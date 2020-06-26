@@ -230,8 +230,8 @@ int rec98_bmp2arr_save_debug_bmp_out(struct rec98_bmp2arr_task *t) {
     *((uint32_t*)(bmp_tmp+20)) = htole32(t->bmp_height*t->bmp_stride);
     *((uint32_t*)(bmp_tmp+24)) = htole32(0);
     *((uint32_t*)(bmp_tmp+28)) = htole32(0);
-    *((uint32_t*)(bmp_tmp+32)) = htole32(0);
-    *((uint32_t*)(bmp_tmp+36)) = htole32(0);
+    *((uint32_t*)(bmp_tmp+32)) = htole32(2);
+    *((uint32_t*)(bmp_tmp+36)) = htole32(2);
     write(fd,bmp_tmp,40);
 
     /* color palette */
