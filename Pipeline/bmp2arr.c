@@ -433,6 +433,15 @@ static int parse_argv(struct rec98_bmp2arr_task *tsk,int argc,char **argv) {
         return -1;
     }
 
+    if (tsk->sprite_width == 0 || tsk->sprite_height == 0) {
+        fprintf(stderr,"Sprite width/height required (-sw and -sh)\n");
+        return -1;
+    }
+    if (!(tsk->sprite_width == 8 || tsk->sprite_width == 16)) {
+        fprintf(stderr,"Sprite width must be 8 or 16\n");
+        return -1;
+    }
+
     return 0; /* success */
 }
 
