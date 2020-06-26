@@ -293,8 +293,12 @@ int rec98_bmp2arr_load_bitmap(struct rec98_bmp2arr_task *t) {
     t->bmp_height = le32toh( *((uint32_t*)(bmp_tmp+8)) );
     if (t->bmp_width < 1 || t->bmp_height < 1 || t->bmp_width > 1024 || t->bmp_height > 1024) goto fioerr;
 
-    if ( le16toh( *((uint16_t*)(bmp_tmp+12)) ) != 1 /* biPlanes*/ ||
-         le32toh( *((uint32_t*)(bmp_tmp+16)) ) != 0 /* biCompression*/)
+    if ( le16toh( *((uint16_t*)(bmp_tmp+12)) ) != 1 /* biPlanes*/)
+        goto fioerr;
+
+    /* biCompression can be 0 (no compression) or 3 (BI_RGB) */
+    if (!(le32toh( *((uint32_t*)(bmp_tmp+16)) ) == 0 /* biCompression */ ||
+          le32toh( *((uint32_t*)(bmp_tmp+16)) ) == 3 /* biCompression */))
         goto fioerr;
 
     bpp = le16toh( *((uint16_t*)(bmp_tmp+14)) );
