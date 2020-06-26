@@ -18,6 +18,8 @@
 #else
 # define le16toh(x) (x)
 # define le32toh(x) (x)
+# define htole16(x) (x)
+# define htole32(x) (x)
 #endif
 
 /* O_BINARY is needed for MS-DOS, Windows, etc.
