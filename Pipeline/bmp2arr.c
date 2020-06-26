@@ -135,7 +135,75 @@ static unsigned char bmp_tmp[128]; /* more than enough */
     } BITMAPINFOHEADER, *PBITMAPINFOHEADER;                     =40
  */
 
+void memcpy24to1(unsigned char *dst,unsigned char *src,unsigned int w) {
+    unsigned char r,g,b,tmp;
+    unsigned int x;
+
+    while (w >= 8) {
+        tmp = 0;
+        for (x=0;x < 8;x++) {
+            b = *src++;
+            g = *src++;
+            r = *src++;
+            if ((r|g|b)&0x80)
+                tmp |= 0x80 >> x;
+        }
+
+        *dst++ = tmp;
+        w -= 8;
+    }
+
+    if (w > 0) {
+        tmp = 0;
+        for (x=0;x < w;x++) {
+            b = *src++;
+            g = *src++;
+            r = *src++;
+            if ((r|g|b)&0x80)
+                tmp |= 0x80 >> x;
+        }
+
+        *dst++ = tmp;
+    }
+}
+
+void memcpy32to1(unsigned char *dst,unsigned char *src,unsigned int w) {
+    unsigned char r,g,b,tmp;
+    unsigned int x;
+
+    while (w >= 8) {
+        tmp = 0;
+        for (x=0;x < 8;x++) {
+            b = *src++;
+            g = *src++;
+            r = *src++;
+                 src++; /* A */
+            if ((r|g|b)&0x80)
+                tmp |= 0x80 >> x;
+        }
+
+        *dst++ = tmp;
+        w -= 8;
+    }
+
+    if (w > 0) {
+        tmp = 0;
+        for (x=0;x < w;x++) {
+            b = *src++;
+            g = *src++;
+            r = *src++;
+                 src++; /* A */
+            if ((r|g|b)&0x80)
+                tmp |= 0x80 >> x;
+        }
+
+        *dst++ = tmp;
+    }
+}
+
 int rec98_bmp2arr_load_bitmap(struct rec98_bmp2arr_task *t) {
+    unsigned char *tmprow = NULL;
+    uint32_t srcstride;
     uint32_t offbits;
     uint32_t bisize;
     uint16_t bpp;
@@ -171,9 +239,11 @@ int rec98_bmp2arr_load_bitmap(struct rec98_bmp2arr_task *t) {
     if (!(bpp == 1 || bpp == 24 || bpp == 32)) goto fioerr;
 
     if (bpp > 1)
-        t->bmp_stride = ((t->bmp_width + 3u) & (~3u)) * (bpp / 8u); /* 4-pixel align */
+        srcstride = ((t->bmp_width + 3u) & (~3u)) * (bpp / 8u); /* 4-pixel align */
     else
-        t->bmp_stride = (t->bmp_width + 7u) / 8u; /* BYTE align */
+        srcstride = (t->bmp_width + 7u) / 8u; /* BYTE align */
+
+    t->bmp_stride = (t->bmp_width + 7u) / 8u; /* BYTE align */
 
 #if TARGET_MSDOS == 16
     if ((32768u / t->bmp_stride) < t->bmp_height) /* cannot fit into 32KB */
@@ -186,16 +256,29 @@ int rec98_bmp2arr_load_bitmap(struct rec98_bmp2arr_task *t) {
     /* read bitmap bits. BMPs are upside-down */
     if (lseek(fd,offbits,SEEK_SET) != offbits) goto fioerr;
 
+    /* may need to convert to 1bpp from source */
+    tmprow = malloc(srcstride);
+    if (tmprow == NULL) goto fioerr;
+
     /* count: height-1 to 0 inclusive */
     row = t->bmp_height - 1u;
     do {
-        if (read(fd,t->bmp + (row * t->bmp_stride),t->bmp_stride) != t->bmp_stride) goto fioerr;
+        if (read(fd,tmprow,srcstride) != srcstride) goto fioerr;
+
+        if (bpp == 1)
+            memcpy(t->bmp + (row * t->bmp_stride),tmprow,t->bmp_width);
+        else if (bpp == 24)
+            memcpy24to1(t->bmp + (row * t->bmp_stride),tmprow,t->bmp_width);
+        else if (bpp == 32)
+            memcpy32to1(t->bmp + (row * t->bmp_stride),tmprow,t->bmp_width);
     } while (row-- != 0u); /* compare against post decrement to break out if it is zero */
 
+    if (tmprow) free(tmprow);
     close(fd);
 
     return 0;
 fioerr:
+    if (tmprow) free(tmprow);
     close(fd);
     return -1;
 }
