@@ -138,6 +138,11 @@ static unsigned char bmp_tmp[128]; /* more than enough */
     } BITMAPINFOHEADER, *PBITMAPINFOHEADER;                     =40
  */
 
+void memcpyxor(unsigned char *dst,unsigned char *src,unsigned int bytes,unsigned char xorval) {
+    while (bytes-- != 0)
+        *dst++ = *src++ ^ xorval;
+}
+
 void memcpy24to1(unsigned char *dst,unsigned char *src,unsigned int w) {
     unsigned char r,g,b,tmp;
     unsigned int x;
@@ -259,6 +264,7 @@ int rec98_bmp2arr_save_debug_bmp_out(struct rec98_bmp2arr_task *t) {
 
 int rec98_bmp2arr_load_bitmap(struct rec98_bmp2arr_task *t) {
     unsigned char *tmprow = NULL;
+    uint8_t xorval = 0;
     uint32_t srcstride;
     uint32_t offbits;
     uint32_t bisize;
@@ -306,6 +312,14 @@ int rec98_bmp2arr_load_bitmap(struct rec98_bmp2arr_task *t) {
         goto fioerr;
 #endif
 
+    /* palette */
+    if (bpp == 1) {
+        if (read(fd,bmp_tmp,4*2) != (4*2)) goto fioerr;
+
+        /* in case of stupid editing programs that put the white color first */
+        if ((bmp_tmp[0]|bmp_tmp[1]|bmp_tmp[2])&0x80) xorval = 0xFF;
+    }
+
     t->bmp = malloc(t->bmp_height * t->bmp_stride);
     if (t->bmp == NULL) goto fioerr;
 
@@ -322,7 +336,7 @@ int rec98_bmp2arr_load_bitmap(struct rec98_bmp2arr_task *t) {
         if (read(fd,tmprow,srcstride) != srcstride) goto fioerr;
 
         if (bpp == 1)
-            memcpy(t->bmp + (row * t->bmp_stride),tmprow,srcstride);
+            memcpyxor(t->bmp + (row * t->bmp_stride),tmprow,srcstride,xorval);
         else if (bpp == 24)
             memcpy24to1(t->bmp + (row * t->bmp_stride),tmprow,t->bmp_width);
         else if (bpp == 32)
