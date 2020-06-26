@@ -44,6 +44,7 @@ struct rec98_bmp2arr_task {
     unsigned char   preshift;           /* 1=generate preshifted variations or 0=don't   This makes the bitmap one byte wider */
     unsigned char   upsidedown;         /* 1=output upside down  (ref. game 3 score bitmap) */
     unsigned char   preshift_inner;     /* 1=[number][PRESHIFT][height]    0=[PRESHIFT][number][height] */
+    unsigned char   debug_bmp_out;      /* 1=output file is bitmap read in (debugging) */
 
     /* working state */
     unsigned int    bmp_width;          /* width of bmp */
@@ -201,6 +202,48 @@ void memcpy32to1(unsigned char *dst,unsigned char *src,unsigned int w) {
     }
 }
 
+int rec98_bmp2arr_save_debug_bmp_out(struct rec98_bmp2arr_task *t) {
+    unsigned int y;
+    int fd;
+
+    if (t == NULL || t->output_file == NULL) return -1;
+    if (t->bmp == NULL) return -1;
+
+    fd = open(t->output_file,O_WRONLY|O_CREAT|O_TRUNC|O_BINARY,0644);
+    if (fd < 0) return -1;
+
+    /* BITMAPFILEHEADER */
+    memcpy(bmp_tmp+0, "BM",2);
+    *((uint32_t*)(bmp_tmp+2 )) = htole32(14+40+(t->bmp_height*t->bmp_stride));  /* bfSize */
+    *((uint16_t*)(bmp_tmp+6 )) = htole16(0);
+    *((uint16_t*)(bmp_tmp+8 )) = htole16(0);
+    *((uint32_t*)(bmp_tmp+10)) = htole32(14+40);                                /* bfOffBits */
+    write(fd,bmp_tmp,14);
+
+    /* BITMAPINFOHEADER */
+    *((uint32_t*)(bmp_tmp+0 )) = htole32(40);
+    *((uint32_t*)(bmp_tmp+4 )) = htole32(t->bmp_width);
+    *((uint32_t*)(bmp_tmp+8 )) = htole32(t->bmp_height);
+    *((uint16_t*)(bmp_tmp+12)) = htole16(1);
+    *((uint16_t*)(bmp_tmp+14)) = htole16(1);
+    *((uint32_t*)(bmp_tmp+16)) = htole32(0);
+    *((uint32_t*)(bmp_tmp+20)) = htole32(t->bmp_height*t->bmp_stride);
+    *((uint32_t*)(bmp_tmp+24)) = htole32(0);
+    *((uint32_t*)(bmp_tmp+28)) = htole32(0);
+    *((uint32_t*)(bmp_tmp+32)) = htole32(0);
+    *((uint32_t*)(bmp_tmp+36)) = htole32(0);
+    write(fd,bmp_tmp,40);
+
+    /* the bits */
+    y = t->bmp_height - 1;
+    do {
+        write(fd,t->bmp + (y*t->bmp_stride),t->bmp_stride);
+    } while (y-- != 0);
+
+    close(fd);
+    return 0;
+}
+
 int rec98_bmp2arr_load_bitmap(struct rec98_bmp2arr_task *t) {
     unsigned char *tmprow = NULL;
     uint32_t srcstride;
@@ -331,6 +374,9 @@ static int parse_argv(struct rec98_bmp2arr_task *tsk,int argc,char **argv) {
             else if (!strcmp(a,"u")) {
                 tsk->upsidedown = 1;
             }
+            else if (!strcmp(a,"dbg-bmp")) {
+                tsk->debug_bmp_out = 1;
+            }
             else if (!strcmp(a,"pshf")) {
                 a = argv[i++];
                 if (a == NULL) return -1;
@@ -379,6 +425,13 @@ int main(int argc,char **argv) {
 
     if (rec98_bmp2arr_load_bitmap(&tsk))
         return 1;
+
+    if (tsk.debug_bmp_out) {
+        if (rec98_bmp2arr_save_debug_bmp_out(&tsk))
+            return 1;
+
+        return 0;
+    }
 
     rec98_bmp2arr_task_free(&tsk);
     return 0;
