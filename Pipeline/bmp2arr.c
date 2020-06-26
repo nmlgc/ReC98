@@ -287,7 +287,7 @@ int rec98_bmp2arr_load_bitmap(struct rec98_bmp2arr_task *t) {
     /* BITMAPINFOHEADER */
     if (read(fd,bmp_tmp,40) != 40) goto fioerr;
     bisize = le32toh( *((uint32_t*)(bmp_tmp+0)) );
-    if (bisize != 40) goto fioerr; /* TODO: Adapt to support BITMAPV4INFO, BITMAPV5INFO, later on */
+    if (bisize < 40) goto fioerr; /* *sigh* GIMP has decided to export the larger header with NO option to emit the traditional 40-byte format */
 
     t->bmp_width = le32toh( *((uint32_t*)(bmp_tmp+4)) );
     t->bmp_height = le32toh( *((uint32_t*)(bmp_tmp+8)) );
@@ -311,6 +311,10 @@ int rec98_bmp2arr_load_bitmap(struct rec98_bmp2arr_task *t) {
     if ((32768u / t->bmp_stride) < t->bmp_height) /* cannot fit into 32KB */
         goto fioerr;
 #endif
+
+    /* skip anything beyond the 40 byte header we expect */
+    if (bisize > 40)
+        lseek(fd,bisize-40,SEEK_CUR);
 
     /* palette */
     if (bpp == 1) {
