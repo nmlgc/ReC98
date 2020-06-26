@@ -214,10 +214,10 @@ int rec98_bmp2arr_save_debug_bmp_out(struct rec98_bmp2arr_task *t) {
 
     /* BITMAPFILEHEADER */
     memcpy(bmp_tmp+0, "BM",2);
-    *((uint32_t*)(bmp_tmp+2 )) = htole32(14+40+(t->bmp_height*t->bmp_stride));  /* bfSize */
+    *((uint32_t*)(bmp_tmp+2 )) = htole32(14+40+4*2+(t->bmp_height*t->bmp_stride));  /* bfSize */
     *((uint16_t*)(bmp_tmp+6 )) = htole16(0);
     *((uint16_t*)(bmp_tmp+8 )) = htole16(0);
-    *((uint32_t*)(bmp_tmp+10)) = htole32(14+40);                                /* bfOffBits */
+    *((uint32_t*)(bmp_tmp+10)) = htole32(14+40+4*2);                                /* bfOffBits */
     write(fd,bmp_tmp,14);
 
     /* BITMAPINFOHEADER */
@@ -233,6 +233,17 @@ int rec98_bmp2arr_save_debug_bmp_out(struct rec98_bmp2arr_task *t) {
     *((uint32_t*)(bmp_tmp+32)) = htole32(0);
     *((uint32_t*)(bmp_tmp+36)) = htole32(0);
     write(fd,bmp_tmp,40);
+
+    /* color palette */
+    bmp_tmp[0+0] = 0x00;
+    bmp_tmp[0+1] = 0x00;
+    bmp_tmp[0+2] = 0x00;
+    bmp_tmp[0+3] = 0x00;
+    bmp_tmp[4+0] = 0xFF;
+    bmp_tmp[4+1] = 0xFF;
+    bmp_tmp[4+2] = 0xFF;
+    bmp_tmp[4+3] = 0x00;
+    write(fd,bmp_tmp,4*2);
 
     /* the bits */
     y = t->bmp_height - 1;
