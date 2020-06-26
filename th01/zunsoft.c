@@ -65,10 +65,10 @@ void zunsoft_exit(void)
 	egc_start();
 }
 
-void pascal vector(int *dx, int *dy, unsigned char angle, int r)
+void pascal vector2(int *ret_x, int *ret_y, unsigned char angle, int length)
 {
-	*dx = (r * (long)Cos8(angle)) >> 8;
-	*dy = (r * (long)Sin8(angle)) >> 8;
+	*ret_x = (length * (long)Cos8(angle)) >> 8;
+	*ret_y = (length * (long)Sin8(angle)) >> 8;
 }
 
 void objects_setup(void)
@@ -131,7 +131,7 @@ void stars_render_and_update(void)
 
 		grcg_pset(star_pos[i].x, star_pos[i].y);
 
-		vector(&dx, &dy, star_angle, star_speed[i]);
+		vector2(&dx, &dy, star_angle, star_speed[i]);
 		star_pos[i].x += dx;
 		star_pos[i].y += dy;
 		if(star_pos[i].x < 0) {

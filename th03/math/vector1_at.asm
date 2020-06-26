@@ -1,4 +1,5 @@
-vector1_at	proc far
+public _vector1_at
+_vector1_at	proc far
 
 @@origin	= word ptr  6
 @@length	= word ptr  8
@@ -13,4 +14,4 @@ vector1_at	proc far
 	add	ax, [bp+@@origin]
 	pop	bp
 	retf
-vector1_at	endp
+_vector1_at	endp

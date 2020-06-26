@@ -4361,8 +4361,8 @@ sub_BB66	endp
 
 sub_BB80	proc near
 
-var_2		= byte ptr -2
-var_1		= byte ptr -1
+@@length		= byte ptr -2
+@@angle		= byte ptr -1
 
 		enter	2, 0
 		push	si
@@ -4405,13 +4405,13 @@ loc_BBD1:
 		cwd
 		idiv	bx
 		add	dl, 50h	; 'P'
-		mov	[bp+var_1], dl
+		mov	[bp+@@angle], dl
 		call	IRand
 		mov	bx, 40h
 		cwd
 		idiv	bx
 		add	dl, 30h	; '0'
-		mov	[bp+var_2], dl
+		mov	[bp+@@length], dl
 		call	IRand
 		and	ax, 3
 		mov	[si+0Ah], ax
@@ -4421,8 +4421,8 @@ loc_BBD1:
 		push	ds
 		lea	ax, [si+8]
 		push	ax
-		push	word ptr [bp+var_1]
-		mov	al, [bp+var_2]
+		push	word ptr [bp+@@angle]
+		mov	al, [bp+@@length]
 		mov	ah, 0
 		push	ax
 		call	vector2

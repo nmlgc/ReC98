@@ -3498,14 +3498,14 @@ loc_BD00:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, large (80 shl 16) or 0, _CosTable8[bx]
+		call	_vector1_at c, large (80 shl 16) or 0, _CosTable8[bx]
 		mov	di, ax
 		mov	bx, word_20CE4
 		mov	al, [bx+6]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, large (80 shl 16) or 0, _SinTable8[bx]
+		call	_vector1_at c, large (80 shl 16) or 0, _SinTable8[bx]
 		mov	[bp+var_2], ax
 		mov	bx, word_20CE4
 		add	[bx], di
@@ -4061,7 +4061,7 @@ arg_2		= byte ptr  6
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, word_20E3E, word_20E42, _CosTable8[bx]
+		call	_vector1_at c, word_20E3E, word_20E42, _CosTable8[bx]
 		mov	dl, byte ptr word_23AF0
 		mov	dh, 0
 		add	dx, dx
@@ -4072,7 +4072,7 @@ arg_2		= byte ptr  6
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, word_20E40, word_20E42, _SinTable8[bx]
+		call	_vector1_at c, word_20E40, word_20E42, _SinTable8[bx]
 		mov	[bp+@@top], ax
 		call	sprite16_put pascal, [bp+@@left], ax, 34B4h
 		leave
@@ -5889,7 +5889,7 @@ loc_CF62:
 		mov	ah, 0
 		push	ax
 		push	word ptr [si+2]
-		call	vector1_at
+		call	_vector1_at
 		add	sp, 6
 		mov	bx, di
 		add	bx, bx
@@ -5905,7 +5905,7 @@ loc_CF62:
 		mov	ah, 0
 		push	ax
 		push	word ptr [si+4]
-		call	vector1_at
+		call	_vector1_at
 		add	sp, 6
 		cwd
 		sub	ax, dx
@@ -5985,7 +5985,7 @@ sub_D05D	proc far
 		mov	bp, sp
 		push	si
 		push	di
-		mov	byte_2142C, 40h
+		mov	angle_2142C, 40h
 		mov	si, 39CCh
 		xor	di, di
 		jmp	short loc_D089
@@ -6025,7 +6025,7 @@ sub_D092	proc far
 		mov	bp, sp
 		push	si
 		push	di
-		mov	byte_2142C, 40h
+		mov	angle_2142C, 40h
 		mov	si, 39CCh
 		xor	di, di
 		jmp	short loc_D0F1
@@ -6131,7 +6131,7 @@ sub_D135	proc far
 		mov	ax, 0A800h
 		mov	es, ax
 		assume es:nothing
-		mov	byte_2142C, 40h
+		mov	angle_2142C, 40h
 		mov	di, 39CCh
 		xor	si, si
 
@@ -6227,12 +6227,12 @@ loc_D222:
 		jge	short loc_D241
 
 loc_D23B:
-		inc	byte_2142C
+		inc	angle_2142C
 		jmp	short loc_D245
 ; ---------------------------------------------------------------------------
 
 loc_D241:
-		dec	byte_2142C
+		dec	angle_2142C
 
 loc_D245:
 		mov	[bp+var_3], 1
@@ -6256,7 +6256,7 @@ loc_D254:
 		lea	bx, [di+6]
 		push	ds
 		push	bx
-		mov	al, byte_2142C
+		mov	al, angle_2142C
 		mov	ah, 0
 		push	ax
 		mov	al, [di+8]
@@ -6317,7 +6317,7 @@ sub_D2E8	proc far
 		mov	bp, sp
 		push	si
 		push	di
-		mov	byte_2142C, 40h
+		mov	angle_2142C, 40h
 		mov	si, 39CCh
 		xor	di, di
 		jmp	short loc_D337
@@ -6376,7 +6376,7 @@ sub_D340	proc far
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 13
 		mov	ax, 0A800h
 		mov	es, ax
-		mov	byte_2142C, 40h
+		mov	angle_2142C, 40h
 		mov	di, 39CCh
 		xor	si, si
 
@@ -6477,12 +6477,12 @@ loc_D434:
 		jge	short loc_D453
 
 loc_D44D:
-		inc	byte_2142C
+		inc	angle_2142C
 		jmp	short loc_D457
 ; ---------------------------------------------------------------------------
 
 loc_D453:
-		dec	byte_2142C
+		dec	angle_2142C
 
 loc_D457:
 		mov	[bp+var_3], 1
@@ -6506,7 +6506,7 @@ loc_D466:
 		lea	bx, [di+6]
 		push	ds
 		push	bx
-		mov	al, byte_2142C
+		mov	al, angle_2142C
 		mov	ah, 0
 		push	ax
 		mov	al, [di+8]
@@ -8014,8 +8014,8 @@ sub_DF18	endp
 
 sub_DFE9	proc near
 
-var_4		= byte ptr -4
-var_2		= byte ptr -2
+@@vector_y		= byte ptr -4
+@@vector_x		= byte ptr -2
 arg_0		= word ptr  4
 
 		push	bp
@@ -8063,19 +8063,19 @@ loc_E036:
 		add	al, 0FEh
 		mov	[si+13h], al
 		push	ss
-		lea	ax, [bp+var_2]
+		lea	ax, [bp+@@vector_x]
 		push	ax
 		push	ss
-		lea	ax, [bp+var_4]
+		lea	ax, [bp+@@vector_y]
 		push	ax
 		push	word ptr [si+12h]
 		mov	al, [si+13h]
 		mov	ah, 0
 		push	ax
 		call	vector2
-		mov	al, [bp+var_2]
+		mov	al, [bp+@@vector_x]
 		mov	byte_23AE6, al
-		mov	al, [bp+var_4]
+		mov	al, [bp+@@vector_y]
 		mov	byte_23AE7, al
 		push	si
 		call	sub_D6D4
@@ -9301,7 +9301,7 @@ sub_F1FA	proc near
 var_5		= byte ptr -5
 @@top		= word ptr -4
 @@left		= word ptr -2
-arg_0		= word ptr  4
+@@length		= word ptr  4
 arg_2		= word ptr  6
 arg_4		= word ptr  8
 
@@ -9309,7 +9309,7 @@ arg_4		= word ptr  8
 		push	si
 		push	di
 		mov	di, [bp+arg_4]
-		cmp	[bp+arg_0], 1
+		cmp	[bp+@@length], 1
 		jnz	short loc_F210
 		call	snd_se_play pascal, 16
 
@@ -9327,9 +9327,9 @@ loc_F210:
 		add	ax, 10h
 		mov	[bp+arg_2], ax
 		mov	ax, 8
-		imul	[bp+arg_0]
-		mov	[bp+arg_0], ax
-		mov	al, byte ptr [bp+arg_0]
+		imul	[bp+@@length]
+		mov	[bp+@@length], ax
+		mov	al, byte ptr [bp+@@length]
 		mov	[bp+var_5], al
 		cmp	_pid_current, 1
 		jnz	short loc_F253
@@ -9354,14 +9354,14 @@ loc_F26E:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, di, [bp+arg_0], _CosTable8[bx]
+		call	_vector1_at c, di, [bp+@@length], _CosTable8[bx]
 		add	ax, -24
 		mov	[bp+@@left], ax
 		mov	al, [bp+var_5]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, [bp+arg_2], [bp+arg_0], _SinTable8[bx]
+		call	_vector1_at c, [bp+arg_2], [bp+@@length], _SinTable8[bx]
 		add	ax, -24
 		mov	[bp+@@top], ax
 		call	sprite16_put pascal, [bp+@@left], ax, 1930h
@@ -9374,7 +9374,7 @@ loc_F2C3:
 		cmp	si, 10h
 		jl	short loc_F26E
 		mov	al, 0
-		sub	al, byte ptr [bp+arg_0]
+		sub	al, byte ptr [bp+@@length]
 		mov	[bp+var_5], al
 		xor	si, si
 		jmp	short loc_F32F
@@ -9386,11 +9386,11 @@ loc_F2D4:
 		add	ax, ax
 		mov	bx, ax
 		push	_CosTable8[bx]
-		mov	ax, [bp+arg_0]
+		mov	ax, [bp+@@length]
 		add	ax, ax
 		push	ax
 		push	di
-		call	vector1_at
+		call	_vector1_at
 		add	sp, 6
 		add	ax, -24
 		mov	[bp+@@left], ax
@@ -9399,11 +9399,11 @@ loc_F2D4:
 		add	ax, ax
 		mov	bx, ax
 		push	_SinTable8[bx]
-		mov	ax, [bp+arg_0]
+		mov	ax, [bp+@@length]
 		add	ax, ax
 		push	ax
 		push	[bp+arg_2]
-		call	vector1_at
+		call	_vector1_at
 		add	sp, 6
 		add	ax, -24
 		mov	[bp+@@top], ax
@@ -9416,7 +9416,7 @@ loc_F2D4:
 loc_F32F:
 		cmp	si, 8
 		jl	short loc_F2D4
-		cmp	[bp+arg_0], 0C8h
+		cmp	[bp+@@length], 0C8h
 		jl	short loc_F34E
 		push	2560
 		mov	al, 1
@@ -9454,7 +9454,7 @@ sub_F356	proc near
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, large (16 shl 16) or 0, _SinTable8[bx]
+		call	_vector1_at c, large (16 shl 16) or 0, _SinTable8[bx]
 		mov	word_1F348, ax
 		cmp	word_1F33E, 300h
 		jg	short loc_F399
@@ -9787,14 +9787,14 @@ loc_F619:
 		test	byte ptr word_1F3B0, 3
 		jnz	short loc_F683
 		mov	al, byte_1FE50
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		mov	byte_23E45, 22h ; '"'
 		mov	ax, word_1F33E
 		mov	word_23E3E, ax
 		mov	ax, word_1F340
 		mov	word_23E40, ax
 		mov	al, byte_1F39F
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		mov	byte_23E4E, 2
 		mov	al, 1
 		sub	al, _pid_current
@@ -9805,7 +9805,7 @@ loc_F619:
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		call	sub_17730
 		mov	al, byte_1FE50
 		add	al, 7
@@ -9909,7 +9909,7 @@ sub_F72D	proc near
 		test	byte ptr word_1F3B0, 1Fh
 		jnz	short loc_F7A8
 		call	randring_far_next16
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		mov	byte_23E45, 26h ; '&'
 		mov	ax, word_1F33E
 		mov	word_23E3E, ax
@@ -9926,7 +9926,7 @@ sub_F72D	proc near
 
 loc_F768:
 		mov	al, byte_1F3A2
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		mov	al, byte_1F3A3
 		mov	byte_23E47, al
 		mov	byte_23E4E, 2
@@ -9934,18 +9934,18 @@ loc_F768:
 		mov	al, byte_1F3A3
 		mov	ah, 0
 		push	ax
-		mov	ax, 100h
+		mov	ax, 256
 		cwd
 		pop	bx
 		idiv	bx
-		add	al, byte ptr word_23E42+1
-		mov	byte ptr word_23E42+1, al
+		add	al, angle_23E43
+		mov	angle_23E43, al
 		mov	al, byte_1F3A4
 
 loc_F795:
 		mov	byte_23E47, al
 		mov	al, byte_1F3A1
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		mov	byte_23E4E, 4
 		call	sub_17730
 
@@ -10440,14 +10440,14 @@ loc_FBB5:
 		jnz	loc_FC51
 		call	snd_se_play pascal, 3
 		mov	al, byte_20E28
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		mov	byte_23E45, 22h ; '"'
 		mov	ax, word_1F33E
 		mov	word_23E3E, ax
 		mov	ax, word_1F340
 		mov	word_23E40, ax
 		mov	al, byte_1F39F
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		mov	byte_23E4E, 2
 		mov	byte_23E50, 0
 		call	sub_17730
@@ -10468,13 +10468,13 @@ loc_FBB5:
 		mov	byte_23E4E, 1
 		mov	byte_23E45, 0Fh
 		mov	al, byte_1F3A3
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		mov	al, byte_20E29
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		call	sub_17730
 		mov	al, 80h
 		sub	al, byte_20E29
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		call	sub_17730
 
 loc_FC49:
@@ -10548,14 +10548,14 @@ loc_FCC6:
 		jbe	loc_FD6D
 		test	byte ptr word_1F3B0, 3
 		jnz	short loc_FD12
-		mov	byte ptr word_23E42+1, 0
+		mov	angle_23E43, 0
 		mov	byte_23E45, 1Ch
 		mov	word_23E3E, si
 		mov	word_23E40, di
 		mov	al, byte_1F3A0
 		mov	byte_23E47, al
 		mov	al, byte_1F3A1
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		mov	byte_23E4E, 2
 		mov	byte_23E50, 0
 		call	sub_17730
@@ -10567,11 +10567,11 @@ loc_FD12:
 		cmp	word_1F3B0, 40h
 		jnz	short loc_FD47
 		call	randring_far_next16
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		mov	byte_23E45, 25h ; '%'
 		mov	word_23E3E, si
 		mov	word_23E40, di
-		mov	byte ptr word_23E42, 20h ; ' '
+		mov	byte_23E42, 20h ; ' '
 		mov	byte_23E4E, 2
 		mov	byte_23E50, 0
 		call	sub_17730
@@ -10653,14 +10653,14 @@ loc_FDCB:
 
 loc_FDD0:
 		call	snd_se_play pascal, 10
-		mov	byte ptr word_23E42+1, 0
+		mov	angle_23E43, 0
 		mov	ax, word_1F33E
 		add	ax, 180h
 		mov	word_23E3E, ax
 		mov	ax, word_1F340
 		add	ax, 0FE00h
 		mov	word_23E40, ax
-		mov	byte ptr word_23E42, 58h ; 'X'
+		mov	byte_23E42, 58h ; 'X'
 		mov	byte_23E4E, 2
 		mov	byte_23E50, 0
 		mov	byte_23E51, 1
@@ -10714,21 +10714,21 @@ loc_FE54:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, word_1F33E, (48 shl 4), _CosTable8[bx]
+		call	_vector1_at c, word_1F33E, (48 shl 4), _CosTable8[bx]
 		mov	word_23E3E, ax
 		mov	al, byte_20E2B
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, word_1F340, (48 shl 4), _SinTable8[bx]
+		call	_vector1_at c, word_1F340, (48 shl 4), _SinTable8[bx]
 		mov	word_23E40, ax
 		mov	al, byte_20E2B
 		add	al, 40h
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		mov	byte_23E4E, 4
 		mov	byte_23E45, 21h ; '!'
 		mov	al, byte_1F3A5
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		call	sub_17730
 		call	snd_se_play pascal, 10
 		mov	al, byte_20E2A
@@ -11079,13 +11079,13 @@ arg_2		= word ptr  6
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, [bp+var_2], si, _CosTable8[bx]
+		call	_vector1_at c, [bp+var_2], si, _CosTable8[bx]
 		mov	di, ax
 		mov	al, [bp+arg_0]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, [bp+var_4], si, _SinTable8[bx]
+		call	_vector1_at c, [bp+var_4], si, _SinTable8[bx]
 		mov	[bp+@@top], ax
 		call	sprite16_put pascal, di, ax, sprite_1F34C
 		mov	ah, SPRITE16_SET_MASK
@@ -11097,13 +11097,13 @@ arg_2		= word ptr  6
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, [bp+var_2], si, _CosTable8[bx]
+		call	_vector1_at c, [bp+var_2], si, _CosTable8[bx]
 		mov	di, ax
 		mov	al, [bp+arg_0]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, [bp+var_4], si, _SinTable8[bx]
+		call	_vector1_at c, [bp+var_4], si, _SinTable8[bx]
 		mov	[bp+@@top], ax
 		call	sprite16_put pascal, di, ax, sprite_1F34C
 		mov	ah, SPRITE16_SET_MASK
@@ -11276,7 +11276,7 @@ loc_103A5:
 		jnz	short loc_103EC
 		mov	byte_23E4E, 2
 		mov	al, byte_20E4E
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		mov	byte_23E45, 26h ; '&'
 		mov	ax, word_20E50
 		mov	word_23E3E, ax
@@ -11284,7 +11284,7 @@ loc_103A5:
 		mov	word_23E40, ax
 		mov	al, byte_1F39F
 		add	al, byte_20E4C
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		mov	al, byte_1F3A0
 		mov	byte_23E47, al
 		call	sub_17730
@@ -11378,11 +11378,11 @@ loc_104A7:
 		mov	ax, word_20E52
 		mov	word_23E40, ax
 		mov	al, byte_20E4E
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		push	1Fh
 		call	randring_far_next16_and
 		add	al, byte_1F3A1
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		push	1
 		call	randring_far_next16_and
 		inc	al
@@ -11425,13 +11425,13 @@ sub_1050F	proc near
 		or	dx, dx
 		jnz	short loc_105A1
 		mov	byte_23E45, 20h ; ' '
-		mov	byte ptr word_23E42, 20h ; ' '
+		mov	byte_23E42, 20h ; ' '
 		push	1
 		call	randring_far_next16_and
 		inc	al
 		mov	byte_23E4E, al
 		call	randring_far_next16
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		mov	ax, word_1F33E
 		mov	word_23E3E, ax
 		mov	ax, word_1F340
@@ -11439,13 +11439,13 @@ sub_1050F	proc near
 		mov	word_23E40, ax
 		call	sub_17730
 		call	randring_far_next16
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		mov	ax, word_1F340
 		add	ax, 200h
 		mov	word_23E40, ax
 		call	sub_17730
 		call	randring_far_next16
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		mov	ax, word_1F33E
 		add	ax, 0FE00h
 		mov	word_23E3E, ax
@@ -11453,7 +11453,7 @@ sub_1050F	proc near
 		mov	word_23E40, ax
 		call	sub_17730
 		call	randring_far_next16
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		mov	ax, word_1F33E
 		add	ax, 200h
 		mov	word_23E3E, ax
@@ -11573,8 +11573,8 @@ sub_10669	proc near
 		mov	word_23E3E, ax
 		mov	ax, word_20E52
 		mov	word_23E40, ax
-		mov	byte ptr word_23E42+1, 0C0h
-		mov	byte ptr word_23E42, 60h
+		mov	angle_23E43, -40h
+		mov	byte_23E42, 60h
 		mov	byte_23E45, 16h
 		call	sub_17730
 		mov	byte_23E45, 10h
@@ -11584,7 +11584,7 @@ loc_106B8:
 		cmp	word_1F3B0, 20h	; ' '
 		jb	short loc_106F5
 		mov	byte_23E45, 0
-		mov	byte ptr word_23E42, 24h ; '$'
+		mov	byte_23E42, 24h ; '$'
 		mov	word_23E40, 0
 		xor	si, si
 		jmp	short loc_106F0
@@ -11596,8 +11596,8 @@ loc_106D3:
 		mov	word_23E3E, ax
 		push	3Fh ; '?'
 		call	randring_far_next16_and
-		add	al, 20h	; ' '
-		mov	byte ptr word_23E42+1, al
+		add	al, 20h
+		mov	angle_23E43, al
 		call	sub_17730
 		inc	si
 
@@ -12263,39 +12263,39 @@ loc_10C8D:
 		mov	_pid_other, al
 		mov	al, [bp+var_1]
 		add	al, al
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		mov	al, byte_23DC7
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, word_1F33E, (32 shl 4), _CosTable8[bx]
+		call	_vector1_at c, word_1F33E, (32 shl 4), _CosTable8[bx]
 		mov	word_23E3E, ax
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, word_1F340, (32 shl 4), _SinTable8[bx]
+		call	_vector1_at c, word_1F340, (32 shl 4), _SinTable8[bx]
 		mov	word_23E40, ax
 		call	sub_17730
 		mov	al, [bp+var_1]
 		add	al, al
 		add	al, 80h
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		mov	al, [bp+var_1]
 		add	al, 80h
 		mov	[bp+var_1], al
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, word_1F33E, (32 shl 4), _CosTable8[bx]
+		call	_vector1_at c, word_1F33E, (32 shl 4), _CosTable8[bx]
 		mov	word_23E3E, ax
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, word_1F340, (32 shl 4), _SinTable8[bx]
+		call	_vector1_at c, word_1F340, (32 shl 4), _SinTable8[bx]
 		mov	word_23E40, ax
 		call	sub_17730
 
@@ -12308,12 +12308,12 @@ loc_10D62:
 		mov	al, byte ptr word_1F3B0
 		add	al, al
 		mov	[bp+var_1], al
-		add	al, 0C0h
+		add	al, -40h
 		mov	[bp+var_1], al
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, point_1F342.y, (48 shl 4), _SinTable8[bx]
+		call	_vector1_at c, point_1F342.y, (48 shl 4), _SinTable8[bx]
 		mov	word_1F340, ax
 		cmp	word_1F3B0, 80h
 		jb	short locret_10D9E
@@ -12336,7 +12336,7 @@ sub_10DA0	proc near
 		call	sub_F356
 		mov	byte_23E4E, 2
 		mov	al, byte_1F3A1
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		mov	al, 1
 		sub	al, _pid_current
 		mov	_pid_other, al
@@ -12348,10 +12348,10 @@ sub_10DA0	proc near
 		jnb	short loc_10DEF
 		cmp	_round_frame_mod16, 0
 		jnz	short loc_10E14
-		mov	byte ptr word_23E42+1, 20h ; ' '
+		mov	angle_23E43, 20h
 		mov	byte_23E45, 8
 		call	sub_17730
-		mov	byte ptr word_23E42+1, 60h
+		mov	angle_23E43, 60h
 
 loc_10DE8:
 		call	sub_17730
@@ -12365,7 +12365,7 @@ loc_10DEF:
 		cmp	_round_frame_mod16, 0
 		jnz	short loc_10E14
 		mov	byte_23E45, 15h
-		mov	byte ptr word_23E42+1, 40h
+		mov	angle_23E43, 40h
 		jmp	short loc_10DE8
 ; ---------------------------------------------------------------------------
 
@@ -12423,7 +12423,7 @@ loc_10E3F:
 		add	ax, ax
 		push	ax
 		push	word_1F33E
-		call	vector1_at
+		call	_vector1_at
 		add	sp, 6
 		mov	bx, si
 		add	bx, bx
@@ -12438,7 +12438,7 @@ loc_10E3F:
 		add	ax, ax
 		push	ax
 		push	word_1F340
-		call	vector1_at
+		call	_vector1_at
 		add	sp, 6
 		mov	bx, si
 		add	bx, bx
@@ -12477,7 +12477,7 @@ loc_10EC9:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, word_1F33E, (48 shl 4), _CosTable8[bx]
+		call	_vector1_at c, word_1F33E, (48 shl 4), _CosTable8[bx]
 		mov	bx, si
 		add	bx, bx
 		mov	[bx+686Ah], ax
@@ -12485,7 +12485,7 @@ loc_10EC9:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, word_1F340, (48 shl 4), _SinTable8[bx]
+		call	_vector1_at c, word_1F340, (48 shl 4), _SinTable8[bx]
 		mov	bx, si
 		add	bx, bx
 		mov	[bx+6876h], ax
@@ -12503,7 +12503,7 @@ loc_10F26:
 		jnz	loc_10FCE
 		mov	byte_23E4E, 2
 		mov	al, byte_1F3A3
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		mov	al, 1
 		sub	al, _pid_current
 		mov	_pid_other, al
@@ -12512,7 +12512,7 @@ loc_10F26:
 		mov	ax, word_1F340
 		mov	word_23E40, ax
 		call	randring_far_next16
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		mov	byte_23E45, 26h ; '&'
 		mov	al, byte_1F3A4
 		mov	byte_23E47, al
@@ -12578,7 +12578,7 @@ sub_10FD1	proc near
 		jnz	short loc_11031
 		mov	byte_23E4E, 2
 		mov	al, byte_1F3A1
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		mov	al, 1
 		sub	al, _pid_current
 		mov	_pid_other, al
@@ -12587,12 +12587,12 @@ sub_10FD1	proc near
 		mov	ax, word_1F340
 		mov	word_23E40, ax
 		mov	al, byte ptr word_1F3B0
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		mov	byte_23E45, 0Eh
 		call	sub_17730
-		mov	al, 78h	; 'x'
+		mov	al, 78h
 		sub	al, byte ptr word_1F3B0
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		call	sub_17730
 		pop	bp
 		retn
@@ -12895,7 +12895,7 @@ var_5		= byte ptr -5
 var_4		= word ptr -4
 @@top		= word ptr -2
 arg_0		= word ptr  4
-arg_2		= byte ptr  6
+@@angle		= byte ptr  6
 
 		enter	6, 0
 		push	si
@@ -12954,17 +12954,17 @@ loc_11329:
 ; ---------------------------------------------------------------------------
 
 loc_11330:
-		mov	al, [bp+arg_2]
+		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, word_1F33E, [bp+arg_0], _CosTable8[bx]
+		call	_vector1_at c, word_1F33E, [bp+arg_0], _CosTable8[bx]
 		mov	di, ax
-		mov	al, [bp+arg_2]
+		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, word_1F340, [bp+arg_0], _SinTable8[bx]
+		call	_vector1_at c, word_1F340, [bp+arg_0], _SinTable8[bx]
 		mov	[bp+@@top], ax
 		push	di
 		mov	al, [bp+@@pid_other]
@@ -12979,9 +12979,9 @@ loc_11330:
 		mov	[bp+@@top], ax
 		call	sprite16_put pascal, di, ax, si
 		inc	[bp+var_4]
-		mov	al, [bp+arg_2]
-		add	al, 20h	; ' '
-		mov	[bp+arg_2], al
+		mov	al, [bp+@@angle]
+		add	al, 20h
+		mov	[bp+@@angle], al
 
 loc_1139D:
 		cmp	[bp+var_4], 8
@@ -13120,14 +13120,14 @@ loc_1148D:
 		cmp	word_1F3B0, 1Ch
 		jb	loc_11544
 		mov	al, byte_23DE2
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		mov	byte_23E45, 22h ; '"'
 		mov	ax, word_1F33E
 		mov	word_23E3E, ax
 		mov	ax, word_1F340
 		mov	word_23E40, ax
 		mov	al, byte_1F39F
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		mov	byte_23E4E, 2
 		mov	al, [bp+@@pid_other]
 		mov	_pid_other, al
@@ -13157,7 +13157,7 @@ loc_114F3:
 		mov	al, byte_23DE2
 		add	al, 8
 		mov	byte_23DE2, al
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		inc	si
 
 loc_11504:
@@ -13326,9 +13326,9 @@ sub_11620	proc near
 		mov	ax, word_1F340
 		mov	word_23E40, ax
 		mov	al, byte_23DE3
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		mov	al, byte_1F3A1
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		mov	byte_23E4E, 1
 		mov	al, 1
 		sub	al, _pid_current
@@ -13336,17 +13336,17 @@ sub_11620	proc near
 		call	sub_17730
 		mov	al, byte_23DE3
 		add	al, 80h
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		call	sub_17730
 		mov	al, byte_1F3A1
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		call	sub_17730
 		mov	al, byte_23DE3
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		call	sub_17730
 		mov	al, byte_23DE3
 		add	al, 10h
@@ -13649,7 +13649,7 @@ var_8		= word ptr -8
 @@sprite_offset		= word ptr -6
 @@pid_other		= word ptr -4
 @@top		= word ptr -2
-arg_0		= byte ptr  4
+@@angle		= byte ptr  4
 arg_2		= byte ptr  6
 arg_4		= word ptr  8
 
@@ -13707,17 +13707,17 @@ loc_11971:
 ; ---------------------------------------------------------------------------
 
 loc_11978:
-		mov	al, [bp+arg_0]
+		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, word_1F33E, [bp+arg_4], _CosTable8[bx]
+		call	_vector1_at c, word_1F33E, [bp+arg_4], _CosTable8[bx]
 		mov	di, ax
-		mov	al, [bp+arg_0]
+		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, word_1F340, [bp+arg_4], _SinTable8[bx]
+		call	_vector1_at c, word_1F340, [bp+arg_4], _SinTable8[bx]
 		mov	[bp+@@top], ax
 		call	playfield_fg_x_to_screen pascal, di, [bp+@@pid_other]
 		add	ax, -16
@@ -13726,17 +13726,17 @@ loc_11978:
 		sar	ax, 4
 		mov	[bp+@@top], ax
 		call	sprite16_put pascal, di, ax, [bp+@@sprite_offset]
-		mov	al, [bp+arg_0]
-		add	al, 20h	; ' '
-		mov	[bp+arg_0], al
+		mov	al, [bp+@@angle]
+		add	al, 20h
+		mov	[bp+@@angle], al
 		inc	[bp+var_8]
 
 loc_119E1:
 		cmp	[bp+var_8], 8
 		jl	short loc_11978
-		mov	al, [bp+arg_0]
+		mov	al, [bp+@@angle]
 		add	al, 3
-		mov	[bp+arg_0], al
+		mov	[bp+@@angle], al
 		sub	[bp+@@sprite_offset], 4
 		inc	si
 
@@ -13858,7 +13858,7 @@ kotohime_11A6D	endp
 
 sub_11AC1	proc near
 
-var_5		= byte ptr -5
+@@angle		= byte ptr -5
 var_4		= word ptr -4
 var_2		= word ptr -2
 arg_0		= word ptr  4
@@ -13874,7 +13874,7 @@ loc_11ACF:
 		cmp	[bp+arg_0], 0
 		jz	short loc_11ADD
 		call	randring_far_next16
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 
 loc_11ADD:
 		mov	ax, si
@@ -13886,17 +13886,17 @@ loc_11ADD:
 		pop	bx
 		idiv	bx
 		add	al, byte_1F355
-		mov	[bp+var_5], al
+		mov	[bp+@@angle], al
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, word_1F33E, word_1F356, _CosTable8[bx]
+		call	_vector1_at c, word_1F33E, word_1F356, _CosTable8[bx]
 		mov	[bp+var_2], ax
-		mov	al, [bp+var_5]
+		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, word_1F340, word_1F356, _SinTable8[bx]
+		call	_vector1_at c, word_1F340, word_1F356, _SinTable8[bx]
 		mov	[bp+var_4], ax
 		mov	ax, [bp+var_2]
 		mov	word_23E3E, ax
@@ -13944,7 +13944,7 @@ loc_11B6B:
 		jbe	short loc_11BC4
 		mov	byte_23E45, 24h ; '$'
 		mov	al, byte_1F39F
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		push	1
 		call	sub_11AC1
 		call	snd_se_play pascal, 3
@@ -13994,15 +13994,15 @@ loc_11BE5:
 		cmp	byte_1F354, 40h
 		jbe	short loc_11C5D
 		mov	byte_23E45, 5
-		mov	byte ptr word_23E42+1, 0
+		mov	angle_23E43, 0
 		mov	al, byte_1F3A2
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		push	0
 		call	sub_11AC1
 		mov	byte_23E45, 18h
-		mov	byte ptr word_23E42+1, 0
+		mov	angle_23E43, 0
 		mov	al, byte_1F3A1
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		push	0
 		call	sub_11AC1
 		call	snd_se_play pascal, 3
@@ -14043,9 +14043,9 @@ sub_11C5F	proc near
 		call	snd_se_play pascal, 3
 		mov	byte_23E4E, 1
 		mov	al, byte ptr word_1F3B0
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		mov	al, byte_1F3A3
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		mov	byte_23E45, 26h ; '&'
 		mov	byte_23E47, 4
 		mov	ax, word_1F33E
@@ -14146,13 +14146,13 @@ loc_11D77:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, word_1F33E, word_1F356, _CosTable8[bx]
+		call	_vector1_at c, word_1F33E, word_1F356, _CosTable8[bx]
 		mov	[bp+var_2], ax
 		mov	al, [bp+var_5]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, word_1F340, word_1F356, _SinTable8[bx]
+		call	_vector1_at c, word_1F340, word_1F356, _SinTable8[bx]
 		mov	[bp+var_4], ax
 		mov	ax, [bp+var_2]
 		mov	word_23E3E, ax
@@ -14173,7 +14173,7 @@ loc_11DDB:
 		idiv	bx
 		add	al, [bp+var_5]
 		add	al, 40h
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		mov	ax, si
 		imul	ax, 30h
 		mov	dl, byte_1F3A5
@@ -14183,7 +14183,7 @@ loc_11DDB:
 		pop	bx
 		idiv	bx
 		add	al, 10h
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		call	sub_17730
 		inc	si
 
@@ -14411,7 +14411,7 @@ word_11F94	dw	0,     1,     2,     3
 
 sub_11FE4	proc near
 
-var_7		= byte ptr -7
+@@angle		= byte ptr -7
 var_6		= word ptr -6
 @@sprite_offset		= word ptr -4
 @@top		= word ptr -2
@@ -14447,17 +14447,17 @@ loc_12021:
 		cwd
 		idiv	[bp+arg_0]
 		add	al, byte_1F355
-		mov	[bp+var_7], al
+		mov	[bp+@@angle], al
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, word_1F33E, [bp+var_6], _CosTable8[bx]
+		call	_vector1_at c, word_1F33E, [bp+var_6], _CosTable8[bx]
 		mov	di, ax
-		mov	al, [bp+var_7]
+		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, word_1F340, [bp+var_6], _SinTable8[bx]
+		call	_vector1_at c, word_1F340, [bp+var_6], _SinTable8[bx]
 		mov	[bp+@@top], ax
 		push	di
 		mov	al, _pid_current
@@ -14731,7 +14731,7 @@ loc_1229A:
 		mov	byte_23E4E, 1
 		mov	byte_23E45, 0
 		mov	al, byte_1F39F
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		cmp	byte_23DE5, 0
 		jnz	short loc_122CC
 		mov	al, byte_23DE4
@@ -14760,34 +14760,34 @@ loc_122E5:
 		mov	ax, word_1F340
 		mov	word_23E40, ax
 		mov	al, byte_23DE4
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		call	sub_17730
 		mov	ax, word_1F33E
 		mov	word_23E3E, ax
 		mov	ax, word_1F340
 		add	ax, 380h
 		mov	word_23E40, ax
-		mov	al, byte ptr word_23E42+1
+		mov	al, angle_23E43
 		add	al, 40h
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		call	sub_17730
 		mov	ax, word_1F33E
 		add	ax, 0FC80h
 		mov	word_23E3E, ax
 		mov	ax, word_1F340
 		mov	word_23E40, ax
-		mov	al, byte ptr word_23E42+1
+		mov	al, angle_23E43
 		add	al, 40h
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		call	sub_17730
 		mov	ax, word_1F33E
 		mov	word_23E3E, ax
 		mov	ax, word_1F340
 		add	ax, 0FC80h
 		mov	word_23E40, ax
-		mov	al, byte ptr word_23E42+1
+		mov	al, angle_23E43
 		add	al, 40h
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		call	sub_17730
 
 locret_12353:
@@ -14832,11 +14832,11 @@ loc_1239D:
 		mov	ax, word_1F340
 		mov	word_23E40, ax
 		call	randring_far_next16
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		mov	byte_23E4E, 2
 		mov	byte_23E45, 25h ; '%'
 		mov	al, byte_1F3A1
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		call	sub_17730
 		cmp	byte_1F39E, 8
 		jb	short loc_12423
@@ -14847,7 +14847,7 @@ loc_1239D:
 		mov	bx, 4
 		cwd
 		idiv	bx
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		mov	ax, word_1F33E
 		add	ax, 380h
 		mov	word_23E3E, ax
@@ -14899,12 +14899,12 @@ loc_12447:
 		mov	ax, word_1F340
 		mov	word_23E40, ax
 		call	randring_far_next16
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		mov	byte_23E4E, 2
 		mov	byte_23E45, 26h ; '&'
 		mov	byte_23E47, 30h	; '0'
 		mov	al, byte_1F3A3
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		mov	byte_23E51, 1
 		call	sub_17730
 		mov	byte_23E51, 0
@@ -14954,7 +14954,7 @@ sub_12498	proc near
 		mov	byte_23E45, 0
 		mov	byte_23E4E, 1
 		mov	al, byte_1F3A4
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		xor	si, si
 		jmp	short loc_12546
 ; ---------------------------------------------------------------------------
@@ -14982,15 +14982,15 @@ loc_124F5:
 		idiv	bx
 		mov	dl, 60h
 		sub	dl, al
-		mov	byte ptr word_23E42+1, dl
+		mov	angle_23E43, dl
 		call	sub_17730
 		mov	al, 0
-		sub	al, byte ptr word_23E42+1
-		mov	byte ptr word_23E42+1, al
+		sub	al, angle_23E43
+		mov	angle_23E43, al
 		call	sub_17730
-		mov	al, byte ptr word_23E42
+		mov	al, byte_23E42
 		add	al, 2
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		inc	si
 
 loc_12546:
@@ -15025,15 +15025,15 @@ loc_12553:
 		idiv	bx
 		mov	dl, 60h
 		sub	dl, al
-		mov	byte ptr word_23E42+1, dl
+		mov	angle_23E43, dl
 		call	sub_17730
 		mov	al, 0
-		sub	al, byte ptr word_23E42+1
-		mov	byte ptr word_23E42+1, al
+		sub	al, angle_23E43
+		mov	angle_23E43, al
 		call	sub_17730
-		mov	al, byte ptr word_23E42
-		add	al, 0FEh
-		mov	byte ptr word_23E42, al
+		mov	al, byte_23E42
+		add	al, -2
+		mov	byte_23E42, al
 		inc	si
 
 loc_125A4:
@@ -15068,7 +15068,7 @@ loc_125B0:
 		mov	byte_23E4E, 1
 		mov	byte_23E45, 22h ; '"'
 		mov	al, byte_1F3A4
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		xor	si, si
 		jmp	short loc_1263F
 ; ---------------------------------------------------------------------------
@@ -15094,12 +15094,12 @@ loc_125FF:
 		cwd
 		pop	bx
 		idiv	bx
-		add	al, 0E0h
-		mov	byte ptr word_23E42+1, al
+		add	al, -20h
+		mov	angle_23E43, al
 		call	sub_17730
-		mov	al, byte ptr word_23E42
+		mov	al, byte_23E42
 		add	al, 2
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		inc	si
 
 loc_1263F:
@@ -15132,12 +15132,12 @@ loc_1264C:
 		cwd
 		pop	bx
 		idiv	bx
-		add	al, 0E0h
-		mov	byte ptr word_23E42+1, al
+		add	al, -20h
+		mov	angle_23E43, al
 		call	sub_17730
-		mov	al, byte ptr word_23E42
-		add	al, 0FEh
-		mov	byte ptr word_23E42, al
+		mov	al, byte_23E42
+		add	al, -2
+		mov	byte_23E42, al
 		inc	si
 
 loc_1268C:
@@ -15449,7 +15449,7 @@ word_1290E	dw	0,     1,     2,     3
 
 sub_1295E	proc near
 
-var_9		= byte ptr -9
+@@angle		= byte ptr -9
 var_8		= word ptr -8
 @@pid_other		= word ptr -6
 @@sprite_offset		= word ptr -4
@@ -15481,17 +15481,17 @@ var_8		= word ptr -8
 ; ---------------------------------------------------------------------------
 
 loc_129A0:
-		mov	al, [bp+var_9]
+		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, word_1F33E, [bp+var_8], _CosTable8[bx]
+		call	_vector1_at c, word_1F33E, [bp+var_8], _CosTable8[bx]
 		mov	di, ax
-		mov	al, [bp+var_9]
+		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, word_1F340, [bp+var_8], _SinTable8[bx]
+		call	_vector1_at c, word_1F340, [bp+var_8], _SinTable8[bx]
 		mov	[bp+@@top], ax
 		call	playfield_fg_x_to_screen pascal, di, [bp+@@pid_other]
 		add	ax, -16
@@ -15501,11 +15501,11 @@ loc_129A0:
 		mov	[bp+@@top], ax
 		call	sprite16_put pascal, di, ax, [bp+@@sprite_offset]
 		inc	si
-		mov	al, [bp+var_9]
+		mov	al, [bp+@@angle]
 		add	al, 10h
 
 loc_12A04:
-		mov	[bp+var_9], al
+		mov	[bp+@@angle], al
 		cmp	si, 10h
 		jl	short loc_129A0
 		pop	di
@@ -15877,7 +15877,7 @@ loc_12C8B:
 		mov	word_23E3E, ax
 		mov	ax, word_1F340
 		mov	word_23E40, ax
-		mov	byte ptr word_23E42, 30h ; '0'
+		mov	byte_23E42, 30h ; '0'
 		call	sub_17730
 		call	snd_se_play pascal, 10
 		pop	bp
@@ -15949,7 +15949,7 @@ loc_12D7B:
 		mov	ah, 0
 		push	ax
 		call	sub_CDBD
-		mov	byte ptr word_23E42, 10h
+		mov	byte_23E42, 10h
 		mov	al, byte_1F3A0
 		jmp	loc_12E4D
 ; ---------------------------------------------------------------------------
@@ -15963,14 +15963,14 @@ loc_12DC5:
 		mov	ah, 0
 		push	ax
 		call	sub_CDBD
-		mov	byte ptr word_23E42, 28h ; '('
+		mov	byte_23E42, 28h ; '('
 		mov	al, byte_1F3A1
 		mov	byte_23E47, al
 		call	sub_17730
 		call	snd_se_play pascal, 10
 		mov	byte_23E4E, 1
-		mov	byte ptr word_23E42+1, 20h ; ' '
-		mov	byte ptr word_23E42, 10h
+		mov	angle_23E43, 20h
+		mov	byte_23E42, 10h
 		mov	byte_23E45, 22h ; '"'
 		xor	si, si
 		jmp	short loc_12E24
@@ -15978,12 +15978,12 @@ loc_12DC5:
 
 loc_12E0E:
 		call	sub_17730
-		mov	al, byte ptr word_23E42+1
+		mov	al, angle_23E43
 		add	al, 6
-		mov	byte ptr word_23E42+1, al
-		mov	al, byte ptr word_23E42
+		mov	angle_23E43, al
+		mov	al, byte_23E42
 		add	al, 3
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		inc	si
 
 loc_12E24:
@@ -16001,7 +16001,7 @@ loc_12E2B:
 		mov	ah, 0
 		push	ax
 		call	sub_CDBD
-		mov	byte ptr word_23E42, 38h ; '8'
+		mov	byte_23E42, 38h ; '8'
 		mov	al, byte_1F3A2
 
 loc_12E4D:
@@ -16069,7 +16069,7 @@ loc_12EB0:
 		mov	word_23E3E, ax
 		mov	ax, word_1F340
 		mov	word_23E40, ax
-		mov	byte ptr word_23E42, 30h ; '0'
+		mov	byte_23E42, 30h ; '0'
 		call	sub_17730
 		call	snd_se_play pascal, 10
 
@@ -16161,9 +16161,9 @@ loc_12F77:
 		mov	ax, word_1F340
 		mov	word_23E40, ax
 		mov	al, byte_1F3A5
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		mov	al, byte_23DE6
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		call	sub_17730
 		call	snd_se_play pascal, 10
 
@@ -16459,7 +16459,7 @@ sub_13174	endp
 
 sub_13223	proc near
 
-var_7		= byte ptr -7
+@@angle		= byte ptr -7
 var_6		= word ptr -6
 @@sprite_offset		= word ptr -4
 @@top		= word ptr -2
@@ -16493,26 +16493,26 @@ loc_13254:
 		add	ax, [bp+@@sprite_offset]
 		mov	[bp+@@sprite_offset], ax
 		mov	al, byte_1F355
-		mov	[bp+var_7], al
+		mov	[bp+@@angle], al
 		mov	al, 0
-		sub	al, [bp+var_7]
-		mov	[bp+var_7], al
+		sub	al, [bp+@@angle]
+		mov	[bp+@@angle], al
 		xor	si, si
 		jmp	short loc_132F5
 ; ---------------------------------------------------------------------------
 
 loc_13286:
-		mov	al, [bp+var_7]
+		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, word_1F33E, [bp+var_6], _CosTable8[bx]
+		call	_vector1_at c, word_1F33E, [bp+var_6], _CosTable8[bx]
 		mov	di, ax
-		mov	al, [bp+var_7]
+		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, word_1F340, [bp+var_6], _SinTable8[bx]
+		call	_vector1_at c, word_1F340, [bp+var_6], _SinTable8[bx]
 		mov	[bp+@@top], ax
 		push	di
 		mov	al, _pid_current
@@ -16528,9 +16528,9 @@ loc_13286:
 		mov	[bp+@@top], ax
 		call	sprite16_put pascal, di, ax, [bp+@@sprite_offset]
 		inc	si
-		mov	al, [bp+var_7]
+		mov	al, [bp+@@angle]
 		add	al, 10h
-		mov	[bp+var_7], al
+		mov	[bp+@@angle], al
 
 loc_132F5:
 		cmp	si, 10h
@@ -16640,7 +16640,7 @@ rikako_1334D	endp
 sub_133A5	proc near
 
 var_2		= byte ptr -2
-var_1		= byte ptr -1
+@@angle		= byte ptr -1
 
 		enter	2, 0
 		push	si
@@ -16677,17 +16677,17 @@ loc_133DE:
 		call	sub_CDBD
 		mov	byte_23E4E, 2
 		mov	byte_23E45, 16h
-		mov	byte ptr word_23E42, 1Ch
+		mov	byte_23E42, 1Ch
 		push	1
 		call	randring_far_next16_and
 		or	ax, ax
 		jz	short loc_1341D
-		mov	al, 30h	; '0'
+		mov	al, 30h
 		jmp	short loc_1341F
 ; ---------------------------------------------------------------------------
 
 loc_1341D:
-		mov	al, 0D0h
+		mov	al, -30h
 
 loc_1341F:
 		mov	[bp+var_2], al
@@ -16704,21 +16704,21 @@ loc_13426:
 		cwd
 		pop	bx
 		idiv	bx
-		mov	[bp+var_1], al
+		mov	[bp+@@angle], al
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, word_1F33E, (48 shl 4), _CosTable8[bx]
+		call	_vector1_at c, word_1F33E, (48 shl 4), _CosTable8[bx]
 		mov	word_23E3E, ax
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, word_1F340, (48 shl 4), _SinTable8[bx]
+		call	_vector1_at c, word_1F340, (48 shl 4), _SinTable8[bx]
 		mov	word_23E40, ax
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@angle]
 		add	al, [bp+var_2]
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		call	sub_17730
 		inc	si
 
@@ -16827,17 +16827,17 @@ loc_1353F:
 		mov	word_23E3E, ax
 		mov	ax, word_1F340
 		mov	word_23E40, ax
-		mov	byte ptr word_23E42, 20h ; ' '
+		mov	byte_23E42, 20h ; ' '
 		xor	si, si
 		jmp	short loc_13581
 ; ---------------------------------------------------------------------------
 
 loc_1356B:
 		call	randring_far_next16
-		mov	byte ptr word_23E42+1, al
-		mov	al, byte ptr word_23E42
+		mov	angle_23E43, al
+		mov	al, byte_23E42
 		add	al, 8
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		call	sub_17730
 		inc	si
 
@@ -16918,9 +16918,9 @@ loc_135F8:
 		mov	ax, word_1F340
 		mov	word_23E40, ax
 		mov	al, byte_23DE8
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		mov	al, byte_1F3A3
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		cmp	[bp+var_1], 1
 		jz	short loc_13633
 		cmp	[bp+var_1], 5
@@ -16935,7 +16935,7 @@ loc_13633:
 		call	sub_17730
 		mov	al, byte_23DE8
 		add	al, 80h
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		call	sub_17730
 
 loc_1364C:
@@ -17117,7 +17117,7 @@ word_1377F	dw	0,     1,     2,     3
 
 sub_137CF	proc near
 
-var_9		= byte ptr -9
+@@angle		= byte ptr -9
 var_8		= word ptr -8
 var_6		= word ptr -6
 @@top		= word ptr -4
@@ -17151,7 +17151,7 @@ loc_13814:
 		mov	_sprite16_put_w, (16 / 16)
 		mov	_sprite16_put_h, 8
 		mov	al, byte_1F354
-		mov	[bp+var_9], al
+		mov	[bp+@@angle], al
 		add	[bp+@@left], 40
 		add	[bp+@@top], 40
 		xor	di, di
@@ -17159,17 +17159,17 @@ loc_13814:
 ; ---------------------------------------------------------------------------
 
 loc_1383D:
-		mov	al, [bp+var_9]
+		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, [bp+@@left], 48, _CosTable8[bx]
+		call	_vector1_at c, [bp+@@left], 48, _CosTable8[bx]
 		mov	[bp+var_6], ax
-		mov	al, [bp+var_9]
+		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, [bp+@@top], 48, _SinTable8[bx]
+		call	_vector1_at c, [bp+@@top], 48, _SinTable8[bx]
 		mov	[bp+var_8], ax
 		test	di, 3
 		jz	short loc_1388B
@@ -17193,9 +17193,9 @@ loc_1388E:
 		push	ax
 		call	sprite16_put
 		inc	di
-		mov	al, [bp+var_9]
-		add	al, 20h	; ' '
-		mov	[bp+var_9], al
+		mov	al, [bp+@@angle]
+		add	al, 20h
+		mov	[bp+@@angle], al
 
 loc_138AA:
 		cmp	di, 8
@@ -17213,7 +17213,7 @@ sub_137CF	endp
 
 sub_138B3	proc near
 
-var_7		= byte ptr -7
+@@angle		= byte ptr -7
 var_6		= word ptr -6
 @@sprite_offset		= word ptr -4
 @@top		= word ptr -2
@@ -17246,26 +17246,26 @@ loc_138E4:
 loc_138FB:
 		mov	al, byte ptr word_1F3B0
 		shl	al, 2
-		mov	[bp+var_7], al
+		mov	[bp+@@angle], al
 		mov	al, 0
-		sub	al, [bp+var_7]
-		mov	[bp+var_7], al
+		sub	al, [bp+@@angle]
+		mov	[bp+@@angle], al
 		xor	si, si
 		jmp	short loc_13982
 ; ---------------------------------------------------------------------------
 
 loc_13910:
-		mov	al, [bp+var_7]
+		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, word_1F33E, [bp+var_6], _CosTable8[bx]
+		call	_vector1_at c, word_1F33E, [bp+var_6], _CosTable8[bx]
 		mov	di, ax
-		mov	al, [bp+var_7]
+		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, word_1F340, [bp+var_6], _SinTable8[bx]
+		call	_vector1_at c, word_1F340, [bp+var_6], _SinTable8[bx]
 		mov	[bp+@@top], ax
 		push	di
 		mov	al, _pid_current
@@ -17282,9 +17282,9 @@ loc_13910:
 		mov	[bp+@@top], ax
 		call	sprite16_put pascal, di, ax, [bp+@@sprite_offset]
 		inc	si
-		mov	al, [bp+var_7]
+		mov	al, [bp+@@angle]
 		add	al, 10h
-		mov	[bp+var_7], al
+		mov	[bp+@@angle], al
 
 loc_13982:
 		cmp	si, 10h
@@ -19041,7 +19041,7 @@ loc_14723:
 		sub	al, _pid_current
 		mov	[bp+@@pid_other], al
 		mov	_pid_other, al
-		mov	byte ptr word_23E42, 38h ; '8'
+		mov	byte_23E42, 38h ; '8'
 		mov	byte_23E45, 0
 		mov	al, _pid_current
 		mov	ah, 0
@@ -19094,7 +19094,7 @@ loc_147BA:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_147F5
-		mov	byte ptr word_23E42+1, 20h ; ' '
+		mov	angle_23E43, 20h
 		mov	word_23E3E, 0
 		xor	si, si
 		jmp	short loc_147EE
@@ -19102,9 +19102,9 @@ loc_147BA:
 
 loc_147E0:
 		nopcall	sub_17730
-		mov	al, byte ptr word_23E42
-		add	al, 0FAh
-		mov	byte ptr word_23E42, al
+		mov	al, byte_23E42
+		add	al, -6
+		mov	byte_23E42, al
 		inc	si
 
 loc_147EE:
@@ -19124,7 +19124,7 @@ loc_147F5:
 		idiv	bx
 		cmp	dx, 0Ch
 		jnz	short loc_14850
-		mov	byte ptr word_23E42+1, 60h
+		mov	angle_23E43, 60h
 		mov	word_23E3E, 1200h
 		xor	si, si
 		jmp	short loc_1482A
@@ -19132,9 +19132,9 @@ loc_147F5:
 
 loc_1481C:
 		nopcall	sub_17730
-		mov	al, byte ptr word_23E42
-		add	al, 0FAh
-		mov	byte ptr word_23E42, al
+		mov	al, byte_23E42
+		add	al, -6
+		mov	byte_23E42, al
 		inc	si
 
 loc_1482A:
@@ -19578,8 +19578,8 @@ sub_14B0A	endp
 public CHARGESHOT_UPDATE_REIMU
 chargeshot_update_reimu	proc far
 
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@vector_y		= word ptr -4
+@@vector_x		= word ptr -2
 
 		enter	4, 0
 		push	si
@@ -19631,10 +19631,10 @@ loc_14BF1:
 		or	si, si
 		jg	short loc_14BC2
 		push	ss
-		lea	ax, [bp+var_2]
+		lea	ax, [bp+@@vector_x]
 		push	ax
 		push	ss
-		lea	ax, [bp+var_4]
+		lea	ax, [bp+@@vector_y]
 		push	ax
 		mov	bx, word_205CA
 		push	word ptr [bx+1Eh]
@@ -19643,9 +19643,9 @@ loc_14BF1:
 		push	ax
 		call	vector2
 		mov	bx, word_205CA
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@vector_x]
 		add	[bx+2],	ax
-		mov	ax, [bp+var_4]
+		mov	ax, [bp+@@vector_y]
 		add	[bx+10h], ax
 		cmp	byte ptr [bx], 1
 		jnz	short loc_14C5E
@@ -19985,8 +19985,8 @@ loc_14EB3:
 		sub	al, _pid_current
 		mov	[bp+@@pid_other], al
 		mov	_pid_other, al
-		mov	byte ptr word_23E42, 20h ; ' '
-		mov	byte ptr word_23E42+1, 0
+		mov	byte_23E42, 20h ; ' '
+		mov	angle_23E43, 0
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
@@ -20038,7 +20038,7 @@ loc_14F52:
 		mov	bx, ax
 		mov	al, [bx+2D58h]
 		mov	byte_23E47, al
-		mov	byte ptr word_23E42, 32h ; '2'
+		mov	byte_23E42, 32h ; '2'
 		mov	word_23E3E, 400h
 		push	4000080h
 		mov	al, [bp+@@pid_other]
@@ -21069,14 +21069,14 @@ loc_157E3:
 		shl	ax, 2
 		mov	bx, ax
 		mov	al, [bx+2D59h]
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		mov	al, [bp+@@pid_other]
 		mov	_pid_other, al
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
 		mov	al, [bx+3790h]
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		mov	byte_23E50, 0
 		mov	byte_23E45, 14h
 		push	word_23E3E
@@ -21103,7 +21103,7 @@ loc_157E3:
 		mov	bx, ax
 		mov	al, [bx+2D58h]
 		mov	byte_23E47, al
-		mov	byte ptr word_23E42, 36h ; '6'
+		mov	byte_23E42, 36h ; '6'
 		push	word_23E3E
 		push	100h
 		mov	al, [bp+@@pid_other]
@@ -21387,7 +21387,7 @@ loc_15A91:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, 144, di, _CosTable8[bx]
+		call	_vector1_at c, 144, di, _CosTable8[bx]
 		add	ax, [bp+var_2]
 		mov	bx, si
 		add	bx, bx
@@ -21398,7 +21398,7 @@ loc_15A91:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, 200, di, _SinTable8[bx]
+		call	_vector1_at c, 200, di, _SinTable8[bx]
 		cwd
 		sub	ax, dx
 		sar	ax, 1
@@ -21431,7 +21431,7 @@ loc_15B29:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, 144, di, _CosTable8[bx]
+		call	_vector1_at c, 144, di, _CosTable8[bx]
 		add	ax, [bp+var_2]
 		mov	bx, si
 		add	bx, bx
@@ -21442,7 +21442,7 @@ loc_15B29:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, 200, di, _SinTable8[bx]
+		call	_vector1_at c, 200, di, _SinTable8[bx]
 		cwd
 		sub	ax, dx
 		sar	ax, 1
@@ -22323,8 +22323,8 @@ loc_1630B:
 		mov	word_23E40, ax
 		push	18h
 		call	sub_13EFF
-		mov	byte ptr word_23E42, al
-		mov	byte ptr word_23E42+1, 0
+		mov	byte_23E42, al
+		mov	angle_23E43, 0
 		mov	al, [bp+@@pid]
 		mov	_pid_other, al
 		mov	al, byte_23AF8
@@ -23367,7 +23367,7 @@ var_6		= word ptr -6
 var_4		= word ptr -4
 @@top		= word ptr -2
 arg_0		= byte ptr  4
-arg_2		= word ptr  6
+@@length		= word ptr  6
 @@sprite_offset		= word ptr  8
 
 		enter	0Ah, 0
@@ -23397,14 +23397,14 @@ loc_16BEC:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, [bp+var_6], [bp+arg_2], _CosTable8[bx]
+		call	_vector1_at c, [bp+var_6], [bp+@@length], _CosTable8[bx]
 		mov	di, ax
 		mov	al, [bp+var_A]
 		add	al, [bp+arg_0]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, [bp+var_8], [bp+arg_2], _SinTable8[bx]
+		call	_vector1_at c, [bp+var_8], [bp+@@length], _SinTable8[bx]
 		mov	[bp+@@top], ax
 		push	di
 		mov	al, _pid_current
@@ -23704,10 +23704,10 @@ loc_16E42:
 		shl	ax, 2
 		mov	bx, ax
 		mov	al, [bx+2D59h]
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		mov	al, [bp+@@pid_other]
 		mov	_pid_other, al
-		mov	byte ptr word_23E42+1, 0
+		mov	angle_23E43, 0
 		mov	byte_23E45, 2Ch ; ','
 		mov	al, _pid_current
 		mov	ah, 0
@@ -24334,7 +24334,7 @@ sub_17384	endp
 
 sub_173A2	proc near
 
-var_9		= byte ptr -9
+@@length		= byte ptr -9
 var_8		= byte ptr -8
 var_7		= byte ptr -7
 @@center_y		= word ptr -6
@@ -24364,8 +24364,8 @@ arg_0		= word ptr  4
 		mov	bx, ax
 		mov	ax, _players[bx].center.y
 		mov	[bp+@@center_y], ax
-		mov	al, byte ptr word_23E42
-		mov	[bp+var_9], al
+		mov	al, byte_23E42
+		mov	[bp+@@length], al
 		mov	al, byte_23E45
 		mov	ah, 0
 		mov	bx, ax
@@ -24669,7 +24669,7 @@ loc_1760D:
 ; ---------------------------------------------------------------------------
 
 loc_17619:
-		mov	al, byte ptr word_23E42+1
+		mov	al, angle_23E43
 		mov	ah, 0
 		add	ax, ax
 		mov	dx, 80h
@@ -24703,8 +24703,8 @@ loc_17649:
 		mov	[bp+var_2], ax
 		push	1Fh
 		call	randring2_next16_and
-		add	al, [bp+var_9]
-		mov	[bp+var_9], al
+		add	al, [bp+@@length]
+		mov	[bp+@@length], al
 		mov	al, byte_23E47
 		mov	ah, 0
 		cmp	ax, si
@@ -24731,13 +24731,13 @@ loc_1767D:
 		push	[bp+@@center_x]
 		push	[bp+@@center_y]
 		mov	al, byte ptr [bp+var_2]
-		add	al, byte ptr word_23E42+1
+		add	al, angle_23E43
 		push	ax
 		push	ds
 		push	offset point_23E48.x
 		push	ds
 		push	offset point_23E48.y
-		mov	al, [bp+var_9]
+		mov	al, [bp+@@length]
 		mov	ah, 0
 		push	ax
 		call	vector2_between_plus
@@ -24750,16 +24750,16 @@ loc_176A8:
 		push	ds
 		push	offset point_23E48.y
 		mov	al, byte ptr [bp+var_2]
-		add	al, byte ptr word_23E42+1
+		add	al, angle_23E43
 		push	ax
-		mov	al, [bp+var_9]
+		mov	al, [bp+@@length]
 		mov	ah, 0
 		push	ax
 		call	vector2
 
 loc_176C3:
 		mov	al, byte ptr [bp+var_2]
-		add	al, byte ptr word_23E42+1
+		add	al, angle_23E43
 		mov	byte_26352, al
 		mov	ax, di
 		pop	di
@@ -24826,7 +24826,7 @@ var_E		= byte ptr -0Eh
 var_D		= byte ptr -0Dh
 var_C		= byte ptr -0Ch
 var_B		= byte ptr -0Bh
-var_A		= word ptr -0Ah
+@@length		= word ptr -0Ah
 var_8		= word ptr -8
 var_6		= word ptr -6
 var_4		= word ptr -4
@@ -24888,20 +24888,20 @@ loc_177A9:
 		mov	[bp+var_D], al
 
 loc_177AF:
-		mov	al, byte ptr word_23E42
+		mov	al, byte_23E42
 		mov	[bp+var_E], al
 		mov	al, byte_23E3C
-		add	byte ptr word_23E42, al
-		cmp	byte ptr word_23E42, 80h
+		add	byte_23E42, al
+		cmp	byte_23E42, 80h
 		jbe	short loc_177CA
-		mov	byte ptr word_23E42, 80h
+		mov	byte_23E42, 80h
 		jmp	short loc_177D6
 ; ---------------------------------------------------------------------------
 
 loc_177CA:
-		cmp	byte ptr word_23E42, 10h
+		cmp	byte_23E42, 10h
 		jnb	short loc_177D6
-		mov	byte ptr word_23E42, 10h
+		mov	byte_23E42, 10h
 
 loc_177D6:
 		mov	[bp+var_2], 0
@@ -25004,7 +25004,7 @@ loc_1787E:
 		cwd
 		idiv	bx
 		add	ax, 46h	; 'F'
-		mov	[bp+var_A], ax
+		mov	[bp+@@length], ax
 		mov	ax, [bp+var_8]
 		shl	ax, 4
 		push	ax
@@ -25012,8 +25012,7 @@ loc_1787E:
 		mov	ax, [bp+var_6]
 		shl	ax, 4
 		push	ax
-		push	0FFh
-		call	randring2_next16_and
+		call	randring2_next16_and pascal, 255
 		push	ax
 		push	0
 		push	ds
@@ -25022,7 +25021,7 @@ loc_1787E:
 		push	ds
 		lea	ax, [si+0Ch]
 		push	ax
-		push	[bp+var_A]
+		push	[bp+@@length]
 		call	vector2_between_plus
 		push	[bp+var_6]
 		mov	al, _pid_other
@@ -25030,9 +25029,9 @@ loc_1787E:
 		push	ax
 		call	sub_A2F2
 		mov	[si+8],	ax
-		mov	al, byte ptr word_23E42+1
+		mov	al, angle_23E43
 		mov	[si+0Fh], al
-		mov	al, byte ptr word_23E42
+		mov	al, byte_23E42
 		mov	[si+0Eh], al
 		jmp	short loc_17958
 ; ---------------------------------------------------------------------------
@@ -25047,7 +25046,7 @@ loc_17914:
 		mov	[si+0Ch], ax
 		mov	al, byte_26352
 		mov	[si+0Fh], al
-		mov	al, byte ptr word_23E42
+		mov	al, byte_23E42
 		mov	[si+0Eh], al
 		cmp	[bp+var_D], 4
 		jnz	short loc_17940
@@ -25068,7 +25067,7 @@ loc_1794F:
 
 loc_17958:
 		mov	al, [bp+var_E]
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 
 loc_1795E:
 		pop	di
@@ -25108,7 +25107,7 @@ sub_17971	endp
 sub_1797F	proc far
 		push	bp
 		mov	bp, sp
-		mov	byte ptr word_23E42+1, 0
+		mov	angle_23E43, 0
 		mov	byte_23E47, 0
 		mov	byte_23E50, 1
 		mov	byte_23E4F, 1
@@ -25171,7 +25170,7 @@ sub_179D5	proc near
 		mov	ax, [si+4]
 		mov	word_23E40, ax
 		mov	ax, [si+0Eh]
-		mov	word_23E42, ax
+		mov	word ptr byte_23E42, ax
 		mov	ax, [si+10h]
 		mov	word ptr _pid_other, ax
 		call	sub_17730
@@ -25634,7 +25633,7 @@ sub_17BD1	endp
 
 sub_17DAE	proc far
 
-var_8		= byte ptr -8
+@@length		= byte ptr -8
 @@pid		= byte ptr -7
 var_6		= word ptr -6
 var_4		= word ptr -4
@@ -25677,13 +25676,13 @@ loc_17DD4:
 		pop	dx
 		add	dl, al
 		add	dl, 14h
-		mov	[bp+var_8], dl
-		cmp	[bp+var_8], 80h
+		mov	[bp+@@length], dl
+		cmp	[bp+@@length], 80h
 		jbe	short loc_17E17
-		mov	[bp+var_8], 80h
+		mov	[bp+@@length], 80h
 
 loc_17E17:
-		mov	al, [bp+var_8]
+		mov	al, [bp+@@length]
 		mov	[si+1Bh], al
 		mov	al, byte_1E14C
 		add	al, 2
@@ -25746,7 +25745,7 @@ loc_17E83:
 		cwd
 		idiv	bx
 		add	al, 46h	; 'F'
-		mov	[bp+var_8], al
+		mov	[bp+@@length], al
 		mov	ax, [bp+@@x]
 		shl	ax, 4
 		push	ax
@@ -25762,7 +25761,7 @@ loc_17E83:
 		push	ds
 		lea	ax, [si+12h]
 		push	ax
-		mov	al, [bp+var_8]
+		mov	al, [bp+@@length]
 		mov	ah, 0
 		push	ax
 		call	vector2_between_plus
@@ -27103,19 +27102,13 @@ loc_18A68:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	_CosTable8[bx]
-		push	(144 shl 16) or 144
-		call	vector1_at
-		add	sp, 6
+		call	_vector1_at c, large (144 shl 16) or 144, _CosTable8[bx]
 		mov	si, ax
 		mov	al, byte_1FBD4
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	_SinTable8[bx]
-		push	(144 shl 16) or 184
-		call	vector1_at
-		add	sp, 6
+		call	_vector1_at c, large (144 shl 16) or 184, _SinTable8[bx]
 		mov	di, ax
 		mov	ax, si
 		shl	ax, 4
@@ -27133,19 +27126,13 @@ loc_18A68:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	_CosTable8[bx]
-		push	(144 shl 16) or 144
-		call	vector1_at
-		add	sp, 6
+		call	_vector1_at c, large (144 shl 16) or 144, _CosTable8[bx]
 		mov	si, ax
 		mov	al, byte_1FBD4
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		push	_SinTable8[bx]
-		push	(144 shl 16) or 184
-		call	vector1_at
-		add	sp, 6
+		call	_vector1_at c, large (144 shl 16) or 184, _SinTable8[bx]
 		mov	di, ax
 		mov	ax, si
 		shl	ax, 4
@@ -28544,7 +28531,7 @@ loc_1969B:
 		mov	bx, [di]
 		push	word ptr [bx+14h]
 		push	word ptr [bx+2]
-		call	vector1_at
+		call	_vector1_at
 		add	sp, 6
 		mov	[di+2],	ax
 		mov	bx, [di]
@@ -28556,7 +28543,7 @@ loc_1969B:
 		mov	bx, [di]
 		push	word ptr [bx+14h]
 		push	word ptr [bx+4]
-		call	vector1_at
+		call	_vector1_at
 		add	sp, 6
 		mov	[di+10h], ax
 		mov	ax, [di+2]
@@ -28940,8 +28927,8 @@ sub_198DD	endp
 kana_19999	proc far
 
 @@pid_other		= byte ptr -5
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@vector_y		= word ptr -4
+@@vector_x		= word ptr -2
 
 		enter	6, 0
 		push	si
@@ -28967,10 +28954,10 @@ loc_199C6:
 		cmp	byte ptr [si], 1
 		jnz	loc_19A5D
 		push	ss
-		lea	ax, [bp+var_2]
+		lea	ax, [bp+@@vector_x]
 		push	ax
 		push	ss
-		lea	ax, [bp+var_4]
+		lea	ax, [bp+@@vector_y]
 		push	ax
 		push	word ptr [si+12h]
 		mov	al, [si+13h]
@@ -28978,9 +28965,9 @@ loc_199C6:
 		push	ax
 		call	vector2
 		inc	byte ptr [si+13h]
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@vector_x]
 		add	[si+2],	ax
-		mov	ax, [bp+var_4]
+		mov	ax, [bp+@@vector_y]
 		add	[si+4],	ax
 		mov	al, [si+1]
 		mov	ah, 0
@@ -28990,14 +28977,14 @@ loc_199C6:
 		or	dx, dx
 		jnz	short loc_19A49
 		mov	byte_23E4E, 8
-		mov	byte ptr word_23E42+1, 40h
+		mov	angle_23E43, 40h
 		mov	byte_23E45, 0
 		mov	byte_23E46, 80h
 		mov	al, byte ptr word_23AF0
 		mov	ah, 0
 		add	ax, 1680h
 		mov	word_23E4C, ax
-		mov	byte ptr word_23E42, 10h
+		mov	byte_23E42, 10h
 		mov	ax, [si+2]
 		mov	word_23E3E, ax
 		mov	ax, [si+4]
@@ -29753,18 +29740,18 @@ loc_19F5D:
 		mov	[bp+var_1], 0Ch
 
 loc_19F61:
-		mov	byte ptr word_23E42, 10h
+		mov	byte_23E42, 10h
 		xor	si, si
 		jmp	short loc_19F7F
 ; ---------------------------------------------------------------------------
 
 loc_19F6A:
 		call	sub_17730
-		mov	al, byte ptr word_23E42
+		mov	al, byte_23E42
 		add	al, 2
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		mov	al, [bp+var_1]
-		add	byte ptr word_23E42+1, al
+		add	angle_23E43, al
 		inc	si
 
 loc_19F7F:
@@ -29792,7 +29779,7 @@ var_1		= byte ptr -1
 		mov	bx, ax
 		mov	al, [bx+2D5Ah]
 		mov	byte_23E4E, al
-		mov	byte ptr word_23E42, 10h
+		mov	byte_23E42, 10h
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 2
@@ -29819,11 +29806,11 @@ loc_19FCE:
 
 loc_19FD2:
 		call	sub_17730
-		mov	al, byte ptr word_23E42
+		mov	al, byte_23E42
 		add	al, 2
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		mov	al, [bp+var_1]
-		add	byte ptr word_23E42+1, al
+		add	angle_23E43, al
 		inc	si
 
 loc_19FE7:
@@ -29876,9 +29863,9 @@ loc_1A020:
 		call	sub_19EF9
 		cmp	byte ptr [si+11h], 0
 		jz	loc_1A0D5
-		mov	byte ptr word_23E42, 1Ch
+		mov	byte_23E42, 1Ch
 		call	randring_far_next16
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		mov	byte_23E45, 26h ; '&'
 		mov	al, [bp+@@pid_other]
 		mov	_pid_other, al
@@ -29905,9 +29892,9 @@ loc_1A08B:
 		cmp	byte ptr [si+12h], 10h
 		jnz	short loc_1A0D5
 		call	sub_19EF9
-		mov	byte ptr word_23E42, 18h
+		mov	byte_23E42, 18h
 		call	randring_far_next16
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		mov	byte_23E45, 26h ; '&'
 		mov	al, [bp+@@pid_other]
 		mov	_pid_other, al
@@ -30119,9 +30106,9 @@ sub_1A1ED	proc near
 
 arg_0		= word ptr  4
 arg_2		= byte ptr  6
-arg_4		= word ptr  8
+@@y2		= word ptr  8
 arg_6		= word ptr  0Ah
-arg_8		= word ptr  0Ch
+@@y1		= word ptr  0Ch
 @@x		= word ptr  0Eh
 
 		push	bp
@@ -30134,7 +30121,7 @@ arg_8		= word ptr  0Ch
 		mov	byte ptr [si+1], 0
 		mov	ax, [bp+@@x]
 		mov	[si+2],	ax
-		mov	ax, [bp+arg_8]
+		mov	ax, [bp+@@y1]
 		mov	[si+4],	ax
 		mov	al, [bp+arg_2]
 		mov	[si+10h], al
@@ -30155,11 +30142,11 @@ arg_8		= word ptr  0Ch
 		mov	ax, [bp+@@x]
 		shl	ax, 4
 		push	ax
-		push	[bp+arg_8]
+		push	[bp+@@y1]
 		mov	ax, di
 		shl	ax, 4
 		push	ax
-		push	[bp+arg_4]
+		push	[bp+@@y2]
 		push	0
 		push	ds
 		lea	ax, [si+6]
@@ -30251,7 +30238,7 @@ reimu_1A27E	endp
 
 sub_1A2CE	proc far
 
-arg_0		= word ptr  6
+@@angle		= word ptr  6
 arg_2		= word ptr  8
 arg_4		= word ptr  0Ah
 
@@ -30286,7 +30273,7 @@ loc_1A2E4:
 		push	ds
 		lea	ax, [si+8]
 		push	ax
-		push	[bp+arg_0]
+		push	[bp+@@angle]
 		push	50h ; 'P'
 		call	vector2
 		jmp	short loc_1A324
@@ -30536,7 +30523,7 @@ sub_1A491	endp
 
 reimu_1A4E0	proc far
 
-var_1		= byte ptr -1
+@@angle		= byte ptr -1
 
 		enter	2, 0
 		push	si
@@ -30616,20 +30603,20 @@ loc_1A58A:
 		jz	short loc_1A5E5
 		push	1Fh
 		call	randring_far_next16_and
-		mov	[bp+var_1], al
+		mov	[bp+@@angle], al
 		push	1
 		call	randring_far_next16_and
 		imul	ax, 60h
-		add	al, [bp+var_1]
+		add	al, [bp+@@angle]
 		add	al, 80h
-		mov	[bp+var_1], al
+		mov	[bp+@@angle], al
 		push	ds
 		lea	ax, [si+6]
 		push	ax
 		push	ds
 		lea	ax, [si+8]
 		push	ax
-		push	word ptr [bp+var_1]
+		push	word ptr [bp+@@angle]
 		mov	al, byte_23AF8
 		mov	ah, 0
 		mov	bx, 8
@@ -32119,8 +32106,8 @@ rikako_1B105	proc far
 var_7		= byte ptr -7
 var_6		= byte ptr -6
 @@pid_other		= byte ptr -5
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@vector_y		= word ptr -4
+@@vector_x		= word ptr -2
 
 		enter	8, 0
 		push	si
@@ -32149,19 +32136,19 @@ loc_1B146:
 		cmp	byte ptr [si], 1
 		jnz	loc_1B1FC
 		push	ss
-		lea	ax, [bp+var_2]
+		lea	ax, [bp+@@vector_x]
 		push	ax
 		push	ss
-		lea	ax, [bp+var_4]
+		lea	ax, [bp+@@vector_y]
 		push	ax
 		push	word ptr [si+12h]
 		mov	al, [si+13h]
 		mov	ah, 0
 		push	ax
 		call	vector2
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@vector_x]
 		add	[si+2],	ax
-		mov	ax, [bp+var_4]
+		mov	ax, [bp+@@vector_y]
 		add	[si+4],	ax
 		cmp	byte ptr [si+17h], 0
 		jnz	short loc_1B1CC
@@ -32749,9 +32736,9 @@ loc_1B57C:
 		idiv	bx
 		shl	dl, 2
 		add	dl, 18h
-		mov	byte ptr word_23E42, dl
+		mov	byte_23E42, dl
 		mov	byte_23E45, 1
-		mov	byte ptr word_23E42+1, 0
+		mov	angle_23E43, 0
 		mov	word_23E40, 0
 		mov	word_23E3E, si
 		mov	byte_23E50, 0
@@ -32972,7 +32959,7 @@ sub_1B6CA	endp
 public CHARGESHOT_UPDATE_ELLEN
 chargeshot_update_ellen	proc far
 
-var_9		= byte ptr -9
+@@length		= byte ptr -9
 var_8		= word ptr -8
 var_6		= word ptr -6
 var_4		= word ptr -4
@@ -33053,7 +33040,7 @@ loc_1B7BC:
 		jnz	short loc_1B855
 		mov	al, [bx+3]
 		add	al, -2
-		mov	[bp+var_9], al
+		mov	[bp+@@length], al
 		push	ds
 		mov	ax, word_1F868
 		add	ax, 8
@@ -33063,14 +33050,14 @@ loc_1B7BC:
 		add	ax, 10
 		push	ax
 		push	word ptr [bx+2]
-		mov	al, [bp+var_9]
+		mov	al, [bp+@@length]
 		mov	ah, 0
 		push	ax
 		call	vector2
 		mov	bx, word_1F868
-		mov	al, [bp+var_9]
+		mov	al, [bp+@@length]
 		mov	[bx+3],	al
-		cmp	[bp+var_9], 0
+		cmp	[bp+@@length], 0
 		jnz	short loc_1B896
 		mov	byte ptr [bx+1], 1
 		mov	ax, [bp+var_4]
@@ -33402,8 +33389,8 @@ loc_1BA77:
 		mov	bx, ax
 		cmp	word ptr [bx+1FFEh], 0
 		jle	loc_1BB55
-		mov	byte ptr word_23E42+1, 0
-		mov	byte ptr word_23E42, 38h ; '8'
+		mov	angle_23E43, 0
+		mov	byte_23E42, 38h ; '8'
 		mov	byte_23E45, 2Ch ; ','
 		mov	al, _pid_current
 		mov	ah, 0
@@ -33455,13 +33442,13 @@ loc_1BB55:
 		cmp	word ptr [bx+2002h], 900h
 		jge	loc_1BBFA
 		call	randring_far_next16
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		mov	al, [bx+2D59h]
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		mov	byte_23E45, 24h ; '$'
 		mov	al, _pid_current
 		mov	ah, 0
@@ -33494,7 +33481,7 @@ loc_1BB55:
 		call	sub_CE0C
 		call	sub_17730
 		call	randring_far_next16
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		mov	al, _pid_current
 		mov	ah, 0
 		add	ax, ax
@@ -33665,8 +33652,8 @@ chargeshot_update_kana	proc far
 
 var_7		= byte ptr -7
 var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@vector_y		= word ptr -4
+@@vector_x		= word ptr -2
 
 		enter	8, 0
 		push	si
@@ -33697,10 +33684,10 @@ var_2		= word ptr -2
 
 loc_1BD1B:
 		push	ss
-		lea	ax, [bp+var_2]
+		lea	ax, [bp+@@vector_x]
 		push	ax
 		push	ss
-		lea	ax, [bp+var_4]
+		lea	ax, [bp+@@vector_y]
 		push	ax
 		push	word ptr [si+34h]
 		mov	al, [si+35h]
@@ -33731,9 +33718,9 @@ loc_1BD3A:
 loc_1BD5D:
 		cmp	[bp+var_6], 0
 		jg	short loc_1BD3A
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@vector_x]
 		add	[si], ax
-		mov	ax, [bp+var_4]
+		mov	ax, [bp+@@vector_y]
 		add	[si+1Ah], ax
 		cmp	[bp+var_7], 1
 		jnz	short loc_1BD77
@@ -34117,13 +34104,13 @@ loc_1BFF3:
 		mov	ax, [bx+2676h]
 		mov	word_23E3E, ax
 		mov	byte_23E45, 0
-		mov	byte ptr word_23E42+1, 40h
+		mov	angle_23E43, 40h
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		mov	al, [bx+2D59h]
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		call	sub_17730
 		push	word_23E3E
 		push	0
@@ -34826,7 +34813,7 @@ loc_1C563:
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+3930h]
-		call	vector1_at
+		call	_vector1_at
 		add	sp, 6
 		mov	[si], ax
 		mov	al, [si+4]
@@ -34840,7 +34827,7 @@ loc_1C563:
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+3934h]
-		call	vector1_at
+		call	_vector1_at
 		add	sp, 6
 		mov	[si+2],	ax
 		test	byte ptr [bp+var_2], 1
@@ -35177,20 +35164,20 @@ loc_1C7CA:
 		idiv	bx
 		mov	dl, 20h	; ' '
 		sub	dl, al
-		mov	byte ptr word_23E42+1, dl
+		mov	angle_23E43, dl
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		mov	al, [bx+2D59h]
-		mov	byte ptr word_23E42, al
+		mov	byte_23E42, al
 		mov	word_23E3E, 0
 		call	sub_17730
 		mov	word_23E3E, 1200h
 		call	sub_17730
-		mov	al, byte ptr word_23E42+1
+		mov	al, angle_23E43
 		neg	al
-		mov	byte ptr word_23E42+1, al
+		mov	angle_23E43, al
 		call	sub_17730
 		mov	word_23E3E, 0
 		call	sub_17730
@@ -36613,7 +36600,7 @@ farfp_20F20	dd ?
 farfp_20F24	dd ?
 farfp_20F28	dd ?
 		db 1280 dup(?)
-byte_2142C	db ?
+angle_2142C	db ?
 		db ?
 word_2142E	dw ?
 word_21430	dw ?
@@ -36708,7 +36695,8 @@ byte_23E3C	db ?
 		db ?
 word_23E3E	dw ?
 word_23E40	dw ?
-word_23E42	dw ?
+byte_23E42	db ?
+angle_23E43	db ?
 public _pid_other
 _pid_other	db ?
 byte_23E45	db ?

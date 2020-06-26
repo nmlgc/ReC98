@@ -1,3 +1,4 @@
+public VECTOR2
 vector2	proc far
 
 @@r		= word ptr  6

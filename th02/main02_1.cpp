@@ -3,6 +3,8 @@
  * 1st part of code segment #2 of TH02's MAIN.EXE
  */
 
+extern "C" {
+
 #include "th02/th02.h"
 #include "th02/formats/pi.h"
 
@@ -33,5 +35,7 @@ void pascal mptn_free(void)
 
 #include "th01/hardware/vplanset.c"
 #include "th02/formats/pi_load.c"
-#include "th02/math/vector.c"
+#include "th02/math/vector.cpp"
 #include "th02/hardware/frmdely1.c"
+
+}

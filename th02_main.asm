@@ -9312,8 +9312,8 @@ main_02_TEXT	segment	word public 'CODE' use16
 	extern MPTN_FREE:proc
 	extern _vram_planes_set:proc
 	extern _pi_slot_load:proc
-	extern VECTOR:proc
-	extern VECTOR_BETWEEN:proc
+	extern VECTOR2:proc
+	extern VECTOR2_BETWEEN_PLUS:proc
 	extern FRAME_DELAY:proc
 	extern _input_sense:proc
 	extern _game_exit:proc
@@ -10220,12 +10220,12 @@ sub_102D6	endp
 
 sub_103B3	proc near
 
-var_A		= word ptr -0Ah
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
+@@x1		= word ptr -0Ah
+@@x2		= word ptr -8
+@@y2		= word ptr -6
+@@y1		= word ptr -4
 var_2		= word ptr -2
-arg_0		= word ptr  4
+@@length		= word ptr  4
 arg_2		= word ptr  6
 arg_4		= word ptr  8
 arg_6		= dword	ptr  0Ah
@@ -10243,19 +10243,19 @@ arg_6		= dword	ptr  0Ah
 		shl	ax, 2
 		mov	bx, ax
 		mov	ax, [bx+si+4]
-		mov	[bp+var_4], ax
+		mov	[bp+@@y1], ax
 		mov	ax, point_205F6.y
 		add	ax, 20
-		mov	[bp+var_6], ax
+		mov	[bp+@@y2], ax
 		mov	ax, point_205F6.x
 		add	ax, 12
-		mov	[bp+var_8], ax
+		mov	[bp+@@x2], ax
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		mov	ax, [bx+si+2]
-		mov	[bp+var_A], ax
+		mov	[bp+@@x1], ax
 		mov	bx, [bp+arg_4]
 		dec	bx
 		cmp	bx, 26h	; '&'
@@ -10561,7 +10561,7 @@ loc_1063C:
 		mov	[bp+var_2], ax
 		call	randring2_next8_and pascal, 1Fh
 		mov	ah, 0
-		add	[bp+arg_0], ax
+		add	[bp+@@length], ax
 		mov	al, [si+10h]
 		mov	ah, 0
 		les	bx, [bp+arg_6]
@@ -10571,10 +10571,10 @@ loc_1063C:
 ; ---------------------------------------------------------------------------
 
 loc_1065D:
-		push	[bp+var_A]
-		push	[bp+var_4]
-		push	[bp+var_8]
-		push	[bp+var_6]
+		push	[bp+@@x1]
+		push	[bp+@@y1]
+		push	[bp+@@x2]
+		push	[bp+@@y2]
 		mov	al, [si+10h]
 		add	al, byte ptr [bp+var_2]
 		push	ax
@@ -10584,8 +10584,8 @@ loc_1065D:
 		push	ds
 		lea	ax, [si+0Ch]
 		push	ax
-		push	[bp+arg_0]
-		call	vector_between
+		push	[bp+@@length]
+		call	vector2_between_plus
 		jmp	short loc_1069D
 ; ---------------------------------------------------------------------------
 
@@ -10599,8 +10599,8 @@ loc_10684:
 		mov	al, [si+10h]
 		add	al, byte ptr [bp+var_2]
 		push	ax
-		push	[bp+arg_0]
-		call	vector
+		push	[bp+@@length]
+		call	vector2
 
 loc_1069D:
 		les	bx, [bp+arg_6]
@@ -10866,10 +10866,10 @@ sub_10865	proc near
 
 var_4		= word ptr -4
 var_2		= word ptr -2
-arg_0		= word ptr  4
+@@length		= word ptr  4
 arg_2		= byte ptr  6
 arg_4		= byte ptr  8
-arg_6		= word ptr  0Ah
+@@angle		= word ptr  0Ah
 arg_8		= word ptr  0Ch
 arg_A		= word ptr  0Eh
 
@@ -10890,7 +10890,7 @@ arg_A		= word ptr  0Eh
 		cmp	[bp+arg_4], 83h
 		jz	short loc_108A3
 		push	ss
-		lea	ax, [bp+arg_0]
+		lea	ax, [bp+@@length]
 		push	ax
 		call	sub_10716
 		or	ax, ax
@@ -10922,9 +10922,9 @@ loc_108B8:
 		mov	al, [bp+arg_2]
 		mov	[si+0Eh], al
 		mov	byte ptr [si+12h], 0
-		mov	al, byte ptr [bp+arg_0]
+		mov	al, byte ptr [bp+@@length]
 		mov	[si+11h], al
-		mov	al, byte ptr [bp+arg_6]
+		mov	al, byte ptr [bp+@@angle]
 		mov	[si+10h], al
 		inc	di
 		cmp	[bp+arg_4], 80h
@@ -10948,7 +10948,7 @@ loc_108B8:
 		mov	ah, 0
 		push	ax
 		push	si
-		push	[bp+arg_0]
+		push	[bp+@@length]
 		call	sub_103B3
 		or	ax, ax
 		jnz	short loc_1096B
@@ -10976,9 +10976,9 @@ loc_10924:
 		push	ds
 		lea	ax, [si+0Ch]
 		push	ax
-		push	[bp+arg_6]
-		push	[bp+arg_0]
-		call	vector
+		push	[bp+@@angle]
+		push	[bp+@@length]
+		call	vector2
 		jmp	short loc_1096B
 ; ---------------------------------------------------------------------------
 
@@ -10991,15 +10991,15 @@ loc_1096B:
 		mov	ah, 0
 		cmp	ax, [bp+var_4]
 		jle	short loc_10995
-		sar	[bp+arg_0], 1
+		sar	[bp+@@length], 1
 		mov	al, _rank
 		cbw
 		cmp	ax, RANK_LUNATIC
 		jnz	short loc_10985
-		add	[bp+arg_0], 8
+		add	[bp+@@length], 8
 
 loc_10985:
-		cmp	[bp+arg_0], 10h
+		cmp	[bp+@@length], 10h
 		jl	short loc_10995
 		inc	[bp+var_4]
 		mov	[bp+var_2], 0
@@ -11020,9 +11020,9 @@ sub_10865	endp
 
 sub_1099B	proc near
 
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@x2		= word ptr -6
+@@x1		= word ptr -4
+@@y2		= word ptr -2
 arg_0		= word ptr  4
 
 		push	bp
@@ -11037,14 +11037,14 @@ arg_0		= word ptr  4
 		mov	di, ax
 		mov	ax, point_205F6.y
 		add	ax, 8
-		mov	[bp+var_2], ax
+		mov	[bp+@@y2], ax
 		mov	bx, word_2174E
 		mov	ax, [bx]
 		sar	ax, 4
-		mov	[bp+var_4], ax
+		mov	[bp+@@x1], ax
 		mov	ax, point_205F6.x
 		add	ax, 8
-		mov	[bp+var_6], ax
+		mov	[bp+@@x2], ax
 		mov	al, [si+0Fh]
 		mov	ah, 0
 		sub	ax, 80h
@@ -11055,8 +11055,8 @@ arg_0		= word ptr  4
 		jmp	cs:off_10BB4[bx]
 
 loc_109E7:
-		mov	ax, [bp+var_4]
-		cmp	ax, [bp+var_6]
+		mov	ax, [bp+@@x1]
+		cmp	ax, [bp+@@x2]
 		jge	short loc_109F7
 		mov	ax, word_21744
 		add	[si+0Ah], ax
@@ -11064,14 +11064,14 @@ loc_109E7:
 ; ---------------------------------------------------------------------------
 
 loc_109F7:
-		mov	ax, [bp+var_4]
-		cmp	ax, [bp+var_6]
+		mov	ax, [bp+@@x1]
+		cmp	ax, [bp+@@x2]
 		jle	short loc_10A05
 		mov	ax, word_21744
 		sub	[si+0Ah], ax
 
 loc_10A05:
-		cmp	di, [bp+var_2]
+		cmp	di, [bp+@@y2]
 		jge	short loc_10A13
 		mov	ax, word_21744
 		add	[si+0Ch], ax
@@ -11079,7 +11079,7 @@ loc_10A05:
 ; ---------------------------------------------------------------------------
 
 loc_10A13:
-		cmp	di, [bp+var_2]
+		cmp	di, [bp+@@y2]
 		jle	loc_10BAD
 		mov	ax, word_21744
 		sub	[si+0Ch], ax
@@ -11092,10 +11092,10 @@ loc_10A23:
 		mov	ah, 0
 		cmp	ax, word_21746
 		jge	loc_10BA9
-		push	[bp+var_4]
+		push	[bp+@@x1]
 		push	di
-		push	[bp+var_6]
-		push	[bp+var_2]
+		push	[bp+@@x2]
+		push	[bp+@@y2]
 		push	0
 		push	ds
 		lea	ax, [si+0Ah]
@@ -11106,7 +11106,7 @@ loc_10A23:
 		mov	al, [si+11h]
 		mov	ah, 0
 		push	ax
-		call	vector_between
+		call	vector2_between_plus
 		jmp	loc_10BAD
 ; ---------------------------------------------------------------------------
 
@@ -11127,10 +11127,10 @@ loc_10A57:
 		jnz	loc_10BAD
 		cmp	word ptr [si+0Ch], 0
 		jnz	loc_10BAD
-		push	[bp+var_4]
+		push	[bp+@@x1]
 		push	di
-		push	[bp+var_6]
-		push	[bp+var_2]
+		push	[bp+@@x2]
+		push	[bp+@@y2]
 		push	0
 		push	ds
 		lea	ax, [si+0Ah]
@@ -11141,7 +11141,7 @@ loc_10A57:
 		mov	al, [si+11h]
 		mov	ah, 0
 		push	ax
-		call	vector_between
+		call	vector2_between_plus
 		inc	byte ptr [si+12h]
 		mov	al, [si+12h]
 		mov	ah, 0
@@ -11173,7 +11173,7 @@ loc_10AC3:
 		mov	al, [si+11h]
 		mov	ah, 0
 		push	ax
-		call	vector
+		call	vector2
 		inc	byte ptr [si+12h]
 		mov	al, [si+12h]
 		mov	ah, 0
@@ -11196,9 +11196,9 @@ loc_10B02:
 		mov	al, [si+11h]
 		mov	ah, 0
 		push	ax
-		call	vector
-		mov	ax, [bp+var_4]
-		cmp	ax, [bp+var_6]
+		call	vector2
+		mov	ax, [bp+@@x1]
+		cmp	ax, [bp+@@x2]
 		jge	short loc_10B34
 		mov	ax, word_21746
 		add	[si+0Ah], ax
@@ -11206,14 +11206,14 @@ loc_10B02:
 ; ---------------------------------------------------------------------------
 
 loc_10B34:
-		mov	ax, [bp+var_4]
-		cmp	ax, [bp+var_6]
+		mov	ax, [bp+@@x1]
+		cmp	ax, [bp+@@x2]
 		jle	short loc_10B42
 		mov	ax, word_21746
 		sub	[si+0Ah], ax
 
 loc_10B42:
-		cmp	di, [bp+var_2]
+		cmp	di, [bp+@@y2]
 		jge	short loc_10B4F
 		mov	ax, word_21746
 		add	[si+0Ch], ax
@@ -11221,7 +11221,7 @@ loc_10B42:
 ; ---------------------------------------------------------------------------
 
 loc_10B4F:
-		cmp	di, [bp+var_2]
+		cmp	di, [bp+@@y2]
 		jle	short loc_10B5A
 		mov	ax, word_21746
 		sub	[si+0Ch], ax
@@ -11236,9 +11236,9 @@ loc_10B5A:
 ; ---------------------------------------------------------------------------
 
 loc_10B6A:
-		cmp	[bp+var_4], 28h	; '('
+		cmp	[bp+@@x1], 40
 		jl	short loc_10B77
-		cmp	[bp+var_4], 188h
+		cmp	[bp+@@x1], 392
 		jle	short loc_10B85
 
 loc_10B77:
@@ -11249,9 +11249,9 @@ loc_10B77:
 		inc	byte ptr [si+12h]
 
 loc_10B85:
-		cmp	di, 18h
+		cmp	di, 24
 		jl	short loc_10B90
-		cmp	di, 168h
+		cmp	di, 360
 		jle	short loc_10B9E
 
 loc_10B90:
@@ -21879,7 +21879,7 @@ loc_16458:
 		push	ds
 		push	offset point_255A4.y
 		push	48
-		call	vector_between
+		call	vector2_between_plus
 		mov	ax, point_255A4.x
 		neg	ax
 		mov	word_255AC, ax
@@ -22630,16 +22630,16 @@ sub_16ADD	endp
 
 sub_16AFC	proc near
 
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@vector_y		= word ptr -6
+@@vector_x		= word ptr -4
+@@y2		= word ptr -2
 
 		push	bp
 		mov	bp, sp
 		sub	sp, 6
 		mov	ax, point_205F6.y
 		add	ax, 16
-		mov	[bp+var_2], ax
+		mov	[bp+@@y2], ax
 		mov	bx, word_26C4A
 		push	word ptr [bx]
 		mov	bx, word_26C4C
@@ -22647,13 +22647,13 @@ var_2		= word ptr -2
 		mov	ax, point_205F6.x
 		add	ax, 24
 		push	ax
-		push	[bp+var_2]
+		push	[bp+@@y2]
 		push	0
 		push	ss
-		lea	ax, [bp+var_4]
+		lea	ax, [bp+@@vector_x]
 		push	ax
 		push	ss
-		lea	ax, [bp+var_6]
+		lea	ax, [bp+@@vector_y]
 		push	ax
 		mov	bx, word_26C46
 		mov	bx, [bx+8]
@@ -22661,15 +22661,15 @@ var_2		= word ptr -2
 		mov	al, [bx+2]
 		mov	ah, 0
 		push	ax
-		call	vector_between
+		call	vector2_between_plus
 		mov	bx, word_26C52
-		mov	al, byte ptr [bp+var_4]
+		mov	al, byte ptr [bp+@@vector_x]
 		mov	[bx], al
 		mov	bx, word_26C54
-		mov	al, byte ptr [bp+var_6]
+		mov	al, byte ptr [bp+@@vector_y]
 		mov	[bx], al
 		mov	bx, word_26C4A
-		mov	ax, [bp+var_4]
+		mov	ax, [bp+@@vector_x]
 		add	[bx], ax
 		mov	bx, word_26C4C
 		mov	ax, [bp+var_6]
@@ -22685,8 +22685,9 @@ sub_16AFC	endp
 
 sub_16B69	proc near
 
-var_5		= word ptr -5
-var_2		= word ptr -2
+@@angle		= byte ptr -5
+@@vector_y		= word ptr -4
+@@vector_x		= word ptr -2
 arg_0		= word ptr  4
 arg_2		= word ptr  6
 
@@ -22718,30 +22719,30 @@ loc_16B9F:
 		mov	al, [bx+si]
 		mov	bx, word_26C46
 		add	al, [bx+16h]
-		mov	byte ptr [bp+var_5], al
+		mov	[bp+@@angle], al
 		push	ss
-		lea	ax, [bp+var_2]
+		lea	ax, [bp+@@vector_x]
 		push	ax
 		push	ss
-		lea	ax, [bp+var_5+1]
+		lea	ax, [bp+@@vector_y]
 		push	ax
-		push	[bp+var_5]
+		push	word ptr [bp+@@angle]
 		mov	bx, word_26C44
 		mov	al, [bx+si+2]
 		mov	ah, 0
 		push	ax
-		call	vector
+		call	vector2
 		mov	bx, word_26C4A
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@vector_x]
 		add	[bx], ax
 		mov	bx, word_26C4C
-		mov	ax, [bp+var_5+1]
+		mov	ax, [bp+@@vector_y]
 		add	[bx], ax
 		mov	bx, word_26C52
-		mov	al, byte ptr [bp+var_2]
+		mov	al, byte ptr [bp+@@vector_x]
 		mov	[bx], al
 		mov	bx, word_26C54
-		mov	al, byte ptr [bp+var_5+1]
+		mov	al, byte ptr [bp+@@vector_y]
 		mov	[bx], al
 		pop	si
 		leave
@@ -22755,9 +22756,10 @@ sub_16B69	endp
 
 sub_16BF4	proc near
 
-var_F		= word ptr -0Fh
-var_C		= word ptr -0Ch
-var_A		= word ptr -0Ah
+@@angle		= byte ptr -0Fh
+var_E		= word ptr -0Eh
+@@vector_y		= word ptr -0Ch
+@@vector_x		= word ptr -0Ah
 var_8		= dword	ptr -8
 var_4		= dword	ptr -4
 
@@ -22780,7 +22782,7 @@ var_4		= dword	ptr -4
 		add	bx, word_26C44
 		cmp	byte ptr [bx], 0
 		jnz	short loc_16C2A
-		mov	ax, 0FFFFh
+		mov	ax, -1
 		jmp	short loc_16C2D
 ; ---------------------------------------------------------------------------
 
@@ -22788,43 +22790,43 @@ loc_16C2A:
 		mov	ax, 1
 
 loc_16C2D:
-		mov	[bp+var_F+1], ax
+		mov	[bp+var_E], ax
 		mov	bx, word_26C44
 		mov	al, [bx+si]
 		mov	bx, word_26C46
 		add	al, [bx+16h]
-		mov	byte ptr [bp+var_F], al
+		mov	[bp+@@angle], al
 		inc	si
 		mov	bx, word_26C44
 		mov	al, [bx+si]
 		mov	ah, 0
-		imul	[bp+var_F+1]
+		imul	[bp+var_E]
 		mov	bx, word_26C46
 		add	[bx+16h], ax
 		inc	si
 		push	ss
-		lea	ax, [bp+var_A]
+		lea	ax, [bp+@@vector_x]
 		push	ax
 		push	ss
-		lea	ax, [bp+var_C]
+		lea	ax, [bp+@@vector_y]
 		push	ax
-		push	[bp+var_F]
+		push	word ptr [bp+@@angle]
 		mov	bx, word_26C44
 		mov	al, [bx+si]
 		mov	ah, 0
 		push	ax
-		call	vector
+		call	vector2
 		les	bx, [bp+var_4]
-		mov	ax, [bp+var_A]
+		mov	ax, [bp+@@vector_x]
 		add	es:[bx], ax
 		les	bx, [bp+var_8]
-		mov	ax, [bp+var_C]
+		mov	ax, [bp+@@vector_y]
 		add	es:[bx], ax
 		mov	bx, word_26C52
-		mov	al, byte ptr [bp+var_A]
+		mov	al, byte ptr [bp+@@vector_x]
 		mov	[bx], al
 		mov	bx, word_26C54
-		mov	al, byte ptr [bp+var_C]
+		mov	al, byte ptr [bp+@@vector_y]
 		mov	[bx], al
 		pop	si
 		leave
@@ -25942,8 +25944,8 @@ sub_183D0	endp
 
 sub_188AA	proc near
 
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@y1		= word ptr -4
+@@x1		= word ptr -2
 
 		push	bp
 		mov	bp, sp
@@ -25956,12 +25958,12 @@ var_2		= word ptr -2
 		mov	bx, word_2065C
 		mov	ax, [bx]
 		add	ax, 50h	; 'P'
-		mov	[bp+var_2], ax
+		mov	[bp+@@x1], ax
 		mov	bx, word_2065E
 		mov	ax, [bx]
 		add	ax, 40h
-		mov	[bp+var_4], ax
-		call	vector_between pascal, [bp+var_2], ax, point_205F6.x, point_205F6.y, 0, ds, offset point_26CD6.x, ds, offset point_26CD6.y, 48
+		mov	[bp+@@y1], ax
+		call	vector2_between_plus pascal, [bp+@@x1], ax, point_205F6.x, point_205F6.y, 0, ds, offset point_26CD6.x, ds, offset point_26CD6.y, 48
 
 loc_188F8:
 		push	ds
@@ -26253,7 +26255,7 @@ var_2		= word ptr -2
 		mov	ax, [bx]
 		add	ax, 40h
 		mov	[bp+var_4], ax
-		call	vector_between pascal, [bp+var_2], ax, point_205F6.x, point_205F6.y, 0, ds, offset point_26CDE.x, ds, offset point_26CDE.y, 52
+		call	vector2_between_plus pascal, [bp+var_2], ax, point_205F6.x, point_205F6.y, 0, ds, offset point_26CDE.x, ds, offset point_26CDE.y, 52
 
 loc_18B99:
 		push	ds

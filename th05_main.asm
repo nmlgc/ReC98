@@ -2123,8 +2123,9 @@ sub_C52D	endp
 
 sub_C567	proc near
 
-var_5		= word ptr -5
-var_2		= word ptr -2
+@@angle		= byte ptr -5
+var_4		= word ptr -4
+@@length		= word ptr -2
 
 		enter	6, 0
 		push	si
@@ -2133,7 +2134,7 @@ var_2		= word ptr -2
 		jnz	loc_C5FC
 		mov	si, 38C2h
 		mov	di, 3908h
-		mov	[bp+var_5+1], 0
+		mov	[bp+var_4], 0
 		jmp	short loc_C5F6
 ; ---------------------------------------------------------------------------
 
@@ -2160,35 +2161,33 @@ loc_C583:
 		sub	di, 0Ah
 		mov	[di], eax
 		add	di, 64h	; 'd'
-		push	7Fh
-		call	randring1_next16_and
-		add	ax, 0A0h
-		mov	[bp+var_2], ax
-		push	30h ; '0'
-		call	randring1_next16_mod
+		call	randring1_next16_and pascal, ((8 shl 4) - 1)
+		add	ax, (10 shl 4)
+		mov	[bp+@@length], ax
+		call	randring1_next16_mod pascal, 30h
 		sub	al, 18h
 		add	al, 40h
-		mov	byte ptr [bp+var_5], al
+		mov	[bp+@@angle], al
 		push	ds
 		lea	ax, [si+4]
 		push	ax
 		push	ds
 		lea	ax, [si+6]
 		push	ax
-		push	[bp+var_5]
-		push	[bp+var_2]
+		push	word ptr [bp+@@angle]
+		push	[bp+@@length]
 		call	vector2
-		inc	[bp+var_5+1]
+		inc	[bp+var_4]
 		add	si, 50h	; 'P'
 
 loc_C5F6:
-		cmp	[bp+var_5+1], 6
+		cmp	[bp+var_4], 6
 		jl	short loc_C583
 
 loc_C5FC:
 		mov	si, 38FEh
 		mov	di, 3908h
-		mov	[bp+var_5+1], 0
+		mov	[bp+var_4], 0
 		jmp	loc_C72E
 ; ---------------------------------------------------------------------------
 
@@ -2296,7 +2295,7 @@ loc_C683:
 		ja	short loc_C72B
 		mov	al, _stage_frame_mod8
 		mov	ah, 0
-		cmp	ax, [bp+var_5+1]
+		cmp	ax, [bp+var_4]
 		jnz	short loc_C72B
 		push	word ptr [si]
 		mov	ax, [si+2]
@@ -2305,10 +2304,10 @@ loc_C683:
 		nopcall	circles_add_growing
 
 loc_C72B:
-		inc	[bp+var_5+1]
+		inc	[bp+var_4]
 
 loc_C72E:
-		cmp	[bp+var_5+1], 6
+		cmp	[bp+var_4], 6
 		jl	loc_C60A
 		pop	di
 		pop	si
@@ -2916,7 +2915,7 @@ sub_CC9E	proc near
 		push	si
 		cmp	byte_2429B, 20h	; ' '
 		jnz	short loc_CCAF
-		mov	word_242A8, 10h
+		mov	length_242A8, 10h
 
 loc_CCAF:
 		xor	si, si
@@ -2926,8 +2925,8 @@ loc_CCAF:
 loc_CCB3:
 		push	offset point_242A2
 		push	(192 shl 16) or 160 ; No subpixels!
-		push	word_242A8
-		mov	al, byte_242AA
+		push	length_242A8
+		mov	al, angle_242AA
 		mov	ah, 0
 		push	ax
 		call	vector2_at
@@ -2943,17 +2942,17 @@ loc_CCB3:
 
 loc_CCFE:
 		inc	si
-		mov	al, byte_242AA
+		mov	al, angle_242AA
 		add	al, 10h
-		mov	byte_242AA, al
+		mov	angle_242AA, al
 
 loc_CD07:
 		cmp	si, 10h
 		jl	short loc_CCB3
-		mov	al, byte_242AA
+		mov	al, angle_242AA
 		add	al, 2
-		mov	byte_242AA, al
-		add	word_242A8, 2
+		mov	angle_242AA, al
+		add	length_242A8, 2
 		pop	si
 		pop	bp
 		retn
@@ -3979,9 +3978,8 @@ loc_D471:
 		lea	ax, [si+8]
 		push	ax
 		pushd	(0 shl 16) or 0
-		push	3Fh ; '?'
-		call	randring1_next16_and
-		add	ax, 20h	; ' '
+		call	randring1_next16_and pascal, 3Fh
+		add	ax, 20h
 		push	ax
 		mov	al, [si+0Eh]
 		mov	ah, 0
@@ -6804,9 +6802,9 @@ var_2		= word ptr -2
 		cmp	[bp+var_4], 300h
 		jl	short loc_F80F
 		mov	[bp+var_4], 300h
-		mov	al, byte_2268E
+		mov	al, angle_2268E
 		inc	al
-		mov	byte_2268E, al
+		mov	angle_2268E, al
 
 loc_F80F:
 		mov	[bp+var_2], 0
@@ -6816,7 +6814,7 @@ loc_F80F:
 loc_F816:
 		push	_midboss_pos.cur.x
 		push	[bp+var_4]
-		mov	al, byte_2268E
+		mov	al, angle_2268E
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -6825,7 +6823,7 @@ loc_F816:
 		mov	si, ax
 		push	_midboss_pos.cur.y
 		push	[bp+var_4]
-		mov	al, byte_2268E
+		mov	al, angle_2268E
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -6855,9 +6853,9 @@ loc_F816:
 
 loc_F881:
 		inc	[bp+var_2]
-		mov	al, byte_2268E
+		mov	al, angle_2268E
 		add	al, 10h
-		mov	byte_2268E, al
+		mov	angle_2268E, al
 
 loc_F88C:
 		cmp	[bp+var_2], 10h
@@ -9752,7 +9750,7 @@ sub_11695	proc near
 @@left		= word ptr -0Ah
 @@patnum		= word ptr -8
 var_6		= word ptr -6
-var_4		= word ptr -4
+@@angle		= word ptr -4
 var_2		= word ptr -2
 
 		enter	0Ah, 0
@@ -9772,7 +9770,7 @@ loc_116A6:
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	[bp+var_4], ax
+		mov	[bp+@@angle], ax
 		and	si, 0FFF0h
 		mov	al, [di+1]
 		mov	ah, 0
@@ -9786,7 +9784,7 @@ loc_116CE:
 		jge	loc_1179F
 		push	0
 		push	word ptr [di+4]
-		mov	bx, [bp+var_4]
+		mov	bx, [bp+@@angle]
 		add	bx, bx
 		push	_SinTable8[bx]
 		call	vector1_at
@@ -9881,12 +9879,12 @@ loc_1178F:
 
 loc_1179F:
 		sub	si, 10h
-		add	[bp+var_4], 8
+		add	[bp+@@angle], 8
 
 loc_117A6:
 		cmp	si, 10h
 		jl	short loc_117B4
-		cmp	[bp+var_4], 80h
+		cmp	[bp+@@angle], 80h
 		jl	loc_116CE
 
 loc_117B4:
@@ -16738,8 +16736,8 @@ sub_18905	proc near
 		mov	eax, _midboss_pos.cur
 		mov	_midboss_pos.prev, eax
 		push	offset _midboss_pos.cur
-		push	word_2CE26
-		push	word_2CE28
+		push	sppoint_2CE26.x
+		push	sppoint_2CE26.y
 		push	_midboss_pos.velocity.x
 		mov	al, _midboss_angle
 		mov	ah, 0
@@ -16747,8 +16745,8 @@ sub_18905	proc near
 		call	vector2_at
 		mov	al, angle_2D084
 		cbw
-		add	word_2CE26, ax
-		cmp	word_2CE26, 800h
+		add	sppoint_2CE26.x, ax
+		cmp	sppoint_2CE26.x, (128 shl 4)
 		jge	short loc_18941
 		mov	al, angle_2D084
 		add	al, 2
@@ -16756,7 +16754,7 @@ sub_18905	proc near
 ; ---------------------------------------------------------------------------
 
 loc_18941:
-		cmp	word_2CE26, 1000h
+		cmp	sppoint_2CE26.x, (256 shl 4)
 		jle	short loc_18951
 		mov	al, angle_2D084
 		add	al, -2
@@ -16896,9 +16894,9 @@ loc_18A56:
 		mov	angle_2D085, 0
 		mov	angle_2D084, 20h
 		mov	_midboss_pos.velocity.x, 0
-		mov	word_2CE26, 0C00h
+		mov	sppoint_2CE26.x, 0C00h
 		mov	ax, _midboss_pos.cur.y
-		mov	word_2CE28, ax
+		mov	sppoint_2CE26.x.y, ax
 		jmp	loc_18BA0
 ; ---------------------------------------------------------------------------
 
@@ -16987,16 +16985,16 @@ midboss2_update	endp
 
 sub_18BB8	proc near
 
-var_1		= byte ptr -1
+@@angle		= byte ptr -1
 arg_0		= word ptr  4
-arg_2		= word ptr  6
+@@length		= word ptr  6
 
 		enter	2, 0
 		cmp	_boss_phase_frame, 1
 		jnz	short loc_18BDC
 		call	randring2_next16
-		mov	[bp+var_1], al
-		call	vector2 pascal, ds, offset _boss_pos.velocity.x, ds, offset _boss_pos.velocity.y, word ptr [bp+var_1], [bp+arg_2]
+		mov	[bp+@@angle], al
+		call	vector2 pascal, ds, offset _boss_pos.velocity.x, ds, offset _boss_pos.velocity.y, word ptr [bp+@@angle], [bp+@@length]
 
 loc_18BDC:
 		mov	ax, _boss_pos.velocity.x
@@ -19799,7 +19797,7 @@ loc_1A4B4:
 		push	word ptr [si+14h]
 		mov	ax, [bp+arg_2]
 		add	ax, ax
-		mov	dx, 64h	; 'd'
+		mov	dx, 64h
 		sub	dx, ax
 		push	dx
 		call	vector2_near
@@ -23688,16 +23686,16 @@ include th05/main/bullet/knives_add_update.asm
 
 sub_1C9BE	proc near
 
-var_1		= byte ptr -1
+@@angle		= byte ptr -1
 arg_0		= word ptr  4
-arg_2		= word ptr  6
+@@length		= word ptr  6
 
 		enter	2, 0
 		cmp	_boss_phase_frame, 1
 		jnz	short loc_1C9E7
 		call	randring2_next16
-		mov	[bp+var_1], al
-		call	vector2 pascal, ds, offset _boss_pos.velocity.x, ds, offset _boss_pos.velocity.y, word ptr [bp+var_1], [bp+arg_2]
+		mov	[bp+@@angle], al
+		call	vector2 pascal, ds, offset _boss_pos.velocity.x, ds, offset _boss_pos.velocity.y, word ptr [bp+@@angle], [bp+@@length]
 		mov	_boss_sprite, 188
 
 loc_1C9E7:
@@ -29146,7 +29144,7 @@ byte_2264E	db 0
 		db 0
 include th04/main/item/miss_add[data].asm
 word_2268C	dw 0
-byte_2268E	db 0
+angle_2268E	db 0
 		db 0
 include th04/strings/gameover[data].asm
 asc_226B3	db '  ',0
@@ -29422,8 +29420,8 @@ include th04/formats/bb_playchar[bss].asm
 		db 2 dup(?)
 point_242A2	Point <?>
 		db 2 dup(?)
-word_242A8	dw ?
-byte_242AA	db ?
+length_242A8	dw ?
+angle_242AA	db ?
 		db 485 dup(?)
 point_24490	Point <?>
 point_24494	Point <?>
@@ -29538,8 +29536,7 @@ word_2CE06	dw ?
 include th04/main/score[bss].asm
 		db 2 dup(?)
 fp_2CE24	dw ?
-word_2CE26	dw ?
-word_2CE28	dw ?
+sppoint_2CE26	Point <?>
 fp_2CE2A	dw ?
 fp_2CE2C	dw ?
 word_2CE2E	dw ?

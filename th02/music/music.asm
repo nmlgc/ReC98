@@ -114,7 +114,7 @@ else
 	push	_CosTable8[bx]
 	push	[bp+arg_4]
 	push	[bp+arg_8]
-	call	vector1_at
+	call	_vector1_at
 	add	sp, 6
 endif
 
@@ -139,7 +139,7 @@ else
 	push	_SinTable8[bx]
 	push	[bp+arg_4]
 	push	[bp+arg_6]
-	call	vector1_at
+	call	_vector1_at
 	add	sp, 6
 endif
 

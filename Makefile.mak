@@ -59,7 +59,7 @@ bin\th01\op.exe: bin\piloadc.obj bin\th01\op.obj th01\op_01.cpp th01\op_02.c th0
 $**
 |
 
-bin\th01\reiiden.exe: bin\piloadc.obj bin\th01\reiiden.obj th01\main_01.cpp th01\main_01_.cpp th01\main_02.c th01\main_03.c th01\main_04.c th01\main_05.c th01\main_06.cpp th01\main_07.cpp th01\main_08.cpp th01\main_09.cpp th01\main_12.c th01\main_13.cpp th01\main_13_.cpp th01\main_14.c th01\main_16.c th01\main_19.cpp th01\main_25.cpp th01\main_27.cpp th01\main_38.cpp th01\main_38_.cpp
+bin\th01\reiiden.exe: bin\piloadc.obj bin\th01\reiiden.obj th01\main_01.cpp th01\main_01_.cpp th01\main_02.c th01\main_03.c th01\main_04.c th01\main_05.c th01\main_06.cpp th01\main_07.cpp th01\main_08.cpp th01\main_09.cpp th01\main_12.c th01\main_13.cpp th01\main_13_.cpp th01\main_14.cpp th01\main_16.c th01\main_19.cpp th01\main_25.cpp th01\main_27.cpp th01\main_38.cpp th01\main_38_.cpp
 	$(CC) $(CFLAGS) -ml -3 -DGAME=1 -DBINARY='M' -nbin\th01\ -eREIIDEN.EXE @&&|
 $**
 |
@@ -79,7 +79,7 @@ bin\th02\op.exe: th02\op_01.c bin\th02\op.obj th02\op_02_1.c th02\op_02_2.c th02
 $**
 |
 
-bin\th02\main.exe: bin\th02\main.obj th02\main02_1.c th02\main02_2.c th02\main_03.cpp
+bin\th02\main.exe: bin\th02\main.obj th02\main02_1.cpp th02\main02_2.c th02\main_03.cpp
 	$(CC) $(CFLAGS) -ml -Z -DGAME=2 -nbin\th02\ -eMAIN.EXE @&&|
 $**
 |

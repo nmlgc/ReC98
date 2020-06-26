@@ -1,3 +1,4 @@
+public VECTOR2_BETWEEN_PLUS
 vector2_between_plus	proc far
 
 @@r	= word ptr  6

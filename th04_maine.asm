@@ -1953,15 +1953,9 @@ loc_B04E:
 		push	ax
 		push	0
 		call	cdg_put_plane
-		push	[bp+arg_4]
-		push	si
-		push	_CosTable8+128
-		call	vector1_at
+		call	vector1_at pascal, [bp+arg_4], si, _CosTable8+128
 		mov	di, ax
-		push	[bp+arg_2]
-		push	si
-		push	_CosTable8
-		call	vector1_at
+		call	vector1_at pascal, [bp+arg_2], si, _CosTable8
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
@@ -1997,15 +1991,9 @@ loc_B04E:
 		push	ax
 		push	2
 		call	cdg_put_plane
-		push	[bp+arg_4]
-		push	si
-		push	_CosTable8+384
-		call	vector1_at
+		call	vector1_at pascal, [bp+arg_4], si, _CosTable8+384
 		mov	di, ax
-		push	[bp+arg_2]
-		push	si
-		push	_CosTable8+256
-		call	vector1_at
+		call	vector1_at pascal, [bp+arg_2], si, _CosTable8+256
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
@@ -2083,15 +2071,9 @@ loc_B165:
 		push	ax
 		push	0
 		call	cdg_put_plane
-		push	[bp+arg_4]
-		push	si
-		push	_CosTable8
-		call	vector1_at
+		call	vector1_at pascal, [bp+arg_4], si, _CosTable8
 		mov	di, ax
-		push	[bp+arg_2]
-		push	si
-		push	_SinTable8
-		call	vector1_at
+		call	vector1_at pascal, [bp+arg_2], si, _SinTable8
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
@@ -2127,15 +2109,9 @@ loc_B165:
 		push	ax
 		push	2
 		call	cdg_put_plane
-		push	[bp+arg_4]
-		push	si
-		push	_CosTable8+256
-		call	vector1_at
+		call	vector1_at pascal, [bp+arg_4], si, _CosTable8+256
 		mov	di, ax
-		push	[bp+arg_2]
-		push	si
-		push	_CosTable8+128
-		call	vector1_at
+		call	vector1_at pascal, [bp+arg_2], si, _CosTable8+128
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
