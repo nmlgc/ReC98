@@ -368,6 +368,11 @@ static int parse_argv(struct rec98_bmp2arr_task *tsk,int argc,char **argv) {
                 if (a == NULL) return -1;
                 cstr_set(&tsk->output_file,a);
             }
+            else if (!strcmp(a,"sym")) {
+                a = argv[i++];
+                if (a == NULL) return -1;
+                cstr_set(&tsk->output_symname,a);
+            }
             else if (!strcmp(a,"of")) {
                 a = argv[i++];
                 if (a == NULL) return -1;
