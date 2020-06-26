@@ -251,7 +251,7 @@ int rec98_bmp2arr_save_debug_bmp_out(struct rec98_bmp2arr_task *t) {
 }
 
 struct saveout_ctx {
-    unsigned int            sscols,ssrows,spritenum,x,y,bytesperrow;
+    unsigned int            sscols,ssrows,spritenum,bytesperrow;
     FILE*                   fp; /* for that nice fprintf formatting if needed */
 };
 
