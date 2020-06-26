@@ -53,9 +53,6 @@ struct rec98_bmp2arr_task {
     unsigned int    bmp_height;         /* height of bmp */
     unsigned int    bmp_stride;         /* bytes per scanline */
     unsigned char*  bmp;                /* bitmap in memory (NTS: All examples listed can easily fit in 64KB or less) */
-
-    unsigned long   output_size;
-    unsigned char*  output;             /* again, output can fit in far less than 64KB */
 };
 
 /* C-string utils */
@@ -72,15 +69,6 @@ void cstr_set(char **s,const char *n) {
     if (s != NULL) {
         cstr_free(s);
         if (n != NULL) *s = strdup(n);
-    }
-}
-
-void rec98_bmp2arr_task_free_output(struct rec98_bmp2arr_task *t) {
-    if (t != NULL) {
-        if (t->output != NULL) {
-            free(t->output);
-            t->output = NULL;
-        }
     }
 }
 
@@ -103,7 +91,6 @@ int rec98_bmp2arr_task_init(struct rec98_bmp2arr_task *t) {
 /* assume *t is initialized data */
 int rec98_bmp2arr_task_free(struct rec98_bmp2arr_task *t) {
     if (t == NULL) return -1; /* failure */
-    rec98_bmp2arr_task_free_output(t);
     rec98_bmp2arr_task_free_bmp(t);
     cstr_free(&t->output_symname);
     cstr_free(&t->output_file);
