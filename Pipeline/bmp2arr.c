@@ -323,7 +323,7 @@ int saveout_write_sprite(struct rec98_bmp2arr_task *t,struct saveout_ctx *sctx,c
         /* none needed */
     }
     else if (t->output_type == REC98_OUT_BIN) {
-        /* none needed */
+        fwrite(bmp,sctx->bytesperrow * t->sprite_height,1,sctx->fp);
     }
 
     return 0;
