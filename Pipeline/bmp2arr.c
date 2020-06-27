@@ -304,7 +304,7 @@ static int saveout_write_prologue(struct rec98_bmp2arr_task *t,struct saveout_ct
 
         /* BITMAPFILEHEADER */
         memcpy(bmp_tmp+0, "BM",2);
-        *((uint32_t*)(bmp_tmp+2 )) = htole32(14+40+4*2+(balign*t->sprite_height*sctx->ssrows*sctx->sscols));  /* bfSize */
+        *((uint32_t*)(bmp_tmp+2 )) = htole32(14+40+4*2+(balign*t->sprite_height*sctx->ssrows*sctx->sscols*(t->preshift?8u:1u)));  /* bfSize */
         *((uint16_t*)(bmp_tmp+6 )) = htole16(0);
         *((uint16_t*)(bmp_tmp+8 )) = htole16(0);
         *((uint32_t*)(bmp_tmp+10)) = htole32(14+40+4*2);                                /* bfOffBits */
@@ -313,11 +313,11 @@ static int saveout_write_prologue(struct rec98_bmp2arr_task *t,struct saveout_ct
         /* BITMAPINFOHEADER */
         *((uint32_t*)(bmp_tmp+0 )) = htole32(40);
         *((uint32_t*)(bmp_tmp+4 )) = htole32(sctx->bytesperrow*8u);
-        *((uint32_t*)(bmp_tmp+8 )) = htole32(t->sprite_height*sctx->ssrows*sctx->sscols);
+        *((uint32_t*)(bmp_tmp+8 )) = htole32(t->sprite_height*sctx->ssrows*sctx->sscols*(t->preshift?8u:1u));
         *((uint16_t*)(bmp_tmp+12)) = htole16(1);
         *((uint16_t*)(bmp_tmp+14)) = htole16(1);
         *((uint32_t*)(bmp_tmp+16)) = htole32(0);
-        *((uint32_t*)(bmp_tmp+20)) = htole32(balign*t->sprite_height*sctx->ssrows*sctx->sscols);
+        *((uint32_t*)(bmp_tmp+20)) = htole32(balign*t->sprite_height*sctx->ssrows*sctx->sscols*(t->preshift?8u:1u));
         *((uint32_t*)(bmp_tmp+24)) = htole32(0);
         *((uint32_t*)(bmp_tmp+28)) = htole32(0);
         *((uint32_t*)(bmp_tmp+32)) = htole32(2);
