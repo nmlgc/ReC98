@@ -251,7 +251,7 @@ int rec98_bmp2arr_save_debug_bmp_out(struct rec98_bmp2arr_task *t) {
 }
 
 struct saveout_ctx {
-    unsigned int            sscols,ssrows,spritenum,bytesperrow;
+    unsigned int            sscols,ssrows,spritenum,bytesperrow,sscol,ssrow;
     FILE*                   fp; /* for that nice fprintf formatting if needed */
 };
 
@@ -291,7 +291,33 @@ static int saveout_write_prologue(struct rec98_bmp2arr_task *t,struct saveout_ct
 
 static int saveout_write_epilogue(struct rec98_bmp2arr_task *t,struct saveout_ctx *sctx) {
     if (t->output_type == REC98_OUT_C) {
-        fprintf(sctx->fp,"};\n");
+        fprintf(sctx->fp,"};/*end spritesheet*/\n");
+    }
+    else if (t->output_type == REC98_OUT_ASM) {
+        /* none needed */
+    }
+    else if (t->output_type == REC98_OUT_BIN) {
+        /* none needed */
+    }
+
+    return 0;
+}
+
+int saveout_write_sprite(struct rec98_bmp2arr_task *t,struct saveout_ctx *sctx,const unsigned char *bmp/*length bytesperrow * height*/) {
+    unsigned int r,c;
+
+    if (t->output_type == REC98_OUT_C) {
+        fprintf(sctx->fp,"%c",sctx->spritenum != 0 ? ',' : ' ');
+        fprintf(sctx->fp,"{/*sprite %u*/\n",sctx->spritenum);
+        for (r=0;r < t->sprite_height;r++) {
+            fprintf(sctx->fp,"\t");
+            for (c=0;c < sctx->bytesperrow;c++) {
+                fprintf(sctx->fp,"%c",(c != 0 || r != 0) ? ',' : ' ');
+                fprintf(sctx->fp,"0x%02x",*bmp++);
+            }
+            fprintf(sctx->fp,"\n");
+        }
+        fprintf(sctx->fp," }/*end sprite %u*/\n",sctx->spritenum);
     }
     else if (t->output_type == REC98_OUT_ASM) {
         /* none needed */
@@ -319,11 +345,14 @@ int rec98_bmp2arr_save_output(struct rec98_bmp2arr_task *t) {
     if (t->preshift && t->sprite_width != 8)
         return -1;
 
-    sctx.fp = fopen(t->output_file,"wb");
-    if (sctx.fp == NULL) return -1;
-
     sctx.bytesperrow = (t->sprite_width + 7u) / 8u;
     if (t->preshift) sctx.bytesperrow += 1u; /* in the examples, an 8-pixel wide sprite is shifted across 16 pixels */
+
+    if ((sctx.bytesperrow * t->sprite_height) > sizeof(bmp_tmp))
+        return -1;
+
+    sctx.fp = fopen(t->output_file,"wb");
+    if (sctx.fp == NULL) return -1;
 
     fprintf(stderr,"Sprite sheet: %d sprites total (%d x %d).\n",
         sctx.sscols * sctx.ssrows,sctx.sscols,sctx.ssrows);
@@ -333,7 +362,34 @@ int rec98_bmp2arr_save_output(struct rec98_bmp2arr_task *t) {
     if (saveout_write_prologue(t,&sctx))
         goto fioerr;
 
-    // TODO
+    if (t->preshift && t->preshift_inner == 1)
+        goto fioerr; /* TODO */
+    else if (t->preshift && t->preshift_inner == 0)
+        goto fioerr; /* TODO */
+    else {
+        for (sctx.ssrow=0;sctx.ssrow < sctx.ssrows;sctx.ssrow++) {
+            sctx.spritenum = sctx.ssrow * sctx.sscols;
+            for (sctx.sscol=0;sctx.sscol < sctx.sscols;sctx.sscol++,sctx.spritenum++) {
+                unsigned char *dbits = bmp_tmp; /* use bmp_tmp[], this is why the size check */
+                unsigned int y,b;
+
+                for (y=0;y < t->sprite_height;y++) {
+                    unsigned int sr =
+                        t->upsidedown ? (t->sprite_height - 1 - y) : y;
+                    const unsigned char *sbits =
+                        (const unsigned char*)t->bmp +
+                        (sctx.sscol * ((t->sprite_width + 7u) / 8u)) +
+                        (((sctx.ssrow * t->sprite_height) + sr) * t->bmp_stride);
+
+                    for (b=0;b < sctx.bytesperrow;b++)
+                        *dbits++ = *sbits++;
+                }
+
+                if (saveout_write_sprite(t,&sctx,bmp_tmp))
+                    goto fioerr;
+            }
+        }
+    }
 
     if (saveout_write_epilogue(t,&sctx))
         goto fioerr;
