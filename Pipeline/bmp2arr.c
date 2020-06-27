@@ -519,8 +519,7 @@ int rec98_bmp2arr_load_bitmap(struct rec98_bmp2arr_task *t) {
     bpp = le16toh( *((uint16_t*)(bmp_tmp+14)) );
     if (!(bpp == 1 || bpp == 24 || bpp == 32)) goto fioerr;
 
-    srcstride = (((t->bmp_width * bpp) + 31u) & (~31u)) / 8u; /* 4-byte align */
-    t->bmp_stride = (t->bmp_width + 7u) / 8u; /* BYTE align */
+    t->bmp_stride = srcstride = (((t->bmp_width * bpp) + 31u) & (~31u)) / 8u; /* 4-byte align */
 
 #if TARGET_MSDOS == 16
     if ((32768u / t->bmp_stride) < t->bmp_height) /* cannot fit into 32KB */
