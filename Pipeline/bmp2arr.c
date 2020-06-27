@@ -368,7 +368,7 @@ int saveout_write_sprite(struct rec98_bmp2arr_task *t,struct saveout_ctx *sctx,c
                 fprintf(sctx->fp,"%c",(c != 0 || r != 0) ? ',' : ' ');
                 fprintf(sctx->fp,"0x%02x",*bmp++);
             }
-            fprintf(sctx->fp," /* row %u */",r);
+            fprintf(sctx->fp," /* row %u */",t->upsidedown ? (t->sprite_height - 1u - r) : r);
             fprintf(sctx->fp,"\n");
         }
         fprintf(sctx->fp," }/*end sprite %u*/\n",sctx->spritenum);
@@ -386,7 +386,7 @@ int saveout_write_sprite(struct rec98_bmp2arr_task *t,struct saveout_ctx *sctx,c
                 fprintf(sctx->fp,"b");
                 bmp++;
             }
-            fprintf(sctx->fp," ; row %u",r);
+            fprintf(sctx->fp," ; row %u",t->upsidedown ? (t->sprite_height - 1u - r) : r);
             fprintf(sctx->fp,"\n");
         }
     }
