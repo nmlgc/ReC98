@@ -33,7 +33,8 @@ enum rec98_bmp2arr_output_type {
     REC98_OUT_C=0,
     REC98_OUT_ASM,
     REC98_OUT_OMF,
-    REC98_OUT_BIN
+    REC98_OUT_BIN,
+    REC98_OUT_BMP
 };
 
 /* the task at hand */
@@ -285,6 +286,42 @@ static int saveout_write_prologue(struct rec98_bmp2arr_task *t,struct saveout_ct
     else if (t->output_type == REC98_OUT_BIN) {
         /* none needed */
     }
+    else if (t->output_type == REC98_OUT_BMP) {
+        const unsigned int balign = (sctx->bytesperrow + 3u) & (~3u);
+
+        /* BITMAPFILEHEADER */
+        memcpy(bmp_tmp+0, "BM",2);
+        *((uint32_t*)(bmp_tmp+2 )) = htole32(14+40+4*2+(balign*t->sprite_height*sctx->ssrows*sctx->sscols));  /* bfSize */
+        *((uint16_t*)(bmp_tmp+6 )) = htole16(0);
+        *((uint16_t*)(bmp_tmp+8 )) = htole16(0);
+        *((uint32_t*)(bmp_tmp+10)) = htole32(14+40+4*2);                                /* bfOffBits */
+        fwrite(bmp_tmp,14,1,sctx->fp);
+
+        /* BITMAPINFOHEADER */
+        *((uint32_t*)(bmp_tmp+0 )) = htole32(40);
+        *((uint32_t*)(bmp_tmp+4 )) = htole32(sctx->bytesperrow*8u);
+        *((uint32_t*)(bmp_tmp+8 )) = htole32(t->sprite_height*sctx->ssrows*sctx->sscols);
+        *((uint16_t*)(bmp_tmp+12)) = htole16(1);
+        *((uint16_t*)(bmp_tmp+14)) = htole16(1);
+        *((uint32_t*)(bmp_tmp+16)) = htole32(0);
+        *((uint32_t*)(bmp_tmp+20)) = htole32(balign*t->sprite_height*sctx->ssrows*sctx->sscols);
+        *((uint32_t*)(bmp_tmp+24)) = htole32(0);
+        *((uint32_t*)(bmp_tmp+28)) = htole32(0);
+        *((uint32_t*)(bmp_tmp+32)) = htole32(2);
+        *((uint32_t*)(bmp_tmp+36)) = htole32(2);
+        fwrite(bmp_tmp,40,1,sctx->fp);
+
+        /* color palette */
+        bmp_tmp[0+0] = 0x00;
+        bmp_tmp[0+1] = 0x00;
+        bmp_tmp[0+2] = 0x00;
+        bmp_tmp[0+3] = 0x00;
+        bmp_tmp[4+0] = 0xFF;
+        bmp_tmp[4+1] = 0xFF;
+        bmp_tmp[4+2] = 0xFF;
+        bmp_tmp[4+3] = 0x00;
+        fwrite(bmp_tmp,4,2,sctx->fp);
+    }
 
     return 0;
 }
@@ -297,6 +334,9 @@ static int saveout_write_epilogue(struct rec98_bmp2arr_task *t,struct saveout_ct
         /* none needed */
     }
     else if (t->output_type == REC98_OUT_BIN) {
+        /* none needed */
+    }
+    else if (t->output_type == REC98_OUT_BMP) {
         /* none needed */
     }
 
@@ -324,6 +364,14 @@ int saveout_write_sprite(struct rec98_bmp2arr_task *t,struct saveout_ctx *sctx,c
     }
     else if (t->output_type == REC98_OUT_BIN) {
         fwrite(bmp,sctx->bytesperrow * t->sprite_height,1,sctx->fp);
+    }
+    else if (t->output_type == REC98_OUT_BMP) {
+        const unsigned int balign = (sctx->bytesperrow + 3u) & (~3u);
+        for (r=0;r < t->sprite_height;r++) {
+            memcpy(bmp_tmp,bmp,sctx->bytesperrow);
+            fwrite(bmp_tmp,balign,1,sctx->fp);
+            bmp += sctx->bytesperrow;
+        }
     }
 
     return 0;
@@ -443,11 +491,7 @@ int rec98_bmp2arr_load_bitmap(struct rec98_bmp2arr_task *t) {
     bpp = le16toh( *((uint16_t*)(bmp_tmp+14)) );
     if (!(bpp == 1 || bpp == 24 || bpp == 32)) goto fioerr;
 
-    if (bpp > 1)
-        srcstride = ((t->bmp_width + 3u) & (~3u)) * (bpp / 8u); /* 4-pixel align */
-    else
-        srcstride = (t->bmp_width + 7u) / 8u; /* BYTE align */
-
+    srcstride = (((t->bmp_width * bpp) + 31u) & (~31u)) / 8u; /* 4-byte align */
     t->bmp_stride = (t->bmp_width + 7u) / 8u; /* BYTE align */
 
 #if TARGET_MSDOS == 16
@@ -535,6 +579,8 @@ static int parse_argv(struct rec98_bmp2arr_task *tsk,int argc,char **argv) {
                     tsk->output_type = REC98_OUT_ASM;
                 else if (!strcmp(a,"bin"))
                     tsk->output_type = REC98_OUT_BIN;
+                else if (!strcmp(a,"bmp"))
+                    tsk->output_type = REC98_OUT_BMP;
                 else if (!strcmp(a,"c"))
                     tsk->output_type = REC98_OUT_C;
                 else
