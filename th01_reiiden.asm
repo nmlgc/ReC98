@@ -23,6 +23,9 @@ BINARY = 'M'
 include ReC98.inc
 include th01/th01.inc
 include th01/main/playfld.inc
+include th01/formats/cfg.inc
+
+BOMBS_MAX = 5
 
 	option emulator
 
@@ -2511,7 +2514,7 @@ loc_D00D:
 		jl	loc_CEE9
 		call	_z_vsync_wait_and_scrollup stdcall, 0
 		pop	cx
-		mov	al, byte_36C14
+		mov	al, _credit_bombs
 		mov	_bombs, al
 		les	bx, _resident
 		mov	es:[bx+reiidenconfig_t.bombs], 1
@@ -3227,11 +3230,11 @@ loc_D54F:
 		push	ds
 		push	offset _rand
 		push	ds
-		push	offset unk_34A33
+		push	offset _lives_extra
 		push	ds
-		push	offset byte_36C14
+		push	offset _credit_bombs
 		push	ds
-		push	offset byte_34A31
+		push	offset _bgm_mode
 		push	ds
 		push	offset _rank
 		call	_resident_stuff_get
@@ -3246,7 +3249,7 @@ loc_D579:
 ; ---------------------------------------------------------------------------
 
 loc_D583:
-		mov	byte_36C14, 1
+		mov	_credit_bombs, 1
 		les	bx, _resident
 		mov	eax, es:[bx+reiidenconfig_t.score]
 		mov	_score, eax
@@ -3343,7 +3346,7 @@ loc_D669:
 		mov	_mode_test, 1
 
 loc_D68E:
-		mov	al, byte_34A31
+		mov	al, _bgm_mode
 		cbw
 		cmp	ax, 1
 		jnz	short loc_D69C
@@ -3431,7 +3434,7 @@ loc_D72E:
 		mov	al, es:[bx+reiidenconfig_t.bombs]
 		mov	_bombs, al
 		mov	_player_left, PLAYER_LEFT_START
-		cmp	byte_34A31, 0
+		cmp	_bgm_mode, 0
 		jz	short loc_D776
 		cmp	es:[bx+reiidenconfig_t.snd_need_init], 0
 		jz	short loc_D776
@@ -13326,7 +13329,7 @@ loc_17DCD:
 		mov	[bx+5372h], ax
 		mov	al, _bombs
 		cbw
-		cmp	ax, 5
+		cmp	ax, BOMBS_MAX
 		jge	short loc_17DFB
 		inc	_bombs
 		mov	al, _bombs
@@ -18473,13 +18476,13 @@ loc_1AFC8:
 		mov	al, _bombs
 		cbw
 		mov	[bp+var_6], ax
-		mov	al, byte_36C14
+		mov	al, _credit_bombs
 		add	al, _bombs
 		mov	_bombs, al
 		cbw
-		cmp	ax, 5
+		cmp	ax, BOMBS_MAX
 		jle	short loc_1B01F
-		mov	_bombs, 5
+		mov	_bombs, BOMBS_MAX
 		jmp	short loc_1B028
 ; ---------------------------------------------------------------------------
 
@@ -19859,7 +19862,7 @@ loc_1BE24:
 		mov	byte ptr word_39E14+1, 0
 		mov	word_3984E, 4
 		mov	word_39880, 3
-		cmp	_rank, 0
+		cmp	_rank, RANK_EASY
 		jnz	short loc_1BE6D
 		mov	ax, 15Eh
 		jmp	short loc_1BE9A
@@ -20089,7 +20092,7 @@ loc_1C02D:
 		mov	x_39E06, 0
 		call	_z_palette_set_all_show c, offset palette_39B8C, ds
 		call	sub_232A4
-		cmp	_rank, 0
+		cmp	_rank, RANK_EASY
 		jnz	short loc_1C097
 		mov	ax, 8
 		jmp	loc_1D84C
@@ -20098,7 +20101,7 @@ loc_1C02D:
 loc_1C097:
 		mov	al, _rank
 		cbw
-		cmp	ax, 1
+		cmp	ax, RANK_NORMAL
 		jnz	short loc_1C0A6
 		mov	ax, 0Ch
 		jmp	loc_1D84C
@@ -20107,7 +20110,7 @@ loc_1C097:
 loc_1C0A6:
 		mov	al, _rank
 		cbw
-		cmp	ax, 2
+		cmp	ax, RANK_HARD
 		jnz	short loc_1C0B5
 		mov	ax, 10h
 		jmp	loc_1D84C
@@ -20116,7 +20119,7 @@ loc_1C0A6:
 loc_1C0B5:
 		mov	al, _rank
 		cbw
-		cmp	ax, 3
+		cmp	ax, RANK_LUNATIC
 		jnz	short loc_1C0C4
 		mov	ax, 14h
 		jmp	loc_1D84C
@@ -20472,7 +20475,7 @@ loc_1C3EB:
 		mov	ax, RES_Y
 		sub	ax, point_3982A.y
 		mov	y_39E0C, ax
-		cmp	_rank, 0
+		cmp	_rank, RANK_EASY
 		jnz	short loc_1C45B
 		mov	ax, 0Ch
 		jmp	short loc_1C488
@@ -20481,7 +20484,7 @@ loc_1C3EB:
 loc_1C45B:
 		mov	al, _rank
 		cbw
-		cmp	ax, 1
+		cmp	ax, RANK_NORMAL
 		jnz	short loc_1C469
 		mov	ax, 8
 		jmp	short loc_1C488
@@ -20490,7 +20493,7 @@ loc_1C45B:
 loc_1C469:
 		mov	al, _rank
 		cbw
-		cmp	ax, 2
+		cmp	ax, RANK_HARD
 		jnz	short loc_1C477
 		mov	ax, 4
 		jmp	short loc_1C488
@@ -20499,7 +20502,7 @@ loc_1C469:
 loc_1C477:
 		mov	al, _rank
 		cbw
-		cmp	ax, 3
+		cmp	ax, RANK_LUNATIC
 		jnz	short loc_1C485
 		mov	ax, 2
 		jmp	short loc_1C488
@@ -20808,7 +20811,7 @@ loc_1C741:
 		mov	word_39E12, 0
 		call	_z_palette_set_all_show c, offset palette_39B8C, ds
 		call	sub_232A4
-		cmp	_rank, 0
+		cmp	_rank, RANK_EASY
 		jnz	short loc_1C7B1
 		mov	ax, 0Ah
 		jmp	loc_1D84C
@@ -20817,7 +20820,7 @@ loc_1C741:
 loc_1C7B1:
 		mov	al, _rank
 		cbw
-		cmp	ax, 1
+		cmp	ax, RANK_NORMAL
 		jnz	short loc_1C7C0
 		mov	ax, 10h
 		jmp	loc_1D84C
@@ -20826,7 +20829,7 @@ loc_1C7B1:
 loc_1C7C0:
 		mov	al, _rank
 		cbw
-		cmp	ax, 2
+		cmp	ax, RANK_HARD
 		jnz	short loc_1C7CF
 		mov	ax, 14h
 		jmp	loc_1D84C
@@ -20835,7 +20838,7 @@ loc_1C7C0:
 loc_1C7CF:
 		mov	al, _rank
 		cbw
-		cmp	ax, 3
+		cmp	ax, RANK_LUNATIC
 		jnz	short loc_1C7DE
 		mov	ax, 18h
 		jmp	loc_1D84C
@@ -21292,7 +21295,7 @@ loc_1CBE8:
 		mov	x_39E06, 0
 		mov	al, _rank
 		cbw
-		cmp	ax, 1
+		cmp	ax, RANK_NORMAL
 		jle	loc_1CF52
 		jmp	loc_1CD9D
 ; ---------------------------------------------------------------------------
@@ -21379,7 +21382,7 @@ loc_1CCF1:
 		mov	x_39E06, 0
 		mov	al, _rank
 		cbw
-		cmp	ax, 1
+		cmp	ax, RANK_NORMAL
 		jle	loc_1CF52
 
 loc_1CD9D:
@@ -21481,7 +21484,7 @@ loc_1CDD6:
 		mov	x_39E06, 0
 		mov	al, _rank
 		cbw
-		cmp	ax, 2
+		cmp	ax, RANK_HARD
 		jnz	short loc_1CF29
 		push	30018h
 		mov	ax, point_398F2.y
@@ -21498,7 +21501,7 @@ loc_1CDD6:
 loc_1CF29:
 		mov	al, _rank
 		cbw
-		cmp	ax, 3
+		cmp	ax, RANK_LUNATIC
 		jnz	short loc_1CF52
 		push	4001Ch
 
@@ -22388,7 +22391,7 @@ loc_1D808:
 		jl	short loc_1D7B1
 		mov	ax, y_39DF8
 		mov	y_39DF2, ax
-		cmp	_rank, 0
+		cmp	_rank, RANK_EASY
 		jnz	short loc_1D81F
 		mov	ax, 18h
 		jmp	short loc_1D84C
@@ -22397,7 +22400,7 @@ loc_1D808:
 loc_1D81F:
 		mov	al, _rank
 		cbw
-		cmp	ax, 1
+		cmp	ax, RANK_NORMAL
 		jnz	short loc_1D82D
 		mov	ax, 0Eh
 		jmp	short loc_1D84C
@@ -22406,7 +22409,7 @@ loc_1D81F:
 loc_1D82D:
 		mov	al, _rank
 		cbw
-		cmp	ax, 2
+		cmp	ax, RANK_HARD
 		jnz	short loc_1D83B
 		mov	ax, 0Ah
 		jmp	short loc_1D84C
@@ -22415,7 +22418,7 @@ loc_1D82D:
 loc_1D83B:
 		mov	al, _rank
 		cbw
-		cmp	ax, 3
+		cmp	ax, RANK_LUNATIC
 		jnz	short loc_1D849
 		mov	ax, 8
 		jmp	short loc_1D84C
@@ -24126,7 +24129,7 @@ arg_A		= word ptr  10h
 		push	bp
 		mov	bp, sp
 		mov	dx, [bp+arg_6]
-		cmp	_rank, 0
+		cmp	_rank, RANK_EASY
 		jnz	short loc_1E853
 		mov	ax, [bp+arg_4]
 		jmp	short loc_1E87E
@@ -24135,7 +24138,7 @@ arg_A		= word ptr  10h
 loc_1E853:
 		mov	al, _rank
 		cbw
-		cmp	ax, 1
+		cmp	ax, RANK_NORMAL
 		jnz	short loc_1E860
 		mov	ax, dx
 		jmp	short loc_1E87E
@@ -24144,7 +24147,7 @@ loc_1E853:
 loc_1E860:
 		mov	al, _rank
 		cbw
-		cmp	ax, 2
+		cmp	ax, RANK_HARD
 		jnz	short loc_1E86E
 		mov	ax, [bp+arg_8]
 		jmp	short loc_1E87E
@@ -24153,7 +24156,7 @@ loc_1E860:
 loc_1E86E:
 		mov	al, _rank
 		cbw
-		cmp	ax, 3
+		cmp	ax, RANK_LUNATIC
 		jnz	short loc_1E87C
 		mov	ax, [bp+arg_A]
 		jmp	short loc_1E87E
@@ -26645,7 +26648,7 @@ loc_1FEAB:
 		push	eax
 		mov	al, _rank
 		cbw
-		cmp	ax, 3
+		cmp	ax, RANK_LUNATIC
 		jnz	short loc_1FECC
 		mov	ax, 1
 		jmp	short loc_1FECE
@@ -27168,7 +27171,7 @@ loc_202A6:
 		jl	loc_2036D
 		mov	al, _rank
 		cbw
-		cmp	ax, 3
+		cmp	ax, RANK_LUNATIC
 		jnz	short loc_2031C
 		mov	al, byte_34A34
 		cbw
@@ -28762,7 +28765,7 @@ loc_20F85:
 ; ---------------------------------------------------------------------------
 
 loc_20F8F:
-		cmp	_rank, 0
+		cmp	_rank, RANK_EASY
 		jz	short loc_20FA3
 		mov	ax, si
 		add	ax, ax
@@ -28789,7 +28792,7 @@ loc_20FBF:
 ; ---------------------------------------------------------------------------
 
 loc_20FC8:
-		cmp	_rank, 0
+		cmp	_rank, RANK_EASY
 		jz	short loc_20FDC
 		mov	ax, si
 		add	ax, ax
@@ -31678,7 +31681,7 @@ arg_A		= word ptr  10h
 		push	bp
 		mov	bp, sp
 		mov	dx, [bp+arg_6]
-		cmp	_rank, 0
+		cmp	_rank, RANK_EASY
 		jnz	short loc_2282C
 		mov	ax, [bp+arg_4]
 		jmp	short loc_22857
@@ -31687,7 +31690,7 @@ arg_A		= word ptr  10h
 loc_2282C:
 		mov	al, _rank
 		cbw
-		cmp	ax, 1
+		cmp	ax, RANK_NORMAL
 		jnz	short loc_22839
 		mov	ax, dx
 		jmp	short loc_22857
@@ -31696,7 +31699,7 @@ loc_2282C:
 loc_22839:
 		mov	al, _rank
 		cbw
-		cmp	ax, 2
+		cmp	ax, RANK_HARD
 		jnz	short loc_22847
 		mov	ax, [bp+arg_8]
 		jmp	short loc_22857
@@ -31705,7 +31708,7 @@ loc_22839:
 loc_22847:
 		mov	al, _rank
 		cbw
-		cmp	ax, 3
+		cmp	ax, RANK_LUNATIC
 		jnz	short loc_22855
 		mov	ax, [bp+arg_A]
 		jmp	short loc_22857
@@ -32727,7 +32730,7 @@ loc_2302C:
 		call	sub_232A4
 		mov	word_39852, 0
 		mov	word_3A381, 0
-		cmp	_rank, 0
+		cmp	_rank, RANK_EASY
 		jnz	short loc_23087
 		mov	ax, 46h	; 'F'
 		jmp	short loc_230B4
@@ -32736,7 +32739,7 @@ loc_2302C:
 loc_23087:
 		mov	al, _rank
 		cbw
-		cmp	ax, 1
+		cmp	ax, RANK_NORMAL
 		jnz	short loc_23095
 		mov	ax, 32h	; '2'
 		jmp	short loc_230B4
@@ -32745,7 +32748,7 @@ loc_23087:
 loc_23095:
 		mov	al, _rank
 		cbw
-		cmp	ax, 2
+		cmp	ax, RANK_HARD
 		jnz	short loc_230A3
 		mov	ax, 1Eh
 		jmp	short loc_230B4
@@ -32754,7 +32757,7 @@ loc_23095:
 loc_230A3:
 		mov	al, _rank
 		cbw
-		cmp	ax, 3
+		cmp	ax, RANK_LUNATIC
 		jnz	short loc_230B1
 		mov	ax, 0Ah
 		jmp	short loc_230B4
@@ -33051,7 +33054,7 @@ arg_A		= word ptr  10h
 		push	bp
 		mov	bp, sp
 		mov	dx, [bp+arg_6]
-		cmp	_rank, 0
+		cmp	_rank, RANK_EASY
 		jnz	short loc_232F6
 		mov	ax, [bp+arg_4]
 		jmp	short loc_23321
@@ -33060,7 +33063,7 @@ arg_A		= word ptr  10h
 loc_232F6:
 		mov	al, _rank
 		cbw
-		cmp	ax, 1
+		cmp	ax, RANK_NORMAL
 		jnz	short loc_23303
 		mov	ax, dx
 		jmp	short loc_23321
@@ -33069,7 +33072,7 @@ loc_232F6:
 loc_23303:
 		mov	al, _rank
 		cbw
-		cmp	ax, 2
+		cmp	ax, RANK_HARD
 		jnz	short loc_23311
 		mov	ax, [bp+arg_8]
 		jmp	short loc_23321
@@ -33078,7 +33081,7 @@ loc_23303:
 loc_23311:
 		mov	al, _rank
 		cbw
-		cmp	ax, 3
+		cmp	ax, RANK_LUNATIC
 		jnz	short loc_2331F
 		mov	ax, [bp+arg_A]
 		jmp	short loc_23321
@@ -36690,7 +36693,7 @@ arg_A		= word ptr  10h
 		push	bp
 		mov	bp, sp
 		mov	dx, [bp+arg_6]
-		cmp	_rank, 0
+		cmp	_rank, RANK_EASY
 		jnz	short loc_253B4
 		mov	ax, [bp+arg_4]
 		jmp	short loc_253DF
@@ -36699,7 +36702,7 @@ arg_A		= word ptr  10h
 loc_253B4:
 		mov	al, _rank
 		cbw
-		cmp	ax, 1
+		cmp	ax, RANK_NORMAL
 		jnz	short loc_253C1
 		mov	ax, dx
 		jmp	short loc_253DF
@@ -36708,7 +36711,7 @@ loc_253B4:
 loc_253C1:
 		mov	al, _rank
 		cbw
-		cmp	ax, 2
+		cmp	ax, RANK_HARD
 		jnz	short loc_253CF
 		mov	ax, [bp+arg_8]
 		jmp	short loc_253DF
@@ -36717,7 +36720,7 @@ loc_253C1:
 loc_253CF:
 		mov	al, _rank
 		cbw
-		cmp	ax, 3
+		cmp	ax, RANK_LUNATIC
 		jnz	short loc_253DD
 		mov	ax, [bp+arg_A]
 		jmp	short loc_253DF
@@ -40274,7 +40277,7 @@ loc_274FF:
 		push	48h ; 'H'
 		mov	al, _rank
 		cbw
-		cmp	ax, 3
+		cmp	ax, RANK_LUNATIC
 		jnz	short loc_2751B
 		mov	ax, 1Eh
 		jmp	short loc_2751E
@@ -42074,7 +42077,7 @@ arg_A		= word ptr  10h
 		push	bp
 		mov	bp, sp
 		mov	dx, [bp+arg_6]
-		cmp	_rank, 0
+		cmp	_rank, RANK_EASY
 		jnz	short loc_2866B
 		mov	ax, [bp+arg_4]
 		jmp	short loc_28696
@@ -42083,7 +42086,7 @@ arg_A		= word ptr  10h
 loc_2866B:
 		mov	al, _rank
 		cbw
-		cmp	ax, 1
+		cmp	ax, RANK_NORMAL
 		jnz	short loc_28678
 		mov	ax, dx
 		jmp	short loc_28696
@@ -42092,7 +42095,7 @@ loc_2866B:
 loc_28678:
 		mov	al, _rank
 		cbw
-		cmp	ax, 2
+		cmp	ax, RANK_HARD
 		jnz	short loc_28686
 		mov	ax, [bp+arg_8]
 		jmp	short loc_28696
@@ -42101,7 +42104,7 @@ loc_28678:
 loc_28686:
 		mov	al, _rank
 		cbw
-		cmp	ax, 3
+		cmp	ax, RANK_LUNATIC
 		jnz	short loc_28694
 		mov	ax, [bp+arg_A]
 		jmp	short loc_28696
@@ -46009,7 +46012,7 @@ loc_2AAF6:
 		add	sp, 28h
 		mov	al, _rank
 		cbw
-		cmp	ax, 2
+		cmp	ax, RANK_HARD
 		; Hack (jl loc_2ABC0)
 		db 00fh
 		db 08ch
@@ -46038,7 +46041,7 @@ loc_2AAF6:
 		add	sp, 28h
 		mov	al, _rank
 		cbw
-		cmp	ax, 3
+		cmp	ax, RANK_LUNATIC
 		jnz	short loc_2ABC0
 		pushd	0
 		pushd	0
@@ -49566,7 +49569,7 @@ arg_A		= word ptr  10h
 loc_2CDD3:
 		mov	bp, sp
 		mov	dx, [bp+arg_6]
-		cmp	_rank, 0
+		cmp	_rank, RANK_EASY
 		jnz	short loc_2CDE4
 		mov	ax, [bp+arg_4]
 		jmp	short loc_2CE0F
@@ -49575,7 +49578,7 @@ loc_2CDD3:
 loc_2CDE4:
 		mov	al, _rank
 		cbw
-		cmp	ax, 1
+		cmp	ax, RANK_NORMAL
 		jnz	short loc_2CDF1
 		mov	ax, dx
 		jmp	short loc_2CE0F
@@ -49584,7 +49587,7 @@ loc_2CDE4:
 loc_2CDF1:
 		mov	al, _rank
 		cbw
-		cmp	ax, 2
+		cmp	ax, RANK_HARD
 		jnz	short loc_2CDFF
 		mov	ax, [bp+arg_8]
 		jmp	short loc_2CE0F
@@ -49593,7 +49596,7 @@ loc_2CDF1:
 loc_2CDFF:
 		mov	al, _rank
 		cbw
-		cmp	ax, 3
+		cmp	ax, RANK_LUNATIC
 		jnz	short loc_2CE0D
 		mov	ax, [bp+arg_A]
 		jmp	short loc_2CE0F
@@ -54771,7 +54774,7 @@ arg_A		= word ptr  10h
 		jl	loc_304B4
 		cmp	[bp+arg_6], 190h
 		jg	loc_304B4
-		cmp	_rank, 0
+		cmp	_rank, RANK_EASY
 		jnz	short loc_303B1
 		xor	ax, ax
 		jmp	short loc_303D0
@@ -54780,7 +54783,7 @@ arg_A		= word ptr  10h
 loc_303B1:
 		mov	al, _rank
 		cbw
-		cmp	ax, 1
+		cmp	ax, RANK_NORMAL
 		jnz	short loc_303BF
 		mov	ax, 6
 		jmp	short loc_303D0
@@ -54789,7 +54792,7 @@ loc_303B1:
 loc_303BF:
 		mov	al, _rank
 		cbw
-		cmp	ax, 2
+		cmp	ax, RANK_HARD
 		jnz	short loc_303CD
 		mov	ax, 0Ch
 		jmp	short loc_303D0
@@ -54921,7 +54924,7 @@ arg_12		= word ptr  18h
 		les	bx, [bp+arg_0]
 		cmp	word ptr es:[bx+1068h],	64h ; 'd'
 		jg	loc_30634
-		cmp	_rank, 0
+		cmp	_rank, RANK_EASY
 		jnz	short loc_304D9
 		xor	ax, ax
 		jmp	short loc_304F8
@@ -54930,7 +54933,7 @@ arg_12		= word ptr  18h
 loc_304D9:
 		mov	al, _rank
 		cbw
-		cmp	ax, 1
+		cmp	ax, RANK_NORMAL
 		jnz	short loc_304E7
 		mov	ax, 6
 		jmp	short loc_304F8
@@ -54939,7 +54942,7 @@ loc_304D9:
 loc_304E7:
 		mov	al, _rank
 		cbw
-		cmp	ax, 2
+		cmp	ax, RANK_HARD
 		jnz	short loc_304F5
 		mov	ax, 0Ch
 		jmp	short loc_304F8
@@ -56198,11 +56201,14 @@ main_38___TEXT	ends
 
 	.data
 
-public _rank
-_rank	db RANK_NORMAL
-byte_34A31	db 1
-_bombs	db 1
-unk_34A33	db    2
+; Not *really* a cfg_options_t, since you'd expect that structure to contain
+; the immutable contents of REIIDEN.CFG. However, [bombs] is in fact the
+; *current* bomb count, and the .CFG value is saved to [credit_bombs]...
+public _rank, _bgm_mode, _bombs, _lives_extra
+_rank	db CFG_RANK_DEFAULT
+_bgm_mode	db CFG_BGM_MODE_DEFAULT
+_bombs	db CFG_BOMBS_DEFAULT
+_lives_extra	db    CFG_LIVES_EXTRA_DEFAULT
 byte_34A34	db 0
 byte_34A35	db 0
 		db    0
@@ -57279,7 +57285,8 @@ _INIT_	ends
 	.data?
 
 ; TODO: Missing clip[bss].asm (16 bytes) somewhere in there...
-byte_36C14	db ?
+public _credit_bombs
+_credit_bombs	db ?
 byte_36C15	db ?
 _rand	dd ?
 dword_36C1A	dd ?
