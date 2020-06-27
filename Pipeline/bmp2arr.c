@@ -344,7 +344,7 @@ static int saveout_write_epilogue(struct rec98_bmp2arr_task *t,struct saveout_ct
 }
 
 int saveout_write_sprite(struct rec98_bmp2arr_task *t,struct saveout_ctx *sctx,const unsigned char *bmp/*length bytesperrow * height*/) {
-    unsigned int r,c;
+    unsigned int r,c,b;
 
     if (t->output_type == REC98_OUT_C) {
         fprintf(sctx->fp,"%c",sctx->spritenum != 0 ? ',' : ' ');
@@ -360,7 +360,20 @@ int saveout_write_sprite(struct rec98_bmp2arr_task *t,struct saveout_ctx *sctx,c
         fprintf(sctx->fp," }/*end sprite %u*/\n",sctx->spritenum);
     }
     else if (t->output_type == REC98_OUT_ASM) {
-        /* none needed */
+        fprintf(sctx->fp,"; sprite %u\n",sctx->spritenum);
+        for (r=0;r < t->sprite_height;r++) {
+            fprintf(sctx->fp,"\tdb ");
+            for (c=0;c < sctx->bytesperrow;c++) {
+                if (c != 0) fprintf(sctx->fp,",");
+
+                for (b=0;b < 8;b++)
+                    fprintf(sctx->fp,"%u",(*bmp >> (7u - b)) & 1u);
+
+                fprintf(sctx->fp,"b");
+                bmp++;
+            }
+            fprintf(sctx->fp,"\n");
+        }
     }
     else if (t->output_type == REC98_OUT_BIN) {
         fwrite(bmp,sctx->bytesperrow * t->sprite_height,1,sctx->fp);
