@@ -252,7 +252,7 @@ int rec98_bmp2arr_save_debug_bmp_out(struct rec98_bmp2arr_task *t) {
 }
 
 struct saveout_ctx {
-    unsigned int            sscols,ssrows,spritenum,bytesperrow,sscol,ssrow;
+    unsigned int            sscols,ssrows,spritenum,bytesperrow,sscol,ssrow,sspreshift;
     FILE*                   fp; /* for that nice fprintf formatting if needed */
 };
 
@@ -438,11 +438,44 @@ int rec98_bmp2arr_save_output(struct rec98_bmp2arr_task *t) {
     if (saveout_write_prologue(t,&sctx))
         goto fioerr;
 
-    if (t->preshift && t->preshift_inner == 1)
-        goto fioerr; /* TODO */
+    if (t->preshift && t->preshift_inner == 1) {
+        for (sctx.ssrow=0;sctx.ssrow < sctx.ssrows;sctx.ssrow++) {
+            sctx.spritenum = sctx.ssrow * sctx.sscols;
+            for (sctx.sscol=0;sctx.sscol < sctx.sscols;sctx.sscol++,sctx.spritenum++) {
+                for (sctx.sspreshift=0;sctx.sspreshift < 8;sctx.sspreshift++) {
+                    unsigned char *dbits = bmp_tmp; /* use bmp_tmp[], this is why the size check */
+                    unsigned int y,b;
+
+                    for (y=0;y < t->sprite_height;y++) {
+                        unsigned int shif;
+                        unsigned int sr =
+                            t->upsidedown ? (t->sprite_height - 1 - y) : y;
+                        const unsigned char *sbits =
+                            (const unsigned char*)t->bmp +
+                            (sctx.sscol * ((t->sprite_width + 7u) / 8u)) +
+                            (((sctx.ssrow * t->sprite_height) + sr) * t->bmp_stride);
+
+                        shif = ((unsigned int)(*sbits++)) << (8u - sctx.sspreshift);
+                        b = 0;
+                        do {
+                            *dbits++ = shif >> 8u;
+                            if ((++b) < sctx.bytesperrow)
+                                shif = (shif << 8u) + (((unsigned int)(*sbits++)) << (8u - sctx.sspreshift));
+                            else
+                                break;
+                        } while (1);
+                    }
+
+                    if (saveout_write_sprite(t,&sctx,bmp_tmp))
+                        goto fioerr;
+                }
+            }
+        }
+    }
     else if (t->preshift && t->preshift_inner == 0)
         goto fioerr; /* TODO */
     else {
+        sctx.sspreshift = 0;
         for (sctx.ssrow=0;sctx.ssrow < sctx.ssrows;sctx.ssrow++) {
             sctx.spritenum = sctx.ssrow * sctx.sscols;
             for (sctx.sscol=0;sctx.sscol < sctx.sscols;sctx.sscol++,sctx.spritenum++) {
