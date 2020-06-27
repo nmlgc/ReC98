@@ -509,6 +509,11 @@ int rec98_bmp2arr_save_output(struct rec98_bmp2arr_task *t) {
     }
     else if (t->preshift && t->preshift_inner == 0) {
         for (sctx.sspreshift=0;sctx.sspreshift < 8;sctx.sspreshift++) {
+            if (t->output_type == REC98_OUT_C) {
+                fprintf(sctx.fp,"%c",sctx.sspreshift != 0 ? ',' : ' ');
+                fprintf(sctx.fp,"{/*preshift %u*/\n",sctx.sspreshift);
+            }
+
             for (sctx.ssrow=0;sctx.ssrow < sctx.ssrows;sctx.ssrow++) {
                 sctx.spritenum = sctx.ssrow * sctx.sscols;
                 for (sctx.sscol=0;sctx.sscol < sctx.sscols;sctx.sscol++,sctx.spritenum++) {
@@ -540,6 +545,10 @@ int rec98_bmp2arr_save_output(struct rec98_bmp2arr_task *t) {
                     if (saveout_write_sprite(t,&sctx,bmp_tmp))
                         goto fioerr;
                 }
+            }
+
+            if (t->output_type == REC98_OUT_C) {
+                fprintf(sctx.fp," }/*end preshift %u*/\n",sctx.sspreshift);
             }
         }
     }
