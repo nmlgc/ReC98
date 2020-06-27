@@ -360,8 +360,15 @@ int saveout_write_sprite(struct rec98_bmp2arr_task *t,struct saveout_ctx *sctx,c
     unsigned int r,c,b;
 
     if (t->output_type == REC98_OUT_C) {
-        fprintf(sctx->fp,"%c",sctx->spritenum != 0 ? ',' : ' ');
-        fprintf(sctx->fp,"{/*sprite %u*/\n",sctx->spritenum);
+        if (t->preshift && t->preshift_inner) {
+            fprintf(sctx->fp,"%c",sctx->sspreshift != 0 ? ',' : ' ');
+            fprintf(sctx->fp,"{/*sprite %u preshift %u*/\n",sctx->spritenum,sctx->sspreshift);
+        }
+        else {
+            fprintf(sctx->fp,"%c",sctx->spritenum != 0 ? ',' : ' ');
+            fprintf(sctx->fp,"{/*sprite %u*/\n",sctx->spritenum);
+        }
+
         for (r=0;r < t->sprite_height;r++) {
             fprintf(sctx->fp,"\t");
             for (c=0;c < sctx->bytesperrow;c++) {
@@ -371,10 +378,22 @@ int saveout_write_sprite(struct rec98_bmp2arr_task *t,struct saveout_ctx *sctx,c
             fprintf(sctx->fp," /* row %u */",t->upsidedown ? (t->sprite_height - 1u - r) : r);
             fprintf(sctx->fp,"\n");
         }
-        fprintf(sctx->fp," }/*end sprite %u*/\n",sctx->spritenum);
+
+        if (t->preshift && t->preshift_inner) {
+            fprintf(sctx->fp," }/*end sprite %u preshift %u*/\n",sctx->spritenum,sctx->sspreshift);
+        }
+        else {
+            fprintf(sctx->fp," }/*end sprite %u*/\n",sctx->spritenum);
+        }
     }
     else if (t->output_type == REC98_OUT_ASM) {
-        fprintf(sctx->fp,"; sprite %u\n",sctx->spritenum);
+        if (t->preshift && t->preshift_inner) {
+            fprintf(sctx->fp,"; sprite %u preshift %u\n",sctx->spritenum,sctx->sspreshift);
+        }
+        else {
+            fprintf(sctx->fp,"; sprite %u\n",sctx->spritenum);
+        }
+
         for (r=0;r < t->sprite_height;r++) {
             fprintf(sctx->fp,"\tdb ");
             for (c=0;c < sctx->bytesperrow;c++) {
@@ -442,6 +461,11 @@ int rec98_bmp2arr_save_output(struct rec98_bmp2arr_task *t) {
         for (sctx.ssrow=0;sctx.ssrow < sctx.ssrows;sctx.ssrow++) {
             sctx.spritenum = sctx.ssrow * sctx.sscols;
             for (sctx.sscol=0;sctx.sscol < sctx.sscols;sctx.sscol++,sctx.spritenum++) {
+                if (t->output_type == REC98_OUT_C) {
+                    fprintf(sctx.fp,"%c",sctx.spritenum != 0 ? ',' : ' ');
+                    fprintf(sctx.fp,"{/*preshift*/\n");
+                }
+
                 for (sctx.sspreshift=0;sctx.sspreshift < 8;sctx.sspreshift++) {
                     unsigned char *dbits = bmp_tmp; /* use bmp_tmp[], this is why the size check */
                     unsigned int y,b;
@@ -468,6 +492,10 @@ int rec98_bmp2arr_save_output(struct rec98_bmp2arr_task *t) {
 
                     if (saveout_write_sprite(t,&sctx,bmp_tmp))
                         goto fioerr;
+                }
+
+                if (t->output_type == REC98_OUT_C) {
+                    fprintf(sctx.fp," }/*end preshift*/\n");
                 }
             }
         }
