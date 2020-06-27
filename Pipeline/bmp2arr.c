@@ -360,12 +360,17 @@ int saveout_write_sprite(struct rec98_bmp2arr_task *t,struct saveout_ctx *sctx,c
     unsigned int r,c,b;
 
     if (t->output_type == REC98_OUT_C) {
-        if (t->preshift) {
+        if (t->preshift && t->preshift_inner) {
             fprintf(sctx->fp,"%c",sctx->sspreshift != 0 ? ',' : ' ');
-            fprintf(sctx->fp,"{/*sprite %u preshift %u*/\n",sctx->spritenum,sctx->sspreshift);
         }
         else {
             fprintf(sctx->fp,"%c",sctx->spritenum != 0 ? ',' : ' ');
+        }
+
+        if (t->preshift) {
+            fprintf(sctx->fp,"{/*sprite %u preshift %u*/\n",sctx->spritenum,sctx->sspreshift);
+        }
+        else {
             fprintf(sctx->fp,"{/*sprite %u*/\n",sctx->spritenum);
         }
 
