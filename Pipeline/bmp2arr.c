@@ -471,7 +471,7 @@ int rec98_bmp2arr_save_output(struct rec98_bmp2arr_task *t) {
                     unsigned int y,b;
 
                     for (y=0;y < t->sprite_height;y++) {
-                        unsigned int shif;
+                        unsigned int shif = 0;
                         unsigned int sr =
                             t->upsidedown ? (t->sprite_height - 1 - y) : y;
                         const unsigned char *sbits =
@@ -479,15 +479,17 @@ int rec98_bmp2arr_save_output(struct rec98_bmp2arr_task *t) {
                             (sctx.sscol * ((t->sprite_width + 7u) / 8u)) +
                             (((sctx.ssrow * t->sprite_height) + sr) * t->bmp_stride);
 
-                        shif = ((unsigned int)(*sbits++)) << (8u - sctx.sspreshift);
-                        b = 0;
-                        do {
+                        b = sctx.bytesperrow;
+                        while (b >= 2) {
+                            b--;
+                            shif = (shif << 8u) + (((unsigned int)(*sbits++)) << (8u - sctx.sspreshift));
                             *dbits++ = shif >> 8u;
-                            if ((++b) < sctx.bytesperrow)
-                                shif = (shif << 8u) + (((unsigned int)(*sbits++)) << (8u - sctx.sspreshift));
-                            else
-                                break;
-                        } while (1);
+                        }
+                        while (b >= 1) {
+                            b--;
+                            shif = (shif << 8u);
+                            *dbits++ = shif >> 8u;
+                        }
                     }
 
                     if (saveout_write_sprite(t,&sctx,bmp_tmp))
