@@ -280,6 +280,19 @@ static int saveout_write_prologue(struct rec98_bmp2arr_task *t,struct saveout_ct
         fprintf(sctx->fp,"; Sprite sheet: %d sprites (%d x %d) of %d x %d sprites.\n",sctx->sscols * sctx->ssrows,sctx->sscols,sctx->ssrows,t->sprite_width,t->sprite_height);
         fprintf(sctx->fp,"\n");
 
+        fprintf(sctx->fp,"; const unsigned char %s",t->output_symname != NULL ? t->output_symname : "untitled");
+
+        if (t->preshift && t->preshift_inner == 0)
+            fprintf(sctx->fp,"[8/*PRESHIFT*/]");
+
+        fprintf(sctx->fp,"[%d]",sctx->ssrows * sctx->sscols);
+
+        if (t->preshift && t->preshift_inner == 1)
+            fprintf(sctx->fp,"[8/*PRESHIFT*/]");
+
+        fprintf(sctx->fp,"[%d/*%d bytes x %d rows*/];\n",
+            sctx->bytesperrow * t->sprite_height,sctx->bytesperrow,t->sprite_height);
+
         fprintf(sctx->fp,"public %s\n",t->output_symname != NULL ? t->output_symname : "untitled");
         fprintf(sctx->fp,"label %s byte\n",t->output_symname != NULL ? t->output_symname : "untitled");
     }
