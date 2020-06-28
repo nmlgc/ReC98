@@ -17,7 +17,7 @@ extern "C" {
 #define MARISA_STARS(dmg) \
 	shot->pos.cur.x.v += star_distance; \
 	shot->damage = dmg; \
-	VELOCITY_Y(-12); \
+	VELOCITY_Y(-12.0f); \
 	star_distance += to_sp(STAR_DISTANCE);
 
 void pascal near shot_marisa_l2(void)
@@ -32,7 +32,7 @@ void pascal near shot_marisa_l2(void)
 		} else {
 			if(sai.i == 3) { OPT_L;	MISSILE_L;	VELOCITY_X(-1.625f); }
 			else/*i == 2*/ { OPT_R;	MISSILE_R;	VELOCITY_X( 1.625f); }
-			VELOCITY_Y(2);
+			VELOCITY_Y(2.0f);
 			shot->set_option_sprite_and_damage(16);
 		}
 		if(sai.next() <= 0) {
@@ -55,8 +55,8 @@ void pascal near shot_marisa_l3(void)
 			switch(sai.i - 3u) {
 			case 0:	OPT_L;	MISSILE_L;	VELOCITY_XY(-1.375f, 2.25f);	break;
 			case 1:	OPT_R;	MISSILE_R;	VELOCITY_XY( 1.375f, 2.25f);	break;
-			case 2:	OPT_L;	MISSILE_S;	VELOCITY_Y(-3);	break;
-			case 3:	OPT_R;	MISSILE_S;	VELOCITY_Y(-3);	break;
+			case 2:	OPT_L;	MISSILE_S;	VELOCITY_Y(-3.0f);	break;
+			case 3:	OPT_R;	MISSILE_S;	VELOCITY_Y(-3.0f);	break;
 			}
 			shot->set_option_sprite_and_damage(13);
 		}
@@ -83,10 +83,10 @@ void pascal near shot_marisa_l4(void)
 			switch(sai.i - 4u) {
 			case 0: OPT_L;	MISSILE_L;	VELOCITY_XY(-1.375f, 2.25f);	break;
 			case 1: OPT_R;	MISSILE_R;	VELOCITY_XY( 1.375f, 2.25f);	break;
-			case 2: OPT_L;	MISSILE_S;	VELOCITY_XY(-1, -3);	break;
-			case 3: OPT_R;	MISSILE_S;	VELOCITY_XY( 1, -3);	break;
-			case 4:	OPT_L;	MISSILE_S;	VELOCITY_XY(0, -4);	break;
-			case 5: OPT_R;	MISSILE_S;	VELOCITY_XY(0, -4);	break;
+			case 2: OPT_L;	MISSILE_S;	VELOCITY_XY(-1.0f, -3.0f);	break;
+			case 3: OPT_R;	MISSILE_S;	VELOCITY_XY( 1.0f, -3.0f);	break;
+			case 4:	OPT_L;	MISSILE_S;	VELOCITY_XY( 0.0f, -4.0f);	break;
+			case 5: OPT_R;	MISSILE_S;	VELOCITY_XY( 0.0f, -4.0f);	break;
 			}
 			shot->set_option_sprite_and_damage(12);
 		}
@@ -113,10 +113,10 @@ void pascal near shot_marisa_l5(void)
 			switch(sai.i - 4u) {
 			case 0: OPT_L;	MISSILE_L;	VELOCITY_XY(-1.375f, 2.25f);	break;
 			case 1: OPT_R;	MISSILE_R;	VELOCITY_XY( 1.375f, 2.25f);	break;
-			case 2: OPT_L;	MISSILE_S;	VELOCITY_XY(-1, -3);	break;
-			case 3: OPT_R;	MISSILE_S;	VELOCITY_XY( 1, -3);	break;
-			case 4:	OPT_L;	MISSILE_S;	VELOCITY_XY( 0.5f, -4);	break;
-			case 5:	OPT_R;	MISSILE_S;	VELOCITY_XY(-0.5f, -4);	break;
+			case 2: OPT_L;	MISSILE_S;	VELOCITY_XY(-1.0f, -3.0f);	break;
+			case 3: OPT_R;	MISSILE_S;	VELOCITY_XY( 1.0f, -3.0f);	break;
+			case 4:	OPT_L;	MISSILE_S;	VELOCITY_XY( 0.5f, -4.0f);	break;
+			case 5:	OPT_R;	MISSILE_S;	VELOCITY_XY(-0.5f, -4.0f);	break;
 			}
 			shot->set_option_sprite_and_damage(11);
 		}
@@ -139,12 +139,12 @@ void pascal near shot_marisa_l6(void)
 			switch(sai.i - 5u) {
 			case 0:	OPT_L;	MISSILE_L;	VELOCITY_XY(-1.375f, 2.25f);	break;
 			case 1:	OPT_R;	MISSILE_R;	VELOCITY_XY( 1.375f, 2.25f);	break;
-			case 2:	OPT_L;	MISSILE_S;	VELOCITY_XY(-1, -3);	break;
-			case 3:	OPT_R;	MISSILE_S;	VELOCITY_XY( 1, -3);	break;
-			case 4:	OPT_L;	MISSILE_S;	VELOCITY_Y(-5);	break;
-			case 5:	OPT_R;	MISSILE_S;	VELOCITY_Y(-5);	break;
-			case 6:	OPT_L;	MISSILE_S;	VELOCITY_Y(-2);	break;
-			case 7:	OPT_R;	MISSILE_S;	VELOCITY_Y(-2);	break;
+			case 2:	OPT_L;	MISSILE_S;	VELOCITY_XY(-1.0f, -3.0f);	break;
+			case 3:	OPT_R;	MISSILE_S;	VELOCITY_XY( 1.0f, -3.0f);	break;
+			case 4:	OPT_L;	MISSILE_S;	VELOCITY_Y(-5.0f);	break;
+			case 5:	OPT_R;	MISSILE_S;	VELOCITY_Y(-5.0f);	break;
+			case 6:	OPT_L;	MISSILE_S;	VELOCITY_Y(-2.0f);	break;
+			case 7:	OPT_R;	MISSILE_S;	VELOCITY_Y(-2.0f);	break;
 			}
 			shot->set_option_sprite_and_damage(11);
 		}
@@ -164,14 +164,14 @@ void pascal near shot_marisa_l6(void)
 			switch(sai.i - 5u) { \
 			case 0:	OPT_L;	MISSILE_L;	VELOCITY_XY(-1.75f, 2.25f);	break; \
 			case 1:	OPT_R;	MISSILE_R;	VELOCITY_XY( 1.75f, 2.25f);	break; \
-			case 2:	OPT_L;	MISSILE_R;	VELOCITY_XY( 2,  2);	break; \
-			case 3:	OPT_R;	MISSILE_L;	VELOCITY_XY(-2,  2);	break; \
-			case 4:	OPT_L;	MISSILE_S;	VELOCITY_YX( 3, -1);	break; \
-			case 5:	OPT_R;	MISSILE_S;	VELOCITY_YX( 3,  1);	break; \
-			case 6:	OPT_L;	MISSILE_S;	VELOCITY_Y(-5);	break; \
-			case 7:	OPT_R;	MISSILE_S;	VELOCITY_Y(-5);	break; \
-			case 8:	OPT_L;	MISSILE_S;	VELOCITY_Y(-2);	break; \
-			case 9:	OPT_R;	MISSILE_S;	VELOCITY_Y(-2);	break; \
+			case 2:	OPT_L;	MISSILE_R;	VELOCITY_XY( 2.0f,  2.0f);	break; \
+			case 3:	OPT_R;	MISSILE_L;	VELOCITY_XY(-2.0f,  2.0f);	break; \
+			case 4:	OPT_L;	MISSILE_S;	VELOCITY_YX( 3.0f, -1.0f);	break; \
+			case 5:	OPT_R;	MISSILE_S;	VELOCITY_YX( 3.0f,  1.0f);	break; \
+			case 6:	OPT_L;	MISSILE_S;	VELOCITY_Y(-5.0f);	break; \
+			case 7:	OPT_R;	MISSILE_S;	VELOCITY_Y(-5.0f);	break; \
+			case 8:	OPT_L;	MISSILE_S;	VELOCITY_Y(-2.0f);	break; \
+			case 9:	OPT_R;	MISSILE_S;	VELOCITY_Y(-2.0f);	break; \
 			} \
 			shot->set_option_sprite_and_damage(missile_damage); \
 		} \
@@ -202,20 +202,20 @@ void pascal near shot_marisa_l9(void)
 			MARISA_STARS(4);
 		} else {
 			switch(sai.i - 7u) {
-			case  0:	OPT_L;	MISSILE_L;	VELOCITY_XY(-2, 2.25f);	break;
-			case  1:	OPT_R;	MISSILE_R;	VELOCITY_XY( 2, 2.25f);	break;
-			case  2:	OPT_L;	MISSILE_R;	VELOCITY_XY( 2, 2);	break;
-			case  3:	OPT_R;	MISSILE_L;	VELOCITY_XY(-2, 2);	break;
-			case  4:	OPT_L;	MISSILE_S;	VELOCITY_Y(3);	break;
-			case  5:	OPT_R;	MISSILE_S;	VELOCITY_Y(3);	break;
-			case  6:	OPT_L;	MISSILE_S;	VELOCITY_YX( 0, -1);	break;
-			case  7:	OPT_R;	MISSILE_S;	VELOCITY_YX( 0,  1);	break;
-			case  8:	OPT_L;	MISSILE_S;	VELOCITY_Y(-8);	break;
-			case  9:	OPT_R;	MISSILE_S;	VELOCITY_Y(-8);	break;
-			case 10:	OPT_L;	MISSILE_S;	VELOCITY_Y(-4);	break;
-			case 11:	OPT_R;	MISSILE_S;	VELOCITY_Y(-4);	break;
-			case 12:	OPT_L;	MISSILE_S;	VELOCITY_Y(-1);	break;
-			case 13:	OPT_R;	MISSILE_S;	VELOCITY_Y(-1);	break;
+			case  0:	OPT_L;	MISSILE_L;	VELOCITY_XY(-2.0f, 2.25f);	break;
+			case  1:	OPT_R;	MISSILE_R;	VELOCITY_XY( 2.0f, 2.25f);	break;
+			case  2:	OPT_L;	MISSILE_R;	VELOCITY_XY( 2.0f, 2.0f);	break;
+			case  3:	OPT_R;	MISSILE_L;	VELOCITY_XY(-2.0f, 2.0f);	break;
+			case  4:	OPT_L;	MISSILE_S;	VELOCITY_Y(3.0f);	break;
+			case  5:	OPT_R;	MISSILE_S;	VELOCITY_Y(3.0f);	break;
+			case  6:	OPT_L;	MISSILE_S;	VELOCITY_YX( 0.0f, -1.0f);	break;
+			case  7:	OPT_R;	MISSILE_S;	VELOCITY_YX( 0.0f,  1.0f);	break;
+			case  8:	OPT_L;	MISSILE_S;	VELOCITY_Y(-8.0f);	break;
+			case  9:	OPT_R;	MISSILE_S;	VELOCITY_Y(-8.0f);	break;
+			case 10:	OPT_L;	MISSILE_S;	VELOCITY_Y(-4.0f);	break;
+			case 11:	OPT_R;	MISSILE_S;	VELOCITY_Y(-4.0f);	break;
+			case 12:	OPT_L;	MISSILE_S;	VELOCITY_Y(-1.0f);	break;
+			case 13:	OPT_R;	MISSILE_S;	VELOCITY_Y(-1.0f);	break;
 			}
 			shot->set_option_sprite_and_damage(9);
 		}

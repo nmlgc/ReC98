@@ -56,8 +56,8 @@ void pascal near shot_yuuka_l3(void)
 
 	while(( shot = shots_add() ) != NULL) {
 		if(sai.i <= 2) {
-			if(sai.i == 2) { shot->pos.cur.x -= 8; }
-			else/*i == 1*/ { shot->pos.cur.x += 8; }
+			if(sai.i == 2) { shot->pos.cur.x -= 8.0f; }
+			else/*i == 1*/ { shot->pos.cur.x += 8.0f; }
 			shot->damage = 8;
 		} else {
 			if(sai.i == 4) {
@@ -102,7 +102,7 @@ void pascal near shot_yuuka_l4(void)
 					sai.i = 1;
 				}
 			}
-			shot->pos.velocity.y = 2;
+			shot->pos.velocity.y = 2.0f;
 			shot->set_option_sprite_and_damage(6);
 		}
 		shot_velocity_set(&shot->pos.velocity, sai.angle);
