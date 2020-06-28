@@ -1,6 +1,7 @@
 #include "th01/snd/mdrv2.h"
 #include "th01/formats/ptn.hpp"
 #include "th01/hardware/egc.h"
+#include "th01/math/overlap.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/player/player.hpp"
 #include "th01/main/player/orb.hpp"
@@ -93,12 +94,10 @@ bool16 CShots::hittest_orb(int i, int orb_left, int orb_top)
 	if(moving[i] == false) {
 		return false;
 	}
-	if(
-		((left[i] - orb_left) < ORB_W)
-		&& ((left[i] - orb_left) > (-SHOT_W))
-		&& ((top[i] - orb_top) < ORB_H)
-		&& ((top[i] - orb_top) > (-SHOT_H))
-	) {
+	if(overlap_lt_gt(
+		left[i], top[i], SHOT_W, SHOT_H,
+		orb_left, orb_top, ORB_W, ORB_H
+	)) {
 		if((left[i] - orb_left) > (SHOT_W / 2)) {
 			orb_velocity_x = OVX_4_LEFT;
 		} else if((left[i] - orb_left) == (SHOT_W / 2)) {
@@ -132,12 +131,15 @@ bool16 CShots::hittest_pellet(int pellet_left, int pellet_top)
 		if(decay_frame[i] == 1) {
 			continue;
 		}
-		if(
-			((left[i] - pellet_left) <= ((SHOT_W / 2) - SHOT_SPRITE_MARGIN))
-			&& ((left[i] - pellet_left) >= -(SHOT_H - SHOT_SPRITE_MARGIN))
-			&& ((top[i] - pellet_top) <= ((SHOT_W / 2) - SHOT_SPRITE_MARGIN))
-			&& ((top[i] - pellet_top) >= -(SHOT_H - SHOT_SPRITE_MARGIN))
-		) {
+		if(overlap_le_ge(
+			left[i], top[i],
+			(SHOT_W - SHOT_SPRITE_MARGIN),
+			(SHOT_H - SHOT_SPRITE_MARGIN),
+			pellet_left,
+			pellet_top,
+			(PELLET_W - SHOT_SPRITE_MARGIN),
+			(PELLET_H - SHOT_SPRITE_MARGIN)
+		)) {
 			on_hit(i);
 			return true;
 		}
@@ -153,12 +155,9 @@ bool16 CShots::hittest_boss(
 		if(moving[i] == false) {
 			continue;
 		}
-		if(
-			(left[i] >= hitbox_left)
-			&& (left[i] <= (hitbox_left + hitbox_w))
-			&& (top[i] >= hitbox_top)
-			&& (top[i] <= (hitbox_top + hitbox_h))
-		) {
+		if(overlap_point_le_ge_wh(
+			left[i], top[i], hitbox_left, hitbox_top, hitbox_w, hitbox_h
+		)) {
 			on_hit(i);
 			return true;
 		}

@@ -1,3 +1,5 @@
+#include "th01/sprites/pellet.h"
+
 static const int SHOT_COUNT = 8;
 
 struct CShots {
