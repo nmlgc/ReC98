@@ -4,8 +4,12 @@
 #else
 # include <stdint.h>
 #endif
-#include <sys/types.h>
-#include <sys/stat.h>
+#if defined(_MSC_VER)/*Microsoft C++*/ || defined(__BORLANDC__)
+# include <io.h>
+#else
+# include <sys/types.h>
+# include <sys/stat.h>
+#endif
 #include <stdlib.h>
 #include <string.h>
 #include <malloc.h>
