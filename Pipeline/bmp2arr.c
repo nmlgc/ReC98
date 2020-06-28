@@ -663,16 +663,19 @@ int rec98_bmp2arr_load_bitmap(struct rec98_bmp2arr_task *t) {
     if (lseek(fd,offbits,SEEK_SET) != offbits) goto fioerr;
 
     /* may need to convert to 1bpp from source */
-    tmprow = malloc(srcstride);
+#if TARGET_MSDOS == 16
+    if (srcstride >= 0xFFFFul) goto fioerr;
+#endif
+    tmprow = malloc((unsigned int)srcstride);
     if (tmprow == NULL) goto fioerr;
 
     /* count: height-1 to 0 inclusive */
     row = t->bmp_height - 1u;
     do {
-        if (read(fd,tmprow,srcstride) != srcstride) goto fioerr;
+        if ((uint32_t)read(fd,tmprow,(unsigned int)srcstride) != srcstride) goto fioerr;
 
         if (bpp == 1)
-            memcpyxor(t->bmp + (row * t->bmp_stride),tmprow,srcstride,xorval);
+            memcpyxor(t->bmp + (row * t->bmp_stride),tmprow,(unsigned int)srcstride,xorval);
         else if (bpp == 24)
             memcpy24to1(t->bmp + (row * t->bmp_stride),tmprow,t->bmp_width);
         else if (bpp == 32)
