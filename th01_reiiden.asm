@@ -16386,10 +16386,10 @@ loc_1963B:
 ; ---------------------------------------------------------------------------
 
 loc_1964A:
-		push	30001Eh
-		push	40h
+		push	PP_1_RANDOM_WIDE or ((3 shl 4) shl 16)
+		push	PLAYFIELD_TOP
 		call	IRand
-		mov	bx, 280h
+		mov	bx, PLAYFIELD_RIGHT
 		cwd
 		idiv	bx
 		push	dx
@@ -19182,18 +19182,18 @@ sub_1B6D9	proc far
 		idiv	word_39DE4
 		cmp	dx, 0Ah
 		jnz	short loc_1B70E
-		push	180015h
+		push	PP_2_SPREAD_WIDE_AIMED or (((1 shl 4) + 8) shl 16)
 		mov	ax, point_3982A.y
-		add	ax, 20h	; ' '
+		add	ax, 32
 		push	ax
 		mov	ax, point_3982A.x
-		add	ax, 1Ch
+		add	ax, 28
 		push	ax
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_pattern$qii16pellet_pattern_ti
 		add	sp, 0Ch
-		push	18h
+		push	(1 shl 4) + 8
 		jmp	loc_1B7D1
 ; ---------------------------------------------------------------------------
 
@@ -19203,7 +19203,7 @@ loc_1B70E:
 		idiv	word_39DE4
 		cmp	dx, 19h
 		jnz	short loc_1B740
-		push	1C0015h
+		push	PP_2_SPREAD_WIDE_AIMED or (((1 shl 4) + 12) shl 16)
 		mov	ax, point_3982A.y
 		add	ax, 32
 		push	ax
@@ -19214,7 +19214,7 @@ loc_1B70E:
 		push	offset _Pellets
 		call	@CPellets@add_pattern$qii16pellet_pattern_ti
 		add	sp, 0Ch
-		push	1Ch
+		push	(1 shl 4) + 12
 		jmp	loc_1B7D1
 ; ---------------------------------------------------------------------------
 
@@ -19224,7 +19224,7 @@ loc_1B740:
 		idiv	word_39DE4
 		cmp	dx, 28h	; '('
 		jnz	short loc_1B771
-		push	200015h
+		push	PP_2_SPREAD_WIDE_AIMED or ((2 shl 4) shl 16)
 		mov	ax, point_3982A.y
 		add	ax, 32
 		push	ax
@@ -19235,7 +19235,7 @@ loc_1B740:
 		push	offset _Pellets
 		call	@CPellets@add_pattern$qii16pellet_pattern_ti
 		add	sp, 0Ch
-		push	20h ; ' '
+		push	(2 shl 4)
 		jmp	short loc_1B7D1
 ; ---------------------------------------------------------------------------
 
@@ -19245,7 +19245,7 @@ loc_1B771:
 		idiv	word_39DE4
 		cmp	dx, 3Ch	; '<'
 		jnz	short loc_1B7A2
-		push	2C0015h
+		push	PP_2_SPREAD_WIDE_AIMED or (((2 shl 4) + 12) shl 16)
 		mov	ax, point_3982A.y
 		add	ax, 32
 		push	ax
@@ -19256,7 +19256,7 @@ loc_1B771:
 		push	offset _Pellets
 		call	@CPellets@add_pattern$qii16pellet_pattern_ti
 		add	sp, 0Ch
-		push	2Ch ; ','
+		push	(2 shl 4) + 12
 		jmp	short loc_1B7D1
 ; ---------------------------------------------------------------------------
 
@@ -19266,7 +19266,7 @@ loc_1B7A2:
 		idiv	word_39DE4
 		cmp	dx, 50h	; 'P'
 		jnz	short loc_1B7D5
-		push	320015h
+		push	PP_2_SPREAD_WIDE_AIMED or (((3 shl 4) + 2) shl 16)
 		mov	ax, point_3982A.y
 		add	ax, 32
 		push	ax
@@ -19277,10 +19277,10 @@ loc_1B7A2:
 		push	offset _Pellets
 		call	@CPellets@add_pattern$qii16pellet_pattern_ti
 		add	sp, 0Ch
-		push	32h ; '2'
+		push	(3 shl 4) + 2
 
 loc_1B7D1:
-		push	15h
+		push	PP_2_SPREAD_WIDE_AIMED
 		jmp	short loc_1B808
 ; ---------------------------------------------------------------------------
 
@@ -19290,7 +19290,7 @@ loc_1B7D5:
 		idiv	word_39DE4
 		cmp	dx, 6Eh	; 'n'
 		jnz	short loc_1B822
-		push	44000Ch
+		push	PP_1_AIMED or (((4 shl 4) + 4) shl 16)
 		mov	ax, point_3982A.y
 		add	ax, 32
 		push	ax
@@ -19301,7 +19301,7 @@ loc_1B7D5:
 		push	offset _Pellets
 		call	@CPellets@add_pattern$qii16pellet_pattern_ti
 		add	sp, 0Ch
-		push	44000Ch
+		push	PP_1_AIMED or (((4 shl 4) + 4) shl 16)
 
 loc_1B808:
 		mov	ax, point_3985C.y
@@ -19645,7 +19645,7 @@ loc_1BBD3:
 		cbw
 		cmp	ax, 2
 		jnz	loc_1DFFC
-		push	36001Bh
+		push	PP_5_SPREAD_WIDE_AIMED or (((3 shl 4) + 6) shl 16)
 		mov	ax, point_398F2.y
 		add	ax, 28
 		push	ax
@@ -19655,7 +19655,7 @@ loc_1BBD3:
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_pattern$qii16pellet_pattern_ti
-		push	36001Bh
+		push	PP_5_SPREAD_WIDE_AIMED or (((3 shl 4) + 6) shl 16)
 		mov	ax, point_398C0.y
 		add	ax, 28
 		push	ax
@@ -19665,12 +19665,12 @@ loc_1BBD3:
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_pattern$qii16pellet_pattern_ti
-		push	36001Bh
+		push	PP_5_SPREAD_WIDE_AIMED or (((3 shl 4) + 6) shl 16)
 		mov	ax, point_3988E.y
-		add	ax, 1Ch
+		add	ax, 28
 		push	ax
 		mov	ax, point_3988E.x
-		add	ax, 1Ch
+		add	ax, 28
 		push	ax
 		push	ds
 		push	offset _Pellets
@@ -19695,7 +19695,7 @@ loc_1BC8C:
 		cbw
 		cmp	ax, 3
 		jnz	loc_1DFFC
-		push	36001Bh
+		push	PP_5_SPREAD_WIDE_AIMED or (((3 shl 4) + 6) shl 16)
 		mov	ax, point_398F2.y
 		add	ax, 28
 		push	ax
@@ -19705,7 +19705,7 @@ loc_1BC8C:
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_pattern$qii16pellet_pattern_ti
-		push	36001Bh
+		push	PP_5_SPREAD_WIDE_AIMED or (((3 shl 4) + 6) shl 16)
 		mov	ax, point_398C0.y
 		add	ax, 28
 		push	ax
@@ -19715,12 +19715,12 @@ loc_1BC8C:
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_pattern$qii16pellet_pattern_ti
-		push	36001Bh
+		push	PP_5_SPREAD_WIDE_AIMED or (((3 shl 4) + 6) shl 16)
 		mov	ax, point_3988E.y
-		add	ax, 1Ch
+		add	ax, 28
 		push	ax
 		mov	ax, point_3988E.x
-		add	ax, 1Ch
+		add	ax, 28
 		push	ax
 		push	ds
 		push	offset _Pellets
@@ -19728,7 +19728,7 @@ loc_1BC8C:
 		add	sp, 24h
 
 loc_1BD19:
-		push	36001Bh
+		push	PP_5_SPREAD_WIDE_AIMED or (((3 shl 4) + 6) shl 16)
 		mov	ax, point_3982A.y
 		add	ax, 28
 		push	ax
@@ -19738,7 +19738,7 @@ loc_1BD19:
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_pattern$qii16pellet_pattern_ti
-		push	36001Bh
+		push	PP_5_SPREAD_WIDE_AIMED or (((3 shl 4) + 6) shl 16)
 		mov	ax, point_3985C.y
 		add	ax, 28
 		push	ax
@@ -20209,7 +20209,7 @@ loc_1C1AF:
 		add	ax, 28
 		push	ax
 		call	iatan2
-		mov	byte ptr word_39E16, al
+		mov	angle_39E16, al
 		mov	ax, RES_Y
 		sub	ax, point_398C0.y
 		add	ax, 28
@@ -20219,13 +20219,13 @@ loc_1C1AF:
 		add	ax, 28
 		push	ax
 		call	iatan2
-		mov	byte ptr word_39E16+1, al
-		mov	al, byte ptr word_39E16
-		add	al, 0F0h
-		mov	byte ptr word_39E16, al
-		mov	al, byte ptr word_39E16+1
+		mov	angle_39E17, al
+		mov	al, angle_39E16
+		add	al, -10h
+		mov	angle_39E16, al
+		mov	al, angle_39E17
 		add	al, 10h
-		mov	byte ptr word_39E16+1, al
+		mov	angle_39E17, al
 
 loc_1C21E:
 		mov	ax, word_3A6CA
@@ -20234,8 +20234,8 @@ loc_1C21E:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1C236
-		push	word_39E16
-		push	word_39E16+1
+		push	word ptr angle_39E16
+		push	word ptr angle_39E17
 		call	sub_1B824
 
 loc_1C236:
@@ -20260,14 +20260,14 @@ loc_1C25D:
 		cmp	dx, 1
 		jnz	loc_1C327
 		inc	x_39E06
-		mov	al, byte ptr word_39E16
-		add	al, 0FEh ; '?'
-		mov	byte ptr word_39E16, al
-		mov	al, byte ptr word_39E16+1
+		mov	al, angle_39E16
+		add	al, -2
+		mov	angle_39E16, al
+		mov	al, angle_39E17
 		add	al, 2
-		mov	byte ptr word_39E16+1, al
-		push	word_39E16
-		push	word_39E16+1
+		mov	angle_39E17, al
+		push	word ptr angle_39E16
+		push	word ptr angle_39E17
 		call	sub_1B824
 		cmp	x_39E06, 10
 		jle	loc_1C327
@@ -20294,35 +20294,35 @@ loc_1C2B7:
 		inc	x_39E06
 		cmp	word_39E08, 3
 		jnz	short loc_1C2DA
-		mov	al, byte ptr word_39E16
+		mov	al, angle_39E16
 		add	al, 4
-		mov	byte ptr word_39E16, al
+		mov	angle_39E16, al
 		jmp	short loc_1C2FF
 ; ---------------------------------------------------------------------------
 
 loc_1C2DA:
 		cmp	word_39E08, 7
 		jnz	short loc_1C2E8
-		mov	al, byte ptr word_39E16+1
-		add	al, 0FCh
+		mov	al, angle_39E17
+		add	al, -4
 		jmp	short loc_1C2FC
 ; ---------------------------------------------------------------------------
 
 loc_1C2E8:
 		cmp	word_39E08, 0Bh
 		jnz	short loc_1C2FF
-		mov	al, byte ptr word_39E16
+		mov	al, angle_39E16
 		add	al, 2
-		mov	byte ptr word_39E16, al
-		mov	al, byte ptr word_39E16+1
-		add	al, 0FEh ; '?'
+		mov	angle_39E16, al
+		mov	al, angle_39E17
+		add	al, -2
 
 loc_1C2FC:
-		mov	byte ptr word_39E16+1, al
+		mov	angle_39E17, al
 
 loc_1C2FF:
-		push	word_39E16
-		push	word_39E16+1
+		push	word ptr angle_39E16
+		push	word ptr angle_39E17
 		call	sub_1B824
 		cmp	x_39E06, 10
 		jle	short loc_1C327
@@ -20483,7 +20483,7 @@ loc_1C485:
 
 loc_1C488:
 		mov	word_39DE4, ax
-		mov	byte ptr word_39E16, 0
+		mov	angle_39E16, 0
 		jmp	loc_1DFFC
 ; ---------------------------------------------------------------------------
 
@@ -20495,7 +20495,7 @@ loc_1C493:
 		inc	word_3A6CA
 		inc	word_39E04
 		inc	x_39E06
-		dec	byte ptr word_39E16
+		dec	angle_39E16
 		push	30000h
 		pushd	0
 		push	ds
@@ -20570,11 +20570,11 @@ loc_1C55B:
 		idiv	word_39DE4
 		or	dx, dx
 		jnz	short loc_1C5BA
-		pushd	0
-		pushd	0
-		push	40h
-		mov	al, 80h	; '?'
-		sub	al, byte ptr word_39E16
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		push	(4 shl 4)
+		mov	al, 80h
+		sub	al, angle_39E16
 		push	ax
 		mov	ax, point_3982A.y
 		add	ax, 32
@@ -20585,10 +20585,10 @@ loc_1C55B:
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		pushd	0
-		pushd	0
-		push	40h
-		push	word_39E16
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		push	(4 shl 4)
+		push	word ptr angle_39E16
 		mov	ax, point_3985C.y
 		add	ax, 32
 		push	ax
@@ -20617,7 +20617,7 @@ loc_1C5D4:
 		jle	short loc_1C5F3
 		mov	x_39E06, -15
 		mov	word_39E08, 3
-		mov	byte ptr word_39E16, 80h ; '?'
+		mov	angle_39E16, 80h
 
 loc_1C5F3:
 		cmp	word_39E08, 3
@@ -20627,11 +20627,11 @@ loc_1C5F3:
 		idiv	word_39DE4
 		or	dx, dx
 		jnz	short loc_1C65A
-		pushd	0
-		push	400004h
-		push	40h
-		mov	al, 80h	; '?'
-		sub	al, byte ptr word_39E16
+		pushd	0 or (0 shl 16)
+		push	PM_FALL_STRAIGHT_FROM_TOP_THEN_NORMAL or ((4 shl 4) shl 16)
+		push	(4 shl 4)
+		mov	al, 80h
+		sub	al, angle_39E16
 		push	ax
 		mov	ax, point_3982A.y
 		add	ax, 32
@@ -20642,10 +20642,10 @@ loc_1C5F3:
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		pushd	0
-		push	400004h
-		push	40h
-		push	word_39E16
+		pushd	0 or (0 shl 16)
+		push	PM_FALL_STRAIGHT_FROM_TOP_THEN_NORMAL or ((4 shl 4) shl 16)
+		push	(4 shl 4)
+		push	word ptr angle_39E16
 		mov	ax, point_3985C.y
 		add	ax, 32
 		push	ax
@@ -20667,7 +20667,7 @@ loc_1C65A:
 		mov	word_39E08, 0
 		mov	word_3A6CA, 0
 		inc	byte ptr word_39E14
-		mov	byte ptr word_39E16, 0
+		mov	angle_39E16, 0
 
 loc_1C67D:
 		pushd	0 or (0 shl 16)
@@ -20926,7 +20926,7 @@ loc_1C8C2:
 		add	ax, 1Ch
 		push	ax
 		call	iatan2
-		mov	byte ptr word_39E16, al
+		mov	angle_39E16, al
 		mov	ax, RES_Y
 		sub	ax, point_398C0.y
 		add	ax, 28
@@ -20936,13 +20936,13 @@ loc_1C8C2:
 		add	ax, 28
 		push	ax
 		call	iatan2
-		mov	byte ptr word_39E16+1, al
-		mov	al, byte ptr word_39E16
-		add	al, 0F0h
-		mov	byte ptr word_39E16, al
-		mov	al, byte ptr word_39E16+1
+		mov	angle_39E17, al
+		mov	al, angle_39E16
+		add	al, -10h
+		mov	angle_39E16, al
+		mov	al, angle_39E17
 		add	al, 10h
-		mov	byte ptr word_39E16+1, al
+		mov	angle_39E17, al
 
 loc_1C931:
 		mov	ax, word_3A6CA
@@ -20951,8 +20951,8 @@ loc_1C931:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1C949
-		push	word_39E16
-		push	word_39E16+1
+		push	word ptr angle_39E16
+		push	word ptr angle_39E17
 		call	sub_1B824
 
 loc_1C949:
@@ -20977,25 +20977,25 @@ loc_1C969:
 		inc	x_39E06
 		cmp	word_39E08, 2
 		jnz	short loc_1C993
-		mov	al, byte ptr word_39E16
-		add	al, 0FEh ; '?'
-		mov	byte ptr word_39E16, al
-		mov	al, byte ptr word_39E16+1
-		add	al, 0FEh ; '?'
+		mov	al, angle_39E16
+		add	al, -2
+		mov	angle_39E16, al
+		mov	al, angle_39E17
+		add	al, -2
 		jmp	short loc_1C9A0
 ; ---------------------------------------------------------------------------
 
 loc_1C993:
-		mov	al, byte ptr word_39E16
+		mov	al, angle_39E16
 		add	al, 2
-		mov	byte ptr word_39E16, al
-		mov	al, byte ptr word_39E16+1
+		mov	angle_39E16, al
+		mov	al, angle_39E17
 		add	al, 2
 
 loc_1C9A0:
-		mov	byte ptr word_39E16+1, al
-		push	word_39E16
-		push	word_39E16+1
+		mov	angle_39E17, al
+		push	word ptr angle_39E16
+		push	word ptr angle_39E17
 		call	sub_1B824
 		cmp	x_39E06, 10
 		jle	loc_1CA38
@@ -21020,10 +21020,10 @@ loc_1C9D1:
 		inc	x_39E06
 		cmp	word_39E08, 3
 		jnz	short loc_1C9F9
-		mov	al, byte ptr word_39E16
+		mov	al, angle_39E16
 		add	al, 3
-		mov	byte ptr word_39E16, al
-		mov	al, byte ptr word_39E16+1
+		mov	angle_39E16, al
+		mov	al, angle_39E17
 		add	al, 3
 		jmp	short loc_1CA0D
 ; ---------------------------------------------------------------------------
@@ -21031,18 +21031,18 @@ loc_1C9D1:
 loc_1C9F9:
 		cmp	word_39E08, 7
 		jnz	short loc_1CA10
-		mov	al, byte ptr word_39E16
-		add	al, 0FDh ; '?'
-		mov	byte ptr word_39E16, al
-		mov	al, byte ptr word_39E16+1
-		add	al, 0FDh ; '?'
+		mov	al, angle_39E16
+		add	al, -3
+		mov	angle_39E16, al
+		mov	al, angle_39E17
+		add	al, -3
 
 loc_1CA0D:
-		mov	byte ptr word_39E16+1, al
+		mov	angle_39E17, al
 
 loc_1CA10:
-		push	word_39E16
-		push	word_39E16+1
+		push	word ptr angle_39E16
+		push	word ptr angle_39E17
 		call	sub_1B824
 		cmp	x_39E06, 10
 		jle	short loc_1CA38
@@ -21356,7 +21356,7 @@ loc_1CCF1:
 		jle	loc_1CF52
 
 loc_1CD9D:
-		push	30018h
+		push	PP_3_SPREAD_NARROW_AIMED or (3 shl 16)
 		jmp	loc_1CF38
 ; ---------------------------------------------------------------------------
 
@@ -21456,7 +21456,7 @@ loc_1CDD6:
 		cbw
 		cmp	ax, RANK_HARD
 		jnz	short loc_1CF29
-		push	30018h
+		push	PP_3_SPREAD_NARROW_AIMED or (3 shl 16)
 		mov	ax, point_398F2.y
 		add	ax, 28
 		push	ax
@@ -21473,7 +21473,7 @@ loc_1CF29:
 		cbw
 		cmp	ax, RANK_LUNATIC
 		jnz	short loc_1CF52
-		push	4001Ch
+		push	PP_5_SPREAD_NARROW_AIMED or (4 shl 16)
 
 loc_1CF38:
 		mov	ax, point_398F2.y
@@ -22716,11 +22716,11 @@ loc_1DB5B:
 		sub	ax, point_39DFC.x
 		push	ax
 		call	iatan2
-		mov	byte ptr word_39E16, al
-		pushd	0
-		pushd	0
-		push	30h ; '0'
-		push	word_39E16
+		mov	angle_39E16, al
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		push	(3 shl 4)
+		push	word ptr angle_39E16
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+5450h]
@@ -24216,7 +24216,8 @@ sub_1E886	endp
 
 sub_1E908	proc far
 
-var_13		= word ptr -13h
+@@angle		= byte ptr -13h
+var_12		= word ptr -12h
 var_10		= byte ptr -10h
 var_8		= byte ptr -8
 
@@ -24232,7 +24233,7 @@ var_8		= byte ptr -8
 		push	580050h
 		push	480040h
 		push	ds
-		push	offset word_39E18
+		push	offset speed_39E18
 		call	sub_1E841
 		push	8
 		call	_mdrv2_se_play
@@ -24250,7 +24251,7 @@ loc_1E947:
 		mov	di, ax
 		mov	ax, point_3982A.y
 		add	ax, 80
-		mov	[bp+var_13+1], ax
+		mov	[bp+var_12], ax
 		push	ss
 		lea	ax, [bp+var_8]
 		push	ax
@@ -24258,7 +24259,7 @@ loc_1E947:
 		lea	ax, [bp+var_10]
 		push	ax
 		push	di
-		push	[bp+var_13+1]
+		push	[bp+var_12]
 		push	word_39E1A+1
 		push	word_39E1A
 		push	4
@@ -24303,7 +24304,7 @@ loc_1E9C6:
 		lea	ax, [bp+var_10]
 		add	bx, ax
 		mov	ax, ss:[bx]
-		sub	ax, [bp+var_13+1]
+		sub	ax, [bp+var_12]
 		push	ax
 		mov	bx, si
 		add	bx, bx
@@ -24313,11 +24314,11 @@ loc_1E9C6:
 		sub	ax, di
 		push	ax
 		call	iatan2
-		mov	byte ptr [bp+var_13], al
-		pushd	0
-		pushd	0
-		push	word_39E18
-		push	[bp+var_13]
+		mov	[bp+@@angle], al
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		push	speed_39E18
+		push	word ptr [bp+@@angle]
 		mov	bx, si
 		add	bx, bx
 		lea	ax, [bp+var_10]
@@ -24352,7 +24353,7 @@ loc_1EA31:
 		add	bx, bx
 		lea	ax, [bp+var_10]
 		add	bx, ax
-		mov	ax, 180h
+		mov	ax, 384
 		sub	ax, ss:[bx]
 		push	ax
 		mov	bx, si
@@ -24364,15 +24365,15 @@ loc_1EA31:
 		sub	ax, ss:[bx]
 		push	ax
 		call	iatan2
-		mov	byte ptr [bp+var_13], al
-		pushd	0
-		pushd	0
-		mov	ax, word_39E18
+		mov	[bp+@@angle], al
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		mov	ax, speed_39E18
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		push	ax
-		push	[bp+var_13]
+		push	word ptr [bp+@@angle]
 		mov	bx, si
 		add	bx, bx
 		lea	ax, [bp+var_10]
@@ -24403,7 +24404,7 @@ loc_1EA9F:
 		lea	ax, [bp+var_10]
 		push	ax
 		push	di
-		push	[bp+var_13+1]
+		push	[bp+var_12]
 		push	word_39E1A+1
 		push	word_39E1A
 		push	4
@@ -24426,7 +24427,7 @@ loc_1EAD2:
 		mov	di, ax
 		mov	ax, point_3982A.y
 		add	ax, 80
-		mov	[bp+var_13+1], ax
+		mov	[bp+var_12], ax
 		push	ss
 		lea	ax, [bp+var_8]
 		push	ax
@@ -24434,7 +24435,7 @@ loc_1EAD2:
 		lea	ax, [bp+var_10]
 		push	ax
 		push	di
-		push	[bp+var_13+1]
+		push	[bp+var_12]
 		push	word_39E1A+1
 		push	word_39E1A
 		push	4
@@ -24485,7 +24486,7 @@ var_8		= byte ptr -8
 		push	760070h
 		push	680060h
 		push	ds
-		push	offset word_39E18
+		push	offset speed_39E18
 		call	sub_1E841
 		add	sp, 0Ch
 		push	8
@@ -24546,7 +24547,7 @@ loc_1EBC7:
 loc_1EBD8:
 		cmp	word_3A6CA, 0F0h
 		jle	loc_1EC70
-		push	word_39E18
+		push	speed_39E18
 		push	ss
 		lea	ax, [bp+@@vector_y]
 		push	ax
@@ -24673,7 +24674,8 @@ sub_1EB24	endp
 
 sub_1ECF0	proc far
 
-var_23		= word ptr -23h
+@@angle		= byte ptr -23h
+var_22		= word ptr -22h
 var_20		= byte ptr -20h
 var_18		= byte ptr -18h
 var_10		= byte ptr -10h
@@ -24696,7 +24698,7 @@ loc_1ED01:
 		push	580050h
 		push	480040h
 		push	ds
-		push	offset word_39E18
+		push	offset speed_39E18
 		call	sub_1E841
 		push	8
 		call	_mdrv2_se_play
@@ -24714,7 +24716,7 @@ loc_1ED3A:
 		mov	di, ax
 		mov	ax, point_3982A.y
 		add	ax, 80
-		mov	[bp+var_23+1], ax
+		mov	[bp+var_22], ax
 		push	ss
 		lea	ax, [bp+var_8]
 		push	ax
@@ -24722,7 +24724,7 @@ loc_1ED3A:
 		lea	ax, [bp+var_10]
 		push	ax
 		push	di
-		push	[bp+var_23+1]
+		push	[bp+var_22]
 		push	word_39E22+1
 		push	word_39E22
 		push	4
@@ -24734,7 +24736,7 @@ loc_1ED3A:
 		lea	ax, [bp+var_20]
 		push	ax
 		push	di
-		push	[bp+var_23+1]
+		push	[bp+var_22]
 		push	word_39E22+1
 		mov	al, 0
 		sub	al, byte ptr word_39E22
@@ -24779,7 +24781,7 @@ loc_1EDD9:
 		lea	ax, [bp+var_10]
 		add	bx, ax
 		mov	ax, ss:[bx]
-		sub	ax, [bp+var_23+1]
+		sub	ax, [bp+var_22]
 		push	ax
 		mov	bx, si
 		add	bx, bx
@@ -24789,11 +24791,11 @@ loc_1EDD9:
 		sub	ax, di
 		push	ax
 		call	iatan2
-		mov	byte ptr [bp+var_23], al
-		pushd	0
-		pushd	0
-		push	word_39E18
-		push	[bp+var_23]
+		mov	[bp+@@angle], al
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		push	speed_39E18
+		push	word ptr [bp+@@angle]
 		mov	bx, si
 		add	bx, bx
 		lea	ax, [bp+var_10]
@@ -24812,7 +24814,7 @@ loc_1EDD9:
 		lea	ax, [bp+var_20]
 		add	bx, ax
 		mov	ax, ss:[bx]
-		sub	ax, [bp+var_23+1]
+		sub	ax, [bp+var_22]
 		push	ax
 		mov	bx, si
 		add	bx, bx
@@ -24822,11 +24824,11 @@ loc_1EDD9:
 		sub	ax, di
 		push	ax
 		call	iatan2
-		mov	byte ptr [bp+var_23], al
-		pushd	0
-		pushd	0
-		push	word_39E18
-		push	[bp+var_23]
+		mov	[bp+@@angle], al
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		push	speed_39E18
+		push	word ptr [bp+@@angle]
 		mov	bx, si
 		add	bx, bx
 		lea	ax, [bp+var_20]
@@ -24857,7 +24859,7 @@ loc_1EE95:
 		lea	ax, [bp+var_10]
 		push	ax
 		push	di
-		push	[bp+var_23+1]
+		push	[bp+var_22]
 		push	word_39E22+1
 		push	word_39E22
 		push	4
@@ -24869,7 +24871,7 @@ loc_1EE95:
 		lea	ax, [bp+var_20]
 		push	ax
 		push	di
-		push	[bp+var_23+1]
+		push	[bp+var_22]
 		push	word_39E22+1
 		mov	al, 0
 		sub	al, byte ptr word_39E22
@@ -24903,7 +24905,7 @@ loc_1EF00:
 		mov	di, ax
 		mov	ax, point_3982A.y
 		add	ax, 80
-		mov	[bp+var_23+1], ax
+		mov	[bp+var_22], ax
 		push	ss
 		lea	ax, [bp+var_8]
 		push	ax
@@ -24911,7 +24913,7 @@ loc_1EF00:
 		lea	ax, [bp+var_10]
 		push	ax
 		push	di
-		push	[bp+var_23+1]
+		push	[bp+var_22]
 		push	word_39E22+1
 		push	word_39E22
 		push	4
@@ -24923,7 +24925,7 @@ loc_1EF00:
 		lea	ax, [bp+var_20]
 		push	ax
 		push	di
-		push	[bp+var_23+1]
+		push	[bp+var_22]
 		push	word_39E22+1
 		mov	al, 0
 		sub	al, byte ptr word_39E22
@@ -24965,7 +24967,8 @@ sub_1ECF0	endp
 sub_1EF85	proc far
 
 var_6		= word ptr -6
-var_3		= word ptr -3
+@@angle		= byte ptr -3
+var_2		= word ptr -2
 arg_0		= word ptr  6
 
 		enter	6, 0
@@ -25070,26 +25073,26 @@ loc_1F087:
 		push	2D0028h
 		push	23001Eh
 		push	ds
-		push	offset word_39E18
+		push	offset speed_39E18
 		call	sub_1E841
 		push	0C000Ah
 		push	80005h
 		push	ss
-		lea	ax, [bp+var_3+1]
+		lea	ax, [bp+var_2]
 		push	ax
 		call	sub_1E841
 		add	sp, 18h
 		xor	si, si
-		mov	byte ptr [bp+var_3], 0
+		mov	[bp+@@angle], 0
 		jmp	short loc_1F0F3
 ; ---------------------------------------------------------------------------
 
 loc_1F0BB:
-		pushd	0
-		push	word_39E18
-		push	6
-		push	word_39E18
-		push	[bp+var_3]
+		pushd	0 or (0 shl 16)
+		push	speed_39E18
+		push	PM_CHASE
+		push	speed_39E18
+		push	word ptr [bp+@@angle]
 		mov	ax, point_3982A.y
 		add	ax, 80
 		push	ax
@@ -25101,14 +25104,14 @@ loc_1F0BB:
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii
 		add	sp, 14h
 		inc	si
-		mov	ax, 100h
+		mov	ax, 256
 		cwd
-		idiv	[bp+var_3+1]
-		add	al, byte ptr [bp+var_3]
-		mov	byte ptr [bp+var_3], al
+		idiv	[bp+var_2]
+		add	al, [bp+@@angle]
+		mov	[bp+@@angle], al
 
 loc_1F0F3:
-		cmp	si, [bp+var_3+1]
+		cmp	si, [bp+var_2]
 		jl	short loc_1F0BB
 
 loc_1F0F8:
@@ -25346,7 +25349,7 @@ loc_1F263:
 		push	370032h
 		push	2D0028h
 		push	ds
-		push	offset word_39E18
+		push	offset speed_39E18
 		call	sub_1E841
 		push	8
 		call	_mdrv2_se_play
@@ -25544,7 +25547,7 @@ loc_1F4F8:
 		add	bx, bx
 		cmp	word ptr [bx+5487h], 0FC19h
 		jz	short loc_1F548
-		push	240017h
+		push	PP_3_SPREAD_WIDE_AIMED or (((2 shl 4) + 4) shl 16)
 		mov	ax, point_3982A.y
 		add	ax, 80
 		push	ax
@@ -25626,7 +25629,7 @@ var_8		= byte ptr -8
 		push	370032h
 		push	2D0028h
 		push	ds
-		push	offset word_39E18
+		push	offset speed_39E18
 		call	sub_1E841
 		add	sp, 0Ch
 		push	8
@@ -25686,7 +25689,7 @@ loc_1F644:
 		cmp	dx, 8
 		jnz	loc_1F6E4
 		push	word_39E5A
-		mov	ax, word_39E18
+		mov	ax, speed_39E18
 		mov	bx, 0Ah
 		cwd
 		idiv	bx
@@ -25825,11 +25828,11 @@ var_8		= byte ptr -8
 		jnz	short loc_1F7AD
 		mov	word_39E5C, 20h	; ' '
 		mov	byte ptr word_39E5A+1, 0
-		mov	byte ptr word_39E5E, 80h ; '?'
+		mov	angle_39E5E, 80h
 		push	380030h
 		push	280020h
 		push	ds
-		push	offset word_39E18
+		push	offset speed_39E18
 		call	sub_1E841
 		push	8
 		call	_mdrv2_se_play
@@ -25893,26 +25896,26 @@ loc_1F821:
 		jle	short loc_1F884
 		cmp	word_3A6CA, 10Eh
 		jle	short loc_1F838
-		mov	al, byte ptr word_39E5E
+		mov	al, angle_39E5E
 		add	al, 0Ch
 		jmp	short loc_1F83D
 ; ---------------------------------------------------------------------------
 
 loc_1F838:
-		mov	al, byte ptr word_39E5E
-		add	al, 0F4h
+		mov	al, angle_39E5E
+		add	al, -0Ch
 
 loc_1F83D:
-		mov	byte ptr word_39E5E, al
+		mov	angle_39E5E, al
 		xor	si, si
 		jmp	short loc_1F877
 ; ---------------------------------------------------------------------------
 
 loc_1F844:
-		pushd	0
-		pushd	0
-		push	word_39E18
-		push	word_39E5E
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		push	speed_39E18
+		push	word ptr angle_39E5E
 		mov	bx, si
 		add	bx, bx
 		lea	ax, [bp+var_10]
@@ -26020,11 +26023,11 @@ loc_1F91A:
 		cmp	word_3A6CA, 64h	; 'd'
 		jnz	short loc_1F953
 		mov	word_39E60, 20h	; ' '
-		mov	byte ptr word_39E5E+1, 0
+		mov	byte_39E5F, 0
 		push	3E003Ah
 		push	360032h
 		push	ds
-		push	offset word_39E18
+		push	offset speed_39E18
 		call	sub_1E841
 		push	8
 		call	_mdrv2_se_play
@@ -26050,7 +26053,7 @@ loc_1F953:
 		push	si
 		push	ax
 		push	word_39E60
-		push	word_39E5E+1
+		push	word ptr byte_39E5F
 		push	4
 		call	sub_1E886
 		push	4
@@ -26060,9 +26063,9 @@ loc_1F953:
 		push	offset unk_39E64
 		call	sub_17C2F
 		add	sp, 0Ah
-		mov	al, byte ptr word_39E5E+1
+		mov	al, byte_39E5F
 		add	al, 3
-		mov	byte ptr word_39E5E+1, al
+		mov	byte_39E5F, al
 		cmp	word_39E60, 50h	; 'P'
 		jge	short loc_1F9AD
 		add	word_39E60, 8
@@ -26075,7 +26078,7 @@ loc_1F9AD:
 		push	si
 		push	di
 		push	word_39E60
-		push	word_39E5E+1
+		push	word ptr byte_39E5F
 		push	4
 		call	sub_1E886
 		push	70004h
@@ -26098,7 +26101,7 @@ loc_1F9DA:
 		mov	[bp+var_2], dx
 		push	bx
 		push	140007h
-		push	word_39E18
+		push	speed_39E18
 		push	190h
 		mov	ax, _player_left
 		add	ax, 14
@@ -26133,7 +26136,7 @@ loc_1FA30:
 		push	si
 		push	ax
 		push	word_39E60
-		push	word_39E5E+1
+		push	word ptr byte_39E5F
 		push	4
 		call	sub_1E886
 		push	4
@@ -27027,7 +27030,7 @@ sub_20071	endp
 
 sub_201BE	proc far
 
-var_2		= word ptr -2
+@@pattern		= word ptr -2
 
 		enter	2, 0
 		push	si
@@ -27140,12 +27143,12 @@ loc_202A6:
 		cbw
 		cmp	ax, 0Ah
 		jge	short loc_202D4
-		mov	[bp+var_2], 0Ch
+		mov	[bp+@@pattern], PP_1_AIMED
 		jmp	short loc_202D9
 ; ---------------------------------------------------------------------------
 
 loc_202D4:
-		mov	[bp+var_2], 1Dh
+		mov	[bp+@@pattern], PP_1_RANDOM_NARROW_AIMED
 
 loc_202D9:
 		mov	ax, si
@@ -27154,21 +27157,21 @@ loc_202D9:
 		add	bx, ax
 		cmp	word ptr es:[bx], 19h
 		jnz	short loc_2031C
-		push	38h ; '8'
-		push	[bp+var_2]
+		push	(3 shl 4) + 8
+		push	[bp+@@pattern]
 		mov	ax, si
 		add	ax, ax
 		les	bx, off_39E88
 		add	bx, ax
 		mov	ax, es:[bx]
-		add	ax, 0Ch
+		add	ax, 12
 		push	ax
 		mov	ax, si
 		add	ax, ax
 		les	bx, font
 		add	bx, ax
 		mov	ax, es:[bx]
-		add	ax, 0Ch
+		add	ax, 12
 		push	ax
 		push	ds
 		push	offset _Pellets
@@ -29133,7 +29136,7 @@ off_212D7	dw offset loc_20EDB
 
 sub_21301	proc far
 
-var_1		= byte ptr -1
+@@pattern		= byte ptr -1
 arg_0		= word ptr  6
 arg_2		= word ptr  8
 
@@ -29269,36 +29272,36 @@ loc_2141A:
 		jmp	cs:off_2155F[bx]
 
 loc_21445:
-		mov	[bp+var_1], 0Ch
+		mov	[bp+@@pattern], PP_1_AIMED
 		jmp	short loc_21467
 ; ---------------------------------------------------------------------------
 
 loc_2144B:
-		mov	[bp+var_1], 1Dh
+		mov	[bp+@@pattern], PP_1_RANDOM_NARROW_AIMED
 		jmp	short loc_21467
 ; ---------------------------------------------------------------------------
 
 loc_21451:
-		mov	[bp+var_1], 15h
+		mov	[bp+@@pattern], PP_2_SPREAD_WIDE_AIMED
 		jmp	short loc_21467
 ; ---------------------------------------------------------------------------
 
 loc_21457:
-		mov	[bp+var_1], 17h
+		mov	[bp+@@pattern], PP_3_SPREAD_WIDE_AIMED
 		jmp	short loc_21467
 ; ---------------------------------------------------------------------------
 
 loc_2145D:
-		mov	[bp+var_1], 19h
+		mov	[bp+@@pattern], PP_4_SPREAD_WIDE_AIMED
 		jmp	short loc_21467
 ; ---------------------------------------------------------------------------
 
 loc_21463:
-		mov	[bp+var_1], 1Bh
+		mov	[bp+@@pattern], PP_5_SPREAD_WIDE_AIMED
 
 loc_21467:
-		push	38h ; '8'
-		mov	al, [bp+var_1]
+		push	(3 shl 4) + 8
+		mov	al, [bp+@@pattern]
 		mov	ah, 0
 		push	ax
 		mov	ax, si
@@ -29306,14 +29309,14 @@ loc_21467:
 		les	bx, off_39E9E
 		add	bx, ax
 		mov	ax, es:[bx]
-		add	ax, 0Ch
+		add	ax, 12
 		push	ax
 		mov	ax, si
 		add	ax, ax
 		les	bx, off_39E9A
 		add	bx, ax
 		mov	ax, es:[bx]
-		add	ax, 0Ch
+		add	ax, 12
 		push	ax
 		push	ds
 		push	offset _Pellets
@@ -31912,12 +31915,12 @@ loc_229EF:
 		mov	al, 0FFh
 
 loc_229F1:
-		mov	byte ptr word_3A387+1, al
+		mov	byte_3A388, al
 
 loc_229F4:
 		cmp	word_3A37F, 64h	; 'd'
 		jge	short loc_22A07
-		mov	al, byte ptr word_3A387+1
+		mov	al, byte_3A388
 		cbw
 		push	ax
 		call	sub_2285F
@@ -31932,10 +31935,10 @@ loc_22A07:
 		push	1E0014h
 		push	0F000Ah
 		push	ds
-		push	offset word_3A385
+		push	offset speed_3A385
 		call	sub_2281A
 		add	sp, 0Ch
-		mov	al, byte ptr word_3A387+1
+		mov	al, byte_3A388
 		cbw
 		cmp	ax, 0FFFFh
 		jnz	short loc_22A32
@@ -31944,23 +31947,23 @@ loc_22A07:
 ; ---------------------------------------------------------------------------
 
 loc_22A32:
-		mov	al, 80h	; '?'
+		mov	al, 80h
 
 loc_22A34:
-		mov	byte ptr word_3A387, al
+		mov	angle_3A387, al
 
 loc_22A37:
 		cmp	word_3A37F, 0A0h ; '?'
 		jge	short loc_22A9F
 		push	1
-		mov	al, byte ptr word_3A387+1
+		mov	al, byte_3A388
 		cbw
 		push	ax
 		call	sub_227C8
 		add	sp, 4
 		mov	ax, 3Ch	; '<'
 		cwd
-		idiv	word_3A385
+		idiv	speed_3A385
 		push	ax
 		mov	ax, word_3A37F
 		cwd
@@ -31968,10 +31971,10 @@ loc_22A37:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_22AA5
-		pushd	0
-		pushd	0
-		push	32h ; '2'
-		push	word_3A387
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		push	(3 shl 4) + 2
+		push	word ptr angle_3A387
 		mov	ax, point_3982A.y
 		add	ax, 44
 		push	ax
@@ -31982,14 +31985,14 @@ loc_22A37:
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii
 		add	sp, 14h
-		mov	al, byte ptr word_3A387+1
+		mov	al, byte_3A388
 		cbw
 		shl	ax, 7
 		cwd
-		idiv	word_3A385
-		mov	dl, byte ptr word_3A387
+		idiv	speed_3A385
+		mov	dl, angle_3A387
 		sub	dl, al
-		mov	byte ptr word_3A387, dl
+		mov	angle_3A387, dl
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -32025,9 +32028,9 @@ loc_22ABA:
 		push	60005h
 		push	40004h
 		push	ds
-		push	offset word_3A385
+		push	offset speed_3A385
 		call	sub_2281A
-		push	word_3A385
+		push	speed_3A385
 		push	ds
 		push	offset point_3A389.y
 		push	ds
@@ -32276,19 +32279,19 @@ sub_22B88	endp
 
 sub_22CF6	proc far
 
-var_2		= word ptr -2
+@@chase_speed		= word ptr -2
 
 		enter	2, 0
 		push	41003Eh
 		push	3A0037h
 		push	ss
-		lea	ax, [bp+var_2]
+		lea	ax, [bp+@@chase_speed]
 		push	ax
 		call	sub_2281A
-		pushd	0
-		push	[bp+var_2]
-		push	60010h
-		push	0F0h
+		pushd	0 or (0 shl 16)
+		push	[bp+@@chase_speed]
+		push	(1 shl 4) or (PM_CHASE shl 16)
+		push	(-10h and 255)
 		mov	ax, point_3982A.y
 		add	ax, 44
 		push	ax
@@ -32299,10 +32302,10 @@ var_2		= word ptr -2
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii
 		add	sp, 20h
-		pushd	0
-		push	[bp+var_2]
-		push	60010h
-		push	90h
+		pushd	0 or (0 shl 16)
+		push	[bp+@@chase_speed]
+		push	(1 shl 4) or (PM_CHASE shl 16)
+		push	(-70h and 255)
 		mov	ax, point_3982A.y
 		add	ax, 44
 		push	ax
@@ -32324,19 +32327,19 @@ sub_22CF6	endp
 
 sub_22D63	proc far
 
-var_2		= word ptr -2
+@@speed		= word ptr -2
 
 		enter	2, 0
 		push	50004Bh
 		push	46003Ch
 		push	ss
-		lea	ax, [bp+var_2]
+		lea	ax, [bp+@@speed]
 		push	ax
 		call	sub_2281A
-		pushd	0
-		pushd	0
-		push	[bp+var_2]
-		push	30h ; '0'
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		push	[bp+@@speed]
+		push	30h
 		mov	ax, point_3982A.y
 		add	ax, 44
 		push	ax
@@ -32347,10 +32350,10 @@ var_2		= word ptr -2
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii
 		add	sp, 20h
-		pushd	0
-		pushd	0
-		push	[bp+var_2]
-		push	50h ; 'P'
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		push	[bp+@@speed]
+		push	50h
 		mov	ax, point_3982A.y
 		add	ax, 44
 		push	ax
@@ -32438,14 +32441,14 @@ sub_22E09	endp
 
 sub_22E42	proc far
 
-var_1		= byte ptr -1
+@@angle		= byte ptr -1
 
 		enter	2, 0
 		push	si
 		push	42003Ch
 		push	360030h
 		push	ds
-		push	offset word_3A385
+		push	offset speed_3A385
 		call	sub_2281A
 		add	sp, 0Ch
 		xor	si, si
@@ -32455,11 +32458,11 @@ var_1		= byte ptr -1
 loc_22E62:
 		call	IRand
 		and	al, 7Fh
-		mov	[bp+var_1], al
-		pushd	0
-		pushd	0
-		push	word_3A385
-		push	word ptr [bp+var_1]
+		mov	[bp+@@angle], al
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		push	speed_3A385
+		push	word ptr [bp+@@angle]
 		mov	ax, point_3982A.y
 		add	ax, 44
 		push	ax
@@ -32495,7 +32498,7 @@ var_2		= word ptr -2
 		push	600050h
 		push	400030h
 		push	ds
-		push	offset word_3A385
+		push	offset speed_3A385
 		call	sub_2281A
 		add	sp, 0Ch
 		xor	si, si
@@ -32513,9 +32516,9 @@ loc_22EBC:
 		cwd
 		idiv	bx
 		mov	[bp+var_4], dx
-		pushd	0
-		push	word_3A385
-		push	20000h
+		pushd	0 or (0 shl 16)
+		push	speed_3A385
+		push	(0 shl 4) or (PM_SLING_AIMED shl 16)
 		push	0
 		mov	ax, point_3982A.y
 		add	ax, [bp+var_4]
@@ -32722,15 +32725,15 @@ loc_230A3:
 		cbw
 		cmp	ax, RANK_LUNATIC
 		jnz	short loc_230B1
-		mov	ax, 0Ah
+		mov	ax, 10
 		jmp	short loc_230B4
 ; ---------------------------------------------------------------------------
 
 loc_230B1:
-		mov	ax, 32h	; '2'
+		mov	ax, (3 shl 4) + 2
 
 loc_230B4:
-		mov	word_3A385, ax
+		mov	speed_3A385, ax
 		jmp	loc_232A0
 ; ---------------------------------------------------------------------------
 
@@ -33165,12 +33168,12 @@ loc_2336A:
 		push	ds
 		push	offset aTamasii_bos ; "tamasii.bos"
 		push	ds
-		push	offset word_3A3C9
+		push	offset x_3A3C9
 		call	sub_1568F
 		mov	word_3A3F3, 0
-		mov	ax, word_3A3C9
+		mov	ax, x_3A3C9
 		mov	[bp+var_32], ax
-		mov	ax, word_3A3CB
+		mov	ax, y_3A3CB
 		mov	[bp+var_30], ax
 		mov	ax, word_3A3CD
 		mov	[bp+var_2E], ax
@@ -33359,14 +33362,14 @@ sub_2355F	proc far
 		push	320000h
 		push	0
 		push	ds
-		push	offset word_3A3C9
+		push	offset x_3A3C9
 		call	sub_166D2
 		push	1900040h
 		push	2400020h
 		push	320000h
 		push	0
 		push	ds
-		push	offset word_3A3FB
+		push	offset x_3A3FB
 		call	sub_166D2
 		add	sp, 24h
 		xor	si, si
@@ -34268,8 +34271,8 @@ sub_23D19	proc near
 		jl	loc_23E6A
 		cmp	word_3A6CA, 64h	; 'd'
 		jnz	short loc_23D63
-		mov	byte_3A6B9, 0
-		mov	byte_3A6BA, 0
+		mov	angle_3A6B9, 0
+		mov	angle_3A6BA, 0
 		push	10002h
 		push	30004h
 		push	ds
@@ -34289,32 +34292,32 @@ loc_23D63:
 		or	dx, dx
 		jnz	loc_23E6A
 		movsx	eax, word_3A6BB
-		mov	dl, byte_3A6B9
+		mov	dl, angle_3A6B9
 		mov	dh, 0
-		and	dx, 0FFh
+		and	dx, 255
 		add	dx, dx
 		mov	bx, dx
 		movsx	edx, _CosTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
-		add	ax, 140h
+		add	ax, 320
 		mov	si, ax
 		movsx	eax, word_3A6BB
-		mov	dl, byte_3A6B9
+		mov	dl, angle_3A6B9
 		mov	dh, 0
-		and	dx, 0FFh
+		and	dx, 255
 		add	dx, dx
 		mov	bx, dx
 		movsx	edx, _SinTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
-		add	ax, 0B4h ; '?'
+		add	ax, 180
 		mov	di, ax
-		pushd	0
-		pushd	0
-		push	32h ; '2'
-		mov	al, byte_3A6B9
-		add	al, byte_3A6BA
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		push	(3 shl 4) + 2
+		mov	al, angle_3A6B9
+		add	al, angle_3A6BA
 		push	ax
 		push	di
 		push	si
@@ -34322,35 +34325,35 @@ loc_23D63:
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii
 		movsx	eax, word_3A6BB
-		mov	dl, byte_3A6B9
+		mov	dl, angle_3A6B9
 		mov	dh, 0
-		add	dx, 80h	; '?'
-		and	dx, 0FFh
+		add	dx, 80h
+		and	dx, 255
 		add	dx, dx
 		mov	bx, dx
 		movsx	edx, _CosTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
-		add	ax, 140h
+		add	ax, 320
 		mov	si, ax
 		movsx	eax, word_3A6BB
-		mov	dl, byte_3A6B9
+		mov	dl, angle_3A6B9
 		mov	dh, 0
-		add	dx, 80h	; '?'
-		and	dx, 0FFh
+		add	dx, 80h
+		and	dx, 255
 		add	dx, dx
 		mov	bx, dx
 		movsx	edx, _SinTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
-		add	ax, 0B4h ; '?'
+		add	ax, 180
 		mov	di, ax
-		pushd	0
-		pushd	0
-		push	32h ; '2'
-		mov	al, byte_3A6B9
-		add	al, byte_3A6BA
-		add	al, 80h	; '?'
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		push	(3 shl 4) + 2
+		mov	al, angle_3A6B9
+		add	al, angle_3A6BA
+		add	al, 80h
 		push	ax
 		push	di
 		push	si
@@ -34363,10 +34366,10 @@ loc_23D63:
 		mov	word_3A6CA, 0
 
 loc_23E5E:
-		mov	al, byte_3A6B9
-		add	al, 0F8h
-		mov	byte_3A6B9, al
-		inc	byte_3A6BA
+		mov	al, angle_3A6B9
+		add	al, -8
+		mov	angle_3A6B9, al
+		inc	angle_3A6BA
 
 loc_23E6A:
 		pop	di
@@ -34382,22 +34385,23 @@ sub_23D19	endp
 
 sub_23E6E	proc near
 
-var_7		= word ptr -7
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@angle		= byte ptr -7
+var_6		= word ptr -6
+@@top		= word ptr -4
+@@left		= word ptr -2
 
 		enter	8, 0
 		push	si
 		push	320037h
 		push	3C0050h
 		push	ss
-		lea	ax, [bp+var_7+1]
+		lea	ax, [bp+var_6]
 		push	ax
 		call	sub_232E4
 		add	sp, 0Ch
 		mov	ax, word_3A6CA
 		cwd
-		idiv	[bp+var_7+1]
+		idiv	[bp+var_6]
 		or	dx, dx
 		jnz	short loc_23F13
 		xor	si, si
@@ -34407,38 +34411,29 @@ var_2		= word ptr -2
 loc_23E9A:
 		mov	bx, si
 		shl	bx, 5
-		and	bx, 0FFh
+		and	bx, 255
 		add	bx, bx
 		movsx	eax, _CosTable8[bx]
 		shl	eax, 4
 		sar	eax, 8
-		add	ax, 13Ch
-		mov	[bp+var_2], ax
+		add	ax, 316
+		mov	[bp+@@left], ax
 		mov	bx, si
 		shl	bx, 5
-		and	bx, 0FFh
+		and	bx, 255
 		add	bx, bx
 		movsx	eax, _SinTable8[bx]
 		shl	eax, 4
 		sar	eax, 8
-		add	ax, 0E0h
-		mov	[bp+var_4], ax
-		push	0A4h ; '?'
+		add	ax, 224
+		mov	[bp+@@top], ax
+		push	164
 		mov	ax, _player_left
 		add	ax, -300
 		push	ax
 		call	iatan2
-		mov	byte ptr [bp+var_7], al
-		push	0E00138h
-		push	200005h
-		push	30h ; '0'
-		push	[bp+var_7]
-		push	[bp+var_4]
-		push	[bp+var_2]
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		add	sp, 14h
+		mov	[bp+@@angle], al
+		call	@CPellets@add_single$qiiii15pellet_motion_tiii c, offset _Pellets, ds, [bp+@@left], [bp+@@top], word ptr [bp+@@angle], (3 shl 4), large PM_SPIN or ((2 shl 4) shl 16), large 312 or (224 shl 16)
 		inc	si
 
 loc_23F0E:
@@ -34466,14 +34461,14 @@ sub_23F16	proc near
 		push	3200D0h
 		push	130h
 		push	ds
-		push	offset word_3A3C9
+		push	offset x_3A3C9
 		call	sub_166D2
 		push	1900040h
 		push	2400020h
 		push	3200D0h
 		push	130h
 		push	ds
-		push	offset word_3A3FB
+		push	offset x_3A3FB
 		call	sub_166D2
 		add	sp, 24h
 		jmp	short loc_23F99
@@ -34494,7 +34489,7 @@ loc_23F62:
 		push	10004h
 		push	0FFFDh
 		call	sub_23629
-		cmp	word_3A3CB, 60h
+		cmp	y_3A3CB, 96
 		jge	short loc_23F99
 		mov	ax, 1
 		pop	bp
@@ -34514,10 +34509,10 @@ sub_23F16	endp
 
 sub_23F9D	proc near
 
-var_8		= word ptr -8
+@@pattern		= word ptr -8
 var_6		= byte ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@top		= word ptr -4
+@@left		= word ptr -2
 
 		enter	8, 0
 		push	si
@@ -34546,28 +34541,22 @@ var_2		= word ptr -2
 
 loc_23FDE:
 		mov	bx, si
-		imul	bx, 32h
+		imul	bx, 50
 		mov	ax, [bx+5A29h]
 		add	ax, 0Ch
-		mov	[bp+var_2], ax
+		mov	[bp+@@left], ax
 		mov	bx, si
-		imul	bx, 32h
+		imul	bx, 50
 		mov	ax, [bx+5A2Bh]
 		add	ax, 8
-		mov	[bp+var_4], ax
+		mov	[bp+@@top], ax
 		push	13001Bh
 		push	170015h
 		push	ss
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@pattern]
 		push	ax
 		call	sub_232E4
-		push	37h ; '7'
-		push	[bp+var_8]
-		push	[bp+var_4]
-		push	[bp+var_2]
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
+		call	@CPellets@add_pattern$qii16pellet_pattern_ti stdcall, offset _Pellets, ds, [bp+@@left], [bp+@@top], [bp+@@pattern], (3 shl 4) + 7
 		add	sp, 18h
 		inc	si
 
@@ -34616,17 +34605,17 @@ loc_24064:
 		idiv	word_3A6B7
 		or	dx, dx
 		jnz	short loc_24092
-		mov	ax, word_3A3C9
-		add	ax, 0Ch
+		mov	ax, x_3A3C9
+		add	ax, 12
 		push	ax
-		mov	ax, word_3A3CB
+		mov	ax, y_3A3CB
 		add	ax, 8
 		push	ax
 		call	sub_2368E
-		mov	ax, word_3A3FB
-		add	ax, 0Ch
+		mov	ax, x_3A3FB
+		add	ax, 12
 		push	ax
-		mov	ax, word_3A3FD
+		mov	ax, y_3A3FD
 		add	ax, 8
 		push	ax
 		call	sub_2368E
@@ -34724,22 +34713,22 @@ sub_2414C	proc near
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_2419B
-		push	28000Ch
-		mov	ax, word_3A3CB
-		add	ax, 0Ch
+		push	PP_1_AIMED or (((2 shl 4) + 8) shl 16)
+		mov	ax, y_3A3CB
+		add	ax, 12
 		push	ax
-		mov	ax, word_3A3C9
-		add	ax, 0Ch
+		mov	ax, x_3A3C9
+		add	ax, 12
 		push	ax
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_pattern$qii16pellet_pattern_ti
-		push	28000Ch
-		mov	ax, word_3A3FD
-		add	ax, 0Ch
+		push	PP_1_AIMED or (((2 shl 4) + 8) shl 16)
+		mov	ax, y_3A3FD
+		add	ax, 12
 		push	ax
-		mov	ax, word_3A3FB
-		add	ax, 0Ch
+		mov	ax, x_3A3FB
+		add	ax, 12
 		push	ax
 		push	ds
 		push	offset _Pellets
@@ -34748,14 +34737,14 @@ sub_2414C	proc near
 
 loc_2419B:
 		mov	bx, word_3A6CA
-		and	bx, 0FFh
+		and	bx, 255
 		add	bx, bx
 		movsx	eax, _CosTable8[bx]
 		shl	eax, 2
 		sar	eax, 8
 		mov	si, ax
 		mov	bx, word_3A6CA
-		and	bx, 0FFh
+		and	bx, 255
 		add	bx, bx
 		movsx	eax, _CosTable8[bx]
 		shl	eax, 1
@@ -34785,7 +34774,7 @@ sub_2414C	endp
 
 sub_241E7	proc near
 
-var_2		= word ptr -2
+@@top		= word ptr -2
 
 		enter	2, 0
 		push	si
@@ -34794,7 +34783,7 @@ var_2		= word ptr -2
 		jl	loc_24310
 		cmp	word_3A6CA, 64h	; 'd'
 		jnz	short loc_24219
-		mov	byte ptr word_3A6BD, 20h ; ' '
+		mov	angle_3A6BD, 20h
 		push	40006h
 		push	8000Eh
 		push	ds
@@ -34818,64 +34807,56 @@ loc_2422C:
 		mov	ax, si
 		shl	ax, 7
 		add	bx, ax
-		and	bx, 0FFh
+		and	bx, 255
 		add	bx, bx
 		movsx	eax, _CosTable8[bx]
-		imul	eax, 5Ah
+		imul	eax, 90
 		sar	eax, 8
-		add	ax, 140h
+		add	ax, 320
 		mov	di, ax
 		mov	bx, word_3A6CA
 		shl	bx, 2
 		mov	ax, si
 		shl	ax, 7
 		add	bx, ax
-		and	bx, 0FFh
+		and	bx, 255
 		add	bx, bx
 		movsx	eax, _SinTable8[bx]
-		imul	eax, 5Ah
+		imul	eax, 90
 		sar	eax, 8
-		add	ax, 0B4h ; '?'
-		mov	[bp+var_2], ax
-		pushd	0
-		pushd	0
-		push	24h ; '$'
-		push	word_3A6BD
-		push	ax
-		push	di
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		pushd	0
-		pushd	0
-		push	24h ; '$'
-		mov	al, byte ptr word_3A6BD
+		add	ax, 180
+		mov	[bp+@@top], ax
+		call	@CPellets@add_single$qiiii15pellet_motion_tiii stdcall, offset _Pellets, ds, di, ax, word ptr angle_3A6BD, (2 shl 4) + 4, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		push	(2 shl 4) + 4
+		mov	al, angle_3A6BD
 		add	al, 40h
 		push	ax
-		push	[bp+var_2]
+		push	[bp+@@top]
 		push	di
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii
 		add	sp, 28h
-		pushd	0
-		pushd	0
-		push	24h ; '$'
-		mov	al, byte ptr word_3A6BD
-		add	al, 80h	; '?'
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		push	(2 shl 4) + 4
+		mov	al, angle_3A6BD
+		add	al, 80h
 		push	ax
-		push	[bp+var_2]
+		push	[bp+@@top]
 		push	di
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		pushd	0
-		pushd	0
-		push	24h ; '$'
-		mov	al, byte ptr word_3A6BD
-		add	al, 0C0h ; '?'
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		push	(2 shl 4) + 4
+		mov	al, angle_3A6BD
+		add	al, -40h
 		push	ax
-		push	[bp+var_2]
+		push	[bp+@@top]
 		push	di
 		push	ds
 		push	offset _Pellets
@@ -34888,9 +34869,9 @@ loc_242EC:
 		jl	loc_2422C
 		cmp	word_3A6CA, 258h
 		jg	short loc_24305
-		mov	al, byte ptr word_3A6BD
-		add	al, 0FBh
-		mov	byte ptr word_3A6BD, al
+		mov	al, angle_3A6BD
+		add	al, -5
+		mov	angle_3A6BD, al
 		jmp	short loc_24310
 ; ---------------------------------------------------------------------------
 
@@ -35110,106 +35091,106 @@ loc_244F9:
 ; ---------------------------------------------------------------------------
 
 loc_2450C:
-		pushd	0
-		push	10001h
-		push	30h ; '0'
+		pushd	0 or (0 shl 16)
+		push	PM_GRAVITY or (1 shl 16)
+		push	(3 shl 4)
 		push	0
 		mov	bx, si
-		imul	bx, 32h
+		imul	bx, 50
 		mov	ax, [bx+5A2Bh]
-		add	ax, 0Ch
+		add	ax, 12
 		push	ax
 		mov	bx, si
-		imul	bx, 32h
+		imul	bx, 50
 		mov	ax, [bx+5A29h]
-		add	ax, 0Ch
+		add	ax, 12
 		push	ax
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		pushd	0
-		push	10001h
-		push	20h ; ' '
+		pushd	0 or (0 shl 16)
+		push	PM_GRAVITY or (1 shl 16)
+		push	(2 shl 4)
 		push	0
 		mov	bx, si
-		imul	bx, 32h
+		imul	bx, 50
 		mov	ax, [bx+5A2Bh]
-		add	ax, 0Ch
+		add	ax, 12
 		push	ax
 		mov	bx, si
-		imul	bx, 32h
+		imul	bx, 50
 		mov	ax, [bx+5A29h]
-		add	ax, 0Ch
+		add	ax, 12
 		push	ax
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii
 		add	sp, 28h
-		pushd	0
-		push	10001h
-		push	10h
+		pushd	0 or (0 shl 16)
+		push	PM_GRAVITY or (1 shl 16)
+		push	(1 shl 4)
 		push	0
 		mov	bx, si
-		imul	bx, 32h
+		imul	bx, 50
 		mov	ax, [bx+5A2Bh]
-		add	ax, 0Ch
+		add	ax, 12
 		push	ax
 		mov	bx, si
-		imul	bx, 32h
+		imul	bx, 50
 		mov	ax, [bx+5A29h]
-		add	ax, 0Ch
+		add	ax, 12
 		push	ax
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		pushd	0
-		push	10001h
-		push	10h
-		push	80h ; '?'
+		pushd	0 or (0 shl 16)
+		push	PM_GRAVITY or (1 shl 16)
+		push	(1 shl 4)
+		push	80h
 		mov	bx, si
-		imul	bx, 32h
+		imul	bx, 50
 		mov	ax, [bx+5A2Bh]
-		add	ax, 0Ch
+		add	ax, 12
 		push	ax
 		mov	bx, si
-		imul	bx, 32h
+		imul	bx, 50
 		mov	ax, [bx+5A29h]
-		add	ax, 0Ch
+		add	ax, 12
 		push	ax
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii
 		add	sp, 28h
-		pushd	0
-		push	10001h
-		push	20h ; ' '
-		push	80h ; '?'
+		pushd	0 or (0 shl 16)
+		push	PM_GRAVITY or (1 shl 16)
+		push	(2 shl 4)
+		push	80h
 		mov	bx, si
-		imul	bx, 32h
+		imul	bx, 50
 		mov	ax, [bx+5A2Bh]
-		add	ax, 0Ch
+		add	ax, 12
 		push	ax
 		mov	bx, si
-		imul	bx, 32h
+		imul	bx, 50
 		mov	ax, [bx+5A29h]
-		add	ax, 0Ch
+		add	ax, 12
 		push	ax
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		pushd	0
-		push	10001h
-		push	30h ; '0'
-		push	80h ; '?'
+		pushd	0 or (0 shl 16)
+		push	PM_GRAVITY or (1 shl 16)
+		push	(3 shl 4)
+		push	80h
 		mov	bx, si
-		imul	bx, 32h
+		imul	bx, 50
 		mov	ax, [bx+5A2Bh]
-		add	ax, 0Ch
+		add	ax, 12
 		push	ax
 		mov	bx, si
-		imul	bx, 32h
+		imul	bx, 50
 		mov	ax, [bx+5A29h]
-		add	ax, 0Ch
+		add	ax, 12
 		push	ax
 		push	ds
 		push	offset _Pellets
@@ -35262,7 +35243,7 @@ sub_24660	proc near
 		push	140010h
 		push	0A0000h
 		push	ds
-		push	(offset	word_3A6BD+1)
+		push	(offset	word_3A6BE)
 		call	sub_232E4
 		add	sp, 18h
 
@@ -35279,14 +35260,14 @@ loc_246A0:
 		idiv	bx
 		mov	si, ax
 		call	IRand
-		mov	dx, word_3A6BD+1
+		mov	dx, word_3A6BE
 		add	dx, dx
 		inc	dx
 		push	dx
 		cwd
 		pop	bx
 		idiv	bx
-		sub	dx, word_3A6BD+1
+		sub	dx, word_3A6BE
 		mov	di, dx
 		push	80014h
 		push	0Ah
@@ -36009,7 +35990,7 @@ sub_24DFF	proc far
 		pushd	5
 		push	32h ; '2'
 		push	ds
-		push	offset word_3A3C9
+		push	offset x_3A3C9
 		call	@_vector_new_$qnvuiuluie ; _vector_new_(void *,uint,ulong,uint,...)
 		push	seg main_21_TEXT
 		push	offset sub_17096
@@ -37203,14 +37184,14 @@ sub_256AA	endp
 sub_258C2	proc far
 
 var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@top		= word ptr -4
+@@left		= word ptr -2
 
 		enter	6, 0
 		push	si
 		cmp	word_3A6CA, 0Ah
 		jge	short loc_258D4
-		mov	word_3A6FB+1, 0
+		mov	word_3A6FC, 0
 
 loc_258D4:
 		cmp	word_3A6CA, 32h	; '2'
@@ -37235,7 +37216,7 @@ loc_258D4:
 		push	ds
 		push	offset point_3982A
 		call	sub_1689D
-		mov	byte ptr word_3A6FB, 0
+		mov	angle_3A6FB, 0
 		push	1C0017h
 		push	1D000Ch
 		push	ds
@@ -37252,7 +37233,7 @@ loc_25947:
 		idiv	bx
 		or	dx, dx
 		jnz	loc_25AED
-		cmp	word_3A6FB+1, 0
+		cmp	word_3A6FC, 0
 		jnz	loc_25AED
 		cmp	word_3A6CA, 3Ch	; '<'
 		jnz	short loc_25977
@@ -37261,14 +37242,14 @@ loc_25947:
 		pop	cx
 
 loc_25977:
-		mov	al, byte ptr word_3A6FB
+		mov	al, angle_3A6FB
 		mov	ah, 0
 		mov	[bp+var_6], ax
 		fild	[bp+var_6]
 		fadd	qword ptr dbl_35D95
 		call	ftol@
 		push	ax
-		push	word_3A6FB
+		push	word ptr angle_3A6FB
 		push	1
 		push	70080h
 		push	80h ; '?'
@@ -37279,10 +37260,10 @@ loc_25977:
 		add	ax, 64
 		push	ax
 		call	sub_1786D
-		mov	al, byte ptr word_3A6FB
-		add	al, 42h	; 'B'
+		mov	al, angle_3A6FB
+		add	al, 42h
 		push	ax
-		mov	al, byte ptr word_3A6FB
+		mov	al, angle_3A6FB
 		add	al, 40h
 		push	ax
 		push	1
@@ -37295,11 +37276,11 @@ loc_25977:
 		add	ax, 64
 		push	ax
 		call	sub_1786D
-		mov	al, byte ptr word_3A6FB
-		add	al, 82h
+		mov	al, angle_3A6FB
+		add	al, -7Eh
 		push	ax
-		mov	al, byte ptr word_3A6FB
-		add	al, 80h	; '?'
+		mov	al, angle_3A6FB
+		add	al, 80h
 		push	ax
 		push	1
 		push	70080h
@@ -37312,11 +37293,11 @@ loc_25977:
 		push	ax
 		call	sub_1786D
 		add	sp, 30h
-		mov	al, byte ptr word_3A6FB
-		add	al, 0C2h ; '?'
+		mov	al, angle_3A6FB
+		add	al, -3Eh
 		push	ax
-		mov	al, byte ptr word_3A6FB
-		add	al, 0C0h ; '?'
+		mov	al, angle_3A6FB
+		add	al, -40h
 		push	ax
 		push	1
 		push	70080h
@@ -37329,10 +37310,10 @@ loc_25977:
 		push	ax
 		call	sub_1786D
 		add	sp, 10h
-		mov	al, byte ptr word_3A6FB
+		mov	al, angle_3A6FB
 		add	al, 2
-		mov	byte ptr word_3A6FB, al
-		cmp	byte ptr word_3A6FB, 40h
+		mov	angle_3A6FB, al
+		cmp	angle_3A6FB, 40h
 		jb	loc_25C4A
 		push	0FFh
 		push	0
@@ -37357,7 +37338,7 @@ loc_25977:
 		add	ax, 64
 		push	ax
 		call	sub_1786D
-		mov	word_3A6FB+1, 1
+		mov	word_3A6FC, 1
 		push	1
 		call	_graph_accesspage_func
 		push	1
@@ -37386,12 +37367,12 @@ loc_25977:
 ; ---------------------------------------------------------------------------
 
 loc_25AED:
-		cmp	word_3A6FB+1, 0
+		cmp	word_3A6FC, 0
 		jz	loc_25B99
-		cmp	word_3A6FB+1, 28h ; '('
+		cmp	word_3A6FC, 28h
 		jge	loc_25B99
-		inc	word_3A6FB+1
-		mov	ax, word_3A6FB+1
+		inc	word_3A6FC
+		mov	ax, word_3A6FC
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -37417,7 +37398,7 @@ loc_25AED:
 ; ---------------------------------------------------------------------------
 
 loc_25B3E:
-		mov	ax, word_3A6FB+1
+		mov	ax, word_3A6FC
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -37454,7 +37435,7 @@ loc_25B7A:
 ; ---------------------------------------------------------------------------
 
 loc_25B99:
-		cmp	word_3A6FB+1, 0
+		cmp	word_3A6FC, 0
 		jz	loc_25C4A
 		push	0FFh
 		push	0
@@ -37468,15 +37449,15 @@ loc_25B99:
 		push	ax
 		call	sub_17956
 		add	sp, 0Eh
-		mov	byte ptr word_3A6FB, 0
+		mov	angle_3A6FB, 0
 		xor	si, si
 		jmp	short loc_25C35
 ; ---------------------------------------------------------------------------
 
 loc_25BCE:
-		mov	al, byte ptr word_3A6FB
+		mov	al, angle_3A6FB
 		mov	ah, 0
-		and	ax, 0FFh
+		and	ax, 255
 		add	ax, ax
 		mov	bx, ax
 		movsx	eax, _CosTable8[bx]
@@ -37484,10 +37465,10 @@ loc_25BCE:
 		sar	eax, 8
 		add	ax, point_3982A.x
 		add	ax, 60
-		mov	[bp+var_2], ax
-		mov	al, byte ptr word_3A6FB
+		mov	[bp+@@left], ax
+		mov	al, angle_3A6FB
 		mov	ah, 0
-		and	ax, 0FFh
+		and	ax, 255
 		add	ax, ax
 		mov	bx, ax
 		movsx	eax, _SinTable8[bx]
@@ -37495,25 +37476,18 @@ loc_25BCE:
 		sar	eax, 8
 		add	ax, point_3982A.y
 		add	ax, 48
-		mov	[bp+var_4], ax
-		push	4
-		push	word_3A6CC
-		push	ax
-		push	[bp+var_2]
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
-		add	sp, 0Ch
-		mov	al, byte ptr word_3A6FB
+		mov	[bp+@@top], ax
+		call	@CPellets@add_pattern$qii16pellet_pattern_ti c, offset _Pellets, ds, [bp+@@left], ax, word_3A6CC, 4
+		mov	al, angle_3A6FB
 		add	al, 8
-		mov	byte ptr word_3A6FB, al
+		mov	angle_3A6FB, al
 		inc	si
 
 loc_25C35:
 		cmp	si, 20h	; ' '
 		jl	short loc_25BCE
 		mov	word_3A6CA, 0
-		mov	word_3A6FB+1, 0
+		mov	word_3A6FC, 0
 		xor	ax, ax
 		jmp	short loc_25C4D
 ; ---------------------------------------------------------------------------
@@ -38100,10 +38074,10 @@ loc_26194:
 ; ---------------------------------------------------------------------------
 
 loc_261B6:
-		pushd	0
-		pushd	0
-		push	30h ; '0'
-		mov	ax, 100h
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		push	(3 shl 4)
+		mov	ax, 256
 		cwd
 		idiv	word_3A6CC
 		imul	si
@@ -38134,10 +38108,10 @@ loc_261ED:
 ; ---------------------------------------------------------------------------
 
 loc_261F8:
-		pushd	0
-		pushd	0
-		push	36h ; '6'
-		mov	ax, 100h
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		push	(3 shl 4) + 6
+		mov	ax, 256
 		cwd
 		idiv	word_3A6CC
 		imul	si
@@ -38169,10 +38143,10 @@ loc_26231:
 ; ---------------------------------------------------------------------------
 
 loc_2623C:
-		pushd	0
-		pushd	0
-		push	40h
-		mov	ax, 100h
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		push	(4 shl 4)
+		mov	ax, 256
 		cwd
 		idiv	word_3A6CC
 		imul	si
@@ -38204,10 +38178,10 @@ loc_26275:
 ; ---------------------------------------------------------------------------
 
 loc_26280:
-		pushd	0
-		pushd	0
-		push	48h ; 'H'
-		mov	ax, 100h
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		push	(4 shl 4) + 8
+		mov	ax, 256
 		cwd
 		idiv	word_3A6CC
 		imul	si
@@ -38239,10 +38213,10 @@ loc_262B8:
 ; ---------------------------------------------------------------------------
 
 loc_262C3:
-		pushd	0
-		pushd	0
-		push	50h ; 'P'
-		mov	ax, 100h
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		push	(5 shl 4)
+		mov	ax, 256
 		cwd
 		idiv	word_3A6CC
 		imul	si
@@ -38295,7 +38269,8 @@ sub_260DC	endp
 
 sub_26322	proc far
 
-var_3		= word ptr -3
+@@angle		= byte ptr -3
+@@speed		= word ptr -2
 
 		enter	4, 0
 		push	si
@@ -38528,26 +38503,26 @@ loc_26548:
 loc_26568:
 		call	IRand
 		and	al, 7Fh
-		mov	byte ptr [bp+var_3], al
+		mov	[bp+@@angle], al
 		call	IRand
-		add	ax, 18h
+		add	ax, (1 shl 4) + 8
 		and	ax, 3Fh
-		mov	[bp+var_3+1], ax
-		pushd	0
-		pushd	0
+		mov	[bp+@@speed], ax
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
 		push	ax
-		push	[bp+var_3]
+		push	word ptr [bp+@@angle]
 		mov	ax, word_3A6CA
-		add	ax, 0FF9Ch
-		mov	bx, 0Ah
+		add	ax, -100
+		mov	bx, 10
 		cwd
 		idiv	bx
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+5D73h]
 		mov	ax, word_3A6CA
-		add	ax, 0FF9Ch
-		mov	bx, 0Ah
+		add	ax, -100
+		mov	bx, 10
 		cwd
 		idiv	bx
 		add	ax, ax
@@ -38613,7 +38588,8 @@ sub_26322	endp
 sub_2661D	proc far
 
 var_4		= byte ptr -4
-var_3		= word ptr -3
+@@angle		= byte ptr -3
+var_2		= word ptr -2
 
 		enter	4, 0
 		push	si
@@ -38703,8 +38679,8 @@ loc_266F4:
 		mov	bx, 15h
 		cwd
 		idiv	bx
-		add	dl, 36h	; '6'
-		mov	byte ptr [bp+var_3], dl
+		add	dl, 36h
+		mov	[bp+@@angle], dl
 		jmp	short loc_26791
 ; ---------------------------------------------------------------------------
 
@@ -38722,8 +38698,8 @@ loc_2672E:
 		mov	bx, 15h
 		cwd
 		idiv	bx
-		add	dl, 36h	; '6'
-		mov	byte ptr [bp+var_3], dl
+		add	dl, 36h
+		mov	[bp+@@angle], dl
 		call	IRand
 		test	al, 1
 		jz	short loc_2676D
@@ -38739,7 +38715,7 @@ loc_2676D:
 
 loc_26774:
 		mov	[bp+var_4], al
-		mov	al, byte ptr [bp+var_3]
+		mov	al, [bp+@@angle]
 		mov	ah, 0
 		mov	dl, [bp+var_4]
 		mov	dh, 0
@@ -38751,13 +38727,13 @@ loc_26774:
 		mov	dx, ax
 		pop	ax
 		imul	dx
-		mov	byte ptr [bp+var_3], al
+		mov	[bp+@@angle], al
 
 loc_26791:
-		pushd	0
-		pushd	0
-		push	60h
-		push	[bp+var_3]
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		push	(6 shl 4)
+		push	word ptr [bp+@@angle]
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+5D93h]
@@ -38840,9 +38816,9 @@ loc_26856:
 		mov	bx, 2
 		cwd
 		idiv	bx
-		mov	[bp+var_3+1], dx
+		mov	[bp+var_2], dx
 		push	4
-		mov	ax, [bp+var_3+1]
+		mov	ax, [bp+var_2]
 		add	ax, 4
 		push	ax
 		push	0
@@ -39489,7 +39465,7 @@ sub_26D12	endp
 
 sub_26E02	proc far
 
-var_2		= word ptr -2
+@@pattern		= word ptr -2
 
 		enter	2, 0
 		mov	ax, word_3A6CA
@@ -39501,13 +39477,13 @@ var_2		= word ptr -2
 		push	14001Ch
 		push	1B0017h
 		push	ss
-		lea	ax, [bp+var_2]
+		lea	ax, [bp+@@pattern]
 		push	ax
 		call	sub_253A2
-		push	38h ; '8'
-		push	[bp+var_2]
+		push	(3 shl 4) + 8
+		push	[bp+@@pattern]
 		mov	ax, point_3988E.y
-		add	ax, 0Ch
+		add	ax, 12
 		push	ax
 		mov	ax, point_3988E.x
 		add	ax, 14h
@@ -39539,19 +39515,19 @@ sub_26E49	proc far
 		call	IRand
 		test	al, 1
 		jz	short loc_26E6A
-		push	580016h
+		push	PP_2_SPREAD_NARROW_AIMED or (((5 shl 4) + 8) shl 16)
 		jmp	short loc_26E70
 ; ---------------------------------------------------------------------------
 
 loc_26E6A:
-		push	580015h
+		push	PP_2_SPREAD_WIDE_AIMED or (((5 shl 4) + 8) shl 16)
 
 loc_26E70:
 		mov	ax, point_3988E.y
-		add	ax, 0Ch
+		add	ax, 12
 		push	ax
 		mov	ax, point_3988E.x
-		add	ax, 14h
+		add	ax, 20
 		push	ax
 		push	ds
 		push	offset _Pellets
@@ -39583,12 +39559,12 @@ sub_26E8C	proc far
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_26ECA
-		push	550016h
+		push	PP_2_SPREAD_NARROW_AIMED or (((5 shl 4) + 5) shl 16)
 		mov	ax, point_3988E.y
-		add	ax, 0Ch
+		add	ax, 12
 		push	ax
 		mov	ax, point_3988E.x
-		add	ax, 14h
+		add	ax, 20
 		push	ax
 		push	ds
 		push	offset _Pellets
@@ -39613,12 +39589,12 @@ loc_26ECA:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_26F10
-		push	550018h
+		push	PP_3_SPREAD_NARROW_AIMED or (((5 shl 4) + 5) shl 16)
 		mov	ax, point_3988E.y
-		add	ax, 0Ch
+		add	ax, 12
 		push	ax
 		mov	ax, point_3988E.x
-		add	ax, 14h
+		add	ax, 20
 		push	ax
 		push	ds
 		push	offset _Pellets
@@ -39644,16 +39620,16 @@ sub_26F12	proc far
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_26F4D
-		pushd	0
-		push	10001h
+		pushd	0 or (0 shl 16)
+		push	PM_GRAVITY or (1 shl 16)
 		push	2
 		call	IRand
 		push	ax
 		mov	ax, point_3988E.y
-		add	ax, 0Ch
+		add	ax, 12
 		push	ax
 		mov	ax, point_3988E.x
-		add	ax, 14h
+		add	ax, 20
 		push	ax
 		push	ds
 		push	offset _Pellets
@@ -39672,7 +39648,7 @@ sub_26F12	endp
 
 sub_26F4F	proc far
 
-var_1		= byte ptr -1
+@@angle		= byte ptr -1
 
 		enter	2, 0
 		push	si
@@ -39747,8 +39723,8 @@ loc_27008:
 ; ---------------------------------------------------------------------------
 
 loc_2702A:
-		pushd	0
-		pushd	0
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
 		mov	ax, si
 		add	ax, word_3A6CC
 		shl	ax, 4
@@ -39763,8 +39739,8 @@ loc_2702A:
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		pushd	0
-		pushd	0
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
 		mov	ax, si
 		add	ax, word_3A6CC
 		shl	ax, 4
@@ -39796,13 +39772,13 @@ loc_27088:
 ; ---------------------------------------------------------------------------
 
 loc_27093:
-		pushd	0
-		pushd	0
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
 		mov	ax, si
 		add	ax, word_3A6CC
 		shl	ax, 4
 		push	ax
-		push	50h ; 'P'
+		push	50h
 		mov	ax, point_3982A.y
 		add	ax, 40
 		push	ax
@@ -39812,13 +39788,13 @@ loc_27093:
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		pushd	0
-		pushd	0
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
 		mov	ax, si
 		add	ax, word_3A6CC
 		shl	ax, 4
 		push	ax
-		push	30h ; '0'
+		push	30h
 		mov	ax, point_3982A.y
 		add	ax, 40
 		push	ax
@@ -39845,13 +39821,13 @@ loc_270F1:
 ; ---------------------------------------------------------------------------
 
 loc_270FC:
-		pushd	0
-		pushd	0
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
 		mov	ax, si
 		add	ax, word_3A6CC
 		shl	ax, 4
 		push	ax
-		push	68h ; 'h'
+		push	68h
 		mov	ax, point_3982A.y
 		add	ax, 40
 		push	ax
@@ -39861,8 +39837,8 @@ loc_270FC:
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		pushd	0
-		pushd	0
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
 		mov	ax, si
 		add	ax, word_3A6CC
 		shl	ax, 4
@@ -39889,20 +39865,20 @@ loc_27152:
 loc_27159:
 		cmp	word_3A6CA, 50h	; 'P'
 		jnz	short loc_271DA
-		mov	[bp+var_1], 0
+		mov	[bp+@@angle], 0
 		xor	si, si
 		jmp	short loc_271CB
 ; ---------------------------------------------------------------------------
 
 loc_27168:
-		pushd	0
-		pushd	0
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
 		mov	ax, word_3A6CC
 		add	ax, 2
 		shl	ax, 4
 		push	ax
-		mov	al, 80h	; '?'
-		sub	al, [bp+var_1]
+		mov	al, 80h
+		sub	al, [bp+@@angle]
 		push	ax
 		mov	ax, point_3982A.y
 		add	ax, 40
@@ -39913,13 +39889,13 @@ loc_27168:
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		pushd	0
-		pushd	0
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
 		mov	ax, word_3A6CC
 		add	ax, 2
 		shl	ax, 4
 		push	ax
-		push	word ptr [bp+var_1]
+		push	word ptr [bp+@@angle]
 		mov	ax, point_3982A.y
 		add	ax, 40
 		push	ax
@@ -39930,9 +39906,9 @@ loc_27168:
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii
 		add	sp, 28h
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@angle]
 		add	al, 6
-		mov	[bp+var_1], al
+		mov	[bp+@@angle], al
 		inc	si
 
 loc_271CB:
@@ -40044,7 +40020,7 @@ loc_272B5:
 		push	offset word_3A6CC
 		call	sub_253A2
 		add	sp, 0Ch
-		mov	byte ptr word_3A76F, 0
+		mov	angle_3A76F, 0
 
 loc_272E1:
 		cmp	word_3A6CA, 3Ch	; '<'
@@ -40066,10 +40042,10 @@ loc_272E1:
 		mov	word_3A76D, ax
 
 loc_27317:
-		mov	al, byte ptr word_3A76F
+		mov	al, angle_3A76F
 		add	al, 2
 		push	ax
-		push	word_3A76F
+		push	word ptr angle_3A76F
 		push	1
 		push	70080h
 		push	800180h
@@ -40077,10 +40053,10 @@ loc_27317:
 		add	ax, 10h
 		push	ax
 		call	sub_1786D
-		mov	al, byte ptr word_3A76F
-		add	al, 42h	; 'B'
+		mov	al, angle_3A76F
+		add	al, 42h
 		push	ax
-		mov	al, byte ptr word_3A76F
+		mov	al, angle_3A76F
 		add	al, 40h
 		push	ax
 		push	1
@@ -40090,11 +40066,11 @@ loc_27317:
 		add	ax, 10h
 		push	ax
 		call	sub_1786D
-		mov	al, byte ptr word_3A76F
-		add	al, 82h
+		mov	al, angle_3A76F
+		add	al, -7Eh
 		push	ax
-		mov	al, byte ptr word_3A76F
-		add	al, 80h	; '?'
+		mov	al, angle_3A76F
+		add	al, 80h
 		push	ax
 		push	1
 		push	70080h
@@ -40104,11 +40080,11 @@ loc_27317:
 		push	ax
 		call	sub_1786D
 		add	sp, 30h
-		mov	al, byte ptr word_3A76F
-		add	al, 0C2h ; '?'
+		mov	al, angle_3A76F
+		add	al, -3Eh
 		push	ax
-		mov	al, byte ptr word_3A76F
-		add	al, 0C0h ; '?'
+		mov	al, angle_3A76F
+		add	al, -40h
 		push	ax
 		push	1
 		push	70080h
@@ -40118,10 +40094,10 @@ loc_27317:
 		push	ax
 		call	sub_1786D
 		add	sp, 10h
-		mov	al, byte ptr word_3A76F
+		mov	al, angle_3A76F
 		add	al, 2
-		mov	byte ptr word_3A76F, al
-		cmp	byte ptr word_3A76F, 40h
+		mov	angle_3A76F, al
+		cmp	angle_3A76F, 40h
 		jb	loc_275EF
 		push	0FFh
 		push	0
@@ -40232,23 +40208,23 @@ loc_274FF:
 		idiv	word_3A6CC
 		or	dx, dx
 		jnz	short loc_27539
-		push	48h ; 'H'
+		push	(4 shl 4) + 8
 		mov	al, _rank
 		cbw
 		cmp	ax, RANK_LUNATIC
 		jnz	short loc_2751B
-		mov	ax, 1Eh
+		mov	ax, PP_1_RANDOM_WIDE
 		jmp	short loc_2751E
 ; ---------------------------------------------------------------------------
 
 loc_2751B:
-		mov	ax, 1
+		mov	ax, PP_1
 
 loc_2751E:
 		push	ax
-		push	40h
+		push	PLAYFIELD_TOP
 		call	IRand
-		mov	bx, 278h
+		mov	bx, 632
 		cwd
 		idiv	bx
 		push	dx
@@ -40266,7 +40242,7 @@ loc_27539:
 		idiv	bx
 		or	dx, dx
 		jnz	loc_275EF
-		push	48000Ch
+		push	PP_1_AIMED or (((4 shl 4) + 8) shl 16)
 		mov	ax, point_3982A.y
 		add	ax, 44
 		push	ax
@@ -40303,12 +40279,12 @@ loc_275A1:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_275D2
-		push	48000Ch
+		push	PP_1_AIMED or (((4 shl 4) + 8) shl 16)
 		mov	ax, point_3988E.y
-		add	ax, 2Ch	; ','
+		add	ax, 44
 		push	ax
 		mov	ax, point_3988E.x
-		add	ax, 3Ch	; '<'
+		add	ax, 60
 		push	ax
 		push	ds
 		push	offset _Pellets
@@ -40320,7 +40296,7 @@ loc_275D2:
 		jle	short loc_275EF
 		mov	word_3A6CA, 0
 		mov	word_3A76B, 0
-		mov	byte ptr word_3A76F, 0
+		mov	angle_3A76F, 0
 		xor	ax, ax
 		pop	bp
 		retf
@@ -40339,8 +40315,8 @@ sub_271F1	endp
 
 sub_275F4	proc far
 
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@top		= word ptr -4
+@@left		= word ptr -2
 
 		enter	4, 0
 		push	si
@@ -40426,7 +40402,7 @@ loc_276AD:
 		push	ds
 		push	offset point_3982A
 		call	sub_1689D
-		mov	byte ptr word_3A76F+1, 0
+		mov	angle_3A770, 0
 		push	0F0014h
 		push	1E0028h
 		push	ds
@@ -40452,10 +40428,10 @@ loc_27729:
 		pop	cx
 
 loc_27759:
-		mov	al, byte ptr word_3A76F+1
+		mov	al, angle_3A770
 		add	al, 2
 		push	ax
-		push	word_3A76F+1
+		push	word ptr angle_3A770
 		push	1
 		push	70080h
 		push	80h ; '?'
@@ -40466,10 +40442,10 @@ loc_27759:
 		add	ax, 64
 		push	ax
 		call	sub_1786D
-		mov	al, byte ptr word_3A76F+1
-		add	al, 42h	; 'B'
+		mov	al, angle_3A770
+		add	al, 42h
 		push	ax
-		mov	al, byte ptr word_3A76F+1
+		mov	al, angle_3A770
 		add	al, 40h
 		push	ax
 		push	1
@@ -40482,11 +40458,11 @@ loc_27759:
 		add	ax, 64
 		push	ax
 		call	sub_1786D
-		mov	al, byte ptr word_3A76F+1
-		add	al, 82h
+		mov	al, angle_3A770
+		add	al, -7Eh
 		push	ax
-		mov	al, byte ptr word_3A76F+1
-		add	al, 80h	; '?'
+		mov	al, angle_3A770
+		add	al, 80h
 		push	ax
 		push	1
 		push	70080h
@@ -40499,11 +40475,11 @@ loc_27759:
 		push	ax
 		call	sub_1786D
 		add	sp, 30h
-		mov	al, byte ptr word_3A76F+1
-		add	al, 0C2h ; '?'
+		mov	al, angle_3A770
+		add	al, -3Eh
 		push	ax
-		mov	al, byte ptr word_3A76F+1
-		add	al, 0C0h ; '?'
+		mov	al, angle_3A770
+		add	al, -40h
 		push	ax
 		push	1
 		push	70080h
@@ -40516,10 +40492,10 @@ loc_27759:
 		push	ax
 		call	sub_1786D
 		add	sp, 10h
-		mov	al, byte ptr word_3A76F+1
+		mov	al, angle_3A770
 		add	al, 2
-		mov	byte ptr word_3A76F+1, al
-		cmp	byte ptr word_3A76F+1, 40h
+		mov	angle_3A770, al
+		cmp	angle_3A770, 40h
 		jb	loc_27A1C
 		push	0FFh
 		push	0
@@ -40655,15 +40631,15 @@ loc_2796A:
 		push	ax
 		call	sub_17956
 		add	sp, 0Eh
-		mov	byte ptr word_3A76F+1, 0
+		mov	angle_3A770, 0
 		xor	si, si
 		jmp	short loc_27A06
 ; ---------------------------------------------------------------------------
 
 loc_2799F:
-		mov	al, byte ptr word_3A76F+1
+		mov	al, angle_3A770
 		mov	ah, 0
-		and	ax, 0FFh
+		and	ax, 255
 		add	ax, ax
 		mov	bx, ax
 		movsx	eax, _CosTable8[bx]
@@ -40671,10 +40647,10 @@ loc_2799F:
 		sar	eax, 8
 		add	ax, point_3982A.x
 		add	ax, 64
-		mov	[bp+var_2], ax
-		mov	al, byte ptr word_3A76F+1
+		mov	[bp+@@left], ax
+		mov	al, angle_3A770
 		mov	ah, 0
-		and	ax, 0FFh
+		and	ax, 255
 		add	ax, ax
 		mov	bx, ax
 		movsx	eax, _SinTable8[bx]
@@ -40682,17 +40658,11 @@ loc_2799F:
 		sar	eax, 8
 		add	ax, point_3982A.y
 		add	ax, 28
-		mov	[bp+var_4], ax
-		push	400001h
-		push	ax
-		push	[bp+var_2]
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
-		add	sp, 0Ch
-		mov	al, byte ptr word_3A76F+1
+		mov	[bp+@@top], ax
+		call	@CPellets@add_pattern$qii16pellet_pattern_ti c, offset _Pellets, ds, [bp+@@left], ax, large PP_1 or ((4 shl 4) shl 16)
+		mov	al, angle_3A770
 		add	al, 8
-		mov	byte ptr word_3A76F+1, al
+		mov	angle_3A770, al
 		inc	si
 
 loc_27A06:
@@ -40710,7 +40680,7 @@ loc_27A1C:
 		idiv	word_3A6CC
 		or	dx, dx
 		jnz	short loc_27A65
-		push	40001Bh
+		push	PP_5_SPREAD_WIDE_AIMED or ((4 shl 4) shl 16)
 		mov	ax, point_3982A.y
 		add	ax, 40
 		push	ax
@@ -40720,7 +40690,7 @@ loc_27A1C:
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_pattern$qii16pellet_pattern_ti
-		push	40001Bh
+		push	PP_5_SPREAD_WIDE_AIMED or ((4 shl 4) shl 16)
 		mov	ax, point_3982A.y
 		add	ax, 40
 		push	ax
@@ -42496,7 +42466,7 @@ loc_28A16:
 		jz	short loc_28A60
 		cmp	byte ptr [si+61C0h], 0
 		jnz	short loc_28A60
-		push	30000Ch
+		push	PP_1_AIMED or ((3 shl 4) shl 16)
 		mov	bx, si
 		shl	bx, 3
 		fld	qword ptr [bx+5ED2h]
@@ -42545,11 +42515,11 @@ loc_28A82:
 ; ---------------------------------------------------------------------------
 
 loc_28A94:
-		pushd	0
-		pushd	0
-		push	40h
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		push	(4 shl 4)
 		mov	ax, di
-		imul	ax, 2Ah
+		imul	ax, 42
 		push	ax
 		mov	bx, si
 		shl	bx, 3
@@ -42599,12 +42569,12 @@ loc_28B00:
 		jz	short loc_28B59
 		cmp	byte ptr [si+61C0h], 0
 		jnz	short loc_28B59
-		pushd	0
-		push	10001h
-		push	40h
+		pushd	0 or (0 shl 16)
+		push	PM_GRAVITY or (1 shl 16)
+		push	(4 shl 4)
 		call	IRand
 		and	al, 7Fh
-		add	al, 80h	; '?'
+		add	al, 80h
 		push	ax
 		mov	bx, si
 		shl	bx, 3
@@ -43137,7 +43107,7 @@ sub_28FC5	endp
 
 sub_29015	proc near
 
-arg_0		= word ptr  4
+@@angle		= byte ptr  4
 arg_2		= word ptr  6
 arg_4		= dword	ptr  8
 arg_8		= dword	ptr  0Ch
@@ -43146,23 +43116,23 @@ arg_8		= dword	ptr  0Ch
 		mov	bp, sp
 		push	si
 		mov	si, [bp+arg_2]
-		pushd	0
-		pushd	0
-		push	70h ; 'p'
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		push	(7 shl 4)
 		push	40h
 		mov	ax, si
 		add	ax, ax
 		les	bx, [bp+arg_4]
 		add	bx, ax
 		mov	ax, es:[bx]
-		add	ax, 0Ch
+		add	ax, 12
 		push	ax
 		mov	ax, si
 		add	ax, ax
 		les	bx, [bp+arg_8]
 		add	bx, ax
 		mov	ax, es:[bx]
-		add	ax, 0Ch
+		add	ax, 12
 		push	ax
 		push	ds
 		push	offset _Pellets
@@ -43171,7 +43141,7 @@ arg_8		= dword	ptr  0Ch
 		add	ax, ax
 		les	bx, [bp+arg_4]
 		add	bx, ax
-		mov	ax, 184h
+		mov	ax, 388
 		sub	ax, es:[bx]
 		push	ax
 		mov	ax, 1
@@ -43187,48 +43157,48 @@ arg_8		= dword	ptr  0Ch
 		sub	ax, es:[bx]
 		push	ax
 		call	iatan2
-		mov	byte ptr [bp+arg_0], al
-		pushd	0
-		pushd	0
-		push	70h ; 'p'
-		push	[bp+arg_0]
+		mov	[bp+@@angle], al
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		push	(7 shl 4)
+		push	word ptr [bp+@@angle]
 		mov	ax, si
 		add	ax, ax
 		les	bx, [bp+arg_4]
 		add	bx, ax
 		mov	ax, es:[bx]
-		add	ax, 0Ch
+		add	ax, 12
 		push	ax
 		mov	ax, si
 		add	ax, ax
 		les	bx, [bp+arg_8]
 		add	bx, ax
 		mov	ax, es:[bx]
-		add	ax, 0Ch
+		add	ax, 12
 		push	ax
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii
 		add	sp, 28h
-		pushd	0
-		pushd	0
-		push	70h ; 'p'
-		mov	al, 80h	; '?'
-		sub	al, byte ptr [bp+arg_0]
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		push	(7 shl 4)
+		mov	al, 80h
+		sub	al, [bp+@@angle]
 		push	ax
 		mov	ax, si
 		add	ax, ax
 		les	bx, [bp+arg_4]
 		add	bx, ax
 		mov	ax, es:[bx]
-		add	ax, 0Ch
+		add	ax, 12
 		push	ax
 		mov	ax, si
 		add	ax, ax
 		les	bx, [bp+arg_8]
 		add	bx, ax
 		mov	ax, es:[bx]
-		add	ax, 0Ch
+		add	ax, 12
 		push	ax
 		push	ds
 		push	offset _Pellets
@@ -43246,7 +43216,7 @@ sub_29015	endp
 
 sub_290F9	proc near
 
-var_1		= byte ptr -1
+@@angle		= byte ptr -1
 
 		enter	2, 0
 		push	si
@@ -43313,16 +43283,16 @@ loc_29142:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_291D2
-		push	700001h
+		push	PP_1 or ((7 shl 4) shl 16)
 		mov	bx, si
 		add	bx, bx
 		mov	ax, [bx+6200h]
-		add	ax, 0Ch
+		add	ax, 12
 		push	ax
 		mov	bx, si
 		add	bx, bx
 		mov	ax, [bx+61FCh]
-		add	ax, 0Ch
+		add	ax, 12
 		push	ax
 		push	ds
 		push	offset _Pellets
@@ -43404,53 +43374,53 @@ loc_29219:
 		idiv	bx
 		or	dx, dx
 		jnz	loc_29306
-		push	700001h
+		push	PP_1 or ((7 shl 4) shl 16)
 		mov	bx, si
 		add	bx, bx
 		mov	ax, [bx+6200h]
-		add	ax, 0Ch
+		add	ax, 12
 		push	ax
 		mov	bx, si
 		add	bx, bx
 		mov	ax, [bx+61FCh]
-		add	ax, 0Ch
+		add	ax, 12
 		push	ax
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_pattern$qii16pellet_pattern_ti
 		mov	bx, si
 		add	bx, bx
-		mov	ax, 190h
+		mov	ax, PLAYFIELD_BOTTOM
 		sub	ax, [bx+6200h]
-		add	ax, 0Ch
+		add	ax, 12
 		push	ax
 		mov	bx, si
 		add	bx, bx
 		mov	ax, [bx+61FCh]
 		mov	dx, si
-		imul	dx, 0A0h
+		imul	dx, 160
 		add	ax, dx
-		add	ax, 0FFB0h
+		add	ax, -80
 		mov	bx, si
 		add	bx, bx
 		sub	ax, [bx+61FCh]
-		add	ax, 0Ch
+		add	ax, 12
 		push	ax
 		call	iatan2
-		mov	[bp+var_1], al
-		pushd	0
-		pushd	0
-		push	70h ; 'p'
-		push	word ptr [bp+var_1]
+		mov	[bp+@@angle], al
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		push	(7 shl 4)
+		push	word ptr [bp+@@angle]
 		mov	bx, si
 		add	bx, bx
 		mov	ax, [bx+6200h]
-		add	ax, 0Ch
+		add	ax, 12
 		push	ax
 		mov	bx, si
 		add	bx, bx
 		mov	ax, [bx+61FCh]
-		add	ax, 0Ch
+		add	ax, 12
 		push	ax
 		push	ds
 		push	offset _Pellets
@@ -43520,7 +43490,7 @@ loc_2933D:
 		push	ds
 		push	offset unk_3ABA0
 		push	si
-		push	word ptr [bp+var_1]
+		push	word ptr [bp+@@angle]
 		call	sub_29015
 
 loc_2939A:
@@ -43593,7 +43563,7 @@ loc_293D3:
 		push	ds
 		push	offset unk_3ABA0
 		push	si
-		push	word ptr [bp+var_1]
+		push	word ptr [bp+@@angle]
 		call	sub_29015
 
 loc_29443:
@@ -43696,7 +43666,7 @@ loc_294C9:
 		push	ds
 		push	offset unk_3ABA0
 		push	si
-		push	word ptr [bp+var_1]
+		push	word ptr [bp+@@angle]
 		call	sub_29015
 
 loc_29530:
@@ -45165,64 +45135,57 @@ sub_2A2ED	proc near
 		mov	bp, sp
 		cmp	word_3A6CA, 5
 		jge	short loc_2A313
-		mov	byte ptr word_3AF44, 0
+		mov	angle_3AF44, 0
 		push	8000Ah
 		push	0C0012h
 		push	ds
-		push	(offset	word_3AF44+1)
+		push	offset	word_3AF45
 		call	sub_28659
 		add	sp, 0Ch
 
 loc_2A313:
 		mov	ax, word_3A6CA
 		cwd
-		idiv	word_3AF44+1
+		idiv	word_3AF45
 		or	dx, dx
 		jnz	loc_2A3AA
 		mov	_Pellets.PELLET_spawn_with_cloud, 1
-		pushd	0
-		pushd	0
-		push	38h ; '8'
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		push	(3 shl 4) + 8
 		mov	al, 0
-		sub	al, byte ptr word_3AF44
+		sub	al, angle_3AF44
 		push	ax
-		push	0A00238h
+		push	568 or (160 shl 16)
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		pushd	0
-		pushd	0
-		push	38h ; '8'
-		mov	al, 80h	; '?'
-		sub	al, byte ptr word_3AF44
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		push	(3 shl 4) + 8
+		mov	al, 80h
+		sub	al, angle_3AF44
 		push	ax
-		push	0A00238h
+		push	568 or (160 shl 16)
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii
 		add	sp, 28h
-		pushd	0
-		pushd	0
-		push	38h ; '8'
-		push	word_3AF44
-		push	0A00040h
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		pushd	0
-		pushd	0
-		push	38h ; '8'
-		mov	al, byte ptr word_3AF44
-		add	al, 80h	; '?'
+		call	@CPellets@add_single$qiiii15pellet_motion_tiii stdcall, offset _Pellets, ds, large 64 or (160 shl 16), word ptr angle_3AF44, (3 shl 4) + 8, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		push	(3 shl 4) + 8
+		mov	al, angle_3AF44
+		add	al, 80h
 		push	ax
-		push	0A00040h
+		push	64 or (160 shl 16)
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii
 		add	sp, 28h
-		mov	al, byte ptr word_3AF44
-		add	al, byte ptr word_3AF44+1
-		mov	byte ptr word_3AF44, al
+		mov	al, angle_3AF44
+		add	al, byte ptr word_3AF45
+		mov	angle_3AF44, al
 
 loc_2A3AA:
 		cmp	word_3A6CA, 1DFh
@@ -45241,9 +45204,9 @@ sub_2A2ED	endp
 
 sub_2A3BA	proc near
 
-var_5		= byte ptr -5
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@angle		= byte ptr -5
+@@top		= word ptr -4
+@@left		= word ptr -2
 
 		enter	6, 0
 		cmp	word_3A6CA, 0Ah
@@ -45268,36 +45231,27 @@ loc_2A3DC:
 		or	dx, dx
 		jnz	short loc_2A459
 		call	IRand
-		mov	[bp+var_5], al
+		mov	[bp+@@angle], al
 		mov	ah, 0
-		and	ax, 0FFh
+		and	ax, 255
 		add	ax, ax
 		mov	bx, ax
 		movsx	eax, _SinTable8[bx]
-		imul	eax, 28h
+		imul	eax, 40
 		sar	eax, 8
-		add	ax, 140h
-		mov	[bp+var_2], ax
-		mov	al, [bp+var_5]
+		add	ax, 320
+		mov	[bp+@@left], ax
+		mov	al, [bp+@@angle]
 		mov	ah, 0
-		and	ax, 0FFh
+		and	ax, 255
 		add	ax, ax
 		mov	bx, ax
 		movsx	eax, _CosTable8[bx]
-		imul	eax, 28h
+		imul	eax, 40
 		sar	eax, 8
-		add	ax, 0B4h ; '?'
-		mov	[bp+var_4], ax
-		pushd	0
-		push	480002h
-		push	0
-		push	0
-		push	ax
-		push	[bp+var_2]
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		add	sp, 14h
+		add	ax, 180
+		mov	[bp+@@top], ax
+		call	@CPellets@add_single$qiiii15pellet_motion_tiii c, offset _Pellets, ds, [bp+@@left], ax, 0, (0 shl 4), large PM_SLING_AIMED or (((4 shl 4) + 8) shl 16), large 0 or (0 shl 16)
 
 loc_2A459:
 		cmp	word_3A6CA, 12Bh
@@ -45756,9 +45710,9 @@ sub_2A896	endp
 
 sub_2A8F7	proc near
 
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@pattern		= word ptr -6
+@@top		= word ptr -4
+@@left		= word ptr -2
 
 		enter	6, 0
 		mov	ax, word_3A6CA
@@ -45768,24 +45722,18 @@ var_2		= word ptr -2
 		or	dx, dx
 		jnz	short locret_2A947
 		call	IRand
-		mov	bx, 280h
+		mov	bx, PLAYFIELD_RIGHT
 		cwd
 		idiv	bx
-		mov	[bp+var_2], dx
-		mov	[bp+var_4], 40h
+		mov	[bp+@@left], dx
+		mov	[bp+@@top], PLAYFIELD_TOP
 		push	1E0001h
 		push	10001h
 		push	ss
-		lea	ax, [bp+var_6]
+		lea	ax, [bp+@@pattern]
 		push	ax
 		call	sub_28659
-		push	2Ch ; ','
-		push	[bp+var_6]
-		push	[bp+var_4]
-		push	[bp+var_2]
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
+		call	@CPellets@add_pattern$qii16pellet_pattern_ti stdcall, offset _Pellets, ds, [bp+@@left], [bp+@@top], [bp+@@pattern], (2 shl 4) + 12
 		add	sp, 18h
 
 locret_2A947:
@@ -45812,8 +45760,8 @@ loc_2A960:
 		jl	loc_2ABD8
 		cmp	word_3A6CA, 96h
 		jnz	short loc_2A99E
-		mov	byte ptr word_3B041, 0
-		mov	byte ptr word_3B041+1, 1
+		mov	angle_3B041, 0
+		mov	byte_3B042, 1
 		push	4B0046h
 		push	41003Ch
 		push	ds
@@ -45831,9 +45779,9 @@ loc_2A993:
 loc_2A99E:
 		cmp	word_3A6CA, 0C8h ; '?'
 		jge	short loc_2AA13
-		mov	al, byte ptr word_3B041
+		mov	al, angle_3B041
 		mov	ah, 0
-		and	ax, 0FFh
+		and	ax, 255
 		add	ax, ax
 		mov	bx, ax
 		movsx	eax, _CosTable8[bx]
@@ -45841,9 +45789,9 @@ loc_2A99E:
 		sar	eax, 8
 		add	ax, 320
 		mov	si, ax
-		mov	al, byte ptr word_3B041
+		mov	al, angle_3B041
 		mov	ah, 0
-		and	ax, 0FFh
+		and	ax, 255
 		add	ax, ax
 		mov	bx, ax
 		movsx	eax, _SinTable8[bx]
@@ -45852,9 +45800,9 @@ loc_2A99E:
 		add	ax, 160
 		mov	di, ax
 		call	sub_28948 pascal, ((RES_X / 2) shl 16) or 160, si, ax, 7
-		mov	al, byte ptr word_3B041+1
-		add	byte ptr word_3B041, al
-		inc	byte ptr word_3B041+1
+		mov	al, byte_3B042
+		add	angle_3B041, al
+		inc	byte_3B042
 		mov	ax, word_3A6CA
 		mov	bx, 0Ah
 		cwd
@@ -45870,7 +45818,7 @@ loc_2AA13:
 		mov	si, 999
 		mov	di, 999
 		call	sub_28948 pascal, ((RES_X / 2) shl 16) or 160, si, di, 7
-		mov	byte ptr word_3B041, 0
+		mov	angle_3B041, 0
 		jmp	loc_2ABD8
 ; ---------------------------------------------------------------------------
 
@@ -45883,9 +45831,9 @@ loc_2AA36:
 		idiv	bx
 		or	dx, dx
 		jnz	loc_2ABD8
-		mov	al, byte ptr word_3B041
+		mov	al, angle_3B041
 		mov	ah, 0
-		and	ax, 0FFh
+		and	ax, 255
 		add	ax, ax
 		mov	bx, ax
 		movsx	eax, _CosTable8[bx]
@@ -45893,9 +45841,9 @@ loc_2AA36:
 		sar	eax, 8
 		add	ax, 140h
 		mov	si, ax
-		mov	al, byte ptr word_3B041
+		mov	al, angle_3B041
 		mov	ah, 0
-		and	ax, 0FFh
+		and	ax, 255
 		add	ax, ax
 		mov	bx, ax
 		movsx	eax, _SinTable8[bx]
@@ -45934,34 +45882,27 @@ loc_2AA36:
 ; ---------------------------------------------------------------------------
 
 loc_2AADB:
-		pushd	0
-		pushd	0
-		push	64h ; 'd'
-		push	word_3B041
-		push	0A00140h
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiii15pellet_motion_tiii stdcall, offset _Pellets, ds, large 320 or (160 shl 16), word ptr angle_3B041, (6 shl 4) + 4, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 
 loc_2AAF6:
 		add	sp, 14h
-		pushd	0
-		pushd	0
-		push	60h
-		mov	al, byte ptr word_3B041
-		add	al, 0FCh
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		push	(6 shl 4)
+		mov	al, angle_3B041
+		add	al, -4
 		push	ax
-		push	0A00140h
+		push	320 or (160 shl 16)
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		pushd	0
-		pushd	0
-		push	60h
-		mov	al, byte ptr word_3B041
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		push	(6 shl 4)
+		mov	al, angle_3B041
 		add	al, 4
 		push	ax
-		push	0A00140h
+		push	320 or (160 shl 16)
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii
@@ -45974,23 +45915,23 @@ loc_2AAF6:
 		db 08ch
 		db 07fh
 		db 000h
-		pushd	0
-		pushd	0
-		push	40h
-		mov	al, byte ptr word_3B041
-		add	al, 0FCh
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		push	(4 shl 4)
+		mov	al, angle_3B041
+		add	al, -4
 		push	ax
-		push	0A00140h
+		push	320 or (160 shl 16)
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		pushd	0
-		pushd	0
-		push	40h
-		mov	al, byte ptr word_3B041
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		push	(4 shl 4)
+		mov	al, angle_3B041
 		add	al, 4
 		push	ax
-		push	0A00140h
+		push	320 or (160 shl 16)
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii
@@ -45999,28 +45940,14 @@ loc_2AAF6:
 		cbw
 		cmp	ax, RANK_LUNATIC
 		jnz	short loc_2ABC0
-		pushd	0
-		pushd	0
-		push	40h
-		push	word_3B041
-		push	0A00140h
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		pushd	0
-		pushd	0
-		push	30h ; '0'
-		push	word_3B041
-		push	0A00140h
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiii15pellet_motion_tiii stdcall, offset _Pellets, ds, large 320 or (160 shl 16), word ptr angle_3B041, (4 shl 4), large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiii15pellet_motion_tiii stdcall, offset _Pellets, ds, large 320 or (160 shl 16), word ptr angle_3B041, (3 shl 4), large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 		add	sp, 28h
 
 loc_2ABC0:
-		mov	al, byte ptr word_3B041
+		mov	al, angle_3B041
 		add	al, 0Ch
-		mov	byte ptr word_3B041, al
+		mov	angle_3B041, al
 		jmp	short loc_2ABD8
 ; ---------------------------------------------------------------------------
 
@@ -46326,7 +46253,7 @@ sub_2ABDC	endp
 
 sub_2AECE	proc near
 
-var_1		= byte ptr -1
+@@angle		= byte ptr -1
 
 		enter	2, 0
 		push	si
@@ -46334,24 +46261,16 @@ var_1		= byte ptr -1
 		jl	loc_2AFDC
 		cmp	word_3A6CA, 32h	; '2'
 		jnz	short loc_2AF19
-		mov	[bp+var_1], 0
+		mov	[bp+@@angle], 0
 		xor	si, si
 		jmp	short loc_2AF11
 ; ---------------------------------------------------------------------------
 
 loc_2AEEB:
-		pushd	0
-		pushd	0
-		push	20h ; ' '
-		push	word ptr [bp+var_1]
-		push	0A00140h
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		add	sp, 14h
-		mov	al, [bp+var_1]
+		call	@CPellets@add_single$qiiii15pellet_motion_tiii c, offset _Pellets, ds, large 320 or (160 shl 16), word ptr [bp+@@angle], (2 shl 4), large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		mov	al, [bp+@@angle]
 		add	al, 7
-		mov	[bp+var_1], al
+		mov	[bp+@@angle], al
 		inc	si
 
 loc_2AF11:
@@ -46363,24 +46282,16 @@ loc_2AF11:
 loc_2AF19:
 		cmp	word_3A6CA, 3Ch	; '<'
 		jnz	short loc_2AF56
-		mov	[bp+var_1], 4
+		mov	[bp+@@angle], 4
 		xor	si, si
 		jmp	short loc_2AF4E
 ; ---------------------------------------------------------------------------
 
 loc_2AF28:
-		pushd	0
-		pushd	0
-		push	30h ; '0'
-		push	word ptr [bp+var_1]
-		push	0A00140h
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		add	sp, 14h
-		mov	al, [bp+var_1]
+		call	@CPellets@add_single$qiiii15pellet_motion_tiii c, offset _Pellets, ds, large 320 or (160 shl 16), word ptr [bp+@@angle], (3 shl 4), large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		mov	al, [bp+@@angle]
 		add	al, 0Ch
-		mov	[bp+var_1], al
+		mov	[bp+@@angle], al
 		inc	si
 
 loc_2AF4E:
@@ -46392,24 +46303,16 @@ loc_2AF4E:
 loc_2AF56:
 		cmp	word_3A6CA, 46h	; 'F'
 		jnz	short loc_2AF92
-		mov	[bp+var_1], 4
+		mov	[bp+@@angle], 4
 		xor	si, si
 		jmp	short loc_2AF8B
 ; ---------------------------------------------------------------------------
 
 loc_2AF65:
-		pushd	0
-		pushd	0
-		push	40h
-		push	word ptr [bp+var_1]
-		push	0A00140h
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		add	sp, 14h
-		mov	al, [bp+var_1]
+		call	@CPellets@add_single$qiiii15pellet_motion_tiii c, offset _Pellets, ds, large 320 or (160 shl 16), word ptr [bp+@@angle], (4 shl 4), large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		mov	al, [bp+@@angle]
 		add	al, 0Eh
-		mov	[bp+var_1], al
+		mov	[bp+@@angle], al
 		inc	si
 
 loc_2AF8B:
@@ -46421,24 +46324,16 @@ loc_2AF8B:
 loc_2AF92:
 		cmp	word_3A6CA, 50h	; 'P'
 		jnz	short loc_2AFCE
-		mov	[bp+var_1], 0Eh
+		mov	[bp+@@angle], 0Eh
 		xor	si, si
 		jmp	short loc_2AFC7
 ; ---------------------------------------------------------------------------
 
 loc_2AFA1:
-		pushd	0
-		pushd	0
-		push	30h ; '0'
-		push	word ptr [bp+var_1]
-		push	0A00140h
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		add	sp, 14h
-		mov	al, [bp+var_1]
+		call	@CPellets@add_single$qiiii15pellet_motion_tiii c, offset _Pellets, ds, large 320 or (160 shl 16), word ptr [bp+@@angle], (3 shl 4), large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		mov	al, [bp+@@angle]
 		add	al, 0Ah
-		mov	[bp+var_1], al
+		mov	[bp+@@angle], al
 		inc	si
 
 loc_2AFC7:
@@ -46467,7 +46362,7 @@ sub_2AFDF	proc near
 
 var_6		= word ptr -6
 var_4		= word ptr -4
-var_1		= byte ptr -1
+@@angle		= byte ptr -1
 
 		enter	6, 0
 		push	si
@@ -46481,8 +46376,8 @@ var_1		= byte ptr -1
 		push	offset word_3A780
 		call	sub_28659
 		add	sp, 0Ch
-		mov	word_3B04D, 2
-		mov	word_3B04F, 18Fh
+		mov	x_3B04D, 2
+		mov	y_3B04F, (PLAYFIELD_BOTTOM - 1)
 		jmp	loc_2B2B6
 ; ---------------------------------------------------------------------------
 
@@ -46496,25 +46391,25 @@ loc_2B01A:
 		or	dx, dx
 		jnz	short loc_2B07B
 		push	(32 shl 16) or 48
-		mov	ax, word_3B04F
+		mov	ax, y_3B04F
 		add	ax, -32
 		push	ax
-		mov	ax, word_3B04D
+		mov	ax, x_3B04D
 		add	ax, -40
 		push	ax
 		call	_egc_copy_rect_1_to_0
 		push	7
 		push	word_3B051
 		push	0
-		mov	ax, word_3B04F
-		add	ax, 0FFF0h
+		mov	ax, y_3B04F
+		add	ax, -16
 		push	ax
-		mov	ax, word_3B04D
-		add	ax, 0FFE8h
+		mov	ax, x_3B04D
+		add	ax, -24
 		push	ax
 		call	sub_1754D
 		add	sp, 12h
-		call	sub_28948 pascal, ((RES_X / 2) shl 16) or 120, word_3B04D, word_3B04F, 7
+		call	sub_28948 pascal, ((RES_X / 2) shl 16) or 120, x_3B04D, y_3B04F, 7
 
 loc_2B07B:
 		mov	ax, word_3A6CA
@@ -46524,30 +46419,30 @@ loc_2B07B:
 		cmp	dx, 1
 		jnz	short loc_2B0EF
 		push	(32 shl 16) or 48
-		mov	ax, word_3B04F
+		mov	ax, y_3B04F
 		add	ax, -32
 		push	ax
 		mov	ax, 632
-		sub	ax, word_3B04D
+		sub	ax, x_3B04D
 		add	ax, 16
 		push	ax
 		call	_egc_copy_rect_1_to_0
 		push	7
 		push	word_3B051
 		push	0
-		mov	ax, word_3B04F
-		add	ax, 0FFF0h
+		mov	ax, y_3B04F
+		add	ax, -16
 		push	ax
-		mov	ax, 278h
-		sub	ax, word_3B04D
+		mov	ax, (PLAYFIELD_RIGHT - 8)
+		sub	ax, x_3B04D
 		push	ax
 		call	sub_1754D
 		add	sp, 12h
 		push	((RES_X / 2) shl 16) or 120
 		mov	ax, (RES_X - 1)
-		sub	ax, word_3B04D
+		sub	ax, x_3B04D
 		push	ax
-		push	word_3B04F
+		push	y_3B04F
 		push	7
 		call	sub_28948
 		cmp	word_3B051, 5
@@ -46564,22 +46459,22 @@ loc_2B0EC:
 		mov	word_3B051, ax
 
 loc_2B0EF:
-		add	word_3B04D, 8
+		add	x_3B04D, 8
 		jmp	loc_2B2B6
 ; ---------------------------------------------------------------------------
 
 loc_2B0F7:
 		cmp	word_3A6CA, 82h
 		jnz	short loc_2B125
-		push	word_3B04F
+		push	y_3B04F
 		mov	ax, RES_X - 1
-		sub	ax, word_3B04D
+		sub	ax, x_3B04D
 		add	ax, 8
 		push	ax
 		push	(120 shl 16) or 320
 		call	_graph_r_line_unput
 		add	sp, 8
-		mov	word_3B04D, 0
+		mov	x_3B04D, 0
 		jmp	loc_2B2B6
 ; ---------------------------------------------------------------------------
 
@@ -46601,22 +46496,22 @@ loc_2B125:
 loc_2B14D:
 		mov	ax, _player_left
 		add	ax, 16
-		sub	ax, word_3B04D
+		sub	ax, x_3B04D
 		mov	[bp+var_4], ax
 		cwd
 		xor	ax, dx
 		sub	ax, dx
 		cmp	ax, 20h	; ' '
 		jle	short loc_2B188
-		pushd	0
-		pushd	0
-		lea	ax, [si+30h]
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		lea	ax, [si+(3 shl 4)]
 		push	ax
-		push	0C0h ; '?'
-		mov	ax, word_3B04F
-		add	ax, 0FFF8h
+		push	(-40h and 255)
+		mov	ax, y_3B04F
+		add	ax, -8
 		push	ax
-		push	word_3B04D
+		push	x_3B04D
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii
@@ -46626,7 +46521,7 @@ loc_2B188:
 		mov	ax, _player_left
 		add	ax, 16
 		mov	dx, (PLAYFIELD_RIGHT - 1)
-		sub	dx, word_3B04D
+		sub	dx, x_3B04D
 		sub	ax, dx
 		mov	[bp+var_6], ax
 		cwd
@@ -46634,16 +46529,16 @@ loc_2B188:
 		sub	ax, dx
 		cmp	ax, 20h	; ' '
 		jle	short loc_2B1CC
-		pushd	0
-		pushd	0
-		lea	ax, [si+30h]
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		lea	ax, [si+(3 shl 4)]
 		push	ax
-		push	0C0h ; '?'
-		mov	ax, word_3B04F
-		add	ax, 0FFF8h
+		push	(-40h and 255)
+		mov	ax, y_3B04F
+		add	ax, -8
 		push	ax
-		mov	ax, 27Fh
-		sub	ax, word_3B04D
+		mov	ax, (PLAYFIELD_RIGHT - 1)
+		sub	ax, x_3B04D
 		push	ax
 		push	ds
 		push	offset _Pellets
@@ -46651,12 +46546,12 @@ loc_2B188:
 		add	sp, 14h
 
 loc_2B1CC:
-		add	si, 10h
+		add	si, (1 shl 4)
 
 loc_2B1CF:
-		cmp	si, 40h
+		cmp	si, (4 shl 4)
 		jl	loc_2B14D
-		add	word_3B04D, 20h	; ' '
+		add	x_3B04D, 32
 		push	7
 		call	_mdrv2_se_play
 		pop	cx
@@ -46666,8 +46561,8 @@ loc_2B1CF:
 loc_2B1E6:
 		cmp	word_3A6CA, 15Eh
 		jnz	short loc_2B1FD
-		mov	word_3B04D, 0
-		mov	word_3B04F, 40h
+		mov	x_3B04D, 0
+		mov	y_3B04F, 64
 		jmp	loc_2B2B6
 ; ---------------------------------------------------------------------------
 
@@ -46684,44 +46579,36 @@ loc_2B1FD:
 ; ---------------------------------------------------------------------------
 
 loc_2B21A:
-		mov	ax, 190h
-		sub	ax, word_3B04F
+		mov	ax, PLAYFIELD_BOTTOM
+		sub	ax, y_3B04F
 		push	ax
 		call	IRand
-		mov	bx, 280h
+		mov	bx, PLAYFIELD_RIGHT
 		cwd
 		idiv	bx
-		sub	dx, word_3B04D
+		sub	dx, x_3B04D
 		push	dx
 		call	iatan2
-		mov	[bp+var_1], al
-		pushd	0
-		pushd	0
-		push	30h ; '0'
-		push	word ptr [bp+var_1]
-		push	word_3B04F
-		push	word_3B04D
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		mov	ax, 190h
-		sub	ax, word_3B04F
+		mov	[bp+@@angle], al
+		call	@CPellets@add_single$qiiii15pellet_motion_tiii stdcall, offset _Pellets, ds, x_3B04D, y_3B04F, word ptr [bp+@@angle], (3 shl 4), large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		mov	ax, PLAYFIELD_BOTTOM
+		sub	ax, y_3B04F
 		push	ax
 		call	IRand
-		mov	bx, 280h
+		mov	bx, PLAYFIELD_RIGHT
 		cwd
 		idiv	bx
-		sub	dx, word_3B04D
+		sub	dx, x_3B04D
 		push	dx
 		call	iatan2
-		mov	[bp+var_1], al
-		pushd	0
-		pushd	0
-		push	30h ; '0'
-		push	word ptr [bp+var_1]
-		push	word_3B04F
-		mov	ax, 27Fh
-		sub	ax, word_3B04D
+		mov	[bp+@@angle], al
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		push	(3 shl 4)
+		push	word ptr [bp+@@angle]
+		push	y_3B04F
+		mov	ax, (PLAYFIELD_RIGHT - 1)
+		sub	ax, x_3B04D
 		push	ax
 		push	ds
 		push	offset _Pellets
@@ -46732,7 +46619,7 @@ loc_2B21A:
 loc_2B29A:
 		cmp	si, 2
 		jl	loc_2B21A
-		add	word_3B04D, 20h	; ' '
+		add	x_3B04D, 32
 		jmp	short loc_2B2B6
 ; ---------------------------------------------------------------------------
 
@@ -47242,10 +47129,10 @@ loc_2B71C:
 		les	bx, [bp+arg_0]
 		cmp	word ptr es:[bx], 64h ;	'd'
 		jnz	short loc_2B780
-		mov	word_3B327, 0
-		mov	word_3B329, 190h
-		mov	word_3B32B, 70h	; 'p'
-		mov	word_3B32D+1, 0
+		mov	x_3B327, 0
+		mov	y_3B329, PLAYFIELD_BOTTOM
+		mov	speed_3B32B, (7 shl 4)
+		mov	word_3B32E, 0
 		push	100012h
 		push	180020h
 		push	ds
@@ -47254,59 +47141,43 @@ loc_2B71C:
 		add	sp, 0Ch
 
 loc_2B780:
-		cmp	word_3B32D+1, 0
+		cmp	word_3B32E, 0
 		jnz	short loc_2B7E7
-		mov	ax, word_3B329
-		add	ax, 0FF47h
+		mov	ax, y_3B329
+		add	ax, -185
 		push	ax
-		mov	ax, word_3B327
-		add	ax, 0FEC0h
+		mov	ax, x_3B327
+		add	ax, -320
 		push	ax
 		call	iatan2
-		mov	byte ptr word_3B32D, al
-		pushd	0
-		pushd	0
-		push	word_3B32B
-		push	word_3B32D
-		push	0B90140h
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		add	sp, 14h
-		sub	word_3B32B, 4
+		mov	angle_3B32D, al
+		call	@CPellets@add_single$qiiii15pellet_motion_tiii c, offset _Pellets, ds, large 320 or (185 shl 16), word ptr angle_3B32D, speed_3B32B, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		sub	speed_3B32B, 4
 		mov	ax, word_3A780
-		add	word_3B327, ax
-		cmp	word_3B327, 280h
+		add	x_3B327, ax
+		cmp	x_3B327, PLAYFIELD_RIGHT
 		jl	short loc_2B838
-		mov	word_3B32D+1, 1
-		mov	word_3B32B, 70h	; 'p'
-		mov	word_3B327, 280h
+		mov	word_3B32E, 1
+		mov	speed_3B32B, (7 shl 4)
+		mov	x_3B327, PLAYFIELD_RIGHT
 		pop	bp
 		retn	4
 ; ---------------------------------------------------------------------------
 
 loc_2B7E7:
-		mov	ax, word_3B329
-		add	ax, 0FF47h
+		mov	ax, y_3B329
+		add	ax, -185
 		push	ax
-		mov	ax, word_3B327
-		add	ax, 0FEC0h
+		mov	ax, x_3B327
+		add	ax, -320
 		push	ax
 		call	iatan2
-		mov	byte ptr word_3B32D, al
-		pushd	0
-		pushd	0
-		push	word_3B32B
-		push	word_3B32D
-		push	0B90140h
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		add	sp, 14h
-		sub	word_3B32B, 4
+		mov	angle_3B32D, al
+		call	@CPellets@add_single$qiiii15pellet_motion_tiii c, offset _Pellets, ds, large 320 or (185 shl 16), word ptr angle_3B32D, speed_3B32B, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		sub	speed_3B32B, 4
 		mov	ax, word_3A780
-		sub	word_3B327, ax
-		cmp	word_3B327, 0
+		sub	x_3B327, ax
+		cmp	x_3B327, 0
 		jge	short loc_2B838
 		les	bx, [bp+arg_0]
 		mov	word ptr es:[bx], 0
@@ -47474,13 +47345,13 @@ loc_2B97C:
 ; ---------------------------------------------------------------------------
 
 loc_2B9EA:
-		pushd	0
-		push	10001h
-		push	10h
+		pushd	0 or (0 shl 16)
+		push	PM_GRAVITY or (1 shl 16)
+		push	(1 shl 4)
 		call	IRand
 		push	ax
-		push	0B9h ; '?'
-		mov	ax, 280h
+		push	185
+		mov	ax, PLAYFIELD_RIGHT
 		cwd
 		idiv	word_3A780
 		imul	si
@@ -47520,10 +47391,10 @@ arg_0		= dword	ptr  4
 		les	bx, [bp+arg_0]
 		cmp	word ptr es:[bx], 50h ;	'P'
 		jnz	short loc_2BA6F
-		mov	word_3B338, 0
-		mov	word_3B33A, 190h
-		mov	word_3B33C, 70h	; 'p'
-		mov	word_3B33E+1, 0
+		mov	x_3B338, 0
+		mov	y_3B338, PLAYFIELD_BOTTOM
+		mov	speed_3B33C, (7 shl 4)
+		mov	word_3B33F, 0
 		push	100012h
 		push	180020h
 		push	ds
@@ -47532,68 +47403,52 @@ arg_0		= dword	ptr  4
 		add	sp, 0Ch
 
 loc_2BA6F:
-		mov	ax, word_3B33E+1
+		mov	ax, word_3B33F
 		mov	bx, 2
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_2BADA
-		mov	ax, word_3B33A
-		add	ax, 0FF47h
+		mov	ax, y_3B338
+		add	ax, -185
 		push	ax
-		mov	ax, word_3B338
-		add	ax, 0FEC0h
+		mov	ax, x_3B338
+		add	ax, -320
 		push	ax
 		call	iatan2
-		mov	byte ptr word_3B33E, al
-		pushd	0
-		pushd	0
-		push	word_3B33C
-		push	word_3B33E
-		push	0B90140h
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		add	sp, 14h
-		sub	word_3B33C, 4
+		mov	angle_3B33E, al
+		call	@CPellets@add_single$qiiii15pellet_motion_tiii c, offset _Pellets, ds, large 320 or (185 shl 16), word ptr angle_3B33E, speed_3B33C, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		sub	speed_3B33C, 4
 		mov	ax, word_3A780
-		add	word_3B338, ax
-		cmp	word_3B338, 280h
+		add	x_3B338, ax
+		cmp	x_3B338, PLAYFIELD_RIGHT
 		jl	short loc_2BB42
-		inc	word_3B33E+1
-		mov	word_3B33C, 70h	; 'p'
-		mov	word_3B338, 280h
+		inc	word_3B33F
+		mov	speed_3B33C, (7 shl 4)
+		mov	x_3B338, PLAYFIELD_RIGHT
 		pop	bp
 		retn	4
 ; ---------------------------------------------------------------------------
 
 loc_2BADA:
-		mov	ax, word_3B33A
-		add	ax, 0FF47h
+		mov	ax, y_3B338
+		add	ax, -185
 		push	ax
-		mov	ax, word_3B338
-		add	ax, 0FEC0h
+		mov	ax, x_3B338
+		add	ax, -320
 		push	ax
 		call	iatan2
-		mov	byte ptr word_3B33E, al
-		pushd	0
-		pushd	0
-		push	word_3B33C
-		push	word_3B33E
-		push	0B90140h
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		add	sp, 14h
-		sub	word_3B33C, 4
+		mov	angle_3B33E, al
+		call	@CPellets@add_single$qiiii15pellet_motion_tiii c, offset _Pellets, ds, large 320 or (185 shl 16), word ptr angle_3B33E, speed_3B33C, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		sub	speed_3B33C, 4
 		mov	ax, word_3A780
-		sub	word_3B338, ax
-		cmp	word_3B338, 0
+		sub	x_3B338, ax
+		cmp	x_3B338, 0
 		jge	short loc_2BB42
-		inc	word_3B33E+1
-		mov	word_3B338, 0
-		mov	word_3B33C, 70h	; 'p'
-		cmp	word_3B33E+1, 4
+		inc	word_3B33F
+		mov	x_3B338, 0
+		mov	speed_3B33C, (7 shl 4)
+		cmp	word_3B33F, 4
 		jnz	short loc_2BB42
 		les	bx, [bp+arg_0]
 		mov	word ptr es:[bx], 0
@@ -50229,9 +50084,10 @@ sub_2D412	endp
 
 sub_2D439	proc far
 
-var_7		= word ptr -7
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@angle		= byte ptr -7
+@@y		= word ptr -6
+@@x		= word ptr -4
+@@top		= word ptr -2
 
 		enter	8, 0
 		push	si
@@ -50271,12 +50127,7 @@ loc_2D4B0:
 loc_2D4C5:
 		cmp	si, 4
 		jl	short loc_2D4B0
-		push	30h ; '0'
-		push	word_3B438
-		push	0BC0138h
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
+		call	@CPellets@add_pattern$qii16pellet_pattern_ti stdcall, offset _Pellets, ds, large 312 or (188 shl 16), word_3B438, (3 shl 4)
 		push	0C000Eh
 		push	100012h
 		push	ds
@@ -50424,138 +50275,100 @@ loc_2D62C:
 		jnz	loc_2D7D3
 		xor	di, di
 		call	IRand
-		mov	bx, 0C8h ; '?'
+		mov	bx, 200
 		cwd
 		idiv	bx
-		add	dx, 40h
-		mov	[bp+var_2], dx
+		add	dx, PLAYFIELD_TOP
+		mov	[bp+@@top], dx
 		call	IRand
-		mov	bx, 190h
+		mov	bx, 400
 		cwd
 		idiv	bx
-		add	dx, 0F0h
-		mov	[bp+var_4], dx
-		mov	[bp+var_7+1], 190h
-		mov	ax, [bp+var_7+1]
-		sub	ax, [bp+var_2]
+		add	dx, 240
+		mov	[bp+@@x], dx
+		mov	[bp+@@y], PLAYFIELD_BOTTOM
+		mov	ax, [bp+@@y]
+		sub	ax, [bp+@@top]
 		push	ax
-		mov	ax, [bp+var_4]
+		mov	ax, [bp+@@x]
 		sub	ax, di
 		push	ax
 		call	iatan2
-		mov	byte ptr [bp+var_7], al
-		pushd	0
-		pushd	0
-		push	28h ; '('
-		push	[bp+var_7]
-		push	[bp+var_2]
-		push	di
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		mov	di, 278h
+		mov	[bp+@@angle], al
+		call	@CPellets@add_single$qiiii15pellet_motion_tiii stdcall, offset _Pellets, ds, di, [bp+@@top], word ptr [bp+@@angle], (2 shl 4) + 8, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		mov	di, (PLAYFIELD_RIGHT - 8)
 		call	IRand
-		mov	bx, 0C8h ; '?'
+		mov	bx, 200
 		cwd
 		idiv	bx
-		add	dx, 40h
-		mov	[bp+var_2], dx
+		add	dx, PLAYFIELD_TOP
+		mov	[bp+@@top], dx
 		call	IRand
-		mov	bx, 190h
+		mov	bx, PLAYFIELD_BOTTOM
 		cwd
 		idiv	bx
-		mov	[bp+var_4], dx
-		mov	[bp+var_7+1], 190h
-		mov	ax, [bp+var_7+1]
-		sub	ax, [bp+var_2]
+		mov	[bp+@@x], dx
+		mov	[bp+@@y], PLAYFIELD_BOTTOM
+		mov	ax, [bp+@@y]
+		sub	ax, [bp+@@top]
 		push	ax
-		mov	ax, [bp+var_4]
+		mov	ax, [bp+@@x]
 		sub	ax, di
 		push	ax
 		call	iatan2
-		mov	byte ptr [bp+var_7], al
-		pushd	0
-		pushd	0
-		push	28h ; '('
-		push	[bp+var_7]
-		push	[bp+var_2]
-		push	di
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		mov	[bp+@@angle], al
+		call	@CPellets@add_single$qiiii15pellet_motion_tiii stdcall, offset _Pellets, ds, di, [bp+@@top], word ptr [bp+@@angle], (2 shl 4) + 8, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 		add	sp, 28h
-		mov	[bp+var_2], 40h
+		mov	[bp+@@top], PLAYFIELD_TOP
 		call	IRand
-		mov	bx, 280h
+		mov	bx, PLAYFIELD_RIGHT
 		cwd
 		idiv	bx
 		mov	di, dx
-		mov	[bp+var_7+1], 190h
+		mov	[bp+@@y], PLAYFIELD_BOTTOM
 		call	IRand
-		mov	bx, 280h
+		mov	bx, PLAYFIELD_RIGHT
 		cwd
 		idiv	bx
-		mov	[bp+var_4], dx
-		mov	ax, [bp+var_7+1]
-		sub	ax, [bp+var_2]
+		mov	[bp+@@x], dx
+		mov	ax, [bp+@@y]
+		sub	ax, [bp+@@top]
 		push	ax
-		mov	ax, [bp+var_4]
+		mov	ax, [bp+@@x]
 		sub	ax, di
 		push	ax
 		call	iatan2
-		mov	byte ptr [bp+var_7], al
-		pushd	0
-		pushd	0
-		push	28h ; '('
-		push	[bp+var_7]
-		push	[bp+var_2]
-		push	di
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		mov	[bp+var_2], 40h
+		mov	[bp+@@angle], al
+		call	@CPellets@add_single$qiiii15pellet_motion_tiii stdcall, offset _Pellets, ds, di, [bp+@@top], word ptr [bp+@@angle], (2 shl 4) + 8, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		mov	[bp+@@top], PLAYFIELD_TOP
 		call	IRand
-		mov	bx, 280h
+		mov	bx, PLAYFIELD_RIGHT
 		cwd
 		idiv	bx
 		mov	di, dx
-		mov	[bp+var_7+1], 190h
+		mov	[bp+@@y], PLAYFIELD_BOTTOM
 		call	IRand
-		mov	bx, 280h
+		mov	bx, PLAYFIELD_RIGHT
 		cwd
 		idiv	bx
-		mov	[bp+var_4], dx
-		mov	ax, [bp+var_7+1]
-		sub	ax, [bp+var_2]
+		mov	[bp+@@x], dx
+		mov	ax, [bp+@@y]
+		sub	ax, [bp+@@top]
 		push	ax
-		mov	ax, [bp+var_4]
+		mov	ax, [bp+@@x]
 		sub	ax, di
 		push	ax
 		call	iatan2
-		mov	byte ptr [bp+var_7], al
-		pushd	0
-		pushd	0
-		push	28h ; '('
-		push	[bp+var_7]
-		push	[bp+var_2]
-		push	di
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		mov	[bp+@@angle], al
+		call	@CPellets@add_single$qiiii15pellet_motion_tiii stdcall, offset _Pellets, ds, di, [bp+@@top], word ptr [bp+@@angle], (2 shl 4) + 8, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 		add	sp, 28h
-		mov	[bp+var_2], 40h
+		mov	[bp+@@top], PLAYFIELD_TOP
 		call	IRand
-		mov	bx, 280h
+		mov	bx, PLAYFIELD_RIGHT
 		cwd
 		idiv	bx
 		mov	di, dx
-		push	28000Ch
-		push	[bp+var_2]
-		push	dx
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
-		add	sp, 0Ch
+		call	@CPellets@add_pattern$qii16pellet_pattern_ti c, offset _Pellets, ds, dx, [bp+@@top], large PP_1_AIMED or (((2 shl 4) + 8) shl 16)
 		jmp	short loc_2D7D3
 ; ---------------------------------------------------------------------------
 
@@ -50579,26 +50392,12 @@ sub_2D439	endp
 
 sub_2D7D7	proc far
 
-arg_0		= word ptr  6
+@@angle		= word ptr  6
 
 		push	bp
 		mov	bp, sp
-		pushd	0
-		pushd	0
-		push	word_3B438
-		push	[bp+arg_0]
-		push	0BC0148h
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		pushd	0
-		pushd	0
-		push	word_3B438
-		push	[bp+arg_0]
-		push	0BC0128h
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiii15pellet_motion_tiii stdcall, offset _Pellets, ds, large 328 or (188 shl 16), [bp+@@angle], word_3B438, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiii15pellet_motion_tiii stdcall, offset _Pellets, ds, large 296 or (188 shl 16), [bp+@@angle], word_3B438, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 		add	sp, 28h
 		pop	bp
 		retf
@@ -50623,8 +50422,8 @@ loc_2D828:
 		jl	loc_2D8E8
 		cmp	word_3A6CA, 64h	; 'd'
 		jnz	short loc_2D85A
-		mov	byte ptr word_3B454, 40h
-		mov	word_3B454+1, 0FFFFh
+		mov	angle_3B454, 40h
+		mov	word_3B455, 0FFFFh
 		push	700060h
 		push	500050h
 		push	ds
@@ -50654,14 +50453,13 @@ loc_2D873:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_2D8A7
-		mov	al, byte ptr word_3B454
+		mov	al, angle_3B454
 		add	al, 5
-		mov	byte ptr word_3B454, al
-		push	word_3B454
-		call	sub_2D7D7
+		mov	angle_3B454, al
+		call	sub_2D7D7 stdcall, word ptr angle_3B454
 		pop	cx
-		mov	al, 80h	; '?'
-		sub	al, byte ptr word_3B454
+		mov	al, 80h
+		sub	al, angle_3B454
 		push	ax
 
 loc_2D8A0:
@@ -50680,15 +50478,13 @@ loc_2D8A7:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_2D8DA
-		mov	al, byte ptr word_3B454
-		add	al, 0F4h
-		mov	byte ptr word_3B454, al
-		push	word_3B454
-		call	sub_2D7D7
-		mov	al, 80h	; '?'
-		sub	al, byte ptr word_3B454
-		push	ax
-		call	sub_2D7D7
+		mov	al, angle_3B454
+		add	al, -0Ch
+		mov	angle_3B454, al
+		call	sub_2D7D7 stdcall, word ptr angle_3B454
+		mov	al, 80h
+		sub	al, angle_3B454
+		call	sub_2D7D7 stdcall, ax
 		add	sp, 4
 
 loc_2D8DA:
@@ -50708,11 +50504,12 @@ sub_2D817	endp
 
 sub_2D8EA	proc far
 
-var_C		= word ptr -0Ch
+@@speed		= word ptr -0Ch
 @@vector_y		= byte ptr -0Ah
 @@vector_x		= byte ptr -8
 @@angle		= byte ptr -5
-var_2		= word ptr -2
+@@top		= word ptr -4
+@@left		= word ptr -2
 
 		enter	0Ch, 0
 		push	si
@@ -51052,7 +50849,7 @@ loc_2DBEC:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_2DC2F
-		mov	ax, 19Ah
+		mov	ax, 410
 		jmp	short loc_2DC45
 ; ---------------------------------------------------------------------------
 
@@ -51063,22 +50860,22 @@ loc_2DC2F:
 		idiv	bx
 		cmp	dx, 28h	; '('
 		jnz	short loc_2DC42
-		mov	ax, 13Ch
+		mov	ax, 316
 		jmp	short loc_2DC45
 ; ---------------------------------------------------------------------------
 
 loc_2DC42:
-		mov	ax, 138h
+		mov	ax, 312
 
 loc_2DC45:
-		mov	[bp+var_2], ax
+		mov	[bp+@@left], ax
 		mov	ax, word_3A6CA
 		mov	bx, 78h	; 'x'
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_2DC5A
-		mov	ax, 46h	; 'F'
+		mov	ax, (PLAYFIELD_TOP + 6)
 		jmp	short loc_2DC70
 ; ---------------------------------------------------------------------------
 
@@ -51089,15 +50886,15 @@ loc_2DC5A:
 		idiv	bx
 		cmp	dx, 28h	; '('
 		jnz	short loc_2DC6D
-		mov	ax, 8Ch
+		mov	ax, (PLAYFIELD_TOP + 76)
 		jmp	short loc_2DC70
 ; ---------------------------------------------------------------------------
 
 loc_2DC6D:
-		mov	ax, 0BCh ; '?'
+		mov	ax, (PLAYFIELD_TOP + 124)
 
 loc_2DC70:
-		mov	[bp+var_4], ax
+		mov	[bp+@@top], ax
 		xor	si, si
 		jmp	loc_2DD0F
 ; ---------------------------------------------------------------------------
@@ -51120,7 +50917,7 @@ loc_2DC88:
 		idiv	bx
 		cmp	dx, 1
 		jnz	short loc_2DC9A
-		mov	ax, 10h
+		mov	ax, (1 shl 4)
 		jmp	short loc_2DCAE
 ; ---------------------------------------------------------------------------
 
@@ -51136,11 +50933,11 @@ loc_2DC9A:
 ; ---------------------------------------------------------------------------
 
 loc_2DCAB:
-		mov	ax, 20h	; ' '
+		mov	ax, (2 shl 4)
 
 loc_2DCAE:
-		add	ax, 28h	; '('
-		mov	[bp+var_C], ax
+		add	ax, (2 shl 4) + 8
+		mov	[bp+@@speed], ax
 		push	word ptr [bp+@@angle]
 		push	ax
 		push	ss
@@ -51150,28 +50947,19 @@ loc_2DCAE:
 		lea	ax, [bp+@@vector_x]
 		push	ax
 		call	_vector2
-		pushd	0
-		pushd	0
-		push	[bp+var_C]
+		pushd	0 or (0 shl 16)
+		pushd	PM_NORMAL or (0 shl 16)
+		push	[bp+@@speed]
 		mov	al, 80h
 		sub	al, [bp+@@angle]
 		push	ax
-		push	[bp+var_4]
-		push	[bp+var_2]
+		push	[bp+@@top]
+		push	[bp+@@left]
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii
 		add	sp, 20h
-		pushd	0
-		pushd	0
-		push	[bp+var_C]
-		push	word ptr [bp+@@angle]
-		push	[bp+var_4]
-		push	[bp+var_2]
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		add	sp, 14h
+		call	@CPellets@add_single$qiiii15pellet_motion_tiii c, offset _Pellets, ds, [bp+@@left], [bp+@@top], word ptr [bp+@@angle], [bp+@@speed], large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 		mov	al, [bp+@@angle]
 		add	al, 0Ch
 		mov	[bp+@@angle], al
@@ -51251,7 +51039,7 @@ loc_2DD76:
 		call	_vector2_between stdcall, large (200 shl 16) or 290, large (64 shl 16) or 64, offset x_3B48F, ds, offset y_3B491, ds, 16
 		mov	point_3B493.x, 290
 		mov	point_3B493.y, 200
-		mov	word_3B499, 30h	; '0'
+		mov	speed_3B499, (3 shl 4)
 		push	0Ch
 		call	_mdrv2_se_play
 		mov	word_3B497, 63h	; 'c'
@@ -51358,15 +51146,8 @@ loc_2DEC6:
 		idiv	word_3B438
 		or	dx, dx
 		jnz	short loc_2DEF8
-		push	word_3B499
-		push	0Ch
-		push	point_3B493.y
-		push	point_3B493.x
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
-		add	sp, 0Ch
-		add	word_3B499, 2
+		call	@CPellets@add_pattern$qii16pellet_pattern_ti c, offset _Pellets, ds, point_3B493.x, point_3B493.y, PP_1_AIMED, speed_3B499
+		add	speed_3B499, 2
 
 loc_2DEF8:
 		push	6
@@ -51402,7 +51183,7 @@ loc_2DF1D:
 		cmp	word_3A6CA, 64h	; 'd'
 		jnz	short loc_2DF55
 		mov	byte_3B49B, 20h	; ' '
-		mov	word_3B49C+1, 0FFF8h
+		mov	word_3B49D, 0FFF8h
 		mov	word_3B49F, 0
 		push	20003h
 		push	40005h
@@ -51417,34 +51198,26 @@ loc_2DF55:
 		idiv	word_3B438
 		or	dx, dx
 		jnz	short loc_2DFBA
-		push	0B8h ; '?'
+		push	(PLAYFIELD_TOP + 120)
 		mov	ax, _player_left
 		add	ax, -278
 		push	ax
 		call	iatan2
-		mov	byte ptr word_3B49C, al
+		mov	angle_3B49C, al
 		mov	al, byte_3B49B
-		add	byte ptr word_3B49C, al
-		add	al, byte ptr word_3B49C+1
+		add	angle_3B49C, al
+		add	al, byte ptr word_3B49D
 		mov	byte_3B49B, al
 		inc	word_3B49F
 		cmp	word_3B49F, 8
 		jle	short loc_2DF9C
 		mov	ax, 0FFFFh
-		imul	word_3B49C+1
-		mov	word_3B49C+1, ax
+		imul	word_3B49D
+		mov	word_3B49D, ax
 		mov	word_3B49F, 0
 
 loc_2DF9C:
-		pushd	0
-		pushd	0
-		push	30h ; '0'
-		push	word_3B49C
-		push	0BC0138h
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		add	sp, 14h
+		call	@CPellets@add_single$qiiii15pellet_motion_tiii c, offset _Pellets, ds, large 312 or (188 shl 16), word ptr angle_3B49C, (3 shl 4), large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 
 loc_2DFBA:
 		cmp	word_3A6CA, 2BCh
@@ -52106,9 +51879,9 @@ loc_2E6AC:
 		idiv	word_3B438
 		or	dx, dx
 		jnz	short loc_2E703
-		pushd	0
-		push	10001h
-		push	20h ; ' '
+		pushd	0 or (0 shl 16)
+		push	PM_GRAVITY or (1 shl 16)
+		push	(2 shl 4)
 		call	IRand
 		and	al, 7Fh
 		push	ax
@@ -52117,9 +51890,9 @@ loc_2E6AC:
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		pushd	0
-		push	10001h
-		push	20h ; ' '
+		pushd	0 or (0 shl 16)
+		push	PM_GRAVITY or (1 shl 16)
+		push	(2 shl 4)
 		call	IRand
 		and	al, 7Fh
 		push	ax
@@ -52226,8 +51999,8 @@ sub_2E7C4	proc far
 		push	1
 		call	sub_2D343
 		mov	word_35FF2, 0
-		mov	word_3B517, 19Ah
-		mov	word_3B519, 46h	; 'F'
+		mov	left_3B517, 410
+		mov	top_3B519, (PLAYFIELD_TOP + 6)
 		push	10002h
 		push	30005h
 		push	ds
@@ -52246,57 +52019,57 @@ loc_2E803:
 		idiv	word_3B438
 		or	dx, dx
 		jnz	short loc_2E8A1
-		pushd	0
-		push	10001h
-		push	0
+		pushd	0 or (0 shl 16)
+		push	PM_GRAVITY or (1 shl 16)
+		push	(0 shl 4)
 		call	IRand
 		mov	bx, 7Fh
 		cwd
 		idiv	bx
 		push	dx
-		push	word_3B519
-		push	word_3B517
+		push	top_3B519
+		push	left_3B517
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		pushd	0
-		push	10001h
-		push	0
+		pushd	0 or (0 shl 16)
+		push	PM_GRAVITY or (1 shl 16)
+		push	(0 shl 4)
 		call	IRand
 		mov	bx, 7Fh
 		cwd
 		idiv	bx
 		push	dx
-		push	word_3B519
-		push	word_3B517
+		push	top_3B519
+		push	left_3B517
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii
 		add	sp, 28h
-		mov	ax, 28h	; '('
+		mov	ax, 40
 		cwd
 		idiv	word_3B438
 		push	ax
-		mov	ax, 16h
+		mov	ax, 22
 		cwd
 		pop	bx
 		idiv	bx
-		add	word_3B517, ax
-		mov	ax, 28h	; '('
+		add	left_3B517, ax
+		mov	ax, 40
 		cwd
 		idiv	word_3B438
 		push	ax
-		mov	ax, 0A2h ; '?'
+		mov	ax, 162
 		cwd
 		pop	bx
 		idiv	bx
-		add	word_3B519, ax
+		add	top_3B519, ax
 
 loc_2E8A1:
 		cmp	word_3A6CA, 8Ch
 		jnz	short loc_2E8CC
-		mov	word_3B517, 1B0h
-		mov	word_3B519, 0E8h
+		mov	left_3B517, 432
+		mov	top_3B519, (PLAYFIELD_TOP + 168)
 		push	20002h
 		push	20003h
 		push	ds
@@ -52309,41 +52082,41 @@ loc_2E8CC:
 		jl	loc_2EA01
 		cmp	word_3A6CA, 96h
 		jge	short loc_2E93B
-		pushd	0
-		push	10001h
-		push	0
+		pushd	0 or (0 shl 16)
+		push	PM_GRAVITY or (1 shl 16)
+		push	(0 shl 4)
 		call	IRand
 		mov	bx, 7Fh
 		cwd
 		idiv	bx
 		push	dx
-		push	word_3B519
-		push	word_3B517
+		push	top_3B519
+		push	left_3B517
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		pushd	0
-		push	10001h
-		push	0
+		pushd	0 or (0 shl 16)
+		push	PM_GRAVITY or (1 shl 16)
+		push	(0 shl 4)
 		call	IRand
 		mov	bx, 7Fh
 		cwd
 		idiv	bx
 		push	dx
-		push	word_3B519
-		push	word_3B517
+		push	top_3B519
+		push	left_3B517
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii
 		add	sp, 28h
-		sub	word_3B517, 17h
-		sub	word_3B519, 3
+		sub	left_3B517, 23
+		sub	top_3B519, 3
 
 loc_2E93B:
 		cmp	word_3A6CA, 96h
 		jnz	short loc_2E966
-		mov	word_3B517, 0C6h ; '?'
-		mov	word_3B519, 0C6h ; '?'
+		mov	left_3B517, 198
+		mov	top_3B519, (PLAYFIELD_TOP + 134)
 		push	10001h
 		push	20003h
 		push	ds
@@ -52361,51 +52134,51 @@ loc_2E966:
 		idiv	word_3B438
 		or	dx, dx
 		jnz	short loc_2EA01
-		pushd	0
-		push	10001h
-		push	0
+		pushd	0 or (0 shl 16)
+		push	PM_GRAVITY or (1 shl 16)
+		push	(0 shl 4)
 		call	IRand
 		mov	bx, 7Fh
 		cwd
 		idiv	bx
 		push	dx
-		push	word_3B519
-		push	word_3B517
+		push	top_3B519
+		push	left_3B517
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		pushd	0
-		push	10001h
-		push	0
+		pushd	0 or (0 shl 16)
+		push	PM_GRAVITY or (1 shl 16)
+		push	(0 shl 4)
 		call	IRand
 		mov	bx, 7Fh
 		cwd
 		idiv	bx
 		push	dx
-		push	word_3B519
-		push	word_3B517
+		push	top_3B519
+		push	left_3B517
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii
 		add	sp, 28h
-		mov	ax, 14h
+		mov	ax, 20
 		cwd
 		idiv	word_3B438
 		push	ax
-		mov	ax, 0FF2Ch
+		mov	ax, -212
 		cwd
 		pop	bx
 		idiv	bx
-		sub	word_3B517, ax
-		mov	ax, 14h
+		sub	left_3B517, ax
+		mov	ax, 20
 		cwd
 		idiv	word_3B438
 		push	ax
-		mov	ax, 80h	; '?'
+		mov	ax, 128
 		cwd
 		pop	bx
 		idiv	bx
-		sub	word_3B519, ax
+		sub	top_3B519, ax
 
 loc_2EA01:
 		pop	bp
@@ -52427,8 +52200,8 @@ sub_2EA03	proc far
 		push	3
 		call	sub_2D343
 		mov	word_35FF2, 0
-		mov	word_3B51B, 19Ah
-		mov	word_3B51D, 46h	; 'F'
+		mov	left_3B51B, 410
+		mov	top_3B51D, (PLAYFIELD_TOP + 6)
 		push	480040h
 		push	300020h
 		push	ds
@@ -52448,66 +52221,34 @@ loc_2EA42:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_2EAAA
-		pushd	0
-		pushd	0
-		push	word_3B438
-		push	20h ; ' '
-		push	word_3B51D
-		push	word_3B51B
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		pushd	0
-		pushd	0
-		push	word_3B438
-		push	60h
-		push	word_3B51D
-		push	word_3B51B
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiii15pellet_motion_tiii stdcall, offset _Pellets, ds, left_3B51B, top_3B51D, 20h, word_3B438, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiii15pellet_motion_tiii stdcall, offset _Pellets, ds, left_3B51B, top_3B51D, 60h, word_3B438, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 		add	sp, 28h
-		inc	word_3B51B
-		add	word_3B51D, 0Ch
+		inc	left_3B51B
+		add	top_3B51D, 12
 
 loc_2EAAA:
 		cmp	word_3A6CA, 8Ch
 		jnz	short loc_2EABE
-		mov	word_3B51B, 1B0h
-		mov	word_3B51D, 0E8h
+		mov	left_3B51B, 432
+		mov	top_3B51D, (PLAYFIELD_TOP + 168)
 
 loc_2EABE:
 		cmp	word_3A6CA, 8Ch
 		jl	loc_2EB8F
 		cmp	word_3A6CA, 96h
 		jge	short loc_2EB17
-		pushd	0
-		pushd	0
-		push	word_3B438
-		push	20h ; ' '
-		push	word_3B51D
-		push	word_3B51B
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		pushd	0
-		pushd	0
-		push	word_3B438
-		push	60h
-		push	word_3B51D
-		push	word_3B51B
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiii15pellet_motion_tiii stdcall, offset _Pellets, ds, left_3B51B, top_3B51D, 20h, word_3B438, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiii15pellet_motion_tiii stdcall, offset _Pellets, ds, left_3B51B, top_3B51D, 60h, word_3B438, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 		add	sp, 28h
-		sub	word_3B51B, 17h
-		sub	word_3B51D, 3
+		sub	left_3B51B, 23
+		sub	top_3B51D, 3
 
 loc_2EB17:
 		cmp	word_3A6CA, 96h
 		jnz	short loc_2EB2B
-		mov	word_3B51B, 0C6h ; '?'
-		mov	word_3B51D, 0C6h ; '?'
+		mov	left_3B51B, 198
+		mov	top_3B51D, (PLAYFIELD_TOP + 134)
 
 loc_2EB2B:
 		cmp	word_3A6CA, 96h
@@ -52520,27 +52261,11 @@ loc_2EB2B:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_2EB8F
-		pushd	0
-		pushd	0
-		push	word_3B438
-		push	20h ; ' '
-		push	word_3B51D
-		push	word_3B51B
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		pushd	0
-		pushd	0
-		push	word_3B438
-		push	60h
-		push	word_3B51D
-		push	word_3B51B
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiii15pellet_motion_tiii stdcall, offset _Pellets, ds, left_3B51B, top_3B51D, 20h, word_3B438, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiii15pellet_motion_tiii stdcall, offset _Pellets, ds, left_3B51B, top_3B51D, 60h, word_3B438, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 		add	sp, 28h
-		sub	word_3B51B, 0FFEBh
-		sub	word_3B51D, 0Ch
+		sub	left_3B51B, -21
+		sub	top_3B51D, 12
 
 loc_2EB8F:
 		pop	bp
@@ -52643,12 +52368,7 @@ loc_2EC7A:
 		mov	word_3A6CA, 0
 
 loc_2EC80:
-		push	480017h
-		push	46019Ah
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
-		add	sp, 0Ch
+		call	@CPellets@add_pattern$qii16pellet_pattern_ti c, offset _Pellets, ds, large 410 or (70 shl 16), large PP_3_SPREAD_WIDE_AIMED or (((4 shl 4) + 8) shl 16)
 
 loc_2EC98:
 		pop	bp
@@ -52691,14 +52411,7 @@ loc_2ECD9:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_2ED1E
-		push	word_3B438
-		push	0Ch
-		push	word_3B527
-		push	word_3B525
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
-		add	sp, 0Ch
+		call	@CPellets@add_pattern$qii16pellet_pattern_ti c, offset _Pellets, ds, word_3B525, word_3B527, PP_1_AIMED, word_3B438
 		inc	word_3B525
 		add	word_3B527, 0Ch
 
@@ -52713,14 +52426,7 @@ loc_2ED32:
 		jl	loc_2EDBD
 		cmp	word_3A6CA, 96h
 		jge	short loc_2ED68
-		push	word_3B438
-		push	0Ch
-		push	word_3B527
-		push	word_3B525
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
-		add	sp, 0Ch
+		call	@CPellets@add_pattern$qii16pellet_pattern_ti c, offset _Pellets, ds, word_3B525, word_3B527, PP_1_AIMED, word_3B438
 		sub	word_3B525, 17h
 		sub	word_3B527, 3
 
@@ -52741,14 +52447,7 @@ loc_2ED7C:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_2EDBD
-		push	word_3B438
-		push	0Ch
-		push	word_3B527
-		push	word_3B525
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
-		add	sp, 0Ch
+		call	@CPellets@add_pattern$qii16pellet_pattern_ti c, offset _Pellets, ds, word_3B525, word_3B527, PP_1_AIMED, word_3B438
 		sub	word_3B525, 0FFEBh
 		sub	word_3B527, 0Ch
 
@@ -52764,7 +52463,7 @@ sub_2EC9A	endp
 
 sub_2EDBF	proc far
 
-var_1		= byte ptr -1
+@@angle		= byte ptr -1
 
 		enter	2, 0
 		push	si
@@ -52784,24 +52483,16 @@ loc_2EDD2:
 		or	dx, dx
 		jnz	short loc_2EE20
 		xor	si, si
-		mov	[bp+var_1], 0
+		mov	[bp+@@angle], 0
 		jmp	short loc_2EE19
 ; ---------------------------------------------------------------------------
 
 loc_2EDF0:
-		pushd	0
-		push	10001h
-		push	20h ; ' '
-		push	word ptr [bp+var_1]
-		push	0C80122h
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		add	sp, 14h
+		call	@CPellets@add_single$qiiii15pellet_motion_tiii c, offset _Pellets, ds, large 290 or (200 shl 16), word ptr [bp+@@angle], (2 shl 4), large PM_GRAVITY or (1 shl 16), large 0 or (0 shl 16)
 		inc	si
-		mov	al, [bp+var_1]
-		add	al, 0F4h
-		mov	[bp+var_1], al
+		mov	al, [bp+@@angle]
+		add	al, -0Ch
+		mov	[bp+@@angle], al
 
 loc_2EE19:
 		cmp	si, 0Ah
@@ -52817,24 +52508,16 @@ loc_2EE20:
 		cmp	dx, 0Ah
 		jnz	short loc_2EE6C
 		xor	si, si
-		mov	[bp+var_1], 0
+		mov	[bp+@@angle], 0
 		jmp	short loc_2EE5F
 ; ---------------------------------------------------------------------------
 
 loc_2EE36:
-		pushd	0
-		push	300004h
-		push	20h ; ' '
-		push	word ptr [bp+var_1]
-		push	0C80122h
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
-		add	sp, 14h
+		call	@CPellets@add_single$qiiii15pellet_motion_tiii c, offset _Pellets, ds, large 290 or (200 shl 16), word ptr [bp+@@angle], (2 shl 4), large PM_FALL_STRAIGHT_FROM_TOP_THEN_NORMAL or ((3 shl 4) shl 16), large 0 or (0 shl 16)
 		inc	si
-		mov	al, [bp+var_1]
-		add	al, 0F4h
-		mov	[bp+var_1], al
+		mov	al, [bp+@@angle]
+		add	al, -0Ch
+		mov	[bp+@@angle], al
 
 loc_2EE5F:
 		cmp	si, 0Ah
@@ -56505,8 +56188,9 @@ word_39E0E	dw ?
 word_39E10	dw ?
 word_39E12	dw ?
 word_39E14	dw ?
-word_39E16	dw ?
-word_39E18	dw ?
+angle_39E16	db ?
+angle_39E17	db ?
+speed_39E18	dw ?
 word_39E1A	dw ?
 		db    ?	;
 word_39E1D	dw ?
@@ -56537,7 +56221,8 @@ word_39E57	dw ?
 		db ?
 word_39E5A	dw ?
 word_39E5C	dw ?
-word_39E5E	dw ?
+angle_39E5E	db ?
+byte_39E5F	db ?
 word_39E60	dw ?
 		dw ?
 unk_39E64	db    ?	;
@@ -56595,15 +56280,16 @@ _route	db ?
 word_3A37F	dw ?
 word_3A381	dw ?
 word_3A383	dw ?
-word_3A385	dw ?
-word_3A387	dw ?
+speed_3A385	dw ?
+angle_3A387	db ?
+byte_3A388	db ?
 point_3A389	Point <?>
 		db ?
 palette_3A38E	palette_t <?>
 byte_3A3BE	db ?
 		db 10 dup(?)
-word_3A3C9	dw ?
-word_3A3CB	dw ?
+x_3A3C9	dw ?
+y_3A3CB	dw ?
 word_3A3CD	dw ?
 word_3A3CF	dw ?
 word_3A3D1	dw ?
@@ -56628,8 +56314,8 @@ word_3A3F5	dw ?
 word_3A3F7	dw ?
 byte_3A3F9	db ?
 byte_3A3FA	db ?
-word_3A3FB	dw ?
-word_3A3FD	dw ?
+x_3A3FB	dw ?
+y_3A3FD	dw ?
 		db 4 dup(?)
 unk_3A403	db    ?	;
 		db    ?	;
@@ -56667,11 +56353,11 @@ byte_3A4F3	db ?
 byte_3A4F4	db ?
 		db 450 dup(?)
 word_3A6B7	dw ?
-byte_3A6B9	db ?
-byte_3A6BA	db ?
+angle_3A6B9	db ?
+angle_3A6BA	db ?
 word_3A6BB	dw ?
-word_3A6BD	dw ?
-		db ?
+angle_3A6BD	db ?
+word_3A6BE	dw ?
 word_3A6C0	dw ?
 word_3A6C2	dw ?
 word_3A6C4	dw ?
@@ -56685,8 +56371,8 @@ byte_3A6CE	db ?
 word_3A6E3	dw ?
 word_3A6E5	dw ?
 		db 20 dup(?)
-word_3A6FB	dw ?
-		db ?
+angle_3A6FB	db ?
+word_3A6FC	dw ?
 word_3A6FE	dw ?
 		db 101 dup(?)
 x_3A765	dw ?
@@ -56694,7 +56380,8 @@ y_3A767	dw ?
 word_3A769	dw ?
 word_3A76B	dw ?
 word_3A76D	dw ?
-word_3A76F	dw ?
+angle_3A76F	db ?
+angle_3A770	db ?
 word_3A771	dw ?
 word_3A773	dw ?
 word_3A775	dw ?
@@ -56730,35 +56417,37 @@ x_3AF3C	dw ?
 word_3AF3E	dw ?
 word_3AF40	dw ?
 word_3AF42	dw ?
-word_3AF44	dw ?
-		db 241 dup(?)
+angle_3AF44	db ?
+word_3AF45	dw ?
+		db 240 dup(?)
 point_3B037	Point <?>
 y_3B03B	dw ?
 x_3B03D	dw ?
 word_3B03F	dw ?
-word_3B041	dw ?
+angle_3B041	db ?
+byte_3B042	db ?
 point_3B043	Point <?>
 point_3B047	Point <?>
 word_3B04B	dw ?
-word_3B04D	dw ?
-word_3B04F	dw ?
+x_3B04D	dw ?
+y_3B04F	dw ?
 word_3B051	dw ?
 word_3B053	dw ?
 word_3B055	dw ?
 		db 720 dup(?)
-word_3B327	dw ?
-word_3B329	dw ?
-word_3B32B	dw ?
-word_3B32D	dw ?
-		db ?
+x_3B327	dw ?
+y_3B329	dw ?
+speed_3B32B	dw ?
+angle_3B32D	db ?
+word_3B32E	dw ?
 point_3B330	Point <?>
 word_3B334	dw ?
 word_3B336	dw ?
-word_3B338	dw ?
-word_3B33A	dw ?
-word_3B33C	dw ?
-word_3B33E	dw ?
-		db    ?	;
+x_3B338	dw ?
+y_3B338	dw ?
+speed_3B33C	dw ?
+angle_3B33E	db ?
+word_3B33F	dw ?
 word_3B341	dw 30 dup(?)
 word_3B37D	dw 30 dup(?)
 word_3B3B9	dw 30 dup(?)
@@ -56781,8 +56470,8 @@ word_3B44C	dw ?
 word_3B44E	dw ?
 word_3B450	dw ?
 word_3B452	dw ?
-word_3B454	dw ?
-		db    ?	;
+angle_3B454	db ?
+word_3B455	dw ?
 word_3B457	dw ?
 		db 8 dup(?)
 word_3B461	dw ?
@@ -56802,10 +56491,10 @@ x_3B48F	dw ?
 y_3B491	dw ?
 point_3B493	Point <?>
 word_3B497	dw ?
-word_3B499	dw ?
+speed_3B499	dw ?
 byte_3B49B	db ?
-word_3B49C	dw ?
-		db    ?	;
+angle_3B49C	db ?
+word_3B49D	dw ?
 word_3B49F	dw ?
 word_3B4A1	dw ?
 		db 8 dup(?)
@@ -56834,10 +56523,10 @@ y_3B4FF	dw    ?	;
 		db 16 dup(?)
 point_3B511	Point <?>
 word_3B515	dw ?
-word_3B517	dw ?
-word_3B519	dw ?
-word_3B51B	dw ?
-word_3B51D	dw ?
+left_3B517	dw ?
+top_3B519	dw ?
+left_3B51B	dw ?
+top_3B51D	dw ?
 word_3B51F	dw ?
 word_3B521	dw ?
 word_3B523	dw ?
