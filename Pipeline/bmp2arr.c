@@ -1,6 +1,10 @@
 
 #if defined(REC98_PROJECT)
 # include "platform.h" /* see also [https://github.com/nmlgc/ReC98/issues/8] */
+#elif defined(_MSC_VER)/*Microsoft C++*/ || defined(__BORLANDC__)
+typedef unsigned char uint8_t;
+typedef unsigned short uint16_t;
+typedef unsigned long uint32_t;
 #else
 # include <stdint.h>
 #endif
@@ -9,11 +13,11 @@
 #else
 # include <sys/types.h>
 # include <sys/stat.h>
+# include <unistd.h>
 #endif
 #include <stdlib.h>
 #include <string.h>
 #include <malloc.h>
-#include <unistd.h>
 #include <stdio.h>
 #include <fcntl.h>
 
