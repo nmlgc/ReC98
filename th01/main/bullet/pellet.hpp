@@ -1,3 +1,8 @@
+/// Constants
+/// ---------
+static const int PELLET_COUNT = 100;
+/// ---------
+
 enum pellet_motion_t {
 };
 
@@ -30,3 +35,18 @@ struct pellet_t {
 	int angle;
 	pellet_sling_direction_t sling_direction;
 };
+
+class CPellets {
+	pellet_t near pellets[PELLET_COUNT];
+	int alive_count; // only used for one single optimization
+	int unknown_zero[10];
+public:
+	int unknown_seven;
+	bool16 interlace_field;
+	bool spawn_with_cloud;
+};
+
+/// Globals
+/// -------
+extern CPellets Pellets;
+/// -------

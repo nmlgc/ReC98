@@ -948,10 +948,7 @@ arg_0		= word ptr  6
 		mov	word_34A78, 1
 		cmp	[bp+arg_0], 0
 		jnz	loc_BF82
-		push	ds
-		push	offset unk_37635
-		call	sub_30E54
-		add	sp, 4
+		call	sub_30E54 c, offset _Pellets, ds
 		call	_ptn_put_8 c, _player_left, (43h shl 16) or _player_top
 		xor	si, si
 		jmp	short loc_BF75
@@ -1209,10 +1206,7 @@ loc_C128:
 		idiv	bx
 		or	dx, dx
 		jnz	loc_C42E
-		push	ds
-		push	offset unk_37635
-		call	sub_30E54
-		add	sp, 4
+		call	sub_30E54 c, offset _Pellets, ds
 		jmp	loc_C42E
 ; ---------------------------------------------------------------------------
 
@@ -1336,10 +1330,7 @@ loc_C21C:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_C235
-		push	ds
-		push	offset unk_37635
-		call	sub_30E54
-		add	sp, 4
+		call	sub_30E54 c, offset _Pellets, ds
 
 loc_C235:
 		xor	si, si
@@ -1831,10 +1822,7 @@ loc_C816:
 		push	1
 		call	_frame_delay
 		pop	cx
-		push	ds
-		push	offset unk_37635
-		call	sub_30B1F
-		add	sp, 4
+		call	sub_30B1F c, offset _Pellets, ds
 		mov	ax, si
 		mov	bx, 5
 		cwd
@@ -2825,10 +2813,7 @@ loc_D29E:
 loc_D2A5:
 		cmp	_input_up, 0
 		jz	short loc_D2C7
-		push	ds
-		push	offset unk_37635
-		call	sub_30DEE
-		add	sp, 4
+		call	sub_30DEE c, offset _Pellets, ds
 
 loc_D2B8:
 		push	ds
@@ -3500,10 +3485,7 @@ loc_D7E4:
 		mov	es:[bx+reiidenconfig_t.score], eax
 		mov	eax, _continues_total
 		mov	es:[bx+reiidenconfig_t.continues_total], eax
-		push	ds
-		push	offset unk_37635
-		call	sub_30DEE
-		add	sp, 4
+		call	sub_30DEE c, offset _Pellets, ds
 		call	@CShots@unput_and_reset_all$qv c, offset _Shots, ds
 		mov	word ptr [bp+s1+2], ds
 		mov	word ptr [bp+s1], 1250h
@@ -3547,7 +3529,7 @@ loc_D85F:
 		call	sub_22694
 
 loc_D892:
-		mov	word_386B3, 7
+		mov	_Pellets.PELLET_unknown_seven, 7
 		jmp	loc_D9CA
 ; ---------------------------------------------------------------------------
 
@@ -3769,7 +3751,7 @@ loc_DA9E:
 		mov	word_34A88, 0
 		mov	_orb_in_portal, 0
 		mov	dword_34A62, 0
-		mov	word_386B3, 7
+		mov	_Pellets.PELLET_unknown_seven, 7
 		cmp	_mode_debug, 1
 		jnz	short loc_DAD7
 		call	sub_D340
@@ -4412,10 +4394,7 @@ loc_E244:
 		inc	si
 		call	sub_CE5C
 		call	@CShots@unput_and_reset_all$qv c, offset _Shots, ds
-		push	ds
-		push	offset unk_37635
-		call	sub_30DEE
-		add	sp, 4
+		call	sub_30DEE c, offset _Pellets, ds
 		call	sub_D47D
 		mov	word_34A8A, 1
 		cmp	byte_34ADF, 0
@@ -4504,10 +4483,7 @@ word_E309	dw	4,     9,   0Eh,   13h
 sub_E319	proc far
 		push	bp
 		mov	bp, sp
-		push	ds
-		push	offset unk_37635
-		call	sub_30047
-		add	sp, 4
+		call	sub_30047 c, offset _Pellets, ds
 		mov	_Shots.SHOT_unknown[0 * word], 50h
 		mov	_Shots.SHOT_unknown[1 * word], 60h
 		mov	_Shots.SHOT_unknown[2 * word], 70h
@@ -7363,10 +7339,7 @@ arg_0		= word ptr  6
 		push	si
 		push	di
 		call	@CShots@unput_and_reset_all$qv c, offset _Shots, ds
-		push	ds
-		push	offset unk_37635
-		call	sub_30DEE
-		add	sp, 4
+		call	sub_30DEE c, offset _Pellets, ds
 		push	32h ; '2'
 		call	_frame_delay
 		pop	cx
@@ -16421,7 +16394,7 @@ loc_1964A:
 		idiv	bx
 		push	dx
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		add	sp, 0Ch
 		inc	[bp+var_2]
@@ -18359,10 +18332,7 @@ loc_1AE85:
 		call	_egc_copy_rect_1_to_0
 		add	sp, 8
 		call	@CShots@unput_and_reset_all$qv c, offset _Shots, ds
-		push	ds
-		push	offset unk_37635
-		call	sub_30E54
-		add	sp, 4
+		call	sub_30E54 c, offset _Pellets, ds
 		push	0
 		call	sub_19E48
 		pop	cx
@@ -19220,7 +19190,7 @@ sub_1B6D9	proc far
 		add	ax, 1Ch
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		add	sp, 0Ch
 		push	18h
@@ -19241,7 +19211,7 @@ loc_1B70E:
 		add	ax, 28
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		add	sp, 0Ch
 		push	1Ch
@@ -19262,7 +19232,7 @@ loc_1B740:
 		add	ax, 28
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		add	sp, 0Ch
 		push	20h ; ' '
@@ -19283,7 +19253,7 @@ loc_1B771:
 		add	ax, 28
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		add	sp, 0Ch
 		push	2Ch ; ','
@@ -19304,7 +19274,7 @@ loc_1B7A2:
 		add	ax, 28
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		add	sp, 0Ch
 		push	32h ; '2'
@@ -19328,7 +19298,7 @@ loc_1B7D5:
 		add	ax, 28
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		add	sp, 0Ch
 		push	44000Ch
@@ -19341,7 +19311,7 @@ loc_1B808:
 		add	ax, 28
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		add	sp, 0Ch
 
@@ -19683,7 +19653,7 @@ loc_1BBD3:
 		add	ax, 28
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		push	36001Bh
 		mov	ax, point_398C0.y
@@ -19693,7 +19663,7 @@ loc_1BBD3:
 		add	ax, 28
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		push	36001Bh
 		mov	ax, point_3988E.y
@@ -19703,7 +19673,7 @@ loc_1BBD3:
 		add	ax, 1Ch
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		add	sp, 24h
 		mov	al, _rank
@@ -19733,7 +19703,7 @@ loc_1BC8C:
 		add	ax, 28
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		push	36001Bh
 		mov	ax, point_398C0.y
@@ -19743,7 +19713,7 @@ loc_1BC8C:
 		add	ax, 28
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		push	36001Bh
 		mov	ax, point_3988E.y
@@ -19753,7 +19723,7 @@ loc_1BC8C:
 		add	ax, 1Ch
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		add	sp, 24h
 
@@ -19766,7 +19736,7 @@ loc_1BD19:
 		add	ax, 28
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		push	36001Bh
 		mov	ax, point_3985C.y
@@ -19776,7 +19746,7 @@ loc_1BD19:
 		add	ax, 28
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		add	sp, 18h
 		jmp	loc_1DFFC
@@ -20613,7 +20583,7 @@ loc_1C55B:
 		add	ax, 28
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		pushd	0
 		pushd	0
@@ -20626,7 +20596,7 @@ loc_1C55B:
 		add	ax, 28
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 28h
 
@@ -20670,7 +20640,7 @@ loc_1C5F3:
 		add	ax, 28
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		pushd	0
 		push	400004h
@@ -20683,7 +20653,7 @@ loc_1C5F3:
 		add	ax, 28
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 28h
 
@@ -21494,7 +21464,7 @@ loc_1CDD6:
 		add	ax, 28
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		add	sp, 0Ch
 
@@ -21513,7 +21483,7 @@ loc_1CF38:
 		add	ax, 28
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		add	sp, 0Ch
 
@@ -22291,10 +22261,7 @@ loc_1D6C4:
 		cmp	word_3A6C8, 0
 		jg	short loc_1D75D
 		call	_mdrv2_bgm_fade_out_nonblock
-		push	ds
-		push	offset unk_37635
-		call	sub_30DEE
-		add	sp, 4
+		call	sub_30DEE c, offset _Pellets, ds
 		xor	si, si
 		jmp	short loc_1D74B
 ; ---------------------------------------------------------------------------
@@ -22761,7 +22728,7 @@ loc_1DB5B:
 		add	bx, bx
 		push	word ptr [bx+5446h]
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 14h
 		inc	si
@@ -23043,9 +23010,7 @@ loc_1DF5A:
 		cmp	word_3A6C8, 0
 		jg	short loc_1DFFC
 		call	_mdrv2_bgm_fade_out_nonblock
-		push	ds
-		push	offset unk_37635
-		call	sub_30DEE
+		call	sub_30DEE stdcall, offset _Pellets, ds
 		push	ds
 		push	offset unk_39EC4
 		call	sub_21EFF
@@ -24364,7 +24329,7 @@ loc_1E9C6:
 		add	bx, ax
 		push	word ptr ss:[bx]
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		push	7
 		call	_mdrv2_se_play
@@ -24419,7 +24384,7 @@ loc_1EA31:
 		add	bx, ax
 		push	word ptr ss:[bx]
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		push	7
 		call	_mdrv2_se_play
@@ -24796,7 +24761,7 @@ loc_1ED3A:
 		mov	al, byte ptr word_39E22
 		add	al, 0FAh
 		mov	byte ptr word_39E22, al
-		mov	byte_386B7, 1
+		mov	_Pellets.PELLET_spawn_with_cloud, 1
 		cmp	word_39E22+1, 70h ; 'p'
 		jge	short loc_1EDD4
 		add	word_39E22+1, 8
@@ -24840,7 +24805,7 @@ loc_1EDD9:
 		add	bx, ax
 		push	word ptr ss:[bx]
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		mov	bx, si
 		add	bx, bx
@@ -24873,7 +24838,7 @@ loc_1EDD9:
 		add	bx, ax
 		push	word ptr ss:[bx]
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		push	7
 		call	_mdrv2_se_play
@@ -24928,7 +24893,7 @@ loc_1EE95:
 		push	ax
 		call	sub_17BAE
 		add	sp, 18h
-		mov	byte_386B7, 0
+		mov	_Pellets.PELLET_spawn_with_cloud, 0
 
 loc_1EF00:
 		cmp	word_3A6CA, 140h
@@ -25132,7 +25097,7 @@ loc_1F0BB:
 		add	ax, 64
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 14h
 		inc	si
@@ -25587,7 +25552,7 @@ loc_1F4F8:
 		add	ax, 64
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		push	(224 shl 16) or 32
 		push	176
@@ -25959,7 +25924,7 @@ loc_1F844:
 		add	bx, ax
 		push	word ptr ss:[bx]
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 14h
 		inc	si
@@ -26476,9 +26441,7 @@ loc_1FCF7:
 		push	0
 		call	_graph_accesspage_func
 		call	_mdrv2_bgm_fade_out_nonblock
-		push	ds
-		push	offset unk_37635
-		call	sub_30DEE
+		call	sub_30DEE stdcall, offset _Pellets, ds
 		push	ds
 		push	offset unk_39EC4
 		call	sub_21EFF
@@ -27208,7 +27171,7 @@ loc_202D9:
 		add	ax, 0Ch
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		add	sp, 0Ch
 
@@ -29353,7 +29316,7 @@ loc_21467:
 		add	ax, 0Ch
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		add	sp, 0Ch
 		push	18h
@@ -32016,7 +31979,7 @@ loc_22A37:
 		add	ax, 44
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 14h
 		mov	al, byte ptr word_3A387+1
@@ -32333,7 +32296,7 @@ var_2		= word ptr -2
 		add	ax, 44
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 20h
 		pushd	0
@@ -32347,7 +32310,7 @@ var_2		= word ptr -2
 		add	ax, 44
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 14h
 		leave
@@ -32381,7 +32344,7 @@ var_2		= word ptr -2
 		add	ax, 12
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 20h
 		pushd	0
@@ -32395,7 +32358,7 @@ var_2		= word ptr -2
 		add	ax, 84
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 14h
 		leave
@@ -32504,7 +32467,7 @@ loc_22E62:
 		add	ax, 44
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 14h
 		inc	si
@@ -32561,7 +32524,7 @@ loc_22EBC:
 		add	ax, [bp+var_2]
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 14h
 		inc	si
@@ -32963,9 +32926,7 @@ loc_2326F:
 		push	offset point_3982A
 		call	sub_1588A
 		call	_mdrv2_bgm_fade_out_nonblock
-		push	ds
-		push	offset unk_37635
-		call	sub_30DEE
+		call	sub_30DEE stdcall, offset _Pellets, ds
 		add	sp, 0Eh
 		call	sub_1261B
 
@@ -33161,7 +33122,7 @@ var_1		= byte ptr -1
 		push	si
 		push	di
 		mov	byte_360CC, 1
-		mov	word_386B3, 7
+		mov	_Pellets.PELLET_unknown_seven, 7
 		xor	si, si
 		jmp	short loc_2335B
 ; ---------------------------------------------------------------------------
@@ -34358,7 +34319,7 @@ loc_23D63:
 		push	di
 		push	si
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		movsx	eax, word_3A6BB
 		mov	dl, byte_3A6B9
@@ -34394,7 +34355,7 @@ loc_23D63:
 		push	di
 		push	si
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 28h
 		cmp	word_3A6CA, 384h
@@ -34475,7 +34436,7 @@ loc_23E9A:
 		push	[bp+var_4]
 		push	[bp+var_2]
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 14h
 		inc	si
@@ -34605,7 +34566,7 @@ loc_23FDE:
 		push	[bp+var_4]
 		push	[bp+var_2]
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		add	sp, 18h
 		inc	si
@@ -34771,7 +34732,7 @@ sub_2414C	proc near
 		add	ax, 0Ch
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		push	28000Ch
 		mov	ax, word_3A3FD
@@ -34781,7 +34742,7 @@ sub_2414C	proc near
 		add	ax, 0Ch
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		add	sp, 18h
 
@@ -34883,7 +34844,7 @@ loc_2422C:
 		push	ax
 		push	di
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		pushd	0
 		pushd	0
@@ -34894,7 +34855,7 @@ loc_2422C:
 		push	[bp+var_2]
 		push	di
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 28h
 		pushd	0
@@ -34906,7 +34867,7 @@ loc_2422C:
 		push	[bp+var_2]
 		push	di
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		pushd	0
 		pushd	0
@@ -34917,7 +34878,7 @@ loc_2422C:
 		push	[bp+var_2]
 		push	di
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 28h
 		add	si, 2
@@ -35164,7 +35125,7 @@ loc_2450C:
 		add	ax, 0Ch
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		pushd	0
 		push	10001h
@@ -35181,7 +35142,7 @@ loc_2450C:
 		add	ax, 0Ch
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 28h
 		pushd	0
@@ -35199,7 +35160,7 @@ loc_2450C:
 		add	ax, 0Ch
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		pushd	0
 		push	10001h
@@ -35216,7 +35177,7 @@ loc_2450C:
 		add	ax, 0Ch
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 28h
 		pushd	0
@@ -35234,7 +35195,7 @@ loc_2450C:
 		add	ax, 0Ch
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		pushd	0
 		push	10001h
@@ -35251,7 +35212,7 @@ loc_2450C:
 		add	ax, 0Ch
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		push	7
 		call	_mdrv2_se_play
@@ -35987,10 +35948,7 @@ loc_24D59:
 		cmp	word_3A6C8, 0
 		jg	short loc_24DFB
 		call	_mdrv2_bgm_fade_out_nonblock
-		push	ds
-		push	offset unk_37635
-		call	sub_30DEE
-		add	sp, 4
+		call	sub_30DEE c, offset _Pellets, ds
 		xor	si, si
 		jmp	short loc_24DE9
 ; ---------------------------------------------------------------------------
@@ -36258,7 +36216,7 @@ sub_24F41	proc far
 		push	bp
 		mov	bp, sp
 		mov	byte_360CC, 1
-		mov	word_386B3, 7
+		mov	_Pellets.PELLET_unknown_seven, 7
 		mov	word_39854, 1
 		push	0
 		push	ds
@@ -37543,7 +37501,7 @@ loc_25BCE:
 		push	ax
 		push	[bp+var_2]
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		add	sp, 0Ch
 		mov	al, byte ptr word_3A6FB
@@ -38157,7 +38115,7 @@ loc_261B6:
 		add	ax, 60
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 14h
 		inc	si
@@ -38192,7 +38150,7 @@ loc_261F8:
 		add	ax, 60
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 14h
 		inc	si
@@ -38227,7 +38185,7 @@ loc_2623C:
 		add	ax, 60
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 14h
 		inc	si
@@ -38262,7 +38220,7 @@ loc_26280:
 		add	ax, 60
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 14h
 		inc	si
@@ -38297,7 +38255,7 @@ loc_262C3:
 		add	ax, 60
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 14h
 		inc	si
@@ -38596,7 +38554,7 @@ loc_26568:
 		mov	bx, ax
 		push	word ptr [bx+5D5Fh]
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 14h
 		inc	si
@@ -38807,7 +38765,7 @@ loc_26791:
 		add	bx, bx
 		push	word ptr [bx+5D89h]
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 14h
 
@@ -39555,7 +39513,7 @@ var_2		= word ptr -2
 		add	ax, 14h
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		add	sp, 18h
 
@@ -39596,7 +39554,7 @@ loc_26E70:
 		add	ax, 14h
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		add	sp, 0Ch
 
@@ -39633,7 +39591,7 @@ sub_26E8C	proc far
 		add	ax, 14h
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		add	sp, 0Ch
 
@@ -39663,7 +39621,7 @@ loc_26ECA:
 		add	ax, 14h
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		add	sp, 0Ch
 
@@ -39698,7 +39656,7 @@ sub_26F12	proc far
 		add	ax, 14h
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 14h
 
@@ -39803,7 +39761,7 @@ loc_2702A:
 		add	ax, 56
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		pushd	0
 		pushd	0
@@ -39819,7 +39777,7 @@ loc_2702A:
 		add	ax, 64
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 28h
 		inc	si
@@ -39852,7 +39810,7 @@ loc_27093:
 		add	ax, 56
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		pushd	0
 		pushd	0
@@ -39868,7 +39826,7 @@ loc_27093:
 		add	ax, 64
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 28h
 		inc	si
@@ -39901,7 +39859,7 @@ loc_270FC:
 		add	ax, 56
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		pushd	0
 		pushd	0
@@ -39917,7 +39875,7 @@ loc_270FC:
 		add	ax, 64
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 28h
 		inc	si
@@ -39953,7 +39911,7 @@ loc_27168:
 		add	ax, 56
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		pushd	0
 		pushd	0
@@ -39969,7 +39927,7 @@ loc_27168:
 		add	ax, 64
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 28h
 		mov	al, [bp+var_1]
@@ -40295,7 +40253,7 @@ loc_2751E:
 		idiv	bx
 		push	dx
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		add	sp, 0Ch
 
@@ -40316,7 +40274,7 @@ loc_27539:
 		add	ax, 60
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		jmp	loc_2745E
 ; ---------------------------------------------------------------------------
@@ -40353,7 +40311,7 @@ loc_275A1:
 		add	ax, 3Ch	; '<'
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		add	sp, 0Ch
 
@@ -40729,7 +40687,7 @@ loc_2799F:
 		push	ax
 		push	[bp+var_2]
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		add	sp, 0Ch
 		mov	al, byte ptr word_3A76F+1
@@ -40760,7 +40718,7 @@ loc_27A1C:
 		add	ax, 22
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		push	40001Bh
 		mov	ax, point_3982A.y
@@ -40770,7 +40728,7 @@ loc_27A1C:
 		add	ax, 100
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		add	sp, 18h
 
@@ -41993,9 +41951,7 @@ loc_285A5:
 		cmp	word_3A6C8, 0
 		jg	short loc_28655
 		call	_mdrv2_bgm_fade_out_nonblock
-		push	ds
-		push	offset unk_37635
-		call	sub_30DEE
+		call	sub_30DEE stdcall, offset _Pellets, ds
 		push	1
 		call	sub_24EC2
 		push	ds
@@ -42554,7 +42510,7 @@ loc_28A16:
 		call	ftol@
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		add	sp, 0Ch
 
@@ -42608,7 +42564,7 @@ loc_28A94:
 		call	ftol@
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 14h
 		inc	di
@@ -42663,7 +42619,7 @@ loc_28B00:
 		call	ftol@
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 14h
 
@@ -43209,7 +43165,7 @@ arg_8		= dword	ptr  0Ch
 		add	ax, 0Ch
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		mov	ax, si
 		add	ax, ax
@@ -43251,7 +43207,7 @@ arg_8		= dword	ptr  0Ch
 		add	ax, 0Ch
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 28h
 		pushd	0
@@ -43275,7 +43231,7 @@ arg_8		= dword	ptr  0Ch
 		add	ax, 0Ch
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 14h
 		pop	si
@@ -43369,7 +43325,7 @@ loc_29142:
 		add	ax, 0Ch
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		add	sp, 0Ch
 
@@ -43460,7 +43416,7 @@ loc_29219:
 		add	ax, 0Ch
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		mov	bx, si
 		add	bx, bx
@@ -43497,7 +43453,7 @@ loc_29219:
 		add	ax, 0Ch
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 20h
 
@@ -45223,7 +45179,7 @@ loc_2A313:
 		idiv	word_3AF44+1
 		or	dx, dx
 		jnz	loc_2A3AA
-		mov	byte_386B7, 1
+		mov	_Pellets.PELLET_spawn_with_cloud, 1
 		pushd	0
 		pushd	0
 		push	38h ; '8'
@@ -45232,7 +45188,7 @@ loc_2A313:
 		push	ax
 		push	0A00238h
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		pushd	0
 		pushd	0
@@ -45242,7 +45198,7 @@ loc_2A313:
 		push	ax
 		push	0A00238h
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 28h
 		pushd	0
@@ -45251,7 +45207,7 @@ loc_2A313:
 		push	word_3AF44
 		push	0A00040h
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		pushd	0
 		pushd	0
@@ -45261,7 +45217,7 @@ loc_2A313:
 		push	ax
 		push	0A00040h
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 28h
 		mov	al, byte ptr word_3AF44
@@ -45339,7 +45295,7 @@ loc_2A3DC:
 		push	ax
 		push	[bp+var_2]
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 14h
 
@@ -45828,7 +45784,7 @@ var_2		= word ptr -2
 		push	[bp+var_4]
 		push	[bp+var_2]
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		add	sp, 18h
 
@@ -45984,7 +45940,7 @@ loc_2AADB:
 		push	word_3B041
 		push	0A00140h
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 
 loc_2AAF6:
@@ -45997,7 +45953,7 @@ loc_2AAF6:
 		push	ax
 		push	0A00140h
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		pushd	0
 		pushd	0
@@ -46007,7 +45963,7 @@ loc_2AAF6:
 		push	ax
 		push	0A00140h
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 28h
 		mov	al, _rank
@@ -46026,7 +45982,7 @@ loc_2AAF6:
 		push	ax
 		push	0A00140h
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		pushd	0
 		pushd	0
@@ -46036,7 +45992,7 @@ loc_2AAF6:
 		push	ax
 		push	0A00140h
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 28h
 		mov	al, _rank
@@ -46049,7 +46005,7 @@ loc_2AAF6:
 		push	word_3B041
 		push	0A00140h
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		pushd	0
 		pushd	0
@@ -46057,7 +46013,7 @@ loc_2AAF6:
 		push	word_3B041
 		push	0A00140h
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 28h
 
@@ -46390,7 +46346,7 @@ loc_2AEEB:
 		push	word ptr [bp+var_1]
 		push	0A00140h
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 14h
 		mov	al, [bp+var_1]
@@ -46419,7 +46375,7 @@ loc_2AF28:
 		push	word ptr [bp+var_1]
 		push	0A00140h
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 14h
 		mov	al, [bp+var_1]
@@ -46448,7 +46404,7 @@ loc_2AF65:
 		push	word ptr [bp+var_1]
 		push	0A00140h
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 14h
 		mov	al, [bp+var_1]
@@ -46477,7 +46433,7 @@ loc_2AFA1:
 		push	word ptr [bp+var_1]
 		push	0A00140h
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 14h
 		mov	al, [bp+var_1]
@@ -46662,7 +46618,7 @@ loc_2B14D:
 		push	ax
 		push	word_3B04D
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 14h
 
@@ -46690,7 +46646,7 @@ loc_2B188:
 		sub	ax, word_3B04D
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 14h
 
@@ -46746,7 +46702,7 @@ loc_2B21A:
 		push	word_3B04F
 		push	word_3B04D
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		mov	ax, 190h
 		sub	ax, word_3B04F
@@ -46768,7 +46724,7 @@ loc_2B21A:
 		sub	ax, word_3B04D
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 28h
 		inc	si
@@ -47314,7 +47270,7 @@ loc_2B780:
 		push	word_3B32D
 		push	0B90140h
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 14h
 		sub	word_3B32B, 4
@@ -47344,7 +47300,7 @@ loc_2B7E7:
 		push	word_3B32D
 		push	0B90140h
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 14h
 		sub	word_3B32B, 4
@@ -47530,7 +47486,7 @@ loc_2B9EA:
 		imul	si
 		push	ax
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 14h
 		inc	si
@@ -47596,7 +47552,7 @@ loc_2BA6F:
 		push	word_3B33E
 		push	0B90140h
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 14h
 		sub	word_3B33C, 4
@@ -47626,7 +47582,7 @@ loc_2BADA:
 		push	word_3B33E
 		push	0B90140h
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 14h
 		sub	word_3B33C, 4
@@ -49002,10 +48958,7 @@ loc_2C835:
 		mov	word_3A6CA, 0
 		mov	word_3B433, 18Fh
 		call	@CShots@unput_and_reset_all$qv c, offset _Shots, ds
-		push	ds
-		push	offset unk_37635
-		call	sub_30DEE
-		add	sp, 4
+		call	sub_30DEE c, offset _Pellets, ds
 		xor	si, si
 		jmp	short loc_2C8AE
 ; ---------------------------------------------------------------------------
@@ -50322,7 +50275,7 @@ loc_2D4C5:
 		push	word_3B438
 		push	0BC0138h
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		push	0C000Eh
 		push	100012h
@@ -50498,7 +50451,7 @@ loc_2D62C:
 		push	[bp+var_2]
 		push	di
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		mov	di, 278h
 		call	IRand
@@ -50528,7 +50481,7 @@ loc_2D62C:
 		push	[bp+var_2]
 		push	di
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 28h
 		mov	[bp+var_2], 40h
@@ -50558,7 +50511,7 @@ loc_2D62C:
 		push	[bp+var_2]
 		push	di
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		mov	[bp+var_2], 40h
 		call	IRand
@@ -50587,7 +50540,7 @@ loc_2D62C:
 		push	[bp+var_2]
 		push	di
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 28h
 		mov	[bp+var_2], 40h
@@ -50600,7 +50553,7 @@ loc_2D62C:
 		push	[bp+var_2]
 		push	dx
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		add	sp, 0Ch
 		jmp	short loc_2D7D3
@@ -50636,7 +50589,7 @@ arg_0		= word ptr  6
 		push	[bp+arg_0]
 		push	0BC0148h
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		pushd	0
 		pushd	0
@@ -50644,7 +50597,7 @@ arg_0		= word ptr  6
 		push	[bp+arg_0]
 		push	0BC0128h
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 28h
 		pop	bp
@@ -51206,7 +51159,7 @@ loc_2DCAE:
 		push	[bp+var_4]
 		push	[bp+var_2]
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 20h
 		pushd	0
@@ -51216,7 +51169,7 @@ loc_2DCAE:
 		push	[bp+var_4]
 		push	[bp+var_2]
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 14h
 		mov	al, [bp+@@angle]
@@ -51410,7 +51363,7 @@ loc_2DEC6:
 		push	point_3B493.y
 		push	point_3B493.x
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		add	sp, 0Ch
 		add	word_3B499, 2
@@ -51489,7 +51442,7 @@ loc_2DF9C:
 		push	word_3B49C
 		push	0BC0138h
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 14h
 
@@ -52162,7 +52115,7 @@ loc_2E6AC:
 		push	point_3B511.y
 		push	point_3B511.x
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		pushd	0
 		push	10001h
@@ -52173,7 +52126,7 @@ loc_2E6AC:
 		push	point_3B511.y
 		push	point_3B511.x
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 28h
 
@@ -52304,7 +52257,7 @@ loc_2E803:
 		push	word_3B519
 		push	word_3B517
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		pushd	0
 		push	10001h
@@ -52317,7 +52270,7 @@ loc_2E803:
 		push	word_3B519
 		push	word_3B517
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 28h
 		mov	ax, 28h	; '('
@@ -52367,7 +52320,7 @@ loc_2E8CC:
 		push	word_3B519
 		push	word_3B517
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		pushd	0
 		push	10001h
@@ -52380,7 +52333,7 @@ loc_2E8CC:
 		push	word_3B519
 		push	word_3B517
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 28h
 		sub	word_3B517, 17h
@@ -52419,7 +52372,7 @@ loc_2E966:
 		push	word_3B519
 		push	word_3B517
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		pushd	0
 		push	10001h
@@ -52432,7 +52385,7 @@ loc_2E966:
 		push	word_3B519
 		push	word_3B517
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 28h
 		mov	ax, 14h
@@ -52502,7 +52455,7 @@ loc_2EA42:
 		push	word_3B51D
 		push	word_3B51B
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		pushd	0
 		pushd	0
@@ -52511,7 +52464,7 @@ loc_2EA42:
 		push	word_3B51D
 		push	word_3B51B
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 28h
 		inc	word_3B51B
@@ -52535,7 +52488,7 @@ loc_2EABE:
 		push	word_3B51D
 		push	word_3B51B
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		pushd	0
 		pushd	0
@@ -52544,7 +52497,7 @@ loc_2EABE:
 		push	word_3B51D
 		push	word_3B51B
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 28h
 		sub	word_3B51B, 17h
@@ -52574,7 +52527,7 @@ loc_2EB2B:
 		push	word_3B51D
 		push	word_3B51B
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		pushd	0
 		pushd	0
@@ -52583,7 +52536,7 @@ loc_2EB2B:
 		push	word_3B51D
 		push	word_3B51B
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 28h
 		sub	word_3B51B, 0FFEBh
@@ -52693,7 +52646,7 @@ loc_2EC80:
 		push	480017h
 		push	46019Ah
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		add	sp, 0Ch
 
@@ -52743,7 +52696,7 @@ loc_2ECD9:
 		push	word_3B527
 		push	word_3B525
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		add	sp, 0Ch
 		inc	word_3B525
@@ -52765,7 +52718,7 @@ loc_2ED32:
 		push	word_3B527
 		push	word_3B525
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		add	sp, 0Ch
 		sub	word_3B525, 17h
@@ -52793,7 +52746,7 @@ loc_2ED7C:
 		push	word_3B527
 		push	word_3B525
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_30368
 		add	sp, 0Ch
 		sub	word_3B525, 0FFEBh
@@ -52842,7 +52795,7 @@ loc_2EDF0:
 		push	word ptr [bp+var_1]
 		push	0C80122h
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 14h
 		inc	si
@@ -52875,7 +52828,7 @@ loc_2EE36:
 		push	word ptr [bp+var_1]
 		push	0C80122h
 		push	ds
-		push	offset unk_37635
+		push	offset _Pellets
 		call	sub_304B8
 		add	sp, 14h
 		inc	si
@@ -54313,23 +54266,23 @@ main_38__TEXT	segment	byte public 'CODE' use16
 
 sub_30047	proc far
 
-arg_0		= dword	ptr  6
+@@CPellets		= dword	ptr  6
 
 		push	bp
 		mov	bp, sp
 		push	si
-		cmp	[bp+arg_0], 0
+		cmp	[bp+@@CPellets], 0
 		jnz	short loc_30065
-		push	1083h
+		push	size CPellets
 		call	@$bnew$qui	; operator new(uint)
 		pop	cx
-		mov	word ptr [bp+arg_0+2], dx
-		mov	word ptr [bp+arg_0], ax
+		mov	word ptr [bp+@@CPellets+2], dx
+		mov	word ptr [bp+@@CPellets], ax
 		or	ax, dx
 		jz	short loc_300AA
 
 loc_30065:
-		mov	ax, word ptr [bp+arg_0]
+		mov	ax, word ptr [bp+@@CPellets]
 		mov	word_3B530, ax
 		xor	si, si
 		jmp	short loc_30081
@@ -54343,10 +54296,10 @@ loc_3006F:
 		add	word_3B530, 2Ah	; '*'
 
 loc_30081:
-		cmp	si, 64h	; 'd'
+		cmp	si, PELLET_COUNT
 		jl	short loc_3006F
-		les	bx, [bp+arg_0]
-		mov	word ptr es:[bx+1068h],	0
+		les	bx, [bp+@@CPellets]
+		mov	es:[bx+CPellets.PELLET_alive_count], 0
 		xor	si, si
 		jmp	short loc_300A5
 ; ---------------------------------------------------------------------------
@@ -54354,18 +54307,18 @@ loc_30081:
 loc_30094:
 		mov	ax, si
 		add	ax, ax
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@CPellets]
 		add	bx, ax
-		mov	word ptr es:[bx+106Ah],	0
+		mov	es:[bx+PELLET_unknown_zero], 0
 		inc	si
 
 loc_300A5:
-		cmp	si, 0Ah
+		cmp	si, 10
 		jl	short loc_30094
 
 loc_300AA:
-		mov	dx, word ptr [bp+arg_0+2]
-		mov	ax, word ptr [bp+arg_0]
+		mov	dx, word ptr [bp+@@CPellets+2]
+		mov	ax, word ptr [bp+@@CPellets]
 		pop	si
 		pop	bp
 		retf
@@ -54750,8 +54703,8 @@ var_A		= word ptr -0Ah
 var_8		= word ptr -8
 var_6		= word ptr -6
 var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= dword	ptr  6
+@@i		= word ptr -2
+@@CPellets		= dword	ptr  6
 arg_4		= word ptr  0Ah
 arg_6		= word ptr  0Ch
 arg_8		= word ptr  0Eh
@@ -54763,8 +54716,8 @@ arg_A		= word ptr  10h
 		mov	di, [bp+arg_4]
 		mov	si, [bp+arg_A]
 		mov	[bp+var_4], 0
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx+1068h],	64h ; 'd'
+		les	bx, [bp+@@CPellets]
+		cmp	es:[bx+CPellets.PELLET_alive_count], PELLET_COUNT
 		jg	loc_304B4
 		cmp	di, 280h
 		jge	loc_304B4
@@ -54815,9 +54768,9 @@ loc_303D0:
 		mov	si, 10h
 
 loc_303EC:
-		mov	ax, word ptr [bp+arg_0]
+		mov	ax, word ptr [bp+@@CPellets]
 		mov	word_3B530, ax
-		mov	[bp+var_2], 0
+		mov	[bp+@@i], 0
 		jmp	loc_304AC
 ; ---------------------------------------------------------------------------
 
@@ -54839,8 +54792,8 @@ loc_303FA:
 		mov	[bx+22h], di
 		mov	ax, [bp+arg_6]
 		mov	[bx+24h], ax
-		les	bx, [bp+arg_0]
-		cmp	byte ptr es:[bx+1082h],	0
+		les	bx, [bp+@@CPellets]
+		cmp	es:[bx+PELLET_spawn_with_cloud], 0
 		jz	short loc_3044A
 		mov	bx, word_3B530
 		mov	word ptr [bx+20h], 1
@@ -54857,8 +54810,8 @@ loc_30451:
 		mov	[bx+0Eh], ax
 		mov	word ptr [bx+0Ah], 0FFFFh
 		mov	word ptr [bx+1Ah], 0
-		les	bx, [bp+arg_0]
-		inc	word ptr es:[bx+1068h]
+		les	bx, [bp+@@CPellets]
+		inc	es:[bx+CPellets.PELLET_alive_count]
 		push	[bp+arg_6]
 		push	di
 		push	ss
@@ -54884,11 +54837,11 @@ loc_30451:
 		jz	short loc_304B4
 
 loc_304A4:
-		inc	[bp+var_2]
+		inc	[bp+@@i]
 		add	word_3B530, 2Ah	; '*'
 
 loc_304AC:
-		cmp	[bp+var_2], 64h	; 'd'
+		cmp	[bp+@@i], PELLET_COUNT
 		jl	loc_303FA
 
 loc_304B4:
@@ -54907,7 +54860,7 @@ sub_304B8	proc far
 
 @@vector_y		= word ptr -4
 @@vector_x		= word ptr -2
-arg_0		= dword	ptr  6
+@@CPellets		= dword	ptr  6
 arg_4		= word ptr  0Ah
 arg_6		= word ptr  0Ch
 @@angle		= word ptr  0Eh
@@ -54921,8 +54874,8 @@ arg_12		= word ptr  18h
 		push	si
 		push	di
 		mov	si, [bp+arg_A]
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx+1068h],	64h ; 'd'
+		les	bx, [bp+@@CPellets]
+		cmp	es:[bx+CPellets.PELLET_alive_count], PELLET_COUNT
 		jg	loc_30634
 		cmp	_rank, RANK_EASY
 		jnz	short loc_304D9
@@ -54965,7 +54918,7 @@ loc_304F8:
 		mov	si, 10h
 
 loc_30514:
-		mov	ax, word ptr [bp+arg_0]
+		mov	ax, word ptr [bp+@@CPellets]
 		mov	word_3B530, ax
 		xor	di, di
 		jmp	loc_3062D
@@ -54990,8 +54943,8 @@ loc_3051F:
 		mov	[bx+22h], ax
 		mov	ax, [bp+arg_6]
 		mov	[bx+24h], ax
-		les	bx, [bp+arg_0]
-		cmp	byte ptr es:[bx+1082h],	0
+		les	bx, [bp+@@CPellets]
+		cmp	es:[bx+PELLET_spawn_with_cloud], 0
 		jz	short loc_30573
 		mov	bx, word_3B530
 		mov	word ptr [bx+20h], 1
@@ -55009,8 +54962,8 @@ loc_3057A:
 		mov	[bx+1],	al
 		mov	word ptr [bx+0Ah], 0FFFFh
 		mov	word ptr [bx+1Ah], 0
-		les	bx, [bp+arg_0]
-		inc	word ptr es:[bx+1068h]
+		les	bx, [bp+@@CPellets]
+		inc	es:[bx+CPellets.PELLET_alive_count]
 		mov	ax, [bp+arg_10]
 		shl	ax, 4
 		mov	bx, word_3B530
@@ -55071,7 +55024,7 @@ loc_30627:
 		add	word_3B530, 2Ah	; '*'
 
 loc_3062D:
-		cmp	di, 64h	; 'd'
+		cmp	di, PELLET_COUNT
 		jl	loc_3051F
 
 loc_30634:
@@ -55605,7 +55558,7 @@ sub_3090A	endp
 
 sub_30AFD	proc far
 
-arg_0		= dword	ptr  6
+@@CPellets		= dword	ptr  6
 
 		push	bp
 		mov	bp, sp
@@ -55615,9 +55568,9 @@ arg_0		= dword	ptr  6
 		jle	short loc_30B1D
 		mov	word ptr [bx+1Eh], 0
 		mov	byte ptr [bx], 0
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@CPellets]
 		assume es:nothing
-		dec	word ptr es:[bx+1068h]
+		dec	es:[bx+CPellets.PELLET_alive_count]
 
 loc_30B1D:
 		pop	bp
@@ -55631,13 +55584,13 @@ sub_30AFD	endp
 
 sub_30B1F	proc far
 
-arg_0		= dword	ptr  6
+@@CPellets		= dword	ptr  6
 
 		push	bp
 		mov	bp, sp
 		push	si
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx+1080h],	0
+		les	bx, [bp+@@CPellets]
+		cmp	es:[bx+CPellets.PELLET_interlace_field], 0
 		jnz	short loc_30B33
 		mov	ax, 1
 		jmp	short loc_30B35
@@ -55647,13 +55600,13 @@ loc_30B33:
 		xor	ax, ax
 
 loc_30B35:
-		les	bx, [bp+arg_0]
-		mov	es:[bx+1080h], ax
-		push	word ptr [bp+arg_0+2]
+		les	bx, [bp+@@CPellets]
+		mov	es:[bx+CPellets.PELLET_interlace_field], ax
+		push	word ptr [bp+@@CPellets+2]
 		push	bx
 		nopcall	sub_30F70
 		add	sp, 4
-		mov	ax, word ptr [bp+arg_0]
+		mov	ax, word ptr [bp+@@CPellets]
 		mov	word_3B530, ax
 		xor	si, si
 		jmp	loc_30C9F
@@ -55665,12 +55618,12 @@ loc_30B54:
 		jz	loc_30C99
 		cmp	byte_360CC, 0
 		jz	short loc_30B78
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@CPellets]
 		mov	ax, si
 		mov	cx, 2
 		cwd
 		idiv	cx
-		cmp	es:[bx+1080h], dx
+		cmp	es:[bx+CPellets.PELLET_interlace_field], dx
 		jnz	short loc_30BA4
 
 loc_30B78:
@@ -55695,9 +55648,7 @@ loc_30BA4:
 		jnz	short loc_30BBF
 		cmp	byte ptr [bx+1], 0
 		jz	short loc_30BBF
-		pushd	[bp+arg_0]
-		call	sub_30638
-		add	sp, 4
+		call	sub_30638 c, large [bp+@@CPellets]
 
 loc_30BBF:
 		mov	bx, word_3B530
@@ -55734,8 +55685,8 @@ loc_30BDF:
 		mov	bx, word_3B530
 		mov	word ptr [bx+1Eh], 0
 		mov	byte ptr [bx], 0
-		les	bx, [bp+arg_0]
-		dec	word ptr es:[bx+1068h]
+		les	bx, [bp+@@CPellets]
+		dec	es:[bx+CPellets.PELLET_alive_count]
 		push	(8 shl 16) or 16
 		mov	bx, word_3B530
 		mov	ax, [bx+0Ch]
@@ -55761,8 +55712,8 @@ loc_30C46:
 loc_30C65:
 		mov	bx, word_3B530
 		mov	byte ptr [bx], 0
-		les	bx, [bp+arg_0]
-		dec	word ptr es:[bx+1068h]
+		les	bx, [bp+@@CPellets]
+		dec	es:[bx+CPellets.PELLET_alive_count]
 		mov	bx, word_3B530
 		mov	word ptr [bx+1Eh], 0
 		push	(8 shl 16) or 16
@@ -55780,10 +55731,10 @@ loc_30C99:
 		add	word_3B530, 2Ah	; '*'
 
 loc_30C9F:
-		cmp	si, 64h	; 'd'
+		cmp	si, PELLET_COUNT
 		jl	loc_30B54
 		call	@CShots@unput_update_render$qv c, offset _Shots, ds
-		mov	ax, word ptr [bp+arg_0]
+		mov	ax, word ptr [bp+@@CPellets]
 		mov	word_3B530, ax
 		xor	si, si
 		jmp	loc_30DE4
@@ -55795,8 +55746,8 @@ loc_30CBC:
 		jz	loc_30DDE
 		cmp	byte_360CC, 0
 		jz	short loc_30CE9
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx+1080h]
+		les	bx, [bp+@@CPellets]
+		mov	ax, es:[bx+CPellets.PELLET_interlace_field]
 		and	ax, 1
 		push	ax
 		mov	ax, si
@@ -55815,7 +55766,7 @@ loc_30CE9:
 		mov	ax, [bx+2]
 		sar	ax, 4
 		push	ax
-		pushd	[bp+arg_0]
+		pushd	[bp+@@CPellets]
 		call	sub_3090A
 		add	sp, 8
 		cmp	ax, 1
@@ -55876,14 +55827,12 @@ loc_30D76:
 		inc	word ptr [bx+1Ah]
 		cmp	word ptr [bx+1Eh], 0
 		jz	short loc_30D90
-		pushd	[bp+arg_0]
-		call	sub_30AFD
-		add	sp, 4
+		call	sub_30AFD c, large [bp+@@CPellets]
 		jmp	short loc_30DDE
 ; ---------------------------------------------------------------------------
 
 loc_30D90:
-		pushd	[bp+arg_0]
+		pushd	[bp+@@CPellets]
 		nopcall	sub_30F06
 		add	sp, 4
 		or	ax, ax
@@ -55904,8 +55853,8 @@ loc_30D90:
 loc_30DC6:
 		mov	bx, word_3B530
 		mov	byte ptr [bx], 0
-		les	bx, [bp+arg_0]
-		dec	word ptr es:[bx+1068h]
+		les	bx, [bp+@@CPellets]
+		dec	es:[bx+CPellets.PELLET_alive_count]
 		mov	bx, word_3B530
 		mov	word ptr [bx+1Eh], 0
 
@@ -55914,7 +55863,7 @@ loc_30DDE:
 		add	word_3B530, 2Ah	; '*'
 
 loc_30DE4:
-		cmp	si, 64h	; 'd'
+		cmp	si, PELLET_COUNT
 		jl	loc_30CBC
 		pop	si
 		pop	bp
@@ -55928,12 +55877,12 @@ sub_30B1F	endp
 
 sub_30DEE	proc far
 
-arg_0		= dword	ptr  6
+@@CPellets		= dword	ptr  6
 
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	ax, word ptr [bp+arg_0]
+		mov	ax, word ptr [bp+@@CPellets]
 		mov	word_3B530, ax
 		xor	si, si
 		jmp	short loc_30E42
@@ -55967,10 +55916,10 @@ loc_30E3C:
 		add	word_3B530, 2Ah	; '*'
 
 loc_30E42:
-		cmp	si, 64h	; 'd'
+		cmp	si, PELLET_COUNT
 		jl	short loc_30DFC
-		les	bx, [bp+arg_0]
-		mov	word ptr es:[bx+1068h],	0
+		les	bx, [bp+@@CPellets]
+		mov	es:[bx+CPellets.PELLET_alive_count], 0
 		pop	si
 		pop	bp
 		retf
@@ -55984,11 +55933,11 @@ sub_30DEE	endp
 sub_30E54	proc far
 
 var_2		= word ptr -2
-arg_0		= word ptr  6
+@@CPellets		= word ptr  6
 
 		enter	2, 0
 		push	si
-		mov	ax, [bp+arg_0]
+		mov	ax, [bp+@@CPellets]
 		mov	word_3B530, ax
 		xor	si, si
 		jmp	short loc_30EC0
@@ -56024,7 +55973,7 @@ loc_30EBA:
 		add	word_3B530, 2Ah	; '*'
 
 loc_30EC0:
-		cmp	si, 64h	; 'd'
+		cmp	si, PELLET_COUNT
 		jl	short loc_30E63
 		pop	si
 		leave
@@ -56038,11 +55987,11 @@ sub_30E54	endp
 
 sub_30EC8	proc far
 
-arg_0		= dword	ptr  6
+@@CPellets		= dword	ptr  6
 
 		push	bp
 		mov	bp, sp
-		mov	ax, word ptr [bp+arg_0]
+		mov	ax, word ptr [bp+@@CPellets]
 		mov	word_3B530, ax
 		xor	dx, dx
 		jmp	short loc_30EF5
@@ -56062,10 +56011,10 @@ loc_30EEF:
 		add	word_3B530, 2Ah	; '*'
 
 loc_30EF5:
-		cmp	dx, 64h	; 'd'
+		cmp	dx, PELLET_COUNT
 		jl	short loc_30ED5
-		les	bx, [bp+arg_0]
-		mov	word ptr es:[bx+1068h],	0
+		les	bx, [bp+@@CPellets]
+		mov	es:[bx+CPellets.PELLET_alive_count], 0
 		pop	bp
 		retf
 sub_30EC8	endp
@@ -56127,12 +56076,12 @@ sub_30F06	endp
 
 sub_30F70	proc far
 
-arg_0		= word ptr  6
+@@CPellets		= word ptr  6
 
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	ax, [bp+arg_0]
+		mov	ax, [bp+@@CPellets]
 		mov	word_3B530, ax
 		xor	si, si
 		jmp	loc_31004
@@ -56188,7 +56137,7 @@ loc_30FFE:
 		add	word_3B530, 2Ah	; '*'
 
 loc_31004:
-		cmp	si, 64h	; 'd'
+		cmp	si, PELLET_COUNT
 		jl	loc_30F7F
 		pop	si
 		pop	bp
@@ -57301,11 +57250,7 @@ unk_37129	db    ?	;
 		db 645 dup(?)
 unk_373AF	db    ?	;
 		db 645 dup(?)
-unk_37635	db    ?	;
-		db 4221 dup(?)
-word_386B3	dw ?
-		db 2 dup(?)
-byte_386B7	db ?
+include th01/main/bullet/pellets[bss].asm
 include th01/main/player/shots[bss].asm
 		db 4 dup(?)
 public _input_prev
