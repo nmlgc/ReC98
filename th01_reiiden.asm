@@ -54283,17 +54283,17 @@ sub_30047	proc far
 
 loc_30065:
 		mov	ax, word ptr [bp+@@CPellets]
-		mov	word_3B530, ax
+		mov	_pellet_cur, ax
 		xor	si, si
 		jmp	short loc_30081
 ; ---------------------------------------------------------------------------
 
 loc_3006F:
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		mov	byte ptr [bx], 0
 		mov	word ptr [bx+18h], 0
 		inc	si
-		add	word_3B530, 2Ah	; '*'
+		add	_pellet_cur, size pellet_t
 
 loc_30081:
 		cmp	si, PELLET_COUNT
@@ -54769,19 +54769,19 @@ loc_303D0:
 
 loc_303EC:
 		mov	ax, word ptr [bp+@@CPellets]
-		mov	word_3B530, ax
+		mov	_pellet_cur, ax
 		mov	[bp+@@i], 0
 		jmp	loc_304AC
 ; ---------------------------------------------------------------------------
 
 loc_303FA:
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		cmp	byte ptr [bx], 1
 		jz	loc_304A4
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		cmp	word ptr [bx+20h], 0
 		jnz	loc_304A4
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		mov	word ptr [bx+1Eh], 0
 		mov	ax, di
 		shl	ax, 4
@@ -54795,17 +54795,17 @@ loc_303FA:
 		les	bx, [bp+@@CPellets]
 		cmp	es:[bx+PELLET_spawn_with_cloud], 0
 		jz	short loc_3044A
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		mov	word ptr [bx+20h], 1
 		jmp	short loc_30451
 ; ---------------------------------------------------------------------------
 
 loc_3044A:
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		mov	byte ptr [bx], 1
 
 loc_30451:
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		mov	ax, [bp+arg_8]
 		mov	[bx+0Eh], ax
 		mov	word ptr [bx+0Ah], 0FFFFh
@@ -54828,7 +54828,7 @@ loc_30451:
 		call	sub_30123
 		add	sp, 14h
 		mov	[bp+var_6], ax
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		mov	ax, [bp+var_8]
 		mov	[bx+10h], ax
 		mov	ax, [bp+var_A]
@@ -54838,7 +54838,7 @@ loc_30451:
 
 loc_304A4:
 		inc	[bp+@@i]
-		add	word_3B530, 2Ah	; '*'
+		add	_pellet_cur, size pellet_t
 
 loc_304AC:
 		cmp	[bp+@@i], PELLET_COUNT
@@ -54919,19 +54919,19 @@ loc_304F8:
 
 loc_30514:
 		mov	ax, word ptr [bp+@@CPellets]
-		mov	word_3B530, ax
+		mov	_pellet_cur, ax
 		xor	di, di
 		jmp	loc_3062D
 ; ---------------------------------------------------------------------------
 
 loc_3051F:
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		cmp	byte ptr [bx], 1
 		jz	loc_30627
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		cmp	word ptr [bx+20h], 0
 		jnz	loc_30627
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		mov	word ptr [bx+1Eh], 0
 		mov	ax, [bp+arg_4]
 		shl	ax, 4
@@ -54946,17 +54946,17 @@ loc_3051F:
 		les	bx, [bp+@@CPellets]
 		cmp	es:[bx+PELLET_spawn_with_cloud], 0
 		jz	short loc_30573
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		mov	word ptr [bx+20h], 1
 		jmp	short loc_3057A
 ; ---------------------------------------------------------------------------
 
 loc_30573:
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		mov	byte ptr [bx], 1
 
 loc_3057A:
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		mov	word ptr [bx+0Eh], 0
 		mov	al, byte ptr [bp+arg_C]
 		mov	[bx+1],	al
@@ -54966,7 +54966,7 @@ loc_3057A:
 		inc	es:[bx+CPellets.PELLET_alive_count]
 		mov	ax, [bp+arg_10]
 		shl	ax, 4
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		mov	[bx+6],	ax
 		mov	ax, [bp+arg_12]
 		shl	ax, 4
@@ -54983,7 +54983,7 @@ loc_3057A:
 		push	ax
 		call	_vector2
 		add	sp, 0Ch
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		mov	ax, [bp+@@vector_x]
 		mov	[bx+14h], ax
 		mov	ax, [bp+@@vector_y]
@@ -54995,7 +54995,7 @@ loc_3057A:
 		sub	ax, [bx+6]
 		push	ax
 		call	iatan2
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		mov	[bx+26h], ax
 
 loc_305F9:
@@ -55009,7 +55009,7 @@ loc_305F9:
 		push	ax
 		call	_vector2
 		add	sp, 0Ch
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		mov	ax, [bp+@@length]
 		mov	[bx+1Ch], ax
 		mov	ax, [bp+@@vector_x]
@@ -55021,7 +55021,7 @@ loc_305F9:
 
 loc_30627:
 		inc	di
-		add	word_3B530, 2Ah	; '*'
+		add	_pellet_cur, size pellet_t
 
 loc_3062D:
 		cmp	di, PELLET_COUNT
@@ -55033,279 +55033,10 @@ loc_30634:
 		leave
 		retf
 sub_304B8	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_30638	proc far
-
-@@vector_y		= word ptr -4
-@@vector_x		= word ptr -2
-
-		enter	4, 0
-		mov	bx, word_3B530
-		mov	al, [bx+1]
-		mov	ah, 0
-		dec	ax
-		mov	bx, ax
-		cmp	bx, 5
-		ja	locret_30893
-		add	bx, bx
-		jmp	cs:off_30895[bx]
-
-loc_30656:
-		mov	bx, word_3B530
-		mov	ax, [bx+1Ch]
-		jmp	loc_3088C
-; ---------------------------------------------------------------------------
-
-loc_30660:
-		mov	bx, word_3B530
-		cmp	word ptr [bx+28h], 0
-		jnz	short loc_3067A
-		call	IRand
-		and	ax, 1
-		inc	ax
-		mov	bx, word_3B530
-		mov	[bx+28h], ax
-
-loc_3067A:
-		mov	bx, word_3B530
-		cmp	word ptr [bx+28h], 1
-		jnz	short loc_3069B
-		push	word ptr [bx+26h]
-		push	word ptr [bx+1Ch]
-		push	ds
-		mov	ax, word_3B530
-		add	ax, 12h
-		push	ax
-		push	ds
-		mov	ax, word_3B530
-		add	ax, 10h
-		jmp	short loc_306B4
-; ---------------------------------------------------------------------------
-
-loc_3069B:
-		mov	bx, word_3B530
-		push	word ptr [bx+26h]
-		push	word ptr [bx+1Ch]
-		push	ds
-		mov	ax, word_3B530
-		add	ax, 10h
-		push	ax
-		push	ds
-		mov	ax, word_3B530
-		add	ax, 12h
-
-loc_306B4:
-		push	ax
-		call	_vector2
-		add	sp, 0Ch
-		mov	bx, word_3B530
-		add	word ptr [bx+26h], 8
-		cmp	word ptr [bx+26h], 100h
-		jle	locret_30893
-		push	word ptr [bx+1Ch]
-		push	ds
-		mov	ax, word_3B530
-		add	ax, 12h
-		push	ax
-		push	ds
-		mov	ax, word_3B530
-		add	ax, 10h
-		push	ax
-		push	384
-		mov	ax, _player_left
-		add	ax, 8
-		push	ax
-		mov	ax, [bx+4]
-		sar	ax, 4
-		push	ax
-		mov	ax, [bx+2]
-		sar	ax, 4
-		push	ax
-		call	_vector2_between
-		add	sp, 12h
-		mov	bx, word_3B530
-		mov	word ptr [bx+0Eh], 0Ch
-		mov	word ptr [bx+26h], 0
-		leave
-		retf
-; ---------------------------------------------------------------------------
-
-loc_30711:
-		mov	bx, word_3B530
-		cmp	word ptr [bx+2], 0
-		jle	short loc_3072F
-		mov	ax, [bx+2]
-		sar	ax, 4
-		cmp	ax, 2780h
-		jge	short loc_3072F
-		cmp	word ptr [bx+4], 460h
-		jg	locret_30893
-
-loc_3072F:
-		mov	bx, word_3B530
-		mov	ax, [bx+10h]
-		neg	ax
-		mov	[bx+10h], ax
-		mov	word ptr [bx+12h], 0
-		mov	byte ptr [bx+1], 1
-		cmp	word ptr [bx+2], 0
-		jg	short loc_3074F
-		mov	word ptr [bx+2], 10h
-
-loc_3074F:
-		mov	bx, word_3B530
-		cmp	word ptr [bx+2], 2780h
-		jl	short loc_3075F
-		mov	word ptr [bx+2], 2770h
-
-loc_3075F:
-		mov	bx, word_3B530
-		cmp	word ptr [bx+4], 400h
-		jg	locret_30893
-		mov	word ptr [bx+4], 410h
-		leave
-		retf
-; ---------------------------------------------------------------------------
-
-loc_30773:
-		mov	bx, word_3B530
-		mov	ax, [bx+4]
-		sar	ax, 4
-		cmp	ax, 46h	; 'F'
-		jg	locret_30893
-		mov	word ptr [bx+10h], 0
-		mov	ax, [bx+1Ch]
-		mov	[bx+12h], ax
-		mov	byte ptr [bx+1], 0
-		mov	ax, [bx+4]
-		sar	ax, 4
-		cmp	ax, 40h
-		jg	locret_30893
-		mov	word ptr [bx+4], 410h
-		leave
-		retf
-; ---------------------------------------------------------------------------
-
-loc_307A7:
-		mov	bx, word_3B530
-		mov	bx, [bx+26h]
-		and	bx, 0FFh
-		add	bx, bx
-		movsx	eax, _CosTable8[bx]
-		shl	eax, 8
-		sar	eax, 8
-		mov	bx, word_3B530
-		add	ax, [bx+6]
-		mov	[bx+2],	ax
-		mov	bx, [bx+26h]
-		and	bx, 0FFh
-		add	bx, bx
-		movsx	eax, _SinTable8[bx]
-		shl	eax, 8
-		sar	eax, 8
-		mov	bx, word_3B530
-		add	ax, [bx+8]
-		mov	[bx+4],	ax
-		mov	ax, [bx+14h]
-		add	[bx+6],	ax
-		mov	ax, [bx+16h]
-		add	[bx+8],	ax
-		mov	word ptr [bx+10h], 0
-		mov	word ptr [bx+12h], 0
-		add	word ptr [bx+26h], 4
-		leave
-		retf
-; ---------------------------------------------------------------------------
-
-loc_30809:
-		mov	bx, word_3B530
-		push	word ptr [bx+1Ch]
-		push	ss
-		lea	ax, [bp+@@vector_y]
-		push	ax
-		push	ss
-		lea	ax, [bp+@@vector_x]
-		push	ax
-		push	384
-		mov	ax, _player_left
-		add	ax, 8
-		push	ax
-		mov	ax, [bx+4]
-		sar	ax, 4
-		push	ax
-		mov	ax, [bx+2]
-		sar	ax, 4
-		push	ax
-		call	_vector2_between
-		add	sp, 12h
-		mov	bx, word_3B530
-		cmp	word ptr [bx+4], 1400h
-		jge	short locret_30893
-		mov	ax, [bx+10h]
-		cmp	ax, [bp+@@vector_x]
-		jle	short loc_30852
-		mov	ax, 0FFFFh
-		jmp	short loc_30865
-; ---------------------------------------------------------------------------
-
-loc_30852:
-		mov	bx, word_3B530
-		mov	ax, [bx+10h]
-		cmp	ax, [bp+@@vector_x]
-		jge	short loc_30863
-		mov	ax, 1
-		jmp	short loc_30865
-; ---------------------------------------------------------------------------
-
-loc_30863:
-		xor	ax, ax
-
-loc_30865:
-		mov	bx, word_3B530
-		add	[bx+10h], ax
-		mov	ax, [bx+12h]
-		cmp	ax, [bp+@@vector_y]
-		jle	short loc_30879
-		mov	ax, 0FFFFh
-		jmp	short loc_3088C
-; ---------------------------------------------------------------------------
-
-loc_30879:
-		mov	bx, word_3B530
-		mov	ax, [bx+12h]
-		cmp	ax, [bp+@@vector_y]
-		jge	short loc_3088A
-		mov	ax, 1
-		jmp	short loc_3088C
-; ---------------------------------------------------------------------------
-
-loc_3088A:
-		xor	ax, ax
-
-loc_3088C:
-		mov	bx, word_3B530
-		add	[bx+12h], ax
-
-locret_30893:
-		leave
-		retf
-sub_30638	endp
-
-; ---------------------------------------------------------------------------
-off_30895	dw offset loc_30656
-		dw offset loc_30660
-		dw offset loc_30711
-		dw offset loc_30773
-		dw offset loc_307A7
-		dw offset loc_30809
 main_38__TEXT	ends
 
 main_38___TEXT	segment	byte public 'CODE' use16
+	extern @CPellets@motion_type_apply_for_cur$qv:proc
 	extern _pellet_render:proc
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -55406,7 +55137,7 @@ loc_309B6:
 loc_309BE:
 		cmp	si, 3	; ???
 		jl	loc_30918
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		cmp	word ptr [bx+1Eh], 0
 		jnz	loc_30AF6
 		mov	ax, di
@@ -55463,7 +55194,7 @@ loc_30A42:
 		jnz	short loc_30A5E
 
 loc_30A47:
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		sar	word ptr [bx+12h], 1
 		sar	word ptr [bx+10h], 1
 		mov	word ptr [bx+1Eh], 1
@@ -55504,7 +55235,7 @@ loc_30AA0:
 loc_30AA2:
 		cmp	ax, 1
 		jnz	short loc_30AF6
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		mov	ax, [bx+2]
 		sar	ax, 4
 		mov	dx, _player_left
@@ -55522,16 +55253,16 @@ loc_30AC6:
 		push	word ptr [bp+@@angle]
 		push	80h ; '?'
 		push	ds
-		mov	ax, word_3B530
+		mov	ax, _pellet_cur
 		add	ax, 12h
 		push	ax
 		push	ds
-		mov	ax, word_3B530
+		mov	ax, _pellet_cur
 		add	ax, 10h
 		push	ax
 		call	_vector2
 		add	sp, 0Ch
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		cmp	word ptr [bx+0Eh], 0
 		jnz	short loc_30AF2
 		mov	byte ptr [bx+1], 0
@@ -55562,7 +55293,7 @@ sub_30AFD	proc far
 
 		push	bp
 		mov	bp, sp
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		inc	word ptr [bx+1Eh]
 		cmp	word ptr [bx+1Eh], 15h
 		jle	short loc_30B1D
@@ -55607,13 +55338,13 @@ loc_30B35:
 		nopcall	sub_30F70
 		add	sp, 4
 		mov	ax, word ptr [bp+@@CPellets]
-		mov	word_3B530, ax
+		mov	_pellet_cur, ax
 		xor	si, si
 		jmp	loc_30C9F
 ; ---------------------------------------------------------------------------
 
 loc_30B54:
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		cmp	byte ptr [bx], 0
 		jz	loc_30C99
 		cmp	byte_360CC, 0
@@ -55627,7 +55358,7 @@ loc_30B54:
 		jnz	short loc_30BA4
 
 loc_30B78:
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		cmp	word ptr [bx+18h], 0
 		jnz	short loc_30BA4
 		cmp	word ptr [bx+0Ah], 0FFFFh
@@ -55643,27 +55374,27 @@ loc_30B78:
 		add	sp, 8
 
 loc_30BA4:
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		cmp	word ptr [bx+0Eh], 0
 		jnz	short loc_30BBF
 		cmp	byte ptr [bx+1], 0
 		jz	short loc_30BBF
-		call	sub_30638 c, large [bp+@@CPellets]
+		call	@CPellets@motion_type_apply_for_cur$qv c, large [bp+@@CPellets]
 
 loc_30BBF:
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		cmp	word ptr [bx+12h], 80h ; '?'
 		jle	short loc_30BCF
 		mov	word ptr [bx+12h], 80h ; '?'
 
 loc_30BCF:
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		cmp	word ptr [bx+10h], 80h ; '?'
 		jle	short loc_30BDF
 		mov	word ptr [bx+10h], 80h ; '?'
 
 loc_30BDF:
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		mov	ax, [bx+12h]
 		add	[bx+4],	ax
 		mov	ax, [bx+10h]
@@ -55682,13 +55413,13 @@ loc_30BDF:
 		add	sp, 8
 		or	ax, ax
 		jz	short loc_30C46
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		mov	word ptr [bx+1Eh], 0
 		mov	byte ptr [bx], 0
 		les	bx, [bp+@@CPellets]
 		dec	es:[bx+CPellets.PELLET_alive_count]
 		push	(8 shl 16) or 16
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		mov	ax, [bx+0Ch]
 		sar	ax, 4
 		push	ax
@@ -55699,7 +55430,7 @@ loc_30BDF:
 		add	sp, 8
 
 loc_30C46:
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		cmp	word ptr [bx+4], 1900h
 		jge	short loc_30C65
 		cmp	word ptr [bx+4], 400h
@@ -55710,11 +55441,11 @@ loc_30C46:
 		jg	short loc_30C99
 
 loc_30C65:
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		mov	byte ptr [bx], 0
 		les	bx, [bp+@@CPellets]
 		dec	es:[bx+CPellets.PELLET_alive_count]
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		mov	word ptr [bx+1Eh], 0
 		push	(8 shl 16) or 16
 		mov	ax, [bx+0Ch]
@@ -55728,20 +55459,20 @@ loc_30C65:
 
 loc_30C99:
 		inc	si
-		add	word_3B530, 2Ah	; '*'
+		add	_pellet_cur, size pellet_t
 
 loc_30C9F:
 		cmp	si, PELLET_COUNT
 		jl	loc_30B54
 		call	@CShots@unput_update_render$qv c, offset _Shots, ds
 		mov	ax, word ptr [bp+@@CPellets]
-		mov	word_3B530, ax
+		mov	_pellet_cur, ax
 		xor	si, si
 		jmp	loc_30DE4
 ; ---------------------------------------------------------------------------
 
 loc_30CBC:
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		cmp	byte ptr [bx], 0
 		jz	loc_30DDE
 		cmp	byte_360CC, 0
@@ -55759,7 +55490,7 @@ loc_30CBC:
 		jnz	loc_30D76
 
 loc_30CE9:
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		mov	ax, [bx+4]
 		sar	ax, 4
 		push	ax
@@ -55771,13 +55502,13 @@ loc_30CE9:
 		add	sp, 8
 		cmp	ax, 1
 		jnz	short loc_30D5D
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		cmp	word ptr [bx+18h], 1
 		jnz	short loc_30D1A
 		mov	word ptr [bx+18h], 0
 
 loc_30D1A:
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		cmp	word ptr [bx+1Eh], 0
 		jnz	short loc_30D28
 		push	0
@@ -55785,7 +55516,7 @@ loc_30D1A:
 ; ---------------------------------------------------------------------------
 
 loc_30D28:
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		cmp	word ptr [bx+1Eh], 0Ah
 		jg	short loc_30D36
 		push	1
@@ -55793,13 +55524,13 @@ loc_30D28:
 ; ---------------------------------------------------------------------------
 
 loc_30D36:
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		cmp	word ptr [bx+1Eh], 14h
 		jge	short loc_30D66
 		push	2
 
 loc_30D42:
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		mov	ax, [bx+4]
 		sar	ax, 4
 		push	ax
@@ -55812,18 +55543,18 @@ loc_30D42:
 ; ---------------------------------------------------------------------------
 
 loc_30D5D:
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		mov	word ptr [bx+18h], 1
 
 loc_30D66:
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		mov	ax, [bx+2]
 		mov	[bx+0Ah], ax
 		mov	ax, [bx+4]
 		mov	[bx+0Ch], ax
 
 loc_30D76:
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		inc	word ptr [bx+1Ah]
 		cmp	word ptr [bx+1Eh], 0
 		jz	short loc_30D90
@@ -55837,7 +55568,7 @@ loc_30D90:
 		add	sp, 4
 		or	ax, ax
 		jz	short loc_30DDE
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		cmp	word ptr [bx+18h], 0
 		jnz	short loc_30DC6
 		push	(8 shl 16) or 16
@@ -55851,16 +55582,16 @@ loc_30D90:
 		add	sp, 8
 
 loc_30DC6:
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		mov	byte ptr [bx], 0
 		les	bx, [bp+@@CPellets]
 		dec	es:[bx+CPellets.PELLET_alive_count]
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		mov	word ptr [bx+1Eh], 0
 
 loc_30DDE:
 		inc	si
-		add	word_3B530, 2Ah	; '*'
+		add	_pellet_cur, size pellet_t
 
 loc_30DE4:
 		cmp	si, PELLET_COUNT
@@ -55883,16 +55614,16 @@ sub_30DEE	proc far
 		mov	bp, sp
 		push	si
 		mov	ax, word ptr [bp+@@CPellets]
-		mov	word_3B530, ax
+		mov	_pellet_cur, ax
 		xor	si, si
 		jmp	short loc_30E42
 ; ---------------------------------------------------------------------------
 
 loc_30DFC:
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		cmp	byte ptr [bx], 0
 		jz	short loc_30E3C
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		cmp	word ptr [bx+18h], 0
 		jnz	short loc_30E2B
 		push	(8 shl 16) or 16
@@ -55906,14 +55637,14 @@ loc_30DFC:
 		add	sp, 8
 
 loc_30E2B:
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		mov	word ptr [bx+1Eh], 0
 		mov	byte ptr [bx], 0
 		mov	word ptr [bx+20h], 0
 
 loc_30E3C:
 		inc	si
-		add	word_3B530, 2Ah	; '*'
+		add	_pellet_cur, size pellet_t
 
 loc_30E42:
 		cmp	si, PELLET_COUNT
@@ -55938,39 +55669,39 @@ var_2		= word ptr -2
 		enter	2, 0
 		push	si
 		mov	ax, [bp+@@CPellets]
-		mov	word_3B530, ax
+		mov	_pellet_cur, ax
 		xor	si, si
 		jmp	short loc_30EC0
 ; ---------------------------------------------------------------------------
 
 loc_30E63:
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		cmp	byte ptr [bx], 0
 		jz	short loc_30EBA
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		cmp	word ptr [bx+1Eh], 0
 		jnz	short loc_30EBA
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		mov	ax, [bx+12h]
 		mov	[bp+var_2], ax
 		fild	[bp+var_2]
 		fdiv	flt_3624F
 		call	ftol@
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		mov	[bx+12h], ax
 		mov	ax, [bx+10h]
 		mov	[bp+var_2], ax
 		fild	[bp+var_2]
 		fdiv	flt_3624F
 		call	ftol@
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		mov	[bx+10h], ax
 		mov	word ptr [bx+1Eh], 1
 		add	word_360CD, 0Ah
 
 loc_30EBA:
 		inc	si
-		add	word_3B530, 2Ah	; '*'
+		add	_pellet_cur, size pellet_t
 
 loc_30EC0:
 		cmp	si, PELLET_COUNT
@@ -55992,23 +55723,23 @@ sub_30EC8	proc far
 		push	bp
 		mov	bp, sp
 		mov	ax, word ptr [bp+@@CPellets]
-		mov	word_3B530, ax
+		mov	_pellet_cur, ax
 		xor	dx, dx
 		jmp	short loc_30EF5
 ; ---------------------------------------------------------------------------
 
 loc_30ED5:
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		cmp	byte ptr [bx], 0
 		jz	short loc_30EEF
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		mov	byte ptr [bx], 0
 		mov	word ptr [bx+1Eh], 0
 		mov	word ptr [bx+20h], 0
 
 loc_30EEF:
 		inc	dx
-		add	word_3B530, 2Ah	; '*'
+		add	_pellet_cur, size pellet_t
 
 loc_30EF5:
 		cmp	dx, PELLET_COUNT
@@ -56029,10 +55760,10 @@ sub_30F06	proc far
 		mov	bp, sp
 		cmp	word_34A78, 1
 		jz	short loc_30F6C
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		cmp	word ptr [bx+1Eh], 0
 		jnz	short loc_30F6C
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		mov	ax, [bx+2]
 		sar	ax, 4
 		mov	dx, _player_left
@@ -56082,16 +55813,16 @@ sub_30F70	proc far
 		mov	bp, sp
 		push	si
 		mov	ax, [bp+@@CPellets]
-		mov	word_3B530, ax
+		mov	_pellet_cur, ax
 		xor	si, si
 		jmp	loc_31004
 ; ---------------------------------------------------------------------------
 
 loc_30F7F:
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		cmp	word ptr [bx+20h], 0
 		jz	short loc_30FFE
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		inc	word ptr [bx+20h]
 		cmp	word ptr [bx+20h], 2
 		jnz	short loc_30F9A
@@ -56100,7 +55831,7 @@ loc_30F7F:
 ; ---------------------------------------------------------------------------
 
 loc_30F9A:
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		cmp	word ptr [bx+20h], 5
 		jnz	short loc_30FB6
 		call	_pellet_cloud_unput_8 c, word ptr [bx+22h], word ptr [bx+24h], 0
@@ -56108,14 +55839,14 @@ loc_30F9A:
 ; ---------------------------------------------------------------------------
 
 loc_30FB6:
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		cmp	word ptr [bx+20h], 6
 		jnz	short loc_30FD8
 		push	1
 
 loc_30FC2:
 		push	7
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		push	word ptr [bx+24h]
 		push	word ptr [bx+22h]
 		call	_pellet_cloud_put_8
@@ -56124,17 +55855,17 @@ loc_30FC2:
 ; ---------------------------------------------------------------------------
 
 loc_30FD8:
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		cmp	word ptr [bx+20h], 9
 		jnz	short loc_30FFE
 		call	_pellet_cloud_unput_8 c, word ptr [bx+22h], word ptr [bx+24h], 1
-		mov	bx, word_3B530
+		mov	bx, _pellet_cur
 		mov	word ptr [bx+20h], 0
 		mov	byte ptr [bx], 1
 
 loc_30FFE:
 		inc	si
-		add	word_3B530, 2Ah	; '*'
+		add	_pellet_cur, size pellet_t
 
 loc_31004:
 		cmp	si, PELLET_COUNT
@@ -57824,6 +57555,6 @@ word_3B529	dw ?
 word_3B52B	dw ?
 word_3B52D	dw ?
 byte_3B52F	db ?
-word_3B530	dw ?
+	extern _pellet_cur:word
 
 		end
