@@ -5,3 +5,5 @@ extern bool bgm_mode;
 extern char bombs;
 extern char credit_bombs;
 extern char lives_extra;
+
+extern resident_t far *resident;

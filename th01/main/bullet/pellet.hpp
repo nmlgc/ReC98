@@ -103,9 +103,39 @@ public:
 	bool spawn_with_cloud;
 
 protected:
+	pellet_t near* iteration_start(void) {
+		return static_cast<pellet_t near *>(pellets);
+	}
+
 	// Updates the velocity of the currently iterated pellet, depending on its
 	// [motion_type].
 	void motion_type_apply_for_cur(void);
+
+public:
+	// Spawns a number of bullets according to the given [pattern], with their
+	// corresponding velocities, at (left, top). [speed_base] is tuned
+	// according to the currently played difficulty and the resident
+	// [pellet_speed]. The [motion_type] for the new pellets is PM_NORMAL.
+	void add_pattern(
+		int left, int top, pellet_pattern_t pattern, subpixel_t speed_base
+	);
+
+	// Spawns a single new pellet with a customizable [motion_type].
+	// [speed_base] is tuned according to the currently played difficulty and
+	// the resident [pellet_speed]; [speed_for_motion_fixed] is never tuned.
+	//
+	// [spin_center_x] and [spin_center_y] are only used with PM_SPIN,
+	// while [speed_base] is *ignored* for PM_SPIN.
+	void add_single(
+		int left,
+		int top,
+		int angle,
+		subpixel_t speed_base,
+		pellet_motion_t motion_type,
+		subpixel_t speed_for_motion_fixed = to_sp(0.0f),
+		int spin_center_x = 0,
+		int spin_center_y = 0
+	);
 };
 
 /// Globals

@@ -3,6 +3,9 @@
 
 typedef int subpixel_t;
 
+#define TO_SP(v) \
+	(v << 4)
+
 inline subpixel_t to_sp(float screen_v) {
 	return static_cast<subpixel_t>(screen_v * 16.0f);
 }
@@ -12,6 +15,10 @@ public:
 	// Code generation will require direct access to v, if performing
 	// arithmetic with a local variable...
 	T v;
+
+	subpixel_t operator -(const SubpixelBase<T> &other) {
+		return (this->v - other.v);
+	}
 
 	void operator +=(float screen_v) {
 		this->v += static_cast<T>(to_sp(screen_v));
@@ -26,7 +33,7 @@ public:
 	}
 
 	void operator =(const T &screen_v) {
-		v = (screen_v << 4);
+		v = TO_SP(screen_v);
 	}
 
 	T to_screen() const {

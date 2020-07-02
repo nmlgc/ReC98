@@ -7,8 +7,8 @@
 #pragma option -Z
 
 extern "C" {
-#include "ReC98.h"
-#include "th01/hardware/graph.h"
+#include "th01/th01.h"
+#include "th01/ranks.h"
 
 #include "th01/main/bullet/pellet.cpp"
 

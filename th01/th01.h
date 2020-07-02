@@ -42,7 +42,7 @@ typedef struct {
 	char snd_need_init;
 	char unused_2;
 	char mode;
-	int bullet_speed;
+	int pellet_speed;
 	long rand;
 	long score;
 	long continues_total;

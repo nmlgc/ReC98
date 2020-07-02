@@ -1,6 +1,7 @@
 #include "th01/sprites/pellet.h"
 #include "th01/math/subpixel.hpp"
 #include "th01/math/vector.hpp"
+#include "th01/main/vars.hpp"
 #include "th01/main/bullet/pellet.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/player/player.hpp"
@@ -20,6 +21,172 @@
 /// -------
 pellet_t near *pellet_cur;
 /// -------
+
+// Sets the velocity for pellet #[i] in the given [pattern]. Returns true if
+// this was the last pellet for this pattern.
+bool16 pattern_velocity_set(
+	Subpixel &ret_x,
+	Subpixel &ret_y,
+	pellet_pattern_t pattern,
+	subpixel_t speed,
+	int &i,
+	int pellet_left,
+	int pellet_top
+);
+
+inline subpixel_t base_speed_for_rank(void)
+{
+	return
+		(static_cast<int>(rank) == RANK_EASY) ? to_sp(0.0f) :
+		(static_cast<int>(rank) == RANK_NORMAL) ? to_sp(0.375f) :
+		(static_cast<int>(rank) == RANK_HARD) ? to_sp(0.75f) :
+		to_sp(1.125f);
+}
+
+#define speed_set(speed) \
+	speed += base_speed_for_rank(); \
+	speed += ((resident->pellet_speed * speed) / to_sp(2.5f)); \
+	if(speed < to_sp(1.0f)) { \
+		speed = to_sp(1.0f); \
+	}
+
+#define pellet_init(pellet, left, top, pattern) \
+	pellet->decay_frame = 0; \
+	pellet->cur_left.v = TO_SP(left); \
+	pellet->cur_top = top; \
+	pellet->cloud_left = left; \
+	pellet->cloud_top = top; \
+	if(spawn_with_cloud) { \
+		pellet->cloud_frame = 1; \
+	} else { \
+		pellet->moving = true; \
+	} \
+	pellet->from_pattern = pattern;
+
+void CPellets::add_pattern(
+	int left, int top, pellet_pattern_t pattern, subpixel_t speed
+)
+{
+	int i;
+	int pattern_i = 0;
+	int pattern_done;
+	Subpixel vel_x;
+	Subpixel vel_y;
+
+	// Should be >=, but yeah, it's just an inconsequential oversight.
+	if(alive_count > PELLET_COUNT) {
+		return;
+	}
+	if(
+		(left >= PLAYFIELD_RIGHT) ||
+		(top < (PLAYFIELD_TOP - PELLET_H)) ||
+		(left < (PLAYFIELD_LEFT - PELLET_W)) ||
+		(top > PLAYFIELD_BOTTOM)
+	) {
+		return;
+	}
+	speed_set(speed);
+
+	#define p pellet_cur
+	p = iteration_start();
+	for(i = 0; i < PELLET_COUNT; i++, p++) {
+		if(p->moving == true) {
+			continue;
+		}
+		if(p->cloud_frame) {
+			continue;
+		}
+		pellet_init(p, left, top, pattern);
+		p->prev_left.v = -1;
+		p->age = 0;
+		alive_count++;
+		/* TODO: Replace with the decompiled call
+		 * pattern_done = pattern_velocity_set(
+			vel_x, vel_y, pattern, speed, pattern_i, left, top
+		);
+		 * once that function is part of this translation unit */
+		__asm {
+			push	top;
+			db  	0x57;	// PUSH DI
+			push	ss;
+			lea 	ax, pattern_i;
+			push	ax;
+			db  	0x56;	// PUSH SI
+			push	pattern;
+			push	ss;
+			lea 	ax, vel_y;
+			push	ax
+			push	ss;
+			lea 	ax, vel_x;
+			push	ax;
+			push	cs;
+			call	near ptr pattern_velocity_set;
+			add 	sp, 0x14;
+		}
+		pattern_done = _AX;
+		p->velocity.x.v = vel_x.v;
+		p->velocity.y.v = vel_y.v;
+		if(pattern_done == true) {
+			return;
+		}
+	}
+	#undef p
+}
+
+void CPellets::add_single(
+	int left,
+	int top,
+	int angle,
+	subpixel_t speed_base,
+	pellet_motion_t motion_type,
+	subpixel_t speed_for_motion_fixed,
+	int spin_center_x,
+	int spin_center_y
+)
+{
+	int i;
+	Subpixel vel_x;
+	Subpixel vel_y;
+
+	// Should be >=, but yeah, it's just an inconsequential oversight.
+	if(alive_count > PELLET_COUNT) {
+		return;
+	}
+	speed_set(speed_base);
+
+	#define p pellet_cur
+	p = iteration_start();
+	for(i = 0; i < PELLET_COUNT; i++, p++) {
+		if(p->moving == true) {
+			continue;
+		}
+		if(p->cloud_frame) {
+			continue;
+		}
+		pellet_init(p, left, top, 0);
+		p->motion_type = motion_type;
+		p->prev_left.v = -1;
+		p->age = 0;
+		alive_count++;
+		p->spin_center.x.v = TO_SP(spin_center_x);
+		p->spin_center.y = spin_center_y;
+		if(motion_type == PM_SPIN) {
+			vector2(vel_x.v, vel_y.v, speed_for_motion_fixed, angle);
+			p->spin_velocity.x.v = vel_x.v;
+			p->spin_velocity.y.v = vel_y.v;
+			p->angle = iatan2(
+				(p->cur_top - p->spin_center.y),
+				(p->cur_left - p->spin_center.x)
+			);
+		}
+		vector2(vel_x.v, vel_y.v, speed_base, angle);
+		p->speed.v = speed_for_motion_fixed;
+		p->velocity.x.v = vel_x.v;
+		p->velocity.y.v = vel_y.v;
+		return;
+	}
+	#undef p
+}
 
 void CPellets::motion_type_apply_for_cur(void)
 {
