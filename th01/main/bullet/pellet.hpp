@@ -158,6 +158,15 @@ protected:
 	// [motion_type].
 	void motion_type_apply_for_cur(void);
 
+	// Processes any collision between the currently iterated pellet, the Orb,
+	// or a deflecting player. (Regular, life-losing hit testing between
+	// pellets and the player is done elsewhere!)
+	// Returns true if the bullet remains visible.
+	//
+	// (And yes, this function does operate on the currently iterated pellet,
+	// despite taking separate position parameters!)
+	bool16 visible_after_hittests_for_cur(int pellet_left, int pellet_top);
+
 public:
 	// Spawns a number of bullets according to the given [pattern], with their
 	// corresponding velocities, at (left, top). [speed_base] is tuned
@@ -188,4 +197,5 @@ public:
 /// Globals
 /// -------
 extern CPellets Pellets;
+extern unsigned int pellet_destroy_score_delta;
 /// -------

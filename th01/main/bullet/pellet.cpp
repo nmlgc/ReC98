@@ -1,10 +1,11 @@
-#include "th01/sprites/pellet.h"
 #include "th01/math/subpixel.hpp"
 #include "th01/math/vector.hpp"
 #include "th01/main/vars.hpp"
 #include "th01/main/bullet/pellet.hpp"
 #include "th01/main/playfld.hpp"
+#include "th01/main/player/orb.hpp"
 #include "th01/main/player/player.hpp"
+#include "th01/main/player/shots.hpp"
 
 /// Constants
 /// ---------
@@ -15,6 +16,8 @@
 #define PELLET_TOP_MIN (PLAYFIELD_TOP)
 
 #define PELLET_BOUNCE_TOP_MIN (PLAYFIELD_TOP + ((PELLET_H / 4) * 3))
+
+static const unsigned int PELLET_DESTROY_SCORE = 10;
 /// ---------
 
 /// Globals
@@ -424,4 +427,75 @@ void pellet_render(int left, int top, int cel)
 	grcg_setcolor_rmw(7);
 	pellet_put(left, top, cel);
 	grcg_off();
+}
+
+inline bool16 overlaps_shot(int pellet_left, int pellet_top, int i)
+{
+	return overlap_lt_gt(
+		pellet_left, pellet_top, PELLET_W, PELLET_H,
+		Shots.left[i], Shots.top[i], SHOT_W, SHOT_H
+	);
+}
+
+inline bool16 overlaps_orb(int pellet_left, int pellet_top)
+{
+	return overlap_lt_gt(
+		pellet_left, pellet_top, PELLET_W, PELLET_H,
+		orb_cur_left, orb_cur_top, ORB_W, ORB_H
+	);
+}
+
+bool16 CPellets::visible_after_hittests_for_cur(int pellet_left, int pellet_top)
+{
+	#define p pellet_cur
+	for(int i = 0; i < 3; i++) {
+		if(
+			(Shots.is_moving(i) == true) &&
+			(overlaps_shot(pellet_left, pellet_top, i) == true)
+		) {
+			return false;
+		} else if(overlaps_shot((pellet_left + 8), pellet_top, i) == true) {
+			return false;
+		}
+	}
+	if(p->decay_frame) {
+		return true;
+	}
+	if(
+		(overlaps_orb(pellet_left, pellet_top) == true) ||
+		(overlaps_orb((pellet_left + 8), pellet_top) == true)
+	) {
+		// Hey, let's also process a collision! Why not?!
+		p->velocity.y.v >>= 1;
+		p->velocity.x.v >>= 1;
+		p->decay_frame = 1;
+		pellet_destroy_score_delta += PELLET_DESTROY_SCORE;
+		return true;
+	}
+	if((player_deflecting == true) && (overlap_lt_gt(
+		pellet_left,
+		pellet_top,
+		PELLET_W,
+		PELLET_H,
+		(player_left - PELLET_W),
+		(player_top - (PELLET_H * 2)),
+		(PLAYER_W + (PELLET_W * 2)),
+		(PLAYER_H + (PELLET_H * 2))
+	) == true)) {
+		char deflect_angle;
+		if(p->cur_left.to_screen() <= (player_left + 12)) {
+			deflect_angle = 0x80;
+		} else {
+			deflect_angle = 0x00;
+		}
+		vector2(p->velocity.x.v, p->velocity.y.v, to_sp(8.0f), deflect_angle);
+		if(!p->from_pattern) {
+			p->motion_type = PM_NORMAL;
+		}
+		// Yes, deflected pellets aren't rendered on the frames they're
+		// deflected on!
+		return false;
+	}
+	return true;
+	#undef p
 }

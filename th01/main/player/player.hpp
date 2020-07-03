@@ -11,3 +11,5 @@ static const int player_top = (PLAYFIELD_BOTTOM - PLAYER_H);
 static const int player_center_y = (PLAYFIELD_BOTTOM - (PLAYER_H / 2));
 
 void player_move_and_clamp(int delta);
+
+extern unsigned char player_deflecting;

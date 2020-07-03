@@ -1,15 +1,12 @@
 #include "th01/snd/mdrv2.h"
 #include "th01/formats/ptn.hpp"
 #include "th01/hardware/egc.h"
-#include "th01/math/overlap.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/player/player.hpp"
 #include "th01/main/player/orb.hpp"
 #include "th01/main/player/shots.hpp"
 
 static const int SHOT_SPRITE_MARGIN = 2;
-static const int SHOT_W = PTN_QUARTER_W;
-static const int SHOT_H = PTN_QUARTER_H;
 static const int SHOT_DECAY_FRAMES = 7;
 
 #define sloppy_unput(i) \

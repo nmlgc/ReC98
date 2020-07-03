@@ -3097,10 +3097,10 @@ sub_D4B1	endp
 sub_D4C2	proc far
 		push	bp
 		mov	bp, sp
-		movzx	eax, word_360CD
+		movzx	eax, _pellet_destroy_score_delta
 		add	_score, eax
 		call	sub_1889C
-		mov	word_360CD, 0
+		mov	_pellet_destroy_score_delta, 0
 		pop	bp
 		retf
 sub_D4C2	endp
@@ -3786,7 +3786,7 @@ loc_DB0A:
 		mov	_orb_velocity_x, OVX_4_LEFT
 		mov	_orb_prev_left, ORB_LEFT_START
 		mov	_orb_prev_top, ORB_TOP_START
-		mov	byte_34A57, 0
+		mov	_player_deflecting, 0
 		mov	byte_34A58, 0
 		mov	word_34A84, 0
 
@@ -4092,7 +4092,7 @@ loc_DE47:
 		add	sp, 0Ch
 
 loc_DE67:
-		cmp	word_360CD, 0
+		cmp	_pellet_destroy_score_delta, 0
 		jz	short loc_DE72
 		call	sub_D4C2
 
@@ -16462,7 +16462,7 @@ arg_0		= word ptr  6
 		mov	byte_35B46, 0
 		mov	byte_34A58, 0
 		mov	byte_34A59, 0
-		mov	byte_34A57, 0
+		mov	_player_deflecting, 0
 		mov	_player_ptn_id, 40h
 		cmp	_rank, RANK_EASY
 		jnz	short loc_19E93
@@ -16528,7 +16528,7 @@ loc_19EEF:
 		jnz	short loc_19F2B
 		mov	dword_34A62, 0
 		mov	byte_35B46, 3
-		mov	byte_34A57, 1
+		mov	_player_deflecting, 1
 		mov	byte_35B47, 1
 		dec	_bombs
 		mov	al, _bombs
@@ -16577,7 +16577,7 @@ loc_19F90:
 		mov	byte_35B44, 0
 		cmp	byte_35B46, 0
 		jnz	loc_1AC2A
-		mov	byte_34A57, 0
+		mov	_player_deflecting, 0
 		jmp	loc_1AC2A
 ; ---------------------------------------------------------------------------
 
@@ -16795,7 +16795,7 @@ loc_1A1FB:
 		mov	byte_35B43, 0
 		mov	byte_35B44, 2
 		mov	byte_39DB2, 0
-		mov	byte_34A57, 1
+		mov	_player_deflecting, 1
 		jmp	short loc_1A264
 ; ---------------------------------------------------------------------------
 
@@ -16984,7 +16984,7 @@ loc_1A3C0:
 
 loc_1A403:
 		mov	byte_35B43, 0
-		mov	byte_34A57, 0
+		mov	_player_deflecting, 0
 		push	0Bh
 		call	_mdrv2_se_play
 		pop	cx
@@ -17040,7 +17040,7 @@ loc_1A46F:
 		mov	al, byte_35B43
 		cmp	al, byte_36C15
 		jnz	short loc_1A47D
-		mov	byte_34A57, 0
+		mov	_player_deflecting, 0
 
 loc_1A47D:
 		mov	al, byte_35B43
@@ -17678,7 +17678,7 @@ loc_1A986:
 		cbw
 		cmp	ax, 14h
 		jnz	short loc_1A994
-		mov	byte_34A57, 0
+		mov	_player_deflecting, 0
 
 loc_1A994:
 		mov	al, byte_35B43
@@ -17797,7 +17797,7 @@ loc_1AA96:
 		cbw
 		cmp	ax, 4
 		jnz	short loc_1AAA4
-		mov	byte_34A57, 0
+		mov	_player_deflecting, 0
 
 loc_1AAA4:
 		mov	[bp+var_6], 13h
@@ -17844,7 +17844,7 @@ loc_1AAF6:
 		mov	dword_34A62, 0
 		mov	byte_35B43, 0
 		mov	byte_34A59, 0
-		mov	byte_34A57, 0
+		mov	_player_deflecting, 0
 		mov	al, byte_35B44
 		cbw
 		cmp	ax, 5
@@ -17956,7 +17956,7 @@ loc_1ABCD:
 		inc	byte_35B44
 
 loc_1ABD1:
-		mov	byte_34A57, 1
+		mov	_player_deflecting, 1
 
 loc_1ABD6:
 		push	0Bh
@@ -48856,7 +48856,7 @@ loc_2C8AE:
 		fwait
 		mov	_orb_force_frame, 0
 		mov	_orb_velocity_x, OVX_4_LEFT
-		mov	byte_34A57, 0
+		mov	_player_deflecting, 0
 		mov	byte_34A58, 0
 		push	0
 		call	sub_19E48
@@ -54012,251 +54012,8 @@ main_38___TEXT	segment	byte public 'CODE' use16
 	extern @CPellets@add_pattern$qii16pellet_pattern_ti:proc
 	extern @CPellets@add_single$qiiii15pellet_motion_tiii:proc
 	extern @CPellets@motion_type_apply_for_cur$qv:proc
+	extern @CPellets@visible_after_hittests_for_cur$qii:proc
 	extern _pellet_render:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_3090A	proc far
-
-@@angle		= byte ptr -1
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	di, [bp+arg_4]
-		xor	si, si
-		jmp	loc_309BE
-; ---------------------------------------------------------------------------
-
-loc_30918:
-		mov	al, _Shots.SHOT_moving[si]
-		mov	ah, 0
-		cmp	ax, 1
-		jnz	short loc_3096F
-		mov	bx, si
-		add	bx, bx
-		mov	ax, di
-		sub	ax, _Shots.SHOT_left[bx]
-		cmp	ax, 16
-		jge	short loc_30966
-		mov	bx, si
-		add	bx, bx
-		mov	ax, di
-		sub	ax, _Shots.SHOT_left[bx]
-		cmp	ax, -8
-		jle	short loc_30966
-		mov	bx, si
-		add	bx, bx
-		mov	ax, [bp+arg_6]
-		sub	ax, _Shots.SHOT_top[bx]
-		cmp	ax, 16
-		jge	short loc_30966
-		mov	bx, si
-		add	bx, bx
-		mov	ax, [bp+arg_6]
-		sub	ax, _Shots.SHOT_top[bx]
-		cmp	ax, -8
-		jle	short loc_30966
-		mov	ax, 1
-		jmp	short loc_30968
-; ---------------------------------------------------------------------------
-
-loc_30966:
-		xor	ax, ax
-
-loc_30968:
-		cmp	ax, 1
-		jz	loc_30AF2
-
-loc_3096F:
-		mov	bx, si
-		add	bx, bx
-		lea	ax, [di+8]
-		sub	ax, _Shots.SHOT_left[bx]
-		cmp	ax, 16
-		jge	short loc_309B4
-		mov	bx, si
-		add	bx, bx
-		lea	ax, [di+8]
-		sub	ax, _Shots.SHOT_left[bx]
-		cmp	ax, -8
-		jle	short loc_309B4
-		mov	bx, si
-		add	bx, bx
-		mov	ax, [bp+arg_6]
-		sub	ax, _Shots.SHOT_top[bx]
-		cmp	ax, 16
-		jge	short loc_309B4
-		mov	bx, si
-		add	bx, bx
-		mov	ax, [bp+arg_6]
-		sub	ax, _Shots.SHOT_top[bx]
-		cmp	ax, -8
-		jle	short loc_309B4
-		mov	ax, 1
-		jmp	short loc_309B6
-; ---------------------------------------------------------------------------
-
-loc_309B4:
-		xor	ax, ax
-
-loc_309B6:
-		cmp	ax, 1
-		jz	loc_30AF2
-		inc	si
-
-loc_309BE:
-		cmp	si, 3	; ???
-		jl	loc_30918
-		mov	bx, _pellet_cur
-		cmp	word ptr [bx+1Eh], 0
-		jnz	loc_30AF6
-		mov	ax, di
-		sub	ax, _orb_cur_left
-		cmp	ax, 32
-		jge	short loc_30A04
-		mov	ax, di
-		sub	ax, _orb_cur_left
-		cmp	ax, -8
-		jle	short loc_30A04
-		mov	ax, [bp+arg_6]
-		sub	ax, _orb_cur_top
-		cmp	ax, 32
-		jge	short loc_30A04
-		mov	ax, [bp+arg_6]
-		sub	ax, _orb_cur_top
-		cmp	ax, -8
-		jle	short loc_30A04
-		mov	ax, 1
-		jmp	short loc_30A06
-; ---------------------------------------------------------------------------
-
-loc_30A04:
-		xor	ax, ax
-
-loc_30A06:
-		cmp	ax, 1
-		jz	short loc_30A47
-		lea	ax, [di+8]
-		sub	ax, _orb_cur_left
-		cmp	ax, 32
-		jge	short loc_30A40
-		lea	ax, [di+8]
-		sub	ax, _orb_cur_left
-		cmp	ax, -8
-		jle	short loc_30A40
-		mov	ax, [bp+arg_6]
-		sub	ax, _orb_cur_top
-		cmp	ax, 32
-		jge	short loc_30A40
-		mov	ax, [bp+arg_6]
-		sub	ax, _orb_cur_top
-		cmp	ax, -8
-		jle	short loc_30A40
-		mov	ax, 1
-		jmp	short loc_30A42
-; ---------------------------------------------------------------------------
-
-loc_30A40:
-		xor	ax, ax
-
-loc_30A42:
-		cmp	ax, 1
-		jnz	short loc_30A5E
-
-loc_30A47:
-		mov	bx, _pellet_cur
-		sar	word ptr [bx+12h], 1
-		sar	word ptr [bx+10h], 1
-		mov	word ptr [bx+1Eh], 1
-		add	word_360CD, 0Ah
-		jmp	loc_30AF6
-; ---------------------------------------------------------------------------
-
-loc_30A5E:
-		cmp	byte_34A57, 1
-		jnz	loc_30AF6
-		mov	ax, _player_left
-		add	ax, -8
-		mov	dx, di
-		sub	dx, ax
-		cmp	dx, 30h	; '0'
-		jge	short loc_30AA0
-		mov	ax, _player_left
-		add	ax, -8
-		mov	dx, di
-		sub	dx, ax
-		cmp	dx, -8
-		jle	short loc_30AA0
-		mov	ax, [bp+arg_6]
-		add	ax, 0FEA0h
-		cmp	ax, 30h	; '0'
-		jge	short loc_30AA0
-		mov	ax, [bp+arg_6]
-		add	ax, 0FEA0h
-		cmp	ax, 0FFF8h
-		jle	short loc_30AA0
-		mov	ax, 1
-		jmp	short loc_30AA2
-; ---------------------------------------------------------------------------
-
-loc_30AA0:
-		xor	ax, ax
-
-loc_30AA2:
-		cmp	ax, 1
-		jnz	short loc_30AF6
-		mov	bx, _pellet_cur
-		mov	ax, [bx+2]
-		sar	ax, 4
-		mov	dx, _player_left
-		add	dx, 12
-		cmp	ax, dx
-		jg	short loc_30AC2
-		mov	[bp+@@angle], 80h
-		jmp	short loc_30AC6
-; ---------------------------------------------------------------------------
-
-loc_30AC2:
-		mov	[bp+@@angle], 0
-
-loc_30AC6:
-		push	word ptr [bp+@@angle]
-		push	80h ; '?'
-		push	ds
-		mov	ax, _pellet_cur
-		add	ax, 12h
-		push	ax
-		push	ds
-		mov	ax, _pellet_cur
-		add	ax, 10h
-		push	ax
-		call	_vector2
-		add	sp, 0Ch
-		mov	bx, _pellet_cur
-		cmp	word ptr [bx+0Eh], 0
-		jnz	short loc_30AF2
-		mov	byte ptr [bx+1], 0
-
-loc_30AF2:
-		xor	ax, ax
-		jmp	short loc_30AF9
-; ---------------------------------------------------------------------------
-
-loc_30AF6:
-		mov	ax, 1
-
-loc_30AF9:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_3090A	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -54473,7 +54230,7 @@ loc_30CE9:
 		sar	ax, 4
 		push	ax
 		pushd	[bp+@@CPellets]
-		call	sub_3090A
+		call	@CPellets@visible_after_hittests_for_cur$qii
 		add	sp, 8
 		cmp	ax, 1
 		jnz	short loc_30D5D
@@ -54672,7 +54429,7 @@ loc_30E63:
 		mov	bx, _pellet_cur
 		mov	[bx+10h], ax
 		mov	word ptr [bx+1Eh], 1
-		add	word_360CD, 0Ah
+		add	_pellet_destroy_score_delta, 10
 
 loc_30EBA:
 		inc	si
@@ -54877,7 +54634,8 @@ byte_34A49	db 1
 		db    0
 include th01/hardware/input_main_end[data].asm
 		db    0
-byte_34A57	db 0
+public _player_deflecting
+_player_deflecting	db 0
 byte_34A58	db 0
 byte_34A59	db 0
 _score	dd 0
@@ -55915,7 +55673,8 @@ a0m_0		db 1Bh,'[0m',0
 a11h		db 1Bh,'[1;1H',0
 word_360CA	dw 0
 byte_360CC	db 0
-word_360CD	dw 0
+public _pellet_destroy_score_delta
+_pellet_destroy_score_delta	dw 0
 include th01/sprites/pellet.asp
 flt_3624F	dd 1.5
 		db 0
