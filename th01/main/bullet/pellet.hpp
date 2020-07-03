@@ -60,7 +60,54 @@ enum pellet_sling_direction_t {
 	_pellet_sling_direction_t_FORCE_INT = 0x7FFF
 };
 
+// Types for predefined multi-pellet patterns. In TH01, individual bullets of
+// such a pattern only differ in their angle.
+//
+// The PP_?_ number indicates the number of pellets created by this pattern.
+//
+// All patterns (including the random-angle ones) are symmetrical around
+// • a (0, 1) vector, pointing downwards (for static patterns)
+// • a vector from the pellet's origin to the player (for aimed patterns)
+// Odd-numbered spreads always contain a pellet in the center, which moves
+// along this axis of symmetry; even-numbered spreads don't.
+//
+// For aimed patterns, this means that:
+// • all odd-numbered spreads are aimed *at* the player, while
+// • all even-numbered spreads are aimed *around* the player.
 enum pellet_pattern_t {
+	// Does not actually work, due to a ZUN bug in pattern_velocity_set()!
+	PP_NONE = 0,
+
+	PP_1 = 1,
+	PP_1_AIMED = 12,
+
+	PP_2_SPREAD_WIDE,
+	PP_2_SPREAD_NARROW,
+	PP_3_SPREAD_WIDE,
+	PP_3_SPREAD_NARROW,
+	PP_4_SPREAD_WIDE,
+	PP_4_SPREAD_NARROW,
+	PP_5_SPREAD_WIDE,
+	PP_5_SPREAD_NARROW,
+
+	// Aimed versions of the n-way spreads above. Expected to have enum values
+	// >= this one!
+	PP_AIMED_SPREADS,
+
+	PP_2_SPREAD_WIDE_AIMED = PP_AIMED_SPREADS,
+	PP_2_SPREAD_NARROW_AIMED,
+	PP_3_SPREAD_WIDE_AIMED,
+	PP_3_SPREAD_NARROW_AIMED,
+	PP_4_SPREAD_WIDE_AIMED,
+	PP_4_SPREAD_NARROW_AIMED,
+	PP_5_SPREAD_WIDE_AIMED,
+	PP_5_SPREAD_NARROW_AIMED,
+
+	// -11.25 deg to +11.25 deg, around the player
+	PP_1_RANDOM_NARROW_AIMED = 29,
+	// -45 deg to +45 deg, facing down
+	PP_1_RANDOM_WIDE = 30,
+
 	_pellet_pattern_t_FORCE_INT = 0x7FFF
 };
 

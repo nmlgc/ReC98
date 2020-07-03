@@ -22,6 +22,18 @@
 pellet_t near *pellet_cur;
 /// -------
 
+void vector2_to_player_from(
+	int x, int y, int &ret_x, int &ret_y, int length, unsigned char plus_angle
+)
+{
+	plus_angle = iatan2(
+		(player_center_y - y),
+		((player_left + (PLAYER_W / 2) - (PELLET_W / 2)) - x)
+	) + plus_angle;
+	ret_x = (static_cast<long>(length) * Cos8(plus_angle)) >> 8;
+	ret_y = (static_cast<long>(length) * Sin8(plus_angle)) >> 8;
+}
+
 // Sets the velocity for pellet #[i] in the given [pattern]. Returns true if
 // this was the last pellet for this pattern.
 bool16 pattern_velocity_set(
@@ -32,7 +44,103 @@ bool16 pattern_velocity_set(
 	int &i,
 	int pellet_left,
 	int pellet_top
-);
+)
+{
+	// ZUN bug: Due to this default, add_pattern() ends up repeatedly calling
+	// this function for [pattern] values not covered by the switch below,
+	// until it iterated over the entire pellet array...
+	bool16 done = false;
+	unsigned char angle = 0x00;
+	unsigned char spread_delta = 0x00;
+
+	#define to_aim_or_not_to_aim() \
+		if(pattern >= PP_AIMED_SPREADS) { \
+			goto aim; \
+		} \
+		/* Static pattern; add a 90° angle, so that 0° points downwards */ \
+		angle += 0x40; \
+		goto no_aim;
+
+	switch(pattern) {
+	case PP_1:
+		ret_y.v = speed;
+		ret_x = 0.0f;
+		done = true;
+		break;
+	case PP_1_AIMED:
+		vector2_between(
+			pellet_left,
+			pellet_top,
+			player_left + 8,
+			player_center_y,
+			ret_x.v,
+			ret_y.v,
+			speed
+		);
+		done = true;
+		break;
+
+	case PP_2_SPREAD_WIDE:
+	case PP_2_SPREAD_WIDE_AIMED:	spread_delta = 0x08;	// fallthrough
+	case PP_2_SPREAD_NARROW:
+	case PP_2_SPREAD_NARROW_AIMED:
+		/**/ if(i == 0) { angle = (+0x04 + spread_delta); }
+		else if(i == 1) { angle = (-0x04 - spread_delta); done = true; }
+		to_aim_or_not_to_aim();
+
+	case PP_3_SPREAD_WIDE:
+	case PP_3_SPREAD_WIDE_AIMED:	spread_delta = 0x05;	// fallthrough
+	case PP_3_SPREAD_NARROW:
+	case PP_3_SPREAD_NARROW_AIMED:
+		/**/ if(i == 0) { angle =   0x00; }
+		else if(i == 1) { angle = (+0x04 + spread_delta); }
+		else if(i == 2) { angle = (-0x04 - spread_delta); done = true; }
+		to_aim_or_not_to_aim();
+
+	case PP_4_SPREAD_WIDE:
+	case PP_4_SPREAD_WIDE_AIMED:	spread_delta = 0x04;	// fallthrough
+	case PP_4_SPREAD_NARROW:
+	case PP_4_SPREAD_NARROW_AIMED:
+		/**/ if(i == 0) { angle = (+0x04 +  spread_delta); }
+		else if(i == 1) { angle = (-0x04 -  spread_delta); }
+		else if(i == 2) { angle = (+0x0C + (spread_delta * 3)); }
+		else if(i == 3) { angle = (-0x0C - (spread_delta * 3)); done = true; }
+		to_aim_or_not_to_aim();
+
+	case PP_5_SPREAD_WIDE:
+	case PP_5_SPREAD_WIDE_AIMED:	spread_delta = 0x04;	// fallthrough
+	case PP_5_SPREAD_NARROW:
+	case PP_5_SPREAD_NARROW_AIMED:
+		/**/ if(i == 0) { angle =   0x00; }
+		else if(i == 1) { angle = (+0x04 +  spread_delta); }
+		else if(i == 2) { angle = (-0x04 -  spread_delta); }
+		else if(i == 3) { angle = (+0x08 + (spread_delta * 2)); }
+		else if(i == 4) { angle = (-0x08 - (spread_delta * 2)); done = true; }
+		to_aim_or_not_to_aim();
+
+	case PP_1_RANDOM_NARROW_AIMED:
+		angle = ((rand() & 0x0F) - 0x07);
+		done = true;
+		goto aim;
+
+	case PP_1_RANDOM_WIDE:
+		angle = ((rand() & 0x3F) + 0x20);
+		done = true;
+		goto no_aim;
+
+	aim:
+		vector2_to_player_from(
+			pellet_left, pellet_top, ret_x.v, ret_y.v, speed, angle
+		);
+		break;
+
+	no_aim:
+		vector2(ret_x.v, ret_y.v, speed, angle);
+		break;
+	}
+	i++;
+	return done;
+}
 
 inline subpixel_t base_speed_for_rank(void)
 {
@@ -100,30 +208,9 @@ void CPellets::add_pattern(
 		p->prev_left.v = -1;
 		p->age = 0;
 		alive_count++;
-		/* TODO: Replace with the decompiled call
-		 * pattern_done = pattern_velocity_set(
+		pattern_done = pattern_velocity_set(
 			vel_x, vel_y, pattern, speed, pattern_i, left, top
 		);
-		 * once that function is part of this translation unit */
-		__asm {
-			push	top;
-			db  	0x57;	// PUSH DI
-			push	ss;
-			lea 	ax, pattern_i;
-			push	ax;
-			db  	0x56;	// PUSH SI
-			push	pattern;
-			push	ss;
-			lea 	ax, vel_y;
-			push	ax
-			push	ss;
-			lea 	ax, vel_x;
-			push	ax;
-			push	cs;
-			call	near ptr pattern_velocity_set;
-			add 	sp, 0x14;
-		}
-		pattern_done = _AX;
 		p->velocity.x.v = vel_x.v;
 		p->velocity.y.v = vel_y.v;
 		if(pattern_done == true) {
@@ -163,7 +250,7 @@ void CPellets::add_single(
 		if(p->cloud_frame) {
 			continue;
 		}
-		pellet_init(p, left, top, 0);
+		pellet_init(p, left, top, PP_NONE);
 		p->motion_type = motion_type;
 		p->prev_left.v = -1;
 		p->age = 0;
@@ -220,7 +307,7 @@ void CPellets::motion_type_apply_for_cur(void)
 				p->velocity.y.v,
 				p->speed.v
 			);
-			p->from_pattern = 12;
+			p->from_pattern = PP_1_AIMED;
 			p->angle = 0x00;
 		}
 		break;
