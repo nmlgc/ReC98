@@ -1,12 +1,3 @@
-#include "th01/math/subpixel.hpp"
-#include "th01/math/vector.hpp"
-#include "th01/main/vars.hpp"
-#include "th01/main/bullet/pellet.hpp"
-#include "th01/main/playfld.hpp"
-#include "th01/main/player/orb.hpp"
-#include "th01/main/player/player.hpp"
-#include "th01/main/player/shots.hpp"
-
 /// Constants
 /// ---------
 // Can't declare these as `static const` variables, because that would break
@@ -24,6 +15,24 @@ static const unsigned int PELLET_DESTROY_SCORE = 10;
 /// -------
 pellet_t near *pellet_cur;
 /// -------
+
+CPellets::CPellets(void)
+{
+	int i;
+
+	#define p pellet_cur
+	p = iteration_start();
+	for(i = 0; i < PELLET_COUNT; i++, p++) {
+		p->moving = false;
+		p->not_rendered = false;
+	}
+	#undef p
+
+	alive_count = 0;
+	for(i = 0; i < sizeof(unknown_zero) / sizeof(unknown_zero[0]); i++) {
+		unknown_zero[i] = 0;
+	}
+}
 
 void vector2_to_player_from(
 	int x, int y, int &ret_x, int &ret_y, int length, unsigned char plus_angle

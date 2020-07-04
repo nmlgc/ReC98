@@ -73,7 +73,7 @@ main_13 group main_13_TEXT, main_13__TEXT
 main_19 group main_19_TEXT, main_19__TEXT
 main_25 group main_25_TEXT, main_25__TEXT
 main_27 group main_27_TEXT, main_27__TEXT
-main_38 group main_38_TEXT, main_38__TEXT, main_38___TEXT
+main_38 group main_38_TEXT, main_38__TEXT
 
 ; ===========================================================================
 
@@ -4483,7 +4483,7 @@ word_E309	dw	4,     9,   0Eh,   13h
 sub_E319	proc far
 		push	bp
 		mov	bp, sp
-		call	sub_30047 c, offset _Pellets, ds
+		call	@CPellets@$bctr$qv c, offset _Pellets, ds
 		mov	_Shots.SHOT_unknown[0 * word], 50h
 		mov	_Shots.SHOT_unknown[1 * word], 60h
 		mov	_Shots.SHOT_unknown[2 * word], 70h
@@ -53930,90 +53930,22 @@ main_37_TEXT	ends
 
 ; Segment type:	Pure code
 main_38_TEXT	segment	byte public 'CODE' use16
-main_38_TEXT	ends
-
-main_38__TEXT	segment	byte public 'CODE' use16
-		assume cs:main_38
-		;org 4
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
 	extern @CShots@add$qii:proc
 	extern @CShots@unput_and_reset_all$qv:proc
 	extern @CShots@unput_update_render$qv:proc
 	extern @CShots@hittest_pellet$qii:proc
 	extern @CShots@hittest_boss$qiiii:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_30047	proc far
-
-@@CPellets		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		cmp	[bp+@@CPellets], 0
-		jnz	short loc_30065
-		push	size CPellets
-		call	@$bnew$qui	; operator new(uint)
-		pop	cx
-		mov	word ptr [bp+@@CPellets+2], dx
-		mov	word ptr [bp+@@CPellets], ax
-		or	ax, dx
-		jz	short loc_300AA
-
-loc_30065:
-		mov	ax, word ptr [bp+@@CPellets]
-		mov	_pellet_cur, ax
-		xor	si, si
-		jmp	short loc_30081
-; ---------------------------------------------------------------------------
-
-loc_3006F:
-		mov	bx, _pellet_cur
-		mov	byte ptr [bx], 0
-		mov	word ptr [bx+18h], 0
-		inc	si
-		add	_pellet_cur, size pellet_t
-
-loc_30081:
-		cmp	si, PELLET_COUNT
-		jl	short loc_3006F
-		les	bx, [bp+@@CPellets]
-		mov	es:[bx+CPellets.PELLET_alive_count], 0
-		xor	si, si
-		jmp	short loc_300A5
-; ---------------------------------------------------------------------------
-
-loc_30094:
-		mov	ax, si
-		add	ax, ax
-		les	bx, [bp+@@CPellets]
-		add	bx, ax
-		mov	es:[bx+PELLET_unknown_zero], 0
-		inc	si
-
-loc_300A5:
-		cmp	si, 10
-		jl	short loc_30094
-
-loc_300AA:
-		mov	dx, word ptr [bp+@@CPellets+2]
-		mov	ax, word ptr [bp+@@CPellets]
-		pop	si
-		pop	bp
-		retf
-sub_30047	endp
-main_38__TEXT	ends
-
-main_38___TEXT	segment	byte public 'CODE' use16
+	extern @CPellets@$bctr$qv:proc
 	extern @CPellets@add_pattern$qii16pellet_pattern_ti:proc
 	extern @CPellets@add_single$qiiii15pellet_motion_tiii:proc
 	extern @CPellets@motion_type_apply_for_cur$qv:proc
 	extern @CPellets@visible_after_hittests_for_cur$qii:proc
 	extern _pellet_render:proc
+main_38_TEXT	ends
+
+main_38__TEXT	segment	byte public 'CODE' use16
+		assume cs:main_38
+		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -54609,7 +54541,7 @@ sub_30F70	endp
 
 ; ---------------------------------------------------------------------------
 		dw 0
-main_38___TEXT	ends
+main_38__TEXT	ends
 
 	.data
 

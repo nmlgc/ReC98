@@ -269,6 +269,50 @@ Examples:
   **Certainty**: Maybe Borland (not Turbo) C++ has an optimization option
   against it?
 
+### Boilerplate for constructors defined outside the class declaration
+
+```c++
+struct MyClass {
+  // Members…
+
+  MyClass();
+};
+
+MyClass::MyClass() {
+  // Initialization…
+}
+```
+
+Resulting ASM:
+
+```asm
+; MyClass::MyClass(MyClass* this)
+; Exact instructions differ depending on the memory model. Model-independent
+; ASM instructions are in UPPERCASE.
+@MyClass@$bctr$qv proc
+  PUSH  BP
+  MOV   BP, SP
+  ; (saving SI and DI, if used in constructor code)
+  ; (if this, 0)
+  JNZ   @@ctor_code
+  PUSH  sizeof(MyClass)
+  CALL  @$bnew$qui      ; operator new(uint)
+  POP   CX
+  ; (this = value_returned_from_new)
+  ; (if this)
+  JZ    @@ret
+
+@@ctor_code:
+  ; Initialization…
+
+@@ret:
+  ; (retval = this)
+  ; (restoring DI and SI, if used in constructor code)
+  POP   BP
+  RET
+@MyClass@$bctr$qv endp
+```
+
 ## Limits of decompilability
 
 ### `MOV BX, SP`-style functions, or others with no standard stack frame

@@ -168,6 +168,8 @@ protected:
 	bool16 visible_after_hittests_for_cur(int pellet_left, int pellet_top);
 
 public:
+	CPellets(void);
+
 	// Spawns a number of bullets according to the given [pattern], with their
 	// corresponding velocities, at (left, top). [speed_base] is tuned
 	// according to the currently played difficulty and the resident
