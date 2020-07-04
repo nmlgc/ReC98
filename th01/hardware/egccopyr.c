@@ -1,6 +1,6 @@
 #include "th01/hardware/egcscopy.c"
 
-void egc_copy_rect_1_to_0(int x, int y, int w, int h)
+void egc_copy_rect_1_to_0_16(int x, int y, int w, int h)
 {
 	register int x_end = x;
 	register int x_floor = x_end;

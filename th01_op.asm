@@ -316,7 +316,7 @@ arg_0		= word ptr  6
 ; ---------------------------------------------------------------------------
 
 loc_A954:
-		call	_egc_copy_rect_1_to_0 c, large (306 shl 16) or 244, large (16 shl 16) or 128
+		call	_egc_copy_rect_1_to_0_16 c, large (306 shl 16) or 244, large (16 shl 16) or 128
 		pop	bp
 		retf
 sub_A92C	endp
@@ -418,7 +418,7 @@ arg_2		= word ptr  8
 		imul	ax, 20
 		add	ax, 266
 		mov	[bp+var_A], ax
-		call	_egc_copy_rect_1_to_0 c, di, ax, large (16 shl 16) or 176
+		call	_egc_copy_rect_1_to_0_16 c, di, ax, large (16 shl 16) or 176
 		or	si, si
 		jnz	short loc_AA34
 		mov	al, _opts.O_rank
@@ -532,7 +532,7 @@ arg_2		= word ptr  8
 		imul	ax, 40
 		add	ax, 286
 		mov	[bp+var_A], ax
-		call	_egc_copy_rect_1_to_0 c, di, ax, large (16 shl 16) or 176
+		call	_egc_copy_rect_1_to_0_16 c, di, ax, large (16 shl 16) or 176
 		or	si, si
 		jnz	short loc_AB69
 		push	(16 shl 16) or 192
@@ -540,7 +540,7 @@ arg_2		= word ptr  8
 		add	ax, 20
 		push	ax
 		push	di
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 		mov	al, byte_1251D
 		cbw
@@ -614,7 +614,7 @@ sub_AB97	proc far
 		mov	bp, sp
 		cmp	word_12564, 0
 		jnz	short loc_AC04
-		call	_egc_copy_rect_1_to_0 c, large (266 shl 16) or 220, large (100 shl 16) or 176
+		call	_egc_copy_rect_1_to_0_16 c, large (266 shl 16) or 220, large (100 shl 16) or 176
 		push	50000h
 		call	sub_A96A
 		add	sp, 4
@@ -720,7 +720,7 @@ sub_AC84	proc far
 		mov	word_12568, 0
 		mov	word_12566, 1
 		mov	_option_rows, 4
-		call	_egc_copy_rect_1_to_0 c, large (276 shl 16) or 220, large (80 shl 16) or 176
+		call	_egc_copy_rect_1_to_0_16 c, large (276 shl 16) or 220, large (80 shl 16) or 176
 		push	0F0000h
 		call	sub_A9B9
 		add	sp, 4
@@ -965,7 +965,7 @@ sub_AEA8	proc far
 		mov	_input_ok, 0
 		mov	_input_shot, 0
 		mov	_option_rows, 1
-		call	_egc_copy_rect_1_to_0 c, large (266 shl 16) or 220, large (100 shl 16) or 176
+		call	_egc_copy_rect_1_to_0_16 c, large (266 shl 16) or 220, large (100 shl 16) or 176
 		push	0F0000h
 		call	sub_AAB6
 		add	sp, 4
@@ -1418,7 +1418,7 @@ op_06_TEXT	ends
 
 ; Segment type:	Pure code
 op_07_TEXT	segment	byte public 'CODE' use16
-	extern _egc_copy_rect_1_to_0:proc
+	extern _egc_copy_rect_1_to_0_16:proc
 op_07_TEXT	ends
 
 ; ===========================================================================

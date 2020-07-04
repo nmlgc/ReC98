@@ -90,7 +90,7 @@ static inline ptn_t* ptn_with_id(int id)
 
 // If true, the affected 32×32 or 16×16 area is restored from VRAM page 1
 // before a byte-aligned alpha put operation.
-// (Because calling egc_copy_rect_1_to_0() yourself is way too much to ask?)
+// (Because calling egc_copy_rect_1_to_0_16() yourself is way too much to ask?)
 extern bool ptn_unput_before_alpha_put;
 
 // 32×32 access

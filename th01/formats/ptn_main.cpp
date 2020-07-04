@@ -65,7 +65,7 @@ void ptn_put_8(int left, int top, int ptn_id)
 	ptn_t *ptn = ptn_with_id_shift(ptn_id);
 
 	if(ptn_unput_before_alpha_put) {
-		egc_copy_rect_1_to_0(left, top, PTN_W, PTN_H);
+		egc_copy_rect_1_to_0_16(left, top, PTN_W, PTN_H);
 	}
 	for(y = 0; y < PTN_H; y++) {
 		mask = ptn->alpha[y];
@@ -120,7 +120,7 @@ void ptn_put_quarter_8(int left, int top, int ptn_id, int quarter)
 
 	q.init(quarter);
 	if(ptn_unput_before_alpha_put) {
-		egc_copy_rect_1_to_0(left, top, PTN_QUARTER_W, PTN_QUARTER_H);
+		egc_copy_rect_1_to_0_16(left, top, PTN_QUARTER_W, PTN_QUARTER_H);
 	}
 	for(y = q.y; y < (q.y + PTN_QUARTER_H); y++) {
 		mask_full = ptn->alpha[y];

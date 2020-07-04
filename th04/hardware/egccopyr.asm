@@ -1,5 +1,5 @@
-public EGC_COPY_RECT_1_TO_0
-egc_copy_rect_1_to_0	proc far
+public EGC_COPY_RECT_1_TO_0_16
+egc_copy_rect_1_to_0_16	proc far
 
 @@h	= word ptr [bp+6]
 @@w	= word ptr [bp+8]
@@ -78,7 +78,7 @@ endif
 	pop	di
 	pop	bp
 	retf	8
-egc_copy_rect_1_to_0	endp
+egc_copy_rect_1_to_0_16	endp
 	align 2
 
 

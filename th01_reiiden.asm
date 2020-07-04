@@ -1100,7 +1100,7 @@ loc_C014:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+3DCDh]
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 		mov	ax, [bp+var_2]
 		imul	ax, 0Ah
@@ -1225,7 +1225,7 @@ loc_C150:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+3DCDh]
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 		inc	si
 
@@ -1601,7 +1601,7 @@ loc_C47E:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+3E4Ah]
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 		inc	si
 
@@ -1656,7 +1656,7 @@ loc_C4E2:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+3E4Ah]
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 
 loc_C50B:
@@ -1991,14 +1991,14 @@ loc_C9A2:
 		jz	loc_CB91
 		cmp	_input_lr, INPUT_LEFT
 		jnz	short loc_C9E6
-		call	_egc_copy_rect_1_to_0 c, large (144 shl 16) or 320, large (16 shl 16) or 16
+		call	_egc_copy_rect_1_to_0_16 c, large (144 shl 16) or 320, large (16 shl 16) or 16
 		call	_graph_putsa_fx c, 256, large ( 7h shl 16) or 144, offset aB, ds	; "Åú"
 		mov	[bp+var_1], 0
 
 loc_C9E6:
 		cmp	_input_lr, INPUT_RIGHT
 		jnz	short loc_CA1A
-		call	_egc_copy_rect_1_to_0 c, large (144 shl 16) or 256, large (16 shl 16) or 16
+		call	_egc_copy_rect_1_to_0_16 c, large (144 shl 16) or 256, large (16 shl 16) or 16
 		call	_graph_putsa_fx c, 320, large ( 7h shl 16) or 144, offset aB, ds	; "Åú"
 		mov	[bp+var_1], 1
 
@@ -2016,8 +2016,8 @@ loc_CA30:
 		jnz	loc_C9A2
 
 loc_CA39:
-		call	_egc_copy_rect_1_to_0 c, large (128 shl 16) or 276, large (16 shl 16) or 80
-		call	_egc_copy_rect_1_to_0 c, large (144 shl 16) or 256, large (16 shl 16) or 112
+		call	_egc_copy_rect_1_to_0_16 c, large (128 shl 16) or 276, large (16 shl 16) or 80
+		call	_egc_copy_rect_1_to_0_16 c, large (144 shl 16) or 256, large (16 shl 16) or 112
 		push	14h
 		call	_frame_delay
 		pop	cx
@@ -2042,14 +2042,14 @@ loc_CACF:
 		jz	loc_CB91
 		cmp	_input_lr, INPUT_LEFT
 		jnz	short loc_CB13
-		call	_egc_copy_rect_1_to_0 c, large (144 shl 16) or 336, large (16 shl 16) or 16
+		call	_egc_copy_rect_1_to_0_16 c, large (144 shl 16) or 336, large (16 shl 16) or 16
 		call	_graph_putsa_fx c, 224, large ( 7h shl 16) or 144, offset aB, ds	; "Åú"
 		mov	[bp+var_1], 0
 
 loc_CB13:
 		cmp	_input_lr, INPUT_RIGHT
 		jnz	short loc_CB47
-		call	_egc_copy_rect_1_to_0 c, large (144 shl 16) or 224, large (16 shl 16) or 16
+		call	_egc_copy_rect_1_to_0_16 c, large (144 shl 16) or 224, large (16 shl 16) or 16
 		call	_graph_putsa_fx c, 336, large ( 7h shl 16) or 144, offset aB, ds	; "Åú"
 		mov	[bp+var_1], 1
 
@@ -2090,7 +2090,7 @@ loc_CB91:
 loc_CB96:
 		call	_z_palette_set_all_show c, offset palette_39B8C, ds
 		call	_input_reset_sense
-		call	_egc_copy_rect_1_to_0 c, large (128 shl 16) or 232, large (32 shl 16) or 176
+		call	_egc_copy_rect_1_to_0_16 c, large (128 shl 16) or 232, large (32 shl 16) or 176
 		xor	ax, ax
 		leave
 		retf
@@ -2388,7 +2388,7 @@ loc_CF04:
 		lea	ax, [bp+var_A]
 		add	bx, ax
 		push	word ptr ss:[bx]
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 
 loc_CF30:
@@ -4574,7 +4574,7 @@ main_06_TEXT	ends
 main_07_TEXT	segment	byte public 'CODE' use16
 	extern _ptn_copy_8_0_to_1:proc
 	extern VRAM_PLANES_SET:proc
-	extern _egc_copy_rect_1_to_0:proc
+	extern _egc_copy_rect_1_to_0_16:proc
 	extern _ptn_snap_8:proc
 	extern _ptn_snap_quarter_8:proc
 main_07_TEXT	ends
@@ -5572,7 +5572,7 @@ loc_122C7:
 		mov	eax, es:[bx+10h]
 		sar	eax, 8
 		push	ax
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 
 loc_12310:
@@ -6076,7 +6076,7 @@ loc_1291D:
 loc_1292E:
 		cmp	[bp+var_A], 0
 		jnz	short loc_1297F
-		call	_egc_copy_rect_1_to_0 stdcall, large (250 shl 16) or 128, large (32 shl 16) or 32
+		call	_egc_copy_rect_1_to_0_16 stdcall, large (250 shl 16) or 128, large (32 shl 16) or 32
 		call	_ptn_put_8 stdcall, 128, (3 shl 16) or 300
 		push	(0Fh shl 16) or 0Fh
 		push	(0Fh shl 16) or 03h
@@ -6090,7 +6090,7 @@ loc_1292E:
 ; ---------------------------------------------------------------------------
 
 loc_1297F:
-		call	_egc_copy_rect_1_to_0 stdcall, large (300 shl 16) or 128, large (32 shl 16) or 32
+		call	_egc_copy_rect_1_to_0_16 stdcall, large (300 shl 16) or 128, large (32 shl 16) or 32
 		call	_ptn_put_8 stdcall, 128, (3 shl 16) or 250
 		push	(0Fh shl 16) or 0Fh
 		push	(0Fh shl 16) or 01h
@@ -10670,7 +10670,7 @@ loc_164AB:
 		push	ax
 
 loc_164CE:
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 		inc	si
 
@@ -10961,7 +10961,7 @@ arg_0		= dword	ptr  6
 		push	ax
 		push	word ptr es:[bx+2]
 		push	word ptr es:[bx]
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 		pop	bp
 		retf
@@ -11062,7 +11062,7 @@ loc_167DE:
 loc_167F9:
 		mov	[bp+var_2], ax
 		les	bx, [bp+arg_0]
-		call	_egc_copy_rect_1_to_0 c, ax, word ptr es:[bx+6], 8, word ptr es:[bx+0Ah]
+		call	_egc_copy_rect_1_to_0_16 c, ax, word ptr es:[bx+6], 8, word ptr es:[bx+0Ah]
 		les	bx, [bp+arg_0]
 		mov	ax, es:[bx+2]
 		cmp	ax, es:[bx+6]
@@ -11091,7 +11091,7 @@ loc_16830:
 		push	ax
 		push	[bp+var_4]
 		push	word ptr es:[bx+4]
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		les	bx, [bp+arg_0]
 		push	word ptr es:[bx+24h]
 		push	word ptr es:[bx+2]
@@ -12761,7 +12761,7 @@ loc_1796F:
 		jz	short loc_179E2
 
 loc_179C7:
-		call	_egc_copy_rect_1_to_0 c, di, [bp+@@top], large (1 shl 16) or 8
+		call	_egc_copy_rect_1_to_0_16 c, di, [bp+@@top], large (1 shl 16) or 8
 		mov	[bp+var_4], di
 		mov	ax, [bp+@@top]
 		mov	[bp+var_6], ax
@@ -13275,7 +13275,7 @@ arg_0		= word ptr  6
 		mov	bx, si
 		imul	bx, 0Ah
 		push	word ptr [bx+5370h]
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 		mov	bx, si
 		imul	bx, 0Ah
@@ -13415,7 +13415,7 @@ loc_17E71:
 		mov	bx, si
 		imul	bx, 0Ah
 		push	word ptr [bx+5370h]
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 
 loc_17EAF:
@@ -13637,7 +13637,7 @@ arg_0		= word ptr  6
 		mov	bx, si
 		imul	bx, 0Ah
 		push	word ptr [bx+5370h]
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 		mov	bx, si
 		imul	bx, 0Ah
@@ -13691,7 +13691,7 @@ loc_180B0:
 
 loc_180BC:
 		push	ax
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 
 loc_180C5:
@@ -13992,7 +13992,7 @@ arg_0		= word ptr  6
 		mov	bx, si
 		imul	bx, 0Ah
 		push	word ptr [bx+5398h]
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 		mov	bx, si
 		imul	bx, 0Ah
@@ -14137,7 +14137,7 @@ loc_183F6:
 		mov	bx, si
 		imul	bx, 0Ah
 		push	word ptr [bx+5398h]
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 
 loc_18434:
@@ -14222,7 +14222,7 @@ loc_1848E:
 
 loc_18497:
 		push	ax
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 		mov	bx, si
 		imul	bx, 0Ah
@@ -18282,7 +18282,7 @@ var_2		= word ptr -2
 		enter	6, 0
 		push	si
 		push	di
-		call	_egc_copy_rect_1_to_0 c, _player_left, _player_top, large (32 shl 16) or 32
+		call	_egc_copy_rect_1_to_0_16 c, _player_left, _player_top, large (32 shl 16) or 32
 		call	_ptn_put_8 c, _orb_cur_left, _orb_cur_top, 3
 		call	IRand
 		mov	bx, 8
@@ -18329,7 +18329,7 @@ loc_1AE85:
 		mov	ax, _player_left
 		add	ax, -8
 		push	ax
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 		call	@CShots@unput_and_reset_all$qv c, offset _Shots, ds
 		call	sub_30E54 c, offset _Pellets, ds
@@ -18358,8 +18358,8 @@ loc_1AEF2:
 ; ---------------------------------------------------------------------------
 
 loc_1AEFB:
-		call	_egc_copy_rect_1_to_0 c, _player_left, _player_top, large (32 shl 16) or 32
-		call	_egc_copy_rect_1_to_0 c, di, _player_top, large (32 shl 16) or 32
+		call	_egc_copy_rect_1_to_0_16 c, _player_left, _player_top, large (32 shl 16) or 32
+		call	_egc_copy_rect_1_to_0_16 c, di, _player_top, large (32 shl 16) or 32
 		cmp	si, 0Ah
 		jge	short loc_1AF2C
 		mov	ax, 16
@@ -18436,8 +18436,8 @@ loc_1AFC0:
 loc_1AFC8:
 		cmp	si, 1Eh
 		jl	loc_1AEFB
-		call	_egc_copy_rect_1_to_0 c, _player_left, _player_top, large (32 shl 16) or 32
-		call	_egc_copy_rect_1_to_0 c, di, _player_top, large (32 shl 16) or 32
+		call	_egc_copy_rect_1_to_0_16 c, _player_left, _player_top, large (32 shl 16) or 32
+		call	_egc_copy_rect_1_to_0_16 c, di, _player_top, large (32 shl 16) or 32
 		mov	ax, _rem_lives
 		inc	ax
 		push	ax
@@ -24006,7 +24006,7 @@ loc_1E768:
 		add	ax, si
 		push	ax
 		push	point_3982A.x
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		push	8
 		push	w_39832
 		mov	ax, point_3982A.y
@@ -24014,7 +24014,7 @@ loc_1E768:
 		sub	ax, si
 		push	ax
 		push	point_3982A.x
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 10h
 
 loc_1E798:
@@ -25564,7 +25564,7 @@ loc_1F4F8:
 		mov	ax, [bx+5497h]
 		add	ax, -16
 		push	ax
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 14h
 		mov	bx, si
 		add	bx, bx
@@ -26961,7 +26961,7 @@ loc_20116:
 		mov	ax, es:[bx]
 		add	ax, [bp+@@x]
 		push	ax
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 
 loc_20142:
@@ -29466,7 +29466,7 @@ loc_215D2:
 		mov	word ptr es:[bx], 1
 		mov	word_39EB7, si
 		mov	_portals_blocked, 1
-		call	_egc_copy_rect_1_to_0 c, _orb_prev_left, _orb_prev_top, large ORB_W or (ORB_H shl 16)
+		call	_egc_copy_rect_1_to_0_16 c, _orb_prev_left, _orb_prev_top, large ORB_W or (ORB_H shl 16)
 		push	1Eh
 
 loc_2160F:
@@ -29505,7 +29505,7 @@ loc_21634:
 		les	bx, off_39E9A
 		add	bx, ax
 		push	word ptr es:[bx]
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 		push	1Fh
 		jmp	short loc_2160F
@@ -29529,7 +29529,7 @@ loc_21670:
 		les	bx, off_39E9A
 		add	bx, ax
 		push	word ptr es:[bx]
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 		push	1Dh
 		mov	ax, si
@@ -29591,7 +29591,7 @@ loc_2170D:
 		add	bx, ax
 		mov	ax, es:[bx]
 		mov	_portal_dst_top, ax
-		call	_egc_copy_rect_1_to_0 c, _portal_dst_left, ax, large (32 shl 16) or 32
+		call	_egc_copy_rect_1_to_0_16 c, _portal_dst_left, ax, large (32 shl 16) or 32
 		push	1Fh
 
 loc_21742:
@@ -29607,7 +29607,7 @@ loc_2174D:
 		add	bx, ax
 		cmp	word ptr es:[bx], 1Eh
 		jnz	short loc_21777
-		call	_egc_copy_rect_1_to_0 c, _portal_dst_left, _portal_dst_top, large (32 shl 16) or 32
+		call	_egc_copy_rect_1_to_0_16 c, _portal_dst_left, _portal_dst_top, large (32 shl 16) or 32
 		push	1Eh
 		jmp	short loc_21742
 ; ---------------------------------------------------------------------------
@@ -29619,7 +29619,7 @@ loc_21777:
 		add	bx, ax
 		cmp	word ptr es:[bx], 28h ;	'('
 		jnz	short loc_217FA
-		call	_egc_copy_rect_1_to_0 c, _portal_dst_left, _portal_dst_top, large (32 shl 16) or 32
+		call	_egc_copy_rect_1_to_0_16 c, _portal_dst_left, _portal_dst_top, large (32 shl 16) or 32
 		call	_ptn_put_8 c, _portal_dst_left, _portal_dst_top, 1Dh
 		call	IRand
 		mov	bx, 5
@@ -30627,7 +30627,7 @@ loc_21F23:
 		mov	ax, es:[bx+0C8h]
 		sar	ax, 4
 		push	ax
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 
 loc_21F7D:
@@ -30675,7 +30675,7 @@ loc_21FD5:
 		mov	ax, es:[bx+0C8h]
 		sar	ax, 4
 		push	ax
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 		mov	ax, si
 		add	ax, ax
@@ -30759,7 +30759,7 @@ loc_220A1:
 		mov	ax, es:[bx+0C8h]
 		sar	ax, 4
 		push	ax
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		push	7
 		call	_mdrv2_se_play
 		add	sp, 0Ah
@@ -31317,7 +31317,7 @@ loc_2253F:
 		mov	ax, [bx+584Dh]
 		sar	ax, 4
 		push	ax
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 		mov	al, [bp+var_1]
 		mov	ah, 0
@@ -31809,7 +31809,7 @@ loc_2292E:
 
 loc_22939:
 		push	point_3982A.x
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 
 loc_22945:
@@ -31831,7 +31831,7 @@ loc_22956:
 		push	ax
 
 loc_2296D:
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 
 loc_22975:
@@ -33666,7 +33666,7 @@ sub_2376D	proc near
 		push	(16 shl 16) or 16
 		push	di
 		push	si
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		call	_ptn_put_quarter_8 stdcall, si, di, [bp+@@ptn_id], [bp+@@quarter]
 		add	sp, 10h
 		pop	di
@@ -36406,7 +36406,7 @@ loc_2517B:
 		cmp	word_3A6CA, 2Ch	; ','
 		jnz	short loc_2519E
 		mov	word_39852, 1
-		call	_egc_copy_rect_1_to_0 c, [point_3982A], large (96 shl 16) or 128
+		call	_egc_copy_rect_1_to_0_16 c, [point_3982A], large (96 shl 16) or 128
 		jmp	loc_25293
 ; ---------------------------------------------------------------------------
 
@@ -36516,7 +36516,7 @@ loc_252A7:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+5D2Fh]
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 
 loc_252CC:
@@ -37088,7 +37088,7 @@ loc_257EA:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+5D47h]
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 
 loc_2580F:
@@ -38558,7 +38558,7 @@ loc_265C5:
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+5D5Fh]
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 		jmp	short loc_26617
 ; ---------------------------------------------------------------------------
@@ -38770,7 +38770,7 @@ loc_267DF:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+5D89h]
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 
 loc_26804:
@@ -39016,7 +39016,7 @@ loc_269CB:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+5D9Dh]
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 
 loc_269F0:
@@ -39186,7 +39186,7 @@ loc_26B48:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+5DB1h]
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 
 loc_26B6D:
@@ -39283,7 +39283,7 @@ loc_26C11:
 loc_26C3C:
 		cmp	word_3A6CA, 64h	; 'd'
 		jle	loc_26D0B
-		call	_egc_copy_rect_1_to_0 c, [point_3988E], (32 shl 16) or 48
+		call	_egc_copy_rect_1_to_0_16 c, [point_3988E], (32 shl 16) or 48
 		mov	ax, point_3988E.x
 		add	ax, 0FFD8h
 		mov	di, ax
@@ -41049,7 +41049,7 @@ loc_27C7B:
 		lea	ax, [bp+var_1E]
 		add	bx, ax
 		push	word ptr ss:[bx]
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		push	80003h
 		push	0
 		push	[bp+var_2]
@@ -41069,7 +41069,7 @@ loc_27C7B:
 		lea	ax, [bp+var_1C]
 		add	bx, ax
 		push	word ptr ss:[bx]
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		push	80002h
 		push	0
 		mov	bx, si
@@ -41097,7 +41097,7 @@ loc_27C7B:
 		lea	ax, [bp+var_1A]
 		add	bx, ax
 		push	word ptr ss:[bx]
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		push	80001h
 		push	0
 		mov	bx, si
@@ -41233,7 +41233,7 @@ loc_27E8E:
 		lea	ax, [bp+var_1E]
 		add	bx, ax
 		push	word ptr ss:[bx]
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		push	80003h
 		push	0
 		push	[bp+var_2]
@@ -41250,7 +41250,7 @@ loc_27E8E:
 		lea	ax, [bp+var_1C]
 		add	bx, ax
 		push	word ptr ss:[bx]
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		push	80002h
 		push	0
 		mov	bx, si
@@ -41275,7 +41275,7 @@ loc_27E8E:
 		lea	ax, [bp+var_1A]
 		add	bx, ax
 		push	word ptr ss:[bx]
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 2Ch
 		push	80001h
 		push	0
@@ -42737,7 +42737,7 @@ loc_28C92:
 		fld	qword ptr [bx+5DE2h]
 		call	ftol@
 		push	ax
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 
 loc_28CC0:
@@ -42824,7 +42824,7 @@ loc_28D89:
 		fld	qword ptr [bx+5DE2h]
 		call	ftol@
 		push	ax
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 		mov	byte ptr [si+141Fh], 0
 		jmp	loc_28E98
@@ -43261,7 +43261,7 @@ loc_29142:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+6204h]
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		push	7
 		mov	ax, word_3A6CA
 		mov	bx, 3
@@ -43352,7 +43352,7 @@ loc_29219:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+6204h]
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		push	7
 		mov	ax, word_3A6CA
 		mov	bx, 3
@@ -43463,7 +43463,7 @@ loc_2933D:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+6204h]
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		push	7
 		mov	ax, word_3A6CA
 		mov	bx, 3
@@ -43536,7 +43536,7 @@ loc_293D3:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+6204h]
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		push	7
 		mov	ax, word_3A6CA
 		mov	bx, 3
@@ -43639,7 +43639,7 @@ loc_294C9:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+6204h]
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		push	7
 		mov	ax, word_3A6CA
 		mov	bx, 3
@@ -43699,7 +43699,7 @@ loc_29556:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+61FCh]
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 		inc	si
 
@@ -43972,7 +43972,7 @@ loc_297B1:
 		mov	ax, subpixel_point_3AC50.x
 		sar	ax, 4
 		push	ax
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 		mov	ax, word_35DE3
 		dec	ax
@@ -44182,7 +44182,7 @@ loc_29995:
 		mov	ax, subpixel_point_3AC50.x
 		sar	ax, 4
 		push	ax
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 		mov	ax, word_3AC56
 		add	subpixel_point_3AC50.x, ax
@@ -44919,7 +44919,7 @@ loc_2A073:
 		mov	ax, subpixel_x_3AF32
 		sar	ax, 4
 		push	ax
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 		mov	ax, y_3AF3A
 		add	subpixel_y_3AF36, ax
@@ -45004,7 +45004,7 @@ loc_2A175:
 		idiv	bx
 		or	dx, dx
 		jnz	loc_2A2BA
-		call	_egc_copy_rect_1_to_0 stdcall, x_3AF34, y_3AF38, 16, bx
+		call	_egc_copy_rect_1_to_0_16 stdcall, x_3AF34, y_3AF38, 16, bx
 		push	0FFh
 		push	0
 		push	8
@@ -46013,7 +46013,7 @@ loc_2AC27:
 		mov	ax, point_3B043.x
 		add	ax, -28
 		push	ax
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 		push	7
 		push	word_3B04B
@@ -46043,7 +46043,7 @@ loc_2AC8A:
 		sub	ax, point_3B043.x
 		add	ax, 4
 		push	ax
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 		push	7
 		push	word_3B04B
@@ -46397,7 +46397,7 @@ loc_2B01A:
 		mov	ax, x_3B04D
 		add	ax, -40
 		push	ax
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		push	7
 		push	word_3B051
 		push	0
@@ -46426,7 +46426,7 @@ loc_2B07B:
 		sub	ax, x_3B04D
 		add	ax, 16
 		push	ax
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		push	7
 		push	word_3B051
 		push	0
@@ -47231,7 +47231,7 @@ loc_2B883:
 		add	ax, -8
 		push	ax
 		push	point_3B330.x
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		call	sub_28948 pascal, ((RES_X / 2) shl 16) or 185, point_3B330.x, point_3B330.y, 7
 		push	7
 		push	word_3B334
@@ -47260,7 +47260,7 @@ loc_2B8E3:
 		mov	ax, 608
 		sub	ax, point_3B330.x
 		push	ax
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		push	((RES_X / 2) shl 16) or 185
 		mov	ax, RES_X - 1
 		sub	ax, point_3B330.x
@@ -47318,13 +47318,13 @@ loc_2B97C:
 		mov	ax, 608
 		sub	ax, point_3B330.x
 		push	ax
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		push	(50 shl 16) or 32
 		mov	ax, point_3B330.y
 		add	ax, -16
 		push	ax
 		push	point_3B330.x
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		mov	ax, point_3B330.y
 		add	ax, 4
 		push	ax
@@ -47643,7 +47643,7 @@ loc_2BC5A:
 		cwd
 		idiv	bx
 		push	ax
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 
 loc_2BCCE:
@@ -47705,7 +47705,7 @@ loc_2BD09:
 		cwd
 		idiv	bx
 		push	ax
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 
 loc_2BD70:
@@ -47766,7 +47766,7 @@ loc_2BDAA:
 		cwd
 		idiv	bx
 		push	ax
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 
 loc_2BE11:
@@ -50154,7 +50154,7 @@ loc_2D50D:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+6AA2h]
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 		inc	si
 
@@ -50224,7 +50224,7 @@ loc_2D5BD:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+6AA2h]
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 		inc	si
 
@@ -50597,7 +50597,7 @@ loc_2D9A5:
 		mov	bx, si
 		imul	bx, 0Ah
 		push	word ptr [bx+6ABFh]
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 		mov	di, 3
 		jmp	short loc_2DA02
@@ -50996,7 +50996,7 @@ loc_2DD23:
 		add	ax, ax
 		add	bx, ax
 		push	word ptr [bx+6AB7h]
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 		inc	di
 
@@ -51056,7 +51056,7 @@ loc_2DD76:
 loc_2DDD9:
 		cmp	word_3B497, 63h	; 'c'
 		jnz	short loc_2DE24
-		call	_egc_copy_rect_1_to_0 c, point_3B493.x, point_3B493.y, large (8 shl 16) or 16
+		call	_egc_copy_rect_1_to_0_16 c, point_3B493.x, point_3B493.y, large (8 shl 16) or 16
 		mov	ax, x_3B48F
 		add	point_3B493.x, ax
 		mov	ax, y_3B491
@@ -51078,7 +51078,7 @@ loc_2DE1F:
 loc_2DE24:
 		cmp	word_3B497, 63h	; 'c'
 		jge	loc_2DF0A
-		call	_egc_copy_rect_1_to_0 c, point_3B493.x, point_3B493.y, large (8 shl 16) or 16
+		call	_egc_copy_rect_1_to_0_16 c, point_3B493.x, point_3B493.y, large (8 shl 16) or 16
 		cmp	word_3B497, 0
 		jnz	short loc_2DE4E
 		xor	ax, ax
@@ -51347,7 +51347,7 @@ loc_2E0A9:
 		mov	bx, si
 		imul	bx, 0Ah
 		push	word ptr [bx+6B09h]
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 		mov	di, 3
 		jmp	short loc_2E106
@@ -51700,7 +51700,7 @@ loc_2E3EC:
 		add	ax, ax
 		add	bx, ax
 		push	word ptr [bx+6B01h]
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 		inc	di
 
@@ -54034,7 +54034,7 @@ loc_30B78:
 		mov	ax, [bx+0Ah]
 		sar	ax, 4
 		push	ax
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 
 loc_30BA4:
@@ -54090,7 +54090,7 @@ loc_30BDF:
 		mov	ax, [bx+0Ah]
 		sar	ax, 4
 		push	ax
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 
 loc_30C46:
@@ -54118,7 +54118,7 @@ loc_30C65:
 		mov	ax, [bx+0Ah]
 		sar	ax, 4
 		push	ax
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 
 loc_30C99:
@@ -54242,7 +54242,7 @@ loc_30D90:
 		mov	ax, [bx+0Ah]
 		sar	ax, 4
 		push	ax
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 
 loc_30DC6:
@@ -54297,7 +54297,7 @@ loc_30DFC:
 		mov	ax, [bx+2]
 		sar	ax, 4
 		push	ax
-		call	_egc_copy_rect_1_to_0
+		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 
 loc_30E2B:

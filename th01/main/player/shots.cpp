@@ -2,7 +2,7 @@ static const int SHOT_SPRITE_MARGIN = 2;
 static const int SHOT_DECAY_FRAMES = 7;
 
 #define sloppy_unput(i) \
-	egc_copy_rect_1_to_0(left[i], top[i], SHOT_W, SHOT_H);
+	egc_copy_rect_1_to_0_16(left[i], top[i], SHOT_W, SHOT_H);
 
 #define PTN_SHOT \
 	1, 0

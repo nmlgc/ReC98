@@ -21,7 +21,7 @@ window_dropdown_row	proc near
 	shl	ax, 4
 	push	ax
 	push	WINDOW_TILE_H
-	call	egc_copy_rect_1_to_0
+	call	egc_copy_rect_1_to_0_16
 	call	super_put pascal, si, di, 2
 	push	si
 	lea	ax, [di+WINDOW_BORDER_H]
@@ -79,7 +79,7 @@ window_rollup_row	proc near
 	shl	ax, 4
 	push	ax
 	push	WINDOW_TILE_H
-	call	egc_copy_rect_1_to_0
+	call	egc_copy_rect_1_to_0_16
 	call	super_put pascal, si, di, 6
 	add	si, WINDOW_TILE_W
 	mov	[bp+@@tile_x], 1
@@ -176,7 +176,7 @@ window_singleline	proc near
 	shl	ax, 4
 	push	ax
 	push	WINDOW_BORDER_H + WINDOW_TILE_H + WINDOW_BORDER_H
-	call	egc_copy_rect_1_to_0
+	call	egc_copy_rect_1_to_0_16
 	call	super_put pascal, si, di, 5
 	push	si
 	lea	ax, [di+WINDOW_TILE_H]

@@ -428,7 +428,7 @@ void graph_r_hline(int left, int right, int y, int col)
 		grcg_setcolor_rmw(col);
 	}
 	if(graph_r_unput) {
-		egc_copy_rect_1_to_0(left, y, RES_X - left, 1);
+		egc_copy_rect_1_to_0_16(left, y, RES_X - left, 1);
 	} else {
 		if(full_bytes_to_put == 0) {
 			vram_row[0] = (left_pixels & right_pixels);
@@ -459,7 +459,7 @@ void graph_r_vline(int x, int top, int bottom, int col)
 	graph_r_last_line_end.y = bottom;
 
 	if(graph_r_unput) {
-		egc_copy_rect_1_to_0(x, top, sizeof(pattern) * 8, bottom - top);
+		egc_copy_rect_1_to_0_16(x, top, sizeof(pattern) * 8, bottom - top);
 		return;
 	}
 	vram_row_offset = vram_offset_shift(x, top);

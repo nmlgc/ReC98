@@ -244,8 +244,8 @@ void whitelines_animate(void)
 	int y2 = 0;
 	hack drawn_at = WHITELINES_DRAWN_AT;
 	while(i++ < (RES_Y / 4)) {
-		egc_copy_rect_1_to_0(0, y1, RES_X, 1);
-		egc_copy_rect_1_to_0(0, y2, RES_X, 1);
+		egc_copy_rect_1_to_0_16(0, y1, RES_X, 1);
+		egc_copy_rect_1_to_0_16(0, y2, RES_X, 1);
 
 		do {
 			y1 = (rand() % RES_Y);

@@ -451,7 +451,7 @@ arg_2		= word ptr  6
 		imul	ax, 20
 		add	ax, 250
 		mov	di, ax
-		call	egc_copy_rect_1_to_0 pascal, 256, ax, (128 shl 16) or 16
+		call	egc_copy_rect_1_to_0_16 pascal, 256, ax, (128 shl 16) or 16
 		call	grcg_setcolor pascal, GC_RMW, [bp+arg_0]
 		mov	[bp+var_2], si
 		mov	bx, si
@@ -516,7 +516,7 @@ loc_A69A:
 		jnz	short loc_A705
 		call	cdg_put pascal, 256, di, 35
 		call	cdg_put pascal, 352, di, 36
-		call	egc_copy_rect_1_to_0 pascal, large (0 shl 16) or 384, (RES_X shl 16) or 16
+		call	egc_copy_rect_1_to_0_16 pascal, large (0 shl 16) or 384, (RES_X shl 16) or 16
 		mov	_graph_putsa_fx_func, 2
 		mov	bx, [bp+var_2]
 		shl	bx, 2
@@ -572,7 +572,7 @@ arg_2		= word ptr  6
 		mov	[bp+@@y], 366
 
 loc_A737:
-		call	egc_copy_rect_1_to_0 pascal, 224, [bp+@@y], (192 shl 16) or 16
+		call	egc_copy_rect_1_to_0_16 pascal, 224, [bp+@@y], (192 shl 16) or 16
 		call	grcg_setcolor pascal, GC_RMW, [bp+arg_0]
 		mov	bx, [bp+arg_2]
 		cmp	bx, 7
@@ -744,7 +744,7 @@ loc_A900:
 		push	[bp+@@y]
 		push	36
 		call	cdg_put
-		call	egc_copy_rect_1_to_0 pascal, large (0 shl 16) or 384, (RES_X shl 16) or 16
+		call	egc_copy_rect_1_to_0_16 pascal, large (0 shl 16) or 384, (RES_X shl 16) or 16
 		mov	_graph_putsa_fx_func, 2
 		mov	bx, si
 		shl	bx, 2
@@ -848,7 +848,7 @@ main_update_and_render	proc near
 		jnz	short loc_AA2B
 		mov	_main_menu_unused_1, 0
 		mov	_main_input_allowed, 0
-		call	egc_copy_rect_1_to_0 pascal, (192 shl 16) or 250, (288 shl 16) or 160
+		call	egc_copy_rect_1_to_0_16 pascal, (192 shl 16) or 250, (288 shl 16) or 160
 		xor	si, si
 		jmp	short loc_AA16
 ; ---------------------------------------------------------------------------
@@ -1014,7 +1014,7 @@ option_update_and_render	proc near
 		cmp	_option_initialized, 0
 		jnz	short loc_AC1F
 		mov	_option_input_allowed, 0
-		call	egc_copy_rect_1_to_0 pascal, (272 shl 16) or 250, (160 shl 16) or 144
+		call	egc_copy_rect_1_to_0_16 pascal, (272 shl 16) or 250, (160 shl 16) or 144
 		xor	si, si
 		jmp	short loc_AC0A
 ; ---------------------------------------------------------------------------

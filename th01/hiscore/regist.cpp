@@ -344,7 +344,7 @@ void alphabet_put_at(int left, int top, bool16 is_selected)
 
 	int16_t kanji = '\0';
 
-	egc_copy_rect_1_to_0(left, top, KANJI_PADDED_W, GLYPH_H);
+	egc_copy_rect_1_to_0_16(left, top, KANJI_PADDED_W, GLYPH_H);
 
 	int fx = FX(
 		!is_selected ? (COL_REGULAR) : (FX_REVERSE | COL_SELECTED), 2, 0
@@ -403,7 +403,7 @@ int regist_on_shot(
 		}
 	}
 
-	egc_copy_rect_1_to_0(
+	egc_copy_rect_1_to_0_16(
 		entered_name_left,
 		entered_name_top,
 		(SCOREDAT_NAME_KANJI * GLYPH_FULL_W),

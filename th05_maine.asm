@@ -430,7 +430,7 @@ arg_6		= word ptr  0Ah
 		push	[bp+arg_2]
 		push	[bp+arg_0]
 		call	pi_slot_put_quarter_mask
-		call	egc_copy_rect_1_to_0 pascal, si, di, (320 shl 16) or 200
+		call	egc_copy_rect_1_to_0_16 pascal, si, di, (320 shl 16) or 200
 		pop	di
 		pop	si
 		pop	bp
@@ -1263,7 +1263,7 @@ loc_AE42:
 		call	frame_delay
 
 loc_AE64:
-		call	egc_copy_rect_1_to_0 pascal, (160 shl 16) or 64, (320 shl 16) or 200
+		call	egc_copy_rect_1_to_0_16 pascal, (160 shl 16) or 64, (320 shl 16) or 200
 		jmp	loc_AF8F	; default
 ; ---------------------------------------------------------------------------
 

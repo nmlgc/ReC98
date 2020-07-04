@@ -18,7 +18,7 @@ void egc_wave_unput(int left, int top, int len, int amp, int ph, int w, int h)
 	for(int y = 0; y < h; y++) {
 		int x = (((long)amp * Sin8(t)) / 256) + left;
 		t += 256 / len;
-		egc_copy_rect_1_to_0(x, top + y, w, 1);
+		egc_copy_rect_1_to_0_16(x, top + y, w, 1);
 	}
 }
 
