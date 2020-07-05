@@ -5,10 +5,15 @@
 #define PELLET_LEFT_MIN (PLAYFIELD_LEFT)
 #define PELLET_LEFT_MAX (PLAYFIELD_RIGHT - PELLET_W)
 #define PELLET_TOP_MIN (PLAYFIELD_TOP)
+#define PELLET_TOP_MAX (PLAYFIELD_BOTTOM)
 
 #define PELLET_BOUNCE_TOP_MIN (PLAYFIELD_TOP + ((PELLET_H / 4) * 3))
 
+#define PELLET_VELOCITY_MAX to_sp(8.0f)
+
 static const unsigned int PELLET_DESTROY_SCORE = 10;
+static const int PELLET_DECAY_FRAMES = 20;
+static const int PELLET_DECAY_CELS = 2;
 /// ---------
 
 /// Globals
@@ -457,6 +462,35 @@ inline bool16 overlaps_orb(int pellet_left, int pellet_top)
 bool16 CPellets::visible_after_hittests_for_cur(int pellet_left, int pellet_top)
 {
 	#define p pellet_cur
+	// Well, well. Since ZUN uses this super sloppy 16x8 rectangle to unblit
+	// 8x8 pellets, there's now the (completely unnecessary) possibility of
+	// accidentally unblitting parts of a sprite that was previously drawn
+	// into the 8 pixels right of a pellet.
+	// "Oh, I know! Let's test the entire 16 pixels, and in case we got an
+	// entity there, we simply make the *pellet* invisible for this frame!
+	// Then we don't even have to unblit it later! :tannedcirno:"
+	//
+	// Except that the only entity type this is done for are the player shots,
+	// and also only for 3 basically random ones? Note that indices 0, 1, and
+	// 2 in the shot array don't necessarily have to be the 3 ones that
+	// spawned last... although given the sheer ~quality~ of all this code, it
+	// might very well have been intended like that? Or maybe this code was
+	// written when the intended SHOT_COUNT was still 3. Urgh.
+	//
+	// Also note that the code is still testing the left 8 pixels that make up
+	// the actual pellet, despite already having hit-tested them with a call
+	// to CShots::hittest_pellet() before. Turns out that the check there
+	// (which actually does affect gameplay) is more precise and excludes the
+	// transparent edges of the shot sprite, which the blitting-related check
+	// here shouldn't do. (This entire paragraph would have been unnecessary
+	// if this code had just tested all 16 pixels at once, rather than having
+	// this weird, bloated, and slow split into two 8-pixel checks.)
+	//
+	// This is certainly a contender for the most stupid piece of code in this
+	// game. What about the player sprite, the Orb (for which we *do* the same
+	// test, but always return `true` regardless), or, heck, *other pellets*?
+	// It's just so hilarious how these mitigations don't help fixing the
+	// underlying problem, at all.
 	for(int i = 0; i < 3; i++) {
 		if(
 			(Shots.is_moving(i) == true) &&
@@ -474,7 +508,8 @@ bool16 CPellets::visible_after_hittests_for_cur(int pellet_left, int pellet_top)
 		(overlaps_orb(pellet_left, pellet_top) == true) ||
 		(overlaps_orb((pellet_left + 8), pellet_top) == true)
 	) {
-		// Hey, let's also process a collision! Why not?!
+		// Hey, let's also process a collision! Why not?! This is one magical
+		// Orb, after all. Even collides with pellets it doesn't actually hit.
 		p->velocity.y.v >>= 1;
 		p->velocity.x.v >>= 1;
 		p->decay_frame = 1;
@@ -506,5 +541,137 @@ bool16 CPellets::visible_after_hittests_for_cur(int pellet_left, int pellet_top)
 		return false;
 	}
 	return true;
+	#undef p
+}
+
+void CPellets::decay_tick_for_cur(void)
+{
+	#define p pellet_cur
+	p->decay_frame++;
+	if(p->decay_frame > (PELLET_DECAY_FRAMES + 1)) {
+		p->decay_frame = 0;
+		p->moving = false;
+		alive_count--;
+	}
+	#undef p
+}
+
+void CPellets::unput_update_render(void)
+{
+	int i;
+
+	interlace_field = (interlace_field == false) ? true : false;
+	/* TODO: Replace with the decompiled call
+	 * clouds_unput_update_render();
+	 * once that function is part of this translation unit */
+	__asm {
+		push	word ptr [bp+8];
+		push	bx;
+		nop;
+		push	cs;
+		db  	0xE8, 0x2A, 0x04;
+		add 	sp, 4;
+	}
+
+	#define p pellet_cur
+	p = iteration_start();
+	for(i = 0; i < PELLET_COUNT; i++, p++) {
+		if(p->moving == false) {
+			continue;
+		}
+		if(!pellet_interlace || (interlace_field == (i % 2))) {
+			if(p->not_rendered == false && (p->prev_left.v != -1)) {
+				p->sloppy_wide_unput();
+			}
+		}
+		if(p->from_pattern == PP_NONE && p->motion_type) {
+			motion_type_apply_for_cur();
+		}
+		if(p->velocity.y.v > PELLET_VELOCITY_MAX) {
+			p->velocity.y.v = PELLET_VELOCITY_MAX;
+		}
+		if(p->velocity.x.v > PELLET_VELOCITY_MAX) {
+			p->velocity.x.v = PELLET_VELOCITY_MAX;
+		}
+		p->cur_top.v += p->velocity.y.v;
+		p->cur_left.v += p->velocity.x.v;
+
+		// Shot<->Pellet hit testing
+		if(p->decay_frame == 0) {
+			if(Shots.hittest_pellet(
+				p->cur_left.to_screen(), p->cur_top.to_screen()
+			)) {
+				p->decay_frame = 0;
+				p->moving = false;
+				alive_count--;
+				p->sloppy_wide_unput();
+			}
+		}
+		// Clipping
+		if(
+			p->cur_top.v >= to_sp(PELLET_TOP_MAX) ||
+			p->cur_top.v < to_sp(PELLET_TOP_MIN) ||
+			p->cur_left.v >= to_sp(PELLET_LEFT_MAX) ||
+			p->cur_left.v <= to_sp(PELLET_LEFT_MIN)
+		) {
+			p->moving = false;
+			alive_count--;
+			p->decay_frame = 0;
+			p->sloppy_wide_unput();
+		}
+	}
+
+	Shots.unput_update_render();
+
+	p = iteration_start();
+	for(i = 0; i < PELLET_COUNT; i++, p++) {
+		if(p->moving == false) {
+			continue;
+		}
+		if(!pellet_interlace || ((interlace_field & 1) == (i % 2))) {
+			if(visible_after_hittests_for_cur(
+				p->cur_left.to_screen(), p->cur_top.to_screen()
+			) == true) {
+				if(p->not_rendered == true) {
+					p->not_rendered = false;
+				}
+				#define render pellet_render
+				#define decay_frames_for_cel(cel) \
+					((PELLET_DECAY_FRAMES / PELLET_DECAY_CELS) * cel)
+				if(p->decay_frame == 0) {
+					render(p->cur_left.to_screen(), p->cur_top.to_screen(), 0);
+				} else if(p->decay_frame <= decay_frames_for_cel(1)) {
+					render(p->cur_left.to_screen(), p->cur_top.to_screen(), 1);
+				}  else if(p->decay_frame < decay_frames_for_cel(2)) {
+					render(p->cur_left.to_screen(), p->cur_top.to_screen(), 2);
+				}
+				#undef decay_frames_for_cel
+				#undef render
+			} else {
+				p->not_rendered = true;
+			}
+			p->prev_left.v = p->cur_left.v;
+			p->prev_top.v = p->cur_top.v;
+		}
+		p->age++;
+		if(p->decay_frame) {
+			decay_tick_for_cur();
+			continue;
+		}
+		/* TODO: Replace with the decompiled call
+		 * if(hittest_player_for_cur())
+		 * once that function is part of this translation unit */
+		__asm {
+			db 0x66, 0xFF, 0x76, 0x06, 0x90, 0x0E, 0xE8, 0x6D, 0x01; add sp, 4;
+		}
+		if(_AX) {
+			if(p->not_rendered == false) {
+				p->sloppy_wide_unput();
+			}
+			p->moving = false;
+			alive_count--;
+			p->decay_frame = 0;
+		}
+	}
 	#undef p
 }

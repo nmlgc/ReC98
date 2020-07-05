@@ -1822,7 +1822,7 @@ loc_C816:
 		push	1
 		call	_frame_delay
 		pop	cx
-		call	sub_30B1F c, offset _Pellets, ds
+		call	@CPellets@unput_update_render$qv c, offset _Pellets, ds
 		mov	ax, si
 		mov	bx, 5
 		cwd
@@ -33124,7 +33124,7 @@ var_1		= byte ptr -1
 		enter	64h, 0
 		push	si
 		push	di
-		mov	byte_360CC, 1
+		mov	_pellet_interlace, 1
 		mov	_Pellets.PELLET_unknown_seven, 7
 		xor	si, si
 		jmp	short loc_2335B
@@ -36196,7 +36196,7 @@ sub_24EC2	endp
 sub_24F41	proc far
 		push	bp
 		mov	bp, sp
-		mov	byte_360CC, 1
+		mov	_pellet_interlace, 1
 		mov	_Pellets.PELLET_unknown_seven, 7
 		mov	word_39854, 1
 		push	0
@@ -42055,7 +42055,7 @@ sub_2869E	proc far
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	byte_360CC, 1
+		mov	_pellet_interlace, 1
 		call	text_fillca pascal, (' ' shl 16) + TX_BLACK + TX_REVERSE
 		call	_grp_put_palette_show stdcall, offset aBoss6_l_grp, ds ; "boss6_l.grp"
 		push	1
@@ -49498,7 +49498,7 @@ var_2		= word ptr -2
 		enter	8, 0
 		push	si
 		push	di
-		mov	byte_360CC, 1
+		mov	_pellet_interlace, 1
 		call	text_fillca pascal, (' ' shl 16) + TX_BLACK + TX_REVERSE
 		call	_grp_put_palette_show stdcall, offset aBoss7_d1_grp, ds ; "boss7_d1.grp"
 		push	ds
@@ -53938,333 +53938,12 @@ main_38_TEXT	segment	byte public 'CODE' use16
 	extern @CPellets@$bctr$qv:proc
 	extern @CPellets@add_pattern$qii16pellet_pattern_ti:proc
 	extern @CPellets@add_single$qiiii15pellet_motion_tiii:proc
-	extern @CPellets@motion_type_apply_for_cur$qv:proc
-	extern @CPellets@visible_after_hittests_for_cur$qii:proc
-	extern _pellet_render:proc
+	extern @CPellets@unput_update_render$qv:proc
 main_38_TEXT	ends
 
 main_38__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_38
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_30AFD	proc far
-
-@@CPellets		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	bx, _pellet_cur
-		inc	word ptr [bx+1Eh]
-		cmp	word ptr [bx+1Eh], 15h
-		jle	short loc_30B1D
-		mov	word ptr [bx+1Eh], 0
-		mov	byte ptr [bx], 0
-		les	bx, [bp+@@CPellets]
-		assume es:nothing
-		dec	es:[bx+CPellets.PELLET_alive_count]
-
-loc_30B1D:
-		pop	bp
-		retf
-sub_30AFD	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_30B1F	proc far
-
-@@CPellets		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		les	bx, [bp+@@CPellets]
-		cmp	es:[bx+CPellets.PELLET_interlace_field], 0
-		jnz	short loc_30B33
-		mov	ax, 1
-		jmp	short loc_30B35
-; ---------------------------------------------------------------------------
-
-loc_30B33:
-		xor	ax, ax
-
-loc_30B35:
-		les	bx, [bp+@@CPellets]
-		mov	es:[bx+CPellets.PELLET_interlace_field], ax
-		push	word ptr [bp+@@CPellets+2]
-		push	bx
-		nopcall	sub_30F70
-		add	sp, 4
-		mov	ax, word ptr [bp+@@CPellets]
-		mov	_pellet_cur, ax
-		xor	si, si
-		jmp	loc_30C9F
-; ---------------------------------------------------------------------------
-
-loc_30B54:
-		mov	bx, _pellet_cur
-		cmp	byte ptr [bx], 0
-		jz	loc_30C99
-		cmp	byte_360CC, 0
-		jz	short loc_30B78
-		les	bx, [bp+@@CPellets]
-		mov	ax, si
-		mov	cx, 2
-		cwd
-		idiv	cx
-		cmp	es:[bx+CPellets.PELLET_interlace_field], dx
-		jnz	short loc_30BA4
-
-loc_30B78:
-		mov	bx, _pellet_cur
-		cmp	word ptr [bx+18h], 0
-		jnz	short loc_30BA4
-		cmp	word ptr [bx+0Ah], 0FFFFh
-		jz	short loc_30BA4
-		push	(8 shl 16) or 16
-		mov	ax, [bx+0Ch]
-		sar	ax, 4
-		push	ax
-		mov	ax, [bx+0Ah]
-		sar	ax, 4
-		push	ax
-		call	_egc_copy_rect_1_to_0_16
-		add	sp, 8
-
-loc_30BA4:
-		mov	bx, _pellet_cur
-		cmp	word ptr [bx+0Eh], 0
-		jnz	short loc_30BBF
-		cmp	byte ptr [bx+1], 0
-		jz	short loc_30BBF
-		call	@CPellets@motion_type_apply_for_cur$qv c, large [bp+@@CPellets]
-
-loc_30BBF:
-		mov	bx, _pellet_cur
-		cmp	word ptr [bx+12h], 80h ; '?'
-		jle	short loc_30BCF
-		mov	word ptr [bx+12h], 80h ; '?'
-
-loc_30BCF:
-		mov	bx, _pellet_cur
-		cmp	word ptr [bx+10h], 80h ; '?'
-		jle	short loc_30BDF
-		mov	word ptr [bx+10h], 80h ; '?'
-
-loc_30BDF:
-		mov	bx, _pellet_cur
-		mov	ax, [bx+12h]
-		add	[bx+4],	ax
-		mov	ax, [bx+10h]
-		add	[bx+2],	ax
-		cmp	word ptr [bx+1Eh], 0
-		jnz	short loc_30C46
-		mov	ax, [bx+4]
-		sar	ax, 4
-		push	ax
-		mov	ax, [bx+2]
-		sar	ax, 4
-		push	ax
-		push	ds
-		push	offset _Shots
-		call	@CShots@hittest_pellet$qii
-		add	sp, 8
-		or	ax, ax
-		jz	short loc_30C46
-		mov	bx, _pellet_cur
-		mov	word ptr [bx+1Eh], 0
-		mov	byte ptr [bx], 0
-		les	bx, [bp+@@CPellets]
-		dec	es:[bx+CPellets.PELLET_alive_count]
-		push	(8 shl 16) or 16
-		mov	bx, _pellet_cur
-		mov	ax, [bx+0Ch]
-		sar	ax, 4
-		push	ax
-		mov	ax, [bx+0Ah]
-		sar	ax, 4
-		push	ax
-		call	_egc_copy_rect_1_to_0_16
-		add	sp, 8
-
-loc_30C46:
-		mov	bx, _pellet_cur
-		cmp	word ptr [bx+4], 1900h
-		jge	short loc_30C65
-		cmp	word ptr [bx+4], 400h
-		jl	short loc_30C65
-		cmp	word ptr [bx+2], 2780h
-		jge	short loc_30C65
-		cmp	word ptr [bx+2], 0
-		jg	short loc_30C99
-
-loc_30C65:
-		mov	bx, _pellet_cur
-		mov	byte ptr [bx], 0
-		les	bx, [bp+@@CPellets]
-		dec	es:[bx+CPellets.PELLET_alive_count]
-		mov	bx, _pellet_cur
-		mov	word ptr [bx+1Eh], 0
-		push	(8 shl 16) or 16
-		mov	ax, [bx+0Ch]
-		sar	ax, 4
-		push	ax
-		mov	ax, [bx+0Ah]
-		sar	ax, 4
-		push	ax
-		call	_egc_copy_rect_1_to_0_16
-		add	sp, 8
-
-loc_30C99:
-		inc	si
-		add	_pellet_cur, size pellet_t
-
-loc_30C9F:
-		cmp	si, PELLET_COUNT
-		jl	loc_30B54
-		call	@CShots@unput_update_render$qv c, offset _Shots, ds
-		mov	ax, word ptr [bp+@@CPellets]
-		mov	_pellet_cur, ax
-		xor	si, si
-		jmp	loc_30DE4
-; ---------------------------------------------------------------------------
-
-loc_30CBC:
-		mov	bx, _pellet_cur
-		cmp	byte ptr [bx], 0
-		jz	loc_30DDE
-		cmp	byte_360CC, 0
-		jz	short loc_30CE9
-		les	bx, [bp+@@CPellets]
-		mov	ax, es:[bx+CPellets.PELLET_interlace_field]
-		and	ax, 1
-		push	ax
-		mov	ax, si
-		mov	bx, 2
-		cwd
-		idiv	bx
-		pop	ax
-		cmp	ax, dx
-		jnz	loc_30D76
-
-loc_30CE9:
-		mov	bx, _pellet_cur
-		mov	ax, [bx+4]
-		sar	ax, 4
-		push	ax
-		mov	ax, [bx+2]
-		sar	ax, 4
-		push	ax
-		pushd	[bp+@@CPellets]
-		call	@CPellets@visible_after_hittests_for_cur$qii
-		add	sp, 8
-		cmp	ax, 1
-		jnz	short loc_30D5D
-		mov	bx, _pellet_cur
-		cmp	word ptr [bx+18h], 1
-		jnz	short loc_30D1A
-		mov	word ptr [bx+18h], 0
-
-loc_30D1A:
-		mov	bx, _pellet_cur
-		cmp	word ptr [bx+1Eh], 0
-		jnz	short loc_30D28
-		push	0
-		jmp	short loc_30D42
-; ---------------------------------------------------------------------------
-
-loc_30D28:
-		mov	bx, _pellet_cur
-		cmp	word ptr [bx+1Eh], 0Ah
-		jg	short loc_30D36
-		push	1
-		jmp	short loc_30D42
-; ---------------------------------------------------------------------------
-
-loc_30D36:
-		mov	bx, _pellet_cur
-		cmp	word ptr [bx+1Eh], 14h
-		jge	short loc_30D66
-		push	2
-
-loc_30D42:
-		mov	bx, _pellet_cur
-		mov	ax, [bx+4]
-		sar	ax, 4
-		push	ax
-		mov	ax, [bx+2]
-		sar	ax, 4
-		push	ax
-		call	_pellet_render
-		add	sp, 6
-		jmp	short loc_30D66
-; ---------------------------------------------------------------------------
-
-loc_30D5D:
-		mov	bx, _pellet_cur
-		mov	word ptr [bx+18h], 1
-
-loc_30D66:
-		mov	bx, _pellet_cur
-		mov	ax, [bx+2]
-		mov	[bx+0Ah], ax
-		mov	ax, [bx+4]
-		mov	[bx+0Ch], ax
-
-loc_30D76:
-		mov	bx, _pellet_cur
-		inc	word ptr [bx+1Ah]
-		cmp	word ptr [bx+1Eh], 0
-		jz	short loc_30D90
-		call	sub_30AFD c, large [bp+@@CPellets]
-		jmp	short loc_30DDE
-; ---------------------------------------------------------------------------
-
-loc_30D90:
-		pushd	[bp+@@CPellets]
-		nopcall	sub_30F06
-		add	sp, 4
-		or	ax, ax
-		jz	short loc_30DDE
-		mov	bx, _pellet_cur
-		cmp	word ptr [bx+18h], 0
-		jnz	short loc_30DC6
-		push	(8 shl 16) or 16
-		mov	ax, [bx+0Ch]
-		sar	ax, 4
-		push	ax
-		mov	ax, [bx+0Ah]
-		sar	ax, 4
-		push	ax
-		call	_egc_copy_rect_1_to_0_16
-		add	sp, 8
-
-loc_30DC6:
-		mov	bx, _pellet_cur
-		mov	byte ptr [bx], 0
-		les	bx, [bp+@@CPellets]
-		dec	es:[bx+CPellets.PELLET_alive_count]
-		mov	bx, _pellet_cur
-		mov	word ptr [bx+1Eh], 0
-
-loc_30DDE:
-		inc	si
-		add	_pellet_cur, size pellet_t
-
-loc_30DE4:
-		cmp	si, PELLET_COUNT
-		jl	loc_30CBC
-		pop	si
-		pop	bp
-		retf
-sub_30B1F	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -54418,8 +54097,8 @@ sub_30EC8	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_30F06	proc far
+public @CPellets@hittest_player_for_cur$qv
+@CPellets@hittest_player_for_cur$qv	proc far
 		push	bp
 		mov	bp, sp
 		cmp	word_34A78, 1
@@ -54462,14 +54141,14 @@ loc_30F6C:
 		xor	ax, ax
 		pop	bp
 		retf
-sub_30F06	endp
+@CPellets@hittest_player_for_cur$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_30F70	proc far
+public @CPellets@clouds_unput_update_render$qv
+@CPellets@clouds_unput_update_render$qv	proc far
 
 @@CPellets		= word ptr  6
 
@@ -54537,7 +54216,7 @@ loc_31004:
 		pop	si
 		pop	bp
 		retf
-sub_30F70	endp
+@CPellets@clouds_unput_update_render$qv	endp
 
 ; ---------------------------------------------------------------------------
 		dw 0
@@ -55604,8 +55283,8 @@ a0m_0		db 1Bh,'[0m',0
 ; char a11h[]
 a11h		db 1Bh,'[1;1H',0
 word_360CA	dw 0
-byte_360CC	db 0
-public _pellet_destroy_score_delta
+public _pellet_interlace, _pellet_destroy_score_delta
+_pellet_interlace	db 0
 _pellet_destroy_score_delta	dw 0
 include th01/sprites/pellet.asp
 flt_3624F	dd 1.5

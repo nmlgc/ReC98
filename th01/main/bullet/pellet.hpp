@@ -112,6 +112,17 @@ enum pellet_pattern_t {
 };
 
 struct pellet_t {
+protected:
+	friend class CPellets;
+
+	// Why, I don't even?!?
+	void sloppy_wide_unput(void) {
+		egc_copy_rect_1_to_0_16(
+			prev_left.to_screen(), prev_top.to_screen(), 16, PELLET_H
+		);
+	}
+
+public:
 	unsigned char moving;
 	unsigned char motion_type;
 
@@ -125,7 +136,11 @@ struct pellet_t {
 	pellet_pattern_t from_pattern;
 	SPPoint velocity; // unused for PM_SPIN
 	SPPoint spin_velocity; // only used for PM_SPIN
+
+	// Used only for poor attempts at reducing flickering. Does not disable
+	// hit testing if true.
 	bool16 not_rendered;
+
 	int age;
 	Subpixel speed; // for recalculating velocities with certain motion types
 	int decay_frame;
@@ -146,6 +161,8 @@ class CPellets {
 	int unknown_zero[10];
 public:
 	int unknown_seven;
+
+	// Rendering pellets at odd or even indices this frame?
 	bool16 interlace_field;
 	bool spawn_with_cloud;
 
@@ -158,6 +175,9 @@ protected:
 	// [motion_type].
 	void motion_type_apply_for_cur(void);
 
+	void decay_tick_for_cur(void);
+	bool16 hittest_player_for_cur(void);
+
 	// Processes any collision between the currently iterated pellet, the Orb,
 	// or a deflecting player. (Regular, life-losing hit testing between
 	// pellets and the player is done elsewhere!)
@@ -166,6 +186,8 @@ protected:
 	// (And yes, this function does operate on the currently iterated pellet,
 	// despite taking separate position parameters!)
 	bool16 visible_after_hittests_for_cur(int pellet_left, int pellet_top);
+
+	void clouds_unput_update_render(void);
 
 public:
 	CPellets(void);
@@ -194,10 +216,27 @@ public:
 		int spin_center_x = 0,
 		int spin_center_y = 0
 	);
+
+	// Also calls Shots.unput_update_render()!
+	void unput_update_render(void);
 };
 
 /// Globals
 /// -------
 extern CPellets Pellets;
+
+// If true, CPellets::unput_update_render() performs
+// • rendering,
+// • and hit testing against the Orb and the player
+// for only half of the [pellets] each frame, alternating between even and odd
+// [pellets] array indices. However,
+// • motion updates,
+// • and hit testing against *player shots*
+// are still done for all pellets every frame.
+//
+// Probably not really meant to save CPU and/or VRAM accesses, but rather to
+// reduce flicker in busy boss battles, due to all the sloppy unblitting...
+extern bool pellet_interlace;
+
 extern unsigned int pellet_destroy_score_delta;
 /// -------
