@@ -945,7 +945,7 @@ arg_0		= word ptr  6
 		push	offset unk_34AA5
 		mov	cx, 30h	; '0'
 		call	SCOPY@
-		mov	word_34A78, 1
+		mov	_player_invincible, 1
 		cmp	[bp+arg_0], 0
 		jnz	loc_BF82
 		call	@CPellets@decay_all$qv c, offset _Pellets, ds
@@ -3491,7 +3491,7 @@ loc_D7E4:
 		mov	word ptr [bp+s1], 1250h
 		mov	byte_34ADF, 0
 		mov	word_360CA, 0
-		mov	word_34A78, 0
+		mov	_player_invincible, 0
 		mov	_player_invincibility_time, 0
 		mov	ax, [bp+@@stage]
 		mov	[bp+var_E], ax
@@ -3830,7 +3830,7 @@ loc_DBCC:
 		call	_input_reset_sense
 		cmp	_player_invincibility_time, 1
 		jle	short loc_DBDD
-		mov	word_34A78, 1
+		mov	_player_invincible, 1
 
 loc_DBDD:
 		cmp	byte_34ADF, 0
@@ -3921,14 +3921,14 @@ loc_DC9D:
 		cmp	_player_invincibility_time, 1
 		jle	short loc_DCB7
 		dec	_player_invincibility_time
-		mov	word_34A78, 1
+		mov	_player_invincible, 1
 		jmp	short loc_DCCA
 ; ---------------------------------------------------------------------------
 
 loc_DCB7:
 		cmp	_player_invincibility_time, 1
 		jnz	short loc_DCCA
-		mov	word_34A78, 0
+		mov	_player_invincible, 0
 		mov	_player_invincibility_time, 0
 
 loc_DCCA:
@@ -3959,7 +3959,7 @@ loc_DD0E:
 		mov	_rem_lives, 0
 
 loc_DD20:
-		push	word_34A78
+		push	_player_invincible
 		call	sub_C466
 		pop	cx
 		mov	al, byte_34ADF
@@ -4660,7 +4660,7 @@ sub_114E3	proc far
 		jle	short loc_11523
 		cmp	di, 384
 		jle	short loc_11523
-		cmp	word_34A78, 0
+		cmp	_player_invincible, 0
 		jnz	short loc_11523
 		mov	_done, 1
 
@@ -4702,7 +4702,7 @@ sub_11527	proc far
 		jle	short loc_1156A
 
 loc_1155E:
-		cmp	word_34A78, 0
+		cmp	_player_invincible, 0
 
 loc_11563:
 		jnz	short loc_1156A
@@ -5518,7 +5518,7 @@ loc_12237:
 		mov	ax, [bp+var_8]
 		mov	es:[bx], ax
 		mov	[bp+var_8], 0
-		cmp	word_34A78, 0
+		cmp	_player_invincible, 0
 		jnz	short loc_12299
 		les	bx, [bp+arg_0]
 		cmp	byte ptr es:[bx+42h], 0
@@ -16461,7 +16461,7 @@ arg_0		= word ptr  6
 		mov	byte_35B45, 1
 		mov	byte_35B46, 0
 		mov	byte_34A58, 0
-		mov	byte_34A59, 0
+		mov	_player_sliding, 0
 		mov	_player_deflecting, 0
 		mov	_player_ptn_id, 40h
 		cmp	_rank, RANK_EASY
@@ -16811,7 +16811,7 @@ loc_1A211:
 		cwd
 		idiv	bx
 		mov	byte_39DB2, dl
-		mov	byte_34A59, 1
+		mov	_player_sliding, 1
 		mov	byte_35B48, 0
 		mov	al, byte_39DB2
 		cbw
@@ -16988,7 +16988,7 @@ loc_1A403:
 		push	0Bh
 		call	_mdrv2_se_play
 		pop	cx
-		mov	byte_34A59, 1
+		mov	_player_sliding, 1
 		jmp	loc_1A70B
 ; ---------------------------------------------------------------------------
 
@@ -17149,7 +17149,7 @@ loc_1A542:
 		add	sp, 0Ah
 		mov	byte_39DB2, 3
 		mov	byte_35B43, 0
-		mov	byte_34A59, 0
+		mov	_player_sliding, 0
 		mov	al, byte_35B48
 		cbw
 		cmp	ax, 1
@@ -17267,7 +17267,7 @@ loc_1A660:
 		add	sp, 0Ah
 		mov	byte_39DB2, 3
 		mov	byte_35B43, 0
-		mov	byte_34A59, 0
+		mov	_player_sliding, 0
 		mov	al, byte_35B48
 		cbw
 		cmp	ax, 1
@@ -17843,7 +17843,7 @@ loc_1AAEE:
 loc_1AAF6:
 		mov	dword_34A62, 0
 		mov	byte_35B43, 0
-		mov	byte_34A59, 0
+		mov	_player_sliding, 0
 		mov	_player_deflecting, 0
 		mov	al, byte_35B44
 		cbw
@@ -18075,7 +18075,7 @@ arg_0		= word ptr  6
 		mov	si, [bp+arg_0]
 		or	si, si
 		jnz	short loc_1ACD7
-		cmp	word_34A78, 0
+		cmp	_player_invincible, 0
 		jnz	loc_1AE0A
 		cmp	byte_35B28, 0
 		jnz	loc_1AE0A
@@ -19160,7 +19160,7 @@ loc_1B68A:
 		mov	_done, 1
 
 loc_1B6CB:
-		cmp	word_34A78, 0
+		cmp	_player_invincible, 0
 		jz	short loc_1B6D7
 		mov	_done, 0
 
@@ -25519,7 +25519,7 @@ loc_1F495:
 		push	ax
 		call	sub_1F19E
 		add	sp, 6
-		cmp	word_34A78, 0
+		cmp	_player_invincible, 0
 		jnz	short loc_1F4ED
 		mov	bx, si
 		add	bx, bx
@@ -30856,7 +30856,7 @@ loc_221C1:
 loc_221C2:
 		cmp	si, 32h	; '2'
 		jl	loc_220F6
-		cmp	word_34A78, 0
+		cmp	_player_invincible, 0
 		jnz	short loc_22231
 		xor	si, si
 		jmp	short loc_2222C
@@ -32079,7 +32079,7 @@ loc_22B5A:
 		mov	word_3A37F, 0
 
 loc_22B60:
-		cmp	word_34A78, 0
+		cmp	_player_invincible, 0
 		jnz	short loc_22B86
 		mov	ax, point_3982A.x
 		cmp	ax, _player_left
@@ -33569,7 +33569,7 @@ arg_2		= word ptr  6
 		push	bp
 		mov	bp, sp
 		mov	dx, [bp+arg_2]
-		cmp	word_34A78, 1
+		cmp	_player_invincible, 1
 		jz	short loc_2370F
 		mov	ax, dx
 		add	ax, -16
@@ -40180,7 +40180,7 @@ loc_27464:
 		add	sp, 1Eh
 
 loc_274C6:
-		cmp	word_34A78, 0
+		cmp	_player_invincible, 0
 		jnz	short loc_274F2
 		mov	ax, word_3A76D
 		add	ax, 104
@@ -42854,7 +42854,7 @@ loc_28DBF:
 		push	ax
 		call	sub_1754D
 		add	sp, 0Ah
-		cmp	word_34A78, 0
+		cmp	_player_invincible, 0
 		jnz	loc_28E98
 		mov	bx, si
 		shl	bx, 3
@@ -45104,7 +45104,7 @@ loc_2A245:
 		add	sp, 6
 
 loc_2A2BA:
-		cmp	word_34A78, 0
+		cmp	_player_invincible, 0
 		jnz	short loc_2A2EB
 		mov	ax, subpixel_x_3AF32
 		sar	ax, 4
@@ -48053,7 +48053,7 @@ loc_2C06B:
 		add	dx, 24
 		cmp	ax, dx
 		jge	short loc_2C0BC
-		cmp	word_34A78, 0
+		cmp	_player_invincible, 0
 		jnz	short loc_2C0BC
 		mov	_done, 1
 
@@ -48966,7 +48966,7 @@ loc_2C9DA:
 		mov	word_35E97, 0
 		mov	byte_3A6CE, 64h	; 'd'
 		mov	_player_invincibility_time, 0
-		mov	word_34A78, 0
+		mov	_player_invincible, 0
 		call	sub_232A4
 		push	ds
 		push	offset _z_Palettes
@@ -50756,7 +50756,7 @@ loc_2DAF6:
 		jge	short loc_2DB6C
 		mov	bx, si
 		imul	bx, 0Ah
-		mov	al, byte_34A59
+		mov	al, _player_sliding
 		mov	ah, 0
 		imul	ax, 0Ah
 		add	ax, 170h
@@ -50766,7 +50766,7 @@ loc_2DAF6:
 		imul	bx, 0Ah
 		cmp	word ptr [bx+6ACBh], 188h
 		jge	short loc_2DB6C
-		cmp	word_34A78, 0
+		cmp	_player_invincible, 0
 		jnz	short loc_2DB6C
 		mov	_done, 1
 
@@ -51506,7 +51506,7 @@ loc_2E1FA:
 		jge	short loc_2E270
 		mov	bx, si
 		imul	bx, 0Ah
-		mov	al, byte_34A59
+		mov	al, _player_sliding
 		mov	ah, 0
 		imul	ax, 0Ah
 		add	ax, 170h
@@ -51516,7 +51516,7 @@ loc_2E1FA:
 		imul	bx, 0Ah
 		cmp	word ptr [bx+6B29h], 188h
 		jge	short loc_2E270
-		cmp	word_34A78, 0
+		cmp	_player_invincible, 0
 		jnz	short loc_2E270
 		mov	_done, 1
 
@@ -53950,56 +53950,6 @@ main_38__TEXT	segment	byte public 'CODE' use16
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public @CPellets@hittest_player_for_cur$qv
-@CPellets@hittest_player_for_cur$qv	proc far
-		push	bp
-		mov	bp, sp
-		cmp	word_34A78, 1
-		jz	short loc_30F6C
-		mov	bx, _pellet_cur
-		cmp	word ptr [bx+1Eh], 0
-		jnz	short loc_30F6C
-		mov	bx, _pellet_cur
-		mov	ax, [bx+2]
-		sar	ax, 4
-		mov	dx, _player_left
-		add	dx, 4
-		cmp	ax, dx
-		jl	short loc_30F6C
-		mov	ax, [bx+2]
-		sar	ax, 4
-		mov	dx, _player_left
-		add	dx, 20
-		cmp	ax, dx
-		jg	short loc_30F6C
-		mov	ax, [bx+4]
-		sar	ax, 4
-		mov	dl, byte_34A59
-		mov	dh, 0
-		shl	dx, 3
-		add	dx, 170h
-		cmp	ax, dx
-		jl	short loc_30F6C
-		mov	ax, [bx+4]
-		sar	ax, 4
-		cmp	ax, 188h
-		jge	short loc_30F6C
-		mov	_done, 1
-		mov	ax, 1
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_30F6C:
-		xor	ax, ax
-		pop	bp
-		retf
-@CPellets@hittest_player_for_cur$qv	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
 public @CPellets@clouds_unput_update_render$qv
 @CPellets@clouds_unput_update_render$qv	proc far
 
@@ -54098,10 +54048,10 @@ byte_34A49	db 1
 		db    0
 include th01/hardware/input_main_end[data].asm
 		db    0
-public _player_deflecting
+public _player_deflecting, _player_sliding
 _player_deflecting	db 0
 byte_34A58	db 0
-byte_34A59	db 0
+_player_sliding	db 0
 _score	dd 0
 dword_34A5E	dd 0
 dword_34A62	dd 0
@@ -54115,7 +54065,8 @@ word_34A70	dw 0
 word_34A72	dw 0
 word_34A74	dw 0
 		dw 0
-word_34A78	dw 0
+public _player_invincible
+_player_invincible	dw 0
 		dw 0
 public _orb_velocity_x
 _orb_velocity_x	dw 0

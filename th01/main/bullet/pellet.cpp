@@ -659,15 +659,7 @@ void CPellets::unput_update_render(void)
 		p->age++;
 		if(p->decay_frame) {
 			decay_tick_for_cur();
-			continue;
-		}
-		/* TODO: Replace with the decompiled call
-		 * if(hittest_player_for_cur())
-		 * once that function is part of this translation unit */
-		__asm {
-			db 0x66, 0xFF, 0x76, 0x06, 0x90, 0x0E, 0xE8, 0x6D, 0x01; add sp, 4;
-		}
-		if(_AX) {
+		} else if(hittest_player_for_cur()) {
 			if(p->not_rendered == false) {
 				p->sloppy_wide_unput();
 			}
@@ -731,4 +723,24 @@ void CPellets::reset_all(void)
 	}
 	#undef p
 	alive_count = 0;
+}
+
+bool16 CPellets::hittest_player_for_cur(void)
+{
+	#define p pellet_cur
+	if(player_invincible == true || p->decay_frame) {
+		return false;
+	}
+	if(
+		(p->cur_left.to_screen() >= (player_left + 4)) &&
+		(p->cur_left.to_screen() <= (player_left + 20)) &&
+		(p->cur_top.to_screen() >= (player_top + (player_sliding * 8))) &&
+		// Yup, <, not <= as in the overlap_point_le_ge() macro.
+		(p->cur_top.to_screen() < (player_top + PLAYER_H - PELLET_H))
+	) {
+		done = true;
+		return true;
+	}
+	return false;
+	#undef p
 }
