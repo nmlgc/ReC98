@@ -2,12 +2,19 @@
 #ifndef _BMP2ARRL_H
 #define _BMP2ARRL_H
 
+#include <stdio.h>
+
 /* what to emit */
 enum rec98_bmp2arr_output_type {
     REC98_OUT_C=0,
     REC98_OUT_ASM,
     REC98_OUT_BIN,
     REC98_OUT_BMP
+};
+
+struct saveout_ctx {
+    unsigned int            sscols,ssrows,spritenum,bytesperrow,sscol,ssrow,sspreshift;
+    FILE*                   fp; /* for that nice fprintf formatting if needed */
 };
 
 /* the task at hand */
@@ -29,6 +36,16 @@ struct rec98_bmp2arr_task {
     unsigned int    bmp_stride;         /* bytes per scanline */
     unsigned char*  bmp;                /* bitmap in memory (NTS: All examples listed can easily fit in 64KB or less) */
 };
+
+void cstr_free(char **s);
+void cstr_set(char **s,const char *n);
+void rec98_bmp2arr_task_free_bmp(struct rec98_bmp2arr_task *t);
+int rec98_bmp2arr_task_init(struct rec98_bmp2arr_task *t);
+int rec98_bmp2arr_task_free(struct rec98_bmp2arr_task *t);
+int rec98_bmp2arr_save_debug_bmp_out(struct rec98_bmp2arr_task *t);
+int saveout_write_sprite(struct rec98_bmp2arr_task *t,struct saveout_ctx *sctx,const unsigned char *bmp/*length bytesperrow * height*/);
+int rec98_bmp2arr_save_output(struct rec98_bmp2arr_task *t);
+int rec98_bmp2arr_load_bitmap(struct rec98_bmp2arr_task *t);
 
 #endif /* _BMP2ARRL_H */
 
