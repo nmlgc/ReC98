@@ -948,7 +948,7 @@ arg_0		= word ptr  6
 		mov	word_34A78, 1
 		cmp	[bp+arg_0], 0
 		jnz	loc_BF82
-		call	sub_30E54 c, offset _Pellets, ds
+		call	@CPellets@decay_all$qv c, offset _Pellets, ds
 		call	_ptn_put_8 c, _player_left, (43h shl 16) or _player_top
 		xor	si, si
 		jmp	short loc_BF75
@@ -1206,7 +1206,7 @@ loc_C128:
 		idiv	bx
 		or	dx, dx
 		jnz	loc_C42E
-		call	sub_30E54 c, offset _Pellets, ds
+		call	@CPellets@decay_all$qv c, offset _Pellets, ds
 		jmp	loc_C42E
 ; ---------------------------------------------------------------------------
 
@@ -1330,7 +1330,7 @@ loc_C21C:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_C235
-		call	sub_30E54 c, offset _Pellets, ds
+		call	@CPellets@decay_all$qv c, offset _Pellets, ds
 
 loc_C235:
 		xor	si, si
@@ -2813,7 +2813,7 @@ loc_D29E:
 loc_D2A5:
 		cmp	_input_up, 0
 		jz	short loc_D2C7
-		call	sub_30DEE c, offset _Pellets, ds
+		call	@CPellets@unput_and_reset_all$qv c, offset _Pellets, ds
 
 loc_D2B8:
 		push	ds
@@ -3485,7 +3485,7 @@ loc_D7E4:
 		mov	es:[bx+reiidenconfig_t.score], eax
 		mov	eax, _continues_total
 		mov	es:[bx+reiidenconfig_t.continues_total], eax
-		call	sub_30DEE c, offset _Pellets, ds
+		call	@CPellets@unput_and_reset_all$qv c, offset _Pellets, ds
 		call	@CShots@unput_and_reset_all$qv c, offset _Shots, ds
 		mov	word ptr [bp+s1+2], ds
 		mov	word ptr [bp+s1], 1250h
@@ -4394,7 +4394,7 @@ loc_E244:
 		inc	si
 		call	sub_CE5C
 		call	@CShots@unput_and_reset_all$qv c, offset _Shots, ds
-		call	sub_30DEE c, offset _Pellets, ds
+		call	@CPellets@unput_and_reset_all$qv c, offset _Pellets, ds
 		call	sub_D47D
 		mov	word_34A8A, 1
 		cmp	byte_34ADF, 0
@@ -7339,7 +7339,7 @@ arg_0		= word ptr  6
 		push	si
 		push	di
 		call	@CShots@unput_and_reset_all$qv c, offset _Shots, ds
-		call	sub_30DEE c, offset _Pellets, ds
+		call	@CPellets@unput_and_reset_all$qv c, offset _Pellets, ds
 		push	32h ; '2'
 		call	_frame_delay
 		pop	cx
@@ -18332,7 +18332,7 @@ loc_1AE85:
 		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 		call	@CShots@unput_and_reset_all$qv c, offset _Shots, ds
-		call	sub_30E54 c, offset _Pellets, ds
+		call	@CPellets@decay_all$qv c, offset _Pellets, ds
 		push	0
 		call	sub_19E48
 		pop	cx
@@ -22261,7 +22261,7 @@ loc_1D6C4:
 		cmp	word_3A6C8, 0
 		jg	short loc_1D75D
 		call	_mdrv2_bgm_fade_out_nonblock
-		call	sub_30DEE c, offset _Pellets, ds
+		call	@CPellets@unput_and_reset_all$qv c, offset _Pellets, ds
 		xor	si, si
 		jmp	short loc_1D74B
 ; ---------------------------------------------------------------------------
@@ -23010,7 +23010,7 @@ loc_1DF5A:
 		cmp	word_3A6C8, 0
 		jg	short loc_1DFFC
 		call	_mdrv2_bgm_fade_out_nonblock
-		call	sub_30DEE stdcall, offset _Pellets, ds
+		call	@CPellets@unput_and_reset_all$qv stdcall, offset _Pellets, ds
 		push	ds
 		push	offset unk_39EC4
 		call	sub_21EFF
@@ -26444,7 +26444,7 @@ loc_1FCF7:
 		push	0
 		call	_graph_accesspage_func
 		call	_mdrv2_bgm_fade_out_nonblock
-		call	sub_30DEE stdcall, offset _Pellets, ds
+		call	@CPellets@unput_and_reset_all$qv stdcall, offset _Pellets, ds
 		push	ds
 		push	offset unk_39EC4
 		call	sub_21EFF
@@ -32929,7 +32929,7 @@ loc_2326F:
 		push	offset point_3982A
 		call	sub_1588A
 		call	_mdrv2_bgm_fade_out_nonblock
-		call	sub_30DEE stdcall, offset _Pellets, ds
+		call	@CPellets@unput_and_reset_all$qv stdcall, offset _Pellets, ds
 		add	sp, 0Eh
 		call	sub_1261B
 
@@ -35929,7 +35929,7 @@ loc_24D59:
 		cmp	word_3A6C8, 0
 		jg	short loc_24DFB
 		call	_mdrv2_bgm_fade_out_nonblock
-		call	sub_30DEE c, offset _Pellets, ds
+		call	@CPellets@unput_and_reset_all$qv c, offset _Pellets, ds
 		xor	si, si
 		jmp	short loc_24DE9
 ; ---------------------------------------------------------------------------
@@ -41921,7 +41921,7 @@ loc_285A5:
 		cmp	word_3A6C8, 0
 		jg	short loc_28655
 		call	_mdrv2_bgm_fade_out_nonblock
-		call	sub_30DEE stdcall, offset _Pellets, ds
+		call	@CPellets@unput_and_reset_all$qv stdcall, offset _Pellets, ds
 		push	1
 		call	sub_24EC2
 		push	ds
@@ -48813,7 +48813,7 @@ loc_2C835:
 		mov	word_3A6CA, 0
 		mov	word_3B433, 18Fh
 		call	@CShots@unput_and_reset_all$qv c, offset _Shots, ds
-		call	sub_30DEE c, offset _Pellets, ds
+		call	@CPellets@unput_and_reset_all$qv c, offset _Pellets, ds
 		xor	si, si
 		jmp	short loc_2C8AE
 ; ---------------------------------------------------------------------------
@@ -53939,160 +53939,13 @@ main_38_TEXT	segment	byte public 'CODE' use16
 	extern @CPellets@add_pattern$qii16pellet_pattern_ti:proc
 	extern @CPellets@add_single$qiiii15pellet_motion_tiii:proc
 	extern @CPellets@unput_update_render$qv:proc
+	extern @CPellets@unput_and_reset_all$qv:proc
+	extern @CPellets@decay_all$qv:proc
 main_38_TEXT	ends
 
 main_38__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_38
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_30DEE	proc far
-
-@@CPellets		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	ax, word ptr [bp+@@CPellets]
-		mov	_pellet_cur, ax
-		xor	si, si
-		jmp	short loc_30E42
-; ---------------------------------------------------------------------------
-
-loc_30DFC:
-		mov	bx, _pellet_cur
-		cmp	byte ptr [bx], 0
-		jz	short loc_30E3C
-		mov	bx, _pellet_cur
-		cmp	word ptr [bx+18h], 0
-		jnz	short loc_30E2B
-		push	(8 shl 16) or 16
-		mov	ax, [bx+4]
-		sar	ax, 4
-		push	ax
-		mov	ax, [bx+2]
-		sar	ax, 4
-		push	ax
-		call	_egc_copy_rect_1_to_0_16
-		add	sp, 8
-
-loc_30E2B:
-		mov	bx, _pellet_cur
-		mov	word ptr [bx+1Eh], 0
-		mov	byte ptr [bx], 0
-		mov	word ptr [bx+20h], 0
-
-loc_30E3C:
-		inc	si
-		add	_pellet_cur, size pellet_t
-
-loc_30E42:
-		cmp	si, PELLET_COUNT
-		jl	short loc_30DFC
-		les	bx, [bp+@@CPellets]
-		mov	es:[bx+CPellets.PELLET_alive_count], 0
-		pop	si
-		pop	bp
-		retf
-sub_30DEE	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_30E54	proc far
-
-var_2		= word ptr -2
-@@CPellets		= word ptr  6
-
-		enter	2, 0
-		push	si
-		mov	ax, [bp+@@CPellets]
-		mov	_pellet_cur, ax
-		xor	si, si
-		jmp	short loc_30EC0
-; ---------------------------------------------------------------------------
-
-loc_30E63:
-		mov	bx, _pellet_cur
-		cmp	byte ptr [bx], 0
-		jz	short loc_30EBA
-		mov	bx, _pellet_cur
-		cmp	word ptr [bx+1Eh], 0
-		jnz	short loc_30EBA
-		mov	bx, _pellet_cur
-		mov	ax, [bx+12h]
-		mov	[bp+var_2], ax
-		fild	[bp+var_2]
-		fdiv	flt_3624F
-		call	ftol@
-		mov	bx, _pellet_cur
-		mov	[bx+12h], ax
-		mov	ax, [bx+10h]
-		mov	[bp+var_2], ax
-		fild	[bp+var_2]
-		fdiv	flt_3624F
-		call	ftol@
-		mov	bx, _pellet_cur
-		mov	[bx+10h], ax
-		mov	word ptr [bx+1Eh], 1
-		add	_pellet_destroy_score_delta, 10
-
-loc_30EBA:
-		inc	si
-		add	_pellet_cur, size pellet_t
-
-loc_30EC0:
-		cmp	si, PELLET_COUNT
-		jl	short loc_30E63
-		pop	si
-		leave
-		retf
-sub_30E54	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_30EC8	proc far
-
-@@CPellets		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	ax, word ptr [bp+@@CPellets]
-		mov	_pellet_cur, ax
-		xor	dx, dx
-		jmp	short loc_30EF5
-; ---------------------------------------------------------------------------
-
-loc_30ED5:
-		mov	bx, _pellet_cur
-		cmp	byte ptr [bx], 0
-		jz	short loc_30EEF
-		mov	bx, _pellet_cur
-		mov	byte ptr [bx], 0
-		mov	word ptr [bx+1Eh], 0
-		mov	word ptr [bx+20h], 0
-
-loc_30EEF:
-		inc	dx
-		add	_pellet_cur, size pellet_t
-
-loc_30EF5:
-		cmp	dx, PELLET_COUNT
-		jl	short loc_30ED5
-		les	bx, [bp+@@CPellets]
-		mov	es:[bx+CPellets.PELLET_alive_count], 0
-		pop	bp
-		retf
-sub_30EC8	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -55283,12 +55136,8 @@ a0m_0		db 1Bh,'[0m',0
 ; char a11h[]
 a11h		db 1Bh,'[1;1H',0
 word_360CA	dw 0
-public _pellet_interlace, _pellet_destroy_score_delta
-_pellet_interlace	db 0
-_pellet_destroy_score_delta	dw 0
-include th01/sprites/pellet.asp
-flt_3624F	dd 1.5
-		db 0
+	extern _pellet_interlace:byte
+	extern _pellet_destroy_score_delta:word
 _INIT_	segment word public 'INITDATA' use16
 		db    1
 		db  20h

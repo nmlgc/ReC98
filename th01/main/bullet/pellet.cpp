@@ -19,6 +19,9 @@ static const int PELLET_DECAY_CELS = 2;
 /// Globals
 /// -------
 pellet_t near *pellet_cur;
+bool pellet_interlace = false;
+unsigned int pellet_destroy_score_delta = 0;
+#include "th01/sprites/pellet.csp"
 /// -------
 
 CPellets::CPellets(void)
@@ -674,4 +677,58 @@ void CPellets::unput_update_render(void)
 		}
 	}
 	#undef p
+}
+
+void CPellets::unput_and_reset_all(void)
+{
+	#define p pellet_cur
+	p = iteration_start();
+	for(int i = 0; i < PELLET_COUNT; i++, p++) {
+		if(p->moving == false) {
+			continue;
+		}
+		if(p->not_rendered == false) {
+			p->sloppy_wide_unput_at_cur_pos();
+		}
+		p->decay_frame = 0;
+		p->moving = false;
+		p->cloud_frame = 0;
+	}
+	#undef p
+	alive_count = 0;
+}
+
+void CPellets::decay_all(void)
+{
+	#define p pellet_cur
+	p = iteration_start();
+	for(int i = 0; i < PELLET_COUNT; i++, p++) {
+		if(p->moving == false) {
+			continue;
+		}
+		if(p->decay_frame) {
+			continue;
+		}
+		p->velocity.y.v /= 1.5f;
+		p->velocity.x.v /= 1.5f;
+		p->decay_frame = 1;
+		pellet_destroy_score_delta += PELLET_DESTROY_SCORE;
+	}
+	#undef p
+}
+
+void CPellets::reset_all(void)
+{
+	#define p pellet_cur
+	p = iteration_start();
+	for(int i = 0; i < PELLET_COUNT; i++, p++) {
+		if(p->moving == false) {
+			continue;
+		}
+		p->moving = false;
+		p->decay_frame = 0;
+		p->cloud_frame = 0;
+	}
+	#undef p
+	alive_count = 0;
 }

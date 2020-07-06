@@ -5,5 +5,3 @@
 #else
 	static const int PELLET_CELS = 3;
 #endif
-
-extern const dots16_t sPELLET[PELLET_CELS][PRESHIFT][PELLET_H];

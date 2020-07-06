@@ -122,6 +122,12 @@ protected:
 		);
 	}
 
+	void sloppy_wide_unput_at_cur_pos(void) {
+		egc_copy_rect_1_to_0_16(
+			cur_left.to_screen(), cur_top.to_screen(), 16, PELLET_H
+		);
+	}
+
 public:
 	unsigned char moving;
 	unsigned char motion_type;
@@ -217,8 +223,15 @@ public:
 		int spin_center_y = 0
 	);
 
+	// Transitions all living pellets into their decay state, awarding points
+	// for each one.
+	void decay_all(void);
+
 	// Also calls Shots.unput_update_render()!
 	void unput_update_render(void);
+
+	void unput_and_reset_all(void);
+	void reset_all(void);
 };
 
 /// Globals

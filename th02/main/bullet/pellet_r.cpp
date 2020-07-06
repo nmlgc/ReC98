@@ -1,5 +1,7 @@
 #include "th01/sprites/pellet.h"
 
+extern const dots16_t sPELLET[PELLET_CELS][PRESHIFT][PELLET_H];
+
 void pascal near pellet_render(int left, int top)
 {
 	_ES = SEG_PLANE_B;
