@@ -43,7 +43,6 @@ void rec98_bmp2arr_task_free_bmp(struct rec98_bmp2arr_task *t);
 int rec98_bmp2arr_task_init(struct rec98_bmp2arr_task *t);
 int rec98_bmp2arr_task_free(struct rec98_bmp2arr_task *t);
 int rec98_bmp2arr_save_debug_bmp_out(struct rec98_bmp2arr_task *t);
-int saveout_write_sprite(struct rec98_bmp2arr_task *t,struct saveout_ctx *sctx,const unsigned char *bmp/*length bytesperrow * height*/);
 int rec98_bmp2arr_save_output(struct rec98_bmp2arr_task *t);
 int rec98_bmp2arr_load_bitmap(struct rec98_bmp2arr_task *t);
 
