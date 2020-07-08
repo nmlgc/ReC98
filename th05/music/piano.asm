@@ -299,7 +299,7 @@ public PIANO_LABEL_PUT_RAW
 piano_label_put_raw	proc near
 	xor	ah, ah
 	shl	al, 3
-	add	ax, offset _PIANO_LABEL_FONT
+	add	ax, offset _sPIANO_LABEL_FONT
 	mov	si, ax
 	mov	cx, PIANO_LABEL_FONT_W
 

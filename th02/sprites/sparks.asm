@@ -1,9 +1,3 @@
-SPARK_W = 8
-SPARK_H = 8
-SPARK_VRAM_W = (16 / 8)
-SPARK_SIZE = (SPARK_VRAM_W * SPARK_H)
-SPARK_CELS = 8
-
 public _sSPARKS
 label _sSPARKS byte
 	; x + 0

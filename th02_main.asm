@@ -22,6 +22,7 @@ include ReC98.inc
 include th02/th02.inc
 include th02/main/playfld.inc
 include th02/main/hud/hud.inc
+include th02/main/sparks.inc
 include th02/sprites/main_pat.inc
 
 	extern SCOPY@:proc

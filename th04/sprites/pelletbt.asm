@@ -1,5 +1,3 @@
-PELLET_BOTTOM_H = 4
-
 public _sPELLET_BOTTOM
 label _sPELLET_BOTTOM byte
 	; x + 0

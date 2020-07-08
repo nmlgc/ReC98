@@ -1,8 +1,8 @@
 SCORE_FONT_W = 8
 SCORE_FONT_H = 8
 
-public _SCORE_FONT
-_SCORE_FONT label byte
+public _sSCORE_FONT
+_sSCORE_FONT label byte
 ; 0
 	db   111110b
 	db  1100001b

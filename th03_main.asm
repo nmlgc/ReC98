@@ -6579,7 +6579,7 @@ sub_D50E	proc near
 		push	si
 		push	di
 		mov	ah, 0
-		mov	si, offset _SCORE_FONT
+		mov	si, offset _sSCORE_FONT
 		shl	ax, 3
 		add	si, ax
 		mov	ax, cx
