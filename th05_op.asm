@@ -3632,7 +3632,7 @@ include th03/snd/se_state[data].asm
 include th04/bgimage[data].asm
 include th05/mem[data].asm
 include th05/music/piano[data].asm
-include th05/sprites/piano_l.asm
+include th05/sprites/piano_l.asp
 include th05/snd/load[data].asm
 include th04/snd/snd[data].asm
 include th03/formats/pi_slot_put_mask[data].asm

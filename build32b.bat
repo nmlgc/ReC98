@@ -23,9 +23,19 @@ if errorlevel 9009 goto no_tasm32
 %CXX32% 1>NUL 2>NUL
 if errorlevel 9009 goto no_bcc32
 
-set BMP2ARR=bin\Pipeline\bmparr32.exe
+set BMP2ARR=bin\Pipeline\bmp2arr.exe
 
 %CXX32% %CXX32FLAGS% -nbin/Pipeline/ Pipeline\bmp2arr.c Pipeline\bmp2arrl.c
+
+%BMP2ARR% -i th01/sprites/pellet.bmp -o th01/sprites/pellet.asp -sym _sPELLET -of asm -sw 8 -sh 8 -pshf inner
+%BMP2ARR% -i th02/sprites/pellet.bmp -o th02/sprites/pellet.asp -sym _sPELLET -of asm -sw 8 -sh 8 -pshf outer
+%BMP2ARR% -i th02/sprites/sparks.bmp -o th02/sprites/sparks.asp -sym _sSPARKS -of asm -sw 8 -sh 8 -pshf outer
+%BMP2ARR% -i th02/sprites/pointnum.bmp -o th02/sprites/pointnum.asp -sym _sPOINTNUMS -of asm -sw 8 -sh 8
+%BMP2ARR% -i th03/sprites/score.bmp -o th03/sprites/score.asp -sym _sSCORE_FONT -of asm -sw 8 -sh 8 -u
+%BMP2ARR% -i th04/sprites/pelletbt.bmp -o th04/sprites/pelletbt.asp -sym _sPELLET_BOTTOM -of asm -sw 8 -sh 4 -pshf outer
+%BMP2ARR% -i th04/sprites/pointnum.bmp -o th04/sprites/pointnum.asp -sym _sPOINTNUMS -of asm -sw 8 -sh 8 -pshf inner
+%BMP2ARR% -i th05/sprites/gaiji.bmp -o th05/sprites/gaiji.asp -sym _sGAIJI -of asm -sw 16 -sh 16
+%BMP2ARR% -i th05/sprites/piano_l.bmp -o th05/sprites/piano_l.asp -sym _sPIANO_LABEL_FONT -of asm -sw 8 -sh 8
 
 %ReC98_ASM% th01_op.asm bin\th01\op.obj
 %ReC98_ASM% th01_reiiden.asm bin\th01\reiiden.obj

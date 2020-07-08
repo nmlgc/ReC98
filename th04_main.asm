@@ -35499,14 +35499,14 @@ off_21CBA	dd aSt00_map
 aSt00_map	db 'ST00.MAP',0
 		db 0
 include th04/main/pointnum/pointnum[data].asm
-include th04/sprites/pointnum.asm
+include th04/sprites/pointnum.asp
 		db  18h
 		db  3Ch	; <
 		db  7Eh	; ~
 		db 0BDh
 		db 0FFh
 		db    0
-include th02/sprites/sparks.asm
+include th02/sprites/sparks.asp
 include th04/main/player/shot_velocity[data].asm
 		db  18h
 		db  68h	; h
@@ -35520,8 +35520,8 @@ include th04/main/player/shot_velocity[data].asm
 		db  80h
 		db  20h
 		db  60h
-include th01/sprites/pellet.asm
-include th04/sprites/pelletbt.asm
+include th02/sprites/pellet.asp
+include th04/sprites/pelletbt.asp
 byte_22B9C	db 0
 		db 0
 byte_22B9E	db 1

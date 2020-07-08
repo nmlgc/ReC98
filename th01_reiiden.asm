@@ -57651,8 +57651,7 @@ a11h		db 1Bh,'[1;1H',0
 word_360CA	dw 0
 byte_360CC	db 0
 word_360CD	dw 0
-include th01/sprites/pellet.asm
-include th01/sprites/pellet_d.asm
+include th01/sprites/pellet.asp
 flt_3624F	dd 1.5
 		db 0
 _INIT_	segment word public 'INITDATA' use16

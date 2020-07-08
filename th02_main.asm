@@ -33704,7 +33704,7 @@ public _rank, _stage_id
 _rank	db RANK_NORMAL
 _stage_id	db 0
 aHuuma_cfg	db 'huuma.cfg',0
-include th01/sprites/pellet.asm
+include th02/sprites/pellet.asp
 gBONUS		db 0ABh, 0B8h, 0B6h, 0BEh, 0BCh, 0
 gBONUS_0	db 0ABh, 0B8h, 0B6h, 0BEh, 0BCh, 0
 aUqiUx		db ' “ïˆÕ“x',0
@@ -33731,7 +33731,7 @@ asc_1E47E	db '                ',0
 		db    0
 		db    1
 		db    0
-include th02/sprites/pointnum.asm
+include th02/sprites/pointnum.asp
 byte_1E500	db 4
 byte_1E501	db 0
 byte_1E502	db 0
@@ -33985,7 +33985,7 @@ asc_1E6DF	db '  ',0
 		db 0FFh
 		db  7Eh	; ~
 		db  3Ch	; <
-include th02/sprites/sparks.asm
+include th02/sprites/sparks.asp
 word_1EB0A	dw 0
 byte_1EB0C	db 0
 byte_1EB0D	db 0FFh

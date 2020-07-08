@@ -35815,7 +35815,7 @@ word_1DDAC	dw 2AB6h
 		db  1Eh
 		db  32h	; 2
 include th03/main/player/hitcombo[data].asm
-include th03/sprites/score.asm
+include th03/sprites/score.asp
 include th03/main/5_powers_of_10[data].asm
 		db  6Ch	; l
 		db    0
