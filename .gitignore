@@ -4,3 +4,7 @@ Research/*.exe
 Research/*.obj
 RESEARCH/*.EXE
 RESEARCH/*.OBJ
+
+# Borland C++ ILINK32 debug information - can't be deactivated, unfortunately.
+*.tds
+*.TDS
