@@ -239,7 +239,7 @@ static int saveout_write_epilogue(struct rec98_bmp2arr_task *t,struct saveout_ct
 void cstr_free(char **s) {
     if (s != NULL) {
         if (*s != NULL) {
-            free(*s);
+            free((void*)(*s));
             *s = NULL;
         }
     }
@@ -255,7 +255,7 @@ void cstr_set(char **s,const char *n) {
 void rec98_bmp2arr_task_free_bmp(struct rec98_bmp2arr_task *t) {
     if (t != NULL) {
         if (t->bmp != NULL) {
-            free(t->bmp);
+            free((void*)(t->bmp));
             t->bmp = NULL;
         }
     }
@@ -625,7 +625,7 @@ int rec98_bmp2arr_load_bitmap(struct rec98_bmp2arr_task *t) {
         if ((bmp_tmp[0]|bmp_tmp[1]|bmp_tmp[2])&0x80) xorval = 0xFF;
     }
 
-    t->bmp = malloc(t->bmp_height * t->bmp_stride);
+    t->bmp = (unsigned char*)malloc(t->bmp_height * t->bmp_stride);
     if (t->bmp == NULL) goto fioerr;
 
     /* read bitmap bits. BMPs are upside-down */
@@ -635,7 +635,7 @@ int rec98_bmp2arr_load_bitmap(struct rec98_bmp2arr_task *t) {
 #if TARGET_MSDOS == 16
     if (srcstride >= 0xFFFFul) goto fioerr;
 #endif
-    tmprow = malloc((unsigned int)srcstride);
+    tmprow = (unsigned char*)malloc((unsigned int)srcstride);
     if (tmprow == NULL) goto fioerr;
 
     /* count: height-1 to 0 inclusive */
@@ -651,12 +651,12 @@ int rec98_bmp2arr_load_bitmap(struct rec98_bmp2arr_task *t) {
             memcpy32to1(t->bmp + (row * t->bmp_stride),tmprow,t->bmp_width);
     } while (row-- != 0u); /* compare against post decrement to break out if it is zero */
 
-    if (tmprow) free(tmprow);
+    if (tmprow) free((void*)tmprow);
     close(fd);
 
     return 0;
 fioerr:
-    if (tmprow) free(tmprow);
+    if (tmprow) free((void*)tmprow);
     close(fd);
     return -1;
 }
