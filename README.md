@@ -86,6 +86,27 @@ You will need:
 
   ----
 
+* **Borland C++ 5.5, for 32-bit Windows (`BCC32.EXE`)**
+
+  Released as freeware, and as of July 2020, still sort of officially downloadable from
+
+    http://altd.embarcadero.com/download/bcppbuilder/freecommandLinetools.exe
+
+  (SHA-256 `433b44741f07f2ad673eb936511d498c5a6b7f260f98c4d9a6da70c41a56d855`)
+
+  Needed to fulfill the role of being "just *any* native C++ compiler" for our own tools that either don't necessarily *have* to run on 16-bit DOS, or are required by the 32-bit build step, as long as that one still exists (see above).
+
+  Currently, this category of tools only includes the [converter for hardcoded sprites]. Since that one is written to be as platform-independent as possible, it could easily be compiled with any other native C compiler you happen to have already installed. (Which also means that future port developers hopefully have one less thing to worry about.)
+  However, choosing Borland C++ 5.5 fits ReC98 very well for a number of reasons:
+
+  * It still happens to be the most hassle- and bloat-free way to get *any* sort of 32-bit Windows C++ compiler to people, clearly beating Open Watcom, and the required registration for [Borland/Embarcadero's own C++ 7.30]. Depending on anything bigger would be way out of proportion, considering how little we use it for
+  * We already rely on a 32-bit Windows tool
+  * Turbo C++ 4.0J defines the lower bound for our allowed level of C++ features anyway, making Borland C++ 5.5's old age and lacking C++ standard compliance a non-issue
+  * Unlike 7.30, 5.5 still works on Windows 9x, which is what typically runs on the real PC-98 hardware that some people might want to compile ReC98 on.
+  * Other tiny C compilers have no C++ support.
+
+  ----
+
 * **DOSBox** (if you're running a 64-bit version of Windows, or a non-Windows operating system)
 
   For the most part, it shouldn't matter whether you use [the original DOSBox](https://dosbox.com) or your favorite fork. A DOSBox with dynamic recompilation is highly recommended for faster compilation, though. Make sure to enable that feature by setting the following options in its configuration file (`dosbox.conf` for the original version):
@@ -104,3 +125,5 @@ To build, simply run `build.bat` and follow any instructions. The final executab
 
 [indistinguishable]: https://github.com/nmlgc/mzdiff
 [can't be decompiled]: Research/Borland%20C++%20decompilation.md#limits-of-decompilability
+[converter for hardcoded sprites]: https://github.com/nmlgc/ReC98/issues/8
+[Borland/Embarcadero's own C++ 7.30]: https://www.embarcadero.com/de/free-tools/ccompiler/free-download
