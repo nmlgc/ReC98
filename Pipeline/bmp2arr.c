@@ -1,14 +1,14 @@
 
 #if defined(REC98_PROJECT)
 # include "platform.h" /* see also [https://github.com/nmlgc/ReC98/issues/8] */
-#elif defined(_MSC_VER)/*Microsoft C++*/ || defined(__BORLANDC__)
+#elif defined(_MSC_VER)/*Microsoft C++*/ || defined(__BORLANDC__) || defined(__TURBOC__)
 typedef unsigned char uint8_t;
 typedef unsigned short uint16_t;
 typedef unsigned long uint32_t;
 #else
 # include <stdint.h>
 #endif
-#if defined(_MSC_VER)/*Microsoft C++*/ || defined(__BORLANDC__)
+#if defined(_MSC_VER)/*Microsoft C++*/ || defined(__BORLANDC__) || defined(__TURBOC__)
 # include <io.h>
 #else
 # include <sys/types.h>
