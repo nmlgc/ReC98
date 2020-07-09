@@ -48,25 +48,37 @@ Crossed-out files are identical to their version in the previous game. ONGCHK.CO
 ## Building
 You will need:
 
-* Borland Turbo C++ 4.0J
-* Borland Turbo Assembler (TASM), version 5.0 or later, in a 32-bit version (`TASM32.EXE`)
-* [DOSBox](http://dosbox.com) if you're running a 64-bit version of Windows, or a non-Windows operating system
+* **Borland Turbo C++ 4.0J**
 
-  To speed up compilation, make sure to set the following in `dosbox.conf`:
-  ```
+  This was the compiler ZUN originally used, so it's the only one that can deterministically compile this code to executables that are bit-perfect to ZUN's original ones.
+
+  ----
+
+* **Borland Turbo Assembler (TASM), version 5.0 or later, for 32-bit Windows (`TASM32.EXE`)**
+
+  Borland never made a cross compiler targeting 16-bit DOS that runs on 32-bit Windows, so the C++ parts *have* to be compiled using a 16-bit DOS program. The not yet decompiled ASM parts of the code, however, *can* be assembled using a 32-bit Windows tool. This not only way outperforms any 16-bit solution that would have to be emulated on modern 64-bit systems, making build times, well, tolerable. It also removes any potential EMS or XMS issues we might have had with `TASMX.EXE` on these emulators.
+
+  These advantages were particularly relevant in the early days of ReC98, when the ASM files were pretty huge. That's also when I decided to freely use long file names that don't need to conform to the 8.3 convention… As a result, the build process still starts with a separate 32-bit part (`build32b.bat`), which must be run in Windows (or Wine).
+
+  In the end though, we'd definitely like to have a single-step 16-bit build process that requires no 32-bit tools. This will probably happen some time after reaching 100% position independence over all games.
+
+  ----
+
+* **DOSBox** (if you're running a 64-bit version of Windows, or a non-Windows operating system)
+
+  For the most part, it shouldn't matter whether you use [the original DOSBox](https://dosbox.com) or your favorite fork. A DOSBox with dynamic recompilation is highly recommended for faster compilation, though. Make sure to enable that feature by setting the following options in its configuration file (`dosbox.conf` for the original version):
+
+  ```ini
   [cpu]
   core=dynamic
   cycles=max
   ```
 
-The Borland tools are the only ones that will, with the correct command-line switches for each game, deterministically compile this source code to executables that are bit-perfect to ZUN's original ones. Hence, they are the only supported build tools during all of the reconstruction phase.
+  ----
 
-To build, simply run `build.bat` and follow the instructions.
-
-Since I, unfortunately, decided earlier in development to freely use long file names that don't need to conform to the 8.3 convention, the first part of the building process (`build32b.bat`) must be run in Windows (or Wine). This will be fixed as development goes along.
-
-The final executables will be put into `bin\th0?`, using the same names as the originals.
+To build, simply run `build.bat` and follow any instructions. The final executables will be put into `bin\th0?`, using the same names as the originals.
 
 ----
 
 [indistinguishable]: https://github.com/nmlgc/mzdiff
+[can't be decompiled]: Research/Borland%20C++%20decompilation.md#limits-of-decompilability
