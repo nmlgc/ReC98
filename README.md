@@ -25,7 +25,7 @@ The original games in question are:
 * TH04: 東方幻想郷　～ Lotus Land Story (1998)
 * TH05: 東方怪綺談　～ Mystic Square (1998)
 
-Since we only have the binaries, we obviously can't know how ZUN named any variables and functions, and which comments the original code was surrounded with. *Perfect* therefore means that the binaries compiled from the code in the ReC98 repository are [indistinguishable](https://giithub.com/nmlgc/mzdiff) from ZUN's original builds, making it impossible to *disprove* that the original code *couldn't* have looked like this. This property is maintained for every Git commit along the way.
+Since we only have the binaries, we obviously can't know how ZUN named any variables and functions, and which comments the original code was surrounded with. *Perfect* therefore means that the binaries compiled from the code in the ReC98 repository are [indistinguishable] from ZUN's original builds, making it impossible to *disprove* that the original code *couldn't* have looked like this. This property is maintained for every Git commit along the way.
 
 Aside from the preservation angle and the resulting deep insight into the games' mechanics, the code can then serve as the foundation for any type of mod, or any port to non-PC-98 platforms, developed by the community. This is also why ReC98 values *readable and understandable* code over a pure decompilation.
 
@@ -82,3 +82,7 @@ To build, simply run `build.bat` and follow the instructions.
 Since I, unfortunately, decided earlier in development to freely use long file names that don't need to conform to the 8.3 convention, the first part of the building process (`build32b.bat`) must be run in Windows (or Wine). This will be fixed as development goes along.
 
 The final executables will be put into `bin\th0?`, using the same names as the originals.
+
+----
+
+[indistinguishable]: https://github.com/nmlgc/mzdiff
