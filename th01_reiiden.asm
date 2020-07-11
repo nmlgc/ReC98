@@ -73,7 +73,6 @@ main_13 group main_13_TEXT, main_13__TEXT
 main_19 group main_19_TEXT, main_19__TEXT
 main_25 group main_25_TEXT, main_25__TEXT
 main_27 group main_27_TEXT, main_27__TEXT
-main_38 group main_38_TEXT, main_38__TEXT
 
 ; ===========================================================================
 
@@ -53943,88 +53942,6 @@ main_38_TEXT	segment	byte public 'CODE' use16
 	extern @CPellets@decay_all$qv:proc
 main_38_TEXT	ends
 
-main_38__TEXT	segment	byte public 'CODE' use16
-		assume cs:main_38
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public @CPellets@clouds_unput_update_render$qv
-@CPellets@clouds_unput_update_render$qv	proc far
-
-@@CPellets		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	ax, [bp+@@CPellets]
-		mov	_pellet_cur, ax
-		xor	si, si
-		jmp	loc_31004
-; ---------------------------------------------------------------------------
-
-loc_30F7F:
-		mov	bx, _pellet_cur
-		cmp	word ptr [bx+20h], 0
-		jz	short loc_30FFE
-		mov	bx, _pellet_cur
-		inc	word ptr [bx+20h]
-		cmp	word ptr [bx+20h], 2
-		jnz	short loc_30F9A
-		push	0
-		jmp	short loc_30FC2
-; ---------------------------------------------------------------------------
-
-loc_30F9A:
-		mov	bx, _pellet_cur
-		cmp	word ptr [bx+20h], 5
-		jnz	short loc_30FB6
-		call	_pellet_cloud_unput_8 c, word ptr [bx+22h], word ptr [bx+24h], 0
-		jmp	short loc_30FFE
-; ---------------------------------------------------------------------------
-
-loc_30FB6:
-		mov	bx, _pellet_cur
-		cmp	word ptr [bx+20h], 6
-		jnz	short loc_30FD8
-		push	1
-
-loc_30FC2:
-		push	7
-		mov	bx, _pellet_cur
-		push	word ptr [bx+24h]
-		push	word ptr [bx+22h]
-		call	_pellet_cloud_put_8
-		add	sp, 8
-		jmp	short loc_30FFE
-; ---------------------------------------------------------------------------
-
-loc_30FD8:
-		mov	bx, _pellet_cur
-		cmp	word ptr [bx+20h], 9
-		jnz	short loc_30FFE
-		call	_pellet_cloud_unput_8 c, word ptr [bx+22h], word ptr [bx+24h], 1
-		mov	bx, _pellet_cur
-		mov	word ptr [bx+20h], 0
-		mov	byte ptr [bx], 1
-
-loc_30FFE:
-		inc	si
-		add	_pellet_cur, size pellet_t
-
-loc_31004:
-		cmp	si, PELLET_COUNT
-		jl	loc_30F7F
-		pop	si
-		pop	bp
-		retf
-@CPellets@clouds_unput_update_render$qv	endp
-
-; ---------------------------------------------------------------------------
-		dw 0
-main_38__TEXT	ends
-
 	.data
 
 ; Not *really* a cfg_options_t, since you'd expect that structure to contain
@@ -55706,6 +55623,5 @@ word_3B529	dw ?
 word_3B52B	dw ?
 word_3B52D	dw ?
 byte_3B52F	db ?
-	extern _pellet_cur:word
 
 		end

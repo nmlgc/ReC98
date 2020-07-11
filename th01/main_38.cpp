@@ -20,6 +20,7 @@ extern "C" {
 #include "th01/main/player/orb.hpp"
 #include "th01/main/player/shots.hpp"
 #include "th01/main/bullet/pellet.hpp"
+#include "th01/main/bullet/pellet_c.hpp"
 }
 
 #include "th01/main/player/shots.cpp"

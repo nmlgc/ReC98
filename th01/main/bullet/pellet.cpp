@@ -18,7 +18,7 @@ static const int PELLET_DECAY_CELS = 2;
 
 /// Globals
 /// -------
-pellet_t near *pellet_cur;
+pellet_t near *p;
 bool pellet_interlace = false;
 unsigned int pellet_destroy_score_delta = 0;
 #include "th01/sprites/pellet.csp"
@@ -28,13 +28,11 @@ CPellets::CPellets(void)
 {
 	int i;
 
-	#define p pellet_cur
 	p = iteration_start();
 	for(i = 0; i < PELLET_COUNT; i++, p++) {
 		p->moving = false;
 		p->not_rendered = false;
 	}
-	#undef p
 
 	alive_count = 0;
 	for(i = 0; i < sizeof(unknown_zero) / sizeof(unknown_zero[0]); i++) {
@@ -215,7 +213,6 @@ void CPellets::add_pattern(
 	}
 	speed_set(speed);
 
-	#define p pellet_cur
 	p = iteration_start();
 	for(i = 0; i < PELLET_COUNT; i++, p++) {
 		if(p->moving == true) {
@@ -237,7 +234,6 @@ void CPellets::add_pattern(
 			return;
 		}
 	}
-	#undef p
 }
 
 void CPellets::add_single(
@@ -261,7 +257,6 @@ void CPellets::add_single(
 	}
 	speed_set(speed_base);
 
-	#define p pellet_cur
 	p = iteration_start();
 	for(i = 0; i < PELLET_COUNT; i++, p++) {
 		if(p->moving == true) {
@@ -292,12 +287,10 @@ void CPellets::add_single(
 		p->velocity.y.v = vel_y.v;
 		return;
 	}
-	#undef p
 }
 
 void CPellets::motion_type_apply_for_cur(void)
 {
-	#define p pellet_cur
 	Subpixel velocity_to_player_x;
 	Subpixel velocity_to_player_y;
 
@@ -403,7 +396,6 @@ void CPellets::motion_type_apply_for_cur(void)
 		}
 		break;
 	}
-	#undef p
 }
 
 void pellet_put(int left, int top, int cel)
@@ -464,7 +456,6 @@ inline bool16 overlaps_orb(int pellet_left, int pellet_top)
 
 bool16 CPellets::visible_after_hittests_for_cur(int pellet_left, int pellet_top)
 {
-	#define p pellet_cur
 	// Well, well. Since ZUN uses this super sloppy 16x8 rectangle to unblit
 	// 8x8 pellets, there's now the (completely unnecessary) possibility of
 	// accidentally unblitting parts of a sprite that was previously drawn
@@ -544,19 +535,16 @@ bool16 CPellets::visible_after_hittests_for_cur(int pellet_left, int pellet_top)
 		return false;
 	}
 	return true;
-	#undef p
 }
 
 void CPellets::decay_tick_for_cur(void)
 {
-	#define p pellet_cur
 	p->decay_frame++;
 	if(p->decay_frame > (PELLET_DECAY_FRAMES + 1)) {
 		p->decay_frame = 0;
 		p->moving = false;
 		alive_count--;
 	}
-	#undef p
 }
 
 void CPellets::unput_update_render(void)
@@ -564,19 +552,9 @@ void CPellets::unput_update_render(void)
 	int i;
 
 	interlace_field = (interlace_field == false) ? true : false;
-	/* TODO: Replace with the decompiled call
-	 * clouds_unput_update_render();
-	 * once that function is part of this translation unit */
-	__asm {
-		push	word ptr [bp+8];
-		push	bx;
-		nop;
-		push	cs;
-		db  	0xE8, 0x2A, 0x04;
-		add 	sp, 4;
-	}
 
-	#define p pellet_cur
+	clouds_unput_update_render();
+
 	p = iteration_start();
 	for(i = 0; i < PELLET_COUNT; i++, p++) {
 		if(p->moving == false) {
@@ -668,12 +646,10 @@ void CPellets::unput_update_render(void)
 			p->decay_frame = 0;
 		}
 	}
-	#undef p
 }
 
 void CPellets::unput_and_reset_all(void)
 {
-	#define p pellet_cur
 	p = iteration_start();
 	for(int i = 0; i < PELLET_COUNT; i++, p++) {
 		if(p->moving == false) {
@@ -686,13 +662,11 @@ void CPellets::unput_and_reset_all(void)
 		p->moving = false;
 		p->cloud_frame = 0;
 	}
-	#undef p
 	alive_count = 0;
 }
 
 void CPellets::decay_all(void)
 {
-	#define p pellet_cur
 	p = iteration_start();
 	for(int i = 0; i < PELLET_COUNT; i++, p++) {
 		if(p->moving == false) {
@@ -706,12 +680,10 @@ void CPellets::decay_all(void)
 		p->decay_frame = 1;
 		pellet_destroy_score_delta += PELLET_DESTROY_SCORE;
 	}
-	#undef p
 }
 
 void CPellets::reset_all(void)
 {
-	#define p pellet_cur
 	p = iteration_start();
 	for(int i = 0; i < PELLET_COUNT; i++, p++) {
 		if(p->moving == false) {
@@ -721,13 +693,11 @@ void CPellets::reset_all(void)
 		p->decay_frame = 0;
 		p->cloud_frame = 0;
 	}
-	#undef p
 	alive_count = 0;
 }
 
 bool16 CPellets::hittest_player_for_cur(void)
 {
-	#define p pellet_cur
 	if(player_invincible == true || p->decay_frame) {
 		return false;
 	}
@@ -742,5 +712,28 @@ bool16 CPellets::hittest_player_for_cur(void)
 		return true;
 	}
 	return false;
-	#undef p
+}
+
+static const int CLOUD_COL = 7;
+
+void CPellets::clouds_unput_update_render(void)
+{
+	p = iteration_start();
+	for(int i = 0; i < PELLET_COUNT; i++, p++) {
+		if(p->cloud_frame == 0) {
+			continue;
+		}
+		p->cloud_frame++;
+		if(p->cloud_frame == 2) {
+			pellet_cloud_put_8(p->cloud_left, p->cloud_top, CLOUD_COL, 0);
+		} else if(p->cloud_frame == 5) {
+			pellet_cloud_unput_8(p->cloud_left, p->cloud_top, 0);
+		} else if(p->cloud_frame == 6) {
+			pellet_cloud_put_8(p->cloud_left, p->cloud_top, CLOUD_COL, 1);
+		} else if(p->cloud_frame == 9) {
+			pellet_cloud_unput_8(p->cloud_left, p->cloud_top, 1);
+			p->cloud_frame = 0;
+			p->moving = true;
+		}
+	}
 }
