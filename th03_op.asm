@@ -2745,7 +2745,7 @@ sub_B670	endp
 
 sub_B6C0	proc near
 
-var_7		= byte ptr -7
+@@angle		= byte ptr -7
 var_6		= word ptr -6
 var_4		= word ptr -4
 var_2		= word ptr -2
@@ -2765,13 +2765,13 @@ arg_8		= byte ptr  0Ch
 loc_B6CF:
 		mov	al, byte ptr [bp+var_6]
 		add	al, [bp+arg_8]
-		mov	[bp+var_7], al
+		mov	[bp+@@angle], al
 		mov	ah, 0
 		imul	[bp+arg_2]
-		mov	bx, 100h
+		mov	bx, 256
 		cwd
 		idiv	bx
-		mov	[bp+var_7], al
+		mov	[bp+@@angle], al
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -2779,13 +2779,13 @@ loc_B6CF:
 		mov	[bp+var_2], ax
 		mov	al, byte ptr [bp+var_6]
 		add	al, [bp+arg_6]
-		mov	[bp+var_7], al
+		mov	[bp+@@angle], al
 		mov	ah, 0
 		imul	[bp+arg_0]
-		mov	bx, 100h
+		mov	bx, 256
 		cwd
 		idiv	bx
-		mov	[bp+var_7], al
+		mov	[bp+@@angle], al
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax

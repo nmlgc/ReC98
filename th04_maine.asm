@@ -1774,7 +1774,7 @@ loc_AEF1:
 		mov	si, ax
 		push	[bp+arg_4]
 		push	ax
-		mov	al, byte_124C7
+		mov	al, angle_124C7
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -1783,7 +1783,7 @@ loc_AEF1:
 		mov	di, ax
 		push	[bp+arg_2]
 		push	si
-		mov	al, byte_124C7
+		mov	al, angle_124C7
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -1798,9 +1798,9 @@ loc_AEF1:
 		push	ax
 		push	0
 		call	cdg_put_plane
-		mov	al, byte_124C7
+		mov	al, angle_124C7
 		add	al, 40h
-		mov	byte_124C7, al
+		mov	angle_124C7, al
 		push	[bp+arg_4]
 		push	si
 		mov	ah, 0
@@ -1811,7 +1811,7 @@ loc_AEF1:
 		mov	di, ax
 		push	[bp+arg_2]
 		push	si
-		mov	al, byte_124C7
+		mov	al, angle_124C7
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -1826,9 +1826,9 @@ loc_AEF1:
 		push	ax
 		push	1
 		call	cdg_put_plane
-		mov	al, byte_124C7
+		mov	al, angle_124C7
 		add	al, 40h
-		mov	byte_124C7, al
+		mov	angle_124C7, al
 		push	[bp+arg_4]
 		push	si
 		mov	ah, 0
@@ -1839,7 +1839,7 @@ loc_AEF1:
 		mov	di, ax
 		push	[bp+arg_2]
 		push	si
-		mov	al, byte_124C7
+		mov	al, angle_124C7
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -1854,9 +1854,9 @@ loc_AEF1:
 		push	ax
 		push	2
 		call	cdg_put_plane
-		mov	al, byte_124C7
+		mov	al, angle_124C7
 		add	al, 40h
-		mov	byte_124C7, al
+		mov	angle_124C7, al
 		push	[bp+arg_4]
 		push	si
 		mov	ah, 0
@@ -1867,7 +1867,7 @@ loc_AEF1:
 		mov	di, ax
 		push	[bp+arg_2]
 		push	si
-		mov	al, byte_124C7
+		mov	al, angle_124C7
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -1882,9 +1882,9 @@ loc_AEF1:
 		push	ax
 		push	3
 		call	cdg_put_plane
-		mov	al, byte_124C7
+		mov	al, angle_124C7
 		add	al, 40h
-		mov	byte_124C7, al
+		mov	angle_124C7, al
 		GRCG_OFF_CLOBBERING dx
 
 loc_B027:
@@ -2212,9 +2212,9 @@ loc_B2AF:
 		push	ax
 		call	sub_B25B
 		dec	si
-		mov	al, byte_124C7
+		mov	al, angle_124C7
 		add	al, 8
-		mov	byte_124C7, al
+		mov	angle_124C7, al
 		push	di
 		push	[bp+arg_0]
 		push	si
@@ -2280,9 +2280,9 @@ loc_B339:
 		push	si
 		call	sub_B25B
 		inc	si
-		mov	al, byte_124C7
+		mov	al, angle_124C7
 		add	al, 8
-		mov	byte_124C7, al
+		mov	angle_124C7, al
 		cmp	si, 40h
 		jge	short loc_B39A
 		push	di
@@ -2351,9 +2351,9 @@ loc_B3C7:
 		push	si
 		call	sub_B25B
 		inc	si
-		mov	al, byte_124C7
-		add	al, 0F8h
-		mov	byte_124C7, al
+		mov	al, angle_124C7
+		add	al, -8
+		mov	angle_124C7, al
 		cmp	si, 40h
 		jge	short loc_B43B
 		mov	byte_124C6, 2
@@ -4918,7 +4918,7 @@ col_124C2	db ?
 		db    ?	;
 word_124C4	dw ?
 byte_124C6	db ?
-byte_124C7	db ?
+angle_124C7	db ?
 fp_124C8	dw ?
 		db 2 dup(?)
 byte_124CC	db ?
