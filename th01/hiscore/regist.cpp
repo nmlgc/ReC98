@@ -2,6 +2,7 @@
 #include "th01/hardware/grp2xscs.h"
 #include "th01/hardware/input.hpp"
 #include "th01/hardware/vsync.h"
+#include "th01/score.h"
 
 #define COL_SELECTED 3
 #define COL_REGULAR 7
@@ -17,8 +18,6 @@ static const int TITLE_BACK_BOTTOM = (TITLE_BACK_TOP + TITLE_BACK_H);
 
 /// Table
 /// -----
-#define POINT_DIGITS 7
-
 #define TABLE_TOP 48
 #define TABLE_ROW_H GLYPH_H
 #define TABLE_BODY_TOP (TABLE_TOP + TABLE_ROW_H)
@@ -43,7 +42,7 @@ inline int table_points_left(int x_kanji) {
 }
 
 inline int table_stage_route_left(int x_kanji) {
-	return table_points_left(POINT_DIGITS + 3 + x_kanji);
+	return table_points_left(SCORE_DIGITS + 3 + x_kanji);
 }
 
 inline int table_stage_left(int x_kanji) {
@@ -258,7 +257,7 @@ void regist_put_initial(
 			table_points_left(0),
 			top,
 			FX(place_col, 3, 0),
-			POINT_DIGITS,
+			SCORE_DIGITS,
 			(entered_place == i) ? entered_points : scoredat_points[i],
 			0,
 			false
