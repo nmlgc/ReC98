@@ -49,7 +49,7 @@ typedef struct {
 	unsigned int continues_per_scene[SCENE_COUNT];
 	long bonus_per_stage[STAGES_PER_SCENE]; // of the current scene
 	int stage;
-	long hiscore;
+	unsigned long hiscore;
 	long score_highest; // among all continues
 	unsigned int p_value;
 } resident_t;

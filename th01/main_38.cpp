@@ -7,7 +7,6 @@
 
 extern "C" {
 #include "th01/th01.h"
-#include "th01/ranks.h"
 #include "th01/snd/mdrv2.h"
 #include "th01/formats/ptn.hpp"
 #include "th01/hardware/egc.h"

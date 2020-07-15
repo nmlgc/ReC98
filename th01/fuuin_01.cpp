@@ -8,7 +8,6 @@
 extern "C" {
 #include <stdio.h>
 #include "th01/th01.h"
-#include "th01/ranks.h"
 #include "th01/end/vars.hpp"
 
 #undef RES_ID

@@ -14355,157 +14355,13 @@ main_24_TEXT	ends
 ; Segment type:	Pure code
 main_25_TEXT	segment	byte public 'CODE' use16
 	extern _graph_putfwnum_fx:proc
+	extern _hiscore_update_and_render:proc
 main_25_TEXT	ends
 
 main_25__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_25
 		;org 9
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_18657	proc far
-
-var_8		= dword	ptr -8
-var_4		= dword	ptr -4
-
-		enter	8, 0
-		push	si
-		mov	[bp+var_4], 0F4240h
-		les	bx, _resident
-		mov	eax, es:[bx+reiidenconfig_t.hiscore]
-		mov	[bp+var_8], eax
-		cmp	eax, _score
-		jnb	loc_187A3
-		xor	si, si
-		jmp	loc_18723
-; ---------------------------------------------------------------------------
-
-loc_1867F:
-		mov	eax, dword_35ABF
-		cdq
-		idiv	[bp+var_4]
-		mov	ebx, 0Ah
-		cdq
-		idiv	ebx
-		push	edx
-		mov	eax, _score
-		xor	edx, edx
-		div	[bp+var_4]
-		xor	edx, edx
-		div	ebx
-		pop	eax
-		cmp	eax, edx
-		jnz	short loc_186B5
-		cmp	byte_35A96, 1
-		jnz	short loc_1870F
-
-loc_186B5:
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		mov	ax, si
-		mov	bx, 4
-		cwd
-		idiv	bx
-		push	dx
-		mov	ax, si
-		cwd
-		idiv	bx
-		add	ax, (PTN_SLOT_5 + 10)
-		push	ax
-		push	0
-		mov	ax, si
-		shl	ax, 4
-		add	ax, 256
-		push	ax
-		call	_ptn_put_quarter_noalpha_8
-		add	sp, 8
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		mov	ax, si
-		mov	bx, 4
-		cwd
-		idiv	bx
-		push	dx
-		mov	ax, si
-		cwd
-		idiv	bx
-		add	ax, (PTN_SLOT_5 + 10)
-		push	ax
-		push	0
-		mov	ax, si
-		shl	ax, 4
-		add	ax, 256
-		push	ax
-		call	_ptn_put_quarter_noalpha_8
-		add	sp, 8
-
-loc_1870F:
-		mov	ebx, 0Ah
-		mov	eax, [bp+var_4]
-		cdq
-		idiv	ebx
-		mov	[bp+var_4], eax
-		inc	si
-
-loc_18723:
-		cmp	si, 7
-		jl	loc_1867F
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		push	1	; put_leading_zeroes
-		cmp	byte_35A96, 1
-		jnz	short loc_18740
-		xor	eax, eax
-		jmp	short loc_18744
-; ---------------------------------------------------------------------------
-
-loc_18740:
-		mov	eax, dword_35ABF
-
-loc_18744:
-		push	eax	; num_prev
-		pushd	[_score]	; num
-		push	(7 shl 16) or 27h	; (digits) or (fx)
-		pushd	(0 shl 16) or 256	; (top) or (left)
-		call	_graph_putfwnum_fx
-		add	sp, 12h
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		push	1	; put_leading_zeroes
-		cmp	byte_35A96, 1
-		jnz	short loc_18774
-		xor	eax, eax
-		jmp	short loc_18778
-; ---------------------------------------------------------------------------
-
-loc_18774:
-		mov	eax, dword_35ABF
-
-loc_18778:
-		push	eax	; num_prev
-		pushd	[_score]	; num
-		push	(7 shl 16) or 27h	; (digits) or (fx)
-		pushd	(0 shl 16) or 256	; (top) or (left)
-		call	_graph_putfwnum_fx
-		add	sp, 12h
-		mov	eax, _score
-		mov	dword_35ABF, eax
-		les	bx, _resident
-		mov	es:[bx+reiidenconfig_t.hiscore], eax
-
-loc_187A3:
-		pop	si
-		leave
-		retf
-sub_18657	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14537,7 +14393,7 @@ loc_187B2:
 		pop	ax
 		cmp	ax, dx
 		jnz	short loc_187D4
-		cmp	byte_35A96, 1
+		cmp	_fwnum_force_rerender, 1
 		jnz	short loc_18814
 
 loc_187D4:
@@ -14579,7 +14435,7 @@ loc_1881F:
 		call	_graph_accesspage_func
 		pop	cx
 		push	1	; put_leading_zeroes
-		cmp	byte_35A96, 1
+		cmp	_fwnum_force_rerender, 1
 		jnz	short loc_18839
 		xor	ax, ax
 		jmp	short loc_1883C
@@ -14601,7 +14457,7 @@ loc_1883C:
 		call	_graph_accesspage_func
 		pop	cx
 		push	1 ; put_leading_zeroes
-		cmp	byte_35A96, 1
+		cmp	_fwnum_force_rerender, 1
 		jnz	short loc_18870
 		xor	ax, ax
 		jmp	short loc_18873
@@ -14672,7 +14528,7 @@ loc_188CD:
 		pop	eax
 		cmp	eax, edx
 		jnz	short loc_18903
-		cmp	byte_35A96, 1
+		cmp	_fwnum_force_rerender, 1
 		jnz	short loc_18928
 
 loc_18903:
@@ -14706,7 +14562,7 @@ loc_1893C:
 		cmp	si, 7
 		jl	short loc_188CD
 		push	1	; put_leading_zeroes
-		cmp	byte_35A96, 1
+		cmp	_fwnum_force_rerender, 1
 		jnz	short loc_1894F
 		xor	eax, eax
 		jmp	short loc_18953
@@ -14742,7 +14598,7 @@ loc_18971:
 		pop	ax
 		cmp	ax, dx
 		jnz	short loc_18993
-		cmp	byte_35A96, 1
+		cmp	_fwnum_force_rerender, 1
 		jnz	short loc_189AB
 
 loc_18993:
@@ -14767,7 +14623,7 @@ loc_189B6:
 		cmp	si, 2
 		jl	short loc_18971
 		push	1	; put_leading_zeroes
-		cmp	byte_35A96, 1
+		cmp	_fwnum_force_rerender, 1
 		jnz	short loc_189C8
 		xor	ax, ax
 		jmp	short loc_189CB
@@ -14794,7 +14650,7 @@ loc_189ED:
 		mov	dword_39DA6, eax
 		mov	ax, word_34A84
 		mov	word_39DAA, ax
-		call	sub_18657
+		call	_hiscore_update_and_render
 		mov	al, byte_39DA1
 		mov	ah, 0
 		cmp	ax, word_34A84
@@ -15815,9 +15671,9 @@ loc_19229:
 		call	sub_18A20
 		pop	cx
 		call	sub_192D6
-		mov	byte_35A96, 1
+		mov	_fwnum_force_rerender, 1
 		call	sub_1889C
-		mov	byte_35A96, 0
+		mov	_fwnum_force_rerender, 0
 		leave
 		retf
 sub_190D6	endp
@@ -53969,6 +53825,7 @@ public _player_deflecting, _player_sliding
 _player_deflecting	db 0
 byte_34A58	db 0
 _player_sliding	db 0
+public _score
 _score	dd 0
 dword_34A5E	dd 0
 dword_34A62	dd 0
@@ -54537,9 +54394,11 @@ aBomb		db 'Bomb',0
 aExtend		db 'Extend!!',0
 aVpf		db 'ÇP‰›',0
 		db 0
-byte_35A96	db 0
+public _fwnum_force_rerender
+_fwnum_force_rerender	db 0
 include th01/hardware/grppfnfx_ptrs[data].asm
-dword_35ABF	dd 0
+public _score_prev
+_score_prev	dd 0
 include th01/hardware/grppfnfx[data].asm
 		db    0
 		db 0E8h
