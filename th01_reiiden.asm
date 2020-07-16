@@ -1803,7 +1803,7 @@ loc_C7C9:
 		call	_orb_force_new
 		add	sp, 0Ah
 		mov	_orb_cur_top, ORB_TOP_MAX
-		mov	word_34A84, 0
+		mov	_cardcombo_cur, 0
 
 loc_C7F4:
 		cmp	_orb_cur_top, ORB_TOP_MIN
@@ -3747,7 +3747,7 @@ loc_DA9E:
 		mov	ax, word_34A8A
 		mov	word_34A8C, ax
 		call	sub_190D6
-		mov	word_34A88, 0
+		mov	_cardcombo_max, 0
 		mov	_orb_in_portal, 0
 		mov	dword_34A62, 0
 		mov	_Pellets.PELLET_unknown_seven, 7
@@ -3787,7 +3787,7 @@ loc_DB0A:
 		mov	_orb_prev_top, ORB_TOP_START
 		mov	_player_deflecting, 0
 		mov	byte_34A58, 0
-		mov	word_34A84, 0
+		mov	_cardcombo_cur, 0
 
 loc_DB3E:
 		push	0
@@ -7114,8 +7114,8 @@ loc_1321E:
 		push	256
 		call	_graph_putsa_fx
 		add	sp, 0Ah
-		mov	ax, word_34A88
-		imul	ax, 64h
+		mov	ax, _cardcombo_max
+		imul	ax, 100
 		mov	si, ax
 		cmp	si, 1999h
 		jle	short loc_13277
@@ -7427,8 +7427,8 @@ loc_13513:
 		push	5
 		call	_frame_delay
 		pop	cx
-		mov	ax, word_34A88
-		imul	ax, 0C8h
+		mov	ax, _cardcombo_max
+		imul	ax, 200
 		cwde
 		mov	[bp+var_6], eax
 		cmp	[bp+var_6], 1999h
@@ -14356,133 +14356,13 @@ main_24_TEXT	ends
 main_25_TEXT	segment	byte public 'CODE' use16
 	extern _graph_putfwnum_fx:proc
 	extern _hiscore_update_and_render:proc
+	extern _cardcombo_max_render:proc
 main_25_TEXT	ends
 
 main_25__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_25
 		;org 9
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_187A6	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, 0Ah
-		xor	si, si
-		jmp	short loc_1881F
-; ---------------------------------------------------------------------------
-
-loc_187B2:
-		mov	ax, word_39DA4
-		cwd
-		idiv	di
-		mov	bx, 0Ah
-		cwd
-		idiv	bx
-		mov	ax, word_34A84
-		push	dx
-		cwd
-		idiv	di
-		cwd
-		idiv	bx
-		pop	ax
-		cmp	ax, dx
-		jnz	short loc_187D4
-		cmp	_fwnum_force_rerender, 1
-		jnz	short loc_18814
-
-loc_187D4:
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		push	si
-		push	((PTN_SLOT_5 + 12) shl 16) or 0
-		mov	ax, si
-		shl	ax, 4
-		add	ax, 400
-		push	ax
-		call	_ptn_put_quarter_noalpha_8
-		add	sp, 8
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		push	si
-		push	((PTN_SLOT_5 + 12) shl 16) or 0
-		mov	ax, si
-		shl	ax, 4
-		add	ax, 400
-		push	ax
-		call	_ptn_put_quarter_noalpha_8
-		add	sp, 8
-
-loc_18814:
-		mov	bx, 0Ah
-		mov	ax, di
-		cwd
-		idiv	bx
-		mov	di, ax
-		inc	si
-
-loc_1881F:
-		cmp	si, 2
-		jl	short loc_187B2
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		push	1	; put_leading_zeroes
-		cmp	_fwnum_force_rerender, 1
-		jnz	short loc_18839
-		xor	ax, ax
-		jmp	short loc_1883C
-; ---------------------------------------------------------------------------
-
-loc_18839:
-		mov	ax, word_39DA4
-
-loc_1883C:
-		cwde
-		push	eax	; num_prev
-		movsx	eax, word_34A84
-		push	eax	; num
-		push	(2 shl 16) or 27h	; (digits) or (fx)
-		pushd	(0 shl 16) or 400	; (top) or (left)
-		call	_graph_putfwnum_fx
-		add	sp, 12h
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		push	1 ; put_leading_zeroes
-		cmp	_fwnum_force_rerender, 1
-		jnz	short loc_18870
-		xor	ax, ax
-		jmp	short loc_18873
-; ---------------------------------------------------------------------------
-
-loc_18870:
-		mov	ax, word_39DA4
-
-loc_18873:
-		cwde
-		push	eax	; num_prev
-		movsx	eax, word_34A84
-		push	eax	; num
-		push	(2 shl 16) or 27h	; (digits) or (fx)
-		pushd	(0 shl 16) or 400	; (top) or (left)
-		call	_graph_putfwnum_fx
-		add	sp, 12h
-		mov	ax, word_34A84
-		mov	word_39DA4, ax
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_187A6	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14589,7 +14469,7 @@ loc_18971:
 		mov	bx, 0Ah
 		cwd
 		idiv	bx
-		mov	ax, word_34A84
+		mov	ax, _cardcombo_cur
 		push	dx
 		cwd
 		idiv	di
@@ -14635,7 +14515,7 @@ loc_189C8:
 loc_189CB:
 		cwde
 		push	eax	; num_prev
-		movsx	eax, word_34A84
+		movsx	eax, _cardcombo_cur
 		push	eax	; num
 		push	(2 shl 16) or 37h	; (digits) or (fx)
 		push	(16 shl 16) or 400	; (top) or (left)
@@ -14648,16 +14528,16 @@ loc_189ED:
 		jge	loc_188B5
 		mov	eax, _score
 		mov	dword_39DA6, eax
-		mov	ax, word_34A84
+		mov	ax, _cardcombo_cur
 		mov	word_39DAA, ax
 		call	_hiscore_update_and_render
 		mov	al, byte_39DA1
 		mov	ah, 0
-		cmp	ax, word_34A84
+		cmp	ax, _cardcombo_cur
 		jge	short loc_18A1C
-		mov	al, byte ptr word_34A84
+		mov	al, byte ptr _cardcombo_cur
 		mov	byte_39DA1, al
-		call	sub_187A6
+		call	_cardcombo_max_render
 
 loc_18A1C:
 		pop	di
@@ -26463,8 +26343,8 @@ loc_1FE6A:
 loc_1FEAB:
 		les	bx, off_39E8C
 		mov	byte ptr es:[bx+si], 1
-		mov	ax, word_34A84
-		imul	word_34A84
+		mov	ax, _cardcombo_cur
+		imul	_cardcombo_cur
 		cwde
 		push	eax
 		mov	al, _rank
@@ -26510,12 +26390,12 @@ loc_1FF15:
 		add	bx, ax
 		mov	eax, es:[bx]
 		add	_score, eax
-		inc	word_34A84
-		mov	ax, word_34A88
-		cmp	ax, word_34A84
+		inc	_cardcombo_cur
+		mov	ax, _cardcombo_max
+		cmp	ax, _cardcombo_cur
 		jge	short loc_1FF3C
-		mov	ax, word_34A84
-		mov	word_34A88, ax
+		mov	ax, _cardcombo_cur
+		mov	_cardcombo_max, ax
 
 loc_1FF3C:
 		call	sub_1889C
@@ -53847,10 +53727,10 @@ _orb_velocity_x	dw 0
 word_34A7E	dw 0
 _rem_lives	dw 4
 word_34A82	dw 0
-word_34A84	dw 0
-public _orb_in_portal
+public _cardcombo_cur, _orb_in_portal, _cardcombo_max
+_cardcombo_cur	dw 0
 _orb_in_portal	dw 0
-word_34A88	dw 0
+_cardcombo_max	dw 0
 word_34A8A	dw 1
 word_34A8C	dw 1
 public _orb_prev_left, _orb_prev_top
@@ -55098,7 +54978,7 @@ node		dd ?
 byte_39DA0	db ?
 byte_39DA1	db ?
 word_39DA2	dw ?
-word_39DA4	dw ?
+include th01/main/hud/hud[bss].asm
 dword_39DA6	dd ?
 word_39DAA	dw ?
 word_39DAC	dw ?
