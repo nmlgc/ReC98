@@ -3098,7 +3098,7 @@ sub_D4C2	proc far
 		mov	bp, sp
 		movzx	eax, _pellet_destroy_score_delta
 		add	_score, eax
-		call	sub_1889C
+		call	_hud_score_and_cardcombo_render
 		mov	_pellet_destroy_score_delta, 0
 		pop	bp
 		retf
@@ -3800,7 +3800,7 @@ loc_DB3E:
 		mov	_input_shot, 0
 		mov	_input_ok, 0
 		mov	_paused, 0
-		call	sub_1889C
+		call	_hud_score_and_cardcombo_render
 		mov	_bomb_doubletap_frames, (BOMB_DOUBLETAP_WINDOW * 3)
 		mov	word_34A70, 3Ch	; '<'
 		push	1
@@ -7297,7 +7297,7 @@ loc_13313:
 		push	240
 		call	_graph_putsa_fx
 		add	sp, 0Ah
-		call	sub_1889C
+		call	_hud_score_and_cardcombo_render
 		call	sub_D02F
 		call	_input_reset_sense
 		mov	_input_shot, 1
@@ -13318,7 +13318,7 @@ loc_17DCD:
 
 loc_17DFB:
 		add	_score, 10000
-		call	sub_1889C
+		call	_hud_score_and_cardcombo_render
 		mov	bx, si
 		imul	bx, 0Ah
 		mov	byte ptr [bx+5378h], 64h ; 'd'
@@ -14042,7 +14042,7 @@ loc_1837A:
 		les	bx, _resident
 		movzx	eax, es:[bx+reiidenconfig_t.p_value]
 		add	_score, eax
-		call	sub_1889C
+		call	_hud_score_and_cardcombo_render
 		mov	bx, si
 		imul	bx, 0Ah
 		mov	byte ptr [bx+53A0h], 64h ; 'd'
@@ -14355,197 +14355,13 @@ main_24_TEXT	ends
 ; Segment type:	Pure code
 main_25_TEXT	segment	byte public 'CODE' use16
 	extern _graph_putfwnum_fx:proc
-	extern _hiscore_update_and_render:proc
-	extern _cardcombo_max_render:proc
+	extern _hud_score_and_cardcombo_render:proc
 main_25_TEXT	ends
 
 main_25__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_25
 		;org 9
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1889C	proc far
-
-var_6		= dword	ptr -6
-var_2		= word ptr -2
-
-		enter	6, 0
-		push	si
-		push	di
-		mov	[bp+var_6], 0F4240h
-		mov	di, 0Ah
-		mov	[bp+var_2], 1
-		jmp	loc_189ED
-; ---------------------------------------------------------------------------
-
-loc_188B5:
-		push	[bp+var_2]
-		call	_graph_accesspage_func
-		pop	cx
-		mov	[bp+var_6], 0F4240h
-		mov	di, 0Ah
-		xor	si, si
-		jmp	short loc_1893C
-; ---------------------------------------------------------------------------
-
-loc_188CD:
-		mov	eax, dword_39DA6
-		cdq
-		idiv	[bp+var_6]
-		mov	ebx, 0Ah
-		cdq
-		idiv	ebx
-		push	edx
-		mov	eax, _score
-		xor	edx, edx
-		div	[bp+var_6]
-		xor	edx, edx
-		div	ebx
-		pop	eax
-		cmp	eax, edx
-		jnz	short loc_18903
-		cmp	_fwnum_force_rerender, 1
-		jnz	short loc_18928
-
-loc_18903:
-		mov	ax, si
-		mov	bx, 4
-		cwd
-		idiv	bx
-		push	dx
-		mov	ax, si
-		cwd
-		idiv	bx
-		add	ax, (PTN_SLOT_5 + 6)
-		push	ax
-		push	16
-		mov	ax, si
-		shl	ax, 4
-		add	ax, 256
-		push	ax
-		call	_ptn_put_quarter_noalpha_8
-		add	sp, 8
-
-loc_18928:
-		mov	ebx, 0Ah
-		mov	eax, [bp+var_6]
-		cdq
-		idiv	ebx
-		mov	[bp+var_6], eax
-		inc	si
-
-loc_1893C:
-		cmp	si, 7
-		jl	short loc_188CD
-		push	1	; put_leading_zeroes
-		cmp	_fwnum_force_rerender, 1
-		jnz	short loc_1894F
-		xor	eax, eax
-		jmp	short loc_18953
-; ---------------------------------------------------------------------------
-
-loc_1894F:
-		mov	eax, dword_39DA6
-
-loc_18953:
-		push	eax	; num_prev
-		pushd	[_score]	; num
-		push	(7 shl 16) or 37h	; (digits) or (fx)
-		push	(16 shl 16) or 256	; (top) or (left)
-		call	_graph_putfwnum_fx
-		add	sp, 12h
-		xor	si, si
-		jmp	short loc_189B6
-; ---------------------------------------------------------------------------
-
-loc_18971:
-		mov	ax, word_39DAA
-		cwd
-		idiv	di
-		mov	bx, 0Ah
-		cwd
-		idiv	bx
-		mov	ax, _cardcombo_cur
-		push	dx
-		cwd
-		idiv	di
-		cwd
-		idiv	bx
-		pop	ax
-		cmp	ax, dx
-		jnz	short loc_18993
-		cmp	_fwnum_force_rerender, 1
-		jnz	short loc_189AB
-
-loc_18993:
-		push	si
-		push	((PTN_SLOT_5 + 8) shl 16) or 16
-		mov	ax, si
-		shl	ax, 4
-		add	ax, 400
-		push	ax
-		call	_ptn_put_quarter_noalpha_8
-		add	sp, 8
-
-loc_189AB:
-		mov	bx, 0Ah
-		mov	ax, di
-		cwd
-		idiv	bx
-		mov	di, ax
-		inc	si
-
-loc_189B6:
-		cmp	si, 2
-		jl	short loc_18971
-		push	1	; put_leading_zeroes
-		cmp	_fwnum_force_rerender, 1
-		jnz	short loc_189C8
-		xor	ax, ax
-		jmp	short loc_189CB
-; ---------------------------------------------------------------------------
-
-loc_189C8:
-		mov	ax, word_39DAA
-
-loc_189CB:
-		cwde
-		push	eax	; num_prev
-		movsx	eax, _cardcombo_cur
-		push	eax	; num
-		push	(2 shl 16) or 37h	; (digits) or (fx)
-		push	(16 shl 16) or 400	; (top) or (left)
-		call	_graph_putfwnum_fx
-		add	sp, 12h
-		dec	[bp+var_2]
-
-loc_189ED:
-		cmp	[bp+var_2], 0
-		jge	loc_188B5
-		mov	eax, _score
-		mov	dword_39DA6, eax
-		mov	ax, _cardcombo_cur
-		mov	word_39DAA, ax
-		call	_hiscore_update_and_render
-		mov	al, byte_39DA1
-		mov	ah, 0
-		cmp	ax, _cardcombo_cur
-		jge	short loc_18A1C
-		mov	al, byte ptr _cardcombo_cur
-		mov	byte_39DA1, al
-		call	_cardcombo_max_render
-
-loc_18A1C:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_1889C	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14745,7 +14561,7 @@ loc_18BB7:
 		push	100h
 		nopcall	sub_18CD3
 		add	sp, 6
-		mov	byte_39DA1, 0
+		mov	_hud_cardcombo_max, 0
 		pop	di
 		pop	si
 		pop	bp
@@ -15537,7 +15353,7 @@ loc_19124:
 		push	608
 		call	_graph_putsa_fx
 		add	sp, 0Ah
-		mov	byte_39DA1, 0
+		mov	_hud_cardcombo_max, 0
 		cmp	byte_34A49, 1
 		jnz	short loc_19227
 		push	1
@@ -15552,7 +15368,7 @@ loc_19229:
 		pop	cx
 		call	sub_192D6
 		mov	_fwnum_force_rerender, 1
-		call	sub_1889C
+		call	_hud_score_and_cardcombo_render
 		mov	_fwnum_force_rerender, 0
 		leave
 		retf
@@ -26398,7 +26214,7 @@ loc_1FF15:
 		mov	_cardcombo_max, ax
 
 loc_1FF3C:
-		call	sub_1889C
+		call	_hud_score_and_cardcombo_render
 		mov	al, byte_35BEE
 		inc	byte_35BEE
 		mov	ah, 0
@@ -29851,7 +29667,7 @@ loc_21B5B:
 loc_21B61:
 		movsx	eax, [bp+arg_12]
 		add	_score, eax
-		call	sub_1889C
+		call	_hud_score_and_cardcombo_render
 		push	3
 		call	_mdrv2_se_play
 		call	[bp+arg_14]
@@ -44323,7 +44139,7 @@ loc_29D0E:
 		call	_graph_accesspage_func
 		mov	byte_34A49, 1
 		call	sub_190D6
-		call	sub_1889C
+		call	_hud_score_and_cardcombo_render
 		push	0FFFFh
 		push	word_3A6C8
 		call	sub_2191C
@@ -48692,7 +48508,7 @@ loc_2C9DA:
 		call	_graph_copy_page_back_to_front
 		mov	byte_34A49, 1
 		call	sub_190D6
-		call	sub_1889C
+		call	_hud_score_and_cardcombo_render
 		call	_z_vsync_wait_and_scrollup stdcall, 0
 		pop	cx
 		mov	word_3A6CA, 0
@@ -54976,11 +54792,10 @@ byte_39D36	db ?
 ; void far *node
 node		dd ?
 byte_39DA0	db ?
-byte_39DA1	db ?
+public _hud_cardcombo_max
+_hud_cardcombo_max	db ?
 word_39DA2	dw ?
 include th01/main/hud/hud[bss].asm
-dword_39DA6	dd ?
-word_39DAA	dw ?
 word_39DAC	dw ?
 word_39DAE	dw ?
 byte_39DB0	db ?

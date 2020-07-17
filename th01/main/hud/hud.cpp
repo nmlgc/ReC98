@@ -10,8 +10,10 @@
 static const int SCORE_LEFT = 256;
 static const int CARDCOMBO_LEFT = 400;
 static const int MAX_TOP = 0;
+static const int CUR_TOP = 16;
 
 static const int MAX_FX = FX(7, 2, 0);
+static const int CUR_FX = FX(7, 3, 0);
 
 #if (PTN_QUARTER_W < GLYPH_FULL_W)
 	#error Original code assumes PTN_QUARTER_W >= GLYPH_FULL_W
@@ -24,6 +26,8 @@ static const int COL_W = PTN_QUARTER_W;
 // Forces re-rendering of all full-width numbers on the HUD, even if they
 // haven't changed since the last render call.
 extern unsigned char fwnum_force_rerender;
+
+extern unsigned char hud_cardcombo_max; // Why a separate variable???
 /// -------
 
 /// Functions
@@ -120,4 +124,50 @@ void cardcombo_max_render(void)
 
 	prev = cardcombo_cur;
 	#undef prev
+}
+
+void hud_score_and_cardcombo_render(void)
+{
+	// TODO: Should just be `static` once the variable can be declared here
+	#define score_prev score_cur_prev
+	#define cardcombo_prev cardcombo_cur_prev
+	extern long score_prev;
+	extern int cardcombo_prev;
+
+	int digit;
+	int page;
+	int cardcombo_divisor;
+	long score_divisor;
+
+	score_divisor = 1000000; // Must match SCORE_DIGITS!
+	cardcombo_divisor = 10; // Must match CARDCOMBO_DIGITS!
+	for(page = 1; page >= 0; page--) {
+		graph_accesspage_func(page);
+		score_divisor = 1000000; // Must match SCORE_DIGITS!
+		cardcombo_divisor = 10; // Must match CARDCOMBO_DIGITS!
+
+		for(digit = 0; digit < SCORE_DIGITS; digit++) {
+			if(digit_changed(score, score_prev, score_divisor)) {
+				score_bg(bg_put, digit, CUR_TOP, PTN_BG_CUR_SCORE);
+			}
+			score_divisor /= 10;
+		}
+		score_put(CUR_TOP, CUR_FX, score_prev);
+
+		for(digit = 0; digit < CARDCOMBO_DIGITS; digit++) {
+			if(digit_changed(cardcombo_cur, cardcombo_prev, cardcombo_divisor)) {
+				cardcombo_bg(bg_put, digit, CUR_TOP, PTN_BG_CUR_CARDCOMBO);
+			}
+			cardcombo_divisor /= 10;
+		}
+		cardcombo_put(CUR_TOP, CUR_FX, cardcombo_prev);
+	}
+
+	score_prev = score;
+	cardcombo_prev = cardcombo_cur;
+	hiscore_update_and_render();
+	if(hud_cardcombo_max < cardcombo_cur) {
+		hud_cardcombo_max = cardcombo_cur;
+		cardcombo_max_render();
+	}
 }

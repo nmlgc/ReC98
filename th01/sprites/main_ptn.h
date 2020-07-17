@@ -12,6 +12,10 @@ typedef enum {
 typedef enum {
 	// HUD (snapped backgrounds)
 	// -------------------------
+	PTN_BG_CUR_SCORE = PTN_ID(PTN_SLOT_BG_HUD, 6),
+	PTN_BG_CUR_SCORE_last = last_for_quarters(PTN_BG_CUR_SCORE, SCORE_DIGITS),
+	PTN_BG_CUR_CARDCOMBO,
+
 	PTN_BG_MAX_SCORE = PTN_ID(PTN_SLOT_BG_HUD, 10),
 	PTN_BG_MAX_SCORE_last = last_for_quarters(PTN_BG_MAX_SCORE, SCORE_DIGITS),
 	PTN_BG_MAX_CARDCOMBO,
