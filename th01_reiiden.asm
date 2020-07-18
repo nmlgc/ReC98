@@ -14354,220 +14354,14 @@ main_24_TEXT	ends
 
 ; Segment type:	Pure code
 main_25_TEXT	segment	byte public 'CODE' use16
-	extern _graph_putfwnum_fx:proc
 	extern _hud_score_and_cardcombo_render:proc
+	extern _score_and_cardcombo_put_initial:proc
 main_25_TEXT	ends
 
 main_25__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_25
 		;org 9
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_18A20	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, [bp+arg_0]
-		or	di, di
-		jz	loc_18AB6
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		xor	si, si
-		jmp	short loc_18A60
-; ---------------------------------------------------------------------------
-
-loc_18A3A:
-		mov	ax, si
-		mov	bx, 4
-		cwd
-		idiv	bx
-		push	dx
-		mov	ax, si
-		cwd
-		idiv	bx
-		add	ax, (PTN_SLOT_5 + 6)
-		push	ax
-		push	16
-		mov	ax, si
-		shl	ax, 4
-		add	ax, 256
-		push	ax
-		call	_ptn_snap_quarter_8
-		add	sp, 8
-		inc	si
-
-loc_18A60:
-		cmp	si, 7
-		jl	short loc_18A3A
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		call	_graph_putfwnum_fx c, large (16 shl 16) or 256, large (7 shl 16) or 37h, large [_score], large 0, 1
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		xor	si, si
-		jmp	short loc_18AAF
-; ---------------------------------------------------------------------------
-
-loc_18A96:
-		push	si
-		push	((PTN_SLOT_5 + 8) shl 16) or 16
-		mov	ax, si
-		shl	ax, 4
-		add	ax, 400
-		push	ax
-		call	_ptn_snap_quarter_8
-		add	sp, 8
-		inc	si
-
-loc_18AAF:
-		cmp	si, 2
-		jl	short loc_18A96
-		jmp	short loc_18AD8
-; ---------------------------------------------------------------------------
-
-loc_18AB6:
-		xor	si, si
-		jmp	short loc_18AD3
-; ---------------------------------------------------------------------------
-
-loc_18ABA:
-		push	si
-		push	((PTN_SLOT_5 + 8) shl 16) or 16
-		mov	ax, si
-		shl	ax, 4
-		add	ax, 400
-		push	ax
-		call	_ptn_put_quarter_noalpha_8
-		add	sp, 8
-		inc	si
-
-loc_18AD3:
-		cmp	si, 2
-		jl	short loc_18ABA
-
-loc_18AD8:
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		call	_graph_putfwnum_fx c, large (16 shl 16) or 400, large (2 shl 16) or 37h, large 0, large 99, 1
-		or	di, di
-		jz	loc_18B95
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		xor	si, si
-		jmp	short loc_18B33
-; ---------------------------------------------------------------------------
-
-loc_18B0D:
-		mov	ax, si
-		mov	bx, 4
-		cwd
-		idiv	bx
-		push	dx
-		mov	ax, si
-		cwd
-		idiv	bx
-		add	ax, (PTN_SLOT_5 + 10)
-		push	ax
-		push	0
-		mov	ax, si
-		shl	ax, 4
-		add	ax, 256
-		push	ax
-		call	_ptn_snap_quarter_8
-		add	sp, 8
-		inc	si
-
-loc_18B33:
-		cmp	si, 7
-		jl	short loc_18B0D
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		push	1	; put_leading_zeroes
-		pushd	0	; num_prev
-		les	bx, _resident
-		pushd	dword ptr es:[bx+reiidenconfig_t.hiscore]	; num
-		push	(7 shl 16) or 27h	; (digits) or (fx)
-		pushd	(0 shl 16) or 256	; (top) or (left)
-		call	_graph_putfwnum_fx
-		add	sp, 12h
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		xor	si, si
-		jmp	short loc_18B86
-; ---------------------------------------------------------------------------
-
-loc_18B6D:
-		push	si
-		push	((PTN_SLOT_5 + 12) shl 16) or 0
-		mov	ax, si
-		shl	ax, 4
-		add	ax, 400
-		push	ax
-		call	_ptn_snap_quarter_8
-		add	sp, 8
-		inc	si
-
-loc_18B86:
-		cmp	si, 2
-		jl	short loc_18B6D
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		jmp	short loc_18BB7
-; ---------------------------------------------------------------------------
-
-loc_18B95:
-		xor	si, si
-		jmp	short loc_18BB2
-; ---------------------------------------------------------------------------
-
-loc_18B99:
-		push	si
-		push	((PTN_SLOT_5 + 12) shl 16) or 0
-		mov	ax, si
-		shl	ax, 4
-		add	ax, 400
-		push	ax
-		call	_ptn_put_quarter_noalpha_8
-		add	sp, 8
-		inc	si
-
-loc_18BB2:
-		cmp	si, 2
-		jl	short loc_18B99
-
-loc_18BB7:
-		call	_graph_putfwnum_fx c, large (0 shl 16) or 400, large (2 shl 16) or 27h, large 0, large 99, 1
-		push	0B00000h
-		push	100h
-		nopcall	sub_18CD3
-		add	sp, 6
-		push	0B00010h
-		push	100h
-		nopcall	sub_18CD3
-		add	sp, 6
-		mov	_hud_cardcombo_max, 0
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_18A20	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14699,8 +14493,8 @@ sub_18C8C	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_18CD3	proc far
+public _graph_copy_hud_row_0_to_1_8
+_graph_copy_hud_row_0_to_1_8	proc far
 
 var_6		= word ptr -6
 var_4		= word ptr -4
@@ -14778,16 +14572,16 @@ loc_18D02:
 
 loc_18D6F:
 		mov	ax, [bp+arg_4]
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
 		cmp	ax, [bp+var_6]
 		jg	short loc_18D02
-		add	[bp+var_4], 50h	; 'P'
+		add	[bp+var_4], ROW_SIZE
 		inc	[bp+var_2]
 
 loc_18D84:
-		cmp	[bp+var_2], 10h
+		cmp	[bp+var_2], GLYPH_H
 		jl	loc_18CF8
 		push	0
 		call	_graph_accesspage_func
@@ -14796,7 +14590,7 @@ loc_18D84:
 		pop	si
 		leave
 		retf
-sub_18CD3	endp
+_graph_copy_hud_row_0_to_1_8	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -14859,8 +14653,8 @@ loc_18DF8:
 		mov	ax, _rem_lives
 		shl	ax, 4
 		push	ax
-		pushd	80h
-		call	sub_18CD3
+		pushd	128 or (0 shl 16)
+		call	_graph_copy_hud_row_0_to_1_8
 		add	sp, 6
 		pop	si
 		pop	bp
@@ -15008,8 +14802,8 @@ loc_18F13:
 		mov	ax, _rem_lives
 		shl	ax, 4
 		push	ax
-		pushd	80h
-		call	sub_18CD3
+		pushd	128 or (0 shl 16)
+		call	_graph_copy_hud_row_0_to_1_8
 		add	sp, 6
 
 loc_18F2D:
@@ -15069,8 +14863,8 @@ loc_18F78:
 		cbw
 		shl	ax, 4
 		push	ax
-		push	100080h
-		call	sub_18CD3
+		push	128 or (16 shl 16)
+		call	_graph_copy_hud_row_0_to_1_8
 		add	sp, 6
 		pop	si
 		pop	bp
@@ -15199,8 +14993,8 @@ loc_19064:
 		cbw
 		shl	ax, 4
 		push	ax
-		push	100080h
-		call	sub_18CD3
+		push	128 or (16 shl 16)
+		call	_graph_copy_hud_row_0_to_1_8
 		add	sp, 6
 
 loc_19081:
@@ -15236,9 +15030,9 @@ var_4		= byte ptr -4
 		push	608
 		call	_graph_putsa_fx
 		add	sp, 0Ah
-		push	100020h
-		push	260h
-		call	sub_18CD3
+		push	32 or (16 shl 16)
+		push	608
+		call	_graph_copy_hud_row_0_to_1_8
 		add	sp, 6
 		leave
 		retf
@@ -15364,7 +15158,7 @@ loc_19227:
 		push	0
 
 loc_19229:
-		call	sub_18A20
+		call	_score_and_cardcombo_put_initial
 		pop	cx
 		call	sub_192D6
 		mov	_fwnum_force_rerender, 1

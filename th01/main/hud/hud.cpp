@@ -8,7 +8,6 @@
 /// Constants
 /// ---------
 static const int SCORE_LEFT = 256;
-static const int CARDCOMBO_LEFT = 400;
 static const int MAX_TOP = 0;
 static const int CUR_TOP = 16;
 
@@ -19,6 +18,14 @@ static const int CUR_FX = FX(7, 3, 0);
 	#error Original code assumes PTN_QUARTER_W >= GLYPH_FULL_W
 #endif
 static const int COL_W = PTN_QUARTER_W;
+
+static const int SCORE_W = (SCORE_DIGITS * COL_W);
+
+static const int CARDCOMBO_LEFT = (SCORE_LEFT + ((SCORE_DIGITS + 2) * COL_W));
+static const int CARDCOMBO_W = (CARDCOMBO_DIGITS * COL_W);
+static const int CARDCOMBO_RIGHT = (CARDCOMBO_LEFT + CARDCOMBO_W);
+
+static const int SCORE_AND_CARDCOMBO_W = (CARDCOMBO_RIGHT - SCORE_LEFT);
 /// ---------
 
 /// Globals
@@ -39,12 +46,19 @@ inline int col_left(int first_left, int col) {
 #define bg_put(first_left, col, top, ptn_id, quarter) \
 	ptn_put_quarter_noalpha_8(col_left(first_left, col), top, ptn_id, quarter)
 
+#define bg_snap(first_left, col, top, ptn_id, quarter) \
+	ptn_snap_quarter_8(col_left(first_left, col), top, ptn_id, quarter)
+
 #define ptn_id_and_quarter_from_i(func, first_left, col, top, ptn_id_base, i) \
 	func(first_left, col, top, (ptn_id_base + (i / 4)), (i % 4))
 
 #define digit_changed(var, var_prev, divisor) \
 	((var_prev / divisor) % 10) != ((var / divisor) % 10) || \
 	(fwnum_force_rerender == 1)
+
+// Copies the (⌊[w]/16⌋*16)×[ROW_H] pixels starting at (⌊left/8⌋*8, top) from
+// VRAM page 0 to VRAM page 1.
+void graph_copy_hud_row_0_to_1_8(int left, int top, int w);
 /// ---------
 }
 
@@ -170,4 +184,67 @@ void hud_score_and_cardcombo_render(void)
 		hud_cardcombo_max = cardcombo_cur;
 		cardcombo_max_render();
 	}
+}
+
+#define cardcombo_bg_loop(func, digit, top, ptn_id) \
+	for(digit = 0; digit < CARDCOMBO_DIGITS; digit++) { \
+		cardcombo_bg(func, digit, top, ptn_id); \
+	} \
+
+inline void cardcombo_put_initial(int top, int fx) {
+	graph_putfwnum_fx(CARDCOMBO_LEFT, top, fx, CARDCOMBO_DIGITS, 0, 99, true);
+}
+
+#define score_snap_bg_and_put(digit, top, ptn_id, fx, score) \
+	graph_accesspage_func(1); \
+	for(digit = 0; digit < SCORE_DIGITS; digit++) { \
+		score_bg(bg_snap, digit, top, ptn_id); \
+	} \
+	graph_accesspage_func(0); \
+	graph_putfwnum_fx(SCORE_LEFT, top, fx, SCORE_DIGITS, score, 0, true);
+
+// Setting [first_run] to false will only reset the card combo display.
+void score_and_cardcombo_put_initial(bool16 first_run)
+{
+	int digit;
+
+	// Spot the difference… :(
+	if(first_run) {
+		score_snap_bg_and_put(digit, CUR_TOP, PTN_BG_CUR_SCORE, CUR_FX, score);
+		graph_accesspage_func(1);
+		cardcombo_bg_loop(bg_snap, digit, CUR_TOP, PTN_BG_CUR_CARDCOMBO);
+	} else {
+		cardcombo_bg_loop(bg_put, digit, CUR_TOP, PTN_BG_CUR_CARDCOMBO);
+	}
+	graph_accesspage_func(0);
+	cardcombo_put_initial(CUR_TOP, CUR_FX);
+
+	if(first_run) {
+		score_snap_bg_and_put(
+			digit, MAX_TOP, PTN_BG_MAX_SCORE, MAX_FX, resident->hiscore
+		);
+		graph_accesspage_func(1);
+		cardcombo_bg_loop(bg_snap, digit, MAX_TOP, PTN_BG_MAX_CARDCOMBO);
+		graph_accesspage_func(0);
+	} else {
+		cardcombo_bg_loop(bg_put, digit, MAX_TOP, PTN_BG_MAX_CARDCOMBO);
+	}
+	cardcombo_put_initial(MAX_TOP, MAX_FX);
+
+	/* TODO: Replace with the decompiled calls
+	 * 	graph_copy_hud_row_0_to_1_8(SCORE_LEFT, MAX_TOP, SCORE_AND_CARDCOMBO_W);
+	 * 	graph_copy_hud_row_0_to_1_8(SCORE_LEFT, CUR_TOP, SCORE_AND_CARDCOMBO_W);
+	 * once that function is part of this translation unit */
+	#define call(top) __asm { \
+		db  	0x66, 0x68, top, 0x00, SCORE_AND_CARDCOMBO_W, 0x00; \
+		push	SCORE_LEFT; \
+		nop; \
+		push	cs; \
+		call	near ptr graph_copy_hud_row_0_to_1_8; \
+		add 	sp, 6; \
+	}
+	call(MAX_TOP);
+	call(CUR_TOP);
+
+	hud_cardcombo_max = 0;
 }
