@@ -22,20 +22,18 @@ extern "C" {
 
 typedef dots_t(PTN_W) ptn_dots_t;
 
-struct ptn_planar_t {
-	ptn_dots_t B[PTN_H];
-	ptn_dots_t R[PTN_H];
-	ptn_dots_t G[PTN_H];
-	ptn_dots_t E[PTN_H];
+struct ptn_plane_t {
+	ptn_dots_t row[PTN_H];
+
+	ptn_dots_t& operator [](int y) {
+		return row[y];
+	}
 };
 
 // On-disk per-image structure
 struct ptn_file_image_t {
 	int8_t unused_zero;
-	union {
-		ptn_planar_t planes;
-		ptn_dots_t P[PL_COUNT][PTN_H];
-	};
+	Planar<ptn_plane_t> planes;
 };
 
 // In-memory per-image structure

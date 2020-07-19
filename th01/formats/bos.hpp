@@ -3,10 +3,7 @@
 #define BOS_IMAGES_PER_SLOT 8
 
 struct bos_image_t {
-	dots16_t *B;
-	dots16_t *R;
-	dots16_t *G;
-	dots16_t *E;
+	Planar<dots16_t *> planes;
 	dots16_t *alpha;
 };
 

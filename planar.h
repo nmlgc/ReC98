@@ -20,6 +20,20 @@ typedef enum {
 	PL_B, PL_R, PL_G, PL_E, PL_COUNT
 } vram_plane_t;
 
+#ifdef __cplusplus
+	template <class T> struct Planar {
+		T B, R, G, E;
+
+		T& operator [](int plane) {
+			return (&B)[plane];
+		}
+
+		const T& operator [](int plane) const {
+			return (&B)[plane];
+		}
+	};
+#endif
+
 typedef struct {
 	dots8_t B, R, G, E;
 } planar8_t;
