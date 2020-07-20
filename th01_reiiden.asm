@@ -707,9 +707,7 @@ var_2		= word ptr -2
 		enter	2, 0
 		push	si
 		call	sub_14BD2
-		push	ds
-		push	offset aMask_grf ; "mask.grf"
-		call	sub_18C8C
+		call	_hud_bg_load stdcall, offset aMask_grf, ds
 		push	ds
 		push	offset aMiko_ac_bos ; "miko_ac.bos"
 		push	ds
@@ -2747,7 +2745,7 @@ loc_D1E3:
 		push	offset aKabeMem7lu ; "kabe  mem	  = %7lu\n"
 		call	_printf
 		add	sp, 8
-		push	word_39DA2
+		push	_hud_bg_size
 		push	ds
 		push	offset aMaskMem7u ; "mask  mem	 = %7u\n"
 		call	_printf
@@ -2849,7 +2847,7 @@ loc_D2F8:
 		jl	short loc_D2E5
 		push	ds
 		push	offset aMask	; "MASK"
-		pushd	[node]	; node
+		pushd	[_hud_bg]
 		call	sub_D095
 		push	ds
 		push	offset aKabe	; "KABE"
@@ -14356,139 +14354,14 @@ main_24_TEXT	ends
 main_25_TEXT	segment	byte public 'CODE' use16
 	extern _hud_score_and_cardcombo_render:proc
 	extern _score_and_cardcombo_put_initial:proc
+	extern _hud_bg_put:proc
+	extern _hud_bg_load:proc
 main_25_TEXT	ends
 
 main_25__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_25
 		;org 9
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_18BFD	proc far
-
-var_3		= byte ptr -3
-var_2		= byte ptr -2
-var_1		= byte ptr -1
-
-		enter	4, 0
-		push	si
-		push	di
-		xor	di, di
-		mov	al, byte_39DA0
-		mov	[bp+var_3], al
-		cli
-		call	_grcg_setcolor_rmw stdcall, 10
-		pop	cx
-		xor	si, si
-		jmp	short loc_18C7C
-; ---------------------------------------------------------------------------
-
-loc_18C18:
-		les	bx, node
-		add	bx, di
-		mov	al, es:[bx]
-		mov	[bp+var_1], al
-		inc	di
-		cmp	al, [bp+var_3]
-		jnz	short loc_18C69
-		mov	bx, word ptr node
-		add	bx, di
-		mov	al, es:[bx]
-		mov	[bp+var_2], al
-		inc	di
-		cmp	[bp+var_2], 0
-		jz	short loc_18C69
-		mov	bx, word ptr node
-		add	bx, di
-		mov	al, es:[bx]
-		mov	[bp+var_1], al
-		inc	di
-		jmp	short loc_18C5F
-; ---------------------------------------------------------------------------
-
-loc_18C4C:
-		cmp	[bp+var_1], 0
-		jz	short loc_18C5E
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		mov	al, [bp+var_1]
-		mov	es:[bx], al
-
-loc_18C5E:
-		inc	si
-
-loc_18C5F:
-		mov	al, [bp+var_2]
-		dec	[bp+var_2]
-		or	al, al
-		jnz	short loc_18C4C
-
-loc_18C69:
-		cmp	[bp+var_1], 0
-		jz	short loc_18C7B
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		mov	al, [bp+var_1]
-		mov	es:[bx], al
-
-loc_18C7B:
-		inc	si
-
-loc_18C7C:
-		cmp	si, 14A0h
-		jb	short loc_18C18
-		call	_grcg_off_func
-		sti
-		pop	di
-		pop	si
-		leave
-		retf
-sub_18BFD	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_18C8C	proc far
-
-var_40		= byte ptr -40h
-var_3B		= byte ptr -3Bh
-var_38		= word ptr -38h
-arg_0		= dword	ptr  6
-
-		enter	40h, 0
-		push	si
-		pushd	[bp+arg_0]
-		call	file_ropen
-		push	ss
-		lea	ax, [bp+var_40]
-		push	ax
-		push	40h
-		call	file_read
-		mov	al, [bp+var_3B]
-		mov	byte_39DA0, al
-		mov	si, [bp+var_38]
-		mov	word_39DA2, si
-		push	si
-		call	@$bnwa$qui
-		pop	cx
-		mov	word ptr node+2, dx
-		mov	word ptr node, ax
-		push	dx
-		push	ax
-		push	si
-		call	file_read
-		call	file_close
-		xor	ax, ax
-		pop	si
-		leave
-		retf
-sub_18C8C	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15051,11 +14924,11 @@ var_4		= byte ptr -4
 		push	1
 		call	_graph_accesspage_func
 		pop	cx
-		call	sub_18BFD
+		call	_hud_bg_put
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
-		call	sub_18BFD
+		call	_hud_bg_put
 		cmp	byte_34A47, 0
 		jnz	short loc_1910C
 		mov	al, _route
@@ -54583,12 +54456,6 @@ byte_39D2C	db ?
 		db 9 dup(?)
 byte_39D36	db ?
 		db 101 dup(?)
-; void far *node
-node		dd ?
-byte_39DA0	db ?
-public _hud_cardcombo_max
-_hud_cardcombo_max	db ?
-word_39DA2	dw ?
 include th01/main/hud/hud[bss].asm
 word_39DAC	dw ?
 word_39DAE	dw ?

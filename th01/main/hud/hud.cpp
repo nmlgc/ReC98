@@ -1,5 +1,6 @@
 #include "th01/main/vars.hpp"
 #include "th01/formats/ptn.hpp"
+#include "th01/formats/grf.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/player/player.hpp"
 #include "th01/sprites/main_ptn.h"
@@ -34,7 +35,10 @@ static const int SCORE_AND_CARDCOMBO_W = (CARDCOMBO_RIGHT - SCORE_LEFT);
 // haven't changed since the last render call.
 extern unsigned char fwnum_force_rerender;
 
+// extern uint8_t *hud_bg;
+extern uint8_t hud_bg_rle_run_byte;
 extern unsigned char hud_cardcombo_max; // Why a separate variable???
+// size_t hud_bg_size;
 /// -------
 
 /// Functions
@@ -248,3 +252,63 @@ void score_and_cardcombo_put_initial(bool16 first_run)
 
 	hud_cardcombo_max = 0;
 }
+
+/// Background
+/// ----------
+void hud_bg_put(void)
+{
+	register uint16_t vram_offset;
+	uint16_t src_offset = 0;
+	uint8_t byte;
+	uint8_t runs;
+	uint8_t rle_run_byte = hud_bg_rle_run_byte;
+
+	disable();
+	grcg_setcolor_rmw(10);
+	for(vram_offset = 0; vram_offset < (66 * ROW_SIZE); vram_offset++) {
+		// Effectively the same algorithm as used for .GRX files, except for
+		// • the customizable RLE run byte, and
+		// • implicitly defining a run of 0x00 dots as a skip. (Which really
+		//   is just an optimization here, since blitting a 0x00 byte with the
+		//   GRCG won't blit anything after all.)
+		byte = hud_bg[src_offset++];
+		if(byte == rle_run_byte) {
+			runs = hud_bg[src_offset++];
+			if(runs) {
+				byte = hud_bg[src_offset++];
+				while(runs--) {
+					if(byte != 0) {
+						VRAM_PUT(B, vram_offset, byte, 8);
+					}
+					vram_offset++;
+				}
+			}
+		}
+		// Yes, in case we just did a putting run, we are in fact putting
+		// one more byte!
+		if(byte != 0) {
+			VRAM_PUT(B, vram_offset, byte, 8);
+		}
+	}
+	grcg_off();
+	enable();
+}
+
+int hud_bg_load(const char *fn)
+{
+	int size;
+	grf_header_t header;
+
+	file_ropen(fn);
+	file_read(&header, sizeof(header));
+
+	hud_bg_rle_run_byte = header.rle_run_byte;
+	size = header.rle_size.B;
+	hud_bg_size = size;
+	hud_bg = new uint8_t[size];
+
+	file_read(hud_bg, size);
+	file_close();
+	return 0;
+}
+/// ----------

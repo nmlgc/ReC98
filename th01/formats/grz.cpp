@@ -78,6 +78,11 @@ void grx_put(unsigned int slot)
 		grcg_setcolor_rmw(grx_col - 1);
 	}
 	for(uint16_t vram_offset = 0; vram_offset < PLANE_SIZE; vram_offset++) {
+		// Effectively the same algorithm as used for .GRF files, except for
+		// • the fixed RLE run command byte, and
+		// • adding another wasteful byte to define whether a run should put
+		//   actually the next bytes from the planar stream, or just skip over
+		//   them.
 		command = *(rle++);
 		if(command == GC_RUN) {
 			runs = *(rle++);
