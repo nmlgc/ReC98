@@ -18,7 +18,11 @@ static const int CUR_FX = FX(7, 3, 0);
 #if (PTN_QUARTER_W < GLYPH_FULL_W)
 	#error Original code assumes PTN_QUARTER_W >= GLYPH_FULL_W
 #endif
+#if (PTN_QUARTER_H < GLYPH_H)
+	#error Original code assumes PTN_QUARTER_H >= GLYPH_H
+#endif
 static const int COL_W = PTN_QUARTER_W;
+static const int ROW_H = PTN_QUARTER_H;
 
 static const int SCORE_W = (SCORE_DIGITS * COL_W);
 
@@ -235,21 +239,8 @@ void score_and_cardcombo_put_initial(bool16 first_run)
 	}
 	cardcombo_put_initial(MAX_TOP, MAX_FX);
 
-	/* TODO: Replace with the decompiled calls
-	 * 	graph_copy_hud_row_0_to_1_8(SCORE_LEFT, MAX_TOP, SCORE_AND_CARDCOMBO_W);
-	 * 	graph_copy_hud_row_0_to_1_8(SCORE_LEFT, CUR_TOP, SCORE_AND_CARDCOMBO_W);
-	 * once that function is part of this translation unit */
-	#define call(top) __asm { \
-		db  	0x66, 0x68, top, 0x00, SCORE_AND_CARDCOMBO_W, 0x00; \
-		push	SCORE_LEFT; \
-		nop; \
-		push	cs; \
-		call	near ptr graph_copy_hud_row_0_to_1_8; \
-		add 	sp, 6; \
-	}
-	call(MAX_TOP);
-	call(CUR_TOP);
-
+	graph_copy_hud_row_0_to_1_8(SCORE_LEFT, MAX_TOP, SCORE_AND_CARDCOMBO_W);
+	graph_copy_hud_row_0_to_1_8(SCORE_LEFT, CUR_TOP, SCORE_AND_CARDCOMBO_W);
 	hud_cardcombo_max = 0;
 }
 
@@ -312,3 +303,30 @@ int hud_bg_load(const char *fn)
 	return 0;
 }
 /// ----------
+
+void graph_copy_hud_row_0_to_1_8(int left, int top, int w)
+{
+	uint16_t vram_offset;
+	dots16_t dots;
+	int y;
+	uint16_t vram_offset_row = vram_offset_divmul(left, top);
+	int x;
+
+	vram_offset = vram_offset_row;
+	for(y = 0; y < ROW_H; y++) {
+		vram_offset = vram_offset_row;
+		for(x = 0; x < (w / 16); x++) {
+			#define copy_plane(plane) \
+				OUTW(0xA6, 0);	VRAM_SNAP(dots, plane, vram_offset, 16); \
+				OUTW(0xA6, 1);	VRAM_PUT(plane, vram_offset, dots, 16);
+			copy_plane(B);
+			copy_plane(R);
+			copy_plane(G);
+			copy_plane(E);
+			vram_offset += sizeof(dots);
+			#undef copy_plane
+		}
+		vram_offset_row += ROW_SIZE;
+	}
+	graph_accesspage_func(0);
+}

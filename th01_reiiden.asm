@@ -14356,115 +14356,13 @@ main_25_TEXT	segment	byte public 'CODE' use16
 	extern _score_and_cardcombo_put_initial:proc
 	extern _hud_bg_put:proc
 	extern _hud_bg_load:proc
+	extern _graph_copy_hud_row_0_to_1_8:proc
 main_25_TEXT	ends
 
 main_25__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_25
 		;org 9
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public _graph_copy_hud_row_0_to_1_8
-_graph_copy_hud_row_0_to_1_8	proc far
-
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		enter	6, 0
-		push	si
-		push	di
-		mov	ax, [bp+arg_0]
-		mov	bx, 8
-		cwd
-		idiv	bx
-		mov	dx, [bp+arg_2]
-		imul	dx, 50h
-		add	ax, dx
-		mov	[bp+var_4], ax
-		mov	si, [bp+var_4]
-		mov	[bp+var_2], 0
-		jmp	loc_18D84
-; ---------------------------------------------------------------------------
-
-loc_18CF8:
-		mov	si, [bp+var_4]
-		mov	[bp+var_6], 0
-		jmp	short loc_18D6F
-; ---------------------------------------------------------------------------
-
-loc_18D02:
-		mov	dx, 0A6h
-		xor	ax, ax
-		out	dx, ax
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		mov	di, es:[bx]
-		mov	ax, 1
-		out	dx, ax
-		mov	bx, word ptr _VRAM_PLANE_B
-		add	bx, si
-		mov	es:[bx], di
-		xor	ax, ax
-		out	dx, ax
-		les	bx, _VRAM_PLANE_R
-		add	bx, si
-		mov	di, es:[bx]
-		mov	ax, 1
-		out	dx, ax
-		mov	bx, word ptr _VRAM_PLANE_R
-		add	bx, si
-		mov	es:[bx], di
-		xor	ax, ax
-		out	dx, ax
-		les	bx, _VRAM_PLANE_G
-		add	bx, si
-		mov	di, es:[bx]
-		mov	ax, 1
-		out	dx, ax
-		mov	bx, word ptr _VRAM_PLANE_G
-		add	bx, si
-		mov	es:[bx], di
-		xor	ax, ax
-		out	dx, ax
-		les	bx, _VRAM_PLANE_E
-		add	bx, si
-		mov	di, es:[bx]
-		mov	ax, 1
-		out	dx, ax
-		mov	bx, word ptr _VRAM_PLANE_E
-		add	bx, si
-		mov	es:[bx], di
-		add	si, 2
-		inc	[bp+var_6]
-
-loc_18D6F:
-		mov	ax, [bp+arg_4]
-		mov	bx, 16
-		cwd
-		idiv	bx
-		cmp	ax, [bp+var_6]
-		jg	short loc_18D02
-		add	[bp+var_4], ROW_SIZE
-		inc	[bp+var_2]
-
-loc_18D84:
-		cmp	[bp+var_2], GLYPH_H
-		jl	loc_18CF8
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		pop	di
-		pop	si
-		leave
-		retf
-_graph_copy_hud_row_0_to_1_8	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 

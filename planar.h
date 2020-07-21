@@ -76,6 +76,11 @@ static inline unsigned int vram_offset_muldiv(int x, int y)
 {
 	return (y * ROW_SIZE) + (x / 8);
 }
+
+static inline unsigned int vram_offset_divmul(int x, int y)
+{
+	return (x / 8) + (y * ROW_SIZE);
+}
 #endif
 
 #define VRAM_CHUNK(plane, offset, bit_count) \
