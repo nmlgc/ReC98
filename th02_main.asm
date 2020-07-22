@@ -6791,11 +6791,7 @@ hud_power_put	proc near
 var_18		= word ptr -18h
 var_16		= word ptr -16h
 var_14		= word ptr -14h
-var_12		= word ptr -12h
-var_10		= word ptr -10h
-var_E		= word ptr -0Eh
-var_C		= word ptr -0Ch
-var_A		= byte ptr -0Ah
+@@bar_colors		= byte ptr -12h
 var_8		= word ptr -8
 var_6		= word ptr -6
 var_4		= word ptr -4
@@ -6812,16 +6808,16 @@ var_2		= word ptr -2
 		mov	[bp+var_6], ax
 		mov	ax, word_1E5DC
 		mov	[bp+var_4], ax
-		mov	ax, word_1E5DE
-		mov	[bp+var_12], ax
-		mov	ax, word_1E5E0
-		mov	[bp+var_10], ax
-		mov	ax, word_1E5E2
-		mov	[bp+var_E], ax
-		mov	ax, word_1E5E4
-		mov	[bp+var_C], ax
-		mov	al, byte_1E5E6
-		mov	[bp+var_A], al
+		mov	ax, word ptr _HUD_POWER_COLORS + 0
+		mov	word ptr [bp+@@bar_colors], ax
+		mov	ax, word ptr _HUD_POWER_COLORS + 2
+		mov	word ptr [bp+@@bar_colors + 2], ax
+		mov	ax, word ptr _HUD_POWER_COLORS + 4
+		mov	word ptr [bp+@@bar_colors + 4], ax
+		mov	ax, word ptr _HUD_POWER_COLORS + 6
+		mov	word ptr [bp+@@bar_colors + 6], ax
+		mov	al, _HUD_POWER_COLORS + 8
+		mov	[bp+@@bar_colors + 8], al
 		mov	ax, word_1E5E7
 		mov	[bp+var_18], ax
 		mov	ax, word_1E5E9
@@ -6874,7 +6870,7 @@ loc_DF37:
 		push	ax
 		mov	al, shot_level
 		mov	ah, 0
-		lea	dx, [bp+var_12]
+		lea	dx, [bp+@@bar_colors]
 		add	ax, dx
 		mov	bx, ax
 		mov	al, ss:[bx]
@@ -33827,11 +33823,7 @@ include th02/main/hud/score_put[data].asm
 word_1E5D8	dw 4140h
 word_1E5DA	dw 4342h
 word_1E5DC	dw 44h
-word_1E5DE	dw 4141h
-word_1E5E0	dw 6141h
-word_1E5E2	dw 2161h
-word_1E5E4	dw 0A181h
-byte_1E5E6	db 0C1h
+include th02/main/hud/power[data].asm
 word_1E5E7	dw 0CFCFh
 word_1E5E9	dw 0CFCFh
 word_1E5EB	dw 0CFh

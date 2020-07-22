@@ -7452,25 +7452,21 @@ hud_point_items_put	endp
 public HUD_DREAM_PUT
 hud_dream_put	proc far
 
-var_A		= word ptr -0Ah
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= byte ptr -2
+@@bar_colors		= byte ptr -(((HUD_DREAM_COLOR_COUNT + 1) / word) * word)
 
 		push	bp
 		mov	bp, sp
 		sub	sp, 0Ah
-		mov	ax, word_22721
-		mov	[bp+var_A], ax
-		mov	ax, word_22723
-		mov	[bp+var_8], ax
-		mov	ax, word_22725
-		mov	[bp+var_6], ax
-		mov	ax, word_22727
-		mov	[bp+var_4], ax
-		mov	al, byte_22729
-		mov	[bp+var_2], al
+		mov	ax, word ptr _HUD_DREAM_COLORS + 0
+		mov	word ptr [bp+@@bar_colors + 0], ax
+		mov	ax, word ptr _HUD_DREAM_COLORS + 2
+		mov	word ptr [bp+@@bar_colors + 2], ax
+		mov	ax, word ptr _HUD_DREAM_COLORS + 4
+		mov	word ptr [bp+@@bar_colors + 4], ax
+		mov	ax, word ptr _HUD_DREAM_COLORS + 6
+		mov	word ptr [bp+@@bar_colors + 6], ax
+		mov	al, _HUD_DREAM_COLORS + 8
+		mov	[bp+@@bar_colors + 8], al
 		cmp	byte_22720, 7Fh
 		ja	short loc_105E6
 		cmp	_dream, 128
@@ -7489,10 +7485,10 @@ loc_105E6:
 		push	ax
 		mov	al, _dream
 		mov	ah, 0
-		mov	bx, 10h
+		mov	bx, (BAR_MAX / (HUD_DREAM_COLOR_COUNT - 1))
 		cwd
 		idiv	bx
-		lea	dx, [bp+var_A]
+		lea	dx, [bp+@@bar_colors]
 		add	ax, dx
 		mov	bx, ax
 		mov	al, ss:[bx]
@@ -7523,18 +7519,18 @@ hud_graze_put	endp
 public HUD_POWER_PUT
 hud_power_put	proc far
 
-var_A		= byte ptr -0Ah
+@@bar_colors		= byte ptr -(((HUD_POWER_COLOR_COUNT + 1) / word) * word)
 
 		push	bp
 		mov	bp, sp
-		sub	sp, 0Ah
+		sub	sp, -@@bar_colors
 		push	si
 		push	di
-		mov	si, 1D4Ah
-		lea	di, [bp+var_A]
+		mov	si, offset _HUD_POWER_COLORS
+		lea	di, [bp+@@bar_colors]
 		push	ss
 		pop	es
-		mov	cx, 5
+		mov	cx, ((HUD_POWER_COLOR_COUNT + 1) / word)
 		rep movsw
 		push	16h
 		mov	al, _power
@@ -7542,7 +7538,7 @@ var_A		= byte ptr -0Ah
 		push	ax
 		mov	al, _shot_level
 		mov	ah, 0
-		lea	dx, [bp+var_A]
+		lea	dx, [bp+@@bar_colors]
 		add	ax, dx
 		mov	bx, ax
 		mov	al, ss:[bx]
@@ -7562,9 +7558,7 @@ hud_power_put	endp
 
 sub_1065B	proc far
 
-var_10		= word ptr -10h
-var_E		= word ptr -0Eh
-var_C		= byte ptr -0Ch
+@@bar_colors	= byte ptr -10h
 var_A		= word ptr -0Ah
 var_8		= word ptr -8
 var_6		= word ptr -6
@@ -7587,22 +7581,22 @@ arg_0		= word ptr  6
 		mov	[bp+var_4], ax
 		mov	al, byte_2273C
 		mov	[bp+var_2], al
-		mov	ax, word_2273D
-		mov	[bp+var_10], ax
-		mov	ax, word_2273F
-		mov	[bp+var_E], ax
-		mov	al, byte_22741
-		mov	[bp+var_C], al
+		mov	ax, word ptr _HUD_HP_COLORS + 0
+		mov	word ptr [bp+@@bar_colors + 0], ax
+		mov	ax, word ptr _HUD_HP_COLORS + 2
+		mov	word ptr [bp+@@bar_colors + 2], ax
+		mov	al, _HUD_HP_COLORS + 4
+		mov	[bp+@@bar_colors + 4], al
 		or	si, si
 		jz	short loc_106C8
 		call	gaiji_putsa pascal, (61 shl 16) + 8, ds, offset gsENEMY, TX_YELLOW
 		push	9
 		push	si
 		mov	ax, si
-		mov	bx, 20h	; ' '
+		mov	bx, (BAR_MAX / (HUD_HP_COLOR_COUNT - 1))
 		cwd
 		idiv	bx
-		lea	dx, [bp+var_10]
+		lea	dx, [bp+@@bar_colors]
 		add	ax, dx
 		mov	bx, ax
 		mov	al, ss:[bx]
@@ -27920,20 +27914,14 @@ include th04/score[data].asm
 include th04/strings/hud[data].asm
 gsRUIKEI	db 0EDh, 0EEh, 0, 0, 0
 byte_22720	db 0
-word_22721	dw 4141h
-word_22723	dw 6161h
-word_22725	dw 8121h
-word_22727	dw 0C1A1h
-byte_22729	db 0E1h
-include th04/main/hud/bar_colors[data].asm
+include th05/main/hud/dream[data].asm
+include th04/main/hud/power[data].asm
 word_22734	dw 202h
 word_22736	dw 202h
 word_22738	dw 202h
 word_2273A	dw 202h
 byte_2273C	db 0
-word_2273D	dw 6141h
-word_2273F	dw 0C1A1h
-byte_22741	db 0E1h
+include th04/main/hud/hp[data].asm
 aB@b@bB@b@	db '　　×　　',0
 aB@b@bB@b@_0	db '　　×　　',0
 off_22758	dw offset sub_1823B

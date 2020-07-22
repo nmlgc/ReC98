@@ -6792,18 +6792,18 @@ hud_graze_put	endp
 public HUD_POWER_PUT
 hud_power_put	proc far
 
-var_A		= byte ptr -0Ah
+@@bar_colors		= byte ptr -(((HUD_POWER_COLOR_COUNT + 1) / word) * word)
 
 		push	bp
 		mov	bp, sp
-		sub	sp, 0Ah
+		sub	sp, -@@bar_colors
 		push	si
 		push	di
-		mov	si, 1ABDh
-		lea	di, [bp+var_A]
+		mov	si, offset _HUD_POWER_COLORS
+		lea	di, [bp+@@bar_colors]
 		push	ss
 		pop	es
-		mov	cx, 5
+		mov	cx, ((HUD_POWER_COLOR_COUNT + 1) / word)
 		rep movsw
 		push	16h
 		mov	al, _power
@@ -6811,7 +6811,7 @@ var_A		= byte ptr -0Ah
 		push	ax
 		mov	al, _shot_level
 		mov	ah, 0
-		lea	dx, [bp+var_A]
+		lea	dx, [bp+@@bar_colors]
 		add	ax, dx
 		mov	bx, ax
 		mov	al, ss:[bx]
@@ -6831,9 +6831,7 @@ hud_power_put	endp
 
 sub_F0DD	proc far
 
-var_10		= word ptr -10h
-var_E		= word ptr -0Eh
-var_C		= byte ptr -0Ch
+@@bar_colors	= byte ptr -10h
 var_A		= word ptr -0Ah
 var_8		= word ptr -8
 var_6		= word ptr -6
@@ -6856,22 +6854,22 @@ arg_0		= word ptr  6
 		mov	[bp+var_4], ax
 		mov	al, byte_22E0F
 		mov	[bp+var_2], al
-		mov	ax, word_22E10
-		mov	[bp+var_10], ax
-		mov	ax, word_22E12
-		mov	[bp+var_E], ax
-		mov	al, byte_22E14
-		mov	[bp+var_C], al
+		mov	ax, word ptr _HUD_HP_COLORS + 0
+		mov	word ptr [bp+@@bar_colors + 0], ax
+		mov	ax, word ptr _HUD_HP_COLORS + 2
+		mov	word ptr [bp+@@bar_colors + 2], ax
+		mov	al, _HUD_HP_COLORS + 4
+		mov	[bp+@@bar_colors + 4], al
 		or	si, si
 		jz	short loc_F14C
 		call	gaiji_putsa pascal, (61 shl 16) + 8, ds, offset gsENEMY, TX_YELLOW
 		push	9
 		push	si
 		mov	ax, si
-		mov	bx, 20h	; ' '
+		mov	bx, (BAR_MAX / (HUD_HP_COLOR_COUNT - 1))
 		cwd
 		idiv	bx
-		lea	dx, [bp+var_10]
+		lea	dx, [bp+@@bar_colors]
 		add	ax, dx
 		mov	bx, ax
 		mov	al, ss:[bx]
@@ -35279,15 +35277,13 @@ unk_22D9E	db 0DCh
 		db    1
 include th04/score[data].asm
 include th04/strings/hud[data].asm
-include th04/main/hud/bar_colors[data].asm
+include th04/main/hud/power[data].asm
 word_22E07	dw 202h
 word_22E09	dw 202h
 word_22E0B	dw 202h
 word_22E0D	dw 202h
 byte_22E0F	db 0
-word_22E10	dw 6141h
-word_22E12	dw 0C1A1h
-byte_22E14	db 0E1h
+include th04/main/hud/hp[data].asm
 include th04/main/hud/bar_put[data].asm
 aB@b@bB@b@	db '　　×　　',0
 aB@b@bB@b@_0	db '　　×　　',0
