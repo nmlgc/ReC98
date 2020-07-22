@@ -6,10 +6,21 @@
 static const int CARDCOMBO_DIGITS = 2;
 
 typedef enum {
+	PTN_SLOT_STG = 0, // stg(_b).ptn
+	PTN_SLOT_MIKO = 1, // miko.ptn
 	PTN_SLOT_BG_HUD = 5,
+	PTN_SLOT_NUMB = 7, // numb.ptn
 } main_ptn_slot_t;
 
 typedef enum {
+	// stg(_b).ptn
+	// -----------
+	PTN_HUD = PTN_ID(PTN_SLOT_STG, 0),
+	PTN_SHOT,
+	PTN_BLAST, // ???
+	PTN_ORB,
+	// -----------
+
 	// HUD (snapped backgrounds)
 	// -------------------------
 	PTN_BG_CUR_SCORE = PTN_ID(PTN_SLOT_BG_HUD, 6),

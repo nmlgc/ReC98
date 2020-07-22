@@ -1,14 +1,10 @@
+#include "th01/sprites/main_ptn.h"
+
 static const int SHOT_SPRITE_MARGIN = 2;
 static const int SHOT_DECAY_FRAMES = 7;
 
 #define sloppy_unput(i) \
 	egc_copy_rect_1_to_0_16(left[i], top[i], SHOT_W, SHOT_H);
-
-#define PTN_SHOT \
-	1, 0
-
-#define PTN_SHOT_DECAY(frame) \
-	1, (frame / 4) + 1
 
 void CShots::add(int new_left, int new_top)
 {
@@ -44,6 +40,10 @@ void CShots::unput_and_reset_all(void)
 	}
 }
 
+inline int decay_quarter(int frame) {
+	return ((frame / 4) + 1);
+}
+
 void CShots::unput_update_render(void)
 {
 	for(int i = 0; i < SHOT_COUNT; i++) {
@@ -57,13 +57,13 @@ void CShots::unput_update_render(void)
 				}
 			}
 			if(top[i] >= PLAYFIELD_TOP) {
-				ptn_put_quarter_8(left[i], top[i], PTN_SHOT);
+				ptn_put_quarter_8(left[i], top[i], PTN_SHOT, 0);
 			} else {
 				moving[i] = false;
 			}
 		} else if(decay_frame[i]) {
 			ptn_unput_quarter_8(
-				left[i], top[i], PTN_SHOT_DECAY(decay_frame[i])
+				left[i], top[i], PTN_SHOT, decay_quarter(decay_frame[i])
 			);
 			decay_frame[i]++;
 			if(decay_frame[i] > SHOT_DECAY_FRAMES) {
@@ -71,7 +71,7 @@ void CShots::unput_update_render(void)
 				moving[i] = false;
 			} else {
 				ptn_put_quarter_8(
-					left[i], top[i], PTN_SHOT_DECAY(decay_frame[i])
+					left[i], top[i], PTN_SHOT, decay_quarter(decay_frame[i])
 				);
 			}
 		}

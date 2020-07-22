@@ -24,6 +24,7 @@ include ReC98.inc
 include th01/th01.inc
 include th01/main/playfld.inc
 include th01/formats/cfg.inc
+include th01/sprites/main_ptn.inc
 
 BOMBS_MAX = 5
 
@@ -718,8 +719,8 @@ var_2		= word ptr -2
 		push	ds
 		push	offset unk_373AF
 		call	sub_14BF0
-		call	_ptn_load stdcall, 0, offset aStg_ptn, ds	; "stg.ptn"
-		call	_ptn_load stdcall, 1, offset aMiko_ptn, ds ; "miko.ptn"
+		call	_ptn_load stdcall, PTN_SLOT_STG, offset aStg_ptn, ds	; "stg.ptn"
+		call	_ptn_load stdcall, PTN_SLOT_MIKO, offset aMiko_ptn, ds ; "miko.ptn"
 		call	_ptn_new stdcall, (26 shl 16) or 5
 		add	sp, 24h
 		nopcall	sub_BEB1
@@ -1868,7 +1869,7 @@ loc_C88B:
 		mov	bx, 3
 		cwd
 		idiv	bx
-		add	ax, 3
+		add	ax, PTN_ORB
 		call	_ptn_put_8 c, _orb_cur_left, _orb_cur_top, ax
 
 loc_C8B6:
@@ -3668,9 +3669,9 @@ loc_D9CA:
 		call	sub_1843D
 		cmp	byte_34AA4, 0
 		jnz	short loc_DA2A
-		call	_ptn_free stdcall, 0
+		call	_ptn_free stdcall, PTN_SLOT_STG
 		pop	cx
-		call	_ptn_load c, 0, offset aStg_b_ptn, ds ; "stg_b.ptn"
+		call	_ptn_load c, PTN_SLOT_STG, offset aStg_b_ptn, ds ; "stg_b.ptn"
 		mov	byte_34AA4, 1
 		jmp	short loc_DA2A
 ; ---------------------------------------------------------------------------
@@ -3678,9 +3679,9 @@ loc_D9CA:
 loc_DA06:
 		cmp	byte_34AA4, 0
 		jz	short loc_DA2A
-		call	_ptn_free stdcall, 0
+		call	_ptn_free stdcall, PTN_SLOT_STG
 		pop	cx
-		call	_ptn_load c, 0, offset aStg_ptn, ds	; "stg.ptn"
+		call	_ptn_load c, PTN_SLOT_STG, offset aStg_ptn, ds	; "stg.ptn"
 		mov	byte_34AA4, 0
 		jmp	short $+2
 
@@ -6801,7 +6802,7 @@ sub_12F62	proc near
 		push	1
 		call	_graph_accesspage_func
 		call	_grp_put stdcall, offset aClear3_grp, ds ; "CLEAR3.grp"
-		call	_ptn_load stdcall, 7, offset aNumb_ptn, ds ; "numb.ptn"
+		call	_ptn_load stdcall, PTN_SLOT_NUMB, offset aNumb_ptn, ds ; "numb.ptn"
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 0Eh
@@ -7730,7 +7731,7 @@ loc_13933:
 
 loc_13941:
 		mov	dword_34A5E, 0
-		call	_ptn_free stdcall, 7
+		call	_ptn_free stdcall, PTN_SLOT_NUMB
 		pop	cx
 		pop	di
 		pop	si
@@ -17399,7 +17400,7 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		call	_egc_copy_rect_1_to_0_16 c, _player_left, _player_top, large (32 shl 16) or 32
-		call	_ptn_put_8 c, _orb_cur_left, _orb_cur_top, 3
+		call	_ptn_put_8 c, _orb_cur_left, _orb_cur_top, PTN_ORB
 		call	IRand
 		mov	bx, 8
 		cwd
@@ -17516,7 +17517,7 @@ loc_1AF62:
 		xor	di, di
 
 loc_1AF68:
-		call	_ptn_put_8 c, _orb_cur_left, _orb_cur_top, 3
+		call	_ptn_put_8 c, _orb_cur_left, _orb_cur_top, PTN_ORB
 		mov	ax, si
 		mov	bx, 2
 		cwd
@@ -34547,7 +34548,7 @@ loc_24857:
 
 loc_24871:
 		call	_ptn_put_8 stdcall, _player_left, (40h shl 16) or _player_top
-		call	_ptn_put_8 stdcall, _orb_cur_left, _orb_cur_top, 3
+		call	_ptn_put_8 stdcall, _orb_cur_left, _orb_cur_top, PTN_ORB
 		push	1
 		call	_frame_delay
 		add	sp, 0Eh
