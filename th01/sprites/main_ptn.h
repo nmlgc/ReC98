@@ -1,3 +1,4 @@
+#include "th01/common.h"
 #include "th01/score.h"
 
 #define last_for_quarters(base, quarters) \
@@ -23,7 +24,13 @@ typedef enum {
 
 	// HUD (snapped backgrounds)
 	// -------------------------
-	PTN_BG_CUR_SCORE = PTN_ID(PTN_SLOT_BG_HUD, 6),
+	// The usage code doesn't really cap either of these, though...
+	PTN_BG_LIVES = PTN_ID(PTN_SLOT_BG_HUD, 0),
+	PTN_BG_LIVES_last = last_for_quarters(PTN_BG_LIVES, LIVES_MAX),
+	PTN_BG_BOMBS = PTN_ID(PTN_SLOT_BG_HUD, 4),
+	PTN_BG_BOMBS_last = last_for_quarters(PTN_BG_BOMBS, BOMBS_MAX),
+
+	PTN_BG_CUR_SCORE,
 	PTN_BG_CUR_SCORE_last = last_for_quarters(PTN_BG_CUR_SCORE, SCORE_DIGITS),
 	PTN_BG_CUR_CARDCOMBO,
 

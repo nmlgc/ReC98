@@ -5,15 +5,13 @@
 
 #include "ReC98.h"
 
+#include "th01/common.h"
+
 // Graphics
 // --------
 #include "th01/hardware/egc.h"
 #include "th01/hardware/graph.h"
 // --------
-
-// Game
-#define STAGES_PER_SCENE 4
-#define SCENE_COUNT 4
 
 // Resident structure
 #define RES_ID "ReiidenConfig"

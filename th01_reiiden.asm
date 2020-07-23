@@ -26,6 +26,7 @@ include th01/main/playfld.inc
 include th01/formats/cfg.inc
 include th01/sprites/main_ptn.inc
 
+LIVES_MAX = 6
 BOMBS_MAX = 5
 
 	option emulator
@@ -2522,16 +2523,15 @@ sub_D02F	proc far
 		imul	eax, 61A80h
 		cmp	eax, _score
 		ja	short loc_D07A
-		cmp	_rem_lives, 6
+		cmp	_lives, LIVES_MAX
 		jge	short loc_D076
-		inc	_rem_lives
+		inc	_lives
 		les	bx, _resident
-		mov	al, byte ptr _rem_lives
+		mov	al, byte ptr _lives
 		mov	es:[bx+reiidenconfig_t.rem_lives], al
-		mov	ax, _rem_lives
+		mov	ax, _lives
 		dec	ax
-		push	ax
-		call	sub_18E15
+		call	_hud_lives_put stdcall, ax
 		pop	cx
 		push	0Fh
 		call	_mdrv2_se_play
@@ -3413,7 +3413,7 @@ loc_D72E:
 		les	bx, _resident
 		mov	al, es:[bx+reiidenconfig_t.rem_lives]
 		cbw
-		mov	_rem_lives, ax
+		mov	_lives, ax
 		mov	al, es:[bx+reiidenconfig_t.bombs]
 		mov	_bombs, al
 		mov	_player_left, PLAYER_LEFT_START
@@ -3894,13 +3894,13 @@ loc_DC3A:
 
 loc_DC64:
 		inc	_rand
-		mov	ax, _rem_lives
-		imul	ax, 0C8h
-		mov	dx, 708h
+		mov	ax, _lives
+		imul	ax, 200
+		mov	dx, 1800
 		sub	dx, ax
 		mov	al, _bombs
 		cbw
-		imul	ax, 32h
+		imul	ax, 50
 		sub	dx, ax
 		mov	[bp+var_C], dx
 		movsx	ebx, [bp+var_C]
@@ -3954,7 +3954,7 @@ loc_DD0E:
 		cmp	_input_down, 0
 		jz	short loc_DD20
 		mov	_done, 1
-		mov	_rem_lives, 0
+		mov	_lives, 0
 
 loc_DD20:
 		push	_player_invincible
@@ -4105,7 +4105,7 @@ loc_DE72:
 		mov	es:[bx+reiidenconfig_t.rand], eax
 		mov	word_34A72, 0
 		mov	dword_34A62, 0C8h ; 'È'
-		cmp	_rem_lives, 0
+		cmp	_lives, 0
 		jle	short loc_DEDA
 		cmp	word_34A82, 0
 		jnz	short loc_DEDA
@@ -4114,7 +4114,7 @@ loc_DE72:
 		pop	cx
 		les	bx, _resident
 		dec	es:[bx+reiidenconfig_t.rem_lives]
-		dec	_rem_lives
+		dec	_lives
 		call	sub_1AE0D
 		mov	_done, 0
 		inc	si
@@ -4172,7 +4172,7 @@ loc_DF52:
 		les	bx, _resident
 		mov	eax, _score
 		mov	es:[bx+reiidenconfig_t.score], eax
-		mov	al, byte ptr _rem_lives
+		mov	al, byte ptr _lives
 		mov	es:[bx+reiidenconfig_t.rem_lives], al
 		mov	es:[bx+reiidenconfig_t.snd_need_init], 1
 		mov	al, _route
@@ -7141,7 +7141,7 @@ loc_13285:
 		push	256
 		call	_graph_putsa_fx
 		add	sp, 0Ah
-		mov	ax, _rem_lives
+		mov	ax, _lives
 		imul	ax, 0C8h
 		mov	si, ax
 		mov	al, _bombs
@@ -7492,7 +7492,7 @@ loc_135E2:
 		push	5
 		call	_frame_delay
 		pop	cx
-		mov	ax, _rem_lives
+		mov	ax, _lives
 		imul	ax, 1F4h
 		cwde
 		mov	[bp+var_6], eax
@@ -13306,8 +13306,7 @@ loc_17DCD:
 		mov	al, _bombs
 		cbw
 		dec	ax
-		push	ax
-		call	sub_18F98
+		call	_hud_bombs_put stdcall, ax
 		pop	cx
 		mov	bx, si
 		imul	bx, 0Ah
@@ -14358,424 +14357,16 @@ main_25_TEXT	segment	byte public 'CODE' use16
 	extern _hud_bg_put:proc
 	extern _hud_bg_load:proc
 	extern _graph_copy_hud_row_0_to_1_8:proc
+	extern _lives_put_initial:proc
+	extern _hud_lives_put:proc
+	extern _bombs_put_initial:proc
+	extern _hud_bombs_put:proc
 main_25_TEXT	ends
 
 main_25__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_25
 		;org 9
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_18D98	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_18DF8
-; ---------------------------------------------------------------------------
-
-loc_18DA0:
-		mov	ax, si
-		mov	bx, 4
-		cwd
-		idiv	bx
-		push	dx
-		mov	ax, si
-		cwd
-		idiv	bx
-		add	ax, PTN_SLOT_5
-		push	ax
-		mov	ax, si
-		mov	bx, 6
-		cwd
-		idiv	bx
-		shl	ax, 4
-		push	ax
-		mov	ax, si
-		cwd
-		idiv	bx
-		shl	dx, 4
-		add	dx, 128
-		push	dx
-		call	_ptn_snap_quarter_8
-		add	sp, 8
-		pushd	0
-		mov	ax, si
-		mov	bx, 6
-		cwd
-		idiv	bx
-		shl	ax, 4
-		push	ax
-		mov	ax, si
-		cwd
-		idiv	bx
-		shl	dx, 4
-		add	dx, 128
-		push	dx
-		call	_ptn_put_quarter_8
-		add	sp, 8
-		inc	si
-
-loc_18DF8:
-		cmp	si, _rem_lives
-		jl	short loc_18DA0
-		mov	ax, _rem_lives
-		shl	ax, 4
-		push	ax
-		pushd	128 or (0 shl 16)
-		call	_graph_copy_hud_row_0_to_1_8
-		add	sp, 6
-		pop	si
-		pop	bp
-		retf
-sub_18D98	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_18E15	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, [bp+arg_0]
-		cmp	di, _rem_lives
-		jle	loc_18EA9
-		mov	si, _rem_lives
-		jmp	short loc_18EA2
-; ---------------------------------------------------------------------------
-
-loc_18E2B:
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		mov	ax, si
-		mov	bx, 4
-		cwd
-		idiv	bx
-		push	dx
-		mov	ax, si
-		cwd
-		idiv	bx
-		add	ax, PTN_SLOT_5
-		push	ax
-		mov	ax, si
-		mov	bx, 6
-		cwd
-		idiv	bx
-		shl	ax, 4
-		push	ax
-		mov	ax, si
-		cwd
-		idiv	bx
-		shl	dx, 4
-		add	dx, 128
-		push	dx
-		call	_ptn_put_quarter_noalpha_8
-		add	sp, 8
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		mov	ax, si
-		mov	bx, 4
-		cwd
-		idiv	bx
-		push	dx
-		mov	ax, si
-		cwd
-		idiv	bx
-		add	ax, PTN_SLOT_5
-		push	ax
-		mov	ax, si
-		mov	bx, 6
-		cwd
-		idiv	bx
-		shl	ax, 4
-		push	ax
-		mov	ax, si
-		cwd
-		idiv	bx
-		shl	dx, 4
-		add	dx, 128
-		push	dx
-		call	_ptn_put_quarter_noalpha_8
-		add	sp, 8
-		inc	si
-
-loc_18EA2:
-		cmp	si, di
-		jl	short loc_18E2B
-		jmp	loc_18F2D
-; ---------------------------------------------------------------------------
-
-loc_18EA9:
-		cmp	di, _rem_lives
-		jge	short loc_18F2D
-		mov	si, di
-		jmp	short loc_18F13
-; ---------------------------------------------------------------------------
-
-loc_18EB3:
-		mov	ax, si
-		mov	bx, 4
-		cwd
-		idiv	bx
-		push	dx
-		mov	ax, si
-		cwd
-		idiv	bx
-		add	ax, PTN_SLOT_5
-		push	ax
-		mov	ax, si
-		mov	bx, 6
-		cwd
-		idiv	bx
-		shl	ax, 4
-		push	ax
-		mov	ax, si
-		cwd
-		idiv	bx
-		shl	dx, 4
-		add	dx, 128
-		push	dx
-		call	_ptn_snap_quarter_8
-		add	sp, 8
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		pushd	0
-		mov	ax, si
-		mov	bx, 6
-		cwd
-		idiv	bx
-		shl	ax, 4
-		push	ax
-		mov	ax, si
-		cwd
-		idiv	bx
-		shl	dx, 4
-		add	dx, 128
-		push	dx
-		call	_ptn_put_quarter_8
-		add	sp, 8
-		inc	si
-
-loc_18F13:
-		cmp	si, _rem_lives
-		jl	short loc_18EB3
-		mov	ax, _rem_lives
-		shl	ax, 4
-		push	ax
-		pushd	128 or (0 shl 16)
-		call	_graph_copy_hud_row_0_to_1_8
-		add	sp, 6
-
-loc_18F2D:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_18E15	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_18F31	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_18F78
-; ---------------------------------------------------------------------------
-
-loc_18F39:
-		mov	ax, si
-		mov	bx, 4
-		cwd
-		idiv	bx
-		push	dx
-		mov	ax, si
-		cwd
-		idiv	bx
-		add	ax, (PTN_SLOT_5 + 4)
-		push	ax
-		push	16
-		mov	ax, si
-		shl	ax, 4
-		add	ax, 128
-		push	ax
-		call	_ptn_snap_quarter_8
-		add	sp, 8
-		push	0 or (1 shl 16)
-		push	10h
-		mov	ax, si
-		shl	ax, 4
-		add	ax, 128
-		push	ax
-		call	_ptn_put_quarter_8
-		add	sp, 8
-		inc	si
-
-loc_18F78:
-		mov	al, _bombs
-		cbw
-		cmp	ax, si
-		jg	short loc_18F39
-		mov	al, _bombs
-		cbw
-		shl	ax, 4
-		push	ax
-		push	128 or (16 shl 16)
-		call	_graph_copy_hud_row_0_to_1_8
-		add	sp, 6
-		pop	si
-		pop	bp
-		retf
-sub_18F31	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_18F98	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, [bp+arg_0]
-		mov	al, _bombs
-		cbw
-		cmp	ax, di
-		jge	short loc_19011
-		mov	al, _bombs
-		cbw
-		mov	si, ax
-		jmp	short loc_1900B
-; ---------------------------------------------------------------------------
-
-loc_18FB0:
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		mov	ax, si
-		mov	bx, 4
-		cwd
-		idiv	bx
-		push	dx
-		mov	ax, si
-		cwd
-		idiv	bx
-		add	ax, (PTN_SLOT_5 + 4)
-		push	ax
-		push	16
-		mov	ax, si
-		shl	ax, 4
-		add	ax, 128
-		push	ax
-		call	_ptn_put_quarter_noalpha_8
-		add	sp, 8
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		mov	ax, si
-		mov	bx, 4
-		cwd
-		idiv	bx
-		push	dx
-		mov	ax, si
-		cwd
-		idiv	bx
-		add	ax, (PTN_SLOT_5 + 4)
-		push	ax
-		push	16
-		mov	ax, si
-		shl	ax, 4
-		add	ax, 128
-		push	ax
-		call	_ptn_put_quarter_noalpha_8
-		add	sp, 8
-		inc	si
-
-loc_1900B:
-		cmp	si, di
-		jl	short loc_18FB0
-		jmp	short loc_19081
-; ---------------------------------------------------------------------------
-
-loc_19011:
-		mov	al, _bombs
-		cbw
-		cmp	ax, di
-		jle	short loc_19081
-		mov	si, di
-		jmp	short loc_19064
-; ---------------------------------------------------------------------------
-
-loc_1901D:
-		mov	ax, si
-		mov	bx, 4
-		cwd
-		idiv	bx
-		push	dx
-		mov	ax, si
-		cwd
-		idiv	bx
-		add	ax, (PTN_SLOT_5 + 4)
-		push	ax
-		push	16
-		mov	ax, si
-		shl	ax, 4
-		add	ax, 128
-		push	ax
-		call	_ptn_snap_quarter_8
-		add	sp, 8
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		push	0 or (1 shl 16)
-		push	16
-		mov	ax, si
-		shl	ax, 4
-		add	ax, 128
-		push	ax
-		call	_ptn_put_quarter_8
-		add	sp, 8
-		inc	si
-
-loc_19064:
-		mov	al, _bombs
-		cbw
-		cmp	ax, si
-		jg	short loc_1901D
-		mov	al, _bombs
-		cbw
-		shl	ax, 4
-		push	ax
-		push	128 or (16 shl 16)
-		call	_graph_copy_hud_row_0_to_1_8
-		add	sp, 6
-
-loc_19081:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_18F98	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14843,8 +14434,8 @@ var_4		= byte ptr -4
 loc_1910C:
 		cmp	byte_34A49, 1
 		jnz	short loc_19124
-		call	sub_18D98
-		call	sub_18F31
+		call	_lives_put_initial
+		call	_bombs_put_initial
 		call	sub_19085
 		call	sub_1926B
 
@@ -15651,8 +15242,7 @@ loc_19EEF:
 		mov	al, _bombs
 		cbw
 		inc	ax
-		push	ax
-		call	sub_18F98
+		call	_hud_bombs_put stdcall, ax
 		pop	cx
 
 loc_19F2B:
@@ -17392,7 +16982,7 @@ sub_1AC6E	endp
 
 sub_1AE0D	proc far
 
-var_6		= word ptr -6
+@@prev_bombs		= word ptr -6
 var_4		= word ptr -4
 var_2		= word ptr -2
 
@@ -17555,14 +17145,13 @@ loc_1AFC8:
 		jl	loc_1AEFB
 		call	_egc_copy_rect_1_to_0_16 c, _player_left, _player_top, large (32 shl 16) or 32
 		call	_egc_copy_rect_1_to_0_16 c, di, _player_top, large (32 shl 16) or 32
-		mov	ax, _rem_lives
+		mov	ax, _lives
 		inc	ax
-		push	ax
-		call	sub_18E15
+		call	_hud_lives_put stdcall, ax
 		pop	cx
 		mov	al, _bombs
 		cbw
-		mov	[bp+var_6], ax
+		mov	[bp+@@prev_bombs], ax
 		mov	al, _credit_bombs
 		add	al, _bombs
 		mov	_bombs, al
@@ -17574,8 +17163,7 @@ loc_1AFC8:
 ; ---------------------------------------------------------------------------
 
 loc_1B01F:
-		push	[bp+var_6]
-		call	sub_18F98
+		call	_hud_bombs_put stdcall, [bp+@@prev_bombs]
 		pop	cx
 
 loc_1B028:
@@ -30036,7 +29624,7 @@ arg_0		= dword	ptr  6
 
 		push	bp
 		mov	bp, sp
-		cmp	_rem_lives, 0
+		cmp	_lives, 0
 		jnz	short loc_22260
 		cmp	byte_34A58, 1
 		jnz	short loc_22260
@@ -53104,10 +52692,10 @@ word_34A74	dw 0
 public _player_invincible
 _player_invincible	dw 0
 		dw 0
-public _orb_velocity_x
+public _orb_velocity_x, _lives
 _orb_velocity_x	dw 0
 word_34A7E	dw 0
-_rem_lives	dw 4
+_lives	dw 4
 word_34A82	dw 0
 public _cardcombo_cur, _orb_in_portal, _cardcombo_max
 _cardcombo_cur	dw 0

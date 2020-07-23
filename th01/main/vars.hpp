@@ -1,7 +1,5 @@
 #include "th01/ranks.h"
 
-#define BOMBS_MAX 5
-
 extern rank_t rank;
 extern bool bgm_mode;
 extern char bombs;

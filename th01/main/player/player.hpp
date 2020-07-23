@@ -16,5 +16,6 @@ extern unsigned char player_deflecting;
 extern unsigned char player_sliding;
 extern bool16 player_invincible;
 
+extern int lives;
 extern int cardcombo_cur;
 extern int cardcombo_max;
