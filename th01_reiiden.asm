@@ -75,6 +75,7 @@ main_13 group main_13_TEXT, main_13__TEXT
 main_19 group main_19_TEXT, main_19__TEXT
 main_25 group main_25_TEXT, main_25__TEXT
 main_27 group main_27_TEXT, main_27__TEXT
+main_30 group main_30_TEXT, main_30__TEXT
 
 ; ===========================================================================
 
@@ -14194,7 +14195,7 @@ sub_18456	endp
 
 sub_18465	proc far
 
-var_6		= byte ptr -6
+@@str		= byte ptr -6
 arg_0		= word ptr  6
 
 		enter	6, 0
@@ -14242,14 +14243,14 @@ loc_18497:
 
 loc_184D3:
 		push	ss
-		lea	ax, [bp+var_6]
+		lea	ax, [bp+@@str]
 		push	ax
 		les	bx, _resident
 		push	es:[bx+reiidenconfig_t.p_value]
 		push	5
-		call	sub_1FF8A
+		call	str_right_aligned_from_uint16
 		push	ss
-		lea	ax, [bp+var_6]
+		lea	ax, [bp+@@str]
 		push	ax
 		push	7
 		mov	bx, si
@@ -14374,20 +14375,20 @@ main_25__TEXT	segment	byte public 'CODE' use16
 
 sub_19085	proc far
 
-var_4		= byte ptr -4
+@@str		= byte ptr -4
 
 		enter	4, 0
 		call	_ptn_snap_quarter_8 c, large (32 shl 16) or 608, large (PTN_SLOT_5 + 2)
 		push	ss
-		lea	ax, [bp+var_4]
+		lea	ax, [bp+@@str]
 		push	ax
 		mov	al, byte_34A34
 		cbw
 		push	ax
 		push	2
-		call	sub_1FF8A
+		call	str_right_aligned_from_uint16
 		push	ss
-		lea	ax, [bp+var_4]
+		lea	ax, [bp+@@str]
 		push	ax
 		push	(27h shl 16) or 32
 		push	608
@@ -14408,7 +14409,7 @@ sub_19085	endp
 
 sub_190D6	proc far
 
-var_4		= byte ptr -4
+@@str		= byte ptr -4
 
 		enter	4, 0
 		push	1
@@ -14465,15 +14466,15 @@ loc_19124:
 		call	_ptn_put_quarter_noalpha_8 stdcall, large (32 shl 16) or 608, large (0 shl 16) or (PTN_SLOT_5 + 2)
 		add	sp, 8
 		push	ss
-		lea	ax, [bp+var_4]
+		lea	ax, [bp+@@str]
 		push	ax
 		mov	al, byte_34A34
 		cbw
 		push	ax
 		push	2
-		call	sub_1FF8A
+		call	str_right_aligned_from_uint16
 		push	ss
-		lea	ax, [bp+var_4]
+		lea	ax, [bp+@@str]
 		push	ax
 		push	(27h shl 16) or 32
 		push	608
@@ -14504,7 +14505,7 @@ loc_19124:
 		call	_ptn_put_quarter_noalpha_8 stdcall, large (32 shl 16) or 608, large (0 shl 16) or (PTN_SLOT_5 + 2)
 		add	sp, 8
 		push	ss
-		lea	ax, [bp+var_4]
+		lea	ax, [bp+@@str]
 		push	ax
 		push	(27h shl 16) or 32
 		push	608
@@ -14582,7 +14583,7 @@ sub_19243	endp
 
 sub_1926B	proc far
 
-var_6		= byte ptr -6
+@@str		= byte ptr -6
 
 		enter	6, 0
 		push	si
@@ -14598,15 +14599,15 @@ loc_19287:
 		cmp	si, 2
 		jl	short loc_19274
 		push	ss
-		lea	ax, [bp+var_6]
+		lea	ax, [bp+@@str]
 		push	ax
 		push	word_39DAC
 		push	4
-		call	sub_1FF8A
+		call	str_right_aligned_from_uint16
 		push	1
 		call	_graph_accesspage_func
 		push	ss
-		lea	ax, [bp+var_6]
+		lea	ax, [bp+@@str]
 		push	ax
 		push	(27h shl 16) or 0
 		push	512
@@ -14614,7 +14615,7 @@ loc_19287:
 		push	0
 		call	_graph_accesspage_func
 		push	ss
-		lea	ax, [bp+var_6]
+		lea	ax, [bp+@@str]
 		push	ax
 		push	(27h shl 16) or 0
 		push	512
@@ -14656,7 +14657,7 @@ loc_192EB:
 		push	ax
 		push	word_39DAC
 		push	4
-		call	sub_1FF8A
+		call	str_right_aligned_from_uint16
 		push	ss
 		lea	ax, [bp+@@str]
 		push	ax
@@ -14673,7 +14674,7 @@ loc_192EB:
 		push	ax
 		push	word_39DAC
 		push	4
-		call	sub_1FF8A
+		call	str_right_aligned_from_uint16
 		push	ss
 		lea	ax, [bp+@@str]
 		push	ax
@@ -25208,7 +25209,7 @@ main_29_TEXT	ends
 
 ; Segment type:	Pure code
 main_30_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_30_TEXT
+		assume cs:main_30
 		;org 3
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -25411,161 +25412,11 @@ loc_1FF7F:
 		leave
 		retf
 sub_1FDD3	endp
+main_30_TEXT	ends
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1FF8A	proc far
-
-var_1		= byte ptr -1
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= dword	ptr  0Ah
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	di, [bp+arg_2]
-		mov	si, 2710h
-		mov	cx, [bp+arg_0]
-		mov	[bp+var_1], 0
-		jmp	short loc_1FFAB
-; ---------------------------------------------------------------------------
-
-loc_1FF9F:
-		mov	bx, 0Ah
-		mov	ax, si
-		xor	dx, dx
-		div	bx
-		mov	si, ax
-		inc	cx
-
-loc_1FFAB:
-		cmp	cx, 5
-		jb	short loc_1FF9F
-		xor	cx, cx
-		jmp	short loc_1FFF7
-; ---------------------------------------------------------------------------
-
-loc_1FFB4:
-		mov	ax, di
-		xor	dx, dx
-		div	si
-		or	ax, ax
-		jz	short loc_1FFC2
-		mov	[bp+var_1], 1
-
-loc_1FFC2:
-		cmp	[bp+var_1], 0
-		jz	short loc_1FFDA
-		mov	ax, di
-		xor	dx, dx
-		div	si
-		add	al, 30h	; '0'
-		les	bx, [bp+arg_4]
-		add	bx, cx
-		mov	es:[bx], al
-		jmp	short loc_1FFE3
-; ---------------------------------------------------------------------------
-
-loc_1FFDA:
-		les	bx, [bp+arg_4]
-		add	bx, cx
-		mov	byte ptr es:[bx], 20h ;	' '
-
-loc_1FFE3:
-		mov	ax, di
-		xor	dx, dx
-		div	si
-		mov	di, dx
-		mov	bx, 0Ah
-		mov	ax, si
-		xor	dx, dx
-		div	bx
-		mov	si, ax
-		inc	cx
-
-loc_1FFF7:
-		cmp	cx, [bp+arg_0]
-		jb	short loc_1FFB4
-		les	bx, [bp+arg_4]
-		add	bx, [bp+arg_0]
-		mov	byte ptr es:[bx], 0
-		pop	di
-		pop	si
-		leave
-		retf	8
-sub_1FF8A	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2000C	proc far
-
-var_3		= byte ptr -3
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= dword	ptr  8
-
-		enter	4, 0
-		push	si
-		push	di
-		mov	si, [bp+arg_0]
-		mov	cx, 2710h
-		xor	di, di
-		mov	[bp+var_3], 0
-		mov	[bp+var_2], 0
-		jmp	short loc_2005C
-; ---------------------------------------------------------------------------
-
-loc_20025:
-		mov	ax, si
-		cwd
-		idiv	cx
-		or	ax, ax
-		jz	short loc_20032
-		mov	[bp+var_3], 1
-
-loc_20032:
-		cmp	[bp+var_3], 0
-		jz	short loc_20048
-		mov	ax, si
-		cwd
-		idiv	cx
-		add	al, 30h	; '0'
-		les	bx, [bp+arg_2]
-		add	bx, di
-		mov	es:[bx], al
-		inc	di
-
-loc_20048:
-		mov	ax, si
-		cwd
-		idiv	cx
-		mov	si, dx
-		mov	bx, 0Ah
-		mov	ax, cx
-		cwd
-		idiv	bx
-		mov	cx, ax
-		inc	[bp+var_2]
-
-loc_2005C:
-		cmp	[bp+var_2], 5
-		jl	short loc_20025
-		les	bx, [bp+arg_2]
-		add	bx, di
-		mov	byte ptr es:[bx], 0
-		pop	di
-		pop	si
-		leave
-		retf	6
-sub_2000C	endp
-
+main_30__TEXT	segment	byte public 'CODE' use16
+	extern STR_RIGHT_ALIGNED_FROM_UINT16:proc
+	extern STR_FROM_POSITIVE_INT16:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -25573,7 +25424,7 @@ sub_2000C	endp
 
 sub_20071	proc far
 
-var_8		= byte ptr -8
+@@str		= byte ptr -8
 @@x		= word ptr -2
 
 		enter	8, 0
@@ -25686,16 +25537,16 @@ loc_20142:
 
 loc_20167:
 		push	ss
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@str]
 		push	ax
 		mov	ax, si
 		shl	ax, 2
 		les	bx, off_39EAC
 		add	bx, ax
 		push	word ptr es:[bx]
-		call	sub_2000C
+		call	str_from_positive_int16
 		push	ss
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@str]
 		push	ax
 		push	27h
 		mov	ax, si
@@ -25942,7 +25793,7 @@ loc_20395:
 		retf
 sub_201BE	endp
 
-main_30_TEXT	ends
+main_30__TEXT	ends
 
 ; ===========================================================================
 
