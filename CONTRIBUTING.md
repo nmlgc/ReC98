@@ -214,6 +214,8 @@ C++, Open Watcom, and Visual C++, which will ease future third-party ports.
 * Macros defining the number of distinct sprites in an animation: `*_CELS`
 * Frame variables counting from a frame count to 0: `*_time`
 * Frame variables and other counters starting from 0: `*_frames`
+* Generic 0-based IDs: `*_id`
+* Generic 1-based IDs, with 0 indicating some sort of absence: `*_num`
 * Functionally identical reimplementations or micro-optimizations of
   master.lib functions: `z_<master.lib function name>`
 

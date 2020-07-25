@@ -14,7 +14,7 @@ static char CIRCLE_COLORS[] = {4, 3, 2, 1};
 char page_write;
 char page_show;
 char tone;
-char logo_num;
+char logo_patnum;
 char wave_len;
 char wave_phase;
 char wave_amp;
@@ -89,7 +89,7 @@ void objects_setup(void)
 
 	frame = 0;
 	tone = 0;
-	logo_num = 0;
+	logo_patnum = 0;
 	wave_len = 23;
 	wave_phase = 0;
 	wave_amp = 0;
@@ -168,31 +168,31 @@ void logo_render_and_update(void)
 	}
 	if(frame < 90) {
 		if(frame == 55 || frame == 60 || frame == 65) {
-			logo_num += 2;
+			logo_patnum += 2;
 		}
-		super_put_8(256, 192, logo_num+0);
-		super_put_8(320, 192, logo_num+1);
+		super_put_8(256, 192, logo_patnum+0);
+		super_put_8(320, 192, logo_patnum+1);
 	} else if(frame < 110) {
-		super_wave_put(256, 192, logo_num+0, wave_len, wave_amp, wave_phase);
-		super_wave_put(320, 192, logo_num+1, wave_len, wave_amp, wave_phase);
+		super_wave_put(256, 192, logo_patnum+0, wave_len, wave_amp, wave_phase);
+		super_wave_put(320, 192, logo_patnum+1, wave_len, wave_amp, wave_phase);
 		wave_len--;
 		wave_phase += 4;
 		wave_amp += 4;
 	} else if(frame < 130) {
 		if(frame == 110) {
-			logo_num += 2;
+			logo_patnum += 2;
 		}
-		super_wave_put(256, 192, logo_num+0, wave_len, wave_amp, wave_phase);
-		super_wave_put(320, 192, logo_num+1, wave_len, wave_amp, wave_phase);
+		super_wave_put(256, 192, logo_patnum+0, wave_len, wave_amp, wave_phase);
+		super_wave_put(320, 192, logo_patnum+1, wave_len, wave_amp, wave_phase);
 		wave_len++;
 		wave_phase += 4;
 		wave_amp -= 4;
 	} else if(frame < 170) {
 		if(frame == 155 || frame == 160 || frame == 165) {
-			logo_num += 2;
+			logo_patnum += 2;
 		}
-		super_put_8(256, 192, logo_num+0);
-		super_put_8(320, 192, logo_num+1);
+		super_put_8(256, 192, logo_patnum+0);
+		super_put_8(320, 192, logo_patnum+1);
 	}
 }
 

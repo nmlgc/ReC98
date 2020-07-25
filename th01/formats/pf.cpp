@@ -12,7 +12,7 @@ extern "C" {
 
 #undef arc_file_get
 
-#define MAX_NUM_FILES 64
+#define FILE_COUNT 64
 #define CACHE_SIZE 0x100
 
 typedef struct {
@@ -29,8 +29,8 @@ typedef struct {
 
 pf_header_t *arc_pfs;
 pf_header_t *file_pf;
-int file_num;
-int arc_num_files;
+int cur_file_id;
+int arc_pf_count;
 char file_compressed;
 char arc_key;
 
@@ -44,7 +44,7 @@ void pascal arc_load(const char fn[PF_FN_LEN])
 {
 	int i, c;
 
-	arc_pfs = new pf_header_t[MAX_NUM_FILES];
+	arc_pfs = new pf_header_t[FILE_COUNT];
 	file_ropen(fn);
 	for(i = 0; i < PF_FN_LEN; i++) {
 		arc_fn[i] = fn[i];
@@ -52,9 +52,9 @@ void pascal arc_load(const char fn[PF_FN_LEN])
 			break;
 		}
 	}
-	file_read(arc_pfs, sizeof(pf_header_t) * MAX_NUM_FILES);
+	file_read(arc_pfs, sizeof(pf_header_t) * FILE_COUNT);
 	file_close();
-	for(i = 0; i < MAX_NUM_FILES; i++) {
+	for(i = 0; i < FILE_COUNT; i++) {
 		if(arc_pfs[i].type[0] == 0) {
 			break;
 		}
@@ -65,7 +65,7 @@ void pascal arc_load(const char fn[PF_FN_LEN])
 			arc_pfs[i].fn[c] = ~arc_pfs[i].fn[c];
 		}
 	}
-	arc_num_files = i;
+	arc_pf_count = i;
 }
 
 void pascal arc_free(void)
@@ -77,7 +77,7 @@ int pascal near at_pos_of(const char fn[PF_FN_LEN])
 {
 	int i;
 	for(i = 0; i < PF_FN_LEN; i++) {
-		if(arc_pfs[file_num].fn[i] != toupper(fn[i])) {
+		if(arc_pfs[cur_file_id].fn[i] != toupper(fn[i])) {
 			return 0;
 		}
 		if(fn[i] == 0) {
@@ -153,14 +153,14 @@ void pascal arc_file_load(const char fn[PF_FN_LEN])
 	const char rle_type[] = {"••"};
 	int i;
 
-	file_num = 0;
-	for(i = 0; i < arc_num_files; i++) {
+	cur_file_id = 0;
+	for(i = 0; i < arc_pf_count; i++) {
 		if(at_pos_of(fn)) {
 			break;
 		}
-		file_num++;
+		cur_file_id++;
 	}
-	file_pf = &arc_pfs[file_num];
+	file_pf = &arc_pfs[cur_file_id];
 	file_ropen(arc_fn);
 	file_seek(file_pf->offset, SEEK_SET);
 	if(file_pf->type[0] == rle_type[0] && file_pf->type[1] == rle_type[1]) {

@@ -91,7 +91,7 @@ _piano_render	endp
 
 ; void __usercall near piano_part_render(
 ; 	void far *vram_at_x0_and_top_of_part<es:di>,
-; 	int fm_part_num<si>,
+; 	int fm_part_id<si>,
 ; 	QQ **pmd_part<ds:bx>,
 ; 	void __seg own_ds<fs>
 ; );

@@ -1,14 +1,14 @@
 proc_defconv pi_slot_put
-	arg @@x:word, @@y:word, @@slot:word
+	arg @@left:word, @@top:word, @@slot:word
 if GAME ge 3
-	local @@row_num:word, @@row_buf:dword
+	local @@y:word, @@row_buf:dword
 else
-	local @@row_buf:dword, @@row_num:word
+	local @@row_buf:dword, @@y:word
 endif
 
 	push	si
 	push	di
-	mov	si, @@y
+	mov	si, @@top
 	mov	di, @@slot
 	mov	bx, di
 	shl	bx, 2
@@ -16,11 +16,11 @@ endif
 	mov	dx, word ptr _pi_slot_buffers[bx]
 	mov	word ptr @@row_buf+2, ax
 	mov	word ptr @@row_buf, dx
-	mov	@@row_num, 0
+	mov	@@y, 0
 	jmp	short @@check
 
 @@put:
-	push	@@x
+	push	@@left
 	push	si
 	pushd	@@row_buf
 	mov	bx, di
@@ -47,13 +47,13 @@ endif
 	and	dx, 0Fh
 	mov	word ptr @@row_buf+2, ax
 	mov	word ptr @@row_buf, dx
-	inc	@@row_num
+	inc	@@y
 
 @@check:
 	mov	bx, di
 	imul	bx, size PiHeader
 	mov	ax, _pi_slot_headers.PiHeader._ysize[bx]
-	cmp	ax, @@row_num
+	cmp	ax, @@y
 	ja	short @@put
 	pop	di
 	pop	si

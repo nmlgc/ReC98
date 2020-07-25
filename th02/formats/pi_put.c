@@ -4,15 +4,15 @@ void pi_slot_palette_apply(int slot)
 	palette_show();
 }
 
-void pi_slot_put(int x, int y, int slot)
+void pi_slot_put(int left, int top, int slot)
 {
 	char *row_p = pi_slot_buffers[slot];
-	int row_num;
-	for(row_num = 0; row_num < pi_slot_headers[slot].ysize; row_num++) {
-		graph_pack_put_8(x, y, row_p, pi_slot_headers[slot].xsize);
-		y++;
-		if(y >= RES_Y) {
-			y -= RES_Y;
+	int y;
+	for(y = 0; y < pi_slot_headers[slot].ysize; y++) {
+		graph_pack_put_8(left, top, row_p, pi_slot_headers[slot].xsize);
+		top++;
+		if(top >= RES_Y) {
+			top -= RES_Y;
 		}
 		row_p += pi_slot_headers[slot].xsize / 2;
 		row_p = MK_FP(
