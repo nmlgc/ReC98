@@ -6,5 +6,8 @@
 #define STAGES_PER_SCENE 4
 #define SCENE_COUNT 4
 
+#define STAGE_COUNT 20
+#define STAGE_DIGITS 2
+
 #define LIVES_MAX 6
 #define BOMBS_MAX 5

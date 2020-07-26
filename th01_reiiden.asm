@@ -894,7 +894,7 @@ loc_BE23:
 		add	sp, 18h	; (only sub_B961 actually uses Pascal calling convention!)
 
 loc_BEA4:
-		mov	al, byte_34A34
+		mov	al, _stage_num
 		cbw			; int
 		push	ax		; int
 		call	sub_BA89
@@ -3701,7 +3701,7 @@ loc_DA2A:
 loc_DA49:
 		mov	al, byte ptr [bp+@@stage]
 		inc	al
-		mov	byte_34A34, al
+		mov	_stage_num, al
 		mov	al, byte_34ADF
 		cbw
 		cmp	ax, 6
@@ -14357,51 +14357,17 @@ main_25_TEXT	segment	byte public 'CODE' use16
 	extern _score_and_cardcombo_put_initial:proc
 	extern _hud_bg_put:proc
 	extern _hud_bg_load:proc
-	extern _graph_copy_hud_row_0_to_1_8:proc
 	extern _lives_put_initial:proc
 	extern _hud_lives_put:proc
 	extern _bombs_put_initial:proc
 	extern _hud_bombs_put:proc
+	extern _stage_put_initial:proc
 main_25_TEXT	ends
 
 main_25__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_25
 		;org 9
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_19085	proc far
-
-@@str		= byte ptr -4
-
-		enter	4, 0
-		call	_ptn_snap_quarter_8 c, large (32 shl 16) or 608, large (PTN_SLOT_5 + 2)
-		push	ss
-		lea	ax, [bp+@@str]
-		push	ax
-		mov	al, byte_34A34
-		cbw
-		push	ax
-		push	2
-		call	str_right_aligned_from_uint16
-		push	ss
-		lea	ax, [bp+@@str]
-		push	ax
-		push	(27h shl 16) or 32
-		push	608
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-		push	32 or (16 shl 16)
-		push	608
-		call	_graph_copy_hud_row_0_to_1_8
-		add	sp, 6
-		leave
-		retf
-sub_19085	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14425,7 +14391,7 @@ sub_190D6	proc far
 		mov	al, _route
 		cbw
 		push	ax
-		mov	al, byte_34A34
+		mov	al, _stage_num
 		cbw
 		dec	ax
 		push	ax
@@ -14437,7 +14403,7 @@ loc_1910C:
 		jnz	short loc_19124
 		call	_lives_put_initial
 		call	_bombs_put_initial
-		call	sub_19085
+		call	_stage_put_initial
 		call	sub_1926B
 
 loc_19124:
@@ -14468,7 +14434,7 @@ loc_19124:
 		push	ss
 		lea	ax, [bp+@@str]
 		push	ax
-		mov	al, byte_34A34
+		mov	al, _stage_num
 		cbw
 		push	ax
 		push	2
@@ -25695,9 +25661,9 @@ loc_202A6:
 		cbw
 		cmp	ax, RANK_LUNATIC
 		jnz	short loc_2031C
-		mov	al, byte_34A34
+		mov	al, _stage_num
 		cbw
-		cmp	ax, 0Ah
+		cmp	ax, 10
 		jge	short loc_202D4
 		mov	[bp+@@pattern], PP_1_AIMED
 		jmp	short loc_202D9
@@ -52509,7 +52475,8 @@ _rank	db CFG_RANK_DEFAULT
 _bgm_mode	db CFG_BGM_MODE_DEFAULT
 _bombs	db CFG_BOMBS_DEFAULT
 _lives_extra	db    CFG_LIVES_EXTRA_DEFAULT
-byte_34A34	db 0
+public _stage_num
+_stage_num	db 0
 byte_34A35	db 0
 		db    0
 aRANKS	dd aEasy		; "EASY"

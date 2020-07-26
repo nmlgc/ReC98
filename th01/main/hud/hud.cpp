@@ -1,4 +1,5 @@
 #include "th01/main/vars.hpp"
+#include "th01/core/str_val.hpp"
 #include "th01/formats/ptn.hpp"
 #include "th01/formats/grf.hpp"
 #include "th01/main/playfld.hpp"
@@ -18,6 +19,9 @@ static const int BOMBS_TOP = 16;
 static const int SCORE_LEFT = 256;
 static const int MAX_TOP = 0;
 static const int CUR_TOP = 16;
+
+static const int STAGE_LEFT = 608;
+static const int STAGE_TOP = 32;
 
 static const int PTN_LIFE_QUARTER = 0;
 static const int PTN_BOMB_QUARTER = 1;
@@ -414,3 +418,16 @@ void hud_bombs_put(int prev)
 #undef put_initial
 #undef put_change
 /// ---------------
+
+// Assumes page 0.
+void stage_put_initial(void)
+{
+	char str[STAGE_DIGITS + 1];
+
+	bg_snap(STAGE_LEFT, 0, STAGE_TOP, PTN_BG_STAGE, 0);
+	str_right_aligned_from_uint16(str, stage_num, STAGE_DIGITS);
+	graph_putsa_fx(STAGE_LEFT, STAGE_TOP, MAX_FX, str);
+	graph_copy_hud_row_0_to_1_8(
+		STAGE_LEFT, STAGE_TOP, STAGE_DIGITS * GLYPH_HALF_W
+	);
+}
