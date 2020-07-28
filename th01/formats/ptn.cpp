@@ -31,7 +31,7 @@ ptn_error_t ptn_load_palette_show(int slot, const char *fn)
 	ptn_t *ptn;
 
 	arc_file_load(fn);
-	arc_file_get(h.header);
+	arc_file_get_far(h.header);
 
 	image_count = h.header.image_count;
 	// MODDERS:
@@ -46,7 +46,7 @@ ptn_error_t ptn_load_palette_show(int slot, const char *fn)
 		return PE_OUT_OF_MEMORY;
 	}
 
-	arc_file_get(h.pal);
+	arc_file_get_far(h.pal);
 	if(flag_palette_show) {
 		z_palette_set_all_show(h.pal);
 	}
@@ -54,8 +54,8 @@ ptn_error_t ptn_load_palette_show(int slot, const char *fn)
 	ptn_image_count[slot] = image_count;
 	ptn = ptn_images[slot];
 	for(i = 0; i < image_count; i++, ptn++) {
-		arc_file_get(ptn->unused_zero);
-		arc_file_get(ptn->planes);
+		arc_file_get_far(ptn->unused_zero);
+		arc_file_get_far(ptn->planes);
 		for(y = 0; y < PTN_H; y++) {
 			ptn->alpha[y] = ptn_alpha_from(
 				ptn->planes.B[y],
