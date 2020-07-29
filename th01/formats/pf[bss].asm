@@ -10,3 +10,4 @@ _cache	dd ?
 _arc_fn	db 13 dup (?)
 _file_pos	dw ?
 _cache_bytes_read	dw ?
+	evendata

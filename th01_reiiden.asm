@@ -12042,15 +12042,15 @@ arg_0		= word ptr  6
 		call	arc_file_seek pascal, 4
 		push	ds
 		mov	ax, di
-		imul	ax, 26h
-		add	ax, 50BCh
+		imul	ax, size grc_t
+		add	ax, offset _grc_images.GRC_vram_w
 		push	ax
 		push	2
 		call	arc_file_get
 		push	ds
 		mov	ax, di
-		imul	ax, 26h
-		add	ax, 50BEh
+		imul	ax, size grc_t
+		add	ax, offset _grc_images.GRC_h
 		push	ax
 		push	2
 		call	arc_file_get
@@ -12062,19 +12062,19 @@ arg_0		= word ptr  6
 		mov	al, [bp+var_36]
 		mov	ah, 0
 		mov	bx, di
-		imul	bx, 26h
-		mov	[bx+50C0h], ax
+		imul	bx, size grc_t
+		mov	_grc_images[bx].GRC_image_count, ax
 		mov	bx, di
-		imul	bx, 26h
-		mov	ax, [bx+50BCh]
+		imul	bx, size grc_t
+		mov	ax, _grc_images[bx].GRC_vram_w
 		mov	bx, di
-		imul	bx, 26h
-		imul	word ptr [bx+50BEh]
+		imul	bx, size grc_t
+		imul	_grc_images[bx].GRC_h
 		mov	[bp+var_2], ax
 		push	ss
 		lea	ax, [bp+var_36]
 		push	ax
-		push	48
+		push	size palette_t
 		call	arc_file_get
 		mov	[bp+var_4], 0
 		jmp	short loc_17534
@@ -12082,19 +12082,19 @@ arg_0		= word ptr  6
 
 loc_174C8:
 		mov	bx, di
-		imul	bx, 26h
+		imul	bx, size grc_t
 		mov	ax, [bp+var_4]
 		shl	ax, 2
 		add	bx, ax
-		mov	ax, [bx+50C2h]
-		or	ax, [bx+50C4h]
+		mov	ax, word ptr _grc_images.GRC_dots[bx]+0
+		or	ax, word ptr _grc_images.GRC_dots[bx]+2
 		jz	short loc_174F9
 		mov	bx, di
-		imul	bx, 26h
+		imul	bx, size grc_t
 		mov	ax, [bp+var_4]
 		shl	ax, 2
 		add	bx, ax
-		pushd	dword ptr [bx+50C2h] ; font
+		pushd	_grc_images.GRC_dots[bx] ; font
 		call	@$bdla$qnv
 		add	sp, 4
 
@@ -12103,24 +12103,24 @@ loc_174F9:
 		call	@$bnwa$qui
 		pop	cx
 		mov	bx, di
-		imul	bx, 26h
+		imul	bx, size grc_t
 		mov	si, [bp+var_4]
 		shl	si, 2
 		add	bx, si
-		mov	[bx+50C4h], dx
-		mov	[bx+50C2h], ax
+		mov	word ptr _grc_images.GRC_dots[bx]+2, dx
+		mov	word ptr _grc_images.GRC_dots[bx]+0, ax
 		mov	bx, di
-		imul	bx, 26h
+		imul	bx, size grc_t
 		mov	ax, [bp+var_4]
 		shl	ax, 2
 		add	bx, ax
-		call	arc_file_get pascal, large dword ptr [bx+50C2h], [bp+var_2]
+		call	arc_file_get pascal, large _grc_images.GRC_dots[bx], [bp+var_2]
 		inc	[bp+var_4]
 
 loc_17534:
 		mov	bx, di
-		imul	bx, 26h
-		mov	ax, [bx+50C0h]
+		imul	bx, size grc_t
+		mov	ax, _grc_images[bx].GRC_image_count
 		cmp	ax, [bp+var_4]
 		jg	short loc_174C8
 		call	arc_file_free
@@ -12164,16 +12164,16 @@ arg_6		= word ptr  0Ch
 		mov	[bp+var_2], ax
 		mov	[bp+var_8], 0
 		mov	bx, si
-		imul	bx, 26h
-		mov	ax, [bx+50BCh]
+		imul	bx, size grc_t
+		mov	ax, _grc_images[bx].GRC_vram_w
 		imul	ax, -8
 		cmp	ax, [bp+arg_0]
 		jg	loc_1767E
 		cmp	[bp+arg_0], 280h
 		jge	loc_1767E
 		mov	bx, si
-		imul	bx, 26h
-		mov	ax, [bx+50BEh]
+		imul	bx, size grc_t
+		mov	ax, _grc_images[bx].GRC_h
 		imul	ax, -1
 		cmp	ax, [bp+arg_2]
 		jg	loc_1767E
@@ -12200,11 +12200,11 @@ loc_175BD:
 
 loc_175D8:
 		mov	bx, si
-		imul	bx, 26h
+		imul	bx, size grc_t
 		mov	ax, [bp+arg_6]
 		shl	ax, 2
 		add	bx, ax
-		les	bx, [bx+50C2h]
+		les	bx, _grc_images.GRC_dots[bx]
 		add	bx, [bp+var_8]
 		cmp	byte ptr es:[bx], 0
 		jz	short loc_17638
@@ -12229,11 +12229,11 @@ loc_17605:
 
 loc_17618:
 		mov	bx, si
-		imul	bx, 26h
+		imul	bx, size grc_t
 		mov	ax, [bp+arg_6]
 		shl	ax, 2
 		add	bx, ax
-		les	bx, [bx+50C2h]
+		les	bx, _grc_images.GRC_dots[bx]
 		add	bx, [bp+var_8]
 		mov	al, es:[bx]
 		les	bx, _VRAM_PLANE_B
@@ -12247,8 +12247,8 @@ loc_17638:
 
 loc_1763F:
 		mov	bx, si
-		imul	bx, 26h
-		mov	ax, [bx+50BCh]
+		imul	bx, size grc_t
+		mov	ax, _grc_images[bx].GRC_vram_w
 		cmp	ax, [bp+var_6]
 		jg	short loc_175D8
 		jmp	short loc_1765B
@@ -12256,8 +12256,8 @@ loc_1763F:
 
 loc_1764F:
 		mov	bx, si
-		imul	bx, 26h
-		mov	ax, [bx+50BCh]
+		imul	bx, size grc_t
+		mov	ax, _grc_images[bx].GRC_vram_w
 		add	[bp+var_8], ax
 
 loc_1765B:
@@ -12268,8 +12268,8 @@ loc_1765B:
 
 loc_17669:
 		mov	bx, si
-		imul	bx, 26h
-		mov	ax, [bx+50BEh]
+		imul	bx, size grc_t
+		mov	ax, _grc_images[bx].GRC_h
 		cmp	ax, [bp+var_4]
 		jg	loc_175BD
 
@@ -12303,36 +12303,36 @@ arg_0		= word ptr  6
 
 loc_1768E:
 		mov	bx, di
-		imul	bx, 26h
+		imul	bx, size grc_t
 		mov	ax, si
 		shl	ax, 2
 		add	bx, ax
-		mov	ax, [bx+50C2h]
-		or	ax, [bx+50C4h]
+		mov	ax, word ptr _grc_images.GRC_dots[bx]+0
+		or	ax, word ptr _grc_images.GRC_dots[bx]+2
 		jz	short loc_176D5
 		mov	bx, di
-		imul	bx, 26h
+		imul	bx, size grc_t
 		mov	ax, si
 		shl	ax, 2
 		add	bx, ax
-		pushd	dword ptr [bx+50C2h] ; font
+		pushd	_grc_images.GRC_dots[bx]
 		call	@$bdla$qnv
 		add	sp, 4
 		mov	bx, di
-		imul	bx, 26h
+		imul	bx, size grc_t
 		mov	ax, si
 		shl	ax, 2
 		add	bx, ax
-		mov	word ptr [bx+50C4h], 0
-		mov	word ptr [bx+50C2h], 0
+		mov	word ptr _grc_images.GRC_dots[bx]+2, 0
+		mov	word ptr _grc_images.GRC_dots[bx]+0, 0
 
 loc_176D5:
 		inc	si
 
 loc_176D6:
 		mov	bx, di
-		imul	bx, 26h
-		cmp	[bx+50C0h], si
+		imul	bx, size grc_t
+		cmp	_grc_images[bx].GRC_image_count, si
 		jg	short loc_1768E
 		pop	di
 		pop	si
@@ -53750,7 +53750,7 @@ word_39A2B	dw ?
 byte_39A32	db ?
 		db ?
 include th01/formats/pf[bss].asm
-		db 305 dup(?)
+include th01/formats/grc[bss].asm
 palette_39B8C	palette_t <?>
 		db 348 dup(?)
 byte_39D18	db ?
