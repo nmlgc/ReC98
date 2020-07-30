@@ -1,5 +1,17 @@
 /// Uncompressed monochrome 8w×h sprite format
 /// ------------------------------------------
+#include "th01/formats/sprfmt_h.hpp"
+
+#define GRC_MAGIC "GRCG"
+
+// On-disk per-file header. Not the same as for .BOS!
+struct grc_header_t {
+	char magic[sizeof(GRC_MAGIC) - 1];
+	int16_t vram_w;
+	int16_t h;
+	spriteformat_header_inner_t inner;
+};
+
 static const int GRC_SLOT_COUNT = 8;
 static const int GRC_IMAGES_PER_SLOT = 8;
 
@@ -12,4 +24,8 @@ struct grc_t {
 };
 
 extern grc_t grc_images[GRC_SLOT_COUNT];
+
+// Loads all images from the .GRC file with the given [fn] inside the
+// currently active packfile into the given .GRC [slot]. Always returns 0.
+int grc_load(int slot, const char fn[PF_FN_LEN]);
 /// ------------------------------------------

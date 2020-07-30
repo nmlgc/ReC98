@@ -73,6 +73,7 @@ BOMBS_MAX = 5
 main_01 group main_01_TEXT, main_01__TEXT, main_01___TEXT
 main_13 group main_13_TEXT, main_13__TEXT
 main_19 group main_19_TEXT, main_19__TEXT
+main_23 group main_23_TEXT, main_23__TEXT
 main_25 group main_25_TEXT, main_25__TEXT
 main_27 group main_27_TEXT, main_27__TEXT
 main_30 group main_30_TEXT, main_30__TEXT
@@ -912,14 +913,8 @@ sub_BCFE	endp
 sub_BEB1	proc far
 		push	bp
 		mov	bp, sp
-		push	ds
-		push	offset aKuzi1_grc ; "kuzi1.grc"
-		push	6
-		call	sub_1744B
-		push	ds
-		push	offset aKuzi2_grc ; "kuzi2.grc"
-		push	7
-		call	sub_1744B
+		call	_grc_load stdcall, 6, offset aKuzi1_grc, ds
+		call	_grc_load stdcall, 7, offset aKuzi2_grc, ds
 		add	sp, 0Ch
 		pop	bp
 		retf
@@ -12018,119 +12013,13 @@ main_22_TEXT	ends
 
 ; Segment type:	Pure code
 main_23_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_23_TEXT
+	extern _grc_load:proc
+main_23_TEXT	ends
+
+main_23__TEXT	segment	byte public 'CODE' use16
+		assume cs:main_23
 		;org 0Bh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1744B	proc far
-
-var_36		= byte ptr -36h
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  6
-@@fn		= dword	ptr  8
-
-		enter	36h, 0
-		push	si
-		push	di
-		mov	di, [bp+arg_0]
-		call	arc_file_load pascal, large [bp+@@fn]
-		call	arc_file_seek pascal, 4
-		push	ds
-		mov	ax, di
-		imul	ax, size grc_t
-		add	ax, offset _grc_images.GRC_vram_w
-		push	ax
-		push	2
-		call	arc_file_get
-		push	ds
-		mov	ax, di
-		imul	ax, size grc_t
-		add	ax, offset _grc_images.GRC_h
-		push	ax
-		push	2
-		call	arc_file_get
-		push	ss
-		lea	ax, [bp+var_36]
-		push	ax
-		push	8
-		call	arc_file_get
-		mov	al, [bp+var_36]
-		mov	ah, 0
-		mov	bx, di
-		imul	bx, size grc_t
-		mov	_grc_images[bx].GRC_image_count, ax
-		mov	bx, di
-		imul	bx, size grc_t
-		mov	ax, _grc_images[bx].GRC_vram_w
-		mov	bx, di
-		imul	bx, size grc_t
-		imul	_grc_images[bx].GRC_h
-		mov	[bp+var_2], ax
-		push	ss
-		lea	ax, [bp+var_36]
-		push	ax
-		push	size palette_t
-		call	arc_file_get
-		mov	[bp+var_4], 0
-		jmp	short loc_17534
-; ---------------------------------------------------------------------------
-
-loc_174C8:
-		mov	bx, di
-		imul	bx, size grc_t
-		mov	ax, [bp+var_4]
-		shl	ax, 2
-		add	bx, ax
-		mov	ax, word ptr _grc_images.GRC_dots[bx]+0
-		or	ax, word ptr _grc_images.GRC_dots[bx]+2
-		jz	short loc_174F9
-		mov	bx, di
-		imul	bx, size grc_t
-		mov	ax, [bp+var_4]
-		shl	ax, 2
-		add	bx, ax
-		pushd	_grc_images.GRC_dots[bx] ; font
-		call	@$bdla$qnv
-		add	sp, 4
-
-loc_174F9:
-		push	[bp+var_2]
-		call	@$bnwa$qui
-		pop	cx
-		mov	bx, di
-		imul	bx, size grc_t
-		mov	si, [bp+var_4]
-		shl	si, 2
-		add	bx, si
-		mov	word ptr _grc_images.GRC_dots[bx]+2, dx
-		mov	word ptr _grc_images.GRC_dots[bx]+0, ax
-		mov	bx, di
-		imul	bx, size grc_t
-		mov	ax, [bp+var_4]
-		shl	ax, 2
-		add	bx, ax
-		call	arc_file_get pascal, large _grc_images.GRC_dots[bx], [bp+var_2]
-		inc	[bp+var_4]
-
-loc_17534:
-		mov	bx, di
-		imul	bx, size grc_t
-		mov	ax, _grc_images[bx].GRC_image_count
-		cmp	ax, [bp+var_4]
-		jg	short loc_174C8
-		call	arc_file_free
-		xor	ax, ax
-		pop	di
-		pop	si
-		leave
-		retf
-sub_1744B	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -13154,7 +13043,7 @@ loc_17CA3:
 		retf
 sub_17C2F	endp
 
-main_23_TEXT	ends
+main_23__TEXT	ends
 
 ; ===========================================================================
 
@@ -34744,10 +34633,7 @@ sub_24F41	proc far
 		push	offset point_3988E
 		call	sub_1568F
 		mov	word_398B8, 0
-		push	ds
-		push	offset aBoss5_gr_grc ; "boss5_gr.grc"
-		push	0
-		call	sub_1744B
+		call	_grc_load stdcall, 0, offset aBoss5_gr_grc, ds
 		call	_ptn_new stdcall, (12 shl 16) or 2
 		call	_ptn_load stdcall, 3, offset aBoss3_m_ptn_1, ds ;	"boss3_m.ptn"
 		mov	byte_3A1B2, 0C0h ; '?'
@@ -40657,23 +40543,11 @@ sub_28754	proc far
 		push	ds
 		push	offset word_39A1E
 		call	sub_16B56
-		push	ds
-		push	offset aBoss6gr1_grc ; "boss6gr1.grc"
-		push	0
-		call	sub_1744B
-		push	ds
-		push	offset aBoss6gr2_grc ; "boss6gr2.grc"
-		push	1
-		call	sub_1744B
-		push	ds
-		push	offset aBoss6gr3_grc ; "boss6gr3.grc"
-		push	2
-		call	sub_1744B
+		call	_grc_load stdcall, 0, offset aBoss6gr1_grc, ds
+		call	_grc_load stdcall, 1, offset aBoss6gr2_grc, ds
+		call	_grc_load stdcall, 2, offset aBoss6gr3_grc, ds
 		add	sp, 30h
-		push	ds
-		push	offset aBoss6gr4_grc ; "boss6gr4.grc"
-		push	3
-		call	sub_1744B
+		call	_grc_load stdcall, 3, offset aBoss6gr4_grc, ds
 		call	sub_232A4
 		nopcall	sub_287D9
 		call	_ptn_new stdcall, (16 shl 16) or 2

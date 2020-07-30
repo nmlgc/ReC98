@@ -110,6 +110,29 @@ as part of the same translation unit. Found nothing so far, though.
 Borland C++ just pushes the entire word. Will cause IDA to mis-identify
 certain local variables as `word`s when they aren't.
 
+### Pushing pointers
+
+When passing a `near` pointer to a function that takes a `far` one, the
+segment argument is sometimes `PUSH`ed immediately, before evaluating the
+offset:
+
+```c++
+#pragma option -ml
+
+struct s100 {
+  char c[100];
+};
+
+extern s100 structs[5];
+
+void __cdecl process(s100 *element);
+
+void foo(int i) {
+  process((s100 near *)(&structs[i])); // PUSH DS; (AX = offset); PUSH AX;
+  process((s100 far *)(&structs[i]));  // (AX = offset); PUSH DS; PUSH AX;
+}
+```
+
 ## Flags
 
 ### `-Z` (Suppress register reloads)

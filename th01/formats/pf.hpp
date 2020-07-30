@@ -20,6 +20,9 @@ void pascal arc_file_load(const char fn[PF_FN_LEN]);
 // into [buf], advancing the cursor in the process.
 void pascal arc_file_get(char *buf, size_t size);
 
+#define arc_file_get_near(var) \
+	arc_file_get(reinterpret_cast<char near *>(&var), sizeof(var))
+
 #define arc_file_get_far(var) \
 	arc_file_get(reinterpret_cast<char far *>(&var), sizeof(var))
 
