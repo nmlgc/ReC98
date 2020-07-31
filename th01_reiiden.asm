@@ -1152,17 +1152,17 @@ loc_C014:
 ; ---------------------------------------------------------------------------
 
 loc_C0CA:
-		push	70000h
-		push	7
+		push	0 or (7 shl 16) ; (image) or (col)
+		push	7 ; slot
 
 loc_C0D2:
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+3E03h]
+		push	word ptr [bx+3E03h]	; top
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+3DCDh]
-		call	sub_1754D
+		push	word ptr [bx+3DCDh]	; left
+		call	_grc_put_8
 		add	sp, 0Ah
 		inc	si
 		mov	al, angle_387D9
@@ -12014,164 +12014,13 @@ main_22_TEXT	ends
 ; Segment type:	Pure code
 main_23_TEXT	segment	byte public 'CODE' use16
 	extern _grc_load:proc
+	extern _grc_put_8:proc
 main_23_TEXT	ends
 
 main_23__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_23
 		;org 0Bh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1754D	proc far
-
-var_A		= word ptr -0Ah
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-@@col		= word ptr  0Eh
-
-		enter	0Ah, 0
-		push	si
-		push	di
-		mov	si, [bp+arg_4]
-		mov	ax, [bp+arg_0]
-		sar	ax, 3
-		mov	dx, [bp+arg_2]
-		shl	dx, 6
-		add	ax, dx
-		mov	dx, [bp+arg_2]
-		shl	dx, 4
-		add	ax, dx
-		mov	[bp+var_2], ax
-		mov	[bp+var_8], 0
-		mov	bx, si
-		imul	bx, size grc_t
-		mov	ax, _grc_images[bx].GRC_vram_w
-		imul	ax, -8
-		cmp	ax, [bp+arg_0]
-		jg	loc_1767E
-		cmp	[bp+arg_0], 280h
-		jge	loc_1767E
-		mov	bx, si
-		imul	bx, size grc_t
-		mov	ax, _grc_images[bx].GRC_h
-		imul	ax, -1
-		cmp	ax, [bp+arg_2]
-		jg	loc_1767E
-		cmp	[bp+arg_2], 190h
-		jge	loc_1767E
-		call	_grcg_setcolor_rmw stdcall, [bp+@@col]
-		pop	cx
-		mov	[bp+var_4], 0
-		jmp	loc_17669
-; ---------------------------------------------------------------------------
-
-loc_175BD:
-		mov	di, [bp+var_2]
-		mov	ax, di
-		mov	bx, 50h	; 'P'
-		cwd
-		idiv	bx
-		mov	[bp+var_A], ax
-		cmp	[bp+var_2], 0
-		jl	short loc_1764F
-		mov	[bp+var_6], 0
-		jmp	short loc_1763F
-; ---------------------------------------------------------------------------
-
-loc_175D8:
-		mov	bx, si
-		imul	bx, size grc_t
-		mov	ax, [bp+arg_6]
-		shl	ax, 2
-		add	bx, ax
-		les	bx, _grc_images.GRC_dots[bx]
-		add	bx, [bp+var_8]
-		cmp	byte ptr es:[bx], 0
-		jz	short loc_17638
-		cmp	[bp+arg_0], 0
-		jl	short loc_17605
-		mov	ax, di
-		mov	bx, 50h	; 'P'
-		cwd
-		idiv	bx
-		cmp	ax, [bp+var_A]
-		jz	short loc_17618
-
-loc_17605:
-		cmp	[bp+arg_0], 0
-		jge	short loc_17638
-		mov	ax, di
-		mov	bx, 50h	; 'P'
-		cwd
-		idiv	bx
-		cmp	ax, [bp+var_A]
-		jz	short loc_17638
-
-loc_17618:
-		mov	bx, si
-		imul	bx, size grc_t
-		mov	ax, [bp+arg_6]
-		shl	ax, 2
-		add	bx, ax
-		les	bx, _grc_images.GRC_dots[bx]
-		add	bx, [bp+var_8]
-		mov	al, es:[bx]
-		les	bx, _VRAM_PLANE_B
-		add	bx, di
-		mov	es:[bx], al
-
-loc_17638:
-		inc	[bp+var_8]
-		inc	di
-		inc	[bp+var_6]
-
-loc_1763F:
-		mov	bx, si
-		imul	bx, size grc_t
-		mov	ax, _grc_images[bx].GRC_vram_w
-		cmp	ax, [bp+var_6]
-		jg	short loc_175D8
-		jmp	short loc_1765B
-; ---------------------------------------------------------------------------
-
-loc_1764F:
-		mov	bx, si
-		imul	bx, size grc_t
-		mov	ax, _grc_images[bx].GRC_vram_w
-		add	[bp+var_8], ax
-
-loc_1765B:
-		add	[bp+var_2], 50h	; 'P'
-		cmp	[bp+var_2], 7D00h
-		jge	short loc_17679
-		inc	[bp+var_4]
-
-loc_17669:
-		mov	bx, si
-		imul	bx, size grc_t
-		mov	ax, _grc_images[bx].GRC_h
-		cmp	ax, [bp+var_4]
-		jg	loc_175BD
-
-loc_17679:
-		call	_grcg_off_func
-
-loc_1767E:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_1754D	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -35543,18 +35392,18 @@ loc_25861:
 		cwd
 		idiv	bx
 		mov	[bp+var_2], dx
-		push	4
+		push	4	; col
 		mov	ax, [bp+var_2]
 		add	ax, 4
-		push	ax
-		push	0
+		push	ax	; image
+		push	0	; slot
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+5D51h]
+		push	word ptr [bx+5D51h]	; top
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+5D47h]
-		call	sub_1754D
+		push	word ptr [bx+5D47h]	; left
+		call	_grc_put_8
 		add	sp, 0Ah
 
 loc_2589A:
@@ -36816,15 +36665,15 @@ loc_26413:
 ; ---------------------------------------------------------------------------
 
 loc_2647B:
-		push	40003h
-		push	0
+		push	3 or (4 shl 16)	; (image) or (col)
+		push	0	; slot
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+5D75h]
+		push	word ptr [bx+5D75h]	; top
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+5D61h]
-		call	sub_1754D
+		push	word ptr [bx+5D61h]	; left
+		call	_grc_put_8
 		add	sp, 0Ah
 		inc	si
 
@@ -36853,8 +36702,8 @@ loc_264AC:
 		jg	loc_265C5
 		push	7
 		call	_mdrv2_se_play
-		push	40004h
-		push	0
+		push	4 or (4 shl 16)	; (image) or (col)
+		push	0	; slot
 		mov	ax, word_3A6CA
 		add	ax, 0FF9Ch
 		mov	bx, 0Ah
@@ -36862,7 +36711,7 @@ loc_264AC:
 		idiv	bx
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+5D73h]
+		push	word ptr [bx+5D73h]	; top
 		mov	ax, word_3A6CA
 		add	ax, 0FF9Ch
 		mov	bx, 0Ah
@@ -36870,8 +36719,8 @@ loc_264AC:
 		idiv	bx
 		add	ax, ax
 		mov	bx, ax
-		push	word ptr [bx+5D5Fh]
-		call	sub_1754D
+		push	word ptr [bx+5D5Fh]	; left
+		call	_grc_put_8
 		add	sp, 0Ch
 		mov	ax, word_3A6CA
 		add	ax, 0FF9Ch
@@ -36883,15 +36732,15 @@ loc_264AC:
 ; ---------------------------------------------------------------------------
 
 loc_26527:
-		push	40003h
-		push	0
+		push	3 or (4 shl 16)	; (image) or (col)
+		push	0	; slot
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+5D75h]
+		push	word ptr [bx+5D75h] ; top
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+5D61h]
-		call	sub_1754D
+		push	word ptr [bx+5D61h]	; left
+		call	_grc_put_8
 		add	sp, 0Ah
 		inc	si
 
@@ -37225,18 +37074,18 @@ loc_26856:
 		cwd
 		idiv	bx
 		mov	[bp+var_2], dx
-		push	4
+		push	4	; col
 		mov	ax, [bp+var_2]
 		add	ax, 4
-		push	ax
-		push	0
+		push	ax	; image
+		push	0	; slot
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+5D93h]
+		push	word ptr [bx+5D93h]	; top
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+5D89h]
-		call	sub_1754D
+		push	word ptr [bx+5D89h]	; left
+		call	_grc_put_8
 		add	sp, 0Ah
 
 loc_2688F:
@@ -37472,21 +37321,21 @@ loc_26A42:
 		idiv	bx
 		mov	[bp+var_2], dx
 		call	IRand
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
-		push	dx
+		push	dx	; col
 		mov	ax, [bp+var_2]
 		add	ax, 4
-		push	ax
-		push	0
+		push	ax	; image
+		push	0	; slot
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+5DA7h]
+		push	word ptr [bx+5DA7h]	; top
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+5D9Dh]
-		call	sub_1754D
+		push	word ptr [bx+5D9Dh]	; left
+		call	_grc_put_8
 		add	sp, 0Ah
 
 loc_26A84:
@@ -37642,21 +37491,21 @@ loc_26BBF:
 		idiv	bx
 		mov	[bp+var_2], dx
 		call	IRand
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
-		push	dx
+		push	dx	; col
 		mov	ax, [bp+var_2]
 		add	ax, 4
-		push	ax
-		push	0
+		push	ax	; image
+		push	0	; slot
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+5DBBh]
+		push	word ptr [bx+5DBBh]	; top
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+5DB1h]
-		call	sub_1754D
+		push	word ptr [bx+5DB1h]	; left
+		call	_grc_put_8
 		add	sp, 0Ah
 
 loc_26C01:
@@ -39393,7 +39242,7 @@ var_C		= word ptr -0Ch
 var_9		= byte ptr -9
 var_8		= dword	ptr -8
 var_4		= word ptr -4
-var_2		= word ptr -2
+@@top		= word ptr -2
 
 		enter	2Ah, 0
 		push	si
@@ -39429,9 +39278,9 @@ loc_27C7B:
 		add	ax, ax
 		mov	bx, ax
 		movsx	eax, _CosTable8[bx]
-		imul	eax, 60h
+		imul	eax, 96
 		sar	eax, 8
-		add	ax, 130h
+		add	ax, 304
 		mov	di, ax
 		mov	al, [bp+var_9]
 		mov	ah, 0
@@ -39442,10 +39291,10 @@ loc_27C7B:
 		add	ax, ax
 		mov	bx, ax
 		movsx	eax, _SinTable8[bx]
-		imul	eax, 60h
+		imul	eax, 96
 		sar	eax, 8
 		add	ax, 72h	; 'r'
-		mov	[bp+var_2], ax
+		mov	[bp+@@top], ax
 		push	(32 shl 16) or 48
 		mov	bx, si
 		imul	bx, 6
@@ -39458,11 +39307,7 @@ loc_27C7B:
 		add	bx, ax
 		push	word ptr ss:[bx]
 		call	_egc_copy_rect_1_to_0_16
-		push	80003h
-		push	0
-		push	[bp+var_2]
-		push	di
-		call	sub_1754D
+		call	_grc_put_8 stdcall, di, [bp+@@top], 0, large 3 or (8 shl 16)
 		add	sp, 12h
 		cmp	word_3A773, 1
 		jle	loc_27DAF
@@ -39478,19 +39323,19 @@ loc_27C7B:
 		add	bx, ax
 		push	word ptr ss:[bx]
 		call	_egc_copy_rect_1_to_0_16
-		push	80002h
-		push	0
+		push	2 or (8 shl 16)	; (image) or (col)
+		push	0	; slot
 		mov	bx, si
 		imul	bx, 6
 		lea	ax, [bp+var_2A]
 		add	bx, ax
-		push	word ptr ss:[bx]
+		push	word ptr ss:[bx]	; top
 		mov	bx, si
 		imul	bx, 6
 		lea	ax, [bp+var_1E]
 		add	bx, ax
-		push	word ptr ss:[bx]
-		call	sub_1754D
+		push	word ptr ss:[bx]	; left
+		call	_grc_put_8
 		add	sp, 12h
 		cmp	word_3A773, 2
 		jle	short loc_27DAF
@@ -39506,19 +39351,19 @@ loc_27C7B:
 		add	bx, ax
 		push	word ptr ss:[bx]
 		call	_egc_copy_rect_1_to_0_16
-		push	80001h
-		push	0
+		push	1 or (8 shl 16)	; (image) or (col)
+		push	0	; slot
 		mov	bx, si
 		imul	bx, 6
 		lea	ax, [bp+var_28]
 		add	bx, ax
-		push	word ptr ss:[bx]
+		push	word ptr ss:[bx]	; top
 		mov	bx, si
 		imul	bx, 6
 		lea	ax, [bp+var_1C]
 		add	bx, ax
-		push	word ptr ss:[bx]
-		call	sub_1754D
+		push	word ptr ss:[bx]	; left
+		call	_grc_put_8
 		add	sp, 12h
 
 loc_27DAF:
@@ -39571,7 +39416,7 @@ loc_27DAF:
 		imul	bx, 6
 		lea	ax, [bp+var_2A]
 		add	bx, ax
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@top]
 		mov	ss:[bx], ax
 		inc	si
 
@@ -39619,7 +39464,7 @@ loc_27E8E:
 		lea	ax, [bp+var_1E]
 		add	bx, ax
 		mov	ax, ss:[bx]
-		add	ax, 40h
+		add	ax, 64
 		mov	dx, si
 		shl	dx, 7
 		sub	ax, dx
@@ -39629,7 +39474,7 @@ loc_27E8E:
 		lea	ax, [bp+var_2A]
 		add	bx, ax
 		mov	ax, ss:[bx]
-		mov	[bp+var_2], ax
+		mov	[bp+@@top], ax
 		push	(32 shl 16) or 48
 		mov	bx, si
 		imul	bx, 6
@@ -39642,11 +39487,7 @@ loc_27E8E:
 		add	bx, ax
 		push	word ptr ss:[bx]
 		call	_egc_copy_rect_1_to_0_16
-		push	80003h
-		push	0
-		push	[bp+var_2]
-		push	di
-		call	sub_1754D
+		call	_grc_put_8 stdcall, di, [bp+@@top], 0, large 3 or (8 shl 16)
 		push	(32 shl 16) or 48
 		mov	bx, si
 		imul	bx, 6
@@ -39659,19 +39500,19 @@ loc_27E8E:
 		add	bx, ax
 		push	word ptr ss:[bx]
 		call	_egc_copy_rect_1_to_0_16
-		push	80002h
-		push	0
+		push	2 or (8 shl 16)	; (image) or (col)
+		push	0	; slot
 		mov	bx, si
 		imul	bx, 6
 		lea	ax, [bp+var_2A]
 		add	bx, ax
-		push	word ptr ss:[bx]
+		push	word ptr ss:[bx]	; top
 		mov	bx, si
 		imul	bx, 6
 		lea	ax, [bp+var_1E]
 		add	bx, ax
-		push	word ptr ss:[bx]
-		call	sub_1754D
+		push	word ptr ss:[bx]	; left
+		call	_grc_put_8
 		push	(32 shl 16) or 48
 		mov	bx, si
 		imul	bx, 6
@@ -39685,19 +39526,19 @@ loc_27E8E:
 		push	word ptr ss:[bx]
 		call	_egc_copy_rect_1_to_0_16
 		add	sp, 2Ch
-		push	80001h
-		push	0
+		push	1 or (8 shl 16)	; (image) or (col)
+		push	0	; slot
 		mov	bx, si
 		imul	bx, 6
 		lea	ax, [bp+var_28]
 		add	bx, ax
-		push	word ptr ss:[bx]
+		push	word ptr ss:[bx]	; top
 		mov	bx, si
 		imul	bx, 6
 		lea	ax, [bp+var_1C]
 		add	bx, ax
-		push	word ptr ss:[bx]
-		call	sub_1754D
+		push	word ptr ss:[bx]	; left
+		call	_grc_put_8
 		add	sp, 0Ah
 		cmp	[bp+var_1A], 280h
 		jle	short loc_27F9D
@@ -39755,7 +39596,7 @@ loc_27F9D:
 		imul	bx, 6
 		lea	ax, [bp+var_2A]
 		add	bx, ax
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@top]
 		mov	ss:[bx], ax
 		inc	si
 
@@ -41083,7 +40924,7 @@ loc_28C2A:
 		cbw
 		or	ax, ax
 		jle	short loc_28C92
-		push	0Fh
+		push	15	; col
 		mov	al, [si+61DEh]
 		cbw
 		push	ax
@@ -41103,19 +40944,19 @@ loc_28C2A:
 		cwd
 		idiv	bx
 		inc	ax
-		push	ax
-		push	1
+		push	ax	; image
+		push	1	; slot
 		mov	bx, si
 		shl	bx, 3
 		fld	qword ptr [bx+5ED2h]
 		call	ftol@
-		push	ax
+		push	ax	; top
 		mov	bx, si
 		shl	bx, 3
 		fld	qword ptr [bx+5DE2h]
 		call	ftol@
-		push	ax
-		call	sub_1754D
+		push	ax	; left
+		call	_grc_put_8
 		add	sp, 0Ah
 		dec	byte ptr [si+61C0h]
 		jmp	short loc_28CC0
@@ -41227,7 +41068,7 @@ loc_28D89:
 ; ---------------------------------------------------------------------------
 
 loc_28DBF:
-		push	0Fh
+		push	15	; col
 		mov	ax, word_3A6CA
 		mov	bx, 5
 		cwd
@@ -41236,19 +41077,19 @@ loc_28DBF:
 		cwd
 		idiv	bx
 		add	dx, 6
-		push	dx
-		push	1
+		push	dx	; image
+		push	1	; slot
 		mov	bx, si
 		shl	bx, 3
 		fld	qword ptr [bx+5ED2h]
 		call	ftol@
-		push	ax
+		push	ax	; top
 		mov	bx, si
 		shl	bx, 3
 		fld	qword ptr [bx+5DE2h]
 		call	ftol@
-		push	ax
-		call	sub_1754D
+		push	ax	; left
+		call	_grc_put_8
 		add	sp, 0Ah
 		cmp	_player_invincible, 0
 		jnz	loc_28E98
@@ -41658,20 +41499,20 @@ loc_29142:
 		add	bx, bx
 		push	word ptr [bx+6204h]
 		call	_egc_copy_rect_1_to_0_16
-		push	7
+		push	7	; col
 		mov	ax, word_3A6CA
 		mov	bx, 3
 		cwd
 		idiv	bx
-		push	dx
-		push	0
+		push	dx	; image
+		push	0	; slot
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+6200h]
+		push	word ptr [bx+6200h]	; top
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+61FCh]
-		call	sub_1754D
+		push	word ptr [bx+61FCh]	; left
+		call	_grc_put_8
 		add	sp, 12h
 		mov	ax, word_3A6CA
 		mov	bx, 4
@@ -41749,20 +41590,20 @@ loc_29219:
 		add	bx, bx
 		push	word ptr [bx+6204h]
 		call	_egc_copy_rect_1_to_0_16
-		push	7
+		push	7	; col
 		mov	ax, word_3A6CA
 		mov	bx, 3
 		cwd
 		idiv	bx
-		push	dx
-		push	0
+		push	dx	; image
+		push	0	; slot
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+6200h]
+		push	word ptr [bx+6200h]	; top
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+61FCh]
-		call	sub_1754D
+		push	word ptr [bx+61FCh]	; left
+		call	_grc_put_8
 		add	sp, 12h
 		mov	ax, word_3A6CA
 		mov	bx, 4
@@ -41860,20 +41701,20 @@ loc_2933D:
 		add	bx, bx
 		push	word ptr [bx+6204h]
 		call	_egc_copy_rect_1_to_0_16
-		push	7
+		push	7	; col
 		mov	ax, word_3A6CA
 		mov	bx, 3
 		cwd
 		idiv	bx
-		push	dx
-		push	0
+		push	dx	; image
+		push	0	; slot
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+6200h]
+		push	word ptr [bx+6200h]	; top
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+61FCh]
-		call	sub_1754D
+		push	word ptr [bx+61FCh]	; left
+		call	_grc_put_8
 		add	sp, 12h
 		mov	ax, word_3A6CA
 		mov	bx, 4
@@ -41933,20 +41774,20 @@ loc_293D3:
 		add	bx, bx
 		push	word ptr [bx+6204h]
 		call	_egc_copy_rect_1_to_0_16
-		push	7
+		push	7	; col
 		mov	ax, word_3A6CA
 		mov	bx, 3
 		cwd
 		idiv	bx
-		push	dx
-		push	0
+		push	dx	; image
+		push	0	; slot
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+6200h]
+		push	word ptr [bx+6200h]	; top
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+61FCh]
-		call	sub_1754D
+		push	word ptr [bx+61FCh]	; left
+		call	_grc_put_8
 		add	sp, 12h
 		mov	ax, word_3A6CA
 		mov	bx, 4
@@ -42036,20 +41877,20 @@ loc_294C9:
 		add	bx, bx
 		push	word ptr [bx+6204h]
 		call	_egc_copy_rect_1_to_0_16
-		push	7
+		push	7	; col
 		mov	ax, word_3A6CA
 		mov	bx, 3
 		cwd
 		idiv	bx
-		push	dx
-		push	0
+		push	dx	; image
+		push	0	; slot
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+6200h]
+		push	word ptr [bx+6200h]	; top
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+61FCh]
-		call	sub_1754D
+		push	word ptr [bx+61FCh]	; left
+		call	_grc_put_8
 		add	sp, 12h
 		mov	ax, word_3A6CA
 		mov	bx, 4
@@ -42377,15 +42218,15 @@ loc_297B1:
 ; ---------------------------------------------------------------------------
 
 loc_297D5:
-		push	0F0000h
-		push	1
+		push	0 or (15 shl 16)	; (image) or (col)
+		push	1	; slot
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+6274h]
+		push	word ptr [bx+6274h]	; top
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+6238h]
-		call	sub_1754D
+		push	word ptr [bx+6238h]	; left
+		call	_grc_put_8
 		add	sp, 0Ah
 		dec	si
 
@@ -42419,15 +42260,15 @@ loc_297F6:
 		mov	bx, word_35DE3
 		add	bx, bx
 		mov	[bx+6274h], ax
-		push	0F0000h
-		push	1
+		push	0 or (15 shl 16) ; (image) or (col)
+		push	1	; slot
 		mov	ax, subpixel_point_3AC50.y
 		sar	ax, 4
-		push	ax
+		push	ax	; top
 		mov	ax, subpixel_point_3AC50.x
 		sar	ax, 4
-		push	ax
-		call	sub_1754D
+		push	ax	; left
+		call	_grc_put_8
 		add	sp, 0Ah
 		inc	word_35DE3
 
@@ -42437,20 +42278,20 @@ loc_29874:
 		cwd
 		idiv	bx
 		add	dx, 2
-		push	dx
+		push	dx	; col
 		mov	ax, word_3A6CA
 		mov	bx, 2
 		cwd
 		idiv	bx
-		push	dx
-		push	bx
+		push	dx	; image
+		push	bx	; slot
 		mov	ax, subpixel_point_3AC50.y
 		sar	ax, 4
-		push	ax
+		push	ax	; top
 		mov	ax, subpixel_point_3AC50.x
 		sar	ax, 4
-		push	ax
-		call	sub_1754D
+		push	ax	; left
+		call	_grc_put_8
 		add	sp, 0Ah
 		jmp	loc_29A96
 ; ---------------------------------------------------------------------------
@@ -42597,16 +42438,16 @@ loc_29995:
 		cwd
 		idiv	bx
 		add	dx, 2
-		push	dx
+		push	dx	; col
 		mov	ax, word_3A6CA
 		mov	bx, 2
 		cwd
 		idiv	bx
-		push	dx
-		push	bx
-		push	subpixel_point_3AC50.y
-		push	subpixel_point_3AC50.x
-		call	sub_1754D
+		push	dx	; image
+		push	bx	; slot
+		push	subpixel_point_3AC50.y	; top
+		push	subpixel_point_3AC50.x	; left
+		call	_grc_put_8
 		add	sp, 0Ah
 
 loc_29A29:
@@ -44388,7 +44229,7 @@ var_8		= qword	ptr -8
 		mov	point_3B043.y, (RES_Y - 1)
 		mov	point_3B047.x, 2
 		mov	point_3B047.y, -2
-		mov	word_3B04B, 3
+		mov	grc_image_3B04B, 3
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -44411,16 +44252,16 @@ loc_2AC27:
 		push	ax
 		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
-		push	7
-		push	word_3B04B
-		push	0
+		push	7	; col
+		push	grc_image_3B04B	; image
+		push	0	; slot
 		mov	ax, point_3B043.y
 		add	ax, -16
-		push	ax
+		push	ax	; top
 		mov	ax, point_3B043.x
 		add	ax, -24
-		push	ax
-		call	sub_1754D
+		push	ax	; left
+		call	_grc_put_8
 		add	sp, 0Ah
 		call	sub_28948 pascal, ((RES_X / 2) shl 16) or 120, point_3B043.x, point_3B043.y, 7
 
@@ -44441,16 +44282,16 @@ loc_2AC8A:
 		push	ax
 		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
-		push	7
-		push	word_3B04B
-		push	0
+		push	7	; col
+		push	grc_image_3B04B	; image
+		push	0	; slot
 		mov	ax, point_3B043.y
 		add	ax, -16
-		push	ax
-		mov	ax, 632
+		push	ax	; top
+		mov	ax, (RES_X - 8)
 		sub	ax, point_3B043.x
-		push	ax
-		call	sub_1754D
+		push	ax	; left
+		call	_grc_put_8
 		add	sp, 0Ah
 		push	((RES_X / 2) shl 16) or 120
 		mov	ax, (RES_X - 1)
@@ -44459,9 +44300,9 @@ loc_2AC8A:
 		push	point_3B043.y
 		push	7
 		call	sub_28948
-		cmp	word_3B04B, 5
+		cmp	grc_image_3B04B, 5
 		jge	short loc_2ACFB
-		mov	ax, word_3B04B
+		mov	ax, grc_image_3B04B
 		inc	ax
 		jmp	short loc_2ACFE
 ; ---------------------------------------------------------------------------
@@ -44470,7 +44311,7 @@ loc_2ACFB:
 		mov	ax, 3
 
 loc_2ACFE:
-		mov	word_3B04B, ax
+		mov	grc_image_3B04B, ax
 
 loc_2AD01:
 		add	point_3B043.x, 2
@@ -44794,16 +44635,16 @@ loc_2B01A:
 		add	ax, -40
 		push	ax
 		call	_egc_copy_rect_1_to_0_16
-		push	7
-		push	word_3B051
-		push	0
+		push	7	; col
+		push	grc_image_3B051	; image
+		push	0	; slot
 		mov	ax, y_3B04F
 		add	ax, -16
-		push	ax
+		push	ax	; top
 		mov	ax, x_3B04D
 		add	ax, -24
-		push	ax
-		call	sub_1754D
+		push	ax	; left
+		call	_grc_put_8
 		add	sp, 12h
 		call	sub_28948 pascal, ((RES_X / 2) shl 16) or 120, x_3B04D, y_3B04F, 7
 
@@ -44823,16 +44664,16 @@ loc_2B07B:
 		add	ax, 16
 		push	ax
 		call	_egc_copy_rect_1_to_0_16
-		push	7
-		push	word_3B051
-		push	0
+		push	7 ; col
+		push	grc_image_3B051	; image
+		push	0	; slot
 		mov	ax, y_3B04F
 		add	ax, -16
-		push	ax
+		push	ax	; top
 		mov	ax, (PLAYFIELD_RIGHT - 8)
 		sub	ax, x_3B04D
-		push	ax
-		call	sub_1754D
+		push	ax	; left
+		call	_grc_put_8
 		add	sp, 12h
 		push	((RES_X / 2) shl 16) or 120
 		mov	ax, (RES_X - 1)
@@ -44841,9 +44682,9 @@ loc_2B07B:
 		push	y_3B04F
 		push	7
 		call	sub_28948
-		cmp	word_3B051, 5
+		cmp	grc_image_3B051, 5
 		jge	short loc_2B0E9
-		mov	ax, word_3B051
+		mov	ax, grc_image_3B051
 		inc	ax
 		jmp	short loc_2B0EC
 ; ---------------------------------------------------------------------------
@@ -44852,7 +44693,7 @@ loc_2B0E9:
 		mov	ax, 3
 
 loc_2B0EC:
-		mov	word_3B051, ax
+		mov	grc_image_3B051, ax
 
 loc_2B0EF:
 		add	x_3B04D, 8
@@ -45603,7 +45444,7 @@ arg_0		= dword	ptr  4
 		jnz	short loc_2B883
 		mov	point_3B330.x, 0
 		mov	point_3B330.y, RES_Y - 1
-		mov	word_3B334, 3
+		mov	grc_image_3B334, 3
 		mov	word_3B336, 3
 		push	2D0028h
 		push	23001Eh
@@ -45629,14 +45470,14 @@ loc_2B883:
 		push	point_3B330.x
 		call	_egc_copy_rect_1_to_0_16
 		call	sub_28948 pascal, ((RES_X / 2) shl 16) or 185, point_3B330.x, point_3B330.y, 7
-		push	7
-		push	word_3B334
-		push	0
+		push	7	; col
+		push	grc_image_3B334	; image
+		push	0	; slot
 		mov	ax, point_3B330.y
 		add	ax, -16
-		push	ax
-		push	point_3B330.x
-		call	sub_1754D
+		push	ax	; top
+		push	point_3B330.x	; left
+		call	_grc_put_8
 		add	sp, 12h
 		jmp	short loc_2B95F
 ; ---------------------------------------------------------------------------
@@ -45664,20 +45505,20 @@ loc_2B8E3:
 		push	point_3B330.y
 		push	7
 		call	sub_28948
-		push	7
-		push	word_3B334
-		push	0
+		push	7	; col
+		push	grc_image_3B334	; image
+		push	0	; slot
 		mov	ax, point_3B330.y
 		add	ax, -16
-		push	ax
+		push	ax	; top
 		mov	ax, 608
 		sub	ax, point_3B330.x
-		push	ax
-		call	sub_1754D
+		push	ax	; left
+		call	_grc_put_8
 		add	sp, 12h
-		mov	ax, word_3B334
+		mov	ax, grc_image_3B334
 		mov	word_3B336, ax
-		cmp	word_3B334, 5
+		cmp	grc_image_3B334, 5
 		jge	short loc_2B954
 		inc	ax
 		jmp	short loc_2B957
@@ -45687,7 +45528,7 @@ loc_2B954:
 		mov	ax, 3
 
 loc_2B957:
-		mov	word_3B334, ax
+		mov	grc_image_3B334, ax
 		sub	point_3B330.y, 8
 
 loc_2B95F:
@@ -46328,11 +46169,11 @@ loc_2BF45:
 		push	3
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+69DDh]
+		push	word ptr [bx+69DDh]	; top
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+69A1h]
-		call	sub_1754D
+		push	word ptr [bx+69A1h]	; left
+		call	_grc_put_8
 		add	sp, 0Ah
 
 loc_2BFA6:
@@ -53909,10 +53750,10 @@ angle_3B041	db ?
 byte_3B042	db ?
 point_3B043	Point <?>
 point_3B047	Point <?>
-word_3B04B	dw ?
+grc_image_3B04B	dw ?
 x_3B04D	dw ?
 y_3B04F	dw ?
-word_3B051	dw ?
+grc_image_3B051	dw ?
 word_3B053	dw ?
 word_3B055	dw ?
 		db 720 dup(?)
@@ -53922,7 +53763,7 @@ speed_3B32B	dw ?
 angle_3B32D	db ?
 word_3B32E	dw ?
 point_3B330	Point <?>
-word_3B334	dw ?
+grc_image_3B334	dw ?
 word_3B336	dw ?
 x_3B338	dw ?
 y_3B338	dw ?
