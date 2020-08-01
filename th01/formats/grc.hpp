@@ -29,6 +29,9 @@ extern grc_t grc_images[GRC_SLOT_COUNT];
 // currently active packfile into the given .GRC [slot]. Always returns 0.
 int grc_load(int slot, const char fn[PF_FN_LEN]);
 
+// Frees all images in the given [slot].
+void grc_free(int slot);
+
 // Blits the sub[image] from the given [slot] to (⌊left/8⌋*8, top) with the
 // given [col]. Correctly clips the sprite at all 4 edges of VRAM.
 void grc_put_8(int left, int top, int slot, int image, int col);

@@ -92,3 +92,13 @@ void grc_put_8(int left, int top, int slot, int image, int col)
 
 	#undef grc_slot
 }
+
+void grc_free(int slot)
+{
+	for(int i = 0; grc_images[slot].image_count > i; i++) {
+		if(grc_images[slot].dots[i]) {
+			delete[] grc_images[slot].dots[i];
+			grc_images[slot].dots[i] = NULL;
+		}
+	}
+}

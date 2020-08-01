@@ -12015,69 +12015,13 @@ main_22_TEXT	ends
 main_23_TEXT	segment	byte public 'CODE' use16
 	extern _grc_load:proc
 	extern _grc_put_8:proc
+	extern _grc_free:proc
 main_23_TEXT	ends
 
 main_23__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_23
 		;org 0Bh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_17682	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, [bp+arg_0]
-		xor	si, si
-		jmp	short loc_176D6
-; ---------------------------------------------------------------------------
-
-loc_1768E:
-		mov	bx, di
-		imul	bx, size grc_t
-		mov	ax, si
-		shl	ax, 2
-		add	bx, ax
-		mov	ax, word ptr _grc_images.GRC_dots[bx]+0
-		or	ax, word ptr _grc_images.GRC_dots[bx]+2
-		jz	short loc_176D5
-		mov	bx, di
-		imul	bx, size grc_t
-		mov	ax, si
-		shl	ax, 2
-		add	bx, ax
-		pushd	_grc_images.GRC_dots[bx]
-		call	@$bdla$qnv
-		add	sp, 4
-		mov	bx, di
-		imul	bx, size grc_t
-		mov	ax, si
-		shl	ax, 2
-		add	bx, ax
-		mov	word ptr _grc_images.GRC_dots[bx]+2, 0
-		mov	word ptr _grc_images.GRC_dots[bx]+0, 0
-
-loc_176D5:
-		inc	si
-
-loc_176D6:
-		mov	bx, di
-		imul	bx, size grc_t
-		cmp	_grc_images[bx].GRC_image_count, si
-		jg	short loc_1768E
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_17682	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -34586,8 +34530,7 @@ sub_250BC	proc far
 		call	sub_169CB
 		push	2
 		call	sub_169CB
-		push	0
-		call	sub_17682
+		call	_grc_free stdcall, 0
 		call	_ptn_free stdcall, 2
 		call	_ptn_free stdcall, 3
 		add	sp, 0Ch
@@ -40569,14 +40512,10 @@ sub_28908	proc far
 		call	sub_16F1B
 		push	1
 		call	sub_16F1B
-		push	0
-		call	sub_17682
-		push	1
-		call	sub_17682
-		push	2
-		call	sub_17682
-		push	3
-		call	sub_17682
+		call	_grc_free stdcall, 0
+		call	_grc_free stdcall, 1
+		call	_grc_free stdcall, 2
+		call	_grc_free stdcall, 3
 		call	_ptn_free stdcall, 2
 		add	sp, 10h
 		pop	bp
