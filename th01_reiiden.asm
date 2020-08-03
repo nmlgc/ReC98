@@ -12016,6 +12016,7 @@ main_23_TEXT	segment	byte public 'CODE' use16
 	extern _grc_load:proc
 	extern _grc_put_8:proc
 	extern _grc_free:proc
+	extern _grcg_put_8x8_mono:proc
 main_23_TEXT	ends
 
 main_23__TEXT	segment	byte public 'CODE' use16
@@ -12027,80 +12028,21 @@ main_23__TEXT	segment	byte public 'CODE' use16
 
 ; Attributes: bp-based frame
 
-sub_176E5	proc far
-
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= byte ptr  8
-arg_4		= dword	ptr  0Ah
-@@col		= word ptr  0Eh
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	di, [bp+arg_0]
-		call	_grcg_setcolor_rmw stdcall, [bp+@@col]
-		pop	cx
-		xor	si, si
-		jmp	short loc_17733
-; ---------------------------------------------------------------------------
-
-loc_176FB:
-		les	bx, [bp+arg_4]
-		add	bx, si
-		mov	al, es:[bx]
-		mov	ah, 0
-		mov	cl, 10h
-		sub	cl, [bp+arg_2]
-		shl	ax, cl
-		mov	bx, word ptr [bp+arg_4]
-		add	bx, si
-		mov	dl, es:[bx]
-		mov	dh, 0
-		mov	cl, [bp+arg_2]
-		sar	dx, cl
-		add	ax, dx
-		mov	[bp+var_2], ax
-		les	bx, _VRAM_PLANE_B
-		add	bx, di
-		mov	es:[bx], ax
-		add	di, 50h	; 'P'
-		cmp	di, 7D00h
-		jge	short loc_17738
-		inc	si
-
-loc_17733:
-		cmp	si, 8
-		jl	short loc_176FB
-
-loc_17738:
-		call	_grcg_off_func
-		pop	di
-		pop	si
-		leave
-		retf
-sub_176E5	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
 sub_17741	proc far
 
-var_C		= word ptr -0Ch
-var_A		= word ptr -0Ah
-var_8		= byte ptr -8
+@@first_bit		= word ptr -0Ch
+@@vram_offset_topleft		= word ptr -0Ah
+@@sprite		= byte ptr -8
 arg_0		= word ptr  6
 arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
+@@col		= word ptr  0Ah
 
 		enter	0Ch, 0
 		push	si
 		push	di
 		mov	si, [bp+arg_0]
 		mov	di, [bp+arg_2]
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@sprite]
 		push	ss
 		push	ax
 		push	ds
@@ -12114,11 +12056,11 @@ arg_4		= word ptr  0Ah
 		mov	dx, di
 		imul	dx, 50h
 		add	ax, dx
-		mov	[bp+var_A], ax
+		mov	[bp+@@vram_offset_topleft], ax
 		mov	ax, si
 		cwd
 		idiv	bx
-		mov	[bp+var_C], dx
+		mov	[bp+@@first_bit], dx
 		or	si, si
 		jl	short loc_177A1
 		cmp	si, 280h
@@ -12127,13 +12069,13 @@ arg_4		= word ptr  0Ah
 		jl	short loc_177A1
 		cmp	di, 190h
 		jge	short loc_177A1
-		push	[bp+arg_4]
+		push	[bp+@@col]
 		push	ss
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@sprite]
 		push	ax
-		push	[bp+var_C]
-		push	[bp+var_A]
-		call	sub_176E5
+		push	[bp+@@first_bit]
+		push	[bp+@@vram_offset_topleft]
+		call	_grcg_put_8x8_mono
 		add	sp, 0Ah
 
 loc_177A1:
@@ -12150,19 +12092,19 @@ sub_17741	endp
 
 sub_177A5	proc far
 
-var_C		= word ptr -0Ch
-var_A		= word ptr -0Ah
-var_8		= byte ptr -8
+@@first_bit		= word ptr -0Ch
+@@vram_offset_topleft		= word ptr -0Ah
+@@sprite		= byte ptr -8
 arg_0		= word ptr  6
 arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
+@@col		= word ptr  0Ah
 
 		enter	0Ch, 0
 		push	si
 		push	di
 		mov	si, [bp+arg_0]
 		mov	di, [bp+arg_2]
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@sprite]
 		push	ss
 		push	ax
 		push	ds
@@ -12176,11 +12118,11 @@ arg_4		= word ptr  0Ah
 		mov	dx, di
 		imul	dx, 50h
 		add	ax, dx
-		mov	[bp+var_A], ax
+		mov	[bp+@@vram_offset_topleft], ax
 		mov	ax, si
 		cwd
 		idiv	bx
-		mov	[bp+var_C], dx
+		mov	[bp+@@first_bit], dx
 		or	si, si
 		jl	short loc_17805
 		cmp	si, 280h
@@ -12189,13 +12131,13 @@ arg_4		= word ptr  0Ah
 		jl	short loc_17805
 		cmp	di, 190h
 		jge	short loc_17805
-		push	[bp+arg_4]
+		push	[bp+@@col]
 		push	ss
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@sprite]
 		push	ax
-		push	[bp+var_C]
-		push	[bp+var_A]
-		call	sub_176E5
+		push	[bp+@@first_bit]
+		push	[bp+@@vram_offset_topleft]
+		call	_grcg_put_8x8_mono
 		add	sp, 0Ah
 
 loc_17805:
@@ -12212,19 +12154,19 @@ sub_177A5	endp
 
 sub_17809	proc far
 
-var_C		= word ptr -0Ch
-var_A		= word ptr -0Ah
-var_8		= byte ptr -8
+@@first_bit		= word ptr -0Ch
+@@vram_offset_topleft		= word ptr -0Ah
+@@sprite		= byte ptr -8
 arg_0		= word ptr  6
 arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
+@@col		= word ptr  0Ah
 
 		enter	0Ch, 0
 		push	si
 		push	di
 		mov	si, [bp+arg_0]
 		mov	di, [bp+arg_2]
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@sprite]
 		push	ss
 		push	ax
 		push	ds
@@ -12238,11 +12180,11 @@ arg_4		= word ptr  0Ah
 		mov	dx, di
 		imul	dx, 50h
 		add	ax, dx
-		mov	[bp+var_A], ax
+		mov	[bp+@@vram_offset_topleft], ax
 		mov	ax, si
 		cwd
 		idiv	bx
-		mov	[bp+var_C], dx
+		mov	[bp+@@first_bit], dx
 		or	si, si
 		jl	short loc_17869
 		cmp	si, 280h
@@ -12251,13 +12193,13 @@ arg_4		= word ptr  0Ah
 		jl	short loc_17869
 		cmp	di, 190h
 		jge	short loc_17869
-		push	[bp+arg_4]
+		push	[bp+@@col]
 		push	ss
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@sprite]
 		push	ax
-		push	[bp+var_C]
-		push	[bp+var_A]
-		call	sub_176E5
+		push	[bp+@@first_bit]
+		push	[bp+@@vram_offset_topleft]
+		call	_grcg_put_8x8_mono
 		add	sp, 0Ah
 
 loc_17869:
@@ -45641,7 +45583,7 @@ sub_2BA29	endp
 
 sub_2BB46	proc near
 
-var_1A		= word ptr -1Ah
+@@first_bit		= word ptr -1Ah
 var_18		= byte ptr -18h
 var_10		= byte ptr -10h
 var_8		= byte ptr -8
@@ -46053,7 +45995,7 @@ loc_2BE9F:
 		mov	bx, 0Ah
 		cwd
 		idiv	bx
-		imul	ax, 50h
+		imul	ax, ROW_SIZE
 		pop	dx
 		add	dx, ax
 		mov	di, dx
@@ -46066,14 +46008,14 @@ loc_2BE9F:
 		mov	bx, 8
 		cwd
 		idiv	bx
-		mov	[bp+var_1A], dx
-		push	7
-		push	ss
+		mov	[bp+@@first_bit], dx
+		push	7	; col
+		push	ss	; sprite (segment)
 		lea	ax, [bp+var_8]
-		push	ax
-		push	dx
-		push	di
-		call	sub_176E5
+		push	ax	; sprite (offset)
+		push	dx	; first_bit
+		push	di	; vram_offset_topleft
+		call	_grcg_put_8x8_mono
 		add	sp, 0Ah
 		jmp	loc_2C0BC
 ; ---------------------------------------------------------------------------
@@ -46179,8 +46121,8 @@ loc_2BFC3:
 		mov	bx, 8
 		cwd
 		idiv	bx
-		mov	[bp+var_1A], dx
-		push	7
+		mov	[bp+@@first_bit], dx
+		push	7	; col
 		mov	bx, si
 		add	bx, bx
 		cmp	word ptr [bx+6A19h], 0
@@ -46195,11 +46137,11 @@ loc_2C058:
 		lea	ax, [bp+var_18]
 
 loc_2C05D:
-		push	dx
-		push	ax
-		push	[bp+var_1A]
-		push	di
-		call	sub_176E5
+		push	dx	; sprite (segment)
+		push	ax	; sprite (offset)
+		push	[bp+@@first_bit]	; first_bit
+		push	di	; vram_offset_topleft
+		call	_grcg_put_8x8_mono
 		add	sp, 0Ah
 
 loc_2C06B:

@@ -7,4 +7,5 @@
 
 extern "C" {
 #include "th01/formats/grc.cpp"
+#include "th01/hardware/grcg8x8m.cpp"
 }
