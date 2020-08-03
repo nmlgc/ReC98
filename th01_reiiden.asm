@@ -12017,198 +12017,15 @@ main_23_TEXT	segment	byte public 'CODE' use16
 	extern _grc_put_8:proc
 	extern _grc_free:proc
 	extern _grcg_put_8x8_mono:proc
+	extern _shape8x8_diamond_put:proc
+	extern _shape8x8_star_put:proc
+	extern _shape8x8_flake_put:proc
 main_23_TEXT	ends
 
 main_23__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_23
 		;org 0Bh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_17741	proc far
-
-@@first_bit		= word ptr -0Ch
-@@vram_offset_topleft		= word ptr -0Ah
-@@sprite		= byte ptr -8
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-@@col		= word ptr  0Ah
-
-		enter	0Ch, 0
-		push	si
-		push	di
-		mov	si, [bp+arg_0]
-		mov	di, [bp+arg_2]
-		lea	ax, [bp+@@sprite]
-		push	ss
-		push	ax
-		push	ds
-		push	offset unk_35A4A
-		mov	cx, 8
-		call	SCOPY@
-		mov	ax, si
-		mov	bx, 8
-		cwd
-		idiv	bx
-		mov	dx, di
-		imul	dx, 50h
-		add	ax, dx
-		mov	[bp+@@vram_offset_topleft], ax
-		mov	ax, si
-		cwd
-		idiv	bx
-		mov	[bp+@@first_bit], dx
-		or	si, si
-		jl	short loc_177A1
-		cmp	si, 280h
-		jge	short loc_177A1
-		or	di, di
-		jl	short loc_177A1
-		cmp	di, 190h
-		jge	short loc_177A1
-		push	[bp+@@col]
-		push	ss
-		lea	ax, [bp+@@sprite]
-		push	ax
-		push	[bp+@@first_bit]
-		push	[bp+@@vram_offset_topleft]
-		call	_grcg_put_8x8_mono
-		add	sp, 0Ah
-
-loc_177A1:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_17741	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_177A5	proc far
-
-@@first_bit		= word ptr -0Ch
-@@vram_offset_topleft		= word ptr -0Ah
-@@sprite		= byte ptr -8
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-@@col		= word ptr  0Ah
-
-		enter	0Ch, 0
-		push	si
-		push	di
-		mov	si, [bp+arg_0]
-		mov	di, [bp+arg_2]
-		lea	ax, [bp+@@sprite]
-		push	ss
-		push	ax
-		push	ds
-		push	offset unk_35A52
-		mov	cx, 8
-		call	SCOPY@
-		mov	ax, si
-		mov	bx, 8
-		cwd
-		idiv	bx
-		mov	dx, di
-		imul	dx, 50h
-		add	ax, dx
-		mov	[bp+@@vram_offset_topleft], ax
-		mov	ax, si
-		cwd
-		idiv	bx
-		mov	[bp+@@first_bit], dx
-		or	si, si
-		jl	short loc_17805
-		cmp	si, 280h
-		jge	short loc_17805
-		or	di, di
-		jl	short loc_17805
-		cmp	di, 190h
-		jge	short loc_17805
-		push	[bp+@@col]
-		push	ss
-		lea	ax, [bp+@@sprite]
-		push	ax
-		push	[bp+@@first_bit]
-		push	[bp+@@vram_offset_topleft]
-		call	_grcg_put_8x8_mono
-		add	sp, 0Ah
-
-loc_17805:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_177A5	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_17809	proc far
-
-@@first_bit		= word ptr -0Ch
-@@vram_offset_topleft		= word ptr -0Ah
-@@sprite		= byte ptr -8
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-@@col		= word ptr  0Ah
-
-		enter	0Ch, 0
-		push	si
-		push	di
-		mov	si, [bp+arg_0]
-		mov	di, [bp+arg_2]
-		lea	ax, [bp+@@sprite]
-		push	ss
-		push	ax
-		push	ds
-		push	offset unk_35A5A
-		mov	cx, 8
-		call	SCOPY@
-		mov	ax, si
-		mov	bx, 8
-		cwd
-		idiv	bx
-		mov	dx, di
-		imul	dx, 50h
-		add	ax, dx
-		mov	[bp+@@vram_offset_topleft], ax
-		mov	ax, si
-		cwd
-		idiv	bx
-		mov	[bp+@@first_bit], dx
-		or	si, si
-		jl	short loc_17869
-		cmp	si, 280h
-		jge	short loc_17869
-		or	di, di
-		jl	short loc_17869
-		cmp	di, 190h
-		jge	short loc_17869
-		push	[bp+@@col]
-		push	ss
-		lea	ax, [bp+@@sprite]
-		push	ax
-		push	[bp+@@first_bit]
-		push	[bp+@@vram_offset_topleft]
-		call	_grcg_put_8x8_mono
-		add	sp, 0Ah
-
-loc_17869:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_17809	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -34732,14 +34549,14 @@ loc_25310:
 loc_25374:
 		cmp	word_3A6CA, 44h	; 'D'
 		jge	short loc_25395
-		push	2
+		push	2	; col
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+5D39h]
+		push	word ptr [bx+5D39h]	; top
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+5D2Fh]
-		call	sub_177A5
+		push	word ptr [bx+5D2Fh]	; left
+		call	_shape8x8_star_put
 		add	sp, 6
 
 loc_25395:
@@ -43052,14 +42869,14 @@ loc_2A073:
 loc_2A0B0:
 		mov	ax, x_3AF3C
 		add	subpixel_x_3AF32, ax
-		push	7
+		push	7	; col
 		mov	ax, subpixel_y_3AF36
 		sar	ax, 4
-		push	ax
+		push	ax	; top
 		mov	ax, subpixel_x_3AF32
 		sar	ax, 4
-		push	ax
-		call	sub_17809
+		push	ax	; left
+		call	_shape8x8_flake_put
 		add	sp, 6
 
 loc_2A0CF:
@@ -43215,11 +43032,7 @@ loc_2A245:
 		push	ax
 		call	sub_1786D
 		add	sp, 30h
-		push	7
-		push	y_3AF38
-		push	x_3AF34
-		call	sub_177A5
-		add	sp, 6
+		call	_shape8x8_star_put c, x_3AF34, y_3AF38, 7
 
 loc_2A2BA:
 		cmp	_player_invincible, 0
@@ -48310,14 +48123,14 @@ loc_2D58B:
 ; ---------------------------------------------------------------------------
 
 loc_2D58F:
-		push	9
+		push	9	; col
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+6AAAh]
+		push	word ptr [bx+6AAAh]	; top
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+6AA2h]
-		call	sub_17741
+		push	word ptr [bx+6AA2h]	; left
+		call	_shape8x8_diamond_put
 		add	sp, 6
 		inc	si
 
@@ -48365,14 +48178,14 @@ loc_2D605:
 ; ---------------------------------------------------------------------------
 
 loc_2D609:
-		push	9
+		push	9	; col
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+6AAAh]
+		push	word ptr [bx+6AAAh]	; top
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+6AA2h]
-		call	sub_17741
+		push	word ptr [bx+6AA2h]	; left
+		call	_shape8x8_diamond_put
 		add	sp, 6
 		inc	si
 
@@ -48722,34 +48535,34 @@ loc_2D9A5:
 ; ---------------------------------------------------------------------------
 
 loc_2D9D9:
-		push	9
+		push	9	; col
 		mov	bx, si
 		imul	bx, 0Ah
 		mov	ax, di
 		add	ax, ax
 		add	bx, ax
-		push	word ptr [bx+6ACBh]
+		push	word ptr [bx+6ACBh]	; top
 		mov	bx, si
 		imul	bx, 0Ah
 		mov	ax, di
 		add	ax, ax
 		add	bx, ax
-		push	word ptr [bx+6AB7h]
-		call	sub_17741
+		push	word ptr [bx+6AB7h]	; left
+		call	_shape8x8_diamond_put
 		add	sp, 6
 		dec	di
 
 loc_2DA02:
 		cmp	di, 1
 		jge	short loc_2D9D9
-		push	7
+		push	7	; col
 		mov	bx, si
 		imul	bx, 0Ah
-		push	word ptr [bx+6ACBh]
+		push	word ptr [bx+6ACBh]	; top
 		mov	bx, si
 		imul	bx, 0Ah
-		push	word ptr [bx+6AB7h]
-		call	sub_17741
+		push	word ptr [bx+6AB7h]	; left
+		call	_shape8x8_diamond_put
 		add	sp, 6
 		mov	bx, si
 		add	bx, bx
@@ -49189,7 +49002,7 @@ loc_2DDD9:
 ; ---------------------------------------------------------------------------
 
 loc_2DE1F:
-		push	9
+		push	9	; col
 		jmp	loc_2DEFA
 ; ---------------------------------------------------------------------------
 
@@ -49268,12 +49081,12 @@ loc_2DEC6:
 		add	speed_3B499, 2
 
 loc_2DEF8:
-		push	6
+		push	6	; col
 
 loc_2DEFA:
 		push	point_3B493.y
 		push	point_3B493.x
-		call	sub_17741
+		call	_shape8x8_diamond_put
 		add	sp, 6
 
 loc_2DF0A:
@@ -49472,34 +49285,34 @@ loc_2E0A9:
 ; ---------------------------------------------------------------------------
 
 loc_2E0DD:
-		push	9
+		push	9	; col
 		mov	bx, si
 		imul	bx, 0Ah
 		mov	ax, di
 		add	ax, ax
 		add	bx, ax
-		push	word ptr [bx+6B29h]
+		push	word ptr [bx+6B29h]	; top
 		mov	bx, si
 		imul	bx, 0Ah
 		mov	ax, di
 		add	ax, ax
 		add	bx, ax
-		push	word ptr [bx+6B01h]
-		call	sub_17741
+		push	word ptr [bx+6B01h]	; left
+		call	_shape8x8_diamond_put
 		add	sp, 6
 		dec	di
 
 loc_2E106:
 		cmp	di, 1
 		jge	short loc_2E0DD
-		push	7
+		push	7	; col
 		mov	bx, si
 		imul	bx, 0Ah
-		push	word ptr [bx+6B29h]
+		push	word ptr [bx+6B29h]	; top
 		mov	bx, si
 		imul	bx, 0Ah
-		push	word ptr [bx+6B01h]
-		call	sub_17741
+		push	word ptr [bx+6B01h]	; left
+		call	_shape8x8_diamond_put
 		add	sp, 6
 		mov	bx, si
 		add	bx, bx
@@ -52598,30 +52411,7 @@ include th01/hiscore/regist[data].asm
 byte_35A44	db 0
 		db 0
 include th01/formats/pf[data].asm
-unk_35A4A	db  18h
-		db  3Ch	; <
-		db  7Eh	; ~
-		db 0FFh
-		db 0FFh
-		db  7Eh	; ~
-		db  3Ch	; <
-		db  18h
-unk_35A52	db  18h
-		db  3Ch	; <
-		db 0FFh
-		db 0FFh
-		db  7Eh	; ~
-		db  7Eh	; ~
-		db  66h	; f
-		db  42h	; B
-unk_35A5A	db  18h
-		db  3Ch	; <
-		db  5Ah	; Z
-		db 0FFh
-		db 0FFh
-		db  5Ah	; Z
-		db  3Ch	; <
-		db  18h
+include th01/sprites/shape8x8.asp
 		db    0
 		db    0
 		db  18h

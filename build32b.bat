@@ -29,6 +29,7 @@ set BMP2ARR=bin\Pipeline\bmp2arr.exe
 
 %BMP2ARR% -i th01/sprites/pellet.bmp -o th01/sprites/pellet.csp -sym sPELLET -of c -sw 8 -sh 8 -pshf inner
 %BMP2ARR% -i th01/sprites/pellet_c.bmp -o th01/sprites/pellet_c.asp -sym _sPELLET_CLOUD -of asm -sw 16 -sh 16
+%BMP2ARR% -i th01/sprites/shape8x8.bmp -o th01/sprites/shape8x8.asp -sym _sSHAPE8X8 -of asm -sw 8 -sh 8
 %BMP2ARR% -i th02/sprites/pellet.bmp -o th02/sprites/pellet.asp -sym _sPELLET -of asm -sw 8 -sh 8 -pshf outer
 %BMP2ARR% -i th02/sprites/sparks.bmp -o th02/sprites/sparks.asp -sym _sSPARKS -of asm -sw 8 -sh 8 -pshf outer
 %BMP2ARR% -i th02/sprites/pointnum.bmp -o th02/sprites/pointnum.asp -sym _sPOINTNUMS -of asm -sw 8 -sh 8
