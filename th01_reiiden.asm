@@ -23,6 +23,7 @@ BINARY = 'M'
 include ReC98.inc
 include th01/th01.inc
 include th01/main/playfld.inc
+include th01/main/boss/entity.inc
 include th01/formats/cfg.inc
 include th01/sprites/main_ptn.inc
 
@@ -3520,7 +3521,7 @@ loc_D85F:
 		call	_strcpy
 		add	sp, 8
 		xor	di, di
-		call	sub_22694
+		call	_singyoku_load
 
 loc_D892:
 		mov	_Pellets.PELLET_unknown_seven, 7
@@ -3546,7 +3547,7 @@ loc_D89B:
 		pushd	[bp+s1]	; dest
 		call	_strcpy
 		add	sp, 8
-		call	sub_1B03F
+		call	_yuugenmagan_load
 		jmp	loc_D96D
 ; ---------------------------------------------------------------------------
 
@@ -3563,7 +3564,7 @@ loc_D8D9:
 		pushd	[bp+s1]	; dest
 		call	_strcpy
 		add	sp, 8
-		call	sub_1E33A
+		call	_mima_load
 		jmp	short loc_D96D
 ; ---------------------------------------------------------------------------
 
@@ -3589,7 +3590,7 @@ loc_D901:
 		pushd	[bp+s1]	; dest
 		call	_strcpy
 		add	sp, 8
-		call	sub_23329
+		call	_kikuri_load
 
 loc_D941:
 		mov	di, 1
@@ -3609,7 +3610,7 @@ loc_D947:
 		pushd	[bp+s1]	; dest
 		call	_strcpy
 		add	sp, 8
-		call	sub_24F41
+		call	_elis_load
 
 loc_D96D:
 		xor	di, di
@@ -3630,7 +3631,7 @@ loc_D972:
 		push	ax		; dest
 		call	_strcpy
 		add	sp, 8
-		call	sub_28754
+		call	_sariel_load
 		jmp	short loc_D941
 ; ---------------------------------------------------------------------------
 
@@ -3723,7 +3724,7 @@ loc_DA7B:
 		cmp	ax, 7
 		jnz	short loc_DA8D
 		push	0
-		call	sub_2CEAD
+		call	_konngara_load
 		jmp	short loc_DA9D
 ; ---------------------------------------------------------------------------
 
@@ -5808,10 +5809,10 @@ var_2		= word ptr -2
 		mov	[bp+var_8], 0
 		call	_z_vsync_wait_and_scrollup stdcall, 0
 		pop	cx
-		mov	ax, point_3982A.y
+		mov	ax, boss.BE_cur_top
 		add	ax, 48
 		mov	[bp+var_2], ax
-		mov	ax, point_3982A.y
+		mov	ax, boss.BE_cur_top
 		add	ax, 48
 		mov	[bp+var_4], ax
 
@@ -11939,23 +11940,18 @@ sub_16F1B	endp
 sub_17041	proc far
 		push	bp
 		mov	bp, sp
-		mov	word_39854, 0
-		mov	byte_3985A, 0
-		mov	word_39886, 0
-		mov	byte_3988C, 0
-		mov	word_398B8, 0
-		mov	byte_398BE, 0
-		mov	word_398EA, 0
-		mov	byte_398F0, 0
-		mov	word_3991C, 0
-		mov	byte_39922, 0
+		CBossEntity__ctor	boss_entity_0
+		CBossEntity__ctor	boss_entity_1
+		CBossEntity__ctor	boss_entity_2
+		CBossEntity__ctor	boss_entity_3
+		CBossEntity__ctor	boss_entity_4
 		push	seg main_21_TEXT
 		push	offset sub_17096
 		push	5
 		pushd	5
-		push	32h ; '2'
+		push	size CBossEntity
 		push	ds
-		push	offset unk_39924
+		push	offset _boss_entities_unused
 		call	@_vector_new_$qnvuiuluie ; _vector_new_(void *,uint,ulong,uint,...)
 		add	sp, 10h
 		pop	bp
@@ -16599,381 +16595,86 @@ main_28_TEXT	segment	byte public 'CODE' use16
 		;org 0Fh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
+eye_0	equ <boss_entity_0>
+eye_1	equ <boss_entity_1>
+eye_2	equ <boss_entity_2>
+eye_3	equ <boss_entity_3>
+eye_4	equ <boss_entity_4>
+eye_west	equ <boss_entity_0>
+eye_east	equ <boss_entity_1>
+eye_southwest	equ <boss_entity_2>
+eye_southeast	equ <boss_entity_3>
+eye_north	equ <boss_entity_4>
+
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public _yuugenmagan_load
+_yuugenmagan_load	proc c
+	local	@@template_east:CBossEntity
+	local	@@template_southwest:CBossEntity
+	local	@@template_southeast:CBossEntity
+	local	@@template_north:CBossEntity
 
-sub_1B03F	proc far
-
-var_C8		= word ptr -0C8h
-var_C6		= word ptr -0C6h
-var_C4		= word ptr -0C4h
-var_C2		= word ptr -0C2h
-var_C0		= word ptr -0C0h
-var_BE		= word ptr -0BEh
-var_BC		= word ptr -0BCh
-var_BA		= word ptr -0BAh
-var_B8		= word ptr -0B8h
-var_B6		= word ptr -0B6h
-var_B4		= word ptr -0B4h
-var_B2		= word ptr -0B2h
-var_B0		= word ptr -0B0h
-var_AE		= word ptr -0AEh
-var_AC		= word ptr -0ACh
-var_AA		= word ptr -0AAh
-var_A8		= word ptr -0A8h
-var_A6		= word ptr -0A6h
-var_A4		= word ptr -0A4h
-var_A2		= word ptr -0A2h
-var_A0		= word ptr -0A0h
-var_9E		= word ptr -9Eh
-var_9C		= word ptr -9Ch
-var_9A		= word ptr -9Ah
-var_98		= byte ptr -98h
-var_97		= byte ptr -97h
-var_96		= word ptr -96h
-var_94		= word ptr -94h
-var_92		= word ptr -92h
-var_90		= word ptr -90h
-var_8E		= word ptr -8Eh
-var_8C		= word ptr -8Ch
-var_8A		= word ptr -8Ah
-var_88		= word ptr -88h
-var_86		= word ptr -86h
-var_84		= word ptr -84h
-var_82		= word ptr -82h
-var_80		= word ptr -80h
-var_7E		= word ptr -7Eh
-var_7C		= word ptr -7Ch
-var_7A		= word ptr -7Ah
-var_78		= word ptr -78h
-var_76		= word ptr -76h
-var_74		= word ptr -74h
-var_72		= word ptr -72h
-var_70		= word ptr -70h
-var_6E		= word ptr -6Eh
-var_6C		= word ptr -6Ch
-var_6A		= word ptr -6Ah
-var_68		= word ptr -68h
-var_66		= byte ptr -66h
-var_65		= byte ptr -65h
-var_64		= word ptr -64h
-var_62		= word ptr -62h
-var_60		= word ptr -60h
-var_5E		= word ptr -5Eh
-var_5C		= word ptr -5Ch
-var_5A		= word ptr -5Ah
-var_58		= word ptr -58h
-var_56		= word ptr -56h
-var_54		= word ptr -54h
-var_52		= word ptr -52h
-var_50		= word ptr -50h
-var_4E		= word ptr -4Eh
-var_4C		= word ptr -4Ch
-var_4A		= word ptr -4Ah
-var_48		= word ptr -48h
-var_46		= word ptr -46h
-var_44		= word ptr -44h
-var_42		= word ptr -42h
-var_40		= word ptr -40h
-var_3E		= word ptr -3Eh
-var_3C		= word ptr -3Ch
-var_3A		= word ptr -3Ah
-var_38		= word ptr -38h
-var_36		= word ptr -36h
-var_34		= byte ptr -34h
-var_33		= byte ptr -33h
-var_32		= word ptr -32h
-var_30		= word ptr -30h
-var_2E		= word ptr -2Eh
-var_2C		= word ptr -2Ch
-var_2A		= word ptr -2Ah
-var_28		= word ptr -28h
-var_26		= word ptr -26h
-var_24		= word ptr -24h
-var_22		= word ptr -22h
-var_20		= word ptr -20h
-var_1E		= word ptr -1Eh
-var_1C		= word ptr -1Ch
-var_1A		= word ptr -1Ah
-var_18		= word ptr -18h
-var_16		= word ptr -16h
-var_14		= word ptr -14h
-var_12		= word ptr -12h
-var_10		= word ptr -10h
-var_E		= word ptr -0Eh
-var_C		= word ptr -0Ch
-var_A		= word ptr -0Ah
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= byte ptr -2
-var_1		= byte ptr -1
-
-		enter	0C8h, 0
-		mov	word_39854, 1
+		mov	eye_west.BE_loading, 1
 		push	0
 		push	ds
 		push	offset aBoss2_bos ; "boss2.bos"
 		push	ds
-		push	offset point_3982A
+		push	offset eye_west
 		call	sub_1568F
-		mov	word_39854, 0
-		mov	ax, point_3982A.x
-		mov	[bp+var_32], ax
-		mov	ax, point_3982A.y
-		mov	[bp+var_30], ax
-		mov	ax, word_3982E
-		mov	[bp+var_2E], ax
-		mov	ax, word_39830
-		mov	[bp+var_2C], ax
-		mov	ax, w_39832
-		mov	[bp+var_2A], ax
-		mov	ax, word_39834
-		mov	[bp+var_28], ax
-		mov	ax, word_39836
-		mov	[bp+var_26], ax
-		mov	ax, word_39838
-		mov	[bp+var_24], ax
-		mov	ax, word_3983A
-		mov	[bp+var_22], ax
-		mov	ax, word_3983C
-		mov	[bp+var_20], ax
-		mov	ax, word_3983E
-		mov	[bp+var_1E], ax
-		mov	ax, word_39840
-		mov	[bp+var_1C], ax
-		mov	ax, word_39842
-		mov	[bp+var_1A], ax
-		mov	ax, word_39844
-		mov	[bp+var_18], ax
-		mov	ax, word_39846
-		mov	[bp+var_16], ax
-		mov	ax, word_39848
-		mov	[bp+var_14], ax
-		mov	ax, word_3984A
-		mov	[bp+var_12], ax
-		mov	ax, word_3984C
-		mov	[bp+var_10], ax
-		mov	ax, word_3984E
-		mov	[bp+var_E], ax
-		mov	ax, word_39850
-		mov	[bp+var_C], ax
-		mov	ax, word_39852
-		mov	[bp+var_A], ax
-		mov	ax, word_39854
-		mov	[bp+var_8], ax
-		mov	ax, word_39856
-		mov	[bp+var_6], ax
-		mov	ax, word_39858
-		mov	[bp+var_4], ax
-		mov	al, byte_3985A
-		mov	[bp+var_2], al
-		mov	al, byte_3985B
-		mov	[bp+var_1], al
+		mov	eye_west.BE_loading, 0
+		CBossEntity__copy	@@template_east, eye_west
 		push	ds
-		push	offset unk_39866
+		push	offset eye_east.BE_h
 		push	ds
-		push	offset unk_39864
+		push	offset eye_east.BE_vram_w
 		push	ds
-		push	offset unk_3988D
+		push	offset eye_east.BE_bos_slot
 		push	ds
-		push	offset unk_3987C
+		push	offset eye_east.BE_bos_image_count
 		push	ss
-		lea	ax, [bp+var_32]
+		lea	ax, @@template_east
 		push	ax
 		call	sub_15851
-		mov	ax, point_3982A.x
-		mov	[bp+var_64], ax
-		mov	ax, point_3982A.y
-		mov	[bp+var_62], ax
-		mov	ax, word_3982E
-		mov	[bp+var_60], ax
-		mov	ax, word_39830
-		mov	[bp+var_5E], ax
-		mov	ax, w_39832
-		mov	[bp+var_5C], ax
-		mov	ax, word_39834
-		mov	[bp+var_5A], ax
-		mov	ax, word_39836
-		mov	[bp+var_58], ax
-		mov	ax, word_39838
-		mov	[bp+var_56], ax
-		mov	ax, word_3983A
-		mov	[bp+var_54], ax
-		mov	ax, word_3983C
-		mov	[bp+var_52], ax
-		mov	ax, word_3983E
-		mov	[bp+var_50], ax
-		mov	ax, word_39840
-		mov	[bp+var_4E], ax
-		mov	ax, word_39842
-		mov	[bp+var_4C], ax
-		mov	ax, word_39844
-		mov	[bp+var_4A], ax
-		mov	ax, word_39846
-		mov	[bp+var_48], ax
-		mov	ax, word_39848
-		mov	[bp+var_46], ax
-		mov	ax, word_3984A
-		mov	[bp+var_44], ax
-		mov	ax, word_3984C
-		mov	[bp+var_42], ax
-		mov	ax, word_3984E
-		mov	[bp+var_40], ax
-		mov	ax, word_39850
-		mov	[bp+var_3E], ax
-		mov	ax, word_39852
-		mov	[bp+var_3C], ax
-		mov	ax, word_39854
-		mov	[bp+var_3A], ax
-		mov	ax, word_39856
-		mov	[bp+var_38], ax
-		mov	ax, word_39858
-		mov	[bp+var_36], ax
-		mov	al, byte_3985A
-		mov	[bp+var_34], al
-		mov	al, byte_3985B
-		mov	[bp+var_33], al
+		CBossEntity__copy	@@template_southwest, eye_west
 		push	ds
-		push	offset unk_39898
+		push	offset eye_southwest.BE_h
 		push	ds
-		push	offset unk_39896
+		push	offset eye_southwest.BE_vram_w
 		push	ds
-		push	offset unk_398BF
+		push	offset eye_southwest.BE_bos_slot
 		push	ds
-		push	offset unk_398AE
+		push	offset eye_southwest.BE_bos_image_count
 		push	ss
-		lea	ax, [bp+var_64]
+		lea	ax, @@template_southwest
 		push	ax
 		call	sub_15851
 		add	sp, 32h
-		mov	ax, point_3982A.x
-		mov	[bp+var_96], ax
-		mov	ax, point_3982A.y
-		mov	[bp+var_94], ax
-		mov	ax, word_3982E
-		mov	[bp+var_92], ax
-		mov	ax, word_39830
-		mov	[bp+var_90], ax
-		mov	ax, w_39832
-		mov	[bp+var_8E], ax
-		mov	ax, word_39834
-		mov	[bp+var_8C], ax
-		mov	ax, word_39836
-		mov	[bp+var_8A], ax
-		mov	ax, word_39838
-		mov	[bp+var_88], ax
-		mov	ax, word_3983A
-		mov	[bp+var_86], ax
-		mov	ax, word_3983C
-		mov	[bp+var_84], ax
-		mov	ax, word_3983E
-		mov	[bp+var_82], ax
-		mov	ax, word_39840
-		mov	[bp+var_80], ax
-		mov	ax, word_39842
-		mov	[bp+var_7E], ax
-		mov	ax, word_39844
-		mov	[bp+var_7C], ax
-		mov	ax, word_39846
-		mov	[bp+var_7A], ax
-		mov	ax, word_39848
-		mov	[bp+var_78], ax
-		mov	ax, word_3984A
-		mov	[bp+var_76], ax
-		mov	ax, word_3984C
-		mov	[bp+var_74], ax
-		mov	ax, word_3984E
-		mov	[bp+var_72], ax
-		mov	ax, word_39850
-		mov	[bp+var_70], ax
-		mov	ax, word_39852
-		mov	[bp+var_6E], ax
-		mov	ax, word_39854
-		mov	[bp+var_6C], ax
-		mov	ax, word_39856
-		mov	[bp+var_6A], ax
-		mov	ax, word_39858
-		mov	[bp+var_68], ax
-		mov	al, byte_3985A
-		mov	[bp+var_66], al
-		mov	al, byte_3985B
-		mov	[bp+var_65], al
+		CBossEntity__copy	@@template_southeast, eye_west
 		push	ds
-		push	offset unk_398CA
+		push	offset eye_southeast.BE_h
 		push	ds
-		push	offset unk_398C8
+		push	offset eye_southeast.BE_vram_w
 		push	ds
-		push	offset unk_398F1
+		push	offset eye_southeast.BE_bos_slot
 		push	ds
-		push	offset unk_398E0
+		push	offset eye_southeast.BE_bos_image_count
 		push	ss
-		lea	ax, [bp+var_96]
+		lea	ax, @@template_southeast
 		push	ax
 		call	sub_15851
-		mov	ax, point_3982A.x
-		mov	[bp+var_C8], ax
-		mov	ax, point_3982A.y
-		mov	[bp+var_C6], ax
-		mov	ax, word_3982E
-		mov	[bp+var_C4], ax
-		mov	ax, word_39830
-		mov	[bp+var_C2], ax
-		mov	ax, w_39832
-		mov	[bp+var_C0], ax
-		mov	ax, word_39834
-		mov	[bp+var_BE], ax
-		mov	ax, word_39836
-		mov	[bp+var_BC], ax
-		mov	ax, word_39838
-		mov	[bp+var_BA], ax
-		mov	ax, word_3983A
-		mov	[bp+var_B8], ax
-		mov	ax, word_3983C
-		mov	[bp+var_B6], ax
-		mov	ax, word_3983E
-		mov	[bp+var_B4], ax
-		mov	ax, word_39840
-		mov	[bp+var_B2], ax
-		mov	ax, word_39842
-		mov	[bp+var_B0], ax
-		mov	ax, word_39844
-		mov	[bp+var_AE], ax
-		mov	ax, word_39846
-		mov	[bp+var_AC], ax
-		mov	ax, word_39848
-		mov	[bp+var_AA], ax
-		mov	ax, word_3984A
-		mov	[bp+var_A8], ax
-		mov	ax, word_3984C
-		mov	[bp+var_A6], ax
-		mov	ax, word_3984E
-		mov	[bp+var_A4], ax
-		mov	ax, word_39850
-		mov	[bp+var_A2], ax
-		mov	ax, word_39852
-		mov	[bp+var_A0], ax
-		mov	ax, word_39854
-		mov	[bp+var_9E], ax
-		mov	ax, word_39856
-		mov	[bp+var_9C], ax
-		mov	ax, word_39858
-		mov	[bp+var_9A], ax
-		mov	al, byte_3985A
-		mov	[bp+var_98], al
-		mov	al, byte_3985B
-		mov	[bp+var_97], al
+		CBossEntity__copy	@@template_north, eye_west
 		push	ds
-		push	offset unk_398FC
+		push	offset eye_north.BE_h
 		push	ds
-		push	offset unk_398FA
+		push	offset eye_north.BE_vram_w
 		push	ds
-		push	offset unk_39923
+		push	offset eye_north.BE_bos_slot
 		push	ds
-		push	offset unk_39912
+		push	offset eye_north.BE_bos_image_count
 		push	ss
-		lea	ax, [bp+var_C8]
+		lea	ax, @@template_north
 		push	ax
 		call	sub_15851
 		nopcall	sub_1B383
@@ -16983,9 +16684,8 @@ var_1		= byte ptr -1
 		push	offset unk_39EC4
 		call	sub_21EFF
 		add	sp, 32h
-		leave
-		retf
-sub_1B03F	endp
+		ret
+_yuugenmagan_load	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -16999,11 +16699,11 @@ sub_1B383	proc far
 		push	di
 		call	_grp_palette_load_show c, offset aBoss2_grp_0, ds ; "boss2.grp"
 		call	sub_232A4
-		mov	word_3984E, 0
-		mov	word_39880, 0
-		mov	word_398B2, 0
-		mov	word_398E4, 0
-		mov	word_39916, 0
+		mov	eye_0.BE_bos_image, 0
+		mov	eye_1.BE_bos_image, 0
+		mov	eye_2.BE_bos_image, 0
+		mov	eye_3.BE_bos_image, 0
+		mov	eye_4.BE_bos_image, 0
 		xor	si, si
 		jmp	short loc_1B3D8
 ; ---------------------------------------------------------------------------
@@ -17035,14 +16735,14 @@ loc_1B3D8:
 		push	300080h
 		push	40h
 		push	ds
-		push	offset point_3982A
+		push	offset eye_west
 		call	sub_166D2
 		push	1300040h
 		push	2E00000h
 		push	300080h
 		push	200h
 		push	ds
-		push	offset point_3985C
+		push	offset eye_east
 		call	sub_166D2
 		add	sp, 24h
 		push	1300040h
@@ -17050,14 +16750,14 @@ loc_1B3D8:
 		push	3000B0h
 		push	0C0h ; '?'
 		push	ds
-		push	offset point_3988E
+		push	offset eye_southwest
 		call	sub_166D2
 		push	1300040h
 		push	2E00000h
 		push	3000B0h
 		push	180h
 		push	ds
-		push	offset point_398C0.x
+		push	offset eye_southeast
 		call	sub_166D2
 		add	sp, 24h
 		push	1300040h
@@ -17065,33 +16765,18 @@ loc_1B3D8:
 		push	300040h
 		push	120h
 		push	ds
-		push	offset point_398F2
+		push	offset eye_north
 		call	sub_166D2
-		mov	word_3983E, 0Ch
-		mov	word_39840, 34h	; '4'
-		mov	word_39842, 0Ch
-		mov	word_39844, 20h	; ' '
-		mov	word_39870, 0Ch
-		mov	word_39872, 34h	; '4'
-		mov	word_39874, 0Ch
-		mov	word_39876, 20h	; ' '
-		mov	word_398A2, 0Ch
-		mov	word_398A4, 34h	; '4'
-		mov	word_398A6, 0Ch
-		mov	word_398A8, 20h	; ' '
-		mov	word_398D4, 0Ch
-		mov	word_398D6, 34h	; '4'
-		mov	word_398D8, 0Ch
-		mov	word_398DA, 20h	; ' '
-		mov	word_39906, 0Ch
-		mov	word_39908, 34h	; '4'
-		mov	word_3990A, 0Ch
-		mov	word_3990C, 20h	; ' '
-		mov	word_39852, 1
-		mov	word_39884, 1
-		mov	word_398B6, 1
-		mov	word_398E8, 1
-		mov	word_3991A, 1
+		CBossEntity__hitbox_set	eye_0, 12, 12, 52, 32
+		CBossEntity__hitbox_set	eye_1, 12, 12, 52, 32
+		CBossEntity__hitbox_set	eye_2, 12, 12, 52, 32
+		CBossEntity__hitbox_set	eye_3, 12, 12, 52, 32
+		CBossEntity__hitbox_set	eye_4, 12, 12, 52, 32
+		mov	eye_0.BE_hitbox_orb_inactive, 1
+		mov	eye_1.BE_hitbox_orb_inactive, 1
+		mov	eye_2.BE_hitbox_orb_inactive, 1
+		mov	eye_3.BE_hitbox_orb_inactive, 1
+		mov	eye_4.BE_hitbox_orb_inactive, 1
 		mov	word_3A6CA, 0
 		mov	byte_3A6CE, 0
 		mov	word_3A6C8, 10h
@@ -17168,37 +16853,37 @@ sub_1B58F	proc far
 		cmp	word_3A6CA, 12Ch
 		jge	short loc_1B60E
 		push	(7 shl 16) or 398
-		mov	ax, point_3982A.y
+		mov	ax, eye_west.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, eye_west.BE_cur_left
 		add	ax, 28
 		push	ax
 		call	_graph_r_vline
 		push	(7 shl 16) or 398
-		mov	ax, point_3985C.y
+		mov	ax, eye_east.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_3985C.x
+		mov	ax, eye_east.BE_cur_left
 		add	ax, 28
 		push	ax
 		call	_graph_r_vline
 		add	sp, 10h
-		mov	ax, point_3982A.x
+		mov	ax, eye_west.BE_cur_left
 		add	ax, 4
 		cmp	ax, _player_left
 		jge	short loc_1B5F1
-		mov	ax, point_3982A.x
+		mov	ax, eye_west.BE_cur_left
 		add	ax, 20
 		cmp	ax, _player_left
 		jg	short loc_1B609
 
 loc_1B5F1:
-		mov	ax, point_3985C.x
+		mov	ax, eye_east.BE_cur_left
 		add	ax, 4
 		cmp	ax, _player_left
 		jge	short loc_1B60E
-		mov	ax, point_3985C.x
+		mov	ax, eye_east.BE_cur_left
 		add	ax, 44
 		cmp	ax, _player_left
 		jle	short loc_1B60E
@@ -17212,37 +16897,37 @@ loc_1B60E:
 		cmp	word_3A6CA, 140h
 		jge	short loc_1B68A
 		push	(7 shl 16) or 398
-		mov	ax, point_3988E.y
+		mov	ax, eye_southwest.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_3988E.x
+		mov	ax, eye_southwest.BE_cur_left
 		add	ax, 28
 		push	ax
 		call	_graph_r_vline
 		push	(7 shl 16) or 398
-		mov	ax, point_398C0.y
+		mov	ax, eye_southeast.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_398C0.x
+		mov	ax, eye_southeast.BE_cur_left
 		add	ax, 28
 		push	ax
 		call	_graph_r_vline
 		add	sp, 10h
-		mov	ax, point_3988E.x
+		mov	ax, eye_southwest.BE_cur_left
 		add	ax, 4
 		cmp	ax, _player_left
 		jge	short loc_1B66D
-		mov	ax, point_3988E.x
+		mov	ax, eye_southwest.BE_cur_left
 		add	ax, 20
 		cmp	ax, _player_left
 		jg	short loc_1B685
 
 loc_1B66D:
-		mov	ax, point_398C0.x
+		mov	ax, eye_southeast.BE_cur_left
 		add	ax, 4
 		cmp	ax, _player_left
 		jge	short loc_1B68A
-		mov	ax, point_398C0.x
+		mov	ax, eye_southeast.BE_cur_left
 		add	ax, 20
 		cmp	ax, _player_left
 		jle	short loc_1B68A
@@ -17254,19 +16939,19 @@ loc_1B68A:
 		cmp	word_3A6CA, 0C8h ; '?'
 		jle	short loc_1B6CB
 		push	(7 shl 16) or 398
-		mov	ax, point_398F2.y
+		mov	ax, eye_north.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_398F2.x
+		mov	ax, eye_north.BE_cur_left
 		add	ax, 28
 		push	ax
 		call	_graph_r_vline
 		add	sp, 8
-		mov	ax, point_398F2.x
+		mov	ax, eye_north.BE_cur_left
 		add	ax, 4
 		cmp	ax, _player_left
 		jge	short loc_1B6CB
-		mov	ax, point_398F2.x
+		mov	ax, eye_north.BE_cur_left
 		add	ax, 20
 		cmp	ax, _player_left
 		jle	short loc_1B6CB
@@ -17296,10 +16981,10 @@ sub_1B6D9	proc far
 		cmp	dx, 0Ah
 		jnz	short loc_1B70E
 		push	PP_2_SPREAD_WIDE_AIMED or (((1 shl 4) + 8) shl 16)
-		mov	ax, point_3982A.y
+		mov	ax, eye_west.BE_cur_top
 		add	ax, 32
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, eye_west.BE_cur_left
 		add	ax, 28
 		push	ax
 		push	ds
@@ -17317,10 +17002,10 @@ loc_1B70E:
 		cmp	dx, 19h
 		jnz	short loc_1B740
 		push	PP_2_SPREAD_WIDE_AIMED or (((1 shl 4) + 12) shl 16)
-		mov	ax, point_3982A.y
+		mov	ax, eye_west.BE_cur_top
 		add	ax, 32
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, eye_west.BE_cur_left
 		add	ax, 28
 		push	ax
 		push	ds
@@ -17338,10 +17023,10 @@ loc_1B740:
 		cmp	dx, 28h	; '('
 		jnz	short loc_1B771
 		push	PP_2_SPREAD_WIDE_AIMED or ((2 shl 4) shl 16)
-		mov	ax, point_3982A.y
+		mov	ax, eye_west.BE_cur_top
 		add	ax, 32
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, eye_west.BE_cur_left
 		add	ax, 28
 		push	ax
 		push	ds
@@ -17359,10 +17044,10 @@ loc_1B771:
 		cmp	dx, 3Ch	; '<'
 		jnz	short loc_1B7A2
 		push	PP_2_SPREAD_WIDE_AIMED or (((2 shl 4) + 12) shl 16)
-		mov	ax, point_3982A.y
+		mov	ax, eye_west.BE_cur_top
 		add	ax, 32
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, eye_west.BE_cur_left
 		add	ax, 28
 		push	ax
 		push	ds
@@ -17380,10 +17065,10 @@ loc_1B7A2:
 		cmp	dx, 50h	; 'P'
 		jnz	short loc_1B7D5
 		push	PP_2_SPREAD_WIDE_AIMED or (((3 shl 4) + 2) shl 16)
-		mov	ax, point_3982A.y
+		mov	ax, eye_west.BE_cur_top
 		add	ax, 32
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, eye_west.BE_cur_left
 		add	ax, 28
 		push	ax
 		push	ds
@@ -17404,10 +17089,10 @@ loc_1B7D5:
 		cmp	dx, 6Eh	; 'n'
 		jnz	short loc_1B822
 		push	PP_1_AIMED or (((4 shl 4) + 4) shl 16)
-		mov	ax, point_3982A.y
+		mov	ax, eye_west.BE_cur_top
 		add	ax, 32
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, eye_west.BE_cur_left
 		add	ax, 28
 		push	ax
 		push	ds
@@ -17417,10 +17102,10 @@ loc_1B7D5:
 		push	PP_1_AIMED or (((4 shl 4) + 4) shl 16)
 
 loc_1B808:
-		mov	ax, point_3985C.y
+		mov	ax, eye_east.BE_cur_top
 		add	ax, 32
 		push	ax
-		mov	ax, point_3985C.x
+		mov	ax, eye_east.BE_cur_left
 		add	ax, 28
 		push	ax
 		push	ds
@@ -17472,11 +17157,11 @@ arg_2		= word ptr  6
 		sub	sp, 8
 		fstp	[bp+var_18]
 		fwait
-		mov	ax, point_3988E.y
-		add	ax, 1Ch
+		mov	ax, eye_southwest.BE_cur_top
+		add	ax, 28
 		push	ax		; int
-		mov	ax, point_3988E.x
-		add	ax, 1Ch
+		mov	ax, eye_southwest.BE_cur_left
+		add	ax, 28
 		push	ax		; int
 		push	ds
 		push	offset unk_39EC4 ; __int32
@@ -17505,10 +17190,10 @@ arg_2		= word ptr  6
 		sub	sp, 8
 		fstp	[bp+var_18]
 		fwait
-		mov	ax, point_398C0.y
+		mov	ax, eye_southeast.BE_cur_top
 		add	ax, 28
 		push	ax		; int
-		mov	ax, point_398C0.x
+		mov	ax, eye_southeast.BE_cur_left
 		add	ax, 28
 		push	ax		; int
 		push	ds
@@ -17643,28 +17328,28 @@ loc_1BA6C:
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3982A
+		push	offset eye_0
 		call	sub_16733
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3985C
+		push	offset eye_1
 		call	sub_16733
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3988E
+		push	offset eye_2
 		call	sub_16733
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_398C0.x
+		push	offset eye_3
 		call	sub_16733
 		add	sp, 30h
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_398F2
+		push	offset eye_4
 		call	sub_16733
 		add	sp, 0Ch
 		call	sub_1B58F
@@ -17683,106 +17368,106 @@ loc_1BA6C:
 loc_1BAFD:
 		cmp	word_3A6CA, 64h	; 'd'
 		jnz	short loc_1BB1F
-		mov	word_3984E, 1
-		mov	word_39880, 1
-		mov	word_39852, 0
-		mov	word_39884, 0
+		mov	eye_west.BE_bos_image, 1
+		mov	eye_east.BE_bos_image, 1
+		mov	eye_west.BE_hitbox_orb_inactive, 0
+		mov	eye_east.BE_hitbox_orb_inactive, 0
 		jmp	loc_1DFFC
 ; ---------------------------------------------------------------------------
 
 loc_1BB1F:
 		cmp	word_3A6CA, 78h	; 'x'
 		jnz	short loc_1BB4D
-		mov	word_3984E, 2
-		mov	word_39880, 2
-		mov	word_398B2, 1
-		mov	word_398E4, 1
-		mov	word_398B6, 0
-		mov	word_398E8, 0
+		mov	eye_west.BE_bos_image, 2
+		mov	eye_east.BE_bos_image, 2
+		mov	eye_southwest.BE_bos_image, 1
+		mov	eye_southeast.BE_bos_image, 1
+		mov	eye_southwest.BE_hitbox_orb_inactive, 0
+		mov	eye_southeast.BE_hitbox_orb_inactive, 0
 		jmp	loc_1DFFC
 ; ---------------------------------------------------------------------------
 
 loc_1BB4D:
 		cmp	word_3A6CA, 8Ch
 		jnz	short loc_1BB7C
-		mov	word_3984E, 6
-		mov	word_39880, 6
-		mov	word_398B2, 2
-		mov	word_398E4, 2
-		mov	word_39916, 1
-		mov	word_3991A, 0
+		mov	eye_west.BE_bos_image, 6
+		mov	eye_east.BE_bos_image, 6
+		mov	eye_southwest.BE_bos_image, 2
+		mov	eye_southeast.BE_bos_image, 2
+		mov	eye_north.BE_bos_image, 1
+		mov	eye_north.BE_hitbox_orb_inactive, 0
 		jmp	loc_1DFFC
 ; ---------------------------------------------------------------------------
 
 loc_1BB7C:
 		cmp	word_3A6CA, 0A0h ; '?'
 		jnz	short loc_1BBA5
-		mov	word_3984E, 3
-		mov	word_39880, 3
-		mov	word_398B2, 6
-		mov	word_398E4, 6
-		mov	word_39916, 2
+		mov	eye_west.BE_bos_image, 3
+		mov	eye_east.BE_bos_image, 3
+		mov	eye_southwest.BE_bos_image, 6
+		mov	eye_southeast.BE_bos_image, 6
+		mov	eye_north.BE_bos_image, 2
 		jmp	loc_1DFFC
 ; ---------------------------------------------------------------------------
 
 loc_1BBA5:
 		cmp	word_3A6CA, 0B4h ; '?'
 		jnz	short loc_1BBC2
-		mov	word_398B2, 3
-		mov	word_398E4, 3
-		mov	word_39916, 6
+		mov	eye_southwest.BE_bos_image, 3
+		mov	eye_southeast.BE_bos_image, 3
+		mov	eye_north.BE_bos_image, 6
 		jmp	loc_1DFFC
 ; ---------------------------------------------------------------------------
 
 loc_1BBC2:
 		cmp	word_3A6CA, 0C8h ; '?'
 		jnz	short loc_1BBD3
-		mov	word_39916, 3
+		mov	eye_north.BE_bos_image, 3
 		jmp	loc_1DFFC
 ; ---------------------------------------------------------------------------
 
 loc_1BBD3:
 		cmp	word_3A6CA, 0F0h
 		jnz	loc_1BC8C
-		mov	word_3984E, 2
-		mov	word_39880, 2
-		mov	word_398B2, 2
-		mov	word_398E4, 2
-		mov	word_39916, 2
-		mov	word_39852, 1
-		mov	word_39884, 1
-		mov	word_398B6, 1
-		mov	word_398E8, 1
-		mov	word_3991A, 1
+		mov	eye_0.BE_bos_image, 2
+		mov	eye_1.BE_bos_image, 2
+		mov	eye_2.BE_bos_image, 2
+		mov	eye_3.BE_bos_image, 2
+		mov	eye_4.BE_bos_image, 2
+		mov	eye_0.BE_hitbox_orb_inactive, 1
+		mov	eye_1.BE_hitbox_orb_inactive, 1
+		mov	eye_2.BE_hitbox_orb_inactive, 1
+		mov	eye_3.BE_hitbox_orb_inactive, 1
+		mov	eye_4.BE_hitbox_orb_inactive, 1
 		mov	al, _rank
 		cbw
 		cmp	ax, 2
 		jnz	loc_1DFFC
 		push	PP_5_SPREAD_WIDE_AIMED or (((3 shl 4) + 6) shl 16)
-		mov	ax, point_398F2.y
+		mov	ax, eye_north.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_398F2.x
-		add	ax, 28
-		push	ax
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
-		push	PP_5_SPREAD_WIDE_AIMED or (((3 shl 4) + 6) shl 16)
-		mov	ax, point_398C0.y
-		add	ax, 28
-		push	ax
-		mov	ax, point_398C0.x
+		mov	ax, eye_north.BE_cur_left
 		add	ax, 28
 		push	ax
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_pattern$qii16pellet_pattern_ti
 		push	PP_5_SPREAD_WIDE_AIMED or (((3 shl 4) + 6) shl 16)
-		mov	ax, point_3988E.y
+		mov	ax, eye_southeast.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_3988E.x
+		mov	ax, eye_southeast.BE_cur_left
+		add	ax, 28
+		push	ax
+		push	ds
+		push	offset _Pellets
+		call	@CPellets@add_pattern$qii16pellet_pattern_ti
+		push	PP_5_SPREAD_WIDE_AIMED or (((3 shl 4) + 6) shl 16)
+		mov	ax, eye_southwest.BE_cur_top
+		add	ax, 28
+		push	ax
+		mov	ax, eye_southwest.BE_cur_left
 		add	ax, 28
 		push	ax
 		push	ds
@@ -17799,40 +17484,40 @@ loc_1BBD3:
 loc_1BC8C:
 		cmp	word_3A6CA, 104h
 		jnz	loc_1BD59
-		mov	word_3984E, 1
-		mov	word_39880, 1
-		mov	word_398B2, 1
-		mov	word_398E4, 1
-		mov	word_39916, 1
+		mov	eye_west.BE_bos_image, 1
+		mov	eye_east.BE_bos_image, 1
+		mov	eye_southwest.BE_bos_image, 1
+		mov	eye_southeast.BE_bos_image, 1
+		mov	eye_north.BE_bos_image, 1
 		mov	al, _rank
 		cbw
 		cmp	ax, 3
 		jnz	loc_1DFFC
 		push	PP_5_SPREAD_WIDE_AIMED or (((3 shl 4) + 6) shl 16)
-		mov	ax, point_398F2.y
+		mov	ax, eye_north.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_398F2.x
-		add	ax, 28
-		push	ax
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
-		push	PP_5_SPREAD_WIDE_AIMED or (((3 shl 4) + 6) shl 16)
-		mov	ax, point_398C0.y
-		add	ax, 28
-		push	ax
-		mov	ax, point_398C0.x
+		mov	ax, eye_north.BE_cur_left
 		add	ax, 28
 		push	ax
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_pattern$qii16pellet_pattern_ti
 		push	PP_5_SPREAD_WIDE_AIMED or (((3 shl 4) + 6) shl 16)
-		mov	ax, point_3988E.y
+		mov	ax, eye_southeast.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_3988E.x
+		mov	ax, eye_southeast.BE_cur_left
+		add	ax, 28
+		push	ax
+		push	ds
+		push	offset _Pellets
+		call	@CPellets@add_pattern$qii16pellet_pattern_ti
+		push	PP_5_SPREAD_WIDE_AIMED or (((3 shl 4) + 6) shl 16)
+		mov	ax, eye_southwest.BE_cur_top
+		add	ax, 28
+		push	ax
+		mov	ax, eye_southwest.BE_cur_left
 		add	ax, 28
 		push	ax
 		push	ds
@@ -17842,20 +17527,20 @@ loc_1BC8C:
 
 loc_1BD19:
 		push	PP_5_SPREAD_WIDE_AIMED or (((3 shl 4) + 6) shl 16)
-		mov	ax, point_3982A.y
+		mov	ax, eye_west.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, eye_west.BE_cur_left
 		add	ax, 28
 		push	ax
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_pattern$qii16pellet_pattern_ti
 		push	PP_5_SPREAD_WIDE_AIMED or (((3 shl 4) + 6) shl 16)
-		mov	ax, point_3985C.y
+		mov	ax, eye_east.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_3985C.x
+		mov	ax, eye_east.BE_cur_left
 		add	ax, 28
 		push	ax
 		push	ds
@@ -17868,69 +17553,69 @@ loc_1BD19:
 loc_1BD59:
 		cmp	word_3A6CA, 118h
 		jnz	short loc_1BD82
-		mov	word_3984E, 0
-		mov	word_39880, 0
-		mov	word_398B2, 0
-		mov	word_398E4, 0
-		mov	word_39916, 0
+		mov	eye_west.BE_bos_image, 0
+		mov	eye_east.BE_bos_image, 0
+		mov	eye_southwest.BE_bos_image, 0
+		mov	eye_southeast.BE_bos_image, 0
+		mov	eye_north.BE_bos_image, 0
 		jmp	loc_1DFFC
 ; ---------------------------------------------------------------------------
 
 loc_1BD82:
 		cmp	word_3A6CA, 12Ch
 		jnz	short loc_1BDCD
-		mov	word_3984E, 1
-		mov	word_39880, 1
+		mov	eye_west.BE_bos_image, 1
+		mov	eye_east.BE_bos_image, 1
 		push	RES_Y
-		mov	ax, point_3982A.x
+		mov	ax, eye_west.BE_cur_left
 		add	ax, 28
 		push	ax
-		mov	ax, point_3982A.y
+		mov	ax, eye_west.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, eye_west.BE_cur_left
 		add	ax, 28
 		push	ax
 		call	_graph_r_line_unput
 		add	sp, 8
 		push	RES_Y
-		mov	ax, point_3985C.x
+		mov	ax, eye_east.BE_cur_left
 		add	ax, 28
 		push	ax
-		mov	ax, point_3985C.y
+		mov	ax, eye_east.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_3985C.x
+		mov	ax, eye_east.BE_cur_left
 		jmp	loc_1BEB1
 ; ---------------------------------------------------------------------------
 
 loc_1BDCD:
 		cmp	word_3A6CA, 140h
 		jnz	short loc_1BE24
-		mov	word_3984E, 2
-		mov	word_39880, 2
-		mov	word_39852, 0
-		mov	word_39884, 0
+		mov	eye_west.BE_bos_image, 2
+		mov	eye_east.BE_bos_image, 2
+		mov	eye_west.BE_hitbox_orb_inactive, 0
+		mov	eye_east.BE_hitbox_orb_inactive, 0
 		push	RES_Y
-		mov	ax, point_3988E.x
+		mov	ax, eye_southwest.BE_cur_left
 		add	ax, 28
 		push	ax
-		mov	ax, point_3988E.y
+		mov	ax, eye_southwest.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_3988E.x
+		mov	ax, eye_southwest.BE_cur_left
 		add	ax, 28
 		push	ax
 		call	_graph_r_line_unput
 		add	sp, 8
 		push	RES_Y
-		mov	ax, point_398C0.x
+		mov	ax, eye_southeast.BE_cur_left
 		add	ax, 28
 		push	ax
-		mov	ax, point_398C0.y
+		mov	ax, eye_southeast.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_398C0.x
+		mov	ax, eye_southeast.BE_cur_left
 		jmp	loc_1BEB1
 ; ---------------------------------------------------------------------------
 
@@ -17943,8 +17628,8 @@ loc_1BE24:
 		call	_z_palette_set_all_show c, offset palette_39B8C, ds
 		call	sub_232A4
 		mov	byte ptr word_39E14+1, 0
-		mov	word_3984E, 4
-		mov	word_39880, 3
+		mov	eye_west.BE_bos_image, 4
+		mov	eye_east.BE_bos_image, 3
 		cmp	_rank, RANK_EASY
 		jnz	short loc_1BE6D
 		mov	ax, 15Eh
@@ -17984,13 +17669,13 @@ loc_1BE97:
 loc_1BE9A:
 		mov	word_39DE4, ax
 		push	RES_Y
-		mov	ax, point_398F2.x
+		mov	ax, eye_north.BE_cur_left
 		add	ax, 28
 		push	ax
-		mov	ax, point_398F2.y
+		mov	ax, eye_north.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_398F2.x
+		mov	ax, eye_north.BE_cur_left
 
 loc_1BEB1:
 		add	ax, 28
@@ -18010,112 +17695,112 @@ loc_1BEC0:
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3982A
+		push	offset eye_west
 		call	sub_16733
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3985C
+		push	offset eye_east
 		call	sub_16733
 		add	sp, 18h
-		mov	ax, point_3982A.x
+		mov	ax, eye_west.BE_cur_left
 		add	ax, 32
 		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1BF11
-		mov	word_3984E, 4
+		mov	eye_west.BE_bos_image, 4
 		jmp	short loc_1BF30
 ; ---------------------------------------------------------------------------
 
 loc_1BF11:
-		mov	ax, point_3982A.x
+		mov	ax, eye_west.BE_cur_left
 		add	ax, 32
 		mov	dx, _player_left
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1BF2A
-		mov	word_3984E, 5
+		mov	eye_west.BE_bos_image, 5
 		jmp	short loc_1BF30
 ; ---------------------------------------------------------------------------
 
 loc_1BF2A:
-		mov	word_3984E, 3
+		mov	eye_west.BE_bos_image, 3
 
 loc_1BF30:
-		mov	ax, point_3985C.x
+		mov	ax, eye_east.BE_cur_left
 		add	ax, 32
 		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1BF47
-		mov	word_39880, 4
+		mov	eye_east.BE_bos_image, 4
 		jmp	short loc_1BF66
 ; ---------------------------------------------------------------------------
 
 loc_1BF47:
-		mov	ax, point_3985C.x
+		mov	ax, eye_east.BE_cur_left
 		add	ax, 32
 		mov	dx, _player_left
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1BF60
-		mov	word_39880, 5
+		mov	eye_east.BE_bos_image, 5
 		jmp	short loc_1BF66
 ; ---------------------------------------------------------------------------
 
 loc_1BF60:
-		mov	word_39880, 3
+		mov	eye_east.BE_bos_image, 3
 
 loc_1BF66:
 		call	sub_1B6D9
 		pushd	0 or (0 shl 16)
 		pushd	0 or (0 shl 16)
 		push	ds
-		push	offset point_3982A
+		push	offset eye_west
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
 		jnz	short loc_1BF88
-		cmp	word_3984E, 0
+		cmp	eye_west.BE_bos_image, 0
 		jnz	short loc_1BFE8
 
 loc_1BF88:
 		push	ds
-		push	offset point_3985C
+		push	offset eye_east
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
 		jnz	short loc_1BFA0
-		cmp	word_39880, 0
+		cmp	eye_east.BE_bos_image, 0
 		jnz	short loc_1BFE8
 
 loc_1BFA0:
 		push	ds
-		push	offset point_3988E
+		push	offset eye_southwest
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
 		jnz	short loc_1BFB8
-		cmp	word_398B2, 0
+		cmp	eye_southwest.BE_bos_image, 0
 		jnz	short loc_1BFE8
 
 loc_1BFB8:
 		push	ds
-		push	offset point_398C0.x
+		push	offset eye_southeast
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
 		jnz	short loc_1BFD0
-		cmp	word_398E4, 0
+		cmp	eye_southeast.BE_bos_image, 0
 		jnz	short loc_1BFE8
 
 loc_1BFD0:
 		push	ds
-		push	offset point_398F2
+		push	offset eye_north
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
 		jnz	short loc_1BFED
-		cmp	word_39916, 0
+		cmp	eye_north.BE_bos_image, 0
 		jz	short loc_1BFED
 
 loc_1BFE8:
@@ -18223,60 +17908,60 @@ loc_1C0CA:
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3988E
+		push	offset eye_southwest
 		call	sub_16733
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_398C0.x
+		push	offset eye_southeast
 		call	sub_16733
 		add	sp, 18h
-		mov	ax, point_3988E.x
+		mov	ax, eye_southwest.BE_cur_left.x
 		add	ax, 32
 		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1C11B
-		mov	word_398B2, 4
+		mov	eye_southwest.BE_bos_image, 4
 		jmp	short loc_1C13A
 ; ---------------------------------------------------------------------------
 
 loc_1C11B:
-		mov	ax, point_3988E.x
+		mov	ax, eye_southwest.BE_cur_left
 		add	ax, 32
 		mov	dx, _player_left
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1C134
-		mov	word_398B2, 5
+		mov	eye_southwest.BE_bos_image, 5
 		jmp	short loc_1C13A
 ; ---------------------------------------------------------------------------
 
 loc_1C134:
-		mov	word_398B2, 3
+		mov	eye_southwest.BE_bos_image, 3
 
 loc_1C13A:
-		mov	ax, point_398C0.x
+		mov	ax, eye_southeast.BE_cur_left
 		add	ax, 32
 		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1C151
-		mov	word_398E4, 4
+		mov	eye_southeast.BE_bos_image, 4
 		jmp	short loc_1C170
 ; ---------------------------------------------------------------------------
 
 loc_1C151:
-		mov	ax, point_398C0.x
+		mov	ax, eye_southeast.BE_cur_left
 		add	ax, 32
 		mov	dx, _player_left
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1C16A
-		mov	word_398E4, 5
+		mov	eye_southeast.BE_bos_image, 5
 		jmp	short loc_1C170
 ; ---------------------------------------------------------------------------
 
 loc_1C16A:
-		mov	word_398E4, 3
+		mov	eye_southeast.BE_bos_image, 3
 
 loc_1C170:
 		cmp	word_3A6CA, 5Ah	; 'Z'
@@ -18287,8 +17972,8 @@ loc_1C170:
 		jnz	short loc_1C191
 
 loc_1C185:
-		mov	word_398B2, 1
-		mov	word_398E4, 1
+		mov	eye_southwest.BE_bos_image, 1
+		mov	eye_southeast.BE_bos_image, 1
 
 loc_1C191:
 		cmp	word_3A6CA, 64h	; 'd'
@@ -18314,21 +17999,21 @@ loc_1C1AF:
 		add	ax, -8
 		mov	word_39E0A, ax
 		mov	ax, RES_Y
-		sub	ax, point_3988E.y
+		sub	ax, eye_southwest.BE_cur_top
 		add	ax, 28
 		push	ax
 		mov	ax, word_39E0A
-		sub	ax, point_3988E.x
+		sub	ax, eye_southwest.BE_cur_left
 		add	ax, 28
 		push	ax
 		call	iatan2
 		mov	angle_39E16, al
 		mov	ax, RES_Y
-		sub	ax, point_398C0.y
+		sub	ax, eye_southeast.BE_cur_top
 		add	ax, 28
 		push	ax
 		mov	ax, word_39E0A
-		sub	ax, point_398C0.x
+		sub	ax, eye_southeast.BE_cur_left
 		add	ax, 28
 		push	ax
 		call	iatan2
@@ -18448,52 +18133,52 @@ loc_1C327:
 		pushd	0 or (0 shl 16)
 		pushd	0 or (0 shl 16)
 		push	ds
-		push	offset point_3982A
+		push	offset eye_west
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
 		jnz	short loc_1C345
-		cmp	word_3984E, 0
+		cmp	eye_west.BE_bos_image, 0
 		jnz	short loc_1C3A5
 
 loc_1C345:
 		push	ds
-		push	offset point_3985C
+		push	offset eye_east
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
 		jnz	short loc_1C35D
-		cmp	word_39880, 0
+		cmp	eye_east.BE_bos_image, 0
 		jnz	short loc_1C3A5
 
 loc_1C35D:
 		push	ds
-		push	offset point_3988E
+		push	offset eye_southwest
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
 		jnz	short loc_1C375
-		cmp	word_398B2, 0
+		cmp	eye_southwest.BE_bos_image, 0
 		jnz	short loc_1C3A5
 
 loc_1C375:
 		push	ds
-		push	offset point_398C0.x
+		push	offset eye_southeast
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
 		jnz	short loc_1C38D
-		cmp	word_398E4, 0
+		cmp	eye_southeast.BE_bos_image, 0
 		jnz	short loc_1C3A5
 
 loc_1C38D:
 		push	ds
-		push	offset point_398F2
+		push	offset eye_north
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
 		jnz	short loc_1C3AA
-		cmp	word_39916, 0
+		cmp	eye_north.BE_bos_image, 0
 		jz	short loc_1C3AA
 
 loc_1C3A5:
@@ -18556,7 +18241,7 @@ loc_1C3EB:
 		call	_z_palette_set_all_show c, offset palette_39B8C, ds
 		call	sub_232A4
 		mov	ax, RES_Y
-		sub	ax, point_3982A.y
+		sub	ax, eye_west.BE_cur_top
 		mov	y_39E0C, ax
 		cmp	_rank, RANK_EASY
 		jnz	short loc_1C45B
@@ -18612,60 +18297,60 @@ loc_1C493:
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3982A
+		push	offset eye_west
 		call	sub_16733
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3985C
+		push	offset eye_east
 		call	sub_16733
 		add	sp, 18h
-		mov	ax, point_3982A.x
+		mov	ax, eye_west.BE_cur_left
 		add	ax, 32
 		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1C4EC
-		mov	word_3984E, 4
+		mov	eye_west.BE_bos_image, 4
 		jmp	short loc_1C50B
 ; ---------------------------------------------------------------------------
 
 loc_1C4EC:
-		mov	ax, point_3982A.x
+		mov	ax, eye_west.BE_cur_left
 		add	ax, 32
 		mov	dx, _player_left
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1C505
-		mov	word_3984E, 5
+		mov	eye_west.BE_bos_image, 5
 		jmp	short loc_1C50B
 ; ---------------------------------------------------------------------------
 
 loc_1C505:
-		mov	word_3984E, 3
+		mov	eye_west.BE_bos_image, 3
 
 loc_1C50B:
-		mov	ax, point_3985C.x
+		mov	ax, eye_east.BE_cur_left
 		add	ax, 32
 		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1C522
-		mov	word_39880, 4
+		mov	eye_east.BE_bos_image, 4
 		jmp	short loc_1C541
 ; ---------------------------------------------------------------------------
 
 loc_1C522:
-		mov	ax, point_3985C.x
+		mov	ax, eye_east.BE_cur_left
 		add	ax, 32
 		mov	dx, _player_left
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1C53B
-		mov	word_39880, 5
+		mov	eye_east.BE_bos_image, 5
 		jmp	short loc_1C541
 ; ---------------------------------------------------------------------------
 
 loc_1C53B:
-		mov	word_39880, 3
+		mov	eye_east.BE_bos_image, 3
 
 loc_1C541:
 		cmp	word_3A6CA, 64h	; 'd'
@@ -18689,10 +18374,10 @@ loc_1C55B:
 		mov	al, 80h
 		sub	al, angle_39E16
 		push	ax
-		mov	ax, point_3982A.y
+		mov	ax, eye_west.BE_cur_top
 		add	ax, 32
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, eye_west.BE_cur_left
 		add	ax, 28
 		push	ax
 		push	ds
@@ -18702,10 +18387,10 @@ loc_1C55B:
 		pushd	PM_NORMAL or (0 shl 16)
 		push	(4 shl 4)
 		push	word ptr angle_39E16
-		mov	ax, point_3985C.y
+		mov	ax, eye_east.BE_cur_top
 		add	ax, 32
 		push	ax
-		mov	ax, point_3985C.x
+		mov	ax, eye_east.BE_cur_left
 		add	ax, 28
 		push	ax
 		push	ds
@@ -18746,10 +18431,10 @@ loc_1C5F3:
 		mov	al, 80h
 		sub	al, angle_39E16
 		push	ax
-		mov	ax, point_3982A.y
+		mov	ax, eye_west.BE_cur_top
 		add	ax, 32
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, eye_west.BE_cur_left
 		add	ax, 28
 		push	ax
 		push	ds
@@ -18759,10 +18444,10 @@ loc_1C5F3:
 		push	PM_FALL_STRAIGHT_FROM_TOP_THEN_NORMAL or ((4 shl 4) shl 16)
 		push	(4 shl 4)
 		push	word ptr angle_39E16
-		mov	ax, point_3985C.y
+		mov	ax, eye_east.BE_cur_top
 		add	ax, 32
 		push	ax
-		mov	ax, point_3985C.x
+		mov	ax, eye_east.BE_cur_left
 		add	ax, 28
 		push	ax
 		push	ds
@@ -18786,52 +18471,52 @@ loc_1C67D:
 		pushd	0 or (0 shl 16)
 		pushd	0 or (0 shl 16)
 		push	ds
-		push	offset point_3982A
+		push	offset eye_west
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
 		jnz	short loc_1C69B
-		cmp	word_3984E, 0
+		cmp	eye_west.BE_bos_image, 0
 		jnz	short loc_1C6FB
 
 loc_1C69B:
 		push	ds
-		push	offset point_3985C
+		push	offset eye_east
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
 		jnz	short loc_1C6B3
-		cmp	word_39880, 0
+		cmp	eye_east.BE_bos_image, 0
 		jnz	short loc_1C6FB
 
 loc_1C6B3:
 		push	ds
-		push	offset point_3988E
+		push	offset eye_southwest
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
 		jnz	short loc_1C6CB
-		cmp	word_398B2, 0
+		cmp	eye_southwest.BE_bos_image, 0
 		jnz	short loc_1C6FB
 
 loc_1C6CB:
 		push	ds
-		push	offset point_398C0.x
+		push	offset eye_southeast
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
 		jnz	short loc_1C6E3
-		cmp	word_398E4, 0
+		cmp	eye_southeast.BE_bos_image, 0
 		jnz	short loc_1C6FB
 
 loc_1C6E3:
 		push	ds
-		push	offset point_398F2
+		push	offset eye_north
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
 		jnz	short loc_1C700
-		cmp	word_39916, 0
+		cmp	eye_north.BE_bos_image, 0
 		jz	short loc_1C700
 
 loc_1C6FB:
@@ -18942,60 +18627,60 @@ loc_1C7E4:
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3988E
+		push	offset eye_southwest
 		call	sub_16733
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_398C0.x
+		push	offset eye_southeast
 		call	sub_16733
 		add	sp, 18h
-		mov	ax, point_3988E.x
+		mov	ax, eye_southwest.BE_cur_left
 		add	ax, 32
 		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1C835
-		mov	word_398B2, 4
+		mov	eye_southwest.BE_bos_image, 4
 		jmp	short loc_1C854
 ; ---------------------------------------------------------------------------
 
 loc_1C835:
-		mov	ax, point_3988E.x
+		mov	ax, eye_southwest.BE_cur_left
 		add	ax, 32
 		mov	dx, _player_left
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1C84E
-		mov	word_398B2, 5
+		mov	eye_southwest.BE_bos_image, 5
 		jmp	short loc_1C854
 ; ---------------------------------------------------------------------------
 
 loc_1C84E:
-		mov	word_398B2, 3
+		mov	eye_southwest.BE_bos_image, 3
 
 loc_1C854:
-		mov	ax, point_398C0.x
+		mov	ax, eye_southeast.BE_cur_left
 		add	ax, 32
 		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1C86B
-		mov	word_398E4, 4
+		mov	eye_southeast.BE_bos_image, 4
 		jmp	short loc_1C88A
 ; ---------------------------------------------------------------------------
 
 loc_1C86B:
-		mov	ax, point_398C0.x
+		mov	ax, eye_southeast.BE_cur_left
 		add	ax, 32
 		mov	dx, _player_left
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1C884
-		mov	word_398E4, 5
+		mov	eye_southeast.BE_bos_image, 5
 		jmp	short loc_1C88A
 ; ---------------------------------------------------------------------------
 
 loc_1C884:
-		mov	word_398E4, 3
+		mov	eye_southeast.BE_bos_image, 3
 
 loc_1C88A:
 		cmp	word_3A6CA, 5Ah	; 'Z'
@@ -19006,8 +18691,8 @@ loc_1C88A:
 		jnz	short loc_1C8AB
 
 loc_1C89F:
-		mov	word_398B2, 1
-		mov	word_398E4, 1
+		mov	eye_southwest.BE_bos_image, 1
+		mov	eye_southeast.BE_bos_image, 1
 
 loc_1C8AB:
 		cmp	word_3A6CA, 64h	; 'd'
@@ -19030,22 +18715,22 @@ loc_1C8C2:
 		mov	ax, _player_left
 		add	ax, -8
 		mov	word_39E0A, ax
-		mov	ax, 190h
-		sub	ax, point_3988E.y
-		add	ax, 1Ch
+		mov	ax, RES_Y
+		sub	ax, eye_southwest.BE_cur_top
+		add	ax, 28
 		push	ax
 		mov	ax, word_39E0A
-		sub	ax, point_3988E.x
-		add	ax, 1Ch
+		sub	ax, eye_southwest.BE_cur_left
+		add	ax, 28
 		push	ax
 		call	iatan2
 		mov	angle_39E16, al
 		mov	ax, RES_Y
-		sub	ax, point_398C0.y
+		sub	ax, eye_southeast.BE_cur_top
 		add	ax, 28
 		push	ax
 		mov	ax, word_39E0A
-		sub	ax, point_398C0.x
+		sub	ax, eye_southeast.BE_cur_left
 		add	ax, 28
 		push	ax
 		call	iatan2
@@ -19168,52 +18853,52 @@ loc_1CA38:
 		pushd	0 or (0 shl 16)
 		pushd	0 or (0 shl 16)
 		push	ds
-		push	offset point_3982A
+		push	offset eye_west
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
 		jnz	short loc_1CA56
-		cmp	word_3984E, 0
+		cmp	eye_west.BE_bos_image, 0
 		jnz	short loc_1CAB6
 
 loc_1CA56:
 		push	ds
-		push	offset point_3985C
+		push	offset eye_east
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
 		jnz	short loc_1CA6E
-		cmp	word_39880, 0
+		cmp	eye_east.BE_bos_image, 0
 		jnz	short loc_1CAB6
 
 loc_1CA6E:
 		push	ds
-		push	offset point_3988E
+		push	offset eye_southwest
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
 		jnz	short loc_1CA86
-		cmp	word_398B2, 0
+		cmp	eye_southwest.BE_bos_image, 0
 		jnz	short loc_1CAB6
 
 loc_1CA86:
 		push	ds
-		push	offset point_398C0.x
+		push	offset eye_southeast
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
 		jnz	short loc_1CA9E
-		cmp	word_398E4, 0
+		cmp	eye_southeast.BE_bos_image, 0
 		jnz	short loc_1CAB6
 
 loc_1CA9E:
 		push	ds
-		push	offset point_398F2
+		push	offset eye_north
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
 		jnz	short loc_1CABB
-		cmp	word_39916, 0
+		cmp	eye_north.BE_bos_image, 0
 		jz	short loc_1CABB
 
 loc_1CAB6:
@@ -19286,7 +18971,7 @@ loc_1CB3E:
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_398F2
+		push	offset eye_north
 		call	sub_16733
 		add	sp, 0Ch
 		cmp	word_3A6CA, 1Eh
@@ -19299,7 +18984,7 @@ loc_1CB3E:
 		jnz	short loc_1CB88
 
 loc_1CB82:
-		mov	word_39916, 1
+		mov	eye_north.BE_bos_image, 1
 
 loc_1CB88:
 		cmp	word_3A6CA, 28h	; '('
@@ -19326,36 +19011,36 @@ loc_1CBB2:
 		jnz	loc_1CF57
 		cmp	x_39E06, 256
 		jg	short loc_1CBD2
-		mov	word_39916, 4
+		mov	eye_north.BE_bos_image, 4
 		jmp	short loc_1CBE8
 ; ---------------------------------------------------------------------------
 
 loc_1CBD2:
 		cmp	x_39E06, 384
 		jl	short loc_1CBE2
-		mov	word_39916, 5
+		mov	eye_north.BE_bos_image, 5
 		jmp	short loc_1CBE8
 ; ---------------------------------------------------------------------------
 
 loc_1CBE2:
-		mov	word_39916, 3
+		mov	eye_north.BE_bos_image, 3
 
 loc_1CBE8:
 		mov	ax, x_39E06
 		mov	[bp+var_4], ax
-		mov	ax, point_398F2.y
+		mov	ax, eye_north.BE_cur_top
 		add	ax, 28
 		mov	[bp+var_6], ax
-		mov	ax, point_398F2.x
+		mov	ax, eye_north.BE_cur_left
 		add	ax, 28
 		mov	[bp+var_8], ax
 		mov	ax, x_39E06
 		add	ax, -16
 		mov	[bp+var_A], ax
-		mov	ax, point_398F2.y
+		mov	ax, eye_north.BE_cur_top
 		add	ax, 28
 		mov	[bp+var_C], ax
-		mov	ax, point_398F2.x
+		mov	ax, eye_north.BE_cur_left
 		add	ax, 28
 		mov	[bp+var_E], ax
 		call	sub_114CA stdcall, ax, [bp+var_C], [bp+var_A], RES_Y
@@ -19365,10 +19050,10 @@ loc_1CBE8:
 		jl	loc_1CF52
 		push	RES_Y
 		push	x_39E06
-		mov	ax, point_398F2.y
+		mov	ax, eye_north.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_398F2.x
+		mov	ax, eye_north.BE_cur_left
 		add	ax, 28
 		push	ax
 		call	sub_114CA
@@ -19409,38 +19094,38 @@ loc_1CCBB:
 		jnz	loc_1CF57
 		cmp	x_39E06, 256
 		jg	short loc_1CCDB
-		mov	word_39916, 5
+		mov	eye_north.BE_bos_image, 5
 		jmp	short loc_1CCF1
 ; ---------------------------------------------------------------------------
 
 loc_1CCDB:
 		cmp	x_39E06, 384
 		jl	short loc_1CCEB
-		mov	word_39916, 4
+		mov	eye_north.BE_bos_image, 4
 		jmp	short loc_1CCF1
 ; ---------------------------------------------------------------------------
 
 loc_1CCEB:
-		mov	word_39916, 3
+		mov	eye_north.BE_bos_image, 3
 
 loc_1CCF1:
 		mov	ax, RES_X
 		sub	ax, x_39E06
 		mov	[bp+var_10], ax
-		mov	ax, point_398F2.y
+		mov	ax, eye_north.BE_cur_top
 		add	ax, 28
 		mov	[bp+var_12], ax
-		mov	ax, point_398F2.x
+		mov	ax, eye_north.BE_cur_left
 		add	ax, 28
 		mov	[bp+var_14], ax
 		mov	ax, RES_X
 		sub	ax, x_39E06
 		add	ax, 16
 		mov	[bp+var_16], ax
-		mov	ax, point_398F2.y
+		mov	ax, eye_north.BE_cur_top
 		add	ax, 28
 		mov	[bp+var_18], ax
-		mov	ax, point_398F2.x
+		mov	ax, eye_north.BE_cur_left
 		add	ax, 28
 		mov	[bp+@@left], ax
 		call	sub_114CA stdcall, ax, [bp+var_18], [bp+var_16], RES_Y
@@ -19452,10 +19137,10 @@ loc_1CCF1:
 		mov	ax, RES_X
 		sub	ax, x_39E06
 		push	ax
-		mov	ax, point_398F2.y
+		mov	ax, eye_north.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_398F2.x
+		mov	ax, eye_north.BE_cur_left
 		add	ax, 28
 		push	ax
 		call	sub_114CA
@@ -19497,22 +19182,22 @@ loc_1CDD6:
 		idiv	bx
 		cmp	dx, 1
 		jnz	loc_1CF57
-		mov	word_39916, 6
+		mov	eye_north.BE_bos_image, 6
 		mov	ax, x_39E06
 		mov	[bp+var_1C], ax
-		mov	ax, point_398F2.y
+		mov	ax, eye_north.BE_cur_top
 		add	ax, 28
 		mov	[bp+var_1E], ax
-		mov	ax, point_398F2.x
+		mov	ax, eye_north.BE_cur_left
 		add	ax, 28
 		mov	[bp+var_20], ax
 		mov	ax, x_39E06
 		add	ax, -16
 		mov	[bp+var_22], ax
-		mov	ax, point_398F2.y
+		mov	ax, eye_north.BE_cur_top
 		add	ax, 28
 		mov	[bp+var_24], ax
-		mov	ax, point_398F2.x
+		mov	ax, eye_north.BE_cur_left
 		add	ax, 28
 		mov	[bp+var_26], ax
 		call	sub_114CA stdcall, ax, [bp+var_24], [bp+var_22], RES_Y
@@ -19520,20 +19205,20 @@ loc_1CDD6:
 		mov	ax, RES_X
 		sub	ax, x_39E06
 		mov	[bp+var_28], ax
-		mov	ax, point_398F2.y
+		mov	ax, eye_north.BE_cur_top
 		add	ax, 28
 		mov	[bp+var_2A], ax
-		mov	ax, point_398F2.x
+		mov	ax, eye_north.BE_cur_left
 		add	ax, 28
 		mov	[bp+var_2C], ax
 		mov	ax, RES_X
 		sub	ax, x_39E06
 		add	ax, 16
 		mov	[bp+var_2E], ax
-		mov	ax, point_398F2.y
+		mov	ax, eye_north.BE_cur_top
 		add	ax, 28
 		mov	[bp+var_30], ax
-		mov	ax, point_398F2.x
+		mov	ax, eye_north.BE_cur_left
 		add	ax, 28
 		mov	[bp+var_32], ax
 		call	sub_114CA stdcall, ax, [bp+var_30], [bp+var_2E], RES_Y
@@ -19543,10 +19228,10 @@ loc_1CDD6:
 		jl	loc_1CF52
 		push	RES_Y
 		push	x_39E06
-		mov	ax, point_398F2.y
+		mov	ax, eye_north.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_398F2.x
+		mov	ax, eye_north.BE_cur_left
 		add	ax, 28
 		push	ax
 		call	sub_114CA
@@ -19554,10 +19239,10 @@ loc_1CDD6:
 		mov	ax, RES_X
 		sub	ax, x_39E06
 		push	ax
-		mov	ax, point_398F2.y
+		mov	ax, eye_north.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_398F2.x
+		mov	ax, eye_north.BE_cur_left
 		add	ax, 28
 		push	ax
 		call	sub_114CA
@@ -19570,10 +19255,10 @@ loc_1CDD6:
 		cmp	ax, RANK_HARD
 		jnz	short loc_1CF29
 		push	PP_3_SPREAD_NARROW_AIMED or (3 shl 16)
-		mov	ax, point_398F2.y
+		mov	ax, eye_north.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_398F2.x
+		mov	ax, eye_north.BE_cur_left
 		add	ax, 28
 		push	ax
 		push	ds
@@ -19589,10 +19274,10 @@ loc_1CF29:
 		push	PP_5_SPREAD_NARROW_AIMED or (4 shl 16)
 
 loc_1CF38:
-		mov	ax, point_398F2.y
+		mov	ax, eye_north.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_398F2.x
+		mov	ax, eye_north.BE_cur_left
 		add	ax, 28
 		push	ax
 		push	ds
@@ -19607,52 +19292,52 @@ loc_1CF57:
 		pushd	0 or (0 shl 16)
 		pushd	0 or (0 shl 16)
 		push	ds
-		push	offset point_3982A
+		push	offset eye_west
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
 		jnz	short loc_1CF75
-		cmp	word_3984E, 0
+		cmp	eye_west.BE_bos_image, 0
 		jnz	short loc_1CFD5
 
 loc_1CF75:
 		push	ds
-		push	offset point_3985C
+		push	offset eye_east
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
 		jnz	short loc_1CF8D
-		cmp	word_39880, 0
+		cmp	eye_east.BE_bos_image, 0
 		jnz	short loc_1CFD5
 
 loc_1CF8D:
 		push	ds
-		push	offset point_3988E
+		push	offset eye_southwest
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
 		jnz	short loc_1CFA5
-		cmp	word_398B2, 0
+		cmp	eye_southwest.BE_bos_image, 0
 		jnz	short loc_1CFD5
 
 loc_1CFA5:
 		push	ds
-		push	offset point_398C0.x
+		push	offset eye_southeast
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
 		jnz	short loc_1CFBD
-		cmp	word_398E4, 0
+		cmp	eye_southeast.BE_bos_image, 0
 		jnz	short loc_1CFD5
 
 loc_1CFBD:
 		push	ds
-		push	offset point_398F2
+		push	offset eye_north
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
 		jnz	short loc_1CFDA
-		cmp	word_39916, 0
+		cmp	eye_north.BE_bos_image, 0
 		jz	short loc_1CFDA
 
 loc_1CFD5:
@@ -19734,148 +19419,148 @@ loc_1D08C:
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3982A
+		push	offset eye_west
 		call	sub_16733
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3985C
+		push	offset eye_east
 		call	sub_16733
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3988E
+		push	offset eye_southwest
 		call	sub_16733
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_398C0.x
+		push	offset eye_southeast
 		call	sub_16733
 		add	sp, 30h
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_398F2
+		push	offset eye_north
 		call	sub_16733
 		add	sp, 0Ch
-		mov	ax, point_3982A.x
+		mov	ax, eye_west.BE_cur_left
 		add	ax, 32
 		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1D116
-		mov	word_3984E, 4
+		mov	eye_west.BE_bos_image, 4
 		jmp	short loc_1D135
 ; ---------------------------------------------------------------------------
 
 loc_1D116:
-		mov	ax, point_3982A.x
+		mov	ax, eye_west.BE_cur_left
 		add	ax, 32
 		mov	dx, _player_left
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1D12F
-		mov	word_3984E, 5
+		mov	eye_west.BE_bos_image, 5
 		jmp	short loc_1D135
 ; ---------------------------------------------------------------------------
 
 loc_1D12F:
-		mov	word_3984E, 3
+		mov	eye_west.BE_bos_image, 3
 
 loc_1D135:
-		mov	ax, point_3985C.x
+		mov	ax, eye_east.BE_cur_left
 		add	ax, 32
 		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1D14C
-		mov	word_39880, 4
+		mov	eye_east.BE_bos_image, 4
 		jmp	short loc_1D16B
 ; ---------------------------------------------------------------------------
 
 loc_1D14C:
-		mov	ax, point_3985C.x
+		mov	ax, eye_east.BE_cur_left
 		add	ax, 32
 		mov	dx, _player_left
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1D165
-		mov	word_39880, 5
+		mov	eye_east.BE_bos_image, 5
 		jmp	short loc_1D16B
 ; ---------------------------------------------------------------------------
 
 loc_1D165:
-		mov	word_39880, 3
+		mov	eye_east.BE_bos_image, 3
 
 loc_1D16B:
-		mov	ax, point_3988E.x
+		mov	ax, eye_southwest.BE_cur_left
 		add	ax, 32
 		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1D182
-		mov	word_398B2, 4
+		mov	eye_southwest.BE_bos_image, 4
 		jmp	short loc_1D1A1
 ; ---------------------------------------------------------------------------
 
 loc_1D182:
-		mov	ax, point_3988E.x
+		mov	ax, eye_southwest.BE_cur_left
 		add	ax, 32
 		mov	dx, _player_left
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1D19B
-		mov	word_398B2, 5
+		mov	eye_southwest.BE_bos_image, 5
 		jmp	short loc_1D1A1
 ; ---------------------------------------------------------------------------
 
 loc_1D19B:
-		mov	word_398B2, 3
+		mov	eye_southwest.BE_bos_image, 3
 
 loc_1D1A1:
-		mov	ax, point_398C0.x
+		mov	ax, eye_southeast.BE_cur_left
 		add	ax, 32
 		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1D1B8
-		mov	word_398E4, 4
+		mov	eye_southeast.BE_bos_image, 4
 		jmp	short loc_1D1D7
 ; ---------------------------------------------------------------------------
 
 loc_1D1B8:
-		mov	ax, point_398C0.x
+		mov	ax, eye_southeast.BE_cur_left
 		add	ax, 32
 		mov	dx, _player_left
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1D1D1
-		mov	word_398E4, 5
+		mov	eye_southeast.BE_bos_image, 5
 		jmp	short loc_1D1D7
 ; ---------------------------------------------------------------------------
 
 loc_1D1D1:
-		mov	word_398E4, 3
+		mov	eye_southeast.BE_bos_image, 3
 
 loc_1D1D7:
-		mov	ax, point_398F2.x
+		mov	ax, eye_north.BE_cur_left
 		add	ax, 32
 		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1D1EE
-		mov	word_39916, 4
+		mov	eye_north.BE_bos_image, 4
 		jmp	short loc_1D20D
 ; ---------------------------------------------------------------------------
 
 loc_1D1EE:
-		mov	ax, point_398F2.x
+		mov	ax, eye_north.BE_cur_left
 		add	ax, 32
 		mov	dx, _player_left
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1D207
-		mov	word_39916, 5
+		mov	eye_north.BE_bos_image, 5
 		jmp	short loc_1D20D
 ; ---------------------------------------------------------------------------
 
 loc_1D207:
-		mov	word_39916, 3
+		mov	eye_north.BE_bos_image, 3
 
 loc_1D20D:
 		cmp	word_3A6CA, 64h	; 'd'
@@ -19892,72 +19577,72 @@ loc_1D21D:
 
 loc_1D230:
 		push	7
-		mov	ax, point_3988E.y
+		mov	ax, eye_southwest.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_3988E.x
+		mov	ax, eye_southwest.BE_cur_left
 		add	ax, 28
 		push	ax
-		mov	ax, point_398F2.y
+		mov	ax, eye_north.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_398F2.x
-		add	ax, 28
-		push	ax
-		call	sub_114E3
-		push	7
-		mov	ax, point_3985C.y
-		add	ax, 28
-		push	ax
-		mov	ax, point_3985C.x
-		add	ax, 28
-		push	ax
-		mov	ax, point_3988E.y
-		add	ax, 28
-		push	ax
-		mov	ax, point_3988E.x
+		mov	ax, eye_north.BE_cur_left
 		add	ax, 28
 		push	ax
 		call	sub_114E3
 		push	7
-		mov	ax, point_3982A.y
+		mov	ax, eye_east.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, eye_east.BE_cur_left
 		add	ax, 28
 		push	ax
-		mov	ax, point_3985C.y
+		mov	ax, eye_southwest.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_3985C.x
-		add	ax, 28
-		push	ax
-		call	sub_114E3
-		push	7
-		mov	ax, point_398C0.y
-		add	ax, 28
-		push	ax
-		mov	ax, point_398C0.x
-		add	ax, 28
-		push	ax
-		mov	ax, point_3982A.y
-		add	ax, 28
-		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, eye_southwest.BE_cur_left
 		add	ax, 28
 		push	ax
 		call	sub_114E3
 		push	7
-		mov	ax, point_398F2.y
+		mov	ax, eye_west.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_398F2.x
+		mov	ax, eye_west.BE_cur_left
 		add	ax, 28
 		push	ax
-		mov	ax, point_398C0.y
+		mov	ax, eye_east.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_398C0.x
+		mov	ax, eye_east.BE_cur_left
+		add	ax, 28
+		push	ax
+		call	sub_114E3
+		push	7
+		mov	ax, eye_southeast.BE_cur_top
+		add	ax, 28
+		push	ax
+		mov	ax, eye_southeast.BE_cur_left
+		add	ax, 28
+		push	ax
+		mov	ax, eye_west.BE_cur_top
+		add	ax, 28
+		push	ax
+		mov	ax, eye_west.BE_cur_left
+		add	ax, 28
+		push	ax
+		call	sub_114E3
+		push	7
+		mov	ax, eye_north.BE_cur_top
+		add	ax, 28
+		push	ax
+		mov	ax, eye_north.BE_cur_left
+		add	ax, 28
+		push	ax
+		mov	ax, eye_southeast.BE_cur_top
+		add	ax, 28
+		push	ax
+		mov	ax, eye_southeast.BE_cur_left
 		add	ax, 28
 		push	ax
 		call	sub_114E3
@@ -19980,24 +19665,24 @@ loc_1D2F6:
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, point_3988E.y
+		add	ax, eye_southwest.BE_cur_top
 		add	ax, 28
 		push	ax
 		mov	ax, x_39E06
 		mov	bx, 3
 		cwd
 		idiv	bx
-		add	ax, point_3988E.x
+		add	ax, eye_southwest.BE_cur_left
 		add	ax, 28
 		push	ax
 		mov	ax, x_39E06
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, point_398F2.y
+		add	ax, eye_north.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_398F2.x
+		mov	ax, eye_north.BE_cur_left
 		add	ax, 28
 		push	ax
 		call	sub_114CA
@@ -20005,10 +19690,10 @@ loc_1D2F6:
 		mov	bx, 3
 		cwd
 		idiv	bx
-		add	ax, point_3985C.y
+		add	ax, eye_east.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_3985C.x
+		mov	ax, eye_east.BE_cur_left
 		add	ax, 28
 		sub	ax, x_39E06
 		push	ax
@@ -20016,13 +19701,13 @@ loc_1D2F6:
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, point_3988E.y
+		add	ax, eye_southwest.BE_cur_top
 		add	ax, 28
 		push	ax
 		mov	ax, x_39E06
 		cwd
 		idiv	bx
-		add	ax, point_3988E.x
+		add	ax, eye_southwest.BE_cur_left
 		add	ax, 28
 		push	ax
 		call	sub_114CA
@@ -20030,20 +19715,20 @@ loc_1D2F6:
 		mov	bx, 3
 		cwd
 		idiv	bx
-		add	ax, point_3982A.y
+		add	ax, eye_west.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, eye_west.BE_cur_left
 		add	ax, x_39E06
 		add	ax, 28
 		push	ax
 		mov	ax, x_39E06
 		cwd
 		idiv	bx
-		add	ax, point_3985C.y
+		add	ax, eye_east.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_3985C.x
+		mov	ax, eye_east.BE_cur_left
 		add	ax, 28
 		sub	ax, x_39E06
 		push	ax
@@ -20052,24 +19737,24 @@ loc_1D2F6:
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, point_398C0.y
+		add	ax, eye_southeast.BE_cur_top
 		add	ax, 28
 		push	ax
 		mov	ax, x_39E06
 		mov	bx, 3
 		cwd
 		idiv	bx
-		mov	dx, point_398C0.x
+		mov	dx, eye_southeast.BE_cur_left
 		add	dx, 28
 		sub	dx, ax
 		push	dx
 		mov	ax, x_39E06
 		cwd
 		idiv	bx
-		add	ax, point_3982A.y
+		add	ax, eye_west.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, eye_west.BE_cur_left
 		add	ax, x_39E06
 		add	ax, 28
 		push	ax
@@ -20078,24 +19763,24 @@ loc_1D2F6:
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, point_398F2.y
+		add	ax, eye_north.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_398F2.x
+		mov	ax, eye_north.BE_cur_left
 		add	ax, 28
 		push	ax
 		mov	ax, x_39E06
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, point_398C0.y
+		add	ax, eye_southeast.BE_cur_top
 		add	ax, 28
 		push	ax
 		mov	ax, x_39E06
 		mov	bx, 3
 		cwd
 		idiv	bx
-		mov	dx, point_398C0.x
+		mov	dx, eye_southeast.BE_cur_left
 		add	dx, 28
 		sub	dx, ax
 		push	dx
@@ -20106,24 +19791,24 @@ loc_1D2F6:
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, point_3988E.y
+		add	ax, eye_southwest.BE_cur_top
 		add	ax, 28
 		push	ax
 		mov	ax, x_39E06
 		mov	bx, 3
 		cwd
 		idiv	bx
-		add	ax, point_3988E.x
+		add	ax, eye_southwest.BE_cur_left
 		add	ax, 28
 		push	ax
 		mov	ax, x_39E06
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, point_398F2.y
+		add	ax, eye_north.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_398F2.x
+		mov	ax, eye_north.BE_cur_left
 		add	ax, 28
 		push	ax
 		call	sub_114E3
@@ -20133,10 +19818,10 @@ loc_1D2F6:
 		mov	bx, 3
 		cwd
 		idiv	bx
-		add	ax, point_3985C.y
+		add	ax, eye_east.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_3985C.x
+		mov	ax, eye_east.BE_cur_left
 		add	ax, 28
 		sub	ax, x_39E06
 		push	ax
@@ -20144,13 +19829,13 @@ loc_1D2F6:
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, point_3988E.y
+		add	ax, eye_southwest.BE_cur_top
 		add	ax, 28
 		push	ax
 		mov	ax, x_39E06
 		cwd
 		idiv	bx
-		add	ax, point_3988E.x
+		add	ax, eye_southwest.BE_cur_left
 		add	ax, 28
 		push	ax
 		call	sub_114E3
@@ -20159,20 +19844,20 @@ loc_1D2F6:
 		mov	bx, 3
 		cwd
 		idiv	bx
-		add	ax, point_3982A.y
+		add	ax, eye_west.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, eye_west.BE_cur_left
 		add	ax, x_39E06
 		add	ax, 28
 		push	ax
 		mov	ax, x_39E06
 		cwd
 		idiv	bx
-		add	ax, point_3985C.y
+		add	ax, eye_east.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_3985C.x
+		mov	ax, eye_east.BE_cur_left
 		add	ax, 28
 		sub	ax, x_39E06
 		push	ax
@@ -20182,24 +19867,24 @@ loc_1D2F6:
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, point_398C0.y
+		add	ax, eye_southeast.BE_cur_top
 		add	ax, 28
 		push	ax
 		mov	ax, x_39E06
 		mov	bx, 3
 		cwd
 		idiv	bx
-		mov	dx, point_398C0.x
+		mov	dx, eye_southeast.BE_cur_left
 		add	dx, 28
 		sub	dx, ax
 		push	dx
 		mov	ax, x_39E06
 		cwd
 		idiv	bx
-		add	ax, point_3982A.y
+		add	ax, eye_west.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, eye_west.BE_cur_left
 		add	ax, x_39E06
 		add	ax, 28
 		push	ax
@@ -20209,24 +19894,24 @@ loc_1D2F6:
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, point_398F2.y
+		add	ax, eye_north.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_398F2.x
+		mov	ax, eye_north.BE_cur_left
 		add	ax, 28
 		push	ax
 		mov	ax, x_39E06
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, point_398C0.y
+		add	ax, eye_southeast.BE_cur_top
 		add	ax, 28
 		push	ax
 		mov	ax, x_39E06
 		mov	bx, 3
 		cwd
 		idiv	bx
-		mov	dx, point_398C0.x
+		mov	dx, eye_southeast.BE_cur_left
 		add	dx, 28
 		sub	dx, ax
 		push	dx
@@ -20234,54 +19919,54 @@ loc_1D2F6:
 		add	sp, 28h
 		cmp	x_39E06, 160
 		jle	loc_1D63F
-		mov	ax, point_398F2.x
+		mov	ax, eye_north.BE_cur_left
 		add	ax, 28
 		mov	x_39DE6, ax
 		mov	ax, x_39E06
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, point_398F2.y
+		add	ax, eye_north.BE_cur_top
 		add	ax, 28
 		mov	y_39DF0, ax
 		mov	ax, x_39E06
 		mov	bx, 3
 		cwd
 		idiv	bx
-		add	ax, point_3988E.x
+		add	ax, eye_southwest.BE_cur_left
 		add	ax, 28
 		mov	x_39DE8, ax
 		mov	ax, x_39E06
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, point_3988E.y
+		add	ax, eye_southwest.BE_cur_top
 		add	ax, 28
 		mov	y_39DF2, ax
-		mov	ax, point_3985C.x
+		mov	ax, eye_east.BE_cur_left
 		add	ax, 28
 		sub	ax, x_39E06
 		mov	x_39DEA, ax
 		mov	ax, x_39E06
 		cwd
 		idiv	bx
-		add	ax, point_3985C.y
+		add	ax, eye_east.y
 		add	ax, 28
 		mov	y_39DF4, ax
-		mov	ax, point_3982A.x
+		mov	ax, eye_west.BE_cur_left
 		add	ax, x_39E06
 		add	ax, 28
 		mov	x_39DEC, ax
 		mov	ax, x_39E06
 		cwd
 		idiv	bx
-		add	ax, point_3982A.y
+		add	ax, eye_west.BE_cur_top
 		add	ax, 28
 		mov	y_39DF6, ax
 		mov	ax, x_39E06
 		cwd
 		idiv	bx
-		mov	dx, point_398C0.x
+		mov	dx, eye_southeast.BE_cur_left
 		add	dx, 28
 		sub	dx, ax
 		mov	x_39DEE, dx
@@ -20289,7 +19974,7 @@ loc_1D2F6:
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, point_398C0.y
+		add	ax, eye_southeast.BE_cur_top
 		add	ax, 28
 		mov	y_39DF8, ax
 		mov	word_39E08, 3
@@ -20298,52 +19983,52 @@ loc_1D63F:
 		pushd	0 or (0 shl 16)
 		pushd	0 or (0 shl 16)
 		push	ds
-		push	offset point_3982A
+		push	offset eye_west
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
 		jnz	short loc_1D65D
-		cmp	word_3984E, 0
+		cmp	eye_west.BE_bos_image, 0
 		jnz	short loc_1D6BD
 
 loc_1D65D:
 		push	ds
-		push	offset point_3985C
+		push	offset eye_east
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
 		jnz	short loc_1D675
-		cmp	word_39880, 0
+		cmp	eye_east.BE_bos_image, 0
 		jnz	short loc_1D6BD
 
 loc_1D675:
 		push	ds
-		push	offset point_3988E
+		push	offset eye_southwest
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
 		jnz	short loc_1D68D
-		cmp	word_398B2, 0
+		cmp	eye_southwest.BE_bos_image, 0
 		jnz	short loc_1D6BD
 
 loc_1D68D:
 		push	ds
-		push	offset point_398C0.x
+		push	offset eye_southeast
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
 		jnz	short loc_1D6A5
-		cmp	word_398E4, 0
+		cmp	eye_southeast.BE_bos_image, 0
 		jnz	short loc_1D6BD
 
 loc_1D6A5:
 		push	ds
-		push	offset point_398F2
+		push	offset eye_north
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
 		jnz	short loc_1D6C2
-		cmp	word_39916, 0
+		cmp	eye_north.BE_bos_image, 0
 		jz	short loc_1D6C2
 
 loc_1D6BD:
@@ -20569,7 +20254,7 @@ loc_1D8D5:
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3982A
+		push	offset eye_west
 		call	sub_16733
 		add	sp, 0Ch
 
@@ -20582,7 +20267,7 @@ loc_1D90D:
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3985C
+		push	offset eye_east
 		call	sub_16733
 		add	sp, 0Ch
 
@@ -20595,7 +20280,7 @@ loc_1D92E:
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3988E
+		push	offset eye_southwest
 		call	sub_16733
 		add	sp, 0Ch
 
@@ -20608,7 +20293,7 @@ loc_1D94F:
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_398C0.x
+		push	offset eye_southeast
 		call	sub_16733
 		add	sp, 0Ch
 
@@ -20621,7 +20306,7 @@ loc_1D970:
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_398F2
+		push	offset eye_north
 		call	sub_16733
 		add	sp, 0Ch
 
@@ -20674,132 +20359,132 @@ loc_1D9E4:
 loc_1DA05:
 		test	byte ptr word_39E14, 1
 		jz	short loc_1DA42
-		mov	ax, point_3982A.x
+		mov	ax, eye_west.BE_cur_left
 		add	ax, 32
 		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1DA23
-		mov	word_3984E, 4
+		mov	eye_west.BE_bos_image, 4
 		jmp	short loc_1DA42
 ; ---------------------------------------------------------------------------
 
 loc_1DA23:
-		mov	ax, point_3982A.x
+		mov	ax, eye_west.BE_cur_left
 		add	ax, 32
 		mov	dx, _player_left
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1DA3C
-		mov	word_3984E, 5
+		mov	eye_west.BE_bos_image, 5
 		jmp	short loc_1DA42
 ; ---------------------------------------------------------------------------
 
 loc_1DA3C:
-		mov	word_3984E, 3
+		mov	eye_west.BE_bos_image, 3
 
 loc_1DA42:
 		test	byte ptr word_39E14, 2
 		jz	short loc_1DA7F
-		mov	ax, point_3985C.x
+		mov	ax, eye_east.BE_cur_left
 		add	ax, 32
 		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1DA60
-		mov	word_39880, 4
+		mov	eye_east.BE_bos_image, 4
 		jmp	short loc_1DA7F
 ; ---------------------------------------------------------------------------
 
 loc_1DA60:
-		mov	ax, point_3985C.x
+		mov	ax, eye_east.BE_cur_left
 		add	ax, 32
 		mov	dx, _player_left
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1DA79
-		mov	word_39880, 5
+		mov	eye_east.BE_bos_image, 5
 		jmp	short loc_1DA7F
 ; ---------------------------------------------------------------------------
 
 loc_1DA79:
-		mov	word_39880, 3
+		mov	eye_east.BE_bos_image, 3
 
 loc_1DA7F:
 		test	byte ptr word_39E14, 4
 		jz	short loc_1DABC
-		mov	ax, point_3988E.x
+		mov	ax, eye_southwest.BE_cur_left
 		add	ax, 32
 		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1DA9D
-		mov	word_398B2, 4
+		mov	eye_southwest.BE_bos_image, 4
 		jmp	short loc_1DABC
 ; ---------------------------------------------------------------------------
 
 loc_1DA9D:
-		mov	ax, point_3988E.x
+		mov	ax, eye_southwest.BE_cur_left
 		add	ax, 32
 		mov	dx, _player_left
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1DAB6
-		mov	word_398B2, 5
+		mov	eye_southwest.BE_bos_image, 5
 		jmp	short loc_1DABC
 ; ---------------------------------------------------------------------------
 
 loc_1DAB6:
-		mov	word_398B2, 3
+		mov	eye_southwest.BE_bos_image, 3
 
 loc_1DABC:
 		test	byte ptr word_39E14, 8
 		jz	short loc_1DAF9
-		mov	ax, point_398C0.x
+		mov	ax, eye_southeast.BE_cur_left
 		add	ax, 32
 		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1DADA
-		mov	word_398E4, 4
+		mov	eye_southeast.BE_bos_image, 4
 		jmp	short loc_1DAF9
 ; ---------------------------------------------------------------------------
 
 loc_1DADA:
-		mov	ax, point_398C0.x
+		mov	ax, eye_southeast.BE_cur_left
 		add	ax, 32
 		mov	dx, _player_left
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1DAF3
-		mov	word_398E4, 5
+		mov	eye_southeast.BE_bos_image, 5
 		jmp	short loc_1DAF9
 ; ---------------------------------------------------------------------------
 
 loc_1DAF3:
-		mov	word_398E4, 3
+		mov	eye_southeast.BE_bos_image, 3
 
 loc_1DAF9:
 		test	byte ptr word_39E14, 10h
 		jz	short loc_1DB36
-		mov	ax, point_398F2.x
+		mov	ax, eye_north.BE_cur_left
 		add	ax, 32
 		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1DB17
-		mov	word_39916, 4
+		mov	eye_north.BE_bos_image, 4
 		jmp	short loc_1DB36
 ; ---------------------------------------------------------------------------
 
 loc_1DB17:
-		mov	ax, point_398F2.x
+		mov	ax, eye_north.BE_cur_left
 		add	ax, 32
 		mov	dx, _player_left
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1DB30
-		mov	word_39916, 5
+		mov	eye_north.BE_bos_image, 5
 		jmp	short loc_1DB36
 ; ---------------------------------------------------------------------------
 
 loc_1DB30:
-		mov	word_39916, 3
+		mov	eye_north.BE_bos_image, 3
 
 loc_1DB36:
 		cmp	word_39E08, 0
@@ -21047,52 +20732,52 @@ loc_1DED5:
 		pushd	0 or (0 shl 16)
 		pushd	0 or (0 shl 16)
 		push	ds
-		push	offset point_3982A
+		push	offset eye_west
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
 		jnz	short loc_1DEF3
-		cmp	word_3984E, 0
+		cmp	eye_west.BE_bos_image, 0
 		jnz	short loc_1DF53
 
 loc_1DEF3:
 		push	ds
-		push	offset point_3985C
+		push	offset eye_east
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
 		jnz	short loc_1DF0B
-		cmp	word_39880, 0
+		cmp	eye_east.BE_bos_image, 0
 		jnz	short loc_1DF53
 
 loc_1DF0B:
 		push	ds
-		push	offset point_3988E
+		push	offset eye_southwest
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
 		jnz	short loc_1DF23
-		cmp	word_398B2, 0
+		cmp	eye_southwest.BE_bos_image, 0
 		jnz	short loc_1DF53
 
 loc_1DF23:
 		push	ds
-		push	offset point_398C0.x
+		push	offset eye_southeast
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
 		jnz	short loc_1DF3B
-		cmp	word_398E4, 0
+		cmp	eye_southeast.BE_bos_image, 0
 		jnz	short loc_1DF53
 
 loc_1DF3B:
 		push	ds
-		push	offset point_398F2
+		push	offset eye_north
 		call	sub_16970
 		add	sp, 4
 		cmp	ax, 1
 		jnz	short loc_1DF58
-		cmp	word_39916, 0
+		cmp	eye_north.BE_bos_image, 0
 		jz	short loc_1DF58
 
 loc_1DF53:
@@ -21207,7 +20892,7 @@ loc_1E022:
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3982A
+		push	offset eye_west
 		call	sub_16733
 		add	sp, 0Ch
 
@@ -21227,7 +20912,7 @@ loc_1E04F:
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3985C
+		push	offset eye_east
 		call	sub_16733
 		add	sp, 0Ch
 
@@ -21247,7 +20932,7 @@ loc_1E07C:
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3988E
+		push	offset eye_southwest
 		call	sub_16733
 		add	sp, 0Ch
 
@@ -21267,7 +20952,7 @@ loc_1E0A9:
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_398C0.x
+		push	offset eye_southeast
 		call	sub_16733
 		add	sp, 0Ch
 
@@ -21287,7 +20972,7 @@ loc_1E0D6:
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_398F2
+		push	offset eye_north
 		call	sub_16733
 		add	sp, 0Ch
 
@@ -21324,77 +21009,77 @@ loc_1E12D:
 		jnz	loc_1E1F1
 		test	[bp+arg_0], 1
 		jz	short loc_1E144
-		mov	word_3984E, 2
+		mov	eye_west.BE_bos_image, 2
 
 loc_1E144:
 		test	[bp+arg_0], 2
 		jz	short loc_1E150
-		mov	word_39880, 2
+		mov	eye_east.BE_bos_image, 2
 
 loc_1E150:
 		test	[bp+arg_0], 4
 		jz	short loc_1E15C
-		mov	word_398B2, 2
+		mov	eye_southwest.BE_bos_image, 2
 
 loc_1E15C:
 		test	[bp+arg_0], 8
 		jz	short loc_1E168
-		mov	word_398E4, 2
+		mov	eye_southeast.BE_bos_image, 2
 
 loc_1E168:
 		test	[bp+arg_0], 10h
 		jz	short loc_1E174
-		mov	word_39916, 2
+		mov	eye_north.BE_bos_image, 2
 
 loc_1E174:
 		test	[bp+arg_2], 1
 		jz	short loc_1E180
-		mov	word_3984E, 1
+		mov	eye_west.BE_bos_image, 1
 
 loc_1E180:
 		test	[bp+arg_2], 2
 		jz	short loc_1E18C
-		mov	word_39880, 1
+		mov	eye_east.BE_bos_image, 1
 
 loc_1E18C:
 		test	[bp+arg_2], 4
 		jz	short loc_1E198
-		mov	word_398B2, 1
+		mov	eye_southwest.BE_bos_image, 1
 
 loc_1E198:
 		test	[bp+arg_2], 8
 		jz	short loc_1E1A4
-		mov	word_398E4, 1
+		mov	eye_southeast.BE_bos_image, 1
 
 loc_1E1A4:
 		test	[bp+arg_2], 10h
 		jz	short loc_1E1B0
-		mov	word_39916, 1
+		mov	eye_north.BE_bos_image, 1
 
 loc_1E1B0:
 		test	[bp+arg_2], 1
 		jz	short loc_1E1BC
-		mov	word_39852, 0
+		mov	eye_west.BE_hitbox_orb_inactive, 0
 
 loc_1E1BC:
 		test	[bp+arg_2], 2
 		jz	short loc_1E1C8
-		mov	word_39884, 0
+		mov	eye_east.BE_hitbox_orb_inactive, 0
 
 loc_1E1C8:
 		test	[bp+arg_2], 4
 		jz	short loc_1E1D4
-		mov	word_398B6, 0
+		mov	eye_southwest.BE_hitbox_orb_inactive, 0
 
 loc_1E1D4:
 		test	[bp+arg_2], 8
 		jz	short loc_1E1E0
-		mov	word_398E8, 0
+		mov	eye_southeast.BE_hitbox_orb_inactive, 0
 
 loc_1E1E0:
 		test	[bp+arg_2], 10h
 		jz	loc_1E336
-		mov	word_3991A, 0
+		mov	eye_north.BE_hitbox_orb_inactive, 0
 		jmp	loc_1E336
 ; ---------------------------------------------------------------------------
 
@@ -21404,77 +21089,77 @@ loc_1E1F1:
 		jnz	loc_1E2B5
 		test	[bp+arg_0], 1
 		jz	short loc_1E208
-		mov	word_3984E, 1
+		mov	eye_west.BE_bos_image, 1
 
 loc_1E208:
 		test	[bp+arg_0], 2
 		jz	short loc_1E214
-		mov	word_39880, 1
+		mov	eye_east.BE_bos_image, 1
 
 loc_1E214:
 		test	[bp+arg_0], 4
 		jz	short loc_1E220
-		mov	word_398B2, 1
+		mov	eye_southwest.BE_bos_image, 1
 
 loc_1E220:
 		test	[bp+arg_0], 8
 		jz	short loc_1E22C
-		mov	word_398E4, 1
+		mov	eye_southeast.BE_bos_image, 1
 
 loc_1E22C:
 		test	[bp+arg_0], 10h
 		jz	short loc_1E238
-		mov	word_39916, 1
+		mov	eye_north.BE_bos_image, 1
 
 loc_1E238:
 		test	[bp+arg_2], 1
 		jz	short loc_1E244
-		mov	word_3984E, 2
+		mov	eye_west.BE_bos_image, 2
 
 loc_1E244:
 		test	[bp+arg_2], 2
 		jz	short loc_1E250
-		mov	word_39880, 2
+		mov	eye_east.BE_bos_image, 2
 
 loc_1E250:
 		test	[bp+arg_2], 4
 		jz	short loc_1E25C
-		mov	word_398B2, 2
+		mov	eye_southwest.BE_bos_image, 2
 
 loc_1E25C:
 		test	[bp+arg_2], 8
 		jz	short loc_1E268
-		mov	word_398E4, 2
+		mov	eye_southeast.BE_bos_image, 2
 
 loc_1E268:
 		test	[bp+arg_2], 10h
 		jz	short loc_1E274
-		mov	word_39916, 2
+		mov	eye_north.BE_bos_image, 2
 
 loc_1E274:
 		test	[bp+arg_0], 1
 		jz	short loc_1E280
-		mov	word_39852, 1
+		mov	eye_west.BE_hitbox_orb_inactive, 1
 
 loc_1E280:
 		test	[bp+arg_0], 2
 		jz	short loc_1E28C
-		mov	word_39884, 1
+		mov	eye_east.BE_hitbox_orb_inactive, 1
 
 loc_1E28C:
 		test	[bp+arg_0], 4
 		jz	short loc_1E298
-		mov	word_398B6, 1
+		mov	eye_southwest.BE_hitbox_orb_inactive, 1
 
 loc_1E298:
 		test	[bp+arg_0], 8
 		jz	short loc_1E2A4
-		mov	word_398E8, 1
+		mov	eye_southeast.BE_hitbox_orb_inactive, 1
 
 loc_1E2A4:
 		test	[bp+arg_0], 10h
 		jz	loc_1E336
-		mov	word_3991A, 1
+		mov	eye_north.BE_hitbox_orb_inactive, 1
 		jmp	loc_1E336
 ; ---------------------------------------------------------------------------
 
@@ -21484,54 +21169,54 @@ loc_1E2B5:
 		jnz	short loc_1E336
 		test	[bp+arg_0], 1
 		jz	short loc_1E2CA
-		mov	word_3984E, 0
+		mov	eye_west.BE_bos_image, 0
 
 loc_1E2CA:
 		test	[bp+arg_0], 2
 		jz	short loc_1E2D6
-		mov	word_39880, 0
+		mov	eye_east.BE_bos_image, 0
 
 loc_1E2D6:
 		test	[bp+arg_0], 4
 		jz	short loc_1E2E2
-		mov	word_398B2, 0
+		mov	eye_southwest.BE_bos_image, 0
 
 loc_1E2E2:
 		test	[bp+arg_0], 8
 		jz	short loc_1E2EE
-		mov	word_398E4, 0
+		mov	eye_southeast.BE_bos_image, 0
 
 loc_1E2EE:
 		test	[bp+arg_0], 10h
 		jz	short loc_1E2FA
-		mov	word_39916, 0
+		mov	eye_north.BE_bos_image, 0
 
 loc_1E2FA:
 		test	[bp+arg_2], 1
 		jz	short loc_1E306
-		mov	word_3984E, 6
+		mov	eye_west.BE_bos_image, 6
 
 loc_1E306:
 		test	[bp+arg_2], 2
 		jz	short loc_1E312
-		mov	word_39880, 6
+		mov	eye_east.BE_bos_image, 6
 
 loc_1E312:
 		test	[bp+arg_2], 4
 		jz	short loc_1E31E
-		mov	word_398B2, 6
+		mov	eye_southwest.BE_bos_image, 6
 
 loc_1E31E:
 		test	[bp+arg_2], 8
 		jz	short loc_1E32A
-		mov	word_398E4, 6
+		mov	eye_southeast.BE_bos_image, 6
 
 loc_1E32A:
 		test	[bp+arg_2], 10h
 		jz	short loc_1E336
 
 loc_1E330:
-		mov	word_39916, 6
+		mov	eye_north.BE_bos_image, 6
 
 loc_1E336:
 		pop	di
@@ -21540,6 +21225,16 @@ loc_1E336:
 		retf
 sub_1DFFF	endp
 
+eye_west	equ <>
+eye_east	equ <>
+eye_southwest	equ <>
+eye_southeast	equ <>
+eye_center	equ <>
+eye_0	equ <>
+eye_1	equ <>
+eye_2	equ <>
+eye_3	equ <>
+eye_4	equ <>
 main_28_TEXT	ends
 
 ; ===========================================================================
@@ -21550,31 +21245,34 @@ main_29_TEXT	segment	byte public 'CODE' use16
 		;org 0Ah
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
+mima_still	equ <boss_entity_0>
+mima_animated	equ <boss_entity_1>
+
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_1E33A	proc far
+public _mima_load
+_mima_load	proc far
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
-		mov	word_39854, 1
+		mov	mima_still.BE_loading, 1
 		push	0
 		push	ds
 		push	offset aBoss3_1_bos ; "boss3_1.bos"
 		push	ds
-		push	offset point_3982A
+		push	offset mima_still
 		call	sub_1568F
-		mov	word_39854, 0
-		mov	word_39886, 1
+		mov	mima_still.BE_loading, 0
+		mov	mima_animated.BE_loading, 1
 		push	1
 		push	ds
 		push	offset aBoss3_2_bos ; "boss3_2.bos"
 		push	ds
-		push	offset point_3985C
+		push	offset mima_animated
 		call	sub_1568F
-		mov	word_39886, 0
+		mov	mima_animated.BE_loading, 0
 		call	_grp_palette_load_show stdcall, offset aBoss3_grp_0, ds ; "boss3.grp"
 		add	sp, 18h
 		xor	si, si
@@ -21615,7 +21313,7 @@ loc_1E3A2:
 		pop	si
 		pop	bp
 		retf
-sub_1E33A	endp
+_mima_load	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -21625,8 +21323,8 @@ sub_1E33A	endp
 sub_1E3D7	proc far
 
 var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@left		= word ptr -4
+@@top		= word ptr -2
 
 		enter	6, 0
 		cmp	byte_35B7A, 0
@@ -21637,14 +21335,14 @@ var_2		= word ptr -2
 		idiv	bx
 		or	dx, dx
 		jnz	short locret_1E42F
-		mov	ax, point_3982A.y
+		mov	ax, mima_still.BE_cur_top
 		add	ax, 48
-		mov	[bp+var_2], ax
-		mov	ax, point_3982A.x
-		mov	[bp+var_4], ax
-		mov	point_3985C.x, ax
-		mov	ax, [bp+var_2]
-		mov	point_3985C.y, ax
+		mov	[bp+@@top], ax
+		mov	ax, mima_still.BE_cur_left
+		mov	[bp+@@left], ax
+		mov	mima_animated.BE_cur_left, ax
+		mov	ax, [bp+@@top]
+		mov	mima_animated.BE_cur_top, ax
 		mov	ax, word_3A6CA
 		cwd
 		idiv	bx
@@ -21654,11 +21352,11 @@ var_2		= word ptr -2
 		inc	dx
 		mov	[bp+var_6], dx
 		mov	ax, [bp+var_6]
-		mov	word_39880, ax
+		mov	mima_animated.BE_bos_image, ax
 		push	ax
-		pushd	[point_3985C]
+		pushd	[dword ptr mima_animated.BE_cur_left]
 		push	ds
-		push	offset point_3985C
+		push	offset mima_animated
 		call	sub_15F4A
 		add	sp, 0Ah
 
@@ -21674,33 +21372,33 @@ sub_1E3D7	endp
 
 sub_1E431	proc far
 
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@left		= word ptr -4
+@@top		= word ptr -2
 
 		enter	4, 0
 		mov	byte_35B7A, 0
-		mov	ax, point_3982A.y
+		mov	ax, mima_still.BE_cur_top
 		add	ax, 48
-		mov	[bp+var_2], ax
-		mov	ax, point_3982A.x
-		mov	[bp+var_4], ax
-		mov	point_3985C.x, ax
-		mov	ax, [bp+var_2]
-		mov	point_3985C.y, ax
-		mov	word_39880, 0
+		mov	[bp+@@top], ax
+		mov	ax, mima_still.BE_cur_left
+		mov	[bp+@@left], ax
+		mov	mima_animated.BE_cur_left, ax
+		mov	ax, [bp+@@top]
+		mov	mima_animated.BE_cur_top, ax
+		mov	mima_animated.BE_bos_image, 0
 		push	1
 		call	_graph_accesspage_func
 		push	0
-		pushd	[point_3985C]
+		pushd	[dword ptr mima_animated.BE_cur_left]
 		push	ds
-		push	offset point_3985C
+		push	offset mima_animated
 		call	sub_1588A
 		push	0
 		call	_graph_accesspage_func
 		push	0
-		pushd	[point_3985C]
+		pushd	[dword ptr mima_animated.BE_cur_left]
 		push	ds
-		push	offset point_3985C
+		push	offset mima_animated
 		call	sub_1588A
 		add	sp, 18h
 		leave
@@ -21714,35 +21412,35 @@ sub_1E431	endp
 
 sub_1E48B	proc far
 
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@left		= word ptr -4
+@@top		= word ptr -2
 
 		enter	4, 0
 		cmp	byte_35B7A, 0
 		jnz	short locret_1E4EA
 		mov	byte_35B7A, 1
-		mov	ax, point_3982A.y
+		mov	ax, mima_still.BE_cur_top
 		add	ax, 48
-		mov	[bp+var_2], ax
-		mov	ax, point_3982A.x
-		mov	[bp+var_4], ax
-		mov	point_3985C.x, ax
-		mov	ax, [bp+var_2]
-		mov	point_3985C.y, ax
-		mov	word_39880, 1
+		mov	[bp+@@top], ax
+		mov	ax, mima_still.BE_cur_left
+		mov	[bp+@@left], ax
+		mov	mima_animated.BE_cur_left, ax
+		mov	ax, [bp+@@top]
+		mov	mima_animated.BE_cur_top, ax
+		mov	mima_animated.BE_bos_image, 1
 		push	1
 		call	_graph_accesspage_func
 		push	1
-		pushd	[point_3985C]
+		pushd	[dword ptr mima_animated.BE_cur_left]
 		push	ds
-		push	offset point_3985C
+		push	offset mima_animated
 		call	sub_1588A
 		push	0
 		call	_graph_accesspage_func
 		push	1
-		pushd	[point_3985C]
+		pushd	[dword ptr mima_animated.BE_cur_left]
 		push	ds
-		push	offset point_3985C
+		push	offset mima_animated
 		call	sub_1588A
 		add	sp, 18h
 
@@ -21761,17 +21459,17 @@ sub_1E4EC	proc far
 		mov	bp, sp
 		push	1
 		call	_graph_accesspage_func
-		push	word_3984E
-		pushd	[point_3982A]
+		push	mima_still.BE_bos_image
+		pushd	[dword ptr mima_still.BE_cur_left]
 		push	ds
-		push	offset point_3982A
+		push	offset mima_still
 		call	sub_1588A
 		push	0
 		call	_graph_accesspage_func
-		push	word_3984E
-		pushd	[point_3982A]
+		push	mima_still.BE_bos_image
+		pushd	[dword ptr mima_still.BE_cur_left]
 		push	ds
-		push	offset point_3982A
+		push	offset mima_still
 		call	sub_1588A
 		add	sp, 18h
 		pop	bp
@@ -21786,16 +21484,16 @@ sub_1E4EC	endp
 sub_1E526	proc far
 
 @@image		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@top		= word ptr -4
+@@left		= word ptr -2
 
 		enter	6, 0
 		push	si
 		push	di
-		mov	ax, point_3982A.x
-		mov	[bp+var_2], ax
-		mov	ax, point_3982A.y
-		mov	[bp+var_4], ax
+		mov	ax, mima_still.BE_cur_left
+		mov	[bp+@@left], ax
+		mov	ax, mima_still.BE_cur_top
+		mov	[bp+@@top], ax
 		mov	[bp+@@image], 3
 		push	1
 		call	_graph_accesspage_func
@@ -21815,11 +21513,11 @@ loc_1E54D:
 		push	ax
 		mov	ax, di
 		shl	ax, 5
-		add	ax, [bp+var_4]
+		add	ax, [bp+@@top]
 		push	ax
 		mov	ax, si
 		shl	ax, 5
-		add	ax, [bp+var_2]
+		add	ax, [bp+@@left]
 		push	ax
 		call	_ptn_snap_8
 		add	sp, 6
@@ -21851,18 +21549,18 @@ sub_1E526	endp
 sub_1E589	proc far
 
 var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@top		= word ptr -4
+@@left		= word ptr -2
 arg_0		= word ptr  6
 
 		enter	6, 0
 		push	si
 		push	di
 		mov	di, 3
-		mov	ax, point_3982A.x
-		mov	[bp+var_2], ax
-		mov	ax, point_3982A.y
-		mov	[bp+var_4], ax
+		mov	ax, mima_still.BE_cur_left
+		mov	[bp+@@left], ax
+		mov	ax, mima_still.BE_cur_top
+		mov	[bp+@@top], ax
 		cmp	[bp+arg_0], 0
 		jnz	short loc_1E5E1
 		mov	[bp+var_6], 0
@@ -21879,11 +21577,11 @@ loc_1E5AF:
 		push	ax
 		mov	ax, [bp+var_6]
 		shl	ax, 5
-		add	ax, [bp+var_4]
+		add	ax, [bp+@@top]
 		push	ax
 		mov	ax, si
 		shl	ax, 5
-		add	ax, [bp+var_2]
+		add	ax, [bp+@@left]
 		push	ax
 		call	_ptn_put_noalpha_8
 		add	sp, 6
@@ -21911,23 +21609,23 @@ loc_1E5E8:
 		push	2
 		lea	ax, [PTN_SLOT_2+di]
 		push	ax
-		mov	ax, [bp+var_4]
+		mov	ax, [bp+@@top]
 		add	ax, 48
 		push	ax
 		mov	ax, si
 		shl	ax, 5
-		add	ax, [bp+var_2]
+		add	ax, [bp+@@left]
 		push	ax
 		call	_ptn_put_quarter_noalpha_8
 		push	3
 		lea	ax, [di+PTN_SLOT_2]
 		push	ax
-		mov	ax, [bp+var_4]
+		mov	ax, [bp+@@top]
 		add	ax, 48
 		push	ax
 		mov	ax, si
 		shl	ax, 5
-		add	ax, [bp+var_2]
+		add	ax, [bp+@@left]
 		add	ax, 10h
 		push	ax
 		call	_ptn_put_quarter_noalpha_8
@@ -21945,12 +21643,12 @@ loc_1E628:
 loc_1E631:
 		lea	ax, [PTN_SLOT_2+di]
 		push	ax
-		mov	ax, [bp+var_4]
+		mov	ax, [bp+@@top]
 		add	ax, 64
 		push	ax
 		mov	ax, si
 		shl	ax, 5
-		add	ax, [bp+var_2]
+		add	ax, [bp+@@left]
 		push	ax
 		call	_ptn_put_noalpha_8
 		add	sp, 6
@@ -21992,9 +21690,9 @@ arg_2		= word ptr  8
 		mov	[bp+var_4], di
 		mov	ax, [bp+arg_0]
 		mov	[bp+var_6], ax
-		mov	point_3982A.x, ax
+		mov	mima_still.BE_cur_left, ax
 		mov	ax, [bp+var_4]
-		mov	point_3982A.y, ax
+		mov	mima_still.BE_cur_top, ax
 		call	sub_1E526
 		lea	ax, [di+50h]
 		mov	[bp+var_2], ax
@@ -22039,26 +21737,26 @@ loc_1E6D7:
 
 loc_1E6DB:
 		push	si
-		push	word_3984E
+		push	mima_still.BE_bos_image
 		mov	ax, di
 		add	ax, [bp+var_2]
 		add	ax, si
 		push	ax
 		push	[bp+arg_0]
 		push	ds
-		push	offset point_3982A
+		push	offset mima_still
 		call	sub_15CDD
 		mov	ax, 9Fh
 		sub	ax, si
 		push	ax
-		push	word_3984E
+		push	mima_still.BE_bos_image
 		lea	ax, [di+0A0h]
 		sub	ax, [bp+var_2]
 		sub	ax, si
 		push	ax
 		push	[bp+arg_0]
 		push	ds
-		push	offset point_3982A
+		push	offset mima_still
 		call	sub_15CDD
 		add	sp, 18h
 		inc	si
@@ -22114,19 +21812,19 @@ sub_1E739	proc far
 
 loc_1E768:
 		push	8
-		push	w_39832
-		mov	ax, point_3982A.y
+		push	mima_still.BE_vram_w
+		mov	ax, mima_still.BE_cur_top
 		add	ax, si
 		push	ax
-		push	point_3982A.x
+		push	mima_still.BE_cur_left
 		call	_egc_copy_rect_1_to_0_16
 		push	8
-		push	w_39832
-		mov	ax, point_3982A.y
+		push	mima_still.BE_vram_w
+		mov	ax, mima_still.BE_cur_top
 		add	ax, 152
 		sub	ax, si
 		push	ax
-		push	point_3982A.x
+		push	mima_still.BE_cur_left
 		call	_egc_copy_rect_1_to_0_16
 		add	sp, 10h
 
@@ -22145,21 +21843,18 @@ sub_1E79B	proc far
 		push	bp
 		mov	bp, sp
 		call	sub_232A4
-		mov	word_3984E, 0
-		mov	word_39880, 1
+		mov	mima_still.BE_bos_image, 0
+		mov	mima_animated.BE_bos_image, 1
 		call	_z_palette_white_in
 		push	1300040h
 		push	2E00000h
 		push	300040h
 		push	100h
 		push	ds
-		push	offset point_3982A
+		push	offset mima_still
 		call	sub_166D2
-		mov	word_3983E, 20h	; ' '
-		mov	word_39840, 60h
-		mov	word_39842, 20h	; ' '
-		mov	word_39844, 80h	; '?'
-		mov	word_39852, 0
+		CBossEntity__hitbox_set	mima_still, 32, 32, 96, 128
+		mov	mima_still.BE_hitbox_orb_inactive, 0
 		mov	word_3A6CA, 0
 		mov	byte_3A6CE, 0
 		mov	word_3A6C8, 0Ch
@@ -22359,10 +22054,10 @@ loc_1E947:
 		idiv	bx
 		or	dx, dx
 		jnz	loc_1EAD2
-		mov	ax, point_3982A.x
+		mov	ax, mima_still.BE_cur_left
 		add	ax, 64
 		mov	di, ax
-		mov	ax, point_3982A.y
+		mov	ax, mima_still.BE_cur_top
 		add	ax, 80
 		mov	[bp+var_12], ax
 		push	ss
@@ -22535,10 +22230,10 @@ loc_1EA9F:
 loc_1EAD2:
 		cmp	word_3A6CA, 168h
 		jle	short loc_1EB20
-		mov	ax, point_3982A.x
+		mov	ax, mima_still.BE_cur_left
 		add	ax, 64
 		mov	di, ax
-		mov	ax, point_3982A.y
+		mov	ax, mima_still.BE_cur_top
 		add	ax, 80
 		mov	[bp+var_12], ax
 		push	ss
@@ -22613,10 +22308,10 @@ loc_1EB64:
 		idiv	bx
 		or	dx, dx
 		jnz	loc_1ECA1
-		mov	ax, point_3982A.x
+		mov	ax, mima_still.BE_cur_left
 		add	ax, 64
 		mov	si, ax
-		mov	ax, point_3982A.y
+		mov	ax, mima_still.BE_cur_top
 		add	ax, 80
 		mov	di, ax
 		push	ss
@@ -22744,10 +22439,10 @@ loc_1EC70:
 loc_1ECA1:
 		cmp	word_3A6CA, 140h
 		jle	short loc_1ECEC
-		mov	ax, point_3982A.x
+		mov	ax, mima_still.BE_cur_left
 		add	ax, 64
 		mov	si, ax
-		mov	ax, point_3982A.y
+		mov	ax, mima_still.BE_cur_top
 		add	ax, 80
 		mov	di, ax
 		push	ss
@@ -22824,10 +22519,10 @@ loc_1ED3A:
 		idiv	bx
 		or	dx, dx
 		jnz	loc_1EF00
-		mov	ax, point_3982A.x
+		mov	ax, mima_still.BE_cur_left
 		add	ax, 64
 		mov	di, ax
-		mov	ax, point_3982A.y
+		mov	ax, mima_still.BE_cur_top
 		add	ax, 80
 		mov	[bp+var_22], ax
 		push	ss
@@ -23013,10 +22708,10 @@ loc_1EE95:
 loc_1EF00:
 		cmp	word_3A6CA, 140h
 		jle	short loc_1EF81
-		mov	ax, point_3982A.x
+		mov	ax, mima_still.BE_cur_left
 		add	ax, 64
 		mov	di, ax
-		mov	ax, point_3982A.y
+		mov	ax, mima_still.BE_cur_top
 		add	ax, 80
 		mov	[bp+var_22], ax
 		push	ss
@@ -23118,7 +22813,7 @@ loc_1EFB1:
 loc_1EFE5:
 		cmp	byte_39E25, 0
 		jnz	short loc_1EFF8
-		mov	word_39852, 1
+		mov	mima_still.BE_hitbox_orb_inactive, 1
 		call	sub_1E739
 		jmp	short loc_1F051
 ; ---------------------------------------------------------------------------
@@ -23146,22 +22841,22 @@ loc_1F011:
 
 loc_1F020:
 		mov	[bp+var_6], ax
-		mov	point_3982A.x, ax
-		mov	point_3982A.y, 96
+		mov	mima_still.BE_cur_left, ax
+		mov	mima_still.BE_cur_top, 96
 		call	sub_1E526
 
 loc_1F030:
 		cmp	word_3A6CA, 0Ch
 		jge	short loc_1F03F
-		mov	word_39852, 1
+		mov	mima_still.BE_hitbox_orb_inactive, 1
 		jmp	short loc_1F045
 ; ---------------------------------------------------------------------------
 
 loc_1F03F:
-		mov	word_39852, 0
+		mov	mima_still.BE_hitbox_orb_inactive, 0
 
 loc_1F045:
-		pushd	[point_3982A]
+		pushd	[dword ptr mima_still.BE_cur_left]
 		call	sub_1E659
 		add	sp, 4
 
@@ -23206,10 +22901,10 @@ loc_1F0BB:
 		push	PM_CHASE
 		push	speed_39E18
 		push	word ptr [bp+@@angle]
-		mov	ax, point_3982A.y
+		mov	ax, mima_still.BE_cur_top
 		add	ax, 80
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, mima_still.BE_cur_left
 		add	ax, 64
 		push	ax
 		push	ds
@@ -23233,16 +22928,16 @@ loc_1F0F8:
 		push	1
 		call	_graph_accesspage_func
 		push	0
-		pushd	[point_3982A]
+		pushd	[dword ptr mima_still.BE_cur_left]
 		push	ds
-		push	offset point_3982A
+		push	offset mima_still
 		call	sub_1588A
 		push	0
 		call	_graph_accesspage_func
 		push	0
-		pushd	[point_3982A]
+		pushd	[dword ptr mima_still.BE_cur_left]
 		push	ds
-		push	offset point_3982A
+		push	offset mima_still
 		call	sub_1588A
 		call	_z_palette_set_all_show stdcall, offset palette_39B8C, ds
 		add	sp, 1Ch
@@ -23661,10 +23356,10 @@ loc_1F4F8:
 		cmp	word ptr [bx+5487h], 0FC19h
 		jz	short loc_1F548
 		push	PP_3_SPREAD_WIDE_AIMED or (((2 shl 4) + 4) shl 16)
-		mov	ax, point_3982A.y
+		mov	ax, mima_still.BE_cur_top
 		add	ax, 80
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, mima_still.BE_cur_left
 		add	ax, 64
 		push	ax
 		push	ds
@@ -23756,10 +23451,10 @@ loc_1F5DE:
 		idiv	bx
 		or	dx, dx
 		jnz	loc_1F717
-		mov	ax, point_3982A.x
+		mov	ax, mima_still.BE_cur_left
 		add	ax, 64
 		mov	di, ax
-		mov	ax, point_3982A.y
+		mov	ax, mima_still.BE_cur_top
 		add	ax, 80
 		mov	[bp+var_12], ax
 		push	ss
@@ -23885,10 +23580,10 @@ loc_1F6E4:
 loc_1F717:
 		cmp	word_3A6CA, 154h
 		jle	short loc_1F765
-		mov	ax, point_3982A.x
+		mov	ax, mima_still.BE_cur_left
 		add	ax, 64
 		mov	di, ax
-		mov	ax, point_3982A.y
+		mov	ax, mima_still.BE_cur_top
 		add	ax, 80
 		mov	[bp+var_12], ax
 		push	ss
@@ -23958,10 +23653,10 @@ loc_1F7AD:
 		idiv	bx
 		or	dx, dx
 		jnz	loc_1F8B7
-		mov	ax, point_3982A.x
+		mov	ax, mima_still.BE_cur_left
 		add	ax, 64
 		mov	di, ax
-		mov	ax, point_3982A.y
+		mov	ax, mima_still.BE_cur_top
 		add	ax, 80
 		mov	[bp+var_12], ax
 		push	ss
@@ -24078,10 +23773,10 @@ loc_1F884:
 loc_1F8B7:
 		cmp	word_3A6CA, 172h
 		jle	short loc_1F905
-		mov	ax, point_3982A.x
+		mov	ax, mima_still.BE_cur_left
 		add	ax, 64
 		mov	di, ax
-		mov	ax, point_3982A.y
+		mov	ax, mima_still.BE_cur_top
 		add	ax, 80
 		mov	[bp+var_12], ax
 		push	ss
@@ -24153,10 +23848,10 @@ loc_1F953:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1F9DA
-		mov	ax, point_3982A.x
+		mov	ax, mima_still.BE_cur_left
 		add	ax, 64
 		mov	si, ax
-		mov	ax, point_3982A.y
+		mov	ax, mima_still.BE_cur_top
 		add	ax, 80
 		mov	di, ax
 		push	ds
@@ -24236,10 +23931,10 @@ loc_1F9DA:
 loc_1FA30:
 		cmp	word_3A6CA, 12Ch
 		jle	short loc_1FA77
-		mov	ax, point_3982A.x
+		mov	ax, mima_still.BE_cur_left
 		add	ax, 64
 		mov	si, ax
-		mov	ax, point_3982A.y
+		mov	ax, mima_still.BE_cur_top
 		add	ax, 80
 		mov	di, ax
 		push	ds
@@ -24294,7 +23989,7 @@ var_2		= word ptr -2
 		call	_graph_accesspage_func
 		pop	cx
 		mov	word_3A6CA, 0
-		mov	word_39852, 0
+		mov	mima_still.BE_hitbox_orb_inactive, 0
 		xor	di, di
 		mov	byte_35B7B, 1
 		mov	byte_35B7C, 2
@@ -24401,14 +24096,14 @@ loc_1FB9C:
 
 loc_1FBAC:
 		push	(48 shl 16) or 96
-		mov	ax, point_3982A.y
-		add	ax, 48	; '0'
+		mov	ax, mima_still.BE_cur_top
+		add	ax, 48
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, mima_still.BE_cur_left
 		add	ax, 16
 		push	ax
 		push	ds
-		push	offset point_3982A
+		push	offset mima_still
 		call	sub_16970
 		add	sp, 4
 		push	ax
@@ -24442,8 +24137,8 @@ loc_1FBAC:
 		add	sp, 8
 		mov	byte_35B7B, 4
 		mov	byte_35B7C, 8
-		mov	point_3982A.x, 256
-		mov	point_3982A.y, 120
+		mov	mima_still.BE_cur_left, 256
+		mov	mima_still.BE_cur_top, 120
 		call	sub_1E526
 		mov	byte_3A6CE, 2
 		mov	word_3A6CA, 0
@@ -24522,14 +24217,14 @@ loc_1FCF4:
 
 loc_1FCF7:
 		push	(48 shl 16) or 96
-		mov	ax, point_3982A.y
+		mov	ax, mima_still.BE_cur_top
 		add	ax, 48
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, mima_still.BE_cur_left
 		add	ax, 16
 		push	ax
 		push	ds
-		push	offset point_3982A
+		push	offset mima_still
 		call	sub_16970
 		add	sp, 4
 		push	ax
@@ -24610,6 +24305,8 @@ loc_1FDCF:
 		retf
 sub_1FA7B	endp
 
+mima_still	equ <>
+mima_animated	equ <>
 main_29_TEXT	ends
 
 ; ===========================================================================
@@ -29415,39 +29112,43 @@ main_33_TEXT	segment	byte public 'CODE' use16
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
+singyoku_sphere	equ <boss_entity_0>
+singyoku_flash 	equ <boss_entity_1>
+singyoku_person	equ <boss_entity_2>
+
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_22694	proc far
+public _singyoku_load
+_singyoku_load	proc far
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
-		mov	word_39854, 1
+		mov	singyoku_sphere.BE_loading, 1
 		push	0
 		push	ds
 		push	offset aBoss1_bos ; "boss1.bos"
 		push	ds
-		push	offset point_3982A
+		push	offset singyoku_sphere
 		call	sub_1568F
-		mov	word_39854, 0
-		mov	word_39886, 1
+		mov	singyoku_sphere.BE_loading, 0
+		mov	singyoku_flash.BE_loading, 1
 		push	1
 		push	ds
 		push	offset aBoss1_2_bos ; "boss1_2.bos"
 		push	ds
-		push	offset point_3985C
+		push	offset singyoku_flash
 		call	sub_1568F
-		mov	word_39886, 0
-		mov	word_398B8, 1
+		mov	singyoku_flash.BE_loading, 0
+		mov	singyoku_person.BE_loading, 1
 		push	2
 		push	ds
 		push	offset aBoss1_3_bos ; "boss1_3.bos"
 		push	ds
-		push	offset point_3988E
+		push	offset singyoku_person
 		call	sub_1568F
-		mov	word_398B8, 0
+		mov	singyoku_person.BE_loading, 0
 		call	_grp_palette_load_show_sane stdcall, offset aBoss1_grp_0, ds	; "boss1.grp"
 		add	sp, 22h
 		xor	si, si
@@ -29485,7 +29186,7 @@ loc_22717:
 		pop	si
 		pop	bp
 		retf
-sub_22694	endp
+_singyoku_load	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -29502,14 +29203,11 @@ sub_22731	proc far
 		push	200040h
 		push	280h
 		push	ds
-		push	offset point_3982A
+		push	offset singyoku_sphere
 		call	sub_166D2
-		mov	word_3983E, 18h
-		mov	word_39840, 48h	; 'H'
-		mov	word_39842, 18h
-		mov	word_39844, 48h	; 'H'
-		mov	word_39852, 0
-		mov	word_3984E, 0
+		CBossEntity__hitbox_set	singyoku_sphere, 24, 24, 72, 72
+		mov	singyoku_sphere.BE_hitbox_orb_inactive, 0
+		mov	singyoku_sphere.BE_bos_image, 0
 		mov	word_3A383, 8
 		mov	word_3A1E5, 6
 		mov	word_3A1E7, 2
@@ -29558,7 +29256,7 @@ arg_2		= byte ptr  8
 		idiv	[bp+arg_0]
 		or	dx, dx
 		jnz	short locret_22818
-		mov	ax, word_3984E
+		mov	ax, singyoku_sphere.BE_bos_image
 		add	al, [bp+arg_2]
 		mov	[bp+var_1], al
 		cbw
@@ -29579,13 +29277,13 @@ loc_227F8:
 		mov	al, [bp+var_1]
 		cbw
 		mov	[bp+var_4], ax
-		mov	word_3984E, ax
+		mov	singyoku_sphere.BE_bos_image, ax
 		mov	al, [bp+var_1]
 		cbw
 		push	ax
-		pushd	[point_3982A]
+		pushd	[dword ptr singyoku_sphere.BE_cur_left]
 		push	ds
-		push	offset point_3982A
+		push	offset singyoku_sphere
 		call	sub_15F4A
 		add	sp, 0Ah
 
@@ -29666,17 +29364,17 @@ arg_0		= word ptr  6
 		mov	bp, sp
 		cmp	word_3A37F, 32h	; '2'
 		jge	short loc_22895
-		mov	word_3984E, 0
+		mov	singyoku_sphere.BE_bos_image, 0
 		mov	ax, word_3A37F
 		mov	bx, 4
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	loc_2290A
-		push	word_3984E
-		pushd	[point_3982A]
+		push	singyoku_sphere.BE_bos_image
+		pushd	[dword ptr singyoku_sphere.BE_cur_left]
 		push	ds
-		push	offset point_3982A
+		push	offset singyoku_sphere
 		call	sub_15F4A
 		add	sp, 0Ah
 		pop	bp
@@ -29699,10 +29397,10 @@ loc_228A4:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_2290A
-		push	word_3984E
-		pushd	[point_3982A]
+		push	singyoku_sphere.BE_bos_image
+		pushd	[dword ptr singyoku_sphere.BE_cur_left]
 		push	ds
-		push	offset point_3982A
+		push	offset singyoku_sphere
 		call	sub_15F4A
 		add	sp, 0Ah
 		cmp	word_3A37F, 32h	; '2'
@@ -29756,7 +29454,7 @@ arg_6		= word ptr  0Ch
 		neg	ax
 		push	ax
 		push	96
-		mov	ax, point_3982A.y
+		mov	ax, singyoku_sphere.BE_cur_top
 		add	ax, si
 		add	ax, 96
 		push	ax
@@ -29768,10 +29466,10 @@ loc_2292E:
 		jle	short loc_22945
 		push	si
 		push	96
-		push	point_3982A.y
+		push	singyoku_sphere.BE_cur_top
 
 loc_22939:
-		push	point_3982A.x
+		push	singyoku_sphere.BE_cur_left
 		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 
@@ -29779,7 +29477,7 @@ loc_22945:
 		or	di, di
 		jle	short loc_22956
 		push	(96 shl 16) or 8
-		pushd	[point_3982A]
+		pushd	[dword ptr singyoku_sphere.BE_cur_left]
 		jmp	short loc_2296D
 ; ---------------------------------------------------------------------------
 
@@ -29787,8 +29485,8 @@ loc_22956:
 		or	di, di
 		jge	short loc_22975
 		push	(96 shl 16) or 8
-		push	point_3982A.y
-		mov	ax, point_3982A.x
+		push	singyoku_sphere.BE_cur_top
+		mov	ax, singyoku_sphere.BE_cur_left
 		add	ax, 96
 		sub	ax, si
 		push	ax
@@ -29798,10 +29496,10 @@ loc_2296D:
 		add	sp, 8
 
 loc_22975:
-		mov	ax, point_3982A.y
+		mov	ax, singyoku_sphere.BE_cur_top
 		add	ax, si
 		mov	[bp+var_2], ax
-		mov	ax, point_3982A.x
+		mov	ax, singyoku_sphere.BE_cur_left
 		add	ax, di
 		jge	short loc_22988
 		xor	ax, ax
@@ -29809,7 +29507,7 @@ loc_22975:
 ; ---------------------------------------------------------------------------
 
 loc_22988:
-		mov	ax, point_3982A.x
+		mov	ax, singyoku_sphere.BE_cur_left
 		add	ax, di
 
 loc_2298D:
@@ -29820,7 +29518,7 @@ loc_2298D:
 ; ---------------------------------------------------------------------------
 
 loc_22997:
-		mov	ax, point_3982A.x
+		mov	ax, singyoku_sphere.BE_cur_left
 		add	ax, di
 		jge	short loc_229A2
 		xor	ax, ax
@@ -29828,14 +29526,14 @@ loc_22997:
 ; ---------------------------------------------------------------------------
 
 loc_229A2:
-		mov	ax, point_3982A.x
+		mov	ax, singyoku_sphere.BE_cur_left
 		add	ax, di
 
 loc_229A7:
 		mov	[bp+var_4], ax
-		mov	point_3982A.x, ax
+		mov	singyoku_sphere.BE_cur_left, ax
 		mov	ax, [bp+var_2]
-		mov	point_3982A.y, ax
+		mov	singyoku_sphere.BE_cur_top, ax
 		mov	ax, word_3A37F
 		mov	bx, 2
 		cwd
@@ -29938,10 +29636,10 @@ loc_22A37:
 		pushd	PM_NORMAL or (0 shl 16)
 		push	(3 shl 4) + 2
 		push	word ptr angle_3A387
-		mov	ax, point_3982A.y
+		mov	ax, singyoku_sphere.BE_cur_top
 		add	ax, 44
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, singyoku_sphere.BE_cur_left
 		add	ax, 44
 		push	ax
 		push	ds
@@ -30000,10 +29698,10 @@ loc_22ABA:
 		push	offset point_3A389.x
 		push	368
 		push	_player_left
-		mov	ax, point_3982A.y
+		mov	ax, singyoku_sphere.BE_cur_top
 		add	ax, 32
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, singyoku_sphere.BE_cur_left
 		add	ax, 32
 		push	ax
 		call	_vector2_between
@@ -30017,7 +29715,7 @@ loc_22AFE:
 		push	point_3A389.x
 		call	sub_2290C
 		add	sp, 8
-		cmp	point_3982A.y, 304
+		cmp	singyoku_sphere.BE_cur_top, 304
 		jle	short loc_22B60
 		mov	point_3A389.x, 999
 		mov	point_3A389.y, -4
@@ -30032,7 +29730,7 @@ loc_22B31:
 		push	0
 		call	sub_2290C
 		add	sp, 8
-		cmp	point_3982A.y, 96
+		cmp	singyoku_sphere.BE_cur_top, 96
 		jge	short loc_22B60
 		mov	point_3A389.y, 0
 		jmp	short loc_22B60
@@ -30044,13 +29742,13 @@ loc_22B5A:
 loc_22B60:
 		cmp	_player_invincible, 0
 		jnz	short loc_22B86
-		mov	ax, point_3982A.x
+		mov	ax, singyoku_sphere.BE_cur_left
 		cmp	ax, _player_left
 		jg	short loc_22B86
 		add	ax, 64
 		cmp	ax, _player_left
 		jl	short loc_22B86
-		cmp	point_3982A.y, 272
+		cmp	singyoku_sphere.BE_cur_top, 272
 		jl	short loc_22B86
 		mov	_done, 1
 
@@ -30097,9 +29795,9 @@ loc_22BA1:
 		mov	ax, si
 		imul	ax, 3
 		push	ax
-		pushd	[point_3982A]
+		pushd	[dword ptr singyoku_sphere.BE_cur_left]
 		push	ds
-		push	offset point_3988E
+		push	offset singyoku_person
 		jmp	loc_22C8A
 ; ---------------------------------------------------------------------------
 
@@ -30110,14 +29808,14 @@ loc_22BD5:
 		imul	ax, 3
 		inc	ax
 		mov	[bp+var_2], ax
-		mov	word_398B2, ax
+		mov	singyoku_person.BE_bos_image, ax
 		mov	ax, si
 		imul	ax, 3
 		inc	ax
 		push	ax
-		pushd	[point_3982A]
+		pushd	[dword ptr singyoku_sphere.BE_cur_left]
 		push	ds
-		push	offset point_3988E
+		push	offset singyoku_person
 		call	sub_15F4A
 		add	sp, 0Ah
 		call	[bp+arg_2]
@@ -30131,7 +29829,7 @@ loc_22C07:
 		imul	ax, 3
 		add	ax, 2
 		mov	[bp+var_4], ax
-		mov	word_398B2, ax
+		mov	singyoku_person.BE_bos_image, ax
 		or	si, si
 		jnz	short loc_22C25
 		push	2
@@ -30142,9 +29840,9 @@ loc_22C25:
 		push	4
 
 loc_22C27:
-		pushd	[point_3982A]
+		pushd	[dword ptr singyoku_sphere.BE_cur_left]
 		push	ds
-		push	offset point_3988E
+		push	offset singyoku_person
 		call	sub_15F4A
 		add	sp, 0Ah
 		call	[bp+arg_6]
@@ -30157,13 +29855,13 @@ loc_22C3E:
 		mov	ax, si
 		imul	ax, 3
 		mov	[bp+var_6], ax
-		mov	word_398B2, ax
+		mov	singyoku_person.BE_bos_image, ax
 		mov	ax, si
 		imul	ax, 3
 		push	ax
-		pushd	[point_3982A]
+		pushd	[dword ptr singyoku_sphere.BE_cur_left]
 		push	ds
-		push	offset point_3988E
+		push	offset singyoku_person
 		call	sub_15F4A
 		add	sp, 0Ah
 		call	[bp+arg_A]
@@ -30181,9 +29879,9 @@ loc_22C7D:
 		push	ax
 
 loc_22C81:
-		pushd	[point_3982A]
+		pushd	[dword ptr singyoku_sphere.BE_cur_left]
 		push	ds
-		push	offset point_3985C
+		push	offset singyoku_flash
 
 loc_22C8A:
 		call	sub_15F4A
@@ -30204,9 +29902,9 @@ loc_22CA0:
 		cmp	word_3A37F, 104h
 		jnz	short loc_22CC1
 		push	0
-		pushd	[point_3982A]
+		pushd	[dword ptr singyoku_sphere.BE_cur_left]
 		push	ds
-		push	offset point_3982A
+		push	offset singyoku_sphere
 		call	sub_15F4A
 		add	sp, 0Ah
 		mov	word_3A37F, 0
@@ -30222,10 +29920,10 @@ loc_22CC1:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_22CF3
-		push	word_398B2
-		pushd	[point_3982A]
+		push	singyoku_person.BE_bos_image
+		pushd	[dword ptr singyoku_sphere.BE_cur_left]
 		push	ds
-		push	offset point_3988E
+		push	offset singyoku_person
 		call	sub_15F4A
 		add	sp, 0Ah
 
@@ -30255,10 +29953,10 @@ sub_22CF6	proc far
 		push	[bp+@@chase_speed]
 		push	(1 shl 4) or (PM_CHASE shl 16)
 		push	(-10h and 255)
-		mov	ax, point_3982A.y
+		mov	ax, singyoku_sphere.BE_cur_top
 		add	ax, 44
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, singyoku_sphere.BE_cur_left
 		add	ax, 44
 		push	ax
 		push	ds
@@ -30269,10 +29967,10 @@ sub_22CF6	proc far
 		push	[bp+@@chase_speed]
 		push	(1 shl 4) or (PM_CHASE shl 16)
 		push	(-70h and 255)
-		mov	ax, point_3982A.y
+		mov	ax, singyoku_sphere.BE_cur_top
 		add	ax, 44
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, singyoku_sphere.BE_cur_left
 		add	ax, 44
 		push	ax
 		push	ds
@@ -30303,10 +30001,10 @@ sub_22D63	proc far
 		pushd	PM_NORMAL or (0 shl 16)
 		push	[bp+@@speed]
 		push	30h
-		mov	ax, point_3982A.y
+		mov	ax, singyoku_sphere.BE_cur_top
 		add	ax, 44
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, singyoku_sphere.BE_cur_left
 		add	ax, 12
 		push	ax
 		push	ds
@@ -30317,10 +30015,10 @@ sub_22D63	proc far
 		pushd	PM_NORMAL or (0 shl 16)
 		push	[bp+@@speed]
 		push	50h
-		mov	ax, point_3982A.y
+		mov	ax, singyoku_sphere.BE_cur_top
 		add	ax, 44
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, singyoku_sphere.BE_cur_left
 		add	ax, 84
 		push	ax
 		push	ds
@@ -30426,10 +30124,10 @@ loc_22E62:
 		pushd	PM_NORMAL or (0 shl 16)
 		push	speed_3A385
 		push	word ptr [bp+@@angle]
-		mov	ax, point_3982A.y
+		mov	ax, singyoku_sphere.BE_cur_top
 		add	ax, 44
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, singyoku_sphere.BE_cur_left
 		add	ax, 44
 		push	ax
 		push	ds
@@ -30483,10 +30181,10 @@ loc_22EBC:
 		push	speed_3A385
 		push	(0 shl 4) or (PM_SLING_AIMED shl 16)
 		push	0
-		mov	ax, point_3982A.y
+		mov	ax, singyoku_sphere.BE_cur_top
 		add	ax, [bp+var_4]
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, singyoku_sphere.BE_cur_left
 		add	ax, [bp+var_2]
 		push	ax
 		push	ds
@@ -30561,8 +30259,8 @@ var_2		= byte ptr -2
 		mov	[bp+var_2], al
 		cmp	byte_35CDE, 0
 		jnz	loc_230BA
-		mov	point_3982A.x, 272
-		mov	point_3982A.y, 96
+		mov	singyoku_sphere.BE_cur_left, 272
+		mov	singyoku_sphere.BE_cur_top, 96
 		pushd	(0 shl 16) or 0
 		pushd	(0 shl 16) or 5
 		call	_z_palette_set_show
@@ -30583,7 +30281,7 @@ loc_22F9D:
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3982A
+		push	offset singyoku_sphere
 		call	sub_16733
 		add	sp, 0Ch
 		inc	word_3A37F
@@ -30657,7 +30355,7 @@ loc_2302C:
 		call	sub_C433
 		add	sp, 4
 		call	sub_232A4
-		mov	word_39852, 0
+		mov	singyoku_sphere.BE_hitbox_orb_inactive, 0
 		mov	word_3A381, 0
 		cmp	_rank, RANK_EASY
 		jnz	short loc_23087
@@ -30745,14 +30443,14 @@ loc_23115:
 
 loc_23118:
 		push	(48 shl 16) or 96
-		mov	ax, point_3982A.y
-		add	ax, 32	; ' '
+		mov	ax, singyoku_sphere.BE_cur_top
+		add	ax, 32
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, singyoku_sphere.BE_cur_left
 		add	ax, 16
 		push	ax
 		push	ds
-		push	offset point_3982A
+		push	offset singyoku_sphere
 		call	sub_16970
 		add	sp, 4
 		push	ax
@@ -30845,14 +30543,14 @@ loc_2320A:
 
 loc_2320E:
 		push	(48 shl 16) or 96
-		mov	ax, point_3982A.y
+		mov	ax, singyoku_sphere.BE_cur_top
 		add	ax, 32
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, singyoku_sphere.BE_cur_left
 		add	ax, 16
 		push	ax
 		push	ds
-		push	offset point_3982A
+		push	offset singyoku_sphere
 		call	sub_16970
 		add	sp, 4
 		push	ax
@@ -30886,10 +30584,10 @@ loc_2326F:
 		cbw
 		cmp	ax, 8
 		jnz	short loc_232A0
-		push	word_3984E
-		pushd	[point_3982A]
+		push	singyoku_sphere.BE_bos_image
+		pushd	[dword ptr singyoku_sphere.BE_cur_left]
 		push	ds
-		push	offset point_3982A
+		push	offset singyoku_sphere
 		call	sub_1588A
 		call	_mdrv2_bgm_fade_out_nonblock
 		call	@CPellets@unput_and_reset_all$qv stdcall, offset _Pellets, ds
@@ -30903,6 +30601,9 @@ loc_232A0:
 		retf
 sub_22F4A	endp
 
+singyoku_sphere	equ <>
+singyoku_flash 	equ <>
+singyoku_person	equ <>
 main_33_TEXT	ends
 
 ; ===========================================================================
@@ -31028,63 +30729,10 @@ sub_232E4	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public _kikuri_load
+_kikuri_load	proc c
+	local	@@template_soul:CBossEntity, @@template_tear:CBossEntity
 
-sub_23329	proc far
-
-var_64		= word ptr -64h
-var_62		= word ptr -62h
-var_60		= word ptr -60h
-var_5E		= word ptr -5Eh
-var_5C		= word ptr -5Ch
-var_5A		= word ptr -5Ah
-var_58		= word ptr -58h
-var_56		= word ptr -56h
-var_54		= word ptr -54h
-var_52		= word ptr -52h
-var_50		= word ptr -50h
-var_4E		= word ptr -4Eh
-var_4C		= word ptr -4Ch
-var_4A		= word ptr -4Ah
-var_48		= word ptr -48h
-var_46		= word ptr -46h
-var_44		= word ptr -44h
-var_42		= word ptr -42h
-var_40		= word ptr -40h
-var_3E		= word ptr -3Eh
-var_3C		= word ptr -3Ch
-var_3A		= word ptr -3Ah
-var_38		= word ptr -38h
-var_36		= word ptr -36h
-var_34		= byte ptr -34h
-var_33		= byte ptr -33h
-var_32		= word ptr -32h
-var_30		= word ptr -30h
-var_2E		= word ptr -2Eh
-var_2C		= word ptr -2Ch
-var_2A		= word ptr -2Ah
-var_28		= word ptr -28h
-var_26		= word ptr -26h
-var_24		= word ptr -24h
-var_22		= word ptr -22h
-var_20		= word ptr -20h
-var_1E		= word ptr -1Eh
-var_1C		= word ptr -1Ch
-var_1A		= word ptr -1Ah
-var_18		= word ptr -18h
-var_16		= word ptr -16h
-var_14		= word ptr -14h
-var_12		= word ptr -12h
-var_10		= word ptr -10h
-var_E		= word ptr -0Eh
-var_C		= word ptr -0Ch
-var_A		= word ptr -0Ah
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= byte ptr -2
-var_1		= byte ptr -1
-
-		enter	64h, 0
 		push	si
 		push	di
 		mov	_pellet_interlace, 1
@@ -31124,88 +30772,37 @@ loc_23364:
 		inc	si
 
 loc_2336A:
-		cmp	si, 0Ah
+		cmp	si, KIKURI_TEAR_COUNT
 		jl	short loc_23364
-		mov	word_3A3F3, 1
+		mov	kikuri_soul_0.BE_loading, 1
 		push	0
 		push	ds
 		push	offset aTamasii_bos ; "tamasii.bos"
 		push	ds
-		push	offset x_3A3C9
+		push	offset kikuri_soul_0
 		call	sub_1568F
-		mov	word_3A3F3, 0
-		mov	ax, x_3A3C9
-		mov	[bp+var_32], ax
-		mov	ax, y_3A3CB
-		mov	[bp+var_30], ax
-		mov	ax, word_3A3CD
-		mov	[bp+var_2E], ax
-		mov	ax, word_3A3CF
-		mov	[bp+var_2C], ax
-		mov	ax, word_3A3D1
-		mov	[bp+var_2A], ax
-		mov	ax, word_3A3D3
-		mov	[bp+var_28], ax
-		mov	ax, word_3A3D5
-		mov	[bp+var_26], ax
-		mov	ax, word_3A3D7
-		mov	[bp+var_24], ax
-		mov	ax, word_3A3D9
-		mov	[bp+var_22], ax
-		mov	ax, word_3A3DB
-		mov	[bp+var_20], ax
-		mov	ax, word_3A3DD
-		mov	[bp+var_1E], ax
-		mov	ax, word_3A3DF
-		mov	[bp+var_1C], ax
-		mov	ax, word_3A3E1
-		mov	[bp+var_1A], ax
-		mov	ax, word_3A3E3
-		mov	[bp+var_18], ax
-		mov	ax, word_3A3E5
-		mov	[bp+var_16], ax
-		mov	ax, word_3A3E7
-		mov	[bp+var_14], ax
-		mov	ax, word_3A3E9
-		mov	[bp+var_12], ax
-		mov	ax, word_3A3EB
-		mov	[bp+var_10], ax
-		mov	ax, word_3A3ED
-		mov	[bp+var_E], ax
-		mov	ax, word_3A3EF
-		mov	[bp+var_C], ax
-		mov	ax, word_3A3F1
-		mov	[bp+var_A], ax
-		mov	ax, word_3A3F3
-		mov	[bp+var_8], ax
-		mov	ax, word_3A3F5
-		mov	[bp+var_6], ax
-		mov	ax, word_3A3F7
-		mov	[bp+var_4], ax
-		mov	al, byte_3A3F9
-		mov	[bp+var_2], al
-		mov	al, byte_3A3FA
-		mov	[bp+var_1], al
+		mov	kikuri_soul_0.BE_loading, 0
+		CBossEntity__copy	@@template_soul, kikuri_soul_0
 		push	ds
-		push	offset unk_3A405
+		push	offset kikuri_soul_1.BE_h
 		push	ds
-		push	offset unk_3A403
+		push	offset kikuri_soul_1.BE_vram_w
 		push	ds
-		push	offset unk_3A42C
+		push	offset kikuri_soul_1.BE_bos_slot
 		push	ds
-		push	offset unk_3A41B
+		push	offset kikuri_soul_1.BE_bos_image_count
 		push	ss
-		lea	ax, [bp+var_32]
+		lea	ax, @@template_soul
 		push	ax
 		call	sub_15851
-		mov	word_3A4ED, 1
+		mov	kikuri_tear_0.BE_loading, 1
 		push	1
 		push	ds
 		push	offset aTamasii2_bos ; "tamasii2.bos"
 		push	ds
-		push	offset word_3A4C3
+		push	offset kikuri_tear_0
 		call	sub_1568F
-		mov	word_3A4ED, 0
+		mov	kikuri_tear_0.BE_loading, 0
 		call	_ptn_load stdcall, 2, offset aTamayen_ptn, ds ; "tamayen.ptn"
 		add	sp, 2Eh
 		mov	si, 1
@@ -31213,87 +30810,36 @@ loc_2336A:
 ; ---------------------------------------------------------------------------
 
 loc_2346F:
-		mov	ax, word_3A4C3
-		mov	[bp+var_64], ax
-		mov	ax, word_3A4C5
-		mov	[bp+var_62], ax
-		mov	ax, word_3A4C7
-		mov	[bp+var_60], ax
-		mov	ax, word_3A4C9
-		mov	[bp+var_5E], ax
-		mov	ax, word_3A4CB
-		mov	[bp+var_5C], ax
-		mov	ax, word_3A4CD
-		mov	[bp+var_5A], ax
-		mov	ax, word_3A4CF
-		mov	[bp+var_58], ax
-		mov	ax, word_3A4D1
-		mov	[bp+var_56], ax
-		mov	ax, word_3A4D3
-		mov	[bp+var_54], ax
-		mov	ax, word_3A4D5
-		mov	[bp+var_52], ax
-		mov	ax, word_3A4D7
-		mov	[bp+var_50], ax
-		mov	ax, word_3A4D9
-		mov	[bp+var_4E], ax
-		mov	ax, word_3A4DB
-		mov	[bp+var_4C], ax
-		mov	ax, word_3A4DD
-		mov	[bp+var_4A], ax
-		mov	ax, word_3A4DF
-		mov	[bp+var_48], ax
-		mov	ax, word_3A4E1
-		mov	[bp+var_46], ax
-		mov	ax, word_3A4E3
-		mov	[bp+var_44], ax
-		mov	ax, word_3A4E5
-		mov	[bp+var_42], ax
-		mov	ax, word_3A4E7
-		mov	[bp+var_40], ax
-		mov	ax, word_3A4E9
-		mov	[bp+var_3E], ax
-		mov	ax, word_3A4EB
-		mov	[bp+var_3C], ax
-		mov	ax, word_3A4ED
-		mov	[bp+var_3A], ax
-		mov	ax, word_3A4EF
-		mov	[bp+var_38], ax
-		mov	ax, word_3A4F1
-		mov	[bp+var_36], ax
-		mov	al, byte_3A4F3
-		mov	[bp+var_34], al
-		mov	al, byte_3A4F4
-		mov	[bp+var_33], al
+		CBossEntity__copy	@@template_tear, _kikuri_tears
 		mov	ax, si
-		imul	ax, 32h
-		add	ax, 5B2Dh
+		imul	ax, size CBossEntity
+		add	ax, offset _kikuri_tears.BE_h
 		push	ds
 		push	ax
 		mov	ax, si
-		imul	ax, 32h
-		add	ax, 5B2Bh
+		imul	ax, size CBossEntity
+		add	ax, offset _kikuri_tears.BE_vram_w
 		push	ds
 		push	ax
 		mov	ax, si
-		imul	ax, 32h
-		add	ax, 5B54h
+		imul	ax, size CBossEntity
+		add	ax, offset _kikuri_tears.BE_bos_slot
 		push	ds
 		push	ax
 		mov	ax, si
-		imul	ax, 32h
-		add	ax, 5B43h
+		imul	ax, size CBossEntity
+		add	ax, offset _kikuri_tears.BE_bos_image_count
 		push	ds
 		push	ax
 		push	ss
-		lea	ax, [bp+var_64]
+		lea	ax, @@template_tear
 		push	ax
 		call	sub_15851
 		add	sp, 14h
 		inc	si
 
 loc_23541:
-		cmp	si, 0Ah
+		cmp	si, KIKURI_TEAR_COUNT
 		jl	loc_2346F
 		nopcall	sub_2355F
 		push	700FFh
@@ -31301,9 +30847,8 @@ loc_23541:
 		add	sp, 4
 		pop	di
 		pop	si
-		leave
-		retf
-sub_23329	endp
+		ret
+_kikuri_load	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -31325,14 +30870,14 @@ sub_2355F	proc far
 		push	320000h
 		push	0
 		push	ds
-		push	offset x_3A3C9
+		push	offset kikuri_soul_0
 		call	sub_166D2
 		push	1900040h
 		push	2400020h
 		push	320000h
 		push	0
 		push	ds
-		push	offset x_3A3FB
+		push	offset kikuri_soul_1
 		call	sub_166D2
 		add	sp, 24h
 		xor	si, si
@@ -31416,21 +30961,21 @@ sub_235FD	endp
 
 sub_23629	proc near
 
-var_2		= word ptr -2
+@@image_new		= word ptr -2
 arg_0		= word ptr  4
 arg_2		= word ptr  6
-arg_4		= word ptr  8
+@@soul		= word ptr  8
 
 		enter	2, 0
 		push	si
-		mov	si, [bp+arg_4]
+		mov	si, [bp+@@soul]
 		push	1
 		push	[bp+arg_0]
 		push	[bp+arg_2]
 		push	0
 		mov	ax, si
-		imul	ax, 32h
-		add	ax, 5A29h
+		imul	ax, size CBossEntity
+		add	ax, offset _kikuri_souls
 		push	ds
 		push	ax
 		call	sub_16733
@@ -31442,24 +30987,24 @@ arg_4		= word ptr  8
 		or	dx, dx
 		jnz	short loc_23689
 		mov	bx, si
-		imul	bx, 32h
-		cmp	word ptr [bx+5A4Dh], 2
+		imul	bx, size CBossEntity
+		cmp	_kikuri_souls[bx].BE_bos_image, 2
 		jl	short loc_23673
 		mov	bx, si
-		imul	bx, 32h
-		mov	word ptr [bx+5A4Dh], 0
+		imul	bx, size CBossEntity
+		mov	_kikuri_souls[bx].BE_bos_image, 0
 		jmp	short loc_23689
 ; ---------------------------------------------------------------------------
 
 loc_23673:
 		mov	bx, si
-		imul	bx, 32h
-		mov	ax, [bx+5A4Dh]
+		imul	bx, size CBossEntity
+		mov	ax, _kikuri_souls[bx].BE_bos_image
 		inc	ax
-		mov	[bp+var_2], ax
+		mov	[bp+@@image_new], ax
 		mov	bx, si
-		imul	bx, 32h
-		mov	[bx+5A4Dh], ax
+		imul	bx, size CBossEntity
+		mov	_kikuri_souls[bx].BE_bos_image, ax
 
 loc_23689:
 		pop	si
@@ -31493,15 +31038,15 @@ loc_23696:
 		push	[bp+arg_0]
 		push	[bp+arg_2]
 		mov	ax, si
-		imul	ax, 32h
-		add	ax, 5B23h
+		imul	ax, size CBossEntity
+		add	ax, offset _kikuri_tears
 		push	ds
 		push	ax
 		call	sub_166D2
 		add	sp, 12h
 		mov	bx, si
-		imul	bx, 32h
-		mov	word ptr [bx+5B47h], 0
+		imul	bx, size CBossEntity
+		mov	_kikuri_tears[bx].BE_bos_image, 0
 		mov	byte ptr [si+5A1Fh], 1
 		jmp	short loc_236DB
 ; ---------------------------------------------------------------------------
@@ -31510,7 +31055,7 @@ loc_236D5:
 		inc	si
 
 loc_236D6:
-		cmp	si, 0Ah
+		cmp	si, KIKURI_TEAR_COUNT
 		jl	short loc_23696
 
 loc_236DB:
@@ -31572,13 +31117,13 @@ loc_2371D:
 		jz	short loc_23764
 		mov	bx, si
 		imul	bx, 32h
-		cmp	word ptr [bx+5B25h], 180h
+		cmp	_kikuri_tears[bx].BE_cur_top, 384
 		jg	short loc_2374E
 		push	10008h
 		pushd	0
 		mov	ax, si
-		imul	ax, 32h
-		add	ax, 5B23h
+		imul	ax, size CBossEntity
+		add	ax, offset _kikuri_tears
 		push	ds
 		push	ax
 		call	sub_16733
@@ -31588,9 +31133,9 @@ loc_2371D:
 
 loc_2374E:
 		mov	bx, si
-		imul	bx, 32h
-		push	word ptr [bx+5B23h]
-		push	180h
+		imul	bx, size CBossEntity
+		push	_kikuri_tears[bx].BE_cur_left
+		push	384
 		push	ds
 		mov	ax, si
 		add	ax, 5A1Fh
@@ -32424,14 +31969,14 @@ sub_23F16	proc near
 		push	3200D0h
 		push	130h
 		push	ds
-		push	offset x_3A3C9
+		push	offset kikuri_soul_0
 		call	sub_166D2
 		push	1900040h
 		push	2400020h
 		push	3200D0h
 		push	130h
 		push	ds
-		push	offset x_3A3FB
+		push	offset kikuri_soul_1
 		call	sub_166D2
 		add	sp, 24h
 		jmp	short loc_23F99
@@ -32452,7 +31997,7 @@ loc_23F62:
 		push	10004h
 		push	0FFFDh
 		call	sub_23629
-		cmp	y_3A3CB, 96
+		cmp	kikuri_soul_0.BE_cur_top, 96
 		jge	short loc_23F99
 		mov	ax, 1
 		pop	bp
@@ -32504,13 +32049,13 @@ var_6		= byte ptr -6
 
 loc_23FDE:
 		mov	bx, si
-		imul	bx, 50
-		mov	ax, [bx+5A29h]
-		add	ax, 0Ch
+		imul	bx, size CBossEntity
+		mov	ax, _kikuri_souls[bx].BE_cur_left
+		add	ax, 12
 		mov	[bp+@@left], ax
 		mov	bx, si
-		imul	bx, 50
-		mov	ax, [bx+5A2Bh]
+		imul	bx, size CBossEntity
+		mov	ax, _kikuri_souls[bx].BE_cur_top
 		add	ax, 8
 		mov	[bp+@@top], ax
 		push	13001Bh
@@ -32568,17 +32113,17 @@ loc_24064:
 		idiv	word_3A6B7
 		or	dx, dx
 		jnz	short loc_24092
-		mov	ax, x_3A3C9
+		mov	ax, kikuri_soul_0.BE_cur_left
 		add	ax, 12
 		push	ax
-		mov	ax, y_3A3CB
+		mov	ax, kikuri_soul_0.BE_cur_top
 		add	ax, 8
 		push	ax
 		call	sub_2368E
-		mov	ax, x_3A3FB
+		mov	ax, kikuri_soul_1.BE_cur_left
 		add	ax, 12
 		push	ax
-		mov	ax, y_3A3FD
+		mov	ax, kikuri_soul_1.BE_cur_top
 		add	ax, 8
 		push	ax
 		call	sub_2368E
@@ -32677,20 +32222,20 @@ sub_2414C	proc near
 		or	dx, dx
 		jnz	short loc_2419B
 		push	PP_1_AIMED or (((2 shl 4) + 8) shl 16)
-		mov	ax, y_3A3CB
+		mov	ax, kikuri_soul_0.BE_cur_top
 		add	ax, 12
 		push	ax
-		mov	ax, x_3A3C9
+		mov	ax, kikuri_soul_0.BE_cur_left
 		add	ax, 12
 		push	ax
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_pattern$qii16pellet_pattern_ti
 		push	PP_1_AIMED or (((2 shl 4) + 8) shl 16)
-		mov	ax, y_3A3FD
+		mov	ax, kikuri_soul_1.BE_cur_top
 		add	ax, 12
 		push	ax
-		mov	ax, x_3A3FB
+		mov	ax, kikuri_soul_1.BE_cur_left
 		add	ax, 12
 		push	ax
 		push	ds
@@ -33059,13 +32604,13 @@ loc_2450C:
 		push	(3 shl 4)
 		push	0
 		mov	bx, si
-		imul	bx, 50
-		mov	ax, [bx+5A2Bh]
+		imul	bx, size CBossEntity
+		mov	ax, _kikuri_souls[bx].BE_cur_top
 		add	ax, 12
 		push	ax
 		mov	bx, si
-		imul	bx, 50
-		mov	ax, [bx+5A29h]
+		imul	bx, size CBossEntity
+		mov	ax, _kikuri_souls[bx].BE_cur_left
 		add	ax, 12
 		push	ax
 		push	ds
@@ -33076,13 +32621,13 @@ loc_2450C:
 		push	(2 shl 4)
 		push	0
 		mov	bx, si
-		imul	bx, 50
-		mov	ax, [bx+5A2Bh]
+		imul	bx, size CBossEntity
+		mov	ax, _kikuri_souls[bx].BE_cur_top
 		add	ax, 12
 		push	ax
 		mov	bx, si
-		imul	bx, 50
-		mov	ax, [bx+5A29h]
+		imul	bx, size CBossEntity
+		mov	ax, _kikuri_souls[bx].BE_cur_left
 		add	ax, 12
 		push	ax
 		push	ds
@@ -33094,13 +32639,13 @@ loc_2450C:
 		push	(1 shl 4)
 		push	0
 		mov	bx, si
-		imul	bx, 50
-		mov	ax, [bx+5A2Bh]
+		imul	bx, size CBossEntity
+		mov	ax, _kikuri_souls[bx].BE_cur_top
 		add	ax, 12
 		push	ax
 		mov	bx, si
-		imul	bx, 50
-		mov	ax, [bx+5A29h]
+		imul	bx, size CBossEntity
+		mov	ax, _kikuri_souls[bx].BE_cur_left
 		add	ax, 12
 		push	ax
 		push	ds
@@ -33111,13 +32656,13 @@ loc_2450C:
 		push	(1 shl 4)
 		push	80h
 		mov	bx, si
-		imul	bx, 50
-		mov	ax, [bx+5A2Bh]
+		imul	bx, size CBossEntity
+		mov	ax, _kikuri_souls[bx].BE_cur_top
 		add	ax, 12
 		push	ax
 		mov	bx, si
-		imul	bx, 50
-		mov	ax, [bx+5A29h]
+		imul	bx, size CBossEntity
+		mov	ax, _kikuri_souls[bx].BE_cur_left
 		add	ax, 12
 		push	ax
 		push	ds
@@ -33129,13 +32674,13 @@ loc_2450C:
 		push	(2 shl 4)
 		push	80h
 		mov	bx, si
-		imul	bx, 50
-		mov	ax, [bx+5A2Bh]
+		imul	bx, size CBossEntity
+		mov	ax, _kikuri_souls[bx].BE_cur_top
 		add	ax, 12
 		push	ax
 		mov	bx, si
-		imul	bx, 50
-		mov	ax, [bx+5A29h]
+		imul	bx, size CBossEntity
+		mov	ax, _kikuri_souls[bx].BE_cur_left
 		add	ax, 12
 		push	ax
 		push	ds
@@ -33146,13 +32691,13 @@ loc_2450C:
 		push	(3 shl 4)
 		push	80h
 		mov	bx, si
-		imul	bx, 50
-		mov	ax, [bx+5A2Bh]
+		imul	bx, size CBossEntity
+		mov	ax, _kikuri_souls[bx].BE_cur_top
 		add	ax, 12
 		push	ax
 		mov	bx, si
-		imul	bx, 50
-		mov	ax, [bx+5A29h]
+		imul	bx, size CBossEntity
+		mov	ax, _kikuri_souls[bx].BE_cur_left
 		add	ax, 12
 		push	ax
 		push	ds
@@ -33951,17 +33496,17 @@ sub_24DFF	proc far
 		push	offset sub_17096
 		push	5
 		pushd	5
-		push	32h ; '2'
+		push	size CBossEntity
 		push	ds
-		push	offset x_3A3C9
+		push	offset _kikuri_souls
 		call	@_vector_new_$qnvuiuluie ; _vector_new_(void *,uint,ulong,uint,...)
 		push	seg main_21_TEXT
 		push	offset sub_17096
 		push	5
-		pushd	0Ah
-		push	32h ; '2'
+		pushd	KIKURI_TEAR_COUNT
+		push	size CBossEntity
 		push	ds
-		push	offset word_3A4C3
+		push	offset _kikuri_tears
 		call	@_vector_new_$qnvuiuluie ; _vector_new_(void *,uint,ulong,uint,...)
 		add	sp, 20h
 		pop	bp
@@ -33977,6 +33522,10 @@ main_35_TEXT	segment	byte public 'CODE' use16
 		assume cs:main_35_TEXT
 		;org 3
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
+
+elis_still_or_wave	equ <boss_entity_0>
+elis_attack	equ <boss_entity_1>
+elis_bat	equ <boss_entity_2>
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -33994,27 +33543,27 @@ arg_0		= word ptr  6
 		enter	0Ah, 0
 		push	si
 		push	di
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		mov	[bp+var_8], ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		mov	[bp+var_A], ax
-		mov	point_3985C.x, ax
+		mov	elis_attack.BE_cur_left, ax
 		mov	ax, [bp+var_8]
-		mov	point_3985C.y, ax
+		mov	elis_attack.BE_cur_top, ax
 		cmp	[bp+arg_0], 1
 		jnz	short loc_24E5F
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		mov	[bp+var_2], ax
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		jmp	short loc_24E6E
 ; ---------------------------------------------------------------------------
 
 loc_24E5F:
 		cmp	[bp+arg_0], 2
 		jnz	short loc_24E71
-		mov	ax, point_3985C.x
+		mov	ax, elis_attack.BE_cur_left
 		mov	[bp+var_2], ax
-		mov	ax, point_3985C.y
+		mov	ax, elis_attack.BE_cur_top
 
 loc_24E6E:
 		mov	[bp+var_4], ax
@@ -34085,27 +33634,27 @@ arg_0		= word ptr  6
 		push	si
 		push	di
 		mov	[bp+@@image], 0
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		mov	[bp+var_8], ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		mov	[bp+var_A], ax
-		mov	point_3985C.x, ax
+		mov	elis_attack.BE_cur_left, ax
 		mov	ax, [bp+var_8]
-		mov	point_3985C.y, ax
+		mov	elis_attack.BE_cur_top, ax
 		cmp	[bp+arg_0], 1
 		jnz	short loc_24EF3
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		mov	[bp+var_2], ax
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		jmp	short loc_24F02
 ; ---------------------------------------------------------------------------
 
 loc_24EF3:
 		cmp	[bp+arg_0], 2
 		jnz	short loc_24F05
-		mov	ax, point_3985C.x
+		mov	ax, elis_attack.BE_cur_left
 		mov	[bp+var_2], ax
-		mov	ax, point_3985C.y
+		mov	ax, elis_attack.BE_cur_top
 
 loc_24F02:
 		mov	[bp+var_4], ax
@@ -34155,36 +33704,36 @@ sub_24EC2	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_24F41	proc far
+public _elis_load
+_elis_load	proc far
 		push	bp
 		mov	bp, sp
 		mov	_pellet_interlace, 1
 		mov	_Pellets.PELLET_unknown_seven, 7
-		mov	word_39854, 1
+		mov	elis_still_or_wave.BE_loading, 1
 		push	0
 		push	ds
 		push	offset aBoss5_bos ; "boss5.bos"
 		push	ds
-		push	offset point_3982A
+		push	offset elis_still_or_wave
 		call	sub_1568F
-		mov	word_39854, 0
-		mov	word_39886, 1
+		mov	elis_still_or_wave.BE_loading, 0
+		mov	elis_attack.BE_loading, 1
 		push	1
 		push	ds
 		push	offset aBoss5_2_bos ; "boss5_2.bos"
 		push	ds
-		push	offset point_3985C
+		push	offset elis_attack
 		call	sub_1568F
-		mov	word_39886, 0
-		mov	word_398B8, 1
+		mov	elis_attack.BE_loading, 0
+		mov	elis_bat.BE_loading, 1
 		push	2
 		push	ds
 		push	offset aBoss5_3_bos ; "boss5_3.bos"
 		push	ds
-		push	offset point_3988E
+		push	offset elis_bat
 		call	sub_1568F
-		mov	word_398B8, 0
+		mov	elis_bat.BE_loading, 0
 		call	_grc_load stdcall, 0, offset aBoss5_gr_grc, ds
 		call	_ptn_new stdcall, (12 shl 16) or 2
 		call	_ptn_load stdcall, 3, offset aBoss3_m_ptn_1, ds ;	"boss3_m.ptn"
@@ -34196,7 +33745,7 @@ sub_24F41	proc far
 		add	sp, 32h
 		pop	bp
 		retf
-sub_24F41	endp
+_elis_load	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -34213,14 +33762,14 @@ sub_24FE0	proc far
 		push	300060h
 		push	100h
 		push	ds
-		push	offset point_3982A
+		push	offset elis_still_or_wave
 		call	sub_166D2
 		push	1300040h
 		push	2E00000h
 		push	300060h
 		push	100h
 		push	ds
-		push	offset point_3985C
+		push	offset elis_attack
 		call	sub_166D2
 		add	sp, 24h
 		push	1300040h
@@ -34228,17 +33777,11 @@ sub_24FE0	proc far
 		push	300060h
 		push	100h
 		push	ds
-		push	offset point_3988E
+		push	offset elis_bat
 		call	sub_166D2
 		add	sp, 12h
-		mov	word_3983E, 20h	; ' '
-		mov	word_39840, 60h
-		mov	word_39842, 0Ch
-		mov	word_39844, 40h
-		mov	word_398A2, 8
-		mov	word_398A4, 28h	; '('
-		mov	word_398A6, 8
-		mov	word_398A8, 18h
+		CBossEntity__hitbox_set	elis_still_or_wave, 32, 12, 96, 64
+		CBossEntity__hitbox_set	elis_bat, 8, 8, 40, 24
 		mov	byte_3A6CE, 0
 		mov	word_3A6CA, 0
 		mov	word_3A6C8, 0Eh
@@ -34313,13 +33856,13 @@ arg_2		= word ptr  8
 
 		enter	8, 0
 		push	si
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		mov	[bp+var_2], ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		mov	[bp+var_4], ax
-		mov	point_3985C.x, ax
+		mov	elis_attack.BE_cur_left, ax
 		mov	ax, [bp+var_2]
-		mov	point_3985C.y, ax
+		mov	elis_attack.BE_cur_top, ax
 		cmp	word_3A6CA, 14h
 		jnz	short loc_25150
 		push	1
@@ -34329,17 +33872,17 @@ arg_2		= word ptr  8
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 6
-		mov	word_39856, 0
-		mov	word_3984E, 2
+		mov	elis_still_or_wave.BE_move_lock_frame, 0
+		mov	elis_still_or_wave.BE_bos_image, 2
 
 loc_25132:
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3982A
+		push	offset elis_still_or_wave
 		call	sub_1689D
 		add	sp, 0Ch
-		mov	word_39852, 1
+		mov	elis_still_or_wave.BE_hitbox_orb_inactive, 1
 		jmp	loc_25293
 ; ---------------------------------------------------------------------------
 
@@ -34349,37 +33892,37 @@ loc_25150:
 		push	1
 		call	sub_24EC2
 		pop	cx
-		mov	word_39856, 0
-		mov	word_3984E, 3
+		mov	elis_still_or_wave.BE_move_lock_frame, 0
+		mov	elis_still_or_wave.BE_bos_image, 3
 		jmp	short loc_25132
 ; ---------------------------------------------------------------------------
 
 loc_2516C:
 		cmp	word_3A6CA, 24h	; '$'
 		jnz	short loc_2517B
-		mov	word_39852, 1
+		mov	elis_still_or_wave.BE_hitbox_orb_inactive, 1
 		jmp	short loc_251C7
 ; ---------------------------------------------------------------------------
 
 loc_2517B:
 		cmp	word_3A6CA, 2Ch	; ','
 		jnz	short loc_2519E
-		mov	word_39852, 1
-		call	_egc_copy_rect_1_to_0_16 c, [point_3982A], large (96 shl 16) or 128
+		mov	elis_still_or_wave.BE_hitbox_orb_inactive, 1
+		call	_egc_copy_rect_1_to_0_16 c, [dword ptr elis_still_or_wave.BE_cur_left], large (96 shl 16) or 128
 		jmp	loc_25293
 ; ---------------------------------------------------------------------------
 
 loc_2519E:
 		cmp	word_3A6CA, 34h	; '4'
 		jnz	short loc_251DD
-		mov	word_39852, 1
+		mov	elis_still_or_wave.BE_hitbox_orb_inactive, 1
 		mov	ax, [bp+arg_2]
 		mov	[bp+var_6], ax
 		mov	ax, [bp+arg_0]
 		mov	[bp+var_8], ax
-		mov	point_3982A.x, ax
+		mov	elis_still_or_wave.BE_cur_left, ax
 		mov	ax, [bp+var_6]
-		mov	point_3982A.y, ax
+		mov	elis_still_or_wave.BE_cur_top, ax
 		push	1
 		call	sub_24E33
 		pop	cx
@@ -34388,59 +33931,59 @@ loc_251C7:
 		push	1
 		call	sub_24EC2
 		pop	cx
-		mov	word_39856, 0
-		mov	word_3984E, 4
+		mov	elis_still_or_wave.BE_move_lock_frame, 0
+		mov	elis_still_or_wave.BE_bos_image, 4
 		jmp	loc_25269
 ; ---------------------------------------------------------------------------
 
 loc_251DD:
 		cmp	word_3A6CA, 3Ch	; '<'
 		jnz	short loc_251FF
-		mov	word_39852, 1
+		mov	elis_still_or_wave.BE_hitbox_orb_inactive, 1
 		push	1
 		call	sub_24EC2
 		pop	cx
-		mov	word_39856, 0
-		mov	word_3984E, 3
+		mov	elis_still_or_wave.BE_move_lock_frame, 0
+		mov	elis_still_or_wave.BE_bos_image, 3
 		jmp	short loc_25269
 ; ---------------------------------------------------------------------------
 
 loc_251FF:
 		cmp	word_3A6CA, 44h	; 'D'
 		jnz	short loc_25221
-		mov	word_39852, 1
+		mov	elis_still_or_wave.BE_hitbox_orb_inactive, 1
 		push	1
 		call	sub_24EC2
 		pop	cx
-		mov	word_39856, 0
-		mov	word_3984E, 2
+		mov	elis_still_or_wave.BE_move_lock_frame, 0
+		mov	elis_still_or_wave.BE_bos_image, 2
 		jmp	short loc_25269
 ; ---------------------------------------------------------------------------
 
 loc_25221:
 		cmp	word_3A6CA, 4Ch	; 'L'
 		jnz	short loc_25280
-		mov	word_39852, 0
+		mov	elis_still_or_wave.BE_hitbox_orb_inactive, 0
 		push	1
 		call	_graph_accesspage_func
-		mov	word_39856, 0
-		mov	word_3984E, 0
+		mov	elis_still_or_wave.BE_move_lock_frame, 0
+		mov	elis_still_or_wave.BE_bos_image, 0
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3982A
+		push	offset elis_still_or_wave
 		call	sub_1689D
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 10h
-		mov	word_39856, 0
-		mov	word_3984E, 0
+		mov	elis_still_or_wave.BE_move_lock_frame, 0
+		mov	elis_still_or_wave.BE_bos_image, 0
 
 loc_25269:
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3982A
+		push	offset elis_still_or_wave
 		call	sub_1689D
 		add	sp, 0Ch
 		jmp	short loc_25293
@@ -34489,7 +34032,7 @@ loc_252DA:
 		mov	bx, 192
 		cwd
 		idiv	bx
-		add	dx, point_3982A.x
+		add	dx, elis_still_or_wave.BE_cur_left
 		add	dx, -32
 		mov	bx, si
 		add	bx, bx
@@ -34498,7 +34041,7 @@ loc_252DA:
 		mov	bx, 128
 		cwd
 		idiv	bx
-		add	dx, point_3982A.y
+		add	dx, elis_still_or_wave.BE_cur_top
 		add	dx, -32
 		mov	bx, si
 		add	bx, bx
@@ -34511,7 +34054,7 @@ loc_25310:
 		mov	bx, 192
 		cwd
 		idiv	bx
-		add	dx, point_3982A.x
+		add	dx, elis_still_or_wave.BE_cur_left
 		add	dx, -32
 		mov	bx, si
 		add	bx, bx
@@ -34530,7 +34073,7 @@ loc_25310:
 		mov	bx, 128
 		cwd
 		idiv	bx
-		add	dx, point_3982A.y
+		add	dx, elis_still_or_wave.BE_cur_top
 		add	dx, -32
 		mov	bx, si
 		add	bx, bx
@@ -34657,21 +34200,21 @@ var_8		= qword	ptr -8
 		call	_graph_accesspage_func
 		push	1
 		call	sub_24EC2
-		mov	word_39856, 0
-		mov	word_3984E, 1
+		mov	elis_still_or_wave.BE_move_lock_frame, 0
+		mov	elis_still_or_wave.BE_bos_image, 1
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3982A
+		push	offset elis_still_or_wave
 		call	sub_1689D
 		push	0
 		call	_graph_accesspage_func
-		mov	word_39856, 0
-		mov	word_3984E, 1
+		mov	elis_still_or_wave.BE_move_lock_frame, 0
+		mov	elis_still_or_wave.BE_bos_image, 1
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3982A
+		push	offset elis_still_or_wave
 		call	sub_1689D
 		add	sp, 1Eh
 		push	41003Ch
@@ -34690,10 +34233,10 @@ loc_2546B:
 		push	2
 		push	40020h
 		push	20h ; ' '
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 32
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		push	ax
 		call	sub_1786D
@@ -34718,10 +34261,10 @@ loc_254A0:
 		push	2
 		push	word_3A6E3
 		push	word_3A6E3
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 32
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		push	ax
 		call	sub_17956
@@ -34750,10 +34293,10 @@ loc_25504:
 		push	4
 		push	word_3A6E3
 		push	word_3A6E3
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 32
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		push	ax
 		call	sub_1786D
@@ -34769,10 +34312,10 @@ loc_25528:
 		push	20h ; ' '
 		push	word_3A6E3
 		push	word_3A6E3
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 32
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		push	ax
 		call	sub_17956
@@ -34787,22 +34330,22 @@ loc_25556:
 		call	_graph_accesspage_func
 		push	1
 		call	sub_24EC2
-		mov	word_39856, 0
-		mov	word_3984E, 0
+		mov	elis_still_or_wave.BE_move_lock_frame, 0
+		mov	elis_still_or_wave.BE_bos_image, 0
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3982A
+		push	offset elis_still_or_wave
 		call	sub_1689D
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 12h
-		mov	word_39856, 0
-		mov	word_3984E, 0
+		mov	elis_still_or_wave.BE_move_lock_frame, 0
+		mov	elis_still_or_wave.BE_bos_image, 0
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3982A
+		push	offset elis_still_or_wave
 		call	sub_1689D
 
 loc_255B1:
@@ -34855,10 +34398,10 @@ loc_255FB:
 		fld	[bp+var_8]
 		call	ftol@
 		push	ax
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 60
 		push	ax
 		mov	ax, word_3A6CA
@@ -34935,23 +34478,23 @@ var_2		= word ptr -2
 		push	1
 		call	sub_24EC2
 		pop	cx
-		mov	word_39856, 0
-		mov	word_3984E, 1
+		mov	elis_still_or_wave.BE_move_lock_frame, 0
+		mov	elis_still_or_wave.BE_bos_image, 1
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3982A
+		push	offset elis_still_or_wave
 		call	sub_1689D
 		add	sp, 0Ch
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
-		mov	word_39856, 0
-		mov	word_3984E, 1
+		mov	elis_still_or_wave.BE_move_lock_frame, 0
+		mov	elis_still_or_wave.BE_bos_image, 1
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3982A
+		push	offset elis_still_or_wave
 		call	sub_1689D
 		add	sp, 0Ch
 		push	1D0019h
@@ -35071,7 +34614,7 @@ loc_2582D:
 		mov	bx, 192
 		cwd
 		idiv	bx
-		add	dx, point_3982A.x
+		add	dx, elis_still_or_wave.BE_cur_left
 		add	dx, -32
 		mov	bx, si
 		add	bx, bx
@@ -35080,7 +34623,7 @@ loc_2582D:
 		mov	bx, 128
 		cwd
 		idiv	bx
-		add	dx, point_3982A.y
+		add	dx, elis_still_or_wave.BE_cur_top
 		add	dx, -32
 		mov	bx, si
 		add	bx, bx
@@ -35159,21 +34702,21 @@ loc_258D4:
 		call	_graph_accesspage_func
 		push	1
 		call	sub_24EC2
-		mov	word_39856, 0
-		mov	word_3984E, 1
+		mov	elis_still_or_wave.BE_move_lock_frame, 0
+		mov	elis_still_or_wave.BE_bos_image, 1
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3982A
+		push	offset elis_still_or_wave
 		call	sub_1689D
 		push	0
 		call	_graph_accesspage_func
-		mov	word_39856, 0
-		mov	word_3984E, 1
+		mov	elis_still_or_wave.BE_move_lock_frame, 0
+		mov	elis_still_or_wave.BE_bos_image, 1
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3982A
+		push	offset elis_still_or_wave
 		call	sub_1689D
 		mov	angle_3A6FB, 0
 		push	1C0017h
@@ -35212,10 +34755,10 @@ loc_25977:
 		push	1
 		push	70080h
 		push	80h ; '?'
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		push	ax
 		call	sub_1786D
@@ -35228,10 +34771,10 @@ loc_25977:
 		push	1
 		push	70080h
 		push	80h ; '?'
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		push	ax
 		call	sub_1786D
@@ -35244,10 +34787,10 @@ loc_25977:
 		push	1
 		push	70080h
 		push	80h ; '?'
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		push	ax
 		call	sub_1786D
@@ -35261,10 +34804,10 @@ loc_25977:
 		push	1
 		push	70080h
 		push	80h ; '?'
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		push	ax
 		call	sub_1786D
@@ -35278,10 +34821,10 @@ loc_25977:
 		push	0
 		push	1
 		push	800080h
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		push	ax
 		call	sub_17956
@@ -35290,10 +34833,10 @@ loc_25977:
 		push	1
 		push	70080h
 		push	80h ; '?'
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		push	ax
 		call	sub_1786D
@@ -35302,24 +34845,24 @@ loc_25977:
 		call	_graph_accesspage_func
 		push	1
 		call	sub_24EC2
-		mov	word_39856, 0
-		mov	word_3984E, 0
+		mov	elis_still_or_wave.BE_move_lock_frame, 0
+		mov	elis_still_or_wave.BE_bos_image, 0
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3982A
+		push	offset elis_still_or_wave
 		call	sub_1689D
 		push	0
 		call	_graph_accesspage_func
 		push	1
 		call	sub_24EC2
 		add	sp, 32h
-		mov	word_39856, 0
-		mov	word_3984E, 0
+		mov	elis_still_or_wave.BE_move_lock_frame, 0
+		mov	elis_still_or_wave.BE_bos_image, 0
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3982A
+		push	offset elis_still_or_wave
 		call	sub_1689D
 		add	sp, 0Ch
 		jmp	loc_25C4A
@@ -35341,10 +34884,10 @@ loc_25AED:
 		push	0
 		push	1
 		push	800080h
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		push	ax
 		call	sub_17956
@@ -35367,10 +34910,10 @@ loc_25B3E:
 		push	0
 		push	1
 		push	800080h
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		push	ax
 		call	sub_17956
@@ -35382,10 +34925,10 @@ loc_25B3E:
 
 loc_25B7A:
 		push	800080h
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		push	ax
 		call	sub_1786D
@@ -35400,10 +34943,10 @@ loc_25B99:
 		push	0
 		push	1
 		push	800080h
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		push	ax
 		call	sub_17956
@@ -35422,7 +34965,7 @@ loc_25BCE:
 		movsx	eax, _CosTable8[bx]
 		shl	eax, 7
 		sar	eax, 8
-		add	ax, point_3982A.x
+		add	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 60
 		mov	[bp+@@left], ax
 		mov	al, angle_3A6FB
@@ -35433,7 +34976,7 @@ loc_25BCE:
 		movsx	eax, _SinTable8[bx]
 		shl	eax, 7
 		sar	eax, 8
-		add	ax, point_3982A.y
+		add	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
 		mov	[bp+@@top], ax
 		call	@CPellets@add_pattern$qii16pellet_pattern_ti c, offset _Pellets, ds, [bp+@@left], ax, word_3A6CC, 4
@@ -35484,7 +35027,7 @@ arg_4		= byte ptr  8
 		movsx	eax, _CosTable8[bx]
 		shl	eax, 7
 		sar	eax, 8
-		add	ax, point_3982A.x
+		add	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		mov	[bp+var_2], ax
 		mov	al, [bp+arg_4]
@@ -35495,7 +35038,7 @@ arg_4		= byte ptr  8
 		movsx	eax, _SinTable8[bx]
 		shl	eax, 7
 		sar	eax, 8
-		add	ax, point_3982A.y
+		add	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
 		mov	[bp+var_4], ax
 		mov	al, [bp+arg_2]
@@ -35506,7 +35049,7 @@ arg_4		= byte ptr  8
 		movsx	eax, _CosTable8[bx]
 		shl	eax, 7
 		sar	eax, 8
-		add	ax, point_3982A.x
+		add	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		mov	[bp+var_6], ax
 		mov	al, [bp+arg_2]
@@ -35517,7 +35060,7 @@ arg_4		= byte ptr  8
 		movsx	eax, _SinTable8[bx]
 		shl	eax, 7
 		sar	eax, 8
-		add	ax, point_3982A.y
+		add	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
 		mov	[bp+var_8], ax
 		push	[bp+arg_0]
@@ -35554,7 +35097,7 @@ arg_2		= byte ptr  6
 		movsx	eax, _CosTable8[bx]
 		shl	eax, 7
 		sar	eax, 8
-		add	ax, point_3982A.x
+		add	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		mov	[bp+@@left], ax
 		mov	al, [bp+arg_2]
@@ -35565,7 +35108,7 @@ arg_2		= byte ptr  6
 		movsx	eax, _SinTable8[bx]
 		shl	eax, 7
 		sar	eax, 8
-		add	ax, point_3982A.y
+		add	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
 		mov	[bp+@@top], ax
 		mov	al, [bp+arg_0]
@@ -35576,7 +35119,7 @@ arg_2		= byte ptr  6
 		movsx	eax, _CosTable8[bx]
 		shl	eax, 7
 		sar	eax, 8
-		add	ax, point_3982A.x
+		add	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		mov	[bp+@@right], ax
 		mov	al, [bp+arg_0]
@@ -35587,7 +35130,7 @@ arg_2		= byte ptr  6
 		movsx	eax, _SinTable8[bx]
 		shl	eax, 7
 		sar	eax, 8
-		add	ax, point_3982A.y
+		add	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
 		mov	[bp+@@bottom], ax
 		call	_graph_r_line_unput c, [bp+@@left], [bp+@@top], [bp+@@right], ax
@@ -35715,23 +35258,23 @@ loc_25E3D:
 		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
-		mov	word_39888, 0
-		mov	word_39880, 0
+		mov	elis_attack.BE_move_lock_frame, 0
+		mov	elis_attack.BE_bos_image, 0
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3985C
+		push	offset elis_attack
 		call	sub_1689D
 		push	0
 		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
-		mov	word_39888, 0
-		mov	word_39880, 0
+		mov	elis_attack.BE_move_lock_frame, 0
+		mov	elis_attack.BE_bos_image, 0
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3985C
+		push	offset elis_attack
 		call	sub_1689D
 		add	sp, 20h
 		mov	byte ptr word_3A6FE, 0
@@ -35762,10 +35305,10 @@ loc_25EE1:
 		push	1
 		push	70080h
 		push	80h ; '?'
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		push	ax
 		call	sub_1786D
@@ -35778,10 +35321,10 @@ loc_25EE1:
 		push	1
 		push	70080h
 		push	80h ; '?'
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		push	ax
 		call	sub_1786D
@@ -35794,10 +35337,10 @@ loc_25EE1:
 		push	1
 		push	70080h
 		push	80h ; '?'
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		push	ax
 		call	sub_1786D
@@ -35811,10 +35354,10 @@ loc_25EE1:
 		push	1
 		push	70080h
 		push	80h ; '?'
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		push	ax
 		call	sub_1786D
@@ -35829,10 +35372,10 @@ loc_25EE1:
 		push	0
 		push	1
 		push	800080h
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		push	ax
 		call	sub_17956
@@ -35841,10 +35384,10 @@ loc_25EE1:
 		push	1
 		push	70080h
 		push	80h ; '?'
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		push	ax
 		call	sub_1786D
@@ -35897,10 +35440,10 @@ loc_26029:
 
 loc_2604C:
 		push	800080h
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		push	ax
 		call	sub_1786D
@@ -35931,10 +35474,10 @@ loc_26068:
 		push	0
 		push	1
 		push	800080h
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		push	ax
 		call	sub_17956
@@ -35972,20 +35515,20 @@ sub_260DC	proc far
 		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
-		mov	word_39888, 0
-		mov	word_39880, 1
+		mov	elis_attack.BE_move_lock_frame, 0
+		mov	elis_attack.BE_bos_image, 1
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3985C
+		push	offset elis_attack
 		call	sub_1689D
 		push	0
 		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
 		add	sp, 14h
-		mov	word_39888, 0
-		mov	word_39880, 1
+		mov	elis_attack.BE_move_lock_frame, 0
+		mov	elis_attack.BE_bos_image, 1
 		jmp	short loc_2617F
 ; ---------------------------------------------------------------------------
 
@@ -35998,24 +35541,24 @@ loc_26136:
 		jnz	short loc_26194
 		push	1
 		call	_graph_accesspage_func
-		mov	word_39888, 0
-		mov	word_39880, 2
+		mov	elis_attack.BE_move_lock_frame, 0
+		mov	elis_attack.BE_bos_image, 2
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3985C
+		push	offset elis_attack
 		call	sub_1689D
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 10h
-		mov	word_39888, 0
-		mov	word_39880, 2
+		mov	elis_attack.BE_move_lock_frame, 0
+		mov	elis_attack.BE_bos_image, 2
 
 loc_2617F:
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3985C
+		push	offset elis_attack
 		call	sub_1689D
 		add	sp, 0Ch
 
@@ -36041,10 +35584,10 @@ loc_261B6:
 		idiv	word_3A6CC
 		imul	si
 		push	ax
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 44
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 60
 		push	ax
 		push	ds
@@ -36076,10 +35619,10 @@ loc_261F8:
 		imul	si
 		add	al, 2
 		push	ax
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 44
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 60
 		push	ax
 		push	ds
@@ -36111,10 +35654,10 @@ loc_2623C:
 		imul	si
 		add	al, 4
 		push	ax
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 44
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 60
 		push	ax
 		push	ds
@@ -36146,10 +35689,10 @@ loc_26280:
 		imul	si
 		add	al, 6
 		push	ax
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 44
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 60
 		push	ax
 		push	ds
@@ -36181,10 +35724,10 @@ loc_262C3:
 		imul	si
 		add	al, 8
 		push	ax
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 44
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 60
 		push	ax
 		push	ds
@@ -36243,20 +35786,20 @@ sub_26322	proc far
 		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
-		mov	word_39888, 0
-		mov	word_39880, 1
+		mov	elis_attack.BE_move_lock_frame, 0
+		mov	elis_attack.BE_bos_image, 1
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3985C
+		push	offset elis_attack
 		call	sub_1689D
 		push	0
 		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
 		add	sp, 14h
-		mov	word_39888, 0
-		mov	word_39880, 1
+		mov	elis_attack.BE_move_lock_frame, 0
+		mov	elis_attack.BE_bos_image, 1
 		jmp	short loc_263C6
 ; ---------------------------------------------------------------------------
 
@@ -36269,24 +35812,24 @@ loc_2637D:
 		jnz	short loc_263DB
 		push	1
 		call	_graph_accesspage_func
-		mov	word_39888, 0
-		mov	word_39880, 2
+		mov	elis_attack.BE_move_lock_frame, 0
+		mov	elis_attack.BE_bos_image, 2
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3985C
+		push	offset elis_attack
 		call	sub_1689D
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 10h
-		mov	word_39888, 0
-		mov	word_39880, 2
+		mov	elis_attack.BE_move_lock_frame, 0
+		mov	elis_attack.BE_bos_image, 2
 
 loc_263C6:
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3985C
+		push	offset elis_attack
 		call	sub_1689D
 		add	sp, 0Ch
 
@@ -36299,7 +35842,7 @@ loc_263DB:
 		idiv	bx
 		or	dx, dx
 		jnz	loc_264AC
-		cmp	point_3982A.x, 256
+		cmp	elis_still_or_wave.BE_cur_left, 256
 		jge	short loc_26407
 		mov	ax, word_3A6CA
 		cwd
@@ -36318,14 +35861,14 @@ loc_26407:
 		xor	ax, ax
 
 loc_26413:
-		sub	ax, point_3982A.x
+		sub	ax, elis_still_or_wave.BE_cur_left
 		mov	bx, 10
 		cwd
 		idiv	bx
 		mov	dx, ax
 		pop	ax
 		imul	dx
-		add	ax, point_3982A.x
+		add	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 48
 		push	ax
 		mov	ax, word_3A6CA
@@ -36340,7 +35883,7 @@ loc_26413:
 		cwd
 		idiv	bx
 		add	dx, RES_Y / 2
-		sub	dx, point_3982A.y
+		sub	dx, elis_still_or_wave.BE_cur_top
 		mov	bx, 10
 		mov	ax, dx
 		cwd
@@ -36352,7 +35895,7 @@ loc_26413:
 		mov	dx, ax
 		pop	ax
 		imul	dx
-		add	ax, point_3982A.y
+		add	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 32
 		push	ax
 		mov	ax, word_3A6CA
@@ -36562,20 +36105,20 @@ var_2		= word ptr -2
 		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
-		mov	word_39888, 0
-		mov	word_39880, 1
+		mov	elis_attack.BE_move_lock_frame, 0
+		mov	elis_attack.BE_bos_image, 1
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3985C
+		push	offset elis_attack
 		call	sub_1689D
 		push	0
 		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
 		add	sp, 14h
-		mov	word_39888, 0
-		mov	word_39880, 1
+		mov	elis_attack.BE_move_lock_frame, 0
+		mov	elis_attack.BE_bos_image, 1
 		jmp	short loc_266C1
 ; ---------------------------------------------------------------------------
 
@@ -36588,24 +36131,24 @@ loc_26678:
 		jnz	short loc_266D6
 		push	1
 		call	_graph_accesspage_func
-		mov	word_39888, 0
-		mov	word_39880, 2
+		mov	elis_attack.BE_move_lock_frame, 0
+		mov	elis_attack.BE_bos_image, 2
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3985C
+		push	offset elis_attack
 		call	sub_1689D
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 10h
-		mov	word_39888, 0
-		mov	word_39880, 2
+		mov	elis_attack.BE_move_lock_frame, 0
+		mov	elis_attack.BE_bos_image, 2
 
 loc_266C1:
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3985C
+		push	offset elis_attack
 		call	sub_1689D
 		add	sp, 0Ch
 
@@ -36753,7 +36296,7 @@ loc_26822:
 		mov	bx, 192
 		cwd
 		idiv	bx
-		add	dx, point_3982A.x
+		add	dx, elis_still_or_wave.BE_cur_left
 		add	dx, -32
 		mov	bx, si
 		add	bx, bx
@@ -36762,7 +36305,7 @@ loc_26822:
 		mov	bx, 128
 		cwd
 		idiv	bx
-		add	dx, point_3982A.y
+		add	dx, elis_still_or_wave.BE_cur_top
 		add	dx, -32
 		mov	bx, si
 		add	bx, bx
@@ -36930,23 +36473,23 @@ var_2		= word ptr -2
 		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
-		mov	word_39888, 0
-		mov	word_39880, 0
+		mov	elis_attack.BE_move_lock_frame, 0
+		mov	elis_attack.BE_bos_image, 0
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3985C
+		push	offset elis_attack
 		call	sub_1689D
 		push	0
 		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
-		mov	word_39888, 0
-		mov	word_39880, 0
+		mov	elis_attack.BE_move_lock_frame, 0
+		mov	elis_attack.BE_bos_image, 0
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3985C
+		push	offset elis_attack
 		call	sub_1689D
 		add	sp, 20h
 
@@ -36999,7 +36542,7 @@ loc_26A0E:
 		mov	bx, 192
 		cwd
 		idiv	bx
-		add	dx, point_3982A.x
+		add	dx, elis_still_or_wave.BE_cur_left
 		add	dx, -32
 		mov	bx, si
 		add	bx, bx
@@ -37008,7 +36551,7 @@ loc_26A0E:
 		mov	bx, 128
 		cwd
 		idiv	bx
-		add	dx, point_3982A.y
+		add	dx, elis_still_or_wave.BE_cur_top
 		add	dx, -32
 		mov	bx, si
 		add	bx, bx
@@ -37072,16 +36615,16 @@ loc_26A94:
 loc_26ABF:
 		cmp	word_3A6CA, 64h	; 'd'
 		jle	short loc_26B17
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 32
 		mov	[bp+var_4], ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 40
 		mov	[bp+var_6], ax
-		mov	point_3988E.x, ax
+		mov	elis_bat.BE_cur_left, ax
 		mov	ax, [bp+var_4]
-		mov	point_3988E.y, ax
-		mov	word_398B2, 0
+		mov	elis_bat.BE_cur_top, ax
+		mov	elis_bat.BE_bos_image, 0
 		push	1
 		call	_graph_accesspage_func
 		push	2
@@ -37166,20 +36709,20 @@ loc_26B6D:
 
 loc_26B8B:
 		call	IRand
-		mov	bx, 0C0h ; '?'
+		mov	bx, 192
 		cwd
 		idiv	bx
-		add	dx, point_3988E.x
-		add	dx, 0FFB8h
+		add	dx, elis_bat.BE_cur_left
+		add	dx, -72
 		mov	bx, si
 		add	bx, bx
 		mov	[bx+5DB1h], dx
 		call	IRand
-		mov	bx, 80h	; '?'
+		mov	bx, 128
 		cwd
 		idiv	bx
-		add	dx, point_3988E.y
-		add	dx, 0FFD0h
+		add	dx, elis_bat.BE_cur_top
+		add	dx, -48
 		mov	bx, si
 		add	bx, bx
 		mov	[bx+5DBBh], dx
@@ -37242,12 +36785,12 @@ loc_26C11:
 loc_26C3C:
 		cmp	word_3A6CA, 64h	; 'd'
 		jle	loc_26D0B
-		call	_egc_copy_rect_1_to_0_16 c, [point_3988E], (32 shl 16) or 48
-		mov	ax, point_3988E.x
-		add	ax, 0FFD8h
+		call	_egc_copy_rect_1_to_0_16 c, [dword ptr elis_bat.BE_cur_left], (32 shl 16) or 48
+		mov	ax, elis_bat.BE_cur_left
+		add	ax, -40
 		mov	di, ax
-		mov	ax, point_3988E.y
-		add	ax, 0FFE0h
+		mov	ax, elis_bat.BE_cur_top
+		add	ax, -32
 		mov	[bp+var_4], ax
 		or	di, di
 		jge	short loc_26C71
@@ -37270,32 +36813,32 @@ loc_26C85:
 		mov	[bp+var_6], ax
 		mov	[bp+var_8], di
 		mov	ax, [bp+var_8]
-		mov	point_3982A.x, ax
+		mov	elis_still_or_wave.BE_cur_left, ax
 		mov	ax, [bp+var_6]
-		mov	point_3982A.y, ax
+		mov	elis_still_or_wave.BE_cur_top, ax
 		push	1
 		call	sub_24E33
 		push	1
 		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
-		mov	word_39888, 0
-		mov	word_39880, 1
+		mov	elis_attack.BE_move_lock_frame, 0
+		mov	elis_attack.BE_bos_image, 1
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3985C
+		push	offset elis_attack
 		call	sub_1689D
 		push	0
 		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
-		mov	word_39888, 0
-		mov	word_39880, 1
+		mov	elis_attack.BE_move_lock_frame, 0
+		mov	elis_attack.BE_bos_image, 1
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3985C
+		push	offset elis_attack
 		call	sub_1689D
 		call	_z_vsync_wait_and_scrollup stdcall, RES_Y
 		add	sp, 24h
@@ -37353,7 +36896,7 @@ loc_26D39:
 		idiv	bx
 		add	dx, 96
 		mov	y_3A767, dx
-		mov	ax, point_3988E.x
+		mov	ax, elis_bat.BE_cur_left
 		sub	ax, x_3A765
 		mov	[bp+var_2], ax
 		cwd
@@ -37361,7 +36904,7 @@ loc_26D39:
 		sub	ax, dx
 		cmp	ax, 80h	; '?'
 		jge	short loc_26D82
-		mov	ax, point_3988E.y
+		mov	ax, elis_bat.BE_cur_top
 		sub	ax, y_3A767
 		mov	[bp+var_4], ax
 		cwd
@@ -37371,9 +36914,9 @@ loc_26D39:
 		jl	short loc_26D39
 
 loc_26D82:
-		call	_vector2_between c, large [point_3988E], x_3A765, y_3A767, large [bp+arg_0], large [bp+arg_4], 2
+		call	_vector2_between c, large [dword ptr elis_bat.BE_cur_left], x_3A765, y_3A767, large [bp+arg_0], large [bp+arg_4], 2
 		mov	ax, x_3A765
-		sub	ax, point_3988E.x
+		sub	ax, elis_bat.BE_cur_left
 		mov	[bp+var_6], ax
 		cwd
 		xor	ax, dx
@@ -37441,10 +36984,10 @@ sub_26E02	proc far
 		call	sub_253A2
 		push	(3 shl 4) + 8
 		push	[bp+@@pattern]
-		mov	ax, point_3988E.y
+		mov	ax, elis_bat.BE_cur_top
 		add	ax, 12
 		push	ax
-		mov	ax, point_3988E.x
+		mov	ax, elis_bat.BE_cur_left
 		add	ax, 14h
 		push	ax
 		push	ds
@@ -37482,10 +37025,10 @@ loc_26E6A:
 		push	PP_2_SPREAD_WIDE_AIMED or (((5 shl 4) + 8) shl 16)
 
 loc_26E70:
-		mov	ax, point_3988E.y
+		mov	ax, elis_bat.BE_cur_top
 		add	ax, 12
 		push	ax
-		mov	ax, point_3988E.x
+		mov	ax, elis_bat.BE_cur_left
 		add	ax, 20
 		push	ax
 		push	ds
@@ -37519,10 +37062,10 @@ sub_26E8C	proc far
 		or	dx, dx
 		jnz	short loc_26ECA
 		push	PP_2_SPREAD_NARROW_AIMED or (((5 shl 4) + 5) shl 16)
-		mov	ax, point_3988E.y
+		mov	ax, elis_bat.BE_cur_top
 		add	ax, 12
 		push	ax
-		mov	ax, point_3988E.x
+		mov	ax, elis_bat.BE_cur_left
 		add	ax, 20
 		push	ax
 		push	ds
@@ -37549,10 +37092,10 @@ loc_26ECA:
 		or	dx, dx
 		jnz	short loc_26F10
 		push	PP_3_SPREAD_NARROW_AIMED or (((5 shl 4) + 5) shl 16)
-		mov	ax, point_3988E.y
+		mov	ax, elis_bat.BE_cur_top
 		add	ax, 12
 		push	ax
-		mov	ax, point_3988E.x
+		mov	ax, elis_bat.BE_cur_left
 		add	ax, 20
 		push	ax
 		push	ds
@@ -37584,10 +37127,10 @@ sub_26F12	proc far
 		push	2
 		call	IRand
 		push	ax
-		mov	ax, point_3988E.y
+		mov	ax, elis_bat.BE_cur_top
 		add	ax, 12
 		push	ax
-		mov	ax, point_3988E.x
+		mov	ax, elis_bat.BE_cur_left
 		add	ax, 20
 		push	ax
 		push	ds
@@ -37621,20 +37164,20 @@ sub_26F4F	proc far
 		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
-		mov	word_39888, 0
-		mov	word_39880, 1
+		mov	elis_attack.BE_move_lock_frame, 0
+		mov	elis_attack.BE_bos_image, 1
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3985C
+		push	offset elis_attack
 		call	sub_1689D
 		push	0
 		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
 		add	sp, 14h
-		mov	word_39888, 0
-		mov	word_39880, 1
+		mov	elis_attack.BE_move_lock_frame, 0
+		mov	elis_attack.BE_bos_image, 1
 		jmp	short loc_26FF3
 ; ---------------------------------------------------------------------------
 
@@ -37647,24 +37190,24 @@ loc_26FAA:
 		jnz	short loc_27008
 		push	1
 		call	_graph_accesspage_func
-		mov	word_39888, 0
-		mov	word_39880, 2
+		mov	elis_attack.BE_move_lock_frame, 0
+		mov	elis_attack.BE_bos_image, 2
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3985C
+		push	offset elis_attack
 		call	sub_1689D
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 10h
-		mov	word_39888, 0
-		mov	word_39880, 2
+		mov	elis_attack.BE_move_lock_frame, 0
+		mov	elis_attack.BE_bos_image, 2
 
 loc_26FF3:
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3985C
+		push	offset elis_attack
 		call	sub_1689D
 		add	sp, 0Ch
 
@@ -37689,10 +37232,10 @@ loc_2702A:
 		shl	ax, 4
 		push	ax
 		push	40h
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 40
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 56
 		push	ax
 		push	ds
@@ -37705,10 +37248,10 @@ loc_2702A:
 		shl	ax, 4
 		push	ax
 		push	40h
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 40
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		push	ax
 		push	ds
@@ -37738,10 +37281,10 @@ loc_27093:
 		shl	ax, 4
 		push	ax
 		push	50h
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 40
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 56
 		push	ax
 		push	ds
@@ -37754,10 +37297,10 @@ loc_27093:
 		shl	ax, 4
 		push	ax
 		push	30h
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 40
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		push	ax
 		push	ds
@@ -37787,10 +37330,10 @@ loc_270FC:
 		shl	ax, 4
 		push	ax
 		push	68h
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 40
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 56
 		push	ax
 		push	ds
@@ -37803,10 +37346,10 @@ loc_270FC:
 		shl	ax, 4
 		push	ax
 		push	18h
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 40
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		push	ax
 		push	ds
@@ -37839,10 +37382,10 @@ loc_27168:
 		mov	al, 80h
 		sub	al, [bp+@@angle]
 		push	ax
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 40
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 56
 		push	ax
 		push	ds
@@ -37855,10 +37398,10 @@ loc_27168:
 		shl	ax, 4
 		push	ax
 		push	word ptr [bp+@@angle]
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 40
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		push	ax
 		push	ds
@@ -37921,20 +37464,20 @@ loc_27201:
 		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
-		mov	word_39888, 0
-		mov	word_39880, 1
+		mov	elis_attack.BE_move_lock_frame, 0
+		mov	elis_attack.BE_bos_image, 1
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3985C
+		push	offset elis_attack
 		call	sub_1689D
 		push	0
 		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
 		add	sp, 14h
-		mov	word_39888, 0
-		mov	word_39880, 1
+		mov	elis_attack.BE_move_lock_frame, 0
+		mov	elis_attack.BE_bos_image, 1
 		jmp	short loc_272A0
 ; ---------------------------------------------------------------------------
 
@@ -37947,24 +37490,24 @@ loc_27257:
 		jnz	short loc_272B5
 		push	1
 		call	_graph_accesspage_func
-		mov	word_39888, 0
-		mov	word_39880, 2
+		mov	elis_attack.BE_move_lock_frame, 0
+		mov	elis_attack.BE_bos_image, 2
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3985C
+		push	offset elis_attack
 		call	sub_1689D
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 10h
-		mov	word_39888, 0
-		mov	word_39880, 2
+		mov	elis_attack.BE_move_lock_frame, 0
+		mov	elis_attack.BE_bos_image, 2
 
 loc_272A0:
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3985C
+		push	offset elis_attack
 		call	sub_1689D
 		add	sp, 0Ch
 
@@ -38081,24 +37624,24 @@ loc_27317:
 		call	_graph_accesspage_func
 		push	1
 		call	sub_24EC2
-		mov	word_39856, 0
-		mov	word_3984E, 0
+		mov	elis_still_or_wave.BE_move_lock_frame, 0
+		mov	elis_still_or_wave.BE_bos_image, 0
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3982A
+		push	offset elis_still_or_wave
 		call	sub_1689D
 		push	0
 		call	_graph_accesspage_func
 		push	1
 		call	sub_24EC2
 		add	sp, 32h
-		mov	word_39856, 0
-		mov	word_3984E, 0
+		mov	elis_still_or_wave.BE_move_lock_frame, 0
+		mov	elis_still_or_wave.BE_bos_image, 0
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3982A
+		push	offset elis_still_or_wave
 		call	sub_1689D
 
 loc_2745E:
@@ -38202,10 +37745,10 @@ loc_27539:
 		or	dx, dx
 		jnz	loc_275EF
 		push	PP_1_AIMED or (((4 shl 4) + 8) shl 16)
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 44
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 60
 		push	ax
 		push	ds
@@ -38239,10 +37782,10 @@ loc_275A1:
 		or	dx, dx
 		jnz	short loc_275D2
 		push	PP_1_AIMED or (((4 shl 4) + 8) shl 16)
-		mov	ax, point_3988E.y
+		mov	ax, elis_bat.BE_cur_top
 		add	ax, 44
 		push	ax
-		mov	ax, point_3988E.x
+		mov	ax, elis_bat.BE_cur_left
 		add	ax, 60
 		push	ax
 		push	ds
@@ -38289,20 +37832,20 @@ sub_275F4	proc far
 		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
-		mov	word_39888, 0
-		mov	word_39880, 1
+		mov	elis_attack.BE_move_lock_frame, 0
+		mov	elis_attack.BE_bos_image, 1
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3985C
+		push	offset elis_attack
 		call	sub_1689D
 		push	0
 		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
 		add	sp, 14h
-		mov	word_39888, 0
-		mov	word_39880, 1
+		mov	elis_attack.BE_move_lock_frame, 0
+		mov	elis_attack.BE_bos_image, 1
 		jmp	short loc_27698
 ; ---------------------------------------------------------------------------
 
@@ -38315,24 +37858,24 @@ loc_2764F:
 		jnz	short loc_276AD
 		push	1
 		call	_graph_accesspage_func
-		mov	word_39888, 0
-		mov	word_39880, 2
+		mov	elis_attack.BE_move_lock_frame, 0
+		mov	elis_attack.BE_bos_image, 2
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3985C
+		push	offset elis_attack
 		call	sub_1689D
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 10h
-		mov	word_39888, 0
-		mov	word_39880, 2
+		mov	elis_attack.BE_move_lock_frame, 0
+		mov	elis_attack.BE_bos_image, 2
 
 loc_27698:
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3985C
+		push	offset elis_attack
 		call	sub_1689D
 		add	sp, 0Ch
 
@@ -38345,21 +37888,21 @@ loc_276AD:
 		call	_graph_accesspage_func
 		push	1
 		call	sub_24EC2
-		mov	word_39856, 0
-		mov	word_3984E, 1
+		mov	elis_still_or_wave.BE_move_lock_frame, 0
+		mov	elis_still_or_wave.BE_bos_image, 1
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3982A
+		push	offset elis_still_or_wave
 		call	sub_1689D
 		push	0
 		call	_graph_accesspage_func
-		mov	word_39856, 0
-		mov	word_3984E, 1
+		mov	elis_still_or_wave.BE_move_lock_frame, 0
+		mov	elis_still_or_wave.BE_bos_image, 1
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3982A
+		push	offset elis_still_or_wave
 		call	sub_1689D
 		mov	angle_3A770, 0
 		push	0F0014h
@@ -38394,10 +37937,10 @@ loc_27759:
 		push	1
 		push	70080h
 		push	80h ; '?'
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		push	ax
 		call	sub_1786D
@@ -38410,10 +37953,10 @@ loc_27759:
 		push	1
 		push	70080h
 		push	80h ; '?'
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		push	ax
 		call	sub_1786D
@@ -38426,10 +37969,10 @@ loc_27759:
 		push	1
 		push	70080h
 		push	80h ; '?'
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		push	ax
 		call	sub_1786D
@@ -38443,10 +37986,10 @@ loc_27759:
 		push	1
 		push	70080h
 		push	80h ; '?'
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		push	ax
 		call	sub_1786D
@@ -38460,10 +38003,10 @@ loc_27759:
 		push	0
 		push	1
 		push	800080h
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		push	ax
 		call	sub_17956
@@ -38472,10 +38015,10 @@ loc_27759:
 		push	1
 		push	70080h
 		push	80h ; '?'
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		push	ax
 		call	sub_1786D
@@ -38484,24 +38027,24 @@ loc_27759:
 		call	_graph_accesspage_func
 		push	1
 		call	sub_24EC2
-		mov	word_39856, 0
-		mov	word_3984E, 0
+		mov	elis_still_or_wave.BE_move_lock_frame, 0
+		mov	elis_still_or_wave.BE_bos_image, 0
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3982A
+		push	offset elis_still_or_wave
 		call	sub_1689D
 		push	0
 		call	_graph_accesspage_func
 		push	1
 		call	sub_24EC2
 		add	sp, 32h
-		mov	word_39856, 0
-		mov	word_3984E, 0
+		mov	elis_still_or_wave.BE_move_lock_frame, 0
+		mov	elis_still_or_wave.BE_bos_image, 0
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3982A
+		push	offset elis_still_or_wave
 		call	sub_1689D
 		add	sp, 0Ch
 		jmp	loc_27A1C
@@ -38523,10 +38066,10 @@ loc_278BE:
 		push	0
 		push	1
 		push	800080h
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		push	ax
 		call	sub_17956
@@ -38549,10 +38092,10 @@ loc_2790F:
 		push	0
 		push	1
 		push	800080h
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		push	ax
 		call	sub_17956
@@ -38564,10 +38107,10 @@ loc_2790F:
 
 loc_2794B:
 		push	800080h
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		push	ax
 		call	sub_1786D
@@ -38582,10 +38125,10 @@ loc_2796A:
 		push	0
 		push	1
 		push	800080h
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		push	ax
 		call	sub_17956
@@ -38604,7 +38147,7 @@ loc_2799F:
 		movsx	eax, _CosTable8[bx]
 		shl	eax, 7
 		sar	eax, 8
-		add	ax, point_3982A.x
+		add	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
 		mov	[bp+@@left], ax
 		mov	al, angle_3A770
@@ -38615,7 +38158,7 @@ loc_2799F:
 		movsx	eax, _SinTable8[bx]
 		shl	eax, 7
 		sar	eax, 8
-		add	ax, point_3982A.y
+		add	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 28
 		mov	[bp+@@top], ax
 		call	@CPellets@add_pattern$qii16pellet_pattern_ti c, offset _Pellets, ds, [bp+@@left], ax, large PP_1 or ((4 shl 4) shl 16)
@@ -38640,20 +38183,20 @@ loc_27A1C:
 		or	dx, dx
 		jnz	short loc_27A65
 		push	PP_5_SPREAD_WIDE_AIMED or ((4 shl 4) shl 16)
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 40
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 22
 		push	ax
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_pattern$qii16pellet_pattern_ti
 		push	PP_5_SPREAD_WIDE_AIMED or ((4 shl 4) shl 16)
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 40
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 100
 		push	ax
 		push	ds
@@ -38675,10 +38218,10 @@ loc_27A65:
 		push	70032h
 		push	190h
 		push	_player_left
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 28
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 60
 		push	ax
 		mov	ax, word_3A6CA
@@ -39319,8 +38862,8 @@ loc_2802A:
 		jnz	loc_28158
 		cmp	word_3A773, 18h
 		jz	short loc_28082
-		push	word_39834
-		mov	ax, w_39832
+		push	elis_still_or_wave.BE_h
+		mov	ax, elis_still_or_wave.BE_vram_w
 		shl	ax, 3
 		add	ax, 16
 		push	ax
@@ -39334,7 +38877,7 @@ loc_2802A:
 		mov	ax, word_3A773
 		add	ax, -2
 		push	ax
-		pushd	[point_3982A]
+		pushd	[dword ptr elis_still_or_wave.BE_cur_left]
 		call	_egc_wave_unput
 		add	sp, 0Eh
 
@@ -39349,9 +38892,9 @@ loc_28082:
 		add	ax, 2
 		push	ax
 		push	0
-		pushd	[point_3982A]
+		pushd	[dword ptr elis_still_or_wave.BE_cur_left]
 		push	ds
-		push	offset point_3982A
+		push	offset elis_still_or_wave
 		call	sub_16344
 		add	sp, 10h
 		jmp	loc_28158
@@ -39360,8 +38903,8 @@ loc_28082:
 loc_280AE:
 		cmp	word_3A773, 64h	; 'd'
 		jnz	short loc_28103
-		push	word_39834
-		mov	ax, w_39832
+		push	elis_still_or_wave.BE_h
+		mov	ax, elis_still_or_wave.BE_vram_w
 		shl	ax, 3
 		add	ax, 16
 		push	ax
@@ -39374,14 +38917,14 @@ loc_280AE:
 		push	ax
 
 loc_280D6:
-		pushd	[point_3982A]
+		pushd	[dword ptr elis_still_or_wave.BE_cur_left]
 		call	_egc_wave_unput
-		mov	word_39856, 0
-		mov	word_3984E, 0
+		mov	elis_still_or_wave.BE_move_lock_frame, 0
+		mov	elis_still_or_wave.BE_bos_image, 0
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3982A
+		push	offset elis_still_or_wave
 		call	sub_16733
 		add	sp, 1Ah
 		jmp	short loc_28158
@@ -39394,9 +38937,9 @@ loc_28103:
 		call	sub_24EC2
 		push	400008h
 		push	30000h
-		pushd	[point_3982A]
+		pushd	[dword ptr elis_still_or_wave.BE_cur_left]
 		push	ds
-		push	offset point_3982A
+		push	offset elis_still_or_wave
 		call	sub_16344
 		add	sp, 12h
 		jmp	short loc_28158
@@ -39405,8 +38948,8 @@ loc_28103:
 loc_28130:
 		cmp	word_3A773, 82h
 		jnz	short loc_28150
-		push	word_39834
-		mov	ax, w_39832
+		push	elis_still_or_wave.BE_h
+		mov	ax, elis_still_or_wave.BE_vram_w
 		shl	ax, 3
 		add	ax, 10h
 		push	ax
@@ -39430,22 +38973,22 @@ loc_28163:
 		mov	word_3A6CA, 0
 		mov	word_3A773, 0
 		mov	byte_3A6CE, 1
-		mov	word_39852, 0
+		mov	elis_still_or_wave.BE_hitbox_orb_inactive, 0
 		push	1
 		call	_graph_accesspage_func
-		mov	word_39856, 0
+		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3982A
+		push	offset elis_still_or_wave
 		call	sub_1689D
 		push	0
 		call	_graph_accesspage_func
-		mov	word_39856, 0
+		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3982A
+		push	offset elis_still_or_wave
 		call	sub_1689D
 		add	sp, 1Ch
 		mov	word_3A779, 0
@@ -39510,22 +39053,22 @@ loc_2823F:
 
 loc_28258:
 		push	(48 shl 16) or 64
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 32
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 32
 		push	ax
 		cmp	word_35D4C, 0
 		jnz	short loc_28279
 		push	ds
-		push	offset point_3982A
+		push	offset elis_still_or_wave
 		jmp	short loc_2827D
 ; ---------------------------------------------------------------------------
 
 loc_28279:
 		push	ds
-		push	offset point_3988E
+		push	offset elis_bat
 
 loc_2827D:
 		call	sub_16970
@@ -39591,13 +39134,13 @@ loc_2832B:
 		jnz	loc_28442
 		inc	word_3A6CA
 		inc	word_3A773
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		mov	[bp+var_C], ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		mov	[bp+var_E], ax
-		mov	point_3985C.x, ax
+		mov	elis_attack.BE_cur_left, ax
 		mov	ax, [bp+var_C]
-		mov	point_3985C.y, ax
+		mov	elis_attack.BE_cur_top, ax
 		cmp	word_3A777, 0
 		jz	short loc_28368
 		push	word_3A777
@@ -39638,22 +39181,22 @@ loc_28396:
 
 loc_283AF:
 		push	(48 shl 16) or 64
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 32
 		push	ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 32
 		push	ax
 		cmp	word_35D4C, 0
 		jnz	short loc_283D0
 		push	ds
-		push	offset point_3982A
+		push	offset elis_still_or_wave
 		jmp	short loc_283D4
 ; ---------------------------------------------------------------------------
 
 loc_283D0:
 		push	ds
-		push	offset point_3988E
+		push	offset elis_bat
 
 loc_283D4:
 		call	sub_16970
@@ -39736,13 +39279,13 @@ loc_284B3:
 		jnz	loc_28655
 		inc	word_3A6CA
 		inc	word_3A773
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		mov	[bp+var_10], ax
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		mov	[bp+var_12], ax
-		mov	point_3985C.x, ax
+		mov	elis_attack.BE_cur_left, ax
 		mov	ax, [bp+var_10]
-		mov	point_3985C.y, ax
+		mov	elis_attack.BE_cur_top, ax
 		cmp	word_35D4C, 0
 		jz	short loc_28539
 		push	2
@@ -39750,7 +39293,7 @@ loc_284B3:
 		push	word_3A77D
 		push	0
 		push	ds
-		push	offset point_3988E
+		push	offset elis_bat
 		call	sub_16733
 		add	sp, 0Ch
 		mov	ax, word_3A6CA
@@ -39759,7 +39302,7 @@ loc_284B3:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_2850F
-		mov	word_398B2, 0
+		mov	elis_bat.BE_bos_image, 0
 		jmp	short loc_28539
 ; ---------------------------------------------------------------------------
 
@@ -39770,7 +39313,7 @@ loc_2850F:
 		idiv	bx
 		cmp	dx, 3
 		jnz	short loc_28525
-		mov	word_398B2, 1
+		mov	elis_bat.BE_bos_image, 1
 		jmp	short loc_28539
 ; ---------------------------------------------------------------------------
 
@@ -39781,7 +39324,7 @@ loc_28525:
 		idiv	bx
 		cmp	dx, 6
 		jnz	short loc_28539
-		mov	word_398B2, 2
+		mov	elis_bat.BE_bos_image, 2
 
 loc_28539:
 		push	0
@@ -39817,38 +39360,38 @@ loc_2856D:
 		push	ax
 		cmp	word_35D4C, 0
 		jnz	short loc_2857D
-		mov	ax, point_3982A.y
+		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 32
 		jmp	short loc_28580
 ; ---------------------------------------------------------------------------
 
 loc_2857D:
-		mov	ax, point_3988E.x
+		mov	ax, elis_bat.BE_cur_left
 
 loc_28580:
 		push	ax
 		cmp	word_35D4C, 0
 		jnz	short loc_28590
-		mov	ax, point_3982A.x
+		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 32
 		jmp	short loc_28593
 ; ---------------------------------------------------------------------------
 
 loc_28590:
-		mov	ax, point_3988E.x
+		mov	ax, elis_bat.BE_cur_left
 
 loc_28593:
 		push	ax
 		cmp	word_35D4C, 0
 		jnz	short loc_285A1
 		push	ds
-		push	offset point_3982A
+		push	offset elis_still_or_wave
 		jmp	short loc_285A5
 ; ---------------------------------------------------------------------------
 
 loc_285A1:
 		push	ds
-		push	offset point_3988E
+		push	offset elis_bat
 
 loc_285A5:
 		call	sub_16970
@@ -39929,6 +39472,9 @@ loc_28655:
 		retf
 sub_27C39	endp
 
+elis_still_or_wave	equ <>
+elis_attack	equ <>
+elis_bat	equ <>
 main_35_TEXT	ends
 
 ; ===========================================================================
@@ -39938,6 +39484,8 @@ main_36_TEXT	segment	byte public 'CODE' use16
 		assume cs:main_36_TEXT
 		;org 9
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
+
+sariel_shield	equ <boss_entity_0>
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -40062,18 +39610,18 @@ sub_2869E	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_28754	proc far
+public _sariel_load
+_sariel_load	proc far
 		push	bp
 		mov	bp, sp
-		mov	word_39854, 1
+		mov	sariel_shield.BE_loading, 1
 		push	0
 		push	ds
 		push	offset aBoss6_1_bos ; "boss6_1.bos"
 		push	ds
-		push	offset point_3982A
+		push	offset sariel_shield
 		call	sub_1568F
-		mov	word_39854, 0
+		mov	sariel_shield.BE_loading, 0
 		push	0
 		push	ds
 		push	offset aBoss6_2_bos ; "boss6_2.bos"
@@ -40097,7 +39645,7 @@ sub_28754	proc far
 		add	sp, 0Ah
 		pop	bp
 		retf
-sub_28754	endp
+_sariel_load	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -40112,19 +39660,16 @@ sub_287D9	proc far
 		push	300090h
 		push	130h
 		push	ds
-		push	offset point_3982A
+		push	offset sariel_shield
 		call	sub_166D2
 		add	sp, 12h
-		mov	word_3983E, 0
-		mov	word_39840, 30h	; '0'
-		mov	word_39842, 0
-		mov	word_39844, 30h	; '0'
+		CBossEntity__hitbox_set	sariel_shield, 0, 0, 48, 48
 		mov	word_3A6C8, 12h
 		mov	word_3A1E5, 8
 		mov	word_3A1E7, 2
 		mov	byte_3A6CE, 0
 		mov	word_3A6CA, 0
-		mov	word_39852, 0
+		mov	sariel_shield.BE_hitbox_orb_inactive, 0
 		mov	word_39A1E, 118h
 		mov	word_39A20, 0C0h ; '?'
 		mov	word_39A29, 128h
@@ -40881,22 +40426,22 @@ var_2		= word ptr -2
 		cwd
 		idiv	bx
 		mov	[bp+var_2], ax
-		mov	word_3984E, ax
+		mov	sariel_shield.BE_bos_image, ax
 		push	1
 		call	_graph_accesspage_func
-		mov	word_39856, 0
+		mov	sariel_shield.BE_move_lock_frame, 0
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3982A
+		push	offset sariel_shield
 		call	sub_1689D
 		push	0
 		call	_graph_accesspage_func
-		mov	word_39856, 0
+		mov	sariel_shield.BE_move_lock_frame, 0
 		push	30000h
 		pushd	0
 		push	ds
-		push	offset point_3982A
+		push	offset sariel_shield
 		call	sub_1689D
 		add	sp, 1Ch
 
@@ -46036,7 +45581,7 @@ var_5		= word ptr -5
 
 loc_2C100:
 		push	ds
-		push	offset point_3982A
+		push	offset sariel_shield
 		call	sub_16970
 		add	sp, 4
 		or	ax, ax
@@ -46228,8 +45773,8 @@ loc_2C2F2:
 		mov	word_3A6CA, 0
 		mov	byte_3B437, 0
 		call	sub_232D3
-		mov	point_3982A.x, 304
-		mov	point_3982A.y, 144
+		mov	sariel_shield.BE_cur_left, 304
+		mov	sariel_shield.BE_cur_top, 144
 		call	sub_28852
 		push	1
 		call	sub_28F11
@@ -47281,6 +46826,7 @@ loc_2CDCE:
 		retf
 sub_2C0CA	endp
 
+sariel_shield	equ <>
 main_36_TEXT	ends
 
 ; ===========================================================================
@@ -47290,6 +46836,10 @@ main_37_TEXT	segment	byte public 'CODE' use16
 		assume cs:main_37_TEXT
 		;org 2
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
+
+konngara_head	equ <boss_entity_0>
+konngara_face_closed_or_glare	equ <boss_entity_1>
+konngara_face_aim	equ <boss_entity_2>
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -47418,8 +46968,8 @@ sub_2CE17	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_2CEAD	proc far
+public _konngara_load
+_konngara_load	proc far
 
 var_8		= word ptr -8
 var_6		= word ptr -6
@@ -47475,31 +47025,31 @@ loc_2CF26:
 		jl	short loc_2CF11
 		call	_z_palette_set_all_show stdcall, offset _z_Palettes, ds
 		call	text_fillca pascal, (' ' shl 16) + TX_WHITE
-		mov	word_39854, 1
+		mov	konngara_head.BE_loading, 1
 		push	0
 		push	ds
 		push	offset aBoss8_1_bos ; "boss8_1.bos"
 		push	ds
-		push	offset point_3982A
+		push	offset konngara_head
 		call	sub_1568F
-		mov	word_39854, 0
-		mov	word_39886, 1
+		mov	konngara_head.BE_loading, 0
+		mov	konngara_face_closed_or_glare.BE_loading, 1
 		push	1
 		push	ds
 		push	offset aBoss8_e1_bos ; "boss8_e1.bos"
 		push	ds
-		push	offset point_3985C
+		push	offset konngara_face_closed_or_glare
 		call	sub_1568F
-		mov	word_39886, 0
-		mov	word_398B8, 1
+		mov	konngara_face_closed_or_glare.BE_loading, 0
+		mov	konngara_face_aim.BE_loading, 1
 		push	2
 		push	ds
 		push	offset aBoss8_e2_bos ; "boss8_e2.bos"
 		push	ds
-		push	offset point_3988E
+		push	offset konngara_face_aim
 		call	sub_1568F
 		add	sp, 22h
-		mov	word_398B8, 0
+		mov	konngara_face_aim.BE_loading, 0
 		xor	di, di
 		mov	si, 32
 		mov	[bp+var_2], 0
@@ -47739,7 +47289,7 @@ loc_2D1F0:
 		pop	si
 		leave
 		retf
-sub_2CEAD	endp
+_konngara_load	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -47830,14 +47380,14 @@ arg_0		= word ptr  6
 		push	si
 		push	500118h
 		push	ds
-		push	offset point_3982A
+		push	offset konngara_head
 		call	sub_1588A
 		push	0
 		call	_graph_accesspage_func
 		push	si
 		push	500118h
 		push	ds
-		push	offset point_3982A
+		push	offset konngara_head
 		call	sub_1588A
 		add	sp, 18h
 		cmp	word_35FF0, 3
@@ -47847,7 +47397,7 @@ arg_0		= word ptr  6
 		push	si
 		push	800118h
 		push	ds
-		push	offset point_3988E
+		push	offset konngara_face_aim
 		call	sub_1588A
 		push	0
 		call	_graph_accesspage_func
@@ -47855,7 +47405,7 @@ arg_0		= word ptr  6
 		push	si
 		push	800118h
 		push	ds
-		push	offset point_3988E
+		push	offset konngara_face_aim
 		jmp	short loc_2D334
 ; ---------------------------------------------------------------------------
 
@@ -47871,7 +47421,7 @@ loc_2D2EF:
 		push	ax
 		push	800118h
 		push	ds
-		push	offset point_3985C
+		push	offset konngara_face_closed_or_glare
 		call	sub_1588A
 		push	0
 		call	_graph_accesspage_func
@@ -47883,7 +47433,7 @@ loc_2D2EF:
 		push	ax
 		push	800118h
 		push	ds
-		push	offset point_3985C
+		push	offset konngara_face_closed_or_glare
 
 loc_2D334:
 		call	sub_1588A
@@ -47920,7 +47470,7 @@ arg_0		= word ptr  6
 		push	word_35FEE
 		push	800118h
 		push	ds
-		push	offset point_3988E
+		push	offset konngara_face_aim
 		call	sub_1588A
 		push	0
 		call	_graph_accesspage_func
@@ -47928,7 +47478,7 @@ arg_0		= word ptr  6
 		push	word_35FEE
 		push	800118h
 		push	ds
-		push	offset point_3988E
+		push	offset konngara_face_aim
 		jmp	short loc_2D403
 ; ---------------------------------------------------------------------------
 
@@ -47943,7 +47493,7 @@ loc_2D38B:
 		push	ax
 		push	800118h
 		push	ds
-		push	offset point_3985C
+		push	offset konngara_face_closed_or_glare
 		call	sub_1588A
 		push	0
 		call	_graph_accesspage_func
@@ -47954,7 +47504,7 @@ loc_2D38B:
 		push	ax
 		push	800118h
 		push	ds
-		push	offset point_3985C
+		push	offset konngara_face_closed_or_glare
 		jmp	short loc_2D403
 ; ---------------------------------------------------------------------------
 
@@ -47964,7 +47514,7 @@ loc_2D3D1:
 		push	word_35FEE
 		push	500118h
 		push	ds
-		push	offset point_3982A
+		push	offset konngara_head
 		call	sub_1588A
 		push	0
 		call	_graph_accesspage_func
@@ -47972,7 +47522,7 @@ loc_2D3D1:
 		push	word_35FEE
 		push	500118h
 		push	ds
-		push	offset point_3982A
+		push	offset konngara_head
 
 loc_2D403:
 		call	sub_1588A
@@ -51855,6 +51405,9 @@ loc_2FC40:
 		retf
 sub_2EE7D	endp
 
+konngara_head	equ <>
+konngara_face_closed_or_glare	equ <>
+konngara_face_aim	equ <>
 main_37_TEXT	ends
 
 ; ===========================================================================
@@ -53017,114 +52570,16 @@ unk_3940D	db    ?	;
 include th01/hiscore/hiscore[bss].asm
 		db 4 dup(?)
 include th01/formats/bos[bss].asm
-point_3982A	Point <?>
-word_3982E	dw ?
-word_39830	dw ?
-w_39832	dw ?
-word_39834	dw ?
-word_39836	dw ?
-word_39838	dw ?
-word_3983A	dw ?
-word_3983C	dw ?
-word_3983E	dw ?
-word_39840	dw ?
-word_39842	dw ?
-word_39844	dw ?
-word_39846	dw ?
-word_39848	dw ?
-word_3984A	dw ?
-word_3984C	dw ?
-word_3984E	dw ?
-word_39850	dw ?
-word_39852	dw ?
-word_39854	dw ?
-word_39856	dw ?
-word_39858	dw ?
-byte_3985A	db ?
-byte_3985B	db ?
-point_3985C	Point <?>
-		db 4 dup(?)
-unk_39864	db    ?	;
-		db    ?	;
-unk_39866	db    ?	;
-		db 9 dup(?)
-word_39870	dw ?
-word_39872	dw ?
-word_39874	dw ?
-word_39876	dw ?
-		db 4 dup(?)
-unk_3987C	db    ?	;
-		db 3 dup(?)
-word_39880	dw ?
-		db 2 dup(?)
-word_39884	dw ?
-word_39886	dw ?
-word_39888	dw ?
-		db 2 dup(?)
-byte_3988C	db ?
-unk_3988D	db    ?	;
-point_3988E	Point <?>
-		db 4 dup(?)
-unk_39896	db    ?	;
-		db    ?	;
-unk_39898	db    ?	;
-		db 9 dup(?)
-word_398A2	dw ?
-word_398A4	dw ?
-word_398A6	dw ?
-word_398A8	dw ?
-		db 4 dup(?)
-unk_398AE	db    ?	;
-		db 3 dup(?)
-word_398B2	dw ?
-		db 2 dup(?)
-word_398B6	dw ?
-word_398B8	dw ?
-		db 4 dup(?)
-byte_398BE	db ?
-unk_398BF	db    ?	;
-point_398C0	Point <?>
-		db 4 dup(?)
-unk_398C8	db    ?	;
-		db    ?	;
-unk_398CA	db    ?	;
-		db 9 dup(?)	;
-word_398D4	dw ?
-word_398D6	dw ?
-word_398D8	dw ?
-word_398DA	dw ?
-		db 4 dup(?)
-unk_398E0	db    ?	;
-		db 3 dup(?)
-word_398E4	dw ?
-		db 2 dup(?)
-word_398E8	dw ?
-word_398EA	dw ?
-		db 4 dup(?)
-byte_398F0	db ?
-unk_398F1	db    ?	;
-point_398F2	Point <?>
-		db 4 dup(?)
-unk_398FA	db    ?	;
-		db    ?	;
-unk_398FC	db    ?	;
-		db 9 dup(?)
-word_39906	dw ?
-word_39908	dw ?
-word_3990A	dw ?
-word_3990C	dw ?
-		db 4 dup(?)
-unk_39912	db    ?	;
-		db 3 dup(?)
-word_39916	dw ?
-		db 2 dup(?)
-word_3991A	dw ?
-word_3991C	dw ?
-		db 4 dup(?)
-byte_39922	db ?
-unk_39923	db    ?	;
-unk_39924	db    ?	;
-		db 249 dup (?)
+
+_boss_entities	CBossEntity 5 dup(<?>)
+_boss_entities_unused	CBossEntity 5 dup(<?>)
+boss_entity_0	equ <_boss_entities[0 * size CBossEntity]>
+boss_entity_1	equ <_boss_entities[1 * size CBossEntity]>
+boss_entity_2	equ <_boss_entities[2 * size CBossEntity]>
+boss_entity_3	equ <_boss_entities[3 * size CBossEntity]>
+boss_entity_4	equ <_boss_entities[4 * size CBossEntity]>
+boss	equ boss_entity_0
+
 word_39A1E	dw ?
 word_39A20	dw ?
 		db 5 dup(?)
@@ -53281,70 +52736,7 @@ point_3A389	Point <?>
 palette_3A38E	palette_t <?>
 byte_3A3BE	db ?
 		db 10 dup(?)
-x_3A3C9	dw ?
-y_3A3CB	dw ?
-word_3A3CD	dw ?
-word_3A3CF	dw ?
-word_3A3D1	dw ?
-word_3A3D3	dw ?
-word_3A3D5	dw ?
-word_3A3D7	dw ?
-word_3A3D9	dw ?
-word_3A3DB	dw ?
-word_3A3DD	dw ?
-word_3A3DF	dw ?
-word_3A3E1	dw ?
-word_3A3E3	dw ?
-word_3A3E5	dw ?
-word_3A3E7	dw ?
-word_3A3E9	dw ?
-word_3A3EB	dw ?
-word_3A3ED	dw ?
-word_3A3EF	dw ?
-word_3A3F1	dw ?
-word_3A3F3	dw ?
-word_3A3F5	dw ?
-word_3A3F7	dw ?
-byte_3A3F9	db ?
-byte_3A3FA	db ?
-x_3A3FB	dw ?
-y_3A3FD	dw ?
-		db 4 dup(?)
-unk_3A403	db    ?	;
-		db    ?	;
-unk_3A405	db    ?	;
-		db 21 dup (?)
-unk_3A41B	db    ?	;
-		db 16 dup(?)
-unk_3A42C	db    ?	;
-		db 150 dup(?)
-word_3A4C3	dw ?
-word_3A4C5	dw ?
-word_3A4C7	dw ?
-word_3A4C9	dw ?
-word_3A4CB	dw ?
-word_3A4CD	dw ?
-word_3A4CF	dw ?
-word_3A4D1	dw ?
-word_3A4D3	dw ?
-word_3A4D5	dw ?
-word_3A4D7	dw ?
-word_3A4D9	dw ?
-word_3A4DB	dw ?
-word_3A4DD	dw ?
-word_3A4DF	dw ?
-word_3A4E1	dw ?
-word_3A4E3	dw ?
-word_3A4E5	dw ?
-word_3A4E7	dw ?
-word_3A4E9	dw ?
-word_3A4EB	dw ?
-word_3A4ED	dw ?
-word_3A4EF	dw ?
-word_3A4F1	dw ?
-byte_3A4F3	db ?
-byte_3A4F4	db ?
-		db 450 dup(?)
+include th01/main/boss/b15j[bss].asm
 word_3A6B7	dw ?
 angle_3A6B9	db ?
 angle_3A6BA	db ?
