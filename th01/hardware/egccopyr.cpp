@@ -19,7 +19,7 @@ void egc_copy_rect_1_to_0_16(int x, int y, int w, int h)
 			graph_accesspage_func(1); VRAM_SNAP(dots, B, p, 16);
 			graph_accesspage_func(0); VRAM_PUT(B, p, dots, 16);
 		}
-		row_p += 640 / 8;
+		row_p += ROW_SIZE;
 	}
 	egc_off();
 }

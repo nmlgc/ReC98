@@ -12,8 +12,8 @@
 #define PIANO_OCTAVES 8
 #define PIANO_OCTAVE_W (7 * PIANO_KEY_W)
 
-#define PIANO_VRAM_X (PIANO_X / 8)
-#define PIANO_VRAM_W ((PIANO_OCTAVES * PIANO_OCTAVE_W) / 8)
+#define PIANO_VRAM_X (PIANO_X / BYTE_DOTS)
+#define PIANO_VRAM_W ((PIANO_OCTAVES * PIANO_OCTAVE_W) / BYTE_DOTS)
 
 // Sprite data
 extern const dots8_t PIANO_KEYS_BLACK[PIANO_VRAM_W];
@@ -33,7 +33,7 @@ extern const dots8_t PIANO_KEYS_BLACK[PIANO_VRAM_W];
 
 #define piano_label_putc(col, row, chr) \
 	_AL = chr; \
-	_DI = (PIANO_LABEL_Y(row) * ROW_SIZE) + (PIANO_LABEL_X(col) / 8); \
+	_DI = (PIANO_LABEL_Y(row) * ROW_SIZE) + (PIANO_LABEL_X(col) / BYTE_DOTS); \
 	piano_label_put_raw();
 
 void pascal piano_label_put_raw();

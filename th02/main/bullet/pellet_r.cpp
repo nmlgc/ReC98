@@ -14,7 +14,7 @@ void pascal near pellet_render(int left, int top)
 	_DX >>= 2;
 	_DI = _AX + _DX;
 
-	_SI = reinterpret_cast<uint16_t>(sPELLET[0][left & 7]);
+	_SI = reinterpret_cast<uint16_t>(sPELLET[0][left & (BYTE_DOTS - 1)]);
 	_CX = 8;
 	put_loop: {
 		__asm movsw

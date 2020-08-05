@@ -143,8 +143,8 @@ void ptn_put_quarter(int left, int top, int ptn_id, int quarter)
 		void set(const dots16_t& dots, const char& first_bit) {
 			d8[0] = ((dots & 0xFF) >> first_bit);
 			d8[1] = (
-				((dots & 0xFF) << (8 - first_bit)) |
-				((dots & 0xFF00) >> (8 + first_bit))
+				((dots & 0xFF) << (BYTE_DOTS - first_bit)) |
+				((dots & 0xFF00) >> (BYTE_DOTS + first_bit))
 			);
 			d8[2] = ((dots & 0xFF00) >> first_bit);
 		}
@@ -156,8 +156,8 @@ void ptn_put_quarter(int left, int top, int ptn_id, int quarter)
 		) {
 			d8[0] = (((dots & 0xFF) >> first_bit) & mask.d8[0]);
 			d8[1] = ((
-				((dots & 0xFF) << (8 - first_bit)) |
-				((dots & 0xFF00) >> (8 + first_bit))
+				((dots & 0xFF) << (BYTE_DOTS - first_bit)) |
+				((dots & 0xFF00) >> (BYTE_DOTS + first_bit))
 			) & mask.d8[1]);
 			d8[2] = (((dots & 0xFF00) >> first_bit) & mask.d8[2]);
 		}
@@ -171,7 +171,7 @@ void ptn_put_quarter(int left, int top, int ptn_id, int quarter)
 	unsigned int y;
 	dots_t(PTN_QUARTER_W) mask;
 	PTNQuarter q;
-	char first_bit = (left % 8);
+	char first_bit = (left % BYTE_DOTS);
 	dots16_unaligned_t mask_unaligned = ptnpq_mask_unaligned_zero;
 	dots16_unaligned_t dots_unaligned = ptnpq_dots_unaligned_zero;
 	Planar<dots_t(PTN_QUARTER_W)> sprite;

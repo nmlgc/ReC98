@@ -14,7 +14,7 @@ typedef int32_t sdots32_t;
 
 // Defines a hardcoded 1bpp sprite, pre-shifted to all 8 start X positions
 // within a single VRAM byte.
-#define PRESHIFT 8
+#define PRESHIFT BYTE_DOTS
 
 typedef enum {
 	PL_B, PL_R, PL_G, PL_E, PL_COUNT
@@ -73,12 +73,12 @@ static inline unsigned int vram_offset_shift(int x, int y)
 
 static inline unsigned int vram_offset_muldiv(int x, int y)
 {
-	return (y * ROW_SIZE) + (x / 8);
+	return (y * ROW_SIZE) + (x / BYTE_DOTS);
 }
 
 static inline unsigned int vram_offset_divmul(int x, int y)
 {
-	return (x / 8) + (y * ROW_SIZE);
+	return (x / BYTE_DOTS) + (y * ROW_SIZE);
 }
 
 static inline unsigned int vram_offset_mulshift(int x, int y)

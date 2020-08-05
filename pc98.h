@@ -13,9 +13,10 @@
 
 /// Graphics
 /// --------
+#define BYTE_DOTS 8
 #define RES_X 640
 #define RES_Y 400
-#define ROW_SIZE (RES_X / 8)
+#define ROW_SIZE (RES_X / BYTE_DOTS)
 #define PLANE_SIZE (ROW_SIZE * RES_Y)
 
 typedef bool page_t;

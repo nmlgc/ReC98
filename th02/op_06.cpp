@@ -176,7 +176,7 @@ void pascal near music_flip(void)
 #define CMT_BACK_BLIT(dst, dp, src, sp) \
 	ps = 0; \
 	for(y = 64; y < 80; y++) { \
-		for(x = 160; x < 480; x += (4 * 8)) { \
+		for(x = 160; x < 480; x += (4 * BYTE_DOTS)) { \
 			pd = vram_offset_shift(x, y); \
 			*(long*)(dst[PL_B] + (dp)) = *(long*)(src[PL_B] + (sp)); \
 			*(long*)(dst[PL_R] + (dp)) = *(long*)(src[PL_R] + (sp)); \
@@ -186,7 +186,7 @@ void pascal near music_flip(void)
 		} \
 	} \
 	for(y = 80; y < 384; y++) { \
-		for(x = 304; x < 624; x += (4 * 8)) { \
+		for(x = 304; x < 624; x += (4 * BYTE_DOTS)) { \
 			pd = vram_offset_shift(x, y); \
 			*(long*)(dst[PL_B] + (dp)) = *(long*)(src[PL_B] + (sp)); \
 			*(long*)(dst[PL_R] + (dp)) = *(long*)(src[PL_R] + (sp)); \
@@ -202,7 +202,7 @@ void pascal near cmt_back_snap(void)
 	int i;
 	for(i = 0; i < PL_COUNT; i++) {
 		cmt_back[i] = reinterpret_cast<dots8_t *>(MK_FP(
-			hmem_allocbyte(304 * (320 / 8) + 16 * (320 / 8)), 0
+			hmem_allocbyte(304 * (320 / BYTE_DOTS) + 16 * (320 / BYTE_DOTS)), 0
 		));
 	}
 	CMT_BACK_BLIT(cmt_back, ps, VRAM_PLANE, pd);

@@ -17,7 +17,7 @@ static const int PIC_H = (RES_Y / 2);
 static const int PIC_LEFT = ((RES_X / 2) - (PIC_W / 2));
 static const int PIC_TOP  = ((RES_Y / 2) - (PIC_H / 2));
 
-static const int PIC_VRAM_W = (PIC_W / 8);
+static const int PIC_VRAM_W = (PIC_W / BYTE_DOTS);
 
 void end_pic_show(int quarter)
 {

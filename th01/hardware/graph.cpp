@@ -367,7 +367,7 @@ void z_palette_show(void)
 void z_grcg_pset(int x, int y, int col)
 {
 	grcg_setcolor_rmw(col);
-	VRAM_SBYTE(B, vram_offset_mulshift(x, y)) = (0x80 >> (x & 7));
+	VRAM_SBYTE(B, vram_offset_mulshift(x, y)) = (0x80 >> (x & (BYTE_DOTS - 1)));
 	grcg_off_func();
 }
 
@@ -375,7 +375,7 @@ int z_graph_readdot(int x, int y)
 {
 	int ret;
 	int16_t vram_offset = vram_offset_mulshift(x, y);
-	sdots16_t mask = (0x80 >> (x & 7));
+	sdots16_t mask = (0x80 >> (x & (BYTE_DOTS - 1)));
 
 #define test(plane, vram_offset, mask, bit) \
 	if(VRAM_SBYTE(plane, vram_offset) & mask) { \
@@ -420,9 +420,9 @@ void graph_r_hline(int left, int right, int y, int col)
 	graph_r_last_line_end.y = y;
 
 	vram_row = (dots8_t *)(MK_FP(GRAM_400, vram_offset_muldiv(left, y)));
-	full_bytes_to_put = (right / 8) - (left / 8);
-	left_pixels = 0xFF >> (left & 7);
-	right_pixels = 0xFF << (7 - (right & 7));
+	full_bytes_to_put = (right / BYTE_DOTS) - (left / BYTE_DOTS);
+	left_pixels = 0xFF >> (left & (BYTE_DOTS - 1));
+	right_pixels = 0xFF << ((BYTE_DOTS - 1) - (right & (BYTE_DOTS - 1)));
 
 	if(!graph_r_unput) {
 		grcg_setcolor_rmw(col);
@@ -459,12 +459,14 @@ void graph_r_vline(int x, int top, int bottom, int col)
 	graph_r_last_line_end.y = bottom;
 
 	if(graph_r_unput) {
-		egc_copy_rect_1_to_0_16(x, top, sizeof(pattern) * 8, bottom - top);
+		egc_copy_rect_1_to_0_16(
+			x, top, (sizeof(pattern) * BYTE_DOTS), (bottom - top)
+		);
 		return;
 	}
 	vram_row_offset = vram_offset_shift(x, top);
-	pattern = graph_r_pattern >> (x & 7);
-	pattern |= graph_r_pattern << (16 - (x & 7));
+	pattern = graph_r_pattern >> (x & (BYTE_DOTS - 1));
+	pattern |= graph_r_pattern << (16 - (x & (BYTE_DOTS - 1)));
 
 	grcg_setcolor_rmw(col);
 	for(y = top; y <= bottom; y++) {
@@ -548,8 +550,8 @@ void graph_r_line(int left, int top, int right, int bottom, int col)
 			y_vram = y_cur; \
 			x_vram = (x_cur >> 3); \
 		} \
-		pixels |= (graph_r_pattern >> (x_cur & 7)); \
-		pixels |= (graph_r_pattern << (16 - (x_cur & 7))); \
+		pixels |= (graph_r_pattern >> (x_cur & (BYTE_DOTS - 1))); \
+		pixels |= (graph_r_pattern << (16 - (x_cur & (BYTE_DOTS - 1)))); \
 		error -= plotted_len; \
 		step_var += step_increment; \
 		if(error < 0) { \
@@ -645,8 +647,8 @@ void z_grcg_boxfill(int left, int top, int right, int bottom, int col)
 	vram_row = (dots8_t *)(MK_FP(GRAM_400, vram_offset_mulshift(left, top)));
 	for(y = top; y <= bottom; y++) {
 		full_bytes_to_put = (right >> 3) - (left >> 3);
-		left_pixels = 0xFF >> (left & 7);
-		right_pixels = 0xFF << (7 - (right & 7));
+		left_pixels = 0xFF >> (left & (BYTE_DOTS - 1));
+		right_pixels = 0xFF << ((BYTE_DOTS - 1) - (right & (BYTE_DOTS - 1)));
 
 		if(full_bytes_to_put == 0) {
 			vram_row[0] = (left_pixels & right_pixels);
@@ -757,7 +759,7 @@ void graph_copy_byterect_back_to_front(
 	int left, int top, int right, int bottom
 )
 {
-	int w = (right - left) / 8;
+	int w = (right - left) / BYTE_DOTS;
 	int h = (bottom - top);
 	Planes_declare(p);
 	page_t page_front = page_back ^ 1;
@@ -780,7 +782,7 @@ void graph_move_byterect_interpage(
 	int src, int dst
 )
 {
-	int w = (src_right - src_left) / 8;
+	int w = (src_right - src_left) / BYTE_DOTS;
 	int h = (src_bottom - src_top);
 	Planes_declare(src);
 	Planes_declare(dst);

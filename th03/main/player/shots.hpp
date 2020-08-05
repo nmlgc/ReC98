@@ -4,7 +4,7 @@
 #define SHOT_SPRITE_COUNT 4
 #define SHOT_W 16
 #define SHOT_H 8
-#define SHOT_VRAM_W (SHOT_W / 8)
+#define SHOT_VRAM_W (SHOT_W / BYTE_DOTS)
 #define SHOT_VRAM_H (SHOT_H / 2)
 
 enum shot_mode_t {

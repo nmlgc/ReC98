@@ -2,7 +2,7 @@
 
 #define set_vram_ptr(vram, first_bit, left, top) \
 	vram = (dots8_t *)(MK_FP(GRAM_400, vram_offset_muldiv(left, top))); \
-	first_bit = left % 8; \
+	first_bit = (left % BYTE_DOTS); \
 
 #define get_glyph(glyph, codepoint, fullwidth, str, left, line) \
 	if(_ismbblead(str[0])) { \
@@ -64,17 +64,17 @@
 
 #define put_row_and_advance(vram, row, first_bit) \
 	if(first_bit) { \
-		vram[0] = glyph_row >> (first_bit + 8); \
-		vram[1] = glyph_row >> (first_bit + 0); \
-		vram[2] = glyph_row << (8 - first_bit); \
+		vram[0] = glyph_row >> (first_bit + BYTE_DOTS); \
+		vram[1] = glyph_row >> (first_bit +         0); \
+		vram[2] = glyph_row << (BYTE_DOTS - first_bit); \
 	} else { \
-		vram[0] = glyph_row >> 8; \
+		vram[0] = glyph_row >> BYTE_DOTS; \
 		vram[1] = glyph_row; \
 	} \
 	vram += ROW_SIZE;
 
 #define advance_left(left, fullwidth, spacing) \
 	if(fullwidth) { \
-		left += 8; \
+		left += GLYPH_HALF_W; \
 	} \
-	left += spacing + 8;
+	left += spacing + GLYPH_HALF_W;

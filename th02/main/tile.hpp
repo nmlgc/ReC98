@@ -1,6 +1,6 @@
 #define TILE_W 16
 #define TILE_H 16
-#define TILE_VRAM_W (TILE_W / 8)
+#define TILE_VRAM_W (TILE_W / BYTE_DOTS)
 #define TILES_Y (1 + (PLAYFIELD_H / TILE_H) + 1)
 #define TILES_X (PLAYFIELD_W / TILE_W)
 
