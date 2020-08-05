@@ -74,6 +74,7 @@ BOMBS_MAX = 5
 main_01 group main_01_TEXT, main_01__TEXT, main_01___TEXT
 main_13 group main_13_TEXT, main_13__TEXT
 main_19 group main_19_TEXT, main_19__TEXT
+main_21 group main_21_TEXT, main_21__TEXT
 main_23 group main_23_TEXT, main_23__TEXT
 main_25 group main_25_TEXT, main_25__TEXT
 main_27 group main_27_TEXT, main_27__TEXT
@@ -8874,76 +8875,12 @@ main_20_TEXT	ends
 
 ; Segment type:	Pure code
 main_21_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_21_TEXT
+main_21_TEXT	ends
+
+main_21__TEXT	segment	byte public 'CODE' use16
+		assume cs:main_21
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_155F4	proc far
-		push	bp
-		mov	bp, sp
-		xor	dx, dx
-		jmp	loc_15686
-; ---------------------------------------------------------------------------
-
-loc_155FC:
-		xor	cx, cx
-		jmp	short loc_1567E
-; ---------------------------------------------------------------------------
-
-loc_15600:
-		mov	bx, dx
-		imul	bx, size bos_t
-		mov	ax, cx
-		imul	ax, size bos_image_t
-		add	bx, ax
-		mov	word ptr (_bos_images[bx].BOS_alpha+2), 0
-		mov	word ptr (_bos_images[bx].BOS_alpha+0), 0
-		mov	bx, dx
-		imul	bx, size bos_t
-		mov	ax, cx
-		imul	ax, size bos_image_t
-		add	bx, ax
-		mov	word ptr (_bos_images[bx].BOS_B+2), 0
-		mov	word ptr (_bos_images[bx].BOS_B+0), 0
-		mov	bx, dx
-		imul	bx, size bos_t
-		mov	ax, cx
-		imul	ax, size bos_image_t
-		add	bx, ax
-		mov	word ptr (_bos_images[bx].BOS_R+2), 0
-		mov	word ptr (_bos_images[bx].BOS_R+0), 0
-		mov	bx, dx
-		imul	bx, size bos_t
-		mov	ax, cx
-		imul	ax, size bos_image_t
-		add	bx, ax
-		mov	word ptr (_bos_images[bx].BOS_G+2), 0
-		mov	word ptr (_bos_images[bx].BOS_G+0), 0
-		mov	bx, dx
-		imul	bx, size bos_t
-		mov	ax, cx
-		imul	ax, size bos_image_t
-		add	bx, ax
-		mov	word ptr (_bos_images[bx].BOS_E+2), 0
-		mov	word ptr (_bos_images[bx].BOS_E+0), 0
-		inc	cx
-
-loc_1567E:
-		cmp	cx, 8
-		jl	loc_15600
-		inc	dx
-
-loc_15686:
-		cmp	dx, 0Ah
-		jl	loc_155FC
-		pop	bp
-		retf
-sub_155F4	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -11945,7 +11882,7 @@ sub_17041	proc far
 		CBossEntity__ctor	boss_entity_2
 		CBossEntity__ctor	boss_entity_3
 		CBossEntity__ctor	boss_entity_4
-		push	seg main_21_TEXT
+		push	seg main_21
 		push	offset sub_17096
 		push	5
 		pushd	5
@@ -11993,7 +11930,7 @@ loc_170C3:
 		retf
 sub_17096	endp
 
-main_21_TEXT	ends
+main_21__TEXT	ends
 
 ; ===========================================================================
 
@@ -33492,7 +33429,7 @@ sub_24722	endp
 sub_24DFF	proc far
 		push	bp
 		mov	bp, sp
-		push	seg main_21_TEXT
+		push	seg main_21
 		push	offset sub_17096
 		push	5
 		pushd	5
@@ -33500,7 +33437,7 @@ sub_24DFF	proc far
 		push	ds
 		push	offset _kikuri_souls
 		call	@_vector_new_$qnvuiuluie ; _vector_new_(void *,uint,ulong,uint,...)
-		push	seg main_21_TEXT
+		push	seg main_21
 		push	offset sub_17096
 		push	5
 		pushd	KIKURI_TEAR_COUNT
