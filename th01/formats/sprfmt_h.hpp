@@ -6,6 +6,7 @@ struct spriteformat_header_inner_t {
 };
 
 // For reference, never actually used by the game itself (unfortunately).
+// [Outer] can be a grc_header_t or a bos_header_t.
 template <class Outer> struct spriteformat_header_t {
 	Outer outer;
 	Palette4 pal;

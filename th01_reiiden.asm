@@ -2795,8 +2795,7 @@ loc_D28B:
 ; ---------------------------------------------------------------------------
 
 loc_D296:
-		push	si
-		call	sub_169CB
+		call	_bos_free stdcall, si
 		pop	cx
 		inc	si
 
@@ -3054,8 +3053,7 @@ loc_D495:
 		pop	cx
 		cmp	si, 4
 		jge	short loc_D4A8
-		push	si
-		call	sub_169CB
+		call	_bos_free stdcall, si
 		pop	cx
 
 loc_D4A8:
@@ -3119,43 +3117,43 @@ sub_D4DD	proc far
 		jmp	cs:off_D524[bx]
 
 loc_D4F3:
-		call	sub_227AB
+		call	_singyoku_free
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 
 loc_D4FA:
-		call	sub_1B579
+		call	_yuugenmagan_free
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 
 loc_D501:
-		call	sub_1E81D
+		call	_mima_free
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 
 loc_D508:
-		call	sub_235E0
+		call	_kikuri_free
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 
 loc_D50F:
-		call	sub_250BC
+		call	_elis_free
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 
 loc_D516:
-		call	sub_28908
+		call	_sariel_free
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 
 loc_D51D:
-		call	sub_2D241
+		call	_konngara_free
 
 loc_D522:
 		pop	bp
@@ -8875,188 +8873,13 @@ main_20_TEXT	ends
 
 ; Segment type:	Pure code
 main_21_TEXT	segment	byte public 'CODE' use16
+	extern @CBossEntity@bos_load$qxnxci:proc
 main_21_TEXT	ends
 
 main_21__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_21
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1568F	proc far
-
-var_32		= byte ptr -32h
-var_2E		= byte ptr -2Eh
-var_2C		= byte ptr -2Ch
-var_2A		= byte ptr -2Ah
-arg_0		= dword	ptr  6
-@@fn		= dword	ptr  0Ah
-@@slot		= word ptr  0Eh
-
-		enter	32h, 0
-		push	si
-		push	di
-		call	arc_file_load pascal, large [bp+@@fn]
-		push	ss
-		lea	ax, [bp+var_32]
-		push	ax
-		push	16
-		call	arc_file_get
-		mov	al, [bp+var_2E]
-		mov	ah, 0
-		les	bx, [bp+arg_0]
-		mov	es:[bx+8], ax
-		mov	al, [bp+var_2C]
-		mov	ah, 0
-		mov	es:[bx+0Ah], ax
-		mov	al, [bp+var_2A]
-		mov	ah, 0
-		mov	es:[bx+20h], ax
-		mov	ax, es:[bx+8]
-		imul	word ptr es:[bx+0Ah]
-		mov	di, ax
-		push	ss
-		lea	ax, [bp+var_32]
-		push	ax
-		push	48
-		call	arc_file_get
-		cmp	byte_35A44, 0
-		jnz	loc_1583C
-		push	[bp+@@slot]
-		nopcall	sub_169CB
-		pop	cx
-		xor	si, si
-		jmp	loc_15831
-; ---------------------------------------------------------------------------
-
-loc_156F5:
-		mov	ax, di
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		add	ax, ax
-		push	ax
-		call	@$bnwa$qui
-		pop	cx
-		mov	bx, [bp+@@slot]
-		imul	bx, size bos_t
-		mov	cx, si
-		imul	cx, size bos_image_t
-		add	bx, cx
-		mov	word ptr (_bos_images[bx].BOS_alpha+2), dx
-		mov	word ptr (_bos_images[bx].BOS_alpha+0), ax
-		mov	ax, di
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		add	ax, ax
-		push	ax
-		call	@$bnwa$qui
-		pop	cx
-		mov	bx, [bp+@@slot]
-		imul	bx, size bos_t
-		mov	cx, si
-		imul	cx, size bos_image_t
-		add	bx, cx
-		mov	word ptr (_bos_images[bx].BOS_B+2), dx
-		mov	word ptr (_bos_images[bx].BOS_B+0), ax
-		mov	ax, di
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		add	ax, ax
-		push	ax
-		call	@$bnwa$qui
-		pop	cx
-		mov	bx, [bp+@@slot]
-		imul	bx, size bos_t
-		mov	cx, si
-		imul	cx, size bos_image_t
-		add	bx, cx
-		mov	word ptr (_bos_images[bx].BOS_R+2), dx
-		mov	word ptr (_bos_images[bx].BOS_R+0), ax
-		mov	ax, di
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		add	ax, ax
-		push	ax
-		call	@$bnwa$qui
-		pop	cx
-		mov	bx, [bp+@@slot]
-		imul	bx, size bos_t
-		mov	cx, si
-		imul	cx, size bos_image_t
-		add	bx, cx
-		mov	word ptr (_bos_images[bx].BOS_G+2), dx
-		mov	word ptr (_bos_images[bx].BOS_G+0), ax
-		mov	ax, di
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		add	ax, ax
-		push	ax
-		call	@$bnwa$qui
-		pop	cx
-		mov	bx, [bp+@@slot]
-		imul	bx, size bos_t
-		mov	cx, si
-		imul	cx, size bos_image_t
-		add	bx, cx
-		mov	word ptr (_bos_images[bx].BOS_E+2), dx
-		mov	word ptr (_bos_images[bx].BOS_E+0), ax
-		mov	bx, [bp+@@slot]
-		imul	bx, size bos_t
-		mov	ax, si
-		imul	ax, size bos_image_t
-		add	bx, ax
-		call	arc_file_get pascal, large _bos_images[bx].BOS_alpha, di
-		mov	bx, [bp+@@slot]
-		imul	bx, size bos_t
-		mov	ax, si
-		imul	ax, size bos_image_t
-		add	bx, ax
-		call	arc_file_get pascal, large _bos_images[bx].BOS_B, di
-		mov	bx, [bp+@@slot]
-		imul	bx, size bos_t
-		mov	ax, si
-		imul	ax, size bos_image_t
-		add	bx, ax
-		call	arc_file_get pascal, large _bos_images[bx].BOS_R, di
-		mov	bx, [bp+@@slot]
-		imul	bx, size bos_t
-		mov	ax, si
-		imul	ax, size bos_image_t
-		add	bx, ax
-		call	arc_file_get pascal, large _bos_images[bx].BOS_G, di
-		mov	bx, [bp+@@slot]
-		imul	bx, size bos_t
-		mov	ax, si
-		imul	ax, size bos_image_t
-		add	bx, ax
-		call	arc_file_get pascal, large _bos_images[bx].BOS_E, di
-		inc	si
-
-loc_15831:
-		les	bx, [bp+arg_0]
-		cmp	es:[bx+20h], si
-		jg	loc_156F5
-
-loc_1583C:
-		les	bx, [bp+arg_0]
-		mov	al, byte ptr [bp+@@slot]
-		mov	es:[bx+31h], al
-		call	arc_file_free
-		xor	ax, ax
-		pop	di
-		pop	si
-		leave
-		retf
-sub_1568F	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -11205,16 +11028,16 @@ sub_16970	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public _bos_free
+_bos_free	proc far
 
-sub_169CB	proc far
-
-arg_0		= word ptr  6
+@@slot		= word ptr  6
 
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
-		mov	di, [bp+arg_0]
+		mov	di, [bp+@@slot]
 		xor	si, si
 		jmp	loc_16B4B
 ; ---------------------------------------------------------------------------
@@ -11344,7 +11167,7 @@ loc_16B4B:
 		pop	si
 		pop	bp
 		retf
-sub_169CB	endp
+_bos_free	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -11388,7 +11211,7 @@ arg_0		= dword	ptr  6
 		push	ax
 		push	48
 		call	arc_file_get
-		cmp	byte_35A44, 0
+		cmp	_bos_header_only, 0
 		jnz	loc_16D55
 		push	[bp+@@slot]
 		nopcall	sub_16F1B
@@ -16553,14 +16376,7 @@ _yuugenmagan_load	proc c
 	local	@@template_southeast:CBossEntity
 	local	@@template_north:CBossEntity
 
-		mov	eye_west.BE_loading, 1
-		push	0
-		push	ds
-		push	offset aBoss2_bos ; "boss2.bos"
-		push	ds
-		push	offset eye_west
-		call	sub_1568F
-		mov	eye_west.BE_loading, 0
+		CBossEntity__bos_load	eye_west, 0, aBoss2_bos
 		CBossEntity__copy	@@template_east, eye_west
 		push	ds
 		push	offset eye_east.BE_h
@@ -16765,17 +16581,16 @@ sub_1B53D	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_1B579	proc far
+public _yuugenmagan_free
+_yuugenmagan_free	proc far
 		push	bp
 		mov	bp, sp
-		push	0
-		call	sub_169CB
+		call	_bos_free stdcall, 0
 		call	_ptn_free stdcall, 2
 		add	sp, 4
 		pop	bp
 		retf
-sub_1B579	endp
+_yuugenmagan_free	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -21194,22 +21009,8 @@ _mima_load	proc far
 		mov	bp, sp
 		push	si
 		push	di
-		mov	mima_still.BE_loading, 1
-		push	0
-		push	ds
-		push	offset aBoss3_1_bos ; "boss3_1.bos"
-		push	ds
-		push	offset mima_still
-		call	sub_1568F
-		mov	mima_still.BE_loading, 0
-		mov	mima_animated.BE_loading, 1
-		push	1
-		push	ds
-		push	offset aBoss3_2_bos ; "boss3_2.bos"
-		push	ds
-		push	offset mima_animated
-		call	sub_1568F
-		mov	mima_animated.BE_loading, 0
+		CBossEntity__bos_load	mima_still, 0, aBoss3_1_bos
+		CBossEntity__bos_load	mima_animated, 1, aBoss3_2_bos
 		call	_grp_palette_load_show stdcall, offset aBoss3_grp_0, ds ; "boss3.grp"
 		add	sp, 18h
 		xor	si, si
@@ -21808,20 +21609,18 @@ sub_1E79B	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_1E81D	proc far
+public _mima_free
+_mima_free	proc far
 		push	bp
 		mov	bp, sp
-		push	0
-		call	sub_169CB
-		push	1
-		call	sub_169CB
+		call	_bos_free stdcall, 0
+		call	_bos_free stdcall, 1
 		call	_ptn_free stdcall, 2
 		call	_ptn_free stdcall, 3
 		add	sp, 8
 		pop	bp
 		retf
-sub_1E81D	endp
+_mima_free	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -29062,30 +28861,9 @@ _singyoku_load	proc far
 		mov	bp, sp
 		push	si
 		push	di
-		mov	singyoku_sphere.BE_loading, 1
-		push	0
-		push	ds
-		push	offset aBoss1_bos ; "boss1.bos"
-		push	ds
-		push	offset singyoku_sphere
-		call	sub_1568F
-		mov	singyoku_sphere.BE_loading, 0
-		mov	singyoku_flash.BE_loading, 1
-		push	1
-		push	ds
-		push	offset aBoss1_2_bos ; "boss1_2.bos"
-		push	ds
-		push	offset singyoku_flash
-		call	sub_1568F
-		mov	singyoku_flash.BE_loading, 0
-		mov	singyoku_person.BE_loading, 1
-		push	2
-		push	ds
-		push	offset aBoss1_3_bos ; "boss1_3.bos"
-		push	ds
-		push	offset singyoku_person
-		call	sub_1568F
-		mov	singyoku_person.BE_loading, 0
+		CBossEntity__bos_load	singyoku_sphere, 0, aBoss1_bos
+		CBossEntity__bos_load	singyoku_flash, 1, aBoss1_2_bos
+		CBossEntity__bos_load	singyoku_person, 2, aBoss1_3_bos
 		call	_grp_palette_load_show_sane stdcall, offset aBoss1_grp_0, ds	; "boss1.grp"
 		add	sp, 22h
 		xor	si, si
@@ -29160,20 +28938,17 @@ sub_22731	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_227AB	proc far
+public _singyoku_free
+_singyoku_free	proc far
 		push	bp
 		mov	bp, sp
-		push	0
-		call	sub_169CB
-		push	1
-		call	sub_169CB
-		push	2
-		call	sub_169CB
+		call	_bos_free stdcall, 0
+		call	_bos_free stdcall, 1
+		call	_bos_free stdcall, 2
 		add	sp, 6
 		pop	bp
 		retf
-sub_227AB	endp
+_singyoku_free	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -30711,14 +30486,7 @@ loc_23364:
 loc_2336A:
 		cmp	si, KIKURI_TEAR_COUNT
 		jl	short loc_23364
-		mov	kikuri_soul_0.BE_loading, 1
-		push	0
-		push	ds
-		push	offset aTamasii_bos ; "tamasii.bos"
-		push	ds
-		push	offset kikuri_soul_0
-		call	sub_1568F
-		mov	kikuri_soul_0.BE_loading, 0
+		CBossEntity__bos_load	kikuri_soul_0, 0, aTamasii_bos
 		CBossEntity__copy	@@template_soul, kikuri_soul_0
 		push	ds
 		push	offset kikuri_soul_1.BE_h
@@ -30732,14 +30500,7 @@ loc_2336A:
 		lea	ax, @@template_soul
 		push	ax
 		call	sub_15851
-		mov	kikuri_tear_0.BE_loading, 1
-		push	1
-		push	ds
-		push	offset aTamasii2_bos ; "tamasii2.bos"
-		push	ds
-		push	offset kikuri_tear_0
-		call	sub_1568F
-		mov	kikuri_tear_0.BE_loading, 0
+		CBossEntity__bos_load	kikuri_tear_0, 1, aTamasii2_bos
 		call	_ptn_load stdcall, 2, offset aTamayen_ptn, ds ; "tamayen.ptn"
 		add	sp, 2Eh
 		mov	si, 1
@@ -30850,19 +30611,17 @@ sub_2355F	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_235E0	proc far
+public _kikuri_free
+_kikuri_free	proc far
 		push	bp
 		mov	bp, sp
-		push	0
-		call	sub_169CB
-		push	1
-		call	sub_169CB
+		call	_bos_free stdcall, 0
+		call	_bos_free stdcall, 1
 		call	_ptn_free stdcall, 2
 		add	sp, 6
 		pop	bp
 		retf
-sub_235E0	endp
+_kikuri_free	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -33647,30 +33406,9 @@ _elis_load	proc far
 		mov	bp, sp
 		mov	_pellet_interlace, 1
 		mov	_Pellets.PELLET_unknown_seven, 7
-		mov	elis_still_or_wave.BE_loading, 1
-		push	0
-		push	ds
-		push	offset aBoss5_bos ; "boss5.bos"
-		push	ds
-		push	offset elis_still_or_wave
-		call	sub_1568F
-		mov	elis_still_or_wave.BE_loading, 0
-		mov	elis_attack.BE_loading, 1
-		push	1
-		push	ds
-		push	offset aBoss5_2_bos ; "boss5_2.bos"
-		push	ds
-		push	offset elis_attack
-		call	sub_1568F
-		mov	elis_attack.BE_loading, 0
-		mov	elis_bat.BE_loading, 1
-		push	2
-		push	ds
-		push	offset aBoss5_3_bos ; "boss5_3.bos"
-		push	ds
-		push	offset elis_bat
-		call	sub_1568F
-		mov	elis_bat.BE_loading, 0
+		CBossEntity__bos_load	elis_still_or_wave, 0, aBoss5_bos
+		CBossEntity__bos_load	elis_attack, 1, aBoss5_2_bos
+		CBossEntity__bos_load	elis_bat, 2, aBoss5_3_bos
 		call	_grc_load stdcall, 0, offset aBoss5_gr_grc, ds
 		call	_ptn_new stdcall, (12 shl 16) or 2
 		call	_ptn_load stdcall, 3, offset aBoss3_m_ptn_1, ds ;	"boss3_m.ptn"
@@ -33759,23 +33497,20 @@ sub_24FE0	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_250BC	proc far
+public _elis_free
+_elis_free	proc far
 		push	bp
 		mov	bp, sp
-		push	0
-		call	sub_169CB
-		push	1
-		call	sub_169CB
-		push	2
-		call	sub_169CB
+		call	_bos_free stdcall, 0
+		call	_bos_free stdcall, 1
+		call	_bos_free stdcall, 2
 		call	_grc_free stdcall, 0
 		call	_ptn_free stdcall, 2
 		call	_ptn_free stdcall, 3
 		add	sp, 0Ch
 		pop	bp
 		retf
-sub_250BC	endp
+_elis_free	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -39551,14 +39286,7 @@ public _sariel_load
 _sariel_load	proc far
 		push	bp
 		mov	bp, sp
-		mov	sariel_shield.BE_loading, 1
-		push	0
-		push	ds
-		push	offset aBoss6_1_bos ; "boss6_1.bos"
-		push	ds
-		push	offset sariel_shield
-		call	sub_1568F
-		mov	sariel_shield.BE_loading, 0
+		CBossEntity__bos_load	sariel_shield, 0, aBoss6_1_bos
 		push	0
 		push	ds
 		push	offset aBoss6_2_bos ; "boss6_2.bos"
@@ -39743,12 +39471,11 @@ sub_288B5	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_28908	proc far
+public _sariel_free
+_sariel_free	proc far
 		push	bp
 		mov	bp, sp
-		push	0
-		call	sub_169CB
+		call	_bos_free stdcall, 0
 		push	0
 		call	sub_16F1B
 		push	1
@@ -39761,7 +39488,7 @@ sub_28908	proc far
 		add	sp, 10h
 		pop	bp
 		retf
-sub_28908	endp
+_sariel_free	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -46742,7 +46469,7 @@ loc_2CDA0:
 loc_2CDAA:
 		call	_z_vsync_wait_and_scrollup stdcall, 0
 		pop	cx
-		call	sub_28908
+		call	_sariel_free
 		xor	si, si
 		jmp	short loc_2CDC4
 ; ---------------------------------------------------------------------------
@@ -46962,29 +46689,10 @@ loc_2CF26:
 		jl	short loc_2CF11
 		call	_z_palette_set_all_show stdcall, offset _z_Palettes, ds
 		call	text_fillca pascal, (' ' shl 16) + TX_WHITE
-		mov	konngara_head.BE_loading, 1
-		push	0
-		push	ds
-		push	offset aBoss8_1_bos ; "boss8_1.bos"
-		push	ds
-		push	offset konngara_head
-		call	sub_1568F
-		mov	konngara_head.BE_loading, 0
-		mov	konngara_face_closed_or_glare.BE_loading, 1
-		push	1
-		push	ds
-		push	offset aBoss8_e1_bos ; "boss8_e1.bos"
-		push	ds
-		push	offset konngara_face_closed_or_glare
-		call	sub_1568F
-		mov	konngara_face_closed_or_glare.BE_loading, 0
+		CBossEntity__bos_load	konngara_head, 0, aBoss8_1_bos
+		CBossEntity__bos_load	konngara_face_closed_or_glare, 1, aBoss8_e1_bos
 		mov	konngara_face_aim.BE_loading, 1
-		push	2
-		push	ds
-		push	offset aBoss8_e2_bos ; "boss8_e2.bos"
-		push	ds
-		push	offset konngara_face_aim
-		call	sub_1568F
+		call	@CBossEntity@bos_load$qxnxci stdcall, offset konngara_face_aim, ds, offset aBoss8_e2_bos, ds, 2
 		add	sp, 22h
 		mov	konngara_face_aim.BE_loading, 0
 		xor	di, di
@@ -47266,17 +46974,14 @@ sub_2D20D	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_2D241	proc far
+public _konngara_free
+_konngara_free	proc far
 		push	bp
 		mov	bp, sp
 		push	si
-		push	0
-		call	sub_169CB
-		push	1
-		call	sub_169CB
-		push	2
-		call	sub_169CB
+		call	_bos_free stdcall, 0
+		call	_bos_free stdcall, 1
+		call	_bos_free stdcall, 2
 		add	sp, 6
 		xor	si, si
 		jmp	short loc_2D269
@@ -47293,7 +46998,7 @@ loc_2D269:
 		pop	si
 		pop	bp
 		retf
-sub_2D241	endp
+_konngara_free	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -50923,7 +50628,7 @@ loc_2F766:
 		push	offset asc_360A1 ; "\x1B*"
 		call	_printf
 		add	sp, 4
-		call	sub_2D241
+		call	_konngara_free
 		call	_z_graph_clear
 		call	_mdrv2_bgm_stop
 		call	_z_palette_set_show c, large (0 shl 16) or 0, large (0 shl 16) or 0
@@ -51332,7 +51037,7 @@ loc_2FC28:
 loc_2FC32:
 		cmp	si, 5
 		jl	short loc_2FC28
-		call	sub_2D241
+		call	_konngara_free
 		mov	byte_35DAA, 1
 
 loc_2FC40:
@@ -51898,8 +51603,7 @@ include th01/hiscore/alphabet_syms[data].asm
 include th01/hiscore/regist_name[data].asm
 include th01/hiscore/scorelod[data].asm
 include th01/hiscore/regist[data].asm
-byte_35A44	db 0
-		db 0
+include th01/main/boss/entity[data].asm
 include th01/formats/pf[data].asm
 include th01/sprites/shape8x8.asp
 		db    0

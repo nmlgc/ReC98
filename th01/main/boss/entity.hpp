@@ -29,4 +29,9 @@ public:
 	int zero_2;
 	char zero_3;
 	unsigned char bos_slot;
+
+	// Loads all images from the .BOS file with the given [fn] inside the
+	// currently active packfile into the given .BOS [slot], and keeps the
+	// .BOS metadata in this class. Always returns 0.
+	int bos_load(const char fn[PF_FN_LEN], int slot);
 };

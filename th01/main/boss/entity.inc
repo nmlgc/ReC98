@@ -73,6 +73,12 @@ CBossEntity__copy	macro	dst:req, src:req
 	copy8  	dst, src, BE_bos_slot
 endm
 
+CBossEntity__bos_load	macro that:req, slot:req, fn:req
+	mov that.BE_loading, 1
+	call	@CBossEntity@bos_load$qxnxci stdcall, offset that, ds, offset fn, ds, slot
+	mov that.BE_loading, 0
+endm
+
 CBossEntity__hitbox_set	macro that:req, left:req, top:req, right:req, bottom:req
 	mov	that.BE_hitbox_orb.A_left, left
 	mov	that.BE_hitbox_orb.A_right, right
