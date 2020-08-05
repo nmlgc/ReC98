@@ -34,4 +34,11 @@ public:
 	// currently active packfile into the given .BOS [slot], and keeps the
 	// .BOS metadata in this class. Always returns 0.
 	int bos_load(const char fn[PF_FN_LEN], int slot);
+
+	// Copies the .BOS header data of this instance to the given variables. In
+	// practice, only used to copy these values from one CBossEntity to
+	// another.
+	void bos_metadata_get(
+		int &image_count, unsigned char &slot, int &vram_w, int &h
+	) const;
 };

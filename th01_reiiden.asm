@@ -8874,47 +8874,13 @@ main_20_TEXT	ends
 ; Segment type:	Pure code
 main_21_TEXT	segment	byte public 'CODE' use16
 	extern @CBossEntity@bos_load$qxnxci:proc
+	extern @CBossEntity@bos_metadata_get$xqmimuct1t1:proc
 main_21_TEXT	ends
 
 main_21__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_21
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_15851	proc far
-
-arg_0		= dword	ptr  6
-arg_4		= dword	ptr  0Ah
-arg_8		= dword	ptr  0Eh
-arg_C		= dword	ptr  12h
-arg_10		= dword	ptr  16h
-
-		push	bp
-		mov	bp, sp
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx+20h]
-		les	bx, [bp+arg_4]
-		mov	es:[bx], ax
-		les	bx, [bp+arg_0]
-		mov	al, es:[bx+31h]
-		les	bx, [bp+arg_8]
-		mov	es:[bx], al
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx+0Ah]
-		les	bx, [bp+arg_10]
-		mov	es:[bx], ax
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx+8]
-		les	bx, [bp+arg_C]
-		mov	es:[bx], ax
-		pop	bp
-		retf
-sub_15851	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -16389,7 +16355,7 @@ _yuugenmagan_load	proc c
 		push	ss
 		lea	ax, @@template_east
 		push	ax
-		call	sub_15851
+		call	@CBossEntity@bos_metadata_get$xqmimuct1t1
 		CBossEntity__copy	@@template_southwest, eye_west
 		push	ds
 		push	offset eye_southwest.BE_h
@@ -16402,7 +16368,7 @@ _yuugenmagan_load	proc c
 		push	ss
 		lea	ax, @@template_southwest
 		push	ax
-		call	sub_15851
+		call	@CBossEntity@bos_metadata_get$xqmimuct1t1
 		add	sp, 32h
 		CBossEntity__copy	@@template_southeast, eye_west
 		push	ds
@@ -16416,7 +16382,7 @@ _yuugenmagan_load	proc c
 		push	ss
 		lea	ax, @@template_southeast
 		push	ax
-		call	sub_15851
+		call	@CBossEntity@bos_metadata_get$xqmimuct1t1
 		CBossEntity__copy	@@template_north, eye_west
 		push	ds
 		push	offset eye_north.BE_h
@@ -16429,7 +16395,7 @@ _yuugenmagan_load	proc c
 		push	ss
 		lea	ax, @@template_north
 		push	ax
-		call	sub_15851
+		call	@CBossEntity@bos_metadata_get$xqmimuct1t1
 		nopcall	sub_1B383
 		call	_ptn_load stdcall, 2, offset aBoss3_m_ptn, ds ; "boss3_m.ptn"
 		mov	byte_3A1B2, 80h	; '?'
@@ -30499,7 +30465,7 @@ loc_2336A:
 		push	ss
 		lea	ax, @@template_soul
 		push	ax
-		call	sub_15851
+		call	@CBossEntity@bos_metadata_get$xqmimuct1t1
 		CBossEntity__bos_load	kikuri_tear_0, 1, aTamasii2_bos
 		call	_ptn_load stdcall, 2, offset aTamayen_ptn, ds ; "tamayen.ptn"
 		add	sp, 2Eh
@@ -30532,7 +30498,7 @@ loc_2346F:
 		push	ss
 		lea	ax, @@template_tear
 		push	ax
-		call	sub_15851
+		call	@CBossEntity@bos_metadata_get$xqmimuct1t1
 		add	sp, 14h
 		inc	si
 

@@ -65,3 +65,13 @@ int CBossEntity::bos_load(const char fn[PF_FN_LEN], int slot)
 	arc_file_free();
 	return 0;
 }
+
+void CBossEntity::bos_metadata_get(
+	int &image_count, unsigned char &slot, int &vram_w, int &h
+) const
+{
+	image_count = this->bos_image_count;
+	slot = this->bos_slot;
+	h = this->h;
+	vram_w = this->vram_w;
+}
