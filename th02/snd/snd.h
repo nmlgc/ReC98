@@ -23,8 +23,8 @@ int snd_determine_mode(void);
 int16_t DEFCONV snd_kaja_interrupt(int16_t ax);
 #define snd_kaja_func(func, param) snd_kaja_interrupt((func) << 8 | (param))
 
-#define SND_LOAD_SONG (KAJA_GET_SONG_ADDRESS << 8)
-#define SND_LOAD_SE (PMD_GET_SE_ADDRESS << 8)
+#define SND_LOAD_SONG (kaja_func_t)(KAJA_GET_SONG_ADDRESS << 8)
+#define SND_LOAD_SE (kaja_func_t)(PMD_GET_SE_ADDRESS << 8)
 
 #ifdef PMD /* requires kaja.h */
 	void snd_load(const char *fn, kaja_func_t func);

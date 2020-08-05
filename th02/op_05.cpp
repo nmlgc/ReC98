@@ -3,8 +3,13 @@
  * Code segment #5 of TH02's OP.EXE
  */
 
+extern "C" {
 #include "th02/th02.h"
 #include "th02/formats/pi.h"
+
+inline char sel_ring_end() {
+	return SHOTTYPE_COUNT - 1;
+}
 
 char sel = 1;
 int8_t sel_padding = 0;
@@ -175,7 +180,7 @@ void pascal shottype_menu(void)
 				frame_delay(1);
 				darken_pic_at(pic_x[sel] + 8, pic_y[sel] + 8);
 
-				RING_DEC(sel, SHOTTYPE_COUNT - 1);
+				RING_DEC(sel, sel_ring_end());
 				DRAW_NEW_SEL();
 			}
 			if(key_det & INPUT_RIGHT) {
@@ -187,7 +192,7 @@ void pascal shottype_menu(void)
 				frame_delay(1);
 				darken_pic_at(pic_x[sel] + 8, pic_y[sel] + 8);
 
-				RING_INC(sel, SHOTTYPE_COUNT - 1);
+				RING_INC(sel, sel_ring_end());
 				DRAW_NEW_SEL();
 			}
 			if(key_det & INPUT_SHOT || key_det & INPUT_OK) {
@@ -210,4 +215,6 @@ void pascal shottype_menu(void)
 	graph_pi_free(&pi_slot_headers[1], pi_slot_buffers[1]);
 	graph_pi_free(&pi_slot_headers[2], pi_slot_buffers[2]);
 	palette_black_out(1);
+}
+
 }

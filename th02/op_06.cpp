@@ -3,6 +3,7 @@
  * Code segment #6 of TH02's OP.EXE
  */
 
+extern "C" {
 #include "libs/kaja/kaja.h"
 #include "th02/th02.h"
 #include "th02/formats/pi.h"
@@ -51,10 +52,18 @@ const char *MUSIC_FILES[] = {
 	"boss5.m"
 };
 
+// Polygon state
+char initialized = 0;
+point_t points[10];
+point_t pos[MUSIC_POLYGONS];
+point_t move_speed[MUSIC_POLYGONS];
+char angle[MUSIC_POLYGONS];
+char rot_speed[MUSIC_POLYGONS];
+
 unsigned char music_sel;
 unsigned char music_page;
-char *screen_back_B;
-char *cmt_back[PL_COUNT];
+dots8_t *screen_back_B;
+dots8_t *cmt_back[PL_COUNT];
 
 void pascal near draw_track(unsigned char sel, unsigned char color)
 {
@@ -76,7 +85,7 @@ void pascal near draw_tracks(unsigned char sel)
 void pascal near screen_back_B_snap(void)
 {
 	int p;
-	screen_back_B = MK_FP(hmem_allocbyte(PLANE_SIZE), 0);
+	screen_back_B = (dots8_t *)(MK_FP(hmem_allocbyte(PLANE_SIZE), 0));
 	PLANE_DWORD_BLIT(screen_back_B, VRAM_PLANE_B);
 }
 
@@ -91,7 +100,9 @@ void pascal near screen_back_B_put(void)
 	PLANE_DWORD_BLIT(VRAM_PLANE_B, screen_back_B);
 }
 
-void pascal near polygon_build(Point near *pts, int x, int y, int rad, int npoint, char angle)
+void pascal near polygon_build(
+	point_t near *pts, int x, int y, int rad, int npoint, char angle
+)
 {
 	int i;
 	y >>= 4;
@@ -118,14 +129,6 @@ void pascal near polygons_update_and_render(void)
 		if(rot_speed[i] == 0) { \
 			rot_speed[i] = 4; \
 		}
-
-	static char initialized = 0;
-
-	static Point points[10];
-	static Point pos[MUSIC_POLYGONS];
-	static Point move_speed[MUSIC_POLYGONS];
-	static char angle[MUSIC_POLYGONS];
-	static char rot_speed[MUSIC_POLYGONS];
 
 	int i;
 	if(!initialized) {
@@ -154,7 +157,7 @@ void pascal near polygons_update_and_render(void)
 			move_speed[i].x = 8 - (rand() & 15);
 			POLYGON_INIT_PART2;
 		}
-		grcg_polygon_c(points, VERTICES(i));
+		grcg_polygon_c(reinterpret_cast<Point *>(points), VERTICES(i));
 	}
 }
 
@@ -198,9 +201,9 @@ void pascal near cmt_back_snap(void)
 	int ps, x, pd, y;
 	int i;
 	for(i = 0; i < PL_COUNT; i++) {
-		cmt_back[i] = MK_FP(
+		cmt_back[i] = reinterpret_cast<dots8_t *>(MK_FP(
 			hmem_allocbyte(304 * (320 / 8) + 16 * (320 / 8)), 0
-		);
+		));
 	}
 	CMT_BACK_BLIT(cmt_back, ps, VRAM_PLANE, pd);
 }
@@ -340,4 +343,6 @@ controls:
 	palette_entry_rgb_show("op.rgb");
 	graph_copy_page(0);
 	graph_accesspage(0);
+}
+
 }

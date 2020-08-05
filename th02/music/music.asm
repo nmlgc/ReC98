@@ -1,5 +1,5 @@
-; Already decompiled in th02\op_06.c, but we need to haul this around until we
-; can insert the C version into TH03, TH04 and TH05. Everything here is
+; Already decompiled in th02\op_06.cpp, but we need to haul this around until
+; we can insert the C version into TH03, TH04 and TH05. Everything here is
 ; identical in all 4 games.
 
 ; ... well, except for this. Even though TH05 does allocate space for 16

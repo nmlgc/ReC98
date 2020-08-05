@@ -3,6 +3,7 @@
  * Code segment #5 of TH02's MAINE.EXE
  */
 
+extern "C" {
 #include "th02/th02.h"
 
 void pascal near rotrect_draw(int rad, unsigned char angle)
@@ -25,7 +26,7 @@ void pascal near rotrect_draw(int rad, unsigned char angle)
 }
 
 #define graph_accesspage_func graph_accesspage
-#include "th01/hardware/egccopyr.c"
+#include "th01/hardware/egccopyr.cpp"
 
 void pascal rotrect_animate(char rot_speed, char start_angle)
 {
@@ -65,4 +66,6 @@ void pascal rotrect_animate(char rot_speed, char start_angle)
 	grcg_line( 28,  96, 356,  96);
 	grcg_off();
 	palette_white();
+}
+
 }

@@ -11,6 +11,6 @@ extern "C" {
 
 #include "th01/formats/ptn_0to1.cpp"
 #include "th01/hardware/vplanset.c"
-#include "th01/hardware/egccopyr.c"
+#include "th01/hardware/egccopyr.cpp"
 #include "th01/formats/ptn_snap.cpp"
 }

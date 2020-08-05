@@ -45,6 +45,16 @@ struct point_t {
 		(val) = (min); \
 	}
 
+#ifdef __cplusplus
+	// This is, in fact, the only way to circumvent 16-bit promotion inside
+	// comparisons between two 8-bit values in C++. I kid you not.
+	static inline char ring_min() {
+		return 0;
+	}
+#else
+	#define ring_min() 0
+#endif
+
 #define RING_INC(val, ring_end) \
 	(val)++; \
 	if((val) > (ring_end)) { \
@@ -53,7 +63,7 @@ struct point_t {
 
 #define RING_DEC(val, ring_end) \
 	(val)--; \
-	if((val) < 0) { \
+	if(val < ring_min()) { \
 		(val) = ring_end; \
 	}
 

@@ -64,7 +64,7 @@ bin\th01\reiiden.exe: bin\piloadc.obj bin\th01\reiiden.obj th01\main_01.cpp th01
 $**
 |
 
-bin\th01\fuuin.exe: bin\piloadc.obj bin\th01\fuuin.obj th01\fuuin_01.cpp th01\fuuin_02.cpp th01\fuuin_04.cpp th01\fuuin_05.c th01\fuuin_06.c th01\fuuin_07.c th01\fuuin_08.cpp th01\fuuin_09.c th01\fuuin_10.cpp th01\fuuin_11.c th01\fuuin_12.c th01\fuuin_13.c
+bin\th01\fuuin.exe: bin\piloadc.obj bin\th01\fuuin.obj th01\fuuin_01.cpp th01\fuuin_02.cpp th01\fuuin_04.cpp th01\fuuin_05.c th01\fuuin_06.c th01\fuuin_07.c th01\fuuin_08.cpp th01\fuuin_09.c th01\fuuin_10.cpp th01\fuuin_11.cpp th01\fuuin_12.cpp th01\fuuin_13.c
 	$(CC) $(CFLAGS) -ml -3 -DGAME=1 -DBINARY='E' -nbin\th01\ -eFUUIN.EXE @&&|
 $**
 |
@@ -74,7 +74,7 @@ bin\th02\zun_res.com: th02\zun_res1.c th02\zun_res2.c th02\zun_res3.c
 $**
 | masters.lib
 
-bin\th02\op.exe: th02\op_01.c bin\th02\op.obj th02\op_02_1.c th02\op_02_2.c th02\op_03.c th02\op_04.c th02\op_05.c th02\op_06.c
+bin\th02\op.exe: th02\op_01.c bin\th02\op.obj th02\op_02_1.cpp th02\op_02_2.c th02\op_03.c th02\op_04.c th02\op_05.cpp th02\op_06.cpp
 	$(CC) $(CFLAGS) -ml -Z -DGAME=2 -nbin\th02\ -eOP.EXE @&&|
 $**
 |
@@ -84,7 +84,7 @@ bin\th02\main.exe: bin\th02\main.obj th02\main02_1.cpp th02\main02_2.c th02\main
 $**
 |
 
-bin\th02\maine.exe: bin\th02\maine.obj th02\maine021.c th02\maine022.c th02\maine_03.c th02\maine_04.c th02\maine_05.c
+bin\th02\maine.exe: bin\th02\maine.obj th02\maine021.cpp th02\maine022.c th02\maine_03.c th02\maine_04.c th02\maine_05.cpp
 	$(CC) $(CFLAGS) -ml -3 -Z -DGAME=2 -nbin\th02\ -eMAINE.EXE @&&|
 $**
 |

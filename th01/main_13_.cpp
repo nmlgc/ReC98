@@ -10,7 +10,7 @@ extern "C" {
 #pragma option -O-
 #pragma option -Z-
 
-#include "th01/hardware/grp2xscs.c"
+#include "th01/hardware/grp2xscs.cpp"
 
 void egc_wave_unput(int left, int top, int len, int amp, int ph, int w, int h)
 {

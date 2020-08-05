@@ -5,6 +5,7 @@
 
 #pragma codeseg maine_02_TEXT
 
+extern "C" {
 #include "th02/th02.h"
 #include "th02/formats/pi.h"
 
@@ -13,3 +14,4 @@
 #include "th01/hardware/vplanset.c"
 #include "th02/formats/pi_load.c"
 #include "th02/hardware/frmdely1.c"
+}

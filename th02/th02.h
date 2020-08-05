@@ -85,7 +85,7 @@ void key_delay(void);
 #define RES_ID "MIKOConfig"
 typedef struct {
 	char id[11];	// = RES_ID
-	char stage;
+	unsigned char stage;
 	char debug;
 	int8_t padding_1;
 	long score;
