@@ -8875,213 +8875,13 @@ main_20_TEXT	ends
 main_21_TEXT	segment	byte public 'CODE' use16
 	extern @CBossEntity@bos_load$qxnxci:proc
 	extern @CBossEntity@bos_metadata_get$xqmimuct1t1:proc
+	extern @CBossEntity@put_8$xqiii:proc
 main_21_TEXT	ends
 
 main_21__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_21
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1588A	proc far
-
-@@bos		= dword	ptr -0Ch
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-@@image		= word ptr  0Eh
-
-		enter	0Ch, 0
-		push	si
-		push	di
-		mov	ax, [bp+arg_4]
-		mov	bx, 8
-		cwd
-		idiv	bx
-		mov	dx, [bp+arg_6]
-		imul	dx, 50h
-		add	ax, dx
-		mov	[bp+var_2], ax
-		xor	si, si
-		les	bx, [bp+arg_0]
-		mov	al, es:[bx+31h]
-		mov	ah, 0
-		imul	ax, size bos_t
-		mov	dx, [bp+@@image]
-		imul	dx, size bos_image_t
-		add	ax, dx
-		add	ax, offset _bos_images
-		mov	word ptr [bp+@@bos+2], ds
-		mov	word ptr [bp+@@bos], ax
-		mov	ax, es:[bx+20h]
-		cmp	ax, [bp+@@image]
-		jle	loc_15A33
-		mov	[bp+var_4], 0
-		jmp	loc_15A25
-; ---------------------------------------------------------------------------
-
-loc_158D7:
-		mov	di, [bp+var_2]
-		cmp	[bp+arg_4], 0
-		jge	short loc_158EC
-		mov	ax, [bp+var_2]
-		mov	bx, 50h	; 'P'
-		cwd
-		idiv	bx
-		inc	ax
-		jmp	short loc_158F5
-; ---------------------------------------------------------------------------
-
-loc_158EC:
-		mov	ax, [bp+var_2]
-		mov	bx, 50h	; 'P'
-		cwd
-		idiv	bx
-
-loc_158F5:
-		mov	[bp+var_8], ax
-		mov	[bp+var_6], 0
-		jmp	loc_15A04
-; ---------------------------------------------------------------------------
-
-loc_15900:
-		mov	ax, di
-		mov	bx, 50h	; 'P'
-		cwd
-		idiv	bx
-		cmp	ax, [bp+var_8]
-		jnz	loc_159FD
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_alpha]
-		mov	ax, si
-		add	ax, ax
-		add	bx, ax
-		mov	ax, es:[bx]
-		not	ax
-		or	ax, ax
-		jz	loc_159FD
-		call	_grcg_setcolor_rmw stdcall, 0
-		pop	cx
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_alpha]
-		mov	ax, si
-		add	ax, ax
-		add	bx, ax
-		mov	ax, es:[bx]
-		not	ax
-		les	bx, _VRAM_PLANE_B
-		add	bx, di
-		mov	es:[bx], ax
-		call	_grcg_off_func
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_B]
-		mov	ax, si
-		add	ax, ax
-		add	bx, ax
-		cmp	word ptr es:[bx], 0
-		jz	short loc_15979
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_B]
-		mov	ax, si
-		add	ax, ax
-		add	bx, ax
-		mov	ax, es:[bx]
-		les	bx, _VRAM_PLANE_B
-		add	bx, di
-		or	es:[bx], ax
-
-loc_15979:
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_R]
-		mov	ax, si
-		add	ax, ax
-		add	bx, ax
-		cmp	word ptr es:[bx], 0
-		jz	short loc_159A5
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_R]
-		mov	ax, si
-		add	ax, ax
-		add	bx, ax
-		mov	ax, es:[bx]
-		les	bx, _VRAM_PLANE_R
-		add	bx, di
-		or	es:[bx], ax
-
-loc_159A5:
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_G]
-		mov	ax, si
-		add	ax, ax
-		add	bx, ax
-		cmp	word ptr es:[bx], 0
-		jz	short loc_159D1
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_G]
-		mov	ax, si
-		add	ax, ax
-		add	bx, ax
-		mov	ax, es:[bx]
-		les	bx, _VRAM_PLANE_G
-		add	bx, di
-		or	es:[bx], ax
-
-loc_159D1:
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_E]
-		mov	ax, si
-		add	ax, ax
-		add	bx, ax
-		cmp	word ptr es:[bx], 0
-		jz	short loc_159FD
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_E]
-		mov	ax, si
-		add	ax, ax
-		add	bx, ax
-		mov	ax, es:[bx]
-		les	bx, _VRAM_PLANE_E
-		add	bx, di
-		or	es:[bx], ax
-
-loc_159FD:
-		add	di, 2
-		inc	si
-		inc	[bp+var_6]
-
-loc_15A04:
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx+8]
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		cmp	ax, [bp+var_6]
-		jg	loc_15900
-		add	[bp+var_2], 50h	; 'P'
-		cmp	[bp+var_2], 7D00h
-		jge	short loc_15A33
-		inc	[bp+var_4]
-
-loc_15A25:
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx+0Ah]
-		cmp	ax, [bp+var_4]
-		jg	loc_158D7
-
-loc_15A33:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_1588A	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -10913,13 +10713,7 @@ loc_16917:
 
 loc_1692E:
 		les	bx, [bp+arg_0]
-		push	word ptr es:[bx+24h]
-		push	word ptr es:[bx+2]
-		push	word ptr es:[bx]
-		push	word ptr [bp+arg_0+2]
-		push	bx
-		call	sub_1588A
-		add	sp, 0Ah
+		call	@CBossEntity@put_8$xqiii c, bx, word ptr [bp+arg_0+2], word ptr es:[bx], word ptr es:[bx+2], word ptr es:[bx+24h]
 		les	bx, [bp+arg_0]
 		mov	word ptr es:[bx+2Ch], 1
 		jmp	short loc_1696D
@@ -21092,18 +20886,10 @@ sub_1E431	proc far
 		mov	mima_animated.BE_bos_image, 0
 		push	1
 		call	_graph_accesspage_func
-		push	0
-		pushd	[dword ptr mima_animated.BE_cur_left]
-		push	ds
-		push	offset mima_animated
-		call	sub_1588A
+		call	@CBossEntity@put_8$xqiii stdcall, offset mima_animated, ds, large [dword ptr mima_animated.BE_cur_left], 0
 		push	0
 		call	_graph_accesspage_func
-		push	0
-		pushd	[dword ptr mima_animated.BE_cur_left]
-		push	ds
-		push	offset mima_animated
-		call	sub_1588A
+		call	@CBossEntity@put_8$xqiii stdcall, offset mima_animated, ds, large [dword ptr mima_animated.BE_cur_left], 0
 		add	sp, 18h
 		leave
 		retf
@@ -21134,18 +20920,10 @@ sub_1E48B	proc far
 		mov	mima_animated.BE_bos_image, 1
 		push	1
 		call	_graph_accesspage_func
-		push	1
-		pushd	[dword ptr mima_animated.BE_cur_left]
-		push	ds
-		push	offset mima_animated
-		call	sub_1588A
+		call	@CBossEntity@put_8$xqiii stdcall, offset mima_animated, ds, large [dword ptr mima_animated.BE_cur_left], 1
 		push	0
 		call	_graph_accesspage_func
-		push	1
-		pushd	[dword ptr mima_animated.BE_cur_left]
-		push	ds
-		push	offset mima_animated
-		call	sub_1588A
+		call	@CBossEntity@put_8$xqiii stdcall, offset mima_animated, ds, large [dword ptr mima_animated.BE_cur_left], 1
 		add	sp, 18h
 
 locret_1E4EA:
@@ -21163,18 +20941,10 @@ sub_1E4EC	proc far
 		mov	bp, sp
 		push	1
 		call	_graph_accesspage_func
-		push	mima_still.BE_bos_image
-		pushd	[dword ptr mima_still.BE_cur_left]
-		push	ds
-		push	offset mima_still
-		call	sub_1588A
+		call	@CBossEntity@put_8$xqiii stdcall, offset mima_still, ds, large [dword ptr mima_still.BE_cur_left], mima_still.BE_bos_image
 		push	0
 		call	_graph_accesspage_func
-		push	mima_still.BE_bos_image
-		pushd	[dword ptr mima_still.BE_cur_left]
-		push	ds
-		push	offset mima_still
-		call	sub_1588A
+		call	@CBossEntity@put_8$xqiii stdcall, offset mima_still, ds, large [dword ptr mima_still.BE_cur_left], mima_still.BE_bos_image
 		add	sp, 18h
 		pop	bp
 		retf
@@ -22629,18 +22399,10 @@ loc_1F0F8:
 		jb	short loc_1F154
 		push	1
 		call	_graph_accesspage_func
-		push	0
-		pushd	[dword ptr mima_still.BE_cur_left]
-		push	ds
-		push	offset mima_still
-		call	sub_1588A
+		call	@CBossEntity@put_8$xqiii stdcall, offset mima_still, ds, large [dword ptr mima_still.BE_cur_left], 0
 		push	0
 		call	_graph_accesspage_func
-		push	0
-		pushd	[dword ptr mima_still.BE_cur_left]
-		push	ds
-		push	offset mima_still
-		call	sub_1588A
+		call	@CBossEntity@put_8$xqiii stdcall, offset mima_still, ds, large [dword ptr mima_still.BE_cur_left], 0
 		call	_z_palette_set_all_show stdcall, offset palette_39B8C, ds
 		add	sp, 1Ch
 		mov	byte_39E25, 0FFh
@@ -30262,11 +30024,7 @@ loc_2326F:
 		cbw
 		cmp	ax, 8
 		jnz	short loc_232A0
-		push	singyoku_sphere.BE_bos_image
-		pushd	[dword ptr singyoku_sphere.BE_cur_left]
-		push	ds
-		push	offset singyoku_sphere
-		call	sub_1588A
+		call	@CBossEntity@put_8$xqiii stdcall, offset singyoku_sphere, ds, large [dword ptr singyoku_sphere.BE_cur_left], singyoku_sphere.BE_bos_image
 		call	_mdrv2_bgm_fade_out_nonblock
 		call	@CPellets@unput_and_reset_all$qv stdcall, offset _Pellets, ds
 		add	sp, 0Eh
@@ -46931,7 +46689,7 @@ sub_2D20D	proc far
 		mov	word_3A6CA, 0
 		mov	word_35FF2, 1
 		mov	word_35FF0, 0
-		mov	word_35FEE, 2
+		mov	konngara_image_35FEE, 2
 		pop	bp
 		retf
 sub_2D20D	endp
@@ -46973,45 +46731,33 @@ _konngara_free	endp
 
 sub_2D271	proc far
 
-arg_0		= word ptr  6
+@@image		= word ptr  6
 
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, [bp+arg_0]
+		mov	si, [bp+@@image]
 		cmp	word_35FF2, 0
 		jz	loc_2D340
-		cmp	word_35FEE, si
+		cmp	konngara_image_35FEE, si
 		jz	loc_2D340
 		push	1
 		call	_graph_accesspage_func
-		push	si
-		push	500118h
-		push	ds
-		push	offset konngara_head
-		call	sub_1588A
+		call	@CBossEntity@put_8$xqiii stdcall, offset konngara_head, ds, large 280 or (80 shl 16), si
 		push	0
 		call	_graph_accesspage_func
-		push	si
-		push	500118h
-		push	ds
-		push	offset konngara_head
-		call	sub_1588A
+		call	@CBossEntity@put_8$xqiii stdcall, offset konngara_head, ds, large 280 or (80 shl 16), si
 		add	sp, 18h
 		cmp	word_35FF0, 3
 		jnz	short loc_2D2EF
 		push	1
 		call	_graph_accesspage_func
-		push	si
-		push	800118h
-		push	ds
-		push	offset konngara_face_aim
-		call	sub_1588A
+		call	@CBossEntity@put_8$xqiii stdcall, offset konngara_face_aim, ds, large 280 or (128 shl 16), si
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 0Eh
 		push	si
-		push	800118h
+		push	280 or (128 shl 16)
 		push	ds
 		push	offset konngara_face_aim
 		jmp	short loc_2D334
@@ -47026,11 +46772,7 @@ loc_2D2EF:
 		dec	ax
 		imul	ax, 3
 		add	ax, si
-		push	ax
-		push	800118h
-		push	ds
-		push	offset konngara_face_closed_or_glare
-		call	sub_1588A
+		call	@CBossEntity@put_8$xqiii stdcall, offset konngara_face_closed_or_glare, ds, large 	280 or (128 shl 16), ax
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 0Eh
@@ -47039,16 +46781,16 @@ loc_2D2EF:
 		imul	ax, 3
 		add	ax, si
 		push	ax
-		push	800118h
+		push	280 or (128 shl 16)
 		push	ds
 		push	offset konngara_face_closed_or_glare
 
 loc_2D334:
-		call	sub_1588A
+		call	@CBossEntity@put_8$xqiii
 		add	sp, 0Ah
 
 loc_2D33C:
-		mov	word_35FEE, si
+		mov	konngara_image_35FEE, si
 
 loc_2D340:
 		pop	si
@@ -47075,16 +46817,12 @@ arg_0		= word ptr  6
 		jnz	short loc_2D38B
 		push	1
 		call	_graph_accesspage_func
-		push	word_35FEE
-		push	800118h
-		push	ds
-		push	offset konngara_face_aim
-		call	sub_1588A
+		call	@CBossEntity@put_8$xqiii stdcall, offset konngara_face_aim, ds, large 	280 or (128 shl 16), konngara_image_35FEE
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 0Eh
-		push	word_35FEE
-		push	800118h
+		push	konngara_image_35FEE
+		push	280 or (128 shl 16)
 		push	ds
 		push	offset konngara_face_aim
 		jmp	short loc_2D403
@@ -47097,20 +46835,16 @@ loc_2D38B:
 		call	_graph_accesspage_func
 		lea	ax, [si-1]
 		imul	ax, 3
-		add	ax, word_35FEE
-		push	ax
-		push	800118h
-		push	ds
-		push	offset konngara_face_closed_or_glare
-		call	sub_1588A
+		add	ax, konngara_image_35FEE
+		call	@CBossEntity@put_8$xqiii stdcall, offset konngara_face_closed_or_glare, ds, large 280 or (128 shl 16), ax
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 0Eh
 		lea	ax, [si-1]
 		imul	ax, 3
-		add	ax, word_35FEE
+		add	ax, konngara_image_35FEE
 		push	ax
-		push	800118h
+		push	280 or (128 shl 16)
 		push	ds
 		push	offset konngara_face_closed_or_glare
 		jmp	short loc_2D403
@@ -47119,21 +46853,17 @@ loc_2D38B:
 loc_2D3D1:
 		push	1
 		call	_graph_accesspage_func
-		push	word_35FEE
-		push	500118h
-		push	ds
-		push	offset konngara_head
-		call	sub_1588A
+		call	@CBossEntity@put_8$xqiii stdcall, offset konngara_head, ds, large 280 or (80 shl 16), konngara_image_35FEE
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 0Eh
-		push	word_35FEE
-		push	500118h
+		push	konngara_image_35FEE
+		push	280 or (80 shl 16)
 		push	ds
 		push	offset konngara_head
 
 loc_2D403:
-		call	sub_1588A
+		call	@CBossEntity@put_8$xqiii
 		add	sp, 0Ah
 		mov	word_35FF0, si
 
@@ -49083,8 +48813,7 @@ sub_2E7C4	proc far
 		mov	bp, sp
 		cmp	word_3A6CA, 0Ah
 		jnz	short loc_2E803
-		push	2
-		call	sub_2D271
+		call	sub_2D271 stdcall, 2
 		push	1
 		call	sub_2D343
 		mov	word_35FF2, 0
@@ -49284,8 +49013,7 @@ sub_2EA03	proc far
 		mov	bp, sp
 		cmp	word_3A6CA, 0Ah
 		jnz	short loc_2EA42
-		push	2
-		call	sub_2D271
+		call	sub_2D271 stdcall, 2
 		push	3
 		call	sub_2D343
 		mov	word_35FF2, 0
@@ -49474,8 +49202,7 @@ sub_2EC9A	proc far
 		mov	bp, sp
 		cmp	word_3A6CA, 0Ah
 		jnz	short loc_2ECD9
-		push	2
-		call	sub_2D271
+		call	sub_2D271 stdcall, 2
 		push	3
 		call	sub_2D343
 		mov	word_35FF2, 0
@@ -49636,7 +49363,7 @@ sub_2EDBF	endp
 sub_2EE7D	proc far
 
 var_C		= byte ptr -0Ch
-var_8		= word ptr -8
+@@image		= word ptr -8
 var_6		= word ptr -6
 var_4		= word ptr -4
 var_2		= word ptr -2
@@ -49700,9 +49427,8 @@ loc_2EF1F:
 		mov	ax, 2
 
 loc_2EF22:
-		mov	[bp+var_8], ax
-		push	ax
-		call	sub_2D271
+		mov	[bp+@@image], ax
+		call	sub_2D271 stdcall, ax
 		pop	cx
 		cmp	word_35FF8, 0
 		jnz	short loc_2EF38
@@ -49830,9 +49556,8 @@ loc_2F058:
 		mov	ax, 2
 
 loc_2F05B:
-		mov	[bp+var_8], ax
-		push	ax
-		call	sub_2D271
+		mov	[bp+@@image], ax
+		call	sub_2D271 stdcall, ax
 		pop	cx
 		cmp	word_3A6CA, 32h	; '2'
 		jnz	short loc_2F07F
@@ -49937,9 +49662,8 @@ loc_2F162:
 		mov	ax, 2
 
 loc_2F165:
-		mov	[bp+var_8], ax
-		push	ax
-		call	sub_2D271
+		mov	[bp+@@image], ax
+		call	sub_2D271 stdcall, ax
 		pop	cx
 		cmp	word_35FF8, 0
 		jnz	short loc_2F17B
@@ -50074,9 +49798,8 @@ loc_2F2A8:
 		mov	ax, 2
 
 loc_2F2AB:
-		mov	[bp+var_8], ax
-		push	ax
-		call	sub_2D271
+		mov	[bp+@@image], ax
+		call	sub_2D271 stdcall, ax
 		pop	cx
 		cmp	word_3A6CA, 32h	; '2'
 		jnz	short loc_2F2CF
@@ -50181,9 +49904,8 @@ loc_2F3B2:
 		mov	ax, 2
 
 loc_2F3B5:
-		mov	[bp+var_8], ax
-		push	ax
-		call	sub_2D271
+		mov	[bp+@@image], ax
+		call	sub_2D271 stdcall, ax
 		pop	cx
 		cmp	word_35FF8, 0
 		jnz	short loc_2F3CB
@@ -50317,9 +50039,8 @@ loc_2F503:
 		mov	ax, 2
 
 loc_2F506:
-		mov	[bp+var_8], ax
-		push	ax
-		call	sub_2D271
+		mov	[bp+@@image], ax
+		call	sub_2D271 stdcall, ax
 		pop	cx
 		cmp	word_3A6CA, 32h	; '2'
 		jnz	short loc_2F52A
@@ -50433,9 +50154,8 @@ loc_2F62C:
 		mov	ax, 2
 
 loc_2F62F:
-		mov	[bp+var_8], ax
-		push	ax
-		call	sub_2D271
+		mov	[bp+@@image], ax
+		call	sub_2D271 stdcall, ax
 		pop	cx
 		cmp	word_35FF8, 0
 		jnz	short loc_2F646
@@ -52034,7 +51754,7 @@ aBoss6_a6_grp	db 'boss6_a6.grp',0
 		dd aAngel_0		; "ANGEL"
 		dd aOf_0		; "OF"
 		dd aDeath_0		; "DEATH"
-word_35FEE	dw 9
+konngara_image_35FEE	dw 9
 word_35FF0	dw 0
 word_35FF2	dw 1
 point_35FF4	Point <999, 999>

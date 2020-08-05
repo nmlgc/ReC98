@@ -2,12 +2,24 @@
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
+#include "th01/hardware/graph.h"
 #include "th01/formats/sprfmt_h.hpp"
 #include "th01/formats/pf.hpp"
 #include "th01/formats/bos.hpp"
 #include "th01/main/boss/entity.hpp"
 
 extern bool bos_header_only;
+
+/// Helper functions
+/// ----------------
+// Part of ZUN's attempt at clipping at the left or right edges of VRAM, by
+// comparing [vram_offset] against the value returned from this function.
+inline int16_t vram_intended_y_for(int16_t vram_offset, int first_x) {
+	return (first_x < 0)
+		? ((vram_offset / ROW_SIZE) + 1)
+		: ((vram_offset / ROW_SIZE) + 0);
+}
+/// ----------------
 
 void bos_reset_all_broken(void)
 {
@@ -75,3 +87,46 @@ void CBossEntity::bos_metadata_get(
 	h = this->h;
 	vram_w = this->vram_w;
 }
+
+/// Blitting
+/// --------
+void CBossEntity::put_8(int left, int top, int image) const
+{
+	int16_t vram_offset_row = vram_offset_divmul(left, top);
+	int16_t vram_offset;
+	size_t bos_p = 0;
+	int bos_y;
+	int bos_word_x;
+	int16_t intended_y;
+
+	bos_image_t &bos = bos_images[bos_slot].image[image];
+	if(bos_image_count <= image) {
+		return;
+	}
+
+	for(bos_y = 0; h > bos_y; bos_y++) {
+		int16_t vram_offset = vram_offset_row;
+		intended_y = vram_intended_y_for(vram_offset_row, left);
+		for(bos_word_x = 0; (vram_w / 2) > bos_word_x; bos_word_x++) {
+			if((vram_offset / ROW_SIZE) == intended_y) {
+				if(~bos.alpha[bos_p]) {
+					grcg_setcolor_rmw(0);
+					VRAM_PUT(B, vram_offset, ~bos.alpha[bos_p], 16);
+					grcg_off();
+
+					vram_or_emptyopt(B, vram_offset, bos.planes.B[bos_p], 16);
+					vram_or_emptyopt(R, vram_offset, bos.planes.R[bos_p], 16);
+					vram_or_emptyopt(G, vram_offset, bos.planes.G[bos_p], 16);
+					vram_or_emptyopt(E, vram_offset, bos.planes.E[bos_p], 16);
+				}
+			}
+			vram_offset += 2;
+			bos_p++;
+		}
+		vram_offset_row += ROW_SIZE;
+		if(vram_offset_row >= PLANE_SIZE) { // Clip at the bottom edge
+			break;
+		}
+	}
+}
+/// --------
