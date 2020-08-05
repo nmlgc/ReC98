@@ -24,6 +24,11 @@
 	typedef RGB<uint8_t, 256> RGB8;
 	typedef Palette<RGB8> Palette8;
 #endif
+
+// A version of master.lib's Point without the constructor, even in C++
+struct point_t {
+	int x, y;
+};
 // ---------------------
 
 // Macros
