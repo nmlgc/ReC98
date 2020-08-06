@@ -88,6 +88,33 @@ case it's part of an arithmetic expression that was promoted to `int`.
   ret = (3.14 > f);  // FLD 3.14,  FCOMP f + 4
   ```
 
+## Assignments
+
+* When assigning to a array element at a variable or non-0 index, the array
+  element address is typically evaluated before the expression to be assigned.
+  But when assigning
+  * the result of any arithmetic expression of a *16-bit type*
+  * to an element of a `far` array of a *16-bit type*,
+
+  the expression will be evaluated first, if its signedness differs from that
+  of the array:
+
+  ```c
+  int far *s;
+  unsigned int far *u;
+  int s1, s2;
+  unsigned int u1, u2;
+
+  s[1] = (s1 | s2); // LES BX, [s]; MOV AX, s1; OR AX, s2; MOV ES:[BX+2], AX
+  s[1] = (s1 | u2); // MOV AX, s1; OR AX, u2; LES BX, [s]; MOV ES:[BX+2], AX
+  s[1] = (u1 | u2); // MOV AX, u1; OR AX, u2; LES BX, [s]; MOV ES:[BX+2], AX
+
+  u[1] = (s1 | s2); // MOV AX, s1; OR AX, s2; LES BX, [u]; MOV ES:[BX+2], AX
+  u[1] = (s1 | u2); // LES BX, [u]; MOV AX, s1; OR AX, u2; MOV ES:[BX+2], AX
+  u[1] = (u1 | u2); // LES BX, [u]; MOV AX, u1; OR AX, u2; MOV ES:[BX+2], AX
+  ```
+
+
 ## `switch` statements
 
 * Sequence of the individual cases is identical in both C and ASM

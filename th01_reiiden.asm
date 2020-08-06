@@ -8877,94 +8877,17 @@ main_21_TEXT	segment	byte public 'CODE' use16
 	extern @CBossEntity@bos_metadata_get$xqmimuct1t1:proc
 	extern @CBossEntity@put_8$xqiii:proc
 	extern @CBossEntity@put_1line$xqiiii:proc
+	VRAM_SNAP_MASKED procdesc pascal near
+	VRAM_PUT_BG_FG procdesc pascal near \
+		fg:word, plane:dword, vram_offset:word, bg_masked:word
+	VRAM_PUT_UNALIGNED_BG_FG procdesc pascal near \
+		fg:word, plane:dword, vram_offset:word, bg_masked:word, first_bit:byte
 main_21_TEXT	ends
 
 main_21__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_21
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_15C80	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= dword	ptr  8
-arg_8		= dword	ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		les	bx, [bp+arg_4]
-		add	bx, [bp+arg_2]
-		mov	ax, es:[bx]
-		and	ax, [bp+arg_0]
-		les	bx, [bp+arg_8]
-		mov	es:[bx], ax
-		pop	bp
-		retn	0Ch
-sub_15C80	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_15C99	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= dword	ptr  8
-arg_8		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		mov	ax, [bp+arg_8]
-		or	ax, [bp+arg_0]
-		les	bx, [bp+arg_4]
-		add	bx, [bp+arg_2]
-		mov	es:[bx], ax
-		pop	bp
-		retn	0Ah
-sub_15C99	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_15CAF	proc near
-
-var_2		= word ptr -2
-arg_0		= byte ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-arg_6		= dword	ptr  0Ah
-arg_A		= word ptr  0Eh
-
-		enter	2, 0
-		push	si
-		mov	si, [bp+arg_A]
-		mov	ax, si
-		mov	cl, [bp+arg_0]
-		sar	ax, cl
-		mov	cl, 10h
-		sub	cl, [bp+arg_0]
-		mov	dx, si
-		shl	dx, cl
-		add	ax, dx
-		mov	[bp+var_2], ax
-		les	bx, [bp+arg_6]
-		add	bx, [bp+arg_4]
-		or	ax, [bp+arg_2]
-		mov	es:[bx], ax
-		pop	si
-		leave
-		retn	0Ch
-sub_15CAF	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9107,51 +9030,35 @@ loc_15D71:
 		pushd	[_VRAM_PLANE_B]
 		push	si
 		push	[bp+var_20]
-		call	sub_15C80
+		call	vram_snap_masked
 		push	ss
 		lea	ax, [bp+var_E]
 		push	ax
 		pushd	[_VRAM_PLANE_R]
 		push	si
 		push	[bp+var_20]
-		call	sub_15C80
+		call	vram_snap_masked
 		push	ss
 		lea	ax, [bp+var_C]
 		push	ax
 		pushd	[_VRAM_PLANE_G]
 		push	si
 		push	[bp+var_20]
-		call	sub_15C80
+		call	vram_snap_masked
 		push	ss
 		lea	ax, [bp+var_A]
 		push	ax
 		pushd	[_VRAM_PLANE_E]
 		push	si
 		push	[bp+var_20]
-		call	sub_15C80
+		call	vram_snap_masked
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 4
-		push	[bp+var_1E]
-		pushd	[_VRAM_PLANE_B]
-		push	si
-		push	[bp+var_10]
-		call	sub_15C99
-		push	[bp+var_1C]
-		pushd	[_VRAM_PLANE_R]
-		push	si
-		push	[bp+var_E]
-		call	sub_15C99
-		push	[bp+var_1A]
-		pushd	[_VRAM_PLANE_G]
-		push	si
-		push	[bp+var_C]
-		call	sub_15C99
-		push	[bp+var_18]
-		pushd	[_VRAM_PLANE_E]
-		push	si
-		push	[bp+var_A]
-		call	sub_15C99
+		call	vram_put_bg_fg pascal, [bp+var_1E], large [_VRAM_PLANE_B], si, [bp+var_10]
+		call	vram_put_bg_fg pascal, [bp+var_1C], large [_VRAM_PLANE_R], si, [bp+var_E]
+		call	vram_put_bg_fg pascal, [bp+var_1A], large [_VRAM_PLANE_G], si, [bp+var_C]
+		call	vram_put_bg_fg pascal, [bp+var_18], large [_VRAM_PLANE_E], si, [bp+var_A]
 		jmp	loc_15F2C
 ; ---------------------------------------------------------------------------
 
@@ -9172,55 +9079,35 @@ loc_15E7A:
 		pushd	[_VRAM_PLANE_B]
 		push	si
 		push	[bp+var_12]
-		call	sub_15C80
+		call	vram_snap_masked
 		push	ss
 		lea	ax, [bp+var_E]
 		push	ax
 		pushd	[_VRAM_PLANE_R]
 		push	si
 		push	[bp+var_12]
-		call	sub_15C80
+		call	vram_snap_masked
 		push	ss
 		lea	ax, [bp+var_C]
 		push	ax
 		pushd	[_VRAM_PLANE_G]
 		push	si
 		push	[bp+var_12]
-		call	sub_15C80
+		call	vram_snap_masked
 		push	ss
 		lea	ax, [bp+var_A]
 		push	ax
 		pushd	[_VRAM_PLANE_E]
 		push	si
 		push	[bp+var_12]
-		call	sub_15C80
+		call	vram_snap_masked
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 4
-		push	[bp+var_1E]
-		pushd	[_VRAM_PLANE_B]
-		push	si
-		push	[bp+var_10]
-		push	[bp+var_7]
-		call	sub_15CAF
-		push	[bp+var_1C]
-		pushd	[_VRAM_PLANE_R]
-		push	si
-		push	[bp+var_E]
-		push	[bp+var_7]
-		call	sub_15CAF
-		push	[bp+var_1A]
-		pushd	[_VRAM_PLANE_G]
-		push	si
-		push	[bp+var_C]
-		push	[bp+var_7]
-		call	sub_15CAF
-		push	[bp+var_18]
-		pushd	[_VRAM_PLANE_E]
-		push	si
-		push	[bp+var_A]
-		push	[bp+var_7]
-		call	sub_15CAF
+		call	vram_put_unaligned_bg_fg pascal, [bp+var_1E], large [_VRAM_PLANE_B], si, [bp+var_10], [bp+var_7]
+		call	vram_put_unaligned_bg_fg pascal, [bp+var_1C], large [_VRAM_PLANE_R], si, [bp+var_E], [bp+var_7]
+		call	vram_put_unaligned_bg_fg pascal, [bp+var_1A], large [_VRAM_PLANE_G], si, [bp+var_C], [bp+var_7]
+		call	vram_put_unaligned_bg_fg pascal, [bp+var_18], large [_VRAM_PLANE_E], si, [bp+var_A], [bp+var_7]
 
 loc_15F2C:
 		add	si, 2
@@ -10059,7 +9946,7 @@ loc_16596:
 		add	ax, ax
 		add	bx, ax
 		push	word ptr es:[bx]
-		call	sub_15C80
+		call	vram_snap_masked
 		push	ss
 		lea	ax, [bp+var_E]
 		push	ax
@@ -10071,7 +9958,7 @@ loc_16596:
 		add	ax, ax
 		add	bx, ax
 		push	word ptr es:[bx]
-		call	sub_15C80
+		call	vram_snap_masked
 		push	ss
 		lea	ax, [bp+var_C]
 		push	ax
@@ -10083,7 +9970,7 @@ loc_16596:
 		add	ax, ax
 		add	bx, ax
 		push	word ptr es:[bx]
-		call	sub_15C80
+		call	vram_snap_masked
 		push	ss
 		lea	ax, [bp+var_A]
 		push	ax
@@ -10095,7 +9982,7 @@ loc_16596:
 		add	ax, ax
 		add	bx, ax
 		push	word ptr es:[bx]
-		call	sub_15C80
+		call	vram_snap_masked
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 4
@@ -10104,41 +9991,25 @@ loc_16596:
 		mov	ax, di
 		add	ax, ax
 		add	bx, ax
-		push	word ptr es:[bx+bos_image_t.BOS_B]
-		pushd	[_VRAM_PLANE_B]
-		push	si
-		push	[bp+var_10]
-		call	sub_15C99
+		call	vram_put_bg_fg pascal, word ptr es:[bx], large [_VRAM_PLANE_B], si, [bp+var_10]
 		les	bx, [bp+@@bos]
 		les	bx, es:[bx+bos_image_t.BOS_R]
 		mov	ax, di
 		add	ax, ax
 		add	bx, ax
-		push	word ptr es:[bx]
-		pushd	[_VRAM_PLANE_R]
-		push	si
-		push	[bp+var_E]
-		call	sub_15C99
+		call	vram_put_bg_fg pascal, word ptr es:[bx], large [_VRAM_PLANE_R], si, [bp+var_E]
 		les	bx, [bp+@@bos]
 		les	bx, es:[bx+bos_image_t.BOS_G]
 		mov	ax, di
 		add	ax, ax
 		add	bx, ax
-		push	word ptr es:[bx]
-		pushd	[_VRAM_PLANE_G]
-		push	si
-		push	[bp+var_C]
-		call	sub_15C99
+		call	vram_put_bg_fg pascal, word ptr es:[bx], large [_VRAM_PLANE_G], si, [bp+var_C]
 		les	bx, [bp+@@bos]
 		les	bx, es:[bx+bos_image_t.BOS_E]
 		mov	ax, di
 		add	ax, ax
 		add	bx, ax
-		push	word ptr es:[bx]
-		pushd	[_VRAM_PLANE_E]
-		push	si
-		push	[bp+var_A]
-		call	sub_15C99
+		call	vram_put_bg_fg pascal, word ptr es:[bx], large [_VRAM_PLANE_E], si, [bp+var_A]
 		add	si, 2
 
 loc_166AA:
