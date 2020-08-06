@@ -1,7 +1,4 @@
-#include <stddef.h>
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
+#include "ReC98.h"
 #include "th01/hardware/graph.h"
 #include "th01/formats/sprfmt_h.hpp"
 #include "th01/formats/pf.hpp"
@@ -127,6 +124,72 @@ void CBossEntity::put_8(int left, int top, int image) const
 		if(vram_offset_row >= PLANE_SIZE) { // Clip at the bottom edge
 			break;
 		}
+	}
+}
+void CBossEntity::put_1line(int left, int y, int image, int row) const
+{
+	int16_t vram_offset_row = vram_offset_shift(left, y);
+	int bos_word_x;
+	size_t bos_p = 0;
+	int16_t intended_y;
+	char first_bit = (left & (BYTE_DOTS - 1));
+	char other_shift = ((1 * BYTE_DOTS) - first_bit);
+
+	bos_image_t &bos = bos_images[bos_slot].image[image];
+	if(bos_image_count <= image) {
+		return;
+	}
+
+	int16_t vram_offset = vram_offset_row;
+	intended_y = vram_intended_y_for(vram_offset_row, left);
+
+	bos_p = ((vram_w / 2) * row);
+	for(bos_word_x = 0; (vram_w / 2) > bos_word_x; bos_word_x++) {
+		if((vram_offset / ROW_SIZE) == intended_y) {
+			struct {
+				twobyte_t alpha, B, R, G, E;
+			} cur;
+
+			cur.alpha.v = ~bos.alpha[bos_p];
+			cur.B.v = bos.planes.B[bos_p];
+			cur.R.v = bos.planes.R[bos_p];
+			cur.G.v = bos.planes.G[bos_p];
+			cur.E.v = bos.planes.E[bos_p];
+
+			#define vram_byte(plane, byte) \
+				(VRAM_PLANE_##plane + vram_offset)[byte]
+			if(first_bit == 0) {
+				for(register int byte = 0; byte < sizeof(dots16_t); byte++) {
+					grcg_setcolor_rmw(0);
+					vram_byte(B, byte) = cur.alpha.u[byte];
+					grcg_off();
+
+					vram_byte(B, byte) |= cur.B.u[byte];
+					vram_byte(R, byte) |= cur.R.u[byte];
+					vram_byte(G, byte) |= cur.G.u[byte];
+					vram_byte(E, byte) |= cur.E.u[byte];
+				}
+			} else {
+				for(register int byte = 0; byte < sizeof(dots16_t); byte++) {
+					grcg_setcolor_rmw(0);
+					vram_byte(B, byte + 0) = (cur.alpha.u[byte] >> first_bit);
+					vram_byte(B, byte + 1) = (cur.alpha.u[byte] << other_shift);
+					grcg_off();
+
+					vram_byte(B, byte + 0) |= (cur.B.u[byte] >> first_bit);
+					vram_byte(R, byte + 0) |= (cur.R.u[byte] >> first_bit);
+					vram_byte(G, byte + 0) |= (cur.G.u[byte] >> first_bit);
+					vram_byte(E, byte + 0) |= (cur.E.u[byte] >> first_bit);
+					vram_byte(B, byte + 1) |= (cur.B.u[byte] << other_shift);
+					vram_byte(R, byte + 1) |= (cur.R.u[byte] << other_shift);
+					vram_byte(G, byte + 1) |= (cur.G.u[byte] << other_shift);
+					vram_byte(E, byte + 1) |= (cur.E.u[byte] << other_shift);
+				}
+			}
+			#undef vram_byte
+		}
+		vram_offset += 2;
+		bos_p++;
 	}
 }
 /// --------

@@ -54,5 +54,9 @@ public:
 	// Blits [image] to (⌊left/8⌋*8, top).
 	// Additionally clips at the bottom edge of VRAM.
 	void put_8(int left, int top, int image) const;
+
+	// Blits line #[row] of [image] to (left, top).
+	// Additionally clips at the bottom edge of VRAM.
+	void put_1line(int left, int y, int image, int row) const;
 	/// --------
 };

@@ -77,6 +77,7 @@ typedef union {
 	struct {
 		int8_t lo, hi;
 	} byte;
+	uint8_t u[2];
 	int16_t v;
 } twobyte_t;
 

@@ -8876,275 +8876,13 @@ main_21_TEXT	segment	byte public 'CODE' use16
 	extern @CBossEntity@bos_load$qxnxci:proc
 	extern @CBossEntity@bos_metadata_get$xqmimuct1t1:proc
 	extern @CBossEntity@put_8$xqiii:proc
+	extern @CBossEntity@put_1line$xqiiii:proc
 main_21_TEXT	ends
 
 main_21__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_21
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_15A37	proc far
-
-var_18		= word ptr -18h
-var_16		= word ptr -16h
-var_14		= word ptr -14h
-var_12		= word ptr -12h
-var_10		= word ptr -10h
-@@bos		= dword	ptr -0Eh
-var_A		= byte ptr -0Ah
-var_9		= byte ptr -9
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-@@image		= word ptr  0Eh
-arg_A		= word ptr  10h
-
-		enter	18h, 0
-		push	si
-		push	di
-		mov	ax, [bp+arg_4]
-		sar	ax, 3
-		mov	dx, [bp+arg_6]
-		shl	dx, 6
-		add	ax, dx
-		mov	dx, [bp+arg_6]
-		shl	dx, 4
-		add	ax, dx
-		mov	[bp+var_2], ax
-		mov	[bp+var_6], 0
-		mov	al, byte ptr [bp+arg_4]
-		and	al, 7
-		mov	[bp+var_9], al
-		mov	al, 8
-		sub	al, [bp+var_9]
-		mov	[bp+var_A], al
-		les	bx, [bp+arg_0]
-		mov	al, es:[bx+31h]
-		mov	ah, 0
-		imul	ax, size bos_t
-		mov	dx, [bp+@@image]
-		imul	dx, size bos_image_t
-		add	ax, dx
-		add	ax, offset _bos_images
-		mov	word ptr [bp+@@bos+2], ds
-		mov	word ptr [bp+@@bos], ax
-		mov	ax, es:[bx+20h]
-		cmp	ax, [bp+@@image]
-		jle	loc_15C7C
-		mov	di, [bp+var_2]
-		cmp	[bp+arg_4], 0
-		jge	short loc_15AA9
-		mov	ax, [bp+var_2]
-		mov	bx, 50h	; 'P'
-		cwd
-		idiv	bx
-		inc	ax
-		jmp	short loc_15AB2
-; ---------------------------------------------------------------------------
-
-loc_15AA9:
-		mov	ax, [bp+var_2]
-		mov	bx, 50h	; 'P'
-		cwd
-		idiv	bx
-
-loc_15AB2:
-		mov	[bp+var_8], ax
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx+8]
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		imul	[bp+arg_A]
-		mov	[bp+var_6], ax
-		mov	[bp+var_4], 0
-		jmp	loc_15C69
-; ---------------------------------------------------------------------------
-
-loc_15ACF:
-		mov	ax, di
-		mov	bx, 50h	; 'P'
-		cwd
-		idiv	bx
-		cmp	ax, [bp+var_8]
-		jnz	loc_15C60
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_alpha]
-		mov	ax, [bp+var_6]
-		add	ax, ax
-		add	bx, ax
-		mov	ax, es:[bx]
-		not	ax
-		mov	[bp+var_18], ax
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_B]
-		mov	ax, [bp+var_6]
-		add	ax, ax
-		add	bx, ax
-		mov	ax, es:[bx]
-		mov	[bp+var_16], ax
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_R]
-		mov	ax, [bp+var_6]
-		add	ax, ax
-		add	bx, ax
-		mov	ax, es:[bx]
-		mov	[bp+var_14], ax
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_G]
-		mov	ax, [bp+var_6]
-		add	ax, ax
-		add	bx, ax
-		mov	ax, es:[bx]
-		mov	[bp+var_12], ax
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_E]
-		mov	ax, [bp+var_6]
-		add	ax, ax
-		add	bx, ax
-		mov	ax, es:[bx]
-		mov	[bp+var_10], ax
-		cmp	[bp+var_9], 0
-		jnz	short loc_15B9F
-		xor	si, si
-		jmp	short loc_15B97
-; ---------------------------------------------------------------------------
-
-loc_15B4D:
-		call	_grcg_setcolor_rmw stdcall, 0
-		pop	cx
-		mov	al, byte ptr [bp+si+var_18]
-		les	bx, _VRAM_PLANE_B
-		add	bx, di
-		mov	es:[bx+si], al
-		call	_grcg_off_func
-		mov	al, byte ptr [bp+si+var_16]
-		les	bx, _VRAM_PLANE_B
-		add	bx, di
-		or	es:[bx+si], al
-		mov	al, byte ptr [bp+si+var_14]
-		les	bx, _VRAM_PLANE_R
-		add	bx, di
-		or	es:[bx+si], al
-		mov	al, byte ptr [bp+si+var_12]
-		les	bx, _VRAM_PLANE_G
-		add	bx, di
-		or	es:[bx+si], al
-		mov	al, byte ptr [bp+si+var_10]
-		les	bx, _VRAM_PLANE_E
-		add	bx, di
-		or	es:[bx+si], al
-		inc	si
-
-loc_15B97:
-		cmp	si, 2
-		jl	short loc_15B4D
-		jmp	loc_15C60
-; ---------------------------------------------------------------------------
-
-loc_15B9F:
-		xor	si, si
-		jmp	loc_15C59
-; ---------------------------------------------------------------------------
-
-loc_15BA4:
-		call	_grcg_setcolor_rmw stdcall, 0
-		pop	cx
-		mov	al, byte ptr [bp+si+var_18]
-		mov	ah, 0
-		mov	cl, [bp+var_9]
-		sar	ax, cl
-		les	bx, _VRAM_PLANE_B
-		add	bx, di
-		mov	es:[bx+si], al
-		mov	al, byte ptr [bp+si+var_18]
-		mov	cl, [bp+var_A]
-		shl	al, cl
-		mov	bx, word ptr _VRAM_PLANE_B
-		add	bx, di
-		mov	es:[bx+si+1], al
-		call	_grcg_off_func
-		mov	al, byte ptr [bp+si+var_16]
-		mov	ah, 0
-		mov	cl, [bp+var_9]
-		sar	ax, cl
-		les	bx, _VRAM_PLANE_B
-		add	bx, di
-		or	es:[bx+si], al
-		mov	al, byte ptr [bp+si+var_14]
-		mov	ah, 0
-		sar	ax, cl
-		les	bx, _VRAM_PLANE_R
-		add	bx, di
-		or	es:[bx+si], al
-		mov	al, byte ptr [bp+si+var_12]
-		mov	ah, 0
-		sar	ax, cl
-		les	bx, _VRAM_PLANE_G
-		add	bx, di
-		or	es:[bx+si], al
-		mov	al, byte ptr [bp+si+var_10]
-		mov	ah, 0
-		sar	ax, cl
-		les	bx, _VRAM_PLANE_E
-		add	bx, di
-		or	es:[bx+si], al
-		mov	al, byte ptr [bp+si+var_16]
-		mov	cl, [bp+var_A]
-		shl	al, cl
-		les	bx, _VRAM_PLANE_B
-		add	bx, di
-		or	es:[bx+si+1], al
-		mov	al, byte ptr [bp+si+var_14]
-		shl	al, cl
-		les	bx, _VRAM_PLANE_R
-		add	bx, di
-		or	es:[bx+si+1], al
-		mov	al, byte ptr [bp+si+var_12]
-		shl	al, cl
-		les	bx, _VRAM_PLANE_G
-		add	bx, di
-		or	es:[bx+si+1], al
-		mov	al, byte ptr [bp+si+var_10]
-		shl	al, cl
-		les	bx, _VRAM_PLANE_E
-		add	bx, di
-		or	es:[bx+si+1], al
-		inc	si
-
-loc_15C59:
-		cmp	si, 2
-		jl	loc_15BA4
-
-loc_15C60:
-		add	di, 2
-		inc	[bp+var_6]
-		inc	[bp+var_4]
-
-loc_15C69:
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx+8]
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		cmp	ax, [bp+var_4]
-		jg	loc_15ACF
-
-loc_15C7C:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_15A37	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9976,11 +9714,11 @@ sub_1612E	endp
 
 sub_16344	proc far
 
-var_2		= word ptr -2
-arg_0		= dword	ptr  6
+@@left		= word ptr -2
+@@CBossEntity		= dword	ptr  6
 arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
+@@top		= word ptr  0Ch
+@@image		= word ptr  0Eh
 arg_A		= word ptr  10h
 arg_C		= word ptr  12h
 arg_E		= word ptr  14h
@@ -10004,19 +9742,19 @@ loc_16351:
 		cdq
 		idiv	ebx
 		add	ax, [bp+arg_4]
-		mov	[bp+var_2], ax
+		mov	[bp+@@left], ax
 		mov	ax, 256
 		cwd
 		idiv	[bp+arg_A]
 		add	di, ax
 		push	si
-		push	[bp+arg_8]
-		mov	ax, [bp+arg_6]
+		push	[bp+@@image]
+		mov	ax, [bp+@@top]
 		add	ax, si
 		push	ax
-		push	[bp+var_2]
-		pushd	[bp+arg_0]
-		call	sub_15A37
+		push	[bp+@@left]
+		pushd	[bp+@@CBossEntity]
+		call	@CBossEntity@put_1line$xqiiii
 		add	sp, 0Ch
 		inc	si
 
