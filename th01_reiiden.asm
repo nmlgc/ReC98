@@ -8880,256 +8880,13 @@ main_21_TEXT	segment	byte public 'CODE' use16
 	VRAM_SNAP_MASKED procdesc pascal near
 	VRAM_PUT_BG_FG procdesc pascal near \
 		fg:word, plane:dword, vram_offset:word, bg_masked:word
-	VRAM_PUT_UNALIGNED_BG_FG procdesc pascal near \
-		fg:word, plane:dword, vram_offset:word, bg_masked:word, first_bit:byte
+	extern @CBossEntity@unput_and_put_1line$xqiiii:proc
 main_21_TEXT	ends
 
 main_21__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_21
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_15CDD	proc far
-
-var_20		= word ptr -20h
-var_1E		= word ptr -1Eh
-var_1C		= word ptr -1Ch
-var_1A		= word ptr -1Ah
-var_18		= word ptr -18h
-@@bos		= dword	ptr -16h
-var_12		= word ptr -12h
-var_10		= word ptr -10h
-var_E		= word ptr -0Eh
-var_C		= word ptr -0Ch
-var_A		= word ptr -0Ah
-var_8		= byte ptr -8
-var_7		= word ptr -7
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-@@image		= word ptr  0Eh
-arg_A		= word ptr  10h
-
-		enter	20h, 0
-		push	si
-		push	di
-		mov	ax, [bp+arg_4]
-		sar	ax, 3
-		mov	dx, [bp+arg_6]
-		shl	dx, 6
-		add	ax, dx
-		mov	dx, [bp+arg_6]
-		shl	dx, 4
-		add	ax, dx
-		mov	[bp+var_2], ax
-		xor	di, di
-		mov	al, byte ptr [bp+arg_4]
-		and	al, 7
-		mov	byte ptr [bp+var_7], al
-		mov	al, 10h
-		sub	al, byte ptr [bp+var_7]
-		mov	[bp+var_8], al
-		les	bx, [bp+arg_0]
-		mov	al, es:[bx+31h]
-		mov	ah, 0
-		imul	ax, size bos_t
-		mov	dx, [bp+@@image]
-		imul	dx, size bos_image_t
-		add	ax, dx
-		add	ax, offset _bos_images
-		mov	word ptr [bp+@@bos+2], ds
-		mov	word ptr [bp+@@bos], ax
-		mov	ax, es:[bx+20h]
-		cmp	ax, [bp+@@image]
-		jle	loc_15F46
-		mov	si, [bp+var_2]
-		cmp	[bp+arg_4], 0
-		jge	short loc_15D4C
-		mov	ax, [bp+var_2]
-		mov	bx, 50h	; 'P'
-		cwd
-		idiv	bx
-		inc	ax
-		jmp	short loc_15D55
-; ---------------------------------------------------------------------------
-
-loc_15D4C:
-		mov	ax, [bp+var_2]
-		mov	bx, 50h	; 'P'
-		cwd
-		idiv	bx
-
-loc_15D55:
-		mov	[bp+var_7+1], ax
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx+8]
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		imul	[bp+arg_A]
-		mov	di, ax
-		mov	[bp+var_4], 0
-		jmp	loc_15F33
-; ---------------------------------------------------------------------------
-
-loc_15D71:
-		mov	ax, si
-		mov	bx, 50h	; 'P'
-		cwd
-		idiv	bx
-		cmp	ax, [bp+var_7+1]
-		jnz	loc_15F2C
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_alpha]
-		mov	ax, di
-		add	ax, ax
-		add	bx, ax
-		mov	ax, es:[bx]
-		mov	[bp+var_20], ax
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_B]
-		mov	ax, di
-		add	ax, ax
-		add	bx, ax
-		mov	ax, es:[bx]
-		mov	[bp+var_1E], ax
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_R]
-		mov	ax, di
-		add	ax, ax
-		add	bx, ax
-		mov	ax, es:[bx]
-		mov	[bp+var_1C], ax
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_G]
-		mov	ax, di
-		add	ax, ax
-		add	bx, ax
-		mov	ax, es:[bx]
-		mov	[bp+var_1A], ax
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_E]
-		mov	ax, di
-		add	ax, ax
-		add	bx, ax
-		mov	ax, es:[bx]
-		mov	[bp+var_18], ax
-		cmp	byte ptr [bp+var_7], 0
-		jnz	loc_15E7A
-		push	1
-		call	_graph_accesspage_func
-		push	ss
-		lea	ax, [bp+var_10]
-		push	ax
-		pushd	[_VRAM_PLANE_B]
-		push	si
-		push	[bp+var_20]
-		call	vram_snap_masked
-		push	ss
-		lea	ax, [bp+var_E]
-		push	ax
-		pushd	[_VRAM_PLANE_R]
-		push	si
-		push	[bp+var_20]
-		call	vram_snap_masked
-		push	ss
-		lea	ax, [bp+var_C]
-		push	ax
-		pushd	[_VRAM_PLANE_G]
-		push	si
-		push	[bp+var_20]
-		call	vram_snap_masked
-		push	ss
-		lea	ax, [bp+var_A]
-		push	ax
-		pushd	[_VRAM_PLANE_E]
-		push	si
-		push	[bp+var_20]
-		call	vram_snap_masked
-		push	0
-		call	_graph_accesspage_func
-		add	sp, 4
-		call	vram_put_bg_fg pascal, [bp+var_1E], large [_VRAM_PLANE_B], si, [bp+var_10]
-		call	vram_put_bg_fg pascal, [bp+var_1C], large [_VRAM_PLANE_R], si, [bp+var_E]
-		call	vram_put_bg_fg pascal, [bp+var_1A], large [_VRAM_PLANE_G], si, [bp+var_C]
-		call	vram_put_bg_fg pascal, [bp+var_18], large [_VRAM_PLANE_E], si, [bp+var_A]
-		jmp	loc_15F2C
-; ---------------------------------------------------------------------------
-
-loc_15E7A:
-		push	1
-		call	_graph_accesspage_func
-		mov	ax, [bp+var_20]
-		mov	cl, byte ptr [bp+var_7]
-		shr	ax, cl
-		mov	dx, [bp+var_20]
-		mov	cl, [bp+var_8]
-		shl	dx, cl
-		add	ax, dx
-		mov	[bp+var_12], ax
-		push	ss
-		lea	ax, [bp+var_10]
-		push	ax
-		pushd	[_VRAM_PLANE_B]
-		push	si
-		push	[bp+var_12]
-		call	vram_snap_masked
-		push	ss
-		lea	ax, [bp+var_E]
-		push	ax
-		pushd	[_VRAM_PLANE_R]
-		push	si
-		push	[bp+var_12]
-		call	vram_snap_masked
-		push	ss
-		lea	ax, [bp+var_C]
-		push	ax
-		pushd	[_VRAM_PLANE_G]
-		push	si
-		push	[bp+var_12]
-		call	vram_snap_masked
-		push	ss
-		lea	ax, [bp+var_A]
-		push	ax
-		pushd	[_VRAM_PLANE_E]
-		push	si
-		push	[bp+var_12]
-		call	vram_snap_masked
-		push	0
-		call	_graph_accesspage_func
-		add	sp, 4
-		call	vram_put_unaligned_bg_fg pascal, [bp+var_1E], large [_VRAM_PLANE_B], si, [bp+var_10], [bp+var_7]
-		call	vram_put_unaligned_bg_fg pascal, [bp+var_1C], large [_VRAM_PLANE_R], si, [bp+var_E], [bp+var_7]
-		call	vram_put_unaligned_bg_fg pascal, [bp+var_1A], large [_VRAM_PLANE_G], si, [bp+var_C], [bp+var_7]
-		call	vram_put_unaligned_bg_fg pascal, [bp+var_18], large [_VRAM_PLANE_E], si, [bp+var_A], [bp+var_7]
-
-loc_15F2C:
-		add	si, 2
-		inc	di
-		inc	[bp+var_4]
-
-loc_15F33:
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx+8]
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		cmp	ax, [bp+var_4]
-		jg	loc_15D71
-
-loc_15F46:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_15CDD	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9662,11 +9419,11 @@ sub_16344	endp
 
 sub_163A8	proc far
 
-var_2		= word ptr -2
-arg_0		= dword	ptr  6
+@@left		= word ptr -2
+@@CBossEntity		= dword	ptr  6
 arg_4		= word ptr  0Ah
 arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
+@@image		= word ptr  0Eh
 arg_A		= word ptr  10h
 arg_C		= word ptr  12h
 arg_E		= word ptr  14h
@@ -9690,24 +9447,24 @@ loc_163B5:
 		cdq
 		idiv	ebx
 		add	ax, [bp+arg_4]
-		mov	[bp+var_2], ax
+		mov	[bp+@@left], ax
 		mov	ax, 256
 		cwd
 		idiv	[bp+arg_A]
 		add	di, ax
 		push	si
-		push	[bp+arg_8]
+		push	[bp+@@image]
 		mov	ax, [bp+arg_6]
 		add	ax, si
 		push	ax
-		push	[bp+var_2]
-		pushd	[bp+arg_0]
-		call	sub_15CDD
+		push	[bp+@@left]
+		pushd	[bp+@@CBossEntity]
+		call	@CBossEntity@unput_and_put_1line$xqiiii
 		add	sp, 0Ch
 		inc	si
 
 loc_163FF:
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@CBossEntity]
 		cmp	es:[bx+0Ah], si
 		jg	short loc_163B5
 		pop	di
@@ -20759,7 +20516,7 @@ sub_1E659	proc far
 var_6		= word ptr -6
 var_4		= word ptr -4
 var_2		= word ptr -2
-arg_0		= word ptr  6
+@@left		= word ptr  6
 arg_2		= word ptr  8
 
 		enter	6, 0
@@ -20771,7 +20528,7 @@ arg_2		= word ptr  8
 		cmp	word_3A6CA, 0Ah
 		jnz	short loc_1E691
 		mov	[bp+var_4], di
-		mov	ax, [bp+arg_0]
+		mov	ax, [bp+@@left]
 		mov	[bp+var_6], ax
 		mov	mima_still.BE_cur_left, ax
 		mov	ax, [bp+var_4]
@@ -20825,11 +20582,11 @@ loc_1E6DB:
 		add	ax, [bp+var_2]
 		add	ax, si
 		push	ax
-		push	[bp+arg_0]
+		push	[bp+@@left]
 		push	ds
 		push	offset mima_still
-		call	sub_15CDD
-		mov	ax, 9Fh
+		call	@CBossEntity@unput_and_put_1line$xqiiii
+		mov	ax, 159
 		sub	ax, si
 		push	ax
 		push	mima_still.BE_bos_image
@@ -20837,10 +20594,10 @@ loc_1E6DB:
 		sub	ax, [bp+var_2]
 		sub	ax, si
 		push	ax
-		push	[bp+arg_0]
+		push	[bp+@@left]
 		push	ds
 		push	offset mima_still
-		call	sub_15CDD
+		call	@CBossEntity@unput_and_put_1line$xqiiii
 		add	sp, 18h
 		inc	si
 

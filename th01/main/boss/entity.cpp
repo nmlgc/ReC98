@@ -217,4 +217,73 @@ void pascal near vram_put_unaligned_bg_fg(
 	sdots16_t fg_shifted = (fg >> first_bit) + (fg << (16 - first_bit));
 	reinterpret_cast<dots16_t &>(plane[vram_offset]) = (fg_shifted | bg_masked);
 }
+
+#define vram_snap_masked_planar(dst, vram_offset, mask) \
+	vram_snap_masked(dst.B, VRAM_PLANE_B, vram_offset, mask); \
+	vram_snap_masked(dst.R, VRAM_PLANE_R, vram_offset, mask); \
+	vram_snap_masked(dst.G, VRAM_PLANE_G, vram_offset, mask); \
+	vram_snap_masked(dst.E, VRAM_PLANE_E, vram_offset, mask);
+
+#define vram_put_bg_fg_planar(vram_offset, bg, fg) \
+	vram_put_bg_fg(fg.B, VRAM_PLANE_B, vram_offset, bg.B); \
+	vram_put_bg_fg(fg.R, VRAM_PLANE_R, vram_offset, bg.R); \
+	vram_put_bg_fg(fg.G, VRAM_PLANE_G, vram_offset, bg.G); \
+	vram_put_bg_fg(fg.E, VRAM_PLANE_E, vram_offset, bg.E);
+
+#define vram_put_unaligned_bg_fg_planar(vram_offset, bg, fg, first_bit) \
+	vram_put_unaligned_bg_fg(fg.B, VRAM_PLANE_B, vram_offset, bg.B, first_bit); \
+	vram_put_unaligned_bg_fg(fg.R, VRAM_PLANE_R, vram_offset, bg.R, first_bit); \
+	vram_put_unaligned_bg_fg(fg.G, VRAM_PLANE_G, vram_offset, bg.G, first_bit); \
+	vram_put_unaligned_bg_fg(fg.E, VRAM_PLANE_E, vram_offset, bg.E, first_bit);
+
+void CBossEntity::unput_and_put_1line(int left, int y, int image, int row) const
+{
+	int16_t vram_offset_row = vram_offset_shift(left, y);
+	int bos_word_x;
+	size_t bos_p = 0;
+	int16_t intended_y;
+	char first_bit = (left & (BYTE_DOTS - 1));
+	char other_shift = ((2 * BYTE_DOTS) - first_bit);
+	Planar<dots16_t> bg_masked;
+	dots16_t mask_unaligned;
+
+	bos_image_t &bos = bos_images[bos_slot].image[image];
+	if(bos_image_count <= image) {
+		return;
+	}
+
+	int16_t vram_offset = vram_offset_row;
+	intended_y = vram_intended_y_for(vram_offset_row, left);
+
+	bos_p = ((vram_w / 2) * row);
+	for(bos_word_x = 0; (vram_w / 2) > bos_word_x; bos_word_x++) {
+		if((vram_offset / ROW_SIZE) == intended_y) {
+			Planar<dots16_t> fg;
+
+			dots16_t alpha = bos.alpha[bos_p];
+			fg.B = bos.planes.B[bos_p];
+			fg.R = bos.planes.R[bos_p];
+			fg.G = bos.planes.G[bos_p];
+			fg.E = bos.planes.E[bos_p];
+			if(first_bit == 0) {
+				graph_accesspage_func(1);
+				vram_snap_masked_planar(bg_masked, vram_offset, alpha);
+				graph_accesspage_func(0);
+				vram_put_bg_fg_planar(vram_offset, bg_masked, fg);
+			} else {
+				graph_accesspage_func(1);
+				mask_unaligned = (
+					(alpha >> first_bit) + (alpha << other_shift)
+				);
+				vram_snap_masked_planar(bg_masked, vram_offset, mask_unaligned);
+				graph_accesspage_func(0);
+				vram_put_unaligned_bg_fg_planar(
+					vram_offset, bg_masked, fg, first_bit
+				);
+			}
+		}
+		vram_offset += 2;
+		bos_p++;
+	}
+}
 /// --------

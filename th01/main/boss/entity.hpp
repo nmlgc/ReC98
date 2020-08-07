@@ -58,5 +58,9 @@ public:
 	// Blits line #[row] of [image] to (left, top).
 	// Additionally clips at the bottom edge of VRAM.
 	void put_1line(int left, int y, int image, int row) const;
+
+	// Like put_1line(), but restores all pixels along the line from VRAM page
+	// 1 prior to blitting the line.
+	void unput_and_put_1line(int left, int y, int image, int row) const;
 	/// --------
 };
