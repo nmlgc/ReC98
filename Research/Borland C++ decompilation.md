@@ -114,6 +114,20 @@ case it's part of an arithmetic expression that was promoted to `int`.
   u[1] = (u1 | u2); // LES BX, [u]; MOV AX, u1; OR AX, u2; MOV ES:[BX+2], AX
   ```
 
+* Assigning `AX` to multiple variables in a row also indicates multiple
+  assignment in C:
+
+  ```c
+  // Applies to all storage durations
+  int a, b, c;
+
+  a = 0;  // MOV [a], 0
+  b = 0;  // MOV [b], 0
+  c = 0;  // MOV [c], 0
+
+  a = b = c = 0; // XOR AX, AX;  MOV [c], AX; MOV [b], AX;  MOV [a], AX;
+                 // Note the opposite order of variables!
+  ```
 
 ## `switch` statements
 

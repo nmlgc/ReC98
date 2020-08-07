@@ -8881,236 +8881,13 @@ main_21_TEXT	segment	byte public 'CODE' use16
 	VRAM_PUT_BG_FG procdesc pascal near \
 		fg:word, plane:dword, vram_offset:word, bg_masked:word
 	extern @CBossEntity@unput_and_put_1line$xqiiii:proc
+	extern @CBossEntity@unput_and_put_8$xqiii:proc
 main_21_TEXT	ends
 
 main_21__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_21
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_15F4A	proc far
-
-@@bos		= dword	ptr -14h
-var_10		= word ptr -10h
-var_E		= word ptr -0Eh
-var_C		= word ptr -0Ch
-var_A		= word ptr -0Ah
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-@@image		= word ptr  0Eh
-
-		enter	14h, 0
-		push	si
-		push	di
-		mov	ax, [bp+arg_4]
-		mov	bx, 8
-		cwd
-		idiv	bx
-		mov	dx, [bp+arg_6]
-		imul	dx, 50h
-		add	ax, dx
-		mov	[bp+var_2], ax
-		xor	di, di
-		les	bx, [bp+arg_0]
-		mov	al, es:[bx+31h]
-		mov	ah, 0
-		imul	ax, size bos_t
-		mov	dx, [bp+@@image]
-		imul	dx, size bos_image_t
-		add	ax, dx
-		add	ax, offset _bos_images
-		mov	word ptr [bp+@@bos+2], ds
-		mov	word ptr [bp+@@bos], ax
-		mov	ax, es:[bx+20h]
-		cmp	ax, [bp+@@image]
-		jle	loc_1612A
-		mov	[bp+var_4], 0
-		jmp	loc_1611C
-; ---------------------------------------------------------------------------
-
-loc_15F97:
-		mov	si, [bp+var_2]
-		cmp	[bp+arg_4], 0
-		jge	short loc_15FAC
-		mov	ax, [bp+var_2]
-		mov	bx, 50h	; 'P'
-		cwd
-		idiv	bx
-		inc	ax
-		jmp	short loc_15FB5
-; ---------------------------------------------------------------------------
-
-loc_15FAC:
-		mov	ax, [bp+var_2]
-		mov	bx, 50h	; 'P'
-		cwd
-		idiv	bx
-
-loc_15FB5:
-		mov	[bp+var_8], ax
-		mov	[bp+var_6], 0
-		jmp	loc_160FB
-; ---------------------------------------------------------------------------
-
-loc_15FC0:
-		mov	ax, si
-		mov	bx, 50h	; 'P'
-		cwd
-		idiv	bx
-		cmp	ax, [bp+var_8]
-		jnz	loc_160F4
-		lea	ax, [si+1]
-		cwd
-		idiv	bx
-		cmp	ax, [bp+var_8]
-		jnz	loc_160F4
-		or	si, si
-		jl	loc_160F4
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_alpha]
-		mov	ax, di
-		add	ax, ax
-		add	bx, ax
-		cmp	word ptr es:[bx], 0
-		jz	short loc_1606F
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_alpha]
-		mov	ax, di
-		add	ax, ax
-		add	bx, ax
-		mov	ax, es:[bx]
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		and	ax, es:[bx]
-		mov	[bp+var_10], ax
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_alpha]
-		mov	ax, di
-		add	ax, ax
-		add	bx, ax
-		mov	ax, es:[bx]
-		les	bx, _VRAM_PLANE_R
-		add	bx, si
-		and	ax, es:[bx]
-		mov	[bp+var_E], ax
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_alpha]
-		mov	ax, di
-		add	ax, ax
-		add	bx, ax
-		mov	ax, es:[bx]
-		les	bx, _VRAM_PLANE_G
-		add	bx, si
-		and	ax, es:[bx]
-		mov	[bp+var_C], ax
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_alpha]
-		mov	ax, di
-		add	ax, ax
-		add	bx, ax
-		mov	ax, es:[bx]
-		les	bx, _VRAM_PLANE_E
-		add	bx, si
-		and	ax, es:[bx]
-		mov	[bp+var_A], ax
-		jmp	short loc_1607D
-; ---------------------------------------------------------------------------
-
-loc_1606F:
-		xor	ax, ax
-		mov	[bp+var_A], ax
-		mov	[bp+var_C], ax
-		mov	[bp+var_E], ax
-		mov	[bp+var_10], ax
-
-loc_1607D:
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_B]
-		mov	ax, di
-		add	ax, ax
-		add	bx, ax
-		mov	ax, es:[bx]
-		or	ax, [bp+var_10]
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		mov	es:[bx], ax
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_R]
-		mov	ax, di
-		add	ax, ax
-		add	bx, ax
-		mov	ax, es:[bx]
-		or	ax, [bp+var_E]
-		les	bx, _VRAM_PLANE_R
-		add	bx, si
-		mov	es:[bx], ax
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_G]
-		mov	ax, di
-		add	ax, ax
-		add	bx, ax
-		mov	ax, es:[bx]
-		or	ax, [bp+var_C]
-		les	bx, _VRAM_PLANE_G
-		add	bx, si
-		mov	es:[bx], ax
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_E]
-		mov	ax, di
-		add	ax, ax
-		add	bx, ax
-		mov	ax, es:[bx]
-		or	ax, [bp+var_A]
-		les	bx, _VRAM_PLANE_E
-		add	bx, si
-		mov	es:[bx], ax
-
-loc_160F4:
-		add	si, 2
-		inc	di
-		inc	[bp+var_6]
-
-loc_160FB:
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx+8]
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		cmp	ax, [bp+var_6]
-		jg	loc_15FC0
-		add	[bp+var_2], 50h	; 'P'
-		cmp	[bp+var_2], 7D00h
-		jge	short loc_1612A
-		inc	[bp+var_4]
-
-loc_1611C:
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx+0Ah]
-		cmp	ax, [bp+var_4]
-		jg	loc_15F97
-
-loc_1612A:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_15F4A	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9980,12 +9757,7 @@ loc_16830:
 		push	word ptr es:[bx+4]
 		call	_egc_copy_rect_1_to_0_16
 		les	bx, [bp+arg_0]
-		push	word ptr es:[bx+24h]
-		push	word ptr es:[bx+2]
-		push	word ptr es:[bx]
-		push	word ptr [bp+arg_0+2]
-		push	bx
-		call	sub_15F4A
+		call	@CBossEntity@unput_and_put_8$xqiii stdcall, bx, word ptr [bp+arg_0+2], word ptr es:[bx], word ptr es:[bx+2], word ptr es:[bx+24h]
 		add	sp, 12h
 		les	bx, [bp+arg_0]
 		mov	word ptr es:[bx+2Ch], 1
@@ -20217,12 +19989,7 @@ var_6		= word ptr -6
 		mov	[bp+var_6], dx
 		mov	ax, [bp+var_6]
 		mov	mima_animated.BE_bos_image, ax
-		push	ax
-		pushd	[dword ptr mima_animated.BE_cur_left]
-		push	ds
-		push	offset mima_animated
-		call	sub_15F4A
-		add	sp, 0Ah
+		call	@CBossEntity@unput_and_put_8$xqiii c, offset mima_animated, ds, large [dword ptr mima_animated.BE_cur_left], ax
 
 locret_1E42F:
 		leave
@@ -28086,12 +27853,7 @@ loc_227F8:
 		mov	singyoku_sphere.BE_bos_image, ax
 		mov	al, [bp+var_1]
 		cbw
-		push	ax
-		pushd	[dword ptr singyoku_sphere.BE_cur_left]
-		push	ds
-		push	offset singyoku_sphere
-		call	sub_15F4A
-		add	sp, 0Ah
+		call	@CBossEntity@unput_and_put_8$xqiii c, offset singyoku_sphere, ds, large [dword ptr singyoku_sphere.BE_cur_left], ax
 
 locret_22818:
 		leave
@@ -28177,12 +27939,7 @@ arg_0		= word ptr  6
 		idiv	bx
 		or	dx, dx
 		jnz	loc_2290A
-		push	singyoku_sphere.BE_bos_image
-		pushd	[dword ptr singyoku_sphere.BE_cur_left]
-		push	ds
-		push	offset singyoku_sphere
-		call	sub_15F4A
-		add	sp, 0Ah
+		call	@CBossEntity@unput_and_put_8$xqiii c, offset singyoku_sphere, ds, large [dword ptr singyoku_sphere.BE_cur_left], singyoku_sphere.BE_bos_image
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -28203,12 +27960,7 @@ loc_228A4:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_2290A
-		push	singyoku_sphere.BE_bos_image
-		pushd	[dword ptr singyoku_sphere.BE_cur_left]
-		push	ds
-		push	offset singyoku_sphere
-		call	sub_15F4A
-		add	sp, 0Ah
+		call	@CBossEntity@unput_and_put_8$xqiii c, offset singyoku_sphere, ds, large [dword ptr singyoku_sphere.BE_cur_left], singyoku_sphere.BE_bos_image
 		cmp	word_3A37F, 32h	; '2'
 		jz	short loc_228FE
 		cmp	word_3A37F, 3Ch	; '<'
@@ -28618,12 +28370,7 @@ loc_22BD5:
 		mov	ax, si
 		imul	ax, 3
 		inc	ax
-		push	ax
-		pushd	[dword ptr singyoku_sphere.BE_cur_left]
-		push	ds
-		push	offset singyoku_person
-		call	sub_15F4A
-		add	sp, 0Ah
+		call	@CBossEntity@unput_and_put_8$xqiii c, offset singyoku_person, ds, large [dword ptr singyoku_sphere.BE_cur_left], ax
 		call	[bp+arg_2]
 		jmp	loc_22CC1
 ; ---------------------------------------------------------------------------
@@ -28649,7 +28396,7 @@ loc_22C27:
 		pushd	[dword ptr singyoku_sphere.BE_cur_left]
 		push	ds
 		push	offset singyoku_person
-		call	sub_15F4A
+		call	@CBossEntity@unput_and_put_8$xqiii
 		add	sp, 0Ah
 		call	[bp+arg_6]
 		jmp	loc_22CC1
@@ -28664,12 +28411,7 @@ loc_22C3E:
 		mov	singyoku_person.BE_bos_image, ax
 		mov	ax, si
 		imul	ax, 3
-		push	ax
-		pushd	[dword ptr singyoku_sphere.BE_cur_left]
-		push	ds
-		push	offset singyoku_person
-		call	sub_15F4A
-		add	sp, 0Ah
+		call	@CBossEntity@unput_and_put_8$xqiii c, offset singyoku_person, ds, large [dword ptr singyoku_sphere.BE_cur_left], ax
 		call	[bp+arg_A]
 		jmp	short loc_22CC1
 ; ---------------------------------------------------------------------------
@@ -28690,7 +28432,7 @@ loc_22C81:
 		push	offset singyoku_flash
 
 loc_22C8A:
-		call	sub_15F4A
+		call	@CBossEntity@unput_and_put_8$xqiii
 		add	sp, 0Ah
 		jmp	short loc_22CC1
 ; ---------------------------------------------------------------------------
@@ -28707,12 +28449,7 @@ loc_22C9C:
 loc_22CA0:
 		cmp	word_3A37F, 104h
 		jnz	short loc_22CC1
-		push	0
-		pushd	[dword ptr singyoku_sphere.BE_cur_left]
-		push	ds
-		push	offset singyoku_sphere
-		call	sub_15F4A
-		add	sp, 0Ah
+		call	@CBossEntity@unput_and_put_8$xqiii c, offset singyoku_sphere, ds, large [dword ptr singyoku_sphere.BE_cur_left], 0
 		mov	word_3A37F, 0
 
 loc_22CC1:
@@ -28726,12 +28463,7 @@ loc_22CC1:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_22CF3
-		push	singyoku_person.BE_bos_image
-		pushd	[dword ptr singyoku_sphere.BE_cur_left]
-		push	ds
-		push	offset singyoku_person
-		call	sub_15F4A
-		add	sp, 0Ah
+		call	@CBossEntity@unput_and_put_8$xqiii c, offset singyoku_person, ds, large [dword ptr singyoku_sphere.BE_cur_left], singyoku_person.BE_bos_image
 
 loc_22CF3:
 		pop	si

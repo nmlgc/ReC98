@@ -16,6 +16,10 @@ inline int16_t vram_intended_y_for(int16_t vram_offset, int first_x) {
 		? ((vram_offset / ROW_SIZE) + 1)
 		: ((vram_offset / ROW_SIZE) + 0);
 }
+
+#define vram_offset_at_intended_y_16(vram_offset, intended_y) \
+	(((vram_offset + 0) / ROW_SIZE) == intended_y) && \
+	(((vram_offset + 1) / ROW_SIZE) == intended_y)
 /// ----------------
 
 void bos_reset_all_broken(void)
@@ -284,6 +288,53 @@ void CBossEntity::unput_and_put_1line(int left, int y, int image, int row) const
 		}
 		vram_offset += 2;
 		bos_p++;
+	}
+}
+
+void CBossEntity::unput_and_put_8(int left, int top, int image) const
+{
+	int16_t vram_offset_row = vram_offset_divmul(left, top);
+	int16_t vram_offset;
+	size_t bos_p = 0;
+	int bos_y;
+	int bos_word_x;
+	int16_t intended_y;
+	Planar<dots16_t> bg_masked;
+
+	bos_image_t &bos = bos_images[bos_slot].image[image];
+	if(bos_image_count <= image) {
+		return;
+	}
+
+	for(bos_y = 0; h > bos_y; bos_y++) {
+		int16_t vram_offset = vram_offset_row;
+		intended_y = vram_intended_y_for(vram_offset_row, left);
+		for(bos_word_x = 0; (vram_w / 2) > bos_word_x; bos_word_x++) {
+			if(
+				vram_offset_at_intended_y_16(vram_offset, intended_y) &&
+				(vram_offset >= 0) // Clip at the top edge
+			) {
+				graph_accesspage_func(1);
+				if(bos.alpha[bos_p]) {
+					vram_snap_planar_masked(
+						bg_masked, vram_offset, 16, bos.alpha[bos_p]
+					);
+				} else {
+					bg_masked.B = bg_masked.R = bg_masked.G = bg_masked.E = 0;
+				}
+				graph_accesspage_func(0);
+				VRAM_PUT(B, vram_offset, bos.planes.B[bos_p] | bg_masked.B, 16);
+				VRAM_PUT(R, vram_offset, bos.planes.R[bos_p] | bg_masked.R, 16);
+				VRAM_PUT(G, vram_offset, bos.planes.G[bos_p] | bg_masked.G, 16);
+				VRAM_PUT(E, vram_offset, bos.planes.E[bos_p] | bg_masked.E, 16);
+			}
+			vram_offset += 2;
+			bos_p++;
+		}
+		vram_offset_row += ROW_SIZE;
+		if(vram_offset_row >= PLANE_SIZE) { // Clip at the bottom edge
+			break;
+		}
 	}
 }
 /// --------
