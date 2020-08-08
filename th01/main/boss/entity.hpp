@@ -55,6 +55,11 @@ public:
 	// Additionally clips at the bottom edge of VRAM.
 	void put_8(int left, int top, int image) const;
 
+	// Precisely restores pixels according to the alpha mask of [image] from
+	// VRAM page 1, starting at (⌊left/8⌋*8, top).
+	// Additionally clips at the top and bottom edges of VRAM.
+	void unput_8(int left, int top, int image) const;
+
 	// Like put_8(), but restores all pixels in the blitted sprite
 	// rectangle from VRAM page 1 prior to blitting.
 	// Additionally clips at the top and bottom edges of VRAM.

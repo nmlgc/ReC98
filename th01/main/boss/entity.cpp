@@ -337,4 +337,63 @@ void CBossEntity::unput_and_put_8(int left, int top, int image) const
 		}
 	}
 }
+
+#define vram_unput_masked_emptyopt(plane, offset, bit_count, mask, tmp_dots) \
+	graph_accesspage_func(1); \
+	VRAM_SNAP(tmp_dots, plane, offset, bit_count); \
+	if(tmp_dots) { \
+		graph_accesspage_func(0); \
+		VRAM_CHUNK(plane, offset, bit_count) |= (mask & tmp_dots); \
+	}
+
+#define vram_unput_masked_emptyopt_planar(offset, bit_count, mask, tmp_dots) \
+	vram_unput_masked_emptyopt(B, offset, bit_count, mask, tmp_dots); \
+	vram_unput_masked_emptyopt(R, offset, bit_count, mask, tmp_dots); \
+	vram_unput_masked_emptyopt(G, offset, bit_count, mask, tmp_dots); \
+	vram_unput_masked_emptyopt(E, offset, bit_count, mask, tmp_dots);
+
+void CBossEntity::unput_8(int left, int top, int image) const
+{
+	int16_t vram_offset_row = vram_offset_divmul(left, top);
+	int16_t vram_offset;
+	int bos_y;
+	int bos_word_x;
+	size_t bos_p = 0;
+	int16_t intended_y;
+
+	bos_image_t &bos = bos_images[bos_slot].image[image];
+	if(bos_image_count <= image) {
+		return;
+	}
+
+	for(bos_y = 0; h > bos_y; bos_y++) {
+		int16_t vram_offset = vram_offset_row;
+		intended_y = vram_intended_y_for(vram_offset_row, left);
+		for(bos_word_x = 0; (vram_w / 2) > bos_word_x; bos_word_x++) {
+			if(
+				vram_offset_at_intended_y_16(vram_offset, intended_y) &&
+				(vram_offset >= 0) // Clip at the top edge
+			) {
+				grcg_setcolor_rmw(0);
+				graph_accesspage_func(0);
+				VRAM_PUT(B, vram_offset, ~bos.alpha[bos_p], 16);
+				grcg_off();
+
+				if(~bos.alpha[bos_p]) {
+					dots16_t bg_dots;
+					vram_unput_masked_emptyopt_planar(
+						vram_offset, 16, ~bos.alpha[bos_p], bg_dots
+					);
+				}
+			}
+			vram_offset += 2;
+			bos_p++;
+		}
+		vram_offset_row += ROW_SIZE;
+		if(vram_offset_row >= PLANE_SIZE) { // Clip at the bottom edge
+			break;
+		}
+	}
+	graph_accesspage_func(0);
+}
 /// --------
