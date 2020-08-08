@@ -8879,50 +8879,13 @@ main_21_TEXT	segment	byte public 'CODE' use16
 	extern @CBossEntity@unput_and_put_1line$xqiiii:proc
 	extern @CBossEntity@unput_and_put_8$xqiii:proc
 	extern @CBossEntity@wave_put$xqiiiiii:proc
+	extern @CBossEntity@pos_set$qiiiiiii:proc
 main_21_TEXT	ends
 
 main_21__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_21
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_166D2	proc far
-
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
-arg_A		= word ptr  10h
-arg_C		= word ptr  12h
-arg_E		= word ptr  14h
-arg_10		= word ptr  16h
-
-		push	bp
-		mov	bp, sp
-		les	bx, [bp+arg_0]
-		mov	ax, [bp+arg_4]
-		mov	es:[bx], ax
-		mov	ax, [bp+arg_6]
-		mov	es:[bx+2], ax
-		mov	ax, [bp+arg_8]
-		mov	es:[bx+26h], ax
-		mov	ax, [bp+arg_A]
-		mov	es:[bx+0Ch], ax
-		mov	ax, [bp+arg_C]
-		mov	es:[bx+0Eh], ax
-		mov	ax, [bp+arg_E]
-		mov	es:[bx+10h], ax
-		mov	ax, [bp+arg_10]
-		mov	es:[bx+12h], ax
-		mov	word ptr es:[bx+2Eh], 0
-		pop	bp
-		retf
-sub_166D2	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14697,43 +14660,13 @@ loc_1B3D2:
 loc_1B3D8:
 		cmp	si, 10h
 		jl	short loc_1B3BB
-		push	1300040h
-		push	2E00000h
-		push	300080h
-		push	40h
-		push	ds
-		push	offset eye_west
-		call	sub_166D2
-		push	1300040h
-		push	2E00000h
-		push	300080h
-		push	200h
-		push	ds
-		push	offset eye_east
-		call	sub_166D2
+		call	@CBossEntity@pos_set$qiiiiiii stdcall, offset      eye_west, ds,  64, large 128 or (48 shl 16), large 0 or (736 shl 16), large 64 or (304 shl 16)
+		call	@CBossEntity@pos_set$qiiiiiii stdcall, offset      eye_east, ds, 512, large 128 or (48 shl 16), large 0 or (736 shl 16), large 64 or (304 shl 16)
 		add	sp, 24h
-		push	1300040h
-		push	2E00000h
-		push	3000B0h
-		push	0C0h ; '?'
-		push	ds
-		push	offset eye_southwest
-		call	sub_166D2
-		push	1300040h
-		push	2E00000h
-		push	3000B0h
-		push	180h
-		push	ds
-		push	offset eye_southeast
-		call	sub_166D2
+		call	@CBossEntity@pos_set$qiiiiiii stdcall, offset eye_southwest, ds, 192, large 176 or (48 shl 16), large 0 or (736 shl 16), large 64 or (304 shl 16)
+		call	@CBossEntity@pos_set$qiiiiiii stdcall, offset eye_southeast, ds, 384, large 176 or (48 shl 16), large 0 or (736 shl 16), large 64 or (304 shl 16)
 		add	sp, 24h
-		push	1300040h
-		push	2E00000h
-		push	300040h
-		push	120h
-		push	ds
-		push	offset eye_north
-		call	sub_166D2
+		call	@CBossEntity@pos_set$qiiiiiii stdcall, offset     eye_north, ds, 288, large  64 or (48 shl 16), large 0 or (736 shl 16), large 64 or (304 shl 16)
 		CBossEntity__hitbox_set	eye_0, 12, 12, 52, 32
 		CBossEntity__hitbox_set	eye_1, 12, 12, 52, 32
 		CBossEntity__hitbox_set	eye_2, 12, 12, 52, 32
@@ -19769,13 +19702,7 @@ sub_1E79B	proc far
 		mov	mima_still.BE_bos_image, 0
 		mov	mima_animated.BE_bos_image, 1
 		call	_z_palette_white_in
-		push	1300040h
-		push	2E00000h
-		push	300040h
-		push	100h
-		push	ds
-		push	offset mima_still
-		call	sub_166D2
+		call	@CBossEntity@pos_set$qiiiiiii stdcall, offset mima_still, ds, 256, large 64 or (48 shl 16), large 0 or (736 shl 16), large 64 or (304 shl 16)
 		CBossEntity__hitbox_set	mima_still, 32, 32, 96, 128
 		mov	mima_still.BE_hitbox_orb_inactive, 0
 		mov	word_3A6CA, 0
@@ -27090,13 +27017,7 @@ sub_22731	proc far
 		mov	bp, sp
 		call	sub_232A4
 		call	_z_palette_set_all_show stdcall, offset _z_Palettes, ds
-		push	1300040h
-		push	2E00000h
-		push	200040h
-		push	280h
-		push	ds
-		push	offset singyoku_sphere
-		call	sub_166D2
+		call	@CBossEntity@pos_set$qiiiiiii stdcall, offset singyoku_sphere, ds, 640, large 64 or (32 shl 16), large 0 or (736 shl 16), large 64 or (304 shl 16)
 		CBossEntity__hitbox_set	singyoku_sphere, 24, 24, 72, 72
 		mov	singyoku_sphere.BE_hitbox_orb_inactive, 0
 		mov	singyoku_sphere.BE_bos_image, 0
@@ -28701,20 +28622,8 @@ sub_2355F	proc far
 		mov	word_3A6C8, 0Eh
 		mov	word_3A1E5, 0Ah
 		mov	word_3A1E7, 6
-		push	1900040h
-		push	2400020h
-		push	320000h
-		push	0
-		push	ds
-		push	offset kikuri_soul_0
-		call	sub_166D2
-		push	1900040h
-		push	2400020h
-		push	320000h
-		push	0
-		push	ds
-		push	offset kikuri_soul_1
-		call	sub_166D2
+		call	@CBossEntity@pos_set$qiiiiiii stdcall, offset kikuri_soul_0, ds, 0, large 0 or (50 shl 16), large 32 or (576 shl 16), large 64 or (400 shl 16)
+		call	@CBossEntity@pos_set$qiiiiiii stdcall, offset kikuri_soul_1, ds, 0, large 0 or (50 shl 16), large 32 or (576 shl 16), large 64 or (400 shl 16)
 		add	sp, 24h
 		xor	si, si
 		jmp	short loc_235D7
@@ -28853,8 +28762,8 @@ sub_23629	endp
 
 sub_2368E	proc near
 
-arg_0		= word ptr  4
-arg_2		= word ptr  6
+@@top		= word ptr  4
+@@left		= word ptr  6
 
 		push	bp
 		mov	bp, sp
@@ -28866,17 +28775,17 @@ arg_2		= word ptr  6
 loc_23696:
 		cmp	byte ptr [si+5A1Fh], 0
 		jnz	short loc_236D5
-		push	1900040h
-		push	2400020h
-		push	32h ; '2'
-		push	[bp+arg_0]
-		push	[bp+arg_2]
+		push	64 or (400 shl 16)	; (move_clamp_top) or (move_clamp_bottom)
+		push	32 or (576 shl 16)	; (move_clamp_left) or (move_clamp_right)
+		push	50	; unknown
+		push	[bp+@@top]
+		push	[bp+@@left]
 		mov	ax, si
 		imul	ax, size CBossEntity
 		add	ax, offset _kikuri_tears
-		push	ds
-		push	ax
-		call	sub_166D2
+		push	ds	; this (segment)
+		push	ax	; this (offset)
+		call	@CBossEntity@pos_set$qiiiiiii
 		add	sp, 12h
 		mov	bx, si
 		imul	bx, size CBossEntity
@@ -29798,20 +29707,8 @@ sub_23F16	proc near
 		mov	bp, sp
 		cmp	word_3A6CA, 0C8h ; '?'
 		jnz	short loc_23F62
-		push	1900040h
-		push	2400020h
-		push	3200D0h
-		push	130h
-		push	ds
-		push	offset kikuri_soul_0
-		call	sub_166D2
-		push	1900040h
-		push	2400020h
-		push	3200D0h
-		push	130h
-		push	ds
-		push	offset kikuri_soul_1
-		call	sub_166D2
+		call	@CBossEntity@pos_set$qiiiiiii stdcall, offset kikuri_soul_0, ds, 304, large 208 or (50 shl 16), large 32 or (576 shl 16), large 64 or (400 shl 16)
+		call	@CBossEntity@pos_set$qiiiiiii stdcall, offset kikuri_soul_1, ds, 304, large 208 or (50 shl 16), large 32 or (576 shl 16), large 64 or (400 shl 16)
 		add	sp, 24h
 		jmp	short loc_23F99
 ; ---------------------------------------------------------------------------
@@ -31570,29 +31467,10 @@ sub_24FE0	proc far
 		mov	bp, sp
 		push	si
 		push	di
-		push	1300040h
-		push	2E00000h
-		push	300060h
-		push	100h
-		push	ds
-		push	offset elis_still_or_wave
-		call	sub_166D2
-		push	1300040h
-		push	2E00000h
-		push	300060h
-		push	100h
-		push	ds
-		push	offset elis_attack
-		call	sub_166D2
+		call	@CBossEntity@pos_set$qiiiiiii stdcall, offset elis_still_or_wave, ds, 256, large 96 or (48 shl 16), large 0 or (736 shl 16), large 64 or (304 shl 16)
+		call	@CBossEntity@pos_set$qiiiiiii stdcall, offset        elis_attack, ds, 256, large 96 or (48 shl 16), large 0 or (736 shl 16), large 64 or (304 shl 16)
 		add	sp, 24h
-		push	1300040h
-		push	2E00000h
-		push	300060h
-		push	100h
-		push	ds
-		push	offset elis_bat
-		call	sub_166D2
-		add	sp, 12h
+		call	@CBossEntity@pos_set$qiiiiiii       c, offset           elis_bat, ds, 256, large 96 or (48 shl 16), large 0 or (736 shl 16), large 64 or (304 shl 16)
 		CBossEntity__hitbox_set	elis_still_or_wave, 32, 12, 96, 64
 		CBossEntity__hitbox_set	elis_bat, 8, 8, 40, 24
 		mov	byte_3A6CE, 0
@@ -37453,14 +37331,7 @@ _sariel_load	endp
 sub_287D9	proc far
 		push	bp
 		mov	bp, sp
-		push	1900000h
-		push	2800000h
-		push	300090h
-		push	130h
-		push	ds
-		push	offset sariel_shield
-		call	sub_166D2
-		add	sp, 12h
+		call	@CBossEntity@pos_set$qiiiiiii c, offset sariel_shield, ds, 304, large 144 or (48 shl 16), large 0 or (640 shl 16), large 0 or (400 shl 16)
 		CBossEntity__hitbox_set	sariel_shield, 0, 0, 48, 48
 		mov	word_3A6C8, 12h
 		mov	word_3A1E5, 8

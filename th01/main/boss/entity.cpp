@@ -503,3 +503,23 @@ void CBossEntity::unput_and_put_16x8_8(int bos_left, int bos_top) const
 	}
 }
 /// --------
+
+void CBossEntity::pos_set(
+	int left,
+	int top,
+	int unknown,
+	int move_clamp_left,
+	int move_clamp_right,
+	int move_clamp_top,
+	int move_clamp_bottom
+)
+{
+	this->cur_left = left;
+	this->cur_top = top;
+	this->unknown = unknown;
+	this->move_clamp.left = move_clamp_left;
+	this->move_clamp.right = move_clamp_right;
+	this->move_clamp.top = move_clamp_top;
+	this->move_clamp.bottom = move_clamp_bottom;
+	this->zero_2 = 0;
+}

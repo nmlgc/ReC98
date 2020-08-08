@@ -105,4 +105,18 @@ public:
 	// Additionally clips at the top and bottom edges of VRAM.
 	void unput_and_put_16x8_8(int bos_left, int bos_top) const;
 	/// --------
+
+	/// Movement
+	/// --------
+	// Sets [cur_left], [cur_top], [unknown], and the [move_clamp] area.
+	void pos_set(
+		int left,
+		int top,
+		int unknown,
+		int move_clamp_left,
+		int move_clamp_right,
+		int move_clamp_top,
+		int move_clamp_bottom
+	);
+	/// --------
 };
