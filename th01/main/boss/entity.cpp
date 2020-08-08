@@ -236,6 +236,12 @@ void pascal near vram_put_unaligned_bg_fg(
 	vram_put_bg_fg(fg.G, VRAM_PLANE_G, vram_offset, bg.G); \
 	vram_put_bg_fg(fg.E, VRAM_PLANE_E, vram_offset, bg.E);
 
+#define vram_put_bg_word_planar(vram_offset, bg, planes, p) \
+	vram_put_bg_fg(planes.B[p], VRAM_PLANE_B, vram_offset, bg.B); \
+	vram_put_bg_fg(planes.R[p], VRAM_PLANE_R, vram_offset, bg.R); \
+	vram_put_bg_fg(planes.G[p], VRAM_PLANE_G, vram_offset, bg.G); \
+	vram_put_bg_fg(planes.E[p], VRAM_PLANE_E, vram_offset, bg.E);
+
 #define vram_put_unaligned_bg_fg_planar(vram_offset, bg, fg, first_bit) \
 	vram_put_unaligned_bg_fg(fg.B, VRAM_PLANE_B, vram_offset, bg.B, first_bit); \
 	vram_put_unaligned_bg_fg(fg.R, VRAM_PLANE_R, vram_offset, bg.R, first_bit); \
@@ -450,6 +456,49 @@ void CBossEntity::egc_sloppy_wave_unput_double_broken(
 			egc_copy_rect_1_to_0_16(
 				(x_1 - vram_w), (top + bos_y), word_align(x_2 - x_1), bos_y
 			);
+		}
+	}
+}
+
+void CBossEntity::unput_and_put_16x8_8(int bos_left, int bos_top) const
+{
+	int16_t vram_offset_row = vram_offset_shift(cur_left, cur_top);
+	int bos_row;
+	size_t bos_p = 0;
+	int intended_y;
+	int image = bos_image;
+	Planar<dots16_t> bg_masked;
+	bos_image_t &bos = bos_images[bos_slot].image[image];
+
+	// Yes, the macro form. Out of all places that could have required it, it
+	// had to be an originally unused function…
+	vram_offset_row += VRAM_OFFSET_SHIFT(bos_left, bos_top);
+	bos_p = (((vram_w / 2) * bos_top) + (bos_left / 16));
+
+	if(bos_image_count <= image) {
+		return;
+	}
+
+	for(bos_row = 0; bos_row < 8; bos_row++) {
+		int16_t vram_offset = vram_offset_row;
+		// Note the difference between this and vram_offset_at_intended_y_16()!
+		intended_y = (bos_left < 0)
+			? ((vram_offset_row / ROW_SIZE) - 1)
+			: ((vram_offset_row / ROW_SIZE) - 0);
+		if(
+			(((vram_offset + 1) / ROW_SIZE) == intended_y) &&
+			(vram_offset >= 0) // Clip at the top edge
+		) {
+			graph_accesspage_func(1);
+			vram_snap_masked_planar(bg_masked, vram_offset, bos.alpha[bos_p]);
+			graph_accesspage_func(0);
+			vram_put_bg_word_planar(vram_offset, bg_masked, bos.planes, bos_p);
+			vram_offset += 2;
+		}
+		bos_p += (vram_w / 2);
+		vram_offset_row += ROW_SIZE;
+		if(vram_offset_row >= PLANE_SIZE) { // Clip at the bottom edge
+			break;
 		}
 	}
 }

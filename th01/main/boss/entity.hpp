@@ -96,5 +96,13 @@ public:
 		int left_2,
 		int len_2, int amp_2, int phase_2
 	) const;
+
+	// Blits the 16×8 pixels of [bos_image] in [bos_slot] starting at
+	// (bos_left, bos_top), relative to the top-left corner of the sprite, to
+	//	((⌊cur_left/8⌋ + bos_left/8⌋) * 8, (cur_top + bos_top))
+	// after precisely restoring pixels according to the alpha mask of the
+	// pixels to be blitted from VRAM page 1.
+	// Additionally clips at the top and bottom edges of VRAM.
+	void unput_and_put_16x8_8(int bos_left, int bos_top) const;
 	/// --------
 };
