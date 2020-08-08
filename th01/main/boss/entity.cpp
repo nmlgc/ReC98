@@ -1,5 +1,6 @@
 #include "ReC98.h"
 #include "th01/math/wave.hpp"
+#include "th01/hardware/egc.h"
 #include "th01/hardware/graph.h"
 #include "th01/formats/sprfmt_h.hpp"
 #include "th01/formats/pf.hpp"
@@ -418,5 +419,38 @@ void CBossEntity::wave_unput_and_put(
 ) const
 {
 	wave_func(unput_and_put_1line, left, top, image, len, amp, phase);
+}
+
+inline int word_align(int v) {
+	return (((v / 16) * 16) + 16);
+}
+
+void CBossEntity::egc_sloppy_wave_unput_double_broken(
+	int left_1, int top, int,
+	int len_1, int amp_1, int phase_1,
+	int left_2,
+	int len_2, int amp_2, int phase_2
+) const
+{
+	int x_1;
+	int t_1 = phase_1;
+	int x_2;
+	int t_2 = phase_2;
+	for(int bos_y = 0; h > bos_y; bos_y++) {
+		x_1 = wave_x(amp_1, t_1) + left_1;
+		x_2 = wave_x(amp_2, t_2) + left_2;
+		t_1 += (0x100 / len_1);
+		t_2 += (0x100 / len_2);
+		// ZUN bug: Shouldn't the [h] parameter be 1?
+		if(x_1 > x_2) {
+			egc_copy_rect_1_to_0_16(
+				x_2, (top + bos_y), word_align(x_1 - x_2), bos_y
+			);
+		} else {
+			egc_copy_rect_1_to_0_16(
+				(x_1 - vram_w), (top + bos_y), word_align(x_2 - x_1), bos_y
+			);
+		}
+	}
 }
 /// --------

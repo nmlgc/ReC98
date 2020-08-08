@@ -86,5 +86,15 @@ public:
 	void wave_unput_and_put(
 		int left, int top, int image, int len, int amp, int phase
 	) const;
+
+	// Tries to unblit the two sprites at (left_1, top) and (left_2, top) that
+	// were previously blitted with the given wave function using the EGC, but
+	// fails.
+	void egc_sloppy_wave_unput_double_broken(
+		int left_1, int top, int unused,
+		int len_1, int amp_1, int phase_1,
+		int left_2,
+		int len_2, int amp_2, int phase_2
+	) const;
 	/// --------
 };
