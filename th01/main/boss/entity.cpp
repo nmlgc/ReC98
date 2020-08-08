@@ -523,3 +523,8 @@ void CBossEntity::pos_set(
 	this->move_clamp.bottom = move_clamp_bottom;
 	this->zero_2 = 0;
 }
+
+void CBossEntity::sloppy_unput() const
+{
+	egc_copy_rect_1_to_0_16(cur_left, cur_top, (vram_w * BYTE_DOTS), h);
+}

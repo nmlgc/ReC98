@@ -104,6 +104,10 @@ public:
 	// pixels to be blitted from VRAM page 1.
 	// Additionally clips at the top and bottom edges of VRAM.
 	void unput_and_put_16x8_8(int bos_left, int bos_top) const;
+
+	// Restores the pixels inside the entire ([vram_w]*8)×[h] rectangle
+	// starting at (cur_left, cur_top) from VRAM page 1.
+	void sloppy_unput(void) const;
 	/// --------
 
 	/// Movement

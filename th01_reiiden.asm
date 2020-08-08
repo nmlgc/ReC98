@@ -8891,30 +8891,6 @@ main_21__TEXT	segment	byte public 'CODE' use16
 
 ; Attributes: bp-based frame
 
-sub_16710	proc far
-
-arg_0		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		les	bx, [bp+arg_0]
-		push	word ptr es:[bx+0Ah]
-		mov	ax, es:[bx+8]
-		shl	ax, 3
-		push	ax
-		push	word ptr es:[bx+2]
-		push	word ptr es:[bx]
-		call	_egc_copy_rect_1_to_0_16
-		add	sp, 8
-		pop	bp
-		retf
-sub_16710	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
 sub_16733	proc far
 
 var_6		= word ptr -6
