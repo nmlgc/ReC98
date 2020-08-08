@@ -72,5 +72,19 @@ public:
 	// Like put_1line(), but restores all pixels along the line from VRAM page
 	// 1 prior to blitting the line.
 	void unput_and_put_1line(int left, int y, int image, int row) const;
+
+	// Blits [image] with a wave function applied to the starting X coordinate
+	// for each row, based at the given (left, top) point. Used for Elis'
+	// entrance animation.
+	// Calls put_1line() for each row, and clips the sprite accordingly.
+	void wave_put(
+		int left, int top, int image, int len, int amp, int phase
+	) const;
+
+	// Like wave_put(), but calls unput_and_put_1line() for each line instead.
+	// For a sloppy, EGC-accelerated unblitter function, see egc_wave_unput().
+	void wave_unput_and_put(
+		int left, int top, int image, int len, int amp, int phase
+	) const;
 	/// --------
 };

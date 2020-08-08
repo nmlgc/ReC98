@@ -5,6 +5,7 @@
 
 extern "C" {
 #include "th01/th01.h"
+#include "th01/math/wave.hpp"
 
 #pragma option -2
 #pragma option -O-
@@ -16,8 +17,8 @@ void egc_wave_unput(int left, int top, int len, int amp, int ph, int w, int h)
 {
 	int t = ph;
 	for(int y = 0; y < h; y++) {
-		int x = (((long)amp * Sin8(t)) / 256) + left;
-		t += 256 / len;
+		int x = (wave_x(amp, t) + left);
+		t += (0x100 / len);
 		egc_copy_rect_1_to_0_16(x, top + y, w, 1);
 	}
 }

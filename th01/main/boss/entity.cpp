@@ -1,4 +1,5 @@
 #include "ReC98.h"
+#include "th01/math/wave.hpp"
 #include "th01/hardware/graph.h"
 #include "th01/formats/sprfmt_h.hpp"
 #include "th01/formats/pf.hpp"
@@ -395,5 +396,27 @@ void CBossEntity::unput_8(int left, int top, int image) const
 		}
 	}
 	graph_accesspage_func(0);
+}
+
+#define wave_func(func, left, top, image, len, amp, phase) \
+	int t = phase; \
+	for(int bos_y = 0; h > bos_y; bos_y++) { \
+		int x = (wave_x(amp, t) + left); \
+		t += (0x100 / len); \
+		func(x, (top + bos_y), image, bos_y); \
+	}
+
+void CBossEntity::wave_put(
+	int left, int top, int image, int len, int amp, int phase
+) const
+{
+	wave_func(put_1line, left, top, image, len, amp, phase);
+}
+
+void CBossEntity::wave_unput_and_put(
+	int left, int top, int image, int len, int amp, int phase
+) const
+{
+	wave_func(unput_and_put_1line, left, top, image, len, amp, phase);
 }
 /// --------

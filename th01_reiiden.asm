@@ -8876,140 +8876,18 @@ main_21_TEXT	segment	byte public 'CODE' use16
 	extern @CBossEntity@bos_load$qxnxci:proc
 	extern @CBossEntity@bos_metadata_get$xqmimuct1t1:proc
 	extern @CBossEntity@put_8$xqiii:proc
-	extern @CBossEntity@put_1line$xqiiii:proc
 	VRAM_SNAP_MASKED procdesc pascal near
 	VRAM_PUT_BG_FG procdesc pascal near \
 		fg:word, plane:dword, vram_offset:word, bg_masked:word
 	extern @CBossEntity@unput_and_put_1line$xqiiii:proc
 	extern @CBossEntity@unput_and_put_8$xqiii:proc
+	extern @CBossEntity@wave_put$xqiiiiii:proc
 main_21_TEXT	ends
 
 main_21__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_21
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_16344	proc far
-
-@@left		= word ptr -2
-@@CBossEntity		= dword	ptr  6
-arg_4		= word ptr  0Ah
-@@top		= word ptr  0Ch
-@@image		= word ptr  0Eh
-arg_A		= word ptr  10h
-arg_C		= word ptr  12h
-arg_E		= word ptr  14h
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	di, [bp+arg_E]
-		xor	si, si
-		jmp	short loc_1639B
-; ---------------------------------------------------------------------------
-
-loc_16351:
-		movsx	eax, [bp+arg_C]
-		mov	bx, di
-		and	bx, 255
-		add	bx, bx
-		movsx	edx, _SinTable8[bx]
-		imul	eax, edx
-		mov	ebx, 256
-		cdq
-		idiv	ebx
-		add	ax, [bp+arg_4]
-		mov	[bp+@@left], ax
-		mov	ax, 256
-		cwd
-		idiv	[bp+arg_A]
-		add	di, ax
-		push	si
-		push	[bp+@@image]
-		mov	ax, [bp+@@top]
-		add	ax, si
-		push	ax
-		push	[bp+@@left]
-		pushd	[bp+@@CBossEntity]
-		call	@CBossEntity@put_1line$xqiiii
-		add	sp, 0Ch
-		inc	si
-
-loc_1639B:
-		les	bx, [bp+arg_0]
-		cmp	es:[bx+0Ah], si
-		jg	short loc_16351
-		pop	di
-		pop	si
-		leave
-		retf
-sub_16344	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_163A8	proc far
-
-@@left		= word ptr -2
-@@CBossEntity		= dword	ptr  6
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-@@image		= word ptr  0Eh
-arg_A		= word ptr  10h
-arg_C		= word ptr  12h
-arg_E		= word ptr  14h
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	di, [bp+arg_E]
-		xor	si, si
-		jmp	short loc_163FF
-; ---------------------------------------------------------------------------
-
-loc_163B5:
-		movsx	eax, [bp+arg_C]
-		mov	bx, di
-		and	bx, 255
-		add	bx, bx
-		movsx	edx, _SinTable8[bx]
-		imul	eax, edx
-		mov	ebx, 256
-		cdq
-		idiv	ebx
-		add	ax, [bp+arg_4]
-		mov	[bp+@@left], ax
-		mov	ax, 256
-		cwd
-		idiv	[bp+arg_A]
-		add	di, ax
-		push	si
-		push	[bp+@@image]
-		mov	ax, [bp+arg_6]
-		add	ax, si
-		push	ax
-		push	[bp+@@left]
-		pushd	[bp+@@CBossEntity]
-		call	@CBossEntity@unput_and_put_1line$xqiiii
-		add	sp, 0Ch
-		inc	si
-
-loc_163FF:
-		les	bx, [bp+@@CBossEntity]
-		cmp	es:[bx+0Ah], si
-		jg	short loc_163B5
-		pop	di
-		pop	si
-		leave
-		retf
-sub_163A8	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -37139,17 +37017,17 @@ loc_28082:
 		mov	ax, word_3A773
 		imul	ax, 6
 		push	ax
-		mov	ax, 64h	; 'd'
+		mov	ax, 100	; phase
 		sub	ax, word_3A773
-		push	ax
+		push	ax	; amp
 		mov	ax, word_3A773
 		add	ax, 2
-		push	ax
-		push	0
-		pushd	[dword ptr elis_still_or_wave.BE_cur_left]
-		push	ds
-		push	offset elis_still_or_wave
-		call	sub_16344
+		push	ax	; len
+		push	0	; image
+		pushd	[dword ptr elis_still_or_wave.BE_cur_left]	; left, top
+		push	ds	; this (segment)
+		push	offset elis_still_or_wave	; this (offset)
+		call	@CBossEntity@wave_put$xqiiiiii
 		add	sp, 10h
 		jmp	loc_28158
 ; ---------------------------------------------------------------------------
@@ -37189,12 +37067,7 @@ loc_28103:
 		jnz	short loc_28130
 		push	1
 		call	sub_24EC2
-		push	400008h
-		push	30000h
-		pushd	[dword ptr elis_still_or_wave.BE_cur_left]
-		push	ds
-		push	offset elis_still_or_wave
-		call	sub_16344
+		call	@CBossEntity@wave_put$xqiiiiii stdcall, offset elis_still_or_wave, ds, large [dword ptr elis_still_or_wave.BE_cur_left], large 0 or (3 shl 16), large 8 or (64 shl 16)
 		add	sp, 12h
 		jmp	short loc_28158
 ; ---------------------------------------------------------------------------
