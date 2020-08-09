@@ -40,6 +40,7 @@ where the scalar-type variable is declared in relation to them.
 | `ADD [m8], imm8` | Only achievable through a C++ method operating on a  member? |
 | `MOV AL, [m8]`<br />`ADD AL, imm8`<br />`MOV [m8], AL` | Opposite; *not* an inlined function |
 | `CWD`<br />`SUB AX, DX`<br />`SAR AX, 1` | `AX / 2`, `AX` is *int* |
+| `MOV [new_var], AX`<br />`CWD`<br />`XOR AX, DX`<br />`SUB AX, DX` | `abs(AX)`, defined in `<stdlib.h>`. `AX` is *int* |
 
 ### Arithmetic on a register *after* assigning it to a variable?
 

@@ -528,3 +528,32 @@ void CBossEntity::sloppy_unput() const
 {
 	egc_copy_rect_1_to_0_16(cur_left, cur_top, (vram_w * BYTE_DOTS), h);
 }
+
+void CBossEntity::move_lock_unput_and_put_8(
+	int, int delta_x, int delta_y, int lock_frames
+)
+{
+	if(move_lock_frame == 0) {
+		move(delta_x, delta_y);
+
+		int unput_left = (prev_delta_x > 0)
+			? ((prev_left / BYTE_DOTS) * BYTE_DOTS)
+			: (((cur_left / BYTE_DOTS) * BYTE_DOTS) + (vram_w * BYTE_DOTS));
+		egc_copy_rect_1_to_0_16(unput_left, prev_top, 8, h);
+
+		int unput_top = (cur_top > prev_top)
+			? prev_top
+			: (cur_top + h);
+		egc_copy_rect_1_to_0_16(
+			prev_left, unput_top, (vram_w << 3), abs(cur_top - prev_top)
+		);
+
+		unput_and_put_8(cur_left, cur_top, bos_image);
+
+		move_lock_frame = 1;
+	} else if(move_lock_frame >= lock_frames) {
+		move_lock_frame = 0;
+	} else {
+		move_lock_frame++;
+	}
+}

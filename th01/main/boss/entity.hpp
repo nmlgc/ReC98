@@ -112,6 +112,31 @@ public:
 
 	/// Movement
 	/// --------
+protected:
+	void move(const int &delta_x, const int &delta_y) {
+		prev_delta_x = delta_x;
+		prev_delta_y = delta_y;
+		prev_left = cur_left;
+		prev_top = cur_top;
+
+		cur_left += prev_delta_x;
+		if(move_clamp.left > cur_left) {
+			cur_left = move_clamp.left;
+		}
+		if(move_clamp.right < cur_left) {
+			cur_left = move_clamp.right;
+		}
+
+		cur_top += prev_delta_y;
+		if(cur_top < move_clamp.top) {
+			cur_top = move_clamp.top;
+		}
+		if(cur_top > move_clamp.bottom) {
+			cur_top = move_clamp.bottom;
+		}
+	}
+
+public:
 	// Sets [cur_left], [cur_top], [unknown], and the [move_clamp] area.
 	void pos_set(
 		int left,
@@ -121,6 +146,12 @@ public:
 		int move_clamp_right,
 		int move_clamp_top,
 		int move_clamp_bottom
+	);
+
+	// (Just read the actual function code, it's impossible to summarize
+	// without spelling every single line here.)
+	void move_lock_unput_and_put_8(
+		int unused, int delta_x, int delta_y, int lock_frames
 	);
 	/// --------
 };

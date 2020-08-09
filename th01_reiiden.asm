@@ -8880,164 +8880,13 @@ main_21_TEXT	segment	byte public 'CODE' use16
 	extern @CBossEntity@unput_and_put_8$xqiii:proc
 	extern @CBossEntity@wave_put$xqiiiiii:proc
 	extern @CBossEntity@pos_set$qiiiiiii:proc
+	extern @CBossEntity@move_lock_unput_and_put_8$qiiii:proc
 main_21_TEXT	ends
 
 main_21__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_21
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_16733	proc far
-
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= dword	ptr  6
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
-arg_A		= word ptr  10h
-
-		enter	6, 0
-		push	si
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx+2Ch], 0
-		jnz	loc_1687F
-		mov	ax, [bp+arg_6]
-		mov	es:[bx+1Eh], ax
-		mov	ax, [bp+arg_8]
-		mov	es:[bx+1Ch], ax
-		push	es
-		mov	si, word ptr [bp+arg_0]
-		mov	ax, es:[si]
-		pop	es
-		mov	es:[bx+4], ax
-		mov	es, word ptr [bp+arg_0+2]
-		mov	ax, es:[bx+2]
-		mov	es:[bx+6], ax
-		mov	ax, es:[bx+1Eh]
-		add	es:[bx], ax
-		mov	ax, es:[bx+0Ch]
-		cmp	ax, es:[bx]
-		jle	short loc_1677E
-		mov	es:[bx], ax
-		jmp	short $+2
-
-loc_1677E:
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx+0Eh]
-		cmp	ax, es:[bx]
-		jge	short loc_1678F
-		mov	es:[bx], ax
-		jmp	short $+2
-
-loc_1678F:
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx+1Ch]
-		add	es:[bx+2], ax
-		mov	ax, es:[bx+2]
-		cmp	ax, es:[bx+10h]
-		jge	short loc_167AE
-		mov	ax, es:[bx+10h]
-		mov	es:[bx+2], ax
-		jmp	short $+2
-
-loc_167AE:
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx+2]
-		cmp	ax, es:[bx+12h]
-		jle	short loc_167C5
-		mov	ax, es:[bx+12h]
-		mov	es:[bx+2], ax
-		jmp	short $+2
-
-loc_167C5:
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx+1Eh], 0
-		jle	short loc_167DE
-		mov	ax, es:[bx+4]
-		mov	bx, 8
-		cwd
-		idiv	bx
-		shl	ax, 3
-		jmp	short loc_167F9
-; ---------------------------------------------------------------------------
-
-loc_167DE:
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx]
-		mov	bx, 8
-		cwd
-		idiv	bx
-		shl	ax, 3
-		mov	bx, word ptr [bp+arg_0]
-		mov	dx, es:[bx+8]
-		shl	dx, 3
-		add	ax, dx
-
-loc_167F9:
-		mov	[bp+var_2], ax
-		les	bx, [bp+arg_0]
-		call	_egc_copy_rect_1_to_0_16 c, ax, word ptr es:[bx+6], 8, word ptr es:[bx+0Ah]
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx+2]
-		cmp	ax, es:[bx+6]
-		jle	short loc_16825
-		mov	ax, es:[bx+6]
-		jmp	short loc_16830
-; ---------------------------------------------------------------------------
-
-loc_16825:
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx+2]
-		add	ax, es:[bx+0Ah]
-
-loc_16830:
-		mov	[bp+var_4], ax
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx+2]
-		sub	ax, es:[bx+6]
-		mov	[bp+var_6], ax
-		cwd
-		xor	ax, dx
-		sub	ax, dx
-		push	ax
-		mov	ax, es:[bx+8]
-		shl	ax, 3
-		push	ax
-		push	[bp+var_4]
-		push	word ptr es:[bx+4]
-		call	_egc_copy_rect_1_to_0_16
-		les	bx, [bp+arg_0]
-		call	@CBossEntity@unput_and_put_8$xqiii stdcall, bx, word ptr [bp+arg_0+2], word ptr es:[bx], word ptr es:[bx+2], word ptr es:[bx+24h]
-		add	sp, 12h
-		les	bx, [bp+arg_0]
-		mov	word ptr es:[bx+2Ch], 1
-		jmp	short loc_1689A
-; ---------------------------------------------------------------------------
-
-loc_1687F:
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx+2Ch]
-		cmp	ax, [bp+arg_A]
-		jl	short loc_16893
-		mov	word ptr es:[bx+2Ch], 0
-		jmp	short loc_1689A
-; ---------------------------------------------------------------------------
-
-loc_16893:
-		les	bx, [bp+arg_0]
-		inc	word ptr es:[bx+2Ch]
-
-loc_1689A:
-		pop	si
-		leave
-		retf
-sub_16733	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15200,33 +15049,12 @@ var_2		= word ptr -2
 
 loc_1BA6C:
 		inc	word_3A6CA
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset eye_0
-		call	sub_16733
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset eye_1
-		call	sub_16733
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset eye_2
-		call	sub_16733
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset eye_3
-		call	sub_16733
+		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_0, ds, large 0 or (0 shl 16), large 0 or (3 shl 16)
+		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_1, ds, large 0 or (0 shl 16), large 0 or (3 shl 16)
+		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_2, ds, large 0 or (0 shl 16), large 0 or (3 shl 16)
+		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_3, ds, large 0 or (0 shl 16), large 0 or (3 shl 16)
 		add	sp, 30h
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset eye_4
-		call	sub_16733
-		add	sp, 0Ch
+		call	@CBossEntity@move_lock_unput_and_put_8$qiiii       c, offset eye_4, ds, large 0 or (0 shl 16), large 0 or (3 shl 16)
 		call	sub_1B58F
 		mov	ax, word_3A6CA
 		mov	bx, 28h	; '('
@@ -15567,16 +15395,8 @@ loc_1BEC0:
 		jnz	loc_1C02D
 		inc	word_3A6CA
 		inc	word_39E04
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset eye_west
-		call	sub_16733
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset eye_east
-		call	sub_16733
+		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_west, ds, large 0, large 0 or (3 shl 16)
+		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_east, ds, large 0, large 0 or (3 shl 16)
 		add	sp, 18h
 		mov	ax, eye_west.BE_cur_left
 		add	ax, 32
@@ -15780,16 +15600,8 @@ loc_1C0CA:
 		jnz	loc_1C3EB
 		inc	word_3A6CA
 		inc	word_39E04
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset eye_southwest
-		call	sub_16733
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset eye_southeast
-		call	sub_16733
+		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_southwest, ds, large 0, large 0 or (3 shl 16)
+		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_southeast, ds, large 0, large 0 or (3 shl 16)
 		add	sp, 18h
 		mov	ax, eye_southwest.BE_cur_left.x
 		add	ax, 32
@@ -16169,16 +15981,8 @@ loc_1C493:
 		inc	word_39E04
 		inc	x_39E06
 		dec	angle_39E16
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset eye_west
-		call	sub_16733
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset eye_east
-		call	sub_16733
+		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_west, ds, large 0, large 0 or (3 shl 16)
+		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_east, ds, large 0, large 0 or (3 shl 16)
 		add	sp, 18h
 		mov	ax, eye_west.BE_cur_left
 		add	ax, 32
@@ -16499,16 +16303,8 @@ loc_1C7E4:
 		jnz	loc_1CB08
 		inc	word_3A6CA
 		inc	word_39E04
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset eye_southwest
-		call	sub_16733
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset eye_southeast
-		call	sub_16733
+		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_southwest, ds, large 0, large 0 or (3 shl 16)
+		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_southeast, ds, large 0, large 0 or (3 shl 16)
 		add	sp, 18h
 		mov	ax, eye_southwest.BE_cur_left
 		add	ax, 32
@@ -16843,12 +16639,7 @@ loc_1CB3E:
 		jnz	loc_1D036
 		inc	word_3A6CA
 		inc	word_39E04
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset eye_north
-		call	sub_16733
-		add	sp, 0Ch
+		call	@CBossEntity@move_lock_unput_and_put_8$qiiii c, offset eye_north, ds, large 0, large 0 or (3 shl 16)
 		cmp	word_3A6CA, 1Eh
 		jl	short loc_1CB88
 		cmp	word_39E08, 0
@@ -17291,33 +17082,12 @@ loc_1D08C:
 		jnz	loc_1D852
 		inc	word_3A6CA
 		inc	word_39E04
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset eye_west
-		call	sub_16733
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset eye_east
-		call	sub_16733
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset eye_southwest
-		call	sub_16733
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset eye_southeast
-		call	sub_16733
+		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset      eye_west, ds, large 0, large 0 or (3 shl 16)
+		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset      eye_east, ds, large 0, large 0 or (3 shl 16)
+		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_southwest, ds, large 0, large 0 or (3 shl 16)
+		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_southeast, ds, large 0, large 0 or (3 shl 16)
 		add	sp, 30h
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset eye_north
-		call	sub_16733
-		add	sp, 0Ch
+		call	@CBossEntity@move_lock_unput_and_put_8$qiiii       c, offset     eye_north, ds, large 0, large 0 or (3 shl 16)
 		mov	ax, eye_west.BE_cur_left
 		add	ax, 32
 		sub	ax, _player_left
@@ -18126,12 +17896,7 @@ loc_1D8D5:
 		and	ax, 1
 		cmp	ax, 1
 		jnz	short loc_1D90D
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset eye_west
-		call	sub_16733
-		add	sp, 0Ch
+		call	@CBossEntity@move_lock_unput_and_put_8$qiiii c, offset eye_west, ds, large 0, large 0 or (3 shl 16)
 
 loc_1D90D:
 		mov	al, byte ptr word_39E14
@@ -18139,12 +17904,7 @@ loc_1D90D:
 		and	ax, 2
 		cmp	ax, 2
 		jnz	short loc_1D92E
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset eye_east
-		call	sub_16733
-		add	sp, 0Ch
+		call	@CBossEntity@move_lock_unput_and_put_8$qiiii c, offset eye_east, ds, large 0, large 0 or (3 shl 16)
 
 loc_1D92E:
 		mov	al, byte ptr word_39E14
@@ -18152,12 +17912,7 @@ loc_1D92E:
 		and	ax, 4
 		cmp	ax, 4
 		jnz	short loc_1D94F
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset eye_southwest
-		call	sub_16733
-		add	sp, 0Ch
+		call	@CBossEntity@move_lock_unput_and_put_8$qiiii c, offset eye_southwest, ds, large 0, large 0 or (3 shl 16)
 
 loc_1D94F:
 		mov	al, byte ptr word_39E14
@@ -18165,12 +17920,7 @@ loc_1D94F:
 		and	ax, 8
 		cmp	ax, 8
 		jnz	short loc_1D970
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset eye_southeast
-		call	sub_16733
-		add	sp, 0Ch
+		call	@CBossEntity@move_lock_unput_and_put_8$qiiii c, offset eye_southeast, ds, large 0, large 0 or (3 shl 16)
 
 loc_1D970:
 		mov	al, byte ptr word_39E14
@@ -18178,12 +17928,7 @@ loc_1D970:
 		and	ax, 10h
 		cmp	ax, 10h
 		jnz	short loc_1D991
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset eye_north
-		call	sub_16733
-		add	sp, 0Ch
+		call	@CBossEntity@move_lock_unput_and_put_8$qiiii c, offset eye_north, ds, large 0, large 0 or (3 shl 16)
 
 loc_1D991:
 		cmp	word_35B54, 0
@@ -18764,12 +18509,7 @@ arg_8		= dword	ptr  0Eh
 		jnz	short loc_1E037
 
 loc_1E022:
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset eye_west
-		call	sub_16733
-		add	sp, 0Ch
+		call	@CBossEntity@move_lock_unput_and_put_8$qiiii c, offset eye_west, ds, large 0, large 0 or (3 shl 16)
 
 loc_1E037:
 		mov	al, [bp+arg_0]
@@ -18784,12 +18524,7 @@ loc_1E037:
 		jnz	short loc_1E064
 
 loc_1E04F:
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset eye_east
-		call	sub_16733
-		add	sp, 0Ch
+		call	@CBossEntity@move_lock_unput_and_put_8$qiiii c, offset eye_east, ds, large 0, large 0 or (3 shl 16)
 
 loc_1E064:
 		mov	al, [bp+arg_0]
@@ -18804,12 +18539,7 @@ loc_1E064:
 		jnz	short loc_1E091
 
 loc_1E07C:
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset eye_southwest
-		call	sub_16733
-		add	sp, 0Ch
+		call	@CBossEntity@move_lock_unput_and_put_8$qiiii c, offset eye_southwest, ds, large 0, large 0 or (3 shl 16)
 
 loc_1E091:
 		mov	al, [bp+arg_0]
@@ -18824,12 +18554,7 @@ loc_1E091:
 		jnz	short loc_1E0BE
 
 loc_1E0A9:
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset eye_southeast
-		call	sub_16733
-		add	sp, 0Ch
+		call	@CBossEntity@move_lock_unput_and_put_8$qiiii c, offset eye_southeast, ds, large 0, large 0 or (3 shl 16)
 
 loc_1E0BE:
 		mov	al, [bp+arg_0]
@@ -18844,12 +18569,7 @@ loc_1E0BE:
 		jnz	short loc_1E0EB
 
 loc_1E0D6:
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset eye_north
-		call	sub_16733
-		add	sp, 0Ch
+		call	@CBossEntity@move_lock_unput_and_put_8$qiiii c, offset eye_north, ds, large 0, large 0 or (3 shl 16)
 
 loc_1E0EB:
 		les	bx, [bp+arg_8]
@@ -28029,12 +27749,7 @@ var_2		= byte ptr -2
 ; ---------------------------------------------------------------------------
 
 loc_22F9D:
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset singyoku_sphere
-		call	sub_16733
-		add	sp, 0Ch
+		call	@CBossEntity@move_lock_unput_and_put_8$qiiii c, offset singyoku_sphere, ds, large 0, large 0 or (3 shl 16)
 		inc	word_3A37F
 		mov	ax, word_3A37F
 		cwd
@@ -28678,26 +28393,26 @@ sub_235FD	endp
 
 ; Attributes: bp-based frame
 
-sub_23629	proc near
+_kikuri_soul_move_and_render	proc near
 
 @@image_new		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= word ptr  6
+@@delta_y		= word ptr  4
+@@delta_x		= word ptr  6
 @@soul		= word ptr  8
 
 		enter	2, 0
 		push	si
 		mov	si, [bp+@@soul]
-		push	1
-		push	[bp+arg_0]
-		push	[bp+arg_2]
-		push	0
+		push	1	; lock_frames
+		push	[bp+@@delta_y]	; delta_y
+		push	[bp+@@delta_x]	; delta_x
+		push	0	; unused
 		mov	ax, si
 		imul	ax, size CBossEntity
 		add	ax, offset _kikuri_souls
-		push	ds
-		push	ax
-		call	sub_16733
+		push	ds	; this (segment)
+		push	ax	; this (offset)
+		call	@CBossEntity@move_lock_unput_and_put_8$qiiii
 		add	sp, 0Ch
 		mov	ax, word_3A6CA
 		mov	bx, 0Ch
@@ -28729,7 +28444,7 @@ loc_23689:
 		pop	si
 		leave
 		retn	6
-sub_23629	endp
+_kikuri_soul_move_and_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -28835,17 +28550,17 @@ loc_2371D:
 		cmp	byte ptr [si+5A1Fh], 0
 		jz	short loc_23764
 		mov	bx, si
-		imul	bx, 32h
+		imul	bx, size CBossEntity
 		cmp	_kikuri_tears[bx].BE_cur_top, 384
 		jg	short loc_2374E
-		push	10008h
-		pushd	0
+		push	8 or (1 shl 16)	; (delta_y) or (lock_frames)
+		pushd	0 or (0 shl 16) ; (unused) or (delta_x)
 		mov	ax, si
 		imul	ax, size CBossEntity
 		add	ax, offset _kikuri_tears
-		push	ds
-		push	ax
-		call	sub_16733
+		push	ds	; this (segment)
+		push	ax	; this (offset)
+		call	@CBossEntity@move_lock_unput_and_put_8$qiiii
 		add	sp, 0Ch
 		jmp	short loc_23764
 ; ---------------------------------------------------------------------------
@@ -29698,12 +29413,8 @@ loc_23F62:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_23F99
-		pushd	0FFFCh
-		push	0FFFDh
-		call	sub_23629
-		push	10004h
-		push	0FFFDh
-		call	sub_23629
+		call	_kikuri_soul_move_and_render stdcall, -3, large (-4 and 0FFFFh) or (0 shl 16)
+		call	_kikuri_soul_move_and_render stdcall, -3, large ( 4 and 0FFFFh) or (1 shl 16)
 		cmp	kikuri_soul_0.BE_cur_top, 96
 		jge	short loc_23F99
 		mov	ax, 1
@@ -29731,12 +29442,8 @@ var_6		= byte ptr -6
 
 		enter	8, 0
 		push	si
-		pushd	0
-		push	0
-		call	sub_23629
-		push	10000h
-		push	0
-		call	sub_23629
+		call	_kikuri_soul_move_and_render stdcall, 0, large 0 or (0 shl 16)
+		call	_kikuri_soul_move_and_render stdcall, 0, large 0 or (1 shl 16)
 		push	3C0046h
 		push	500064h
 		push	ss
@@ -29851,16 +29558,13 @@ loc_24092:
 		sar	eax, 8
 		mov	di, ax
 		call	sub_23715
-		push	0
-		push	si
-		push	di
-		call	sub_23629
+		call	_kikuri_soul_move_and_render stdcall, di, si, 0
 		push	1
 		mov	ax, si
 		neg	ax
 		push	ax
 		push	di
-		call	sub_23629
+		call	_kikuri_soul_move_and_render
 		pop	di
 		pop	si
 		pop	bp
@@ -29966,16 +29670,13 @@ loc_2419B:
 		sar	eax, 8
 		mov	di, ax
 		call	sub_23715
-		push	0
-		push	si
-		push	di
-		call	sub_23629
+		call	_kikuri_soul_move_and_render stdcall, di, si, 0
 		push	1
 		mov	ax, si
 		neg	ax
 		push	ax
 		push	di
-		call	sub_23629
+		call	_kikuri_soul_move_and_render
 		pop	di
 		pop	si
 		pop	bp
@@ -36585,11 +36286,7 @@ loc_280D6:
 		call	_egc_wave_unput
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		mov	elis_still_or_wave.BE_bos_image, 0
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_still_or_wave
-		call	sub_16733
+		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
 		add	sp, 1Ah
 		jmp	short loc_28158
 ; ---------------------------------------------------------------------------
@@ -36921,9 +36618,9 @@ loc_2846F:
 		mov	word_35D4C, 1
 		push	1
 		push	ds
-		push	offset word_3A77B
+		push	offset elis_bat_move_delta_y
 		push	ds
-		push	offset word_3A77D
+		push	offset elis_bat_move_delta_x
 		push	ds
 		push	offset word_35D4C
 		call	sub_27B67
@@ -36947,13 +36644,13 @@ loc_284B3:
 		mov	elis_attack.BE_cur_top, ax
 		cmp	word_35D4C, 0
 		jz	short loc_28539
-		push	2
-		push	word_3A77B
-		push	word_3A77D
-		push	0
-		push	ds
-		push	offset elis_bat
-		call	sub_16733
+		push	2	; lock_frames
+		push	elis_bat_move_delta_y	; delta_y
+		push	elis_bat_move_delta_x	; delta_x
+		push	0	; unused
+		push	ds	; this (segment)
+		push	offset elis_bat	; this (offset)
+		call	@CBossEntity@move_lock_unput_and_put_8$qiiii
 		add	sp, 0Ch
 		mov	ax, word_3A6CA
 		mov	bx, 9
@@ -36988,9 +36685,9 @@ loc_28525:
 loc_28539:
 		push	0
 		push	ds
-		push	offset word_3A77B
+		push	offset elis_bat_move_delta_y
 		push	ds
-		push	offset word_3A77D
+		push	offset elis_bat_move_delta_x
 		push	ds
 		push	offset word_35D4C
 		call	sub_27B67
@@ -50355,8 +50052,8 @@ word_3A773	dw ?
 word_3A775	dw ?
 word_3A777	dw ?
 word_3A779	dw ?
-word_3A77B	dw ?
-word_3A77D	dw ?
+elis_bat_move_delta_y	dw ?
+elis_bat_move_delta_x	dw ?
 byte_3A77F	db ?
 word_3A780	dw ?
 		db 1050 dup (?)
