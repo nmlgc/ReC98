@@ -148,8 +148,11 @@ public:
 		int move_clamp_bottom
 	);
 
-	// (Just read the actual function code, it's impossible to summarize
-	// without spelling every single line here.)
+	// (Just read the actual function code, it's impossible to summarize these
+	// without spelling out every single line here.)
+	void move_lock_and_put_8(
+		int unused, int delta_x, int delta_y, int lock_frames
+	);
 	void move_lock_unput_and_put_8(
 		int unused, int delta_x, int delta_y, int lock_frames
 	);

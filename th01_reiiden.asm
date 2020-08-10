@@ -8881,105 +8881,13 @@ main_21_TEXT	segment	byte public 'CODE' use16
 	extern @CBossEntity@wave_put$xqiiiiii:proc
 	extern @CBossEntity@pos_set$qiiiiiii:proc
 	extern @CBossEntity@move_lock_unput_and_put_8$qiiii:proc
+	extern @CBossEntity@move_lock_and_put_8$qiiii:proc
 main_21_TEXT	ends
 
 main_21__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_21
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1689D	proc far
-
-arg_0		= dword	ptr  6
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
-arg_A		= word ptr  10h
-
-		push	bp
-		mov	bp, sp
-		push	si
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx+2Ch], 0
-		jnz	loc_16952
-		mov	ax, [bp+arg_6]
-		mov	es:[bx+1Eh], ax
-		mov	ax, [bp+arg_8]
-		mov	es:[bx+1Ch], ax
-		push	es
-		mov	si, word ptr [bp+arg_0]
-		mov	ax, es:[si]
-		pop	es
-		mov	es:[bx+4], ax
-		mov	es, word ptr [bp+arg_0+2]
-		mov	ax, es:[bx+2]
-		mov	es:[bx+6], ax
-		mov	ax, es:[bx+1Eh]
-		add	es:[bx], ax
-		mov	ax, es:[bx+0Ch]
-		cmp	ax, es:[bx]
-		jle	short loc_168E7
-		mov	es:[bx], ax
-		jmp	short $+2
-
-loc_168E7:
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx+0Eh]
-		cmp	ax, es:[bx]
-		jge	short loc_168F8
-		mov	es:[bx], ax
-		jmp	short $+2
-
-loc_168F8:
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx+1Ch]
-		add	es:[bx+2], ax
-		mov	ax, es:[bx+2]
-		cmp	ax, es:[bx+10h]
-		jge	short loc_16917
-		mov	ax, es:[bx+10h]
-		mov	es:[bx+2], ax
-		jmp	short $+2
-
-loc_16917:
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx+2]
-		cmp	ax, es:[bx+12h]
-		jle	short loc_1692E
-		mov	ax, es:[bx+12h]
-		mov	es:[bx+2], ax
-		jmp	short $+2
-
-loc_1692E:
-		les	bx, [bp+arg_0]
-		call	@CBossEntity@put_8$xqiii c, bx, word ptr [bp+arg_0+2], word ptr es:[bx], word ptr es:[bx+2], word ptr es:[bx+24h]
-		les	bx, [bp+arg_0]
-		mov	word ptr es:[bx+2Ch], 1
-		jmp	short loc_1696D
-; ---------------------------------------------------------------------------
-
-loc_16952:
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx+2Ch]
-		cmp	ax, [bp+arg_A]
-		jl	short loc_16966
-		mov	word ptr es:[bx+2Ch], 0
-		jmp	short loc_1696D
-; ---------------------------------------------------------------------------
-
-loc_16966:
-		les	bx, [bp+arg_0]
-		inc	word ptr es:[bx+2Ch]
-
-loc_1696D:
-		pop	si
-		pop	bp
-		retf
-sub_1689D	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -31241,12 +31149,7 @@ arg_2		= word ptr  8
 		mov	elis_still_or_wave.BE_bos_image, 2
 
 loc_25132:
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_still_or_wave
-		call	sub_1689D
-		add	sp, 0Ch
+		call	@CBossEntity@move_lock_and_put_8$qiiii c, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
 		mov	elis_still_or_wave.BE_hitbox_orb_inactive, 1
 		jmp	loc_25293
 ; ---------------------------------------------------------------------------
@@ -31333,11 +31236,7 @@ loc_25221:
 		call	_graph_accesspage_func
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		mov	elis_still_or_wave.BE_bos_image, 0
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_still_or_wave
-		call	sub_1689D
+		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 10h
@@ -31345,12 +31244,7 @@ loc_25221:
 		mov	elis_still_or_wave.BE_bos_image, 0
 
 loc_25269:
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_still_or_wave
-		call	sub_1689D
-		add	sp, 0Ch
+		call	@CBossEntity@move_lock_and_put_8$qiiii c, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
 		jmp	short loc_25293
 ; ---------------------------------------------------------------------------
 
@@ -31567,20 +31461,12 @@ var_8		= qword	ptr -8
 		call	sub_24EC2
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		mov	elis_still_or_wave.BE_bos_image, 1
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_still_or_wave
-		call	sub_1689D
+		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
 		push	0
 		call	_graph_accesspage_func
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		mov	elis_still_or_wave.BE_bos_image, 1
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_still_or_wave
-		call	sub_1689D
+		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
 		add	sp, 1Eh
 		push	41003Ch
 		push	370032h
@@ -31697,21 +31583,13 @@ loc_25556:
 		call	sub_24EC2
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		mov	elis_still_or_wave.BE_bos_image, 0
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_still_or_wave
-		call	sub_1689D
+		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 12h
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		mov	elis_still_or_wave.BE_bos_image, 0
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_still_or_wave
-		call	sub_1689D
+		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
 
 loc_255B1:
 		add	sp, 0Ch
@@ -31845,23 +31723,13 @@ var_2		= word ptr -2
 		pop	cx
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		mov	elis_still_or_wave.BE_bos_image, 1
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_still_or_wave
-		call	sub_1689D
-		add	sp, 0Ch
+		call	@CBossEntity@move_lock_and_put_8$qiiii c, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		mov	elis_still_or_wave.BE_bos_image, 1
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_still_or_wave
-		call	sub_1689D
-		add	sp, 0Ch
+		call	@CBossEntity@move_lock_and_put_8$qiiii c, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
 		push	1D0019h
 		push	15000Fh
 		push	ds
@@ -32069,20 +31937,12 @@ loc_258D4:
 		call	sub_24EC2
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		mov	elis_still_or_wave.BE_bos_image, 1
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_still_or_wave
-		call	sub_1689D
+		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
 		push	0
 		call	_graph_accesspage_func
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		mov	elis_still_or_wave.BE_bos_image, 1
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_still_or_wave
-		call	sub_1689D
+		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
 		mov	angle_3A6FB, 0
 		push	1C0017h
 		push	1D000Ch
@@ -32212,11 +32072,7 @@ loc_25977:
 		call	sub_24EC2
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		mov	elis_still_or_wave.BE_bos_image, 0
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_still_or_wave
-		call	sub_1689D
+		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
 		push	0
 		call	_graph_accesspage_func
 		push	1
@@ -32224,12 +32080,7 @@ loc_25977:
 		add	sp, 32h
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		mov	elis_still_or_wave.BE_bos_image, 0
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_still_or_wave
-		call	sub_1689D
-		add	sp, 0Ch
+		call	@CBossEntity@move_lock_and_put_8$qiiii c, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
 		jmp	loc_25C4A
 ; ---------------------------------------------------------------------------
 
@@ -32625,22 +32476,14 @@ loc_25E3D:
 		call	sub_24EC2
 		mov	elis_attack.BE_move_lock_frame, 0
 		mov	elis_attack.BE_bos_image, 0
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_attack
-		call	sub_1689D
+		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 		push	0
 		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
 		mov	elis_attack.BE_move_lock_frame, 0
 		mov	elis_attack.BE_bos_image, 0
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_attack
-		call	sub_1689D
+		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 		add	sp, 20h
 		mov	byte ptr word_3A6FE, 0
 		mov	word_3A6FE+1, 0
@@ -32882,11 +32725,7 @@ sub_260DC	proc far
 		call	sub_24EC2
 		mov	elis_attack.BE_move_lock_frame, 0
 		mov	elis_attack.BE_bos_image, 1
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_attack
-		call	sub_1689D
+		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 		push	0
 		call	_graph_accesspage_func
 		push	2
@@ -32908,11 +32747,7 @@ loc_26136:
 		call	_graph_accesspage_func
 		mov	elis_attack.BE_move_lock_frame, 0
 		mov	elis_attack.BE_bos_image, 2
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_attack
-		call	sub_1689D
+		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 10h
@@ -32920,12 +32755,7 @@ loc_26136:
 		mov	elis_attack.BE_bos_image, 2
 
 loc_2617F:
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_attack
-		call	sub_1689D
-		add	sp, 0Ch
+		call	@CBossEntity@move_lock_and_put_8$qiiii c, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 
 loc_26194:
 		cmp	word_3A6CA, 0Ah
@@ -33153,11 +32983,7 @@ sub_26322	proc far
 		call	sub_24EC2
 		mov	elis_attack.BE_move_lock_frame, 0
 		mov	elis_attack.BE_bos_image, 1
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_attack
-		call	sub_1689D
+		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 		push	0
 		call	_graph_accesspage_func
 		push	2
@@ -33179,11 +33005,7 @@ loc_2637D:
 		call	_graph_accesspage_func
 		mov	elis_attack.BE_move_lock_frame, 0
 		mov	elis_attack.BE_bos_image, 2
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_attack
-		call	sub_1689D
+		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 10h
@@ -33191,12 +33013,7 @@ loc_2637D:
 		mov	elis_attack.BE_bos_image, 2
 
 loc_263C6:
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_attack
-		call	sub_1689D
-		add	sp, 0Ch
+		call	@CBossEntity@move_lock_and_put_8$qiiii c, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 
 loc_263DB:
 		cmp	word_3A6CA, 64h	; 'd'
@@ -33472,11 +33289,7 @@ var_2		= word ptr -2
 		call	sub_24EC2
 		mov	elis_attack.BE_move_lock_frame, 0
 		mov	elis_attack.BE_bos_image, 1
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_attack
-		call	sub_1689D
+		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 		push	0
 		call	_graph_accesspage_func
 		push	2
@@ -33498,11 +33311,7 @@ loc_26678:
 		call	_graph_accesspage_func
 		mov	elis_attack.BE_move_lock_frame, 0
 		mov	elis_attack.BE_bos_image, 2
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_attack
-		call	sub_1689D
+		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 10h
@@ -33510,12 +33319,7 @@ loc_26678:
 		mov	elis_attack.BE_bos_image, 2
 
 loc_266C1:
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_attack
-		call	sub_1689D
-		add	sp, 0Ch
+		call	@CBossEntity@move_lock_and_put_8$qiiii c, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 
 loc_266D6:
 		cmp	word_3A6CA, 1Eh
@@ -33840,22 +33644,14 @@ var_2		= word ptr -2
 		call	sub_24EC2
 		mov	elis_attack.BE_move_lock_frame, 0
 		mov	elis_attack.BE_bos_image, 0
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_attack
-		call	sub_1689D
+		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 		push	0
 		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
 		mov	elis_attack.BE_move_lock_frame, 0
 		mov	elis_attack.BE_bos_image, 0
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_attack
-		call	sub_1689D
+		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 		add	sp, 20h
 
 loc_269A5:
@@ -34189,22 +33985,14 @@ loc_26C85:
 		call	sub_24EC2
 		mov	elis_attack.BE_move_lock_frame, 0
 		mov	elis_attack.BE_bos_image, 1
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_attack
-		call	sub_1689D
+		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 		push	0
 		call	_graph_accesspage_func
 		push	2
 		call	sub_24EC2
 		mov	elis_attack.BE_move_lock_frame, 0
 		mov	elis_attack.BE_bos_image, 1
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_attack
-		call	sub_1689D
+		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 		call	_z_vsync_wait_and_scrollup stdcall, RES_Y
 		add	sp, 24h
 		mov	word_3A6CA, 0
@@ -34531,11 +34319,7 @@ sub_26F4F	proc far
 		call	sub_24EC2
 		mov	elis_attack.BE_move_lock_frame, 0
 		mov	elis_attack.BE_bos_image, 1
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_attack
-		call	sub_1689D
+		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 		push	0
 		call	_graph_accesspage_func
 		push	2
@@ -34557,11 +34341,7 @@ loc_26FAA:
 		call	_graph_accesspage_func
 		mov	elis_attack.BE_move_lock_frame, 0
 		mov	elis_attack.BE_bos_image, 2
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_attack
-		call	sub_1689D
+		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 10h
@@ -34569,12 +34349,7 @@ loc_26FAA:
 		mov	elis_attack.BE_bos_image, 2
 
 loc_26FF3:
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_attack
-		call	sub_1689D
-		add	sp, 0Ch
+		call	@CBossEntity@move_lock_and_put_8$qiiii c, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 
 loc_27008:
 		cmp	word_3A6CA, 32h	; '2'
@@ -34831,11 +34606,7 @@ loc_27201:
 		call	sub_24EC2
 		mov	elis_attack.BE_move_lock_frame, 0
 		mov	elis_attack.BE_bos_image, 1
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_attack
-		call	sub_1689D
+		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 		push	0
 		call	_graph_accesspage_func
 		push	2
@@ -34857,11 +34628,7 @@ loc_27257:
 		call	_graph_accesspage_func
 		mov	elis_attack.BE_move_lock_frame, 0
 		mov	elis_attack.BE_bos_image, 2
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_attack
-		call	sub_1689D
+		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 10h
@@ -34869,12 +34636,7 @@ loc_27257:
 		mov	elis_attack.BE_bos_image, 2
 
 loc_272A0:
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_attack
-		call	sub_1689D
-		add	sp, 0Ch
+		call	@CBossEntity@move_lock_and_put_8$qiiii c, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 
 loc_272B5:
 		cmp	word_3A6CA, 3Ch	; '<'
@@ -34991,11 +34753,7 @@ loc_27317:
 		call	sub_24EC2
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		mov	elis_still_or_wave.BE_bos_image, 0
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_still_or_wave
-		call	sub_1689D
+		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
 		push	0
 		call	_graph_accesspage_func
 		push	1
@@ -35003,11 +34761,7 @@ loc_27317:
 		add	sp, 32h
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		mov	elis_still_or_wave.BE_bos_image, 0
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_still_or_wave
-		call	sub_1689D
+		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
 
 loc_2745E:
 		add	sp, 0Ch
@@ -35199,11 +34953,7 @@ sub_275F4	proc far
 		call	sub_24EC2
 		mov	elis_attack.BE_move_lock_frame, 0
 		mov	elis_attack.BE_bos_image, 1
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_attack
-		call	sub_1689D
+		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 		push	0
 		call	_graph_accesspage_func
 		push	2
@@ -35225,11 +34975,7 @@ loc_2764F:
 		call	_graph_accesspage_func
 		mov	elis_attack.BE_move_lock_frame, 0
 		mov	elis_attack.BE_bos_image, 2
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_attack
-		call	sub_1689D
+		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 10h
@@ -35237,12 +34983,7 @@ loc_2764F:
 		mov	elis_attack.BE_bos_image, 2
 
 loc_27698:
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_attack
-		call	sub_1689D
-		add	sp, 0Ch
+		call	@CBossEntity@move_lock_and_put_8$qiiii c, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 
 loc_276AD:
 		cmp	word_3A6CA, 32h	; '2'
@@ -35255,20 +34996,12 @@ loc_276AD:
 		call	sub_24EC2
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		mov	elis_still_or_wave.BE_bos_image, 1
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_still_or_wave
-		call	sub_1689D
+		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
 		push	0
 		call	_graph_accesspage_func
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		mov	elis_still_or_wave.BE_bos_image, 1
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_still_or_wave
-		call	sub_1689D
+		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
 		mov	angle_3A770, 0
 		push	0F0014h
 		push	1E0028h
@@ -35394,11 +35127,7 @@ loc_27759:
 		call	sub_24EC2
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		mov	elis_still_or_wave.BE_bos_image, 0
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_still_or_wave
-		call	sub_1689D
+		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
 		push	0
 		call	_graph_accesspage_func
 		push	1
@@ -35406,12 +35135,7 @@ loc_27759:
 		add	sp, 32h
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		mov	elis_still_or_wave.BE_bos_image, 0
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_still_or_wave
-		call	sub_1689D
-		add	sp, 0Ch
+		call	@CBossEntity@move_lock_and_put_8$qiiii c, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
 		jmp	loc_27A1C
 ; ---------------------------------------------------------------------------
 
@@ -36333,19 +36057,11 @@ loc_28163:
 		push	1
 		call	_graph_accesspage_func
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_still_or_wave
-		call	sub_1689D
+		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
 		push	0
 		call	_graph_accesspage_func
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset elis_still_or_wave
-		call	sub_1689D
+		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
 		add	sp, 1Ch
 		mov	word_3A779, 0
 		mov	word_3A777, 1
@@ -37771,19 +37487,11 @@ var_2		= word ptr -2
 		push	1
 		call	_graph_accesspage_func
 		mov	sariel_shield.BE_move_lock_frame, 0
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset sariel_shield
-		call	sub_1689D
+		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset sariel_shield, ds, large 0, large 0 or (3 shl 16)
 		push	0
 		call	_graph_accesspage_func
 		mov	sariel_shield.BE_move_lock_frame, 0
-		push	30000h
-		pushd	0
-		push	ds
-		push	offset sariel_shield
-		call	sub_1689D
+		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset sariel_shield, ds, large 0, large 0 or (3 shl 16)
 		add	sp, 1Ch
 
 locret_28F0F:

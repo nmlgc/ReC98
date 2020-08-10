@@ -557,3 +557,18 @@ void CBossEntity::move_lock_unput_and_put_8(
 		move_lock_frame++;
 	}
 }
+
+void CBossEntity::move_lock_and_put_8(
+	int, int delta_x, int delta_y, int lock_frames
+)
+{
+	if(move_lock_frame == 0) {
+		move(delta_x, delta_y);
+		put_8(cur_left, cur_top, bos_image);
+		move_lock_frame = 1;
+	} else if(move_lock_frame >= lock_frames) {
+		move_lock_frame = 0;
+	} else {
+		move_lock_frame++;
+	}
+}
