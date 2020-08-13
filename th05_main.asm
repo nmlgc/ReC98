@@ -34,6 +34,7 @@ include th05/main/player/shot_types.inc
 
 	.seq
 main_01 group main_0_TEXT, main_01_TEXT
+main_03 group main_032_TEXT, main_033_TEXT
 
 ; ===========================================================================
 
@@ -11186,8 +11187,8 @@ main_02_TEXT	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-main_03_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_03_TEXT
+main_032_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_03
 		;org 8
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -13856,122 +13857,11 @@ loc_16CC7:
 		pop	bp
 		retn	2
 sub_16BD9	endp
+main_032_TEXT	ends
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_16CCC	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, [bp+arg_2]
-		xor	si, si
-		mov	ax, di
-		sub	ax, _boss_pos.cur.x
-		mov	cx, ax
-		mov	bx, 10h
-		cwd
-		idiv	bx
-		or	ax, ax
-		jz	short loc_16CEC
-		mov	ax, cx
-		jmp	short loc_16CFA
-; ---------------------------------------------------------------------------
-
-loc_16CEC:
-		mov	ax, cx
-		mov	bx, 4
-		cwd
-		idiv	bx
-		or	ax, ax
-		jz	short loc_16D03
-		mov	ax, cx
-
-loc_16CFA:
-		cwd
-		idiv	bx
-		add	_boss_pos.cur.x, ax
-		jmp	short loc_16D08
-; ---------------------------------------------------------------------------
-
-loc_16D03:
-		mov	_boss_pos.cur.x, di
-		inc	si
-
-loc_16D08:
-		or	cx, cx
-		jge	short loc_16D11
-		mov	al, byte ptr _boss_sprite_left
-		jmp	short loc_16D14
-; ---------------------------------------------------------------------------
-
-loc_16D11:
-		mov	al, byte ptr _boss_sprite_right
-
-loc_16D14:
-		mov	_boss_sprite, al
-		mov	ax, [bp+arg_0]
-		sub	ax, _boss_pos.cur.y
-		mov	cx, ax
-		mov	bx, 10h
-		cwd
-		idiv	bx
-		or	ax, ax
-		jz	short loc_16D31
-		mov	ax, cx
-		cwd
-		idiv	bx
-		jmp	short loc_16D43
-; ---------------------------------------------------------------------------
-
-loc_16D31:
-		mov	ax, cx
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		or	ax, ax
-		jz	short loc_16D49
-		mov	ax, cx
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-
-loc_16D43:
-		add	_boss_pos.cur.y, ax
-		jmp	short loc_16D50
-; ---------------------------------------------------------------------------
-
-loc_16D49:
-		mov	ax, [bp+arg_0]
-		mov	_boss_pos.cur.y, ax
-		inc	si
-
-loc_16D50:
-		cmp	si, 2
-		jz	short loc_16D59
-		mov	al, 0
-		jmp	short loc_16D61
-; ---------------------------------------------------------------------------
-
-loc_16D59:
-		mov	al, byte ptr _boss_sprite_stay
-		mov	_boss_sprite, al
-		mov	al, 1
-
-loc_16D61:
-		pop	di
-		pop	si
-		pop	bp
-		retn	4
-sub_16CCC	endp
-
+main_033_TEXT	segment	byte public 'CODE' use16
+	BOSS_FLYSTEP_TOWARDS procdesc pascal near \
+		target_x:word, target_y:word
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -19528,8 +19418,8 @@ loc_1A245:
 		mov	ax, offset sub_19AFB
 		mov	fp_2CE2C, ax
 		mov	fp_2CE2A, ax
-		push	0C000400h
-		call	sub_16CCC
+		push	(((PLAYFIELD_W / 2) shl 4) shl 16) or (64 shl 4)
+		call	boss_flystep_towards
 		or	al, al
 		jz	loc_1A359
 		jmp	loc_1A34F
@@ -19582,8 +19472,8 @@ loc_1A315:
 		mov	ax, offset sub_19A84
 		mov	fp_2CE2C, ax
 		mov	fp_2CE2A, ax
-		push	0C000400h
-		call	sub_16CCC
+		push	(((PLAYFIELD_W / 2) shl 4) shl 16) or (64 shl 4)
+		call	boss_flystep_towards
 		or	al, al
 		jz	short loc_1A359
 
@@ -22212,8 +22102,8 @@ loc_1BA89:
 
 loc_1BAAD:
 		call	sub_1FB07
-		push	0C000600h
-		call	sub_16CCC
+		push	(((PLAYFIELD_W / 2) shl 4) shl 16) or (96 shl 4)
+		call	boss_flystep_towards
 		or	al, al
 		jz	loc_1BD09
 		mov	_boss_sprite, 204
@@ -22248,9 +22138,7 @@ loc_1BB14:
 ; ---------------------------------------------------------------------------
 
 loc_1BB24:
-		push	_yuki_pos.cur.x
-		push	_yuki_pos.cur.y
-		call	sub_16CCC
+		call	boss_flystep_towards pascal, _yuki_pos.cur.x, _yuki_pos.cur.y
 		or	al, al
 		jz	short loc_1BB6D
 		mov	ax, _boss_pos.cur.x
@@ -22288,8 +22176,8 @@ loc_1BB7B:
 
 loc_1BB84:
 		call	sub_1FADD
-		push	0C000600h
-		call	sub_16CCC
+		push	(((PLAYFIELD_W / 2) shl 4) shl 16) or (96 shl 4)
+		call	boss_flystep_towards
 		or	al, al
 		jz	loc_1BD09
 		inc	_boss_phase
@@ -22310,9 +22198,7 @@ loc_1BBAE:
 ; ---------------------------------------------------------------------------
 
 loc_1BBBE:
-		push	_boss_pos.cur.x
-		push	600h
-		call	sub_16CCC
+		call	boss_flystep_towards pascal, _boss_pos.cur.x, (96 shl 4)
 		or	al, al
 		jz	short loc_1BBFA
 		mov	_boss_phase_frame, 0
@@ -22347,8 +22233,8 @@ loc_1BC08:
 
 loc_1BC10:
 		call	sub_1FADD
-		push	0C000600h
-		call	sub_16CCC
+		push	(((PLAYFIELD_W / 2) shl 4) shl 16) or (96 shl 4)
+		call	boss_flystep_towards
 		or	al, al
 		jz	loc_1BD09
 		inc	_boss_phase
@@ -22376,8 +22262,8 @@ loc_1BC4E:
 
 loc_1BC54:
 		call	sub_1FADD
-		push	0C000600h
-		call	sub_16CCC
+		push	(((PLAYFIELD_W / 2) shl 4) shl 16) or (96 shl 4)
+		call	boss_flystep_towards
 		or	al, al
 		jz	loc_1BD09
 		inc	_boss_phase
@@ -23414,8 +23300,8 @@ loc_1C5B4:
 
 loc_1C5D8:
 		call	sub_1FB07
-		push	0C000600h
-		call	sub_16CCC
+		push	(((PLAYFIELD_W / 2) shl 4) shl 16) or (96 shl 4)
+		call	boss_flystep_towards
 		or	al, al
 		jz	loc_1C805
 		mov	_boss_sprite, 188
@@ -23483,8 +23369,8 @@ loc_1C68A:
 
 loc_1C693:
 		call	sub_1FADD
-		push	0C000800h
-		call	sub_16CCC
+		push	(((PLAYFIELD_W / 2) shl 4) shl 16) or (128 shl 4)
+		call	boss_flystep_towards
 		or	al, al
 		jz	loc_1C805
 		inc	_boss_phase
@@ -23520,8 +23406,8 @@ loc_1C6D4:
 
 loc_1C6E1:
 		call	sub_1FADD
-		push	0C000600h
-		call	sub_16CCC
+		push	(((PLAYFIELD_W / 2) shl 4) shl 16) or (96 shl 4)
+		call	boss_flystep_towards
 		or	al, al
 		jz	loc_1C805
 		jmp	short loc_1C76D
@@ -23579,8 +23465,8 @@ loc_1C755:
 
 loc_1C75B:
 		call	sub_1FADD
-		push	0C000600h
-		call	sub_16CCC
+		push	(((PLAYFIELD_W / 2) shl 4) shl 16) or (96 shl 4)
+		call	boss_flystep_towards
 		or	al, al
 		jz	loc_1C805
 
@@ -24644,8 +24530,8 @@ loc_1D41A:
 
 loc_1D423:
 		call	sub_1FADD
-		push	0C000400h
-		call	sub_16CCC
+		push	(((PLAYFIELD_W / 2) shl 4) shl 16) or (64 shl 4)
+		call	boss_flystep_towards
 		or	al, al
 		jz	loc_1D513
 		inc	_boss_phase
@@ -24707,8 +24593,8 @@ loc_1D4B7:
 
 loc_1D4BC:
 		call	sub_1FADD
-		push	0C000600h
-		call	sub_16CCC
+		push	(((PLAYFIELD_W / 2) shl 4) shl 16) or (96 shl 4)
+		call	boss_flystep_towards
 		or	al, al
 		jz	short loc_1D513
 		inc	_boss_phase
@@ -26030,8 +25916,8 @@ loc_1E308:
 
 loc_1E314:
 		call	sub_1FADD
-		push	0C000500h
-		call	sub_16CCC
+		push	(((PLAYFIELD_W / 2) shl 4) shl 16) or (80 shl 4)
+		call	boss_flystep_towards
 		or	al, al
 		jz	loc_1E527
 		inc	_boss_phase
@@ -27951,8 +27837,8 @@ loc_1F46F:
 		mov	_palette_changed, 1
 
 loc_1F483:
-		push	0C000400h
-		call	sub_16CCC
+		push	(((PLAYFIELD_W / 2) shl 4) shl 16) or (64 shl 4)
+		call	boss_flystep_towards
 		or	al, al
 		jz	short loc_1F49F
 		mov	_boss_phase_frame, 0
@@ -28850,7 +28736,7 @@ loc_1FD8B:
 		retn
 sub_1FD62	endp
 
-main_03_TEXT	ends
+main_033_TEXT	ends
 
 	.data
 
