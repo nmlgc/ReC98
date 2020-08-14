@@ -27,7 +27,9 @@ include th05/sprites/main_pat.inc
 include th04/sprites/blit.inc
 include th04/main/phase.inc
 include th05/main/bullet/pattypes.inc
+include th04/main/bullet/bullet.inc
 include th05/main/player/shot_types.inc
+include th05/main/enemy/enemy.inc
 
 	extern _execl:proc
 	extern _strlen:proc
@@ -29354,12 +29356,6 @@ include th02/main/demo[bss].asm
 byte_25FF8	db ?
 		db ?
 include th04/main/bullet/template[bss].asm
-
-; Needs to be here because it contains a bullet_template_t, which is only
-; declared in template[bss].asm. Moving it before that declaration results in
-; an illegal forward reference.
-include th05/main/enemy/enemy.inc
-
 include th05/main/lasers[bss].asm
 include th04/main/midboss/vars[bss].asm
 include th04/main/boss/vars[bss].asm

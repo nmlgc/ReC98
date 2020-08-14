@@ -28,6 +28,14 @@ include th04/sprites/blit.inc
 include th04/main/phase.inc
 include th04/main/bullet/pattypes.inc
 
+bullet_template_delta_t union
+	spread_angle	db ?
+	stack_speed 	db ?
+bullet_template_delta_t ends
+
+include th04/main/bullet/bullet.inc
+include th04/main/enemy/enemy.inc
+
 	extern SCOPY@:proc
 	extern _execl:proc
 	extern _memcpy:proc
@@ -35863,12 +35871,6 @@ include th04/main/ems[bss].asm
 _turbo_mode	db ?
 		db ?
 include th04/main/bullet/template[bss].asm
-
-; Needs to be here because it contains a bullet_template_t, which is only
-; declared in template[bss].asm. Moving it before that declaration results in
-; an illegal forward reference.
-include th04/main/enemy/enemy.inc
-
 include th04/main/midboss/vars[bss].asm
 include th04/main/boss/vars[bss].asm
 include th04/main/sparks[bss].asm

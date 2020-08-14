@@ -11,6 +11,8 @@
 
 /// States and modes
 /// ----------------
+/// Everything here needs to be kept in sync with the ASM versions in
+/// bullet.hpp!
 #define BSS_CLOUD_FRAMES (BULLET_CLOUD_CELS * 4)
 #define BMS_DECAY_FRAMES (BULLET_DECAY_CELS * 4)
 #define BMS_SLOWDOWN_BASE_SPEED 4.5f
@@ -54,6 +56,7 @@ enum bullet_special_motion_t {
 };
 /// ----------------
 
+// Needs to be kept in sync with the ASM version in bullet.inc!
 struct bullet_t {
 	char flag;
 	char age;
@@ -143,6 +146,7 @@ void near pellets_render_bottom();
 
 /// Template
 /// --------
+// Needs to be kept in sync with the ASM version in bullet.inc!
 struct bullet_template_t {
 	uint8_t spawn_type;
 	unsigned char patnum;	// TH05: 0 = pellet
