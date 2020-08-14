@@ -37,6 +37,7 @@ include th04/main/bullet/pattypes.inc
 
 	.seq
 main_01 group main_0_TEXT, main_01_TEXT, main_012_TEXT
+main_03 group main_032_TEXT, main_033_TEXT
 
 ; ===========================================================================
 
@@ -597,72 +598,72 @@ loc_ADFC:
 		mov	ah, 0
 		mov	bx, ax
 		cmp	bx, 4
-		ja	loc_AEC2
+		ja	@@ret
 		add	bx, bx
 		jmp	cs:off_AEC6[bx]
 
-loc_AE17:
+@@easy:
 		mov	score_2CFFE, 100
 		mov	_playperf_min, 4
 		mov	_playperf_max, 16
 		mov	fp_2D000, offset sub_1CEEE
 		mov	fp_2D002, offset sub_1CF4E
-		mov	fp_2D004, offset sub_1CEC5
-		jmp	loc_AEC2
+		mov	_bullet_template_tune, offset bullet_template_tune_easy
+		jmp	@@ret
 ; ---------------------------------------------------------------------------
 
-loc_AE3C:
+@@normal:
 		mov	score_2CFFE, 250
 		mov	_playperf_min, 11
 		mov	_playperf_max, 24
-		jmp	short loc_AEB0
+		jmp	short @@tune_normal
 ; ---------------------------------------------------------------------------
 
-loc_AE4E:
+@@hard:
 		mov	_playperf, 20
 		mov	score_2CFFE, 400
 		mov	_playperf_min, 20
 		mov	_playperf_max, 32
 		mov	fp_2D000, offset sub_1CF32
 		mov	fp_2D002, offset sub_1CF86
-		mov	fp_2D004, offset sub_1CED8
-		jmp	short loc_AEC2
+		mov	_bullet_template_tune, offset bullet_template_tune_hard
+		jmp	short @@ret
 ; ---------------------------------------------------------------------------
 
-loc_AE77:
+@@lunatic:
 		mov	score_2CFFE, 500
 		mov	_playperf, 22
 		mov	_playperf_min, 22
 		mov	_playperf_max, 34
 		mov	fp_2D000, offset sub_1CF32
 		mov	fp_2D002, offset sub_1CF86
-		mov	fp_2D004, offset sub_1CEE3
-		jmp	short loc_AEC2
+		mov	_bullet_template_tune, offset bullet_template_tune_lunatic
+		jmp	short @@ret
 ; ---------------------------------------------------------------------------
 
-loc_AEA0:
+@@extra:
 		mov	score_2CFFE, 2560
 		mov	_playperf_min, 16
 		mov	_playperf_max, 20
 
-loc_AEB0:
+@@tune_normal:
 		mov	fp_2D000, offset sub_1CF16
 		mov	fp_2D002, offset sub_1CF6A
-		mov	fp_2D004, offset sub_1CED0
+		mov	_bullet_template_tune, offset bullet_template_tune_normal
 
-loc_AEC2:
+@@ret:
 		pop	si
 		pop	bp
 		retn
-sub_AD03	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
-off_AEC6	dw offset loc_AE17
-		dw offset loc_AE3C
-		dw offset loc_AE4E
-		dw offset loc_AE77
-		dw offset loc_AEA0
+off_AEC6	dw offset @@easy
+		dw offset @@normal
+		dw offset @@hard
+		dw offset @@lunatic
+		dw offset @@extra
+sub_AD03	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -13373,8 +13374,8 @@ main_02_TEXT	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-main_03_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_03_TEXT
+main_032_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_03
 		;org 0Ch
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -13507,7 +13508,7 @@ loc_13FCC:
 		mov	_bullet_template.speed, (2 shl 4)
 		mov	_bullet_template.pattern, BP_SINGLE
 		mov	_bullet_template.BT_special_motion, 0FFh
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D002
 		mov	al, 80h
 		sub	al, byte_25594
@@ -13788,7 +13789,7 @@ sub_142F1	proc near
 		mov	_bullet_template.count, 32
 		mov	_bullet_template.speed, (2 shl 4) + 8
 		mov	_bullet_template.BT_angle, 0
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D000
 
 loc_14339:
@@ -13804,7 +13805,7 @@ loc_14339:
 		mov	_bullet_template.speed, (3 shl 4) + 4
 		mov	al, _midboss_angle
 		mov	_bullet_template.BT_angle, al
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D000
 		call	snd_se_play pascal, 3
 
@@ -13838,7 +13839,7 @@ sub_14383	proc near
 		mov	_bullet_template.speed, (2 shl 4) + 8
 		call	randring2_next16
 		mov	_bullet_template.BT_angle, al
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	sub_1CFA2
 		call	snd_se_play pascal, 9
 
@@ -13874,7 +13875,7 @@ loc_143D6:
 		mov	_bullet_template.BT_angle, al
 		add	al, -8
 		mov	_midboss_angle, al
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D000
 		call	snd_se_play pascal, 3
 
@@ -13916,7 +13917,7 @@ loc_14435:
 		mov	al, _midboss_angle
 		mov	_bullet_template.BT_angle, al
 		mov	_bullet_template.count, 24
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	sub_1CFA2
 		call	snd_se_play pascal, 9
 		mov	al, _midboss_angle
@@ -14246,7 +14247,7 @@ sub_1476F	proc near
 		call	randring2_next16
 		mov	_bullet_template.BT_angle, al
 		mov	_bullet_template.speed, (3 shl 4)
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D000
 
 loc_14796:
@@ -14276,7 +14277,7 @@ sub_14798	proc near
 		idiv	bx
 		add	al, 10
 		mov	_bullet_template.speed, al
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D000
 		call	snd_se_play pascal, 3
 
@@ -14305,7 +14306,7 @@ sub_147DB	proc near
 		call	randring2_next16_and pascal, 0Fh
 		add	al, -048h
 		mov	_bullet_template.BT_angle, al
-		call	fp_2D004
+		call	_bullet_template_tune
 		mov	byte_2CFF7, 2
 		call	fp_2D002
 		call	snd_se_play pascal, 9
@@ -14330,14 +14331,14 @@ sub_14828	proc near
 		call	randring2_next16
 		mov	_bullet_template.BT_angle, al
 		mov	_bullet_template.speed, (2 shl 4)
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D000
 		mov	_bullet_template.pattern, BP_RING
 		mov	_bullet_template.count, 16
 		call	randring2_next16
 		mov	_bullet_template.BT_angle, al
 		mov	_bullet_template.speed, (3 shl 4)
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D000
 
 loc_1486C:
@@ -14387,7 +14388,7 @@ loc_148A4:
 		mov	_bullet_template.BT_delta.spread_angle, 6
 		mov	_bullet_template.BT_angle, 0
 		mov	_bullet_template.speed, (4 shl 4)
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D000
 		leave
 		retn
@@ -14629,7 +14630,7 @@ sub_14AF2	proc near
 		mov	_bullet_template.patnum, PAT_BULLET16_N_BALL_BLUE
 		mov	_bullet_template.pattern, BP_SINGLE
 		mov	_bullet_template.speed, (2 shl 4) + 10
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D000
 		mov	_bullet_template.BT_delta.spread_angle, 0Fh
 		jmp	short loc_14B4C
@@ -14642,7 +14643,7 @@ loc_14B4C:
 		mov	_bullet_template.pattern, BP_SPREAD
 		mov	_bullet_template.count, 6
 		mov	_bullet_template.speed, (2 shl 4) + 4
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D000
 
 loc_14B63:
@@ -14686,7 +14687,7 @@ sub_14B76	proc near
 		mov	_bullet_template.speed, al
 		mov	_bullet_template.pattern, BP_RING
 		mov	_bullet_template.count, 32
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D000
 
 loc_14BBA:
@@ -14724,7 +14725,7 @@ sub_14BCD	proc near
 		shl	al, 5
 		add	al, 8
 		mov	_bullet_template.BT_angle, al
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D000
 		mov	al, byte_255B3
 		shl	al, 5
@@ -14791,7 +14792,7 @@ loc_14C6B:
 		mov	_bullet_template.BT_delta.spread_angle, 10h
 		mov	al, _midboss_angle
 		mov	_bullet_template.BT_angle, al
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D000
 		mov	_bullet_template.speed, 10
 		mov	ax, _player_pos.cur.y
@@ -15107,7 +15108,7 @@ loc_14F9B:
 		call	randring2_next16_mod pascal, 60h
 		sub	al, 30h
 		mov	_bullet_template.BT_angle, al
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D000
 		mov	_bullet_template.spawn_type, BST_BULLET16
 		mov	_bullet_template.patnum, PAT_BULLET16_N_SMALL_BALL_YELLOW
@@ -15214,7 +15215,7 @@ loc_150A6:
 		call	snd_se_play pascal, 3
 		mov	_bullet_template.spawn_type, BST_BULLET16
 		mov	_bullet_template.patnum, PAT_BULLET16_N_SMALL_BALL_YELLOW
-		call	fp_2D004
+		call	_bullet_template_tune
 		mov	_bullet_template.speed, (1 shl 4)
 		mov	_bullet_template.count, 12
 		mov	_bullet_template.BT_delta.stack_speed, 7
@@ -15297,7 +15298,7 @@ loc_15142:
 		mov	_bullet_template.BT_delta.spread_angle, al
 		mov	_bullet_template.speed, (3 shl 4) + 2
 		mov	_bullet_template.BT_angle, 0
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	sub_1CFA2
 
 loc_1517E:
@@ -15328,7 +15329,7 @@ loc_151A5:
 		mov	_bullet_template.speed, al
 		mov	al, _midboss_angle
 		mov	_bullet_template.BT_angle, al
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	sub_1CFA2
 		push	3
 
@@ -15398,7 +15399,7 @@ loc_1522F:
 		mov	_bullet_template.BT_angle, al
 
 loc_15263:
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D000
 		cmp	_midboss_pos.cur.x, (192 shl 4)
 		jge	short loc_1527C
@@ -16057,7 +16058,7 @@ loc_157EB:
 		mov	al, byte ptr [si+enemy_t.E_bullet_template.BT_delta]
 		mov	_bullet_template.BT_delta, al
 		push	es
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D000
 		pop	es
 		jmp	loc_158BE
@@ -16936,7 +16937,7 @@ sub_15F97	proc near
 		mov	_bullet_template.count, 11
 		mov	_bullet_template.BT_delta.spread_angle, 5
 		mov	_bullet_template.speed, (2 shl 4) + 8
-		call	fp_2D004
+		call	_bullet_template_tune
 		jmp	loc_1607E
 ; ---------------------------------------------------------------------------
 
@@ -17072,7 +17073,7 @@ loc_160F4:
 		mov	_bullet_template.BT_special_motion, 82h
 		mov	byte_2CFF7, 1
 		mov	_bullet_template.count, 32
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	sub_1CFB5
 		mov	_bullet_template.spawn_type, BST_BULLET16_CLOUD_FORWARDS
 		mov	_bullet_template.speed, (4 shl 4)
@@ -17121,7 +17122,7 @@ loc_16187:
 		mov	_bullet_template.BT_special_motion, 82h
 		mov	byte_2CFF7, 1
 		mov	_bullet_template.count, 32
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	sub_1CFB5
 		call	snd_se_play pascal, 9
 		pop	bp
@@ -17197,7 +17198,7 @@ loc_16228:
 		mov	_bullet_template.BT_delta.spread_angle, 8
 		mov	_bullet_template.patnum, PAT_BULLET16_N_CROSS_YELLOW
 		mov	_bullet_template.speed, (2 shl 4)
-		call	fp_2D004
+		call	_bullet_template_tune
 		mov	byte_2CFF7, 1
 
 loc_1626B:
@@ -17298,7 +17299,7 @@ loc_1632F:
 		mov	_bullet_template.count, 5
 		mov	_bullet_template.BT_delta.spread_angle, 42h
 		mov	_bullet_template.speed, (5 shl 4)
-		call	fp_2D004
+		call	_bullet_template_tune
 		jmp	short loc_16366
 ; ---------------------------------------------------------------------------
 
@@ -17443,7 +17444,7 @@ loc_16476:
 		mov	_bullet_template.count, 32
 		mov	_bullet_template.patnum, PAT_BULLET16_D_BLUE
 		mov	_bullet_template.speed, (4 shl 4) + 8
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D000
 		mov	al, _bullet_template.BT_angle
 		add	al, 2
@@ -17460,7 +17461,7 @@ loc_164BB:
 		mov	_bullet_template.patnum, PAT_BULLET16_N_OUTLINED_BALL_BLUE
 		mov	_bullet_template.speed, (2 shl 4)
 		mov	_bullet_template.count, 2
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D000
 
 locret_164EB:
@@ -17528,7 +17529,7 @@ loc_1656A:
 		mov	_bullet_template.pattern, BP_SPREAD
 		mov	_bullet_template.patnum, PAT_BULLET16_N_BALL_BLUE
 		mov	_bullet_template.speed, (2 shl 4) + 8
-		call	fp_2D004
+		call	_bullet_template_tune
 		add	_bullet_template.BT_origin.x, (32 shl 4)
 		mov	al, _boss_angle
 		mov	_bullet_template.BT_angle, al
@@ -17544,7 +17545,7 @@ loc_1656A:
 		mov	_bullet_template.spawn_type, BST_PELLET
 		mov	_bullet_template.count, 3
 		mov	_bullet_template.speed, (1 shl 4) + 8
-		call	fp_2D004
+		call	_bullet_template_tune
 		mov	al, byte_2D02D
 		mov	_bullet_template.BT_angle, al
 		call	fp_2D002
@@ -18527,7 +18528,7 @@ var_1		= byte ptr -1
 		mov	_bullet_template.pattern, BP_SPREAD
 		mov	_bullet_template.BT_angle, 80h
 		mov	_bullet_template.BT_delta.spread_angle, 8
-		call	fp_2D004
+		call	_bullet_template_tune
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -18710,7 +18711,7 @@ var_1		= byte ptr -1
 		mov	_bullet_template.pattern, BP_SPREAD
 		mov	_bullet_template.count, 3
 		mov	_bullet_template.BT_delta.spread_angle, 8
-		call	fp_2D004
+		call	_bullet_template_tune
 		mov	fp_25676, offset sub_16F24
 		mov	al, byte ptr _boss_phase_frame
 		mov	byte_2D02D, al
@@ -18750,7 +18751,7 @@ loc_16FC6:
 		mov	al, _bullet_template.BT_angle
 		add	al, 6
 		mov	_bullet_template.BT_angle, al
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D000
 		mov	al, _bullet_template.BT_angle
 		add	al, 40h
@@ -18837,7 +18838,7 @@ var_1		= byte ptr -1
 		mov	_bullet_template.spawn_type, BST_PELLET
 		mov	_bullet_template.speed, (1 shl 4)
 		mov	_bullet_template.pattern, BP_SINGLE
-		call	fp_2D004
+		call	_bullet_template_tune
 		mov	fp_25676, offset sub_17061
 		mov	si, 0B204h
 		xor	di, di
@@ -18896,7 +18897,7 @@ loc_17102:
 		mov	_bullet_template.count, 3
 		mov	_bullet_template.BT_delta.spread_angle, 0Ch
 		mov	_bullet_template.BT_angle, 0
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D000
 
 loc_17136:
@@ -19000,14 +19001,14 @@ loc_171D2:
 		mov	_bullet_template.speed, (2 shl 4)
 		mov	_bullet_template.pattern, BP_RING_AIMED
 		mov	_bullet_template.count, 16
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D000
 
 loc_1720D:
 		mov	_bullet_template.pattern, BP_SPREAD
 		mov	_bullet_template.count, 3
 		mov	_bullet_template.BT_delta.spread_angle, 6
-		call	fp_2D004
+		call	_bullet_template_tune
 		mov	_bullet_template.speed, (4 shl 4)
 		call	snd_se_play pascal, 9
 		call	sub_16DD7
@@ -19150,7 +19151,7 @@ var_3		= byte ptr -3
 		mov	_bullet_template.speed, (3 shl 4) + 2
 		mov	_bullet_template.pattern, BP_RING_AIMED
 		mov	_bullet_template.BT_angle, 0
-		call	fp_2D004
+		call	_bullet_template_tune
 		mov	fp_25676, offset sub_17061
 		jmp	loc_1748D
 ; ---------------------------------------------------------------------------
@@ -19215,7 +19216,7 @@ loc_173D3:
 		mov	_bullet_template.patnum, PAT_BULLET16_N_BALL_RED
 		mov	_bullet_template.pattern, BP_SINGLE_AIMED
 		mov	_bullet_template.BT_special_motion, 0FFh
-		call	fp_2D004
+		call	_bullet_template_tune
 		xor	si, si
 		jmp	short loc_1746F
 ; ---------------------------------------------------------------------------
@@ -19300,7 +19301,7 @@ var_1		= byte ptr -1
 		mov	_bullet_template.speed, (5 shl 4) + 12
 		mov	_bullet_template.pattern, BP_SINGLE
 		mov	_bullet_template.BT_special_motion, 83h
-		call	fp_2D004
+		call	_bullet_template_tune
 		mov	fp_25676, offset sub_17061
 		mov	byte_2D02D, 0
 		jmp	loc_1769B
@@ -19473,7 +19474,7 @@ loc_17634:
 		mov	_bullet_template.count, 16
 		mov	_bullet_template.BT_delta.stack_speed, 5
 		mov	_bullet_template.speed, (1 shl 4)
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	sub_1CFA2
 		mov	al, _bullet_template.BT_angle
 		add	al, -8
@@ -19610,7 +19611,7 @@ loc_177B8:
 		mov	_bullet_template.count, 16
 		mov	_bullet_template.BT_delta.stack_speed, 5
 		mov	_bullet_template.speed, (1 shl 4)
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	sub_1CFA2
 		mov	al, _bullet_template.BT_angle
 		add	al, 8
@@ -19649,7 +19650,7 @@ var_1		= byte ptr -1
 		mov	_bullet_template.count, 32
 		mov	_bullet_template.pattern, BP_RING
 		mov	_bullet_template.speed, (3 shl 4) + 8
-		call	fp_2D004
+		call	_bullet_template_tune
 		push	1
 		call	randring2_next16_and
 		or	ax, ax
@@ -19739,7 +19740,7 @@ loc_178AD:
 		mov	_bullet_template.BT_angle, al
 
 loc_178F6:
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	sub_16DD7
 		mov	ax, _boss_phase_frame
 		mov	bx, 8
@@ -19756,7 +19757,7 @@ loc_178F6:
 		mov	byte_2D02C, al
 		mov	_bullet_template.pattern, BP_SINGLE
 		mov	_bullet_template.BT_angle, 0
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	sub_16DD7
 
 loc_17936:
@@ -19801,7 +19802,7 @@ loc_1795F:
 		mov	_bullet_template.BT_delta.stack_speed, 5
 		mov	_bullet_template.BT_angle, 0
 		mov	_bullet_template.speed, (1 shl 4)
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	sub_1CFA2
 		call	snd_se_play pascal, 15
 		jmp	short loc_179B8
@@ -20506,7 +20507,7 @@ loc_17F94:
 		add	_bullet_template.BT_origin.x, ax
 		mov	ax, [si+enemy_t.pos.cur.y]
 		add	_bullet_template.BT_origin.y, ax
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D000
 
 @@no_autofire:
@@ -21077,7 +21078,7 @@ loc_183A7:
 		mov	_bullet_template.speed, (2 shl 4) + 8
 		mov	byte_2CFF7, 2
 		mov	byte_2CFF8, 0E0h
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	sub_1CFB5
 		mov	byte_2CFF8, 20h	; ' '
 		call	sub_1CFB5
@@ -21261,7 +21262,7 @@ sub_18556	proc near
 loc_18570:
 		mov	_bullet_template.pattern, BP_RING
 		mov	_bullet_template.count, 32
-		call	fp_2D004
+		call	_bullet_template_tune
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -22023,7 +22024,7 @@ loc_18C3E:
 		mov	_bullet_template.BT_angle, 0
 		mov	_bullet_template.pattern, BP_RING_AIMED
 		mov	_bullet_template.count, 16
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	sub_18A79
 		or	al, al
 		jz	short loc_18C74
@@ -22087,7 +22088,7 @@ loc_18CCC:
 		mov	_bullet_template.BT_angle, 0
 		mov	_bullet_template.pattern, BP_RING_AIMED
 		mov	_bullet_template.count, 16
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	sub_18A79
 		or	al, al
 		jz	short loc_18D02
@@ -22167,7 +22168,7 @@ loc_18D7E:
 		mov	_bullet_template.BT_angle, 0
 		mov	_bullet_template.pattern, BP_RING_AIMED
 		mov	_bullet_template.count, 8
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	sub_18A79
 		or	al, al
 		jz	short locret_18DB4
@@ -22226,7 +22227,7 @@ loc_18E19:
 
 loc_18E1B:
 		mov	byte_2CFF8, al
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D002
 		mov	al, byte_2CFF8
 		add	al, 80h
@@ -22309,7 +22310,7 @@ loc_18EB6:
 		mov	_bullet_template.BT_angle, 0
 		mov	_bullet_template.pattern, BP_RING_AIMED
 		mov	_bullet_template.count, 12
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	sub_18A79
 		or	al, al
 		jz	short loc_18EE5
@@ -22387,7 +22388,7 @@ loc_18F5A:
 		mov	_bullet_template.BT_angle, 0
 		mov	_bullet_template.pattern, BP_RING_AIMED
 		mov	_bullet_template.count, 12
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	sub_18A79
 		or	al, al
 		jz	short loc_18F89
@@ -22482,7 +22483,7 @@ loc_19029:
 		mov	_bullet_template.BT_angle, 0
 		mov	_bullet_template.pattern, BP_RING_AIMED
 		mov	_bullet_template.count, 6
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	sub_18A79
 		or	al, al
 		jz	short loc_19058
@@ -22586,7 +22587,7 @@ loc_190DE:
 		add	al, (2 shl 4)
 		mov	_bullet_template.speed, al
 		mov	_bullet_template.BT_special_motion, 0FFh
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D002
 
 loc_1915B:
@@ -22724,7 +22725,7 @@ loc_19279:
 		mov	_bullet_template.count, 22
 		call	randring2_next16
 		mov	_bullet_template.BT_angle, al
-		call	fp_2D004
+		call	_bullet_template_tune
 		mov	_bullet_template.speed, (1 shl 4)
 		mov	al, _boss_mode_change
 		mov	ah, 0
@@ -22847,7 +22848,7 @@ loc_19387:
 		mov	_bullet_template.count, 22
 		call	randring2_next16
 		mov	_bullet_template.BT_angle, al
-		call	fp_2D004
+		call	_bullet_template_tune
 		mov	_bullet_template.speed, (1 shl 4)
 		mov	al, _boss_mode_change
 		mov	ah, 0
@@ -23275,7 +23276,7 @@ loc_19751:
 		mov	al, _boss_angle
 		add	al, -20h
 		mov	_bullet_template.BT_angle, al
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D002
 		mov	al, _bullet_template.BT_angle
 		add	al, 40h
@@ -23319,7 +23320,7 @@ sub_197BB	proc near
 		mov	_bullet_template.count, 16
 		mov	_bullet_template.speed, (2 shl 4)
 		mov	_bullet_template.BT_angle, 0
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D000
 		call	snd_se_play pascal, 9
 
@@ -23358,7 +23359,7 @@ sub_19814	proc near
 		mov	al, _bullet_template.BT_angle
 		add	al, 8
 		mov	_bullet_template.BT_angle, al
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D000
 		add	_bullet_template.BT_origin.x, (64 shl 4)
 		call	fp_2D000
@@ -23475,7 +23476,7 @@ loc_19956:
 		mov	_bullet_template.spawn_type, al
 		call	randring2_next16
 		mov	_bullet_template.BT_angle, al
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D000
 		add	_bullet_template.BT_origin.x, (64 shl 4)
 		call	randring2_next16_and pascal, 1
@@ -23547,7 +23548,7 @@ loc_199ED:
 		mov	_boss_angle, al
 		mov	_bullet_template.speed, (2 shl 4)
 		mov	_bullet_template.BT_angle, al
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	sub_1CFA2
 		cmp	_boss_phase_frame, 128
 		jl	loc_19AA1
@@ -23708,7 +23709,7 @@ loc_19B88:
 		mov	_bullet_template.count, 16
 		mov	_bullet_template.speed, (4 shl 4)
 		mov	_bullet_template.BT_angle, 0
-		call	fp_2D004
+		call	_bullet_template_tune
 		xor	si, si
 		jmp	short loc_19BF6
 ; ---------------------------------------------------------------------------
@@ -24573,7 +24574,7 @@ loc_1A2BE:
 		mov	_bullet_template.count, 32
 		mov	_bullet_template.speed, (1 shl 4)
 		mov	_bullet_template.BT_angle, 0
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D000
 		mov	[bp+var_6], 40h
 
@@ -25229,7 +25230,7 @@ loc_1AB86:
 		mov	_bullet_template.BT_special_motion, 81h
 		mov	_bullet_template.count, 20
 		mov	byte_2CFF8, 0C0h
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	sub_1CFB5
 		mov	byte_2CFF8, 40h
 		call	sub_1CFB5
@@ -25386,7 +25387,7 @@ loc_1ACD9:
 		call	randring2_next16
 		mov	_bullet_template.BT_angle, al
 		mov	byte_2CFF7, 1
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	sub_1CFB5
 		call	randring2_next16
 		mov	_bullet_template.BT_angle, al
@@ -25490,7 +25491,7 @@ sub_1ADDB	proc near
 		mov	_bullet_template.pattern, BP_RING
 		mov	_bullet_template.count, 16
 		mov	_bullet_template.speed, (1 shl 4) + 14
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D000
 		mov	_bullet_template.spawn_type, BST_BULLET16_CLOUD_FORWARDS
 		mov	_bullet_template.patnum, PAT_BULLET16_N_BALL_BLUE
@@ -25512,7 +25513,7 @@ loc_1AE40:
 		mov	_bullet_template.count, 7
 		mov	_bullet_template.speed, (2 shl 4)
 		mov	_bullet_template.BT_delta.spread_angle, 0Ah
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	sub_1CFA2
 		call	snd_se_play pascal, 15
 		mov	_bullet_template.spawn_type, BST_PELLET
@@ -25521,7 +25522,7 @@ loc_1AE40:
 		mov	_bullet_template.speed, (1 shl 4) + 8
 
 loc_1AE85:
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D000
 
 loc_1AE8D:
@@ -25572,7 +25573,7 @@ loc_1AEB7:
 		mov	_bullet_template.pattern, BP_SPREAD
 		mov	_bullet_template.BT_delta.spread_angle, 8
 		mov	_bullet_template.count, 3
-		call	fp_2D004
+		call	_bullet_template_tune
 		mov	_bullet_template.BT_angle, 60h
 		call	fp_2D000
 		mov	_bullet_template.BT_angle, 20h
@@ -25898,7 +25899,7 @@ sub_1B1B1	proc near
 		idiv	bx
 		add	al, 4
 		mov	_bullet_template.count, al
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D000
 		jmp	short loc_1B213
 ; ---------------------------------------------------------------------------
@@ -26000,7 +26001,7 @@ var_1		= byte ptr -1
 		mov	al, [bp+var_1]
 		add	al, (2 shl 4)
 		mov	_bullet_template.speed, al
-		call	fp_2D004
+		call	_bullet_template_tune
 		mov	al, -7Eh
 		sub	al, _bullet_template.BT_angle
 		mov	_bullet_template.BT_angle, al
@@ -27138,7 +27139,7 @@ loc_1BD64:
 		mov	_bullet_template.pattern, BP_SPREAD
 		mov	_bullet_template.count, 5
 		mov	_bullet_template.BT_delta.spread_angle, 10h
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D000
 		mov	al, _bullet_template.BT_angle
 		add	al, -10h
@@ -27257,7 +27258,7 @@ sub_1BE43	proc near
 		mov	_bullet_template.speed, (2 shl 4)
 		mov	_bullet_template.pattern, BP_RING_AIMED
 		mov	_bullet_template.count, 48
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	sub_1CFA2
 		pop	bp
 		retn
@@ -27311,7 +27312,7 @@ loc_1BEB9:
 		mov	_bullet_template.pattern, BP_SPREAD
 		mov	_bullet_template.count, 2
 		mov	_bullet_template.BT_delta.spread_angle, 0Ch
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D000
 		mov	al, _bullet_template.BT_angle
 		add	al, 4
@@ -27340,7 +27341,7 @@ loc_1BF05:
 		mov	_bullet_template.pattern, BP_SPREAD
 		mov	_bullet_template.count, 2
 		mov	_bullet_template.BT_delta.spread_angle, 0Ch
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D000
 		mov	al, _bullet_template.BT_angle
 		add	al, -2
@@ -27456,7 +27457,7 @@ loc_1BFEB:
 		mov	_bullet_template.count, 4
 		mov	_bullet_template.BT_delta.spread_angle, 0Ch
 		mov	_bullet_template.patnum, PAT_BULLET16_N_OUTLINED_BALL_WHITE
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D000
 		mov	al, _bullet_template.BT_angle
 		add	al, 0Bh
@@ -27497,7 +27498,7 @@ sub_1C044	proc near
 		mov	_bullet_template.speed, (4 shl 4)
 		mov	_bullet_template.pattern, BP_SINGLE_AIMED
 		mov	_bullet_template.patnum, PAT_BULLET16_N_OUTLINED_BALL_BLUE
-		call	fp_2D004
+		call	_bullet_template_tune
 
 loc_1C07C:
 		cmp	_boss_phase_frame, 16
@@ -27582,7 +27583,7 @@ loc_1C0FF:
 		mov	_bullet_template.count, 4
 		mov	_bullet_template.BT_delta.spread_angle, 0Ch
 		mov	_bullet_template.patnum, PAT_BULLET16_N_OUTLINED_BALL_WHITE
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D000
 		mov	al, _bullet_template.BT_angle
 		add	al, -0Bh
@@ -27630,7 +27631,7 @@ sub_1C164	proc near
 		mov	_bullet_template.speed, (2 shl 4)
 		mov	_bullet_template.pattern, BP_RING_AIMED
 		mov	_bullet_template.count, 16
-		call	fp_2D004
+		call	_bullet_template_tune
 
 loc_1C19C:
 		cmp	_boss_phase_frame, 16
@@ -27677,7 +27678,7 @@ sub_1C1CF	proc near
 		call	randring2_next16
 		mov	_bullet_template.BT_angle, al
 		sub	_bullet_template.BT_origin.x, (32 shl 4)
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D000
 		call	randring2_next16
 		mov	_bullet_template.BT_angle, al
@@ -27736,7 +27737,7 @@ loc_1C26C:
 		mov	_bullet_template.pattern, BP_RING_AIMED
 		mov	_bullet_template.count, 16
 		mov	_bullet_template.BT_angle, 0
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D000
 		call	snd_se_play pascal, 3
 
@@ -27747,7 +27748,7 @@ loc_1C2AD:
 		mov	_bullet_template.speed, (2 shl 4)
 		mov	_bullet_template.pattern, BP_RANDOM_ANGLE
 		mov	_bullet_template.count, 2
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D000
 
 loc_1C2D1:
@@ -28871,470 +28872,13 @@ off_1CC29	dw offset loc_1CB71
 		dw offset loc_1CB78
 		dw offset loc_1CB7F
 bullets_update	endp
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1CC33	proc near
-		push	bp
-		mov	bp, sp
-		mov	al, _bullet_template.pattern
-		mov	ah, 0
-		sub	ax, BP_RANDOM_ANGLE
-		mov	bx, ax
-		cmp	bx, (BP_STACK_AIMED - BP_RANDOM_ANGLE)
-		ja	short @@ret
-		add	bx, bx
-		jmp	cs:off_1CC8C[bx]
-
-@@stack:
-		mov	al, _bullet_template.BT_delta.stack_speed
-		mov	ah, 0
-		mov	bx, 4
-		cwd
-		idiv	bx
-		mov	dl, _bullet_template.BT_delta.stack_speed
-		sub	dl, al
-		mov	_bullet_template.BT_delta.stack_speed, dl
-		cmp	_bullet_template.count, 2
-		jb	short @@ret
-		dec	_bullet_template.count
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-@@spread:
-		cmp	_bullet_template.count, 3
-		jb	short @@ret
-		mov	al, _bullet_template.count
-		add	al, -2
-		jmp	short loc_1CC86
-; ---------------------------------------------------------------------------
-
-loc_1CC7C:
-		mov	al, _bullet_template.count
-		mov	ah, 0
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-
-loc_1CC86:
-		mov	_bullet_template.count, al
-
-@@ret:
-		pop	bp
-		retn
-
-; ---------------------------------------------------------------------------
-		db 0
-off_1CC8C	dw offset loc_1CC7C
-		dw offset @@ret
-		dw offset @@ret
-		dw offset @@ret
-		dw offset @@ret
-		dw offset @@ret
-		dw offset @@ret
-		dw offset @@ret
-		dw offset @@ret
-		dw offset @@ret
-		dw offset @@ret
-		dw offset loc_1CC7C
-		dw offset @@ret
-		dw offset @@ret
-		dw offset @@ret
-		dw offset @@ret
-		dw offset @@ret
-		dw offset loc_1CC7C
-		dw offset @@spread
-		dw offset @@spread
-		dw offset @@stack
-		dw offset @@stack
-sub_1CC33	endp
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1CCB8	proc near
-
-@@pattern		= word ptr -2
-
-		enter	2, 0
-		mov	al, _bullet_template.pattern
-		mov	ah, 0
-		mov	[bp+@@pattern], ax
-		mov	cx, 0Ah
-		mov	bx, offset word_1CD46
-
-loc_1CCCA:
-		mov	ax, cs:[bx]
-		cmp	ax, [bp+@@pattern]
-		jz	short loc_1CCD9
-		add	bx, 2
-		loop	loc_1CCCA
-		jmp	short locret_1CD43 ; default
-; ---------------------------------------------------------------------------
-
-loc_1CCD9:
-		jmp	word ptr cs:[bx+14h] ; switch jump
-; ---------------------------------------------------------------------------
-
-@@single_aimed:
-		mov	_bullet_template.pattern, BP_STACK_AIMED
-		jmp	short loc_1CCE9
-; ---------------------------------------------------------------------------
-
-@@single:
-		mov	_bullet_template.pattern, BP_STACK
-
-loc_1CCE9:
-		mov	_bullet_template.count, 2
-		mov	_bullet_template.BT_delta.stack_speed, 6
-		leave
-		retn
-; ---------------------------------------------------------------------------
-
-@@stack:
-		mov	al, _bullet_template.BT_delta.stack_speed
-		mov	ah, 0
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		add	al, _bullet_template.BT_delta.stack_speed
-		mov	_bullet_template.BT_delta.stack_speed, al
-		leave
-		retn
-; ---------------------------------------------------------------------------
-
-@@spread:
-		mov	al, _bullet_template.count
-		add	al, 2
-		jmp	short loc_1CD40
-; ---------------------------------------------------------------------------
-
-@@ring:
-		mov	al, _bullet_template.count
-		mov	ah, 0
-		imul	ax, 3
-		mov	_bullet_template.count, al
-		mov	ah, 0
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	_bullet_template.count, al
-		cmp	_bullet_template.count, 48
-		jbe	short locret_1CD43 ; default
-		mov	_bullet_template.count, 48
-		leave
-		retn
-; ---------------------------------------------------------------------------
-
-@@random:
-		mov	al, _bullet_template.count
-		mov	ah, 0
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		add	al, _bullet_template.count
-
-loc_1CD40:
-		mov	_bullet_template.count, al
-
-locret_1CD43:
-		leave			; default
-		retn
-
-; ---------------------------------------------------------------------------
-		db 0
-word_1CD46	dw BP_SINGLE
-		dw BP_SINGLE_AIMED
-		dw BP_RANDOM_ANGLE
-		dw BP_RANDOM_ANGLE_AND_SPEED
-		dw BP_RING
-		dw BP_RING_AIMED
-		dw BP_SPREAD
-		dw BP_SPREAD_AIMED
-		dw BP_STACK
-		dw BP_STACK_AIMED
-		dw offset @@single
-		dw offset @@single_aimed
-		dw offset @@random
-		dw offset @@random
-		dw offset @@ring
-		dw offset @@ring
-		dw offset @@spread
-		dw offset @@spread
-		dw offset @@stack
-		dw offset @@stack
-sub_1CCB8	endp
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1CD6E	proc near
-
-@@pattern		= word ptr -2
-
-		enter	2, 0
-		mov	al, _bullet_template.pattern
-		mov	ah, 0
-		mov	[bp+@@pattern], ax
-		mov	cx, 0Ah
-		mov	bx, offset word_1CDEA
-
-loc_1CD80:
-		mov	ax, cs:[bx]
-		cmp	ax, [bp+@@pattern]
-		jz	short loc_1CD8F
-		add	bx, 2
-		loop	loc_1CD80
-		jmp	short locret_1CDE7 ; default
-; ---------------------------------------------------------------------------
-
-loc_1CD8F:
-		jmp	word ptr cs:[bx+14h] ; switch jump
-; ---------------------------------------------------------------------------
-
-@@single_aimed:
-		mov	_bullet_template.pattern, BP_SPREAD_AIMED
-		jmp	short loc_1CD9F
-; ---------------------------------------------------------------------------
-
-@@single:
-		mov	_bullet_template.pattern, BP_SPREAD
-
-loc_1CD9F:
-		mov	_bullet_template.count, 3
-		mov	_bullet_template.BT_delta.spread_angle, 6
-		leave
-		retn
-; ---------------------------------------------------------------------------
-
-@@stack:
-		mov	al, _bullet_template.BT_delta.stack_speed
-		mov	ah, 0
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		add	al, _bullet_template.BT_delta.stack_speed
-		mov	_bullet_template.BT_delta.stack_speed, al
-		inc	_bullet_template.count
-		leave
-		retn
-; ---------------------------------------------------------------------------
-
-@@spread:
-		mov	al, _bullet_template.count
-		add	al, 4
-		jmp	short loc_1CDE4
-; ---------------------------------------------------------------------------
-
-@@ring:
-		mov	al, _bullet_template.count
-		add	al, al
-		mov	_bullet_template.count, al
-		cmp	_bullet_template.count, 48
-		jbe	short locret_1CDE7 ; default
-		mov	_bullet_template.count, 48
-		leave
-		retn
-; ---------------------------------------------------------------------------
-
-@@random:
-		mov	al, _bullet_template.count
-		add	al, al
-
-loc_1CDE4:
-		mov	_bullet_template.count, al
-
-locret_1CDE7:
-		leave			; default
-		retn
-
-; ---------------------------------------------------------------------------
-		db 0
-word_1CDEA	dw BP_SINGLE
-		dw BP_SINGLE_AIMED
-		dw BP_RANDOM_ANGLE
-		dw BP_RANDOM_ANGLE_AND_SPEED
-		dw BP_RING
-		dw BP_RING_AIMED
-		dw BP_SPREAD
-		dw BP_SPREAD_AIMED
-		dw BP_STACK
-		dw BP_STACK_AIMED
-		dw offset @@single
-		dw offset @@single_aimed
-		dw offset @@random
-		dw offset @@random
-		dw offset @@ring
-		dw offset @@ring
-		dw offset @@spread
-		dw offset @@spread
-		dw offset @@stack
-		dw offset @@stack
-sub_1CD6E	endp
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1CE12	proc near
-		push	bp
-		mov	bp, sp
-		mov	al, _bullet_template.pattern
-		mov	ah, 0
-		sub	ax, BP_RING
-		mov	bx, ax
-		cmp	bx, 0Ah
-		ja	@@ret
-		add	bx, bx
-		jmp	cs:off_1CEAF[bx]
-
-@@stack:
-		cmp	_playperf, 24
-		jb	short loc_1CE3A
-		inc	_bullet_template.count
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_1CE3A:
-		cmp	_playperf, 6
-		ja	short @@ret
-		cmp	_bullet_template.count, 2
-		jb	short @@ret
-		dec	_bullet_template.count
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-@@spread:
-		cmp	_playperf, 24
-		jb	short loc_1CE57
-		jmp	short loc_1CE81
-; ---------------------------------------------------------------------------
-
-loc_1CE57:
-		cmp	_playperf, 6
-		ja	short @@ret
-		cmp	_bullet_template.count, 3
-		jb	short @@ret
-		mov	al, _bullet_template.count
-		add	al, -2
-		jmp	short loc_1CEAA
-; ---------------------------------------------------------------------------
-
-@@ring:
-		cmp	_playperf, 24
-		jb	short loc_1CE7A
-		mov	al, _bullet_template.count
-		add	al, 4
-		jmp	short loc_1CEAA
-; ---------------------------------------------------------------------------
-
-loc_1CE7A:
-		cmp	_playperf, 20
-		jb	short loc_1CE88
-
-loc_1CE81:
-		mov	al, _bullet_template.count
-		add	al, 2
-		jmp	short loc_1CEAA
-; ---------------------------------------------------------------------------
-
-loc_1CE88:
-		cmp	_bullet_template.count, 5
-		jb	short @@ret
-		cmp	_playperf, 10
-		ja	short loc_1CE9E
-		mov	al, _bullet_template.count
-		add	al, -2
-		mov	_bullet_template.count, al
-
-loc_1CE9E:
-		cmp	_playperf, 4
-		ja	short @@ret
-		mov	al, _bullet_template.count
-		add	al, -4
-
-loc_1CEAA:
-		mov	_bullet_template.count, al
-
-@@ret:
-		pop	bp
-		retn
-
-; ---------------------------------------------------------------------------
-off_1CEAF	dw offset @@ring
-		dw offset @@ret
-		dw offset @@ret
-		dw offset @@ret
-		dw offset @@ret
-		dw offset @@ret
-		dw offset @@ring
-		dw offset @@spread
-		dw offset @@spread
-		dw offset @@stack
-		dw offset @@stack
-sub_1CE12	endp
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1CEC5	proc near
-		push	bp
-		mov	bp, sp
-		call	sub_1CE12
-		call	sub_1CC33
-		pop	bp
-		retn
-sub_1CEC5	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1CED0	proc near
-		push	bp
-		mov	bp, sp
-		call	sub_1CE12
-		pop	bp
-		retn
-sub_1CED0	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1CED8	proc near
-		push	bp
-		mov	bp, sp
-		call	sub_1CE12
-		call	sub_1CCB8
-		pop	bp
-		retn
-sub_1CED8	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1CEE3	proc near
-		push	bp
-		mov	bp, sp
-		call	sub_1CE12
-		call	sub_1CD6E
-		pop	bp
-		retn
-sub_1CEE3	endp
-
+main_032_TEXT	ends
+
+main_033_TEXT	segment	byte public 'CODE' use16
+	BULLET_TEMPLATE_TUNE_EASY procdesc near
+	BULLET_TEMPLATE_TUNE_NORMAL procdesc near
+	BULLET_TEMPLATE_TUNE_HARD procdesc near
+	BULLET_TEMPLATE_TUNE_LUNATIC procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -32443,7 +31987,7 @@ var_1		= byte ptr -1
 		mov	_bullet_template.count, 6
 		mov	al, byte_2D023
 		mov	_bullet_template.BT_delta.spread_angle, al
-		call	fp_2D004
+		call	_bullet_template_tune
 		cmp	_player_pos.cur.x, 192 * 16
 		jge	short loc_1ED6C
 		mov	al, 0FEh
@@ -32510,7 +32054,7 @@ var_1		= byte ptr -1
 		mov	_bullet_template.pattern, BP_SPREAD_AIMED
 		mov	_bullet_template.count, 9
 		mov	_bullet_template.BT_delta.spread_angle, 6
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	sub_1CFB5
 
 loc_1EE01:
@@ -32605,7 +32149,7 @@ var_1		= byte ptr -1
 		mov	byte_2CFF7, 1
 		mov	_bullet_template.pattern, BP_RING
 		mov	_bullet_template.count, 16
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	sub_1CFB5
 		call	snd_se_play pascal, 3
 
@@ -32633,7 +32177,7 @@ loc_1EEF5:
 		mov	_bullet_template.pattern, BP_STACK
 		mov	_bullet_template.count, 4
 		mov	_bullet_template.BT_delta.stack_speed, 8
-		call	fp_2D004
+		call	_bullet_template_tune
 		xor	si, si
 		call	randring2_next16
 		jmp	short loc_1EF5D
@@ -32760,7 +32304,7 @@ var_1		= byte ptr -1
 		mov	_bullet_template.BT_angle, al
 		mov	_bullet_template.pattern, BP_RANDOM_ANGLE_AND_SPEED
 		mov	_bullet_template.count, 3
-		call	fp_2D004
+		call	_bullet_template_tune
 
 loc_1F08E:
 		cmp	[bp+var_1], 1
@@ -32796,7 +32340,7 @@ loc_1F0B0:
 		mov	_bullet_template.speed, (3 shl 4)
 		mov	_bullet_template.BT_special_motion, 82h
 		mov	byte_2CFF7, 1
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D002
 		push	15
 
@@ -32910,7 +32454,7 @@ loc_1F1AA:
 		mov	_bullet_template.pattern, BP_STACK
 		mov	_bullet_template.count, 4
 		mov	_bullet_template.BT_delta.stack_speed, 10
-		call	fp_2D004
+		call	_bullet_template_tune
 		xor	si, si
 		call	randring2_next16
 		jmp	short loc_1F218
@@ -32981,7 +32525,7 @@ loc_1F263:
 		call	randring2_next16_and pascal, 3
 		add	al, 2
 		mov	_bullet_template.count, al
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	randring2_next16_mod pascal, (64 shl 4)
 		mov	dx, _boss_pos.cur.x
 		add	dx, (-32 shl 4)
@@ -34511,7 +34055,7 @@ loc_1FF44:
 		mov	_bullet_template.BT_angle, -40h
 		mov	_bullet_template.patnum, PAT_BULLET16_N_OUTLINED_BALL_WHITE
 		mov	_bullet_template.speed, (7 shl 4) + 15
-		call	fp_2D004
+		call	_bullet_template_tune
 		call	fp_2D000
 		call	snd_se_play pascal, 3
 		mov	ax, _player_pos.cur.y
@@ -35328,7 +34872,7 @@ off_206D8	dw offset loc_202B0
 		dw offset loc_205D4
 		dw offset loc_20609
 		dw offset loc_2065F
-main_03_TEXT	ends
+main_033_TEXT	ends
 
 ; ---------------------------------------------------------------------------
 ; ===========================================================================
@@ -36363,7 +35907,7 @@ _stage_graze	dw ?
 score_2CFFE	dw ?
 fp_2D000	dw ?
 fp_2D002	dw ?
-fp_2D004	dw ?
+include th04/main/bullet/tune[bss].asm
 include th04/main/bullet/pellet_r[bss].asm
 angle_2D008	db ?
 	evendata

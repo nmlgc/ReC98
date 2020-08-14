@@ -141,6 +141,8 @@ void near pellets_render_top();
 void near pellets_render_bottom();
 /// ---------
 
+/// Template
+/// --------
 struct bullet_template_t {
 	uint8_t spawn_type;
 	unsigned char patnum;	// TH05: 0 = pellet
@@ -168,3 +170,13 @@ struct bullet_template_t {
 };
 
 extern bullet_template_t bullet_template;
+
+// Modifies [bullet_template] based on [playperf] and the respective
+// difficulty.
+void pascal near bullet_template_tune_easy(void);
+void pascal near bullet_template_tune_normal(void);
+void pascal near bullet_template_tune_hard(void);
+void pascal near bullet_template_tune_lunatic(void);
+
+extern nearfunc_t_near bullet_template_tune;
+/// --------

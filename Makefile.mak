@@ -115,7 +115,7 @@ $**
 |
 
 bin\th04\scoreupd.obj: th04\scoreupd.asm
-bin\th04\main.exe: bin\th04\main.obj bin\th04\scoreupd.obj th04\main011.cpp
+bin\th04\main.exe: bin\th04\main.obj bin\th04\scoreupd.obj th04\main011.cpp th04\main032.cpp
 	$(CC) $(CFLAGS) -ml -DGAME=4 -DBINARY='M' -3 -Z -nbin\th04\ -eMAIN.EXE @&&|
 $**
 |

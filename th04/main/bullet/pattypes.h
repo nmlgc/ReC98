@@ -37,6 +37,8 @@ typedef enum {
 	BP_FORCESINGLE = 0x40,
 	BP_FORCESINGLE_RANDOM_ANGLE = 0x1A,
 	BP_FORCESINGLE_AIMED = 0x41,
+
+	_bullet_pattern_t_FORCE_U8 = 0xFF
 } bullet_pattern_t;
 
 /// Spawn types
