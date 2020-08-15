@@ -38,6 +38,7 @@ typedef enum {
 	BP_RANDOM_ANGLE = 12,
 	BP_RANDOM_ANGLE_AND_SPEED = 13,
 
+	// Not affected by tuning functions.
 	BP_FORCESINGLE = (BPCF_SINGLE),
 	BP_FORCESINGLE_AIMED = (BPCF_SINGLE + BPC0_AIMED),
 } bullet_pattern_t;
