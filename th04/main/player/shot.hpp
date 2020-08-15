@@ -59,6 +59,10 @@ extern shot_t near *shot_ptr;
 // Index of the last valid entry in [shots].
 extern char shot_last_id;
 
+// Current area on the playfield for which to check shot collisions.
+extern SPPoint shot_hitbox_center;
+extern SPPoint shot_hitbox_radius;
+
 // Only used for hit detection in TH04. TH05 also uses it in shots_render().
 struct shot_alive_t {
 	SPPoint pos;

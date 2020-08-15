@@ -9547,16 +9547,16 @@ var_6		= word ptr -6
 		enter	10h, 0
 		push	si
 		push	di
-		mov	ax, word ptr dword_257DE
-		sub	ax, word_257E2
+		mov	ax, _shot_hitbox_center.x
+		sub	ax, _shot_hitbox_radius.x
 		mov	[bp+var_6], ax
-		mov	ax, word ptr dword_257DE+2
-		sub	ax, word_257E4
+		mov	ax, _shot_hitbox_center.y
+		sub	ax, _shot_hitbox_radius.y
 		mov	[bp+var_8], ax
-		mov	ax, word_257E2
+		mov	ax, _shot_hitbox_radius.x
 		add	ax, ax
 		mov	[bp+var_A], ax
-		mov	ax, word_257E4
+		mov	ax, _shot_hitbox_radius.y
 		add	ax, ax
 		mov	[bp+var_C], ax
 		xor	di, di
@@ -9642,7 +9642,7 @@ loc_1068C:
 		inc	byte_25980
 		test	byte_25980, 3
 		jnz	short loc_106D4
-		call	sparks_add_random pascal, [bp+var_E], word ptr dword_257DE+2, large (((8 shl 4) shl 16) or 1)
+		call	sparks_add_random pascal, [bp+var_E], _shot_hitbox_center.y, large (((8 shl 4) shl 16) or 1)
 
 loc_106D4:
 		add	[bp+var_E], 300h
@@ -9654,7 +9654,7 @@ loc_106D4:
 		inc	byte_25980
 		test	byte_25980, 3
 		jnz	short loc_10704
-		call	sparks_add_random pascal, [bp+var_E], word ptr dword_257DE+2, large (((8 shl 4) shl 16) or 1)
+		call	sparks_add_random pascal, [bp+var_E], _shot_hitbox_center.y, large (((8 shl 4) shl 16) or 1)
 
 loc_10704:
 		movzx	eax, di
@@ -13652,12 +13652,12 @@ loc_14158:
 		call	snd_se_play pascal, 9
 
 loc_1419A:
-		mov	word_257E2, 100h
-		mov	word_257E4, 0C0h
+		mov	_shot_hitbox_radius.x, (16 shl 4)
+		mov	_shot_hitbox_radius.y, (12 shl 4)
 		mov	ax, _midboss_pos.cur.x
-		mov	word ptr dword_257DE, ax
+		mov	_shot_hitbox_center.x, ax
 		mov	ax, _midboss_pos.cur.y
-		mov	word ptr dword_257DE+2,	ax
+		mov	_shot_hitbox_center.y, ax
 		call	sub_105B9
 		or	ax, ax
 		jz	loc_142E4
@@ -13693,12 +13693,12 @@ loc_141FA:
 		mov	_midboss_phase_frame, 0
 
 loc_14205:
-		mov	word_257E2, 180h
-		mov	word_257E4, 100h
+		mov	_shot_hitbox_radius.x, (24 shl 4)
+		mov	_shot_hitbox_radius.y, (16 shl 4)
 		mov	ax, _midboss_pos.cur.x
-		mov	word ptr dword_257DE, ax
+		mov	_shot_hitbox_center.x, ax
 		mov	ax, _midboss_pos.cur.y
-		mov	word ptr dword_257DE+2,	ax
+		mov	_shot_hitbox_center.y, ax
 		call	sub_105B9
 		or	ax, ax
 		jz	loc_142E4
@@ -13720,12 +13720,12 @@ loc_1422D:
 		mov	ax, _midboss_pos.cur.y
 		mov	_homing_target.y, ax
 		inc	_midboss_phase_frame
-		mov	word_257E2, 180h
-		mov	word_257E4, 100h
+		mov	_shot_hitbox_radius.x, (24 shl 4)
+		mov	_shot_hitbox_radius.y, (16 shl 4)
 		mov	ax, _midboss_pos.cur.x
-		mov	word ptr dword_257DE, ax
+		mov	_shot_hitbox_center.x, ax
 		mov	ax, _midboss_pos.cur.y
-		mov	word ptr dword_257DE+2,	ax
+		mov	_shot_hitbox_center.y, ax
 		call	sub_105B9
 		mov	si, ax
 		mov	_bullet_template.spawn_type, BST_PELLET
@@ -13964,9 +13964,7 @@ var_4		= word ptr -4
 		push	offset _midboss_pos
 		call	_motion_update_2
 		inc	_midboss_phase_frame
-		push	1800180h
-		push	0Ah
-		call	sub_1E618
+		call	sub_1E618 pascal, (24 shl 4) or ((24 shl 4) shl 16), 10
 		mov	si, ax
 		cmp	_midboss_phase_frame, 20
 		jl	loc_1468D
@@ -14097,9 +14095,7 @@ loc_14601:
 		mov	_midboss_phase, 3
 
 loc_14606:
-		push	1800180h
-		push	4
-		call	sub_1E618
+		call	sub_1E618 pascal, (24 shl 4) or ((24 shl 4) shl 16), 4
 		mov	si, ax
 		or	si, si
 		jz	short loc_1468D
@@ -14860,9 +14856,7 @@ var_2		= word ptr -2
 		push	offset _midboss_pos
 		call	_motion_update_2
 		inc	_midboss_phase_frame
-		push	1800180h
-		push	0Ah
-		call	sub_1E618
+		call	sub_1E618 pascal, (24 shl 4) or ((24 shl 4) shl 16), 10
 		mov	si, ax
 		cmp	_midboss_phase_frame, 96
 		jl	loc_14F57
@@ -15002,10 +14996,8 @@ loc_14E77:
 		mov	_midboss_pos.velocity.x, (-3 shl 4)
 		mov	_midboss_sprite, 1
 
-loc_14E8E:
-		push	1800180h	; default
-		push	0Ah
-		call	sub_1E618
+loc_14E8E:	; default
+		call	sub_1E618 pascal, (24 shl 4) or ((24 shl 4) shl 16), 10
 		mov	si, ax
 		or	si, si
 		jz	loc_14F57
@@ -15466,9 +15458,7 @@ var_2		= word ptr -2
 		push	offset _midboss_pos
 		call	_motion_update_2
 		inc	_midboss_phase_frame
-		push	1800180h
-		push	0Ah
-		call	sub_1E618
+		call	sub_1E618 pascal, (24 shl 4) or ((24 shl 4) shl 16), 10
 		mov	si, ax
 		cmp	_midboss_phase_frame, 48
 		jl	loc_1552D
@@ -15590,9 +15580,7 @@ loc_153E9:
 		mov	_midboss_phase, PHASE_NONE
 
 loc_153EE:
-		push	1800180h
-		push	4
-		call	sub_1E618
+		call	sub_1E618 pascal, (24 shl 4) or ((24 shl 4) shl 16), 4
 		mov	si, ax
 		or	si, si
 		jz	loc_1552D
@@ -18400,12 +18388,12 @@ loc_16CEF:
 		inc	byte ptr [si]
 
 loc_16CFC:
-		mov	word_257E2, 0C0h
-		mov	word_257E4, 0C0h
+		mov	_shot_hitbox_radius.x, (12 shl 4)
+		mov	_shot_hitbox_radius.y, (12 shl 4)
 		mov	ax, [si+2]
-		mov	word ptr dword_257DE, ax
+		mov	_shot_hitbox_center.x, ax
 		mov	ax, [si+4]
-		mov	word ptr dword_257DE+2,	ax
+		mov	_shot_hitbox_center.y, ax
 		call	sub_105B9
 		mov	[si+16h], ax
 		mov	ax, [si+16h]
@@ -19835,9 +19823,7 @@ sub_179BC	proc near
 		push	bp
 		mov	bp, sp
 		inc	_boss_phase_frame
-		push	1800180h
-		push	4
-		call	sub_1E5D8
+		call	sub_1E5D8 pascal, (24 shl 4) or ((24 shl 4) shl 16), 4
 		mov	_boss_damage_this_frame, al
 		mov	ah, 0
 		mov	dl, byte_25672
@@ -20382,8 +20368,8 @@ var_1		= byte ptr -1
 		push	di
 		mov	_homing_target.x, HOMING_TARGET_NONE
 		mov	_homing_target.y, HOMING_TARGET_NONE
-		mov	word_257E2, 100h
-		mov	word_257E4, 0C0h
+		mov	_shot_hitbox_radius.x, (16 shl 4)
+		mov	_shot_hitbox_radius.y, (12 shl 4)
 		mov	si, offset _enemies
 		xor	di, di
 		jmp	@@more?
@@ -20444,7 +20430,7 @@ loc_17ECA:
 
 loc_17F0F:
 		mov	eax, dword ptr [si+enemy_t.pos.cur]
-		mov	dword_257DE, eax
+		mov	dword ptr _shot_hitbox_center, eax
 		call	sub_105B9
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 0
@@ -21401,9 +21387,7 @@ sub_186B9	proc near
 		mov	bp, sp
 		cmp	byte_259EF, 0
 		jz	short loc_186D0
-		push	3000300h
-		push	0Ah
-		call	sub_1E5D8
+		call	sub_1E5D8 pascal, (48 shl 4) or ((48 shl 4) shl 16), 10
 		jmp	short loc_186E3
 ; ---------------------------------------------------------------------------
 
@@ -23735,9 +23719,7 @@ loc_19BF6:
 		call	snd_se_play pascal, 6
 
 loc_19C02:
-		push	1000100h
-		push	0Ah
-		call	sub_1E5D8
+		call	sub_1E5D8 pascal, (16 shl 4) or ((16 shl 4) shl 16), 10
 		jmp	loc_19E8D
 ; ---------------------------------------------------------------------------
 
@@ -24384,8 +24366,8 @@ var_4		= word ptr -4
 		enter	6, 0
 		push	si
 		push	di
-		mov	word_257E2, 0C0h
-		mov	word_257E4, 0C0h
+		mov	_shot_hitbox_radius.x, (12 shl 4)
+		mov	_shot_hitbox_radius.y, (12 shl 4)
 		mov	si, 0B204h
 		xor	di, di
 		jmp	loc_1A235
@@ -24460,9 +24442,9 @@ loc_1A1C6:
 
 loc_1A1CF:
 		mov	ax, [si+2]
-		mov	word ptr dword_257DE, ax
+		mov	_shot_hitbox_center.x, ax
 		mov	ax, [si+4]
-		mov	word ptr dword_257DE+2,	ax
+		mov	_shot_hitbox_center.y, ax
 		call	sub_105B9
 		mov	[si+16h], ax
 		or	ax, ax
@@ -26131,12 +26113,12 @@ sub_1B3E2	proc near
 		mov	bp, sp
 		cmp	byte_25A1B, 2
 		jnz	short loc_1B42B
-		mov	word_257E2, 180h
-		mov	word_257E4, 300h
+		mov	_shot_hitbox_radius.x, (24 shl 4)
+		mov	_shot_hitbox_radius.y, (48 shl 4)
 		mov	ax, point_25A0C.x
-		mov	word ptr dword_257DE, ax
+		mov	_shot_hitbox_center.x, ax
 		mov	ax, point_25A0C.y
-		mov	word ptr dword_257DE+2,	ax
+		mov	_shot_hitbox_center.y, ax
 		call	sub_105B9
 		mov	byte_25A1E, al
 		or	al, al
@@ -26949,12 +26931,12 @@ loc_1BBA8:
 		mov	ah, 0
 		push	ax
 		call	vector2
-		mov	word_257E2, 200h
-		mov	word_257E4, 200h
+		mov	_shot_hitbox_radius.x, (32 shl 4)
+		mov	_shot_hitbox_radius.y, (32 shl 4)
 		mov	ax, motion_25A28.cur.x
-		mov	word ptr dword_257DE, ax
+		mov	_shot_hitbox_center.x, ax
 		mov	ax, motion_25A28.cur.y
-		mov	word ptr dword_257DE+2,	ax
+		mov	_shot_hitbox_center.y, ax
 		call	sub_105B9
 		shr	ax, 1
 		mov	dx, motion_25A28.velocity.y
@@ -31163,27 +31145,27 @@ stagex_setup	endp
 
 sub_1E5D8	proc near
 
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
+@@se		= word ptr  4
+@@radius_y		= word ptr  6
+@@radius_x		= word ptr  8
 
 		push	bp
 		mov	bp, sp
 		push	si
 		mov	byte_22E9C, 1
-		mov	ax, [bp+arg_4]
-		mov	word_257E2, ax
-		mov	ax, [bp+arg_2]
-		mov	word_257E4, ax
+		mov	ax, [bp+@@radius_x]
+		mov	_shot_hitbox_radius.x, ax
+		mov	ax, [bp+@@radius_y]
+		mov	_shot_hitbox_radius.y, ax
 		mov	ax, _boss_pos.cur.x
-		mov	word ptr dword_257DE, ax
+		mov	_shot_hitbox_center.x, ax
 		mov	ax, _boss_pos.cur.y
-		mov	word ptr dword_257DE+2,	ax
+		mov	_shot_hitbox_center.y, ax
 		call	sub_105B9
 		mov	si, ax
 		or	si, si
 		jz	short loc_1E60C
-		call	snd_se_play pascal, [bp+arg_0]
+		call	snd_se_play pascal, [bp+@@se]
 
 loc_1E60C:
 		mov	byte_22E9C, 0
@@ -31200,26 +31182,26 @@ sub_1E5D8	endp
 
 sub_1E618	proc near
 
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
+@@se		= word ptr  4
+@@radius_y		= word ptr  6
+@@radius_x		= word ptr  8
 
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	ax, [bp+arg_4]
-		mov	word_257E2, ax
-		mov	ax, [bp+arg_2]
-		mov	word_257E4, ax
+		mov	ax, [bp+@@radius_x]
+		mov	_shot_hitbox_radius.x, ax
+		mov	ax, [bp+@@radius_y]
+		mov	_shot_hitbox_radius.y, ax
 		mov	ax, _midboss_pos.cur.x
-		mov	word ptr dword_257DE, ax
+		mov	_shot_hitbox_center.x, ax
 		mov	ax, _midboss_pos.cur.y
-		mov	word ptr dword_257DE+2,	ax
+		mov	_shot_hitbox_center.y, ax
 		call	sub_105B9
 		mov	si, ax
 		or	si, si
 		jz	short loc_1E647
-		call	snd_se_play pascal, [bp+arg_0]
+		call	snd_se_play pascal, [bp+@@se]
 
 loc_1E647:
 		mov	ax, si
@@ -31930,12 +31912,12 @@ loc_1ECB9:
 		inc	word ptr [si+0Ch]
 
 loc_1ECBC:
-		mov	word_257E2, 0C0h
-		mov	word_257E4, 0C0h
+		mov	_shot_hitbox_radius.x, (12 shl 4)
+		mov	_shot_hitbox_radius.y, (12 shl 4)
 		mov	ax, [si+2]
-		mov	word ptr dword_257DE, ax
+		mov	_shot_hitbox_center.x, ax
 		mov	ax, [si+4]
-		mov	word ptr dword_257DE+2,	ax
+		mov	_shot_hitbox_center.y, ax
 		call	sub_105B9
 		mov	ax, [si+2]
 		add	ax, 0FF40h
@@ -34327,9 +34309,7 @@ sub_20202	proc near
 		jz	short loc_20220
 		cmp	amp_237F8, 0
 		jnz	short loc_20220
-		push	3000300h
-		push	0Ah
-		call	sub_1E5D8
+		call	sub_1E5D8 pascal, (48 shl 4) or ((48 shl 4) shl 16), 10
 		jmp	short loc_20233
 ; ---------------------------------------------------------------------------
 
@@ -35784,9 +35764,6 @@ byte_257D8	db ?
 		db ?
 playchar_shot_func	dw ?
 playchar_shot_funcs	dw ?
-dword_257DE	dd ?
-word_257E2	dw ?
-word_257E4	dw ?
 include th04/main/player/shots_alive[bss].asm
 byte_25980	db ?
 		db ?

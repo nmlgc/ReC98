@@ -10830,16 +10830,16 @@ var_4		= word ptr -4
 		enter	0Ch, 0
 		push	si
 		push	di
-		mov	ax, word ptr dword_2CED2
-		sub	ax, word_2CED6
+		mov	ax, _shot_hitbox_center.x
+		sub	ax, _shot_hitbox_radius.x
 		mov	[bp+var_4], ax
-		mov	ax, word ptr dword_2CED2+2
-		sub	ax, word_2CED8
+		mov	ax, _shot_hitbox_center.y
+		sub	ax, _shot_hitbox_radius.y
 		mov	[bp+var_6], ax
-		mov	ax, word_2CED6
+		mov	ax, _shot_hitbox_radius.x
 		add	ax, ax
 		mov	[bp+var_8], ax
-		mov	ax, word_2CED8
+		mov	ax, _shot_hitbox_radius.y
 		add	ax, ax
 		mov	[bp+var_A], ax
 		xor	si, si
@@ -11018,16 +11018,16 @@ var_4		= word ptr -4
 		enter	0Ch, 0
 		push	si
 		push	di
-		mov	ax, word ptr dword_2CED2
-		sub	ax, word_2CED6
+		mov	ax, _shot_hitbox_center.x
+		sub	ax, _shot_hitbox_radius.x
 		mov	[bp+var_4], ax
-		mov	ax, word ptr dword_2CED2+2
-		sub	ax, word_2CED8
+		mov	ax, _shot_hitbox_center.y
+		sub	ax, _shot_hitbox_radius.y
 		mov	[bp+var_6], ax
-		mov	ax, word_2CED6
+		mov	ax, _shot_hitbox_radius.x
 		add	ax, ax
 		mov	[bp+var_8], ax
-		mov	ax, word_2CED8
+		mov	ax, _shot_hitbox_radius.y
 		add	ax, ax
 		mov	[bp+var_A], ax
 		xor	di, di
@@ -12670,8 +12670,8 @@ var_1		= byte ptr -1
 		push	di
 		mov	_homing_target.x, HOMING_TARGET_NONE
 		mov	_homing_target.y, HOMING_TARGET_NONE
-		mov	word_2CED6, 100h
-		mov	word_2CED8, 0C0h
+		mov	_shot_hitbox_radius.x, (16 shl 4)
+		mov	_shot_hitbox_radius.y, (12 shl 4)
 		mov	[bp+var_2], 0
 		mov	si, offset _enemies
 		xor	di, di
@@ -12732,7 +12732,7 @@ loc_160F2:
 
 loc_16134:
 		mov	eax, dword ptr [si+enemy_t.pos.cur]
-		mov	dword_2CED2, eax
+		mov	dword ptr _shot_hitbox_center, eax
 		call	sub_126B3
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 0
@@ -15527,9 +15527,7 @@ loc_180E3:
 ; ---------------------------------------------------------------------------
 
 loc_180FF:
-		push	0C000C0h
-		push	0Ah
-		call	sub_1FA9D
+		call	sub_1FA9D pascal, (12 shl 4) or ((12 shl 4) shl 16), 10
 		cmp	_midboss_phase_frame, 64
 		jl	loc_181C4
 		inc	_midboss_phase
@@ -15541,9 +15539,7 @@ loc_180FF:
 
 loc_1812B:
 		call	sub_18017
-		push	1800180h
-		push	4
-		call	sub_1FA9D
+		call	sub_1FA9D pascal, (24 shl 4) or ((24 shl 4) shl 16), 4
 		mov	_midboss_damage_this_frame, al
 		mov	ah, 0
 		sub	_midboss_hp, ax
@@ -16545,9 +16541,7 @@ midboss2_update	proc far
 loc_18A56:
 		push	offset _midboss_pos
 		call	_motion_update_2
-		push	1800180h
-		push	0Ah
-		call	sub_1FA9D
+		call	sub_1FA9D pascal, (24 shl 4) or ((24 shl 4) shl 16), 10
 		cmp	_midboss_phase_frame, 256
 		jl	loc_18BA0
 		inc	_midboss_phase
@@ -16565,9 +16559,7 @@ loc_18A56:
 loc_18A9F:
 		call	sub_18987
 		call	sub_18905
-		push	1800180h
-		push	4
-		call	sub_1FA9D
+		call	sub_1FA9D pascal, (24 shl 4) or ((24 shl 4) shl 16), 4
 		mov	_midboss_damage_this_frame, al
 		mov	ah, 0
 		sub	_midboss_hp, ax
@@ -16595,9 +16587,7 @@ loc_18B24:
 		call	sub_189FC
 		push	offset _midboss_pos
 		call	_motion_update_2
-		push	1800180h
-		push	4
-		call	sub_1FA9D
+		call	sub_1FA9D pascal, (24 shl 4) or ((24 shl 4) shl 16), 4
 		mov	_midboss_damage_this_frame, al
 		mov	ah, 0
 		sub	_midboss_hp, ax
@@ -17760,9 +17750,7 @@ midboss3_update	proc far
 loc_1950C:
 		push	offset _midboss_pos
 		call	_motion_update_2
-		push	1800180h
-		push	0Ah
-		call	sub_1FA9D
+		call	sub_1FA9D pascal, (24 shl 4) or ((24 shl 4) shl 16), 10
 		cmp	_midboss_phase_frame, 192
 		jl	loc_19613
 		inc	_midboss_phase
@@ -17819,9 +17807,7 @@ loc_1959E:
 loc_195A1:
 		cmp	_midboss_sprite, 212
 		jnb	short loc_195BC
-		push	1800180h
-		push	4
-		call	sub_1FA9D
+		call	sub_1FA9D pascal, (24 shl 4) or ((24 shl 4) shl 16), 4
 		mov	_midboss_damage_this_frame, al
 		mov	ah, 0
 		sub	_midboss_hp, ax
@@ -17942,8 +17928,8 @@ puppets_update	proc near
 		enter	2, 0
 		push	si
 		push	di
-		mov	word_2CED6, 140h
-		mov	word_2CED8, 140h
+		mov	_shot_hitbox_radius.x, (20 shl 4)
+		mov	_shot_hitbox_radius.y, (20 shl 4)
 		mov	si, offset puppets
 		mov	[bp+@@i], 0
 		jmp	@@more?
@@ -18095,7 +18081,7 @@ loc_197FF:
 		cmp	byte_2D07F, 3
 		jz	short loc_1984A
 		mov	eax, dword ptr [si+puppet_t.pos.cur]
-		mov	dword_2CED2, eax
+		mov	dword ptr _shot_hitbox_center, eax
 		call	sub_126B3
 		mov	[si+puppet_t.PUPPET_damage_this_frame], ax
 		cmp	[si+puppet_t.PUPPET_damage_this_frame], 0
@@ -18734,11 +18720,11 @@ loc_19D56:
 		mov	_bullet_template.speed, (1 shl 4) + 8
 		mov	_bullet_template.pattern, BP_SINGLE
 		call	_bullet_template_tune
-		mov	word_2CED6, 380h
-		mov	word_2CED8, 80h
+		mov	_shot_hitbox_radius.x, (56 shl 4)
+		mov	_shot_hitbox_radius.y, (8 shl 4)
 		mov	eax, puppet0.pos.cur
-		mov	dword_2CED2, eax
-		add	word ptr dword_2CED2, 400h
+		mov	_shot_hitbox_center, eax
+		add	_shot_hitbox_center.x, (64 shl 4)
 		call	sub_12842
 		mov	[bp+var_2], ax
 		cmp	[bp+var_2], 0
@@ -19326,25 +19312,25 @@ off_1A3D1	dw offset loc_1A089
 
 mai_yuki_1A3EF	proc near
 
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
+@@se		= word ptr  4
+@@radius_y		= word ptr  6
+@@radius_x		= word ptr  8
 
 		push	bp
 		mov	bp, sp
 		push	si
 		mov	byte_2297E, 1
-		mov	ax, [bp+arg_4]
-		mov	word_2CED6, ax
-		mov	ax, [bp+arg_2]
-		mov	word_2CED8, ax
+		mov	ax, [bp+@@radius_x]
+		mov	_shot_hitbox_radius.x, ax
+		mov	ax, [bp+@@radius_y]
+		mov	_shot_hitbox_radius.y, ax
 		mov	eax, _yuki_pos.cur
-		mov	dword_2CED2, eax
+		mov	_shot_hitbox_center, eax
 		call	sub_126B3
 		mov	si, ax
 		or	si, si
 		jz	short loc_1A41F
-		call	snd_se_play pascal, [bp+arg_0]
+		call	snd_se_play pascal, [bp+@@se]
 
 loc_1A41F:
 		mov	byte_2297E, 0
@@ -19371,9 +19357,7 @@ mai_yuki_1A42B	proc near
 ; ---------------------------------------------------------------------------
 
 loc_1A439:
-		push	1800180h
-		push	4
-		call	mai_yuki_1A3EF
+		call	mai_yuki_1A3EF pascal, (24 shl 4) or ((24 shl 4) shl 16), 4
 		mov	_yuki_damage_this_frame, al
 		mov	ah, 0
 		sub	_yuki_hp, ax
@@ -20394,9 +20378,7 @@ loc_1AC58:
 
 loc_1AC5E:
 		call	sub_1FB07
-		push	1800180h
-		push	0Ah
-		call	mai_yuki_1A3EF
+		call	mai_yuki_1A3EF pascal, (24 shl 4) or ((24 shl 4) shl 16), 10
 		cmp	_boss_phase_frame, 128
 		jl	loc_1AFA7	; default
 		inc	_boss_phase
@@ -20408,9 +20390,7 @@ loc_1AC5E:
 
 loc_1AC90:
 		call	sub_1FB07	; jumptable 0001AC18 case 1
-		push	1800180h
-		push	0Ah
-		call	mai_yuki_1A3EF
+		call	mai_yuki_1A3EF pascal, (24 shl 4) or ((24 shl 4) shl 16), 10
 		cmp	_boss_phase_frame, 64
 		jl	loc_1AFA7	; default
 		inc	_boss_phase
@@ -21060,9 +21040,7 @@ loc_1B293:
 loc_1B29F:
 		push	offset _midboss_pos
 		call	_motion_update_2
-		push	1800180h
-		push	0Ah
-		call	sub_1FA9D
+		call	sub_1FA9D pascal, (24 shl 4) or ((24 shl 4) shl 16), 10
 		cmp	_midboss_phase_frame, 192
 		jl	loc_1B3A1
 		inc	_midboss_phase
@@ -21119,9 +21097,7 @@ loc_1B32C:
 loc_1B32F:
 		cmp	angle_2D085, 0
 		jz	short loc_1B34A
-		push	1800180h
-		push	4
-		call	sub_1FA9D
+		call	sub_1FA9D pascal, (24 shl 4) or ((24 shl 4) shl 16), 4
 		mov	_midboss_damage_this_frame, al
 		mov	ah, 0
 		sub	_midboss_hp, ax
@@ -21184,8 +21160,8 @@ b4balls_update	proc near
 		enter	2, 0
 		push	si
 		push	di
-		mov	word_2CED6, 80h
-		mov	word_2CED8, 80h
+		mov	_shot_hitbox_radius.x, (8 shl 4)
+		mov	_shot_hitbox_radius.y, (8 shl 4)
 		mov	si, offset b4balls
 		mov	di, 1
 		jmp	@@more?
@@ -21225,7 +21201,7 @@ loc_1B48B:
 
 loc_1B4B1:
 		mov	eax, dword ptr [si+b4ball_t.pos.cur]
-		mov	dword_2CED2, eax
+		mov	dword ptr _shot_hitbox_center, eax
 		call	sub_126B3
 		mov	[bp+@@damage], ax
 		or	ax, ax
@@ -24190,10 +24166,10 @@ loc_1D2EF:
 		cmp	_boss2_pos.cur.y, (-32 shl 4)
 		jl	short loc_1D320
 		sub	_boss2_pos.cur.y, (1 shl 4)
-		mov	word_2CED6, 180h
-		mov	word_2CED8, 180h
+		mov	_shot_hitbox_radius.x, (24 shl 4)
+		mov	_shot_hitbox_radius.y, (24 shl 4)
 		mov	eax, _boss2_pos.cur
-		mov	dword_2CED2, eax
+		mov	_shot_hitbox_center, eax
 		call	sub_126B3
 		or	ax, ax
 		jz	short loc_1D320
@@ -26188,9 +26164,7 @@ midbossx_update	proc far
 ; ---------------------------------------------------------------------------
 
 loc_1E732:
-		push	1800180h
-		push	0Ah
-		call	sub_1FA9D
+		call	sub_1FA9D pascal, (24 shl 4) or ((24 shl 4) shl 16), 10
 		mov	_midboss_angle, 64
 		push	_midboss_phase_frame
 		call	sub_1E556
@@ -26254,9 +26228,7 @@ loc_1E7AF:
 		mov	off_2285A, ax
 
 loc_1E7F2:
-		push	1800180h
-		push	4
-		call	sub_1FA9D
+		call	sub_1FA9D pascal, (24 shl 4) or ((24 shl 4) shl 16), 4
 		mov	_midboss_damage_this_frame, al
 		mov	ah, 0
 		sub	_midboss_hp, ax
@@ -28090,9 +28062,7 @@ midboss5_update	proc far
 loc_1F89F:
 		push	offset _midboss_pos
 		call	_motion_update_2
-		push	1800180h
-		push	0Ah
-		call	sub_1FA9D
+		call	sub_1FA9D pascal, (24 shl 4) or ((24 shl 4) shl 16), 10
 		cmp	_midboss_phase_frame, 192
 		jl	loc_1F9A1
 		inc	_midboss_phase
@@ -28143,9 +28113,7 @@ loc_1F933:
 		call	sub_1F6F1
 
 loc_1F936:
-		push	1800180h
-		push	4
-		call	sub_1FA9D
+		call	sub_1FA9D pascal, (24 shl 4) or ((24 shl 4) shl 16), 4
 		mov	_midboss_damage_this_frame, al
 		mov	ah, 0
 		sub	_midboss_hp, ax
@@ -28197,25 +28165,25 @@ include th05/main/hud/number_put.asm
 
 sub_1FA5E	proc near
 
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
+@@se		= word ptr  4
+@@radius_y		= word ptr  6
+@@radius_x		= word ptr  8
 
 		push	bp
 		mov	bp, sp
 		push	si
 		mov	byte_2297E, 1
-		mov	ax, [bp+arg_4]
-		mov	word_2CED6, ax
-		mov	ax, [bp+arg_2]
-		mov	word_2CED8, ax
+		mov	ax, [bp+@@radius_x]
+		mov	_shot_hitbox_radius.x, ax
+		mov	ax, [bp+@@radius_y]
+		mov	_shot_hitbox_radius.y, ax
 		mov	eax, _boss_pos.cur
-		mov	dword_2CED2, eax
+		mov	_shot_hitbox_center, eax
 		call	sub_126B3
 		mov	si, ax
 		or	si, si
 		jz	short loc_1FA8E
-		call	snd_se_play pascal, [bp+arg_0]
+		call	snd_se_play pascal, [bp+@@se]
 
 loc_1FA8E:
 		mov	byte_2297E, 0
@@ -28233,27 +28201,27 @@ sub_1FA5E	endp
 
 sub_1FA9D	proc near
 
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
+@@se		= word ptr  4
+@@radius_y		= word ptr  6
+@@radius_x		= word ptr  8
 
 		push	bp
 		mov	bp, sp
 		push	si
 		mov	byte_2297E, 1
-		mov	ax, [bp+arg_4]
-		mov	word_2CED6, ax
-		mov	ax, [bp+arg_2]
-		mov	word_2CED8, ax
+		mov	ax, [bp+@@radius_x]
+		mov	_shot_hitbox_radius.x, ax
+		mov	ax, [bp+@@radius_y]
+		mov	_shot_hitbox_radius.y, ax
 		mov	ax, _midboss_pos.cur.x
-		mov	word ptr dword_2CED2, ax
+		mov	_shot_hitbox_center.x, ax
 		mov	ax, _midboss_pos.cur.y
-		mov	word ptr dword_2CED2+2,	ax
+		mov	_shot_hitbox_center.y, ax
 		call	sub_126B3
 		mov	si, ax
 		or	si, si
 		jz	short loc_1FAD1
-		call	snd_se_play pascal, [bp+arg_0]
+		call	snd_se_play pascal, [bp+@@se]
 
 loc_1FAD1:
 		mov	byte_2297E, 0
@@ -29243,9 +29211,6 @@ _miss_explosion_angle	db ?
 		db 5 dup(?)
 _playchar_shot_func	dw ?
 _playchar_shot_funcs	dw ?
-dword_2CED2	dd ?
-word_2CED6	dw ?
-word_2CED8	dw ?
 include th04/main/player/shots_alive[bss].asm
 include th05/main/player/hitshot_from[bss].asm
 word_2D05E	dw ?
