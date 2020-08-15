@@ -1,10 +1,11 @@
 #include "th04/sprites/cels.h"
 
-/// Stage-independent pattern numbers for the super_*() functions
-/// -------------------------------------------------------------
+/// Pattern numbers for the super_*() functions.
 /// Since super_entry_bfnt() doesn't take a "start patnum" parameter, the
 /// order in which the files are loaded has to match the order here.
 typedef enum {
+	/// Stage-independent
+	/// =================
 	// miko32.bft
 	// ----------
 	PAT_ENEMY_KILL = 4,
@@ -47,13 +48,10 @@ typedef enum {
 	PAT_DECAY_PELLET_last = (PAT_DECAY_PELLET + BULLET_DECAY_CELS - 1),
 	PAT_DECAY_BULLET16,
 	PAT_DECAY_BULLET16_last = (PAT_DECAY_BULLET16 + BULLET_DECAY_CELS - 1),
-	// ----------
-} main_patnum_t;
-/// -------------------------------------------------------------
+	/// =================
 
-/// Stage 6
-/// -------
-typedef enum {
+	/// Stage 6
+	/// =======
 	// st05.bb1
 	// --------
 	PAT_YUUKA6_PARASOL_BACK_OPEN = 128,
@@ -102,5 +100,5 @@ typedef enum {
 	PAT_YUUKA6_VANISH_2 = 178,
 	PAT_YUUKA6_VANISH_3 = 180,
 	// --------
-} stage6_patnum_t;
-/// -------
+	/// =======
+} main_patnum_t;

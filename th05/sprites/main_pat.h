@@ -3,11 +3,12 @@
 #define PARTICLE_CELS 4
 #define B4BALL_CELS 4
 
-/// Stage-independent pattern numbers for the super_*() functions
-/// -------------------------------------------------------------
+/// Pattern numbers for the super_*() functions.
 /// Since super_entry_bfnt() doesn't take a "start patnum" parameter, the
 /// order in which the files are loaded has to match the order here.
 typedef enum {
+	/// Stage-independent
+	/// =================
 	// miko32.bft
 	// ----------
 	PAT_ENEMY_KILL = 4,
@@ -65,12 +66,10 @@ typedef enum {
 	PAT_PARTICLE = 172,
 	PAT_PARTICLE_last = (PAT_PARTICLE + PARTICLE_CELS),
 	// ----------
-} main_patnum_t;
-/// -------------------------------------------------------------
+	/// =================
 
-/// Stage 4
-/// -------
-typedef enum {
+	/// Stage 4
+	/// =======
 	// st03.bb3
 	// --------
 	PAT_B4BALL_SNOW = 212,
@@ -82,25 +81,21 @@ typedef enum {
 	PAT_DECAY_B4BALL,
 	PAT_DECAY_B4BALL_last = (PAT_DECAY_B4BALL + BULLET_DECAY_CELS - 1),
 	// --------
-} stage4_patnum_t;
-/// -------
+	/// =======
 
-/// Stage 5
-/// -------
-typedef enum {
+	/// Stage 5
+	/// =======
 	// st04.bb2
 	// --------
 	PAT_KNIFE = 193,
 	PAT_KNIFE_last = (PAT_KNIFE + BULLET_V_CELS),
 	PAT_DECAY_KNIFE,
-	PAT_DECAY_KNIFE_last = (PAT_DECAY_KNIFE + BULLET_DECAY_CELS - 1)
+	PAT_DECAY_KNIFE_last = (PAT_DECAY_KNIFE + BULLET_DECAY_CELS - 1),
 	/// -------
-} stage5_patnum_t;
-/// -------
+	/// =======
 
-/// Stage 6
-/// -------
-typedef enum {
+	/// Stage 6
+	/// =======
 	// st05.bb4
 	// --------
 	PAT_B6BALL_BLUE_1 = 200,
@@ -108,7 +103,7 @@ typedef enum {
 	PAT_B6BALL_BLUE_2,
 	PAT_B6BALL_BLUE_3,
 	PAT_DECAY_B6BALL,
-	PAT_DECAY_B6BALL_last = (PAT_DECAY_B6BALL + BULLET_DECAY_CELS - 1)
+	PAT_DECAY_B6BALL_last = (PAT_DECAY_B6BALL + BULLET_DECAY_CELS - 1),
 	/// -------
-} stage6_patnum_t;
-/// -------
+	/// =======
+} main_patnum_t;
