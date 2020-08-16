@@ -4,6 +4,7 @@
  */
 
 #include "ReC98.h"
+#include "th01/math/area.hpp"
 #include "th04/shared.hpp"
 #include "th05/resident.hpp"
 

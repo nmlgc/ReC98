@@ -22,6 +22,7 @@ BINARY = 'M'
 
 include ReC98.inc
 include th05/th05.inc
+include th01/math/area.inc
 include th02/main/sparks.inc
 include th05/sprites/main_pat.inc
 include th04/sprites/blit.inc
@@ -13496,142 +13497,11 @@ loc_16B0F:
 gather_update	endp
 
 include th04/main/gather_render.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_16BD9	proc near
-
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+arg_0]
-		or	si, si
-		jnz	short loc_16C35
-		cmp	_boss_pos.cur.x, (144 shl 4)
-		jge	short loc_16BF5
-		push	60h
-		call	randring2_next16_mod
-		sub	al, 30h	; '0'
-		jmp	short loc_16C09
-; ---------------------------------------------------------------------------
-
-loc_16BF5:
-		cmp	_boss_pos.cur.x, (240 shl 4)
-		jle	short loc_16C06
-		push	60h
-		call	randring2_next16_and
-		add	al, 30h	; '0'
-		jmp	short loc_16C09
-; ---------------------------------------------------------------------------
-
-loc_16C06:
-		call	randring2_next16
-
-loc_16C09:
-		mov	_boss_angle, al
-		cmp	byte_2C974, 1
-		jnz	short loc_16C1A
-		cmp	_boss_angle, 128
-		jb	short loc_16C28
-
-loc_16C1A:
-		cmp	byte_2C974, 2
-		jnz	short loc_16C30
-		cmp	_boss_angle, 128
-		jb	short loc_16C30
-
-loc_16C28:
-		mov	al, _boss_angle
-		neg	al
-		mov	_boss_angle, al
-
-loc_16C30:
-		mov	byte_2C974, 0
-
-loc_16C35:
-		or	si, si
-		jl	loc_16CC5
-		push	offset _boss_pos.velocity
-		push	word ptr _boss_angle
-		mov	ax, si
-		add	ax, ax
-		mov	dx, 40h
-		sub	dx, ax
-		push	dx
-		call	vector2_near
-		mov	ax, _boss_pos.velocity.x
-		add	_boss_pos.cur.x, ax
-		mov	ax, _boss_pos.velocity.y
-		add	_boss_pos.cur.y, ax
-		cmp	_boss_pos.velocity.x, 0
-		jge	short loc_16C69
-		mov	al, byte ptr _boss_sprite_left
-		jmp	short loc_16C6C
-; ---------------------------------------------------------------------------
-
-loc_16C69:
-		mov	al, byte ptr _boss_sprite_right
-
-loc_16C6C:
-		mov	_boss_sprite, al
-		mov	ax, _boss_pos.cur.y
-		cmp	ax, word_22586
-		jge	short loc_16C85
-		mov	ax, word_22586
-		mov	_boss_pos.cur.y, ax
-		mov	byte_2C974, 2
-		jmp	short loc_16C99
-; ---------------------------------------------------------------------------
-
-loc_16C85:
-		mov	ax, _boss_pos.cur.y
-		cmp	ax, word_22588
-		jle	short loc_16C99
-		mov	ax, word_22588
-		mov	_boss_pos.cur.y, ax
-		mov	byte_2C974, 1
-
-loc_16C99:
-		mov	ax, _boss_pos.cur.x
-		cmp	ax, word_22582
-		jge	short loc_16CA7
-		mov	ax, word_22582
-		jmp	short loc_16CB3
-; ---------------------------------------------------------------------------
-
-loc_16CA7:
-		mov	ax, _boss_pos.cur.x
-		cmp	ax, word_22584
-		jle	short loc_16CB6
-		mov	ax, word_22584
-
-loc_16CB3:
-		mov	_boss_pos.cur.x, ax
-
-loc_16CB6:
-		cmp	si, 1Ch
-		jl	short loc_16CC5
-		mov	al, byte ptr _boss_sprite_stay
-		mov	_boss_sprite, al
-		mov	al, 1
-		jmp	short loc_16CC7
-; ---------------------------------------------------------------------------
-
-loc_16CC5:
-		mov	al, 0
-
-loc_16CC7:
-		pop	si
-		pop	bp
-		retn	2
-sub_16BD9	endp
 main_032_TEXT	ends
 
 main_033_TEXT	segment	byte public 'CODE' use16
+	BOSS_FLYSTEP_RANDOM procdesc pascal near \
+		frame:word
 	BOSS_FLYSTEP_TOWARDS procdesc pascal near \
 		target_x:word, target_y:word
 
@@ -15624,8 +15494,7 @@ sub_181E5	proc near
 loc_1821C:
 		mov	ax, _boss_phase_frame
 		add	ax, -16
-		push	ax
-		call	sub_16BD9
+		call	boss_flystep_random pascal, ax
 		or	al, al
 		jz	short loc_18235
 		mov	_boss_phase_frame, 0
@@ -16236,8 +16105,7 @@ loc_187BA:
 		mov	ah, 0
 		mov	dx, _boss_phase_frame
 		sub	dx, ax
-		push	dx
-		call	sub_16BD9
+		call	boss_flystep_random pascal, dx
 		or	al, al
 		jz	short loc_18819
 		mov	_boss_phase_frame, 0
@@ -16295,8 +16163,7 @@ loc_18838:
 loc_18843:
 		mov	ax, _boss_phase_frame
 		add	ax, -16
-		push	ax
-		call	sub_16BD9
+		call	boss_flystep_random pascal, ax
 		or	al, al
 		jz	short loc_1889D
 		mov	_boss_phase_frame, 0
@@ -19105,8 +18972,7 @@ loc_1A192:
 loc_1A1A2:
 		mov	ax, _boss_phase_frame
 		add	ax, -8
-		push	ax
-		call	sub_16BD9
+		call	boss_flystep_random pascal, ax
 		or	al, al
 		jz	short loc_1A1E7
 		mov	_boss_mode, 1
@@ -21352,8 +21218,7 @@ loc_1B609:
 		mov	bx, 64
 		cwd
 		idiv	bx
-		push	dx
-		call	sub_16BD9
+		call	boss_flystep_random pascal, dx
 
 loc_1B624:
 		mov	al, 0
@@ -21421,8 +21286,7 @@ loc_1B6A5:
 		mov	bx, 64
 		cwd
 		idiv	bx
-		push	dx
-		call	sub_16BD9
+		call	boss_flystep_random pascal, dx
 
 loc_1B6C0:
 		mov	al, 0
@@ -21485,9 +21349,8 @@ loc_1B732:
 		mov	bx, 64
 		cwd
 		idiv	bx
-		add	dx, 0FFE0h
-		push	dx
-		call	sub_16BD9
+		add	dx, -32
+		call	boss_flystep_random pascal, dx
 
 loc_1B750:
 		mov	al, 0
@@ -21570,9 +21433,8 @@ loc_1B810:
 		mov	bx, 64
 		cwd
 		idiv	bx
-		add	dx, 0FFE0h
-		push	dx
-		call	sub_16BD9
+		add	dx, -32
+		call	boss_flystep_random pascal, dx
 
 loc_1B82E:
 		mov	al, 0
@@ -21715,9 +21577,8 @@ loc_1B958:
 		mov	bx, 64
 		cwd
 		idiv	bx
-		add	dx, 0FFE7h
-		push	dx
-		call	sub_16BD9
+		add	dx, -25
+		call	boss_flystep_random pascal, dx
 
 loc_1B96F:
 		mov	al, 0
@@ -21769,7 +21630,7 @@ loc_1B9C3:
 		mov	bx, 64
 		cwd
 		idiv	bx
-		add	dx, 0FFE0h
+		add	dx, -32
 		jmp	short loc_1B9EA
 ; ---------------------------------------------------------------------------
 
@@ -21780,8 +21641,7 @@ loc_1B9E1:
 		idiv	bx
 
 loc_1B9EA:
-		push	dx
-		call	sub_16BD9
+		call	boss_flystep_random pascal, dx
 
 loc_1B9EE:
 		mov	al, 0
@@ -22172,8 +22032,7 @@ loc_1BDB0:
 		mov	bx, 64
 		cwd
 		idiv	bx
-		push	dx
-		call	sub_16BD9
+		call	boss_flystep_random pascal, dx
 
 loc_1BDCB:
 		mov	al, 0
@@ -22262,8 +22121,7 @@ loc_1BE77:
 		mov	bx, 64
 		cwd
 		idiv	bx
-		push	dx
-		call	sub_16BD9
+		call	boss_flystep_random pascal, dx
 
 loc_1BE92:
 		mov	al, 0
@@ -22514,8 +22372,7 @@ loc_1C0C4:
 		mov	bx, 64
 		cwd
 		idiv	bx
-		push	dx
-		call	sub_16BD9
+		call	boss_flystep_random pascal, dx
 
 loc_1C0DF:
 		mov	al, 0
@@ -22589,8 +22446,7 @@ loc_1C175:
 		mov	bx, 64
 		cwd
 		idiv	bx
-		push	dx
-		call	sub_16BD9
+		call	boss_flystep_random pascal, dx
 
 loc_1C190:
 		mov	al, 0
@@ -22940,9 +22796,8 @@ loc_1C4A3:
 		cmp	[bp+var_2], 60h
 		jg	short loc_1C4C7
 		mov	ax, [bp+var_2]
-		add	ax, 0FFE0h
-		push	ax
-		call	sub_16BD9
+		add	ax, -32
+		call	boss_flystep_random pascal, ax
 
 loc_1C4C7:
 		mov	ax, word_2CE3E
@@ -23081,8 +22936,7 @@ loc_1C630:
 loc_1C640:
 		mov	ax, _boss_phase_frame
 		add	ax, -32
-		push	ax
-		call	sub_16BD9
+		call	boss_flystep_random pascal, ax
 		or	al, al
 		jz	short loc_1C67C
 		mov	_boss_phase_frame, 0
@@ -23174,8 +23028,7 @@ loc_1C6F5:
 loc_1C705:
 		mov	ax, _boss_phase_frame
 		add	ax, -32
-		push	ax
-		call	sub_16BD9
+		call	boss_flystep_random pascal, ax
 		or	al, al
 		jz	short loc_1C741
 		mov	_boss_phase_frame, 0
@@ -23239,8 +23092,7 @@ loc_1C784:
 loc_1C794:
 		mov	ax, _boss_phase_frame
 		add	ax, -4
-		push	ax
-		call	sub_16BD9
+		call	boss_flystep_random pascal, ax
 		or	al, al
 		jz	short loc_1C7D7
 		mov	_boss_phase_frame, 0
@@ -24603,8 +24455,7 @@ loc_1D805:
 loc_1D82E:
 		mov	ax, _boss_phase_frame
 		add	ax, -64
-		push	ax
-		call	sub_16BD9
+		call	boss_flystep_random pascal, ax
 		pop	bp
 		retn
 sub_1D7DC	endp
@@ -24643,8 +24494,7 @@ loc_1D877:
 loc_1D88E:
 		mov	ax, _boss_phase_frame
 		add	ax, -64
-		push	ax
-		call	sub_16BD9
+		call	boss_flystep_random pascal, ax
 		pop	bp
 		retn
 sub_1D83A	endp
@@ -25477,9 +25327,8 @@ loc_1E13D:
 		cwd
 		idiv	bx
 		mov	si, dx
-		lea	ax, [si-60h]
-		push	ax
-		call	sub_16BD9
+		lea	ax, [si-96]
+		call	boss_flystep_random pascal, ax
 
 loc_1E15A:
 		pop	si
@@ -25615,8 +25464,7 @@ loc_1E286:
 loc_1E296:
 		mov	ax, _boss_phase_frame
 		add	ax, -32
-		push	ax
-		call	sub_16BD9
+		call	boss_flystep_random pascal, ax
 		or	al, al
 		jz	short loc_1E2DC
 		mov	_boss_phase_frame, 0
@@ -26489,8 +26337,7 @@ loc_1E9F2:
 loc_1E9F9:
 		mov	ax, _boss_phase_frame
 		add	ax, -100
-		push	ax
-		call	sub_16BD9
+		call	boss_flystep_random pascal, ax
 		cmp	_boss_phase_frame, 128
 		jnz	short loc_1EA10
 		mov	ax, 1
@@ -26626,8 +26473,7 @@ loc_1EB39:
 		mov	ax, _boss_phase_frame
 		and	ax, 7Fh
 		add	ax, -96
-		push	ax
-		call	sub_16BD9
+		call	boss_flystep_random pascal, ax
 
 loc_1EB4E:
 		mov	al, 0
@@ -26939,8 +26785,7 @@ sub_1EDC1	proc near
 loc_1EE14:
 		mov	ax, _boss_phase_frame
 		add	ax, -100
-		push	ax
-		call	sub_16BD9
+		call	boss_flystep_random pascal, ax
 		cmp	_boss_phase_frame, 128
 		jnz	short loc_1EE2B
 		mov	ax, 1
@@ -27009,8 +26854,7 @@ loc_1EEA1:
 		mov	ax, _boss_phase_frame
 		and	ax, 3Fh
 		add	ax, -32
-		push	ax
-		call	sub_16BD9
+		call	boss_flystep_random pascal, ax
 		cmp	_boss_phase_frame, 512
 		jl	short loc_1EEED
 		mov	ax, _boss_phase_frame
@@ -27144,8 +26988,7 @@ loc_1EFCF:
 		mov	bx, 32
 		cwd
 		idiv	bx
-		push	dx
-		call	sub_16BD9
+		call	boss_flystep_random pascal, dx
 		cmp	_boss_phase_frame, 128
 		jnz	short loc_1EFE9
 		mov	ax, 1
@@ -27446,10 +27289,10 @@ loc_1F2C9:
 		mov	_boss_sprite_right, 184
 		mov	_boss_sprite_stay, 180
 		mov	byte_2CE56, 0
-		mov	word_22582, 400h
-		mov	word_22584, 1400h
-		mov	word_22586, 300h
-		mov	word_22588, 600h
+		mov	_boss_flystep_random_clamp.A_left, (BOSS_W shl 4)
+		mov	_boss_flystep_random_clamp.A_right, ((PLAYFIELD_W - BOSS_W) shl 4)
+		mov	_boss_flystep_random_clamp.A_top, (48 shl 4)
+		mov	_boss_flystep_random_clamp.A_bottom, (96 shl 4)
 		mov	si, 204
 		jmp	short loc_1F32D
 ; ---------------------------------------------------------------------------
@@ -27506,8 +27349,7 @@ loc_1F3AD:
 loc_1F3BD:
 		mov	ax, _boss_phase_frame
 		add	ax, -32
-		push	ax
-		call	sub_16BD9
+		call	boss_flystep_random pascal, ax
 		or	al, al
 		jz	short loc_1F403
 		mov	_boss_phase_frame, 0
@@ -28751,12 +28593,7 @@ aBONUS_TOTAL	db 'Å@Å@Å@ÇsÇnÇsÇ`Çk',0
 aALL_CLEAR	db 'Ç`ÇkÇkÅ@ÇbÇåÇÖÇÅÇíÅ@Å@',0
 aPLAYER_REM	db 'écÇËêlêîÅ@Å~ÇPÇOÇOÇOÇO',0
 aPOINT_TOTAL	db 'ëçìæì_ÉAÉCÉeÉÄÉ{Å[ÉiÉX',0
-word_22582	dw 200h
-word_22584	dw 1600h
-word_22586	dw 180h
-word_22588	dw 800h
-		db    0
-		db    0
+include th05/main/boss/move[data].asm
 include th05/main/item/enemy_drops[data].asm
 byte_225CC	db 0
 		db 0
@@ -29124,8 +28961,6 @@ include th04/main/boss/explosions[bss].asm
 byte_2C96C	db ?
 		db ?
 include th05/main/boss/sprites[bss].asm
-byte_2C974	db ?
-		db ?
 byte_2C976	db ?
 byte_2C977	db ?
 include th04/main/bullet/clear[bss].asm

@@ -1,5 +1,8 @@
 // Bosses
 // ------
+static const int BOSS_W = 64;
+static const int BOSS_H = 64;
+
 typedef struct {
 	motion_t pos;
 	int hp;

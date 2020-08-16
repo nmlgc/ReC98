@@ -1,3 +1,23 @@
+extern y_direction_t boss_flystep_random_next_y_direction;
+
+bool pascal near boss_flystep_random(int frame)
+{
+	flystep_random_for(
+		boss,
+		boss_flystep_random_next_y_direction,
+		4.0f,
+		BOSS_FLYSTEP_RANDOM_FRAMES,
+		boss_flystep_random_clamp.left.v,
+		boss_flystep_random_clamp.right.v,
+		boss_flystep_random_clamp.top.v,
+		boss_flystep_random_clamp.bottom.v,
+		boss_sprite_left,
+		boss_sprite_right,
+		boss_sprite_stay,
+		frame
+	);
+}
+
 static const int TOWARDS_FRACTION = 16; // higher = slower
 
 inline int towards(int val, int speed = 1) {

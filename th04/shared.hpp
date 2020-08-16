@@ -24,6 +24,8 @@
 #include "th04/score.h"
 /// ------
 
+#include "th04/main/playfld.h"
+
 /// Stages
 /// ------
 extern nearfunc_t_near stage_invalidate;
