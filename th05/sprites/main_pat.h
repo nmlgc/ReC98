@@ -2,6 +2,7 @@
 
 #define PARTICLE_CELS 4
 #define B4BALL_CELS 4
+#define B4_CELS 16
 
 /// Pattern numbers for the super_*() functions.
 /// Since super_entry_bfnt() doesn't take a "start patnum" parameter, the
@@ -70,6 +71,20 @@ typedef enum {
 
 	/// Stage 4
 	/// =======
+	// st03.bb1 / st03.bb2
+	// -------------------
+	// Internally, both Mai and Yuki use Mai's patnums, starting at PAT_MAI.
+	// They are only differentiated inside the rendering function, by adding
+	// B4_CELS onto the patnum for Yuki. Thus, both files are assumed to have
+	// the same number of sprites.
+	PAT_MAI = 180,
+	PAT_B4_STILL = PAT_MAI,
+	PAT_B4_RIGHT,
+	PAT_B4_LEFT,
+
+	PAT_YUKI = (PAT_MAI + B4_CELS),
+	// -------------------
+
 	// st03.bb3
 	// --------
 	PAT_B4BALL_SNOW = 212,

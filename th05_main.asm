@@ -37,7 +37,7 @@ include th05/main/enemy/enemy.inc
 
 	.seq
 main_01 group main_0_TEXT, main_01_TEXT
-main_03 group main_031_TEXT, main_032_TEXT, main_033_TEXT
+main_03 group main_031_TEXT, main_032_TEXT, main_033_TEXT, main_034_TEXT
 
 ; ===========================================================================
 
@@ -8877,7 +8877,7 @@ loc_10E07:
 		push	[bp+@@y]
 		mov	al, _yuki_sprite
 		mov	ah, 0
-		add	ax, 16
+		add	ax, B4_CELS
 		push	ax
 		mov	al, _yuki_damage_this_frame
 
@@ -19240,162 +19240,11 @@ loc_1A45A:
 		pop	bp
 		retn
 mai_yuki_1A42B	endp
+main_033_TEXT	ends
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1A45E	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+arg_4]
-		mov	di, [bp+arg_0]
-		cmp	[bp+arg_2], 0
-		jnz	short loc_1A4B4
-		cmp	word ptr [si], 900h
-		jge	short loc_1A47E
-		push	60h
-		call	randring2_next16_mod
-		sub	al, 30h	; '0'
-		jmp	short loc_1A490
-; ---------------------------------------------------------------------------
-
-loc_1A47E:
-		cmp	word ptr [si], 0F00h
-		jle	short loc_1A48D
-		push	60h
-		call	randring2_next16_and
-		add	al, 30h	; '0'
-		jmp	short loc_1A490
-; ---------------------------------------------------------------------------
-
-loc_1A48D:
-		call	randring2_next16
-
-loc_1A490:
-		mov	[si+14h], al
-		cmp	byte ptr [di], 1
-		jnz	short loc_1A49E
-		cmp	byte ptr [si+14h], 80h
-		jb	short loc_1A4A9
-
-loc_1A49E:
-		cmp	byte ptr [di], 2
-		jnz	short loc_1A4B1
-		cmp	byte ptr [si+14h], 80h
-		jb	short loc_1A4B1
-
-loc_1A4A9:
-		mov	al, [si+14h]
-		neg	al
-		mov	[si+14h], al
-
-loc_1A4B1:
-		mov	byte ptr [di], 0
-
-loc_1A4B4:
-		cmp	[bp+arg_2], 0
-		jl	short loc_1A52E
-		lea	ax, [si+8]
-		push	ax
-		push	word ptr [si+14h]
-		mov	ax, [bp+arg_2]
-		add	ax, ax
-		mov	dx, 64h
-		sub	dx, ax
-		push	dx
-		call	vector2_near
-		mov	ax, [si+8]
-		add	[si], ax
-		mov	ax, [si+0Ah]
-		add	[si+2],	ax
-		cmp	word ptr [si+8], 0
-		jge	short loc_1A4E6
-		mov	byte ptr [si+0Eh], 0B6h
-		jmp	short loc_1A4EA
-; ---------------------------------------------------------------------------
-
-loc_1A4E6:
-		mov	byte ptr [si+0Eh], 0B5h
-
-loc_1A4EA:
-		cmp	word ptr [si+2], 180h
-		jge	short loc_1A4FB
-		mov	word ptr [si+2], 180h
-		mov	byte ptr [di], 2
-		jmp	short loc_1A50A
-; ---------------------------------------------------------------------------
-
-loc_1A4FB:
-		cmp	word ptr [si+2], 800h
-		jle	short loc_1A50A
-		mov	word ptr [si+2], 800h
-		mov	byte ptr [di], 1
-
-loc_1A50A:
-		cmp	word ptr [si], 200h
-		jge	short loc_1A516
-		mov	word ptr [si], 200h
-		jmp	short loc_1A520
-; ---------------------------------------------------------------------------
-
-loc_1A516:
-		cmp	word ptr [si], 1600h
-		jle	short loc_1A520
-		mov	word ptr [si], 1600h
-
-loc_1A520:
-		cmp	[bp+arg_2], 30h	; '0'
-		jl	short loc_1A52E
-		mov	byte ptr [si+0Eh], 0B4h
-		mov	al, 1
-		jmp	short loc_1A530
-; ---------------------------------------------------------------------------
-
-loc_1A52E:
-		mov	al, 0
-
-loc_1A530:
-		pop	di
-		pop	si
-		pop	bp
-		retn	6
-sub_1A45E	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1A536	proc near
-
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+arg_0]
-		push	offset _boss_pos
-		push	si
-		push	0C454h
-		call	sub_1A45E
-		push	offset _boss2_pos
-		push	si
-		push	0C455h
-		call	sub_1A45E
-		pop	si
-		pop	bp
-		retn	2
-sub_1A536	endp
-
+main_034_TEXT	segment	byte public 'CODE' use16
+	MAI_YUKI_FLYSTEP_RANDOM procdesc pascal near \
+		frame:word
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -20310,8 +20159,7 @@ loc_1AD20:
 		mov	[bp+var_2], ax
 
 loc_1AD29:
-		push	[bp+var_2]
-		call	sub_1A536
+		call	mai_yuki_flystep_random pascal, [bp+var_2]
 		or	al, al
 		jz	loc_1ADCF
 		mov	_boss_phase_frame, 0
@@ -28318,7 +28166,7 @@ loc_1FD8B:
 		retn
 sub_1FD62	endp
 
-main_033_TEXT	ends
+main_034_TEXT	ends
 
 	.data
 
@@ -28997,7 +28845,7 @@ fp_2CE2C	dw ?
 word_2CE2E	dw ?
 word_2CE30	dw ?
 fp_2CE32	dw ?
-		db 2 dup(?)
+include th05/main/boss/b4_both[bss].asm
 fp_2CE36	dw ?
 fp_2CE38	dw ?
 word_2CE3A	dw ?

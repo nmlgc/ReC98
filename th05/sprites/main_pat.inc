@@ -2,6 +2,7 @@ include th04/sprites/cels.inc
 
 PARTICLE_CELS = 4
 B4BALL_CELS = 4
+B4_CELS = 16
 
 PAT_ENEMY_KILL = 4
 PAT_CLOUD_BULLET16_BLUE = 12
