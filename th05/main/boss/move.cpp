@@ -1,5 +1,3 @@
-#include "th05/main/boss/boss.hpp"
-
 static const int TOWARDS_FRACTION = 16; // higher = slower
 
 inline int towards(int val, int speed = 1) {

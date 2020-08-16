@@ -30,14 +30,7 @@ MIDBOSS_DEC(x);
 
 /// Bosses
 /// ------
-// Callbacks
-extern nearfunc_t_near boss_custombullets_render;
-
-extern unsigned int boss_sprite_left;
-extern unsigned int boss_sprite_right;
-extern unsigned int boss_sprite_stay;
-
-extern boss_stuff_t boss2;
+#include "th05/main/boss/boss.hpp"
 
 BOSS_DEC(sara);
 BOSS_DEC(louise);

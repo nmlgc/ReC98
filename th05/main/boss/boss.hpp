@@ -1,5 +1,14 @@
 #include "th04/main/boss/boss.hpp"
 
+// Callbacks
+extern nearfunc_t_near boss_custombullets_render;
+
+extern unsigned int boss_sprite_left;
+extern unsigned int boss_sprite_right;
+extern unsigned int boss_sprite_stay;
+
+extern boss_stuff_t boss2;
+
 /// Movement
 /// --------
 /// Call these on subsequent frames for a smooth flying movement.

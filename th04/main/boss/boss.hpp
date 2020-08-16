@@ -1,3 +1,36 @@
+// Bosses
+// ------
+typedef struct {
+	motion_t pos;
+	int hp;
+	unsigned char sprite;
+	unsigned char phase;
+	int phase_frame;
+	unsigned char damage_this_frame;
+	unsigned char mode;
+	// Used for both movement and bullet angles.
+	unsigned char angle;
+	unsigned char mode_change;
+	int phase_end_hp;
+} boss_stuff_t;
+
+extern boss_stuff_t boss;
+extern SPPoint boss_hitbox_radius;
+
+// Callbacks
+extern  farfunc_t_near boss_update;
+extern nearfunc_t_near boss_fg_render;
+extern  farfunc_t_near boss_update_func;
+extern nearfunc_t_near boss_backdrop_colorfill;
+extern nearfunc_t_near boss_bg_render_func;
+extern nearfunc_t_near boss_fg_render_func;
+
+#define BOSS_DEC(name) \
+	void pascal  far name##_update(void); \
+	void pascal near name##_bg_render(void); \
+	void pascal near name##_fg_render(void);
+// ------
+
 /// Explosions
 /// ----------
 #define EXPLOSION_SMALL_COUNT 2
