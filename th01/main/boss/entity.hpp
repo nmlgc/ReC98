@@ -1,7 +1,3 @@
-struct area_t {
-	int left, right, top, bottom;
-};
-
 // An individual entity rendered with sprites from a .BOS file. May or may not
 // be animated, and may or may not have a hitbox for collision with the Orb.
 class CBossEntity {
@@ -12,8 +8,8 @@ public:
 	int prev_top;
 	int vram_w;
 	int h;
-	area_t move_clamp;	// Relative to VRAM
-	area_t hitbox_orb;	// Relative to [cur_left] and [cur_top]
+	area_t<int> move_clamp;	// Relative to VRAM
+	area_t<int> hitbox_orb;	// Relative to [cur_left] and [cur_top]
 
 	// Never actually read outside of the functions that set them...
 	int prev_delta_y;

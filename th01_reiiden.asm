@@ -22,6 +22,7 @@ BINARY = 'M'
 
 include ReC98.inc
 include th01/th01.inc
+include th01/math/area.inc
 include th01/main/playfld.inc
 include th01/main/boss/entity.inc
 include th01/formats/cfg.inc

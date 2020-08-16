@@ -1,10 +1,3 @@
-area_t	struc
-	A_left	dw ?
-	A_right	dw ?
-	A_top	dw ?
-	A_bottom	dw ?
-area_t	ends
-
 CBossEntity	struc
 	BE_cur_left	dw ?
 	BE_cur_top	dw ?
