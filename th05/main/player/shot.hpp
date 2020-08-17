@@ -1,5 +1,4 @@
 #define SHOT_COUNT 64
-#define SA_HIT -999.0f
 
 #include "th04/main/player/shot.hpp"
 

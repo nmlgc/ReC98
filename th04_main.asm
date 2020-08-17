@@ -22,6 +22,7 @@ BINARY = 'M'
 
 include ReC98.inc
 include th04/th04.inc
+include th01/math/subpixel.inc
 include th02/main/sparks.inc
 include th04/sprites/main_pat.inc
 include th04/sprites/blit.inc
@@ -7191,7 +7192,7 @@ loc_F421:
 		add	word ptr [si+2], 180h
 
 loc_F426:
-		cmp	_homing_target.y, HOMING_TARGET_NONE
+		cmp	_homing_target.y, SUBPIXEL_NONE
 		jz	short loc_F43A
 		push	si
 		push	7
@@ -7279,7 +7280,7 @@ loc_F4B7:
 		add	word ptr [si+2], 180h
 
 loc_F4BC:
-		cmp	_homing_target.y, HOMING_TARGET_NONE
+		cmp	_homing_target.y, SUBPIXEL_NONE
 		jz	short loc_F4D0
 		push	si
 		push	7
@@ -7364,7 +7365,7 @@ loc_F553:
 		add	word ptr [si+2], 180h
 
 loc_F558:
-		cmp	_homing_target.y, HOMING_TARGET_NONE
+		cmp	_homing_target.y, SUBPIXEL_NONE
 		jz	short loc_F56C
 		push	si
 		push	7
@@ -7449,7 +7450,7 @@ loc_F5EF:
 		add	word ptr [si+2], 180h
 
 loc_F5F4:
-		cmp	_homing_target.y, HOMING_TARGET_NONE
+		cmp	_homing_target.y, SUBPIXEL_NONE
 		jz	short loc_F608
 		push	si
 		push	7
@@ -7534,7 +7535,7 @@ loc_F68B:
 		add	word ptr [si+2], 180h
 
 loc_F690:
-		cmp	_homing_target.y, HOMING_TARGET_NONE
+		cmp	_homing_target.y, SUBPIXEL_NONE
 		jz	short loc_F6A4
 		push	si
 		push	7
@@ -7648,7 +7649,7 @@ loc_F75B:
 		add	word ptr [si+2], 180h
 
 loc_F760:
-		cmp	_homing_target.y, HOMING_TARGET_NONE
+		cmp	_homing_target.y, SUBPIXEL_NONE
 		jz	short loc_F774
 		push	si
 		push	7
@@ -7750,7 +7751,7 @@ loc_F80E:
 		add	word ptr [si+2], 180h
 
 loc_F813:
-		cmp	_homing_target.y, HOMING_TARGET_NONE
+		cmp	_homing_target.y, SUBPIXEL_NONE
 		jz	short loc_F827
 		push	si
 		push	7
@@ -7871,7 +7872,7 @@ loc_F8E9:
 		mov	byte ptr [bp-2], 0CCh
 
 loc_F8F2:
-		cmp	_homing_target.y, HOMING_TARGET_NONE
+		cmp	_homing_target.y, SUBPIXEL_NONE
 		jz	short loc_F908
 		push	si
 		push	7
@@ -7905,7 +7906,7 @@ loc_F929:
 		add	word ptr [si+2], 180h
 
 loc_F92E:
-		cmp	_homing_target.y, HOMING_TARGET_NONE
+		cmp	_homing_target.y, SUBPIXEL_NONE
 		jz	short loc_F93C
 		push	si
 		push	0
@@ -20366,8 +20367,8 @@ var_1		= byte ptr -1
 		enter	2, 0
 		push	si
 		push	di
-		mov	_homing_target.x, HOMING_TARGET_NONE
-		mov	_homing_target.y, HOMING_TARGET_NONE
+		mov	_homing_target.x, SUBPIXEL_NONE
+		mov	_homing_target.y, SUBPIXEL_NONE
 		mov	_shot_hitbox_radius.x, (16 shl 4)
 		mov	_shot_hitbox_radius.y, (12 shl 4)
 		mov	si, offset _enemies
@@ -31409,8 +31410,8 @@ loc_1E8E5:
 
 loc_1E905:
 		inc	_boss_phase_frame
-		mov	_homing_target.x, HOMING_TARGET_NONE
-		mov	_homing_target.y, HOMING_TARGET_NONE
+		mov	_homing_target.x, SUBPIXEL_NONE
+		mov	_homing_target.y, SUBPIXEL_NONE
 
 loc_1E915:
 		pop	bp

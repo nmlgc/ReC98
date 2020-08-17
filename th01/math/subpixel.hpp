@@ -1,6 +1,8 @@
 // Fixed-point format for expressing world-space coordinates, with 4 bits of
 // fractional resolution.
 
+#define PIXEL_NONE (-999)
+
 typedef int subpixel_t;
 
 #define TO_SP(v) \
@@ -38,6 +40,10 @@ public:
 
 	T to_screen() const {
 		return v >> 4;
+	}
+
+	static T None() {
+		return to_sp(PIXEL_NONE);
 	}
 };
 

@@ -1,7 +1,3 @@
-if GAME eq 5
-	SA_HIT = (-999 shl 4)
-endif
-
 shot_alive_t struct
 	SA_pos	Point <?>
 	SA_shot	dw ?

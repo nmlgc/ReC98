@@ -65,7 +65,10 @@ extern SPPoint shot_hitbox_radius;
 
 // Only used for hit detection in TH04. TH05 also uses it in shots_render().
 struct shot_alive_t {
+	// For TH05, [x] == Subpixel::None() indicates that this shot has been
+	// converted to a hitshot.
 	SPPoint pos;
+
 	shot_t near *shot;
 };
 extern unsigned int shots_alive_count;

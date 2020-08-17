@@ -23,6 +23,7 @@ BINARY = 'M'
 include ReC98.inc
 include th05/th05.inc
 include th01/math/area.inc
+include th01/math/subpixel.inc
 include th02/main/sparks.inc
 include th05/sprites/main_pat.inc
 include th04/sprites/blit.inc
@@ -10555,7 +10556,7 @@ shots_update_homing:
 		mov	[si+shot_t.SHOT_type], ST_NORMAL
 
 loc_12460:
-		cmp	_homing_target.x, HOMING_TARGET_NONE
+		cmp	_homing_target.x, SUBPIXEL_NONE
 		jz	loc_124FA
 		mov	ax, _homing_target.y
 		sub	ax, [si+4]
@@ -10750,7 +10751,7 @@ shots_render	proc near
 ; ---------------------------------------------------------------------------
 
 @@shot_loop:
-		cmp	[di+shot_alive_t.SA_pos.x], SA_HIT
+		cmp	[di+shot_alive_t.SA_pos.x], SUBPIXEL_NONE
 		jz	short @@shot_next
 		mov	ax, [di+shot_alive_t.SA_shot]
 		mov	[bp+@@shot], ax
@@ -10882,7 +10883,7 @@ loc_1271E:
 
 loc_1273B:
 		call	hitshot_from pascal, [di+shot_alive_t.SA_shot]
-		mov	[di+shot_alive_t.SA_pos.x], SA_HIT
+		mov	[di+shot_alive_t.SA_pos.x], SUBPIXEL_NONE
 
 @@shot_next:
 		inc	[bp+@@i]
@@ -11083,7 +11084,7 @@ loc_128D8:
 
 loc_128EA:
 		call	hitshot_from pascal, [si+shot_alive_t.SA_shot]
-		mov	[si+shot_alive_t.SA_pos.x], SA_HIT
+		mov	[si+shot_alive_t.SA_pos.x], SUBPIXEL_NONE
 
 @@shot_next:
 		inc	[bp+@@i]
@@ -12669,8 +12670,8 @@ var_1		= byte ptr -1
 		enter	2, 0
 		push	si
 		push	di
-		mov	_homing_target.x, HOMING_TARGET_NONE
-		mov	_homing_target.y, HOMING_TARGET_NONE
+		mov	_homing_target.x, SUBPIXEL_NONE
+		mov	_homing_target.y, SUBPIXEL_NONE
 		mov	_shot_hitbox_radius.x, (16 shl 4)
 		mov	_shot_hitbox_radius.y, (12 shl 4)
 		mov	[bp+var_2], 0
@@ -12843,7 +12844,7 @@ loc_16221:
 @@more?:
 		cmp	di, ENEMY_COUNT
 		jl	@@loop
-		cmp	_homing_target.x, HOMING_TARGET_NONE
+		cmp	_homing_target.x, SUBPIXEL_NONE
 		jz	short loc_162B9
 		cmp	[bp+var_2], 8
 		jb	short loc_1626C
@@ -18931,14 +18932,14 @@ loc_1A101:
 		mov	[si+puppet_t.radius_motion], (256 shl 4)
 		mov	[si+puppet_t.PUPPET_angle], 60h
 		mov	[si+puppet_t.PUPPET_hp_cur], PUPPET_HP
-		mov	[si+puppet_t.pos.cur.x], (-999 shl 4)
+		mov	[si+puppet_t.pos.cur.x], SUBPIXEL_NONE
 		add	si, size puppet_t
 		mov	[si+puppet_t.flag], 1
 		mov	[si+puppet_t.PUPPET_patnum], 190
 		mov	[si+puppet_t.radius_motion], (256 shl 4)
 		mov	[si+puppet_t.PUPPET_angle], 20h
 		mov	[si+puppet_t.PUPPET_hp_cur], PUPPET_HP
-		mov	[si+puppet_t.pos.cur.x], (-999 shl 4)
+		mov	[si+puppet_t.pos.cur.x], SUBPIXEL_NONE
 		mov	fp_2CE2A, offset sub_198B7
 		mov	fp_2CE2C, offset sub_198B7
 		jmp	loc_1A3B2
@@ -28132,8 +28133,8 @@ loc_1FD35:
 		call	frame_delay
 
 loc_1FD51:
-		mov	_homing_target.x, HOMING_TARGET_NONE
-		mov	_homing_target.y, HOMING_TARGET_NONE
+		mov	_homing_target.x, SUBPIXEL_NONE
+		mov	_homing_target.y, SUBPIXEL_NONE
 
 loc_1FD5D:
 		pop	si
