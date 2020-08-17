@@ -7,8 +7,6 @@ custom_t ends
 ; Stage 2 star particles
 ; ----------------------
 S2PARTICLE_COUNT = 64
-S2PARTICLE_W = 16
-S2PARTICLE_H = 16
 
 s2particle_t struc
 	flag	db ?

@@ -1,6 +1,4 @@
 #define S2PARTICLE_COUNT 64
-#define S2PARTICLE_W 16
-#define S2PARTICLE_H 16
 
 typedef struct {
 	unsigned char flag;

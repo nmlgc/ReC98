@@ -1,5 +1,8 @@
 #include "th04/sprites/cels.h"
 
+#define PARTICLE_W 16
+#define PARTICLE_H 16
+
 #define PARTICLE_CELS 4
 #define B4BALL_CELS 4
 #define B4_CELS 16

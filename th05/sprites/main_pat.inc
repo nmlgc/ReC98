@@ -1,5 +1,8 @@
 include th04/sprites/cels.inc
 
+PARTICLE_W = 16
+PARTICLE_H = 16
+
 PARTICLE_CELS = 4
 B4BALL_CELS = 4
 B4_CELS = 16

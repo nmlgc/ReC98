@@ -9634,10 +9634,10 @@ loc_115AD:
 		add	di, PAT_PARTICLE
 		mov	ax, [si+s2particle_t.pos.cur.x]
 		sar	ax, 4
-		add	ax, (PLAYFIELD_X - (S2PARTICLE_W / 2))
+		add	ax, (PLAYFIELD_X - (PARTICLE_W / 2))
 		mov	[bp+var_4], ax
 		mov	ax, [si+s2particle_t.pos.cur.y]
-		add	ax, ((PLAYFIELD_Y - (S2PARTICLE_H / 2)) shl 4)
+		add	ax, ((PLAYFIELD_Y - (PARTICLE_H / 2)) shl 4)
 		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	cx, [bp+var_4]
 		call	z_super_roll_put_16x16_mono_raw pascal, di
