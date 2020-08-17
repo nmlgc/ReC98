@@ -37,7 +37,7 @@ include th05/main/enemy/enemy.inc
 	extern _strlen:proc
 
 	.seq
-main_01 group main_0_TEXT, main_01_TEXT
+main_01 group main__TEXT, main_0_TEXT, main_01_TEXT
 main_03 group main_031_TEXT, main_032_TEXT, main_033_TEXT, main_034_TEXT
 
 ; ===========================================================================
@@ -311,7 +311,7 @@ _TEXT		ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-main_0_TEXT	segment	word public 'CODE' use16
+main__TEXT	segment	word public 'CODE' use16
 		assume cs:main_01
 		;org 0Dh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
@@ -4026,7 +4026,9 @@ loc_D4F4:
 		leave
 		retn
 sub_D3C6	endp
+main__TEXT	ends
 
+main_0_TEXT	segment	word public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
