@@ -3,6 +3,12 @@
  * Rendering code for all bosses
  */
 
+#include <master.h>
+#include "th01/math/subpixel.hpp"
+#include "th04/math/vector.hpp"
+#include "th04/main/drawp.hpp"
+#include "th04/main/playfld.h"
+
 /// Structures
 /// ----------
 #define BOSS_PARTICLE_COUNT 64
@@ -36,3 +42,21 @@ struct lineset_t {
 extern boss_particle_t boss_particles[BOSS_PARTICLE_COUNT];
 extern lineset_t linesets[LINESET_COUNT];
 /// ----------
+
+// Draws the given line out of [set] with the current GRCG tile and color.
+void pascal near grcg_lineset_line_put(lineset_t near &set, int i)
+{
+	vector2_at(drawpoint,
+		set.center[i].x, set.center[i].y, set.radius[i], set.angle[i]
+	);
+	int x1 = (PLAYFIELD_X + drawpoint.x.to_screen());
+	int y1 = (PLAYFIELD_Y + drawpoint.y.to_screen());
+
+	vector2_at(drawpoint,
+		set.center[i].x, set.center[i].y, set.radius[i], (set.angle[i] + 0x80)
+	);
+	int x2 = (PLAYFIELD_X + drawpoint.x.to_screen());
+	int y2 = (PLAYFIELD_Y + drawpoint.y.to_screen());
+
+	grcg_line(x1, y1, x2, y2);
+}

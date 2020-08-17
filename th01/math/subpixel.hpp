@@ -42,6 +42,10 @@ public:
 		return v >> 4;
 	}
 
+	operator T() const {
+		return v;
+	}
+
 	static T None() {
 		return to_sp(PIXEL_NONE);
 	}

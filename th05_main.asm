@@ -4026,82 +4026,12 @@ loc_D4F4:
 		leave
 		retn
 sub_D3C6	endp
+
+	GRCG_LINESET_LINE_PUT procdesc pascal near \
+		set:near ptr, i:word
 main__TEXT	ends
 
 main_0_TEXT	segment	word public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D4F8	proc near
-
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		enter	8, 0
-		push	si
-		push	di
-		mov	si, [bp+arg_2]
-		mov	di, [bp+arg_0]
-		push	offset _drawpoint
-		mov	bx, di
-		shl	bx, 2
-		push	[bx+si+lineset_t.LS_center.x]
-		mov	bx, di
-		shl	bx, 2
-		push	[bx+si+lineset_t.LS_center.y]
-		mov	bx, di
-		add	bx, bx
-		push	[bx+si+lineset_t.LS_radius]
-		mov	bx, di
-		mov	al, [bx+si+lineset_t.LS_angle]
-		mov	ah, 0
-		push	ax
-		call	vector2_at
-		mov	ax, _drawpoint.x
-		sar	ax, 4
-		add	ax, 32
-		mov	[bp+var_2], ax
-		mov	ax, _drawpoint.y
-		sar	ax, 4
-		add	ax, 16
-		mov	[bp+var_4], ax
-		push	offset _drawpoint
-		mov	bx, di
-		shl	bx, 2
-		push	[bx+si+lineset_t.LS_center.x]
-		mov	bx, di
-		shl	bx, 2
-		push	[bx+si+lineset_t.LS_center.y]
-		mov	bx, di
-		add	bx, bx
-		push	[bx+si+lineset_t.LS_radius]
-		mov	bx, di
-		mov	al, [bx+si+lineset_t.LS_angle]
-		mov	ah, 0
-		add	ax, 80h
-		push	ax
-		call	vector2_at
-		mov	ax, _drawpoint.x
-		sar	ax, 4
-		add	ax, 32
-		mov	[bp+var_6], ax
-		mov	ax, _drawpoint.y
-		sar	ax, 4
-		add	ax, 16
-		mov	[bp+var_8], ax
-		call	grcg_line pascal, [bp+var_2], [bp+var_4], [bp+var_6], ax
-		pop	di
-		pop	si
-		leave
-		retn	4
-sub_D4F8	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4201,34 +4131,18 @@ loc_D630:
 		mov	ah, GC_BRG
 		call	_grcg_setcolor_direct_seg1_raw
 		call	sub_D327
-		push	offset lineset0
-		push	12h
-		call	sub_D4F8
-		push	offset lineset0
-		push	0Ch
-		call	sub_D4F8
-		push	offset lineset1
-		push	12h
-		call	sub_D4F8
-		push	offset lineset1
-		push	0Ch
-		call	sub_D4F8
+		call	grcg_lineset_line_put pascal, offset lineset0, 18
+		call	grcg_lineset_line_put pascal, offset lineset0, 12
+		call	grcg_lineset_line_put pascal, offset lineset1, 18
+		call	grcg_lineset_line_put pascal, offset lineset1, 12
 		mov	ah, GC_RG
 		call	_grcg_setcolor_direct_seg1_raw
-		push	offset lineset0
-		push	6
-		call	sub_D4F8
-		push	offset lineset1
-		push	6
-		call	sub_D4F8
+		call	grcg_lineset_line_put pascal, offset lineset0, 6
+		call	grcg_lineset_line_put pascal, offset lineset1, 6
 		mov	ah, 0Fh
 		call	_grcg_setcolor_direct_seg1_raw
-		push	offset lineset0
-		push	0
-		call	sub_D4F8
-		push	offset lineset1
-		push	0
-		call	sub_D4F8
+		call	grcg_lineset_line_put pascal, offset lineset0, 0
+		call	grcg_lineset_line_put pascal, offset lineset1, 0
 		GRCG_OFF_CLOBBERING dx
 		pop	di
 		pop	si
@@ -4462,34 +4376,18 @@ loc_D82E:
 		mov	ah, GC_BRG
 		call	_grcg_setcolor_direct_seg1_raw
 		call	sub_D327
-		push	offset lineset0
-		push	12h
-		call	sub_D4F8
-		push	offset lineset0
-		push	0Ch
-		call	sub_D4F8
-		push	offset lineset1
-		push	12h
-		call	sub_D4F8
-		push	offset lineset1
-		push	0Ch
-		call	sub_D4F8
+		call	grcg_lineset_line_put pascal, offset lineset0, 18
+		call	grcg_lineset_line_put pascal, offset lineset0, 12
+		call	grcg_lineset_line_put pascal, offset lineset1, 18
+		call	grcg_lineset_line_put pascal, offset lineset1, 12
 		mov	ah, GC_RG
 		call	_grcg_setcolor_direct_seg1_raw
-		push	offset lineset0
-		push	6
-		call	sub_D4F8
-		push	offset lineset1
-		push	6
-		call	sub_D4F8
+		call	grcg_lineset_line_put pascal, offset lineset0, 6
+		call	grcg_lineset_line_put pascal, offset lineset1, 6
 		mov	ah, 0Fh
 		call	_grcg_setcolor_direct_seg1_raw
-		push	offset lineset0
-		push	0
-		call	sub_D4F8
-		push	offset lineset1
-		push	0
-		call	sub_D4F8
+		call	grcg_lineset_line_put pascal, offset lineset0, 0
+		call	grcg_lineset_line_put pascal, offset lineset1, 0
 		GRCG_OFF_CLOBBERING dx
 		pop	di
 		pop	si
@@ -4688,34 +4586,18 @@ loc_D9C6:
 		mov	ah, GC_BRG
 		call	_grcg_setcolor_direct_seg1_raw
 		call	sub_D327
-		push	offset lineset0
-		push	12h
-		call	sub_D4F8
-		push	offset lineset0
-		push	0Ch
-		call	sub_D4F8
-		push	offset lineset1
-		push	12h
-		call	sub_D4F8
-		push	offset lineset1
-		push	0Ch
-		call	sub_D4F8
+		call	grcg_lineset_line_put pascal, offset lineset0, 18
+		call	grcg_lineset_line_put pascal, offset lineset0, 12
+		call	grcg_lineset_line_put pascal, offset lineset1, 18
+		call	grcg_lineset_line_put pascal, offset lineset1, 12
 		mov	ah, GC_RG
 		call	_grcg_setcolor_direct_seg1_raw
-		push	offset lineset0
-		push	6
-		call	sub_D4F8
-		push	offset lineset1
-		push	6
-		call	sub_D4F8
+		call	grcg_lineset_line_put pascal, offset lineset0, 6
+		call	grcg_lineset_line_put pascal, offset lineset1, 6
 		mov	ah, 0Fh
 		call	_grcg_setcolor_direct_seg1_raw
-		push	offset lineset0
-		push	0
-		call	sub_D4F8
-		push	offset lineset1
-		push	0
-		call	sub_D4F8
+		call	grcg_lineset_line_put pascal, offset lineset0, 0
+		call	grcg_lineset_line_put pascal, offset lineset1, 0
 		GRCG_OFF_CLOBBERING dx
 		pop	di
 		pop	si

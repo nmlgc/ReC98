@@ -8,5 +8,9 @@ int pascal near vector2_near(
 );
 
 int pascal vector2_at(
-	Point near &ret, int origin_x, int origin_y, int length, int angle
+	SPPoint near &ret,
+	subpixel_t origin_x,
+	subpixel_t origin_y,
+	subpixel_t length,
+	int angle
 );
