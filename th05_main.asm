@@ -3885,51 +3885,51 @@ sub_D327	endp
 
 sub_D3C6	proc near
 
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@set		= word ptr -6
+@@line_i		= word ptr -4
+@@angle		= word ptr -2
 
 		enter	6, 0
 		push	si
 		push	di
 		cmp	word_21D6E, 0FFh
 		jnz	loc_D456
-		mov	[bp+var_6], 3AC0h
+		mov	[bp+@@set], offset _linesets
 		xor	di, di
-		mov	[bp+var_2], 40h
+		mov	[bp+@@angle], 40h
 		jmp	short loc_D433
 ; ---------------------------------------------------------------------------
 
 loc_D3E4:
-		mov	[bp+var_4], 0
+		mov	[bp+@@line_i], 0
 		jmp	short loc_D422
 ; ---------------------------------------------------------------------------
 
 loc_D3EB:
-		mov	bx, [bp+var_4]
+		mov	bx, [bp+@@line_i]
 		shl	bx, 2
-		add	bx, [bp+var_6]
-		mov	word ptr [bx], 0C00h
-		mov	bx, [bp+var_4]
+		add	bx, [bp+@@set]
+		mov	[bx+lineset_t.LS_center.x], ((PLAYFIELD_W / 2) shl 4)
+		mov	bx, [bp+@@line_i]
 		shl	bx, 2
-		add	bx, [bp+var_6]
-		mov	word ptr [bx+2], 0B80h
-		mov	bx, [bp+var_4]
+		add	bx, [bp+@@set]
+		mov	[bx+lineset_t.LS_center.y], ((PLAYFIELD_H / 2) shl 4)
+		mov	bx, [bp+@@line_i]
 		add	bx, bx
-		add	bx, [bp+var_6]
-		mov	word ptr [bx+52h], 10h
-		mov	bx, [bp+var_6]
-		add	bx, [bp+var_4]
-		mov	al, byte ptr [bp+var_2]
-		mov	[bx+7Ah], al
-		inc	[bp+var_4]
+		add	bx, [bp+@@set]
+		mov	[bx+lineset_t.LS_radius], (1 shl 4)
+		mov	bx, [bp+@@set]
+		add	bx, [bp+@@line_i]
+		mov	al, byte ptr [bp+@@angle]
+		mov	[bx+lineset_t.LS_angle], al
+		inc	[bp+@@line_i]
 
 loc_D422:
-		cmp	[bp+var_4], 14h
+		cmp	[bp+@@line_i], LINESET_LINE_COUNT
 		jl	short loc_D3EB
 		inc	di
-		add	[bp+var_6], 8Eh
-		sub	[bp+var_2], 80h
+		add	[bp+@@set], size lineset_t
+		sub	[bp+@@angle], 80h
 
 loc_D433:
 		cmp	di, 2
@@ -4002,23 +4002,23 @@ loc_D4BE:
 		idiv	bx
 		cmp	dx, 2
 		jge	short loc_D4E4
-		mov	al, byte_2451A
+		mov	al, lineset0.LS_angle
 		add	al, 2
-		mov	byte_2451A, al
-		mov	al, byte_245A8
+		mov	lineset0.LS_angle, al
+		mov	al, lineset1.LS_angle
 		add	al, 2
 		jmp	short loc_D4F1
 ; ---------------------------------------------------------------------------
 
 loc_D4E4:
-		mov	al, byte_2451A
-		add	al, 0FEh
-		mov	byte_2451A, al
-		mov	al, byte_245A8
-		add	al, 0FEh
+		mov	al, lineset0.LS_angle
+		add	al, -2
+		mov	lineset0.LS_angle, al
+		mov	al, lineset1.LS_angle
+		add	al, -2
 
 loc_D4F1:
-		mov	byte_245A8, al
+		mov	lineset1.LS_angle, al
 
 loc_D4F4:
 		pop	di
@@ -4049,15 +4049,15 @@ arg_2		= word ptr  6
 		push	offset _drawpoint
 		mov	bx, di
 		shl	bx, 2
-		push	word ptr [bx+si]
+		push	[bx+si+lineset_t.LS_center.x]
 		mov	bx, di
 		shl	bx, 2
-		push	word ptr [bx+si+2]
+		push	[bx+si+lineset_t.LS_center.y]
 		mov	bx, di
 		add	bx, bx
-		push	word ptr [bx+si+52h]
+		push	[bx+si+lineset_t.LS_radius]
 		mov	bx, di
-		mov	al, [bx+si+7Ah]
+		mov	al, [bx+si+lineset_t.LS_angle]
 		mov	ah, 0
 		push	ax
 		call	vector2_at
@@ -4072,15 +4072,15 @@ arg_2		= word ptr  6
 		push	offset _drawpoint
 		mov	bx, di
 		shl	bx, 2
-		push	word ptr [bx+si]
+		push	[bx+si+lineset_t.LS_center.x]
 		mov	bx, di
 		shl	bx, 2
-		push	word ptr [bx+si+2]
+		push	[bx+si+lineset_t.LS_center.y]
 		mov	bx, di
 		add	bx, bx
-		push	word ptr [bx+si+52h]
+		push	[bx+si+lineset_t.LS_radius]
 		mov	bx, di
-		mov	al, [bx+si+7Ah]
+		mov	al, [bx+si+lineset_t.LS_angle]
 		mov	ah, 0
 		add	ax, 80h
 		push	ax
@@ -4107,12 +4107,12 @@ sub_D4F8	endp
 
 sub_D598	proc near
 
-arg_0		= word ptr  4
+@@set		= word ptr  4
 
 		push	bp
 		mov	bp, sp
-		mov	cx, [bp+arg_0]
-		mov	dx, 12h
+		mov	cx, [bp+@@set]
+		mov	dx, (LINESET_LINE_COUNT - 2)
 		jmp	short loc_D5DA
 ; ---------------------------------------------------------------------------
 
@@ -4121,26 +4121,26 @@ loc_D5A3:
 		dec	bx
 		shl	bx, 2
 		add	bx, cx
-		mov	eax, [bx]
+		mov	eax, dword ptr [bx+lineset_t.LS_center]
 		mov	bx, dx
 		shl	bx, 2
 		add	bx, cx
-		mov	[bx], eax
+		mov	dword ptr [bx+lineset_t.LS_center], eax
 		mov	bx, cx
 		add	bx, dx
-		mov	al, [bx+79h]
+		mov	al, [bx+(lineset_t.LS_angle - 1)]
 		mov	bx, cx
 		add	bx, dx
-		mov	[bx+7Ah], al
+		mov	[bx+(lineset_t.LS_angle - 0)], al
 		mov	bx, dx
 		dec	bx
 		add	bx, bx
 		add	bx, cx
-		mov	ax, [bx+52h]
+		mov	ax, [bx+lineset_t.LS_radius]
 		mov	bx, dx
 		add	bx, bx
 		add	bx, cx
-		mov	[bx+52h], ax
+		mov	[bx+lineset_t.LS_radius], ax
 		dec	dx
 
 loc_D5DA:
@@ -4161,7 +4161,7 @@ sub_D5E2	proc near
 		push	si
 		push	di
 		call	sub_D3C6
-		mov	si, 3AC0h
+		mov	si, offset _linesets
 		xor	di, di
 		jmp	short loc_D630
 ; ---------------------------------------------------------------------------
@@ -4169,28 +4169,28 @@ sub_D5E2	proc near
 loc_D5F1:
 		push	si
 		call	sub_D598
-		add	word ptr [si+52h], 40h
+		add	[si+lineset_t.LS_radius], (4 shl 4)
 		push	si
 		push	((192 shl 4) shl 16) or (184 shl 4)
-		mov	ax, [si+52h]
+		mov	ax, [si+lineset_t.LS_radius]
 		imul	ax, 3
 		mov	bx, 4
 		cwd
 		idiv	bx
 		push	ax
-		mov	al, [si+7Ah]
+		mov	al, [si+lineset_t.LS_angle]
 		mov	ah, 0
 		add	ax, -64
 		push	ax
 		call	vector2_at
-		cmp	word ptr [si+52h], 0E00h
+		cmp	[si+lineset_t.LS_radius], (224 shl 4)
 		jl	short loc_D62B
 		inc	byte_21D6C
-		mov	word ptr [si+52h], 0
+		mov	[si+lineset_t.LS_radius], 0
 
 loc_D62B:
 		inc	di
-		add	si, 8Eh
+		add	si, size lineset_t
 
 loc_D630:
 		cmp	di, 2
@@ -4199,32 +4199,32 @@ loc_D630:
 		mov	ah, GC_BRG
 		call	_grcg_setcolor_direct_seg1_raw
 		call	sub_D327
-		push	3AC0h
+		push	offset lineset0
 		push	12h
 		call	sub_D4F8
-		push	3AC0h
+		push	offset lineset0
 		push	0Ch
 		call	sub_D4F8
-		push	3B4Eh
+		push	offset lineset1
 		push	12h
 		call	sub_D4F8
-		push	3B4Eh
+		push	offset lineset1
 		push	0Ch
 		call	sub_D4F8
 		mov	ah, GC_RG
 		call	_grcg_setcolor_direct_seg1_raw
-		push	3AC0h
+		push	offset lineset0
 		push	6
 		call	sub_D4F8
-		push	3B4Eh
+		push	offset lineset1
 		push	6
 		call	sub_D4F8
 		mov	ah, 0Fh
 		call	_grcg_setcolor_direct_seg1_raw
-		push	3AC0h
+		push	offset lineset0
 		push	0
 		call	sub_D4F8
-		push	3B4Eh
+		push	offset lineset1
 		push	0
 		call	sub_D4F8
 		GRCG_OFF_CLOBBERING dx
@@ -4241,53 +4241,53 @@ sub_D5E2	endp
 
 sub_D694	proc near
 
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@set		= word ptr -6
+@@line_i		= word ptr -4
+@@center_x		= word ptr -2
 
 		enter	6, 0
 		push	si
 		push	di
 		cmp	byte_21D70, 0
 		jnz	loc_D751
-		mov	[bp+var_2], 400h
-		mov	[bp+var_6], 3AC0h
+		mov	[bp+@@center_x], (64 shl 4)
+		mov	[bp+@@set], offset _linesets
 		xor	di, di
 		jmp	short loc_D707
 ; ---------------------------------------------------------------------------
 
 loc_D6B1:
-		mov	[bp+var_4], 12h
+		mov	[bp+@@line_i], (LINESET_LINE_COUNT - 2)
 		jmp	short loc_D6EE
 ; ---------------------------------------------------------------------------
 
 loc_D6B8:
-		mov	bx, [bp+var_4]
+		mov	bx, [bp+@@line_i]
 		shl	bx, 2
-		add	bx, [bp+var_6]
-		mov	ax, [bp+var_2]
-		mov	[bx], ax
-		mov	bx, [bp+var_4]
+		add	bx, [bp+@@set]
+		mov	ax, [bp+@@center_x]
+		mov	[bx+lineset_t.LS_center.x], ax
+		mov	bx, [bp+@@line_i]
 		shl	bx, 2
-		add	bx, [bp+var_6]
-		mov	word ptr [bx+2], 0D80h
-		mov	bx, [bp+var_4]
+		add	bx, [bp+@@set]
+		mov	[bx+lineset_t.LS_center.y], (216 shl 4)
+		mov	bx, [bp+@@line_i]
 		add	bx, bx
-		add	bx, [bp+var_6]
-		mov	word ptr [bx+52h], 1000h
-		mov	bx, [bp+var_6]
-		add	bx, [bp+var_4]
-		mov	byte ptr [bx+7Ah], 40h
-		dec	[bp+var_4]
+		add	bx, [bp+@@set]
+		mov	word ptr [bx+lineset_t.LS_radius], (256 shl 4)
+		mov	bx, [bp+@@set]
+		add	bx, [bp+@@line_i]
+		mov	byte ptr [bx+lineset_t.LS_angle], 40h
+		dec	[bp+@@line_i]
 
 loc_D6EE:
-		cmp	[bp+var_4], 0
+		cmp	[bp+@@line_i], 0
 		jge	short loc_D6B8
-		mov	bx, [bp+var_6]
-		mov	word ptr [bx+50h], 0
+		mov	bx, [bp+@@set]
+		mov	word ptr [bx+lineset_t.LS_velocity_y], 0
 		inc	di
-		add	[bp+var_6], 8Eh
-		add	[bp+var_2], 1000h
+		add	[bp+@@set], size lineset_t
+		add	[bp+@@center_x], (256 shl 4)
 
 loc_D707:
 		cmp	di, 2
@@ -4363,7 +4363,7 @@ var_2		= word ptr -2
 		push	di
 		call	sub_D694
 		mov	[bp+var_2], 4
-		mov	si, 3AC0h
+		mov	si, offset _linesets
 		xor	di, di
 		jmp	short loc_D7E8
 ; ---------------------------------------------------------------------------
@@ -4371,9 +4371,9 @@ var_2		= word ptr -2
 loc_D789:
 		push	si
 		call	sub_D598
-		mov	ax, [si+50h]
-		add	[si+2],	ax
-		cmp	word ptr [si+50h], 0FF20h
+		mov	ax, [si+lineset_t.LS_velocity_y]
+		add	[si+lineset_t.LS_center.y], ax
+		cmp	[si+lineset_t.LS_velocity_y], (-14 shl 4)
 		jle	short loc_D7AB
 		cmp	_stage_frame_mod4, 0
 		jnz	short loc_D7A6
@@ -4385,12 +4385,12 @@ loc_D7A6:
 		xor	ax, ax
 
 loc_D7A8:
-		sub	[si+50h], ax
+		sub	[si+lineset_t.LS_velocity_y], ax
 
 loc_D7AB:
-		cmp	word ptr [si+52h], 600h
+		cmp	[si+lineset_t.LS_radius], (96 shl 4)
 		jle	short loc_D7B6
-		sub	word ptr [si+52h], 2
+		sub	[si+lineset_t.LS_radius], 2
 
 loc_D7B6:
 		mov	ax, word_21D72
@@ -4398,23 +4398,23 @@ loc_D7B6:
 		cmp	ax, 100h
 		jnb	short loc_D7C8
 		mov	ax, [bp+var_2]
-		add	[si], ax
+		add	[si+lineset_t.LS_center.x], ax
 		jmp	short loc_D7CD
 ; ---------------------------------------------------------------------------
 
 loc_D7C8:
 		mov	ax, [bp+var_2]
-		sub	[si], ax
+		sub	[si+lineset_t.LS_center.x], ax
 
 loc_D7CD:
 		mov	ax, [bp+var_2]
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	al, [si+7Ah]
-		mov	[si+7Ah], al
+		add	al, [si+lineset_t.LS_angle]
+		mov	[si+lineset_t.LS_angle], al
 		inc	di
-		add	si, 8Eh
+		add	si, size lineset_t
 		mov	ax, [bp+var_2]
 		neg	ax
 		mov	[bp+var_2], ax
@@ -4423,18 +4423,18 @@ loc_D7E8:
 		cmp	di, 2
 		jl	short loc_D789
 		inc	word_21D72
-		mov	si, 3AC0h
-		cmp	word ptr [si+2], 500h
+		mov	si, offset _linesets
+		cmp	[si+lineset_t.LS_center.y], (80 shl 4)
 		jge	short loc_D82E
-		mov	ax, 500h
-		sub	ax, [si+2]
+		mov	ax, (80 shl 4)
+		sub	ax, [si+lineset_t.LS_center.y]
 		mov	[bp+var_2], ax
 		xor	di, di
 		jmp	short loc_D829
 ; ---------------------------------------------------------------------------
 
 loc_D808:
-		mov	[bp+var_4], 12h
+		mov	[bp+var_4], (LINESET_LINE_COUNT - 2)
 		jmp	short loc_D81E
 ; ---------------------------------------------------------------------------
 
@@ -4442,14 +4442,14 @@ loc_D80F:
 		mov	bx, [bp+var_4]
 		shl	bx, 2
 		mov	ax, [bp+var_2]
-		add	[bx+si+2], ax
+		add	[bx+si+lineset_t.LS_center.y], ax
 		dec	[bp+var_4]
 
 loc_D81E:
 		cmp	[bp+var_4], 0
 		jge	short loc_D80F
 		inc	di
-		add	si, 8Eh
+		add	si, size lineset_t
 
 loc_D829:
 		cmp	di, 2
@@ -4460,32 +4460,32 @@ loc_D82E:
 		mov	ah, GC_BRG
 		call	_grcg_setcolor_direct_seg1_raw
 		call	sub_D327
-		push	3AC0h
+		push	offset lineset0
 		push	12h
 		call	sub_D4F8
-		push	3AC0h
+		push	offset lineset0
 		push	0Ch
 		call	sub_D4F8
-		push	3B4Eh
+		push	offset lineset1
 		push	12h
 		call	sub_D4F8
-		push	3B4Eh
+		push	offset lineset1
 		push	0Ch
 		call	sub_D4F8
 		mov	ah, GC_RG
 		call	_grcg_setcolor_direct_seg1_raw
-		push	3AC0h
+		push	offset lineset0
 		push	6
 		call	sub_D4F8
-		push	3B4Eh
+		push	offset lineset1
 		push	6
 		call	sub_D4F8
 		mov	ah, 0Fh
 		call	_grcg_setcolor_direct_seg1_raw
-		push	3AC0h
+		push	offset lineset0
 		push	0
 		call	sub_D4F8
-		push	3B4Eh
+		push	offset lineset1
 		push	0
 		call	sub_D4F8
 		GRCG_OFF_CLOBBERING dx
@@ -4555,7 +4555,7 @@ sub_D88D	endp
 
 sub_D8D9	proc near
 
-var_4		= word ptr -4
+@@line_i		= word ptr -4
 var_2		= word ptr -2
 
 		enter	4, 0
@@ -4563,7 +4563,7 @@ var_2		= word ptr -2
 		push	di
 		call	sub_D88D
 		mov	[bp+var_2], 4
-		mov	si, 3AC0h
+		mov	si, offset _linesets
 		xor	di, di
 		jmp	short loc_D944
 ; ---------------------------------------------------------------------------
@@ -4571,18 +4571,18 @@ var_2		= word ptr -2
 loc_D8EE:
 		push	si
 		call	sub_D598
-		mov	ax, [si+50h]
-		add	[si+2],	ax
-		cmp	word ptr [si+50h], 0E0h
+		mov	ax, [si+lineset_t.LS_velocity_y]
+		add	[si+lineset_t.LS_center.y], ax
+		cmp	[si+lineset_t.LS_velocity_y], (14 shl 4)
 		jge	short loc_D907
 		mov	al, _stage_frame_mod2
 		mov	ah, 0
-		add	[si+50h], ax
+		add	[si+lineset_t.LS_velocity_y], ax
 
 loc_D907:
-		cmp	word ptr [si+52h], 600h
+		cmp	[si+lineset_t.LS_radius], (96 shl 4)
 		jle	short loc_D912
-		sub	word ptr [si+52h], 2
+		sub	[si+lineset_t.LS_radius], 2
 
 loc_D912:
 		mov	ax, word_21D72
@@ -4590,23 +4590,23 @@ loc_D912:
 		cmp	ax, 100h
 		jnb	short loc_D924
 		mov	ax, [bp+var_2]
-		add	[si], ax
+		add	[si+lineset_t.LS_center.x], ax
 		jmp	short loc_D929
 ; ---------------------------------------------------------------------------
 
 loc_D924:
 		mov	ax, [bp+var_2]
-		sub	[si], ax
+		sub	[si+lineset_t.LS_center.x], ax
 
 loc_D929:
 		mov	ax, [bp+var_2]
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	al, [si+7Ah]
-		mov	[si+7Ah], al
+		add	al, [si+lineset_t.LS_angle]
+		mov	[si+lineset_t.LS_angle], al
 		inc	di
-		add	si, 8Eh
+		add	si, size lineset_t
 		mov	ax, [bp+var_2]
 		neg	ax
 		mov	[bp+var_2], ax
@@ -4615,33 +4615,33 @@ loc_D944:
 		cmp	di, 2
 		jl	short loc_D8EE
 		inc	word_21D72
-		mov	si, 3AC0h
-		cmp	word ptr [si+2], 500h
+		mov	si, offset _linesets
+		cmp	[si+lineset_t.LS_center.y], (80 shl 4)
 		jge	short loc_D98C
-		mov	ax, 500h
-		sub	ax, [si+2]
+		mov	ax, (80 shl 4)
+		sub	ax, [si+lineset_t.LS_center.y]
 		mov	[bp+var_2], ax
 		xor	di, di
 		jmp	short loc_D985
 ; ---------------------------------------------------------------------------
 
 loc_D964:
-		mov	[bp+var_4], 12h
+		mov	[bp+@@line_i], (LINESET_LINE_COUNT - 2)
 		jmp	short loc_D97A
 ; ---------------------------------------------------------------------------
 
 loc_D96B:
-		mov	bx, [bp+var_4]
+		mov	bx, [bp+@@line_i]
 		shl	bx, 2
 		mov	ax, [bp+var_2]
-		add	[bx+si+2], ax
-		dec	[bp+var_4]
+		add	[bx+si+lineset_t.LS_center.y], ax
+		dec	[bp+@@line_i]
 
 loc_D97A:
-		cmp	[bp+var_4], 0
+		cmp	[bp+@@line_i], 0
 		jge	short loc_D96B
 		inc	di
-		add	si, 8Eh
+		add	si, size lineset_t
 
 loc_D985:
 		cmp	di, 2
@@ -4650,32 +4650,32 @@ loc_D985:
 ; ---------------------------------------------------------------------------
 
 loc_D98C:
-		cmp	word ptr [si+2], 1300h
+		cmp	[si+lineset_t.LS_center.y], (304 shl 4)
 		jle	short loc_D9C6
-		mov	ax, [si+2]
-		add	ax, 0ED00h
+		mov	ax, [si+lineset_t.LS_center.y]
+		add	ax, (-304 shl 4)
 		mov	[bp+var_2], ax
 		xor	di, di
 		jmp	short loc_D9C1
 ; ---------------------------------------------------------------------------
 
 loc_D9A0:
-		mov	[bp+var_4], 12h
+		mov	[bp+@@line_i], (LINESET_LINE_COUNT - 2)
 		jmp	short loc_D9B6
 ; ---------------------------------------------------------------------------
 
 loc_D9A7:
-		mov	bx, [bp+var_4]
+		mov	bx, [bp+@@line_i]
 		shl	bx, 2
 		mov	ax, [bp+var_2]
-		sub	[bx+si+2], ax
-		dec	[bp+var_4]
+		sub	[bx+si+lineset_t.LS_center.y], ax
+		dec	[bp+@@line_i]
 
 loc_D9B6:
-		cmp	[bp+var_4], 0
+		cmp	[bp+@@line_i], 0
 		jge	short loc_D9A7
 		inc	di
-		add	si, 8Eh
+		add	si, size lineset_t
 
 loc_D9C1:
 		cmp	di, 2
@@ -4686,32 +4686,32 @@ loc_D9C6:
 		mov	ah, GC_BRG
 		call	_grcg_setcolor_direct_seg1_raw
 		call	sub_D327
-		push	3AC0h
+		push	offset lineset0
 		push	12h
 		call	sub_D4F8
-		push	3AC0h
+		push	offset lineset0
 		push	0Ch
 		call	sub_D4F8
-		push	3B4Eh
+		push	offset lineset1
 		push	12h
 		call	sub_D4F8
-		push	3B4Eh
+		push	offset lineset1
 		push	0Ch
 		call	sub_D4F8
 		mov	ah, GC_RG
 		call	_grcg_setcolor_direct_seg1_raw
-		push	3AC0h
+		push	offset lineset0
 		push	6
 		call	sub_D4F8
-		push	3B4Eh
+		push	offset lineset1
 		push	6
 		call	sub_D4F8
 		mov	ah, 0Fh
 		call	_grcg_setcolor_direct_seg1_raw
-		push	3AC0h
+		push	offset lineset0
 		push	0
 		call	sub_D4F8
-		push	3B4Eh
+		push	offset lineset1
 		push	0
 		call	sub_D4F8
 		GRCG_OFF_CLOBBERING dx
@@ -4940,7 +4940,7 @@ sub_DBFF	proc near
 		mov	bp, sp
 		push	si
 		push	di
-		mov	si, 3AC0h
+		mov	si, offset _linesets
 		cmp	byte_21D76, 0
 		jnz	short loc_DC2C
 		xor	di, di
@@ -4950,40 +4950,40 @@ sub_DBFF	proc near
 loc_DC12:
 		mov	bx, di
 		add	bx, bx
-		mov	word ptr [bx+si+52h], 10h
+		mov	[bx+si+lineset_t.LS_radius], (1 shl 4)
 		mov	bx, di
-		mov	byte ptr [bx+si+7Ah], 0
+		mov	byte ptr [bx+si+lineset_t.LS_angle], 0
 		inc	di
 
 loc_DC22:
-		cmp	di, 13h
+		cmp	di, (LINESET_LINE_COUNT - 1)
 		jl	short loc_DC12
 		mov	byte_21D76, 1
 
 loc_DC2C:
-		mov	di, 12h
+		mov	di, (LINESET_LINE_COUNT - 2)
 		jmp	short loc_DC49
 ; ---------------------------------------------------------------------------
 
 loc_DC31:
 		lea	bx, [di-1]
 		add	bx, bx
-		mov	ax, [bx+si+52h]
+		mov	ax, [bx+si+lineset_t.LS_radius]
 		mov	bx, di
 		add	bx, bx
-		mov	[bx+si+52h], ax
+		mov	[bx+si+lineset_t.LS_radius], ax
 		mov	bx, di
-		mov	al, [bx+si+79h]
-		mov	[bx+si+7Ah], al
+		mov	al, [bx+si+(lineset_t.LS_angle - 1)]
+		mov	[bx+si+(lineset_t.LS_angle - 0)], al
 		dec	di
 
 loc_DC49:
 		or	di, di
 		jg	short loc_DC31
-		add	word ptr [si+52h], 50h ; 'P'
-		cmp	word ptr [si+52h], 1400h
+		add	[si+lineset_t.LS_radius], (5 shl 4)
+		cmp	[si+lineset_t.LS_radius], (320 shl 4)
 		jl	short loc_DC66
-		mov	word ptr [si+52h], 10h
+		mov	[si+lineset_t.LS_radius], (1 shl 4)
 		mov	al, 3
 		sub	al, byte_21D76
 		mov	byte_21D76, al
@@ -4991,26 +4991,26 @@ loc_DC49:
 loc_DC66:
 		cmp	byte_21D76, 1
 		jnz	short loc_DC74
-		mov	al, [si+7Ah]
+		mov	al, [si+lineset_t.LS_angle]
 		inc	al
 		jmp	short loc_DC79
 ; ---------------------------------------------------------------------------
 
 loc_DC74:
-		mov	al, [si+7Ah]
-		add	al, 0FFh
+		mov	al, [si+lineset_t.LS_angle]
+		add	al, -1
 
 loc_DC79:
-		mov	[si+7Ah], al
+		mov	[si+lineset_t.LS_angle], al
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 8
-		push	word ptr [si+76h]
-		mov	al, [si+8Ch]
+		push	[si+lineset_t.LS_radius[18 * word]]
+		mov	al, [si+lineset_t.LS_angle[18 * byte]]
 		mov	ah, 0
 		push	ax
 		call	sub_DB33
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 9
-		push	word ptr [si+64h]
-		mov	al, [si+83h]
+		push	[si+lineset_t.LS_radius[9 * word]]
+		mov	al, [si+lineset_t.LS_angle[9 * byte]]
 		mov	ah, 0
 		push	ax
 		call	sub_DB33
@@ -5023,8 +5023,8 @@ loc_DCBA:
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
 
 loc_DCC5:
-		push	word ptr [si+52h]
-		mov	al, [si+7Ah]
+		push	[si+lineset_t.LS_radius]
+		mov	al, [si+lineset_t.LS_angle]
 		mov	ah, 0
 		push	ax
 		call	sub_DB33
@@ -28738,11 +28738,7 @@ byte_24498	db ?
 		db ?
 include th04/main/boss/backdrop[bss].asm
 word_2449C	dw ?
-		db 124 dup(?)
-byte_2451A	db ?
-		db 141 dup(?)
-byte_245A8	db ?
-		db 303 dup(?)
+	dw ?
 include th05/main/boss/render[bss].asm
 include th05/formats/bb_curvebullet[bss].asm
 include th05/formats/bb_load[bss].asm
