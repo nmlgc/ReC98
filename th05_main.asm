@@ -3795,82 +3795,82 @@ yumeko_bg_render	endp
 
 sub_D327	proc near
 
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@i		= word ptr -4
+@@left		= word ptr -2
 
 		enter	4, 0
 		push	si
 		push	di
 		mov	ax, GRAM_400
 		mov	es, ax
-		mov	si, 3CF8h
-		mov	[bp+var_4], 0
+		mov	si, offset _boss_particles
+		mov	[bp+@@i], 0
 		jmp	short loc_D3BA
 ; ---------------------------------------------------------------------------
 
 loc_D33C:
-		cmp	word ptr [si], 0C190h
+		cmp	[si+boss_particle_t.BP_pos.x], SUBPIXEL_NONE
 		jz	short loc_D3B4
-		mov	ax, [si+8]
-		add	[si], ax
-		mov	ax, [si+0Ah]
-		add	[si+2],	ax
-		cmp	byte ptr [si+0Fh], 0
+		mov	ax, [si+boss_particle_t.BP_velocity.x]
+		add	[si+boss_particle_t.BP_pos.x], ax
+		mov	ax, [si+boss_particle_t.BP_velocity.y]
+		add	[si+boss_particle_t.BP_pos.y], ax
+		cmp	[si+boss_particle_t.BP_patnum], 0
 		jnz	short loc_D36C
-		mov	ax, [si+0Ch]
+		mov	ax, [si+boss_particle_t.BP_age]
 		mov	bx, 8
 		cwd
 		idiv	bx
 		mov	di, ax
-		cmp	di, 4
+		cmp	di, PARTICLE_CELS
 		jl	short loc_D366
-		mov	di, 3
+		mov	di, (PARTICLE_CELS - 1)
 
 loc_D366:
-		add	di, 172
+		add	di, PAT_PARTICLE
 		jmp	short loc_D373
 ; ---------------------------------------------------------------------------
 
 loc_D36C:
-		mov	al, [si+0Fh]
+		mov	al, [si+boss_particle_t.BP_patnum]
 		mov	ah, 0
 		mov	di, ax
 
 loc_D373:
-		mov	ax, [si]
+		mov	ax, [si+boss_particle_t.BP_pos.x]
 		sar	ax, 4
-		add	ax, 18h
-		mov	[bp+var_2], ax
-		mov	ax, [si+2]
+		add	ax, (PLAYFIELD_X - (PARTICLE_W / 2))
+		mov	[bp+@@left], ax
+		mov	ax, [si+boss_particle_t.BP_pos.y]
 		sar	ax, 4
-		add	ax, 8
-		mov	cx, [bp+var_2]
-		cmp	cx, 10h
+		add	ax, (PLAYFIELD_Y - (PARTICLE_H / 2))
+		mov	cx, [bp+@@left]
+		cmp	cx, (PLAYFIELD_X - PARTICLE_W)
 		jle	short loc_D39F
-		cmp	cx, 1A0h
+		cmp	cx, PLAYFIELD_RIGHT
 		jge	short loc_D39F
-		cmp	ax, 0
+		cmp	ax, (PLAYFIELD_Y - PARTICLE_H)
 		jle	short loc_D39F
-		cmp	ax, 180h
+		cmp	ax, PLAYFIELD_BOTTOM
 		jl	short loc_D3AD
 
 loc_D39F:
-		mov	eax, [si+4]
-		mov	[si], eax
-		mov	word ptr [si+0Ch], 0
+		mov	eax, dword ptr [si+boss_particle_t.BP_origin]
+		mov	dword ptr [si+boss_particle_t.BP_pos], eax
+		mov	[si+boss_particle_t.BP_age], 0
 		jmp	short loc_D3B4
 ; ---------------------------------------------------------------------------
 
 loc_D3AD:
 		call	z_super_roll_put_16x16_mono_raw pascal, di
-		inc	word ptr [si+0Ch]
+		inc	[si+boss_particle_t.BP_age]
 
 loc_D3B4:
-		inc	[bp+var_4]
-		add	si, 10h
+		inc	[bp+@@i]
+		add	si, size boss_particle_t
 
 loc_D3BA:
-		cmp	[bp+var_4], 40h
+		cmp	[bp+@@i], BOSS_PARTICLE_COUNT
 		jl	loc_D33C
 		pop	di
 		pop	si
@@ -3934,19 +3934,19 @@ loc_D422:
 loc_D433:
 		cmp	di, 2
 		jl	short loc_D3E4
-		mov	si, 3CF8h
+		mov	si, offset _boss_particles
 		xor	di, di
 		jmp	short loc_D44B
 ; ---------------------------------------------------------------------------
 
 loc_D43F:
-		mov	word ptr [si], 0C190h
-		mov	byte ptr [si+0Fh], 0
+		mov	[si+boss_particle_t.BP_pos.x], SUBPIXEL_NONE
+		mov	[si+boss_particle_t.BP_patnum], 0
 		inc	di
-		add	si, 10h
+		add	si, size boss_particle_t
 
 loc_D44B:
-		cmp	di, 40h
+		cmp	di, BOSS_PARTICLE_COUNT
 		jl	short loc_D43F
 		mov	word_21D6E, 0
 
@@ -3971,22 +3971,22 @@ loc_D471:
 		jnz	short loc_D4BE
 		mov	ax, word_21D6E
 		shl	ax, 4
-		add	ax, 3CF8h
+		add	ax, offset _boss_particles
 		mov	si, ax
-		mov	word ptr [si], 0C00h
-		mov	word ptr [si+2], 0B80h
-		mov	word ptr [si+4], 0C00h
-		mov	word ptr [si+6], 0B80h
+		mov	[si+boss_particle_t.BP_pos.x], ((PLAYFIELD_W / 2) shl 4)
+		mov	[si+boss_particle_t.BP_pos.y], ((PLAYFIELD_H / 2) shl 4)
+		mov	[si+boss_particle_t.BP_origin.x], ((PLAYFIELD_W / 2) shl 4)
+		mov	[si+boss_particle_t.BP_origin.y], ((PLAYFIELD_H / 2) shl 4)
 		call	randring1_next16
-		mov	[si+0Eh], al
-		mov	word ptr [si+0Ch], 0
-		lea	ax, [si+8]
+		mov	[si+boss_particle_t.BP_angle], al
+		mov	[si+boss_particle_t.BP_age], 0
+		lea	ax, [si+boss_particle_t.BP_velocity]
 		push	ax
 		pushd	(0 shl 16) or 0
 		call	randring1_next16_and pascal, 3Fh
-		add	ax, 20h
+		add	ax, (2 shl 4)
 		push	ax
-		mov	al, [si+0Eh]
+		mov	al, [si+boss_particle_t.BP_angle]
 		mov	ah, 0
 		push	ax
 		call	vector2_at
@@ -4292,56 +4292,53 @@ loc_D6EE:
 loc_D707:
 		cmp	di, 2
 		jl	short loc_D6B1
-		mov	si, 3CF8h
+		mov	si, offset _boss_particles
 		xor	di, di
 		jmp	short loc_D746
 ; ---------------------------------------------------------------------------
 
 loc_D713:
-		push	1800h
-		call	randring1_next16_mod
-		mov	[si], ax
-		push	1800h
-		call	randring1_next16_mod
-		mov	[si+2],	ax
-		mov	ax, [si]
-		mov	[si+4],	ax
-		mov	word ptr [si+6], 0FFF0h
-		mov	word ptr [si+8], 0
-		mov	word ptr [si+0Ah], 0
-		push	3
-		call	randring1_next16_and
-		add	al, 0ACh ; '¬'
-		mov	[si+0Fh], al
+		call	randring1_next16_mod pascal, (PLAYFIELD_W shl 4)
+		mov	[si+boss_particle_t.BP_pos.x], ax
+		call	randring1_next16_mod pascal, (PLAYFIELD_W shl 4) ; Huh?
+		mov	[si+boss_particle_t.BP_pos.y], ax
+		mov	ax, [si+boss_particle_t.BP_pos.x]
+		mov	[si+boss_particle_t.BP_origin.x], ax
+		mov	[si+boss_particle_t.BP_origin.y], (-1 shl 4)
+		mov	[si+boss_particle_t.BP_velocity.x], 0
+		mov	[si+boss_particle_t.BP_velocity.y], 0
+		call	randring1_next16_and pascal, 3
+		add	al, PAT_PARTICLE
+		mov	[si+boss_particle_t.BP_patnum], al
 		inc	di
-		add	si, 10h
+		add	si, size boss_particle_t
 
 loc_D746:
-		cmp	di, 40h
+		cmp	di, BOSS_PARTICLE_COUNT
 		jl	short loc_D713
 		inc	byte_21D70
 		jmp	short loc_D770
 ; ---------------------------------------------------------------------------
 
 loc_D751:
-		mov	si, 3CF8h
+		mov	si, offset _boss_particles
 		xor	di, di
 		jmp	short loc_D76B
 ; ---------------------------------------------------------------------------
 
 loc_D758:
-		cmp	word ptr [si+0Ah], 0A0h
+		cmp	[si+boss_particle_t.BP_velocity.y], (10 shl 4)
 		jge	short loc_D767
 		mov	al, _stage_frame_mod2
 		mov	ah, 0
-		add	[si+0Ah], ax
+		add	[si+boss_particle_t.BP_velocity.y], ax
 
 loc_D767:
 		inc	di
-		add	si, 10h
+		add	si, size boss_particle_t
 
 loc_D76B:
-		cmp	di, 40h
+		cmp	di, BOSS_PARTICLE_COUNT
 		jl	short loc_D758
 
 loc_D770:
@@ -4509,42 +4506,42 @@ sub_D88D	proc near
 		push	si
 		cmp	byte_21D74, 0
 		jnz	short loc_D8B7
-		mov	si, 3CF8h
-		cmp	word ptr [si+0Ah], 0
+		mov	si, offset _boss_particles
+		cmp	[si+boss_particle_t.BP_velocity.y], 0
 		jge	short loc_D8B7
 		xor	dx, dx
 		jmp	short loc_D8AE
 ; ---------------------------------------------------------------------------
 
 loc_D8A5:
-		mov	word ptr [si+6], 1710h
+		mov	[si+boss_particle_t.BP_origin.y], ((PLAYFIELD_H + 1) shl 4)
 		inc	dx
-		add	si, 10h
+		add	si, size boss_particle_t
 
 loc_D8AE:
-		cmp	dx, 40h
+		cmp	dx, BOSS_PARTICLE_COUNT
 		jl	short loc_D8A5
 		inc	byte_21D74
 
 loc_D8B7:
-		mov	si, 3CF8h
+		mov	si, offset _boss_particles
 		xor	dx, dx
 		jmp	short loc_D8D1
 ; ---------------------------------------------------------------------------
 
 loc_D8BE:
-		cmp	word ptr [si+0Ah], 0FF60h
+		cmp	[si+boss_particle_t.BP_velocity.y], (-10 shl 4)
 		jle	short loc_D8CD
 		mov	al, _stage_frame_mod2
 		mov	ah, 0
-		sub	[si+0Ah], ax
+		sub	[si+boss_particle_t.BP_velocity.y], ax
 
 loc_D8CD:
 		inc	dx
-		add	si, 10h
+		add	si, size boss_particle_t
 
 loc_D8D1:
-		cmp	dx, 40h
+		cmp	dx, BOSS_PARTICLE_COUNT
 		jl	short loc_D8BE
 		pop	si
 		pop	bp
@@ -4731,55 +4728,55 @@ sub_D8D9	endp
 
 sub_DA25	proc near
 
-var_2		= word ptr -2
+@@cel		= word ptr -2
 
 		enter	2, 0
 		push	si
 		cmp	byte_21D75, 0
 		jnz	short loc_DA4F
-		mov	si, 3CF8h
+		mov	si, offset _boss_particles
 		xor	cx, cx
 		jmp	short loc_DA46
 ; ---------------------------------------------------------------------------
 
 loc_DA38:
-		mov	word ptr [si+6], 0F00h
-		mov	word ptr [si+0Ah], 0FFF0h
+		mov	[si+boss_particle_t.BP_origin.y], (240 shl 4)
+		mov	[si+boss_particle_t.BP_velocity.y], (-1 shl 4)
 		inc	cx
-		add	si, 10h
+		add	si, size boss_particle_t
 
 loc_DA46:
-		cmp	cx, 40h
+		cmp	cx, BOSS_PARTICLE_COUNT
 		jl	short loc_DA38
 		inc	byte_21D75
 
 loc_DA4F:
-		mov	si, 3CF8h
+		mov	si, offset _boss_particles
 		xor	cx, cx
 		jmp	short loc_DA7E
 ; ---------------------------------------------------------------------------
 
 loc_DA56:
-		mov	ax, [si+2]
-		mov	bx, 400h
+		mov	ax, [si+boss_particle_t.BP_pos.y]
+		mov	bx, (64 shl 4)
 		cwd
 		idiv	bx
-		mov	dx, 3
+		mov	dx, (PARTICLE_CELS - 1)
 		sub	dx, ax
-		mov	[bp+var_2], dx
-		cmp	[bp+var_2], 0
+		mov	[bp+@@cel], dx
+		cmp	[bp+@@cel], 0
 		jge	short loc_DA72
-		mov	[bp+var_2], 0
+		mov	[bp+@@cel], 0
 
 loc_DA72:
-		mov	al, byte ptr [bp+var_2]
-		add	al, 0ACh ; '¬'
-		mov	[si+0Fh], al
+		mov	al, byte ptr [bp+@@cel]
+		add	al, PAT_PARTICLE
+		mov	[si+boss_particle_t.BP_patnum], al
 		inc	cx
-		add	si, 10h
+		add	si, size boss_particle_t
 
 loc_DA7E:
-		cmp	cx, 40h
+		cmp	cx, BOSS_PARTICLE_COUNT
 		jl	short loc_DA56
 		pop	si
 		leave
@@ -28745,7 +28742,8 @@ word_2449C	dw ?
 byte_2451A	db ?
 		db 141 dup(?)
 byte_245A8	db ?
-		db 1327 dup(?)
+		db 303 dup(?)
+include th05/main/boss/render[bss].asm
 include th05/formats/bb_curvebullet[bss].asm
 include th05/formats/bb_load[bss].asm
 _invalidate_left_x_tile	dw ?

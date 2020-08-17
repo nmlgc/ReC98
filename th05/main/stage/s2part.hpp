@@ -1,5 +1,7 @@
 #define S2PARTICLE_COUNT 64
 
+// `s2` to differentiate this structure from `boss_particle_t`, which uses the
+// same sprites.
 typedef struct {
 	unsigned char flag;
 	unsigned char angle;
