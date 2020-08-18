@@ -75,12 +75,12 @@ void near tune_for_lunatic(void)
 	case BP_SINGLE_AIMED:
 		tmpl.pattern = BP_SPREAD_AIMED;
 		tmpl.count = 3;
-		tmpl.delta.spread_angle = to_sp(0.375f);
+		tmpl.delta.spread_angle = 0x06;
 		break;
 	case BP_SINGLE:
 		tmpl.pattern = BP_SPREAD;
 		tmpl.count = 3;
-		tmpl.delta.spread_angle = to_sp(0.375f);
+		tmpl.delta.spread_angle = 0x06;
 		break;
 
 	case BP_STACK:
