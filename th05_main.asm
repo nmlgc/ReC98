@@ -4029,59 +4029,11 @@ sub_D3C6	endp
 
 	GRCG_LINESET_LINE_PUT procdesc pascal near \
 		set:near ptr, i:word
+	LINESET_FORWARD_COPY procdesc pascal near \
+		set:near ptr
 main__TEXT	ends
 
 main_0_TEXT	segment	word public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D598	proc near
-
-@@set		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		mov	cx, [bp+@@set]
-		mov	dx, (LINESET_LINE_COUNT - 2)
-		jmp	short loc_D5DA
-; ---------------------------------------------------------------------------
-
-loc_D5A3:
-		mov	bx, dx
-		dec	bx
-		shl	bx, 2
-		add	bx, cx
-		mov	eax, dword ptr [bx+lineset_t.LS_center]
-		mov	bx, dx
-		shl	bx, 2
-		add	bx, cx
-		mov	dword ptr [bx+lineset_t.LS_center], eax
-		mov	bx, cx
-		add	bx, dx
-		mov	al, [bx+(lineset_t.LS_angle - 1)]
-		mov	bx, cx
-		add	bx, dx
-		mov	[bx+(lineset_t.LS_angle - 0)], al
-		mov	bx, dx
-		dec	bx
-		add	bx, bx
-		add	bx, cx
-		mov	ax, [bx+lineset_t.LS_radius]
-		mov	bx, dx
-		add	bx, bx
-		add	bx, cx
-		mov	[bx+lineset_t.LS_radius], ax
-		dec	dx
-
-loc_D5DA:
-		or	dx, dx
-		jg	short loc_D5A3
-		pop	bp
-		retn	2
-sub_D598	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4099,8 +4051,7 @@ sub_D5E2	proc near
 ; ---------------------------------------------------------------------------
 
 loc_D5F1:
-		push	si
-		call	sub_D598
+		call	lineset_forward_copy pascal, si
 		add	[si+lineset_t.LS_radius], (4 shl 4)
 		push	si
 		push	((192 shl 4) shl 16) or (184 shl 4)
@@ -4285,8 +4236,7 @@ var_2		= word ptr -2
 ; ---------------------------------------------------------------------------
 
 loc_D789:
-		push	si
-		call	sub_D598
+		call	lineset_forward_copy pascal, si
 		mov	ax, [si+lineset_t.LS_velocity_y]
 		add	[si+lineset_t.LS_center.y], ax
 		cmp	[si+lineset_t.LS_velocity_y], (-14 shl 4)
@@ -4469,8 +4419,7 @@ var_2		= word ptr -2
 ; ---------------------------------------------------------------------------
 
 loc_D8EE:
-		push	si
-		call	sub_D598
+		call	lineset_forward_copy pascal, si
 		mov	ax, [si+lineset_t.LS_velocity_y]
 		add	[si+lineset_t.LS_center.y], ax
 		cmp	[si+lineset_t.LS_velocity_y], (14 shl 4)

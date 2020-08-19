@@ -60,3 +60,13 @@ void pascal near grcg_lineset_line_put(lineset_t near &set, int i)
 
 	grcg_line(x1, y1, x2, y2);
 }
+
+// Copies lines [0; 17] to lines [1..18].
+void pascal near lineset_forward_copy(lineset_t near &set)
+{
+	for(int i = (LINESET_LINE_COUNT - 2); i > 0; i--) {
+		set.center[i] = set.center[i - 1];
+		set.angle[i] = set.angle[i - 1];
+		set.radius[i].v = set.radius[i - 1].v;
+	}
+}
