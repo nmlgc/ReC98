@@ -5510,7 +5510,7 @@ loc_E581:
 ; ---------------------------------------------------------------------------
 
 loc_E588:
-		call	gaiji_putca pascal, [bp+var_2], (12 shl 16) + 0B0h, TX_WHITE
+		call	gaiji_putca pascal, [bp+var_2], (12 shl 16) + gb_G_, TX_WHITE
 		push	1
 		call	frame_delay
 		call	text_putsa pascal, [bp+var_2], 12, ds, offset asc_22C3F, TX_WHITE
@@ -5524,7 +5524,7 @@ loc_E5B5:
 ; ---------------------------------------------------------------------------
 
 loc_E5C2:
-		call	gaiji_putca pascal, [bp+var_2], (12 shl 16) + 0B0h, TX_WHITE
+		call	gaiji_putca pascal, [bp+var_2], (12 shl 16) + gb_G_, TX_WHITE
 		push	1
 		call	frame_delay
 		call	text_putsa pascal, [bp+var_2], 12, ds, offset asc_22C42, TX_WHITE
@@ -5616,7 +5616,7 @@ var_1		= byte ptr -1
 		push	(33 shl 16) + 22
 		mov	al, [bp+var_2]
 		mov	ah, 0
-		add	ax, 0A0h
+		add	ax, gb_0_
 		push	ax
 		push	TX_GREEN
 		call	gaiji_putca
@@ -6637,7 +6637,7 @@ var_1		= byte ptr -1
 ; ---------------------------------------------------------------------------
 
 loc_EF0B:
-		call	gaiji_putca pascal, si, (13 shl 16) + 0D4h, TX_WHITE
+		call	gaiji_putca pascal, si, (13 shl 16) + gs_YINYANG, TX_WHITE
 		add	si, 2
 		inc	[bp+var_2]
 
@@ -6649,7 +6649,7 @@ loc_EF20:
 ; ---------------------------------------------------------------------------
 
 loc_EF2A:
-		call	gaiji_putca pascal, si, (13 shl 16) + 2, TX_WHITE
+		call	gaiji_putca pascal, si, (13 shl 16) + g_EMPTY, TX_WHITE
 		add	si, 2
 		inc	[bp+var_2]
 
@@ -6666,16 +6666,16 @@ loc_EF47:
 		push	(68 shl 16) + 13
 		mov	al, [bp+var_1]
 		cbw
-		mov	bx, 0Ah
+		mov	bx, 10
 		cwd
 		idiv	bx
-		add	ax, 0A0h
+		add	ax, gb_0_
 		push	ax
 		push	TX_WHITE
 		call	gaiji_putca
 		mov	al, [bp+var_1]
 		cbw
-		mov	bx, 0Ah
+		mov	bx, 10
 		cwd
 		idiv	bx
 		mov	[bp+var_1], dl
@@ -6684,7 +6684,7 @@ loc_EF88:
 		push	(70 shl 16) + 13
 		mov	al, [bp+var_1]
 		cbw
-		add	ax, 0A0h
+		add	ax, gb_0_
 		push	ax
 		push	TX_WHITE
 		call	gaiji_putca
@@ -6720,7 +6720,7 @@ var_1		= byte ptr -1
 ; ---------------------------------------------------------------------------
 
 loc_EFC3:
-		call	gaiji_putca pascal, si, (11 shl 16) + 0D3h, TX_WHITE
+		call	gaiji_putca pascal, si, (11 shl 16) + gs_BOMB, TX_WHITE
 		add	si, 2
 		inc	[bp+var_2]
 
@@ -6732,7 +6732,7 @@ loc_EFD8:
 ; ---------------------------------------------------------------------------
 
 loc_EFE2:
-		call	gaiji_putca pascal, si, (11 shl 16) + 2, TX_WHITE
+		call	gaiji_putca pascal, si, (11 shl 16) + g_EMPTY, TX_WHITE
 		add	si, 2
 		inc	[bp+var_2]
 
@@ -6752,16 +6752,16 @@ loc_EFFF:
 		push	(68 shl 16) + 11
 		mov	al, [bp+var_1]
 		cbw
-		mov	bx, 0Ah
+		mov	bx, 10
 		cwd
 		idiv	bx
-		add	ax, 0A0h
+		add	ax, gb_0_
 		push	ax
 		push	TX_WHITE
 		call	gaiji_putca
 		mov	al, [bp+var_1]
 		cbw
-		mov	bx, 0Ah
+		mov	bx, 10
 		cwd
 		idiv	bx
 		mov	[bp+var_1], dl
@@ -6770,7 +6770,7 @@ loc_F04B:
 		push	(70 shl 16) + 11
 		mov	al, [bp+var_1]
 		cbw
-		add	ax, 0A0h
+		add	ax, gb_0_
 		push	ax
 		push	TX_WHITE
 		call	gaiji_putca
@@ -6994,11 +6994,11 @@ loc_F276:
 loc_F280:
 		push	TX_YELLOW
 		call	gaiji_putsa
-		call	gaiji_putca pascal, (58 shl 16) + 15, (0E6h shl 16) + TX_YELLOW
+		call	gaiji_putca pascal, (58 shl 16) + 15, (gs_TEN shl 16) + TX_YELLOW
 		call	main_01:hud_point_items_put
-		call	gaiji_putca pascal, (58 shl 16) + 17, (0E7h shl 16) + TX_YELLOW
+		call	gaiji_putca pascal, (58 shl 16) + 17, (gs_YUME shl 16) + TX_YELLOW
 		call	main_01:hud_dream_put
-		call	gaiji_putca pascal, (58 shl 16) + 19, (0E8h shl 16) + TX_YELLOW
+		call	gaiji_putca pascal, (58 shl 16) + 19, (gs_TAMA shl 16) + TX_YELLOW
 		call	main_01:hud_graze_put
 		les	bx, _resident
 		cmp	es:[bx+resident_t.playchar_ascii], '0' + PLAYCHAR_REIMU
@@ -29675,7 +29675,7 @@ arg_4		= word ptr  8
 		enter	12h, 0
 		push	si
 		push	di
-		mov	[bp+var_E], 0F4240h
+		mov	[bp+var_E], 1000000
 		xor	si, si
 		xor	di, di
 		jmp	short loc_1D4EA
@@ -29694,16 +29694,16 @@ loc_1D4A2:
 		or	di, di
 		jz	short loc_1D4D1
 		mov	al, byte ptr [bp+var_12]
-		add	al, 0A0h
+		add	al, gb_0_
 		mov	[bp+si+var_A], al
 		jmp	short loc_1D4D5
 ; ---------------------------------------------------------------------------
 
 loc_1D4D1:
-		mov	[bp+si+var_A], 2
+		mov	[bp+si+var_A], g_EMPTY
 
 loc_1D4D5:
-		mov	ebx, 0Ah
+		mov	ebx, 10
 		mov	eax, [bp+var_E]
 		xor	edx, edx
 		div	ebx
@@ -29714,9 +29714,9 @@ loc_1D4EA:
 		cmp	[bp+var_E], 1
 		ja	short loc_1D4A2
 		mov	al, byte ptr [bp+arg_0]
-		add	al, 0A0h
+		add	al, gb_0_
 		mov	[bp+var_4], al
-		mov	[bp+var_3], 0A0h
+		mov	[bp+var_3], gb_0_
 		mov	[bp+var_2], 0
 		push	34
 		push	[bp+arg_4]
@@ -29750,7 +29750,7 @@ arg_4		= word ptr  0Ah
 		enter	0Ah, 0
 		push	si
 		push	di
-		mov	si, 2710h
+		mov	si, 10000
 		xor	di, di
 		mov	[bp+var_A], 0
 		jmp	short loc_1D565
@@ -29770,16 +29770,16 @@ loc_1D52B:
 		cmp	[bp+var_A], 0
 		jz	short loc_1D555
 		mov	al, byte ptr [bp+var_8]
-		add	al, 0A0h
+		add	al, gb_0_
 		mov	[bp+di+var_6], al
 		jmp	short loc_1D559
 ; ---------------------------------------------------------------------------
 
 loc_1D555:
-		mov	[bp+di+var_6], 2
+		mov	[bp+di+var_6], g_EMPTY
 
 loc_1D559:
-		mov	bx, 0Ah
+		mov	bx, 10
 		mov	ax, si
 		xor	dx, dx
 		div	bx
@@ -29790,7 +29790,7 @@ loc_1D565:
 		cmp	si, 1
 		ja	short loc_1D52B
 		mov	al, byte ptr [bp+arg_0]
-		add	al, 0A0h
+		add	al, gb_0_
 		mov	[bp+var_2], al
 		mov	[bp+var_1], 0
 		push	[bp+arg_4]

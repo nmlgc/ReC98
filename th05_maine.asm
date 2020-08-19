@@ -2887,7 +2887,7 @@ arg_4		= word ptr  8
 		push	ax
 		mov	bx, di
 		imul	bx, 11h
-		mov	al, [bx+si+14EEh]
+		mov	al, gALPHABET[bx+si]
 		mov	ah, 0
 		push	ax
 		push	[bp+arg_0]
@@ -3662,7 +3662,7 @@ loc_C376:
 		mov	bx, [bp+var_4]
 		imul	bx, 11h
 		add	bx, [bp+var_6]
-		mov	al, [bx+14EEh]
+		mov	al, gALPHABET[bx]
 		mov	ah, 0
 		push	ax
 		push	TX_WHITE

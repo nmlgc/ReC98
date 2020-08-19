@@ -6893,7 +6893,7 @@ loc_F9AA:
 ; ---------------------------------------------------------------------------
 
 loc_F9B1:
-		call	gaiji_putca pascal, [bp+var_2], (12 shl 16) + 0B0h, TX_WHITE
+		call	gaiji_putca pascal, [bp+var_2], (12 shl 16) + gb_G_, TX_WHITE
 		push	1
 		call	frame_delay
 		call	text_putsa pascal, [bp+var_2], 12, ds, offset asc_226B3, TX_WHITE
@@ -6907,7 +6907,7 @@ loc_F9DE:
 ; ---------------------------------------------------------------------------
 
 loc_F9EB:
-		call	gaiji_putca pascal, [bp+var_2], (12 shl 16) + 0B0h, TX_WHITE
+		call	gaiji_putca pascal, [bp+var_2], (12 shl 16) + gb_G_, TX_WHITE
 		push	1
 		call	frame_delay
 		call	text_putsa pascal, [bp+var_2], 12, ds, offset asc_226B6, TX_WHITE
@@ -6999,7 +6999,7 @@ var_1		= byte ptr -1
 		push	(33 shl 16) + 22
 		mov	al, [bp+var_2]
 		mov	ah, 0
-		add	ax, 0A0h
+		add	ax, gb_0_
 		push	ax
 		push	TX_GREEN
 		call	gaiji_putca
@@ -7526,7 +7526,7 @@ var_1		= byte ptr -1
 ; ---------------------------------------------------------------------------
 
 loc_10425:
-		call	gaiji_putca pascal, si, (13 shl 16) + 0D4h, TX_WHITE
+		call	gaiji_putca pascal, si, (13 shl 16) + gs_YINYANG, TX_WHITE
 		add	si, 2
 		inc	[bp+var_2]
 
@@ -7555,16 +7555,16 @@ loc_10461:
 		push	(68 shl 16) + 13
 		mov	al, [bp+var_1]
 		cbw
-		mov	bx, 0Ah
+		mov	bx, 10
 		cwd
 		idiv	bx
-		add	ax, 0A0h
+		add	ax, gb_0_
 		push	ax
 		push	TX_WHITE
 		call	gaiji_putca
 		mov	al, [bp+var_1]
 		cbw
-		mov	bx, 0Ah
+		mov	bx, 10
 		cwd
 		idiv	bx
 		mov	[bp+var_1], dl
@@ -7573,7 +7573,7 @@ loc_104A2:
 		push	(70 shl 16) + 13
 		mov	al, [bp+var_1]
 		cbw
-		add	ax, 0A0h
+		add	ax, gb_0_
 		push	ax
 		push	TX_WHITE
 		call	gaiji_putca
@@ -7608,7 +7608,7 @@ var_1		= byte ptr -1
 ; ---------------------------------------------------------------------------
 
 loc_104D8:
-		call	gaiji_putca pascal, si, (11 shl 16) + 0D3h, TX_WHITE
+		call	gaiji_putca pascal, si, (11 shl 16) + gs_BOMB, TX_WHITE
 		add	si, 2
 		inc	[bp+var_2]
 
@@ -7620,7 +7620,7 @@ loc_104ED:
 ; ---------------------------------------------------------------------------
 
 loc_104F7:
-		call	gaiji_putca pascal, si, (11 shl 16) + 2, TX_WHITE
+		call	gaiji_putca pascal, si, (11 shl 16) + g_EMPTY, TX_WHITE
 		add	si, 2
 		inc	[bp+var_2]
 
@@ -7639,16 +7639,16 @@ loc_10514:
 		push	(68 shl 16) + 11
 		mov	al, [bp+var_1]
 		cbw
-		mov	bx, 0Ah
+		mov	bx, 10
 		cwd
 		idiv	bx
-		add	ax, 0A0h
+		add	ax, gb_0_
 		push	ax
 		push	TX_WHITE
 		call	gaiji_putca
 		mov	al, [bp+var_1]
 		cbw
-		mov	bx, 0Ah
+		mov	bx, 10
 		cwd
 		idiv	bx
 		mov	[bp+var_1], dl
@@ -7657,7 +7657,7 @@ loc_1055B:
 		push	(70 shl 16) + 11
 		mov	al, [bp+var_1]
 		cbw
-		add	ax, 0A0h
+		add	ax, gb_0_
 		push	ax
 		push	TX_WHITE
 		call	gaiji_putca

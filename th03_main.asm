@@ -8469,9 +8469,9 @@ arg_4		= word ptr  8
 		push	di
 		mov	di, [bp+arg_4]
 		mov	si, [bp+arg_0]
-		cmp	si, 0Ah
+		cmp	si, 10
 		jl	short loc_E3CE
-		cmp	si, 64h	; 'd'
+		cmp	si, 100
 		jl	short loc_E39F
 		lea	ax, [di+12h]
 		push	ax
@@ -8482,10 +8482,10 @@ arg_4		= word ptr  8
 		idiv	bx
 		push	ax
 		mov	ax, si
-		mov	bx, 64h	; 'd'
+		mov	bx, 100
 		cwd
 		idiv	bx
-		add	ax, 0A0h
+		add	ax, gb_0_
 		push	ax
 		push	TX_WHITE
 		call	gaiji_putca
@@ -8505,10 +8505,10 @@ loc_E39F:
 		idiv	bx
 		push	ax
 		mov	ax, si
-		mov	bx, 0Ah
+		mov	bx, 10
 		cwd
 		idiv	bx
-		add	ax, 0A0h
+		add	ax, gb_0_
 		push	ax
 		push	TX_WHITE
 		call	gaiji_putca
@@ -8527,7 +8527,7 @@ loc_E3CE:
 		cwd
 		idiv	bx
 		push	ax
-		lea	ax, [si+0A0h]
+		lea	ax, [si+gb_0_]
 		push	ax
 		push	TX_WHITE
 		call	gaiji_putca

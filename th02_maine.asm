@@ -499,7 +499,7 @@ sub_9846	proc near
 
 var_2		= byte ptr -2
 var_1		= byte ptr -1
-arg_0		= dword	ptr  4
+@@g_str		= dword	ptr  4
 arg_4		= word ptr  8
 
 		enter	2, 0
@@ -528,18 +528,18 @@ loc_986B:
 		jnz	short loc_9885
 
 loc_9876:
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@g_str]
 		add	bx, cx
 		mov	al, [bp+var_1]
-		add	al, 0A0h
+		add	al, gb_0_
 		mov	es:[bx], al
 		jmp	short loc_988E
 ; ---------------------------------------------------------------------------
 
 loc_9885:
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@g_str]
 		add	bx, cx
-		mov	byte ptr es:[bx], 0CFh ; 'Ï'
+		mov	byte ptr es:[bx], gb_SP
 
 loc_988E:
 		mov	al, [bp+var_1]
@@ -547,7 +547,7 @@ loc_988E:
 		imul	si
 		sub	di, ax
 		inc	cx
-		mov	bx, 0Ah
+		mov	bx, 10
 		mov	ax, si
 		cwd
 		idiv	bx
@@ -556,7 +556,7 @@ loc_988E:
 loc_98A1:
 		cmp	cx, 3
 		jl	short loc_985A
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@g_str]
 		add	bx, cx
 		mov	byte ptr es:[bx], 0
 		pop	di

@@ -11,6 +11,7 @@ typedef enum {
 	gaiji_boldfont(0xA0),
 
 	gb_SP = 0xCF,
+	gs_NOTES = 0xD8, // ♫
 	gs_BULLET = 0xDA, // •
 	gs_PERIOD, // .
 	gs_EXCLAMATION, // !

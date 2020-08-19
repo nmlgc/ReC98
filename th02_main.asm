@@ -2192,7 +2192,7 @@ loc_B4D7:
 		mov	bx, 5
 		cwd
 		idiv	bx
-		add	dl, 0A1h
+		add	dl, gb_1_
 		mov	gStage1+5, dl
 		mov	al, _stage_id
 		cbw
@@ -3124,7 +3124,7 @@ bgm_show	proc near
 		jz	short loc_C108
 		cmp	bgm_show_timer, 1
 		jnz	short loc_C0E6
-		call	gaiji_putca pascal, (24 shl 16) + 23, (0D8h shl 16) + TX_YELLOW
+		call	gaiji_putca pascal, (24 shl 16) + 23, (gs_NOTES shl 16) + TX_YELLOW
 		push	(26 shl 16) + 23
 		push	ds
 		mov	al, _bgm_title_id
@@ -3412,7 +3412,7 @@ loc_C400:
 		call	sub_C2F4
 		call	gaiji_putsa pascal, (18 shl 16) + 20, ds, offset gCREDIT, TX_GREEN
 		les	bx, _resident
-		mov	ax, 0A3h ; '£'
+		mov	ax, gb_3_
 		sub	ax, es:[bx+mikoconfig_t.continues_used]
 		mov	si, ax
 		call	gaiji_putca pascal, (32 shl 16) + 20, ax, TX_GREEN
@@ -6905,7 +6905,7 @@ loc_DF7E:
 		mov	ax, si
 		add	ax, ax
 		add	ax, 62
-		call	gaiji_putca pascal, ax, (17 shl 16) + 2, TX_WHITE
+		call	gaiji_putca pascal, ax, (17 shl 16) + gs_YINYANG, TX_WHITE
 		inc	si
 
 loc_DF95:
@@ -6923,7 +6923,7 @@ loc_DFA5:
 		mov	ax, si
 		add	ax, ax
 		add	ax, 62
-		call	gaiji_putca pascal, ax, (17 shl 16) + 0CFh, TX_WHITE
+		call	gaiji_putca pascal, ax, (17 shl 16) + gb_SP, TX_WHITE
 		inc	si
 
 loc_DFBC:
@@ -6951,7 +6951,7 @@ loc_DFCC:
 		mov	ax, si
 		add	ax, ax
 		add	ax, 62
-		call	gaiji_putca pascal, ax, (15 shl 16) + 3, TX_WHITE
+		call	gaiji_putca pascal, ax, (15 shl 16) + gs_BOMB, TX_WHITE
 		inc	si
 
 loc_DFE3:
@@ -6969,7 +6969,7 @@ loc_DFF3:
 		mov	ax, si
 		add	ax, ax
 		add	ax, 62
-		call	gaiji_putca pascal, ax, (15 shl 16) + 0CFh, TX_WHITE
+		call	gaiji_putca pascal, ax, (15 shl 16) + gb_SP, TX_WHITE
 		inc	si
 
 loc_E00A:
@@ -9358,25 +9358,25 @@ sub_FB42	proc near
 var_B		= byte ptr -0Bh
 var_A		= dword	ptr -0Ah
 var_6		= dword	ptr -6
-var_2		= word ptr -2
+@@gaiji		= word ptr -2
 arg_0		= dword	ptr  4
 arg_4		= word ptr  8
-arg_6		= word ptr  0Ah
-arg_8		= word ptr  0Ch
+@@tram_y		= word ptr  0Ah
+@@tram_x		= word ptr  0Ch
 
 		enter	0Ch, 0
 		push	si
 		push	di
 		mov	di, [bp+arg_4]
-		mov	[bp+var_2], 0A0h
-		mov	[bp+var_6], 989680h
+		mov	[bp+@@gaiji], gb_0_
+		mov	[bp+var_6], 10000000
 		mov	[bp+var_B], 0
 		mov	si, 8
 		jmp	short loc_FB75
 ; ---------------------------------------------------------------------------
 
 loc_FB61:
-		mov	ebx, 0Ah
+		mov	ebx, 10
 		mov	eax, [bp+var_6]
 		cdq
 		idiv	ebx
@@ -9394,7 +9394,7 @@ loc_FB7D:
 		mov	eax, [bp+arg_0]
 		cdq
 		idiv	[bp+var_6]
-		mov	ebx, 0Ah
+		mov	ebx, 10
 		cdq
 		idiv	ebx
 		mov	[bp+var_A], edx
@@ -9403,8 +9403,8 @@ loc_FB7D:
 		idiv	ebx
 		mov	[bp+var_6], eax
 		mov	ax, word ptr [bp+var_A]
-		add	ax, 0A0h
-		mov	[bp+var_2], ax
+		add	ax, gb_0_
+		mov	[bp+@@gaiji], ax
 		cmp	[bp+var_A], 0
 		jz	short loc_FBB7
 		mov	[bp+var_B], 1
@@ -9420,8 +9420,8 @@ loc_FBC2:
 		jz	short loc_FBDE
 		mov	ax, si
 		add	ax, ax
-		add	ax, [bp+arg_8]
-		call	gaiji_putca pascal, ax, [bp+arg_6], [bp+var_2], TX_WHITE
+		add	ax, [bp+@@tram_x]
+		call	gaiji_putca pascal, ax, [bp+@@tram_y], [bp+@@gaiji], TX_WHITE
 
 loc_FBDE:
 		inc	si
@@ -32704,14 +32704,14 @@ sub_1C713	proc far
 var_B		= byte ptr -0Bh
 var_A		= dword	ptr -0Ah
 var_6		= dword	ptr -6
-var_2		= word ptr -2
-arg_0		= word ptr  6
+@@gaiji		= word ptr -2
+@@atrb		= word ptr  6
 arg_2		= dword	ptr  8
-arg_6		= word ptr  0Ch
+@@tram_y		= word ptr  0Ch
 
 		enter	0Ch, 0
 		push	si
-		mov	[bp+var_6], 989680h
+		mov	[bp+var_6], 10000000
 		mov	[bp+var_B], 0
 		mov	si, 1Ah
 		jmp	short loc_1C77B
@@ -32721,7 +32721,7 @@ loc_1C729:
 		mov	eax, [bp+arg_2]
 		cdq
 		idiv	[bp+var_6]
-		mov	ebx, 0Ah
+		mov	ebx, 10
 		cdq
 		idiv	ebx
 		mov	[bp+var_A], edx
@@ -32730,8 +32730,8 @@ loc_1C729:
 		idiv	ebx
 		mov	[bp+var_6], eax
 		mov	ax, word ptr [bp+var_A]
-		add	ax, 0A0h
-		mov	[bp+var_2], ax
+		add	ax, gb_0_
+		mov	[bp+@@gaiji], ax
 		cmp	[bp+var_A], 0
 		jz	short loc_1C763
 		mov	[bp+var_B], 1
@@ -32739,7 +32739,7 @@ loc_1C729:
 loc_1C763:
 		cmp	[bp+var_B], 0
 		jz	short loc_1C778
-		call	gaiji_putca pascal, si, [bp+arg_6], [bp+var_2], [bp+arg_0]
+		call	gaiji_putca pascal, si, [bp+@@tram_y], [bp+@@gaiji], [bp+@@atrb]
 
 loc_1C778:
 		add	si, 2
@@ -32853,7 +32853,7 @@ loc_1C83F:
 		push	ax
 		mov	al, [si+7903h]
 		mov	ah, 0
-		add	ax, 0A0h
+		add	ax, gb_0_
 		push	ax
 		jmp	short loc_1C88A
 ; ---------------------------------------------------------------------------
@@ -32862,7 +32862,7 @@ loc_1C881:
 		push	44
 		lea	ax, [si+6]
 		push	ax
-		push	0F0h
+		push	gs_ALL
 
 loc_1C88A:
 		push	di
@@ -32892,18 +32892,18 @@ loc_1C8A7:
 		push	6
 		lea	ax, [si+6]
 		push	ax
-		lea	ax, [si+0A1h]
+		lea	ax, [si+gb_1_]
 		push	ax
 		jmp	short loc_1C8D1
 ; ---------------------------------------------------------------------------
 
 loc_1C8B9:
 		push	(5 shl 16) + 15
-		push	0A1h
+		push	gb_1_
 		push	di
 		call	gaiji_putca
 		push	(7 shl 16) + 15
-		push	0A0h
+		push	gb_0_
 
 loc_1C8D1:
 		push	di
@@ -32944,7 +32944,7 @@ arg_4		= word ptr  8
 		push	ax
 		mov	bx, di
 		imul	bx, 11h
-		mov	al, [bx+si+1351h]
+		mov	al, gALPHABET[bx+si]
 		mov	ah, 0
 		push	ax
 		push	[bp+arg_0]

@@ -10,3 +10,4 @@ gb_6_ = GB_DIGITS + 6
 gb_7_ = GB_DIGITS + 7
 gb_8_ = GB_DIGITS + 8
 gb_9_ = GB_DIGITS + 9
+gb_G_ = 0B0h
