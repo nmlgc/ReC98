@@ -30,11 +30,13 @@ public:
 		this->v -= static_cast<T>(to_sp(screen_v));
 	}
 
-	void operator =(float screen_v) {
+	// No overloads of `operator =()`, since the class needs to be trivially
+	// copyable.
+	void set(float screen_v) {
 		v = static_cast<T>(to_sp(screen_v));
 	}
 
-	void operator =(const T &screen_v) {
+	void set(const T &screen_v) {
 		v = TO_SP(screen_v);
 	}
 
@@ -55,13 +57,8 @@ template <class T> struct SPPointBase {
 	T x, y;
 
 	void set(float screen_x, float screen_y) {
-		x = screen_x;
-		y = screen_y;
-	}
-
-	void set(const T &screen_x, const T &screen_y) {
-		x = screen_x;
-		y = screen_y;
+		x.set(screen_x);
+		y.set(screen_y);
 	}
 };
 

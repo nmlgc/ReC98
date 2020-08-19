@@ -130,6 +130,47 @@ case it's part of an arithmetic expression that was promoted to `int`.
                  // Note the opposite order of variables!
   ```
 
+* For trivially copyable structures, copy assignments are optimized to an
+  equivalent of `memcpy()`:
+
+  | Structure size | (no flags)  |  -G                  |
+  |----------------|-------------|----------------------|
+  |              1 | via `AL`    | via `AL`             |
+  |              2 | via `AX`    | via `AX`             |
+  |              3 | `SCOPY@`    | via `AX` and `AL`    |
+  |              4 | via `DX:AX` | via `DX:AX`          |
+  |        5, 7, 9 | `SCOPY@`    | via `AX` and `AL`    |
+  |           6, 8 | `SCOPY@`    | via `AX`             |
+  |  10, 12, 14, … | `SCOPY@`    | `REP MOVSW`          |
+  |  11, 13, 15, … | `SCOPY@`    | `REP MOVSW`, `MOVSB` |
+
+  (With the `-3` flag, `EAX` is used instead of `DX:AX` in the 4-byte case,
+  but everything else stays the same.)
+
+  Breaking triviality by overloading `operator =` in any of the structure
+  members also breaks this optimization. In some cases, it might be possible
+  to recreate it, by simulating triviality in an overloaded copy assignment
+  operator inside the class in question:
+
+  ```c++
+  struct Nontrivial {
+    nontrivial_char_t e[100];
+    // Functions containing local classes aren't expanded inline, so...
+    struct Trivial {
+      char e[100];
+    };
+
+    void operator =(const Nontrivial &other) {
+      reinterpret_cast<Trivial &>(*this) = (
+          reinterpret_cast<const Trivial &>(other)
+      );
+    }
+  };
+  ```
+
+  However, this only generates identical code to the original optimization if
+  passing the `other` parameter can be inlined, which isn't always the case.
+
 ## `switch` statements
 
 * Sequence of the individual cases is identical in both C and ASM

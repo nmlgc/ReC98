@@ -102,7 +102,7 @@ void pascal near shot_yuuka_l4(void)
 					sai.i = 1;
 				}
 			}
-			shot->pos.velocity.y = 2.0f;
+			shot->pos.velocity.y.set(2.0f);
 			shot->set_option_sprite_and_damage(6);
 		}
 		shot_velocity_set(&shot->pos.velocity, sai.angle);

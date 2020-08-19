@@ -40,7 +40,7 @@ void pascal near stage2_setup(void)
 	midboss_render_func = midboss2_render;
 	midboss.frames_until = 2750;
 	midboss.pos.init(192, -32);
-	midboss.pos.velocity.set(0, 0.5f);
+	midboss.pos.velocity.set(0.0f, 0.5f);
 	midboss.hp = 1400;
 	midboss.sprite = 202;
 
@@ -67,7 +67,7 @@ void pascal near stage3_setup(void)
 	midboss_render_func = midboss3_render;
 	midboss.frames_until = 5750;
 	midboss.pos.init(192, -32);
-	midboss.pos.velocity.set(0, 0.5f);
+	midboss.pos.velocity.set(0.0f, 0.5f);
 	midboss.hp = 1400;
 	midboss.sprite = 208;
 
@@ -97,7 +97,7 @@ void pascal near stage4_setup(void)
 	midboss_render_func = midboss4_render;
 	midboss.frames_until = 3900;
 	midboss.pos.init(192, -32);
-	midboss.pos.velocity.set(0, 0.5f);
+	midboss.pos.velocity.set(0.0f, 0.5f);
 	midboss.hp = 1100;
 	midboss.sprite = 208;
 
@@ -126,7 +126,7 @@ void pascal near stage5_setup(void)
 	midboss_render_func = midboss5_render;
 	midboss.frames_until = 4800;
 	midboss.pos.init(192, -32);
-	midboss.pos.velocity.set(0, 0.5f);
+	midboss.pos.velocity.set(0.0f, 0.5f);
 	midboss.hp = 1550;
 	midboss.sprite = 212;
 

@@ -82,7 +82,7 @@ bool16 pattern_velocity_set(
 	switch(pattern) {
 	case PP_1:
 		ret_y.v = speed;
-		ret_x = 0.0f;
+		ret_x.set(0.0f);
 		done = true;
 		break;
 	case PP_1_AIMED:
@@ -179,7 +179,7 @@ inline subpixel_t base_speed_for_rank(void)
 #define pellet_init(pellet, left, top, pattern) \
 	pellet->decay_frame = 0; \
 	pellet->cur_left.v = TO_SP(left); \
-	pellet->cur_top = top; \
+	pellet->cur_top.v = TO_SP(top); \
 	pellet->cloud_left = left; \
 	pellet->cloud_top = top; \
 	if(spawn_with_cloud) { \
@@ -271,7 +271,7 @@ void CPellets::add_single(
 		p->age = 0;
 		alive_count++;
 		p->spin_center.x.v = TO_SP(spin_center_x);
-		p->spin_center.y = spin_center_y;
+		p->spin_center.y.v = TO_SP(spin_center_y);
 		if(motion_type == PM_SPIN) {
 			vector2(vel_x.v, vel_y.v, speed_for_motion_fixed, angle);
 			p->spin_velocity.x.v = vel_x.v;
@@ -339,27 +339,27 @@ void CPellets::motion_type_apply_for_cur(void)
 			|| (p->cur_top.v <= to_sp(PELLET_BOUNCE_TOP_MIN))
 		) {
 			p->velocity.x.v = -p->velocity.x.v;
-			p->velocity.y = 0.0f;
+			p->velocity.y.set(0.0f);
 			p->motion_type = PM_GRAVITY;
 			// Nope, this doesn't help.
 			if(p->cur_left.v <= to_sp(PELLET_LEFT_MIN)) {
-				p->cur_left = (PELLET_LEFT_MIN + 1.0f);
+				p->cur_left.set(PELLET_LEFT_MIN + 1.0f);
 			}
 			if(p->cur_left.v >= to_sp(PELLET_LEFT_MAX)) {
-				p->cur_left = (PELLET_LEFT_MAX - 1.0f);
+				p->cur_left.set(PELLET_LEFT_MAX - 1.0f);
 			}
 			if(p->cur_top.v <= to_sp(PELLET_TOP_MIN)) {
-				p->cur_top = (PELLET_TOP_MIN + 1.0f);
+				p->cur_top.set(PELLET_TOP_MIN + 1.0f);
 			}
 		}
 		break;
 	case PM_FALL_STRAIGHT_FROM_TOP_THEN_NORMAL:
 		if(p->cur_top.to_screen() <= PELLET_BOUNCE_TOP_MIN) {
-			p->velocity.x = 0.0f;
+			p->velocity.x.set(0.0f);
 			p->velocity.y.v = p->speed.v;
 			p->motion_type = PM_NORMAL;
 			if(p->cur_top.to_screen() <= PLAYFIELD_TOP) {
-				p->cur_top = (PLAYFIELD_TOP + 1.0f);
+				p->cur_top.set(PLAYFIELD_TOP + 1.0f);
 			}
 		}
 		break;
@@ -370,8 +370,7 @@ void CPellets::motion_type_apply_for_cur(void)
 		p->cur_top.v = (to_spin_circle(Sin8(p->angle)) + p->spin_center.y.v);
 		p->spin_center.x.v += p->spin_velocity.x.v;
 		p->spin_center.y.v += p->spin_velocity.y.v;
-		p->velocity.x = 0.0f;
-		p->velocity.y = 0.0f;
+		p->velocity.set(0.0f, 0.0f);
 		p->angle += PELLET_SPIN_DELTA_ANGLE;
 		#undef to_spin_circle
 		break;
