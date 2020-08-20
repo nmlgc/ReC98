@@ -9,7 +9,7 @@ extern "C" {
 #include "th01/main/bullet/pellet_c.hpp"
 #include "th01/sprites/pellet_c.h"
 
-void pellet_cloud_put_8(int left, int top, int col, int cel)
+void pellet_cloud_put_8(screen_x_t left, vram_y_t top, int col, int cel)
 {
 	uint16_t vram_offset = vram_offset_shift(left, top);
 
@@ -26,7 +26,7 @@ void pellet_cloud_put_8(int left, int top, int col, int cel)
 	grcg_off();
 }
 
-void pellet_cloud_unput_8(int left, int top, int cel)
+void pellet_cloud_unput_8(screen_x_t left, vram_y_t top, int cel)
 {
 	planar_t(PELLET_CLOUD_W) page1;
 	uint16_t vram_offset = vram_offset_shift(left, top);

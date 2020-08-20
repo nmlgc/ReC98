@@ -19,6 +19,6 @@
 
 #define PLAYFIELD_VRAM_W_BORDERED (PLAYFIELD_W_BORDERED / BYTE_DOTS)
 
-extern int playfield_fg_shift_x[PLAYFIELD_COUNT];
+extern screen_x_t playfield_fg_shift_x[PLAYFIELD_COUNT];
 
-int pascal playfield_fg_x_to_screen(Subpixel x, unsigned int pid);
+screen_x_t pascal playfield_fg_x_to_screen(Subpixel x, unsigned int pid);

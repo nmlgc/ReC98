@@ -46,10 +46,10 @@ extern curvebullet_trail_t curvebullet_trails[CURVEBULLET_COUNT + 1];
 // given position. Assumptions:
 // • ES is already be set to the beginning of a VRAM segment
 // • The GRCG is active, and set to the intended color
-// Beware, [top] is actually interpreted as unsigned! [top] must therefore be
-// between 0 and (RES_Y - 1).
+// Beware, [top] is actually interpreted as an unsigned screen-space
+// coordinate! [top] must therefore be between 0 and (RES_Y - 1).
 void __fastcall near curvebullet_put(
-	unsigned int left, unsigned int top, int sprite
+	uscreen_x_t left, uscreen_y_t top, int sprite
 );
 
 void pascal near curvebullets_add();

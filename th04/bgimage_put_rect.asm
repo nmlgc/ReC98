@@ -3,8 +3,8 @@ bgimage_put_rect	proc far
 
 @@h	= word ptr  6
 @@w	= word ptr  8
-@@y	= word ptr  0Ah
-@@x	= word ptr  0Ch
+@@top	= word ptr  0Ah
+@@left	= word ptr  0Ch
 
 	push	bp
 	mov	bp, sp
@@ -12,8 +12,8 @@ bgimage_put_rect	proc far
 	push	si
 	push	ds
 	cld
-	mov	ax, [bp+@@x]
-	mov	dx, [bp+@@y]
+	mov	ax, [bp+@@left]
+	mov	dx, [bp+@@top]
 	mov	bx, ax
 	sar	bx, 4
 	shl	bx, 1

@@ -2,8 +2,8 @@ public PI_SLOT_PUT_MASK
 pi_slot_put_mask	proc far
 @@mask_id	= word ptr  6
 @@slot	= word ptr  8
-@@y	= word ptr  0Ah
-@@x	= word ptr  0Ch
+@@top	= word ptr  0Ah
+@@left	= word ptr  0Ch
 
 	push	bp
 	mov	bp, sp
@@ -15,8 +15,8 @@ pi_slot_put_mask	proc far
 	les	si, _pi_slot_buffers[si]
 	assume es:nothing
 	imul	di, size PiHeader
-	push	[bp+@@x]
-	push	[bp+@@y]
+	push	[bp+@@left]
+	push	[bp+@@top]
 	mov	ax, _pi_slot_headers._xsize[di]
 	push	ax
 	shr	ax, 1
@@ -38,8 +38,8 @@ pi_slot_put_quarter_mask	proc far
 @@mask_id	= word ptr  6
 @@quarter	= byte ptr  8
 @@slot	= word ptr  0Ah
-@@y	= word ptr  0Ch
-@@x	= word ptr  0Eh
+@@top	= word ptr  0Ch
+@@left	= word ptr  0Eh
 
 	push	bp
 	mov	bp, sp
@@ -67,8 +67,8 @@ pi_slot_put_quarter_mask	proc far
 	mov	es, ax
 	assume es:nothing
 	mov	di, 200
-	push	[bp+@@x]
-	push	[bp+@@y]
+	push	[bp+@@left]
+	push	[bp+@@top]
 	push	320
 	push	320
 	mov	ax, [bp+@@mask_id]
@@ -86,13 +86,13 @@ pi_slot_put_quarter_mask	endp
 ;	int mask_id<ax>,
 ;	void far *pi_buf<es:si>,
 ;	int h<di>,
-;	int x, int y, int w, size_t stride_packed
+;	screen_x_t left, vram_y_t top, int w, size_t stride_packed
 ; );
 pi_slot_put_mask_rowloop	proc near
 @@stride_packed	= word ptr [bp+2]
 @@w	= word ptr [bp+4]
-@@y	= word ptr [bp+6]
-@@x	= word ptr [bp+8]
+@@top	= word ptr [bp+6]
+@@left	= word ptr [bp+8]
 @@mask_id equ ax
 @@h equ di
 
@@ -102,9 +102,9 @@ TEMP_ROW = RES_Y
 	add	@@mask_id, offset _PI_MASKS
 	mov	_pi_mask_ptr, @@mask_id
 	mov	bp, sp
-	mov	dx, @@x
+	mov	dx, @@left
 	shr	dx, 3
-	mov	ax, @@y
+	mov	ax, @@top
 	shl	ax, 6
 	add	dx, ax
 	shr	ax, 2

@@ -11,6 +11,6 @@
 
 extern const dots16_t DIALOG_BOX_TILES[DIALOG_BOX_TILE_COUNT][DIALOG_BOX_TILE_H];
 
-void pascal near dialog_box_put(unsigned int left, unsigned int top, int tile);
+void pascal near dialog_box_put(uscreen_x_t left, uvram_y_t top, int tile);
 void pascal near dialog_box_fade_in();
 // ---

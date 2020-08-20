@@ -69,22 +69,22 @@ extern dots8_t *VRAM_PLANE_E;
 
 #ifdef __cplusplus
 // MODDERS: Replace with a single function
-static inline unsigned int vram_offset_shift(int x, int y)
+static inline unsigned int vram_offset_shift(screen_x_t x, vram_y_t y)
 {
 	return VRAM_OFFSET_SHIFT(x, y);
 }
 
-static inline unsigned int vram_offset_muldiv(int x, int y)
+static inline unsigned int vram_offset_muldiv(screen_x_t x, vram_y_t y)
 {
 	return (y * ROW_SIZE) + (x / BYTE_DOTS);
 }
 
-static inline unsigned int vram_offset_divmul(int x, int y)
+static inline unsigned int vram_offset_divmul(screen_x_t x, vram_y_t y)
 {
 	return (x / BYTE_DOTS) + (y * ROW_SIZE);
 }
 
-static inline unsigned int vram_offset_mulshift(int x, int y)
+static inline unsigned int vram_offset_mulshift(screen_x_t x, vram_y_t y)
 {
 	return (y * ROW_SIZE) + (x >> 3);
 }

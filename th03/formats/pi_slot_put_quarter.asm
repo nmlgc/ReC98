@@ -1,10 +1,10 @@
 proc_defconv pi_slot_put_quarter
-	arg @@x:word, @@y:word, @@slot:word, @@quarter:word
+	arg @@left:word, @@top:word, @@slot:word, @@quarter:word
 	local @@row_num:word, @@row_buf:dword
 
 	push	si
 	push	di
-	mov	si, @@y
+	mov	si, @@top
 	mov	di, @@quarter
 	mov	bx, @@slot
 	shl	bx, 2
@@ -42,7 +42,7 @@ proc_defconv pi_slot_put_quarter
 	jmp	short @@check
 
 @@put:
-	call	graph_pack_put_8 pascal, @@x, si, @@row_buf, 320
+	call	graph_pack_put_8 pascal, @@left, si, @@row_buf, 320
 	inc	si
 	cmp	si, 400
 	jl	short @@next_row

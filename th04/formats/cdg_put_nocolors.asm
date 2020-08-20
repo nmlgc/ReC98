@@ -1,13 +1,13 @@
-; Displays the CDG image in the given [slot] at (⌊x/8⌋*8, y), disregarding its
-; color planes.
+; Displays the CDG image in the given [slot] at (⌊left/8⌋*8, top),
+; disregarding its color planes.
 
-; void pascal cdg_put_nocolors(int x, int y, int slot);
+; void pascal cdg_put_nocolors(screen_x_t left, vram_y_t top, int slot);
 public CDG_PUT_NOCOLORS
 cdg_put_nocolors	proc far
 
 @@slot	= word ptr  6
-@@y   	= word ptr  8
-@@x   	= word ptr  10
+@@top 	= word ptr  8
+@@left	= word ptr  10
 
 	push	bp
 	mov	bp, sp
@@ -16,7 +16,7 @@ cdg_put_nocolors	proc far
 	mov	si, [bp+@@slot]
 	shl	si, 4
 	add	si, offset _cdg_slots
-	mov	di, [bp+@@x]
+	mov	di, [bp+@@left]
 	sar	di, 3
 	add	di, [si+CDGSlot.vram_byte_at_bottom_left]
 	mov	ax, [si+CDGSlot.width_divided_by_32]
@@ -29,7 +29,7 @@ endif
 	shl	ax, 2
 	add	ax, (640 / 8)
 	mov	dx, ax
-	mov	ax, [bp+@@y]
+	mov	ax, [bp+@@top]
 if GAME eq 4
 	mov	bx, ax
 	shl	ax, 2

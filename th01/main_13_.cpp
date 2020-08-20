@@ -13,17 +13,21 @@ extern "C" {
 
 #include "th01/hardware/grp2xscs.cpp"
 
-void egc_wave_unput(int left, int top, int len, int amp, int ph, int w, int h)
+void egc_wave_unput(
+	screen_x_t left, vram_y_t top, int len, int amp, int ph, int w, int h
+)
 {
 	int t = ph;
 	for(int y = 0; y < h; y++) {
-		int x = (wave_x(amp, t) + left);
+		screen_x_t x = (wave_x(amp, t) + left);
 		t += (0x100 / len);
 		egc_copy_rect_1_to_0_16(x, top + y, w, 1);
 	}
 }
 
-void graph_hline_unput_masked(int left, int top, dots8_t *mask, int w)
+void graph_hline_unput_masked(
+	screen_x_t left, vram_y_t top, dots8_t *mask, int w
+)
 {
 	planar8_t px8;
 	register uint16_t p = vram_offset_shift(left, top);

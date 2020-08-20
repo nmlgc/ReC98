@@ -2,10 +2,11 @@ struct hack { const char* NUM[10]; }; // XXX
 extern const hack FULLWIDTH_NUMBERS;
 
 void graph_putfwnum_fx(
-	int left, int top, int fx, int digits, long num, long num_prev, bool16 put
+	screen_x_t left, vram_y_t top, int fx, int digits,
+	long num, long num_prev, bool16 put
 )
 {
-	int x = left;
+	screen_x_t x = left;
 	int divisor_i;
 	int digit;
 	int digit_prev;

@@ -1,8 +1,8 @@
-; Displays the CDG image in the given [slot] centered at (⌊x_center/8⌋*8,
-; y_center), then applies a dissolve effect with the given [strength]
+; Displays the CDG image in the given [slot] centered at (⌊center_x/8⌋*8,
+; center_y), then applies a dissolve effect with the given [strength]
 ; (mod 8, 0 = none, 7 = full) on the E bitplane.
 
-; void pascal cdg_put_dissolve_e(int x_center, int y_center, int slot, int strength);
+; void pascal cdg_put_dissolve_e(screen_x_t center_x, vram_y_t center_y, int slot, int strength);
 public CDG_PUT_DISSOLVE_E
 cdg_put_dissolve_e	proc near
 
@@ -11,8 +11,8 @@ cdg_put_dissolve_e	proc near
 @@p_offset	= word ptr -2
 @@strength	= word ptr  4
 @@slot    	= word ptr  6
-@@y_center	= word ptr  8
-@@x_center	= word ptr  0Ah
+@@center_y	= word ptr  8
+@@center_x	= word ptr  0Ah
 
 	enter	6, 0
 	push	si
@@ -29,23 +29,23 @@ cdg_put_dissolve_e	proc near
 	cwd
 	sub	ax, dx
 	sar	ax, 1
-	sub	[bp+@@x_center], ax
+	sub	[bp+@@center_x], ax
 	mov	ax, [bp+@@h]
 	cwd
 	sub	ax, dx
 	sar	ax, 1
-	sub	[bp+@@y_center], ax
+	sub	[bp+@@center_y], ax
 	cmp	byte_10BC7, 0
 	jz	short @@put_noalpha
 	cmp	byte_10BB5, 0
 	jnz	short @@put_alpha
 
 @@put_noalpha:
-	call	cdg_put_noalpha pascal, [bp+@@x_center], [bp+@@y_center], [bp+@@slot]
+	call	cdg_put_noalpha pascal, [bp+@@center_x], [bp+@@center_y], [bp+@@slot]
 	jmp	short @@dissolve_prepare
 
 @@put_alpha:
-	call	cdg_put pascal, [bp+@@x_center], [bp+@@y_center], [bp+@@slot]
+	call	cdg_put pascal, [bp+@@center_x], [bp+@@center_y], [bp+@@slot]
 
 @@dissolve_prepare:
 	and	[bp+@@strength], 7
@@ -56,14 +56,14 @@ cdg_put_dissolve_e	proc near
 	cwd
 	idiv	bx
 	mov	[bp+@@w], ax
-	mov	ax, [bp+@@y_center]
+	mov	ax, [bp+@@center_y]
 	add	[bp+@@h], ax
-	mov	ax, [bp+@@x_center]
+	mov	ax, [bp+@@center_x]
 	sar	ax, 3
-	mov	dx, [bp+@@y_center]
+	mov	dx, [bp+@@center_y]
 	shl	dx, 6
 	add	ax, dx
-	mov	dx, [bp+@@y_center]
+	mov	dx, [bp+@@center_y]
 	shl	dx, 4
 	add	ax, dx
 	mov	[bp+@@p_offset], ax
@@ -73,7 +73,7 @@ cdg_put_dissolve_e	proc near
 	mov	bx, [bp+@@strength]
 	shl	bx, 3
 	add	bx, offset CDG_DISSOLVE_PATTERN
-	mov	dx, [bp+@@y_center]
+	mov	dx, [bp+@@center_y]
 
 @@dissolve_next_row:
 	mov	si, dx

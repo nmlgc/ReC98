@@ -151,8 +151,8 @@ public:
 	Subpixel speed; // for recalculating velocities with certain motion types
 	int decay_frame;
 	int cloud_frame;
-	int cloud_left;	// Not subpixels!
-	int cloud_top; 	// Not subpixels!
+	screen_x_t cloud_left;	// Not subpixels!
+	screen_y_t cloud_top; 	// Not subpixels!
 	int angle;	// for recalculating velocities with certain motion types
 
 	// Direction for PM_SLING_AIMED. Not reset when a pellet is destroyed -
@@ -191,7 +191,9 @@ protected:
 	//
 	// (And yes, this function does operate on the currently iterated pellet,
 	// despite taking separate position parameters!)
-	bool16 visible_after_hittests_for_cur(int pellet_left, int pellet_top);
+	bool16 visible_after_hittests_for_cur(
+		screen_x_t pellet_left, screen_y_t pellet_top
+	);
 
 	void clouds_unput_update_render(void);
 
@@ -203,7 +205,10 @@ public:
 	// according to the currently played difficulty and the resident
 	// [pellet_speed]. The [motion_type] for the new pellets is PM_NORMAL.
 	void add_pattern(
-		int left, int top, pellet_pattern_t pattern, subpixel_t speed_base
+		screen_x_t left,
+		screen_y_t top,
+		pellet_pattern_t pattern,
+		subpixel_t speed_base
 	);
 
 	// Spawns a single new pellet with a customizable [motion_type].
@@ -213,14 +218,14 @@ public:
 	// [spin_center_x] and [spin_center_y] are only used with PM_SPIN,
 	// while [speed_base] is *ignored* for PM_SPIN.
 	void add_single(
-		int left,
-		int top,
+		screen_x_t left,
+		screen_y_t top,
 		int angle,
 		subpixel_t speed_base,
 		pellet_motion_t motion_type,
 		subpixel_t speed_for_motion_fixed = to_sp(0.0f),
-		int spin_center_x = 0,
-		int spin_center_y = 0
+		screen_x_t spin_center_x = 0,
+		screen_y_t spin_center_y = 0
 	);
 
 	// Transitions all living pellets into their decay state, awarding points

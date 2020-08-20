@@ -2,4 +2,6 @@
 // the given effect.
 #define FX(color, weight, spacing) \
 	((color) | (weight & 3) << 4 | (spacing & 7) << 6)
-void graph_putsa_fx(int left, int top, int fx, const unsigned char *str);
+void graph_putsa_fx(
+	screen_x_t left, vram_y_t top, int fx, const unsigned char *str
+);

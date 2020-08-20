@@ -36,10 +36,10 @@ void pascal near shots_render(void)
 	for(int i = 0; i < SHOTPAIR_COUNT; i++, shotpair++) {
 		if(shotpair->flag) {
 			int so = shotpair->so_anim + shotpair->so_pid;
-			int left = playfield_fg_x_to_screen(
+			screen_x_t left = playfield_fg_x_to_screen(
 				shotpair->topleft.x, shotpair->pid
 			);
-			int top = shotpair->topleft.y.to_screen() + PLAYFIELD_Y;
+			screen_y_t top = shotpair->topleft.y.to_screen() + PLAYFIELD_Y;
 
 			sprite16_put(left + 0,                 top, so);
 			sprite16_put(left + SHOTPAIR_DISTANCE, top, so);

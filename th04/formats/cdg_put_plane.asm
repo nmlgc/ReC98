@@ -6,14 +6,14 @@
 ; actually doesn't apply any sort of effect on the pixel data, and relies on
 ; the individual planes being pre-dissolved.)
 
-; void pascal cdg_put_plane(int x, int y, int slot, int plane)
+; void pascal cdg_put_plane(screen_x_t left, vram_y_t top, int slot, int plane)
 public CDG_PUT_PLANE
 cdg_put_plane	proc far
 
 @@plane	= word ptr  6
 @@slot 	= word ptr  8
-@@y    	= word ptr  0Ah
-@@x    	= word ptr  0Ch
+@@top  	= word ptr  0Ah
+@@left 	= word ptr  0Ch
 
 	push	bp
 	mov	bp, sp
@@ -22,7 +22,7 @@ cdg_put_plane	proc far
 	mov	si, [bp+@@slot]
 	shl	si, 4
 	add	si, offset _cdg_slots
-	mov	cx, [bp+@@x]
+	mov	cx, [bp+@@left]
 	mov	di, cx
 	sar	di, 4
 	shl	di, 1
@@ -40,7 +40,7 @@ cdg_put_plane	proc far
 	shl	ax, 1
 	add	ax, (640 / 8)
 	mov	dx, ax
-	mov	ax, [bp+@@y]
+	mov	ax, [bp+@@top]
 	mov	bx, ax
 	shl	ax, 2
 	add	ax, bx

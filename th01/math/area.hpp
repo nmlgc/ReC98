@@ -1,3 +1,4 @@
-template <class T> struct area_t {
-	T left, right, top, bottom;
+template <class TX, class TY> struct area_t {
+	TX left, right;
+	TY top, bottom;
 };

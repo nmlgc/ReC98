@@ -1,7 +1,7 @@
 proc_defconv pi_slot_put
 @@slot	= word ptr [bp + (cPtrSize + 2)]
-@@y	= word ptr [bp + (cPtrSize + 4)]
-@@x	= word ptr [bp + (cPtrSize + 6)]
+@@top	= word ptr [bp + (cPtrSize + 4)]
+@@left	= word ptr [bp + (cPtrSize + 6)]
 
 	push	bp
 	mov	bp, sp
@@ -12,8 +12,8 @@ proc_defconv pi_slot_put
 	shl	si, 2
 	les	si, _pi_slot_buffers[si]
 	imul	di, size PiHeader
-	push	@@x
-	push	@@y
+	push	@@left
+	push	@@top
 	mov	ax, _pi_slot_headers.PiHeader._xsize[di]
 	push	ax
 	shr	ax, 1
@@ -32,8 +32,8 @@ endp_defconv
 proc_defconv pi_slot_put_quarter
 @@quarter	= byte ptr [bp + (cPtrSize + 2)]
 @@slot	= word ptr [bp + (cPtrSize + 4)]
-@@y	= word ptr [bp + (cPtrSize + 6)]
-@@x	= word ptr [bp + (cPtrSize + 8)]
+@@top	= word ptr [bp + (cPtrSize + 6)]
+@@left	= word ptr [bp + (cPtrSize + 8)]
 
 	push	bp
 	mov	bp, sp
@@ -59,8 +59,8 @@ proc_defconv pi_slot_put_quarter
 	mov	ax, es
 	add	ax, dx
 	mov	es, ax
-	push	@@x
-	push	@@y
+	push	@@left
+	push	@@top
 	push	320
 	push	320
 	mov	di, 200
@@ -76,25 +76,25 @@ endp_defconv
 ; void pascal pi_slot_put_mask_rowloop(
 ;	void far *pi_buf<es:si>,
 ;	int h<di>,
-;	int x, int y, int w, size_t stride_packed
+;	screen_x_t x, vram_y_t y, int w, size_t stride_packed
 ; );
 pi_slot_put_rowloop	proc near
 @@stride_packed	= word ptr [bp+2]
 @@w	= word ptr [bp+4]
-@@y	= word ptr [bp+6]
-@@x	= word ptr [bp+8]
+@@top	= word ptr [bp+6]
+@@left	= word ptr [bp+8]
 @@h equ di
 
 	mov	bp, sp
 
 @@put_row:
 	push	es
-	call	graph_pack_put_8_noclip pascal, @@x, @@y, es, si, @@w
+	call	graph_pack_put_8_noclip pascal, @@left, @@top, es, si, @@w
 	pop	es
-	inc	@@y
-	cmp	@@y, RES_Y
+	inc	@@top
+	cmp	@@top, RES_Y
 	jb	short @@next_row
-	sub	@@y, RES_Y
+	sub	@@top, RES_Y
 
 @@next_row:
 	add	si, @@stride_packed

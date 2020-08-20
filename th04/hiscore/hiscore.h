@@ -1,1 +1,3 @@
-void pascal near score_stage_put(int x, int y, unsigned int g_stage);
+void pascal near score_stage_put(
+	screen_x_t x, screen_y_t y, unsigned int g_stage
+);

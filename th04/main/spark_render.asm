@@ -1,9 +1,9 @@
-; Draws the hardcoded spark sprite with the given ID, with ([x], [vram_y])
+; Draws the hardcoded spark sprite with the given ID at the given position.
 ; pointing to the top-left point. Assumptions:
 ; • ES is already be set to the beginning of a VRAM segment
 ; • The GRCG is active, and set to the intended color
 
-; void near fastcall spark_render(int x, int vram_y, int sprite_id);
+; void near fastcall spark_render(screen_x_t left, vram_y_t top, int sprite_id);
 public @spark_render
 @spark_render	proc near
 	push	si

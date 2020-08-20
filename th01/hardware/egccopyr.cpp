@@ -1,11 +1,11 @@
 #include "th01/hardware/egcscopy.c"
 
-void egc_copy_rect_1_to_0_16(int x, int y, int w, int h)
+void egc_copy_rect_1_to_0_16(screen_x_t x, vram_y_t y, int w, int h)
 {
-	register int x_end = x;
-	register int x_floor = x_end;
+	register screen_x_t x_end = x;
+	register screen_x_t x_floor = x_end;
 	int row;
-	int col;
+	screen_x_t col;
 	int row_p;
 	dots16_t dots;
 	int p;

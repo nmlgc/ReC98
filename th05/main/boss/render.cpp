@@ -4,6 +4,8 @@
  */
 
 #include <master.h>
+#include "platform.h"
+#include "pc98.h"
 #include "th01/math/subpixel.hpp"
 #include "th04/math/vector.hpp"
 #include "th04/main/drawp.hpp"
@@ -49,14 +51,14 @@ void pascal near grcg_lineset_line_put(lineset_t near &set, int i)
 	vector2_at(drawpoint,
 		set.center[i].x, set.center[i].y, set.radius[i], set.angle[i]
 	);
-	int x1 = (PLAYFIELD_X + drawpoint.x.to_screen());
-	int y1 = (PLAYFIELD_Y + drawpoint.y.to_screen());
+	screen_x_t x1 = (PLAYFIELD_X + drawpoint.x.to_screen());
+	screen_y_t y1 = (PLAYFIELD_Y + drawpoint.y.to_screen());
 
 	vector2_at(drawpoint,
 		set.center[i].x, set.center[i].y, set.radius[i], (set.angle[i] + 0x80)
 	);
-	int x2 = (PLAYFIELD_X + drawpoint.x.to_screen());
-	int y2 = (PLAYFIELD_Y + drawpoint.y.to_screen());
+	screen_x_t x2 = (PLAYFIELD_X + drawpoint.x.to_screen());
+	screen_y_t y2 = (PLAYFIELD_Y + drawpoint.y.to_screen());
 
 	grcg_line(x1, y1, x2, y2);
 }

@@ -30,7 +30,7 @@ static inline ptn_t* ptn_with_id_shift(int id)
 	VRAM_CHUNK(G, vram_offset, w) |= ((ptn->planes.G[y] >> q.x) & mask); \
 	VRAM_CHUNK(E, vram_offset, w) |= ((ptn->planes.E[y] >> q.x) & mask);
 
-void ptn_unput_8(int left, int top, int ptn_id)
+void ptn_unput_8(screen_x_t left, vram_y_t top, int ptn_id)
 {
 	ptn_dots_t mask = 0;
 	uint16_t vram_offset = vram_offset_shift(left, top);
@@ -57,7 +57,7 @@ void ptn_unput_8(int left, int top, int ptn_id)
 	}
 }
 
-void ptn_put_8(int left, int top, int ptn_id)
+void ptn_put_8(screen_x_t left, vram_y_t top, int ptn_id)
 {
 	unsigned int y;
 	dots_t(PTN_W) mask = 0;
@@ -80,7 +80,9 @@ void ptn_put_8(int left, int top, int ptn_id)
 	}
 }
 
-void ptn_unput_quarter_8(int left, int top, int ptn_id, int quarter)
+void ptn_unput_quarter_8(
+	screen_x_t left, vram_y_t top, int ptn_id, int quarter
+)
 {
 	sdots_t(PTN_QUARTER_W) mask;
 	unsigned int y;
@@ -109,7 +111,7 @@ void ptn_unput_quarter_8(int left, int top, int ptn_id, int quarter)
 	}
 }
 
-void ptn_put_quarter_8(int left, int top, int ptn_id, int quarter)
+void ptn_put_quarter_8(screen_x_t left, vram_y_t top, int ptn_id, int quarter)
 {
 	sdots_t(PTN_QUARTER_W) mask;
 	unsigned int y;
@@ -134,7 +136,7 @@ void ptn_put_quarter_8(int left, int top, int ptn_id, int quarter)
 	}
 }
 
-void ptn_put_quarter(int left, int top, int ptn_id, int quarter)
+void ptn_put_quarter(screen_x_t left, vram_y_t top, int ptn_id, int quarter)
 {
 	union dots16_unaligned_t {
 		dots8_t d8[3];

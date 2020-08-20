@@ -1,10 +1,10 @@
 proc_defconv pi_slot_put_interlace
-	arg @@x:word, @@y:word, @@slot:word
+	arg @@left:word, @@top:word, @@slot:word
 	local @@row_num:word, @@row_buf:dword
 
 	push	si
 	push	di
-	mov	si, @@y
+	mov	si, @@top
 	mov	di, @@slot
 	mov	bx, di
 	shl	bx, 2
@@ -16,7 +16,7 @@ proc_defconv pi_slot_put_interlace
 	jmp	short @@check
 
 @@put:
-	push	@@x
+	push	@@left
 	push	si
 	pushd	@@row_buf
 	mov	bx, di

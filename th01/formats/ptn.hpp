@@ -95,23 +95,23 @@ extern bool ptn_unput_before_alpha_put;
 // ------------
 // Displays the given [ptn_id] at (⌊left/8⌋*8, top), disregarding its alpha
 // plane.
-void ptn_put_noalpha_8(int left, int top, int ptn_id);
+void ptn_put_noalpha_8(screen_x_t left, vram_y_t top, int ptn_id);
 
 // Overwrites the 4 color planes of [ptn_id] with the current VRAM content of
 // the 32×32 pixels starting at (⌊left/8⌋*8, top).
-void ptn_snap_8(int left, int top, int ptn_id);
+void ptn_snap_8(screen_x_t left, vram_y_t top, int ptn_id);
 
 // Copies the 32×32 pixels starting at (⌊left/8⌋*8, top) from VRAM page 0 to
 // VRAM page 1.
-void ptn_copy_8_0_to_1(int left, int top);
+void ptn_copy_8_0_to_1(screen_x_t left, vram_y_t top);
 
 // Restores the 32×32 pixels starting at (⌊left/8⌋*8, top) on VRAM page 0 with
 // the same (background) pixels from VRAM page 1, applying the alpha mask from
 // the given [ptn_id].
-void ptn_unput_8(int left, int top, int ptn_id);
+void ptn_unput_8(screen_x_t left, vram_y_t top, int ptn_id);
 
 // Displays the given [ptn_id] at (⌊left/8⌋*8, top).
-void ptn_put_8(int left, int top, int ptn_id);
+void ptn_put_8(screen_x_t left, vram_y_t top, int ptn_id);
 // ------------
 
 // 16×16 access
@@ -138,21 +138,29 @@ struct PTNQuarter
 
 // Displays the given [quarter] of the given [ptn_id] at (⌊left/8⌋*8, top),
 // diregarding its alpha plane.
-void ptn_put_quarter_noalpha_8(int left, int top, int ptn_id, int quarter);
+void ptn_put_quarter_noalpha_8(
+	screen_x_t left, vram_y_t top, int ptn_id, int quarter
+);
 
 // Overwrites the 4 color planes of the given [quarter] of [ptn_id] with the
 // current VRAM content of the 16×16 pixels starting at (⌊left/8⌋*8, top).
-void ptn_snap_quarter_8(int left, int top, int ptn_id, int quarter);
+void ptn_snap_quarter_8(
+	screen_x_t left, vram_y_t top, int ptn_id, int quarter
+);
 
 // Restores the 16×16 pixels starting at (⌊left/8⌋*8, top) on VRAM page 0 with
 // the same (background) pixels from VRAM page 1, applying the alpha mask from
 // the given [quarter] of [ptn_id].
-void ptn_unput_quarter_8(int left, int top, int ptn_id, int quarter);
+void ptn_unput_quarter_8(
+	screen_x_t left, vram_y_t top, int ptn_id, int quarter
+);
 
 // Displays the given [quarter] of the given [ptn_id] at (⌊left/8⌋*8, top).
-void ptn_put_quarter_8(int left, int top, int ptn_id, int quarter);
+void ptn_put_quarter_8(
+	screen_x_t left, vram_y_t top, int ptn_id, int quarter
+);
 
 // Displays the given [quarter] of the given [ptn_id] at (left, top).
-void ptn_put_quarter(int left, int top, int ptn_id, int quarter);
+void ptn_put_quarter(screen_x_t left, vram_y_t top, int ptn_id, int quarter);
 // ------------
 /// -----------------------------------------

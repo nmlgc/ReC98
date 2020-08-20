@@ -24,7 +24,7 @@ long unused_5;
 #include "th01/hardware/vplanset.c"
 #include "th02/formats/pi_load.c"
 
-void pascal graph_copy_rect_1_to_0(int x, int y, int w, int h)
+void pascal graph_copy_rect_1_to_0(screen_x_t x, vram_y_t y, int w, int h)
 {
 	int row_p = vram_offset_shift(x, y);
 	int row;

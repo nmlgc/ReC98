@@ -98,7 +98,9 @@ void pascal grp_palette_white_in(unsigned int frames)
 
 #pragma option -O-
 
-void pascal graph_type_ank(int left, int top, int len, const char *str)
+void pascal graph_type_ank(
+	screen_x_t left, vram_y_t top, int len, const char *str
+)
 {
 	extern const char graph_type_ank_fmt[];
 	for(int i = 0; i < len; i++) {
@@ -110,7 +112,9 @@ void pascal graph_type_ank(int left, int top, int len, const char *str)
 	}
 }
 
-void pascal graph_type_kanji(int left, int top, int len, const char *str)
+void pascal graph_type_kanji(
+	screen_x_t left, vram_y_t top, int len, const char *str
+)
 {
 	extern const char graph_type_kanji_fmt[];
 	for(int i = 0; i < len; i++) {

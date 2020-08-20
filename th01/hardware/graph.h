@@ -35,36 +35,49 @@ void grcg_off_func(void);
 #undef grcg_off
 #define grcg_off grcg_off_func
 
-void z_grcg_boxfill(int left, int top, int right, int bottom, int col);
+void z_grcg_boxfill(
+	screen_x_t left, vram_y_t top, screen_x_t right, vram_y_t bottom, int col
+);
 /// ----
 
 /// Points
 /// ------
-void z_grcg_pset(int x, int y, int col);
+void z_grcg_pset(screen_x_t x, vram_y_t y, int col);
 // Returns the color value at the given point on the current VRAM page.
-int z_graph_readdot(int x, int y);
+int z_graph_readdot(screen_x_t x, vram_y_t y);
 /// ------
 
 /// Restorable line drawing
 /// -----------------------
 // Draws straight horizontal or vertical lines.
-void graph_r_hline(int left, int right, int y, int col);
-void graph_r_vline(int x, int top, int bottom, int col);
+void graph_r_hline(screen_x_t left, screen_x_t right, vram_y_t y, int col);
+void graph_r_vline(screen_x_t x, vram_y_t top, vram_y_t bottom, int col);
 
 // Draws a line with an arbitrary angle between the two points.
-void graph_r_line(int left, int top, int right, int bottom, int col);
+void graph_r_line(
+	screen_x_t left, vram_y_t top, screen_x_t right, vram_y_t bottom, int col
+);
 
 // Draws a line with an arbitrary angle and an arbitrary 16-pixel pattern
 // between the two points.
 void graph_r_line_patterned(
-	int left, int top, int right, int bottom, int col, dots16_t pattern
+	screen_x_t left,
+	vram_y_t top,
+	screen_x_t right,
+	vram_y_t bottom,
+	int col,
+	dots16_t pattern
 );
 
 // Recovers the pixels on the given arbitrary-angle line from page 1.
-void graph_r_line_unput(int left, int top, int right, int bottom);
+void graph_r_line_unput(
+	screen_x_t left, vram_y_t top, screen_x_t right, vram_y_t bottom
+);
 
 // Draws the outline of a rectangle.
-void graph_r_box(int left, int top, int right, int bottom, int col);
+void graph_r_box(
+	screen_x_t left, vram_y_t top, screen_x_t right, vram_y_t bottom, int col
+);
 /// -----------------------
 
 /// Text
@@ -82,7 +95,9 @@ int text_extent_fx(int fx, const unsigned char *str);
 #define FX_REVERSE  	0x800
 // ----------------------
 #include "th01/hardware/grppsafx.h"
-void graph_printf_fx(int left, int top, int fx, const char *fmt, ...);
+void graph_printf_fx(
+	screen_x_t left, vram_y_t top, int fx, const char *fmt, ...
+);
 
 // Puts the rightmost N [digits] of [num] onto the graphics RAM, using
 // full-width digits, and applying the given effect. (Consequently, the units
@@ -91,7 +106,7 @@ void graph_printf_fx(int left, int top, int fx, const char *fmt, ...);
 // only blits the digits of [num] that differ from those in [num_prev].
 // Will put nothing if [put_leading_zeroes] is false and [num] is 0.
 void graph_putfwnum_fx(
-	int left, int top, int fx, int digits,
+	screen_x_t left, vram_y_t top, int fx, int digits,
 	long num, long num_prev, bool16 put_leading_zeroes
 );
 /// ----
@@ -104,7 +119,7 @@ void graph_putfwnum_fx(
 //     (⌊left/8⌋*8 + ⌊(right-left)/8⌋*8, bottom)
 // on the current back page to the same position on the current front page.
 void graph_copy_byterect_back_to_front(
-	int left, int top, int right, int bottom
+	screen_x_t left, vram_y_t top, screen_x_t right, vram_y_t bottom
 );
 
 // Moves the given source rectangle from
@@ -113,8 +128,12 @@ void graph_copy_byterect_back_to_front(
 //     (⌊left/8⌋*8 + ⌊(right-left)/8⌋*8, bottom)
 // on the [dst] page. Already assumes [src] to be the currently accessed page.
 void graph_move_byterect_interpage(
-	int src_left, int src_top, int src_right, int src_bottom,
-	int dst_left, int dst_top,
+	screen_x_t src_left,
+	vram_y_t src_top,
+	screen_x_t src_right,
+	vram_y_t src_bottom,
+	screen_x_t dst_left,
+	vram_y_t dst_top,
 	int src, int dst
 );
 /// --------

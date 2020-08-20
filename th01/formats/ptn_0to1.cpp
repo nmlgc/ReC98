@@ -1,6 +1,6 @@
 #include "th01/formats/ptn.hpp"
 
-void ptn_copy_8_0_to_1(int left, int top)
+void ptn_copy_8_0_to_1(screen_x_t left, vram_y_t top)
 {
 	planar_t(PTN_W) row;
 	unsigned int vram_offset = vram_offset_shift(left, top);

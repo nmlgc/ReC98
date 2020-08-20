@@ -21,7 +21,7 @@ struct item_splash_t {
 extern item_splash_t item_splashes[ITEM_SPLASH_COUNT];
 extern unsigned char item_splash_last_id;
 
-void __fastcall near item_splash_dot_render(int x, int vram_y);
+void __fastcall near item_splash_dot_render(screen_x_t x, vram_y_t vram_y);
 void pascal near item_splashes_init(void);
 void pascal near item_splashes_add(Subpixel x, Subpixel y);
 void pascal near item_splashes_update(void);

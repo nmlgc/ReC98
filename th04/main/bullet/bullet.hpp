@@ -123,8 +123,8 @@ extern bullet_t bullets[BULLET_COUNT];
 /// ---------
 union pellet_render_t {
 	struct {
-		int left;
-		int top;
+		screen_x_t left;
+		vram_y_t top;
 	} top;
 	struct {
 		uint16_t vram_offset;

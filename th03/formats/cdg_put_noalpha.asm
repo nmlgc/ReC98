@@ -1,13 +1,13 @@
-; Displays the CDG image in the given [slot] at (⌊x/8⌋*8, y), disregarding its
-; alpha plane.
+; Displays the CDG image in the given [slot] at (⌊left/8⌋*8, top),
+; disregarding its alpha plane.
 
-; void pascal cdg_put_noalpha(int x, int y, int slot);
+; void pascal cdg_put_noalpha(screen_x_t left, vram_y_t top, int slot);
 public CDG_PUT_NOALPHA
 cdg_put_noalpha	proc far
 
 @@slot	= word ptr  6
-@@y   	= word ptr  8
-@@x   	= word ptr  10
+@@top 	= word ptr  8
+@@left	= word ptr  10
 
 	push	bp
 	mov	bp, sp
@@ -16,7 +16,7 @@ cdg_put_noalpha	proc far
 	mov	si, [bp+@@slot]
 	shl	si, 4
 	add	si, offset _cdg_slots
-	mov	ax, [bp+@@x]
+	mov	ax, [bp+@@left]
 	sar	ax, 3
 	add	ax, [si+CDGSlot.vram_byte_at_bottom_left]
 	mov	di, ax
@@ -26,7 +26,7 @@ cdg_put_noalpha	proc far
 	shl	ax, 2
 	add	ax, (640 / 8)
 	mov	dx, ax
-	mov	ax, [bp+@@y]
+	mov	ax, [bp+@@top]
 	mov	bx, ax
 	shl	ax, 2
 	add	ax, bx

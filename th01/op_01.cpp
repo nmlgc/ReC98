@@ -20,8 +20,8 @@ extern "C" {
 void snap_col_4(void)
 {
 	extern dots8_t* columns[ROW_SIZE];
-	register int x;
-	register int y;
+	register vram_x_t x;
+	register screen_y_t y;
 	int vram_offset;
 
 	for(x = 0; x < ROW_SIZE; x++) {
@@ -217,7 +217,7 @@ void option_input_sense(void)
 
 /// White line animation
 /// --------------------
-void whiteline_put(int y)
+void whiteline_put(screen_y_t y)
 {
 	size_t vram_offset = vram_offset_shift(0, y);
 	int x;
@@ -240,8 +240,8 @@ void whitelines_animate(void)
 	extern const hack WHITELINES_DRAWN_AT;
 
 	unsigned int i = 0;
-	int y1 = 0;
-	int y2 = 0;
+	screen_y_t y1 = 0;
+	screen_y_t y2 = 0;
 	hack drawn_at = WHITELINES_DRAWN_AT;
 	while(i++ < (RES_Y / 4)) {
 		egc_copy_rect_1_to_0_16(0, y1, RES_X, 1);

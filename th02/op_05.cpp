@@ -38,11 +38,10 @@ char cleared_game_with[SHOTTYPE_COUNT];
 char cleared_extra_with[SHOTTYPE_COUNT];
 long unused[2];
 
-void pascal graph_copy_rect_1_to_0(int x, int y, int w, int h);
-
 void copy_pic_back(int sel, int highlight)
 {
-	int x, y;
+	screen_x_t x;
+	screen_y_t y;
 	if(!highlight) {
 		switch(sel) {
 			case 0: x =  16; y = 128; break;
@@ -67,7 +66,7 @@ void copy_pic_back(int sel, int highlight)
 	}
 }
 
-void darken_pic_at(int x, int y)
+void darken_pic_at(screen_x_t x, screen_y_t y)
 {
 	int row_p = vram_offset_shift(x, y);
 	int row, col;
@@ -83,7 +82,8 @@ void darken_pic_at(int x, int y)
 
 void draw_shottype_desc(int sel, int color)
 {
-	int x, y;
+	screen_x_t x;
+	screen_y_t y;
 	switch(sel) {
 		case 0: x =  16; y = 296; break;
 		case 1: x = 224; y = 136; break;
@@ -158,8 +158,8 @@ void pascal shottype_menu_init(void)
 void pascal shottype_menu(void)
 {
 	int input_locked = 0;
-	int pic_x[] = { 16, 224, 432};
-	int pic_y[] = {128, 224, 128};
+	screen_x_t pic_x[] = { 16, 224, 432};
+	screen_y_t pic_y[] = {128, 224, 128};
 	unsigned int input_delay = 0;
 	shottype_menu_init();
 

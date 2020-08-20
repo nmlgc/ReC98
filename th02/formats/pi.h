@@ -18,7 +18,7 @@ void DEFCONV pi_slot_palette_apply(int slot);
 // Displays the PI image in slot #[slot] at ([left], [top]). Horizontally, the
 // image is cut off at 640 pixels; vertically, it is wrapped if it exceeds the
 // clipping frame defined via grc_setclip().
-void DEFCONV pi_slot_put(int left, int top, int slot);
+void DEFCONV pi_slot_put(screen_x_t left, vram_y_t top, int slot);
 
 #define pi_load_put_free(slot, fn) \
 	pi_slot_load(slot, (fn)); \

@@ -1,5 +1,5 @@
 ; void pascal far hud_bar_put(
-; 	unsigned int y, unsigned char value, unsigned int atrb
+; 	utram_y_t y, unsigned char value, unsigned int atrb
 ; );
 public HUD_BAR_PUT
 hud_bar_put	proc far

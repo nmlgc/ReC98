@@ -1,6 +1,6 @@
-; Displays the CDG image in the given [slot] at (⌊x/8⌋*8, y).
+; Displays the CDG image in the given [slot] at (⌊left/8⌋*8, top).
 
-; void pascal cdg_put(int x, int y, int slot);
+; void pascal cdg_put(screen_x_t left, vram_y_t top, int slot);
 public CDG_PUT
 cdg_put	proc far
 

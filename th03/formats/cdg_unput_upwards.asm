@@ -1,17 +1,17 @@
 ; Assuming that the CDG image in the given [slot] was previously displayed
-; centered at (⌊x_center/8⌋*8, y_center), this function clears the two lines
+; centered at (⌊center_x/8⌋*8, center_y), this function clears the two lines
 ; at the bottom of that image, as well as the one line immediately below, from
 ; the VRAM's E plane.
 
-; void cdg_unput_for_upwards_motion_e(int x_center, int y_center, int slot);
+; void cdg_unput_for_upwards_motion_e(screen_x_t center_x, vram_y_t center_y, int slot);
 public CDG_UNPUT_FOR_UPWARDS_MOTION_E
 cdg_unput_for_upwards_motion_e	proc near
 
 @@h	      	= word ptr -4
 @@w       	= word ptr -2
 @@slot    	= word ptr  4
-@@y_center	= word ptr  6
-@@x_center	= word ptr  8
+@@center_y	= word ptr  6
+@@center_x	= word ptr  8
 
 	enter	4, 0
 	push	si
@@ -28,19 +28,19 @@ cdg_unput_for_upwards_motion_e	proc near
 	cwd
 	sub	ax, dx
 	sar	ax, 1
-	sub	[bp+@@x_center], ax
+	sub	[bp+@@center_x], ax
 	mov	ax, [bp+@@h]
 	cwd
 	sub	ax, dx
 	sar	ax, 1
 	add	ax, -2
-	add	[bp+@@y_center], ax
-	mov	ax, [bp+@@x_center]
+	add	[bp+@@center_y], ax
+	mov	ax, [bp+@@center_x]
 	sar	ax, 3
-	mov	dx, [bp+@@y_center]
+	mov	dx, [bp+@@center_y]
 	shl	dx, 6
 	add	ax, dx
-	mov	dx, [bp+@@y_center]
+	mov	dx, [bp+@@center_y]
 	shl	dx, 4
 	add	ax, dx
 	mov	di, ax

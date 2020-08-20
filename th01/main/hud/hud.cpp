@@ -9,19 +9,19 @@
 
 /// Constants
 /// ---------
-static const int LIVES_LEFT = 128;
-static const int LIVES_TOP = 0;
+static const screen_x_t LIVES_LEFT = 128;
+static const screen_y_t LIVES_TOP = 0;
 static const int LIVES_PER_ROW = 6; // for all the cheaters?
 
-static const int BOMBS_LEFT = 128;
-static const int BOMBS_TOP = 16;
+static const screen_x_t BOMBS_LEFT = 128;
+static const screen_y_t BOMBS_TOP = 16;
 
-static const int SCORE_LEFT = 256;
-static const int MAX_TOP = 0;
-static const int CUR_TOP = 16;
+static const screen_x_t SCORE_LEFT = 256;
+static const screen_y_t MAX_TOP = 0;
+static const screen_y_t CUR_TOP = 16;
 
-static const int STAGE_LEFT = 608;
-static const int STAGE_TOP = 32;
+static const screen_x_t STAGE_LEFT = 608;
+static const screen_y_t STAGE_TOP = 32;
 
 static const int PTN_LIFE_QUARTER = 0;
 static const int PTN_BOMB_QUARTER = 1;
@@ -40,9 +40,11 @@ static const int ROW_H = PTN_QUARTER_H;
 
 static const int SCORE_W = (SCORE_DIGITS * COL_W);
 
-static const int CARDCOMBO_LEFT = (SCORE_LEFT + ((SCORE_DIGITS + 2) * COL_W));
+static const screen_x_t CARDCOMBO_LEFT = (
+	SCORE_LEFT + ((SCORE_DIGITS + 2) * COL_W)
+);
 static const int CARDCOMBO_W = (CARDCOMBO_DIGITS * COL_W);
-static const int CARDCOMBO_RIGHT = (CARDCOMBO_LEFT + CARDCOMBO_W);
+static const screen_x_t CARDCOMBO_RIGHT = (CARDCOMBO_LEFT + CARDCOMBO_W);
 
 static const int SCORE_AND_CARDCOMBO_W = (CARDCOMBO_RIGHT - SCORE_LEFT);
 /// ---------
@@ -61,7 +63,7 @@ extern unsigned char hud_cardcombo_max; // Why a separate variable???
 
 /// Functions
 /// ---------
-inline int col_left(int first_left, int col) {
+inline screen_x_t col_left(screen_x_t first_left, int col) {
 	return (first_left + (col * COL_W));
 }
 
@@ -83,12 +85,17 @@ inline int col_left(int first_left, int col) {
 
 // Copies the (⌊[w]/16⌋*16)×[ROW_H] pixels starting at (⌊left/8⌋*8, top) from
 // VRAM page 0 to VRAM page 1.
-void graph_copy_hud_row_0_to_1_8(int left, int top, int w);
+void graph_copy_hud_row_0_to_1_8(screen_x_t left, vram_y_t top, int w);
 /// ---------
 }
 
 template <class T1, class T2> inline void fwnum_put(
-	int left, int top, int fx, int digits, const T1 &val, const T2 &val_prev
+	screen_x_t left,
+	screen_y_t top,
+	int fx,
+	int digits,
+	const T1 &val,
+	const T2 &val_prev
 ) {
 	graph_putfwnum_fx(
 		left, top, fx, digits, val,
@@ -102,7 +109,7 @@ template <class T1, class T2> inline void fwnum_put(
 #define score_max_bg(func, digit) \
 	score_bg(func, digit, MAX_TOP, PTN_BG_MAX_SCORE)
 
-inline void score_put(int top, int fx, const long &prev) {
+inline void score_put(screen_y_t top, int fx, const long &prev) {
 	fwnum_put(SCORE_LEFT, top, fx, SCORE_DIGITS, score, prev);
 }
 
@@ -112,7 +119,7 @@ inline void score_put(int top, int fx, const long &prev) {
 #define cardcombo_max_bg(func, digit) \
 	cardcombo_bg(func, digit, MAX_TOP, PTN_BG_MAX_CARDCOMBO)
 
-inline void cardcombo_put(int top, int fx, const int &prev) {
+inline void cardcombo_put(screen_y_t top, int fx, const int &prev) {
 	fwnum_put(CARDCOMBO_LEFT, top, fx, CARDCOMBO_DIGITS, cardcombo_cur, prev);
 }
 
@@ -216,7 +223,7 @@ void hud_score_and_cardcombo_render(void)
 		cardcombo_bg(func, digit, top, ptn_id); \
 	} \
 
-inline void cardcombo_put_initial(int top, int fx) {
+inline void cardcombo_put_initial(screen_y_t top, int fx) {
 	graph_putfwnum_fx(CARDCOMBO_LEFT, top, fx, CARDCOMBO_DIGITS, 0, 99, true);
 }
 
@@ -321,7 +328,7 @@ int hud_bg_load(const char *fn)
 }
 /// ----------
 
-void graph_copy_hud_row_0_to_1_8(int left, int top, int w)
+void graph_copy_hud_row_0_to_1_8(screen_x_t left, vram_y_t top, int w)
 {
 	uint16_t vram_offset;
 	dots16_t dots;
@@ -354,7 +361,7 @@ inline int lives_col(int i) {
 	return (i % LIVES_PER_ROW);
 }
 
-inline int lives_top(int i) {
+inline screen_y_t lives_top(int i) {
 	return (LIVES_TOP + ((i / LIVES_PER_ROW) * ROW_H));
 }
 

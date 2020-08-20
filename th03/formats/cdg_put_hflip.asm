@@ -1,12 +1,12 @@
-; Displays the CDG image in the given [slot] at (⌊x/8⌋*8, y), flipped
+; Displays the CDG image in the given [slot] at (⌊left/8⌋*8, top), flipped
 ; horizontally.
 
-; void DEFCONV cdg_put_hflip(int x, int y, int slot);
+; void DEFCONV cdg_put_hflip(screen_x_t left, vram_y_t top, int slot);
 proc_defconv cdg_put_hflip
 
 @@slot	= word ptr  6
-@@y   	= word ptr  8
-@@x   	= word ptr  10
+@@top 	= word ptr  8
+@@left	= word ptr  10
 
 	push	bp
 	mov	bp, sp
@@ -16,7 +16,7 @@ proc_defconv cdg_put_hflip
 	mov	si, [bp+@@slot]
 	shl	si, 4
 	add	si, offset _cdg_slots
-	mov	ax, [bp+@@x]
+	mov	ax, [bp+@@left]
 	sar	ax, 3
 	add	ax, [si+CDGSlot.vram_byte_at_bottom_left]
 	mov	bx, [si+CDGSlot.width_divided_by_32]
@@ -33,7 +33,7 @@ proc_defconv cdg_put_hflip
 	mov	word ptr cs:@@stride_alpha+1, ax
 	mov	word ptr cs:@@stride_colors+1, ax
 	jmp	short $+2
-	mov	ax, [bp+@@y]
+	mov	ax, [bp+@@top]
 	mov	bx, ax
 	shl	ax, 2
 	add	ax, bx

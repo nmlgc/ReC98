@@ -53,7 +53,7 @@ void pascal near score_points_put(unsigned y, long points, unsigned atrb)
 	}
 }
 
-void pascal near shottype_put(int y, int type, int atrb)
+void pascal near shottype_put(tram_y_t y, int type, int atrb)
 {
 	text_putsa(48, y, SHOTTYPES[type], atrb);
 }
@@ -76,7 +76,7 @@ void int_to_string(char *str, int val, int chars)
 	str[c] = 0;
 }
 
-void pascal near scoredat_date_put(int y, int place, int atrb)
+void pascal near scoredat_date_put(tram_y_t y, int place, int atrb)
 {
 	char str[6];
 	int_to_string(str, hi.score.date[place].da_year, 4);
@@ -126,7 +126,8 @@ void pascal near scores_put(int place_to_highlight)
 void pascal near logo_render(void)
 {
 	int i;
-	int x, y;
+	screen_x_t x;
+	screen_y_t y;
 	grcg_setcolor(GC_RMW, 10);
 	grcg_fill();
 	grcg_off();

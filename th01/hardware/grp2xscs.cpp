@@ -18,8 +18,8 @@ void scale_2x(dots32_t &dst32, sdots16_t src16)
 }
 
 void graph_2xscale_byterect_1_to_0_slow(
-	int left_0, int top_0,
-	int left_1, int top_1, int w_1, int h_1
+	screen_x_t left_0, vram_y_t top_0,
+	screen_x_t left_1, vram_y_t top_1, int w_1, int h_1
 )
 {
 	int row_p1 = vram_offset_divmul(left_1, top_1);

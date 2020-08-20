@@ -112,7 +112,9 @@ void pascal near pi_load_put_free_to(const char near *fn, char page)
 
 void op_animate(void)
 {
-	int door_x, door_y; // Sony Vegas calls this a "Barn Door" transition.
+	// Sony Vegas calls this a "Barn Door" transition.
+	int door_x;
+	tram_y_t door_y;
 	const char gbZUN[] = {gb_Z_, gb_U_, gb_N_, 0};
 
 	text_wipe();

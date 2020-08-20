@@ -7,6 +7,8 @@
 
 extern "C" {
 #include <dos.h>
+#include "platform.h"
+#include "pc98.h"
 #include "libs/sprite16/sprite16.h"
 #include "th03/sprite16.hpp"
 
@@ -22,7 +24,7 @@ extern "C" {
 
 #define RESULT_IS_ZERO (_FLAGS & 0x40)
 
-#define SETUP_VARS(left, screen_top, sprite_offset) \
+#define SETUP_VARS(left, top, sprite_offset) \
 	sprite_offset_local = sprite_offset; \
 	putpos_left = left; \
 	put_w_words = sprite16_put_w.v; \
@@ -33,10 +35,10 @@ extern "C" {
 	clip_left = sprite16_clip_left; \
 	clip_right = sprite16_clip_right;
 
-#define CALL_PUT(left, screen_top, put_w_words, sprite_offset) \
+#define CALL_PUT(left, top, put_w_words, sprite_offset) \
 	_AH = SPRITE16_PUT; \
 	_DX = putpos_left; \
-	_BX = screen_top; \
+	_BX = top; \
 	static_cast<int>(_BX) >>= 1; \
 	_AL = put_w_words; \
 	_CX = sprite16_put_h; \
@@ -62,13 +64,13 @@ extern "C" {
 		} \
 	} while(putpos_right >= clip_right);
 
-void pascal sprite16_put(int left, int screen_top, int sprite_offset)
+void pascal sprite16_put(screen_x_t left, screen_y_t top, int sprite_offset)
 {
-	SETUP_VARS(left, screen_top, sprite_offset);
+	SETUP_VARS(left, top, sprite_offset);
 	if(putpos_right < clip_right) {
 		if(putpos_left >= clip_left) {
 put:
-			CALL_PUT(putpos_left, screen_top, put_w_words, sprite_offset_local);
+			CALL_PUT(putpos_left, top, put_w_words, sprite_offset_local);
 			return;
 		} else if(putpos_right < clip_left) {
 			return;
@@ -87,16 +89,16 @@ put:
 #pragma codestring "\x90"
 
 void pascal sprite16_putx(
-	int left, int screen_top, int sprite_offset, sprite16_put_func_t func
+	screen_x_t left, screen_y_t top, int sprite_offset, sprite16_put_func_t func
 )
 {
-	SETUP_VARS(left, screen_top, sprite_offset);
+	SETUP_VARS(left, top, sprite_offset);
 	if(putpos_right < clip_right) {
 		if(putpos_left >= clip_left) {
 put:
 			_AH = SPRITE16_PUT;
 			_DX = putpos_left;
-			_BX = screen_top;
+			_BX = top;
 			static_cast<int>(_BX) >>= 1;
 			_AL = put_w_words;
 			_CX = sprite16_put_h;
@@ -129,7 +131,9 @@ end:
 
 #pragma codestring "\x90"
 
-void pascal sprite16_put_noclip(int left, int screen_top, int sprite_offset)
+void pascal sprite16_put_noclip(
+	screen_x_t left, screen_y_t top, int sprite_offset
+)
 {
 	// A completely useless SETUP_VARS variant without the `put_w_words`
 	// assignment, which actually makes it incorrect...
@@ -140,7 +144,7 @@ void pascal sprite16_put_noclip(int left, int screen_top, int sprite_offset)
 	putpos_right <<= 4;
 	putpos_right += putpos_left;
 
-	CALL_PUT(putpos_left, screen_top, sprite16_put_w.v, sprite_offset_local);
+	CALL_PUT(putpos_left, top, sprite16_put_w.v, sprite_offset_local);
 }
 
 }

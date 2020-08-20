@@ -41,7 +41,7 @@ void pascal mptn_free(void);
 
 #include "th01/hardware/grppsafx.h"
 
-void pascal graph_copy_rect_1_to_0(int x, int y, int w, int h);
+void pascal graph_copy_rect_1_to_0(screen_x_t x, vram_y_t y, int w, int h);
 // -------
 
 typedef enum {

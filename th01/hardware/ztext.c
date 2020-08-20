@@ -110,7 +110,7 @@ void z_text_locate(char x, char y)
 	int86(0xDC, &regs, &regs);
 }
 
-void z_text_putsa(int x, int y, int z_atrb, const char *str)
+void z_text_putsa(tram_x_t x, tram_y_t y, int z_atrb, const char *str)
 {
 	uint16_t codepoint;
 	int p = ((y * text_width()) + x) * 2;
@@ -177,7 +177,7 @@ void z_text_putsa(int x, int y, int z_atrb, const char *str)
 	}
 }
 
-void z_text_vputsa(int x, int y, int z_atrb, const char *fmt, ...)
+void z_text_vputsa(tram_x_t x, tram_y_t y, int z_atrb, const char *fmt, ...)
 {
 	char str[256];
 	va_list ap;

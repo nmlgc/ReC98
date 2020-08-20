@@ -21,5 +21,5 @@ void pascal near bb_stage_load(const char far* fn);
 #define bb_txt_put_8(left, top, sprite) \
 	_CX = sprite; \
 	bb_txt_put_8_raw(left, top);
-void __fastcall near bb_txt_put_8_raw(unsigned int left, unsigned int top);
+void __fastcall near bb_txt_put_8_raw(uscreen_x_t left, uvram_y_t top);
 /// ---------------------

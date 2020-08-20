@@ -2,14 +2,14 @@
 // be animated, and may or may not have a hitbox for collision with the Orb.
 class CBossEntity {
 public:
-	int cur_left;
-	int cur_top;
-	int prev_left;
-	int prev_top;
+	screen_x_t cur_left;
+	screen_y_t cur_top;
+	screen_x_t prev_left;
+	screen_y_t prev_top;
 	int vram_w;
 	int h;
-	area_t<int> move_clamp;	// Relative to VRAM
-	area_t<int> hitbox_orb;	// Relative to [cur_left] and [cur_top]
+	area_t<screen_x_t, screen_y_t> move_clamp;	// Relative to VRAM
+	area_t<int, int> hitbox_orb;	// Relative to [cur_left] and [cur_top]
 
 	// Never actually read outside of the functions that set them...
 	int prev_delta_y;
@@ -49,47 +49,49 @@ public:
 
 	// Blits [image] to (⌊left/8⌋*8, top).
 	// Additionally clips at the bottom edge of VRAM.
-	void put_8(int left, int top, int image) const;
+	void put_8(screen_x_t left, vram_y_t top, int image) const;
 
 	// Precisely restores pixels according to the alpha mask of [image] from
 	// VRAM page 1, starting at (⌊left/8⌋*8, top).
 	// Additionally clips at the top and bottom edges of VRAM.
-	void unput_8(int left, int top, int image) const;
+	void unput_8(screen_x_t left, vram_y_t top, int image) const;
 
 	// Like put_8(), but restores all pixels in the blitted sprite
 	// rectangle from VRAM page 1 prior to blitting.
 	// Additionally clips at the top and bottom edges of VRAM.
-	void unput_and_put_8(int left, int top, int image) const;
+	void unput_and_put_8(screen_x_t left, vram_y_t top, int image) const;
 
 	// Blits line #[row] of [image] to (left, top).
 	// Additionally clips at the bottom edge of VRAM.
-	void put_1line(int left, int y, int image, int row) const;
+	void put_1line(screen_x_t left, vram_y_t y, int image, int row) const;
 
 	// Like put_1line(), but restores all pixels along the line from VRAM page
 	// 1 prior to blitting the line.
-	void unput_and_put_1line(int left, int y, int image, int row) const;
+	void unput_and_put_1line(
+		screen_x_t left, vram_y_t y, int image, int row
+	) const;
 
 	// Blits [image] with a wave function applied to the starting X coordinate
 	// for each row, based at the given (left, top) point. Used for Elis'
 	// entrance animation.
 	// Calls put_1line() for each row, and clips the sprite accordingly.
 	void wave_put(
-		int left, int top, int image, int len, int amp, int phase
+		screen_x_t left, vram_y_t top, int image, int len, int amp, int phase
 	) const;
 
 	// Like wave_put(), but calls unput_and_put_1line() for each line instead.
 	// For a sloppy, EGC-accelerated unblitter function, see egc_wave_unput().
 	void wave_unput_and_put(
-		int left, int top, int image, int len, int amp, int phase
+		screen_x_t left, vram_y_t top, int image, int len, int amp, int phase
 	) const;
 
 	// Tries to unblit the two sprites at (left_1, top) and (left_2, top) that
 	// were previously blitted with the given wave function using the EGC, but
 	// fails.
 	void egc_sloppy_wave_unput_double_broken(
-		int left_1, int top, int unused,
+		screen_x_t left_1, vram_y_t top, int unused,
 		int len_1, int amp_1, int phase_1,
-		int left_2,
+		screen_x_t left_2,
 		int len_2, int amp_2, int phase_2
 	) const;
 
@@ -135,13 +137,13 @@ protected:
 public:
 	// Sets [cur_left], [cur_top], [unknown], and the [move_clamp] area.
 	void pos_set(
-		int left,
-		int top,
+		screen_x_t left,
+		screen_y_t top,
 		int unknown,
-		int move_clamp_left,
-		int move_clamp_right,
-		int move_clamp_top,
-		int move_clamp_bottom
+		screen_x_t move_clamp_left,
+		screen_x_t move_clamp_right,
+		screen_y_t move_clamp_top,
+		screen_y_t move_clamp_bottom
 	);
 
 	// (Just read the actual function code, it's impossible to summarize these

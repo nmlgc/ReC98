@@ -4,8 +4,8 @@ cdg_put_plane_roll	proc far
 @@plane_dst	= word ptr [bp+6]
 @@plane_src	= word ptr [bp+8]
 @@slot     	= word ptr [bp+10]
-@@y        	= word ptr [bp+12]
-@@x        	= word ptr [bp+14]
+@@top      	= word ptr [bp+12]
+@@left     	= word ptr [bp+14]
 
 @@stride_backwards equ dx
 @@h equ bx
@@ -19,10 +19,10 @@ cdg_put_plane_roll	proc far
 	mov	si, @@slot
 	shl	si, 4
 	add	si, offset _cdg_slots
-	mov	di, @@x
+	mov	di, @@left
 	sar	di, 3
 	mov	@@h, [si+CDGSlot.pixel_height]
-	mov	ax, @@y
+	mov	ax, @@top
 	add	ax, @@h
 	dec	ax
 	shl	ax, 6

@@ -6,15 +6,15 @@ static const int SHOT_W = 16;
 static const int SHOT_H = 16;
 
 struct CShots {
-	int left[SHOT_COUNT];
-	int top[SHOT_COUNT];
+	screen_x_t left[SHOT_COUNT];
+	screen_y_t top[SHOT_COUNT];
 	int unknown[SHOT_COUNT];
 
 	// A shot slot can be considered "alive" if either of these are nonzero.
 	unsigned char moving[SHOT_COUNT];
 	unsigned char decay_frame[SHOT_COUNT];
 
-	void add(int new_left, int new_top);
+	void add(screen_x_t new_left, screen_y_t new_top);
 	void unput_and_reset_all(void);
 	void unput_update_render(void);
 
@@ -24,16 +24,19 @@ struct CShots {
 
 	// Processes any collision between *the given* shot and the Orb, placed at
 	// the given position, and returns true if they did collide.
-	bool16 hittest_orb(int i, int orb_left, int orb_top);
+	bool16 hittest_orb(int i, screen_x_t orb_left, screen_y_t orb_top);
 
 	// Processes any collision between *any* shot and a pellet, placed at the
 	// given position, and returns true if they did collide.
-	bool16 hittest_pellet(int pellet_left, int pellet_top);
+	bool16 hittest_pellet(screen_x_t pellet_left, screen_y_t pellet_top);
 
 	// Processes any collision between *any* shot and a boss with the given
 	// hitbox, and returns true if they did collide.
 	bool16 hittest_boss(
-		int hitbox_left, int hitbox_top, int hitbox_w, int hitbox_h
+		screen_x_t hitbox_left,
+		screen_y_t hitbox_top,
+		int hitbox_w,
+		int hitbox_h
 	);
 };
 

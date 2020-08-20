@@ -6,7 +6,7 @@ static const int SHOT_DECAY_FRAMES = 7;
 #define sloppy_unput(i) \
 	egc_copy_rect_1_to_0_16(left[i], top[i], SHOT_W, SHOT_H);
 
-void CShots::add(int new_left, int new_top)
+void CShots::add(screen_x_t new_left, screen_y_t new_top)
 {
 	if(new_left < PLAYFIELD_LEFT || new_left > (PLAYFIELD_RIGHT - 1)) {
 		return;
@@ -78,7 +78,7 @@ void CShots::unput_update_render(void)
 	}
 }
 
-bool16 CShots::hittest_orb(int i, int orb_left, int orb_top)
+bool16 CShots::hittest_orb(int i, screen_x_t orb_left, screen_y_t orb_top)
 {
 	if(moving[i] == false) {
 		return false;
@@ -111,7 +111,7 @@ bool16 CShots::hittest_orb(int i, int orb_left, int orb_top)
 	decay_frame[i] = 1; \
 	mdrv2_se_play(16);
 
-bool16 CShots::hittest_pellet(int pellet_left, int pellet_top)
+bool16 CShots::hittest_pellet(screen_x_t pellet_left, screen_y_t pellet_top)
 {
 	for(int i = 0; i < SHOT_COUNT; i++) {
 		if(moving[i] == false) {
@@ -137,7 +137,7 @@ bool16 CShots::hittest_pellet(int pellet_left, int pellet_top)
 }
 
 bool16 CShots::hittest_boss(
-	int hitbox_left, int hitbox_top, int hitbox_w, int hitbox_h
+	screen_x_t hitbox_left, screen_y_t hitbox_top, int hitbox_w, int hitbox_h
 )
 {
 	for(int i = 0; i < SHOT_COUNT; i++) {

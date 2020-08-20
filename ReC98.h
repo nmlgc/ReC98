@@ -29,6 +29,11 @@
 struct point_t {
 	int x, y;
 };
+
+struct screen_point_t {
+	screen_x_t x;
+	screen_y_t y;
+};
 // ---------------------
 
 // Macros

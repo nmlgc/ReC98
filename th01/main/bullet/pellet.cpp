@@ -41,7 +41,12 @@ CPellets::CPellets(void)
 }
 
 void vector2_to_player_from(
-	int x, int y, int &ret_x, int &ret_y, int length, unsigned char plus_angle
+	screen_x_t x,
+	screen_y_t y,
+	subpixel_t &ret_x,
+	subpixel_t &ret_y,
+	subpixel_t length,
+	unsigned char plus_angle
 )
 {
 	plus_angle = iatan2(
@@ -60,8 +65,8 @@ bool16 pattern_velocity_set(
 	pellet_pattern_t pattern,
 	subpixel_t speed,
 	int &i,
-	int pellet_left,
-	int pellet_top
+	screen_x_t pellet_left,
+	screen_y_t pellet_top
 )
 {
 	// ZUN bug: Due to this default, add_pattern() ends up repeatedly calling
@@ -190,7 +195,7 @@ inline subpixel_t base_speed_for_rank(void)
 	pellet->from_pattern = pattern;
 
 void CPellets::add_pattern(
-	int left, int top, pellet_pattern_t pattern, subpixel_t speed
+	screen_x_t left, screen_y_t top, pellet_pattern_t pattern, subpixel_t speed
 )
 {
 	int i;
@@ -237,14 +242,14 @@ void CPellets::add_pattern(
 }
 
 void CPellets::add_single(
-	int left,
-	int top,
+	screen_x_t left,
+	screen_y_t top,
 	int angle,
 	subpixel_t speed_base,
 	pellet_motion_t motion_type,
 	subpixel_t speed_for_motion_fixed,
-	int spin_center_x,
-	int spin_center_y
+	screen_x_t spin_center_x,
+	screen_y_t spin_center_y
 )
 {
 	int i;
@@ -397,7 +402,7 @@ void CPellets::motion_type_apply_for_cur(void)
 	}
 }
 
-void pellet_put(int left, int top, int cel)
+void pellet_put(screen_x_t left, vram_y_t top, int cel)
 {
 	// Some `__asm` statements here look like they could be expressed using
 	// register pseudovariables. However, TCC would then use a different
@@ -430,14 +435,16 @@ void pellet_put(int left, int top, int cel)
 	__asm loop	put_loop;
 }
 
-void pellet_render(int left, int top, int cel)
+void pellet_render(screen_x_t left, screen_y_t top, int cel)
 {
 	grcg_setcolor_rmw(7);
 	pellet_put(left, top, cel);
 	grcg_off();
 }
 
-inline bool16 overlaps_shot(int pellet_left, int pellet_top, int i)
+inline bool16 overlaps_shot(
+	screen_x_t pellet_left, screen_y_t pellet_top, int i
+)
 {
 	return overlap_lt_gt(
 		pellet_left, pellet_top, PELLET_W, PELLET_H,
@@ -445,7 +452,7 @@ inline bool16 overlaps_shot(int pellet_left, int pellet_top, int i)
 	);
 }
 
-inline bool16 overlaps_orb(int pellet_left, int pellet_top)
+inline bool16 overlaps_orb(screen_x_t pellet_left, screen_y_t pellet_top)
 {
 	return overlap_lt_gt(
 		pellet_left, pellet_top, PELLET_W, PELLET_H,
@@ -453,7 +460,9 @@ inline bool16 overlaps_orb(int pellet_left, int pellet_top)
 	);
 }
 
-bool16 CPellets::visible_after_hittests_for_cur(int pellet_left, int pellet_top)
+bool16 CPellets::visible_after_hittests_for_cur(
+	screen_x_t pellet_left, screen_y_t pellet_top
+)
 {
 	// Well, well. Since ZUN uses this super sloppy 16x8 rectangle to unblit
 	// 8x8 pellets, there's now the (completely unnecessary) possibility of

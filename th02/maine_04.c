@@ -40,9 +40,9 @@ void pascal scoredat_defaults_set(void)
 	}
 
 // Slightly differs from the same function in OP.EXE!
-void pascal score_points_put(unsigned y, long points, unsigned atrb)
+void pascal score_points_put(tram_y_t y, long points, unsigned atrb)
 {
-	int x;
+	tram_x_t x;
 	int digit;
 	long divisor = 10000000;
 	long result;

@@ -4,8 +4,12 @@
 ;	パターンの表示(16x16/32x32限定, 4色以内, 画面上下連続)
 ;
 ; Functions/Procedures:
-;	void z_super_roll_put_tiny_32x32( int left<ax>, int top<dx>, int num ) ;
-;	void z_super_roll_put_tiny_16x16( int left<ax>, int top<dx>, int num ) ;
+;	void z_super_roll_put_tiny_32x32(
+;		screen_x_t left<ax>, vram_y_t top<dx>, int num
+;	);
+;	void z_super_roll_put_tiny_16x16(
+;		screen_x_t left<ax>, vram_y_t top<dx>, int num
+;	);
 ;
 ; Parameters:
 ;	x,y	描画する座標

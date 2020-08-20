@@ -1,6 +1,6 @@
 extern "C" {
 
-void ptn_snap_8(int left, int top, int ptn_id)
+void ptn_snap_8(screen_x_t left, vram_y_t top, int ptn_id)
 {
 	unsigned int vram_offset = vram_offset_muldiv(left, top);
 	ptn_t *ptn = ptn_with_id(ptn_id);
@@ -21,7 +21,9 @@ static inline ptn_dots_t dot_mask(int x, int w)
 	return static_cast<ptn_dots_t>((1u << w) - 1u) << (w - x);
 }
 
-void ptn_snap_quarter_8(int left, int top, int ptn_id, int quarter)
+void ptn_snap_quarter_8(
+	screen_x_t left, vram_y_t top, int ptn_id, int quarter
+)
 {
 	int y;
 	unsigned int vram_offset = vram_offset_muldiv(left, top);

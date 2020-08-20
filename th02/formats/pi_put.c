@@ -4,7 +4,7 @@ void pi_slot_palette_apply(int slot)
 	palette_show();
 }
 
-void pi_slot_put(int left, int top, int slot)
+void pi_slot_put(screen_x_t left, vram_y_t top, int slot)
 {
 	char *row_p = pi_slot_buffers[slot];
 	int y;

@@ -61,11 +61,11 @@ extern const char gEXTRA_STAGE[12];
 #define BGM_TRAM_CENTER_Y (vram_y_to_tram(BGM_CENTER_Y))
 #define BGM_TRAM_RIGHT (PLAYFIELD_TRAM_RIGHT - 1)
 
-inline int bgm_note_tram_left(int title_len)
+inline tram_x_t bgm_note_tram_left(int title_len)
 {
 	return ((BGM_TRAM_RIGHT - (GAIJI_TRAM_W + 1)) - title_len);
 }
-inline int bgm_title_tram_left(int title_len)
+inline tram_x_t bgm_title_tram_left(int title_len)
 {
 	return (BGM_TRAM_RIGHT - title_len);
 }
@@ -74,10 +74,12 @@ inline int bgm_title_tram_left(int title_len)
 // with the given halfwidth length, starting at the given text RAM X column
 // and playfield-space Y position.
 // Assumes that the GRCG is active, and set to the intended color.
-void pascal near popup_dissolve_put(int tram_left, subpixel_t top, int ank_len)
+void pascal near popup_dissolve_put(
+	tram_x_t tram_left, subpixel_t top, int ank_len
+)
 {
-	int vram_left = tram_left;
-	int vram_right = ank_len;
+	vram_x_t vram_left = tram_left;
+	vram_x_t vram_right = ank_len;
 
 	vram_left--;
 	vram_right += vram_left;

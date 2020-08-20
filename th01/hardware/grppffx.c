@@ -5,7 +5,9 @@
 #include "ReC98.h"
 #include "th01/hardware/graph.h"
 
-void graph_printf_fx(int left, int top, int fx, const char *fmt, ...)
+void graph_printf_fx(
+	screen_x_t left, vram_y_t top, int fx, const char *fmt, ...
+)
 {
 	char str[256];
 	va_list ap;

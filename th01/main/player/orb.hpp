@@ -1,16 +1,18 @@
 static const int ORB_W = 32;
 static const int ORB_H = 32;
 
-static const int ORB_LEFT_MIN = (PLAYFIELD_LEFT);
-static const int ORB_LEFT_MAX = (PLAYFIELD_RIGHT - ORB_W);
-static const int ORB_TOP_MIN = (PLAYFIELD_TOP);
-static const int ORB_TOP_MAX = (PLAYFIELD_BOTTOM - ORB_H);
+static const screen_x_t ORB_LEFT_MIN = (PLAYFIELD_LEFT);
+static const screen_x_t ORB_LEFT_MAX = (PLAYFIELD_RIGHT - ORB_W);
+static const screen_y_t ORB_TOP_MIN = (PLAYFIELD_TOP);
+static const screen_y_t ORB_TOP_MAX = (PLAYFIELD_BOTTOM - ORB_H);
 
-static const int ORB_LEFT_START = (ORB_LEFT_MAX -  8);
-static const int  ORB_TOP_START = ( ORB_TOP_MAX - 88);
+static const screen_x_t ORB_LEFT_START = (ORB_LEFT_MAX -  8);
+static const screen_y_t  ORB_TOP_START = ( ORB_TOP_MAX - 88);
 
-extern int  orb_cur_left,  orb_cur_top;
-extern int orb_prev_left, orb_prev_top;
+extern screen_x_t orb_cur_left;
+extern screen_y_t orb_cur_top;
+extern screen_x_t orb_prev_left;
+extern screen_y_t orb_prev_top;
 extern bool16 orb_in_portal;
 
 /// Physics

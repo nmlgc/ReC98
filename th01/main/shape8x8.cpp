@@ -10,17 +10,17 @@
 	} \
 	grcg_put_8x8_mono(vram_offset_topleft, first_bit, sprite.rows, col);
 
-void shape8x8_diamond_put(int left, int top, int col)
+void shape8x8_diamond_put(screen_x_t left, vram_y_t top, int col)
 {
 	shape8x8_put(SHAPE8X8_DIAMOND, left, top, col);
 }
 
-void shape8x8_star_put(int left, int top, int col)
+void shape8x8_star_put(screen_x_t left, vram_y_t top, int col)
 {
 	shape8x8_put(SHAPE8X8_STAR, left, top, col);
 }
 
-void shape8x8_flake_put(int left, int top, int col)
+void shape8x8_flake_put(screen_x_t left, vram_y_t top, int col)
 {
 	shape8x8_put(SHAPE8X8_FLAKE, left, top, col);
 }

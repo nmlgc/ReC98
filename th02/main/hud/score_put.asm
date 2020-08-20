@@ -2,7 +2,7 @@ HUD_CONTINUES_X = HUD_X + ((SCORE_DIGITS - 1) * 2)
 
 ; Only prints the seven score digits, in contrast to the TH04/TH05 version!
 
-; void pascal near hud_score_put(unsigned int y, long value);
+; void pascal near hud_score_put(utram_y_t y, long value);
 public HUD_SCORE_PUT
 hud_score_put	proc near
 @@result 	=  word ptr [bp-4]
@@ -44,7 +44,7 @@ hud_score_put	proc near
 hud_score_put	endp
 
 
-; void pascal near hud_continues_put(unsigned int y, int continues_used);
+; void pascal near hud_continues_put(utram_y_t y, int continues_used);
 public HUD_CONTINUES_PUT
 hud_continues_put	proc near
 

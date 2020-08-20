@@ -3,4 +3,6 @@
 extern int graph_putsa_fx_func;
 extern int graph_putsa_fx_spacing;
 
-void pascal graph_putsa_fx(int x, int y, int color, const unsigned char *str);
+void pascal graph_putsa_fx(
+	screen_x_t left, vram_y_t top, int color, const unsigned char *str
+);

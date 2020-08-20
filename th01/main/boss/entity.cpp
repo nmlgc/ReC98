@@ -14,7 +14,7 @@ extern bool bos_header_only;
 /// ----------------
 // Part of ZUN's attempt at clipping at the left or right edges of VRAM, by
 // comparing [vram_offset] against the value returned from this function.
-inline int16_t vram_intended_y_for(int16_t vram_offset, int first_x) {
+inline vram_y_t vram_intended_y_for(int16_t vram_offset, screen_x_t first_x) {
 	return (first_x < 0)
 		? ((vram_offset / ROW_SIZE) + 1)
 		: ((vram_offset / ROW_SIZE) + 0);
@@ -94,14 +94,14 @@ void CBossEntity::bos_metadata_get(
 
 /// Blitting
 /// --------
-void CBossEntity::put_8(int left, int top, int image) const
+void CBossEntity::put_8(screen_x_t left, vram_y_t top, int image) const
 {
 	int16_t vram_offset_row = vram_offset_divmul(left, top);
 	int16_t vram_offset;
 	size_t bos_p = 0;
 	int bos_y;
 	int bos_word_x;
-	int16_t intended_y;
+	vram_y_t intended_y;
 
 	bos_image_t &bos = bos_images[bos_slot].image[image];
 	if(bos_image_count <= image) {
@@ -133,12 +133,14 @@ void CBossEntity::put_8(int left, int top, int image) const
 		}
 	}
 }
-void CBossEntity::put_1line(int left, int y, int image, int row) const
+void CBossEntity::put_1line(
+	screen_x_t left, vram_y_t y, int image, int row
+) const
 {
 	int16_t vram_offset_row = vram_offset_shift(left, y);
 	int bos_word_x;
 	size_t bos_p = 0;
-	int16_t intended_y;
+	vram_y_t intended_y;
 	char first_bit = (left & (BYTE_DOTS - 1));
 	char other_shift = ((1 * BYTE_DOTS) - first_bit);
 
@@ -249,12 +251,14 @@ void pascal near vram_put_unaligned_bg_fg(
 	vram_put_unaligned_bg_fg(fg.G, VRAM_PLANE_G, vram_offset, bg.G, first_bit); \
 	vram_put_unaligned_bg_fg(fg.E, VRAM_PLANE_E, vram_offset, bg.E, first_bit);
 
-void CBossEntity::unput_and_put_1line(int left, int y, int image, int row) const
+void CBossEntity::unput_and_put_1line(
+	screen_x_t left, vram_y_t y, int image, int row
+) const
 {
 	int16_t vram_offset_row = vram_offset_shift(left, y);
 	int bos_word_x;
 	size_t bos_p = 0;
-	int16_t intended_y;
+	vram_y_t intended_y;
 	char first_bit = (left & (BYTE_DOTS - 1));
 	char other_shift = ((2 * BYTE_DOTS) - first_bit);
 	Planar<dots16_t> bg_masked;
@@ -300,14 +304,16 @@ void CBossEntity::unput_and_put_1line(int left, int y, int image, int row) const
 	}
 }
 
-void CBossEntity::unput_and_put_8(int left, int top, int image) const
+void CBossEntity::unput_and_put_8(
+	screen_x_t left, vram_y_t top, int image
+) const
 {
 	int16_t vram_offset_row = vram_offset_divmul(left, top);
 	int16_t vram_offset;
 	size_t bos_p = 0;
 	int bos_y;
 	int bos_word_x;
-	int16_t intended_y;
+	vram_y_t intended_y;
 	Planar<dots16_t> bg_masked;
 
 	bos_image_t &bos = bos_images[bos_slot].image[image];
@@ -361,14 +367,14 @@ void CBossEntity::unput_and_put_8(int left, int top, int image) const
 	vram_unput_masked_emptyopt(G, offset, bit_count, mask, tmp_dots); \
 	vram_unput_masked_emptyopt(E, offset, bit_count, mask, tmp_dots);
 
-void CBossEntity::unput_8(int left, int top, int image) const
+void CBossEntity::unput_8(screen_x_t left, vram_y_t top, int image) const
 {
 	int16_t vram_offset_row = vram_offset_divmul(left, top);
 	int16_t vram_offset;
 	int bos_y;
 	int bos_word_x;
 	size_t bos_p = 0;
-	int16_t intended_y;
+	vram_y_t intended_y;
 
 	bos_image_t &bos = bos_images[bos_slot].image[image];
 	if(bos_image_count <= image) {
@@ -409,20 +415,20 @@ void CBossEntity::unput_8(int left, int top, int image) const
 #define wave_func(func, left, top, image, len, amp, phase) \
 	int t = phase; \
 	for(int bos_y = 0; h > bos_y; bos_y++) { \
-		int x = (wave_x(amp, t) + left); \
+		screen_x_t x = (wave_x(amp, t) + left); \
 		t += (0x100 / len); \
 		func(x, (top + bos_y), image, bos_y); \
 	}
 
 void CBossEntity::wave_put(
-	int left, int top, int image, int len, int amp, int phase
+	screen_x_t left, vram_y_t top, int image, int len, int amp, int phase
 ) const
 {
 	wave_func(put_1line, left, top, image, len, amp, phase);
 }
 
 void CBossEntity::wave_unput_and_put(
-	int left, int top, int image, int len, int amp, int phase
+	screen_x_t left, vram_y_t top, int image, int len, int amp, int phase
 ) const
 {
 	wave_func(unput_and_put_1line, left, top, image, len, amp, phase);
@@ -433,15 +439,15 @@ inline int word_align(int v) {
 }
 
 void CBossEntity::egc_sloppy_wave_unput_double_broken(
-	int left_1, int top, int,
+	screen_x_t left_1, vram_y_t top, int,
 	int len_1, int amp_1, int phase_1,
-	int left_2,
+	screen_x_t left_2,
 	int len_2, int amp_2, int phase_2
 ) const
 {
-	int x_1;
+	screen_x_t x_1;
 	int t_1 = phase_1;
-	int x_2;
+	screen_x_t x_2;
 	int t_2 = phase_2;
 	for(int bos_y = 0; h > bos_y; bos_y++) {
 		x_1 = wave_x(amp_1, t_1) + left_1;
@@ -466,7 +472,7 @@ void CBossEntity::unput_and_put_16x8_8(int bos_left, int bos_top) const
 	int16_t vram_offset_row = vram_offset_shift(cur_left, cur_top);
 	int bos_row;
 	size_t bos_p = 0;
-	int intended_y;
+	vram_y_t intended_y;
 	int image = bos_image;
 	Planar<dots16_t> bg_masked;
 	bos_image_t &bos = bos_images[bos_slot].image[image];
@@ -506,13 +512,13 @@ void CBossEntity::unput_and_put_16x8_8(int bos_left, int bos_top) const
 /// --------
 
 void CBossEntity::pos_set(
-	int left,
-	int top,
+	screen_x_t left,
+	screen_y_t top,
 	int unknown,
-	int move_clamp_left,
-	int move_clamp_right,
-	int move_clamp_top,
-	int move_clamp_bottom
+	screen_x_t move_clamp_left,
+	screen_x_t move_clamp_right,
+	screen_y_t move_clamp_top,
+	screen_y_t move_clamp_bottom
 )
 {
 	this->cur_left = left;
@@ -537,12 +543,12 @@ void CBossEntity::move_lock_unput_and_put_8(
 	if(move_lock_frame == 0) {
 		move(delta_x, delta_y);
 
-		int unput_left = (prev_delta_x > 0)
+		screen_x_t unput_left = (prev_delta_x > 0)
 			? ((prev_left / BYTE_DOTS) * BYTE_DOTS)
 			: (((cur_left / BYTE_DOTS) * BYTE_DOTS) + (vram_w * BYTE_DOTS));
 		egc_copy_rect_1_to_0_16(unput_left, prev_top, 8, h);
 
-		int unput_top = (cur_top > prev_top)
+		vram_y_t unput_top = (cur_top > prev_top)
 			? prev_top
 			: (cur_top + h);
 		egc_copy_rect_1_to_0_16(

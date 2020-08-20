@@ -54,8 +54,8 @@ const char *MUSIC_FILES[] = {
 
 // Polygon state
 char initialized = 0;
-point_t points[10];
-point_t pos[MUSIC_POLYGONS];
+screen_point_t points[10];
+screen_point_t pos[MUSIC_POLYGONS];
 point_t move_speed[MUSIC_POLYGONS];
 char angle[MUSIC_POLYGONS];
 char rot_speed[MUSIC_POLYGONS];
@@ -101,7 +101,12 @@ void pascal near screen_back_B_put(void)
 }
 
 void pascal near polygon_build(
-	point_t near *pts, int x, int y, int rad, int npoint, char angle
+	screen_point_t near *pts,
+	screen_x_t x,
+	screen_y_t y,
+	int rad,
+	int npoint,
+	char angle
 )
 {
 	int i;
@@ -198,7 +203,10 @@ void pascal near music_flip(void)
 
 void pascal near cmt_back_snap(void)
 {
-	int ps, x, pd, y;
+	int ps;
+	screen_x_t x;
+	int pd;
+	screen_y_t y;
 	int i;
 	for(i = 0; i < PL_COUNT; i++) {
 		cmt_back[i] = reinterpret_cast<dots8_t *>(MK_FP(
@@ -220,7 +228,10 @@ void pascal near cmt_back_free(void)
 
 void pascal near cmt_back_put(void)
 {
-	int ps, x, pd, y;
+	int ps;
+	screen_x_t x;
+	int pd;
+	screen_y_t y;
 	CMT_BACK_BLIT(VRAM_PLANE, pd, cmt_back, ps);
 }
 

@@ -102,7 +102,7 @@ void ptn_free(int slot)
 	}
 }
 
-void ptn_put_noalpha_8(int left, int top, int ptn_id)
+void ptn_put_noalpha_8(screen_x_t left, vram_y_t top, int ptn_id)
 {
 	unsigned int vram_offset = vram_offset_shift(left, top);
 	ptn_t *ptn = ptn_with_id(ptn_id);
@@ -118,7 +118,9 @@ void ptn_put_noalpha_8(int left, int top, int ptn_id)
 	}
 }
 
-void ptn_put_quarter_noalpha_8(int left, int top, int ptn_id, int quarter)
+void ptn_put_quarter_noalpha_8(
+	screen_x_t left, vram_y_t top, int ptn_id, int quarter
+)
 {
 	int y;
 	unsigned int vram_offset = vram_offset_muldiv(left, top);

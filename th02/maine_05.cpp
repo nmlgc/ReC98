@@ -8,7 +8,8 @@ extern "C" {
 
 void pascal near rotrect_draw(int rad, unsigned char angle)
 {
-	int x[4], y[4];
+	screen_x_t x[4];
+	screen_y_t y[4];
 	int i;
 	for(i = 0; i < 4; i++) {
 		x[i] = ((rad * (long)CosTable8[angle]) >> 8) + 192;

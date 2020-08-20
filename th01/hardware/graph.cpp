@@ -265,7 +265,7 @@ void graph_copy_page_back_to_front(void)
 	Planes_declare(p);
 	page_t page_front = (page_back ^ 1);
 
-	for(int y = 0; y < RES_Y; y++) {
+	for(screen_y_t y = 0; y < RES_Y; y++) {
 		PlanarRow_blit(tmp, p, ROW_SIZE);
 		graph_accesspage(page_front);
 		PlanarRow_blit(p, tmp, ROW_SIZE);
@@ -364,14 +364,14 @@ void z_palette_show(void)
 #define VRAM_SBYTE(plane, offset) \
 	*reinterpret_cast<sdots8_t *>(MK_FP(SEG_PLANE_##plane, offset))
 
-void z_grcg_pset(int x, int y, int col)
+void z_grcg_pset(screen_x_t x, vram_y_t y, int col)
 {
 	grcg_setcolor_rmw(col);
 	VRAM_SBYTE(B, vram_offset_mulshift(x, y)) = (0x80 >> (x & (BYTE_DOTS - 1)));
 	grcg_off_func();
 }
 
-int z_graph_readdot(int x, int y)
+int z_graph_readdot(screen_x_t x, vram_y_t y)
 {
 	int ret;
 	int16_t vram_offset = vram_offset_mulshift(x, y);
@@ -404,7 +404,7 @@ extern bool graph_r_unput;
 // Not used for purely horizontal lines.
 extern dots16_t graph_r_pattern;
 
-void graph_r_hline(int left, int right, int y, int col)
+void graph_r_hline(screen_x_t left, screen_x_t right, vram_y_t y, int col)
 {
 	int x;
 	int full_bytes_to_put;
@@ -445,9 +445,9 @@ void graph_r_hline(int left, int right, int y, int col)
 	}
 }
 
-void graph_r_vline(int x, int top, int bottom, int col)
+void graph_r_vline(screen_x_t x, vram_y_t top, vram_y_t bottom, int col)
 {
-	int y;
+	vram_y_t y;
 	int order_tmp;
 	dots16_t pattern;
 	int vram_row_offset;
@@ -476,7 +476,9 @@ void graph_r_vline(int x, int top, int bottom, int col)
 	grcg_off_func();
 }
 
-void graph_r_line_unput(int left, int top, int right, int bottom)
+void graph_r_line_unput(
+	screen_x_t left, vram_y_t top, screen_x_t right, vram_y_t bottom
+)
 {
 	graph_r_unput = true;
 	graph_r_line(left, top, right, bottom, 7);
@@ -484,7 +486,12 @@ void graph_r_line_unput(int left, int top, int right, int bottom)
 }
 
 void graph_r_line_patterned(
-	int left, int top, int right, int bottom, int col, dots16_t pattern
+	screen_x_t left,
+	vram_y_t top,
+	screen_x_t right,
+	vram_y_t bottom,
+	int col,
+	dots16_t pattern
 )
 {
 	graph_r_pattern = pattern;
@@ -492,16 +499,24 @@ void graph_r_line_patterned(
 	graph_r_pattern = 0x80;
 }
 
-void graph_r_line(int left, int top, int right, int bottom, int col)
+void graph_r_line(
+	screen_x_t left,
+	vram_y_t top,
+	screen_x_t right,
+	vram_y_t bottom,
+	int col
+)
 {
 	register int vram_offset;
 	int i;
-	int x_cur, y_cur;
+	screen_x_t x_cur;
+	vram_y_t y_cur;
 	int w, h;
 	int error;
 	int y_direction;
 	int order_tmp;
-	int x_vram, y_vram;
+	vram_x_t x_vram;
+	vram_y_t y_vram;
 	dots16_t pixels;
 
 	planar32_t page1;
@@ -628,10 +643,16 @@ end:
 }
 /// -----------------------
 
-void z_grcg_boxfill(int left, int top, int right, int bottom, int col)
+void z_grcg_boxfill(
+	screen_x_t left,
+	vram_y_t top,
+	screen_x_t right,
+	vram_y_t bottom,
+	int col
+)
 {
 	int x;
-	int y;
+	vram_y_t y;
 	int full_bytes_to_put;
 	int order_tmp;
 	dots8_t left_pixels;
@@ -664,7 +685,13 @@ void z_grcg_boxfill(int left, int top, int right, int bottom, int col)
 	grcg_off_func();
 }
 
-void graph_r_box(int left, int top, int right, int bottom, int col)
+void graph_r_box(
+	screen_x_t left,
+	vram_y_t top,
+	screen_x_t right,
+	vram_y_t bottom,
+	int col
+)
 {
 	graph_r_hline(left, right, top, col);
 	graph_r_vline(left, top, bottom, col);
@@ -699,9 +726,11 @@ int text_extent_fx(int fx, const unsigned char *str)
 
 #include "th01/hardware/grppsafx.cpp"
 
-void graph_putsa_fx(int left, int top, int fx, const unsigned char *str)
+void graph_putsa_fx(
+	screen_x_t left, vram_y_t top, int fx, const unsigned char *str
+)
 {
-	register int x = left;
+	register screen_x_t x = left;
 	uint16_t codepoint;
 	dots16_t glyph_row;
 	unsigned char far *vram;
@@ -756,7 +785,7 @@ void graph_putsa_fx(int left, int top, int fx, const unsigned char *str)
 }
 
 void graph_copy_byterect_back_to_front(
-	int left, int top, int right, int bottom
+	screen_x_t left, vram_y_t top, screen_x_t right, vram_y_t bottom
 )
 {
 	int w = (right - left) / BYTE_DOTS;
@@ -777,8 +806,12 @@ void graph_copy_byterect_back_to_front(
 }
 
 void graph_move_byterect_interpage(
-	int src_left, int src_top, int src_right, int src_bottom,
-	int dst_left, int dst_top,
+	screen_x_t src_left,
+	vram_y_t src_top,
+	screen_x_t src_right,
+	vram_y_t src_bottom,
+	screen_x_t dst_left,
+	vram_y_t dst_top,
 	int src, int dst
 )
 {

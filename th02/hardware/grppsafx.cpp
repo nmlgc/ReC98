@@ -2,7 +2,9 @@
 #include <mbstring.h>
 #include "th01/hardware/grppsafx.cpp"
 
-void graph_putsa_fx(int left, int top, int fx, const unsigned char *str)
+void graph_putsa_fx(
+	screen_x_t left, vram_y_t top, int fx, const unsigned char *str
+)
 {
 	uint16_t codepoint;
 	dots16_t glyph_row;

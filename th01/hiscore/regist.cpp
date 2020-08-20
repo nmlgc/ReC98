@@ -9,12 +9,12 @@
 
 #define TITLE_LEFT 48
 #define TITLE_TOP 0
-static const int TITLE_BACK_LEFT = 0;
-static const int TITLE_BACK_TOP = (RES_Y - GLYPH_H);
+static const screen_x_t TITLE_BACK_LEFT = 0;
+static const screen_y_t TITLE_BACK_TOP = (RES_Y - GLYPH_H);
 static const int TITLE_BACK_W = 288;
 static const int TITLE_BACK_H = GLYPH_H;
-static const int TITLE_BACK_RIGHT = (TITLE_BACK_LEFT + TITLE_BACK_W);
-static const int TITLE_BACK_BOTTOM = (TITLE_BACK_TOP + TITLE_BACK_H);
+static const screen_x_t TITLE_BACK_RIGHT = (TITLE_BACK_LEFT + TITLE_BACK_W);
+static const screen_y_t TITLE_BACK_BOTTOM = (TITLE_BACK_TOP + TITLE_BACK_H);
 
 /// Table
 /// -----
@@ -25,33 +25,33 @@ static const int TITLE_BACK_BOTTOM = (TITLE_BACK_TOP + TITLE_BACK_H);
 #define table_row_top(place) (TABLE_BODY_TOP + (place * TABLE_ROW_H))
 
 // Recursively defining column positions \o/
-inline int table_left(int x_kanji) {
+inline screen_x_t table_left(int x_kanji) {
 	return 32 + (x_kanji * GLYPH_FULL_W);
 }
 
-inline int table_place_left(int x_kanji) {
+inline screen_x_t table_place_left(int x_kanji) {
 	return table_left(x_kanji);
 }
 
-inline int table_name_left(int x_kanji) {
+inline screen_x_t table_name_left(int x_kanji) {
 	return table_place_left(7 + x_kanji);
 }
 
-inline int table_points_left(int x_kanji) {
+inline screen_x_t table_points_left(int x_kanji) {
 	return table_name_left(SCOREDAT_NAME_KANJI + 5 + x_kanji);
 }
 
-inline int table_stage_route_left(int x_kanji) {
+inline screen_x_t table_stage_route_left(int x_kanji) {
 	return table_points_left(SCORE_DIGITS + 3 + x_kanji);
 }
 
-inline int table_stage_left(int x_kanji) {
+inline screen_x_t table_stage_left(int x_kanji) {
 	return table_stage_route_left(1 + x_kanji);
 }
 
 // Code generation actually prohibits this from being a Point!
-extern int entered_name_left;
-extern int entered_name_top;
+extern screen_x_t entered_name_left;
+extern screen_y_t entered_name_top;
 /// -----
 
 /// Alphabet
@@ -173,7 +173,7 @@ void alphabet_put_initial()
 	alphabet_putsa_fx(NUM_TOP, i, fx, ALPHABET_ENTER);	i++;
 }
 
-inline void header_cell_put(int left, const char str[])
+inline void header_cell_put(screen_x_t left, const char str[])
 {
 	graph_putsa_fx(left, TABLE_TOP, FX(COL_SELECTED, 3, 0), str);
 }
@@ -232,7 +232,7 @@ void regist_put_initial(
 		# define top table_row_top(i)
 		#else
 			int place_col = (i == entered_place) ? COL_SELECTED : COL_REGULAR;
-			int top = table_row_top(i);
+			vram_y_t top = table_row_top(i);
 		#endif
 
 		switch(i) {
@@ -333,7 +333,7 @@ void regist_put_initial(
 		on_enter \
 	}
 
-void alphabet_put_at(int left, int top, bool16 is_selected)
+void alphabet_put_at(screen_x_t left, screen_y_t top, bool16 is_selected)
 {
 	// Placement matters with -O-!
 	extern const char ALPHABET_SPACE_0[];
@@ -372,8 +372,10 @@ void alphabet_put_at(int left, int top, bool16 is_selected)
 	name.byte[(pos * 2) + 1] = kanji_lo(kanji);
 
 int regist_on_shot(
-	int left, int top,
-	scoredat_name_z_t& entered_name, int& entered_name_cursor
+	screen_x_t left,
+	screen_y_t top,
+	scoredat_name_z_t &entered_name,
+	int &entered_name_cursor
 )
 {
 	int16_t kanji = '\0';
@@ -436,7 +438,7 @@ enum regist_input_ret_t {
 #pragma option -b.
 
 regist_input_ret_t regist_on_input(
-	int& left, int& top,
+	screen_x_t &left, screen_y_t &top,
 	scoredat_name_z_t& entered_name, int& entered_name_cursor
 )
 {
@@ -590,8 +592,8 @@ void regist_name_enter(int entered_place)
 {
 	scoredat_name_z_t entered_name;
 	regist_input_timeout_declare();
-	int left;
-	int top;
+	screen_x_t left;
+	screen_y_t top;
 	int entered_name_cursor;
 	int i;
 
