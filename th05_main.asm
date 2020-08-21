@@ -38,7 +38,7 @@ include th05/main/enemy/enemy.inc
 
 	.seq
 main_01 group main__TEXT, main_0_TEXT, main_01_TEXT
-main_03 group main_031_TEXT, main_032_TEXT, main_033_TEXT, main_034_TEXT
+main_03 group main_031_TEXT, main_032_TEXT, main_033_TEXT, main_034_TEXT, main_035_TEXT
 
 ; ===========================================================================
 
@@ -9575,24 +9575,23 @@ loc_11691:
 		retn
 midbossx_render	endp
 
-
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_11695	proc near
+public EXALICE_CUSTOMBULLETS_RENDER
+exalice_custombullets_render	proc near
 
 @@left		= word ptr -0Ah
 @@patnum		= word ptr -8
 var_6		= word ptr -6
 @@angle		= word ptr -4
-var_2		= word ptr -2
+@@i		= word ptr -2
 
 		enter	0Ah, 0
 		push	si
 		push	di
-		mov	di, 0C478h
-		mov	[bp+var_2], 0
+		mov	di, offset _firewaves
+		mov	[bp+@@i], 0
 		jmp	loc_117BA
 ; ---------------------------------------------------------------------------
 
@@ -9609,7 +9608,7 @@ loc_116A6:
 		and	si, 0FFF0h
 		mov	al, [di+1]
 		mov	ah, 0
-		add	ax, 168
+		add	ax, PAT_FIREWAVE_LEFT
 		mov	[bp+@@patnum], ax
 		jmp	loc_117A6
 ; ---------------------------------------------------------------------------
@@ -9723,18 +9722,18 @@ loc_117A6:
 		jl	loc_116CE
 
 loc_117B4:
-		inc	[bp+var_2]
-		add	di, 6
+		inc	[bp+@@i]
+		add	di, size firewave_t
 
 loc_117BA:
-		cmp	[bp+var_2], 2
+		cmp	[bp+@@i], 2
 		jl	loc_116A6
 		call	curvebullets_render
 		pop	di
 		pop	si
 		leave
 		retn
-sub_11695	endp
+exalice_custombullets_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -25798,84 +25797,12 @@ loc_1E864:
 		retf
 midbossx_update	endp
 
+	FIREWAVES_ADD procdesc pascal near \
+		amp:word, is_right:byte
+	FIREWAVES_UPDATE procdesc pascal near
+main_034_TEXT	ends
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1E87C	proc near
-
-arg_0		= byte ptr  4
-arg_2		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, 0C478h
-		xor	dx, dx
-		jmp	short loc_1E8A6
-; ---------------------------------------------------------------------------
-
-loc_1E887:
-		cmp	byte ptr [si], 0
-		jnz	short loc_1E8A2
-		mov	byte ptr [si], 1
-		mov	al, [bp+arg_0]
-		mov	[si+1],	al
-		mov	word ptr [si+2], 10h
-		mov	ax, [bp+arg_2]
-		mov	[si+4],	ax
-		jmp	short loc_1E8AB
-; ---------------------------------------------------------------------------
-
-loc_1E8A2:
-		inc	dx
-		add	si, 6
-
-loc_1E8A6:
-		cmp	dx, 2
-		jl	short loc_1E887
-
-loc_1E8AB:
-		pop	si
-		pop	bp
-		retn	4
-sub_1E87C	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1E8B0	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, 0C478h
-		xor	ax, ax
-		jmp	short loc_1E8D2
-; ---------------------------------------------------------------------------
-
-loc_1E8BB:
-		cmp	byte ptr [si], 0
-		jz	short loc_1E8CE
-		add	word ptr [si+2], 4
-		cmp	word ptr [si+2], 260h
-		jl	short loc_1E8CE
-		mov	byte ptr [si], 0
-
-loc_1E8CE:
-		inc	ax
-		add	si, 6
-
-loc_1E8D2:
-		cmp	ax, 2
-		jl	short loc_1E8BB
-		pop	si
-		pop	bp
-		retn
-sub_1E8B0	endp
-
+main_035_TEXT	segment	byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -26129,7 +26056,7 @@ loc_1EB0C:
 		jnz	short loc_1EB39
 		push	bx
 		mov	ax, _boss_phase_frame
-		mov	bx, 256
+		mov	bx, 256		; amp
 		cwd
 		idiv	bx
 		or	dx, dx
@@ -26142,8 +26069,8 @@ loc_1EB2C:
 		xor	ax, ax
 
 loc_1EB2E:
-		push	ax
-		call	sub_1E87C
+		push	ax	; is_right
+		call	firewaves_add
 		call	snd_se_play pascal, 13
 
 loc_1EB39:
@@ -27008,7 +26935,7 @@ loc_1F374:
 		mov	_boss_mode, 1
 		mov	_boss_mode_change, 0
 		mov	_boss_phase_frame, 0
-		mov	_boss_custombullets_render, offset sub_11695
+		mov	_boss_custombullets_render, offset exalice_custombullets_render
 		mov	angle_2D085, 0
 		mov	fp_2CE66, offset sub_1E922
 		mov	byte_2D07F, 0
@@ -27298,7 +27225,7 @@ loc_1F660:
 
 loc_1F666:
 		call	curvebullets_update
-		call	sub_1E8B0
+		call	firewaves_update
 		push	_boss_hp
 		push	6784h
 		call	sub_17354
@@ -27997,7 +27924,7 @@ loc_1FD8B:
 		retn
 sub_1FD62	endp
 
-main_034_TEXT	ends
+main_035_TEXT	ends
 
 	.data
 
@@ -28690,7 +28617,8 @@ byte_2CE4C	db ?
 include th04/main/stage/funcs[bss].asm
 point_2CE52	Point <?>
 byte_2CE56	db ?
-		db 13 dup(?)
+		evendata
+include th05/main/boss/bx[bss].asm
 patnum_2CE64	dw ?
 fp_2CE66	dw ?
 fp_2CE68	dw ?

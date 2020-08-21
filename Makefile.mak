@@ -135,7 +135,7 @@ bin\th05\op.exe: bin\th05\op.obj th05\op_01.cpp
 $**
 |
 
-bin\th05\main.exe: bin\th05\main.obj th05\main010.cpp th05\p_common.cpp th05\p_reimu.cpp th05\p_marisa.cpp th05\p_mima.cpp th05\p_yuuka.cpp bin\th05\player.obj bin\th05\hud_bar.obj bin\th05\scoreupd.obj th05\main011.cpp th05\main012.cpp  bin\th05\bullet.obj th05\main031.cpp th05\main032.cpp th05\main033.cpp
+bin\th05\main.exe: bin\th05\main.obj th05\main010.cpp th05\p_common.cpp th05\p_reimu.cpp th05\p_marisa.cpp th05\p_mima.cpp th05\p_yuuka.cpp bin\th05\player.obj bin\th05\hud_bar.obj bin\th05\scoreupd.obj th05\main011.cpp th05\main012.cpp  bin\th05\bullet.obj th05\main031.cpp th05\main032.cpp th05\main033.cpp th05\main034.cpp
 	$(CC) $(CFLAGS) -ml -3 -Z -DGAME=5 -DBINARY='M' -nbin\th05\ -eMAIN.EXE @&&|
 $**
 |

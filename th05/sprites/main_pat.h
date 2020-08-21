@@ -26,8 +26,8 @@ typedef enum {
 	PAT_SHOT_SUB = 22,
 	PAT_OPTION = 26,
 	// --------------------------------------------------
-	// miko16.bft
-	// ----------
+	// miko16.bft / st06_16.bft
+	// ------------------------
 	PAT_ITEM = 36,
 
 	// Non-directional bullets
@@ -65,11 +65,14 @@ typedef enum {
 	PAT_DECAY_BULLET16,
 	PAT_DECAY_BULLET16_last = (PAT_DECAY_BULLET16 + BULLET_DECAY_CELS - 1),
 
+	PAT_FIREWAVE_LEFT = 168,	// st06_16.bft only
+	PAT_FIREWAVE_RIGHT,     	// st06_16.bft only
+
 	PAT_EXPLOSION_SMALL,
 
 	PAT_PARTICLE = 172,
 	PAT_PARTICLE_last = (PAT_PARTICLE + PARTICLE_CELS),
-	// ----------
+	// ------------------------
 	/// =================
 
 	/// Stage 4
