@@ -83,7 +83,10 @@ int CBossEntity::bos_load(const char fn[PF_FN_LEN], int slot)
 }
 
 void CBossEntity::bos_metadata_get(
-	int &image_count, unsigned char &slot, int &vram_w, int &h
+	int &image_count,
+	unsigned char &slot,
+	vram_byte_amount_t &vram_w,
+	pixel_t &h
 ) const
 {
 	image_count = this->bos_image_count;
@@ -99,8 +102,8 @@ void CBossEntity::put_8(screen_x_t left, vram_y_t top, int image) const
 	int16_t vram_offset_row = vram_offset_divmul(left, top);
 	int16_t vram_offset;
 	size_t bos_p = 0;
-	int bos_y;
-	int bos_word_x;
+	pixel_t bos_y;
+	vram_word_amount_t bos_word_x;
 	vram_y_t intended_y;
 
 	bos_image_t &bos = bos_images[bos_slot].image[image];
@@ -134,11 +137,11 @@ void CBossEntity::put_8(screen_x_t left, vram_y_t top, int image) const
 	}
 }
 void CBossEntity::put_1line(
-	screen_x_t left, vram_y_t y, int image, int row
+	screen_x_t left, vram_y_t y, int image, pixel_t row
 ) const
 {
 	int16_t vram_offset_row = vram_offset_shift(left, y);
-	int bos_word_x;
+	vram_word_amount_t bos_word_x;
 	size_t bos_p = 0;
 	vram_y_t intended_y;
 	char first_bit = (left & (BYTE_DOTS - 1));
@@ -167,8 +170,9 @@ void CBossEntity::put_1line(
 
 			#define vram_byte(plane, byte) \
 				(VRAM_PLANE_##plane + vram_offset)[byte]
+			register vram_byte_amount_t byte;
 			if(first_bit == 0) {
-				for(register int byte = 0; byte < sizeof(dots16_t); byte++) {
+				for(byte = 0; byte < sizeof(dots16_t); byte++) {
 					grcg_setcolor_rmw(0);
 					vram_byte(B, byte) = cur.alpha.u[byte];
 					grcg_off();
@@ -179,7 +183,7 @@ void CBossEntity::put_1line(
 					vram_byte(E, byte) |= cur.E.u[byte];
 				}
 			} else {
-				for(register int byte = 0; byte < sizeof(dots16_t); byte++) {
+				for(byte = 0; byte < sizeof(dots16_t); byte++) {
 					grcg_setcolor_rmw(0);
 					vram_byte(B, byte + 0) = (cur.alpha.u[byte] >> first_bit);
 					vram_byte(B, byte + 1) = (cur.alpha.u[byte] << other_shift);
@@ -252,11 +256,11 @@ void pascal near vram_put_unaligned_bg_fg(
 	vram_put_unaligned_bg_fg(fg.E, VRAM_PLANE_E, vram_offset, bg.E, first_bit);
 
 void CBossEntity::unput_and_put_1line(
-	screen_x_t left, vram_y_t y, int image, int row
+	screen_x_t left, vram_y_t y, int image, pixel_t row
 ) const
 {
 	int16_t vram_offset_row = vram_offset_shift(left, y);
-	int bos_word_x;
+	vram_word_amount_t bos_word_x;
 	size_t bos_p = 0;
 	vram_y_t intended_y;
 	char first_bit = (left & (BYTE_DOTS - 1));
@@ -311,8 +315,8 @@ void CBossEntity::unput_and_put_8(
 	int16_t vram_offset_row = vram_offset_divmul(left, top);
 	int16_t vram_offset;
 	size_t bos_p = 0;
-	int bos_y;
-	int bos_word_x;
+	pixel_t bos_y;
+	vram_word_amount_t bos_word_x;
 	vram_y_t intended_y;
 	Planar<dots16_t> bg_masked;
 
@@ -371,8 +375,8 @@ void CBossEntity::unput_8(screen_x_t left, vram_y_t top, int image) const
 {
 	int16_t vram_offset_row = vram_offset_divmul(left, top);
 	int16_t vram_offset;
-	int bos_y;
-	int bos_word_x;
+	pixel_t bos_y;
+	vram_word_amount_t bos_word_x;
 	size_t bos_p = 0;
 	vram_y_t intended_y;
 
@@ -414,14 +418,14 @@ void CBossEntity::unput_8(screen_x_t left, vram_y_t top, int image) const
 
 #define wave_func(func, left, top, image, len, amp, phase) \
 	int t = phase; \
-	for(int bos_y = 0; h > bos_y; bos_y++) { \
+	for(pixel_t bos_y = 0; h > bos_y; bos_y++) { \
 		screen_x_t x = (wave_x(amp, t) + left); \
 		t += (0x100 / len); \
 		func(x, (top + bos_y), image, bos_y); \
 	}
 
 void CBossEntity::wave_put(
-	screen_x_t left, vram_y_t top, int image, int len, int amp, int phase
+	screen_x_t left, vram_y_t top, int image, int len, pixel_t amp, int phase
 ) const
 {
 	wave_func(put_1line, left, top, image, len, amp, phase);
@@ -440,16 +444,16 @@ inline int word_align(int v) {
 
 void CBossEntity::egc_sloppy_wave_unput_double_broken(
 	screen_x_t left_1, vram_y_t top, int,
-	int len_1, int amp_1, int phase_1,
+	int len_1, pixel_t amp_1, int phase_1,
 	screen_x_t left_2,
-	int len_2, int amp_2, int phase_2
+	int len_2, pixel_t amp_2, int phase_2
 ) const
 {
 	screen_x_t x_1;
 	int t_1 = phase_1;
 	screen_x_t x_2;
 	int t_2 = phase_2;
-	for(int bos_y = 0; h > bos_y; bos_y++) {
+	for(pixel_t bos_y = 0; h > bos_y; bos_y++) {
 		x_1 = wave_x(amp_1, t_1) + left_1;
 		x_2 = wave_x(amp_2, t_2) + left_2;
 		t_1 += (0x100 / len_1);
@@ -467,10 +471,10 @@ void CBossEntity::egc_sloppy_wave_unput_double_broken(
 	}
 }
 
-void CBossEntity::unput_and_put_16x8_8(int bos_left, int bos_top) const
+void CBossEntity::unput_and_put_16x8_8(pixel_t bos_left, pixel_t bos_top) const
 {
 	int16_t vram_offset_row = vram_offset_shift(cur_left, cur_top);
-	int bos_row;
+	pixel_t bos_row;
 	size_t bos_p = 0;
 	vram_y_t intended_y;
 	int image = bos_image;
@@ -537,7 +541,7 @@ void CBossEntity::sloppy_unput() const
 }
 
 void CBossEntity::move_lock_unput_and_put_8(
-	int, int delta_x, int delta_y, int lock_frames
+	int, pixel_t delta_x, pixel_t delta_y, int lock_frames
 )
 {
 	if(move_lock_frame == 0) {
@@ -566,7 +570,7 @@ void CBossEntity::move_lock_unput_and_put_8(
 }
 
 void CBossEntity::move_lock_and_put_8(
-	int, int delta_x, int delta_y, int lock_frames
+	int, pixel_t delta_x, pixel_t delta_y, int lock_frames
 )
 {
 	if(move_lock_frame == 0) {

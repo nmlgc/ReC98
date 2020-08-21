@@ -7,7 +7,7 @@ void pi_slot_palette_apply(int slot)
 void pi_slot_put(screen_x_t left, vram_y_t top, int slot)
 {
 	char *row_p = pi_slot_buffers[slot];
-	int y;
+	pixel_t y;
 	for(y = 0; y < pi_slot_headers[slot].ysize; y++) {
 		graph_pack_put_8(left, top, row_p, pi_slot_headers[slot].xsize);
 		top++;

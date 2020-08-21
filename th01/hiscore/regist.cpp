@@ -11,8 +11,8 @@
 #define TITLE_TOP 0
 static const screen_x_t TITLE_BACK_LEFT = 0;
 static const screen_y_t TITLE_BACK_TOP = (RES_Y - GLYPH_H);
-static const int TITLE_BACK_W = 288;
-static const int TITLE_BACK_H = GLYPH_H;
+static const pixel_t TITLE_BACK_W = 288;
+static const pixel_t TITLE_BACK_H = GLYPH_H;
 static const screen_x_t TITLE_BACK_RIGHT = (TITLE_BACK_LEFT + TITLE_BACK_W);
 static const screen_y_t TITLE_BACK_BOTTOM = (TITLE_BACK_TOP + TITLE_BACK_H);
 
@@ -70,7 +70,7 @@ extern screen_y_t entered_name_top;
 #define relative_top(row) \
 	((row) * KANJI_PADDED_H)
 
-inline int relative_top_for(int kanji_id)
+inline pixel_t relative_top_for(int kanji_id)
 {
 	return relative_top(kanji_id / KANJI_PER_ROW);
 }
@@ -80,7 +80,7 @@ inline int row_ceil(int count)
 	return ((count + (KANJI_PER_ROW - 1)) / KANJI_PER_ROW);
 }
 
-inline int left_for(int kanji_id)
+inline pixel_t left_for(int kanji_id)
 {
 	return (((kanji_id % KANJI_PER_ROW) * KANJI_PADDED_W) + MARGIN_W);
 }

@@ -15,7 +15,7 @@ void pellet_cloud_put_8(screen_x_t left, vram_y_t top, int col, int cel)
 
 	grcg_setcolor_rmw(col);
 
-	int y = 0;
+	pixel_t y = 0;
 	while(y < PELLET_CLOUD_H) {
 		if(sPELLET_CLOUD[cel][y]) {
 			VRAM_PUT(B, vram_offset, sPELLET_CLOUD[cel][y], PELLET_CLOUD_W);
@@ -33,7 +33,7 @@ void pellet_cloud_unput_8(screen_x_t left, vram_y_t top, int cel)
 
 	pellet_cloud_put_8(left, top, 0, cel);
 
-	int y = 0;
+	pixel_t y = 0;
 	while(y < PELLET_CLOUD_H) {
 		if(sPELLET_CLOUD[cel][y]) {
 			graph_accesspage_func(1);

@@ -19,13 +19,13 @@ void scale_2x(dots32_t &dst32, sdots16_t src16)
 
 void graph_2xscale_byterect_1_to_0_slow(
 	screen_x_t left_0, vram_y_t top_0,
-	screen_x_t left_1, vram_y_t top_1, int w_1, int h_1
+	screen_x_t left_1, vram_y_t top_1, pixel_t w_1, pixel_t h_1
 )
 {
 	int row_p1 = vram_offset_divmul(left_1, top_1);
 	int row_p0 = vram_offset_divmul(left_0, top_0);
-	int col16;
-	int row;
+	vram_word_amount_t col16;
+	pixel_t row;
 	Planar<dots16_t> px16;
 	dots16_t px16_nonzero;
 

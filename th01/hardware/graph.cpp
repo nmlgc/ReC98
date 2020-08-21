@@ -406,8 +406,8 @@ extern dots16_t graph_r_pattern;
 
 void graph_r_hline(screen_x_t left, screen_x_t right, vram_y_t y, int col)
 {
-	int x;
-	int full_bytes_to_put;
+	vram_byte_amount_t x;
+	vram_byte_amount_t full_bytes_to_put;
 	int order_tmp;
 	dots8_t left_pixels;
 	dots8_t right_pixels;
@@ -511,7 +511,7 @@ void graph_r_line(
 	int i;
 	screen_x_t x_cur;
 	vram_y_t y_cur;
-	int w, h;
+	pixel_t w, h;
 	int error;
 	int y_direction;
 	int order_tmp;
@@ -651,9 +651,9 @@ void z_grcg_boxfill(
 	int col
 )
 {
-	int x;
+	vram_byte_amount_t x;
 	vram_y_t y;
-	int full_bytes_to_put;
+	vram_byte_amount_t full_bytes_to_put;
 	int order_tmp;
 	dots8_t left_pixels;
 	dots8_t right_pixels;
@@ -699,10 +699,10 @@ void graph_r_box(
 	graph_r_hline(left, right, bottom, col);
 }
 
-int text_extent_fx(int fx, const unsigned char *str)
+pixel_t text_extent_fx(int fx, const unsigned char *str)
 {
-	register int ret = 0;
-	register int spacing = (fx / 0x40) % 8;
+	register pixel_t ret = 0;
+	register pixel_t spacing = (fx / 0x40) % 8;
 	while(*str) {
 		if(_ismbblead(str[0])) {
 			uint16_t codepoint = ((char)str[0] << 8) + str[0];
@@ -737,12 +737,12 @@ void graph_putsa_fx(
 	int fullwidth;
 	int first_bit;
 	int weight = (fx / 0x10) % 4;
-	int spacing = (fx / 0x40) % 8;
+	pixel_t spacing = (fx / 0x40) % 8;
 	int clear_bg = (fx & FX_CLEAR_BG);
 	int underline = (fx & FX_UNDERLINE);
 	int reverse = (fx & FX_REVERSE);
-	int w;
-	int line;
+	pixel_t w;
+	pixel_t line;
 	dots16_t glyph[GLYPH_H];
 	register dots16_t glyph_row_tmp;
 
@@ -788,11 +788,11 @@ void graph_copy_byterect_back_to_front(
 	screen_x_t left, vram_y_t top, screen_x_t right, vram_y_t bottom
 )
 {
-	int w = (right - left) / BYTE_DOTS;
-	int h = (bottom - top);
+	pixel_t w = (right - left) / BYTE_DOTS;
+	pixel_t h = (bottom - top);
 	Planes_declare(p);
 	page_t page_front = page_back ^ 1;
-	int row;
+	pixel_t row;
 	PlanarRow_declare(tmp);
 
 	Planes_offset(p, left, top);
@@ -815,11 +815,11 @@ void graph_move_byterect_interpage(
 	int src, int dst
 )
 {
-	int w = (src_right - src_left) / BYTE_DOTS;
-	int h = (src_bottom - src_top);
+	pixel_t w = (src_right - src_left) / BYTE_DOTS;
+	pixel_t h = (src_bottom - src_top);
 	Planes_declare(src);
 	Planes_declare(dst);
-	int row;
+	pixel_t row;
 	PlanarRow_declare(tmp);
 
 	Planes_offset(src, src_left, src_top);

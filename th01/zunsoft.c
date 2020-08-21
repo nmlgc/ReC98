@@ -4,6 +4,8 @@
  */
 
 #include <master.h>
+#include "platform.h"
+#include "pc98.h"
 
 #define CIRCLE_COUNT 4
 #define STAR_COUNT 50
@@ -65,7 +67,9 @@ void zunsoft_exit(void)
 	egc_start();
 }
 
-void pascal vector2(int *ret_x, int *ret_y, unsigned char angle, int length)
+void pascal vector2(
+	pixel_t *ret_x, pixel_t *ret_y, unsigned char angle, pixel_t length
+)
 {
 	*ret_x = (length * (long)Cos8(angle)) >> 8;
 	*ret_y = (length * (long)Sin8(angle)) >> 8;
@@ -127,7 +131,7 @@ void stars_render_and_update(void)
 	int i;
 	grcg_setcolor(GC_RMW, 5);
 	for(i = 0; i < STAR_COUNT; i++) {
-		int dx, dy;
+		pixel_t dx, dy;
 
 		grcg_pset(star_pos[i].x, star_pos[i].y);
 

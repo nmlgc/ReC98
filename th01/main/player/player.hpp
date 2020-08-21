@@ -1,5 +1,5 @@
-static const int PLAYER_W = 32;
-static const int PLAYER_H = 32;
+static const pixel_t PLAYER_W = 32;
+static const pixel_t PLAYER_H = 32;
 
 static const screen_x_t PLAYER_LEFT_MIN = (PLAYFIELD_LEFT);
 static const screen_x_t PLAYER_LEFT_MAX = (PLAYFIELD_RIGHT - PLAYER_W);

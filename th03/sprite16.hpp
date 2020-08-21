@@ -1,6 +1,6 @@
 #include "th03/hardware/vram.hpp"
 
-extern int sprite16_put_h;
+extern pixel_t sprite16_put_h;
 extern VRAMWord sprite16_put_w;
 extern screen_x_t sprite16_clip_left;
 extern screen_x_t sprite16_clip_right;

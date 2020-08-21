@@ -2,6 +2,21 @@
 // -----
 // PC-98 hardware constants not covered by master.lib
 
+/// Spaces
+/// ------
+/// These don't necessarily have to be relative to the top-left corner of the
+/// display.
+
+// Display-space widths, heights, and object-space coordinates
+typedef int pixel_t;
+typedef unsigned int upixel_t;
+
+// VRAM widths and object-space coordinates
+typedef int vram_byte_amount_t;
+typedef int vram_word_amount_t;
+typedef int vram_dword_amount_t;
+/// ------
+
 /// Coordinate systems
 /// ------------------
 /// All of these are relative to the top-left corner of the final display.

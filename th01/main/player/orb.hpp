@@ -1,5 +1,5 @@
-static const int ORB_W = 32;
-static const int ORB_H = 32;
+static const pixel_t ORB_W = 32;
+static const pixel_t ORB_H = 32;
 
 static const screen_x_t ORB_LEFT_MIN = (PLAYFIELD_LEFT);
 static const screen_x_t ORB_LEFT_MAX = (PLAYFIELD_RIGHT - ORB_W);

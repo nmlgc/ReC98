@@ -75,8 +75,8 @@ endp_defconv
 
 ; void pascal pi_slot_put_mask_rowloop(
 ;	void far *pi_buf<es:si>,
-;	int h<di>,
-;	screen_x_t x, vram_y_t y, int w, size_t stride_packed
+;	pixel_t h<di>,
+;	screen_x_t x, vram_y_t y, pixel_t w, size_t stride_packed
 ; );
 pi_slot_put_rowloop	proc near
 @@stride_packed	= word ptr [bp+2]

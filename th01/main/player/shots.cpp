@@ -1,6 +1,6 @@
 #include "th01/sprites/main_ptn.h"
 
-static const int SHOT_SPRITE_MARGIN = 2;
+static const pixel_t SHOT_SPRITE_MARGIN = 2;
 static const int SHOT_DECAY_FRAMES = 7;
 
 #define sloppy_unput(i) \
@@ -137,7 +137,10 @@ bool16 CShots::hittest_pellet(screen_x_t pellet_left, screen_y_t pellet_top)
 }
 
 bool16 CShots::hittest_boss(
-	screen_x_t hitbox_left, screen_y_t hitbox_top, int hitbox_w, int hitbox_h
+	screen_x_t hitbox_left,
+	screen_y_t hitbox_top,
+	pixel_t hitbox_w,
+	pixel_t hitbox_h
 )
 {
 	for(int i = 0; i < SHOT_COUNT; i++) {

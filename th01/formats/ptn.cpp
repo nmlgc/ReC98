@@ -25,7 +25,7 @@ ptn_error_t ptn_load_palette_show(int slot, const char *fn)
 		ptn_header_t header;
 	} h;
 
-	int y;
+	pixel_t y;
 	int i;
 	int image_count;
 	ptn_t *ptn;
@@ -106,7 +106,7 @@ void ptn_put_noalpha_8(screen_x_t left, vram_y_t top, int ptn_id)
 {
 	unsigned int vram_offset = vram_offset_shift(left, top);
 	ptn_t *ptn = ptn_with_id(ptn_id);
-	for(int y = 0; y < PTN_H; y++) {
+	for(pixel_t y = 0; y < PTN_H; y++) {
 		#define put_noalpha(vram_offset, w, ptn) \
 			VRAM_CHUNK(B, vram_offset, w) = (ptn->planes.B[y]); \
 			VRAM_CHUNK(R, vram_offset, w) = (ptn->planes.R[y]); \
@@ -122,7 +122,7 @@ void ptn_put_quarter_noalpha_8(
 	screen_x_t left, vram_y_t top, int ptn_id, int quarter
 )
 {
-	int y;
+	pixel_t y;
 	unsigned int vram_offset = vram_offset_muldiv(left, top);
 	PTNQuarter q;
 	ptn_t *ptn = ptn_with_id(ptn_id);

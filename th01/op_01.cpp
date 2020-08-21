@@ -220,7 +220,7 @@ void option_input_sense(void)
 void whiteline_put(screen_y_t y)
 {
 	size_t vram_offset = vram_offset_shift(0, y);
-	int x;
+	vram_dword_amount_t x;
 
 	grcg_setcolor_rmw(15);
 	x = 0;

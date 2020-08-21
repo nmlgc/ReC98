@@ -24,11 +24,11 @@ struct pointnum_t {
 	SPPoint center_cur;
 	Subpixel center_prev_y;
 #if GAME == 5
-	unsigned int width;
+	upixel_t width;
 	unsigned char digits_lebcd[POINTNUM_DIGITS];
 #else
 	unsigned char digits_lebcd[POINTNUM_DIGITS];
-	unsigned int width;
+	upixel_t width;
 	bool times_2;
 #endif
 	int8_t padding;
@@ -42,7 +42,7 @@ extern unsigned char pointnum_white_p;
 
 #if GAME == 5
 	// Returns the on-screen width of [number] in pixels.
-	unsigned int pascal near pointnum_digits_set(
+	upixel_t pascal near pointnum_digits_set(
 		unsigned char near *last_digit, uint16_t points
 	);
 #else

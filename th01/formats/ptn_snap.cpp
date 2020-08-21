@@ -4,7 +4,7 @@ void ptn_snap_8(screen_x_t left, vram_y_t top, int ptn_id)
 {
 	unsigned int vram_offset = vram_offset_muldiv(left, top);
 	ptn_t *ptn = ptn_with_id(ptn_id);
-	for(int y = 0; y < PTN_H; y++) {
+	for(pixel_t y = 0; y < PTN_H; y++) {
 		#define snap(ptn, vram_offset, w) \
 			ptn->planes.B[y] = VRAM_CHUNK(B, vram_offset, w); \
 			ptn->planes.R[y] = VRAM_CHUNK(R, vram_offset, w); \
@@ -16,7 +16,7 @@ void ptn_snap_8(screen_x_t left, vram_y_t top, int ptn_id)
 	}
 }
 
-static inline ptn_dots_t dot_mask(int x, int w)
+static inline ptn_dots_t dot_mask(pixel_t x, pixel_t w)
 {
 	return static_cast<ptn_dots_t>((1u << w) - 1u) << (w - x);
 }
@@ -25,9 +25,9 @@ void ptn_snap_quarter_8(
 	screen_x_t left, vram_y_t top, int ptn_id, int quarter
 )
 {
-	int y;
+	pixel_t y;
 	unsigned int vram_offset = vram_offset_muldiv(left, top);
-	int q_y;
+	pixel_t q_y;
 	ptn_dots_t q_mask;
 	long q_x;
 	ptn_t *ptn = ptn_with_id(ptn_id);

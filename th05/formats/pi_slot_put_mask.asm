@@ -85,8 +85,8 @@ pi_slot_put_quarter_mask	endp
 ; void pascal pi_slot_put_mask_rowloop(
 ;	int mask_id<ax>,
 ;	void far *pi_buf<es:si>,
-;	int h<di>,
-;	screen_x_t left, vram_y_t top, int w, size_t stride_packed
+;	pixel_t h<di>,
+;	screen_x_t left, vram_y_t top, pixel_t w, size_t stride_packed
 ; );
 pi_slot_put_mask_rowloop	proc near
 @@stride_packed	= word ptr [bp+2]

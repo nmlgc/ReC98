@@ -17,8 +17,8 @@ static const int GRC_IMAGES_PER_SLOT = 8;
 
 // In-memory slot structure
 struct grc_t {
-	int vram_w;
-	int h;
+	vram_byte_amount_t vram_w;
+	pixel_t h;
 	int image_count;
 	dots8_t* dots[GRC_IMAGES_PER_SLOT];
 };

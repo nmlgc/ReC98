@@ -6,14 +6,14 @@ public:
 	screen_y_t cur_top;
 	screen_x_t prev_left;
 	screen_y_t prev_top;
-	int vram_w;
-	int h;
-	area_t<screen_x_t, screen_y_t> move_clamp;	// Relative to VRAM
-	area_t<int, int> hitbox_orb;	// Relative to [cur_left] and [cur_top]
+	vram_byte_amount_t vram_w;
+	pixel_t h;
+	area_t<screen_x_t, screen_y_t> move_clamp; // Relative to VRAM
+	area_t<pixel_t, pixel_t> hitbox_orb; // Relative to [cur_left] and [cur_top]
 
 	// Never actually read outside of the functions that set them...
-	int prev_delta_y;
-	int prev_delta_x;
+	pixel_t prev_delta_y;
+	pixel_t prev_delta_x;
 
 	int bos_image_count;
 	int zero_1;
@@ -35,7 +35,10 @@ public:
 	// practice, only used to copy these values from one CBossEntity to
 	// another.
 	void bos_metadata_get(
-		int &image_count, unsigned char &slot, int &vram_w, int &h
+		int &image_count,
+		unsigned char &slot,
+		vram_byte_amount_t &vram_w,
+		pixel_t &h
 	) const;
 
 	/// Blitting
@@ -63,12 +66,12 @@ public:
 
 	// Blits line #[row] of [image] to (left, top).
 	// Additionally clips at the bottom edge of VRAM.
-	void put_1line(screen_x_t left, vram_y_t y, int image, int row) const;
+	void put_1line(screen_x_t left, vram_y_t y, int image, pixel_t row) const;
 
 	// Like put_1line(), but restores all pixels along the line from VRAM page
 	// 1 prior to blitting the line.
 	void unput_and_put_1line(
-		screen_x_t left, vram_y_t y, int image, int row
+		screen_x_t left, vram_y_t y, int image, pixel_t row
 	) const;
 
 	// Blits [image] with a wave function applied to the starting X coordinate
@@ -76,13 +79,23 @@ public:
 	// entrance animation.
 	// Calls put_1line() for each row, and clips the sprite accordingly.
 	void wave_put(
-		screen_x_t left, vram_y_t top, int image, int len, int amp, int phase
+		screen_x_t left,
+		vram_y_t top,
+		int image,
+		int len,
+		pixel_t amp,
+		int phase
 	) const;
 
 	// Like wave_put(), but calls unput_and_put_1line() for each line instead.
 	// For a sloppy, EGC-accelerated unblitter function, see egc_wave_unput().
 	void wave_unput_and_put(
-		screen_x_t left, vram_y_t top, int image, int len, int amp, int phase
+		screen_x_t left,
+		vram_y_t top,
+		int image,
+		int len,
+		pixel_t amp,
+		int phase
 	) const;
 
 	// Tries to unblit the two sprites at (left_1, top) and (left_2, top) that
@@ -90,9 +103,9 @@ public:
 	// fails.
 	void egc_sloppy_wave_unput_double_broken(
 		screen_x_t left_1, vram_y_t top, int unused,
-		int len_1, int amp_1, int phase_1,
+		int len_1, pixel_t amp_1, int phase_1,
 		screen_x_t left_2,
-		int len_2, int amp_2, int phase_2
+		int len_2, pixel_t amp_2, int phase_2
 	) const;
 
 	// Blits the 16×8 pixels of [bos_image] in [bos_slot] starting at
@@ -101,7 +114,7 @@ public:
 	// after precisely restoring pixels according to the alpha mask of the
 	// pixels to be blitted from VRAM page 1.
 	// Additionally clips at the top and bottom edges of VRAM.
-	void unput_and_put_16x8_8(int bos_left, int bos_top) const;
+	void unput_and_put_16x8_8(pixel_t bos_left, pixel_t bos_top) const;
 
 	// Restores the pixels inside the entire ([vram_w]*8)×[h] rectangle
 	// starting at (cur_left, cur_top) from VRAM page 1.
@@ -111,7 +124,7 @@ public:
 	/// Movement
 	/// --------
 protected:
-	void move(const int &delta_x, const int &delta_y) {
+	void move(const pixel_t &delta_x, const pixel_t &delta_y) {
 		prev_delta_x = delta_x;
 		prev_delta_y = delta_y;
 		prev_left = cur_left;
@@ -149,10 +162,10 @@ public:
 	// (Just read the actual function code, it's impossible to summarize these
 	// without spelling out every single line here.)
 	void move_lock_and_put_8(
-		int unused, int delta_x, int delta_y, int lock_frames
+		int unused, pixel_t delta_x, pixel_t delta_y, int lock_frames
 	);
 	void move_lock_unput_and_put_8(
-		int unused, int delta_x, int delta_y, int lock_frames
+		int unused, pixel_t delta_x, pixel_t delta_y, int lock_frames
 	);
 	/// --------
 };

@@ -1,6 +1,6 @@
 ; Returns the Y coordinate in AX.
 
-; int __usercall near vector2_at_opt(int angle<cx>, int length<bx>, Point origin<ss:bp>, Point near *ret<ss:di>)
+; int __usercall near vector2_at_opt(int angle<cx>, pixel_t length<bx>, Point origin<ss:bp>, Point near *ret<ss:di>)
 vector2_at_opt	proc near
 	push	si
 	mov	si, cx

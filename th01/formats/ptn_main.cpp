@@ -36,7 +36,7 @@ void ptn_unput_8(screen_x_t left, vram_y_t top, int ptn_id)
 	uint16_t vram_offset = vram_offset_shift(left, top);
 	ptn_t *ptn = ptn_with_id_shift(ptn_id);
 
-	for(unsigned int y = 0; y < PTN_H; y++) {
+	for(upixel_t y = 0; y < PTN_H; y++) {
 		mask = ptn->alpha[y];
 		graph_accesspage_func(0);
 		if(mask) {
@@ -59,7 +59,7 @@ void ptn_unput_8(screen_x_t left, vram_y_t top, int ptn_id)
 
 void ptn_put_8(screen_x_t left, vram_y_t top, int ptn_id)
 {
-	unsigned int y;
+	upixel_t y;
 	dots_t(PTN_W) mask = 0;
 	uint16_t vram_offset = vram_offset_shift(left, top);
 	ptn_t *ptn = ptn_with_id_shift(ptn_id);
@@ -85,7 +85,7 @@ void ptn_unput_quarter_8(
 )
 {
 	sdots_t(PTN_QUARTER_W) mask;
-	unsigned int y;
+	upixel_t y;
 	PTNQuarter q;
 	planar_t(PTN_QUARTER_W) page1;
 	sdots_t(PTN_W) mask_full = 0;
@@ -114,7 +114,7 @@ void ptn_unput_quarter_8(
 void ptn_put_quarter_8(screen_x_t left, vram_y_t top, int ptn_id, int quarter)
 {
 	sdots_t(PTN_QUARTER_W) mask;
-	unsigned int y;
+	upixel_t y;
 	PTNQuarter q;
 	sdots_t(PTN_W) mask_full = 0;
 	uint16_t vram_offset = vram_offset_shift(left, top);
@@ -170,7 +170,7 @@ void ptn_put_quarter(screen_x_t left, vram_y_t top, int ptn_id, int quarter)
 	extern dots16_unaligned_t ptnpq_dots_unaligned_zero;
 
 	unsigned int plane;
-	unsigned int y;
+	upixel_t y;
 	dots_t(PTN_QUARTER_W) mask;
 	PTNQuarter q;
 	char first_bit = (left % BYTE_DOTS);

@@ -8,7 +8,7 @@ void grcg_put_8x8_mono(
 )
 {
 	grcg_setcolor_rmw(col);
-	for(int y = 0; y < 8; y++) {
+	for(pixel_t y = 0; y < 8; y++) {
 		dots16_t d = (
 			(sprite[y] >> first_bit) + (sprite[y] << (16 - first_bit))
 		);

@@ -35,18 +35,18 @@ static const int CUR_FX = FX(7, 3, 0);
 #if (PTN_QUARTER_H < GLYPH_H)
 	#error Original code assumes PTN_QUARTER_H >= GLYPH_H
 #endif
-static const int COL_W = PTN_QUARTER_W;
-static const int ROW_H = PTN_QUARTER_H;
+static const pixel_t COL_W = PTN_QUARTER_W;
+static const pixel_t ROW_H = PTN_QUARTER_H;
 
-static const int SCORE_W = (SCORE_DIGITS * COL_W);
+static const pixel_t SCORE_W = (SCORE_DIGITS * COL_W);
 
 static const screen_x_t CARDCOMBO_LEFT = (
 	SCORE_LEFT + ((SCORE_DIGITS + 2) * COL_W)
 );
-static const int CARDCOMBO_W = (CARDCOMBO_DIGITS * COL_W);
+static const pixel_t CARDCOMBO_W = (CARDCOMBO_DIGITS * COL_W);
 static const screen_x_t CARDCOMBO_RIGHT = (CARDCOMBO_LEFT + CARDCOMBO_W);
 
-static const int SCORE_AND_CARDCOMBO_W = (CARDCOMBO_RIGHT - SCORE_LEFT);
+static const pixel_t SCORE_AND_CARDCOMBO_W = (CARDCOMBO_RIGHT - SCORE_LEFT);
 /// ---------
 
 /// Globals
@@ -85,7 +85,7 @@ inline screen_x_t col_left(screen_x_t first_left, int col) {
 
 // Copies the (⌊[w]/16⌋*16)×[ROW_H] pixels starting at (⌊left/8⌋*8, top) from
 // VRAM page 0 to VRAM page 1.
-void graph_copy_hud_row_0_to_1_8(screen_x_t left, vram_y_t top, int w);
+void graph_copy_hud_row_0_to_1_8(screen_x_t left, vram_y_t top, pixel_t w);
 /// ---------
 }
 
@@ -328,13 +328,13 @@ int hud_bg_load(const char *fn)
 }
 /// ----------
 
-void graph_copy_hud_row_0_to_1_8(screen_x_t left, vram_y_t top, int w)
+void graph_copy_hud_row_0_to_1_8(screen_x_t left, vram_y_t top, pixel_t w)
 {
 	uint16_t vram_offset;
 	dots16_t dots;
-	int y;
+	pixel_t y;
 	uint16_t vram_offset_row = vram_offset_divmul(left, top);
-	int x;
+	vram_word_amount_t x;
 
 	vram_offset = vram_offset_row;
 	for(y = 0; y < ROW_H; y++) {

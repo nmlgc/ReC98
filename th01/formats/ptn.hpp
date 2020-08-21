@@ -25,7 +25,7 @@ typedef dots_t(PTN_W) ptn_dots_t;
 struct ptn_plane_t {
 	ptn_dots_t row[PTN_H];
 
-	ptn_dots_t& operator [](int y) {
+	ptn_dots_t& operator [](pixel_t y) {
 		return row[y];
 	}
 };
@@ -128,7 +128,7 @@ void ptn_put_8(screen_x_t left, vram_y_t top, int ptn_id);
 
 struct PTNQuarter
 {
-	int x, y;
+	pixel_t x, y;
 
 	void init(const int& quarter) {
 		y = ptn_quarter_y(quarter);

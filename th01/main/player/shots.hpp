@@ -2,8 +2,8 @@
 #include "th01/math/overlap.hpp"
 
 static const int SHOT_COUNT = 8;
-static const int SHOT_W = 16;
-static const int SHOT_H = 16;
+static const pixel_t SHOT_W = 16;
+static const pixel_t SHOT_H = 16;
 
 struct CShots {
 	screen_x_t left[SHOT_COUNT];
@@ -35,8 +35,8 @@ struct CShots {
 	bool16 hittest_boss(
 		screen_x_t hitbox_left,
 		screen_y_t hitbox_top,
-		int hitbox_w,
-		int hitbox_h
+		pixel_t hitbox_w,
+		pixel_t hitbox_h
 	);
 };
 

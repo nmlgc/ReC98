@@ -12,8 +12,8 @@ void graph_putsa_fx(
 	int fullwidth;
 	int first_bit;
 	int weight = (fx >> 4) & 3;
-	int spacing = (fx >> 6) & 7;
-	int line;
+	pixel_t spacing = (fx >> 6) & 7;
+	pixel_t line;
 	dots16_t glyph[GLYPH_H];
 	register dots16_t glyph_row_tmp;
 

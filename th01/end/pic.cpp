@@ -12,23 +12,23 @@ void pascal end_pics_load_palette_show(const char *fn)
 #define egc_start_copy egc_start_copy_1
 #include "th01/hardware/egcscopy.c"
 
-static const int PIC_W = (RES_X / 2);
-static const int PIC_H = (RES_Y / 2);
+static const pixel_t PIC_W = (RES_X / 2);
+static const pixel_t PIC_H = (RES_Y / 2);
 static const screen_x_t PIC_LEFT = ((RES_X / 2) - (PIC_W / 2));
 static const screen_y_t PIC_TOP  = ((RES_Y / 2) - (PIC_H / 2));
 
-static const int PIC_VRAM_W = (PIC_W / BYTE_DOTS);
+static const pixel_t PIC_VRAM_W = (PIC_W / BYTE_DOTS);
 
 void end_pic_show(int quarter)
 {
 	egc_start_copy();
 
-	int src_left = ((quarter % 2) * PIC_W);
-	int src_top  = ((quarter / 2) * PIC_H);
+	pixel_t src_left = ((quarter % 2) * PIC_W);
+	pixel_t src_top  = ((quarter / 2) * PIC_H);
 	size_t vram_offset_src = vram_offset_shift(src_left, src_top);
 	size_t vram_offset_dst = vram_offset_shift(PIC_LEFT, PIC_TOP);
-	int vram_x;
-	int y;
+	vram_word_amount_t vram_x;
+	pixel_t y;
 
 	for(y = 0; y < PIC_H; y++) {
 		for(vram_x = 0; vram_x < (PIC_VRAM_W / sizeof(dots16_t)); vram_x++) {

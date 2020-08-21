@@ -12,8 +12,8 @@
 extern char vsync_initialized;
 extern int vsync_callback_is_set;
 
-extern int RES_X_HALF;
-extern int RES_Y_HALF;
+extern pixel_t RES_X_HALF;
+extern pixel_t RES_Y_HALF;
 
 extern int vsync_unused;
 extern void interrupt (*vsync_callback_old)(void);
@@ -21,8 +21,8 @@ extern void (*vsync_callback)(void);
 
 static void interrupt vsync_intfunc(void)
 {
-	int res_x_half = RES_X_HALF;
-	int res_y_half = RES_Y_HALF;
+	pixel_t res_x_half = RES_X_HALF;
+	pixel_t res_y_half = RES_Y_HALF;
 	vsync_frame++;
 	vsync_unused++;
 	if(vsync_callback_is_set) {
