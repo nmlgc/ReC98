@@ -64,27 +64,33 @@ extern dots8_t *VRAM_PLANE_G;
 extern dots8_t *VRAM_PLANE_R;
 extern dots8_t *VRAM_PLANE_E;
 
+// Byte offset of an 8-pixel-aligned X/Y position on a VRAM bitplane,
+// relative to the beginning (= top-left corner) of the plane.
+typedef int16_t vram_offset_t;
+// MODDERS: Delete (yes, this one, not the signed one above!)
+typedef uint16_t uvram_offset_t;
+
 #define VRAM_OFFSET_SHIFT(x, y) \
 	(x >> 3) + (y << 6) + (y << 4)
 
 #ifdef __cplusplus
 // MODDERS: Replace with a single function
-static inline unsigned int vram_offset_shift(screen_x_t x, vram_y_t y)
+static inline vram_offset_t vram_offset_shift(screen_x_t x, vram_y_t y)
 {
 	return VRAM_OFFSET_SHIFT(x, y);
 }
 
-static inline unsigned int vram_offset_muldiv(screen_x_t x, vram_y_t y)
+static inline vram_offset_t vram_offset_muldiv(screen_x_t x, vram_y_t y)
 {
 	return (y * ROW_SIZE) + (x / BYTE_DOTS);
 }
 
-static inline unsigned int vram_offset_divmul(screen_x_t x, vram_y_t y)
+static inline vram_offset_t vram_offset_divmul(screen_x_t x, vram_y_t y)
 {
 	return (x / BYTE_DOTS) + (y * ROW_SIZE);
 }
 
-static inline unsigned int vram_offset_mulshift(screen_x_t x, vram_y_t y)
+static inline vram_offset_t vram_offset_mulshift(screen_x_t x, vram_y_t y)
 {
 	return (y * ROW_SIZE) + (x >> 3);
 }

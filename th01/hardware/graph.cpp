@@ -374,7 +374,7 @@ void z_grcg_pset(screen_x_t x, vram_y_t y, int col)
 int z_graph_readdot(screen_x_t x, vram_y_t y)
 {
 	int ret;
-	int16_t vram_offset = vram_offset_mulshift(x, y);
+	vram_offset_t vram_offset = vram_offset_mulshift(x, y);
 	sdots16_t mask = (0x80 >> (x & (BYTE_DOTS - 1)));
 
 #define test(plane, vram_offset, mask, bit) \
@@ -450,7 +450,7 @@ void graph_r_vline(screen_x_t x, vram_y_t top, vram_y_t bottom, int col)
 	vram_y_t y;
 	int order_tmp;
 	dots16_t pattern;
-	int vram_row_offset;
+	vram_offset_t vram_row_offset;
 
 	fix_order(top, bottom);
 	clip_y(top, bottom);
@@ -507,7 +507,7 @@ void graph_r_line(
 	int col
 )
 {
-	register int vram_offset;
+	register vram_offset_t vram_offset;
 	int i;
 	screen_x_t x_cur;
 	vram_y_t y_cur;

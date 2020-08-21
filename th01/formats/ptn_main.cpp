@@ -33,7 +33,7 @@ static inline ptn_t* ptn_with_id_shift(int id)
 void ptn_unput_8(screen_x_t left, vram_y_t top, int ptn_id)
 {
 	ptn_dots_t mask = 0;
-	uint16_t vram_offset = vram_offset_shift(left, top);
+	uvram_offset_t vram_offset = vram_offset_shift(left, top);
 	ptn_t *ptn = ptn_with_id_shift(ptn_id);
 
 	for(upixel_t y = 0; y < PTN_H; y++) {
@@ -61,7 +61,7 @@ void ptn_put_8(screen_x_t left, vram_y_t top, int ptn_id)
 {
 	upixel_t y;
 	dots_t(PTN_W) mask = 0;
-	uint16_t vram_offset = vram_offset_shift(left, top);
+	uvram_offset_t vram_offset = vram_offset_shift(left, top);
 	ptn_t *ptn = ptn_with_id_shift(ptn_id);
 
 	if(ptn_unput_before_alpha_put) {
@@ -89,7 +89,7 @@ void ptn_unput_quarter_8(
 	PTNQuarter q;
 	planar_t(PTN_QUARTER_W) page1;
 	sdots_t(PTN_W) mask_full = 0;
-	uint16_t vram_offset = vram_offset_shift(left, top);
+	vram_offset_t vram_offset = vram_offset_shift(left, top);
 	ptn_t *ptn = ptn_with_id_shift(ptn_id);
 
 	q.init(quarter);
@@ -117,7 +117,7 @@ void ptn_put_quarter_8(screen_x_t left, vram_y_t top, int ptn_id, int quarter)
 	upixel_t y;
 	PTNQuarter q;
 	sdots_t(PTN_W) mask_full = 0;
-	uint16_t vram_offset = vram_offset_shift(left, top);
+	vram_offset_t vram_offset = vram_offset_shift(left, top);
 	ptn_t *ptn = ptn_with_id_shift(ptn_id);
 
 	q.init(quarter);
@@ -179,7 +179,7 @@ void ptn_put_quarter(screen_x_t left, vram_y_t top, int ptn_id, int quarter)
 	Planar<dots_t(PTN_QUARTER_W)> sprite;
 	dots_t(PTN_QUARTER_W) dots;
 
-	uint16_t vram_offset = vram_offset_shift(left, top);
+	uvram_offset_t vram_offset = vram_offset_shift(left, top);
 	ptn_t *ptn = ptn_with_id_shift(ptn_id);
 
 	ptnpq_vram.B = VRAM_PLANE_B;

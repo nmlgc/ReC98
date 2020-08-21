@@ -68,7 +68,7 @@ void copy_pic_back(int sel, int highlight)
 
 void darken_pic_at(screen_x_t x, screen_y_t y)
 {
-	int row_p = vram_offset_shift(x, y);
+	vram_offset_t row_p = vram_offset_shift(x, y);
 	pixel_t row;
 	vram_byte_amount_t col;
 

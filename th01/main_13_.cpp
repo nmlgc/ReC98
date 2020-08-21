@@ -36,7 +36,7 @@ void graph_hline_unput_masked(
 )
 {
 	planar8_t px8;
-	register uint16_t p = vram_offset_shift(left, top);
+	register vram_offset_t p = vram_offset_shift(left, top);
 	for(vram_byte_amount_t x = 0; x < w; x++, p++) {
 		if(mask[x]) {
 			graph_accesspage_func(1);

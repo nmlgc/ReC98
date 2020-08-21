@@ -22,8 +22,8 @@ void graph_2xscale_byterect_1_to_0_slow(
 	screen_x_t left_1, vram_y_t top_1, pixel_t w_1, pixel_t h_1
 )
 {
-	int row_p1 = vram_offset_divmul(left_1, top_1);
-	int row_p0 = vram_offset_divmul(left_0, top_0);
+	vram_offset_t row_p1 = vram_offset_divmul(left_1, top_1);
+	vram_offset_t row_p0 = vram_offset_divmul(left_0, top_0);
 	vram_word_amount_t col16;
 	pixel_t row;
 	Planar<dots16_t> px16;

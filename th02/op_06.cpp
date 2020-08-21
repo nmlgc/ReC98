@@ -203,9 +203,9 @@ void pascal near music_flip(void)
 
 void pascal near cmt_back_snap(void)
 {
-	int ps;
+	vram_offset_t ps;
 	screen_x_t x;
-	int pd;
+	vram_offset_t pd;
 	screen_y_t y;
 	int i;
 	for(i = 0; i < PL_COUNT; i++) {
@@ -228,9 +228,9 @@ void pascal near cmt_back_free(void)
 
 void pascal near cmt_back_put(void)
 {
-	int ps;
+	vram_offset_t ps;
 	screen_x_t x;
-	int pd;
+	vram_offset_t pd;
 	screen_y_t y;
 	CMT_BACK_BLIT(VRAM_PLANE, pd, cmt_back, ps);
 }

@@ -22,7 +22,7 @@ void snap_col_4(void)
 	extern dots8_t* columns[ROW_SIZE];
 	register vram_x_t x;
 	register screen_y_t y;
-	int vram_offset;
+	vram_offset_t vram_offset;
 
 	for(x = 0; x < ROW_SIZE; x++) {
 		columns[x] = new dots8_t[RES_Y];
@@ -219,7 +219,7 @@ void option_input_sense(void)
 /// --------------------
 void whiteline_put(screen_y_t y)
 {
-	size_t vram_offset = vram_offset_shift(0, y);
+	vram_offset_t vram_offset = vram_offset_shift(0, y);
 	vram_dword_amount_t x;
 
 	grcg_setcolor_rmw(15);
@@ -227,7 +227,7 @@ void whiteline_put(screen_y_t y)
 	while(x < (ROW_SIZE / sizeof(dots32_t))) {
 		VRAM_CHUNK(B, vram_offset, 32) = 0xFFFFFFFF;
 		x++;
-		vram_offset += sizeof(dots32_t);
+		vram_offset += static_cast<vram_offset_t>(sizeof(dots32_t));
 	}
 	grcg_off();
 }

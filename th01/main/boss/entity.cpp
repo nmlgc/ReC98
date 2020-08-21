@@ -14,7 +14,9 @@ extern bool bos_header_only;
 /// ----------------
 // Part of ZUN's attempt at clipping at the left or right edges of VRAM, by
 // comparing [vram_offset] against the value returned from this function.
-inline vram_y_t vram_intended_y_for(int16_t vram_offset, screen_x_t first_x) {
+inline vram_y_t vram_intended_y_for(
+	vram_offset_t vram_offset, screen_x_t first_x
+) {
 	return (first_x < 0)
 		? ((vram_offset / ROW_SIZE) + 1)
 		: ((vram_offset / ROW_SIZE) + 0);
@@ -99,8 +101,8 @@ void CBossEntity::bos_metadata_get(
 /// --------
 void CBossEntity::put_8(screen_x_t left, vram_y_t top, int image) const
 {
-	int16_t vram_offset_row = vram_offset_divmul(left, top);
-	int16_t vram_offset;
+	vram_offset_t vram_offset_row = vram_offset_divmul(left, top);
+	vram_offset_t vram_offset;
 	size_t bos_p = 0;
 	pixel_t bos_y;
 	vram_word_amount_t bos_word_x;
@@ -112,7 +114,7 @@ void CBossEntity::put_8(screen_x_t left, vram_y_t top, int image) const
 	}
 
 	for(bos_y = 0; h > bos_y; bos_y++) {
-		int16_t vram_offset = vram_offset_row;
+		vram_offset_t vram_offset = vram_offset_row;
 		intended_y = vram_intended_y_for(vram_offset_row, left);
 		for(bos_word_x = 0; (vram_w / 2) > bos_word_x; bos_word_x++) {
 			if((vram_offset / ROW_SIZE) == intended_y) {
@@ -140,7 +142,7 @@ void CBossEntity::put_1line(
 	screen_x_t left, vram_y_t y, int image, pixel_t row
 ) const
 {
-	int16_t vram_offset_row = vram_offset_shift(left, y);
+	vram_offset_t vram_offset_row = vram_offset_shift(left, y);
 	vram_word_amount_t bos_word_x;
 	size_t bos_p = 0;
 	vram_y_t intended_y;
@@ -152,7 +154,7 @@ void CBossEntity::put_1line(
 		return;
 	}
 
-	int16_t vram_offset = vram_offset_row;
+	vram_offset_t vram_offset = vram_offset_row;
 	intended_y = vram_intended_y_for(vram_offset_row, left);
 
 	bos_p = ((vram_w / 2) * row);
@@ -206,14 +208,14 @@ void CBossEntity::put_1line(
 	}
 }
 void pascal near vram_snap_masked(
-	dots16_t &dst, dots8_t plane[], uint16_t vram_offset, dots16_t mask
+	dots16_t &dst, dots8_t plane[], vram_offset_t vram_offset, dots16_t mask
 )
 {
 	dst = (reinterpret_cast<dots16_t &>(plane[vram_offset]) & mask);
 }
 
 void pascal near vram_put_bg_fg(
-	sdots16_t fg, dots8_t plane[], uint16_t vram_offset, sdots16_t bg_masked
+	sdots16_t fg, dots8_t plane[], vram_offset_t vram_offset, sdots16_t bg_masked
 )
 {
 	reinterpret_cast<dots16_t &>(plane[vram_offset]) = (fg | bg_masked);
@@ -222,7 +224,7 @@ void pascal near vram_put_bg_fg(
 void pascal near vram_put_unaligned_bg_fg(
 	sdots16_t fg,
 	dots8_t plane[],
-	uint16_t vram_offset,
+	vram_offset_t vram_offset,
 	uint16_t bg_masked,
 	char first_bit
 )
@@ -259,7 +261,7 @@ void CBossEntity::unput_and_put_1line(
 	screen_x_t left, vram_y_t y, int image, pixel_t row
 ) const
 {
-	int16_t vram_offset_row = vram_offset_shift(left, y);
+	vram_offset_t vram_offset_row = vram_offset_shift(left, y);
 	vram_word_amount_t bos_word_x;
 	size_t bos_p = 0;
 	vram_y_t intended_y;
@@ -273,7 +275,7 @@ void CBossEntity::unput_and_put_1line(
 		return;
 	}
 
-	int16_t vram_offset = vram_offset_row;
+	vram_offset_t vram_offset = vram_offset_row;
 	intended_y = vram_intended_y_for(vram_offset_row, left);
 
 	bos_p = ((vram_w / 2) * row);
@@ -312,8 +314,8 @@ void CBossEntity::unput_and_put_8(
 	screen_x_t left, vram_y_t top, int image
 ) const
 {
-	int16_t vram_offset_row = vram_offset_divmul(left, top);
-	int16_t vram_offset;
+	vram_offset_t vram_offset_row = vram_offset_divmul(left, top);
+	vram_offset_t vram_offset;
 	size_t bos_p = 0;
 	pixel_t bos_y;
 	vram_word_amount_t bos_word_x;
@@ -326,7 +328,7 @@ void CBossEntity::unput_and_put_8(
 	}
 
 	for(bos_y = 0; h > bos_y; bos_y++) {
-		int16_t vram_offset = vram_offset_row;
+		vram_offset_t vram_offset = vram_offset_row;
 		intended_y = vram_intended_y_for(vram_offset_row, left);
 		for(bos_word_x = 0; (vram_w / 2) > bos_word_x; bos_word_x++) {
 			if(
@@ -373,8 +375,8 @@ void CBossEntity::unput_and_put_8(
 
 void CBossEntity::unput_8(screen_x_t left, vram_y_t top, int image) const
 {
-	int16_t vram_offset_row = vram_offset_divmul(left, top);
-	int16_t vram_offset;
+	vram_offset_t vram_offset_row = vram_offset_divmul(left, top);
+	vram_offset_t vram_offset;
 	pixel_t bos_y;
 	vram_word_amount_t bos_word_x;
 	size_t bos_p = 0;
@@ -386,7 +388,7 @@ void CBossEntity::unput_8(screen_x_t left, vram_y_t top, int image) const
 	}
 
 	for(bos_y = 0; h > bos_y; bos_y++) {
-		int16_t vram_offset = vram_offset_row;
+		vram_offset_t vram_offset = vram_offset_row;
 		intended_y = vram_intended_y_for(vram_offset_row, left);
 		for(bos_word_x = 0; (vram_w / 2) > bos_word_x; bos_word_x++) {
 			if(
@@ -473,7 +475,7 @@ void CBossEntity::egc_sloppy_wave_unput_double_broken(
 
 void CBossEntity::unput_and_put_16x8_8(pixel_t bos_left, pixel_t bos_top) const
 {
-	int16_t vram_offset_row = vram_offset_shift(cur_left, cur_top);
+	vram_offset_t vram_offset_row = vram_offset_shift(cur_left, cur_top);
 	pixel_t bos_row;
 	size_t bos_p = 0;
 	vram_y_t intended_y;
@@ -491,7 +493,7 @@ void CBossEntity::unput_and_put_16x8_8(pixel_t bos_left, pixel_t bos_top) const
 	}
 
 	for(bos_row = 0; bos_row < 8; bos_row++) {
-		int16_t vram_offset = vram_offset_row;
+		vram_offset_t vram_offset = vram_offset_row;
 		// Note the difference between this and vram_offset_at_intended_y_16()!
 		intended_y = (bos_left < 0)
 			? ((vram_offset_row / ROW_SIZE) - 1)

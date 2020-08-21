@@ -104,7 +104,7 @@ void ptn_free(int slot)
 
 void ptn_put_noalpha_8(screen_x_t left, vram_y_t top, int ptn_id)
 {
-	unsigned int vram_offset = vram_offset_shift(left, top);
+	vram_offset_t vram_offset = vram_offset_shift(left, top);
 	ptn_t *ptn = ptn_with_id(ptn_id);
 	for(pixel_t y = 0; y < PTN_H; y++) {
 		#define put_noalpha(vram_offset, w, ptn) \
@@ -123,7 +123,7 @@ void ptn_put_quarter_noalpha_8(
 )
 {
 	pixel_t y;
-	unsigned int vram_offset = vram_offset_muldiv(left, top);
+	vram_offset_t vram_offset = vram_offset_muldiv(left, top);
 	PTNQuarter q;
 	ptn_t *ptn = ptn_with_id(ptn_id);
 

@@ -28,7 +28,7 @@ void pascal graph_copy_rect_1_to_0(
 	screen_x_t x, vram_y_t y, pixel_t w, pixel_t h
 )
 {
-	int row_p = vram_offset_shift(x, y);
+	vram_offset_t row_p = vram_offset_shift(x, y);
 	pixel_t row;
 	for(row = 0; row < h; row++) {
 		vram_word_amount_t col;

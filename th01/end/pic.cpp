@@ -25,8 +25,8 @@ void end_pic_show(int quarter)
 
 	pixel_t src_left = ((quarter % 2) * PIC_W);
 	pixel_t src_top  = ((quarter / 2) * PIC_H);
-	size_t vram_offset_src = vram_offset_shift(src_left, src_top);
-	size_t vram_offset_dst = vram_offset_shift(PIC_LEFT, PIC_TOP);
+	uvram_offset_t vram_offset_src = vram_offset_shift(src_left, src_top);
+	uvram_offset_t vram_offset_dst = vram_offset_shift(PIC_LEFT, PIC_TOP);
 	vram_word_amount_t vram_x;
 	pixel_t y;
 

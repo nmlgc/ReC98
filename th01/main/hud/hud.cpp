@@ -330,10 +330,10 @@ int hud_bg_load(const char *fn)
 
 void graph_copy_hud_row_0_to_1_8(screen_x_t left, vram_y_t top, pixel_t w)
 {
-	uint16_t vram_offset;
+	vram_offset_t vram_offset;
 	dots16_t dots;
 	pixel_t y;
-	uint16_t vram_offset_row = vram_offset_divmul(left, top);
+	vram_offset_t vram_offset_row = vram_offset_divmul(left, top);
 	vram_word_amount_t x;
 
 	vram_offset = vram_offset_row;
@@ -347,7 +347,7 @@ void graph_copy_hud_row_0_to_1_8(screen_x_t left, vram_y_t top, pixel_t w)
 			copy_plane(R);
 			copy_plane(G);
 			copy_plane(E);
-			vram_offset += sizeof(dots);
+			vram_offset += static_cast<vram_offset_t>(sizeof(dots));
 			#undef copy_plane
 		}
 		vram_offset_row += ROW_SIZE;

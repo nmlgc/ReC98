@@ -2,7 +2,7 @@ extern "C" {
 
 void ptn_snap_8(screen_x_t left, vram_y_t top, int ptn_id)
 {
-	unsigned int vram_offset = vram_offset_muldiv(left, top);
+	vram_offset_t vram_offset = vram_offset_muldiv(left, top);
 	ptn_t *ptn = ptn_with_id(ptn_id);
 	for(pixel_t y = 0; y < PTN_H; y++) {
 		#define snap(ptn, vram_offset, w) \
@@ -26,7 +26,7 @@ void ptn_snap_quarter_8(
 )
 {
 	pixel_t y;
-	unsigned int vram_offset = vram_offset_muldiv(left, top);
+	vram_offset_t vram_offset = vram_offset_muldiv(left, top);
 	pixel_t q_y;
 	ptn_dots_t q_mask;
 	long q_x;

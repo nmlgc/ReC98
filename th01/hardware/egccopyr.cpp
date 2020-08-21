@@ -6,9 +6,9 @@ void egc_copy_rect_1_to_0_16(screen_x_t x, vram_y_t y, pixel_t w, pixel_t h)
 	register screen_x_t x_floor = x_end;
 	pixel_t row;
 	screen_x_t col;
-	int row_p;
+	vram_offset_t row_p;
 	dots16_t dots;
-	int p;
+	vram_offset_t p;
 
 	x_end += w;
 	x_floor &= 0xFFF0;

@@ -11,7 +11,7 @@ extern "C" {
 
 void pellet_cloud_put_8(screen_x_t left, vram_y_t top, int col, int cel)
 {
-	uint16_t vram_offset = vram_offset_shift(left, top);
+	vram_offset_t vram_offset = vram_offset_shift(left, top);
 
 	grcg_setcolor_rmw(col);
 
@@ -29,7 +29,7 @@ void pellet_cloud_put_8(screen_x_t left, vram_y_t top, int col, int cel)
 void pellet_cloud_unput_8(screen_x_t left, vram_y_t top, int cel)
 {
 	planar_t(PELLET_CLOUD_W) page1;
-	uint16_t vram_offset = vram_offset_shift(left, top);
+	vram_offset_t vram_offset = vram_offset_shift(left, top);
 
 	pellet_cloud_put_8(left, top, 0, cel);
 

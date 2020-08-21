@@ -1,7 +1,7 @@
 #include "th01/hardware/grcg8x8m.hpp"
 
 void grcg_put_8x8_mono(
-	int16_t vram_offset_topleft,
+	vram_offset_t vram_offset_topleft,
 	char first_bit,
 	const dots8_t sprite[8],
 	int col

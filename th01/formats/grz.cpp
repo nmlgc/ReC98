@@ -77,7 +77,8 @@ void grx_put(unsigned int slot)
 	if(grx_col) {
 		grcg_setcolor_rmw(grx_col - 1);
 	}
-	for(uint16_t vram_offset = 0; vram_offset < PLANE_SIZE; vram_offset++) {
+	uvram_offset_t vram_offset;
+	for(vram_offset = 0; vram_offset < PLANE_SIZE; vram_offset++) {
 		// Effectively the same algorithm as used for .GRF files, except for
 		// • the fixed RLE run command byte, and
 		// • adding another wasteful byte to define whether a run should put

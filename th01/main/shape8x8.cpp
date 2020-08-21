@@ -3,7 +3,7 @@
 
 #define shape8x8_put(shape, left, top, col) \
 	dots8x8_t sprite = sSHAPE8X8[shape]; \
-	int16_t vram_offset_topleft = vram_offset_divmul(left, top); \
+	vram_offset_t vram_offset_topleft = vram_offset_divmul(left, top); \
 	int first_bit = (left % BYTE_DOTS); \
 	if((left < 0) || (left >= RES_X) || (top < 0) || (top >= RES_Y)) { \
 		return; \

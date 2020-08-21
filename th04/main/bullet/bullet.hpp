@@ -127,7 +127,7 @@ union pellet_render_t {
 		vram_y_t top;
 	} top;
 	struct {
-		uint16_t vram_offset;
+		vram_offset_t vram_offset;
 		uint16_t sprite_offset;
 	} bottom;
 };
