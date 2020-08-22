@@ -39,6 +39,10 @@ extern const int ITEM_TYPE_PATNUM[IT_COUNT];
 
 void pascal near items_add(Subpixel x, Subpixel y, item_type_t type);
 
+// Increments or decrements [playperf] when reaching certain values.
+extern unsigned char item_playperf_raise;
+extern unsigned char item_playperf_lower;
+
 // Items dropped when losing a life
 // --------------------------------
 #define MISS_ITEM_COUNT 5
@@ -72,3 +76,5 @@ extern unsigned int total_point_items_collected;
 // TH04 includes items collected above the PoC during a bomb, TH05 doesn't.
 extern unsigned int total_max_valued_point_items_collected;
 // -------------------
+
+extern bool items_pull_to_player;

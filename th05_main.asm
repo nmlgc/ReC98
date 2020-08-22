@@ -2052,7 +2052,7 @@ loc_C4BC:
 		mov	ax, fp_23F5A
 		mov	fp_23F58, ax
 		call	snd_se_play pascal, 13
-		mov	byte_2264E, 1
+		mov	_items_pull_to_player, 1
 		les	bx, _resident
 		assume es:nothing
 		inc	es:[bx+resident_t.bombs_used]
@@ -2411,7 +2411,7 @@ loc_C7D8:
 		mov	_scroll_active, 1
 
 loc_C7F2:
-		mov	byte_2264E, 0
+		mov	_items_pull_to_player, 0
 		jmp	short loc_C800
 ; ---------------------------------------------------------------------------
 
@@ -2660,7 +2660,7 @@ loc_CA05:
 		mov	_scroll_active, 1
 
 loc_CA1F:
-		mov	byte_2264E, 0
+		mov	_items_pull_to_player, 0
 		jmp	short loc_CA2D
 ; ---------------------------------------------------------------------------
 
@@ -2871,7 +2871,7 @@ loc_CC28:
 		mov	_scroll_active, 1
 
 loc_CC42:
-		mov	byte_2264E, 0
+		mov	_items_pull_to_player, 0
 		jmp	short loc_CC50
 ; ---------------------------------------------------------------------------
 
@@ -3073,7 +3073,7 @@ loc_CDDE:
 		mov	_scroll_active, 1
 
 loc_CDF8:
-		mov	byte_2264E, 0
+		mov	_items_pull_to_player, 0
 		jmp	short loc_CE06
 ; ---------------------------------------------------------------------------
 
@@ -13346,7 +13346,7 @@ sub_16D67	proc far
 		and	al, 0Fh
 		mov	byte_2C98A, al
 		call	item_splashes_init
-		mov	byte_2264E, 0
+		mov	_items_pull_to_player, 0
 		mov	word_2C986, 0
 		pop	bp
 		retf
@@ -13367,7 +13367,7 @@ items_add	proc near
 		mov	bp, sp
 		push	si
 		push	di
-		cmp	byte_2264E, 0
+		cmp	_items_pull_to_player, 0
 		jz	short loc_16DA0
 		cmp	[bp+@@type], IT_BIGPOWER
 		jb	short loc_16D9C
@@ -13417,7 +13417,7 @@ loc_16DD1:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, ITEM_TYPE_PATNUM[bx]
+		mov	ax, _ITEM_TYPE_PATNUM[bx]
 		mov	[si+item_t.ITEM_patnum], ax
 		call	item_splashes_add pascal, [bp+@@x], [bp+@@y]
 		mov	word ptr [si+12h], 0
@@ -13523,7 +13523,7 @@ loc_16FAA:
 		jb	short loc_16FD1
 		mov	_power_overflow_level, 42
 		mov	[bp+@@yellow], 1
-		cmp	byte_2264E, 0
+		cmp	_items_pull_to_player, 0
 		jnz	short loc_16FD1
 		cmp	_dream, 128
 		jnb	short loc_16FD1
@@ -13558,8 +13558,8 @@ loc_17003:
 loc_1700C:
 		cmp	[bp+var_2], 0
 		jg	short loc_1704D
-		inc	byte_225CC
-		cmp	byte_2264E, 0
+		inc	_item_playperf_raise
+		cmp	_items_pull_to_player, 0
 		jnz	short loc_17043
 		mov	ax, [di+4]
 		mov	bx, 400h
@@ -13592,7 +13592,7 @@ loc_1704D:
 		mov	si, dx
 
 loc_1705C:
-		inc	byte_225CC
+		inc	_item_playperf_raise
 		inc	_extend_point_items_collected
 		inc	_total_point_items_collected
 		cmp	_stage_point_items_collected, POINT_ITEMS_MAX
@@ -13619,13 +13619,13 @@ loc_1708F:
 
 loc_17097:
 		call	hud_dream_put
-		mov	al, byte_225CC
+		mov	al, _item_playperf_raise
 		add	al, 2
-		mov	byte_225CC, al
-		cmp	byte_2264E, 0
+		mov	_item_playperf_raise, al
+		cmp	_items_pull_to_player, 0
 		jz	loc_17174
 		add	al, 2
-		mov	byte_225CC, al
+		mov	_item_playperf_raise, al
 		jmp	loc_17174
 ; ---------------------------------------------------------------------------
 
@@ -13712,11 +13712,11 @@ loc_1718F:
 		call	pointnums_add_yellow pascal, word ptr [di+2], word ptr [di+4], si
 
 loc_17199:
-		cmp	byte_225CC, 20h	; ' '
+		cmp	_item_playperf_raise, 32
 		jb	short loc_171AF
-		mov	al, byte_225CC
-		add	al, 0E0h
-		mov	byte_225CC, al
+		mov	al, _item_playperf_raise
+		add	al, -32
+		mov	_item_playperf_raise, al
 		call	playperf_raise pascal, 1
 
 loc_171AF:
@@ -13814,7 +13814,7 @@ loc_1721C:
 ; ---------------------------------------------------------------------------
 
 loc_1722E:
-		cmp	byte_2264E, 0
+		cmp	_items_pull_to_player, 0
 		jz	short loc_17264
 		mov	byte_21762, 1
 		mov	[si+item_t.pulled_to_player], 1
@@ -28201,17 +28201,7 @@ aPLAYER_REM	db 'écÇËêlêîÅ@Å~ÇPÇOÇOÇOÇO',0
 aPOINT_TOTAL	db 'ëçìæì_ÉAÉCÉeÉÄÉ{Å[ÉiÉX',0
 include th05/main/boss/move[data].asm
 include th05/main/item/enemy_drops[data].asm
-byte_225CC	db 0
-		db 0
-include th04/main/item/type_patnum[data].asm
-include th02/main/power_overflow[data].asm
-include th04/main/dream_score[data].asm
-public _power_overflow_level
-_power_overflow_level	dw 0
-include th04/main/item/collect[data].asm
-byte_2264E	db 0
-		db 0
-include th04/main/item/miss_add[data].asm
+include th04/main/item/items[data].asm
 word_2268C	dw 0
 angle_2268E	db 0
 		db 0

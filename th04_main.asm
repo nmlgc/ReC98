@@ -8810,7 +8810,7 @@ loc_FFED:
 		mov	fp_255AA, ax
 		mov	_bullet_clear_time, 192
 		call	snd_se_play pascal, 13
-		mov	byte_236E0, 1
+		mov	_items_pull_to_player, 1
 		les	bx, _resident
 		inc	es:[bx+resident_t.bombs_used]
 
@@ -9098,7 +9098,7 @@ loc_1028E:
 		jnz	short loc_102A8
 		call	snd_se_play pascal, 15
 		mov	_scroll_active, 1
-		mov	byte_236E0, 0
+		mov	_items_pull_to_player, 0
 		jmp	short loc_102AF
 ; ---------------------------------------------------------------------------
 
@@ -30250,7 +30250,7 @@ sub_1DA1B	proc far
 		and	al, 0Fh
 		mov	byte_2D00E, al
 		call	item_splashes_init
-		mov	byte_236E0, 0
+		mov	_items_pull_to_player, 0
 		mov	_dream_score, 0
 		pop	bp
 		retf
@@ -30315,7 +30315,7 @@ loc_1DA76:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, ITEM_TYPE_PATNUM[bx]
+		mov	ax, _ITEM_TYPE_PATNUM[bx]
 		mov	[si+item_t.ITEM_patnum], ax
 		call	item_splashes_add pascal, [bp+@@x], [bp+@@y]
 		mov	word ptr [si+12h], 0
@@ -30393,7 +30393,7 @@ loc_1DC19:
 		mov	si, POWER_OVERFLOW_BONUS[bx]
 		cmp	_pointnum_times_2, 0
 		jz	loc_1DD93
-		inc	byte_23660
+		inc	_item_playperf_raise
 		jmp	loc_1DD93
 ; ---------------------------------------------------------------------------
 
@@ -30401,9 +30401,9 @@ loc_1DC33:
 		cmp	word ptr [di+4], 340h
 		jg	short loc_1DC58
 		mov	si, 5120
-		mov	al, byte_23660
+		mov	al, _item_playperf_raise
 		add	al, 4
-		mov	byte_23660, al
+		mov	_item_playperf_raise, al
 		inc	_total_max_valued_point_items_collected
 		mov	[bp+@@yellow], 1
 		cmp	_pointnum_times_2, 0
@@ -30420,15 +30420,15 @@ loc_1DC58:
 		mov	dx, 3300
 		sub	dx, ax
 		mov	si, dx
-		mov	al, byte_23660
+		mov	al, _item_playperf_raise
 		add	al, 2
-		mov	byte_23660, al
+		mov	_item_playperf_raise, al
 		cmp	_pointnum_times_2, 0
 		jz	short loc_1DC7B
 		add	al, 2
 
 loc_1DC78:
-		mov	byte_23660, al
+		mov	_item_playperf_raise, al
 
 loc_1DC7B:
 		inc	_total_point_items_collected
@@ -30452,13 +30452,13 @@ loc_1DC9A:
 		mov	_dream_score, ax
 		mov	si, _dream_score
 		call	hud_dream_put
-		mov	al, byte_23660
+		mov	al, _item_playperf_raise
 		add	al, 2
-		mov	byte_23660, al
+		mov	_item_playperf_raise, al
 		cmp	_pointnum_times_2, 0
 		jz	loc_1DD93
 		add	al, 2
-		mov	byte_23660, al
+		mov	_item_playperf_raise, al
 		jmp	loc_1DD93
 ; ---------------------------------------------------------------------------
 
@@ -30557,11 +30557,11 @@ loc_1DDBF:
 		call	pointnums_add_yellow pascal, word ptr [di+2], word ptr [di+4], si
 
 loc_1DDC9:
-		cmp	byte_23660, 20h	; ' '
+		cmp	_item_playperf_raise, 32
 		jb	short loc_1DDDF
-		mov	al, byte_23660
-		add	al, 0E0h
-		mov	byte_23660, al
+		mov	al, _item_playperf_raise
+		add	al, -32
+		mov	_item_playperf_raise, al
 		call	playperf_raise pascal, 1
 
 loc_1DDDF:
@@ -30602,21 +30602,21 @@ arg_0		= word ptr  4
 		jmp	cs:off_1DE51[bx]
 
 loc_1DE11:
-		inc	byte_23661
+		inc	_item_playperf_lower
 		jmp	short loc_1DE36
 ; ---------------------------------------------------------------------------
 
 loc_1DE17:
-		mov	al, byte_23661
+		mov	al, _item_playperf_lower
 		add	al, 2
-		mov	byte_23661, al
+		mov	_item_playperf_lower, al
 		jmp	short loc_1DE36
 ; ---------------------------------------------------------------------------
 
 loc_1DE21:
-		mov	al, byte_23661
+		mov	al, _item_playperf_lower
 		add	al, 4
-		mov	byte_23661, al
+		mov	_item_playperf_lower, al
 		jmp	short loc_1DE36
 ; ---------------------------------------------------------------------------
 
@@ -30632,11 +30632,13 @@ loc_1DE31:
 		call	playperf_lower
 
 loc_1DE36:
-		cmp	byte_23661, 40h
+		cmp	_item_playperf_lower, 64
 		jb	short loc_1DE4C
-		mov	al, byte_23661
-		add	al, 0D0h
-		mov	byte_23661, al
+		mov	al, _item_playperf_lower
+		; And that's why we don't declare symbols for the increment and
+		; decrement periods of these...
+		add	al, -48
+		mov	_item_playperf_lower, al
 		call	playperf_lower pascal, 1
 
 loc_1DE4C:
@@ -30665,7 +30667,7 @@ items_update	proc far
 		push	si
 		push	di
 		mov	si, offset _items
-		cmp	byte_236E0, 0
+		cmp	_items_pull_to_player, 0
 		jz	short loc_1DE74
 		mov	_pointnum_times_2, 1
 		jmp	short loc_1DE79
@@ -30689,7 +30691,7 @@ loc_1DE7E:
 ; ---------------------------------------------------------------------------
 
 loc_1DE90:
-		cmp	byte_236E0, 0
+		cmp	_items_pull_to_player, 0
 		jz	short loc_1DEC6
 		mov	_pointnum_times_2, 1
 		mov	[si+item_t.pulled_to_player], 1
@@ -35594,16 +35596,7 @@ aBONUS_POINT_2	db 'ÇoÇnÇhÇmÇsÅ@ÇaÇèÇéÇïÇìÅ@Å@Å@Å@Å@Å@Å~',0
 aBONUS_TOTAL_2	db 'Å@Å@Å@ÇsÇnÇsÇ`Çk',0
 		db    0
 include th04/main/item/enemy_drops[data].asm
-byte_23660	db 0
-byte_23661	db 0
-include th04/main/item/type_patnum[data].asm
-include th02/main/power_overflow[data].asm
-include th04/main/dream_score[data].asm
-_power_overflow_level	dw 0
-include th04/main/item/collect[data].asm
-byte_236E0	db 0
-		db 0
-include th04/main/item/miss_add[data].asm
+include th04/main/item/items[data].asm
 include th04/main/boss/end[data].asm
 aSt00_bmt	db 'st00.bmt',0
 aSt00bk_cdg	db 'st00bk.cdg',0
