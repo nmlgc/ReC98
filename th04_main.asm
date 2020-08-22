@@ -376,7 +376,7 @@ loc_ABBA:
 		call	fp_255CA
 		call	sub_19EE4
 		call	_stage_vm
-		cmp	byte_256A8, 0
+		cmp	_bombing, 0
 		jnz	short loc_ABD4
 		call	_boss_bg_render
 		jmp	short loc_ABD8
@@ -552,8 +552,8 @@ loc_AD7C:
 		mov	playchar_shot_funcs, offset SHOT_FUNCS_REIMU_B
 
 loc_AD82:
-		mov	fp_256AA, offset sub_FFB4
-		mov	fp_256AC, offset sub_1004D
+		mov	_player_bomb_func, offset player_bomb
+		mov	_playchar_bomb_func, offset bomb_reimu
 		jmp	short loc_ADBB
 ; ---------------------------------------------------------------------------
 
@@ -570,8 +570,8 @@ loc_ADA9:
 		mov	playchar_shot_funcs, offset SHOT_FUNCS_MARISA_B
 
 loc_ADAF:
-		mov	fp_256AA, offset sub_FFB4
-		mov	fp_256AC, offset sub_10113
+		mov	_player_bomb_func, offset player_bomb
+		mov	_playchar_bomb_func, offset bomb_marisa
 
 loc_ADBB:
 		les	bx, _resident
@@ -928,7 +928,7 @@ sub_B1D0	proc near
 		mov	bp, sp
 		call	main_01:sub_11ECB
 		mov	_stage_frame, 0
-		mov	byte_2D00A, 0
+		mov	_bombing_disabled, 0
 		mov	_scroll_line, 0
 		mov	word_25100, 0
 		mov	_scroll_line_on_page[0 * 2], 0
@@ -8770,7 +8770,7 @@ include th04/formats/bb_playchar.asm
 sub_FFA4	proc near
 		push	bp
 		mov	bp, sp
-		mov	byte_256A8, 0
+		mov	_bombing, 0
 		mov	fp_255AA, offset nullfunc_near
 		pop	bp
 		retn
@@ -8780,16 +8780,16 @@ sub_FFA4	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_FFB4	proc near
+public PLAYER_BOMB
+player_bomb	proc near
 		push	bp
 		mov	bp, sp
-		cmp	byte_256A8, 0
+		cmp	_bombing, 0
 		jnz	short loc_10028
 		les	bx, _resident
 		cmp	es:[bx+resident_t.rem_bombs], 0
 		jz	short loc_10028
-		cmp	byte_2D00A, 0
+		cmp	_bombing_disabled, 0
 		jnz	short loc_10028
 		cmp	_miss_time, 0
 		jz	short loc_FFED
@@ -8803,8 +8803,8 @@ loc_FFED:
 		les	bx, _resident
 		dec	es:[bx+resident_t.rem_bombs]
 		nopcall	main_01:sub_EFA1
-		mov	byte_256A8, 1
-		mov	byte_256A9, 0
+		mov	_bombing, 1
+		mov	_bomb_frame, 0
 		mov	_player_invincibility_time, BOMB_INVINCIBILITY_FRAMES
 		mov	ax, fp_255AC
 		mov	fp_255AA, ax
@@ -8817,7 +8817,7 @@ loc_FFED:
 loc_10028:
 		pop	bp
 		retn
-sub_FFB4	endp
+player_bomb	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -8853,8 +8853,8 @@ sub_1002A	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_1004D	proc near
+public BOMB_REIMU
+bomb_reimu	proc near
 
 var_1		= byte ptr -1
 
@@ -8867,12 +8867,12 @@ var_1		= byte ptr -1
 		push	(32 shl 16) or 56
 		push	0
 		call	cdg_put_noalpha
-		cmp	byte_256A9, 50h	; 'P'
+		cmp	_bomb_frame, 80
 		ja	short loc_10096
 		mov	_circles_color, GC_RG
-		mov	al, byte_256A9
+		mov	al, _bomb_frame
 		mov	ah, 0
-		add	ax, 0FFD0h
+		add	ax, -48
 		imul	ax, 3
 		mov	dx, 196
 		sub	dx, ax
@@ -8882,7 +8882,7 @@ var_1		= byte ptr -1
 ; ---------------------------------------------------------------------------
 
 loc_10096:
-		cmp	byte_256A9, 0A0h
+		cmp	_bomb_frame, 160
 		ja	short loc_100FE
 		cmp	_stage_frame_mod4, 0
 		jnz	short loc_100FE
@@ -8921,14 +8921,14 @@ loc_100FE:
 		GRCG_OFF_CLOBBERING dx
 		leave
 		retn
-sub_1004D	endp
+bomb_reimu	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_10113	proc near
+public BOMB_MARISA
+bomb_marisa	proc near
 
 var_2		= word ptr -2
 
@@ -8942,12 +8942,12 @@ var_2		= word ptr -2
 		push	(32 shl 16) or 56
 		push	0
 		call	cdg_put_noalpha
-		cmp	byte_256A9, 50h	; 'P'
+		cmp	_bomb_frame, 80
 		ja	short loc_1015E
 		mov	_circles_color, 0Fh
-		mov	al, byte_256A9
+		mov	al, _bomb_frame
 		mov	ah, 0
-		add	ax, 0FFD0h
+		add	ax, -48
 		imul	ax, 3
 		mov	dx, 196
 		sub	dx, ax
@@ -8957,49 +8957,49 @@ var_2		= word ptr -2
 ; ---------------------------------------------------------------------------
 
 loc_1015E:
-		cmp	byte_256A9, 0A0h
+		cmp	_bomb_frame, 160
 		ja	loc_101F4
 		cmp	_stage_frame_mod4, 0
 		jnz	loc_101F4
-		mov	al, byte_256A9
+		mov	al, _bomb_frame
 		mov	ah, 0
-		add	ax, 0FFB0h
+		add	ax, -80
 		shl	ax, 2
 		mov	si, ax
-		mov	al, byte_256A9
+		mov	al, _bomb_frame
 		mov	ah, 0
-		mov	dx, 0A1h
+		mov	dx, 161
 		sub	dx, ax
 		imul	dx, 3
 		add	dx, 28h	; '('
 		mov	[bp-2],	dx
-		cmp	byte_256A9, 78h	; 'x'
+		cmp	_bomb_frame, 120
 		jnb	short loc_101B6
-		mov	al, byte_256A9
+		mov	al, _bomb_frame
 		mov	ah, 0
-		add	ax, 0FFB0h
+		add	ax, -80
 		shl	ax, 3
 		push	ax
 		call	main_01:randring1_next16_mod
-		mov	dl, byte_256A9
+		mov	dl, _bomb_frame
 		mov	dh, 0
-		add	dx, 0FFC0h
+		add	dx, -64
 		shl	dx, 2
 		sub	ax, dx
 		jmp	short loc_101D7
 ; ---------------------------------------------------------------------------
 
 loc_101B6:
-		mov	al, byte_256A9
+		mov	al, _bomb_frame
 		mov	ah, 0
-		mov	dx, 0A1h
+		mov	dx, 161
 		sub	dx, ax
 		shl	dx, 3
 		push	dx
 		call	main_01:randring1_next16_mod
-		mov	dl, byte_256A9
+		mov	dl, _bomb_frame
 		mov	dh, 0
-		mov	bx, 0A1h
+		mov	bx, 161
 		sub	bx, dx
 		shl	bx, 2
 		sub	ax, bx
@@ -9026,7 +9026,7 @@ loc_101F4:
 		pop	si
 		leave
 		retn
-sub_10113	endp
+bomb_marisa	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -9036,11 +9036,11 @@ sub_10113	endp
 sub_1020A	proc near
 		push	bp
 		mov	bp, sp
-		cmp	byte_256A8, 0
+		cmp	_bombing, 0
 		jz	loc_1030B
-		cmp	byte_256A9, 20h	; ' '
+		cmp	_bomb_frame, 32
 		jnb	short loc_1022A
-		mov	al, byte_256A9
+		mov	al, _bomb_frame
 		mov	ah, 0
 		mov	bx, 4
 		cwd
@@ -9049,14 +9049,14 @@ sub_1020A	proc near
 ; ---------------------------------------------------------------------------
 
 loc_1022A:
-		cmp	byte_256A9, 30h	; '0'
+		cmp	_bomb_frame, 48
 		jnb	short loc_10245
-		mov	al, byte_256A9
+		mov	al, _bomb_frame
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, 0FFF8h
+		add	ax, -8
 
 loc_1023E:
 		push	ax
@@ -9067,7 +9067,7 @@ loc_10242:
 ; ---------------------------------------------------------------------------
 
 loc_10245:
-		cmp	byte_256A9, 30h	; '0'
+		cmp	_bomb_frame, 48
 		jnz	short loc_10281
 		mov	_scroll_active, 0
 		call	graph_scrollup pascal, 0
@@ -9085,16 +9085,16 @@ loc_10245:
 ; ---------------------------------------------------------------------------
 
 loc_10281:
-		cmp	byte_256A9, 0B0h ; '°'
+		cmp	_bomb_frame, 176
 		jnb	short loc_1028E
 
 loc_10288:
-		call	fp_256AC
+		call	_playchar_bomb_func
 		jmp	short loc_10307
 ; ---------------------------------------------------------------------------
 
 loc_1028E:
-		cmp	byte_256A9, 0B0h ; '°'
+		cmp	_bomb_frame, 176
 		jnz	short loc_102A8
 		call	snd_se_play pascal, 15
 		mov	_scroll_active, 1
@@ -9103,7 +9103,7 @@ loc_1028E:
 ; ---------------------------------------------------------------------------
 
 loc_102A8:
-		cmp	byte_256A9, 0E2h
+		cmp	_bomb_frame, 226
 		jnb	short loc_102F2
 
 loc_102AF:
@@ -9115,28 +9115,28 @@ loc_102AF:
 		mov	Palettes+44, al
 		mov	ax, fp_255AC
 		mov	fp_255AA, ax
-		mov	al, byte_256A9
+		mov	al, _bomb_frame
 		mov	ah, 0
-		add	ax, 0FF50h
+		add	ax, -176
 		add	ax, ax
 		mov	dx, 200
 		sub	dx, ax
 		mov	PaletteTone, dx
 		mov	_palette_changed, 1
-		cmp	byte_256A9, 0B1h
+		cmp	_bomb_frame, 177
 		jnz	short loc_10307
 		call	graph_scrollup pascal, _scroll_line
 		jmp	loc_10242
 ; ---------------------------------------------------------------------------
 
 loc_102F2:
-		mov	byte_256A8, 0
+		mov	_bombing, 0
 		mov	PaletteTone, 100
 		mov	_palette_changed, 1
 		mov	_circles_color, GC_R
 
 loc_10307:
-		inc	byte_256A9
+		inc	_bomb_frame
 
 loc_1030B:
 		pop	bp
@@ -9157,7 +9157,7 @@ arg_0		= word ptr  4
 		enter	4, 0
 		push	si
 		push	di
-		cmp	byte_256A9, 30h	; '0'
+		cmp	_bomb_frame, 48
 		jnz	short loc_10386
 		mov	si, 4370h
 		xor	di, di
@@ -9612,7 +9612,7 @@ var_6		= word ptr -6
 		mov	ax, [bp+@@i]
 		cmp	ax, _shots_alive_count
 		jb	short @@shot_loop
-		cmp	byte_256A8, 0
+		cmp	_bombing, 0
 		jz	short loc_1068C
 		cmp	_stage_frame_mod4, 0
 		jnz	short loc_1067E
@@ -9906,7 +9906,7 @@ loc_10BC7:
 		sub	_player_option_pos_cur.y, ax
 		test	_key_det.lo, low INPUT_BOMB
 		jz	short loc_10BF0
-		call	fp_256AA
+		call	_player_bomb_func
 
 loc_10BF0:
 		cmp	_miss_time, 0
@@ -21420,7 +21420,7 @@ var_4		= word ptr -4
 var_1		= byte ptr -1
 
 		enter	4, 0
-		cmp	byte_256A8, 0
+		cmp	_bombing, 0
 		jz	short loc_186FB
 		mov	byte_259EF, 20h	; ' '
 
@@ -31305,7 +31305,7 @@ loc_1E778:
 		jb	loc_1E915
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
-		mov	byte_2D00A, 1
+		mov	_bombing_disabled, 1
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -31357,7 +31357,7 @@ loc_1E801:
 		call	bb_stage_free
 		call	cdg_load_single_noalpha pascal, 16, ds, offset aSt06bk2_cdg, 0
 		call	bb_stage_load pascal, ds, offset aSt06b_bb
-		mov	byte_2D00A, 0
+		mov	_bombing_disabled, 0
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -34365,7 +34365,7 @@ sub_2023B	endp
 gengetsu_update	proc far
 		push	bp
 		mov	bp, sp
-		cmp	byte_256A8, 0
+		cmp	_bombing, 0
 		jz	short loc_20279
 		mov	byte_259EF, 20h	; ' '
 
@@ -35746,10 +35746,7 @@ include th04/main/score[bss].asm
 byte_256A2	db ?
 		db ?
 include th04/main/player/shots_add[bss].asm
-byte_256A8	db ?
-byte_256A9	db ?
-fp_256AA	dw ?
-fp_256AC	dw ?
+include th04/main/player/bomb[bss].asm
 include th04/formats/bb_playchar[bss].asm
 		db 294 dup(?)
 byte_257D6	db ?
@@ -35884,8 +35881,9 @@ include th04/main/bullet/tune[bss].asm
 include th04/main/bullet/pellet_r[bss].asm
 angle_2D008	db ?
 	evendata
-byte_2D00A	db ?
-		db ?
+public _bombing_disabled
+_bombing_disabled	db ?
+	evendata
 public _dream_score
 _dream_score	dw ?
 byte_2D00E	db ?

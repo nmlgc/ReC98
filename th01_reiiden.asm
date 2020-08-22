@@ -927,12 +927,12 @@ sub_BEB1	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_BECF	proc far
+public _bomb_update_and_render
+_bomb_update_and_render	proc far
 
 @@palette		= byte ptr -32h
 var_2		= word ptr -2
-arg_0		= word ptr  6
+@@frame		= word ptr  6
 
 		enter	32h, 0
 		push	si
@@ -944,7 +944,7 @@ arg_0		= word ptr  6
 		mov	cx, 30h	; '0'
 		call	SCOPY@
 		mov	_player_invincible, 1
-		cmp	[bp+arg_0], 0
+		cmp	[bp+@@frame], 0
 		jnz	loc_BF82
 		call	@CPellets@decay_all$qv c, offset _Pellets, ds
 		call	_ptn_put_8 c, _player_left, (43h shl 16) or _player_top
@@ -1012,9 +1012,9 @@ loc_BF75:
 ; ---------------------------------------------------------------------------
 
 loc_BF82:
-		cmp	[bp+arg_0], 32h	; '2'
+		cmp	[bp+@@frame], 50
 		jge	loc_C146
-		mov	ax, [bp+arg_0]
+		mov	ax, [bp+@@frame]
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -1044,17 +1044,17 @@ loc_BF82:
 		add	sp, 8
 
 loc_BFC0:
-		mov	ax, [bp+arg_0]
+		mov	ax, [bp+@@frame]
 		mov	bx, 4
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_BFF1
-		mov	ax, [bp+arg_0]
-		mov	bx, 50h	; 'P'
+		mov	ax, [bp+@@frame]
+		mov	bx, 80
 		cwd
 		idiv	bx
-		mov	bx, 28h	; '('
+		mov	bx, 40
 		mov	ax, dx
 		cwd
 		idiv	bx
@@ -1073,13 +1073,13 @@ loc_BFEE:
 		mov	byte_3876C, al
 
 loc_BFF1:
-		mov	ax, [bp+arg_0]
+		mov	ax, [bp+@@frame]
 		mov	bx, 2
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	loc_C113
-		mov	al, byte ptr [bp+arg_0]
+		mov	al, byte ptr [bp+@@frame]
 		mov	angle_387D9, al
 		mov	[bp+var_2], 0
 		jmp	loc_C10B
@@ -1104,8 +1104,8 @@ loc_C014:
 		imul	ax, 0Ah
 		mov	dx, 1F4h
 		sub	dx, ax
-		mov	ax, [bp+arg_0]
-		add	ax, 3Ch	; '<'
+		mov	ax, [bp+@@frame]
+		add	ax, 60
 		shl	ax, 2
 		sub	dx, ax
 		movsx	eax, dx
@@ -1125,8 +1125,8 @@ loc_C014:
 		imul	ax, 0Ah
 		mov	dx, 1F4h
 		sub	dx, ax
-		mov	ax, [bp+arg_0]
-		add	ax, 3Ch	; '<'
+		mov	ax, [bp+@@frame]
+		add	ax, 60
 		shl	ax, 2
 		sub	dx, ax
 		movsx	eax, dx
@@ -1177,7 +1177,7 @@ loc_C0F3:
 		add	ax, 9
 		cmp	ax, si
 		jg	loc_C014
-		mov	al, byte ptr [bp+arg_0]
+		mov	al, byte ptr [bp+@@frame]
 		neg	al
 		mov	angle_387D9, al
 		add	[bp+var_2], 9
@@ -1187,8 +1187,8 @@ loc_C10B:
 		jle	loc_C00E
 
 loc_C113:
-		mov	ax, [bp+arg_0]
-		mov	bx, 1Eh
+		mov	ax, [bp+@@frame]
+		mov	bx, 30
 		cwd
 		idiv	bx
 		or	dx, dx
@@ -1198,8 +1198,8 @@ loc_C113:
 		pop	cx
 
 loc_C128:
-		mov	ax, [bp+arg_0]
-		mov	bx, 0Ah
+		mov	ax, [bp+@@frame]
+		mov	bx, 10
 		cwd
 		idiv	bx
 		or	dx, dx
@@ -1209,7 +1209,7 @@ loc_C128:
 ; ---------------------------------------------------------------------------
 
 loc_C146:
-		cmp	[bp+arg_0], 32h	; '2'
+		cmp	[bp+@@frame], 50
 		jnz	short loc_C17C
 		xor	si, si
 		jmp	short loc_C16F
@@ -1235,12 +1235,12 @@ loc_C16F:
 ; ---------------------------------------------------------------------------
 
 loc_C17C:
-		cmp	[bp+arg_0], 32h	; '2'
+		cmp	[bp+@@frame], 50
 		jle	loc_C3EE
-		cmp	[bp+arg_0], 8Ch
+		cmp	[bp+@@frame], 140
 		jge	loc_C3EE
-		mov	ax, [bp+arg_0]
-		mov	bx, 0Ah
+		mov	ax, [bp+@@frame]
+		mov	bx, 10
 		cwd
 		idiv	bx
 		or	dx, dx
@@ -1250,7 +1250,7 @@ loc_C17C:
 		pop	cx
 
 loc_C1A2:
-		mov	ax, [bp+arg_0]
+		mov	ax, [bp+@@frame]
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -1263,7 +1263,7 @@ loc_C1A2:
 ; ---------------------------------------------------------------------------
 
 loc_C1B6:
-		mov	ax, [bp+arg_0]
+		mov	ax, [bp+@@frame]
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -1277,8 +1277,8 @@ loc_C1C8:
 		add	sp, 4
 
 loc_C1D0:
-		mov	ax, [bp+arg_0]
-		mov	bx, 10h
+		mov	ax, [bp+@@frame]
+		mov	bx, 16
 		cwd
 		idiv	bx
 		or	dx, dx
@@ -1288,14 +1288,14 @@ loc_C1D0:
 ; ---------------------------------------------------------------------------
 
 loc_C1E2:
-		mov	ax, [bp+arg_0]
-		mov	bx, 10h
+		mov	ax, [bp+@@frame]
+		mov	bx, 16
 		cwd
 		idiv	bx
 		cmp	dx, 4
 		jz	short loc_C211
-		mov	ax, [bp+arg_0]
-		mov	bx, 10h
+		mov	ax, [bp+@@frame]
+		mov	bx, 16
 		cwd
 		idiv	bx
 		cmp	dx, 8
@@ -1305,8 +1305,8 @@ loc_C1E2:
 ; ---------------------------------------------------------------------------
 
 loc_C203:
-		mov	ax, [bp+arg_0]
-		mov	bx, 10h
+		mov	ax, [bp+@@frame]
+		mov	bx, 16
 		cwd
 		idiv	bx
 		cmp	dx, 0Ch
@@ -1322,7 +1322,7 @@ loc_C214:
 ; ---------------------------------------------------------------------------
 
 loc_C21C:
-		mov	ax, [bp+arg_0]
+		mov	ax, [bp+@@frame]
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -1337,8 +1337,8 @@ loc_C235:
 ; ---------------------------------------------------------------------------
 
 loc_C23F:				; ...
-		mov	ax, [bp+arg_0]
-		add	ax, 0FFCEh
+		mov	ax, [bp+@@frame]
+		add	ax, -50
 		imul	ax, 6
 		cwde
 		mov	dl, angle_387D9
@@ -1351,8 +1351,8 @@ loc_C23F:				; ...
 		sar	eax, 8
 		add	ax, 130h
 		mov	word_3876D, ax
-		mov	ax, [bp+arg_0]
-		add	ax, 0FFCEh
+		mov	ax, [bp+@@frame]
+		add	ax, -50
 		imul	ax, 6
 		cwde
 		mov	dl, angle_387D9
@@ -1370,8 +1370,8 @@ loc_C23F:				; ...
 		push	word_3876D
 		call	sub_1156E
 		add	sp, 8
-		mov	ax, [bp+arg_0]
-		add	ax, 0FFCEh
+		mov	ax, [bp+@@frame]
+		add	ax, -50
 		imul	ax, 7
 		cwde
 		mov	dl, angle_387D9
@@ -1384,8 +1384,8 @@ loc_C23F:				; ...
 		sar	eax, 8
 		add	ax, 130h
 		mov	word_3876D, ax
-		mov	ax, [bp+arg_0]
-		add	ax, 0FFCEh
+		mov	ax, [bp+@@frame]
+		add	ax, -50
 		imul	ax, 7
 		cwde
 		mov	dl, angle_387D9
@@ -1403,8 +1403,8 @@ loc_C23F:				; ...
 		push	word_3876D
 		call	sub_1156E
 		add	sp, 8
-		mov	ax, [bp+arg_0]
-		add	ax, 0FFCEh
+		mov	ax, [bp+@@frame]
+		add	ax, -50
 		shl	ax, 3
 		cwde
 		mov	dl, angle_387D9
@@ -1417,8 +1417,8 @@ loc_C23F:				; ...
 		sar	eax, 8
 		add	ax, 130h
 		mov	word_3876D, ax
-		mov	ax, [bp+arg_0]
-		add	ax, 0FFCEh
+		mov	ax, [bp+@@frame]
+		add	ax, -50
 		shl	ax, 3
 		cwde
 		mov	dl, angle_387D9
@@ -1444,8 +1444,8 @@ loc_C23F:				; ...
 loc_C38C:
 		cmp	si, 10h
 		jl	loc_C23F
-		mov	ax, [bp+arg_0]
-		mov	bx, 14h
+		mov	ax, [bp+@@frame]
+		mov	bx, 20
 		cwd
 		idiv	bx
 		or	dx, dx
@@ -1499,7 +1499,7 @@ loc_C3E7:
 ; ---------------------------------------------------------------------------
 
 loc_C3EE:
-		cmp	[bp+arg_0], 8Ch
+		cmp	[bp+@@frame], 140
 		jnz	short loc_C42E
 		call	_z_vsync_wait_and_scrollup stdcall, 0
 		pop	cx
@@ -1524,7 +1524,7 @@ loc_C430:
 		pop	si
 		leave
 		retf
-sub_BECF	endp
+_bomb_update_and_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -12324,8 +12324,7 @@ loc_19F2B:
 		push	1
 		nopcall	sub_1AC6E
 		pop	cx
-		push	word ptr dword_34A62
-		call	sub_BECF
+		call	_bomb_update_and_render stdcall, word ptr dword_34A62
 		pop	cx
 		mov	[bp+var_4], ax
 		cmp	[bp+var_4], 0

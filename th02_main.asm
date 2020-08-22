@@ -3566,7 +3566,7 @@ loc_C5C2:
 		jl	short loc_C5B7
 		mov	byte_205DE, 0
 		mov	_player_invincibility_time, 0
-		mov	byte_20606, 0
+		mov	_player_invincible_via_bomb, 0
 		mov	byte_20607, 0
 		mov	byte_20608, 0
 		mov	byte_20609, 0
@@ -7182,7 +7182,7 @@ sub_E178	proc near
 		cmp	es:[bx+mikoconfig_t.shottype], 0
 		jnz	short loc_E1D2
 		call	_pi_slot_load c, 1, offset aBomb1_pi, ds
-		mov	fp_219CA, offset sub_E618
+		mov	_playchar_bomb_func, offset bomb_reimu_a
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -7192,7 +7192,7 @@ loc_E1D2:
 		cmp	es:[bx+mikoconfig_t.shottype], 2
 		jnz	short loc_E1F3
 		call	_pi_slot_load c, 1, offset aBomb3_pi, ds
-		mov	fp_219CA, offset sub_E89C
+		mov	_playchar_bomb_func, offset bomb_reimu_c
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -7217,7 +7217,7 @@ loc_E1F3:
 		push	1440h
 		call	file_read
 		call	file_close
-		mov	fp_219CA, offset sub_EAEB
+		mov	_playchar_bomb_func, offset bomb_reimu_b
 
 loc_E248:
 		pop	bp
@@ -7253,7 +7253,7 @@ sub_E271	proc near
 		push	bp
 		mov	bp, sp
 		mov	byte_218C2, 0
-		mov	byte_218B4, 0
+		mov	_bombing, 0
 		pop	bp
 		retn
 sub_E271	endp
@@ -7262,32 +7262,32 @@ sub_E271	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_E280	proc near
+public PLAYER_BOMB
+player_bomb	proc near
 		push	bp
 		mov	bp, sp
-		cmp	byte_218B4, 0
+		cmp	_bombing, 0
 		jnz	short loc_E2D7
 		cmp	bombs, 0
 		jz	short loc_E2D7
-		mov	byte_218B4, 1
-		mov	byte_20606, 1
+		mov	_bombing, 1
+		mov	_player_invincible_via_bomb, 1
 		dec	bombs
 		call	hud_bombs_put
-		mov	word_218B6, 0
+		mov	_bomb_frame, 0
 		inc	byte_218C2
 		inc	byte_1E64E
 		call	_snd_se_play c, 9
-		mov	word_218C4, 0DCh
-		mov	word_218C6, 0C4h
-		mov	word_218C8, 0
+		mov	_bomb_circle_center.x, (PLAYFIELD_X + (PLAYFIELD_W / 2) - 4)
+		mov	_bomb_circle_center.y, (PLAYFIELD_Y + (PLAYFIELD_H / 2) - 4)
+		mov	_bomb_circle_frame, 0
 		mov	word_218CA, 0
 		call	sub_10E0A
 
 loc_E2D7:
 		pop	bp
 		retn
-sub_E280	endp
+player_bomb	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -7305,18 +7305,18 @@ var_2		= word ptr -2
 		sub	sp, 6
 		push	si
 		push	di
-		cmp	byte_218B4, 0
+		cmp	_bombing, 0
 		jz	loc_E3EA
-		cmp	word_218C8, 1
+		cmp	_bomb_circle_frame, 1
 		jle	loc_E38A
-		dec	word_218B6
-		mov	ax, word_218B6
+		dec	_bomb_frame
+		mov	ax, _bomb_frame
 		shl	ax, 3
-		mov	dx, 100h
+		mov	dx, 256
 		sub	dx, ax
 		mov	[bp+var_2], dx
 		xor	di, di
-		mov	al, byte ptr word_218B6
+		mov	al, byte ptr _bomb_frame
 		jmp	short loc_E371
 ; ---------------------------------------------------------------------------
 
@@ -7329,7 +7329,7 @@ loc_E30C:
 		movsx	edx, _CosTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
-		add	ax, word_218C4
+		add	ax, _bomb_circle_center.x
 		mov	[bp+var_4], ax
 		movsx	eax, [bp+var_2]
 		mov	dl, [bp+@@angle]
@@ -7339,11 +7339,11 @@ loc_E30C:
 		movsx	edx, _SinTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
-		add	ax, word_218C6
+		add	ax, _bomb_circle_center.y
 		mov	si, ax
 		cmp	si, 8
 		jle	short loc_E36B
-		cmp	si, 180h
+		cmp	si, PLAYFIELD_BOTTOM
 		jge	short loc_E36B
 		push	[bp+var_4]
 		push	si
@@ -7359,17 +7359,17 @@ loc_E371:
 		mov	[bp+@@angle], al
 		cmp	di, 40h
 		jl	short loc_E30C
-		cmp	word_218B6, 20h	; ' '
+		cmp	_bomb_frame, BOMB_CIRCLE_FRAMES
 		jl	short loc_E386
-		mov	word_218C8, 0
+		mov	_bomb_circle_frame, 0
 
 loc_E386:
-		inc	word_218B6
+		inc	_bomb_frame
 
 loc_E38A:
 		cmp	word_218CA, 1
 		jnz	short loc_E39D
-		cmp	word_218B6, 20h	; ' '
+		cmp	_bomb_frame, BOMB_CIRCLE_FRAMES
 		jg	short loc_E39D
 		mov	byte_22D48, 1
 
@@ -7377,9 +7377,9 @@ loc_E39D:
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.shottype], 0
 		jnz	short loc_E3BA
-		cmp	word_218B6, 88h
+		cmp	_bomb_frame, 136
 		jz	short loc_E3E5
-		cmp	word_218B6, 89h
+		cmp	_bomb_frame, 137
 		jnz	short loc_E3EA
 		jmp	short loc_E3E5
 ; ---------------------------------------------------------------------------
@@ -7388,17 +7388,17 @@ loc_E3BA:
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.shottype], 1
 		jnz	short loc_E3D7
-		cmp	word_218B6, 0A4h
+		cmp	_bomb_frame, 164
 		jz	short loc_E3E5
-		cmp	word_218B6, 0A5h
+		cmp	_bomb_frame, 165
 		jnz	short loc_E3EA
 		jmp	short loc_E3E5
 ; ---------------------------------------------------------------------------
 
 loc_E3D7:
-		cmp	word_218B6, 70h	; 'p'
+		cmp	_bomb_frame, 112
 		jz	short loc_E3E5
-		cmp	word_218B6, 71h	; 'q'
+		cmp	_bomb_frame, 113
 		jnz	short loc_E3EA
 
 loc_E3E5:
@@ -7427,7 +7427,7 @@ var_2		= word ptr -2
 		sub	sp, 6
 		push	si
 		push	di
-		inc	word_218C8
+		inc	_bomb_circle_frame
 		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
@@ -7435,13 +7435,13 @@ var_2		= word ptr -2
 		mov	bx, ax
 		mov	[bx+3E5Ch], dx
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
-		mov	ax, word_218B6
+		mov	ax, _bomb_frame
 		shl	ax, 3
-		mov	dx, 100h
+		mov	dx, 256
 		sub	dx, ax
 		mov	di, dx
 		xor	si, si
-		mov	al, byte ptr word_218B6
+		mov	al, byte ptr _bomb_frame
 		jmp	short loc_E47B
 ; ---------------------------------------------------------------------------
 
@@ -7454,7 +7454,7 @@ loc_E42A:
 		movsx	edx, _CosTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
-		add	ax, word_218C4
+		add	ax, _bomb_circle_center.x
 		mov	[bp+var_2], ax
 		movsx	eax, di
 		mov	dl, [bp+@@angle]
@@ -7464,7 +7464,7 @@ loc_E42A:
 		movsx	edx, _SinTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
-		add	ax, word_218C6
+		add	ax, _bomb_circle_center.y
 		mov	[bp+var_4], ax
 		push	[bp+var_2]
 		push	ax
@@ -7519,7 +7519,7 @@ loc_E4AE:
 		movsx	edx, _CosTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
-		add	ax, word_218C4
+		add	ax, _bomb_circle_center.x
 		mov	[bp+var_2], ax
 		movsx	eax, di
 		mov	dl, [bp+@@angle]
@@ -7529,7 +7529,7 @@ loc_E4AE:
 		movsx	edx, _SinTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
-		add	ax, word_218C6
+		add	ax, _bomb_circle_center.y
 		mov	[bp+var_4], ax
 		push	[bp+var_2]
 		push	ax
@@ -7559,7 +7559,7 @@ sub_E512	proc near
 		mov	bp, sp
 		push	si
 		push	di
-		mov	ax, word_218B6
+		mov	ax, _bomb_frame
 		and	ax, 0Fh
 		add	ax, ax
 		mov	di, ax
@@ -7600,7 +7600,7 @@ loc_E55D:
 loc_E566:
 		cmp	byte ptr [si+3F28h], 0
 		jz	short loc_E5AB
-		mov	ax, word_218B6
+		mov	ax, _bomb_frame
 		and	ax, 3
 		mov	dx, si
 		and	dx, 3
@@ -7652,7 +7652,7 @@ var_4		= dword	ptr -4
 		mov	bp, sp
 		sub	sp, 6
 		push	si
-		mov	ax, word_218B6
+		mov	ax, _bomb_frame
 		dec	ax
 		sar	ax, 1
 		mov	[bp+var_6], ax
@@ -7700,8 +7700,8 @@ sub_E5B5	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_E618	proc near
+public BOMB_REIMU_A
+bomb_reimu_a	proc near
 
 @@component		= word ptr -2
 
@@ -7710,7 +7710,7 @@ sub_E618	proc near
 		sub	sp, 2
 		push	si
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		cmp	word_218B6, 1
+		cmp	_bomb_frame, 1
 		jnz	short loc_E668
 		mov	[bp+@@component], 0
 		jmp	short loc_E64E
@@ -7733,7 +7733,7 @@ loc_E64E:
 		call	far ptr	palette_show
 
 loc_E668:
-		cmp	word_218B6, 20h	; ' '
+		cmp	_bomb_frame, BOMB_CIRCLE_FRAMES
 		jge	short loc_E680
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 3
 		call	sub_E5B5
@@ -7741,7 +7741,7 @@ loc_E668:
 ; ---------------------------------------------------------------------------
 
 loc_E680:
-		cmp	word_218B6, 20h	; ' '
+		cmp	_bomb_frame, BOMB_CIRCLE_FRAMES
 		jnz	short loc_E6CC
 		mov	al, rgb_21A50.r
 		mov	Palettes+9, al
@@ -7761,28 +7761,28 @@ loc_E680:
 ; ---------------------------------------------------------------------------
 
 loc_E6CC:
-		cmp	word_218B6, 88h
+		cmp	_bomb_frame, 136
 		jge	loc_E821
-		cmp	word_218B6, 40h
+		cmp	_bomb_frame, 64
 		jle	short loc_E6E8
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 11
 
 loc_E6E8:
 		call	grcg_boxfill pascal, (PLAYFIELD_X shl 16) or 0, ((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 		call	grcg_off
-		cmp	word_218B6, 40h
+		cmp	_bomb_frame, 64
 		jg	short loc_E74D
-		mov	ax, word_218B6
+		mov	ax, _bomb_frame
 		shl	ax, 2
-		add	ax, 0FF80h
-		mov	dx, 80h
+		add	ax, -128
+		mov	dx, 128
 		sub	dx, ax
 		mov	[bp+var_2], dx
 		mov	al, byte ptr [bp+var_2]
 		mov	Palettes, al
 		mov	Palettes+1, 0
 		mov	Palettes+2, al
-		cmp	word_218B6, 40h
+		cmp	_bomb_frame, 64
 		jnz	short loc_E745
 		mov	PaletteTone, 200
 		call	far ptr	palette_show
@@ -7800,7 +7800,7 @@ loc_E74D:
 		push	320001h
 		push	0
 		call	sub_4090
-		cmp	word_218B6, 46h	; 'F'
+		cmp	_bomb_frame, 70
 		jnz	short loc_E774
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
@@ -7810,7 +7810,7 @@ loc_E74D:
 loc_E774:
 		cmp	byte_2066C, 0
 		jz	short loc_E782
-		test	byte ptr word_218B6, 1
+		test	byte ptr _bomb_frame, 1
 		jz	short loc_E7A0
 
 loc_E782:
@@ -7824,9 +7824,9 @@ loc_E793:
 		call	_pi_slot_put c, 112, si, 1
 
 loc_E7A0:
-		cmp	word_218B6, 56h	; 'V'
+		cmp	_bomb_frame, 86
 		jl	short loc_E7E8
-		mov	ax, word_218B6
+		mov	ax, _bomb_frame
 		mov	bx, 3
 		cwd
 		idiv	bx
@@ -7844,20 +7844,20 @@ loc_E7C0:
 		mov	Palettes, al
 		mov	Palettes+1, al
 		mov	Palettes+2, al
-		mov	ax, word_218B6
+		mov	ax, _bomb_frame
 		add	ax, ax
 		add	ax, -72
 		mov	PaletteTone, ax
 		call	far ptr	palette_show
-		cmp	word_218B6, 6Fh	; 'o'
+		cmp	_bomb_frame, 111
 		jle	short loc_E7E8
 		mov	byte_2066D, 2
 
 loc_E7E8:
-		cmp	word_218B6, 56h	; 'V'
+		cmp	_bomb_frame, 86
 		jge	short loc_E80E
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
-		test	byte ptr word_218B6, 3
+		test	byte ptr _bomb_frame, 3
 		jnz	short loc_E80B
 		call	_snd_se_play c, 15
 
@@ -7865,14 +7865,14 @@ loc_E80B:
 		call	sub_E512
 
 loc_E80E:
-		cmp	word_218B6, 56h	; 'V'
+		cmp	_bomb_frame, 86
 		jnz	short loc_E892
 		call	_snd_se_play c, 17
 		jmp	short loc_E892
 ; ---------------------------------------------------------------------------
 
 loc_E821:
-		cmp	word_218B6, 88h
+		cmp	_bomb_frame, 136
 		jnz	short loc_E867
 		mov	al, rgb_21A4D.r
 		mov	Palettes, al
@@ -7892,9 +7892,9 @@ loc_E821:
 ; ---------------------------------------------------------------------------
 
 loc_E867:
-		cmp	word_218B6, 9Ch
+		cmp	_bomb_frame, 156
 		jge	short loc_E888
-		mov	ax, word_218B6
+		mov	ax, _bomb_frame
 		imul	ax, 5
 		add	ax, -680
 		mov	dx, 200
@@ -7918,14 +7918,14 @@ loc_E899:
 		pop	si
 		leave
 		retn
-sub_E618	endp
+bomb_reimu_a	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_E89C	proc near
+public BOMB_REIMU_C
+bomb_reimu_c	proc near
 
 var_64		= byte ptr -64h
 var_4		= word ptr -4
@@ -7943,14 +7943,14 @@ var_2		= word ptr -2
 		mov	cx, 30h	; '0'
 		rep movsw
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 2
-		cmp	word_218B6, 20h	; ' '
+		cmp	_bomb_frame, BOMB_CIRCLE_FRAMES
 		jge	short loc_E8C9
 		call	sub_E5B5
 		jmp	loc_EA60
 ; ---------------------------------------------------------------------------
 
 loc_E8C9:
-		cmp	word_218B6, 20h	; ' '
+		cmp	_bomb_frame, BOMB_CIRCLE_FRAMES
 		jnz	short loc_E915
 		mov	al, byte_2287E
 		mov	byte_21A53, al
@@ -7974,12 +7974,12 @@ loc_E902:
 ; ---------------------------------------------------------------------------
 
 loc_E915:
-		cmp	word_218B6, 64h	; 'd'
+		cmp	_bomb_frame, 100
 		jge	loc_E9A6
 		call	grcg_boxfill pascal, (PLAYFIELD_X shl 16) or 0, ((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
-		cmp	word_218B6, 50h	; 'P'
+		cmp	_bomb_frame, 80
 		jl	short loc_E94C
-		mov	ax, word_218B6
+		mov	ax, _bomb_frame
 		imul	ax, 5
 		add	ax, -300
 		mov	PaletteTone, ax
@@ -8020,11 +8020,11 @@ loc_E99D:
 ; ---------------------------------------------------------------------------
 
 loc_E9A6:
-		cmp	word_218B6, 70h	; 'p'
+		cmp	_bomb_frame, 112
 		jge	short loc_EA11
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
-		test	byte ptr word_218B6, 1
+		test	byte ptr _bomb_frame, 1
 		jz	short loc_E9F3
 		call	grcg_off
 		mov	[bp+var_2], 10h
@@ -8048,7 +8048,7 @@ loc_E9F3:
 ; ---------------------------------------------------------------------------
 
 loc_EA11:
-		cmp	word_218B6, 70h	; 'p'
+		cmp	_bomb_frame, 112
 		jnz	short loc_EA35
 		mov	al, byte_21A53
 		mov	byte_2287E, al
@@ -8060,9 +8060,9 @@ loc_EA11:
 ; ---------------------------------------------------------------------------
 
 loc_EA35:
-		cmp	word_218B6, 80h
+		cmp	_bomb_frame, 128
 		jge	short loc_EA56
-		mov	ax, word_218B6
+		mov	ax, _bomb_frame
 		imul	ax, 5
 		add	ax, -540
 		mov	dx, 200
@@ -8087,7 +8087,7 @@ loc_EA67:
 		pop	si
 		leave
 		retn
-sub_E89C	endp
+bomb_reimu_c	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -8165,20 +8165,20 @@ sub_EA6B	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_EAEB	proc near
+public BOMB_REIMU_B
+bomb_reimu_b	proc near
 		push	bp
 		mov	bp, sp
 		push	si
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
-		cmp	word_218B6, 20h	; ' '
+		cmp	_bomb_frame, BOMB_CIRCLE_FRAMES
 		jge	short loc_EB07
 		call	sub_E5B5
 		jmp	loc_ECA2
 ; ---------------------------------------------------------------------------
 
 loc_EB07:
-		cmp	word_218B6, 20h	; ' '
+		cmp	_bomb_frame, BOMB_CIRCLE_FRAMES
 		jnz	short loc_EB32
 		mov	byte_21A55, 0
 		mov	al, byte_2287E
@@ -8189,13 +8189,13 @@ loc_EB07:
 ; ---------------------------------------------------------------------------
 
 loc_EB32:
-		cmp	word_218B6, 84h
+		cmp	_bomb_frame, 132
 		jge	short loc_EB9E
-		cmp	word_218B6, 20h	; ' '
+		cmp	_bomb_frame, BOMB_CIRCLE_FRAMES
 		jle	short loc_EB7C
-		test	byte ptr word_218B6, 3
+		test	byte ptr _bomb_frame, 3
 		jnz	short loc_EB7C
-		mov	ax, word_218B6
+		mov	ax, _bomb_frame
 		and	ax, 7
 		cmp	ax, 4
 		jnz	short loc_EB5D
@@ -8210,7 +8210,7 @@ loc_EB5D:
 		cmp	byte_21A55, 12h
 		jb	short loc_EB7C
 		call	_playfield_tram_wipe
-		mov	word_218B6, 84h
+		mov	_bomb_frame, 132
 
 loc_EB7C:
 		call	grcg_boxfill pascal, (PLAYFIELD_X shl 16) or 0, ((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
@@ -8220,13 +8220,13 @@ loc_EB7C:
 ; ---------------------------------------------------------------------------
 
 loc_EB9E:
-		cmp	word_218B6, 0A4h
+		cmp	_bomb_frame, 164
 		jge	loc_EC56
 		call	grcg_boxfill pascal, (PLAYFIELD_X shl 16) or 0, ((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 		mov	byte_2066D, 2
 		cmp	byte_2066C, 0
 		jz	short loc_EBCC
-		test	byte ptr word_218B6, 1
+		test	byte ptr _bomb_frame, 1
 		jz	short loc_EBEF
 
 loc_EBCC:
@@ -8241,44 +8241,44 @@ loc_EBE2:
 		call	_pi_slot_put c, 32, si, 1
 
 loc_EBEF:
-		test	byte ptr word_218B6, 3
+		test	byte ptr _bomb_frame, 3
 		jnz	short loc_EC00
 		call	_snd_se_play c, 15
 
 loc_EC00:
-		cmp	word_218B6, 8Ch
+		cmp	_bomb_frame, 140
 		jg	short loc_EC10
-		mov	ax, word_218B6
+		mov	ax, _bomb_frame
 		add	ax, -132
 		jmp	short loc_EC36
 ; ---------------------------------------------------------------------------
 
 loc_EC10:
-		cmp	word_218B6, 94h
+		cmp	_bomb_frame, 148
 		jg	short loc_EC20
-		mov	ax, word_218B6
+		mov	ax, _bomb_frame
 		add	ax, -140
 		jmp	short loc_EC36
 ; ---------------------------------------------------------------------------
 
 loc_EC20:
-		cmp	word_218B6, 9Ch
+		cmp	_bomb_frame, 156
 		jg	short loc_EC30
-		mov	ax, word_218B6
+		mov	ax, _bomb_frame
 		add	ax, -148
 		jmp	short loc_EC36
 ; ---------------------------------------------------------------------------
 
 loc_EC30:
-		mov	ax, word_218B6
+		mov	ax, _bomb_frame
 		add	ax, -156
 
 loc_EC36:
 		push	ax
 		call	sub_E48C
-		mov	ax, word_218B6
+		mov	ax, _bomb_frame
 		add	ax, ax
-		add	ax, word_218B6
+		add	ax, _bomb_frame
 		add	ax, -396
 
 loc_EC46:
@@ -8290,7 +8290,7 @@ loc_EC46:
 ; ---------------------------------------------------------------------------
 
 loc_EC56:
-		cmp	word_218B6, 0A4h
+		cmp	_bomb_frame, 164
 		jnz	short loc_EC85
 		call	_snd_se_play c, 16
 		mov	al, byte_21A54
@@ -8303,11 +8303,11 @@ loc_EC56:
 ; ---------------------------------------------------------------------------
 
 loc_EC85:
-		cmp	word_218B6, 0B8h
+		cmp	_bomb_frame, 184
 		jge	short loc_EC98
-		mov	ax, word_218B6
+		mov	ax, _bomb_frame
 		imul	ax, 5
-		add	ax, 0FCCCh
+		add	ax, -820
 		jmp	short loc_EC46
 ; ---------------------------------------------------------------------------
 
@@ -8325,7 +8325,7 @@ loc_ECA9:
 		pop	si
 		pop	bp
 		retn
-sub_EAEB	endp
+bomb_reimu_b	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -8337,21 +8337,21 @@ sub_ECAC	proc near
 		mov	bp, sp
 		push	si
 		xor	si, si
-		cmp	byte_218B4, 0
+		cmp	_bombing, 0
 		jz	short loc_ED0E
-		inc	word_218B6
+		inc	_bomb_frame
 		cmp	word_218CA, 0
 		jnz	short loc_ECE3
-		cmp	word_218B6, 20h	; ' '
+		cmp	_bomb_frame, BOMB_CIRCLE_FRAMES
 		jg	short loc_ECD0
 		call	sub_E3EE
 		jmp	short loc_ECF0
 ; ---------------------------------------------------------------------------
 
 loc_ECD0:
-		cmp	word_218C8, 0
+		cmp	_bomb_circle_frame, 0
 		jnz	short loc_ECF0
-		mov	word_218B6, 0
+		mov	_bomb_frame, 0
 		inc	word_218CA
 		jmp	short loc_ECF0
 ; ---------------------------------------------------------------------------
@@ -8359,14 +8359,14 @@ loc_ECD0:
 loc_ECE3:
 		cmp	word_218CA, 1
 		jnz	short loc_ECF0
-		call	fp_219CA
+		call	_playchar_bomb_func
 		mov	si, ax
 
 loc_ECF0:
 		or	si, si
 		jz	short loc_ED0E
-		mov	byte_218B4, 0
-		mov	byte_20606, 0
+		mov	_bombing, 0
+		mov	_player_invincible_via_bomb, 0
 		mov	_player_invincibility_time, BOMB_INVINCIBILITY_FRAMES_AFTER
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
@@ -8718,7 +8718,7 @@ sub_EF36	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		cmp	byte_20606, 0
+		cmp	_player_invincible_via_bomb, 0
 		jnz	short loc_EF4F
 		cmp	_player_invincibility_time, 0
 		jz	short loc_EF54
@@ -8992,7 +8992,7 @@ sub_F1D8	proc near
 		mov	bp, sp
 		push	si
 		push	di
-		cmp	byte_20606, 0
+		cmp	_player_invincible_via_bomb, 0
 		jnz	short loc_F1F2
 		cmp	_player_invincibility_time, 0
 		jz	short loc_F1F7
@@ -9280,7 +9280,7 @@ loc_F426:
 loc_F434:
 		test	byte ptr _key_det, INPUT_BOMB
 		jz	short loc_F43E
-		call	sub_E280
+		call	player_bomb
 
 loc_F43E:
 		pop	di
@@ -10769,7 +10769,7 @@ arg_8		= word ptr  0Ch
 		call	sub_10763
 		or	ax, ax
 		jnz	loc_1085F
-		cmp	byte_218B4, 0
+		cmp	_bombing, 0
 		jnz	loc_1085F
 		push	ss
 		lea	ax, [bp+arg_0]
@@ -10885,7 +10885,7 @@ arg_A		= word ptr  0Eh
 		call	sub_10763
 		or	ax, ax
 		jnz	loc_10995
-		cmp	byte_218B4, 0
+		cmp	_bombing, 0
 		jnz	loc_10995
 		cmp	[bp+arg_4], 83h
 		jz	short loc_108A3
@@ -14945,7 +14945,7 @@ loc_129AB:
 ; ---------------------------------------------------------------------------
 
 loc_129BA:
-		cmp	byte_218B4, 0
+		cmp	_bombing, 0
 		jz	short loc_129CD
 		mov	al, byte_1EB88
 		test	byte ptr dword_20612, al
@@ -34750,9 +34750,9 @@ point_205F6	Point <?>
 		db 8 dup(?)
 playchar_shot_func	dw ?
 include th01/main/player_is_hit[bss].asm
-public _player_invincibility_time
+public _player_invincibility_time, _player_invincible_via_bomb
 _player_invincibility_time	db ?
-byte_20606	db ?
+_player_invincible_via_bomb	db ?
 byte_20607	db ?
 byte_20608	db ?
 byte_20609	db ?
@@ -34840,21 +34840,19 @@ dword_218AC	dd ?
 word_218B0	dw ?
 shot_level	db ?
 		db ?
-byte_218B4	db ?
-		db ?
-word_218B6	dw ?
-		db 2 dup(?)
+include th02/main/player/bomb[bss].asm
 dword_218BA	dd ?
 word_218BE	dw ?
 word_218C0	dw ?
 byte_218C2	db ?
 		db ?
-word_218C4	dw ?
-word_218C6	dw ?
-word_218C8	dw ?
+public _bomb_circle_center, _bomb_circle_frame
+_bomb_circle_center	Point <?>
+_bomb_circle_frame	dw ?
 word_218CA	dw ?
 		db 254 dup(?)
-fp_219CA	dw ?
+public _playchar_bomb_func
+_playchar_bomb_func	dw ?
 		db 128 dup(?)
 byte_21A4C	db ?
 rgb_21A4D	rgb_t <?>

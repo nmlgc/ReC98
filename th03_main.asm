@@ -21,6 +21,7 @@
 include ReC98.inc
 include th03/th03.inc
 include th03/main/playfld.inc
+include th03/main/player/bomb.inc
 include th03/sprite16.inc
 include libs/sprite16/sprite16.inc
 
@@ -1296,7 +1297,7 @@ loc_A1BD:
 		mov	bx, di
 		add	bx, bx
 		mov	_playfield_fg_shift_x[bx], 0
-		mov	byte ptr [di+658Bh], 0
+		mov	_damage_all_enemies_on[di], 0
 		mov	byte ptr [di+798h], 0
 		inc	di
 		add	si, size player_t
@@ -3965,7 +3966,7 @@ arg_0		= word ptr  4
 		mov	ah, 0
 		mov	bx, 1
 		sub	bx, ax
-		mov	byte ptr [bx+658Bh], 1
+		mov	_damage_all_enemies_on[bx], 1
 		mov	word_20E42, 0
 		jmp	short loc_C12C
 ; ---------------------------------------------------------------------------
@@ -4503,8 +4504,7 @@ loc_C505:
 		call	randring1_next16
 		test	al, 3
 		jnz	short loc_C52B
-		push	si
-		call	sub_E080
+		call	player_bomb pascal, si
 		jmp	short loc_C52F
 ; ---------------------------------------------------------------------------
 
@@ -4866,8 +4866,7 @@ loc_C75E:
 loc_C77A:
 		cmp	word ptr [si+18h], 400h
 		ja	short loc_C787
-		push	si
-		call	sub_E080
+		call	player_bomb pascal, si
 		jmp	short loc_C78B
 ; ---------------------------------------------------------------------------
 
@@ -7371,12 +7370,12 @@ loc_DA68:
 		mov	al, byte ptr word_23AF0
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+658Bh], 0
+		cmp	_damage_all_enemies_on[bx], 0
 		jz	short loc_DA81
 		mov	al, byte ptr word_23AF0
 		mov	ah, 0
 		mov	bx, ax
-		dec	byte ptr [bx+658Bh]
+		dec	_damage_all_enemies_on[bx]
 
 loc_DA81:
 		cmp	byte_20E3C, 2
@@ -7720,8 +7719,7 @@ loc_DD7B:
 loc_DD9A:
 		test	di, 10h
 		jz	short loc_DDA4
-		push	si
-		call	sub_E080
+		call	player_bomb pascal, si
 
 loc_DDA4:
 		cmp	byte ptr [si+22h], 2
@@ -8098,47 +8096,47 @@ sub_DFE9	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public PLAYER_BOMB
+player_bomb	proc near
 
-sub_E080	proc near
-
-arg_0		= word ptr  4
+@@player		= word ptr  4
 
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, [bp+arg_0]
+		mov	si, [bp+@@player]
 		mov	al, byte ptr word_23AF0
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+6580h], 0
-		jnz	short loc_E0F2
-		cmp	byte ptr [si+1Eh], 0
-		jnz	short loc_E0F2
-		cmp	byte ptr [si+1Dh], 0
+		cmp	_bomb_state[bx], BOMB_INACTIVE
+		jnz	short @@ret
+		cmp	[si+player_t.hyper_active], 0
+		jnz	short @@ret
+		cmp	[si+player_t.bombs], 0
 		jz	short loc_E0BF
 		mov	al, byte ptr word_23AF0
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+6580h], 1
-		dec	byte ptr [si+1Dh]
-		mov	byte ptr [si+6], 0B4h
+		mov	_bomb_state[bx], BOMB_PREPARING
+		dec	[si+player_t.bombs]
+		mov	[si+player_t.invincibility_time], BOMB_FRAMES
 		push	word_23AF0
 		nopcall	sub_B9AB
 		jmp	short loc_E0EF
 ; ---------------------------------------------------------------------------
 
 loc_E0BF:
-		cmp	word ptr [si+1Ah], 0FF0h
-		jb	short loc_E0F2
+		cmp	[si+player_t.gauge_avail], GAUGE_MAX
+		jb	short @@ret
 		mov	al, byte ptr word_23AF0
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+658Bh], 1
+		mov	_damage_all_enemies_on[bx], 1
 		call	snd_se_play pascal, 7
-		mov	al, [si+8]
-		mov	[si+1Eh], al
-		push	word ptr [si]
-		push	word ptr [si+2]
+		mov	al, [si+player_t.playchar_paletted]
+		mov	[si+player_t.hyper_active], al
+		push	[si+player_t.center.x]
+		push	[si+player_t.center.y]
 		mov	al, byte ptr word_23AF0
 		mov	ah, 0
 		push	ax
@@ -8147,11 +8145,11 @@ loc_E0BF:
 loc_E0EF:
 		call	sub_E24B
 
-loc_E0F2:
+@@ret:
 		pop	si
 		pop	bp
 		retn	2
-sub_E080	endp
+player_bomb	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -19231,7 +19229,7 @@ marisa_1489D	endp
 marisa_bomb	proc far
 
 var_2		= byte ptr -2
-var_1		= byte ptr -1
+@@frame		= byte ptr -1
 
 		enter	2, 0
 		push	si
@@ -19239,15 +19237,15 @@ var_1		= byte ptr -1
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+6580h], 0
-		jz	loc_14A72
+		cmp	_bomb_state[bx], BOMB_INACTIVE
+		jz	@@ret
 		call	egc_off
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+307Eh]
-		mov	[bp+var_1], al
-		cmp	[bp+var_1], 40h
+		mov	al, _bomb_frame[bx]
+		mov	[bp+@@frame], al
+		cmp	[bp+@@frame], 64
 		jnb	short loc_14914
 		push	GC_RMW
 		mov	al, _pid_current
@@ -19262,21 +19260,21 @@ var_1		= byte ptr -1
 loc_148FF:
 		call	sub_B39E
 		call	grcg_off
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@frame]
 		shl	al, 2
 		mov	dl, 0
 		jmp	loc_149E8
 ; ---------------------------------------------------------------------------
 
 loc_14914:
-		cmp	[bp+var_1], 80h
+		cmp	[bp+@@frame], 128
 		jnb	loc_149D1
-		test	[bp+var_1], 1
+		test	[bp+@@frame], 1
 		jz	short loc_14929
 		call	snd_se_play pascal, 16
 
 loc_14929:
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@frame]
 		mov	ah, 0
 		and	ax, 3
 		cmp	ax, 2
@@ -19314,7 +19312,7 @@ loc_14967:
 		mov	ah, 0
 		push	ax
 		call	sub_EFF4
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@frame]
 		mov	ah, 0
 		mov	bx, 8
 		cwd
@@ -19352,9 +19350,9 @@ loc_149D1:
 		add	ax, ax
 		mov	bx, ax
 		mov	_playfield_fg_shift_x[bx], 0
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@frame]
 		shl	al, 3
-		mov	dl, 0FFh
+		mov	dl, 255
 
 loc_149E8:
 		sub	dl, al
@@ -19378,10 +19376,10 @@ loc_149E8:
 
 loc_14A1C:
 		call	egc_on
-		cmp	[bp+var_1], 40h
-		jb	short loc_14A72
-		cmp	[bp+var_1], 80h
-		jnb	short loc_14A72
+		cmp	[bp+@@frame], 64
+		jb	short @@ret
+		cmp	[bp+@@frame], 128
+		jnb	short @@ret
 		mov	_sprite16_put_w, (48 / 16)
 		mov	_sprite16_put_h, 24
 		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
@@ -19390,7 +19388,7 @@ loc_14A1C:
 		mov	ah, 0
 		add	ax, 0F16h
 		mov	di, ax
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@frame]
 		mov	ah, 0
 		and	ax, 3
 		cmp	ax, 2
@@ -19407,7 +19405,7 @@ loc_14A5E:
 		push	di
 		call	sprite16_put
 
-loc_14A72:
+@@ret:
 		pop	di
 		pop	si
 		leave
@@ -20131,41 +20129,41 @@ sub_1501E	proc far
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+6580h], 0
-		jz	short loc_1508A
+		cmp	_bomb_state[bx], BOMB_INACTIVE
+		jz	short @@ret
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+6580h], 1
+		cmp	_bomb_state[bx], BOMB_PREPARING
 		jnz	short loc_1505C
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+6580h], 2
+		mov	_bomb_state[bx], BOMB_ACTIVE
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+307Eh], 0
+		mov	_bomb_frame[bx], 0
 		call	snd_se_play pascal, 18
 
 loc_1505C:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		inc	byte ptr [bx+307Eh]
+		inc	_bomb_frame[bx]
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+307Eh], 0B4h
-		jb	short loc_1508A
+		cmp	_bomb_frame[bx], BOMB_FRAMES
+		jb	short @@ret
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+6580h], 0
+		mov	_bomb_state[bx], BOMB_INACTIVE
 		push	word ptr _pid_current
 		call	sub_A3A8
 
-loc_1508A:
+@@ret:
 		pop	bp
 		retf
 sub_1501E	endp
@@ -20182,21 +20180,21 @@ reimu_1508C	proc far
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+6580h], 0
-		jz	loc_1515A
+		cmp	_bomb_state[bx], BOMB_INACTIVE
+		jz	@@ret
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+6580h], 1
+		cmp	_bomb_state[bx], BOMB_PREPARING
 		jnz	short loc_150ED
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+6580h], 2
+		mov	_bomb_state[bx], BOMB_ACTIVE
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+307Eh], 0
+		mov	_bomb_frame[bx], 0
 		xor	si, si
 		jmp	short loc_150E1
 ; ---------------------------------------------------------------------------
@@ -20221,7 +20219,7 @@ loc_150ED:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		inc	byte ptr [bx+307Eh]
+		inc	_bomb_frame[bx]
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 8
@@ -20253,16 +20251,16 @@ loc_15132:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+307Eh], 0B4h
-		jb	short loc_1515A
+		cmp	_bomb_frame[bx], BOMB_FRAMES
+		jb	short @@ret
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+6580h], 0
+		mov	_bomb_state[bx], BOMB_INACTIVE
 		push	word ptr _pid_current
 		call	sub_A3A8
 
-loc_1515A:
+@@ret:
 		pop	si
 		pop	bp
 		retf
@@ -20337,21 +20335,21 @@ sub_1515D	endp
 reimu_bomb	proc far
 
 var_2		= byte ptr -2
-var_1		= byte ptr -1
+@@frame		= byte ptr -1
 
 		enter	2, 0
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+6580h], 0
-		jz	locret_153B9
+		cmp	_bomb_state[bx], BOMB_INACTIVE
+		jz	@@ret
 		call	egc_off
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+307Eh]
-		mov	[bp+var_1], al
-		cmp	[bp+var_1], 40h
+		mov	al, _bomb_frame[bx]
+		mov	[bp+@@frame], al
+		cmp	[bp+@@frame], 64
 		jnb	loc_152C2
 		push	GC_RMW
 		mov	al, _pid_current
@@ -20366,12 +20364,12 @@ var_1		= byte ptr -1
 loc_1522B:
 		call	sub_B39E
 		call	grcg_off
-		cmp	[bp+var_1], 20h	; ' '
+		cmp	[bp+@@frame], 32
 		jnb	short loc_1527D
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 8
-		mov	dl, [bp+var_1]
+		mov	dl, [bp+@@frame]
 		mov	dh, 0
 		shl	dx, 3
 		add	ax, dx
@@ -20395,11 +20393,11 @@ loc_1527D:
 		mov	al, _pid_current
 		mov	ah, 0
 		imul	ax, size rgb_t
-		mov	dl, [bp+var_1]
+		mov	dl, [bp+@@frame]
 		shl	dl, 2
 		mov	bx, ax
 		mov	Palettes[bx].r, dl
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@frame]
 		mov	ah, 0
 		imul	ax, 3
 		mov	dl, _pid_current
@@ -20407,7 +20405,7 @@ loc_1527D:
 		imul	dx, size rgb_t
 		mov	bx, dx
 		mov	Palettes[bx].g, al
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@frame]
 		mov	ah, 0
 		imul	ax, 3
 		mov	dl, _pid_current
@@ -20419,16 +20417,16 @@ loc_1527D:
 ; ---------------------------------------------------------------------------
 
 loc_152C2:
-		cmp	[bp+var_1], 70h	; 'p'
+		cmp	[bp+@@frame], 112
 		jnb	loc_15360
-		test	[bp+var_1], 1
+		test	[bp+@@frame], 1
 		jz	short loc_152D7
 		call	snd_se_play pascal, 16
 
 loc_152D7:
-		cmp	[bp+var_1], 60h
+		cmp	[bp+@@frame], 96
 		ja	short loc_15318
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@frame]
 		mov	ah, 0
 		and	ax, 1
 		imul	ax, 80
@@ -20457,7 +20455,7 @@ loc_15318:
 		mov	_palette_changed, 1
 
 loc_15323:
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@frame]
 		mov	ah, 0
 		mov	bx, 8
 		cwd
@@ -20491,9 +20489,9 @@ loc_15360:
 		add	ax, ax
 		mov	bx, ax
 		mov	_playfield_fg_shift_x[bx], 0
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@frame]
 		shl	al, 3
-		mov	dl, 0FFh
+		mov	dl, 255
 		sub	dl, al
 		mov	[bp+var_2], dl
 		mov	al, _pid_current
@@ -20517,11 +20515,11 @@ loc_153A6:
 
 loc_153AB:
 		call	egc_on
-		cmp	[bp+var_1], 60h
-		jnb	short locret_153B9
+		cmp	[bp+@@frame], 96
+		jnb	short @@ret
 		call	sub_1515D
 
-locret_153B9:
+@@ret:
 		leave
 		retf
 reimu_bomb	endp
@@ -21299,7 +21297,7 @@ loc_159DD:
 		mov	al, pid_20E3A
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+6580h], 0
+		cmp	_bomb_state[bx], BOMB_INACTIVE
 		jz	short loc_159F8
 		test	byte ptr word_23AF6, 1
 		jnz	short loc_159F8
@@ -21324,7 +21322,7 @@ yumemi_bomb	proc far
 
 var_14		= byte ptr -14h
 var_10		= byte ptr -10h
-var_F		= byte ptr -0Fh
+@@frame		= byte ptr -0Fh
 var_E		= word ptr -0Eh
 var_C		= word ptr -0Ch
 var_A		= word ptr -0Ah
@@ -21339,17 +21337,17 @@ var_2		= word ptr -2
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+6580h], 0
-		jz	loc_15CB5
+		cmp	_bomb_state[bx], BOMB_INACTIVE
+		jz	@@ret
 		call	egc_off
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+307Eh]
-		mov	[bp+var_F], al
-		cmp	[bp+var_F], 40h
+		mov	al, _bomb_frame[bx]
+		mov	[bp+@@frame], al
+		cmp	[bp+@@frame], 64
 		ja	loc_15BB9
-		cmp	[bp+var_F], 20h	; ' '
+		cmp	[bp+@@frame], 32
 		jnb	short loc_15A4A
 		mov	ah, 0
 		imul	ax, 3
@@ -21413,12 +21411,12 @@ loc_15AE6:
 		cmp	si, 3
 		jl	short loc_15A91
 		call	grcg_triangle pascal, [bp+var_8], [bp+var_E], [bp+var_6], [bp+var_C], [bp+var_4], [bp+var_A]
-		cmp	[bp+var_F], 20h	; ' '
+		cmp	[bp+@@frame], 32
 		jbe	loc_15B9A
-		mov	al, [bp+var_F]
+		mov	al, [bp+@@frame]
 		mov	ah, 0
 		imul	ax, 3
-		mov	dx, 140h
+		mov	dx, 320
 		sub	dx, ax
 		mov	di, dx
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 8
@@ -21461,16 +21459,16 @@ loc_15B7E:
 loc_15B9A:
 		call	grc_setclip pascal, large 0, ((RES_X - 1) shl 16) or (SPRITE16_RES_Y - 1)
 		call	grcg_off
-		mov	al, [bp+var_F]
+		mov	al, [bp+@@frame]
 		shl	al, 2
 		mov	[bp+var_10], al
 		jmp	loc_15C7E
 ; ---------------------------------------------------------------------------
 
 loc_15BB9:
-		cmp	[bp+var_F], 90h
+		cmp	[bp+@@frame], 144
 		jnb	loc_15C57
-		test	[bp+var_F], 7
+		test	[bp+@@frame], 7
 		jnz	short loc_15BEC
 		call	snd_se_play pascal, 5
 		mov	PaletteTone, 140
@@ -21488,7 +21486,7 @@ loc_15BEC:
 		call	far ptr	palette_show
 
 loc_15BF7:
-		mov	al, [bp+var_F]
+		mov	al, [bp+@@frame]
 		mov	ah, 0
 		mov	bx, 8
 		cwd
@@ -21540,9 +21538,9 @@ loc_15C57:
 		add	ax, ax
 		mov	bx, ax
 		mov	_playfield_fg_shift_x[bx], 0
-		mov	al, [bp+var_F]
+		mov	al, [bp+@@frame]
 		shl	al, 3
-		mov	dl, 0FFh
+		mov	dl, 255
 		sub	dl, al
 		mov	[bp+var_10], dl
 
@@ -21568,7 +21566,7 @@ loc_15C7E:
 loc_15CB0:
 		call	egc_on
 
-loc_15CB5:
+@@ret:
 		pop	di
 		pop	si
 		leave
@@ -22166,7 +22164,7 @@ loc_16187:
 		mov	[bp+@@pid], al
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+658Bh], 0
+		cmp	_damage_all_enemies_on[bx], 0
 		jz	short loc_16212
 		mov	bx, word_2203C
 		mov	byte ptr [bx+7], 0
@@ -23947,21 +23945,21 @@ mima_17043	proc far
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+6580h], 0
-		jz	loc_1714C
+		cmp	_bomb_state[bx], BOMB_INACTIVE
+		jz	@@ret
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+6580h], 1
+		cmp	_bomb_state[bx], BOMB_PREPARING
 		jnz	short loc_170A5
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+6580h], 2
+		mov	_bomb_state[bx], BOMB_ACTIVE
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+307Eh], 0
+		mov	_bomb_frame[bx], 0
 		xor	si, si
 		jmp	short loc_17099
 ; ---------------------------------------------------------------------------
@@ -23986,11 +23984,11 @@ loc_170A5:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		inc	byte ptr [bx+307Eh]
+		inc	_bomb_frame[bx]
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+307Eh]
+		mov	al, _bomb_frame[bx]
 		mov	ah, 0
 		mov	bx, 8
 		cwd
@@ -24002,7 +24000,7 @@ loc_170A5:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+307Eh]
+		mov	al, _bomb_frame[bx]
 		mov	ah, 0
 		mov	bx, 8
 		cwd
@@ -24041,16 +24039,16 @@ loc_17129:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+307Eh], 0B4h
-		jb	short loc_1714C
+		cmp	_bomb_frame[bx], BOMB_FRAMES
+		jb	short @@ret
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+6580h], 0
+		mov	_bomb_state[bx], BOMB_INACTIVE
 		push	word ptr _pid_current
 		call	sub_A3A8
 
-loc_1714C:
+@@ret:
 		pop	si
 		pop	bp
 		retf
@@ -24118,21 +24116,21 @@ sub_1714F	endp
 mima_bomb	proc far
 
 var_2		= byte ptr -2
-var_1		= byte ptr -1
+@@frame		= byte ptr -1
 
 		enter	2, 0
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+6580h], 0
-		jz	locret_17382
+		cmp	_bomb_state[bx], BOMB_INACTIVE
+		jz	@@ret
 		call	egc_off
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+307Eh]
-		mov	[bp+var_1], al
-		cmp	[bp+var_1], 50h	; 'P'
+		mov	al, _bomb_frame[bx]
+		mov	[bp+@@frame], al
+		cmp	[bp+@@frame], 80
 		ja	short loc_17255
 		push	GC_RMW
 		mov	al, _pid_current
@@ -24147,7 +24145,7 @@ var_1		= byte ptr -1
 loc_17202:
 		call	sub_B39E
 		call	grcg_off
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@frame]
 		mov	ah, 0
 		imul	ax, 3
 		mov	dl, 0
@@ -24175,9 +24173,9 @@ loc_17202:
 ; ---------------------------------------------------------------------------
 
 loc_17255:
-		cmp	[bp+var_1], 90h
+		cmp	[bp+@@frame], 144
 		jnb	loc_17332
-		test	[bp+var_1], 1
+		test	[bp+@@frame], 1
 		jnz	short loc_1727B
 		call	snd_se_play pascal, 16
 		mov	al, _pid_current
@@ -24207,7 +24205,7 @@ loc_1728A:
 		mov	bx, ax
 		mov	Palettes[bx].b, 0
 		mov	_palette_changed, 1
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@frame]
 		mov	ah, 0
 		mov	bx, 8
 		cwd
@@ -24271,9 +24269,9 @@ loc_17332:
 		add	ax, ax
 		mov	bx, ax
 		mov	_playfield_fg_shift_x[bx], 0
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@frame]
 		shl	al, 3
-		mov	dl, 0FFh
+		mov	dl, 255
 		sub	dl, al
 		mov	[bp+var_2], dl
 		mov	al, _pid_current
@@ -24296,7 +24294,7 @@ loc_17332:
 loc_1737D:
 		call	egc_on
 
-locret_17382:
+@@ret:
 		leave
 		retf
 mima_bomb	endp
@@ -25265,12 +25263,12 @@ loc_17A7A:
 		jz	short loc_17ADC
 		mov	bh, 0
 		mov	bl, [si+10h]
-		add	bx, 6580h
+		add	bx, offset _bomb_state
 		cmp	byte ptr [bx], 0
 		jnz	short loc_17AD6
 		mov	bh, 0
 		mov	bl, [si+10h]
-		add	bx, 658Bh
+		add	bx, offset _damage_all_enemies_on
 		cmp	byte ptr [bx], 0
 		jnz	short loc_17AD6
 		cmp	byte ptr [si+17h], 0
@@ -26009,7 +26007,7 @@ loc_18092:
 		mov	al, [bx+8]
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+6580h], 0
+		cmp	_bomb_state[bx], BOMB_INACTIVE
 		jnz	short loc_180BB
 		cmp	si, 0FF00h
 		jle	short loc_180BB
@@ -26386,22 +26384,22 @@ main_05_TEXT	segment	byte public 'CODE' use16
 chiyuri_bomb	proc far
 
 var_2		= byte ptr -2
-var_1		= byte ptr -1
+@@frame		= byte ptr -1
 
 		enter	2, 0
 		push	si
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+6580h], 0
-		jz	loc_185A8
+		cmp	_bomb_state[bx], BOMB_INACTIVE
+		jz	@@ret
 		call	egc_off
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+307Eh]
-		mov	[bp+var_1], al
-		cmp	[bp+var_1], 40h
+		mov	al, _bomb_frame[bx]
+		mov	[bp+@@frame], al
+		cmp	[bp+@@frame], 64
 		jnb	short loc_18455
 		push	GC_RMW
 		mov	al, _pid_current
@@ -26416,9 +26414,9 @@ var_1		= byte ptr -1
 loc_1840A:
 		call	sub_B39E
 		call	grcg_off
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@frame]
 		shl	al, 2
-		mov	dl, 0FFh
+		mov	dl, 255
 		sub	dl, al
 		mov	[bp+var_2], dl
 		mov	al, [bp+var_2]
@@ -26426,7 +26424,7 @@ loc_1840A:
 		push	ax
 		push	word ptr _pid_current
 		call	sub_A3D2
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@frame]
 		mov	ah, 0
 		mov	bx, 8
 		cwd
@@ -26442,10 +26440,10 @@ loc_1840A:
 ; ---------------------------------------------------------------------------
 
 loc_18455:
-		cmp	[bp+var_1], 90h
+		cmp	[bp+@@frame], 144
 		jnb	loc_1853F
 		mov	_palette_changed, 1
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@frame]
 		mov	ah, 0
 		and	ax, 3
 		cmp	ax, 2
@@ -26470,17 +26468,17 @@ loc_1848B:
 		mov	_palette_changed, 1
 
 loc_184A5:
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@frame]
 		mov	ah, 0
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_18518
 		call	snd_se_play pascal, 10
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@frame]
 		mov	ah, 0
-		add	ax, 0FFC0h
+		add	ax, -64
 		add	ax, ax
 		shl	ax, 4
 		mov	si, ax
@@ -26543,12 +26541,12 @@ loc_1853F:
 		add	ax, ax
 		mov	bx, ax
 		mov	_playfield_fg_shift_x[bx], 0
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@frame]
 		shl	al, 3
-		mov	dl, 0FFh
+		mov	dl, 255
 		sub	dl, al
-		mov	[bp+var_1], dl
-		mov	al, [bp+var_1]
+		mov	[bp+@@frame], dl
+		mov	al, [bp+@@frame]
 		add	al, al
 		mov	[bp+var_2], al
 		mov	al, _pid_current
@@ -26565,7 +26563,7 @@ loc_1853F:
 		mov	al, _pid_current
 		mov	ah, 0
 		imul	ax, size rgb_t
-		mov	dl, [bp+var_1]
+		mov	dl, [bp+@@frame]
 		mov	bx, ax
 		mov	Palettes[bx].b, dl
 		mov	_palette_changed, 1
@@ -26573,7 +26571,7 @@ loc_1853F:
 loc_185A3:
 		call	egc_on
 
-loc_185A8:
+@@ret:
 		pop	si
 		leave
 		retf
@@ -26591,21 +26589,21 @@ ellen_185AB	proc far
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+6580h], 0
-		jz	loc_186C0
+		cmp	_bomb_state[bx], BOMB_INACTIVE
+		jz	@@ret
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+6580h], 1
+		cmp	_bomb_state[bx], BOMB_PREPARING
 		jnz	short loc_1860D
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+6580h], 2
+		mov	_bomb_state[bx], BOMB_ACTIVE
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+307Eh], 0
+		mov	_bomb_frame[bx], 0
 		xor	si, si
 		jmp	short loc_18601
 ; ---------------------------------------------------------------------------
@@ -26630,7 +26628,7 @@ loc_1860D:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		inc	byte ptr [bx+307Eh]
+		inc	_bomb_frame[bx]
 		mov	word_1F2EC, 0FE00h
 		mov	word_1F2EE, 0FE00h
 		mov	al, _pid_current
@@ -26687,16 +26685,16 @@ loc_18698:
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+307Eh], 0B4h
-		jb	short loc_186C0
+		cmp	_bomb_frame[bx], BOMB_FRAMES
+		jb	short @@ret
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	byte ptr [bx+6580h], 0
+		mov	_bomb_state[bx], BOMB_INACTIVE
 		push	word ptr _pid_current
 		call	sub_A3A8
 
-loc_186C0:
+@@ret:
 		pop	si
 		pop	bp
 		retf
@@ -26784,7 +26782,7 @@ sub_186C3	endp
 ellen_bomb	proc far
 
 var_4		= byte ptr -4
-var_3		= byte ptr -3
+@@frame		= byte ptr -3
 var_2		= word ptr -2
 
 		enter	4, 0
@@ -26792,15 +26790,15 @@ var_2		= word ptr -2
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+6580h], 0
-		jz	loc_189A7
+		cmp	_bomb_state[bx], BOMB_INACTIVE
+		jz	@@ret
 		call	egc_off
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+307Eh]
-		mov	[bp+var_3], al
-		cmp	[bp+var_3], 40h
+		mov	al, _bomb_frame[bx]
+		mov	[bp+@@frame], al
+		cmp	[bp+@@frame], 64
 		jnb	short loc_18801
 		push	GC_RMW
 		mov	al, _pid_current
@@ -26815,7 +26813,7 @@ var_2		= word ptr -2
 loc_187AF:
 		call	sub_B39E
 		call	grcg_off
-		mov	al, [bp+var_3]
+		mov	al, [bp+@@frame]
 		add	al, al
 		mov	[bp+var_4], al
 		mov	al, _pid_current
@@ -26842,9 +26840,9 @@ loc_187AF:
 ; ---------------------------------------------------------------------------
 
 loc_18801:
-		cmp	[bp+var_3], 80h
+		cmp	[bp+@@frame], 128
 		jnb	loc_18911
-		test	[bp+var_3], 1
+		test	[bp+@@frame], 1
 		jz	short loc_18845
 		call	snd_se_play pascal, 10
 		mov	al, _pid_current
@@ -26884,7 +26882,7 @@ loc_18845:
 
 loc_18872:
 		mov	_palette_changed, 1
-		mov	al, [bp+var_3]
+		mov	al, [bp+@@frame]
 		mov	ah, 0
 		and	ax, 3
 		cmp	ax, 2
@@ -26921,7 +26919,7 @@ loc_188B2:
 		mov	ah, 0
 		push	ax
 		call	sub_EFF4
-		mov	al, [bp+var_3]
+		mov	al, [bp+@@frame]
 		mov	ah, 0
 		mov	bx, 4
 		cwd
@@ -26953,9 +26951,9 @@ loc_18911:
 		add	ax, ax
 		mov	bx, ax
 		mov	_playfield_fg_shift_x[bx], 0
-		mov	al, [bp+var_3]
+		mov	al, [bp+@@frame]
 		shl	al, 3
-		mov	dl, 0FFh
+		mov	dl, 255
 		sub	dl, al
 		mov	[bp+var_4], dl
 		mov	al, _pid_current
@@ -26980,10 +26978,10 @@ loc_18911:
 
 loc_18964:
 		call	egc_on
-		cmp	[bp+var_3], 40h
-		jb	short loc_189A7
-		cmp	[bp+var_3], 80h
-		jnb	short loc_189A7
+		cmp	[bp+@@frame], 64
+		jb	short @@ret
+		cmp	[bp+@@frame], 128
+		jnb	short @@ret
 		mov	al, _pid_current
 		mov	ah, 0
 		add	ax, ax
@@ -27003,7 +27001,7 @@ loc_18964:
 		mov	bx, ax
 		mov	_playfield_fg_shift_x[bx], dx
 
-loc_189A7:
+@@ret:
 		pop	si
 		leave
 		retf
@@ -27017,7 +27015,7 @@ ellen_bomb	endp
 kana_bomb	proc far
 
 var_2		= byte ptr -2
-var_1		= byte ptr -1
+@@frame		= byte ptr -1
 
 		enter	2, 0
 		push	si
@@ -27025,23 +27023,23 @@ var_1		= byte ptr -1
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+6580h], 0
-		jz	loc_18BB4
+		cmp	_bomb_state[bx], BOMB_INACTIVE
+		jz	@@ret
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+307Eh]
-		mov	[bp+var_1], al
-		cmp	[bp+var_1], 40h
+		mov	al, _bomb_frame[bx]
+		mov	[bp+@@frame], al
+		cmp	[bp+@@frame], 64
 		jnb	short loc_18A10
-		mov	al, 40h
-		sub	al, [bp+var_1]
+		mov	al, 64
+		sub	al, [bp+@@frame]
 		mov	[bp+var_2], al
 		mov	ah, 0
 		push	ax
 		push	word ptr _pid_current
 		call	sub_A3D2
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@frame]
 		mov	ah, 0
 		mov	bx, 8
 		cwd
@@ -27056,14 +27054,14 @@ var_1		= byte ptr -1
 
 loc_18A08:
 		mov	angle_1FBD4, 0
-		jmp	loc_18BB4
+		jmp	@@ret
 ; ---------------------------------------------------------------------------
 
 loc_18A10:
-		cmp	[bp+var_1], 80h
+		cmp	[bp+@@frame], 128
 		jnb	loc_18B5B
 		call	egc_off
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@frame]
 		mov	ah, 0
 		and	ax, 3
 		cmp	ax, 2
@@ -27091,7 +27089,7 @@ loc_18A4E:
 		call	sub_A3D2
 
 loc_18A68:
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@frame]
 		mov	ah, 0
 		mov	bx, 4
 		cwd
@@ -27168,7 +27166,7 @@ loc_18B3D:
 		push	ax
 		call	sub_EFF4
 		call	egc_on
-		jmp	short loc_18BB4
+		jmp	short @@ret
 ; ---------------------------------------------------------------------------
 
 loc_18B5B:
@@ -27177,14 +27175,14 @@ loc_18B5B:
 		add	ax, ax
 		mov	bx, ax
 		mov	_playfield_fg_shift_x[bx], 0
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@frame]
 		shl	al, 3
-		mov	dl, 0FFh
+		mov	dl, 255
 		sub	dl, al
-		mov	[bp+var_1], dl
+		mov	[bp+@@frame], dl
 
 loc_18B77:
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@frame]
 		add	al, al
 		mov	[bp+var_2], al
 		mov	al, _pid_current
@@ -27201,12 +27199,12 @@ loc_18B77:
 		mov	al, _pid_current
 		mov	ah, 0
 		imul	ax, size rgb_t
-		mov	dl, [bp+var_1]
+		mov	dl, [bp+@@frame]
 		mov	bx, ax
 		mov	Palettes[bx].b, dl
 		mov	_palette_changed, 1
 
-loc_18BB4:
+@@ret:
 		pop	di
 		pop	si
 		leave
@@ -27221,7 +27219,7 @@ kana_bomb	endp
 kotohime_bomb	proc far
 
 var_2		= byte ptr -2
-var_1		= byte ptr -1
+@@frame		= byte ptr -1
 
 		enter	2, 0
 		push	si
@@ -27229,15 +27227,15 @@ var_1		= byte ptr -1
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+6580h], 0
-		jz	loc_18DC4
+		cmp	_bomb_state[bx], BOMB_INACTIVE
+		jz	@@ret
 		call	egc_off
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+307Eh]
-		mov	[bp+var_1], al
-		cmp	[bp+var_1], 40h
+		mov	al, _bomb_frame[bx]
+		mov	[bp+@@frame], al
+		cmp	[bp+@@frame], 64
 		jnb	loc_18C95
 		push	GC_RMW
 		mov	al, _pid_current
@@ -27252,7 +27250,7 @@ var_1		= byte ptr -1
 loc_18C04:
 		call	sub_B39E
 		call	grcg_off
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@frame]
 		mov	ah, 0
 		imul	ax, 3
 		mov	[bp+var_2], al
@@ -27277,20 +27275,20 @@ loc_18C04:
 		mov	bx, ax
 		mov	Palettes[bx].b, dl
 		mov	_palette_changed, 1
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@frame]
 		mov	ah, 0
 		mov	bx, 8
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	loc_18DBF
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@frame]
 		mov	ah, 0
 		imul	ax, 48h
 		mov	dx, 11B8h
 		sub	dx, ax
 		mov	si, dx
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@frame]
 		mov	ah, 0
 		imul	ax, 5Ch
 		add	ax, 5Ch
@@ -27305,10 +27303,10 @@ loc_18C04:
 ; ---------------------------------------------------------------------------
 
 loc_18C95:
-		cmp	[bp+var_1], 80h
+		cmp	[bp+@@frame], 128
 		jnb	loc_18D5B
 		mov	_palette_changed, 1
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@frame]
 		mov	ah, 0
 		and	ax, 3
 		cmp	ax, 2
@@ -27334,7 +27332,7 @@ loc_18CD2:
 		mov	_palette_changed, 1
 
 loc_18CEC:
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@frame]
 		mov	ah, 0
 		mov	bx, 8
 		cwd
@@ -27342,7 +27340,7 @@ loc_18CEC:
 		or	dx, dx
 		jnz	short loc_18D34
 		xor	si, si
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@frame]
 		mov	ah, 0
 		mov	bx, 10h
 		cwd
@@ -27398,11 +27396,11 @@ loc_18D5B:
 		add	ax, ax
 		mov	bx, ax
 		mov	_playfield_fg_shift_x[bx], 0
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@frame]
 		shl	al, 3
-		mov	dl, 0FFh
+		mov	dl, 255
 		sub	dl, al
-		mov	[bp+var_1], dl
+		mov	[bp+@@frame], dl
 		mov	al, [bp+var_2]
 		add	al, al
 		mov	[bp+var_2], al
@@ -27420,7 +27418,7 @@ loc_18D5B:
 		mov	al, _pid_current
 		mov	ah, 0
 		imul	ax, size rgb_t
-		mov	dl, [bp+var_1]
+		mov	dl, [bp+@@frame]
 		mov	bx, ax
 		mov	Palettes[bx].b, dl
 		mov	_palette_changed, 1
@@ -27428,7 +27426,7 @@ loc_18D5B:
 loc_18DBF:
 		call	egc_on
 
-loc_18DC4:
+@@ret:
 		pop	di
 		pop	si
 		leave
@@ -27443,22 +27441,22 @@ kotohime_bomb	endp
 rikako_bomb	proc far
 
 var_2		= byte ptr -2
-var_1		= byte ptr -1
+@@frame		= byte ptr -1
 
 		enter	2, 0
 		push	si
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		cmp	byte ptr [bx+6580h], 0
-		jz	loc_18FE7
+		cmp	_bomb_state[bx], BOMB_INACTIVE
+		jz	@@ret
 		mov	al, _pid_current
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+307Eh]
-		mov	[bp+var_1], al
+		mov	al, _bomb_frame[bx]
+		mov	[bp+@@frame], al
 		call	egc_off
-		cmp	[bp+var_1], 40h
+		cmp	[bp+@@frame], 64
 		jnb	short loc_18E39
 		push	GC_RMW
 		mov	al, _pid_current
@@ -27473,7 +27471,7 @@ var_1		= byte ptr -1
 loc_18E11:
 		call	sub_B39E
 		call	grcg_off
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@frame]
 		shl	al, 2
 		mov	[bp+var_2], al
 		mov	ah, 0
@@ -27485,9 +27483,9 @@ loc_18E11:
 ; ---------------------------------------------------------------------------
 
 loc_18E39:
-		cmp	[bp+var_1], 80h
+		cmp	[bp+@@frame], 128
 		jnb	loc_18F89
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@frame]
 		mov	ah, 0
 		and	ax, 3
 		cmp	ax, 2
@@ -27571,7 +27569,7 @@ loc_18E7C:
 
 loc_18F38:
 		call	grcg_off
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@frame]
 		mov	ah, 0
 		mov	bx, 8
 		cwd
@@ -27598,7 +27596,7 @@ loc_18F6B:
 		jle	short loc_18F58
 
 loc_18F71:
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@frame]
 		mov	ah, 0
 		mov	bx, 4
 		cwd
@@ -27615,12 +27613,12 @@ loc_18F89:
 		add	ax, ax
 		mov	bx, ax
 		mov	_playfield_fg_shift_x[bx], 0
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@frame]
 		shl	al, 3
-		mov	dl, 0FFh
+		mov	dl, 255
 		sub	dl, al
-		mov	[bp+var_1], dl
-		mov	al, [bp+var_1]
+		mov	[bp+@@frame], dl
+		mov	al, [bp+@@frame]
 		add	al, al
 		mov	[bp+var_2], al
 		mov	al, _pid_current
@@ -27637,7 +27635,7 @@ loc_18F89:
 		mov	al, _pid_current
 		mov	ah, 0
 		imul	ax, size rgb_t
-		mov	dl, [bp+var_1]
+		mov	dl, [bp+@@frame]
 		mov	bx, ax
 		mov	Palettes[bx].b, dl
 		mov	_palette_changed, 1
@@ -27645,7 +27643,7 @@ loc_18F89:
 loc_18FE2:
 		call	egc_on
 
-loc_18FE7:
+@@ret:
 		pop	si
 		leave
 		retf
@@ -36541,7 +36539,9 @@ p1_205CE	dd ?
 p2_205D2	dd ?
 bomb_p1	dd ?
 bomb_p2	dd ?
-		db 514 dup(?)
+public _bomb_frame
+_bomb_frame	db PLAYER_COUNT dup(?)
+		db 512 dup(?)
 word_207E0	dw ?
 byte_207E2	db ?
 byte_207E3	db ?
@@ -36645,7 +36645,9 @@ word_220F4	dw ?
 word_220F6	dw ?
 		db 2 dup(?)
 byte_220FA	db ?
-		db 6631 dup(?)
+		db 6629 dup(?)
+public _bomb_state
+_bomb_state	db PLAYER_COUNT dup(?)
 byte_23AE2	db ?
 byte_23AE3	db ?
 byte_23AE4	db ?
@@ -36653,9 +36655,10 @@ byte_23AE5	db ?
 byte_23AE6	db ?
 byte_23AE7	db ?
 player_23AE8	dw ?
-public _cpu_hit_damage_additional
+public _cpu_hit_damage_additional, _damage_all_enemies_on
 _cpu_hit_damage_additional	db ?
-		db 3 dup(?)
+_damage_all_enemies_on	db PLAYFIELD_COUNT dup(?)
+		db ?
 include th02/hardware/pages[bss].asm
 word_23AF0	dw ?
 public _round_frame
