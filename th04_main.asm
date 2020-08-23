@@ -8916,8 +8916,7 @@ loc_100FE:
 		call	_grcg_setmode_rmw_seg1
 		mov	ah, GC_B
 		call	_grcg_setcolor_direct_seg1_raw
-		push	0
-		call	main_01:sub_1030D
+		call	bomb_stars_update_and_render_for pascal, PLAYCHAR_REIMU
 		GRCG_OFF_CLOBBERING dx
 		leave
 		retn
@@ -9020,8 +9019,7 @@ loc_101F4:
 		call	_grcg_setmode_rmw_seg1
 		mov	ah, GC_BRG
 		call	_grcg_setcolor_direct_seg1_raw
-		push	1
-		call	main_01:sub_1030D
+		call	bomb_stars_update_and_render_for pascal, PLAYCHAR_MARISA
 		GRCG_OFF_CLOBBERING dx
 		pop	si
 		leave
@@ -9147,58 +9145,55 @@ sub_1020A	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_1030D	proc near
+public BOMB_STARS_UPDATE_AND_RENDER_FOR
+bomb_stars_update_and_render_for	proc near
 
 @@vector_y		= word ptr -4
 @@vector_x		= word ptr -2
-arg_0		= word ptr  4
+@@playchar		= word ptr  4
 
 		enter	4, 0
 		push	si
 		push	di
 		cmp	_bomb_frame, 48
 		jnz	short loc_10386
-		mov	si, 4370h
+		mov	si, offset _bomb_stars
 		xor	di, di
 		jmp	short loc_10381
 ; ---------------------------------------------------------------------------
 
 loc_10321:
-		push	1800h
-		call	main_01:randring1_next16_mod
-		mov	[si], ax
-		push	1700h
-		call	main_01:randring1_next16_mod
-		mov	[si+2],	ax
-		cmp	[bp+arg_0], 0
+		call	randring1_next16_mod pascal, (PLAYFIELD_W shl 4)
+		mov	[si+bomb_star_t.BS_center.x], ax
+		call	randring1_next16_mod pascal, (PLAYFIELD_H shl 4)
+		mov	[si+bomb_star_t.BS_center.y], ax
+		cmp	[bp+@@playchar], PLAYCHAR_REIMU
 		jnz	short loc_1036F
-		mov	byte ptr [si+4], 0C0h
+		mov	[si+bomb_star_t.BS_angle], -40h
 		jmp	short loc_10346
 ; ---------------------------------------------------------------------------
 
 loc_1033E:
-		push	1800h
-		call	main_01:randring1_next16_mod
-		mov	[si], ax
+		call	randring1_next16_mod pascal, (PLAYFIELD_W shl 4)
+		mov	[si+bomb_star_t.BS_center.x], ax
 
 loc_10346:
-		cmp	word ptr [si], 800h
+		cmp	[si+bomb_star_t.BS_center.x], (((PLAYFIELD_W / 3) * 1) shl 4)
 		jl	short loc_10352
-		cmp	word ptr [si], 1000h
+		cmp	[si+bomb_star_t.BS_center.x], (((PLAYFIELD_W / 3) * 2) shl 4)
 		jle	short loc_1033E
 
 loc_10352:
-		cmp	word ptr [si], 0C00h
+		cmp	[si+bomb_star_t.BS_center.x], ((PLAYFIELD_W / 2) shl 4)
 		jg	short loc_1035F
-		mov	ax, 820h
-		sub	ax, [si]
+		mov	ax, (130 shl 4)
+		sub	ax, [si+bomb_star_t.BS_center.x]
 		jmp	short loc_10364
 ; ---------------------------------------------------------------------------
 
 loc_1035F:
-		mov	ax, [si]
-		add	ax, 0F020h
+		mov	ax, [si+bomb_star_t.BS_center.x]
+		add	ax, (-254 shl 4)
 
 loc_10364:
 		mov	[bp+@@vector_x], ax
@@ -9209,22 +9204,21 @@ loc_10364:
 ; ---------------------------------------------------------------------------
 
 loc_1036F:
-		mov	byte ptr [si+4], 0E0h
-		push	7Fh
-		call	main_01:randring1_next16_and
-		add	al, 0A0h
+		mov	[si+bomb_star_t.BS_angle], -20h
+		call	randring1_next16_and pascal, ((8 shl 4) - 1)
+		add	al, (10 shl 4)
 
 loc_1037A:
-		mov	[si+5],	al
+		mov	[si+bomb_star_t.BS_speed], al
 		inc	di
-		add	si, 6
+		add	si, size bomb_star_t
 
 loc_10381:
-		cmp	di, 30h	; '0'
+		cmp	di, BOMB_STAR_COUNT
 		jl	short loc_10321
 
 loc_10386:
-		mov	si, 4370h
+		mov	si, offset _bomb_stars
 		xor	di, di
 		jmp	loc_1041D
 ; ---------------------------------------------------------------------------
@@ -9236,72 +9230,70 @@ loc_1038E:
 		push	ss
 		lea	ax, [bp+@@vector_y]
 		push	ax
-		push	word ptr [si+4]
-		mov	al, [si+5]
+		push	word ptr [si+bomb_star_t.BS_angle]
+		mov	al, [si+bomb_star_t.BS_speed]
 		mov	ah, 0
 		push	ax
 		call	vector2
 		mov	ax, [bp+@@vector_x]
-		add	[si], ax
+		add	[si+bomb_star_t.BS_center.x], ax
 		mov	ax, [bp+@@vector_y]
-		add	[si+2],	ax
-		cmp	word ptr [si], 0FF80h
+		add	[si+bomb_star_t.BS_center.y], ax
+		cmp	[si+bomb_star_t.BS_center.x], (-(BOMB_STAR_W / 2) shl 4)
 		jle	short loc_103C9
-		cmp	word ptr [si], 1880h
+		cmp	[si+bomb_star_t.BS_center.x], ((PLAYFIELD_W + (BOMB_STAR_W / 2)) shl 4)
 		jge	short loc_103C9
-		cmp	word ptr [si+2], 0FF80h
+		cmp	[si+bomb_star_t.BS_center.y], (-(BOMB_STAR_H / 2) shl 4)
 		jle	short loc_103C9
-		cmp	word ptr [si+2], 1800h
+		cmp	[si+bomb_star_t.BS_center.y], ((PLAYFIELD_H + BOMB_STAR_H) shl 4) ; !
 		jl	short loc_103F8
 
 loc_103C9:
-		cmp	[bp+arg_0], 0
+		cmp	[bp+@@playchar], 0
 		jnz	short loc_103D6
-		mov	word ptr [si+2], 1800h
+		mov	[si+bomb_star_t.BS_center.y], ((PLAYFIELD_H + BOMB_STAR_H) shl 4)
 		jmp	short loc_103F8
 ; ---------------------------------------------------------------------------
 
 loc_103D6:
 		test	di, 1
 		jz	short loc_103EB
-		mov	word ptr [si], 0FF80h
-		push	1700h
-		call	main_01:randring1_next16_mod
-		mov	[si+2],	ax
+		mov	[si+bomb_star_t.BS_center.x], (-8 shl 4)
+		call	randring1_next16_mod pascal, (PLAYFIELD_H shl 4)
+		mov	[si+bomb_star_t.BS_center.y], ax
 		jmp	short loc_103F8
 ; ---------------------------------------------------------------------------
 
 loc_103EB:
-		push	1800h
-		call	main_01:randring1_next16_mod
-		mov	[si], ax
-		mov	word ptr [si+2], 1780h
+		call	randring1_next16_mod pascal, (PLAYFIELD_W shl 4)
+		mov	[si+bomb_star_t.BS_center.x], ax
+		mov	[si+bomb_star_t.BS_center.y], ((PLAYFIELD_H + (BOMB_STAR_H / 2)) shl 4)
 
 loc_103F8:
 		mov	ax, GRAM_400
 		mov	es, ax
 		assume es:nothing
-		mov	ax, [si]
+		mov	ax, [si+bomb_star_t.BS_center.x]
 		sar	ax, 4
-		add	ax, 18h
+		add	ax, (PLAYFIELD_X - (BOMB_STAR_W / 2))
 		mov	[bp+@@vector_x], ax
-		mov	ax, [si+2]
+		mov	ax, [si+bomb_star_t.BS_center.y]
 		sar	ax, 4
-		add	ax, 8
+		add	ax, (PLAYFIELD_Y - (BOMB_STAR_H / 2))
 		mov	cx, [bp+@@vector_x]
 		push	78h ; 'x'
 		call	main_01:sub_C01A
 		inc	di
-		add	si, 6
+		add	si, size bomb_star_t
 
 loc_1041D:
-		cmp	di, 30h	; '0'
+		cmp	di, BOMB_STAR_COUNT
 		jl	loc_1038E
 		pop	di
 		pop	si
 		leave
 		retn	2
-sub_1030D	endp
+bomb_stars_update_and_render_for	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -35748,7 +35740,7 @@ byte_256A2	db ?
 include th04/main/player/shots_add[bss].asm
 include th04/main/player/bomb[bss].asm
 include th04/formats/bb_playchar[bss].asm
-		db 294 dup(?)
+include th04/main/player/bombanim[bss].asm
 byte_257D6	db ?
 byte_257D7	db ?
 byte_257D8	db ?
