@@ -37,7 +37,7 @@ include th05/main/enemy/enemy.inc
 	extern _strlen:proc
 
 	.seq
-main_01 group main__TEXT, main_0_TEXT, main_01_TEXT
+main_01 group main_TEXT, main__TEXT, main_0_TEXT, main_01_TEXT
 main_03 group main_031_TEXT, main_032_TEXT, main_033_TEXT, main_034_TEXT, main_035_TEXT
 
 ; ===========================================================================
@@ -311,7 +311,7 @@ _TEXT		ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-main__TEXT	segment	word public 'CODE' use16
+main_TEXT	segment	word public 'CODE' use16
 		assume cs:main_01
 		;org 0Dh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
@@ -2120,13 +2120,15 @@ loc_C565:
 		pop	bp
 		retn
 sub_C52D	endp
+main_TEXT	ends
 
+main__TEXT	segment	byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_C567	proc near
+reimu_stars_update_and_render	proc near
 
 @@angle		= byte ptr -5
 var_4		= word ptr -4
@@ -2318,7 +2320,7 @@ loc_C72E:
 		pop	si
 		leave
 		retn
-sub_C567	endp
+reimu_stars_update_and_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -2332,7 +2334,7 @@ sub_C73A	proc near
 		push	0
 		call	cdg_put_noalpha
 		call	sub_CEC2
-		call	sub_C567
+		call	reimu_stars_update_and_render
 		mov	_circles_color, GC_RG
 		cmp	_bomb_frame, 64
 		ja	short loc_C777
