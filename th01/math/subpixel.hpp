@@ -40,7 +40,7 @@ public:
 		v = TO_SP(screen_v);
 	}
 
-	T to_screen() const {
+	T to_pixel() const {
 		return v >> 4;
 	}
 

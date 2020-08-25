@@ -317,8 +317,8 @@ void CPellets::motion_type_apply_for_cur(void)
 		p->angle += PELLET_SLING_DELTA_ANGLE;
 		if(p->angle > 0x100) {
 			vector2_between(
-				p->cur_left.to_screen(),
-				p->cur_top.to_screen(),
+				p->cur_left.to_pixel(),
+				p->cur_top.to_pixel(),
 				player_left + 8,
 				player_center_y,
 				p->velocity.x.v,
@@ -340,7 +340,7 @@ void CPellets::motion_type_apply_for_cur(void)
 		//    type system? :zunpet:
 		if(
 			(p->cur_left.v <= PELLET_LEFT_MIN)
-			|| (p->cur_left.to_screen() >= to_sp(PELLET_LEFT_MAX))
+			|| (p->cur_left.to_pixel() >= to_sp(PELLET_LEFT_MAX))
 			|| (p->cur_top.v <= to_sp(PELLET_BOUNCE_TOP_MIN))
 		) {
 			p->velocity.x.v = -p->velocity.x.v;
@@ -359,11 +359,11 @@ void CPellets::motion_type_apply_for_cur(void)
 		}
 		break;
 	case PM_FALL_STRAIGHT_FROM_TOP_THEN_NORMAL:
-		if(p->cur_top.to_screen() <= PELLET_BOUNCE_TOP_MIN) {
+		if(p->cur_top.to_pixel() <= PELLET_BOUNCE_TOP_MIN) {
 			p->velocity.x.set(0.0f);
 			p->velocity.y.v = p->speed.v;
 			p->motion_type = PM_NORMAL;
-			if(p->cur_top.to_screen() <= PLAYFIELD_TOP) {
+			if(p->cur_top.to_pixel() <= PLAYFIELD_TOP) {
 				p->cur_top.set(PLAYFIELD_TOP + 1.0f);
 			}
 		}
@@ -381,8 +381,8 @@ void CPellets::motion_type_apply_for_cur(void)
 		break;
 	case PM_CHASE:
 		vector2_between(
-			p->cur_left.to_screen(),
-			p->cur_top.to_screen(),
+			p->cur_left.to_pixel(),
+			p->cur_top.to_pixel(),
 			player_left + 8,
 			player_center_y,
 			velocity_to_player_x.v,
@@ -529,7 +529,7 @@ bool16 CPellets::visible_after_hittests_for_cur(
 		(PLAYER_H + (PELLET_H * 2))
 	) == true)) {
 		char deflect_angle;
-		if(p->cur_left.to_screen() <= (player_left + 12)) {
+		if(p->cur_left.to_pixel() <= (player_left + 12)) {
 			deflect_angle = 0x80;
 		} else {
 			deflect_angle = 0x00;
@@ -588,7 +588,7 @@ void CPellets::unput_update_render(void)
 		// Shot<->Pellet hit testing
 		if(p->decay_frame == 0) {
 			if(Shots.hittest_pellet(
-				p->cur_left.to_screen(), p->cur_top.to_screen()
+				p->cur_left.to_pixel(), p->cur_top.to_pixel()
 			)) {
 				p->decay_frame = 0;
 				p->moving = false;
@@ -619,7 +619,7 @@ void CPellets::unput_update_render(void)
 		}
 		if(!pellet_interlace || ((interlace_field & 1) == (i % 2))) {
 			if(visible_after_hittests_for_cur(
-				p->cur_left.to_screen(), p->cur_top.to_screen()
+				p->cur_left.to_pixel(), p->cur_top.to_pixel()
 			) == true) {
 				if(p->not_rendered == true) {
 					p->not_rendered = false;
@@ -628,11 +628,11 @@ void CPellets::unput_update_render(void)
 				#define decay_frames_for_cel(cel) \
 					((PELLET_DECAY_FRAMES / PELLET_DECAY_CELS) * cel)
 				if(p->decay_frame == 0) {
-					render(p->cur_left.to_screen(), p->cur_top.to_screen(), 0);
+					render(p->cur_left.to_pixel(), p->cur_top.to_pixel(), 0);
 				} else if(p->decay_frame <= decay_frames_for_cel(1)) {
-					render(p->cur_left.to_screen(), p->cur_top.to_screen(), 1);
+					render(p->cur_left.to_pixel(), p->cur_top.to_pixel(), 1);
 				}  else if(p->decay_frame < decay_frames_for_cel(2)) {
-					render(p->cur_left.to_screen(), p->cur_top.to_screen(), 2);
+					render(p->cur_left.to_pixel(), p->cur_top.to_pixel(), 2);
 				}
 				#undef decay_frames_for_cel
 				#undef render
@@ -710,11 +710,11 @@ bool16 CPellets::hittest_player_for_cur(void)
 		return false;
 	}
 	if(
-		(p->cur_left.to_screen() >= (player_left + 4)) &&
-		(p->cur_left.to_screen() <= (player_left + 20)) &&
-		(p->cur_top.to_screen() >= (player_top + (player_sliding * 8))) &&
+		(p->cur_left.to_pixel() >= (player_left + 4)) &&
+		(p->cur_left.to_pixel() <= (player_left + 20)) &&
+		(p->cur_top.to_pixel() >= (player_top + (player_sliding * 8))) &&
 		// Yup, <, not <= as in the overlap_point_le_ge() macro.
-		(p->cur_top.to_screen() < (player_top + PLAYER_H - PELLET_H))
+		(p->cur_top.to_pixel() < (player_top + PLAYER_H - PELLET_H))
 	) {
 		done = true;
 		return true;

@@ -51,14 +51,14 @@ void pascal near grcg_lineset_line_put(lineset_t near &set, int i)
 	vector2_at(drawpoint,
 		set.center[i].x, set.center[i].y, set.radius[i], set.angle[i]
 	);
-	screen_x_t x1 = (PLAYFIELD_X + drawpoint.x.to_screen());
-	screen_y_t y1 = (PLAYFIELD_Y + drawpoint.y.to_screen());
+	screen_x_t x1 = (PLAYFIELD_X + drawpoint.x.to_pixel());
+	screen_y_t y1 = (PLAYFIELD_Y + drawpoint.y.to_pixel());
 
 	vector2_at(drawpoint,
 		set.center[i].x, set.center[i].y, set.radius[i], (set.angle[i] + 0x80)
 	);
-	screen_x_t x2 = (PLAYFIELD_X + drawpoint.x.to_screen());
-	screen_y_t y2 = (PLAYFIELD_Y + drawpoint.y.to_screen());
+	screen_x_t x2 = (PLAYFIELD_X + drawpoint.x.to_pixel());
+	screen_y_t y2 = (PLAYFIELD_Y + drawpoint.y.to_pixel());
 
 	grcg_line(x1, y1, x2, y2);
 }
