@@ -21,7 +21,6 @@ RANDRING_NEXT_DEF macro instance
 	randring&instance&_next16_and	endp
 		nop
 
-	; void pascal near randring_next16_mod(unsigned short n);
 	public RANDRING&instance&_NEXT16_MOD
 	randring&instance&_next16_mod	proc near
 	arg @@n:word

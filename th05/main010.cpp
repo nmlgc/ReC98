@@ -6,4 +6,5 @@
 #pragma codeseg main_TEXT main_01
 
 extern "C" {
+#include "th05/main/player/bombanim.cpp"
 }

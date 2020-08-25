@@ -20,6 +20,10 @@ public:
 	// arithmetic with a local variable...
 	SubpixelType v;
 
+	SubpixelType operator +(float pixel_v) {
+		return (this->v + static_cast<SubpixelType>(to_sp(pixel_v)));
+	}
+
 	SubpixelType operator -(const SelfType &other) {
 		return (this->v - other.v);
 	}
@@ -44,6 +48,10 @@ public:
 
 	PixelType to_pixel() const {
 		return static_cast<PixelType>(v >> 4);
+	}
+
+	PixelType to_pixel_slow() const { // MODDERS: Delete
+		return (v / 16);
 	}
 
 	operator SubpixelType() const {
