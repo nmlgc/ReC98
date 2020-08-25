@@ -2456,11 +2456,11 @@ bomb_reimu	endp
 
 ; Attributes: bp-based frame
 
-sub_C84F	proc near
+marisa_lasers_update_and_render	proc near
 
 var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@y		= word ptr -4
+@@x		= word ptr -2
 
 		enter	6, 0
 		push	si
@@ -2475,12 +2475,12 @@ var_2		= word ptr -2
 
 loc_C86B:
 		mov	bx, di
-		imul	bx, 0Ah
-		mov	word ptr [bx+38C2h], 0FC19h
+		imul	bx, size marisa_laser_t
+		mov	_bomb_anim[bx+marisa_laser_t.BA_center.x], PIXEL_NONE
 		inc	di
 
 loc_C877:
-		cmp	di, 8
+		cmp	di, MARISA_LASER_COUNT
 		jl	short loc_C86B
 
 loc_C87C:
@@ -2498,17 +2498,17 @@ loc_C87C:
 		idiv	bx
 		and	ax, 7
 		mov	di, ax
-		imul	ax, 0Ah
-		add	ax, 38C2h
+		imul	ax, size marisa_laser_t
+		add	ax, offset _bomb_anim
 		mov	si, ax
 		mov	eax, _player_pos.cur
-		mov	[si], eax
+		mov	dword ptr [si+marisa_laser_t.BA_center], eax
 		call	sub_158CC
 		mov	ax, _player_pos.cur.x
-		mov	[si], ax
+		mov	[si+marisa_laser_t.BA_center.x], ax
 		mov	ax, _player_pos.cur.y
-		mov	[si+2],	ax
-		mov	word ptr [si+6], 18h
+		mov	[si+marisa_laser_t.BA_center.y], ax
+		mov	[si+marisa_laser_t.BA_radius], 24
 		call	snd_se_play pascal, 15
 		mov	PaletteTone, 170
 		jmp	short loc_C8D4
@@ -2520,84 +2520,84 @@ loc_C8CE:
 loc_C8D4:
 		call	far ptr	palette_show
 		call	_grcg_setmode_rmw_seg1
-		mov	si, 38C2h
+		mov	si, offset _bomb_anim
 		xor	di, di
 		jmp	loc_C98D
 ; ---------------------------------------------------------------------------
 
 loc_C8E4:
-		cmp	word ptr [si], 0FC19h
+		cmp	[si+marisa_laser_t.BA_center.x], PIXEL_NONE
 		jz	loc_C989
-		mov	ax, [si]
-		mov	bx, 10h
+		mov	ax, [si+marisa_laser_t.BA_center.x]
+		mov	bx, 16
 		cwd
 		idiv	bx
-		add	ax, 20h	; ' '
-		mov	[bp+var_2], ax
-		mov	ax, [si+2]
+		add	ax, PLAYFIELD_LEFT
+		mov	[bp+@@x], ax
+		mov	ax, [si+marisa_laser_t.BA_center.y]
 		cwd
 		idiv	bx
-		add	ax, 10h
-		mov	[bp+var_4], ax
+		add	ax, PLAYFIELD_TOP
+		mov	[bp+@@y], ax
 		mov	ah, GC_BRG
 		call	_grcg_setcolor_direct_seg1_raw
-		mov	ax, [si+6]
+		mov	ax, [si+marisa_laser_t.BA_radius]
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		mov	[bp+var_6], ax
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@x]
 		sub	ax, [bp+var_6]
 		push	ax
 		push	10h
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@x]
 		add	ax, [bp+var_6]
 		push	ax
-		push	[bp+var_4]
+		push	[bp+@@y]
 		call	grcg_boxfill
 		mov	ah, GC_RG
 		call	_grcg_setcolor_direct_seg1_raw
 		dec	[bp+var_6]
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@x]
 		sub	ax, [bp+var_6]
 		push	ax
 		push	10h
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@x]
 		add	ax, [bp+var_6]
 		push	ax
-		push	[bp+var_4]
+		push	[bp+@@y]
 		call	grcg_boxfill
 		mov	ah, 0Fh
 		call	_grcg_setcolor_direct_seg1_raw
 		dec	[bp+var_6]
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@x]
 		sub	ax, [bp+var_6]
 		push	ax
 		push	10h
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@x]
 		add	ax, [bp+var_6]
 		push	ax
-		push	[bp+var_4]
+		push	[bp+@@y]
 		call	grcg_boxfill
-		call	grcg_circlefill pascal, [bp+var_2], [bp+var_4], word ptr [si+6]
-		dec	word ptr [si+6]
-		cmp	word ptr [si+6], 4
+		call	grcg_circlefill pascal, [bp+@@x], [bp+@@y], [si+marisa_laser_t.BA_radius]
+		dec	[si+marisa_laser_t.BA_radius]
+		cmp	[si+marisa_laser_t.BA_radius], 4
 		jge	short loc_C989
-		mov	word ptr [si], 0FC19h
+		mov	[si+marisa_laser_t.BA_center.x], PIXEL_NONE
 
 loc_C989:
 		inc	di
-		add	si, 0Ah
+		add	si, size marisa_laser_t
 
 loc_C98D:
-		cmp	di, 8
+		cmp	di, MARISA_LASER_COUNT
 		jl	loc_C8E4
 		GRCG_OFF_CLOBBERING dx
 		pop	di
 		pop	si
 		leave
 		retn
-sub_C84F	endp
+marisa_lasers_update_and_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -2625,7 +2625,7 @@ sub_C99E	proc near
 ; ---------------------------------------------------------------------------
 
 loc_C9D0:
-		call	sub_C84F
+		call	marisa_lasers_update_and_render
 		mov	_shot_time, SHOT_BLOCKED_FOR_THIS_FRAME
 		pop	bp
 		retn
@@ -2705,7 +2705,7 @@ bomb_marisa	endp
 
 ; Attributes: bp-based frame
 
-sub_CA7B	proc near
+mima_circles_update_and_render	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -2720,12 +2720,12 @@ sub_CA7B	proc near
 
 loc_CA96:
 		mov	bx, di
-		imul	bx, 0Ah
-		mov	word ptr [bx+38C2h], 0FC19h
+		imul	bx, size mima_circle_t
+		mov	_bomb_anim[bx+mima_circle_t.BA_center.x], PIXEL_NONE
 		inc	di
 
 loc_CAA2:
-		cmp	di, 8
+		cmp	di, MIMA_CIRCLE_COUNT
 		jl	short loc_CA96
 
 loc_CAA7:
@@ -2741,58 +2741,62 @@ loc_CAA7:
 		add	ax, -16
 		cwd
 		idiv	bx
-		and	ax, 7
+		and	ax, (MIMA_CIRCLE_COUNT - 1)
 		mov	di, ax
-		imul	ax, 0Ah
-		add	ax, 38C2h
+		imul	ax, size mima_circle_t
+		add	ax, offset _bomb_anim
 		mov	si, ax
+
+		; Just so that it's not PIXEL_NONE, given that it's overwritten
+		; immediately after anyway? Probably copy-pasted from Marisa.
 		mov	eax, _player_pos.cur
-		mov	[si], eax
-		mov	word ptr [si+6], 100h
+		mov	dword ptr [si+mima_circle_t.BA_center], eax
+
+		mov	[si+mima_circle_t.BA_distance], 256
 		call	randring1_next16
-		mov	[si+8],	al
+		mov	[si+mima_circle_t.BA_angle], al
 
 loc_CAE0:
-		mov	si, 38C2h
+		mov	si, offset _bomb_anim
 		xor	di, di
 		jmp	short loc_CB27
 ; ---------------------------------------------------------------------------
 
 loc_CAE7:
-		cmp	word ptr [si], 0FC19h
+		cmp	word ptr [si+mima_circle_t.BA_center.x], PIXEL_NONE
 		jz	short loc_CB23
 		push	si
 		push	(224 shl 16) or 117
-		push	word ptr [si+6]
-		mov	al, [si+8]
+		push	[si+mima_circle_t.BA_distance]
+		mov	al, [si+mima_circle_t.BA_angle]
 		mov	ah, 0
 		push	ax
 		call	vector2_at
-		push	word ptr [si]
-		push	word ptr [si+2]
-		mov	ax, [si+6]
+		push	[si+mima_circle_t.BA_center.x]
+		push	[si+mima_circle_t.BA_center.y]
+		mov	ax, [si+mima_circle_t.BA_distance]
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		push	ax
 		call	grcg_circlefill
-		sub	word ptr [si+6], 10h
-		cmp	word ptr [si+6], 4
+		sub	[si+mima_circle_t.BA_distance], 16
+		cmp	[si+mima_circle_t.BA_distance], 4
 		jge	short loc_CB23
-		mov	word ptr [si], 0FC19h
+		mov	[si+mima_circle_t.BA_center.x], PIXEL_NONE
 
 loc_CB23:
 		inc	di
-		add	si, 0Ah
+		add	si, size mima_circle_t
 
 loc_CB27:
-		cmp	di, 8
+		cmp	di, MIMA_CIRCLE_COUNT
 		jl	short loc_CAE7
 		pop	di
 		pop	si
 		pop	bp
 		retn
-sub_CA7B	endp
+mima_circles_update_and_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -2820,7 +2824,7 @@ sub_CB30	proc near
 		call	grcg_vline pascal, (239 shl 16) or 336, PLAYFIELD_BOTTOM - 1
 		mov	ah, 15
 		call	_grcg_setcolor_direct_seg1_raw
-		call	sub_CA7B
+		call	mima_circles_update_and_render
 		mov	al, _bomb_frame
 		mov	ah, 0
 		mov	dx, 224
@@ -2916,13 +2920,13 @@ bomb_mima	endp
 
 ; Attributes: bp-based frame
 
-sub_CC9E	proc near
+yuuka_heart_update_and_render	proc near
 		push	bp
 		mov	bp, sp
 		push	si
 		cmp	_bomb_frame, 32
 		jnz	short loc_CCAF
-		mov	length_242A8, 10h
+		mov	_bomb_anim.BA_distance, 16
 
 loc_CCAF:
 		xor	si, si
@@ -2930,40 +2934,40 @@ loc_CCAF:
 ; ---------------------------------------------------------------------------
 
 loc_CCB3:
-		push	offset point_242A2
+		push	offset _bomb_anim.BA_topleft
 		push	(192 shl 16) or 160 ; No subpixels!
-		push	length_242A8
-		mov	al, angle_242AA
+		push	_bomb_anim.BA_distance
+		mov	al, _bomb_anim.BA_angle
 		mov	ah, 0
 		push	ax
 		call	vector2_at
-		cmp	point_242A2.x, 0
+		cmp	_bomb_anim.BA_topleft.x, 0
 		jl	short loc_CCFE
-		cmp	point_242A2.x, (PLAYFIELD_RIGHT - 32)
+		cmp	_bomb_anim.BA_topleft.x, (PLAYFIELD_RIGHT - 32)
 		jg	short loc_CCFE
-		cmp	point_242A2.y, 0
+		cmp	_bomb_anim.BA_topleft.y, 0
 		jl	short loc_CCFE
-		cmp	point_242A2.y, (PLAYFIELD_BOTTOM - 48)
+		cmp	_bomb_anim.BA_topleft.y, (PLAYFIELD_BOTTOM - 48)
 		jg	short loc_CCFE
-		call	super_roll_put_1plane pascal, point_242A2.x, point_242A2.y, (179 shl 16) or 0, PLANE_PUT or GC_BRGI
+		call	super_roll_put_1plane pascal, _bomb_anim.BA_topleft.x, _bomb_anim.BA_topleft.y, (179 shl 16) or 0, PLANE_PUT or GC_BRGI
 
 loc_CCFE:
 		inc	si
-		mov	al, angle_242AA
+		mov	al, _bomb_anim.BA_angle
 		add	al, 10h
-		mov	angle_242AA, al
+		mov	_bomb_anim.BA_angle, al
 
 loc_CD07:
 		cmp	si, 10h
 		jl	short loc_CCB3
-		mov	al, angle_242AA
+		mov	al, _bomb_anim.BA_angle
 		add	al, 2
-		mov	angle_242AA, al
-		add	length_242A8, 2
+		mov	_bomb_anim.BA_angle, al
+		add	_bomb_anim.BA_distance, 2
 		pop	si
 		pop	bp
 		retn
-sub_CC9E	endp
+yuuka_heart_update_and_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -2977,7 +2981,7 @@ sub_CD1C	proc near
 		push	0
 		call	cdg_put_noalpha
 		call	sub_CFBA
-		call	sub_CC9E
+		call	yuuka_heart_update_and_render
 		mov	_circles_color, GC_RG
 		cmp	_bomb_frame, 64
 		ja	short loc_CD59
@@ -28476,12 +28480,7 @@ include th02/math/randring[bss].asm
 include th04/main/pointnum/render[bss].asm
 include th04/main/player/bomb[bss].asm
 include th04/formats/bb_playchar[bss].asm
-		db 2 dup(?)
-point_242A2	Point <?>
-		db 2 dup(?)
-length_242A8	dw ?
-angle_242AA	db ?
-		db 485 dup(?)
+include th05/main/player/bombanim[bss].asm
 point_24490	Point <?>
 point_24494	Point <?>
 byte_24498	db ?
