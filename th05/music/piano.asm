@@ -6,17 +6,17 @@ _piano_setup	proc far
 	mov	ax, GRAM_400
 	mov	es, ax
 	assume es:nothing
-	mov	di, (PIANO_Y + (0 * PIANO_H_PADDED)) * ROW_SIZE
+	mov	di, (PIANO_TOP + (0 * PIANO_H_PADDED)) * ROW_SIZE
 	call	piano_draw_part_keys
-	mov	di, (PIANO_Y + (1 * PIANO_H_PADDED)) * ROW_SIZE
+	mov	di, (PIANO_TOP + (1 * PIANO_H_PADDED)) * ROW_SIZE
 	call	piano_draw_part_keys
-	mov	di, (PIANO_Y + (2 * PIANO_H_PADDED)) * ROW_SIZE
+	mov	di, (PIANO_TOP + (2 * PIANO_H_PADDED)) * ROW_SIZE
 	call	piano_draw_part_keys
-	mov	di, (PIANO_Y + (3 * PIANO_H_PADDED)) * ROW_SIZE
+	mov	di, (PIANO_TOP + (3 * PIANO_H_PADDED)) * ROW_SIZE
 	call	piano_draw_part_keys
-	mov	di, (PIANO_Y + (4 * PIANO_H_PADDED)) * ROW_SIZE
+	mov	di, (PIANO_TOP + (4 * PIANO_H_PADDED)) * ROW_SIZE
 	call	piano_draw_part_keys
-	mov	di, (PIANO_Y + (5 * PIANO_H_PADDED)) * ROW_SIZE
+	mov	di, (PIANO_TOP + (5 * PIANO_H_PADDED)) * ROW_SIZE
 	call	piano_draw_part_keys
 	mov	ah, GC_RI
 	call	_grcg_setcolor_direct_seg1_raw
@@ -50,31 +50,31 @@ _piano_render	proc far
 	GRCG_SETMODE_VIA_MOV al, GC_RMW
 	mov	ax, GRAM_400
 	mov	es, ax
-	mov	di, (PIANO_Y + (5 * PIANO_H_PADDED)) * ROW_SIZE
+	mov	di, (PIANO_TOP + (5 * PIANO_H_PADDED)) * ROW_SIZE
 	call	piano_draw_part_keys
 	lds	bx, _pmd_workadr	; FMPart[0]
-	mov	di, (PIANO_Y + (0 * PIANO_H_PADDED)) * ROW_SIZE
+	mov	di, (PIANO_TOP + (0 * PIANO_H_PADDED)) * ROW_SIZE
 	mov	si, offset piano_notes_t.fm[0]
 	call	piano_part_render
 	add	bx, 2	; FMPart[1]
-	mov	di, (PIANO_Y + (1 * PIANO_H_PADDED)) * ROW_SIZE
+	mov	di, (PIANO_TOP + (1 * PIANO_H_PADDED)) * ROW_SIZE
 	mov	si, offset piano_notes_t.fm[1]
 	call	piano_part_render
 	add	bx, 2	; FMPart[2]
-	mov	di, (PIANO_Y + (2 * PIANO_H_PADDED)) * ROW_SIZE
+	mov	di, (PIANO_TOP + (2 * PIANO_H_PADDED)) * ROW_SIZE
 	mov	si, offset piano_notes_t.fm[2]
 	call	piano_part_render
 	add	bx, 2	; FMPart[3]
-	mov	di, (PIANO_Y + (3 * PIANO_H_PADDED)) * ROW_SIZE
+	mov	di, (PIANO_TOP + (3 * PIANO_H_PADDED)) * ROW_SIZE
 	mov	si, offset piano_notes_t.fm[3]
 	call	piano_part_render
 	add	bx, 2	; FMPart[4]
-	mov	di, (PIANO_Y + (4 * PIANO_H_PADDED)) * ROW_SIZE
+	mov	di, (PIANO_TOP + (4 * PIANO_H_PADDED)) * ROW_SIZE
 	mov	si, offset piano_notes_t.fm[4]
 	call	piano_part_render
 	mov	ah, GC_RI
 	call	_grcg_setcolor_direct_seg1_raw
-	mov	di, (PIANO_Y + (5 * PIANO_H_PADDED)) * ROW_SIZE
+	mov	di, (PIANO_TOP + (5 * PIANO_H_PADDED)) * ROW_SIZE
 	add	bx, 4	; SSGPart[0]
 	call	piano_get_note
 	call	piano_draw_pressed_key
@@ -156,7 +156,7 @@ piano_draw_part_keys	proc near
 	push	si
 	mov	ah, GC_GI
 	call	_grcg_setcolor_direct_seg1_raw
-	add	di, PIANO_VRAM_X
+	add	di, PIANO_VRAM_LEFT
 	mov	ax, PIANO_KEYS_WHITE
 	mov	dl, PIANO_H
 
@@ -206,7 +206,7 @@ piano_draw_pressed_key	proc near
 	mul	dl
 	mov	dl, cs:PIANO_KEY_PRESSED_TOP[bx]
 	add	bx, bx
-	add	ax, cs:PIANO_NOTE_X[bx]
+	add	ax, cs:PIANO_NOTE_LEFT[bx]
 	mov	cx, ax
 	shr	ax, 3
 	add	di, ax
@@ -265,19 +265,19 @@ BLACK_OR_WHITE	label word
 	dw offset black_key	; A#
 	dw offset white_key	; B
 
-PIANO_NOTE_X	label word
-	dw PIANO_X + 0	; C
-	dw PIANO_X + 2	; C#
-	dw PIANO_X + 4	; D
-	dw PIANO_X + 6	; D#
-	dw PIANO_X + 8	; E
-	dw PIANO_X + 12	; F
-	dw PIANO_X + 14	; F#
-	dw PIANO_X + 16	; G
-	dw PIANO_X + 18	; G#
-	dw PIANO_X + 20	; A
-	dw PIANO_X + 22	; A#
-	dw PIANO_X + 24	; B
+PIANO_NOTE_LEFT	label word
+	dw PIANO_LEFT + 0	; C
+	dw PIANO_LEFT + 2	; C#
+	dw PIANO_LEFT + 4	; D
+	dw PIANO_LEFT + 6	; D#
+	dw PIANO_LEFT + 8	; E
+	dw PIANO_LEFT + 12	; F
+	dw PIANO_LEFT + 14	; F#
+	dw PIANO_LEFT + 16	; G
+	dw PIANO_LEFT + 18	; G#
+	dw PIANO_LEFT + 20	; A
+	dw PIANO_LEFT + 22	; A#
+	dw PIANO_LEFT + 24	; B
 
 ; 1bpp sprite data for the top part of a pressed key, in the black key row.
 PIANO_KEY_PRESSED_TOP	label byte

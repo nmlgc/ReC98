@@ -12,7 +12,7 @@ void pascal near firewaves_add(pixel_t amp, bool is_right)
 		if(!firewave->alive) {
 			firewave->alive = true;
 			firewave->is_right = is_right;
-			firewave->bottom = PLAYFIELD_Y;
+			firewave->bottom = PLAYFIELD_TOP;
 			firewave->amp = amp;
 			return;
 		}

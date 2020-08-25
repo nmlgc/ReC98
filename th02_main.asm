@@ -1677,8 +1677,8 @@ loc_47E6:
 		push	GC_RMW
 		push	0
 		nopcall	grcg_setcolor
-		push	PLAYFIELD_VRAM_X
-		push	PLAYFIELD_Y
+		push	PLAYFIELD_VRAM_LEFT
+		push	PLAYFIELD_TOP
 		push	PLAYFIELD_VRAM_RIGHT
 		push	PLAYFIELD_BOTTOM
 		nopcall	grcg_byteboxfill_x
@@ -7278,8 +7278,8 @@ player_bomb	proc near
 		inc	byte_218C2
 		inc	byte_1E64E
 		call	_snd_se_play c, 9
-		mov	_bomb_circle_center.x, (PLAYFIELD_X + (PLAYFIELD_W / 2) - 4)
-		mov	_bomb_circle_center.y, (PLAYFIELD_Y + (PLAYFIELD_H / 2) - 4)
+		mov	_bomb_circle_center.x, (PLAYFIELD_LEFT + (PLAYFIELD_W / 2) - 4)
+		mov	_bomb_circle_center.y, (PLAYFIELD_TOP + (PLAYFIELD_H / 2) - 4)
 		mov	_bomb_circle_frame, 0
 		mov	word_218CA, 0
 		call	sub_10E0A
@@ -7756,7 +7756,7 @@ loc_E680:
 		mov	al, byte_2287E
 		mov	byte_21A4C, al
 		mov	byte_2287E, 2
-		call	grcg_boxfill pascal, (PLAYFIELD_X shl 16) or 0, ((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
+		call	grcg_boxfill pascal, (PLAYFIELD_LEFT shl 16) or 0, ((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 		jmp	loc_E892
 ; ---------------------------------------------------------------------------
 
@@ -7768,7 +7768,7 @@ loc_E6CC:
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 11
 
 loc_E6E8:
-		call	grcg_boxfill pascal, (PLAYFIELD_X shl 16) or 0, ((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
+		call	grcg_boxfill pascal, (PLAYFIELD_LEFT shl 16) or 0, ((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 		call	grcg_off
 		cmp	_bomb_frame, 64
 		jg	short loc_E74D
@@ -7955,7 +7955,7 @@ loc_E8C9:
 		mov	al, byte_2287E
 		mov	byte_21A53, al
 		mov	byte_2287E, 2
-		call	grcg_boxfill pascal, (PLAYFIELD_X shl 16) or 0, ((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
+		call	grcg_boxfill pascal, (PLAYFIELD_LEFT shl 16) or 0, ((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 		mov	[bp+var_4], 0
 		jmp	short loc_E902
 ; ---------------------------------------------------------------------------
@@ -7976,7 +7976,7 @@ loc_E902:
 loc_E915:
 		cmp	_bomb_frame, 100
 		jge	loc_E9A6
-		call	grcg_boxfill pascal, (PLAYFIELD_X shl 16) or 0, ((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
+		call	grcg_boxfill pascal, (PLAYFIELD_LEFT shl 16) or 0, ((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 		cmp	_bomb_frame, 80
 		jl	short loc_E94C
 		mov	ax, _bomb_frame
@@ -8043,7 +8043,7 @@ loc_E9DB:
 
 loc_E9F3:
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
-		call	grcg_boxfill pascal, (PLAYFIELD_X shl 16) or 0, ((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
+		call	grcg_boxfill pascal, (PLAYFIELD_LEFT shl 16) or 0, ((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 		jmp	short loc_EA60
 ; ---------------------------------------------------------------------------
 
@@ -8184,7 +8184,7 @@ loc_EB07:
 		mov	al, byte_2287E
 		mov	byte_21A54, al
 		mov	byte_2287E, 2
-		call	grcg_boxfill pascal, (PLAYFIELD_X shl 16) or 0, ((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
+		call	grcg_boxfill pascal, (PLAYFIELD_LEFT shl 16) or 0, ((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 		jmp	loc_ECA2
 ; ---------------------------------------------------------------------------
 
@@ -8213,7 +8213,7 @@ loc_EB5D:
 		mov	_bomb_frame, 132
 
 loc_EB7C:
-		call	grcg_boxfill pascal, (PLAYFIELD_X shl 16) or 0, ((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
+		call	grcg_boxfill pascal, (PLAYFIELD_LEFT shl 16) or 0, ((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 4
 		call	sub_E512
 		jmp	loc_ECA2
@@ -8222,7 +8222,7 @@ loc_EB7C:
 loc_EB9E:
 		cmp	_bomb_frame, 164
 		jge	loc_EC56
-		call	grcg_boxfill pascal, (PLAYFIELD_X shl 16) or 0, ((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
+		call	grcg_boxfill pascal, (PLAYFIELD_LEFT shl 16) or 0, ((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 		mov	byte_2066D, 2
 		cmp	byte_2066C, 0
 		jz	short loc_EBCC
@@ -16739,7 +16739,7 @@ var_2		= byte ptr -2
 		cmp	[bp+var_4], 80h
 		ja	short loc_13732
 		mov	word_1ED94, 3E8h
-		call	grc_setclip pascal, (PLAYFIELD_X shl 16) or 0, (PLAYFIELD_RIGHT shl 16) or (RES_Y - 1)
+		call	grc_setclip pascal, (PLAYFIELD_LEFT shl 16) or 0, (PLAYFIELD_RIGHT shl 16) or (RES_Y - 1)
 		mov	Palettes+42, 0E0h
 		mov	Palettes+43, 0C0h
 		mov	Palettes+44, 0B0h ; '°'
@@ -17810,7 +17810,7 @@ sub_140AE	proc far
 		mov	bp, sp
 		cmp	byte_1EDA6, 0
 		jz	short loc_140D4
-		call	grc_setclip pascal, (PLAYFIELD_X shl 16) or 0, (PLAYFIELD_RIGHT shl 16) or (RES_Y - 1)
+		call	grc_setclip pascal, (PLAYFIELD_LEFT shl 16) or 0, (PLAYFIELD_RIGHT shl 16) or (RES_Y - 1)
 		mov	byte_1EDA6, 0
 		mov	word_1EB0A, 0FFFFh
 
@@ -20754,7 +20754,7 @@ var_2		= word ptr -2
 		mov	[bx], ax
 		call	egc_off
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		call	grcg_byteboxfill_x pascal, (PLAYFIELD_VRAM_X shl 16) or PLAYFIELD_Y, ((PLAYFIELD_VRAM_RIGHT - 1) shl 16) or PLAYFIELD_BOTTOM - 1
+		call	grcg_byteboxfill_x pascal, (PLAYFIELD_VRAM_LEFT shl 16) or PLAYFIELD_TOP, ((PLAYFIELD_VRAM_RIGHT - 1) shl 16) or PLAYFIELD_BOTTOM - 1
 		call	grcg_off
 		call	sub_15645
 		leave
@@ -20811,7 +20811,7 @@ loc_15A8A:
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
 		mov	ax, point_254E6.x
 		add	ax, 64
-		call	grcg_vline pascal, ax, (PLAYFIELD_Y shl 16) or PLAYFIELD_BOTTOM - 1
+		call	grcg_vline pascal, ax, (PLAYFIELD_TOP shl 16) or PLAYFIELD_BOTTOM - 1
 		call	grcg_off
 
 loc_15ABA:
@@ -22462,7 +22462,7 @@ evileye_init	proc far
 		mov	super_patnum, 80h
 		call	super_entry_bfnt pascal, ds, offset aStage5b1_bft ; "stage5b1.bft"
 		call	super_entry_bfnt pascal, ds, offset aStage5b2_bft ; "stage5b2.bft"
-		call	grc_setclip pascal, (PLAYFIELD_X shl 16) or 0, (PLAYFIELD_RIGHT shl 16) or (RES_Y - 1)
+		call	grc_setclip pascal, (PLAYFIELD_LEFT shl 16) or 0, (PLAYFIELD_RIGHT shl 16) or (RES_Y - 1)
 		call	sub_134A0
 		mov	word_20652, 0A0h
 		mov	word_20654, 0A0h
@@ -24581,7 +24581,7 @@ var_1		= byte ptr -1
 		mov	[bx], ax
 		call	egc_off
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		call	grcg_byteboxfill_x pascal, (PLAYFIELD_VRAM_X shl 16) or PLAYFIELD_Y, ((PLAYFIELD_VRAM_RIGHT - 1) shl 16) or PLAYFIELD_BOTTOM - 1
+		call	grcg_byteboxfill_x pascal, (PLAYFIELD_VRAM_LEFT shl 16) or PLAYFIELD_TOP, ((PLAYFIELD_VRAM_RIGHT - 1) shl 16) or PLAYFIELD_BOTTOM - 1
 		mov	al, byte_2066C
 		mov	ah, 0
 		mov	dx, ax
@@ -25379,7 +25379,7 @@ loc_182DD:
 		add	ax, [bx]
 		add	ax, 8
 		mov	di, ax
-		call	grcg_line pascal, ax, PLAYFIELD_Y, ax, PLAYFIELD_BOTTOM - 1
+		call	grcg_line pascal, ax, PLAYFIELD_TOP, ax, PLAYFIELD_BOTTOM - 1
 		call	grcg_off
 		mov	bx, word_2065C
 		mov	ax, [bx]
@@ -27801,7 +27801,7 @@ mima_init	proc far
 		call	sub_13337
 		push	1
 		call	palette_white_out
-		call	grc_setclip pascal, (PLAYFIELD_X shl 16) or 0, (PLAYFIELD_RIGHT shl 16) or (RES_Y - 1)
+		call	grc_setclip pascal, (PLAYFIELD_LEFT shl 16) or 0, (PLAYFIELD_RIGHT shl 16) or (RES_Y - 1)
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		call	grcg_fill
 		call	grcg_off
@@ -27912,7 +27912,7 @@ mima_init	proc far
 		graph_accesspage _page_back
 		call	grcg_fill
 		call	grcg_off
-		call	grc_setclip pascal, (PLAYFIELD_X shl 16) or 0, (PLAYFIELD_RIGHT shl 16) or (RES_Y - 1)
+		call	grc_setclip pascal, (PLAYFIELD_LEFT shl 16) or 0, (PLAYFIELD_RIGHT shl 16) or (RES_Y - 1)
 		mov	word_26C6A, 0
 		xor	si, si
 		jmp	short loc_19C0D
@@ -28950,7 +28950,7 @@ sub_1A529	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		call	grc_setclip pascal, (PLAYFIELD_X shl 16) or PLAYFIELD_Y, (PLAYFIELD_RIGHT shl 16) or 320
+		call	grc_setclip pascal, (PLAYFIELD_LEFT shl 16) or PLAYFIELD_TOP, (PLAYFIELD_RIGHT shl 16) or 320
 		call	_snd_se_play c, 9
 		mov	si, 96h
 		jmp	loc_1A613
@@ -29199,7 +29199,7 @@ marisa_init	proc far
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		call	grcg_fill
 		call	grcg_off
-		call	grc_setclip pascal, (PLAYFIELD_X shl 16) or 0, (PLAYFIELD_RIGHT shl 16) or (RES_Y - 1)
+		call	grc_setclip pascal, (PLAYFIELD_LEFT shl 16) or 0, (PLAYFIELD_RIGHT shl 16) or (RES_Y - 1)
 		call	super_put_rect pascal, point_26D76.x, point_26D76.y, patnum_2064E
 		mov	ax, point_26D76.x
 		add	ax, 48
@@ -31993,7 +31993,7 @@ marisa_bg_render	proc far
 		mov	word_2065E, ax
 		call	egc_off
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		call	grcg_byteboxfill_x pascal, (PLAYFIELD_VRAM_X shl 16) or PLAYFIELD_Y, ((PLAYFIELD_VRAM_RIGHT - 1) shl 16) or PLAYFIELD_BOTTOM - 1
+		call	grcg_byteboxfill_x pascal, (PLAYFIELD_VRAM_LEFT shl 16) or PLAYFIELD_TOP, ((PLAYFIELD_VRAM_RIGHT - 1) shl 16) or PLAYFIELD_BOTTOM - 1
 		call	sub_3EF4
 		mov	al, _page_front
 		mov	ah, 0

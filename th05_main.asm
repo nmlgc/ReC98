@@ -2808,15 +2808,15 @@ sub_CB30	proc near
 		call	cdg_put_noalpha
 		call	sub_CF50
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 7
-		call	grcg_vline pascal, (209 shl 16) or PLAYFIELD_Y, PLAYFIELD_Y + 47
+		call	grcg_vline pascal, (209 shl 16) or PLAYFIELD_TOP, PLAYFIELD_TOP + 47
 		call	grcg_vline pascal, (209 shl 16) or 336, PLAYFIELD_BOTTOM - 1
-		call	grcg_vline pascal, (238 shl 16) or PLAYFIELD_Y, PLAYFIELD_Y + 47
+		call	grcg_vline pascal, (238 shl 16) or PLAYFIELD_TOP, PLAYFIELD_TOP + 47
 		call	grcg_vline pascal, (238 shl 16) or 336, PLAYFIELD_BOTTOM - 1
 		mov	ah, GC_BI
 		call	_grcg_setcolor_direct_seg1_raw
-		call	grcg_vline pascal, (208 shl 16) or PLAYFIELD_Y, PLAYFIELD_Y + 47
+		call	grcg_vline pascal, (208 shl 16) or PLAYFIELD_TOP, PLAYFIELD_TOP + 47
 		call	grcg_vline pascal, (208 shl 16) or 336, PLAYFIELD_BOTTOM - 1
-		call	grcg_vline pascal, (239 shl 16) or PLAYFIELD_Y, PLAYFIELD_Y + 47
+		call	grcg_vline pascal, (239 shl 16) or PLAYFIELD_TOP, PLAYFIELD_TOP + 47
 		call	grcg_vline pascal, (239 shl 16) or 336, PLAYFIELD_BOTTOM - 1
 		mov	ah, 15
 		call	_grcg_setcolor_direct_seg1_raw
@@ -3178,10 +3178,10 @@ sub_CEC2	proc near
 		out	dx, al
 		out	dx, al
 		popf
-		mov	ax, GRAM_400 + (PLAYFIELD_Y * ROW_SIZE) shr 4
+		mov	ax, GRAM_400 + (PLAYFIELD_TOP * ROW_SIZE) shr 4
 		mov	es, ax
 		assume es:nothing
-		mov	di, (PLAYFIELD_H - 1) * ROW_SIZE + PLAYFIELD_VRAM_X
+		mov	di, (PLAYFIELD_H - 1) * ROW_SIZE + PLAYFIELD_VRAM_LEFT
 
 loc_CEDB:
 		mov	es:[di+(352 / 8)], eax
@@ -3212,9 +3212,9 @@ sub_CEF2	proc near
 		out	dx, al
 		out	dx, al
 		popf
-		mov	ax, GRAM_400 + (PLAYFIELD_Y * ROW_SIZE) shr 4
+		mov	ax, GRAM_400 + (PLAYFIELD_TOP * ROW_SIZE) shr 4
 		mov	es, ax
-		mov	di, (PLAYFIELD_H - 1) * ROW_SIZE + PLAYFIELD_VRAM_X
+		mov	di, (PLAYFIELD_H - 1) * ROW_SIZE + PLAYFIELD_VRAM_LEFT
 
 loc_CF0D:
 		mov	es:[di+(320 / 8)], eax
@@ -3275,18 +3275,18 @@ sub_CF50	proc near
 		out	dx, al
 		out	dx, al
 		popf
-		mov	ax, GRAM_400 + ((320 + PLAYFIELD_Y) * ROW_SIZE) shr 4
+		mov	ax, GRAM_400 + ((320 + PLAYFIELD_TOP) * ROW_SIZE) shr 4
 		mov	es, ax
 		assume es:nothing
 		call	sub_CF2C
-		mov	ax, GRAM_400 + (PLAYFIELD_Y * ROW_SIZE) shr 4
+		mov	ax, GRAM_400 + (PLAYFIELD_TOP * ROW_SIZE) shr 4
 		mov	es, ax
 		assume es:nothing
 		call	sub_CF2C
-		mov	ax, GRAM_400 + ((48 + PLAYFIELD_Y) * ROW_SIZE) shr 4
+		mov	ax, GRAM_400 + ((48 + PLAYFIELD_TOP) * ROW_SIZE) shr 4
 		mov	es, ax
 		assume es:nothing
-		mov	di, (271 * ROW_SIZE) + PLAYFIELD_VRAM_X
+		mov	di, (271 * ROW_SIZE) + PLAYFIELD_VRAM_LEFT
 
 loc_CF7B:
 		mov	es:[di], eax
@@ -3302,7 +3302,7 @@ loc_CF7B:
 		out	dx, al
 		out	dx, al
 		popf
-		mov	ax, GRAM_400 + ((320 + PLAYFIELD_Y) * ROW_SIZE) shr 4
+		mov	ax, GRAM_400 + ((320 + PLAYFIELD_TOP) * ROW_SIZE) shr 4
 		mov	es, ax
 		assume es:nothing
 		mov	di, (47 * ROW_SIZE) + (208 / 8)
@@ -3311,7 +3311,7 @@ loc_CF9D:
 		stosd
 		sub	di, ROW_SIZE + 4
 		jge	short loc_CF9D
-		mov	ax, GRAM_400 + (PLAYFIELD_Y * ROW_SIZE) shr 4
+		mov	ax, GRAM_400 + (PLAYFIELD_TOP * ROW_SIZE) shr 4
 		mov	es, ax
 		assume es:nothing
 		mov	di, (47 * ROW_SIZE) + (208 / 8)
@@ -3344,9 +3344,9 @@ sub_CFBA	proc near
 		out	dx, al
 		out	dx, al
 		popf
-		mov	ax, GRAM_400 + (PLAYFIELD_Y * ROW_SIZE) shr 4
+		mov	ax, GRAM_400 + (PLAYFIELD_TOP * ROW_SIZE) shr 4
 		mov	es, ax
-		mov	di, (PLAYFIELD_H - 1) * ROW_SIZE + PLAYFIELD_VRAM_X
+		mov	di, (PLAYFIELD_H - 1) * ROW_SIZE + PLAYFIELD_VRAM_LEFT
 
 loc_CFD5:
 		mov	es:[di+(320 / 8)], eax
@@ -3841,17 +3841,17 @@ loc_D36C:
 loc_D373:
 		mov	ax, [si+boss_particle_t.BP_pos.x]
 		sar	ax, 4
-		add	ax, (PLAYFIELD_X - (PARTICLE_W / 2))
+		add	ax, (PLAYFIELD_LEFT - (PARTICLE_W / 2))
 		mov	[bp+@@left], ax
 		mov	ax, [si+boss_particle_t.BP_pos.y]
 		sar	ax, 4
-		add	ax, (PLAYFIELD_Y - (PARTICLE_H / 2))
+		add	ax, (PLAYFIELD_TOP - (PARTICLE_H / 2))
 		mov	cx, [bp+@@left]
-		cmp	cx, (PLAYFIELD_X - PARTICLE_W)
+		cmp	cx, (PLAYFIELD_LEFT - PARTICLE_W)
 		jle	short loc_D39F
 		cmp	cx, PLAYFIELD_RIGHT
 		jge	short loc_D39F
-		cmp	ax, (PLAYFIELD_Y - PARTICLE_H)
+		cmp	ax, (PLAYFIELD_TOP - PARTICLE_H)
 		jle	short loc_D39F
 		cmp	ax, PLAYFIELD_BOTTOM
 		jl	short loc_D3AD
@@ -4950,10 +4950,10 @@ playfield_fillm_32_0_320_192	proc near
 		out	dx, al
 		sti
 		GRCG_FILL_PLAYFIELD_ROWS	192, 176, dx
-		mov	ax, GRAM_400 + (PLAYFIELD_Y * ROW_SIZE) shr 4
+		mov	ax, GRAM_400 + (PLAYFIELD_TOP * ROW_SIZE) shr 4
 		mov	es, ax
 		assume es:nothing
-		mov	di, (191 * ROW_SIZE) + PLAYFIELD_VRAM_X
+		mov	di, (191 * ROW_SIZE) + PLAYFIELD_VRAM_LEFT
 
 loc_DD61:
 		mov	es:[di], eax
@@ -5605,7 +5605,7 @@ sub_EACE	proc near
 		mov	_bullet_clear_trigger, 0
 		mov	_stage_graze, 0
 		mov	_circles_color, GC_R
-		call	grc_setclip pascal, large (PLAYFIELD_X shl 16) or PLAYFIELD_Y, large ((PLAYFIELD_RIGHT - 1) shl 16) or (PLAYFIELD_BOTTOM - 1)
+		call	grc_setclip pascal, large (PLAYFIELD_LEFT shl 16) or PLAYFIELD_TOP, large ((PLAYFIELD_RIGHT - 1) shl 16) or (PLAYFIELD_BOTTOM - 1)
 		push	offset _hitshots
 		push	size _hitshots / 4
 		call	sub_E708
@@ -5811,10 +5811,10 @@ sub_EEF2	proc near
 		mov	bp, sp
 		push	di
 		call	egc_start_copy_inlined_noframe
-		mov	ax, GRAM_400 + (PLAYFIELD_Y * ROW_SIZE) shr 4
+		mov	ax, GRAM_400 + (PLAYFIELD_TOP * ROW_SIZE) shr 4
 		mov	es, ax
 		assume es:nothing
-		mov	di, (PLAYFIELD_H - 1) * ROW_SIZE + PLAYFIELD_VRAM_X
+		mov	di, (PLAYFIELD_H - 1) * ROW_SIZE + PLAYFIELD_VRAM_LEFT
 		mov	dx, 0A6h
 		mov	al, _page_front
 
@@ -6677,7 +6677,7 @@ loc_F816:
 		jge	short loc_F881
 		mov	ax, si
 		sar	ax, 4
-		add	ax, (PLAYFIELD_X - 16)
+		add	ax, (PLAYFIELD_LEFT - 16)
 		mov	si, ax
 		call	scroll_subpixel_y_to_vram_seg1 pascal, di
 		mov	di, ax
@@ -7140,12 +7140,12 @@ loc_100DE:
 		cmp	[si+bullet_t.spawn_state], BSS_CLOUD_BACKWARDS
 		ja	short loc_10108
 		mov	ax, [si+bullet_t.pos.cur.y]
-		add	ax, ((PLAYFIELD_Y - (BULLET16_H / 2)) shl 4)
+		add	ax, ((PLAYFIELD_TOP - (BULLET16_H / 2)) shl 4)
 		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	dx, ax
 		mov	ax, [si+bullet_t.pos.cur.x]
 		sar	ax, 4
-		add	ax, (PLAYFIELD_X - (BULLET16_W / 2))
+		add	ax, (PLAYFIELD_LEFT - (BULLET16_W / 2))
 		call	z_super_roll_put_tiny_16x16_raw pascal, [si+bullet_t.BULLET_patnum]
 		jmp	short loc_1016B
 ; ---------------------------------------------------------------------------
@@ -7363,13 +7363,13 @@ loc_102B2:
 loc_102B9:
 		cmp	word_2CE02, 0
 		jge	short loc_102F0
-		push	(PLAYFIELD_X shl 16) or 0
+		push	(PLAYFIELD_LEFT shl 16) or 0
 		push	((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 		mov	ax, word_2CE02
 		neg	ax
 		push	ax
 		call	egc_shift_left
-		push	(PLAYFIELD_X shl 16) or 0
+		push	(PLAYFIELD_LEFT shl 16) or 0
 		push	((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 		mov	ax, word_2CE02
 		neg	ax
@@ -7381,7 +7381,7 @@ loc_102B9:
 loc_102F0:
 		cmp	word_2CE02, 0
 		jle	short loc_10311
-		push	(PLAYFIELD_X shl 16) or 0
+		push	(PLAYFIELD_LEFT shl 16) or 0
 		push	((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 		push	word_2CE02
 		call	egc_shift_right
@@ -7394,13 +7394,13 @@ loc_10311:
 		jge	short loc_10346
 		cmp	_scroll_line, 0
 		jnz	short loc_1032D
-		push	(PLAYFIELD_X shl 16) or PLAYFIELD_Y
+		push	(PLAYFIELD_LEFT shl 16) or PLAYFIELD_TOP
 		push	((PLAYFIELD_RIGHT - 1) shl 16) or (PLAYFIELD_BOTTOM - 1)
 		jmp	short loc_10339
 ; ---------------------------------------------------------------------------
 
 loc_1032D:
-		push	(PLAYFIELD_X shl 16) or 0
+		push	(PLAYFIELD_LEFT shl 16) or 0
 		push	((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 
 loc_10339:
@@ -7416,13 +7416,13 @@ loc_10346:
 		jle	short loc_1037C
 		cmp	_scroll_line, 0
 		jnz	short loc_10362
-		push	(PLAYFIELD_X shl 16) or PLAYFIELD_Y
+		push	(PLAYFIELD_LEFT shl 16) or PLAYFIELD_TOP
 		push	((PLAYFIELD_RIGHT - 1) shl 16) or (PLAYFIELD_BOTTOM - 1)
 		jmp	short loc_1036E
 ; ---------------------------------------------------------------------------
 
 loc_10362:
-		push	(PLAYFIELD_X shl 16) or 0
+		push	(PLAYFIELD_LEFT shl 16) or 0
 		push	((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 
 loc_1036E:
@@ -8366,7 +8366,7 @@ loc_10B2E:
 		jz	loc_10C38
 		mov	ax, [si+puppet_t.pos.cur.x]
 		sar	ax, 4
-		add	ax, (PLAYFIELD_X - (PUPPET_W / 2))
+		add	ax, (PLAYFIELD_LEFT - (PUPPET_W / 2))
 		mov	[bp+@@left], ax
 		cmp	[bp+@@left], 0
 		jle	loc_10C38
@@ -9466,10 +9466,10 @@ loc_115AD:
 		add	di, PAT_PARTICLE
 		mov	ax, [si+s2particle_t.pos.cur.x]
 		sar	ax, 4
-		add	ax, (PLAYFIELD_X - (PARTICLE_W / 2))
+		add	ax, (PLAYFIELD_LEFT - (PARTICLE_W / 2))
 		mov	[bp+var_4], ax
 		mov	ax, [si+s2particle_t.pos.cur.y]
-		add	ax, ((PLAYFIELD_Y - (PARTICLE_H / 2)) shl 4)
+		add	ax, ((PLAYFIELD_TOP - (PARTICLE_H / 2)) shl 4)
 		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	cx, [bp+var_4]
 		call	z_super_roll_put_16x16_mono_raw pascal, di
@@ -9616,7 +9616,7 @@ loc_116A6:
 ; ---------------------------------------------------------------------------
 
 loc_116CE:
-		cmp	si, PLAYFIELD_Y + PLAYFIELD_H
+		cmp	si, PLAYFIELD_TOP + PLAYFIELD_H
 		jge	loc_1179F
 		push	0
 		push	word ptr [di+4]
@@ -10594,12 +10594,12 @@ shots_render	proc near
 		add	al, cl
 		mov	cl, al
 		mov	ax, [di+shot_alive_t.SA_pos.y]
-		add	ax, ((PLAYFIELD_Y - (SHOT_H / 2)) shl 4)
+		add	ax, ((PLAYFIELD_TOP - (SHOT_H / 2)) shl 4)
 		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	dx, ax
 		mov	ax, [di+shot_alive_t.SA_pos.x]
 		sar	ax, 4
-		add	ax, (PLAYFIELD_X - (SHOT_W / 2))
+		add	ax, (PLAYFIELD_LEFT - (SHOT_W / 2))
 		call	z_super_roll_put_tiny_16x16_raw pascal, cx
 
 @@shot_next:
@@ -10623,12 +10623,12 @@ shots_render	proc near
 		mov	ch, 0
 		mov	cl, [si+hitshot_t.patnum]
 		mov	ax, [si+hitshot_t.pos.cur.y]
-		add	ax, ((PLAYFIELD_Y - (HITSHOT_H / 2)) shl 4)
+		add	ax, ((PLAYFIELD_TOP - (HITSHOT_H / 2)) shl 4)
 		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	dx, ax
 		mov	ax, [si+hitshot_t.pos.cur.x]
 		sar	ax, 4
-		add	ax, PLAYFIELD_X - (HITSHOT_W / 2)
+		add	ax, PLAYFIELD_LEFT - (HITSHOT_W / 2)
 		call	z_super_roll_put_tiny_16x16_raw pascal, cx
 
 @@hitshot_next:
@@ -14951,12 +14951,12 @@ loc_17E41:
 		jl	short loc_17E74
 		mov	ax, [si+bullet_t.pos.cur.x]
 		sar	ax, 4
-		add	ax, (PLAYFIELD_X - (PELLET_W / 2))
+		add	ax, (PLAYFIELD_LEFT - (PELLET_W / 2))
 		mov	bx, _pellets_render_count
 		shl	bx, 2
 		mov	_pellets_render[bx].PRT_left, ax
 		mov	ax, [si+bullet_t.pos.cur.y]
-		add	ax, ((PLAYFIELD_Y - (PELLET_H / 2)) shl 4)
+		add	ax, ((PLAYFIELD_TOP - (PELLET_H / 2)) shl 4)
 		call	scroll_subpixel_y_to_vram_seg3 pascal, ax
 		mov	bx, _pellets_render_count
 		shl	bx, 2

@@ -36,7 +36,7 @@ b4balls_render	proc near
 	mov	dx, ax
 	mov	ax, [si+b4ball_t.pos.cur.x]
 	sar	ax, 4
-	add	ax, (PLAYFIELD_X - (B4BALL_W / 2))
+	add	ax, (PLAYFIELD_LEFT - (B4BALL_W / 2))
 	call	z_super_roll_put_tiny_32x32_raw pascal, di
 
 @@next:

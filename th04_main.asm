@@ -1949,10 +1949,10 @@ sub_BF94	endp
 
 playfield_fillm_96_112_288_256	proc near
 		push	di
-		mov	ax, GRAM_400 + ((112 + PLAYFIELD_Y) * ROW_SIZE) shr 4
+		mov	ax, GRAM_400 + ((112 + PLAYFIELD_TOP) * ROW_SIZE) shr 4
 		mov	es, ax
 		assume es:nothing
-		mov	di, (255 * ROW_SIZE) + PLAYFIELD_VRAM_X
+		mov	di, (255 * ROW_SIZE) + PLAYFIELD_VRAM_LEFT
 		nop
 
 @@left_rect:
@@ -2577,7 +2577,7 @@ loc_CD61:
 loc_CD68:
 		cmp	word_255BE, 0
 		jge	short loc_CD88
-		push	(PLAYFIELD_X shl 16) or 0
+		push	(PLAYFIELD_LEFT shl 16) or 0
 		push	((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 		mov	ax, word_255BE
 		neg	ax
@@ -2589,7 +2589,7 @@ loc_CD68:
 loc_CD88:
 		cmp	word_255BE, 0
 		jle	short loc_CDA9
-		push	(PLAYFIELD_X shl 16) or 0
+		push	(PLAYFIELD_LEFT shl 16) or 0
 		push	((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 		push	word_255BE
 		call	egc_shift_right
@@ -2600,7 +2600,7 @@ loc_CDA4:
 loc_CDA9:
 		cmp	word_255C0, 0
 		jge	short loc_CDC9
-		push	(PLAYFIELD_X shl 16) or 0
+		push	(PLAYFIELD_LEFT shl 16) or 0
 		push	((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 		mov	ax, word_255C0
 		neg	ax
@@ -2612,7 +2612,7 @@ loc_CDA9:
 loc_CDC9:
 		cmp	word_255C0, 0
 		jle	short loc_CDEA
-		push	(PLAYFIELD_X shl 16) or 0
+		push	(PLAYFIELD_LEFT shl 16) or 0
 		push	((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 		push	word_255C0
 		call	egc_shift_down
@@ -2868,10 +2868,10 @@ sub_D016	proc near
 		mov	bp, sp
 		push	di
 		call	main_01:egc_start_copy_inlined_noframe
-		mov	ax, GRAM_400 + (PLAYFIELD_Y * ROW_SIZE) shr 4
+		mov	ax, GRAM_400 + (PLAYFIELD_TOP * ROW_SIZE) shr 4
 		mov	es, ax
 		assume es:nothing
-		mov	di, (PLAYFIELD_H - 1) * ROW_SIZE + PLAYFIELD_VRAM_X
+		mov	di, (PLAYFIELD_H - 1) * ROW_SIZE + PLAYFIELD_VRAM_LEFT
 		mov	dx, 0A6h
 		mov	al, _page_front
 
@@ -9275,11 +9275,11 @@ loc_103F8:
 		assume es:nothing
 		mov	ax, [si+bomb_star_t.BS_center.x]
 		sar	ax, 4
-		add	ax, (PLAYFIELD_X - (BOMB_STAR_W / 2))
+		add	ax, (PLAYFIELD_LEFT - (BOMB_STAR_W / 2))
 		mov	[bp+@@vector_x], ax
 		mov	ax, [si+bomb_star_t.BS_center.y]
 		sar	ax, 4
-		add	ax, (PLAYFIELD_Y - (BOMB_STAR_H / 2))
+		add	ax, (PLAYFIELD_TOP - (BOMB_STAR_H / 2))
 		mov	cx, [bp+@@vector_x]
 		push	78h ; 'x'
 		call	main_01:sub_C01A
@@ -10587,7 +10587,7 @@ loc_11AC4:
 		jge	short loc_11B2F
 		mov	ax, si
 		sar	ax, 4
-		add	ax,  (PLAYFIELD_X - 16)
+		add	ax,  (PLAYFIELD_LEFT - 16)
 		mov	si, ax
 		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, di
 		mov	di, ax
@@ -11039,7 +11039,7 @@ sub_11ECB	proc near
 		mov	_bullet_clear_trigger, 0
 		mov	_stage_graze, 0
 		mov	_circles_color, GC_R
-		call	grc_setclip pascal, large (PLAYFIELD_X shl 16) or PLAYFIELD_Y, large ((PLAYFIELD_RIGHT - 1) shl 16) or (PLAYFIELD_BOTTOM - 1)
+		call	grc_setclip pascal, large (PLAYFIELD_LEFT shl 16) or PLAYFIELD_TOP, large ((PLAYFIELD_RIGHT - 1) shl 16) or (PLAYFIELD_BOTTOM - 1)
 		push	offset _shots
 		push	size _shots / 4
 		call	main_01:sub_C34E
@@ -11209,7 +11209,7 @@ loc_12086:
 ; ---------------------------------------------------------------------------
 
 loc_12096:
-		mov	dx, GRAM_400 + (PLAYFIELD_Y * ROW_SIZE) shr 4
+		mov	dx, GRAM_400 + (PLAYFIELD_TOP * ROW_SIZE) shr 4
 		mov	di, bx
 		and	di, 0FFh
 		add	di, word_2323E
@@ -11235,7 +11235,7 @@ loc_120B4:
 		jge	short loc_120B1
 		xor	bl, 0Ch
 		sub	dx, 0A0h
-		cmp	dx, GRAM_400 + (PLAYFIELD_Y * ROW_SIZE) shr 4
+		cmp	dx, GRAM_400 + (PLAYFIELD_TOP * ROW_SIZE) shr 4
 		jg	short loc_120A5
 		cmp	dx, 0A7B0h
 		jnz	short loc_12096
@@ -12756,12 +12756,12 @@ bullets_render	proc near
 		cmp	[si+bullet_t.spawn_state], BSS_CLOUD_BACKWARDS
 		ja	short loc_12D24
 		mov	ax, [si+bullet_t.pos.cur.y]
-		add	ax, ((PLAYFIELD_Y - (BULLET16_H / 2)) shl 4)
+		add	ax, ((PLAYFIELD_TOP - (BULLET16_H / 2)) shl 4)
 		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	dx, ax
 		mov	ax, [si+bullet_t.pos.cur.x]
 		sar	ax, 4
-		add	ax, (PLAYFIELD_X - (BULLET16_W / 2))
+		add	ax, (PLAYFIELD_LEFT - (BULLET16_W / 2))
 		call	main_01:z_super_roll_put_tiny_16x16_raw pascal, [si+bullet_t.BULLET_patnum]
 		jmp	short @@sprite_bullet_next
 ; ---------------------------------------------------------------------------
@@ -12841,12 +12841,12 @@ loc_12DBE:
 		cmp	[si+bullet_t.flag], 1
 		jnz	short @@dot_bullet_next
 		mov	ax, [si+bullet_t.pos.cur.y]
-		add	ax, ((PLAYFIELD_Y - (BULLET16_H / 2)) shl 4)
+		add	ax, ((PLAYFIELD_TOP - (BULLET16_H / 2)) shl 4)
 		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	dx, ax
 		mov	ax, [si+bullet_t.pos.cur.x]
 		sar	ax, 4
-		add	ax, (PLAYFIELD_X - (BULLET16_W / 2))
+		add	ax, (PLAYFIELD_LEFT - (BULLET16_W / 2))
 		call	main_01:z_super_roll_put_tiny_16x16_raw pascal, [si+bullet_t.BULLET_patnum]
 
 @@dot_bullet_next:
@@ -28704,12 +28704,12 @@ loc_1CAC5:
 		jl	short loc_1CAF8
 		mov	ax, [si+bullet_t.pos.cur.x]
 		sar	ax, 4
-		add	ax, (PLAYFIELD_X - (PELLET_W / 2))
+		add	ax, (PLAYFIELD_LEFT - (PELLET_W / 2))
 		mov	bx, _pellets_render_count
 		shl	bx, 2
 		mov	_pellets_render[bx].PRT_left, ax
 		mov	ax, [si+bullet_t.pos.cur.y]
-		add	ax, ((PLAYFIELD_Y - (PELLET_H / 2)) shl 4)
+		add	ax, ((PLAYFIELD_TOP - (PELLET_H / 2)) shl 4)
 		call	scroll_subpixel_y_to_vram_seg3 pascal, ax
 		mov	bx, _pellets_render_count
 		shl	bx, 2

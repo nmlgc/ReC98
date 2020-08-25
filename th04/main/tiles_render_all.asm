@@ -3,7 +3,7 @@ tiles_render_all	proc near
 	push	si
 	push	di
 	call	egc_start_copy_inlined_noframe
-	mov	di, ((RES_Y - TILE_H) * ROW_SIZE) + PLAYFIELD_VRAM_X
+	mov	di, ((RES_Y - TILE_H) * ROW_SIZE) + PLAYFIELD_VRAM_LEFT
 	mov	bx, offset _tile_ring[TILES_MEMORY_X * (TILES_Y - 1) * 2]
 	mov	ax, GRAM_400
 	mov	es, ax

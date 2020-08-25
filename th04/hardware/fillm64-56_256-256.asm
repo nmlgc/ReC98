@@ -6,10 +6,10 @@
 public PLAYFIELD_FILLM_64_56_256_256
 playfield_fillm_64_56_256_256	proc near
 		push	di
-		mov	ax, GRAM_400 + (PLAYFIELD_Y * ROW_SIZE) shr 4
+		mov	ax, GRAM_400 + (PLAYFIELD_TOP * ROW_SIZE) shr 4
 		mov	es, ax
 		assume es:nothing
-		mov	di, (55 * ROW_SIZE) + PLAYFIELD_VRAM_X
+		mov	di, (55 * ROW_SIZE) + PLAYFIELD_VRAM_LEFT
 		nop
 
 @@rows_next:
@@ -21,10 +21,10 @@ playfield_fillm_64_56_256_256	proc near
 		loop	@@rows_top_and_bottom
 		sub	di, ROW_SIZE + PLAYFIELD_VRAM_W
 		jge	short @@rows_next
-		mov	ax, GRAM_400 + ((56 + PLAYFIELD_Y) * ROW_SIZE) shr 4
+		mov	ax, GRAM_400 + ((56 + PLAYFIELD_TOP) * ROW_SIZE) shr 4
 		mov	es, ax
 		assume es:nothing
-		mov	di, (255 * ROW_SIZE) + PLAYFIELD_VRAM_X
+		mov	di, (255 * ROW_SIZE) + PLAYFIELD_VRAM_LEFT
 		nop
 
 @@cols:

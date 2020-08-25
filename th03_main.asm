@@ -24090,7 +24090,7 @@ loc_1717D:
 		call	playfield_fg_x_to_screen
 		mov	[bp+@@x], ax
 		push	ax
-		push	PLAYFIELD_Y
+		push	PLAYFIELD_TOP
 		mov	bx, word_23E3A
 		push	word ptr [bx+2]
 		push	SPF_DOWNWARDS_COLUMN

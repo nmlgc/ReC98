@@ -3,6 +3,6 @@ static const screen_y_t PLAYFIELD_TOP = 64;
 static const screen_x_t PLAYFIELD_RIGHT = RES_X;
 static const screen_y_t PLAYFIELD_BOTTOM = RES_Y;
 
-static const screen_x_t PLAYFIELD_CENTER = (
+static const screen_x_t PLAYFIELD_CENTER_X = (
 	((PLAYFIELD_RIGHT - PLAYFIELD_LEFT) / 2) + PLAYFIELD_LEFT
 );

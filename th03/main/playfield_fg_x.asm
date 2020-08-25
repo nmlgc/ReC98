@@ -16,7 +16,7 @@ playfield_fg_x_to_screen	proc far
 
 @@apply_shift:
 	add	ax, _playfield_fg_shift_x[bx]
-	add	ax, PLAYFIELD_X
+	add	ax, PLAYFIELD_LEFT
 	pop	bp
 	retf	4
 playfield_fg_x_to_screen	endp

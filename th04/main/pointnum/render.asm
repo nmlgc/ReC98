@@ -43,9 +43,9 @@ pointnums_render proc near
 	mov	dx, [si+pointnum_t.PN_center_cur.x]
 	sar	dx, 4
 	; DX = leftmost possible position
-	add	dx, (PLAYFIELD_X - (((POINTNUM_DIGITS + 1) * POINTNUM_W) / 2))
+	add	dx, (PLAYFIELD_LEFT - (((POINTNUM_DIGITS + 1) * POINTNUM_W) / 2))
 	mov	ax, [si+pointnum_t.PN_center_cur.y]
-	add	ax, ((PLAYFIELD_Y - (POINTNUM_H / 2)) shl 4)
+	add	ax, ((PLAYFIELD_TOP - (POINTNUM_H / 2)) shl 4)
 	call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
 
 	; Loop over the digits to find out how many of them should actually be put

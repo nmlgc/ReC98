@@ -22,7 +22,7 @@ knives_render	proc near
 	mov	dx, ax
 	mov	ax, [si+knife_t.pos.cur.x]
 	sar	ax, 4
-	add	ax, (PLAYFIELD_X - (KNIFE_W / 2))
+	add	ax, (PLAYFIELD_LEFT - (KNIFE_W / 2))
 	call	z_super_roll_put_tiny_32x32_raw pascal, [bp+@@patnum_tiny]
 
 @@next:

@@ -49,7 +49,7 @@ extern const char gEXTRA_STAGE[12];
 
 #define POPUP_FRAMES_UNTIL_OUT_DISSOLVE 192
 
-#define vram_y_to_tram(y) (PLAYFIELD_TRAM_Y + (y / GLYPH_H))
+#define vram_y_to_tram(y) (PLAYFIELD_TRAM_TOP + (y / GLYPH_H))
 
 #define STAGE_NUM_W ((sizeof(gStage_1) - 1) * GAIJI_TRAM_W)
 #define STAGE_NUM_FE_W ((sizeof(gFINAL_STAGE) - 1) * GAIJI_TRAM_W)

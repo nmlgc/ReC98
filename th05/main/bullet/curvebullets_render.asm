@@ -7,8 +7,8 @@ curvebullets_render	proc near
 
 @@clip	macro @@label_next:req
 local @@positive_y
-	add	ax, (PLAYFIELD_X - (CURVEBULLET_W / 2))
-	cmp	dx, (PLAYFIELD_Y - CURVEBULLET_H)
+	add	ax, (PLAYFIELD_LEFT - (CURVEBULLET_W / 2))
+	cmp	dx, (PLAYFIELD_TOP - CURVEBULLET_H)
 	jl	short @@label_next
 	cmp	dx, PLAYFIELD_BOTTOM
 	jge	short @@label_next
@@ -21,12 +21,12 @@ local @@positive_y
 	; since curve bullets are only used by bosses whose backgrounds don't
 	; scroll, ZUN apparently didn't see the need to call that function here?
 	; Y wrapping is in fact necessary here though, since curve bullets are one
-	; of the few sprite types with a height greater than PLAYFIELD_Y *and*
+	; of the few sprite types with a height greater than PLAYFIELD_TOP *and*
 	; sometimes leave the playfield through the top. Therefore, their top Y
 	; coordinate can and will end up between 0 and -15, before being clipped
-	; at -16 (PLAYFIELD_Y - CURVEBULLET_H). curvebullet_put() will then handle
+	; at -16 (PLAYFIELD_TOP - CURVEBULLET_H). curvebullet_put() will then handle
 	; the actual Y wrapping of the remaining sprite rows.
-	or	dx, dx ; (PLAYFIELD_Y - (CURVEBULLET_H / 2))
+	or	dx, dx ; (PLAYFIELD_TOP - (CURVEBULLET_H / 2))
 	jge	short @@positive_y
 	add	dx, RES_Y
 @@positive_y:

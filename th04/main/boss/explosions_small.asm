@@ -47,18 +47,18 @@ explosions_small_update_and_render	proc near
 	call	vector1_at
 	mov	[bp+@@draw_y], ax
 	sar	ax, 4
-	add	ax, PLAYFIELD_Y - (EXPLOSION_SMALL_H / 2)
+	add	ax, PLAYFIELD_TOP - (EXPLOSION_SMALL_H / 2)
 	mov	dx, ax
 	mov	ax, [bp+@@draw_x]
 	sar	ax, 4
-	add	ax, PLAYFIELD_X - (EXPLOSION_SMALL_W / 2)
-	cmp	ax, PLAYFIELD_X - EXPLOSION_SMALL_W
+	add	ax, PLAYFIELD_LEFT - (EXPLOSION_SMALL_W / 2)
+	cmp	ax, PLAYFIELD_LEFT - EXPLOSION_SMALL_W
 	jbe	short @@next_sprite
-	cmp	ax, PLAYFIELD_X + PLAYFIELD_W
+	cmp	ax, PLAYFIELD_LEFT + PLAYFIELD_W
 	jnb	short @@next_sprite
 	or	dx, dx
 	jbe	short @@next_sprite
-	cmp	dx, PLAYFIELD_Y + PLAYFIELD_H
+	cmp	dx, PLAYFIELD_TOP + PLAYFIELD_H
 	jnb	short @@next_sprite
 	call	z_super_roll_put_tiny_16x16_raw pascal, PAT_EXPLOSION_SMALL
 

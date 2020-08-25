@@ -63,11 +63,11 @@ sparks_render	proc near
 	cmp	[si+spark_t.flag], 1
 	jnz	short @@more?
 	mov	ax, [si+spark_t.pos.cur.y]
-	add	ax, ((PLAYFIELD_Y - (SPARK_H / 2)) shl 4)
+	add	ax, ((PLAYFIELD_TOP - (SPARK_H / 2)) shl 4)
 	call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 	mov	dx, ax
 	mov	ax, [si+spark_t.pos.cur.x]
-	add	ax, ((PLAYFIELD_X - (SPARK_W / 2)) shl 4)
+	add	ax, ((PLAYFIELD_LEFT - (SPARK_W / 2)) shl 4)
 	sar	ax, 4	; → actual pixels
 	mov	cl, [si+spark_t.age]
 	call	@spark_render

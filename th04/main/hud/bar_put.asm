@@ -29,7 +29,7 @@ hud_bar_put	proc far
 	mov	byte ptr [bp+@@bar_max + 8], al
 	cmp	di, BAR_MAX
 	jl	short @@below_max
-	push	HUD_X
+	push	HUD_LEFT
 	push	[bp+@@y]
 	push	ss
 	lea	ax, [bp+@@bar_max]
@@ -68,7 +68,7 @@ hud_bar_put	proc far
 	cmp	si, 7
 	jle	short @@still_empty_cells_left
 	mov	[bp+@@bar_notfull+8], 0
-	push	HUD_X
+	push	HUD_LEFT
 	push	[bp+@@y]
 	push	ss
 	lea	ax, [bp+@@bar_notfull]

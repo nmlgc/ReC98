@@ -6,8 +6,8 @@
 // For both playfields, in every direction. (CSS style!)
 // The clipped SPRITE16 display functions rely on this being at least 16!
 #define PLAYFIELD_BORDER 16
-#define PLAYFIELD_X PLAYFIELD_BORDER
-#define PLAYFIELD_Y PLAYFIELD_BORDER
+#define PLAYFIELD_LEFT PLAYFIELD_BORDER
+#define PLAYFIELD_TOP PLAYFIELD_BORDER
 
 #define PLAYFIELD_VRAM_H (PLAYFIELD_H / 2)
 

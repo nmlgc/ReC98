@@ -25206,7 +25206,7 @@ loc_21B11:
 		jz	short loc_21B5B
 		cmp	_orb_velocity_x, OVX_0
 		jnz	short loc_21B61
-		cmp	_orb_cur_left, (PLAYFIELD_CENTER - (ORB_W / 2))
+		cmp	_orb_cur_left, (PLAYFIELD_CENTER_X - (ORB_W / 2))
 		jge	short loc_21B5B
 
 loc_21B53:

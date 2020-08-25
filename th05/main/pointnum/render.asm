@@ -41,7 +41,7 @@ pointnums_render	proc near
 	shr	bp, 1	; BP = distance between leftmost pointnum and center_cur.x
 	mov	dx, [si+pointnum_t.PN_center_cur.x]
 	sar	dx, 4
-	add	dx, PLAYFIELD_X
+	add	dx, PLAYFIELD_LEFT
 	sub	dx, bp
 	shr	bp, 2	; BP = total number of digits to print
 
@@ -50,7 +50,7 @@ pointnums_render	proc near
 	sub	bp, 2
 
 	mov	ax, [si+pointnum_t.PN_center_cur.y]
-	add	ax, ((PLAYFIELD_Y - (POINTNUM_H / 2)) shl 4)
+	add	ax, ((PLAYFIELD_TOP - (POINTNUM_H / 2)) shl 4)
 	call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 	add	si, pointnum_t.PN_digits_lebcd
 	add	si, bp

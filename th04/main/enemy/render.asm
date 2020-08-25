@@ -51,7 +51,7 @@ enemies_render	proc near
 @@put:
 	mov	ax, [si+enemy_t.cur.pos.x]
 	sar	ax, 4
-	add	ax, (PLAYFIELD_X - (ENEMY_W / 2))
+	add	ax, (PLAYFIELD_LEFT - (ENEMY_W / 2))
 	mov	di, ax
 	call	scroll_subpixel_y_to_vram_seg1 pascal, [si+enemy_t.pos.cur.y]
 	mov	[bp+@@top], ax

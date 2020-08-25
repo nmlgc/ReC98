@@ -79,7 +79,7 @@ HUD_SCORE_PUT	proc pascal near
 	inc	@@gaiji_p
 	dec	@@score_p
 	loop	@@digit_loop
-	call	GAIJI_PUTSA pascal, HUD_X, @@y, ds, offset _hud_gaiji_row, TX_WHITE
+	call	GAIJI_PUTSA pascal, HUD_LEFT, @@y, ds, offset _hud_gaiji_row, TX_WHITE
 	add	@@y, 2
 
 	; Put exactly two lines, high score at (56, 4), and current score at

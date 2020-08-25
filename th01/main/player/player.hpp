@@ -4,7 +4,7 @@ static const pixel_t PLAYER_H = 32;
 static const screen_x_t PLAYER_LEFT_MIN = (PLAYFIELD_LEFT);
 static const screen_x_t PLAYER_LEFT_MAX = (PLAYFIELD_RIGHT - PLAYER_W);
 
-static const screen_x_t PLAYER_LEFT_START = (PLAYFIELD_CENTER - (PLAYER_W / 2));
+static const screen_x_t PLAYER_LEFT_START = (PLAYFIELD_CENTER_X - (PLAYER_W / 2));
 
 extern screen_x_t player_left;
 static const screen_y_t player_top = (PLAYFIELD_BOTTOM - PLAYER_H);

@@ -39,7 +39,7 @@ void pascal near shots_render(void)
 			screen_x_t left = playfield_fg_x_to_screen(
 				shotpair->topleft.x, shotpair->pid
 			);
-			screen_y_t top = shotpair->topleft.y.to_pixel() + PLAYFIELD_Y;
+			screen_y_t top = shotpair->topleft.y.to_pixel() + PLAYFIELD_TOP;
 
 			sprite16_put(left + 0,                 top, so);
 			sprite16_put(left + SHOTPAIR_DISTANCE, top, so);

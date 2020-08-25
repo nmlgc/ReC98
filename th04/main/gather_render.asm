@@ -75,12 +75,12 @@ gather_render	proc far
 	or	al, al
 	jz	short @@point_next
 	mov	ax, _drawpoint.y
-	add	ax, ((PLAYFIELD_Y - (GATHER_POINT_H / 2)) shl 4)
+	add	ax, ((PLAYFIELD_TOP - (GATHER_POINT_H / 2)) shl 4)
 	call	scroll_subpixel_y_to_vram_seg3 pascal, ax
 	mov	dx, ax
 	mov	ax, _drawpoint.x
 	sar	ax, 4
-	add	ax, (PLAYFIELD_X - (GATHER_POINT_W / 2))
+	add	ax, (PLAYFIELD_LEFT - (GATHER_POINT_W / 2))
 	call	@gather_point_render
 
 @@point_next:

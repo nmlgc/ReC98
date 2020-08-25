@@ -9,8 +9,8 @@ popup_update_and_render	proc near
 	jz	short @@needs_init?
 	cmp	_popup_frame, 64
 	jb	short @@needs_init?
-	call	text_putsa pascal, (PLAYFIELD_TRAM_X shl 16) + POPUP_TRAM_Y, _PLAYFIELD_BLANK_ROW, TX_WHITE
-	call	text_putsa pascal, (PLAYFIELD_TRAM_X shl 16) + 23, _PLAYFIELD_BLANK_ROW, TX_WHITE
+	call	text_putsa pascal, (PLAYFIELD_TRAM_LEFT shl 16) + POPUP_TRAM_Y, _PLAYFIELD_BLANK_ROW, TX_WHITE
+	call	text_putsa pascal, (PLAYFIELD_TRAM_LEFT shl 16) + 23, _PLAYFIELD_BLANK_ROW, TX_WHITE
 	mov	_popup_frame, 0
 
 @@needs_init?:
@@ -43,12 +43,12 @@ popup_update_and_render	proc near
 	mov	bx, _popup_gaiji_len
 	mov	_popup_shiftbuf[bx], 0
 	add	ax, ax
-	mov	dx, PLAYFIELD_TRAM_X + PLAYFIELD_TRAM_W
+	mov	dx, PLAYFIELD_TRAM_LEFT + PLAYFIELD_TRAM_W
 	sub	dx, ax
 	mov	_popup_cur_tram_x, dx
 	cmp	_popup_id_new, POPUP_ID_BONUS
 	jz	short @@enforce_bonus_text_width
-	mov	ax, PLAYFIELD_TRAM_X + (PLAYFIELD_TRAM_W / 2)
+	mov	ax, PLAYFIELD_TRAM_LEFT + (PLAYFIELD_TRAM_W / 2)
 	sub	ax, _popup_gaiji_len
 	mov	_popup_dest_tram_x, ax
 	jmp	short @@finish_init
@@ -64,7 +64,7 @@ popup_update_and_render	proc near
 @@done?:
 	cmp	_popup_frame, POPUP_DURATION
 	jb	short @@shift_needed?
-	call	text_putsa pascal, (PLAYFIELD_TRAM_X shl 16) + POPUP_TRAM_Y, _PLAYFIELD_BLANK_ROW, TX_WHITE
+	call	text_putsa pascal, (PLAYFIELD_TRAM_LEFT shl 16) + POPUP_TRAM_Y, _PLAYFIELD_BLANK_ROW, TX_WHITE
 	mov	_popup_frame, 0
 	mov	_popup, offset nullfunc_near
 	leave
@@ -134,7 +134,7 @@ popup_update_and_render	proc near
 	mov	ax, _popup_gaiji_len
 	add	ax, ax
 	add	ax, _popup_cur_tram_x
-	cmp	ax, PLAYFIELD_TRAM_X + PLAYFIELD_TRAM_W - GAIJI_TRAM_W
+	cmp	ax, PLAYFIELD_TRAM_LEFT + PLAYFIELD_TRAM_W - GAIJI_TRAM_W
 	jg	short @@still_shifting
 	mov	ax, _popup_gaiji_len
 	add	ax, ax
@@ -150,7 +150,7 @@ popup_update_and_render	proc near
 	cmp	_popup_dest_reached, 0
 	jnz	short @@put_regular
 	mov	_popup_dest_reached, 1
-	call	text_putsa pascal, (PLAYFIELD_TRAM_X shl 16) + POPUP_TRAM_Y, _PLAYFIELD_BLANK_ROW, TX_WHITE
+	call	text_putsa pascal, (PLAYFIELD_TRAM_LEFT shl 16) + POPUP_TRAM_Y, _PLAYFIELD_BLANK_ROW, TX_WHITE
 
 @@put_regular:
 	push	_popup_dest_tram_x
@@ -165,7 +165,7 @@ popup_update_and_render	proc near
 	cmp	_popup_id_cur, POPUP_ID_BONUS
 	jnz	short @@ret
 if GAME eq 5
-	call	hud_points_put pascal, ((PLAYFIELD_TRAM_X + (PLAYFIELD_TRAM_W / 2)) shl 16) + 2, large [_popup_bonus]
+	call	hud_points_put pascal, ((PLAYFIELD_TRAM_LEFT + (PLAYFIELD_TRAM_W / 2)) shl 16) + 2, large [_popup_bonus]
 else
 	call	popup_points_put pascal, large [_popup_bonus]
 endif
@@ -231,7 +231,7 @@ popup_points_put	proc pascal near
 	mov	@@buf[SCORE_DIGITS - 2], al   	; (ones)
 	mov	@@buf[SCORE_DIGITS - 1], gb_0_	; ("continues used" digit)
 	mov	@@buf[SCORE_DIGITS - 0], 0     	; (null terminator)
-	push	((PLAYFIELD_TRAM_X + (PLAYFIELD_TRAM_W / 2)) shl 16) + POPUP_TRAM_Y
+	push	((PLAYFIELD_TRAM_LEFT + (PLAYFIELD_TRAM_W / 2)) shl 16) + POPUP_TRAM_Y
 	push	ss
 	lea	ax, @@buf
 	push	ax

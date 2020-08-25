@@ -37,12 +37,12 @@ item_splashes_render	proc near
 	cmp	_drawpoint.x, (PLAYFIELD_W shl 4)
 	jge	short @@next_dot
 	mov	ax, _drawpoint.y
-	add	ax, (PLAYFIELD_Y shl 4)
+	add	ax, (PLAYFIELD_TOP shl 4)
 	call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 	mov	dx, ax
 	mov	ax, _drawpoint.x
 	sar	ax, 4
-	add	ax, PLAYFIELD_X
+	add	ax, PLAYFIELD_LEFT
 	call	@item_splash_dot_render
 
 @@next_dot:

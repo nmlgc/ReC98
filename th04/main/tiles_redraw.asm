@@ -7,7 +7,7 @@ tiles_redraw_invalidated	proc near
 	mov	es, ax
 	assume es:nothing
 	mov	bx, offset _halftiles_dirty[TILES_MEMORY_X * (TILE_FLAGS_Y - 1)]
-	mov	di, ((RES_Y - TILE_FLAG_H) * ROW_SIZE) + PLAYFIELD_VRAM_X
+	mov	di, ((RES_Y - TILE_FLAG_H) * ROW_SIZE) + PLAYFIELD_VRAM_LEFT
 	mov	dh, TILE_FLAGS_Y
 	mov	si, TILES_MEMORY_X * (TILES_Y - 1) * 2
 

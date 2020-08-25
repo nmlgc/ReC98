@@ -26,7 +26,7 @@ HUD_BAR_PUT	proc near
 	push	ds
 	pop	es
 	mov	di, offset _hud_gaiji_row
-	push	HUD_X
+	push	HUD_LEFT
 	push	@@y
 	push	ds
 	push	di
