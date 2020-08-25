@@ -1,10 +1,9 @@
-; Growing or shrinking circles.
 circle_t struc
 	flag        	db ?
 	age         	db ?
 	center      	Point ?
 	radius_cur  	dw ?
-	radius_delta	dw ? ; signed
+	radius_delta	dw ?
 circle_t ends
 
 if GAME eq 5

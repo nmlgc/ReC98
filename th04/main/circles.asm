@@ -1,8 +1,3 @@
-; [center_x] and [center_y] are *passed* in units of 1/16th of a pixel, but
-; stored at pixel precision, as master.lib's grcg_circle() function doesn't
-; support more than that anyway.
-
-; void pascal circles_add_growing(Subpixel center_x, Subpixel center_y);
 public CIRCLES_ADD_GROWING
 circles_add_growing	proc far
 @@center_y	= word ptr  6
@@ -50,7 +45,6 @@ circles_add_growing	proc far
 circles_add_growing	endp
 
 
-; void pascal circles_add_shrinking(Subpixel center_x, Subpixel center_y);
 public CIRCLES_ADD_SHRINKING
 circles_add_shrinking	proc far
 @@center_y	= word ptr  6
@@ -98,7 +92,6 @@ circles_add_shrinking	proc far
 circles_add_shrinking	endp
 
 
-; void pascal near circles_update(void);
 public CIRCLES_UPDATE
 circles_update	proc near
 	push	bp
@@ -136,7 +129,6 @@ circles_update	proc near
 circles_update	endp
 
 
-; void pascal near circles_render(void);
 public CIRCLES_RENDER
 circles_render	proc near
 	push	bp
