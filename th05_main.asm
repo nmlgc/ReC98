@@ -28,6 +28,7 @@ include th02/main/sparks.inc
 include th05/sprites/main_pat.inc
 include th04/sprites/blit.inc
 include th04/main/phase.inc
+include th04/main/tile.inc
 include th05/main/bullet/pattypes.inc
 include th04/main/bullet/bullet.inc
 include th05/main/player/shot_types.inc
@@ -1007,7 +1008,7 @@ loc_B4A9:
 		call	map_load
 		call	std_load
 		call	sub_EE17
-		call	sub_BB9A
+		call	tiles_fill_initial
 		graph_accesspage 0
 
 loc_B4BB:
@@ -1637,55 +1638,9 @@ map_free	proc near
 locret_BB98:
 		retn
 map_free	endp
+		even
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_BB9A	proc near
-		push	di
-		push	si
-		push	ds
-		mov	bx, _tile_section_ptr
-		sub	bx, 4
-		mov	di, offset _tile_ring
-		add	di, TILES_MEMORY_X * (TILES_Y - 1) * 2
-		xor	dx, dx
-		mov	ax, ds
-		mov	es, ax
-		assume es:_DATA
-		mov	ax, _std_seg
-		mov	fs, ax
-		mov	ax, map_seg
-		mov	ds, ax
-		mov	al, 5
-
-loc_BBBD:
-		xor	dx, dx
-		mov	dl, fs:[bx]
-		mov	si, dx
-		mov	si, es:[si+870h]
-		add	si, 100h
-		mov	ah, 5
-
-loc_BBCF:
-		mov	cx, TILES_X / 2
-		rep movsd
-		sub	di, (TILES_MEMORY_X + TILES_X) * 2
-		sub	si, (TILES_MEMORY_X + TILES_X) * 2
-		dec	ah
-		jnz	short loc_BBCF
-		inc	bx
-		dec	al
-		jnz	short loc_BBBD
-		pop	ds
-		pop	si
-		pop	di
-		retn
-sub_BB9A	endp
-
+include th04/main/tiles_fill_initial.asm
 include th04/main/tiles_render_all.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -1835,7 +1790,7 @@ loc_BD88:
 		mov	bx, _tile_section_ptr
 		mov	bl, es:[bx]
 		xor	bh, bh
-		mov	bx, [bx+870h]
+		mov	bx, _TILE_SECTION_OFFSETS[bx]
 		mov	si, ax
 		add	si, bx
 		push	ds
@@ -27832,71 +27787,8 @@ include th03/formats/cdg[data].asm
 include th04/formats/cfg_lres[data].asm
 		db 0
 aSt00_map	db  'st00.map',0
-		db    0
-		db    0
-		db    0
-		db  40h
-		db    1
-		db  80h
-		db    2
-		db 0C0h
-		db    3
-		db    0
-		db    5
-		db  40h
-		db    6
-		db  80h
-		db    7
-		db 0C0h
-		db    8
-		db    0
-		db  0Ah
-		db  40h
-		db  0Bh
-		db  80h
-		db  0Ch
-		db 0C0h
-		db  0Dh
-		db    0
-		db  0Fh
-		db  40h
-		db  10h
-		db  80h
-		db  11h
-		db 0C0h
-		db  12h
-		db    0
-		db  14h
-		db  40h
-		db  15h
-		db  80h
-		db  16h
-		db 0C0h
-		db  17h
-		db    0
-		db  19h
-		db  40h
-		db  1Ah
-		db  80h
-		db  1Bh
-		db 0C0h
-		db  1Ch
-		db    0
-		db  1Eh
-		db  40h
-		db  1Fh
-		db  80h
-		db  20h
-		db 0C0h
-		db  21h	; !
-		db    0
-		db  23h	; #
-		db  40h
-		db  24h	; $
-		db  80h
-		db  25h	; %
-		db 0C0h
-		db  26h	; &
+	evendata
+include th04/main/tile_section[data].asm
 include th04/formats/std[data].asm
 off_2129C	dw offset sub_15A5C
 		dw offset sub_15A8E

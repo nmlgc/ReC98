@@ -1,5 +1,7 @@
-; TH05 adds stage and BGM titles to the format, but the rest of the format is
-; identical to TH04.
+; TH05 adds stage and BGM titles to the format, and assumes that the tile
+; section IDs come pre-multiplied by the element size of the section offset
+; lookup array – see tiles_fill_initial() for details. The rest of the format
+; is identical to TH04.
 
 ; void pascal near std_load(void);
 public STD_LOAD

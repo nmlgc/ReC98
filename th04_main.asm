@@ -27,6 +27,7 @@ include th02/main/sparks.inc
 include th04/sprites/main_pat.inc
 include th04/sprites/blit.inc
 include th04/main/phase.inc
+include th04/main/tile.inc
 include th04/main/bullet/pattypes.inc
 
 bullet_template_delta_t union
@@ -878,7 +879,7 @@ loc_B144:
 		call	main_01:map_load
 		call	main_01:std_load
 		call	main_01:sub_CED4
-		call	main_01:sub_BAA2
+		call	tiles_fill_initial
 		graph_accesspage 0
 
 loc_B156:
@@ -1431,7 +1432,7 @@ loc_B89D:
 		mov	bl, es:[bx]
 		xor	bh, bh
 		add	bl, bl
-		mov	bx, [bx+93Ah]
+		mov	bx, _TILE_SECTION_OFFSETS[bx]
 		mov	si, ax
 		add	si, bx
 		push	ds
@@ -1585,53 +1586,7 @@ loc_B9D4:
 map_free	endp
 
 include th04/main/tiles_invalidate.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_BAA2	proc near
-		push	di
-		push	si
-		push	ds
-		xor	bx, bx
-		mov	di, offset _tile_ring
-		add	di, TILES_MEMORY_X * (TILES_Y - 1) * 2
-		xor	dx, dx
-		mov	ax, ds
-		mov	es, ax
-		mov	ax, _std_seg
-		mov	fs, ax
-		mov	ax, map_seg
-		mov	ds, ax
-		mov	al, 5
-
-loc_BAC0:
-		xor	dx, dx
-		mov	dl, fs:[bx]
-		mov	si, dx
-		add	si, si
-		mov	si, es:[si+93Ah]
-		add	si, 100h
-		mov	ah, 5
-
-loc_BAD4:
-		mov	cx, TILES_X / 2
-		rep movsd
-		sub	di, (TILES_MEMORY_X + TILES_X) * 2
-		sub	si, (TILES_MEMORY_X + TILES_X) * 2
-		dec	ah
-		jnz	short loc_BAD4
-		inc	bx
-		dec	al
-		jnz	short loc_BAC0
-		pop	ds
-		pop	si
-		pop	di
-		retn
-sub_BAA2	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th04/main/tiles_fill_initial.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -34956,69 +34911,7 @@ aMaine		db 'maine',0
 aMaine_0	db 'maine',0
 ; char aMaine_1[]
 aMaine_1	db 'maine',0
-		dw 0
-		db  40h
-		db    1
-		db  80h
-		db    2
-		db 0C0h
-		db    3
-		db    0
-		db    5
-		db  40h
-		db    6
-		db  80h
-		db    7
-		db 0C0h
-		db    8
-		db    0
-		db  0Ah
-		db  40h
-		db  0Bh
-		db  80h
-		db  0Ch
-		db 0C0h
-		db  0Dh
-		db    0
-		db  0Fh
-		db  40h
-		db  10h
-		db  80h
-		db  11h
-		db 0C0h
-		db  12h
-		db    0
-		db  14h
-		db  40h
-		db  15h
-		db  80h
-		db  16h
-		db 0C0h
-		db  17h
-		db    0
-		db  19h
-		db  40h
-		db  1Ah
-		db  80h
-		db  1Bh
-		db 0C0h
-		db  1Ch
-		db    0
-		db  1Eh
-		db  40h
-		db  1Fh
-		db  80h
-		db  20h
-		db 0C0h
-		db  21h	; !
-		db    0
-		db  23h	; #
-		db  40h
-		db  24h	; $
-		db  80h
-		db  25h	; %
-		db 0C0h
-		db  26h	; &
+include th04/main/tile_section[data].asm
 off_21CBA	dd aSt00_map
 					; "ST00.MAP"
 aSt00_map	db 'ST00.MAP',0

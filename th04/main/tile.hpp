@@ -5,9 +5,21 @@
 // anything with?
 #define TILES_MEMORY_X (512 / TILE_W)
 
+static const int TILE_ROWS_PER_SECTION = 5;
+
+// An absolutely pointless lookup table mapping tile section IDs to offsets in
+// [map_seg], which, through its very existence, pointlessly limits the amount
+// of tile sections contained in a .MAP file.
+static const int TILE_SECTION_COUNT_MAX = 32;
+extern const uint16_t TILE_SECTION_OFFSETS[TILE_SECTION_COUNT_MAX];
+
 // TH04 starts addressing individual tiles directly via their 16-bit offset
 // in the VRAM.
 extern uint16_t tile_ring[TILES_Y][TILES_MEMORY_X];
+
+// Completely fills [tile_ring] with the initial screen of a stage, by loading
+// the section IDs from [std_seg], and the tiles themselves from [map_seg].
+void pascal near tiles_fill_initial(void);
 
 // Blits all tiles in the ring buffer to the playfield in VRAM.
 void pascal near tiles_render_all(void);
