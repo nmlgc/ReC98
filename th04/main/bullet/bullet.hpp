@@ -132,6 +132,12 @@ union pellet_render_t {
 	} bottom;
 };
 
+#if (GAME == 5)
+	// Separate render list for pellets during their delay cloud stage.
+	extern int pellet_clouds_render_count;
+	extern bullet_t near *pellet_clouds_render[PELLET_COUNT];
+#endif
+
 extern int pellets_render_count;
 extern pellet_render_t pellets_render[PELLET_COUNT];
 

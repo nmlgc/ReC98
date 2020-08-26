@@ -6970,9 +6970,9 @@ loc_10171:
 ; ---------------------------------------------------------------------------
 
 loc_1018A:
-		mov	bx, word_2CDF8
+		mov	bx, _pellet_clouds_render_count
 		add	bx, bx
-		mov	si, [bx-3D50h]
+		mov	si, _pellet_clouds_render[bx]
 		mov	al, [si+bullet_t.spawn_state]
 		mov	ah, 0
 		mov	bx, (BSS_CLOUD_FRAMES / BULLET_CLOUD_CELS)
@@ -6990,8 +6990,8 @@ loc_1018A:
 		call	z_super_roll_put_tiny_16x16_raw pascal, di
 
 loc_101BD:
-		mov	ax, word_2CDF8
-		dec	word_2CDF8
+		mov	ax, _pellet_clouds_render_count
+		dec	_pellet_clouds_render_count
 		or	ax, ax
 		jnz	short loc_1018A
 		mov	ah, 0Fh
@@ -14469,7 +14469,7 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		mov	[bp+var_2], 0
-		mov	word_2CDF8, 0
+		mov	_pellet_clouds_render_count, 0
 		mov	_pellets_render_count, 0
 		mov	si, offset _bullets[(BULLET_COUNT - 1) * size bullet_t]
 		cmp	_bullet_clear_trigger, 0
@@ -14608,10 +14608,10 @@ loc_17D36:
 loc_17D3D:
 		cmp	di, BULLET16_COUNT
 		jl	loc_17E74
-		mov	bx, word_2CDF8
+		mov	bx, _pellet_clouds_render_count
 		add	bx, bx
-		mov	[bx-3D50h], si
-		inc	word_2CDF8
+		mov	_pellet_clouds_render[bx], si
+		inc	_pellet_clouds_render_count
 		jmp	loc_17E74
 ; ---------------------------------------------------------------------------
 
@@ -28266,10 +28266,7 @@ byte_2C99C	db ?
 include th05/main/lasers_render[bss].asm
 include th05/main/bullet/curve[bss].asm
 include th04/main/item/splashes[bss].asm
-public _pellet_bottom_col
-_pellet_bottom_col	dw ?
-		db 360 dup(?)
-word_2CDF8	dw ?
+include th05/main/bullet/pellet_r[bss].asm
 include th04/main/scroll[bss].asm
 word_2CE02	dw ?
 word_2CE04	dw ?
