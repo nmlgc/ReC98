@@ -147,4 +147,5 @@ b6balls	equ <_custom_entities[1 * size b6ball_t]>
 ; --------------------
 
 public _custom_entities
-_custom_entities	custom_t (CUSTOM_COUNT + 1) dup (<?>)
+_custom_entities	custom_t CUSTOM_COUNT dup (<?>)
+	custom_t <?> ; 1 additional unused one, for some reason?

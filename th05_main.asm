@@ -192,15 +192,15 @@ mptn_load_inner	proc far
 		mov	bx, ax
 		mov	si, bx
 		mov	ah, 3Fh	; '?'
-		mov	dx, 265Ch
+		mov	dx, offset Palettes
 		mov	cx, 6
 		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
 					; BX = file handle, CX = number	of bytes to read
 					; DS:DX	-> buffer
 		mov	di, word ptr Palettes+4
 		mov	ah, 3Fh	; '?'
-		mov	dx, 265Ch
-		mov	cx, 30h	; '0'
+		mov	dx, offset Palettes
+		mov	cx, size palette_t
 		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
 					; BX = file handle, CX = number	of bytes to read
 					; DS:DX	-> buffer
@@ -1172,10 +1172,10 @@ loc_B76F:
 		mov	word ptr _DemoBuf+2, ax
 		mov	word ptr _DemoBuf, 0
 		mov	word ptr [bp+var_4+2], ds
-		mov	word ptr [bp+var_4], 22Dh
+		mov	word ptr [bp+var_4], offset aDemo0_rec
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.demo_num]
-		add	al, 2Fh	; '/'
+		add	al, ('0' - 1)
 		les	bx, [bp+var_4]
 		mov	es:[bx+4], al
 		push	word ptr [bp+var_4+2]
@@ -5386,7 +5386,7 @@ sub_EACE	proc near
 		push	(size _pellets + size _bullets16) / 4
 		call	sub_E708
 		push	offset _custom_entities
-		push	1A0h
+		push	size _custom_entities / 4
 		call	sub_E708
 		push	offset _circles
 		push	size _circles / 4
@@ -5922,7 +5922,7 @@ var_1		= byte ptr -1
 		enter	6, 0
 		push	si
 		mov	word ptr [bp+var_6+2], ds
-		mov	word ptr [bp+var_6], 1817h
+		mov	word ptr [bp+var_6], offset _dialog_kanji_buf
 
 loc_F1B3:
 		les	bx, dword_2C930
@@ -12529,7 +12529,7 @@ loc_1641B:
 		push	ds
 		mov	bx, [bp+arg_6]
 		add	bx, bx
-		push	word ptr [bx+1896h]
+		push	_STAGE_CLEAR_BONUS_DESC[bx]
 		push	ax
 		call	text_putsa
 		pop	si
@@ -25459,7 +25459,7 @@ loc_1E732:
 		mov	angle_2D085, 0
 		mov	angle_2D084, 0
 		mov	byte_2D082, 0
-		mov	off_2285A, 938Eh
+		mov	off_2285A, offset sub_1E60E
 		jmp	loc_1E864
 ; ---------------------------------------------------------------------------
 
@@ -27829,7 +27829,8 @@ off_221D0	dd a_dm00_tx2
 include th04/formats/dialog[data].asm
 byte_221EC	db 0
 a_dm00_tx2	db '_DM00.TX2',0
-		db '  ',0
+public _dialog_kanji_buf
+_dialog_kanji_buf	db '  ',0
 aSt06_bb1	db 'st06.bb1',0
 aSt06_bb2	db 'st06.bb2',0
 aSt06b		db 'st06b',0
@@ -27849,7 +27850,9 @@ aBomb0_bft_0	db 'bomb0.bft',0
 include th04/main/boss/explosions_big[data].asm
 byte_22274	db 0
 byte_22275	db 0
-off_22276	dw offset aBOSS_FINAL_TIMEOUT
+public _STAGE_CLEAR_BONUS_DESC
+_STAGE_CLEAR_BONUS_DESC label word
+		dw offset aBOSS_FINAL_TIMEOUT
 		dw offset aPENALTY_6
 		dw offset aPENALTY_5
 		dw offset aPENALTY_4

@@ -1016,7 +1016,7 @@ var_4		= dword	ptr -4
 		mov	word ptr _DemoBuf+2, ax
 		mov	word ptr _DemoBuf, 0
 		mov	word ptr [bp+var_4+2], ds
-		mov	word ptr [bp+var_4], 1EDh
+		mov	word ptr [bp+var_4], offset aDemo0_rec
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.demo_num]
 		add	al, '0'
@@ -3470,7 +3470,7 @@ var_1		= byte ptr -1
 		push	si
 		push	di
 		mov	word ptr [bp+var_6+2], ds
-		mov	word ptr [bp+var_6], 18A0h
+		mov	word ptr [bp+var_6], offset _dialog_kanji_buf
 
 loc_D57A:
 		les	bx, dword_255CC
@@ -29793,7 +29793,7 @@ loc_1D5CB:
 		push	[bp+arg_8]
 		mov	bx, [bp+arg_6]
 		shl	bx, 2
-		pushd	dword ptr [bx+1F3Ah]
+		pushd	_STAGE_CLEAR_BONUS_DESC[bx]
 		push	ax
 		call	text_putsa
 		pop	si
@@ -34951,7 +34951,8 @@ include th04/formats/dialog[data].asm
 byte_22BCA	db 0
 a_dm00_txt	db '_DM00.TXT',0
 a_dm04b_txt	db '_DM04B.txt',0
-		db '  ',0
+public _dialog_kanji_buf
+_dialog_kanji_buf	db '  ',0
 aKao0_cd2_0	db 'KAO0.cd2',0
 aKao1_cd2_0	db 'KAO1.cd2',0
 aBss7_cd2	db 'bss7.cd2',0
@@ -35434,6 +35435,8 @@ aGensou_scr_1	db 'GENSOU.SCR',0
 aGensou_scr_2	db 'GENSOU.SCR',0
 byte_23278	db 0
 		db 0
+public _STAGE_CLEAR_BONUS_DESC
+_STAGE_CLEAR_BONUS_DESC label dword
 		dd aBOSS_FINAL_TIMEOUT
 		dd aPENALTY_6
 		dd aPENALTY_5
