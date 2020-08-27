@@ -5,7 +5,7 @@ include libs/master.lib/master.inc
 include th02/main/hud/hud.inc
 include th04/gaiji/gaiji.inc
 
-extrn _hud_gaiji_row:byte:HUD_TRAM_W
+extrn _hud_gaiji_row:byte:HUD_KANJI_W
 
 ; ----------------------------------------------------------------------------
 
@@ -32,7 +32,7 @@ HUD_BAR_PUT	proc near
 	push	di
 	push	@@atrb
 	mov	al, g_BAR_MAX
-	mov	cx, HUD_TRAM_W
+	mov	cx, HUD_KANJI_W
 	mov	bl, @@value
 	cmp	bl, BAR_MAX
 	jb	short @@below_max
