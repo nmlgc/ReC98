@@ -4,6 +4,12 @@ echo Running the first, 32-bit part of the ReC98 build process.
 set ReC98_ASM=tasm32 /m /mx /kh32768 /t /ilibs\master.lib\
 set CXX32=bcc32
 
+%ReC98_ASM% 1>NUL 2>NUL
+if errorlevel 9009 goto no_tasm32
+
+%CXX32% 1>NUL 2>NUL
+if errorlevel 9009 goto no_bcc32
+
 REM Silence incorrect warnings for Borland C++ 5.5
 REM ----------------------------------------------
 REM 'identifier' is assigned a value that is never used
@@ -14,14 +20,8 @@ REM ----------------------------------------------
 
 set CXX32FLAGS=%CXX32FLAGS% -O2 -v- -x-
 
-del /S *.obj
 for /L %%i in (1,1,5) do mkdir bin\th0%%i 2>NUL
-
-%ReC98_ASM% 1>NUL 2>NUL
-if errorlevel 9009 goto no_tasm32
-
-%CXX32% 1>NUL 2>NUL
-if errorlevel 9009 goto no_bcc32
+del /S *.obj
 
 set BMP2ARR=bin\Pipeline\bmp2arr.exe
 
