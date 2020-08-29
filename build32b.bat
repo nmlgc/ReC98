@@ -3,11 +3,11 @@ echo Running the first, 32-bit part of the ReC98 build process.
 
 set ReC98_ASM=tasm32 /m /mx /kh32768 /t /ilibs\master.lib\
 
-del /S *.obj
-for /L %%i in (1,1,5) do mkdir bin\th0%%i 2>NUL
-
 %ReC98_ASM% 1>NUL 2>NUL
 if errorlevel 9009 goto no_tasm32
+
+for /L %%i in (1,1,5) do mkdir bin\th0%%i 2>NUL
+del /S *.obj
 
 %ReC98_ASM% th01_zunsoft.asm bin\th01\zunsoft.obj
 %ReC98_ASM% th01_op.asm bin\th01\op.obj
