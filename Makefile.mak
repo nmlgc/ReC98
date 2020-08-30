@@ -48,7 +48,6 @@ bin\piloadc.obj: libs\piloadc\piloadc.asm
 	tlink /t /3 $**
 
 bin\Pipeline\grzview.com: Pipeline\grzview.cpp th01\formats\grz.cpp
-	mkdir bin\Pipeline
 	$(CC) $(CFLAGS) -Z -mt -lt -nbin\Pipeline\ $** masters.lib
 
 bin\th01\zunsoft.com: th01\zunsoft.c

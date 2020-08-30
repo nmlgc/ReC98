@@ -20,7 +20,11 @@ REM ----------------------------------------------
 
 set CXX32FLAGS=%CXX32FLAGS% -O2 -v- -x-
 
+: Neither BCC32 nor TASM32 automatically create nonexisting output
+: directories...
+mkdir bin\Pipeline 2>NUL
 for /L %%i in (1,1,5) do mkdir bin\th0%%i 2>NUL
+
 del /S *.obj
 
 set BMP2ARR=bin\Pipeline\bmp2arr.exe
