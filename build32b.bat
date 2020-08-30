@@ -25,8 +25,6 @@ set CXX32FLAGS=%CXX32FLAGS% -O2 -v- -x-
 mkdir bin\Pipeline 2>NUL
 for /L %%i in (1,1,5) do mkdir bin\th0%%i 2>NUL
 
-del /S *.obj
-
 set BMP2ARR=bin\Pipeline\bmp2arr.exe
 
 %CXX32% %CXX32FLAGS% -nbin/Pipeline/ Pipeline\bmp2arr.c Pipeline\bmp2arrl.c
