@@ -12,7 +12,7 @@ tcc >NUL
 if errorlevel 9009 goto no_tcc
 if errorlevel 216 goto 64_bit
 
-maker
+maker -B
 if errorlevel 9009 goto no_make
 if errorlevel 216 goto 64_bit
 goto eof
