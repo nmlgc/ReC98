@@ -31,7 +31,19 @@ if errorlevel 1 goto no_bcc32
 mkdir bin\Pipeline %STDERR_IGNORE%
 for %%i in (1 2 3 4 5) do mkdir bin\th0%%i %STDERR_IGNORE%
 
+call set_errorlevel_to_1.bat
+tup version >NUL
+if     errorlevel 1 goto fallback
+: NT returns negative values for things like DLL import failures
+if not errorlevel 0 goto fallback
+
 tup
+goto eof
+
+:fallback
+echo [:(] Failed to run Tup (gittup.org/tup), falling back on a dumb full rebuild...
+if not errorlevel 0 echo (Delete `tup.exe` to avoid the error message boxes in the future)
+call Tupfile.bat
 
 goto eof
 

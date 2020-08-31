@@ -62,6 +62,7 @@ And while this project has made decent progress so far, completing the decompila
 Crossed-out files are identical to their version in the previous game. ONGCHK.COM is part of the PMD sound driver by KAJA, and therefore doesn't need to be disassembled either; we only need to keep the binary to allow bit-perfect rebuilds of ZUN.COM.
 
 ## Building
+
 You will need:
 
 * **Borland Turbo C++ 4.0J**
@@ -107,9 +108,11 @@ You will need:
 
   ----
 
-* [**Tup**](http://gittup.org/tup/), for Windows
+* [**Tup**](http://gittup.org/tup/), for Windows (optional, but recommended)
 
   A sane, parallel build system, used to ensure minimal rebuilds during the 32-bit build part. Provides perfect tracking of dependencies via code injection and hooking a compiler's file opening syscalls, allowing it to automatically add all `#include`d files to the build dependency graph. This makes it way superior to most `make` implementations, which lack this vital feature, and are therefore inherently unsuited for pretty much any programming language imaginable. With no abstractions for specific compilers, Tup also fits perfectly with the ancient Borland tools required for this project.
+
+  As of September 2020, the Windows version of Tup requires Vista or higher. In case Tup can't run or isn't installed, the build process falls back on a dumb batch file, which always fully rebuilds the entire 32-bit part.
 
   ----
 

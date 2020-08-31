@@ -58,6 +58,8 @@ C++, Open Watcom, and Visual C++, which will ease future third-party ports.
 * Whenever you edit the `Tupfile`:
   * Make sure that the `B32_OBJS` list in `build32b.bat` still matches the
     list of `.obj` files generated from the `Tupfile`
+  * Run `tup generate Tupfile.bat` to update the dumb batch fallback script,
+    for systems that can't run Tup.
 
 ## Code organization
 
