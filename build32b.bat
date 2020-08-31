@@ -25,7 +25,7 @@ if errorlevel 1 goto no_tasm32
 
 : Neither BCC32 nor TASM32 automatically create nonexisting output
 : directories. Tup would, but not everybody can use it.
-for /L %%i in (1,1,5) do mkdir bin\th0%%i %STDERR_IGNORE%
+for %%i in (1 2 3 4 5) do mkdir bin\th0%%i %STDERR_IGNORE%
 
 tup
 
