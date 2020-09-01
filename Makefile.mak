@@ -25,20 +25,20 @@ th05:: $(TH05:\=bin\th05\)
 # Third-party libraries
 # ---------------------
 bin\piloadc.obj: libs\piloadc\piloadc.asm
-	$(AS) $(AFLAGS) $**, $@
+	$(AS) $(AFLAGS) $**, $*
 # ---------------------
 
 {th05}.asm{bin\th05}.obj:
-	$(AS) $(AFLAGS) /dGAME=5 $**, $@
+	$(AS) $(AFLAGS) /dGAME=5 $**, $(@R)
 
 # Shared TH04/TH05 assembly units
 # -------------------------------
 # Need to go into separate .obj directories since they will have different
 # AFLAGS per game.
 {th04}.asm{bin\th04}.obj:
-	$(AS) $(AFLAGS) /dGAME=4 $**, $@
+	$(AS) $(AFLAGS) /dGAME=4 $**, $(@R)
 {th04}.asm{bin\th05}.obj:
-	$(AS) $(AFLAGS) /dGAME=5 $**, $@
+	$(AS) $(AFLAGS) /dGAME=5 $**, $(@R)
 # -------------------------------
 
 .obj.exe:
