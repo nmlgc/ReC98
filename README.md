@@ -69,6 +69,24 @@ You will need:
 
   This was the compiler ZUN originally used, so it's the only one that can deterministically compile this code to executables that are bit-perfect to ZUN's original ones.
 
+  On 32-bit Windows ≥Vista, `TLINK` might fail with
+
+  ```text
+  Loader error (0000): Unrecognized Error
+  ```
+
+  This can be fixed by configuring the NTVDM DPMI driver to be loaded into conventional memory rather than upper memory, by editing `%WINDIR%\System32\autoexec.nt`:
+
+  ```patch
+   REM Install DPMI support
+  -LH %SystemRoot%\system32\dosx
+  +%SystemRoot%\system32\dosx
+  ```
+
+  Requires a reboot after that edit to take effect.
+
+  ([Source](http://oshow.txt-nifty.com/blog/2008/11/loader-error-00.html))
+
   ----
 
 * **Borland Turbo Assembler (TASM), version 4.1 or later, for 16-bit DOS (`TASM.EXE`)**
@@ -127,6 +145,8 @@ You will need:
   ```
 
   ----
+
+The most performant OS for building ReC98 is therefore a 32-bit Windows ≥Vista, where both the 32-bit and 16-bit build parts can run natively from a single shell. The build process should work reliably on pretty much every system though: Windows 98 SE (which you might use on actual PC-98 hardware) is the oldest one to be known to work, and modern 64-bit Windows and Linux of course work as well.
 
 To build, simply run `build.bat` and follow any instructions. The final executables will be put into `bin\th0?`, using the same names as the originals.
 
