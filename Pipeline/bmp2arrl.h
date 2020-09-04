@@ -24,6 +24,8 @@ enum rec98_bmp2arr_output_type {
 #define UPSIDEDOWN     (1 << 2) /* output upside down  (ref. game 3 score bitmap) */
 #define DEBUG_BMP_OUT  (1 << 3) /* output file is bitmap read in (debugging) */
 
+#define QUIET          (1 << 4) /* don't print debug messages on stderr */
+
 /* only used internally */
 #define PRESHIFT_ANY (PRESHIFT_OUTER | PRESHIFT_INNER)
 

@@ -552,10 +552,12 @@ enum bmp2arr_error rec98_bmp2arr_save_output(struct rec98_bmp2arr_task *t) {
     if (sctx.fp == NULL)
         return bmp2arr_error_set_str(t, OUTPUT_OPEN_ERROR, t->output_file);
 
-    fprintf(stderr,"Sprite sheet: %d sprites total (%d x %d).\n",
-        sctx.sscols * sctx.ssrows,sctx.sscols,sctx.ssrows);
-    fprintf(stderr,"Each sprite is %d x %d\n",
-        t->sprite_width,t->sprite_height);
+    if (!(t->flags & QUIET)) {
+        fprintf(stderr,"Sprite sheet: %d sprites total (%d x %d).\n",
+            sctx.sscols * sctx.ssrows,sctx.sscols,sctx.ssrows);
+        fprintf(stderr,"Each sprite is %d x %d\n",
+            t->sprite_width,t->sprite_height);
+    }
 
     if (saveout_write_prologue(t,&sctx))
         goto fioerr;

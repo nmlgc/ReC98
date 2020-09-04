@@ -106,6 +106,9 @@ static enum bmp2arr_error parse_argv(struct rec98_bmp2arr_task *tsk,int argc,cha
             else if (!strcmp(a,"dbg-bmp")) {
                 tsk->flags |= DEBUG_BMP_OUT;
             }
+            else if (!strcmp(a,"q")) {
+                tsk->flags |= QUIET;
+            }
             else if (!strcmp(a,"pshf")) {
                 a = argv[i++];
                 if (a == NULL)

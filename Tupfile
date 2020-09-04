@@ -21,7 +21,7 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 		bin/Pipeline/bmp2arr.tds \
 		$(BMP2ARR)
 
-!bmp2arr = | $(BMP2ARR) |> $(BMP2ARR) -i %f -o %o |> %o
+!bmp2arr = | $(BMP2ARR) |> $(BMP2ARR) -q -i %f -o %o |> %o
 
 : th01/sprites/pellet.bmp |> !bmp2arr -sym sPELLET -of c -sw 8 -sh 8 -pshf inner |> th01/sprites/pellet.csp
 : th01/sprites/pellet_c.bmp |> !bmp2arr -sym _sPELLET_CLOUD -of asm -sw 16 -sh 16 |> th01/sprites/pellet_c.asp
