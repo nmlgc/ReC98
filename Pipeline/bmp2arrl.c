@@ -64,6 +64,96 @@ static unsigned char bmp_tmp[128]; /* more than enough */
     } BITMAPINFOHEADER, *PBITMAPINFOHEADER;                     =40
  */
 
+/* error reporting */
+static const char* BMP2ARR_PARAMETERLESS_ERRORS[BMP2ARR_ERROR_COUNT] = {
+    /* SUCCESS                  */ "Success",
+    /* INTERNAL_ERROR_ERROR     */ "bmp2arr_error structure used incorrectly",
+    /* INTERNAL_NULLPTR         */ "Tried to dereference a null pointer",
+    /* INTERNAL_ARRAY_TOO_SMALL */ "Internal array too small",
+
+    /* EXPECTED_ARGUMENT        */ NULL,
+    /* EXPECTED_SWITCH          */ NULL,
+
+    /* MISSING_INPUT_BMP        */ "Input BMP file name required (-i)",
+    /* MISSING_OUTPUT_FILE      */ "Output file name required (-o)",
+    /* MISSING_SPRITE_WIDTH     */ "Sprite width required (-sw)",
+    /* MISSING_SPRITE_HEIGHT    */ "Sprite height required (-sh)",
+
+    /* INVALID_SWITCH           */ NULL,
+    /* INVALID_OUTPUT_TYPE      */ "Invalid output type; must be (asm | bin | bmp | c)",
+    /* INVALID_PRESHIFT         */ "Invalid preshift type, must be (outer | inner)",
+    /* INVALID_PRESHIFT_WIDTH   */ "Pre-shifting is only supported for 8-pixel wide sprites",
+    /* INVALID_SPRITE_WIDTH     */ "Sprite width must be 8 or 16",
+    /* INVALID_SPRITE_HEIGHT    */ "Sprite height must be between 1 and 32",
+
+    /* INPUT_OPEN_ERROR         */ NULL,
+    /* INPUT_OUT_OF_MEMORY      */ "Not enough memory to read the input BMP",
+    /* INPUT_INVALID            */ "Error reading input file (not a valid BMP?)",
+    /* INPUT_TOO_SMALL          */ "Input BMP is too small to contain even a single sprite",
+    /* INPUT_ALREADY_LOADED     */ "Input BMP already loaded",
+
+    /* OUTPUT_NO_INPUT_LOADED   */ "Input BMP needs to be loaded before saving the output file",
+    /* OUTPUT_OPEN_ERROR        */ NULL,
+    /* OUTPUT_IO_ERROR          */ "Error writing output file",
+};
+
+static enum bmp2arr_error nullptr_error(void) {
+    fprintf(stderr,"%s\n", BMP2ARR_PARAMETERLESS_ERRORS[INTERNAL_NULLPTR]);
+    return INTERNAL_NULLPTR;
+}
+
+enum bmp2arr_error bmp2arr_error_report(struct bmp2arr_error_info *err) {
+    if (err == NULL) {
+        return nullptr_error();
+    }
+    switch(err->type) {
+    case EXPECTED_ARGUMENT:
+        fprintf(stderr,"*** Error: Missing argument for '-%s'\n", err->param_str);
+        break;
+    case EXPECTED_SWITCH:
+        fprintf(stderr,"*** Error: Expected a command-line switch at '%s'\n", err->param_str);
+        break;
+    case INVALID_SWITCH:
+        fprintf(stderr,"*** Error: Invalid command-line switch: '%s'\n", err->param_str);
+        break;
+    case INPUT_OPEN_ERROR:
+        fprintf(stderr,"*** Error: Failed to open input file: '%s'\n", err->param_str);
+        break;
+    case OUTPUT_OPEN_ERROR:
+        fprintf(stderr,"*** Error: Failed to open output file: '%s'\n", err->param_str);
+        break;
+    default:
+        fprintf(stderr,"*** Error: %s\n", BMP2ARR_PARAMETERLESS_ERRORS[err->type]);
+        break;
+    }
+    return err->type;
+}
+
+/* error generation */
+enum bmp2arr_error bmp2arr_error_set(struct rec98_bmp2arr_task *t, enum bmp2arr_error type) {
+    if (t == NULL) {
+        return nullptr_error();
+    }
+    t->err.type = type;
+    if (BMP2ARR_PARAMETERLESS_ERRORS[type] == NULL)
+        t->err.type = INTERNAL_ERROR_ERROR;
+
+    t->err.param_str = NULL;
+    return type;
+}
+
+enum bmp2arr_error bmp2arr_error_set_str(struct rec98_bmp2arr_task *t, enum bmp2arr_error type, const char *param) {
+    if (t == NULL) {
+        return nullptr_error();
+    }
+    t->err.type = type;
+    if (BMP2ARR_PARAMETERLESS_ERRORS[type] != NULL)
+        t->err.type = INTERNAL_ERROR_ERROR;
+
+    t->err.param_str = param;
+    return type;
+}
+
 static void memcpyxor(unsigned char *dst,unsigned char *src,unsigned int bytes,unsigned char xorval) {
     while (bytes-- != 0)
         *dst++ = *src++ ^ xorval;
@@ -263,32 +353,43 @@ void rec98_bmp2arr_task_free_bmp(struct rec98_bmp2arr_task *t) {
 }
 
 /* assume *t is uninitialized data */
-int rec98_bmp2arr_task_init(struct rec98_bmp2arr_task *t) {
-    if (t == NULL) return -1; /* failure */
+enum bmp2arr_error rec98_bmp2arr_task_init(struct rec98_bmp2arr_task *t) {
+    if (t == NULL)
+        return INTERNAL_NULLPTR;
+
     memset(t,0,sizeof(*t));
-    return 0; /* success */
+    return SUCCESS;
 }
 
 /* assume *t is initialized data */
-int rec98_bmp2arr_task_free(struct rec98_bmp2arr_task *t) {
-    if (t == NULL) return -1; /* failure */
+enum bmp2arr_error rec98_bmp2arr_task_free(struct rec98_bmp2arr_task *t) {
+    if (t == NULL)
+        return INTERNAL_NULLPTR;
+
     rec98_bmp2arr_task_free_bmp(t);
     cstr_free(&t->output_symname);
     cstr_free(&t->output_file);
     cstr_free(&t->input_bmp);
     memset(t,0,sizeof(*t));
-    return 0; /* success */
+    return SUCCESS;
 }
 
-int rec98_bmp2arr_save_debug_bmp_out(struct rec98_bmp2arr_task *t) {
+enum bmp2arr_error rec98_bmp2arr_save_debug_bmp_out(struct rec98_bmp2arr_task *t) {
     unsigned int y;
     int fd;
 
-    if (t == NULL || t->output_file == NULL) return -1;
-    if (t->bmp == NULL) return -1;
+    if (t == NULL)
+        return INTERNAL_NULLPTR;
+
+    if (t->output_file == NULL)
+        return bmp2arr_error_set(t, MISSING_OUTPUT_FILE);
+
+    if (t->bmp == NULL)
+        return bmp2arr_error_set(t, OUTPUT_NO_INPUT_LOADED);
 
     fd = open(t->output_file,O_WRONLY|O_CREAT|O_TRUNC|O_BINARY,0644);
-    if (fd < 0) return -1;
+    if (fd < 0)
+        return bmp2arr_error_set_str(t, OUTPUT_OPEN_ERROR, t->output_file);
 
     /* BITMAPFILEHEADER */
     memcpy(bmp_tmp+0, "BM",2);
@@ -330,7 +431,7 @@ int rec98_bmp2arr_save_debug_bmp_out(struct rec98_bmp2arr_task *t) {
     } while (y-- != 0);
 
     close(fd);
-    return 0;
+    return bmp2arr_error_set(t, SUCCESS);
 }
 
 static int saveout_write_sprite(struct rec98_bmp2arr_task *t,struct saveout_ctx *sctx,const unsigned char *bmp/*length bytesperrow * height*/) {
@@ -406,31 +507,44 @@ static int saveout_write_sprite(struct rec98_bmp2arr_task *t,struct saveout_ctx 
     return 0;
 }
 
-int rec98_bmp2arr_save_output(struct rec98_bmp2arr_task *t) {
+enum bmp2arr_error rec98_bmp2arr_save_output(struct rec98_bmp2arr_task *t) {
     struct saveout_ctx sctx;
 
-    if (t == NULL || t->output_file == NULL) return -1;
-    if (t->bmp == NULL) return -1;
-    if (t->sprite_width < 8) return -1;
-    if (t->sprite_height == 0) return -1;
-    if ((t->flags & PRESHIFT_ANY) == PRESHIFT_ANY) return -1;
+    if (t == NULL)
+        return INTERNAL_NULLPTR;
+
+    if(t->output_file == NULL)
+        return bmp2arr_error_set(t, MISSING_OUTPUT_FILE);
+
+    if (t->bmp == NULL)
+        return bmp2arr_error_set(t, OUTPUT_NO_INPUT_LOADED);
+
+    if (t->sprite_width < 8)
+        return bmp2arr_error_set(t, INVALID_SPRITE_WIDTH);
+
+    if (t->sprite_height == 0)
+        return bmp2arr_error_set(t, MISSING_SPRITE_HEIGHT);
+
+    if ((t->flags & PRESHIFT_ANY) == PRESHIFT_ANY)
+        return bmp2arr_error_set(t, INVALID_PRESHIFT);
 
     sctx.sscols = t->bmp_width / t->sprite_width;
     sctx.ssrows = t->bmp_height / t->sprite_height;
-    if (sctx.sscols == 0 || sctx.ssrows == 0) return -1;
+    if (sctx.sscols == 0 || sctx.ssrows == 0)
+        return bmp2arr_error_set(t, INPUT_TOO_SMALL);
 
-    /* PRESHIFT only supported for 8-pixel wide sprites */
     if (t->flags & PRESHIFT_ANY && t->sprite_width != 8)
-        return -1;
+        return bmp2arr_error_set(t, INVALID_PRESHIFT_WIDTH);
 
     sctx.bytesperrow = (t->sprite_width + 7u) / 8u;
     if (t->flags & PRESHIFT_ANY) sctx.bytesperrow += 1u; /* in the examples, an 8-pixel wide sprite is shifted across 16 pixels */
 
     if ((sctx.bytesperrow * t->sprite_height) > sizeof(bmp_tmp))
-        return -1;
+        return bmp2arr_error_set(t, INTERNAL_ARRAY_TOO_SMALL);
 
     sctx.fp = fopen(t->output_file,"wb");
-    if (sctx.fp == NULL) return -1;
+    if (sctx.fp == NULL)
+        return bmp2arr_error_set_str(t, OUTPUT_OPEN_ERROR, t->output_file);
 
     fprintf(stderr,"Sprite sheet: %d sprites total (%d x %d).\n",
         sctx.sscols * sctx.ssrows,sctx.sscols,sctx.ssrows);
@@ -560,13 +674,14 @@ int rec98_bmp2arr_save_output(struct rec98_bmp2arr_task *t) {
         goto fioerr;
 
     fclose(sctx.fp);
-    return 0;
+    return bmp2arr_error_set(t, SUCCESS);
 fioerr:
     fclose(sctx.fp);
-    return -1;
+    return bmp2arr_error_set(t, OUTPUT_IO_ERROR);
 }
 
-int rec98_bmp2arr_load_bitmap(struct rec98_bmp2arr_task *t) {
+enum bmp2arr_error rec98_bmp2arr_load_bitmap(struct rec98_bmp2arr_task *t) {
+    enum bmp2arr_error err = SUCCESS;
     unsigned char *tmprow = NULL;
     uint8_t xorval = 0;
     uint32_t srcstride;
@@ -576,11 +691,19 @@ int rec98_bmp2arr_load_bitmap(struct rec98_bmp2arr_task *t) {
     uint32_t row;
     int fd;
 
-    if (t == NULL || t->input_bmp == NULL) return -1;
-    if (t->bmp != NULL) return -1;
+    if (t == NULL)
+        return INTERNAL_NULLPTR;
+
+    if (t->input_bmp == NULL)
+        return bmp2arr_error_set(t, MISSING_INPUT_BMP);
+
+    if (t->bmp != NULL)
+        return bmp2arr_error_set(t, INPUT_ALREADY_LOADED);
 
     fd = open(t->input_bmp,O_RDONLY|O_BINARY);
-    if (fd < 0) return -1;
+    if (fd < 0)
+        return bmp2arr_error_set_str(t, INPUT_OPEN_ERROR, t->input_bmp);
+
     if (lseek(fd,0,SEEK_SET) != 0) goto fioerr;
 
     /* BITMAPFILEHEADER */
@@ -628,7 +751,10 @@ int rec98_bmp2arr_load_bitmap(struct rec98_bmp2arr_task *t) {
     }
 
     t->bmp = (unsigned char*)malloc(t->bmp_height * t->bmp_stride);
-    if (t->bmp == NULL) goto fioerr;
+    if (t->bmp == NULL) {
+        err = bmp2arr_error_set(t, INPUT_OUT_OF_MEMORY);
+        goto fioerr;
+    }
 
     /* read bitmap bits. BMPs are upside-down */
     if (lseek(fd,offbits,SEEK_SET) != offbits) goto fioerr;
@@ -656,10 +782,13 @@ int rec98_bmp2arr_load_bitmap(struct rec98_bmp2arr_task *t) {
     if (tmprow) free((void*)tmprow);
     close(fd);
 
-    return 0;
+    return bmp2arr_error_set(t, SUCCESS);
 fioerr:
     if (tmprow) free((void*)tmprow);
     close(fd);
-    return -1;
+    if (err == SUCCESS) {
+        return bmp2arr_error_set(t, INPUT_INVALID);
+    }
+    return err;
 }
 

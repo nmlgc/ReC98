@@ -38,7 +38,7 @@ typedef unsigned long uint32_t;
 #define O_BINARY (0)
 #endif
 
-static int parse_argv(struct rec98_bmp2arr_task *tsk,int argc,char **argv) {
+static enum bmp2arr_error parse_argv(struct rec98_bmp2arr_task *tsk,int argc,char **argv) {
     char *a;
     int i;
 
@@ -50,22 +50,26 @@ static int parse_argv(struct rec98_bmp2arr_task *tsk,int argc,char **argv) {
 
             if (!strcmp(a,"i")) {
                 a = argv[i++];
-                if (a == NULL) return -1;
+                if (a == NULL)
+                    return bmp2arr_error_set_str(tsk, EXPECTED_ARGUMENT, "i");
                 cstr_set(&tsk->input_bmp,a);
             }
             else if (!strcmp(a,"o")) {
                 a = argv[i++];
-                if (a == NULL) return -1;
+                if (a == NULL)
+                    return bmp2arr_error_set_str(tsk, EXPECTED_ARGUMENT, "o");
                 cstr_set(&tsk->output_file,a);
             }
             else if (!strcmp(a,"sym")) {
                 a = argv[i++];
-                if (a == NULL) return -1;
+                if (a == NULL)
+                    return bmp2arr_error_set_str(tsk, EXPECTED_ARGUMENT, "sym");
                 cstr_set(&tsk->output_symname,a);
             }
             else if (!strcmp(a,"of")) {
                 a = argv[i++];
-                if (a == NULL) return -1;
+                if (a == NULL)
+                    return bmp2arr_error_set_str(tsk, EXPECTED_ARGUMENT, "of");
 
                 if (!strcmp(a,"asm"))
                     tsk->output_type = REC98_OUT_ASM;
@@ -76,19 +80,25 @@ static int parse_argv(struct rec98_bmp2arr_task *tsk,int argc,char **argv) {
                 else if (!strcmp(a,"c"))
                     tsk->output_type = REC98_OUT_C;
                 else
-                    return -1;
+                    return bmp2arr_error_set(tsk, INVALID_OUTPUT_TYPE);
             }
             else if (!strcmp(a,"sw")) {
                 a = argv[i++];
-                if (a == NULL) return -1;
+                if (a == NULL)
+                    return bmp2arr_error_set_str(tsk, EXPECTED_ARGUMENT, "sw");
+
                 tsk->sprite_width = atoi(a);
-                if (!(tsk->sprite_width == 8 || tsk->sprite_width == 16)) return -1;
+                if (!(tsk->sprite_width == 8 || tsk->sprite_width == 16))
+                    return bmp2arr_error_set(tsk, INVALID_SPRITE_WIDTH);
             }
             else if (!strcmp(a,"sh")) {
                 a = argv[i++];
-                if (a == NULL) return -1;
+                if (a == NULL)
+                    return bmp2arr_error_set_str(tsk, EXPECTED_ARGUMENT, "sh");
+
                 tsk->sprite_height = atoi(a);
-                if (tsk->sprite_height < 1 || tsk->sprite_height > 32) return -1;
+                if (tsk->sprite_height < 1 || tsk->sprite_height > 32)
+                    return bmp2arr_error_set(tsk, INVALID_SPRITE_HEIGHT);
             }
             else if (!strcmp(a,"u")) {
                 tsk->flags |= UPSIDEDOWN;
@@ -98,47 +108,39 @@ static int parse_argv(struct rec98_bmp2arr_task *tsk,int argc,char **argv) {
             }
             else if (!strcmp(a,"pshf")) {
                 a = argv[i++];
-                if (a == NULL) return -1;
+                if (a == NULL)
+                    return bmp2arr_error_set_str(tsk, EXPECTED_ARGUMENT, "pshf");
 
                 if (!strcmp(a,"inner"))
                     tsk->flags |= PRESHIFT_INNER;
                 else if (!strcmp(a,"outer"))
                     tsk->flags |= PRESHIFT_OUTER;
                 else
-                    return -1;
+                    return bmp2arr_error_set(tsk, INVALID_PRESHIFT);
             }
             else {
-                fprintf(stderr,"Unknown switch '%s'\n",a);
+                return bmp2arr_error_set_str(tsk, INVALID_SWITCH, a);
             }
         }
         else {
-            fprintf(stderr,"Unexpected\n");
-            return -1;
+            return bmp2arr_error_set_str(tsk, EXPECTED_SWITCH, a);
         }
     }
 
-    /* input BMP is required */
-    if (tsk->input_bmp == NULL) {
-        fprintf(stderr,"Input BMP required (-i)\n");
-        return -1;
-    }
+    /* required fields */
+    if (tsk->input_bmp == NULL)
+        return bmp2arr_error_set(tsk, MISSING_INPUT_BMP);
 
-    /* output file is required */
-    if (tsk->output_file == NULL) {
-        fprintf(stderr,"Output file required (-o)\n");
-        return -1;
-    }
+    if (tsk->output_file == NULL)
+        return bmp2arr_error_set(tsk, MISSING_OUTPUT_FILE);
 
-    if (tsk->sprite_width == 0 || tsk->sprite_height == 0) {
-        fprintf(stderr,"Sprite width/height required (-sw and -sh)\n");
-        return -1;
-    }
-    if (!(tsk->sprite_width == 8 || tsk->sprite_width == 16)) {
-        fprintf(stderr,"Sprite width must be 8 or 16\n");
-        return -1;
-    }
+    if (tsk->sprite_width == 0)
+        return bmp2arr_error_set(tsk, MISSING_SPRITE_WIDTH);
 
-    return 0; /* success */
+    if (tsk->sprite_height == 0)
+        return bmp2arr_error_set(tsk, MISSING_SPRITE_HEIGHT);
+
+    return bmp2arr_error_set(tsk, SUCCESS);
 }
 
 int main(int argc,char **argv) {
@@ -148,20 +150,20 @@ int main(int argc,char **argv) {
         return 1;
 
     if (parse_argv(&tsk,argc,argv))
-        return 1;
+        return bmp2arr_error_report(&tsk.err);
 
     if (rec98_bmp2arr_load_bitmap(&tsk))
-        return 1;
+        return bmp2arr_error_report(&tsk.err);
 
     if (tsk.flags & DEBUG_BMP_OUT) {
         if (rec98_bmp2arr_save_debug_bmp_out(&tsk))
-            return 1;
+            return bmp2arr_error_report(&tsk.err);
 
         return 0;
     }
 
     if (rec98_bmp2arr_save_output(&tsk))
-        return 1;
+        return bmp2arr_error_report(&tsk.err);
 
     rec98_bmp2arr_task_free(&tsk);
     return 0;

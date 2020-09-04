@@ -29,6 +29,47 @@ struct saveout_ctx {
     FILE*                   fp; /* for that nice fprintf formatting if needed */
 };
 
+/* potential errors */
+enum bmp2arr_error {
+    SUCCESS=0,
+    INTERNAL_ERROR_ERROR,
+    INTERNAL_NULLPTR,
+    INTERNAL_ARRAY_TOO_SMALL,
+
+    EXPECTED_ARGUMENT,
+    EXPECTED_SWITCH,
+
+    MISSING_INPUT_BMP,
+    MISSING_OUTPUT_FILE,
+    MISSING_SPRITE_WIDTH,
+    MISSING_SPRITE_HEIGHT,
+
+    INVALID_SWITCH,
+    INVALID_OUTPUT_TYPE,
+    INVALID_PRESHIFT,
+    INVALID_PRESHIFT_WIDTH,
+    INVALID_SPRITE_WIDTH,
+    INVALID_SPRITE_HEIGHT,
+
+    INPUT_OPEN_ERROR,
+    INPUT_OUT_OF_MEMORY,
+    INPUT_INVALID,
+    INPUT_TOO_SMALL,
+    INPUT_ALREADY_LOADED,
+
+    OUTPUT_NO_INPUT_LOADED,
+    OUTPUT_OPEN_ERROR,
+    OUTPUT_IO_ERROR,
+
+    BMP2ARR_ERROR_COUNT,
+};
+
+/* extended error information */
+struct bmp2arr_error_info {
+    enum bmp2arr_error type;
+    const char*        param_str;
+};
+
 /* the task at hand */
 struct rec98_bmp2arr_task {
     char*           input_bmp;
@@ -38,6 +79,9 @@ struct rec98_bmp2arr_task {
     unsigned char   sprite_width;       /* 8, or 16 [https://github.com/nmlgc/ReC98/issues/8 ref. dots8_t, dots16_t] */
     unsigned char   sprite_height;      /* according to list, either 4, 8, or 16 */
     unsigned char   flags;              /* see flag list above */
+
+    /* error of the last operation */
+    struct bmp2arr_error_info err;
 
     /* working state */
     unsigned int    bmp_width;          /* width of bmp */
@@ -49,11 +93,15 @@ struct rec98_bmp2arr_task {
 void cstr_free(char **s);
 void cstr_set(char **s,const char *n);
 void rec98_bmp2arr_task_free_bmp(struct rec98_bmp2arr_task *t);
-int rec98_bmp2arr_task_init(struct rec98_bmp2arr_task *t);
-int rec98_bmp2arr_task_free(struct rec98_bmp2arr_task *t);
-int rec98_bmp2arr_save_debug_bmp_out(struct rec98_bmp2arr_task *t);
-int rec98_bmp2arr_save_output(struct rec98_bmp2arr_task *t);
-int rec98_bmp2arr_load_bitmap(struct rec98_bmp2arr_task *t);
+enum bmp2arr_error rec98_bmp2arr_task_init(struct rec98_bmp2arr_task *t);
+enum bmp2arr_error rec98_bmp2arr_task_free(struct rec98_bmp2arr_task *t);
+enum bmp2arr_error rec98_bmp2arr_save_debug_bmp_out(struct rec98_bmp2arr_task *t);
+enum bmp2arr_error rec98_bmp2arr_save_output(struct rec98_bmp2arr_task *t);
+enum bmp2arr_error rec98_bmp2arr_load_bitmap(struct rec98_bmp2arr_task *t);
+
+enum bmp2arr_error bmp2arr_error_set(struct rec98_bmp2arr_task *t, enum bmp2arr_error type);
+enum bmp2arr_error bmp2arr_error_set_str(struct rec98_bmp2arr_task *t, enum bmp2arr_error type, const char *param);
+enum bmp2arr_error bmp2arr_error_report(struct bmp2arr_error_info *err);
 
 #endif /* _BMP2ARRL_H */
 
