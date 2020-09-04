@@ -553,10 +553,35 @@ enum bmp2arr_error rec98_bmp2arr_save_output(struct rec98_bmp2arr_task *t) {
         return bmp2arr_error_set_str(t, OUTPUT_OPEN_ERROR, t->output_file);
 
     if (!(t->flags & QUIET)) {
-        fprintf(stderr,"Sprite sheet: %d sprites total (%d x %d).\n",
-            sctx.sscols * sctx.ssrows,sctx.sscols,sctx.ssrows);
-        fprintf(stderr,"Each sprite is %d x %d\n",
-            t->sprite_width,t->sprite_height);
+        unsigned int cels = sctx.sscols * sctx.ssrows;
+        const char *str_layout = NULL;
+        static const char *TYPES[BMP2ARR_OUTPUT_TYPE_COUNT] = {
+            NULL, "C", "ASM", "binary", "BMP"
+        };
+
+        if (t->flags & PRESHIFT_OUTER) {
+            str_layout = "[PRESHIFT][cels][rows]";
+        } else if (t->flags & PRESHIFT_INNER) {
+            str_layout = "[cels][PRESHIFT][rows]";
+        } else  {
+            str_layout = "[cels][rows] (no pre-shifting)";
+        }
+
+        fprintf(stderr,
+            "Input bitmap: %s (size %d x %d)\n"
+            " Sprite size: %d x %d\n"
+            "      = Cels: %d (arranged as %d x %d)\n"
+            " Data layout: %s\n"
+            " Y direction: %s\n"
+            " Output file: %s (Format: %s)\n"
+            ,
+            t->input_bmp,(sctx.sscols*t->sprite_width),(sctx.ssrows*t->sprite_height),
+            t->sprite_width,t->sprite_height,
+            cels,sctx.sscols,sctx.ssrows,
+            str_layout,
+            (t->flags & UPSIDEDOWN) ? "upside down" : "normal",
+            t->output_file, TYPES[t->output_type]
+        );
     }
 
     if (saveout_write_prologue(t,&sctx))
