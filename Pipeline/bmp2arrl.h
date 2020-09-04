@@ -6,10 +6,13 @@
 
 /* what to emit */
 enum rec98_bmp2arr_output_type {
-    REC98_OUT_C=0,
+    REC98_OUT_NONE=0,
+    REC98_OUT_C,
     REC98_OUT_ASM,
     REC98_OUT_BIN,
-    REC98_OUT_BMP
+    REC98_OUT_BMP,
+
+    BMP2ARR_OUTPUT_TYPE_COUNT,
 };
 
 /* conversion flags */
@@ -41,6 +44,7 @@ enum bmp2arr_error {
 
     MISSING_INPUT_BMP,
     MISSING_OUTPUT_FILE,
+    MISSING_OUTPUT_TYPE,
     MISSING_SPRITE_WIDTH,
     MISSING_SPRITE_HEIGHT,
 

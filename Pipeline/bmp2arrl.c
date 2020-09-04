@@ -76,6 +76,7 @@ static const char* BMP2ARR_PARAMETERLESS_ERRORS[BMP2ARR_ERROR_COUNT] = {
 
     /* MISSING_INPUT_BMP        */ "Input BMP file name required (-i)",
     /* MISSING_OUTPUT_FILE      */ "Output file name required (-o)",
+    /* MISSING_OUTPUT_TYPE      */ "Output type required (-of)",
     /* MISSING_SPRITE_WIDTH     */ "Sprite width required (-sw)",
     /* MISSING_SPRITE_HEIGHT    */ "Sprite height required (-sh)",
 
@@ -515,6 +516,11 @@ enum bmp2arr_error rec98_bmp2arr_save_output(struct rec98_bmp2arr_task *t) {
 
     if(t->output_file == NULL)
         return bmp2arr_error_set(t, MISSING_OUTPUT_FILE);
+
+    if(t->output_type == REC98_OUT_NONE)
+        return bmp2arr_error_set(t, MISSING_OUTPUT_TYPE);
+    if(t->output_type > BMP2ARR_OUTPUT_TYPE_COUNT)
+        return bmp2arr_error_set(t, INVALID_OUTPUT_TYPE);
 
     if (t->bmp == NULL)
         return bmp2arr_error_set(t, OUTPUT_NO_INPUT_LOADED);

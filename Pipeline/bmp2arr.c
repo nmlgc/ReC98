@@ -134,6 +134,9 @@ static enum bmp2arr_error parse_argv(struct rec98_bmp2arr_task *tsk,int argc,cha
     if (tsk->output_file == NULL)
         return bmp2arr_error_set(tsk, MISSING_OUTPUT_FILE);
 
+    if (tsk->output_type == REC98_OUT_NONE)
+        return bmp2arr_error_set(tsk, MISSING_OUTPUT_TYPE);
+
     if (tsk->sprite_width == 0)
         return bmp2arr_error_set(tsk, MISSING_SPRITE_WIDTH);
 
