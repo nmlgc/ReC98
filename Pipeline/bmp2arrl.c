@@ -143,12 +143,12 @@ static int saveout_write_prologue(struct rec98_bmp2arr_task *t,struct saveout_ct
 
         fprintf(sctx->fp,"const unsigned char %s",t->output_symname != NULL ? t->output_symname : "untitled");
 
-        if (t->preshift && t->preshift_inner == 0)
+        if (t->flags & PRESHIFT_OUTER)
             fprintf(sctx->fp,"[8/*PRESHIFT*/]");
 
         fprintf(sctx->fp,"[%d]",sctx->ssrows * sctx->sscols);
 
-        if (t->preshift && t->preshift_inner == 1)
+        if (t->flags & PRESHIFT_INNER)
             fprintf(sctx->fp,"[8/*PRESHIFT*/]");
 
         fprintf(sctx->fp,"[%d/*%d bytes x %d rows*/] = {\n",
@@ -161,12 +161,12 @@ static int saveout_write_prologue(struct rec98_bmp2arr_task *t,struct saveout_ct
 
         fprintf(sctx->fp,"; const unsigned char %s",t->output_symname != NULL ? t->output_symname : "untitled");
 
-        if (t->preshift && t->preshift_inner == 0)
+        if (t->flags & PRESHIFT_OUTER)
             fprintf(sctx->fp,"[8/*PRESHIFT*/]");
 
         fprintf(sctx->fp,"[%d]",sctx->ssrows * sctx->sscols);
 
-        if (t->preshift && t->preshift_inner == 1)
+        if (t->flags & PRESHIFT_INNER)
             fprintf(sctx->fp,"[8/*PRESHIFT*/]");
 
         fprintf(sctx->fp,"[%d/*%d bytes x %d rows*/];\n",
@@ -180,23 +180,24 @@ static int saveout_write_prologue(struct rec98_bmp2arr_task *t,struct saveout_ct
     }
     else if (t->output_type == REC98_OUT_BMP) {
         const unsigned int balign = (sctx->bytesperrow + 3u) & (~3u);
+        const unsigned int bitmap_size = t->sprite_height*sctx->ssrows*sctx->sscols*((t->flags&PRESHIFT_ANY)?8u:1u);
 
         /* BITMAPFILEHEADER */
         memcpy(bmp_tmp+0, "BM",2);
-        *((uint32_t*)(bmp_tmp+2 )) = htole32(14+40+4*2+(balign*t->sprite_height*sctx->ssrows*sctx->sscols*(t->preshift?8u:1u)));  /* bfSize */
+        *((uint32_t*)(bmp_tmp+2 )) = htole32(14+40+4*2+(balign*bitmap_size));  /* bfSize */
         *((uint16_t*)(bmp_tmp+6 )) = htole16(0);
         *((uint16_t*)(bmp_tmp+8 )) = htole16(0);
-        *((uint32_t*)(bmp_tmp+10)) = htole32(14+40+4*2);                                /* bfOffBits */
+        *((uint32_t*)(bmp_tmp+10)) = htole32(14+40+4*2);                       /* bfOffBits */
         fwrite(bmp_tmp,14,1,sctx->fp);
 
         /* BITMAPINFOHEADER */
         *((uint32_t*)(bmp_tmp+0 )) = htole32(40);
         *((uint32_t*)(bmp_tmp+4 )) = htole32(sctx->bytesperrow*8u);
-        *((uint32_t*)(bmp_tmp+8 )) = htole32(t->sprite_height*sctx->ssrows*sctx->sscols*(t->preshift?8u:1u));
+        *((uint32_t*)(bmp_tmp+8 )) = htole32(bitmap_size);
         *((uint16_t*)(bmp_tmp+12)) = htole16(1);
         *((uint16_t*)(bmp_tmp+14)) = htole16(1);
         *((uint32_t*)(bmp_tmp+16)) = htole32(0);
-        *((uint32_t*)(bmp_tmp+20)) = htole32(balign*t->sprite_height*sctx->ssrows*sctx->sscols*(t->preshift?8u:1u));
+        *((uint32_t*)(bmp_tmp+20)) = htole32(balign*bitmap_size);
         *((uint32_t*)(bmp_tmp+24)) = htole32(0);
         *((uint32_t*)(bmp_tmp+28)) = htole32(0);
         *((uint32_t*)(bmp_tmp+32)) = htole32(2);
@@ -336,14 +337,14 @@ static int saveout_write_sprite(struct rec98_bmp2arr_task *t,struct saveout_ctx 
     unsigned int r,c,b;
 
     if (t->output_type == REC98_OUT_C) {
-        if (t->preshift && t->preshift_inner) {
+        if (t->flags & PRESHIFT_INNER) {
             fprintf(sctx->fp,"%c",sctx->sspreshift != 0 ? ',' : ' ');
         }
         else {
             fprintf(sctx->fp,"%c",sctx->spritenum != 0 ? ',' : ' ');
         }
 
-        if (t->preshift) {
+        if (t->flags & PRESHIFT_ANY) {
             fprintf(sctx->fp,"{/*sprite %u preshift %u*/\n",sctx->spritenum,sctx->sspreshift);
         }
         else {
@@ -356,11 +357,11 @@ static int saveout_write_sprite(struct rec98_bmp2arr_task *t,struct saveout_ctx 
                 fprintf(sctx->fp,"%c",(c != 0 || r != 0) ? ',' : ' ');
                 fprintf(sctx->fp,"0x%02x",*bmp++);
             }
-            fprintf(sctx->fp," /* row %u */",t->upsidedown ? (t->sprite_height - 1u - r) : r);
+            fprintf(sctx->fp," /* row %u */",(t->flags & UPSIDEDOWN) ? (t->sprite_height - 1u - r) : r);
             fprintf(sctx->fp,"\n");
         }
 
-        if (t->preshift) {
+        if (t->flags & PRESHIFT_ANY) {
             fprintf(sctx->fp," }/*end sprite %u preshift %u*/\n",sctx->spritenum,sctx->sspreshift);
         }
         else {
@@ -368,7 +369,7 @@ static int saveout_write_sprite(struct rec98_bmp2arr_task *t,struct saveout_ctx 
         }
     }
     else if (t->output_type == REC98_OUT_ASM) {
-        if (t->preshift) {
+        if (t->flags & PRESHIFT_ANY) {
             fprintf(sctx->fp,"; sprite %u preshift %u\n",sctx->spritenum,sctx->sspreshift);
         }
         else {
@@ -386,7 +387,7 @@ static int saveout_write_sprite(struct rec98_bmp2arr_task *t,struct saveout_ctx 
                 fprintf(sctx->fp,"b");
                 bmp++;
             }
-            fprintf(sctx->fp," ; row %u",t->upsidedown ? (t->sprite_height - 1u - r) : r);
+            fprintf(sctx->fp," ; row %u",(t->flags & UPSIDEDOWN) ? (t->sprite_height - 1u - r) : r);
             fprintf(sctx->fp,"\n");
         }
     }
@@ -412,17 +413,18 @@ int rec98_bmp2arr_save_output(struct rec98_bmp2arr_task *t) {
     if (t->bmp == NULL) return -1;
     if (t->sprite_width < 8) return -1;
     if (t->sprite_height == 0) return -1;
+    if ((t->flags & PRESHIFT_ANY) == PRESHIFT_ANY) return -1;
 
     sctx.sscols = t->bmp_width / t->sprite_width;
     sctx.ssrows = t->bmp_height / t->sprite_height;
     if (sctx.sscols == 0 || sctx.ssrows == 0) return -1;
 
     /* PRESHIFT only supported for 8-pixel wide sprites */
-    if (t->preshift && t->sprite_width != 8)
+    if (t->flags & PRESHIFT_ANY && t->sprite_width != 8)
         return -1;
 
     sctx.bytesperrow = (t->sprite_width + 7u) / 8u;
-    if (t->preshift) sctx.bytesperrow += 1u; /* in the examples, an 8-pixel wide sprite is shifted across 16 pixels */
+    if (t->flags & PRESHIFT_ANY) sctx.bytesperrow += 1u; /* in the examples, an 8-pixel wide sprite is shifted across 16 pixels */
 
     if ((sctx.bytesperrow * t->sprite_height) > sizeof(bmp_tmp))
         return -1;
@@ -438,7 +440,7 @@ int rec98_bmp2arr_save_output(struct rec98_bmp2arr_task *t) {
     if (saveout_write_prologue(t,&sctx))
         goto fioerr;
 
-    if (t->preshift && t->preshift_inner == 1) {
+    if (t->flags & PRESHIFT_INNER) {
         for (sctx.ssrow=0;sctx.ssrow < sctx.ssrows;sctx.ssrow++) {
             sctx.spritenum = sctx.ssrow * sctx.sscols;
             for (sctx.sscol=0;sctx.sscol < sctx.sscols;sctx.sscol++,sctx.spritenum++) {
@@ -454,7 +456,7 @@ int rec98_bmp2arr_save_output(struct rec98_bmp2arr_task *t) {
                     for (y=0;y < t->sprite_height;y++) {
                         unsigned int shif = 0;
                         unsigned int sr =
-                            t->upsidedown ? (t->sprite_height - 1 - y) : y;
+                            (t->flags & UPSIDEDOWN) ? (t->sprite_height - 1 - y) : y;
                         const unsigned char *sbits =
                             (const unsigned char*)t->bmp +
                             (sctx.sscol * ((t->sprite_width + 7u) / 8u)) +
@@ -483,7 +485,7 @@ int rec98_bmp2arr_save_output(struct rec98_bmp2arr_task *t) {
             }
         }
     }
-    else if (t->preshift && t->preshift_inner == 0) {
+    else if (t->flags & PRESHIFT_OUTER) {
         for (sctx.sspreshift=0;sctx.sspreshift < 8;sctx.sspreshift++) {
             if (t->output_type == REC98_OUT_C) {
                 fprintf(sctx.fp,"%c",sctx.sspreshift != 0 ? ',' : ' ');
@@ -499,7 +501,7 @@ int rec98_bmp2arr_save_output(struct rec98_bmp2arr_task *t) {
                     for (y=0;y < t->sprite_height;y++) {
                         unsigned int shif = 0;
                         unsigned int sr =
-                            t->upsidedown ? (t->sprite_height - 1 - y) : y;
+                            (t->flags & UPSIDEDOWN) ? (t->sprite_height - 1 - y) : y;
                         const unsigned char *sbits =
                             (const unsigned char*)t->bmp +
                             (sctx.sscol * ((t->sprite_width + 7u) / 8u)) +
@@ -538,7 +540,7 @@ int rec98_bmp2arr_save_output(struct rec98_bmp2arr_task *t) {
 
                 for (y=0;y < t->sprite_height;y++) {
                     unsigned int sr =
-                        t->upsidedown ? (t->sprite_height - 1 - y) : y;
+                        (t->flags & UPSIDEDOWN) ? (t->sprite_height - 1 - y) : y;
                     const unsigned char *sbits =
                         (const unsigned char*)t->bmp +
                         (sctx.sscol * ((t->sprite_width + 7u) / 8u)) +

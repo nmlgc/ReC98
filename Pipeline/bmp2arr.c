@@ -91,20 +91,19 @@ static int parse_argv(struct rec98_bmp2arr_task *tsk,int argc,char **argv) {
                 if (tsk->sprite_height < 1 || tsk->sprite_height > 32) return -1;
             }
             else if (!strcmp(a,"u")) {
-                tsk->upsidedown = 1;
+                tsk->flags |= UPSIDEDOWN;
             }
             else if (!strcmp(a,"dbg-bmp")) {
-                tsk->debug_bmp_out = 1;
+                tsk->flags |= DEBUG_BMP_OUT;
             }
             else if (!strcmp(a,"pshf")) {
                 a = argv[i++];
                 if (a == NULL) return -1;
 
-                tsk->preshift = 1;
                 if (!strcmp(a,"inner"))
-                    tsk->preshift_inner = 1;
+                    tsk->flags |= PRESHIFT_INNER;
                 else if (!strcmp(a,"outer"))
-                    tsk->preshift_inner = 0;
+                    tsk->flags |= PRESHIFT_OUTER;
                 else
                     return -1;
             }
@@ -154,7 +153,7 @@ int main(int argc,char **argv) {
     if (rec98_bmp2arr_load_bitmap(&tsk))
         return 1;
 
-    if (tsk.debug_bmp_out) {
+    if (tsk.flags & DEBUG_BMP_OUT) {
         if (rec98_bmp2arr_save_debug_bmp_out(&tsk))
             return 1;
 

@@ -12,6 +12,18 @@ enum rec98_bmp2arr_output_type {
     REC98_OUT_BMP
 };
 
+/* conversion flags */
+
+/* Whether to generate preshifted variations or not. Makes the bitmap one byte wider */
+#define PRESHIFT_OUTER (1 << 0) /* [PRESHIFT][number][height] */
+#define PRESHIFT_INNER (1 << 1) /* [number][PRESHIFT][height] */
+
+#define UPSIDEDOWN     (1 << 2) /* output upside down  (ref. game 3 score bitmap) */
+#define DEBUG_BMP_OUT  (1 << 3) /* output file is bitmap read in (debugging) */
+
+/* only used internally */
+#define PRESHIFT_ANY (PRESHIFT_OUTER | PRESHIFT_INNER)
+
 struct saveout_ctx {
     unsigned int            sscols,ssrows,spritenum,bytesperrow,sscol,ssrow,sspreshift;
     FILE*                   fp; /* for that nice fprintf formatting if needed */
@@ -25,10 +37,7 @@ struct rec98_bmp2arr_task {
     unsigned char   output_type;
     unsigned char   sprite_width;       /* 8, or 16 [https://github.com/nmlgc/ReC98/issues/8 ref. dots8_t, dots16_t] */
     unsigned char   sprite_height;      /* according to list, either 4, 8, or 16 */
-    unsigned char   preshift;           /* 1=generate preshifted variations or 0=don't   This makes the bitmap one byte wider */
-    unsigned char   upsidedown;         /* 1=output upside down  (ref. game 3 score bitmap) */
-    unsigned char   preshift_inner;     /* 1=[number][PRESHIFT][height]    0=[PRESHIFT][number][height] */
-    unsigned char   debug_bmp_out;      /* 1=output file is bitmap read in (debugging) */
+    unsigned char   flags;              /* see flag list above */
 
     /* working state */
     unsigned int    bmp_width;          /* width of bmp */
