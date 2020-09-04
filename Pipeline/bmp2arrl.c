@@ -91,6 +91,7 @@ static const char* BMP2ARR_PARAMETERLESS_ERRORS[BMP2ARR_ERROR_COUNT] = {
     /* INPUT_OUT_OF_MEMORY      */ "Not enough memory to read the input BMP",
     /* INPUT_INVALID            */ "Error reading input file (not a valid BMP?)",
     /* INPUT_TOO_SMALL          */ "Input BMP is too small to contain even a single sprite",
+    /* INPUT_COLOR_AT           */ NULL,
     /* INPUT_ALREADY_LOADED     */ "Input BMP already loaded",
 
     /* OUTPUT_NO_INPUT_LOADED   */ "Input BMP needs to be loaded before saving the output file",
@@ -120,6 +121,9 @@ enum bmp2arr_error bmp2arr_error_report(struct bmp2arr_error_info *err) {
     case INPUT_OPEN_ERROR:
         fprintf(stderr,"*** Error: Failed to open input file: '%s'\n", err->param_str);
         break;
+    case INPUT_COLOR_AT:
+        fprintf(stderr,"*** Error: Found a non-#000/#FFF pixel at (%d, %d)\n", err->param_int[0], err->param_int[1]);
+        break;
     case OUTPUT_OPEN_ERROR:
         fprintf(stderr,"*** Error: Failed to open output file: '%s'\n", err->param_str);
         break;
@@ -140,6 +144,8 @@ enum bmp2arr_error bmp2arr_error_set(struct rec98_bmp2arr_task *t, enum bmp2arr_
         t->err.type = INTERNAL_ERROR_ERROR;
 
     t->err.param_str = NULL;
+    t->err.param_int[0] = 0;
+    t->err.param_int[1] = 0;
     return type;
 }
 
@@ -152,7 +158,30 @@ enum bmp2arr_error bmp2arr_error_set_str(struct rec98_bmp2arr_task *t, enum bmp2
         t->err.type = INTERNAL_ERROR_ERROR;
 
     t->err.param_str = param;
+    t->err.param_int[0] = 0;
+    t->err.param_int[1] = 0;
     return type;
+}
+
+enum bmp2arr_error bmp2arr_error_set_int_int(struct rec98_bmp2arr_task *t, enum bmp2arr_error type, int param_1, int param_2) {
+    if (t == NULL) {
+        return nullptr_error();
+    }
+    t->err.type = type;
+    if (BMP2ARR_PARAMETERLESS_ERRORS[type] != NULL)
+        t->err.type = INTERNAL_ERROR_ERROR;
+
+    t->err.param_str = NULL;
+    t->err.param_int[0] = param_1;
+    t->err.param_int[1] = param_2;
+    return type;
+}
+
+static int is_black_or_white(uint8_t r,uint8_t g,uint8_t b) {
+    return (
+        ((r == 0x00) && (g == 0x00) && (b == 0x00)) ||
+        ((r == 0xFF) && (g == 0xFF) && (b == 0xFF))
+    );
 }
 
 static void memcpyxor(unsigned char *dst,unsigned char *src,unsigned int bytes,unsigned char xorval) {
@@ -160,8 +189,10 @@ static void memcpyxor(unsigned char *dst,unsigned char *src,unsigned int bytes,u
         *dst++ = *src++ ^ xorval;
 }
 
-static void memcpy24to1(unsigned char *dst,unsigned char *src,unsigned int w) {
-    unsigned char r,g,b,tmp;
+/* return -1 on success, or the position of a non-#000/#FFF pixel otherwise */
+static int memcpy24to1(unsigned char *dst,unsigned char *src,unsigned int w) {
+    unsigned int w_total = w;
+    uint8_t r,g,b,tmp;
     unsigned int x;
 
     while (w >= 8) {
@@ -170,8 +201,10 @@ static void memcpy24to1(unsigned char *dst,unsigned char *src,unsigned int w) {
             b = *src++;
             g = *src++;
             r = *src++;
-            if ((r|g|b)&0x80)
+            if (is_black_or_white(r,g,b))
                 tmp |= 0x80 >> x;
+            else
+                return ((w_total - w) + x);
         }
 
         *dst++ = tmp;
@@ -184,16 +217,20 @@ static void memcpy24to1(unsigned char *dst,unsigned char *src,unsigned int w) {
             b = *src++;
             g = *src++;
             r = *src++;
-            if ((r|g|b)&0x80)
+            if (is_black_or_white(r,g,b))
                 tmp |= 0x80 >> x;
+            else
+                return ((w_total - w) + x);
         }
 
         *dst++ = tmp;
     }
+    return -1;
 }
 
-static void memcpy32to1(unsigned char *dst,unsigned char *src,unsigned int w) {
-    unsigned char r,g,b,tmp;
+static int memcpy32to1(unsigned char *dst,unsigned char *src,unsigned int w) {
+    unsigned int w_total = w;
+    uint8_t r,g,b,tmp;
     unsigned int x;
 
     while (w >= 8) {
@@ -203,8 +240,10 @@ static void memcpy32to1(unsigned char *dst,unsigned char *src,unsigned int w) {
             g = *src++;
             r = *src++;
                  src++; /* A */
-            if ((r|g|b)&0x80)
+            if (is_black_or_white(r,g,b))
                 tmp |= 0x80 >> x;
+            else
+                return ((w_total - w) + x);
         }
 
         *dst++ = tmp;
@@ -218,12 +257,15 @@ static void memcpy32to1(unsigned char *dst,unsigned char *src,unsigned int w) {
             g = *src++;
             r = *src++;
                  src++; /* A */
-            if ((r|g|b)&0x80)
+            if (is_black_or_white(r,g,b))
                 tmp |= 0x80 >> x;
+            else
+                return ((w_total - w) + x);
         }
 
         *dst++ = tmp;
     }
+    return -1;
 }
 
 static int saveout_write_prologue(struct rec98_bmp2arr_task *t,struct saveout_ctx *sctx) {
@@ -806,10 +848,20 @@ enum bmp2arr_error rec98_bmp2arr_load_bitmap(struct rec98_bmp2arr_task *t) {
 
         if (bpp == 1)
             memcpyxor(t->bmp + (row * t->bmp_stride),tmprow,(unsigned int)srcstride,xorval);
-        else if (bpp == 24)
-            memcpy24to1(t->bmp + (row * t->bmp_stride),tmprow,t->bmp_width);
-        else if (bpp == 32)
-            memcpy32to1(t->bmp + (row * t->bmp_stride),tmprow,t->bmp_width);
+        else if (bpp == 24) {
+            int err_x = memcpy24to1(t->bmp + (row * t->bmp_stride),tmprow,t->bmp_width);
+            if (err_x != -1) {
+                err = bmp2arr_error_set_int_int(t, INPUT_COLOR_AT, err_x, (int)row);
+                goto fioerr;
+            }
+        }
+        else if (bpp == 32) {
+            int err_x = memcpy32to1(t->bmp + (row * t->bmp_stride),tmprow,t->bmp_width);
+            if (err_x != -1) {
+                err = bmp2arr_error_set_int_int(t, INPUT_COLOR_AT, err_x, (int)row);
+                goto fioerr;
+            }
+        }
     } while (row-- != 0u); /* compare against post decrement to break out if it is zero */
 
     if (tmprow) free((void*)tmprow);

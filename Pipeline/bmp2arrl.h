@@ -61,6 +61,7 @@ enum bmp2arr_error {
     INPUT_OUT_OF_MEMORY,
     INPUT_INVALID,
     INPUT_TOO_SMALL,
+    INPUT_COLOR_AT,
     INPUT_ALREADY_LOADED,
 
     OUTPUT_NO_INPUT_LOADED,
@@ -74,6 +75,7 @@ enum bmp2arr_error {
 struct bmp2arr_error_info {
     enum bmp2arr_error type;
     const char*        param_str;
+    int                param_int[2];
 };
 
 /* the task at hand */
@@ -107,6 +109,7 @@ enum bmp2arr_error rec98_bmp2arr_load_bitmap(struct rec98_bmp2arr_task *t);
 
 enum bmp2arr_error bmp2arr_error_set(struct rec98_bmp2arr_task *t, enum bmp2arr_error type);
 enum bmp2arr_error bmp2arr_error_set_str(struct rec98_bmp2arr_task *t, enum bmp2arr_error type, const char *param);
+enum bmp2arr_error bmp2arr_error_set_int_int(struct rec98_bmp2arr_task *t, enum bmp2arr_error type, int param_1, int param_2);
 enum bmp2arr_error bmp2arr_error_report(struct bmp2arr_error_info *err);
 
 #endif /* _BMP2ARRL_H */
