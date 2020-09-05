@@ -14,7 +14,7 @@
 ; Application type:  Executable	16bit
 
 		.286 ; Force the .model directive to create 16-bit default segments...
-		.model large main_02_TEXT
+		.model large
 		.386 ; ... then switch to what we actually need.
 		; And yes, we can't move this to an include file for some reason.
 
@@ -30,6 +30,7 @@ include th02/sprites/main_pat.inc
 	extern _getdate:proc
 	extern _memcpy:proc
 
+	.seq
 main_03 group main_03_TEXT, main_03__TEXT
 
 ; ===========================================================================
@@ -9301,7 +9302,7 @@ main_01_TEXT	ends
 
 ; ===========================================================================
 
-main_02_TEXT	segment	word public 'CODE' use16
+seg2	segment	word public 'CODE' use16
 	extern ZUN_ERROR:proc
 	extern _key_delay:proc
 	extern MPTN_LOAD:proc
@@ -9325,7 +9326,7 @@ main_02_TEXT	segment	word public 'CODE' use16
 	extern _snd_se_reset:proc
 	extern _snd_se_play:proc
 	extern _snd_se_update:proc
-main_02_TEXT	ends
+seg2	ends
 
 ; ===========================================================================
 

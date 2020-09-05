@@ -5532,8 +5532,8 @@ mainl_01_TEXT	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-mainl_02_TEXT	segment	word public 'CODE' use16
-		assume cs:mainl_02_TEXT
+seg2	segment	word public 'CODE' use16
+		assume cs:seg2
 		;org 2
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -5589,7 +5589,7 @@ include th03/hardware/input_wait.asm
 		db 0
 include th03/formats/cdg_put_noalpha.asm
 include th03/formats/hfliplut.asm
-mainl_02_TEXT	ends
+seg2	ends
 
 	.data
 

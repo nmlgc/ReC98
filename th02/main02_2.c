@@ -9,7 +9,7 @@
 #include "th02/mem.h"
 #include "th02/snd/snd.h"
 
-#pragma codeseg main_02_TEXT
+#pragma codeseg seg2
 #pragma option -3
 
 #define frame_delay_2 frame_delay

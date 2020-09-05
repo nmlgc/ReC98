@@ -5,4 +5,6 @@
 
 #include <master.h>
 
+#pragma codeseg seg2
+
 #include "th02/hardware/frmdely2.c"

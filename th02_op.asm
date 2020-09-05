@@ -124,16 +124,6 @@ _TEXT		ends
 op_01_TEXT	segment	byte public 'CODE' use16
 op_01_TEXT	ends
 
-; ===========================================================================
-
-op_02_TEXT	segment	word public 'CODE' use16
-op_02_TEXT	ends
-
-; ===========================================================================
-
-op_03_TEXT	segment	word public 'CODE' use16
-op_03_TEXT	ends
-
 	.data
 
 include libs/master.lib/bfnt_id[data].asm

@@ -3,7 +3,7 @@
  * SPRITE16 display calls
  */
 
-#pragma codeseg main_02_TEXT
+#pragma codeseg seg2
 
 extern "C" {
 #include <dos.h>

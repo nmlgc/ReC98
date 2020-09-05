@@ -14,7 +14,7 @@
 ; Application type:  Executable	16bit
 
 		.286 ; Force the .model directive to create 16-bit default segments...
-		.model large op_02_TEXT
+		.model large seg2
 		.386 ; ... then switch to what we actually need.
 		; And yes, we can't move this to an include file for some reason.
 
@@ -3893,8 +3893,8 @@ op_01_TEXT	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-op_02_TEXT	segment	word public 'CODE' use16
-		assume cs:op_02_TEXT
+seg2	segment	word public 'CODE' use16
+		assume cs:seg2
 		;org 2
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -3930,7 +3930,7 @@ include th04/bgimage.asm
 include th04/bgimage_put_rect.asm
 include th04/formats/cdg_load.asm
 	extern FRAME_DELAY_2:proc
-op_02_TEXT	ends
+seg2	ends
 
 	.data
 

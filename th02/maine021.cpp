@@ -3,7 +3,7 @@
  * 1st part of code segment #2 of TH02's MAINE.EXE
  */
 
-#pragma codeseg maine_02_TEXT
+#pragma codeseg seg2
 
 extern "C" {
 #include "th02/th02.h"

@@ -74,7 +74,7 @@ bin\th03\res_yume.com: th03\res_yume.cpp
 $**
 | masters.lib
 
-bin\th03\op.exe: bin\th03\op.obj th03\op_02.c
+bin\th03\op.exe: bin\th03\op.obj th03\seg2.c
 	$(CC) $(CFLAGS) -ml -DGAME=3 -nbin\th03\ -eOP.EXE @&&|
 $**
 |

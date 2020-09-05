@@ -7770,8 +7770,8 @@ maine_01_TEXT	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-maine_02_TEXT	segment	word public 'CODE' use16
-		assume cs:maine_02_TEXT
+seg2	segment	word public 'CODE' use16
+		assume cs:seg2
 		;org 0Ch
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -7804,7 +7804,7 @@ include th05/hardware/frame_delay.asm
 		db 0
 include th04/formats/cdg_load.asm
 include th04/hardware/egccopyr.asm
-maine_02_TEXT	ends
+seg2	ends
 
 	.data
 

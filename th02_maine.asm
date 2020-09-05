@@ -14,7 +14,7 @@
 ; Application type:  Executable	16bit
 
 		.286 ; Force the .model directive to create 16-bit default segments...
-		.model large maine_02_TEXT
+		.model large _TEXT
 		.386 ; ... then switch to what we actually need.
 		; And yes, we can't move this to an include file for some reason.
 
@@ -24,6 +24,7 @@ include th02/th02.inc
 	extern SCOPY@:proc
 	extern _execl:proc
 
+	.seq
 ; ===========================================================================
 
 ; Segment type:	Pure code
@@ -3023,7 +3024,7 @@ maine_01_TEXT	ends
 
 ; ===========================================================================
 
-maine_02_TEXT	segment	word public 'CODE' use16
+seg2	segment	word public 'CODE' use16
 	extern _graph_putsa_fx:proc
 	extern _key_delay:proc
 	extern _vram_planes_set:proc
@@ -3040,11 +3041,11 @@ maine_02_TEXT	segment	word public 'CODE' use16
 	extern _pi_slot_put:proc
 	extern _snd_kaja_interrupt:proc
 	extern _snd_delay_until_measure:proc
-maine_02_TEXT	ends
+seg2	ends
 
 ; ===========================================================================
 
-maine_03_TEXT	segment	byte public 'CODE' use16
+maine_03_TEXT	segment	word public 'CODE' use16
 	extern CFG_LOAD:proc
 maine_03_TEXT	ends
 

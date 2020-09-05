@@ -3485,8 +3485,8 @@ op_01_TEXT	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-op_02_TEXT	segment	word public 'CODE' use16
-		assume cs:op_02_TEXT
+seg2	segment	word public 'CODE' use16
+		assume cs:seg2
 		; org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -3527,7 +3527,7 @@ include th05/hardware/frame_delay.asm
 include th04/formats/cdg_load.asm
 include th04/hardware/egccopyr.asm
 		even
-op_02_TEXT	ends
+seg2	ends
 
 	.data
 

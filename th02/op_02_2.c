@@ -10,7 +10,7 @@
 #include "th02/formats/pi.h"
 #include "th02/snd/snd.h"
 
-#pragma codeseg op_02_TEXT
+#pragma codeseg seg2
 #pragma option -3
 
 const char pf_fn[] = PF_FN;

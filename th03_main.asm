@@ -26,6 +26,7 @@ include th03/sprite16.inc
 include libs/sprite16/sprite16.inc
 
 	extern _execl:proc
+	.seq
 
 ; ===========================================================================
 
@@ -8938,8 +8939,8 @@ main_01_TEXT	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-main_02_TEXT	segment	word public 'CODE' use16
-		assume cs:main_02_TEXT
+seg2	segment	word public 'CODE' use16
+		assume cs:seg2
 		;org 8
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -9280,7 +9281,7 @@ sub_F0EE	endp
 		left:word, screen_top:word, sprite_offset:word, func:word
 	SPRITE16_PUT_NOCLIP procdesc pascal far \
 		left:word, screen_top:word, sprite_offset:word
-main_02_TEXT	ends
+seg2	ends
 
 ; ===========================================================================
 

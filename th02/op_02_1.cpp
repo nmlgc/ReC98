@@ -8,7 +8,7 @@ extern "C" {
 #include "th02/initexit.h"
 #include "th02/formats/pi.h"
 
-#pragma codeseg op_02_TEXT
+#pragma codeseg seg2
 #pragma option -3
 
 resident_t *resident;

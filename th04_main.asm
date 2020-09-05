@@ -13166,8 +13166,8 @@ main_012_TEXT	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-main_02_TEXT	segment	word public 'CODE' use16
-		assume cs:main_02_TEXT
+seg2	segment	word public 'CODE' use16
+		assume cs:seg2
 		;org 0Dh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -13323,7 +13323,7 @@ include th04/formats/cdg_put_plane_roll.asm
 include th04/hardware/input_sense.asm
 include th04/snd/se.asm
 include th04/formats/cdg_load.asm
-main_02_TEXT	ends
+seg2	ends
 
 ; ===========================================================================
 
