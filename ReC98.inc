@@ -32,7 +32,6 @@ include libs/kaja/kaja.inc
 include pc98.inc
 include th01/hardware/egc.inc
 include th02/formats/pi_slots.inc
-include th03/formats/cdg.inc
 
 nopcall macro func
 if LDATA

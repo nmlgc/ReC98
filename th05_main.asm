@@ -1287,9 +1287,9 @@ loc_B84E:
 		call	cdg_load_single_noalpha pascal, 31, [off_20A80], 0
 		push	_Ems
 		pushd	0
-		push	_cdg_slots.sgm_colors + (size CDGSlot * 31)
+		push	_cdg_slots.seg_colors + (size cdg_t * 31)
 		push	0
-		mov	ax, _cdg_slots.bitplane_size + (size CDGSlot * 31)
+		mov	ax, _cdg_slots.CDG_plane_size + (size cdg_t * 31)
 		shl	ax, 2
 		movzx	eax, ax
 		push	eax
@@ -1323,9 +1323,9 @@ EmsLoad	proc near ; ZUN symbol [MAGNet2010]
 		jz	@@ret
 		push	_Ems
 		pushd	84D0h
-		push	_cdg_slots.sgm_colors + (size CDGSlot * 0)
+		push	_cdg_slots.seg_colors + (size cdg_t * 0)
 		push	0
-		mov	ax, _cdg_slots.bitplane_size + (size CDGSlot * 0)
+		mov	ax, _cdg_slots.CDG_plane_size + (size cdg_t * 0)
 		shl	ax, 2
 		movzx	eax, ax
 		push	eax
@@ -1370,7 +1370,7 @@ loc_B941:
 loc_B946:
 		mov	si, 2
 		mov	[bp+@@size], 186A0h
-		mov	di, _cdg_slots.bitplane_size + (size CDGSlot * 2)
+		mov	di, _cdg_slots.CDG_plane_size + (size cdg_t * 2)
 		jmp	short loc_B9B4
 ; ---------------------------------------------------------------------------
 
@@ -1379,7 +1379,7 @@ loc_B957:
 		pushd	[bp+@@size]
 		mov	bx, si
 		shl	bx, 4
-		push	_cdg_slots.sgm_alpha[bx]
+		push	_cdg_slots.seg_alpha[bx]
 		push	0
 		movzx	eax, di
 		push	eax
@@ -1390,7 +1390,7 @@ loc_B957:
 		pushd	[bp+@@size]
 		mov	bx, si
 		shl	bx, 4
-		push	_cdg_slots.sgm_colors[bx]
+		push	_cdg_slots.seg_colors[bx]
 		push	0
 		mov	ax, di
 		shl	ax, 2
@@ -1407,7 +1407,7 @@ loc_B957:
 loc_B9B4:
 		mov	bx, si
 		shl	bx, 4
-		cmp	_cdg_slots.sgm_alpha[bx], 0
+		cmp	_cdg_slots.seg_alpha[bx], 0
 		jnz	short loc_B957
 
 @@ret:
@@ -1439,7 +1439,7 @@ arg_0		= dword	ptr  4
 		call	cdg_load_all pascal, 8, [bp+arg_0]
 		mov	si, 8
 		mov	[bp+var_4], 30D40h
-		mov	di, _cdg_slots.bitplane_size + (size CDGSlot * 8)
+		mov	di, _cdg_slots.CDG_plane_size + (size cdg_t * 8)
 		jmp	short loc_BA54
 ; ---------------------------------------------------------------------------
 
@@ -1448,7 +1448,7 @@ loc_B9F7:
 		pushd	[bp+var_4]
 		mov	bx, si
 		shl	bx, 4
-		push	_cdg_slots.sgm_alpha[bx]
+		push	_cdg_slots.seg_alpha[bx]
 		push	0
 		movzx	eax, di
 		push	eax
@@ -1459,7 +1459,7 @@ loc_B9F7:
 		pushd	[bp+var_4]
 		mov	bx, si
 		shl	bx, 4
-		push	_cdg_slots.sgm_colors[bx]
+		push	_cdg_slots.seg_colors[bx]
 		push	0
 		mov	ax, di
 		shl	ax, 2
@@ -1476,7 +1476,7 @@ loc_B9F7:
 loc_BA54:
 		mov	bx, si
 		shl	bx, 4
-		cmp	_cdg_slots.sgm_alpha[bx], 0
+		cmp	_cdg_slots.seg_alpha[bx], 0
 		jnz	short loc_B9F7
 
 loc_BA60:
@@ -1496,16 +1496,16 @@ sub_BA66	proc near
 		mov	bp, sp
 		cmp	_Ems, 0
 		jz	short loc_BA9C
-		mov	ax, _cdg_slots.bitplane_size + (size CDGSlot * 31)
+		mov	ax, _cdg_slots.CDG_plane_size + (size cdg_t * 31)
 		shl	ax, 2
 		push	ax
 		call	hmem_allocbyte
-		mov	_cdg_slots.sgm_colors + (size CDGSlot * 31), ax
+		mov	_cdg_slots.seg_colors + (size cdg_t * 31), ax
 		push	_Ems
 		pushd	0
 		push	ax
 		push	0
-		mov	ax, _cdg_slots.bitplane_size + (size CDGSlot * 31)
+		mov	ax, _cdg_slots.CDG_plane_size + (size cdg_t * 31)
 		shl	ax, 2
 		movzx	eax, ax
 		push	eax
@@ -6102,7 +6102,7 @@ loc_F39C:
 		mov	[bp+var_4], 30D40h
 
 loc_F3A4:
-		mov	si, _cdg_slots.bitplane_size + (size CDGSlot * 2)
+		mov	si, _cdg_slots.CDG_plane_size + (size cdg_t * 2)
 		mov	ax, [bp+arg_0]
 		imul	si
 		imul	ax, 5
@@ -6110,7 +6110,7 @@ loc_F3A4:
 		add	[bp+var_4], eax
 		push	si
 		call	hmem_allocbyte
-		mov	_cdg_slots.sgm_alpha + (size CDGSlot * 2), ax
+		mov	_cdg_slots.seg_alpha + (size cdg_t * 2), ax
 		push	_Ems
 		pushd	[bp+var_4]
 		push	ax
@@ -6125,7 +6125,7 @@ loc_F3A4:
 		mov	si, ax
 		push	si
 		call	hmem_allocbyte
-		mov	_cdg_slots.sgm_colors + (size CDGSlot * 2), ax
+		mov	_cdg_slots.seg_colors + (size cdg_t * 2), ax
 		push	_Ems
 		pushd	[bp+var_4]
 		push	ax
@@ -6183,12 +6183,12 @@ sub_F463	proc near
 		push	si
 		cmp	_Ems, 0
 		jz	short loc_F499
-		mov	ax, _cdg_slots.bitplane_size + (size CDGSlot * 0)
+		mov	ax, _cdg_slots.CDG_plane_size + (size cdg_t * 0)
 		shl	ax, 2
 		mov	si, ax
 		push	ax
 		call	hmem_allocbyte
-		mov	_cdg_slots.sgm_colors + (size CDGSlot * 0), ax
+		mov	_cdg_slots.seg_colors + (size cdg_t * 0), ax
 		push	_Ems
 		pushd	84D0h
 		push	ax

@@ -18,8 +18,8 @@ cdg_put_nocolors	proc far
 	add	si, offset _cdg_slots
 	mov	di, [bp+@@left]
 	sar	di, 3
-	add	di, [si+CDGSlot.vram_byte_at_bottom_left]
-	mov	ax, [si+CDGSlot.width_divided_by_32]
+	add	di, [si+cdg_t.offset_at_bottom_left]
+	mov	ax, [si+cdg_t.vram_dword_w]
 if GAME eq 4
 	mov	word ptr cs:@@width+1, ax
 	jmp	short $+2
@@ -42,7 +42,7 @@ endif
 	add	ax, 0A800h
 	mov	es, ax
 	push	ds
-	mov	ds, [si+CDGSlot.sgm_alpha]
+	mov	ds, [si+cdg_t.seg_alpha]
 	xor	si, si
 if GAME eq 4
 	cld

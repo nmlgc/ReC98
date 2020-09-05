@@ -6597,19 +6597,19 @@ arg_0     	= word ptr  4
 		shl	ax, 4
 		add	ax, offset _cdg_slots
 		mov	si, ax
-		mov	ax, [si+CDGSlot.pixel_width]
+		mov	ax, [si+cdg_t.pixel_w]
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		sub	[bp+@@x_center], ax
-		mov	ax, [si+CDGSlot.pixel_height]
+		mov	ax, [si+cdg_t.pixel_h]
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		sub	di, ax
 		cmp	word_11848, 1
 		jg	loc_DDBC
-		mov	ax, [si+CDGSlot.pixel_width]
+		mov	ax, [si+cdg_t.pixel_w]
 		mov	bx, 10h
 		cwd
 		idiv	bx
@@ -6692,8 +6692,8 @@ loc_DDBC:
 loc_DDD8:
 		push	[bp+@@x_center]
 		push	di
-		push	[si+CDGSlot.pixel_width]
-		push	[si+CDGSlot.pixel_height]
+		push	[si+cdg_t.pixel_w]
+		push	[si+cdg_t.pixel_h]
 		push	word_151C4
 		push	1
 		call	sub_DBE6
@@ -6725,8 +6725,8 @@ loc_DE01:
 loc_DE2C:
 		push	[bp+@@x_center]
 		push	di
-		push	[si+CDGSlot.pixel_width]
-		push	[si+CDGSlot.pixel_height]
+		push	[si+cdg_t.pixel_w]
+		push	[si+cdg_t.pixel_h]
 		push	word_151C4
 		push	0FFFFh
 		call	sub_DBE6
@@ -6739,8 +6739,8 @@ loc_DE2C:
 loc_DE49:
 		push	[bp+@@x_center]
 		push	di
-		push	[si+CDGSlot.pixel_width]
-		push	[si+CDGSlot.pixel_height]
+		push	[si+cdg_t.pixel_w]
+		push	[si+cdg_t.pixel_h]
 		push	80FFFFh
 		call	sub_DBE6
 		mov	word_11848, 0
@@ -6781,19 +6781,19 @@ arg_0     	= word ptr  4
 		shl	ax, 4
 		add	ax, offset _cdg_slots
 		mov	si, ax
-		mov	ax, [si+CDGSlot.pixel_width]
+		mov	ax, [si+cdg_t.pixel_w]
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		sub	[bp+@@x_center], ax
-		mov	ax, [si+CDGSlot.pixel_height]
+		mov	ax, [si+cdg_t.pixel_h]
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		sub	di, ax
 		cmp	word_1184A, 1
 		jg	loc_DF34
-		mov	ax, [si+CDGSlot.pixel_width]
+		mov	ax, [si+cdg_t.pixel_w]
 		mov	bx, 10h
 		cwd
 		idiv	bx
@@ -6848,14 +6848,14 @@ loc_DF16:
 		add	[bp+var_4], 10h
 
 loc_DF1A:
-		mov	ax, [si+CDGSlot.pixel_width]
+		mov	ax, [si+cdg_t.pixel_w]
 		cmp	ax, [bp+var_4]
 		jge	short loc_DED9
 		add	[bp+var_2], 10h
 		add	di, 10h
 
 loc_DF29:
-		mov	ax, [si+CDGSlot.pixel_height]
+		mov	ax, [si+cdg_t.pixel_h]
 		cmp	ax, [bp+var_2]
 		jge	short loc_DED2
 		jmp	loc_DFE4
@@ -6876,8 +6876,8 @@ loc_DF34:
 loc_DF50:
 		push	[bp+@@x_center]
 		push	di
-		push	[si+CDGSlot.pixel_width]
-		push	[si+CDGSlot.pixel_height]
+		push	[si+cdg_t.pixel_w]
+		push	[si+cdg_t.pixel_h]
 		push	word_151C8
 		push	1
 		call	sub_DBE6
@@ -6909,8 +6909,8 @@ loc_DF79:
 loc_DFA4:
 		push	[bp+@@x_center]
 		push	di
-		push	[si+CDGSlot.pixel_width]
-		push	[si+CDGSlot.pixel_height]
+		push	[si+cdg_t.pixel_w]
+		push	[si+cdg_t.pixel_h]
 		push	word_151C8
 		push	0FFFFh
 		call	sub_DBE6
@@ -6923,8 +6923,8 @@ loc_DFA4:
 loc_DFC1:
 		push	[bp+@@x_center]
 		push	di
-		push	[si+CDGSlot.pixel_width]
-		push	[si+CDGSlot.pixel_height]
+		push	[si+cdg_t.pixel_w]
+		push	[si+cdg_t.pixel_h]
 		push	80FFFFh
 		call	sub_DBE6
 		mov	word_1184A, 0

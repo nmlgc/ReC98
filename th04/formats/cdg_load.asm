@@ -28,14 +28,14 @@ cdg_load_single	proc far
 	call	file_ropen
 	push	ds
 	push	di
-	push	size CDGSlot
+	push	size cdg_t
 	call	file_read
-	mov	ax, [di+CDGSlot.bitplane_size]
+	mov	ax, [di+cdg_t.CDG_plane_size]
 	mov	dx, ax
-	cmp	[di+CDGSlot.alpha], 0
+	cmp	[di+cdg_t.plane_layout], CDG_COLORS
 	jz	short @@read
 	shl	ax, 2
-	cmp	[di+CDGSlot.alpha], 2
+	cmp	[di+cdg_t.plane_layout], CDG_ALPHA
 	jz	short @@read
 	add	ax, dx
 
@@ -58,41 +58,41 @@ cdg_load_single	endp
 ; Reads a single CDG image from the master.lib file, which previously has been
 ; positioned at the beginning of the image data, into the slot in DI.
 cdg_read_single	proc near
-	mov	al, [di+CDGSlot.alpha]
-	or	al, al
+	mov	al, [di+cdg_t.plane_layout]
+	or	al, al	; AL == CDG_COLORS?
 	jz	short @@colors
-	cmp	al, 2
+	cmp	al, CDG_ALPHA
 	jz	short @@alpha
 	cmp	cdg_noalpha, 0
 	jnz	short @@skip_alpha
 
 @@alpha:
-	push	[di+CDGSlot.bitplane_size]
+	push	[di+cdg_t.CDG_plane_size]
 	call	hmem_allocbyte
-	mov	[di+CDGSlot.sgm_alpha], ax
+	mov	[di+cdg_t.seg_alpha], ax
 	push	ax
 	push	0
-	push	[di+CDGSlot.bitplane_size]
+	push	[di+cdg_t.CDG_plane_size]
 	call	file_read
 	jmp	short @@colors
 
 @@skip_alpha:
-	movzx	eax, [di+CDGSlot.bitplane_size]
+	movzx	eax, [di+cdg_t.CDG_plane_size]
 	push	eax
 	push	1
 	call	file_seek
 
 @@colors:
-	cmp	[di+CDGSlot.alpha], 2
+	cmp	[di+cdg_t.plane_layout], CDG_ALPHA
 	jz	short @@ret
-	mov	ax, [di+CDGSlot.bitplane_size]
+	mov	ax, [di+cdg_t.CDG_plane_size]
 	shl	ax, 2
 	push	ax
 	call	hmem_allocbyte
-	mov	[di+CDGSlot.sgm_colors], ax
+	mov	[di+cdg_t.seg_colors], ax
 	push	ax
 	push	0
-	mov	ax, [di+CDGSlot.bitplane_size]
+	mov	ax, [di+cdg_t.CDG_plane_size]
 	shl	ax, 2
 	push	ax
 	call	file_read
@@ -130,11 +130,11 @@ cdg_load_all	proc far
 	add	di, offset _cdg_slots
 	push	ds
 	push	di
-	push	size CDGSlot
+	push	size cdg_t
 	call	file_read
 	mov	si, di
 	mov	bp, [bp+@@slot_first]
-	mov	al, CDGSlot.num_images[si]
+	mov	al, cdg_t.image_count[si]
 	mov	cdg_images_to_load, al
 	push	ds
 	pop	es
@@ -145,11 +145,11 @@ cdg_load_all	proc far
 	call	cdg_free
 	mov	cx, 3
 	rep movsd
-	sub	si, CDGSlot.sgm_alpha
-	sub	di, CDGSlot.sgm_alpha
+	sub	si, cdg_t.seg_alpha
+	sub	di, cdg_t.seg_alpha
 	call	cdg_read_single
 	inc	bp
-	add	di, size CDGSlot
+	add	di, size cdg_t
 	dec	cdg_images_to_load
 	jnz	short @@loop
 	call	file_close
@@ -170,7 +170,7 @@ cdg_free	proc far
 	push	di
 	mov	di, ss:[bx+4]
 	shl	di, 4
-	add	di, offset _cdg_slots.sgm_alpha
+	add	di, offset _cdg_slots.seg_alpha
 	cmp	word ptr [di], 0
 	jz	short @@colors
 	push	word ptr [di]

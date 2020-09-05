@@ -21,7 +21,7 @@ cdg_put_plane_roll	proc far
 	add	si, offset _cdg_slots
 	mov	di, @@left
 	sar	di, 3
-	mov	@@h, [si+CDGSlot.pixel_height]
+	mov	@@h, [si+cdg_t.pixel_h]
 	mov	ax, @@top
 	add	ax, @@h
 	dec	ax
@@ -29,15 +29,15 @@ cdg_put_plane_roll	proc far
 	add	di, ax
 	shr	ax, 2
 	add	di, ax
-	mov	ax, [si+CDGSlot.width_divided_by_32]
+	mov	ax, [si+cdg_t.vram_dword_w]
 	mov	word ptr cs:@@width_dwords, ax
 	jmp	short $+2
 	shl	ax, 2
 	add	ax, ROW_SIZE
 	mov	@@stride_backwards, ax
 	push	ds
-	mov	ax, [si+CDGSlot.sgm_colors]
-	mov	si, [si+CDGSlot.bitplane_size]
+	mov	ax, [si+cdg_t.seg_colors]
+	mov	si, [si+cdg_t.CDG_plane_size]
 	mov	ds, ax
 	mov	cx, @@plane_src
 	inc	cx

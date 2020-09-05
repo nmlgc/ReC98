@@ -9,6 +9,7 @@ include th02/score.inc
 ; --------
 include th04/formats/bb.inc
 include th04/formats/cfg.inc
+include th03/formats/cdg.inc
 include th04/formats/map.inc
 include th04/formats/scoredat.inc
 ; --------

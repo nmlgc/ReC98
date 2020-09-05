@@ -18,8 +18,8 @@ proc_defconv cdg_put_hflip
 	add	si, offset _cdg_slots
 	mov	ax, [bp+@@left]
 	sar	ax, 3
-	add	ax, [si+CDGSlot.vram_byte_at_bottom_left]
-	mov	bx, [si+CDGSlot.width_divided_by_32]
+	add	ax, [si+cdg_t.offset_at_bottom_left]
+	mov	bx, [si+cdg_t.vram_dword_w]
 	shl	bx, 2
 	add	ax, bx
 	dec	ax
@@ -41,7 +41,7 @@ proc_defconv cdg_put_hflip
 	mov	es, ax
 	assume es:nothing
 	mov	bx, offset hflip_lut
-	mov	fs, [si+CDGSlot.sgm_alpha]
+	mov	fs, [si+cdg_t.seg_alpha]
 	xor	si, si
 
 @@stride_alpha:
@@ -68,7 +68,7 @@ proc_defconv cdg_put_hflip
 	mov	si, [bp+@@slot]
 	shl	si, 4
 	add	si, offset _cdg_slots
-	mov	fs, [si+CDGSlot.sgm_colors]
+	mov	fs, [si+cdg_t.seg_colors]
 	xor	si, si
 
 @@stride_colors:

@@ -1117,9 +1117,9 @@ loc_B4AF:
 		call	cdg_load_single_noalpha pascal, 31, [eyename], 0
 		push	_Ems
 		pushd	0
-		push	_cdg_slots.sgm_colors + (size CDGSlot * 31)
+		push	_cdg_slots.seg_colors + (size cdg_t * 31)
 		push	0
-		mov	ax, _cdg_slots.bitplane_size + (size CDGSlot * 31)
+		mov	ax, _cdg_slots.CDG_plane_size + (size cdg_t * 31)
 		shl	ax, 2
 		movzx	eax, ax
 		push	eax
@@ -1152,9 +1152,9 @@ EmsLoad	proc near ; ZUN symbol [MAGNet2010]
 		jz	@@ret
 		push	_Ems
 		pushd	34000
-		push	_cdg_slots.sgm_colors + (size CDGSlot * 0)
+		push	_cdg_slots.seg_colors + (size cdg_t * 0)
 		push	0
-		mov	ax, _cdg_slots.bitplane_size + (size CDGSlot * 0)
+		mov	ax, _cdg_slots.CDG_plane_size + (size cdg_t * 0)
 		shl	ax, 2
 		movzx	eax, ax
 		push	eax
@@ -1176,7 +1176,7 @@ loc_B593:
 		call	cdg_load_all
 		mov	si, 2
 		mov	[bp+@@size], 94000
-		mov	di, _cdg_slots.bitplane_size + (size CDGSlot * 2)
+		mov	di, _cdg_slots.CDG_plane_size + (size cdg_t * 2)
 		jmp	short loc_B606
 ; ---------------------------------------------------------------------------
 
@@ -1185,7 +1185,7 @@ loc_B5A9:
 		pushd	[bp+@@size]
 		mov	bx, si
 		shl	bx, 4
-		push	_cdg_slots.sgm_alpha[bx]
+		push	_cdg_slots.seg_alpha[bx]
 		push	0
 		movzx	eax, di
 		push	eax
@@ -1196,7 +1196,7 @@ loc_B5A9:
 		pushd	[bp+@@size]
 		mov	bx, si
 		shl	bx, 4
-		push	_cdg_slots.sgm_colors[bx]
+		push	_cdg_slots.seg_colors[bx]
 		push	0
 		mov	ax, di
 		shl	ax, 2
@@ -1213,7 +1213,7 @@ loc_B5A9:
 loc_B606:
 		mov	bx, si
 		shl	bx, 4
-		cmp	_cdg_slots.sgm_alpha[bx], 0
+		cmp	_cdg_slots.seg_alpha[bx], 0
 		jnz	short loc_B5A9
 
 @@ret:
@@ -1233,16 +1233,16 @@ sub_B616	proc near
 		mov	bp, sp
 		cmp	_Ems, 0
 		jz	short loc_B64C
-		mov	ax, _cdg_slots.bitplane_size + (size CDGSlot * 31)
+		mov	ax, _cdg_slots.CDG_plane_size + (size cdg_t * 31)
 		shl	ax, 2
 		push	ax
 		call	hmem_allocbyte
-		mov	_cdg_slots.sgm_colors + (size CDGSlot * 31), ax
+		mov	_cdg_slots.seg_colors + (size cdg_t * 31), ax
 		push	_Ems
 		pushd	0
 		push	ax
 		push	0
-		mov	ax, _cdg_slots.bitplane_size + (size CDGSlot * 31)
+		mov	ax, _cdg_slots.CDG_plane_size + (size cdg_t * 31)
 		shl	ax, 2
 		movzx	eax, ax
 		push	eax
@@ -3673,7 +3673,7 @@ var_4		= dword	ptr -4
 		cmp	_Ems, 0
 		jz	loc_D7D0
 		mov	[bp+var_4], 16F30h
-		mov	si, _cdg_slots.bitplane_size + (size CDGSlot * 2)
+		mov	si, _cdg_slots.CDG_plane_size + (size cdg_t * 2)
 		mov	di, 2
 		jmp	short loc_D7C9
 ; ---------------------------------------------------------------------------
@@ -3683,12 +3683,12 @@ loc_D750:
 		call	hmem_allocbyte
 		mov	bx, di
 		shl	bx, 4
-		mov	_cdg_slots.sgm_alpha[bx], ax
+		mov	_cdg_slots.seg_alpha[bx], ax
 		push	_Ems
 		pushd	[bp+var_4]
 		mov	bx, di
 		shl	bx, 4
-		push	_cdg_slots.sgm_alpha[bx]
+		push	_cdg_slots.seg_alpha[bx]
 		push	0
 		movzx	eax, si
 		push	eax
@@ -3702,12 +3702,12 @@ loc_D750:
 		call	hmem_allocbyte
 		mov	bx, di
 		shl	bx, 4
-		mov	_cdg_slots.sgm_colors[bx], ax
+		mov	_cdg_slots.seg_colors[bx], ax
 		push	_Ems
 		pushd	[bp+var_4]
 		mov	bx, di
 		shl	bx, 4
-		push	_cdg_slots.sgm_colors[bx]
+		push	_cdg_slots.seg_colors[bx]
 		push	0
 		movzx	eax, si
 		push	eax
@@ -3804,12 +3804,12 @@ loc_D835:
 loc_D83A:
 		cmp	_Ems, 0
 		jz	short loc_D86C
-		mov	ax, _cdg_slots.bitplane_size + (size CDGSlot * 0)
+		mov	ax, _cdg_slots.CDG_plane_size + (size cdg_t * 0)
 		shl	ax, 2
 		mov	di, ax
 		push	ax
 		call	hmem_allocbyte
-		mov	_cdg_slots.sgm_colors + (size CDGSlot * 0), ax
+		mov	_cdg_slots.seg_colors + (size cdg_t * 0), ax
 		push	_Ems
 		pushd	84D0h
 		push	ax

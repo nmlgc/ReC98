@@ -26,8 +26,8 @@ cdg_put_plane	proc far
 	mov	di, cx
 	sar	di, 4
 	shl	di, 1
-	add	di, [si+CDGSlot.vram_byte_at_bottom_left]
-	mov	ax, [si+CDGSlot.width_divided_by_32]
+	add	di, [si+cdg_t.offset_at_bottom_left]
+	mov	ax, [si+cdg_t.vram_dword_w]
 	shl	ax, 1
 	mov	byte ptr cs:@@width_words+1, al
 	and	cx, 15
@@ -47,8 +47,8 @@ cdg_put_plane	proc far
 	add	ax, 0A800h
 	mov	es, ax
 	push	ds
-	mov	ax, [si+CDGSlot.sgm_colors]
-	mov	si, [si+CDGSlot.bitplane_size]
+	mov	ax, [si+cdg_t.seg_colors]
+	mov	si, [si+cdg_t.CDG_plane_size]
 	mov	ds, ax
 	mov	ax, [bp+@@plane]
 	mov	bp, dx

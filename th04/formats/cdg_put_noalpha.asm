@@ -31,13 +31,13 @@ cdg_put_noalpha	proc far
 	add	si, offset _cdg_slots
 	mov	bx, [bp+@@left]
 	sar	bx, 3
-	add	bx, [si+CDGSlot.vram_byte_at_bottom_left]
-	mov	ax, [si+CDGSlot.width_divided_by_32]
+	add	bx, [si+cdg_t.offset_at_bottom_left]
+	mov	ax, [si+cdg_t.vram_dword_w]
 	mov	bp, ax
 	shl	ax, 2
 	add	ax, (640 / 8)
 	mov	dx, ax
-	mov	ax, [si+CDGSlot.sgm_colors]
+	mov	ax, [si+cdg_t.seg_colors]
 	mov	ds, ax
 	xor	si, si
 	mov	al, 4

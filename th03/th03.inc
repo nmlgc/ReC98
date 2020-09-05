@@ -9,6 +9,7 @@ include th03/math/randring.inc
 include th03/hardware/input.inc
 include th03/chars.inc
 include th03/formats/cfg.inc
+include th03/formats/cdg.inc
 include th02/score.inc
 
 KM_KEY_KEY = 0

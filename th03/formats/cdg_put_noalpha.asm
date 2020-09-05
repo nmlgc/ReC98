@@ -18,9 +18,9 @@ cdg_put_noalpha	proc far
 	add	si, offset _cdg_slots
 	mov	ax, [bp+@@left]
 	sar	ax, 3
-	add	ax, [si+CDGSlot.vram_byte_at_bottom_left]
+	add	ax, [si+cdg_t.offset_at_bottom_left]
 	mov	di, ax
-	mov	ax, [si+CDGSlot.width_divided_by_32]
+	mov	ax, [si+cdg_t.vram_dword_w]
 	mov	word ptr cs:@@width+1,	ax
 	jmp	short $+2
 	shl	ax, 2
@@ -33,7 +33,7 @@ cdg_put_noalpha	proc far
 	add	ax, 0A800h
 	mov	es, ax
 	push	ds
-	mov	ax, [si+CDGSlot.sgm_colors]
+	mov	ax, [si+cdg_t.seg_colors]
 	mov	ds, ax
 	xor	si, si
 	mov	bx, di

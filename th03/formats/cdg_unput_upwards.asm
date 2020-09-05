@@ -18,11 +18,11 @@ cdg_unput_for_upwards_motion_e	proc near
 	push	di
 	mov	bx, [bp+@@slot]
 	shl	bx, 4
-	mov	ax, _cdg_slots.pixel_width[bx]
+	mov	ax, _cdg_slots.pixel_w[bx]
 	mov	[bp+@@w], ax
 	mov	bx, [bp+@@slot]
 	shl	bx, 4
-	mov	ax, _cdg_slots.pixel_height[bx]
+	mov	ax, _cdg_slots.pixel_h[bx]
 	mov	[bp+@@h], ax
 	mov	ax, [bp+@@w]
 	cwd

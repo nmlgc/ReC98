@@ -26,9 +26,9 @@ cdg_load_single_forcealpha	proc far
 	call	file_ropen
 	push	ds
 	push	si
-	push	size CDGSlot
+	push	size cdg_t
 	call	file_read
-	mov	ax, [si+CDGSlot.bitplane_size]
+	mov	ax, [si+cdg_t.CDG_plane_size]
 	imul	ax, 5
 	movzx	eax, ax
 	mov	[bp+@@image_size], eax
@@ -37,21 +37,21 @@ cdg_load_single_forcealpha	proc far
 	push	eax
 	push	1
 	call	file_seek
-	push	[si+CDGSlot.bitplane_size]
+	push	[si+cdg_t.CDG_plane_size]
 	call	hmem_allocbyte
-	mov	[si+CDGSlot.sgm_alpha], ax
-	push	[si+CDGSlot.sgm_alpha]
+	mov	[si+cdg_t.seg_alpha], ax
+	push	[si+cdg_t.seg_alpha]
 	push	0
-	push	[si+CDGSlot.bitplane_size]
+	push	[si+cdg_t.CDG_plane_size]
 	call	file_read
-	mov	ax, [si+CDGSlot.bitplane_size]
+	mov	ax, [si+cdg_t.CDG_plane_size]
 	shl	ax, 2
 	push	ax
 	call	hmem_allocbyte
-	mov	[si+CDGSlot.sgm_colors], ax
-	push	[si+CDGSlot.sgm_colors]
+	mov	[si+cdg_t.seg_colors], ax
+	push	[si+cdg_t.seg_colors]
 	push	0
-	mov	ax, [si+CDGSlot.bitplane_size]
+	mov	ax, [si+cdg_t.CDG_plane_size]
 	shl	ax, 2
 	push	ax
 	call	file_read
@@ -88,9 +88,9 @@ cdg_load_single_noalpha	proc far
 	call	file_ropen
 	push	ds
 	push	si
-	push	size CDGSlot
+	push	size cdg_t
 	call	file_read
-	mov	ax, [si+CDGSlot.bitplane_size]
+	mov	ax, [si+cdg_t.CDG_plane_size]
 	imul	ax, 5
 	movzx	eax, ax
 	mov	[bp+@@image_size], eax
@@ -99,19 +99,19 @@ cdg_load_single_noalpha	proc far
 	push	eax
 	push	1
 	call	file_seek
-	movzx	eax, [si+CDGSlot.bitplane_size]
+	movzx	eax, [si+cdg_t.CDG_plane_size]
 	push	eax
 	push	1
 	call	file_seek
-	mov	[si+CDGSlot.sgm_alpha], 0
-	mov	ax, [si+CDGSlot.bitplane_size]
+	mov	[si+cdg_t.seg_alpha], 0
+	mov	ax, [si+cdg_t.CDG_plane_size]
 	shl	ax, 2
 	push	ax
 	call	hmem_allocbyte
-	mov	[si+CDGSlot.sgm_colors], ax
-	push	[si+CDGSlot.sgm_colors]
+	mov	[si+cdg_t.seg_colors], ax
+	push	[si+cdg_t.seg_colors]
 	push	0
-	mov	ax, [si+CDGSlot.bitplane_size]
+	mov	ax, [si+cdg_t.CDG_plane_size]
 	shl	ax, 2
 	push	ax
 	call	file_read
@@ -146,7 +146,7 @@ cdg_load_all	proc far
 	mov	si, ax
 	push	ds
 	push	ax
-	push	size CDGSlot
+	push	size cdg_t
 	call	file_read
 	mov	di, si
 	mov	[bp+@@i], 1
@@ -160,7 +160,7 @@ cdg_load_all	proc far
 	inc	[bp+@@i]
 
 @@free_loop:
-	mov	al, [di+CDGSlot.num_images]
+	mov	al, [di+cdg_t.image_count]
 	mov	ah, 0
 	cmp	ax, [bp+@@i]
 	jg	short @@free
@@ -168,54 +168,54 @@ cdg_load_all	proc far
 	jmp	short @@load_loop
 
 @@copy_header:
-	mov	ax, [di+CDGSlot.bitplane_size]
-	mov	[si+CDGSlot.bitplane_size], ax
-	mov	ax, [di+CDGSlot.pixel_width]
-	mov	[si+CDGSlot.pixel_width], ax
-	mov	ax, [di+CDGSlot.pixel_height]
-	mov	[si+CDGSlot.pixel_height], ax
-	mov	ax, [di+CDGSlot.vram_byte_at_bottom_left]
-	mov	[si+CDGSlot.vram_byte_at_bottom_left], ax
-	mov	ax, [di+CDGSlot.width_divided_by_32]
-	mov	[si+CDGSlot.width_divided_by_32], ax
-	mov	al, [di+CDGSlot.num_images]
-	mov	[si+CDGSlot.num_images], al
-	mov	[si+CDGSlot.alpha], 0
+	mov	ax, [di+cdg_t.CDG_plane_size]
+	mov	[si+cdg_t.CDG_plane_size], ax
+	mov	ax, [di+cdg_t.pixel_w]
+	mov	[si+cdg_t.pixel_w], ax
+	mov	ax, [di+cdg_t.pixel_h]
+	mov	[si+cdg_t.pixel_h], ax
+	mov	ax, [di+cdg_t.offset_at_bottom_left]
+	mov	[si+cdg_t.offset_at_bottom_left], ax
+	mov	ax, [di+cdg_t.vram_dword_w]
+	mov	[si+cdg_t.vram_dword_w], ax
+	mov	al, [di+cdg_t.image_count]
+	mov	[si+cdg_t.image_count], al
+	mov	[si+cdg_t.plane_layout], CDG_COLORS_AND_ALPHA
 	cmp	cdg_noalpha, 0
 	jnz	short @@noalpha
-	push	[si+CDGSlot.bitplane_size]
+	push	[si+cdg_t.CDG_plane_size]
 	call	hmem_allocbyte
-	mov	[si+CDGSlot.sgm_alpha], ax
-	push	[si+CDGSlot.sgm_alpha]
+	mov	[si+cdg_t.seg_alpha], ax
+	push	[si+cdg_t.seg_alpha]
 	push	0
-	push	[si+CDGSlot.bitplane_size]
+	push	[si+cdg_t.CDG_plane_size]
 	call	file_read
 	jmp	short @@alpha
 
 @@noalpha:
-	mov	[si+CDGSlot.sgm_alpha], 0
-	movzx	eax, [si+CDGSlot.bitplane_size]
+	mov	[si+cdg_t.seg_alpha], 0
+	movzx	eax, [si+cdg_t.CDG_plane_size]
 	push	eax
 	push	1
 	call	file_seek
 
 @@alpha:
-	mov	ax, [si+CDGSlot.bitplane_size]
+	mov	ax, [si+cdg_t.CDG_plane_size]
 	shl	ax, 2
 	push	ax
 	call	hmem_allocbyte
-	mov	[si+CDGSlot.sgm_colors], ax
-	push	[si+CDGSlot.sgm_colors]
+	mov	[si+cdg_t.seg_colors], ax
+	push	[si+cdg_t.seg_colors]
 	push	0
-	mov	ax, [si+CDGSlot.bitplane_size]
+	mov	ax, [si+cdg_t.CDG_plane_size]
 	shl	ax, 2
 	push	ax
 	call	file_read
 	inc	[bp+@@i]
-	add	si, size CDGSlot
+	add	si, size cdg_t
 
 @@load_loop:
-	mov	al, [di+CDGSlot.num_images]
+	mov	al, [di+cdg_t.image_count]
 	mov	ah, 0
 	cmp	ax, [bp+@@i]
 	jg	@@copy_header

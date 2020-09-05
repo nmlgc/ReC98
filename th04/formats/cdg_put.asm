@@ -27,8 +27,8 @@ cdg_put	proc far
 	shl	si, 4
 	add	si, offset _cdg_slots
 if GAME eq 4
-	mov	ax, [si+CDGSlot.sgm_colors]
-	mov	word ptr cs:@@sgm_colors+1, ax
+	mov	ax, [si+cdg_t.seg_colors]
+	mov	word ptr cs:@@seg_colors+1, ax
 	jmp	short $+2
 	mov	ax, [bp+@@y]
 	mov	bx, ax
@@ -51,20 +51,20 @@ endif
 	push	ax
 	mov	ax, [bp+@@x]
 	shr	ax, 3
-	add	ax, [si+CDGSlot.vram_byte_at_bottom_left]
+	add	ax, [si+cdg_t.offset_at_bottom_left]
 	mov	di, ax
 	mov	bx, ax
-	mov	ax, [si+CDGSlot.width_divided_by_32]
+	mov	ax, [si+cdg_t.vram_dword_w]
 	mov	bp, ax
 	shl	ax, 2
 	add	ax, (640 / 8)
 	mov	dx, ax
 if GAME eq 4
-	mov	ax, [si+CDGSlot.sgm_alpha]
+	mov	ax, [si+cdg_t.seg_alpha]
 	mov	ds, ax
 else
-	mov	ax, [si+CDGSlot.sgm_colors]
-	mov	cx, [si+CDGSlot.sgm_alpha]
+	mov	ax, [si+cdg_t.seg_colors]
+	mov	cx, [si+cdg_t.seg_alpha]
 	mov	ds, cx
 endif
 	xor	si, si
@@ -87,7 +87,7 @@ if GAME eq 5
 endif
 
 if GAME eq 4
-@@sgm_colors:
+@@seg_colors:
 	mov	ax, 1234h
 	mov	ds, ax
 	assume ds:nothing

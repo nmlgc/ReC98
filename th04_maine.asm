@@ -2202,12 +2202,12 @@ loc_B2AF:
 		mov	ah, 0
 		shl	ax, 4
 		mov	bx, ax
-		push	_cdg_slots.pixel_width[bx]
+		push	_cdg_slots.pixel_w[bx]
 		mov	al, byte_124C6
 		mov	ah, 0
 		shl	ax, 4
 		mov	bx, ax
-		push	_cdg_slots.pixel_height[bx]
+		push	_cdg_slots.pixel_h[bx]
 		lea	ax, [si+1]
 		push	ax
 		call	sub_B25B
@@ -2271,12 +2271,12 @@ loc_B339:
 		mov	ah, 0
 		shl	ax, 4
 		mov	bx, ax
-		push	_cdg_slots.pixel_width[bx]
+		push	_cdg_slots.pixel_w[bx]
 		mov	al, byte_124C6
 		mov	ah, 0
 		shl	ax, 4
 		mov	bx, ax
-		push	_cdg_slots.pixel_height[bx]
+		push	_cdg_slots.pixel_h[bx]
 		push	si
 		call	sub_B25B
 		inc	si
@@ -2340,14 +2340,14 @@ loc_B3C7:
 		out	dx, al
 		push	di
 		push	[bp+arg_4]
-		push	_cdg_slots.pixel_width + (size CDGSlot * 2)
-		push	_cdg_slots.pixel_height + (size CDGSlot * 2)
+		push	_cdg_slots.pixel_w + (size cdg_t * 2)
+		push	_cdg_slots.pixel_h + (size cdg_t * 2)
 		push	si
 		call	sub_B25B
 		push	[bp+arg_2]
 		push	[bp+arg_0]
-		push	_cdg_slots.pixel_width + (size CDGSlot * 0)
-		push	_cdg_slots.pixel_height + (size CDGSlot * 0)
+		push	_cdg_slots.pixel_w + (size cdg_t * 0)
+		push	_cdg_slots.pixel_h + (size cdg_t * 0)
 		push	si
 		call	sub_B25B
 		inc	si

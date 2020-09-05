@@ -16,14 +16,14 @@ cdg_put proc far
 	mov	si, [bp+@@slot]
 	shl	si, 4
 	add	si, offset _cdg_slots
-	mov	ax, [si+CDGSlot.sgm_colors]
-	mov	word ptr cs:@@sgm_colors+1, ax
+	mov	ax, [si+cdg_t.seg_colors]
+	mov	word ptr cs:@@seg_colors+1, ax
 	mov	ax, [bp+@@left]
 	sar	ax, 3
-	add	ax, [si+CDGSlot.vram_byte_at_bottom_left]
+	add	ax, [si+cdg_t.offset_at_bottom_left]
 	mov	di, ax
-	mov	word ptr cs:@@vram_byte_at_bottom_left+1, ax
-	mov	ax, [si+CDGSlot.width_divided_by_32]
+	mov	word ptr cs:@@offset_at_bottom_left+1, ax
+	mov	ax, [si+cdg_t.vram_dword_w]
 	mov	word ptr cs:@@width_1+1, ax
 	mov	word ptr cs:@@width_2+1, ax
 	shl	ax, 2
@@ -37,7 +37,7 @@ cdg_put proc far
 	add	ax, 0A800h
 	mov	es, ax
 	push	ds
-	mov	ax, [si+CDGSlot.sgm_alpha]
+	mov	ax, [si+cdg_t.seg_alpha]
 	mov	ds, ax
 	xor	si, si
 
@@ -53,12 +53,12 @@ cdg_put proc far
 	xor	al, al
 	out	7Ch, al
 
-@@vram_byte_at_bottom_left:
+@@offset_at_bottom_left:
 	mov	bx, 1234h
 	mov	di, bx
 	xor	si, si
 
-@@sgm_colors:
+@@seg_colors:
 	mov	ax, 1234h
 	mov	ds, ax
 	assume ds:nothing
