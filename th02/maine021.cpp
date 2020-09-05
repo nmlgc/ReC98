@@ -7,6 +7,7 @@
 
 extern "C" {
 #include "th02/th02.h"
+#include "th02/hardware/frmdelay.h"
 #include "th02/formats/pi.h"
 
 #include "th02/hardware/grppsafx.cpp"

@@ -9,6 +9,7 @@
 #include "th02/initexit.h"
 #include "th02/formats/pi.h"
 #include "th02/snd/snd.h"
+#include "th02/hardware/frmdelay.h"
 
 #pragma codeseg seg2
 #pragma option -3

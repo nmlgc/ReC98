@@ -44,5 +44,4 @@ void pascal graph_copy_rect_1_to_0(
 	}
 }
 
-#include "th02/hardware/frmdely2.c"
 }

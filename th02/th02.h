@@ -71,10 +71,6 @@ typedef enum {
 extern input_t key_det; /* ZUN symbol [MAGNet2010] */
 
 void input_sense(void);
-
-void pascal frame_delay(int frames);
-void pascal frame_delay_2(int frames);
-
 void key_delay(void);
 
 // Music Room

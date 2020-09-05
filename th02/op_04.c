@@ -6,6 +6,7 @@
 #include <mbctype.h>
 #include <mbstring.h>
 #include "th02/th02.h"
+#include "th02/hardware/frmdelay.h"
 #include "th02/gaiji/gaiji.h"
 
 char rank = RANK_NORMAL;

@@ -34,6 +34,12 @@ bin\Pipeline\grzview.com: Pipeline\grzview.cpp th01\formats\grz.cpp
 bin\th01\zunsoft.com: th01\zunsoft.c
 	$(CC) $(CFLAGS) -mt -lt -nbin\th01\ $** masters.lib
 
+# Segment 2 (game-independent code)
+# ---------------------------------
+bin\frmdely2.obj: th02\frmdely2.c
+	$(CC) $(CFLAGS) -ml -n$(@D) -c $**
+# ---------------------------------
+
 bin\th01\op.exe: bin\piloadc.obj bin\th01\op.obj th01\op_01.cpp th01\op_02.c th01\op_03.c th01\op_04.c th01\op_05.c th01\op_06.cpp th01\op_07.cpp th01\op_08.c th01\op_09.cpp th01\op_10.c th01\op_11.c th01\op_12.cpp
 	$(CC) $(CFLAGS) -ml -3 -DGAME=1 -DBINARY='O' -nbin\th01\ -eOP.EXE @&&|
 $**
@@ -54,7 +60,7 @@ bin\th02\zun_res.com: th02\zun_res1.c th02\zun_res2.c th02\zun_res3.c
 $**
 | masters.lib
 
-bin\th02\op.exe: th02\op_01.c bin\th02\op.obj th02\op_02_1.cpp th02\op_02_2.c th02\op_03.c th02\op_04.c th02\op_05.cpp th02\op_06.cpp
+bin\th02\op.exe: th02\op_01.c bin\th02\op.obj th02\op_02_1.cpp bin\frmdely2.obj th02\op_02_2.c th02\op_03.c th02\op_04.c th02\op_05.cpp th02\op_06.cpp
 	$(CC) $(CFLAGS) -ml -Z -DGAME=2 -nbin\th02\ -eOP.EXE @&&|
 $**
 |
@@ -74,7 +80,7 @@ bin\th03\res_yume.com: th03\res_yume.cpp
 $**
 | masters.lib
 
-bin\th03\op.exe: bin\th03\op.obj th03\seg2.c
+bin\th03\op.exe: bin\th03\op.obj bin\frmdely2.obj
 	$(CC) $(CFLAGS) -ml -DGAME=3 -nbin\th03\ -eOP.EXE @&&|
 $**
 |
@@ -89,7 +95,7 @@ bin\th04\res_huma.com: th04\res_huma.cpp
 $**
 | masters.lib
 
-bin\th04\op.exe: bin\th04\op.obj th04\op_01.cpp th04\op_02.c
+bin\th04\op.exe: bin\th04\op.obj th04\op_01.cpp bin\frmdely2.obj
 	$(CC) $(CFLAGS) -ml -DGAME=4 -DBINARY='O' -nbin\th04\ -eOP.EXE @&&|
 $**
 |

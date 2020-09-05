@@ -5,6 +5,7 @@
 
 extern "C" {
 #include "th02/th02.h"
+#include "th02/hardware/frmdelay.h"
 
 void pascal near rotrect_draw(int rad, unsigned char angle)
 {
