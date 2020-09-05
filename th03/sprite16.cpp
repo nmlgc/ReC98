@@ -9,6 +9,7 @@ extern "C" {
 #include <dos.h>
 #include "platform.h"
 #include "pc98.h"
+#include "decomp.h"
 #include "libs/sprite16/sprite16.h"
 #include "th03/sprite16.hpp"
 
@@ -21,8 +22,6 @@ extern "C" {
 #define clip_right static_cast<int>(_CX)
 #define put_w_words (_AL)
 #define should_draw_column (_SI)
-
-#define RESULT_IS_ZERO (_FLAGS & 0x40)
 
 #define SETUP_VARS(left, top, sprite_offset) \
 	sprite_offset_local = sprite_offset; \
@@ -49,7 +48,7 @@ extern "C" {
 	do { \
 		putpos_left += 16; \
 		put_w_words--; \
-		if(RESULT_IS_ZERO) { \
+		if(FLAGS_ZERO) { \
 			return; \
 		} \
 		sprite_offset_local += (16 / 8); \
@@ -59,7 +58,7 @@ extern "C" {
 	do { \
 		putpos_right -= 16; \
 		put_w_words--; \
-		if(RESULT_IS_ZERO) { \
+		if(FLAGS_ZERO) { \
 			return; \
 		} \
 	} while(putpos_right >= clip_right);
@@ -107,7 +106,7 @@ put:
 				should_draw_column = func;
 				geninterrupt(SPRITE16);
 				should_draw_column--;
-				if(RESULT_IS_ZERO) {
+				if(FLAGS_ZERO) {
 					return;
 				}
 				_BX += _CX;
