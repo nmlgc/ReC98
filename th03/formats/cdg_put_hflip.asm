@@ -40,7 +40,7 @@ proc_defconv cdg_put_hflip
 	add	ax, 0A800h
 	mov	es, ax
 	assume es:nothing
-	mov	bx, offset hflip_lut
+	mov	bx, offset _hflip_lut
 	mov	fs, [si+cdg_t.seg_alpha]
 	xor	si, si
 

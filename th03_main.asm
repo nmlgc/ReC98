@@ -615,7 +615,7 @@ var_2		= word ptr -2
 		call	sub_13CDD
 		mov	byte_207E3, 0
 		call	sub_9EBF
-		call	hflip_lut_generate
+		call	_hflip_lut_generate
 		nopcall	sub_D5A2
 		mov	byte_23AFA, 0
 		les	bx, _resident
@@ -9228,7 +9228,7 @@ loc_F0A9:
 		mov	bx, [bp+arg_0]
 		shl	bx, 2
 		les	di, [bx+1D64h]
-		mov	bx, offset hflip_lut
+		mov	bx, offset _hflip_lut
 
 loc_F0BB:
 		mov	al, es:[di]

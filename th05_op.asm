@@ -30,6 +30,8 @@ include th05/music/piano.inc
 	extern _getch:proc
 	extern _strlen:proc
 
+g_seg2 group seg2, seg2_
+
 ; ===========================================================================
 
 ; Segment type:	Pure code
@@ -3486,11 +3488,13 @@ op_01_TEXT	ends
 
 ; Segment type:	Pure code
 seg2	segment	word public 'CODE' use16
-		assume cs:seg2
+seg2	ends
+
+seg2_	segment	word public 'CODE' use16
+		assume cs:g_seg2
 		; org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-include th03/formats/hfliplut.asm
 include th04/snd/pmd_res.asm
 include th02/snd/mmd_res.asm
 include th04/snd/detmodes.asm
@@ -3527,7 +3531,7 @@ include th05/hardware/frame_delay.asm
 include th04/formats/cdg_load.asm
 include th04/hardware/egccopyr.asm
 		even
-seg2	ends
+seg2_	ends
 
 	.data
 

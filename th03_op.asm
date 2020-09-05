@@ -2328,7 +2328,7 @@ sub_B38D	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		call	hflip_lut_generate
+		call	_hflip_lut_generate
 		xor	si, si
 		jmp	short loc_B3B0
 ; ---------------------------------------------------------------------------
@@ -3642,7 +3642,7 @@ include th03/hardware/input_modes.asm
 include th03/hardware/input_wait.asm
 		db 0
 include th03/formats/cdg_put_noalpha.asm
-include th03/formats/hfliplut.asm
+	extern _hflip_lut_generate:proc
 	extern FRAME_DELAY_2:proc
 seg2	ends
 

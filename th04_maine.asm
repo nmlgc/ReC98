@@ -28,6 +28,8 @@ include th04/th04.inc
 	extern _tolower:proc
 	extern __ctype:byte
 
+g_seg2 group seg2, seg2_
+
 ; ===========================================================================
 
 ; Segment type:	Pure code
@@ -4694,7 +4696,7 @@ maine_01_TEXT	ends
 
 ; Segment type:	Pure code
 seg2	segment	word public 'CODE' use16
-		assume cs:seg2
+		assume cs:g_seg2
 		;org 0Ah
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -4704,7 +4706,9 @@ include th02/formats/pi_slot_palette_apply.asm
 include th02/formats/pi_slot_put.asm
 include th02/formats/pi_slot_load.asm
 include th03/formats/pi_slot_put_quarter.asm
-include th03/formats/hfliplut.asm
+seg2	ends
+
+seg2_	segment	word public 'CODE' use16
 include th04/hardware/input_wait.asm
 include th04/math/vector1_at.asm
 include th04/math/vector2_at.asm
@@ -4726,7 +4730,7 @@ include th04/snd/se.asm
 include th04/bgimage.asm
 include th04/bgimage_put_rect.asm
 include th04/formats/cdg_load.asm
-seg2	ends
+seg2_	ends
 
 	.data
 

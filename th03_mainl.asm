@@ -906,7 +906,7 @@ loc_9DAD:
 		call	gaiji_entry_bfnt
 		call	snd_load c, offset aYume_efc, ds, SND_LOAD_SE
 		call	snd_se_reset
-		call	hflip_lut_generate
+		call	_hflip_lut_generate
 		les	bx, _resident
 		cmp	es:[bx+resident_t.show_score_menu], 0
 		jz	short loc_9E04
@@ -5588,7 +5588,7 @@ include th03/hardware/input_modes.asm
 include th03/hardware/input_wait.asm
 		db 0
 include th03/formats/cdg_put_noalpha.asm
-include th03/formats/hfliplut.asm
+	extern _hflip_lut_generate:proc
 seg2	ends
 
 	.data

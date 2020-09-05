@@ -38,6 +38,9 @@ bin\th01\zunsoft.com: th01\zunsoft.c
 # ---------------------------------
 bin\frmdely2.obj: th02\frmdely2.c
 	$(CC) $(CFLAGS) -ml -n$(@D) -c $**
+
+bin\hfliplut.obj: th03\hfliplut.c
+	$(CC) $(CFLAGS) -ml -n$(@D) -c $**
 # ---------------------------------
 
 bin\th01\op.exe: bin\piloadc.obj bin\th01\op.obj th01\op_01.cpp th01\op_02.c th01\op_03.c th01\op_04.c th01\op_05.c th01\op_06.cpp th01\op_07.cpp th01\op_08.c th01\op_09.cpp th01\op_10.c th01\op_11.c th01\op_12.cpp
@@ -80,13 +83,18 @@ bin\th03\res_yume.com: th03\res_yume.cpp
 $**
 | masters.lib
 
-bin\th03\op.exe: bin\th03\op.obj bin\frmdely2.obj
+bin\th03\op.exe: bin\th03\op.obj bin\hfliplut.obj bin\frmdely2.obj
 	$(CC) $(CFLAGS) -ml -DGAME=3 -nbin\th03\ -eOP.EXE @&&|
 $**
 |
 
 bin\th03\main.exe: bin\th03\main.obj th03\main_01.cpp th03\sprite16.cpp
 	$(CC) $(CFLAGS) -ml -Z -DGAME=3 -nbin\th03\ -eMAIN.EXE @&&|
+$**
+|
+
+bin\th03\mainl.exe: bin\th03\mainl.obj bin\hfliplut.obj
+	$(CC) $(CFLAGS) -ml -DGAME=3 -nbin\th03\ -eMAINL.EXE @&&|
 $**
 |
 
@@ -100,8 +108,13 @@ bin\th04\op.exe: bin\th04\op.obj th04\op_01.cpp bin\frmdely2.obj
 $**
 |
 
-bin\th04\main.exe: bin\th04\main.obj bin\th04\scoreupd.obj th04\main011.cpp th04\main032.cpp
+bin\th04\main.exe: bin\th04\main.obj bin\th04\scoreupd.obj th04\main011.cpp bin\hfliplut.obj th04\main032.cpp
 	$(CC) $(CFLAGS) -ml -DGAME=4 -DBINARY='M' -3 -Z -nbin\th04\ -eMAIN.EXE @&&|
+$**
+|
+
+bin\th04\maine.exe: bin\th04\maine.obj bin\hfliplut.obj
+	$(CC) $(CFLAGS) -ml -DGAME=4 -DBINARY='E' -nbin\th04\ -eMAINE.EXE @&&|
 $**
 |
 
@@ -110,13 +123,18 @@ bin\th05\res_kso.com: th05\res_kso.cpp
 $**
 | masters.lib
 
-bin\th05\op.exe: bin\th05\op.obj th05\op_01.cpp
+bin\th05\op.exe: bin\th05\op.obj th05\op_01.cpp bin\hfliplut.obj
 	$(CC) $(CFLAGS) -ml -DGAME=5 -DBINARY='O' -nbin\th05\ -eOP.EXE @&&|
 $**
 |
 
-bin\th05\main.exe: bin\th05\main.obj th05\main010.cpp th05\main011.cpp th05\p_common.cpp th05\p_reimu.cpp th05\p_marisa.cpp th05\p_mima.cpp th05\p_yuuka.cpp bin\th05\player.obj bin\th05\hud_bar.obj bin\th05\scoreupd.obj th05\main012.cpp th05\main013.cpp  bin\th05\bullet.obj th05\main031.cpp th05\main032.cpp th05\main033.cpp th05\main034.cpp
+bin\th05\main.exe: bin\th05\main.obj th05\main010.cpp th05\main011.cpp th05\p_common.cpp th05\p_reimu.cpp th05\p_marisa.cpp th05\p_mima.cpp th05\p_yuuka.cpp bin\th05\player.obj bin\th05\hud_bar.obj bin\th05\scoreupd.obj th05\main012.cpp th05\main013.cpp bin\hfliplut.obj bin\th05\bullet.obj th05\main031.cpp th05\main032.cpp th05\main033.cpp th05\main034.cpp
 	$(CC) $(CFLAGS) -ml -3 -Z -DGAME=5 -DBINARY='M' -nbin\th05\ -eMAIN.EXE @&&|
+$**
+|
+
+bin\th05\maine.exe: bin\th05\maine.obj bin\hfliplut.obj
+	$(CC) $(CFLAGS) -ml -DGAME=5 -DBINARY='E' -nbin\th05\ -eMAINE.EXE @&&|
 $**
 |
 

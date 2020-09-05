@@ -1,11 +1,8 @@
-; Generates a lookup table for flipping one byte, interpreted as a horizontal
-; line of 8 pixels in a single bitplane.
-
-; int DEFCONV hflip_lut_generate()
-proc_defconv hflip_lut_generate
+public _hflip_lut_generate
+_hflip_lut_generate proc
 	push	di
 	xor	ax, ax
-	mov	di, offset hflip_lut
+	mov	di, offset _hflip_lut
 	xor	dl, dl
 	jmp	short @@check
 
@@ -25,4 +22,4 @@ proc_defconv hflip_lut_generate
 	jnz	short @@outer
 	pop	di
 	ret
-endp_defconv
+_hflip_lut_generate endp
