@@ -1,11 +1,5 @@
-; TH03-specific note: All CDG images loaded by this game are assumed to have
-; an alpha plane.
-
-; Loads the [n]th image of the CDG file [fn] into [slot].
-
-; void pascal cdg_load_single_forcealpha(int slot, const char *fn, int n)
-public CDG_LOAD_SINGLE_FORCEALPHA
-cdg_load_single_forcealpha	proc far
+public CDG_LOAD_SINGLE
+cdg_load_single	proc far
 
 @@image_size	= dword	ptr -4
 @@n         	=  word ptr  6
@@ -60,13 +54,10 @@ cdg_load_single_forcealpha	proc far
 	pop	si
 	leave
 	retf	8
-cdg_load_single_forcealpha	endp
+cdg_load_single	endp
 
 
-; Loads the [n]th image of the CDG file [fn] into [slot], skipping the alpha
-; plane.
-
-; void pascal cdg_load_single_noalpha(int slot, const char *fn, int n)
+public CDG_LOAD_SINGLE_NOALPHA
 cdg_load_single_noalpha	proc far
 
 @@image_size	= dword	ptr -4
@@ -123,10 +114,7 @@ cdg_load_single_noalpha	proc far
 cdg_load_single_noalpha	endp
 
 
-; Loads all images of the CDG file [fn], starting at [slot_first] and
-; incrementing the slot number for every further image.
-
-; void pascal cdg_load_all(int slot_first, const char *fn);
+public CDG_LOAD_ALL
 cdg_load_all	proc far
 
 @@i         	=  word ptr -2
@@ -227,11 +215,6 @@ cdg_load_all	proc far
 cdg_load_all	endp
 
 
-; Loads all images of the CDG file [fn], disregarding their alpha planes,
-; starting at [slot_first] and incrementing the slot number for every further
-; image.
-
-; void pascal cdg_load_all_noalpha(int slot_first, const char *fn);
 public CDG_LOAD_ALL_NOALPHA
 cdg_load_all_noalpha	proc far
 
@@ -250,9 +233,7 @@ cdg_load_all_noalpha	proc far
 cdg_load_all_noalpha	endp
 
 
-; Frees the CDG image in the given [slot].
-
-; void cdg_free(int slot);
+public CDG_FREE
 cdg_free	proc far
 
 @@slot		= word ptr  6

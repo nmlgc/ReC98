@@ -5750,7 +5750,7 @@ loc_E813:
 		mov	eax, _total_frames
 		mov	es:[bx+resident_t.frames], eax
 		call	main_01:bb_txt_free
-		call	cdg_freeall
+		call	cdg_free_all
 		call	bb_stage_free
 		call	main_01:sub_CF1E
 		call	main_01:bb_playchar_free

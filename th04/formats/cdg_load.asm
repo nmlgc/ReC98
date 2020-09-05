@@ -1,7 +1,3 @@
-; Loads the [n]th image of the CDG file [fn] into [slot].
-
-; void pascal cdg_load_single_noalpha(int slot, const char *fn, int n);
-; void pascal cdg_load_single(int slot, const char *fn, int n);
 public CDG_LOAD_SINGLE_NOALPHA
 public CDG_LOAD_SINGLE
 
@@ -102,11 +98,6 @@ cdg_read_single	proc near
 cdg_read_single	endp
 
 
-; Loads all images of the CDG file [fn], starting at [slot_first] and
-; incrementing the slot number for every further image.
-
-; void pascal cdg_load_all_noalpha(int slot, const char *fn);
-; void pascal cdg_load_all(int slot, const char *fn);
 public CDG_LOAD_ALL_NOALPHA
 public CDG_LOAD_ALL
 
@@ -161,9 +152,6 @@ cdg_load_all	proc far
 cdg_load_all	endp
 
 
-; Frees the CDG image in the given [slot].
-
-; void cdg_free(int slot);
 public CDG_FREE
 cdg_free	proc far
 	mov	bx, sp
@@ -192,11 +180,8 @@ cdg_free	endp
 	align 2
 
 
-; Frees the CDG images in all slots.
-
-; void cdg_freeall();
-public CDG_FREEALL
-cdg_freeall	proc far
+public CDG_FREE_ALL
+cdg_free_all	proc far
 	push	si
 	mov	si, CDG_SLOT_COUNT - 1
 
@@ -206,4 +191,4 @@ cdg_freeall	proc far
 	jge	short @@loop
 	pop	si
 	retf
-cdg_freeall	endp
+cdg_free_all	endp

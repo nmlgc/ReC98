@@ -165,7 +165,7 @@ _arg0		= dword	ptr  4
 
 		push	bp
 		mov	bp, sp
-		call	cdg_freeall
+		call	cdg_free_all
 		call	graph_hide
 		call	text_clear
 		call	gaiji_restore
@@ -2447,7 +2447,7 @@ sub_B44D	proc near
 		call	sub_B3AC
 		push	4
 		call	palette_black_out
-		call	cdg_freeall
+		call	cdg_free_all
 		graph_accesspage 1
 		call	pi_slot_load pascal, 0, ds, offset aSff2_pi
 		call	pi_slot_palette_apply pascal, 0
@@ -2518,7 +2518,7 @@ sub_B44D	proc near
 		push	3000A0h
 		call	snd_delay_until_measure
 		call	bgimage_free
-		call	cdg_freeall
+		call	cdg_free_all
 		push	4
 		call	palette_black_out
 		pop	bp

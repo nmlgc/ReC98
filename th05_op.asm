@@ -1744,7 +1744,7 @@ main_cdg_load	endp
 main_cdg_free	proc near
 		push	bp
 		mov	bp, sp
-		call	cdg_freeall
+		call	cdg_free_all
 		pop	bp
 		retn
 main_cdg_free	endp
@@ -2207,7 +2207,7 @@ musicroom	proc near
 		mov	ax, MUSICROOM_TRACKCOUNTS[bx]
 		mov	musicroom_trackcount, ax
 		mov	byte_13E96, 0
-		call	cdg_freeall
+		call	cdg_free_all
 		call	text_clear
 		mov	_music_page, 1
 		mov	PaletteTone, 0

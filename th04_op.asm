@@ -1811,7 +1811,7 @@ musicroom	proc near
 		push	bp
 		mov	bp, sp
 		mov	byte_12DBE, 0
-		call	cdg_freeall
+		call	cdg_free_all
 		call	text_clear
 		mov	_music_page, 1
 		mov	PaletteTone, 0
@@ -2485,7 +2485,7 @@ main_cdg_load	endp
 main_cdg_free	proc near
 		push	bp
 		mov	bp, sp
-		call	cdg_freeall
+		call	cdg_free_all
 		pop	bp
 		retn
 main_cdg_free	endp

@@ -244,7 +244,7 @@ _arg0		= dword	ptr  4
 
 		push	bp
 		mov	bp, sp
-		call	cdg_freeall
+		call	cdg_free_all
 		call	graph_hide
 		call	text_clear
 		call	game_exit
@@ -7755,7 +7755,7 @@ loc_E7CC:
 		dec	si
 		or	si, si
 		jg	short loc_E7CC
-		call	cdg_freeall
+		call	cdg_free_all
 		call	super_free
 		call	grc_setclip pascal, large 0, ((RES_X - 1) shl 16) or (RES_Y - 1)
 		pop	di

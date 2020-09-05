@@ -6361,7 +6361,7 @@ loc_F71C:
 		mov	eax, _total_frames
 		mov	es:[bx+resident_t.frames], eax
 		call	bb_txt_free
-		call	cdg_freeall
+		call	cdg_free_all
 		call	bb_stage_free
 		call	sub_EE32
 		call	bb_playchar_free

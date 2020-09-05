@@ -153,7 +153,7 @@ var_1		= byte ptr -1
 		call	palette_entry_rgb
 		call	far ptr	palette_show
 		call	cdg_load_all_noalpha pascal, 0, ds, offset aLogo_cd2
-		call	cdg_load_single_forcealpha pascal, 5, ds, offset aLogo5_cdg, 0
+		call	cdg_load_single pascal, 5, ds, offset aLogo5_cdg, 0
 		les	bx, _resident
 		cmp	es:[bx+resident_t.pid_winner], 0
 		jnz	short loc_965E
@@ -277,7 +277,7 @@ sub_973E	proc near
 		retn
 sub_973E	endp
 
-include th03/formats/cdg_freeall.asm
+include th03/formats/cdg_free_all.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -332,7 +332,7 @@ loc_97FC:
 		push	offset aLogo1_rgb ; "logo1.rgb"
 		call	palette_entry_rgb
 		call	far ptr	palette_show
-		call	cdg_freeall
+		call	cdg_free_all
 		push	0B0004h
 		call	snd_delay_until_measure
 		push	1
@@ -464,7 +464,7 @@ var_1		= byte ptr -1
 		mov	ah, 0
 		and	ax, 1
 		push	ax
-		call	cdg_load_single_forcealpha
+		call	cdg_load_single
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][1]
 		add	al, -1
@@ -482,7 +482,7 @@ var_1		= byte ptr -1
 		mov	ah, 0
 		and	ax, 1
 		push	ax
-		call	cdg_load_single_forcealpha
+		call	cdg_load_single
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		cwd
@@ -539,7 +539,7 @@ loc_99D4:
 		mov	ah, 0
 		inc	ax
 		push	ax
-		call	cdg_load_single_forcealpha
+		call	cdg_load_single
 		mov	byte_F7E5, 0
 
 loc_99F1:
@@ -967,7 +967,7 @@ loc_9E7B:
 		jnz	loc_9F38
 
 loc_9E89:
-		call	cdg_freeall
+		call	cdg_free_all
 		freePISlotLarge	0
 		mov	al, _playchar_filename_id[0]
 		mov	ah, 0
@@ -1034,7 +1034,7 @@ loc_9F2E:
 ; ---------------------------------------------------------------------------
 
 loc_9F38:
-		call	cdg_freeall
+		call	cdg_free_all
 		freePISlotLarge	0
 		call	sub_B7D2
 		call	sub_9F8D
@@ -1045,7 +1045,7 @@ loc_9F38:
 ; ---------------------------------------------------------------------------
 
 loc_9F58:
-		call	cdg_freeall
+		call	cdg_free_all
 		freePISlotLarge	0
 
 loc_9F69:
@@ -2947,7 +2947,7 @@ sub_AFAC	proc near
 		mov	al, es:[bx+resident_t.rank]
 		mov	bx, word_ED68
 		add	[bx+3],	al
-		call	cdg_load_single_forcealpha pascal, 0, ds, bx, 0
+		call	cdg_load_single pascal, 0, ds, bx, 0
 		push	(320 shl 16) or 312
 		push	0
 		call	cdg_put
@@ -5378,8 +5378,8 @@ loc_C4D8:
 		graph_showpage 1
 		call	cdg_load_single_noalpha pascal, 0, ds, offset aStf1_cdg, 0
 		call	cdg_load_single_noalpha pascal, 1, ds, offset aStf11_cdg, 0
-		call	cdg_load_single_forcealpha pascal, 2, ds, offset aStf3_cdg, 0
-		call	cdg_load_single_forcealpha pascal, 3, ds, offset aStf4_cdg, 0
+		call	cdg_load_single pascal, 2, ds, offset aStf3_cdg, 0
+		call	cdg_load_single pascal, 3, ds, offset aStf4_cdg, 0
 		call	cdg_load_single_noalpha pascal, 4, ds, offset aStf5_cdg, 0
 		call	cdg_load_single_noalpha pascal, 5, ds, offset aStf6_cdg, 0
 		call	cdg_load_single_noalpha pascal, 6, ds, offset aStf7_cdg, 0

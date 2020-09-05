@@ -49,5 +49,25 @@ typedef struct {
 
 extern cdg_t cdg_slots[CDG_SLOT_COUNT];
 
+// Loading and freeing
+// -------------------
+// Loads all images of the CDG file [fn], starting at [slot_first] and
+// incrementing the slot number for every further image.
+void pascal cdg_load_all(int slot_first, const char *fn);
+
+// Like cdg_load_all(), but not loading any alpha planes.
 void pascal cdg_load_all_noalpha(int slot_first, const char *fn);
+
+// Loads the [n]th image of the CDG file [fn] into [slot].
+void pascal cdg_load_single(int slot, const char *fn, int n);
+
+// Like cdg_load_single(), but not loading any alpha planes.
+void pascal cdg_load_single_noalpha(int slot, const char *fn, int n);
+
+// Frees the CDG image in the given [slot].
+void pascal cdg_free(int slot);
+
+// Frees the CDG images in all slots.
+void pascal cdg_free_all(void);
+// -------------------
 /// ---------------------------------------------------------------------------

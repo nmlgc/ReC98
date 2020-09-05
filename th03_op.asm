@@ -2340,7 +2340,7 @@ loc_B39A:
 		shl	bx, 2
 		pushd	dword ptr [bx+0A0Eh]
 		push	0
-		call	cdg_load_single_forcealpha
+		call	cdg_load_single
 		inc	si
 
 loc_B3B0:
@@ -2360,7 +2360,7 @@ sub_B38D	endp
 sub_B3C3	proc near
 		push	bp
 		mov	bp, sp
-		call	cdg_load_single_forcealpha pascal, 1, ds, offset a99sl_cdg, 0
+		call	cdg_load_single pascal, 1, ds, offset a99sl_cdg, 0
 		call	cdg_load_single_noalpha pascal, 11, ds, offset aSlwin_cdg , 0
 		call	cdg_load_single_noalpha pascal, 12, ds, offset aSlex_cdg, 0
 		pop	bp
@@ -2376,7 +2376,7 @@ sub_B3EF	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		call	cdg_load_single_forcealpha pascal, 0, [off_E1FE], 0
+		call	cdg_load_single pascal, 0, [off_E1FE], 0
 		mov	si, 3
 		jmp	short loc_B41C
 ; ---------------------------------------------------------------------------
@@ -2388,7 +2388,7 @@ loc_B406:
 		shl	bx, 2
 		pushd	dword ptr [bx+0A0Eh]
 		push	0
-		call	cdg_load_single_forcealpha
+		call	cdg_load_single
 		inc	si
 
 loc_B41C:
@@ -2441,7 +2441,7 @@ loc_B4A6:
 		shl	bx, 2
 		pushd	dword ptr [bx+0A0Eh]
 		push	0
-		call	cdg_load_single_forcealpha
+		call	cdg_load_single
 		inc	si
 
 loc_B4BC:
@@ -3125,7 +3125,7 @@ loc_B9CC:
 		push	0
 
 loc_B9DA:
-		call	cdg_load_single_forcealpha
+		call	cdg_load_single
 		mov	bx, 1
 		sub	bx, si
 		cmp	byte ptr [bx+246Ah], 0
@@ -3180,7 +3180,7 @@ loc_BA53:
 		push	1
 
 loc_BA61:
-		call	cdg_load_single_forcealpha
+		call	cdg_load_single
 		mov	bx, 1
 		sub	bx, si
 		cmp	byte ptr [bx+246Ah], 0
