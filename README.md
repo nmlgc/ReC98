@@ -89,7 +89,7 @@ You will need:
 
   ----
 
-* **Borland Turbo Assembler (TASM), version 4.1 or later, for 16-bit DOS (`TASM.EXE`)**
+* **Borland Turbo Assembler (TASM), version 4.1 or later, for 16-bit DOS (`TASM.EXE`)** (currently not needed)
 
   Towards TH05, the games increasingly used raw ASM code that [can't be decompiled]. Thus, even the final 16-bit-only build will need some sort of assembler.
 
@@ -146,7 +146,7 @@ You will need:
 
   ----
 
-The most performant OS for building ReC98 is therefore a 32-bit Windows ≥Vista, where both the 32-bit and 16-bit build parts can run natively from a single shell. The build process should work reliably on pretty much every system though: Windows 98 SE (which you might use on actual PC-98 hardware) is the oldest one to be known to work, and modern 64-bit Windows and Linux of course work as well.
+The most performant OS for building ReC98 is therefore a 32-bit Windows ≥Vista, where both the 32-bit and 16-bit build parts can run natively from a single shell. The build process was tested and should work reliably on pretty much every system though – from modern 64-bit Windows and Linux, down to Windows 95, which you might use on actual PC-98 hardware.
 
 To build, simply run `build.bat` and follow any instructions. The final executables will be put into `bin\th0?`, using the same names as the originals.
 

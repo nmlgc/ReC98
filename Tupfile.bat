@@ -14,6 +14,9 @@ bin\\Pipeline\\bmp2arr.exe -i th04/sprites/pelletbt.bmp -o th04/sprites/pelletbt
 bin\\Pipeline\\bmp2arr.exe -i th04/sprites/pointnum.bmp -o th04/sprites/pointnum.asp -sym _sPOINTNUMS -of asm -sw 8 -sh 8 -pshf inner
 bin\\Pipeline\\bmp2arr.exe -i th05/sprites/gaiji.bmp -o th05/sprites/gaiji.asp -sym _sGAIJI -of asm -sw 16 -sh 16
 bin\\Pipeline\\bmp2arr.exe -i th05/sprites/piano_l.bmp -o th05/sprites/piano_l.asp -sym _sPIANO_LABEL_FONT -of asm -sw 8 -sh 8
+tasm32 /m /mx /kh32768 /t /ml libs\piloadc\piloadc.asm bin\piloadc.obj
+tasm32 /m /mx /kh32768 /t zuncom\zun_stub.asm bin\zuncom\zun_stub.obj
+tasm32 /m /mx /kh32768 /t zuncom\cstmstub.asm bin\zuncom\cstmstub.obj
 tasm32 /m /mx /kh32768 /t th01_op.asm bin\th01\op.obj
 tasm32 /m /mx /kh32768 /t th01_reiiden.asm bin\th01\reiiden.obj
 tasm32 /m /mx /kh32768 /t th01_fuuin.asm bin\th01\fuuin.obj
@@ -25,9 +28,14 @@ tasm32 /m /mx /kh32768 /t /DTHIEF libs\sprite16\sprite16.asm bin\th03\zunsp.obj
 tasm32 /m /mx /kh32768 /t th03_op.asm bin\th03\op.obj
 tasm32 /m /mx /kh32768 /t th03_main.asm bin\th03\main.obj
 tasm32 /m /mx /kh32768 /t th03_mainl.asm bin\th03\mainl.obj
+tasm32 /m /mx /kh32768 /t /dGAME=4 th04\scoreupd.asm bin\th04\scoreupd.obj
 tasm32 /m /mx /kh32768 /t th04_op.asm bin\th04\op.obj
 tasm32 /m /mx /kh32768 /t th04_main.asm bin\th04\main.obj
 tasm32 /m /mx /kh32768 /t th04_maine.asm bin\th04\maine.obj
+tasm32 /m /mx /kh32768 /t /dGAME=5 th04\scoreupd.asm bin\th05\scoreupd.obj
+tasm32 /m /mx /kh32768 /t /dGAME=5 th05\player.asm bin\th05\player.obj
+tasm32 /m /mx /kh32768 /t /dGAME=5 th05\hud_bar.asm bin\th05\hud_bar.obj
+tasm32 /m /mx /kh32768 /t /dGAME=5 th05\bullet.asm bin\th05\bullet.obj
 tasm32 /m /mx /kh32768 /t th05_op.asm bin\th05\op.obj
 tasm32 /m /mx /kh32768 /t th05_main.asm bin\th05\main.obj
 tasm32 /m /mx /kh32768 /t th05_maine.asm bin\th05\maine.obj

@@ -22,25 +22,6 @@ th03:: $(TH03:\=bin\th03\)
 th04:: $(TH04:\=bin\th04\)
 th05:: $(TH05:\=bin\th05\)
 
-# Third-party libraries
-# ---------------------
-bin\piloadc.obj: libs\piloadc\piloadc.asm
-	$(AS) $(AFLAGS) $**, $*
-# ---------------------
-
-{th05}.asm{bin\th05}.obj:
-	$(AS) $(AFLAGS) /dGAME=5 $**, $(@R)
-
-# Shared TH04/TH05 assembly units
-# -------------------------------
-# Need to go into separate .obj directories since they will have different
-# AFLAGS per game.
-{th04}.asm{bin\th04}.obj:
-	$(AS) $(AFLAGS) /dGAME=4 $**, $(@R)
-{th04}.asm{bin\th05}.obj:
-	$(AS) $(AFLAGS) /dGAME=5 $**, $(@R)
-# -------------------------------
-
 .obj.exe:
 	$(CC) $(CFLAGS) -ml $**
 
@@ -113,16 +94,10 @@ bin\th04\op.exe: bin\th04\op.obj th04\op_01.cpp th04\op_02.c
 $**
 |
 
-bin\th04\scoreupd.obj: th04\scoreupd.asm
 bin\th04\main.exe: bin\th04\main.obj bin\th04\scoreupd.obj th04\main011.cpp th04\main032.cpp
 	$(CC) $(CFLAGS) -ml -DGAME=4 -DBINARY='M' -3 -Z -nbin\th04\ -eMAIN.EXE @&&|
 $**
 |
-
-bin\th05\bullet.obj: th05\bullet.asm
-bin\th05\player.obj: th05\player.asm
-bin\th05\hud_bar.obj: th05\hud_bar.asm
-bin\th05\scoreupd.obj: th04\scoreupd.asm
 
 bin\th05\res_kso.com: th05\res_kso.cpp
 	$(CC) $(CFLAGS) -mt -lt -Z -DGAME=5 -nbin\th05\ -eRES_KSO.COM @&&|
@@ -141,23 +116,14 @@ $**
 
 # ZUN.COM packing
 
+{bin\zuncom}.obj{bin\zuncom}.bin:
+	tlink -t $**, $@
+
 bin\zuncom\zungen.com: zuncom\zungen.c
-	mkdir bin\zuncom
 	$(CC) $(CFLAGS) -mt -lt -nbin\zuncom\ -eZUNGEN.COM $**
 
-bin\zuncom\zun_stub.bin: zuncom\zun_stub.asm
-	mkdir bin\zuncom
-	tasm zuncom\zun_stub.asm,bin\zuncom\zun_stub
-	tlink -t bin\zuncom\zun_stub.obj,bin\zuncom\zun_stub.bin
-
 bin\zuncom\comcstm.com: zuncom\comcstm.c
-	mkdir bin\zuncom
 	$(CC) $(CFLAGS) -mt -lt -nbin\zuncom\ -eCOMCSTM.com $**
-
-bin\zuncom\cstmstub.bin: zuncom\cstmstub.asm
-	mkdir bin\zuncom
-	tasm zuncom\cstmstub.asm,bin\zuncom\cstmstub
-	tlink -t bin\zuncom\cstmstub.obj,bin\zuncom\cstmstub.bin
 
 ZUNCOM_PREREQ = bin\zuncom\zungen.com bin\zuncom\zun_stub.bin
 
