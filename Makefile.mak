@@ -83,7 +83,7 @@ bin\th03\res_yume.com: th03\res_yume.cpp
 $**
 | masters.lib
 
-bin\th03\op.exe: bin\th03\op.obj bin\hfliplut.obj bin\frmdely2.obj
+bin\th03\op.exe: bin\th03\op.obj bin\th03\cdg_p_na.obj bin\hfliplut.obj bin\frmdely2.obj
 	$(CC) $(CFLAGS) -ml -DGAME=3 -nbin\th03\ -eOP.EXE @&&|
 $**
 |
@@ -93,7 +93,7 @@ bin\th03\main.exe: bin\th03\main.obj th03\main_01.cpp th03\sprite16.cpp
 $**
 |
 
-bin\th03\mainl.exe: bin\th03\mainl.obj bin\hfliplut.obj
+bin\th03\mainl.exe: bin\th03\mainl.obj bin\th03\cdg_p_na.obj bin\hfliplut.obj
 	$(CC) $(CFLAGS) -ml -DGAME=3 -nbin\th03\ -eMAINL.EXE @&&|
 $**
 |

@@ -36,6 +36,7 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 : th05/sprites/piano_l.bmp |> !bmp2arr -sym _sPIANO_LABEL_FONT -of asm -sw 8 -sh 8 |> th05/sprites/piano_l.asp
 
 !as = |> $(AS) %f %o |> bin\\%B.obj
+!as3 = |> $(AS) /dGAME=3 th03\%b %o |> bin\\th03\\%B.obj
 !as4 = |> $(AS) /dGAME=4 th04\%b %o |> bin\\th04\\%B.obj
 !as5 = |> $(AS) /dGAME=5 th05\%b %o |> bin\\th05\\%B.obj
 
@@ -63,6 +64,7 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 : th02_maine.asm |> !as |> bin\\th02\\maine.obj
 
 : libs/sprite16/sprite16.asm |> $(AS) /DTHIEF libs\sprite16\sprite16.asm %o |> bin\\th03\\zunsp.obj
+: th03\\cdg_p_na.asm |> !as3 |>
 : th03_op.asm |> !as |> bin\\th03\\op.obj
 : th03_main.asm | \
 	th03/sprites/score.asp \

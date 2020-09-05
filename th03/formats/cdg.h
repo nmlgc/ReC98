@@ -70,4 +70,11 @@ void pascal cdg_free(int slot);
 // Frees the CDG images in all slots.
 void pascal cdg_free_all(void);
 // -------------------
+
+// Blitting
+// --------
+// Displays the CDG image in the given [slot] at (⌊left/8⌋*8, top),
+// disregarding its alpha plane.
+void pascal cdg_put_noalpha(screen_x_t left, vram_y_t top, int slot);
+// --------
 /// ---------------------------------------------------------------------------

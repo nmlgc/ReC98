@@ -5587,7 +5587,7 @@ include th03/formats/pi_slot_put_quarter.asm
 include th03/hardware/input_modes.asm
 include th03/hardware/input_wait.asm
 		db 0
-include th03/formats/cdg_put_noalpha.asm
+	extern CDG_PUT_NOALPHA:proc
 	extern _hflip_lut_generate:proc
 seg2	ends
 
