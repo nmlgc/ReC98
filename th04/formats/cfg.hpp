@@ -8,7 +8,7 @@ typedef struct {
 	int8_t turbo_mode;
 } cfg_options_t;
 
-#include "th03/formats/cfg.h"
+#include "th03/formats/cfg.hpp"
 
 #define CFG_LIVES_MAX 6
 #define CFG_LIVES_DEFAULT 3

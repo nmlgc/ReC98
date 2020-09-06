@@ -83,8 +83,8 @@ bin\th03\res_yume.com: th03\res_yume.cpp
 $**
 | masters.lib
 
-bin\th03\op.exe: bin\th03\op.obj bin\th03\cdg_p_na.obj bin\hfliplut.obj bin\frmdely2.obj
-	$(CC) $(CFLAGS) -ml -DGAME=3 -nbin\th03\ -eOP.EXE @&&|
+bin\th03\op.exe: th03\op_01.cpp bin\th03\op.obj bin\th03\cdg_p_na.obj bin\hfliplut.obj bin\frmdely2.obj
+	$(CC) $(CFLAGS) -ml -3 -Z -DGAME=3 -nbin\th03\ -eOP.EXE @&&|
 $**
 |
 

@@ -54,3 +54,5 @@ typedef struct {
 	unsigned char demo_num;	// 0 = no demo active
 	int8_t unused_3[198];
 } resident_t;
+
+extern resident_t *resident;

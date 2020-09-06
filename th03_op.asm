@@ -139,7 +139,9 @@ op_01_TEXT	segment	byte public 'CODE' use16
 		;org 8
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-include th03/formats/cfg.asm
+	CFG_LOAD procdesc pascal near
+	CFG_SAVE procdesc pascal near
+	CFG_SAVE_EXIT procdesc pascal near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3648,8 +3650,7 @@ seg2	ends
 
 	.data
 
-include th03/formats/cfg[data].asm
-		db    0
+	extern _snd_sel_disabled:byte
 		db    0
 		db    0
 		db    0
@@ -3697,6 +3698,8 @@ _quit	db 0
 byte_D953	db 1
 _main_menu_initialized	db 0
 _option_initialized	db 0
+public _CFG_FN
+label _CFG_FN
 aYume_cfg	db 'YUME.CFG',0
 ; char path[]
 path		db 'mainl',0
@@ -3729,6 +3732,7 @@ include libs/master.lib/wordmask[data].asm
 include libs/master.lib/mem[data].asm
 include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
+public _snd_active
 _snd_active	db 0
 		db 0
 include libs/master.lib/respal_exist[data].asm

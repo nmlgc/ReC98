@@ -10,7 +10,7 @@
 #include "th04/common.h"
 #include "th05/resident.hpp"
 #include "th04/snd/snd.h"
-#include "th04/formats/cfg.h"
+#include "th04/formats/cfg.hpp"
 
 char debug = 0;
 const cfg_options_t OPTS_DEFAULT = {
