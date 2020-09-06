@@ -19,10 +19,10 @@ typedef enum {
 /// Variables
 /// ---------
 // Multi-player P1/P2 controls
-extern twobyte_t input_mp_p1;
-extern twobyte_t input_mp_p2;
-// Single-player controls. Sometimes only accessed through the high byte.
-extern twobyte_t input_sp;
+extern uint16_t input_mp_p1;
+extern uint16_t input_mp_p2;
+// Single-player controls.
+extern uint16_t input_sp;
 /// ---------
 
 /// Modes

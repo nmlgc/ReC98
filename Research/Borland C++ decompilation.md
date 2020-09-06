@@ -42,6 +42,20 @@ where the scalar-type variable is declared in relation to them.
 | `CWD`<br />`SUB AX, DX`<br />`SAR AX, 1` | `AX / 2`, `AX` is *int* |
 | `MOV [new_var], AX`<br />`CWD`<br />`XOR AX, DX`<br />`SUB AX, DX` | `abs(AX)`, defined in `<stdlib.h>`. `AX` is *int* |
 
+* When bit-testing the a variable with a 16-bit mask via `&` in a conditional
+  expression, the `TEST` is optimized to cover just the high or low byte, if
+  possible:
+  ```c
+  long v = 0xFFFFFFFF; // Works regardless of size or signedness
+  char       b00 = (v & 0x00000001) != 0; // TEST  BYTE PTR [v + 0], 1
+  char       b08 = (v & 0x00000100) != 0; // TEST  BYTE PTR [v + 1], 1
+  char       b16 = (v & 0x00010000) != 0; // TEST DWORD PTR [v + 0], 0x00010000
+  char       b24 = (v & 0x01000000) != 0; // TEST DWORD PTR [v + 0], 0x01000000
+  char b00_to_15 = (v & 0x0000FFFF) != 0; // TEST  WORD PTR [v + 0], 0xFFFF
+  char b16_to_31 = (v & 0xFFFF0000) != 0; // TEST DWORD PTR [v + 0], 0xFFFF0000
+  char b08_to_23 = (v & 0x00FFFF00) != 0; // TEST DWORD PTR [v + 0], 0x00FFFF00
+  ```
+
 ### Arithmetic on a register *after* assigning it to a variable?
 
 Assigment is part of the C expression. If it's a comparison, that comparison

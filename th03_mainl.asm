@@ -5584,9 +5584,8 @@ include th03/snd/delaymea.asm
 include th03/hardware/input_wait_ok.asm
 include th02/formats/pi_load.asm
 include th03/formats/pi_put_quarter.asm
-include th03/hardware/input_modes.asm
-include th03/hardware/input_wait.asm
-		db 0
+	extern INPUT_MODE_INTERFACE:proc
+	extern INPUT_WAIT_FOR_CHANGE:proc
 	extern CDG_PUT_NOALPHA:proc
 	extern _hflip_lut_generate:proc
 seg2	ends

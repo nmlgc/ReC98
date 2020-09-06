@@ -86,12 +86,15 @@ bin\th02\maine.exe: bin\th02\maine.obj bin\th02\grppsafx.obj th02\maine021.cpp t
 $**
 |
 
+{th03}.cpp{bin\th03}.obj:
+	$(CC) $(CFLAGS) -ml -Z -DGAME=3 -n$(@D) -c $**
+
 bin\th03\res_yume.com: th03\res_yume.cpp
 	$(CC) $(CFLAGS) -mt -lt -Z -DGAME=3 -nbin\th03\ -eRES_YUME.COM @&&|
 $**
 | masters.lib
 
-bin\th03\op.exe: th03\op_01.cpp bin\th03\op.obj bin\th03\cdg_p_na.obj bin\hfliplut.obj bin\frmdely2.obj
+bin\th03\op.exe: th03\op_01.cpp bin\th03\op.obj bin\th03\inp_m_w.obj bin\th03\cdg_p_na.obj bin\hfliplut.obj bin\frmdely2.obj
 	$(CC) $(CFLAGS) -ml -3 -Z -DGAME=3 -nbin\th03\ -eOP.EXE @&&|
 $**
 |
@@ -101,7 +104,7 @@ bin\th03\main.exe: bin\th03\main.obj th03\main_01.cpp th03\sprite16.cpp
 $**
 |
 
-bin\th03\mainl.exe: bin\th03\mainl.obj bin\th03\cdg_p_na.obj bin\hfliplut.obj
+bin\th03\mainl.exe: bin\th03\mainl.obj bin\th03\inp_m_w.obj bin\th03\cdg_p_na.obj bin\hfliplut.obj
 	$(CC) $(CFLAGS) -ml -DGAME=3 -nbin\th03\ -eMAINL.EXE @&&|
 $**
 |

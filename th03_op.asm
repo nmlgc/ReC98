@@ -3640,9 +3640,10 @@ include th02/initop.asm
 include th03/formats/cdg_load.asm
 include th03/hardware/grppsafx.asm
 include th02/formats/pi_load.asm
-include th03/hardware/input_modes.asm
-include th03/hardware/input_wait.asm
-		db 0
+	extern INPUT_MODE_INTERFACE:proc
+	extern INPUT_MODE_KEY_VS_KEY:proc
+	extern INPUT_MODE_JOY_VS_KEY:proc
+	extern INPUT_MODE_KEY_VS_JOY:proc
 	extern CDG_PUT_NOALPHA:proc
 	extern _hflip_lut_generate:proc
 	extern FRAME_DELAY_2:proc
