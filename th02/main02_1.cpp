@@ -12,7 +12,6 @@ extern "C" {
 #pragma codeseg seg2
 #pragma option -3
 
-#include "th02/zunerror.c"
 #include "th02/hardware/keydelay.c"
 
 int pascal mptn_load_inner(const char *fn);

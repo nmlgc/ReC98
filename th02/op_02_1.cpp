@@ -5,7 +5,6 @@
 
 extern "C" {
 #include "th02/th02.h"
-#include "th02/initexit.h"
 #include "th02/formats/pi.h"
 
 #pragma codeseg seg2
@@ -18,9 +17,6 @@ char bombs;
 long unused_4;
 long unused_5;
 
-#include "th02/exit_dos.c"
-#include "th02/zunerror.c"
-#include "th02/hardware/grppsafx.cpp"
 #include "th01/hardware/vplanset.c"
 #include "th02/formats/pi_load.c"
 

@@ -14,7 +14,7 @@
 ; Application type:  Executable	16bit
 
 		.286 ; Force the .model directive to create 16-bit default segments...
-		.model large op_02_TEXT
+		.model large _TEXT
 		.386 ; ... then switch to what we actually need.
 		; And yes, we can't move this to an include file for some reason.
 
@@ -123,6 +123,9 @@ _TEXT		ends
 
 op_01_TEXT	segment	byte public 'CODE' use16
 op_01_TEXT	ends
+
+seg2	segment	word public 'CODE' use16
+seg2	ends
 
 	.data
 

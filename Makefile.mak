@@ -36,6 +36,9 @@ bin\th01\zunsoft.com: th01\zunsoft.c
 
 # Segment 2 (game-independent code)
 # ---------------------------------
+bin\exit_dos.obj: th02\exit_dos.c
+	$(CC) $(CFLAGS) -ml -n$(@D) -c $**
+
 bin\frmdely2.obj: th02\frmdely2.c
 	$(CC) $(CFLAGS) -ml -n$(@D) -c $**
 
@@ -58,22 +61,27 @@ bin\th01\fuuin.exe: bin\piloadc.obj bin\th01\fuuin.obj th01\fuuin_01.cpp th01\fu
 $**
 |
 
+{th02}.c{bin\th02}.obj:
+	$(CC) $(CFLAGS) -ml -Z -DGAME=2 -n$(@D) -c $**
+{th02}.cpp{bin\th02}.obj:
+	$(CC) $(CFLAGS) -ml -Z -DGAME=2 -n$(@D) -c $**
+
 bin\th02\zun_res.com: th02\zun_res1.c th02\zun_res2.c th02\zun_res3.c
 	$(CC) $(CFLAGS) -mt -lt -Z -DGAME=2 -nbin\th02\ -eZUN_RES.COM @&&|
 $**
 | masters.lib
 
-bin\th02\op.exe: th02\op_01.c bin\th02\op.obj th02\op_02_1.cpp bin\frmdely2.obj th02\op_02_2.c th02\op_03.c th02\op_04.c th02\op_05.cpp th02\op_06.cpp
+bin\th02\op.exe: th02\op_01.c bin\exit_dos.obj bin\th02\zunerror.obj bin\th02\grppsafx.obj bin\th02\op.obj th02\op_02_1.cpp bin\frmdely2.obj th02\op_02_2.c th02\op_03.c th02\op_04.c th02\op_05.cpp th02\op_06.cpp
 	$(CC) $(CFLAGS) -ml -Z -DGAME=2 -nbin\th02\ -eOP.EXE @&&|
 $**
 |
 
-bin\th02\main.exe: bin\th02\main.obj th02\main02_1.cpp th02\main02_2.c th02\main_03.cpp
+bin\th02\main.exe: bin\th02\main.obj bin\th02\zunerror.obj th02\main02_1.cpp th02\main02_2.c th02\main_03.cpp
 	$(CC) $(CFLAGS) -ml -Z -DGAME=2 -nbin\th02\ -eMAIN.EXE @&&|
 $**
 |
 
-bin\th02\maine.exe: bin\th02\maine.obj th02\maine021.cpp th02\maine022.c th02\maine_03.c th02\maine_04.c th02\maine_05.cpp
+bin\th02\maine.exe: bin\th02\maine.obj bin\th02\grppsafx.obj th02\maine021.cpp th02\maine022.c th02\maine_03.c th02\maine_04.c th02\maine_05.cpp
 	$(CC) $(CFLAGS) -ml -3 -Z -DGAME=2 -nbin\th02\ -eMAINE.EXE @&&|
 $**
 |
