@@ -4,14 +4,25 @@
  */
 
 #pragma codeseg seg2
+#pragma option -k-
 
 extern "C" {
 #include <dos.h>
+#include "libs/master.lib/master.h"
 #include "platform.h"
 #include "pc98.h"
+#include "planar.h"
 #include "decomp.h"
 #include "libs/sprite16/sprite16.h"
 #include "th03/sprite16.hpp"
+
+void pascal sprite16_sprites_commit(void)
+{
+	sprite16_sprites_copy_page(1);
+	graph_accesspage(0);
+	_AH = SPRITE16_GENERATE_ALPHA;
+	geninterrupt(SPRITE16);
+}
 
 // Register variables; declare them as local ones and remove this block when
 // porting away from 16-bit x86

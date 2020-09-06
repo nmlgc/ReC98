@@ -121,64 +121,7 @@ include libs/master.lib/pfint21.asm
 include libs/master.lib/js_start.asm
 include libs/master.lib/js_sense.asm
 		db 0
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2C2C	proc near
-		mov	cx, 0FA0h
-		xor	al, 1
-		out	0A6h, al
-		mov	ds, bx
-		mov	es, dx
-		xor	di, di
-		mov	si, di
-		rep movsd
-		xchg	bx, dx
-		retn
-sub_2C2C	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_2C42	proc far
-		xor	dx, dx
-		mov	bx, 3E80h
-		push	bx
-		nopcall	smem_wget
-		xchg	ax, dx
-		jb	short locret_2C89
-		mov	bx, sp
-		mov	ax, ss:[bx+4]
-		push	si
-		push	di
-		push	ds
-		mov	bx, 0ABE8h
-		call	sub_2C2C
-		call	sub_2C2C
-		mov	bx, 0B3E8h
-		call	sub_2C2C
-		call	sub_2C2C
-		mov	bx, 0BBE8h
-		call	sub_2C2C
-		call	sub_2C2C
-		mov	bx, 0E3E8h
-		call	sub_2C2C
-		call	sub_2C2C
-		pop	ds
-		pop	di
-		pop	si
-		push	dx
-		nopcall	smem_release
-		mov	ax, 1
-
-locret_2C89:
-		retf	2
-sub_2C42	endp
-
+include th03/hardware/sprite16_copy.asm
 include libs/master.lib/draw_trapezoid.asm
 include th03/formats/pfopen.asm
 include libs/master.lib/pf_str_ieq.asm
@@ -944,7 +887,7 @@ loc_9E24:
 		call	sub_E266
 		nopcall	sub_A38E
 		call	graph_200line pascal, 0
-		call	sub_F0EE
+		call	sprite16_sprites_commit
 		mov	_page_back, 0
 		mov	_page_front, 1
 		graph_accesspage 0
@@ -9263,18 +9206,7 @@ sub_F0A6	endp
 ; ---------------------------------------------------------------------------
 		nop
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_F0EE	proc far
-		push	1
-		call	sub_2C42
-		graph_accesspage 0
-		mov	ah, SPRITE16_GENERATE_ALPHA
-		int	SPRITE16
-		retf
-sub_F0EE	endp
-
+	SPRITE16_SPRITES_COMMIT procdesc pascal far
 	SPRITE16_PUT procdesc pascal far \
 		left:word, screen_top:word, sprite_offset:word
 	SPRITE16_PUTX procdesc pascal far \

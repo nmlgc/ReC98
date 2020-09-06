@@ -14,7 +14,16 @@ enum sprite16_put_func_t {
 	_sprite16_put_func_t_FORCE_INT = 0xFFFF
 };
 
-// Draws the sprite with the given offset in the SPRITE16_SPRITE_AREA at the
+// Copies the entire sprite area in VRAM from page [dst_page ^ 1] to
+// [dst_page]. Returns true if successful, false if the temporary memory
+// couldn't be allocated.
+bool16 pascal sprite16_sprites_copy_page(int dst_page);
+
+// Initializes SPRITE16 for double-buffered blitting of the sprites that have
+// been blitted to the sprite area on VRAM page 0.
+void pascal sprite16_sprites_commit(void);
+
+// Draws the sprite with the given offset in the SPRITE16 sprite area at the
 // given (left, top) position in screen (not VRAM) coordinates. The left and
 // right parts of the sprite are clipped in 16-pixel increments to stay within
 // the left and right clipping points, so make sure to hide at least 16 more
