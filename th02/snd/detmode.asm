@@ -1,4 +1,5 @@
-proc_defconv snd_determine_mode
+public _snd_determine_mode
+_snd_determine_mode proc
 	mov	ah, PMD_GET_DRIVER_VERSION
 	int	60h
 	xor	bx, bx
@@ -15,5 +16,5 @@ proc_defconv snd_determine_mode
 	mov	_snd_active, bl
 	mov	ax, bx
 	ret
-endp_defconv
+_snd_determine_mode endp
 	nop	; word alignment

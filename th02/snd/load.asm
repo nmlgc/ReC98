@@ -1,9 +1,4 @@
-; Loads a song in .M format ([func] = SND_LOAD_SONG) or a sound effect bank in
-; .EFC format ([func] = SND_LOAD_SE) into the respective work buffer of the
-; sound driver. If MIDI is used, 'md' is appended to the file name.
-
-; void DEFCONV snd_load(const char *fn, int func)
-proc_defconv snd_load
+proc_defconv snd_load, SND_LOAD
 @@fn	= dword ptr (cPtrSize + 2)
 @@func	= word ptr (cPtrSize + 2 + dPtrSize)
 

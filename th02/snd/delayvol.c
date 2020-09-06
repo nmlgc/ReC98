@@ -1,4 +1,4 @@
-void snd_delay_until_volume(char volume)
+void snd_delay_until_volume(uint8_t volume)
 {
 loop:
 	_AH = KAJA_GET_VOLUME;

@@ -1,8 +1,9 @@
-proc_defconv snd_se_reset
+public _snd_se_reset
+_snd_se_reset proc
 	mov	_snd_se_frame, 0
 	mov	_snd_se_playing, -1
 	ret
-endp_defconv
+_snd_se_reset endp
 	even
 
 retfunc macro
@@ -12,7 +13,7 @@ retfunc macro
 		ret
 	endif
 endm
-proc_defconv snd_se_play
+proc_defconv snd_se_play, SND_SE_PLAY
 @@se	= [bp+6]
 
 	push	bp
@@ -43,7 +44,8 @@ proc_defconv snd_se_play
 endp_defconv
 	even
 
-proc_defconv snd_se_update
+public _snd_se_update
+_snd_se_update proc
 	cmp	_snd_fm_possible, 0
 	jz	short @@ret
 	cmp	_snd_se_playing, -1
@@ -67,5 +69,5 @@ proc_defconv snd_se_update
 
 @@ret:
 	ret
-endp_defconv
+_snd_se_update endp
 	even

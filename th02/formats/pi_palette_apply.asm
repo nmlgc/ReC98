@@ -2,7 +2,7 @@ if GAME ge 3
 	align	2
 endif
 
-proc_defconv pi_palette_apply
+proc_defconv pi_palette_apply, PI_PALETTE_APPLY
 @@slot	= word ptr (cPtrSize + 2)
 
 	push	bp

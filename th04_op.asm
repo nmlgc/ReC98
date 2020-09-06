@@ -732,7 +732,7 @@ loc_AE76:
 		push	ax
 		push	8
 		call	_putfunc
-		call	snd_se_reset
+		call	_snd_se_reset
 		call	snd_se_play pascal, 1
 		call	snd_se_update
 		pop	bp
@@ -806,7 +806,7 @@ loc_AF1C:
 		jz	loc_B02B
 
 loc_AF2C:
-		call	snd_se_reset
+		call	_snd_se_reset
 		call	snd_se_play pascal, 11
 		call	snd_se_update
 		mov	al, _menu_sel
@@ -996,7 +996,7 @@ loc_B0F4:
 ; ---------------------------------------------------------------------------
 
 loc_B14F:
-		call	snd_se_reset
+		call	_snd_se_reset
 		call	snd_se_play pascal, 11
 		call	snd_se_update
 		mov	_option_initialized, 0
@@ -3686,7 +3686,7 @@ loc_D7BB:
 		jz	short loc_D84C
 
 loc_D7D6:
-		call	snd_se_reset
+		call	_snd_se_reset
 		call	snd_se_play pascal, 1
 		call	snd_se_update
 		mov	al, 1
@@ -3727,7 +3727,7 @@ loc_D84C:
 		jz	short loc_D8B2
 
 loc_D85A:
-		call	snd_se_reset
+		call	_snd_se_reset
 		call	snd_se_play pascal, 11
 		call	snd_se_update
 		mov	al, playchar_132B8
@@ -3827,7 +3827,7 @@ loc_D939:
 		push	1
 		call	frame_delay
 		graph_showpage 0
-		call	snd_se_reset
+		call	_snd_se_reset
 		call	snd_se_play pascal, 1
 		call	snd_se_update
 
@@ -3838,7 +3838,7 @@ loc_D986:
 		jz	short loc_D9D5
 
 @@z_pressed:
-		call	snd_se_reset
+		call	_snd_se_reset
 		call	snd_se_play pascal, 11
 		call	snd_se_update
 		les	bx, _resident

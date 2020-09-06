@@ -1,5 +1,5 @@
-; int __cdecl snd_pmd_resident(void)
-snd_pmd_resident	proc
+public _snd_pmd_resident
+_snd_pmd_resident	proc
 	xor	ax, ax
 	mov	_snd_interrupt_if_midi, 60h
 	mov	_snd_midi_possible, al
@@ -18,4 +18,4 @@ snd_pmd_resident	proc
 
 @@ret:
 	ret
-snd_pmd_resident	endp
+_snd_pmd_resident	endp

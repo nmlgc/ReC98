@@ -897,7 +897,7 @@ _envp		= dword	ptr  0Ch
 		les	bx, _resident
 		cmp	es:[bx+resident_t.bgm_mode], SND_BGM_OFF
 		jz	short loc_9DAD
-		call	snd_determine_mode
+		call	_snd_determine_mode
 
 loc_9DAD:
 		call	gaiji_backup
@@ -905,7 +905,7 @@ loc_9DAD:
 		push	offset aMikoft_bft ; "MIKOFT.bft"
 		call	gaiji_entry_bfnt
 		call	snd_load c, offset aYume_efc, ds, SND_LOAD_SE
-		call	snd_se_reset
+		call	_snd_se_reset
 		call	_hflip_lut_generate
 		les	bx, _resident
 		cmp	es:[bx+resident_t.show_score_menu], 0
@@ -2440,9 +2440,9 @@ loc_ABFE:
 		lea	ax, [bp+var_2]
 		push	ax
 		call	sub_A50A
-		call	snd_se_reset
+		call	_snd_se_reset
 		call	snd_se_play pascal, [bp+var_2]
-		call	snd_se_update
+		call	_snd_se_update
 		jmp	short loc_AC1E	; default
 ; ---------------------------------------------------------------------------
 
@@ -4130,7 +4130,7 @@ loc_B8F1:
 		call	pi_palette_apply pascal, 0
 		call	pi_put pascal, large 0, 0
 		freePISlotLarge	0
-		call	snd_delay_until_volume stdcall, 255
+		call	_snd_delay_until_volume stdcall, 255
 		pop	cx
 		kajacall	KAJA_SONG_STOP
 		pop	bp
@@ -5276,7 +5276,7 @@ sub_C40D	proc near
 		kajacall	KAJA_SONG_FADE, 16
 		push	4
 		call	palette_black_out
-		call	snd_delay_until_volume stdcall, 255
+		call	_snd_delay_until_volume stdcall, 255
 		pop	cx
 		kajacall	KAJA_SONG_STOP
 		mov	byte_106B0, 50h	; 'P'

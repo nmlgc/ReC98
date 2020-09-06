@@ -1,4 +1,5 @@
-proc_defconv snd_pmd_resident
+public _snd_pmd_resident
+_snd_pmd_resident proc
 	mov	_snd_interrupt_if_midi, 60h
 	mov	_snd_midi_active, 0
 	mov	_snd_fm_possible, 0
@@ -19,5 +20,5 @@ proc_defconv snd_pmd_resident
 @@nope:
 	xor	ax, ax
 	ret
-endp_defconv
+_snd_pmd_resident endp
 	nop	; word alignment

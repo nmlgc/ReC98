@@ -19,7 +19,7 @@ cfg_load	proc near
 	les	bx, _resident
 	mov	al, [bp+@@cfg.CFG_bgm_mode]
 	mov	es:[bx+resident_t.bgm_mode], al
-	call	snd_determine_mode
+	call	_snd_determine_mode
 	mov	_snd_sel_disabled, 0
 	cmp	_snd_active, 0
 	jnz	short @@snd_disabled?

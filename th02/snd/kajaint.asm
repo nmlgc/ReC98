@@ -1,4 +1,4 @@
-proc_defconv snd_kaja_interrupt
+proc_defconv snd_kaja_interrupt, SND_KAJA_INTERRUPT
 @@ax	= word ptr (cPtrSize + 2)
 
 	push	bp

@@ -23,11 +23,17 @@ int snd_determine_mode(void);
 int16_t DEFCONV snd_kaja_interrupt(int16_t ax);
 #define snd_kaja_func(func, param) snd_kaja_interrupt((func) << 8 | (param))
 
+void snd_delay_until_volume(uint8_t volume);
+
 #define SND_LOAD_SONG (kaja_func_t)(KAJA_GET_SONG_ADDRESS << 8)
 #define SND_LOAD_SE (kaja_func_t)(PMD_GET_SE_ADDRESS << 8)
 
-#ifdef PMD /* requires kaja.h */
-	void snd_load(const char *fn, kaja_func_t func);
+#if defined(PMD) && (GAME <= 3) /* requires kaja.h */
+	// Loads a song in .M format ([func] = SND_LOAD_SONG) or a sound effect
+	// bank in EFC format ([func] = SND_LOAD_SE) into the respective work
+	// buffer of the sound driver. If MIDI is used, 'md' is appended to the
+	// file name.
+	void DEFCONV snd_load(const char *fn, kaja_func_t func);
 #endif
 
 void snd_se_reset(void);

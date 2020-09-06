@@ -1612,7 +1612,7 @@ loc_AD95:
 		lea	ax, [bp+var_2]
 		push	ax
 		call	sub_A64D
-		call	snd_se_reset
+		call	_snd_se_reset
 		call	snd_se_play pascal, [bp+var_2]
 		call	snd_se_update
 		jmp	short loc_ADB5	; default

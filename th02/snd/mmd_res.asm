@@ -1,4 +1,5 @@
-proc_defconv snd_mmd_resident
+public _snd_mmd_resident
+_snd_mmd_resident proc
 	xor	ax, ax
 	mov	es, ax
 	les	bx, dword ptr es:[61h * 4]
@@ -23,5 +24,5 @@ if GAME le 3
 endif
 	xor	ax, ax
 	ret
-endp_defconv
+_snd_mmd_resident endp
 	nop	; word alignment

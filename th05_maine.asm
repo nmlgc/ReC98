@@ -1339,7 +1339,7 @@ loc_AF18:
 		lea	ax, [bp+var_2]
 		push	ax
 		call	sub_A738
-		call	snd_se_reset
+		call	_snd_se_reset
 		call	snd_se_play pascal, [bp+var_2]
 		call	snd_se_update
 		jmp	short loc_AF8F	; default

@@ -9,10 +9,10 @@ snd_determine_modes	proc
 	push	di
 	mov	si, [bp+@@req_bgm_mode]
 	mov	di, [bp+@@req_se_mode]
-	nopcall	snd_pmd_resident
+	nopcall	_snd_pmd_resident
 	cmp	si, SND_BGM_MIDI
 	jne	short @@check_PMD
-	nopcall	snd_mmd_resident
+	nopcall	_snd_mmd_resident
 
 @@check_PMD:
 	mov	ah, PMD_GET_DRIVER_VERSION

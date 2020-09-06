@@ -1,4 +1,5 @@
-proc_defconv pi_put
+public PI_PUT
+pi_put proc
 @@slot	= word ptr [bp + (cPtrSize + 2)]
 @@top	= word ptr [bp + (cPtrSize + 4)]
 @@left	= word ptr [bp + (cPtrSize + 6)]
@@ -24,12 +25,13 @@ proc_defconv pi_put
 	pop	si
 	pop	bp
 	ret	6
-endp_defconv
+pi_put endp
 	align	2
 
 ; ---------------------------------------------------------------------------
 
-proc_defconv pi_put_quarter
+public PI_PUT_QUARTER
+pi_put_quarter proc
 @@quarter	= byte ptr [bp + (cPtrSize + 2)]
 @@slot	= word ptr [bp + (cPtrSize + 4)]
 @@top	= word ptr [bp + (cPtrSize + 6)]
@@ -69,7 +71,7 @@ proc_defconv pi_put_quarter
 	pop	si
 	pop	bp
 	ret	8
-endp_defconv
+pi_put_quarter endp
 
 ; ---------------------------------------------------------------------------
 

@@ -1,4 +1,4 @@
-func snd_se_reset
+func _snd_se_reset
 	mov	_snd_se_frame, 0
 	mov	_snd_se_playing, -1
 	ret

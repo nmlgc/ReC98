@@ -1,5 +1,5 @@
-; int DEFCONV snd_delay_until_volume(__int8 volume)
-proc_defconv snd_delay_until_volume
+public _snd_delay_until_volume
+_snd_delay_until_volume proc
 @@volume	= byte ptr (cPtrSize + 2)
 
 	push	bp
@@ -23,5 +23,5 @@ proc_defconv snd_delay_until_volume
 @@ret:
 	pop	bp
 	ret
-endp_defconv
+_snd_delay_until_volume endp
 	nop	; word alignment

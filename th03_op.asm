@@ -1122,7 +1122,7 @@ loc_A2AE:
 		jnz	short loc_A2DB
 		mov	es:[bx+resident_t.bgm_mode], SND_BGM_FM
 		kajacall	KAJA_SONG_STOP
-		call	snd_determine_mode
+		call	_snd_determine_mode
 		kajacall	KAJA_SONG_PLAY
 		jmp	short loc_A2F1
 ; ---------------------------------------------------------------------------
@@ -1192,7 +1192,7 @@ loc_A357:
 		jnz	short loc_A384
 		mov	es:[bx+resident_t.bgm_mode], SND_BGM_FM
 		kajacall	KAJA_SONG_STOP
-		call	snd_determine_mode
+		call	_snd_determine_mode
 		kajacall	KAJA_SONG_PLAY
 		jmp	short loc_A39A
 ; ---------------------------------------------------------------------------

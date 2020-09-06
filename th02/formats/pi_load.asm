@@ -1,4 +1,4 @@
-proc_defconv pi_load
+proc_defconv pi_load, PI_LOAD
 	arg @@slot:word, @@fn:dword
 	local @@ret
 

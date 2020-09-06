@@ -830,7 +830,7 @@ loc_A9B6:
 		push	ax
 		push	0Eh
 		call	_putfunc
-		call	snd_se_reset
+		call	_snd_se_reset
 		call	snd_se_play pascal, 1
 		call	snd_se_update
 		pop	bp
@@ -904,7 +904,7 @@ loc_AA5C:
 		jz	loc_ABA8
 
 loc_AA6C:
-		call	snd_se_reset
+		call	_snd_se_reset
 		call	snd_se_play pascal, 11
 		call	snd_se_update
 		mov	al, _menu_sel
@@ -1104,7 +1104,7 @@ loc_AC71:
 ; ---------------------------------------------------------------------------
 
 loc_ACD8:
-		call	snd_se_reset
+		call	_snd_se_reset
 		call	snd_se_play pascal, 11
 		call	snd_se_update
 		mov	_option_initialized, 0
@@ -3389,7 +3389,7 @@ loc_D1B5:
 		jz	short loc_D223
 
 @@left_or_right_pressed:
-		call	snd_se_reset
+		call	_snd_se_reset
 		call	snd_se_play pascal, 1
 		call	snd_se_update
 		graph_accesspage 1
@@ -3411,7 +3411,7 @@ loc_D223:
 		jz	short loc_D284
 
 @@up_or_down_pressed:
-		call	snd_se_reset
+		call	_snd_se_reset
 		call	snd_se_play pascal, 1
 		call	snd_se_update
 		graph_accesspage 1
@@ -3438,7 +3438,7 @@ loc_D284:
 		mov	bx, ax
 		cmp	_selectable_with[bx], 0
 		jz	short @@unable_to_select
-		call	snd_se_reset
+		call	_snd_se_reset
 		call	snd_se_play pascal, 11
 		call	snd_se_update
 		les	bx, _resident

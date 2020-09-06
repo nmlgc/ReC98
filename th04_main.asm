@@ -3347,7 +3347,7 @@ loc_D47B:
 		lea	ax, [bp+var_2]
 		push	ax
 		call	main_01:sub_D0CA
-		call	snd_se_reset
+		call	_snd_se_reset
 		call	snd_se_play pascal, [bp+var_2]
 		call	snd_se_update
 		jmp	loc_D528	; default

@@ -1,4 +1,5 @@
-proc_defconv pi_put_quarter
+public PI_PUT_QUARTER
+pi_put_quarter proc pascal
 	arg @@left:word, @@top:word, @@slot:word, @@quarter:word
 	local @@row_num:word, @@row_buf:dword
 
@@ -67,4 +68,4 @@ proc_defconv pi_put_quarter
 	pop	di
 	pop	si
 	ret
-endp_defconv
+endp

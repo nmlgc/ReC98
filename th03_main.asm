@@ -158,7 +158,7 @@ _envp		= dword	ptr  0Ch
 		les	bx, _resident
 		cmp	es:[bx+resident_t.bgm_mode], SND_BGM_OFF
 		jz	short loc_970F
-		call	snd_determine_mode
+		call	_snd_determine_mode
 
 loc_970F:
 		call	gaiji_backup
@@ -263,7 +263,7 @@ loc_977E:
 		push	_input_mp_p2
 		push	offset _p2
 		call	sub_DA43
-		call	snd_se_update
+		call	_snd_se_update
 		test	_input_sp.hi, high INPUT_CANCEL
 		jz	short loc_9845
 		call	sub_C7A5
@@ -892,7 +892,7 @@ loc_9E24:
 		mov	_page_front, 1
 		graph_accesspage 0
 		graph_showpage 1
-		call	snd_se_reset
+		call	_snd_se_reset
 		nopcall	sub_B8F7
 		nopcall	sub_BAE0
 		call	grc_setclip pascal, large 0, ((RES_X - 1) shl 16) or (SPRITE16_RES_Y - 1)
@@ -1283,7 +1283,7 @@ sub_A21F	proc near
 		call	farfp_20F28
 		mov	_p1.hyper, offset hyper_standby
 		mov	_p2.hyper, offset hyper_standby
-		call	snd_se_reset
+		call	_snd_se_reset
 		nopcall	sub_B8F7
 		nopcall	sub_A38E
 		nopcall	sub_BAE0
@@ -4858,9 +4858,9 @@ loc_C7C1:
 ; ---------------------------------------------------------------------------
 
 loc_C7C8:
-		call	snd_se_reset
+		call	_snd_se_reset
 		call	snd_se_play pascal, 21
-		call	snd_se_update
+		call	_snd_se_update
 		jmp	short loc_C7E7
 ; ---------------------------------------------------------------------------
 
@@ -4892,9 +4892,9 @@ loc_C80A:
 loc_C816:
 		cmp	_input_sp, INPUT_NONE
 		jnz	short loc_C80A
-		call	snd_se_reset
+		call	_snd_se_reset
 		call	snd_se_play pascal, 21
-		call	snd_se_update
+		call	_snd_se_update
 		pop	bp
 		retn
 sub_C7A5	endp
@@ -5202,9 +5202,9 @@ sub_CA3C	proc far
 		jnz	short loc_CAC8
 
 loc_CA4E:
-		call	snd_se_reset
+		call	_snd_se_reset
 		call	snd_se_play pascal, 19
-		call	snd_se_update
+		call	_snd_se_update
 		push	0
 		nopcall	sub_BA91
 		push	1
@@ -11636,7 +11636,7 @@ loc_107B2:
 		jnz	short loc_107CC
 
 loc_107C0:
-		call	snd_se_reset
+		call	_snd_se_reset
 		call	snd_se_play pascal, 5
 
 loc_107CC:

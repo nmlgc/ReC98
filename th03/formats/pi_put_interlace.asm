@@ -1,4 +1,5 @@
-proc_defconv pi_put_interlace
+public PI_PUT_INTERLACE
+pi_put_interlace proc pascal
 	arg @@left:word, @@top:word, @@slot:word
 	local @@row_num:word, @@row_buf:dword
 
@@ -53,4 +54,4 @@ proc_defconv pi_put_interlace
 	pop	di
 	pop	si
 	ret
-endp_defconv
+pi_put_interlace endp
