@@ -1,5 +1,5 @@
-public GAME_EXIT
-game_exit	proc far
+public _game_exit
+_game_exit	proc far
 	push	bp
 	mov	bp, sp
 	call	pfend
@@ -26,4 +26,4 @@ if GAME ge 4
 endif
 	pop	bp
 	retf
-game_exit	endp
+_game_exit	endp

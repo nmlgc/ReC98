@@ -171,7 +171,7 @@ _arg0		= dword	ptr  4
 		call	graph_hide
 		call	text_clear
 		call	gaiji_restore
-		call	game_exit
+		call	_game_exit
 		pushd	0
 		pushd	[bp+_arg0]	; arg0
 		pushd	[bp+_arg0]	; path

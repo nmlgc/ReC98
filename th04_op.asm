@@ -185,7 +185,7 @@ start_game	proc near
 		call	cfg_save
 		call	gaiji_restore
 		kajacall	KAJA_SONG_FADE, 10
-		call	game_exit
+		call	_game_exit
 		les	bx, _resident
 		cmp	es:[bx+resident_t.debug_mode], 0
 		jnz	short loc_A957
@@ -236,7 +236,7 @@ start_extra	proc near
 		call	cfg_save
 		call	gaiji_restore
 		kajacall	KAJA_SONG_FADE, 10
-		call	game_exit
+		call	_game_exit
 		pushd	0
 		push	ds
 		push	offset aMain	; "main"
@@ -320,7 +320,7 @@ loc_AA6E:
 		call	main_cdg_free
 		call	cfg_save
 		call	gaiji_restore
-		call	game_exit
+		call	_game_exit
 		pushd	0
 		push	ds
 		push	offset aMain	; "main"
@@ -1339,7 +1339,7 @@ loc_B47B:
 		call	cfg_save_exit
 		call	gaiji_restore
 		call	text_clear
-		call	game_exit_to_dos
+		call	_game_exit_to_dos
 		call	respal_free
 		pop	si
 		pop	bp

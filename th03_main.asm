@@ -2405,7 +2405,7 @@ _arg0		= dword	ptr  6
 		call	sub_EF1C
 		push	1
 		call	sub_EF1C
-		call	game_exit
+		call	_game_exit
 		pushd	0
 		pushd	[bp+_arg0]	; arg0
 		pushd	[bp+_arg0]	; path

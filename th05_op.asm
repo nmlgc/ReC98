@@ -208,7 +208,7 @@ loc_A400:
 		call	main_cdg_free
 		call	cfg_save
 		kajacall	KAJA_SONG_FADE, 10
-		call	game_exit
+		call	_game_exit
 		les	bx, _resident
 		cmp	es:[bx+resident_t.debug_mode], 0
 		jnz	short loc_A430
@@ -290,7 +290,7 @@ loc_A4A0:
 		call	main_cdg_free
 		call	cfg_save
 		kajacall	KAJA_SONG_FADE, 10
-		call	game_exit
+		call	_game_exit
 		pushd	0
 		push	ds
 		push	offset aMain	; "main"
@@ -413,7 +413,7 @@ loc_A5BF:
 		call	cfg_save
 		push	1
 		call	palette_black_out
-		call	game_exit
+		call	_game_exit
 		pushd	0
 		push	ds
 		push	offset aMain	; "main"
@@ -1474,7 +1474,7 @@ loc_B058:
 		call	main_cdg_free
 		call	cfg_save_exit
 		call	text_clear
-		call	game_exit_to_dos
+		call	_game_exit_to_dos
 		call	respal_free
 		pop	si
 		pop	bp

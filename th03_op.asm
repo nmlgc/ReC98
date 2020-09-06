@@ -291,7 +291,7 @@ loc_9B4E:
 		call	cfg_save
 		call	gaiji_restore
 		kajacall	KAJA_SONG_STOP
-		call	game_exit
+		call	_game_exit
 		pushd	0
 		push	ds
 		push	offset path	; "mainl"
@@ -503,7 +503,7 @@ loc_9D19:
 		call	cfg_save
 		call	gaiji_restore
 		kajacall	KAJA_SONG_STOP
-		call	game_exit
+		call	_game_exit
 		pushd	0
 		push	ds
 		push	offset path	; "mainl"
@@ -600,7 +600,7 @@ loc_9EA6:
 		call	gaiji_restore
 		kajacall	KAJA_SONG_STOP
 		call	super_free
-		call	game_exit
+		call	_game_exit
 		pushd	0
 		push	ds
 		push	offset path	; "mainl"
@@ -1382,7 +1382,7 @@ loc_A4FE:
 		call	cfg_save_exit
 		call	gaiji_restore
 		call	text_clear
-		call	game_exit_to_dos
+		call	_game_exit_to_dos
 		call	respal_free
 		pop	bp
 		retf

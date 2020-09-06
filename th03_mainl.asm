@@ -913,7 +913,7 @@ loc_9DAD:
 		call	sub_B7D2
 		call	text_clear
 		call	gaiji_restore
-		call	game_exit
+		call	_game_exit
 		pushd	0
 		push	ds
 		push	offset path	; "op"
@@ -1051,7 +1051,7 @@ loc_9F58:
 loc_9F69:
 		call	text_clear
 		call	gaiji_restore
-		call	game_exit
+		call	_game_exit
 		pushd	0
 		push	ds
 		push	offset path	; "op"
@@ -4241,7 +4241,7 @@ loc_B9DD:
 loc_BA66:
 		call	text_clear
 		call	gaiji_restore
-		call	game_exit
+		call	_game_exit
 		pushd	0
 		push	ds
 		push	offset aOp_0	; "op"
