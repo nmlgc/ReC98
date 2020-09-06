@@ -40,24 +40,14 @@ cdg_put_noalpha	proc far
 	cld
 	nop
 
+@@row_loop:
 @@width:
 	mov	cx, 1234h
 	rep movsd
 	sub	di, dx
-	jns	short @@width
+	jns	short @@row_loop
 	mov	di, bx
-	mov	ax, es
-	add	ax, 800h
-	mov	es, ax
-	assume es:nothing
-	cmp	ax, 0C000h
-	jb	short @@width
-	cmp	ax, 0C800h
-	jnb	short @@ret
-	add	ax, 2000h
-	mov	es, ax
-	assume es:nothing
-	jmp	short @@width
+	vram_plane_next es, @@row_loop
 
 @@ret:
 	pop	ds

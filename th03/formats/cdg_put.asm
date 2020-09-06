@@ -63,6 +63,7 @@ cdg_put proc far
 	mov	ds, ax
 	assume ds:nothing
 
+@@row_loop:
 @@width_2:
 	mov	cx, 1234h
 
@@ -73,20 +74,9 @@ cdg_put proc far
 	add	di, 4
 	loop	@@blit_dword
 	sub	di, dx
-	jns	short @@width_2
+	jns	short @@row_loop
 	mov	di, bx
-	mov	ax, es
-	add	ax, 800h
-	mov	es, ax
-	assume es:nothing
-	cmp	ax, 0C000h
-	jb	short @@width_2
-	cmp	ax, 0C800h
-	jnb	short @@ret
-	add	ax, 2000h
-	mov	es, ax
-	assume es:nothing
-	jmp	short @@width_2
+	vram_plane_next es, @@row_loop
 
 @@ret:
 	pop	ds

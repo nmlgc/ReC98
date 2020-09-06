@@ -114,6 +114,11 @@ typedef int8_t uint4_t;
 #define SEG_PLANE_R 0xB000
 #define SEG_PLANE_G 0xB800
 #define SEG_PLANE_E 0xE000
+
+// Segment distance between B↔R↔G
+#define SEG_PLANE_DIST_BRG 0x800
+// Segment distance between G↔E
+#define SEG_PLANE_DIST_E 0x2800
 /// ---------------
 
 /// Keyboard

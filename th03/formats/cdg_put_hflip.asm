@@ -75,6 +75,7 @@ proc_defconv cdg_put_hflip
 	mov	dx, 1234h
 	nop
 
+@@row_loop:
 @@width_bytes_colors:
 	mov	cx, 1234
 
@@ -86,22 +87,11 @@ proc_defconv cdg_put_hflip
 	dec	di
 	loop	@@blit_hflip_colors
 	sub	di, dx
-	jns	short @@width_bytes_colors
+	jns	short @@row_loop
 
 @@last_x_colors:
 	mov	di, 1234h
-	mov	ax, es
-	add	ax, 800h
-	mov	es, ax
-	assume es:nothing
-	cmp	ax, 0C000h
-	jb	short @@width_bytes_colors
-	cmp	ax, 0C800h
-	jnb	short @@ret
-	add	ax, 2000h
-	mov	es, ax
-	assume es:nothing
-	jmp	short @@width_bytes_colors
+	vram_plane_next es, @@row_loop
 
 @@ret:
 	pop	di
