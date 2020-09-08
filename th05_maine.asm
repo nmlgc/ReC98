@@ -5432,8 +5432,8 @@ loc_D41B:
 		mov	byte ptr [si+13h], 0
 		mov	word ptr [si+8], 0
 		mov	word ptr [si+0Ah], 0
-		mov	word_151DA, 0
-		mov	word_151DC, 0
+		mov	_space_camera_velocity.x, 0
+		mov	_space_camera_velocity.y, 0
 		xor	di, di
 		jmp	short loc_D451
 ; ---------------------------------------------------------------------------
@@ -5665,11 +5665,11 @@ loc_D5FA:
 		cmp	dword ptr [si],	0FFFFC190h
 		jz	loc_D6F9
 		mov	ax, [si+8]
-		sub	ax, word_151DA
+		sub	ax, _space_camera_velocity.x
 		cwde
 		add	[si], eax
 		mov	ax, [si+0Ah]
-		sub	ax, word_151DC
+		sub	ax, _space_camera_velocity.y
 		cwde
 		add	[si+4],	eax
 		cmp	word_151DE, 0
@@ -5784,9 +5784,9 @@ loc_D70E:
 		cmp	word ptr [bx], 0C190h
 		jz	short loc_D725
 		mov	bx, [bp+var_4]
-		mov	ax, word_151DA
+		mov	ax, _space_camera_velocity.x
 		sub	[bx], ax
-		mov	ax, word_151DC
+		mov	ax, _space_camera_velocity.y
 		sub	[bx+2],	ax
 
 loc_D725:
@@ -5807,26 +5807,26 @@ loc_D73A:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_D751
-		mov	ax, word_151DA
+		mov	ax, _space_camera_velocity.x
 		sub	[di], ax
-		mov	ax, word_151DC
+		mov	ax, _space_camera_velocity.y
 		jmp	short loc_D763
 ; ---------------------------------------------------------------------------
 
 loc_D751:
-		mov	ax, word_151DA
+		mov	ax, _space_camera_velocity.x
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		sub	[di], ax
-		mov	ax, word_151DC
+		mov	ax, _space_camera_velocity.y
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 
 loc_D763:
 		sub	[di+2],	ax
-		cmp	word_151DA, 0
+		cmp	_space_camera_velocity.x, 0
 		jnz	short loc_D7A5
 		mov	ax, word_151CE
 		neg	ax
@@ -5908,11 +5908,11 @@ loc_D7F8:
 		cmp	dword ptr [si],	0FFFFC190h
 		jz	short loc_D83F
 		mov	ax, [si+8]
-		sub	ax, word_151DA
+		sub	ax, _space_camera_velocity.x
 		cwde
 		add	[si], eax
 		mov	ax, [si+0Ah]
-		sub	ax, word_151DC
+		sub	ax, _space_camera_velocity.y
 		cwde
 		add	[si+4],	eax
 		cmp	byte ptr [si+13h], 10h
@@ -6079,7 +6079,7 @@ var_2		= word ptr -2
 		jl	loc_DA31
 		cmp	word_1183E, 0B0h ; '°'
 		jge	short loc_D951
-		inc	word_151DC
+		inc	_space_camera_velocity.y
 		jmp	short loc_D9B5
 ; ---------------------------------------------------------------------------
 
@@ -6088,7 +6088,7 @@ loc_D951:
 		jge	short loc_D964
 		mov	al, byte_1183A
 		mov	ah, 0
-		add	word_151DC, ax
+		add	_space_camera_velocity.y, ax
 		jmp	short loc_D9B5
 ; ---------------------------------------------------------------------------
 
@@ -6109,8 +6109,8 @@ loc_D97D:
 		xor	ax, ax
 
 loc_D97F:
-		add	word_151DC, ax
-		cmp	word_151DC, 0B6h ; '¶'
+		add	_space_camera_velocity.y, ax
+		cmp	_space_camera_velocity.y, ((11 shl 4) + 6)
 		jle	short loc_D9B5
 		inc	byte_11840
 		jmp	short loc_D9B5
@@ -6131,8 +6131,8 @@ loc_D9A3:
 		xor	ax, ax
 
 loc_D9A5:
-		sub	word_151DC, ax
-		cmp	word_151DC, 0B2h ; '²'
+		sub	_space_camera_velocity.y, ax
+		cmp	_space_camera_velocity.y, ((11 shl 4) + 2)
 		jge	short loc_D9B5
 		dec	byte_11840
 
@@ -6188,7 +6188,7 @@ loc_DA18:
 		jl	short loc_DA2C
 		cmp	word_1183E, 410h
 		jg	short loc_DA2C
-		dec	word_151DA
+		dec	_space_camera_velocity.x
 
 loc_DA2C:
 		mov	ax, 1
@@ -6290,11 +6290,11 @@ sub_DAD7	proc near
 		push	si
 		push	di
 		mov	si, 50E4h
-		cmp	word_151DA, 0
+		cmp	_space_camera_velocity.x, 0
 		jge	short loc_DAEF
 		mov	al, byte_1183A
 		mov	ah, 0
-		add	word_151DA, ax
+		add	_space_camera_velocity.x, ax
 
 loc_DAEF:
 		inc	word_11844
@@ -6302,7 +6302,7 @@ loc_DAEF:
 		jl	loc_DBE0
 		cmp	word_11844, 80h
 		jge	short loc_DB0B
-		dec	word_151DC
+		dec	_space_camera_velocity.y
 		jmp	loc_DBC3
 ; ---------------------------------------------------------------------------
 
@@ -6311,7 +6311,7 @@ loc_DB0B:
 		jge	short loc_DB1F
 		mov	al, byte_1183A
 		mov	ah, 0
-		sub	word_151DC, ax
+		sub	_space_camera_velocity.y, ax
 		jmp	loc_DBC3
 ; ---------------------------------------------------------------------------
 
@@ -8301,8 +8301,8 @@ word_151D0	dw ?
 point_151D2	Point <?>
 word_151D6	dw ?
 word_151D8	dw ?
-word_151DA	dw ?
-word_151DC	dw ?
+public _space_camera_velocity
+_space_camera_velocity	Point <?>
 word_151DE	dw ?
 measure_151E0	dw ?
 word_151E2	dw ?
