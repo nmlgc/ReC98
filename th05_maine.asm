@@ -127,81 +127,7 @@ include libs/master.lib/super_cancel_pat.asm
 include libs/master.lib/super_put_rect.asm
 include libs/master.lib/super_put.asm
 include libs/master.lib/super_convert_tiny.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2DB6	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	si
-		push	di
-		mov	es, graph_VramSeg
-		mov	cx, [bp+arg_4]
-		mov	di, [bp+arg_2]
-		mov	bx, [bp+arg_0]
-		shl	bx, 1
-		mov	bp, [bx+21DCh]
-		mov	ds, word ptr [bx+1DDCh]
-		mov	ax, di
-		shl	ax, 2
-		add	di, ax
-		shl	di, 4
-		mov	ax, cx
-		and	cx, 7
-		shr	ax, 3
-		add	di, ax
-		xor	si, si
-		lodsw
-		cmp	al, 80h
-		jnz	short loc_2E3F
-		GRCG_NOINT_SETMODE_VIA_MOV al, GC_RMW
-		push	ax
-		mov	dx, bp
-		mov	al, 50h	; 'P'
-		mul	dl
-		mov	bp, ax
-		shr	dl, 1
-		pop	ax
-		nop
-
-loc_2E02:
-		GRCG_SETCOLOR_DIRECT ah
-		mov	ch, dl
-
-loc_2E1C:
-		lodsw
-		mov	bl, ah
-		xor	ah, ah
-		ror	ax, cl
-		mov	es:[di], ax
-		xor	bh, bh
-		ror	bx, cl
-		mov	es:[di+50h], bx
-		add	di, 0A0h
-		dec	ch
-		jnz	short loc_2E1C
-		sub	di, bp
-		lodsw
-		cmp	al, GC_TDW
-		jz	short loc_2E02
-		out	7Ch, al
-
-loc_2E3F:
-		pop	di
-		pop	si
-		pop	ds
-		pop	bp
-		retf	6
-sub_2DB6	endp
-
+include libs/master.lib/super_put_tiny_small.asm
 include libs/master.lib/js_start.asm
 include libs/master.lib/js_sense.asm
 include libs/master.lib/bgm_bell_org.asm
@@ -6960,15 +6886,15 @@ loc_E053:
 		add	ax, _space_window_center.y
 		add	ax, -4
 		mov	[bp+@@y], ax
-		push	[bp+@@x]
-		push	ax
+		push	[bp+@@x]	; x
+		push	ax	; y
 		mov	ax, di
 		mov	bx, 2
 		cwd
 		idiv	bx
 		add	dx, 6
-		push	dx
-		call	sub_2DB6
+		push	dx	; num
+		call	super_put_tiny_small
 		inc	di
 		add	[bp+var_A], 4
 
@@ -7106,10 +7032,7 @@ loc_E193:
 		add	ax, _space_window_center.y
 		add	ax, -4
 		mov	[bp+@@y], ax
-		push	[bp+@@x]
-		push	ax
-		push	word ptr [si+0Ch]
-		call	sub_2DB6
+		call	super_put_tiny_small pascal, [bp+@@x], ax, word ptr [si+0Ch]
 
 loc_E219:
 		inc	di
