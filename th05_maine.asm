@@ -27,6 +27,7 @@ include th05/th05.inc
 	extern _tolower:proc
 	extern __ctype:byte
 
+maine_01 group maine_01__TEXT, maine_01___TEXT
 g_seg2 group seg2, seg2_
 
 ; ===========================================================================
@@ -228,8 +229,8 @@ _TEXT		ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-maine_01_TEXT	segment	byte public 'CODE' use16
-		assume cs:maine_01_TEXT
+maine_01__TEXT	segment	byte public 'CODE' use16
+		assume cs:maine_01
 		;org 5
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -5308,64 +5309,11 @@ loc_D2FE:
 		leave
 		retn
 sub_D21D	endp
+maine_01__TEXT	ends
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D31F	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-arg_6		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		mov	ax, [bp+arg_6]
-		mov	word_151D6, ax
-		mov	ax, [bp+arg_4]
-		mov	word_151D8, ax
-		mov	ax, [bp+arg_2]
-		mov	word_151CE, ax
-		mov	ax, [bp+arg_0]
-		mov	word_151D0, ax
-		mov	ax, word_151CE
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	dx, word_151D6
-		sub	dx, ax
-		add	dx, 0FFF8h
-		push	dx
-		mov	ax, word_151D0
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	dx, word_151D8
-		sub	dx, ax
-		add	dx, 0FFF8h
-		push	dx
-		mov	ax, word_151CE
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		add	ax, word_151D6
-		add	ax, 7
-		push	ax
-		mov	ax, word_151D0
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		add	ax, word_151D8
-		add	ax, 7
-		push	ax
-		call	grc_setclip
-		pop	bp
-		retn	8
-sub_D31F	endp
-
+maine_01___TEXT	segment	byte public 'CODE' use16
+	SPACE_WINDOW_SET procdesc pascal near \
+		center_x:word, center_y:word, w:word, h:word
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5382,9 +5330,9 @@ var_2		= word ptr -2
 		mov	si, 50E4h
 		mov	[bp+var_2], 55F8h
 		mov	[bp+var_4], 5618h
-		push	14000C8h
-		push	1800140h
-		call	sub_D31F
+		push	((RES_X / 2) shl 16) or (RES_Y / 2)	; (center_x shl 16) or center_y
+		push	(384 shl 16) or 320               	; (w shl 16) or h
+		call	space_window_set
 		mov	word_151DE, 0
 		xor	di, di
 		jmp	short loc_D41B
@@ -5393,18 +5341,18 @@ var_2		= word ptr -2
 loc_D3B3:
 		call	IRand
 		cwd
-		idiv	word_151CE
+		idiv	_space_window_w
 		shl	dx, 4
-		mov	ax, word_151CE
+		mov	ax, _space_window_w
 		shl	ax, 3
 		sub	dx, ax
 		movsx	eax, dx
 		mov	[si], eax
 		call	IRand
 		cwd
-		idiv	word_151D0
+		idiv	_space_window_h
 		shl	dx, 4
-		mov	ax, word_151D0
+		mov	ax, _space_window_h
 		shl	ax, 3
 		sub	dx, ax
 		movsx	eax, dx
@@ -5454,18 +5402,18 @@ loc_D451:
 loc_D45A:
 		call	IRand
 		cwd
-		idiv	word_151CE
+		idiv	_space_window_w
 		shl	dx, 4
-		mov	ax, word_151CE
+		mov	ax, _space_window_w
 		shl	ax, 3
 		sub	dx, ax
 		mov	bx, [bp+var_4]
 		mov	[bx], dx
 		call	IRand
 		cwd
-		idiv	word_151D0
+		idiv	_space_window_h
 		shl	dx, 4
-		mov	ax, word_151D0
+		mov	ax, _space_window_h
 		shl	ax, 3
 		sub	dx, ax
 		mov	bx, [bp+var_4]
@@ -5674,14 +5622,14 @@ loc_D5FA:
 		add	[si+4],	eax
 		cmp	word_151DE, 0
 		jnz	loc_D6AB
-		mov	ax, word_151CE
+		mov	ax, _space_window_w
 		neg	ax
 		shl	ax, 3
 		add	ax, 0FFC0h
 		cwde
 		cmp	eax, [si]
 		jl	short loc_D649
-		mov	ax, word_151CE
+		mov	ax, _space_window_w
 		shl	ax, 4
 		add	ax, 80h
 		cwde
@@ -5690,27 +5638,27 @@ loc_D5FA:
 ; ---------------------------------------------------------------------------
 
 loc_D649:
-		mov	ax, word_151CE
+		mov	ax, _space_window_w
 		shl	ax, 3
 		add	ax, 40h
 		cwde
 		cmp	eax, [si]
 		jg	short loc_D667
-		mov	ax, word_151CE
+		mov	ax, _space_window_w
 		shl	ax, 4
 		add	ax, 80h
 		cwde
 		sub	[si], eax
 
 loc_D667:
-		mov	ax, word_151D0
+		mov	ax, _space_window_h
 		neg	ax
 		shl	ax, 3
 		add	ax, 0FFC0h
 		cwde
 		cmp	eax, [si+4]
 		jl	short loc_D68B
-		mov	ax, word_151D0
+		mov	ax, _space_window_h
 		shl	ax, 4
 		add	ax, 80h
 		cwde
@@ -5719,13 +5667,13 @@ loc_D667:
 ; ---------------------------------------------------------------------------
 
 loc_D68B:
-		mov	ax, word_151D0
+		mov	ax, _space_window_h
 		shl	ax, 3
 		add	ax, 40h
 		cwde
 		cmp	eax, [si+4]
 		jg	short loc_D6AB
-		mov	ax, word_151D0
+		mov	ax, _space_window_h
 		shl	ax, 4
 		add	ax, 80h
 		cwde
@@ -5828,12 +5776,12 @@ loc_D763:
 		sub	[di+2],	ax
 		cmp	_space_camera_velocity.x, 0
 		jnz	short loc_D7A5
-		mov	ax, word_151CE
+		mov	ax, _space_window_w
 		neg	ax
 		shl	ax, 3
 		cmp	ax, [di]
 		jge	short loc_D783
-		mov	ax, word_151CE
+		mov	ax, _space_window_w
 		shl	ax, 3
 		cmp	ax, [di]
 		jg	short loc_D7CA
@@ -5841,34 +5789,34 @@ loc_D763:
 loc_D783:
 		call	IRand
 		cwd
-		idiv	word_151CE
+		idiv	_space_window_w
 		shl	dx, 4
-		mov	ax, word_151CE
+		mov	ax, _space_window_w
 		shl	ax, 3
 		sub	dx, ax
 		mov	[di], dx
-		mov	ax, word_151D0
+		mov	ax, _space_window_h
 		shl	ax, 3
 		mov	[di+2],	ax
 		jmp	short loc_D7CA
 ; ---------------------------------------------------------------------------
 
 loc_D7A5:
-		mov	ax, word_151CE
+		mov	ax, _space_window_w
 		neg	ax
 		shl	ax, 3
 		cmp	ax, [di]
 		jl	short loc_D7B6
-		mov	ax, word_151CE
+		mov	ax, _space_window_w
 		jmp	short loc_D7C5
 ; ---------------------------------------------------------------------------
 
 loc_D7B6:
-		mov	ax, word_151CE
+		mov	ax, _space_window_w
 		shl	ax, 3
 		cmp	ax, [di]
 		jg	short loc_D7CA
-		mov	ax, word_151CE
+		mov	ax, _space_window_w
 		neg	ax
 
 loc_D7C5:
@@ -5876,21 +5824,21 @@ loc_D7C5:
 		mov	[di], ax
 
 loc_D7CA:
-		mov	ax, word_151D0
+		mov	ax, _space_window_h
 		neg	ax
 		shl	ax, 3
 		cmp	ax, [di+2]
 		jl	short loc_D7DC
-		mov	ax, word_151D0
+		mov	ax, _space_window_h
 		jmp	short loc_D7EC
 ; ---------------------------------------------------------------------------
 
 loc_D7DC:
-		mov	ax, word_151D0
+		mov	ax, _space_window_h
 		shl	ax, 3
 		cmp	ax, [di+2]
 		jg	short loc_D7F2
-		mov	ax, word_151D0
+		mov	ax, _space_window_h
 		neg	ax
 
 loc_D7EC:
@@ -6155,24 +6103,24 @@ loc_D9D7:
 
 loc_D9D9:
 		mov	[bp+var_2], ax
-		mov	ax, 140h
+		mov	ax, (RES_X / 2)
 		sub	ax, [bp+var_2]
-		push	ax
-		push	0C8h
+		push	ax	; center_x
+		push	(RES_Y / 2)	; center_y
 		mov	ax, si
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	dx, 180h
+		mov	dx, 384
 		sub	dx, ax
-		push	dx
+		push	dx	; w
 		mov	ax, si
 		mov	bx, 8
 		cwd
 		idiv	bx
-		add	ax, 140h
-		push	ax
-		call	sub_D31F
+		add	ax, 320
+		push	ax	; h
+		call	space_window_set
 		jmp	short loc_DA31
 ; ---------------------------------------------------------------------------
 
@@ -6240,14 +6188,14 @@ sub_DA36	proc near
 		mov	[si+0Ch], dx
 		call	IRand
 		cwd
-		idiv	word_151CE
+		idiv	_space_window_w
 		shl	dx, 4
-		mov	ax, word_151CE
+		mov	ax, _space_window_w
 		shl	ax, 3
 		sub	dx, ax
 		movsx	eax, dx
 		mov	[si], eax
-		mov	ax, word_151D0
+		mov	ax, _space_window_h
 		neg	ax
 		shl	ax, 3
 		add	ax, 0FFC0h
@@ -6316,20 +6264,16 @@ loc_DB0B:
 ; ---------------------------------------------------------------------------
 
 loc_DB1F:
-		mov	ax, word_151CE
+		mov	ax, _space_window_w
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, word_151D6
-		cmp	ax, 276h
+		add	ax, _space_window_center.x
+		cmp	ax, (RES_X - 10)
 		jge	short loc_DB45
-		mov	ax, word_151D6
+		mov	ax, _space_window_center.x
 		add	ax, 4
-		push	ax
-		push	0C8h
-		push	word_151CE
-		push	word_151D0
-		call	sub_D31F
+		call	space_window_set pascal, ax, (RES_Y / 2), _space_window_w, _space_window_h
 
 loc_DB45:
 		mov	word_151DE, 0
@@ -6382,12 +6326,12 @@ loc_DB9F:
 		mov	word_11844, 7528h
 
 loc_DBAD:
-		mov	ax, word_151CE
+		mov	ax, _space_window_w
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, word_151D6
-		cmp	ax, 276h
+		add	ax, _space_window_center.x
+		cmp	ax, (RES_X - 10)
 		jl	short loc_DBC3
 		mov	ax, 1
 		jmp	short loc_DBE2
@@ -6965,32 +6909,32 @@ var_6		= word ptr -6
 		mov	[bp+var_8], 5614h
 		mov	[bp+var_A], 5618h
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-		mov	ax, word_151CE
+		mov	ax, _space_window_w
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	dx, word_151D6
+		mov	dx, _space_window_center.x
 		sub	dx, ax
 		push	dx
-		mov	ax, word_151D0
+		mov	ax, _space_window_h
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	dx, word_151D8
+		mov	dx, _space_window_center.y
 		sub	dx, ax
 		push	dx
-		mov	ax, word_151CE
+		mov	ax, _space_window_w
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, word_151D6
+		add	ax, _space_window_center.x
 		dec	ax
 		push	ax
-		mov	ax, word_151D0
+		mov	ax, _space_window_h
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, word_151D8
+		add	ax, _space_window_center.y
 		dec	ax
 		push	ax
 		call	grcg_boxfill
@@ -7005,7 +6949,7 @@ loc_E053:
 		mov	bx, 16
 		cwd
 		idiv	bx
-		add	ax, word_151D6
+		add	ax, _space_window_center.x
 		add	ax, -4
 		mov	[bp+@@x], ax
 		mov	bx, [bp+var_A]
@@ -7013,7 +6957,7 @@ loc_E053:
 		mov	bx, 16
 		cwd
 		idiv	bx
-		add	ax, word_151D8
+		add	ax, _space_window_center.y
 		add	ax, -4
 		mov	[bp+@@y], ax
 		push	[bp+@@x]
@@ -7045,14 +6989,14 @@ loc_E0A6:
 		mov	bx, 10h
 		cwd
 		idiv	bx
-		add	ax, word_151D6
+		add	ax, _space_window_center.x
 		mov	[bp+@@x], ax
 		mov	bx, [bp+var_8]
 		mov	ax, [bx+2]
 		mov	bx, 10h
 		cwd
 		idiv	bx
-		add	ax, word_151D8
+		add	ax, _space_window_center.y
 		mov	[bp+@@y], ax
 		push	GC_RMW
 		mov	ax, [bp+var_6]
@@ -7075,13 +7019,13 @@ loc_E0FB:
 		mov	ebx, 16
 		cdq
 		idiv	ebx
-		add	ax, word_151D6
+		add	ax, _space_window_center.x
 		add	ax, -16
 		mov	[bp+@@x], ax
 		mov	eax, [si+4]
 		cdq
 		idiv	ebx
-		add	ax, word_151D8
+		add	ax, _space_window_center.y
 		add	ax, -16
 		mov	[bp+@@y], ax
 		cmp	byte ptr [si+13h], 10h
@@ -7123,27 +7067,27 @@ loc_E18B:
 loc_E193:
 		cmp	dword ptr [si],	0FFFFC190h
 		jz	short loc_E219
-		mov	ax, word_151CE
+		mov	ax, _space_window_w
 		neg	ax
 		shl	ax, 3
 		add	ax, 0FFC0h
 		cwde
 		cmp	eax, [si]
 		jge	short loc_E219
-		mov	ax, word_151CE
+		mov	ax, _space_window_w
 		shl	ax, 3
 		add	ax, 40h
 		cwde
 		cmp	eax, [si]
 		jle	short loc_E219
-		mov	ax, word_151D0
+		mov	ax, _space_window_h
 		neg	ax
 		shl	ax, 3
 		add	ax, 0FFC0h
 		cwde
 		cmp	eax, [si+4]
 		jge	short loc_E219
-		mov	ax, word_151D0
+		mov	ax, _space_window_h
 		shl	ax, 3
 		add	ax, 40h
 		cwde
@@ -7153,13 +7097,13 @@ loc_E193:
 		mov	ebx, 10h
 		cdq
 		idiv	ebx
-		add	ax, word_151D6
+		add	ax, _space_window_center.x
 		add	ax, -4
 		mov	[bp+@@x], ax
 		mov	eax, [si+4]
 		cdq
 		idiv	ebx
-		add	ax, word_151D8
+		add	ax, _space_window_center.y
 		add	ax, -4
 		mov	[bp+@@y], ax
 		push	[bp+@@x]
@@ -7175,123 +7119,123 @@ loc_E21D:
 		cmp	di, 40h
 		jl	loc_E193
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
-		mov	ax, word_151CE
+		mov	ax, _space_window_w
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	dx, word_151D6
+		mov	dx, _space_window_center.x
 		sub	dx, ax
-		add	dx, 0FFF8h
+		add	dx, -8
 		push	dx
-		mov	ax, word_151D0
+		mov	ax, _space_window_h
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	dx, word_151D8
-		sub	dx, ax
-		push	dx
-		mov	ax, word_151CE
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	dx, word_151D6
-		sub	dx, ax
-		dec	dx
-		push	dx
-		mov	ax, word_151D0
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		add	ax, word_151D8
-		dec	ax
-		push	ax
-		call	grcg_boxfill
-		mov	ax, word_151CE
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		add	ax, word_151D6
-		push	ax
-		mov	ax, word_151D0
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	dx, word_151D8
+		mov	dx, _space_window_center.y
 		sub	dx, ax
 		push	dx
-		mov	ax, word_151CE
+		mov	ax, _space_window_w
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, word_151D6
-		add	ax, 7
-		push	ax
-		mov	ax, word_151D0
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		add	ax, word_151D8
-		dec	ax
-		push	ax
-		call	grcg_boxfill
-		mov	ax, word_151CE
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	dx, word_151D6
-		sub	dx, ax
-		add	dx, 0FFF8h
-		push	dx
-		mov	ax, word_151D0
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	dx, word_151D8
-		sub	dx, ax
-		add	dx, 0FFF8h
-		push	dx
-		mov	ax, word_151CE
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		add	ax, word_151D6
-		add	ax, 7
-		push	ax
-		mov	ax, word_151D0
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	dx, word_151D8
+		mov	dx, _space_window_center.x
 		sub	dx, ax
 		dec	dx
 		push	dx
-		call	grcg_boxfill
-		mov	ax, word_151CE
+		mov	ax, _space_window_h
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	dx, word_151D6
-		sub	dx, ax
-		add	dx, 0FFF8h
-		push	dx
-		mov	ax, word_151D0
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		add	ax, word_151D8
+		add	ax, _space_window_center.y
+		dec	ax
 		push	ax
-		mov	ax, word_151CE
+		call	grcg_boxfill
+		mov	ax, _space_window_w
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, word_151D6
+		add	ax, _space_window_center.x
+		push	ax
+		mov	ax, _space_window_h
+		cwd
+		sub	ax, dx
+		sar	ax, 1
+		mov	dx, _space_window_center.y
+		sub	dx, ax
+		push	dx
+		mov	ax, _space_window_w
+		cwd
+		sub	ax, dx
+		sar	ax, 1
+		add	ax, _space_window_center.x
 		add	ax, 7
 		push	ax
-		mov	ax, word_151D0
+		mov	ax, _space_window_h
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, word_151D8
+		add	ax, _space_window_center.y
+		dec	ax
+		push	ax
+		call	grcg_boxfill
+		mov	ax, _space_window_w
+		cwd
+		sub	ax, dx
+		sar	ax, 1
+		mov	dx, _space_window_center.x
+		sub	dx, ax
+		add	dx, -8
+		push	dx
+		mov	ax, _space_window_h
+		cwd
+		sub	ax, dx
+		sar	ax, 1
+		mov	dx, _space_window_center.y
+		sub	dx, ax
+		add	dx, -8
+		push	dx
+		mov	ax, _space_window_w
+		cwd
+		sub	ax, dx
+		sar	ax, 1
+		add	ax, _space_window_center.x
+		add	ax, 7
+		push	ax
+		mov	ax, _space_window_h
+		cwd
+		sub	ax, dx
+		sar	ax, 1
+		mov	dx, _space_window_center.y
+		sub	dx, ax
+		dec	dx
+		push	dx
+		call	grcg_boxfill
+		mov	ax, _space_window_w
+		cwd
+		sub	ax, dx
+		sar	ax, 1
+		mov	dx, _space_window_center.x
+		sub	dx, ax
+		add	dx, -8
+		push	dx
+		mov	ax, _space_window_h
+		cwd
+		sub	ax, dx
+		sar	ax, 1
+		add	ax, _space_window_center.y
+		push	ax
+		mov	ax, _space_window_w
+		cwd
+		sub	ax, dx
+		sar	ax, 1
+		add	ax, _space_window_center.x
+		add	ax, 7
+		push	ax
+		mov	ax, _space_window_h
+		cwd
+		sub	ax, dx
+		sar	ax, 1
+		add	ax, _space_window_center.y
 		add	ax, 7
 		push	ax
 		call	grcg_boxfill
@@ -7766,7 +7710,7 @@ loc_E7CC:
 		retn
 sub_E41D	endp
 
-maine_01_TEXT	ends
+maine_01___TEXT	ends
 
 ; ---------------------------------------------------------------------------
 ; ===========================================================================
@@ -8296,11 +8240,12 @@ word_151C8	dw ?
 word_151CA	dw ?
 byte_151CC	db ?
 		db ?
-word_151CE	dw ?
-word_151D0	dw ?
+public _space_window_center, _space_window_w, _space_window_h
+public _space_window_w, _space_window_h
+_space_window_w	dw ?
+_space_window_h	dw ?
 point_151D2	Point <?>
-word_151D6	dw ?
-word_151D8	dw ?
+_space_window_center	Point <?>
 public _space_camera_velocity
 _space_camera_velocity	Point <?>
 word_151DE	dw ?

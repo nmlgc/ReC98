@@ -144,7 +144,7 @@ bin\th05\main.exe: bin\th05\main.obj th05\main010.cpp th05\main011.cpp th05\p_co
 $**
 |
 
-bin\th05\maine.exe: bin\th05\maine.obj bin\hfliplut.obj
+bin\th05\maine.exe: bin\th05\maine.obj th05\staff.cpp bin\hfliplut.obj
 	$(CC) $(CFLAGS) -ml -DGAME=5 -DBINARY='E' -nbin\th05\ -eMAINE.EXE @&&|
 $**
 |
