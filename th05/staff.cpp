@@ -19,6 +19,8 @@ typedef enum {
 	// Ordered from big to small
 	PAT_ORB_PARTICLE = 0,
 	PAT_ORB_PARTICLE_last = (PAT_ORB_PARTICLE + ORB_PARTICLE_CELS - 1),
+	PAT_STAR_BIG,
+	PAT_STAR_SMALL,
 	// ---------
 } staff_patnum_t;
 /// -------------------------------------------
@@ -54,6 +56,7 @@ struct orb_particle_t {
 // -----
 static const int ORB_PARTICLE_COUNT = 64;
 static const int ORB_TRAIL_COUNT = 8;
+static const int STAR_COUNT = 48;
 static const int ORB_INDEX = ORB_PARTICLE_COUNT;
 
 extern pixel_t space_window_w;
@@ -68,6 +71,10 @@ extern orb_particle_t particles[ORB_PARTICLE_COUNT + 1];
 #define orb particles[ORB_INDEX]
 
 extern SPPoint orb_trails_center[ORB_TRAIL_COUNT];
+
+// Elements at even indices are rendered as PAT_STAR_BIG, elements at odd
+// indices are rendered as PAT_STAR_SMALL.
+extern SPPoint stars_center[STAR_COUNT];
 // -----
 
 void pascal near space_window_set(

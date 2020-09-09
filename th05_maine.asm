@@ -5245,6 +5245,8 @@ maine_01___TEXT	segment	byte public 'CODE' use16
 ORB_PARTICLE_CELS = 6
 PAT_ORB_PARTICLE = 0
 PAT_ORB_PARTICLE_last = (PAT_ORB_PARTICLE + ORB_PARTICLE_CELS - 1)
+PAT_STAR_BIG = (PAT_ORB_PARTICLE + ORB_PARTICLE_CELS - 1) + 1
+PAT_STAR_SMALL = PAT_STAR_BIG + 1
 
 ORB_RADIUS_FULL = 16
 ORB_W = 32
@@ -5268,6 +5270,7 @@ orb_particle_t ends
 
 ORB_PARTICLE_COUNT = 64
 ORB_TRAIL_COUNT = 8
+STAR_COUNT = 48
 ORB_INDEX = ORB_PARTICLE_COUNT
 orb	equ <_particles[ORB_INDEX * size orb_particle_t]>
 
@@ -5277,7 +5280,7 @@ orb	equ <_particles[ORB_INDEX * size orb_particle_t]>
 
 sub_D387	proc near
 
-var_4		= word ptr -4
+@@star_center		= word ptr -4
 @@trail_center		= word ptr -2
 
 		enter	4, 0
@@ -5285,7 +5288,7 @@ var_4		= word ptr -4
 		push	di
 		mov	si, offset _particles
 		mov	[bp+@@trail_center], offset _orb_trails_center
-		mov	[bp+var_4], 5618h
+		mov	[bp+@@star_center], offset _stars_center
 		push	((RES_X / 2) shl 16) or (RES_Y / 2)	; (center_x shl 16) or center_y
 		push	(384 shl 16) or 320               	; (w shl 16) or h
 		call	space_window_set
@@ -5364,8 +5367,8 @@ loc_D45A:
 		mov	ax, _space_window_w
 		shl	ax, 3
 		sub	dx, ax
-		mov	bx, [bp+var_4]
-		mov	[bx], dx
+		mov	bx, [bp+@@star_center]
+		mov	[bx+Point.x], dx
 		call	IRand
 		cwd
 		idiv	_space_window_h
@@ -5373,13 +5376,13 @@ loc_D45A:
 		mov	ax, _space_window_h
 		shl	ax, 3
 		sub	dx, ax
-		mov	bx, [bp+var_4]
-		mov	[bx+2],	dx
+		mov	bx, [bp+@@star_center]
+		mov	[bx+Point.y], dx
 		inc	di
-		add	[bp+var_4], 4
+		add	[bp+@@star_center], size Point
 
 loc_D494:
-		cmp	di, 30h	; '0'
+		cmp	di, STAR_COUNT
 		jl	short loc_D45A
 		pop	di
 		pop	si
@@ -5564,7 +5567,7 @@ sub_D5E1	proc near
 		push	di
 		mov	si, offset _particles
 		mov	[bp+@@trail_center], offset _orb_trails_center
-		mov	di, 5618h
+		mov	di, offset _stars_center
 		mov	[bp+@@i], 0
 		jmp	loc_D6FF
 ; ---------------------------------------------------------------------------
@@ -5716,7 +5719,7 @@ loc_D73A:
 		or	dx, dx
 		jnz	short loc_D751
 		mov	ax, _space_camera_velocity.x
-		sub	[di], ax
+		sub	[di+Point.x], ax
 		mov	ax, _space_camera_velocity.y
 		jmp	short loc_D763
 ; ---------------------------------------------------------------------------
@@ -5726,24 +5729,24 @@ loc_D751:
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		sub	[di], ax
+		sub	[di+Point.x], ax
 		mov	ax, _space_camera_velocity.y
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 
 loc_D763:
-		sub	[di+2],	ax
+		sub	[di+Point.y], ax
 		cmp	_space_camera_velocity.x, 0
 		jnz	short loc_D7A5
 		mov	ax, _space_window_w
 		neg	ax
 		shl	ax, 3
-		cmp	ax, [di]
+		cmp	ax, [di+Point.x]
 		jge	short loc_D783
 		mov	ax, _space_window_w
 		shl	ax, 3
-		cmp	ax, [di]
+		cmp	ax, [di+Point.x]
 		jg	short loc_D7CA
 
 loc_D783:
@@ -5754,10 +5757,10 @@ loc_D783:
 		mov	ax, _space_window_w
 		shl	ax, 3
 		sub	dx, ax
-		mov	[di], dx
+		mov	[di+Point.x], dx
 		mov	ax, _space_window_h
 		shl	ax, 3
-		mov	[di+2],	ax
+		mov	[di+Point.y], ax
 		jmp	short loc_D7CA
 ; ---------------------------------------------------------------------------
 
@@ -5765,7 +5768,7 @@ loc_D7A5:
 		mov	ax, _space_window_w
 		neg	ax
 		shl	ax, 3
-		cmp	ax, [di]
+		cmp	ax, [di+Point.x]
 		jl	short loc_D7B6
 		mov	ax, _space_window_w
 		jmp	short loc_D7C5
@@ -5774,20 +5777,20 @@ loc_D7A5:
 loc_D7B6:
 		mov	ax, _space_window_w
 		shl	ax, 3
-		cmp	ax, [di]
+		cmp	ax, [di+Point.x]
 		jg	short loc_D7CA
 		mov	ax, _space_window_w
 		neg	ax
 
 loc_D7C5:
 		shl	ax, 3
-		mov	[di], ax
+		mov	[di+Point.x], ax
 
 loc_D7CA:
 		mov	ax, _space_window_h
 		neg	ax
 		shl	ax, 3
-		cmp	ax, [di+2]
+		cmp	ax, [di+Point.y]
 		jl	short loc_D7DC
 		mov	ax, _space_window_h
 		jmp	short loc_D7EC
@@ -5796,21 +5799,21 @@ loc_D7CA:
 loc_D7DC:
 		mov	ax, _space_window_h
 		shl	ax, 3
-		cmp	ax, [di+2]
+		cmp	ax, [di+Point.y]
 		jg	short loc_D7F2
 		mov	ax, _space_window_h
 		neg	ax
 
 loc_D7EC:
 		shl	ax, 3
-		mov	[di+2],	ax
+		mov	[di+Point.y], ax
 
 loc_D7F2:
 		inc	[bp+@@i]
-		add	di, 4
+		add	di, size Point
 
 loc_D7F8:
-		cmp	[bp+@@i], 30h	; '0'
+		cmp	[bp+@@i], STAR_COUNT
 		jl	loc_D73A
 		mov	si, offset orb
 		cmp	[si+orb_particle_t.OP_center_x], SUBPIXEL_NONE
@@ -6857,7 +6860,7 @@ sub_DE74	endp
 
 sub_DFEC	proc near
 
-var_A		= word ptr -0Ah
+@@star_center		= word ptr -0Ah
 @@trail_center		= word ptr -8
 @@trail_col		= word ptr -6
 @@y		= word ptr -4
@@ -6868,7 +6871,7 @@ var_A		= word ptr -0Ah
 		push	di
 		mov	si, offset orb
 		mov	[bp+@@trail_center], offset _orb_trails_center[(ORB_TRAIL_COUNT - 1) * size Point]
-		mov	[bp+var_A], 5618h
+		mov	[bp+@@star_center], offset _stars_center
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		mov	ax, _space_window_w
 		cwd
@@ -6905,16 +6908,16 @@ var_A		= word ptr -0Ah
 ; ---------------------------------------------------------------------------
 
 loc_E053:
-		mov	bx, [bp+var_A]
-		mov	ax, [bx]
+		mov	bx, [bp+@@star_center]
+		mov	ax, [bx+Point.x]
 		mov	bx, 16
 		cwd
 		idiv	bx
 		add	ax, _space_window_center.x
 		add	ax, -4
 		mov	[bp+@@x], ax
-		mov	bx, [bp+var_A]
-		mov	ax, [bx+2]
+		mov	bx, [bp+@@star_center]
+		mov	ax, [bx+Point.y]
 		mov	bx, 16
 		cwd
 		idiv	bx
@@ -6927,14 +6930,14 @@ loc_E053:
 		mov	bx, 2
 		cwd
 		idiv	bx
-		add	dx, 6
+		add	dx, PAT_STAR_BIG
 		push	dx	; num
 		call	super_put_tiny_small
 		inc	di
-		add	[bp+var_A], 4
+		add	[bp+@@star_center], size Point
 
 loc_E098:
-		cmp	di, 30h	; '0'
+		cmp	di, STAR_COUNT
 		jl	short loc_E053
 		xor	di, di
 		mov	[bp+@@trail_col], 6
@@ -8210,10 +8213,11 @@ _space_camera_velocity	Point <?>
 word_151DE	dw ?
 measure_151E0	dw ?
 word_151E2	dw ?
-public _particles, _orb_trails_center
+public _particles, _orb_trails_center, _stars_center
 _particles	orb_particle_t (ORB_PARTICLE_COUNT + 1) dup (<?>)
 _orb_trails_center	Point ORB_TRAIL_COUNT dup (<?>)
-		db 14358 dup(?)
+_stars_center	Point STAR_COUNT dup (<?>)
+		db 14166 dup(?)
 byte_18F2E	db ?
 		db 6329 dup(?)
 word_1A7E8	dw ?
