@@ -53,6 +53,7 @@ struct orb_particle_t {
 // State
 // -----
 static const int ORB_PARTICLE_COUNT = 64;
+static const int ORB_TRAIL_COUNT = 8;
 static const int ORB_INDEX = ORB_PARTICLE_COUNT;
 
 extern pixel_t space_window_w;
@@ -65,6 +66,8 @@ extern SPPoint space_camera_velocity;
 // All coordinates of these are relative to the center of space.
 extern orb_particle_t particles[ORB_PARTICLE_COUNT + 1];
 #define orb particles[ORB_INDEX]
+
+extern SPPoint orb_trails_center[ORB_TRAIL_COUNT];
 // -----
 
 void pascal near space_window_set(

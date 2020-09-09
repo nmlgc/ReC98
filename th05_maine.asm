@@ -5267,6 +5267,7 @@ orb_particle_t struc
 orb_particle_t ends
 
 ORB_PARTICLE_COUNT = 64
+ORB_TRAIL_COUNT = 8
 ORB_INDEX = ORB_PARTICLE_COUNT
 orb	equ <_particles[ORB_INDEX * size orb_particle_t]>
 
@@ -5277,13 +5278,13 @@ orb	equ <_particles[ORB_INDEX * size orb_particle_t]>
 sub_D387	proc near
 
 var_4		= word ptr -4
-var_2		= word ptr -2
+@@trail_center		= word ptr -2
 
 		enter	4, 0
 		push	si
 		push	di
 		mov	si, offset _particles
-		mov	[bp+var_2], 55F8h
+		mov	[bp+@@trail_center], offset _orb_trails_center
 		mov	[bp+var_4], 5618h
 		push	((RES_X / 2) shl 16) or (RES_Y / 2)	; (center_x shl 16) or center_y
 		push	(384 shl 16) or 320               	; (w shl 16) or h
@@ -5343,13 +5344,13 @@ loc_D41B:
 ; ---------------------------------------------------------------------------
 
 loc_D445:
-		mov	bx, [bp+var_2]
-		mov	word ptr [bx], 0C190h
+		mov	bx, [bp+@@trail_center]
+		mov	[bx+Point.x], SUBPIXEL_NONE
 		inc	di
-		add	[bp+var_2], 4
+		add	[bp+@@trail_center], size Point
 
 loc_D451:
-		cmp	di, 8
+		cmp	di, ORB_TRAIL_COUNT
 		jl	short loc_D445
 		xor	di, di
 		jmp	short loc_D494
@@ -5555,14 +5556,14 @@ sub_D531	endp
 
 sub_D5E1	proc near
 
-var_4		= word ptr -4
+@@trail_center		= word ptr -4
 @@i		= word ptr -2
 
 		enter	4, 0
 		push	si
 		push	di
 		mov	si, offset _particles
-		mov	[bp+var_4], 55F8h
+		mov	[bp+@@trail_center], offset _orb_trails_center
 		mov	di, 5618h
 		mov	[bp+@@i], 0
 		jmp	loc_D6FF
@@ -5687,21 +5688,21 @@ loc_D6FF:
 ; ---------------------------------------------------------------------------
 
 loc_D70E:
-		mov	bx, [bp+var_4]
-		cmp	word ptr [bx], 0C190h
+		mov	bx, [bp+@@trail_center]
+		cmp	[bx+Point.x], SUBPIXEL_NONE
 		jz	short loc_D725
-		mov	bx, [bp+var_4]
+		mov	bx, [bp+@@trail_center]
 		mov	ax, _space_camera_velocity.x
-		sub	[bx], ax
+		sub	[bx+Point.x], ax
 		mov	ax, _space_camera_velocity.y
-		sub	[bx+2],	ax
+		sub	[bx+Point.y], ax
 
 loc_D725:
 		inc	[bp+@@i]
-		add	[bp+var_4], 4
+		add	[bp+@@trail_center], size Point
 
 loc_D72C:
-		cmp	[bp+@@i], 8
+		cmp	[bp+@@i], ORB_TRAIL_COUNT
 		jl	short loc_D70E
 		mov	[bp+@@i], 0
 		jmp	loc_D7F8
@@ -5896,32 +5897,32 @@ sub_D853	endp
 sub_D8B6	proc near
 		push	bp
 		mov	bp, sp
-		mov	dx, 6
+		mov	dx, (ORB_TRAIL_COUNT - 2)
 		jmp	short loc_D8E3
 ; ---------------------------------------------------------------------------
 
 loc_D8BE:
 		mov	bx, dx
 		shl	bx, 2
-		mov	ax, [bx+55F8h]
+		mov	ax, _orb_trails_center[0 * size Point][bx].x
 		mov	bx, dx
 		shl	bx, 2
-		mov	[bx+55FCh], ax
+		mov	_orb_trails_center[1 * size Point][bx].x, ax
 		mov	bx, dx
 		shl	bx, 2
-		mov	ax, [bx+55FAh]
+		mov	ax, _orb_trails_center[0 * size Point][bx].y
 		mov	bx, dx
 		shl	bx, 2
-		mov	[bx+55FEh], ax
+		mov	_orb_trails_center[1 * size Point][bx].y, ax
 		dec	dx
 
 loc_D8E3:
 		or	dx, dx
 		jge	short loc_D8BE
 		mov	ax, word ptr orb.OP_center_x
-		mov	word_156F8, ax
+		mov	_orb_trails_center[0 * size Point].x, ax
 		mov	ax, word ptr orb.OP_center_y
-		mov	word_156FA, ax
+		mov	_orb_trails_center[0 * size Point].y, ax
 		pop	bp
 		retn
 sub_D8B6	endp
@@ -6857,8 +6858,8 @@ sub_DE74	endp
 sub_DFEC	proc near
 
 var_A		= word ptr -0Ah
-var_8		= word ptr -8
-var_6		= word ptr -6
+@@trail_center		= word ptr -8
+@@trail_col		= word ptr -6
 @@y		= word ptr -4
 @@x		= word ptr -2
 
@@ -6866,7 +6867,7 @@ var_6		= word ptr -6
 		push	si
 		push	di
 		mov	si, offset orb
-		mov	[bp+var_8], 5614h
+		mov	[bp+@@trail_center], offset _orb_trails_center[(ORB_TRAIL_COUNT - 1) * size Point]
 		mov	[bp+var_A], 5618h
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		mov	ax, _space_window_w
@@ -6936,42 +6937,42 @@ loc_E098:
 		cmp	di, 30h	; '0'
 		jl	short loc_E053
 		xor	di, di
-		mov	[bp+var_6], 6
+		mov	[bp+@@trail_col], 6
 		jmp	short loc_E0FB
 ; ---------------------------------------------------------------------------
 
 loc_E0A6:
-		mov	bx, [bp+var_8]
-		cmp	word ptr [bx], 0C190h
+		mov	bx, [bp+@@trail_center]
+		cmp	[bx+Point.x], SUBPIXEL_NONE
 		jz	short loc_E0F6
-		mov	bx, [bp+var_8]
-		mov	ax, [bx]
-		mov	bx, 10h
+		mov	bx, [bp+@@trail_center]
+		mov	ax, [bx+Point.x]
+		mov	bx, 16
 		cwd
 		idiv	bx
 		add	ax, _space_window_center.x
 		mov	[bp+@@x], ax
-		mov	bx, [bp+var_8]
-		mov	ax, [bx+2]
-		mov	bx, 10h
+		mov	bx, [bp+@@trail_center]
+		mov	ax, [bx+Point.y]
+		mov	bx, 16
 		cwd
 		idiv	bx
 		add	ax, _space_window_center.y
 		mov	[bp+@@y], ax
 		push	GC_RMW
-		mov	ax, [bp+var_6]
-		inc	[bp+var_6]
+		mov	ax, [bp+@@trail_col]
+		inc	[bp+@@trail_col]
 		push	ax
 		call	grcg_setcolor
-		call	grcg_circlefill pascal, [bp+@@x], [bp+@@y], 16
+		call	grcg_circlefill pascal, [bp+@@x], [bp+@@y], ORB_RADIUS_FULL
 		GRCG_OFF_CLOBBERING dx
 
 loc_E0F6:
 		inc	di
-		sub	[bp+var_8], 4
+		sub	[bp+@@trail_center], size Point
 
 loc_E0FB:
-		cmp	di, 8
+		cmp	di, ORB_TRAIL_COUNT
 		jl	short loc_E0A6
 		cmp	[si+orb_particle_t.OP_center_x], SUBPIXEL_NONE
 		jz	loc_E18B
@@ -8209,11 +8210,10 @@ _space_camera_velocity	Point <?>
 word_151DE	dw ?
 measure_151E0	dw ?
 word_151E2	dw ?
-public _particles
+public _particles, _orb_trails_center
 _particles	orb_particle_t (ORB_PARTICLE_COUNT + 1) dup (<?>)
-word_156F8	dw ?
-word_156FA	dw ?
-		db 14386 dup(?)
+_orb_trails_center	Point ORB_TRAIL_COUNT dup (<?>)
+		db 14358 dup(?)
 byte_18F2E	db ?
 		db 6329 dup(?)
 word_1A7E8	dw ?
