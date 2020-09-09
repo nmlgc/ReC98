@@ -22,6 +22,7 @@ BINARY = 'E'
 
 include ReC98.inc
 include th05/th05.inc
+include th01/math/subpixel.inc
 
 	extern _execl:proc
 	extern _tolower:proc
@@ -5241,6 +5242,34 @@ maine_01___TEXT	segment	byte public 'CODE' use16
 	SPACE_WINDOW_SET procdesc pascal near \
 		center_x:word, center_y:word, w:word, h:word
 
+ORB_PARTICLE_CELS = 6
+PAT_ORB_PARTICLE = 0
+PAT_ORB_PARTICLE_last = (PAT_ORB_PARTICLE + ORB_PARTICLE_CELS - 1)
+
+ORB_RADIUS_FULL = 16
+ORB_W = 32
+ORB_H = 32
+
+X_RIGHT = 0
+X_LEFT = 1
+
+orb_particle_t struc
+	OP_center_x	dd ?
+	OP_center_y	dd ?
+	OP_velocity	Point <?>
+	OP_patnum_tiny	dw ?
+	OP_speed	dw ?
+	OP_gather_frame dw ?
+	OP_angle	db ?
+	OP_al_radius	label byte
+	OP_al_rain_sway_x_direction	label byte
+		db ?
+orb_particle_t ends
+
+ORB_PARTICLE_COUNT = 64
+ORB_INDEX = ORB_PARTICLE_COUNT
+orb	equ <_particles[ORB_INDEX * size orb_particle_t]>
+
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
@@ -5253,7 +5282,7 @@ var_2		= word ptr -2
 		enter	4, 0
 		push	si
 		push	di
-		mov	si, 50E4h
+		mov	si, offset _particles
 		mov	[bp+var_2], 55F8h
 		mov	[bp+var_4], 5618h
 		push	((RES_X / 2) shl 16) or (RES_Y / 2)	; (center_x shl 16) or center_y
@@ -5273,7 +5302,7 @@ loc_D3B3:
 		shl	ax, 3
 		sub	dx, ax
 		movsx	eax, dx
-		mov	[si], eax
+		mov	[si+orb_particle_t.OP_center_x], eax
 		call	IRand
 		cwd
 		idiv	_space_window_h
@@ -5282,30 +5311,31 @@ loc_D3B3:
 		shl	ax, 3
 		sub	dx, ax
 		movsx	eax, dx
-		mov	[si+4],	eax
+		mov	[si+orb_particle_t.OP_center_y], eax
 		call	IRand
-		mov	[si+12h], al
-		mov	word ptr [si+0Eh], 0Ah
-		mov	word ptr [si+0Ch], 0
-		mov	byte ptr [si+13h], 0
-		lea	ax, [si+8]
+		mov	[si+orb_particle_t.OP_angle], al
+		mov	[si+orb_particle_t.OP_speed], (0 shl 4) + 10
+		mov	[si+orb_particle_t.OP_patnum_tiny], PAT_ORB_PARTICLE
+		mov	[si+orb_particle_t.OP_al_rain_sway_x_direction], X_RIGHT
+		lea	ax, [si+orb_particle_t.OP_velocity]
 		push	ax
 		pushd	0
-		push	word ptr [si+0Eh]
-		mov	al, [si+12h]
+		push	[si+orb_particle_t.OP_speed]
+		mov	al, [si+orb_particle_t.OP_angle]
 		mov	ah, 0
 		push	ax
 		call	vector2_at
 		inc	di
-		add	si, 14h
+		add	si, size orb_particle_t
 
 loc_D41B:
-		cmp	di, 40h
+		cmp	di, ORB_PARTICLE_COUNT
 		jl	short loc_D3B3
-		mov	dword ptr [si],	0FFFFC190h
-		mov	byte ptr [si+13h], 0
-		mov	word ptr [si+8], 0
-		mov	word ptr [si+0Ah], 0
+		; si == particles[ORB_INDEX]
+		mov	[si+orb_particle_t.OP_center_x], SUBPIXEL_NONE
+		mov	[si+orb_particle_t.OP_al_radius], 0
+		mov	[si+orb_particle_t.OP_velocity.x], 0
+		mov	[si+orb_particle_t.OP_velocity.y], 0
 		mov	_space_camera_velocity.x, 0
 		mov	_space_camera_velocity.y, 0
 		xor	di, di
@@ -5366,45 +5396,46 @@ sub_D49D	proc near
 		mov	bp, sp
 		push	si
 		push	di
-		mov	si, 50E4h
+		mov	si, offset _particles
 		xor	di, di
 		jmp	short loc_D4ED
 ; ---------------------------------------------------------------------------
 
 loc_D4A9:
-		mov	ax, [si+4]
+		mov	ax, word ptr [si+orb_particle_t.OP_center_y]
 		neg	ax
 		push	ax
-		mov	ax, [si]
+		mov	ax, word ptr [si+orb_particle_t.OP_center_x]
 		neg	ax
 		push	ax
 		call	iatan2
-		mov	[si+12h], al
-		push	word ptr [si]
-		push	word ptr [si+4]
+		mov	[si+orb_particle_t.OP_angle], al
+		push	word ptr [si+orb_particle_t.OP_center_x]
+		push	word ptr [si+orb_particle_t.OP_center_y]
 		call	ihypot
-		mov	bx, 20h	; ' '
+		mov	bx, 32
 		cwd
 		idiv	bx
-		mov	[si+0Eh], ax
-		mov	word ptr [si+10h], 0
-		lea	ax, [si+8]
+		mov	[si+orb_particle_t.OP_speed], ax
+		mov	[si+orb_particle_t.OP_gather_frame], 0
+		lea	ax, [si+orb_particle_t.OP_velocity]
 		push	ax
 		pushd	0
-		push	word ptr [si+0Eh]
-		mov	al, [si+12h]
+		push	[si+orb_particle_t.OP_speed]
+		mov	al, [si+orb_particle_t.OP_angle]
 		mov	ah, 0
 		push	ax
 		call	vector2_at
 		inc	di
-		add	si, 14h
+		add	si, size orb_particle_t
 
 loc_D4ED:
-		cmp	di, 40h
+		cmp	di, ORB_PARTICLE_COUNT
 		jl	short loc_D4A9
-		mov	dword ptr [si],	0
-		mov	dword ptr [si+4], 0
-		mov	byte ptr [si+13h], 1
+		; si == particles[ORB_INDEX]
+		mov	[si+orb_particle_t.OP_center_x], 0
+		mov	[si+orb_particle_t.OP_center_y], 0
+		mov	[si+orb_particle_t.OP_al_radius], 1
 		pop	di
 		pop	si
 		pop	bp
@@ -5420,20 +5451,21 @@ sub_D509	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, 50E4h
+		mov	si, offset _particles
 		xor	ax, ax
 		jmp	short loc_D51F
 ; ---------------------------------------------------------------------------
 
 loc_D514:
-		mov	dword ptr [si],	0FFFFC190h
+		mov	[si+orb_particle_t.OP_center_x], SUBPIXEL_NONE
 		inc	ax
-		add	si, 14h
+		add	si, size orb_particle_t
 
 loc_D51F:
-		cmp	ax, 40h
+		cmp	ax, ORB_PARTICLE_COUNT
 		jl	short loc_D514
-		mov	byte ptr [si+13h], 10h
+		; si == particles[ORB_INDEX]
+		mov	[si+orb_particle_t.OP_al_radius], ORB_RADIUS_FULL
 		mov	word_151DE, 1
 		pop	si
 		pop	bp
@@ -5450,64 +5482,65 @@ sub_D531	proc near
 		mov	bp, sp
 		push	si
 		push	di
-		mov	si, 50E4h
+		mov	si, offset _particles
 		xor	di, di
 		jmp	loc_D5C9
 ; ---------------------------------------------------------------------------
 
 loc_D53E:
-		mov	ax, [si+4]
+		mov	ax, word ptr [si+orb_particle_t.OP_center_y]
 		neg	ax
 		push	ax
-		mov	ax, [si]
+		mov	ax, word ptr [si+orb_particle_t.OP_center_x]
 		neg	ax
 		push	ax
 		call	iatan2
-		mov	[si+12h], al
-		push	word ptr [si]
-		push	word ptr [si+4]
+		mov	[si+orb_particle_t.OP_angle], al
+		push	word ptr [si+orb_particle_t.OP_center_x]
+		push	word ptr [si+orb_particle_t.OP_center_y]
 		call	ihypot
-		mov	bx, 20h	; ' '
+		mov	bx, 32
 		cwd
 		idiv	bx
-		mov	[si+0Eh], ax
-		mov	word ptr [si+0Ch], 0
+		mov	[si+orb_particle_t.OP_speed], ax
+		mov	[si+orb_particle_t.OP_patnum_tiny], PAT_ORB_PARTICLE
 		call	IRand
 		and	al, 7Fh
-		mov	[si+12h], al
+		mov	[si+orb_particle_t.OP_angle], al
 		call	IRand
-		mov	bx, 40h
+		mov	bx, (4 shl 4)
 		cwd
 		idiv	bx
-		add	dx, 5Ch
-		mov	[si+0Eh], dx
+		add	dx, (5 shl 4) + 12
+		mov	[si+orb_particle_t.OP_speed], dx
 		push	offset point_151D2
-		push	x_156E4
-		push	y_156E8
+		push	word ptr orb.OP_center_x
+		push	word ptr orb.OP_center_y
 		push	(12 shl 4)
-		mov	al, [si+12h]
+		mov	al, [si+orb_particle_t.OP_angle]
 		mov	ah, 0
 		push	ax
 		call	vector2_at
-		lea	ax, [si+8]
+		lea	ax, [si+orb_particle_t.OP_velocity]
 		push	ax
 		pushd	0
-		push	word ptr [si+0Eh]
-		mov	al, [si+12h]
+		push	[si+orb_particle_t.OP_speed]
+		mov	al, [si+orb_particle_t.OP_angle]
 		mov	ah, 0
 		push	ax
 		call	vector2_at
 		movsx	eax, point_151D2.x
-		mov	[si], eax
+		mov	[si+orb_particle_t.OP_center_x], eax
 		movsx	eax, point_151D2.y
-		mov	[si+4],	eax
+		mov	[si+orb_particle_t.OP_center_y], eax
 		inc	di
-		add	si, 14h
+		add	si, size orb_particle_t
 
 loc_D5C9:
-		cmp	di, 40h
+		cmp	di, ORB_PARTICLE_COUNT
 		jl	loc_D53E
-		mov	dword ptr [si],	0FFFFC190h
+		; si == particles[ORB_INDEX]
+		mov	[si+orb_particle_t.OP_center_x], SUBPIXEL_NONE
 		mov	word_151DE, 1
 		pop	di
 		pop	si
@@ -5523,133 +5556,133 @@ sub_D531	endp
 sub_D5E1	proc near
 
 var_4		= word ptr -4
-var_2		= word ptr -2
+@@i		= word ptr -2
 
 		enter	4, 0
 		push	si
 		push	di
-		mov	si, 50E4h
+		mov	si, offset _particles
 		mov	[bp+var_4], 55F8h
 		mov	di, 5618h
-		mov	[bp+var_2], 0
+		mov	[bp+@@i], 0
 		jmp	loc_D6FF
 ; ---------------------------------------------------------------------------
 
 loc_D5FA:
-		cmp	dword ptr [si],	0FFFFC190h
+		cmp	[si+orb_particle_t.OP_center_x], SUBPIXEL_NONE
 		jz	loc_D6F9
-		mov	ax, [si+8]
+		mov	ax, [si+orb_particle_t.OP_velocity.x]
 		sub	ax, _space_camera_velocity.x
 		cwde
-		add	[si], eax
-		mov	ax, [si+0Ah]
+		add	[si+orb_particle_t.OP_center_x], eax
+		mov	ax, [si+orb_particle_t.OP_velocity.y]
 		sub	ax, _space_camera_velocity.y
 		cwde
-		add	[si+4],	eax
+		add	[si+orb_particle_t.OP_center_y], eax
 		cmp	word_151DE, 0
 		jnz	loc_D6AB
 		mov	ax, _space_window_w
 		neg	ax
 		shl	ax, 3
-		add	ax, 0FFC0h
+		add	ax, (-4 shl 4)
 		cwde
-		cmp	eax, [si]
+		cmp	eax, [si+orb_particle_t.OP_center_x]
 		jl	short loc_D649
 		mov	ax, _space_window_w
 		shl	ax, 4
-		add	ax, 80h
+		add	ax, (8 shl 4)
 		cwde
-		add	[si], eax
+		add	[si+orb_particle_t.OP_center_x], eax
 		jmp	short loc_D667
 ; ---------------------------------------------------------------------------
 
 loc_D649:
 		mov	ax, _space_window_w
 		shl	ax, 3
-		add	ax, 40h
+		add	ax, (4 shl 4)
 		cwde
-		cmp	eax, [si]
+		cmp	eax, [si+orb_particle_t.OP_center_x]
 		jg	short loc_D667
 		mov	ax, _space_window_w
 		shl	ax, 4
-		add	ax, 80h
+		add	ax, (8 shl 4)
 		cwde
-		sub	[si], eax
+		sub	[si+orb_particle_t.OP_center_x], eax
 
 loc_D667:
 		mov	ax, _space_window_h
 		neg	ax
 		shl	ax, 3
-		add	ax, 0FFC0h
+		add	ax, (-4 shl 4)
 		cwde
-		cmp	eax, [si+4]
+		cmp	eax, [si+orb_particle_t.OP_center_y]
 		jl	short loc_D68B
 		mov	ax, _space_window_h
 		shl	ax, 4
-		add	ax, 80h
+		add	ax, (8 shl 4)
 		cwde
-		add	[si+4],	eax
+		add	[si+orb_particle_t.OP_center_y], eax
 		jmp	short loc_D6AB
 ; ---------------------------------------------------------------------------
 
 loc_D68B:
 		mov	ax, _space_window_h
 		shl	ax, 3
-		add	ax, 40h
+		add	ax, (4 shl 4)
 		cwde
-		cmp	eax, [si+4]
+		cmp	eax, [si+orb_particle_t.OP_center_y]
 		jg	short loc_D6AB
 		mov	ax, _space_window_h
 		shl	ax, 4
-		add	ax, 80h
+		add	ax, (8 shl 4)
 		cwde
-		sub	[si+4],	eax
+		sub	[si+orb_particle_t.OP_center_y], eax
 
 loc_D6AB:
 		cmp	word_151DE, 0
 		jz	short loc_D6F9
 		mov	ax, word_151DE
-		sub	[si+0Eh], ax
-		cmp	word ptr [si+0Eh], 0
+		sub	[si+orb_particle_t.OP_speed], ax
+		cmp	[si+orb_particle_t.OP_speed], 0
 		jnz	short loc_D6C7
-		mov	dword ptr [si],	0FFFFC190h
+		mov	[si+orb_particle_t.OP_center_x], SUBPIXEL_NONE
 		jmp	short loc_D6F9
 ; ---------------------------------------------------------------------------
 
 loc_D6C7:
-		cmp	word ptr [si+0Eh], 23h ; '#'
+		cmp	[si+orb_particle_t.OP_speed], (2 shl 4) + 3
 		jle	short loc_D6D4
-		mov	word ptr [si+0Ch], 0
+		mov	[si+orb_particle_t.OP_patnum_tiny], PAT_ORB_PARTICLE
 		jmp	short loc_D6E4
 ; ---------------------------------------------------------------------------
 
 loc_D6D4:
-		mov	ax, [si+0Eh]
+		mov	ax, [si+orb_particle_t.OP_speed]
 		mov	bx, 7
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_D6E4
-		inc	word ptr [si+0Ch]
+		inc	[si+orb_particle_t.OP_patnum_tiny]
 
 loc_D6E4:
-		lea	ax, [si+8]
+		lea	ax, [si+orb_particle_t.OP_velocity]
 		push	ax
 		pushd	0
-		push	word ptr [si+0Eh]
-		mov	al, [si+12h]
+		push	[si+orb_particle_t.OP_speed]
+		mov	al, [si+orb_particle_t.OP_angle]
 		mov	ah, 0
 		push	ax
 		call	vector2_at
 
 loc_D6F9:
-		inc	[bp+var_2]
-		add	si, 14h
+		inc	[bp+@@i]
+		add	si, size orb_particle_t
 
 loc_D6FF:
-		cmp	[bp+var_2], 40h
+		cmp	[bp+@@i], ORB_PARTICLE_COUNT
 		jl	loc_D5FA
-		mov	[bp+var_2], 0
+		mov	[bp+@@i], 0
 		jmp	short loc_D72C
 ; ---------------------------------------------------------------------------
 
@@ -5664,18 +5697,18 @@ loc_D70E:
 		sub	[bx+2],	ax
 
 loc_D725:
-		inc	[bp+var_2]
+		inc	[bp+@@i]
 		add	[bp+var_4], 4
 
 loc_D72C:
-		cmp	[bp+var_2], 8
+		cmp	[bp+@@i], 8
 		jl	short loc_D70E
-		mov	[bp+var_2], 0
+		mov	[bp+@@i], 0
 		jmp	loc_D7F8
 ; ---------------------------------------------------------------------------
 
 loc_D73A:
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@i]
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -5772,31 +5805,31 @@ loc_D7EC:
 		mov	[di+2],	ax
 
 loc_D7F2:
-		inc	[bp+var_2]
+		inc	[bp+@@i]
 		add	di, 4
 
 loc_D7F8:
-		cmp	[bp+var_2], 30h	; '0'
+		cmp	[bp+@@i], 30h	; '0'
 		jl	loc_D73A
-		mov	si, offset x_156E4
-		cmp	dword ptr [si],	0FFFFC190h
+		mov	si, offset orb
+		cmp	[si+orb_particle_t.OP_center_x], SUBPIXEL_NONE
 		jz	short loc_D83F
-		mov	ax, [si+8]
+		mov	ax, [si+orb_particle_t.OP_velocity.x]
 		sub	ax, _space_camera_velocity.x
 		cwde
-		add	[si], eax
-		mov	ax, [si+0Ah]
+		add	[si+orb_particle_t.OP_center_x], eax
+		mov	ax, [si+orb_particle_t.OP_velocity.y]
 		sub	ax, _space_camera_velocity.y
 		cwde
-		add	[si+4],	eax
-		cmp	byte ptr [si+13h], 10h
+		add	[si+orb_particle_t.OP_center_y], eax
+		cmp	[si+orb_particle_t.OP_al_radius], ORB_RADIUS_FULL
 		jb	short loc_D83F
 		cmp	byte_1183A, 0
 		jz	short loc_D83F
 		call	sub_D853
-		cmp	word ptr [si+0Ah], 0B4h	; 'ｴ'
+		cmp	[si+orb_particle_t.OP_velocity.y], (11 shl 4) + 4
 		jge	short loc_D83F
-		inc	word ptr [si+0Ah]
+		inc	[si+orb_particle_t.OP_velocity.y]
 
 loc_D83F:
 		mov	ax, word_151E2
@@ -5823,31 +5856,31 @@ sub_D853	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	ax, word_1183C
-		inc	word_1183C
-		imul	ax, 14h
-		add	ax, 50E4h
+		mov	ax, particle_i_1183C
+		inc	particle_i_1183C
+		imul	ax, size orb_particle_t
+		add	ax, offset _particles
 		mov	si, ax
-		mov	word ptr [si+0Ch], 0
+		mov	[si+orb_particle_t.OP_patnum_tiny], PAT_ORB_PARTICLE
 		call	IRand
 		and	al, 7Fh
-		mov	[si+12h], al
-		mov	word ptr [si+0Eh], 30h ; '0'
+		mov	[si+orb_particle_t.OP_angle], al
+		mov	[si+orb_particle_t.OP_speed], (3 shl 4)
 		push	offset point_151D2
-		push	x_156E4
-		push	y_156E8
+		push	word ptr orb.OP_center_x
+		push	word ptr orb.OP_center_y
 		push	(12 shl 4)
-		mov	al, [si+12h]
+		mov	al, [si+orb_particle_t.OP_angle]
 		mov	ah, 0
 		push	ax
 		call	vector2_at
 		movsx	eax, point_151D2.x
-		mov	[si], eax
+		mov	[si+orb_particle_t.OP_center_x], eax
 		movsx	eax, point_151D2.y
-		mov	[si+4],	eax
-		cmp	word_1183C, 40h
+		mov	[si+orb_particle_t.OP_center_y], eax
+		cmp	particle_i_1183C, ORB_PARTICLE_COUNT
 		jl	short loc_D8B3
-		mov	word_1183C, 0
+		mov	particle_i_1183C, 0
 
 loc_D8B3:
 		pop	si
@@ -5885,9 +5918,9 @@ loc_D8BE:
 loc_D8E3:
 		or	dx, dx
 		jge	short loc_D8BE
-		mov	ax, x_156E4
+		mov	ax, word ptr orb.OP_center_x
 		mov	word_156F8, ax
-		mov	ax, y_156E8
+		mov	ax, word ptr orb.OP_center_y
 		mov	word_156FA, ax
 		pop	bp
 		retn
@@ -5902,34 +5935,35 @@ sub_D8F5	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, 50E4h
+		mov	si, offset _particles
 		xor	cx, cx
 		jmp	short loc_D91D
 ; ---------------------------------------------------------------------------
 
 loc_D900:
-		inc	word ptr [si+10h]
-		mov	ax, [si+10h]
+		inc	[si+orb_particle_t.OP_gather_frame]
+		mov	ax, [si+orb_particle_t.OP_gather_frame]
 		mov	bx, 8
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_D919
-		cmp	word ptr [si+0Ch], 5
+		cmp	[si+orb_particle_t.OP_patnum_tiny], PAT_ORB_PARTICLE_last
 		jge	short loc_D919
-		inc	word ptr [si+0Ch]
+		inc	[si+orb_particle_t.OP_patnum_tiny]
 
 loc_D919:
 		inc	cx
-		add	si, 14h
+		add	si, size orb_particle_t
 
 loc_D91D:
-		cmp	cx, 40h
+		cmp	cx, ORB_PARTICLE_COUNT
 		jl	short loc_D900
-		cmp	byte ptr [si+13h], 10h
+		; si == particles[ORB_INDEX]
+		cmp	[si+orb_particle_t.OP_al_radius], ORB_RADIUS_FULL
 		jnb	short loc_D92E
 		mov	al, byte_1183A
-		add	[si+13h], al
+		add	[si+orb_particle_t.OP_al_radius], al
 
 loc_D92E:
 		pop	si
@@ -6055,7 +6089,7 @@ loc_DA04:
 		jl	short loc_DA18
 		cmp	word_1183E, 400h
 		jg	short loc_DA18
-		dec	word_156EC
+		dec	orb.OP_velocity.x
 
 loc_DA18:
 		cmp	word_1183E, 3F0h
@@ -6088,30 +6122,30 @@ sub_DA36	proc near
 		mov	bp, sp
 		push	si
 		mov	ax, word_11842
-		imul	ax, 14h
-		add	ax, 50E4h
+		imul	ax, size orb_particle_t
+		add	ax, offset _particles
 		mov	si, ax
 		inc	word_11842
 		mov	ax, word_11842
 		cmp	ax, 40h
 		jge	loc_DAD4
 		call	IRand
-		mov	bx, 18h
+		mov	bx, (1 shl 4) + 8
 		cwd
 		idiv	bx
 		add	dx, 8
-		mov	[si+0Eh], dx
+		mov	[si+orb_particle_t.OP_speed], dx
 		call	IRand
 		mov	bx, 40h
 		cwd
 		idiv	bx
-		add	dl, 20h	; ' '
-		mov	[si+12h], dl
+		add	dl, 20h
+		mov	[si+orb_particle_t.OP_angle], dl
 		call	IRand
-		mov	bx, 6
+		mov	bx, ORB_PARTICLE_CELS
 		cwd
 		idiv	bx
-		mov	[si+0Ch], dx
+		mov	[si+orb_particle_t.OP_patnum_tiny], dx
 		call	IRand
 		cwd
 		idiv	_space_window_w
@@ -6120,29 +6154,29 @@ sub_DA36	proc near
 		shl	ax, 3
 		sub	dx, ax
 		movsx	eax, dx
-		mov	[si], eax
+		mov	[si+orb_particle_t.OP_center_x], eax
 		mov	ax, _space_window_h
 		neg	ax
 		shl	ax, 3
-		add	ax, 0FFC0h
+		add	ax, (-4 shl 4)
 		cwde
-		mov	[si+4],	eax
-		cmp	byte ptr [si+12h], 40h
+		mov	[si+orb_particle_t.OP_center_y], eax
+		cmp	[si+orb_particle_t.OP_angle], 40h
 		jnb	short loc_DABA
-		mov	al, 0
+		mov	al, X_RIGHT
 		jmp	short loc_DABC
 ; ---------------------------------------------------------------------------
 
 loc_DABA:
-		mov	al, 1
+		mov	al, X_LEFT
 
 loc_DABC:
-		mov	[si+13h], al
-		lea	ax, [si+8]
+		mov	[si+orb_particle_t.OP_al_rain_sway_x_direction], al
+		lea	ax, [si+orb_particle_t.OP_velocity]
 		push	ax
 		pushd	0
-		push	word ptr [si+0Eh]
-		mov	al, [si+12h]
+		push	[si+orb_particle_t.OP_speed]
+		mov	al, [si+orb_particle_t.OP_angle]
 		mov	ah, 0
 		push	ax
 		call	vector2_at
@@ -6163,7 +6197,7 @@ sub_DAD7	proc near
 		mov	bp, sp
 		push	si
 		push	di
-		mov	si, 50E4h
+		mov	si, offset _particles
 		cmp	_space_camera_velocity.x, 0
 		jge	short loc_DAEF
 		mov	al, byte_1183A
@@ -6215,35 +6249,35 @@ loc_DB45:
 ; ---------------------------------------------------------------------------
 
 loc_DB5F:
-		cmp	byte ptr [si+13h], 0
+		cmp	[si+orb_particle_t.OP_al_rain_sway_x_direction], X_RIGHT
 		jnz	short loc_DB74
-		inc	byte ptr [si+12h]
-		cmp	byte ptr [si+12h], 60h
+		inc	[si+orb_particle_t.OP_angle]
+		cmp	[si+orb_particle_t.OP_angle], 60h
 		jb	short loc_DB81
-		mov	byte ptr [si+13h], 1
+		mov	[si+orb_particle_t.OP_al_rain_sway_x_direction], X_LEFT
 		jmp	short loc_DB81
 ; ---------------------------------------------------------------------------
 
 loc_DB74:
-		dec	byte ptr [si+12h]
-		cmp	byte ptr [si+12h], 20h ; ' '
+		dec	[si+orb_particle_t.OP_angle]
+		cmp	[si+orb_particle_t.OP_angle], 20h
 		ja	short loc_DB81
-		mov	byte ptr [si+13h], 0
+		mov	[si+orb_particle_t.OP_al_rain_sway_x_direction], X_RIGHT
 
 loc_DB81:
-		lea	ax, [si+8]
+		lea	ax, [si+orb_particle_t.OP_velocity]
 		push	ax
 		pushd	0
-		push	word ptr [si+0Eh]
-		mov	al, [si+12h]
+		push	[si+orb_particle_t.OP_speed]
+		mov	al, [si+orb_particle_t.OP_angle]
 		mov	ah, 0
 		push	ax
 		call	vector2_at
 		inc	di
-		add	si, 14h
+		add	si, size orb_particle_t
 
 loc_DB9A:
-		cmp	di, 40h
+		cmp	di, ORB_PARTICLE_COUNT
 		jl	short loc_DB5F
 
 loc_DB9F:
@@ -6831,7 +6865,7 @@ var_6		= word ptr -6
 		enter	0Ah, 0
 		push	si
 		push	di
-		mov	si, 55E4h
+		mov	si, offset orb
 		mov	[bp+var_8], 5614h
 		mov	[bp+var_A], 5618h
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
@@ -6939,22 +6973,22 @@ loc_E0F6:
 loc_E0FB:
 		cmp	di, 8
 		jl	short loc_E0A6
-		cmp	dword ptr [si],	0FFFFC190h
+		cmp	[si+orb_particle_t.OP_center_x], SUBPIXEL_NONE
 		jz	loc_E18B
-		mov	eax, [si]
+		mov	eax, [si+orb_particle_t.OP_center_x]
 		mov	ebx, 16
 		cdq
 		idiv	ebx
 		add	ax, _space_window_center.x
-		add	ax, -16
+		add	ax, -(ORB_W / 2)
 		mov	[bp+@@x], ax
-		mov	eax, [si+4]
+		mov	eax, [si+orb_particle_t.OP_center_y]
 		cdq
 		idiv	ebx
 		add	ax, _space_window_center.y
-		add	ax, -16
+		add	ax, -(ORB_H / 2)
 		mov	[bp+@@y], ax
-		cmp	byte ptr [si+13h], 10h
+		cmp	[si+orb_particle_t.OP_al_radius], ORB_RADIUS_FULL
 		jb	short loc_E161
 		mov	al, byte_151CC
 		mov	ah, 0
@@ -6973,73 +7007,74 @@ loc_E0FB:
 loc_E161:
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
 		mov	ax, [bp+@@x]
-		add	ax, 16
+		add	ax, (ORB_W / 2)
 		push	ax
 		mov	ax, [bp+@@y]
-		add	ax, 16
+		add	ax, (ORB_H / 2)
 		push	ax
-		mov	al, [si+13h]
+		mov	al, [si+orb_particle_t.OP_al_radius]
 		mov	ah, 0
 		push	ax
 		call	grcg_circlefill
 		GRCG_OFF_CLOBBERING dx
 
 loc_E18B:
-		sub	si, 14h
+		sub	si, size orb_particle_t
+		; ; si == particles[ORB_PARTICLE_COUNT - 1]
 		xor	di, di
 		jmp	loc_E21D
 ; ---------------------------------------------------------------------------
 
 loc_E193:
-		cmp	dword ptr [si],	0FFFFC190h
+		cmp	[si+orb_particle_t.OP_center_x], SUBPIXEL_NONE
 		jz	short loc_E219
 		mov	ax, _space_window_w
 		neg	ax
 		shl	ax, 3
-		add	ax, 0FFC0h
+		add	ax, (-4 shl 4)
 		cwde
-		cmp	eax, [si]
+		cmp	eax, [si+orb_particle_t.OP_center_x]
 		jge	short loc_E219
 		mov	ax, _space_window_w
 		shl	ax, 3
-		add	ax, 40h
+		add	ax, (4 shl 4)
 		cwde
-		cmp	eax, [si]
+		cmp	eax, [si+orb_particle_t.OP_center_x]
 		jle	short loc_E219
 		mov	ax, _space_window_h
 		neg	ax
 		shl	ax, 3
-		add	ax, 0FFC0h
+		add	ax, (-4 shl 4)
 		cwde
-		cmp	eax, [si+4]
+		cmp	eax, [si+orb_particle_t.OP_center_y]
 		jge	short loc_E219
 		mov	ax, _space_window_h
 		shl	ax, 3
-		add	ax, 40h
+		add	ax, (4 shl 4)
 		cwde
-		cmp	eax, [si+4]
+		cmp	eax, [si+orb_particle_t.OP_center_y]
 		jle	short loc_E219
-		mov	eax, [si]
-		mov	ebx, 10h
+		mov	eax, [si+orb_particle_t.OP_center_x]
+		mov	ebx, 16
 		cdq
 		idiv	ebx
 		add	ax, _space_window_center.x
 		add	ax, -4
 		mov	[bp+@@x], ax
-		mov	eax, [si+4]
+		mov	eax, [si+orb_particle_t.OP_center_y]
 		cdq
 		idiv	ebx
 		add	ax, _space_window_center.y
 		add	ax, -4
 		mov	[bp+@@y], ax
-		call	super_put_tiny_small pascal, [bp+@@x], ax, word ptr [si+0Ch]
+		call	super_put_tiny_small pascal, [bp+@@x], ax, [si+orb_particle_t.OP_patnum_tiny]
 
 loc_E219:
 		inc	di
-		sub	si, 14h
+		sub	si, size orb_particle_t
 
 loc_E21D:
-		cmp	di, 40h
+		cmp	di, ORB_PARTICLE_COUNT
 		jl	loc_E193
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
 		mov	ax, _space_window_w
@@ -8053,7 +8088,7 @@ aB@vucB@	db '　６面　',0
 aNPiuU__0	db '最終得点',0
 byte_1183A	db 0
 		db 0
-word_1183C	dw 0
+particle_i_1183C	dw 0
 word_1183E	dw 0
 byte_11840	db 0
 		db 0
@@ -8174,13 +8209,8 @@ _space_camera_velocity	Point <?>
 word_151DE	dw ?
 measure_151E0	dw ?
 word_151E2	dw ?
-		db 1280 dup(?)
-x_156E4	dw ?
-		db 2 dup(?)
-y_156E8	dw ?
-		db 2 dup(?)
-word_156EC	dw ?
-		db 10 dup(?)
+public _particles
+_particles	orb_particle_t (ORB_PARTICLE_COUNT + 1) dup (<?>)
 word_156F8	dw ?
 word_156FA	dw ?
 		db 14386 dup(?)
