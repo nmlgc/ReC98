@@ -7247,90 +7247,7 @@ loc_E39D:
 		retn
 sub_E349	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E39F	proc near
-
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	ds
-		push	ds
-		pop	es
-		assume es:_DATA
-		mov	ax, 0E000h
-		mov	ds, ax
-		assume ds:nothing
-		xor	si, si
-		mov	di, [bp+arg_0]
-		add	di, 56D8h
-		mov	ax, 160h
-
-loc_E3B8:
-		mov	cx, 14h
-		rep movsw
-		add	si, 28h	; '('
-		dec	ax
-		jnz	short loc_E3B8
-		pop	ds
-		assume ds:_DATA
-		pop	di
-		pop	si
-		pop	bp
-		retn	2
-sub_E39F	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E3CA	proc near
-
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		call	grcg_setcolor pascal, (GC_TDW shl 16) + 1
-		mov	ax, GRAM_400
-		mov	es, ax
-		assume es:nothing
-		xor	di, di
-		mov	dx, 160h
-
-loc_E3E4:
-		mov	cx, (40 / 2)
-		rep stosw
-		add	di, ROW_SIZE - 40
-		dec	dx
-		jnz	short loc_E3E4
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 13
-		xor	di, di
-		mov	si, [bp+arg_0]
-		add	si, 56D8h
-		mov	dx, 160h
-
-loc_E406:
-		mov	cx, (40 / 2)
-		rep movsw
-		add	di, ROW_SIZE - 40
-		dec	dx
-		jnz	short loc_E406
-		GRCG_OFF_CLOBBERING dx
-		pop	di
-		pop	si
-		pop	bp
-		retn	2
-sub_E3CA	endp
-
+include th05/end/verdict_bitmap.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7339,7 +7256,7 @@ sub_E3CA	endp
 sub_E41D	proc near
 
 var_4		= word ptr -4
-var_2		= word ptr -2
+@@verdict_bitmap_offset		= word ptr -2
 
 		enter	4, 0
 		push	si
@@ -7355,8 +7272,7 @@ var_2		= word ptr -2
 		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
 		GRCG_OFF_CLOBBERING dx
 		call	sub_D21D
-		push	3700h
-		call	sub_E39F
+		call	verdict_bitmap_snap pascal, (1 * VERDICT_SCREEN_SIZE)
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
 		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
 		graph_accesspage 1
@@ -7544,7 +7460,7 @@ loc_E6B4:
 		or	di, di
 		jz	short loc_E6B4
 		xor	si, si
-		mov	[bp+var_2], 0
+		mov	[bp+@@verdict_bitmap_offset], 0
 		mov	[bp+var_4], 0
 
 loc_E6DB:
@@ -7573,8 +7489,7 @@ loc_E6FD:
 loc_E702:
 		cmp	si, 15Eh
 		jnz	short loc_E70D
-		push	0
-		call	sub_E39F
+		call	verdict_bitmap_snap pascal, 0
 
 loc_E70D:
 		call	sub_DAD7
@@ -7596,7 +7511,7 @@ loc_E70D:
 		jz	short loc_E75C
 
 loc_E74A:
-		cmp	[bp+var_2], 0
+		cmp	[bp+@@verdict_bitmap_offset], 0
 		jnz	short loc_E757
 		mov	[bp+var_4], 1
 		jmp	short loc_E75C
@@ -7610,41 +7525,40 @@ loc_E757:
 loc_E75C:
 		test	_key_det.lo, low INPUT_DOWN
 		jz	short loc_E76E
-		cmp	[bp+var_2], 0
+		cmp	[bp+@@verdict_bitmap_offset], 0
 		jnz	short loc_E76E
 		mov	[bp+var_4], 1
 
 loc_E76E:
 		test	_key_det.lo, low INPUT_UP
 		jz	short loc_E781
-		cmp	[bp+var_2], 3700h
+		cmp	[bp+@@verdict_bitmap_offset], VERDICT_SCREEN_SIZE
 		jnz	short loc_E781
 		mov	[bp+var_4], 2
 
 loc_E781:
 		cmp	[bp+var_4], 1
 		jnz	short loc_E79A
-		add	[bp+var_2], 140h
-		cmp	[bp+var_2], 3700h
+		add	[bp+@@verdict_bitmap_offset], (8 * VERDICT_BITMAP_VRAM_W)
+		cmp	[bp+@@verdict_bitmap_offset], VERDICT_SCREEN_SIZE
 		jbe	short loc_E7B5
-		mov	[bp+var_2], 3700h
+		mov	[bp+@@verdict_bitmap_offset], VERDICT_SCREEN_SIZE
 		jmp	short loc_E7B0
 ; ---------------------------------------------------------------------------
 
 loc_E79A:
 		cmp	[bp+var_4], 2
 		jnz	short loc_E7BB
-		sub	[bp+var_2], 140h
-		cmp	[bp+var_2], 0
+		sub	[bp+@@verdict_bitmap_offset], (8 * VERDICT_BITMAP_VRAM_W)
+		cmp	[bp+@@verdict_bitmap_offset], 0
 		jge	short loc_E7B5
-		mov	[bp+var_2], 0
+		mov	[bp+@@verdict_bitmap_offset], 0
 
 loc_E7B0:
 		mov	[bp+var_4], 0
 
 loc_E7B5:
-		push	[bp+var_2]
-		call	sub_E3CA
+		call	verdict_bitmap_put pascal, [bp+@@verdict_bitmap_offset]
 
 loc_E7BB:
 		call	sub_E349
@@ -8213,14 +8127,9 @@ _space_camera_velocity	Point <?>
 word_151DE	dw ?
 measure_151E0	dw ?
 word_151E2	dw ?
-public _particles, _orb_trails_center, _stars_center
-_particles	orb_particle_t (ORB_PARTICLE_COUNT + 1) dup (<?>)
-_orb_trails_center	Point ORB_TRAIL_COUNT dup (<?>)
-_stars_center	Point STAR_COUNT dup (<?>)
-		db 14166 dup(?)
-byte_18F2E	db ?
-		db 6329 dup(?)
-word_1A7E8	dw ?
-		db 7662 dup(?)
+	extern _particles:orb_particle_t:ORB_PARTICLE_COUNT
+	extern _orb_trails_center:Point:ORB_TRAIL_COUNT
+	extern _stars_center:Point:STAR_COUNT
+	extern _verdict_bitmap:word:(VERDICT_SCREEN_H * 2 * (VERDICT_BITMAP_W / 16))
 
 		end
