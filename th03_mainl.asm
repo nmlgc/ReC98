@@ -2960,10 +2960,10 @@ sub_AFAC	proc near
 		retn
 sub_AFAC	endp
 
-
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+include th03/formats/scoredat.inc
 
 sub_B03D	proc near
 		push	bp
@@ -3014,16 +3014,16 @@ loc_B090:
 		inc	si
 
 loc_B091:
-		cmp	si, 0Ah
+		cmp	si, SCOREDAT_PLACES
 		jl	short loc_B046
-		cmp	si, 0Ah
+		cmp	si, SCOREDAT_PLACES
 		jnz	short loc_B0A1
-		mov	ax, 0FFFFh
-		jmp	loc_B183
+		mov	ax, -1
+		jmp	@@ret
 ; ---------------------------------------------------------------------------
 
 loc_B0A1:
-		cmp	si, 9
+		cmp	si, (SCOREDAT_PLACES - 1)
 		jge	short loc_B100
 		mov	di, 8
 		jmp	short loc_B0FC
@@ -3140,7 +3140,7 @@ loc_B16B:
 		mov	[si+22A6h], al
 		mov	ax, si
 
-loc_B183:
+@@ret:
 		pop	di
 		pop	si
 		pop	bp
@@ -3359,7 +3359,7 @@ var_7		= byte ptr -7
 var_6		= word ptr -6
 var_4		= word ptr -4
 var_2		= word ptr -2
-arg_0		= word ptr  4
+@@place		= word ptr  4
 arg_2		= word ptr  6
 arg_4		= word ptr  8
 
@@ -3367,8 +3367,8 @@ arg_4		= word ptr  8
 		push	si
 		push	di
 		mov	si, [bp+arg_4]
-		mov	di, [bp+arg_0]
-		cmp	word_106AC, di
+		mov	di, [bp+@@place]
+		cmp	_entered_place, di
 		jnz	short loc_B306
 		mov	ax, 1
 		jmp	short loc_B308
@@ -3379,7 +3379,7 @@ loc_B306:
 
 loc_B308:
 		mov	[bp+var_6], ax
-		cmp	word_106AC, di
+		cmp	_entered_place, di
 		jnz	short loc_B315
 		mov	al, 0Fh
 		jmp	short loc_B317
@@ -3390,7 +3390,7 @@ loc_B315:
 
 loc_B317:
 		mov	[bp+var_7], al
-		cmp	word_106AC, 0FFFFh
+		cmp	_entered_place, -1
 		jnz	short loc_B32A
 		mov	[bp+var_6], 1
 		mov	[bp+var_7], 0Fh
@@ -3606,7 +3606,7 @@ var_2		= word ptr -2
 		mov	[bp+var_D], 0
 		mov	[bp+var_E], 7
 		mov	[bp+var_F], 0
-		mov	ax, word_106AC
+		mov	ax, _entered_place
 		imul	ax, 14h
 		add	ax, 68h	; 'h'
 		mov	si, ax
@@ -3812,7 +3812,7 @@ loc_B60C:
 		push	dx
 		push	si
 		call	sub_B1F6
-		mov	bx, word_106AC
+		mov	bx, _entered_place
 		shl	bx, 3
 		mov	al, [bp+var_E]
 		mov	ah, 0
@@ -3832,7 +3832,7 @@ loc_B64B:
 ; ---------------------------------------------------------------------------
 
 loc_B657:
-		mov	bx, word_106AC
+		mov	bx, _entered_place
 		shl	bx, 3
 		mov	al, [bp+var_E]
 		mov	ah, 0
@@ -3871,7 +3871,7 @@ loc_B687:
 		push	dx
 		push	si
 		call	sub_B1F6
-		mov	bx, word_106AC
+		mov	bx, _entered_place
 		shl	bx, 3
 		mov	al, [bp+var_E]
 		mov	ah, 0
@@ -3907,13 +3907,13 @@ loc_B6D3:
 		push	dx
 		push	si
 		call	sub_B1F6
-		mov	bx, word_106AC
+		mov	bx, _entered_place
 		shl	bx, 3
 		mov	al, [bp+var_E]
 		mov	ah, 0
 		add	bx, ax
 		mov	byte ptr [bx+21F0h], 0Eh
-		push	word_106AC
+		push	_entered_place
 		call	sub_B450
 		mov	ax, [bp+var_2]
 		mov	bx, 10h
@@ -3965,7 +3965,7 @@ var_1		= byte ptr -1
 ; ---------------------------------------------------------------------------
 
 loc_B758:
-		mov	bx, word_106AC
+		mov	bx, _entered_place
 		shl	bx, 3
 		add	bx, cx
 		cmp	byte ptr [bx+21F0h], 0Eh
@@ -3992,7 +3992,7 @@ loc_B76E:
 ; ---------------------------------------------------------------------------
 
 loc_B78B:
-		mov	bx, word_106AC
+		mov	bx, _entered_place
 		shl	bx, 3
 		add	bx, cx
 		mov	al, [di]
@@ -4007,7 +4007,7 @@ loc_B79C:
 ; ---------------------------------------------------------------------------
 
 loc_B7A2:
-		mov	bx, word_106AC
+		mov	bx, _entered_place
 		shl	bx, 3
 		mov	al, [bx+21F0h]
 		mov	[bp+var_1], al
@@ -4016,7 +4016,7 @@ loc_B7A2:
 ; ---------------------------------------------------------------------------
 
 loc_B7B4:
-		mov	bx, word_106AC
+		mov	bx, _entered_place
 		shl	bx, 3
 		add	bx, cx
 		mov	al, [bx+21F0h]
@@ -4058,17 +4058,17 @@ sub_B7D2	proc near
 		les	bx, _resident
 		cmp	es:[bx+resident_t.story_stage], STAGE_NONE
 		jnz	short loc_B819
-		mov	word_106AC, 0FFFFh
+		mov	_entered_place, -1
 		jmp	short loc_B81F
 ; ---------------------------------------------------------------------------
 
 loc_B819:
 		call	sub_B03D
-		mov	word_106AC, ax
+		mov	_entered_place, ax
 
 loc_B81F:
 		call	sub_AFAC
-		cmp	word_106AC, 0FFFFh
+		cmp	_entered_place, -1
 		jnz	short loc_B835
 		call	sub_B429
 		push	2
@@ -6031,7 +6031,7 @@ byte_10636	db ?
 		db 115 dup(?)
 byte_106AA	db ?
 byte_106AB	db ?
-word_106AC	dw ?
+include th03/hiscore/regist[bss].asm
 		db 2 dup(?)
 byte_106B0	db ?
 		db 1281 dup(?)
