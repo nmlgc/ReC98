@@ -2,7 +2,7 @@
 // -----
 // Gaiji available to TH02
 
-#include "th02/gaiji/boldfont.h"
+#include "th02/gaiji/from_2.h"
 
 typedef enum {
 	gs_YINYANG = 0x02, // ☯
@@ -18,13 +18,9 @@ typedef enum {
 	gs_QUESTION, // ?
 	gs_ELLIPSIS, // …
 	gs_COPYRIGHT, // ©
-	gs_HEART, // 🎔
-	gs_SKULL, // 💀
-	gs_GHOST, // 👻
-	gs_SIDDHAM_HAM, // Siddhaṃ seed syllable HĀṂ (I don't even)
-	gs_SPACE, // ␠
-	gs_ARROW_LEFT, // ←
-	gs_ARROW_RIGHT, // →
+
+	gaiji_symbols_th02(0xE0),
+
 	gs_END, // "End"
 
 	// Unused 32x16 rank sprites

@@ -1,3 +1,6 @@
+/// Gaiji introduced in TH02, and shared with later games
+/// -----------------------------------------------------
+
 // In TH02, ZUN messed up and swapped M and N in MIKOFT.BFT for both regular
 // and bold fonts. Therefore, other code shouldn't really use the
 // straightforward solution of just adding char literals to a defined start
@@ -45,3 +48,13 @@
 	gb_X_, \
 	gb_Y_, \
 	gb_Z_
+
+#define gaiji_symbols_th02(start) \
+	gs_HEART = start, /* 🎔 */ \
+	gs_SKULL, /* 💀 */ \
+	gs_GHOST, /* 👻 */ \
+	gs_SIDDHAM_HAM, /* Siddhaṃ seed syllable HĀṂ (I don't even) */ \
+	gs_SPACE, /* ␠ */ \
+	gs_ARROW_LEFT, /* ← */ \
+	gs_ARROW_RIGHT /* → */
+/// -----------------------------------------------------

@@ -1,7 +1,3 @@
-; ReC98
-; -----
-; Gaiji available to TH04 and TH05
-
 g_EMPTY = 2
 include th04/gaiji/bar.inc
 include th02/gaiji/boldfont.inc
@@ -14,3 +10,10 @@ gs_TAMA = 0E8h
 gs_ALL = 0E9h
 g_HISCORE_STAGE_EMPTY = 0EFh
 g_NONE = 0FFh
+gs_HEART = 0C9h
+gs_SKULL = 0CAh
+gs_GHOST = 0CBh
+gs_SIDDHAM_HAM = 0CCh
+gs_SPACE = 0CDh
+gs_ARROW_LEFT = 0CEh
+gs_ARROW_RIGHT = 0CFh
