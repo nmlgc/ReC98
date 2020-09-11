@@ -2853,14 +2853,42 @@ sub_BD1E	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+GLYPHBALL_CELS = 4
+
+PAT_GLYPHBALL_CLOUD = 20
+PAT_GLYPHBALL_SPLASH = (PAT_GLYPHBALL_CLOUD + GLYPHBALL_CELS)
+PAT_GLYPHBALL = (PAT_GLYPHBALL_SPLASH + GLYPHBALL_CELS)
+
+GLYPHBALL_CLOUD_SPLASH_W = 32
+GLYPHBALL_CLOUD_SPLASH_H = 32
+GLYPHBALL_W = 16
+GLYPHBALL_H = 16
+
+GBP_FREE = 0
+GBP_CLOUD_AT_ORIGIN = 1
+GBP_FLOAT_TO_TARGET = 2
+GBP_SPLASH_AT_TARGET = 3
+GBP_DONE = 4
+GBP_REMOVE_REQUEST = 5
+
+glyphball_t struc
+	GB_phase	db ?
+	GB_glyph	db ?
+	GB_pos	motion_t <?>
+	GB_target	Point <?>
+	GB_angle	db ?
+	GB_speed	db ?
+	GB_phase_frame	dw ?
+		db 6 dup (?)
+glyphball_t ends
 
 sub_BD46	proc near
 
 arg_0		= byte ptr  4
 arg_2		= byte ptr  6
 arg_4		= word ptr  8
-arg_6		= word ptr  0Ah
-arg_8		= word ptr  0Ch
+@@y		= word ptr  0Ah
+@@x		= word ptr  0Ch
 
 		push	bp
 		mov	bp, sp
@@ -2869,12 +2897,12 @@ arg_8		= word ptr  0Ch
 		mov	di, [bp+arg_4]
 		mov	al, [bp+arg_0]
 		mov	ah, 0
-		imul	ax, 1Ch
-		add	ax, 4F7Ah
+		imul	ax, size glyphball_t
+		add	ax, offset _glyphballs
 		mov	si, ax
-		cmp	byte ptr [si], 0
+		cmp	[si+glyphball_t.GB_phase], GBP_FREE
 		jz	short loc_BD68
-		mov	byte ptr [si], 5
+		mov	[si+glyphball_t.GB_phase], GBP_REMOVE_REQUEST
 		jmp	short loc_BD68
 ; ---------------------------------------------------------------------------
 
@@ -2882,41 +2910,41 @@ loc_BD65:
 		call	sub_BD1E
 
 loc_BD68:
-		cmp	byte ptr [si], 0
+		cmp	[si+glyphball_t.GB_phase], GBP_FREE
 		jnz	short loc_BD65
-		mov	byte ptr [si], 1
-		mov	word ptr [si+14h], 0
-		mov	bx, [bp+arg_6]
+		mov	[si+glyphball_t.GB_phase], GBP_CLOUD_AT_ORIGIN
+		mov	[si+glyphball_t.GB_phase_frame], 0
+		mov	bx, [bp+@@y]
 		imul	bx, ALPHABET_COLS
-		add	bx, [bp+arg_8]
+		add	bx, [bp+@@x]
 		mov	al, _gALPHABET[bx]
-		mov	[si+1],	al
-		cmp	byte ptr [si+1], gs_SPACE
+		mov	[si+glyphball_t.GB_glyph], al
+		cmp	[si+glyphball_t.GB_glyph], gs_SPACE
 		jnz	short loc_BD8F
-		mov	byte ptr [si+1], g_EMPTY
+		mov	[si+glyphball_t.GB_glyph], g_EMPTY
 
 loc_BD8F:
-		mov	ax, [bp+arg_8]
+		mov	ax, [bp+@@x]
 		add	ax, ax
 		add	ax, 17h
 		shl	ax, 4
 		shl	ax, 3
-		add	ax, 80h
-		mov	[si+2],	ax
-		mov	ax, [bp+arg_6]
+		add	ax, ((GAIJI_W / 2) shl 4)
+		mov	[si+glyphball_t.GB_pos.cur.x], ax
+		mov	ax, [bp+@@y]
 		add	ax, 15h
 		shl	ax, 4
 		shl	ax, 4
-		add	ax, 80h
-		mov	[si+4],	ax
+		add	ax, ((GLYPH_H / 2) shl 4)
+		mov	[si+glyphball_t.GB_pos.cur.y], ax
 		call	IRand
-		mov	[si+12h], al
+		mov	[si+glyphball_t.GB_angle], al
 		call	IRand
-		mov	bx, 40h
+		mov	bx, (4 shl 4)
 		cwd
 		idiv	bx
-		add	dl, 40h
-		mov	[si+13h], dl
+		add	dl, (4 shl 4)
+		mov	[si+glyphball_t.GB_speed], dl
 		mov	al, [bp+arg_2]
 		mov	ah, 0
 		mov	bx, ax
@@ -2926,80 +2954,80 @@ loc_BD8F:
 		jmp	cs:off_BE6E[bx]
 
 loc_BDE1:
-		mov	[bp+arg_8], 8
+		mov	[bp+@@x], 8
 		or	di, di
 		jnz	short loc_BDEF
-		mov	ax, 58h	; 'X'
+		mov	ax, 88
 		jmp	short loc_BE3F
 ; ---------------------------------------------------------------------------
 
 loc_BDEF:
 		mov	ax, di
 		shl	ax, 4
-		add	ax, 60h
+		add	ax, 96
 		jmp	short loc_BE3F
 ; ---------------------------------------------------------------------------
 
 loc_BDF9:
-		mov	[bp+arg_8], 148h
+		mov	[bp+@@x], 328
 		or	di, di
 		jnz	short loc_BE07
-		mov	ax, 58h	; 'X'
+		mov	ax, 88
 		jmp	short loc_BE3F
 ; ---------------------------------------------------------------------------
 
 loc_BE07:
 		mov	ax, di
 		shl	ax, 4
-		add	ax, 60h
+		add	ax, 96
 		jmp	short loc_BE3F
 ; ---------------------------------------------------------------------------
 
 loc_BE11:
-		mov	[bp+arg_8], 8
+		mov	[bp+@@x], 8
 		or	di, di
 		jnz	short loc_BE1F
-		mov	ax, 0E0h ; '・
+		mov	ax, 224
 		jmp	short loc_BE3F
 ; ---------------------------------------------------------------------------
 
 loc_BE1F:
 		mov	ax, di
 		shl	ax, 4
-		add	ax, 0E8h ; '・
+		add	ax, 232
 		jmp	short loc_BE3F
 ; ---------------------------------------------------------------------------
 
 loc_BE29:
-		mov	[bp+arg_8], 148h
+		mov	[bp+@@x], 328
 		or	di, di
 		jnz	short loc_BE37
-		mov	ax, 0E0h ; '・
+		mov	ax, 224
 		jmp	short loc_BE3F
 ; ---------------------------------------------------------------------------
 
 loc_BE37:
 		mov	ax, di
 		shl	ax, 4
-		add	ax, 0E8h ; '・
+		add	ax, 232
 
 loc_BE3F:
-		mov	[bp+arg_6], ax
+		mov	[bp+@@y], ax
 
 loc_BE42:
-		mov	ax, [bp+arg_8]
+		mov	ax, [bp+@@x]
 		shl	ax, 4
 		mov	dl, [bp+arg_0]
 		mov	dh, 0
 		shl	dx, 4
 		shl	dx, 4
 		add	ax, dx
-		add	ax, 80h
-		mov	[si+0Eh], ax
-		mov	ax, [bp+arg_6]
+		add	ax, ((GAIJI_W / 2) shl 4)
+		mov	[si+glyphball_t.GB_target.x], ax
+		mov	ax, [bp+@@y]
 		shl	ax, 4
-		add	ax, 80h
-		mov	[si+10h], ax
+		add	ax, ((GLYPH_H / 2) shl 4)
+		mov	[si+glyphball_t.GB_target.y], ax
 		pop	di
 		pop	si
 		pop	bp
@@ -3020,358 +3048,358 @@ off_BE6E	dw offset loc_BDE1
 sub_BE76	proc near
 
 var_8		= byte ptr -8
-var_7		= byte ptr -7
-@@y		= word ptr -6
-@@x		= word ptr -4
+@@angle		= byte ptr -7
+@@top		= word ptr -6
+@@left		= word ptr -4
 @@patnum		= word ptr -2
 
 		enter	8, 0
 		push	si
 		push	di
-		mov	si, 4F7Ah
+		mov	si, offset _glyphballs
 		xor	di, di
 		jmp	short loc_BECC
 ; ---------------------------------------------------------------------------
 
 loc_BE83:
-		cmp	byte ptr [si], 0
+		cmp	[si+glyphball_t.GB_phase], GBP_FREE
 		jz	short loc_BEC8
-		cmp	byte ptr [si], 4
+		cmp	[si+glyphball_t.GB_phase], GBP_DONE
 		jnz	short loc_BE90
-		mov	byte ptr [si], 0
+		mov	[si+glyphball_t.GB_phase], GBP_FREE
 
 loc_BE90:
-		cmp	word ptr [si+6], 0
+		cmp	[si+glyphball_t.GB_pos.prev.x], 0
 		jge	short loc_BE9B
-		mov	word ptr [si+6], 0
+		mov	[si+glyphball_t.GB_pos.prev.x], 0
 
 loc_BE9B:
-		cmp	word ptr [si+8], 0
+		cmp	[si+glyphball_t.GB_pos.prev.y], 0
 		jge	short loc_BEA6
-		mov	word ptr [si+8], 0
+		mov	[si+glyphball_t.GB_pos.prev.y], 0
 
 loc_BEA6:
-		mov	ax, [si+6]
+		mov	ax, [si+glyphball_t.GB_pos.prev.x]
 		mov	bx, 16
 		cwd
 		idiv	bx
-		add	ax, -16
+		add	ax, -(GLYPHBALL_CLOUD_SPLASH_W / 2)
 		push	ax
-		mov	ax, [si+8]
+		mov	ax, [si+glyphball_t.GB_pos.prev.y]
 		cwd
 		idiv	bx
-		add	ax, -16
+		add	ax, -(GLYPHBALL_CLOUD_SPLASH_H / 2)
 		push	ax
-		push	(32 shl 16) or 32
+		push	(GLYPHBALL_CLOUD_SPLASH_W shl 16) or GLYPHBALL_CLOUD_SPLASH_H
 		call	bgimage_put_rect
 
 loc_BEC8:
 		inc	di
-		add	si, 1Ch
+		add	si, size glyphball_t
 
 loc_BECC:
-		cmp	di, 8
+		cmp	di, SCOREDAT_NAME_LEN
 		jl	short loc_BE83
 		mov	al, _entered_place
 		mov	ah, 0
 		push	ax
 		push	word ptr playchar_15178
-		push	word_11622
+		push	_entered_name_cursor
 		call	sub_BA84
-		mov	si, 4F7Ah
+		mov	si, offset _glyphballs
 		xor	di, di
 		jmp	loc_C156
 ; ---------------------------------------------------------------------------
 
 loc_BEEA:
-		cmp	byte ptr [si], 0
+		cmp	[si+glyphball_t.GB_phase], GBP_FREE
 		jz	loc_C152
-		mov	al, [si]
+		mov	al, [si+glyphball_t.GB_phase]
 		mov	ah, 0
 		dec	ax
 		mov	bx, ax
-		cmp	bx, 4
-		ja	loc_C141
+		cmp	bx, (GBP_REMOVE_REQUEST - 1)
+		ja	@@put
 		add	bx, bx
 		jmp	cs:off_C162[bx]
 
-loc_BF06:
-		mov	eax, [si+2]
-		mov	[si+6],	eax
-		mov	ax, [si+2]
+@@cloud_at_origin:
+		mov	eax, dword ptr [si+glyphball_t.GB_pos.cur]
+		mov	dword ptr [si+glyphball_t.GB_pos.prev], eax
+		mov	ax, [si+glyphball_t.GB_pos.cur.x]
 		mov	bx, 16
 		cwd
 		idiv	bx
-		add	ax, -16
-		mov	[bp+@@x], ax
-		mov	ax, [si+4]
+		add	ax, -(GLYPHBALL_CLOUD_SPLASH_W / 2)
+		mov	[bp+@@left], ax
+		mov	ax, [si+glyphball_t.GB_pos.cur.y]
 		cwd
 		idiv	bx
-		add	ax, -16
-		mov	[bp+@@y], ax
-		mov	ax, [si+14h]
+		add	ax, -(GLYPHBALL_CLOUD_SPLASH_H / 2)
+		mov	[bp+@@top], ax
+		mov	ax, [si+glyphball_t.GB_phase_frame]
 		shr	ax, 1
-		add	ax, 20
+		add	ax, PAT_GLYPHBALL_CLOUD
 		mov	[bp+@@patnum], ax
-		cmp	[bp+@@patnum], 24
-		jl	loc_C141
-		inc	byte ptr [si]
+		cmp	[bp+@@patnum], (PAT_GLYPHBALL_CLOUD + GLYPHBALL_CELS)
+		jl	@@put
+		inc	[si+glyphball_t.GB_phase]
 
-loc_BF3E:
-		mov	eax, [si+2]
-		mov	[si+6],	eax
-		lea	ax, [si+0Ah]
+@@float_to_target:
+		mov	eax, dword ptr [si+glyphball_t.GB_pos.cur]
+		mov	dword ptr [si+glyphball_t.GB_pos.prev], eax
+		lea	ax, [si+glyphball_t.GB_pos.velocity]
 		push	ax
 		pushd	0
-		mov	al, [si+13h]
+		mov	al, [si+glyphball_t.GB_speed]
 		mov	ah, 0
 		push	ax
-		mov	al, [si+12h]
+		mov	al, [si+glyphball_t.GB_angle]
 		mov	ah, 0
 		push	ax
 		call	vector2_at
-		mov	ax, [si+0Ah]
-		add	[si+2],	ax
-		mov	ax, [si+0Ch]
-		add	[si+4],	ax
-		mov	ax, [si+2]
+		mov	ax, [si+glyphball_t.GB_pos.velocity.x]
+		add	[si+glyphball_t.GB_pos.cur.x], ax
+		mov	ax, [si+glyphball_t.GB_pos.velocity.y]
+		add	[si+glyphball_t.GB_pos.cur.y], ax
+		mov	ax, [si+glyphball_t.GB_pos.cur.x]
 		mov	bx, 16
 		cwd
 		idiv	bx
-		add	ax, -8
-		mov	[bp+@@x], ax
-		mov	ax, [si+4]
+		add	ax, -(GLYPHBALL_W / 2)
+		mov	[bp+@@left], ax
+		mov	ax, [si+glyphball_t.GB_pos.cur.y]
 		cwd
 		idiv	bx
-		add	ax, -8
-		mov	[bp+@@y], ax
-		cmp	[bp+@@x], 0
+		add	ax, -(GLYPHBALL_H / 2)
+		mov	[bp+@@top], ax
+		cmp	[bp+@@left], 0
 		jge	short loc_BF9F
-		mov	[bp+@@x], 0
+		mov	[bp+@@left], 0
 		mov	al, 80h
-		sub	al, [si+12h]
-		mov	[si+12h], al
-		mov	word ptr [si+2], 80h
+		sub	al, [si+glyphball_t.GB_angle]
+		mov	[si+glyphball_t.GB_angle], al
+		mov	word ptr [si+glyphball_t.GB_pos.cur.x], (8 shl 4)
 		jmp	short loc_BFB8
 ; ---------------------------------------------------------------------------
 
 loc_BF9F:
-		cmp	[bp+@@x], 624
+		cmp	[bp+@@left], (RES_X - GLYPHBALL_W)
 		jl	short loc_BFB8
-		mov	[bp+@@x], 624
+		mov	[bp+@@left], (RES_X - GLYPHBALL_W)
 		mov	al, 80h
-		sub	al, [si+12h]
-		mov	[si+12h], al
-		mov	word ptr [si+2], 2780h
+		sub	al, [si+glyphball_t.GB_angle]
+		mov	[si+glyphball_t.GB_angle], al
+		mov	word ptr [si+glyphball_t.GB_pos.cur.x], ((RES_X - (GLYPHBALL_W / 2)) shl 4)
 
 loc_BFB8:
-		cmp	[bp+@@y], 0
+		cmp	[bp+@@top], 0
 		jge	short loc_BFD2
-		mov	[bp+@@y], 0
-		mov	al, [si+12h]
+		mov	[bp+@@top], 0
+		mov	al, [si+glyphball_t.GB_angle]
 		neg	al
-		mov	[si+12h], al
-		mov	word ptr [si+4], 80h
+		mov	[si+glyphball_t.GB_angle], al
+		mov	word ptr [si+glyphball_t.GB_pos.cur.y], ((GLYPHBALL_H / 2) shl 4)
 		jmp	short loc_BFEB
 ; ---------------------------------------------------------------------------
 
 loc_BFD2:
-		cmp	[bp+@@y], 384
+		cmp	[bp+@@top], (RES_Y - GLYPHBALL_H)
 		jl	short loc_BFEB
-		mov	[bp+@@y], 384
-		mov	al, [si+12h]
+		mov	[bp+@@top], (RES_Y - GLYPHBALL_H)
+		mov	al, [si+glyphball_t.GB_angle]
 		neg	al
-		mov	[si+12h], al
-		mov	word ptr [si+4], 1880h
+		mov	[si+glyphball_t.GB_angle], al
+		mov	word ptr [si+glyphball_t.GB_pos.cur.y], ((RES_Y - (GLYPHBALL_H / 2)) shl 4)
 
 loc_BFEB:
-		mov	ax, [si+14h]
+		mov	ax, [si+glyphball_t.GB_phase_frame]
 		shr	ax, 2
 		and	ax, 3
-		add	ax, 28
+		add	ax, PAT_GLYPHBALL
 		mov	[bp+@@patnum], ax
-		mov	ax, [si+10h]
-		sub	ax, [si+4]
+		mov	ax, [si+glyphball_t.GB_target.y]
+		sub	ax, [si+glyphball_t.GB_pos.cur.y]
 		push	ax
-		mov	ax, [si+0Eh]
-		sub	ax, [si+2]
+		mov	ax, [si+glyphball_t.GB_target.x]
+		sub	ax, [si+glyphball_t.GB_pos.cur.x]
 		push	ax
 		call	iatan2
 		mov	[bp+var_8], al
-		mov	al, [si+12h]
+		mov	al, [si+glyphball_t.GB_angle]
 		sub	al, [bp+var_8]
-		mov	[bp+var_7], al
-		cmp	[bp+var_7], 80h
+		mov	[bp+@@angle], al
+		cmp	[bp+@@angle], 80h
 		jb	short loc_C077
-		cmp	[bp+var_7], 0FEh
+		cmp	[bp+@@angle], -2
 		jb	short loc_C035
 		mov	al, [bp+var_8]
-		mov	[si+12h], al
-		cmp	byte ptr [si+13h], 80h
+		mov	[si+glyphball_t.GB_angle], al
+		cmp	[si+glyphball_t.GB_speed], (8 shl 4)
 		jnb	loc_C0CC
 		jmp	short loc_C089
 ; ---------------------------------------------------------------------------
 
 loc_C035:
-		cmp	[bp+var_7], 0F0h ; '・
+		cmp	[bp+@@angle], -10h
 		jbe	short loc_C04C
-		mov	[bp+var_7], 1
-		cmp	byte ptr [si+13h], 80h
+		mov	[bp+@@angle], 1
+		cmp	[si+glyphball_t.GB_speed], (8 shl 4)
 		jnb	short loc_C06F
-		mov	al, [si+13h]
+		mov	al, [si+glyphball_t.GB_speed]
 		add	al, 2
 		jmp	short loc_C06C
 ; ---------------------------------------------------------------------------
 
 loc_C04C:
-		mov	al, [bp+var_7]
+		mov	al, [bp+@@angle]
 		mov	ah, 0
 		push	ax
-		mov	ax, 100h
+		mov	ax, 256
 		pop	dx
 		sub	ax, dx
 		mov	bx, 10h
 		cwd
 		idiv	bx
-		mov	[bp+var_7], al
-		cmp	byte ptr [si+13h], 8
+		mov	[bp+@@angle], al
+		cmp	[si+glyphball_t.GB_speed], 8
 		jbe	short loc_C06F
-		mov	al, [si+13h]
-		add	al, 0FEh
+		mov	al, [si+glyphball_t.GB_speed]
+		add	al, -2
 
 loc_C06C:
-		mov	[si+13h], al
+		mov	[si+glyphball_t.GB_speed], al
 
 loc_C06F:
-		mov	al, [bp+var_7]
-		add	[si+12h], al
+		mov	al, [bp+@@angle]
+		add	[si+glyphball_t.GB_angle], al
 		jmp	short loc_C0CC
 ; ---------------------------------------------------------------------------
 
 loc_C077:
-		cmp	[bp+var_7], 2
+		cmp	[bp+@@angle], 2
 		ja	short loc_C093
 		mov	al, [bp+var_8]
-		mov	[si+12h], al
-		cmp	byte ptr [si+13h], 80h
+		mov	[si+glyphball_t.GB_angle], al
+		cmp	[si+glyphball_t.GB_speed], (8 shl 4)
 		jnb	short loc_C0CC
 
 loc_C089:
-		mov	al, [si+13h]
+		mov	al, [si+glyphball_t.GB_speed]
 		add	al, 2
-		mov	[si+13h], al
+		mov	[si+glyphball_t.GB_speed], al
 		jmp	short loc_C0CC
 ; ---------------------------------------------------------------------------
 
 loc_C093:
-		cmp	[bp+var_7], 10h
+		cmp	[bp+@@angle], 10h
 		jnb	short loc_C0AA
-		mov	[bp+var_7], 1
-		cmp	byte ptr [si+13h], 80h
+		mov	[bp+@@angle], 1
+		cmp	[si+glyphball_t.GB_speed], (8 shl 4)
 		jnb	short loc_C0C6
-		mov	al, [si+13h]
+		mov	al, [si+glyphball_t.GB_speed]
 		add	al, 2
 		jmp	short loc_C0C3
 ; ---------------------------------------------------------------------------
 
 loc_C0AA:
-		mov	al, [bp+var_7]
+		mov	al, [bp+@@angle]
 		mov	ah, 0
 		mov	bx, 10h
 		cwd
 		idiv	bx
-		mov	[bp+var_7], al
-		cmp	byte ptr [si+13h], 8
+		mov	[bp+@@angle], al
+		cmp	[si+glyphball_t.GB_speed], 8
 		jbe	short loc_C0C6
-		mov	al, [si+13h]
-		add	al, 0FEh
+		mov	al, [si+glyphball_t.GB_speed]
+		add	al, -2
 
 loc_C0C3:
-		mov	[si+13h], al
+		mov	[si+glyphball_t.GB_speed], al
 
 loc_C0C6:
-		mov	al, [bp+var_7]
-		sub	[si+12h], al
+		mov	al, [bp+@@angle]
+		sub	[si+glyphball_t.GB_angle], al
 
 loc_C0CC:
-		mov	ax, [si+2]
-		sub	ax, [si+0Eh]
-		add	ax, 40h
-		cmp	ax, 80h
-		jnb	short loc_C141
-		mov	ax, [si+4]
-		sub	ax, [si+10h]
-		add	ax, 40h
-		cmp	ax, 80h
-		jnb	short loc_C141
-		inc	byte ptr [si]
-		mov	word ptr [si+14h], 0
+		mov	ax, [si+glyphball_t.GB_pos.cur.x]
+		sub	ax, [si+glyphball_t.GB_target.x]
+		add	ax, (4 shl 4)
+		cmp	ax, (8 shl 4)
+		jnb	short @@put
+		mov	ax, [si+glyphball_t.GB_pos.cur.y]
+		sub	ax, [si+glyphball_t.GB_target.y]
+		add	ax, (4 shl 4)
+		cmp	ax, (8 shl 4)
+		jnb	short @@put
+		inc	[si+glyphball_t.GB_phase]
+		mov	[si+glyphball_t.GB_phase_frame], 0
 		mov	al, _entered_place
 		mov	ah, 0
 		imul	ax, (SCOREDAT_NAME_LEN + 1)
-		mov	dl, [si+1]
+		mov	dl, [si+glyphball_t.GB_glyph]
 		mov	bx, ax
 		mov	_hi.score.g_name[bx+di], dl
-		jmp	short loc_C141
+		jmp	short @@put
 ; ---------------------------------------------------------------------------
 
-loc_C102:
-		mov	ax, [si+14h]
+@@splash_at_target:
+		mov	ax, [si+glyphball_t.GB_phase_frame]
 		shr	ax, 2
-		add	ax, 24
+		add	ax, PAT_GLYPHBALL_SPLASH
 		mov	[bp+@@patnum], ax
-		cmp	[bp+@@patnum], 28
+		cmp	[bp+@@patnum], (PAT_GLYPHBALL_SPLASH + GLYPHBALL_CELS)
 		jl	short loc_C118
-		inc	byte ptr [si]
+		inc	[si+glyphball_t.GB_phase]
 		jmp	short loc_C152
 ; ---------------------------------------------------------------------------
 
 loc_C118:
-		mov	eax, [si+0Eh]
-		mov	[si+6],	eax
-		mov	ax, [si+0Eh]
+		mov	eax, dword ptr [si+glyphball_t.GB_target]
+		mov	dword ptr [si+glyphball_t.GB_pos.prev.x], eax
+		mov	ax, [si+glyphball_t.GB_target.x]
 		mov	bx, 16
 		cwd
 		idiv	bx
-		add	ax, -16
-		mov	[bp+@@x], ax
-		mov	ax, [si+10h]
+		add	ax, -(GLYPHBALL_CLOUD_SPLASH_W / 2)
+		mov	[bp+@@left], ax
+		mov	ax, [si+glyphball_t.GB_target.y]
 		cwd
 		idiv	bx
-		add	ax, -16
-		mov	[bp+@@y], ax
-		jmp	short loc_C141
+		add	ax, -(GLYPHBALL_CLOUD_SPLASH_H / 2)
+		mov	[bp+@@top], ax
+		jmp	short @@put
 ; ---------------------------------------------------------------------------
 
-loc_C13D:
-		dec	byte ptr [si]
+@@remove_request:
+		dec	[si+glyphball_t.GB_phase]
 		jmp	short loc_C152
 ; ---------------------------------------------------------------------------
 
-loc_C141:
-		inc	word ptr [si+14h]
-		call	super_put_rect pascal, [bp+@@x], [bp+@@y], [bp+@@patnum]
+@@put:
+		inc	[si+glyphball_t.GB_phase_frame]
+		call	super_put_rect pascal, [bp+@@left], [bp+@@top], [bp+@@patnum]
 
 loc_C152:
 		inc	di
-		add	si, 1Ch
+		add	si, size glyphball_t
 
 loc_C156:
-		cmp	di, 8
+		cmp	di, SCOREDAT_NAME_LEN
 		jl	loc_BEEA
 		pop	di
 		pop	si
 		leave
 		retn
-sub_BE76	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
-off_C162	dw offset loc_BF06
-		dw offset loc_BF3E
-		dw offset loc_C102
-		dw offset loc_C141
-		dw offset loc_C13D
+off_C162	dw offset @@cloud_at_origin
+		dw offset @@float_to_target
+		dw offset @@splash_at_target
+		dw offset @@put
+		dw offset @@remove_request
+sub_BE76	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3386,55 +3414,55 @@ var_1		= byte ptr -1
 		push	di
 		mov	[bp+var_1], 0
 		call	snd_se_play pascal, 11
-		mov	si, 4F7Ah
+		mov	si, offset _glyphballs
 		xor	di, di
 		jmp	short loc_C1AF
 ; ---------------------------------------------------------------------------
 
 loc_C184:
-		cmp	byte ptr [si], 1
+		cmp	[si+glyphball_t.GB_phase], GBP_CLOUD_AT_ORIGIN
 		jnz	short loc_C18C
-		mov	byte ptr [si], 2
+		mov	[si+glyphball_t.GB_phase], GBP_FLOAT_TO_TARGET
 
 loc_C18C:
-		cmp	byte ptr [si], 2
+		cmp	[si+glyphball_t.GB_phase], GBP_FLOAT_TO_TARGET
 		jnz	short loc_C1AB
-		mov	ax, [si+10h]
-		sub	ax, [si+4]
+		mov	ax, [si+glyphball_t.GB_target.y]
+		sub	ax, [si+glyphball_t.GB_pos.cur.y]
 		push	ax
-		mov	ax, [si+0Eh]
-		sub	ax, [si+2]
+		mov	ax, [si+glyphball_t.GB_target.x]
+		sub	ax, [si+glyphball_t.GB_pos.cur.x]
 		push	ax
 		call	iatan2
-		mov	[si+12h], al
-		mov	byte ptr [si+13h], 60h
+		mov	[si+glyphball_t.GB_angle], al
+		mov	[si+glyphball_t.GB_speed], (6 shl 4)
 
 loc_C1AB:
 		inc	di
-		add	si, 1Ch
+		add	si, size glyphball_t
 
 loc_C1AF:
-		cmp	di, 8
+		cmp	di, SCOREDAT_NAME_LEN
 		jl	short loc_C184
 
 loc_C1B4:
 		mov	[bp+var_1], 0
 		xor	di, di
-		mov	si, 4F7Ah
+		mov	si, offset _glyphballs
 		jmp	short loc_C1CB
 ; ---------------------------------------------------------------------------
 
 loc_C1BF:
-		cmp	byte ptr [si], 0
+		cmp	[si+glyphball_t.GB_phase], GBP_FREE
 		jz	short loc_C1C7
 		inc	[bp+var_1]
 
 loc_C1C7:
 		inc	di
-		add	si, 1Ch
+		add	si, size glyphball_t
 
 loc_C1CB:
-		cmp	di, 8
+		cmp	di, SCOREDAT_NAME_LEN
 		jl	short loc_C1BF
 		call	sub_BD1E
 		cmp	[bp+var_1], 0
@@ -3704,30 +3732,30 @@ loc_C448:
 		mov	al, _entered_place
 		mov	ah, 0
 		imul	ax, (SCOREDAT_NAME_LEN + 1)
-		add	ax, word_11622
+		add	ax, _entered_name_cursor
 		mov	bx, ax
 		mov	_hi.score.g_name[bx], g_EMPTY
-		mov	bx, word_11622
-		imul	bx, 1Ch
-		cmp	byte ptr [bx+4F7Ah], 0
+		mov	bx, _entered_name_cursor
+		imul	bx, size glyphball_t
+		cmp	_glyphballs[bx].GB_phase, GBP_FREE
 		jz	short loc_C496
-		mov	bx, word_11622
-		imul	bx, 1Ch
-		mov	byte ptr [bx+4F7Ah], 5
+		mov	bx, _entered_name_cursor
+		imul	bx, size glyphball_t
+		mov	_glyphballs[bx].GB_phase, GBP_REMOVE_REQUEST
 
 loc_C496:
-		cmp	word_11622, 0
+		cmp	_entered_name_cursor, 0
 		jle	short loc_C4A1
-		dec	word_11622
+		dec	_entered_name_cursor
 
 loc_C4A1:
-		mov	bx, word_11622
-		imul	bx, 1Ch
-		cmp	byte ptr [bx+4F7Ah], 0
+		mov	bx, _entered_name_cursor
+		imul	bx, size glyphball_t
+		cmp	_glyphballs[bx].GB_phase, GBP_FREE
 		jz	short loc_C4BB
-		mov	bx, word_11622
-		imul	bx, 1Ch
-		mov	byte ptr [bx+4F7Ah], 5
+		mov	bx, _entered_name_cursor
+		imul	bx, size glyphball_t
+		mov	_glyphballs[bx].GB_phase, GBP_REMOVE_REQUEST
 
 loc_C4BB:
 		call	snd_se_play pascal, 4
@@ -3736,7 +3764,7 @@ loc_C4BB:
 
 @@right:
 		call	snd_se_play pascal, 11
-		cmp	word_11622, 7
+		cmp	_entered_name_cursor, (SCOREDAT_NAME_LEN - 1)
 		jge	short loc_C516
 		jmp	short loc_C512
 ; ---------------------------------------------------------------------------
@@ -3749,9 +3777,9 @@ loc_C4D4:
 		mov	ah, 0
 		push	ax
 		push	word ptr playchar_15178
-		push	word_11622
+		push	_entered_name_cursor
 		call	sub_BD46
-		cmp	word_11622, 7
+		cmp	_entered_name_cursor, (SCOREDAT_NAME_LEN - 1)
 		jnz	short loc_C50B
 		push	si
 		push	di
@@ -3765,11 +3793,11 @@ loc_C4D4:
 		call	sub_BCED
 
 loc_C50B:
-		cmp	word_11622, 7
+		cmp	_entered_name_cursor, (SCOREDAT_NAME_LEN - 1)
 		jge	short loc_C516
 
 loc_C512:
-		inc	word_11622
+		inc	_entered_name_cursor
 
 loc_C516:
 		test	_key_det.lo, low INPUT_BOMB
@@ -3777,30 +3805,30 @@ loc_C516:
 		mov	al, _entered_place
 		mov	ah, 0
 		imul	ax, (SCOREDAT_NAME_LEN + 1)
-		add	ax, word_11622
+		add	ax, _entered_name_cursor
 		mov	bx, ax
 		mov	_hi.score.g_name[bx], g_EMPTY
-		mov	bx, word_11622
-		imul	bx, 1Ch
-		cmp	byte ptr [bx+4F7Ah], 0
+		mov	bx, _entered_name_cursor
+		imul	bx, size glyphball_t
+		cmp	_glyphballs[bx].GB_phase, GBP_FREE
 		jz	short loc_C54A
-		mov	bx, word_11622
-		imul	bx, 1Ch
-		mov	byte ptr [bx+4F7Ah], 5
+		mov	bx, _entered_name_cursor
+		imul	bx, size glyphball_t
+		mov	_glyphballs[bx].GB_phase, GBP_REMOVE_REQUEST
 
 loc_C54A:
-		cmp	word_11622, 0
+		cmp	_entered_name_cursor, 0
 		jle	short loc_C555
-		dec	word_11622
+		dec	_entered_name_cursor
 
 loc_C555:
-		mov	bx, word_11622
-		imul	bx, 1Ch
-		cmp	byte ptr [bx+4F7Ah], 0
+		mov	bx, _entered_name_cursor
+		imul	bx, size glyphball_t
+		cmp	_glyphballs[bx].GB_phase, GBP_FREE
 		jz	short loc_C56F
-		mov	bx, word_11622
-		imul	bx, 1Ch
-		mov	byte ptr [bx+4F7Ah], 5
+		mov	bx, _entered_name_cursor
+		imul	bx, size glyphball_t
+		mov	_glyphballs[bx].GB_phase, GBP_REMOVE_REQUEST
 
 loc_C56F:
 		call	snd_se_play pascal, 4
@@ -7950,7 +7978,8 @@ aAndAllTestPlay	db '             and all test player and you ... ',0
 aExed		db 'EXED',0
 include th04/hiscore/alphabet[data].asm
 byte_11621	db 0
-word_11622	dw 0
+public _entered_name_cursor
+_entered_name_cursor	dw 0
 aGensou_scr	db 'GENSOU.SCR',0
 aGensou_scr_0	db 'GENSOU.SCR',0
 aGensou_scr_1	db 'GENSOU.SCR',0
@@ -8089,7 +8118,8 @@ allcast_step	dw ?
 playchar_15018	db ?
 		db ?
 include th04/formats/scoredat[bss].asm
-		db 252 dup(?)
+public _glyphballs
+_glyphballs	glyphball_t	(SCOREDAT_NAME_LEN + 1) dup (<?>)
 include th03/hiscore/regist[bss].asm
 _hiscore_rank	db ?
 playchar_15178	db ?
