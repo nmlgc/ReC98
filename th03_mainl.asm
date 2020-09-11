@@ -1239,10 +1239,10 @@ loc_A147:
 		mov	si, ax
 		push	ax
 		call	hmem_allocbyte
-		mov	word ptr dword_105C6+2,	ax
-		mov	word ptr dword_105C6, 0
+		mov	word ptr _cutscene_script+2, ax
+		mov	word ptr _cutscene_script, 0
 		push	ax
-		push	word ptr dword_105C6
+		push	word ptr _cutscene_script
 		push	si
 		call	file_read
 		call	file_close
@@ -1262,11 +1262,11 @@ sub_A12E	endp
 sub_A174	proc near
 		push	bp
 		mov	bp, sp
-		cmp	dword_105C6, 0
+		cmp	_cutscene_script, 0
 		jz	short loc_A191
-		push	word ptr dword_105C6+2
+		push	word ptr _cutscene_script+2
 		call	hmem_free
-		mov	dword_105C6, 0
+		mov	_cutscene_script, 0
 
 loc_A191:
 		pop	bp
@@ -1680,17 +1680,17 @@ var_1		= byte ptr -1
 arg_0		= dword	ptr  4
 
 		enter	2, 0
-		les	bx, dword_105C6
+		les	bx, _cutscene_script
 		mov	cl, es:[bx]
-		inc	word ptr dword_105C6
-		les	bx, dword_105C6
+		inc	word ptr _cutscene_script
+		les	bx, _cutscene_script
 		mov	al, es:[bx]
 		mov	[bp+var_1], al
-		inc	word ptr dword_105C6
-		les	bx, dword_105C6
+		inc	word ptr _cutscene_script
+		les	bx, _cutscene_script
 		mov	al, es:[bx]
 		mov	[bp+var_2], al
-		inc	word ptr dword_105C6
+		inc	word ptr _cutscene_script
 		mov	al, cl
 		mov	ah, 0
 		mov	bx, ax
@@ -1699,7 +1699,7 @@ arg_0		= dword	ptr  4
 		les	bx, [bp+arg_0]
 		mov	ax, word_105D8
 		mov	es:[bx], ax
-		sub	word ptr dword_105C6, 3
+		sub	word ptr _cutscene_script, 3
 		leave
 		retn	4
 ; ---------------------------------------------------------------------------
@@ -1715,7 +1715,7 @@ loc_A554:
 		add	ax, 0FFD0h
 		les	bx, [bp+arg_0]
 		mov	es:[bx], ax
-		sub	word ptr dword_105C6, 2
+		sub	word ptr _cutscene_script, 2
 		leave
 		retn	4
 ; ---------------------------------------------------------------------------
@@ -1736,7 +1736,7 @@ loc_A578:
 		add	ax, 0FFD0h
 		les	bx, [bp+arg_0]
 		mov	es:[bx], ax
-		dec	word ptr dword_105C6
+		dec	word ptr _cutscene_script
 		leave
 		retn	4
 ; ---------------------------------------------------------------------------
@@ -1772,10 +1772,10 @@ arg_0		= dword	ptr  4
 
 		push	bp
 		mov	bp, sp
-		les	bx, dword_105C6
-		cmp	byte ptr es:[bx], 2Ch ;	','
+		les	bx, _cutscene_script
+		cmp	byte ptr es:[bx], ','
 		jnz	short loc_A5EF
-		inc	word ptr dword_105C6
+		inc	word ptr _cutscene_script
 		pushd	[bp+arg_0]
 		call	sub_A50A
 		pop	bp
@@ -1867,10 +1867,10 @@ loc_A680:
 		jl	loc_AC1E	; default
 
 loc_A695:
-		les	bx, dword_105C6	; jumptable 0000A67C case 115
+		les	bx, _cutscene_script	; jumptable 0000A67C case 115
 		mov	al, es:[bx]
 		mov	[bp+arg_0], al
-		cmp	[bp+arg_0], 2Dh	; '-'
+		cmp	[bp+arg_0], '-'
 		jz	short loc_A6C4
 		mov	word_105D8, 0
 		push	ss
@@ -1884,7 +1884,7 @@ loc_A695:
 ; ---------------------------------------------------------------------------
 
 loc_A6C4:
-		inc	word ptr dword_105C6
+		inc	word ptr _cutscene_script
 
 loc_A6C8:
 		mov	point_105D0.x, 80
@@ -1940,26 +1940,26 @@ loc_A737:
 ; ---------------------------------------------------------------------------
 
 loc_A73F:
-		les	bx, dword_105C6	; jumptable 0000A67C case 119
+		les	bx, _cutscene_script	; jumptable 0000A67C case 119
 		mov	al, es:[bx]
 		mov	ah, 0
 		push	ax		; ch
 		call	_tolower
 		pop	cx
 		mov	[bp+arg_0], al
-		cmp	[bp+arg_0], 6Fh	; 'o'
+		cmp	[bp+arg_0], 'o'
 		jz	short loc_A75E
-		cmp	[bp+arg_0], 69h	; 'i'
+		cmp	[bp+arg_0], 'i'
 		jnz	short loc_A78C
 
 loc_A75E:
-		inc	word ptr dword_105C6
+		inc	word ptr _cutscene_script
 		mov	word_105D8, 1
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
 		call	sub_A50A
-		cmp	[bp+arg_0], 69h	; 'i'
+		cmp	[bp+arg_0], 'i'
 		jnz	short loc_A781
 		push	[bp+var_2]
 		call	palette_white_in
@@ -1974,11 +1974,11 @@ loc_A781:
 
 loc_A78C:
 		mov	word_105D8, 40h
-		cmp	[bp+arg_0], 6Dh	; 'm'
+		cmp	[bp+arg_0], 'm'
 		jz	short loc_A7CF
-		cmp	[bp+arg_0], 6Bh	; 'k'
+		cmp	[bp+arg_0], 'k'
 		jnz	short loc_A7A2
-		inc	word ptr dword_105C6
+		inc	word ptr _cutscene_script
 
 loc_A7A2:
 		push	ss
@@ -1987,7 +1987,7 @@ loc_A7A2:
 		call	sub_A50A
 		cmp	byte_105CE, 0
 		jnz	loc_AC1E	; default
-		cmp	[bp+arg_0], 6Bh	; 'k'
+		cmp	[bp+arg_0], 'k'
 		jz	short loc_A7C4
 		push	[bp+var_2]
 		call	frame_delay
@@ -2001,13 +2001,13 @@ loc_A7C4:
 ; ---------------------------------------------------------------------------
 
 loc_A7CF:
-		inc	word ptr dword_105C6
-		les	bx, dword_105C6
+		inc	word ptr _cutscene_script
+		les	bx, _cutscene_script
 		mov	al, es:[bx]
 		mov	[bp+arg_0], al
-		cmp	[bp+arg_0], 6Bh	; 'k'
+		cmp	[bp+arg_0], 'k'
 		jnz	short loc_A7E7
-		inc	word ptr dword_105C6
+		inc	word ptr _cutscene_script
 
 loc_A7E7:
 		push	ss
@@ -2020,7 +2020,7 @@ loc_A7E7:
 		call	sub_A5D3
 		cmp	byte_105CE, 0
 		jnz	loc_AC1E	; default
-		cmp	[bp+arg_0], 6Bh	; 'k'
+		cmp	[bp+arg_0], 'k'
 		jz	short loc_A814
 		push	[bp+var_2]
 		push	[bp+var_4]
@@ -2036,8 +2036,8 @@ loc_A814:
 ; ---------------------------------------------------------------------------
 
 loc_A822:
-		les	bx, dword_105C6	; jumptable 0000A67C case 118
-		cmp	byte ptr es:[bx], 70h ;	'p'
+		les	bx, _cutscene_script	; jumptable 0000A67C case 118
+		cmp	byte ptr es:[bx], 'p'
 		jz	short loc_A843
 		mov	word_105D8, 1
 		push	ss
@@ -2050,7 +2050,7 @@ loc_A822:
 ; ---------------------------------------------------------------------------
 
 loc_A843:
-		inc	word ptr dword_105C6
+		inc	word ptr _cutscene_script
 		mov	word_105D8, 0
 		push	ss
 		lea	ax, [bp+var_2]
@@ -2079,24 +2079,24 @@ loc_A87B:
 ; ---------------------------------------------------------------------------
 
 loc_A889:
-		les	bx, dword_105C6	; jumptable 0000A67C case 102
+		les	bx, _cutscene_script	; jumptable 0000A67C case 102
 		mov	al, es:[bx]
 		mov	[bp+arg_0], al
-		cmp	[bp+arg_0], 6Dh	; 'm'
+		cmp	[bp+arg_0], 'm'
 		jz	short loc_A8D5
-		cmp	[bp+arg_0], 69h	; 'i'
+		cmp	[bp+arg_0], 'i'
 		jz	short loc_A8A7
-		cmp	[bp+arg_0], 6Fh	; 'o'
+		cmp	[bp+arg_0], 'o'
 		jnz	loc_AC1E	; default
 
 loc_A8A7:
-		inc	word ptr dword_105C6
+		inc	word ptr _cutscene_script
 		mov	word_105D8, 1
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
 		call	sub_A50A
-		cmp	[bp+arg_0], 69h	; 'i'
+		cmp	[bp+arg_0], 'i'
 		jnz	short loc_A8CA
 		push	[bp+var_2]
 		call	palette_black_in
@@ -2110,7 +2110,7 @@ loc_A8CA:
 ; ---------------------------------------------------------------------------
 
 loc_A8D5:
-		inc	word ptr dword_105C6
+		inc	word ptr _cutscene_script
 		mov	word_105D8, 1
 		push	ss
 		lea	ax, [bp+var_2]
@@ -2123,8 +2123,8 @@ loc_A8D5:
 ; ---------------------------------------------------------------------------
 
 loc_A8F1:
-		les	bx, dword_105C6	; jumptable 0000A67C case 103
-		cmp	byte ptr es:[bx], 61h ;	'a'
+		les	bx, _cutscene_script	; jumptable 0000A67C case 103
+		cmp	byte ptr es:[bx], 'a'
 		jz	short loc_A945
 		mov	word_105D8, 8
 		push	ss
@@ -2164,7 +2164,7 @@ loc_A933:
 ; ---------------------------------------------------------------------------
 
 loc_A945:
-		inc	word ptr dword_105C6
+		inc	word ptr _cutscene_script
 		mov	word_105D8, 0
 		push	ss
 		lea	ax, [bp+var_2]
@@ -2213,18 +2213,18 @@ loc_A9B8:
 ; ---------------------------------------------------------------------------
 
 loc_A9D1:
-		les	bx, dword_105C6	; jumptable 0000A67C case 112
+		les	bx, _cutscene_script	; jumptable 0000A67C case 112
 		mov	al, es:[bx]
 		mov	[bp+arg_0], al
-		inc	word ptr dword_105C6
-		cmp	[bp+arg_0], 3Dh	; '='
+		inc	word ptr _cutscene_script
+		cmp	[bp+arg_0], '='
 		jz	short loc_A9EB
-		cmp	[bp+arg_0], 40h
+		cmp	[bp+arg_0], '@'
 		jnz	short loc_AA1B
 
 loc_A9EB:
 		graph_accesspage 1
-		cmp	[bp+arg_0], 3Dh	; '='
+		cmp	[bp+arg_0], '='
 		jnz	short loc_A9FE
 		call	pi_palette_apply pascal, 0
 
@@ -2237,23 +2237,23 @@ loc_A9FE:
 ; ---------------------------------------------------------------------------
 
 loc_AA1B:
-		cmp	[bp+arg_0], 2Dh	; '-'
+		cmp	[bp+arg_0], '-'
 		jnz	short loc_AA32
 		freePISlotLarge	0
 		jmp	loc_AC1E	; default
 ; ---------------------------------------------------------------------------
 
 loc_AA32:
-		cmp	[bp+arg_0], 70h	; 'p'
+		cmp	[bp+arg_0], 'p'
 		jnz	short loc_AA42
 		call	pi_palette_apply pascal, 0
 		jmp	loc_AB90
 ; ---------------------------------------------------------------------------
 
 loc_AA42:
-		cmp	[bp+arg_0], 2Ch	; ','
+		cmp	[bp+arg_0], ','
 		jz	short loc_AA4F
-		dec	word ptr dword_105C6
+		dec	word ptr _cutscene_script
 		jmp	loc_AC1E	; default
 ; ---------------------------------------------------------------------------
 
@@ -2263,15 +2263,15 @@ loc_AA4F:
 ; ---------------------------------------------------------------------------
 
 loc_AA56:
-		les	bx, dword_105C6
+		les	bx, _cutscene_script
 		mov	al, es:[bx]
 		mov	[bp+arg_0], al
-		inc	word ptr dword_105C6
+		inc	word ptr _cutscene_script
 		mov	ah, 0
 		mov	bx, ax
 		test	(__ctype + 1)[bx], _IS_CTL
 		jnz	short loc_AA8A
-		cmp	[bp+arg_0], 20h	; ' '
+		cmp	[bp+arg_0], ' '
 		jz	short loc_AA8A
 		lea	bx, [bp+var_16]
 		add	bx, [bp+var_2]
@@ -2297,7 +2297,7 @@ loc_AA8A:
 
 loc_AAA3:
 		mov	word_105D8, 4	; jumptable 0000A67C case 61
-		les	bx, dword_105C6
+		les	bx, _cutscene_script
 		mov	al, es:[bx]
 		mov	[bp+arg_0], al
 		cmp	[bp+arg_0], 3Dh	; '='
@@ -2321,7 +2321,7 @@ loc_AAD5:
 ; ---------------------------------------------------------------------------
 
 loc_AAF8:
-		inc	word ptr dword_105C6
+		inc	word ptr _cutscene_script
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
@@ -2367,12 +2367,12 @@ loc_AB63:
 ; ---------------------------------------------------------------------------
 
 loc_AB66:
-		les	bx, dword_105C6	; jumptable 0000A67C case 109
+		les	bx, _cutscene_script	; jumptable 0000A67C case 109
 		mov	al, es:[bx]
 		mov	[bp+arg_0], al
 		cmp	[bp+arg_0], 24h	; '$'
 		jnz	short loc_AB7F
-		inc	word ptr dword_105C6
+		inc	word ptr _cutscene_script
 		push	(KAJA_SONG_STOP shl 8)
 		jmp	short loc_AB8B
 ; ---------------------------------------------------------------------------
@@ -2380,7 +2380,7 @@ loc_AB66:
 loc_AB7F:
 		cmp	[bp+arg_0], 2Ah	; '*'
 		jnz	short loc_AB93
-		inc	word ptr dword_105C6
+		inc	word ptr _cutscene_script
 
 loc_AB89:
 		push	(KAJA_SONG_PLAY shl 8)
@@ -2395,16 +2395,16 @@ loc_AB90:
 loc_AB93:
 		cmp	[bp+arg_0], 2Ch	; ','
 		jnz	loc_AC1E	; default
-		inc	word ptr dword_105C6
+		inc	word ptr _cutscene_script
 		mov	[bp+var_2], 0
 		jmp	short loc_ABD4
 ; ---------------------------------------------------------------------------
 
 loc_ABA6:
-		les	bx, dword_105C6
+		les	bx, _cutscene_script
 		mov	al, es:[bx]
 		mov	[bp+arg_0], al
-		inc	word ptr dword_105C6
+		inc	word ptr _cutscene_script
 		mov	ah, 0
 		mov	bx, ax
 		test	(__ctype + 1)[bx], _IS_CTL
@@ -2522,22 +2522,22 @@ loc_ACB6:
 		mov	byte_105CE, 0
 
 loc_ACBB:
-		les	bx, dword_105C6
+		les	bx, _cutscene_script
 		mov	al, es:[bx]
 		mov	[bp+var_1], al
-		inc	word ptr dword_105C6
+		inc	word ptr _cutscene_script
 		mov	ah, 0
 		mov	bx, ax
 		test	(__ctype + 1)[bx], _IS_CTL
 		jnz	short loc_ACA3
-		cmp	[bp+var_1], 20h	; ' '
+		cmp	[bp+var_1], ' '
 		jz	short loc_ACA3
-		cmp	[bp+var_1], 5Ch
+		cmp	[bp+var_1], '\'
 		jnz	short loc_ACFB
-		les	bx, dword_105C6
+		les	bx, _cutscene_script
 		mov	al, es:[bx]
 		mov	[bp+var_1], al
-		inc	word ptr dword_105C6
+		inc	word ptr _cutscene_script
 		push	word ptr [bp+var_1]
 		call	sub_A64D
 		cmp	al, 0FFh
@@ -2549,12 +2549,12 @@ loc_ACFB:
 		les	bx, [bp+var_6]
 		mov	al, [bp+var_1]
 		mov	es:[bx], al
-		les	bx, dword_105C6
+		les	bx, _cutscene_script
 		mov	al, es:[bx]
 		mov	[bp+var_1], al
 		les	bx, [bp+var_6]
 		mov	es:[bx+1], al
-		inc	word ptr dword_105C6
+		inc	word ptr _cutscene_script
 		graph_accesspage 1
 		push	point_105D0.x
 		push	point_105D0.y
@@ -6011,7 +6011,8 @@ include th03/hardware/input[bss].asm
 include th03/formats/cdg[bss].asm
 include th02/formats/pi_slots[bss].asm
 include th03/formats/hfliplut[bss].asm
-dword_105C6	dd ?
+public _cutscene_script
+_cutscene_script	dd ?
 dword_105CA	dd ?
 byte_105CE	db ?
 		db ?
