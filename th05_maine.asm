@@ -28,7 +28,7 @@ include th01/math/subpixel.inc
 	extern _tolower:proc
 	extern __ctype:byte
 
-maine_01 group maine_01__TEXT, maine_01___TEXT
+maine_01 group maine_01_TEXT, maine_01__TEXT, maine_01___TEXT
 g_seg2 group seg2, seg2_
 
 ; ===========================================================================
@@ -156,7 +156,7 @@ _TEXT		ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-maine_01__TEXT	segment	byte public 'CODE' use16
+maine_01_TEXT	segment	byte public 'CODE' use16
 		assume cs:maine_01
 		;org 5
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
@@ -520,75 +520,11 @@ loc_A864:
 		pop	bp
 		retn
 sub_A826	endp
+maine_01_TEXT	ends
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A866	proc near
-
-var_2		= word ptr -2
-arg_0		= word ptr  4
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	cx, 140h
-		jmp	short loc_A8E0
-; ---------------------------------------------------------------------------
-
-loc_A871:
-		egc_selectpat
-		egc_setrop	EGC_COMPAREREAD or EGC_WS_PATREG or EGC_RL_MEMREAD
-		outw2	EGC_BITLENGTHREG, 0Fh
-		mov	bx, [bp+arg_0]
-		shl	bx, 3
-		mov	ax, cx
-		and	ax, 3
-		add	ax, ax
-		add	bx, ax
-		outw2	EGC_MASKREG, [bx+732h]
-		mov	ax, cx
-		shl	ax, 6
-		mov	dx, cx
-		shl	dx, 4
-		add	ax, dx
-		add	ax, 0Ah
-		mov	si, ax
-		xor	di, di
-		jmp	short loc_A8D9
-; ---------------------------------------------------------------------------
-
-loc_A8B2:
-		graph_accesspage 1
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		mov	ax, es:[bx]
-		mov	[bp+var_2], ax
-		mov	al, 0
-		out	dx, al
-		mov	bx, word ptr _VRAM_PLANE_B
-		add	bx, si
-		mov	ax, [bp+var_2]
-		mov	es:[bx], ax
-		add	di, 10h
-		add	si, 2
-
-loc_A8D9:
-		cmp	di, 1E0h
-		jl	short loc_A8B2
-		inc	cx
-
-loc_A8E0:
-		cmp	cx, 180h
-		jl	short loc_A871
-		pop	di
-		pop	si
-		leave
-		retn	2
-sub_A866	endp
-
+maine_01__TEXT	segment	byte public 'CODE' use16
+	BOX_1_TO_0_MASK procdesc pascal near \
+		mask:word
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -607,8 +543,7 @@ sub_A8EC	proc near
 ; ---------------------------------------------------------------------------
 
 loc_A904:
-		push	si
-		call	sub_A866
+		call	box_1_to_0_mask pascal, si
 		push	word_15008
 		call	frame_delay
 		inc	si
@@ -618,8 +553,7 @@ loc_A912:
 		jl	short loc_A904
 
 loc_A917:
-		push	4
-		call	sub_A866
+		call	box_1_to_0_mask pascal, 4
 		call	egc_off
 		push	1
 		call	frame_delay
@@ -7719,47 +7653,8 @@ include th05/hardware/vram_planes[data].asm
 include th03/formats/cdg[data].asm
 public _colmap_count
 _colmap_count	db 0
-		db    0
-		db  88h
-		db  88h
-		db    0
-		db    0
-		db  22h	; "
-		db  22h	; "
-		db    0
-		db    0
-		db  88h
-		db  88h
-		db  44h	; D
-		db  44h	; D
-		db  22h	; "
-		db  22h	; "
-		db  11h
-		db  11h
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db  44h	; D
-		db  44h	; D
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db  11h
-		db  11h
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db  44h	; D
-		db  44h	; D
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db  55h	; U
-		db  55h	; U
-		db 0FFh
-		db 0FFh
-		db 0FFh
-		db 0FFh
-		db 0FFh
-		db 0FFh
-		db 0FFh
-		db 0FFh
+	evendata
+include th04/end/box[data].asm
 asc_1085A	db '  ', 0
 	even
 byte_1085E	db 0

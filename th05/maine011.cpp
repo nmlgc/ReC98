@@ -1,5 +1,12 @@
+/* ReC98
+ * -----
+ * 2nd part of code segment #1 of TH05's MAINE.EXE
+ */
+
+#pragma codeseg maine_01_TEXT
+
 extern "C" {
-#include "ReC98.h"
+#include "th04/end/box.cpp"
 
 /// String-to-color map
 /// -------------------

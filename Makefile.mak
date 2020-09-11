@@ -124,8 +124,8 @@ bin\th04\main.exe: bin\th04\main.obj bin\th04\scoreupd.obj th04\main011.cpp bin\
 $**
 |
 
-bin\th04\maine.exe: bin\th04\maine.obj bin\hfliplut.obj
-	$(CC) $(CFLAGS) -ml -DGAME=4 -DBINARY='E' -nbin\th04\ -eMAINE.EXE @&&|
+bin\th04\maine.exe: bin\th04\maine.obj th04\maine011.cpp bin\hfliplut.obj
+	$(CC) $(CFLAGS) -ml -DGAME=4 -DBINARY='E' -Z -nbin\th04\ -eMAINE.EXE @&&|
 $**
 |
 
@@ -144,8 +144,8 @@ bin\th05\main.exe: bin\th05\main.obj th05\main010.cpp th05\main011.cpp th05\p_co
 $**
 |
 
-bin\th05\maine.exe: bin\th05\maine.obj th05\staff.cpp bin\hfliplut.obj
-	$(CC) $(CFLAGS) -ml -DGAME=5 -DBINARY='E' -nbin\th05\ -eMAINE.EXE @&&|
+bin\th05\maine.exe: bin\th05\maine.obj th05\maine011.cpp th05\regist.cpp th05\staff.cpp bin\hfliplut.obj
+	$(CC) $(CFLAGS) -ml -DGAME=5 -DBINARY='E' -Z -nbin\th05\ -eMAINE.EXE @&&|
 $**
 |
 
