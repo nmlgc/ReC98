@@ -4,6 +4,7 @@ include th02/gaiji/boldfont.inc
 gs_DOT = 0C4h
 gs_BOMB = 0D3h
 gs_YINYANG = 0D4h
+gs_END = 0D5h
 gs_TEN = 0E6h
 gs_YUME = 0E7h
 gs_TAMA = 0E8h

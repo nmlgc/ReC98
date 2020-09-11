@@ -14,6 +14,7 @@ typedef enum {
 	gaiji_symbols_th02(0xC9),
 	gs_BOMB = 0xD3, // ◉? ⦿? 🎯? 🖸? Or simply 💣?
 	gs_YINYANG, // ☯
+	gs_END, // "End"
 	gs_TEN = 0xE6, // 点
 	gs_YUME, // 夢
 	gs_TAMA, // 弾

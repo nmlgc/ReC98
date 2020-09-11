@@ -199,8 +199,8 @@ void pascal score_enter(void)
 			hi.score.g_name[place][name_pos] = gALPHABET[row][col]; \
 			if(name_pos == 5) { \
 				alphabet_putca(col, row, TX_WHITE); \
-				col = 16; \
-				row = 2; \
+				col = ALPHABET_ENTER_COL; \
+				row = ALPHABET_ENTER_ROW; \
 				alphabet_putca(col, row, TX_GREEN | TX_REVERSE); \
 			} \
 			CLAMP_INC(name_pos, 5); \

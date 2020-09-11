@@ -2816,8 +2816,8 @@ arg_4		= word ptr  8
 		lea	ax, [di+15h]
 		push	ax
 		mov	bx, di
-		imul	bx, 11h
-		mov	al, gALPHABET[bx+si]
+		imul	bx, ALPHABET_COLS
+		mov	al, _gALPHABET[bx+si]
 		mov	ah, 0
 		push	ax
 		push	[bp+arg_0]
@@ -2887,13 +2887,13 @@ loc_BD68:
 		mov	byte ptr [si], 1
 		mov	word ptr [si+14h], 0
 		mov	bx, [bp+arg_6]
-		imul	bx, 11h
+		imul	bx, ALPHABET_COLS
 		add	bx, [bp+arg_8]
-		mov	al, [bx+14EEh]
+		mov	al, _gALPHABET[bx]
 		mov	[si+1],	al
-		cmp	byte ptr [si+1], 0CDh ;	'Í'
+		cmp	byte ptr [si+1], gs_SPACE
 		jnz	short loc_BD8F
-		mov	byte ptr [si+1], 2
+		mov	byte ptr [si+1], g_EMPTY
 
 loc_BD8F:
 		mov	ax, [bp+arg_8]
@@ -3450,11 +3450,13 @@ sub_C16C	endp
 
 ; Attributes: bp-based frame
 
+include th02/hiscore/regist.inc
+
 sub_C1DD	proc near
 
 var_8		= byte ptr -8
 var_7		= byte ptr -7
-var_6		= word ptr -6
+@@initial_col		= word ptr -6
 var_4		= word ptr -4
 var_2		= word ptr -2
 
@@ -3577,12 +3579,12 @@ loc_C307:
 ; ---------------------------------------------------------------------------
 
 loc_C36F:
-		mov	[bp+var_6], 0
+		mov	[bp+@@initial_col], 0
 		jmp	short loc_C3A1
 ; ---------------------------------------------------------------------------
 
 loc_C376:
-		mov	ax, [bp+var_6]
+		mov	ax, [bp+@@initial_col]
 		add	ax, ax
 		add	ax, 23
 		push	ax
@@ -3590,25 +3592,25 @@ loc_C376:
 		add	ax, 21
 		push	ax
 		mov	bx, [bp+var_4]
-		imul	bx, 11h
-		add	bx, [bp+var_6]
-		mov	al, gALPHABET[bx]
+		imul	bx, ALPHABET_COLS
+		add	bx, [bp+@@initial_col]
+		mov	al, _gALPHABET[bx]
 		mov	ah, 0
 		push	ax
 		push	TX_WHITE
 		call	gaiji_putca
-		inc	[bp+var_6]
+		inc	[bp+@@initial_col]
 
 loc_C3A1:
-		cmp	[bp+var_6], 11h
+		cmp	[bp+@@initial_col], ALPHABET_COLS
 		jl	short loc_C376
 		inc	[bp+var_4]
 
 loc_C3AA:
-		cmp	[bp+var_4], 3
+		cmp	[bp+var_4], ALPHABET_ROWS
 		jl	short loc_C36F
 		push	(23 shl 16) + 21
-		mov	al, gALPHABET
+		mov	al, _gALPHABET
 		mov	ah, 0
 		push	ax
 		push	TX_GREEN + TX_REVERSE
@@ -3649,24 +3651,24 @@ loc_C401:
 loc_C409:
 		or	di, di
 		jge	short loc_C412
-		mov	di, 2
+		mov	di, (ALPHABET_ROWS - 1)
 		jmp	short loc_C419
 ; ---------------------------------------------------------------------------
 
 loc_C412:
-		cmp	di, 2
+		cmp	di, (ALPHABET_ROWS - 1)
 		jle	short loc_C419
 		xor	di, di
 
 loc_C419:
 		or	si, si
 		jge	short loc_C422
-		mov	si, 10h
+		mov	si, (ALPHABET_COLS - 1)
 		jmp	short loc_C429
 ; ---------------------------------------------------------------------------
 
 loc_C422:
-		cmp	si, 10h
+		cmp	si, (ALPHABET_COLS - 1)
 		jle	short loc_C429
 		xor	si, si
 
@@ -3685,20 +3687,20 @@ loc_C438:
 
 loc_C448:
 		mov	bx, di
-		imul	bx, 11h
-		mov	al, [bx+si+14EEh]
+		imul	bx, ALPHABET_COLS
+		mov	al, _gALPHABET[bx+si]
 		mov	[bp+var_8], al
 		mov	ah, 0
-		cmp	ax, 0CEh
-		jz	short loc_C469
-		cmp	ax, 0CFh ; 'Ï'
-		jz	short loc_C4C4
-		cmp	ax, 0D5h ; 'Õ'
-		jz	loc_C57D
+		cmp	ax, gs_ARROW_LEFT
+		jz	short @@left
+		cmp	ax, gs_ARROW_RIGHT
+		jz	short @@right
+		cmp	ax, gs_END
+		jz	@@enter
 		jmp	short loc_C4D4
 ; ---------------------------------------------------------------------------
 
-loc_C469:
+@@left:
 		mov	al, _entered_place
 		mov	ah, 0
 		imul	ax, (SCOREDAT_NAME_LEN + 1)
@@ -3732,7 +3734,7 @@ loc_C4BB:
 		jmp	short loc_C516
 ; ---------------------------------------------------------------------------
 
-loc_C4C4:
+@@right:
 		call	snd_se_play pascal, 11
 		cmp	word_11622, 7
 		jge	short loc_C516
@@ -3755,8 +3757,8 @@ loc_C4D4:
 		push	di
 		push	TX_WHITE
 		call	sub_BCED
-		mov	si, 10h
-		mov	di, 2
+		mov	si, ALPHABET_ENTER_COL
+		mov	di, ALPHABET_ENTER_ROW
 		push	si
 		push	di
 		push	TX_GREEN + TX_REVERSE
@@ -3807,7 +3809,7 @@ loc_C576:
 		test	_key_det.hi, high INPUT_CANCEL
 		jz	short loc_C582
 
-loc_C57D:
+@@enter:
 		call	sub_C16C
 		jmp	short loc_C5BE
 ; ---------------------------------------------------------------------------
@@ -7946,12 +7948,7 @@ aSpecialThanksA	db '    Special Thanks                             Aotaka',0
 aAmusementMaker	db '                                               Amusement Makers',0
 aAndAllTestPlay	db '             and all test player and you ... ',0
 aExed		db 'EXED',0
-gALPHABET	db 0AAh, 0ABh, 0ACh, 0ADh, 0AEh, 0AFh, 0B0h, 0B1h, 0B2h
-		db 0B3h, 0B4h, 0B5h, 0B6h, 0B7h, 0B8h, 0B9h, 0BAh, 0BBh
-		db 0BCh, 0BDh, 0BEh, 0BFh, 0C0h, 0C1h, 0C2h, 0C3h, 0C4h
-		db 0C5h, 3, 6, 7, 8, 0Ch, 0Fh, 0A0h, 0A1h, 0A2h, 0A3h
-		db 0A4h, 0A5h, 0A6h, 0A7h, 0A8h, 0A9h, 0E6h, 0E7h, 0E8h
-		db 0CEh, 0CFh, 0CDh, 0D5h
+include th04/hiscore/alphabet[data].asm
 byte_11621	db 0
 word_11622	dw 0
 aGensou_scr	db 'GENSOU.SCR',0

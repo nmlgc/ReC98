@@ -4171,8 +4171,8 @@ arg_4		= word ptr  8
 		lea	ax, [di+12h]
 		push	ax
 		mov	bx, di
-		imul	bx, 11h
-		mov	al, gALPHABET[bx+si]
+		imul	bx, ALPHABET_COLS
+		mov	al, _gALPHABET[bx+si]
 		mov	ah, 0
 		push	ax
 		push	[bp+arg_0]
@@ -4188,14 +4188,16 @@ sub_C7E3	endp
 
 ; Attributes: bp-based frame
 
+include th02/hiscore/regist.inc
+
 sub_C814	proc near
 
 var_A		= byte ptr -0Ah
 var_9		= byte ptr -9
-var_8		= word ptr -8
-var_6		= word ptr -6
+@@initial_col		= word ptr -8
+@@initial_row		= word ptr -6
 var_4		= word ptr -4
-var_2		= word ptr -2
+@@row		= word ptr -2
 
 		enter	0Ah, 0
 		push	si
@@ -4327,49 +4329,49 @@ loc_C95E:
 		call	palette_black_in
 		cmp	_entered_place, -1
 		jz	loc_CB7F
-		mov	[bp+var_6], 0
+		mov	[bp+@@initial_row], 0
 		jmp	short loc_C9CB
 ; ---------------------------------------------------------------------------
 
 loc_C990:
-		mov	[bp+var_8], 0
+		mov	[bp+@@initial_col], 0
 		jmp	short loc_C9C2
 ; ---------------------------------------------------------------------------
 
 loc_C997:
-		mov	ax, [bp+var_8]
+		mov	ax, [bp+@@initial_col]
 		add	ax, ax
 		add	ax, 23
 		push	ax
-		mov	ax, [bp+var_6]
+		mov	ax, [bp+@@initial_row]
 		add	ax, 18
 		push	ax
-		mov	bx, [bp+var_6]
-		imul	bx, 11h
-		add	bx, [bp+var_8]
-		mov	al, gALPHABET[bx]
+		mov	bx, [bp+@@initial_row]
+		imul	bx, ALPHABET_COLS
+		add	bx, [bp+@@initial_col]
+		mov	al, _gALPHABET[bx]
 		mov	ah, 0
 		push	ax
 		push	TX_WHITE
 		call	gaiji_putca
-		inc	[bp+var_8]
+		inc	[bp+@@initial_col]
 
 loc_C9C2:
-		cmp	[bp+var_8], 11h
+		cmp	[bp+@@initial_col], ALPHABET_COLS
 		jl	short loc_C997
-		inc	[bp+var_6]
+		inc	[bp+@@initial_row]
 
 loc_C9CB:
-		cmp	[bp+var_6], 3
+		cmp	[bp+@@initial_row], ALPHABET_ROWS
 		jl	short loc_C990
 		push	(23 shl 16) + 18
-		mov	al, gALPHABET
+		mov	al, _gALPHABET
 		mov	ah, 0
 		push	ax
 		push	TX_GREEN + TX_REVERSE
 		call	gaiji_putca
 		xor	di, di
-		mov	[bp+var_2], 0
+		mov	[bp+@@row], 0
 		call	far ptr	_input_reset_sense
 		mov	[bp+var_4], 1
 
@@ -4380,17 +4382,17 @@ loc_C9F6:
 		test	_key_det.lo, low INPUT_MOVEMENT
 		jz	short loc_CA6A
 		push	di
-		push	[bp+var_2]
+		push	[bp+@@row]
 		push	TX_WHITE
 		call	sub_C7E3
 		test	_key_det.lo, low INPUT_UP
 		jz	short loc_CA1E
-		dec	[bp+var_2]
+		dec	[bp+@@row]
 
 loc_CA1E:
 		test	_key_det.lo, low INPUT_DOWN
 		jz	short loc_CA28
-		inc	[bp+var_2]
+		inc	[bp+@@row]
 
 loc_CA28:
 		test	_key_det.lo, low INPUT_LEFT
@@ -4403,32 +4405,32 @@ loc_CA30:
 		inc	di
 
 loc_CA38:
-		cmp	[bp+var_2], 0
+		cmp	[bp+@@row], 0
 		jge	short loc_CA45
-		mov	[bp+var_2], 2
+		mov	[bp+@@row], (ALPHABET_ROWS - 1)
 		jmp	short loc_CA50
 ; ---------------------------------------------------------------------------
 
 loc_CA45:
-		cmp	[bp+var_2], 2
+		cmp	[bp+@@row], (ALPHABET_ROWS - 1)
 		jle	short loc_CA50
-		mov	[bp+var_2], 0
+		mov	[bp+@@row], 0
 
 loc_CA50:
 		or	di, di
 		jge	short loc_CA59
-		mov	di, 10h
+		mov	di, (ALPHABET_COLS - 1)
 		jmp	short loc_CA60
 ; ---------------------------------------------------------------------------
 
 loc_CA59:
-		cmp	di, 10h
+		cmp	di, (ALPHABET_COLS - 1)
 		jle	short loc_CA60
 		xor	di, di
 
 loc_CA60:
 		push	di
-		push	[bp+var_2]
+		push	[bp+@@row]
 		push	TX_GREEN + TX_REVERSE
 		call	sub_C7E3
 
@@ -4439,24 +4441,24 @@ loc_CA6A:
 		jz	loc_CB03
 
 loc_CA7A:
-		mov	bx, [bp+var_2]
-		imul	bx, 11h
-		mov	al, [bx+di+82Ch]
+		mov	bx, [bp+@@row]
+		imul	bx, ALPHABET_COLS
+		mov	al, _gALPHABET[bx+di]
 		mov	[bp+var_A], al
 		mov	ah, 0
-		sub	ax, 0CDh ; 'ﾍ'
+		sub	ax, gs_SPACE
 		mov	bx, ax
 		cmp	bx, 8
-		ja	short loc_CABD
+		ja	short @@regular
 		add	bx, bx
 		jmp	cs:off_CB9E[bx]
 
-loc_CA9A:
-		mov	[bp+var_A], 2
-		jmp	short loc_CABD
+@@space:
+		mov	[bp+var_A], g_EMPTY
+		jmp	short @@regular
 ; ---------------------------------------------------------------------------
 
-loc_CAA0:
+@@left:
 		mov	al, _entered_place
 		mov	ah, 0
 		imul	ax, (SCOREDAT_NAME_LEN + 1)
@@ -4468,13 +4470,13 @@ loc_CAA0:
 		jmp	short loc_CAF5
 ; ---------------------------------------------------------------------------
 
-loc_CAB6:
+@@right:
 		cmp	si, 7
 		jge	short loc_CAF5
 		jmp	short loc_CAF4
 ; ---------------------------------------------------------------------------
 
-loc_CABD:
+@@regular:
 		mov	al, _entered_place
 		mov	ah, 0
 		imul	ax, (SCOREDAT_NAME_LEN + 1)
@@ -4484,13 +4486,13 @@ loc_CABD:
 		cmp	si, 7
 		jnz	short loc_CAEF
 		push	di
-		push	[bp+var_2]
+		push	[bp+@@row]
 		push	TX_WHITE
 		call	sub_C7E3
-		mov	di, 10h
-		mov	[bp+var_2], 2
+		mov	di, ALPHABET_ENTER_COL
+		mov	[bp+@@row], ALPHABET_ENTER_ROW
 		push	di
-		push	[bp+var_2]
+		push	[bp+@@row]
 		push	TX_GREEN + TX_REVERSE
 		call	sub_C7E3
 
@@ -4531,7 +4533,7 @@ loc_CB1E:
 
 loc_CB2C:
 		test	_key_det.hi, high INPUT_CANCEL
-		jnz	short loc_CB7A
+		jnz	short @@enter
 		mov	ax, _key_det
 		mov	[bp+var_4], ax
 		jmp	short loc_CB6B
@@ -4569,7 +4571,7 @@ loc_CB6B:
 		jmp	loc_C9F6
 ; ---------------------------------------------------------------------------
 
-loc_CB7A:
+@@enter:
 		call	sub_C316
 		jmp	short loc_CB89
 ; ---------------------------------------------------------------------------
@@ -4587,18 +4589,18 @@ loc_CB89:
 		pop	si
 		leave
 		retn
-sub_C814	endp
 
 ; ---------------------------------------------------------------------------
-off_CB9E	dw offset loc_CA9A
-		dw offset loc_CAA0
-		dw offset loc_CAB6
-		dw offset loc_CABD
-		dw offset loc_CABD
-		dw offset loc_CABD
-		dw offset loc_CABD
-		dw offset loc_CABD
-		dw offset loc_CB7A
+off_CB9E	dw offset @@space
+		dw offset @@left
+		dw offset @@right
+		dw offset @@regular
+		dw offset @@regular
+		dw offset @@regular
+		dw offset @@regular
+		dw offset @@regular
+		dw offset @@enter
+sub_C814	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4871,12 +4873,7 @@ aBhbhbhbhbhbhu_	db '？？？？？？点',0
 aPicacovVVcvsfT	db '処理落ちによる判定不可',0
 aUde_pi		db 'ude.pi',0
 		db    0
-gALPHABET	db 0AAh, 0ABh, 0ACh, 0ADh, 0AEh, 0AFh, 0B0h, 0B1h, 0B2h
-		db 0B3h, 0B4h, 0B5h, 0B6h, 0B7h, 0B8h, 0B9h, 0BAh, 0BBh
-		db 0BCh, 0BDh, 0BEh, 0BFh, 0C0h, 0C1h, 0C2h, 0C3h, 0C4h
-		db 0C5h, 3, 6, 7, 8, 0Ch, 0Fh, 0A0h, 0A1h, 0A2h, 0A3h
-		db 0A4h, 0A5h, 0A6h, 0A7h, 0A8h, 0A9h, 0E6h, 0E7h, 0E8h
-		db 0CEh, 0CFh, 0CDh, 0D5h
+include th04/hiscore/alphabet[data].asm
 aGensou_scr	db 'GENSOU.SCR',0
 aGensou_scr_0	db 'GENSOU.SCR',0
 aGensou_scr_1	db 'GENSOU.SCR',0
