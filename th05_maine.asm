@@ -705,6 +705,17 @@ sub_A92B	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+COLMAP_COUNT = 8
+
+colmap_key_t struc
+	CMK_kanji	dw ?
+		db 4 dup (?)
+colmap_key_t ends
+
+colmap_t struc
+	CM_values	db COLMAP_COUNT dup (?)
+	CM_keys	colmap_key_t COLMAP_COUNT dup (<?>)
+colmap_t ends
 
 sub_A9C3	proc near
 
@@ -789,14 +800,14 @@ loc_AA6A:
 		pop	cx
 		mov	[bp+arg_0], al
 		cmp	[bp+arg_0], '='
-		jz	loc_AF34
+		jz	@@colmap_add
 		mov	word_1500C, 0Fh
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
 		call	sub_A738
 		mov	al, byte ptr [bp+var_2]
-		mov	col_1500A, al
+		mov	_text_col, al
 		jmp	loc_AF8F	; default
 ; ---------------------------------------------------------------------------
 
@@ -1273,35 +1284,35 @@ loc_AF18:
 		jmp	short loc_AF8F	; default
 ; ---------------------------------------------------------------------------
 
-loc_AF34:
+@@colmap_add:
 		inc	_cutscene_script_ptr
-		mov	al, byte_10830
+		mov	al, _colmap_count
 		mov	ah, 0
-		imul	ax, 6
+		imul	ax, size colmap_key_t
 		mov	bx, _cutscene_script_ptr
 		mov	dl, [bx]
 		mov	bx, ax
-		mov	[bx+4ED3h], dl
+		mov	byte ptr (_colmap.CM_keys[bx].CMK_kanji + 0), dl
 		inc	_cutscene_script_ptr
-		mov	al, byte_10830
+		mov	al, _colmap_count
 		mov	ah, 0
-		imul	ax, 6
+		imul	ax, size colmap_key_t
 		mov	bx, _cutscene_script_ptr
 		mov	dl, [bx]
 		mov	bx, ax
-		mov	[bx+4ED4h], dl
+		mov	byte ptr (_colmap.CM_keys[bx].CMK_kanji + 1), dl
 		add	_cutscene_script_ptr, 2
 		mov	word_1500C, 0Fh
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
 		call	sub_A738
-		mov	al, byte_10830
+		mov	al, _colmap_count
 		mov	ah, 0
 		mov	dl, byte ptr [bp+var_2]
 		mov	bx, ax
-		mov	[bx+4ECBh], dl
-		inc	byte_10830
+		mov	_colmap.CM_values[bx], dl
+		inc	_colmap_count
 		jmp	short loc_AF8F	; default
 ; ---------------------------------------------------------------------------
 
@@ -1359,7 +1370,7 @@ var_3		= word ptr -3
 		mov	point_15004.x, 80
 		mov	point_15004.y, 320
 		mov	word_15008, 2
-		mov	col_1500A, 15
+		mov	_text_col, 15
 		mov	_graph_putsa_fx_func, 2
 		mov	byte_14F8E, 0
 
@@ -1485,7 +1496,7 @@ loc_B0F4:
 		push	point_15004.x
 		push	point_15004.y
 		push	[bp+@@ch]
-		mov	al, col_1500A
+		mov	al, _text_col
 		mov	ah, 0
 		push	ax
 		call	graph_gaiji_putc
@@ -1505,36 +1516,36 @@ loc_B118:
 		cmp	point_15004.x, 80
 		jnz	short loc_B164
 		xor	si, si
-		jmp	short loc_B15B
+		jmp	short @@colmap_more?
 ; ---------------------------------------------------------------------------
 
-loc_B140:
+@@colmap_loop:
 		mov	bx, si
-		imul	bx, 6
-		mov	ax, [bx+4ED3h]
+		imul	bx, size colmap_key_t
+		mov	ax, _colmap.CM_keys[bx].CMK_kanji
 		les	bx, [bp+@@str]
 		cmp	ax, es:[bx]
-		jnz	short loc_B15A
-		mov	al, [si+4ECBh]
-		mov	col_1500A, al
+		jnz	short @@colmap_next
+		mov	al, _colmap.CM_values[si]
+		mov	_text_col, al
 		jmp	short loc_B164
 ; ---------------------------------------------------------------------------
 
-loc_B15A:
+@@colmap_next:
 		inc	si
 
-loc_B15B:
-		mov	al, byte_10830
+@@colmap_more?:
+		mov	al, _colmap_count
 		mov	ah, 0
 		cmp	ax, si
-		jg	short loc_B140
+		jg	short @@colmap_loop
 
 loc_B164:
 		graph_showpage 0
 		graph_accesspage 1
 		push	point_15004.x
 		push	point_15004.y
-		mov	al, col_1500A
+		mov	al, _text_col
 		mov	ah, 0
 		push	ax
 		pushd	[bp+@@str]
@@ -7706,7 +7717,8 @@ include th03/formats/pi_put_mask[data].asm
 include th05/formats/pi_buffers[bss].asm
 include th05/hardware/vram_planes[data].asm
 include th03/formats/cdg[data].asm
-byte_10830	db 0
+public _colmap_count
+_colmap_count	db 0
 		db    0
 		db  88h
 		db  88h
@@ -8090,10 +8102,14 @@ include th04/hardware/egccopyr[bss].asm
 include th04/end/cutscene_script[bss].asm
 		db 4 dup(?)
 byte_14F8E	db ?
-		db 117 dup(?)
+		db 60 dup(?)
+public _colmap
+_colmap	colmap_t <?>
+		evendata
 point_15004	Point <?>
 word_15008	dw ?
-col_1500A	db ?
+public _text_col
+_text_col	db ?
 		db ?
 word_1500C	dw ?
 measure_1500E	dw ?
