@@ -2873,7 +2873,7 @@ loc_BE8D:
 		in	al, 0A0h	; PIC 2	 same as 0020 for PIC 1
 		test	cl, al
 		jz	short loc_BE8D
-		mov	al, 70h	; 'p'
+		mov	al, 70h	; 7 = SCROLL, 0 = starting regularly with the first parameter
 		out	0A2h, al
 		mov	ax, [bp+var_4]
 		out	0A0h, al	; PIC 2	 same as 0020 for PIC 1
@@ -2895,7 +2895,7 @@ loc_BE8D:
 		jmp	short $+2
 		jmp	short $+2
 		out	0A0h, al	; PIC 2	 same as 0020 for PIC 1
-		mov	ax, 190h
+		mov	ax, RES_Y
 		shl	ax, cl
 		or	ah, ch
 		out	0A0h, al	; PIC 2	 same as 0020 for PIC 1

@@ -24824,14 +24824,14 @@ sub_21889	proc far
 		push	bp
 		mov	bp, sp
 		GRCG_SETMODE_CLOBBERING dx, GC_RMW
-		mov	dx, 7Eh	; '~'
-		mov	al, 55h	; 'U'
+		mov	dx, 126	; Port 007Eh: GRCG tile register
+		mov	al, 01010101b
 		out	dx, al
-		mov	al, 0FFh
+		mov	al, 11111111b
 		out	dx, al
-		mov	al, 55h	; 'U'
+		mov	al, 01010101b
 		out	dx, al
-		mov	al, 0AAh ; '?'
+		mov	al, 10101010b
 		out	dx, al
 		pop	bp
 		retf

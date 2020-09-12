@@ -2828,7 +2828,7 @@ sub_D016	proc near
 		mov	es, ax
 		assume es:nothing
 		mov	di, (PLAYFIELD_H - 1) * ROW_SIZE + PLAYFIELD_VRAM_LEFT
-		mov	dx, 0A6h
+		mov	dx, 166	; Port 00A6h: Page access register
 		mov	al, _page_front
 
 loc_D02B:
@@ -2877,7 +2877,7 @@ arg_2		= word ptr  6
 		mov	ax, [bp+arg_2]
 		shr	ax, 3
 		add	di, ax
-		mov	dx, 0A6h
+		mov	dx, 166	; Port 00A6h: Page access register
 		mov	al, _page_back
 
 loc_D075:
@@ -6436,7 +6436,7 @@ playfield_fillm_0_120_384_128	proc near
 		push	di
 		GRCG_FILL_PLAYFIELD_ROWS	  0, 120, dx
 		cli
-		mov	dx, 7Eh	; '~'
+		mov	dx, 126	; Port 007Eh: GRCG tile register
 		xor	al, al
 		out	dx, al
 		out	dx, al
@@ -11099,8 +11099,8 @@ playfield_fillm_0_40_384_274	endp
 sub_12024	proc near
 		cli
 		GRCG_SETMODE_VIA_MOV al, GC_TDW
-		mov	dx, 7Eh	; '~'
-		mov	al, 0FFh
+		mov	dx, 126	; Port 007Eh: GRCG tile register
+		mov	al, 11111111b
 		out	dx, al
 		xor	al, al
 		out	dx, al
@@ -11145,7 +11145,7 @@ include th04/hardware/grcg_fill_rows.asm
 sub_12076	proc near
 		push	di
 		cli
-		mov	dx, 7Eh	; '~'
+		mov	dx, 126	; Port 007Eh: GRCG tile register
 		xor	al, al
 		out	dx, al
 		out	dx, al
@@ -11196,8 +11196,8 @@ loc_120B4:
 		dec	bh
 		jz	short loc_120F0
 		cli
-		mov	dx, 7Eh	; '~'
-		mov	al, 0FFh
+		mov	dx, 126	; Port 007Eh: GRCG tile register
+		mov	al, 11111111b
 		out	dx, al
 		xor	al, al
 		out	dx, al

@@ -2127,7 +2127,7 @@ arg_2		= word ptr  6
 		mov	si, 3Fh	; '?'
 		mov	[bp+@@page], 0
 		graph_accesspage 0
-		mov	dx, 0A4h
+		mov	dx, 164	; Port 00A4h: Page display register
 		mov	al, 1
 		jmp	short loc_B30B
 ; ---------------------------------------------------------------------------
@@ -2165,7 +2165,7 @@ loc_B2E8:
 		mov	ax, 1
 		sub	ax, [bp+@@page]
 		mov	[bp+@@page], ax
-		mov	dx, 0A6h
+		mov	dx, 166	; Port 00A6h: Page access register
 		mov	al, byte ptr [bp+@@page]
 
 loc_B30B:
@@ -2197,7 +2197,7 @@ arg_2		= word ptr  6
 		xor	si, si
 		mov	[bp+@@page], 0
 		graph_accesspage 0
-		mov	dx, 0A4h
+		mov	dx, 164	; Port 00A4h: Page display register
 		mov	al, 1
 
 loc_B339:
@@ -2235,7 +2235,7 @@ loc_B375:
 		mov	ax, 1
 		sub	ax, [bp+@@page]
 		mov	[bp+@@page], ax
-		mov	dx, 0A6h
+		mov	dx, 166	; Port 00A6h: Page access register
 		mov	al, byte ptr [bp+@@page]
 		jmp	short loc_B339
 ; ---------------------------------------------------------------------------
@@ -2270,7 +2270,7 @@ arg_6		= word ptr  0Ah
 		xor	si, si
 		mov	[bp+@@page], 0
 		graph_accesspage 0
-		mov	dx, 0A4h
+		mov	dx, 164	; Port 00A4h: Page display register
 		mov	al, 1
 
 loc_B3C7:
@@ -2312,7 +2312,7 @@ loc_B416:
 		mov	ax, 1
 		sub	ax, [bp+@@page]
 		mov	[bp+@@page], ax
-		mov	dx, 0A6h
+		mov	dx, 166	; Port 00A6h: Page access register
 		mov	al, byte ptr [bp+@@page]
 		jmp	short loc_B3C7
 ; ---------------------------------------------------------------------------

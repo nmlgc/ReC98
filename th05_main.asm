@@ -2933,8 +2933,8 @@ sub_CEC2	proc near
 		pushf
 		cli
 		GRCG_SETMODE_VIA_MOV al, GC_TDW
-		mov	dx, 7Eh	; '~'
-		mov	al, 0FFh
+		mov	dx, 126	; Port 007Eh: GRCG tile register
+		mov	al, 11111111b
 		out	dx, al
 		out	dx, al
 		out	dx, al
@@ -2966,8 +2966,8 @@ sub_CEF2	proc near
 		pushf
 		cli
 		GRCG_SETMODE_VIA_MOV al, GC_TDW
-		mov	dx, 7Eh	; '~'
-		mov	al, 0FFh
+		mov	dx, 126	; Port 007Eh: GRCG tile register
+		mov	al, 11111111b
 		out	dx, al
 		not	al
 		out	dx, al
@@ -3029,8 +3029,8 @@ sub_CF50	proc near
 		pushf
 		cli
 		GRCG_SETMODE_VIA_MOV al, GC_TDW
-		mov	dx, 7Eh	; '~'
-		mov	al, 0FFh
+		mov	dx, 126	; Port 007Eh: GRCG tile register
+		mov	al, 11111111b
 		out	dx, al
 		not	al
 		out	dx, al
@@ -3057,8 +3057,8 @@ loc_CF7B:
 		jge	short loc_CF7B
 		pushf
 		cli
-		mov	dx, 7Eh	; '~'
-		mov	al, 0FFh
+		mov	dx, 126	; Port 007Eh: GRCG tile register
+		mov	al, 11111111b
 		out	dx, al
 		out	dx, al
 		out	dx, al
@@ -3098,7 +3098,7 @@ sub_CFBA	proc near
 		pushf
 		cli
 		GRCG_SETMODE_VIA_MOV al, GC_TDW
-		mov	dx, 7Eh	; '~'
+		mov	dx, 126	; Port 007Eh: GRCG tile register
 		xor	al, al
 		out	dx, al
 		not	al
@@ -3129,8 +3129,8 @@ sub_CFBA	endp
 sub_CFEE	proc near
 		cli
 		GRCG_SETMODE_VIA_MOV al, GC_TDW
-		mov	dx, 7Eh	; '~'
-		mov	al, 0FFh
+		mov	dx, 126	; Port 007Eh: GRCG tile register
+		mov	al, 11111111b
 		out	dx, al
 		xor	al, al
 		out	dx, al
@@ -4704,7 +4704,7 @@ public PLAYFIELD_FILLM_32_0_320_192
 playfield_fillm_32_0_320_192	proc near
 		push	di
 		cli
-		mov	dx, 7Eh	; '~'
+		mov	dx, 126	; Port 007Eh: GRCG tile register
 		xor	al, al
 		out	dx, al
 		out	dx, al
@@ -5306,7 +5306,7 @@ sub_E92E	proc near
 		pushf
 		cli
 		GRCG_SETMODE_VIA_MOV al, GC_TDW
-		mov	dx, 7Eh	; '~'
+		mov	dx, 126	; Port 007Eh: GRCG tile register
 		xor	al, al
 		out	dx, al
 		out	dx, al
@@ -5328,7 +5328,7 @@ sub_E950	proc near
 		pushf
 		cli
 		GRCG_SETMODE_VIA_MOV al, GC_TDW
-		mov	dx, 7Eh	; '~'
+		mov	dx, 126	; Port 007Eh: GRCG tile register
 		xor	al, al
 		out	dx, al
 		out	dx, al
@@ -5577,7 +5577,7 @@ sub_EEF2	proc near
 		mov	es, ax
 		assume es:nothing
 		mov	di, (PLAYFIELD_H - 1) * ROW_SIZE + PLAYFIELD_VRAM_LEFT
-		mov	dx, 0A6h
+		mov	dx, 166	; Port 00A6h: Page access register
 		mov	al, _page_front
 
 loc_EF07:
@@ -5626,7 +5626,7 @@ arg_2		= word ptr  6
 		mov	ax, [bp+arg_2]
 		shr	ax, 3
 		add	di, ax
-		mov	dx, 0A6h
+		mov	dx, 166	; Port 00A6h: Page access register
 		mov	al, _page_back
 
 loc_EF51:

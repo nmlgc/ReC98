@@ -717,7 +717,7 @@ loc_AA3E:
 		mov	point_15004.y, 320
 		graph_accesspage 1
 		call	bgimage_put_rect pascal, (80 shl 16) or 320, (480 shl 16) or 64
-		mov	dx, 0A6h
+		mov	dx, 166	; Port 00A6h: Page access register
 		mov	al, 0
 
 loc_AA66:
@@ -857,7 +857,7 @@ loc_AB91:
 		lea	ax, [bp+var_2]
 		push	ax
 		call	sub_A738
-		mov	dx, 0A4h
+		mov	dx, 164	; Port 00A4h: Page display register
 		mov	al, byte ptr [bp+var_2]
 		jmp	loc_AA66
 ; ---------------------------------------------------------------------------

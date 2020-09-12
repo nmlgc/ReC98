@@ -2974,7 +2974,7 @@ loc_B184:
 
 loc_B189:
 		graph_accesspage 0
-		mov	dx, 0A4h
+		mov	dx, 164	; Port 00A4h: Page display register
 		out	dx, al
 		call	super_entry_bfnt pascal, ds, offset aEndft_bft ; "endft.bft"
 		push	64h ; 'd'
