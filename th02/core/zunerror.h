@@ -8,7 +8,7 @@ typedef enum {
 	ERROR_MISSING_DRIVER = 4,
 	ERROR_SCOREDAT_CORRUPT = 5,
 
-	_zun_error_t_FORCE_INT = 0xFFFF
+	_zun_error_t_FORCE_UINT16 = 0xFFFF
 } zun_error_t;
 
 void pascal zun_error(zun_error_t err);

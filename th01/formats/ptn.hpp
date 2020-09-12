@@ -53,7 +53,7 @@ typedef enum {
 	PE_OUT_OF_MEMORY = -3,
 	PE_IMAGE_COUNT_INVALID = -9,
 
-	_ptn_error_t_FORCE_INT = 0xFFFF
+	_ptn_error_t_FORCE_UINT16 = 0xFFFF
 } ptn_error_t;
 
 // Frees all images in [slot], then allocates new memory for the given number

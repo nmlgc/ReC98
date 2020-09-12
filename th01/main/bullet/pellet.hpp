@@ -49,7 +49,7 @@ enum pellet_motion_t {
 	// the location of the player relative to this pellet.
 	PM_CHASE = 6,
 
-	_pellet_motion_t_FORCE_INT = 0x7FFF
+	_pellet_motion_t_FORCE_INT16 = 0x7FFF
 };
 
 enum pellet_sling_direction_t {
@@ -57,7 +57,7 @@ enum pellet_sling_direction_t {
 	PSD_CLOCKWISE = 1,
 	PSD_COUNTERCLOCKWISE = 2,
 
-	_pellet_sling_direction_t_FORCE_INT = 0x7FFF
+	_pellet_sling_direction_t_FORCE_INT16 = 0x7FFF
 };
 
 // Types for predefined multi-pellet patterns. In TH01, individual bullets of
@@ -108,7 +108,7 @@ enum pellet_pattern_t {
 	// -45 deg to +45 deg, facing down
 	PP_1_RANDOM_WIDE = 30,
 
-	_pellet_pattern_t_FORCE_INT = 0x7FFF
+	_pellet_pattern_t_FORCE_INT16 = 0x7FFF
 };
 
 struct pellet_t {

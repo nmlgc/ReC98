@@ -5,7 +5,7 @@ typedef enum {
 	CURSOR_BLOCK,
 	CURSOR_UNDERLINE,
 
-	_z_text_cursor_t_FORCE_INT = 0xFFFF
+	_z_text_cursor_t_FORCE_UINT16 = 0xFFFF
 } z_text_cursor_t;
 
 void z_text_init(void);

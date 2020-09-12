@@ -11,7 +11,7 @@ enum sprite16_put_func_t {
 	// top Y coordinate given to sprite16_putx() down to the bottom of VRAM.
 	SPF_DOWNWARDS_COLUMN = 24,
 
-	_sprite16_put_func_t_FORCE_INT = 0xFFFF
+	_sprite16_put_func_t_FORCE_UINT16 = 0xFFFF
 };
 
 // Copies the entire sprite area in VRAM from page [dst_page ^ 1] to

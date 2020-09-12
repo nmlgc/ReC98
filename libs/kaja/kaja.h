@@ -17,7 +17,7 @@ typedef enum {
 	PMD_SE_PLAY = 0x0C,
 	PMD_GET_WORKAREA_ADDRESS = 0x10,
 
-	_kaja_func_t_FORCE_INT = 0xFFFF
+	_kaja_func_t_FORCE_UINT16 = 0xFFFF
 } kaja_func_t;
 
 #define PMD 0x60
