@@ -6825,81 +6825,7 @@ hud_power_put	proc far
 		retf
 hud_power_put	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F0DD	proc far
-
-@@bar_colors	= byte ptr -10h
-var_A		= word ptr -0Ah
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= byte ptr -2
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 10h
-		push	si
-		mov	si, [bp+arg_0]
-		mov	ax, word_22E07
-		mov	[bp+var_A], ax
-		mov	ax, word_22E09
-		mov	[bp+var_8], ax
-		mov	ax, word_22E0B
-		mov	[bp+var_6], ax
-		mov	ax, word_22E0D
-		mov	[bp+var_4], ax
-		mov	al, byte_22E0F
-		mov	[bp+var_2], al
-		mov	ax, word ptr _HUD_HP_COLORS + 0
-		mov	word ptr [bp+@@bar_colors + 0], ax
-		mov	ax, word ptr _HUD_HP_COLORS + 2
-		mov	word ptr [bp+@@bar_colors + 2], ax
-		mov	al, _HUD_HP_COLORS + 4
-		mov	[bp+@@bar_colors + 4], al
-		or	si, si
-		jz	short loc_F14C
-		call	gaiji_putsa pascal, (61 shl 16) + 8, ds, offset gsENEMY, TX_YELLOW
-		push	9
-		push	si
-		mov	ax, si
-		mov	bx, (BAR_MAX / (HUD_HP_COLOR_COUNT - 1))
-		cwd
-		idiv	bx
-		lea	dx, [bp+@@bar_colors]
-		add	ax, dx
-		mov	bx, ax
-		mov	al, ss:[bx]
-		mov	ah, 0
-		push	ax
-		nopcall	main_01:hud_bar_put
-		jmp	short loc_F172
-; ---------------------------------------------------------------------------
-
-loc_F14C:
-		push	(61 shl 16) + 8
-		push	ss
-		lea	ax, [bp+var_6+1]
-		push	ax
-		push	TX_WHITE
-		call	gaiji_putsa
-		push	(56 shl 16) + 9
-		push	ss
-		lea	ax, [bp+var_A]
-		push	ax
-		push	TX_WHITE
-		call	gaiji_putsa
-
-loc_F172:
-		pop	si
-		leave
-		retf	2
-sub_F0DD	endp
-
+include th04/main/hud/element_put.asm
 include th04/main/hud/bar_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -7005,8 +6931,7 @@ loc_F32B:
 loc_F32E:
 		push	ax
 		call	gaiji_putsa
-		push	0
-		call	main_01:sub_F0DD
+		call	hud_hp_put pascal, 0
 		pop	bp
 		retf
 hud_put	endp
@@ -13714,9 +13639,7 @@ loc_142E1:
 		call	sub_1A047
 
 loc_142E4:
-		push	_midboss_hp
-		push	620
-		call	sub_19F16
+		call	hud_hp_update_and_render pascal, _midboss_hp, 620
 		pop	si
 		pop	bp
 		retf
@@ -14082,9 +14005,7 @@ loc_1468A:
 		call	sub_1A047
 
 loc_1468D:
-		push	_midboss_hp
-		push	850
-		call	sub_19F16
+		call	hud_hp_update_and_render pascal, _midboss_hp, 850
 		pop	si
 		leave
 		retf
@@ -15006,9 +14927,7 @@ loc_14F52:
 		nopcall	sub_19EBC
 
 loc_14F57:
-		push	_midboss_hp
-		push	750
-		call	sub_19F16
+		call	hud_hp_update_and_render pascal, _midboss_hp, 750
 		pop	si
 		leave
 		retf
@@ -15620,9 +15539,7 @@ loc_154D1:
 ; ---------------------------------------------------------------------------
 
 loc_1552D:
-		push	_midboss_hp
-		push	1200
-		call	sub_19F16
+		call	hud_hp_update_and_render pascal, _midboss_hp, 1200
 
 loc_15537:
 		pop	si
@@ -17892,9 +17809,7 @@ loc_169B8:
 		mov	ax, _boss_pos.cur.y
 		mov	_homing_target.y, ax
 		call	sub_15DE8
-		push	_boss_hp
-		push	9000
-		call	sub_19F16
+		call	hud_hp_update_and_render pascal, _boss_hp, 9000
 		leave
 		retf
 yuuka5_update	endp
@@ -20093,9 +20008,7 @@ loc_17CA4:
 		mov	ax, _boss_pos.cur.y
 		mov	_homing_target.y, ax
 		call	sub_16C6A
-		push	_boss_hp
-		push	6000
-		call	sub_19F16
+		call	hud_hp_update_and_render pascal, _boss_hp, 6000
 		leave
 		retf
 marisa_update	endp
@@ -21643,9 +21556,7 @@ loc_189A1:
 		mov	_homing_target.x, ax
 		mov	ax, _boss_pos.cur.y
 		mov	_homing_target.y, ax
-		push	_boss_hp
-		push	9400
-		call	sub_19F16
+		call	hud_hp_update_and_render pascal, _boss_hp, 9400
 		leave
 		retf
 mugetsu_update	endp
@@ -22997,9 +22908,7 @@ loc_195A9:
 		mov	_homing_target.x, ax
 		mov	ax, _boss_pos.cur.y
 		mov	_homing_target.y, ax
-		push	_boss_hp
-		push	4800
-		call	sub_19F16
+		call	hud_hp_update_and_render pascal, _boss_hp, 4800
 
 loc_195BF:
 		pop	di
@@ -23936,9 +23845,7 @@ loc_19E8D:
 		mov	_homing_target.x, ax
 		mov	ax, _boss_pos.cur.y
 		mov	_homing_target.y, ax
-		push	_boss_hp
-		push	3050
-		call	sub_19F16
+		call	hud_hp_update_and_render pascal, _boss_hp, 3050
 
 loc_19EA3:
 		pop	si
@@ -24000,64 +23907,7 @@ loc_19F14:
 		retf
 sub_19EE4	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_19F16	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, [bp+arg_2]
-		or	di, di
-		jg	short loc_19F26
-		xor	si, si
-		jmp	short loc_19F4B
-; ---------------------------------------------------------------------------
-
-loc_19F26:
-		cmp	di, [bp+arg_0]
-		jl	short loc_19F30
-		mov	si, 80h
-		jmp	short loc_19F4B
-; ---------------------------------------------------------------------------
-
-loc_19F30:
-		movsx	eax, di
-		shl	eax, 7
-		movsx	ebx, [bp+arg_0]
-		cdq
-		idiv	ebx
-		mov	si, ax
-		cmp	si, 80h
-		jge	short loc_19F4B
-		inc	si
-
-loc_19F4B:
-		cmp	word_23210, si
-		jge	short loc_19F55
-		inc	word_23210
-
-loc_19F55:
-		cmp	word_23210, si
-		jle	short loc_19F5F
-		mov	word_23210, si
-
-loc_19F5F:
-		push	word_23210
-		call	sub_F0DD
-		pop	di
-		pop	si
-		pop	bp
-		retn	4
-sub_19F16	endp
-
+include th04/main/hud/hud.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -26577,9 +26427,7 @@ loc_1B8EA:
 		mov	_homing_target.y, ax
 		call	sub_15DE8
 		call	sub_1A110
-		push	_boss_hp
-		push	13300
-		call	sub_19F16
+		call	hud_hp_update_and_render pascal, _boss_hp, 13300
 		leave
 		retf
 yuuka6_update	endp
@@ -28097,9 +27945,7 @@ loc_1C67A:
 		mov	_homing_target.x, ax
 		mov	ax, _boss_pos.cur.y
 		mov	_homing_target.y, ax
-		push	_boss_hp
-		push	6000
-		call	sub_19F16
+		call	hud_hp_update_and_render pascal, _boss_hp, 6000
 		leave
 		retf
 elly_update	endp
@@ -33150,9 +32996,7 @@ loc_1F8A5:
 		mov	ax, _boss_pos.cur.y
 		mov	_homing_target.y, ax
 		call	sub_1EBF3
-		push	_boss_hp
-		push	9100
-		call	sub_19F16
+		call	hud_hp_update_and_render pascal, _boss_hp, 9100
 		leave
 		retf
 reimu_update	endp
@@ -34793,9 +34637,7 @@ loc_206B6:
 
 loc_206C9:
 		call	sub_15DE8
-		push	_boss_hp
-		push	18700
-		call	sub_19F16
+		call	hud_hp_update_and_render pascal, _boss_hp, 18700
 		pop	bp
 		retf
 gengetsu_update	endp
@@ -35282,11 +35124,6 @@ unk_22D9E	db 0DCh
 include th04/score[data].asm
 include th04/strings/hud[data].asm
 include th04/main/hud/power[data].asm
-word_22E07	dw 202h
-word_22E09	dw 202h
-word_22E0B	dw 202h
-word_22E0D	dw 202h
-byte_22E0F	db 0
 include th04/main/hud/hp[data].asm
 include th04/main/hud/bar_put[data].asm
 aB@b@bB@b@	db '　　×　　',0
@@ -35409,7 +35246,7 @@ word_231F2	dw 10h
 include th03/main/5_powers_of_10[data].asm
 include th04/scoreupd[data].asm
 include th04/main/hud/gaiji_row[data].asm
-word_23210	dw 0
+include th04/main/hud/hud[data].asm
 angle_23212	db 0
 		db    0
 		db  60h

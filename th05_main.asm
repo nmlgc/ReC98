@@ -7552,81 +7552,7 @@ hud_power_put	proc far
 		retf
 hud_power_put	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1065B	proc far
-
-@@bar_colors	= byte ptr -10h
-var_A		= word ptr -0Ah
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= byte ptr -2
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 10h
-		push	si
-		mov	si, [bp+arg_0]
-		mov	ax, word_22734
-		mov	[bp+var_A], ax
-		mov	ax, word_22736
-		mov	[bp+var_8], ax
-		mov	ax, word_22738
-		mov	[bp+var_6], ax
-		mov	ax, word_2273A
-		mov	[bp+var_4], ax
-		mov	al, byte_2273C
-		mov	[bp+var_2], al
-		mov	ax, word ptr _HUD_HP_COLORS + 0
-		mov	word ptr [bp+@@bar_colors + 0], ax
-		mov	ax, word ptr _HUD_HP_COLORS + 2
-		mov	word ptr [bp+@@bar_colors + 2], ax
-		mov	al, _HUD_HP_COLORS + 4
-		mov	[bp+@@bar_colors + 4], al
-		or	si, si
-		jz	short loc_106C8
-		call	gaiji_putsa pascal, (61 shl 16) + 8, ds, offset gsENEMY, TX_YELLOW
-		push	9
-		push	si
-		mov	ax, si
-		mov	bx, (BAR_MAX / (HUD_HP_COLOR_COUNT - 1))
-		cwd
-		idiv	bx
-		lea	dx, [bp+@@bar_colors]
-		add	ax, dx
-		mov	bx, ax
-		mov	al, ss:[bx]
-		mov	ah, 0
-		push	ax
-		call	hud_bar_put
-		jmp	short loc_106EE
-; ---------------------------------------------------------------------------
-
-loc_106C8:
-		push	(61 shl 16) + 8
-		push	ss
-		lea	ax, [bp+var_6+1]
-		push	ax
-		push	TX_WHITE
-		call	gaiji_putsa
-		push	(56 shl 16) + 9
-		push	ss
-		lea	ax, [bp+var_A]
-		push	ax
-		push	TX_WHITE
-		call	gaiji_putsa
-
-loc_106EE:
-		pop	si
-		leave
-		retf	2
-sub_1065B	endp
-
+include th04/main/hud/element_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7711,7 +7637,7 @@ loc_1082D:
 		push	ax
 		call	gaiji_putsa
 		push	0
-		call	sub_1065B
+		call	hud_hp_put
 		pop	bp
 		retf
 
@@ -13705,64 +13631,7 @@ loc_17352:
 		retf
 sub_17322	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_17354	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, [bp+arg_2]
-		or	di, di
-		jg	short loc_17364
-		xor	si, si
-		jmp	short loc_17389
-; ---------------------------------------------------------------------------
-
-loc_17364:
-		cmp	di, [bp+arg_0]
-		jl	short loc_1736E
-		mov	si, 80h
-		jmp	short loc_17389
-; ---------------------------------------------------------------------------
-
-loc_1736E:
-		movsx	eax, di
-		shl	eax, 7
-		movsx	ebx, [bp+arg_0]
-		cdq
-		idiv	ebx
-		mov	si, ax
-		cmp	si, 80h
-		jge	short loc_17389
-		inc	si
-
-loc_17389:
-		cmp	word_2268C, si
-		jge	short loc_17393
-		inc	word_2268C
-
-loc_17393:
-		cmp	word_2268C, si
-		jle	short loc_1739D
-		mov	word_2268C, si
-
-loc_1739D:
-		push	word_2268C
-		call	sub_1065B
-		pop	di
-		pop	si
-		pop	bp
-		retn	4
-sub_17354	endp
-
+include th04/main/hud/hud.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15033,17 +14902,13 @@ loc_1818B:
 
 loc_181B5:
 		call	sub_17486
-		push	_midboss_hp
-		push	1000
-		call	sub_17354
+		call	hud_hp_update_and_render pascal, _midboss_hp, 1000
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 
 loc_181C4:
-		push	_midboss_hp
-		push	1000
-		call	sub_17354
+		call	hud_hp_update_and_render pascal, _midboss_hp, 1000
 		mov	ax, _midboss_pos.cur.x
 		mov	_homing_target.x, ax
 		mov	ax, _midboss_pos.cur.y
@@ -15826,9 +15691,7 @@ loc_188E9:
 		call	boss_death_sequence_function
 
 loc_188EE:
-		push	_boss_hp
-		push	122Ah
-		call	sub_17354
+		call	hud_hp_update_and_render pascal, _boss_hp, 4650
 		pop	bp
 		retf
 sara_update	endp
@@ -16068,17 +15931,13 @@ loc_18B67:
 
 loc_18B91:
 		call	sub_17486
-		push	_midboss_hp
-		push	1400
-		call	sub_17354
+		call	hud_hp_update_and_render pascal, _midboss_hp, 1400
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 
 loc_18BA0:
-		push	_midboss_hp
-		push	1400
-		call	sub_17354
+		call	hud_hp_update_and_render pascal, _midboss_hp, 1400
 		mov	ax, _midboss_pos.cur.x
 		mov	_homing_target.x, ax
 		mov	ax, _midboss_pos.cur.y
@@ -16889,9 +16748,7 @@ loc_1925E:
 		call	boss_death_sequence_function
 
 loc_19263:
-		push	_boss_hp
-		push	1130h
-		call	sub_17354
+		call	hud_hp_update_and_render pascal, _boss_hp, 4400
 		pop	bp
 		retf
 louise_update	endp
@@ -17288,17 +17145,13 @@ loc_195DA:
 
 loc_19604:
 		call	sub_17486
-		push	_midboss_hp
-		push	1400
-		call	sub_17354
+		call	hud_hp_update_and_render pascal, _midboss_hp, 1400
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 
 loc_19613:
-		push	_midboss_hp
-		push	1400
-		call	sub_17354
+		call	hud_hp_update_and_render pascal, _midboss_hp, 1400
 		mov	ax, _midboss_pos.cur.x
 		mov	_homing_target.x, ax
 		mov	ax, _midboss_pos.cur.y
@@ -18729,9 +18582,7 @@ loc_1A3AD:
 		call	boss_death_sequence_function
 
 loc_1A3B2:
-		push	_boss_hp
-		push	2580h
-		call	sub_17354
+		call	hud_hp_update_and_render pascal, _boss_hp, 9600
 		cmp	_boss_phase, 3
 		jb	short loc_1A3CD
 		cmp	_boss_phase, PHASE_BOSS_EXPLODE_BIG
@@ -19994,9 +19845,7 @@ loc_1AFA7:
 		call	curvebullets_update	; default
 		mov	ax, _boss_hp
 		add	ax, _yuki_hp
-		push	ax
-		push	9000
-		call	sub_17354
+		call	hud_hp_update_and_render pascal, ax, 9000
 		pop	si
 		leave
 		retf
@@ -20425,17 +20274,13 @@ loc_1B368:
 
 loc_1B392:
 		call	sub_17486
-		push	_midboss_hp
-		push	1100
-		call	sub_17354
+		call	hud_hp_update_and_render pascal, _midboss_hp, 1100
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 
 loc_1B3A1:
-		push	_midboss_hp
-		push	1100
-		call	sub_17354
+		call	hud_hp_update_and_render pascal, _midboss_hp, 1100
 		mov	ax, _midboss_pos.cur.x
 		mov	_homing_target.x, ax
 		mov	ax, _midboss_pos.cur.y
@@ -21384,9 +21229,7 @@ loc_1BD02:
 
 loc_1BD09:
 		call	b4balls_update
-		push	_boss_hp
-		push	1EDCh
-		call	sub_17354
+		call	hud_hp_update_and_render pascal, _boss_hp, 7900
 		pop	bp
 		retf
 yuki_update	endp
@@ -22579,9 +22422,7 @@ loc_1C7FE:
 
 loc_1C805:
 		call	b4balls_update
-		push	_boss_hp
-		push	1E78h
-		call	sub_17354
+		call	hud_hp_update_and_render pascal, _boss_hp, 7800
 
 loc_1C812:
 		pop	si
@@ -23666,9 +23507,7 @@ loc_1D50C:
 
 loc_1D513:
 		call	knives_update
-		push	_boss_hp
-		push	206Ch
-		call	sub_17354
+		call	hud_hp_update_and_render pascal, _boss_hp, 8300
 
 loc_1D520:
 		pop	si
@@ -25150,9 +24989,7 @@ loc_1E522:
 loc_1E527:
 		call	b6balls_update
 		call	curvebullets_update
-		push	_boss_hp
-		push	22800
-		call	sub_17354
+		call	hud_hp_update_and_render pascal, _boss_hp, 22800
 		pop	di
 		pop	si
 		pop	bp
@@ -25538,17 +25375,13 @@ loc_1E82B:
 
 loc_1E855:
 		call	sub_17486
-		push	_midboss_hp
-		push	3000
-		call	sub_17354
+		call	hud_hp_update_and_render pascal, _midboss_hp, 3000
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 
 loc_1E864:
-		push	_midboss_hp
-		push	3000
-		call	sub_17354
+		call	hud_hp_update_and_render pascal, _midboss_hp, 3000
 		mov	ax, _midboss_pos.cur.x
 		mov	_homing_target.x, ax
 		mov	ax, _midboss_pos.cur.y
@@ -26569,12 +26402,12 @@ loc_1F1D4:
 		mov	al, angle_2D085
 		add	al, 2
 		mov	angle_2D085, al
-		mov	ax, 0D48h
+		mov	ax, 3400
 		sub	ax, _boss_hp
 		cwde
 		shl	eax, 6
 		shl	eax, 4
-		mov	ebx, 0D48h
+		mov	ebx, 3400
 		xor	edx, edx
 		div	ebx
 		mov	_boss_pos.velocity.x, ax
@@ -26986,9 +26819,7 @@ loc_1F660:
 loc_1F666:
 		call	curvebullets_update
 		call	firewaves_update
-		push	_boss_hp
-		push	6784h
-		call	sub_17354
+		call	hud_hp_update_and_render pascal, _boss_hp, 26500
 		pop	si
 		pop	bp
 		retf
@@ -27343,17 +27174,13 @@ loc_1F968:
 
 loc_1F992:
 		call	sub_17486
-		push	_midboss_hp
-		push	1550
-		call	sub_17354
+		call	hud_hp_update_and_render pascal, _midboss_hp, 1550
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 
 loc_1F9A1:
-		push	_midboss_hp
-		push	1550
-		call	sub_17354
+		call	hud_hp_update_and_render pascal, _midboss_hp, 1550
 		mov	ax, _midboss_pos.cur.x
 		mov	_homing_target.x, ax
 		mov	ax, _midboss_pos.cur.y
@@ -27902,7 +27729,7 @@ aPOINT_TOTAL	db '総得点アイテムボーナス',0
 include th05/main/boss/move[data].asm
 include th05/main/item/enemy_drops[data].asm
 include th04/main/item/items[data].asm
-word_2268C	dw 0
+include th04/main/hud/hud[data].asm
 angle_2268E	db 0
 		db 0
 include th04/strings/gameover[data].asm
@@ -27922,11 +27749,6 @@ gsRUIKEI	db 0EDh, 0EEh, 0, 0, 0
 byte_22720	db 0
 include th05/main/hud/dream[data].asm
 include th04/main/hud/power[data].asm
-word_22734	dw 202h
-word_22736	dw 202h
-word_22738	dw 202h
-word_2273A	dw 202h
-byte_2273C	db 0
 include th04/main/hud/hp[data].asm
 aB@b@bB@b@	db '　　×　　',0
 aB@b@bB@b@_0	db '　　×　　',0

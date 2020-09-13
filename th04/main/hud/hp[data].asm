@@ -1,3 +1,11 @@
+; Blank line to remove HP bar
+public _gHUD_HP_BLANK
+_gHUD_HP_BLANK label byte
+	rept HUD_KANJI_W
+		db g_EMPTY
+	endm
+		db 0 ; '\0'
+
 ; Colors for the HP bars.
 public _HUD_HP_COLORS
 _HUD_HP_COLORS label byte
