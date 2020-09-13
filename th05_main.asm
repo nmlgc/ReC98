@@ -9031,11 +9031,11 @@ loc_113C9:
 		sub	ax, _stage_frame
 		mov	[bp+var_2], ax
 		mov	al, byte ptr [bp+var_2]
-		mov	Palettes, al
-		mov	Palettes+1, al
+		mov	Palettes[0 * size rgb_t].r, al
+		mov	Palettes[0 * size rgb_t].g, al
 		mov	ax, [bp+var_2]
 		imul	ax, 5
-		mov	Palettes+2, al
+		mov	Palettes[0 * size rgb_t].b, al
 		mov	al, byte_22859
 		mov	ah, 0
 		add	ax, 100
@@ -9258,13 +9258,13 @@ loc_115FF:
 loc_1160E:
 		mov	al, byte_22858
 		add	al, al
-		mov	Palettes, al
+		mov	Palettes[0 * size rgb_t].r, al
 		mov	al, byte_22858
 		add	al, al
-		mov	Palettes+1, al
+		mov	Palettes[0 * size rgb_t].g, al
 		mov	al, byte_22858
 		shl	al, 2
-		mov	Palettes+2, al
+		mov	Palettes[0 * size rgb_t].b, al
 
 loc_11627:
 		mov	_palette_changed, 1
@@ -24874,9 +24874,9 @@ loc_1E247:
 		call	sub_1FB07
 		cmp	_boss_phase_frame, 32
 		jnz	short loc_1E265
-		mov	Palettes, 0
-		mov	Palettes+1, 0
-		mov	Palettes+2, 0
+		mov	Palettes[0 * size rgb_t].r, 0
+		mov	Palettes[0 * size rgb_t].g, 0
+		mov	Palettes[0 * size rgb_t].b, 0
 		mov	_palette_changed, 1
 
 loc_1E265:
@@ -24980,11 +24980,11 @@ loc_1E36F:
 ; ---------------------------------------------------------------------------
 
 loc_1E377:
-		cmp	Palettes+2, 80h
+		cmp	Palettes[0 * size rgb_t].b, 128
 		jnb	short loc_1E38E
 		cmp	_stage_frame_mod16, 0
 		jnz	short loc_1E389
-		inc	Palettes+2
+		inc	Palettes[0 * size rgb_t].b
 
 loc_1E389:
 		mov	_palette_changed, 1
@@ -25014,11 +25014,11 @@ loc_1E3C4:
 ; ---------------------------------------------------------------------------
 
 loc_1E3D0:
-		cmp	Palettes+2, 0
+		cmp	Palettes[0 * size rgb_t].b, 0
 		jbe	short loc_1E3E7
 		cmp	_stage_frame_mod8, 0
 		jnz	short loc_1E3E2
-		dec	Palettes+2
+		dec	Palettes[0 * size rgb_t].b
 
 loc_1E3E2:
 		mov	_palette_changed, 1
@@ -25035,20 +25035,20 @@ loc_1E3E7:
 ; ---------------------------------------------------------------------------
 
 loc_1E406:
-		cmp	Palettes+2, 0
+		cmp	Palettes[0 * size rgb_t].b, 0
 		jbe	short loc_1E41A
 		cmp	_stage_frame_mod8, 0
 		jnz	short loc_1E42C
-		dec	Palettes+2
+		dec	Palettes[0 * size rgb_t].b
 		jmp	short loc_1E42C
 ; ---------------------------------------------------------------------------
 
 loc_1E41A:
-		cmp	Palettes, 80h
+		cmp	Palettes[0 * size rgb_t].r, 128
 		jnb	short loc_1E431
 		cmp	_stage_frame_mod16, 0
 		jnz	short loc_1E42C
-		inc	Palettes
+		inc	Palettes[0 * size rgb_t].r
 
 loc_1E42C:
 		mov	_palette_changed, 1
@@ -25121,8 +25121,8 @@ loc_1E4CB:
 		inc	_boss_phase
 		mov	_boss_sprite, 180
 		mov	_boss_hitbox_radius.x, (24 shl 4)
-		mov	Palettes, 60h
-		mov	Palettes+2, 0
+		mov	Palettes[0 * size rgb_t].r, 96
+		mov	Palettes[0 * size rgb_t].b, 0
 		call	snd_se_play pascal, 13
 		jmp	short loc_1E527
 ; ---------------------------------------------------------------------------
@@ -26678,9 +26678,9 @@ loc_1F333:
 		mov	_boss_phase_frame, 0
 		inc	_boss_phase
 		call	snd_se_play pascal, 13
-		mov	Palettes, 0
-		mov	Palettes+1, 0
-		mov	Palettes+2, 0
+		mov	Palettes[0 * size rgb_t].r, 0
+		mov	Palettes[0 * size rgb_t].g, 0
+		mov	Palettes[0 * size rgb_t].b, 0
 		mov	_palette_changed, 1
 		mov	patnum_2CE64, 196
 		mov	fp_23F5A, offset exalice_bg_render
@@ -26781,11 +26781,11 @@ loc_1F45D:
 ; ---------------------------------------------------------------------------
 
 loc_1F46F:
-		cmp	Palettes, 60h
+		cmp	Palettes[0 * size rgb_t].r, 96
 		jnb	short loc_1F483
-		mov	al, Palettes
+		mov	al, Palettes[0 * size rgb_t].r
 		add	al, 2
-		mov	Palettes, al
+		mov	Palettes[0 * size rgb_t].r, al
 		mov	_palette_changed, 1
 
 loc_1F483:
@@ -26803,11 +26803,11 @@ loc_1F49F:
 ; ---------------------------------------------------------------------------
 
 loc_1F4A6:
-		cmp	Palettes, 60h
+		cmp	Palettes[0 * size rgb_t].r, 96
 		jnb	short loc_1F4BA
-		mov	al, Palettes
+		mov	al, Palettes[0 * size rgb_t].r
 		add	al, 2
-		mov	Palettes, al
+		mov	Palettes[0 * size rgb_t].r, al
 		mov	_palette_changed, 1
 
 loc_1F4BA:
@@ -26860,14 +26860,14 @@ loc_1F523:
 ; ---------------------------------------------------------------------------
 
 loc_1F536:
-		cmp	Palettes+2, 60h
+		cmp	Palettes[0 * size rgb_t].b, 96
 		jnb	short loc_1F552
-		mov	al, Palettes+2
+		mov	al, Palettes[0 * size rgb_t].b
 		add	al, 2
-		mov	Palettes+2, al
+		mov	Palettes[0 * size rgb_t].b, al
 		mov	al, Palettes
-		add	al, 0FEh
-		mov	Palettes, al
+		add	al, -2
+		mov	Palettes[0 * size rgb_t].r, al
 		mov	_palette_changed, 1
 
 loc_1F552:
@@ -26877,10 +26877,10 @@ loc_1F552:
 ; ---------------------------------------------------------------------------
 
 loc_1F55E:
-		cmp	Palettes, 30h	; '0'
+		cmp	Palettes[0 * size rgb_t].r, 48
 		jnb	short loc_1F572
-		inc	Palettes
-		dec	Palettes+2
+		inc	Palettes[0 * size rgb_t].r
+		dec	Palettes[0 * size rgb_t].b
 		mov	_palette_changed, 1
 
 loc_1F572:
@@ -26890,17 +26890,17 @@ loc_1F572:
 ; ---------------------------------------------------------------------------
 
 loc_1F57E:
-		cmp	Palettes+1, 40h
+		cmp	Palettes[0 * size rgb_t].g, 64
 		jnb	short loc_1F5A4
-		cmp	Palettes, 0
+		cmp	Palettes[0 * size rgb_t].r, 0
 		jbe	short loc_1F590
-		dec	Palettes
+		dec	Palettes[0 * size rgb_t].r
 
 loc_1F590:
-		inc	Palettes+1
-		cmp	Palettes+2, 0
+		inc	Palettes[0 * size rgb_t].g
+		cmp	Palettes[0 * size rgb_t].b, 0
 		jbe	short loc_1F59F
-		dec	Palettes+2
+		dec	Palettes[0 * size rgb_t].b
 
 loc_1F59F:
 		mov	_palette_changed, 1
@@ -26924,9 +26924,9 @@ loc_1F5B0:
 loc_1F5C9:
 		cmp	byte_2D080, 0
 		jnz	short loc_1F5DD
-		cmp	Palettes+1, 0
+		cmp	Palettes[0 * size rgb_t].g, 0
 		jbe	short loc_1F621
-		dec	Palettes+1
+		dec	Palettes[0 * size rgb_t].g
 		jmp	short loc_1F626
 ; ---------------------------------------------------------------------------
 
@@ -26935,25 +26935,25 @@ loc_1F5DD:
 		jnz	short loc_1F606
 		mov	al, Palettes
 		add	al, 2
-		mov	Palettes, al
-		inc	Palettes+1
-		mov	al, Palettes+2
+		mov	Palettes[0 * size rgb_t].r, al
+		inc	Palettes[0 * size rgb_t].g
+		mov	al, Palettes[0 * size rgb_t].b
 		add	al, 2
-		mov	Palettes+2, al
-		cmp	Palettes, 80h
+		mov	Palettes[0 * size rgb_t].b, al
+		cmp	Palettes[0 * size rgb_t].r, 128
 		jb	short loc_1F626
 		mov	byte_2D080, 2
 		jmp	short loc_1F626
 ; ---------------------------------------------------------------------------
 
 loc_1F606:
-		mov	al, Palettes
-		add	al, 0FEh
-		mov	Palettes, al
-		dec	Palettes+1
-		mov	al, Palettes+2
-		add	al, 0FEh
-		mov	Palettes+2, al
+		mov	al, Palettes[0 * size rgb_t].r
+		add	al, -2
+		mov	Palettes[0 * size rgb_t].r, al
+		dec	Palettes[0 * size rgb_t].g
+		mov	al, Palettes[0 * size rgb_t].b
+		add	al, -2
+		mov	Palettes[0 * size rgb_t].b, al
 		cmp	Palettes, 0
 		jnz	short loc_1F626
 

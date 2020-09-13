@@ -1676,13 +1676,13 @@ var_2		= word ptr -2
 		call	pi_palette_apply pascal, 0
 		call	pi_put pascal, large 0, 0
 		call	egc_shift_left_all pascal, 2
-		mov	Palettes+45, 0
-		mov	Palettes+46, 0
-		mov	Palettes+47, 0
+		mov	Palettes[15 * size rgb_t].r, 0
+		mov	Palettes[15 * size rgb_t].g, 0
+		mov	Palettes[15 * size rgb_t].b, 0
 		call	far ptr	palette_show
-		mov	Palettes+33, 0
-		mov	Palettes+34, 0
-		mov	Palettes+35, 0
+		mov	Palettes[11 * size rgb_t].r, 0
+		mov	Palettes[11 * size rgb_t].g, 0
+		mov	Palettes[11 * size rgb_t].b, 0
 		call	far ptr	palette_show
 		freePISlotLarge	0
 		call	pi_load pascal, 0, ds, offset aTl02_pi
@@ -1695,16 +1695,16 @@ loc_AEA0:
 		push	1
 		call	frame_delay
 		mov	al, byte ptr [bp+var_2]
-		mov	Palettes+45, al
-		mov	Palettes+46, al
-		mov	Palettes+47, al
+		mov	Palettes[15 * size rgb_t].r, al
+		mov	Palettes[15 * size rgb_t].g, al
+		mov	Palettes[15 * size rgb_t].b, al
 		call	far ptr	palette_show
-		cmp	[bp+var_2], 80h
+		cmp	[bp+var_2], 128
 		jg	short loc_AECB
 		mov	al, byte ptr [bp+var_2]
-		mov	Palettes+33, al
-		mov	Palettes+34, al
-		mov	Palettes+35, al
+		mov	Palettes[11 * size rgb_t].r, al
+		mov	Palettes[11 * size rgb_t].g, al
+		mov	Palettes[11 * size rgb_t].b, al
 
 loc_AECB:
 		call	far ptr	palette_show
@@ -1732,16 +1732,16 @@ loc_AF02:
 
 loc_AF09:
 		mov	al, byte ptr [bp+var_2]
-		mov	Palettes+45, al
-		mov	Palettes+46, al
-		mov	Palettes+47, al
+		mov	Palettes[15 * size rgb_t].r, al
+		mov	Palettes[15 * size rgb_t].g, al
+		mov	Palettes[15 * size rgb_t].b, al
 		call	far ptr	palette_show
 		add	[bp+var_2], 2
 		push	1
 		call	frame_delay
 
 loc_AF25:
-		cmp	[bp+var_2], 0FFh
+		cmp	[bp+var_2], 255
 		jl	short loc_AF09
 		mov	vsync_Count1, 0
 		call	sub_B3EF

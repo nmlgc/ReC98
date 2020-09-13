@@ -9024,15 +9024,15 @@ loc_10245:
 		mov	_scroll_active, 0
 		call	graph_scrollup pascal, 0
 		mov	fp_255AA, offset nullfunc_near
-		mov	al, Palettes+42
-		mov	byte_257D6, al
-		mov	al, Palettes+43
-		mov	byte_257D7, al
-		mov	al, Palettes+44
-		mov	byte_257D8, al
-		mov	Palettes+42, 0F0h
-		mov	Palettes+43, 0B0h ; '°'
-		mov	Palettes+44, 0C0h
+		mov	al, Palettes[14 * size rgb_t].r
+		mov	rgb_257D6.r, al
+		mov	al, Palettes[14 * size rgb_t].g
+		mov	rgb_257D6.g, al
+		mov	al, Palettes[14 * size rgb_t].b
+		mov	rgb_257D6.b, al
+		mov	Palettes[14 * size rgb_t].r, 240
+		mov	Palettes[14 * size rgb_t].g, 176
+		mov	Palettes[14 * size rgb_t].b, 192
 		jmp	short loc_10288
 ; ---------------------------------------------------------------------------
 
@@ -9059,12 +9059,12 @@ loc_102A8:
 		jnb	short loc_102F2
 
 loc_102AF:
-		mov	al, byte_257D6
-		mov	Palettes+42, al
-		mov	al, byte_257D7
-		mov	Palettes+43, al
-		mov	al, byte_257D8
-		mov	Palettes+44, al
+		mov	al, rgb_257D6.r
+		mov	Palettes[14 * size rgb_t].r, al
+		mov	al, rgb_257D6.g
+		mov	Palettes[14 * size rgb_t].g, al
+		mov	al, rgb_257D6.b
+		mov	Palettes[14 * size rgb_t].b, al
 		mov	ax, fp_255AC
 		mov	fp_255AA, ax
 		mov	al, _bomb_frame
@@ -11718,7 +11718,7 @@ loc_12492:
 ; ---------------------------------------------------------------------------
 
 loc_124A1:
-		mov	al, 0FFh
+		mov	al, 255
 		sub	al, byte_2CDD1
 
 loc_124A7:
@@ -11730,7 +11730,7 @@ loc_124A7:
 		test	byte_2CDD0, 1
 		jz	short loc_124C5
 		mov	al, [bp+var_9]
-		mov	Palettes, al
+		mov	Palettes[0 * size rgb_t].r, al
 		jmp	short loc_124D2
 ; ---------------------------------------------------------------------------
 
@@ -11743,7 +11743,7 @@ loc_124C5:
 		sar	ax, 1
 
 loc_124D2:
-		mov	Palettes+2, al
+		mov	Palettes[0 * size rgb_t].b, al
 		jmp	short loc_12508
 ; ---------------------------------------------------------------------------
 
@@ -11752,15 +11752,15 @@ loc_124D7:
 		call	_grcg_setcolor_direct_seg1_raw
 		cmp	byte_23242, 0
 		jnz	short loc_12508
-		mov	Palettes, 0
-		mov	Palettes+1, 0
+		mov	Palettes[0 * size rgb_t].r, 0
+		mov	Palettes[0 * size rgb_t].g, 0
 		mov	al, [bp+var_9]
 		mov	ah, 0
 		imul	ax, 3
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	Palettes+2, al
+		mov	Palettes[0 * size rgb_t].b, al
 		cmp	[bp+var_9], 7Fh
 		jb	short loc_12508
 		mov	byte_23242, 1
@@ -13220,7 +13220,7 @@ arg_0		= word ptr  6
 
 		push	bp
 		mov	bp, sp
-		push	30h ; '0'       ; n
+		push	size palette_t	; n
 		push	ds
 		mov	ax, [bp+arg_0]
 		shl	ax, 6
@@ -17556,9 +17556,9 @@ loc_16682:
 		call	sub_1E67C
 		cmp	_boss_phase_frame, 32
 		jnz	short loc_166A0
-		mov	Palettes, 40h
-		mov	Palettes+1, 40h
-		mov	Palettes+2, 40h
+		mov	Palettes[0 * size rgb_t].r, 64
+		mov	Palettes[0 * size rgb_t].g, 64
+		mov	Palettes[0 * size rgb_t].b, 64
 		mov	_palette_changed, 1
 
 loc_166A0:
@@ -17804,9 +17804,9 @@ loc_168C9:
 		cmp	_boss_phase, 11h
 		jnz	short loc_168F6
 		mov	_boss_phase_end_hp, 0
-		mov	Palettes, 80h
-		mov	Palettes+1, 40h
-		mov	Palettes+2, 40h
+		mov	Palettes[0 * size rgb_t].r, 128
+		mov	Palettes[0 * size rgb_t].g, 64
+		mov	Palettes[0 * size rgb_t].b, 64
 		mov	_palette_changed, 1
 		jmp	short loc_168FC
 ; ---------------------------------------------------------------------------
@@ -17872,9 +17872,9 @@ loc_16986:
 		mov	_boss_sprite, 4
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 12
-		mov	Palettes, 0
-		mov	Palettes+1, 0
-		mov	Palettes+2, 0
+		mov	Palettes[0 * size rgb_t].r, 0
+		mov	Palettes[0 * size rgb_t].g, 0
+		mov	Palettes[0 * size rgb_t].b, 0
 		mov	_palette_changed, 1
 		mov	_player_invincibility_time, BOSS_DEFEAT_INVINCIBILITY_FRAMES
 		jmp	short loc_169B8
@@ -19833,9 +19833,9 @@ loc_17A31:
 		cmp	_boss_phase_frame, 96
 		jle	loc_17CA4
 		inc	_boss_phase
-		mov	Palettes, 0
-		mov	Palettes+1, 0
-		mov	Palettes+2, 7
+		mov	Palettes[0 * size rgb_t].r, 0
+		mov	Palettes[0 * size rgb_t].g, 0
+		mov	Palettes[0 * size rgb_t].b, 7
 		mov	_palette_changed, 1
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
@@ -19998,20 +19998,20 @@ loc_17BB3:
 		jnz	short loc_17BF0
 		cmp	byte_25670, 0
 		jnz	short loc_17BD7
-		mov	al, Palettes+2
+		mov	al, Palettes[0 * size rgb_t].b
 		add	al, 2
-		mov	Palettes+2, al
-		cmp	Palettes+2, 0C0h
+		mov	Palettes[0 * size rgb_t].b, al
+		cmp	Palettes[0 * size rgb_t].b, 192
 		jb	short loc_17BEB
 		mov	byte_25670, 1
 		jmp	short loc_17BEB
 ; ---------------------------------------------------------------------------
 
 loc_17BD7:
-		mov	al, Palettes+2
-		add	al, 0FEh
-		mov	Palettes+2, al
-		cmp	Palettes+2, 26h	; '&'
+		mov	al, Palettes[0 * size rgb_t].b
+		add	al, -2
+		mov	Palettes[0 * size rgb_t].b, al
+		cmp	Palettes[0 * size rgb_t].b, 38
 		ja	short loc_17BEB
 		mov	byte_25670, 0
 
@@ -20074,8 +20074,8 @@ loc_17C77:
 		mov	_boss_sprite, 4
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 12
-		mov	Palettes, 0
-		mov	Palettes+2, 0
+		mov	Palettes[0 * size rgb_t].r, 0
+		mov	Palettes[0 * size rgb_t].b, 0
 		mov	_palette_changed, 1
 		mov	_player_invincibility_time, BOSS_DEFEAT_INVINCIBILITY_FRAMES
 		jmp	short loc_17CA4
@@ -22561,9 +22561,9 @@ loc_19178:
 		jnz	short loc_191DC
 		mov	_boss_hp, 4800
 		mov	_boss_phase_end_hp, 4800
-		mov	Palettes, 60h
-		mov	Palettes+1, 0
-		mov	Palettes+2, 0
+		mov	Palettes[0 * size rgb_t].r, 96
+		mov	Palettes[0 * size rgb_t].g, 0
+		mov	Palettes[0 * size rgb_t].b, 0
 		mov	_palette_changed, 1
 		mov	word ptr [bp-2], 0B204h
 		xor	si, si
@@ -22981,7 +22981,7 @@ loc_19581:
 		mov	_boss_sprite, 4
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 12
-		mov	Palettes, 0
+		mov	Palettes[0 * size rgb_t].r, 0
 		mov	_palette_changed, 1
 		mov	_player_invincibility_time, BOSS_DEFEAT_INVINCIBILITY_FRAMES
 		jmp	short loc_195A9
@@ -23577,9 +23577,9 @@ loc_19AC8:
 		jnz	short loc_19AEF
 		mov	_boss_hp, 3050
 		mov	_boss_phase_end_hp, 1950
-		mov	Palettes, 0
-		mov	Palettes+1, 0
-		mov	Palettes+2, 60h
+		mov	Palettes[0 * size rgb_t].r, 0
+		mov	Palettes[0 * size rgb_t].g, 0
+		mov	Palettes[0 * size rgb_t].b, 96
 		mov	_palette_changed, 1
 
 loc_19AEF:
@@ -23727,8 +23727,8 @@ loc_19C61:
 
 loc_19C6F:
 		call	boss_phase_end pascal, (ET_NW_SE shl 16) or 450
-		mov	Palettes, 70h	; 'p'
-		mov	Palettes+2, 70h	; 'p'
+		mov	Palettes[0 * size rgb_t].r, 112
+		mov	Palettes[0 * size rgb_t].b, 112
 		mov	_palette_changed, 1
 		jmp	loc_19E8D
 ; ---------------------------------------------------------------------------
@@ -23768,8 +23768,8 @@ loc_19CC8:
 		mov	al, _boss_sprite
 		add	al, 4
 		mov	_boss_sprite, al
-		mov	Palettes, 90h
-		mov	Palettes+2, 20h	; ' '
+		mov	Palettes[0 * size rgb_t].r, 144
+		mov	Palettes[0 * size rgb_t].b, 32
 		mov	_palette_changed, 1
 		mov	_gather_template.GT_col, 9
 		jmp	loc_19E8D
@@ -23919,8 +23919,8 @@ loc_19E60:
 		mov	_boss_sprite, 4
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 12
-		mov	Palettes, 0
-		mov	Palettes+2, 0
+		mov	Palettes[0 * size rgb_t].r, 0
+		mov	Palettes[0 * size rgb_t].b, 0
 		mov	_palette_changed, 1
 		mov	_player_invincibility_time, BOSS_DEFEAT_INVINCIBILITY_FRAMES
 		jmp	short loc_19E8D
@@ -27725,7 +27725,7 @@ loc_1C301:
 		mov	byte_25A26, 0
 		inc	_boss_phase
 		mov	_boss_mode, 0
-		mov	Palettes+2, 80h
+		mov	Palettes[0 * size rgb_t].b, 128
 		mov	_palette_changed, 1
 		mov	_boss_hp, 6000
 		mov	_boss_phase_end_hp, 6000
@@ -27826,7 +27826,7 @@ loc_1C400:
 		cmp	_boss_phase_frame, 32
 		jl	loc_1C67A
 		mov	_boss_pos.velocity.x, 0
-		mov	Palettes+2, 0
+		mov	Palettes[0 * size rgb_t].b, 0
 		mov	_palette_changed, 1
 		mov	word_25A3A, 0
 		mov	_boss_pos.cur.x, (192 shl 4)
@@ -30786,8 +30786,8 @@ stage1_setup	proc far
 		call	super_entry_bfnt pascal, ds, offset aSt00_bmt ; "st00.bmt"
 		call	cdg_load_single_noalpha pascal, 16, ds, offset aSt00bk_cdg, 0
 		call	bb_stage_load pascal, ds, offset aSt00_bb
-		mov	Palettes, 0FFh
-		mov	Palettes+1, 0FFh
+		mov	Palettes[0 * size rgb_t].r, 255
+		mov	Palettes[0 * size rgb_t].g, 255
 		mov	_stage_render, offset nullfunc_near
 		mov	_stage_invalidate, offset nullfunc_near
 		pop	bp
@@ -32571,16 +32571,16 @@ sub_1F378	proc near
 		mov	bp, sp
 		cmp	byte_237F7, 0
 		jnz	short loc_1F394
-		inc	Palettes
-		cmp	Palettes, 0F0h
+		inc	Palettes[0 * size rgb_t].r
+		cmp	Palettes[0 * size rgb_t].r, 240
 		jb	short loc_1F3A4
 		mov	byte_237F7, 1
 		jmp	short loc_1F3A4
 ; ---------------------------------------------------------------------------
 
 loc_1F394:
-		dec	Palettes
-		cmp	Palettes, 40h
+		dec	Palettes[0 * size rgb_t].r
+		cmp	Palettes[0 * size rgb_t].r, 64
 		ja	short loc_1F3A4
 		mov	byte_237F7, 0
 
@@ -32624,9 +32624,9 @@ loc_1F3E2:
 		cmp	_boss_phase_frame, 96
 		jle	loc_1F8A5
 		inc	_boss_phase
-		mov	Palettes, 80h
-		mov	Palettes+1, 0
-		mov	Palettes+2, 0E0h
+		mov	Palettes[0 * size rgb_t].r, 128
+		mov	Palettes[0 * size rgb_t].g, 0
+		mov	Palettes[0 * size rgb_t].b, 224
 		mov	_palette_changed, 1
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
@@ -33020,7 +33020,7 @@ loc_1F752:
 		call	boss_phase_end pascal, (ET_VERTICAL shl 16) or 0
 		mov	_boss_pos.velocity.x, 0
 		mov	byte_2D057, 3
-		mov	Palettes, 3Ch	; '<'
+		mov	Palettes[0 * size rgb_t].r, 60
 		jmp	loc_1F8A5
 ; ---------------------------------------------------------------------------
 
@@ -33063,12 +33063,12 @@ loc_1F7B4:
 loc_1F7BA:
 		push	offset _boss_pos
 		call	_motion_update_2
-		mov	al, Palettes
+		mov	al, Palettes[0 * size rgb_t].r
 		add	al, 3
-		mov	Palettes, al
-		mov	al, Palettes+2
-		add	al, 0FEh
-		mov	Palettes+2, al
+		mov	Palettes[0 * size rgb_t].r, al
+		mov	al, Palettes[0 * size rgb_t].b
+		add	al, -2
+		mov	Palettes[0 * size rgb_t].b, al
 		mov	_palette_changed, 1
 		call	sub_1E64E
 		cmp	_boss_phase_frame, 64
@@ -33131,8 +33131,8 @@ loc_1F878:
 		mov	_boss_sprite, 4
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 12
-		mov	Palettes, 0
-		mov	Palettes+2, 0
+		mov	Palettes[0 * size rgb_t].r, 0
+		mov	Palettes[0 * size rgb_t].b, 0
 		mov	_palette_changed, 1
 		mov	_player_invincibility_time, BOSS_DEFEAT_INVINCIBILITY_FRAMES
 		jmp	short loc_1F8A5
@@ -35636,9 +35636,7 @@ include th04/main/player/shots_add[bss].asm
 include th04/main/player/bomb[bss].asm
 include th04/formats/bb_playchar[bss].asm
 include th04/main/player/bombanim[bss].asm
-byte_257D6	db ?
-byte_257D7	db ?
-byte_257D8	db ?
+rgb_257D6	rgb_t <?>
 		db ?
 playchar_shot_func	dw ?
 playchar_shot_funcs	dw ?

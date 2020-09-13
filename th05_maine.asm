@@ -6283,9 +6283,9 @@ loc_DBC3:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_DBE0
-		cmp	Palettes+2, 60h
+		cmp	Palettes[0 * size rgb_t].b, 96
 		jnb	short loc_DBE0
-		inc	Palettes+2
+		inc	Palettes[0 * size rgb_t].b
 		call	far ptr	palette_show
 
 loc_DBE0:
@@ -7279,7 +7279,7 @@ loc_E549:
 loc_E550:
 		cmp	si, 8
 		jl	short loc_E549
-		mov	Palettes+2, 30h	; '0'
+		mov	Palettes[0 * size rgb_t].b, 48
 		call	sub_D387
 		xor	si, si
 		mov	word_151E2, 0

@@ -1912,7 +1912,7 @@ loc_C8D9:
 		mov	al, _z_Palettes[bx+di]
 		cbw
 		imul	[bp+arg_0]
-		mov	bx, 64h	; 'd'
+		mov	bx, 100
 		cwd
 		idiv	bx
 		mov	bx, si
@@ -48327,7 +48327,7 @@ loc_2FBA8:
 		cbw
 		or	ax, ax
 		jle	short loc_2FBC8
-		mov	al, 0FFh
+		mov	al, -1
 		jmp	short loc_2FBCA
 ; ---------------------------------------------------------------------------
 

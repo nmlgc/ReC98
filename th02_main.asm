@@ -2387,7 +2387,7 @@ loc_B8B5:
 		cmp	vsync_Count1, 64h	; 'd'
 		jb	short loc_B8B5
 		call	text_boxfilla pascal, (4 shl 16) + 1, (51 shl 16) + 23, TX_BLACK + TX_REVERSE
-		push	30h ; '0'       ; n
+		push	size palette_t
 		push	ds
 		push	offset unk_1F4AD ; src
 		push	ds
@@ -3022,9 +3022,9 @@ sub_BF9C	proc far
 		cbw
 		cmp	ax, 2
 		jnz	short loc_BFC3
-		mov	Palettes, 0
-		mov	Palettes+1, 0
-		mov	Palettes+2, 0
+		mov	Palettes[0 * size rgb_t].r, 0
+		mov	Palettes[0 * size rgb_t].g, 0
+		mov	Palettes[0 * size rgb_t].b, 0
 		call	far ptr	palette_show
 
 loc_BFC3:
@@ -7724,9 +7724,9 @@ loc_E638:
 loc_E64E:
 		cmp	[bp+@@component], size rgb_t
 		jl	short loc_E638
-		mov	Palettes[3 * size rgb_t].r, 40h
-		mov	Palettes[3 * size rgb_t].g, 10h
-		mov	Palettes[3 * size rgb_t].b, 40h
+		mov	Palettes[3 * size rgb_t].r, 64
+		mov	Palettes[3 * size rgb_t].g, 16
+		mov	Palettes[3 * size rgb_t].b, 64
 		call	far ptr	palette_show
 
 loc_E668:
@@ -7741,14 +7741,14 @@ loc_E680:
 		cmp	_bomb_frame, BOMB_CIRCLE_FRAMES
 		jnz	short loc_E6CC
 		mov	al, rgb_21A50.r
-		mov	Palettes+9, al
+		mov	Palettes[3 * size rgb_t].r, al
 		mov	al, rgb_21A50.g
-		mov	Palettes+10, al
+		mov	Palettes[3 * size rgb_t].g, al
 		mov	al, rgb_21A50.b
-		mov	Palettes+11, al
-		mov	Palettes, 80h
-		mov	Palettes+1, 0
-		mov	Palettes+2, 80h
+		mov	Palettes[3 * size rgb_t].b, al
+		mov	Palettes[0 * size rgb_t].r, 128
+		mov	Palettes[0 * size rgb_t].g, 0
+		mov	Palettes[0 * size rgb_t].b, 128
 		call	far ptr	palette_show
 		mov	al, byte_2287E
 		mov	byte_21A4C, al
@@ -7776,16 +7776,16 @@ loc_E6E8:
 		sub	dx, ax
 		mov	[bp+var_2], dx
 		mov	al, byte ptr [bp+var_2]
-		mov	Palettes, al
-		mov	Palettes+1, 0
-		mov	Palettes+2, al
+		mov	Palettes[0 * size rgb_t].r, al
+		mov	Palettes[0 * size rgb_t].g, 0
+		mov	Palettes[0 * size rgb_t].b, al
 		cmp	_bomb_frame, 64
 		jnz	short loc_E745
 		mov	PaletteTone, 200
 		call	far ptr	palette_show
-		mov	Palettes, 0FFh
-		mov	Palettes+1, 0FFh
-		mov	Palettes+2, 0FFh
+		mov	Palettes[0 * size rgb_t].r, 255
+		mov	Palettes[0 * size rgb_t].g, 255
+		mov	Palettes[0 * size rgb_t].b, 255
 
 loc_E745:
 		call	far ptr	palette_show
@@ -7829,18 +7829,18 @@ loc_E7A0:
 		idiv	bx
 		or	dx, dx
 		jz	short loc_E7BB
-		mov	[bp+var_2], 0FFh
+		mov	[bp+var_2], 255
 		jmp	short loc_E7C0
 ; ---------------------------------------------------------------------------
 
 loc_E7BB:
-		mov	[bp+var_2], 0A0h
+		mov	[bp+var_2], 160
 
 loc_E7C0:
 		mov	al, byte ptr [bp+var_2]
-		mov	Palettes, al
-		mov	Palettes+1, al
-		mov	Palettes+2, al
+		mov	Palettes[0 * size rgb_t].r, al
+		mov	Palettes[0 * size rgb_t].g, al
+		mov	Palettes[0 * size rgb_t].b, al
 		mov	ax, _bomb_frame
 		add	ax, ax
 		add	ax, -72
@@ -7872,11 +7872,11 @@ loc_E821:
 		cmp	_bomb_frame, 136
 		jnz	short loc_E867
 		mov	al, rgb_21A4D.r
-		mov	Palettes, al
+		mov	Palettes[0 * size rgb_t].r, al
 		mov	al, rgb_21A4D.g
-		mov	Palettes+1, al
+		mov	Palettes[0 * size rgb_t].g, al
 		mov	al, rgb_21A4D.b
-		mov	Palettes+2, al
+		mov	Palettes[0 * size rgb_t].b, al
 		call	far ptr	palette_show
 		call	_snd_se_play c, 16
 		mov	al, byte_21A4C
@@ -11718,11 +11718,11 @@ loc_10F22:
 loc_10F37:
 		mov	ax, word_20686
 		shr	ax, 1
-		mov	dl, 0C8h
+		mov	dl, 200
 		sub	dl, al
-		mov	Palettes, dl
-		mov	Palettes+1, 0
-		mov	Palettes+2, 0
+		mov	Palettes[0 * size rgb_t].r, dl
+		mov	Palettes[0 * size rgb_t].g, 0
+		mov	Palettes[0 * size rgb_t].b, 0
 		mov	ax, word_20686
 		sub	ax, 0C8h
 		mov	word_22D9E, ax
@@ -11733,13 +11733,13 @@ loc_10F37:
 loc_10F5E:
 		cmp	word_20686, 258h
 		jnb	short loc_10F8C
-		mov	Palettes, 0
+		mov	Palettes[0 * size rgb_t].r, 0
 		mov	ax, word_20686
 		shr	ax, 1
-		mov	dl, 2Ch	; ','
+		mov	dl, 44
 		sub	dl, al
-		mov	Palettes+1, dl
-		mov	Palettes+2, 0
+		mov	Palettes[0 * size rgb_t].g, dl
+		mov	Palettes[0 * size rgb_t].b, 0
 		mov	ax, word_20686
 		sub	ax, 190h
 		mov	word_22D9E, ax
@@ -11750,13 +11750,13 @@ loc_10F5E:
 loc_10F8C:
 		cmp	word_20686, 320h
 		jnb	short loc_10FBA
-		mov	Palettes, 0
-		mov	Palettes+1, 0
+		mov	Palettes[0 * size rgb_t].r, 0
+		mov	Palettes[0 * size rgb_t].g, 0
 		mov	ax, word_20686
 		shr	ax, 1
-		mov	dl, 90h
+		mov	dl, 144
 		sub	dl, al
-		mov	Palettes+2, dl
+		mov	Palettes[0 * size rgb_t].b, dl
 		mov	ax, word_20686
 		sub	ax, 258h
 		mov	word_22D9E, ax
@@ -11769,15 +11769,15 @@ loc_10FBA:
 		jnb	short loc_10FF0
 		mov	ax, word_20686
 		shr	ax, 1
-		mov	dl, 0F4h
+		mov	dl, 244
 		sub	dl, al
-		mov	Palettes, dl
-		mov	Palettes+1, 0
+		mov	Palettes[0 * size rgb_t].r, dl
+		mov	Palettes[0 * size rgb_t].g, 0
 		mov	ax, word_20686
 		shr	ax, 1
-		mov	dl, 0F4h
+		mov	dl, 244
 		sub	dl, al
-		mov	Palettes+2, dl
+		mov	Palettes[0 * size rgb_t].b, dl
 		mov	ax, word_20686
 		sub	ax, 320h
 		mov	word_22D9E, ax
@@ -16694,52 +16694,52 @@ var_2		= byte ptr -2
 		mov	bx, 10h
 		cwd
 		idiv	bx
-		add	al, 90h
+		add	al, 144
 		mov	[bp+var_3], al
 		mov	ax, word_1ED94
 		mov	bx, 8
 		cwd
 		idiv	bx
-		add	al, 90h
+		add	al, 144
 		mov	[bp+var_2], al
-		mov	Palettes+24, 0B0h ; '°'
+		mov	Palettes[8 * size rgb_t].r, 176
 		mov	al, [bp+var_3]
-		mov	Palettes+25, al
+		mov	Palettes[8 * size rgb_t].g, al
 		mov	al, [bp+var_2]
-		mov	Palettes+26, al
+		mov	Palettes[8 * size rgb_t].b, al
 		mov	ax, word_1ED94
 		mov	bx, 10h
 		cwd
 		idiv	bx
-		mov	dl, 0A0h
+		mov	dl, 160
 		sub	dl, al
 		mov	[bp+var_4], dl
 		mov	ax, word_1ED94
 		cwd
 		idiv	bx
-		mov	dl, 0A0h
+		mov	dl, 160
 		sub	dl, al
 		mov	[bp+var_3], dl
 		mov	ax, word_1ED94
 		mov	bx, 4
 		cwd
 		idiv	bx
-		mov	dl, 0FFh
+		mov	dl, 255
 		sub	dl, al
 		mov	[bp+var_2], dl
 		mov	al, [bp+var_4]
-		mov	Palettes+39, al
+		mov	Palettes[13 * size rgb_t].r, al
 		mov	al, [bp+var_3]
-		mov	Palettes+40, al
+		mov	Palettes[13 * size rgb_t].g, al
 		mov	al, [bp+var_2]
-		mov	Palettes+41, al
+		mov	Palettes[13 * size rgb_t].b, al
 		cmp	[bp+var_4], 80h
 		ja	short loc_13732
 		mov	word_1ED94, 3E8h
 		call	grc_setclip pascal, (PLAYFIELD_LEFT shl 16) or 0, (PLAYFIELD_RIGHT shl 16) or (RES_Y - 1)
-		mov	Palettes+42, 0E0h
-		mov	Palettes+43, 0C0h
-		mov	Palettes+44, 0B0h ; '°'
+		mov	Palettes[14 * size rgb_t].r, 224
+		mov	Palettes[14 * size rgb_t].g, 192
+		mov	Palettes[14 * size rgb_t].b, 176
 		mov	word_1EB0A, 0FFFFh
 		mov	word_1EDA4, 1
 
@@ -27286,11 +27286,11 @@ loc_1953B:
 		mov	byte_26CC2, al
 		mov	ax, word_20650
 		sar	ax, 1
-		mov	Palettes, al
-		mov	Palettes+1, 0
+		mov	Palettes[0 * size rgb_t].r, al
+		mov	Palettes[0 * size rgb_t].g, 0
 		mov	ax, word_20650
 		sar	ax, 1
-		mov	Palettes+2, al
+		mov	Palettes[0 * size rgb_t].b, al
 		call	far ptr	palette_show
 		cmp	word_20650, 64h	; 'd'
 		jle	loc_198A8
@@ -27363,13 +27363,13 @@ loc_195F8:
 		call	sub_18BA6
 		mov	ax, word_20650
 		sar	ax, 1
-		mov	dl, 33h	; '3'
+		mov	dl, 51
 		sub	dl, al
-		mov	Palettes, dl
+		mov	Palettes[0 * size rgb_t].r, dl
 		mov	ax, word_20650
 		sar	ax, 1
-		mov	Palettes+1, al
-		mov	Palettes+2, 32h	; '2'
+		mov	Palettes[0 * size rgb_t].g, al
+		mov	Palettes[0 * size rgb_t].b, 50
 		call	far ptr	palette_show
 		cmp	word_20650, 64h	; 'd'
 		jle	loc_198A8
@@ -27437,17 +27437,17 @@ loc_196A3:
 		call	sub_18BA6
 		mov	ax, word_20650
 		sar	ax, 1
-		mov	Palettes, al
+		mov	Palettes[0 * size rgb_t].r, al
 		mov	ax, word_20650
 		sar	ax, 1
-		mov	dl, 33h	; '3'
+		mov	dl, 51
 		sub	dl, al
-		mov	Palettes+1, dl
+		mov	Palettes[0 * size rgb_t].g, dl
 		mov	ax, word_20650
 		sar	ax, 1
-		mov	dl, 33h	; '3'
+		mov	dl, 51
 		sub	dl, al
-		mov	Palettes+2, dl
+		mov	Palettes[0 * size rgb_t].b, dl
 		call	far ptr	palette_show
 		cmp	word_20650, 64h	; 'd'
 		jle	loc_198A8
@@ -27521,11 +27521,11 @@ loc_19770:
 		call	sub_18BA6
 		mov	ax, word_20650
 		sar	ax, 1
-		mov	dl, 33h	; '3'
+		mov	dl, 51
 		sub	dl, al
-		mov	Palettes, dl
-		mov	Palettes+1, 0
-		mov	Palettes+2, 0
+		mov	Palettes[0 * size rgb_t].r, dl
+		mov	Palettes[0 * size rgb_t].g, 0
+		mov	Palettes[0 * size rgb_t].b, 0
 		call	far ptr	palette_show
 		cmp	word_20650, 64h	; 'd'
 		jle	loc_198A8

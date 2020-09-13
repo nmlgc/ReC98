@@ -5435,14 +5435,14 @@ loc_CC4D:
 		mov	ah, 0
 		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	Palettes[bx].r, 78h
+		mov	Palettes[bx].r, 120
 
 loc_CC78:
 		mov	al, byte ptr [bp+var_3]
 		mov	ah, 0
 		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	Palettes[bx].b, 78h
+		mov	Palettes[bx].b, 120
 		jmp	short loc_CC98
 ; ---------------------------------------------------------------------------
 
@@ -5451,7 +5451,7 @@ loc_CC89:
 		mov	ah, 0
 		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	Palettes[bx].r, 78h
+		mov	Palettes[bx].r, 120
 
 loc_CC98:
 		mov	_palette_changed, 1
@@ -5543,7 +5543,7 @@ loc_CD67:
 		mov	ah, 0
 		mov	bx, ax
 		mov	al, [bx+3938h]
-		add	al, 0FCh
+		add	al, -4
 		mov	dl, byte ptr [bp+arg_0]
 		mov	dh, 0
 		mov	bx, dx
@@ -15168,7 +15168,7 @@ loc_12748:
 		jnz	short loc_12772
 		mov	word_1F3B0, 0
 		mov	byte_1F34F, 1
-		push	0FFh
+		push	(-1 and 255)
 		push	word ptr [bp+@@pid_other]
 		call	sub_A3D2
 		mov	byte_1F355, 10h
@@ -24115,7 +24115,7 @@ loc_17255:
 		mov	ah, 0
 		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	Palettes[bx].r, 64h
+		mov	Palettes[bx].r, 100
 		jmp	short loc_1728A
 ; ---------------------------------------------------------------------------
 
@@ -26782,17 +26782,17 @@ loc_18801:
 		mov	ah, 0
 		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	Palettes[bx].r, 0FFh
+		mov	Palettes[bx].r, 255
 		mov	al, _pid_current
 		mov	ah, 0
 		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	Palettes[bx].g, 80h
+		mov	Palettes[bx].g, 128
 		mov	al, _pid_current
 		mov	ah, 0
 		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	Palettes[bx].b, 80h
+		mov	Palettes[bx].b, 128
 		jmp	short loc_18872
 ; ---------------------------------------------------------------------------
 
@@ -26811,7 +26811,7 @@ loc_18845:
 		mov	ah, 0
 		imul	ax, size rgb_t
 		mov	bx, ax
-		mov	Palettes[bx].b, 20h
+		mov	Palettes[bx].b, 32
 
 loc_18872:
 		mov	_palette_changed, 1
@@ -26893,7 +26893,7 @@ loc_18911:
 		mov	ah, 0
 		imul	ax, size rgb_t
 		add	dl, dl
-		and	dl, 0FFh
+		and	dl, 255
 		mov	bx, ax
 		mov	Palettes[bx].r, dl
 		mov	al, _pid_current
@@ -27000,7 +27000,7 @@ loc_18A10:
 		cmp	ax, 2
 		jge	short loc_18A4E
 		call	snd_se_play pascal, 10
-		push	0A0h
+		push	160
 		push	word ptr _pid_current
 		call	sub_A3D2
 		mov	al, _pid_current
@@ -27191,14 +27191,14 @@ loc_18C04:
 		mov	ah, 0
 		imul	ax, size rgb_t
 		mov	dl, [bp+var_2]
-		add	dl, 40h
+		add	dl, 64
 		mov	bx, ax
 		mov	Palettes[bx].r, dl
 		mov	al, _pid_current
 		mov	ah, 0
 		imul	ax, size rgb_t
 		mov	dl, [bp+var_2]
-		add	dl, 20h	; ' '
+		add	dl, 32
 		mov	bx, ax
 		mov	Palettes[bx].g, dl
 		mov	al, _pid_current
