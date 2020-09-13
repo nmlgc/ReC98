@@ -79,3 +79,27 @@ extern shot_alive_t shots_alive[SHOT_COUNT];
 shot_t near* pascal near shots_add(void);
 // Also renders hitshots in TH05.
 void pascal near shots_render(void);
+
+// Option laser
+// ------------
+// Unused in TH05, but still present in the code.
+
+static const pixel_t SHOT_LASER_W = 8;
+
+typedef enum {
+	SHOT_LASER_CEL_0,
+	SHOT_LASER_CEL_1,
+	SHOT_LASER_CEL_2,
+	SHOT_LASER_CEL_3,
+	SHOT_LASER_CEL_4,
+	SHOT_LASER_CELS,
+} shot_laser_cel_t;
+
+// Takes a Subpixel for [h].
+#define shot_laser_put(left, top, h, cel) \
+	_SI = h; \
+	shot_laser_put_raw(left, top, cel);
+void __fastcall near shot_laser_put_raw(
+	screen_x_t left, vram_y_t top, shot_laser_cel_t cel
+);
+// ------------

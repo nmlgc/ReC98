@@ -1691,76 +1691,7 @@ include th04/main/null.asm
 include th04/main/pointnum/inv_upd.asm
 include th04/main/pointnum/render.asm
 include th04/main/pointnum/num_put.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_BE68	proc near
-		push	si
-		push	di
-		mov	cx, ax
-		sar	ax, 3
-		mov	di, ax
-		and	cl, 7
-		xor	ah, ah
-		mov	al, [bx+0F8Ah]
-		ror	ax, cl
-		mov	bx, dx
-		shl	dx, 6
-		add	di, dx
-		shr	dx, 2
-		add	di, dx
-		mov	dx, GRAM_400
-		mov	es, dx
-		shr	si, 4
-		mov	cx, si
-		add	cx, bx
-		cmp	cx, 190h
-		ja	short loc_BEA0
-		mov	cx, si
-		xor	dx, dx
-		jmp	short loc_BEA9
-; ---------------------------------------------------------------------------
-
-loc_BEA0:
-		mov	cx, 190h
-		sub	cx, bx
-		mov	dx, si
-		sub	dx, cx
-
-loc_BEA9:
-		or	ah, ah
-		jz	short loc_BEB6
-		nop
-
-loc_BEAE:
-		stosw
-		add	di, 4Eh	; 'N'
-		loop	loc_BEAE
-		jmp	short loc_BEBC
-; ---------------------------------------------------------------------------
-
-loc_BEB6:
-		stosb
-		add	di, 4Fh	; 'O'
-		loop	loc_BEB6
-
-loc_BEBC:
-		or	dx, dx
-		jz	short loc_BEC8
-		sub	di, 7D00h
-		xchg	cx, dx
-		jmp	short loc_BEA9
-; ---------------------------------------------------------------------------
-
-loc_BEC8:
-		pop	di
-		pop	si
-		retn
-sub_BE68	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th04/main/player/shot_laser.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3918,13 +3849,13 @@ arg_2		= word ptr  6
 		mov	al, [bp+arg_0]
 		mov	byte_2560A, al
 		mov	ax, _player_option_pos_cur.x
-		mov	word ptr dword_2560C, ax
+		mov	_player_option_laser_pos.cur.x, ax
 		mov	ax, _player_option_pos_cur.y
-		mov	word ptr dword_2560C+2,	ax
+		mov	_player_option_laser_pos.cur.y, ax
 		mov	ax, _player_option_pos_cur.x
-		mov	word ptr dword_25610, ax
+		mov	_player_option_laser_pos.prev.x, ax
 		mov	ax, _player_option_pos_cur.y
-		mov	word ptr dword_25610+2,	ax
+		mov	_player_option_laser_pos.prev.y, ax
 		mov	byte_22C1A, 0
 
 loc_DADA:
@@ -4975,6 +4906,13 @@ off_E1E8	dw offset loc_E1BC
 
 ; Attributes: bp-based frame
 
+SHOT_LASER_W = 8
+SHOT_LASER_CEL_0 = 0
+SHOT_LASER_CEL_1 = 1
+SHOT_LASER_CEL_2 = 2
+SHOT_LASER_CEL_3 = 3
+SHOT_LASER_CEL_4 = 4
+
 sub_E1F4	proc near
 		push	bp
 		mov	bp, sp
@@ -5027,7 +4965,7 @@ loc_E242:
 ; ---------------------------------------------------------------------------
 
 loc_E24B:
-		mov	di, 3
+		mov	di, SHOT_LASER_CEL_3
 		jmp	short loc_E276
 ; ---------------------------------------------------------------------------
 
@@ -5036,7 +4974,7 @@ loc_E250:
 		ja	short loc_E25B
 
 loc_E257:
-		xor	di, di
+		xor	di, di	; SHOT_LASER_CEL_0
 		jmp	short loc_E276
 ; ---------------------------------------------------------------------------
 
@@ -5045,7 +4983,7 @@ loc_E25B:
 		ja	short loc_E267
 
 loc_E262:
-		mov	di, 1
+		mov	di, SHOT_LASER_CEL_1
 		jmp	short loc_E276
 ; ---------------------------------------------------------------------------
 
@@ -5054,34 +4992,34 @@ loc_E267:
 		ja	short loc_E273
 
 loc_E26E:
-		mov	di, 2
+		mov	di, SHOT_LASER_CEL_2
 		jmp	short loc_E276
 ; ---------------------------------------------------------------------------
 
 loc_E273:
-		mov	di, 4
+		mov	di, SHOT_LASER_CEL_4
 
 loc_E276:
 		mov	al, _stage_frame_mod2
 		add	al, 8
 		mov	ah, al
 		call	_grcg_setcolor_direct_seg1_raw
-		mov	si, word ptr dword_2560C+2
-		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, (16 shl 4)
+		mov	si, _player_option_laser_pos.cur.y
+		call	scroll_subpixel_y_to_vram_seg1 pascal, (PLAYFIELD_TOP shl 4)
 		mov	dx, ax
-		mov	ax, word ptr dword_2560C
+		mov	ax, _player_option_laser_pos.cur.x
 		sar	ax, 4
-		add	ax, 4
+		add	ax, ((PLAYFIELD_LEFT - PLAYER_OPTION_DISTANCE) - (SHOT_LASER_W / 2))
 		mov	bx, di
-		call	main_01:sub_BE68
-		mov	si, word ptr dword_2560C+2
-		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, (16 shl 4)
+		call	shot_laser_put_raw
+		mov	si, _player_option_laser_pos.cur.y
+		call	scroll_subpixel_y_to_vram_seg1 pascal, (PLAYFIELD_TOP shl 4)
 		mov	dx, ax
-		mov	ax, word ptr dword_2560C
+		mov	ax, _player_option_laser_pos.cur.x
 		sar	ax, 4
-		add	ax, 34h	; '4'
+		add	ax, ((PLAYFIELD_LEFT + PLAYER_OPTION_DISTANCE) - (SHOT_LASER_W / 2))
 		mov	bx, di
-		call	main_01:sub_BE68
+		call	shot_laser_put_raw
 
 loc_E2B4:
 		pop	di
@@ -9222,26 +9160,26 @@ loc_1046E:
 		cmp	word_25608, 20h	; ' '
 		jb	short loc_104B2
 		mov	_tile_invalidate_box.x, 8
-		mov	ax, word ptr dword_25610+2
-		mov	bx, 10h
+		mov	ax, _player_option_laser_pos.prev.y
+		mov	bx, 16
 		cwd
 		idiv	bx
 		mov	_tile_invalidate_box.y, ax
-		mov	ax, word ptr dword_25610+2
+		mov	ax, _player_option_laser_pos.prev.y
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		push	ax
-		mov	ax, word ptr dword_25610
+		mov	ax, _player_option_laser_pos.prev.x
 		add	ax, (-24 shl 4)
 		push	ax
 		call	main_01:tiles_invalidate_around
-		mov	ax, word ptr dword_25610+2
+		mov	ax, _player_option_laser_pos.prev.y
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		push	ax
-		mov	ax, word ptr dword_25610
+		mov	ax, _player_option_laser_pos.prev.x
 		add	ax, (24 shl 4)
 		push	ax
 		call	main_01:tiles_invalidate_around
@@ -9326,10 +9264,10 @@ loc_1052D:
 		jl	short loc_104CF
 		cmp	word_25608, 0
 		jz	short loc_1054E
-		mov	eax, dword_2560C
-		mov	dword_25610, eax
+		mov	eax, _player_option_laser_pos.cur
+		mov	_player_option_laser_pos.prev, eax
 		mov	eax, _player_option_pos_cur
-		mov	dword_2560C, eax
+		mov	_player_option_laser_pos.cur, eax
 		dec	word_25608
 
 loc_1054E:
@@ -9408,7 +9346,7 @@ shots_render	endp
 sub_105B9	proc far
 
 var_F		= byte ptr -0Fh
-var_E		= word ptr -0Eh
+@@laser_x		= word ptr -0Eh
 var_C		= word ptr -0Ch
 var_A		= word ptr -0Ah
 var_8		= word ptr -8
@@ -9502,11 +9440,11 @@ loc_1068C:
 		cmp	word_25608, 20h	; ' '
 		jbe	short loc_10704
 		mov	ax, [bp+var_8]
-		cmp	ax, word ptr dword_2560C+2
+		cmp	ax, _player_option_laser_pos.cur.y
 		ja	short loc_10704
-		mov	ax, word ptr dword_2560C
-		add	ax, 0FE80h
-		mov	[bp+var_E], ax
+		mov	ax, _player_option_laser_pos.cur.x
+		add	ax, (-PLAYER_OPTION_DISTANCE shl 4)
+		mov	[bp+@@laser_x], ax
 		sub	ax, [bp+var_6]
 		cmp	ax, [bp+var_A]
 		ja	short loc_106D4
@@ -9514,11 +9452,11 @@ loc_1068C:
 		inc	byte_25980
 		test	byte_25980, 3
 		jnz	short loc_106D4
-		call	sparks_add_random pascal, [bp+var_E], _shot_hitbox_center.y, large (((8 shl 4) shl 16) or 1)
+		call	sparks_add_random pascal, [bp+@@laser_x], _shot_hitbox_center.y, large (((8 shl 4) shl 16) or 1)
 
 loc_106D4:
-		add	[bp+var_E], 300h
-		mov	ax, [bp+var_E]
+		add	[bp+@@laser_x], ((PLAYER_OPTION_DISTANCE * 2) shl 4)
+		mov	ax, [bp+@@laser_x]
 		sub	ax, [bp+var_6]
 		cmp	ax, [bp+var_A]
 		ja	short loc_10704
@@ -9526,7 +9464,7 @@ loc_106D4:
 		inc	byte_25980
 		test	byte_25980, 3
 		jnz	short loc_10704
-		call	sparks_add_random pascal, [bp+var_E], _shot_hitbox_center.y, large (((8 shl 4) shl 16) or 1)
+		call	sparks_add_random pascal, [bp+@@laser_x], _shot_hitbox_center.y, large (((8 shl 4) shl 16) or 1)
 
 loc_10704:
 		movzx	eax, di
@@ -34761,12 +34699,8 @@ aSt00_map	db 'ST00.MAP',0
 		db 0
 include th04/main/pointnum/pointnum[data].asm
 include th04/sprites/pointnum.asp
-		db  18h
-		db  3Ch	; <
-		db  7Eh	; ~
-		db 0BDh
-		db 0FFh
-		db    0
+include th04/main/player/shot_laser[data].asm
+	evendata
 include th02/sprites/sparks.asp
 include th04/main/player/shot_velocity[data].asm
 		db  18h
@@ -35426,9 +35360,8 @@ include th04/main/boss/explosions[bss].asm
 word_25608	dw ?
 byte_2560A	db ?
 		db ?
-dword_2560C	dd ?
-dword_25610	dd ?
-		dd ?
+public _player_option_laser_pos
+_player_option_laser_pos	motion_t <?>
 byte_25618	db ?
 		db ?
 point_2561A	Point <?>

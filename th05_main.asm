@@ -4729,79 +4729,7 @@ playfield_fillm_32_0_320_192	endp
 ; ---------------------------------------------------------------------------
 		nop
 
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_DD72	proc near
-		push	si
-		push	di
-		mov	cx, ax
-		sar	ax, 3
-		mov	di, ax
-		and	cl, 7
-		xor	ah, ah
-		mov	al, [bx+1398h]
-		ror	ax, cl
-		mov	bx, dx
-		shl	dx, 6
-		add	di, dx
-		shr	dx, 2
-		add	di, dx
-		mov	dx, GRAM_400
-		mov	es, dx
-		assume es:nothing
-		shr	si, 4
-		mov	cx, si
-		add	cx, bx
-		cmp	cx, 190h
-		ja	short loc_DDAA
-		mov	cx, si
-		xor	dx, dx
-		jmp	short loc_DDB3
-; ---------------------------------------------------------------------------
-
-loc_DDAA:
-		mov	cx, 190h
-		sub	cx, bx
-		mov	dx, si
-		sub	dx, cx
-
-loc_DDB3:
-		or	ah, ah
-		jz	short loc_DDC0
-		nop
-
-loc_DDB8:
-		stosw
-		add	di, ROW_SIZE - 2
-		loop	loc_DDB8
-		jmp	short loc_DDC6
-; ---------------------------------------------------------------------------
-
-loc_DDC0:
-		stosb
-		add	di, ROW_SIZE - 1
-		loop	loc_DDC0
-
-loc_DDC6:
-		or	dx, dx
-		jz	short loc_DDD2
-		sub	di, 7D00h
-		xchg	cx, dx
-		jmp	short loc_DDB3
-; ---------------------------------------------------------------------------
-
-loc_DDD2:
-		pop	di
-		pop	si
-		retn
-sub_DD72	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
+include th04/main/player/shot_laser.asm
 include th05/formats/bb_curvebullet.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -27634,11 +27562,7 @@ byte_21D74	db 0
 byte_21D75	db 0
 byte_21D76	db 0
 		db 0
-		db  18h
-		db  3Ch	; <
-		db  7Eh	; ~
-		db 0BDh
-		db 0FFh
+include th04/main/player/shot_laser[data].asm
 include th05/formats/bb_curvebullet[data].asm
 ; char aMaine[]
 aMaine		db 'maine',0
