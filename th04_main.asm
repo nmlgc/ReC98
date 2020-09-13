@@ -29803,8 +29803,8 @@ var_4		= dword	ptr -4
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.stage]
 		mov	ah, 0
-		imul	ax, 64h
-		add	ax, 64h	; 'd'
+		imul	ax, 100
+		add	ax, 100
 		mov	si, ax
 		movzx	eax, si
 		mov	[bp+var_4], eax
@@ -29854,21 +29854,21 @@ var_4		= dword	ptr -4
 		call	sub_1D48E
 		mov	eax, [bp+var_4]
 		add	_score_delta, eax
-		cmp	[bp+var_8], 124F80h
+		cmp	[bp+var_8], 1200000
 		jb	short loc_1D814
 		push	4
 		jmp	short loc_1D82E
 ; ---------------------------------------------------------------------------
 
 loc_1D814:
-		cmp	[bp+var_8], 0C3500h
+		cmp	[bp+var_8], 800000
 		jb	short loc_1D822
 		push	2
 		jmp	short loc_1D82E
 ; ---------------------------------------------------------------------------
 
 loc_1D822:
-		cmp	[bp+var_8], 7A120h
+		cmp	[bp+var_8], 500000
 		jb	short loc_1D835
 		push	1
 
@@ -29878,14 +29878,14 @@ loc_1D82E:
 ; ---------------------------------------------------------------------------
 
 loc_1D835:
-		cmp	[bp+var_8], 186A0h
+		cmp	[bp+var_8], 100000
 		ja	short loc_1D843
 		push	2
 		jmp	short loc_1D84F
 ; ---------------------------------------------------------------------------
 
 loc_1D843:
-		cmp	[bp+var_8], 30D40h
+		cmp	[bp+var_8], 200000
 		ja	short loc_1D854
 		push	1
 
@@ -29956,7 +29956,7 @@ loc_1D922:
 		call	text_putsa
 		call	text_putsa pascal, (6 shl 16) + 17, ds, offset aBONUS_POINT_2, TX_WHITE
 		call	text_putsa pascal, (6 shl 16) + 21, ds, offset aBONUS_TOTAL_2, TX_WHITE
-		mov	si, 3E8h
+		mov	si, 1000
 		movzx	eax, si
 		mov	[bp+var_4], eax
 		push	6
@@ -29990,8 +29990,8 @@ loc_1D922:
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.rem_lives]
 		mov	ah, 0
-		imul	ax, 3E8h
-		add	ax, 0FC18h
+		imul	ax, 1000
+		add	ax, -1000
 		jmp	short loc_1D9CE
 ; ---------------------------------------------------------------------------
 
@@ -29999,8 +29999,8 @@ loc_1D9BD:
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.rem_lives]
 		mov	ah, 0
-		imul	ax, 0BB8h
-		add	ax, 0F448h
+		imul	ax, 3000
+		add	ax, -3000
 
 loc_1D9CE:
 		mov	si, ax

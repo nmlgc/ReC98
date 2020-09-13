@@ -6570,7 +6570,7 @@ loc_DBFE:
 
 loc_DC28:
 		mov	eax, dword_218A4
-		add	dword_218AC, eax
+		add	score_218AC, eax
 
 loc_DC31:
 		call	sub_C914
@@ -6603,7 +6603,7 @@ loc_DCE0:
 		mov	eax, [bx+0B2Eh]
 		cmp	eax, _score
 		jle	short loc_DCDC
-		mov	dword_218AC, 0
+		mov	score_218AC, 0
 		pop	bp
 		retn
 sub_DCD1	endp
@@ -6616,9 +6616,9 @@ sub_DCD1	endp
 sub_DCFE	proc far
 		push	bp
 		mov	bp, sp
-		mov	eax, dword_218AC
+		mov	eax, score_218AC
 		add	_score, eax
-		mov	dword_218AC, 0
+		mov	score_218AC, 0
 		mov	word_218B0, 0
 		pop	bp
 		retf
@@ -6633,9 +6633,9 @@ sub_DD1B	proc near
 		push	bp
 		mov	bp, sp
 		mov	_score, 0
-		mov	dword_218AC, 0
+		mov	score_218AC, 0
 		mov	word_218B0, 0
-		mov	dword_1E5B8, 9C40h
+		mov	dword_1E5B8, 40000
 		pop	bp
 		retn
 sub_DD1B	endp
@@ -6652,15 +6652,15 @@ var_4		= dword	ptr -4
 		push	bp
 		mov	bp, sp
 		sub	sp, 4
-		cmp	dword_218AC, 0
+		cmp	score_218AC, 0
 		jz	loc_DE46
 		cmp	byte_2066C, 0
 		jnz	short loc_DDA1
-		mov	eax, dword_218AC
+		mov	eax, score_218AC
 		mov	[bp+var_4], eax
-		cmp	[bp+var_4], 20h	; ' '
+		cmp	[bp+var_4], 32
 		jge	short loc_DD6F
-		mov	[bp+var_4], 20h	; ' '
+		mov	[bp+var_4], 32
 
 loc_DD6F:
 		mov	eax, [bp+var_4]
@@ -6669,9 +6669,9 @@ loc_DD6F:
 		movzx	eax, word_218B0
 		cmp	eax, [bp+var_4]
 		jge	short loc_DDA7
-		cmp	[bp+var_4], 457h
+		cmp	[bp+var_4], 1111
 		jle	short loc_DD99
-		mov	[bp+var_4], 457h
+		mov	[bp+var_4], 1111
 
 loc_DD99:
 		mov	ax, word ptr [bp+var_4]
@@ -6680,22 +6680,22 @@ loc_DD99:
 ; ---------------------------------------------------------------------------
 
 loc_DDA1:
-		mov	word_218B0, 0C27h
+		mov	word_218B0, 3111
 
 loc_DDA7:
-		mov	eax, dword_218AC
+		mov	eax, score_218AC
 		mov	[bp+var_4], eax
 		movzx	eax, word_218B0
 		sub	[bp+var_4], eax
 		cmp	[bp+var_4], 0
 		jge	short loc_DDCE
-		mov	ax, word ptr dword_218AC
+		mov	ax, word ptr score_218AC
 		mov	word_218B0, ax
 		mov	[bp+var_4], 0
 
 loc_DDCE:
 		mov	eax, [bp+var_4]
-		mov	dword_218AC, eax
+		mov	score_218AC, eax
 		movzx	eax, word_218B0
 		add	_score, eax
 		call	hud_score_put pascal, 6, large [_score]
@@ -6751,7 +6751,7 @@ sub_DD41	endp
 sub_DE4E	proc far
 		push	bp
 		mov	bp, sp
-		mov	eax, dword_218AC
+		mov	eax, score_218AC
 		add	_score, eax
 		call	hud_score_put pascal, 6, large [_score]
 		mov	eax, _score
@@ -9623,7 +9623,7 @@ loc_FD5A:
 		cdq
 		idiv	ebx
 		mov	[bp+var_4], eax
-		add	dword_218AC, eax
+		add	score_218AC, eax
 		call	_snd_se_reset
 		call	sub_DE4E
 		call	_snd_se_update
@@ -9762,7 +9762,7 @@ loc_FEB9:
 		cdq
 		idiv	ebx
 		mov	[bp+var_4], eax
-		add	dword_218AC, eax
+		add	score_218AC, eax
 		call	_snd_se_reset
 		call	sub_DE4E
 		call	_snd_se_update
@@ -12513,7 +12513,7 @@ loc_1161B:
 loc_1166B:
 		call	_snd_se_play c, 2
 		mov	byte ptr [si+2BF0h], 1
-		add	dword_218AC, 4E20h
+		add	score_218AC, 20000
 		jmp	short loc_11689
 ; ---------------------------------------------------------------------------
 
@@ -12831,7 +12831,7 @@ loc_118DC:
 		cmp	ax, [bx+2BD4h]
 		jg	short loc_1193E
 		mov	byte ptr [si+2BF0h], 2
-		add	dword_218AC, 7530h
+		add	score_218AC, 30000
 		cmp	si, 3
 		jg	short loc_11939
 		mov	bx, si
@@ -14951,7 +14951,7 @@ loc_129BA:
 
 loc_129CD:
 		mov	ax, [bp+var_8]
-		add	word ptr dword_218AC, ax
+		add	word ptr score_218AC, ax
 		mov	ax, [bp+var_8]
 		pop	di
 		pop	si
@@ -17106,7 +17106,7 @@ loc_13A4B:
 loc_13A6B:
 		call	_snd_se_play c, 2
 		mov	byte_2066A, 1
-		add	dword_218AC, 2710h
+		add	score_218AC, 10000
 		jmp	short loc_13AB8
 ; ---------------------------------------------------------------------------
 
@@ -17588,7 +17588,7 @@ var_2		= word ptr -2
 
 loc_13F18:
 		mov	byte_2066A, 1
-		add	dword_218AC, 4E20h
+		add	score_218AC, 20000
 		mov	_player_invincibility_time, BOSS_DEFEAT_INVINCIBILITY_FRAMES
 
 loc_13F2B:
@@ -18114,7 +18114,7 @@ loc_1438D:
 loc_143AD:
 		call	_snd_se_play c, 2
 		mov	byte_2066A, 1
-		add	dword_218AC, 4E20h
+		add	score_218AC, 20000
 		jmp	short loc_143E1
 ; ---------------------------------------------------------------------------
 
@@ -18410,7 +18410,7 @@ loc_14628:
 		cmp	word_2065A, 960h
 		jl	short loc_14699
 		mov	byte_2066A, 1
-		add	dword_218AC, 7530h
+		add	score_218AC, 30000
 		mov	_player_invincibility_time, BOSS_DEFEAT_INVINCIBILITY_FRAMES
 		jmp	short loc_14699
 ; ---------------------------------------------------------------------------
@@ -24191,7 +24191,7 @@ loc_17864:
 		call	_snd_se_play c, 3
 		mov	bx, word_26C48
 		mov	eax, [bx+12h]
-		add	dword_218AC, eax
+		add	score_218AC, eax
 		mov	al, _rank
 		cbw
 		cmp	ax, RANK_LUNATIC
@@ -27957,7 +27957,7 @@ loc_19C4A:
 		les	bx, _resident
 		mov	es:[bx+mikoconfig_t.score_highest], eax
 		mov	eax, _score
-		imul	eax, 0Ah
+		imul	eax, 10
 		movzx	edx, es:[bx+mikoconfig_t.continues_used]
 		add	eax, edx
 		mov	es:[bx+mikoconfig_t.score], eax
@@ -28391,7 +28391,7 @@ loc_1A07E:
 		jle	short loc_1A0CA
 		call	_snd_se_play c, 2
 		mov	byte_2066A, 1
-		add	dword_218AC, 0C350h
+		add	score_218AC, 50000
 		cmp	word_20616, 660h
 		jnz	short loc_1A0B6
 		mov	di, 4
@@ -29372,7 +29372,7 @@ loc_1AABB:
 		cmp	word_2065A, 384h
 		jl	short loc_1AAD6
 		mov	byte_2066A, 1
-		add	dword_218AC, 4E20h
+		add	score_218AC, 20000
 		mov	_player_invincibility_time, BOSS_DEFEAT_INVINCIBILITY_FRAMES
 
 loc_1AAD6:
@@ -29487,7 +29487,7 @@ loc_1ABD1:
 		mov	bx, si
 		add	bx, bx
 		mov	word ptr [bx-6D46h], 1
-		add	dword_218AC, 1388h
+		add	score_218AC, 5000
 
 loc_1ABEE:
 		mov	al, _page_front
@@ -33819,7 +33819,7 @@ bombs	db 3
 		db 0F5h
 		db    5
 word_1E5B6	dw 0
-dword_1E5B8	dd 9C40h
+dword_1E5B8	dd 40000
 include th02/main/hud/score_put[data].asm
 word_1E5D8	dw 4140h
 word_1E5DA	dw 4342h
@@ -34829,7 +34829,7 @@ dword_218A4	dd ?
 byte_218A8	db ?
 		db ?
 word_218AA	dw ?
-dword_218AC	dd ?
+score_218AC	dd ?
 word_218B0	dw ?
 shot_level	db ?
 		db ?

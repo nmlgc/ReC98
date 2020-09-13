@@ -2519,7 +2519,7 @@ sub_D02F	proc far
 		push	bp
 		mov	bp, sp
 		movsx	eax, word_34A8A
-		imul	eax, 61A80h
+		imul	eax, 400000
 		cmp	eax, _score
 		ja	short loc_D07A
 		cmp	_lives, LIVES_MAX
@@ -3233,7 +3233,7 @@ loc_D583:
 		les	bx, _resident
 		mov	eax, es:[bx+reiidenconfig_t.score]
 		mov	_score, eax
-		mov	ebx, 61A80h
+		mov	ebx, 400000
 		cdq
 		idiv	ebx
 		inc	ax
@@ -7071,9 +7071,9 @@ arg_0		= word ptr  6
 		mov	ax, word_39DAC
 		imul	ax, 3
 		mov	si, ax
-		cmp	si, 1999h
+		cmp	si, 6553
 		jle	short loc_13210
-		mov	si, 1999h
+		mov	si, 6553
 
 loc_13210:
 		xor	di, di
@@ -7082,7 +7082,7 @@ loc_13210:
 
 loc_13214:
 		movsx	eax, si
-		add	dword_34A5E, eax
+		add	score_34A5E, eax
 		inc	di
 
 loc_1321E:
@@ -7113,9 +7113,9 @@ loc_1321E:
 		mov	ax, _cardcombo_max
 		imul	ax, 100
 		mov	si, ax
-		cmp	si, 1999h
+		cmp	si, 6553
 		jle	short loc_13277
-		mov	si, 1999h
+		mov	si, 6553
 
 loc_13277:
 		xor	di, di
@@ -7124,7 +7124,7 @@ loc_13277:
 
 loc_1327B:
 		movsx	eax, si
-		add	dword_34A5E, eax
+		add	score_34A5E, eax
 		inc	di
 
 loc_13285:
@@ -7139,15 +7139,15 @@ loc_13285:
 		call	_graph_putsa_fx
 		add	sp, 0Ah
 		mov	ax, _lives
-		imul	ax, 0C8h
+		imul	ax, 200
 		mov	si, ax
 		mov	al, _bombs
 		cbw
-		imul	ax, 64h
+		imul	ax, 100
 		add	si, ax
-		cmp	si, 1999h
+		cmp	si, 6553
 		jle	short loc_132C2
-		mov	si, 1999h
+		mov	si, 6553
 
 loc_132C2:
 		xor	di, di
@@ -7156,7 +7156,7 @@ loc_132C2:
 
 loc_132C6:
 		movsx	eax, si
-		add	dword_34A5E, eax
+		add	score_34A5E, eax
 		inc	di
 
 loc_132D0:
@@ -7172,11 +7172,11 @@ loc_132D0:
 		add	sp, 0Ah
 		mov	ax, [bp+arg_0]
 		dec	ax
-		imul	ax, 0C8h
+		imul	ax, 200
 		mov	si, ax
-		cmp	si, 1999h
+		cmp	si, 6553
 		jle	short loc_13305
-		mov	si, 1999h
+		mov	si, 6553
 
 loc_13305:
 		xor	di, di
@@ -7185,7 +7185,7 @@ loc_13305:
 
 loc_13309:
 		movsx	eax, si
-		add	dword_34A5E, eax
+		add	score_34A5E, eax
 		inc	di
 
 loc_13313:
@@ -7199,14 +7199,14 @@ loc_13313:
 		push	256
 		call	_graph_putsa_fx
 		add	sp, 0Ah
-		mov	eax, dword_34A5E
+		mov	eax, score_34A5E
 		add	_score, eax
-		mov	ebx, 2710h
+		mov	ebx, 10000
 		xor	edx, edx
 		div	ebx
 		mov	[bp+var_A], ax
-		imul	ax, 2710h
-		mov	dx, word ptr dword_34A5E
+		imul	ax, 10000
+		mov	dx, word ptr score_34A5E
 		sub	dx, ax
 		mov	[bp+var_C], dx
 		mov	ax, [bp+arg_0]
@@ -7217,7 +7217,7 @@ loc_13313:
 		shl	dx, 2
 		les	bx, _resident
 		add	bx, dx
-		mov	eax, dword_34A5E
+		mov	eax, score_34A5E
 		mov	es:[bx+reiidenconfig_t.bonus_per_stage], eax
 		mov	ax, [bp+var_A]
 		mov	bx, 0Ah
@@ -7239,7 +7239,7 @@ loc_13313:
 		call	sub_13033
 		add	sp, 6
 		mov	ax, [bp+var_C]
-		mov	bx, 3E8h
+		mov	bx, 1000
 		cwd
 		idiv	bx
 		push	ax
@@ -7249,13 +7249,13 @@ loc_13313:
 		push	ax
 		call	sub_13033
 		add	sp, 6
-		mov	bx, 3E8h
+		mov	bx, 1000
 		mov	ax, [bp+var_C]
 		cwd
 		idiv	bx
 		mov	[bp+var_C], dx
 		mov	ax, [bp+var_C]
-		mov	bx, 64h	; 'd'
+		mov	bx, 100
 		cwd
 		idiv	bx
 		push	ax
@@ -7265,13 +7265,13 @@ loc_13313:
 		push	ax
 		call	sub_13033
 		add	sp, 6
-		mov	bx, 64h	; 'd'
+		mov	bx, 100
 		mov	ax, [bp+var_C]
 		cwd
 		idiv	bx
 		mov	[bp+var_C], dx
 		mov	ax, [bp+var_C]
-		mov	bx, 0Ah
+		mov	bx, 10
 		cwd
 		idiv	bx
 		push	ax
@@ -7312,7 +7312,7 @@ loc_1345A:
 		jz	short loc_13452
 
 loc_13468:
-		mov	dword_34A5E, 0
+		mov	score_34A5E, 0
 		pop	di
 		pop	si
 		leave
@@ -7361,9 +7361,9 @@ arg_0		= word ptr  6
 		imul	ax, 5
 		movzx	eax, ax
 		mov	[bp+var_6], eax
-		cmp	[bp+var_6], 1999h
+		cmp	[bp+var_6], 6553
 		jle	short loc_13505
-		mov	[bp+var_6], 1999h
+		mov	[bp+var_6], 6553
 
 loc_13505:
 		xor	si, si
@@ -7372,45 +7372,45 @@ loc_13505:
 
 loc_13509:
 		mov	eax, [bp+var_6]
-		add	dword_34A5E, eax
+		add	score_34A5E, eax
 		inc	si
 
 loc_13513:
 		cmp	si, 0Ah
 		jb	short loc_13509
 		mov	eax, [bp+var_6]
-		mov	ebx, 3E8h
+		mov	ebx, 1000
 		cdq
 		idiv	ebx
 		push	ax
 		pushd	56h ; 'V'
 		call	sub_12BAB
 		mov	eax, [bp+var_6]
-		mov	ebx, 3E8h
+		mov	ebx, 1000
 		cdq
 		idiv	ebx
 		mov	[bp+var_6], edx
 		mov	eax, [bp+var_6]
-		mov	ebx, 64h ; 'd'
+		mov	ebx, 100
 		cdq
 		idiv	ebx
 		push	ax
 		push	10056h
 		call	sub_12BAB
 		mov	eax, [bp+var_6]
-		mov	ebx, 64h ; 'd'
+		mov	ebx, 100
 		cdq
 		idiv	ebx
 		mov	[bp+var_6], edx
 		mov	eax, [bp+var_6]
-		mov	ebx, 0Ah
+		mov	ebx, 10
 		cdq
 		idiv	ebx
 		push	ax
 		push	20056h
 		call	sub_12BAB
 		mov	eax, [bp+var_6]
-		mov	ebx, 0Ah
+		mov	ebx, 10
 		cdq
 		idiv	ebx
 		mov	[bp+var_6], edx
@@ -7427,9 +7427,9 @@ loc_13513:
 		imul	ax, 200
 		cwde
 		mov	[bp+var_6], eax
-		cmp	[bp+var_6], 1999h
+		cmp	[bp+var_6], 6553
 		jle	short loc_135D4
-		mov	[bp+var_6], 1999h
+		mov	[bp+var_6], 6553
 
 loc_135D4:
 		xor	si, si
@@ -7438,45 +7438,45 @@ loc_135D4:
 
 loc_135D8:
 		mov	eax, [bp+var_6]
-		add	dword_34A5E, eax
+		add	score_34A5E, eax
 		inc	si
 
 loc_135E2:
 		cmp	si, 0Ah
 		jb	short loc_135D8
 		mov	eax, [bp+var_6]
-		mov	ebx, 3E8h
+		mov	ebx, 1000
 		cdq
 		idiv	ebx
 		push	ax
 		pushd	6Bh ; 'k'
 		call	sub_12BAB
 		mov	eax, [bp+var_6]
-		mov	ebx, 3E8h
+		mov	ebx, 1000
 		cdq
 		idiv	ebx
 		mov	[bp+var_6], edx
 		mov	eax, [bp+var_6]
-		mov	ebx, 64h ; 'd'
+		mov	ebx, 100
 		cdq
 		idiv	ebx
 		push	ax
 		push	1006Bh
 		call	sub_12BAB
 		mov	eax, [bp+var_6]
-		mov	ebx, 64h ; 'd'
+		mov	ebx, 100
 		cdq
 		idiv	ebx
 		mov	[bp+var_6], edx
 		mov	eax, [bp+var_6]
-		mov	ebx, 0Ah
+		mov	ebx, 10
 		cdq
 		idiv	ebx
 		push	ax
 		push	2006Bh
 		call	sub_12BAB
 		mov	eax, [bp+var_6]
-		mov	ebx, 0Ah
+		mov	ebx, 10
 		cdq
 		idiv	ebx
 		mov	[bp+var_6], edx
@@ -7490,17 +7490,17 @@ loc_135E2:
 		call	_frame_delay
 		pop	cx
 		mov	ax, _lives
-		imul	ax, 1F4h
+		imul	ax, 500
 		cwde
 		mov	[bp+var_6], eax
 		mov	al, _bombs
 		cbw
-		imul	ax, 0C8h
+		imul	ax, 200
 		cwde
 		add	[bp+var_6], eax
-		cmp	[bp+var_6], 1999h
+		cmp	[bp+var_6], 6553
 		jle	short loc_136B1
-		mov	[bp+var_6], 1999h
+		mov	[bp+var_6], 6553
 
 loc_136B1:
 		xor	si, si
@@ -7509,45 +7509,45 @@ loc_136B1:
 
 loc_136B5:
 		mov	eax, [bp+var_6]
-		add	dword_34A5E, eax
+		add	score_34A5E, eax
 		inc	si
 
 loc_136BF:
 		cmp	si, 0Ah
 		jb	short loc_136B5
 		mov	eax, [bp+var_6]
-		mov	ebx, 3E8h
+		mov	ebx, 1000
 		cdq
 		idiv	ebx
 		push	ax
 		pushd	80h
 		call	sub_12BAB
 		mov	eax, [bp+var_6]
-		mov	ebx, 3E8h
+		mov	ebx, 1000
 		cdq
 		idiv	ebx
 		mov	[bp+var_6], edx
 		mov	eax, [bp+var_6]
-		mov	ebx, 64h ; 'd'
+		mov	ebx, 100
 		cdq
 		idiv	ebx
 		push	ax
 		push	10080h
 		call	sub_12BAB
 		mov	eax, [bp+var_6]
-		mov	ebx, 64h ; 'd'
+		mov	ebx, 100
 		cdq
 		idiv	ebx
 		mov	[bp+var_6], edx
 		mov	eax, [bp+var_6]
-		mov	ebx, 0Ah
+		mov	ebx, 10
 		cdq
 		idiv	ebx
 		push	ax
 		push	20080h
 		call	sub_12BAB
 		mov	eax, [bp+var_6]
-		mov	ebx, 0Ah
+		mov	ebx, 10
 		cdq
 		idiv	ebx
 		mov	[bp+var_6], edx
@@ -7561,12 +7561,12 @@ loc_136BF:
 		call	_frame_delay
 		pop	cx
 		mov	ax, [bp+arg_0]
-		imul	ax, 3E8h
+		imul	ax, 1000
 		cwde
 		mov	[bp+var_6], eax
-		cmp	[bp+var_6], 0FFFAh
+		cmp	[bp+var_6], 65530
 		jle	short loc_13784
-		mov	[bp+var_6], 0FFFAh
+		mov	[bp+var_6], 65530
 
 loc_13784:
 		xor	si, si
@@ -7575,50 +7575,50 @@ loc_13784:
 
 loc_13788:
 		mov	eax, [bp+var_6]
-		add	dword_34A5E, eax
+		add	score_34A5E, eax
 		inc	si
 
 loc_13792:
 		cmp	si, 0Ah
 		jb	short loc_13788
 		mov	eax, [bp+var_6]
-		mov	ebx, 2710h
+		mov	ebx, 10000
 		cdq
 		idiv	ebx
 		push	ax
 		push	0FFFF0095h
 		call	sub_12BAB
 		mov	eax, [bp+var_6]
-		mov	ebx, 2710h
+		mov	ebx, 10000
 		cdq
 		idiv	ebx
 		mov	[bp+var_6], edx
 		mov	eax, [bp+var_6]
-		mov	ebx, 3E8h
+		mov	ebx, 1000
 		cdq
 		idiv	ebx
 		push	ax
 		pushd	95h
 		call	sub_12BAB
 		mov	eax, [bp+var_6]
-		mov	ebx, 3E8h
+		mov	ebx, 1000
 		cdq
 		idiv	ebx
 		mov	[bp+var_6], edx
 		mov	eax, [bp+var_6]
-		mov	ebx, 64h ; 'd'
+		mov	ebx, 100
 		cdq
 		idiv	ebx
 		push	ax
 		push	10095h
 		call	sub_12BAB
 		mov	eax, [bp+var_6]
-		mov	ebx, 64h ; 'd'
+		mov	ebx, 100
 		cdq
 		idiv	ebx
 		mov	[bp+var_6], edx
 		mov	eax, [bp+var_6]
-		mov	ebx, 0Ah
+		mov	ebx, 10
 		cdq
 		idiv	ebx
 		push	ax
@@ -7633,14 +7633,14 @@ loc_13792:
 		push	5
 		call	_frame_delay
 		pop	cx
-		mov	eax, dword_34A5E
+		mov	eax, score_34A5E
 		add	_score, eax
-		mov	ebx, 2710h
+		mov	ebx, 10000
 		xor	edx, edx
 		div	ebx
 		mov	[bp+var_2], ax
-		imul	ax, 2710h
-		mov	dx, word ptr dword_34A5E
+		imul	ax, 10000
+		mov	dx, word ptr score_34A5E
 		sub	dx, ax
 		mov	di, dx
 		mov	ax, [bp+var_2]
@@ -7727,7 +7727,7 @@ loc_13933:
 		jz	short loc_1392B
 
 loc_13941:
-		mov	dword_34A5E, 0
+		mov	score_34A5E, 0
 		call	_ptn_free stdcall, PTN_SLOT_NUMB
 		pop	cx
 		pop	di
@@ -15418,7 +15418,7 @@ loc_1BFEF:
 		push	ax
 		push	seg main_32_TEXT
 		push	offset sub_21884
-		push	1388h
+		push	5000
 		push	2
 		push	ss
 		lea	ax, [bp+var_2]
@@ -15788,7 +15788,7 @@ loc_1C3AC:
 		push	ax
 		push	seg main_32_TEXT
 		push	offset sub_21884
-		push	1388h
+		push	5000
 		push	2
 		push	ss
 		lea	ax, [bp+var_2]
@@ -16118,7 +16118,7 @@ loc_1C702:
 		push	ax
 		push	seg main_32_TEXT
 		push	offset sub_21884
-		push	1388h
+		push	5000
 		push	2
 		push	ss
 		lea	ax, [bp+var_2]
@@ -16492,7 +16492,7 @@ loc_1CABD:
 		push	ax
 		push	seg main_32_TEXT
 		push	offset sub_21884
-		push	1388h
+		push	5000
 		push	2
 		push	ss
 		lea	ax, [bp+var_2]
@@ -16926,7 +16926,7 @@ loc_1CFDC:
 		push	ax
 		push	seg main_32_TEXT
 		push	offset sub_21884
-		push	1388h
+		push	5000
 		push	2
 		push	ss
 		lea	ax, [bp+var_2]
@@ -17596,7 +17596,7 @@ loc_1D6C4:
 		push	ax
 		push	seg main_32_TEXT
 		push	offset sub_21884
-		push	1388h
+		push	5000
 		push	2
 		push	ss
 		lea	ax, [bp+var_2]
@@ -18320,7 +18320,7 @@ loc_1DF5A:
 		push	ax
 		push	seg main_32_TEXT
 		push	offset sub_21884
-		push	1388h
+		push	5000
 		push	2
 		push	ss
 		lea	ax, [bp+var_2]
@@ -21553,7 +21553,7 @@ loc_1FBAC:
 		push	ax
 		push	seg main_32_TEXT
 		push	offset sub_21884
-		push	1388h
+		push	5000
 		push	2
 		push	ss
 		lea	ax, [bp+var_2]
@@ -21674,7 +21674,7 @@ loc_1FCF7:
 		push	ax
 		push	seg main_32_TEXT
 		push	offset sub_21884
-		push	1388h
+		push	5000
 		push	2
 		push	ss
 		lea	ax, [bp+var_2]
@@ -21898,9 +21898,9 @@ loc_1FECE:
 		les	bx, off_39EAC
 		add	bx, ax
 		mov	es:[bx], edx
-		cmp	dword ptr es:[bx], 6400h
+		cmp	dword ptr es:[bx], 25600
 		jbe	short loc_1FF15
-		mov	dword ptr es:[bx], 6400h
+		mov	dword ptr es:[bx], 25600
 
 loc_1FF15:
 		mov	ax, si
@@ -25132,7 +25132,7 @@ arg_4		= dword	ptr  0Ah
 arg_8		= dword	ptr  0Eh
 arg_C		= dword	ptr  12h
 arg_10		= byte ptr  16h
-arg_12		= word ptr  18h
+@@score		= word ptr  18h
 arg_14		= dword	ptr  1Ah
 arg_18		= byte ptr  1Eh
 @@hitbox_left		= word ptr  20h
@@ -25218,7 +25218,7 @@ loc_21B5B:
 		mov	_orb_velocity_x, OVX_4_LEFT
 
 loc_21B61:
-		movsx	eax, [bp+arg_12]
+		movsx	eax, [bp+@@score]
 		add	_score, eax
 		call	_hud_score_and_cardcombo_render
 		push	3
@@ -27830,7 +27830,7 @@ loc_23118:
 		push	ax
 		push	seg main_32_TEXT
 		push	offset sub_21884
-		push	0BB8h
+		push	3000
 		push	1
 		push	ss
 		lea	ax, [bp+var_2]
@@ -27930,7 +27930,7 @@ loc_2320E:
 		push	ax
 		push	seg main_32_TEXT
 		push	offset sub_21884
-		push	0BB8h
+		push	3000
 		push	1
 		push	ss
 		lea	ax, [bp+var_2]
@@ -30532,7 +30532,7 @@ loc_24B3E:
 		push	ax
 		push	seg main_32_TEXT
 		push	offset sub_21884
-		push	1B58h
+		push	7000
 		push	4
 		push	ss
 		lea	ax, [bp+var_4]
@@ -30616,7 +30616,7 @@ loc_24C2A:
 		push	ax
 		push	seg main_32_TEXT
 		push	offset sub_21884
-		push	1B58h
+		push	7000
 		push	4
 		push	ss
 		lea	ax, [bp+var_4]
@@ -30654,7 +30654,7 @@ loc_24C81:
 		push	ax
 		push	seg main_32_TEXT
 		push	offset sub_21884
-		push	1B58h
+		push	7000
 		push	4
 		push	ss
 		lea	ax, [bp+var_4]
@@ -30737,7 +30737,7 @@ loc_24D59:
 		push	ax
 		push	seg main_32_TEXT
 		push	offset sub_21884
-		push	1B58h
+		push	7000
 		push	4
 		push	ss
 		lea	ax, [bp+var_4]
@@ -36148,7 +36148,7 @@ loc_2827D:
 		push	ax
 		push	seg main_32_TEXT
 		push	offset sub_21884
-		push	1B58h
+		push	7000
 		push	4
 		push	ss
 		lea	ax, [bp+var_8]
@@ -36276,7 +36276,7 @@ loc_283D4:
 		push	ax
 		push	seg main_32_TEXT
 		push	offset sub_21884
-		push	1B58h
+		push	7000
 		push	4
 		push	ss
 		lea	ax, [bp+var_8]
@@ -36471,7 +36471,7 @@ loc_285A5:
 		push	ax
 		push	seg main_32_TEXT
 		push	offset sub_21884
-		push	1B58h
+		push	7000
 		push	4
 		push	ss
 		lea	ax, [bp+var_8]
@@ -42938,7 +42938,7 @@ loc_2C440:
 		push	[bp+var_5]
 		push	seg main_32_TEXT
 		push	offset sub_21884
-		push	2710h
+		push	10000
 		push	3
 		push	ss
 		lea	ax, [bp+var_5+1]
@@ -43031,7 +43031,7 @@ loc_2C533:
 		push	[bp+var_5]
 		push	seg main_32_TEXT
 		push	offset sub_21884
-		push	2710h
+		push	10000
 		push	3
 		push	ss
 		lea	ax, [bp+var_5+1]
@@ -43149,7 +43149,7 @@ loc_2C64F:
 		push	[bp+var_5]
 		push	seg main_32_TEXT
 		push	offset sub_21884
-		push	2710h
+		push	10000
 		push	3
 		push	ss
 		lea	ax, [bp+var_5+1]
@@ -43270,7 +43270,7 @@ loc_2C784:
 		push	[bp+var_5]
 		push	seg main_32_TEXT
 		push	offset sub_21884
-		push	2710h
+		push	10000
 		push	3
 		push	ss
 		lea	ax, [bp+var_5+1]
@@ -43644,7 +43644,7 @@ loc_2CBC2:
 		push	[bp+var_5]
 		push	seg main_32_TEXT
 		push	offset sub_21884
-		push	2710h
+		push	10000
 		push	3
 		push	ss
 		lea	ax, [bp+var_5+1]
@@ -47166,7 +47166,7 @@ loc_2EFDD:
 		push	ax
 		push	seg main_32_TEXT
 		push	offset sub_21884
-		push	2710h
+		push	10000
 		push	3
 		push	ss
 		lea	ax, [bp+var_C]
@@ -47278,7 +47278,7 @@ loc_2F0F7:
 		push	ax
 		push	seg main_32_TEXT
 		push	offset sub_21884
-		push	2710h
+		push	10000
 		push	3
 		push	ss
 		lea	ax, [bp+var_C]
@@ -47408,7 +47408,7 @@ loc_2F22D:
 		push	ax
 		push	seg main_32_TEXT
 		push	offset sub_21884
-		push	2710h
+		push	10000
 		push	3
 		push	ss
 		lea	ax, [bp+var_C]
@@ -47520,7 +47520,7 @@ loc_2F347:
 		push	ax
 		push	seg main_32_TEXT
 		push	offset sub_21884
-		push	2710h
+		push	10000
 		push	3
 		push	ss
 		lea	ax, [bp+var_C]
@@ -47643,7 +47643,7 @@ loc_2F470:
 		push	ax
 		push	seg main_32_TEXT
 		push	offset sub_21884
-		push	2710h
+		push	10000
 		push	3
 		push	ss
 		lea	ax, [bp+var_C]
@@ -47761,7 +47761,7 @@ loc_2F5A2:
 		push	ax
 		push	seg main_32_TEXT
 		push	offset sub_21884
-		push	2710h
+		push	10000
 		push	3
 		push	ss
 		lea	ax, [bp+var_C]
@@ -47956,7 +47956,7 @@ loc_2F766:
 		push	ax
 		push	seg main_32_TEXT
 		push	offset sub_21884
-		push	2710h
+		push	10000
 		push	3
 		push	ss
 		lea	ax, [bp+var_C]
@@ -48446,7 +48446,7 @@ byte_34A58	db 0
 _player_sliding	db 0
 public _score
 _score	dd 0
-dword_34A5E	dd 0
+score_34A5E	dd 0
 dword_34A62	dd 0
 _continues_total	dd 0
 		dw 0

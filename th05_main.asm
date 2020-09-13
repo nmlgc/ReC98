@@ -684,7 +684,7 @@ loc_B16F:
 		jmp	cs:off_B225[bx]
 
 @@easy:
-		mov	word_2C988, 1770h
+		mov	_item_point_score_at_full_dream, 6000
 		mov	score_2C97C, 25
 		mov	_playperf_min, 16
 		mov	_playperf_max, 32
@@ -693,7 +693,7 @@ loc_B16F:
 ; ---------------------------------------------------------------------------
 
 @@normal:
-		mov	word_2C988, 2710h
+		mov	_item_point_score_at_full_dream, 10000
 		mov	score_2C97C, 50
 		mov	_playperf_min, 24
 		mov	_playperf_max, 40
@@ -701,7 +701,7 @@ loc_B16F:
 ; ---------------------------------------------------------------------------
 
 @@hard:
-		mov	word_2C988, 3A98h
+		mov	_item_point_score_at_full_dream, 15000
 		mov	_playperf, 44
 		mov	score_2C97C, 100
 		mov	_playperf_min, 44
@@ -711,7 +711,7 @@ loc_B16F:
 ; ---------------------------------------------------------------------------
 
 @@lunatic:
-		mov	word_2C988, 4E20h
+		mov	_item_point_score_at_full_dream, 20000
 		mov	score_2C97C, 200
 		mov	_playperf, 48
 		mov	_playperf_min, 48
@@ -721,7 +721,7 @@ loc_B16F:
 ; ---------------------------------------------------------------------------
 
 @@extra:
-		mov	word_2C988, 9C40h
+		mov	_item_point_score_at_full_dream, 40000
 		mov	score_2C97C, 500
 		mov	_playperf_min, 32
 		mov	_playperf_max, 36
@@ -10443,7 +10443,7 @@ loc_12783:
 		mov	ax, _player_pos.cur.y
 		cmp	ax, [bp+var_6]
 		jb	short loc_127BD
-		add	si, 16h
+		add	si, 22
 
 loc_127BD:
 		cmp	byte_2297E, 0
@@ -12660,8 +12660,8 @@ loc_165F8:
 		call	text_putsa pascal, (6 shl 16) + 21, ds, BONUS_TOTAL, TX_WHITE
 		mov	al, _stage_id
 		mov	ah, 0
-		imul	ax, 64h
-		add	ax, 64h	; 'd'
+		imul	ax, 100
+		add	ax, 100
 		mov	si, ax
 		movzx	eax, si
 		mov	[bp+var_4], eax
@@ -12716,21 +12716,21 @@ loc_166B2:
 		nopcall	hud_points_put
 
 loc_166CD:
-		cmp	[bp+var_4], 124F80h
+		cmp	[bp+var_4], 1200000
 		jb	short loc_166DB
 		push	4
 		jmp	short loc_166F5
 ; ---------------------------------------------------------------------------
 
 loc_166DB:
-		cmp	[bp+var_4], 0C3500h
+		cmp	[bp+var_4], 800000
 		jb	short loc_166E9
 		push	2
 		jmp	short loc_166F5
 ; ---------------------------------------------------------------------------
 
 loc_166E9:
-		cmp	[bp+var_4], 7A120h
+		cmp	[bp+var_4], 500000
 		jb	short loc_166FC
 		push	1
 
@@ -12740,14 +12740,14 @@ loc_166F5:
 ; ---------------------------------------------------------------------------
 
 loc_166FC:
-		cmp	[bp+var_4], 186A0h
+		cmp	[bp+var_4], 100000
 		ja	short loc_1670A
 		push	2
 		jmp	short loc_16716
 ; ---------------------------------------------------------------------------
 
 loc_1670A:
-		cmp	[bp+var_4], 30D40h
+		cmp	[bp+var_4], 200000
 		ja	short loc_1671B
 		push	1
 
@@ -12837,7 +12837,7 @@ loc_16825:
 loc_1683E:
 		call	text_putsa pascal, (6 shl 16) + 18, ds, POINT_TOTAL, TX_CYAN
 		call	text_putsa pascal, (6 shl 16) + 21, ds, BONUS_TOTAL, TX_WHITE
-		mov	si, 3E8h
+		mov	si, 1000
 		movzx	eax, si
 		mov	[bp+var_4], eax
 		push	(34 shl 16) + 6
@@ -13239,7 +13239,7 @@ loc_16FE3:
 
 loc_17003:
 		mov	[bp+var_2], 0
-		mov	si, word_2C988
+		mov	si, _item_point_score_at_full_dream
 
 loc_1700C:
 		cmp	[bp+var_2], 0
@@ -28073,7 +28073,8 @@ score_2C97C	dw ?
 include th04/main/bullet/pellet_r[bss].asm
 		db 6 dup(?)
 word_2C986	dw ?
-word_2C988	dw ?
+public _item_point_score_at_full_dream
+_item_point_score_at_full_dream	dw ?
 byte_2C98A	db ?
 		db ?
 include th04/main/midboss/funcs[bss].asm

@@ -3044,15 +3044,15 @@ loc_BD24:
 loc_BDD4:
 		les	bx, _resident
 		movzx	eax, es:[bx+resident_t.score_last][6]
-		imul	eax, 2710h
+		imul	eax, 10000
 		add	dword_124CE, eax
 		cmp	es:[bx+resident_t.score_last][7], 3
 		jbe	short loc_BE08
 		mov	al, es:[bx+resident_t.score_last][7]
 		mov	ah, 0
-		add	ax, 0FFFDh
+		add	ax, -3
 		cwde
-		imul	eax, 186A0h
+		imul	eax, 100000
 		add	dword_124CE, eax
 
 loc_BE08:

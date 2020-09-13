@@ -4707,10 +4707,10 @@ loc_CCE8:
 loc_CDCB:
 		les	bx, _resident
 		movzx	eax, es:[bx+resident_t.score_highest][6]
-		imul	eax, 1388h
+		imul	eax, 5000
 		add	dword_1517E, eax
 		movzx	eax, es:[bx+resident_t.score_highest][7]
-		imul	eax, 0C350h
+		imul	eax, 50000
 		add	dword_1517E, eax
 
 loc_CDF3:

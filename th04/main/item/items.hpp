@@ -43,6 +43,10 @@ void pascal near items_add(Subpixel x, Subpixel y, item_type_t type);
 extern unsigned char item_playperf_raise;
 extern unsigned char item_playperf_lower;
 
+#if GAME == 5
+	extern unsigned int item_point_score_at_full_dream;
+#endif
+
 // Items dropped when losing a life
 // --------------------------------
 #define MISS_ITEM_COUNT 5
