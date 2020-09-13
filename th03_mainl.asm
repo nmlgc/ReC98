@@ -703,7 +703,7 @@ loc_9BC2:
 		mov	[bp+var_4], ax
 		cmp	[bp+var_4], 0Ah
 		jl	short loc_9BFB
-		mov	bx, 0Ah
+		mov	bx, 10
 		cwd
 		idiv	bx
 		add	al, [si]
@@ -3204,7 +3204,7 @@ arg_2		= word ptr  6
 		push	si
 		mov	si, [bp+arg_2]
 		mov	ax, si
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
 		shl	dx, 5
@@ -3705,7 +3705,7 @@ loc_B561:
 		push	0
 		call	sub_B1BF
 		mov	ax, [bp+var_2]
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
 		or	dx, dx
@@ -3758,7 +3758,7 @@ loc_B5BF:
 		push	0
 		call	sub_B1BF
 		mov	ax, [bp+var_2]
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
 		cmp	dx, 0Eh
@@ -3916,7 +3916,7 @@ loc_B6D3:
 		push	_entered_place
 		call	sub_B450
 		mov	ax, [bp+var_2]
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
 		cmp	dx, 0Eh
@@ -4383,7 +4383,7 @@ loc_BB8E:
 		test	di, 3
 		jz	short loc_BBBE
 		call	IRand
-		mov	bx, 2780h
+		mov	bx, (632 shl 4)
 		cwd
 		idiv	bx
 		mov	[si+2],	dx
@@ -4392,19 +4392,19 @@ loc_BB8E:
 ; ---------------------------------------------------------------------------
 
 loc_BBBE:
-		mov	word ptr [si+2], 2780h
+		mov	word ptr [si+2], (632 shl 4)
 		call	IRand
-		mov	bx, 1880h
+		mov	bx, (392 shl 4)
 		cwd
 		idiv	bx
 		mov	[si+4],	dx
 
 loc_BBD1:
 		call	IRand
-		mov	bx, 20h	; ' '
+		mov	bx, 20h
 		cwd
 		idiv	bx
-		add	dl, 50h	; 'P'
+		add	dl, 50h
 		mov	[bp+@@angle], dl
 		call	IRand
 		mov	bx, 40h
@@ -4741,7 +4741,7 @@ arg_0		= word ptr  4
 		mov	bx, ax
 		dec	word ptr [bx+27D8h]
 		mov	ax, word_10BB2
-		mov	bx, 14h
+		mov	bx, 20
 		cwd
 		idiv	bx
 		mov	si, ax
@@ -4805,7 +4805,7 @@ sub_BF7E	proc near
 		cmp	word_10BB2, 0A0h
 		jg	short loc_BFAD
 		mov	ax, word_10BB2
-		mov	bx, 14h
+		mov	bx, 20
 		cwd
 		idiv	bx
 		mov	dx, 7
@@ -4987,7 +4987,7 @@ loc_C12A:
 		jg	short loc_C199
 		mov	ax, word_10BB2
 		dec	ax
-		mov	bx, 14h
+		mov	bx, 20
 		cwd
 		idiv	bx
 		mov	di, ax

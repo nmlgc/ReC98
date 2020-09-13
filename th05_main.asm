@@ -1937,7 +1937,7 @@ include th04/main/pointnum/num_put.asm
 		lea	ax, [di+(16 shl 4)]
 		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	di, ax
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
 		shl	ax, 6
@@ -9266,7 +9266,7 @@ loc_11701:
 
 loc_11727:
 		mov	ax, _player_pos.cur.y
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
 		sub	ax, si
@@ -9299,7 +9299,7 @@ loc_11749:
 
 loc_1176A:
 		mov	ax, _player_pos.cur.y
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
 		sub	ax, si
@@ -10006,7 +10006,7 @@ loc_12460:
 		sub	ax, [si+2]
 		push	ax
 		call	iatan2
-		mov	dl, [si+11h]
+		mov	dl, [si+shot_t.SHOT_angle]
 		sub	dl, al
 		mov	[bp+var_5], dl
 		cmp	[bp+var_5], 80h
@@ -10014,7 +10014,7 @@ loc_12460:
 		mov	al, [bp+var_5]
 		mov	ah, 0
 		push	ax
-		mov	ax, 100h
+		mov	ax, 256
 		pop	dx
 		sub	ax, dx
 		mov	bx, 4
@@ -12365,7 +12365,7 @@ arg_8		= word ptr  0Ch
 		imul	eax, es:[bx]
 		mov	es:[bx], eax
 		mov	eax, es:[bx]
-		mov	ebx, 0Ah
+		mov	ebx, 10
 		xor	edx, edx
 		div	ebx
 		mov	bx, word ptr [bp+arg_0]
@@ -13002,7 +13002,7 @@ loc_16DA0:
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	bx, 40h
+		mov	bx, 64
 		cwd
 		idiv	bx
 		mov	bx, dx
@@ -13175,8 +13175,8 @@ loc_1700C:
 		inc	_item_playperf_raise
 		cmp	_items_pull_to_player, 0
 		jnz	short loc_17043
-		mov	ax, [di+4]
-		mov	bx, 400h
+		mov	ax, [di+item_t.pos.cur.y]
+		mov	bx, (64 shl 4)
 		cwd
 		idiv	bx
 		mov	dl, 6
@@ -14631,7 +14631,7 @@ sub_18017	proc near
 		mov	si, 10h
 		cmp	_midboss_hp, 200
 		jg	short loc_18029
-		mov	si, 0Ch
+		mov	si, 12
 
 loc_18029:
 		mov	ax, _midboss_phase_frame
@@ -14734,7 +14734,7 @@ loc_1812B:
 		cwde
 		shl	eax, 6
 		shl	eax, 4
-		mov	ebx, 3E8h
+		mov	ebx, 1000
 		xor	edx, edx
 		div	ebx
 		mov	_midboss_pos.velocity.x, ax
@@ -21390,7 +21390,7 @@ loc_1BF9C:
 		cmp	si, 80h
 		jg	short loc_1BFD7
 		mov	ax, si
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
 		or	dx, dx

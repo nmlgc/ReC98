@@ -4037,7 +4037,7 @@ arg_6		= word ptr  0Ah
 		mov	di, [bp+arg_4]
 		cmp	[bp+arg_2], 0
 		jz	short loc_C745
-		mov	[bp+var_6], 0F4240h
+		mov	[bp+var_6], 1000000
 		jmp	short loc_C74D
 ; ---------------------------------------------------------------------------
 
@@ -4088,7 +4088,7 @@ loc_C79F:
 
 loc_C7B6:
 		mov	eax, [bp+var_6]
-		mov	ebx, 2710h
+		mov	ebx, 10000
 		xor	edx, edx
 		div	ebx
 		mov	[bp+var_2], ax
@@ -4096,13 +4096,13 @@ loc_C7B6:
 		push	di
 		push	ax
 		call	sub_C5E7
-		mov	ebx, 2710h
+		mov	ebx, 10000
 		mov	eax, [bp+var_6]
 		xor	edx, edx
 		div	ebx
 		mov	[bp+var_6], edx
 		mov	eax, [bp+var_6]
-		mov	ebx, 64h ; 'd'
+		mov	ebx, 100
 		xor	edx, edx
 		div	ebx
 		mov	[bp+var_2], ax
@@ -4141,7 +4141,7 @@ arg_6		= word ptr  0Ah
 		mov	si, [bp+arg_6]
 		mov	di, [bp+@@y]
 		mov	eax, [bp+arg_0]
-		mov	ebx, 2710h
+		mov	ebx, 10000
 		xor	edx, edx
 		div	ebx
 		mov	[bp+var_2], ax
@@ -4149,13 +4149,13 @@ arg_6		= word ptr  0Ah
 		push	di
 		push	ax
 		call	sub_C5E7
-		mov	ebx, 2710h
+		mov	ebx, 10000
 		mov	eax, [bp+arg_0]
 		xor	edx, edx
 		div	ebx
 		mov	[bp+arg_0], edx
 		mov	eax, [bp+arg_0]
-		mov	ebx, 64h ; 'd'
+		mov	ebx, 100
 		xor	edx, edx
 		div	ebx
 		mov	[bp+var_2], ax
@@ -4690,7 +4690,7 @@ loc_CCE8:
 		push	ax
 		call	sub_C729
 		mov	byte_116EA, 0
-		mov	ebx, 0Ch
+		mov	ebx, 12
 		mov	eax, dword_1517E
 		cdq
 		idiv	ebx
@@ -4940,7 +4940,7 @@ loc_D08B:
 		mov	ebx, 50000
 		cdq
 		idiv	ebx
-		mov	dx, 18h
+		mov	dx, 24
 		sub	dx, ax
 		mov	si, dx
 		jmp	short loc_D0D1
@@ -5983,7 +5983,7 @@ loc_D964:
 		cmp	byte_11840, 0
 		jnz	short loc_D991
 		mov	ax, word_151E2
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
 		or	dx, dx
@@ -6005,7 +6005,7 @@ loc_D97F:
 
 loc_D991:
 		mov	ax, word_151E2
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
 		or	dx, dx
@@ -6495,7 +6495,7 @@ arg_0     	= word ptr  4
 		cmp	word_11848, 1
 		jg	loc_DDBC
 		mov	ax, [si+cdg_t.pixel_w]
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
 		add	ax, 7
@@ -6536,7 +6536,7 @@ loc_DD61:
 		add	dx, ax
 		push	dx
 		mov	ax, di
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
 		push	ax
@@ -6679,7 +6679,7 @@ arg_0     	= word ptr  4
 		cmp	word_1184A, 1
 		jg	loc_DF34
 		mov	ax, [si+cdg_t.pixel_w]
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
 		add	ax, 7
@@ -6720,7 +6720,7 @@ loc_DED9:
 		add	dx, ax
 		push	dx
 		mov	ax, di
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
 		push	ax

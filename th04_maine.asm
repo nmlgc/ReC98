@@ -2623,7 +2623,7 @@ arg_6		= word ptr  0Ah
 		mov	di, [bp+arg_4]
 		cmp	[bp+arg_2], 0
 		jz	short loc_B8A2
-		mov	[bp+var_6], 0F4240h
+		mov	[bp+var_6], 1000000
 		jmp	short loc_B8AA
 ; ---------------------------------------------------------------------------
 
@@ -2667,7 +2667,7 @@ loc_B8F4:
 loc_B8FC:
 		mov	dword_124CE, eax
 		mov	eax, [bp+var_6]
-		mov	ebx, 2710h
+		mov	ebx, 10000
 		xor	edx, edx
 		div	ebx
 		mov	[bp+var_2], ax
@@ -2675,13 +2675,13 @@ loc_B8FC:
 		push	di
 		push	ax
 		call	sub_B787
-		mov	ebx, 2710h
+		mov	ebx, 10000
 		mov	eax, [bp+var_6]
 		xor	edx, edx
 		div	ebx
 		mov	[bp+var_6], edx
 		mov	eax, [bp+var_6]
-		mov	ebx, 64h ; 'd'
+		mov	ebx, 100
 		xor	edx, edx
 		div	ebx
 		mov	[bp+var_2], ax
@@ -2720,7 +2720,7 @@ arg_6		= word ptr  0Ah
 		mov	si, [bp+arg_6]
 		mov	di, [bp+arg_4]
 		mov	eax, [bp+arg_0]
-		mov	ebx, 2710h
+		mov	ebx, 10000
 		xor	edx, edx
 		div	ebx
 		mov	[bp+var_2], ax
@@ -2728,13 +2728,13 @@ arg_6		= word ptr  0Ah
 		push	di
 		push	ax
 		call	sub_B787
-		mov	ebx, 2710h
+		mov	ebx, 10000
 		mov	eax, [bp+arg_0]
 		xor	edx, edx
 		div	ebx
 		mov	[bp+arg_0], edx
 		mov	eax, [bp+arg_0]
-		mov	ebx, 64h ; 'd'
+		mov	ebx, 100
 		xor	edx, edx
 		div	ebx
 		mov	[bp+var_2], ax
@@ -3249,7 +3249,7 @@ loc_C02E:
 		mov	ebx, 50000
 		cdq
 		idiv	ebx
-		mov	dx, 18h
+		mov	dx, 24
 		sub	dx, ax
 		mov	si, dx
 		jmp	short loc_C074
@@ -4022,7 +4022,7 @@ loc_C787:
 		idiv	bx
 		push	ax
 		mov	ax, di
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
 		push	ax
@@ -4579,7 +4579,7 @@ arg_6		= word ptr  0Ah
 		shl	dx, 4
 		add	ax, dx
 		mov	[bp+var_6], ax
-		mov	bx, 10h
+		mov	bx, 16
 		mov	ax, di
 		cwd
 		idiv	bx

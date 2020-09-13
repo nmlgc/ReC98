@@ -507,7 +507,7 @@ arg_4		= word ptr  8
 		push	si
 		push	di
 		mov	di, [bp+arg_4]
-		mov	si, 64h	; 'd'
+		mov	si, 100
 		mov	[bp+var_2], 0
 		xor	cx, cx
 		jmp	short loc_98A1

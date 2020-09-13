@@ -2941,10 +2941,10 @@ loc_BEED:
 
 loc_BF36:
 		mov	eax, dword_20612
-		mov	ebx, 708h
+		mov	ebx, 1800
 		xor	edx, edx
 		div	ebx
-		cmp	edx, 5DCh
+		cmp	edx, 1500
 		jnz	short loc_BF60
 		mov	al, byte_1F4AC
 		mov	ah, 0
@@ -7566,7 +7566,7 @@ sub_E512	proc near
 
 loc_E525:
 		call	randring1_next16
-		mov	bx, 180h
+		mov	bx, 384
 		xor	dx, dx
 		div	bx
 		add	dx, 20h	; ' '
@@ -7575,7 +7575,7 @@ loc_E525:
 		shl	bx, 2
 		mov	[bx+3F5Ch], dx
 		call	randring1_next16
-		mov	bx, 170h
+		mov	bx, 368
 		xor	dx, dx
 		div	bx
 		add	dx, 10h
@@ -16087,7 +16087,7 @@ loc_13248:
 		jl	short loc_13238
 		les	bx, _resident
 		mov	ax, es:[bx+mikoconfig_t.continues_used]
-		mov	bx, 0Ah
+		mov	bx, 10
 		xor	dx, dx
 		div	bx
 		mov	si, ax
@@ -16119,7 +16119,7 @@ loc_13248:
 loc_1329D:
 		les	bx, _resident
 		mov	ax, es:[bx+mikoconfig_t.continues_used]
-		mov	bx, 0Ah
+		mov	bx, 10
 		xor	dx, dx
 		div	bx
 		mov	si, dx
@@ -16761,7 +16761,7 @@ loc_13739:
 		cmp	ax, word_1ED94
 		jge	short loc_13771
 		call	randring2_next16
-		mov	bx, 280h
+		mov	bx, 640
 		xor	dx, dx
 		div	bx
 		add	dx, 30h	; '0'
@@ -17816,7 +17816,7 @@ loc_140D4:
 		test	byte ptr word_1EDA2, 1
 		jnz	short loc_140F2
 		call	randring2_next16
-		mov	bx, 280h
+		mov	bx, 640
 		xor	dx, dx
 		div	bx
 		add	dx, 30h	; '0'
@@ -19517,7 +19517,7 @@ loc_14FAE:
 		cmp	di, 3
 		jl	short loc_14F8F
 		call	randring2_next16
-		mov	bx, 140h
+		mov	bx, 320
 		xor	dx, dx
 		div	bx
 		add	dx, 20h	; ' '
@@ -31508,7 +31508,7 @@ loc_1BDC4:
 		add	al, 40h
 		mov	byte ptr [bp+var_3], al
 		call	randring2_next16
-		mov	bx, 170h
+		mov	bx, 368
 		xor	dx, dx
 		div	bx
 		add	dx, 20h	; ' '
@@ -31524,7 +31524,7 @@ loc_1BDC4:
 		call	sub_10865
 		push	si
 		call	randring2_next16
-		mov	bx, 140h
+		mov	bx, 320
 		xor	dx, dx
 		div	bx
 		add	dx, 10h
@@ -31702,7 +31702,7 @@ loc_1BF3A:
 
 loc_1BF53:
 		call	randring2_next16
-		mov	bx, 180h
+		mov	bx, 384
 		xor	dx, dx
 		div	bx
 		add	dx, 20h	; ' '

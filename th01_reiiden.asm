@@ -495,7 +495,7 @@ arg_0		= word ptr  6
 		call	sub_BA53
 		add	sp, 32h
 		mov	ax, [bp+var_6]
-		mov	bx, 0Ah
+		mov	bx, 10
 		xor	dx, dx
 		div	bx
 		add	ax, 8030h
@@ -508,7 +508,7 @@ arg_0		= word ptr  6
 		push	ax		; inregs
 		call	sub_BA53
 		mov	ax, [bp+var_6]
-		mov	bx, 0Ah
+		mov	bx, 10
 		xor	dx, dx
 		div	bx
 		add	dx, 8030h
@@ -1659,7 +1659,7 @@ loc_C4E2:
 
 loc_C50B:
 		call	IRand
-		mov	bx, 30h	; '0'
+		mov	bx, 48
 		cwd
 		idiv	bx
 		add	dx, _player_left
@@ -1668,7 +1668,7 @@ loc_C50B:
 		add	bx, bx
 		mov	[bx+3E4Ah], dx
 		call	IRand
-		mov	bx, 30h	; '0'
+		mov	bx, 48
 		cwd
 		idiv	bx
 		add	dx, 160h
@@ -2465,7 +2465,7 @@ loc_CFBC:
 		mov	bx, 2
 		cwd
 		idiv	bx
-		add	dx, 54h
+		add	dx, 84
 		push	dx
 		mov	bx, si
 		add	bx, bx
@@ -2892,10 +2892,10 @@ sub_D340	proc far
 		mov	bp, sp
 		inc	dword_3880A
 		mov	eax, dword_3880A
-		mov	ebx, 3E8h
+		mov	ebx, 1000
 		cdq
 		idiv	ebx
-		cmp	edx, 64h ; 'd'
+		cmp	edx, 100
 		jnz	short loc_D37C
 		push	ds
 		push	offset a30h	; "\x1B[3;0H"
@@ -3451,7 +3451,7 @@ loc_D795:
 		pop	cx
 		call	_z_graph_clear
 		call	IRand
-		mov	bx, 3Ch	; '<'
+		mov	bx, 60
 		cwd
 		idiv	bx
 		mov	byte_35BEE, dl
@@ -5841,7 +5841,7 @@ loc_1265D:
 
 loc_12673:
 		mov	ax, [bp+var_8]
-		mov	bx, 0Fh
+		mov	bx, 15
 		cwd
 		idiv	bx
 		or	dx, dx
@@ -5924,7 +5924,7 @@ loc_12714:
 		inc	[bp+var_8]
 		mov	[bp+var_6], 0
 		mov	ax, [bp+var_8]
-		mov	bx, 0Fh
+		mov	bx, 15
 		cwd
 		idiv	bx
 		or	dx, dx
@@ -6393,7 +6393,7 @@ loc_12BCE:
 		idiv	bx
 		push	dx
 		mov	ax, si
-		mov	bx, 0Ah
+		mov	bx, 10
 		cwd
 		idiv	bx
 		mov	bx, 4
@@ -6407,7 +6407,7 @@ loc_12BCE:
 		call	_ptn_put_quarter_8
 		add	sp, 8
 		mov	ax, si
-		mov	bx, 0Ah
+		mov	bx, 10
 		cwd
 		idiv	bx
 		mov	ax, di
@@ -6440,7 +6440,7 @@ loc_12C2C:
 		idiv	bx
 		push	dx
 		mov	ax, di
-		mov	bx, 0Ah
+		mov	bx, 10
 		cwd
 		idiv	bx
 		mov	bx, 4
@@ -6955,20 +6955,20 @@ arg_2		= dword	ptr  6
 		push	si
 		mov	si, [bp+arg_0]
 		mov	ax, si
-		mov	bx, 3E8h
+		mov	bx, 1000
 		cwd
 		idiv	bx
 		push	ax
 		pushd	[bp+arg_2]
 		call	sub_13033
 		add	sp, 6
-		mov	bx, 3E8h
+		mov	bx, 1000
 		mov	ax, si
 		cwd
 		idiv	bx
 		mov	si, dx
 		mov	ax, si
-		mov	bx, 64h	; 'd'
+		mov	bx, 100
 		cwd
 		idiv	bx
 		push	ax
@@ -6978,13 +6978,13 @@ arg_2		= dword	ptr  6
 		push	ax
 		call	sub_13033
 		add	sp, 6
-		mov	bx, 64h	; 'd'
+		mov	bx, 100
 		mov	ax, si
 		cwd
 		idiv	bx
 		mov	si, dx
 		mov	ax, si
-		mov	bx, 0Ah
+		mov	bx, 10
 		cwd
 		idiv	bx
 		push	ax
@@ -6994,7 +6994,7 @@ arg_2		= dword	ptr  6
 		push	ax
 		call	sub_13033
 		add	sp, 6
-		mov	bx, 0Ah
+		mov	bx, 10
 		mov	ax, si
 		cwd
 		idiv	bx
@@ -7033,7 +7033,7 @@ arg_0		= word ptr  6
 		mov	word ptr [bp+var_8], offset aSTAGE_COMPLETE_NUM
 		xor	si, si
 		mov	ax, [bp+arg_0]
-		mov	bx, 0Ah
+		mov	bx, 10
 		cwd
 		idiv	bx
 		push	ax
@@ -7044,7 +7044,7 @@ arg_0		= word ptr  6
 		call	sub_13033
 		add	sp, 6
 		mov	ax, [bp+arg_0]
-		mov	bx, 0Ah
+		mov	bx, 10
 		cwd
 		idiv	bx
 		push	dx
@@ -7220,7 +7220,7 @@ loc_13313:
 		mov	eax, score_34A5E
 		mov	es:[bx+reiidenconfig_t.bonus_per_stage], eax
 		mov	ax, [bp+var_A]
-		mov	bx, 0Ah
+		mov	bx, 10
 		cwd
 		idiv	bx
 		push	ax
@@ -7228,7 +7228,7 @@ loc_13313:
 		call	sub_13033
 		add	sp, 6
 		mov	ax, [bp+var_A]
-		mov	bx, 0Ah
+		mov	bx, 10
 		cwd
 		idiv	bx
 		push	dx
@@ -7341,14 +7341,14 @@ arg_0		= word ptr  6
 		mov	[bp+var_6], 0
 		call	sub_12F62
 		mov	ax, [bp+arg_0]
-		mov	bx, 0Ah
+		mov	bx, 10
 		cwd
 		idiv	bx
 		add	ax, (7 * PTN_IMAGES_PER_SLOT)
 		call	_ptn_put_8 stdcall, (14 shl 16) or 224, ax
 		add	sp, 6
 		mov	ax, [bp+arg_0]
-		mov	bx, 0Ah
+		mov	bx, 10
 		cwd
 		idiv	bx
 		add	dx, (7 * PTN_IMAGES_PER_SLOT)
@@ -7644,14 +7644,14 @@ loc_13792:
 		sub	dx, ax
 		mov	di, dx
 		mov	ax, [bp+var_2]
-		mov	bx, 0Ah
+		mov	bx, 10
 		cwd
 		idiv	bx
 		push	ax
 		push	0FFFF00C4h
 		call	sub_12BAB
 		mov	ax, [bp+var_2]
-		mov	bx, 0Ah
+		mov	bx, 10
 		cwd
 		idiv	bx
 		mov	[bp+var_2], dx
@@ -7659,38 +7659,38 @@ loc_13792:
 		pushd	0C4h ; 'Ä'
 		call	sub_12BAB
 		mov	ax, di
-		mov	bx, 3E8h
+		mov	bx, 1000
 		cwd
 		idiv	bx
 		push	ax
 		push	100C4h
 		call	sub_12BAB
 		mov	ax, di
-		mov	bx, 3E8h
+		mov	bx, 1000
 		cwd
 		idiv	bx
 		mov	di, dx
 		mov	ax, di
-		mov	bx, 64h	; 'd'
+		mov	bx, 100
 		cwd
 		idiv	bx
 		push	ax
 		push	200C4h
 		call	sub_12BAB
 		mov	ax, di
-		mov	bx, 64h	; 'd'
+		mov	bx, 100
 		cwd
 		idiv	bx
 		mov	di, dx
 		mov	ax, di
-		mov	bx, 0Ah
+		mov	bx, 10
 		cwd
 		idiv	bx
 		push	ax
 		push	300C4h
 		call	sub_12BAB
 		mov	ax, di
-		mov	bx, 0Ah
+		mov	bx, 10
 		cwd
 		idiv	bx
 		mov	di, dx
@@ -8013,7 +8013,7 @@ arg_8		= word ptr  0Eh
 		cmp	ax, [bp+arg_8]
 		jle	loc_15034
 		mov	ax, [bp+arg_4]
-		add	ax, 280h
+		add	ax, 640
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -8031,7 +8031,7 @@ loc_14E70:
 		cmp	[bp+arg_4], 0
 		jge	short loc_14E85
 		mov	ax, [bp+var_2]
-		mov	bx, 50h	; 'P'
+		mov	bx, 80
 		cwd
 		idiv	bx
 		inc	ax
@@ -8040,7 +8040,7 @@ loc_14E70:
 
 loc_14E85:
 		mov	ax, [bp+var_2]
-		mov	bx, 50h	; 'P'
+		mov	bx, 80
 		cwd
 		idiv	bx
 
@@ -8052,7 +8052,7 @@ loc_14E8E:
 
 loc_14E99:
 		mov	ax, si
-		mov	bx, 50h	; 'P'
+		mov	bx, 80
 		cwd
 		idiv	bx
 		cmp	ax, [bp+var_8]
@@ -8239,7 +8239,7 @@ arg_8		= word ptr  0Eh
 		cmp	es:[bx+284h], di
 		jle	loc_1520A
 		mov	ax, [bp+arg_4]
-		add	ax, 280h
+		add	ax, 640
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -8257,7 +8257,7 @@ loc_15071:
 		mov	[bp+var_4], ax
 		cmp	[bp+arg_4], 0
 		jge	short loc_15086
-		mov	bx, 50h	; 'P'
+		mov	bx, 80
 		cwd
 		idiv	bx
 		inc	ax
@@ -8266,7 +8266,7 @@ loc_15071:
 
 loc_15086:
 		mov	ax, [bp+var_2]
-		mov	bx, 50h	; 'P'
+		mov	bx, 80
 		cwd
 		idiv	bx
 
@@ -8278,7 +8278,7 @@ loc_1508F:
 
 loc_1509A:
 		mov	ax, [bp+var_4]
-		mov	bx, 50h	; 'P'
+		mov	bx, 80
 		cwd
 		idiv	bx
 		cmp	ax, [bp+var_A]
@@ -8460,7 +8460,7 @@ arg_E		= word ptr  14h
 		cmp	ax, [bp+arg_C]
 		jle	loc_15570
 		mov	ax, [bp+arg_4]
-		add	ax, 280h
+		add	ax, 640
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -8481,7 +8481,7 @@ loc_15266:
 		mov	[bp+var_10], ax
 		cmp	[bp+arg_4], 0
 		jge	short loc_1527B
-		mov	bx, 50h	; 'P'
+		mov	bx, 80
 		cwd
 		idiv	bx
 		inc	ax
@@ -8490,7 +8490,7 @@ loc_15266:
 
 loc_1527B:
 		mov	ax, [bp+var_4]
-		mov	bx, 50h	; 'P'
+		mov	bx, 80
 		cwd
 		idiv	bx
 
@@ -8667,7 +8667,7 @@ loc_153E6:
 
 loc_153F6:
 		mov	ax, [bp+var_10]
-		mov	bx, 50h	; 'P'
+		mov	bx, 80
 		cwd
 		idiv	bx
 		cmp	ax, [bp+var_14]
@@ -9344,7 +9344,7 @@ loc_16DBF:
 		cmp	word ptr es:[bx], 0
 		jge	short loc_16DD7
 		mov	ax, [bp+var_2]
-		mov	bx, 50h	; 'P'
+		mov	bx, 80
 		cwd
 		idiv	bx
 		inc	ax
@@ -9353,7 +9353,7 @@ loc_16DBF:
 
 loc_16DD7:
 		mov	ax, [bp+var_2]
-		mov	bx, 50h	; 'P'
+		mov	bx, 80
 		cwd
 		idiv	bx
 
@@ -9365,7 +9365,7 @@ loc_16DE0:
 
 loc_16DEB:
 		mov	ax, di
-		mov	bx, 50h	; 'P'
+		mov	bx, 80
 		cwd
 		idiv	bx
 		cmp	ax, [bp+var_8]
@@ -13166,7 +13166,7 @@ loc_1A776:
 loc_1A785:
 		mov	al, byte_35B43
 		cbw
-		add	ax, 0FFF8h
+		add	ax, -8
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -13185,7 +13185,7 @@ loc_1A795:
 loc_1A7A5:
 		mov	al, byte_35B43
 		cbw
-		add	ax, 0FFF9h
+		add	ax, -7
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -13211,7 +13211,7 @@ loc_1A7BF:
 loc_1A7CE:
 		mov	al, byte_35B43
 		cbw
-		add	ax, 0FFF8h
+		add	ax, -8
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -13230,7 +13230,7 @@ loc_1A7DE:
 loc_1A7EE:
 		mov	al, byte_35B43
 		cbw
-		add	ax, 0FFF9h
+		add	ax, -7
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -13272,7 +13272,7 @@ loc_1A826:
 loc_1A835:
 		mov	al, byte_35B43
 		cbw
-		add	ax, 0FFF8h
+		add	ax, -8
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -13291,7 +13291,7 @@ loc_1A845:
 loc_1A855:
 		mov	al, byte_35B43
 		cbw
-		add	ax, 0FFF9h
+		add	ax, -7
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -13319,7 +13319,7 @@ loc_1A874:
 loc_1A883:
 		mov	al, byte_35B43
 		cbw
-		add	ax, 0FFF8h
+		add	ax, -8
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -13338,7 +13338,7 @@ loc_1A893:
 loc_1A8A3:
 		mov	al, byte_35B43
 		cbw
-		add	ax, 0FFF9h
+		add	ax, -7
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -14148,9 +14148,9 @@ loc_1AEFB:
 ; ---------------------------------------------------------------------------
 
 loc_1AF2C:
-		mov	ax, 130h
+		mov	ax, 304
 		sub	ax, [bp+var_2]
-		mov	bx, 14h
+		mov	bx, 20
 		cwd
 		idiv	bx
 
@@ -14163,9 +14163,9 @@ loc_1AF38:
 ; ---------------------------------------------------------------------------
 
 loc_1AF46:
-		mov	ax, 130h
+		mov	ax, 304
 		sub	ax, [bp+var_4]
-		mov	bx, 14h
+		mov	bx, 20
 		cwd
 		idiv	bx
 
@@ -14201,9 +14201,9 @@ loc_1AF68:
 ; ---------------------------------------------------------------------------
 
 loc_1AFB4:
-		mov	ax, 1Eh
+		mov	ax, 30
 		sub	ax, si
-		mov	bx, 0Ah
+		mov	bx, 10
 		cwd
 		idiv	bx
 		inc	ax
@@ -14610,7 +14610,7 @@ sub_1B6D9	proc far
 		mov	ax, word_3A6CA
 		cwd
 		idiv	word_39DE4
-		cmp	dx, 0Ah
+		cmp	dx, 10
 		jnz	short loc_1B70E
 		push	PP_2_SPREAD_WIDE_AIMED or (((1 shl 4) + 8) shl 16)
 		mov	ax, eye_west.BE_cur_top
@@ -14631,7 +14631,7 @@ loc_1B70E:
 		mov	ax, word_3A6CA
 		cwd
 		idiv	word_39DE4
-		cmp	dx, 19h
+		cmp	dx, 25
 		jnz	short loc_1B740
 		push	PP_2_SPREAD_WIDE_AIMED or (((1 shl 4) + 12) shl 16)
 		mov	ax, eye_west.BE_cur_top
@@ -14652,7 +14652,7 @@ loc_1B740:
 		mov	ax, word_3A6CA
 		cwd
 		idiv	word_39DE4
-		cmp	dx, 28h	; '('
+		cmp	dx, 40
 		jnz	short loc_1B771
 		push	PP_2_SPREAD_WIDE_AIMED or ((2 shl 4) shl 16)
 		mov	ax, eye_west.BE_cur_top
@@ -14673,7 +14673,7 @@ loc_1B771:
 		mov	ax, word_3A6CA
 		cwd
 		idiv	word_39DE4
-		cmp	dx, 3Ch	; '<'
+		cmp	dx, 60
 		jnz	short loc_1B7A2
 		push	PP_2_SPREAD_WIDE_AIMED or (((2 shl 4) + 12) shl 16)
 		mov	ax, eye_west.BE_cur_top
@@ -14694,7 +14694,7 @@ loc_1B7A2:
 		mov	ax, word_3A6CA
 		cwd
 		idiv	word_39DE4
-		cmp	dx, 50h	; 'P'
+		cmp	dx, 80
 		jnz	short loc_1B7D5
 		push	PP_2_SPREAD_WIDE_AIMED or (((3 shl 4) + 2) shl 16)
 		mov	ax, eye_west.BE_cur_top
@@ -14718,7 +14718,7 @@ loc_1B7D5:
 		mov	ax, word_3A6CA
 		cwd
 		idiv	word_39DE4
-		cmp	dx, 6Eh	; 'n'
+		cmp	dx, 110
 		jnz	short loc_1B822
 		push	PP_1_AIMED or (((4 shl 4) + 4) shl 16)
 		mov	ax, eye_west.BE_cur_top
@@ -14965,7 +14965,7 @@ loc_1BA6C:
 		call	@CBossEntity@move_lock_unput_and_put_8$qiiii       c, offset eye_4, ds, large 0 or (0 shl 16), large 0 or (3 shl 16)
 		call	sub_1B58F
 		mov	ax, word_3A6CA
-		mov	bx, 28h	; '('
+		mov	bx, 40
 		cwd
 		idiv	bx
 		or	dx, dx
@@ -15270,12 +15270,12 @@ loc_1BE89:
 		cbw
 		cmp	ax, 3
 		jnz	short loc_1BE97
-		mov	ax, 82h
+		mov	ax, 130
 		jmp	short loc_1BE9A
 ; ---------------------------------------------------------------------------
 
 loc_1BE97:
-		mov	ax, 12Ch
+		mov	ax, 300
 
 loc_1BE9A:
 		mov	word_39DE4, ax
@@ -17743,7 +17743,7 @@ loc_1D83B:
 ; ---------------------------------------------------------------------------
 
 loc_1D849:
-		mov	ax, 0Eh
+		mov	ax, 14
 
 loc_1D84C:
 		mov	word_39DE4, ax
@@ -18095,7 +18095,7 @@ loc_1DBF4:
 		or	dx, dx
 		jnz	short loc_1DC18
 		mov	ax, word_3A6CA
-		mov	bx, 40h
+		mov	bx, 64
 		cwd
 		idiv	bx
 		add	ax, 2
@@ -18123,7 +18123,7 @@ loc_1DC38:
 		or	dx, dx
 		jnz	short loc_1DC5C
 		mov	ax, word_3A6CA
-		mov	bx, 40h
+		mov	bx, 64
 		cwd
 		idiv	bx
 		add	ax, 2
@@ -18153,7 +18153,7 @@ loc_1DC6D:
 
 loc_1DCAB:
 		mov	ax, word_3A6CA
-		mov	bx, 40h
+		mov	bx, 64
 		cwd
 		idiv	bx
 		add	ax, 2
@@ -18195,7 +18195,7 @@ loc_1DD70:
 		jnz	short loc_1DD9F
 		inc	word_39DFA
 		mov	ax, word_3A6CA
-		mov	bx, 40h
+		mov	bx, 64
 		cwd
 		idiv	bx
 		add	ax, 2
@@ -18231,7 +18231,7 @@ loc_1DE12:
 		mov	ax, x_39E02
 		add	point_39DFC.x, ax
 		mov	ax, word_3A6CA
-		mov	bx, 40h
+		mov	bx, 64
 		cwd
 		idiv	bx
 		add	ax, 2
@@ -18483,7 +18483,7 @@ loc_1E0EB:
 		les	bx, [bp+arg_8]
 		inc	word ptr es:[bx]
 		mov	ax, es:[bx]
-		mov	bx, 0Ah
+		mov	bx, 10
 		cwd
 		idiv	bx
 		or	dx, dx
@@ -20549,54 +20549,54 @@ loc_1F263:
 		cmp	si, 8
 		jl	short loc_1F24E
 		call	IRand
-		mov	bx, 30h	; '0'
+		mov	bx, 48
 		cwd
 		idiv	bx
-		add	dx, 10h
+		add	dx, 16
 		mov	word_39E37, dx
 		call	IRand
-		mov	bx, 30h	; '0'
+		mov	bx, 48
 		cwd
 		idiv	bx
-		mov	ax, 260h
+		mov	ax, 608
 		sub	ax, dx
-		add	ax, 10h
+		add	ax, 16
 		mov	word_39E39, ax
 		call	IRand
-		mov	bx, 0E0h
+		mov	bx, 224
 		cwd
 		idiv	bx
-		add	dx, 40h
+		add	dx, 64
 		mov	word_39E3B, dx
 		call	IRand
-		mov	bx, 0E0h
+		mov	bx, 224
 		cwd
 		idiv	bx
-		add	dx, 150h
+		add	dx, 336
 		mov	word_39E3D, dx
 		call	IRand
-		mov	bx, 0A0h ; '?'
+		mov	bx, 160
 		cwd
 		idiv	bx
-		add	dx, 80h	; '?'
+		add	dx, 128
 		mov	word_39E3F, dx
 		call	IRand
-		mov	bx, 0A0h ; '?'
+		mov	bx, 160
 		cwd
 		idiv	bx
-		add	dx, 150h
+		add	dx, 336
 		mov	word_39E41, dx
 		call	IRand
-		mov	bx, 0E0h
+		mov	bx, 224
 		cwd
 		idiv	bx
-		add	dx, 40h
+		add	dx, 64
 		mov	word_39E43, dx
 		call	IRand
-		mov	bx, 0E0h
+		mov	bx, 224
 		cwd
 		idiv	bx
-		add	dx, 150h
+		add	dx, 336
 		mov	word_39E45, dx
 		push	370032h
 		push	2D0028h
@@ -20935,14 +20935,14 @@ loc_1F644:
 		cmp	word_3A6CA, 0B4h ; '?'
 		jle	loc_1F6E4
 		mov	ax, word_3A6CA
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
 		cmp	dx, 8
 		jnz	loc_1F6E4
 		push	word_39E5A
 		mov	ax, speed_39E18
-		mov	bx, 0Ah
+		mov	bx, 10
 		cwd
 		idiv	bx
 		push	ax
@@ -21921,7 +21921,7 @@ loc_1FF3C:
 		mov	al, byte_35BEE
 		inc	byte_35BEE
 		mov	ah, 0
-		mov	bx, 0Ah
+		mov	bx, 10
 		cwd
 		idiv	bx
 		or	dx, dx
@@ -22418,7 +22418,7 @@ sub_203F9	proc far
 
 loc_20401:
 		push	si
-		push	270Fh
+		push	9999
 		mov	ax, si
 		add	ax, ax
 		les	bx, off_39E88
@@ -22444,7 +22444,7 @@ loc_20432:
 		mov	ax, si
 		add	ax, word_39E90
 		push	ax
-		push	270Fh
+		push	9999
 		mov	ax, si
 		add	ax, ax
 		les	bx, off_39E9E
@@ -22520,10 +22520,10 @@ arg_6		= word ptr  0Ch
 		pop	dx
 		add	dx, ax
 		mov	si, dx
-		cmp	di, 270Fh
+		cmp	di, 9999
 		jz	short loc_204EF
 		mov	ax, di
-		mov	bx, 40h
+		mov	bx, PTN_IMAGES_PER_SLOT
 		cwd
 		idiv	bx
 		shl	ax, 2
@@ -22532,7 +22532,7 @@ arg_6		= word ptr  0Ch
 		mov	dx, word ptr _ptn_images[bx]
 		push	ax
 		mov	ax, di
-		mov	bx, 40h
+		mov	bx, PTN_IMAGES_PER_SLOT
 		push	dx
 		cwd
 		idiv	bx
@@ -22551,7 +22551,7 @@ loc_204EF:
 		add	bx, ax
 		mov	word ptr [bp+var_10+2],	dx
 		mov	word ptr [bp+var_10], bx
-		cmp	di, 270Fh
+		cmp	di, 9999
 		jz	loc_20622
 		xor	cx, cx
 		jmp	loc_20619
@@ -22860,8 +22860,8 @@ arg_4		= dword	ptr  0Ah
 		mov	bp, sp
 		push	si
 		mov	si, [bp+arg_0]
-		lea	ax, [si-32h]
-		mov	bx, 14h
+		lea	ax, [si-50]
+		mov	bx, 20
 		cwd
 		idiv	bx
 		shl	dx, 5
@@ -22871,12 +22871,12 @@ arg_4		= dword	ptr  0Ah
 		les	bx, off_39E9A
 		add	bx, ax
 		mov	es:[bx], dx
-		lea	ax, [si-32h]
-		mov	bx, 14h
+		lea	ax, [si-50]
+		mov	bx, 20
 		cwd
 		idiv	bx
 		shl	ax, 5
-		add	ax, 40h
+		add	ax, 64
 		les	bx, [bp+arg_4]
 		mov	dx, es:[bx]
 		add	dx, dx
@@ -23276,7 +23276,7 @@ loc_20AF0:
 		jz	short loc_20B70
 		mov	ax, di
 		shl	ax, 7
-		mov	bx, 280h
+		mov	bx, 640
 		cwd
 		idiv	bx
 		mov	ax, [bp+var_2]
@@ -23360,13 +23360,13 @@ loc_20BB2:
 ; ---------------------------------------------------------------------------
 
 loc_20BBC:
-		lea	ax, [di-32h]
-		mov	bx, 14h
+		lea	ax, [di-50]
+		mov	bx, 20
 		cwd
 		idiv	bx
 		shl	dx, 5
 		mov	[bp+var_8], dx
-		lea	ax, [di-32h]
+		lea	ax, [di-50]
 		cwd
 		idiv	bx
 		shl	ax, 5
@@ -24345,7 +24345,7 @@ loc_213DE:
 		les	bx, off_39EA6
 		add	bx, ax
 		mov	ax, es:[bx]
-		mov	bx, 0Ah
+		mov	bx, 10
 		cwd
 		idiv	bx
 		cmp	dx, 9
@@ -24732,10 +24732,10 @@ loc_21777:
 		mov	_orb_velocity_x, dx
 		push	OF_IMMEDIATE
 		call	IRand
-		mov	bx, 13h
+		mov	bx, 19
 		cwd
 		idiv	bx
-		add	dx, 0FFF7h
+		add	dx, -9
 		mov	[bp+var_4], dx
 		fild	[bp+var_4]
 		sub	sp, 8
@@ -26028,7 +26028,7 @@ arg_0		= dword	ptr  6
 		cmp	byte_34A58, 1
 		jnz	short loc_22260
 		mov	eax, [bp+arg_0]
-		mov	ebx, 32h ; '2'
+		mov	ebx, 50
 		xor	edx, edx
 		div	ebx
 		cmp	edx, 0
@@ -26075,7 +26075,7 @@ loc_22287:
 		cmp	[bp+var_1], 28h	; '('
 		jb	short loc_22278
 		mov	word_3A1E9, 2
-		mov	word_3A1EB, 0Ah
+		mov	word_3A1EB, 10
 		jmp	loc_22661
 ; ---------------------------------------------------------------------------
 
@@ -26132,7 +26132,7 @@ loc_222B5:
 
 loc_22323:
 		call	IRand
-		mov	bx, 280h
+		mov	bx, 640
 		cwd
 		idiv	bx
 		shl	dx, 4
@@ -26151,7 +26151,7 @@ loc_22323:
 
 loc_22350:
 		call	IRand
-		mov	bx, 280h
+		mov	bx, 640
 		cwd
 		idiv	bx
 		shl	dx, 4
@@ -26212,7 +26212,7 @@ loc_223B7:
 
 loc_223C6:
 		call	IRand
-		mov	bx, 190h
+		mov	bx, 400
 		cwd
 		idiv	bx
 		shl	dx, 4
@@ -26226,7 +26226,7 @@ loc_223C6:
 
 loc_223E3:
 		call	IRand
-		mov	bx, 280h
+		mov	bx, 640
 		cwd
 		idiv	bx
 		shl	dx, 4
@@ -38374,7 +38374,7 @@ loc_29698:
 		push	word_3A780
 		push	190h
 		call	IRand
-		mov	bx, 280h
+		mov	bx, 640
 		cwd
 		idiv	bx
 		push	dx

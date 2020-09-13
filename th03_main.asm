@@ -1051,7 +1051,7 @@ loc_9FCE:
 		mov	eax, [bp+var_6]
 		imul	eax, 3
 		mov	[bp+var_6], eax
-		add	[bp+var_6], 1F4h
+		add	[bp+var_6], 500
 
 loc_9FE2:
 		cmp	[bp+var_6], 0FFFFh
@@ -1631,7 +1631,7 @@ loc_A4D8:
 		cmp	[bp+arg_0], 0Ah
 		jl	short loc_A50C
 		mov	ax, [bp+arg_0]
-		mov	bx, 0Ah
+		mov	bx, 10
 		cwd
 		idiv	bx
 		add	al, [bp+var_C]
@@ -5976,12 +5976,12 @@ sub_D092	proc far
 
 loc_D0A3:
 		call	IRand
-		mov	bx, 2800h
+		mov	bx, (640 shl 4)
 		cwd
 		idiv	bx
 		mov	[si], dx
 		call	IRand
-		mov	bx, 1900h
+		mov	bx, (400 shl 4)
 		cwd
 		idiv	bx
 		mov	[si+2],	dx
@@ -5996,7 +5996,7 @@ loc_D0A3:
 
 loc_D0DF:
 		call	IRand
-		mov	bx, 0FA0h
+		mov	bx, 4000
 		cwd
 		idiv	bx
 		mov	[si+0Ch], dx
@@ -6268,12 +6268,12 @@ sub_D2E8	proc far
 
 loc_D2F9:
 		call	IRand
-		mov	bx, 2800h
+		mov	bx, (640 shl 4)
 		cwd
 		idiv	bx
 		mov	[si], dx
 		call	IRand
-		mov	bx, 1900h
+		mov	bx, (400 shl 4)
 		cwd
 		idiv	bx
 		mov	[si+2],	dx
@@ -8419,7 +8419,7 @@ arg_4		= word ptr  8
 		push	ax
 		mov	ax, [bp+arg_2]
 		add	ax, 60h
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
 		push	ax
@@ -8431,7 +8431,7 @@ arg_4		= word ptr  8
 		push	ax
 		push	TX_WHITE
 		call	gaiji_putca
-		mov	bx, 64h	; 'd'
+		mov	bx, 100
 		mov	ax, si
 		cwd
 		idiv	bx
@@ -8442,7 +8442,7 @@ loc_E39F:
 		push	ax
 		mov	ax, [bp+arg_2]
 		add	ax, 60h
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
 		push	ax
@@ -8454,7 +8454,7 @@ loc_E39F:
 		push	ax
 		push	TX_WHITE
 		call	gaiji_putca
-		mov	bx, 0Ah
+		mov	bx, 10
 		mov	ax, si
 		cwd
 		idiv	bx
@@ -8465,7 +8465,7 @@ loc_E3CE:
 		push	ax
 		mov	ax, [bp+arg_2]
 		add	ax, 60h
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
 		push	ax
@@ -13178,7 +13178,7 @@ loc_115A1:
 		mov	al, byte_1F3A0
 		mov	ah, 0
 		push	ax
-		mov	ax, 100h
+		mov	ax, 256
 		cwd
 		pop	bx
 		idiv	bx
@@ -13211,7 +13211,7 @@ loc_115E2:
 		mov	al, byte_1F3A0
 		mov	ah, 0
 		push	ax
-		mov	ax, 100h
+		mov	ax, 256
 		cwd
 		pop	bx
 		idiv	bx
@@ -13314,7 +13314,7 @@ var_4		= word ptr -4
 		mov	byte_1F39F, al
 		mov	al, byte_1F39E
 		mov	ah, 0
-		mov	bx, 0Ah
+		mov	bx, 10
 		cwd
 		idiv	bx
 		add	al, 4
@@ -13327,7 +13327,7 @@ var_4		= word ptr -4
 		mov	bx, 3
 		cwd
 		idiv	bx
-		mov	dl, 0Ah
+		mov	dl, 10
 		sub	dl, al
 		mov	byte_1F3A2, dl
 

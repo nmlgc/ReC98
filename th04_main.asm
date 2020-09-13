@@ -1293,7 +1293,7 @@ arg_4		= word ptr  0Ah
 		lea	ax, [di+(16 shl 4)]
 		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	di, ax
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
 		shl	ax, 6
@@ -3131,7 +3131,7 @@ loc_D2FE:
 		idiv	bx
 		push	ax
 		mov	ax, word_255D2
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
 		push	ax
@@ -3450,7 +3450,7 @@ loc_D5E0:
 
 loc_D5F2:
 		mov	ax, word_255D2
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
 		mov	si, ax
@@ -3482,7 +3482,7 @@ loc_D61A:
 
 loc_D62B:
 		mov	ax, word_255D2
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
 		add	ax, 3
@@ -3531,7 +3531,7 @@ loc_D684:
 		idiv	bx
 		push	ax
 		mov	ax, word_255D2
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
 		push	ax
@@ -5989,7 +5989,7 @@ var_2		= word ptr -2
 		mov	_tile_invalidate_box.y, 2
 		call	main_01:tiles_invalidate_around pascal, large ((PLAYFIELD_W / 2) shl 4)
 		mov	ax, _scroll_line
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
 		mov	[bp+var_2], ax
@@ -10157,31 +10157,31 @@ loc_118D2:
 		jz	short loc_1192B
 		mov	bx, [bp+var_A]
 		mov	ax, [bx+2]
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
-		add	ax, 20h	; ' '
+		add	ax, 32
 		mov	si, ax
 		mov	bx, [bp+var_A]
 		mov	ax, [bx+4]
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
-		add	ax, 10h
+		add	ax, 16
 		mov	di, ax
 		mov	bx, [bp+var_A]
 		mov	ax, [bx+6]
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
-		add	ax, 20h	; ' '
+		add	ax, 32
 		mov	[bp+var_6], ax
 		mov	bx, [bp+var_A]
 		mov	ax, [bx+8]
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
-		add	ax, 10h
+		add	ax, 16
 		mov	[bp+var_8], ax
 		call	grcg_line pascal, si, di, [bp+var_6], ax
 
@@ -14621,10 +14621,10 @@ loc_14C6B:
 
 loc_14CCC:
 		mov	ax, si
-		mov	bx, 20h	; ' '
+		mov	bx, 32
 		cwd
 		idiv	bx
-		cmp	dx, 18h
+		cmp	dx, 24
 		jl	short loc_14CEA
 		mov	_bullet_template.spawn_type, BST_BULLET16_CLOUD_FORWARDS
 		mov	al, _bullet_template.speed
@@ -14633,7 +14633,7 @@ loc_14CCC:
 		call	fp_2D002
 
 loc_14CEA:
-		cmp	si, 40h
+		cmp	si, 64
 		jl	short loc_14CFA
 		mov	_midboss_phase_frame, 0
 		mov	byte_255B2, -1
@@ -15969,7 +15969,7 @@ loc_158F7:
 		add	ax, -16
 		imul	[bp+var_4]
 		mov	[bp+var_4], ax
-		mov	bx, 20h	; ' '
+		mov	bx, 32
 		mov	ax, [bp+var_4]
 		cwd
 		idiv	bx
@@ -15995,7 +15995,7 @@ loc_1593A:
 		sub	ax, dx
 		imul	[bp+var_4]
 		mov	[bp+var_4], ax
-		mov	bx, 20h	; ' '
+		mov	bx, 32
 		mov	ax, [bp+var_4]
 		cwd
 		idiv	bx
@@ -18001,7 +18001,7 @@ arg_0		= word ptr  4
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, 0FFFAh
+		add	ax, -6
 		push	ax
 		mov	ax, (192 shl 4)
 		sub	ax, _boss_pos.cur.x
@@ -18013,7 +18013,7 @@ arg_0		= word ptr  4
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, 0FFFAh
+		add	ax, -6
 		push	ax
 		mov	ax, (112 shl 4)
 		sub	ax, _boss_pos.cur.y
@@ -28993,7 +28993,7 @@ sub_1D1CD	proc near
 		mov	ah, 0
 		imul	cx
 		mov	cx, ax
-		mov	bx, 10h
+		mov	bx, 16
 		mov	ax, cx
 		cwd
 		idiv	bx
@@ -29492,7 +29492,7 @@ arg_8		= word ptr  0Ch
 		imul	eax, es:[bx]
 		mov	es:[bx], eax
 		mov	eax, es:[bx]
-		mov	ebx, 0Ah
+		mov	ebx, 10
 		xor	edx, edx
 		div	ebx
 		mov	bx, word ptr [bp+arg_0]
@@ -29950,7 +29950,7 @@ items_add	proc near
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	bx, 40h
+		mov	bx, 64
 		cwd
 		idiv	bx
 		mov	bx, dx
@@ -31815,7 +31815,7 @@ loc_1EEF5:
 		mov	bx, 32
 		cwd
 		idiv	bx
-		cmp	dx, 10h
+		cmp	dx, 16
 		jnz	short loc_1EF6C
 		call	randring2_next16_mod pascal, (64 shl 4)
 		mov	dx, _boss_pos.cur.x
