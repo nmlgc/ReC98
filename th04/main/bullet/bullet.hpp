@@ -119,6 +119,11 @@ extern bullet_t bullets[BULLET_COUNT];
 #define pellets (&bullets[0])
 #define bullets16 (&bullets[PELLET_COUNT])
 
+// Number of times a bouncing bullet can change its direction before it
+// automatically turns into a BMS_NORMAL bullet. Global state, not set
+// per-bullet!
+extern unsigned char bullet_turn_count_max;
+
 /// Rendering
 /// ---------
 union pellet_render_t {
@@ -180,6 +185,8 @@ struct bullet_template_t {
 };
 
 extern bullet_template_t bullet_template;
+// Separate from the template, for some reason?
+extern unsigned char bullet_template_turn_angle;
 
 // Modifies [bullet_template] based on [playperf] and the respective
 // difficulty.
