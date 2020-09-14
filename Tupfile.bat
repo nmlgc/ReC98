@@ -21,6 +21,7 @@ tasm32 /m /mx /kh32768 /t th04_res_huma.asm bin\th04\res_huma.obj
 tasm32 /m /mx /kh32768 /t th04_op.asm bin\th04\op.obj
 tasm32 /m /mx /kh32768 /t th04_main.asm bin\th04\main.obj
 tasm32 /m /mx /kh32768 /t th04_maine.asm bin\th04\maine.obj
+tasm32 /m /mx /kh32768 /t th05_zuninit.asm bin\th05\zuninit.obj
 tasm32 /m /mx /kh32768 /t th05_res_kso.asm bin\th05\res_kso.obj
 tasm32 /m /mx /kh32768 /t th05_op.asm bin\th05\op.obj
 tasm32 /m /mx /kh32768 /t th05_main.asm bin\th05\main.obj
