@@ -7,7 +7,7 @@ CFLAGS = -ls -Ilibs\master.lib\ -Lbin\
 TH01 = \zunsoft.com \op.exe \reiiden.exe \fuuin.exe
 TH02 = \zuninit.com \zun_res.com \op.exe \main.exe \maine.exe
 TH03 = \zunsp.com \res_yume.com \op.exe \main.exe \mainl.exe
-TH04 = \res_huma.com \op.exe \main.exe \maine.exe
+TH04 = \zuninit.com \res_huma.com \op.exe \main.exe \maine.exe
 TH05 = \res_kso.com \op.exe \main.exe \maine.exe
 
 all: th01 th02 th03 th04 th05
