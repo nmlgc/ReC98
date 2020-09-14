@@ -30,6 +30,7 @@ tasm32 /m /mx /kh32768 /t th03_op.asm bin\th03\op.obj
 tasm32 /m /mx /kh32768 /t th03_main.asm bin\th03\main.obj
 tasm32 /m /mx /kh32768 /t th03_mainl.asm bin\th03\mainl.obj
 tasm32 /m /mx /kh32768 /t th04_zuninit.asm bin\th04\zuninit.obj
+tasm32 /m /mx /kh32768 /t th04_memchk.asm bin\th04\memchk.obj
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04\scoreupd.asm bin\th04\scoreupd.obj
 tasm32 /m /mx /kh32768 /t th04_op.asm bin\th04\op.obj
 tasm32 /m /mx /kh32768 /t th04_main.asm bin\th04\main.obj

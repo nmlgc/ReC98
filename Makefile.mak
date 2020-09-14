@@ -9,7 +9,7 @@ PIPELINE = \grzview.com
 TH01 = \zunsoft.com \op.exe \reiiden.exe \fuuin.exe
 TH02 = \zuninit.com \zun_res.com \op.exe \main.exe \maine.exe \zun.com
 TH03 = \zunsp.com \res_yume.com \op.exe \main.exe \mainl.exe \zun.com
-TH04 = \zuninit.com \res_huma.com \op.exe \main.exe \maine.exe
+TH04 = \zuninit.com \memchk.com \res_huma.com \op.exe \main.exe \maine.exe
 TH05 = \zuninit.com \res_kso.com \op.exe \main.exe \maine.exe
 
 all: pipeline th01 th02 th03 th04 th05
@@ -108,6 +108,9 @@ bin\th03\mainl.exe: bin\th03\mainl.obj bin\th03\inp_m_w.obj bin\th03\cdg_p_na.ob
 	$(CC) $(CFLAGS) -ml -DGAME=3 -nbin\th03\ -eMAINL.EXE @&&|
 $**
 |
+
+bin\th04\memchk.com: bin\th04\memchk.obj
+	$(CC) $(CFLAGS) -mt -lt $**
 
 bin\th04\res_huma.com: th04\res_huma.cpp
 	$(CC) $(CFLAGS) -mt -lt -Z -DGAME=4 -nbin\th04\ -eRES_HUMA.COM @&&|

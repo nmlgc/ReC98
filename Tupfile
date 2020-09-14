@@ -72,6 +72,7 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 : th03_mainl.asm |> !as |> bin\\th03\\mainl.obj
 
 : th04_zuninit.asm |> !as |> bin\\th04\\zuninit.obj
+: th04_memchk.asm |> !as |> bin\\th04\\memchk.obj
 : th04\\scoreupd.asm |> !as4 |>
 : th04_op.asm |> !as |> bin\\th04\\op.obj
 : th04_main.asm | \
