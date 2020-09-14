@@ -84,7 +84,9 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 : th04_maine.asm |> !as |> bin\\th04\\maine.obj
 
 : th05_zuninit.asm |> !as |> bin\\th05\\zuninit.obj
-: th05_gjinit.asm |> !as |> bin\\th05\\gjinit.obj
+: th05_gjinit.asm | \
+	th05/sprites/gaiji.asp \
+	|> !as |> bin\\th05\\gjinit.obj
 : th05_memchk.asm |> !as |> bin\\th05\\memchk.obj
 : th04\\scoreupd.asm |> $(AS) /dGAME=5 th04\%b %o |> bin\\th05\\%B.obj
 : th05\\player.asm |> !as5 |>
