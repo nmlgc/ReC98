@@ -19,6 +19,7 @@ AS = tasm32 /m /mx /kh32768 /t
 : th03_mainl.asm |> !as |> bin\\th03\\mainl.obj
 
 : th04_zuninit.asm |> !as |> bin\\th04\\zuninit.obj
+: th04_memchk.asm |> !as |> bin\\th04\\memchk.obj
 : th04_res_huma.asm |> !as |> bin\\th04\\res_huma.obj
 : th04_op.asm |> !as |> bin\\th04\\op.obj
 : th04_main.asm |> !as |> bin\\th04\\main.obj
