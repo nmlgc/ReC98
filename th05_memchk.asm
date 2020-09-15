@@ -42,7 +42,7 @@ start proc near
 		cmp	bx, 32500
 		jnb	short loc_131
 		mov	di, offset aVVxvVBagbgvgkv ; "‚¿‚å‚Á‚ÆAƒƒ‚ƒŠ‚ª‘«‚è‚È‚¢‚©‚à\r\n‚±‚ÌƒQ"...
-		mov	byte_236, 0FFh
+		mov	byte_236, 255
 
 loc_131:
 		xor	dx, dx

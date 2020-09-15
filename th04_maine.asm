@@ -1554,7 +1554,7 @@ loc_AD95:
 ; ---------------------------------------------------------------------------
 
 loc_ADB1:
-		mov	al, 0FFh	; jumptable 0000A876 case 36
+		mov	al, -1	; jumptable 0000A876 case 36
 		jmp	short loc_ADB7
 ; ---------------------------------------------------------------------------
 
@@ -1639,7 +1639,7 @@ loc_AE45:
 		inc	_cutscene_script_ptr
 		push	word ptr [bp+var_1]
 		call	sub_A847
-		cmp	al, 0FFh
+		cmp	al, -1
 		jnz	short loc_AE2D
 		jmp	short loc_AEC8
 ; ---------------------------------------------------------------------------

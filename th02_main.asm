@@ -230,7 +230,7 @@ loc_3DED:
 		mov	word_1FFF4, 0
 		mov	byte_1FFF8, 0Fh
 		mov	byte_1FFF9, 0
-		mov	byte_1FFFA, 0FFh
+		mov	byte_1FFFA, -1
 		mov	word_1FFF6, 20h	; ' '
 		pop	bp
 		retf
@@ -3079,7 +3079,7 @@ loc_C015:
 		mov	eax, _boss_update_func
 		mov	_boss_update, eax
 		setfarfp	farfp_1F48C, sub_BF9C
-		mov	byte_20343, 0FFh
+		mov	byte_20343, -1
 		mov	bgm_show_timer, 1
 		mov	al, byte_1F46E
 		mov	_bgm_title_id, al
@@ -6013,7 +6013,7 @@ arg_2		= word ptr  6
 		mov	[bp+var_14], al
 		cmp	point_205F6.x, 128
 		jg	short loc_D794
-		mov	al, 0FFh
+		mov	al, -1
 		jmp	short loc_D7A2
 ; ---------------------------------------------------------------------------
 
@@ -6563,7 +6563,7 @@ loc_DBFE:
 		cmp	ax, RANK_HARD
 		jl	short loc_DC28
 		mov	cl, _rank
-		add	cl, 0FFh
+		add	cl, -1
 		mov	eax, dword_218A4
 		shl	eax, cl
 		mov	dword_218A4, eax
@@ -8541,7 +8541,7 @@ loc_EE0B:
 		mov	cx, 4
 		mov	dx, 10h
 		mov	bx, [bp+arg_0]
-		mov	al, 0FFh
+		mov	al, 11111111b
 
 loc_EE2E:
 		mov	es:[di], al
@@ -8735,7 +8735,7 @@ loc_EF5F:
 		cmp	_player_is_hit, 0
 		jz	short loc_EF7F
 		call	sub_EFF2
-		cmp	_player_is_hit, 0FFh
+		cmp	_player_is_hit, -1
 		jnz	short loc_EFEF
 		mov	byte_20607, 1
 		mov	_player_is_hit, 0
@@ -8888,7 +8888,7 @@ loc_F0B9:
 		push	word ptr [bx]
 		call	sub_D743
 		mov	byte_218A1, 0
-		mov	_player_is_hit, 0FFh
+		mov	_player_is_hit, -1
 		jmp	loc_F1D5
 ; ---------------------------------------------------------------------------
 
@@ -9166,7 +9166,7 @@ loc_F2FB:
 		mov	[bx], ax
 		test	byte ptr _key_det, INPUT_SHOT
 		jz	short loc_F349
-		cmp	byte_1EB0D, 0FFh
+		cmp	byte_1EB0D, -1
 		jnz	short loc_F336
 		mov	byte_1EB0D, 0
 		mov	byte_22D4A, 0
@@ -9174,7 +9174,7 @@ loc_F2FB:
 ; ---------------------------------------------------------------------------
 
 loc_F336:
-		cmp	byte_1EB0E, 0FFh
+		cmp	byte_1EB0E, -1
 		jnz	short loc_F368
 		mov	byte_1EB0E, 0
 		mov	byte_22D4B, 0
@@ -9184,7 +9184,7 @@ loc_F336:
 loc_F349:
 		cmp	byte_1EB0D, 3
 		jb	short loc_F35C
-		mov	byte_1EB0D, 0FFh
+		mov	byte_1EB0D, -1
 		mov	byte_1EB0E, 4
 		jmp	short loc_F368
 ; ---------------------------------------------------------------------------
@@ -9192,10 +9192,10 @@ loc_F349:
 loc_F35C:
 		cmp	byte_1EB0E, 2
 		jb	short loc_F368
-		mov	byte_1EB0E, 0FFh
+		mov	byte_1EB0E, -1
 
 loc_F368:
-		cmp	byte_1EB0D, 0FFh
+		cmp	byte_1EB0D, -1
 		jz	short loc_F3B3
 		cmp	byte_22D4A, 0
 		jnz	short loc_F3AF
@@ -15678,7 +15678,7 @@ loc_12F59:
 		sub	[bp+var_4], 190h
 
 loc_12F6E:
-		cmp	di, 0FFh
+		cmp	di, 255
 		jnz	short loc_12F94
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		push	40
@@ -16435,11 +16435,11 @@ sub_13439	endp
 sub_134A0	proc near
 		push	bp
 		mov	bp, sp
-		push	0FFh
+		push	255
 		call	sub_13055
 		push	0
 		call	sub_13055
-		push	0FFh
+		push	255
 		call	sub_13055
 		pop	bp
 		retn
@@ -20906,7 +20906,7 @@ loc_15B65:
 		add	ax, 64
 		cwd
 		idiv	bx
-		add	al, 0FFh
+		add	al, -1
 		mov	byte_25590, al
 		mov	patnum_2064E, 134
 		jmp	loc_15D51
@@ -21091,7 +21091,7 @@ var_1		= byte ptr -1
 ; ---------------------------------------------------------------------------
 
 loc_15D7E:
-		mov	al, 0FFh
+		mov	al, -1
 
 loc_15D80:
 		mov	byte_25597, al
@@ -21295,7 +21295,7 @@ loc_15F06:
 ; ---------------------------------------------------------------------------
 
 loc_15F19:
-		mov	al, 0FFh
+		mov	al, -1
 
 loc_15F1B:
 		mov	byte_25598, al
@@ -23226,7 +23226,7 @@ loc_16FD2:
 		add	bx, word_26C44
 		cmp	byte ptr [bx+2], 0
 		jnz	short loc_16FE7
-		mov	al, 0FFh
+		mov	al, -1
 		jmp	short loc_16FE9
 ; ---------------------------------------------------------------------------
 
@@ -23247,7 +23247,7 @@ loc_16FFA:
 		mov	bx, word_26C46
 		cmp	word ptr [bx+18h], 1
 		jnz	short loc_17008
-		mov	al, 0FFh
+		mov	al, -1
 		jmp	short loc_1700A
 ; ---------------------------------------------------------------------------
 
@@ -25488,7 +25488,7 @@ arg_4		= dword	ptr  8
 		shl	word_26CCC, 4
 		shl	word_26CCE, 4
 		mov	word_26CD0, 4
-		mov	byte_26CD3, 0FFh
+		mov	byte_26CD3, -1
 		mov	byte_26CD4, 0
 		jmp	loc_1889C
 ; ---------------------------------------------------------------------------
@@ -25825,7 +25825,7 @@ loc_18783:
 loc_18791:
 		cmp	word_26CD0, 80h
 		jle	short loc_1879E
-		mov	byte_26CD3, 0FEh
+		mov	byte_26CD3, -2
 
 loc_1879E:
 		mov	ax, word_26CCC
@@ -26391,7 +26391,7 @@ loc_18C9B:
 		mov	byte_26CE2, al
 		cmp	point_205F6.x, 208
 		jg	short loc_18CDF
-		mov	al, 0FFh
+		mov	al, -1
 		jmp	short loc_18CE1
 ; ---------------------------------------------------------------------------
 
@@ -30584,7 +30584,7 @@ sub_1B555	proc near
 ; ---------------------------------------------------------------------------
 
 loc_1B579:
-		mov	al, 0FFh
+		mov	al, -1
 
 loc_1B57B:
 		mov	byte_26D81, al
@@ -30994,7 +30994,7 @@ loc_1B8C5:
 		add	ax, 16
 		push	ax
 		push	word_26D87+1
-		push	0FFh
+		push	255
 		push	55003Ch
 		call	sub_10865
 		jmp	loc_1B992
@@ -31460,7 +31460,7 @@ loc_1BD46:
 		add	ax, 8
 		push	ax
 		push	0C0h
-		push	0FFh
+		push	255
 		push	550046h
 		call	sub_10865
 
@@ -31477,7 +31477,7 @@ loc_1BD86:
 		add	ax, 40
 		push	ax
 		push	0C0h
-		push	0FFh
+		push	255
 		push	550046h
 		call	sub_10865
 		jmp	loc_1BE2F
@@ -31515,7 +31515,7 @@ loc_1BDC4:
 		push	dx
 		push	10h
 		push	[bp+var_3]
-		push	0FFh
+		push	255
 		push	55h ; 'U'
 		call	randring2_next8_and pascal, 1Fh
 		mov	ah, 0
@@ -31530,7 +31530,7 @@ loc_1BDC4:
 		add	dx, 10h
 		push	dx
 		push	[bp+var_3]
-		push	0FFh
+		push	255
 		push	55h ; 'U'
 		call	randring2_next8_and pascal, 1Fh
 		mov	ah, 0
@@ -31904,7 +31904,7 @@ loc_1C0F2:
 		mov	bx, 3
 		cwd
 		idiv	bx
-		mov	al, 0FFh
+		mov	al, 255
 		sub	al, dl
 		mov	byte_26D4D, al
 
@@ -32374,7 +32374,7 @@ loc_1C473:
 		mov	bx, [bx+7F0Eh]
 		add	bx, bx
 		mov	ax, [bx+1EDAh]
-		and	ax, 0FFh
+		and	ax, 255
 		mov	bx, word ptr [bp+dest]
 		mov	[bx+1Eh], ax
 		mov	ax, [bx+1Ah]
@@ -32430,7 +32430,7 @@ loc_1C518:
 		inc	word ptr [bp+src]
 		inc	[bp+var_4]
 		les	bx, [bp+src]
-		cmp	byte ptr es:[bx], 0FFh
+		cmp	byte ptr es:[bx], -1
 		jnz	short loc_1C518
 		inc	word ptr [bp+src]
 		mov	al, byte_22FDB
@@ -32501,7 +32501,7 @@ loc_1C5BD:
 		push	es
 		push	bx
 		les	bx, [bp+src]
-		cmp	byte ptr es:[bx], 0FFh
+		cmp	byte ptr es:[bx], -1
 		jnz	short loc_1C5DD
 		mov	ax, 0FFFFh
 		jmp	short loc_1C5E5
@@ -33984,8 +33984,8 @@ asc_1E6DF	db '  ',0
 include th02/sprites/sparks.asp
 word_1EB0A	dw 0
 byte_1EB0C	db 0
-byte_1EB0D	db 0FFh
-byte_1EB0E	db 0FFh
+byte_1EB0D	db -1
+byte_1EB0E	db -1
 		db    1
 		db    1
 		db    4

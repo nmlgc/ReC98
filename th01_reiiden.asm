@@ -1007,7 +1007,7 @@ loc_BF6E:
 loc_BF75:
 		cmp	si, COLOR_COUNT
 		jl	short loc_BF15
-		mov	byte_3876C, 0FFh
+		mov	byte_3876C, -1
 		jmp	loc_C42E
 ; ---------------------------------------------------------------------------
 
@@ -1585,7 +1585,7 @@ arg_0		= word ptr  6
 		push	si
 		cmp	[bp+arg_0], 0
 		jnz	short loc_C4AB
-		cmp	word_387DA, 0FFh
+		cmp	word_387DA, 255
 		jz	loc_C5B1
 		xor	si, si
 		jmp	short loc_C49D
@@ -1606,12 +1606,12 @@ loc_C47E:
 loc_C49D:
 		cmp	si, 8
 		jl	short loc_C47E
-		mov	word_387DA, 0FFh
+		mov	word_387DA, 255
 		jmp	loc_C5B1
 ; ---------------------------------------------------------------------------
 
 loc_C4AB:
-		cmp	word_387DA, 0FFh
+		cmp	word_387DA, 255
 		jnz	short loc_C4C7
 		xor	si, si
 		jmp	short loc_C4C2
@@ -5214,7 +5214,7 @@ loc_11B26:
 		add	bx, dx
 		cmp	al, es:[bx+si]
 		jle	short loc_11B62
-		mov	al, 0FFh
+		mov	al, -1
 		jmp	short loc_11B64
 ; ---------------------------------------------------------------------------
 
@@ -10583,7 +10583,7 @@ arg_20		= dword	ptr  26h
 		cbw
 		cmp	ax, 1
 		jnz	loc_17F73
-		push	0FFh
+		push	255
 		push	0
 		push	8
 		les	bx, [bp+arg_16]
@@ -10615,7 +10615,7 @@ arg_20		= dword	ptr  26h
 ; ---------------------------------------------------------------------------
 
 loc_17F3C:
-		push	0FFh
+		push	255
 		push	0
 		push	8
 		push	7
@@ -12240,7 +12240,7 @@ arg_0		= word ptr  6
 		mov	byte_35B42, 0
 		mov	byte_35B43, 0
 		mov	byte_35B44, 0
-		mov	byte_39DB2, 0FFh
+		mov	byte_39DB2, -1
 		mov	byte_35B45, 1
 		mov	byte_35B46, 0
 		mov	byte_34A58, 0
@@ -20235,7 +20235,7 @@ arg_0		= word ptr  6
 		push	si
 		cmp	[bp+arg_0], 0
 		jnz	short loc_1EFB1
-		mov	byte_39E25, 0FFh
+		mov	byte_39E25, -1
 		mov	byte_35B7B, 4
 		call	IRand
 		mov	bx, 2
@@ -20247,7 +20247,7 @@ arg_0		= word ptr  6
 ; ---------------------------------------------------------------------------
 
 loc_1EFB1:
-		cmp	byte_39E25, 0FFh
+		cmp	byte_39E25, -1
 		jnz	short loc_1EFE5
 		push	1
 		call	_graph_accesspage_func
@@ -20385,7 +20385,7 @@ loc_1F0F8:
 		call	@CBossEntity@put_8$xqiii stdcall, offset mima_still, ds, large [dword ptr mima_still.BE_cur_left], 0
 		call	_z_palette_set_all_show stdcall, offset palette_39B8C, ds
 		add	sp, 1Ch
-		mov	byte_39E25, 0FFh
+		mov	byte_39E25, -1
 		mov	al, 1
 		sub	al, byte_39E26
 		mov	byte_39E26, al
@@ -20628,7 +20628,7 @@ loc_1F322:
 		add	bx, bx
 		cmp	word ptr [bx+5487h], 20h ; ' '
 		jle	short loc_1F380
-		push	0FFh
+		push	255
 		push	0
 		push	4
 		mov	bx, si
@@ -20703,7 +20703,7 @@ loc_1F3DD:
 		add	bx, bx
 		cmp	word ptr [bx+5487h], 20h ; ' '
 		jle	short loc_1F458
-		push	0FFh
+		push	255
 		push	0
 		push	4
 		push	7
@@ -22829,7 +22829,7 @@ arg_0		= byte ptr  6
 loc_2079C:
 		push	ds
 		mov	ax, si
-		imul	ax, 0FFh
+		imul	ax, 255
 		add	ax, 228Eh
 		push	ax
 		push	250
@@ -23076,7 +23076,7 @@ loc_20952:
 
 loc_20957:
 		mov	bx, [bp+arg_0]
-		imul	bx, 0FFh
+		imul	bx, 255
 		mov	al, [bx+di+228Eh]
 		cbw
 		test	ax, si
@@ -23100,7 +23100,7 @@ loc_20972:
 
 loc_2097C:
 		mov	bx, [bp+arg_0]
-		imul	bx, 0FFh
+		imul	bx, 255
 		mov	al, [bx+di+228Eh]
 		cbw
 		dec	ax
@@ -23269,7 +23269,7 @@ loc_20AEB:
 
 loc_20AF0:
 		mov	bx, [bp+arg_0]
-		imul	bx, 0FFh
+		imul	bx, 255
 		mov	al, [bx+di+228Eh]
 		cbw
 		test	ax, si
@@ -23333,7 +23333,7 @@ loc_20B79:
 
 loc_20B8B:
 		mov	bx, [bp+arg_0]
-		imul	bx, 0FFh
+		imul	bx, 255
 		mov	al, [bx+di+228Eh]
 		cbw
 		dec	ax
@@ -23392,7 +23392,7 @@ loc_20BE1:
 		cmp	ax, [bp+var_A]
 		jnz	short loc_20C20
 		mov	bx, [bp+arg_0]
-		imul	bx, 0FFh
+		imul	bx, 255
 		mov	al, [bx+di+228Eh]
 		add	al, 0F3h
 		les	bx, off_39E96
@@ -23454,7 +23454,7 @@ loc_20C59:
 		call	sub_207BD
 		add	sp, 8
 		mov	bx, [bp+arg_0]
-		imul	bx, 0FFh
+		imul	bx, 255
 		mov	al, [bx+di+228Eh]
 		mov	bx, [bp+var_E]
 		mov	es, word ptr off_39EA2+2
@@ -26058,7 +26058,7 @@ arg_2		= word ptr  8
 		enter	2, 0
 		push	si
 		mov	si, [bp+arg_0]
-		cmp	si, 0FFh
+		cmp	si, 255
 		jnz	short loc_2229C
 		mov	[bp+var_1], 0
 		jmp	short loc_22287
@@ -26972,7 +26972,7 @@ sub_229D1	proc far
 ; ---------------------------------------------------------------------------
 
 loc_229EF:
-		mov	al, 0FFh
+		mov	al, -1
 
 loc_229F1:
 		mov	byte_3A388, al
@@ -31479,7 +31479,7 @@ var_8		= qword	ptr -8
 loc_2546B:
 		cmp	word_3A6CA, 3Ch	; '<'
 		jnz	short loc_254A0
-		push	0FFh
+		push	255
 		push	0
 		push	2
 		push	40020h
@@ -31507,7 +31507,7 @@ loc_254A0:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_25528
-		push	0FFh
+		push	255
 		push	0
 		push	2
 		push	word_3A6E3
@@ -31521,7 +31521,7 @@ loc_254A0:
 		call	sub_17956
 		add	sp, 0Eh
 		add	word_3A6E3, 8
-		push	0FFh
+		push	255
 		push	0
 		cmp	word_3A6CA, 64h	; 'd'
 		jge	short loc_254F7
@@ -31558,7 +31558,7 @@ loc_25504:
 loc_25528:
 		cmp	word_3A6CA, 78h	; 'x'
 		jnz	short loc_25556
-		push	0FFh
+		push	255
 		push	0
 		push	20h ; ' '
 		push	word_3A6E3
@@ -32042,7 +32042,7 @@ loc_25977:
 		mov	angle_3A6FB, al
 		cmp	angle_3A6FB, 40h
 		jb	loc_25C4A
-		push	0FFh
+		push	255
 		push	0
 		push	1
 		push	800080h
@@ -32053,7 +32053,7 @@ loc_25977:
 		add	ax, 64
 		push	ax
 		call	sub_17956
-		push	0FFh
+		push	255
 		push	0
 		push	1
 		push	70080h
@@ -32096,7 +32096,7 @@ loc_25AED:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_25B3E
-		push	0FFh
+		push	255
 		push	0
 		push	1
 		push	800080h
@@ -32108,7 +32108,7 @@ loc_25AED:
 		push	ax
 		call	sub_17956
 		add	sp, 0Eh
-		push	0FFh
+		push	255
 		push	0
 		push	1
 		push	4
@@ -32122,7 +32122,7 @@ loc_25B3E:
 		idiv	bx
 		cmp	dx, 4
 		jnz	loc_25C4A
-		push	0FFh
+		push	255
 		push	0
 		push	1
 		push	800080h
@@ -32134,7 +32134,7 @@ loc_25B3E:
 		push	ax
 		call	sub_17956
 		add	sp, 0Eh
-		push	0FFh
+		push	255
 		push	0
 		push	1
 		push	7
@@ -32155,7 +32155,7 @@ loc_25B7A:
 loc_25B99:
 		cmp	word_3A6FC, 0
 		jz	loc_25C4A
-		push	0FFh
+		push	255
 		push	0
 		push	1
 		push	800080h
@@ -32554,7 +32554,7 @@ loc_25EE1:
 		call	sub_1786D
 		add	sp, 30h
 		mov	al, byte ptr word_3A6FE
-		add	al, 0C2h ; '?'
+		add	al, 194
 		push	ax
 		mov	al, byte ptr word_3A6FE
 		add	al, 0C0h ; '?'
@@ -32576,7 +32576,7 @@ loc_25EE1:
 		cmp	byte ptr word_3A6FE, 40h
 		jb	loc_260D8
 		mov	word_3A6FE+1, 1
-		push	0FFh
+		push	255
 		push	0
 		push	1
 		push	800080h
@@ -32587,7 +32587,7 @@ loc_25EE1:
 		add	ax, 64
 		push	ax
 		call	sub_17956
-		push	0FFh
+		push	255
 		push	0
 		push	1
 		push	70080h
@@ -32623,7 +32623,7 @@ loc_26006:
 		jnz	short loc_26029
 		push	bx
 		call	sub_25DE6
-		push	0FFh
+		push	255
 		push	0
 		push	1
 		push	4
@@ -32641,7 +32641,7 @@ loc_26029:
 		jnz	short loc_26068
 		push	7
 		call	sub_25DE6
-		push	0FFh
+		push	255
 		push	0
 		push	1
 		push	7
@@ -32678,7 +32678,7 @@ loc_26068:
 		push	96h
 		push	0EAh
 		call	sub_25CFD
-		push	0FFh
+		push	255
 		push	0
 		push	1
 		push	800080h
@@ -34728,7 +34728,7 @@ loc_27317:
 		mov	angle_3A76F, al
 		cmp	angle_3A76F, 40h
 		jb	loc_275EF
-		push	0FFh
+		push	255
 		push	0
 		push	1
 		push	800080h
@@ -34737,7 +34737,7 @@ loc_27317:
 		add	ax, 10h
 		push	ax
 		call	sub_17956
-		push	0FFh
+		push	255
 		push	0
 		push	1
 		push	70080h
@@ -34780,7 +34780,7 @@ loc_27464:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_274C6
-		push	0FFh
+		push	255
 		push	0
 		push	1
 		push	800080h
@@ -34789,7 +34789,7 @@ loc_27464:
 		add	ax, 10h
 		push	ax
 		call	sub_17956
-		push	0FFh
+		push	255
 		push	0
 		push	1
 		push	70080h
@@ -34881,7 +34881,7 @@ loc_27572:
 		jl	short loc_275EF
 		cmp	word_3A76B, 0C8h ; '?'
 		jnz	short loc_275A1
-		push	0FFh
+		push	255
 		push	0
 		push	1
 		push	800080h
@@ -35097,7 +35097,7 @@ loc_27759:
 		mov	angle_3A770, al
 		cmp	angle_3A770, 40h
 		jb	loc_27A1C
-		push	0FFh
+		push	255
 		push	0
 		push	1
 		push	800080h
@@ -35108,7 +35108,7 @@ loc_27759:
 		add	ax, 64
 		push	ax
 		call	sub_17956
-		push	0FFh
+		push	255
 		push	0
 		push	1
 		push	70080h
@@ -35151,7 +35151,7 @@ loc_278BE:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_2790F
-		push	0FFh
+		push	255
 		push	0
 		push	1
 		push	800080h
@@ -35163,7 +35163,7 @@ loc_278BE:
 		push	ax
 		call	sub_17956
 		add	sp, 0Eh
-		push	0FFh
+		push	255
 		push	0
 		push	1
 		push	4
@@ -35177,7 +35177,7 @@ loc_2790F:
 		idiv	bx
 		cmp	dx, 4
 		jnz	loc_27A1C
-		push	0FFh
+		push	255
 		push	0
 		push	1
 		push	800080h
@@ -35189,7 +35189,7 @@ loc_2790F:
 		push	ax
 		call	sub_17956
 		add	sp, 0Eh
-		push	0FFh
+		push	255
 		push	0
 		push	1
 		push	7
@@ -35210,7 +35210,7 @@ loc_2794B:
 loc_2796A:
 		cmp	word_3A771, 0
 		jz	loc_27A1C
-		push	0FFh
+		push	255
 		push	0
 		push	1
 		push	800080h
@@ -38328,7 +38328,7 @@ loc_295EF:
 		idiv	bx
 		or	dx, dx
 		jz	short loc_29665
-		push	0FFh
+		push	255
 		push	0
 		push	1
 		push	[bp+var_2]
@@ -38349,7 +38349,7 @@ loc_29665:
 		idiv	bx
 		cmp	dx, 8
 		jz	short loc_296EC
-		push	0FFh
+		push	255
 		push	0
 		push	1
 		push	4
@@ -38979,7 +38979,7 @@ loc_29BE7:
 		lea	ax, [bp+var_18]
 		add	si, ax
 		mov	ax, ss:[si]
-		and	ax, 0FFh
+		and	ax, 11111111b
 		mov	es:[bx], ax
 
 loc_29C15:
@@ -39053,7 +39053,7 @@ loc_29C2A:
 		lea	ax, [bp+var_E]
 		add	si, ax
 		mov	ax, ss:[si]
-		and	ax, 0FFh
+		and	ax, 11111111b
 		mov	es:[bx], ax
 
 loc_29CAB:
@@ -39476,7 +39476,7 @@ loc_2A0B0:
 loc_2A0CF:
 		cmp	word_35E03, 3
 		jnz	loc_2A16A
-		push	0FFh
+		push	255
 		push	0
 		push	8
 		push	60010h
@@ -39485,7 +39485,7 @@ loc_2A0CF:
 		sar	ax, 4
 		push	ax
 		call	sub_1786D
-		push	0FFh
+		push	255
 		push	0
 		push	8
 		push	60030h
@@ -39494,7 +39494,7 @@ loc_2A0CF:
 		sar	ax, 4
 		push	ax
 		call	sub_1786D
-		push	0FFh
+		push	255
 		push	0
 		push	6
 		push	70018h
@@ -39534,7 +39534,7 @@ loc_2A175:
 		or	dx, dx
 		jnz	loc_2A2BA
 		call	_egc_copy_rect_1_to_0_16 stdcall, x_3AF34, y_3AF38, 16, bx
-		push	0FFh
+		push	255
 		push	0
 		push	8
 		push	word_3AF40
@@ -39544,7 +39544,7 @@ loc_2A175:
 		sar	ax, 4
 		push	ax
 		call	sub_17956
-		push	0FFh
+		push	255
 		push	0
 		push	8
 		push	word_3AF3E
@@ -39554,7 +39554,7 @@ loc_2A175:
 		sar	ax, 4
 		push	ax
 		call	sub_17956
-		push	0FFh
+		push	255
 		push	0
 		push	6
 		push	word_3AF42
@@ -39592,7 +39592,7 @@ loc_2A175:
 ; ---------------------------------------------------------------------------
 
 loc_2A245:
-		push	0FFh
+		push	255
 		push	0
 		push	8
 		push	5
@@ -39603,7 +39603,7 @@ loc_2A245:
 		sar	ax, 4
 		push	ax
 		call	sub_1786D
-		push	0FFh
+		push	255
 		push	0
 		push	8
 		push	5
@@ -39614,7 +39614,7 @@ loc_2A245:
 		sar	ax, 4
 		push	ax
 		call	sub_1786D
-		push	0FFh
+		push	255
 		push	0
 		push	6
 		push	7
@@ -41195,7 +41195,7 @@ loc_2B2D1:
 		idiv	di
 		or	dx, dx
 		jnz	short loc_2B349
-		push	0FFh
+		push	255
 		push	0
 		push	1
 		push	word_3B053
@@ -41211,7 +41211,7 @@ loc_2B2D1:
 ; ---------------------------------------------------------------------------
 
 loc_2B30B:
-		push	0FFh
+		push	255
 		push	0
 		push	1
 		push	[bp+arg_4]
@@ -46288,7 +46288,7 @@ loc_2E580:
 ; ---------------------------------------------------------------------------
 
 loc_2E589:
-		cmp	word_3A6CA, 0FFh
+		cmp	word_3A6CA, 255
 		jge	short loc_2E5B0
 		call	sub_2CE17 c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
 		sub	point_3B511.y, 8
@@ -46296,7 +46296,7 @@ loc_2E589:
 ; ---------------------------------------------------------------------------
 
 loc_2E5B0:
-		cmp	word_3A6CA, 0FFh
+		cmp	word_3A6CA, 255
 		jnz	short loc_2E5E9
 		mov	point_3B511.x, RES_X - 1
 		mov	point_3B511.y, 64

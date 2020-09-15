@@ -3656,7 +3656,7 @@ sub_D3C6	proc near
 		enter	6, 0
 		push	si
 		push	di
-		cmp	word_21D6E, 0FFh
+		cmp	word_21D6E, (-1 and 255)
 		jnz	loc_D456
 		mov	[bp+@@set], offset _linesets
 		xor	di, di
@@ -3715,7 +3715,7 @@ loc_D44B:
 		mov	word_21D6E, 0
 
 loc_D456:
-		cmp	word_21D6E, 40h
+		cmp	word_21D6E, BOSS_PARTICLE_COUNT
 		jge	short loc_D4BE
 		mov	ax, _boss_phase_frame
 		mov	bx, 4
@@ -6089,7 +6089,7 @@ arg_4		= word ptr  8
 		push	di
 		mov	di, offset aBss0_cd2_0
 		mov	[bp+var_6], offset aKao0_cd2_0
-		cmp	[bp+arg_0], 0FFh
+		cmp	[bp+arg_0], (-1 and 255)
 		jz	loc_F432
 		cmp	_Ems, 0
 		jz	loc_F40F
@@ -6161,7 +6161,7 @@ loc_F432:
 		push	[bp+arg_4]
 		push	[bp+arg_2]
 		call	sub_EF2A
-		cmp	[bp+arg_0], 0FFh
+		cmp	[bp+arg_0], (-1 and 255)
 		jz	short loc_F45D
 		call	cdg_put pascal, [bp+arg_4], [bp+arg_2], 2
 		call	cdg_free pascal, 2
@@ -15677,7 +15677,7 @@ loc_18783:
 		mov	_boss_phase_frame, 0
 		mov	_boss_mode, 0
 		mov	_boss_mode_change, 0
-		mov	byte_2D080, 0FFh
+		mov	byte_2D080, -1
 		mov	byte_2D07F, 40h
 		jmp	short loc_1877A
 ; ---------------------------------------------------------------------------
@@ -19852,7 +19852,7 @@ loc_1AE17:
 
 loc_1AE2C:
 		mov	al, byte ptr [bp+var_2]
-		add	al, 0FFh
+		add	al, -1
 		mov	_boss2_mode_change, al
 		mov	_boss_phase, PHASE_BOSS_EXPLODE_SMALL
 		mov	_boss_phase_frame, 0
@@ -27799,7 +27799,7 @@ include th04/sprites/pointnum.asp
 include th05/formats/bb_playchar[data].asm
 byte_21D6C	db 0
 		db 0
-word_21D6E	dw 0FFh
+word_21D6E	dw (-1 and 255)
 byte_21D70	db 0
 		db 0
 word_21D72	dw 0

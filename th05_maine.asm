@@ -1251,7 +1251,7 @@ loc_AF18:
 ; ---------------------------------------------------------------------------
 
 loc_AF8B:
-		mov	al, 0FFh	; jumptable 0000A9F2 case 36
+		mov	al, -1	; jumptable 0000A9F2 case 36
 		jmp	short loc_AF91
 ; ---------------------------------------------------------------------------
 
@@ -1339,7 +1339,7 @@ loc_B01D:
 		inc	_cutscene_script_ptr
 		push	[bp+var_3]
 		call	sub_A9C3
-		cmp	al, 0FFh
+		cmp	al, -1
 		jnz	short loc_B005
 		jmp	loc_B196
 ; ---------------------------------------------------------------------------

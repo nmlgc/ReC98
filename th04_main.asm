@@ -3233,7 +3233,7 @@ loc_D350:
 		jnz	short loc_D38A
 		push	2000F0h
 		call	main_01:sub_D04E
-		cmp	[bp+var_2], 0FFh
+		cmp	[bp+var_2], (-1 and 255)
 		jz	loc_D528	; default
 		add	[bp+var_2], 2
 		push	2000F0h
@@ -3243,7 +3243,7 @@ loc_D350:
 loc_D38A:
 		push	1200070h
 		call	main_01:sub_D04E
-		cmp	[bp+var_2], 0FFh
+		cmp	[bp+var_2], (-1 and 255)
 		jz	loc_D528	; default
 		add	[bp+var_2], 8
 		push	1200070h
@@ -3422,7 +3422,7 @@ loc_D51D:
 		call	input_wait_for_change pascal, 0		; jumptable 0000D1EC case 36
 
 loc_D524:
-		mov	al, 0FFh	; jumptable 0000D1EC case 35
+		mov	al, -1	; jumptable 0000D1EC case 35
 		jmp	short loc_D52A
 ; ---------------------------------------------------------------------------
 
@@ -3492,7 +3492,7 @@ loc_D57A:
 		inc	word ptr dword_255CC
 		push	word ptr [bp+var_1]
 		call	main_01:sub_D1BC
-		cmp	al, 0FFh
+		cmp	al, -1
 		jnz	short loc_D57A
 		jmp	loc_D6E4
 ; ---------------------------------------------------------------------------
@@ -3579,7 +3579,7 @@ loc_D63F:
 		inc	word ptr dword_255CC
 		push	word ptr [bp+var_1]
 		call	main_01:sub_D1BC
-		cmp	al, 0FFh
+		cmp	al, -1
 		jnz	short loc_D63F
 		jmp	loc_D57A
 ; ---------------------------------------------------------------------------
@@ -11157,7 +11157,7 @@ sub_12076	proc near
 loc_12086:
 		mov	dx, word_2323A
 		mov	di, bx
-		and	di, 0FFh
+		and	di, 255
 		add	di, word_2323C
 		jmp	short loc_120AF
 ; ---------------------------------------------------------------------------
@@ -11165,14 +11165,14 @@ loc_12086:
 loc_12096:
 		mov	dx, GRAM_400 + (PLAYFIELD_TOP * ROW_SIZE) shr 4
 		mov	di, bx
-		and	di, 0FFh
+		and	di, 255
 		add	di, word_2323E
 		jmp	short loc_120AF
 ; ---------------------------------------------------------------------------
 
 loc_120A5:
 		mov	di, bx
-		and	di, 0FFh
+		and	di, 255
 		add	di, 9B0h
 
 loc_120AF:
@@ -11779,7 +11779,7 @@ loc_12522:
 		cmp	_boss_phase, 2
 		jbe	short loc_12567
 		inc	byte_2CDD1
-		cmp	byte_2CDD1, 0FEh
+		cmp	byte_2CDD1, 254
 		jb	loc_127EC
 		mov	word_2CF28, 78h	; 'x'
 		mov	byte_2CDD0, 4
@@ -11797,13 +11797,13 @@ loc_12548:
 loc_12554:
 		cmp	di, 38h	; '8'
 		jl	short loc_12548
-		mov	byte_2CDD1, 0FFh
+		mov	byte_2CDD1, 255
 		mov	word_2CF2A, 40h
 		jmp	loc_127EC
 ; ---------------------------------------------------------------------------
 
 loc_12567:
-		cmp	byte_2CDD1, 0FFh
+		cmp	byte_2CDD1, 255
 		jnz	loc_127EC
 		inc	word_2CF28
 		inc	byte_2CDD0
@@ -11835,7 +11835,7 @@ loc_125A5:
 		cmp	_boss_phase, 4
 		jbe	short loc_125F6
 		inc	byte_2CDD1
-		cmp	byte_2CDD1, 0FEh
+		cmp	byte_2CDD1, 254
 		jb	loc_127EC
 		mov	word_2CF28, 78h	; 'x'
 		mov	byte_2CDD0, 6
@@ -11865,7 +11865,7 @@ loc_125E8:
 ; ---------------------------------------------------------------------------
 
 loc_125F6:
-		cmp	byte_2CDD1, 0FFh
+		cmp	byte_2CDD1, 255
 		jnz	loc_127EC
 		cmp	byte_2CDD0, 4
 		jnz	loc_127AB
@@ -11884,7 +11884,7 @@ loc_1260B:
 
 loc_12627:
 		inc	byte_2CDD1
-		cmp	byte_2CDD1, 0FEh
+		cmp	byte_2CDD1, 254
 		jb	loc_127EC
 		mov	word_2CF28, 78h	; 'x'
 		cmp	byte_2CDD0, 0Ah
@@ -11925,7 +11925,7 @@ loc_12674:
 ; ---------------------------------------------------------------------------
 
 loc_1267C:
-		cmp	byte_2CDD1, 0FFh
+		cmp	byte_2CDD1, 255
 		jnz	loc_127EC
 		test	byte_2CDD0, 1
 		jz	loc_127B1
@@ -11942,7 +11942,7 @@ loc_12691:
 
 loc_126A6:
 		inc	byte_2CDD1
-		cmp	byte_2CDD1, 0FEh
+		cmp	byte_2CDD1, 254
 		jb	loc_127EC
 		mov	word_2CF28, 78h	; 'x'
 		cmp	byte_2CDD0, 0Ch
@@ -11991,12 +11991,12 @@ loc_126FF:
 		mov	word_2CF2A, 40h
 
 loc_12705:
-		mov	byte_2CDD1, 0FFh
+		mov	byte_2CDD1, 255
 		jmp	loc_127EC
 ; ---------------------------------------------------------------------------
 
 loc_1270D:
-		cmp	byte_2CDD1, 0FFh
+		cmp	byte_2CDD1, 255
 		jnz	loc_127EC
 		test	byte_2CDD0, 1
 		jz	loc_127B1
@@ -12032,11 +12032,11 @@ loc_12743:
 		cmp	_boss_phase, 0Fh
 		jb	short loc_1279D
 		inc	byte_2CDD1
-		cmp	byte_2CDD1, 0FEh
+		cmp	byte_2CDD1, 254
 		jb	loc_127EC
 		mov	word_2CF28, 7Ch	; '|'
 		mov	byte_2CDD0, 10h
-		mov	byte_2CDD1, 0FFh
+		mov	byte_2CDD1, 255
 		mov	si, 0BA92h
 		xor	di, di
 		jmp	short loc_12790
@@ -12062,7 +12062,7 @@ loc_12790:
 ; ---------------------------------------------------------------------------
 
 loc_1279D:
-		cmp	byte_2CDD1, 0FFh
+		cmp	byte_2CDD1, 255
 		jnz	short loc_127EC
 		test	byte_2CDD0, 1
 		jz	short loc_127B1
@@ -12082,7 +12082,7 @@ loc_127B7:
 		jb	short loc_127EC
 		mov	word_2CF28, 7Dh	; '}'
 		mov	byte_2CDD0, 11h
-		mov	byte_2CDD1, 0FFh
+		mov	byte_2CDD1, 255
 		mov	si, 0BA92h
 		xor	di, di
 		jmp	short loc_127E1
@@ -12520,7 +12520,7 @@ loc_12BCF:
 loc_12BDC:
 		cmp	[bp+var_2], 9
 		jnz	short loc_12BEA
-		mov	byte_2CFF2, 0FFh
+		mov	byte_2CFF2, -1
 		jmp	loc_12CB2
 ; ---------------------------------------------------------------------------
 
@@ -13464,7 +13464,7 @@ loc_13FCC:
 		mov	_bullet_template.BT_angle, al
 		mov	_bullet_template.speed, (2 shl 4)
 		mov	_bullet_template.pattern, BP_SINGLE
-		mov	_bullet_template.BT_special_motion, 0FFh
+		mov	_bullet_template.BT_special_motion, -1
 		call	_bullet_template_tune
 		call	fp_2D002
 		mov	al, 80h
@@ -13769,7 +13769,7 @@ loc_14339:
 loc_1436F:
 		cmp	_midboss_phase_frame, 32
 		jl	short loc_14381
-		mov	byte_25598, 0FFh
+		mov	byte_25598, -1
 		mov	_midboss_phase_frame, 0
 
 loc_14381:
@@ -13787,7 +13787,7 @@ sub_14383	proc near
 		mov	bp, sp
 		cmp	_midboss_phase_frame, 32
 		jl	short loc_143C5
-		mov	byte_25598, 0FFh
+		mov	byte_25598, -1
 		mov	_midboss_phase_frame, 0
 		mov	_bullet_template.spawn_type, BST_BULLET16_CLOUD_BACKWARDS
 		mov	_bullet_template.patnum, PAT_BULLET16_N_BALL_BLUE
@@ -13839,7 +13839,7 @@ loc_143D6:
 loc_14411:
 		cmp	_midboss_phase_frame, 32
 		jl	short loc_14423
-		mov	byte_25598, 0FFh
+		mov	byte_25598, -1
 		mov	_midboss_phase_frame, 0
 
 loc_14423:
@@ -13884,7 +13884,7 @@ loc_14435:
 loc_14477:
 		cmp	_midboss_phase_frame, 32
 		jl	short loc_14489
-		mov	byte_25598, 0FFh
+		mov	byte_25598, -1
 		mov	_midboss_phase_frame, 0
 
 loc_14489:
@@ -14093,7 +14093,7 @@ midboss3_update	endp
 ; ---------------------------------------------------------------------------
 		db    0
 word_1469B	dw	0,     1,     2,     3
-		dw   0FFh		; value	table for switch statement
+		dw   (-1 and 255)		; value	table for switch statement
 		dw offset loc_1453A	; jump table for switch	statement
 		dw offset loc_14540
 		dw offset loc_14546
@@ -14603,7 +14603,7 @@ loc_14B63:
 		cmp	si, 64
 		jl	short loc_14B73
 		mov	_midboss_phase_frame, 0
-		mov	byte_255B2, 0FFh
+		mov	byte_255B2, -1
 
 loc_14B73:
 		pop	si
@@ -14647,7 +14647,7 @@ loc_14BBA:
 		cmp	si, 20h	; ' '
 		jl	short loc_14BCA
 		mov	_midboss_phase_frame, 0
-		mov	byte_255B2, 0FFh
+		mov	byte_255B2, -1
 
 loc_14BCA:
 		pop	si
@@ -14700,7 +14700,7 @@ loc_14C32:
 		cmp	si, 20h	; ' '
 		jl	short loc_14C42
 		mov	_midboss_phase_frame, 0
-		mov	byte_255B2, 0FFh
+		mov	byte_255B2, -1
 
 loc_14C42:
 		pop	si
@@ -14758,7 +14758,7 @@ loc_14C6B:
 		mov	_bullet_template.BT_angle, al
 		mov	_bullet_template.patnum, PAT_BULLET16_D_BLUE
 		mov	_bullet_template.pattern, BP_SINGLE
-		mov	_bullet_template.BT_special_motion, 0FFh
+		mov	_bullet_template.BT_special_motion, -1
 
 loc_14CCC:
 		mov	ax, si
@@ -14777,7 +14777,7 @@ loc_14CEA:
 		cmp	si, 40h
 		jl	short loc_14CFA
 		mov	_midboss_phase_frame, 0
-		mov	byte_255B2, 0FFh
+		mov	byte_255B2, -1
 
 loc_14CFA:
 		pop	si
@@ -15091,7 +15091,7 @@ loc_15000:
 
 loc_1501A:
 		mov	_midboss_phase_frame, 0
-		mov	byte_255C6, 0FFh
+		mov	byte_255C6, -1
 
 loc_15025:
 		pop	bp
@@ -15203,7 +15203,7 @@ loc_150F6:
 
 loc_15110:
 		mov	_midboss_phase_frame, 0
-		mov	byte_255C6, 0FFh
+		mov	byte_255C6, -1
 
 locret_1511B:
 		leave
@@ -15301,7 +15301,7 @@ loc_151DA:
 
 loc_151F4:
 		mov	_midboss_phase_frame, 0
-		mov	byte_255C6, 0FFh
+		mov	byte_255C6, -1
 
 loc_151FF:
 		pop	si
@@ -15380,7 +15380,7 @@ loc_1528D:
 
 loc_152A7:
 		mov	_midboss_phase_frame, 0
-		mov	byte_255C6, 0FFh
+		mov	byte_255C6, -1
 
 loc_152B2:
 		pop	bp
@@ -15633,7 +15633,7 @@ midboss4_update	endp
 ; ---------------------------------------------------------------------------
 		db 0
 word_1553B	dw	0,     1,     2,     3
-		dw   0FFh		; value	table for switch statement
+		dw   (-1 and 255)		; value	table for switch statement
 		dw offset loc_1535C	; jump table for switch	statement
 		dw offset loc_15361
 		dw offset loc_15366
@@ -16952,7 +16952,7 @@ loc_16057:
 loc_1606B:
 		cmp	_boss_phase_frame, 140
 		jnz	short loc_1607E
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 		mov	_boss_phase_frame, 0
 
 loc_1607E:
@@ -17077,7 +17077,7 @@ loc_16187:
 loc_161C2:
 		cmp	_boss_phase_frame, 288
 		jnz	short loc_161D5
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 		mov	_boss_phase_frame, 0
 
 loc_161D5:
@@ -17197,7 +17197,7 @@ sub_162A3	proc near
 loc_162D7:
 		cmp	_boss_phase_frame, 170
 		jnz	short loc_162EA
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 		mov	_boss_phase_frame, 0
 
 loc_162EA:
@@ -17251,7 +17251,7 @@ loc_1632F:
 loc_16353:
 		cmp	_boss_phase_frame, 128
 		jnz	short loc_16366
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 		mov	_boss_phase_frame, 0
 
 loc_16366:
@@ -17454,7 +17454,7 @@ sub_1653D	proc near
 		mov	_circles_color, 0Fh
 		mov	_boss_angle, 16
 		mov	byte_2D02D, 10h
-		mov	_bullet_template.BT_special_motion, 0FFh
+		mov	_bullet_template.BT_special_motion, -1
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -18511,7 +18511,7 @@ loc_16E84:
 		cmp	_bullet_template.BT_angle, 0
 		jnz	short locret_16E9B
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 		mov	_boss_sprite, 129
 
 locret_16E9B:
@@ -18579,7 +18579,7 @@ loc_16EF1:
 
 loc_16EFE:
 		mov	_boss_phase_frame, 0	; jumptable 00016EBF case 96
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 		mov	_boss_sprite, 129
 
 locret_16F0E:
@@ -18733,7 +18733,7 @@ loc_17048:
 		cmp	di, 4
 		jl	short loc_1703C
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 		mov	_boss_sprite, 129
 
 loc_1705D:
@@ -18873,7 +18873,7 @@ loc_17164:
 		cmp	di, 4
 		jl	short loc_17154
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 		mov	_boss_sprite, 129
 
 loc_17179:
@@ -19059,7 +19059,7 @@ loc_1730D:
 
 loc_17318:
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 		mov	_boss_sprite, 129
 		jmp	short loc_17331
 ; ---------------------------------------------------------------------------
@@ -19160,7 +19160,7 @@ loc_173D3:
 		mov	_bullet_template.spawn_type, BST_BULLET16_CLOUD_FORWARDS
 		mov	_bullet_template.patnum, PAT_BULLET16_N_BALL_RED
 		mov	_bullet_template.pattern, BP_SINGLE_AIMED
-		mov	_bullet_template.BT_special_motion, 0FFh
+		mov	_bullet_template.BT_special_motion, -1
 		call	_bullet_template_tune
 		xor	si, si
 		jmp	short loc_1746F
@@ -19216,7 +19216,7 @@ loc_1746F:
 
 loc_1747D:
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 		mov	_boss_sprite, 129
 
 loc_1748D:
@@ -19438,7 +19438,7 @@ loc_17683:
 
 loc_1768B:
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 		mov	_boss_sprite, 129
 
 loc_1769B:
@@ -19464,7 +19464,7 @@ var_1		= byte ptr -1
 		mov	_bullet_template.spawn_type, BST_BULLET16
 		mov	_bullet_template.patnum, PAT_BULLET16_N_STAR
 		mov	_bullet_template.pattern, BP_SINGLE
-		mov	_bullet_template.BT_special_motion, 0FFh
+		mov	_bullet_template.BT_special_motion, -1
 		mov	_bullet_template.BT_angle, -40h
 		mov	_bullet_template.speed, (6 shl 4)
 		mov	fp_25676, offset sub_17061
@@ -19569,7 +19569,7 @@ loc_177F9:
 
 loc_17801:
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 		mov	_boss_sprite, 129
 
 locret_17811:
@@ -19605,7 +19605,7 @@ var_1		= byte ptr -1
 ; ---------------------------------------------------------------------------
 
 loc_17848:
-		mov	al, 0FFh
+		mov	al, -1
 
 loc_1784A:
 		mov	byte_2D02D, al
@@ -19631,7 +19631,7 @@ loc_17874:
 		cmp	_boss_phase_frame, 128
 		jl	short locret_1788C
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 		mov	_boss_sprite, 129
 
 locret_1788C:
@@ -19754,7 +19754,7 @@ loc_1795F:
 
 loc_179A8:
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 		mov	_boss_sprite, 129
 
 loc_179B8:
@@ -20981,7 +20981,7 @@ loc_1836D:
 
 loc_1837D:
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 
 loc_18388:
 		pop	bp
@@ -21067,7 +21067,7 @@ loc_1841E:
 
 loc_18451:
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 
 locret_1845C:
 		leave
@@ -21108,7 +21108,7 @@ loc_18473:
 
 loc_1849F:
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 		pop	bp
 		retn
 sub_1845E	endp
@@ -21175,7 +21175,7 @@ loc_184D9:
 
 loc_18549:
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 
 loc_18554:
 		pop	bp
@@ -21239,7 +21239,7 @@ loc_18580:
 
 loc_185D7:
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 
 loc_185E2:
 		pop	bp
@@ -21514,7 +21514,7 @@ loc_18844:
 loc_18856:
 		cmp	_mugetsu_phase2_mode, 32 ; default
 		jb	short loc_1886E
-		cmp	_boss_mode, 0FFh
+		cmp	_boss_mode, -1
 		jz	short loc_1886E
 		cmp	_boss_phase_frame, 24
 		jle	short loc_1886E
@@ -22527,7 +22527,7 @@ loc_190DE:
 		call	randring2_next16_and pascal, 0Fh
 		add	al, (2 shl 4)
 		mov	_bullet_template.speed, al
-		mov	_bullet_template.BT_special_motion, 0FFh
+		mov	_bullet_template.BT_special_motion, -1
 		call	_bullet_template_tune
 		call	fp_2D002
 
@@ -23213,7 +23213,7 @@ loc_19751:
 		mov	_bullet_template.pattern, BP_SPREAD
 		mov	_bullet_template.count, 3
 		mov	_bullet_template.BT_delta.spread_angle, 0Ch
-		mov	_bullet_template.BT_special_motion, 0FFh
+		mov	_bullet_template.BT_special_motion, -1
 		mov	al, _boss_angle
 		add	al, -20h
 		mov	_bullet_template.BT_angle, al
@@ -23622,7 +23622,7 @@ loc_19B56:
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
 		mov	byte_2D02D, 0
-		mov	byte_2D02C, 0FFh
+		mov	byte_2D02C, -1
 		mov	fp_255AC, offset orange_bg_render
 		mov	byte_2CDCA, 0
 		jmp	short loc_19C02
@@ -25183,7 +25183,7 @@ loc_1AB86:
 
 loc_1ABD8:
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 		pop	bp
 		retn
 sub_1AB5D	endp
@@ -25279,7 +25279,7 @@ loc_1ACA5:
 
 loc_1ACBF:
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 		leave
 		retn
 sub_1ABE5	endp
@@ -25340,7 +25340,7 @@ loc_1AD58:
 		cmp	_boss_phase_frame, 80
 		jle	short loc_1AD6A
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 
 loc_1AD6A:
 		call	sub_1A907
@@ -25394,7 +25394,7 @@ loc_1ADBA:
 		or	al, al
 		jz	short loc_1ADCC
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 
 loc_1ADCC:
 		call	sub_1A9CA
@@ -25543,7 +25543,7 @@ loc_1AF47:
 		or	al, al
 		jz	short loc_1AF59
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 
 loc_1AF59:
 		call	sub_1AA45
@@ -25662,7 +25662,7 @@ loc_1B082:
 		or	al, al
 		jz	short loc_1B094
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 
 loc_1B094:
 		call	sub_1AA45
@@ -25797,7 +25797,7 @@ loc_1B19D:
 
 loc_1B1A4:
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 
 loc_1B1AF:
 		pop	bp
@@ -25851,7 +25851,7 @@ loc_1B213:
 		cmp	_boss_phase_frame, 144
 		jnz	short loc_1B229
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 
 loc_1B229:
 		pop	bp
@@ -25897,7 +25897,7 @@ loc_1B26D:
 		cmp	_boss_phase_frame, 144
 		jnz	short loc_1B280
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 
 loc_1B280:
 		pop	bp
@@ -26044,7 +26044,7 @@ loc_1B3CB:
 		or	al, al
 		jz	short loc_1B3DD
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 
 loc_1B3DD:
 		call	sub_1AA45
@@ -26231,7 +26231,7 @@ loc_1B5CB:
 		mov	ah, 0
 		or	ax, ax
 		jz	short loc_1B5DB
-		cmp	ax, 0FFh
+		cmp	ax, (-1 and 255)
 		jz	short loc_1B5E0
 		jmp	short loc_1B600
 ; ---------------------------------------------------------------------------
@@ -26257,7 +26257,7 @@ loc_1B5E0:
 loc_1B600:
 		cmp	_boss_sprite, 0
 		jz	loc_1B787
-		cmp	_boss_mode, 0FFh
+		cmp	_boss_mode, -1
 		jz	loc_1B787
 		call	sub_1E64E
 		or	al, al
@@ -26313,12 +26313,12 @@ loc_1B694:
 		jz	loc_1B8EA
 		inc	_boss_phase
 		mov	_boss_mode_change, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 		mov	_boss_phase_frame, 0
 		mov	_yuuka6_anim_frame, 0
 		mov	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
 		mov	byte_25A1B, 1
-		mov	byte_25A02, 0FFh
+		mov	byte_25A02, -1
 		jmp	loc_1B8EA
 ; ---------------------------------------------------------------------------
 
@@ -26704,7 +26704,7 @@ loc_1BA19:
 		jb	short loc_1BA33
 		cmp	[bp+var_1], 0F0h
 		ja	short loc_1BA33
-		mov	byte_25A38, 0FFh
+		mov	byte_25A38, -1
 
 loc_1BA2A:
 		mov	al, _stage_frame_mod2
@@ -27044,7 +27044,7 @@ loc_1BD30:
 		jle	short loc_1BD49
 		cmp	byte_25A26, 0
 		jnz	short loc_1BD49
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 		mov	_boss_phase_frame, 0
 
 loc_1BD49:
@@ -27087,7 +27087,7 @@ loc_1BD64:
 loc_1BDA0:
 		cmp	byte_25A26, 0
 		jnz	short loc_1BDB2
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 		mov	_boss_phase_frame, 0
 
 loc_1BDB2:
@@ -27189,7 +27189,7 @@ word_1BE33	dw 1
 sub_1BE43	proc near
 		push	bp
 		mov	bp, sp
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 		mov	_boss_phase_frame, 0
 		mov	_bullet_template.BT_angle, 0
 		mov	_bullet_template.spawn_type, BST_BULLET16_CLOUD_BACKWARDS
@@ -27334,7 +27334,7 @@ loc_1BF66:
 loc_1BF97:
 		cmp	byte_25A26, 0
 		jnz	short loc_1BFA9
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 		mov	_boss_phase_frame, 0
 
 loc_1BFA9:
@@ -27458,7 +27458,7 @@ loc_1C07C:
 loc_1C0AB:
 		cmp	byte_25A26, 0
 		jnz	short loc_1C0BD
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 		mov	_boss_phase_frame, 0
 
 loc_1C0BD:
@@ -27587,7 +27587,7 @@ loc_1C19C:
 loc_1C1BB:
 		cmp	byte_25A26, 0
 		jnz	short loc_1C1CD
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 		mov	_boss_phase_frame, 0
 
 loc_1C1CD:
@@ -27693,7 +27693,7 @@ loc_1C2AD:
 loc_1C2D1:
 		cmp	byte_25A26, 0
 		jnz	short loc_1C2E3
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 		mov	_boss_phase_frame, 0
 
 loc_1C2E3:
@@ -27739,7 +27739,7 @@ loc_1C32D:
 		mov	ah, 0
 		or	ax, ax
 		jz	short loc_1C343
-		cmp	ax, 0FFh
+		cmp	ax, (-1 and 255)
 		jz	short loc_1C348
 		jmp	short loc_1C39E
 ; ---------------------------------------------------------------------------
@@ -27938,7 +27938,7 @@ loc_1C4EB:
 		mov	al, byte_25A24
 		mov	ah, 0
 		call	boss_explode_small pascal, ax
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 		inc	byte_25A24
 		mov	al, byte_25A24
 		mov	ah, 0
@@ -28052,7 +28052,7 @@ loc_1C600:
 		mov	al, byte_25A24
 		mov	ah, 0
 		call	boss_explode_small pascal, ax
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 		mov	_boss_phase_frame, 0
 		inc	byte_25A24
 		jmp	short loc_1C67A
@@ -31964,7 +31964,7 @@ loc_1EDA3:
 		jl	short locret_1EDBA
 		mov	_boss_sprite, 128
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 
 locret_1EDBA:
 		leave
@@ -32005,7 +32005,7 @@ loc_1EE01:
 		jl	short locret_1EE1F
 		mov	_boss_sprite, 128
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 
 locret_1EE1F:
 		leave
@@ -32039,7 +32039,7 @@ loc_1EE57:
 		cmp	_boss_phase_frame, 96
 		jl	short loc_1EE71
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 		mov	al, byte_2D057
 		neg	al
 		mov	byte_2D057, al
@@ -32141,7 +32141,7 @@ loc_1EF6C:
 		jl	short loc_1EF84
 		mov	_boss_sprite, 128
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 
 loc_1EF84:
 		pop	si
@@ -32212,7 +32212,7 @@ loc_1F034:
 		jl	short locret_1F04C
 		mov	_boss_sprite, 128
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 
 locret_1F04C:
 		leave
@@ -32294,7 +32294,7 @@ loc_1F0F8:
 loc_1F0FF:
 		mov	_boss_sprite, 128
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 
 locret_1F10F:
 		leave
@@ -32340,7 +32340,7 @@ loc_1F15F:
 		cmp	_boss_phase_frame, 180
 		jl	short loc_1F17A
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 		mov	al, byte_2D057
 		neg	al
 		mov	byte_2D057, al
@@ -32366,7 +32366,7 @@ sub_1F17C	proc near
 		mov	_bullet_template.spawn_type, BST_BULLET16_CLOUD_FORWARDS
 		mov	_bullet_template.patnum, PAT_BULLET16_N_BALL_BLUE
 		mov	_bullet_template.BT_angle, -40h
-		mov	_bullet_template.BT_special_motion, 0FFh
+		mov	_bullet_template.BT_special_motion, -1
 		mov	_bullet_template.BT_delta.stack_speed, 8
 
 loc_1F1AA:
@@ -32436,7 +32436,7 @@ var_1		= byte ptr -1
 		mov	_bullet_template.spawn_type, BST_BULLET16_CLOUD_FORWARDS
 		mov	_bullet_template.patnum, PAT_BULLET16_N_BALL_BLUE
 		mov	_bullet_template.BT_angle, -40h
-		mov	_bullet_template.BT_special_motion, 0FFh
+		mov	_bullet_template.BT_special_motion, -1
 		mov	_bullet_template.BT_delta.spread_angle, 8
 		cmp	byte_237F6, 78h	; 'x'
 		jz	short loc_1F25E
@@ -32491,7 +32491,7 @@ loc_1F2D9:
 		jl	short locret_1F2F1
 		mov	_boss_sprite, 128
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 
 locret_1F2F1:
 		leave
@@ -32518,7 +32518,7 @@ var_1		= byte ptr -1
 		mov	al, byte_2D024
 		mov	_bullet_template.count, al
 		mov	_bullet_template.BT_delta.stack_speed, 12
-		mov	_bullet_template.BT_special_motion, 0FFh
+		mov	_bullet_template.BT_special_motion, -1
 		mov	_bullet_template.BT_angle, 0
 		mov	_bullet_template.patnum, PAT_BULLET16_N_BALL_BLUE
 
@@ -32553,7 +32553,7 @@ loc_1F35D:
 		jl	short loc_1F375
 		mov	_boss_sprite, 128
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 
 loc_1F375:
 		pop	si
@@ -32654,7 +32654,7 @@ loc_1F44D:
 		jz	short loc_1F462
 		cmp	ax, 1
 		jz	short loc_1F467
-		cmp	ax, 0FFh
+		cmp	ax, (-1 and 255)
 		jz	short loc_1F46C
 		jmp	short loc_1F46F
 ; ---------------------------------------------------------------------------
@@ -32844,7 +32844,7 @@ loc_1F5E1:
 		jz	short loc_1F5F6
 		cmp	ax, 1
 		jz	short loc_1F5FB
-		cmp	ax, 0FFh
+		cmp	ax, (-1 and 255)
 		jz	short loc_1F600
 		jmp	short loc_1F603
 ; ---------------------------------------------------------------------------
@@ -32942,7 +32942,7 @@ loc_1F6B8:
 		jz	short loc_1F6CD
 		cmp	ax, 1
 		jz	short loc_1F6D2
-		cmp	ax, 0FFh
+		cmp	ax, (-1 and 255)
 		jz	short loc_1F6D7
 		jmp	short loc_1F6E9
 ; ---------------------------------------------------------------------------
@@ -32988,7 +32988,7 @@ loc_1F718:
 		jz	short loc_1F72D
 		cmp	ax, 1
 		jz	short loc_1F732
-		cmp	ax, 0FFh
+		cmp	ax, (-1 and 255)
 		jz	short loc_1F737
 		jmp	short loc_1F73A
 ; ---------------------------------------------------------------------------
@@ -33487,7 +33487,7 @@ loc_1FABE:
 
 loc_1FAEA:
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 		pop	bp
 		retn
 sub_1FAAA	endp
@@ -33554,7 +33554,7 @@ loc_1FB36:
 
 loc_1FB79:
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 
 loc_1FB84:
 		pop	bp
@@ -33628,7 +33628,7 @@ loc_1FBAD:
 
 loc_1FC39:
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 
 loc_1FC44:
 		pop	bp
@@ -33716,7 +33716,7 @@ loc_1FCE0:
 
 loc_1FD23:
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 
 loc_1FD2E:
 		pop	bp
@@ -33743,7 +33743,7 @@ sub_1FD30	proc near
 loc_1FD49:
 		mov	_bullet_template.patnum, PAT_BULLET16_N_HEART_BALL_RED
 		mov	_bullet_template.pattern, BP_SPREAD_AIMED
-		mov	_bullet_template.BT_special_motion, 0FFh
+		mov	_bullet_template.BT_special_motion, -1
 		mov	_bullet_template.BT_delta.spread_angle, 10h
 		mov	_bullet_template.BT_angle, 0
 		mov	_bullet_template.count, 2
@@ -33802,7 +33802,7 @@ loc_1FDCD:
 
 loc_1FDE6:
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 
 loc_1FDF1:
 		pop	si
@@ -33865,7 +33865,7 @@ loc_1FE45:
 
 loc_1FE5D:
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 
 loc_1FE68:
 		pop	bp
@@ -33922,7 +33922,7 @@ loc_1FEA3:
 
 loc_1FED2:
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 
 loc_1FEDD:
 		pop	bp
@@ -34069,7 +34069,7 @@ loc_2002B:
 
 loc_20039:
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 
 loc_20044:
 		pop	di
@@ -34371,7 +34371,7 @@ loc_20311:
 		jz	short loc_20326
 		cmp	ax, 1
 		jz	short loc_2032B
-		cmp	ax, 0FFh
+		cmp	ax, (-1 and 255)
 		jz	short loc_20330
 		jmp	short loc_20389
 ; ---------------------------------------------------------------------------
@@ -34425,7 +34425,7 @@ loc_20370:
 loc_20389:
 		cmp	_boss_mode_change, 18
 		jb	short loc_2039A
-		cmp	_boss_mode, 0FFh
+		cmp	_boss_mode, -1
 		jz	short loc_2039A
 		call	sub_2023B
 
@@ -34450,7 +34450,7 @@ loc_203B8:
 		jz	short loc_203CD
 		cmp	ax, 1
 		jz	short loc_203D2
-		cmp	ax, 0FFh
+		cmp	ax, (-1 and 255)
 		jz	short loc_203D7
 		jmp	short loc_20430
 ; ---------------------------------------------------------------------------
@@ -34504,7 +34504,7 @@ loc_20417:
 loc_20430:
 		cmp	_boss_mode_change, 18
 		jb	short loc_20441
-		cmp	_boss_mode, 0FFh
+		cmp	_boss_mode, -1
 		jz	short loc_20441
 		call	sub_2023B
 
@@ -34529,7 +34529,7 @@ loc_2045F:
 		jz	short loc_20474
 		cmp	ax, 1
 		jz	short loc_20479
-		cmp	ax, 0FFh
+		cmp	ax, (-1 and 255)
 		jz	short loc_2047E
 		jmp	short loc_204D7
 ; ---------------------------------------------------------------------------
@@ -34583,7 +34583,7 @@ loc_204BE:
 loc_204D7:
 		cmp	_boss_mode_change, 18
 		jb	short loc_204E8
-		cmp	_boss_mode, 0FFh
+		cmp	_boss_mode, -1
 		jz	short loc_204E8
 		call	sub_2023B
 
@@ -34608,7 +34608,7 @@ loc_20506:
 		jz	short loc_2051B
 		cmp	ax, 1
 		jz	short loc_20520
-		cmp	ax, 0FFh
+		cmp	ax, (-1 and 255)
 		jz	short loc_20525
 		jmp	short loc_2057E
 ; ---------------------------------------------------------------------------
@@ -34662,7 +34662,7 @@ loc_20565:
 loc_2057E:
 		cmp	_boss_mode_change, 18
 		jb	short loc_2058F
-		cmp	_boss_mode, 0FFh
+		cmp	_boss_mode, -1
 		jz	short loc_2058F
 		call	sub_2023B
 
@@ -34680,7 +34680,7 @@ loc_205A4:
 
 loc_205AA:
 		call	boss_phase_end
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 		mov	word_2D05A, 0C00h
 		jmp	loc_206B6
 ; ---------------------------------------------------------------------------
@@ -34707,7 +34707,7 @@ loc_205D4:
 
 loc_205ED:
 		call	boss_phase_end pascal, (ET_VERTICAL shl 16) or 0
-		mov	_boss_mode, 0FFh
+		mov	_boss_mode, -1
 		mov	word_2D05A, 0C00h
 		mov	byte_2D02D, 10h
 		jmp	loc_206B6

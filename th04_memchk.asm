@@ -41,7 +41,7 @@ envp		= word ptr  8
 		ja	short loc_389
 		push	offset DGROUP:aVVxvVSlvsvVvvi ; "ÇøÇÂÇ¡Ç∆ë´ÇËÇ»Ç¢Ç©Ç‡ÅAÇ‡Ç§è≠ÇµëùÇ‚ÇµÇƒ"...
 		call	sub_38E
-		mov	ax, 0FFh
+		mov	ax, 255
 		leave
 		retn
 ; ---------------------------------------------------------------------------

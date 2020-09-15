@@ -632,7 +632,7 @@ loc_9BC5:
 		jz	short loc_9BF4
 
 loc_9BEF:
-		mov	byte_220DC, 0FFh
+		mov	byte_220DC, -1
 
 loc_9BF4:
 		les	bx, _resident
@@ -684,7 +684,7 @@ loc_9C51:
 		mov	_p2.cpu_safety_frames, ax
 		mov	byte_202B6, 1
 		mov	byte_202B7, 1
-		mov	byte_220DC, 0FFh
+		mov	byte_220DC, -1
 		mov	_cpu_hit_damage_additional, 0
 		push	3
 
@@ -1175,7 +1175,7 @@ loc_A10B:
 		mov	byte_202B7, 10h
 
 loc_A117:
-		mov	byte_1DB9E, 0FFh
+		mov	byte_1DB9E, -1
 		mov	byte_20E3C, 0
 		mov	byte_207E2, 1
 		mov	word_21434, 1400h
@@ -3952,7 +3952,7 @@ loc_C159:
 		add	ax, ax
 		mov	bx, ax
 		mov	_playfield_fg_shift_x[bx], 0
-		mov	byte ptr [si+1Fh], 0FFh
+		mov	byte ptr [si+1Fh], -1
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		mov	byte_20E3C, 2
@@ -5055,28 +5055,28 @@ loc_C956:
 		mov	cx, [bp+var_4]
 		or	cx, cx
 		jz	short loc_C9A6
-		cmp	cx, 40h
+		cmp	cx, 64
 		jnb	short loc_C968
 		mov	[bp+var_1], 0Fh
 		jmp	short loc_C990
 ; ---------------------------------------------------------------------------
 
 loc_C968:
-		cmp	cx, 80h
+		cmp	cx, 128
 		jnb	short loc_C974
 		mov	[bp+var_1], 0Ah
 		jmp	short loc_C990
 ; ---------------------------------------------------------------------------
 
 loc_C974:
-		cmp	cx, 0C0h
+		cmp	cx, 192
 		jnb	short loc_C980
 		mov	[bp+var_1], 8
 		jmp	short loc_C990
 ; ---------------------------------------------------------------------------
 
 loc_C980:
-		cmp	cx, 0FFh
+		cmp	cx, 255
 		jnb	short loc_C98C
 		mov	[bp+var_1], 6
 		jmp	short loc_C990
@@ -5099,28 +5099,28 @@ loc_C9A6:
 		mov	cx, [bp+var_6]
 		or	cx, cx
 		jz	short loc_C9F6
-		cmp	cx, 40h
+		cmp	cx, 64
 		jnb	short loc_C9B8
 		mov	[bp+var_1], 0Fh
 		jmp	short loc_C9E0
 ; ---------------------------------------------------------------------------
 
 loc_C9B8:
-		cmp	cx, 80h
+		cmp	cx, 128
 		jnb	short loc_C9C4
 		mov	[bp+var_1], 0Ah
 		jmp	short loc_C9E0
 ; ---------------------------------------------------------------------------
 
 loc_C9C4:
-		cmp	cx, 0C0h
+		cmp	cx, 192
 		jnb	short loc_C9D0
 		mov	[bp+var_1], 8
 		jmp	short loc_C9E0
 ; ---------------------------------------------------------------------------
 
 loc_C9D0:
-		cmp	cx, 0FFh
+		cmp	cx, 255
 		jnb	short loc_C9DC
 		mov	[bp+var_1], 6
 		jmp	short loc_C9E0
@@ -6592,7 +6592,7 @@ loc_D56B:
 		inc	byte_220DC
 		cmp	byte_220DC, 2
 		jnz	short locret_D5A0
-		mov	byte_220DC, 0FFh
+		mov	byte_220DC, -1
 
 locret_D5A0:
 		retn
@@ -7386,14 +7386,14 @@ loc_DB0A:
 ; ---------------------------------------------------------------------------
 
 loc_DB1E:
-		cmp	byte_20E48, 0FFh
+		cmp	byte_20E48, -1
 		jnz	short loc_DB2B
 		mov	[bp+var_5], 20h	; ' '
 		jmp	short loc_DB3C
 ; ---------------------------------------------------------------------------
 
 loc_DB2B:
-		cmp	byte_20E48, 0FEh
+		cmp	byte_20E48, -2
 		jnz	short loc_DB38
 		mov	[bp+var_5], 7
 		jmp	short loc_DB3C
@@ -7560,7 +7560,7 @@ loc_DC64:
 
 loc_DCBC:
 		add	word_21434, 2800h
-		cmp	byte_1DB9E, 0FFh
+		cmp	byte_1DB9E, -1
 		jnz	short loc_DCCE
 		inc	byte ptr [si+77h]
 		jmp	short loc_DD2B
@@ -7739,7 +7739,7 @@ loc_DE3F:
 ; ---------------------------------------------------------------------------
 
 loc_DE45:
-		cmp	byte ptr [si+1Fh], 0FFh
+		cmp	byte ptr [si+1Fh], -1
 		jz	short loc_DE4F
 		push	si
 		call	sub_C0D8
@@ -7804,7 +7804,7 @@ arg_0		= word ptr  4
 		mov	si, [bp+arg_0]
 		cmp	byte ptr [si+1Fh], 0
 		jz	short loc_DEB2
-		cmp	byte ptr [si+1Fh], 0FFh
+		cmp	byte ptr [si+1Fh], -1
 		jz	short loc_DF12
 		push	si
 		call	sub_C248
@@ -8155,12 +8155,12 @@ loc_E13C:
 		sar	dx, 3
 		mov	di, [bp+arg_0]
 		add	di, cx
-		mov	ch, 0FFh
+		mov	ch, 11111111b
 		shr	ch, cl
 		mov	bx, di
 		cmp	bx, 8
 		jg	short loc_E163
-		mov	bh, 0FFh
+		mov	bh, 11111111b
 		mov	cl, bl
 		shr	bh, cl
 		xor	ch, bh
@@ -8213,11 +8213,11 @@ loc_E1B3:
 		mov	ch, 0
 		add	bx, cx
 		sub	di, 8
-		mov	ch, 0FFh
+		mov	ch, 11111111b
 		cmp	di, 8
 		jnb	short loc_E1CB
 		mov	cx, di
-		mov	ch, 0FFh
+		mov	ch, 11111111b
 		shr	ch, cl
 		not	ch
 
@@ -8572,7 +8572,7 @@ loc_E4A2:
 		movzx	eax, byte_23DF9
 		imul	eax, 100000
 		add	score_23DF0, eax
-		mov	byte_220DC, 0FFh
+		mov	byte_220DC, -1
 
 loc_E55E:
 		mov	eax, score_23DF0
@@ -9359,7 +9359,7 @@ loc_F32F:
 ; ---------------------------------------------------------------------------
 
 loc_F34E:
-		mov	al, 0FFh
+		mov	al, -1
 
 loc_F350:
 		pop	di
@@ -9436,7 +9436,7 @@ loc_F3D6:
 		cmp	word_1F340, 1A00h
 		jl	short loc_F400
 		mov	byte_1F34F, 0
-		mov	byte_1DB9E, 0FFh
+		mov	byte_1DB9E, -1
 		mov	word_21434, 1400h
 
 loc_F400:
@@ -9459,7 +9459,7 @@ sub_F402	proc near
 		mov	bx, ax
 		cmp	byte ptr [bx+2D54h], 5
 		jnz	loc_F4AE
-		cmp	byte_1DB9E, 0FFh
+		cmp	byte_1DB9E, -1
 		jnz	short loc_F481
 		mov	si, 1DFEh
 		cmp	_pid_current, 1
@@ -9499,9 +9499,9 @@ loc_F42B:
 ; ---------------------------------------------------------------------------
 
 loc_F481:
-		cmp	byte_1F34F, 0FFh
+		cmp	byte_1F34F, -1
 		jz	short loc_F4AE
-		mov	byte_1F34F, 0FFh
+		mov	byte_1F34F, -1
 		mov	word_1F3B0, 0
 		mov	al, 1
 		sub	al, _pid_current
@@ -9538,9 +9538,9 @@ sub_F4B4	proc far
 		mov	[bp+@@pid_other], al
 		cmp	word_1F34A, 0
 		jg	short locret_F510
-		cmp	byte_1F34F, 0FFh
+		cmp	byte_1F34F, -1
 		jz	short locret_F510
-		mov	byte_1F34F, 0FFh
+		mov	byte_1F34F, -1
 		mov	word_1F3B0, 0
 		push	word ptr [bp+@@pid_other]
 		call	sub_A3A8
@@ -9652,7 +9652,7 @@ sub_F58C	proc near
 		mov	byte_1F34F, al
 		cmp	byte_1F34F, 0
 		jnz	short loc_F5AD
-		mov	byte_1DB9E, 0FFh
+		mov	byte_1DB9E, -1
 
 loc_F5AD:
 		pop	bp
@@ -10293,7 +10293,7 @@ loc_FB1E:
 ; ---------------------------------------------------------------------------
 
 loc_FB35:
-		cmp	byte_1F34F, 0FFh
+		cmp	byte_1F34F, -1
 		jz	short loc_FB41
 		call	sub_F9A6
 		leave
@@ -11090,7 +11090,7 @@ loc_10299:
 ; ---------------------------------------------------------------------------
 
 loc_102B7:
-		cmp	byte_1F34F, 0FFh
+		cmp	byte_1F34F, -1
 		jz	short loc_102C3
 		call	sub_10053
 		leave
@@ -12092,7 +12092,7 @@ loc_10BE1:
 ; ---------------------------------------------------------------------------
 
 loc_10BED:
-		cmp	byte_1F34F, 0FFh
+		cmp	byte_1F34F, -1
 		jz	short loc_10BF9
 		call	sub_108CA
 		leave
@@ -12950,7 +12950,7 @@ reimu_113A9	proc far
 ; ---------------------------------------------------------------------------
 
 loc_113D1:
-		cmp	byte_1F34F, 0FFh
+		cmp	byte_1F34F, -1
 		jz	short loc_113DD
 		call	sub_111A3
 		pop	bp
@@ -13728,7 +13728,7 @@ loc_11A37:
 ; ---------------------------------------------------------------------------
 
 loc_11A5C:
-		cmp	byte_1F34F, 0FFh
+		cmp	byte_1F34F, -1
 		jz	short loc_11A68
 		call	sub_11885
 		leave
@@ -14535,7 +14535,7 @@ loc_12172:
 ; ---------------------------------------------------------------------------
 
 loc_1218C:
-		cmp	byte_1F34F, 0FFh
+		cmp	byte_1F34F, -1
 		jz	short loc_12198
 		call	sub_120A0
 		pop	bp
@@ -15680,7 +15680,7 @@ loc_12BCB:
 ; ---------------------------------------------------------------------------
 
 loc_12BD7:
-		cmp	byte_1F34F, 0FFh
+		cmp	byte_1F34F, -1
 		jz	short loc_12BE3
 		call	sub_12A10
 		pop	bp
@@ -15689,7 +15689,7 @@ loc_12BD7:
 
 loc_12BE3:
 		call	sub_F58C
-		cmp	byte_1DB9E, 0FFh
+		cmp	byte_1DB9E, -1
 		jnz	short loc_12BF9
 		mov	al, 1
 		sub	al, _pid_current
@@ -16044,20 +16044,20 @@ loc_12F17:
 		sub	dx, ax
 		push	dx
 		call	sub_CE0C
-		mov	byte_23DE6, 0C0h
+		mov	byte_23DE6, -40h
 		push	3
 		call	randring_far_next16_and
 		mov	byte_23DE7, al
 		cmp	byte_23DE7, 0
 		jnz	short loc_12F5A
-		mov	al, 0FDh
+		mov	al, -3
 		jmp	short loc_12F72
 ; ---------------------------------------------------------------------------
 
 loc_12F5A:
 		cmp	byte_23DE7, 1
 		jnz	short loc_12F65
-		mov	al, 0FFh
+		mov	al, -1
 		jmp	short loc_12F72
 ; ---------------------------------------------------------------------------
 
@@ -16508,7 +16508,7 @@ loc_13330:
 ; ---------------------------------------------------------------------------
 
 loc_1333C:
-		cmp	byte_1F34F, 0FFh
+		cmp	byte_1F34F, -1
 		jz	short loc_13348
 		call	sub_13174
 		pop	bp
@@ -16685,7 +16685,7 @@ var_1		= byte ptr -1
 
 		enter	2, 0
 		push	si
-		cmp	byte_1F358, 0F8h
+		cmp	byte_1F358, -8
 		jl	short loc_134C1
 		test	byte ptr word_1F3B0, 7
 		jnz	short loc_134C1
@@ -16811,7 +16811,7 @@ var_1		= byte ptr -1
 		jnz	short loc_135CD
 		cmp	byte_1F358, 2
 		jle	short loc_135C4
-		mov	al, 0FFh
+		mov	al, -1
 		jmp	short loc_135C6
 ; ---------------------------------------------------------------------------
 
@@ -17262,7 +17262,7 @@ loc_139BD:
 ; ---------------------------------------------------------------------------
 
 loc_139C9:
-		cmp	byte_1F34F, 0FFh
+		cmp	byte_1F34F, -1
 		jz	short loc_139D5
 		call	sub_137CF
 		pop	bp
@@ -17357,13 +17357,13 @@ loc_13AE3:
 loc_13AFC:
 		add	bx, 1234h
 		mov	ax, cx
-		mov	ah, 0FFh
+		mov	ah, 11111111b
 
 loc_13B04:
 		shr	ah, 4
 		cmp	dl, 8
 		jge	short loc_13B14
-		mov	ch, 0FFh
+		mov	ch, 11111111b
 		mov	cl, dl
 		shr	ch, cl
 		xor	ah, ch
@@ -17387,7 +17387,7 @@ loc_13B1B:
 loc_13B2C:
 		add	cx, 1234h
 		add	bx, cx
-		mov	ah, 0FFh
+		mov	ah, 11111111b
 		cmp	dl, 8
 		jge	short loc_13B14
 		mov	cl, dl
@@ -17466,7 +17466,7 @@ sub_13B9A	proc far
 loc_13BAA:
 		add	bx, 4BA0h
 		mov	word ptr cs:loc_13BE9+1, bx
-		mov	al, 0FFh
+		mov	al, 11111111b
 		mov	cx, word_220F2
 		shr	al, cl
 		not	al
@@ -22625,7 +22625,7 @@ arg_2		= word ptr  6
 		inc	byte_1F39E
 
 loc_16656:
-		cmp	byte_1DB9E, 0FFh
+		cmp	byte_1DB9E, -1
 		jnz	short loc_1666D
 		mov	al, cl
 		mov	ah, 0
@@ -23011,14 +23011,14 @@ arg_0		= byte ptr  6
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	dl, 0FFh
+		mov	dl, -1
 		mov	al, [bp+arg_0]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		cmp	word ptr [bx+1DCAh], 0
 		jz	short loc_169AD
-		mov	byte_20E48, 0FEh
+		mov	byte_20E48, -2
 		mov	ax, word_1F326
 		mov	word_2142E, ax
 		mov	ax, word_1F328
@@ -23062,11 +23062,11 @@ loc_169EF:
 		jl	short loc_169B4
 
 loc_169F4:
-		cmp	dl, 0FFh
+		cmp	dl, -1
 		jnz	short loc_16A0C
 		mov	word_2142E, 900h
 		mov	word_21430, 12C0h
-		mov	byte_20E48, 0FFh
+		mov	byte_20E48, -1
 		jmp	short loc_16A50
 ; ---------------------------------------------------------------------------
 
@@ -26199,7 +26199,7 @@ loc_182D6:
 		mov	bx, ax
 		mov	al, [bx+4B3Eh]
 		add	al, byte_2203A
-		add	al, 0FFh
+		add	al, -1
 		mov	dl, [bp+@@pid]
 		mov	dh, 0
 		shl	dx, 4
@@ -28131,7 +28131,7 @@ arg_4		= word ptr  0Ah
 		call	randring_far_next16_and
 		or	ax, ax
 		jnz	short loc_19423
-		mov	al, 0FFh
+		mov	al, -1
 		jmp	short loc_19425
 ; ---------------------------------------------------------------------------
 
@@ -33029,7 +33029,7 @@ loc_1B855:
 loc_1B871:
 		mov	bx, word_1F868
 		mov	al, [bx]
-		add	al, 0FFh
+		add	al, -1
 		mov	[bx], al
 		cmp	al, 1
 		jnz	short loc_1B886

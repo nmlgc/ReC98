@@ -2447,7 +2447,7 @@ loc_ABFE:
 ; ---------------------------------------------------------------------------
 
 loc_AC1A:
-		mov	al, 0FFh	; jumptable 0000A67C case 36
+		mov	al, -1	; jumptable 0000A67C case 36
 		jmp	short loc_AC20
 ; ---------------------------------------------------------------------------
 
@@ -2540,7 +2540,7 @@ loc_ACBB:
 		inc	word ptr _cutscene_script
 		push	word ptr [bp+var_1]
 		call	sub_A64D
-		cmp	al, 0FFh
+		cmp	al, -1
 		jnz	short loc_ACA3
 		jmp	loc_ADA0
 ; ---------------------------------------------------------------------------
