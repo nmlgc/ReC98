@@ -2777,27 +2777,27 @@ var_4		= dword	ptr -4
 		jmp	cs:off_BB75[bx]
 
 loc_BA18:
-		mov	[bp+var_4], 9C4h
+		mov	[bp+var_4], 2500
 		jmp	short loc_BA52
 ; ---------------------------------------------------------------------------
 
 loc_BA22:
-		mov	[bp+var_4], 7D0h
+		mov	[bp+var_4], 2000
 		jmp	short loc_BA52
 ; ---------------------------------------------------------------------------
 
 loc_BA2C:
-		mov	[bp+var_4], 5DCh
+		mov	[bp+var_4], 1500
 		jmp	short loc_BA52
 ; ---------------------------------------------------------------------------
 
 loc_BA36:
-		mov	[bp+var_4], 3E8h
+		mov	[bp+var_4], 1000
 		jmp	short loc_BA52
 ; ---------------------------------------------------------------------------
 
 loc_BA40:
-		mov	[bp+var_4], 1F4h
+		mov	[bp+var_4], 500
 		jmp	short loc_BA52
 ; ---------------------------------------------------------------------------
 
@@ -2816,18 +2816,18 @@ loc_BA52:
 ; ---------------------------------------------------------------------------
 
 loc_BA67:
-		add	[bp+var_4], 9C4h
+		add	[bp+var_4], 2500
 		jmp	short loc_BA79
 ; ---------------------------------------------------------------------------
 
 loc_BA71:
-		add	[bp+var_4], 5DCh
+		add	[bp+var_4], 1500
 
 loc_BA79:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.turbo_mode], 0
 		jz	short loc_BA8C
-		add	[bp+var_4], 7D0h
+		add	[bp+var_4], 2000
 
 loc_BA8C:
 		les	bx, _resident
@@ -2839,7 +2839,7 @@ loc_BA8C:
 		add	[bp+var_4], eax
 
 loc_BAA5:
-		mov	[bp+var_8], 0F4240h
+		mov	[bp+var_8], 1000000
 		les	bx, _resident
 		mov	ax, es:[bx+resident_t.items_spawned]
 		cmp	ax, es:[bx+resident_t.items_collected]
@@ -2864,10 +2864,10 @@ loc_BAE0:
 		mov	[bp+var_8], eax
 
 loc_BAF3:
-		mov	eax, 0F4240h
+		mov	eax, 1000000
 		sub	eax, [bp+var_8]
 		mov	[bp+var_8], eax
-		mov	ebx, 64h ; 'd'
+		mov	ebx, 100
 		xor	edx, edx
 		div	ebx
 		mov	[bp+var_8], eax
@@ -2881,11 +2881,11 @@ loc_BAF3:
 
 loc_BB2A:
 		mov	eax, [bp+var_4]
-		imul	eax, 64h
+		imul	eax, 100
 		mov	[bp+var_4], eax
-		cmp	[bp+var_4], 0F4240h
+		cmp	[bp+var_4], 1000000
 		jbe	short loc_BB48
-		mov	[bp+var_4], 0F4240h
+		mov	[bp+var_4], 1000000
 
 loc_BB48:
 		mov	eax, dword_124CE
@@ -3037,7 +3037,7 @@ loc_BD24:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.score_last][7], 9
 		jb	short loc_BDD4
-		add	dword_124CE, 927C0h
+		add	dword_124CE, 600000
 		jmp	short loc_BE08
 ; ---------------------------------------------------------------------------
 
@@ -3065,31 +3065,31 @@ loc_BE08:
 		jmp	cs:off_C0EE[bx]
 
 loc_BE1B:
-		sub	dword_124CE, 0C350h
-		mov	[bp+var_4], 0C3500h
+		sub	dword_124CE, 50000
+		mov	[bp+var_4], 800000
 		jmp	short loc_BE6F
 ; ---------------------------------------------------------------------------
 
 loc_BE2E:
-		mov	[bp+var_4], 0F4240h
+		mov	[bp+var_4], 1000000
 		jmp	short loc_BE6F
 ; ---------------------------------------------------------------------------
 
 loc_BE38:
-		add	dword_124CE, 249F0h
-		mov	[bp+var_4], 124F80h
+		add	dword_124CE, 150000
+		mov	[bp+var_4], 1200000
 		jmp	short loc_BE6F
 ; ---------------------------------------------------------------------------
 
 loc_BE4B:
-		add	dword_124CE, 493E0h
-		mov	[bp+var_4], 155CC0h
+		add	dword_124CE, 300000
+		mov	[bp+var_4], 1400000
 		jmp	short loc_BE6F
 ; ---------------------------------------------------------------------------
 
 loc_BE5E:
-		add	dword_124CE, 6DDD0h
-		mov	[bp+var_4], 16E360h
+		add	dword_124CE, 450000
+		mov	[bp+var_4], 1500000
 
 loc_BE6F:
 		les	bx, _resident
@@ -3103,29 +3103,29 @@ loc_BE6F:
 		jmp	cs:off_C0E2[bx]
 
 loc_BE88:
-		add	dword_124CE, 0C350h
-		add	[bp+var_4], 186A0h
+		add	dword_124CE, 50000
+		add	[bp+var_4], 100000
 		jmp	short loc_BECA
 ; ---------------------------------------------------------------------------
 
 loc_BE9B:
-		add	dword_124CE, 61A8h
-		add	[bp+var_4], 0C350h
+		add	dword_124CE, 25000
+		add	[bp+var_4], 50000
 		jmp	short loc_BECA
 ; ---------------------------------------------------------------------------
 
 loc_BEAE:
-		sub	[bp+var_4], 61A8h
+		sub	[bp+var_4], 25000
 		jmp	short loc_BECA
 ; ---------------------------------------------------------------------------
 
 loc_BEB8:
-		sub	[bp+var_4], 0C350h
+		sub	[bp+var_4], 50000
 		jmp	short loc_BECA
 ; ---------------------------------------------------------------------------
 
 loc_BEC2:
-		sub	[bp+var_4], 124F8h
+		sub	[bp+var_4], 75000
 
 loc_BECA:
 		les	bx, _resident
@@ -3139,47 +3139,47 @@ loc_BECA:
 ; ---------------------------------------------------------------------------
 
 loc_BEDF:
-		add	dword_124CE, 0C350h
-		add	[bp+var_4], 186A0h
+		add	dword_124CE, 50000
+		add	[bp+var_4], 100000
 		jmp	short loc_BF03
 ; ---------------------------------------------------------------------------
 
 loc_BEF2:
-		add	dword_124CE, 4E20h
-		add	[bp+var_4], 0C350h
+		add	dword_124CE, 20000
+		add	[bp+var_4], 50000
 
 loc_BF03:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.turbo_mode], 0
 		jnz	short loc_BF17
-		sub	dword_124CE, 186A0h
+		sub	dword_124CE, 100000
 
 loc_BF17:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.miss_count], 15
 		jb	short loc_BF2D
-		sub	dword_124CE, 493E0h
+		sub	dword_124CE, 300000
 		jmp	short loc_BF43
 ; ---------------------------------------------------------------------------
 
 loc_BF2D:
 		les	bx, _resident
 		movzx	eax, es:[bx+resident_t.miss_count]
-		imul	eax, 4E20h
+		imul	eax, 20000
 		sub	dword_124CE, eax
 
 loc_BF43:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.bombs_used], 30
 		jb	short loc_BF59
-		sub	dword_124CE, 15F90h
+		sub	dword_124CE, 90000
 		jmp	short loc_BF6F
 ; ---------------------------------------------------------------------------
 
 loc_BF59:
 		les	bx, _resident
 		movzx	eax, es:[bx+resident_t.bombs_used]
-		imul	eax, 0BB8h
+		imul	eax, 3000
 		sub	dword_124CE, eax
 
 loc_BF6F:
@@ -3197,7 +3197,7 @@ loc_BF6F:
 ; ---------------------------------------------------------------------------
 
 loc_BF96:
-		sub	dword_124CE, 30D40h
+		sub	dword_124CE, 200000
 		jmp	short loc_BFB4
 ; ---------------------------------------------------------------------------
 
@@ -3205,7 +3205,7 @@ loc_BFA1:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.end_sequence], ES_CONTINUED
 		jnz	short loc_BFB4
-		sub	[bp+var_4], 186A0h
+		sub	[bp+var_4], 100000
 
 loc_BFB4:
 		cmp	dword_124CE, 0
@@ -3234,7 +3234,7 @@ loc_BFD9:
 		push	ds
 		push	offset a_ude_txt ; "_ude.txt"
 		call	file_ropen
-		cmp	dword_124CE, 16E360h
+		cmp	dword_124CE, 1500000
 		jge	short loc_C084
 		cmp	dword_124CE, 0
 		jnz	short loc_C02E
@@ -3243,10 +3243,10 @@ loc_BFD9:
 ; ---------------------------------------------------------------------------
 
 loc_C02E:
-		cmp	dword_124CE, 100590h
+		cmp	dword_124CE, 1050000
 		jge	short loc_C051
 		mov	eax, dword_124CE
-		mov	ebx, 0C350h
+		mov	ebx, 50000
 		cdq
 		idiv	ebx
 		mov	dx, 18h
@@ -3256,14 +3256,14 @@ loc_C02E:
 ; ---------------------------------------------------------------------------
 
 loc_C051:
-		cmp	dword_124CE, 124F80h
+		cmp	dword_124CE, 1200000
 		jge	short loc_C061
 		mov	si, 3
 		jmp	short loc_C074
 ; ---------------------------------------------------------------------------
 
 loc_C061:
-		cmp	dword_124CE, 149970h
+		cmp	dword_124CE, 1350000
 		jge	short loc_C071
 		mov	si, 2
 		jmp	short loc_C074
