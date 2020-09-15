@@ -591,7 +591,7 @@ loc_A93B:
 loc_A950:
 		or	si, si
 		jnz	short loc_A95C
-		mov	si, 3E7h
+		mov	si, 999
 		mov	[bp+var_2], 1
 
 loc_A95C:
@@ -1530,7 +1530,7 @@ sub_B1B5	proc near
 		mov	ax, word ptr ALLCAST_LINES_PER_SCREEN[bx]
 		dec	ax
 		shl	ax, 4
-		mov	dx, 0C0h
+		mov	dx, 192
 		sub	dx, ax
 		mov	ax, allcast_line_on_screen
 		shl	ax, 5
@@ -2300,10 +2300,10 @@ loc_B9E3:
 		jmp	cs:off_BA7C[bx]
 
 loc_B9F5:
-		mov	di, 126h
+		mov	di, 294
 		or	si, si
 		jnz	short loc_BA01
-		mov	ax, 58h	; 'X'
+		mov	ax, 88
 		jmp	short loc_BA4B
 ; ---------------------------------------------------------------------------
 
@@ -5962,16 +5962,16 @@ var_2		= word ptr -2
 		enter	2, 0
 		push	si
 		inc	word_1183E
-		cmp	word_1183E, 50h	; 'P'
+		cmp	word_1183E, 80
 		jl	loc_DA31
-		cmp	word_1183E, 0B0h ; '∞'
+		cmp	word_1183E, 176
 		jge	short loc_D951
 		inc	_space_camera_velocity.y
 		jmp	short loc_D9B5
 ; ---------------------------------------------------------------------------
 
 loc_D951:
-		cmp	word_1183E, 158h
+		cmp	word_1183E, 344
 		jge	short loc_D964
 		mov	al, byte_1183A
 		mov	ah, 0
@@ -6024,16 +6024,16 @@ loc_D9A5:
 		dec	byte_11840
 
 loc_D9B5:
-		cmp	word_1183E, 0EAh ; 'ÅE
+		cmp	word_1183E, 234
 		jl	short loc_DA31
-		cmp	word_1183E, 200h
+		cmp	word_1183E, 512
 		jge	short loc_DA04
 		mov	ax, word_1183E
-		add	ax, 0FF16h
+		add	ax, -234
 		mov	si, ax
-		cmp	si, 58h	; 'X'
+		cmp	si, 88
 		jle	short loc_D9D7
-		add	ax, 0FFA8h
+		add	ax, -88
 		jmp	short loc_D9D9
 ; ---------------------------------------------------------------------------
 
@@ -6064,16 +6064,16 @@ loc_D9D9:
 ; ---------------------------------------------------------------------------
 
 loc_DA04:
-		cmp	word_1183E, 3E0h
+		cmp	word_1183E, 992
 		jl	short loc_DA18
-		cmp	word_1183E, 400h
+		cmp	word_1183E, 1024
 		jg	short loc_DA18
 		dec	orb.OP_velocity.x
 
 loc_DA18:
-		cmp	word_1183E, 3F0h
+		cmp	word_1183E, 1008
 		jl	short loc_DA2C
-		cmp	word_1183E, 410h
+		cmp	word_1183E, 1040
 		jg	short loc_DA2C
 		dec	_space_camera_velocity.x
 
@@ -6185,16 +6185,16 @@ sub_DAD7	proc near
 
 loc_DAEF:
 		inc	word_11844
-		cmp	word_11844, 20h	; ' '
+		cmp	word_11844, 32
 		jl	loc_DBE0
-		cmp	word_11844, 80h
+		cmp	word_11844, 128
 		jge	short loc_DB0B
 		dec	_space_camera_velocity.y
 		jmp	loc_DBC3
 ; ---------------------------------------------------------------------------
 
 loc_DB0B:
-		cmp	word_11844, 134h
+		cmp	word_11844, 308
 		jge	short loc_DB1F
 		mov	al, byte_1183A
 		mov	ah, 0
@@ -6260,9 +6260,9 @@ loc_DB9A:
 		jl	short loc_DB5F
 
 loc_DB9F:
-		cmp	word_11844, 7530h
+		cmp	word_11844, 30000
 		jl	short loc_DBAD
-		mov	word_11844, 7528h
+		mov	word_11844, 29992
 
 loc_DBAD:
 		mov	ax, _space_window_w
@@ -6396,7 +6396,7 @@ loc_DC88:
 		jl	short loc_DC9A
 		lea	bx, [bp+var_2C]
 		add	bx, [bp+var_2]
-		mov	byte ptr ss:[bx], 98h ;	'ÅE
+		mov	byte ptr ss:[bx], 152
 		jmp	short loc_DCBA
 ; ---------------------------------------------------------------------------
 
@@ -6412,7 +6412,7 @@ loc_DC9A:
 loc_DCAC:
 		lea	bx, [bp+var_2C]
 		add	bx, [bp+var_2]
-		mov	al, 9Fh	; 'ÅE
+		mov	al, 159
 		sub	al, byte ptr [bp+arg_2]
 		mov	ss:[bx], al
 
@@ -6469,7 +6469,7 @@ sub_DCFC	proc near
 
 var_4     	= word ptr -4
 var_2     	= word ptr -2
-arg_0     	= word ptr  4
+@@measure     	= word ptr  4
 @@slot    	= word ptr  6
 @@y_center	= word ptr  8
 @@x_center	= word ptr  0Ah
@@ -6592,9 +6592,9 @@ loc_DDD8:
 
 loc_DE01:
 		mov	ax, measure_151E0
-		cmp	ax, [bp+arg_0]
+		cmp	ax, [bp+@@measure]
 		jl	short loc_DE6C
-		cmp	[bp+arg_0], 0F9Ch
+		cmp	[bp+@@measure], 3996
 		jz	short loc_DE6C
 		cmp	word_11848, 4
 		jnz	short loc_DE49
@@ -6653,7 +6653,7 @@ sub_DE74	proc near
 
 var_4     	= word ptr -4
 var_2     	= word ptr -2
-arg_0     	= word ptr  4
+@@measure     	= word ptr  4
 @@slot    	= word ptr  6
 @@y_center	= word ptr  8
 @@x_center	= word ptr  0Ah
@@ -6776,9 +6776,9 @@ loc_DF50:
 
 loc_DF79:
 		mov	ax, measure_151E0
-		cmp	ax, [bp+arg_0]
+		cmp	ax, [bp+@@measure]
 		jl	short loc_DFE4
-		cmp	[bp+arg_0], 0F9Ch
+		cmp	[bp+@@measure], 3996
 		jz	short loc_DFE4
 		cmp	word_1184A, 4
 		jnz	short loc_DFC1
@@ -7306,7 +7306,7 @@ loc_E585:
 		inc	si
 
 loc_E58C:
-		cmp	si, 20h	; ' '
+		cmp	si, 32
 		jl	short loc_E585
 		call	sub_D509
 
@@ -7323,18 +7323,18 @@ loc_E594:
 
 loc_E5AB:
 		call	sub_D931
-		cmp	si, 80h
+		cmp	si, 128
 		jle	short loc_E5C9
-		push	21000F0h
-		push	1004Ch
+		push	(528 shl 16) or 240
+		push	(1 shl 16) or 76
 		call	sub_DE74
 		or	ax, ax
 		jz	short loc_E5C9
 		xor	si, si
 
 loc_E5C9:
-		push	1D000C0h
-		pushd	4Ch ; 'L'
+		push	(464 shl 16) or 192
+		pushd	(0 shl 16) or 76
 		call	sub_DCFC
 		mov	di, ax
 		call	sub_E349
@@ -7345,8 +7345,8 @@ loc_E5C9:
 
 loc_E5E1:
 		call	sub_D931
-		push	1D000C8h
-		push	2005Ch
+		push	(464 shl 16) or 200
+		push	(2 shl 16) or 92
 		call	sub_DCFC
 		mov	di, ax
 		call	sub_E349
@@ -7357,18 +7357,18 @@ loc_E5E1:
 
 loc_E600:
 		call	sub_D931
-		cmp	si, 100h
+		cmp	si, 256
 		jle	short loc_E61E
-		push	1D000E0h
-		push	40078h
+		push	(464 shl 16) or 224
+		push	(4 shl 16) or 120
 		call	sub_DE74
 		or	ax, ax
 		jz	short loc_E61E
 		xor	si, si
 
 loc_E61E:
-		push	1D000B0h
-		push	30078h
+		push	(464 shl 16) or 176
+		push	(3 shl 16) or 120
 		call	sub_DCFC
 		mov	di, ax
 		call	sub_E349
@@ -7387,8 +7387,8 @@ loc_E63A:
 
 loc_E648:
 		call	sub_DAD7
-		push	0B000C8h
-		push	500ACh
+		push	(176 shl 16) or 200
+		push	(5 shl 16) or 172
 		call	sub_DCFC
 		mov	di, ax
 		call	sub_E349
@@ -7397,8 +7397,8 @@ loc_E648:
 
 loc_E663:
 		call	sub_DAD7
-		push	0B000C8h
-		push	600BCh
+		push	(176 shl 16) or 200
+		push	(6 shl 16) or 188
 		call	sub_DCFC
 		mov	di, ax
 		call	sub_E349
@@ -7407,8 +7407,8 @@ loc_E663:
 
 loc_E67E:
 		call	sub_DAD7
-		push	0B000C8h
-		push	700CCh
+		push	(176 shl 16) or 200
+		push	(7 shl 16) or 204
 		call	sub_DCFC
 		mov	di, ax
 		call	sub_E349
@@ -7417,8 +7417,8 @@ loc_E67E:
 
 loc_E699:
 		call	sub_DAD7
-		push	0B000C8h
-		push	800DCh
+		push	(176 shl 16) or 200
+		push	(8 shl 16) or 220
 		call	sub_DCFC
 		mov	di, ax
 		call	sub_E349
@@ -7427,8 +7427,8 @@ loc_E699:
 
 loc_E6B4:
 		call	sub_DAD7
-		push	0B000C8h
-		push	900ECh
+		push	(176 shl 16) or 200
+		push	(9 shl 16) or 236
 		call	sub_DCFC
 		mov	di, ax
 		call	sub_E349
@@ -7440,9 +7440,9 @@ loc_E6B4:
 
 loc_E6DB:
 		call	_input_reset_sense_held
-		cmp	si, 100h
+		cmp	si, 256
 		jz	short loc_E6EC
-		cmp	si, 101h
+		cmp	si, 257
 		jnz	short loc_E6F1
 
 loc_E6EC:
@@ -7451,9 +7451,9 @@ loc_E6EC:
 ; ---------------------------------------------------------------------------
 
 loc_E6F1:
-		cmp	si, 140h
+		cmp	si, 320
 		jz	short loc_E6FD
-		cmp	si, 141h
+		cmp	si, 321
 		jnz	short loc_E702
 
 loc_E6FD:
@@ -7462,17 +7462,17 @@ loc_E6FD:
 ; ---------------------------------------------------------------------------
 
 loc_E702:
-		cmp	si, 15Eh
+		cmp	si, 350
 		jnz	short loc_E70D
 		call	verdict_bitmap_snap pascal, 0
 
 loc_E70D:
 		call	sub_DAD7
-		push	0B00170h
-		push	0A0F9Ch
+		push	(176 shl 16) or 368
+		push	(10 shl 16) or 3996
 		call	sub_DCFC
 		inc	si
-		cmp	si, 190h
+		cmp	si, 400
 		jl	loc_E7BB
 		test	_key_det.hi, high INPUT_CANCEL
 		jnz	short loc_E757
