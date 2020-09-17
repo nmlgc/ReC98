@@ -169,31 +169,31 @@ arg_4		= word ptr  0Ah
 		add	bx, ax
 		mov	ds, dx
 		mov	si, bx
-		mov	cx, 10h
+		mov	cx, TILE_H
 
 loc_39CC:
-		mov	ax, 0A800h
+		mov	ax, SEG_PLANE_B
 		mov	es, ax
 		assume es:nothing
 		mov	ax, [si]
 		mov	es:[di], ax
-		mov	ax, 0B000h
+		mov	ax, SEG_PLANE_R
 		mov	es, ax
 		assume es:nothing
 		mov	ax, [si+20h]
 		mov	es:[di], ax
-		mov	ax, 0B800h
+		mov	ax, SEG_PLANE_G
 		mov	es, ax
 		assume es:nothing
 		mov	ax, [si+40h]
 		mov	es:[di], ax
-		mov	ax, 0E000h
+		mov	ax, SEG_PLANE_E
 		mov	es, ax
 		assume es:nothing
 		mov	ax, [si+60h]
 		mov	es:[di], ax
-		add	di, 50h	; 'P'
-		add	si, 2
+		add	di, ROW_SIZE
+		add	si, (TILE_W / 8)
 		loop	loc_39CC
 		pop	ds
 		pop	di
@@ -987,7 +987,7 @@ loc_4356:
 		cwd
 		idiv	bx
 		shl	ax, 4
-		add	ax, 240h
+		add	ax, 576
 		push	ax
 		mov	ax, si
 		cwd
@@ -1013,7 +1013,7 @@ loc_4383:
 		mov	ax, si
 		cwd
 		idiv	bx
-		imul	dx, 500h
+		imul	dx, (TILE_H * ROW_SIZE)
 		pop	ax
 		add	ax, dx
 		add	ax, 48h	; 'H'

@@ -203,16 +203,16 @@ arg_6		= word ptr  0Ch
 		add	si, 40h
 		mov	dx, [bx+345Ch]
 		mov	ds, dx
-		mov	ax, 0A800h
+		mov	ax, SEG_PLANE_B
 		mov	fs, ax
 		assume fs:nothing
-		mov	ax, 0B000h
+		mov	ax, SEG_PLANE_R
 		mov	gs, ax
 		assume gs:nothing
-		mov	ax, 0B800h
+		mov	ax, SEG_PLANE_G
 		mov	es, ax
 		assume es:nothing
-		mov	cx, 10h
+		mov	cx, 16
 
 loc_36CA:
 		mov	ax, [si-40h]
@@ -220,17 +220,17 @@ loc_36CA:
 		mov	ax, [si-20h]
 		mov	gs:[di], ax
 		movsw
-		add	di, 4Eh	; 'N'
+		add	di, (ROW_SIZE - word)
 		loop	loc_36CA
-		sub	di, 500h
-		mov	ax, 0E000h
+		sub	di, (16 * ROW_SIZE)
+		mov	ax, SEG_PLANE_E
 		mov	es, ax
 		assume es:nothing
-		mov	cx, 10h
+		mov	cx, 16
 
 loc_36E8:
 		movsw
-		add	di, 4Eh	; 'N'
+		add	di, (ROW_SIZE - word)
 		loop	loc_36E8
 
 loc_36EE:
@@ -711,7 +711,7 @@ loc_AEF9:
 		add	al, '0'
 		mov	es:[bx+resident_t.stage_ascii], al
 		mov	fp_23D90, offset DemoPlay
-		mov	random_seed, 13Eh
+		mov	random_seed, 318
 
 loc_AF4A:
 		call	main_01:sub_12024
@@ -1475,8 +1475,8 @@ public MPTN_LOAD
 mptn_load	proc near
 
 var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@tile_y		= word ptr -4
+@@tile_x		= word ptr -2
 arg_0		= dword	ptr  4
 
 		enter	6, 0
@@ -1486,13 +1486,13 @@ arg_0		= dword	ptr  4
 		pushd	[bp+arg_0]
 		call	mptn_load_inner
 		mov	[bp+var_6], 0
-		mov	[bp+var_2], 0
-		mov	si, 240h
+		mov	[bp+@@tile_x], 0
+		mov	si, 576
 		jmp	short loc_B95E
 ; ---------------------------------------------------------------------------
 
 loc_B91C:
-		mov	[bp+var_4], 0
+		mov	[bp+@@tile_y], 0
 		xor	di, di
 		jmp	short loc_B952
 ; ---------------------------------------------------------------------------
@@ -1511,17 +1511,17 @@ loc_B925:
 		push	[bp+var_6]
 		call	sub_3680
 		inc	[bp+var_6]
-		inc	[bp+var_4]
-		add	di, 10h
+		inc	[bp+@@tile_y]
+		add	di, TILE_H
 
 loc_B952:
-		cmp	[bp+var_4], 19h
+		cmp	[bp+@@tile_y], TILES_Y
 		jl	short loc_B925
-		inc	[bp+var_2]
-		add	si, 10h
+		inc	[bp+@@tile_x]
+		add	si, TILE_W
 
 loc_B95E:
-		cmp	[bp+var_2], 4
+		cmp	[bp+@@tile_x], 4
 		jl	short loc_B91C
 		push	0
 		call	mptn_free
@@ -1657,10 +1657,10 @@ loc_BB60:
 		mov	cl, bl
 		mov	bx, ax
 		add	bx, 40h
-		cmp	di, 7D00h
+		cmp	di, PLANE_SIZE
 		jb	short loc_BB87
-		sub	di, 7D00h
-		sub	bx, 640h
+		sub	di, PLANE_SIZE
+		sub	bx, (TILES_MEMORY_X * TILES_Y * word)
 
 loc_BB87:
 		mov	si, _tile_ring[bx]
@@ -1711,8 +1711,8 @@ include th04/hardware/fillm64-56_256-256.asm
 
 sub_BF16	proc near
 
-var_6		= word ptr -6
-var_4		= word ptr -4
+@@top		= word ptr -6
+@@left		= word ptr -4
 var_2		= byte ptr -2
 var_1		= byte ptr -1
 arg_0		= word ptr  4
@@ -1728,11 +1728,11 @@ arg_0		= word ptr  4
 		mov	fs, ax
 		mov	di, [bp+arg_0]
 		shl	di, 7
-		mov	[bp+var_6], 10h
+		mov	[bp+@@top], PLAYFIELD_TOP
 
 loc_BF39:
-		mov	[bp+var_4], 20h	; ' '
-		mov	[bp+var_2], 18h
+		mov	[bp+@@left], PLAYFIELD_LEFT
+		mov	[bp+var_2], TILES_X
 
 loc_BF42:
 		mov	al, fs:[di]
@@ -1741,8 +1741,8 @@ loc_BF42:
 loc_BF48:
 		test	[bp+var_1], 80h
 		jz	short loc_BF65
-		mov	ax, [bp+var_4]
-		mov	dx, [bp+var_6]
+		mov	ax, [bp+@@left]
+		mov	dx, [bp+@@top]
 		add	dx, _scroll_line
 		cmp	dx, RES_Y
 		jl	short loc_BF62
@@ -1753,7 +1753,7 @@ loc_BF62:
 
 loc_BF65:
 		shl	[bp+var_1], 1
-		add	[bp+var_4], 10h
+		add	[bp+@@left], TILE_W
 		dec	[bp+var_2]
 		jz	short loc_BF7A
 		test	[bp+var_2], 7
@@ -1764,8 +1764,8 @@ loc_BF65:
 
 loc_BF7A:
 		add	di, 2
-		add	[bp+var_6], 10h
-		cmp	[bp+var_6], 180h
+		add	[bp+@@top], TILE_H
+		cmp	[bp+@@top], PLAYFIELD_BOTTOM
 		jb	short loc_BF39
 		GRCG_OFF_CLOBBERING dx
 		pop	di
@@ -3162,22 +3162,22 @@ loc_D350:
 		call	frame_delay
 		cmp	word_255D4, 0
 		jnz	short loc_D38A
-		push	2000F0h
+		push	(32 shl 16) or 240
 		call	main_01:sub_D04E
 		cmp	[bp+var_2], (-1 and 255)
 		jz	loc_D528	; default
 		add	[bp+var_2], 2
-		push	2000F0h
+		push	(32 shl 16) or 240
 		jmp	short loc_D3A6
 ; ---------------------------------------------------------------------------
 
 loc_D38A:
-		push	1200070h
+		push	(288 shl 16) or 112
 		call	main_01:sub_D04E
 		cmp	[bp+var_2], (-1 and 255)
 		jz	loc_D528	; default
 		add	[bp+var_2], 8
-		push	1200070h
+		push	(288 shl 16) or 112
 
 loc_D3A6:
 		push	[bp+var_2]
@@ -3743,7 +3743,7 @@ loc_D83A:
 		call	hmem_allocbyte
 		mov	_cdg_slots.seg_colors + (size cdg_t * 0), ax
 		push	_Ems
-		pushd	84D0h
+		pushd	34000
 		push	ax
 		push	0
 		movzx	eax, di
@@ -10912,26 +10912,26 @@ sub_11FC8	proc near
 		mov	ax, GRAM_400
 		mov	es, ax
 		assume es:nothing
-		cmp	bx, 180h
+		cmp	bx, PLAYFIELD_BOTTOM
 		ja	short loc_11FEC
-		mov	cx, 10h
+		mov	cx, TILE_H
 		xor	bx, bx
 		jmp	short loc_11FF6
 ; ---------------------------------------------------------------------------
 
 loc_11FEC:
-		mov	cx, 190h
+		mov	cx, RES_Y
 		sub	cx, bx
-		mov	bx, 10h
+		mov	bx, TILE_H
 		sub	bx, cx
 
 loc_11FF6:
 		stosw
-		add	di, ROW_SIZE - 2
+		add	di, (ROW_SIZE - word)
 		loop	loc_11FF6
 		or	bx, bx
 		jz	short loc_12008
-		sub	di, 7D00h
+		sub	di, PLANE_SIZE
 		xchg	cx, bx
 		jmp	short loc_11FF6
 ; ---------------------------------------------------------------------------

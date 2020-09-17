@@ -183,7 +183,7 @@ mptn_load_inner	proc far
 		push	si
 		push	di
 		push	ds
-		mov	ax, 3D00h
+		mov	ax, (3Dh shl 8) or 00h
 		lds	dx, ss:[bx+4]
 		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
 					; DS:DX	-> ASCIZ filename
@@ -269,13 +269,13 @@ sub_4226	proc far
 		add	di, ax
 		push	ds
 		mov	ds, word_23A5A
-		mov	ax, 0A800h
+		mov	ax, SEG_PLANE_B
 		call	sub_4272
-		mov	ax, 0B000h
+		mov	ax, SEG_PLANE_R
 		call	sub_4272
-		mov	ax, 0B800h
+		mov	ax, SEG_PLANE_G
 		call	sub_4272
-		mov	ax, 0E000h
+		mov	ax, SEG_PLANE_E
 		call	sub_4272
 		pop	ds
 		pop	di
@@ -294,13 +294,13 @@ sub_4226	endp
 sub_4272	proc near
 		mov	es, ax
 		assume es:nothing
-		mov	cx, 10h
+		mov	cx, 16
 
 loc_4277:
 		movsw
-		add	di, 4Eh	; 'N'
+		add	di, (ROW_SIZE - word)
 		loop	loc_4277
-		sub	di, 500h
+		sub	di, (16 * ROW_SIZE)
 		retn
 sub_4272	endp
 
@@ -488,12 +488,12 @@ loc_AF88:
 		jz	short loc_AFC3
 		cmp	byte_20A70, 0
 		jnz	short loc_AFB5
-		mov	byte_20A70, 0FEh
+		mov	byte_20A70, -2
 		jmp	short loc_AFDF
 ; ---------------------------------------------------------------------------
 
 loc_AFB5:
-		cmp	byte_20A70, 0FFh
+		cmp	byte_20A70, -1
 		jnz	short loc_AFDF
 		mov	byte_20A70, 1
 		jmp	short loc_AFDF
@@ -507,9 +507,9 @@ loc_AFC3:
 ; ---------------------------------------------------------------------------
 
 loc_AFD1:
-		cmp	byte_20A70, 0FEh
+		cmp	byte_20A70, -2
 		jnz	short loc_AFDF
-		mov	byte_20A70, 0FFh
+		mov	byte_20A70, -1
 		jmp	short $+2
 
 loc_AFDF:
@@ -549,7 +549,7 @@ loc_B003:
 		mov	_stage_frame_mod4, al
 		and	al, 1
 		mov	_stage_frame_mod2, al
-		test	_stage_frame, 0FFFh
+		test	_stage_frame, 4095
 		jnz	short loc_B055
 		push	1
 		nopcall	playperf_raise
@@ -796,7 +796,7 @@ loc_B2A5:
 
 loc_B2CE:
 		mov	fp_2300E, offset DemoPlay
-		mov	random_seed, 13Eh
+		mov	random_seed, 318
 
 loc_B2DD:
 		call	sub_CFEE
@@ -1323,7 +1323,7 @@ EmsLoad	proc near ; ZUN symbol [MAGNet2010]
 		cmp	_Ems, 0
 		jz	@@ret
 		push	_Ems
-		pushd	84D0h
+		pushd	34000
 		push	_cdg_slots.seg_colors + (size cdg_t * 0)
 		push	0
 		mov	ax, _cdg_slots.CDG_plane_size + (size cdg_t * 0)
@@ -1370,7 +1370,7 @@ loc_B941:
 
 loc_B946:
 		mov	si, 2
-		mov	[bp+@@size], 186A0h
+		mov	[bp+@@size], 100000
 		mov	di, _cdg_slots.CDG_plane_size + (size cdg_t * 2)
 		jmp	short loc_B9B4
 ; ---------------------------------------------------------------------------
@@ -1439,7 +1439,7 @@ arg_0		= dword	ptr  4
 		jz	loc_BA60
 		call	cdg_load_all pascal, 8, [bp+arg_0]
 		mov	si, 8
-		mov	[bp+var_4], 30D40h
+		mov	[bp+var_4], 200000
 		mov	di, _cdg_slots.CDG_plane_size + (size cdg_t * 8)
 		jmp	short loc_BA54
 ; ---------------------------------------------------------------------------
@@ -1552,7 +1552,7 @@ loc_BB08:
 		out	0A6h, al
 		push	ax
 		xor	bp, bp
-		mov	si, 240h
+		mov	si, 576
 
 loc_BB10:
 		xor	di, di
@@ -1563,11 +1563,11 @@ loc_BB12:
 		push	bp
 		call	sub_4226
 		inc	bp
-		add	di, 10h
-		cmp	di, 190h
+		add	di, TILE_H
+		cmp	di, RES_Y
 		jb	short loc_BB12
-		add	si, 10h
-		cmp	si, 280h
+		add	si, TILE_H
+		cmp	si, RES_X
 		jb	short loc_BB10
 		pop	ax
 		dec	al
@@ -1589,9 +1589,9 @@ map_load	proc near
 		push	si
 		call	map_free
 		mov	al, _stage_id
-		add	al, 30h	; '0'
+		add	al, '0'
 		mov	aSt00_map+3, al
-		mov	ax, 3D00h
+		mov	ax, (3Dh shl 8) or 00h
 		mov	dx, offset aSt00_map
 		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
 					; DS:DX	-> ASCIZ filename
@@ -1711,10 +1711,10 @@ loc_BCDC:
 		mov	cl, bl
 		mov	bx, ax
 		add	bx, 40h
-		cmp	di, 7D00h
+		cmp	di, PLANE_SIZE
 		jb	short loc_BD03
-		sub	di, 7D00h
-		sub	bx, 640h
+		sub	di, PLANE_SIZE
+		sub	bx, (TILES_MEMORY_X * TILES_Y * word)
 
 loc_BD03:
 		mov	si, _tile_ring[bx]
@@ -2895,26 +2895,26 @@ sub_CE80	proc near
 		mov	ax, GRAM_400
 		mov	es, ax
 		assume es:nothing
-		cmp	bx, 180h
+		cmp	bx, PLAYFIELD_BOTTOM
 		ja	short loc_CEA4
-		mov	cx, 10h
+		mov	cx, TILE_H
 		xor	bx, bx
 		jmp	short loc_CEAE
 ; ---------------------------------------------------------------------------
 
 loc_CEA4:
-		mov	cx, 190h
+		mov	cx, RES_Y
 		sub	cx, bx
-		mov	bx, 10h
+		mov	bx, TILE_H
 		sub	bx, cx
 
 loc_CEAE:
 		stosw
-		add	di, ROW_SIZE - 2
+		add	di, (ROW_SIZE - word)
 		loop	loc_CEAE
 		or	bx, bx
 		jz	short loc_CEC0
-		sub	di, 7D00h
+		sub	di, PLANE_SIZE
 		xchg	cx, bx
 		jmp	short loc_CEAE
 ; ---------------------------------------------------------------------------
@@ -2999,21 +2999,21 @@ sub_CEF2	endp
 
 
 sub_CF2C	proc near
-		mov	di, 0EB4h
+		mov	di, ((47 * ROW_SIZE) + PLAYFIELD_VRAM_LEFT)
 
 loc_CF2F:
-		mov	cx, 5
+		mov	cx, (160 / (dword * 8))
 		rep stosd
 		mov	es:[di], ax
-		sub	di, 64h	; 'd'
+		sub	di, ((160 / 8) + ROW_SIZE)
 		jge	short loc_CF2F
-		mov	di, 0ECEh
+		mov	di, ((47 * ROW_SIZE) + (PLAYFIELD_VRAM_LEFT + (208 / 8)))
 
 loc_CF40:
-		mov	cx, 5
+		mov	cx, (160 / (dword * 8))
 		rep stosd
 		mov	es:[di], ax
-		sub	di, 64h	; 'd'
+		sub	di, ((160 / 8) + ROW_SIZE)
 		jge	short loc_CF40
 		retn
 sub_CF2C	endp
@@ -4024,8 +4024,8 @@ loc_D7AB:
 
 loc_D7B6:
 		mov	ax, word_21D72
-		and	ax, 1FFh
-		cmp	ax, 100h
+		and	ax, 511
+		cmp	ax, 256
 		jnb	short loc_D7C8
 		mov	ax, [bp+var_2]
 		add	[si+lineset_t.LS_center.x], ax
@@ -4199,8 +4199,8 @@ loc_D907:
 
 loc_D912:
 		mov	ax, word_21D72
-		and	ax, 1FFh
-		cmp	ax, 100h
+		and	ax, 511
+		cmp	ax, 256
 		jnb	short loc_D924
 		mov	ax, [bp+var_2]
 		add	[si+lineset_t.LS_center.x], ax
@@ -4762,8 +4762,8 @@ include th05/formats/bb_load.asm
 
 sub_DF36	proc near
 
-var_6		= word ptr -6
-var_4		= word ptr -4
+@@top		= word ptr -6
+@@left		= word ptr -4
 var_2		= byte ptr -2
 var_1		= byte ptr -1
 arg_0		= word ptr  4
@@ -4779,11 +4779,11 @@ arg_0		= word ptr  4
 		mov	fs, ax
 		mov	di, [bp+arg_0]
 		shl	di, 7
-		mov	[bp+var_6], 10h
+		mov	[bp+@@top], PLAYFIELD_TOP
 
 loc_DF59:
-		mov	[bp+var_4], 20h	; ' '
-		mov	[bp+var_2], 18h
+		mov	[bp+@@left], PLAYFIELD_LEFT
+		mov	[bp+var_2], TILES_X
 
 loc_DF62:
 		mov	al, fs:[di]
@@ -4792,8 +4792,8 @@ loc_DF62:
 loc_DF68:
 		test	[bp+var_1], 80h
 		jz	short loc_DF8C
-		mov	ax, [bp+var_4]
-		mov	dx, [bp+var_6]
+		mov	ax, [bp+@@left]
+		mov	dx, [bp+@@top]
 		cmp	_scroll_active, 0
 		jz	short loc_DF7F
 		add	dx, _scroll_line
@@ -4808,7 +4808,7 @@ loc_DF89:
 
 loc_DF8C:
 		shl	[bp+var_1], 1
-		add	[bp+var_4], 10h
+		add	[bp+@@left], TILE_W
 		dec	[bp+var_2]
 		jz	short loc_DFA1
 		test	[bp+var_2], 7
@@ -4819,8 +4819,8 @@ loc_DF8C:
 
 loc_DFA1:
 		add	di, 2
-		add	[bp+var_6], 10h
-		cmp	[bp+var_6], 180h
+		add	[bp+@@top], TILE_H
+		cmp	[bp+@@top], PLAYFIELD_BOTTOM
 		jb	short loc_DF59
 		GRCG_OFF_CLOBBERING dx
 		pop	di
@@ -5012,7 +5012,7 @@ include th04/formats/scoredat_code_asm.asm
 
 
 sub_E7DC	proc near
-		mov	ax, 3D00h
+		mov	ax, (3Dh shl 8) or 00h
 		mov	dx, offset aGENSOU_SCR
 		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
 					; DS:DX	-> ASCIZ filename
@@ -5031,7 +5031,7 @@ loc_E7E7:
 		imul	ax, size scoredat_section_t
 		mov	dx, ax
 		xor	cx, cx
-		mov	ax, 4200h
+		mov	ax, (42h shl 8) or 00h
 		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
 					; AL = method: offset from beginning of	file
 		mov	ah, 3Fh
@@ -5053,7 +5053,7 @@ sub_E7DC	endp
 
 sub_E813	proc near
 		call	scoredat_encode
-		mov	ax, 3D02h
+		mov	ax, (3Dh shl 8) or 02h
 		mov	dx, offset aGENSOU_SCR
 		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
 					; DS:DX	-> ASCIZ filename
@@ -5067,7 +5067,7 @@ sub_E813	proc near
 		imul	ax, size scoredat_section_t
 		mov	dx, ax
 		xor	cx, cx
-		mov	ax, 4200h
+		mov	ax, (42h shl 8) or 00h
 		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
 					; AL = method: offset from beginning of	file
 		mov	ah, 40h
@@ -5667,12 +5667,12 @@ loc_F021:
 		call	frame_delay
 		cmp	word_2C938, 0
 		jnz	short loc_F045
-		push	2000F0h
+		push	(32 shl 16) or 240
 		jmp	short loc_F04B
 ; ---------------------------------------------------------------------------
 
 loc_F045:
-		push	1200070h
+		push	(288 shl 16) or 112
 
 loc_F04B:
 		mov	al, [bp+arg_0]
@@ -5747,9 +5747,9 @@ loc_F0ED:
 ; ---------------------------------------------------------------------------
 
 loc_F0F0:
-		push	6000Ch
+		push	(6 shl 16) or 12
 		call	sub_EF74
-		push	140014h
+		push	(20 shl 16) or 20
 		call	sub_EF74
 		les	bx, dword_2C930
 		mov	al, es:[bx]
@@ -5846,7 +5846,7 @@ sub_F1A6	proc near
 
 var_6		= dword	ptr -6
 var_2		= byte ptr -2
-var_1		= byte ptr -1
+@@c		= byte ptr -1
 
 		enter	6, 0
 		push	si
@@ -5856,11 +5856,11 @@ var_1		= byte ptr -1
 loc_F1B3:
 		les	bx, dword_2C930
 		mov	al, es:[bx]
-		mov	[bp+var_1], al
+		mov	[bp+@@c], al
 		inc	word ptr dword_2C930
-		cmp	[bp+var_1], 0FFh
+		cmp	[bp+@@c], -1
 		jz	loc_F2AE
-		cmp	[bp+var_1], 0Dh
+		cmp	[bp+@@c], 0Dh
 		jnz	loc_F2A5
 		cmp	word_2C938, 0
 		jnz	short loc_F1E6
@@ -5885,21 +5885,21 @@ loc_F227:
 		call	far ptr	_input_reset_sense
 		les	bx, dword_2C930
 		mov	al, es:[bx]
-		mov	[bp+var_1], al
+		mov	[bp+@@c], al
 		inc	word ptr dword_2C930
-		cmp	[bp+var_1], 0FFh
+		cmp	[bp+@@c], -1
 		jnz	short loc_F249
 		call	input_wait_for_change pascal, 0
 		jmp	short loc_F2AB
 ; ---------------------------------------------------------------------------
 
 loc_F249:
-		push	word ptr [bp+var_1]
+		push	word ptr [bp+@@c]
 		call	sub_EFDE
 		or	al, al
 		jnz	short loc_F227
 		les	bx, [bp+var_6]
-		mov	al, [bp+var_1]
+		mov	al, [bp+@@c]
 		mov	es:[bx], al
 		push	es
 		les	si, dword_2C930
@@ -5927,7 +5927,7 @@ loc_F29E:
 ; ---------------------------------------------------------------------------
 
 loc_F2A5:
-		push	word ptr [bp+var_1]
+		push	word ptr [bp+@@c]
 		call	sub_EFDE
 
 loc_F2AB:
@@ -6009,8 +6009,8 @@ sub_F36B	proc near
 var_6		= word ptr -6
 var_4		= dword	ptr -4
 arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
+@@top		= word ptr  6
+@@left		= word ptr  8
 
 		enter	6, 0
 		push	si
@@ -6023,12 +6023,12 @@ arg_4		= word ptr  8
 		jz	loc_F40F
 		cmp	word_2C938, 0
 		jnz	short loc_F39C
-		mov	[bp+var_4], 186A0h
+		mov	[bp+var_4], 100000
 		jmp	short loc_F3A4
 ; ---------------------------------------------------------------------------
 
 loc_F39C:
-		mov	[bp+var_4], 30D40h
+		mov	[bp+var_4], 200000
 
 loc_F3A4:
 		mov	si, _cdg_slots.CDG_plane_size + (size cdg_t * 2)
@@ -6086,12 +6086,12 @@ loc_F421:
 loc_F432:
 		push	1
 		call	frame_delay
-		push	[bp+arg_4]
-		push	[bp+arg_2]
+		push	[bp+@@left]
+		push	[bp+@@top]
 		call	sub_EF2A
 		cmp	[bp+arg_0], (-1 and 255)
 		jz	short loc_F45D
-		call	cdg_put pascal, [bp+arg_4], [bp+arg_2], 2
+		call	cdg_put pascal, [bp+@@left], [bp+@@top], 2
 		call	cdg_free pascal, 2
 
 loc_F45D:
@@ -6119,7 +6119,7 @@ sub_F463	proc near
 		call	hmem_allocbyte
 		mov	_cdg_slots.seg_colors + (size cdg_t * 0), ax
 		push	_Ems
-		pushd	84D0h
+		pushd	34000
 		push	ax
 		push	0
 		movzx	eax, si
@@ -6326,9 +6326,9 @@ var_2		= word ptr -2
 		mov	ax, _midboss_phase_frame
 		shl	ax, 4
 		mov	[bp+var_4], ax
-		cmp	[bp+var_4], 300h
+		cmp	[bp+var_4], (48 shl 4)
 		jl	short loc_F80F
-		mov	[bp+var_4], 300h
+		mov	[bp+var_4], (48 shl 4)
 		mov	al, angle_2268E
 		inc	al
 		mov	angle_2268E, al
@@ -6717,7 +6717,7 @@ loc_FB40:
 ; ---------------------------------------------------------------------------
 
 loc_FB51:
-		mov	[bp+var_1], 0E1h
+		mov	[bp+var_1], TX_WHITE
 
 loc_FB55:
 		push	(24 shl 16) + 13
@@ -7028,7 +7028,7 @@ sub_10287	proc near
 		jz	short loc_102B9
 		cmp	_stage_frame_mod2, 0
 		jnz	short loc_1029D
-		mov	ax, 0FFFEh
+		mov	ax, -2
 		jmp	short loc_102A0
 ; ---------------------------------------------------------------------------
 
@@ -7039,7 +7039,7 @@ loc_102A0:
 		mov	word_2CE02, ax
 		cmp	_stage_frame_mod4, 1
 		ja	short loc_102AF
-		mov	ax, 0FFFEh
+		mov	ax, -2
 		jmp	short loc_102B2
 ; ---------------------------------------------------------------------------
 
@@ -7523,12 +7523,12 @@ loc_1078E:
 loc_10796:
 		call	sub_104BB
 		call	sub_10407
-		call	gaiji_putca pascal, (58 shl 16) + 16, (0E6h shl 16) + TX_YELLOW
+		call	gaiji_putca pascal, (58 shl 16) + 16, (gs_TEN shl 16) + TX_YELLOW
 		call	gaiji_putsa pascal, (57 shl 16) + 15, ds, offset gsRUIKEI, TX_CYAN
 		call	hud_point_items_put
-		call	gaiji_putca pascal, (63 shl 16) + 19, (0E7h shl 16) + TX_YELLOW
+		call	gaiji_putca pascal, (63 shl 16) + 19, (gs_YUME shl 16) + TX_YELLOW
 		call	hud_dream_put
-		call	gaiji_putca pascal, (58 shl 16) + 18, (0E8h shl 16) + TX_YELLOW
+		call	gaiji_putca pascal, (58 shl 16) + 18, (gs_TAMA shl 16) + TX_YELLOW
 		call	hud_graze_put
 		call	hud_power_put
 		push	(57 shl 16) + 23
@@ -8920,13 +8920,13 @@ loc_11441:
 		mov	ax, di
 		add	ax, ax
 		add	bx, ax
-		mov	_tile_ring[bx], 5048h
+		mov	_tile_ring[bx], ((576 / 8) + (256 * ROW_SIZE))
 		mov	bx, [bp+var_2]
 		shl	bx, 6
 		mov	ax, [bp+var_4]
 		add	ax, ax
 		add	bx, ax
-		mov	_tile_ring[bx], 5048h
+		mov	_tile_ring[bx], ((576 / 8) + (256 * ROW_SIZE))
 		inc	[bp+var_2]
 
 loc_11469:
@@ -8982,7 +8982,7 @@ loc_114CD:
 		cmp	byte_22859, 4
 		jbe	short loc_114E5
 		mov	al, byte_22859
-		add	al, 0FCh
+		add	al, -4
 		mov	byte_22859, al
 		jmp	short loc_114EA
 ; ---------------------------------------------------------------------------
@@ -12291,14 +12291,14 @@ loc_16221:
 		jz	short loc_162B9
 		cmp	[bp+var_2], 8
 		jb	short loc_1626C
-		mov	[bp+var_2], 50h	; 'P'
+		mov	[bp+var_2], 80
 		jmp	short loc_16279
 ; ---------------------------------------------------------------------------
 
 loc_1626C:
 		mov	al, [bp+var_2]
 		shl	al, 3
-		mov	dl, 90h
+		mov	dl, 144
 		sub	dl, al
 		mov	[bp+var_2], dl
 
@@ -12308,7 +12308,7 @@ loc_16279:
 		mov	dl, [bp+var_2]
 		sub	dl, al
 		mov	[bp+var_2], dl
-		cmp	[bp+var_2], 90h
+		cmp	[bp+var_2], 144
 		ja	short loc_16293
 		cmp	[bp+var_2], 4
 		jnb	short loc_16297
@@ -12407,7 +12407,7 @@ arg_0		= dword	ptr  4
 		mov	bp, sp
 		cmp	_boss_mode_change, 0
 		jnz	short loc_1644D
-		push	140000h
+		push	(20 shl 16) or 0
 		push	0
 		jmp	loc_164FD
 ; ---------------------------------------------------------------------------
@@ -12426,19 +12426,19 @@ loc_1644D:
 ; ---------------------------------------------------------------------------
 
 loc_16468:
-		push	120001h
+		push	(18 shl 16) or 1
 		push	3
 		jmp	short loc_16484
 ; ---------------------------------------------------------------------------
 
 loc_16472:
-		push	120002h
+		push	(18 shl 16) or 2
 		push	5
 		jmp	short loc_16484
 ; ---------------------------------------------------------------------------
 
 loc_1647C:
-		push	120003h
+		push	(18 shl 16) or 3
 		push	7
 
 loc_16484:
@@ -12458,19 +12458,19 @@ loc_1648B:
 ; ---------------------------------------------------------------------------
 
 loc_164A1:
-		push	130004h
+		push	(19 shl 16) or 4
 		push	8
 		jmp	short loc_164BD
 ; ---------------------------------------------------------------------------
 
 loc_164AB:
-		push	130005h
+		push	(19 shl 16) or 5
 		push	6
 		jmp	short loc_164BD
 ; ---------------------------------------------------------------------------
 
 loc_164B5:
-		push	130006h
+		push	(19 shl 16) or 6
 		push	4
 
 loc_164BD:
@@ -12487,25 +12487,25 @@ loc_164C4:
 		jmp	cs:off_16508[bx]
 
 loc_164D7:
-		push	140007h
+		push	(20 shl 16) or 7
 		push	5
 		jmp	short loc_164FD
 ; ---------------------------------------------------------------------------
 
 loc_164E1:
-		push	140008h
+		push	(20 shl 16) or 8
 		push	0Ah
 		jmp	short loc_164FD
 ; ---------------------------------------------------------------------------
 
 loc_164EB:
-		push	140009h
+		push	(20 shl 16) or 9
 		push	0Ch
 		jmp	short loc_164FD
 ; ---------------------------------------------------------------------------
 
 loc_164F5:
-		push	14000Ah
+		push	(20 shl 16) or 10
 		push	0Eh
 
 loc_164FD:
@@ -13159,7 +13159,7 @@ loc_16FE3:
 		imul	ax, 18h
 		mov	dx, [di+4]
 		sub	dx, ax
-		add	dx, 0FC80h
+		add	dx, -896
 		mov	[bp+var_2], dx
 		mov	si, 5120
 		jmp	short loc_1700C
@@ -14933,7 +14933,7 @@ sub_182ED	proc near
 		call	_bullet_template_tune
 		call	sub_15A5C
 		mov	al, byte_2D083
-		add	al, 0F8h
+		add	al, -8
 		mov	byte_2D083, al
 		call	snd_se_play pascal, 15
 
@@ -15448,15 +15448,14 @@ loc_18800:
 		cmp	byte_2D07F, 0Ch
 		jbe	short loc_18819
 		mov	al, byte_2D07F
-		add	al, 0F4h
+		add	al, -0Ch
 		mov	byte_2D07F, al
 
 loc_18819:
 		call	sub_1FADD
 		or	al, al
 		jz	loc_188EE
-		push	5
-		call	sub_17416
+		call	sub_17416 pascal, 5
 
 loc_18827:
 		call	boss_phase_end pascal, (ET_NW_SE shl 16) or 450
@@ -15503,7 +15502,7 @@ loc_18884:
 		call	sub_1833B
 		cmp	_boss_phase_frame, 0
 		jnz	short loc_1889D
-		cmp	byte_2D07F, 0B4h
+		cmp	byte_2D07F, -4Ch
 		jnb	short loc_1889D
 		mov	al, byte_2D07F
 		add	al, 18h
@@ -15513,8 +15512,7 @@ loc_1889D:
 		call	sub_1FADD
 		or	al, al
 		jz	short loc_188EE
-		push	5
-		call	sub_17416
+		call	sub_17416 pascal, 5
 
 loc_188A9:
 		call	boss_phase_end pascal, (ET_SW_NE shl 16) or 0
@@ -15544,8 +15542,7 @@ loc_188D2:
 ; ---------------------------------------------------------------------------
 
 loc_188E9:
-		push	0Ah
-		call	boss_death_sequence_function
+		call	boss_death_sequence_function pascal, 10
 
 loc_188EE:
 		call	hud_hp_update_and_render pascal, _boss_hp, 4650
@@ -15727,7 +15724,7 @@ loc_18A56:
 		mov	angle_2D085, 0
 		mov	angle_2D084, 20h
 		mov	_midboss_pos.velocity.x, 0
-		mov	sppoint_2CE26.x, 0C00h
+		mov	sppoint_2CE26.x, (192 shl 4)
 		mov	ax, _midboss_pos.cur.y
 		mov	sppoint_2CE26.x.y, ax
 		jmp	loc_18BA0
@@ -16442,7 +16439,7 @@ loc_190EB:
 ; ---------------------------------------------------------------------------
 
 loc_19100:
-		push	100060h
+		push	(16 shl 16) or 96
 		call	sub_18BB8
 		or	al, al
 		jz	short loc_19132
@@ -16469,8 +16466,7 @@ loc_19132:
 		call	sub_1FADD
 		or	al, al
 		jz	loc_19263
-		push	0Ah
-		call	sub_17416
+		call	sub_17416 pascal, 10
 
 loc_19140:
 		push	(ET_NW_SE shl 16) or 1900
@@ -16486,7 +16482,7 @@ loc_19149:
 
 loc_19158:
 		call	sub_18DDF
-		push	0E0080h
+		push	(14 shl 16) or 128
 		call	sub_18BB8
 		or	al, al
 		jz	short loc_19179
@@ -16499,8 +16495,7 @@ loc_19179:
 		call	sub_1FADD
 		or	al, al
 		jz	loc_19263
-		push	0Ah
-		call	sub_17416
+		call	sub_17416 pascal, 10
 
 loc_19187:
 		call	boss_phase_end pascal, (ET_SW_NE shl 16) or 500
@@ -16522,7 +16517,7 @@ loc_1919D:
 ; ---------------------------------------------------------------------------
 
 loc_191B2:
-		push	300030h
+		push	(48 shl 16) or 48
 		call	sub_18BB8
 		or	al, al
 		jz	short loc_191EB
@@ -16551,8 +16546,7 @@ loc_191EB:
 		call	sub_1FADD
 		or	al, al
 		jz	short loc_19263
-		push	0Ah
-		call	sub_17416
+		call	sub_17416 pascal, 10
 
 loc_191F7:
 		push	(ET_NW_SE shl 16) or 0
@@ -16576,7 +16570,7 @@ loc_1920C:
 
 loc_1921D:
 		call	sub_18FE2
-		push	80080h
+		push	(8 shl 16) or 128
 		call	sub_18BB8
 		or	al, al
 		jz	short loc_19245
@@ -16601,8 +16595,7 @@ loc_19251:
 ; ---------------------------------------------------------------------------
 
 loc_1925E:
-		push	0Ah
-		call	boss_death_sequence_function
+		call	boss_death_sequence_function pascal, 10
 
 loc_19263:
 		call	hud_hp_update_and_render pascal, _boss_hp, 4400
@@ -17838,8 +17831,8 @@ var_2		= word ptr -2
 		mov	ax, 64
 		mov	puppet1.radius_gather, ax
 		mov	puppet0.radius_gather, ax
-		mov	byte_2D07E, 0C4h
-		add	word_2CE30, 20h	; ' '
+		mov	byte_2D07E, -3Ch
+		add	word_2CE30, 32
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -18255,7 +18248,7 @@ loc_1A15A:
 		mov	_boss_phase_frame, 0
 		mov	_boss_mode_change, 0
 		mov	byte_2D07D, 0
-		mov	word_2CE30, 0A0h
+		mov	word_2CE30, 160
 		jmp	loc_1A3B2
 ; ---------------------------------------------------------------------------
 
@@ -18300,8 +18293,7 @@ loc_1A1E7:
 		call	sub_1FADD
 		or	al, al
 		jz	loc_1A3B2
-		push	7
-		call	sub_17416
+		call	sub_17416 pascal, 7
 		call	_boss_items_drop
 
 loc_1A1F8:
@@ -18363,8 +18355,7 @@ loc_1A284:
 		call	sub_1FADD
 		cmp	_boss_phase_frame, 600
 		jl	loc_1A3B2
-		push	5
-		call	sub_17416
+		call	sub_17416 pascal, 5
 		call	boss_explode_small pascal, ET_NW_SE
 		cmp	_bullet_clear_time, 20
 		jnb	short loc_1A2D7
@@ -18435,8 +18426,7 @@ loc_1A396:
 ; ---------------------------------------------------------------------------
 
 loc_1A3AD:
-		push	0Ah
-		call	boss_death_sequence_function
+		call	boss_death_sequence_function pascal, 10
 
 loc_1A3B2:
 		call	hud_hp_update_and_render pascal, _boss_hp, 9600
@@ -18901,7 +18891,7 @@ sub_1A82F	proc near
 		cmp	_boss_phase_frame, 48
 		jnz	short loc_1A843
 		mov	angle_2D085, 20h
-		mov	byte_2D082, 0FCh
+		mov	byte_2D082, -4
 
 loc_1A843:
 		mov	ax, _boss_phase_frame
@@ -19771,13 +19761,11 @@ loc_1B02E:
 loc_1B039:
 		cmp	si, 32
 		jnz	short loc_1B058
-		push	1000h
-		call	randring2_next16_mod
-		add	ax, 400h
+		call	randring2_next16_mod pascal, (256 shl 4)
+		add	ax, (64 shl 4)
 		mov	word_2CE3A, ax
-		push	200h
-		call	randring2_next16_mod
-		add	ax, 400h
+		call	randring2_next16_mod pascal, (32 shl 4)
+		add	ax, (64 shl 4)
 		mov	_midboss_pos.cur.y, ax
 		jmp	short loc_1B09F
 ; ---------------------------------------------------------------------------
@@ -20914,8 +20902,7 @@ loc_1BB6D:
 		call	sub_1FADD
 		or	al, al
 		jz	loc_1BD09
-		push	0Ah
-		call	sub_17416
+		call	sub_17416 pascal, 10
 
 loc_1BB7B:
 		push	(ET_NW_SE shl 16) or 3200
@@ -20971,8 +20958,7 @@ loc_1BBFA:
 		call	sub_1FADD
 		or	al, al
 		jz	loc_1BD09
-		push	0Ah
-		call	sub_17416
+		call	sub_17416 pascal, 10
 
 loc_1BC08:
 		push	(ET_SW_NE shl 16) or 1200
@@ -20997,8 +20983,7 @@ loc_1BC2F:
 		call	sub_1FADD
 		or	al, al
 		jz	loc_1BD09
-		push	0Ah
-		call	sub_17416
+		call	sub_17416 pascal, 10
 
 loc_1BC48:
 		push	(ET_HORIZONTAL shl 16) or 0
@@ -21020,7 +21005,7 @@ loc_1BC54:
 		mov	_boss_mode, 1
 		mov	angle_2D084, 8
 		mov	angle_2D085, 10h
-		mov	byte_2D083, 0F8h
+		mov	byte_2D083, -8
 		jmp	short loc_1BD09
 ; ---------------------------------------------------------------------------
 
@@ -21078,8 +21063,7 @@ loc_1BCE7:
 ; ---------------------------------------------------------------------------
 
 loc_1BD02:
-		push	32h ; '2'
-		call	boss_death_sequence_function
+		call	boss_death_sequence_function pascal, 50
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -21702,7 +21686,7 @@ var_2		= word ptr -2
 		add	al, byte ptr [bp+var_2]
 		mov	_laser_template.coords.angle, al
 		call	lasers_new_fixed_in_slot pascal, 3
-		mov	byte_2D083, 0F8h
+		mov	byte_2D083, -8
 		jmp	loc_1C347
 ; ---------------------------------------------------------------------------
 
@@ -21736,7 +21720,7 @@ loc_1C2AB:
 		mov	byte_2D083, al
 		cmp	byte_2D083, 30h	; '0'
 		jbe	short loc_1C316
-		mov	byte_2D083, 0F8h
+		mov	byte_2D083, -8
 
 loc_1C316:
 		call	snd_se_play pascal, 3
@@ -21833,7 +21817,7 @@ loc_1C3CC:
 loc_1C3DB:
 		cmp	si, word_2CE3C
 		jl	short loc_1C3CC
-		cmp	[bp+var_2], 0A0h
+		cmp	[bp+var_2], 160
 		jnz	short loc_1C3F9
 		xor	si, si
 		jmp	short loc_1C3F1
@@ -21850,7 +21834,7 @@ loc_1C3F1:
 ; ---------------------------------------------------------------------------
 
 loc_1C3F9:
-		cmp	[bp+var_2], 0D4h
+		cmp	[bp+var_2], 212
 		jnz	short loc_1C417
 		xor	si, si
 		jmp	short loc_1C40F
@@ -21869,14 +21853,14 @@ loc_1C40F:
 ; ---------------------------------------------------------------------------
 
 loc_1C417:
-		cmp	[bp+var_2], 0B4h
+		cmp	[bp+var_2], 180
 		jnz	short loc_1C426
 		mov	al, angle_2D085
 		neg	al
 		mov	angle_2D085, al
 
 loc_1C426:
-		cmp	[bp+var_2], 70h	; 'p'
+		cmp	[bp+var_2], 112
 		jg	short loc_1C445
 		mov	al, _stage_frame_mod2
 		mov	ah, 0
@@ -21888,7 +21872,7 @@ loc_1C426:
 ; ---------------------------------------------------------------------------
 
 loc_1C445:
-		cmp	[bp+var_2], 0C0h
+		cmp	[bp+var_2], 192
 		jg	short loc_1C460
 		sub	word_2CE3E, 2
 		cmp	word_2CE3E, 0
@@ -21901,13 +21885,13 @@ loc_1C460:
 		mov	al, _stage_frame_mod2
 		mov	ah, 0
 		add	word_2CE3E, ax
-		cmp	[bp+var_2], 0D4h
+		cmp	[bp+var_2], 212
 		jle	short loc_1C483
 		push	1Fh
 		call	randring2_next16_and
 		or	ax, ax
 		jnz	short loc_1C483
-		mov	ax, 0FFh
+		mov	ax, 255
 		sub	ax, [bp+var_2]
 		add	_boss_phase_frame, ax
 
@@ -21931,7 +21915,7 @@ loc_1C4A3:
 		call	fp_2CE44
 		cmp	_boss_phase_frame, 544
 		jl	short loc_1C4C7
-		cmp	[bp+var_2], 60h
+		cmp	[bp+var_2], 96
 		jg	short loc_1C4C7
 		mov	ax, [bp+var_2]
 		add	ax, -32
@@ -22099,8 +22083,7 @@ loc_1C67C:
 		call	sub_1FADD
 		or	al, al
 		jz	loc_1C805
-		push	0Ah
-		call	sub_17416
+		call	sub_17416 pascal, 10
 
 loc_1C68A:
 		push	(ET_NW_SE shl 16) or 2800
@@ -22125,8 +22108,7 @@ loc_1C6B2:
 		call	sub_1FADD
 		or	al, al
 		jz	loc_1C805
-		push	0Ah
-		call	sub_17416
+		call	sub_17416 pascal, 10
 
 loc_1C6CB:
 		xor	si, si
@@ -22191,8 +22173,7 @@ loc_1C741:
 		call	sub_1FADD
 		or	al, al
 		jz	loc_1C805
-		push	0Ah
-		call	sub_17416
+		call	sub_17416 pascal, 10
 
 loc_1C74F:
 		push	(ET_NW_SE shl 16) or 0
@@ -22213,7 +22194,7 @@ loc_1C76D:
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
 		mov	byte_2D080, 80h
-		mov	byte_2D081, 0FCh
+		mov	byte_2D081, -4
 		jmp	loc_1C805
 ; ---------------------------------------------------------------------------
 
@@ -22272,8 +22253,7 @@ loc_1C7E3:
 ; ---------------------------------------------------------------------------
 
 loc_1C7FE:
-		push	46h ; 'F'
-		call	boss_death_sequence_function
+		call	boss_death_sequence_function pascal, 70
 		jmp	short loc_1C812
 ; ---------------------------------------------------------------------------
 
@@ -22516,7 +22496,7 @@ sub_1CB71	proc near
 		mov	knife_template.twirl_time, 32
 		mov	knife_template.KNIFE_speed, (4 shl 4) + 12
 		mov	byte_2D083, 0
-		mov	byte_2D082, 20h	; ' '
+		mov	byte_2D082, 20h
 		jmp	loc_1CCD0
 ; ---------------------------------------------------------------------------
 
@@ -22818,7 +22798,7 @@ sub_1CED9	proc near
 		mov	_laser_template.LASER_color, 8
 		mov	_laser_template.grow_at_age, 28
 		mov	byte_2D083, 0
-		mov	byte_2D082, 20h	; ' '
+		mov	byte_2D082, 20h
 		mov	knife_template.twirl_time, 32
 		mov	knife_template.KNIFE_speed, (4 shl 4) + 12
 		jmp	loc_1D081
@@ -22954,8 +22934,7 @@ yumeko_1D085	proc near
 		call	snd_se_play pascal, 8
 		mov	knife_template.twirl_time, 32
 		mov	knife_template.KNIFE_speed, (4 shl 4)
-		push	200h
-		call	randring2_next16_mod
+		call	randring2_next16_mod pascal, (32 shl 4)
 		mov	_boss2_pos.cur.y, ax
 		push	(28h shl 16) or 1Eh
 		push	(18h shl 16) or 10h
@@ -23002,8 +22981,7 @@ loc_1D148:
 		mov	angle_2D084, al
 		cmp	_boss2_pos.cur.y, (376 shl 4)
 		jl	short loc_1D1C4
-		push	200h
-		call	randring2_next16_mod
+		call	randring2_next16_mod pascal, (32 shl 4)
 		mov	_boss2_pos.cur.y, ax
 		inc	byte_2D083
 		pop	bp
@@ -23207,7 +23185,7 @@ loc_1D38F:
 ; ---------------------------------------------------------------------------
 
 loc_1D39F:
-		push	200040h
+		push	(32 shl 16) or 64
 		call	sub_1C9BE
 		or	al, al
 		jz	short loc_1D3F3
@@ -23249,8 +23227,7 @@ loc_1D3F3:
 		call	sub_1FADD
 		or	al, al
 		jz	loc_1D513
-		push	0Ah
-		call	sub_17416
+		call	sub_17416 pascal, 10
 
 loc_1D40A:
 		cmp	_boss_phase, 2
@@ -23290,8 +23267,7 @@ loc_1D458:
 		call	sub_1FADD
 		or	al, al
 		jz	loc_1D513
-		push	0Ah
-		call	sub_17416
+		call	sub_17416 pascal, 10
 
 loc_1D472:
 		cmp	_boss_phase, 4
@@ -23316,8 +23292,7 @@ loc_1D49A:
 		call	sub_1FADD
 		or	al, al
 		jz	short loc_1D513
-		push	0Ah
-		call	sub_17416
+		call	sub_17416 pascal, 10
 
 loc_1D4B1:
 		push	(ET_NW_SE shl 16) or 0
@@ -23357,8 +23332,7 @@ loc_1D4F4:
 ; ---------------------------------------------------------------------------
 
 loc_1D50C:
-		push	41h ; 'A'
-		call	boss_death_sequence_function
+		call	boss_death_sequence_function pascal, 65
 		jmp	short loc_1D520
 ; ---------------------------------------------------------------------------
 
@@ -24627,8 +24601,7 @@ loc_1E2DC:
 		call	sub_1FADD
 		or	al, al
 		jz	loc_1E527
-		push	0Ah
-		call	sub_17416
+		call	sub_17416 pascal, 10
 
 loc_1E2EA:
 		cmp	byte_2D080, 0
@@ -24693,8 +24666,7 @@ loc_1E38E:
 		call	sub_1FADD
 		or	al, al
 		jz	loc_1E527
-		push	19h
-		call	sub_17416
+		call	sub_17416 pascal, 25
 
 loc_1E3AB:
 		cmp	byte_2D080, 0
@@ -24768,8 +24740,7 @@ loc_1E431:
 loc_1E45A:
 		or	di, di
 		jz	loc_1E527
-		push	19h
-		call	sub_17416
+		call	sub_17416 pascal, 25
 
 loc_1E465:
 		cmp	byte_2D080, 0
@@ -24840,8 +24811,7 @@ loc_1E510:
 ; ---------------------------------------------------------------------------
 
 loc_1E522:
-		push	41h ; 'A'
-		call	boss_death_sequence_function
+		call	boss_death_sequence_function pascal, 65
 
 loc_1E527:
 		call	b6balls_update
@@ -25014,7 +24984,7 @@ sub_1E60E	proc near
 ; ---------------------------------------------------------------------------
 
 loc_1E625:
-		mov	al, 0FFh
+		mov	al, -1
 
 loc_1E627:
 		mov	byte_2D083, al
@@ -26434,8 +26404,7 @@ loc_1F403:
 		call	sub_1F21A
 		or	ax, ax
 		jz	loc_1F666
-		push	14h
-		call	sub_17416
+		call	sub_17416 pascal, 20
 
 loc_1F412:
 		mov	al, byte_2D07F
@@ -26509,8 +26478,7 @@ loc_1F4C5:
 		call	sub_1F21A
 		or	ax, ax
 		jz	loc_1F666
-		push	14h
-		call	sub_17416
+		call	sub_17416 pascal, 20
 
 loc_1F4D4:
 		mov	al, byte_2D07F
@@ -26670,8 +26638,7 @@ loc_1F643:
 ; ---------------------------------------------------------------------------
 
 loc_1F660:
-		push	0C8h
-		call	boss_death_sequence_function
+		call	boss_death_sequence_function pascal, 200
 
 loc_1F666:
 		call	curvebullets_update
@@ -27197,8 +27164,7 @@ loc_1FBED:
 		mov	_bullet_clear_trigger, al
 		cmp	_boss_mode_change, 0;m_bSuccessDefeat
 		jz	short loc_1FC10
-		push	[bp+n1000]
-		call	sub_17416
+		call	sub_17416 pascal, [bp+n1000]
 
 loc_1FC10:
 		mov	_boss_sprite, 4
