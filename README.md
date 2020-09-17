@@ -63,7 +63,7 @@ Crossed-out files are identical to their version in the previous game. ONGCHK.CO
 
 ## Building
 
-You will need:
+### Required tools
 
 * **Borland Turbo C++ 4.0J**
 
@@ -89,12 +89,6 @@ You will need:
 
   ----
 
-* **Borland Turbo Assembler (TASM), version 4.1 or later, for 16-bit DOS (`TASM.EXE`)** (currently not needed)
-
-  Towards TH05, the games increasingly used raw ASM code that [can't be decompiled]. Thus, even the final 16-bit-only build will need some sort of assembler.
-
-  ----
-
 * **Borland Turbo Assembler (TASM), version 5.0 or later, for 32-bit Windows (`TASM32.EXE`)**
 
   Borland never made a cross compiler targeting 16-bit DOS that runs on 32-bit Windows, so the C++ parts *have* to be compiled using a 16-bit DOS program. The not yet decompiled ASM parts of the code, however, *can* be assembled using a 32-bit Windows tool. This not only way outperforms any 16-bit solution that would have to be emulated on modern 64-bit systems, making build times, well, tolerable. It also removes any potential EMS or XMS issues we might have had with `TASMX.EXE` on these emulators.
@@ -116,13 +110,15 @@ You will need:
   Needed to fulfill the role of being "just *any* native C++ compiler" for our own tools that either don't necessarily *have* to run on 16-bit DOS, or are required by the 32-bit build step, as long as that one still exists (see above).
 
   Currently, this category of tools only includes the [converter for hardcoded sprites]. Since that one is written to be as platform-independent as possible, it could easily be compiled with any other native C compiler you happen to have already installed. (Which also means that future port developers hopefully have one less thing to worry about.)
-  However, choosing Borland C++ 5.5 fits ReC98 very well for a number of reasons:
+  So, if you dislike additional dependencies, feel free to edit the `Tupfile` so that `bmp2arr` is compiled with any others C compiler of your choice.
+
+  However, choosing Borland C++ 5.5 as a default for everyone else fits ReC98 very well for several reasons:
 
   * It still happens to be the most hassle- and bloat-free way to get *any* sort of 32-bit Windows C++ compiler to people, clearly beating Open Watcom, and the required registration for [Borland/Embarcadero's own C++ 7.30]. Depending on anything bigger would be way out of proportion, considering how little we use it for
   * We already rely on a 32-bit Windows tool
   * Turbo C++ 4.0J defines the lower bound for our allowed level of C++ features anyway, making Borland C++ 5.5's old age and lacking C++ standard compliance a non-issue
   * Unlike 7.30, 5.5 still works on Windows 9x, which is what typically runs on the real PC-98 hardware that some people might want to compile ReC98 on.
-  * Other tiny C compilers have no C++ support.
+  * Other tiny C compilers have no C++ support. While the sprite converter is written in C, future tools might not be, and I'm too old to restrict people to C for no good reason.
 
   ----
 
@@ -148,7 +144,22 @@ You will need:
 
 The most performant OS for building ReC98 is therefore a 32-bit Windows ≥Vista, where both the 32-bit and 16-bit build parts can run natively from a single shell. The build process was tested and should work reliably on pretty much every system though – from modern 64-bit Windows and Linux, down to Windows 95, which you might use on actual PC-98 hardware.
 
-To build, simply run `build.bat` and follow any instructions. The final executables will be put into `bin\th0?`, using the same names as the originals.
+### How to build
+
+* Make sure you've created the `bin/bcc32.cfg` and `bin/ilink32.cfg` files for Borland C++ 5.5, as pointed out in its `readme.txt` file. This fixes errors like
+
+  ```text
+  Error E2209 Pipeline/bmp2arrl.c 12: Unable to open file 'io.h'
+  ```
+
+  that you will encounter otherwise.
+
+* Running on a 64-bit OS? Run `build32b.bat` in a Windows shell, followed `build16b.bat` in your DOSBox of choice.
+* Running on 32-bit Windows? Run just `build.bat`.
+
+All batch files will abort with an error if any of the necessary tools can't be found in the `PATH`.
+
+The final executables will be put into `bin\th0?`, using the same names as the originals.
 
 ----
 
