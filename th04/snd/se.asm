@@ -30,7 +30,7 @@ func SND_SE_PLAY
 endfunc
 
 
-func snd_se_update
+func _snd_se_update
 	cmp	_snd_se_mode, SND_SE_OFF
 	jz	short @@ret
 	cmp	_snd_se_playing, -1

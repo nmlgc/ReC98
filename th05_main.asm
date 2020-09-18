@@ -535,7 +535,7 @@ loc_B003:
 		graph_showpage _page_back
 		mov	_page_front, al
 		xor	_page_back, 1
-		call	snd_se_update
+		call	_snd_se_update
 		inc	_frames_unused
 		mov	ax, _stage_frame
 		mov	dx, ax

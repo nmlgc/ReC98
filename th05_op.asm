@@ -832,7 +832,7 @@ loc_A9B6:
 		call	_putfunc
 		call	_snd_se_reset
 		call	snd_se_play pascal, 1
-		call	snd_se_update
+		call	_snd_se_update
 		pop	bp
 		retn	4
 menu_sel_move	endp
@@ -906,7 +906,7 @@ loc_AA5C:
 loc_AA6C:
 		call	_snd_se_reset
 		call	snd_se_play pascal, 11
-		call	snd_se_update
+		call	_snd_se_update
 		mov	al, _menu_sel
 		cbw
 		mov	bx, ax
@@ -1106,7 +1106,7 @@ loc_AC71:
 loc_ACD8:
 		call	_snd_se_reset
 		call	snd_se_play pascal, 11
-		call	snd_se_update
+		call	_snd_se_update
 		mov	_option_initialized, 0
 		mov	_menu_sel, 4
 		mov	_in_option, 0
@@ -3391,7 +3391,7 @@ loc_D1B5:
 @@left_or_right_pressed:
 		call	_snd_se_reset
 		call	snd_se_play pascal, 1
-		call	snd_se_update
+		call	_snd_se_update
 		graph_accesspage 1
 		call	put_pic pascal, 1
 		xor	_playchar_menu_sel, 1 ; 0<->1 2<->3
@@ -3413,7 +3413,7 @@ loc_D223:
 @@up_or_down_pressed:
 		call	_snd_se_reset
 		call	snd_se_play pascal, 1
-		call	snd_se_update
+		call	_snd_se_update
 		graph_accesspage 1
 		call	put_pic pascal, 1
 		xor	_playchar_menu_sel, 2 ; 0<->2 1<->3
@@ -3440,7 +3440,7 @@ loc_D284:
 		jz	short @@unable_to_select
 		call	_snd_se_reset
 		call	snd_se_play pascal, 11
-		call	snd_se_update
+		call	_snd_se_update
 		les	bx, _resident
 		mov	al, _playchar_menu_sel
 		mov	es:[bx+resident_t.playchar], al

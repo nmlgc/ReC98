@@ -734,7 +734,7 @@ loc_AE76:
 		call	_putfunc
 		call	_snd_se_reset
 		call	snd_se_play pascal, 1
-		call	snd_se_update
+		call	_snd_se_update
 		pop	bp
 		retn	4
 menu_sel_move	endp
@@ -808,7 +808,7 @@ loc_AF1C:
 loc_AF2C:
 		call	_snd_se_reset
 		call	snd_se_play pascal, 11
-		call	snd_se_update
+		call	_snd_se_update
 		mov	al, _menu_sel
 		cbw
 		mov	bx, ax
@@ -998,7 +998,7 @@ loc_B0F4:
 loc_B14F:
 		call	_snd_se_reset
 		call	snd_se_play pascal, 11
-		call	snd_se_update
+		call	_snd_se_update
 		mov	_option_initialized, 0
 		mov	_menu_sel, 4
 		mov	_in_option, 0
@@ -3688,7 +3688,7 @@ loc_D7BB:
 loc_D7D6:
 		call	_snd_se_reset
 		call	snd_se_play pascal, 1
-		call	snd_se_update
+		call	_snd_se_update
 		mov	al, 1
 		sub	al, playchar_132B8
 		mov	playchar_132B8, al
@@ -3729,7 +3729,7 @@ loc_D84C:
 loc_D85A:
 		call	_snd_se_reset
 		call	snd_se_play pascal, 11
-		call	snd_se_update
+		call	_snd_se_update
 		mov	al, playchar_132B8
 		mov	ah, 0
 		add	ax, ax
@@ -3829,7 +3829,7 @@ loc_D939:
 		graph_showpage 0
 		call	_snd_se_reset
 		call	snd_se_play pascal, 1
-		call	snd_se_update
+		call	_snd_se_update
 
 loc_D986:
 		test	_key_det.hi, high INPUT_OK
@@ -3840,7 +3840,7 @@ loc_D986:
 @@z_pressed:
 		call	_snd_se_reset
 		call	snd_se_play pascal, 11
-		call	snd_se_update
+		call	_snd_se_update
 		les	bx, _resident
 		mov	al, byte_132B9
 		mov	es:[bx+resident_t.shottype], al

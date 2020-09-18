@@ -445,7 +445,7 @@ loc_AC7A:
 		graph_showpage _page_back
 		mov	_page_front, al
 		xor	_page_back, 1
-		call	snd_se_update
+		call	_snd_se_update
 		inc	_frames_unused
 		mov	ax, _stage_frame
 		mov	dx, ax
@@ -3280,7 +3280,7 @@ loc_D47B:
 		call	main_01:sub_D0CA
 		call	_snd_se_reset
 		call	snd_se_play pascal, [bp+var_2]
-		call	snd_se_update
+		call	_snd_se_update
 		jmp	loc_D528	; default
 ; ---------------------------------------------------------------------------
 

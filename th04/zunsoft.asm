@@ -466,7 +466,7 @@ endif
 	call	palette_show
 
 @@end_of_frame:
-	call	snd_se_update
+	call	_snd_se_update
 	inc	di
 
 @@more_frames?:

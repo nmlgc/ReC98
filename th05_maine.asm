@@ -1214,7 +1214,7 @@ loc_AF18:
 		call	sub_A738
 		call	_snd_se_reset
 		call	snd_se_play pascal, [bp+var_2]
-		call	snd_se_update
+		call	_snd_se_update
 		jmp	short loc_AF8F	; default
 ; ---------------------------------------------------------------------------
 
@@ -2781,7 +2781,7 @@ sub_BCED	endp
 sub_BD1E	proc near
 		push	bp
 		mov	bp, sp
-		call	snd_se_update
+		call	_snd_se_update
 		call	sub_BE76
 		push	1
 		call	frame_delay

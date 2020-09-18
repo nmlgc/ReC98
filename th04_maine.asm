@@ -1549,7 +1549,7 @@ loc_AD95:
 		call	sub_A64D
 		call	_snd_se_reset
 		call	snd_se_play pascal, [bp+var_2]
-		call	snd_se_update
+		call	_snd_se_update
 		jmp	short loc_ADB5	; default
 ; ---------------------------------------------------------------------------
 
