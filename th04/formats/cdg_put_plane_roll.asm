@@ -1,5 +1,5 @@
-public CDG_PUT_PLANE_ROLL
-cdg_put_plane_roll	proc far
+public CDG_PUT_PLANE_ROLL_8
+cdg_put_plane_roll_8 proc far
 
 @@plane_dst	= word ptr [bp+6]
 @@plane_src	= word ptr [bp+8]
@@ -77,4 +77,4 @@ cdg_put_plane_roll	proc far
 	pop	si
 	pop	bp
 	retf	0Ah
-cdg_put_plane_roll	endp
+cdg_put_plane_roll_8 endp

@@ -6502,7 +6502,7 @@ var_2     	= word ptr -2
 		mov	word_151C4, ax
 		mov	word_151C6, 0
 		inc	word_11848
-		call	cdg_put_noalpha pascal, [bp+@@x_center], di, [bp+@@slot]
+		call	cdg_put_noalpha_8 pascal, [bp+@@x_center], di, [bp+@@slot]
 		mov	[bp+var_2], 0
 		jmp	short loc_DDB1
 ; ---------------------------------------------------------------------------
@@ -6686,7 +6686,7 @@ var_2     	= word ptr -2
 		mov	word_151C8, ax
 		mov	word_151CA, 0
 		inc	word_1184A
-		call	cdg_put_noalpha pascal, [bp+@@x_center], di, [bp+@@slot]
+		call	cdg_put_noalpha_8 pascal, [bp+@@x_center], di, [bp+@@slot]
 		mov	[bp+var_2], 0
 		jmp	short loc_DF29
 ; ---------------------------------------------------------------------------

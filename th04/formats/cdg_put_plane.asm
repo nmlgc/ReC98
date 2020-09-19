@@ -1,12 +1,3 @@
-; Displays the given [plane] of the CDG image in the given [slot] at (x, y).
-; (Unlike other CDG displaying functions, this one actually accepts any value
-; for X.) Assumes the GRCG to be set to monochrome mode.
-;
-; (This is used for the "dissolution effect" in the staff roll, but it
-; actually doesn't apply any sort of effect on the pixel data, and relies on
-; the individual planes being pre-dissolved.)
-
-; void pascal cdg_put_plane(screen_x_t left, vram_y_t top, int slot, int plane)
 public CDG_PUT_PLANE
 cdg_put_plane	proc far
 

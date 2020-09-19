@@ -2509,7 +2509,7 @@ loc_B50C:
 
 loc_B50E:
 		push	ax
-		call	cdg_put
+		call	cdg_put_8
 		push	(416 shl 16) or 96
 		cmp	byte_FC5B, 0
 		jnz	short loc_B52A
@@ -2524,7 +2524,7 @@ loc_B52A:
 
 loc_B52D:
 		push	ax
-		call	cdg_put_hflip
+		call	cdg_put_hflip_8
 		pop	bp
 		retn
 sub_B4F3	endp
@@ -2551,10 +2551,8 @@ loc_B54E:
 
 loc_B550:
 		push	ax
-		call	cdg_put
-		push	(416 shl 16) or 96
-		push	1
-		call	cdg_put
+		call	cdg_put_8
+		call	cdg_put_8 pascal, large (416 shl 16) or 96, 1
 		pop	bp
 		retn
 sub_B535	endp
@@ -2572,15 +2570,11 @@ var_2		= word ptr -2
 		enter	4, 0
 		push	si
 		push	di
-		push	(32 shl 16) or 304
-		push	11
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8 pascal, large (32 shl 16) or 304, 11
 		les	bx, _resident
 		cmp	es:[bx+resident_t.game_mode], GM_STORY
 		jz	short loc_B590
-		push	(416 shl 16) or 304
-		push	11
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8 pascal, large (416 shl 16) or 304, 11
 
 loc_B590:
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 14
@@ -2713,27 +2707,23 @@ sub_B636	endp
 sub_B670	proc near
 		push	bp
 		mov	bp, sp
-		push	(160 shl 16) or 304
-		push	12
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8 pascal, large (160 shl 16) or 304, 12
 		push	(176 shl 16) or 316
 		mov	al, _playchars[0]
 		cbw
 		add	ax, 13
 		push	ax
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8
 		les	bx, _resident
 		cmp	es:[bx+resident_t.game_mode], GM_STORY
 		jz	short loc_B6BE
-		push	(544 shl 16) or 304
-		push	12
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8 pascal, large (544 shl 16) or 304, 12
 		push	(560 shl 16) or 316
 		mov	al, _playchars[1]
 		cbw
 		add	ax, 13
 		push	ax
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8
 
 loc_B6BE:
 		pop	bp
@@ -3644,7 +3634,7 @@ include th02/formats/pi_load.asm
 	extern INPUT_MODE_KEY_VS_KEY:proc
 	extern INPUT_MODE_JOY_VS_KEY:proc
 	extern INPUT_MODE_KEY_VS_JOY:proc
-	extern CDG_PUT_NOALPHA:proc
+	extern CDG_PUT_NOALPHA_8:proc
 	extern _hflip_lut_generate:proc
 	extern FRAME_DELAY_2:proc
 seg2	ends

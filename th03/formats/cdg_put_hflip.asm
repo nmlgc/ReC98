@@ -1,9 +1,5 @@
-; Displays the CDG image in the given [slot] at (⌊left/8⌋*8, top), flipped
-; horizontally.
-
-; void pascal cdg_put_hflip(screen_x_t left, vram_y_t top, int slot);
-public CDG_PUT_HFLIP
-cdg_put_hflip proc
+public CDG_PUT_HFLIP_8
+cdg_put_hflip_8 proc
 
 @@slot	= word ptr  6
 @@top 	= word ptr  8
@@ -99,5 +95,5 @@ cdg_put_hflip proc
 	pop	si
 	pop	bp
 	retf	6
-cdg_put_hflip endp
+cdg_put_hflip_8 endp
 	align 2

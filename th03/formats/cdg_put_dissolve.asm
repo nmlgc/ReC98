@@ -1,10 +1,5 @@
-; Displays the CDG image in the given [slot] centered at (⌊center_x/8⌋*8,
-; center_y), then applies a dissolve effect with the given [strength]
-; (mod 8, 0 = none, 7 = full) on the E bitplane.
-
-; void pascal cdg_put_dissolve_e(screen_x_t center_x, vram_y_t center_y, int slot, int strength);
-public CDG_PUT_DISSOLVE_E
-cdg_put_dissolve_e	proc near
+public CDG_PUT_DISSOLVE_E_8
+cdg_put_dissolve_e_8 proc near
 
 @@h       	= word ptr -6
 @@w       	= word ptr -4
@@ -41,11 +36,11 @@ cdg_put_dissolve_e	proc near
 	jnz	short @@put_alpha
 
 @@put_noalpha:
-	call	cdg_put_noalpha pascal, [bp+@@center_x], [bp+@@center_y], [bp+@@slot]
+	call	cdg_put_noalpha_8 pascal, [bp+@@center_x], [bp+@@center_y], [bp+@@slot]
 	jmp	short @@dissolve_prepare
 
 @@put_alpha:
-	call	cdg_put pascal, [bp+@@center_x], [bp+@@center_y], [bp+@@slot]
+	call	cdg_put_8 pascal, [bp+@@center_x], [bp+@@center_y], [bp+@@slot]
 
 @@dissolve_prepare:
 	and	[bp+@@strength], 7
@@ -102,4 +97,4 @@ cdg_put_dissolve_e	proc near
 	pop	si
 	leave
 	retn	8
-cdg_put_dissolve_e	endp
+cdg_put_dissolve_e_8 endp

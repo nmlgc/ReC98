@@ -295,9 +295,7 @@ sub_978D	proc near
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		call	graph_show
-		push	(352 shl 16) or 300
-		push	0
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8 pascal, large (352 shl 16) or 300, 0
 		kajacall	KAJA_SONG_PLAY
 		push	2
 		call	palette_black_in
@@ -308,9 +306,7 @@ sub_978D	proc near
 ; ---------------------------------------------------------------------------
 
 loc_97E8:
-		push	(352 shl 16) or 300
-		push	si
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8 pascal, large (352 shl 16) or 300, si
 		push	6
 		call	frame_delay
 		inc	si
@@ -322,12 +318,8 @@ loc_97FC:
 		call	snd_delay_until_measure
 		mov	PaletteTone, 200
 		call	far ptr	palette_show
-		push	(224 shl 16) or 64
-		push	6
-		call	cdg_put_noalpha
-		push	(352 shl 16) or 300
-		push	5
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8 pascal, large (224 shl 16) or 64, 6
+		call	cdg_put_noalpha_8 pascal, large (352 shl 16) or 300, 5
 		push	ds
 		push	offset aLogo1_rgb ; "logo1.rgb"
 		call	palette_entry_rgb
@@ -571,17 +563,11 @@ var_2		= word ptr -2
 		call	pi_palette_apply pascal, 0
 		call	graph_copy_page pascal, 0
 		freePISlotLarge	0
-		push	(96 shl 16) or 96
-		push	0
-		call	cdg_put
-		push	(352 shl 16) or 96
-		push	1
-		call	cdg_put_hflip
+		call	cdg_put_8 pascal, large (96 shl 16) or 96, 0
+		call	cdg_put_hflip_8 pascal, large (352 shl 16) or 96, 1
 		cmp	byte_F7E5, 0
 		jnz	short loc_9A8E
-		push	(384 shl 16) or 46
-		push	2
-		call	cdg_put
+		call	cdg_put_8 pascal, large (384 shl 16) or 46, 2
 
 loc_9A8E:
 		call	cdg_free pascal, 0
@@ -1108,12 +1094,8 @@ loc_9FB3:
 ; ---------------------------------------------------------------------------
 
 loc_9FC8:
-		push	(192 shl 16) or 272
-		push	0
-		call	cdg_put_noalpha
-		push	(352 shl 16) or 272
-		push	3
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8 pascal, large (192 shl 16) or 272, 0
+		call	cdg_put_noalpha_8 pascal, large (352 shl 16) or 272, 3
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.rem_credits]
 		les	bx, [bp+var_6]
@@ -1141,13 +1123,13 @@ loc_A01E:
 		mov	dx, 2
 		sub	dx, ax
 		push	dx
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8
 		push	(352 shl 16) or 272
 		mov	ax, si
 		add	ax, ax
 		inc	ax
 		push	ax
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8
 		mov	[bp+var_2], 1
 		jmp	short loc_A05B
 ; ---------------------------------------------------------------------------
@@ -2948,9 +2930,7 @@ sub_AFAC	proc near
 		mov	bx, word_ED68
 		add	[bx+3],	al
 		call	cdg_load_single pascal, 0, ds, bx, 0
-		push	(320 shl 16) or 312
-		push	0
-		call	cdg_put
+		call	cdg_put_8 pascal, large (320 shl 16) or 312, 0
 		call	cdg_free pascal, 0
 		call	super_entry_bfnt pascal, ds, offset aRegi2_bft ; "regi2.bft"
 		call	super_entry_bfnt pascal, ds, offset aRegi1_bft ; "regi1.bft"
@@ -4631,7 +4611,7 @@ arg_0		= word ptr  4
 		mov	bx, ax
 		push	word ptr [bx+27D8h]
 		push	di
-		call	cdg_unput_for_upwards_motion_e
+		call	cdg_unput_for_upwards_motion_e_8
 		mov	al, byte_10BB4
 		mov	ah, 0
 		add	ax, ax
@@ -4686,7 +4666,7 @@ loc_BE84:
 		mov	ah, 0
 		push	ax
 		push	si
-		call	cdg_put_dissolve_e
+		call	cdg_put_dissolve_e_8
 		mov	byte_10BC7, 1
 
 loc_BEA7:
@@ -4698,7 +4678,7 @@ loc_BEA7:
 		push	word ptr [bx+27D8h]
 		push	di
 		push	si
-		call	cdg_put_dissolve_e
+		call	cdg_put_dissolve_e_8
 		mov	byte_10BC7, 0
 
 loc_BEC1:
@@ -4734,7 +4714,7 @@ arg_0		= word ptr  4
 		mov	bx, ax
 		push	word ptr [bx+27D8h]
 		push	di
-		call	cdg_unput_for_upwards_motion_e
+		call	cdg_unput_for_upwards_motion_e_8
 		mov	al, byte_10BB4
 		mov	ah, 0
 		add	ax, ax
@@ -4759,7 +4739,7 @@ loc_BF18:
 		mov	ah, 0
 		push	ax
 		push	si
-		call	cdg_put_dissolve_e
+		call	cdg_put_dissolve_e_8
 		mov	byte_10BC7, 1
 
 loc_BF3B:
@@ -4771,7 +4751,7 @@ loc_BF3B:
 		push	word ptr [bx+27D8h]
 		push	di
 		push	si
-		call	cdg_put_dissolve_e
+		call	cdg_put_dissolve_e_8
 		mov	byte_10BC7, 0
 		jmp	short loc_BF78
 ; ---------------------------------------------------------------------------
@@ -4816,7 +4796,7 @@ sub_BF7E	proc near
 		xor	si, si
 
 loc_BFA0:
-		call	cdg_put_dissolve_e pascal, [bp+@@x_center], [bp+@@y_center], [bp+@@slot], si
+		call	cdg_put_dissolve_e_8 pascal, [bp+@@x_center], [bp+@@y_center], [bp+@@slot], si
 
 loc_BFAD:
 		pop	si
@@ -4960,7 +4940,7 @@ loc_C0DC:
 		lea	ax, [si-1]
 		push	ax
 		push	0
-		call	cdg_put_dissolve_e
+		call	cdg_put_dissolve_e_8
 		mov	byte_10BC7, 0
 		call	sub_BCD5
 		inc	word_10BB2
@@ -4978,7 +4958,7 @@ loc_C114:
 		push	word_10BC2
 		lea	ax, [si-1]
 		push	ax
-		call	cdg_unput_for_upwards_motion_e
+		call	cdg_unput_for_upwards_motion_e_8
 
 loc_C12A:
 		push	si
@@ -5009,7 +4989,7 @@ loc_C155:
 		lea	ax, [si-1]
 		push	ax
 		push	di
-		call	cdg_put_dissolve_e
+		call	cdg_put_dissolve_e_8
 		jmp	short loc_C194
 ; ---------------------------------------------------------------------------
 
@@ -5586,7 +5566,7 @@ include th02/formats/pi_load.asm
 include th03/formats/pi_put_quarter.asm
 	extern INPUT_MODE_INTERFACE:proc
 	extern INPUT_WAIT_FOR_CHANGE:proc
-	extern CDG_PUT_NOALPHA:proc
+	extern CDG_PUT_NOALPHA_8:proc
 	extern _hflip_lut_generate:proc
 seg2	ends
 

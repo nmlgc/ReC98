@@ -1257,9 +1257,7 @@ loc_B64C:
 loc_B65A:
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		push	(32 shl 16) or 112
-		push	31
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8 pascal, large (32 shl 16) or 112, 31
 		call	cdg_free pascal, 31
 		push	1
 		call	palette_black_in
@@ -3181,7 +3179,7 @@ loc_D38A:
 
 loc_D3A6:
 		push	[bp+var_2]
-		call	cdg_put
+		call	cdg_put_8
 		jmp	short loc_D3E3
 ; ---------------------------------------------------------------------------
 
@@ -6110,7 +6108,7 @@ stage4_render	endp
 
 stage5_render	proc near
 
-var_2		= word ptr -2
+@@top		= word ptr -2
 
 		enter	2, 0
 		push	si
@@ -6142,15 +6140,15 @@ loc_EC24:
 		mov	ax, [bx-430Ch]
 		add	ax, (-24 shl 4)
 		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
-		mov	[bp+var_2], ax
+		mov	[bp+@@top], ax
 		mov	ax, si
 		shl	ax, 7
-		add	ax, 30h	; '0'
+		add	ax, 48
 		push	ax
-		push	[bp+var_2]
-		push	110000h
-		push	0E000h
-		call	cdg_put_plane_roll
+		push	[bp+@@top]
+		push	(17 shl 16) or 0
+		push	(0 shl 16) or SEG_PLANE_E
+		call	cdg_put_plane_roll_8
 		inc	si
 
 loc_EC51:
@@ -8681,9 +8679,7 @@ var_1		= byte ptr -1
 		call	_grcg_setcolor_direct_seg1_raw
 		call	main_01:playfield_fillm_0_40_384_274
 		GRCG_OFF_CLOBBERING dx
-		push	(32 shl 16) or 56
-		push	0
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8 pascal, large (32 shl 16) or 56, 0
 		cmp	_bomb_frame, 80
 		ja	short loc_10096
 		mov	_circles_color, GC_RG
@@ -8755,9 +8751,7 @@ var_2		= word ptr -2
 		call	_grcg_setcolor_direct_seg1_raw
 		call	main_01:playfield_fillm_0_40_384_274
 		GRCG_OFF_CLOBBERING dx
-		push	(32 shl 16) or 56
-		push	0
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8 pascal, large (32 shl 16) or 56, 0
 		cmp	_bomb_frame, 80
 		ja	short loc_1015E
 		mov	_circles_color, 0Fh
@@ -11341,9 +11335,7 @@ loc_12309:
 		call	_grcg_setcolor_direct_seg1_raw
 		call	main_01:playfield_fillm_64_56_256_256
 		GRCG_OFF_CLOBBERING dx
-		push	(96 shl 16) or 72
-		push	16
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8 pascal, large (96 shl 16) or 72, 16
 
 loc_12327:
 		mov	ax, _bb_stage_seg
@@ -11419,9 +11411,7 @@ loc_12396:
 		call	_grcg_setcolor_direct_seg1_raw
 		call	main_01:playfield_fillm_96_112_288_256
 		GRCG_OFF_CLOBBERING dx
-		push	(128 shl 16) or 128
-		push	16
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8 pascal, large (128 shl 16) or 128, 16
 
 loc_123B4:
 		mov	ax, _bb_stage_seg
@@ -12210,9 +12200,7 @@ loc_129B4:
 		call	_grcg_setcolor_direct_seg1_raw
 		call	main_01:playfield_fillm_0_0_384_192
 		GRCG_OFF_CLOBBERING dx
-		push	(32 shl 16) or 16
-		push	16
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8 pascal, large (32 shl 16) or 16, 16
 
 loc_129D2:
 		mov	ax, _bb_stage_seg

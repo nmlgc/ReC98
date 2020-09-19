@@ -1,9 +1,5 @@
-; Displays the CDG image in the given [slot] at (⌊left/8⌋*8, top),
-; disregarding its alpha plane.
-
-; void pascal cdg_put_noalpha(screen_x_t left, vram_y_t top, int slot);
-public CDG_PUT_NOALPHA
-cdg_put_noalpha	proc far
+public CDG_PUT_NOALPHA_8
+cdg_put_noalpha_8	proc far
 
 @@slot	= word ptr  6
 @@top 	= word ptr  8
@@ -63,5 +59,5 @@ cdg_put_noalpha	proc far
 	pop	si
 	pop	bp
 	retf	6
-cdg_put_noalpha	endp
+cdg_put_noalpha_8	endp
 	align 2

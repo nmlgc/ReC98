@@ -1520,9 +1520,7 @@ loc_BA9C:
 loc_BAAA:
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		push	(80 shl 16) or 112
-		push	31
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8 pascal, large (80 shl 16) or 112, 31
 		call	cdg_free pascal, 31
 		push	1
 		call	palette_black_in
@@ -2088,9 +2086,7 @@ main__TEXT	segment	byte public 'CODE' use16
 sub_C73A	proc near
 		push	bp
 		mov	bp, sp
-		push	(80 shl 16) or 16
-		push	0
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8 pascal, large (80 shl 16) or 16, 0
 		call	sub_CEC2
 		call	reimu_stars_update_and_render
 		mov	_circles_color, GC_RG
@@ -2365,9 +2361,7 @@ marisa_lasers_update_and_render	endp
 sub_C99E	proc near
 		push	bp
 		mov	bp, sp
-		push	(112 shl 16) or 16
-		push	0
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8 pascal, large (112 shl 16) or 16, 0
 		call	sub_CEF2
 		cmp	_bomb_frame, 16
 		jnb	short loc_C9D0
@@ -2565,9 +2559,7 @@ sub_CB30	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		push	(64 shl 16) or 64
-		push	0
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8 pascal, large (64 shl 16) or 64, 0
 		call	sub_CF50
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 7
 		call	grcg_vline pascal, (209 shl 16) or PLAYFIELD_TOP, PLAYFIELD_TOP + 47
@@ -2735,9 +2727,7 @@ yuuka_heart_update_and_render	endp
 sub_CD1C	proc near
 		push	bp
 		mov	bp, sp
-		push	(96 shl 16) or 16
-		push	0
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8 pascal, large (96 shl 16) or 16, 0
 		call	sub_CFBA
 		call	yuuka_heart_update_and_render
 		mov	_circles_color, GC_RG
@@ -3281,9 +3271,7 @@ loc_D124:
 		call	_grcg_setcolor_direct_seg1_raw
 		call	playfield_fillm_0_0_384_192__1
 		GRCG_OFF_CLOBBERING dx
-		push	(32 shl 16) or 16
-		push	16
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8 pascal, large (32 shl 16) or 16, 16
 
 loc_D142:
 		mov	byte_24498, 0
@@ -3358,9 +3346,7 @@ loc_D1B0:
 		call	_grcg_setcolor_direct_seg1_raw
 		call	playfield_fillm_0_205_384_163
 		GRCG_OFF_CLOBBERING dx
-		push	(32 shl 16) or 221
-		push	16
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8 pascal, large (32 shl 16) or 221, 16
 
 loc_D1CE:
 		mov	byte_24498, 0Fh
@@ -3436,9 +3422,7 @@ loc_D23E:
 		call	_grcg_setcolor_direct_seg1_raw
 		call	playfield_fillm_64_56_256_256
 		GRCG_OFF_CLOBBERING dx
-		push	(96 shl 16) or 72
-		push	16
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8 pascal, large (96 shl 16) or 72, 16
 
 loc_D25C:
 		mov	byte_24498, 9
@@ -3510,9 +3494,7 @@ loc_D2C7:
 		call	_grcg_setcolor_direct_seg1_raw
 		call	playfield_fillm_0_0_384_192__2
 		GRCG_OFF_CLOBBERING dx
-		push	(32 shl 16) or 16
-		push	16
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8 pascal, large (32 shl 16) or 16, 16
 
 loc_D2E5:
 		mov	byte_24498, 0Fh
@@ -4455,9 +4437,7 @@ loc_DAFB:
 ; ---------------------------------------------------------------------------
 
 loc_DB0A:
-		push	(32 shl 16) or 256
-		push	17
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8 pascal, large (32 shl 16) or 256, 17
 		call	sub_E950
 		call	sub_DA25
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 6
@@ -6091,7 +6071,7 @@ loc_F432:
 		call	sub_EF2A
 		cmp	[bp+arg_0], (-1 and 255)
 		jz	short loc_F45D
-		call	cdg_put pascal, [bp+@@left], [bp+@@top], 2
+		call	cdg_put_8 pascal, [bp+@@left], [bp+@@top], 2
 		call	cdg_free pascal, 2
 
 loc_F45D:

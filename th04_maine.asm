@@ -1698,7 +1698,7 @@ arg_4		= word ptr  8
 		mov	al, byte_124C6
 		mov	ah, 0
 		push	ax
-		call	cdg_put
+		call	cdg_put_8
 		jmp	loc_B027
 ; ---------------------------------------------------------------------------
 
@@ -1854,7 +1854,7 @@ arg_4		= word ptr  8
 		mov	al, byte_124C6
 		mov	ah, 0
 		push	ax
-		call	cdg_put
+		call	cdg_put_8
 		jmp	loc_B13E
 ; ---------------------------------------------------------------------------
 
@@ -1972,7 +1972,7 @@ arg_4		= word ptr  8
 		mov	al, byte_124C6
 		mov	ah, 0
 		push	ax
-		call	cdg_put
+		call	cdg_put_8
 		jmp	loc_B255
 ; ---------------------------------------------------------------------------
 

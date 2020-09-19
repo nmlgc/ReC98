@@ -9,8 +9,8 @@ include th03/formats/cdg.inc
 SEG2	segment word public 'CODE' use16
 	assume cs:SEG2
 
-public CDG_PUT_NOALPHA
-cdg_put_noalpha	proc far
+public CDG_PUT_NOALPHA_8
+cdg_put_noalpha_8 proc far
 
 @@slot	= word ptr  6
 @@top 	= word ptr  8
@@ -64,7 +64,7 @@ cdg_put_noalpha	proc far
 	pop	si
 	pop	bp
 	retf	6
-cdg_put_noalpha	endp
+cdg_put_noalpha_8 endp
 	even
 SEG2	ends
 

@@ -1,9 +1,5 @@
-; Displays the CDG image in the given [slot] at (⌊left/8⌋*8, top),
-; disregarding its color planes.
-
-; void pascal cdg_put_nocolors(screen_x_t left, vram_y_t top, int slot);
-public CDG_PUT_NOCOLORS
-cdg_put_nocolors	proc far
+public CDG_PUT_NOCOLORS_8
+cdg_put_nocolors_8 proc far
 
 @@slot	= word ptr  6
 @@top 	= word ptr  8
@@ -63,5 +59,5 @@ endif
 	pop	si
 	pop	bp
 	retf	6
-cdg_put_nocolors	endp
+cdg_put_nocolors_8 endp
 	align 2

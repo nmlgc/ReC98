@@ -366,9 +366,7 @@ arg_2		= word ptr  6
 		jmp	cs:off_ABCB[bx]
 
 loc_AAF3:
-		push	(272 shl 16) or 224
-		push	10
-		call	cdg_put_nocolors
+		call	cdg_put_nocolors_8 pascal, large (272 shl 16) or 224, 10
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.rank]
 		mov	ah, 0
@@ -411,14 +409,14 @@ loc_AB4C:
 		push	15
 
 loc_AB54:
-		call	cdg_put_nocolors
+		call	cdg_put_nocolors_8
 
 loc_AB59:
 		GRCG_OFF_CLOBBERING dx
 		cmp	[bp+arg_0], 8
 		jnz	short loc_ABC4
-		call	cdg_put pascal, 256, di, 35
-		call	cdg_put pascal, 352, di, 36
+		call	cdg_put_8 pascal, 256, di, 35
+		call	cdg_put_8 pascal, 352, di, 36
 		call	egc_copy_rect_1_to_0_16 pascal, large (0 shl 16) or 384, (RES_X shl 16) or 16
 		mov	_graph_putsa_fx_func, 2
 		mov	bx, [bp+var_2]
@@ -487,16 +485,14 @@ loc_AC08:
 		jmp	cs:off_AE18[bx]
 
 loc_AC24:
-		push	(224 shl 16) or 224
-		push	16
-		call	cdg_put_nocolors
+		call	cdg_put_nocolors_8 pascal, large (224 shl 16) or 224, 16
 		push	(320 shl 16) or 224
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.rank]
 		mov	ah, 0
 		add	ax, 21
 		push	ax
-		call	cdg_put_nocolors
+		call	cdg_put_nocolors_8
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.rank]
 		mov	ah, 0
@@ -508,37 +504,31 @@ loc_AC57:
 ; ---------------------------------------------------------------------------
 
 loc_AC5C:
-		push	(224 shl 16) or 240
-		push	17
-		call	cdg_put_nocolors
+		call	cdg_put_nocolors_8 pascal, large (224 shl 16) or 240, 17
 		push	(320 shl 16) or 240
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.cfg_lives]
 		mov	ah, 0
 		push	ax
-		call	cdg_put_nocolors
+		call	cdg_put_nocolors_8
 		mov	si, 0Ah
 		jmp	loc_AD9A
 ; ---------------------------------------------------------------------------
 
 loc_AC85:
-		push	(224 shl 16) or 256
-		push	18
-		call	cdg_put_nocolors
+		call	cdg_put_nocolors_8 pascal, large (224 shl 16) or 256, 18
 		push	(320 shl 16) or 256
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.cfg_bombs]
 		mov	ah, 0
 		push	ax
-		call	cdg_put_nocolors
+		call	cdg_put_nocolors_8
 		mov	si, 0Bh
 		jmp	loc_AD9A
 ; ---------------------------------------------------------------------------
 
 loc_ACAE:
-		push	(224 shl 16) or 272
-		push	19
-		call	cdg_put_nocolors
+		call	cdg_put_nocolors_8 pascal, large (224 shl 16) or 272, 19
 		les	bx, _resident
 		cmp	es:[bx+resident_t.bgm_mode], SND_BGM_OFF
 		jnz	short loc_ACCB
@@ -554,9 +544,7 @@ loc_ACCB:
 
 loc_ACD8:
 		mov	[bp+var_2], ax
-		push	(320 shl 16) or 272
-		push	ax
-		call	cdg_put_nocolors
+		call	cdg_put_nocolors_8 pascal, large (320 shl 16) or 272, ax
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.bgm_mode]
 		mov	ah, 0
@@ -565,9 +553,7 @@ loc_ACD8:
 ; ---------------------------------------------------------------------------
 
 loc_ACF7:
-		push	(224 shl 16) or 288
-		push	20
-		call	cdg_put_nocolors
+		call	cdg_put_nocolors_8 pascal, large (224 shl 16) or 288, 20
 		les	bx, _resident
 		cmp	es:[bx+resident_t.se_mode], SND_SE_OFF
 		jnz	short loc_AD14
@@ -586,9 +572,7 @@ loc_AD14:
 
 loc_AD25:
 		mov	[bp+var_2], ax
-		push	(320 shl 16) or 288
-		push	ax
-		call	cdg_put_nocolors
+		call	cdg_put_nocolors_8 pascal, large (320 shl 16) or 288, ax
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.se_mode]
 		mov	ah, 0
@@ -601,10 +585,10 @@ loc_AD44:
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.turbo_mode]
 		mov	ah, 0
-		mov	dx, 21h	; '!'
+		mov	dx, 33
 		sub	dx, ax
 		push	dx
-		call	cdg_put_nocolors
+		call	cdg_put_nocolors_8
 		mov	di, 256
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.turbo_mode]
@@ -614,18 +598,14 @@ loc_AD44:
 ; ---------------------------------------------------------------------------
 
 loc_AD72:
-		push	(272 shl 16) or 320
-		push	31
-		call	cdg_put_nocolors
+		call	cdg_put_nocolors_8 pascal, large (272 shl 16) or 320, 31
 		mov	di, 256
 		mov	si, 14h
 		jmp	short loc_AD9A
 ; ---------------------------------------------------------------------------
 
 loc_AD87:
-		push	(272 shl 16) or 340
-		push	15
-		call	cdg_put_nocolors
+		call	cdg_put_nocolors_8 pascal, large (272 shl 16) or 340, 15
 		mov	di, 256
 		mov	si, 15h
 
@@ -633,7 +613,7 @@ loc_AD9A:
 		GRCG_OFF_CLOBBERING dx
 		cmp	[bp+arg_0], 8
 		jnz	short loc_AE11
-		call	cdg_put pascal, di, [bp+@@y], 35
+		call	cdg_put_8 pascal, di, [bp+@@y], 35
 		cmp	di, 256
 		jnz	short loc_ADBD
 		lea	ax, [di+96]
@@ -647,7 +627,7 @@ loc_ADBD:
 loc_ADC0:
 		push	[bp+@@y]
 		push	36
-		call	cdg_put
+		call	cdg_put_8
 		call	egc_copy_rect_1_to_0_16 pascal, large (0 shl 16) or 384, (RES_X shl 16) or 16
 		mov	_graph_putsa_fx_func, 2
 		mov	bx, si
@@ -3227,14 +3207,10 @@ sub_D3A2	proc near
 		mov	bp, sp
 		cmp	playchar_132B8, PLAYCHAR_REIMU
 		jnz	short loc_D407
-		push	(40 shl 16) or 44
-		push	40
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8 pascal, large (40 shl 16) or 44, 40
 		push	1
 		call	sub_D0FF
-		push	(336 shl 16) or 52
-		push	41
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8 pascal, large (336 shl 16) or 52, 41
 		push	1
 		call	darken_pic
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
@@ -3246,14 +3222,10 @@ sub_D3A2	proc near
 ; ---------------------------------------------------------------------------
 
 loc_D407:
-		push	(328 shl 16) or 44
-		push	41
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8 pascal, large (328 shl 16) or 44, 41
 		push	0
 		call	sub_D0FF
-		push	(48 shl 16) or 52
-		push	40
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8 pascal, large (48 shl 16) or 52, 40
 		push	0
 		call	darken_pic
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
@@ -3517,7 +3489,7 @@ loc_D664:
 		push	41
 
 loc_D66C:
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
 		call	grcg_byteboxfill_x pascal, ((440 / 8) shl 16) or  52, ((440 / 8) shl 16) or 287
 		call	grcg_byteboxfill_x pascal, ((192 / 8) shl 16) or 288, ((440 / 8) shl 16) or 295
