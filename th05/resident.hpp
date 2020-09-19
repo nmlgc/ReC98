@@ -46,3 +46,5 @@ typedef struct {
 	score_lebcd_t stage_score[MAIN_STAGE_COUNT];
 	int32_t unused_3;
 } resident_t;
+
+extern resident_t *resident;

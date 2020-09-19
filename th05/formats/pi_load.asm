@@ -1,3 +1,4 @@
+public PI_LOAD
 func pi_load
 @@fn	= dword ptr (cPtrSize + 2)
 @@slot	= word ptr (cPtrSize + 2 + dPtrSize)

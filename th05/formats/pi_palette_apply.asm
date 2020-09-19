@@ -1,3 +1,4 @@
+public PI_PALETTE_APPLY
 pi_palette_apply	proc
 @@slot	= word ptr cPtrSize
 

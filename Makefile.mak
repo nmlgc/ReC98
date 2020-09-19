@@ -137,8 +137,8 @@ bin\th05\res_kso.com: th05\res_kso.cpp
 $**
 | masters.lib
 
-bin\th05\op.exe: bin\th05\op.obj th05\op_01.cpp bin\hfliplut.obj
-	$(CC) $(CFLAGS) -ml -DGAME=5 -DBINARY='O' -nbin\th05\ -eOP.EXE @&&|
+bin\th05\op.exe: bin\th05\op.obj th05\op_01.cpp th05\m_char.cpp bin\hfliplut.obj
+	$(CC) $(CFLAGS) -ml -DGAME=5 -DBINARY='O' -3 -Z -nbin\th05\ -eOP.EXE @&&|
 $**
 |
 

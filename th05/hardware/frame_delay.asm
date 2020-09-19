@@ -1,4 +1,4 @@
-; int __cdecl frame_delay(int frames)
+public FRAME_DELAY
 frame_delay	proc
 @@frames	= word ptr (cPtrSize + 2)
 

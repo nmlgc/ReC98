@@ -1,3 +1,4 @@
+public PI_FREE
 func pi_free
 @@slot	= word ptr 4
 
