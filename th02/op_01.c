@@ -176,9 +176,7 @@ void op_animate(void)
 
 void pascal near start_init(void)
 {
-	snd_se_reset();
-	snd_se_play(13);
-	snd_se_update();
+	snd_se_play_force(13);
 	frame_delay(20);
 
 	resident->rem_lives = lives;

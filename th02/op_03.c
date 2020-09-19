@@ -13,9 +13,7 @@ void title_flash(void)
 	int page = 1;
 	int frame;
 
-	snd_se_reset();
-	snd_se_play(6);
-	snd_se_update();
+	snd_se_play_force(6);
 	for(frame = 0; frame < 18; frame++) {
 		graph_showpage(page);
 		page = 1 - page;

@@ -39,3 +39,9 @@ void snd_delay_until_volume(uint8_t volume);
 void snd_se_reset(void);
 void DEFCONV snd_se_play(int new_se);
 void snd_se_update(void);
+
+// Cancels any currently playing sound effect to play the given one.
+#define snd_se_play_force(new_se) \
+	snd_se_reset(); \
+	snd_se_play(new_se); \
+	snd_se_update();
