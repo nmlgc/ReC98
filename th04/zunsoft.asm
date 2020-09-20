@@ -234,8 +234,8 @@ loc_B7F6:
 zunsoft_palette_update_and_show	endp
 
 
-public ZUNSOFT
-zunsoft	proc near
+public _zunsoft
+_zunsoft proc near
 
 @@frame		= word ptr -8
 @@i		= word ptr -6
@@ -481,7 +481,7 @@ endif
 	pop	si
 	leave
 	retn
-zunsoft	endp
+_zunsoft endp
 
 ; ---------------------------------------------------------------------------
 if GAME eq 4

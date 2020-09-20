@@ -164,8 +164,8 @@ include th04/formats/cfg.asm
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public START_GAME
-start_game	proc near
+public _start_game
+_start_game	proc near
 		push	bp
 		mov	bp, sp
 		les	bx, _resident
@@ -181,7 +181,7 @@ start_game	proc near
 		jnz	short loc_A96A
 		les	bx, _resident
 		mov	es:[bx+resident_t.demo_num], 0
-		call	main_cdg_free
+		call	_main_cdg_free
 		call	cfg_save
 		call	gaiji_restore
 		kajacall	KAJA_SONG_FADE, 10
@@ -211,14 +211,14 @@ loc_A962:
 loc_A96A:
 		pop	bp
 		retn
-start_game	endp
+_start_game	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public START_EXTRA
-start_extra	proc near
+public _start_extra
+_start_extra	proc near
 		push	bp
 		mov	bp, sp
 		les	bx, _resident
@@ -232,7 +232,7 @@ start_extra	proc near
 		jnz	short loc_A9C7
 		les	bx, _resident
 		mov	es:[bx+resident_t.demo_num], 0
-		call	main_cdg_free
+		call	_main_cdg_free
 		call	cfg_save
 		call	gaiji_restore
 		kajacall	KAJA_SONG_FADE, 10
@@ -248,14 +248,14 @@ start_extra	proc near
 loc_A9C7:
 		pop	bp
 		retn
-start_extra	endp
+_start_extra	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public START_DEMO
-start_demo	proc near
+public _start_demo
+_start_demo	proc near
 		push	bp
 		mov	bp, sp
 		les	bx, _resident
@@ -317,7 +317,7 @@ loc_AA6E:
 		call	palette_black_out
 		call	super_free
 		freePISlotLarge	0
-		call	main_cdg_free
+		call	_main_cdg_free
 		call	cfg_save
 		call	gaiji_restore
 		call	_game_exit
@@ -330,7 +330,7 @@ loc_AA6E:
 		add	sp, 0Ch
 		pop	bp
 		retn
-start_demo	endp
+_start_demo	endp
 
 ; ---------------------------------------------------------------------------
 off_AAAD	dw offset loc_AA08
@@ -798,12 +798,12 @@ loc_AF2C:
 		jmp	cs:off_B046[bx]
 
 loc_AF51:
-		call	start_game
+		call	_start_game
 		jmp	short loc_AFBD
 ; ---------------------------------------------------------------------------
 
 loc_AF56:
-		call	start_extra
+		call	_start_extra
 		graph_accesspage 1
 		call	pi_load pascal, 0, ds, offset aOp1_pi
 		call	pi_palette_apply pascal, 0
@@ -819,14 +819,14 @@ loc_AF56:
 ; ---------------------------------------------------------------------------
 
 loc_AFAD:
-		call	sub_CA94
+		call	_regist_view_menu
 		mov	_main_menu_initialized, 0
 		jmp	short loc_B02B
 ; ---------------------------------------------------------------------------
 
 loc_AFB7:
-		call	musicroom
-		call	main_cdg_load
+		call	_musicroom
+		call	_main_cdg_load
 
 loc_AFBD:
 		graph_accesspage 1
@@ -1237,7 +1237,7 @@ loc_B3AB:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.rank], RANK_DEFAULT
 		jnz	short loc_B3D3
-		call	sub_B9CE
+		call	_setup_menu
 		les	bx, _resident
 		mov	es:[bx+resident_t.rank], RANK_NORMAL
 
@@ -1254,7 +1254,7 @@ loc_B3D3:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.zunsoft_shown], 0
 		jnz	short loc_B40D
-		call	zunsoft
+		call	_zunsoft
 		les	bx, _resident
 		mov	es:[bx+resident_t.zunsoft_shown], 1
 
@@ -1265,9 +1265,9 @@ loc_B40D:
 		kajacall	KAJA_SONG_STOP
 
 loc_B420:
-		call	op_animate
+		call	_op_animate
 		call	_cleardata_and_regist_view_sprite
-		call	main_cdg_load
+		call	_main_cdg_load
 		mov	_in_option, 0
 		mov	_quit, 0
 		mov	_menu_sel, 0
@@ -1289,7 +1289,7 @@ loc_B44E:
 		call	main_update_and_render
 		cmp	si, 640
 		jl	short loc_B45F
-		call	start_demo
+		call	_start_demo
 		jmp	short loc_B45F
 ; ---------------------------------------------------------------------------
 
@@ -1315,7 +1315,7 @@ loc_B46B:
 loc_B47B:
 		cmp	_quit, 0
 		jz	short loc_B43A
-		call	main_cdg_free
+		call	_main_cdg_free
 		call	cfg_save_exit
 		call	gaiji_restore
 		call	text_clear
@@ -1531,8 +1531,8 @@ sub_B8B1	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_B9CE	proc near
+public _setup_menu
+_setup_menu proc near
 		push	bp
 		mov	bp, sp
 		mov	PaletteTone, 0
@@ -1556,7 +1556,7 @@ sub_B9CE	proc near
 		call	super_free
 		pop	bp
 		retn
-sub_B9CE	endp
+_setup_menu endp
 
 include th04/zunsoft.asm
 
@@ -1786,8 +1786,8 @@ draw_cmt	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public MUSICROOM
-musicroom	proc near
+public _musicroom
+_musicroom	proc near
 		push	bp
 		mov	bp, sp
 		mov	byte_12DBE, 0
@@ -1919,7 +1919,7 @@ loc_C544:
 		kajacall	KAJA_SONG_PLAY
 		pop	bp
 		retn
-musicroom	endp
+_musicroom	endp
 
 include th04/formats/scoredat_decode_both.asm
 include th04/formats/scoredat_encode.asm
@@ -2188,8 +2188,8 @@ sub_C8F5	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public SCORE_MENU
-score_menu	proc near
+public _score_render
+_score_render proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -2232,14 +2232,14 @@ loc_CA5B:
 		pop	si
 		pop	bp
 		retn
-score_menu	endp
+_score_render endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_CA94	proc near
+public _regist_view_menu
+_regist_view_menu proc near
 		push	bp
 		mov	bp, sp
 		kajacall	KAJA_SONG_STOP
@@ -2256,7 +2256,7 @@ sub_CA94	proc near
 		call	pi_load pascal, 0, ds, offset aHi01_pi
 
 loc_CADA:
-		call	score_menu
+		call	_score_render
 		push	1
 		call	palette_black_in
 
@@ -2280,7 +2280,7 @@ loc_CAE4:
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		call	_scoredat_load_both
-		call	score_menu
+		call	_score_render
 		push	1
 		call	palette_black_in
 
@@ -2321,7 +2321,7 @@ loc_CBB3:
 		kajacall	KAJA_SONG_PLAY
 		pop	bp
 		retn
-sub_CA94	endp
+_regist_view_menu endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -2404,8 +2404,8 @@ _cleardata_and_regist_view_sprite	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-main_cdg_load	proc near
+public _main_cdg_load
+_main_cdg_load	proc near
 		push	bp
 		mov	bp, sp
 		call	cdg_load_all pascal,  0, ds, offset aSft1_cd2
@@ -2414,27 +2414,27 @@ main_cdg_load	proc near
 		call	cdg_load_all_noalpha pascal, 40, ds, offset aSl_cd2
 		pop	bp
 		retn
-main_cdg_load	endp
+_main_cdg_load	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-main_cdg_free	proc near
+public _main_cdg_free
+_main_cdg_free	proc near
 		push	bp
 		mov	bp, sp
 		call	cdg_free_all
 		pop	bp
 		retn
-main_cdg_free	endp
+_main_cdg_free	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-op_animate	proc near
+public _op_animate
+_op_animate	proc near
 
 @@page		= byte ptr -4
 var_3		= byte ptr -3
@@ -2624,7 +2624,7 @@ loc_CF4E:
 		pop	si
 		leave
 		retn
-op_animate	endp
+_op_animate	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
