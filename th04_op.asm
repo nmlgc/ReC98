@@ -1924,48 +1924,7 @@ musicroom	endp
 include th04/formats/scoredat_decode_both.asm
 include th04/formats/scoredat_encode.asm
 include th04/formats/scoredat_recreate.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public SCOREDAT_LOAD
-scoredat_load	proc near
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	offset aGensou_scr ; "GENSOU.SCR"
-		call	file_exist
-		or	ax, ax
-		jz	short loc_C793
-		push	ds
-		push	offset aGensou_scr ; "GENSOU.SCR"
-		call	file_ropen
-		mov	al, _rank
-		mov	ah, 0
-		imul	ax, size scoredat_section_t
-		movzx	eax, ax
-		call	file_seek pascal, large eax, 0
-		call	file_read pascal, ds, offset _hi, size scoredat_section_t
-		call	file_seek pascal, large (RANK_COUNT - 1) * size scoredat_section_t, 1
-		call	file_read pascal, ds, offset _hi2, size scoredat_section_t
-		call	file_close
-		call	scoredat_decode_func
-		or	al, al
-		jz	short loc_C79A
-
-loc_C793:
-		call	scoredat_recreate
-		mov	al, 1
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_C79A:
-		mov	al, 0
-		pop	bp
-		retn
-scoredat_load	endp
-
+include th04/formats/scoredat_load_both.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2293,7 +2252,7 @@ sub_CA94	proc near
 		assume es:nothing
 		mov	al, es:[bx+resident_t.rank]
 		mov	_rank, al
-		call	scoredat_load
+		call	_scoredat_load_both
 		call	pi_load pascal, 0, ds, offset aHi01_pi
 
 loc_CADA:
@@ -2320,7 +2279,7 @@ loc_CAE4:
 		dec	_rank
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		call	scoredat_load
+		call	_scoredat_load_both
 		call	score_menu
 		push	1
 		call	palette_black_in
@@ -2333,7 +2292,7 @@ loc_CB36:
 		inc	_rank
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		call	scoredat_load
+		call	_scoredat_load_both
 		jmp	short loc_CADA
 ; ---------------------------------------------------------------------------
 
@@ -2377,7 +2336,7 @@ scoredat_cleared_load	proc near
 ; ---------------------------------------------------------------------------
 
 loc_CBEE:
-		call	scoredat_load
+		call	_scoredat_load_both
 		or	al, al
 		jnz	loc_CC78
 		mov	al, _rank

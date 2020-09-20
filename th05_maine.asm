@@ -1788,54 +1788,7 @@ sub_B3CB	endp
 include th04/formats/scoredat_decode.asm
 include th04/formats/scoredat_encode.asm
 include th05/formats/scoredat_recreate_maine.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B646	proc near
-
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	offset aGensou_scr_0 ; "GENSOU.SCR"
-		call	file_exist
-		or	ax, ax
-		jz	short loc_B694
-		push	ds
-		push	offset aGensou_scr_1 ; "GENSOU.SCR"
-		call	file_ropen
-		mov	ax, [bp+arg_0]
-		imul	ax, 5
-		mov	dl, _hiscore_rank
-		mov	dh, 0
-		add	ax, dx
-		imul	ax, size scoredat_section_t
-		movzx	eax, ax
-		push	eax
-		push	0
-		call	file_seek
-		call	file_read pascal, ds, offset _hi, size scoredat_section_t
-		call	file_close
-		call	scoredat_decode
-		or	al, al
-		jz	short loc_B69D
-
-loc_B694:
-		call	scoredat_recreate_maine
-		mov	al, 1
-		pop	bp
-		retn	2
-; ---------------------------------------------------------------------------
-
-loc_B69D:
-		mov	al, 0
-		pop	bp
-		retn	2
-sub_B646	endp
-
+include th05/formats/scoredat_load_for.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1852,7 +1805,7 @@ sub_B6A3	proc near
 		mov	al, playchar_15178
 		mov	ah, 0
 		imul	ax, 5
-		mov	dl, _hiscore_rank
+		mov	dl, _rank
 		mov	dh, 0
 		add	ax, dx
 		imul	ax, size scoredat_section_t
@@ -2066,7 +2019,7 @@ loc_B84F:
 ; ---------------------------------------------------------------------------
 
 loc_B86C:
-		cmp	_hiscore_rank, RANK_EXTRA
+		cmp	_rank, RANK_EXTRA
 		jnb	short loc_B88B
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.stage]
@@ -3462,7 +3415,7 @@ loc_C256:
 		mov	al, es:[bx+resident_t.rank]
 
 loc_C25E:
-		mov	_hiscore_rank, al
+		mov	_rank, al
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.playchar]
 		mov	playchar_15178, al
@@ -3475,8 +3428,7 @@ loc_C273:
 		mov	ah, 0
 		cmp	ax, [bp+var_4]
 		jz	short loc_C289
-		push	[bp+var_4]
-		call	sub_B646
+		call	scoredat_load_for pascal, [bp+var_4]
 		push	[bp+var_4]
 		call	sub_BCD3
 
@@ -3484,16 +3436,15 @@ loc_C289:
 		inc	[bp+var_4]
 
 loc_C28C:
-		cmp	[bp+var_4], 4
+		cmp	[bp+var_4], PLAYCHAR_COUNT
 		jl	short loc_C273
 		mov	al, playchar_15178
 		mov	ah, 0
-		push	ax
-		call	sub_B646
+		call	scoredat_load_for pascal, ax
 		les	bx, _resident
 		cmp	es:[bx+resident_t.turbo_mode], 0
 		jnz	short loc_C2AD
-		cmp	_hiscore_rank, RANK_EXTRA
+		cmp	_rank, RANK_EXTRA
 		jnz	short loc_C2BB
 
 loc_C2AD:
@@ -7832,8 +7783,7 @@ byte_11621	db 0
 public _entered_name_cursor
 _entered_name_cursor	dw 0
 aGensou_scr	db 'GENSOU.SCR',0
-aGensou_scr_0	db 'GENSOU.SCR',0
-aGensou_scr_1	db 'GENSOU.SCR',0
+include th05/formats/scoredat_load_for[data].asm
 aGensou_scr_2	db 'GENSOU.SCR',0
 aHi01_pi	db 'hi01.pi',0
 aScnum_bft	db 'scnum.bft',0
@@ -7962,7 +7912,7 @@ include th04/formats/scoredat[bss].asm
 public _glyphballs
 _glyphballs	glyphball_t	(SCOREDAT_NAME_LEN + 1) dup (<?>)
 include th03/hiscore/regist[bss].asm
-_hiscore_rank	db ?
+_rank	db ?
 playchar_15178	db ?
 		db 3 dup(?)
 byte_1517C	db ?

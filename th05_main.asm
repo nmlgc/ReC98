@@ -4987,46 +4987,7 @@ include th04/main/playperf.asm
 include th05/main/select_for_playchar.asm
 include th04/main/select_for_rank.asm
 include th04/formats/scoredat_code_asm.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_E7DC	proc near
-		mov	ax, (3Dh shl 8) or 00h
-		mov	dx, offset aGENSOU_SCR
-		int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
-					; DS:DX	-> ASCIZ filename
-					; AL = access mode
-					; 0 - read
-		jnb	short loc_E7E7
-		retn
-; ---------------------------------------------------------------------------
-
-loc_E7E7:
-		mov	bx, ax
-		xor	ah, ah
-		mov	al, _playchar
-		imul	ax, 5
-		add	al, _rank
-		imul	ax, size scoredat_section_t
-		mov	dx, ax
-		xor	cx, cx
-		mov	ax, (42h shl 8) or 00h
-		int	21h		; DOS -	2+ - MOVE FILE READ/WRITE POINTER (LSEEK)
-					; AL = method: offset from beginning of	file
-		mov	ah, 3Fh
-		mov	dx, offset _hi
-		mov	cx, size scoredat_section_t
-		int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
-					; BX = file handle, CX = number	of bytes to read
-					; DS:DX	-> buffer
-		mov	ah, 3Eh
-		int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
-					; BX = file handle
-		call	scoredat_decode
-		retn
-sub_E7DC	endp
-
+include th05/formats/scoredat_main.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5179,7 +5140,7 @@ sub_E8F2	endp
 
 
 sub_E8FE	proc near
-		call	sub_E7DC
+		call	_scoredat_load_for_cur
 		xor	bx, bx
 		mov	cx, SCORE_DIGITS
 

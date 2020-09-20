@@ -66,7 +66,7 @@ scoredat_recreate_op	proc near
 @@places_more?:
 	cmp	si, SCOREDAT_PLACES
 	jl	short @@place_loop
-	call	file_create pascal, ds, offset aGensou_scr ; "GENSOU.SCR"
+	call	file_create pascal, ds, offset _SCOREDAT_FN ; "GENSOU.SCR"
 	xor	si, si
 	jmp	short @@sections_more?
 ; ---------------------------------------------------------------------------

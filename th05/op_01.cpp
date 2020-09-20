@@ -15,7 +15,7 @@ scoredat_section_t hi;
 scoredat_section_t hi2;
 static uint8_t scoredat_unused;
 
-unsigned char hiscore_rank;
+unsigned char rank;
 unsigned char cleared_with[PLAYCHAR_COUNT][RANK_COUNT];
 bool extra_unlocked;
 

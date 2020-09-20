@@ -12234,48 +12234,7 @@ loc_12A05:
 mugetsu_gengetsu_bg_render	endp
 
 include th04/formats/scoredat_recreate.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12AB7	proc near
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	offset aGensou_scr_0 ; "GENSOU.SCR"
-		call	file_exist
-		or	ax, ax
-		jz	short loc_12B19
-		push	ds
-		push	offset aGensou_scr_1 ; "GENSOU.SCR"
-		call	file_ropen
-		mov	al, _rank
-		mov	ah, 0
-		imul	ax, size scoredat_section_t
-		movzx	eax, ax
-		call	file_seek pascal, large eax, 0
-		les	bx, _resident
-		assume es:nothing
-		cmp	es:[bx+resident_t.playchar_ascii], '0' + PLAYCHAR_MARISA
-		jnz	short loc_12AFE
-		call	file_seek pascal, large RANK_COUNT * size scoredat_section_t, 1
-
-loc_12AFE:
-		call	file_read pascal, ds, offset _hi, size scoredat_section_t
-		call	file_close
-		call	main_01:scoredat_decode pascal, offset _hi
-		or	al, al
-		jz	short loc_12B1C
-
-loc_12B19:
-		call	main_01:scoredat_recreate
-
-loc_12B1C:
-		pop	bp
-		retn
-sub_12AB7	endp
-
+include th04/formats/scoredat_main.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -12495,7 +12454,7 @@ sub_12B71	endp
 sub_12CB5	proc near
 		push	bp
 		mov	bp, sp
-		call	main_01:sub_12AB7
+		call	_scoredat_load_for_cur
 		cmp	_turbo_mode, 0
 		jz	short loc_12CC5
 		call	main_01:sub_12B71
@@ -12514,7 +12473,7 @@ sub_12CC7	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		call	main_01:sub_12AB7
+		call	_scoredat_load_for_cur
 		xor	si, si
 		jmp	short loc_12CDD
 ; ---------------------------------------------------------------------------

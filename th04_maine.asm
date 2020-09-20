@@ -3352,56 +3352,7 @@ sub_C0F8	endp
 include th04/formats/scoredat_decode.asm
 include th04/formats/scoredat_encode.asm
 include th04/formats/scoredat_recreate.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C2AD	proc near
-
-arg_0		= byte ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	offset aGensou_scr_0 ; "GENSOU.SCR"
-		call	file_exist
-		or	ax, ax
-		jz	short loc_C307
-		push	ds
-		push	offset aGensou_scr_1 ; "GENSOU.SCR"
-		call	file_ropen
-		mov	al, _hiscore_rank
-		mov	ah, 0
-		imul	ax, size scoredat_section_t
-		movzx	eax, ax
-		push	eax
-		push	0
-		call	file_seek
-		cmp	[bp+arg_0], 0
-		jz	short loc_C2EF
-		call	file_seek pascal, large RANK_COUNT * size scoredat_section_t, 1
-
-loc_C2EF:
-		call	file_read pascal, ds, offset _hi, size scoredat_section_t
-		call	file_close
-		call	scoredat_decode
-		or	al, al
-		jz	short loc_C310
-
-loc_C307:
-		call	scoredat_recreate
-		mov	al, 1
-		pop	bp
-		retn	2
-; ---------------------------------------------------------------------------
-
-loc_C310:
-		mov	al, 0
-		pop	bp
-		retn	2
-sub_C2AD	endp
-
+include th04/formats/scoredat_load_for.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3415,12 +3366,12 @@ sub_C316	proc near
 		push	ds
 		push	offset aGensou_scr_2 ; "GENSOU.SCR"
 		call	file_append
-		mov	al, _hiscore_rank
+		mov	al, _rank
 		mov	ah, 0
 		imul	ax, size scoredat_section_t
 		movzx	eax, ax
 		call	file_seek pascal, large eax, 0
-		cmp	byte ptr word_125B8, 0
+		cmp	playchar_125B8, PLAYCHAR_REIMU
 		jz	short loc_C350
 		call	file_seek pascal, large RANK_COUNT * size scoredat_section_t, 1
 
@@ -3683,7 +3634,7 @@ loc_C531:
 		cmp	ax, si
 		jnz	short loc_C549
 		mov	al, [bp+arg_0]
-		cmp	al, byte ptr word_125B8
+		cmp	al, playchar_125B8
 		jnz	short loc_C549
 		mov	al, 0Ah
 		jmp	short loc_C54B
@@ -3788,7 +3739,7 @@ arg_4		= word ptr  8
 		mov	ah, 0
 		cmp	ax, si
 		jnz	short loc_C60E
-		mov	al, byte ptr word_125B8
+		mov	al, playchar_125B8
 		mov	ah, 0
 		cmp	ax, di
 		jnz	short loc_C60E
@@ -3998,7 +3949,7 @@ loc_C73C:
 		cmp	ax, si
 		jnz	short loc_C76E
 		mov	al, byte ptr [bp+arg_0]
-		cmp	al, byte ptr word_125B8
+		cmp	al, playchar_125B8
 		jz	short loc_C787
 
 loc_C76E:
@@ -4160,7 +4111,7 @@ loc_C87A:
 		mov	al, es:[bx+resident_t.rank]
 
 loc_C882:
-		mov	_hiscore_rank, al
+		mov	_rank, al
 		les	bx, _resident
 		cmp	es:[bx+resident_t.playchar_ascii], '0' + PLAYCHAR_MARISA
 		jnz	short loc_C895
@@ -4172,28 +4123,27 @@ loc_C895:
 		xor	ax, ax
 
 loc_C897:
-		mov	byte ptr word_125B8, al
+		mov	playchar_125B8, al
 		mov	al, 1
-		sub	al, byte ptr word_125B8
+		sub	al, playchar_125B8
 		push	ax
-		call	sub_C2AD
-		mov	al, byte ptr word_125B8
+		call	scoredat_load_for
+		mov	al, playchar_125B8
 		mov	ah, 0
 		mov	dx, 1
 		sub	dx, ax
 		push	dx
 		call	sub_C7C9
-		push	word_125B8
-		call	sub_C2AD
+		call	scoredat_load_for pascal, word ptr playchar_125B8
 		les	bx, _resident
 		cmp	es:[bx+resident_t.turbo_mode], 0
 		jnz	short loc_C8CB
-		cmp	_hiscore_rank, RANK_EXTRA
+		cmp	_rank, RANK_EXTRA
 		jnz	short loc_C8D9
 
 loc_C8CB:
 		call	sub_C3B2
-		mov	al, byte ptr word_125B8
+		mov	al, playchar_125B8
 		mov	ah, 0
 		push	ax
 		call	sub_C7C9
@@ -4202,7 +4152,7 @@ loc_C8CB:
 
 loc_C8D9:
 		mov	_entered_place, -1
-		mov	al, byte ptr word_125B8
+		mov	al, playchar_125B8
 		mov	ah, 0
 		push	ax
 		call	sub_C7C9
@@ -4215,7 +4165,7 @@ loc_C909:
 		jz	short loc_C922
 		cmp	es:[bx+resident_t.end_sequence], ES_EXTRA
 		jz	short loc_C922
-		cmp	_hiscore_rank, RANK_EASY
+		cmp	_rank, RANK_EASY
 		jnz	short loc_C95E
 
 loc_C922:
@@ -4442,7 +4392,7 @@ loc_CAF5:
 		mov	al, _entered_place
 		mov	ah, 0
 		push	ax
-		push	word_125B8
+		push	word ptr playchar_125B8
 		push	si
 		call	sub_C665
 
@@ -4462,7 +4412,7 @@ loc_CB1E:
 		mov	al, _entered_place
 		mov	ah, 0
 		push	ax
-		push	word_125B8
+		push	word ptr playchar_125B8
 		push	si
 		call	sub_C665
 
@@ -4827,7 +4777,7 @@ byte_124EF	db ?
 		db 2 dup(?)
 include th04/formats/scoredat[bss].asm
 include th03/hiscore/regist[bss].asm
-_hiscore_rank	db ?
-word_125B8	dw ?
+_rank	db ?
+playchar_125B8	db ?
 
 		end

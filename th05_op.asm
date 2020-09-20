@@ -2431,52 +2431,7 @@ musicroom	endp
 include th04/formats/scoredat_decode_both.asm
 include th04/formats/scoredat_encode.asm
 include th05/formats/scoredat_recreate_op.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public SCOREDAT_LOAD
-scoredat_load	proc near
-
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	offset aGensou_scr ; "GENSOU.SCR"
-		call	file_exist
-		or	ax, ax
-		jz	short loc_CA0C
-		push	ds
-		push	offset aGensou_scr ; "GENSOU.SCR"
-		call	file_ropen
-		mov	ax, [bp+arg_0]
-		imul	ax, 5
-		mov	dl, _hiscore_rank
-		mov	dh, 0
-		add	ax, dx
-		imul	ax, size scoredat_section_t
-		movzx	eax, ax
-		call	file_seek pascal, large eax, 0
-		call	file_read pascal, ds, offset _hi, size scoredat_section_t
-		call	file_close
-		call	scoredat_decode_func
-		or	al, al
-		jz	short loc_CA15
-
-loc_CA0C:
-		call	scoredat_recreate_op
-		mov	al, 1
-		pop	bp
-		retn	2
-; ---------------------------------------------------------------------------
-
-loc_CA15:
-		mov	al, 0
-		pop	bp
-		retn	2
-scoredat_load	endp
-
+include th05/formats/scoredat_load_for.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2718,8 +2673,7 @@ score_render	proc near
 ; ---------------------------------------------------------------------------
 
 loc_CC13:
-		push	si
-		call	scoredat_load
+		call	scoredat_load_for pascal, si
 		xor	di, di
 		jmp	short loc_CC21
 ; ---------------------------------------------------------------------------
@@ -2739,14 +2693,14 @@ loc_CC27:
 		cmp	si, 4
 		jl	short loc_CC13
 		push	(496 shl 16) or 376
-		mov	al, _hiscore_rank
+		mov	al, _rank
 		mov	ah, 0
 		add	ax, ax
 		add	ax, 20
 		push	ax
 		call	super_put
 		push	(560 shl 16) or 376
-		mov	al, _hiscore_rank
+		mov	al, _rank
 		mov	ah, 0
 		add	ax, ax
 		add	ax, 21
@@ -2774,7 +2728,7 @@ score_menu	proc near
 		call	palette_black_out
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.rank]
-		mov	_hiscore_rank, al
+		mov	_rank, al
 		call	pi_load pascal, 0, ds, offset aHi01_pi
 
 loc_CC9F:
@@ -2794,9 +2748,9 @@ loc_CCA9:
 		jnz	short loc_CD17
 		test	_key_det.lo, low INPUT_LEFT
 		jz	short loc_CCF8
-		cmp	_hiscore_rank, RANK_EASY
+		cmp	_rank, RANK_EASY
 		jz	short loc_CCF8
-		dec	_hiscore_rank
+		dec	_rank
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		call	score_render
@@ -2805,9 +2759,9 @@ loc_CCA9:
 loc_CCF8:
 		test	_key_det.lo, low INPUT_RIGHT
 		jz	short loc_CCA9
-		cmp	_hiscore_rank, RANK_EXTRA
+		cmp	_rank, RANK_EXTRA
 		jnb	short loc_CCA9
-		inc	_hiscore_rank
+		inc	_rank
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		jmp	short loc_CC9F
@@ -2852,52 +2806,51 @@ scoredat_cleared_load	proc near
 ; ---------------------------------------------------------------------------
 
 loc_CDA1:
-		mov	_hiscore_rank, RANK_EASY
+		mov	_rank, RANK_EASY
 		jmp	short loc_CE06
 ; ---------------------------------------------------------------------------
 
 loc_CDA8:
-		push	si
-		call	scoredat_load
+		call	scoredat_load_for pascal, si
 		or	al, al
 		jnz	short loc_CE0D
 		mov	bx, si
 		imul	bx, RANK_COUNT
-		mov	al, _hiscore_rank
+		mov	al, _rank
 		mov	ah, 0
 		add	bx, ax
 		mov	al, _hi.score.cleared
 		mov	_cleared_with[bx], al
 		mov	bx, si
 		imul	bx, RANK_COUNT
-		mov	al, _hiscore_rank
+		mov	al, _rank
 		mov	ah, 0
 		add	bx, ax
 		cmp	_cleared_with[bx], SCOREDAT_CLEARED
 		jz	short loc_CDE7
 		mov	bx, si
 		imul	bx, RANK_COUNT
-		mov	al, _hiscore_rank
+		mov	al, _rank
 		mov	ah, 0
 		add	bx, ax
 		mov	_cleared_with[bx], 0
 
 loc_CDE7:
-		cmp	_hiscore_rank, RANK_EXTRA
+		cmp	_rank, RANK_EXTRA
 		jnb	short loc_CE02
 		mov	bx, si
 		imul	bx, RANK_COUNT
-		mov	al, _hiscore_rank
+		mov	al, _rank
 		mov	ah, 0
 		add	bx, ax
 		mov	al, _cleared_with[bx]
 		or	_extra_unlocked, al
 
 loc_CE02:
-		inc	_hiscore_rank
+		inc	_rank
 
 loc_CE06:
-		cmp	_hiscore_rank, RANK_COUNT
+		cmp	_rank, RANK_COUNT
 		jb	short loc_CDA8
 
 loc_CE0D:
@@ -2908,7 +2861,7 @@ loc_CE0E:
 		jl	short loc_CDA1
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.rank]
-		mov	_hiscore_rank, al
+		mov	_rank, al
 		push	ds
 		push	offset aScnum_bft ; "scnum.bft"
 		call	super_entry_bfnt
@@ -3656,7 +3609,7 @@ aMusic_pi	db 'music.pi',0
 aMusic_dat	db 'music.dat',0
 aKaikidan1_dat1	db '‰öãY’k1.dat',0
 		db 0
-aGensou_scr	db 'GENSOU.SCR',0
+include th05/formats/scoredat_load_for[data].asm
 aName		db 'name',0
 aHi01_pi	db 'hi01.pi',0
 aOp1_pi_1	db 'op1.pi',0
@@ -3706,7 +3659,7 @@ word_1403C	dw ?
 musicroom_trackcount	dw ?
 	extern _hi:scoredat_section_t
 	extern _hi2:scoredat_section_t
-	extern _hiscore_rank:byte
+	extern _rank:byte
 	extern _cleared_with:byte
 	extern _extra_unlocked:byte
 	extern _extra_playable_with:byte
