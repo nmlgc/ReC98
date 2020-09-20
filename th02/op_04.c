@@ -193,7 +193,7 @@ void pascal score_menu(void)
 	grc_setclip(0, 0, 639, 399);
 }
 
-int pascal scoredat_cleared_load(void)
+int cleardata_load(void)
 {
 	int game_clear_constants[SHOTTYPE_COUNT] = GAME_CLEAR_CONSTANTS;
 	unsigned char extra_clear_flags[SHOTTYPE_COUNT] = EXTRA_CLEAR_FLAGS;

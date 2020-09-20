@@ -1266,7 +1266,7 @@ loc_B40D:
 
 loc_B420:
 		call	op_animate
-		call	scoredat_cleared_load
+		call	_cleardata_and_regist_view_sprite
 		call	main_cdg_load
 		mov	_in_option, 0
 		mov	_quit, 0
@@ -2327,8 +2327,8 @@ sub_CA94	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public SCOREDAT_CLEARED_LOAD
-scoredat_cleared_load	proc near
+public _cleardata_and_regist_view_sprite
+_cleardata_and_regist_view_sprite	proc near
 		push	bp
 		mov	bp, sp
 		mov	_rank, RANK_EASY
@@ -2398,7 +2398,7 @@ loc_CC78:
 		call	super_entry_bfnt pascal, ds, offset aHi_m_bft ; "hi_m.bft"
 		pop	bp
 		retn
-scoredat_cleared_load	endp
+_cleardata_and_regist_view_sprite	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================

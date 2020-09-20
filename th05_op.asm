@@ -1398,7 +1398,7 @@ loc_AFE1:
 loc_AFF4:
 		call	op_animate
 		call	main_cdg_load
-		call	scoredat_cleared_load
+		call	_cleardata_and_regist_view_sprite
 		mov	_in_option, 0
 		mov	_quit, 0
 		mov	_menu_sel, 0
@@ -2791,111 +2791,7 @@ loc_CD64:
 		retn
 score_menu	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public SCOREDAT_CLEARED_LOAD
-scoredat_cleared_load	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	_extra_unlocked, 0
-		xor	si, si
-		jmp	short loc_CE0E
-; ---------------------------------------------------------------------------
-
-loc_CDA1:
-		mov	_rank, RANK_EASY
-		jmp	short loc_CE06
-; ---------------------------------------------------------------------------
-
-loc_CDA8:
-		call	scoredat_load_for pascal, si
-		or	al, al
-		jnz	short loc_CE0D
-		mov	bx, si
-		imul	bx, RANK_COUNT
-		mov	al, _rank
-		mov	ah, 0
-		add	bx, ax
-		mov	al, _hi.score.cleared
-		mov	_cleared_with[bx], al
-		mov	bx, si
-		imul	bx, RANK_COUNT
-		mov	al, _rank
-		mov	ah, 0
-		add	bx, ax
-		cmp	_cleared_with[bx], SCOREDAT_CLEARED
-		jz	short loc_CDE7
-		mov	bx, si
-		imul	bx, RANK_COUNT
-		mov	al, _rank
-		mov	ah, 0
-		add	bx, ax
-		mov	_cleared_with[bx], 0
-
-loc_CDE7:
-		cmp	_rank, RANK_EXTRA
-		jnb	short loc_CE02
-		mov	bx, si
-		imul	bx, RANK_COUNT
-		mov	al, _rank
-		mov	ah, 0
-		add	bx, ax
-		mov	al, _cleared_with[bx]
-		or	_extra_unlocked, al
-
-loc_CE02:
-		inc	_rank
-
-loc_CE06:
-		cmp	_rank, RANK_COUNT
-		jb	short loc_CDA8
-
-loc_CE0D:
-		inc	si
-
-loc_CE0E:
-		cmp	si, 4
-		jl	short loc_CDA1
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.rank]
-		mov	_rank, al
-		push	ds
-		push	offset aScnum_bft ; "scnum.bft"
-		call	super_entry_bfnt
-		push	ds
-		push	offset aHi_m_bft ; "hi_m.bft"
-		call	super_entry_bfnt
-		xor	si, si
-		jmp	short loc_CE5D
-; ---------------------------------------------------------------------------
-
-loc_CE34:
-		mov	bx, si
-		imul	bx, RANK_COUNT
-		mov	al, _cleared_with[bx].RANK_EASY
-		mov	bx, si
-		imul	bx, RANK_COUNT
-		or	al, _cleared_with[bx].RANK_NORMAL
-		mov	bx, si
-		imul	bx, RANK_COUNT
-		or	al, _cleared_with[bx].RANK_HARD
-		mov	bx, si
-		imul	bx, RANK_COUNT
-		or	al, _cleared_with[bx].RANK_LUNATIC
-		mov	_extra_playable_with[si], al
-		inc	si
-
-loc_CE5D:
-		cmp	si, PLAYCHAR_COUNT
-		jl	short loc_CE34
-		pop	si
-		pop	bp
-		retn
-scoredat_cleared_load	endp
-
+	_cleardata_and_regist_view_sprite procdesc near
 	_playchar_menu procdesc near
 op_01_TEXT	ends
 
@@ -3614,8 +3510,6 @@ aName		db 'name',0
 aHi01_pi	db 'hi01.pi',0
 aOp1_pi_1	db 'op1.pi',0
 aOp_1		db 'op',0
-aScnum_bft	db 'scnum.bft',0
-aHi_m_bft	db 'hi_m.bft',0
 
 	.data?
 
