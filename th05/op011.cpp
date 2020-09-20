@@ -1,7 +1,9 @@
 /* ReC98
  * -----
- * Code segment #1 of TH05's OP.EXE
+ * 2nd part of code segment #1 of TH05's OP.EXE
  */
+
+#pragma codeseg op_01_TEXT
 
 extern "C" {
 

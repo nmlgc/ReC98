@@ -1,3 +1,4 @@
+public SND_KAJA_INTERRUPT
 snd_kaja_interrupt	proc
 @@ax	= word ptr (cPtrSize + 2)
 
