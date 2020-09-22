@@ -168,4 +168,12 @@ public:
 		int unused, pixel_t delta_x, pixel_t delta_y, int lock_frames
 	);
 	/// --------
+
+	/// Collision detection
+	/// -------------------
+public:
+	// Simply returns whether the orb collided with this entity on the last
+	// frame. (TODO: Last frame???)
+	bool16 hittest_orb(void) const;
+	/// -------------------
 };

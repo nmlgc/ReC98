@@ -6,6 +6,8 @@
 #include "th01/formats/sprfmt_h.hpp"
 #include "th01/formats/pf.hpp"
 #include "th01/formats/bos.hpp"
+#include "th01/main/playfld.hpp"
+#include "th01/main/player/orb.hpp"
 #include "th01/main/boss/entity.hpp"
 
 extern bool bos_header_only;
@@ -584,4 +586,25 @@ void CBossEntity::move_lock_and_put_8(
 	} else {
 		move_lock_frame++;
 	}
+}
+
+static const pixel_t ORB_HITBOX_LEFT   = ((ORB_W / 2) - (ORB_W / 4));
+static const pixel_t ORB_HITBOX_TOP    = ((ORB_H / 2) - (ORB_H / 4));
+static const pixel_t ORB_HITBOX_RIGHT  = ((ORB_W / 2) + (ORB_W / 4));
+static const pixel_t ORB_HITBOX_BOTTOM = ((ORB_H / 2) + (ORB_H / 4));
+
+bool16 CBossEntity::hittest_orb(void) const
+{
+	if(hitbox_orb_inactive == true) {
+		return false;
+	}
+	if(
+		((hitbox_orb.left + cur_left - ORB_HITBOX_RIGHT) <= orb_prev_left) &&
+		((hitbox_orb.right + cur_left - ORB_HITBOX_LEFT) >= orb_prev_left) &&
+		((cur_top + hitbox_orb.top - ORB_HITBOX_BOTTOM) <= orb_prev_top) &&
+		((cur_top + hitbox_orb.bottom - ORB_HITBOX_TOP) >= orb_prev_top)
+	) {
+		return true;
+	}
+	return false;
 }

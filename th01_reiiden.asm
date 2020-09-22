@@ -8883,58 +8883,13 @@ main_21_TEXT	segment	byte public 'CODE' use16
 	extern @CBossEntity@pos_set$qiiiiiii:proc
 	extern @CBossEntity@move_lock_unput_and_put_8$qiiii:proc
 	extern @CBossEntity@move_lock_and_put_8$qiiii:proc
+	extern @CBossEntity@hittest_orb$xqv:proc
 main_21_TEXT	ends
 
 main_21__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_21
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_16970	proc far
-
-arg_0		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx+28h], 1
-		jz	short loc_169C7
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx+14h]
-		add	ax, es:[bx]
-		add	ax, -24
-		cmp	ax, _orb_prev_left
-		jg	short loc_169C7
-		mov	ax, es:[bx+16h]
-		add	ax, es:[bx]
-		add	ax, -8
-		cmp	ax, _orb_prev_left
-		jl	short loc_169C7
-		mov	ax, es:[bx+2]
-		add	ax, es:[bx+18h]
-		add	ax, -24
-		cmp	ax, _orb_prev_top
-		jg	short loc_169C7
-		mov	ax, es:[bx+2]
-		add	ax, es:[bx+1Ah]
-		add	ax, -8
-		cmp	ax, _orb_prev_top
-		jl	short loc_169C7
-		mov	ax, 1
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_169C7:
-		xor	ax, ax
-		pop	bp
-		retf
-sub_16970	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15357,50 +15312,35 @@ loc_1BF66:
 		call	sub_1B6D9
 		pushd	0 or (0 shl 16)
 		pushd	0 or (0 shl 16)
-		push	ds
-		push	offset eye_west
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset eye_west, ds
 		cmp	ax, 1
 		jnz	short loc_1BF88
 		cmp	eye_west.BE_bos_image, 0
 		jnz	short loc_1BFE8
 
 loc_1BF88:
-		push	ds
-		push	offset eye_east
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset eye_east, ds
 		cmp	ax, 1
 		jnz	short loc_1BFA0
 		cmp	eye_east.BE_bos_image, 0
 		jnz	short loc_1BFE8
 
 loc_1BFA0:
-		push	ds
-		push	offset eye_southwest
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset eye_southwest, ds
 		cmp	ax, 1
 		jnz	short loc_1BFB8
 		cmp	eye_southwest.BE_bos_image, 0
 		jnz	short loc_1BFE8
 
 loc_1BFB8:
-		push	ds
-		push	offset eye_southeast
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset eye_southeast, ds
 		cmp	ax, 1
 		jnz	short loc_1BFD0
 		cmp	eye_southeast.BE_bos_image, 0
 		jnz	short loc_1BFE8
 
 loc_1BFD0:
-		push	ds
-		push	offset eye_north
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset eye_north, ds
 		cmp	ax, 1
 		jnz	short loc_1BFED
 		cmp	eye_north.BE_bos_image, 0
@@ -15727,50 +15667,35 @@ loc_1C2FF:
 loc_1C327:
 		pushd	0 or (0 shl 16)
 		pushd	0 or (0 shl 16)
-		push	ds
-		push	offset eye_west
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset eye_west, ds
 		cmp	ax, 1
 		jnz	short loc_1C345
 		cmp	eye_west.BE_bos_image, 0
 		jnz	short loc_1C3A5
 
 loc_1C345:
-		push	ds
-		push	offset eye_east
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset eye_east, ds
 		cmp	ax, 1
 		jnz	short loc_1C35D
 		cmp	eye_east.BE_bos_image, 0
 		jnz	short loc_1C3A5
 
 loc_1C35D:
-		push	ds
-		push	offset eye_southwest
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset eye_southwest, ds
 		cmp	ax, 1
 		jnz	short loc_1C375
 		cmp	eye_southwest.BE_bos_image, 0
 		jnz	short loc_1C3A5
 
 loc_1C375:
-		push	ds
-		push	offset eye_southeast
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset eye_southeast, ds
 		cmp	ax, 1
 		jnz	short loc_1C38D
 		cmp	eye_southeast.BE_bos_image, 0
 		jnz	short loc_1C3A5
 
 loc_1C38D:
-		push	ds
-		push	offset eye_north
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset eye_north, ds
 		cmp	ax, 1
 		jnz	short loc_1C3AA
 		cmp	eye_north.BE_bos_image, 0
@@ -16057,50 +15982,35 @@ loc_1C65A:
 loc_1C67D:
 		pushd	0 or (0 shl 16)
 		pushd	0 or (0 shl 16)
-		push	ds
-		push	offset eye_west
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset eye_west, ds
 		cmp	ax, 1
 		jnz	short loc_1C69B
 		cmp	eye_west.BE_bos_image, 0
 		jnz	short loc_1C6FB
 
 loc_1C69B:
-		push	ds
-		push	offset eye_east
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset eye_east, ds
 		cmp	ax, 1
 		jnz	short loc_1C6B3
 		cmp	eye_east.BE_bos_image, 0
 		jnz	short loc_1C6FB
 
 loc_1C6B3:
-		push	ds
-		push	offset eye_southwest
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset eye_southwest, ds
 		cmp	ax, 1
 		jnz	short loc_1C6CB
 		cmp	eye_southwest.BE_bos_image, 0
 		jnz	short loc_1C6FB
 
 loc_1C6CB:
-		push	ds
-		push	offset eye_southeast
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset eye_southeast, ds
 		cmp	ax, 1
 		jnz	short loc_1C6E3
 		cmp	eye_southeast.BE_bos_image, 0
 		jnz	short loc_1C6FB
 
 loc_1C6E3:
-		push	ds
-		push	offset eye_north
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset eye_north, ds
 		cmp	ax, 1
 		jnz	short loc_1C700
 		cmp	eye_north.BE_bos_image, 0
@@ -16431,50 +16341,35 @@ loc_1CA10:
 loc_1CA38:
 		pushd	0 or (0 shl 16)
 		pushd	0 or (0 shl 16)
-		push	ds
-		push	offset eye_west
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset eye_west, ds
 		cmp	ax, 1
 		jnz	short loc_1CA56
 		cmp	eye_west.BE_bos_image, 0
 		jnz	short loc_1CAB6
 
 loc_1CA56:
-		push	ds
-		push	offset eye_east
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset eye_east, ds
 		cmp	ax, 1
 		jnz	short loc_1CA6E
 		cmp	eye_east.BE_bos_image, 0
 		jnz	short loc_1CAB6
 
 loc_1CA6E:
-		push	ds
-		push	offset eye_southwest
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset eye_southwest, ds
 		cmp	ax, 1
 		jnz	short loc_1CA86
 		cmp	eye_southwest.BE_bos_image, 0
 		jnz	short loc_1CAB6
 
 loc_1CA86:
-		push	ds
-		push	offset eye_southeast
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset eye_southeast, ds
 		cmp	ax, 1
 		jnz	short loc_1CA9E
 		cmp	eye_southeast.BE_bos_image, 0
 		jnz	short loc_1CAB6
 
 loc_1CA9E:
-		push	ds
-		push	offset eye_north
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset eye_north, ds
 		cmp	ax, 1
 		jnz	short loc_1CABB
 		cmp	eye_north.BE_bos_image, 0
@@ -16865,50 +16760,35 @@ loc_1CF52:
 loc_1CF57:
 		pushd	0 or (0 shl 16)
 		pushd	0 or (0 shl 16)
-		push	ds
-		push	offset eye_west
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset eye_west, ds
 		cmp	ax, 1
 		jnz	short loc_1CF75
 		cmp	eye_west.BE_bos_image, 0
 		jnz	short loc_1CFD5
 
 loc_1CF75:
-		push	ds
-		push	offset eye_east
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset eye_east, ds
 		cmp	ax, 1
 		jnz	short loc_1CF8D
 		cmp	eye_east.BE_bos_image, 0
 		jnz	short loc_1CFD5
 
 loc_1CF8D:
-		push	ds
-		push	offset eye_southwest
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset eye_southwest, ds
 		cmp	ax, 1
 		jnz	short loc_1CFA5
 		cmp	eye_southwest.BE_bos_image, 0
 		jnz	short loc_1CFD5
 
 loc_1CFA5:
-		push	ds
-		push	offset eye_southeast
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset eye_southeast, ds
 		cmp	ax, 1
 		jnz	short loc_1CFBD
 		cmp	eye_southeast.BE_bos_image, 0
 		jnz	short loc_1CFD5
 
 loc_1CFBD:
-		push	ds
-		push	offset eye_north
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset eye_north, ds
 		cmp	ax, 1
 		jnz	short loc_1CFDA
 		cmp	eye_north.BE_bos_image, 0
@@ -17535,50 +17415,35 @@ loc_1D2F6:
 loc_1D63F:
 		pushd	0 or (0 shl 16)
 		pushd	0 or (0 shl 16)
-		push	ds
-		push	offset eye_west
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset eye_west, ds
 		cmp	ax, 1
 		jnz	short loc_1D65D
 		cmp	eye_west.BE_bos_image, 0
 		jnz	short loc_1D6BD
 
 loc_1D65D:
-		push	ds
-		push	offset eye_east
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset eye_east, ds
 		cmp	ax, 1
 		jnz	short loc_1D675
 		cmp	eye_east.BE_bos_image, 0
 		jnz	short loc_1D6BD
 
 loc_1D675:
-		push	ds
-		push	offset eye_southwest
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset eye_southwest, ds
 		cmp	ax, 1
 		jnz	short loc_1D68D
 		cmp	eye_southwest.BE_bos_image, 0
 		jnz	short loc_1D6BD
 
 loc_1D68D:
-		push	ds
-		push	offset eye_southeast
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset eye_southeast, ds
 		cmp	ax, 1
 		jnz	short loc_1D6A5
 		cmp	eye_southeast.BE_bos_image, 0
 		jnz	short loc_1D6BD
 
 loc_1D6A5:
-		push	ds
-		push	offset eye_north
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset eye_north, ds
 		cmp	ax, 1
 		jnz	short loc_1D6C2
 		cmp	eye_north.BE_bos_image, 0
@@ -18259,50 +18124,35 @@ loc_1DE37:
 loc_1DED5:
 		pushd	0 or (0 shl 16)
 		pushd	0 or (0 shl 16)
-		push	ds
-		push	offset eye_west
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset eye_west, ds
 		cmp	ax, 1
 		jnz	short loc_1DEF3
 		cmp	eye_west.BE_bos_image, 0
 		jnz	short loc_1DF53
 
 loc_1DEF3:
-		push	ds
-		push	offset eye_east
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset eye_east, ds
 		cmp	ax, 1
 		jnz	short loc_1DF0B
 		cmp	eye_east.BE_bos_image, 0
 		jnz	short loc_1DF53
 
 loc_1DF0B:
-		push	ds
-		push	offset eye_southwest
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset eye_southwest, ds
 		cmp	ax, 1
 		jnz	short loc_1DF23
 		cmp	eye_southwest.BE_bos_image, 0
 		jnz	short loc_1DF53
 
 loc_1DF23:
-		push	ds
-		push	offset eye_southeast
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset eye_southeast, ds
 		cmp	ax, 1
 		jnz	short loc_1DF3B
 		cmp	eye_southeast.BE_bos_image, 0
 		jnz	short loc_1DF53
 
 loc_1DF3B:
-		push	ds
-		push	offset eye_north
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset eye_north, ds
 		cmp	ax, 1
 		jnz	short loc_1DF58
 		cmp	eye_north.BE_bos_image, 0
@@ -21546,10 +21396,7 @@ loc_1FBAC:
 		mov	ax, mima_still.BE_cur_left
 		add	ax, 16
 		push	ax
-		push	ds
-		push	offset mima_still
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset mima_still, ds
 		push	ax
 		push	seg main_32_TEXT
 		push	offset sub_21884
@@ -21667,10 +21514,7 @@ loc_1FCF7:
 		mov	ax, mima_still.BE_cur_left
 		add	ax, 16
 		push	ax
-		push	ds
-		push	offset mima_still
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset mima_still, ds
 		push	ax
 		push	seg main_32_TEXT
 		push	offset sub_21884
@@ -27823,10 +27667,7 @@ loc_23118:
 		mov	ax, singyoku_sphere.BE_cur_left
 		add	ax, 16
 		push	ax
-		push	ds
-		push	offset singyoku_sphere
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset singyoku_sphere, ds
 		push	ax
 		push	seg main_32_TEXT
 		push	offset sub_21884
@@ -27923,10 +27764,7 @@ loc_2320E:
 		mov	ax, singyoku_sphere.BE_cur_left
 		add	ax, 16
 		push	ax
-		push	ds
-		push	offset singyoku_sphere
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset singyoku_sphere, ds
 		push	ax
 		push	seg main_32_TEXT
 		push	offset sub_21884
@@ -36143,7 +35981,7 @@ loc_28279:
 		push	offset elis_bat
 
 loc_2827D:
-		call	sub_16970
+		call	@CBossEntity@hittest_orb$xqv
 		add	sp, 4
 		push	ax
 		push	seg main_32_TEXT
@@ -36271,7 +36109,7 @@ loc_283D0:
 		push	offset elis_bat
 
 loc_283D4:
-		call	sub_16970
+		call	@CBossEntity@hittest_orb$xqv
 		add	sp, 4
 		push	ax
 		push	seg main_32_TEXT
@@ -36466,7 +36304,7 @@ loc_285A1:
 		push	offset elis_bat
 
 loc_285A5:
-		call	sub_16970
+		call	@CBossEntity@hittest_orb$xqv
 		add	sp, 4
 		push	ax
 		push	seg main_32_TEXT
@@ -42629,10 +42467,7 @@ var_5		= word ptr -5
 		jle	short loc_2C110
 
 loc_2C100:
-		push	ds
-		push	offset sariel_shield
-		call	sub_16970
-		add	sp, 4
+		call	@CBossEntity@hittest_orb$xqv c, offset sariel_shield, ds
 		or	ax, ax
 		jz	short loc_2C115
 
