@@ -51,10 +51,7 @@ int CBossEntity::load(const char fn[PF_FN_LEN], int slot)
 
 	bos_header_load(this, plane_size, fn);
 	if(!bos_header_only) {
-		/* TODO: Replace with the decompiled call
-		 * 	bos_entity_free(slot);
-		 * once that function is part of this translation unit */
-		__asm { push slot; nop; push cs; call near ptr bos_entity_free; pop cx; }
+		bos_entity_free(slot);
 		for(int i = 0; bos_image_count > i; i++) {
 			#define image bos_entity_images[slot].image[i]
 			bos_image_new(image, plane_size);
@@ -593,6 +590,17 @@ bool16 CBossEntity::hittest_orb(void) const
 		return true;
 	}
 	return false;
+}
+
+void bos_entity_free(int slot)
+{
+	for(int image = 0; image < BOS_IMAGES_PER_SLOT; image++) {
+		bos_image_ptr_free(bos_entity_images[slot].image[image].alpha);
+		bos_image_ptr_free(bos_entity_images[slot].image[image].planes.B);
+		bos_image_ptr_free(bos_entity_images[slot].image[image].planes.R);
+		bos_image_ptr_free(bos_entity_images[slot].image[image].planes.G);
+		bos_image_ptr_free(bos_entity_images[slot].image[image].planes.E);
+	}
 }
 /// --------
 

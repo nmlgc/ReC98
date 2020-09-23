@@ -52,6 +52,22 @@ struct bos_t {
 	image.planes.G = new dots16_t[plane_size / 2]; \
 	image.planes.E = new dots16_t[plane_size / 2];
 
+// Always setting the pointer to NULL, for a change...
+#define bos_image_ptr_free(ptr) \
+	if(ptr) { \
+		delete[] ptr; \
+	} \
+	ptr = NULL;
+
+#define bos_free(slot_ptr) \
+	for(int image = 0; image < BOS_IMAGES_PER_SLOT; image++) { \
+		bos_image_ptr_free(slot_ptr.image[image].alpha); \
+		bos_image_ptr_free(slot_ptr.image[image].planes.B); \
+		bos_image_ptr_free(slot_ptr.image[image].planes.R); \
+		bos_image_ptr_free(slot_ptr.image[image].planes.G); \
+		bos_image_ptr_free(slot_ptr.image[image].planes.E); \
+	}
+
 /// All functions that operate on this format are implemented redundantly for
 /// both CBossEntity and CBossAnim, with their own respective entity arrays.
 /// ---------------------------------------------------------------------
