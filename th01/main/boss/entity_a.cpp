@@ -8,9 +8,7 @@
 #include "th01/formats/bos.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/player/orb.hpp"
-#include "th01/main/boss/entity.hpp"
-
-extern bool bos_header_only;
+#include "th01/main/boss/entity_a.hpp"
 
 /// Helper functions
 /// ----------------
@@ -29,20 +27,25 @@ inline vram_y_t vram_intended_y_for(
 	(((vram_offset + 1) / ROW_SIZE) == intended_y)
 /// ----------------
 
+/// Entities
+/// --------
+extern bos_t bos_entity_images[BOS_ENTITY_SLOT_COUNT];
+extern bool bos_header_only;
+
 void bos_reset_all_broken(void)
 {
-	for(int slot = 0; slot < 10; slot++) { // should be BOS_SLOT_COUNT
+	for(int slot = 0; slot < 10; slot++) { // should be BOS_ENTITY_SLOT_COUNT
 		for(int image = 0; image < BOS_IMAGES_PER_SLOT; image++) {
-			bos_images[slot].image[image].alpha = NULL;
-			bos_images[slot].image[image].planes.B = NULL;
-			bos_images[slot].image[image].planes.R = NULL;
-			bos_images[slot].image[image].planes.G = NULL;
-			bos_images[slot].image[image].planes.E = NULL;
+			bos_entity_images[slot].image[image].alpha = NULL;
+			bos_entity_images[slot].image[image].planes.B = NULL;
+			bos_entity_images[slot].image[image].planes.R = NULL;
+			bos_entity_images[slot].image[image].planes.G = NULL;
+			bos_entity_images[slot].image[image].planes.E = NULL;
 		}
 	}
 }
 
-int CBossEntity::bos_load(const char fn[PF_FN_LEN], int slot)
+int CBossEntity::load(const char fn[PF_FN_LEN], int slot)
 {
 	union {
 		bos_header_t outer;
@@ -62,11 +65,11 @@ int CBossEntity::bos_load(const char fn[PF_FN_LEN], int slot)
 
 	if(!bos_header_only) {
 		/* TODO: Replace with the decompiled call
-		 * 	bos_free(slot);
+		 * 	bos_entity_free(slot);
 		 * once that function is part of this translation unit */
-		__asm { push slot; nop; push cs; call near ptr bos_free; pop cx; }
+		__asm { push slot; nop; push cs; call near ptr bos_entity_free; pop cx; }
 		for(int i = 0; bos_image_count > i; i++) {
-			#define bos bos_images[slot].image[i]
+			#define bos bos_entity_images[slot].image[i]
 			bos.alpha = new dots16_t[image_size / 2];
 			bos.planes.B = new dots16_t[image_size / 2];
 			bos.planes.R = new dots16_t[image_size / 2];
@@ -86,7 +89,7 @@ int CBossEntity::bos_load(const char fn[PF_FN_LEN], int slot)
 	return 0;
 }
 
-void CBossEntity::bos_metadata_get(
+void CBossEntity::metadata_get(
 	int &image_count,
 	unsigned char &slot,
 	vram_byte_amount_t &vram_w,
@@ -110,7 +113,7 @@ void CBossEntity::put_8(screen_x_t left, vram_y_t top, int image) const
 	vram_word_amount_t bos_word_x;
 	vram_y_t intended_y;
 
-	bos_image_t &bos = bos_images[bos_slot].image[image];
+	bos_image_t &bos = bos_entity_images[bos_slot].image[image];
 	if(bos_image_count <= image) {
 		return;
 	}
@@ -151,7 +154,7 @@ void CBossEntity::put_1line(
 	char first_bit = (left & (BYTE_DOTS - 1));
 	char other_shift = ((1 * BYTE_DOTS) - first_bit);
 
-	bos_image_t &bos = bos_images[bos_slot].image[image];
+	bos_image_t &bos = bos_entity_images[bos_slot].image[image];
 	if(bos_image_count <= image) {
 		return;
 	}
@@ -272,7 +275,7 @@ void CBossEntity::unput_and_put_1line(
 	Planar<dots16_t> bg_masked;
 	dots16_t mask_unaligned;
 
-	bos_image_t &bos = bos_images[bos_slot].image[image];
+	bos_image_t &bos = bos_entity_images[bos_slot].image[image];
 	if(bos_image_count <= image) {
 		return;
 	}
@@ -324,7 +327,7 @@ void CBossEntity::unput_and_put_8(
 	vram_y_t intended_y;
 	Planar<dots16_t> bg_masked;
 
-	bos_image_t &bos = bos_images[bos_slot].image[image];
+	bos_image_t &bos = bos_entity_images[bos_slot].image[image];
 	if(bos_image_count <= image) {
 		return;
 	}
@@ -384,7 +387,7 @@ void CBossEntity::unput_8(screen_x_t left, vram_y_t top, int image) const
 	size_t bos_p = 0;
 	vram_y_t intended_y;
 
-	bos_image_t &bos = bos_images[bos_slot].image[image];
+	bos_image_t &bos = bos_entity_images[bos_slot].image[image];
 	if(bos_image_count <= image) {
 		return;
 	}
@@ -483,7 +486,7 @@ void CBossEntity::unput_and_put_16x8_8(pixel_t bos_left, pixel_t bos_top) const
 	vram_y_t intended_y;
 	int image = bos_image;
 	Planar<dots16_t> bg_masked;
-	bos_image_t &bos = bos_images[bos_slot].image[image];
+	bos_image_t &bos = bos_entity_images[bos_slot].image[image];
 
 	// Yes, the macro form. Out of all places that could have required it, it
 	// had to be an originally unused function…
@@ -608,3 +611,9 @@ bool16 CBossEntity::hittest_orb(void) const
 	}
 	return false;
 }
+/// --------
+
+/// Non-entity animations
+/// ---------------------
+extern bos_t bos_anim_images[BOS_ANIM_SLOT_COUNT];
+/// ---------------------

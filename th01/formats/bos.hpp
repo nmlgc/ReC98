@@ -29,25 +29,6 @@ struct bos_t {
 	bos_image_t image[BOS_IMAGES_PER_SLOT];
 };
 
-// Regular
-// -------
-#define BOS_SLOT_COUNT 4
-extern bos_t bos_images[BOS_SLOT_COUNT];
-
-// Frees all images in the given [slot].
-void bos_free(int slot);
-// -------
-
-// Fast
-// ----
-// These… only have functions for direct byte-aligned blitting onto page 0, in
-// exchange for the alpha plane being pre-negated at load time? No idea why.
-// That 1-instruction negation is certainly not what makes the original code
-// slow.
-#define BOS_FAST_SLOT_COUNT 2
-extern bos_t bos_fast_images[BOS_FAST_SLOT_COUNT];
-// ----
-
-/// The remaining functions that operate on this format are implemented as
-/// methods of CBossEntity.
+/// All functions that operate on this format are implemented redundantly for
+/// both CBossEntity and CBossAnim, with their own respective entity arrays.
 /// ---------------------------------------------------------------------

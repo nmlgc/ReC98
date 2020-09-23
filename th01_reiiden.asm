@@ -24,7 +24,7 @@ include ReC98.inc
 include th01/th01.inc
 include th01/math/area.inc
 include th01/main/playfld.inc
-include th01/main/boss/entity.inc
+include th01/main/boss/entity_a.inc
 include th01/formats/cfg.inc
 include th01/sprites/main_ptn.inc
 
@@ -2796,7 +2796,7 @@ loc_D28B:
 ; ---------------------------------------------------------------------------
 
 loc_D296:
-		call	_bos_free stdcall, si
+		call	_bos_entity_free stdcall, si
 		pop	cx
 		inc	si
 
@@ -3054,7 +3054,7 @@ loc_D495:
 		pop	cx
 		cmp	si, 4
 		jge	short loc_D4A8
-		call	_bos_free stdcall, si
+		call	_bos_entity_free stdcall, si
 		pop	cx
 
 loc_D4A8:
@@ -8874,8 +8874,8 @@ main_20_TEXT	ends
 
 ; Segment type:	Pure code
 main_21_TEXT	segment	byte public 'CODE' use16
-	extern @CBossEntity@bos_load$qxnxci:proc
-	extern @CBossEntity@bos_metadata_get$xqmimuct1t1:proc
+	extern @CBossEntity@load$qxnxci:proc
+	extern @CBossEntity@metadata_get$xqmimuct1t1:proc
 	extern @CBossEntity@put_8$xqiii:proc
 	extern @CBossEntity@unput_and_put_1line$xqiiii:proc
 	extern @CBossEntity@unput_and_put_8$xqiii:proc
@@ -8894,8 +8894,8 @@ main_21__TEXT	segment	byte public 'CODE' use16
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public _bos_free
-_bos_free	proc far
+public _bos_entity_free
+_bos_entity_free	proc far
 
 @@slot		= word ptr  6
 
@@ -8914,15 +8914,15 @@ loc_169D8:
 		mov	ax, si
 		imul	ax, size bos_image_t
 		add	bx, ax
-		mov	ax, word ptr (_bos_images[bx].BOS_alpha+0)
-		or	ax, word ptr (_bos_images[bx].BOS_alpha+2)
+		mov	ax, word ptr (_bos_entity_images[bx].BOS_alpha+0)
+		or	ax, word ptr (_bos_entity_images[bx].BOS_alpha+2)
 		jz	short loc_16A09
 		mov	bx, di
 		imul	bx, size bos_t
 		mov	ax, si
 		imul	ax, size bos_image_t
 		add	bx, ax
-		call	@$bdla$qnv c, large _bos_images[bx].BOS_alpha
+		call	@$bdla$qnv c, large _bos_entity_images[bx].BOS_alpha
 
 loc_16A09:
 		mov	bx, di
@@ -8930,22 +8930,22 @@ loc_16A09:
 		mov	ax, si
 		imul	ax, size bos_image_t
 		add	bx, ax
-		mov	word ptr (_bos_images[bx].BOS_alpha+2), 0
-		mov	word ptr (_bos_images[bx].BOS_alpha+0), 0
+		mov	word ptr (_bos_entity_images[bx].BOS_alpha+2), 0
+		mov	word ptr (_bos_entity_images[bx].BOS_alpha+0), 0
 		mov	bx, di
 		imul	bx, size bos_t
 		mov	ax, si
 		imul	ax, size bos_image_t
 		add	bx, ax
-		mov	ax, word ptr (_bos_images[bx].BOS_B+0)
-		or	ax, word ptr (_bos_images[bx].BOS_B+2)
+		mov	ax, word ptr (_bos_entity_images[bx].BOS_B+0)
+		or	ax, word ptr (_bos_entity_images[bx].BOS_B+2)
 		jz	short loc_16A53
 		mov	bx, di
 		imul	bx, size bos_t
 		mov	ax, si
 		imul	ax, size bos_image_t
 		add	bx, ax
-		call	@$bdla$qnv c, large _bos_images[bx].BOS_B
+		call	@$bdla$qnv c, large _bos_entity_images[bx].BOS_B
 
 loc_16A53:
 		mov	bx, di
@@ -8953,22 +8953,22 @@ loc_16A53:
 		mov	ax, si
 		imul	ax, size bos_image_t
 		add	bx, ax
-		mov	word ptr (_bos_images[bx].BOS_B+2), 0
-		mov	word ptr (_bos_images[bx].BOS_B+0), 0
+		mov	word ptr (_bos_entity_images[bx].BOS_B+2), 0
+		mov	word ptr (_bos_entity_images[bx].BOS_B+0), 0
 		mov	bx, di
 		imul	bx, size bos_t
 		mov	ax, si
 		imul	ax, size bos_image_t
 		add	bx, ax
-		mov	ax, word ptr (_bos_images[bx].BOS_R+0)
-		or	ax, word ptr (_bos_images[bx].BOS_R+2)
+		mov	ax, word ptr (_bos_entity_images[bx].BOS_R+0)
+		or	ax, word ptr (_bos_entity_images[bx].BOS_R+2)
 		jz	short loc_16A9D
 		mov	bx, di
 		imul	bx, size bos_t
 		mov	ax, si
 		imul	ax, size bos_image_t
 		add	bx, ax
-		call	@$bdla$qnv c, large _bos_images[bx].BOS_R
+		call	@$bdla$qnv c, large _bos_entity_images[bx].BOS_R
 
 loc_16A9D:
 		mov	bx, di
@@ -8976,22 +8976,22 @@ loc_16A9D:
 		mov	ax, si
 		imul	ax, size bos_image_t
 		add	bx, ax
-		mov	word ptr (_bos_images[bx].BOS_R+2), 0
-		mov	word ptr (_bos_images[bx].BOS_R+0), 0
+		mov	word ptr (_bos_entity_images[bx].BOS_R+2), 0
+		mov	word ptr (_bos_entity_images[bx].BOS_R+0), 0
 		mov	bx, di
 		imul	bx, size bos_t
 		mov	ax, si
 		imul	ax, size bos_image_t
 		add	bx, ax
-		mov	ax, word ptr (_bos_images[bx].BOS_G+0)
-		or	ax, word ptr (_bos_images[bx].BOS_G+2)
+		mov	ax, word ptr (_bos_entity_images[bx].BOS_G+0)
+		or	ax, word ptr (_bos_entity_images[bx].BOS_G+2)
 		jz	short loc_16AE7
 		mov	bx, di
 		imul	bx, size bos_t
 		mov	ax, si
 		imul	ax, size bos_image_t
 		add	bx, ax
-		call	@$bdla$qnv c, large _bos_images[bx].BOS_G
+		call	@$bdla$qnv c, large _bos_entity_images[bx].BOS_G
 
 loc_16AE7:
 		mov	bx, di
@@ -8999,22 +8999,22 @@ loc_16AE7:
 		mov	ax, si
 		imul	ax, size bos_image_t
 		add	bx, ax
-		mov	word ptr (_bos_images[bx].BOS_G+2), 0
-		mov	word ptr (_bos_images[bx].BOS_G+0), 0
+		mov	word ptr (_bos_entity_images[bx].BOS_G+2), 0
+		mov	word ptr (_bos_entity_images[bx].BOS_G+0), 0
 		mov	bx, di
 		imul	bx, size bos_t
 		mov	ax, si
 		imul	ax, size bos_image_t
 		add	bx, ax
-		mov	ax, word ptr (_bos_images[bx].BOS_E+0)
-		or	ax, word ptr (_bos_images[bx].BOS_E+2)
+		mov	ax, word ptr (_bos_entity_images[bx].BOS_E+0)
+		or	ax, word ptr (_bos_entity_images[bx].BOS_E+2)
 		jz	short loc_16B31
 		mov	bx, di
 		imul	bx, size bos_t
 		mov	ax, si
 		imul	ax, size bos_image_t
 		add	bx, ax
-		call	@$bdla$qnv c, large _bos_images[bx].BOS_E
+		call	@$bdla$qnv c, large _bos_entity_images[bx].BOS_E
 
 loc_16B31:
 		mov	bx, di
@@ -9022,8 +9022,8 @@ loc_16B31:
 		mov	ax, si
 		imul	ax, size bos_image_t
 		add	bx, ax
-		mov	word ptr (_bos_images[bx].BOS_E+2), 0
-		mov	word ptr (_bos_images[bx].BOS_E+0), 0
+		mov	word ptr (_bos_entity_images[bx].BOS_E+2), 0
+		mov	word ptr (_bos_entity_images[bx].BOS_E+0), 0
 		inc	si
 
 loc_16B4B:
@@ -9033,7 +9033,7 @@ loc_16B4B:
 		pop	si
 		pop	bp
 		retf
-_bos_free	endp
+_bos_entity_free	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -9100,8 +9100,8 @@ loc_16BBA:
 		mov	cx, si
 		imul	cx, size bos_image_t
 		add	bx, cx
-		mov	word ptr (_bos_fast_images[bx].BOS_alpha+2), dx
-		mov	word ptr (_bos_fast_images[bx].BOS_alpha+0), ax
+		mov	word ptr (_bos_anim_images[bx].BOS_alpha+2), dx
+		mov	word ptr (_bos_anim_images[bx].BOS_alpha+0), ax
 		mov	ax, di
 		cwd
 		sub	ax, dx
@@ -9115,8 +9115,8 @@ loc_16BBA:
 		mov	cx, si
 		imul	cx, size bos_image_t
 		add	bx, cx
-		mov	word ptr (_bos_fast_images[bx].BOS_B+2), dx
-		mov	word ptr (_bos_fast_images[bx].BOS_B+0), ax
+		mov	word ptr (_bos_anim_images[bx].BOS_B+2), dx
+		mov	word ptr (_bos_anim_images[bx].BOS_B+0), ax
 		mov	ax, di
 		cwd
 		sub	ax, dx
@@ -9130,8 +9130,8 @@ loc_16BBA:
 		mov	cx, si
 		imul	cx, size bos_image_t
 		add	bx, cx
-		mov	word ptr (_bos_fast_images[bx].BOS_R+2), dx
-		mov	word ptr (_bos_fast_images[bx].BOS_R+0), ax
+		mov	word ptr (_bos_anim_images[bx].BOS_R+2), dx
+		mov	word ptr (_bos_anim_images[bx].BOS_R+0), ax
 		mov	ax, di
 		cwd
 		sub	ax, dx
@@ -9145,8 +9145,8 @@ loc_16BBA:
 		mov	cx, si
 		imul	cx, size bos_image_t
 		add	bx, cx
-		mov	word ptr (_bos_fast_images[bx].BOS_G+2), dx
-		mov	word ptr (_bos_fast_images[bx].BOS_G+0), ax
+		mov	word ptr (_bos_anim_images[bx].BOS_G+2), dx
+		mov	word ptr (_bos_anim_images[bx].BOS_G+0), ax
 		mov	ax, di
 		cwd
 		sub	ax, dx
@@ -9160,14 +9160,14 @@ loc_16BBA:
 		mov	cx, si
 		imul	cx, size bos_image_t
 		add	bx, cx
-		mov	word ptr (_bos_fast_images[bx].BOS_E+2), dx
-		mov	word ptr (_bos_fast_images[bx].BOS_E+0), ax
+		mov	word ptr (_bos_anim_images[bx].BOS_E+2), dx
+		mov	word ptr (_bos_anim_images[bx].BOS_E+0), ax
 		mov	bx, [bp+@@slot]
 		imul	bx, size bos_t
 		mov	ax, si
 		imul	ax, size bos_image_t
 		add	bx, ax
-		call	arc_file_get pascal, large _bos_fast_images[bx].BOS_alpha, di
+		call	arc_file_get pascal, large _bos_anim_images[bx].BOS_alpha, di
 		mov	[bp+var_2], 0
 		jmp	short loc_16CD5
 ; ---------------------------------------------------------------------------
@@ -9178,7 +9178,7 @@ loc_16C98:
 		mov	ax, si
 		imul	ax, size bos_image_t
 		add	bx, ax
-		les	bx, _bos_fast_images[bx].BOS_alpha
+		les	bx, _bos_anim_images[bx].BOS_alpha
 		mov	ax, [bp+var_2]
 		add	ax, ax
 		add	bx, ax
@@ -9189,7 +9189,7 @@ loc_16C98:
 		mov	dx, si
 		imul	dx, size bos_image_t
 		add	bx, dx
-		mov	bx, word ptr (_bos_fast_images[bx].BOS_alpha+0)
+		mov	bx, word ptr (_bos_anim_images[bx].BOS_alpha+0)
 		mov	dx, [bp+var_2]
 		add	dx, dx
 		add	bx, dx
@@ -9208,25 +9208,25 @@ loc_16CD5:
 		mov	ax, si
 		imul	ax, size bos_image_t
 		add	bx, ax
-		call	arc_file_get pascal, large _bos_fast_images[bx].BOS_B, di
+		call	arc_file_get pascal, large _bos_anim_images[bx].BOS_B, di
 		mov	bx, [bp+@@slot]
 		imul	bx, size bos_t
 		mov	ax, si
 		imul	ax, size bos_image_t
 		add	bx, ax
-		call	arc_file_get pascal, large _bos_fast_images[bx].BOS_R, di
+		call	arc_file_get pascal, large _bos_anim_images[bx].BOS_R, di
 		mov	bx, [bp+@@slot]
 		imul	bx, size bos_t
 		mov	ax, si
 		imul	ax, size bos_image_t
 		add	bx, ax
-		call	arc_file_get pascal, large _bos_fast_images[bx].BOS_G, di
+		call	arc_file_get pascal, large _bos_anim_images[bx].BOS_G, di
 		mov	bx, [bp+@@slot]
 		imul	bx, size bos_t
 		mov	ax, si
 		imul	ax, size bos_image_t
 		add	bx, ax
-		call	arc_file_get pascal, large _bos_fast_images[bx].BOS_E, di
+		call	arc_file_get pascal, large _bos_anim_images[bx].BOS_E, di
 		inc	si
 
 loc_16D46:
@@ -9283,7 +9283,7 @@ arg_0		= dword	ptr  6
 		mov	dh, 0
 		imul	dx, size bos_image_t
 		add	ax, dx
-		add	ax, offset _bos_fast_images
+		add	ax, offset _bos_anim_images
 		mov	word ptr [bp+@@bos+2], ds
 		mov	word ptr [bp+@@bos], ax
 		mov	al, es:[bx+9]
@@ -9472,15 +9472,15 @@ loc_16F28:
 		mov	ax, si
 		imul	ax, size bos_image_t
 		add	bx, ax
-		mov	ax, word ptr (_bos_fast_images[bx].BOS_alpha+0)
-		or	ax, word ptr (_bos_fast_images[bx].BOS_alpha+2)
+		mov	ax, word ptr (_bos_anim_images[bx].BOS_alpha+0)
+		or	ax, word ptr (_bos_anim_images[bx].BOS_alpha+2)
 		jz	short loc_16F59
 		mov	bx, di
 		imul	bx, size bos_t
 		mov	ax, si
 		imul	ax, size bos_image_t
 		add	bx, ax
-		call	@$bdla$qnv c, large _bos_fast_images[bx].BOS_alpha
+		call	@$bdla$qnv c, large _bos_anim_images[bx].BOS_alpha
 
 loc_16F59:
 		mov	bx, di
@@ -9488,56 +9488,56 @@ loc_16F59:
 		mov	ax, si
 		imul	ax, size bos_image_t
 		add	bx, ax
-		mov	word ptr (_bos_fast_images[bx].BOS_alpha+2), 0
-		mov	word ptr (_bos_fast_images[bx].BOS_alpha+0), 0
+		mov	word ptr (_bos_anim_images[bx].BOS_alpha+2), 0
+		mov	word ptr (_bos_anim_images[bx].BOS_alpha+0), 0
 		mov	bx, di
 		imul	bx, size bos_t
 		mov	ax, si
 		imul	ax, size bos_image_t
 		add	bx, ax
-		pushd	_bos_fast_images[bx].BOS_B ; font
+		pushd	_bos_anim_images[bx].BOS_B ; font
 		call	@$bdla$qnv
 		mov	bx, di
 		imul	bx, size bos_t
 		mov	ax, si
 		imul	ax, size bos_image_t
 		add	bx, ax
-		mov	word ptr (_bos_fast_images[bx].BOS_B+2), 0
-		mov	word ptr (_bos_fast_images[bx].BOS_B+0), 0
+		mov	word ptr (_bos_anim_images[bx].BOS_B+2), 0
+		mov	word ptr (_bos_anim_images[bx].BOS_B+0), 0
 		mov	bx, di
 		imul	bx, size bos_t
 		mov	ax, si
 		imul	ax, size bos_image_t
 		add	bx, ax
-		pushd	_bos_fast_images[bx].BOS_R ; font
+		pushd	_bos_anim_images[bx].BOS_R ; font
 		call	@$bdla$qnv
 		mov	bx, di
 		imul	bx, size bos_t
 		mov	ax, si
 		imul	ax, size bos_image_t
 		add	bx, ax
-		mov	word ptr (_bos_fast_images[bx].BOS_R+2), 0
-		mov	word ptr (_bos_fast_images[bx].BOS_R+0), 0
+		mov	word ptr (_bos_anim_images[bx].BOS_R+2), 0
+		mov	word ptr (_bos_anim_images[bx].BOS_R+0), 0
 		mov	bx, di
 		imul	bx, size bos_t
 		mov	ax, si
 		imul	ax, size bos_image_t
 		add	bx, ax
-		pushd	_bos_fast_images[bx].BOS_G ; font
+		pushd	_bos_anim_images[bx].BOS_G ; font
 		call	@$bdla$qnv
 		mov	bx, di
 		imul	bx, size bos_t
 		mov	ax, si
 		imul	ax, size bos_image_t
 		add	bx, ax
-		mov	word ptr (_bos_fast_images[bx].BOS_G+2), 0
-		mov	word ptr (_bos_fast_images[bx].BOS_G+0), 0
+		mov	word ptr (_bos_anim_images[bx].BOS_G+2), 0
+		mov	word ptr (_bos_anim_images[bx].BOS_G+0), 0
 		mov	bx, di
 		imul	bx, size bos_t
 		mov	ax, si
 		imul	ax, size bos_image_t
 		add	bx, ax
-		pushd	_bos_fast_images[bx].BOS_E ; font
+		pushd	_bos_anim_images[bx].BOS_E ; font
 		call	@$bdla$qnv
 		add	sp, 10h
 		mov	bx, di
@@ -9545,8 +9545,8 @@ loc_16F59:
 		mov	ax, si
 		imul	ax, size bos_image_t
 		add	bx, ax
-		mov	word ptr (_bos_fast_images[bx].BOS_E+2), 0
-		mov	word ptr (_bos_fast_images[bx].BOS_E+0), 0
+		mov	word ptr (_bos_anim_images[bx].BOS_E+2), 0
+		mov	word ptr (_bos_anim_images[bx].BOS_E+0), 0
 		inc	si
 
 loc_17036:
@@ -14241,7 +14241,7 @@ _yuugenmagan_load	proc c
 	local	@@template_southeast:CBossEntity
 	local	@@template_north:CBossEntity
 
-		CBossEntity__bos_load	eye_west, 0, aBoss2_bos
+		CBossEntity__load	eye_west, 0, aBoss2_bos
 		CBossEntity__copy	@@template_east, eye_west
 		push	ds
 		push	offset eye_east.BE_h
@@ -14254,7 +14254,7 @@ _yuugenmagan_load	proc c
 		push	ss
 		lea	ax, @@template_east
 		push	ax
-		call	@CBossEntity@bos_metadata_get$xqmimuct1t1
+		call	@CBossEntity@metadata_get$xqmimuct1t1
 		CBossEntity__copy	@@template_southwest, eye_west
 		push	ds
 		push	offset eye_southwest.BE_h
@@ -14267,7 +14267,7 @@ _yuugenmagan_load	proc c
 		push	ss
 		lea	ax, @@template_southwest
 		push	ax
-		call	@CBossEntity@bos_metadata_get$xqmimuct1t1
+		call	@CBossEntity@metadata_get$xqmimuct1t1
 		add	sp, 32h
 		CBossEntity__copy	@@template_southeast, eye_west
 		push	ds
@@ -14281,7 +14281,7 @@ _yuugenmagan_load	proc c
 		push	ss
 		lea	ax, @@template_southeast
 		push	ax
-		call	@CBossEntity@bos_metadata_get$xqmimuct1t1
+		call	@CBossEntity@metadata_get$xqmimuct1t1
 		CBossEntity__copy	@@template_north, eye_west
 		push	ds
 		push	offset eye_north.BE_h
@@ -14294,7 +14294,7 @@ _yuugenmagan_load	proc c
 		push	ss
 		lea	ax, @@template_north
 		push	ax
-		call	@CBossEntity@bos_metadata_get$xqmimuct1t1
+		call	@CBossEntity@metadata_get$xqmimuct1t1
 		nopcall	sub_1B383
 		call	_ptn_load stdcall, 2, offset aBoss3_m_ptn, ds ; "boss3_m.ptn"
 		mov	byte_3A1B2, 80h	; '?'
@@ -14420,7 +14420,7 @@ public _yuugenmagan_free
 _yuugenmagan_free	proc far
 		push	bp
 		mov	bp, sp
-		call	_bos_free stdcall, 0
+		call	_bos_entity_free stdcall, 0
 		call	_ptn_free stdcall, 2
 		add	sp, 4
 		pop	bp
@@ -18610,8 +18610,8 @@ _mima_load	proc far
 		mov	bp, sp
 		push	si
 		push	di
-		CBossEntity__bos_load	mima_still, 0, aBoss3_1_bos
-		CBossEntity__bos_load	mima_animated, 1, aBoss3_2_bos
+		CBossEntity__load	mima_still, 0, aBoss3_1_bos
+		CBossEntity__load	mima_animated, 1, aBoss3_2_bos
 		call	_grp_palette_load_show stdcall, offset aBoss3_grp_0, ds ; "boss3.grp"
 		add	sp, 18h
 		xor	si, si
@@ -19179,8 +19179,8 @@ public _mima_free
 _mima_free	proc far
 		push	bp
 		mov	bp, sp
-		call	_bos_free stdcall, 0
-		call	_bos_free stdcall, 1
+		call	_bos_entity_free stdcall, 0
+		call	_bos_entity_free stdcall, 1
 		call	_ptn_free stdcall, 2
 		call	_ptn_free stdcall, 3
 		add	sp, 8
@@ -26413,9 +26413,9 @@ _singyoku_load	proc far
 		mov	bp, sp
 		push	si
 		push	di
-		CBossEntity__bos_load	singyoku_sphere, 0, aBoss1_bos
-		CBossEntity__bos_load	singyoku_flash, 1, aBoss1_2_bos
-		CBossEntity__bos_load	singyoku_person, 2, aBoss1_3_bos
+		CBossEntity__load	singyoku_sphere, 0, aBoss1_bos
+		CBossEntity__load	singyoku_flash, 1, aBoss1_2_bos
+		CBossEntity__load	singyoku_person, 2, aBoss1_3_bos
 		call	_grp_palette_load_show_sane stdcall, offset aBoss1_grp_0, ds	; "boss1.grp"
 		add	sp, 22h
 		xor	si, si
@@ -26488,9 +26488,9 @@ public _singyoku_free
 _singyoku_free	proc far
 		push	bp
 		mov	bp, sp
-		call	_bos_free stdcall, 0
-		call	_bos_free stdcall, 1
-		call	_bos_free stdcall, 2
+		call	_bos_entity_free stdcall, 0
+		call	_bos_entity_free stdcall, 1
+		call	_bos_entity_free stdcall, 2
 		add	sp, 6
 		pop	bp
 		retf
@@ -27982,7 +27982,7 @@ loc_23364:
 loc_2336A:
 		cmp	si, KIKURI_TEAR_COUNT
 		jl	short loc_23364
-		CBossEntity__bos_load	kikuri_soul_0, 0, aTamasii_bos
+		CBossEntity__load	kikuri_soul_0, 0, aTamasii_bos
 		CBossEntity__copy	@@template_soul, kikuri_soul_0
 		push	ds
 		push	offset kikuri_soul_1.BE_h
@@ -27995,8 +27995,8 @@ loc_2336A:
 		push	ss
 		lea	ax, @@template_soul
 		push	ax
-		call	@CBossEntity@bos_metadata_get$xqmimuct1t1
-		CBossEntity__bos_load	kikuri_tear_0, 1, aTamasii2_bos
+		call	@CBossEntity@metadata_get$xqmimuct1t1
+		CBossEntity__load	kikuri_tear_0, 1, aTamasii2_bos
 		call	_ptn_load stdcall, 2, offset aTamayen_ptn, ds ; "tamayen.ptn"
 		add	sp, 2Eh
 		mov	si, 1
@@ -28028,7 +28028,7 @@ loc_2346F:
 		push	ss
 		lea	ax, @@template_tear
 		push	ax
-		call	@CBossEntity@bos_metadata_get$xqmimuct1t1
+		call	@CBossEntity@metadata_get$xqmimuct1t1
 		add	sp, 14h
 		inc	si
 
@@ -28099,8 +28099,8 @@ public _kikuri_free
 _kikuri_free	proc far
 		push	bp
 		mov	bp, sp
-		call	_bos_free stdcall, 0
-		call	_bos_free stdcall, 1
+		call	_bos_entity_free stdcall, 0
+		call	_bos_entity_free stdcall, 1
 		call	_ptn_free stdcall, 2
 		add	sp, 6
 		pop	bp
@@ -30864,9 +30864,9 @@ _elis_load	proc far
 		mov	bp, sp
 		mov	_pellet_interlace, 1
 		mov	_Pellets.PELLET_unknown_seven, 7
-		CBossEntity__bos_load	elis_still_or_wave, 0, aBoss5_bos
-		CBossEntity__bos_load	elis_attack, 1, aBoss5_2_bos
-		CBossEntity__bos_load	elis_bat, 2, aBoss5_3_bos
+		CBossEntity__load	elis_still_or_wave, 0, aBoss5_bos
+		CBossEntity__load	elis_attack, 1, aBoss5_2_bos
+		CBossEntity__load	elis_bat, 2, aBoss5_3_bos
 		call	_grc_load stdcall, 0, offset aBoss5_gr_grc, ds
 		call	_ptn_new stdcall, (12 shl 16) or 2
 		call	_ptn_load stdcall, 3, offset aBoss3_m_ptn_1, ds ;	"boss3_m.ptn"
@@ -30940,9 +30940,9 @@ public _elis_free
 _elis_free	proc far
 		push	bp
 		mov	bp, sp
-		call	_bos_free stdcall, 0
-		call	_bos_free stdcall, 1
-		call	_bos_free stdcall, 2
+		call	_bos_entity_free stdcall, 0
+		call	_bos_entity_free stdcall, 1
+		call	_bos_entity_free stdcall, 2
 		call	_grc_free stdcall, 0
 		call	_ptn_free stdcall, 2
 		call	_ptn_free stdcall, 3
@@ -36524,7 +36524,7 @@ public _sariel_load
 _sariel_load	proc far
 		push	bp
 		mov	bp, sp
-		CBossEntity__bos_load	sariel_shield, 0, aBoss6_1_bos
+		CBossEntity__load	sariel_shield, 0, aBoss6_1_bos
 		push	0
 		push	ds
 		push	offset aBoss6_2_bos ; "boss6_2.bos"
@@ -36706,7 +36706,7 @@ public _sariel_free
 _sariel_free	proc far
 		push	bp
 		mov	bp, sp
-		call	_bos_free stdcall, 0
+		call	_bos_entity_free stdcall, 0
 		push	0
 		call	sub_16F1B
 		push	1
@@ -43909,10 +43909,10 @@ loc_2CF26:
 		jl	short loc_2CF11
 		call	_z_palette_set_all_show stdcall, offset _z_Palettes, ds
 		call	text_fillca pascal, (' ' shl 16) + TX_WHITE
-		CBossEntity__bos_load	konngara_head, 0, aBoss8_1_bos
-		CBossEntity__bos_load	konngara_face_closed_or_glare, 1, aBoss8_e1_bos
+		CBossEntity__load	konngara_head, 0, aBoss8_1_bos
+		CBossEntity__load	konngara_face_closed_or_glare, 1, aBoss8_e1_bos
 		mov	konngara_face_aim.BE_loading, 1
-		call	@CBossEntity@bos_load$qxnxci stdcall, offset konngara_face_aim, ds, offset aBoss8_e2_bos, ds, 2
+		call	@CBossEntity@load$qxnxci stdcall, offset konngara_face_aim, ds, offset aBoss8_e2_bos, ds, 2
 		add	sp, 22h
 		mov	konngara_face_aim.BE_loading, 0
 		xor	di, di
@@ -44199,9 +44199,9 @@ _konngara_free	proc far
 		push	bp
 		mov	bp, sp
 		push	si
-		call	_bos_free stdcall, 0
-		call	_bos_free stdcall, 1
-		call	_bos_free stdcall, 2
+		call	_bos_entity_free stdcall, 0
+		call	_bos_entity_free stdcall, 1
+		call	_bos_entity_free stdcall, 2
 		add	sp, 6
 		xor	si, si
 		jmp	short loc_2D269
@@ -48785,7 +48785,7 @@ include th01/hiscore/alphabet_syms[data].asm
 include th01/hiscore/regist_name[data].asm
 include th01/hiscore/scorelod[data].asm
 include th01/hiscore/regist[data].asm
-include th01/main/boss/entity[data].asm
+include th01/main/boss/entity_a[data].asm
 include th01/formats/pf[data].asm
 include th01/sprites/shape8x8.asp
 		db    0

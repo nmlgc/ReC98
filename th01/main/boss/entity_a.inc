@@ -66,9 +66,9 @@ CBossEntity__copy	macro	dst:req, src:req
 	copy8  	dst, src, BE_bos_slot
 endm
 
-CBossEntity__bos_load	macro that:req, slot:req, fn:req
+CBossEntity__load	macro that:req, slot:req, fn:req
 	mov that.BE_loading, 1
-	call	@CBossEntity@bos_load$qxnxci stdcall, offset that, ds, offset fn, ds, slot
+	call	@CBossEntity@load$qxnxci stdcall, offset that, ds, offset fn, ds, slot
 	mov that.BE_loading, 0
 endm
 

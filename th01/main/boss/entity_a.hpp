@@ -1,3 +1,10 @@
+/// Entities
+/// --------
+
+// Slot count for unique .BOS files associated with CBossEntity instances.
+// *Not* CBossEntity instances themselves!
+#define BOS_ENTITY_SLOT_COUNT 4
+
 // An individual entity rendered with sprites from a .BOS file. May or may not
 // be animated, and may or may not have a hitbox for collision with the Orb.
 class CBossEntity {
@@ -27,14 +34,14 @@ public:
 	unsigned char bos_slot;
 
 	// Loads all images from the .BOS file with the given [fn] inside the
-	// currently active packfile into the given .BOS [slot], and keeps the
-	// .BOS metadata in this class. Always returns 0.
-	int bos_load(const char fn[PF_FN_LEN], int slot);
+	// currently active packfile into the given CBossEntity .BOS [slot], and
+	// keeps the .BOS metadata in this CBossEntity instance. Always returns 0.
+	int load(const char fn[PF_FN_LEN], int slot);
 
 	// Copies the .BOS header data of this instance to the given variables. In
 	// practice, only used to copy these values from one CBossEntity to
 	// another.
-	void bos_metadata_get(
+	void metadata_get(
 		int &image_count,
 		unsigned char &slot,
 		vram_byte_amount_t &vram_w,
@@ -177,3 +184,15 @@ public:
 	bool16 hittest_orb(void) const;
 	/// -------------------
 };
+
+// Frees all images in the given [slot].
+void bos_entity_free(int slot);
+/// --------
+
+/// Non-entity animations
+/// ---------------------
+
+// Slot count for unique .BOS files associated with CBossAnim instances.
+// *Not* CBossAnim instances themselves!
+#define BOS_ANIM_SLOT_COUNT 2
+/// ---------------------

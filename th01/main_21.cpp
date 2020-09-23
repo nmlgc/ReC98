@@ -6,5 +6,5 @@
 #pragma option -Z
 
 extern "C" {
-#include "th01/main/boss/entity.cpp"
+#include "th01/main/boss/entity_a.cpp"
 }
