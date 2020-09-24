@@ -210,5 +210,14 @@ public:
 	unsigned char bos_image_count;
 	unsigned char bos_image;
 	unsigned char bos_slot;
+
+	// Loads all images from the .BOS file with the given [fn] inside the
+	// currently active packfile into the given CBossAnim .BOS [slot], and
+	// keeps the .BOS metadata in this CBossEntity instance. Always returns 0.
+	// Identical to CBossEntity::load() with an added alpha negation loop.
+	int load(const char fn[PF_FN_LEN], int slot);
 };
+
+// Frees all images in the given [slot].
+void bos_anim_free(int slot);
 /// ---------------------

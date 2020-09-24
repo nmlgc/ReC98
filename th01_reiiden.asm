@@ -8885,225 +8885,13 @@ main_21_TEXT	segment	byte public 'CODE' use16
 	extern @CBossEntity@move_lock_and_put_8$qiiii:proc
 	extern @CBossEntity@hittest_orb$xqv:proc
 	extern _bos_entity_free:proc
+	extern @CBossAnim@load$qxnxci:proc
 main_21_TEXT	ends
 
 main_21__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_21
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_16B56	proc far
-
-var_34		= byte ptr -34h
-var_30		= byte ptr -30h
-var_2E		= byte ptr -2Eh
-var_2C		= byte ptr -2Ch
-var_2		= word ptr -2
-arg_0		= dword	ptr  6
-@@fn		= dword	ptr  0Ah
-@@slot		= word ptr  0Eh
-
-		enter	34h, 0
-		push	si
-		push	di
-		call	arc_file_load pascal, large [bp+@@fn]
-		push	ss
-		lea	ax, [bp+var_34]
-		push	ax
-		push	10h
-		call	arc_file_get
-		mov	al, [bp+var_30]
-		mov	ah, 0
-		les	bx, [bp+arg_0]
-		mov	es:[bx+4], ax
-		mov	al, [bp+var_2E]
-		mov	ah, 0
-		mov	es:[bx+6], ax
-		mov	al, [bp+var_2C]
-		mov	es:[bx+8], al
-		mov	ax, es:[bx+4]
-		imul	word ptr es:[bx+6]
-		mov	di, ax
-		push	ss
-		lea	ax, [bp+var_34]
-		push	ax
-		push	48
-		call	arc_file_get
-		cmp	_bos_header_only, 0
-		jnz	loc_16D55
-		push	[bp+@@slot]
-		nopcall	sub_16F1B
-		pop	cx
-		xor	si, si
-		jmp	loc_16D46
-; ---------------------------------------------------------------------------
-
-loc_16BBA:
-		mov	ax, di
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		add	ax, ax
-		push	ax
-		call	@$bnwa$qui
-		pop	cx
-		mov	bx, [bp+@@slot]
-		imul	bx, size bos_t
-		mov	cx, si
-		imul	cx, size bos_image_t
-		add	bx, cx
-		mov	word ptr (_bos_anim_images[bx].BOS_alpha+2), dx
-		mov	word ptr (_bos_anim_images[bx].BOS_alpha+0), ax
-		mov	ax, di
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		add	ax, ax
-		push	ax
-		call	@$bnwa$qui
-		pop	cx
-		mov	bx, [bp+@@slot]
-		imul	bx, size bos_t
-		mov	cx, si
-		imul	cx, size bos_image_t
-		add	bx, cx
-		mov	word ptr (_bos_anim_images[bx].BOS_B+2), dx
-		mov	word ptr (_bos_anim_images[bx].BOS_B+0), ax
-		mov	ax, di
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		add	ax, ax
-		push	ax
-		call	@$bnwa$qui
-		pop	cx
-		mov	bx, [bp+@@slot]
-		imul	bx, size bos_t
-		mov	cx, si
-		imul	cx, size bos_image_t
-		add	bx, cx
-		mov	word ptr (_bos_anim_images[bx].BOS_R+2), dx
-		mov	word ptr (_bos_anim_images[bx].BOS_R+0), ax
-		mov	ax, di
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		add	ax, ax
-		push	ax
-		call	@$bnwa$qui
-		pop	cx
-		mov	bx, [bp+@@slot]
-		imul	bx, size bos_t
-		mov	cx, si
-		imul	cx, size bos_image_t
-		add	bx, cx
-		mov	word ptr (_bos_anim_images[bx].BOS_G+2), dx
-		mov	word ptr (_bos_anim_images[bx].BOS_G+0), ax
-		mov	ax, di
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		add	ax, ax
-		push	ax
-		call	@$bnwa$qui
-		pop	cx
-		mov	bx, [bp+@@slot]
-		imul	bx, size bos_t
-		mov	cx, si
-		imul	cx, size bos_image_t
-		add	bx, cx
-		mov	word ptr (_bos_anim_images[bx].BOS_E+2), dx
-		mov	word ptr (_bos_anim_images[bx].BOS_E+0), ax
-		mov	bx, [bp+@@slot]
-		imul	bx, size bos_t
-		mov	ax, si
-		imul	ax, size bos_image_t
-		add	bx, ax
-		call	arc_file_get pascal, large _bos_anim_images[bx].BOS_alpha, di
-		mov	[bp+var_2], 0
-		jmp	short loc_16CD5
-; ---------------------------------------------------------------------------
-
-loc_16C98:
-		mov	bx, [bp+@@slot]
-		imul	bx, size bos_t
-		mov	ax, si
-		imul	ax, size bos_image_t
-		add	bx, ax
-		les	bx, _bos_anim_images[bx].BOS_alpha
-		mov	ax, [bp+var_2]
-		add	ax, ax
-		add	bx, ax
-		mov	ax, es:[bx]
-		not	ax
-		mov	bx, [bp+@@slot]
-		imul	bx, size bos_t
-		mov	dx, si
-		imul	dx, size bos_image_t
-		add	bx, dx
-		mov	bx, word ptr (_bos_anim_images[bx].BOS_alpha+0)
-		mov	dx, [bp+var_2]
-		add	dx, dx
-		add	bx, dx
-		mov	es:[bx], ax
-		inc	[bp+var_2]
-
-loc_16CD5:
-		mov	ax, di
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		cmp	ax, [bp+var_2]
-		jg	short loc_16C98
-		mov	bx, [bp+@@slot]
-		imul	bx, size bos_t
-		mov	ax, si
-		imul	ax, size bos_image_t
-		add	bx, ax
-		call	arc_file_get pascal, large _bos_anim_images[bx].BOS_B, di
-		mov	bx, [bp+@@slot]
-		imul	bx, size bos_t
-		mov	ax, si
-		imul	ax, size bos_image_t
-		add	bx, ax
-		call	arc_file_get pascal, large _bos_anim_images[bx].BOS_R, di
-		mov	bx, [bp+@@slot]
-		imul	bx, size bos_t
-		mov	ax, si
-		imul	ax, size bos_image_t
-		add	bx, ax
-		call	arc_file_get pascal, large _bos_anim_images[bx].BOS_G, di
-		mov	bx, [bp+@@slot]
-		imul	bx, size bos_t
-		mov	ax, si
-		imul	ax, size bos_image_t
-		add	bx, ax
-		call	arc_file_get pascal, large _bos_anim_images[bx].BOS_E, di
-		inc	si
-
-loc_16D46:
-		les	bx, [bp+arg_0]
-		mov	al, es:[bx+8]
-		mov	ah, 0
-		cmp	ax, si
-		jg	loc_16BBA
-
-loc_16D55:
-		les	bx, [bp+arg_0]
-		mov	al, byte ptr [bp+@@slot]
-		mov	es:[bx+0Ah], al
-		call	arc_file_free
-		xor	ax, ax
-		pop	di
-		pop	si
-		leave
-		retf
-sub_16B56	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9308,8 +9096,8 @@ sub_16D6A	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_16F1B	proc far
+public _bos_anim_free
+_bos_anim_free	proc far
 
 arg_0		= word ptr  6
 
@@ -9412,7 +9200,7 @@ loc_17036:
 		pop	si
 		pop	bp
 		retf
-sub_16F1B	endp
+_bos_anim_free	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -36385,18 +36173,8 @@ _sariel_load	proc far
 		push	bp
 		mov	bp, sp
 		CBossEntity__load	sariel_shield, 0, aBoss6_1_bos
-		push	0
-		push	ds
-		push	offset aBoss6_2_bos ; "boss6_2.bos"
-		push	ds
-		push	offset sariel_wand
-		call	sub_16B56
-		push	1
-		push	ds
-		push	offset aBoss6_3_bos ; "boss6_3.bos"
-		push	ds
-		push	offset sariel_dress
-		call	sub_16B56
+		call	@CBossAnim@load$qxnxci stdcall, offset sariel_wand,  ds, offset aBoss6_2_bos, ds, 0	; "boss6_2.bos"
+		call	@CBossAnim@load$qxnxci stdcall, offset sariel_dress, ds, offset aBoss6_3_bos, ds, 1	; "boss6_3.bos"
 		call	_grc_load stdcall, 0, offset aBoss6gr1_grc, ds
 		call	_grc_load stdcall, 1, offset aBoss6gr2_grc, ds
 		call	_grc_load stdcall, 2, offset aBoss6gr3_grc, ds
@@ -36567,10 +36345,8 @@ _sariel_free	proc far
 		push	bp
 		mov	bp, sp
 		call	_bos_entity_free stdcall, 0
-		push	0
-		call	sub_16F1B
-		push	1
-		call	sub_16F1B
+		call	_bos_anim_free stdcall, 0
+		call	_bos_anim_free stdcall, 1
 		call	_grc_free stdcall, 0
 		call	_grc_free stdcall, 1
 		call	_grc_free stdcall, 2

@@ -607,4 +607,34 @@ void bos_entity_free(int slot)
 /// Non-entity animations
 /// ---------------------
 extern bos_t bos_anim_images[BOS_ANIM_SLOT_COUNT];
+
+int CBossAnim::load(const char fn[PF_FN_LEN], int slot)
+{
+	int plane_size;
+
+	bos_header_load(this, plane_size, fn);
+	if(!bos_header_only) {
+		/* TODO: Replace with the decompiled call
+		 * 	bos_anim_free(slot);
+		 * once that function is part of this translation unit */
+		__asm { push slot; nop; push cs; call near ptr bos_anim_free; pop cx; }
+		for(int i = 0; bos_image_count > i; i++) {
+			#define image bos_anim_images[slot].image[i]
+			bos_image_new(image, plane_size);
+			arc_file_get(reinterpret_cast<char *>(image.alpha), plane_size);
+			for(int bos_p = 0; bos_p < (plane_size / 2); bos_p++) {
+				image.alpha[bos_p] = ~image.alpha[bos_p];
+			}
+			arc_file_get(reinterpret_cast<char *>(image.planes.B), plane_size);
+			arc_file_get(reinterpret_cast<char *>(image.planes.R), plane_size);
+			arc_file_get(reinterpret_cast<char *>(image.planes.G), plane_size);
+			arc_file_get(reinterpret_cast<char *>(image.planes.E), plane_size);
+			#undef image
+		}
+	}
+
+	bos_slot = slot;
+	arc_file_free();
+	return 0;
+}
 /// ---------------------
