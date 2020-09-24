@@ -216,6 +216,10 @@ public:
 	// keeps the .BOS metadata in this CBossEntity instance. Always returns 0.
 	// Identical to CBossEntity::load() with an added alpha negation loop.
 	int load(const char fn[PF_FN_LEN], int slot);
+
+	// Blits [bos_image] to (⌊left/8⌋*8, top).
+	// Additionally clips at the bottom edge of VRAM.
+	void put_8(void) const;
 };
 
 // Frees all images in the given [slot].

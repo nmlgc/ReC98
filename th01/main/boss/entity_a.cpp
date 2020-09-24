@@ -637,4 +637,43 @@ int CBossAnim::load(const char fn[PF_FN_LEN], int slot)
 	arc_file_free();
 	return 0;
 }
+
+void CBossAnim::put_8(void) const
+{
+	vram_offset_t vram_offset_row = vram_offset_divmul(left, top);
+	vram_offset_t vram_offset;
+	size_t bos_p = 0;
+	pixel_t bos_y;
+	vram_word_amount_t bos_word_x;
+	vram_y_t intended_y;
+
+	bos_image_t &bos = bos_anim_images[bos_slot].image[bos_image];
+	if(bos_image >= bos_image_count) {
+		return;
+	}
+
+	for(bos_y = 0; h > bos_y; bos_y++) {
+		vram_offset_t vram_offset = vram_offset_row;
+		intended_y = vram_intended_y_for(vram_offset_row, left);
+		for(bos_word_x = 0; (vram_w / 2) > bos_word_x; bos_word_x++) {
+			if((vram_offset / ROW_SIZE) == intended_y) {
+				if(bos.alpha[bos_p]) {
+					grcg_setcolor_rmw(0);
+					VRAM_PUT(B, vram_offset, bos.alpha[bos_p], 16);
+					grcg_off();
+				}
+				vram_or_emptyopt(B, vram_offset, bos.planes.B[bos_p], 16);
+				vram_or_emptyopt(R, vram_offset, bos.planes.R[bos_p], 16);
+				vram_or_emptyopt(G, vram_offset, bos.planes.G[bos_p], 16);
+				vram_or_emptyopt(E, vram_offset, bos.planes.E[bos_p], 16);
+			}
+			vram_offset += 2;
+			bos_p++;
+		}
+		vram_offset_row += ROW_SIZE;
+		if(vram_offset_row >= PLANE_SIZE) { // Clip at the bottom edge
+			break;
+		}
+	}
+}
 /// ---------------------

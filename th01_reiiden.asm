@@ -8886,212 +8886,13 @@ main_21_TEXT	segment	byte public 'CODE' use16
 	extern @CBossEntity@hittest_orb$xqv:proc
 	extern _bos_entity_free:proc
 	extern @CBossAnim@load$qxnxci:proc
+	extern @CBossAnim@put_8$xqv:proc
 main_21_TEXT	ends
 
 main_21__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_21
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_16D6A	proc far
-
-@@bos		= dword	ptr -0Ch
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= dword	ptr  6
-
-		enter	0Ch, 0
-		push	si
-		push	di
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx]
-		mov	bx, 8
-		cwd
-		idiv	bx
-		mov	bx, word ptr [bp+arg_0]
-		mov	dx, es:[bx+2]
-		imul	dx, 50h
-		add	ax, dx
-		mov	[bp+var_2], ax
-		xor	si, si
-		mov	al, es:[bx+0Ah]
-		mov	ah, 0
-		imul	ax, size bos_t
-		mov	dl, es:[bx+9]
-		mov	dh, 0
-		imul	dx, size bos_image_t
-		add	ax, dx
-		add	ax, offset _bos_anim_images
-		mov	word ptr [bp+@@bos+2], ds
-		mov	word ptr [bp+@@bos], ax
-		mov	al, es:[bx+9]
-		cmp	al, es:[bx+8]
-		jnb	loc_16F17
-		mov	[bp+var_4], 0
-		jmp	loc_16F09
-; ---------------------------------------------------------------------------
-
-loc_16DBF:
-		mov	di, [bp+var_2]
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx], 0
-		jge	short loc_16DD7
-		mov	ax, [bp+var_2]
-		mov	bx, 80
-		cwd
-		idiv	bx
-		inc	ax
-		jmp	short loc_16DE0
-; ---------------------------------------------------------------------------
-
-loc_16DD7:
-		mov	ax, [bp+var_2]
-		mov	bx, 80
-		cwd
-		idiv	bx
-
-loc_16DE0:
-		mov	[bp+var_8], ax
-		mov	[bp+var_6], 0
-		jmp	loc_16EE8
-; ---------------------------------------------------------------------------
-
-loc_16DEB:
-		mov	ax, di
-		mov	bx, 80
-		cwd
-		idiv	bx
-		cmp	ax, [bp+var_8]
-		jnz	loc_16EE1
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_alpha]
-		mov	ax, si
-		add	ax, ax
-		add	bx, ax
-		cmp	word ptr es:[bx], 0
-		jz	short loc_16E33
-		call	_grcg_setcolor_rmw stdcall, 0
-		pop	cx
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_alpha]
-		mov	ax, si
-		add	ax, ax
-		add	bx, ax
-		mov	ax, es:[bx]
-		les	bx, _VRAM_PLANE_B
-		add	bx, di
-		mov	es:[bx], ax
-		call	_grcg_off_func
-
-loc_16E33:
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_B]
-		mov	ax, si
-		add	ax, ax
-		add	bx, ax
-		cmp	word ptr es:[bx], 0
-		jz	short loc_16E5D
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_B]
-		mov	ax, si
-		add	ax, ax
-		add	bx, ax
-		mov	ax, es:[bx]
-		les	bx, _VRAM_PLANE_B
-		add	bx, di
-		or	es:[bx], ax
-
-loc_16E5D:
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_R]
-		mov	ax, si
-		add	ax, ax
-		add	bx, ax
-		cmp	word ptr es:[bx], 0
-		jz	short loc_16E89
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_R]
-		mov	ax, si
-		add	ax, ax
-		add	bx, ax
-		mov	ax, es:[bx]
-		les	bx, _VRAM_PLANE_R
-		add	bx, di
-		or	es:[bx], ax
-
-loc_16E89:
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_G]
-		mov	ax, si
-		add	ax, ax
-		add	bx, ax
-		cmp	word ptr es:[bx], 0
-		jz	short loc_16EB5
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_G]
-		mov	ax, si
-		add	ax, ax
-		add	bx, ax
-		mov	ax, es:[bx]
-		les	bx, _VRAM_PLANE_G
-		add	bx, di
-		or	es:[bx], ax
-
-loc_16EB5:
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_E]
-		mov	ax, si
-		add	ax, ax
-		add	bx, ax
-		cmp	word ptr es:[bx], 0
-		jz	short loc_16EE1
-		les	bx, [bp+@@bos]
-		les	bx, es:[bx+bos_image_t.BOS_E]
-		mov	ax, si
-		add	ax, ax
-		add	bx, ax
-		mov	ax, es:[bx]
-		les	bx, _VRAM_PLANE_E
-		add	bx, di
-		or	es:[bx], ax
-
-loc_16EE1:
-		add	di, 2
-		inc	si
-		inc	[bp+var_6]
-
-loc_16EE8:
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx+4]
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		cmp	ax, [bp+var_6]
-		jg	loc_16DEB
-		add	[bp+var_2], 50h	; 'P'
-		cmp	[bp+var_2], 7D00h
-		jge	short loc_16F17
-		inc	[bp+var_4]
-
-loc_16F09:
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx+6]
-		cmp	ax, [bp+var_4]
-		jg	loc_16DBF
-
-loc_16F17:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_16D6A	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -37004,14 +36805,10 @@ loc_28F32:
 		mov	sariel_wand.BA_bos_image, 0
 		push	1
 		call	_graph_accesspage_func
-		push	ds
-		push	offset sariel_wand
-		call	sub_16D6A
+		call	@CBossAnim@put_8$xqv stdcall, offset sariel_wand, ds
 		push	0
 		call	_graph_accesspage_func
-		push	ds
-		push	offset sariel_wand
-		call	sub_16D6A
+		call	@CBossAnim@put_8$xqv stdcall, offset sariel_wand, ds
 		add	sp, 0Ch
 		jmp	short loc_28FA3
 ; ---------------------------------------------------------------------------
@@ -37022,14 +36819,10 @@ loc_28F67:
 		mov	sariel_wand.BA_bos_image, 1
 		push	1
 		call	_graph_accesspage_func
-		push	ds
-		push	offset sariel_wand
-		call	sub_16D6A
+		call	@CBossAnim@put_8$xqv stdcall, offset sariel_wand, ds
 		push	0
 		call	_graph_accesspage_func
-		push	ds
-		push	offset sariel_wand
-		call	sub_16D6A
+		call	@CBossAnim@put_8$xqv stdcall, offset sariel_wand, ds
 		add	sp, 0Ch
 		mov	word_35DDD, 0
 		mov	ax, 1
@@ -37088,14 +36881,10 @@ sub_28FC5	proc near
 		mov	sariel_dress.BA_bos_image, al
 		push	1
 		call	_graph_accesspage_func
-		push	ds
-		push	offset sariel_dress
-		call	sub_16D6A
+		call	@CBossAnim@put_8$xqv stdcall, offset sariel_dress, ds
 		push	0
 		call	_graph_accesspage_func
-		push	ds
-		push	offset sariel_dress
-		call	sub_16D6A
+		call	@CBossAnim@put_8$xqv stdcall, offset sariel_dress, ds
 		add	sp, 0Ch
 
 locret_29013:
