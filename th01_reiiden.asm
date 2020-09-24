@@ -8887,122 +8887,13 @@ main_21_TEXT	segment	byte public 'CODE' use16
 	extern _bos_entity_free:proc
 	extern @CBossAnim@load$qxnxci:proc
 	extern @CBossAnim@put_8$xqv:proc
+	extern _bos_anim_free:proc
 main_21_TEXT	ends
 
 main_21__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_21
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public _bos_anim_free
-_bos_anim_free	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, [bp+arg_0]
-		xor	si, si
-		jmp	loc_17036
-; ---------------------------------------------------------------------------
-
-loc_16F28:
-		mov	bx, di
-		imul	bx, size bos_t
-		mov	ax, si
-		imul	ax, size bos_image_t
-		add	bx, ax
-		mov	ax, word ptr (_bos_anim_images[bx].BOS_alpha+0)
-		or	ax, word ptr (_bos_anim_images[bx].BOS_alpha+2)
-		jz	short loc_16F59
-		mov	bx, di
-		imul	bx, size bos_t
-		mov	ax, si
-		imul	ax, size bos_image_t
-		add	bx, ax
-		call	@$bdla$qnv c, large _bos_anim_images[bx].BOS_alpha
-
-loc_16F59:
-		mov	bx, di
-		imul	bx, size bos_t
-		mov	ax, si
-		imul	ax, size bos_image_t
-		add	bx, ax
-		mov	word ptr (_bos_anim_images[bx].BOS_alpha+2), 0
-		mov	word ptr (_bos_anim_images[bx].BOS_alpha+0), 0
-		mov	bx, di
-		imul	bx, size bos_t
-		mov	ax, si
-		imul	ax, size bos_image_t
-		add	bx, ax
-		pushd	_bos_anim_images[bx].BOS_B ; font
-		call	@$bdla$qnv
-		mov	bx, di
-		imul	bx, size bos_t
-		mov	ax, si
-		imul	ax, size bos_image_t
-		add	bx, ax
-		mov	word ptr (_bos_anim_images[bx].BOS_B+2), 0
-		mov	word ptr (_bos_anim_images[bx].BOS_B+0), 0
-		mov	bx, di
-		imul	bx, size bos_t
-		mov	ax, si
-		imul	ax, size bos_image_t
-		add	bx, ax
-		pushd	_bos_anim_images[bx].BOS_R ; font
-		call	@$bdla$qnv
-		mov	bx, di
-		imul	bx, size bos_t
-		mov	ax, si
-		imul	ax, size bos_image_t
-		add	bx, ax
-		mov	word ptr (_bos_anim_images[bx].BOS_R+2), 0
-		mov	word ptr (_bos_anim_images[bx].BOS_R+0), 0
-		mov	bx, di
-		imul	bx, size bos_t
-		mov	ax, si
-		imul	ax, size bos_image_t
-		add	bx, ax
-		pushd	_bos_anim_images[bx].BOS_G ; font
-		call	@$bdla$qnv
-		mov	bx, di
-		imul	bx, size bos_t
-		mov	ax, si
-		imul	ax, size bos_image_t
-		add	bx, ax
-		mov	word ptr (_bos_anim_images[bx].BOS_G+2), 0
-		mov	word ptr (_bos_anim_images[bx].BOS_G+0), 0
-		mov	bx, di
-		imul	bx, size bos_t
-		mov	ax, si
-		imul	ax, size bos_image_t
-		add	bx, ax
-		pushd	_bos_anim_images[bx].BOS_E ; font
-		call	@$bdla$qnv
-		add	sp, 10h
-		mov	bx, di
-		imul	bx, size bos_t
-		mov	ax, si
-		imul	ax, size bos_image_t
-		add	bx, ax
-		mov	word ptr (_bos_anim_images[bx].BOS_E+2), 0
-		mov	word ptr (_bos_anim_images[bx].BOS_E+0), 0
-		inc	si
-
-loc_17036:
-		cmp	si, 8
-		jl	loc_16F28
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_bos_anim_free	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
