@@ -195,4 +195,20 @@ void bos_entity_free(int slot);
 // Slot count for unique .BOS files associated with CBossAnim instances.
 // *Not* CBossAnim instances themselves!
 #define BOS_ANIM_SLOT_COUNT 2
+
+// Stripped-down version of CBossEntity, with just animation support. These
+// only have functions for direct byte-aligned blitting onto page 0, in
+// exchange for the alpha plane being pre-negated at load time? No idea why.
+// That 1-instruction negation is certainly not what makes the original code
+// slow.
+class CBossAnim {
+public:
+	screen_x_t left;
+	screen_y_t top;
+	vram_byte_amount_t vram_w;
+	pixel_t h;
+	unsigned char bos_image_count;
+	unsigned char bos_image;
+	unsigned char bos_slot;
+};
 /// ---------------------

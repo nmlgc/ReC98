@@ -36251,7 +36251,11 @@ main_36_TEXT	segment	byte public 'CODE' use16
 		;org 9
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
+include th01/main/boss/anim.inc
+
 sariel_shield	equ <boss_entity_0>
+sariel_dress	equ <boss_anim_0>
+sariel_wand 	equ <boss_anim_1>
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -36385,13 +36389,13 @@ _sariel_load	proc far
 		push	ds
 		push	offset aBoss6_2_bos ; "boss6_2.bos"
 		push	ds
-		push	offset word_39A29
+		push	offset sariel_wand
 		call	sub_16B56
 		push	1
 		push	ds
 		push	offset aBoss6_3_bos ; "boss6_3.bos"
 		push	ds
-		push	offset word_39A1E
+		push	offset sariel_dress
 		call	sub_16B56
 		call	_grc_load stdcall, 0, offset aBoss6gr1_grc, ds
 		call	_grc_load stdcall, 1, offset aBoss6gr2_grc, ds
@@ -36422,10 +36426,10 @@ sub_287D9	proc far
 		mov	byte_3A6CE, 0
 		mov	word_3A6CA, 0
 		mov	sariel_shield.BE_hitbox_orb_inactive, 0
-		mov	word_39A1E, 118h
-		mov	word_39A20, 0C0h ; '?'
-		mov	word_39A29, 128h
-		mov	word_39A2B, 30h	; '0'
+		mov	sariel_dress.BA_left, 280
+		mov	sariel_dress.BA_top, 192
+		mov	sariel_wand.BA_left, 296
+		mov	sariel_wand.BA_top, 48
 		pop	bp
 		retf
 sub_287D9	endp
@@ -36438,16 +36442,16 @@ sub_287D9	endp
 sub_28852	proc near
 
 @@image		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@top		= word ptr -4
+@@left		= word ptr -2
 
 		enter	6, 0
 		push	si
 		push	di
-		mov	ax, word_39A29
-		mov	[bp+var_2], ax
-		mov	ax, word_39A2B
-		mov	[bp+var_4], ax
+		mov	ax, sariel_wand.BA_left
+		mov	[bp+@@left], ax
+		mov	ax, sariel_wand.BA_top
+		mov	[bp+@@top], ax
 		mov	[bp+@@image], 0
 		push	1
 		call	_graph_accesspage_func
@@ -36467,11 +36471,11 @@ loc_28879:
 		push	ax
 		mov	ax, di
 		shl	ax, 5
-		add	ax, [bp+var_4]
+		add	ax, [bp+@@top]
 		push	ax
 		mov	ax, si
 		shl	ax, 5
-		add	ax, [bp+var_2]
+		add	ax, [bp+@@left]
 		push	ax
 		call	_ptn_snap_8
 		add	sp, 6
@@ -36503,17 +36507,17 @@ sub_28852	endp
 sub_288B5	proc near
 
 @@image		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@top		= word ptr -4
+@@left		= word ptr -2
 
 		enter	6, 0
 		push	si
 		push	di
 		mov	[bp+@@image], 0
-		mov	ax, word_39A29
-		mov	[bp+var_2], ax
-		mov	ax, word_39A2B
-		mov	[bp+var_4], ax
+		mov	ax, sariel_wand.BA_left
+		mov	[bp+@@left], ax
+		mov	ax, sariel_wand.BA_top
+		mov	[bp+@@top], ax
 		xor	di, di
 		jmp	short loc_288FF
 ; ---------------------------------------------------------------------------
@@ -36529,11 +36533,11 @@ loc_288D4:
 		push	ax
 		mov	ax, di
 		shl	ax, 5
-		add	ax, [bp+var_4]
+		add	ax, [bp+@@top]
 		push	ax
 		mov	ax, si
 		shl	ax, 5
-		add	ax, [bp+var_2]
+		add	ax, [bp+@@left]
 		push	ax
 		call	_ptn_put_noalpha_8
 		add	sp, 6
@@ -37221,16 +37225,16 @@ loc_28F32:
 		inc	word_35DDD
 		cmp	word_35DDD, 2
 		jnz	short loc_28F67
-		mov	byte_39A32, 0
+		mov	sariel_wand.BA_bos_image, 0
 		push	1
 		call	_graph_accesspage_func
 		push	ds
-		push	offset word_39A29
+		push	offset sariel_wand
 		call	sub_16D6A
 		push	0
 		call	_graph_accesspage_func
 		push	ds
-		push	offset word_39A29
+		push	offset sariel_wand
 		call	sub_16D6A
 		add	sp, 0Ch
 		jmp	short loc_28FA3
@@ -37239,16 +37243,16 @@ loc_28F32:
 loc_28F67:
 		cmp	word_35DDD, 10h
 		jnz	short loc_28FA3
-		mov	byte_39A32, 1
+		mov	sariel_wand.BA_bos_image, 1
 		push	1
 		call	_graph_accesspage_func
 		push	ds
-		push	offset word_39A29
+		push	offset sariel_wand
 		call	sub_16D6A
 		push	0
 		call	_graph_accesspage_func
 		push	ds
-		push	offset word_39A29
+		push	offset sariel_wand
 		call	sub_16D6A
 		add	sp, 0Ch
 		mov	word_35DDD, 0
@@ -37305,16 +37309,16 @@ sub_28FC5	proc near
 		idiv	bx
 		mov	[bp-2],	ax
 		mov	al, [bp-2]
-		mov	byte_39A27, al
+		mov	sariel_dress.BA_bos_image, al
 		push	1
 		call	_graph_accesspage_func
 		push	ds
-		push	offset word_39A1E
+		push	offset sariel_dress
 		call	sub_16D6A
 		push	0
 		call	_graph_accesspage_func
 		push	ds
-		push	offset word_39A1E
+		push	offset sariel_dress
 		call	sub_16D6A
 		add	sp, 0Ch
 
@@ -43567,6 +43571,8 @@ loc_2CDCE:
 sub_2C0CA	endp
 
 sariel_shield	equ <>
+sariel_dress	equ <>
+sariel_wand 	equ <>
 main_36_TEXT	ends
 
 ; ===========================================================================
@@ -49259,16 +49265,10 @@ boss_entity_3	equ <_boss_entities[3 * size CBossEntity]>
 boss_entity_4	equ <_boss_entities[4 * size CBossEntity]>
 boss	equ boss_entity_0
 
-word_39A1E	dw ?
-word_39A20	dw ?
-		db 5 dup(?)
-byte_39A27	db ?
-		db    ?	;
-word_39A29	dw ?
-word_39A2B	dw ?
-		db 5 dup(?)
-byte_39A32	db ?
-		db ?
+_boss_anims	CBossAnim 2 dup(<?>)
+boss_anim_0	equ <_boss_anims[0 * size CBossAnim]>
+boss_anim_1	equ <_boss_anims[1 * size CBossAnim]>
+
 include th01/formats/pf[bss].asm
 include th01/formats/grc[bss].asm
 palette_39B8C	palette_t <?>
