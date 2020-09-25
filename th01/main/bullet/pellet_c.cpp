@@ -18,7 +18,7 @@ void pellet_cloud_put_8(screen_x_t left, vram_y_t top, int col, int cel)
 	pixel_t y = 0;
 	while(y < PELLET_CLOUD_H) {
 		if(sPELLET_CLOUD[cel][y]) {
-			VRAM_PUT(B, vram_offset, sPELLET_CLOUD[cel][y], PELLET_CLOUD_W);
+			grcg_put(vram_offset, sPELLET_CLOUD[cel][y], PELLET_CLOUD_W);
 		}
 		y++;
 		vram_offset += ROW_SIZE;

@@ -11,7 +11,7 @@
 		\
 		x = 0; \
 		while(x < (w / BYTE_DOTS)) { \
-			VRAM_PUT(B, vram_offset, pattern, 32); \
+			grcg_put(vram_offset, pattern, 32); \
 			x += static_cast<vram_byte_amount_t>(sizeof(pattern)); \
 			vram_offset += static_cast<vram_offset_t>(sizeof(pattern)); \
 		} \

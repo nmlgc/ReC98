@@ -40,8 +40,8 @@ void pascal near box_1_to_0_mask(box_mask_t mask)
 		vram_offset_t vram_offset = vram_offset_shift(BOX_LEFT, y);
 		pixel_t x = 0;
 		while(x < BOX_W) {
-			graph_accesspage(1);	VRAM_SNAP(dots, B, vram_offset, 16);
-			graph_accesspage(0);	VRAM_PUT(B, vram_offset, dots, 16);
+			graph_accesspage(1);	egc_snap(dots, vram_offset, 16);
+			graph_accesspage(0);	egc_put(vram_offset, dots, 16);
 			x += CHUNK_W;
 			vram_offset += (CHUNK_W / BYTE_DOTS);
 		}

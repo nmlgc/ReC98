@@ -72,9 +72,7 @@ void grc_put_8(screen_x_t left, vram_y_t top, int slot, int image, int col)
 						((left >= 0) && ((vram_offset / ROW_SIZE) == vram_y)) ||
 						((left <  0) && ((vram_offset / ROW_SIZE) != vram_y))
 					) {
-						VRAM_PUT(
-							B, vram_offset, grc_slot.dots[image][grc_p], 8
-						);
+						grcg_put(vram_offset, grc_slot.dots[image][grc_p], 8);
 					}
 				}
 				grc_p++;

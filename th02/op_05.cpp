@@ -76,7 +76,7 @@ void darken_pic_at(screen_x_t x, screen_y_t y)
 	grcg_setcolor(GC_RMW, 0);
 	for(row = 0; row < 144; row++, row_p += ROW_SIZE)  {
 		for(col = 0; col < 192 / BYTE_DOTS; col += 2) {
-			VRAM_PUT(B, row_p + col, (row & 1 ? 0xAAAA : 0x5555), 16);
+			grcg_put(row_p + col, (row & 1 ? 0xAAAA : 0x5555), 16);
 		}
 	}
 	grcg_off();

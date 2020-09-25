@@ -152,4 +152,13 @@ static inline vram_offset_t vram_offset_mulshift(screen_x_t x, vram_y_t y)
 		*(dots32_t*)((dst) + p) = *(dots32_t*)((src) + p); \
 	}
 
+#define grcg_put(offset, src, bit_count) \
+	VRAM_PUT(B, offset, src, bit_count)
+
+#define grcg_snap(dst, offset, bit_count) \
+	VRAM_SNAP(dst, B, offset, bit_count)
+
+#define egc_put  grcg_put
+#define egc_snap grcg_snap
+
 void pascal vram_planes_set(void);

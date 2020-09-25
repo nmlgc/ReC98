@@ -15,7 +15,7 @@ static inline ptn_t* ptn_with_id_shift(int id)
 
 #define grcg_clear_masked(vram_offset, w, mask) \
 	grcg_setcolor_rmw(0); \
-	VRAM_PUT(B, vram_offset, mask, w); \
+	grcg_put(vram_offset, mask, w); \
 	grcg_off();
 
 #define ptn_or_masked(vram_offset, w, ptn, mask) \

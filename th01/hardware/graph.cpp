@@ -470,7 +470,7 @@ void graph_r_vline(screen_x_t x, vram_y_t top, vram_y_t bottom, int col)
 
 	grcg_setcolor_rmw(col);
 	for(y = top; y <= bottom; y++) {
-		VRAM_PUT(B, vram_row_offset, pattern, 16);
+		grcg_put(vram_row_offset, pattern, 16);
 		vram_row_offset += ROW_SIZE;
 	}
 	grcg_off_func();
@@ -556,7 +556,7 @@ void graph_r_line(
 		if((x_cur >> 3) != x_vram || (y_vram != y_cur)) { \
 			vram_offset = (y_vram * ROW_SIZE) + x_vram; \
 			if(!graph_r_unput) { \
-				VRAM_PUT(B, vram_offset, pixels, 16); \
+				grcg_put(vram_offset, pixels, 16); \
 				pixels = 0; \
 			} else { \
 				vram_offset--; \

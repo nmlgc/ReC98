@@ -12,7 +12,7 @@ void grcg_put_8x8_mono(
 		dots16_t d = (
 			(sprite[y] >> first_bit) + (sprite[y] << (16 - first_bit))
 		);
-		VRAM_PUT(B, vram_offset_topleft, d, 16);
+		grcg_put(vram_offset_topleft, d, 16);
 		vram_offset_topleft += ROW_SIZE;
 		if(vram_offset_topleft >= PLANE_SIZE) {
 			break;

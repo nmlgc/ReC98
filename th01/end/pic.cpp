@@ -34,8 +34,8 @@ void end_pic_show(int quarter)
 		for(vram_x = 0; vram_x < (PIC_VRAM_W / sizeof(dots16_t)); vram_x++) {
 			dots16_t d;
 
-			graph_accesspage_func(1); d = VRAM_CHUNK(B, vram_offset_src, 16);
-			graph_accesspage_func(0); VRAM_CHUNK(B, vram_offset_dst, 16) = d;
+			graph_accesspage_func(1); egc_snap(d, vram_offset_src, 16);
+			graph_accesspage_func(0); egc_put(vram_offset_dst, d, 16);
 
 			vram_offset_src += sizeof(dots16_t);
 			vram_offset_dst += sizeof(dots16_t);

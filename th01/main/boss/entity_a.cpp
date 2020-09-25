@@ -105,7 +105,7 @@ void CBossEntity::put_8(screen_x_t left, vram_y_t top, int image) const
 			if((vram_offset / ROW_SIZE) == intended_y) {
 				if(~bos.alpha[bos_p]) {
 					grcg_setcolor_rmw(0);
-					VRAM_PUT(B, vram_offset, ~bos.alpha[bos_p], 16);
+					grcg_put(vram_offset, ~bos.alpha[bos_p], 16);
 					grcg_off();
 
 					vram_or_emptyopt(B, vram_offset, bos.planes.B[bos_p], 16);
@@ -382,7 +382,7 @@ void CBossEntity::unput_8(screen_x_t left, vram_y_t top, int image) const
 			) {
 				grcg_setcolor_rmw(0);
 				graph_accesspage_func(0);
-				VRAM_PUT(B, vram_offset, ~bos.alpha[bos_p], 16);
+				grcg_put(vram_offset, ~bos.alpha[bos_p], 16);
 				grcg_off();
 
 				if(~bos.alpha[bos_p]) {
@@ -656,7 +656,7 @@ void CBossAnim::put_8(void) const
 			if((vram_offset / ROW_SIZE) == intended_y) {
 				if(bos.alpha[bos_p]) {
 					grcg_setcolor_rmw(0);
-					VRAM_PUT(B, vram_offset, bos.alpha[bos_p], 16);
+					grcg_put(vram_offset, bos.alpha[bos_p], 16);
 					grcg_off();
 				}
 				vram_or_emptyopt(B, vram_offset, bos.planes.B[bos_p], 16);

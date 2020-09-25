@@ -293,7 +293,7 @@ void hud_bg_put(void)
 				byte = hud_bg[src_offset++];
 				while(runs--) {
 					if(byte != 0) {
-						VRAM_PUT(B, vram_offset, byte, 8);
+						grcg_put(vram_offset, byte, 8);
 					}
 					vram_offset++;
 				}
@@ -302,7 +302,7 @@ void hud_bg_put(void)
 		// Yes, in case we just did a putting run, we are in fact putting
 		// one more byte!
 		if(byte != 0) {
-			VRAM_PUT(B, vram_offset, byte, 8);
+			grcg_put(vram_offset, byte, 8);
 		}
 	}
 	grcg_off();

@@ -57,7 +57,7 @@ void shape_ellipse_arc_put(
 				(cur_x >= 0) && (cur_x < RES_X) &&
 				(cache_vram_offset >= 0) && (cache_vram_offset < PLANE_SIZE)
 			) {
-				VRAM_PUT(B, cache_vram_offset, cache_dots, 8);
+				grcg_put(cache_vram_offset, cache_dots, 8);
 			}
 			cache_dots = ((0x80) >> (cur_x & (BYTE_DOTS - 1)));
 			cache_vram_offset = vram_offset;

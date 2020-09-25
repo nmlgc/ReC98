@@ -16,8 +16,8 @@ void egc_copy_rect_1_to_0_16(screen_x_t x, vram_y_t y, pixel_t w, pixel_t h)
 	egc_start_copy();
 	for(row = 0; row < h; row++) {
 		for(col = x_floor, p = row_p; col < x_end; p += 2, col += 16) {
-			graph_accesspage_func(1); VRAM_SNAP(dots, B, p, 16);
-			graph_accesspage_func(0); VRAM_PUT(B, p, dots, 16);
+			graph_accesspage_func(1); egc_snap(dots, p, 16);
+			graph_accesspage_func(0); egc_put(p, dots, 16);
 		}
 		row_p += ROW_SIZE;
 	}

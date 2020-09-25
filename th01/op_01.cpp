@@ -225,7 +225,7 @@ void whiteline_put(screen_y_t y)
 	grcg_setcolor_rmw(15);
 	x = 0;
 	while(x < (ROW_SIZE / sizeof(dots32_t))) {
-		VRAM_CHUNK(B, vram_offset, 32) = 0xFFFFFFFF;
+		egc_put(vram_offset, 0xFFFFFFFF, 32);
 		x++;
 		vram_offset += static_cast<vram_offset_t>(sizeof(dots32_t));
 	}
