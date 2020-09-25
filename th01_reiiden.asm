@@ -76,7 +76,6 @@ main_01 group main_01_TEXT, main_01__TEXT, main_01___TEXT
 main_13 group main_13_TEXT, main_13__TEXT
 main_19 group main_19_TEXT, main_19__TEXT
 main_21 group main_21_TEXT, main_21__TEXT
-main_23 group main_23_TEXT, main_23__TEXT
 main_25 group main_25_TEXT, main_25__TEXT
 main_27 group main_27_TEXT, main_27__TEXT
 main_30 group main_30_TEXT, main_30__TEXT
@@ -8982,86 +8981,8 @@ main_23_TEXT	segment	byte public 'CODE' use16
 	extern @shape_ellipse_arc_sloppy_unput$qiiiiucucuc:proc
 	extern @shape_invincibility_put$qiii:proc
 	extern _graph_r_lineloop_put:proc
+	extern _graph_r_lineloop_unput:proc
 main_23_TEXT	ends
-
-main_23__TEXT	segment	byte public 'CODE' use16
-		assume cs:main_23
-		;org 0Bh
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_17C2F	proc far
-
-arg_0		= dword	ptr  6
-arg_4		= dword	ptr  0Ah
-arg_8		= word ptr  0Eh
-
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_17C72
-; ---------------------------------------------------------------------------
-
-loc_17C37:
-		lea	ax, [si+1]
-		add	ax, ax
-		les	bx, [bp+arg_4]
-		add	bx, ax
-		push	word ptr es:[bx]
-		lea	ax, [si+1]
-		add	ax, ax
-		les	bx, [bp+arg_0]
-		add	bx, ax
-		push	word ptr es:[bx]
-		mov	ax, si
-		add	ax, ax
-		les	bx, [bp+arg_4]
-		add	bx, ax
-		push	word ptr es:[bx]
-		mov	ax, si
-		add	ax, ax
-		les	bx, [bp+arg_0]
-		add	bx, ax
-		push	word ptr es:[bx]
-		call	_graph_r_line_unput
-		add	sp, 8
-		inc	si
-
-loc_17C72:
-		mov	ax, [bp+arg_8]
-		dec	ax
-		cmp	ax, si
-		jg	short loc_17C37
-		les	bx, [bp+arg_4]
-		push	word ptr es:[bx]
-		les	bx, [bp+arg_0]
-		push	word ptr es:[bx]
-		mov	ax, si
-		add	ax, ax
-		les	bx, [bp+arg_4]
-		add	bx, ax
-		push	word ptr es:[bx]
-		mov	ax, si
-		add	ax, ax
-		les	bx, [bp+arg_0]
-		add	bx, ax
-		push	word ptr es:[bx]
-
-loc_17C9E:
-		call	_graph_r_line_unput
-
-loc_17CA3:
-		add	sp, 8
-		pop	si
-		pop	bp
-		retf
-sub_17C2F	endp
-
-main_23__TEXT	ends
 
 ; ===========================================================================
 
@@ -18218,14 +18139,14 @@ loc_1E947:
 		push	word_39E1A
 		push	4
 		call	sub_1E886
-		push	4
+		push	4	; point_count
 		push	ss
 		lea	ax, [bp+@@y]
 		push	ax
 		push	ss
 		lea	ax, [bp+@@x]
 		push	ax
-		call	sub_17C2F
+		call	_graph_r_lineloop_unput
 		add	sp, 0Ah
 		cmp	word_3A6CA, 104h
 		jge	short loc_1E9A2
@@ -18394,14 +18315,14 @@ loc_1EAD2:
 		push	word_39E1A
 		push	4
 		call	sub_1E886
-		push	4
+		push	4	; point_count
 		push	ss
 		lea	ax, [bp+@@y]
 		push	ax
 		push	ss
 		lea	ax, [bp+@@x]
 		push	ax
-		call	sub_17C2F
+		call	_graph_r_lineloop_unput
 		add	sp, 0Ah
 		mov	word_3A6CA, 0
 
@@ -18472,14 +18393,14 @@ loc_1EB64:
 		push	word_39E1D
 		push	4
 		call	sub_1E886
-		push	4
+		push	4	; point_count
 		push	ss
 		lea	ax, [bp+@@y]
 		push	ax
 		push	ss
 		lea	ax, [bp+@@x]
 		push	ax
-		call	sub_17C2F
+		call	_graph_r_lineloop_unput
 		add	sp, 0Ah
 		mov	al, byte ptr word_39E1D
 		add	al, 0F4h
@@ -18603,14 +18524,14 @@ loc_1ECA1:
 		push	word_39E1D
 		push	4
 		call	sub_1E886
-		push	4
+		push	4	; point_count
 		push	ss
 		lea	ax, [bp+@@y]
 		push	ax
 		push	ss
 		lea	ax, [bp+@@x]
 		push	ax
-		call	sub_17C2F
+		call	_graph_r_lineloop_unput
 		add	sp, 0Ah
 		mov	word_3A6CA, 0
 
@@ -18697,22 +18618,22 @@ loc_1ED3A:
 		push	ax
 		push	4
 		call	sub_1E886
-		push	4
+		push	4	; point_count
 		push	ss
 		lea	ax, [bp+var_10]
 		push	ax
 		push	ss
 		lea	ax, [bp+var_8]
 		push	ax
-		call	sub_17C2F
-		push	4
+		call	_graph_r_lineloop_unput
+		push	4	; point_count
 		push	ss
 		lea	ax, [bp+var_20]
 		push	ax
 		push	ss
 		lea	ax, [bp+var_18]
 		push	ax
-		call	sub_17C2F
+		call	_graph_r_lineloop_unput
 		add	sp, 14h
 		mov	al, byte ptr word_39E22
 		add	al, 0FAh
@@ -18886,22 +18807,22 @@ loc_1EF00:
 		push	ax
 		push	4
 		call	sub_1E886
-		push	4
+		push	4	; point_count
 		push	ss
 		lea	ax, [bp+var_10]
 		push	ax
 		push	ss
 		lea	ax, [bp+var_8]
 		push	ax
-		call	sub_17C2F
-		push	4
+		call	_graph_r_lineloop_unput
+		push	4	; point_count
 		push	ss
 		lea	ax, [bp+var_20]
 		push	ax
 		push	ss
 		lea	ax, [bp+var_18]
 		push	ax
-		call	sub_17C2F
+		call	_graph_r_lineloop_unput
 		add	sp, 14h
 		mov	word_3A6CA, 0
 		call	sub_1E48B
@@ -19607,14 +19528,14 @@ loc_1F5DE:
 		push	word_39E57
 		push	4
 		call	sub_1E886
-		push	4
+		push	4	; point_count
 		push	ss
 		lea	ax, [bp+var_10]
 		push	ax
 		push	ss
 		lea	ax, [bp+var_8]
 		push	ax
-		call	sub_17C2F
+		call	_graph_r_lineloop_unput
 		add	sp, 0Ah
 		mov	al, byte ptr word_39E57
 		add	al, 0F4h
@@ -19736,14 +19657,14 @@ loc_1F717:
 		push	word_39E57
 		push	4
 		call	sub_1E886
-		push	4
+		push	4	; point_count
 		push	ss
 		lea	ax, [bp+var_10]
 		push	ax
 		push	ss
 		lea	ax, [bp+var_8]
 		push	ax
-		call	sub_17C2F
+		call	_graph_r_lineloop_unput
 		add	sp, 0Ah
 		mov	word_3A6CA, 0
 
@@ -19809,14 +19730,14 @@ loc_1F7AD:
 		push	word_39E5A+1
 		push	4
 		call	sub_1E886
-		push	4
+		push	4	; point_count
 		push	ss
 		lea	ax, [bp+var_10]
 		push	ax
 		push	ss
 		lea	ax, [bp+var_8]
 		push	ax
-		call	sub_17C2F
+		call	_graph_r_lineloop_unput
 		add	sp, 0Ah
 		cmp	word_3A6CA, 10Eh
 		jle	short loc_1F80B
@@ -19929,14 +19850,14 @@ loc_1F8B7:
 		push	word_39E5A+1
 		push	4
 		call	sub_1E886
-		push	4
+		push	4	; point_count
 		push	ss
 		lea	ax, [bp+var_10]
 		push	ax
 		push	ss
 		lea	ax, [bp+var_8]
 		push	ax
-		call	sub_17C2F
+		call	_graph_r_lineloop_unput
 		add	sp, 0Ah
 		mov	word_3A6CA, 0
 
@@ -20002,12 +19923,12 @@ loc_1F953:
 		push	word ptr byte_39E5F
 		push	4
 		call	sub_1E886
-		push	4
+		push	4	; point_count
 		push	ds
 		push	offset top_39E6C
 		push	ds
 		push	offset left_39E64
-		call	sub_17C2F
+		call	_graph_r_lineloop_unput
 		add	sp, 0Ah
 		mov	al, byte_39E5F
 		add	al, 3
@@ -20085,12 +20006,12 @@ loc_1FA30:
 		push	word ptr byte_39E5F
 		push	4
 		call	sub_1E886
-		push	4
+		push	4	; point_count
 		push	ds
 		push	offset top_39E6C
 		push	ds
 		push	offset left_39E64
-		call	sub_17C2F
+		call	_graph_r_lineloop_unput
 		add	sp, 0Ah
 		mov	word_3A6CA, 0
 

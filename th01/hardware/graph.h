@@ -84,6 +84,12 @@ void graph_r_box(
 void graph_r_lineloop_put(
 	const screen_x_t x[], const vram_y_t y[], int point_count, int col
 );
+
+// Like graph_r_lineloop_put(), but recovering the pixels along the given
+// lines from VRAM page 1 instead.
+void graph_r_lineloop_unput(
+	const screen_x_t x[], const vram_y_t y[], int point_count
+);
 /// -----------------------
 
 /// Text

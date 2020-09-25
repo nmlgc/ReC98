@@ -224,3 +224,15 @@ void graph_r_lineloop_put(
 	}
 	graph_r_line(x[i], y[i], x[0], y[0], col);
 }
+
+void graph_r_lineloop_unput(
+	const screen_x_t x[], const vram_y_t y[], int point_count
+)
+{
+	int i = 0;
+	while((point_count - 1) > i) {
+		graph_r_line_unput(x[i], y[i], x[i + 1], y[i + 1]);
+		i++;
+	}
+	graph_r_line_unput(x[i], y[i], x[0], y[0]);
+}
