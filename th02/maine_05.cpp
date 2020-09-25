@@ -5,6 +5,7 @@
 
 extern "C" {
 #include "th02/th02.h"
+#include "th02/math/vector.hpp"
 #include "th02/hardware/frmdelay.h"
 
 void pascal near rotrect_draw(int rad, unsigned char angle)
@@ -13,8 +14,8 @@ void pascal near rotrect_draw(int rad, unsigned char angle)
 	screen_y_t y[4];
 	int i;
 	for(i = 0; i < 4; i++) {
-		x[i] = ((rad * (long)CosTable8[angle]) >> 8) + 192;
-		y[i] = ((rad * (long)SinTable8[angle]) >> 8) + 200;
+		x[i] = polar_x_fast(192, rad, angle);
+		y[i] = polar_y_fast(200, rad, angle);
 		if(i & 1) {
 			angle += 81;
 		} else {

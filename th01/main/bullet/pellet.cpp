@@ -53,8 +53,8 @@ void vector2_to_player_from(
 		(player_center_y - y),
 		((player_left + (PLAYER_W / 2) - (PELLET_W / 2)) - x)
 	) + plus_angle;
-	ret_x = (static_cast<long>(length) * Cos8(plus_angle)) >> 8;
-	ret_y = (static_cast<long>(length) * Sin8(plus_angle)) >> 8;
+	ret_x = polar_x(0, length, plus_angle);
+	ret_y = polar_y(0, length, plus_angle);
 }
 
 // Sets the velocity for pellet #[i] in the given [pattern]. Returns true if
@@ -369,15 +369,16 @@ void CPellets::motion_type_apply_for_cur(void)
 		}
 		break;
 	case PM_SPIN:
-		#define to_spin_circle(coord) \
-			((static_cast<long>(coord) * PELLET_SPIN_CIRCLE_RADIUS) >> 8)
-		p->cur_left.v = (to_spin_circle(Cos8(p->angle)) + p->spin_center.x.v);
-		p->cur_top.v = (to_spin_circle(Sin8(p->angle)) + p->spin_center.y.v);
+		p->cur_left.v = polar_x(
+			p->spin_center.x.v, PELLET_SPIN_CIRCLE_RADIUS, p->angle
+		);
+		p->cur_top.v = polar_y(
+			p->spin_center.y.v, PELLET_SPIN_CIRCLE_RADIUS, p->angle
+		);
 		p->spin_center.x.v += p->spin_velocity.x.v;
 		p->spin_center.y.v += p->spin_velocity.y.v;
 		p->velocity.set(0.0f, 0.0f);
 		p->angle += PELLET_SPIN_DELTA_ANGLE;
-		#undef to_spin_circle
 		break;
 	case PM_CHASE:
 		vector2_between(

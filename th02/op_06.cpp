@@ -6,6 +6,7 @@
 extern "C" {
 #include "libs/kaja/kaja.h"
 #include "th02/th02.h"
+#include "th02/math/vector.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/formats/pi.h"
 #include "th02/snd/snd.h"
@@ -114,8 +115,8 @@ void pascal near polygon_build(
 	y >>= 4;
 	for(i = 0; i < npoint; i++) {
 		unsigned char point_angle = ((i << 8) / npoint) + angle;
-		pts[i].x = ((rad * (long)CosTable8[point_angle]) >> 8) + x;
-		pts[i].y = ((rad * (long)SinTable8[point_angle]) >> 8) + y;
+		pts[i].x = polar_x_fast(x, rad, point_angle);
+		pts[i].y = polar_y_fast(y, rad, point_angle);
 	}
 	pts[i].x = pts[0].x;
 	pts[i].y = pts[0].y;

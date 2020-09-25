@@ -2,8 +2,8 @@
 
 void pascal vector2(int &ret_x, int &ret_y, unsigned char angle, int length)
 {
-	ret_x = (static_cast<long>(length) * CosTable8[angle]) >> 8;
-	ret_y = (static_cast<long>(length) * SinTable8[angle]) >> 8;
+	ret_x = polar_x_fast(0, length, angle);
+	ret_y = polar_y_fast(0, length, angle);
 }
 
 void pascal vector2_between_plus(
@@ -18,6 +18,6 @@ void pascal vector2_between_plus(
 )
 {
 	plus_angle = iatan2((y2 - y1), (x2 - x1)) + plus_angle;
-	ret_x = (static_cast<long>(length) * CosTable8[plus_angle]) >> 8;
-	ret_y = (static_cast<long>(length) * SinTable8[plus_angle]) >> 8;
+	ret_x = polar_x_fast(0, length, plus_angle);
+	ret_y = polar_y_fast(0, length, plus_angle);
 }
