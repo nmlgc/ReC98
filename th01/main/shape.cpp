@@ -211,3 +211,16 @@ void shape_invincibility_put_with_mask_from_B_plane(
 	}
 	grcg_off();
 }
+
+// Why is this here?
+void graph_r_lineloop_put(
+	const screen_x_t x[], const vram_y_t y[], int point_count, int col
+)
+{
+	int i = 0;
+	while((point_count - 1) > i) {
+		graph_r_line(x[i], y[i], x[i + 1], y[i + 1], col);
+		i++;
+	}
+	graph_r_line(x[i], y[i], x[0], y[0], col);
+}

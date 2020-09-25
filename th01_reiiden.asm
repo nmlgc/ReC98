@@ -8981,88 +8981,13 @@ main_23_TEXT	segment	byte public 'CODE' use16
 	extern @shape_ellipse_arc_put$qiiiiiucucuc:proc
 	extern @shape_ellipse_arc_sloppy_unput$qiiiiucucuc:proc
 	extern @shape_invincibility_put$qiii:proc
+	extern _graph_r_lineloop_put:proc
 main_23_TEXT	ends
 
 main_23__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_23
 		;org 0Bh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_17BAE	proc far
-
-arg_0		= dword	ptr  6
-arg_4		= dword	ptr  0Ah
-arg_8		= word ptr  0Eh
-arg_A		= word ptr  10h
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, [bp+arg_A]
-		xor	si, si
-		jmp	short loc_17BF6
-; ---------------------------------------------------------------------------
-
-loc_17BBA:
-		push	di
-		lea	ax, [si+1]
-		add	ax, ax
-		les	bx, [bp+arg_4]
-		assume es:nothing
-		add	bx, ax
-		push	word ptr es:[bx]
-		lea	ax, [si+1]
-		add	ax, ax
-		les	bx, [bp+arg_0]
-		add	bx, ax
-		push	word ptr es:[bx]
-		mov	ax, si
-		add	ax, ax
-		les	bx, [bp+arg_4]
-		add	bx, ax
-		push	word ptr es:[bx]
-		mov	ax, si
-		add	ax, ax
-		les	bx, [bp+arg_0]
-		add	bx, ax
-		push	word ptr es:[bx]
-		call	_graph_r_line
-		add	sp, 0Ah
-		inc	si
-
-loc_17BF6:
-		mov	ax, [bp+arg_8]
-		dec	ax
-		cmp	ax, si
-		jg	short loc_17BBA
-		push	di
-		les	bx, [bp+arg_4]
-		push	word ptr es:[bx]
-		les	bx, [bp+arg_0]
-		push	word ptr es:[bx]
-		mov	ax, si
-		add	ax, ax
-		les	bx, [bp+arg_4]
-		add	bx, ax
-		push	word ptr es:[bx]
-		mov	ax, si
-		add	ax, ax
-		les	bx, [bp+arg_0]
-		add	bx, ax
-		push	word ptr es:[bx]
-		call	_graph_r_line
-		add	sp, 0Ah
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_17BAE	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -18247,8 +18172,8 @@ sub_1E908	proc far
 
 @@angle		= byte ptr -13h
 var_12		= word ptr -12h
-var_10		= byte ptr -10h
-var_8		= byte ptr -8
+@@y		= byte ptr -10h
+@@x		= byte ptr -8
 
 		enter	14h, 0
 		push	si
@@ -18282,10 +18207,10 @@ loc_1E947:
 		add	ax, 80
 		mov	[bp+var_12], ax
 		push	ss
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@x]
 		push	ax
 		push	ss
-		lea	ax, [bp+var_10]
+		lea	ax, [bp+@@y]
 		push	ax
 		push	di
 		push	[bp+var_12]
@@ -18295,10 +18220,10 @@ loc_1E947:
 		call	sub_1E886
 		push	4
 		push	ss
-		lea	ax, [bp+var_10]
+		lea	ax, [bp+@@y]
 		push	ax
 		push	ss
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@x]
 		push	ax
 		call	sub_17C2F
 		add	sp, 0Ah
@@ -18330,14 +18255,14 @@ loc_1E9BA:
 loc_1E9C6:
 		mov	bx, si
 		add	bx, bx
-		lea	ax, [bp+var_10]
+		lea	ax, [bp+@@y]
 		add	bx, ax
 		mov	ax, ss:[bx]
 		sub	ax, [bp+var_12]
 		push	ax
 		mov	bx, si
 		add	bx, bx
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@x]
 		add	bx, ax
 		mov	ax, ss:[bx]
 		sub	ax, di
@@ -18350,12 +18275,12 @@ loc_1E9C6:
 		push	word ptr [bp+@@angle]
 		mov	bx, si
 		add	bx, bx
-		lea	ax, [bp+var_10]
+		lea	ax, [bp+@@y]
 		add	bx, ax
 		push	word ptr ss:[bx]
 		mov	bx, si
 		add	bx, bx
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@x]
 		add	bx, ax
 		push	word ptr ss:[bx]
 		push	ds
@@ -18380,14 +18305,14 @@ loc_1EA2D:
 loc_1EA31:
 		mov	bx, si
 		add	bx, bx
-		lea	ax, [bp+var_10]
+		lea	ax, [bp+@@y]
 		add	bx, ax
 		mov	ax, 384
 		sub	ax, ss:[bx]
 		push	ax
 		mov	bx, si
 		add	bx, bx
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@x]
 		add	bx, ax
 		mov	ax, _player_left
 		add	ax, 12
@@ -18405,12 +18330,12 @@ loc_1EA31:
 		push	word ptr [bp+@@angle]
 		mov	bx, si
 		add	bx, bx
-		lea	ax, [bp+var_10]
+		lea	ax, [bp+@@y]
 		add	bx, ax
 		push	word ptr ss:[bx]
 		mov	bx, si
 		add	bx, bx
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@x]
 		add	bx, ax
 		push	word ptr ss:[bx]
 		push	ds
@@ -18427,10 +18352,10 @@ loc_1EA9A:
 
 loc_1EA9F:
 		push	ss
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@x]
 		push	ax
 		push	ss
-		lea	ax, [bp+var_10]
+		lea	ax, [bp+@@y]
 		push	ax
 		push	di
 		push	[bp+var_12]
@@ -18438,14 +18363,14 @@ loc_1EA9F:
 		push	word_39E1A
 		push	4
 		call	sub_1E886
-		push	70004h
+		push	4 or (7 shl 16)	; (point_count) or (col shl 16)
 		push	ss
-		lea	ax, [bp+var_10]
+		lea	ax, [bp+@@y]
 		push	ax
 		push	ss
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@x]
 		push	ax
-		call	sub_17BAE
+		call	_graph_r_lineloop_put
 		add	sp, 0Ch
 
 loc_1EAD2:
@@ -18458,10 +18383,10 @@ loc_1EAD2:
 		add	ax, 80
 		mov	[bp+var_12], ax
 		push	ss
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@x]
 		push	ax
 		push	ss
-		lea	ax, [bp+var_10]
+		lea	ax, [bp+@@y]
 		push	ax
 		push	di
 		push	[bp+var_12]
@@ -18471,10 +18396,10 @@ loc_1EAD2:
 		call	sub_1E886
 		push	4
 		push	ss
-		lea	ax, [bp+var_10]
+		lea	ax, [bp+@@y]
 		push	ax
 		push	ss
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@x]
 		push	ax
 		call	sub_17C2F
 		add	sp, 0Ah
@@ -18500,8 +18425,8 @@ var_18		= word ptr -18h
 @@vector_y		= word ptr -16h
 @@vector_x		= word ptr -14h
 var_12		= word ptr -12h
-var_10		= byte ptr -10h
-var_8		= byte ptr -8
+@@y		= byte ptr -10h
+@@x		= byte ptr -8
 
 		enter	18h, 0
 		push	si
@@ -18536,10 +18461,10 @@ loc_1EB64:
 		add	ax, 80
 		mov	di, ax
 		push	ss
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@x]
 		push	ax
 		push	ss
-		lea	ax, [bp+var_10]
+		lea	ax, [bp+@@y]
 		push	ax
 		push	si
 		push	di
@@ -18549,10 +18474,10 @@ loc_1EB64:
 		call	sub_1E886
 		push	4
 		push	ss
-		lea	ax, [bp+var_10]
+		lea	ax, [bp+@@y]
 		push	ax
 		push	ss
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@x]
 		push	ax
 		call	sub_17C2F
 		add	sp, 0Ah
@@ -18613,12 +18538,12 @@ loc_1EC0B:
 		fwait
 		mov	bx, [bp+var_12]
 		add	bx, bx
-		lea	ax, [bp+var_10]
+		lea	ax, [bp+@@y]
 		add	bx, ax
 		push	word ptr ss:[bx] ; int
 		mov	bx, [bp+var_12]
 		add	bx, bx
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@x]
 		add	bx, ax
 		push	word ptr ss:[bx] ; int
 		push	ds
@@ -18636,10 +18561,10 @@ loc_1EC62:
 
 loc_1EC70:
 		push	ss
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@x]
 		push	ax
 		push	ss
-		lea	ax, [bp+var_10]
+		lea	ax, [bp+@@y]
 		push	ax
 		push	si
 		push	di
@@ -18647,14 +18572,14 @@ loc_1EC70:
 		push	word_39E1D
 		push	4
 		call	sub_1E886
-		push	70004h
+		push	4 or (7 shl 16)	; (point_count) or (col shl 16)
 		push	ss
-		lea	ax, [bp+var_10]
+		lea	ax, [bp+@@y]
 		push	ax
 		push	ss
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@x]
 		push	ax
-		call	sub_17BAE
+		call	_graph_r_lineloop_put
 		add	sp, 0Ch
 
 loc_1ECA1:
@@ -18667,10 +18592,10 @@ loc_1ECA1:
 		add	ax, 80
 		mov	di, ax
 		push	ss
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@x]
 		push	ax
 		push	ss
-		lea	ax, [bp+var_10]
+		lea	ax, [bp+@@y]
 		push	ax
 		push	si
 		push	di
@@ -18680,10 +18605,10 @@ loc_1ECA1:
 		call	sub_1E886
 		push	4
 		push	ss
-		lea	ax, [bp+var_10]
+		lea	ax, [bp+@@y]
 		push	ax
 		push	ss
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@x]
 		push	ax
 		call	sub_17C2F
 		add	sp, 0Ah
@@ -18907,22 +18832,22 @@ loc_1EE95:
 		push	ax
 		push	4
 		call	sub_1E886
-		push	70004h
+		push	4 or (7 shl 16)	; (point_count) or (col shl 16)
 		push	ss
 		lea	ax, [bp+var_10]
 		push	ax
 		push	ss
 		lea	ax, [bp+var_8]
 		push	ax
-		call	sub_17BAE
-		push	70004h
+		call	_graph_r_lineloop_put
+		push	4 or (7 shl 16)	; (point_count) or (col shl 16)
 		push	ss
 		lea	ax, [bp+var_20]
 		push	ax
 		push	ss
 		lea	ax, [bp+var_18]
 		push	ax
-		call	sub_17BAE
+		call	_graph_r_lineloop_put
 		add	sp, 18h
 		mov	_Pellets.PELLET_spawn_with_cloud, 0
 
@@ -19780,14 +19705,14 @@ loc_1F6E4:
 		push	word_39E57
 		push	4
 		call	sub_1E886
-		push	70004h
+		push	4 or (7 shl 16)	; (point_count) or (col shl 16)
 		push	ss
 		lea	ax, [bp+var_10]
 		push	ax
 		push	ss
 		lea	ax, [bp+var_8]
 		push	ax
-		call	sub_17BAE
+		call	_graph_r_lineloop_put
 		add	sp, 0Ch
 
 loc_1F717:
@@ -19973,14 +19898,14 @@ loc_1F884:
 		push	word_39E5A+1
 		push	4
 		call	sub_1E886
-		push	70004h
+		push	4 or (7 shl 16)	; (point_count) or (col shl 16)
 		push	ss
 		lea	ax, [bp+var_10]
 		push	ax
 		push	ss
 		lea	ax, [bp+var_8]
 		push	ax
-		call	sub_17BAE
+		call	_graph_r_lineloop_put
 		add	sp, 0Ch
 
 loc_1F8B7:
@@ -20068,9 +19993,9 @@ loc_1F953:
 		add	ax, 80
 		mov	di, ax
 		push	ds
-		push	offset unk_39E64
+		push	offset left_39E64
 		push	ds
-		push	offset unk_39E6C
+		push	offset top_39E6C
 		push	si
 		push	ax
 		push	word_39E60
@@ -20079,9 +20004,9 @@ loc_1F953:
 		call	sub_1E886
 		push	4
 		push	ds
-		push	offset unk_39E6C
+		push	offset top_39E6C
 		push	ds
-		push	offset unk_39E64
+		push	offset left_39E64
 		call	sub_17C2F
 		add	sp, 0Ah
 		mov	al, byte_39E5F
@@ -20093,21 +20018,21 @@ loc_1F953:
 
 loc_1F9AD:
 		push	ds
-		push	offset unk_39E64
+		push	offset left_39E64
 		push	ds
-		push	offset unk_39E6C
+		push	offset top_39E6C
 		push	si
 		push	di
 		push	word_39E60
 		push	word ptr byte_39E5F
 		push	4
 		call	sub_1E886
-		push	70004h
+		push	4 or (7 shl 16)	; (point_count) or (col shl 16)
 		push	ds
-		push	offset unk_39E6C
+		push	offset top_39E6C
 		push	ds
-		push	offset unk_39E64
-		call	sub_17BAE
+		push	offset left_39E64
+		call	_graph_r_lineloop_put
 		add	sp, 0Ch
 
 loc_1F9DA:
@@ -20129,10 +20054,10 @@ loc_1F9DA:
 		push	ax
 		mov	bx, [bp+var_2]
 		add	bx, bx
-		push	word ptr [bx+54CCh]
+		push	top_39E6C[bx]
 		mov	bx, [bp+var_2]
 		add	bx, bx
-		push	word ptr [bx+54C4h]
+		push	left_39E64[bx]
 		mov	ax, [bp+var_2]
 		imul	ax, 45h
 		add	ax, 4800h
@@ -20151,9 +20076,9 @@ loc_1FA30:
 		add	ax, 80
 		mov	di, ax
 		push	ds
-		push	offset unk_39E64
+		push	offset left_39E64
 		push	ds
-		push	offset unk_39E6C
+		push	offset top_39E6C
 		push	si
 		push	ax
 		push	word_39E60
@@ -20162,9 +20087,9 @@ loc_1FA30:
 		call	sub_1E886
 		push	4
 		push	ds
-		push	offset unk_39E6C
+		push	offset top_39E6C
 		push	ds
-		push	offset unk_39E64
+		push	offset left_39E64
 		call	sub_17C2F
 		add	sp, 0Ah
 		mov	word_3A6CA, 0
@@ -48360,10 +48285,8 @@ angle_39E5E	db ?
 byte_39E5F	db ?
 word_39E60	dw ?
 		dw ?
-unk_39E64	db    ?	;
-		db 7 dup(?)
-unk_39E6C	db    ?	;
-		db 7 dup(?)
+left_39E64	dw 4 dup (?)
+top_39E6C 	dw 4 dup (?)
 word_39E74	dw ?
 word_39E76	dw ?
 word_39E78	dw ?
