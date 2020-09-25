@@ -1711,14 +1711,14 @@ loc_C57D:
 		sub	ax, [bx+3E3Ah]
 
 loc_C588:
-		push	ax
+		push	ax	; cel
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+3E5Ah]
+		push	word ptr [bx+3E5Ah]	; top
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+3E4Ah]
-		call	sub_179F8
+		push	word ptr [bx+3E4Ah]	; left
+		call	@shape_invincibility_put$qiii
 		add	sp, 6
 
 loc_C5A1:
@@ -8980,234 +8980,13 @@ main_23_TEXT	segment	byte public 'CODE' use16
 	extern @shape8x8_flake_put$qiii:proc
 	extern @shape_ellipse_arc_put$qiiiiiucucuc:proc
 	extern @shape_ellipse_arc_sloppy_unput$qiiiiucucuc:proc
+	extern @shape_invincibility_put$qiii:proc
 main_23_TEXT	ends
 
 main_23__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_23
 		;org 0Bh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_179F8	proc far
-
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		enter	4, 0
-		push	si
-		push	di
-		mov	di, [bp+arg_4]
-		cmp	[bp+arg_0], 0
-		jl	loc_17AA5
-		push	di
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		nopcall	sub_17AA9
-		add	sp, 6
-		mov	ax, [bp+arg_0]
-		mov	bx, 8
-		cwd
-		idiv	bx
-		mov	dx, [bp+arg_2]
-		imul	dx, 50h
-		add	ax, dx
-		mov	[bp+var_2], ax
-		mov	ax, [bp+arg_0]
-		cwd
-		idiv	bx
-		mov	[bp+var_4], dx
-		cmp	di, 3
-		jg	short loc_17AA5
-		call	_grcg_setcolor_rmw stdcall, 10
-		pop	cx
-		xor	si, si
-		jmp	short loc_17A9B
-; ---------------------------------------------------------------------------
-
-loc_17A46:
-		cmp	[bp+var_4], 0
-		jnz	short loc_17A61
-		mov	bx, di
-		shl	bx, 3
-		mov	al, [bx+si+10C2h]
-		les	bx, _VRAM_PLANE_B
-		add	bx, [bp+var_2]
-		mov	es:[bx], al
-		jmp	short loc_17A8F
-; ---------------------------------------------------------------------------
-
-loc_17A61:
-		mov	bx, di
-		shl	bx, 3
-		mov	al, [bx+si+10C2h]
-		mov	ah, 0
-		mov	cl, 10h
-		sub	cl, byte ptr [bp+var_4]
-		shl	ax, cl
-		mov	bx, di
-		shl	bx, 3
-		mov	dl, [bx+si+10C2h]
-		mov	dh, 0
-		mov	cl, byte ptr [bp+var_4]
-		sar	dx, cl
-		add	ax, dx
-		les	bx, _VRAM_PLANE_B
-		add	bx, [bp+var_2]
-		mov	es:[bx], ax
-
-loc_17A8F:
-		add	[bp+var_2], 50h	; 'P'
-		cmp	[bp+var_2], 7D00h
-		jg	short loc_17AA0
-		inc	si
-
-loc_17A9B:
-		cmp	si, 8
-		jl	short loc_17A46
-
-loc_17AA0:
-		call	_grcg_off_func
-
-loc_17AA5:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_179F8	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_17AA9	proc far
-
-var_4		= byte ptr -4
-var_3		= byte ptr -3
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		enter	4, 0
-		push	si
-		push	di
-		cmp	[bp+arg_0], 0
-		jl	loc_17BAA
-		mov	ax, [bp+arg_0]
-		mov	bx, 8
-		cwd
-		idiv	bx
-		mov	dx, [bp+arg_2]
-		imul	dx, 50h
-		add	ax, dx
-		mov	si, ax
-		mov	ax, [bp+arg_0]
-		cwd
-		idiv	bx
-		mov	[bp+var_2], dx
-		cmp	[bp+arg_4], 3
-		jg	loc_17BAA
-		call	_grcg_setcolor_rmw stdcall, 10
-		pop	cx
-		xor	di, di
-		jmp	loc_17B9E
-; ---------------------------------------------------------------------------
-
-loc_17AE8:
-		cmp	[bp+var_2], 0
-		jnz	short loc_17B20
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		mov	ax, 0A800h
-		mov	es, ax
-		assume es:nothing
-		mov	al, es:[si]
-		mov	bx, [bp+arg_4]
-		shl	bx, 3
-		and	al, [bx+di+10C2h]
-		mov	[bp+var_3], al
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		mov	ax, 0A800h
-		mov	dl, [bp+var_3]
-		mov	es, ax
-		mov	es:[si], dl
-		jmp	short loc_17B94
-; ---------------------------------------------------------------------------
-
-loc_17B20:
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		mov	ax, 0A800h
-		mov	es, ax
-		mov	al, es:[si]
-		mov	bx, [bp+arg_4]
-		shl	bx, 3
-		mov	dl, [bx+di+10C2h]
-		mov	dh, 0
-		mov	cl, byte ptr [bp+var_2]
-		sar	dx, cl
-		and	al, dl
-		mov	[bp+var_3], al
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		mov	ax, 0A800h
-		mov	es, ax
-		mov	al, es:[si+1]
-		mov	bx, [bp+arg_4]
-		shl	bx, 3
-		mov	dl, [bx+di+10C2h]
-		mov	cl, 8
-		sub	cl, byte ptr [bp+var_2]
-		shl	dl, cl
-		and	al, dl
-		mov	[bp+var_4], al
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		mov	ax, 0A800h
-		mov	dl, [bp+var_3]
-		mov	es, ax
-		mov	es:[si], dl
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		mov	ax, 0A800h
-		mov	dl, [bp+var_4]
-		mov	es, ax
-		mov	es:[si+1], dl
-
-loc_17B94:
-		add	si, 50h	; 'P'
-		cmp	si, 7D00h
-		jg	short loc_17BA5
-		inc	di
-
-loc_17B9E:
-		cmp	di, 8
-		jl	loc_17AE8
-
-loc_17BA5:
-		call	_grcg_off_func
-
-loc_17BAA:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_17AA9	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -47910,38 +47689,7 @@ include th01/hiscore/regist[data].asm
 include th01/main/boss/entity_a[data].asm
 include th01/formats/pf[data].asm
 include th01/sprites/shape8x8.asp
-		db    0
-		db    0
-		db  18h
-		db  2Ch	; ,
-		db  2Ch	; ,
-		db  18h
-		db    0
-		db    0
-		db    0
-		db  18h
-		db  2Ch	; ,
-		db  7Eh	; ~
-		db  7Eh	; ~
-		db  2Ch	; ,
-		db  18h
-		db    0
-		db  18h
-		db  18h
-		db  2Ch	; ,
-		db 0FFh
-		db 0FFh
-		db  2Ch	; ,
-		db  18h
-		db  18h
-		db  18h
-		db  2Ch	; ,
-		db  5Ah	; Z
-		db 0FFh
-		db 0FFh
-		db  5Ah	; Z
-		db  2Ch	; ,
-		db  18h
+include th01/sprites/shape_in.asp
 aBomb		db 'Bomb',0
 aExtend		db 'Extend!!',0
 aVpf		db 'ÇP‰›',0

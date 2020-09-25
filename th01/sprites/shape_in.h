@@ -1,0 +1,6 @@
+static const int SHAPE_INVINCIBILITY_COUNT = 4;
+static const pixel_t SHAPE_INVINCIBILITY_W = 8;
+static const pixel_t SHAPE_INVINCIBILITY_H = 8;
+
+extern const dots8_t
+	sSHAPE_INVINCIBILITY[SHAPE_INVINCIBILITY_COUNT][SHAPE_INVINCIBILITY_H];

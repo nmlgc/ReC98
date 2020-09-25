@@ -27,3 +27,7 @@ void shape_ellipse_arc_sloppy_unput(
 	unsigned char angle_start,
 	unsigned char angle_end
 );
+
+// Blits the given [cel] of the hardcoded invincibility sprites to
+// (left, top).
+void shape_invincibility_put(screen_x_t left, vram_y_t top, int cel);

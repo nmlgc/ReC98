@@ -1,4 +1,5 @@
 #include "th01/sprites/shape8x8.h"
+#include "th01/sprites/shape_in.h"
 #include "th01/main/shape.hpp"
 
 #define shape8x8_put(shape, left, top, col) \
@@ -99,4 +100,114 @@ void shape_ellipse_arc_sloppy_unput(
 			prev_y = cur_y;
 		}
 	}
+}
+
+void shape_invincibility_put_with_mask_from_B_plane(
+	screen_x_t left, vram_y_t top, int cel
+);
+
+void shape_invincibility_put(screen_x_t left, vram_y_t top, int cel)
+{
+	if(left < 0) {
+		return;
+	}
+	shape_invincibility_put_with_mask_from_B_plane(left, top, cel);
+
+	vram_offset_t vram_offset = vram_offset_divmul(left, top);
+	int first_bit = (left % BYTE_DOTS);
+
+	if(cel > (SHAPE_INVINCIBILITY_COUNT - 1)) {
+		return;
+	}
+
+	grcg_setcolor_rmw(10);
+	for(pixel_t y = 0; y < SHAPE_INVINCIBILITY_H; y++) {
+		#define sprite sSHAPE_INVINCIBILITY[cel][y]
+
+		if(first_bit == 0) {
+			grcg_put(vram_offset, sprite, 8);
+		} else {
+			grcg_put(
+				vram_offset, (
+					(sprite << ((BYTE_DOTS * 2) - first_bit)) +
+					(sprite >> first_bit)
+				),
+				16
+			);
+		}
+		vram_offset += ROW_SIZE;
+		if(vram_offset > PLANE_SIZE) { // Clip at the bottom edge
+			break;
+		}
+
+		#undef sprite
+	}
+	grcg_off();
+}
+
+// How do you even?!
+#undef grcg_put
+
+#define grcg_put(vram_offset, src) \
+	/* Nope, pokeb() doesn't generate the same code */ \
+	*reinterpret_cast<dots8_t *>(MK_FP(SEG_PLANE_B, vram_offset)) = src
+
+#define grcg_peek(vram_offset) \
+	peekb(SEG_PLANE_B, vram_offset)
+
+// Surely this function was meant to just regularly unblit the sprite via the
+// EGC? The GRCG RMW mode has no effect on VRAM reads, and simply returns the
+// exact bytes at the given offset on the given (that is, the B) plane. As a
+// result, this unblitting attempt actually blits the sprite again, masked by
+// whatever was in VRAM plane B at the given position before calling this
+// function.
+void shape_invincibility_put_with_mask_from_B_plane(
+	screen_x_t left, vram_y_t top, int cel
+)
+{
+	if(left < 0) {
+		return;
+	}
+
+	vram_offset_t vram_offset = vram_offset_divmul(left, top);
+	int first_bit = (left % BYTE_DOTS);
+
+	if(cel > (SHAPE_INVINCIBILITY_COUNT - 1)) {
+		return;
+	}
+
+	grcg_setcolor_rmw(10);
+	for(pixel_t y = 0; y < SHAPE_INVINCIBILITY_H; y++) {
+		#define sprite sSHAPE_INVINCIBILITY[cel][y]
+
+		if(first_bit == 0) {
+			dots8_t bg_B;
+
+			graph_accesspage_func(1); bg_B = (grcg_peek(vram_offset) & sprite);
+			graph_accesspage_func(0); grcg_put(vram_offset, bg_B);
+		} else {
+			// MODDERS: Add clipping at the right edge
+			dots8_t bg_B_left;
+			dots8_t bg_B_right;
+
+			graph_accesspage_func(1);
+			bg_B_left = (grcg_peek(vram_offset + 0) & (sprite >> first_bit));
+
+			graph_accesspage_func(1);
+			bg_B_right = (
+				grcg_peek(vram_offset + 1) &
+				(sprite << (BYTE_DOTS - first_bit))
+			);
+
+			graph_accesspage_func(0); grcg_put((vram_offset + 0), bg_B_left);
+			graph_accesspage_func(0); grcg_put((vram_offset + 1), bg_B_right);
+		}
+
+		vram_offset += ROW_SIZE;
+		if(vram_offset > PLANE_SIZE) { // Clip at the bottom edge
+			break;
+		}
+		#undef sprite
+	}
+	grcg_off();
 }
