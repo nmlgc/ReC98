@@ -8978,127 +8978,13 @@ main_23_TEXT	segment	byte public 'CODE' use16
 	extern @shape8x8_diamond_put$qiii:proc
 	extern @shape8x8_star_put$qiii:proc
 	extern @shape8x8_flake_put$qiii:proc
+	extern @shape_ellipse_arc_put$qiiiiiucucuc:proc
 main_23_TEXT	ends
 
 main_23__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_23
 		;org 0Bh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1786D	proc far
-
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_1		= byte ptr -1
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-@@col		= word ptr  0Eh
-arg_A		= byte ptr  10h
-arg_C		= byte ptr  12h
-arg_E		= byte ptr  14h
-
-		enter	8, 0
-		push	si
-		push	di
-		mov	[bp+var_1], 0
-		mov	di, 0FFFFh
-		call	_grcg_setcolor_rmw stdcall, [bp+@@col]
-		pop	cx
-		mov	al, [bp+arg_C]
-		cmp	al, [bp+arg_E]
-		ja	loc_17952
-		mov	al, [bp+arg_C]
-		mov	ah, 0
-		mov	si, ax
-		jmp	loc_17942
-; ---------------------------------------------------------------------------
-
-loc_17897:
-		movsx	eax, [bp+arg_4]
-		mov	bx, si
-		and	bx, 255
-		add	bx, bx
-		movsx	edx, _CosTable8[bx]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, [bp+arg_0]
-		mov	[bp+var_6], ax
-		movsx	eax, [bp+arg_6]
-		mov	bx, si
-		and	bx, 255
-		add	bx, bx
-		movsx	edx, _SinTable8[bx]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, [bp+arg_2]
-		mov	[bp+var_8], ax
-		mov	ax, [bp+var_6]
-		sar	ax, 3
-		mov	dx, [bp+var_8]
-		shl	dx, 6
-		add	ax, dx
-		mov	dx, [bp+var_8]
-		shl	dx, 4
-		add	ax, dx
-		mov	[bp+var_4], ax
-		cmp	di, [bp+var_4]
-		jz	short loc_1792D
-		cmp	[bp+var_6], 0
-		jl	short loc_1791A
-		cmp	[bp+var_6], 280h
-		jge	short loc_1791A
-		or	di, di
-		jl	short loc_1791A
-		cmp	di, 7D00h
-		jge	short loc_1791A
-		les	bx, _VRAM_PLANE_B
-		add	bx, di
-		mov	al, [bp+var_1]
-		mov	es:[bx], al
-
-loc_1791A:
-		mov	cl, byte ptr [bp+var_6]
-		and	cl, 7
-		mov	ax, 80h
-		sar	ax, cl
-		mov	[bp+var_1], al
-		mov	di, [bp+var_4]
-		jmp	short loc_1793B
-; ---------------------------------------------------------------------------
-
-loc_1792D:
-		mov	cl, byte ptr [bp+var_6]
-		and	cl, 7
-		mov	ax, 80h
-		sar	ax, cl
-		or	[bp+var_1], al
-
-loc_1793B:
-		mov	al, [bp+arg_A]
-		mov	ah, 0
-		add	si, ax
-
-loc_17942:
-		mov	al, [bp+arg_E]
-		mov	ah, 0
-		cmp	ax, si
-		jge	loc_17897
-		call	_grcg_off_func
-
-loc_17952:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_1786D	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9906,26 +9792,26 @@ arg_20		= dword	ptr  26h
 ; ---------------------------------------------------------------------------
 
 loc_17F3C:
-		push	255
-		push	0
-		push	8
-		push	7
+		push	255	; angle_end
+		push	0	; angle_start
+		push	8	; angle_step
+		push	7	; col
 		les	bx, [bp+arg_16]
 		mov	al, es:[bx]
 		mov	ah, 0
-		push	ax
+		push	ax	; radius_y
 		mov	al, es:[bx]
 		mov	ah, 0
-		push	ax
+		push	ax	; radius_x
 		les	bx, [bp+@@top]
 		mov	ax, es:[bx]
 		add	ax, 16
-		push	ax
+		push	ax	; center_y
 		les	bx, [bp+@@left]
 		mov	ax, es:[bx]
 		add	ax, 16
-		push	ax
-		call	sub_1786D
+		push	ax	; center_x
+		call	@shape_ellipse_arc_put$qiiiiiucucuc
 		add	sp, 10h
 		jmp	loc_18029
 ; ---------------------------------------------------------------------------
@@ -19889,23 +19775,23 @@ loc_1F3DD:
 		add	bx, bx
 		cmp	word ptr [bx+5487h], 20h ; ' '
 		jle	short loc_1F458
-		push	255
-		push	0
-		push	4
-		push	7
+		push	255	; angle_end
+		push	0	; angle_start
+		push	4	; angle_step
+		push	7	; col
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+5487h]
+		push	word ptr [bx+5487h]	; radius_y
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+5487h]
+		push	word ptr [bx+5487h]	; radius_x
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+54A7h]
+		push	word ptr [bx+54A7h]	; center_y
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+5497h]
-		call	sub_1786D
+		push	word ptr [bx+5497h]	; center_x
+		call	@shape_ellipse_arc_put$qiiiiiucucuc
 		push	1
 		mov	bx, si
 		add	bx, bx
@@ -30653,20 +30539,20 @@ var_8		= qword	ptr -8
 loc_2546B:
 		cmp	word_3A6CA, 3Ch	; '<'
 		jnz	short loc_254A0
-		push	255
-		push	0
-		push	2
-		push	40020h
-		push	20h ; ' '
+		push	255	; angle_end
+		push	0	; angle_start
+		push	2	; angle_step
+		push	32 or (4 shl 16)	; (radius_y) or (col shl 16)
+		push	32	; radius_x
 		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 32
-		push	ax
+		push	ax	; center_y
 		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
-		push	ax
-		call	sub_1786D
+		push	ax	; center_x
+		call	@shape_ellipse_arc_put$qiiiiiucucuc
 		add	sp, 10h
-		mov	word_3A6E3, 20h	; ' '
+		mov	radius_3A6E3, 32
 		jmp	loc_255B4
 ; ---------------------------------------------------------------------------
 
@@ -30684,8 +30570,8 @@ loc_254A0:
 		push	255
 		push	0
 		push	2
-		push	word_3A6E3
-		push	word_3A6E3
+		push	radius_3A6E3
+		push	radius_3A6E3
 		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 32
 		push	ax
@@ -30694,9 +30580,9 @@ loc_254A0:
 		push	ax
 		call	sub_17956
 		add	sp, 0Eh
-		add	word_3A6E3, 8
-		push	255
-		push	0
+		add	radius_3A6E3, 8
+		push	255	; angle_end
+		push	0	; angle_start
 		cmp	word_3A6CA, 64h	; 'd'
 		jge	short loc_254F7
 		mov	al, 2
@@ -30711,20 +30597,20 @@ loc_254F7:
 ; ---------------------------------------------------------------------------
 
 loc_25502:
-		mov	al, 20h	; ' '
+		mov	al, 20h
 
 loc_25504:
-		push	ax
-		push	4
-		push	word_3A6E3
-		push	word_3A6E3
+		push	ax	; angle_step
+		push	4	; col
+		push	radius_3A6E3	; radius_y
+		push	radius_3A6E3	; radius_x
 		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 32
-		push	ax
+		push	ax	; center_y
 		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
-		push	ax
-		call	sub_1786D
+		push	ax	; center_x
+		call	@shape_ellipse_arc_put$qiiiiiucucuc
 		add	sp, 10h
 		jmp	loc_255B4
 ; ---------------------------------------------------------------------------
@@ -30735,8 +30621,8 @@ loc_25528:
 		push	255
 		push	0
 		push	20h ; ' '
-		push	word_3A6E3
-		push	word_3A6E3
+		push	radius_3A6E3
+		push	radius_3A6E3
 		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 32
 		push	ax
@@ -31149,67 +31035,67 @@ loc_25977:
 		fild	[bp+var_6]
 		fadd	qword ptr dbl_35D95
 		call	ftol@
-		push	ax
-		push	word ptr angle_3A6FB
-		push	1
-		push	70080h
-		push	80h ; '?'
+		push	ax	; angle_end
+		push	word ptr angle_3A6FB	; angle_start
+		push	1	; angle_step
+		push	128 or (7 shl 16)	; (radius_y) or (col shl 16)
+		push	128	; radius_x
 		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
-		push	ax
+		push	ax	; center_y
 		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
-		push	ax
-		call	sub_1786D
+		push	ax	; center_x
+		call	@shape_ellipse_arc_put$qiiiiiucucuc
 		mov	al, angle_3A6FB
 		add	al, 42h
-		push	ax
+		push	ax	; angle_end
 		mov	al, angle_3A6FB
 		add	al, 40h
-		push	ax
-		push	1
-		push	70080h
-		push	80h ; '?'
+		push	ax	; angle_start
+		push	1	; angle_step
+		push	128 or (7 shl 16)	; (radius_y) or (col shl 16)
+		push	128	; radius_x
 		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
-		push	ax
+		push	ax	; center_y
 		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
-		push	ax
-		call	sub_1786D
+		push	ax	; center_x
+		call	@shape_ellipse_arc_put$qiiiiiucucuc
 		mov	al, angle_3A6FB
 		add	al, -7Eh
-		push	ax
+		push	ax	; angle_end
 		mov	al, angle_3A6FB
 		add	al, 80h
-		push	ax
-		push	1
-		push	70080h
-		push	80h ; '?'
+		push	ax	; angle_start
+		push	1	; angle_step
+		push	128 or (7 shl 16)	; (radius_y) or (col shl 16)
+		push	128	; radius_x
 		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
-		push	ax
+		push	ax	; center_y
 		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
-		push	ax
-		call	sub_1786D
+		push	ax	; center_x
+		call	@shape_ellipse_arc_put$qiiiiiucucuc
 		add	sp, 30h
 		mov	al, angle_3A6FB
 		add	al, -3Eh
-		push	ax
+		push	ax	; angle_end
 		mov	al, angle_3A6FB
 		add	al, -40h
-		push	ax
-		push	1
-		push	70080h
-		push	80h ; '?'
+		push	ax	; angle_start
+		push	1	; angle_step
+		push	128 or (7 shl 16)	; (radius_y) or (col shl 16)
+		push	128	; radius_x
 		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
-		push	ax
+		push	ax	; center_y
 		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
-		push	ax
-		call	sub_1786D
+		push	ax	; center_x
+		call	@shape_ellipse_arc_put$qiiiiiucucuc
 		add	sp, 10h
 		mov	al, angle_3A6FB
 		add	al, 2
@@ -31227,18 +31113,18 @@ loc_25977:
 		add	ax, 64
 		push	ax
 		call	sub_17956
-		push	255
-		push	0
-		push	1
-		push	70080h
-		push	80h ; '?'
+		push	255	; angle_end
+		push	0	; angle_start
+		push	1	; angle_step
+		push	128 or (7 shl 16)	; (radius_y) or (col shl 16)
+		push	128	; radius_x
 		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
-		push	ax
+		push	ax	; center_y
 		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
-		push	ax
-		call	sub_1786D
+		push	ax	; center_x
+		call	@shape_ellipse_arc_put$qiiiiiucucuc
 		mov	word_3A6FC, 1
 		push	1
 		call	_graph_accesspage_func
@@ -31282,10 +31168,10 @@ loc_25AED:
 		push	ax
 		call	sub_17956
 		add	sp, 0Eh
-		push	255
-		push	0
-		push	1
-		push	4
+		push	255	; angle_end
+		push	0	; angle_start
+		push	1	; angle_step
+		push	4	; col
 		jmp	short loc_25B7A
 ; ---------------------------------------------------------------------------
 
@@ -31308,20 +31194,20 @@ loc_25B3E:
 		push	ax
 		call	sub_17956
 		add	sp, 0Eh
-		push	255
-		push	0
-		push	1
-		push	7
+		push	255	; angle_end
+		push	0	; angle_start
+		push	1	; angle_step
+		push	7	; col
 
 loc_25B7A:
-		push	800080h
+		push	128 or (128 shl 16)	; (radius_x) or (radius_y shl 16)
 		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
-		push	ax
+		push	ax	; center_y
 		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
-		push	ax
-		call	sub_1786D
+		push	ax	; center_x
+		call	@shape_ellipse_arc_put$qiiiiiucucuc
 		add	sp, 10h
 		jmp	loc_25C4A
 ; ---------------------------------------------------------------------------
@@ -31636,8 +31522,8 @@ sub_25E28	proc near
 		mov	bp, sp
 		cmp	word_3A6CA, 5
 		jge	short loc_25E3D
-		mov	word_3A6FE+1, 0
-		mov	byte ptr word_3A6FE, 0
+		mov	word_3A6FF, 0
+		mov	angle_3A6FE, 0
 
 loc_25E3D:
 		cmp	word_3A6CA, 0Ah
@@ -31659,8 +31545,8 @@ loc_25E3D:
 		mov	elis_attack.BE_bos_image, 0
 		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 		add	sp, 20h
-		mov	byte ptr word_3A6FE, 0
-		mov	word_3A6FE+1, 0
+		mov	angle_3A6FE, 0
+		mov	word_3A6FF, 0
 
 loc_25EB1:
 		cmp	word_3A6CA, 0Ah
@@ -31671,7 +31557,7 @@ loc_25EB1:
 		idiv	bx
 		or	dx, dx
 		jnz	loc_25FED
-		cmp	word_3A6FE+1, 0
+		cmp	word_3A6FF, 0
 		jnz	loc_25FED
 		cmp	word_3A6CA, 0Ah
 		jnz	short loc_25EE1
@@ -31680,76 +31566,76 @@ loc_25EB1:
 		pop	cx
 
 loc_25EE1:
-		mov	al, byte ptr word_3A6FE
+		mov	al, angle_3A6FE
 		add	al, 2
-		push	ax
-		push	word_3A6FE
-		push	1
-		push	70080h
-		push	80h ; '?'
+		push	ax	; angle_end
+		push	word ptr angle_3A6FE	; angle_start
+		push	1	; angle_step
+		push	128 or (7 shl 16)	; (radius_y) or (col shl 16)
+		push	128	; radius_x
 		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
-		push	ax
+		push	ax	; center_y
 		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
-		push	ax
-		call	sub_1786D
-		mov	al, byte ptr word_3A6FE
-		add	al, 42h	; 'B'
-		push	ax
-		mov	al, byte ptr word_3A6FE
+		push	ax	; center_x
+		call	@shape_ellipse_arc_put$qiiiiiucucuc
+		mov	al, angle_3A6FE
+		add	al, 42h
+		push	ax	; angle_end
+		mov	al, angle_3A6FE
 		add	al, 40h
-		push	ax
-		push	1
-		push	70080h
-		push	80h ; '?'
+		push	ax	; angle_start
+		push	1	; angle_step
+		push	128 or (7 shl 16)	; (radius_y) or (col shl 16)
+		push	128	; radius_x
 		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
-		push	ax
+		push	ax	; center_y
 		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
-		push	ax
-		call	sub_1786D
-		mov	al, byte ptr word_3A6FE
-		add	al, 82h
-		push	ax
-		mov	al, byte ptr word_3A6FE
-		add	al, 80h	; '?'
-		push	ax
-		push	1
-		push	70080h
-		push	80h ; '?'
+		push	ax	; center_x
+		call	@shape_ellipse_arc_put$qiiiiiucucuc
+		mov	al, angle_3A6FE
+		add	al, -7Eh
+		push	ax	; angle_end
+		mov	al, angle_3A6FE
+		add	al, 80h
+		push	ax	; angle_start
+		push	1	; angle_step
+		push	128 or (7 shl 16)	; (radius_y) or (col shl 16)
+		push	128	; radius_x
 		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
-		push	ax
+		push	ax	; center_y
 		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
-		push	ax
-		call	sub_1786D
+		push	ax	; center_x
+		call	@shape_ellipse_arc_put$qiiiiiucucuc
 		add	sp, 30h
-		mov	al, byte ptr word_3A6FE
+		mov	al, angle_3A6FE
 		add	al, 194
-		push	ax
-		mov	al, byte ptr word_3A6FE
-		add	al, 0C0h ; '?'
-		push	ax
-		push	1
-		push	70080h
-		push	80h ; '?'
+		push	ax	; angle_end
+		mov	al, angle_3A6FE
+		add	al, -40h
+		push	ax	; angle_start
+		push	1	; angle_step
+		push	128 or (7 shl 16)	; (radius_y) or (col shl 16)
+		push	128	; radius_x
 		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
-		push	ax
+		push	ax	; center_y
 		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
-		push	ax
-		call	sub_1786D
+		push	ax	; center_x
+		call	@shape_ellipse_arc_put$qiiiiiucucuc
 		add	sp, 10h
-		mov	al, byte ptr word_3A6FE
+		mov	al, angle_3A6FE
 		add	al, 2
-		mov	byte ptr word_3A6FE, al
-		cmp	byte ptr word_3A6FE, 40h
+		mov	angle_3A6FE, al
+		cmp	angle_3A6FE, 40h
 		jb	loc_260D8
-		mov	word_3A6FE+1, 1
+		mov	word_3A6FF, 1
 		push	255
 		push	0
 		push	1
@@ -31761,35 +31647,35 @@ loc_25EE1:
 		add	ax, 64
 		push	ax
 		call	sub_17956
-		push	255
-		push	0
-		push	1
-		push	70080h
-		push	80h ; '?'
+		push	255	; angle_end
+		push	0	; angle_start
+		push	1	; angle_step
+		push	128 or (7 shl 16)	; (radius_y) or (col shl 16)
+		push	128	; radius_x
 		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
-		push	ax
+		push	ax	; center_y
 		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
-		push	ax
-		call	sub_1786D
+		push	ax	; center_x
+		call	@shape_ellipse_arc_put$qiiiiiucucuc
 		add	sp, 1Eh
 		jmp	loc_260D8
 ; ---------------------------------------------------------------------------
 
 loc_25FED:
-		cmp	byte ptr word_3A6FE, 40h
+		cmp	angle_3A6FE, 40h
 		jb	loc_260D8
-		inc	word_3A6FE+1
-		cmp	word_3A6FE+1, 0Ah
+		inc	word_3A6FF
+		cmp	word_3A6FF, 0Ah
 		jnz	short loc_26006
 		push	7
 		call	sub_25DE6
 
 loc_26006:
-		cmp	word_3A6FE+1, 14h
+		cmp	word_3A6FF, 14h
 		jle	short loc_26029
-		mov	ax, word_3A6FE+1
+		mov	ax, word_3A6FF
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -31797,17 +31683,17 @@ loc_26006:
 		jnz	short loc_26029
 		push	bx
 		call	sub_25DE6
-		push	255
-		push	0
-		push	1
-		push	4
+		push	255	; angle_end
+		push	0	; angle_start
+		push	1	; angle_step
+		push	4	; col
 		jmp	short loc_2604C
 ; ---------------------------------------------------------------------------
 
 loc_26029:
-		cmp	word_3A6FE+1, 14h
+		cmp	word_3A6FF, 14h
 		jle	short loc_26068
-		mov	ax, word_3A6FE+1
+		mov	ax, word_3A6FF
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -31815,24 +31701,24 @@ loc_26029:
 		jnz	short loc_26068
 		push	7
 		call	sub_25DE6
-		push	255
-		push	0
-		push	1
-		push	7
+		push	255	; angle_end
+		push	0	; angle_start
+		push	1	; angle_step
+		push	7	; col
 
 loc_2604C:
-		push	800080h
+		push	128 or (128 shl 16)	; (radius_x) or (radius_y shl 16)
 		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
-		push	ax
+		push	ax	; center_y
 		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
-		push	ax
-		call	sub_1786D
+		push	ax	; center_x
+		call	@shape_ellipse_arc_put$qiiiiiucucuc
 		add	sp, 10h
 
 loc_26068:
-		cmp	word_3A6FE+1, 3Ch ; '<'
+		cmp	word_3A6FF, 3Ch ; '<'
 		jle	short loc_260D8
 		push	0C0h ; '?'
 		push	16h
@@ -31865,8 +31751,8 @@ loc_26068:
 		call	sub_17956
 		add	sp, 0Eh
 		mov	word_3A6CA, 0
-		mov	byte ptr word_3A6FE, 0
-		mov	word_3A6FE+1, 0
+		mov	angle_3A6FE, 0
+		mov	word_3A6FF, 0
 		mov	ax, 1
 		pop	bp
 		retn
@@ -33847,55 +33733,55 @@ loc_272E1:
 loc_27317:
 		mov	al, angle_3A76F
 		add	al, 2
-		push	ax
-		push	word ptr angle_3A76F
-		push	1
-		push	70080h
-		push	800180h
+		push	ax	; angle_end
+		push	word ptr angle_3A76F	; angle_start
+		push	1	; angle_step
+		push	128 or (7 shl 16)	; (radius_y) or (col shl 16)
+		push	384 or (128 shl 16)	; (center_y) or (radius_x shl 16)
 		mov	ax, word_3A76D
 		add	ax, 10h
-		push	ax
-		call	sub_1786D
+		push	ax	; center_x
+		call	@shape_ellipse_arc_put$qiiiiiucucuc
 		mov	al, angle_3A76F
 		add	al, 42h
-		push	ax
+		push	ax	; angle_end
 		mov	al, angle_3A76F
 		add	al, 40h
-		push	ax
-		push	1
-		push	70080h
-		push	800180h
+		push	ax	; angle_start
+		push	1	; angle_step
+		push	128 or (7 shl 16)	; (radius_y) or (col shl 16)
+		push	384 or (128 shl 16)	; (center_y) or (radius_x shl 16)
 		mov	ax, word_3A76D
 		add	ax, 10h
-		push	ax
-		call	sub_1786D
+		push	ax	; center_x
+		call	@shape_ellipse_arc_put$qiiiiiucucuc
 		mov	al, angle_3A76F
 		add	al, -7Eh
-		push	ax
+		push	ax	; angle_end
 		mov	al, angle_3A76F
 		add	al, 80h
-		push	ax
-		push	1
-		push	70080h
-		push	800180h
+		push	ax	; angle_start
+		push	1	; angle_step
+		push	128 or (7 shl 16)	; (radius_y) or (col shl 16)
+		push	384 or (128 shl 16)	; (center_y) or (radius_x shl 16)
 		mov	ax, word_3A76D
 		add	ax, 10h
-		push	ax
-		call	sub_1786D
+		push	ax	; center_x
+		call	@shape_ellipse_arc_put$qiiiiiucucuc
 		add	sp, 30h
 		mov	al, angle_3A76F
 		add	al, -3Eh
-		push	ax
+		push	ax	; angle_end
 		mov	al, angle_3A76F
 		add	al, -40h
-		push	ax
-		push	1
-		push	70080h
-		push	800180h
+		push	ax	; angle_start
+		push	1	; angle_step
+		push	128 or (7 shl 16)	; (radius_y) or (col shl 16)
+		push	384 or (128 shl 16)	; (center_y) or (radius_x shl 16)
 		mov	ax, word_3A76D
 		add	ax, 10h
-		push	ax
-		call	sub_1786D
+		push	ax	; center_x
+		call	@shape_ellipse_arc_put$qiiiiiucucuc
 		add	sp, 10h
 		mov	al, angle_3A76F
 		add	al, 2
@@ -33911,15 +33797,15 @@ loc_27317:
 		add	ax, 10h
 		push	ax
 		call	sub_17956
-		push	255
-		push	0
-		push	1
-		push	70080h
-		push	800180h
+		push	255	; angle_end
+		push	0	; angle_start
+		push	1	; angle_step
+		push	128 or (7 shl 16)	; (radius_y) or (col shl 16)
+		push	384 or (128 shl 16)	; (center_y) or (radius_x shl 16)
 		mov	ax, word_3A76D
 		add	ax, 10h
-		push	ax
-		call	sub_1786D
+		push	ax	; center_x
+		call	@shape_ellipse_arc_put$qiiiiiucucuc
 		mov	word_3A76B, 1
 		push	1
 		call	_graph_accesspage_func
@@ -33963,15 +33849,15 @@ loc_27464:
 		add	ax, 10h
 		push	ax
 		call	sub_17956
-		push	255
-		push	0
-		push	1
-		push	70080h
-		push	800180h
+		push	255	; angle_end
+		push	0	; angle_start
+		push	1	; angle_step
+		push	128 or (7 shl 16)	; (radius_y) or (col shl 16)
+		push	384 or (128 shl 16)	; (center_y) or (radius_x shl 16)
 		mov	ax, word_3A76D
 		add	ax, 10h
-		push	ax
-		call	sub_1786D
+		push	ax	; center_x
+		call	@shape_ellipse_arc_put$qiiiiiucucuc
 		add	sp, 1Eh
 
 loc_274C6:
@@ -34204,67 +34090,67 @@ loc_27729:
 loc_27759:
 		mov	al, angle_3A770
 		add	al, 2
-		push	ax
-		push	word ptr angle_3A770
-		push	1
-		push	70080h
-		push	80h ; '?'
+		push	ax	; angle_end
+		push	word ptr angle_3A770	; angle_start
+		push	1	; angle_step
+		push	128 or (7 shl 16)	; (radius_y) or (col shl 16)
+		push	128	; radius_x
 		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
-		push	ax
+		push	ax	; center_y
 		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
-		push	ax
-		call	sub_1786D
+		push	ax	; center_x
+		call	@shape_ellipse_arc_put$qiiiiiucucuc
 		mov	al, angle_3A770
 		add	al, 42h
-		push	ax
+		push	ax	; angle_end
 		mov	al, angle_3A770
 		add	al, 40h
-		push	ax
-		push	1
-		push	70080h
-		push	80h ; '?'
+		push	ax	; angle_start
+		push	1	; angle_step
+		push	128 or (7 shl 16)	; (radius_y) or (col shl 16)
+		push	128	; radius_x
 		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
-		push	ax
+		push	ax	; center_y
 		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
-		push	ax
-		call	sub_1786D
+		push	ax	; center_x
+		call	@shape_ellipse_arc_put$qiiiiiucucuc
 		mov	al, angle_3A770
 		add	al, -7Eh
-		push	ax
+		push	ax	; angle_end
 		mov	al, angle_3A770
 		add	al, 80h
-		push	ax
-		push	1
-		push	70080h
-		push	80h ; '?'
+		push	ax	; angle_start
+		push	1	; angle_step
+		push	128 or (7 shl 16)	; (radius_y) or (col shl 16)
+		push	128	; radius_x
 		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
-		push	ax
+		push	ax	; center_y
 		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
-		push	ax
-		call	sub_1786D
+		push	ax	; center_x
+		call	@shape_ellipse_arc_put$qiiiiiucucuc
 		add	sp, 30h
 		mov	al, angle_3A770
 		add	al, -3Eh
-		push	ax
+		push	ax	; angle_end
 		mov	al, angle_3A770
 		add	al, -40h
-		push	ax
-		push	1
-		push	70080h
-		push	80h ; '?'
+		push	ax	; angle_start
+		push	1	; angle_step
+		push	128 or (7 shl 16)	; (radius_y) or (col shl 16)
+		push	128	; radius_x
 		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
-		push	ax
+		push	ax	; center_y
 		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
-		push	ax
-		call	sub_1786D
+		push	ax	; center_x
+		call	@shape_ellipse_arc_put$qiiiiiucucuc
 		add	sp, 10h
 		mov	al, angle_3A770
 		add	al, 2
@@ -34282,18 +34168,18 @@ loc_27759:
 		add	ax, 64
 		push	ax
 		call	sub_17956
-		push	255
-		push	0
-		push	1
-		push	70080h
-		push	80h ; '?'
+		push	255	; angle_end
+		push	0	; angle_start
+		push	1	; angle_step
+		push	128 or (7 shl 16)	; (radius_y) or (col shl 16)
+		push	128	; radius_x
 		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
-		push	ax
+		push	ax	; center_y
 		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
-		push	ax
-		call	sub_1786D
+		push	ax	; center_x
+		call	@shape_ellipse_arc_put$qiiiiiucucuc
 		mov	word_3A771, 1
 		push	1
 		call	_graph_accesspage_func
@@ -34337,10 +34223,10 @@ loc_278BE:
 		push	ax
 		call	sub_17956
 		add	sp, 0Eh
-		push	255
-		push	0
-		push	1
-		push	4
+		push	255	; angle_end
+		push	0	; angle_start
+		push	1	; angle_step
+		push	4	; col
 		jmp	short loc_2794B
 ; ---------------------------------------------------------------------------
 
@@ -34363,20 +34249,20 @@ loc_2790F:
 		push	ax
 		call	sub_17956
 		add	sp, 0Eh
-		push	255
-		push	0
-		push	1
-		push	7
+		push	255	; angle_end
+		push	0	; angle_start
+		push	1	; angle_step
+		push	7	; col
 
 loc_2794B:
-		push	800080h
+		push	128 or (128 shl 16)	; (radius_x) or (radius_y shl 16)
 		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
-		push	ax
+		push	ax	; center_y
 		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 64
-		push	ax
-		call	sub_1786D
+		push	ax	; center_x
+		call	@shape_ellipse_arc_put$qiiiiiucucuc
 		add	sp, 10h
 		jmp	loc_27A1C
 ; ---------------------------------------------------------------------------
@@ -37466,7 +37352,7 @@ loc_295EF:
 		cwd
 		idiv	bx
 		shl	dx, 3
-		mov	ax, 40h
+		mov	ax, 64
 		sub	ax, dx
 		mov	di, ax
 		mov	ax, word_3A6CA
@@ -37503,19 +37389,19 @@ loc_29665:
 		idiv	bx
 		cmp	dx, 8
 		jz	short loc_296EC
-		push	255
-		push	0
-		push	1
-		push	4
-		push	di
-		push	di
+		push	255	; angle_end
+		push	0	; angle_start
+		push	1	; angle_step
+		push	4	; col
+		push	di	; radius_y
+		push	di	; radius_x
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+6224h]
+		push	word ptr [bx+6224h]	; center_y
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+6210h]
-		call	sub_1786D
+		push	word ptr [bx+6210h]	; center_x
+		call	@shape_ellipse_arc_put$qiiiiiucucuc
 		add	sp, 10h
 		jmp	short loc_296EC
 ; ---------------------------------------------------------------------------
@@ -38630,36 +38516,36 @@ loc_2A0B0:
 loc_2A0CF:
 		cmp	word_35E03, 3
 		jnz	loc_2A16A
-		push	255
-		push	0
-		push	8
-		push	60010h
-		push	300180h
+		push	255	; angle_end
+		push	0	; angle_start
+		push	8	; angle_step
+		push	16 or (6 shl 16)	; (radius_y) or (col shl 16)
+		push	384 or (48 shl 16)	; (center_y) or (radius_x shl 16)
 		mov	ax, subpixel_x_3AF32
 		sar	ax, 4
-		push	ax
-		call	sub_1786D
+		push	ax	; center_x
+		call	@shape_ellipse_arc_put$qiiiiiucucuc
 		push	255
-		push	0
-		push	8
-		push	60030h
-		push	100180h
+		push	0	; angle_start
+		push	8	; angle_step
+		push	48 or (6 shl 16)	; (radius_y) or (col shl 16)
+		push	384 or (16 shl 16)	; (center_y) or (radius_x shl 16)
 		mov	ax, subpixel_x_3AF32
 		sar	ax, 4
-		push	ax
-		call	sub_1786D
-		push	255
-		push	0
-		push	6
-		push	70018h
-		push	180180h
+		push	ax	; center_x
+		call	@shape_ellipse_arc_put$qiiiiiucucuc
+		push	255	; angle_end
+		push	0	; angle_start
+		push	6	; angle_step
+		push	24 or (7 shl 16)	; (radius_y) or (col shl 16)
+		push	384 or (24 shl 16)	; (center_y) or (radius_x shl 16)
 		mov	ax, subpixel_x_3AF32
 		sar	ax, 4
-		push	ax
-		call	sub_1786D
-		mov	word_3AF3E, 30h	; '0'
-		mov	word_3AF40, 10h
-		mov	word_3AF42, 18h
+		push	ax	; center_x
+		call	@shape_ellipse_arc_put$qiiiiiucucuc
+		mov	pixel_3AF3E, 48
+		mov	pixel_3AF40, 16
+		mov	pixel_3AF42, 24
 		mov	ax, subpixel_x_3AF32
 		mov	x_3AF34, ax
 		call	IRand
@@ -38691,8 +38577,8 @@ loc_2A175:
 		push	255
 		push	0
 		push	8
-		push	word_3AF40
-		push	word_3AF3E
+		push	pixel_3AF40
+		push	pixel_3AF3E
 		push	180h
 		mov	ax, subpixel_x_3AF32
 		sar	ax, 4
@@ -38701,8 +38587,8 @@ loc_2A175:
 		push	255
 		push	0
 		push	8
-		push	word_3AF3E
-		push	word_3AF40
+		push	pixel_3AF3E
+		push	pixel_3AF40
 		push	180h
 		mov	ax, subpixel_x_3AF32
 		sar	ax, 4
@@ -38711,17 +38597,17 @@ loc_2A175:
 		push	255
 		push	0
 		push	6
-		push	word_3AF42
-		push	word_3AF42
+		push	pixel_3AF42
+		push	pixel_3AF42
 		push	180h
 		mov	ax, subpixel_x_3AF32
 		sar	ax, 4
 		push	ax
 		call	sub_17956
 		add	sp, 32h
-		sub	word_3AF3E, 6
-		add	word_3AF40, 6
-		add	word_3AF42, 4
+		sub	pixel_3AF3E, 6
+		add	pixel_3AF40, 6
+		add	pixel_3AF42, 4
 		call	IRand
 		mov	bx, 40h
 		cwd
@@ -38738,7 +38624,7 @@ loc_2A175:
 		mov	ax, RES_Y
 		sub	ax, dx
 		mov	y_3AF38, ax
-		cmp	word_3AF3E, 8
+		cmp	pixel_3AF3E, 8
 		jg	short loc_2A245
 		mov	word_35E03, 0FFFFh
 		pop	bp
@@ -38746,39 +38632,39 @@ loc_2A175:
 ; ---------------------------------------------------------------------------
 
 loc_2A245:
-		push	255
-		push	0
-		push	8
-		push	5
-		push	word_3AF40
-		push	word_3AF3E
-		push	180h
+		push	255	; angle_end
+		push	0	; angle_start
+		push	8	; angle_step
+		push	5	; col
+		push	pixel_3AF40	; radius_y
+		push	pixel_3AF3E	; radius_x
+		push	384	; center_y
 		mov	ax, subpixel_x_3AF32
 		sar	ax, 4
-		push	ax
-		call	sub_1786D
-		push	255
-		push	0
-		push	8
-		push	5
-		push	word_3AF3E
-		push	word_3AF40
-		push	180h
+		push	ax	; center_x
+		call	@shape_ellipse_arc_put$qiiiiiucucuc
+		push	255	; angle_end
+		push	0	; angle_start
+		push	8	; angle_step
+		push	5	; col
+		push	pixel_3AF3E	; radius_y
+		push	pixel_3AF40	; radius_x
+		push	384	; center_y
 		mov	ax, subpixel_x_3AF32
 		sar	ax, 4
-		push	ax
-		call	sub_1786D
-		push	255
-		push	0
-		push	6
-		push	7
-		push	word_3AF42
-		push	word_3AF42
-		push	180h
+		push	ax	; center_x
+		call	@shape_ellipse_arc_put$qiiiiiucucuc
+		push	255	; angle_end
+		push	0	; angle_start
+		push	6	; angle_step
+		push	7	; col
+		push	pixel_3AF42	; radius_y
+		push	pixel_3AF42	; radius_x
+		push	384	; center_y
 		mov	ax, subpixel_x_3AF32
 		sar	ax, 4
-		push	ax
-		call	sub_1786D
+		push	ax	; center_x
+		call	@shape_ellipse_arc_put$qiiiiiucucuc
 		add	sp, 30h
 		call	@shape8x8_star_put$qiii c, x_3AF34, y_3AF38, 7
 
@@ -40322,12 +40208,12 @@ sub_2B2B9	proc near
 
 arg_0		= word ptr  4
 arg_2		= word ptr  6
-arg_4		= word ptr  8
+@@col		= word ptr  8
 arg_6		= word ptr  0Ah
 arg_8		= word ptr  0Ch
 arg_A		= word ptr  0Eh
-arg_C		= word ptr  10h
-arg_E		= word ptr  12h
+@@center_y		= word ptr  10h
+@@center_x		= word ptr  12h
 
 		push	bp
 		mov	bp, sp
@@ -40354,8 +40240,8 @@ loc_2B2D1:
 		push	1
 		push	word_3B053
 		push	word_3B053
-		push	[bp+arg_C]
-		push	[bp+arg_E]
+		push	[bp+@@center_y]
+		push	[bp+@@center_x]
 		call	sub_17956
 		add	sp, 0Eh
 		cmp	si, [bp+arg_0]
@@ -40365,25 +40251,25 @@ loc_2B2D1:
 ; ---------------------------------------------------------------------------
 
 loc_2B30B:
-		push	255
-		push	0
-		push	1
-		push	[bp+arg_4]
+		push	255	; angle_end
+		push	0	; angle_start
+		push	1	; angle_step
+		push	[bp+@@col]
 		mov	ax, si
 		cwd
 		idiv	di
 		imul	[bp+arg_6]
 		add	ax, [bp+arg_2]
-		push	ax
+		push	ax	; radius_y
 		mov	ax, si
 		cwd
 		idiv	di
 		imul	[bp+arg_6]
 		add	ax, [bp+arg_2]
-		push	ax
-		push	[bp+arg_C]
-		push	[bp+arg_E]
-		call	sub_1786D
+		push	ax	; radius_x
+		push	[bp+@@center_y]
+		push	[bp+@@center_x]
+		call	@shape_ellipse_arc_put$qiiiiiucucuc
 		add	sp, 10h
 
 loc_2B33B:
@@ -48888,13 +48774,14 @@ word_3A6CA	dw ?
 word_3A6CC	dw ?
 byte_3A6CE	db ?
 		db 20 dup (?)
-word_3A6E3	dw ?
+radius_3A6E3	dw ?
 word_3A6E5	dw ?
 		db 20 dup(?)
 angle_3A6FB	db ?
 word_3A6FC	dw ?
-word_3A6FE	dw ?
-		db 101 dup(?)
+angle_3A6FE	db ?
+word_3A6FF	dw ?
+		db 100 dup(?)
 x_3A765	dw ?
 y_3A767	dw ?
 word_3A769	dw ?
@@ -48934,9 +48821,9 @@ subpixel_y_3AF36	dw ?
 y_3AF38	dw ?
 y_3AF3A	dw ?
 x_3AF3C	dw ?
-word_3AF3E	dw ?
-word_3AF40	dw ?
-word_3AF42	dw ?
+pixel_3AF3E	dw ?
+pixel_3AF40	dw ?
+pixel_3AF42	dw ?
 angle_3AF44	db ?
 word_3AF45	dw ?
 		db 240 dup(?)
