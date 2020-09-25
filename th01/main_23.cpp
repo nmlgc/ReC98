@@ -9,6 +9,7 @@ extern "C" {
 #include "libs/master.lib/master.h"
 #include "th01/formats/grc.cpp"
 #include "th01/hardware/grcg8x8m.cpp"
+#include "th01/hardware/egc.h"
 #include "th01/math/vector.hpp"
 }
 

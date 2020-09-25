@@ -14,3 +14,16 @@ void shape_ellipse_arc_put(
 	unsigned char angle_start,
 	unsigned char angle_end
 );
+
+// Makes a sloppy attempt at restoring the pixels along the given ellipse arc
+// from VRAM page 1, but ends up restoring horizontal 16×1 lines along that
+// arc.
+void shape_ellipse_arc_sloppy_unput(
+	screen_x_t center_x,
+	vram_y_t center_y,
+	pixel_t radius_x,
+	pixel_t radius_y,
+	unsigned char angle_step,
+	unsigned char angle_start,
+	unsigned char angle_end
+);
