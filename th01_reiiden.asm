@@ -8975,9 +8975,9 @@ main_23_TEXT	segment	byte public 'CODE' use16
 	extern _grc_put_8:proc
 	extern _grc_free:proc
 	extern _grcg_put_8x8_mono:proc
-	extern _shape8x8_diamond_put:proc
-	extern _shape8x8_star_put:proc
-	extern _shape8x8_flake_put:proc
+	extern @shape8x8_diamond_put$qiii:proc
+	extern @shape8x8_star_put$qiii:proc
+	extern @shape8x8_flake_put$qiii:proc
 main_23_TEXT	ends
 
 main_23__TEXT	segment	byte public 'CODE' use16
@@ -30532,7 +30532,7 @@ loc_25374:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+5D2Fh]	; left
-		call	_shape8x8_star_put
+		call	@shape8x8_star_put$qiii
 		add	sp, 6
 
 loc_25395:
@@ -38624,7 +38624,7 @@ loc_2A0B0:
 		mov	ax, subpixel_x_3AF32
 		sar	ax, 4
 		push	ax	; left
-		call	_shape8x8_flake_put
+		call	@shape8x8_flake_put$qiii
 		add	sp, 6
 
 loc_2A0CF:
@@ -38780,7 +38780,7 @@ loc_2A245:
 		push	ax
 		call	sub_1786D
 		add	sp, 30h
-		call	_shape8x8_star_put c, x_3AF34, y_3AF38, 7
+		call	@shape8x8_star_put$qiii c, x_3AF34, y_3AF38, 7
 
 loc_2A2BA:
 		cmp	_player_invincible, 0
@@ -43832,7 +43832,7 @@ loc_2D58F:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+6AA2h]	; left
-		call	_shape8x8_diamond_put
+		call	@shape8x8_diamond_put$qiii
 		add	sp, 6
 		inc	si
 
@@ -43887,7 +43887,7 @@ loc_2D609:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+6AA2h]	; left
-		call	_shape8x8_diamond_put
+		call	@shape8x8_diamond_put$qiii
 		add	sp, 6
 		inc	si
 
@@ -44250,7 +44250,7 @@ loc_2D9D9:
 		add	ax, ax
 		add	bx, ax
 		push	word ptr [bx+6AB7h]	; left
-		call	_shape8x8_diamond_put
+		call	@shape8x8_diamond_put$qiii
 		add	sp, 6
 		dec	di
 
@@ -44264,7 +44264,7 @@ loc_2DA02:
 		mov	bx, si
 		imul	bx, 0Ah
 		push	word ptr [bx+6AB7h]	; left
-		call	_shape8x8_diamond_put
+		call	@shape8x8_diamond_put$qiii
 		add	sp, 6
 		mov	bx, si
 		add	bx, bx
@@ -44788,7 +44788,7 @@ loc_2DEF8:
 loc_2DEFA:
 		push	point_3B493.y
 		push	point_3B493.x
-		call	_shape8x8_diamond_put
+		call	@shape8x8_diamond_put$qiii
 		add	sp, 6
 
 loc_2DF0A:
@@ -45000,7 +45000,7 @@ loc_2E0DD:
 		add	ax, ax
 		add	bx, ax
 		push	word ptr [bx+6B01h]	; left
-		call	_shape8x8_diamond_put
+		call	@shape8x8_diamond_put$qiii
 		add	sp, 6
 		dec	di
 
@@ -45014,7 +45014,7 @@ loc_2E106:
 		mov	bx, si
 		imul	bx, 0Ah
 		push	word ptr [bx+6B01h]	; left
-		call	_shape8x8_diamond_put
+		call	@shape8x8_diamond_put$qiii
 		add	sp, 6
 		mov	bx, si
 		add	bx, bx
