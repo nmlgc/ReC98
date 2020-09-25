@@ -29,6 +29,29 @@ struct bos_t {
 	bos_image_t image[BOS_IMAGES_PER_SLOT];
 };
 
+#define bos_header_load(that, plane_size, fn) \
+	union { \
+		bos_header_t outer; \
+		Palette4 pal; \
+		int8_t space[50]; \
+	} header; \
+	\
+	arc_file_load(fn); \
+	\
+	arc_file_get_far(header.outer); \
+	that->vram_w = header.outer.vram_w; \
+	that->h = header.outer.h; \
+	that->bos_image_count = header.outer.inner.image_count; \
+	plane_size = (vram_w * h); \
+	arc_file_get_far(header.pal); // yeah, should have been a seek
+
+#define bos_image_new(image, plane_size) \
+	image.alpha = new dots16_t[plane_size / 2]; \
+	image.planes.B = new dots16_t[plane_size / 2]; \
+	image.planes.R = new dots16_t[plane_size / 2]; \
+	image.planes.G = new dots16_t[plane_size / 2]; \
+	image.planes.E = new dots16_t[plane_size / 2];
+
 /// All functions that operate on this format are implemented redundantly for
 /// both CBossEntity and CBossAnim, with their own respective entity arrays.
 /// ---------------------------------------------------------------------

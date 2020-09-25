@@ -47,40 +47,23 @@ void bos_reset_all_broken(void)
 
 int CBossEntity::load(const char fn[PF_FN_LEN], int slot)
 {
-	union {
-		bos_header_t outer;
-		Palette4 pal;
-		int8_t space[50];
-	} header;
+	int plane_size;
 
-	arc_file_load(fn);
-
-	arc_file_get_far(header.outer);
-	vram_w = header.outer.vram_w;
-	h = header.outer.h;
-	bos_image_count = header.outer.inner.image_count;
-	int image_size = (vram_w * h);
-
-	arc_file_get_far(header.pal); // yeah, should have been a seek
-
+	bos_header_load(this, plane_size, fn);
 	if(!bos_header_only) {
 		/* TODO: Replace with the decompiled call
 		 * 	bos_entity_free(slot);
 		 * once that function is part of this translation unit */
 		__asm { push slot; nop; push cs; call near ptr bos_entity_free; pop cx; }
 		for(int i = 0; bos_image_count > i; i++) {
-			#define bos bos_entity_images[slot].image[i]
-			bos.alpha = new dots16_t[image_size / 2];
-			bos.planes.B = new dots16_t[image_size / 2];
-			bos.planes.R = new dots16_t[image_size / 2];
-			bos.planes.G = new dots16_t[image_size / 2];
-			bos.planes.E = new dots16_t[image_size / 2];
-			arc_file_get(reinterpret_cast<char *>(bos.alpha), image_size);
-			arc_file_get(reinterpret_cast<char *>(bos.planes.B), image_size);
-			arc_file_get(reinterpret_cast<char *>(bos.planes.R), image_size);
-			arc_file_get(reinterpret_cast<char *>(bos.planes.G), image_size);
-			arc_file_get(reinterpret_cast<char *>(bos.planes.E), image_size);
-			#undef bos
+			#define image bos_entity_images[slot].image[i]
+			bos_image_new(image, plane_size);
+			arc_file_get(reinterpret_cast<char *>(image.alpha), plane_size);
+			arc_file_get(reinterpret_cast<char *>(image.planes.B), plane_size);
+			arc_file_get(reinterpret_cast<char *>(image.planes.R), plane_size);
+			arc_file_get(reinterpret_cast<char *>(image.planes.G), plane_size);
+			arc_file_get(reinterpret_cast<char *>(image.planes.E), plane_size);
+			#undef image
 		}
 	}
 
