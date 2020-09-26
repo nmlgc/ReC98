@@ -6,9 +6,13 @@
 extern "C" {
 
 #include <dos.h>
+#include "libs/master.lib/master.h"
 #include "platform.h"
 #include "pc98.h"
+#include "planar.h"
+#include "th01/hardware/egc.h"
+#include "th01/hardware/graph.h"
 
 #include "th01/hardware/scrollup.cpp"
-
+#include "th01/hardware/egcrows.cpp"
 }

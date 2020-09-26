@@ -4558,68 +4558,7 @@ main_13__TEXT	segment	byte public 'CODE' use16
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 	extern _z_vsync_wait_and_scrollup:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_11816	proc far
-
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		enter	4, 0
-		push	si
-		push	di
-		mov	ax, [bp+arg_0]
-		imul	ax, 50h
-		mov	si, ax
-		call	egc_on
-		EGC_SETUP_COPY
-		xor	di, di
-		jmp	short loc_11894
-; ---------------------------------------------------------------------------
-
-loc_11857:
-		mov	[bp+var_2], 0
-		jmp	short loc_1188D
-; ---------------------------------------------------------------------------
-
-loc_1185E:
-		push	1
-		call	_graph_accesspage_func
-		les	bx, _VRAM_PLANE_B
-		assume es:nothing
-		add	bx, si
-		mov	ax, es:[bx]
-		mov	[bp+var_4], ax
-		push	0
-		call	_graph_accesspage_func
-		add	sp, 4
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		mov	ax, [bp+var_4]
-		mov	es:[bx], ax
-		inc	[bp+var_2]
-		add	si, 2
-
-loc_1188D:
-		cmp	[bp+var_2], 28h	; '('
-		jl	short loc_1185E
-		inc	di
-
-loc_11894:
-		cmp	di, [bp+arg_2]
-		jl	short loc_11857
-		call	egc_off
-		pop	di
-		pop	si
-		leave
-		retf
-sub_11816	endp
-
+	extern _egc_copy_rows_1_to_0:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -35010,9 +34949,7 @@ sub_2869E	proc far
 
 loc_28703:
 		call	_z_vsync_wait_and_scrollup stdcall, si
-		push	1
-		push	si
-		call	sub_11816
+		call	_egc_copy_rows_1_to_0 stdcall, si, 1
 		push	1
 		call	_frame_delay
 		add	sp, 8
@@ -42571,9 +42508,7 @@ loc_2D120:
 
 loc_2D12A:
 		call	_z_vsync_wait_and_scrollup stdcall, di
-		push	20h ; ' '
-		push	di
-		call	sub_11816
+		call	_egc_copy_rows_1_to_0 stdcall, di, 32
 		push	1
 		call	_frame_delay
 		add	sp, 8
