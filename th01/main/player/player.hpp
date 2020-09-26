@@ -11,6 +11,7 @@ static const screen_y_t player_top = (PLAYFIELD_BOTTOM - PLAYER_H);
 static const screen_y_t player_center_y = (PLAYFIELD_BOTTOM - (PLAYER_H / 2));
 
 void player_move_and_clamp(int delta);
+void invincibility_sprites_update_and_render(bool16 invincible);
 
 extern unsigned char player_deflecting;
 extern unsigned char player_sliding;

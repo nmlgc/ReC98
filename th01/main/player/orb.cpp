@@ -1,4 +1,3 @@
-#include "th01/main/playfld.hpp"
 #include "th01/main/player/orb.hpp"
 
 extern const double ORB_VELOCITY_Y_MIN;

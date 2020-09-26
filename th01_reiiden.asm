@@ -1569,176 +1569,10 @@ loc_C45F:
 		pop	bp
 		retf
 sub_C433	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C466	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		cmp	[bp+arg_0], 0
-		jnz	short loc_C4AB
-		cmp	word_387DA, 255
-		jz	loc_C5B1
-		xor	si, si
-		jmp	short loc_C49D
-; ---------------------------------------------------------------------------
-
-loc_C47E:
-		push	(8 shl 16) or 16
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+3E5Ah]
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+3E4Ah]
-		call	_egc_copy_rect_1_to_0_16
-		add	sp, 8
-		inc	si
-
-loc_C49D:
-		cmp	si, 8
-		jl	short loc_C47E
-		mov	word_387DA, 255
-		jmp	loc_C5B1
-; ---------------------------------------------------------------------------
-
-loc_C4AB:
-		cmp	word_387DA, 255
-		jnz	short loc_C4C7
-		xor	si, si
-		jmp	short loc_C4C2
-; ---------------------------------------------------------------------------
-
-loc_C4B7:
-		mov	bx, si
-		add	bx, bx
-		mov	word ptr [bx+3E3Ah], 0
-		inc	si
-
-loc_C4C2:
-		cmp	si, 8
-		jl	short loc_C4B7
-
-loc_C4C7:
-		xor	si, si
-		jmp	loc_C5AA
-; ---------------------------------------------------------------------------
-
-loc_C4CC:
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+3E3Ah], 9
-		jz	short loc_C4E2
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+3E3Ah], 0
-		jnz	short loc_C550
-
-loc_C4E2:
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+3E3Ah], 9
-		jnz	short loc_C50B
-		push	(8 shl 16) or 16
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+3E5Ah]
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+3E4Ah]
-		call	_egc_copy_rect_1_to_0_16
-		add	sp, 8
-
-loc_C50B:
-		call	IRand
-		mov	bx, 48
-		cwd
-		idiv	bx
-		add	dx, _player_left
-		add	dx, -8
-		mov	bx, si
-		add	bx, bx
-		mov	[bx+3E4Ah], dx
-		call	IRand
-		mov	bx, 48
-		cwd
-		idiv	bx
-		add	dx, 160h
-		mov	bx, si
-		add	bx, bx
-		mov	[bx+3E5Ah], dx
-		call	IRand
-		mov	bx, 7
-		cwd
-		idiv	bx
-		inc	dx
-		mov	bx, si
-		add	bx, bx
-		mov	[bx+3E3Ah], dx
-
-loc_C550:
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+3E5Ah], 0
-		jl	short loc_C5A1
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+3E5Ah], 278h
-		jge	short loc_C5A1
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+3E3Ah], 4
-		jg	short loc_C57D
-		mov	bx, si
-		add	bx, bx
-		mov	ax, [bx+3E3Ah]
-		dec	ax
-		jmp	short loc_C588
-; ---------------------------------------------------------------------------
-
-loc_C57D:
-		mov	bx, si
-		add	bx, bx
-		mov	ax, 8
-		sub	ax, [bx+3E3Ah]
-
-loc_C588:
-		push	ax	; cel
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+3E5Ah]	; top
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+3E4Ah]	; left
-		call	@shape_invincibility_put$qiii
-		add	sp, 6
-
-loc_C5A1:
-		mov	bx, si
-		add	bx, bx
-		inc	word ptr [bx+3E3Ah]
-		inc	si
-
-loc_C5AA:
-		cmp	si, 8
-		jl	loc_C4CC
-
-loc_C5B1:
-		pop	si
-		pop	bp
-		retf
-sub_C466	endp
 main_01__TEXT	ends
 
 main_01___TEXT	segment	byte public 'CODE' use16
-
+	extern _invincibility_sprites_update_and:proc
 	extern _orb_velocity_y_update:proc
 	extern _orb_force_new:proc
 	extern _orb_move_x:proc
@@ -3953,8 +3787,7 @@ loc_DD0E:
 		mov	_lives, 0
 
 loc_DD20:
-		push	_player_invincible
-		call	sub_C466
+		call	_invincibility_sprites_update_and stdcall, _player_invincible
 		pop	cx
 		mov	al, byte_34ADF
 		cbw
@@ -48065,8 +47898,7 @@ word_3876D	dw ?
 word_387A3	dw ?
 		db 52 dup(?)
 angle_387D9	db ?
-word_387DA	dw ?
-		db 46 dup(?)
+include th01/main/player/inv_spr[bss].asm
 dword_3880A	dd ?
 word_3880E	dw ?
 public _player_left_prev
