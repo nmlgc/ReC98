@@ -1348,8 +1348,8 @@ loc_C23F:				; ...
 		movsx	edx, _CosTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
-		add	ax, 130h
-		mov	word_3876D, ax
+		add	ax, 304
+		mov	_square_left, ax
 		mov	ax, [bp+@@frame]
 		add	ax, -50
 		imul	ax, 6
@@ -1362,13 +1362,9 @@ loc_C23F:				; ...
 		movsx	edx, _SinTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
-		add	ax, 0B8h ; '¸'
-		mov	word_387A3, ax
-		pushd	[_VRAM_PLANE_B]
-		push	ax
-		push	word_3876D
-		call	sub_1156E
-		add	sp, 8
+		add	ax, 184
+		mov	_square_top, ax
+		call	@graph_invert_32x32_8$qiinuc c, _square_left, ax, large [_VRAM_PLANE_B]
 		mov	ax, [bp+@@frame]
 		add	ax, -50
 		imul	ax, 7
@@ -1381,8 +1377,8 @@ loc_C23F:				; ...
 		movsx	edx, _CosTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
-		add	ax, 130h
-		mov	word_3876D, ax
+		add	ax, 304
+		mov	_square_left, ax
 		mov	ax, [bp+@@frame]
 		add	ax, -50
 		imul	ax, 7
@@ -1395,13 +1391,9 @@ loc_C23F:				; ...
 		movsx	edx, _SinTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
-		add	ax, 0B8h ; '¸'
-		mov	word_387A3, ax
-		pushd	[_VRAM_PLANE_B]
-		push	ax
-		push	word_3876D
-		call	sub_1156E
-		add	sp, 8
+		add	ax, 184
+		mov	_square_top, ax
+		call	@graph_invert_32x32_8$qiinuc c, _square_left, ax, large [_VRAM_PLANE_B]
 		mov	ax, [bp+@@frame]
 		add	ax, -50
 		shl	ax, 3
@@ -1414,8 +1406,8 @@ loc_C23F:				; ...
 		movsx	edx, _CosTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
-		add	ax, 130h
-		mov	word_3876D, ax
+		add	ax, 304
+		mov	_square_left, ax
 		mov	ax, [bp+@@frame]
 		add	ax, -50
 		shl	ax, 3
@@ -1428,13 +1420,9 @@ loc_C23F:				; ...
 		movsx	edx, _SinTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
-		add	ax, 0B8h ; '¸'
-		mov	word_387A3, ax
-		pushd	[_VRAM_PLANE_B]
-		push	ax
-		push	word_3876D
-		call	sub_1156E
-		add	sp, 8
+		add	ax, 184
+		mov	_square_top, ax
+		call	@graph_invert_32x32_8$qiinuc c, _square_left, ax, large [_VRAM_PLANE_B]
 		inc	si
 		mov	al, angle_387D9
 		add	al, 10h
@@ -4548,76 +4536,7 @@ main_10_TEXT	ends
 
 ; Segment type:	Pure code
 main_11_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_11_TEXT
-		;org 0Eh
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1156E	proc far
-
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= dword	ptr  0Ah
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	si, [bp+arg_0]
-		mov	cx, [bp+arg_2]
-		mov	ax, si
-		sar	ax, 3
-		mov	dx, cx
-		shl	dx, 6
-		add	ax, dx
-		mov	dx, cx
-		shl	dx, 4
-		add	ax, dx
-		mov	di, ax
-		or	si, si
-		jl	short loc_115A3
-		or	cx, cx
-		jl	short loc_115A3
-		cmp	si, 260h
-		jge	short loc_115A3
-		cmp	cx, 170h
-		jl	short loc_115A8
-
-loc_115A3:
-		mov	ax, 1
-		jmp	short loc_115CB
-; ---------------------------------------------------------------------------
-
-loc_115A8:
-		mov	[bp+var_2], 0
-		jmp	short loc_115C3
-; ---------------------------------------------------------------------------
-
-loc_115AF:
-		les	bx, [bp+arg_4]
-		add	bx, di
-		xor	word ptr es:[bx], 0FFFFh
-		xor	word ptr es:[bx+2], 0FFFFh
-		inc	[bp+var_2]
-
-loc_115C0:
-		add	di, 50h	; 'P'
-
-loc_115C3:
-		cmp	[bp+var_2], 20h	; ' '
-		jl	short loc_115AF
-		xor	ax, ax
-
-loc_115CB:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_1156E	endp
-
+	extern @graph_invert_32x32_8$qiinuc:proc
 main_11_TEXT	ends
 
 ; ===========================================================================
@@ -28714,11 +28633,11 @@ loc_248B0:
 ; ---------------------------------------------------------------------------
 
 loc_248BE:
-		pushd	[_VRAM_PLANE_R]
+		pushd	[_VRAM_PLANE_R]	; plane
 		movsx	eax, word_3A6C4
 		push	eax
 		mov	ax, si
-		mov	bx, 20h	; ' '
+		mov	bx, 32
 		cwd
 		idiv	bx
 		cwde
@@ -28731,12 +28650,12 @@ loc_248BE:
 		movsx	eax, _CosTable8[bx]
 		imul	edx, eax
 		sar	edx, 8
-		add	dx, 0B4h ; '?'
-		push	dx
+		add	dx, 180
+		push	dx	; top
 		movsx	eax, word_3A6C4
 		push	eax
 		mov	ax, si
-		mov	bx, 20h	; ' '
+		mov	bx, 32
 		cwd
 		idiv	bx
 		cwde
@@ -28749,9 +28668,9 @@ loc_248BE:
 		movsx	eax, _SinTable8[bx]
 		imul	edx, eax
 		sar	edx, 8
-		add	dx, 130h
-		push	dx
-		call	sub_1156E
+		add	dx, 304
+		push	dx	; left
+		call	@graph_invert_32x32_8$qiinuc
 		add	sp, 8
 		inc	si
 
@@ -28776,11 +28695,11 @@ loc_24941:
 ; ---------------------------------------------------------------------------
 
 loc_2495E:
-		pushd	[_VRAM_PLANE_R]
+		pushd	[_VRAM_PLANE_R]	; plane
 		movsx	eax, word_3A6C4
 		push	eax
 		mov	ax, si
-		mov	bx, 20h	; ' '
+		mov	bx, 32
 		cwd
 		idiv	bx
 		cwde
@@ -28793,12 +28712,12 @@ loc_2495E:
 		movsx	eax, _CosTable8[bx]
 		imul	edx, eax
 		sar	edx, 8
-		add	dx, 0B4h ; '?'
-		push	dx
+		add	dx, 180
+		push	dx	; top
 		movsx	eax, word_3A6C4
 		push	eax
 		mov	ax, si
-		mov	bx, 20h	; ' '
+		mov	bx, 32
 		cwd
 		idiv	bx
 		cwde
@@ -28811,9 +28730,9 @@ loc_2495E:
 		movsx	eax, _SinTable8[bx]
 		imul	edx, eax
 		sar	edx, 8
-		add	dx, 130h
-		push	dx
-		call	sub_1156E
+		add	dx, 304
+		push	dx	; left
+		call	@graph_invert_32x32_8$qiinuc
 		add	sp, 8
 		inc	si
 
@@ -28828,11 +28747,11 @@ loc_249D8:
 ; ---------------------------------------------------------------------------
 
 loc_249EA:
-		pushd	[_VRAM_PLANE_R]
+		pushd	[_VRAM_PLANE_R]	; plane
 		movsx	eax, word_3A6C4
 		push	eax
 		mov	ax, si
-		mov	bx, 20h	; ' '
+		mov	bx, 32
 		cwd
 		idiv	bx
 		cwde
@@ -28845,12 +28764,12 @@ loc_249EA:
 		movsx	eax, _CosTable8[bx]
 		imul	edx, eax
 		sar	edx, 8
-		add	dx, 0B4h ; '?'
-		push	dx
+		add	dx, 180
+		push	dx	; top
 		movsx	eax, word_3A6C4
 		push	eax
 		mov	ax, si
-		mov	bx, 20h	; ' '
+		mov	bx, 32
 		cwd
 		idiv	bx
 		cwde
@@ -28863,9 +28782,9 @@ loc_249EA:
 		movsx	eax, _SinTable8[bx]
 		imul	edx, eax
 		sar	edx, 8
-		add	dx, 130h
-		push	dx
-		call	sub_1156E
+		add	dx, 304
+		push	dx	; left
+		call	@graph_invert_32x32_8$qiinuc
 		add	sp, 8
 		add	di, ax
 		inc	si
@@ -41088,7 +41007,7 @@ loc_2C162:
 ; ---------------------------------------------------------------------------
 
 loc_2C16E:
-		pushd	[_VRAM_PLANE_R]
+		pushd	[_VRAM_PLANE_R]	; plane
 		movsx	eax, word_3B435
 		mov	dx, si
 		shr	dx, 5
@@ -41101,8 +41020,8 @@ loc_2C16E:
 		movsx	edx, _CosTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
-		add	ax, 0B4h ; '?'
-		push	ax
+		add	ax, 180
+		push	ax	; top
 		movsx	eax, word_3B435
 		mov	dx, si
 		shr	dx, 5
@@ -41115,9 +41034,9 @@ loc_2C16E:
 		movsx	edx, _SinTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
-		add	ax, 130h
-		push	ax
-		call	sub_1156E
+		add	ax, 304
+		push	ax	; left
+		call	@graph_invert_32x32_8$qiinuc
 		add	sp, 8
 		inc	si
 
@@ -41141,7 +41060,7 @@ loc_2C1E5:
 ; ---------------------------------------------------------------------------
 
 loc_2C202:
-		pushd	[_VRAM_PLANE_R]
+		pushd	[_VRAM_PLANE_R]	; plane
 		movsx	eax, word_3B435
 		mov	dx, si
 		shr	dx, 5
@@ -41154,8 +41073,8 @@ loc_2C202:
 		movsx	edx, _CosTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
-		add	ax, 0B4h ; '?'
-		push	ax
+		add	ax, 180
+		push	ax	; top
 		movsx	eax, word_3B435
 		mov	dx, si
 		shr	dx, 5
@@ -41168,9 +41087,9 @@ loc_2C202:
 		movsx	edx, _SinTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
-		add	ax, 130h
-		push	ax
-		call	sub_1156E
+		add	ax, 304
+		push	ax	; left
+		call	@graph_invert_32x32_8$qiinuc
 		add	sp, 8
 		inc	si
 
@@ -41184,7 +41103,7 @@ loc_2C270:
 ; ---------------------------------------------------------------------------
 
 loc_2C282:
-		pushd	[_VRAM_PLANE_R]
+		pushd	[_VRAM_PLANE_R]	; plane
 		movsx	eax, word_3B435
 		mov	dx, si
 		shr	dx, 5
@@ -41197,8 +41116,8 @@ loc_2C282:
 		movsx	edx, _CosTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
-		add	ax, 0B4h ; '?'
-		push	ax
+		add	ax, 180
+		push	ax	; top
 		movsx	eax, word_3B435
 		mov	dx, si
 		shr	dx, 5
@@ -41211,9 +41130,9 @@ loc_2C282:
 		movsx	edx, _SinTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
-		add	ax, 130h
-		push	ax
-		call	sub_1156E
+		add	ax, 304
+		push	ax	; left
+		call	@graph_invert_32x32_8$qiinuc
 		add	sp, 8
 		add	di, ax
 		inc	si
@@ -47893,9 +47812,10 @@ byte_38723	db ?
 		db 24 dup(?)
 palette_3873C	palette_t <?>
 byte_3876C	db ?
-word_3876D	dw ?
+public _square_left, _square_top
+_square_left	dw ?
 		db 52 dup(?)
-word_387A3	dw ?
+_square_top 	dw ?
 		db 52 dup(?)
 angle_387D9	db ?
 include th01/main/player/inv_spr[bss].asm

@@ -51,7 +51,7 @@ bin\th01\op.exe: bin\piloadc.obj bin\th01\op.obj th01\op_01.cpp th01\op_02.c th0
 $**
 |
 
-bin\th01\reiiden.exe: bin\piloadc.obj bin\th01\reiiden.obj th01\main_01.cpp th01\main_01_.cpp th01\main_02.c th01\main_03.c th01\main_04.c th01\main_05.c th01\main_06.cpp th01\main_07.cpp th01\main_08.cpp th01\main_09.cpp th01\main_12.c th01\main_13.cpp th01\main_13_.cpp th01\main_14.cpp th01\main_16.c th01\main_19.cpp th01\main_21.cpp th01\main_23.cpp th01\main_25.cpp th01\main_27.cpp th01\main_30.cpp th01\main_38.cpp
+bin\th01\reiiden.exe: bin\piloadc.obj bin\th01\reiiden.obj th01\main_01.cpp th01\main_01_.cpp th01\main_02.c th01\main_03.c th01\main_04.c th01\main_05.c th01\main_06.cpp th01\main_07.cpp th01\main_08.cpp th01\main_09.cpp th01\grpinv32.cpp th01\main_12.c th01\main_13.cpp th01\main_13_.cpp th01\main_14.cpp th01\main_16.c th01\main_19.cpp th01\main_21.cpp th01\main_23.cpp th01\main_25.cpp th01\main_27.cpp th01\main_30.cpp th01\main_38.cpp
 	$(CC) $(CFLAGS) -ml -3 -DGAME=1 -DBINARY='M' -nbin\th01\ -eREIIDEN.EXE @&&|
 $**
 |
