@@ -3,6 +3,8 @@
  * 1st part of code segment #13 of TH01's REIIDEN.EXE
  */
 
+#pragma option -2
+
 extern "C" {
 
 #include <dos.h>
@@ -15,4 +17,5 @@ extern "C" {
 
 #include "th01/hardware/scrollup.cpp"
 #include "th01/hardware/egcrows.cpp"
+#include "th01/hardware/ptrans_d.cpp"
 }

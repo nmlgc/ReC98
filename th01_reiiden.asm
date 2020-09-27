@@ -4559,214 +4559,7 @@ main_13__TEXT	segment	byte public 'CODE' use16
 
 	extern _z_vsync_wait_and_scrollup:proc
 	extern _egc_copy_rows_1_to_0:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_118A2	proc far
-
-var_52		= byte ptr -52h
-var_2		= byte ptr -2
-var_1		= byte ptr -1
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		enter	52h, 0
-		push	si
-		push	di
-		mov	di, [bp+arg_4]
-		lea	ax, [bp+var_52]
-		push	ss
-		push	ax
-		push	ds
-		push	offset unk_355EC
-		mov	cx, 50h	; 'P'
-		call	SCOPY@
-		mov	ax, [bp+arg_0]
-		mov	bx, 8
-		cwd
-		idiv	bx
-		mov	dx, [bp+arg_2]
-		imul	dx, 50h
-		add	ax, dx
-		mov	si, ax
-		mov	[bp+var_2], 0
-		jmp	loc_11A6C
-; ---------------------------------------------------------------------------
-
-loc_118D6:
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		mov	bx, di
-		shl	bx, 3
-		mov	al, [bp+var_2]
-		cbw
-		add	bx, ax
-		lea	ax, [bp+var_52]
-		add	bx, ax
-		mov	al, ss:[bx]
-		not	al
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		and	al, es:[bx]
-		mov	[bp+var_1], al
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		mov	bx, di
-		shl	bx, 3
-		mov	al, [bp+var_2]
-		cbw
-		add	bx, ax
-		lea	ax, [bp+var_52]
-		add	bx, ax
-		mov	al, ss:[bx]
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		and	al, es:[bx]
-		or	[bp+var_1], al
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		mov	al, [bp+var_1]
-		mov	es:[bx], al
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		mov	bx, di
-		shl	bx, 3
-		mov	al, [bp+var_2]
-		cbw
-		add	bx, ax
-		lea	ax, [bp+var_52]
-		add	bx, ax
-		mov	al, ss:[bx]
-		not	al
-		les	bx, _VRAM_PLANE_R
-		add	bx, si
-		and	al, es:[bx]
-		mov	[bp+var_1], al
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		mov	bx, di
-		shl	bx, 3
-		mov	al, [bp+var_2]
-		cbw
-		add	bx, ax
-		lea	ax, [bp+var_52]
-		add	bx, ax
-		mov	al, ss:[bx]
-		les	bx, _VRAM_PLANE_R
-		add	bx, si
-		and	al, es:[bx]
-		or	[bp+var_1], al
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		les	bx, _VRAM_PLANE_R
-		add	bx, si
-		mov	al, [bp+var_1]
-		mov	es:[bx], al
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		mov	bx, di
-		shl	bx, 3
-		mov	al, [bp+var_2]
-		cbw
-		add	bx, ax
-		lea	ax, [bp+var_52]
-		add	bx, ax
-		mov	al, ss:[bx]
-		not	al
-		les	bx, _VRAM_PLANE_G
-		add	bx, si
-		and	al, es:[bx]
-		mov	[bp+var_1], al
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		mov	bx, di
-		shl	bx, 3
-		mov	al, [bp+var_2]
-		cbw
-		add	bx, ax
-		lea	ax, [bp+var_52]
-		add	bx, ax
-		mov	al, ss:[bx]
-		les	bx, _VRAM_PLANE_G
-		add	bx, si
-		and	al, es:[bx]
-		or	[bp+var_1], al
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		les	bx, _VRAM_PLANE_G
-		add	bx, si
-		mov	al, [bp+var_1]
-		mov	es:[bx], al
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		mov	bx, di
-		shl	bx, 3
-		mov	al, [bp+var_2]
-		cbw
-		add	bx, ax
-		lea	ax, [bp+var_52]
-		add	bx, ax
-		mov	al, ss:[bx]
-		not	al
-		les	bx, _VRAM_PLANE_E
-		add	bx, si
-		and	al, es:[bx]
-		mov	[bp+var_1], al
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		mov	bx, di
-		shl	bx, 3
-		mov	al, [bp+var_2]
-		cbw
-		add	bx, ax
-		lea	ax, [bp+var_52]
-		add	bx, ax
-		mov	al, ss:[bx]
-		les	bx, _VRAM_PLANE_E
-		add	bx, si
-		and	al, es:[bx]
-		or	[bp+var_1], al
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		les	bx, _VRAM_PLANE_E
-		add	bx, si
-		mov	al, [bp+var_1]
-		mov	es:[bx], al
-		add	si, 50h	; 'P'
-		inc	[bp+var_2]
-
-loc_11A6C:
-		mov	al, [bp+var_2]
-		cbw
-		cmp	ax, 8
-		jge	short loc_11A78
-		jmp	loc_118D6
-; ---------------------------------------------------------------------------
-
-loc_11A78:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_118A2	endp
-
+	extern _graph_interleave_pages_8x8_8:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4799,10 +4592,10 @@ sub_11A94	proc far
 var_E		= word ptr -0Eh
 var_C		= word ptr -0Ch
 var_A		= word ptr -0Ah
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@top_2		= word ptr -8
+@@left_2		= word ptr -6
+@@top_1		= word ptr -4
+@@left_1		= word ptr -2
 arg_0		= word ptr  6
 @@palette		= dword	ptr  8
 arg_6		= dword	ptr  0Ch
@@ -4810,39 +4603,35 @@ arg_6		= dword	ptr  0Ch
 		enter	0Eh, 0
 		push	si
 		push	di
-		mov	[bp+var_2], 0
-		mov	[bp+var_4], 0
-		mov	[bp+var_6], 278h
-		mov	[bp+var_8], 188h
+		mov	[bp+@@left_1], 0
+		mov	[bp+@@top_1], 0
+		mov	[bp+@@left_2], (RES_X - 8)
+		mov	[bp+@@top_2], (RES_Y - 8)
 		mov	[bp+var_E], 0
 		jmp	loc_11BFE
 ; ---------------------------------------------------------------------------
 
 loc_11AB6:
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@left_1]
 		mov	[bp+var_A], ax
-		mov	ax, [bp+var_4]
+		mov	ax, [bp+@@top_1]
 		mov	[bp+var_C], ax
 		jmp	short loc_11ADB
 ; ---------------------------------------------------------------------------
 
 loc_11AC4:
-		push	1
-		push	[bp+var_4]
-		push	[bp+var_2]
-		call	sub_118A2
-		add	sp, 6
-		sub	[bp+var_2], 8
-		add	[bp+var_4], 8
+		call	_graph_interleave_pages_8x8_8 c, [bp+@@left_1], [bp+@@top_1], 1
+		sub	[bp+@@left_1], 8
+		add	[bp+@@top_1], 8
 
 loc_11ADB:
-		cmp	[bp+var_2], 0
+		cmp	[bp+@@left_1], 0
 		jl	short loc_11AE8
-		cmp	[bp+var_4], 18Fh
+		cmp	[bp+@@top_1], (RES_Y - 1)
 		jle	short loc_11AC4
 
 loc_11AE8:
-		cmp	[bp+var_A], 278h
+		cmp	[bp+var_A], 632
 		jge	short loc_11AF7
 		mov	ax, [bp+var_A]
 		add	ax, 8
@@ -4853,8 +4642,8 @@ loc_11AF7:
 		mov	ax, [bp+var_A]
 
 loc_11AFA:
-		mov	[bp+var_2], ax
-		cmp	[bp+var_A], 278h
+		mov	[bp+@@left_1], ax
+		cmp	[bp+var_A], 632
 		jge	short loc_11B08
 		xor	ax, ax
 		jmp	short loc_11B0E
@@ -4865,7 +4654,7 @@ loc_11B08:
 		add	ax, 8
 
 loc_11B0E:
-		mov	[bp+var_4], ax
+		mov	[bp+@@top_1], ax
 		mov	ax, [bp+var_E]
 		mov	bx, 8
 		cwd
@@ -4937,26 +4726,22 @@ loc_11B85:
 		call	_z_palette_set_all_show c, word ptr [bp+@@palette], word ptr [bp+@@palette+2]
 
 loc_11B98:
-		mov	ax, [bp+var_6]
+		mov	ax, [bp+@@left_2]
 		mov	[bp+var_A], ax
-		mov	ax, [bp+var_8]
+		mov	ax, [bp+@@top_2]
 		mov	[bp+var_C], ax
 		jmp	short loc_11BBD
 ; ---------------------------------------------------------------------------
 
 loc_11BA6:
-		push	2
-		push	[bp+var_8]
-		push	[bp+var_6]
-		call	sub_118A2
-		add	sp, 6
-		sub	[bp+var_6], 8
-		add	[bp+var_8], 8
+		call	_graph_interleave_pages_8x8_8 c, [bp+@@left_2], [bp+@@top_2], 2
+		sub	[bp+@@left_2], 8
+		add	[bp+@@top_2], 8
 
 loc_11BBD:
-		cmp	[bp+var_6], 0
+		cmp	[bp+@@left_2], 0
 		jl	short loc_11BCA
-		cmp	[bp+var_8], 18Fh
+		cmp	[bp+@@top_2], (RES_Y - 1)
 		jle	short loc_11BA6
 
 loc_11BCA:
@@ -4971,7 +4756,7 @@ loc_11BD5:
 		add	ax, 0FFF8h
 
 loc_11BDB:
-		mov	[bp+var_6], ax
+		mov	[bp+@@left_2], ax
 		cmp	[bp+var_C], 0
 		jle	short loc_11BEC
 		mov	ax, [bp+var_C]
@@ -4983,7 +4768,7 @@ loc_11BEC:
 		mov	ax, [bp+var_C]
 
 loc_11BEF:
-		mov	[bp+var_8], ax
+		mov	[bp+@@top_2], ax
 		push	[bp+arg_0]
 		call	_delay
 		pop	cx
@@ -46989,59 +46774,7 @@ include libs/master.lib/rand[data].asm
 include th01/sprites/pellet_c.asp
 public _res_id
 _res_id	db 'ReiidenConfig',0
-unk_355EC	db    0
-		dd    0
-		db    0
-		db    0
-		db    0
-		db  55h	; U
-		db 0AAh	; ª
-		db  55h	; U
-		db 0AAh	; ª
-		db  55h	; U
-		db 0AAh	; ª
-		db  55h	; U
-		db 0AAh	; ª
-		db 0AAh	; ª
-		db  55h	; U
-		db 0AAh	; ª
-		db  55h	; U
-		db 0AAh	; ª
-		db  55h	; U
-		db 0AAh	; ª
-		db  55h	; U
-		db    0
-		db 0DDh
-		db    0
-		db  77h	; w
-		db    0
-		db 0DDh
-		db    0
-		db  77h	; w
-		db  33h	; 3
-		db  33h	; 3
-		db 0CCh	; Ì
-		db 0CCh	; Ì
-		db  33h	; 3
-		db  33h	; 3
-		db 0CCh	; Ì
-		db 0CCh	; Ì
-		db 0CCh	; Ì
-		db 0CCh	; Ì
-		db  33h	; 3
-		db  33h	; 3
-		db 0CCh	; Ì
-		db 0CCh	; Ì
-		db  33h	; 3
-		db  33h	; 3
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
+include th01/sprites/ileave_m.asp
 		db    0
 		db 0FFh
 		db  80h
