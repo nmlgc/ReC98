@@ -3,6 +3,8 @@
  * 2nd part of code segment #13 of TH01's REIIDEN.EXE
  */
 
+#pragma codeseg main_13_TEXT
+
 extern "C" {
 #include "th01/th01.h"
 #include "th01/math/wave.hpp"

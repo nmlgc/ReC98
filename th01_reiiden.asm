@@ -73,7 +73,6 @@ BOMBS_MAX = 5
 	extern _vsprintf:proc
 
 main_01 group main_01_TEXT, main_01__TEXT, main_01___TEXT
-main_13 group main_13_TEXT, main_13__TEXT
 main_19 group main_19_TEXT, main_19__TEXT
 main_21 group main_21_TEXT, main_21__TEXT
 main_25 group main_25_TEXT, main_25__TEXT
@@ -4550,247 +4549,15 @@ main_12_TEXT	ends
 
 ; Segment type:	Pure code
 main_13_TEXT	segment	byte public 'CODE' use16
-main_13_TEXT	ends
-
-main_13__TEXT	segment	byte public 'CODE' use16
-		assume cs:main_13
-		;org 8
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
 	extern _z_vsync_wait_and_scrollup:proc
 	extern _egc_copy_rows_1_to_0:proc
 	extern _graph_interleave_pages_8x8_8:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_11A7C	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	offset _z_Palettes
-		push	ds
-		push	offset _z_Palettes
-		push	[bp+arg_0]
-		nopcall	sub_11A94
-		add	sp, 0Ah
-		pop	bp
-		retf
-sub_11A7C	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_11A94	proc far
-
-var_E		= word ptr -0Eh
-var_C		= word ptr -0Ch
-var_A		= word ptr -0Ah
-@@top_2		= word ptr -8
-@@left_2		= word ptr -6
-@@top_1		= word ptr -4
-@@left_1		= word ptr -2
-arg_0		= word ptr  6
-@@palette		= dword	ptr  8
-arg_6		= dword	ptr  0Ch
-
-		enter	0Eh, 0
-		push	si
-		push	di
-		mov	[bp+@@left_1], 0
-		mov	[bp+@@top_1], 0
-		mov	[bp+@@left_2], (RES_X - 8)
-		mov	[bp+@@top_2], (RES_Y - 8)
-		mov	[bp+var_E], 0
-		jmp	loc_11BFE
-; ---------------------------------------------------------------------------
-
-loc_11AB6:
-		mov	ax, [bp+@@left_1]
-		mov	[bp+var_A], ax
-		mov	ax, [bp+@@top_1]
-		mov	[bp+var_C], ax
-		jmp	short loc_11ADB
-; ---------------------------------------------------------------------------
-
-loc_11AC4:
-		call	_graph_interleave_pages_8x8_8 c, [bp+@@left_1], [bp+@@top_1], 1
-		sub	[bp+@@left_1], 8
-		add	[bp+@@top_1], 8
-
-loc_11ADB:
-		cmp	[bp+@@left_1], 0
-		jl	short loc_11AE8
-		cmp	[bp+@@top_1], (RES_Y - 1)
-		jle	short loc_11AC4
-
-loc_11AE8:
-		cmp	[bp+var_A], 632
-		jge	short loc_11AF7
-		mov	ax, [bp+var_A]
-		add	ax, 8
-		jmp	short loc_11AFA
-; ---------------------------------------------------------------------------
-
-loc_11AF7:
-		mov	ax, [bp+var_A]
-
-loc_11AFA:
-		mov	[bp+@@left_1], ax
-		cmp	[bp+var_A], 632
-		jge	short loc_11B08
-		xor	ax, ax
-		jmp	short loc_11B0E
-; ---------------------------------------------------------------------------
-
-loc_11B08:
-		mov	ax, [bp+var_C]
-		add	ax, 8
-
-loc_11B0E:
-		mov	[bp+@@top_1], ax
-		mov	ax, [bp+var_E]
-		mov	bx, 8
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_11B98
-		xor	di, di
-		jmp	short loc_11B85
-; ---------------------------------------------------------------------------
-
-loc_11B22:
-		xor	si, si
-		jmp	short loc_11B7F
-; ---------------------------------------------------------------------------
-
-loc_11B26:
-		mov	ax, di
-		imul	ax, 3
-		les	bx, [bp+@@palette]
-		add	bx, ax
-		mov	al, es:[bx+si]
-		mov	dx, di
-		imul	dx, 3
-		les	bx, [bp+arg_6]
-		add	bx, dx
-		cmp	al, es:[bx+si]
-		jz	short loc_11B7E
-		mov	ax, di
-		imul	ax, 3
-		les	bx, [bp+@@palette]
-		add	bx, ax
-		mov	al, es:[bx+si]
-		mov	dx, di
-		imul	dx, 3
-		les	bx, [bp+arg_6]
-		add	bx, dx
-		cmp	al, es:[bx+si]
-		jle	short loc_11B62
-		mov	al, -1
-		jmp	short loc_11B64
-; ---------------------------------------------------------------------------
-
-loc_11B62:
-		mov	al, 1
-
-loc_11B64:
-		mov	dx, di
-		imul	dx, 3
-		les	bx, [bp+@@palette]
-		add	bx, dx
-		add	al, es:[bx+si]
-		mov	dx, di
-		imul	dx, 3
-		les	bx, [bp+@@palette]
-		add	bx, dx
-		mov	es:[bx+si], al
-
-loc_11B7E:
-		inc	si
-
-loc_11B7F:
-		cmp	si, 3
-		jl	short loc_11B26
-		inc	di
-
-loc_11B85:
-		cmp	di, 10h
-		jl	short loc_11B22
-		call	_z_palette_set_all_show c, word ptr [bp+@@palette], word ptr [bp+@@palette+2]
-
-loc_11B98:
-		mov	ax, [bp+@@left_2]
-		mov	[bp+var_A], ax
-		mov	ax, [bp+@@top_2]
-		mov	[bp+var_C], ax
-		jmp	short loc_11BBD
-; ---------------------------------------------------------------------------
-
-loc_11BA6:
-		call	_graph_interleave_pages_8x8_8 c, [bp+@@left_2], [bp+@@top_2], 2
-		sub	[bp+@@left_2], 8
-		add	[bp+@@top_2], 8
-
-loc_11BBD:
-		cmp	[bp+@@left_2], 0
-		jl	short loc_11BCA
-		cmp	[bp+@@top_2], (RES_Y - 1)
-		jle	short loc_11BA6
-
-loc_11BCA:
-		cmp	[bp+var_C], 0
-		jle	short loc_11BD5
-		mov	ax, 278h
-		jmp	short loc_11BDB
-; ---------------------------------------------------------------------------
-
-loc_11BD5:
-		mov	ax, [bp+var_A]
-		add	ax, 0FFF8h
-
-loc_11BDB:
-		mov	[bp+@@left_2], ax
-		cmp	[bp+var_C], 0
-		jle	short loc_11BEC
-		mov	ax, [bp+var_C]
-		add	ax, 0FFF8h
-		jmp	short loc_11BEF
-; ---------------------------------------------------------------------------
-
-loc_11BEC:
-		mov	ax, [bp+var_C]
-
-loc_11BEF:
-		mov	[bp+@@top_2], ax
-		push	[bp+arg_0]
-		call	_delay
-		pop	cx
-		inc	[bp+var_E]
-
-loc_11BFE:
-		cmp	[bp+var_E], 82h
-		jge	short loc_11C08
-		jmp	loc_11AB6
-; ---------------------------------------------------------------------------
-
-loc_11C08:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_11A94	endp
-
+	extern _pagetrans_diagonal_8x8:proc
+	extern _pagetrans_diagonal_8x8_with_pale:proc
 	extern _graph_2xscale_byterect_1_to_0_sl:proc
 	extern _graph_hline_unput_masked:proc
 	extern _egc_wave_unput:proc
-main_13__TEXT	ends
+main_13_TEXT	ends
 
 ; ===========================================================================
 
@@ -34749,8 +34516,7 @@ loc_2871C:
 		call	_grp_put_palette_show stdcall, large [off_35DAB]
 		push	0
 		call	_graph_accesspage_func
-		push	28h ; '('
-		call	sub_11A7C
+		call	_pagetrans_diagonal_8x8 stdcall, 40
 		add	sp, 0Ch
 		mov	eax, _rand
 		mov	random_seed, eax
@@ -41516,13 +41282,7 @@ loc_2C9D4:
 loc_2C9DA:
 		cmp	si, size rgb_t
 		jb	short loc_2C9D4
-		push	ds
-		push	offset _grp_palette
-		push	ds
-		push	offset _z_Palettes
-		push	0
-		call	sub_11A94
-		add	sp, 0Ah
+		call	_pagetrans_diagonal_8x8_with_pale c, 0, offset _z_Palettes, ds, offset _grp_palette, ds
 		push	1
 		call	_graph_accesspage_func
 		pop	cx
