@@ -29,7 +29,7 @@ void pascal near rotrect_draw(int rad, unsigned char angle)
 }
 
 #define graph_accesspage_func graph_accesspage
-#include "th01/hardware/egccopyr.cpp"
+#include "th01/hardware/egcrect.cpp"
 
 void pascal rotrect_animate(char rot_speed, char start_angle)
 {

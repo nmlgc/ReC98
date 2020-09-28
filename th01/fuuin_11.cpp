@@ -7,5 +7,5 @@ extern "C" {
 #include "th01/th01.h"
 
 #include "th01/hardware/vplanset.c"
-#include "th01/hardware/egccopyr.cpp"
+#include "th01/hardware/egcrect.cpp"
 }
