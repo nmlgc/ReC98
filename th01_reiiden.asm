@@ -47211,7 +47211,6 @@ _INIT_	ends
 
 	.data?
 
-; TODO: Missing clip[bss].asm (16 bytes) somewhere in there...
 public _credit_bombs
 _credit_bombs	db ?
 byte_36C15	db ?
@@ -47263,7 +47262,7 @@ include th01/formats/grp_buf[bss].asm
 include libs/master.lib/pal[bss].asm
 include libs/master.lib/fil[bss].asm
 include libs/master.lib/keystart[bss].asm
-		db 16 dup(?)
+include libs/master.lib/clip[bss].asm
 public _resident
 _resident	dd ?
 unk_391A0	db    ?	;

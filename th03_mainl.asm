@@ -5963,7 +5963,6 @@ aStf12_cdg	db 'stf12.cdg',0
 
 	.data?
 
-; TODO: Missing clip[bss].asm (16 bytes) somewhere in there...
 unk_F72C	db    ?	;
 		db 59 dup(?)
 byte_F768	db ?
@@ -5975,7 +5974,7 @@ unk_F7A6	db    ?	;
 byte_F7E2	db ?
 _playchar_filename_id	db PLAYER_COUNT dup (?)
 byte_F7E5	db ?
-		db 16 dup(?)
+include libs/master.lib/clip[bss].asm
 include libs/master.lib/fil[bss].asm
 include libs/master.lib/js[bss].asm
 include libs/master.lib/pal[bss].asm

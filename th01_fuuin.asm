@@ -1817,7 +1817,6 @@ include libs/master.lib/rand[data].asm
 
 	.data?
 
-; TODO: Missing clip[bss].asm (16 bytes) somewhere in there...
 public _continues_total, _continues_per_scene
 _continues_total	dd ?
 _continues_per_scene	dd SCENE_COUNT dup(?)
@@ -1843,6 +1842,6 @@ include th01/formats/grp_buf[bss].asm
 include th01/hardware/vram_planes[bss].asm
 include libs/master.lib/pal[bss].asm
 include libs/master.lib/fil[bss].asm
-		db 16 dup (?)
+include libs/master.lib/clip[bss].asm
 
 		end

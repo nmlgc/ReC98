@@ -35163,11 +35163,10 @@ amp_237F8	db 0
 
 	.data?
 
-; TODO: Missing clip[bss].asm (16 bytes) somewhere in there...
 		dw ?
 fp_23D90	dw ?
 include th02/main/demo[bss].asm
-		db 16 dup(?)
+include libs/master.lib/clip[bss].asm
 include libs/master.lib/fil[bss].asm
 include libs/master.lib/grcg_circle[bss].asm
 include libs/master.lib/js[bss].asm

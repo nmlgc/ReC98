@@ -1653,7 +1653,6 @@ _res_id	db 'ReiidenConfig',0
 include th01/snd/mdrv2[data].asm
 	.data?
 
-; TODO: Missing clip[bss].asm (16 bytes) somewhere in there...
 public _rand
 _rand	dd ?
 public _columns
@@ -1674,7 +1673,7 @@ include th01/formats/grp_buf[bss].asm
 include libs/master.lib/pal[bss].asm
 include libs/master.lib/fil[bss].asm
 include libs/master.lib/keystart[bss].asm
-		db 16 dup(?)
+include libs/master.lib/clip[bss].asm
 public _resident
 _resident	dd ?
 

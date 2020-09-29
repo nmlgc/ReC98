@@ -4733,10 +4733,9 @@ aName		db 'name',0
 
 	.data?
 
-; TODO: Missing clip[bss].asm (16 bytes) somewhere in there...
 public _resident
 _resident	dd ?
-		db 16 dup(?)
+include libs/master.lib/clip[bss].asm
 include libs/master.lib/fil[bss].asm
 include libs/master.lib/js[bss].asm
 include libs/master.lib/pal[bss].asm

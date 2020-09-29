@@ -34644,7 +34644,6 @@ aBoss3_m	db 'boss3.m',0
 		db 0
 	.data?
 
-; TODO: Missing clip[bss].asm (16 bytes) somewhere in there...
 byte_1F466	db ?
 stage1_gaiji_halflen	db ?
 public _stage_title, _stage_title_halflen, _bgm_title_id
@@ -34671,7 +34670,8 @@ unk_1F4AD	db    ?	;
 		db 47 dup(?)
 byte_1F4DD	db ?
 byte_1F4DE	db ?
-		db 17 dup(?)
+		db ?
+include libs/master.lib/clip[bss].asm
 include libs/master.lib/fil[bss].asm
 include libs/master.lib/grcg_circle[bss].asm
 include libs/master.lib/pal[bss].asm
