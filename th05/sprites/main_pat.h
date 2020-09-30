@@ -115,10 +115,10 @@ typedef enum {
 	/// =======
 	// st04.bb2
 	// --------
-	PAT_KNIFE = 193,
-	PAT_KNIFE_last = (PAT_KNIFE + BULLET_V_CELS),
-	PAT_DECAY_KNIFE,
-	PAT_DECAY_KNIFE_last = (PAT_DECAY_KNIFE + BULLET_DECAY_CELS - 1),
+	PAT_SWORD = 193,
+	PAT_SWORD_last = (PAT_SWORD + BULLET_V_CELS),
+	PAT_DECAY_SWORD,
+	PAT_DECAY_SWORD_last = (PAT_DECAY_SWORD + BULLET_DECAY_CELS - 1),
 	/// -------
 	/// =======
 

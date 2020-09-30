@@ -100,27 +100,27 @@ b4ball_template	equ <_custom_entities>
 b4balls	equ <_custom_entities[1 * size b4ball_t]>
 ; ------------------------------
 
-; Yumeko's knives
+; Yumeko's swords
 ; ---------------
-KNIFE_COUNT = 63
-KNIFE_W = 32
-KNIFE_H = 32
+SWORD_COUNT = 63
+SWORD_W = 32
+SWORD_H = 32
 
-knife_t struc
+sword_t struc
 	flag	db ?
-	KNIFE_angle	db ?
+	SWORD_angle	db ?
 	pos	motion_t <?>
 	twirl_time	dw ?
 		dw ?
-	KNIFE_patnum_tiny	dw ?
-	KNIFE_decay_frames	dw ?
+	SWORD_patnum_tiny	dw ?
+	SWORD_decay_frames	dw ?
 		dw ?
-	KNIFE_speed	db ?
+	SWORD_speed	db ?
 		db ?
-knife_t ends
+sword_t ends
 
-knife_template	equ <_custom_entities>
-knives	equ <_custom_entities[1 * size knife_t]>
+sword_template	equ <_custom_entities>
+swords	equ <_custom_entities[1 * size sword_t]>
 ; ---------------
 
 ; Shinki's 32×32 balls

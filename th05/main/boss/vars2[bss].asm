@@ -1,6 +1,6 @@
 ; Variables for the secondary on-screen boss. Used for Yuki in the first part
 ; of the Stage 4 boss fight, for Shinki's leave animation at the beginning of
-; the Stage 5 boss fight, and, weirdly enough, for the knife launch position
+; the Stage 5 boss fight, and, weirdly enough, for the sword launch position
 ; in Phase 8 of the same fight.
 public _boss2, _yuki
 public _boss2_pos, _boss2_hp, _boss2_sprite, _boss2_phase, _boss2_phase_frame

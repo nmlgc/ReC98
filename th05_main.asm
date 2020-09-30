@@ -8412,7 +8412,7 @@ loc_10F86:
 		retn
 sub_10F12	endp
 
-include th05/main/bullet/knives_render.asm
+include th05/main/bullet/swords_render.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -22221,7 +22221,7 @@ off_1C816	dw offset loc_1C54D
 		dw offset loc_1C75B
 		dw offset loc_1C784
 
-include th05/main/bullet/knives_add_update.asm
+include th05/main/bullet/swords_add_update.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -22294,9 +22294,9 @@ sub_1CA42	proc near
 		cmp	_boss_phase_frame, 16
 		jnz	short loc_1CA6B
 		mov	_boss_sprite, 184
-		mov	knife_template.twirl_time, 48
-		mov	knife_template.KNIFE_speed, (5 shl 4)
-		mov	knife_template.KNIFE_angle, 70h
+		mov	sword_template.twirl_time, 48
+		mov	sword_template.SWORD_speed, (5 shl 4)
+		mov	sword_template.SWORD_angle, 70h
 		push	1
 		call	randring2_next16_and
 		mov	angle_2D085, al
@@ -22316,30 +22316,30 @@ loc_1CA6B:
 		cmp	angle_2D085, 0
 		jz	short loc_1CA8F
 		mov	al, 80h
-		sub	al, knife_template.KNIFE_angle
-		mov	knife_template.KNIFE_angle, al
+		sub	al, sword_template.SWORD_angle
+		mov	sword_template.SWORD_angle, al
 
 loc_1CA8F:
-		push	offset knife_template.pos.cur
+		push	offset sword_template.pos.cur
 		push	_boss_pos.cur.x
 		push	_boss_pos.cur.y
 		push	(48 shl 4)
-		mov	al, knife_template.KNIFE_angle
+		mov	al, sword_template.SWORD_angle
 		mov	ah, 0
 		push	ax
 		call	vector2_at
-		call	knives_add
+		call	swords_add
 		cmp	angle_2D085, 0
 		jz	short loc_1CABB
 		mov	al, 80h
-		sub	al, knife_template.KNIFE_angle
-		mov	knife_template.KNIFE_angle, al
+		sub	al, sword_template.SWORD_angle
+		mov	sword_template.SWORD_angle, al
 
 loc_1CABB:
-		mov	al, knife_template.KNIFE_angle
+		mov	al, sword_template.SWORD_angle
 		add	al, -6
-		mov	knife_template.KNIFE_angle, al
-		cmp	knife_template.KNIFE_angle, 0Ch
+		mov	sword_template.SWORD_angle, al
+		cmp	sword_template.SWORD_angle, 0Ch
 		ja	short loc_1CAD5
 		mov	_boss_phase_frame, 0
 		mov	_boss_mode, 0
@@ -22434,8 +22434,8 @@ sub_1CB71	proc near
 		mov	_bullet_template.speed, (6 shl 4)
 		call	_bullet_template_tune
 		call	snd_se_play pascal, 8
-		mov	knife_template.twirl_time, 32
-		mov	knife_template.KNIFE_speed, (4 shl 4) + 12
+		mov	sword_template.twirl_time, 32
+		mov	sword_template.SWORD_speed, (4 shl 4) + 12
 		mov	byte_2D083, 0
 		mov	byte_2D082, 20h
 		jmp	loc_1CCD0
@@ -22489,13 +22489,13 @@ loc_1CC3E:
 		sub	al, 0Fh
 		mov	[bp+@@angle], al
 		call	randring2_next16_mod pascal, (96 shl 4)
-		mov	knife_template.pos.cur.y, ax
+		mov	sword_template.pos.cur.y, ax
 		call	randring2_next16_mod pascal, (352 shl 4)
 		add	ax, (16 shl 4)
-		mov	knife_template.pos.cur.x, ax
-		call	player_angle_from pascal, ax, knife_template.pos.cur.y, word ptr [bp+@@angle]
-		mov	knife_template.KNIFE_angle, al
-		call	knives_add
+		mov	sword_template.pos.cur.x, ax
+		call	player_angle_from pascal, ax, sword_template.pos.cur.y, word ptr [bp+@@angle]
+		mov	sword_template.SWORD_angle, al
+		call	swords_add
 
 loc_1CC7F:
 		mov	ax, _boss_hp
@@ -22740,8 +22740,8 @@ sub_1CED9	proc near
 		mov	_laser_template.grow_at_age, 28
 		mov	byte_2D083, 0
 		mov	byte_2D082, 20h
-		mov	knife_template.twirl_time, 32
-		mov	knife_template.KNIFE_speed, (4 shl 4) + 12
+		mov	sword_template.twirl_time, 32
+		mov	sword_template.SWORD_speed, (4 shl 4) + 12
 		jmp	loc_1D081
 ; ---------------------------------------------------------------------------
 
@@ -22806,13 +22806,13 @@ loc_1CFFA:
 		sub	al, 0Fh
 		mov	[bp+@@angle], al
 		call	randring2_next16_mod pascal, (96 shl 4)
-		mov	knife_template.pos.cur.y, ax
+		mov	sword_template.pos.cur.y, ax
 		call	randring2_next16_mod pascal, (352 shl 4)
 		add	ax, (16 shl 4)
-		mov	knife_template.pos.cur.x, ax
-		call	player_angle_from pascal, ax, knife_template.pos.cur.y, word ptr [bp+@@angle]
-		mov	knife_template.KNIFE_angle, al
-		call	knives_add
+		mov	sword_template.pos.cur.x, ax
+		call	player_angle_from pascal, ax, sword_template.pos.cur.y, word ptr [bp+@@angle]
+		mov	sword_template.SWORD_angle, al
+		call	swords_add
 		inc	si
 
 loc_1D02B:
@@ -22873,8 +22873,8 @@ yumeko_1D085	proc near
 		mov	_bullet_template.spread_angle_delta, al
 		mov	_bullet_template.speed, (8 shl 4)
 		call	snd_se_play pascal, 8
-		mov	knife_template.twirl_time, 32
-		mov	knife_template.KNIFE_speed, (4 shl 4)
+		mov	sword_template.twirl_time, 32
+		mov	sword_template.SWORD_speed, (4 shl 4)
 		call	randring2_next16_mod pascal, (32 shl 4)
 		mov	_boss2_pos.cur.y, ax
 		push	(28h shl 16) or 1Eh
@@ -22899,20 +22899,20 @@ loc_1D117:
 		or	dx, dx
 		jnz	loc_1D1C4
 		mov	al, angle_2D084
-		mov	knife_template.KNIFE_angle, al
+		mov	sword_template.SWORD_angle, al
 		cmp	angle_2D084, 0
 		jnz	short loc_1D142
-		mov	knife_template.pos.cur.x, (16 shl 4)
+		mov	sword_template.pos.cur.x, (16 shl 4)
 		jmp	short loc_1D148
 ; ---------------------------------------------------------------------------
 
 loc_1D142:
-		mov	knife_template.pos.cur.x, ((PLAYFIELD_W - 16) shl 4)
+		mov	sword_template.pos.cur.x, ((PLAYFIELD_W - 16) shl 4)
 
 loc_1D148:
 		mov	ax, _boss2_pos.cur.y
-		mov	knife_template.pos.cur.y, ax
-		call	knives_add
+		mov	sword_template.pos.cur.y, ax
+		call	swords_add
 		mov	al, angle_2D085
 		mov	ah, 0
 		shl	ax, 4
@@ -23034,7 +23034,7 @@ yumeko_update	proc far
 		mov	_homing_target, eax
 		mov	_bullet_template.BT_origin, eax
 		mov	_gather_template.GT_center, eax
-		mov	knife_template.pos.cur, eax
+		mov	sword_template.pos.cur, eax
 		inc	_boss_phase_frame
 		mov	al, _boss_phase
 		mov	ah, 0
@@ -23111,7 +23111,7 @@ loc_1D360:
 		mov	_boss_mode, 1
 		mov	_boss_mode_change, 0
 		mov	fp_2CE46, offset sub_1CA42
-		mov	_boss_custombullets_render, offset knives_render
+		mov	_boss_custombullets_render, offset swords_render
 		jmp	loc_1D513
 ; ---------------------------------------------------------------------------
 
@@ -23278,7 +23278,7 @@ loc_1D50C:
 ; ---------------------------------------------------------------------------
 
 loc_1D513:
-		call	knives_update
+		call	swords_update
 		call	hud_hp_update_and_render pascal, _boss_hp, 8300
 
 loc_1D520:

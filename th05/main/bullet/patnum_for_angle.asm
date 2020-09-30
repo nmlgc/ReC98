@@ -7,7 +7,7 @@ bullet_patnum_for_angle	proc near
 	mov	al, ss:[bx+@@angle]
 	mov	bx, ss:[bx+@@patnum_base]
 	add	al, 3
-	; Yes, this is intended to also cover Yumeko's knife bullets, which start
+	; Yes, this is intended to also cover Yumeko's swords, which start
 	; at patnum 193.
 	cmp	bx, PAT_BULLET16_V
 	jnb	short @@is_vector_bullet
