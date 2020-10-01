@@ -4,6 +4,8 @@
  * modifications for TH01
  */
 
+#pragma option -Z
+
 extern "C" {
 
 #include <ctype.h>
@@ -24,8 +26,6 @@ typedef struct {
 	int32_t offset; // of the file data within the entire archive
 	int32_t reserved; // Always zero
 } pf_header_t;
-
-#pragma option -Z
 
 pf_header_t *arc_pfs;
 pf_header_t *file_pf;

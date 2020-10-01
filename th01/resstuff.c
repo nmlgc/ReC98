@@ -3,9 +3,9 @@
  * Random resident structure stuff
  */
 
-#include "th01/th01.h"
-
 #pragma option -2
+
+#include "th01/th01.h"
 
 extern const char res_id[] /* = RES_ID */;
 extern resident_t *resident;

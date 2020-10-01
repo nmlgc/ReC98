@@ -1,5 +1,3 @@
-#pragma option -1
-
 extern "C" {
 
 #include "platform.h"

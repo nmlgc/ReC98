@@ -1,11 +1,11 @@
+#pragma codeseg seg2
+#pragma option -k-
+
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
 #include "decomp.h"
 #include "th03/formats/hfliplut.h"
-
-#pragma codeseg seg2
-#pragma option -k-
 
 void hflip_lut_generate(void)
 {

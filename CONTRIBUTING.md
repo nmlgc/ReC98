@@ -195,6 +195,11 @@ C++, Open Watcom, and Visual C++, which will ease future third-party ports.
   code, not to replace it with an overly nested, "enterprise-y" class
   hierarchy.
 
+* Put `#pragma codeseg` and any file-wide `#pragma option` settings at the top
+  of the translation unit, *after* any header comment, and *before*
+  `extern "C"` and header inclusions. `#pragma codeseg` comes first, followed
+  by `#pragma option`.
+
 ## Decompilation
 
 * Don't try to decompile self-modifying code. Yes, it may be *possible* by
@@ -208,9 +213,8 @@ C++, Open Watcom, and Visual C++, which will ease future third-party ports.
   alignment. Instead, directly spell out the alignment by adding padding
   members to structures, and additional global variables. It's simply not
   worth requiring every structure to work around it. For functions with
-  `switch` tables that originally were word-alignment, put a single
-  `#pragma option -a2` at the top of the translation unit, after all header
-  inclusions.
+  `switch` tables that originally were word-aligned, put a single
+  `#pragma option -a2` *after* all header inclusions.
 
 ## Naming conventions
 

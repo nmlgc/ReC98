@@ -4,14 +4,11 @@
  */
 
 #pragma codeseg main_13_TEXT
+#pragma option -2 -O- -Z-
 
 extern "C" {
 #include "th01/th01.h"
 #include "th01/math/wave.hpp"
-
-#pragma option -2
-#pragma option -O-
-#pragma option -Z-
 
 #include "th01/hardware/grp2xscs.cpp"
 

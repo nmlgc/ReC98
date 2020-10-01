@@ -3,11 +3,11 @@
  * VSync interrupt handler
  */
 
-#include "th01/th01.h"
-#include "th01/hardware/vsync.h"
-
 #pragma option -2
 #pragma warn -aus
+
+#include "th01/th01.h"
+#include "th01/hardware/vsync.h"
 
 extern char vsync_initialized;
 extern int vsync_callback_is_set;

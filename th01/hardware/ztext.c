@@ -4,6 +4,8 @@
  * unused anyway.
  */
 
+#pragma option -1
+
 #include "th01/th01.h"
 #include "th01/hardware/ztext.h"
 
@@ -11,8 +13,6 @@
 #include <mbstring.h>
 #include <stdarg.h>
 #include <stdio.h>
-
-#pragma option -1
 
 extern char txesc_25line[];
 extern char txesc_20line[];

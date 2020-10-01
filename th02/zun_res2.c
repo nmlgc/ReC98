@@ -3,10 +3,10 @@
  * 2nd part of ZUN_RES.COM. Verifies HUUHI.DAT.
  */
 
+#pragma option -O- -k-
+
 #include <stddef.h>
 #include "th02/th02.h"
-
-#pragma option -O- -k-
 
 extern char rank;
 scoredat_section_t hi;

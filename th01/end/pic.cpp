@@ -1,6 +1,6 @@
-#include "th01/end/pic.hpp"
-
 #pragma option -O-
+
+#include "th01/end/pic.hpp"
 
 void pascal end_pics_load_palette_show(const char *fn)
 {
