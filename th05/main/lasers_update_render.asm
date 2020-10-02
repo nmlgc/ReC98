@@ -339,7 +339,7 @@ lasers_render	proc near
 	push	ax
 	mov	al, [si+laser_t.coords.angle]
 	mov	ah, 0
-	add	ax, 64
+	add	ax, 40h
 	push	ax
 	call	vector2_at
 	xor	di, di

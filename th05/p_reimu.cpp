@@ -17,16 +17,16 @@ extern "C" {
 	sai.angle += angle_add;
 
 #define REIMU_SUB_SPREAD_CONSTANT(i_left) \
-	if(sai.i == i_left)  { shot->from_option_l(); sai.angle = 184; } \
-	else/*i == i_right*/ { shot->from_option_r(); sai.angle = 200; }
+	if(sai.i == i_left)  { shot->from_option_l(); sai.angle = -0x48; } \
+	else/*i == i_right*/ { shot->from_option_r(); sai.angle = -0x38; }
 
 #define REIMU_SUB_SPREAD_RANDOM(i_left) \
 	if(sai.i == i_left) { \
 		shot->from_option_l(); \
-		sai.set_random_angle(3, 182); \
+		sai.set_random_angle(3, -0x4A); \
 	} else /* i == i_right */ { \
 		shot->from_option_r(); \
-		sai.set_random_angle(3, 198); \
+		sai.set_random_angle(3, -0x3A); \
 		if(option_only == 0) { \
 			sai.i = 1; \
 		} \
@@ -81,7 +81,7 @@ void pascal near shot_reimu_l4(void)
 
 	while(( shot = shots_add() ) != NULL) {
 		if(sai.i <= 3) {
-			REIMU_FORWARD(9, 3, 180, 6);
+			REIMU_FORWARD(9, 3, -0x4C, +0x06);
 		} else {
 			REIMU_SUB_SPREAD_CONSTANT(5);
 			SET_HOMING(3);
@@ -101,9 +101,9 @@ void pascal near shot_reimu_l4(void)
 		if(sai.i <= 3) { \
 			shot->damage = 9; \
 			if(sai.i == 3) { \
-				sai.angle = 178; \
+				sai.angle = -0x4E; \
 			} \
-			sai.angle += 7; \
+			sai.angle += 0x07; \
 		} else { \
 			REIMU_SUB_SPREAD_RANDOM(5); \
 			shot->set_option_sprite_and_damage(3); \
@@ -132,7 +132,7 @@ void pascal near shot_reimu_l7(void)
 
 	while(( shot = shots_add() ) != NULL) {
 		if(sai.i <= 5) {
-			REIMU_FORWARD(9, 5, 177, 5);
+			REIMU_FORWARD(9, 5, -0x4F, +0x05);
 		} else {
 			REIMU_SUB_SPREAD_RANDOM(7);
 			SET_HOMING(3);
@@ -153,10 +153,10 @@ void pascal near shot_reimu_l8(void)
 	}
 	while(( shot = shots_add() ) != NULL) {
 		if(sai.i <= 5) {
-			REIMU_FORWARD(9, 5, 177, 5);
+			REIMU_FORWARD(9, 5, -0x4F, +0x05);
 		} else {
-			if(sai.i == 7) { shot->from_option_l(); sai.set_random_angle(3, 182); }
-			else/*i == 6*/ { shot->from_option_r(); sai.set_random_angle(3, 198); }
+			if(sai.i == 7) { shot->from_option_l(); sai.set_random_angle(3, -0x4A); }
+			else/*i == 6*/ { shot->from_option_r(); sai.set_random_angle(3, -0x3A); }
 			SET_HOMING(3);
 		}
 		shot_velocity_set(&shot->pos.velocity, sai.angle);
@@ -173,17 +173,17 @@ void pascal near shot_reimu_l9(void)
 
 	while(( shot = shots_add() ) != NULL) {
 		if(sai.i <= 5) {
-			REIMU_FORWARD(9, 5, 177, 5);
+			REIMU_FORWARD(9, 5, -0x4F, +0x05);
 		} else {
 			if(sai.i <= 7) {
 				REIMU_SUB_SPREAD_CONSTANT(7);
 			} else {
 				if(sai.i == 9) {
 					shot->from_option_l();
-					sai.angle = 170;
+					sai.angle = -0x56;
 				} else /* i == 8 */ {
 					shot->from_option_r();
-					sai.angle = 214;
+					sai.angle = -0x2A;
 					if(option_only == 0) {
 						sai.i = 1;
 					}

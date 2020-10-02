@@ -26,7 +26,7 @@ Point star_pos[STAR_COUNT];
 int frame;
 int circle_speed_x[CIRCLE_COUNT];
 int circle_speed_y[CIRCLE_COUNT];
-char star_angle;
+unsigned char star_angle;
 unsigned char star_speed[STAR_COUNT];
 
 void graph_clear_both(void)
@@ -103,7 +103,7 @@ void objects_setup(void)
 		star_pos[i].y = rand() % 400;
 		star_speed[i] = (rand() % 32) + 6;
 	}
-	star_angle = 64;
+	star_angle = +0x40;
 }
 
 void circles_render_and_update(void)

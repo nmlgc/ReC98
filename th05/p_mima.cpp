@@ -80,7 +80,7 @@ void pascal near shot_mima_l4(void)
 void pascal near shot_mima_l5(void)
 {
 	SHOT_FUNC_INIT(4, SC_6X, SC_3X, i += 3);
-	sai.angle = 186;
+	sai.angle = -0x46;
 	while(( shot = shots_add() ) != NULL) {
 		if(sai.i <= 4) {
 			switch(sai.i - 1) {
@@ -94,7 +94,7 @@ void pascal near shot_mima_l5(void)
 			shot->set_option_sprite_and_damage(4);
 		} else {
 			shot_velocity_set(&shot->pos.velocity, sai.angle);
-			sai.angle += 6;
+			sai.angle += 0x06;
 			shot->damage = 7;
 		}
 		if(sai.next() <= 0) {
@@ -106,7 +106,7 @@ void pascal near shot_mima_l5(void)
 void pascal near shot_mima_l6(void)
 {
 	SHOT_FUNC_INIT(4, SC_6X, SC_3X, i += 3);
-	sai.angle = 186;
+	sai.angle = -0x46;
 	while(( shot = shots_add() ) != NULL) {
 		if(sai.i <= 4) {
 			switch(sai.i - 1) {
@@ -119,7 +119,7 @@ void pascal near shot_mima_l6(void)
 			shot->set_option_sprite_and_damage(4);
 		} else {
 			shot_velocity_set(&shot->pos.velocity, sai.angle);
-			sai.angle += 6;
+			sai.angle += 0x06;
 			shot->damage = 7;
 		}
 		if(sai.next() <= 0) {
@@ -131,7 +131,7 @@ void pascal near shot_mima_l6(void)
 void pascal near shot_mima_l7(void)
 {
 	SHOT_FUNC_INIT(6, SC_6X, SC_3X, i += 3);
-	sai.angle = 186;
+	sai.angle = -0x46;
 	while(( shot = shots_add() ) != NULL) {
 		if(sai.i <= 6) {
 			switch(sai.i - 1) {
@@ -147,7 +147,7 @@ void pascal near shot_mima_l7(void)
 			shot->set_option_sprite_and_damage(4);
 		} else {
 			shot_velocity_set(&shot->pos.velocity, sai.angle);
-			sai.angle += 6;
+			sai.angle += 0x06;
 			shot->damage = 7;
 		}
 		if(sai.next() <= 0) {
@@ -159,7 +159,7 @@ void pascal near shot_mima_l7(void)
 void pascal near shot_mima_l8(void)
 {
 	SHOT_FUNC_INIT(6, SC_6X, SC_3X, i += 3);
-	sai.angle = 186;
+	sai.angle = -0x46;
 	while(( shot = shots_add() ) != NULL) {
 		if(sai.i <= 6) {
 			shot->pos.velocity.y.set(-20.0f);
@@ -176,7 +176,7 @@ void pascal near shot_mima_l8(void)
 			shot->set_option_sprite_and_damage(4);
 		} else {
 			shot_velocity_set(&shot->pos.velocity, sai.angle);
-			sai.angle += 6;
+			sai.angle += 0x06;
 			shot->damage = 7;
 		}
 		if(sai.next() <= 0) {
@@ -202,10 +202,10 @@ void pascal near shot_mima_l9(void)
 			shot->set_option_sprite_and_damage(4);
 		} else {
 			switch(sai.i - 7u) {
-			case 0:	sai.angle = 184;	                        	break;
-			case 1:	sai.angle = 192;	shot->pos.cur.x -= 8.0f;	break;
-			case 2:	sai.angle = 192;	shot->pos.cur.x += 8.0f;	break;
-			case 3:	sai.angle = 200;	                         	break;
+			case 0:	sai.angle = -0x48;	                        	break;
+			case 1:	sai.angle = -0x40;	shot->pos.cur.x -= 8.0f;	break;
+			case 2:	sai.angle = -0x40;	shot->pos.cur.x += 8.0f;	break;
+			case 3:	sai.angle = -0x38;	                         	break;
 			}
 			shot_velocity_set(&shot->pos.velocity, sai.angle);
 			shot->damage = 7;

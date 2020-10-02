@@ -17,9 +17,9 @@ void pascal near rotrect_draw(int rad, unsigned char angle)
 		x[i] = polar_x_fast(192, rad, angle);
 		y[i] = polar_y_fast(200, rad, angle);
 		if(i & 1) {
-			angle += 81;
+			angle += 0x51;
 		} else {
-			angle += 47;
+			angle += 0x2F;
 		}
 	}
 	grcg_line(x[0], y[0], x[1], y[1]);
@@ -34,7 +34,7 @@ void pascal near rotrect_draw(int rad, unsigned char angle)
 void pascal rotrect_animate(char rot_speed, char start_angle)
 {
 	int rads[] = {256, 256, 256, 256, 256};
-	char angles[] = {41, 41, 41, 41, 41};
+	char angles[] = {0x29, 0x29, 0x29, 0x29, 0x29};
 	int i, j;
 	for(i = 0; i < 5; i++) {
 		angles[i] = start_angle;

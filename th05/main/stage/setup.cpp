@@ -191,7 +191,7 @@ void pascal near stagex_setup(void)
 	midboss_render_func = midbossx_render;
 	midboss.frames_until = 5800;
 	midboss.pos.init(192, -16);
-	midboss.angle = 64;
+	midboss.angle = +0x40;
 	midboss.hp = 3000;
 	midboss.sprite = 220;
 

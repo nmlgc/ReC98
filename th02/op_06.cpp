@@ -132,9 +132,9 @@ void pascal near polygons_update_and_render(void)
 		} \
 		move_speed[i].y = ((rand() & 3) << 4) + 32; \
 		angle[i] = rand(); \
-		rot_speed[i] = 4 - (rand() & 7); \
+		rot_speed[i] = 0x04 - (rand() & 0x07); \
 		if(rot_speed[i] == 0) { \
-			rot_speed[i] = 4; \
+			rot_speed[i] = 0x04; \
 		}
 
 	int i;

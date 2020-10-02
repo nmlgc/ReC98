@@ -39,10 +39,10 @@ struct shot_t {
 		this->damage = damage;
 	}
 
-	void set_random_angle_forwards(char random_range = 15, char offset = 184) {
+	void set_random_angle_forwards(char range = 0x0F, char offset = -0x48) {
 		shot_velocity_set(
 			(SPPoint near*)&this->pos.velocity,
-			randring_angle(random_range, offset)
+			randring_angle(range, offset)
 		);
 	}
 };

@@ -5,7 +5,7 @@ uint16_t pascal near randring1_next16_and(uint16_t mask);
 uint16_t pascal near randring2_next16_and(uint16_t mask);
 uint16_t pascal near randring2_next16_mod(uint16_t mask);
 
-inline char randring_angle(char random_range, char offset)
+inline unsigned char randring_angle(unsigned char range, unsigned char offset)
 {
-	return randring1_next16_and(random_range) + offset;
+	return randring1_next16_and(range) + offset;
 }

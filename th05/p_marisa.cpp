@@ -74,10 +74,10 @@ void pascal near shot_marisa_l4(void)
 	while(( shot = shots_add() ) != NULL) {
 		if(sai.i <= STAR_COUNT) {
 			if(sai.i == STAR_COUNT) {
-				sai.angle = 180;
+				sai.angle = -0x4C;
 			}
 			shot->damage = 6;
-			sai.angle += 6;
+			sai.angle += 0x06;
 			shot_velocity_set(&shot->pos.velocity, sai.angle);
 		} else {
 			switch(sai.i - 4u) {
@@ -105,9 +105,9 @@ void pascal near shot_marisa_l5(void)
 		if(sai.i <= STAR_COUNT) {
 			shot->damage = 6;
 			if(sai.i == STAR_COUNT) {
-				sai.angle = 178;
+				sai.angle = -0x4E;
 			}
-			sai.angle += 7;
+			sai.angle += 0x07;
 			shot_velocity_set(&shot->pos.velocity, sai.angle);
 		} else {
 			switch(sai.i - 4u) {
