@@ -707,7 +707,7 @@ sub_BA89	endp
 
 sub_BC87	proc far
 
-var_2		= word ptr -2
+@@i		= word ptr -2
 
 		enter	2, 0
 		push	si
@@ -733,15 +733,15 @@ var_2		= word ptr -2
 ; ---------------------------------------------------------------------------
 
 loc_BCE1:
-		mov	[bp+var_2], si
+		mov	[bp+@@i], si
 		mov	bx, si
-		imul	bx, 45h
-		mov	al, byte ptr [bp+var_2]
-		mov	[bx+4843h], al
+		imul	bx, size CShootoutLaser
+		mov	al, byte ptr [bp+@@i]
+		mov	_shootout_lasers[bx].SL_id, al
 		inc	si
 
 loc_BCF1:
-		cmp	si, 0Ah
+		cmp	si, SHOOTOUT_LASER_COUNT
 		jl	short loc_BCE1
 		mov	byte_34AA4, 0
 		pop	si
@@ -3820,43 +3820,43 @@ loc_DD66:
 
 loc_DD6B:
 		push	ds
-		push	offset unk_391A0
+		push	offset shootout_laser_0
 		call	sub_12347
 		add	sp, 4
 		push	ds
-		push	offset unk_391E5
+		push	offset shootout_laser_1
 		call	sub_12347
 		add	sp, 4
 		push	ds
-		push	offset unk_3922A
+		push	offset shootout_laser_2
 		call	sub_12347
 		add	sp, 4
 		push	ds
-		push	offset unk_3926F
+		push	offset shootout_laser_3
 		call	sub_12347
 		add	sp, 4
 		push	ds
-		push	offset unk_392B4
+		push	offset shootout_laser_4
 		call	sub_12347
 		add	sp, 4
 		push	ds
-		push	offset unk_392F9
+		push	offset shootout_laser_5
 		call	sub_12347
 		add	sp, 4
 		push	ds
-		push	offset unk_3933E
+		push	offset shootout_laser_6
 		call	sub_12347
 		add	sp, 4
 		push	ds
-		push	offset unk_39383
+		push	offset shootout_laser_7
 		call	sub_12347
 		add	sp, 4
 		push	ds
-		push	offset unk_393C8
+		push	offset shootout_laser_8
 		call	sub_12347
 		add	sp, 4
 		push	ds
-		push	offset unk_3940D
+		push	offset shootout_laser_9
 		call	sub_12347
 		add	sp, 4
 		push	[bp+@@stage]
@@ -4920,10 +4920,10 @@ sub_1240A	proc far
 		push	seg main_15_TEXT
 		push	offset sub_12428
 		push	5
-		pushd	0Ah
-		push	45h ; 'E'
+		pushd	SHOOTOUT_LASER_COUNT
+		push	size CShootoutLaser
 		push	ds
-		push	offset unk_391A0
+		push	offset _shootout_lasers
 		call	@_vector_new_$qnvuiuluie ; _vector_new_(void *,uint,ulong,uint,...)
 		add	sp, 10h
 		pop	bp
@@ -4937,29 +4937,29 @@ sub_1240A	endp
 
 sub_12428	proc far
 
-arg_0		= dword	ptr  6
+@@CShootoutLaser		= dword	ptr  6
 
 		push	bp
 		mov	bp, sp
-		cmp	[bp+arg_0], 0
+		cmp	[bp+@@CShootoutLaser], 0
 		jnz	short loc_12444
-		push	45h ; 'E'
+		push	size CShootoutLaser
 		call	@$bnew$qui	; operator new(uint)
 		pop	cx
-		mov	word ptr [bp+arg_0+2], dx
-		mov	word ptr [bp+arg_0], ax
+		mov	word ptr [bp+@@CShootoutLaser+2], dx
+		mov	word ptr [bp+@@CShootoutLaser], ax
 		or	ax, dx
 		jz	short loc_1244D
 
 loc_12444:
-		les	bx, [bp+arg_0]
-		mov	word ptr es:[bx+3Ah], 0
+		les	bx, [bp+@@CShootoutLaser]
+		mov	es:[bx+CShootoutLaser.SL_alive], 0
 
 loc_1244D:
-		mov	dx, word ptr [bp+arg_0+2]
+		mov	dx, word ptr [bp+@@CShootoutLaser+2]
 
 loc_12450:
-		mov	ax, word ptr [bp+arg_0]
+		mov	ax, word ptr [bp+@@CShootoutLaser]
 		pop	bp
 
 locret_12454:
@@ -15492,26 +15492,26 @@ loc_1D6C4:
 
 loc_1D705:
 		mov	bx, si
-		imul	bx, 45h
-		cmp	word ptr [bx+483Ah], 0
+		imul	bx, size CShootoutLaser
+		cmp	_shootout_lasers[bx].SL_alive, 0
 		jz	short loc_1D74A
 		mov	bx, si
-		imul	bx, 45h
-		push	word ptr [bx+4804h]
+		imul	bx, size CShootoutLaser
+		push	word ptr _shootout_lasers[bx].SL_origin_y
 		mov	bx, si
-		imul	bx, 45h
-		push	word ptr [bx+4800h]
+		imul	bx, size CShootoutLaser
+		push	word ptr _shootout_lasers[bx].SL_origin_left
 		mov	bx, si
-		imul	bx, 45h
-		push	word ptr [bx+480Ch]
+		imul	bx, size CShootoutLaser
+		push	word ptr _shootout_lasers[bx].SL_ray_start_y
 		mov	bx, si
-		imul	bx, 45h
-		push	word ptr [bx+4808h]
+		imul	bx, size CShootoutLaser
+		push	word ptr _shootout_lasers[bx].SL_ray_start_left
 		call	_graph_r_line_unput
 		add	sp, 8
 		mov	bx, si
-		imul	bx, 45h
-		mov	word ptr [bx+483Ah], 0
+		imul	bx, size CShootoutLaser
+		mov	_shootout_lasers[bx].SL_alive, 0
 		jmp	short $+2
 
 loc_1D74A:
@@ -16205,26 +16205,26 @@ loc_1DF5A:
 
 loc_1DFA4:
 		mov	bx, si
-		imul	bx, 45h
-		cmp	word ptr [bx+483Ah], 0
+		imul	bx, size CShootoutLaser
+		cmp	_shootout_lasers[bx].SL_alive, 0
 		jz	short loc_1DFE9
 		mov	bx, si
-		imul	bx, 45h
-		push	word ptr [bx+4804h]
+		imul	bx, size CShootoutLaser
+		push	word ptr _shootout_lasers[bx].SL_origin_y
 		mov	bx, si
-		imul	bx, 45h
-		push	word ptr [bx+4800h]
+		imul	bx, size CShootoutLaser
+		push	word ptr _shootout_lasers[bx].SL_origin_left
 		mov	bx, si
-		imul	bx, 45h
-		push	word ptr [bx+480Ch]
+		imul	bx, size CShootoutLaser
+		push	word ptr _shootout_lasers[bx].SL_ray_start_y
 		mov	bx, si
-		imul	bx, 45h
-		push	word ptr [bx+4808h]
+		imul	bx, size CShootoutLaser
+		push	word ptr _shootout_lasers[bx].SL_ray_start_left
 		call	_graph_r_line_unput
 		add	sp, 8
 		mov	bx, si
-		imul	bx, 45h
-		mov	word ptr [bx+483Ah], 0
+		imul	bx, size CShootoutLaser
+		mov	_shootout_lasers[bx].SL_alive, 0
 		jmp	short $+2
 
 loc_1DFE9:
@@ -19223,8 +19223,8 @@ loc_1F9DA:
 		add	bx, bx
 		push	left_39E64[bx]
 		mov	ax, [bp+var_2]
-		imul	ax, 45h
-		add	ax, 4800h
+		imul	ax, size CShootoutLaser
+		add	ax, offset _shootout_lasers
 		push	ds
 		push	ax
 		call	sub_1209D
@@ -19559,26 +19559,26 @@ loc_1FCF7:
 
 loc_1FD77:
 		mov	bx, si
-		imul	bx, 45h
-		cmp	word ptr [bx+483Ah], 0
+		imul	bx, size CShootoutLaser
+		cmp	_shootout_lasers[bx].SL_alive, 0
 		jz	short loc_1FDBC
 		mov	bx, si
-		imul	bx, 45h
-		push	word ptr [bx+4804h]
+		imul	bx, size CShootoutLaser
+		push	word ptr _shootout_lasers[bx].SL_origin_y
 		mov	bx, si
-		imul	bx, 45h
-		push	word ptr [bx+4800h]
+		imul	bx, size CShootoutLaser
+		push	word ptr _shootout_lasers[bx].SL_origin_left
 		mov	bx, si
-		imul	bx, 45h
-		push	word ptr [bx+480Ch]
+		imul	bx, size CShootoutLaser
+		push	word ptr _shootout_lasers[bx].SL_ray_start_y
 		mov	bx, si
-		imul	bx, 45h
-		push	word ptr [bx+4808h]
+		imul	bx, size CShootoutLaser
+		push	word ptr _shootout_lasers[bx].SL_ray_start_left
 		call	_graph_r_line_unput
 		add	sp, 8
 		mov	bx, si
-		imul	bx, 45h
-		mov	word ptr [bx+483Ah], 0
+		imul	bx, size CShootoutLaser
+		mov	_shootout_lasers[bx].SL_alive, 0
 		jmp	short $+2
 
 loc_1FDBC:
@@ -27349,7 +27349,7 @@ sub_240DE	proc near
 		push	ax
 		push	930133h
 		push	ds
-		push	offset unk_391A0
+		push	offset shootout_laser_0
 		call	sub_1209D
 		push	80014h
 		push	0A0032h
@@ -27359,7 +27359,7 @@ sub_240DE	proc near
 		push	ax
 		push	930150h
 		push	ds
-		push	offset unk_391E5
+		push	offset shootout_laser_1
 		call	sub_1209D
 		push	6
 		call	_mdrv2_se_play
@@ -27594,7 +27594,7 @@ sub_24316	proc near
 		push	dx
 		push	930133h
 		push	ds
-		push	offset unk_391A0
+		push	offset shootout_laser_0
 		jmp	loc_244AE
 ; ---------------------------------------------------------------------------
 
@@ -27617,7 +27617,7 @@ loc_24378:
 		push	dx
 		push	930133h
 		push	ds
-		push	offset unk_391E5
+		push	offset shootout_laser_1
 		jmp	loc_244AE
 ; ---------------------------------------------------------------------------
 
@@ -27640,7 +27640,7 @@ loc_243B7:
 		push	dx
 		push	930133h
 		push	ds
-		push	offset unk_3922A
+		push	offset shootout_laser_2
 		jmp	loc_244AE
 ; ---------------------------------------------------------------------------
 
@@ -27663,7 +27663,7 @@ loc_243F6:
 		push	dx
 		push	930133h
 		push	ds
-		push	offset unk_3926F
+		push	offset shootout_laser_3
 		jmp	short loc_244AE
 ; ---------------------------------------------------------------------------
 
@@ -27686,7 +27686,7 @@ loc_24434:
 		push	dx
 		push	930133h
 		push	ds
-		push	offset unk_392B4
+		push	offset shootout_laser_4
 		jmp	short loc_244AE
 ; ---------------------------------------------------------------------------
 
@@ -27709,7 +27709,7 @@ loc_24472:
 		push	dx
 		push	930133h
 		push	ds
-		push	offset unk_392F9
+		push	offset shootout_laser_5
 
 loc_244AE:
 		call	sub_1209D
@@ -27953,8 +27953,8 @@ loc_246A0:
 		add	ax, di
 		push	ax
 		mov	ax, si
-		imul	ax, 45h
-		add	ax, 4800h
+		imul	ax, size CShootoutLaser
+		add	ax, offset _shootout_lasers
 		push	ds
 		push	ax
 		call	sub_1209D
@@ -28606,26 +28606,26 @@ loc_24D59:
 
 loc_24DA3:
 		mov	bx, si
-		imul	bx, 45h
-		cmp	word ptr [bx+483Ah], 0
+		imul	bx, size CShootoutLaser
+		cmp	_shootout_lasers[bx].SL_alive, 0
 		jz	short loc_24DE8
 		mov	bx, si
-		imul	bx, 45h
-		push	word ptr [bx+4804h]
+		imul	bx, size CShootoutLaser
+		push	word ptr _shootout_lasers[bx].SL_origin_y
 		mov	bx, si
-		imul	bx, 45h
-		push	word ptr [bx+4800h]
+		imul	bx, size CShootoutLaser
+		push	word ptr _shootout_lasers[bx].SL_origin_left
 		mov	bx, si
-		imul	bx, 45h
-		push	word ptr [bx+480Ch]
+		imul	bx, size CShootoutLaser
+		push	word ptr _shootout_lasers[bx].SL_ray_start_y
 		mov	bx, si
-		imul	bx, 45h
-		push	word ptr [bx+4808h]
+		imul	bx, size CShootoutLaser
+		push	word ptr _shootout_lasers[bx].SL_ray_start_left
 		call	_graph_r_line_unput
 		add	sp, 8
 		mov	bx, si
-		imul	bx, 45h
-		mov	word ptr [bx+483Ah], 0
+		imul	bx, size CShootoutLaser
+		mov	_shootout_lasers[bx].SL_alive, 0
 		jmp	short $+2
 
 loc_24DE8:
@@ -29499,8 +29499,8 @@ loc_255FB:
 		idiv	bx
 		cwd
 		idiv	bx
-		imul	dx, 45h
-		add	dx, 4800h
+		imul	dx, size CShootoutLaser
+		add	dx, offset _shootout_lasers
 		push	ds
 		push	dx
 		call	sub_1209D
@@ -33165,8 +33165,8 @@ loc_27A65:
 		idiv	bx
 		cwd
 		idiv	bx
-		imul	dx, 45h
-		add	dx, 4800h
+		imul	dx, size CShootoutLaser
+		add	dx, offset _shootout_lasers
 		push	ds
 		push	dx
 		call	sub_1209D
@@ -34346,33 +34346,33 @@ loc_285A5:
 
 loc_285FD:
 		mov	bx, si
-		imul	bx, 45h
-		cmp	word ptr [bx+483Ah], 0
+		imul	bx, size CShootoutLaser
+		cmp	_shootout_lasers[bx].SL_alive, 0
 		jz	short loc_28642
 		mov	bx, si
-		imul	bx, 45h
-		push	word ptr [bx+4804h]
+		imul	bx, size CShootoutLaser
+		push	word ptr _shootout_lasers[bx].SL_origin_y
 		mov	bx, si
-		imul	bx, 45h
-		push	word ptr [bx+4800h]
+		imul	bx, size CShootoutLaser
+		push	word ptr _shootout_lasers[bx].SL_origin_left
 		mov	bx, si
-		imul	bx, 45h
-		push	word ptr [bx+480Ch]
+		imul	bx, size CShootoutLaser
+		push	word ptr _shootout_lasers[bx].SL_ray_start_y
 		mov	bx, si
-		imul	bx, 45h
-		push	word ptr [bx+4808h]
+		imul	bx, size CShootoutLaser
+		push	word ptr _shootout_lasers[bx].SL_ray_start_left
 		call	_graph_r_line_unput
 		add	sp, 8
 		mov	bx, si
-		imul	bx, 45h
-		mov	word ptr [bx+483Ah], 0
+		imul	bx, size CShootoutLaser
+		mov	_shootout_lasers[bx].SL_alive, 0
 		jmp	short $+2
 
 loc_28642:
 		inc	si
 
 loc_28643:
-		cmp	si, 0Ah
+		cmp	si, SHOOTOUT_LASER_COUNT
 		jl	short loc_285FD
 		call	sub_12A3A
 		push	5
@@ -36208,8 +36208,8 @@ loc_29698:
 		add	bx, bx
 		push	word ptr [bx+6210h]
 		mov	ax, si
-		imul	ax, 45h
-		add	ax, 4800h
+		imul	ax, size CShootoutLaser
+		add	ax, offset _shootout_lasers
 		push	ds
 		push	ax
 		call	sub_1209D
@@ -37883,7 +37883,7 @@ loc_2A6B0:
 		push	_player_left
 		push	7801CCh
 		push	ds
-		push	offset unk_391A0
+		push	offset shootout_laser_0
 
 loc_2A724:
 		call	sub_1209D
@@ -37924,7 +37924,7 @@ loc_2A735:
 		push	point_3B037.y
 		push	point_3B037.x
 		push	ds
-		push	offset unk_391E5
+		push	offset shootout_laser_1
 		jmp	short loc_2A724
 ; ---------------------------------------------------------------------------
 
@@ -37944,7 +37944,7 @@ loc_2A79B:
 		push	point_3B037.y
 		push	point_3B037.x
 		push	ds
-		push	offset unk_3922A
+		push	offset shootout_laser_2
 		jmp	loc_2A724
 ; ---------------------------------------------------------------------------
 
@@ -37964,7 +37964,7 @@ loc_2A7FC:
 		push	point_3B037.y
 		push	point_3B037.x
 		push	ds
-		push	offset unk_3926F
+		push	offset shootout_laser_3
 		jmp	loc_2A724
 ; ---------------------------------------------------------------------------
 
@@ -38221,8 +38221,8 @@ loc_2AA36:
 		mov	bx, 0Ah
 		cwd
 		idiv	bx
-		imul	dx, 45h
-		add	dx, 4800h
+		imul	dx, size CShootoutLaser
+		add	dx, offset _shootout_lasers
 		push	ds
 		push	dx
 		call	sub_1209D
@@ -41165,33 +41165,33 @@ loc_2C835:
 
 loc_2C868:
 		mov	bx, si
-		imul	bx, 45h
-		cmp	word ptr [bx+483Ah], 0
+		imul	bx, size CShootoutLaser
+		cmp	_shootout_lasers[bx].SL_alive, 0
 		jz	short loc_2C8AD
 		mov	bx, si
-		imul	bx, 45h
-		push	word ptr [bx+4804h]
+		imul	bx, size CShootoutLaser
+		push	word ptr _shootout_lasers[bx].SL_origin_y
 		mov	bx, si
-		imul	bx, 45h
-		push	word ptr [bx+4800h]
+		imul	bx, size CShootoutLaser
+		push	word ptr _shootout_lasers[bx].SL_origin_left
 		mov	bx, si
-		imul	bx, 45h
-		push	word ptr [bx+480Ch]
+		imul	bx, size CShootoutLaser
+		push	word ptr _shootout_lasers[bx].SL_ray_start_y
 		mov	bx, si
-		imul	bx, 45h
-		push	word ptr [bx+4808h]
+		imul	bx, size CShootoutLaser
+		push	word ptr _shootout_lasers[bx].SL_ray_start_left
 		call	_graph_r_line_unput
 		add	sp, 8
 		mov	bx, si
-		imul	bx, 45h
-		mov	word ptr [bx+483Ah], 0
+		imul	bx, size CShootoutLaser
+		mov	_shootout_lasers[bx].SL_alive, 0
 		jmp	short $+2
 
 loc_2C8AD:
 		inc	si
 
 loc_2C8AE:
-		cmp	si, 0Ah
+		cmp	si, SHOOTOUT_LASER_COUNT
 		jb	short loc_2C868
 		mov	_orb_cur_left, ORB_LEFT_START
 		mov	_orb_cur_top, ORB_TOP_START
@@ -44637,8 +44637,8 @@ loc_2EC19:
 		idiv	bx
 		cwd
 		idiv	bx
-		imul	dx, 45h
-		add	dx, 4800h
+		imul	dx, size CShootoutLaser
+		add	dx, offset _shootout_lasers
 		push	ds
 		push	dx
 		call	sub_1209D
@@ -47138,26 +47138,7 @@ include libs/master.lib/keystart[bss].asm
 include libs/master.lib/clip[bss].asm
 public _resident
 _resident	dd ?
-unk_391A0	db    ?	;
-		db 68 dup(?)
-unk_391E5	db    ?	;
-		db 68 dup(?)
-unk_3922A	db    ?	;
-		db 68 dup(?)
-unk_3926F	db    ?	;
-		db 68 dup(?)
-unk_392B4	db    ?	;
-		db 68 dup(?)
-unk_392F9	db    ?	;
-		db 68 dup(?)
-unk_3933E	db    ?	;
-		db 68 dup(?)
-unk_39383	db    ?	;
-		db 68 dup(?)
-unk_393C8	db    ?	;
-		db 68 dup(?)
-unk_3940D	db    ?	;
-		db 68 dup(?)
+include th01/main/bullet/laser_s[bss].asm
 include th01/hiscore/hiscore[bss].asm
 		db 4 dup(?)
 include th01/formats/bos[bss].asm
