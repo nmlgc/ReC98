@@ -8,6 +8,10 @@ static const int SHOOTOUT_LASER_COUNT = 10;
 
 typedef int32_t laser_pixel_t;
 
+inline laser_pixel_t to_laser_pixel(pixel_t pixel_v) {
+	return (static_cast<laser_pixel_t>(pixel_v) << 8);
+}
+
 class LaserPixel {
 public:
 	// Code generation will require direct access to [v], if performing
@@ -55,6 +59,21 @@ public:
 
 protected:
 	enum { SL_RAY_UNPUT = false, SL_RAY_PUT = true } put_flag;
+
+public:
+	// Does nothing if this laser is already [alive]. No idea why the speed
+	// has to be passed like that - the function simply divides it by 8,
+	// losing any extended precision. *shrug*
+	void spawn(
+		screen_x_t origin_left,
+		vram_y_t origin_y,
+		screen_x_t target_left,
+		vram_y_t target_y,
+		int speed_multiplied_by_8,
+		unsigned char col,
+		int moveout_at_age,
+		int w
+	);
 };
 
 extern CShootoutLaser shootout_lasers[SHOOTOUT_LASER_COUNT];

@@ -73,6 +73,7 @@ BOMBS_MAX = 5
 	extern _vsprintf:proc
 
 main_01 group main_01_TEXT, main_01__TEXT, main_01___TEXT
+main_15 group main_15_TEXT, main_15__TEXT
 main_19 group main_19_TEXT, main_19__TEXT
 main_21 group main_21_TEXT, main_21__TEXT
 main_25 group main_25_TEXT, main_25__TEXT
@@ -4570,108 +4571,13 @@ main_14_TEXT	ends
 
 ; Segment type:	Pure code
 main_15_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_15_TEXT
+	extern @CShootoutLaser@spawn$qiiiiiucii:proc
+main_15_TEXT	ends
+
+main_15__TEXT	segment	byte public 'CODE' use16
+		assume cs:main_15
 		;org 0Dh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1209D	proc far
-
-@@angle		= byte ptr -1
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
-arg_A		= word ptr  10h
-arg_C		= word ptr  12h
-arg_E		= byte ptr  14h
-arg_10		= word ptr  16h
-arg_12		= word ptr  18h
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	di, [bp+arg_4]
-		mov	si, [bp+arg_C]
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx+3Ah], 0
-		jnz	loc_121A8
-		movsx	eax, di
-		shl	eax, 8
-		les	bx, [bp+arg_0]
-		mov	es:[bx], eax
-		movsx	eax, [bp+arg_6]
-		shl	eax, 8
-		mov	es:[bx+4], eax
-		mov	eax, es:[bx]
-		mov	es:[bx+8], eax
-		mov	eax, es:[bx+4]
-		mov	es:[bx+0Ch], eax
-		mov	ax, [bp+arg_8]
-		mov	es:[bx+1Ch], ax
-		mov	ax, [bp+arg_A]
-		mov	es:[bx+1Eh], ax
-		mov	word ptr es:[bx+20h], 0FF00h
-		sub	ax, [bp+arg_6]
-		push	ax
-		mov	ax, [bp+arg_8]
-		sub	ax, di
-		push	ax
-		call	iatan2
-		mov	[bp+@@angle], al
-		mov	ah, 0
-		and	ax, 255
-		add	ax, ax
-		mov	bx, ax
-		movsx	eax, _CosTable8[bx]
-		les	bx, [bp+arg_0]
-		mov	es:[bx+32h], eax
-		mov	al, [bp+@@angle]
-		mov	ah, 0
-		and	ax, 255
-		add	ax, ax
-		mov	bx, ax
-		movsx	eax, _SinTable8[bx]
-		mov	bx, word ptr [bp+arg_0]
-		mov	es:[bx+2Ah], eax
-		movsx	eax, si
-		imul	eax, es:[bx+32h]
-		sar	eax, 3
-		mov	es:[bx+2Eh], eax
-		movsx	eax, si
-		imul	eax, es:[bx+2Ah]
-		sar	eax, 3
-		mov	es:[bx+26h], eax
-		mov	ax, si
-		mov	bx, 8
-		cwd
-		idiv	bx
-		mov	bx, word ptr [bp+arg_0]
-		mov	es:[bx+36h], ax
-		dec	[bp+arg_12]
-		mov	al, byte ptr [bp+arg_12]
-		mov	es:[bx+41h], al
-		mov	word ptr es:[bx+3Ah], 1
-		mov	byte ptr es:[bx+42h], 1
-		mov	ax, [bp+arg_10]
-		mov	es:[bx+3Eh], ax
-		mov	word ptr es:[bx+3Ch], 0
-		mov	al, [bp+arg_E]
-		mov	es:[bx+40h], al
-		mov	ax, es:[bx+36h]
-		mov	es:[bx+1Ah], ax
-		mov	word ptr es:[bx+18h], 0
-
-loc_121A8:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_1209D	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4917,7 +4823,7 @@ sub_12347	endp
 sub_1240A	proc far
 		push	bp
 		mov	bp, sp
-		push	seg main_15_TEXT
+		push	seg main_15
 		push	offset sub_12428
 		push	5
 		pushd	SHOOTOUT_LASER_COUNT
@@ -4966,7 +4872,7 @@ locret_12454:
 		retf
 sub_12428	endp
 
-main_15_TEXT	ends
+main_15__TEXT	ends
 
 ; ===========================================================================
 
@@ -19118,7 +19024,7 @@ sub_1F769	endp
 
 sub_1F909	proc far
 
-var_2		= word ptr -2
+@@laser_i		= word ptr -2
 
 		enter	2, 0
 		push	si
@@ -19208,26 +19114,26 @@ loc_1F9DA:
 		mov	bx, 4
 		cwd
 		idiv	bx
-		mov	[bp+var_2], dx
-		push	bx
-		push	140007h
-		push	speed_39E18
-		push	190h
+		mov	[bp+@@laser_i], dx
+		push	bx	; w
+		push	7 or (20 shl 16)	; (col) or (moveout_at_age shl 16)
+		push	speed_39E18	; speed_multiplied_by_8
+		push	PLAYFIELD_BOTTOM	; target_y
 		mov	ax, _player_left
 		add	ax, 14
-		push	ax
-		mov	bx, [bp+var_2]
+		push	ax		; target_left
+		mov	bx, [bp+@@laser_i]
 		add	bx, bx
-		push	top_39E6C[bx]
-		mov	bx, [bp+var_2]
+		push	top_39E6C[bx]	; origin_y
+		mov	bx, [bp+@@laser_i]
 		add	bx, bx
-		push	left_39E64[bx]
-		mov	ax, [bp+var_2]
+		push	left_39E64[bx]	; origin_left
+		mov	ax, [bp+@@laser_i]
 		imul	ax, size CShootoutLaser
 		add	ax, offset _shootout_lasers
-		push	ds
-		push	ax
-		call	sub_1209D
+		push	ds	; this (segment)
+		push	ax	; this (offset)
+		call	@CShootoutLaser@spawn$qiiiiiucii
 		add	sp, 14h
 
 loc_1FA30:
@@ -26972,7 +26878,7 @@ sub_23D19	proc near
 		push	10002h
 		push	30004h
 		push	ds
-		push	offset word_3A6B7
+		push	offset speed_3A6B7
 		call	sub_232E4
 		push	32005Ah
 		push	5A005Ah
@@ -26984,7 +26890,7 @@ sub_23D19	proc near
 loc_23D63:
 		mov	ax, word_3A6CA
 		cwd
-		idiv	word_3A6B7
+		idiv	speed_3A6B7
 		or	dx, dx
 		jnz	loc_23E6A
 		movsx	eax, word_3A6BB
@@ -27271,14 +27177,14 @@ sub_24041	proc near
 		push	78008Ch
 		push	0A000C8h
 		push	ds
-		push	offset word_3A6B7
+		push	offset speed_3A6B7
 		call	sub_232E4
 		add	sp, 0Ch
 
 loc_24064:
 		mov	ax, word_3A6CA
 		cwd
-		idiv	word_3A6B7
+		idiv	speed_3A6B7
 		or	dx, dx
 		jnz	short loc_24092
 		mov	ax, kikuri_soul_0.BE_cur_left
@@ -27341,26 +27247,26 @@ sub_240DE	proc near
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_2414A
-		push	80014h
-		push	0A0032h
-		push	190h
+		push	20 or (8 shl 16)	; (moveout_at_age) or (w shl 16)
+		push	((6 * 8) + 2) or (10 shl 16)	; (speed_multiplied_by_8) or (col shl 16)
+		push	PLAYFIELD_BOTTOM	; target_y
 		mov	ax, _player_left
 		add	ax, 60
-		push	ax
-		push	930133h
-		push	ds
-		push	offset shootout_laser_0
-		call	sub_1209D
-		push	80014h
-		push	0A0032h
-		push	190h
+		push	ax	; target_left
+		push	307 or (147 shl 16)	; (origin_left) or (origin_y shl 16)
+		push	ds	; this (segment)
+		push	offset shootout_laser_0	; this (offset)
+		call	@CShootoutLaser@spawn$qiiiiiucii
+		push	20 or (8 shl 16)	; (moveout_at_age) or (w shl 16)
+		push	((6 * 8) + 2) or (10 shl 16)	; (speed_multiplied_by_8) or (col shl 16)
+		push	PLAYFIELD_BOTTOM	; target_y
 		mov	ax, _player_left
 		add	ax, -60
-		push	ax
-		push	930150h
-		push	ds
-		push	offset shootout_laser_1
-		call	sub_1209D
+		push	ax	; target_left
+		push	336 or (147 shl 16)	; (origin_left) or (origin_y shl 16)
+		push	ds	; this (segment)
+		push	offset shootout_laser_1	; this (offset)
+		call	@CShootoutLaser@spawn$qiiiiiucii
 		push	6
 		call	_mdrv2_se_play
 		add	sp, 2Ah
@@ -27457,14 +27363,14 @@ sub_241E7	proc near
 		push	40006h
 		push	8000Eh
 		push	ds
-		push	offset word_3A6B7
+		push	offset speed_3A6B7
 		call	sub_232E4
 		add	sp, 0Ch
 
 loc_24219:
 		mov	ax, word_3A6CA
 		cwd
-		idiv	word_3A6B7
+		idiv	speed_3A6B7
 		or	dx, dx
 		jnz	loc_24310
 		xor	si, si
@@ -27576,25 +27482,25 @@ sub_24316	proc near
 		push	40003Ch
 		push	380034h
 		push	ds
-		push	offset word_3A6B7
+		push	offset speed_3A6B7
 		call	sub_232E4
 		push	6
 		call	_mdrv2_se_play
 		add	sp, 0Eh
-		push	40014h
-		push	0Ah
-		push	word_3A6B7
-		push	190h
+		push	20 or (4 shl 16)	; (moveout_at_age) or (w shl 16)
+		push	10	; col
+		push	speed_3A6B7	; speed_multiplied_by_8
+		push	PLAYFIELD_BOTTOM	; target_y
 		call	IRand
-		mov	bx, 78h	; 'x'
+		mov	bx, 120
 		cwd
 		idiv	bx
 		add	dx, _player_left
 		add	dx, -60
-		push	dx
-		push	930133h
-		push	ds
-		push	offset shootout_laser_0
+		push	dx	; target_left
+		push	307 or (147 shl 16)	; (origin_left) or (origin_y shl 16)
+		push	ds	; this (segment)
+		push	offset shootout_laser_0	; this (offset)
 		jmp	loc_244AE
 ; ---------------------------------------------------------------------------
 
@@ -27604,20 +27510,20 @@ loc_24378:
 		push	6
 		call	_mdrv2_se_play
 		pop	cx
-		push	40014h
-		push	0Ah
-		push	word_3A6B7
-		push	190h
+		push	20 or (4 shl 16)	; (moveout_at_age) or (w shl 16)
+		push	10	; col
+		push	speed_3A6B7	; speed_multiplied_by_8
+		push	PLAYFIELD_BOTTOM	; target_y
 		call	IRand
-		mov	bx, 78h	; 'x'
+		mov	bx, 120
 		cwd
 		idiv	bx
 		add	dx, _player_left
 		add	dx, -60
-		push	dx
-		push	930133h
-		push	ds
-		push	offset shootout_laser_1
+		push	dx	; target_left
+		push	307 or (147 shl 16)	; (origin_left) or (origin_y shl 16)
+		push	ds	; this (segment)
+		push	offset shootout_laser_1	; this (offset)
 		jmp	loc_244AE
 ; ---------------------------------------------------------------------------
 
@@ -27627,20 +27533,20 @@ loc_243B7:
 		push	6
 		call	_mdrv2_se_play
 		pop	cx
-		push	40014h
-		push	0Ah
-		push	word_3A6B7
-		push	190h
+		push	20 or (4 shl 16)	; (moveout_at_age) or (w shl 16)
+		push	10	; col
+		push	speed_3A6B7	; speed_multiplied_by_8
+		push	PLAYFIELD_BOTTOM	; target_y
 		call	IRand
-		mov	bx, 78h	; 'x'
+		mov	bx, 120
 		cwd
 		idiv	bx
 		add	dx, _player_left
 		add	dx, -60
-		push	dx
-		push	930133h
-		push	ds
-		push	offset shootout_laser_2
+		push	dx	; target_left
+		push	307 or (147 shl 16)	; (origin_left) or (origin_y shl 16)
+		push	ds	; this (segment)
+		push	offset shootout_laser_2	; this (offset)
 		jmp	loc_244AE
 ; ---------------------------------------------------------------------------
 
@@ -27650,20 +27556,20 @@ loc_243F6:
 		push	6
 		call	_mdrv2_se_play
 		pop	cx
-		push	40014h
-		push	0Ah
-		push	word_3A6B7
-		push	190h
+		push	20 or (4 shl 16)	; (moveout_at_age) or (w shl 16)
+		push	10	; col
+		push	speed_3A6B7	; speed_multiplied_by_8
+		push	PLAYFIELD_BOTTOM	; target_y
 		call	IRand
-		mov	bx, 78h	; 'x'
+		mov	bx, 120
 		cwd
 		idiv	bx
 		add	dx, _player_left
 		add	dx, -60
-		push	dx
-		push	930133h
-		push	ds
-		push	offset shootout_laser_3
+		push	dx	; target_left
+		push	307 or (147 shl 16)	; (origin_left) or (origin_y shl 16)
+		push	ds	; this (segment)
+		push	offset shootout_laser_3	; this (offset)
 		jmp	short loc_244AE
 ; ---------------------------------------------------------------------------
 
@@ -27673,20 +27579,20 @@ loc_24434:
 		push	6
 		call	_mdrv2_se_play
 		pop	cx
-		push	40014h
-		push	0Ah
-		push	word_3A6B7
-		push	190h
+		push	20 or (4 shl 16)	; (moveout_at_age) or (w shl 16)
+		push	10	; col
+		push	speed_3A6B7	; speed_multiplied_by_8
+		push	PLAYFIELD_BOTTOM	; target_y
 		call	IRand
-		mov	bx, 78h	; 'x'
+		mov	bx, 120
 		cwd
 		idiv	bx
 		add	dx, _player_left
 		add	dx, -60
-		push	dx
-		push	930133h
-		push	ds
-		push	offset shootout_laser_4
+		push	dx	; target_left
+		push	307 or (147 shl 16)	; (origin_left) or (origin_y shl 16)
+		push	ds	; this (segment)
+		push	offset shootout_laser_4	; this (offset)
 		jmp	short loc_244AE
 ; ---------------------------------------------------------------------------
 
@@ -27696,23 +27602,23 @@ loc_24472:
 		push	6
 		call	_mdrv2_se_play
 		pop	cx
-		push	40014h
-		push	0Ah
-		push	word_3A6B7
-		push	190h
+		push	20 or (4 shl 16)	; (moveout_at_age) or (w shl 16)
+		push	10	; col
+		push	speed_3A6B7	; speed_multiplied_by_8
+		push	PLAYFIELD_BOTTOM	; target_y
 		call	IRand
-		mov	bx, 78h	; 'x'
+		mov	bx, 120
 		cwd
 		idiv	bx
 		add	dx, _player_left
 		add	dx, -60
-		push	dx
-		push	930133h
-		push	ds
-		push	offset shootout_laser_5
+		push	dx	; target_left
+		push	307 or (147 shl 16)	; (origin_left) or (origin_y shl 16)
+		push	ds	; this (segment)
+		push	offset shootout_laser_5	; this (offset)
 
 loc_244AE:
-		call	sub_1209D
+		call	@CShootoutLaser@spawn$qiiiiiucii
 		add	sp, 14h
 
 loc_244B6:
@@ -27746,14 +27652,14 @@ sub_244CE	proc near
 		push	160017h
 		push	190023h
 		push	ds
-		push	offset word_3A6B7
+		push	offset speed_3A6B7
 		call	sub_232E4
 		add	sp, 0Ch
 
 loc_244F9:
 		mov	ax, word_3A6CA
 		cwd
-		idiv	word_3A6B7
+		idiv	speed_3A6B7
 		or	dx, dx
 		jnz	loc_24647
 		xor	si, si
@@ -27908,7 +27814,7 @@ sub_24660	proc near
 		push	480044h
 		push	40003Ch
 		push	ds
-		push	offset word_3A6B7
+		push	offset speed_3A6B7
 		call	sub_232E4
 		push	140010h
 		push	0A0000h
@@ -27939,25 +27845,25 @@ loc_246A0:
 		idiv	bx
 		sub	dx, word_3A6BE
 		mov	di, dx
-		push	80014h
-		push	0Ah
-		push	word_3A6B7
-		push	190h
+		push	20 or (8 shl 16)	; (moveout_at_age) or (w shl 16)
+		push	10	; col
+		push	speed_3A6B7	; speed_multiplied_by_8
+		push	PLAYFIELD_BOTTOM	; target_y
 		mov	ax, si
 		shl	ax, 6
 		add	ax, di
-		push	ax
-		push	40h
+		push	ax	; target_left
+		push	64	; origin_y
 		mov	ax, si
 		shl	ax, 6
 		add	ax, di
-		push	ax
+		push	ax	; origin_left
 		mov	ax, si
 		imul	ax, size CShootoutLaser
 		add	ax, offset _shootout_lasers
-		push	ds
-		push	ax
-		call	sub_1209D
+		push	ds	; this (segment)
+		push	ax	; this (offset)
+		call	@CShootoutLaser@spawn$qiiiiiucii
 		push	6
 		call	_mdrv2_se_play
 		add	sp, 16h
@@ -29477,22 +29383,22 @@ loc_255FB:
 		fwait
 		fld	flt_35D8D
 		fstp	[bp+var_10]
-		push	40019h
-		push	7
+		push	25 or (4 shl 16)	; (moveout_at_age) or (w shl 16)
+		push	7	; col
 		fwait
-		push	word_3A6CC
+		push	word_3A6CC	; speed_multiplied_by_8
 		fld	[bp+var_10]
 		call	ftol@
-		push	ax
+		push	ax	; target_y
 		fld	[bp+var_8]
 		call	ftol@
-		push	ax
+		push	ax	; target_left
 		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 28
-		push	ax
+		push	ax	; origin_y
 		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 60
-		push	ax
+		push	ax	; origin_left
 		mov	ax, word_3A6CA
 		mov	bx, 0Ah
 		cwd
@@ -29501,9 +29407,9 @@ loc_255FB:
 		idiv	bx
 		imul	dx, size CShootoutLaser
 		add	dx, offset _shootout_lasers
-		push	ds
-		push	dx
-		call	sub_1209D
+		push	ds	; this (segment)
+		push	dx	; this (offset)
+		call	@CShootoutLaser@spawn$qiiiiiucii
 		push	6
 		call	_mdrv2_se_play
 		add	sp, 16h
@@ -33149,16 +33055,16 @@ loc_27A65:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_27ABB
-		push	80014h
-		push	70032h
-		push	190h
-		push	_player_left
+		push	20 or (8 shl 16)	; (moveout_at_age) or (w shl 16)
+		push	((6 * 8) + 2) or (7 shl 16)	; (speed_multiplied_by_8) or (col shl 16)
+		push	PLAYFIELD_BOTTOM	; target_y
+		push	_player_left	; target_left
 		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 28
-		push	ax
+		push	ax	; origin_y
 		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 60
-		push	ax
+		push	ax	; origin_left
 		mov	ax, word_3A6CA
 		mov	bx, 0Ah
 		cwd
@@ -33167,9 +33073,9 @@ loc_27A65:
 		idiv	bx
 		imul	dx, size CShootoutLaser
 		add	dx, offset _shootout_lasers
-		push	ds
-		push	dx
-		call	sub_1209D
+		push	ds	; this (segment)
+		push	dx	; this (offset)
+		call	@CShootoutLaser@spawn$qiiiiiucii
 		push	6
 		call	_mdrv2_se_play
 		add	sp, 16h
@@ -36192,27 +36098,27 @@ loc_29665:
 loc_29698:
 		push	6
 		call	_mdrv2_se_play
-		push	50019h
-		push	4
-		push	word_3A780
-		push	190h
+		push	25 or (5 shl 16)	; (moveout_at_age) or (w shl 16)
+		push	4	; col
+		push	word_3A780	; speed_multiplied_by_8
+		push	PLAYFIELD_BOTTOM	; target_y
 		call	IRand
-		mov	bx, 640
+		mov	bx, PLAYFIELD_RIGHT
 		cwd
 		idiv	bx
-		push	dx
+		push	dx	; target_left
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+6224h]
+		push	word ptr [bx+6224h]	; origin_y
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+6210h]
+		push	word ptr [bx+6210h]	; origin_left
 		mov	ax, si
 		imul	ax, size CShootoutLaser
 		add	ax, offset _shootout_lasers
-		push	ds
-		push	ax
-		call	sub_1209D
+		push	ds	; this (segment)
+		push	ax	; this (offset)
+		call	@CShootoutLaser@spawn$qiiiiiucii
 		add	sp, 16h
 		jmp	short loc_296EC
 ; ---------------------------------------------------------------------------
@@ -37876,17 +37782,17 @@ loc_2A6B0:
 		push	offset word_3A780
 		call	sub_28659
 		add	sp, 1Eh
-		push	80032h
-		push	7
-		push	word_3A780
-		push	190h
-		push	_player_left
-		push	7801CCh
-		push	ds
-		push	offset shootout_laser_0
+		push	50 or (8 shl 16)	; (moveout_at_age) or (w shl 16)
+		push	7	; col
+		push	word_3A780	; speed_multiplied_by_8
+		push	PLAYFIELD_BOTTOM	; target_y
+		push	_player_left	; target_left
+		push	460 or (120 shl 16)	; (origin_left) or (origin_y shl 16)
+		push	ds	; this (segment)
+		push	offset shootout_laser_0	; this (offset)
 
 loc_2A724:
-		call	sub_1209D
+		call	@CShootoutLaser@spawn$qiiiiiucii
 		push	6
 		call	_mdrv2_se_play
 		add	sp, 16h
@@ -37914,17 +37820,17 @@ loc_2A735:
 		push	point_3B037.x
 		call	_vector2_between
 		add	sp, 12h
-		push	80032h
-		push	7
-		push	word_3A780
-		push	190h
-		mov	ax, 27Fh
+		push	50 or (8 shl 16)	; (moveout_at_age) or (w shl 16)
+		push	7	; col
+		push	word_3A780	; speed_multiplied_by_8
+		push	PLAYFIELD_BOTTOM	; target_y
+		mov	ax, (PLAYFIELD_RIGHT - 1)
 		sub	ax, word_3B03F
-		push	ax
-		push	point_3B037.y
-		push	point_3B037.x
-		push	ds
-		push	offset shootout_laser_1
+		push	ax	; target_left
+		push	point_3B037.y	; origin_y
+		push	point_3B037.x	; origin_left
+		push	ds	; this (segment)
+		push	offset shootout_laser_1	; this (offset)
 		jmp	short loc_2A724
 ; ---------------------------------------------------------------------------
 
@@ -37936,15 +37842,15 @@ loc_2A79B:
 		mov	point_3B037.x, 608
 		mov	point_3B037.y, 164
 		call	_vector2_between c, point_3B037.x, point_3B037.y, _player_left, RES_Y, offset x_3B03D, ds, offset y_3B03B, ds, 16
-		push	80032h
-		push	7
-		push	word_3A780
-		push	190h
-		push	_player_left
-		push	point_3B037.y
-		push	point_3B037.x
-		push	ds
-		push	offset shootout_laser_2
+		push	50 or (8 shl 16)	; (moveout_at_age) or (w shl 16)
+		push	7	; col
+		push	word_3A780	; speed_multiplied_by_8
+		push	PLAYFIELD_BOTTOM	; target_y
+		push	_player_left	; target_left
+		push	point_3B037.y	; origin_y
+		push	point_3B037.x	; origin_left
+		push	ds	; this (segment)
+		push	offset shootout_laser_2	; this (offset)
 		jmp	loc_2A724
 ; ---------------------------------------------------------------------------
 
@@ -37956,15 +37862,15 @@ loc_2A7FC:
 		mov	point_3B037.x, 24
 		mov	point_3B037.y, 164
 		call	_vector2_between c, point_3B037.x, point_3B037.y, _player_left, RES_Y, offset x_3B03D, ds, offset y_3B03B, ds, 16
-		push	80032h
-		push	7
-		push	word_3A780
-		push	190h
-		push	_player_left
-		push	point_3B037.y
-		push	point_3B037.x
-		push	ds
-		push	offset shootout_laser_3
+		push	50 or (8 shl 16)	; (moveout_at_age) or (w shl 16)
+		push	7	; col
+		push	word_3A780	; speed_multiplied_by_8
+		push	PLAYFIELD_BOTTOM	; target_y
+		push	_player_left	; target_left
+		push	point_3B037.y	; origin_y
+		push	point_3B037.x	; origin_left
+		push	ds	; this (segment)
+		push	offset shootout_laser_3	; this (offset)
 		jmp	loc_2A724
 ; ---------------------------------------------------------------------------
 
@@ -38208,12 +38114,12 @@ loc_2AA36:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_2AADB
-		push	40014h
-		push	7
-		push	word_3A780
-		push	di
-		push	si
-		push	0A00140h
+		push	20 or (4 shl 16)	; (moveout_at_age) or (w shl 16)
+		push	7	; col
+		push	word_3A780	; speed_multiplied_by_8
+		push	di	; target_y
+		push	si	; target_left
+		push	320 or (160 shl 16)	; (origin_left) or (origin_y shl 16)
 		mov	ax, word_3A6CA
 		add	ax, 0FF29h
 		cwd
@@ -38223,9 +38129,9 @@ loc_2AA36:
 		idiv	bx
 		imul	dx, size CShootoutLaser
 		add	dx, offset _shootout_lasers
-		push	ds
-		push	dx
-		call	sub_1209D
+		push	ds	; this (segment)
+		push	dx	; this (offset)
+		call	@CShootoutLaser@spawn$qiiiiiucii
 		jmp	short loc_2AAF6
 ; ---------------------------------------------------------------------------
 
@@ -44597,7 +44503,7 @@ loc_2EBA2:
 
 loc_2EBD8:
 		mov	ax, word_3A6CA
-		mov	bx, 0Ah
+		mov	bx, 10
 		cwd
 		idiv	bx
 		or	dx, dx
@@ -44605,32 +44511,32 @@ loc_2EBD8:
 		cmp	word_3B523, 0
 		jnz	short loc_2EC00
 		mov	ax, word_3A6CA
-		add	ax, 0FF9Ch
+		add	ax, -100
 		cwd
 		idiv	bx
 		imul	word_3B438
-		mov	word_3B51F, ax
+		mov	laser_target_left_3B51F, ax
 		jmp	short loc_2EC19
 ; ---------------------------------------------------------------------------
 
 loc_2EC00:
 		mov	ax, word_3A6CA
-		add	ax, 0FF9Ch
-		mov	bx, 0Ah
+		add	ax, -100
+		mov	bx, 10
 		cwd
 		idiv	bx
 		imul	word_3B438
-		mov	dx, 280h
+		mov	dx, PLAYFIELD_RIGHT
 		sub	dx, ax
-		mov	word_3B51F, dx
+		mov	laser_target_left_3B51F, dx
 
 loc_2EC19:
-		mov	word_3B521, 190h
-		push	5001Eh
-		push	70044h
-		push	word_3B521
-		push	word_3B51F
-		push	46019Ah
+		mov	laser_target_y_3B521, PLAYFIELD_BOTTOM
+		push	30 or (5 shl 16)	; (moveout_at_age) or (w shl 16)
+		push	((8 * 8) + 4) or (7 shl 16)	; (speed_multiplied_by_8) or (col shl 16)
+		push	laser_target_y_3B521	; target_y
+		push	laser_target_left_3B51F	; target_left
+		push	410 or (70 shl 16)	; (origin_left) or (origin_y shl 16)
 		mov	ax, word_3A6CA
 		mov	bx, 0Ah
 		cwd
@@ -44639,21 +44545,21 @@ loc_2EC19:
 		idiv	bx
 		imul	dx, size CShootoutLaser
 		add	dx, offset _shootout_lasers
-		push	ds
-		push	dx
-		call	sub_1209D
+		push	ds	; this (segment)
+		push	dx	; this (offset)
+		call	@CShootoutLaser@spawn$qiiiiiucii
 		push	6
 		call	_mdrv2_se_play
 		add	sp, 16h
 		cmp	word_3B523, 0
 		jnz	short loc_2EC6C
-		cmp	word_3B51F, 280h
+		cmp	laser_target_left_3B51F, PLAYFIELD_RIGHT
 		jge	short loc_2EC7A
 
 loc_2EC6C:
 		cmp	word_3B523, 1
 		jnz	short loc_2EC80
-		cmp	word_3B51F, 0
+		cmp	laser_target_left_3B51F, 0
 		jg	short loc_2EC80
 
 loc_2EC7A:
@@ -47301,7 +47207,7 @@ palette_3A38E	palette_t <?>
 byte_3A3BE	db ?
 		db 10 dup(?)
 include th01/main/boss/b15j[bss].asm
-word_3A6B7	dw ?
+speed_3A6B7	dw ?
 angle_3A6B9	db ?
 angle_3A6BA	db ?
 word_3A6BB	dw ?
@@ -47477,8 +47383,8 @@ left_3B517	dw ?
 top_3B519	dw ?
 left_3B51B	dw ?
 top_3B51D	dw ?
-word_3B51F	dw ?
-word_3B521	dw ?
+laser_target_left_3B51F	dw ?
+laser_target_y_3B521	dw ?
 word_3B523	dw ?
 word_3B525	dw ?
 word_3B527	dw ?
