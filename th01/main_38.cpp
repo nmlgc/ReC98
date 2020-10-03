@@ -3,8 +3,6 @@
  * Code segment #38 of TH01's REIIDEN.EXE
  */
 
-#pragma option -Z
-
 extern "C" {
 #include "th01/th01.h"
 #include "th01/snd/mdrv2.h"

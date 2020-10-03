@@ -3,7 +3,7 @@
  * Code segment #19 of TH01's REIIDEN.EXE
  */
 
-#pragma option -3 -Z -d
+#pragma option -d
 
 extern "C" {
 #include <io.h>

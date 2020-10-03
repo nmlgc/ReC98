@@ -3,6 +3,8 @@
  * MDRV2 functions
  */
 
+#pragma option -Z-
+
 #include <dos.h>
 #include <fcntl.h>
 #include <io.h>

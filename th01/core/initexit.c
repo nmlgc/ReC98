@@ -1,5 +1,3 @@
-#pragma option -Z
-
 #include <dos.h>
 #include <stdarg.h>
 #include <stdio.h>

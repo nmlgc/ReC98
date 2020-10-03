@@ -1,5 +1,3 @@
-#pragma option -Z
-
 #include <stdio.h>
 #include <stdarg.h>
 #include "ReC98.h"
@@ -16,5 +14,3 @@ void graph_printf_fx(
 	vsprintf(str, fmt, ap);
 	graph_putsa_fx(left, top, fx, str);
 }
-
-#pragma option -Z-

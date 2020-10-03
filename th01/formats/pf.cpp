@@ -4,8 +4,6 @@
  * modifications for TH01
  */
 
-#pragma option -Z
-
 extern "C" {
 
 #include <ctype.h>

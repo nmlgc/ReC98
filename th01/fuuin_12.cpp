@@ -3,8 +3,6 @@
  * Code segment #12 of TH01's FUUIN.EXE
  */
 
-#pragma option -Z
-
 extern "C" {
 #include "th01/th01.h"
 

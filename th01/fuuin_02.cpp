@@ -3,7 +3,7 @@
  * Code segment #2 of TH01's FUUIN.EXE
  */
 
-#pragma option -O- -1
+#pragma option -O- -1 -Z-
 
 extern "C" {
 #include <io.h>

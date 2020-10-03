@@ -3,8 +3,6 @@
  * Code segment #1 of TH01's OP.EXE
  */
 
-#pragma option -Z
-
 extern "C" {
 #include <stdio.h>
 #include "ReC98.h"

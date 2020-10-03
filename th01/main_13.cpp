@@ -3,7 +3,7 @@
  * 1st part of code segment #13 of TH01's REIIDEN.EXE
  */
 
-#pragma option -2
+#pragma option -2 -Z-
 
 extern "C" {
 

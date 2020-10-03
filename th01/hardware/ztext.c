@@ -4,7 +4,7 @@
  * unused anyway.
  */
 
-#pragma option -1
+#pragma option -1 -Z-
 
 #include "th01/th01.h"
 #include "th01/hardware/ztext.h"

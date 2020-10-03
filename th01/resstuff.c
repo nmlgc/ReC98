@@ -3,7 +3,7 @@
  * Random resident structure stuff
  */
 
-#pragma option -2
+#pragma option -2 -Z-
 
 #include "th01/th01.h"
 

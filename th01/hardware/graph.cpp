@@ -1,5 +1,3 @@
-#pragma option -Z
-
 extern "C" {
 #include <dos.h>
 #include <mbctype.h>

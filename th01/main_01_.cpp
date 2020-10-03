@@ -4,7 +4,6 @@
  */
 
 #pragma codeseg main_01__TEXT main_01
-#pragma option -Z
 
 extern "C" {
 #include "ReC98.h"

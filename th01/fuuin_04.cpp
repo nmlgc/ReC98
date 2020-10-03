@@ -3,7 +3,7 @@
  * Code segment #4 of TH01's FUUIN.EXE
  */
 
-#pragma option -1
+#pragma option -1 -Z-
 
 extern "C" {
 #include "ReC98.h"

@@ -3,7 +3,7 @@
  * VSync interrupt handler
  */
 
-#pragma option -2
+#pragma option -2 -Z-
 #pragma warn -aus
 
 #include "th01/th01.h"

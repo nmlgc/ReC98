@@ -3,8 +3,6 @@
  * Code segment #7 of TH01's REIIDEN.EXE
  */
 
-#pragma option -Z
-
 extern "C" {
 #include "ReC98.h"
 #include "th01/hardware/graph.h"
