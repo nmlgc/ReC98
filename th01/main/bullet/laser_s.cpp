@@ -1,7 +1,16 @@
+extern "C" {
 #include "libs/master.lib/master.h"
 #include "platform.h"
 #include "pc98.h"
+#include "planar.h"
+#include "th01/sprites/laser_s.h"
+#include "th01/hardware/egc.h"
+#include "th01/hardware/graph.h"
+#include "th01/hardware/input.hpp"
+#include "th01/main/playfld.hpp"
+#include "th01/main/player/player.hpp"
 #include "th01/main/bullet/laser_s.hpp"
+}
 
 void CShootoutLaser::spawn(
 	screen_x_t _origin_left,
@@ -43,4 +52,77 @@ void CShootoutLaser::spawn(
 	col = _col;
 	ray_moveout_speed = ray_extend_speed;
 	ray_length = 0;
+}
+
+void CShootoutLaser::hittest_and_render(void)
+{
+	screen_x_t left = ray_i_left.to_pixel();
+	vram_y_t y = ray_i_y.to_pixel();
+	unsigned int i;
+	vram_offset_t vram_offset;
+	int preshift = (width_cel * PRESHIFT);
+	dots16_t dots = 0;
+	unsigned int pixel_count;
+
+	if(put_flag) {
+		pixel_count = ray_length;
+		grcg_setcolor_rmw(col);
+	} else {
+		pixel_count = ray_moveout_speed;
+	}
+
+	for(i = 0; i < pixel_count; i++) {
+		if(
+			((left >> 3) != ray_i_left.to_vram_byte_amount()) ||
+			(y != ray_i_y.to_pixel())
+		) {
+			if(put_flag) {
+				vram_offset = vram_offset_shift(left, y);
+				grcg_put(vram_offset, dots, 16);
+				dots = 0;
+
+				if(!player_invincible && damaging) {
+					if(
+						(y > (player_top + 8)) &&
+						((player_left + ((PLAYER_W / 8) * 1)) <= left) &&
+						((player_left + ((PLAYER_W / 8) * 6)) >  left)
+					) {
+						done = true;
+					}
+				}
+			}
+			left = ray_i_left.to_pixel();
+			y = ray_i_y.to_pixel();
+			if(
+				(left > (PLAYFIELD_RIGHT - 2)) ||
+				(left < PLAYFIELD_LEFT) ||
+				(y < PLAYFIELD_TOP) ||
+				(y > (PLAYFIELD_BOTTOM - 1))
+			) {
+				break;
+			}
+		}
+
+		// MODDERS: Should just be
+		// 	sSHOOTOUT_LASER[preshift][(ray_i_left.to_pixel()...)].
+		// (Or actually, how about throwing away that sprite altogether?)
+		dots |= sSHOOTOUT_LASER[0][
+			preshift + (ray_i_left.to_pixel() & (BYTE_DOTS - 1))
+		];
+
+		if(put_flag == SL_RAY_UNPUT) {
+			egc_copy_rect_1_to_0_16(
+				ray_i_left.to_pixel(),
+				ray_i_y.to_pixel(),
+				(sizeof(dots) * BYTE_DOTS),
+				1
+			);
+		}
+		ray_i_left.v += step_x.v;
+		ray_i_y.v += step_y.v;
+	}
+
+	if(put_flag) {
+		grcg_off_func();
+	}
 }

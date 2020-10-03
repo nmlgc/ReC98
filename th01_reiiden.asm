@@ -4572,178 +4572,13 @@ main_14_TEXT	ends
 ; Segment type:	Pure code
 main_15_TEXT	segment	byte public 'CODE' use16
 	extern @CShootoutLaser@spawn$qiiiiiucii:proc
+	extern @CShootoutLaser@hittest_and_render$qv:proc
 main_15_TEXT	ends
 
 main_15__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_15
 		;org 0Dh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_121AC	proc far
-
-var_A		= word ptr -0Ah
-@@dots		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= dword	ptr  6
-
-		enter	0Ah, 0
-		push	si
-		push	di
-		les	bx, [bp+arg_0]
-		mov	eax, es:[bx+10h]
-		sar	eax, 8
-		mov	si, ax
-		mov	eax, es:[bx+14h]
-		sar	eax, 8
-		mov	di, ax
-		mov	al, es:[bx+41h]
-		mov	ah, 0
-		shl	ax, 3
-		mov	[bp+var_6], ax
-		mov	[bp+@@dots], 0
-		cmp	byte ptr es:[bx+44h], 0
-		jz	short loc_121F9
-		mov	ax, es:[bx+18h]
-		mov	[bp+var_A], ax
-		mov	al, es:[bx+40h]
-		mov	ah, 0
-		call	_grcg_setcolor_rmw stdcall, ax
-		pop	cx
-		jmp	short loc_12203
-; ---------------------------------------------------------------------------
-
-loc_121F9:
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx+1Ah]
-		mov	[bp+var_A], ax
-
-loc_12203:
-		mov	[bp+var_2], 0
-		jmp	loc_1232A
-; ---------------------------------------------------------------------------
-
-loc_1220B:
-		mov	ax, si
-		sar	ax, 3
-		cwde
-		les	bx, [bp+arg_0]
-		mov	edx, es:[bx+10h]
-		sar	edx, 0Bh
-		cmp	eax, edx
-		jnz	short loc_12237
-		movsx	eax, di
-		mov	edx, es:[bx+14h]
-		sar	edx, 8
-		cmp	eax, edx
-		jz	loc_122C7
-
-loc_12237:
-		les	bx, [bp+arg_0]
-		cmp	byte ptr es:[bx+44h], 0
-		jz	short loc_12299
-		mov	ax, si
-		sar	ax, 3
-		mov	dx, di
-		shl	dx, 6
-		add	ax, dx
-		mov	dx, di
-		shl	dx, 4
-		add	ax, dx
-		mov	[bp+var_4], ax
-		les	bx, _VRAM_PLANE_B
-		add	bx, [bp+var_4]
-		mov	ax, [bp+@@dots]
-		mov	es:[bx], ax
-		mov	[bp+@@dots], 0
-		cmp	_player_invincible, 0
-		jnz	short loc_12299
-		les	bx, [bp+arg_0]
-		cmp	byte ptr es:[bx+42h], 0
-		jz	short loc_12299
-		cmp	di, 178h
-		jle	short loc_12299
-		mov	ax, _player_left
-		add	ax, 4
-		cmp	ax, si
-		jg	short loc_12299
-		mov	ax, _player_left
-		add	ax, 24
-		cmp	ax, si
-		jle	short loc_12299
-		mov	_done, 1
-
-loc_12299:
-		les	bx, [bp+arg_0]
-		mov	eax, es:[bx+10h]
-		sar	eax, 8
-		mov	si, ax
-		mov	eax, es:[bx+14h]
-		sar	eax, 8
-		mov	di, ax
-		cmp	si, 27Eh
-		jg	short loc_12334
-		or	si, si
-		jl	short loc_12334
-		cmp	di, 40h
-		jl	short loc_12334
-		cmp	di, 18Fh
-		jg	short loc_12334
-
-loc_122C7:
-		les	bx, [bp+arg_0]
-		mov	eax, es:[bx+10h]
-		sar	eax, 8
-		and	ax, 7
-		add	ax, [bp+var_6]
-		add	ax, ax
-		mov	bx, ax
-		mov	ax, word ptr _sSHOOTOUT_LASER[bx]
-		or	[bp+@@dots], ax
-		mov	bx, word ptr [bp+arg_0]
-		cmp	byte ptr es:[bx+44h], 0
-		jnz	short loc_12310
-		push	(1 shl 16) or 16
-		mov	eax, es:[bx+14h]
-		sar	eax, 8
-		push	ax
-		mov	eax, es:[bx+10h]
-		sar	eax, 8
-		push	ax
-		call	_egc_copy_rect_1_to_0_16
-		add	sp, 8
-
-loc_12310:
-		les	bx, [bp+arg_0]
-		mov	eax, es:[bx+32h]
-		add	es:[bx+10h], eax
-		mov	eax, es:[bx+2Ah]
-		add	es:[bx+14h], eax
-		inc	[bp+var_2]
-
-loc_1232A:
-		mov	ax, [bp+var_2]
-		cmp	ax, [bp+var_A]
-		jb	loc_1220B
-
-loc_12334:
-		les	bx, [bp+arg_0]
-		cmp	byte ptr es:[bx+44h], 0
-		jz	short loc_12343
-		call	_grcg_off_func
-
-loc_12343:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_121AC	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4767,10 +4602,7 @@ arg_0		= dword	ptr  6
 		mov	eax, es:[bx+0Ch]
 		mov	es:[bx+14h], eax
 		mov	byte ptr es:[bx+44h], 0
-		push	word ptr [bp+arg_0+2]
-		push	bx
-		call	sub_121AC
-		add	sp, 4
+		call	@CShootoutLaser@hittest_and_render$qv c, bx, word ptr [bp+arg_0+2]
 		les	bx, [bp+arg_0]
 		mov	eax, es:[bx+10h]
 		mov	es:[bx+8], eax
@@ -4805,10 +4637,7 @@ loc_123DD:
 		mov	eax, es:[bx+0Ch]
 		mov	es:[bx+14h], eax
 		mov	byte ptr es:[bx+44h], 1
-		push	word ptr [bp+arg_0+2]
-		push	bx
-		call	sub_121AC
-		add	sp, 4
+		call	@CShootoutLaser@hittest_and_render$qv c, bx, word ptr [bp+arg_0+2]
 
 loc_12408:
 		pop	bp

@@ -17,6 +17,14 @@ public:
 	// Code generation will require direct access to [v], if performing
 	// arithmetic with a local variable...
 	laser_pixel_t v;
+
+	int32_t to_pixel() const {
+		return (v >> 8);
+	}
+
+	int32_t to_vram_byte_amount() const {
+		return (v >> 11);
+	}
 };
 /// ------------------------
 
@@ -58,7 +66,10 @@ public:
 	char id;	// unused
 
 protected:
+	// MODDERS: Just turn into a parameter of hittest_and_render().
 	enum { SL_RAY_UNPUT = false, SL_RAY_PUT = true } put_flag;
+
+	void hittest_and_render(void);
 
 public:
 	// Does nothing if this laser is already [alive]. No idea why the speed
