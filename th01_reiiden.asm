@@ -4680,7 +4680,7 @@ sub_1209D	endp
 sub_121AC	proc far
 
 var_A		= word ptr -0Ah
-var_8		= word ptr -8
+@@dots		= word ptr -8
 var_6		= word ptr -6
 var_4		= word ptr -4
 var_2		= word ptr -2
@@ -4700,7 +4700,7 @@ arg_0		= dword	ptr  6
 		mov	ah, 0
 		shl	ax, 3
 		mov	[bp+var_6], ax
-		mov	[bp+var_8], 0
+		mov	[bp+@@dots], 0
 		cmp	byte ptr es:[bx+44h], 0
 		jz	short loc_121F9
 		mov	ax, es:[bx+18h]
@@ -4752,9 +4752,9 @@ loc_12237:
 		mov	[bp+var_4], ax
 		les	bx, _VRAM_PLANE_B
 		add	bx, [bp+var_4]
-		mov	ax, [bp+var_8]
+		mov	ax, [bp+@@dots]
 		mov	es:[bx], ax
-		mov	[bp+var_8], 0
+		mov	[bp+@@dots], 0
 		cmp	_player_invincible, 0
 		jnz	short loc_12299
 		les	bx, [bp+arg_0]
@@ -4797,8 +4797,8 @@ loc_122C7:
 		add	ax, [bp+var_6]
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, [bx+0C9Eh]
-		or	[bp+var_8], ax
+		mov	ax, word ptr _sSHOOTOUT_LASER[bx]
+		or	[bp+@@dots], ax
 		mov	bx, word ptr [bp+arg_0]
 		cmp	byte ptr es:[bx+44h], 0
 		jnz	short loc_12310
@@ -46537,134 +46537,7 @@ _res_id	db 'ReiidenConfig',0
 include th01/sprites/ileave_m.asp
 		db    0
 		db 0FFh
-		db  80h
-		db    0
-		db  20h
-		db    0
-		db  20h
-		db    0
-		db  10h
-		db    0
-		db    8
-		db    0
-		db    4
-		db    0
-		db    2
-		db    0
-		db    1
-		db    0
-		db 0C0h	; ¿
-		db    0
-		db  60h
-		db    0
-		db  30h	; 0
-		db    0
-		db  18h
-		db    0
-		db  0Ch
-		db    0
-		db    6
-		db    0
-		db    3
-		db    0
-		db    1
-		db  80h
-		db 0E0h
-		db    0
-		db  70h	; p
-		db    0
-		db  38h	; 8
-		db    0
-		db  1Ch
-		db    0
-		db  0Eh
-		db    0
-		db    7
-		db    0
-		db    3
-		db  80h
-		db    1
-		db 0C0h	; ¿
-		db 0F0h
-		db    0
-		db  78h	; x
-		db    0
-		db  3Ch	; <
-		db    0
-		db  1Eh
-		db    0
-		db  0Fh
-		db    0
-		db    7
-		db  80h
-		db    3
-		db 0C0h	; ¿
-		db    1
-		db 0E0h
-		db 0F8h
-		db    0
-		db  7Ch	; |
-		db    0
-		db  3Eh	; >
-		db    0
-		db  1Fh
-		db    0
-		db  0Fh
-		db  80h
-		db    7
-		db 0C0h	; ¿
-		db    3
-		db 0E0h
-		db    1
-		db 0F0h
-		db 0FCh
-		db    0
-		db  7Eh	; ~
-		db    0
-		db  3Fh	; ?
-		db    0
-		db  1Fh
-		db  80h
-		db  0Fh
-		db 0C0h	; ¿
-		db    7
-		db 0E0h
-		db    3
-		db 0F0h
-		db    1
-		db 0F8h
-		db 0FEh
-		db    0
-		db  7Fh
-		db    0
-		db  3Fh	; ?
-		db  80h
-		db  1Fh
-		db 0C0h	; ¿
-		db  0Fh
-		db 0E0h
-		db    7
-		db 0F0h
-		db    3
-		db 0F8h
-		db    1
-		db 0FCh
-		db 0FFh
-		db    0
-		db  7Fh
-		db  80h
-		db  3Fh	; ?
-		db 0C0h	; ¿
-		db  1Fh
-		db 0E0h
-		db  0Fh
-		db 0F0h
-		db    7
-		db 0F8h
-		db    3
-		db 0FCh
-		db    1
-		db 0FEh
+include th01/sprites/laser_s.asp
 include th01/snd/mdrv2[data].asm
 aVqvnvtvmvcb@vp	db 'ÇqÇnÇtÇmÇcÅ@ÇPÅ@ÇbÇkÇdÇ`Çq',0
 aVbvpvovzvtvbvf	db 'ÇbÇèÇéÇáÇíÇÅÇîÇïÇåÇÅÇîÇâÇèÇéÅIÅI',0

@@ -24,6 +24,12 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 !bmp2arr = | $(BMP2ARR) |> $(BMP2ARR) -q -i %f -o %o |> %o
 
 : th01/sprites/ileave_m.bmp |> !bmp2arr -sym _sINTERLEAVE_MASKS -of asm -sw 8 -sh 8 |> th01/sprites/ileave_m.asp
+
+# ZUN bug: Supposed to be 8 preshifted sprites, with a height of 1 and a width
+# of SHOOTOUT_LASER_MAX_W pixels each, but ZUN messed up a single pixel in the
+# first pre-shifted sprite. So, we're forced to manually unroll them…
+: th01/sprites/laser_s.bmp |> !bmp2arr -sym _sSHOOTOUT_LASER -of asm -sw 16 -sh 8 |> th01/sprites/laser_s.asp
+
 : th01/sprites/pellet.bmp |> !bmp2arr -sym sPELLET -of c -sw 8 -sh 8 -pshf inner |> th01/sprites/pellet.csp
 : th01/sprites/pellet_c.bmp |> !bmp2arr -sym _sPELLET_CLOUD -of asm -sw 16 -sh 16 |> th01/sprites/pellet_c.asp
 : th01/sprites/shape8x8.bmp |> !bmp2arr -sym _sSHAPE8X8 -of asm -sw 8 -sh 8 |> th01/sprites/shape8x8.asp
@@ -52,6 +58,7 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 : th01_op.asm |> !as |> bin\\th01\\op.obj
 : th01_reiiden.asm | \
 	th01/sprites/ileave_m.asp \
+	th01/sprites/laser_s.asp \
 	th01/sprites/pellet_c.asp \
 	th01/sprites/shape8x8.asp \
 	th01/sprites/shape_in.asp \
