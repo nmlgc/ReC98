@@ -126,3 +126,39 @@ void CShootoutLaser::hittest_and_render(void)
 		grcg_off_func();
 	}
 }
+
+void CShootoutLaser::update_hittest_and_render(void)
+{
+	if(!alive) {
+		return;
+	}
+	if(age >= moveout_at_age) {
+		ray_i_left.v = ray_start_left.v;
+		ray_i_y.v = ray_start_y.v;
+
+		put_flag = SL_RAY_UNPUT;
+		hittest_and_render();
+
+		// hittest_and_render() has conveniently advanced [ray_i_*] by
+		// [ray_moveout_speed]...
+		ray_start_left.v = ray_i_left.v;
+		ray_start_y.v = ray_i_y.v;
+		if(
+			(ray_start_left.v >= to_laser_pixel(PLAYFIELD_RIGHT)) ||
+			(ray_start_left.v <  to_laser_pixel(PLAYFIELD_LEFT)) ||
+			(ray_start_y.v <  to_laser_pixel(PLAYFIELD_TOP)) ||
+			(ray_start_y.v >= to_laser_pixel(PLAYFIELD_BOTTOM))
+		) {
+			alive = false;
+			return;
+		}
+	} else {
+		ray_length += ray_extend_speed;
+	}
+	age++;
+	ray_i_left.v = ray_start_left.v;
+	ray_i_y.v = ray_start_y.v;
+
+	put_flag = SL_RAY_PUT;
+	hittest_and_render();
+}

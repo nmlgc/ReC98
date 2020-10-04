@@ -85,6 +85,9 @@ public:
 		int moveout_at_age,
 		int w
 	);
+
+	// Directly sets [done] if the laser collides with the player.
+	void update_hittest_and_render(void);
 };
 
 extern CShootoutLaser shootout_lasers[SHOOTOUT_LASER_COUNT];

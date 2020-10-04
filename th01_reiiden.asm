@@ -3820,46 +3820,11 @@ loc_DD66:
 		call	sub_2EE7D
 
 loc_DD6B:
-		push	ds
-		push	offset shootout_laser_0
-		call	sub_12347
-		add	sp, 4
-		push	ds
-		push	offset shootout_laser_1
-		call	sub_12347
-		add	sp, 4
-		push	ds
-		push	offset shootout_laser_2
-		call	sub_12347
-		add	sp, 4
-		push	ds
-		push	offset shootout_laser_3
-		call	sub_12347
-		add	sp, 4
-		push	ds
-		push	offset shootout_laser_4
-		call	sub_12347
-		add	sp, 4
-		push	ds
-		push	offset shootout_laser_5
-		call	sub_12347
-		add	sp, 4
-		push	ds
-		push	offset shootout_laser_6
-		call	sub_12347
-		add	sp, 4
-		push	ds
-		push	offset shootout_laser_7
-		call	sub_12347
-		add	sp, 4
-		push	ds
-		push	offset shootout_laser_8
-		call	sub_12347
-		add	sp, 4
-		push	ds
-		push	offset shootout_laser_9
-		call	sub_12347
-		add	sp, 4
+		@@i = 0
+		rept SHOOTOUT_LASER_COUNT
+			call	@CShootoutLaser@update_hittest_and_render$qv c, offset _shootout_lasers[@@i * size CShootoutLaser], ds
+			@@i = @@i + 1
+		endm
 		push	[bp+@@stage]
 		call	sub_C766
 		cmp	_paused, 1
@@ -4572,78 +4537,13 @@ main_14_TEXT	ends
 ; Segment type:	Pure code
 main_15_TEXT	segment	byte public 'CODE' use16
 	extern @CShootoutLaser@spawn$qiiiiiucii:proc
-	extern @CShootoutLaser@hittest_and_render$qv:proc
+	extern @CShootoutLaser@update_hittest_and_render$qv:proc
 main_15_TEXT	ends
 
 main_15__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_15
 		;org 0Dh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12347	proc far
-
-arg_0		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx+3Ah], 0
-		jz	loc_12408
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx+3Ch]
-		cmp	ax, es:[bx+3Eh]
-		jl	short loc_123D2
-		mov	eax, es:[bx+8]
-		mov	es:[bx+10h], eax
-		mov	eax, es:[bx+0Ch]
-		mov	es:[bx+14h], eax
-		mov	byte ptr es:[bx+44h], 0
-		call	@CShootoutLaser@hittest_and_render$qv c, bx, word ptr [bp+arg_0+2]
-		les	bx, [bp+arg_0]
-		mov	eax, es:[bx+10h]
-		mov	es:[bx+8], eax
-		mov	eax, es:[bx+14h]
-		mov	es:[bx+0Ch], eax
-		cmp	dword ptr es:[bx+8], 28000h
-		jge	short loc_123C7
-		cmp	dword ptr es:[bx+8], 0
-		jl	short loc_123C7
-		cmp	dword ptr es:[bx+0Ch], 4000h
-		jl	short loc_123C7
-		cmp	dword ptr es:[bx+0Ch], 19000h
-		jl	short loc_123DD
-
-loc_123C7:
-		les	bx, [bp+arg_0]
-		mov	word ptr es:[bx+3Ah], 0
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_123D2:
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx+36h]
-		add	es:[bx+18h], ax
-
-loc_123DD:
-		les	bx, [bp+arg_0]
-		inc	word ptr es:[bx+3Ch]
-		mov	eax, es:[bx+8]
-		mov	es:[bx+10h], eax
-		mov	eax, es:[bx+0Ch]
-		mov	es:[bx+14h], eax
-		mov	byte ptr es:[bx+44h], 1
-		call	@CShootoutLaser@hittest_and_render$qv c, bx, word ptr [bp+arg_0+2]
-
-loc_12408:
-		pop	bp
-		retf
-sub_12347	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
