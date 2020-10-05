@@ -4538,6 +4538,7 @@ main_14_TEXT	ends
 main_15_TEXT	segment	byte public 'CODE' use16
 	extern @CShootoutLaser@spawn$qiiiiiucii:proc
 	extern @CShootoutLaser@update_hittest_and_render$qv:proc
+include th01/main/bullet/laser_s.inc
 main_15_TEXT	ends
 
 main_15__TEXT	segment	byte public 'CODE' use16
@@ -15126,30 +15127,7 @@ loc_1D6C4:
 ; ---------------------------------------------------------------------------
 
 loc_1D705:
-		mov	bx, si
-		imul	bx, size CShootoutLaser
-		cmp	_shootout_lasers[bx].SL_alive, 0
-		jz	short loc_1D74A
-		mov	bx, si
-		imul	bx, size CShootoutLaser
-		push	word ptr _shootout_lasers[bx].SL_origin_y
-		mov	bx, si
-		imul	bx, size CShootoutLaser
-		push	word ptr _shootout_lasers[bx].SL_origin_left
-		mov	bx, si
-		imul	bx, size CShootoutLaser
-		push	word ptr _shootout_lasers[bx].SL_ray_start_y
-		mov	bx, si
-		imul	bx, size CShootoutLaser
-		push	word ptr _shootout_lasers[bx].SL_ray_start_left
-		call	_graph_r_line_unput
-		add	sp, 8
-		mov	bx, si
-		imul	bx, size CShootoutLaser
-		mov	_shootout_lasers[bx].SL_alive, 0
-		jmp	short $+2
-
-loc_1D74A:
+		shootout_laser_unput_and_reset_broken	si
 		inc	si
 
 loc_1D74B:
@@ -15839,30 +15817,7 @@ loc_1DF5A:
 ; ---------------------------------------------------------------------------
 
 loc_1DFA4:
-		mov	bx, si
-		imul	bx, size CShootoutLaser
-		cmp	_shootout_lasers[bx].SL_alive, 0
-		jz	short loc_1DFE9
-		mov	bx, si
-		imul	bx, size CShootoutLaser
-		push	word ptr _shootout_lasers[bx].SL_origin_y
-		mov	bx, si
-		imul	bx, size CShootoutLaser
-		push	word ptr _shootout_lasers[bx].SL_origin_left
-		mov	bx, si
-		imul	bx, size CShootoutLaser
-		push	word ptr _shootout_lasers[bx].SL_ray_start_y
-		mov	bx, si
-		imul	bx, size CShootoutLaser
-		push	word ptr _shootout_lasers[bx].SL_ray_start_left
-		call	_graph_r_line_unput
-		add	sp, 8
-		mov	bx, si
-		imul	bx, size CShootoutLaser
-		mov	_shootout_lasers[bx].SL_alive, 0
-		jmp	short $+2
-
-loc_1DFE9:
+		shootout_laser_unput_and_reset_broken	si
 		inc	si
 
 loc_1DFEA:
@@ -19193,30 +19148,7 @@ loc_1FCF7:
 ; ---------------------------------------------------------------------------
 
 loc_1FD77:
-		mov	bx, si
-		imul	bx, size CShootoutLaser
-		cmp	_shootout_lasers[bx].SL_alive, 0
-		jz	short loc_1FDBC
-		mov	bx, si
-		imul	bx, size CShootoutLaser
-		push	word ptr _shootout_lasers[bx].SL_origin_y
-		mov	bx, si
-		imul	bx, size CShootoutLaser
-		push	word ptr _shootout_lasers[bx].SL_origin_left
-		mov	bx, si
-		imul	bx, size CShootoutLaser
-		push	word ptr _shootout_lasers[bx].SL_ray_start_y
-		mov	bx, si
-		imul	bx, size CShootoutLaser
-		push	word ptr _shootout_lasers[bx].SL_ray_start_left
-		call	_graph_r_line_unput
-		add	sp, 8
-		mov	bx, si
-		imul	bx, size CShootoutLaser
-		mov	_shootout_lasers[bx].SL_alive, 0
-		jmp	short $+2
-
-loc_1FDBC:
+		shootout_laser_unput_and_reset_broken	si
 		inc	si
 
 loc_1FDBD:
@@ -28240,30 +28172,7 @@ loc_24D59:
 ; ---------------------------------------------------------------------------
 
 loc_24DA3:
-		mov	bx, si
-		imul	bx, size CShootoutLaser
-		cmp	_shootout_lasers[bx].SL_alive, 0
-		jz	short loc_24DE8
-		mov	bx, si
-		imul	bx, size CShootoutLaser
-		push	word ptr _shootout_lasers[bx].SL_origin_y
-		mov	bx, si
-		imul	bx, size CShootoutLaser
-		push	word ptr _shootout_lasers[bx].SL_origin_left
-		mov	bx, si
-		imul	bx, size CShootoutLaser
-		push	word ptr _shootout_lasers[bx].SL_ray_start_y
-		mov	bx, si
-		imul	bx, size CShootoutLaser
-		push	word ptr _shootout_lasers[bx].SL_ray_start_left
-		call	_graph_r_line_unput
-		add	sp, 8
-		mov	bx, si
-		imul	bx, size CShootoutLaser
-		mov	_shootout_lasers[bx].SL_alive, 0
-		jmp	short $+2
-
-loc_24DE8:
+		shootout_laser_unput_and_reset_broken	si
 		inc	si
 
 loc_24DE9:
@@ -33980,30 +33889,7 @@ loc_285A5:
 ; ---------------------------------------------------------------------------
 
 loc_285FD:
-		mov	bx, si
-		imul	bx, size CShootoutLaser
-		cmp	_shootout_lasers[bx].SL_alive, 0
-		jz	short loc_28642
-		mov	bx, si
-		imul	bx, size CShootoutLaser
-		push	word ptr _shootout_lasers[bx].SL_origin_y
-		mov	bx, si
-		imul	bx, size CShootoutLaser
-		push	word ptr _shootout_lasers[bx].SL_origin_left
-		mov	bx, si
-		imul	bx, size CShootoutLaser
-		push	word ptr _shootout_lasers[bx].SL_ray_start_y
-		mov	bx, si
-		imul	bx, size CShootoutLaser
-		push	word ptr _shootout_lasers[bx].SL_ray_start_left
-		call	_graph_r_line_unput
-		add	sp, 8
-		mov	bx, si
-		imul	bx, size CShootoutLaser
-		mov	_shootout_lasers[bx].SL_alive, 0
-		jmp	short $+2
-
-loc_28642:
+		shootout_laser_unput_and_reset_broken	si
 		inc	si
 
 loc_28643:
@@ -40799,30 +40685,7 @@ loc_2C835:
 ; ---------------------------------------------------------------------------
 
 loc_2C868:
-		mov	bx, si
-		imul	bx, size CShootoutLaser
-		cmp	_shootout_lasers[bx].SL_alive, 0
-		jz	short loc_2C8AD
-		mov	bx, si
-		imul	bx, size CShootoutLaser
-		push	word ptr _shootout_lasers[bx].SL_origin_y
-		mov	bx, si
-		imul	bx, size CShootoutLaser
-		push	word ptr _shootout_lasers[bx].SL_origin_left
-		mov	bx, si
-		imul	bx, size CShootoutLaser
-		push	word ptr _shootout_lasers[bx].SL_ray_start_y
-		mov	bx, si
-		imul	bx, size CShootoutLaser
-		push	word ptr _shootout_lasers[bx].SL_ray_start_left
-		call	_graph_r_line_unput
-		add	sp, 8
-		mov	bx, si
-		imul	bx, size CShootoutLaser
-		mov	_shootout_lasers[bx].SL_alive, 0
-		jmp	short $+2
-
-loc_2C8AD:
+		shootout_laser_unput_and_reset_broken	si
 		inc	si
 
 loc_2C8AE:
