@@ -717,12 +717,12 @@ sub_BC87	proc far
 		push	ds
 		push	offset aMiko_ac_bos ; "miko_ac.bos"
 		push	ds
-		push	offset unk_37129
+		push	offset _player_anim_forward
 		call	sub_14BF0
 		push	ds
 		push	offset aMiko_ac2_bos ; "miko_ac2.bos"
 		push	ds
-		push	offset unk_373AF
+		push	offset _player_anim_slide
 		call	sub_14BF0
 		call	_ptn_load stdcall, PTN_SLOT_STG, offset aStg_ptn, ds	; "stg.ptn"
 		call	_ptn_load stdcall, PTN_SLOT_MIKO, offset aMiko_ptn, ds ; "miko.ptn"
@@ -10211,7 +10211,7 @@ loc_1A24D:
 		add	ax, -8
 		push	ax
 		push	ds
-		push	offset unk_373AF
+		push	offset _player_anim_slide
 		call	sub_15038
 		add	sp, 0Ah
 
@@ -10412,7 +10412,7 @@ loc_1A43F:
 		add	ax, -8
 		push	ax
 		push	ds
-		push	offset unk_37129
+		push	offset _player_anim_forward
 		call	sub_1520E
 		add	sp, 10h
 
@@ -10450,7 +10450,7 @@ loc_1A49F:
 		add	ax, -8
 		push	ax
 		push	ds
-		push	offset unk_37129
+		push	offset _player_anim_forward
 		call	sub_14E37
 		add	sp, 0Ah
 		mov	byte_39DB2, 3
@@ -10493,7 +10493,7 @@ loc_1A4EB:
 		add	ax, -8
 		push	ax
 		push	ds
-		push	offset unk_373AF
+		push	offset _player_anim_slide
 		call	sub_1520E
 		add	sp, 10h
 		mov	al, byte_35B43
@@ -10524,7 +10524,7 @@ loc_1A542:
 		add	ax, -8
 		push	ax
 		push	ds
-		push	offset unk_373AF
+		push	offset _player_anim_slide
 		call	sub_14E37
 		add	sp, 0Ah
 		mov	byte_39DB2, 3
@@ -10612,7 +10612,7 @@ loc_1A60F:
 		add	ax, -8
 		push	ax
 		push	ds
-		push	offset unk_373AF
+		push	offset _player_anim_slide
 		call	sub_1520E
 		add	sp, 10h
 		mov	al, byte_35B43
@@ -10642,7 +10642,7 @@ loc_1A660:
 		add	ax, -8
 		push	ax
 		push	ds
-		push	offset unk_373AF
+		push	offset _player_anim_slide
 		call	sub_14E37
 		add	sp, 0Ah
 		mov	byte_39DB2, 3
@@ -10852,7 +10852,7 @@ loc_1A80A:
 		add	ax, -8
 		push	ax
 		push	ds
-		push	offset unk_37129
+		push	offset _player_anim_forward
 		call	sub_15038
 		add	sp, 0Ah
 		jmp	loc_1A972
@@ -10985,7 +10985,7 @@ loc_1A8FE:
 		add	ax, -8
 		push	ax
 		push	ds
-		push	offset unk_373AF
+		push	offset _player_anim_slide
 		jmp	short loc_1A96A
 ; ---------------------------------------------------------------------------
 
@@ -11038,7 +11038,7 @@ loc_1A95C:
 		add	ax, -8
 		push	ax
 		push	ds
-		push	offset unk_37129
+		push	offset _player_anim_forward
 
 loc_1A96A:
 		call	sub_1520E
@@ -11203,7 +11203,7 @@ loc_1AACA:
 		add	ax, -8
 		push	ax
 		push	ds
-		push	offset unk_37129
+		push	offset _player_anim_forward
 		jmp	short loc_1AAEE
 ; ---------------------------------------------------------------------------
 
@@ -11214,7 +11214,7 @@ loc_1AADD:
 		add	ax, -8
 		push	ax
 		push	ds
-		push	offset unk_373AF
+		push	offset _player_anim_slide
 
 loc_1AAEE:
 		call	sub_14E37
@@ -46594,10 +46594,7 @@ dword_36C20	dd ?
 include th01/main/player/player[bss].asm
 include th01/main/player/orb[bss].asm
 		db 1275 dup(?)
-unk_37129	db    ?	;
-		db 645 dup(?)
-unk_373AF	db    ?	;
-		db 645 dup(?)
+include th01/main/player/anim[bss].asm
 include th01/main/bullet/pellets[bss].asm
 include th01/main/player/shots[bss].asm
 		db 4 dup(?)
