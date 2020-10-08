@@ -29,7 +29,20 @@ struct bos_t {
 	bos_image_t image[BOS_IMAGES_PER_SLOT];
 };
 
-#define bos_header_load(that, plane_size, fn) \
+// Shared loading and freeing subfunctions
+// ---------------------------------------
+
+// Separate function to work around the `Condition is always true/false` and
+// `Unreachable code` warnings
+inline void bos_header_load_palette(Palette4 &pal, bool load) {
+	if(load) {
+		arc_file_get_far(pal);
+	} else {
+		arc_file_seek(sizeof(spriteformat_header_t<bos_header_t>));
+	}
+}
+
+#define bos_header_load(that, plane_size, fn, needlessly_load_the_palette) \
 	union { \
 		bos_header_t outer; \
 		Palette4 pal; \
@@ -42,8 +55,8 @@ struct bos_t {
 	that->vram_w = header.outer.vram_w; \
 	that->h = header.outer.h; \
 	that->bos_image_count = header.outer.inner.image_count; \
-	plane_size = (vram_w * h); \
-	arc_file_get_far(header.pal); // yeah, should have been a seek
+	plane_size = (that->vram_w * that->h); \
+	bos_header_load_palette(header.pal, needlessly_load_the_palette);
 
 #define bos_image_new(image, plane_size) \
 	image.alpha = new dots16_t[plane_size / 2]; \
@@ -67,6 +80,7 @@ struct bos_t {
 		bos_image_ptr_free(slot_ptr.image[image].planes.G); \
 		bos_image_ptr_free(slot_ptr.image[image].planes.E); \
 	}
+// ---------------------------------------
 
 /// All functions that operate on this format are implemented redundantly for
 /// both CBossEntity and CBossAnim, with their own respective entity arrays.

@@ -49,7 +49,7 @@ int CBossEntity::load(const char fn[PF_FN_LEN], int slot)
 {
 	int plane_size;
 
-	bos_header_load(this, plane_size, fn);
+	bos_header_load(this, plane_size, fn, true);
 	if(!bos_header_only) {
 		bos_entity_free(slot);
 		for(int i = 0; bos_image_count > i; i++) {
@@ -612,7 +612,7 @@ int CBossAnim::load(const char fn[PF_FN_LEN], int slot)
 {
 	int plane_size;
 
-	bos_header_load(this, plane_size, fn);
+	bos_header_load(this, plane_size, fn, true);
 	if(!bos_header_only) {
 		bos_anim_free(slot);
 		for(int i = 0; bos_image_count > i; i++) {
