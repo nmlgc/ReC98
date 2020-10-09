@@ -75,6 +75,7 @@ BOMBS_MAX = 5
 main_01 group main_01_TEXT, main_01__TEXT, main_01___TEXT
 main_15 group main_15_TEXT, main_15__TEXT
 main_19 group main_19_TEXT, main_19__TEXT
+main_20 group main_20_TEXT, main_20__TEXT
 main_21 group main_21_TEXT, main_21__TEXT
 main_25 group main_25_TEXT, main_25__TEXT
 main_27 group main_27_TEXT, main_27__TEXT
@@ -714,16 +715,8 @@ sub_BC87	proc far
 		push	si
 		call	sub_14BD2
 		call	_hud_bg_load stdcall, offset aMask_grf, ds
-		push	ds
-		push	offset aMiko_ac_bos ; "miko_ac.bos"
-		push	ds
-		push	offset _player_anim_forward
-		call	sub_14BF0
-		push	ds
-		push	offset aMiko_ac2_bos ; "miko_ac2.bos"
-		push	ds
-		push	offset _player_anim_slide
-		call	sub_14BF0
+		call	@CPlayerAnim@load$qxnxc stdcall, offset _player_anim_forward, ds, offset aMiko_ac_bos,  ds ; "miko_ac.bos"
+		call	@CPlayerAnim@load$qxnxc stdcall, offset _player_anim_slide,   ds, offset aMiko_ac2_bos, ds ; "miko_ac2.bos"
 		call	_ptn_load stdcall, PTN_SLOT_STG, offset aStg_ptn, ds	; "stg.ptn"
 		call	_ptn_load stdcall, PTN_SLOT_MIKO, offset aMiko_ptn, ds ; "miko.ptn"
 		call	_ptn_new stdcall, (26 shl 16) or 5
@@ -6657,214 +6650,12 @@ main_19__TEXT	ends
 
 ; Segment type:	Pure code
 main_20_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_20_TEXT
+	extern @CPlayerAnim@load$qxnxc:proc
+main_20_TEXT	ends
+
+main_20__TEXT	segment	byte public 'CODE' use16
+		assume cs:main_20
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_14BF0	proc far
-
-var_36		= byte ptr -36h
-var_32		= byte ptr -32h
-var_30		= byte ptr -30h
-var_2E		= byte ptr -2Eh
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= dword	ptr  6
-@@fn		= dword	ptr  0Ah
-
-		enter	36h, 0
-		push	si
-		push	di
-		call	arc_file_load pascal, large [bp+@@fn]
-		push	ss
-		lea	ax, [bp+var_36]
-		push	ax
-		push	16
-		call	arc_file_get
-		mov	al, [bp+var_32]
-		mov	ah, 0
-		les	bx, [bp+arg_0]
-		mov	es:[bx+280h], ax
-		mov	al, [bp+var_30]
-		mov	ah, 0
-		mov	es:[bx+282h], ax
-		mov	al, [bp+var_2E]
-		mov	ah, 0
-		mov	es:[bx+284h], ax
-		mov	ax, es:[bx+280h]
-		imul	word ptr es:[bx+282h]
-		mov	[bp+var_2], ax
-		call	arc_file_seek pascal, 64
-		xor	di, di
-		jmp	loc_14E20
-; ---------------------------------------------------------------------------
-
-loc_14C45:
-		push	[bp+var_2]
-		call	@$bnwa$qui
-		pop	cx
-		mov	bx, di
-		shl	bx, 2
-		les	si, [bp+arg_0]
-		add	si, bx
-		mov	es:[si+2], dx
-		mov	es:[si], ax
-		push	[bp+var_2]
-		call	@$bnwa$qui
-		pop	cx
-		mov	bx, di
-		shl	bx, 2
-		les	si, [bp+arg_0]
-		add	si, bx
-		mov	es:[si+82h], dx
-		mov	es:[si+80h], ax
-		push	[bp+var_2]
-		call	@$bnwa$qui
-		pop	cx
-		mov	bx, di
-		shl	bx, 2
-		les	si, [bp+arg_0]
-		add	si, bx
-		mov	es:[si+102h], dx
-		mov	es:[si+100h], ax
-		push	[bp+var_2]
-		call	@$bnwa$qui
-		pop	cx
-		mov	bx, di
-		shl	bx, 2
-		les	si, [bp+arg_0]
-		add	si, bx
-		mov	es:[si+182h], dx
-		mov	es:[si+180h], ax
-		push	[bp+var_2]
-		call	@$bnwa$qui
-		pop	cx
-		mov	bx, di
-		shl	bx, 2
-		les	si, [bp+arg_0]
-		add	si, bx
-		mov	es:[si+202h], dx
-		mov	es:[si+200h], ax
-		call	arc_file_get pascal, word ptr es:[si+2], word ptr es:[si], [bp+var_2]
-		mov	ax, di
-		shl	ax, 2
-		les	bx, [bp+arg_0]
-		add	bx, ax
-		call	arc_file_get pascal, large dword ptr es:[bx+80h], [bp+var_2]
-		mov	ax, di
-		shl	ax, 2
-		les	bx, [bp+arg_0]
-		add	bx, ax
-		call	arc_file_get pascal, large dword ptr es:[bx+100h], [bp+var_2]
-		mov	ax, di
-		shl	ax, 2
-		les	bx, [bp+arg_0]
-		add	bx, ax
-		call	arc_file_get pascal, large dword ptr es:[bx+180h], [bp+var_2]
-		mov	ax, di
-		shl	ax, 2
-		les	bx, [bp+arg_0]
-		add	bx, ax
-		call	arc_file_get pascal, large dword ptr es:[bx+200h], [bp+var_2]
-		mov	[bp+var_4], 0
-		jmp	loc_14E15
-; ---------------------------------------------------------------------------
-
-loc_14D4A:
-		mov	ax, di
-		shl	ax, 2
-		les	bx, [bp+arg_0]
-		add	bx, ax
-		les	bx, es:[bx]
-		add	bx, [bp+var_4]
-		mov	al, es:[bx]
-		not	al
-		mov	dx, di
-		shl	dx, 2
-		les	bx, [bp+arg_0]
-		add	bx, dx
-		les	bx, es:[bx]
-		add	bx, [bp+var_4]
-		mov	es:[bx], al
-		mov	ax, di
-		shl	ax, 2
-		les	bx, [bp+arg_0]
-		add	bx, ax
-		les	bx, es:[bx]
-		add	bx, [bp+var_4]
-		mov	al, es:[bx]
-		mov	dx, di
-		shl	dx, 2
-		les	bx, [bp+arg_0]
-		add	bx, dx
-		les	bx, es:[bx+80h]
-		add	bx, [bp+var_4]
-		and	es:[bx], al
-		mov	ax, di
-		shl	ax, 2
-		les	bx, [bp+arg_0]
-		add	bx, ax
-		les	bx, es:[bx]
-		add	bx, [bp+var_4]
-		mov	al, es:[bx]
-		mov	dx, di
-		shl	dx, 2
-		les	bx, [bp+arg_0]
-		add	bx, dx
-		les	bx, es:[bx+100h]
-		add	bx, [bp+var_4]
-		and	es:[bx], al
-		mov	ax, di
-		shl	ax, 2
-		les	bx, [bp+arg_0]
-		add	bx, ax
-		les	bx, es:[bx]
-		add	bx, [bp+var_4]
-		mov	al, es:[bx]
-		mov	dx, di
-		shl	dx, 2
-		les	bx, [bp+arg_0]
-		add	bx, dx
-		les	bx, es:[bx+180h]
-		add	bx, [bp+var_4]
-		and	es:[bx], al
-		mov	ax, di
-		shl	ax, 2
-		les	bx, [bp+arg_0]
-		add	bx, ax
-		les	bx, es:[bx]
-		add	bx, [bp+var_4]
-		mov	al, es:[bx]
-		mov	dx, di
-		shl	dx, 2
-		les	bx, [bp+arg_0]
-		add	bx, dx
-		les	bx, es:[bx+200h]
-		add	bx, [bp+var_4]
-		and	es:[bx], al
-		inc	[bp+var_4]
-
-loc_14E15:
-		mov	ax, [bp+var_4]
-		cmp	ax, [bp+var_2]
-		jl	loc_14D4A
-		inc	di
-
-loc_14E20:
-		les	bx, [bp+arg_0]
-		cmp	es:[bx+284h], di
-		jg	loc_14C45
-		call	arc_file_free
-		xor	ax, ax
-		pop	di
-		pop	si
-		leave
-		retf
-sub_14BF0	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7746,7 +7537,7 @@ loc_155E7:
 		retf
 sub_15574	endp
 
-main_20_TEXT	ends
+main_20__TEXT	ends
 
 ; ===========================================================================
 

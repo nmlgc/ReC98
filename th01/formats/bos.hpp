@@ -83,5 +83,6 @@ inline void bos_header_load_palette(Palette4 &pal, bool load) {
 // ---------------------------------------
 
 /// All functions that operate on this format are implemented redundantly for
-/// both CBossEntity and CBossAnim, with their own respective entity arrays.
+/// both CBossEntity, CBossAnim, and CPlayerAnim with their own respective
+/// entity arrays.
 /// ---------------------------------------------------------------------

@@ -17,6 +17,10 @@ class CPlayerAnim {
 	vram_byte_amount_t vram_w;
 	pixel_t h;
 	int bos_image_count;
+
+	// Loads all images from the .BOS file with the given [fn] inside the
+	// currently active packfile. Always returns 0.
+	int load(const char fn[PF_FN_LEN]);
 };
 
 extern CPlayerAnim player_anim_forward;
