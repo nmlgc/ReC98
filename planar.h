@@ -90,6 +90,11 @@ static inline vram_offset_t vram_offset_divmul(screen_x_t x, vram_y_t y)
 	return (x / BYTE_DOTS) + (y * ROW_SIZE);
 }
 
+static inline vram_offset_t vram_offset_divmul_wtf(screen_x_t x, vram_y_t y)
+{
+	return ((((x + RES_X) / BYTE_DOTS) + (y * ROW_SIZE)) - ROW_SIZE);
+}
+
 static inline vram_offset_t vram_offset_mulshift(screen_x_t x, vram_y_t y)
 {
 	return (y * ROW_SIZE) + (x >> 3);

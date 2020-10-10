@@ -50,12 +50,12 @@ public:
 
 	/// Blitting
 	/// --------
-	// All of functions with an [image] parameter use that image from
-	// [bos_slot], *not* the [bos_image] of this instance.
-	// All of these also make an attempt at clipping the sprite at the left
-	// and right edges of VRAM. This only really works if [left] is a multiple
-	// of 16 and inside the [-RES_X, RES_X[ range, though, and is pretty much
-	// broken otherwise.
+	// All functions with an [image] parameter use that image from [bos_slot],
+	// *not* the [bos_image] of this instance.
+	// Like CPlayerAnim, all of these also make an attempt at clipping the
+	// sprite at the left and right edges of VRAM. This only really works if
+	// [left] is a multiple of 16 and inside the [-RES_X, RES_X[ range,
+	// though, and is pretty much broken otherwise.
 
 	// Blits [image] to (⌊left/8⌋*8, top).
 	// Additionally clips at the bottom edge of VRAM.

@@ -3,6 +3,8 @@ extern "C" {
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
+#include "th01/hardware/graph.h"
+#include "th01/hardware/planar.h"
 #include "th01/formats/pf.hpp"
 #include "th01/formats/sprfmt_h.hpp"
 #include "th01/formats/bos.hpp"
@@ -38,4 +40,45 @@ int CPlayerAnim::load(const char fn[PF_FN_LEN])
 	}
 	arc_file_free();
 	return 0;
+}
+
+void CPlayerAnim::unput_8(screen_x_t left, vram_y_t top, int image) const
+{
+	vram_offset_t vram_offset;
+	vram_byte_amount_t bos_p = 0;
+	vram_offset_t vram_offset_row;
+	pixel_t bos_y;
+	vram_byte_amount_t bos_byte_x;
+
+	if(bos_image_count <= image) {
+		return;
+	}
+
+	vram_offset_row = vram_offset_divmul_wtf(left, top);
+
+	for(bos_y = 0; h > bos_y; bos_y++) {
+		vram_offset = vram_offset_row;
+		vram_y_t intended_y = vram_intended_y_for(vram_offset_row, left);
+		for(bos_byte_x = 0; vram_w > bos_byte_x; bos_byte_x++) {
+			if(
+				((vram_offset / ROW_SIZE) == intended_y) &&
+				(vram_offset >= 0) // Clip at the top edge
+			) {
+				if(alpha[image][bos_p]) {
+					dots8_t bg_dots;
+					vram_erase_on_0(vram_offset, alpha[image][bos_p], 8);
+					vram_unput_masked_emptyopt_planar(
+						vram_offset, 8, alpha[image][bos_p], bg_dots
+					);
+				}
+			}
+			vram_offset++;
+			bos_p++;
+		}
+		vram_offset_row += ROW_SIZE;
+		if(vram_offset_row >= PLANE_SIZE) { // Clip at the bottom edge
+			break;
+		}
+	}
+	graph_accesspage_func(0);
 }

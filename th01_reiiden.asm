@@ -6651,237 +6651,12 @@ main_19__TEXT	ends
 ; Segment type:	Pure code
 main_20_TEXT	segment	byte public 'CODE' use16
 	extern @CPlayerAnim@load$qxnxc:proc
+	extern @CPlayerAnim@unput_8$xqiii:proc
 main_20_TEXT	ends
 
 main_20__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_20
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_14E37	proc far
-
-var_9		= byte ptr -9
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
-
-		enter	0Ah, 0
-		push	si
-		push	di
-		xor	di, di
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx+284h]
-		cmp	ax, [bp+arg_8]
-		jle	loc_15034
-		mov	ax, [bp+arg_4]
-		add	ax, 640
-		mov	bx, 8
-		cwd
-		idiv	bx
-		mov	dx, [bp+arg_6]
-		imul	dx, 50h
-		add	ax, dx
-		add	ax, 0FFB0h
-		mov	[bp+var_2], ax
-		mov	[bp+var_4], 0
-		jmp	loc_1501D
-; ---------------------------------------------------------------------------
-
-loc_14E70:
-		mov	si, [bp+var_2]
-		cmp	[bp+arg_4], 0
-		jge	short loc_14E85
-		mov	ax, [bp+var_2]
-		mov	bx, 80
-		cwd
-		idiv	bx
-		inc	ax
-		jmp	short loc_14E8E
-; ---------------------------------------------------------------------------
-
-loc_14E85:
-		mov	ax, [bp+var_2]
-		mov	bx, 80
-		cwd
-		idiv	bx
-
-loc_14E8E:
-		mov	[bp+var_8], ax
-		mov	[bp+var_6], 0
-		jmp	loc_15000
-; ---------------------------------------------------------------------------
-
-loc_14E99:
-		mov	ax, si
-		mov	bx, 80
-		cwd
-		idiv	bx
-		cmp	ax, [bp+var_8]
-		jnz	loc_14FFB
-		or	si, si
-		jl	loc_14FFB
-		mov	ax, [bp+arg_8]
-		shl	ax, 2
-		les	bx, [bp+arg_0]
-		add	bx, ax
-		les	bx, es:[bx]
-		add	bx, di
-		cmp	byte ptr es:[bx], 0
-		jz	loc_14FFB
-		call	_grcg_setcolor_rmw stdcall, 0
-		push	0
-		call	_graph_accesspage_func
-		mov	ax, [bp+arg_8]
-		shl	ax, 2
-		les	bx, [bp+arg_0]
-		add	bx, ax
-		les	bx, es:[bx]
-		add	bx, di
-		mov	al, es:[bx]
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		mov	es:[bx], al
-		call	_grcg_off_func
-		push	1
-		call	_graph_accesspage_func
-		add	sp, 6
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		mov	al, es:[bx]
-		mov	[bp+var_9], al
-		cmp	[bp+var_9], 0
-		jz	short loc_14F38
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		mov	ax, [bp+arg_8]
-		shl	ax, 2
-		les	bx, [bp+arg_0]
-		add	bx, ax
-		les	bx, es:[bx]
-		add	bx, di
-		mov	al, es:[bx]
-		and	al, [bp+var_9]
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		or	es:[bx], al
-
-loc_14F38:
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		les	bx, _VRAM_PLANE_R
-		add	bx, si
-		mov	al, es:[bx]
-		mov	[bp+var_9], al
-		cmp	[bp+var_9], 0
-		jz	short loc_14F79
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		mov	ax, [bp+arg_8]
-		shl	ax, 2
-		les	bx, [bp+arg_0]
-		add	bx, ax
-		les	bx, es:[bx]
-		add	bx, di
-		mov	al, es:[bx]
-		and	al, [bp+var_9]
-		les	bx, _VRAM_PLANE_R
-		add	bx, si
-		or	es:[bx], al
-
-loc_14F79:
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		les	bx, _VRAM_PLANE_G
-		add	bx, si
-		mov	al, es:[bx]
-		mov	[bp+var_9], al
-		cmp	[bp+var_9], 0
-		jz	short loc_14FBA
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		mov	ax, [bp+arg_8]
-		shl	ax, 2
-		les	bx, [bp+arg_0]
-		add	bx, ax
-		les	bx, es:[bx]
-		add	bx, di
-		mov	al, es:[bx]
-		and	al, [bp+var_9]
-		les	bx, _VRAM_PLANE_G
-		add	bx, si
-		or	es:[bx], al
-
-loc_14FBA:
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		les	bx, _VRAM_PLANE_E
-		add	bx, si
-		mov	al, es:[bx]
-		mov	[bp+var_9], al
-		cmp	[bp+var_9], 0
-		jz	short loc_14FFB
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		mov	ax, [bp+arg_8]
-		shl	ax, 2
-		les	bx, [bp+arg_0]
-		add	bx, ax
-		les	bx, es:[bx]
-		add	bx, di
-		mov	al, es:[bx]
-		and	al, [bp+var_9]
-		les	bx, _VRAM_PLANE_E
-		add	bx, si
-		or	es:[bx], al
-
-loc_14FFB:
-		inc	si
-		inc	di
-		inc	[bp+var_6]
-
-loc_15000:
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx+280h]
-		cmp	ax, [bp+var_6]
-		jg	loc_14E99
-		add	[bp+var_2], 50h	; 'P'
-		cmp	[bp+var_2], 7D00h
-		jge	short loc_1502C
-		inc	[bp+var_4]
-
-loc_1501D:
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx+282h]
-		cmp	ax, [bp+var_4]
-		jg	loc_14E70
-
-loc_1502C:
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-
-loc_15034:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_14E37	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -10236,13 +10011,13 @@ loc_1A49F:
 		cwd
 		idiv	bx
 		push	ax
-		push	160h
+		push	_player_anim_forward_top
 		mov	ax, _player_left
 		add	ax, -8
 		push	ax
 		push	ds
 		push	offset _player_anim_forward
-		call	sub_14E37
+		call	@CPlayerAnim@unput_8$xqiii
 		add	sp, 0Ah
 		mov	byte_39DB2, 3
 		mov	byte_35B43, 0
@@ -10310,13 +10085,13 @@ loc_1A542:
 		idiv	bx
 		add	dx, 2
 		push	dx
-		push	170h
+		push	_player_top
 		mov	ax, _player_left
 		add	ax, -8
 		push	ax
 		push	ds
 		push	offset _player_anim_slide
-		call	sub_14E37
+		call	@CPlayerAnim@unput_8$xqiii
 		add	sp, 0Ah
 		mov	byte_39DB2, 3
 		mov	byte_35B43, 0
@@ -10428,13 +10203,13 @@ loc_1A660:
 		cwd
 		idiv	bx
 		push	dx
-		push	170h
+		push	_player_top
 		mov	ax, _player_left
 		add	ax, -8
 		push	ax
 		push	ds
 		push	offset _player_anim_slide
-		call	sub_14E37
+		call	@CPlayerAnim@unput_8$xqiii
 		add	sp, 0Ah
 		mov	byte_39DB2, 3
 		mov	byte_35B43, 0
@@ -10989,7 +10764,7 @@ loc_1AAA9:
 
 loc_1AACA:
 		push	[bp+@@ptn_id]
-		push	160h
+		push	_player_anim_forward_top
 		mov	ax, _player_left
 		add	ax, -8
 		push	ax
@@ -11000,7 +10775,7 @@ loc_1AACA:
 
 loc_1AADD:
 		push	[bp+@@ptn_id]
-		push	170h
+		push	_player_top
 		mov	ax, _player_left
 		add	ax, -8
 		push	ax
@@ -11008,7 +10783,7 @@ loc_1AADD:
 		push	offset _player_anim_slide
 
 loc_1AAEE:
-		call	sub_14E37
+		call	@CPlayerAnim@unput_8$xqiii
 		add	sp, 0Ah
 
 loc_1AAF6:

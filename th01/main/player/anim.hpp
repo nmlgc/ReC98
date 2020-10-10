@@ -21,6 +21,19 @@ class CPlayerAnim {
 	// Loads all images from the .BOS file with the given [fn] inside the
 	// currently active packfile. Always returns 0.
 	int load(const char fn[PF_FN_LEN]);
+
+	/// Blitting
+	/// --------
+	// All of these clip the sprite at the top and bottom edges of VRAM. Like
+	// CBossEntity and CBossAnim, they also make an attempt at clipping on the
+	// left and right edges, but that only really works if [left] is a
+	// multiple of 16 and inside the [-RES_X, RES_X[ range, and is pretty much
+	// broken otherwise.
+
+	// Precisely restores pixels according to the alpha mask of [image] from
+	// VRAM page 1, starting at (⌊left/8⌋*8, top).
+	void unput_8(screen_x_t left, vram_y_t top, int image) const;
+	/// --------
 };
 
 extern CPlayerAnim player_anim_forward;
