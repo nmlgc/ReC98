@@ -1,5 +1,6 @@
 #include "th01/hardware/graph.h"
 #include "th01/hardware/egc.h"
+#include "th01/hardware/planar.h"
 #include "th01/formats/ptn.hpp"
 
 static inline ptn_t* ptn_with_id_shift(int id)
@@ -12,11 +13,6 @@ static inline ptn_t* ptn_with_id_shift(int id)
 	}
 	return &ptn_images[id / PTN_IMAGES_PER_SLOT][id % PTN_IMAGES_PER_SLOT];
 }
-
-#define grcg_clear_masked(vram_offset, w, mask) \
-	grcg_setcolor_rmw(0); \
-	grcg_put(vram_offset, mask, w); \
-	grcg_off();
 
 #define ptn_or_masked(vram_offset, w, ptn, mask) \
 	VRAM_CHUNK(B, vram_offset, w) |= (ptn->planes.B[y] & mask); \
@@ -42,7 +38,7 @@ void ptn_unput_8(screen_x_t left, vram_y_t top, int ptn_id)
 		if(mask) {
 			planar_t(PTN_W) page1;
 
-			grcg_clear_masked(vram_offset, PTN_W, mask);
+			vram_erase(vram_offset, mask, PTN_W);
 
 			graph_accesspage_func(1);
 			vram_snap_planar_masked(page1, vram_offset, PTN_W, mask);
@@ -70,7 +66,7 @@ void ptn_put_8(screen_x_t left, vram_y_t top, int ptn_id)
 	for(y = 0; y < PTN_H; y++) {
 		mask = ptn->alpha[y];
 		if(mask) {
-			grcg_clear_masked(vram_offset, PTN_W, mask);
+			vram_erase(vram_offset, mask, PTN_W);
 			ptn_or_masked(vram_offset, PTN_W, ptn, mask);
 		}
 		vram_offset += ROW_SIZE;
@@ -100,7 +96,7 @@ void ptn_unput_quarter_8(
 
 		mask = (mask_full >> q.x);
 		if(mask) {
-			grcg_clear_masked(vram_offset, PTN_QUARTER_W, mask);
+			vram_erase(vram_offset, mask, PTN_QUARTER_W);
 			graph_accesspage_func(1);
 			vram_snap_planar_masked(page1, vram_offset, PTN_QUARTER_W, mask);
 			graph_accesspage_func(0);
@@ -128,7 +124,7 @@ void ptn_put_quarter_8(screen_x_t left, vram_y_t top, int ptn_id, int quarter)
 		mask_full = ptn->alpha[y];
 		mask = (mask_full >> q.x);
 		if(mask) {
-			grcg_clear_masked(vram_offset, PTN_QUARTER_W, mask);
+			vram_erase(vram_offset, mask, PTN_QUARTER_W);
 			ptn_or_quarter_masked(vram_offset, PTN_QUARTER_W, ptn, q, mask);
 		}
 		vram_offset += ROW_SIZE;
@@ -203,7 +199,7 @@ void ptn_put_quarter(screen_x_t left, vram_y_t top, int ptn_id, int quarter)
 		if(first_bit == 0) {
 			if(mask != 0) {
 				#define w PTN_QUARTER_W
-				grcg_clear_masked(vram_offset, w, mask);
+				vram_erase(vram_offset, mask, w);
 				vram_or_masked_emptyopt(B, vram_offset, w, sprite.B, mask);
 				vram_or_masked_emptyopt(R, vram_offset, w, sprite.R, mask);
 				vram_or_masked_emptyopt(G, vram_offset, w, sprite.G, mask);
@@ -213,7 +209,7 @@ void ptn_put_quarter(screen_x_t left, vram_y_t top, int ptn_id, int quarter)
 		} else {
 			if(mask != 0) {
 				mask_unaligned.set(mask, first_bit);
-				grcg_clear_masked(vram_offset, 32, mask_unaligned.d32);
+				vram_erase(vram_offset, mask_unaligned.d32, 32);
 				for(plane = 0; plane < PL_COUNT; plane++) {
 					dots = sprite[plane];
 					if(dots) {

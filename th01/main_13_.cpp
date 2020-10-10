@@ -9,6 +9,7 @@
 extern "C" {
 #include "th01/th01.h"
 #include "th01/math/wave.hpp"
+#include "th01/hardware/planar.h"
 
 #include "th01/hardware/grp2xscs.cpp"
 
@@ -44,9 +45,7 @@ void graph_hline_unput_masked(
 			px8.G = mask[x] & VRAM_PLANE_G[p];
 			px8.E = mask[x] & VRAM_PLANE_E[p];
 			graph_accesspage_func(0);
-			grcg_setcolor_rmw(0);
-			VRAM_PLANE_B[p] = mask[x];
-			grcg_off();
+			vram_erase(p, mask[x], 8);
 			VRAM_PLANE_B[p] |= px8.B;
 			VRAM_PLANE_R[p] |= px8.R;
 			VRAM_PLANE_G[p] |= px8.G;

@@ -3,6 +3,7 @@
 #include "th01/math/wave.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/graph.h"
+#include "th01/hardware/planar.h"
 #include "th01/formats/sprfmt_h.hpp"
 #include "th01/formats/pf.hpp"
 #include "th01/formats/bos.hpp"
@@ -10,22 +11,45 @@
 #include "th01/main/player/orb.hpp"
 #include "th01/main/boss/entity_a.hpp"
 
-/// Helper functions
-/// ----------------
-// Part of ZUN's attempt at clipping at the left or right edges of VRAM, by
-// comparing [vram_offset] against the value returned from this function.
-inline vram_y_t vram_intended_y_for(
-	vram_offset_t vram_offset, screen_x_t first_x
-) {
-	return (first_x < 0)
-		? ((vram_offset / ROW_SIZE) + 1)
-		: ((vram_offset / ROW_SIZE) + 0);
-}
+// Slot structures
+// ---------------
+// Both CBossEntity and CBossAnim choose to restrict themselves to
+// word-aligned / 16w×h image sizes, even though .BOS itself is byte-aligned.
 
-#define vram_offset_at_intended_y_16(vram_offset, intended_y) \
-	(((vram_offset + 0) / ROW_SIZE) == intended_y) && \
-	(((vram_offset + 1) / ROW_SIZE) == intended_y)
-/// ----------------
+#define BOS_IMAGES_PER_SLOT 8
+
+struct bos_image_t {
+	Planar<dots16_t *> planes;
+	dots16_t *alpha;
+};
+
+struct bos_t {
+	bos_image_t image[BOS_IMAGES_PER_SLOT];
+};
+
+#define bos_image_new(image, plane_size) \
+	image.alpha = new dots16_t[plane_size / 2]; \
+	image.planes.B = new dots16_t[plane_size / 2]; \
+	image.planes.R = new dots16_t[plane_size / 2]; \
+	image.planes.G = new dots16_t[plane_size / 2]; \
+	image.planes.E = new dots16_t[plane_size / 2];
+
+// Always setting the pointer to NULL, for a change...
+#define bos_image_ptr_free(ptr) \
+	if(ptr) { \
+		delete[] ptr; \
+	} \
+	ptr = NULL;
+
+#define bos_free(slot_ptr) \
+	for(int image = 0; image < BOS_IMAGES_PER_SLOT; image++) { \
+		bos_image_ptr_free(slot_ptr.image[image].alpha); \
+		bos_image_ptr_free(slot_ptr.image[image].planes.B); \
+		bos_image_ptr_free(slot_ptr.image[image].planes.R); \
+		bos_image_ptr_free(slot_ptr.image[image].planes.G); \
+		bos_image_ptr_free(slot_ptr.image[image].planes.E); \
+	}
+// ---------------
 
 /// Entities
 /// --------
@@ -104,10 +128,7 @@ void CBossEntity::put_8(screen_x_t left, vram_y_t top, int image) const
 		for(bos_word_x = 0; (vram_w / 2) > bos_word_x; bos_word_x++) {
 			if((vram_offset / ROW_SIZE) == intended_y) {
 				if(~bos.alpha[bos_p]) {
-					grcg_setcolor_rmw(0);
-					grcg_put(vram_offset, ~bos.alpha[bos_p], 16);
-					grcg_off();
-
+					vram_erase(vram_offset, ~bos.alpha[bos_p], 16);
 					vram_or_emptyopt(B, vram_offset, bos.planes.B[bos_p], 16);
 					vram_or_emptyopt(R, vram_offset, bos.planes.R[bos_p], 16);
 					vram_or_emptyopt(G, vram_offset, bos.planes.G[bos_p], 16);
@@ -344,20 +365,6 @@ void CBossEntity::unput_and_put_8(
 	}
 }
 
-#define vram_unput_masked_emptyopt(plane, offset, bit_count, mask, tmp_dots) \
-	graph_accesspage_func(1); \
-	VRAM_SNAP(tmp_dots, plane, offset, bit_count); \
-	if(tmp_dots) { \
-		graph_accesspage_func(0); \
-		VRAM_CHUNK(plane, offset, bit_count) |= (mask & tmp_dots); \
-	}
-
-#define vram_unput_masked_emptyopt_planar(offset, bit_count, mask, tmp_dots) \
-	vram_unput_masked_emptyopt(B, offset, bit_count, mask, tmp_dots); \
-	vram_unput_masked_emptyopt(R, offset, bit_count, mask, tmp_dots); \
-	vram_unput_masked_emptyopt(G, offset, bit_count, mask, tmp_dots); \
-	vram_unput_masked_emptyopt(E, offset, bit_count, mask, tmp_dots);
-
 void CBossEntity::unput_8(screen_x_t left, vram_y_t top, int image) const
 {
 	vram_offset_t vram_offset_row = vram_offset_divmul(left, top);
@@ -380,10 +387,7 @@ void CBossEntity::unput_8(screen_x_t left, vram_y_t top, int image) const
 				vram_offset_at_intended_y_16(vram_offset, intended_y) &&
 				(vram_offset >= 0) // Clip at the top edge
 			) {
-				grcg_setcolor_rmw(0);
-				graph_accesspage_func(0);
-				grcg_put(vram_offset, ~bos.alpha[bos_p], 16);
-				grcg_off();
+				vram_erase_on_0(vram_offset, ~bos.alpha[bos_p], 16);
 
 				if(~bos.alpha[bos_p]) {
 					dots16_t bg_dots;
@@ -655,9 +659,7 @@ void CBossAnim::put_8(void) const
 		for(bos_word_x = 0; (vram_w / 2) > bos_word_x; bos_word_x++) {
 			if((vram_offset / ROW_SIZE) == intended_y) {
 				if(bos.alpha[bos_p]) {
-					grcg_setcolor_rmw(0);
-					grcg_put(vram_offset, bos.alpha[bos_p], 16);
-					grcg_off();
+					vram_erase(vram_offset, bos.alpha[bos_p], 16);
 				}
 				vram_or_emptyopt(B, vram_offset, bos.planes.B[bos_p], 16);
 				vram_or_emptyopt(R, vram_offset, bos.planes.R[bos_p], 16);

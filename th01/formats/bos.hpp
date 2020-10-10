@@ -5,32 +5,15 @@
 // On-disk per-file header. Not the same as for .GRC!
 struct bos_header_t {
 	char magic[sizeof(BOS_MAGIC) - 1];
-
-	// Yes, this means that the *format* itself isn't actually restricted to
-	// word-aligned / 16w×h sizes, …
 	uint8_t vram_w;
-
 	int8_t zero;
 	uint8_t h;
 	int8_t unknown;
 	spriteformat_header_inner_t inner;
 };
 
-#define BOS_IMAGES_PER_SLOT 8
-
-// In-memory slot structures
-struct bos_image_t {
-	// … as these types would suggest. That's purely an implementation choice.
-	Planar<dots16_t *> planes;
-	dots16_t *alpha;
-};
-
-struct bos_t {
-	bos_image_t image[BOS_IMAGES_PER_SLOT];
-};
-
-// Shared loading and freeing subfunctions
-// ---------------------------------------
+// Shared loading subfunctions
+// ---------------------------
 
 // Separate function to work around the `Condition is always true/false` and
 // `Unreachable code` warnings
@@ -57,30 +40,39 @@ inline void bos_header_load_palette(Palette4 &pal, bool load) {
 	that->bos_image_count = header.outer.inner.image_count; \
 	plane_size = (that->vram_w * that->h); \
 	bos_header_load_palette(header.pal, needlessly_load_the_palette);
+// ---------------------------
 
-#define bos_image_new(image, plane_size) \
-	image.alpha = new dots16_t[plane_size / 2]; \
-	image.planes.B = new dots16_t[plane_size / 2]; \
-	image.planes.R = new dots16_t[plane_size / 2]; \
-	image.planes.G = new dots16_t[plane_size / 2]; \
-	image.planes.E = new dots16_t[plane_size / 2];
+/// Shared blitting subfunctions
+/// ----------------------------
 
-// Always setting the pointer to NULL, for a change...
-#define bos_image_ptr_free(ptr) \
-	if(ptr) { \
-		delete[] ptr; \
-	} \
-	ptr = NULL;
+// Part of ZUN's attempt at clipping at the left or right edges of VRAM, by
+// comparing [vram_offset] against the value returned from this function.
+inline vram_y_t vram_intended_y_for(
+	vram_offset_t vram_offset, screen_x_t first_x
+) {
+	return (first_x < 0)
+		? ((vram_offset / ROW_SIZE) + 1)
+		: ((vram_offset / ROW_SIZE) + 0);
+}
 
-#define bos_free(slot_ptr) \
-	for(int image = 0; image < BOS_IMAGES_PER_SLOT; image++) { \
-		bos_image_ptr_free(slot_ptr.image[image].alpha); \
-		bos_image_ptr_free(slot_ptr.image[image].planes.B); \
-		bos_image_ptr_free(slot_ptr.image[image].planes.R); \
-		bos_image_ptr_free(slot_ptr.image[image].planes.G); \
-		bos_image_ptr_free(slot_ptr.image[image].planes.E); \
+#define vram_offset_at_intended_y_16(vram_offset, intended_y) \
+	(((vram_offset + 0) / ROW_SIZE) == intended_y) && \
+	(((vram_offset + 1) / ROW_SIZE) == intended_y)
+
+#define vram_unput_masked_emptyopt(plane, offset, bit_count, mask, tmp_dots) \
+	graph_accesspage_func(1); \
+	VRAM_SNAP(tmp_dots, plane, offset, bit_count); \
+	if(tmp_dots) { \
+		graph_accesspage_func(0); \
+		VRAM_CHUNK(plane, offset, bit_count) |= (mask & tmp_dots); \
 	}
-// ---------------------------------------
+
+#define vram_unput_masked_emptyopt_planar(offset, bit_count, mask, tmp_dots) \
+	vram_unput_masked_emptyopt(B, offset, bit_count, mask, tmp_dots); \
+	vram_unput_masked_emptyopt(R, offset, bit_count, mask, tmp_dots); \
+	vram_unput_masked_emptyopt(G, offset, bit_count, mask, tmp_dots); \
+	vram_unput_masked_emptyopt(E, offset, bit_count, mask, tmp_dots);
+/// ----------------------------
 
 /// All functions that operate on this format are implemented redundantly for
 /// both CBossEntity, CBossAnim, and CPlayerAnim with their own respective
