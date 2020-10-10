@@ -6,6 +6,10 @@ struct player_anim_images_t {
 	dots8_t*& operator [](int image) {
 		return img[image];
 	}
+
+	const dots8_t* operator [](int image) const{
+		return img[image];
+	}
 };
 
 // Collection of up to [PLAYER_ANIM_IMAGES_PER_SLOT] player animation sprites
@@ -33,6 +37,9 @@ class CPlayerAnim {
 	// Precisely restores pixels according to the alpha mask of [image] from
 	// VRAM page 1, starting at (⌊left/8⌋*8, top).
 	void unput_8(screen_x_t left, vram_y_t top, int image) const;
+
+	// Blits [image] to (⌊left/8⌋*8, top) on VRAM page 0.
+	void put_0_8(screen_x_t left, vram_y_t top, int image) const;
 	/// --------
 };
 
