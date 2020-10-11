@@ -31,13 +31,13 @@ void egc_wave_unput(
 	}
 }
 
-void graph_hline_unput_masked(
-	screen_x_t left, vram_y_t top, dots8_t *mask, vram_byte_amount_t w
+void graph_hline_unput_masked_8(
+	screen_x_t left, vram_y_t top, dots8_t *mask, vram_byte_amount_t vram_w
 )
 {
 	planar8_t px8;
 	register vram_offset_t p = vram_offset_shift(left, top);
-	for(vram_byte_amount_t x = 0; x < w; x++, p++) {
+	for(vram_byte_amount_t x = 0; x < vram_w; x++, p++) {
 		if(mask[x]) {
 			graph_accesspage_func(1);
 			px8.B = mask[x] & VRAM_PLANE_B[p];

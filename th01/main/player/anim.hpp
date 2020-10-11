@@ -40,6 +40,27 @@ class CPlayerAnim {
 
 	// Blits [image] to (⌊left/8⌋*8, top) on VRAM page 0.
 	void put_0_8(screen_x_t left, vram_y_t top, int image) const;
+
+	// Blits [put_image] to
+	// 	(⌊  put_left/8⌋*8,   put_top)
+	// on VRAM page 0, after attempting to restore the pixels of [unput_image]
+	// starting at
+	// 	(⌊unput_left/8⌋*8, unput_top),
+	// that wouldn't be overlapped by the subsequent [put_image] blit, from
+	// VRAM page 1.
+	//
+	// Only unblits correctly if |⌊put_left/8⌋*8 - ⌊unput_left/8⌋*8| ≤ 1,
+	// though, and spends a lot of CPU time in optimizing the dot patterns for
+	// unblitting. Calling unput_8() and put_0_8() separately might therefore
+	// be just as fast.
+	void unput_and_put_overlapped_8(
+		screen_x_t put_left,
+		vram_y_t put_top,
+		screen_x_t unput_left,
+		vram_y_t unput_top,
+		int put_image,
+		int unput_image
+	) const;
 	/// --------
 };
 

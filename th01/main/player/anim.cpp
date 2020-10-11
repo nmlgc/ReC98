@@ -8,6 +8,8 @@ extern "C" {
 #include "th01/formats/pf.hpp"
 #include "th01/formats/sprfmt_h.hpp"
 #include "th01/formats/bos.hpp"
+#include "th01/main/playfld.hpp"
+#include "th01/main/player/player.hpp"
 #include "th01/main/player/anim.hpp"
 }
 
@@ -119,6 +121,87 @@ void CPlayerAnim::put_0_8(screen_x_t left, vram_y_t top, int image) const
 		vram_offset = vram_offset_row;
 		vram_y_t intended_y = vram_intended_y_for(vram_offset_row, left);
 		put_row(bos_byte_x, vram_offset, bos_p, image);
+		vram_offset_row += ROW_SIZE;
+		if(vram_offset_row >= PLANE_SIZE) { // Clip at the bottom edge
+			break;
+		}
+	}
+	graph_accesspage_func(0);
+}
+
+void CPlayerAnim::unput_and_put_overlapped_8(
+	screen_x_t put_left,
+	vram_y_t put_top,
+	screen_x_t unput_left,
+	vram_y_t unput_top,
+	int put_image,
+	int unput_image
+) const
+{
+	vram_byte_amount_t bos_p;
+	vram_byte_amount_t unput_byte_x;
+	pixel_t bos_y;
+	vram_offset_t vram_offset_row;
+	vram_byte_amount_t vram_distance_from_unput_to_put;
+
+	// MODDERS: This obviously imposes a practical limit of 64 pixels on .BOS
+	// sprite widths
+	dots8_t unput_mask[64 / BYTE_DOTS];
+
+	vram_offset_t vram_offset;
+	vram_byte_amount_t bos_byte_x;
+
+	// Probably supposed to needlessly make sure that both values are positive?
+	vram_distance_from_unput_to_put = (
+		((put_left + PLAYER_W) >> 3) - ((unput_left + PLAYER_W) >> 3)
+	);
+	bos_p = 0;
+
+	if(bos_image_count <= put_image) {
+		return;
+	}
+
+	vram_offset_row = vram_offset_divshift_wtf(put_left, put_top);
+
+	for(bos_y = 0; h > bos_y; bos_y++) {
+		vram_offset = vram_offset_row;
+		vram_y_t intended_y = vram_intended_y_for(vram_offset_row, put_left);
+
+		if(vram_distance_from_unput_to_put > 0) {
+			unput_mask[0] = alpha[unput_image][bos_p];
+			for(unput_byte_x = 1; (vram_w - 0) > unput_byte_x; unput_byte_x++) {
+				unput_mask[unput_byte_x] = (
+					~alpha[  put_image][bos_p + unput_byte_x - 1] &
+					 alpha[unput_image][bos_p + unput_byte_x - 0]
+				);
+			}
+		} else if(vram_distance_from_unput_to_put < 0) {
+			for(unput_byte_x = 0; (vram_w - 1) > unput_byte_x; unput_byte_x++) {
+				unput_mask[unput_byte_x] = (
+					~alpha[  put_image][bos_p + unput_byte_x + 1] &
+					 alpha[unput_image][bos_p + unput_byte_x + 0]
+				);
+			}
+			unput_mask[vram_w - 1] = alpha[unput_image][bos_p + vram_w - 1];
+		} else if(vram_distance_from_unput_to_put == 0) {
+			for(unput_byte_x = 0; (vram_w - 0) > unput_byte_x; unput_byte_x++) {
+				unput_mask[unput_byte_x] = (
+					~alpha[  put_image][bos_p + unput_byte_x] &
+					 alpha[unput_image][bos_p + unput_byte_x]
+				);
+			}
+		}
+		if(unput_left >= 0) {
+			graph_hline_unput_masked_8(
+				unput_left, (unput_top + bos_y), unput_mask, vram_w
+			);
+		} else {
+			graph_hline_unput_masked_8(
+				0, (unput_top + bos_y), (unput_mask + 1), (vram_w - 1)
+			);
+		}
+		put_row(bos_byte_x, vram_offset, bos_p, put_image);
+
 		vram_offset_row += ROW_SIZE;
 		if(vram_offset_row >= PLANE_SIZE) { // Clip at the bottom edge
 			break;

@@ -99,6 +99,11 @@ static inline vram_offset_t vram_offset_mulshift(screen_x_t x, vram_y_t y)
 {
 	return (y * ROW_SIZE) + (x >> 3);
 }
+
+static inline vram_offset_t vram_offset_divshift_wtf(screen_x_t x, vram_y_t y)
+{
+	return ((((x + RES_X) / BYTE_DOTS) + (y << 6) + (y << 4)) - ROW_SIZE);
+}
 #endif
 
 #define VRAM_CHUNK(plane, offset, bit_count) \
