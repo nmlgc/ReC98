@@ -26,6 +26,9 @@ class CPlayerAnim {
 	// currently active packfile. Always returns 0.
 	int load(const char fn[PF_FN_LEN]);
 
+	// Frees all [bos_image_count] loaded images.
+	void free(void);
+
 	/// Blitting
 	/// --------
 	// All of these clip the sprite at the top and bottom edges of VRAM. Like

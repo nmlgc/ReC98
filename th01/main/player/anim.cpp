@@ -209,3 +209,14 @@ void CPlayerAnim::unput_and_put_overlapped_8(
 	}
 	graph_accesspage_func(0);
 }
+
+void CPlayerAnim::free(void)
+{
+	for(int i = 0; bos_image_count > i; i++) {
+		delete[] alpha[i];
+		delete[] planes.B[i];
+		delete[] planes.R[i];
+		delete[] planes.G[i];
+		delete[] planes.E[i];
+	}
+}

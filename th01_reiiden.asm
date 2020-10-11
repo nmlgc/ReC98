@@ -75,7 +75,6 @@ BOMBS_MAX = 5
 main_01 group main_01_TEXT, main_01__TEXT, main_01___TEXT
 main_15 group main_15_TEXT, main_15__TEXT
 main_19 group main_19_TEXT, main_19__TEXT
-main_20 group main_20_TEXT, main_20__TEXT
 main_21 group main_21_TEXT, main_21__TEXT
 main_25 group main_25_TEXT, main_25__TEXT
 main_27 group main_27_TEXT, main_27__TEXT
@@ -6654,70 +6653,6 @@ main_20_TEXT	segment	byte public 'CODE' use16
 	extern @CPlayerAnim@put_0_8$xqiii:proc
 	extern @CPlayerAnim@unput_and_put_overlapped_8$xqiiiiii:proc
 main_20_TEXT	ends
-
-main_20__TEXT	segment	byte public 'CODE' use16
-		assume cs:main_20
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_15574	proc far
-
-arg_0		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_155E7
-; ---------------------------------------------------------------------------
-
-loc_1557C:
-		mov	ax, si
-		shl	ax, 2
-		les	bx, [bp+arg_0]
-		add	bx, ax
-		pushd	dword ptr es:[bx]	; font
-		call	@$bdla$qnv
-		mov	ax, si
-		shl	ax, 2
-		les	bx, [bp+arg_0]
-		add	bx, ax
-		pushd	dword ptr es:[bx+80h] ; font
-		call	@$bdla$qnv
-		mov	ax, si
-		shl	ax, 2
-		les	bx, [bp+arg_0]
-		add	bx, ax
-		pushd	dword ptr es:[bx+100h] ; font
-		call	@$bdla$qnv
-		mov	ax, si
-		shl	ax, 2
-		les	bx, [bp+arg_0]
-		add	bx, ax
-		pushd	dword ptr es:[bx+180h] ; font
-		call	@$bdla$qnv
-		mov	ax, si
-		shl	ax, 2
-		les	bx, [bp+arg_0]
-		add	bx, ax
-		pushd	dword ptr es:[bx+200h] ; font
-		call	@$bdla$qnv
-		add	sp, 14h
-		inc	si
-
-loc_155E7:
-		les	bx, [bp+arg_0]
-		cmp	es:[bx+284h], si
-		jg	short loc_1557C
-		pop	si
-		pop	bp
-		retf
-sub_15574	endp
-
-main_20__TEXT	ends
 
 ; ===========================================================================
 
