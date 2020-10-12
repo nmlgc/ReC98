@@ -808,7 +808,7 @@ loc_BD43:
 loc_BD75:
 		push	ds
 		push	offset _z_Palettes
-		nopcall	sub_C433
+		nopcall	_stage_palette_set
 		add	sp, 4
 		call	_graph_copy_page_back_to_front
 		jmp	short loc_BDAD
@@ -1489,7 +1489,7 @@ loc_C3EE:
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
-		call	_z_palette_set_all_show c, offset palette_39B8C, ds
+		call	_z_palette_set_all_show c, offset _stage_palette, ds
 		mov	_player_invincibility_time, BOMB_INVINCIBILITY_FRAMES_AFTER
 		mov	byte_34A58, 0
 		mov	ax, 1
@@ -1504,54 +1504,10 @@ loc_C430:
 		leave
 		retf
 _bomb_update_and_render	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C433	proc far
-
-arg_0		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		xor	dx, dx
-		jmp	short loc_C45F
-; ---------------------------------------------------------------------------
-
-loc_C43A:
-		xor	cx, cx
-		jmp	short loc_C459
-; ---------------------------------------------------------------------------
-
-loc_C43E:
-		mov	ax, dx
-		imul	ax, size rgb_t
-		les	bx, [bp+arg_0]
-		add	bx, ax
-		add	bx, cx
-		mov	al, es:[bx]
-		mov	bx, dx
-		imul	bx, size rgb_t
-		add	bx, cx
-		mov	byte ptr palette_39B8C[bx], al
-		inc	cx
-
-loc_C459:
-		cmp	cx, size rgb_t
-		jl	short loc_C43E
-		inc	dx
-
-loc_C45F:
-		cmp	dx, COLOR_COUNT
-		jl	short loc_C43A
-		pop	bp
-		retf
-sub_C433	endp
 main_01__TEXT	ends
 
 main_01___TEXT	segment	byte public 'CODE' use16
+	extern _stage_palette_set:proc
 	extern _invincibility_sprites_update_and:proc
 	extern _orb_velocity_y_update:proc
 	extern _orb_force_new:proc
@@ -1899,7 +1855,7 @@ loc_CB91:
 ; ---------------------------------------------------------------------------
 
 loc_CB96:
-		call	_z_palette_set_all_show c, offset palette_39B8C, ds
+		call	_z_palette_set_all_show c, offset _stage_palette, ds
 		call	_input_reset_sense
 		call	_egc_copy_rect_1_to_0_16 c, large (128 shl 16) or 232, large (32 shl 16) or 176
 		xor	ax, ax
@@ -4809,14 +4765,14 @@ loc_1272D:
 
 loc_12731:
 		mov	bx, si
-		imul	bx, 3
+		imul	bx, size rgb_t
 		mov	al, _z_Palettes[bx+di]
 		mov	bx, si
-		imul	bx, 3
-		cmp	al, [bx+di+5414h]
+		imul	bx, size rgb_t
+		cmp	al, byte ptr palette_39DB4[bx+di]
 		jle	short loc_12750
 		mov	bx, si
-		imul	bx, 3
+		imul	bx, size rgb_t
 		dec	byte ptr _z_Palettes[bx+di]
 		jmp	short loc_12753
 ; ---------------------------------------------------------------------------
@@ -4828,12 +4784,12 @@ loc_12753:
 		inc	di
 
 loc_12754:
-		cmp	di, 3
+		cmp	di, size rgb_t
 		jl	short loc_12731
 		inc	si
 
 loc_1275A:
-		cmp	si, 10h
+		cmp	si, COLOR_COUNT
 		jl	short loc_1272D
 		call	_z_palette_set_all_show c, offset _z_Palettes, ds
 
@@ -5171,14 +5127,14 @@ loc_12B4E:
 
 loc_12B52:
 		mov	bx, si
-		imul	bx, 3
+		imul	bx, size rgb_t
 		mov	al, _z_Palettes[bx+di]
 		mov	bx, si
-		imul	bx, 3
-		cmp	al, [bx+di+5414h]
+		imul	bx, size rgb_t
+		cmp	al, byte ptr palette_39DB4[bx+di]
 		jle	short loc_12B71
 		mov	bx, si
-		imul	bx, 3
+		imul	bx, size rgb_t
 		dec	byte ptr _z_Palettes[bx+di]
 		jmp	short loc_12B74
 ; ---------------------------------------------------------------------------
@@ -5190,12 +5146,12 @@ loc_12B74:
 		inc	di
 
 loc_12B75:
-		cmp	di, 3
+		cmp	di, size rgb_t
 		jl	short loc_12B52
 		inc	si
 
 loc_12B7B:
-		cmp	si, 10h
+		cmp	si, COLOR_COUNT
 		jl	short loc_12B4E
 		call	_z_palette_set_all_show c, offset _z_Palettes, ds
 
@@ -5923,7 +5879,7 @@ arg_0		= word ptr  6
 		push	ax
 		call	sub_13033
 		add	sp, 6
-		call	_z_palette_set_all_show c, offset palette_39B8C, ds
+		call	_z_palette_set_all_show c, offset _stage_palette, ds
 		call	sub_12F91
 		pushd	[bp+var_4]
 		push	(2Ah shl 16) or 80
@@ -10883,20 +10839,20 @@ loc_1B3BB:
 
 loc_1B3BF:
 		mov	bx, si
-		imul	bx, 3
+		imul	bx, size rgb_t
 		mov	al, _z_Palettes[bx+di]
 		mov	bx, si
-		imul	bx, 3
-		mov	[bx+di+5414h], al
+		imul	bx, size rgb_t
+		mov	byte ptr palette_39DB4[bx+di], al
 		inc	di
 
 loc_1B3D2:
-		cmp	di, 3
+		cmp	di, size rgb_t
 		jl	short loc_1B3BF
 		inc	si
 
 loc_1B3D8:
-		cmp	si, 10h
+		cmp	si, COLOR_COUNT
 		jl	short loc_1B3BB
 		call	@CBossEntity@pos_set$qiiiiiii stdcall, offset      eye_west, ds,  64, large 128 or (48 shl 16), large 0 or (736 shl 16), large 64 or (304 shl 16)
 		call	@CBossEntity@pos_set$qiiiiiii stdcall, offset      eye_east, ds, 512, large 128 or (48 shl 16), large 0 or (736 shl 16), large 64 or (304 shl 16)
@@ -11477,9 +11433,9 @@ loc_1BA6C:
 		jnz	short loc_1BAFD
 		inc	_z_Palettes[15 * 3].r
 		inc	_z_Palettes[15 * 3].g
-		inc	palette_39B8C[15 * size rgb_t].r
-		inc	palette_39B8C[15 * size rgb_t].g
-		call	_z_palette_set_all_show c, offset palette_39B8C, ds
+		inc	_stage_palette[15 * size rgb_t].r
+		inc	_stage_palette[15 * size rgb_t].g
+		call	_z_palette_set_all_show c, offset _stage_palette, ds
 
 loc_1BAFD:
 		cmp	word_3A6CA, 64h	; 'd'
@@ -11741,7 +11697,7 @@ loc_1BE24:
 		mov	byte_3A6CE, 1
 		mov	word_35B54, 0
 		mov	word_3A6CA, 0
-		call	_z_palette_set_all_show c, offset palette_39B8C, ds
+		call	_z_palette_set_all_show c, offset _stage_palette, ds
 		call	sub_232A4
 		mov	byte ptr word_39E14+1, 0
 		mov	eye_west.BE_bos_image, 4
@@ -11951,7 +11907,7 @@ loc_1C02D:
 		mov	word_3A6CA, 0
 		mov	word_39E04, 0
 		mov	x_39E06, 0
-		call	_z_palette_set_all_show c, offset palette_39B8C, ds
+		call	_z_palette_set_all_show c, offset _stage_palette, ds
 		call	sub_232A4
 		cmp	_rank, RANK_EASY
 		jnz	short loc_1C097
@@ -12308,7 +12264,7 @@ loc_1C3EB:
 		mov	word_3A6CA, 0
 		mov	word_39E04, 0
 		mov	x_39E06, 0
-		call	_z_palette_set_all_show c, offset palette_39B8C, ds
+		call	_z_palette_set_all_show c, offset _stage_palette, ds
 		call	sub_232A4
 		mov	ax, RES_Y
 		sub	ax, eye_west.BE_cur_top
@@ -12624,7 +12580,7 @@ loc_1C741:
 		mov	word_39E04, 0
 		mov	x_39E06, 0
 		mov	word_39E12, 0
-		call	_z_palette_set_all_show c, offset palette_39B8C, ds
+		call	_z_palette_set_all_show c, offset _stage_palette, ds
 		call	sub_232A4
 		cmp	_rank, RANK_EASY
 		jnz	short loc_1C7B1
@@ -14178,7 +14134,7 @@ loc_1D88A:
 		mov	word_39E0E, 0
 
 loc_1D8C1:
-		call	_z_palette_set_all_show c, offset palette_39B8C, ds
+		call	_z_palette_set_all_show c, offset _stage_palette, ds
 		call	sub_232A4
 		jmp	loc_1DFFC
 ; ---------------------------------------------------------------------------
@@ -14849,16 +14805,16 @@ loc_1E0EB:
 		or	ax, ax
 		jle	short loc_1E114
 		dec	_z_Palettes[15 * 3][si]
-		dec	byte ptr palette_39B8C[15 * size rgb_t][si]
+		dec	byte ptr _stage_palette[15 * size rgb_t][si]
 
 loc_1E114:
 		cmp	di, size rgb_t
 		jge	short loc_1E121
 		inc	_z_Palettes[15 * 3][di]
-		inc	byte ptr palette_39B8C[15 * size rgb_t][di]
+		inc	byte ptr _stage_palette[15 * size rgb_t][di]
 
 loc_1E121:
-		call	_z_palette_set_all_show c, offset palette_39B8C, ds
+		call	_z_palette_set_all_show c, offset _stage_palette, ds
 
 loc_1E12D:
 		les	bx, [bp+arg_8]
@@ -15129,20 +15085,20 @@ loc_1E385:
 
 loc_1E389:
 		mov	bx, si
-		imul	bx, 3
+		imul	bx, size rgb_t
 		mov	al, _z_Palettes[bx+di]
 		mov	bx, si
-		imul	bx, 3
-		mov	[bx+di+5414h], al
+		imul	bx, size rgb_t
+		mov	byte ptr palette_39DB4[bx+di], al
 		inc	di
 
 loc_1E39C:
-		cmp	di, 3
+		cmp	di, size rgb_t
 		jl	short loc_1E389
 		inc	si
 
 loc_1E3A2:
-		cmp	si, 10h
+		cmp	si, COLOR_COUNT
 		jl	short loc_1E385
 		nopcall	sub_1E79B
 		call	_ptn_new stdcall, (24 shl 16) or 2
@@ -16737,7 +16693,7 @@ loc_1F0F8:
 		push	0
 		call	_graph_accesspage_func
 		call	@CBossEntity@put_8$xqiii stdcall, offset mima_still, ds, large [dword ptr mima_still.BE_cur_left], 0
-		call	_z_palette_set_all_show stdcall, offset palette_39B8C, ds
+		call	_z_palette_set_all_show stdcall, offset _stage_palette, ds
 		add	sp, 1Ch
 		mov	byte_39E25, -1
 		mov	al, 1
@@ -17819,10 +17775,7 @@ loc_1FAF6:
 		mov	byte_3A6CE, 1
 		mov	word_39E78, 0
 		mov	byte_39E7A, 0
-		push	ds
-		push	offset _z_Palettes
-		call	sub_C433
-		add	sp, 4
+		call	_stage_palette_set c, offset _z_Palettes, ds
 		call	sub_232A4
 		push	0
 		call	sub_1EF85
@@ -22910,25 +22863,22 @@ loc_226FA:
 
 loc_226FE:
 		mov	bx, si
-		imul	bx, 3
+		imul	bx, size rgb_t
 		mov	al, _z_Palettes[bx+di]
 		mov	bx, si
-		imul	bx, 3
-		mov	[bx+di+5414h], al
+		imul	bx, size rgb_t
+		mov	byte ptr palette_39DB4[bx+di], al
 		inc	di
 
 loc_22711:
-		cmp	di, 3
+		cmp	di, size rgb_t
 		jl	short loc_226FE
 		inc	si
 
 loc_22717:
-		cmp	si, 10h
+		cmp	si, COLOR_COUNT
 		jl	short loc_226FA
-		push	ds
-		push	offset unk_39DB4
-		call	sub_C433
-		add	sp, 4
+		call	_stage_palette_set c, offset palette_39DB4, ds
 		nopcall	sub_22731
 		pop	di
 		pop	si
@@ -24010,19 +23960,19 @@ loc_22FD7:
 
 loc_22FE8:
 		mov	al, _z_Palettes[5 * 3][si]
-		cmp	al, byte ptr palette_39B8C[5 * size rgb_t][si]
+		cmp	al, byte ptr _stage_palette[5 * size rgb_t][si]
 		jge	short loc_22FF6
 		inc	_z_Palettes[5 * 3][si]
 
 loc_22FF6:
 		mov	al, _z_Palettes[9 * 3][si]
-		cmp	al, byte ptr palette_39B8C[9 * size rgb_t][si]
+		cmp	al, byte ptr _stage_palette[9 * size rgb_t][si]
 		jge	short loc_23004
 		inc	_z_Palettes[9 * 3][si]
 
 loc_23004:
 		mov	al, _z_Palettes[15 * 3][si]
-		cmp	al, byte ptr palette_39B8C[15 * size rgb_t][si]
+		cmp	al, byte ptr _stage_palette[15 * size rgb_t][si]
 		jge	short loc_23012
 		inc	_z_Palettes[15 * 3][si]
 
@@ -24049,10 +23999,7 @@ loc_2302C:
 		mov	word_3A37F, 0
 		mov	word_35CE6, 0
 		call	sub_232D3
-		push	ds
-		push	offset _z_Palettes
-		call	sub_C433
-		add	sp, 4
+		call	_stage_palette_set c, offset _z_Palettes, ds
 		call	sub_232A4
 		mov	singyoku_sphere.BE_hitbox_orb_inactive, 0
 		mov	word_3A381, 0
@@ -24554,17 +24501,17 @@ loc_235C2:
 
 loc_235C6:
 		mov	bx, si
-		imul	bx, 3
-		mov	byte ptr [bx+di+5414h],	0
+		imul	bx, size rgb_t
+		mov	byte ptr palette_39DB4[bx+di], 0
 		inc	di
 
 loc_235D1:
-		cmp	di, 3
+		cmp	di, size rgb_t
 		jl	short loc_235C6
 		inc	si
 
 loc_235D7:
-		cmp	si, 10h
+		cmp	si, COLOR_COUNT
 		jl	short loc_235C2
 		pop	di
 		pop	si
@@ -26763,10 +26710,7 @@ loc_24A66:
 		mov	word_3A6CA, 0
 		call	sub_232D3
 		mov	byte_3A6C6, 0
-		push	ds
-		push	offset _z_Palettes
-		call	sub_C433
-		add	sp, 4
+		call	_stage_palette_set c, offset _z_Palettes, ds
 		jmp	loc_24DFB
 ; ---------------------------------------------------------------------------
 
@@ -26895,9 +26839,9 @@ loc_24BA3:
 		jnz	short loc_24BDA
 		inc	_z_Palettes[5 * 3].r
 		dec	_z_Palettes[5 * 3].b
-		inc	palette_39B8C[5 * size rgb_t].r
-		dec	palette_39B8C[5 * size rgb_t].b
-		call	_z_palette_set_all_show c, offset palette_39B8C, ds
+		inc	_stage_palette[5 * size rgb_t].r
+		dec	_stage_palette[5 * size rgb_t].b
+		call	_z_palette_set_all_show c, offset _stage_palette, ds
 
 loc_24BDA:
 		cmp	word_3A6CA, 64h	; 'd'
@@ -26905,7 +26849,7 @@ loc_24BDA:
 		mov	byte_3A3BE, 4
 		mov	word_3A6CA, 0
 		mov	word_35D14, 0
-		call	_z_palette_set_all_show c, offset palette_39B8C, ds
+		call	_z_palette_set_all_show c, offset _stage_palette, ds
 		call	sub_232A4
 		jmp	loc_24DFB
 ; ---------------------------------------------------------------------------
@@ -27372,17 +27316,17 @@ loc_2509E:
 
 loc_250A2:
 		mov	bx, si
-		imul	bx, 3
-		mov	byte ptr [bx+di+5414h],	0
+		imul	bx, size rgb_t
+		mov	byte ptr palette_39DB4[bx+di], 0
 		inc	di
 
 loc_250AD:
-		cmp	di, 3
+		cmp	di, size rgb_t
 		jl	short loc_250A2
 		inc	si
 
 loc_250B3:
-		cmp	si, 10h
+		cmp	si, COLOR_COUNT
 		jl	short loc_2509E
 		pop	di
 		pop	si
@@ -35360,9 +35304,7 @@ loc_29D0E:
 		shl	bx, 2
 		call	_grp_put_palette_show stdcall, large off_35DAB[bx]
 		call	_graph_copy_page_back_to_front
-		push	ds
-		push	offset _z_Palettes
-		call	sub_C433
+		call	_stage_palette_set stdcall, offset _z_Palettes, ds
 		push	0
 		call	_graph_accesspage_func
 		mov	byte_34A49, 1
@@ -38899,10 +38841,7 @@ loc_2C117:
 		mov	word_3B433, 0
 		mov	word_3B431, 0
 		call	sub_232A4
-		push	ds
-		push	offset _z_Palettes
-		call	sub_C433
-		add	sp, 4
+		call	_stage_palette_set c, offset _z_Palettes, ds
 		mov	eax, _rand
 		mov	random_seed, eax
 
@@ -39711,10 +39650,7 @@ loc_2C9DA:
 		mov	_player_invincibility_time, 0
 		mov	_player_invincible, 0
 		call	sub_232A4
-		push	ds
-		push	offset _z_Palettes
-		call	sub_C433
-		add	sp, 4
+		call	_stage_palette_set c, offset _z_Palettes, ds
 		mov	word_3A6C8, 6
 		mov	word_3A1E5, 0Ah
 		mov	word_3A1E7, 3
@@ -40251,9 +40187,7 @@ var_2		= word ptr -2
 		mov	_pellet_interlace, 1
 		call	text_fillca pascal, (' ' shl 16) + TX_BLACK + TX_REVERSE
 		call	_grp_put_palette_show stdcall, offset aBoss7_d1_grp, ds ; "boss7_d1.grp"
-		push	ds
-		push	offset _z_Palettes
-		call	sub_C433
+		call	_stage_palette_set stdcall, offset _z_Palettes, ds
 		push	4
 		call	sub_2091E
 		push	1
@@ -45559,7 +45493,8 @@ boss_anim_1	equ <_boss_anims[1 * size CBossAnim]>
 
 include th01/formats/pf[bss].asm
 include th01/formats/grc[bss].asm
-palette_39B8C	palette_t <?>
+public _stage_palette
+_stage_palette	palette_t <?>
 		db 348 dup(?)
 byte_39D18	db ?
 		db 9 dup(?)
@@ -45577,8 +45512,7 @@ byte_39DB0	db ?
 byte_39DB2	db ?
 public _player_ptn_id
 _player_ptn_id	db ?
-unk_39DB4	db    ?	;
-		db 47 dup (?)
+palette_39DB4	palette_t <?>
 word_39DE4	dw ?
 x_39DE6	dw ?
 x_39DE8	dw ?
