@@ -2,6 +2,8 @@
 // -----
 // PC-98 hardware constants not covered by master.lib
 
+#define PC98_H
+
 /// Spaces
 /// ------
 /// These don't necessarily have to be relative to the top-left corner of the

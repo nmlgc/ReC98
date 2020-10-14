@@ -6,7 +6,12 @@
 #pragma codeseg maine_01__TEXT
 
 extern "C" {
-#include "ReC98.h"
+#include "libs/master.lib/master.h"
+#include <stddef.h>
+#include "platform.h"
+#include "pc98.h"
+#include "planar.h"
+#include "master.hpp"
 #include "th01/math/subpixel.hpp"
 
 /// Pattern numbers for the super_*() functions

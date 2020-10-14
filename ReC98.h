@@ -12,30 +12,6 @@
 #include "pc98.h"
 #include "planar.h"
 
-// master.lib extensions
-// ---------------------
-#define palette_entry_rgb_show(fn) \
-	palette_entry_rgb(fn); \
-	palette_show();
-
-#ifdef __cplusplus
-	// master.lib palettes use twice the bits per RGB component for more
-	// toning precision
-	typedef RGB<uint8_t, 256> RGB8;
-	typedef Palette<RGB8> Palette8;
-#endif
-
-// A version of master.lib's Point without the constructor, even in C++
-struct point_t {
-	int x, y;
-};
-
-struct screen_point_t {
-	screen_x_t x;
-	screen_y_t y;
-};
-// ---------------------
-
 // Macros
 // ------
 #define CLAMP_INC(val, max) \

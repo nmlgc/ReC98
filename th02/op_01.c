@@ -6,6 +6,7 @@
 #include <process.h>
 #include "libs/kaja/kaja.h"
 #include "th02/th02.h"
+#include "master.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/core/zunerror.h"
 #include "th02/initexit.h"

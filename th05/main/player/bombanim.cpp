@@ -1,4 +1,5 @@
 #include "ReC98.h"
+#include "master.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th04/math/vector.hpp"
 #include "th04/math/randring.h"

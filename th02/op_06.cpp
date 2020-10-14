@@ -6,6 +6,7 @@
 extern "C" {
 #include "libs/kaja/kaja.h"
 #include "th02/th02.h"
+#include "master.hpp"
 #include "th02/math/vector.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/formats/pi.h"
