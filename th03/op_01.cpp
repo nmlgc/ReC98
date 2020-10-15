@@ -4,7 +4,8 @@
  */
 
 extern "C" {
-#include "ReC98.h"
+#include "libs/master.lib/master.h"
+#include "platform.h"
 #include "th03/common.h"
 #include "th03/chars.hpp"
 #include "th03/score.h"

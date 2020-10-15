@@ -32,7 +32,7 @@ enum game_mode_t {
 
 #define RES_ID "YUMEConfig"
 typedef struct {
-	char id[RES_ID_LEN];
+	char id[sizeof(RES_ID)];
 	unsigned char rank;
 	playchar_paletted_t playchar_paletted[PLAYER_COUNT];
 	bool is_cpu[PLAYER_COUNT];

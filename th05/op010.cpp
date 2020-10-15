@@ -7,7 +7,8 @@
 
 extern "C" {
 #include <process.h>
-#include "ReC98.h"
+#include "libs/master.lib/master.h"
+#include "platform.h"
 #include "libs/kaja/kaja.h"
 #include "th01/ranks.h"
 #include "th02/initexit.h"

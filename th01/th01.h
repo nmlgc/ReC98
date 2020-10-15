@@ -28,7 +28,7 @@ typedef enum {
 } mode_t;
 
 typedef struct {
-	char id[RES_ID_LEN];
+	char id[sizeof(RES_ID)];
 	char rank;
 	char bgm_mode; // 0 = off, 1 = FM
 	char bombs;

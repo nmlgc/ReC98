@@ -1,6 +1,6 @@
 #define RES_ID "HUMAConfig"
 typedef struct {
-	char id[RES_ID_LEN];
+	char id[sizeof(RES_ID)];
 	unsigned char rem_lives;
 	unsigned char credit_lives;
 	unsigned char rem_bombs;

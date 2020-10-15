@@ -1,6 +1,6 @@
 #define RES_ID "KSOConfig"
 typedef struct {
-	char id[RES_ID_LEN];
+	char id[sizeof(RES_ID)];
 	bool zunsoft_shown;
 	int8_t unused_1;
 	char unknown;

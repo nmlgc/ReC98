@@ -49,8 +49,7 @@
 	}
 
 // Resident structure
-#define RES_ID_LEN sizeof(RES_ID)
-#define RES_ID_STRLEN (RES_ID_LEN - 1)
+#define RES_ID_STRLEN (sizeof(RES_ID) - 1)
 #define RES_PARASIZE ((sizeof(resident_t) + 0xF) >> 4)
 // ------
 
