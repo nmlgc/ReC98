@@ -1,6 +1,8 @@
 /* ReC98
  * -----
  * C++ redeclarations and ReC98-specific extensions for master.lib.
+ * Definitions that require types from `pc98.h` are guarded via `#ifdef`,
+ * allowing this header to be used on its own if those aren't required.
  */
 
 /// Types
@@ -65,6 +67,49 @@ struct point_t {
 
 /// Original functions (only contains those actually called from ZUN code)
 /// ----------------------------------------------------------------------
+/// TODO: Remove the `!defined(__MASTER_H)` branches once we've gotten rid of
+/// of master.h.
+
+// Palette
+// -------
+
+void MASTER_RET palette_show(void);
+
+#if !defined(__MASTER_H)
+#define palette_settone(tone) \
+	(PaletteTone = (tone), palette_show())
+
+#define palette_100() \
+	palette_settone(100)
+
+#define palette_black() \
+	palette_settone(0)
+
+#define palette_white() \
+	palette_settone(200)
+#endif
+
+#if !defined(__MASTER_H) && defined(PC98_H) && defined(__cplusplus)
+	#define palette_set(col, r, g, b) (\
+		Palettes[col].v[0] = (uint8_t)(r), \
+		Palettes[col].v[1] = (uint8_t)(g), \
+		Palettes[col].v[2] = (uint8_t)(b) \
+	)
+
+	#define palette_set_all(m) \
+		memcpy(Palettes, (m), sizeof(Palette8))
+
+	extern Palette8 Palettes;
+#endif
+
+extern unsigned int PaletteTone;
+
+int MASTER_RET palette_entry_rgb(const char MASTER_PTR *);
+void MASTER_RET palette_black_in(unsigned speed);
+void MASTER_RET palette_black_out(unsigned speed);
+void MASTER_RET palette_white_in(unsigned speed);
+void MASTER_RET palette_white_out(unsigned speed);
+// -------
 
 // VSync
 // -----
