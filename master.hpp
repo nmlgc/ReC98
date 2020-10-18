@@ -70,6 +70,44 @@ struct point_t {
 /// TODO: Remove the `!defined(__MASTER_H)` branches once we've gotten rid of
 /// of master.h.
 
+// Graphics
+// --------
+
+#if !defined(__MASTER_H)
+#define graph_showpage(p) \
+	outportb(0xA4, p)
+
+#define graph_accesspage(p) \
+	outportb(0xA6, p)
+#endif
+
+extern unsigned graph_VramZoom;
+
+void MASTER_RET graph_400line(void);
+void MASTER_RET graph_200line(int tail);
+void MASTER_RET graph_clear(void);
+void MASTER_RET graph_show(void);
+void MASTER_RET graph_hide(void);
+void MASTER_RET graph_start(void);
+int MASTER_RET graph_copy_page(int to_page);
+
+#if !defined(__MASTER_H) && defined(PC98_H) && defined(__cplusplus)
+	void MASTER_RET graph_gaiji_putc(int x, int y, int c, int color);
+	void MASTER_RET graph_gaiji_puts(
+		int x, int y, int step, const char MASTER_PTR *str, int color
+	);
+
+	// Clipping
+	int MASTER_RET grc_setclip(int xl, int yt, int xr, int yb);
+	int MASTER_RET grc_clip_polygon_n(
+		screen_point_t MASTER_PTR *dest,
+		int ndest,
+		const screen_point_t MASTER_PTR *src,
+		int nsrc
+	);
+#endif
+// --------
+
 // Palette
 // -------
 
