@@ -108,6 +108,82 @@ int MASTER_RET graph_copy_page(int to_page);
 #endif
 // --------
 
+// GRCG-accelerated graphics
+// -------------------------
+
+#if !defined(__MASTER_H)
+/* grcg_setcolor()や vgc_setcolor()に指定するアクセスプレーン指定 */
+#define GC_B	0x0e	/* 青プレーンをアクセスする */
+#define GC_R	0x0d
+#define GC_BR	0x0c	/*	:  */
+#define GC_G	0x0b	/*	:  */
+#define GC_BG	0x0a	/*	:  */
+#define GC_RG	0x09
+#define GC_BRG	0x08	/*	:  */
+#define GC_I	0x07
+#define GC_BI	0x06
+#define GC_RI	0x05
+#define GC_BRI	0x04
+#define GC_GI	0x03
+#define GC_BGI	0x02
+#define GC_RGI	0x01	/*	:  */
+#define GC_BRGI	0x00	/* 全プレーンをアクセスする */
+
+/* grcg_setcolor()の modeに設定する値 */
+#define GC_OFF	0
+#define GC_TDW	0x80	/* 書き込みﾃﾞｰﾀは無視して、ﾀｲﾙﾚｼﾞｽﾀの内容を書く */
+#define GC_TCR	0x80	/* ﾀｲﾙﾚｼﾞｽﾀと同じ色のﾋﾞｯﾄが立って読み込まれる */
+#define GC_RMW	0xc0	/* 書き込みﾋﾞｯﾄが立っているﾄﾞｯﾄにﾀｲﾙﾚｼﾞｽﾀから書く */
+
+void MASTER_RET grcg_setcolor(int mode, int color);
+void MASTER_RET grcg_settile_1line(int mode, long tile);
+void MASTER_RET grcg_off(void);
+
+#define grcg_setmode(mode) \
+	outportb(0x7C, mode)
+#define grcg_off() \
+	outportb(0x7C, 0)
+#endif
+
+#if defined(PC98_H) && defined(__cplusplus)
+	// Trapezoids
+	void MASTER_RET grcg_trapezoid(
+		int y1, int x11, int x12, int y2, int x21, int x22
+	);
+
+	// Polygons
+	void MASTER_RET grcg_polygon_c(
+		const struct Point MASTER_PTR *pts, int npoint
+	);
+	void MASTER_RET grcg_polygon_cx(
+		const struct Point MASTER_PTR *pts, int npoint
+	);
+
+	// Triangles
+	void MASTER_RET grcg_triangle(
+		int x1, int y1, int x2, int y2, int x3, int y3
+	);
+
+	// Straight lines
+	void MASTER_RET grcg_hline(int x1, int x2, int y);
+	void MASTER_RET grcg_vline(int x, int y1, int y2);
+	void MASTER_RET grcg_line(int x1, int y1, int x2, int y2);
+
+	// Rectangles
+	void MASTER_RET grcg_boxfill(int x1, int y1, int x2, int y2);
+	void MASTER_RET grcg_pset(int x, int y);
+	void MASTER_RET grcg_fill(void);
+	void MASTER_RET grcg_round_boxfill(
+		int x1, int y1, int x2, int y2, unsigned r
+	);
+	void MASTER_RET grcg_byteboxfill_x(int x1, int y1, int x2, int y2);
+
+	// Circles
+	void MASTER_RET grcg_circle(int x, int y, unsigned r);
+	void MASTER_RET grcg_circlefill(int x, int y, unsigned r);
+#endif
+// -------------------------
+
 // Palette
 // -------
 
