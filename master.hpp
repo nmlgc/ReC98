@@ -225,6 +225,39 @@ void MASTER_RET palette_white_in(unsigned speed);
 void MASTER_RET palette_white_out(unsigned speed);
 // -------
 
+// .PI
+// ---
+
+#if defined(__cplusplus) && !defined(__MASTER_H) && defined(PC98_H)
+	struct PiHeader {
+		char far *comment;	// graph_pi_load.*() sets this to NULL
+		uint16_t commentlen;	//
+		uint8_t mode;	//
+		uint8_t n;	// aspect
+		uint8_t m;	// aspect
+		uint8_t plane;	// usually 4
+		char machine[4];	//
+		uint16_t maexlen;	// machine extend data length
+		void far * maex;	// machine extend data
+		uint16_t xsize;
+		uint16_t ysize;
+		Palette4 palette;
+	};
+
+	int MASTER_RET graph_pi_load_pack(
+		const char MASTER_PTR *filename,
+		struct PiHeader MASTER_PTR *header,
+		void far *MASTER_PTR *bufptr
+	);
+	void MASTER_RET graph_pi_free(
+		struct PiHeader MASTER_PTR *header, const void far* image
+	);
+	void MASTER_RET graph_pack_put_8(
+		int x, int y, const void far *linepat, int len
+	);
+#endif
+// ---
+
 // VSync
 // -----
 
