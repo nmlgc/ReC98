@@ -1,5 +1,5 @@
 if GAME ge 3
-	proc_defconv macro NAM_UPPER:req, nam_lower:req
+	proc_defconv macro nam_lower:req, NAM_UPPER:req
 		endp_defconv macro
 			NAM_UPPER endp
 		endm
@@ -7,7 +7,7 @@ if GAME ge 3
 		NAM_UPPER proc pascal
 	endm
 else
-	proc_defconv macro NAM_UPPER:req, nam_lower:req
+	proc_defconv macro nam_lower:req, NAM_UPPER:req
 		endp_defconv macro
 			_&nam_lower endp
 		endm
