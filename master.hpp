@@ -184,6 +184,22 @@ void MASTER_RET grcg_off(void);
 #endif
 // -------------------------
 
+// Heap
+// ----
+
+void MASTER_RET mem_assign(unsigned top_seg, unsigned parasize);
+void MASTER_RET mem_assign_all(void);
+int MASTER_RET mem_unassign(void);
+int MASTER_RET mem_assign_dos(unsigned parasize);
+
+// Regular
+unsigned MASTER_RET hmem_allocbyte(unsigned bytesize);
+void MASTER_RET hmem_free(unsigned memseg);
+// Fast
+unsigned MASTER_RET smem_wget(unsigned bytesize);
+void MASTER_RET smem_release(unsigned memseg);
+// ----
+
 // Palette
 // -------
 
