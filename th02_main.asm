@@ -2129,7 +2129,7 @@ var_C		= byte ptr -0Ch
 		call	_playfield_tram_wipe
 		call	_pi_palette_apply stdcall, 0
 		call	_pi_palette_apply stdcall, 0
-		call	_pi_put stdcall, 96, large 144
+		call	_pi_put_8 stdcall, 96, large 144
 		add	sp, 0Ah
 		call	sub_102D6
 		call	sub_16A6B
@@ -7818,7 +7818,7 @@ loc_E782:
 		sub	si, RES_Y
 
 loc_E793:
-		call	_pi_put c, 112, si, 1
+		call	_pi_put_8 c, 112, si, 1
 
 loc_E7A0:
 		cmp	_bomb_frame, 86
@@ -8032,7 +8032,7 @@ loc_E9A6:
 		sub	[bp+var_2], RES_Y
 
 loc_E9DB:
-		call	_pi_put stdcall, 32, [bp+var_2], 1
+		call	_pi_put_8 stdcall, 32, [bp+var_2], 1
 		call	_snd_se_play stdcall, 16
 		add	sp, 8
 		jmp	short loc_EA60
@@ -8235,7 +8235,7 @@ loc_EBCC:
 		sub	si, RES_Y
 
 loc_EBE2:
-		call	_pi_put c, 32, si, 1
+		call	_pi_put_8 c, 32, si, 1
 
 loc_EBEF:
 		test	byte ptr _bomb_frame, 3
@@ -9321,7 +9321,7 @@ seg2	segment	word public 'CODE' use16
 	extern _snd_load:proc
 	extern _game_init_main:proc
 	extern _pi_palette_apply:proc
-	extern _pi_put:proc
+	extern _pi_put_8:proc
 	extern _snd_kaja_interrupt:proc
 	extern _snd_se_reset:proc
 	extern _snd_se_play:proc

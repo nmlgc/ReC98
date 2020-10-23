@@ -104,12 +104,12 @@ void text_wipe(void)
 	text_fillca(' ', TX_BLACK | TX_REVERSE);
 }
 
-void pascal near pi_load_put_free_to(const char near *fn, char page)
+void pascal near pi_load_put_8_free_to(const char near *fn, char page)
 {
 	pi_load(0, fn);
 	graph_accesspage(page);
 	pi_palette_apply(0);
-	pi_put(0, 0, 0);
+	pi_put_8(0, 0, 0);
 	graph_pi_free(&pi_headers[0], pi_buffers[0]);
 }
 
@@ -122,8 +122,8 @@ void op_animate(void)
 
 	text_wipe();
 	snd_load("huuma.efc", SND_LOAD_SE);
-	pi_load_put_free_to("op2.pi", 1);
-	pi_load_put_free_to("op.pi", 0);
+	pi_load_put_8_free_to("op2.pi", 1);
+	pi_load_put_8_free_to("op.pi", 0);
 	pi_load(0, "opa.pi");
 	pi_load(1, "opb.pi");
 	pi_load(2, "opc.pi");
@@ -410,7 +410,7 @@ void main_update_and_render(void)
 				score_menu();
 				graph_accesspage(1);
 				graph_showpage(0);
-				pi_load_put_free(0, "op2.pi");
+				pi_load_put_8_free(0, "op2.pi");
 				palette_entry_rgb_show("op.rgb");
 				graph_copy_page(0);
 				graph_accesspage(0);

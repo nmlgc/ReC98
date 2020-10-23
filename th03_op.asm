@@ -1519,7 +1519,7 @@ loc_AC15:
 		graph_accesspage 1
 		call	pi_load pascal, 0, ds, offset aOp3_pi
 		call	pi_palette_apply pascal, 0
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		freePISlotLarge	0
 		mov	al, music_track_playing
 		mov	_music_sel, al
@@ -1671,10 +1671,10 @@ var_2		= word ptr -2
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		graph_accesspage 1
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		graph_accesspage 0
 		call	pi_palette_apply pascal, 0
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		call	egc_shift_left_all pascal, 2
 		mov	Palettes[15 * size rgb_t].r, 0
 		mov	Palettes[15 * size rgb_t].g, 0
@@ -1773,7 +1773,7 @@ loc_AF65:
 		graph_showpage 0
 		graph_accesspage al
 		call	pi_palette_apply pascal, 0
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		push	1
 		call	frame_delay
 		mov	PaletteTone, 100
@@ -1799,7 +1799,7 @@ loc_AFD9:
 		cmp	si, 8
 		jl	short loc_AFB4
 		graph_accesspage 1
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		graph_accesspage 0
 		freePISlotLarge	0
 		call	sub_B38D
@@ -1826,10 +1826,10 @@ sub_B008	proc near
 		graph_showpage 0
 		call	sub_B3EF
 		graph_accesspage 1
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		graph_accesspage 0
 		call	pi_palette_apply pascal, 0
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		graph_accesspage 0
 		freePISlotLarge	0
 		call	sub_B38D

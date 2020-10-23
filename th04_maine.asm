@@ -273,7 +273,7 @@ loc_A187:
 		graph_accesspage 1
 		call	pi_load pascal, 0, word ptr [bp+var_4+2], bx
 		call	pi_palette_apply pascal, 0
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
 		push	1
@@ -303,7 +303,7 @@ loc_A1FE:
 		graph_accesspage 1
 		call	pi_load pascal, 0, large [bp+var_4]
 		call	pi_palette_apply pascal, 0
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
 		push	1
@@ -1329,7 +1329,7 @@ loc_AB7A:
 		call	pi_palette_apply pascal, 0
 
 loc_AB8D:
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		call	graph_copy_page pascal, 0
 		graph_accesspage 0
 		call	sub_A4AE
@@ -1456,7 +1456,7 @@ loc_ACCF:
 		graph_accesspage 0
 
 loc_ACE0:
-		call	pi_put_quarter pascal, (160 shl 16) + 64, 0, [bp+var_2]
+		call	pi_put_quarter_8 pascal, (160 shl 16) + 64, 0, [bp+var_2]
 
 loc_ACF0:
 		graph_showpage 0
@@ -2340,7 +2340,7 @@ sub_B44D	proc near
 		graph_accesspage 1
 		call	pi_load pascal, 0, ds, offset aSff1_pi
 		call	pi_palette_apply pascal, 0
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
 		call	bgimage_snap
@@ -2388,7 +2388,7 @@ sub_B44D	proc near
 		graph_accesspage 1
 		call	pi_load pascal, 0, ds, offset aSff2_pi
 		call	pi_palette_apply pascal, 0
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
 		call	bgimage_snap
@@ -3339,7 +3339,7 @@ sub_C0F8	proc near
 		graph_accesspage 1
 		call	pi_load pascal, 0, ds, offset aUde_pi
 		call	pi_palette_apply pascal, 0
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
 		push	4
@@ -4095,7 +4095,7 @@ var_4		= word ptr -4
 		graph_accesspage 1
 		call	pi_load pascal, 0, ds, offset aHi01_pi
 		call	pi_palette_apply pascal, 0
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
 		call	super_entry_bfnt pascal, ds, offset aScnum2_bft ; "scnum2.bft"

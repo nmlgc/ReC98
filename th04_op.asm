@@ -807,7 +807,7 @@ loc_AF56:
 		graph_accesspage 1
 		call	pi_load pascal, 0, ds, offset aOp1_pi
 		call	pi_palette_apply pascal, 0
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
 		mov	PaletteTone, 100
@@ -832,7 +832,7 @@ loc_AFBD:
 		graph_accesspage 1
 		call	pi_load pascal, 0, ds, offset aOp1_pi
 		call	pi_palette_apply pascal, 0
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
 		mov	PaletteTone, 100
@@ -1541,7 +1541,7 @@ _setup_menu proc near
 		graph_accesspage 1
 		call	pi_load pascal, 0, ds, offset aMs_pi
 		call	pi_palette_apply pascal, 0
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
 		push	1
@@ -1802,7 +1802,7 @@ _musicroom	proc near
 		graph_accesspage 1
 		call	pi_load pascal, 0, ds, offset aMusic_pi
 		call	pi_palette_apply pascal, 0
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		freePISlotLarge	0
 		mov	al, music_track_playing
 		mov	_music_sel, al
@@ -2195,10 +2195,10 @@ _score_render proc near
 		push	si
 		graph_accesspage 1
 		call	pi_palette_apply pascal, 0
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		graph_accesspage 0
 		call	pi_palette_apply pascal, 0
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		push	0
 		call	sub_C8F5
 		mov	si, 1
@@ -2304,7 +2304,7 @@ loc_CB58:
 		graph_accesspage 1
 		call	pi_load pascal, 0, ds, offset aOp1_pi_0
 		call	pi_palette_apply pascal, 0
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
 		push	1
@@ -2481,7 +2481,7 @@ loc_CD7A:
 		mov	al, [bp+var_3]
 		mov	ah, 0
 		push	ax
-		call	pi_put
+		call	pi_put_8
 		inc	[bp+var_3]
 		graph_accesspage [bp+@@page]
 		mov	al, 1
@@ -2520,7 +2520,7 @@ loc_CE50:
 		graph_accesspage 1
 		call	pi_load pascal, 0, ds, offset aOp1_pi_1
 		call	pi_palette_apply pascal, 0
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
 		xor	si, si
@@ -3476,7 +3476,7 @@ playchar_menu_init	proc near
 		graph_accesspage 1
 		graph_showpage 0
 		call	pi_palette_apply pascal, 0
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		call	sub_CF5E
 		push	0
 		call	sub_D338
@@ -3679,7 +3679,7 @@ loc_D881:
 		graph_accesspage 1
 		mov	PaletteTone, 200
 		call	far ptr	palette_show
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		call	sub_D650
 		call	graph_copy_page pascal, 0
 		push	1

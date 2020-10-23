@@ -1,4 +1,4 @@
-proc_defconv pi_put, PI_PUT
+proc_defconv pi_put_8, PI_PUT_8
 	arg @@left:word, @@top:word, @@slot:word
 if GAME ge 3
 	local @@y:word, @@row_buf:dword

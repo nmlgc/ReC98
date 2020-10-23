@@ -265,7 +265,7 @@ void pascal musicroom(void)
 	graph_clear();
 	graph_accesspage(1);
 
-	pi_load_put_free(0, "op3.pi");
+	pi_load_put_8_free(0, "op3.pi");
 	music_sel = track_playing;
 	draw_tracks(music_sel);
 	graph_copy_page(0);
@@ -353,7 +353,7 @@ controls:
 	graph_accesspage(0);
 	graph_clear();
 	graph_accesspage(1);
-	pi_load_put_free(0, "op2.pi");
+	pi_load_put_8_free(0, "op2.pi");
 	palette_entry_rgb_show("op.rgb");
 	graph_copy_page(0);
 	graph_accesspage(0);

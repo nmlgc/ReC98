@@ -1,5 +1,5 @@
-public PI_PUT_QUARTER
-pi_put_quarter proc pascal
+public PI_PUT_QUARTER_8
+pi_put_quarter_8 proc pascal
 	arg @@left:word, @@top:word, @@slot:word, @@quarter:word
 	local @@row_num:word, @@row_buf:dword
 

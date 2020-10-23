@@ -134,7 +134,7 @@ void pascal shottype_menu_init(void)
 
 	palette_black();
 	graph_accesspage(0);
-	pi_load_put_free(3, "TSELECT.pi");
+	pi_load_put_8_free(3, "TSELECT.pi");
 	graph_copy_page(1);
 	graph_accesspage(0);
 	if(resident->stage != 5) {
@@ -142,9 +142,9 @@ void pascal shottype_menu_init(void)
 	} else {
 		DRAW_CLEARED_FOR(extra);
 	}
-	pi_put( 24, 136, 0);
-	pi_put(224, 224, 1);
-	pi_put(440, 136, 2);
+	pi_put_8( 24, 136, 0);
+	pi_put_8(224, 224, 1);
+	pi_put_8(440, 136, 2);
 	resident->shottype = 1;
 	darken_pic_at( 24, 136);
 	darken_pic_at(440, 136);
@@ -168,7 +168,7 @@ void pascal shottype_menu(void)
 	#define DRAW_NEW_SEL() \
 		frame_delay(1);	copy_pic_back(sel, 1); \
 		frame_delay(1); draw_shottype_desc(sel, 12); \
-		frame_delay(1); pi_put(pic_x[sel], pic_y[sel], sel);
+		frame_delay(1); pi_put_8(pic_x[sel], pic_y[sel], sel);
 
 	do {
 		input_sense();
@@ -178,7 +178,7 @@ void pascal shottype_menu(void)
 				frame_delay(1);
 				copy_pic_back(sel, 0);
 				frame_delay(1);
-				pi_put(pic_x[sel] + 8, pic_y[sel] + 8, sel);
+				pi_put_8(pic_x[sel] + 8, pic_y[sel] + 8, sel);
 				frame_delay(1);
 				darken_pic_at(pic_x[sel] + 8, pic_y[sel] + 8);
 
@@ -188,7 +188,7 @@ void pascal shottype_menu(void)
 			if(key_det & INPUT_RIGHT) {
 				copy_pic_back(sel, 0);
 				frame_delay(1);
-				pi_put(pic_x[sel] + 8, pic_y[sel] + 8, sel);
+				pi_put_8(pic_x[sel] + 8, pic_y[sel] + 8, sel);
 				frame_delay(1);
 				draw_shottype_desc(sel, 7);
 				frame_delay(1);

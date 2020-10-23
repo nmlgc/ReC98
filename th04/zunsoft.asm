@@ -255,7 +255,7 @@ _zunsoft proc near
 	graph_accesspage 1
 	call	pi_load pascal, 0, ds, offset aZun00_pi
 	call	pi_palette_apply pascal, 0
-	call	pi_put pascal, large 0, 0
+	call	pi_put_8 pascal, large 0, 0
 if GAME eq 5
 	call	pi_free pascal, 0
 else

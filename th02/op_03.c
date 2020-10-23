@@ -19,11 +19,11 @@ void title_flash(void)
 		page = 1 - page;
 
 		if(frame == 0) {
-			pi_put(0, 0, 0);
+			pi_put_8(0, 0, 0);
 		} else if(frame == 5) {
-			pi_put(0, 0, 1);
+			pi_put_8(0, 0, 1);
 		} else if(frame == 10) {
-			pi_put(0, 0, 2);
+			pi_put_8(0, 0, 2);
 		}
 
 		if(frame % 3 == 0) {

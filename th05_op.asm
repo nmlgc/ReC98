@@ -623,7 +623,7 @@ loc_AA91:
 		graph_accesspage 1
 		call	pi_load pascal, 0, ds, offset aOp1_pi
 		call	pi_palette_apply pascal, 0
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		call	pi_free pascal, 0
 		call	graph_copy_page pascal, 0
 		mov	PaletteTone, 100
@@ -639,7 +639,7 @@ loc_AAE1:
 		graph_accesspage 1
 		call	pi_load pascal, 0, ds, offset aOp1_pi
 		call	pi_palette_apply pascal, 0
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		call	pi_free pascal, 0
 		call	graph_copy_page pascal, 0
 		mov	PaletteTone, 100
@@ -662,7 +662,7 @@ loc_AB3B:
 		graph_accesspage 1
 		call	pi_load pascal, 0, ds, offset aOp1_pi
 		call	pi_palette_apply pascal, 0
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		call	pi_free pascal, 0
 		call	graph_copy_page pascal, 0
 		mov	PaletteTone, 100
@@ -1399,7 +1399,7 @@ _setup_menu proc near
 		graph_accesspage 1
 		call	pi_load pascal, 0, ds, offset aMs_pi
 		call	pi_palette_apply pascal, 0
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		call	pi_free pascal, 0
 		call	graph_copy_page pascal, 0
 		push	1
@@ -1508,7 +1508,7 @@ loc_BD55:
 		cwd
 		idiv	bx
 		push	ax
-		call	pi_put
+		call	pi_put_8
 
 loc_BD81:
 		push	1
@@ -1568,7 +1568,7 @@ loc_BE08:
 		cwd
 		idiv	bx
 		push	ax
-		call	pi_put_mask
+		call	pi_put_mask_8
 
 loc_BE25:
 		push	1
@@ -1587,7 +1587,7 @@ loc_BE46:
 		graph_accesspage 1
 		graph_showpage 0
 		call	pi_palette_apply pascal, 0
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		call	pi_free pascal, 0
 		call	graph_copy_page pascal, 0
 		pop	si
@@ -1921,7 +1921,7 @@ _musicroom	proc near
 		graph_accesspage 1
 		call	pi_load pascal, 0, ds, offset aMusic_pi
 		call	pi_palette_apply pascal, 0
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		call	pi_free pascal, 0
 		call	_piano_setup
 		call	screen_back_B_snap
@@ -2385,10 +2385,10 @@ _score_render proc near
 		push	di
 		graph_accesspage 1
 		call	pi_palette_apply pascal, 0
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		graph_accesspage 0
 		call	pi_palette_apply pascal, 0
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		xor	si, si
 		jmp	short loc_CC27
 ; ---------------------------------------------------------------------------
@@ -2495,7 +2495,7 @@ loc_CD17:
 		graph_accesspage 1
 		call	pi_load pascal, 0, ds, offset aOp1_pi_1
 		call	pi_palette_apply pascal, 0
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		call	pi_free pascal, 0
 		call	graph_copy_page pascal, 0
 		call	palette_black_in pascal, 1

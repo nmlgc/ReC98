@@ -1,5 +1,5 @@
-public PI_PUT_MASK
-pi_put_mask	proc far
+public PI_PUT_MASK_8
+pi_put_mask_8 proc far
 @@mask_id	= word ptr  6
 @@slot	= word ptr  8
 @@top	= word ptr  0Ah
@@ -23,17 +23,17 @@ pi_put_mask	proc far
 	push	ax
 	mov	di, _pi_headers._ysize[di]
 	mov	ax, [bp+@@mask_id]
-	call	pi_put_mask_rowloop
+	call	pi_put_mask_8_rowloop
 	pop	di
 	pop	si
 	pop	bp
 	retf	8
-pi_put_mask	endp
+pi_put_mask_8 endp
 
 ; ---------------------------------------------------------------------------
 
-public PI_PUT_QUARTER_MASK
-pi_put_quarter_mask	proc far
+public PI_PUT_QUARTER_MASK_8
+pi_put_quarter_mask_8 proc far
 
 @@mask_id	= word ptr  6
 @@quarter	= byte ptr  8
@@ -72,23 +72,23 @@ pi_put_quarter_mask	proc far
 	push	320
 	push	320
 	mov	ax, [bp+@@mask_id]
-	call	pi_put_mask_rowloop
+	call	pi_put_mask_8_rowloop
 	pop	di
 	pop	si
 	pop	bp
 	retf	0Ah
-pi_put_quarter_mask	endp
+pi_put_quarter_mask_8 endp
 	even
 
 ; ---------------------------------------------------------------------------
 
-; void pascal pi_put_mask_rowloop(
+; void pascal pi_put_mask_8_rowloop(
 ;	int mask_id<ax>,
 ;	void far *pi_buf<es:si>,
 ;	pixel_t h<di>,
 ;	screen_x_t left, vram_y_t top, pixel_t w, size_t stride_packed
 ; );
-pi_put_mask_rowloop	proc near
+pi_put_mask_8_rowloop	proc near
 @@stride_packed	= word ptr [bp+2]
 @@w	= word ptr [bp+4]
 @@top	= word ptr [bp+6]
@@ -152,7 +152,7 @@ TEMP_ROW = RES_Y
 	dec	@@h
 	jnz	short @@put_row
 	retn	8
-pi_put_mask_rowloop	endp
+pi_put_mask_8_rowloop	endp
 
 
 ; ---------------------------------------------------------------------------

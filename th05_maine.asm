@@ -359,7 +359,7 @@ arg_6		= word ptr  0Ah
 		push	0
 		push	[bp+arg_2]
 		push	[bp+arg_0]
-		call	pi_put_quarter_mask
+		call	pi_put_quarter_mask_8
 		call	egc_copy_rect_1_to_0_16 pascal, si, di, (320 shl 16) or 200
 		pop	di
 		pop	si
@@ -1002,7 +1002,7 @@ loc_ACE1:
 		call	pi_palette_apply pascal, 0
 
 loc_ACF4:
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		call	graph_copy_page pascal, 0
 		graph_accesspage 0
 		call	bgimage_snap
@@ -1088,7 +1088,7 @@ loc_AD9A:
 		graph_accesspage 1
 		cmp	[bp+var_2], 4
 		jge	short loc_ADE3
-		call	pi_put_quarter pascal, (160 shl 16) + 64, 0, [bp+var_2]
+		call	pi_put_quarter_8 pascal, (160 shl 16) + 64, 0, [bp+var_2]
 		jmp	loc_AE64
 ; ---------------------------------------------------------------------------
 
@@ -1133,7 +1133,7 @@ loc_AE42:
 		cmp	si, 4
 		jl	short loc_AE25
 		graph_accesspage 1
-		call	pi_put_quarter pascal, (160 shl 16) + 64, 0, [bp+var_2]
+		call	pi_put_quarter_8 pascal, (160 shl 16) + 64, 0, [bp+var_2]
 		push	1
 		call	frame_delay
 
@@ -1629,16 +1629,16 @@ loc_B2EE:
 		cwd
 		idiv	bx
 		push	ax
-		call	pi_put_quarter_mask
+		call	pi_put_quarter_mask_8
 		call	sub_B37C
 		inc	si
 
 loc_B309:
 		cmp	si, 8
 		jl	short loc_B2EE
-		call	pi_put_quarter pascal, di, [bp+arg_0], 0, [bp+@@quarter]
+		call	pi_put_quarter_8 pascal, di, [bp+arg_0], 0, [bp+@@quarter]
 		call	sub_B37C
-		call	pi_put_quarter pascal, di, [bp+arg_0], 0, [bp+@@quarter]
+		call	pi_put_quarter_8 pascal, di, [bp+arg_0], 0, [bp+@@quarter]
 		inc	allcast_screen_plus_one
 		cmp	allcast_screen_plus_one, 8
 		jge	short loc_B357
@@ -3397,7 +3397,7 @@ var_2		= word ptr -2
 		graph_accesspage 1
 		call	pi_load pascal, 0, ds, offset aHi01_pi
 		call	pi_palette_apply pascal, 0
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		call	pi_free pascal, 0
 		call	graph_copy_page pascal, 0
 		call	super_entry_bfnt pascal, ds, offset aScnum_bft ; "scnum.bft"
@@ -5035,7 +5035,7 @@ sub_D1B1	proc near
 		graph_accesspage 1
 		call	pi_load pascal, 0, ds, offset aUde_pi
 		call	pi_palette_apply pascal, 0
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		call	pi_free pascal, 0
 		call	graph_copy_page pascal, 0
 		push	4

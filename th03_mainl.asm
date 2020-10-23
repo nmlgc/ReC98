@@ -536,10 +536,10 @@ loc_99D4:
 
 loc_99F1:
 		call	pi_load pascal, 0, ds, offset aStnx0_pi
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		freePISlotLarge	0
 		call	pi_load pascal, 0, ds, word_E504
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		leave
 		retn
 sub_990C	endp
@@ -625,7 +625,7 @@ loc_9A8E:
 		push	1
 		call	sub_9D20
 		call	pi_load pascal, 0, ds, offset aEn2_pi
-		call	pi_put_interlace pascal, large 280, 0
+		call	pi_put_interlace_8 pascal, large 280, 0
 		freePISlotLarge	0
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][1]
@@ -678,7 +678,7 @@ loc_9BBD:
 		call	pi_load
 
 loc_9BC2:
-		call	pi_put_interlace pascal, large 304, 0
+		call	pi_put_interlace_8 pascal, large 304, 0
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.RESIDENT_playchar_paletted][1]
 		mov	ah, 0
@@ -782,7 +782,7 @@ arg_4		= word ptr  8
 		call	pi_load pascal, 0, large [bp+arg_0]
 		mov	ax, si
 		imul	ax, 320
-		call	pi_put_interlace pascal, ax, (200 shl 16)
+		call	pi_put_interlace_8 pascal, ax, (200 shl 16)
 		freePISlotLarge	0
 		les	bx, [bp+arg_0]
 		mov	byte ptr es:[bx+2], 'e'
@@ -790,7 +790,7 @@ arg_4		= word ptr  8
 		call	pi_load pascal, 0, word ptr [bp+arg_0+2], bx
 		mov	ax, si
 		imul	ax, 320
-		call	pi_put_interlace pascal, ax, (208 shl 16)
+		call	pi_put_interlace_8 pascal, ax, (208 shl 16)
 		freePISlotLarge	0
 		pop	si
 		pop	bp
@@ -1180,7 +1180,7 @@ loc_A0C5:
 		call	far ptr	palette_show
 		call	pi_load pascal, 0, ds, offset aOver_pi
 		call	pi_palette_apply pascal, 0
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		freePISlotLarge	0
 		kajacall	KAJA_SONG_STOP
 		les	bx, _resident
@@ -2211,7 +2211,7 @@ loc_A9EB:
 		call	pi_palette_apply pascal, 0
 
 loc_A9FE:
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		call	graph_copy_page pascal, 0
 		graph_accesspage 0
 		call	sub_A36B
@@ -2337,7 +2337,7 @@ loc_AB33:
 		graph_accesspage 0
 
 loc_AB44:
-		call	pi_put_quarter pascal, (160 shl 16) + 64, 0, [bp+var_2]
+		call	pi_put_quarter_8 pascal, (160 shl 16) + 64, 0, [bp+var_2]
 
 loc_AB54:
 		graph_showpage 0
@@ -2923,7 +2923,7 @@ sub_AFAC	proc near
 		graph_showpage al
 		call	pi_load pascal, 0, ds, offset aRegib_pi
 		call	pi_palette_apply pascal, 0
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		freePISlotLarge	0
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.rank]
@@ -4098,7 +4098,7 @@ loc_B879:
 		jz	short loc_B8F1
 		call	pi_load pascal, 0, ds, offset aConti_pi
 		call	pi_palette_apply pascal, 0
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		freePISlotLarge	0
 		call	cdg_load_all pascal, 0, ds, offset aConti_cd2
 		pop	bp
@@ -4108,7 +4108,7 @@ loc_B879:
 loc_B8F1:
 		call	pi_load pascal, 0, ds, offset aOver_pi_0
 		call	pi_palette_apply pascal, 0
-		call	pi_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		freePISlotLarge	0
 		call	_snd_delay_until_volume stdcall, 255
 		pop	cx
