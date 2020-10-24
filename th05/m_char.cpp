@@ -6,7 +6,11 @@
 #pragma codeseg op_01_TEXT
 
 extern "C" {
-#include "ReC98.h"
+#include <dos.h>
+#include "platform.h"
+#include "pc98.h"
+#include "planar.h"
+#include "master.hpp"
 #include "th01/ranks.h"
 #include "th02/hardware/frmdelay.h"
 #include "th04/formats/cdg.h"
@@ -112,16 +116,16 @@ void pascal near pic_put(bool16 darkened)
 
 		// Drop shadow
 		grcg_setcolor(GC_RMW, 1);
-		grcg_byteboxfill_x(
-			((pic_raised_left + PIC_W) / BYTE_DOTS),
+		grcg_boxfill_8(
+			(pic_raised_left + PIC_W),
 			pic_top,
-			((pic_left + PIC_W - 1) / BYTE_DOTS),
+			(pic_left + PIC_W - 1),
 			(pic_raised_top + PIC_H - 1)
 		);
-		grcg_byteboxfill_x(
-			(pic_left / BYTE_DOTS),
+		grcg_boxfill_8(
+			pic_left,
 			(pic_raised_top + PIC_H),
-			((pic_left + PIC_W - 1) / BYTE_DOTS),
+			(pic_left + PIC_W - 1),
 			(pic_top + PIC_H - 1)
 		);
 		grcg_off();

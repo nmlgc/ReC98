@@ -176,7 +176,9 @@ void MASTER_RET grcg_off(void);
 	void MASTER_RET grcg_round_boxfill(
 		int x1, int y1, int x2, int y2, unsigned r
 	);
-	void MASTER_RET grcg_byteboxfill_x(int x1, int y1, int x2, int y2);
+	void MASTER_RET grcg_byteboxfill_x(
+		vram_x_t left, vram_y_t top, vram_x_t right, vram_y_t bottom
+	);
 
 	// Circles
 	void MASTER_RET grcg_circle(int x, int y, unsigned r);
@@ -289,6 +291,11 @@ void MASTER_RET vsync_end(void);
 
 /// Inlined extensions
 /// ------------------
+#define grcg_boxfill_8(left, top, right, bottom) \
+	grcg_byteboxfill_x( \
+		((left) / BYTE_DOTS), top, ((right) / BYTE_DOTS), bottom \
+	)
+
 #define palette_entry_rgb_show(fn) \
 	palette_entry_rgb(fn); \
 	palette_show();
