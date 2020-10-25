@@ -34,7 +34,7 @@ void title_flash(void)
 		frame_delay(1);
 	}
 	graph_showpage(0);
-	graph_pi_free(&pi_headers[0], pi_buffers[0]);
-	graph_pi_free(&pi_headers[1], pi_buffers[1]);
-	graph_pi_free(&pi_headers[2], pi_buffers[2]);
+	pi_free(0);
+	pi_free(1);
+	pi_free(2);
 }

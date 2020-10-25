@@ -110,7 +110,7 @@ void pascal near pi_load_put_8_free_to(const char near *fn, char page)
 	graph_accesspage(page);
 	pi_palette_apply(0);
 	pi_put_8(0, 0, 0);
-	graph_pi_free(&pi_headers[0], pi_buffers[0]);
+	pi_free(0);
 }
 
 void op_animate(void)
@@ -231,9 +231,9 @@ void start_demo(void)
 	resident->shottype = 0;
 	cfg_save();
 	text_clear();
-	graph_pi_free(&pi_headers[0], pi_buffers[0]);
-	graph_pi_free(&pi_headers[1], pi_buffers[1]);
-	graph_pi_free(&pi_headers[2], pi_buffers[2]);
+	pi_free(0);
+	pi_free(1);
+	pi_free(2);
 	gaiji_restore();
 	super_free();
 	game_exit();

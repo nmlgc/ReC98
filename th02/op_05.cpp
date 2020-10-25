@@ -213,9 +213,9 @@ void pascal shottype_menu(void)
 			input_delay = 0;
 		}
 	} while(1);
-	graph_pi_free(&pi_headers[0], pi_buffers[0]);
-	graph_pi_free(&pi_headers[1], pi_buffers[1]);
-	graph_pi_free(&pi_headers[2], pi_buffers[2]);
+	pi_free(0);
+	pi_free(1);
+	pi_free(2);
 	palette_black_out(1);
 }
 
