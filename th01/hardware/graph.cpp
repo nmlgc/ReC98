@@ -697,10 +697,18 @@ void graph_r_box(
 	graph_r_hline(left, right, bottom, col);
 }
 
-pixel_t text_extent_fx(int fx, const unsigned char *str)
+inline int fx_weight_from(int col_and_fx) {
+	return ((col_and_fx / 0x10) % 4);
+}
+
+inline pixel_t fx_spacing_from(int col_and_fx) {
+	return ((col_and_fx / 0x40) % 8);
+}
+
+pixel_t text_extent_fx(int col_and_fx, const unsigned char *str)
 {
 	register pixel_t ret = 0;
-	register pixel_t spacing = (fx / 0x40) % 8;
+	register pixel_t spacing = fx_spacing_from(col_and_fx);
 	while(*str) {
 		if(_ismbblead(str[0])) {
 			uint16_t codepoint = ((char)str[0] << 8) + str[0];
@@ -725,7 +733,7 @@ pixel_t text_extent_fx(int fx, const unsigned char *str)
 #include "th01/hardware/grppsafx.cpp"
 
 void graph_putsa_fx(
-	screen_x_t left, vram_y_t top, int fx, const unsigned char *str
+	screen_x_t left, vram_y_t top, int16_t col_and_fx, const unsigned char *str
 )
 {
 	register screen_x_t x = left;
@@ -734,18 +742,18 @@ void graph_putsa_fx(
 	unsigned char far *vram;
 	int fullwidth;
 	int first_bit;
-	int weight = (fx / 0x10) % 4;
-	pixel_t spacing = (fx / 0x40) % 8;
-	int clear_bg = (fx & FX_CLEAR_BG);
-	int underline = (fx & FX_UNDERLINE);
-	int reverse = (fx & FX_REVERSE);
+	int weight = fx_weight_from(col_and_fx);
+	pixel_t spacing = fx_spacing_from(col_and_fx);
+	int clear_bg = (col_and_fx & FX_CLEAR_BG);
+	int underline = (col_and_fx & FX_UNDERLINE);
+	int reverse = (col_and_fx & FX_REVERSE);
 	pixel_t w;
 	pixel_t line;
 	dots16_t glyph[GLYPH_H];
 	register dots16_t glyph_row_tmp;
 
 	if(clear_bg) {
-		w = text_extent_fx(fx, str);
+		w = text_extent_fx(col_and_fx, str);
 		if(underline) {
 			z_grcg_boxfill(x, top, (x + w - 1), (top + GLYPH_H + 1), 0);
 			graph_r_hline(x, (x + w - 1), (top + GLYPH_H + 1), 7);
@@ -753,11 +761,11 @@ void graph_putsa_fx(
 			z_grcg_boxfill(x, top, (x + w - 1), (top + GLYPH_H - 1), 0);
 		}
 	} else if(underline) {
-		w = text_extent_fx(fx, str);
+		w = text_extent_fx(col_and_fx, str);
 		graph_r_hline(x, (x + w - 1), (top + GLYPH_H + 1), 7);
 	}
 
-	grcg_setcolor_rmw(fx);
+	grcg_setcolor_rmw(col_and_fx);
 	OUTB(0x68, 0xB); // CG ROM dot access
 
 	while(str[0]) {

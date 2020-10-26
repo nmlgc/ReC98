@@ -15,7 +15,7 @@ extern "C" {
 #undef grcg_off
 
 void graph_putsa_fx(
-	screen_x_t left, vram_y_t top, int fx, const unsigned char *str
+	screen_x_t left, vram_y_t top, int16_t col_and_fx, const unsigned char *str
 )
 {
 	uint16_t codepoint;
@@ -23,13 +23,13 @@ void graph_putsa_fx(
 	unsigned char far *vram;
 	int fullwidth;
 	int first_bit;
-	int weight = (fx >> 4) & 3;
-	pixel_t spacing = (fx >> 6) & 7;
+	int weight = (col_and_fx >> 4) & 3;
+	pixel_t spacing = (col_and_fx >> 6) & 7;
 	pixel_t line;
 	dots16_t glyph[GLYPH_H];
 	register dots16_t glyph_row_tmp;
 
-	grcg_setcolor(GC_RMW, fx);
+	grcg_setcolor(GC_RMW, col_and_fx);
 	OUTB(0x68, 0xB); // CG ROM dot access
 
 	while(str[0]) {

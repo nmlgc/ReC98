@@ -45,20 +45,20 @@ void pascal near str_from_kanji(char str[3], uint16_t kanji)
 	str[2] = '\0';
 }
 
-#define graph_putkanji_fx(left, top, fx, fmt_instance, kanji) \
+#define graph_putkanji_fx(left, top, col_and_fx, fmt_instance, kanji) \
 	str_from_kanji(kanji_str, kanji); \
-	graph_putsa_fx(left, top, fx, kanji_str);
+	graph_putsa_fx(left, top, col_and_fx, kanji_str);
 #define graph_printf_fx graph_putsa_fx
 
-#define graph_printf_s_fx(left, top, fx, fmt_instance, str) \
-	graph_putsa_fx(left, top, fx, str);
+#define graph_printf_s_fx(left, top, col_and_fx, fmt_instance, str) \
+	graph_putsa_fx(left, top, col_and_fx, str);
 
-#define regist_route_put(left, top, fx, char_1, char_2) \
+#define regist_route_put(left, top, col_and_fx, char_1, char_2) \
 	unsigned char route[sizeof(twobyte_t) + 1]; \
 	route[2] = '\0'; \
 	route[0] = char_1; \
 	route[1] = char_2; \
-	graph_putsa_fx(left, top, fx, route); \
+	graph_putsa_fx(left, top, col_and_fx, route); \
 
 #define ALPHABET_SPACE_0 ALPHABET_SPACE
 #define ALPHABET_LEFT_0  ALPHABET_LEFT
@@ -91,15 +91,15 @@ void pascal near str_from_kanji(char str[3], uint16_t kanji)
 	z_palette_black_in(); \
 }
 
-#define regist_title_put(left, stage, ranks, fx) { \
+#define regist_title_put(left, stage, ranks, col_and_fx) { \
 	extern const char REGIST_TITLE_1[]; \
 	extern const char REGIST_TITLE_2[]; \
 	if(stage < SCOREDAT_NOT_CLEARED) { \
-		graph_putsa_fx(left +   0, TITLE_BACK_TOP, fx, REGIST_TITLE_1); \
-		graph_putsa_fx(left + 192, TITLE_BACK_TOP, fx, ranks[rank]); \
+		graph_putsa_fx(left +   0, TITLE_BACK_TOP, col_and_fx, REGIST_TITLE_1); \
+		graph_putsa_fx(left + 192, TITLE_BACK_TOP, col_and_fx, ranks[rank]); \
 	} else { \
-		graph_putsa_fx(left +   0, TITLE_TOP, fx, REGIST_TITLE_2); \
-		graph_putsa_fx(left + 192, TITLE_TOP, fx, ranks[rank]); \
+		graph_putsa_fx(left +   0, TITLE_TOP, col_and_fx, REGIST_TITLE_2); \
+		graph_putsa_fx(left + 192, TITLE_TOP, col_and_fx, ranks[rank]); \
 	} \
 }
 

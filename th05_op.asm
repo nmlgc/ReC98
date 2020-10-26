@@ -22,6 +22,7 @@ BINARY = 'O'
 
 include ReC98.inc
 include th05/th05.inc
+include th04/hardware/grppsafx.inc
 include th05/music/music.inc
 include th05/music/piano.inc
 
@@ -240,7 +241,7 @@ loc_A69A:
 		call	cdg_put_8 pascal, 256, di, 35
 		call	cdg_put_8 pascal, 352, di, 36
 		call	egc_copy_rect_1_to_0_16 pascal, large (0 shl 16) or 384, (RES_X shl 16) or 16
-		mov	_graph_putsa_fx_func, 2
+		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
 		mov	bx, [bp+var_2]
 		shl	bx, 2
 		pushd	_MENU_DESC[bx]
@@ -450,7 +451,7 @@ loc_A900:
 		push	36
 		call	cdg_put_8
 		call	egc_copy_rect_1_to_0_16 pascal, large (0 shl 16) or 384, (RES_X shl 16) or 16
-		mov	_graph_putsa_fx_func, 2
+		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
 		mov	bx, si
 		shl	bx, 2
 		pushd	_MENU_DESC[bx]
@@ -1786,7 +1787,7 @@ sub_C376	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, 4
+		mov	si, FX_MASK
 		jmp	short loc_C390
 ; ---------------------------------------------------------------------------
 
@@ -1799,9 +1800,9 @@ loc_C37F:
 		inc	si
 
 loc_C390:
-		cmp	si, 8
+		cmp	si, FX_MASK_END
 		jl	short loc_C37F
-		mov	_graph_putsa_fx_func, 2
+		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
 		call	draw_cmt_lines
 		call	music_flip
 		call	draw_cmt_lines
@@ -1818,7 +1819,7 @@ sub_C376	endp
 sub_C3A7	proc near
 		push	bp
 		mov	bp, sp
-		mov	_graph_putsa_fx_func, 2
+		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
 		call	bgimage_put_rect pascal, (320 shl 16) or  32, (320 shl 16) or  16
 		call	bgimage_put_rect pascal, (320 shl 16) or 180, (320 shl 16) or 144
 		call	music_flip

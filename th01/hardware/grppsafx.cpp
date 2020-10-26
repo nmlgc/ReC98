@@ -50,13 +50,13 @@
 #define apply_weight(row_out, row_in, row_tmp, weight) \
 	row_out = row_in; \
 	switch(weight) { \
-	case 1: \
+	case WEIGHT_HEAVY: \
 		glyph_double(row_out, row_tmp); \
 		break; \
-	case 3: \
+	case WEIGHT_BLACK: \
 		glyph_double(row_out, row_tmp); \
 		/* fallthrough */ \
-	case 2: \
+	case WEIGHT_BOLD: \
 		glyph_double(row_out, row_tmp); \
 		row_tmp ^= row_out; \
 		row_out &= ~(row_tmp << 1); \

@@ -22,6 +22,7 @@ BINARY = 'E'
 
 include ReC98.inc
 include th04/th04.inc
+include th04/hardware/grppsafx.inc
 
 	extern _execl:proc
 	extern _memcpy:proc
@@ -1605,7 +1606,7 @@ var_1		= byte ptr -1
 		mov	point_124BC.y, 320
 		mov	word_124C0, 1
 		mov	col_124C2, 15
-		mov	_graph_putsa_fx_func, 2
+		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
 		call	sub_A4AE
 		mov	byte_1247E, 0
 
@@ -2918,7 +2919,7 @@ var_4		= dword	ptr -4
 
 		enter	4, 0
 		push	si
-		mov	_graph_putsa_fx_func, 2
+		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
 		graph_accesspage 0
 		graph_showpage al
 		call	graph_putsa_fx pascal, (16 shl 16) or  48, 15, ds, offset aB@b@b@b@b@b@b@ ; "　　　　　　　 腕前判定"

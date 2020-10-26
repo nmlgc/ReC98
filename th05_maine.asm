@@ -23,6 +23,7 @@ BINARY = 'E'
 include ReC98.inc
 include th05/th05.inc
 include th01/math/subpixel.inc
+include th04/hardware/grppsafx.inc
 
 	extern _execl:proc
 	extern _tolower:proc
@@ -1305,7 +1306,7 @@ var_3		= word ptr -3
 		mov	point_15004.y, 320
 		mov	word_15008, 2
 		mov	_text_col, 15
-		mov	_graph_putsa_fx_func, 2
+		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
 		mov	byte_14F8E, 0
 
 loc_B005:
@@ -1536,7 +1537,7 @@ sub_B1B5	proc near
 		shl	ax, 5
 		add	dx, ax
 		mov	si, dx
-		mov	_graph_putsa_fx_func, 7
+		mov	_graph_putsa_fx_func, (FX_MASK_END - 1)
 		xor	di, di
 		jmp	short loc_B21E
 ; ---------------------------------------------------------------------------
@@ -1550,9 +1551,9 @@ loc_B1F7:
 		inc	di
 
 loc_B21E:
-		cmp	di, 4
+		cmp	di, FX_MASK
 		jl	short loc_B1F7
-		mov	_graph_putsa_fx_func, 2
+		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
 		call	graph_putsa_fx pascal, 64, si, 15, large [bp+@@str]
 		call	sub_B37C
 		call	graph_putsa_fx pascal, 64, si, 15, large [bp+@@str]
@@ -4379,7 +4380,7 @@ var_4		= dword	ptr -4
 		enter	4, 0
 		push	si
 		mov	dword_1517E, 0
-		mov	_graph_putsa_fx_func, 2
+		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
 		call	graph_putsa_fx pascal, x_116E2, y_116E8, col_116E4, ds, offset aB@b@b@b@b@b@b@ ; "　　　　　　　 腕前判定"
 		push	x_116E2
 		mov	ax, y_116E8

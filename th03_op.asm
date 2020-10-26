@@ -20,6 +20,7 @@
 
 include ReC98.inc
 include th03/th03.inc
+include th01/hardware/grppsafx.inc
 include th02/music/music.inc
 
 	extern SCOPY@:proc
@@ -1412,7 +1413,7 @@ var_1  	= byte ptr -1
 		push	ax
 		mov	al, [bp+@@color]
 		mov	ah, 0
-		or	ax, 20h
+		or	ax, FX_WEIGHT_BOLD
 		push	ax
 		mov	al, [bp+@@sel]
 		mov	ah, 0
@@ -1429,7 +1430,7 @@ var_1  	= byte ptr -1
 		push	ax
 		mov	al, [bp+@@color]
 		mov	ah, 0
-		or	ax, 20h
+		or	ax, FX_WEIGHT_BOLD
 		push	ax
 		mov	al, [bp+@@sel]
 		mov	ah, 0

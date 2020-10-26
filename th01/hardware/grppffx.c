@@ -4,7 +4,7 @@
 #include "th01/hardware/graph.h"
 
 void graph_printf_fx(
-	screen_x_t left, vram_y_t top, int fx, const char *fmt, ...
+	screen_x_t left, vram_y_t top, int16_t col_and_fx, const char *fmt, ...
 )
 {
 	char str[256];
@@ -12,5 +12,5 @@ void graph_printf_fx(
 
 	va_start(ap, fmt);
 	vsprintf(str, fmt, ap);
-	graph_putsa_fx(left, top, fx, str);
+	graph_putsa_fx(left, top, col_and_fx, str);
 }

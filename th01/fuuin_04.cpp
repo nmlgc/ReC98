@@ -14,7 +14,7 @@ extern "C" {
 #include "th01/end/type.h"
 
 #define TYPE_DELAY 3
-#define TYPE_FX FX(15, 0, 0)
+#define TYPE_FX (15 | FX_WEIGHT_NORMAL)
 
 #define TONE_STEP_PER_FRAME 5
 

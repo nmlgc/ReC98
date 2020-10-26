@@ -2,7 +2,7 @@ struct hack { const char* NUM[10]; }; // XXX
 extern const hack FULLWIDTH_NUMBERS;
 
 void graph_putfwnum_fx(
-	screen_x_t left, vram_y_t top, int fx, int digits,
+	screen_x_t left, vram_y_t top, int16_t col_and_fx, int digits,
 	long num, long num_prev, bool16 put
 )
 {
@@ -29,7 +29,7 @@ void graph_putfwnum_fx(
 			put = true;
 		}
 		if(put && ((digit != digit_prev) || !num_prev)) {
-			graph_putsa_fx(x, top, fx, FW.NUM[digit]);
+			graph_putsa_fx(x, top, col_and_fx, FW.NUM[digit]);
 		}
 		x += GLYPH_FULL_W;
 	} while(divisor > 1);

@@ -20,6 +20,7 @@
 
 include ReC98.inc
 include th03/th03.inc
+include th01/hardware/grppsafx.inc
 
 	extern SCOPY@:proc
 	extern __mbcjmstojis:proc
@@ -583,13 +584,13 @@ loc_9A8E:
 		add	ax, ax
 		mov	[bp+var_4], ax
 		push	(80 shl 16) or 292
-		push	2Fh
+		push	(15 or FX_WEIGHT_BOLD)
 		mov	bx, [bp+var_4]
 		shl	bx, 2
 		pushd	CHAR_TITLE[bx]
 		call	graph_putsa_fx
 		push	(128 shl 16) or 308
-		push	2Fh
+		push	(15 or FX_WEIGHT_BOLD)
 		mov	bx, [bp+var_4]
 		shl	bx, 2
 		pushd	CHAR_NAME[bx]
@@ -604,13 +605,13 @@ loc_9A8E:
 		add	ax, ax
 		mov	[bp+var_4], ax
 		push	(336 shl 16) or 292
-		push	2Fh
+		push	(15 or FX_WEIGHT_BOLD)
 		mov	bx, [bp+var_4]
 		shl	bx, 2
 		pushd	CHAR_TITLE[bx]
 		call	graph_putsa_fx
 		push	(384 shl 16) or 308
-		push	2Fh
+		push	(15 or FX_WEIGHT_BOLD)
 		mov	bx, [bp+var_4]
 		shl	bx, 2
 		pushd	CHAR_NAME[bx]
@@ -3473,7 +3474,7 @@ loc_B3E0:
 		push	ax
 		mov	al, [bp+var_7]
 		mov	ah, 0
-		or	ax, 20h
+		or	ax, FX_WEIGHT_BOLD
 		push	ax
 		mov	al, [di+22A6h]
 		mov	ah, 0
@@ -5106,7 +5107,7 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		push	(352 shl 16) or 174
-		push	2Fh
+		push	(15 or FX_WEIGHT_BOLD)
 		mov	al, playchar_10BD7
 		mov	ah, 0
 		shl	ax, 2
@@ -5114,7 +5115,7 @@ var_2		= word ptr -2
 		pushd	aVERDICT_PLAYCHARS[bx]
 		call	graph_putsa_fx
 		push	(360 shl 16) or 199
-		push	2Fh ; '/'
+		push	(15 or FX_WEIGHT_BOLD)
 		mov	al, _rank
 		mov	ah, 0
 		shl	ax, 2
@@ -5145,7 +5146,7 @@ loc_C2F7:
 		cmp	[bp+var_4], 0
 		jz	short loc_C316
 		push	si
-		push	(224 shl 16) or 2Fh
+		push	(224 shl 16) or (15 or FX_WEIGHT_BOLD)
 		mov	bx, di
 		shl	bx, 2
 		pushd	aVERDICT_NUMBERS[bx]
@@ -5162,13 +5163,13 @@ loc_C319:
 		mov	ah, 0
 		mov	di, ax
 		push	si
-		push	(224 shl 16) or 2Fh
+		push	(224 shl 16) or (15 or FX_WEIGHT_BOLD)
 		mov	bx, di
 		shl	bx, 2
 		pushd	aVERDICT_NUMBERS[bx]
 		call	graph_putsa_fx
 		push	(408 shl 16) or 248
-		push	2Fh
+		push	(15 or FX_WEIGHT_BOLD)
 		mov	bx, di
 		shl	bx, 2
 		pushd	aVERDICT_NUMBERS[bx]
@@ -5186,7 +5187,7 @@ loc_C319:
 		sub	si, 16
 		mov	[bp+var_4], 1
 		push	si
-		push	(291 shl 16) or 2Fh
+		push	(291 shl 16) or (15 or FX_WEIGHT_BOLD)
 		mov	bx, di
 		shl	bx, 2
 		pushd	aVERDICT_NUMBERS[bx]
@@ -5215,7 +5216,7 @@ loc_C3B4:
 		cmp	[bp+var_4], 0
 		jz	short loc_C3D3
 		push	si
-		push	(291 shl 16) or 2Fh
+		push	(291 shl 16) or (15 or FX_WEIGHT_BOLD)
 		mov	bx, di
 		shl	bx, 2
 		pushd	aVERDICT_NUMBERS[bx]
@@ -5230,13 +5231,13 @@ loc_C3D3:
 		idiv	bx
 		mov	di, dx
 		push	si
-		push	(291 shl 16) or 2Fh
+		push	(291 shl 16) or (15 or FX_WEIGHT_BOLD)
 		mov	bx, di
 		shl	bx, 2
 		pushd	aVERDICT_NUMBERS[bx]
 		call	graph_putsa_fx
 		lea	ax, [si+16]
-		call	graph_putsa_fx pascal, ax, (291 shl 16) or 2Fh, ds, offset aU_	; "“_"
+		call	graph_putsa_fx pascal, ax, (291 shl 16) or (15 or FX_WEIGHT_BOLD), ds, offset aU_	; "“_"
 		pop	di
 		pop	si
 		leave

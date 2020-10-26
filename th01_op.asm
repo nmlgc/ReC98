@@ -22,6 +22,7 @@ BINARY = 'O'
 
 include ReC98.inc
 include th01/th01.inc
+include th01/hardware/grppsafx.inc
 include th01/formats/cfg.inc
 
 	option emulator
@@ -310,7 +311,7 @@ arg_0		= word ptr  6
 		idiv	bx
 		cmp	dx, 50
 		jge	short loc_A954
-		call	_graph_putsa_fx c, 244, (2Fh shl 16) or 306, offset aVgvhvsb@vjvdvx, ds ; " ÇgÇhÇsÅ@ÇjÇdÇx"
+		call	_graph_putsa_fx c, 244, ((15 or FX_WEIGHT_BOLD) shl 16) or 306, offset aVgvhvsb@vjvdvx, ds ; " ÇgÇhÇsÅ@ÇjÇdÇx"
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -355,7 +356,7 @@ arg_2		= word ptr  8
 		add	bx, ax
 		pushd	dword ptr ss:[bx]
 		mov	ax, [bp+arg_2]
-		or	ax, 30h
+		or	ax, FX_WEIGHT_BLACK
 		push	ax
 		push	[bp+@@y]
 		push	[bp+@@x]

@@ -27,14 +27,14 @@ graph_putsa_fx	proc far
 	out	68h, al
 	mov	bx, _graph_putsa_fx_func
 	add	bx, bx
-	cmp	bx, 8
+	cmp	bx, (FX_MASK * word)
 	jb	short @@not_masking
-	cmp	bx, 16
+	cmp	bx, (FX_MASK_END * word)
 	jnb	short @@not_masking
 
-	mov	ax, (GLYPH_MASK_TABLE - 8)[bx]
+	mov	ax, (GLYPH_MASK_TABLE - (FX_MASK * word))[bx]
 	mov	word ptr cs:grppsafx_glyph_mask, ax
-	mov	bx, 8
+	mov	bx, (FX_MASK * word) ; offset of the [glyph_double_and_mask] offset
 
 @@not_masking:
 	mov	ax, GLYPH_WEIGHT_FUNC_TABLE_1[bx]
@@ -90,7 +90,7 @@ graph_putsa_fx	proc far
 	in	al, 0A9h
 
 grppsafx_glyph_func_1 equ $+1
-	call	glyph_weight_2
+	call	glyph_weight_bold
 	mov	bh, al
 	mov	bl, 0
 	shr	ax, cl
@@ -145,7 +145,7 @@ grppsafx_glyph_spacing_1 equ $+1
 	xor	ah, ah
 
 grppsafx_glyph_func_2 equ $+1
-	call	glyph_weight_2
+	call	glyph_weight_bold
 	ror	ax, cl
 	stosw
 	add	di, ROW_SIZE - 2
@@ -163,18 +163,18 @@ graph_putsa_fx	endp
 	even
 
 
-glyph_weight_1	label near
+glyph_weight_heavy	label near
 	mov	dx, ax
 	add	dx, dx
 	or	ax, dx
-glyph_weight_0	label near
+glyph_weight_normal	label near
 	retn
 
-glyph_weight_3	label near
+glyph_weight_black	label near
 	mov	dx, ax
 	shl	dx, 1
 	or	ax, dx
-glyph_weight_2	label near
+glyph_weight_bold	label near
 	mov	dx, ax
 	mov	bp, ax
 	add	bp, bp
@@ -186,7 +186,7 @@ glyph_weight_2	label near
 	retn
 
 glyph_double_and_mask	proc near
-	call	glyph_weight_2
+	call	glyph_weight_bold
 	mov	bl, ch
 	and	bx, 3
 	add	bx, bx

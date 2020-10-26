@@ -26,8 +26,8 @@ static const screen_y_t STAGE_TOP = 32;
 static const int PTN_LIFE_QUARTER = 0;
 static const int PTN_BOMB_QUARTER = 1;
 
-static const int MAX_FX = FX(7, 2, 0);
-static const int CUR_FX = FX(7, 3, 0);
+static const int16_t MAX_FX = (7 | FX_WEIGHT_BOLD);
+static const int16_t CUR_FX = (7 | FX_WEIGHT_BLACK);
 
 #if (PTN_QUARTER_W < GLYPH_FULL_W)
 	#error Original code assumes PTN_QUARTER_W >= GLYPH_FULL_W

@@ -22,6 +22,7 @@ BINARY = 'M'
 
 include ReC98.inc
 include th01/th01.inc
+include th01/hardware/grppsafx.inc
 include th01/math/area.inc
 include th01/main/playfld.inc
 include th01/main/boss/entity_a.inc
@@ -1739,9 +1740,9 @@ var_1		= byte ptr -1
 
 		enter	2, 0
 		mov	[bp+var_1], 0
-		call	_graph_putsa_fx c, 272, large (37h shl 16) or 128, offset aVovVtvrvd, ds ; "ÇoÇ`ÇtÇrÇd"
-		call	_graph_putsa_fx c, 256, large (37h shl 16) or 144, offset aB@nKjb@b@pic, ds ; "Å@çƒäJÅ@Å@èIóπ"
-		call	_graph_putsa_fx c, 256, large ( 7h shl 16) or 144, offset aBB@b@b@b@b@b@, ds ;	"ÅúÅ@Å@Å@Å@Å@Å@"
+		call	_graph_putsa_fx c, 272, large ((7 or FX_WEIGHT_BLACK) shl 16) or 128, offset aVovVtvrvd, ds ; "ÇoÇ`ÇtÇrÇd"
+		call	_graph_putsa_fx c, 256, large ((7 or FX_WEIGHT_BLACK) shl 16) or 144, offset aB@nKjb@b@pic, ds ; "Å@çƒäJÅ@Å@èIóπ"
+		call	_graph_putsa_fx c, 256, large (7 shl 16) or 144, offset aBB@b@b@b@b@b@, ds ;	"ÅúÅ@Å@Å@Å@Å@Å@"
 		push	28h ; '('
 		call	sub_C8C7
 		pop	cx
@@ -1759,14 +1760,14 @@ loc_C9A2:
 		cmp	_input_lr, INPUT_LEFT
 		jnz	short loc_C9E6
 		call	_egc_copy_rect_1_to_0_16 c, large (144 shl 16) or 320, large (16 shl 16) or 16
-		call	_graph_putsa_fx c, 256, large ( 7h shl 16) or 144, offset aB, ds	; "Åú"
+		call	_graph_putsa_fx c, 256, large (7 shl 16) or 144, offset aB, ds	; "Åú"
 		mov	[bp+var_1], 0
 
 loc_C9E6:
 		cmp	_input_lr, INPUT_RIGHT
 		jnz	short loc_CA1A
 		call	_egc_copy_rect_1_to_0_16 c, large (144 shl 16) or 256, large (16 shl 16) or 16
-		call	_graph_putsa_fx c, 320, large ( 7h shl 16) or 144, offset aB, ds	; "Åú"
+		call	_graph_putsa_fx c, 320, large (7 shl 16) or 144, offset aB, ds	; "Åú"
 		mov	[bp+var_1], 1
 
 loc_CA1A:
@@ -1795,9 +1796,9 @@ loc_CA39:
 		jz	loc_CB96
 		cmp	_paused, 0
 		jz	loc_CB96
-		call	_graph_putsa_fx c, 224, large (37h shl 16) or 128, offset aCUcvPicVVVsvdv, ds ; "ñ{ìñÇ…èIóπÇµÇøÇ·Ç§ÇÃÅH"
-		call	_graph_putsa_fx c, 224, large (37h shl 16) or 144, offset aB@vdvVVVgb@b@v, ds ; "Å@Ç§ÇªÇ≈Ç∑Ç£Å@Å@ÇÕÇ¢Ç¡"
-		call	_graph_putsa_fx c, 224, large ( 7h shl 16) or 144, offset aB, ds	; "Åú"
+		call	_graph_putsa_fx c, 224, large ((7 or FX_WEIGHT_BLACK) shl 16) or 128, offset aCUcvPicVVVsvdv, ds ; "ñ{ìñÇ…èIóπÇµÇøÇ·Ç§ÇÃÅH"
+		call	_graph_putsa_fx c, 224, large ((7 or FX_WEIGHT_BLACK) shl 16) or 144, offset aB@vdvVVVgb@b@v, ds ; "Å@Ç§ÇªÇ≈Ç∑Ç£Å@Å@ÇÕÇ¢Ç¡"
+		call	_graph_putsa_fx c, 224, large (7 shl 16) or 144, offset aB, ds	; "Åú"
 		mov	[bp+var_1], 0
 		jmp	loc_CB5D
 ; ---------------------------------------------------------------------------
@@ -1810,14 +1811,14 @@ loc_CACF:
 		cmp	_input_lr, INPUT_LEFT
 		jnz	short loc_CB13
 		call	_egc_copy_rect_1_to_0_16 c, large (144 shl 16) or 336, large (16 shl 16) or 16
-		call	_graph_putsa_fx c, 224, large ( 7h shl 16) or 144, offset aB, ds	; "Åú"
+		call	_graph_putsa_fx c, 224, large (7 shl 16) or 144, offset aB, ds	; "Åú"
 		mov	[bp+var_1], 0
 
 loc_CB13:
 		cmp	_input_lr, INPUT_RIGHT
 		jnz	short loc_CB47
 		call	_egc_copy_rect_1_to_0_16 c, large (144 shl 16) or 224, large (16 shl 16) or 16
-		call	_graph_putsa_fx c, 336, large ( 7h shl 16) or 144, offset aB, ds	; "Åú"
+		call	_graph_putsa_fx c, 336, large (7 shl 16) or 144, offset aB, ds	; "Åú"
 		mov	[bp+var_1], 1
 
 loc_CB47:
@@ -1937,11 +1938,11 @@ sub_CC0F	proc far
 		call	_graph_accesspage_func
 		pop	cx
 		call	_graph_copy_page_back_to_front
-		call	_graph_putsa_fx c, 0, ((FX_CLEAR_BG or 27h) shl 16) or 0, offset aVgvpvovfvivovx, ds ; "ÇÉÇèÇéÇîÇâÇéÇïÇÖÅHÅ@Å@Å@  "
-		call	_graph_putsa_fx c, 0, ((FX_CLEAR_BG or 27h) shl 16) or 16, offset aVxvevub@b@B@, ds ; "ÇxÇÖÇìÅ@Å@  Å@"
-		call	_graph_putsa_fx c, 0, ((FX_CLEAR_BG or 27h) shl 16) or 32, offset aVmvpb@b@B@, ds ; "ÇmÇèÅ@Å@	Å@ "
-		call	_graph_putsa_fx c, 0, ((FX_CLEAR_BG or 21h) shl 16) or 48, offset aVxvevub@b@c@, ds ; "ÇxÇÖÇìÅ@Å@Å@  "
-		call	_graph_putsa_fx c, 0, ((FX_CLEAR_BG or 21h) shl 16) or 64, offset aVmvpb@b@c@, ds ; "ÇmÇèÅ@Å@Å@   "
+		call	_graph_putsa_fx c, 0, ((FX_CLEAR_BG or (7 or FX_WEIGHT_BOLD)) shl 16) or 0, offset aVgvpvovfvivovx, ds ; "ÇÉÇèÇéÇîÇâÇéÇïÇÖÅHÅ@Å@Å@  "
+		call	_graph_putsa_fx c, 0, ((FX_CLEAR_BG or (7 or FX_WEIGHT_BOLD)) shl 16) or 16, offset aVxvevub@b@B@, ds ; "ÇxÇÖÇìÅ@Å@  Å@"
+		call	_graph_putsa_fx c, 0, ((FX_CLEAR_BG or (7 or FX_WEIGHT_BOLD)) shl 16) or 32, offset aVmvpb@b@B@, ds ; "ÇmÇèÅ@Å@	Å@ "
+		call	_graph_putsa_fx c, 0, ((FX_CLEAR_BG or (1 or FX_WEIGHT_BOLD)) shl 16) or 48, offset aVxvevub@b@c@, ds ; "ÇxÇÖÇìÅ@Å@Å@  "
+		call	_graph_putsa_fx c, 0, ((FX_CLEAR_BG or (1 or FX_WEIGHT_BOLD)) shl 16) or 64, offset aVmvpb@b@c@, ds ; "ÇmÇèÅ@Å@Å@   "
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
@@ -5882,17 +5883,17 @@ arg_0		= word ptr  6
 		call	_z_palette_set_all_show c, offset _stage_palette, ds
 		call	sub_12F91
 		pushd	[bp+var_4]
-		push	(2Ah shl 16) or 80
+		push	((10 or FX_WEIGHT_BOLD) shl 16) or 80
 		push	64
 		call	_graph_putsa_fx
 		add	sp, 0Ah
-		call	_graph_putsa_fx c,  48, large (27h shl 16) or 112, offset aB@b@vavnvmvtvr, ds ; "Å@Å@ÇaÇnÇmÇtÇr"
-		call	_graph_putsa_fx c,  48, large (27h shl 16) or 128, offset aB@vsvivnveb@, ds ; "   Å@ÇsÇâÇçÇÖÅ@"
-		call	_graph_putsa_fx c,  48, large (27h shl 16) or 160, offset aVbvpvovfvivovx, ds ; "ÇbÇèÇéÇîÇâÇéÇïÇèÇïÇì"
-		call	_graph_putsa_fx c,  48, large (27h shl 16) or 192, offset aVavpvnvvbxvovm, ds ; "ÇaÇèÇçÇÇÅïÇoÇåÇÅÇôÇÖÇí"
-		call	_graph_putsa_fx c,  48, large (27h shl 16) or 224, offset aB@b@vrvsvVfvd, ds ;	"Å@Å@ÇrÇsÇ`ÇfÇd"
-		call	_graph_putsa_fx c,  48, large (27h shl 16) or 256, offset aVavnvmvtvrb@vo, ds ; "ÇaÇnÇmÇtÇrÅ@ÇoÇèÇâÇéÇî"
-		call	_graph_putsa_fx c, 160, large (2Ah shl 16) or 288, offset aVgvivfb@vyb@vj, ds ; "ÇgÇâÇîÅ@ÇyÅ@ÇjÇÖÇô"
+		call	_graph_putsa_fx c,  48, large ((7  or FX_WEIGHT_BOLD) shl 16) or 112, offset aB@b@vavnvmvtvr, ds ; "Å@Å@ÇaÇnÇmÇtÇr"
+		call	_graph_putsa_fx c,  48, large ((7  or FX_WEIGHT_BOLD) shl 16) or 128, offset aB@vsvivnveb@, ds ; "   Å@ÇsÇâÇçÇÖÅ@"
+		call	_graph_putsa_fx c,  48, large ((7  or FX_WEIGHT_BOLD) shl 16) or 160, offset aVbvpvovfvivovx, ds ; "ÇbÇèÇéÇîÇâÇéÇïÇèÇïÇì"
+		call	_graph_putsa_fx c,  48, large ((7  or FX_WEIGHT_BOLD) shl 16) or 192, offset aVavpvnvvbxvovm, ds ; "ÇaÇèÇçÇÇÅïÇoÇåÇÅÇôÇÖÇí"
+		call	_graph_putsa_fx c,  48, large ((7  or FX_WEIGHT_BOLD) shl 16) or 224, offset aB@b@vrvsvVfvd, ds ;	"Å@Å@ÇrÇsÇ`ÇfÇd"
+		call	_graph_putsa_fx c,  48, large ((7  or FX_WEIGHT_BOLD) shl 16) or 256, offset aVavnvmvtvrb@vo, ds ; "ÇaÇnÇmÇtÇrÅ@ÇoÇèÇâÇéÇî"
+		call	_graph_putsa_fx c, 160, large ((10 or FX_WEIGHT_BOLD) shl 16) or 288, offset aVgvivfb@vyb@vj, ds ; "ÇgÇâÇîÅ@ÇyÅ@ÇjÇÖÇô"
 		mov	ax, word_39DAC
 		imul	ax, 3
 		mov	si, ax
@@ -5931,7 +5932,7 @@ loc_1321E:
 		push	si
 		call	sub_1307D
 		pushd	[bp+var_8]
-		push	(27h shl 16) or 128
+		push	((7 or FX_WEIGHT_BOLD) shl 16) or 128
 		push	256
 		call	_graph_putsa_fx
 		add	sp, 0Ah
@@ -5959,7 +5960,7 @@ loc_13285:
 		push	si
 		call	sub_1307D
 		pushd	[bp+var_8]
-		push	(27h shl 16) or 160
+		push	((7 or FX_WEIGHT_BOLD) shl 16) or 160
 		push	256
 		call	_graph_putsa_fx
 		add	sp, 0Ah
@@ -5991,7 +5992,7 @@ loc_132D0:
 		push	si
 		call	sub_1307D
 		pushd	[bp+var_8]
-		push	(27h shl 16) or 192
+		push	((7 or FX_WEIGHT_BOLD) shl 16) or 192
 		push	256
 		call	_graph_putsa_fx
 		add	sp, 0Ah
@@ -6020,7 +6021,7 @@ loc_13313:
 		push	si
 		call	sub_1307D
 		pushd	[bp+var_8]
-		push	(27h shl 16) or 224
+		push	((7 or FX_WEIGHT_BOLD) shl 16) or 224
 		push	256
 		call	_graph_putsa_fx
 		add	sp, 0Ah
@@ -6114,7 +6115,7 @@ loc_13313:
 		call	sub_13033
 		add	sp, 6
 		pushd	[bp+var_8]
-		push	(27h shl 16) or 256
+		push	((7 or FX_WEIGHT_BOLD) shl 16) or 256
 		push	240
 		call	_graph_putsa_fx
 		add	sp, 0Ah
@@ -7984,7 +7985,7 @@ loc_19124:
 		shl	ax, 2
 		mov	bx, ax
 		pushd	aRANKS[bx]
-		push	(27h shl 16) or 48
+		push	((7 or FX_WEIGHT_BOLD) shl 16) or 48
 		mov	al, _rank
 		cbw
 		shl	ax, 2
@@ -8011,7 +8012,7 @@ loc_19124:
 		push	ss
 		lea	ax, [bp+@@str]
 		push	ax
-		push	(27h shl 16) or 32
+		push	((7 or FX_WEIGHT_BOLD) shl 16) or 32
 		push	608
 		call	_graph_putsa_fx
 		add	sp, 0Ah
@@ -8023,7 +8024,7 @@ loc_19124:
 		shl	ax, 2
 		mov	bx, ax
 		pushd	aRANKS[bx]
-		push	(27h shl 16) or 48
+		push	((7 or FX_WEIGHT_BOLD) shl 16) or 48
 		mov	al, _rank
 		cbw
 		shl	ax, 2
@@ -8042,7 +8043,7 @@ loc_19124:
 		push	ss
 		lea	ax, [bp+@@str]
 		push	ax
-		push	(27h shl 16) or 32
+		push	((7 or FX_WEIGHT_BOLD) shl 16) or 32
 		push	608
 		call	_graph_putsa_fx
 		add	sp, 0Ah
@@ -8144,7 +8145,7 @@ loc_19287:
 		push	ss
 		lea	ax, [bp+@@str]
 		push	ax
-		push	(27h shl 16) or 0
+		push	((7 or FX_WEIGHT_BOLD) shl 16) or 0
 		push	512
 		call	_graph_putsa_fx
 		push	0
@@ -8152,7 +8153,7 @@ loc_19287:
 		push	ss
 		lea	ax, [bp+@@str]
 		push	ax
-		push	(27h shl 16) or 0
+		push	((7 or FX_WEIGHT_BOLD) shl 16) or 0
 		push	512
 		call	_graph_putsa_fx
 		add	sp, 18h
@@ -18374,7 +18375,7 @@ loc_20167:
 		push	ss
 		lea	ax, [bp+@@str]
 		push	ax
-		push	27h
+		push	(7 or FX_WEIGHT_BOLD)
 		mov	ax, si
 		add	ax, ax
 		les	bx, off_39E88
