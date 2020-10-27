@@ -10,4 +10,9 @@ typedef enum {
 	SHOTTYPE_COUNT,
 } shottype_t;
 
+// Used way too often...
+inline playchars_t playchar_other(playchars_t playchar) {
+	return static_cast<playchars_t>(PLAYCHAR_MARISA - playchar);
+}
+
 extern playchars_t playchar;

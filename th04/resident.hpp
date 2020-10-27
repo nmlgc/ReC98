@@ -54,3 +54,5 @@ typedef struct {
 	unsigned char turbo_mode;
 	int8_t unused_5[182];
 } resident_t;
+
+extern resident_t *resident;

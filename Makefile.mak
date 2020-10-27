@@ -117,8 +117,8 @@ bin\th04\res_huma.com: th04\res_huma.cpp
 $**
 | masters.lib
 
-bin\th04\op.exe: bin\th04\op.obj th04\op_01.cpp bin\frmdely2.obj
-	$(CC) $(CFLAGS) -ml -DGAME=4 -DBINARY='O' -nbin\th04\ -eOP.EXE @&&|
+bin\th04\op.exe: bin\th04\op.obj th04\m_char.cpp bin\frmdely2.obj
+	$(CC) $(CFLAGS) -ml -DGAME=4 -DBINARY='O' -3 -Z -d -nbin\th04\ -eOP.EXE @&&|
 $**
 |
 

@@ -193,15 +193,7 @@ inline void near on_directional_input(uint8_t sel_xorval) {
 	pic_put(true);
 	playchar_menu_sel ^= sel_xorval;
 	pic_put(false);
-	vsync_reset1();
-	frame_delay(1);
-
-	graph_showpage(1);
-	graph_copy_page(0);
-	vsync_reset1();
-	frame_delay(1);
-
-	graph_showpage(0);
+	sync_pages_and_delay();
 }
 
 bool16 near playchar_menu(void)

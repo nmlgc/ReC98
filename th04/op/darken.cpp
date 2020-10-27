@@ -2,7 +2,7 @@
 // alternating dot pattern in the given [col]. [x] and [y] store the currently
 // iterated position.
 #define darken(vram_offset, x, y, w, h, col) \
-	grcg_setcolor(GC_RMW, 1); \
+	grcg_setcolor(GC_RMW, col); \
 	dots32_t pattern = 0xAAAAAAAA; \
 	\
 	y = 0; \
