@@ -129,18 +129,124 @@ inline vram_y_t shottype_title_top(shottype_t shottype) {
 // State
 // -----
 
-extern unsigned char playchar_menu_sel;
-extern unsigned char shottype_menu_sel;
+unsigned char playchar_menu_sel;
+unsigned char shottype_menu_sel;
+
+// Stores the top and left edges of the background that would be covered by
+// raising the pic of the given character. The top edge is stored first,
+// followed by the left one.
+// Actually a Planar<dots8_t>* (storing the 8 dots for all 4 planes before
+// moving to the next byte), but used like a dots8_t* everywhere.
+dots8_t *raise_bg[PLAYCHAR_COUNT];
 
 bool selectable_with[PLAYCHAR_COUNT][SHOTTYPE_COUNT];
 // -----
 
+#define raise_bg_snap_and_advance(p, plane, vo_reimu, vo_marisa) \
+	VRAM_SNAP( raise_bg[PLAYCHAR_REIMU][p], plane, vo_reimu,  8); \
+	VRAM_SNAP(raise_bg[PLAYCHAR_MARISA][p], plane, vo_marisa, 8); \
+	p++;
+
+#define raise_bg_snap_and_advance_planar(p, vo_reimu, vo_marisa) \
+	raise_bg_snap_and_advance(p, B, vo_reimu, vo_marisa); \
+	raise_bg_snap_and_advance(p, R, vo_reimu, vo_marisa); \
+	raise_bg_snap_and_advance(p, G, vo_reimu, vo_marisa); \
+	raise_bg_snap_and_advance(p, E, vo_reimu, vo_marisa); \
+
+#define raise_bg_put_and_advance_planar(vo, p) \
+	VRAM_PUT(B, vo, *(p++), 8); \
+	VRAM_PUT(R, vo, *(p++), 8); \
+	VRAM_PUT(G, vo, *(p++), 8); \
+	VRAM_PUT(E, vo, *(p++), 8);
+
 void near raise_bg_allocate_and_snap(void)
-;
+{
+	size_t raise_bg_p;
+	vram_offset_t vo_reimu_row;
+	pixel_t y;
+	vram_byte_amount_t x;
+	vram_offset_t vo_reimu;
+	vram_offset_t vo_marisa_row;
+	vram_offset_t vo_marisa;
+
+	raise_bg[PLAYCHAR_REIMU] = reinterpret_cast<dots8_t __seg *>(
+		hmem_allocbyte(RAISE_BG_SIZE)
+	);
+	raise_bg[PLAYCHAR_MARISA] = reinterpret_cast<dots8_t __seg *>(
+		hmem_allocbyte(RAISE_BG_SIZE)
+	);
+
+	vo_reimu_row  = raise(vram_offset_shift(REIMU_LEFT,  REIMU_TOP));
+	vo_marisa_row = raise(vram_offset_shift(MARISA_LEFT, MARISA_TOP));
+
+	// Top edge
+	y = 0;
+	raise_bg_p = 0;
+	while(y < RAISE_H) {
+		x = 0;
+		vo_reimu = vo_reimu_row;
+		vo_marisa = vo_marisa_row;
+		while(x < (PIC_W / BYTE_DOTS)) {
+			raise_bg_snap_and_advance_planar(raise_bg_p, vo_reimu, vo_marisa);
+			x++;
+			vo_reimu++;
+			vo_marisa++;
+		}
+		y++;
+		vo_reimu_row  += ROW_SIZE;
+		vo_marisa_row += ROW_SIZE;
+	}
+
+	// Left edge
+	y = 0;
+	while(y < PIC_H) {
+		raise_bg_snap_and_advance_planar(
+			raise_bg_p, vo_reimu_row, vo_marisa_row
+		);
+		y++;
+		vo_reimu_row  += ROW_SIZE;
+		vo_marisa_row += ROW_SIZE;
+	}
+}
+
 void near pascal raise_bg_put(playchars_t playchar_lowered)
-;
+{
+	vram_byte_amount_t x;
+	pixel_t y;
+	vram_offset_t vo_row;
+	dots8_t *playchar_bg;
+	vram_offset_t vo;
+
+	if(playchar_lowered == PLAYCHAR_REIMU) {
+		vo_row = raise(vram_offset_shift(REIMU_LEFT, REIMU_TOP));
+		playchar_bg = raise_bg[PLAYCHAR_REIMU];
+	} else {
+		vo_row = raise(vram_offset_shift(MARISA_LEFT, MARISA_TOP));
+		playchar_bg = raise_bg[PLAYCHAR_MARISA];
+	}
+
+	// Top edge
+	for(y = 0; y < RAISE_H; y++, vo_row += ROW_SIZE) {
+		x = 0;
+		vo = vo_row;
+		while(x < (PIC_W / BYTE_DOTS)) {
+			raise_bg_put_and_advance_planar(vo, playchar_bg);
+			x++;
+			vo++;
+		}
+	}
+
+	// Left edge
+	for(y = 0; y < PIC_H; y++, vo_row += ROW_SIZE) {
+		raise_bg_put_and_advance_planar(vo_row, playchar_bg);
+	}
+}
+
 void near raise_bg_free(void)
-;
+{
+	hmem_free(FP_SEG(raise_bg[PLAYCHAR_REIMU]));
+	hmem_free(FP_SEG(raise_bg[PLAYCHAR_MARISA]));
+}
 
 #include "th04/op/darken.cpp"
 
