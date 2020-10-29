@@ -19,6 +19,7 @@
 		; And yes, we can't move this to an include file for some reason.
 
 include ReC98.inc
+include th01/hardware/grppsafx.inc
 include th02/th02.inc
 
 	extern SCOPY@:proc
@@ -213,17 +214,17 @@ sub_95CB	endp
 
 sub_9643	proc near
 
-var_50		= byte ptr -50h
+@@str		= byte ptr -50h
 arg_0		= word ptr  4
 arg_2		= dword	ptr  6
 arg_6		= word ptr  0Ah
-arg_8		= word ptr  0Ch
-arg_A		= word ptr  0Eh
+@@top		= word ptr  0Ch
+@@left		= word ptr  0Eh
 
 		enter	50h, 0
 		push	si
 		push	di
-		lea	ax, [bp+var_50]
+		lea	ax, [bp+@@str]
 		push	ss
 		push	ax
 		push	ds
@@ -240,22 +241,22 @@ loc_9660:
 		les	bx, [bp+arg_2]
 		add	bx, si
 		mov	al, es:[bx]
-		mov	[bp+si+var_50],	al
+		mov	[bp+si+@@str], al
 		inc	si
 		mov	bx, word ptr [bp+arg_2]
 		add	bx, si
 		mov	al, es:[bx]
-		mov	[bp+si+var_50],	al
+		mov	[bp+si+@@str], al
 		inc	si
-		mov	[bp+si+var_50],	0
+		mov	[bp+si+@@str], 0
 		push	ss
-		lea	ax, [bp+var_50]
+		lea	ax, [bp+@@str]
 		push	ax
-		mov	al, byte_F02A
+		mov	al, col_and_fx_F02A
 		cbw
 		push	ax
-		push	[bp+arg_8]
-		push	[bp+arg_A]
+		push	[bp+@@top]
+		push	[bp+@@left]
 		call	_graph_putsa_fx
 		add	sp, 0Ah
 		cmp	byte_F02B, 0
@@ -974,7 +975,7 @@ sub_9B64	proc near
 		call	frame_delay
 		push	0
 		call	sub_98B5
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		mov	byte_F02B, 1
 		push	90014Ch
 		push	2Ch ; ','
@@ -1030,14 +1031,14 @@ loc_9C3C:
 loc_9C54:
 		cmp	si, 5
 		jle	short loc_9C3C
-		mov	byte_F02A, 26h ; '&'
+		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 6)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		mov	si, 7
 		jmp	short loc_9C91
 ; ---------------------------------------------------------------------------
@@ -1057,14 +1058,14 @@ loc_9C79:
 loc_9C91:
 		cmp	si, 9
 		jle	short loc_9C79
-		mov	byte_F02A, 26h ; '&'
+		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 10)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
@@ -1107,7 +1108,7 @@ loc_9D10:
 		push	offset end_buf + (END_LINE_LEN * 13)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 26h ; '&'
+		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
 		mov	si, 0Eh
 		jmp	short loc_9D48
 ; ---------------------------------------------------------------------------
@@ -1127,7 +1128,7 @@ loc_9D30:
 loc_9D48:
 		cmp	si, 0Fh
 		jle	short loc_9D30
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		mov	si, 10h
 		jmp	short loc_9D6F
 ; ---------------------------------------------------------------------------
@@ -1147,7 +1148,7 @@ loc_9D57:
 loc_9D6F:
 		cmp	si, 11h
 		jle	short loc_9D57
-		mov	byte_F02A, 26h ; '&'
+		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
 		mov	si, 12h
 		jmp	short loc_9D96
 ; ---------------------------------------------------------------------------
@@ -1167,21 +1168,21 @@ loc_9D7E:
 loc_9D96:
 		cmp	si, 14h
 		jle	short loc_9D7E
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 21)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 26h ; '&'
+		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 22)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
@@ -1218,14 +1219,14 @@ loc_9E3B:
 		call	sub_98B5
 		push	2
 		call	palette_black_in
-		mov	byte_F02A, 26h ; '&'
+		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 24)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		mov	si, 19h
 		jmp	short loc_9E7D
 ; ---------------------------------------------------------------------------
@@ -1245,7 +1246,7 @@ loc_9E65:
 loc_9E7D:
 		cmp	si, 1Ah
 		jle	short loc_9E65
-		mov	byte_F02A, 26h ; '&'
+		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.shottype], 0
 		jnz	loc_9F22
@@ -1268,7 +1269,7 @@ loc_9E99:
 loc_9EB1:
 		cmp	si, 1Ch
 		jle	short loc_9E99
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		mov	si, 1Dh
 		jmp	short loc_9ED8
 ; ---------------------------------------------------------------------------
@@ -1290,14 +1291,14 @@ loc_9ED8:
 		jle	short loc_9EC0
 		push	1
 		call	sub_98B5
-		mov	byte_F02A, 26h ; '&'
+		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 31)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
@@ -1322,21 +1323,21 @@ loc_9F22:
 		push	offset end_buf + (END_LINE_LEN * 34)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 35)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 26h ; '&'
+		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 36)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		mov	si, 25h	; '%'
 		jmp	short loc_9F8E
 ; ---------------------------------------------------------------------------
@@ -1356,14 +1357,14 @@ loc_9F76:
 loc_9F8E:
 		cmp	si, 26h	; '&'
 		jle	short loc_9F76
-		mov	byte_F02A, 26h ; '&'
+		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 39)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
@@ -1388,14 +1389,14 @@ loc_9FD3:
 		push	offset end_buf + (END_LINE_LEN * 42)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 43)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 26h ; '&'
+		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
 		mov	si, 2Ch	; ','
 		jmp	short loc_A029
 ; ---------------------------------------------------------------------------
@@ -1415,7 +1416,7 @@ loc_A011:
 loc_A029:
 		cmp	si, 2Dh	; '-'
 		jle	short loc_A011
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		mov	si, 2Eh	; '.'
 		jmp	short loc_A050
 ; ---------------------------------------------------------------------------
@@ -1435,14 +1436,14 @@ loc_A038:
 loc_A050:
 		cmp	si, 2Fh	; '/'
 		jle	short loc_A038
-		mov	byte_F02A, 26h ; '&'
+		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 48)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
@@ -1495,7 +1496,7 @@ sub_A09D	proc near
 		call	frame_delay
 		push	0
 		call	sub_98B5
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		mov	byte_F02B, 1
 		push	90014Ch
 		push	2Ch ; ','
@@ -1603,7 +1604,7 @@ loc_A212:
 		push	offset aEd03a_rgb ; "ed03a.rgb"
 		call	palette_entry_rgb
 		call	far ptr	palette_show
-		mov	byte_F02A, 29h ; ')'
+		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		mov	si, 0Eh
 		jmp	short loc_A247
 ; ---------------------------------------------------------------------------
@@ -1636,21 +1637,21 @@ loc_A247:
 		call	sub_98B5
 		push	2
 		call	palette_black_in
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 16)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 29h ; ')'
+		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 17)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		mov	si, 12h
 		jmp	short loc_A2EA
 ; ---------------------------------------------------------------------------
@@ -1672,7 +1673,7 @@ loc_A2EA:
 		jle	short loc_A2D2
 		push	1
 		call	sub_98B5
-		mov	byte_F02A, 29h ; ')'
+		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		mov	si, 14h
 		jmp	short loc_A316
 ; ---------------------------------------------------------------------------
@@ -1692,14 +1693,14 @@ loc_A2FE:
 loc_A316:
 		cmp	si, 15h
 		jle	short loc_A2FE
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 22)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 29h ; ')'
+		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		mov	si, 17h
 		jmp	short loc_A353
 ; ---------------------------------------------------------------------------
@@ -1719,14 +1720,14 @@ loc_A33B:
 loc_A353:
 		cmp	si, 18h
 		jle	short loc_A33B
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 25)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 29h ; ')'
+		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
@@ -1748,7 +1749,7 @@ loc_A353:
 		call	frame_delay
 		push	2
 		call	sub_98B5
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
@@ -1763,7 +1764,7 @@ loc_A353:
 		push	offset end_buf + (END_LINE_LEN * 29)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 29h ; ')'
+		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		mov	si, 1Eh
 		jmp	short loc_A403
 ; ---------------------------------------------------------------------------
@@ -1783,7 +1784,7 @@ loc_A3EB:
 loc_A403:
 		cmp	si, 1Fh
 		jle	short loc_A3EB
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		mov	si, 20h	; ' '
 		jmp	short loc_A42A
 ; ---------------------------------------------------------------------------
@@ -1803,7 +1804,7 @@ loc_A412:
 loc_A42A:
 		cmp	si, 24h	; '$'
 		jle	short loc_A412
-		mov	byte_F02A, 29h ; ')'
+		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		mov	si, 25h	; '%'
 		jmp	short loc_A451
 ; ---------------------------------------------------------------------------
@@ -1823,7 +1824,7 @@ loc_A439:
 loc_A451:
 		cmp	si, 26h	; '&'
 		jle	short loc_A439
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
@@ -1885,14 +1886,14 @@ loc_A4EC:
 		push	offset end_buf + (END_LINE_LEN * 49)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 50)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 29h ; ')'
+		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
@@ -1903,7 +1904,7 @@ loc_A4EC:
 		call	frame_delay
 		push	2
 		call	sub_98B5
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
@@ -1918,35 +1919,35 @@ loc_A4EC:
 		push	offset end_buf + (END_LINE_LEN * 53)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 29h ; ')'
+		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 54)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 55)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 29h ; ')'
+		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 56)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 57)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 29h ; ')'
+		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		mov	si, 3Ah	; ':'
 		jmp	short loc_A5F9
 ; ---------------------------------------------------------------------------
@@ -1966,7 +1967,7 @@ loc_A5E1:
 loc_A5F9:
 		cmp	si, 3Dh	; '='
 		jle	short loc_A5E1
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		mov	si, 3Eh	; '>'
 		jmp	short loc_A620
 ; ---------------------------------------------------------------------------
@@ -2038,14 +2039,14 @@ loc_A6B6:
 		push	offset end_buf + (END_LINE_LEN * 71)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 72)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 29h ; ')'
+		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
@@ -2056,7 +2057,7 @@ loc_A6B6:
 		call	frame_delay
 		push	2
 		call	sub_98B5
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
@@ -2071,56 +2072,56 @@ loc_A6B6:
 		push	offset end_buf + (END_LINE_LEN * 75)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 29h ; ')'
+		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 76)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 77)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 29h ; ')'
+		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 78)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 79)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 29h ; ')'
+		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 80)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 81)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 29h ; ')'
+		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 82)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
@@ -2292,12 +2293,7 @@ loc_A90C:
 loc_A920:
 		cmp	si, 37h	; '7'
 		jl	short loc_A90C
-		push	ds
-		push	offset aVer1_00	; "ver 1.00"
-		push	2F00C0h
-		push	210h
-		call	_graph_putsa_fx
-		add	sp, 0Ah
+		call	_graph_putsa_fx c, 528, ((15 or FX_WEIGHT_BOLD) shl 16) or 192, offset aVer1_00, ds	; "ver 1.00"
 		push	8
 		call	_snd_delay_until_measure
 		pop	cx
@@ -2321,10 +2317,10 @@ loc_A947:
 		call	sub_A874
 		push	ds
 		push	offset aVer1_00	; "ver 1.00"
-		push	2Fh ; '/'
+		push	(15 or FX_WEIGHT_BOLD)
 		lea	ax, [si+8]
 		push	ax
-		push	210h
+		push	528
 		call	_graph_putsa_fx
 		add	sp, 0Ah
 		push	1
@@ -2337,7 +2333,7 @@ loc_A992:
 		push	9
 		call	_snd_delay_until_measure
 		pop	cx
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	1B000C0h
 		push	14h
 		push	ds
@@ -2359,12 +2355,7 @@ loc_A992:
 		push	29h ; ')'
 		call	rotrect
 		call	sub_A8A4
-		push	ds
-		push	offset aGvgngogigab@b@ ; "プログラム　　　ＺＵＮ"
-		push	2F00C0h
-		push	1A0h
-		call	_graph_putsa_fx
-		add	sp, 0Ah
+		call	_graph_putsa_fx c, 416, ((15 or FX_WEIGHT_BOLD) shl 16) or 192, offset aGvgngogigab@b@, ds	; "プログラム　　　ＺＵＮ"
 		push	11h
 		call	_snd_delay_until_measure
 		pop	cx
@@ -2399,24 +2390,9 @@ loc_A992:
 		call	_snd_delay_until_measure
 		pop	cx
 		call	sub_A8A4
-		push	ds
-		push	offset aGogigtgbgbgnb@ ; "グラフィック　ＺＵＮ"
-		push	2F00C0h
-		push	1A0h
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-		push	ds
-		push	offset aB@b@b@b@b@b@b@ ; "　　　　　　　高附日向"
-		push	2F00E0h
-		push	1A0h
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-		push	ds
-		push	offset aB@b@b@b@bigibG ; "　　　　（オールクリア画）"
-		push	2F00F0h
-		push	1A0h
-		call	_graph_putsa_fx
-		add	sp, 0Ah
+		call	_graph_putsa_fx c, 416, ((15 or FX_WEIGHT_BOLD) shl 16) or 192, offset aGogigtgbgbgnb@, ds	; "グラフィック　ＺＵＮ"
+		call	_graph_putsa_fx c, 416, ((15 or FX_WEIGHT_BOLD) shl 16) or 224, offset aB@b@b@b@b@b@b@, ds	; "　　　　　　　高附日向"
+		call	_graph_putsa_fx c, 416, ((15 or FX_WEIGHT_BOLD) shl 16) or 240, offset aB@b@b@b@bigibG, ds	; "　　　　（オールクリア画）"
 		push	ds
 		push	offset aEd07a_rgb ; "ed07a.rgb"
 		call	palette_entry_rgb
@@ -2450,12 +2426,7 @@ loc_A992:
 		call	_snd_delay_until_measure
 		pop	cx
 		call	sub_A8A4
-		push	ds
-		push	offset aVlvtvrvhvbb@b@ ; "ＭＵＳＩＣ　　ＺＵＮ"
-		push	2F00C0h
-		push	1B0h
-		call	_graph_putsa_fx
-		add	sp, 0Ah
+		call	_graph_putsa_fx c, 432, ((15 or FX_WEIGHT_BOLD) shl 16) or 192, offset aVlvtvrvhvbb@b@, ds	; "ＭＵＳＩＣ　　ＺＵＮ"
 		push	ds
 		push	offset aEd07b_rgb ; "ed07b.rgb"
 		call	palette_entry_rgb
@@ -2493,36 +2464,11 @@ loc_A992:
 		call	_snd_delay_until_measure
 		pop	cx
 		call	sub_A8A4
-		push	ds
-		push	offset aVsvdvrvsb@vovk ; "ＴＥＳＴ　ＰＬＡＹＥＲ"
-		push	2F00C0h
-		push	1A0h
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-		push	ds
-		push	offset aB@b@b@b@vivivs ; "　　　　かおる"
-		push	2F00E0h
-		push	1A0h
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-		push	ds
-		push	offset aB@b@b@b@vbbVv ;	"　　　　Ｃ－Ｗ"
-		push	2F00F8h
-		push	1A0h
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-		push	ds
-		push	offset aB@b@Orucb@mbiS ; "　　 山田　恵一郎"
-		push	2F0110h
-		push	1A0h
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-		push	ds
-		push	offset aVVSSxrivVVVV ; " その他大勢のみなさん"
-		push	2F0128h
-		push	1A0h
-		call	_graph_putsa_fx
-		add	sp, 0Ah
+		call	_graph_putsa_fx c, 416, ((15 or FX_WEIGHT_BOLD) shl 16) or 192, offset aVsvdvrvsb@vovk, ds	; "ＴＥＳＴ　ＰＬＡＹＥＲ"
+		call	_graph_putsa_fx c, 416, ((15 or FX_WEIGHT_BOLD) shl 16) or 224, offset aB@b@b@b@vivivs, ds	; "　　　　かおる"
+		call	_graph_putsa_fx c, 416, ((15 or FX_WEIGHT_BOLD) shl 16) or 248, offset aB@b@b@b@vbbVv, ds	;	"　　　　Ｃ－Ｗ"
+		call	_graph_putsa_fx c, 416, ((15 or FX_WEIGHT_BOLD) shl 16) or 272, offset aB@b@Orucb@mbiS, ds	; "　　 山田　恵一郎"
+		call	_graph_putsa_fx c, 416, ((15 or FX_WEIGHT_BOLD) shl 16) or 296, offset aVVSSxrivVVVV, ds	; " その他大勢のみなさん"
 		push	ds
 		push	offset aEd08b_rgb ; "ed08b.rgb"
 		call	palette_entry_rgb
@@ -2561,10 +2507,10 @@ loc_A992:
 		graph_accesspage 1
 		push	ds
 		push	offset aVsvivbvovlb@vs
-		mov	al, byte_F02A
+		mov	al, col_and_fx_F02A
 		cbw
 		push	ax
-		push	600018h
+		push	(96 shl 16) or 24
 		call	_graph_putsa_fx
 		add	sp, 0Ah
 		push	150060h
@@ -2576,10 +2522,10 @@ loc_A992:
 		graph_accesspage 1
 		push	ds
 		push	offset aB@nPiuU_ ; "　最終得点"
-		mov	al, byte_F02A
+		mov	al, col_and_fx_F02A
 		cbw
 		push	ax
-		push	800040h
+		push	(128 shl 16) or 64
 		call	_graph_putsa_fx
 		add	sp, 0Ah
 		push	0C00080h
@@ -2594,10 +2540,10 @@ loc_A992:
 		graph_accesspage 1
 		push	ds
 		push	offset aGrgugegbgjgeb ;	"コンティニュー"
-		mov	al, byte_F02A
+		mov	al, col_and_fx_F02A
 		cbw
 		push	ax
-		push	0A00040h
+		push	(160 shl 16) or 64
 		call	_graph_putsa_fx
 		add	sp, 0Ah
 		push	(256 shl 16) or 160
@@ -2616,10 +2562,10 @@ loc_A992:
 		graph_accesspage 1
 		push	ds
 		push	offset aB@Gigugn ; "　 ランク"
-		mov	al, byte_F02A
+		mov	al, col_and_fx_F02A
 		cbw
 		push	ax
-		push	0C00040h
+		push	(192 shl 16) or 64
 		call	_graph_putsa_fx
 		add	sp, 0Ah
 		push	(208 shl 16) or 192
@@ -2641,10 +2587,10 @@ loc_A992:
 		graph_accesspage 1
 		push	ds
 		push	offset aGvgmgcgdbPik ; "プレイヤー初期"
-		mov	al, byte_F02A
+		mov	al, col_and_fx_F02A
 		cbw
 		push	ax
-		push	0E00040h
+		push	(224 shl 16) or 64
 		call	_graph_putsa_fx
 		add	sp, 0Ah
 		push	(256 shl 16) or 224
@@ -2664,10 +2610,10 @@ loc_A992:
 		graph_accesspage 1
 		push	ds
 		push	offset aCMvpik	; " 霊撃初期数"
-		mov	al, byte_F02A
+		mov	al, col_and_fx_F02A
 		cbw
 		push	ax
-		push	1000040h
+		push	(256 shl 16) or 64
 		call	_graph_putsa_fx
 		add	sp, 0Ah
 		push	(256 shl 16) or 256
@@ -2701,10 +2647,10 @@ loc_AEAC:
 loc_AEB2:
 		push	ds
 		push	offset aVavVVSrso ; "あなたの腕前"
-		mov	al, byte_F02A
+		mov	al, col_and_fx_F02A
 		cbw
 		push	ax
-		push	1200040h
+		push	(288 shl 16) or 64
 		call	_graph_putsa_fx
 		add	sp, 0Ah
 		push	di
@@ -2804,10 +2750,10 @@ loc_AF56:
 		add	ax, offset end_buf
 		push	ds
 		push	ax
-		mov	al, byte_F02A
+		mov	al, col_and_fx_F02A
 		cbw
 		push	ax
-		push	12000F0h
+		push	(288 shl 16) or 240
 		call	_graph_putsa_fx
 		add	sp, 0Ah
 		push	60120h
@@ -2825,10 +2771,10 @@ loc_AF56:
 		graph_accesspage 1
 		push	ds
 		push	offset aVpvxvxvvb@vyvt ; "１９９７　ＺＵＮ  (Amusement Makers)"
-		mov	al, byte_F02A
+		mov	al, col_and_fx_F02A
 		cbw
 		push	ax
-		push	1600040h
+		push	(352 shl 16) or 64
 		call	_graph_putsa_fx
 		add	sp, 0Ah
 		push	120160h
@@ -3155,7 +3101,7 @@ extern _rank:byte
 	.data?
 
 end_buf	db 100 dup(END_LINE_LEN dup(?))
-byte_F02A	db ?
+col_and_fx_F02A	db ?
 byte_F02B	db ?
 include libs/master.lib/clip[bss].asm
 include libs/master.lib/fil[bss].asm
