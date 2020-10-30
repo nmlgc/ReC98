@@ -13,7 +13,7 @@ extern const char HGRX_MAGIC[4];
 extern char planar_stream_id;
 extern char grx_col;
 extern uint8_t* rle_streams[GRX_COUNT];
-// Actually a planar8_t*, but used like a dots8_t* everywhere.
+// Actually a Planar<dots8_t*>, but used like a dots8_t* everywhere.
 extern dots8_t* planar_streams[GRX_COUNT][PLANAR_STREAM_PER_GRX_COUNT];
 extern unsigned char planar_stream_count[GRX_COUNT];
 

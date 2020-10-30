@@ -36,7 +36,7 @@ void ptn_unput_8(screen_x_t left, vram_y_t top, int ptn_id)
 		mask = ptn->alpha[y];
 		graph_accesspage_func(0);
 		if(mask) {
-			planar_t(PTN_W) page1;
+			Planar<dots_t(PTN_W)> page1;
 
 			vram_erase(vram_offset, mask, PTN_W);
 
@@ -83,7 +83,7 @@ void ptn_unput_quarter_8(
 	sdots_t(PTN_QUARTER_W) mask;
 	upixel_t y;
 	PTNQuarter q;
-	planar_t(PTN_QUARTER_W) page1;
+	Planar<dots_t(PTN_QUARTER_W)> page1;
 	sdots_t(PTN_W) mask_full = 0;
 	vram_offset_t vram_offset = vram_offset_shift(left, top);
 	ptn_t *ptn = ptn_with_id_shift(ptn_id);

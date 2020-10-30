@@ -31,7 +31,7 @@ void pascal graph_copy_rect_1_to_0(
 		int p;
 		for(col = 0, p = row_p; col < (w >> 4); col++, p += 2) {
 			if(row_p >= 0) {
-				planar16_t p16;
+				Planar<dots16_t> p16;
 				graph_accesspage(1);	VRAM_SNAP_PLANAR(p16, p, 16);
 				graph_accesspage(0);	VRAM_PUT_PLANAR(p, p16, 16);
 			}

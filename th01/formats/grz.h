@@ -1,9 +1,9 @@
 /// Run-length encoded, 16-color + alpha, 640×400 image format
 /// ----------------------------------------------------------
 /// In contrast to .GRF, .GRX decouples the RLE command stream from the pixel
-/// data. This allows either multiple pixel streams (stored as planar8_t) to
-/// be used with the same RLE stream, or the RLE stream to be used on its own
-/// for a monochrome byte-aligned pattern.
+/// data. This allows either multiple pixel streams (in Planar<dots8_t*>
+/// format) to be used with the same RLE stream, or the RLE stream to be used
+/// on its own for a monochrome byte-aligned pattern.
 
 // RLE stream format
 enum grx_rle_t {

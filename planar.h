@@ -34,25 +34,11 @@ typedef enum {
 	};
 #endif
 
-typedef struct {
-	dots8_t B, R, G, E;
-} planar8_t;
-
-typedef struct {
-	dots16_t B, R, G, E;
-} planar16_t;
-
-typedef struct {
-	dots32_t B, R, G, E;
-} planar32_t;
-
 // Abstracted dot and planar types, with their width defined by a macro.
 #define dots_t_(x) dots##x##_t
 #define dots_t(x) dots_t_(x)
 #define sdots_t_(x) sdots##x##_t
 #define sdots_t(x) sdots_t_(x)
-#define planar_t_(x) planar##x##_t
-#define planar_t(x) planar_t_(x)
 
 // Since array subscripts create slightly different assembly in places, we
 // offer both variants.

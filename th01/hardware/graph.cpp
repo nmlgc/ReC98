@@ -517,7 +517,7 @@ void graph_r_line(
 	vram_y_t y_vram;
 	dots16_t pixels;
 
-	planar32_t page1;
+	Planar<dots32_t> page1;
 
 #define slope_x ((bottom - top) / (right - left))
 #define slope_y ((right - left) / (bottom - top))
