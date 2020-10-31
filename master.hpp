@@ -70,6 +70,44 @@ struct point_t {
 /// TODO: Remove the `!defined(__MASTER_H)` branches once we've gotten rid of
 /// of master.h.
 
+// EGC
+// ---
+
+#if !defined(__MASTER_H)
+#define EGC_ACTIVEPLANEREG	0x04a0
+#define EGC_READPLANEREG  	0x04a2
+#define EGC_MODE_ROP_REG  	0x04a4
+#define EGC_FGCOLORREG    	0x04a6
+#define EGC_MASKREG       	0x04a8
+#define EGC_BGCOLORREG    	0x04aa
+#define EGC_ADDRRESSREG   	0x04ac
+#define EGC_BITLENGTHREG  	0x04ae
+
+#define EGC_COMPAREREAD	0x2000
+#define EGC_WS_PATREG  	0x1000	/* WS = write source */
+#define EGC_WS_ROP     	0x0800	/* parren reg, ans of rop, cpu data */
+#define EGC_WS_CPU     	0x0000
+#define EGC_SHIFT_CPU  	0x0400	/* input to shifter */
+#define EGC_SHIFT_VRAM 	0x0000	/* cpu write, vram read */
+#define EGC_RL_MEMWRITE	0x0200	/* RL = pattern Register Load */
+#define EGC_RL_MEMREAD 	0x0100	/* ^at mem write, <-at mem read */
+#define EGC_RL_NONE    	0x0000	/* no touch */
+#endif
+
+void MASTER_RET egc_on(void);
+void MASTER_RET egc_off(void);
+void MASTER_RET egc_start(void);
+
+#if !defined(__MASTER_H)
+#define egc_selectpat() \
+	outport(EGC_READPLANEREG, 0x00ff)
+
+// TODO: Document and add helpful macros for the EGC raster ops
+#define egc_setrop(mode_rop) \
+	outport(EGC_MODE_ROP_REG, mode_rop)
+#endif
+// ---
+
 // Graphics
 // --------
 
