@@ -2741,16 +2741,10 @@ loc_BD26:
 		call	farfp_1F490
 		outw2	EGC_ACTIVEPLANEREG, 0FFF0h
 		outw2	EGC_MASKREG, 0FFFFh
-		mov	al, 7
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 4
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
+		graph_mode_change	1
+		graph_mode_egc	0
 		GRCG_OFF_VIA_MOV al
-		mov	al, 6
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
+		graph_mode_change	0
 		mov	ax, word_2034A
 		cmp	ax, word_20616
 		jnz	short loc_BD62
@@ -2843,16 +2837,10 @@ loc_BE3B:
 		mov	byte_1E501, al
 		outw2	EGC_ACTIVEPLANEREG, 0FFF0h
 		outw2	EGC_MASKREG, 0FFFFh
-		mov	al, 7
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 4
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
+		graph_mode_change	1
+		graph_mode_egc	0
 		GRCG_OFF_VIA_MOV al
-		mov	al, 6
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
+		graph_mode_change	0
 		cmp	byte_1E501, 0
 		jz	short loc_BE77
 		inc	_scroll_line

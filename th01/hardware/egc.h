@@ -1,6 +1,28 @@
 #include "defconv.h"
 #include "decomp.h"
 
+/// Enabling and disabling
+/// ----------------------
+
+#define graph_mode_change(enable_or_disable) \
+	outportb2(0x6A, (0x06 + enable_or_disable))
+
+// Requires graphics mode changing to be enabled via graph_mode_change(true).
+#define graph_mode_egc(enable_or_disable) \
+	outportb2(0x6A, (0x04 + enable_or_disable))
+
+#define graph_egc(enable_or_disable) \
+	graph_mode_change(true); \
+	graph_mode_egc(enable_or_disable); \
+	graph_mode_change(false);
+
+#define graph_egc_on() \
+	graph_egc(true);
+
+#define graph_egc_off() \
+	graph_egc(false);
+/// ----------------------
+
 // Requires the EGC to have been activated before.
 #define egc_setup_copy() \
 	OUTW2(EGC_ACTIVEPLANEREG, 0xFFF0); \

@@ -94,12 +94,7 @@ egc_start_copy	proc near
 	popf
 	pop	es
 	assume es:nothing
-	mov	al, 7
-	out	6Ah, al
-	mov	al, 5
-	out	6Ah, al
-	mov	al, 6
-	out	6Ah, al
+	graph_egc	1
 	outw	EGC_ACTIVEPLANEREG, 0FFF0h
 	outw	EGC_READPLANEREG, 0FFh
 	outw	EGC_MASKREG, 0FFFFh

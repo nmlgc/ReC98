@@ -6,6 +6,7 @@
 #include <master.h>
 #include "platform.h"
 #include "pc98.h"
+#include "th01/hardware/egc.h"
 
 #define CIRCLE_COUNT 4
 #define STAR_COUNT 50
@@ -209,16 +210,17 @@ void main(void)
 		mov  es, ax
 		test byte ptr es:0x45C, 0x40
 		jz   hw_setup_done
-		mov  al, 0x7
-		out  0x6a, al
-		mov  al, 0x20
-		out  0x6a, al
-		mov  al, 0x6
-		out  0x6a, al
-		// Activate all graphics hardware in 16-color mode
-		and  byte ptr es:0x54d, 0x7f
-hw_setup_done:
 	}
+		graph_mode_change(true); __asm {
+			mov  al, 0x20
+			out  0x6a, al
+		}
+		graph_mode_change(false);
+
+		// Activate all graphics hardware in 16-color mode
+		__asm { and  byte ptr es:0x54d, 0x7f }
+
+hw_setup_done:
 	zunsoft_init();
 	objects_setup();
 	while(1) {

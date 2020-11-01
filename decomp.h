@@ -12,6 +12,12 @@
 #define FLAGS_ZERO (_FLAGS & 0x40) /* JZ */
 // ----------------
 
+// Alternate version that doesn't spill the port number to DX
+#define outportb2(port, val) __asm { \
+	mov al, val; \
+	out port, al; \
+}
+
 // Alternate version that sets the value first
 #define OUTW2(port, val) __asm { \
 	mov ax, val; \

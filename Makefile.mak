@@ -32,7 +32,7 @@ bin\Pipeline\grzview.com: Pipeline\grzview.cpp th01\formats\grz.cpp
 	$(CC) $(CFLAGS) -Z -mt -lt -nbin\Pipeline\ $** masters.lib
 
 bin\th01\zunsoft.com: th01\zunsoft.c
-	$(CC) $(CFLAGS) -mt -lt -nbin\th01\ $** masters.lib
+	$(CC) $(CFLAGS) -mt -lt -DGAME=1 -nbin\th01\ $** masters.lib
 
 # Segment 2 (game-independent code)
 # ---------------------------------
