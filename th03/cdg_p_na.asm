@@ -6,8 +6,8 @@ include th03/formats/cdg.inc
 
 	extrn _cdg_slots:cdg_t:CDG_SLOT_COUNT
 
-SEG2	segment word public 'CODE' use16
-	assume cs:SEG2
+SHARED	segment word public 'CODE' use16
+	assume cs:SHARED
 
 public CDG_PUT_NOALPHA_8
 cdg_put_noalpha_8 proc far
@@ -66,6 +66,6 @@ cdg_put_noalpha_8 proc far
 	retf	6
 cdg_put_noalpha_8 endp
 	even
-SEG2	ends
+SHARED	ends
 
 	end

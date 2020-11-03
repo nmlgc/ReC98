@@ -2970,7 +2970,7 @@ maine_01_TEXT	ends
 
 ; ===========================================================================
 
-seg2	segment	word public 'CODE' use16
+SHARED	segment	word public 'CODE' use16
 	extern _graph_putsa_fx:proc
 	extern _key_delay:proc
 	extern _vram_planes_set:proc
@@ -2987,7 +2987,7 @@ seg2	segment	word public 'CODE' use16
 	extern _pi_put_8:proc
 	extern _snd_kaja_interrupt:proc
 	extern _snd_delay_until_measure:proc
-seg2	ends
+SHARED	ends
 
 ; ===========================================================================
 

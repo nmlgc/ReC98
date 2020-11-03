@@ -30,7 +30,7 @@ include th04/hardware/grppsafx.inc
 	extern __ctype:byte
 
 maine_01 group maine_01_TEXT, maine_01__TEXT
-g_seg2 group seg2, seg2_
+g_SHARED group SHARED, SHARED_
 
 ; ===========================================================================
 
@@ -4583,8 +4583,8 @@ maine_01__TEXT	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg2	segment	word public 'CODE' use16
-		assume cs:g_seg2
+SHARED	segment	word public 'CODE' use16
+		assume cs:g_SHARED
 		;org 0Ah
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -4594,9 +4594,9 @@ include th02/formats/pi_palette_apply.asm
 include th02/formats/pi_put.asm
 include th02/formats/pi_load.asm
 include th03/formats/pi_put_quarter.asm
-seg2	ends
+SHARED	ends
 
-seg2_	segment	word public 'CODE' use16
+SHARED_	segment	word public 'CODE' use16
 include th04/hardware/input_wait.asm
 include th04/math/vector1_at.asm
 include th04/math/vector2_at.asm
@@ -4618,7 +4618,7 @@ include th04/snd/se.asm
 include th04/bgimage.asm
 include th04/bgimage_put_rect.asm
 include th04/formats/cdg_load.asm
-seg2_	ends
+SHARED_	ends
 
 	.data
 

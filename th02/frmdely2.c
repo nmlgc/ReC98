@@ -1,4 +1,4 @@
-#pragma codeseg seg2
+#pragma codeseg SHARED
 
 #include "libs/master.lib/master.h"
 #include "th02/hardware/frmdelay.h"

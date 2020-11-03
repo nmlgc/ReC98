@@ -3,7 +3,7 @@
  * SPRITE16 display calls
  */
 
-#pragma codeseg seg2
+#pragma codeseg SHARED
 #pragma option -k-
 
 extern "C" {

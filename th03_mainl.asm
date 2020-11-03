@@ -5513,8 +5513,8 @@ mainl_01_TEXT	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg2	segment	word public 'CODE' use16
-		assume cs:seg2
+SHARED	segment	word public 'CODE' use16
+		assume cs:SHARED
 		;org 2
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -5569,7 +5569,7 @@ include th03/formats/pi_put_quarter.asm
 	extern INPUT_WAIT_FOR_CHANGE:proc
 	extern CDG_PUT_NOALPHA_8:proc
 	extern _hflip_lut_generate:proc
-seg2	ends
+SHARED	ends
 
 	.data
 

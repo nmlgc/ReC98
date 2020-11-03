@@ -1,4 +1,4 @@
-#pragma codeseg seg2
+#pragma codeseg SHARED
 #pragma option -3
 
 extern "C" {

@@ -1,4 +1,4 @@
-#pragma codeseg seg2
+#pragma codeseg SHARED
 
 extern "C" {
 #include "ReC98.h"

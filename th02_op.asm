@@ -124,8 +124,8 @@ _TEXT		ends
 op_01_TEXT	segment	byte public 'CODE' use16
 op_01_TEXT	ends
 
-seg2	segment	word public 'CODE' use16
-seg2	ends
+SHARED	segment	word public 'CODE' use16
+SHARED	ends
 
 	.data
 

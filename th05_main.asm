@@ -39,7 +39,7 @@ include th05/main/enemy/enemy.inc
 
 	.seq
 main_01 group main_TEXT, main__TEXT, main_0_TEXT, main_01_TEXT
-g_seg2 group seg2, seg2_
+g_SHARED group SHARED, SHARED_
 main_03 group main_031_TEXT, main_032_TEXT, main_033_TEXT, main_034_TEXT, main_035_TEXT
 
 ; ===========================================================================
@@ -10541,17 +10541,17 @@ main_01_TEXT	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg2	segment	word public 'CODE' use16
-		assume cs:g_seg2
+SHARED	segment	word public 'CODE' use16
+		assume cs:g_SHARED
 		;org 3
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 include th03/math/vector2.asm
 		nop
 include th03/math/vector2_between_plus.asm
-seg2	ends
+SHARED	ends
 
-seg2_	segment	word public 'CODE' use16
+SHARED_	segment	word public 'CODE' use16
 include th04/snd/pmd_res.asm
 include th02/snd/mmd_res.asm
 include th04/snd/detmodes.asm
@@ -10570,7 +10570,7 @@ include th05/hardware/input_wait.asm
 include th05/hardware/frame_delay.asm
 		db 0
 include th04/formats/cdg_load.asm
-seg2_	ends
+SHARED_	ends
 
 ; ===========================================================================
 

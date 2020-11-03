@@ -8882,8 +8882,8 @@ main_01_TEXT	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg2	segment	word public 'CODE' use16
-		assume cs:seg2
+SHARED	segment	word public 'CODE' use16
+		assume cs:SHARED
 		;org 8
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -9213,7 +9213,7 @@ sub_F0A6	endp
 		left:word, screen_top:word, sprite_offset:word, func:word
 	SPRITE16_PUT_NOCLIP procdesc pascal far \
 		left:word, screen_top:word, sprite_offset:word
-seg2	ends
+SHARED	ends
 
 ; ===========================================================================
 

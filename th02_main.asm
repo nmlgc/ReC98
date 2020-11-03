@@ -9290,7 +9290,7 @@ main_01_TEXT	ends
 
 ; ===========================================================================
 
-seg2	segment	word public 'CODE' use16
+SHARED	segment	word public 'CODE' use16
 	extern ZUN_ERROR:proc
 	extern _key_delay:proc
 	extern MPTN_LOAD:proc
@@ -9314,7 +9314,7 @@ seg2	segment	word public 'CODE' use16
 	extern _snd_se_reset:proc
 	extern _snd_se_play:proc
 	extern _snd_se_update:proc
-seg2	ends
+SHARED	ends
 
 ; ===========================================================================
 

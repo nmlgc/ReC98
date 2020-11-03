@@ -30,7 +30,7 @@ include th04/hardware/grppsafx.inc
 	extern __ctype:byte
 
 maine_01 group maine_01_TEXT, maine_01__TEXT, maine_01___TEXT
-g_seg2 group seg2, seg2_
+g_SHARED group SHARED, SHARED_
 
 ; ===========================================================================
 
@@ -7519,11 +7519,11 @@ maine_01___TEXT	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-seg2	segment	word public 'CODE' use16
-seg2	ends
+SHARED	segment	word public 'CODE' use16
+SHARED	ends
 
-seg2_	segment	word public 'CODE' use16
-		assume cs:g_seg2
+SHARED_	segment	word public 'CODE' use16
+		assume cs:g_SHARED
 		;org 0Ch
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -7555,7 +7555,7 @@ include th05/hardware/frame_delay.asm
 		db 0
 include th04/formats/cdg_load.asm
 include th04/hardware/egccopyr.asm
-seg2_	ends
+SHARED_	ends
 
 	.data
 

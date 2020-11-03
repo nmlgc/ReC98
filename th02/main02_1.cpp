@@ -3,7 +3,7 @@
  * 1st part of code segment #2 of TH02's MAIN.EXE
  */
 
-#pragma codeseg seg2
+#pragma codeseg SHARED
 #pragma option -3
 
 extern "C" {
