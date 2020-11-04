@@ -14,7 +14,7 @@
 ; Application type:  Executable	16bit
 
 		.286 ; Force the .model directive to create 16-bit default segments...
-		.model large
+		.model large _TEXT
 		.386 ; ... then switch to what we actually need.
 		; And yes, we can't move this to an include file for some reason.
 
@@ -55,6 +55,7 @@ include th01/th01.inc
 	extern _strcpy:proc
 	extern _vsprintf:proc
 
+	.seq
 fuuin_01 group fuuin_01_TEXT, fuuin_01__TEXT
 
 ; ===========================================================================
@@ -1567,35 +1568,35 @@ fuuin_04_TEXT	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-fuuin_05_TEXT	segment	byte public 'CODE' use16
+vsync_TEXT	segment	byte public 'CODE' use16
 	extern _vsync_init:proc
 	extern _vsync_exit:proc
 	extern _z_vsync_wait:proc
-fuuin_05_TEXT	ends
+vsync_TEXT	ends
 
 ; ===========================================================================
 
-fuuin_06_TEXT	segment	byte public 'CODE' use16
+ztext_TEXT	segment	byte public 'CODE' use16
 	extern _z_text_init:proc
 	extern _z_text_25line:proc
 	extern _z_text_setcursor:proc
 	extern _z_text_clear:proc
 	extern _z_text_show:proc
 	extern _z_text_print:proc
-fuuin_06_TEXT	ends
+ztext_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-fuuin_07_TEXT	segment	byte public 'CODE' use16
+initexit_TEXT	segment	byte public 'CODE' use16
 	extern _game_init:proc
 	extern _game_switch_binary:proc
-fuuin_07_TEXT	ends
+initexit_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-fuuin_08_TEXT	segment	byte public 'CODE' use16
+graph_TEXT	segment	byte public 'CODE' use16
 	extern _z_graph_exit:proc
 	extern _graph_showpage_func:proc
 	extern _graph_accesspage_func:proc
@@ -1609,14 +1610,14 @@ fuuin_08_TEXT	segment	byte public 'CODE' use16
 	extern _graph_putsa_fx:proc
 	extern _graph_move_byterect_interpage:proc
 	extern _z_respal_set:proc
-fuuin_08_TEXT	ends
+graph_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-fuuin_09_TEXT	segment	byte public 'CODE' use16
+grppffx_TEXT	segment	byte public 'CODE' use16
 	extern _graph_printf_fx:proc
-fuuin_09_TEXT	ends
+grppffx_TEXT	ends
 
 ; ===========================================================================
 
@@ -1640,7 +1641,7 @@ fuuin_12_TEXT	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-fuuin_13_TEXT	segment	byte public 'CODE' use16
+mdrv2_TEXT	segment	byte public 'CODE' use16
 	extern _mdrv2_resident:proc
 	extern _mdrv2_bgm_load:proc
 	extern _mdrv2_se_load:proc
@@ -1649,7 +1650,7 @@ fuuin_13_TEXT	segment	byte public 'CODE' use16
 	extern _mdrv2_bgm_fade_out_nonblock:proc
 	extern _mdrv2_check_board:proc
 	extern _mdrv2_se_play:proc
-fuuin_13_TEXT	ends
+mdrv2_TEXT	ends
 
 	.data
 

@@ -34,8 +34,8 @@ bin\Pipeline\grzview.com: Pipeline\grzview.cpp th01\formats\grz.cpp
 bin\th01\zunsoft.com: th01\zunsoft.c
 	$(CC) $(CFLAGS) -mt -lt -DGAME=1 -nbin\th01\ $** masters.lib
 
-# Segment 2 (game-independent code)
-# ---------------------------------
+# Shared (game-independent code)
+# ------------------------------
 bin\exit_dos.obj: th02\exit_dos.c
 	$(CC) $(CFLAGS) -ml -n$(@D) -c $**
 
@@ -44,19 +44,24 @@ bin\frmdely2.obj: th02\frmdely2.c
 
 bin\hfliplut.obj: th03\hfliplut.c
 	$(CC) $(CFLAGS) -ml -n$(@D) -c $**
-# ---------------------------------
+# ------------------------------
 
-bin\th01\op.exe: bin\piloadc.obj bin\th01\op.obj th01\op_01.cpp th01\op_02.c th01\op_03.c th01\op_04.c th01\op_05.c th01\op_06.cpp th01\op_07.cpp th01\op_08.c th01\op_09.cpp th01\op_10.c th01\op_11.c th01\op_12.cpp
+{th01}.c{bin\th01}.obj:
+	$(CC) $(CFLAGS) -ml -3 -Z -DGAME=1 -n$(@D) -c $**
+{th01}.cpp{bin\th01}.obj:
+	$(CC) $(CFLAGS) -ml -3 -Z -DGAME=1 -n$(@D) -c $**
+
+bin\th01\op.exe: bin\piloadc.obj bin\th01\op.obj th01\op_01.cpp bin\th01\frmdely.obj bin\th01\vsync.obj bin\th01\ztext.obj bin\th01\initexit.obj bin\th01\graph.obj th01\op_07.cpp bin\th01\grppffx.obj th01\op_09.cpp bin\th01\resstuff.obj bin\th01\mdrv2.obj th01\op_12.cpp
 	$(CC) $(CFLAGS) -ml -3 -Z -DGAME=1 -DBINARY='O' -nbin\th01\ -eOP.EXE @&&|
 $**
 |
 
-bin\th01\reiiden.exe: bin\piloadc.obj bin\th01\reiiden.obj th01\main_01.cpp th01\main_01_.cpp th01\main_02.c th01\main_03.c th01\main_04.c th01\main_05.c th01\main_06.cpp th01\main_07.cpp th01\main_08.cpp th01\main_09.cpp th01\grpinv32.cpp th01\main_12.c th01\main_13.cpp th01\main_13_.cpp th01\main_14.cpp th01\main_15.cpp th01\main_16.c th01\main_19.cpp th01\main_20.cpp th01\main_21.cpp th01\main_23.cpp th01\main_25.cpp th01\main_27.cpp th01\main_30.cpp th01\main_38.cpp
+bin\th01\reiiden.exe: bin\piloadc.obj bin\th01\reiiden.obj th01\main_01.cpp th01\main_01_.cpp bin\th01\frmdely.obj bin\th01\vsync.obj bin\th01\ztext.obj bin\th01\initexit.obj bin\th01\graph.obj th01\main_07.cpp th01\main_08.cpp th01\main_09.cpp th01\grpinv32.cpp bin\th01\resstuff.obj th01\main_13.cpp th01\main_13_.cpp th01\main_14.cpp th01\main_15.cpp bin\th01\mdrv2.obj th01\main_19.cpp th01\main_20.cpp th01\main_21.cpp th01\main_23.cpp th01\main_25.cpp th01\main_27.cpp th01\main_30.cpp th01\main_38.cpp
 	$(CC) $(CFLAGS) -ml -3 -Z -DGAME=1 -DBINARY='M' -nbin\th01\ -eREIIDEN.EXE @&&|
 $**
 |
 
-bin\th01\fuuin.exe: bin\piloadc.obj bin\th01\fuuin.obj th01\fuuin_01.cpp th01\fuuin_02.cpp th01\fuuin_04.cpp th01\fuuin_05.c th01\fuuin_06.c th01\fuuin_07.c th01\fuuin_08.cpp th01\fuuin_09.c th01\fuuin_10.cpp th01\fuuin_11.cpp th01\fuuin_12.cpp th01\fuuin_13.c
+bin\th01\fuuin.exe: bin\piloadc.obj bin\th01\fuuin.obj th01\fuuin_01.cpp th01\fuuin_02.cpp th01\fuuin_04.cpp bin\th01\vsync.obj bin\th01\ztext.obj bin\th01\initexit.obj bin\th01\graph.obj bin\th01\grppffx.obj th01\fuuin_10.cpp th01\fuuin_11.cpp th01\fuuin_12.cpp bin\th01\mdrv2.obj
 	$(CC) $(CFLAGS) -ml -3 -Z -DGAME=1 -DBINARY='E' -nbin\th01\ -eFUUIN.EXE @&&|
 $**
 |

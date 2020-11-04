@@ -73,6 +73,7 @@ BOMBS_MAX = 5
 	extern _toupper:proc
 	extern _vsprintf:proc
 
+	.seq
 main_01 group main_01_TEXT, main_01__TEXT, main_01___TEXT
 main_15 group main_15_TEXT, main_15__TEXT
 main_19 group main_19_TEXT, main_19__TEXT
@@ -4232,43 +4233,43 @@ main_01___TEXT	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-main_02_TEXT	segment	byte public 'CODE' use16
+frmdely_TEXT	segment	byte public 'CODE' use16
 	extern _frame_delay:proc
-main_02_TEXT	ends
+frmdely_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-main_03_TEXT	segment	byte public 'CODE' use16
+vsync_TEXT	segment	byte public 'CODE' use16
 	extern _vsync_init:proc
 	extern _vsync_exit:proc
 	extern _z_vsync_wait:proc
-main_03_TEXT	ends
+vsync_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-main_04_TEXT	segment	byte public 'CODE' use16
+ztext_TEXT	segment	byte public 'CODE' use16
 	extern _z_text_init:proc
 	extern _z_text_25line:proc
 	extern _z_text_setcursor:proc
 	extern _z_text_clear:proc
 	extern _z_text_show:proc
 	extern _z_text_print:proc
-main_04_TEXT	ends
+ztext_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-main_05_TEXT	segment	byte public 'CODE' use16
+initexit_TEXT	segment	byte public 'CODE' use16
 	extern _game_init:proc
 	extern _game_switch_binary:proc
-main_05_TEXT	ends
+initexit_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-main_06_TEXT	segment	byte public 'CODE' use16
+graph_TEXT	segment	byte public 'CODE' use16
 	extern _z_graph_init:proc
 	extern _z_graph_exit:proc
 	extern _z_graph_show:proc
@@ -4295,7 +4296,7 @@ main_06_TEXT	segment	byte public 'CODE' use16
 	extern _graph_putsa_fx:proc
 	extern _graph_move_byterect_interpage:proc
 	extern _z_respal_set:proc
-main_06_TEXT	ends
+graph_TEXT	ends
 
 ; ===========================================================================
 
@@ -4456,9 +4457,9 @@ main_11_TEXT	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-main_12_TEXT	segment	byte public 'CODE' use16
+resstuff_TEXT	segment	byte public 'CODE' use16
 	extern _resident_stuff_get:proc
-main_12_TEXT	ends
+resstuff_TEXT	ends
 
 ; ===========================================================================
 
@@ -4555,7 +4556,7 @@ main_15__TEXT	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-main_16_TEXT	segment	byte public 'CODE' use16
+mdrv2_TEXT	segment	byte public 'CODE' use16
 	extern _mdrv2_resident:proc
 	extern _mdrv2_bgm_load:proc
 	extern _mdrv2_se_load:proc
@@ -4566,7 +4567,7 @@ main_16_TEXT	segment	byte public 'CODE' use16
 	extern _mdrv2_bgm_fade_in:proc
 	extern _mdrv2_check_board:proc
 	extern _mdrv2_se_play:proc
-main_16_TEXT	ends
+mdrv2_TEXT	ends
 
 ; ===========================================================================
 

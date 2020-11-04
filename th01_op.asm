@@ -52,6 +52,7 @@ include th01/formats/cfg.inc
 	extern _toupper:proc
 	extern _vsprintf:proc
 
+	.seq
 op_01 group op_01_TEXT, op_01__TEXT
 
 ; ===========================================================================
@@ -1358,44 +1359,44 @@ op_01__TEXT	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-op_02_TEXT	segment	byte public 'CODE' use16
+frmdely_TEXT	segment	byte public 'CODE' use16
 	extern _frame_delay:proc
-op_02_TEXT	ends
+frmdely_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-op_03_TEXT	segment	byte public 'CODE' use16
+vsync_TEXT	segment	byte public 'CODE' use16
 	extern _vsync_init:proc
 	extern _vsync_exit:proc
 	extern _z_vsync_wait:proc
-op_03_TEXT	ends
+vsync_TEXT	ends
 
 ; ===========================================================================
 
-op_04_TEXT	segment	byte public 'CODE' use16
+ztext_TEXT	segment	byte public 'CODE' use16
 	extern _z_text_init:proc
 	extern _z_text_25line:proc
 	extern _z_text_setcursor:proc
 	extern _z_text_clear:proc
 	extern _z_text_show:proc
 	extern _z_text_print:proc
-op_04_TEXT	ends
+ztext_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-op_05_TEXT	segment	byte public 'CODE' use16
+initexit_TEXT	segment	byte public 'CODE' use16
 	extern _game_init:proc
 	extern _game_exit:proc
 	extern _game_switch_binary:proc
-op_05_TEXT	ends
+initexit_TEXT	ends
 
 ; ---------------------------------------------------------------------------
 ; ===========================================================================
 
 ; Segment type:	Pure code
-op_06_TEXT	segment	byte public 'CODE' use16
+graph_TEXT	segment	byte public 'CODE' use16
 	extern _z_graph_exit:proc
 	extern _graph_showpage_func:proc
 	extern _graph_accesspage_func:proc
@@ -1412,7 +1413,7 @@ op_06_TEXT	segment	byte public 'CODE' use16
 	extern _z_palette_black_out:proc
 	extern _graph_putsa_fx:proc
 	extern _z_respal_set:proc
-op_06_TEXT	ends
+graph_TEXT	ends
 
 ; ---------------------------------------------------------------------------
 ; ===========================================================================
@@ -1425,9 +1426,9 @@ op_07_TEXT	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-op_08_TEXT	segment	byte public 'CODE' use16
+grppffx_TEXT	segment	byte public 'CODE' use16
 	extern _graph_printf_fx:proc
-op_08_TEXT	ends
+grppffx_TEXT	ends
 
 ; ===========================================================================
 
@@ -1441,22 +1442,22 @@ op_09_TEXT	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-op_10_TEXT	segment	byte public 'CODE' use16
+resstuff_TEXT	segment	byte public 'CODE' use16
 	extern _resident_stuff_set:proc
 	extern _resident_free:proc
-op_10_TEXT	ends
+resstuff_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-op_11_TEXT	segment	byte public 'CODE' use16
+mdrv2_TEXT	segment	byte public 'CODE' use16
 	extern _mdrv2_resident:proc
 	extern _mdrv2_bgm_load:proc
 	extern _mdrv2_bgm_play:proc
 	extern _mdrv2_bgm_stop:proc
 	extern _mdrv2_bgm_fade_out_nonblock:proc
 	extern _mdrv2_check_board:proc
-op_11_TEXT	ends
+mdrv2_TEXT	ends
 
 ; ===========================================================================
 
