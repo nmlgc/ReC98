@@ -78,3 +78,8 @@ void vsync_callback_set(void (*vsync_callback_new)())
 	vsync_callback = vsync_callback_new;
 	vsync_callback_is_set = 1;
 }
+
+void vsync_callback_clear(void)
+{
+	vsync_callback_is_set = 0;
+}

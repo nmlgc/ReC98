@@ -4,4 +4,3 @@
  */
 
 #include "th01/hardware/vsync.c"
-#include "th01/hardware/vsyncclr.c"
