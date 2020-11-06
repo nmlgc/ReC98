@@ -766,7 +766,7 @@ void graph_putsa_fx(
 	}
 
 	grcg_setcolor_rmw(col_and_fx);
-	OUTB(0x68, 0xB); // CG ROM dot access
+	outportb(0x68, 0xB); // CG ROM dot access
 
 	while(str[0]) {
 		set_vram_ptr(vram, first_bit, x, top);
@@ -786,7 +786,7 @@ void graph_putsa_fx(
 		advance_left(x, fullwidth, spacing);
 	}
 
-	OUTB(0x68, 0xA); // CG ROM code access
+	outportb(0x68, 0xA); // CG ROM code access
 	grcg_off_func();
 }
 

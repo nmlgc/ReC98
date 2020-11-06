@@ -341,8 +341,8 @@ void graph_copy_hud_row_0_to_1_8(screen_x_t left, vram_y_t top, pixel_t w)
 		vram_offset = vram_offset_row;
 		for(x = 0; x < (w / 16); x++) {
 			#define copy_plane(plane) \
-				OUTW(0xA6, 0);	VRAM_SNAP(dots, plane, vram_offset, 16); \
-				OUTW(0xA6, 1);	VRAM_PUT(plane, vram_offset, dots, 16);
+				outport(0xA6, 0);	VRAM_SNAP(dots, plane, vram_offset, 16); \
+				outport(0xA6, 1);	VRAM_PUT(plane, vram_offset, dots, 16);
 			copy_plane(B);
 			copy_plane(R);
 			copy_plane(G);

@@ -28,8 +28,8 @@ static void interrupt vsync_intfunc(void)
 	if(vsync_callback_is_set) {
 		vsync_callback();
 	}
-	OUTB(0x00, 0x20); // End of Interrupt
-	OUTB(0x64, 0); // VSync interrupt trigger
+	outportb(0x00, 0x20); // End of Interrupt
+	outportb(0x64, 0); // VSync interrupt trigger
 }
 
 void vsync_init(void)
@@ -41,9 +41,9 @@ void vsync_init(void)
 		setvect(0x0A, vsync_intfunc);
 
 		// Disable all interrupts from 0x08 to 0x0F except for 0x0A
-		OUTB(0x02, INPB(0x02) & 0xFB);
+		outportb(0x02, inportb(0x02) & 0xFB);
 
-		OUTB(0x64, 0); // VSync interrupt trigger
+		outportb(0x64, 0); // VSync interrupt trigger
 		enable();
 	}
 }
@@ -55,7 +55,7 @@ void vsync_exit(void)
 		disable();
 
 		// Reenable all interrupts from 0x08 to 0x0F except for 0x0A
-		OUTB(0x02, INPB(0x02) | 0x04);
+		outportb(0x02, inportb(0x02) | 0x04);
 
 		setvect(0x0a, vsync_callback_old);
 		enable();
@@ -65,10 +65,10 @@ void vsync_exit(void)
 void z_vsync_wait(void)
 {
 	do {
-		_AL = INPB(0x60);
+		_AL = inportb(0x60);
 	} while((_AL & 0x20) != 0);
 	do {
-		_AL = INPB(0x60);
+		_AL = inportb(0x60);
 	} while((_AL & 0x20) == 0);
 }
 

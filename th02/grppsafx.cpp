@@ -30,7 +30,7 @@ void graph_putsa_fx(
 	register dots16_t glyph_row_tmp;
 
 	grcg_setcolor(GC_RMW, col_and_fx);
-	OUTB(0x68, 0xB); // CG ROM dot access
+	outportb(0x68, 0xB); // CG ROM dot access
 
 	while(str[0]) {
 		set_vram_ptr(vram, first_bit, left, top);
@@ -43,7 +43,7 @@ void graph_putsa_fx(
 		advance_left(left, fullwidth, spacing);
 	}
 
-	OUTB(0x68, 0xA); // CG ROM code access
+	outportb(0x68, 0xA); // CG ROM code access
 	grcg_off();
 }
 

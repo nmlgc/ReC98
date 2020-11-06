@@ -19,7 +19,7 @@
 }
 
 // Alternate version that sets the value first
-#define OUTW2(port, val) __asm { \
+#define outport2(port, val) __asm { \
 	mov ax, val; \
 	mov dx, port; \
 	out dx, ax; \

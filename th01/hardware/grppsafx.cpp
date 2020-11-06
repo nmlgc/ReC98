@@ -19,13 +19,13 @@
 		str += 1; \
 	} \
 	\
-	OUTB(0xA1, codepoint & 0xFF); \
-	OUTB(0xA3, (codepoint >> 8) - 0x20); \
+	outportb(0xA1, codepoint & 0xFF); \
+	outportb(0xA3, (codepoint >> 8) - 0x20); \
 	if(codepoint >= 0x2921 && codepoint <= 0x2B7E) { \
 		if(left <= (RES_X - GLYPH_HALF_W)) { \
 			for(line = 0; line < GLYPH_H; line++) { \
-				OUTB(0xA5, line | 0x20); \
-				glyph[line] = INPB(0xA9) << 8; \
+				outportb(0xA5, line | 0x20); \
+				glyph[line] = inportb(0xA9) << 8; \
 			} \
 			fullwidth = 0; \
 		} else { \
@@ -33,10 +33,10 @@
 		} \
 	} else if(left <= (RES_X - GLYPH_FULL_W)) { \
 		for(line = 0; line < GLYPH_H; line++) { \
-			OUTB(0xA5, line | 0x20); \
-			glyph[line] = INPB(0xA9) << 8; \
-			OUTB(0xA5, line); \
-			glyph[line] += INPB(0xA9); \
+			outportb(0xA5, line | 0x20); \
+			glyph[line] = inportb(0xA9) << 8; \
+			outportb(0xA5, line); \
+			glyph[line] += inportb(0xA9); \
 		} \
 		fullwidth = 1; \
 	} else { \

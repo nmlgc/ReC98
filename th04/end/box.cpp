@@ -31,11 +31,11 @@ void pascal near box_1_to_0_mask(box_mask_t mask)
 	#define CHUNK_W static_cast<int>(sizeof(dots) * BYTE_DOTS)
 
 	for(screen_y_t y = BOX_TOP; y < BOX_BOTTOM; y++) {
-		OUTW2(EGC_READPLANEREG, 0x00ff);
+		outport2(EGC_READPLANEREG, 0x00ff);
 		// EGC_COMPAREREAD | EGC_WS_PATREG | EGC_RL_MEMREAD
-		OUTW2(EGC_MODE_ROP_REG, 0x3100);
-		OUTW2(EGC_BITLENGTHREG, 0xF);
-		OUTW(EGC_MASKREG, BOX_MASKS[mask][y & 3]);
+		outport2(EGC_MODE_ROP_REG, 0x3100);
+		outport2(EGC_BITLENGTHREG, 0xF);
+		outport(EGC_MASKREG, BOX_MASKS[mask][y & 3]);
 
 		vram_offset_t vram_offset = vram_offset_shift(BOX_LEFT, y);
 		pixel_t x = 0;

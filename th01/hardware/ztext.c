@@ -84,20 +84,20 @@ void z_text_hide(void)
 void z_text_setcursor(z_text_cursor_t type)
 {
 	_BX = *(char*)MK_FP(0, 0x53B);
-	OUTB(0x62, 0x4B); // CSRFORM
-	OUTB(0x60, _BL | 0x80);
+	outportb(0x62, 0x4B); // CSRFORM
+	outportb(0x60, _BL | 0x80);
 	switch(type) {
 		case CURSOR_HIDE:
-			OUTB(0x60, 0x9F);
+			outportb(0x60, 0x9F);
 			break;
 		case CURSOR_BLOCK:
-			OUTB(0x60, 0x80);
+			outportb(0x60, 0x80);
 			break;
 		case CURSOR_UNDERLINE:
-			OUTB(0x60, _BL + 0x7D);
+			outportb(0x60, _BL + 0x7D);
 			break;
 	}
-	OUTB(0x60, (_BL << 3) + 2);
+	outportb(0x60, (_BL << 3) + 2);
 }
 
 void z_text_locate(char x, char y)
@@ -196,5 +196,5 @@ void z_text_print(const char *str)
 		regs.h.dl = *(str++);
 		int86(0xDC, &regs, &regs);
 	}
-	OUTB(0x64, 0); // VSync interrupt trigger
+	outportb(0x64, 0); // VSync interrupt trigger
 }
