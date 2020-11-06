@@ -7554,7 +7554,7 @@ include th05/snd/delaymea.asm
 include th05/hardware/frame_delay.asm
 		db 0
 include th04/formats/cdg_load.asm
-include th04/hardware/egccopyr.asm
+	extern EGC_COPY_RECT_1_TO_0_16:proc
 SHARED_	ends
 
 	.data
@@ -7887,7 +7887,7 @@ include th05/formats/pi_headers[bss].asm
 include th04/hardware/input[bss].asm
 include th04/formats/cdg[bss].asm
 include libs/master.lib/pfint21[bss].asm
-include th04/hardware/egccopyr[bss].asm
+include th04/hardware/egcrect[bss].asm
 include th04/end/cutscene_script[bss].asm
 		db 4 dup(?)
 byte_14F8E	db ?

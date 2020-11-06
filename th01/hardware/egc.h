@@ -32,10 +32,13 @@
 	outport2(EGC_ADDRRESSREG, 0);  \
 	outport2(EGC_BITLENGTHREG, 0xF);
 
-// Blits the rectangle from (⌊x/16⌋*16, y) to (⌈((x + w)/16)*16⌉, (y + h))
+// Blits the rectangle from
+// 	(⌊left/16⌋*16, top)
+// to
+// 	(⌈((left + w)/16)*16⌉, (top + h))
 // from VRAM page 1 to the same position on VRAM page 0.
 void DEFCONV egc_copy_rect_1_to_0_16(
-	screen_x_t x, vram_y_t y, pixel_t w, pixel_t h
+	screen_x_t left, vram_y_t top, pixel_t w, pixel_t h
 );
 
 // Blits [h] rows starting at [top] from VRAM page 1 to the same position on

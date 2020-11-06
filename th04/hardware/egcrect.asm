@@ -1,3 +1,4 @@
+; (TH04 version only, until that one gets linked in)
 public EGC_COPY_RECT_1_TO_0_16
 egc_copy_rect_1_to_0_16	proc far
 
@@ -12,9 +13,7 @@ egc_copy_rect_1_to_0_16	proc far
 	push	bp
 	mov	bp, sp
 	push	di
-if GAME eq 4
 	cld
-endif
 	call	egc_start_copy
 	outw	EGC_MODE_ROP_REG, EGC_COMPAREREAD or EGC_WS_ROP or EGC_RL_MEMREAD or 0F0h
 	mov	ax, @@x
@@ -36,7 +35,7 @@ endif
 	inc	ax
 
 @@x_on_word_boundary:
-	mov	_egccopyr_width_words, ax
+	mov	_egcrect_w, ax
 	mov	cx, (ROW_SIZE / 2)
 	sub	cx, ax
 	shl	cx, 1
@@ -47,29 +46,16 @@ endif
 	assume es:nothing
 
 @@next_row:
-	mov	cx, _egccopyr_width_words
+	mov	cx, _egcrect_w
 
 @@next_word:
-if GAME eq 5
-	or	di, di
-	js	short @@skip
-	cmp	di, PLANE_SIZE
-	jnb	short @@skip
-endif
 	mov	al, 1
 	out	0A6h, al
 	mov	dx, es:[di]
 	xor	ax, ax
 	out	0A6h, al
-if GAME eq 5
-	mov	es:[di], dx
-
-@@skip:
-	add	di, 2
-else
 	mov	ax, dx
 	stosw
-endif
 	loop	@@next_word
 	add	di, @@stride
 	dec	@@row
@@ -104,3 +90,4 @@ egc_start_copy	proc near
 	outw	EGC_BITLENGTHREG, 0Fh
 	retn
 egc_start_copy	endp
+	even

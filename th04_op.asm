@@ -2664,8 +2664,7 @@ include th02/initop.asm
 include th04/formats/cdg_put_noalpha.asm
 include th04/hardware/input_sense.asm
 include th04/snd/se.asm
-include th04/hardware/egccopyr.asm
-		even
+include th04/hardware/egcrect.asm
 include th04/bgimage.asm
 include th04/bgimage_put_rect.asm
 include th04/formats/cdg_load.asm
@@ -2933,7 +2932,7 @@ include libs/master.lib/bgm[bss].asm
 include th02/snd/load[bss].asm
 include th04/mem[bss].asm
 include th04/hardware/input[bss].asm
-include th04/hardware/egccopyr[bss].asm
+include th04/hardware/egcrect[bss].asm
 include th04/formats/cdg[bss].asm
 include th04/setup[bss].asm
 include th04/zunsoft[bss].asm
