@@ -114,6 +114,9 @@ bin\th03\mainl.exe: bin\th03\mainl.obj bin\th03\inp_m_w.obj bin\th03\cdg_p_na.ob
 $**
 |
 
+{th04}.cpp{bin\th04}.obj:
+	$(CC) $(CFLAGS) -ml -Z -DGAME=4 -n$(@D) -c $**
+
 bin\th04\memchk.com: bin\th04\memchk.obj
 	$(CC) $(CFLAGS) -mt -lt $**
 
@@ -137,12 +140,15 @@ bin\th04\maine.exe: bin\th04\maine.obj th04\maine011.cpp bin\hfliplut.obj
 $**
 |
 
+{th05}.cpp{bin\th05}.obj:
+	$(CC) $(CFLAGS) -ml -Z -DGAME=5 -n$(@D) -c $**
+
 bin\th05\res_kso.com: th05\res_kso.cpp
 	$(CC) $(CFLAGS) -mt -lt -Z -DGAME=5 -nbin\th05\ -eRES_KSO.COM @&&|
 $**
 | masters.lib
 
-bin\th05\op.exe: th05\op010.cpp bin\th05\op.obj th05\op011.cpp th05\m_char.cpp bin\hfliplut.obj
+bin\th05\op.exe: th05\op010.cpp bin\th05\op.obj th05\op011.cpp th05\m_char.cpp bin\th05\egcrect.obj bin\hfliplut.obj
 	$(CC) $(CFLAGS) -ml -DGAME=5 -DBINARY='O' -3 -Z -nbin\th05\ -eOP.EXE @&&|
 $**
 |
@@ -152,7 +158,7 @@ bin\th05\main.exe: bin\th05\main.obj th05\main010.cpp th05\main011.cpp th05\p_co
 $**
 |
 
-bin\th05\maine.exe: bin\th05\maine.obj th05\maine011.cpp th05\regist.cpp th05\staff.cpp bin\hfliplut.obj
+bin\th05\maine.exe: bin\th05\maine.obj th05\maine011.cpp th05\regist.cpp th05\staff.cpp bin\th05\egcrect.obj bin\hfliplut.obj
 	$(CC) $(CFLAGS) -ml -DGAME=5 -DBINARY='E' -Z -nbin\th05\ -eMAINE.EXE @&&|
 $**
 |

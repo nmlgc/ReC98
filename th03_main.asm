@@ -8925,9 +8925,9 @@ arg_4		= word ptr  0Ah
 		call	hmem_allocbyte
 		mov	bx, [bp+arg_4]
 		shl	bx, 2
-		mov	[bx+1D66h], ax
-		mov	word ptr [bx+1D64h], 0
-		pushd	dword ptr [bx+1D64h]
+		mov	word ptr (_mrs_images[bx] + 2), ax
+		mov	word ptr (_mrs_images[bx] + 0), 0
+		pushd	_mrs_images[bx]
 		push	8160h
 		call	file_read
 		call	file_close
@@ -8948,15 +8948,15 @@ arg_0		= word ptr  6
 		mov	bp, sp
 		mov	bx, [bp+arg_0]
 		shl	bx, 2
-		mov	ax, [bx+1D66h]
-		or	dx, [bx+1D64h]
+		mov	ax, word ptr (_mrs_images[bx] + 2)
+		or	dx, word ptr (_mrs_images[bx] + 0)
 		or	dx, ax
 		jz	short loc_EF41
 		push	ax
 		call	hmem_free
 		xor	ax, ax
-		mov	[bx+1D66h], ax
-		mov	[bx+1D64h], ax
+		mov	word ptr (_mrs_images[bx] + 2), ax
+		mov	word ptr (_mrs_images[bx] + 0), ax
 
 loc_EF41:
 		pop	bp
@@ -9000,7 +9000,7 @@ arg_4		= word ptr  0Ah
 		push	ds
 		mov	bx, [bp+arg_0]
 		shl	bx, 2
-		lds	si, [bx+1D64h]
+		lds	si, _mrs_images[bx]
 		mov	dx, 9
 		nop
 
@@ -9082,7 +9082,7 @@ arg_6		= word ptr  0Ch
 		add	ax, dx
 		mov	bx, [bp+arg_2]
 		shl	bx, 2
-		lds	si, [bx+1D64h]
+		lds	si, _mrs_images[bx]
 		mov	si, 4DA0h
 		add	ax, 0A800h
 		mov	fs, ax
@@ -9170,7 +9170,7 @@ loc_F0A9:
 		mov	cx, 8160h
 		mov	bx, [bp+arg_0]
 		shl	bx, 2
-		les	di, [bx+1D64h]
+		les	di, _mrs_images[bx]
 		mov	bx, offset _hflip_lut
 
 loc_F0BB:
@@ -36339,7 +36339,9 @@ include libs/master.lib/pfint21[bss].asm
 include th03/hardware/input[bss].asm
 include th02/formats/pi_slots[bss].asm
 include th03/formats/hfliplut[bss].asm
-		db 32 dup(?)
+MRS_SLOT_COUNT = 8
+public _mrs_images
+_mrs_images	dd MRS_SLOT_COUNT dup(?)
 include th03/sprite16[bss].asm
 word_1F2EC	dw ?
 word_1F2EE	dw ?
