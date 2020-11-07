@@ -5,10 +5,11 @@
 
 #pragma option -2 -Z-
 
-#include "th01/th01.h"
+#include "ReC98.h"
+#include "th01/common.h"
+#include "th01/resident.hpp"
 
 extern const char res_id[] /* = RES_ID */;
-extern resident_t *resident;
 
 void resident_stuff_set(
 	char rank, char bgm_mode, char bombs, char start_lives_extra, long rand

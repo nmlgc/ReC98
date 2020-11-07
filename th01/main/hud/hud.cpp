@@ -1,3 +1,9 @@
+#include <dos.h>
+#include <stddef.h>
+#include "master.hpp"
+#include "th01/common.h"
+#include "th01/resident.hpp"
+#include "th01/hardware/graph.h"
 #include "th01/main/vars.hpp"
 #include "th01/core/str_val.hpp"
 #include "th01/formats/ptn.hpp"

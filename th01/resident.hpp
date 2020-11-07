@@ -1,21 +1,3 @@
-/* ReC98
- * -----
- * Include file for TH01
- */
-
-#include "ReC98.h"
-
-#include "th01/common.h"
-
-// Graphics
-// --------
-#include "th01/hardware/egc.h"
-#include "th01/hardware/graph.h"
-// --------
-
-// Resident structure
-#define RES_ID "ReiidenConfig"
-
 typedef enum {
 	ROUTE_MAKAI,
 	ROUTE_JIGOKU
@@ -27,6 +9,7 @@ typedef enum {
 	MODE_DEBUG = 3
 } mode_t;
 
+#define RES_ID "ReiidenConfig"
 typedef struct {
 	char id[sizeof(RES_ID)];
 	char rank;
@@ -51,3 +34,5 @@ typedef struct {
 	long score_highest; // among all continues
 	unsigned int p_value;
 } resident_t;
+
+extern resident_t *resident;

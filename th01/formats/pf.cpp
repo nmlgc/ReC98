@@ -7,7 +7,9 @@
 extern "C" {
 
 #include <ctype.h>
-#include "th01/th01.h"
+#include <io.h>
+#include "platform.h"
+#include "master.hpp"
 #include "th01/formats/pf.hpp"
 
 #undef arc_file_get

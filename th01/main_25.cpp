@@ -4,7 +4,9 @@
  */
 
 extern "C" {
-#include "th01/th01.h"
+#include "platform.h"
+#include "pc98.h"
+#include "planar.h"
 #include "th01/hardware/grppsafx.h"
 
 #include "th01/hardware/grppfnfx.cpp"

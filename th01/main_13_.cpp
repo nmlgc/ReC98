@@ -7,8 +7,14 @@
 #pragma option -2 -O- -Z-
 
 extern "C" {
-#include "th01/th01.h"
+#include <stdlib.h>
+#include "platform.h"
+#include "pc98.h"
+#include "planar.h"
+#include "master.hpp"
 #include "th01/math/wave.hpp"
+#include "th01/hardware/egc.h"
+#include "th01/hardware/graph.h"
 #include "th01/hardware/planar.h"
 
 #include "th01/hardware/grp2xscs.cpp"

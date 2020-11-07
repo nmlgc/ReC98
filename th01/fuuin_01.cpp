@@ -7,7 +7,11 @@
 
 extern "C" {
 #include <stdio.h>
-#include "th01/th01.h"
+#include "platform.h"
+#include "ReC98.h"
+#include "master.hpp"
+#include "th01/common.h"
+#include "th01/resident.hpp"
 #include "th01/end/vars.hpp"
 
 #undef RES_ID

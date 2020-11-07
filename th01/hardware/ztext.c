@@ -6,13 +6,15 @@
 
 #pragma option -1 -Z-
 
-#include "th01/th01.h"
-#include "th01/hardware/ztext.h"
-
+#include <dos.h>
 #include <mbctype.h>
 #include <mbstring.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include "platform.h"
+#include "pc98.h"
+#include "master.hpp"
+#include "th01/hardware/ztext.h"
 
 extern char txesc_25line[];
 extern char txesc_20line[];

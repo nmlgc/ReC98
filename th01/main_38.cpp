@@ -4,9 +4,16 @@
  */
 
 extern "C" {
-#include "th01/th01.h"
+#include <dos.h>
+#include "platform.h"
+#include "pc98.h"
+#include "planar.h"
+#include "master.hpp"
+#include "th01/common.h"
+#include "th01/resident.hpp"
 #include "th01/snd/mdrv2.h"
 #include "th01/formats/ptn.hpp"
+#include "th01/hardware/graph.h"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/input.hpp"
 #include "th01/math/subpixel.hpp"

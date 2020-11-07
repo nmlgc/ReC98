@@ -6,7 +6,9 @@
 #pragma option -2 -Z-
 #pragma warn -aus
 
-#include "th01/th01.h"
+#include <dos.h>
+#include "platform.h"
+#include "pc98.h"
 #include "th01/hardware/vsync.h"
 
 extern char vsync_initialized;
