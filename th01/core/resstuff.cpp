@@ -5,7 +5,9 @@
 
 #pragma option -2 -Z-
 
-#include "ReC98.h"
+extern "C" {
+#include "platform.h"
+#include "master.hpp"
 #include "th01/common.h"
 #include "th01/resident.hpp"
 
@@ -15,15 +17,15 @@ void resident_stuff_set(
 	char rank, char bgm_mode, char bombs, char start_lives_extra, long rand
 )
 {
-	seg_t res = resdata_exist(res_id, RES_ID_STRLEN, RES_PARASIZE);
-	if(!res) {
-		res = resdata_create(res_id, RES_ID_STRLEN, RES_PARASIZE);
-		resident = MK_FP(res, 0);
+	resident_t __seg *sgm = ResData<resident_t>::exist(res_id);
+	if(!sgm) {
+		sgm = ResData<resident_t>::create(res_id);
+		resident = sgm;
 		resident->stage = 0;
 		resident->continues_total = 0;
 	}
-	if(res) {
-		resident = MK_FP(res, 0);
+	if(sgm) {
+		resident = sgm;
 		resident->rank = rank;
 		resident->bgm_mode = bgm_mode;
 		resident->bombs = bombs;
@@ -43,9 +45,9 @@ int resident_stuff_get(
 	int *stage
 )
 {
-	seg_t res = resdata_exist(res_id, RES_ID_STRLEN, RES_PARASIZE);
-	if(res) {
-		resident = MK_FP(res, 0);
+	resident_t __seg *sgm = ResData<resident_t>::exist(res_id);
+	if(sgm) {
+		resident = sgm;
 		*rank = resident->rank;
 		*bgm_mode = resident->bgm_mode;
 		*bombs = resident->bombs;
@@ -60,8 +62,10 @@ int resident_stuff_get(
 
 void resident_free(void)
 {
-	seg_t res = resdata_exist(res_id, RES_ID_STRLEN, RES_PARASIZE);
-	if(res) {
-		resdata_free(res);
+	resident_t __seg *sgm = ResData<resident_t>::exist(res_id);
+	if(sgm) {
+		resdata_free(sgm);
 	}
+}
+
 }

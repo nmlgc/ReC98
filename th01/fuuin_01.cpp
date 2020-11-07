@@ -8,25 +8,22 @@
 extern "C" {
 #include <stdio.h>
 #include "platform.h"
-#include "ReC98.h"
 #include "master.hpp"
 #include "th01/common.h"
 #include "th01/resident.hpp"
 #include "th01/end/vars.hpp"
 
 #undef RES_ID
-#undef RES_ID_STRLEN
-#define RES_ID_STRLEN (sizeof("ReiidenConfig") - 1)
 
 bool16 end_init(void)
 {
 	int i;
 	#define RES_ID RES_ID_0
 	extern const char RES_ID[];
-	seg_t sgm = resdata_exist(RES_ID, RES_ID_STRLEN, RES_PARASIZE);
+	resident_t __seg *sgm = ResData<resident_t>::exist(RES_ID);
 	#undef RES_ID
 	if(sgm) {
-		resident_t* resident = reinterpret_cast<resident_t*>(MK_FP(sgm, 0));
+		resident_t* resident = sgm;
 		if(resident->end_flag) {
 			score = resident->score;
 			continues_total = 0;
@@ -63,10 +60,10 @@ bool16 end_resident_clear(void)
 	int i;
 	#define RES_ID RES_ID_1
 	extern const char RES_ID[];
-	seg_t sgm = resdata_exist(RES_ID, RES_ID_STRLEN, RES_PARASIZE);
+	resident_t __seg *sgm = ResData<resident_t>::exist(RES_ID);
 	#undef RES_ID
 	if(sgm) {
-		resident_t* resident = reinterpret_cast<resident_t*>(MK_FP(sgm, 0));
+		resident_t* resident = sgm;
 		resident->score = 0;
 		resident->continues_total = 0;
 		resident->end_flag = 0;

@@ -366,6 +366,22 @@ void MASTER_RET palette_white_out(unsigned speed);
 #endif
 // ---
 
+// Resident data
+// -------------
+
+unsigned MASTER_RET resdata_exist(
+      const char MASTER_PTR *id, unsigned idlen, unsigned parasize
+);
+unsigned MASTER_RET resdata_create(
+      const char MASTER_PTR *id, unsigned idlen, unsigned parasize
+);
+
+#if !defined(__MASTER_H)
+#define resdata_free(seg) \
+	dos_free((seg_t)seg)
+#endif
+// -------------
+
 // Text RAM
 // --------
 
@@ -425,4 +441,25 @@ void MASTER_RET vsync_end(void);
 #define palette_entry_rgb_show(fn) \
 	palette_entry_rgb(fn); \
 	palette_show();
+
+// Type-safe resident structure allocation and retrieval
+#ifdef __cplusplus
+	template <class T> struct ResData {
+		static T __seg* create(const char MASTER_PTR *id) {
+			return reinterpret_cast<T __seg *>(resdata_create(
+				id,
+				(sizeof(reinterpret_cast<T *>(0)->id) - 1),
+				((sizeof(T) + 0xF) >> 4)
+			));
+		}
+
+		static T __seg* exist(const char MASTER_PTR *id) {
+			return reinterpret_cast<T __seg *>(resdata_exist(
+				id,
+				(sizeof(reinterpret_cast<T *>(0)->id) - 1),
+				((sizeof(T) + 0xF) >> 4)
+			));
+		}
+	};
+#endif
 /// ------------------
