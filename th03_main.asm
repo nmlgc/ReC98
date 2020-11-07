@@ -1583,10 +1583,8 @@ sub_A4A1	proc near
 
 		push	bp
 		mov	bp, sp
-		push	1
-		call	sub_F0A6
-		push	3
-		call	sub_F0A6
+		call	@mrs_hflip$qi pascal, 1
+		call	@mrs_hflip$qi pascal, 3
 		call	respal_get_palettes
 		call	far ptr	palette_show
 		nopcall	sub_A378
@@ -9152,60 +9150,7 @@ sub_EFF4	endp
 
 ; ---------------------------------------------------------------------------
 		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F0A6	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-
-loc_F0A9:
-		push	si
-		push	di
-		mov	cx, 8160h
-		mov	bx, [bp+arg_0]
-		shl	bx, 2
-		les	di, _mrs_images[bx]
-		mov	bx, offset _hflip_lut
-
-loc_F0BB:
-		mov	al, es:[di]
-		xlat
-		mov	es:[di], al
-		inc	di
-		loop	loc_F0BB
-		mov	cx, 398h
-		xor	bx, bx
-
-loc_F0CA:
-		xor	di, di
-		mov	si, 23h	; '#'
-
-loc_F0CF:
-		mov	al, es:[bx+di]
-		mov	dl, es:[bx+si]
-		mov	es:[bx+si], al
-		mov	es:[bx+di], dl
-		dec	si
-		inc	di
-		cmp	di, 11h
-		jbe	short loc_F0CF
-		add	bx, 24h	; '$'
-		loop	loc_F0CA
-		pop	di
-		pop	si
-		pop	bp
-		retf	2
-sub_F0A6	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
+	extern @MRS_HFLIP$QI:proc
 	SPRITE16_SPRITES_COMMIT procdesc pascal far
 	SPRITE16_PUT procdesc pascal far \
 		left:word, screen_top:word, sprite_offset:word
