@@ -240,6 +240,27 @@ unsigned MASTER_RET smem_wget(unsigned bytesize);
 void MASTER_RET smem_release(unsigned memseg);
 // ----
 
+// Math
+// ----
+
+extern const short SinTable8[256], CosTable8[256];
+extern long random_seed;
+
+#define Sin8(t) SinTable8[(t) & 0xff]
+#define Cos8(t) CosTable8[(t) & 0xff]
+
+int MASTER_RET iatan2(int y, int x);
+int MASTER_RET isqrt(long x);
+int MASTER_RET ihypot(int x, int y);
+
+#define irand_init(seed) \
+	(random_seed = (seed))
+int MASTER_RET irand(void);
+
+#define srand(s) irand_init(s)
+#define rand()   irand()
+// ----
+
 // Optionally buffered single-file I/O
 // -----------------------------------
 
