@@ -6,6 +6,7 @@
 #include <master.h>
 #include "platform.h"
 #include "pc98.h"
+#include "decomp.h"
 #include "th01/hardware/egc.h"
 
 #define CIRCLE_COUNT 4
