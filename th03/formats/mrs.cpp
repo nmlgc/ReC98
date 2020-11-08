@@ -1,9 +1,15 @@
+#pragma option -3
 #pragma codeseg SHARED
 
+extern "C" {
+#include <stddef.h>
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
+#include "decomp.h"
 #include "th03/formats/hfliplut.h"
+}
+
 #include "th03/formats/mrs.hpp"
 
 static const vram_byte_amount_t MRS_BYTE_W = (MRS_W / BYTE_DOTS);
@@ -21,6 +27,9 @@ struct mrs_t {
 
 extern mrs_t far *mrs_images[MRS_SLOT_COUNT];
 
+// Decompilation workarounds
+// -------------------------
+
 // Points [reg_sgm]:[reg_off] to the alpha plane of the .MRS image in the
 // given [slot].
 #define mrs_slot_assign(reg_sgm, reg_off, slot) { \
@@ -28,6 +37,102 @@ extern mrs_t far *mrs_images[MRS_SLOT_COUNT];
 	_BX <<= 2; \
 	__asm { l##reg_sgm reg_off, mrs_images[bx]; } \
 }
+
+// Single iteration across [row_dword_w] 32-dot units of a .MRS image, from
+// bottom to top. _DI is assumed to point at the bottom left target position,
+// while [body] is responsible to increment _DI by [MRS_BYTE_W].
+#define mrs_put_rows(row_dword_w, body) \
+	do { \
+		_CX = row_dword_w; \
+		body \
+		_DI -= (ROW_SIZE + MRS_BYTE_W); \
+	} while(!FLAGS_CARRY);
+
+// ZUN optimized mrs_put_noalpha_8() to blit 3 out of the 4 bitplanes within a
+// single loop. Annoyingly, he does this by first moving the source pointer to
+// the beginning of the G plane within a mrs_t instance, and then accesses the
+// earlier planes with *negative* offsets, rather than, y'know, just using
+// positive ones like a sane person.
+// These offsets are encoded as immediates within the instructions that read
+// the dot patterns. Subtracting the raw values wouldn't decompile correctly,
+// but thankfully, pointer arithmetic does, and is also a lot cleaner...
+// conceptually, at least. It also inlines perfectly, allowing us to give some
+// meaningful names to these horrifying expressions.
+struct mrs_at_G_t : public mrs_plane_t {
+	dots32_t dots_from_alpha(void) const { return *(*((this - 3)->dots)); }
+	dots32_t dots_from_B(void) const     { return *(*((this - 2)->dots)); }
+	dots32_t dots_from_R(void) const     { return *(*((this - 1)->dots)); }
+};
+
+static inline mrs_at_G_t near* mrs_at_G(void) {
+	return reinterpret_cast<mrs_at_G_t near *>(offsetof(mrs_t, planes.G));
+}
+// -------------------------
+
+inline uint16_t to_bottom_left_8(const screen_x_t &left) {
+	return ((left >> 3) + ((MRS_H - 1) * ROW_SIZE));
+}
+
+inline seg_t to_segment(const uscreen_y_t &top) {
+	_AX = (top / 2); // screen_y_t -> vram_y_t...
+	_DX = _AX;
+	return ((_AX << 2) + _DX); // ... and -> segment
+}
+
+void pascal mrs_put_noalpha_8(
+	screen_x_t left, uscreen_y_t top, int slot, bool altered_colors
+)
+{
+	#define _SI	reinterpret_cast<mrs_at_G_t near *>(_SI)
+	#define at_bottom_left	_DX // *Not* rooted at (0, 0)!
+
+	__asm { push ds; }
+	_DI = to_bottom_left_8(left);
+	_AX = to_segment(top);
+	mrs_slot_assign(ds, si, slot);
+	_SI = mrs_at_G();
+
+	// "I've spent good money on that Intel 386 CPU, so let's actually use
+	// *all* its segment registers!" :zunpet: :zunpet: :zunpet:
+	_FS = (_AX += SEG_PLANE_B);       	// = B
+	_GS = (_AX += SEG_PLANE_DIST_BRG);	// = R
+	_ES = (_AX += SEG_PLANE_DIST_BRG);	// = G
+	// At this point though, we're out of segment registers. That's why this
+	// approach of not changing destination segments within a blitting loop
+	// only works for 3 out of the 4 bitplanes, and why we need a second loop
+	// for the final one after all.
+	_BX = (_AX += SEG_PLANE_DIST_E);  	// = E
+	at_bottom_left = _DI;
+	if(altered_colors) {
+		mrs_put_rows(MRS_DWORD_W, { put_altered:
+			poked(_FS, _DI, (~_SI->dots_from_alpha() | _SI->dots_from_B()));
+			poked(_GS, _DI, _SI->dots_from_R());
+			MOVSD;
+			__asm { loop put_altered; }
+		});
+		// SI is now at the beginning of the E plane. Blit it in its own loop
+		_DI = at_bottom_left;
+		_ES = _BX;
+		mrs_put_rows(MRS_DWORD_W, REP MOVSD);
+	} else {
+		mrs_put_rows(MRS_DWORD_W, { put_regular:
+			poked(_FS, _DI, _SI->dots_from_B());
+			poked(_GS, _DI, _SI->dots_from_R());
+			MOVSD;
+			_asm { loop put_regular; }
+		});
+		// SI is now at the beginning of the E plane. Blit it in its own loop
+		_DI = at_bottom_left;
+		_ES = _BX;
+		mrs_put_rows(MRS_DWORD_W, REP MOVSD);
+	}
+	__asm { pop	ds; }
+
+	#undef at_bottom_left
+	#undef _SI
+}
+
+#pragma codestring "\x90"
 
 void pascal mrs_hflip(int slot)
 {

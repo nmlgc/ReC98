@@ -105,6 +105,10 @@ case it's part of an arithmetic expression that was promoted to `int`.
 
 ## Assignments
 
+| | |
+|-|-|
+| `MOV ???, [SI+????]` | Only achievable through pointer arithmetic? |
+
 * When assigning to a array element at a variable or non-0 index, the array
   element address is typically evaluated before the expression to be assigned.
   But when assigning
@@ -452,3 +456,12 @@ contains one of the following:
 
   **Certainty:** Confirmed through reverse-engineering `TCC.EXE`, no way
   around it.
+
+### Compiler bugs
+
+* Dereferencing a `far` pointer constructed from the `_FS` and `_GS`
+  pseudoregisters emits wrong segment prefix opcodes – 0x46 (`INC SI`) and
+  0x4E (`DEC SI`) rather than the correct 0x64 and 0x65, respectively.
+
+  **Workaround**: Not happening when compiling via TASM (`-B` on the command
+  line, or `#pragma inline`).

@@ -9052,104 +9052,7 @@ sub_EF46	endp
 
 ; ---------------------------------------------------------------------------
 		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EFF4	proc far
-
-arg_0		= byte ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	ds
-		mov	ax, [bp+arg_6]
-		sar	ax, 3
-		add	ax, 3930h
-		mov	di, ax
-		mov	ax, [bp+arg_4]
-		shr	ax, 1
-		mov	dx, ax
-		shl	ax, 2
-		add	ax, dx
-		mov	bx, [bp+arg_2]
-		shl	bx, 2
-		lds	si, _mrs_images[bx]
-		mov	si, 4DA0h
-		add	ax, 0A800h
-		mov	fs, ax
-		add	ax, 800h
-		mov	gs, ax
-		add	ax, 800h
-		mov	es, ax
-		add	ax, 2800h
-		mov	bx, ax
-		mov	dx, di
-		cmp	[bp+arg_0], 0
-		jz	short loc_F071
-
-loc_F03A:
-		mov	cx, 9
-
-loc_F03D:
-		mov	eax, [si-4DA0h]
-		not	eax
-		or	eax, [si-33C0h]
-		mov	fs:[di], eax
-		mov	eax, [si-19E0h]
-		mov	gs:[di], eax
-		movsd
-		loop	loc_F03D
-		sub	di, 74h	; 't'
-		jnb	short loc_F03A
-		mov	di, dx
-		mov	es, bx
-
-loc_F064:
-		mov	cx, 9
-		rep movsd
-		sub	di, 74h	; 't'
-		jnb	short loc_F064
-		jmp	short loc_F09E
-; ---------------------------------------------------------------------------
-
-loc_F071:
-		mov	cx, 9
-
-loc_F074:
-		mov	eax, [si-33C0h]
-		mov	fs:[di], eax
-		mov	eax, [si-19E0h]
-		mov	gs:[di], eax
-		movsd
-		loop	loc_F074
-		sub	di, 74h	; 't'
-		jnb	short loc_F071
-		mov	di, dx
-		mov	es, bx
-
-loc_F093:
-		mov	cx, 9
-		rep movsd
-		sub	di, 74h	; 't'
-		jnb	short loc_F093
-
-loc_F09E:
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-sub_EFF4	endp
-
-; ---------------------------------------------------------------------------
-		nop
+	extern @MRS_PUT_NOALPHA_8$QIUIIC:proc
 	extern @MRS_HFLIP$QI:proc
 	SPRITE16_SPRITES_COMMIT procdesc pascal far
 	SPRITE16_PUT procdesc pascal far \
@@ -19177,19 +19080,19 @@ loc_1494A:
 loc_1495C:
 		cmp	_pid_current, 0
 		jz	short loc_14967
-		add	si, 140h
+		add	si, PLAYFIELD_W_BORDERED
 
 loc_14967:
-		push	si
-		push	10h
+		push	si	; left
+		push	PLAYFIELD_TOP	; top
 		mov	al, _pid_current
 		mov	ah, 0
 		add	ax, 2
-		push	ax
+		push	ax	; slot
 		mov	al, _pid_current
 		mov	ah, 0
-		push	ax
-		call	sub_EFF4
+		push	ax	; altered_colors
+		call	@mrs_put_noalpha_8$qiuiic
 		mov	al, [bp+@@frame]
 		mov	ah, 0
 		mov	bx, 8
@@ -20313,18 +20216,18 @@ loc_152D7:
 		mov	_palette_changed, 1
 		mov	al, _pid_current
 		mov	ah, 0
-		imul	ax, 140h
-		add	ax, 10h
-		push	ax
-		push	10h
+		imul	ax, PLAYFIELD_W_BORDERED
+		add	ax, PLAYFIELD_LEFT
+		push	ax	; left
+		push	PLAYFIELD_TOP	; top
 		mov	al, _pid_current
 		mov	ah, 0
 		add	ax, 2
-		push	ax
+		push	ax	; slot
 		mov	al, _pid_current
 		mov	ah, 0
-		push	ax
-		call	sub_EFF4
+		push	ax	; altered_colors
+		call	@mrs_put_noalpha_8$qiuiic
 		jmp	short loc_15323
 ; ---------------------------------------------------------------------------
 
@@ -21393,18 +21296,18 @@ loc_15C23:
 loc_15C32:
 		mov	al, _pid_current
 		mov	ah, 0
-		imul	ax, 140h
-		add	ax, 10h
-		push	ax
-		push	10h
+		imul	ax, PLAYFIELD_W_BORDERED
+		add	ax, PLAYFIELD_LEFT
+		push	ax	; left
+		push	PLAYFIELD_TOP	; top
 		mov	al, _pid_current
 		mov	ah, 0
 		add	ax, 2
-		push	ax
+		push	ax	; slot
 		mov	al, _pid_current
 		mov	ah, 0
-		push	ax
-		call	sub_EFF4
+		push	ax	; altered_colors
+		call	@mrs_put_noalpha_8$qiuiic
 		jmp	short loc_15CB0
 ; ---------------------------------------------------------------------------
 
@@ -24121,23 +24024,23 @@ loc_172F0:
 loc_172FF:
 		mov	al, _pid_current
 		mov	ah, 0
-		imul	ax, 140h
+		imul	ax, PLAYFIELD_W_BORDERED
 		mov	dl, _pid_current
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
 		add	ax, _playfield_fg_shift_x[bx]
-		add	ax, 10h
-		push	ax
-		push	10h
+		add	ax, PLAYFIELD_LEFT
+		push	ax	; left
+		push	PLAYFIELD_TOP	; top
 		mov	al, _pid_current
 		mov	ah, 0
 		add	ax, 2
-		push	ax
+		push	ax	; slot
 		mov	al, _pid_current
 		mov	ah, 0
-		push	ax
-		call	sub_EFF4
+		push	ax	; altered_colors
+		call	@mrs_put_noalpha_8$qiuiic
 		jmp	short loc_1737D
 ; ---------------------------------------------------------------------------
 
@@ -26392,22 +26295,22 @@ loc_184A5:
 		call	sub_CE5B
 
 loc_18518:
-		mov	si, 10h
+		mov	si, PLAYFIELD_LEFT
 		cmp	_pid_current, 0
 		jz	short loc_18526
-		add	si, 140h
+		add	si, PLAYFIELD_W_BORDERED
 
 loc_18526:
-		push	si
-		push	10h
+		push	si	; left
+		push	PLAYFIELD_TOP	; top
 		mov	al, _pid_current
 		mov	ah, 0
 		add	ax, 2
-		push	ax
+		push	ax	; slot
 		mov	al, _pid_current
 		mov	ah, 0
-		push	ax
-		call	sub_EFF4
+		push	ax	; altered_colors
+		call	@mrs_put_noalpha_8$qiuiic
 		jmp	short loc_185A3
 ; ---------------------------------------------------------------------------
 
@@ -26781,22 +26684,22 @@ loc_18895:
 		mov	_playfield_fg_shift_x[bx], -4
 
 loc_188A4:
-		mov	si, 10h
+		mov	si, PLAYFIELD_LEFT
 		cmp	_pid_current, 0
 		jz	short loc_188B2
-		add	si, 140h
+		add	si, PLAYFIELD_W_BORDERED
 
 loc_188B2:
-		push	si
-		push	10h
+		push	si	; left
+		push	PLAYFIELD_TOP	; top
 		mov	al, _pid_current
 		mov	ah, 0
 		add	ax, 2
-		push	ax
+		push	ax	; slot
 		mov	al, _pid_current
 		mov	ah, 0
-		push	ax
-		call	sub_EFF4
+		push	ax	; altered_colors
+		call	@mrs_put_noalpha_8$qiuiic
 		mov	al, [bp+@@frame]
 		mov	ah, 0
 		mov	bx, 4
@@ -27027,22 +26930,22 @@ loc_18A68:
 		mov	angle_1FBD4, al
 
 loc_18B2F:
-		mov	si, 10h
+		mov	si, PLAYFIELD_LEFT
 		cmp	_pid_current, 0
 		jz	short loc_18B3D
-		add	si, 140h
+		add	si, PLAYFIELD_W_BORDERED
 
 loc_18B3D:
-		push	si
-		push	10h
+		push	si	; left
+		push	PLAYFIELD_TOP	; top
 		mov	al, _pid_current
 		mov	ah, 0
 		add	ax, 2
-		push	ax
+		push	ax	; slot
 		mov	al, _pid_current
 		mov	ah, 0
-		push	ax
-		call	sub_EFF4
+		push	ax	; altered_colors
+		call	@mrs_put_noalpha_8$qiuiic
 		call	egc_on
 		jmp	short @@ret
 ; ---------------------------------------------------------------------------
@@ -27247,22 +27150,22 @@ loc_18D28:
 		sub	word_1FE56, 2E0h
 
 loc_18D34:
-		mov	si, 10h
+		mov	si, PLAYFIELD_LEFT
 		cmp	_pid_current, 0
 		jz	short loc_18D42
-		add	si, 140h
+		add	si, PLAYFIELD_W_BORDERED
 
 loc_18D42:
-		push	si
-		push	10h
+		push	si	; left
+		push	PLAYFIELD_TOP	; top
 		mov	al, _pid_current
 		mov	ah, 0
 		add	ax, 2
-		push	ax
+		push	ax	; slot
 		mov	al, _pid_current
 		mov	ah, 0
-		push	ax
-		call	sub_EFF4
+		push	ax	; altered_colors
+		call	@mrs_put_noalpha_8$qiuiic
 		jmp	short loc_18DBF
 ; ---------------------------------------------------------------------------
 
@@ -27384,22 +27287,22 @@ loc_18E5F:
 		mov	_playfield_fg_shift_x[bx], -4
 
 loc_18E6E:
-		mov	si, 10h
+		mov	si, PLAYFIELD_LEFT
 		cmp	_pid_current, 0
 		jz	short loc_18E7C
-		add	si, 140h
+		add	si, PLAYFIELD_W_BORDERED
 
 loc_18E7C:
-		push	si
-		push	10h
+		push	si	; left
+		push	PLAYFIELD_TOP	; top
 		mov	al, _pid_current
 		mov	ah, 0
 		add	ax, 2
-		push	ax
+		push	ax	; slot
 		mov	al, _pid_current
 		mov	ah, 0
-		push	ax
-		call	sub_EFF4
+		push	ax	; altered_colors
+		call	@mrs_put_noalpha_8$qiuiic
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
 		mov	ax, 900h
 		sub	ax, word_220EC
