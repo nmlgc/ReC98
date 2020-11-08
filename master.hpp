@@ -314,6 +314,42 @@ void MASTER_RET palette_white_out(unsigned speed);
 #endif
 // ---
 
+// Text RAM
+// --------
+
+#define text_width()  80
+void MASTER_RET text_boxfilla(
+	unsigned x1, unsigned y1, unsigned x2, unsigned y2, unsigned atrb
+);
+void MASTER_RET text_clear(void);
+void MASTER_RET text_fillca(unsigned ch, unsigned atrb);
+void MASTER_RET text_putca(unsigned x, unsigned y, unsigned ch, unsigned atrb);
+void MASTER_RET text_puts(unsigned x, unsigned y, const char MASTER_PTR *str);
+void MASTER_RET text_putsa(
+	unsigned x, unsigned y, const char MASTER_PTR *str, unsigned atrb
+);
+
+void MASTER_RET text_cursor_hide(void);
+void MASTER_RET text_cursor_show(void);
+void MASTER_RET text_systemline_hide(void);
+void MASTER_RET text_systemline_show(void);
+void MASTER_RET text_show(void);
+void MASTER_RET text_hide(void);
+
+// Attributes
+#define TX_BLACK    	0x01
+#define TX_BLUE     	0x21
+#define TX_RED      	0x41
+#define TX_MAGENTA  	0x61
+#define TX_GREEN    	0x81
+#define TX_CYAN     	0xa1
+#define TX_YELLOW   	0xc1
+#define TX_WHITE    	0xe1
+#define TX_BLINK    	2
+#define TX_REVERSE  	4
+#define TX_UNDERLINE	8
+// --------
+
 // VSync
 // -----
 
