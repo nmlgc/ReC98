@@ -240,6 +240,21 @@ unsigned MASTER_RET smem_wget(unsigned bytesize);
 void MASTER_RET smem_release(unsigned memseg);
 // ----
 
+// Optionally buffered single-file I/O
+// -----------------------------------
+
+int MASTER_RET file_ropen(const char MASTER_PTR *filename);
+int MASTER_RET file_read(void far *buf, unsigned wsize);
+long MASTER_RET file_size(void);
+int MASTER_RET file_create(const char MASTER_PTR *filename);
+int MASTER_RET file_append(const char MASTER_PTR *filename);
+int MASTER_RET file_write(const void far *buf, unsigned wsize);
+void MASTER_RET file_seek(long pos, int dir);
+void MASTER_RET file_close(void);
+int MASTER_RET file_exist(const char MASTER_PTR *filename);
+int MASTER_RET file_delete(const char MASTER_PTR *filename);
+// -----------------------------------
+
 // Palette
 // -------
 
