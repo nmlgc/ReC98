@@ -70,6 +70,22 @@ struct point_t {
 /// TODO: Remove the `!defined(__MASTER_H)` branches once we've gotten rid of
 /// of master.h.
 
+// DOS
+// ---
+// These use INT 21h syscalls as directly as possible.
+
+int MASTER_RET dos_getch(void);
+void MASTER_RET dos_puts2(const char MASTER_PTR *string);
+
+void MASTER_RET dos_free(unsigned seg);
+int MASTER_RET dos_create(const char MASTER_PTR *filename, int attrib);
+int MASTER_RET dos_close(int fh);
+int MASTER_RET dos_write(int fh, const void far *buffer, unsigned len);
+long MASTER_RET dos_seek(int fh, long offs, int mode);
+
+long MASTER_RET dos_axdx(int axval, const char MASTER_PTR *strval);
+// ---
+
 // EGC
 // ---
 
