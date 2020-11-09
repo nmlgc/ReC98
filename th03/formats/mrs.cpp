@@ -1,16 +1,24 @@
-#pragma option -3
+#pragma option -3 -Z-
 #pragma codeseg SHARED
 
 extern "C" {
+#include <dos.h>
 #include <stddef.h>
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
 #include "decomp.h"
+#include "master.hpp"
 #include "th03/formats/hfliplut.h"
 }
 
 #include "th03/formats/mrs.hpp"
+
+#undef grcg_off
+#define grcg_off() { \
+	_AL ^= _AL; \
+	__asm	out 0x7C, al; \
+}
 
 static const vram_byte_amount_t MRS_BYTE_W = (MRS_W / BYTE_DOTS);
 static const vram_dword_amount_t MRS_DWORD_W = (MRS_BYTE_W / sizeof(dots32_t));
@@ -67,6 +75,15 @@ struct mrs_at_G_t : public mrs_plane_t {
 static inline mrs_at_G_t near* mrs_at_G(void) {
 	return reinterpret_cast<mrs_at_G_t near *>(offsetof(mrs_t, planes.G));
 }
+
+// At least mrs_put_8() is somewhat sane.
+struct mrs_at_B_t : public mrs_plane_t {
+	dots32_t dots_from_alpha(void) const  { return *(*((this + 0)->dots)); }
+	dots32_t dots_from_B(void) const      { return *(*((this + 1)->dots)); }
+	dots32_t dots_from_R(void) const      { return *(*((this + 2)->dots)); }
+	dots32_t dots_from_G(void) const      { return *(*((this + 3)->dots)); }
+	dots32_t dots_from_E(void) const      { return *(*((this + 4)->dots)); }
+};
 // -------------------------
 
 inline uint16_t to_bottom_left_8(const screen_x_t &left) {
@@ -78,6 +95,57 @@ inline seg_t to_segment(const uscreen_y_t &top) {
 	_DX = _AX;
 	return ((_AX << 2) + _DX); // ... and -> segment
 }
+
+void pascal mrs_put_8(screen_x_t left, uscreen_y_t top, int slot)
+{
+	#define _SI	reinterpret_cast<mrs_at_B_t near *>(_SI)
+
+	grcg_setcolor(GC_RMW, 0);
+	_DI = to_bottom_left_8(left);
+	_AX = to_segment(top);
+
+	// "I've spent good money on that Intel 386 CPU, so let's actually use
+	// *all* its segment registers!" :zunpet: :zunpet: :zunpet:
+	_ES = (_AX += SEG_PLANE_B);       	// = B
+	_FS = (_AX += SEG_PLANE_DIST_BRG);	// = R
+	_GS = (_AX += SEG_PLANE_DIST_BRG);	// = G
+
+	__asm { push ds; }
+	mrs_slot_assign(ds, si, slot);
+
+	_DX = MRS_DWORD_W;
+	__asm { nop; }
+	mrs_put_rows(_DX, REP MOVSD);
+	grcg_off();
+
+	// Reset to bottom left
+	_SI = 0;
+	_DI += (MRS_H * ROW_SIZE);
+
+	_BX = (_GS + SEG_PLANE_DIST_E); // = E
+	_DX = MRS_DWORD_W;
+	mrs_put_rows(_DX, { put:
+		_EAX = _SI->dots_from_alpha();
+		_EAX |= _EAX;
+		if(!FLAGS_ZERO) {
+			poke_or_d(_ES, _DI, _SI->dots_from_B());
+			poke_or_d(_FS, _DI, _SI->dots_from_R());
+			poke_or_d(_GS, _DI, _SI->dots_from_G());
+			_GS = _BX;
+			poke_or_d(_GS, _DI, _SI->dots_from_E());
+			_GS = (_BX - SEG_PLANE_DIST_E);
+		}
+		reinterpret_cast<uint16_t>(_SI) += sizeof(dots32_t);
+		_DI += sizeof(dots32_t);
+		__asm { loop put; }
+	});
+
+	__asm { pop	ds; }
+
+	#undef _SI
+}
+
+#pragma codestring "\x90"
 
 void pascal mrs_put_noalpha_8(
 	screen_x_t left, uscreen_y_t top, int slot, bool altered_colors
@@ -92,8 +160,6 @@ void pascal mrs_put_noalpha_8(
 	mrs_slot_assign(ds, si, slot);
 	_SI = mrs_at_G();
 
-	// "I've spent good money on that Intel 386 CPU, so let's actually use
-	// *all* its segment registers!" :zunpet: :zunpet: :zunpet:
 	_FS = (_AX += SEG_PLANE_B);       	// = B
 	_GS = (_AX += SEG_PLANE_DIST_BRG);	// = R
 	_ES = (_AX += SEG_PLANE_DIST_BRG);	// = G

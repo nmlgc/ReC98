@@ -57,6 +57,7 @@
 // types.
 #ifdef __cplusplus
 }
+	struct Decomp_ES { void  __seg* value() { return (void  __seg *)(_ES); } };
 	struct Decomp_FS { void  __seg* value() { return (void  __seg *)(_FS); } };
 	struct Decomp_GS { void  __seg* value() { return (void  __seg *)(_GS); } };
 	struct Decomp_DI { void __near* value() { return (void __near *)(_DI); } };
@@ -65,20 +66,28 @@
 	// perfects the inlining.
 	#define poked(sgm, off, val) \
 		_EAX = val; \
-		poked_eax((Decomp##sgm *)NULL, (Decomp##off *)NULL);
+		poked_eax((Decomp##sgm *)NULL, (Decomp##off *)NULL, (uint8_t)(0x89));
+
+	#define poke_or_d(sgm, off, val) \
+		_EAX = val; \
+		poked_eax((Decomp##sgm *)NULL, (Decomp##off *)NULL, (uint8_t)(0x09));
 
 	template <class Segment, class Offset> inline void poked_eax(
-		Segment *sgm, Offset *off
+		Segment *sgm, Offset *off, uint8_t op
 	) {
-		*reinterpret_cast<uint32_t far *>(sgm->value() + off->value()) = _EAX;
+		if(op == 0x89) {
+			*(uint32_t far *)(sgm->value() + off->value()) = _EAX;
+		} else if(op == 0x09) {
+			*(uint32_t far *)(sgm->value() + off->value()) |= _EAX;
+		}
 	}
 
-	inline void poked_eax(Decomp_FS *sgm, Decomp_DI *off) {
-		__emit__(0x66, 0x64, 0x89, 0x05); // MOV FS:[DI], EAX
+	inline void poked_eax(Decomp_FS *sgm, Decomp_DI *off, uint8_t op) {
+		__emit__(0x66, 0x64, op, 0x05); // [op] FS:[DI], EAX
 	}
 
-	inline void poked_eax(Decomp_GS *sgm, Decomp_DI *off) {
-		__emit__(0x66, 0x65, 0x89, 0x05); // MOV GS:[DI], EAX
+	inline void poked_eax(Decomp_GS *sgm, Decomp_DI *off, uint8_t op) {
+		__emit__(0x66, 0x65, op, 0x05); // [op] GS:[DI], EAX
 	}
 
 extern "C" {

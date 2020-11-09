@@ -7,6 +7,9 @@ static const int MRS_SLOT_COUNT = 8;
 static const pixel_t MRS_W = 288;
 static const pixel_t MRS_H = 184;
 
+// Displays the .MRS image in the given [slot] at (⌊left/8⌋*8, top).
+void pascal mrs_put_8(screen_x_t left, uscreen_y_t top, int slot);
+
 // Displays the .MRS image in the given [slot] at (⌊left/8⌋*8, top),
 // disregarding its alpha plane, and optionally altering its colors slightly.
 void pascal mrs_put_noalpha_8(

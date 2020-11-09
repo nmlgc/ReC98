@@ -5152,29 +5152,29 @@ sub_C8C4	endp
 
 sub_C9FE	proc far
 
-arg_0		= byte ptr  6
+@@mrs_slot		= byte ptr  6
 
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	al, [bp+arg_0]
+		mov	al, [bp+@@mrs_slot]
 		mov	ah, 0
 		mov	bx, ax
 		cmp	byte ptr [bx+798h], 1
 		jnz	short loc_CA37
-		mov	si, 10h
-		cmp	[bp+arg_0], 0
+		mov	si, PLAYFIELD_LEFT
+		cmp	[bp+@@mrs_slot], 0
 		jz	short loc_CA1D
-		add	si, 140h
+		add	si, PLAYFIELD_W_BORDERED
 
 loc_CA1D:
-		push	si
-		push	10h
-		mov	al, [bp+arg_0]
+		push	si	; left
+		push	PLAYFIELD_TOP	; top
+		mov	al, [bp+@@mrs_slot]
 		mov	ah, 0
-		push	ax
-		call	sub_EF46
-		mov	al, [bp+arg_0]
+		push	ax	; slot
+		call	@mrs_put_8$qiuii
+		mov	al, [bp+@@mrs_slot]
 		mov	ah, 0
 		mov	bx, ax
 		mov	byte ptr [bx+798h], 2
@@ -8963,95 +8963,7 @@ sub_EF1C	endp
 
 ; ---------------------------------------------------------------------------
 		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EF46	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		call	grcg_setcolor pascal, GC_RMW, 0
-		mov	ax, [bp+arg_4]
-		sar	ax, 3
-		add	ax, 3930h
-		mov	di, ax
-		mov	ax, [bp+arg_2]
-		shr	ax, 1
-		mov	dx, ax
-		shl	ax, 2
-		add	ax, dx
-		add	ax, 0A800h
-		mov	es, ax
-		assume es:nothing
-		add	ax, 800h
-		mov	fs, ax
-		add	ax, 800h
-		mov	gs, ax
-		push	ds
-		mov	bx, [bp+arg_0]
-		shl	bx, 2
-		lds	si, _mrs_images[bx]
-		mov	dx, 9
-		nop
-
-loc_EF8A:
-		mov	cx, dx
-		rep movsd
-		sub	di, 74h	; 't'
-		jnb	short loc_EF8A
-		GRCG_OFF_VIA_XOR al
-		xor	si, si
-		add	di, 3980h
-		mov	ax, gs
-		add	ax, 2800h
-		mov	bx, ax
-		mov	dx, 9
-
-loc_EFA8:
-		mov	cx, dx
-
-loc_EFAA:
-		mov	eax, [si]
-		or	eax, eax
-		jz	short loc_EFDF
-		mov	eax, [si+19E0h]
-		or	es:[di], eax
-		mov	eax, [si+33C0h]
-		or	fs:[di], eax
-		mov	eax, [si+4DA0h]
-		or	gs:[di], eax
-		mov	gs, bx
-		assume gs:nothing
-		mov	eax, [si+6780h]
-		or	gs:[di], eax
-		mov	ax, bx
-		sub	ax, 2800h
-		mov	gs, ax
-		assume gs:nothing
-
-loc_EFDF:
-		add	si, 4
-		add	di, 4
-		loop	loc_EFAA
-		sub	di, 74h	; 't'
-		jnb	short loc_EFA8
-		pop	ds
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-sub_EF46	endp
-
-; ---------------------------------------------------------------------------
-		nop
+	extern @MRS_PUT_8$QIUII:proc
 	extern @MRS_PUT_NOALPHA_8$QIUIIC:proc
 	extern @MRS_HFLIP$QI:proc
 	SPRITE16_SPRITES_COMMIT procdesc pascal far
