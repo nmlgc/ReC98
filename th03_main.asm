@@ -2399,10 +2399,8 @@ _arg0		= dword	ptr  6
 		call	graph_hide
 		call	text_clear
 		call	gaiji_restore
-		push	0
-		call	sub_EF1C
-		push	1
-		call	sub_EF1C
+		call	@mrs_free$qi pascal, 0
+		call	@mrs_free$qi pascal, 1
 		call	_game_exit
 		pushd	0
 		pushd	[bp+_arg0]	; arg0
@@ -8933,36 +8931,7 @@ arg_4		= word ptr  0Ah
 		retf	6
 sub_EEE2	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EF1C	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	bx, [bp+arg_0]
-		shl	bx, 2
-		mov	ax, word ptr (_mrs_images[bx] + 2)
-		or	dx, word ptr (_mrs_images[bx] + 0)
-		or	dx, ax
-		jz	short loc_EF41
-		push	ax
-		call	hmem_free
-		xor	ax, ax
-		mov	word ptr (_mrs_images[bx] + 2), ax
-		mov	word ptr (_mrs_images[bx] + 0), ax
-
-loc_EF41:
-		pop	bp
-		retf	2
-sub_EF1C	endp
-
-; ---------------------------------------------------------------------------
-		nop
+	extern @MRS_FREE$QI:proc
 	extern @MRS_PUT_8$QIUII:proc
 	extern @MRS_PUT_NOALPHA_8$QIUIIC:proc
 	extern @MRS_HFLIP$QI:proc

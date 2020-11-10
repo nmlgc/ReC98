@@ -7,6 +7,9 @@ static const int MRS_SLOT_COUNT = 8;
 static const pixel_t MRS_W = 288;
 static const pixel_t MRS_H = 184;
 
+// Frees the .MRS image in the given [slot].
+void pascal mrs_free(int slot);
+
 // Displays the .MRS image in the given [slot] at (⌊left/8⌋*8, top).
 void pascal mrs_put_8(screen_x_t left, uscreen_y_t top, int slot);
 

@@ -38,11 +38,15 @@ extern mrs_t far *mrs_images[MRS_SLOT_COUNT];
 // Decompilation workarounds
 // -------------------------
 
+#define mrs_slot_offset_to(var, slot) { \
+	var = slot; \
+	var <<= 2; \
+}
+
 // Points [reg_sgm]:[reg_off] to the alpha plane of the .MRS image in the
 // given [slot].
 #define mrs_slot_assign(reg_sgm, reg_off, slot) { \
-	_BX = slot; \
-	_BX <<= 2; \
+	mrs_slot_offset_to(_BX, slot); \
 	__asm { l##reg_sgm reg_off, mrs_images[bx]; } \
 }
 
@@ -85,6 +89,27 @@ struct mrs_at_B_t : public mrs_plane_t {
 	dots32_t dots_from_E(void) const      { return *(*((this + 4)->dots)); }
 };
 // -------------------------
+
+void pascal mrs_free(int slot)
+{
+	#define mrs_image_pointer_word(slot_offset, off_or_sgm) \
+		*(reinterpret_cast<uint16_t near *>( \
+			reinterpret_cast<uint16_t>(mrs_images) + slot_offset \
+		) + off_or_sgm)
+	mrs_slot_offset_to(_BX, slot);
+	_AX = mrs_image_pointer_word(_BX, 1);
+	// Yes, |=, not =, to an uninitialized register. The entire reason why we
+	// can't decompile this into one sane expression...
+	_DX |= mrs_image_pointer_word(_BX, 0);
+	_DX |= _AX;
+	if(!FLAGS_ZERO) {
+		hmem_free(_AX);
+		mrs_image_pointer_word(_BX, 0) = mrs_image_pointer_word(_BX, 1) = NULL;
+	}
+	#undef mrs_image_pointer_word
+}
+
+#pragma codestring "\x90"
 
 inline uint16_t to_bottom_left_8(const screen_x_t &left) {
 	return ((left >> 3) + ((MRS_H - 1) * ROW_SIZE));
