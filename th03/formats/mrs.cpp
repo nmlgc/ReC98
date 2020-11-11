@@ -1,4 +1,4 @@
-#pragma option -3 -Z-
+#pragma option -3
 #pragma codeseg SHARED
 
 extern "C" {
@@ -89,6 +89,22 @@ struct mrs_at_B_t : public mrs_plane_t {
 	dots32_t dots_from_E(void) const      { return *(*((this + 4)->dots)); }
 };
 // -------------------------
+
+void pascal mrs_load(int slot, const char *fn)
+{
+	file_ropen(fn);
+	mrs_images[slot] = reinterpret_cast<mrs_t __seg *>(
+		hmem_allocbyte(sizeof(mrs_t))
+	);
+	// MODDERS: Relies on the above expression setting _BX to the byte offset
+	// of [slot]...
+	file_read(*reinterpret_cast<mrs_t * near*>(
+		reinterpret_cast<uint16_t>(mrs_images) + _BX
+	), sizeof(mrs_t));
+	file_close();
+}
+
+#pragma option -Z-
 
 void pascal mrs_free(int slot)
 {

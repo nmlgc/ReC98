@@ -7,6 +7,10 @@ static const int MRS_SLOT_COUNT = 8;
 static const pixel_t MRS_W = 288;
 static const pixel_t MRS_H = 184;
 
+// Loads the .MRS image from [fn] into the given [slot], which is assumed to
+// be empty.
+void pascal mrs_load(int slot, const char *fn);
+
 // Frees the .MRS image in the given [slot].
 void pascal mrs_free(int slot);
 

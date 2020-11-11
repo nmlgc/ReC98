@@ -1557,18 +1557,12 @@ arg_4		= word ptr  8
 		mov	byte ptr es:[bx+5], 'm'
 		mov	byte ptr es:[bx+6], 'r'
 		mov	byte ptr es:[bx+7], 's'
-		push	si
-		push	word ptr [bp+arg_0+2]
-		push	bx
-		call	sub_EEE2
+		call	@mrs_load$qinxc pascal, si, word ptr [bp+arg_0+2], bx
 		les	bx, [bp+arg_0]
 		mov	byte ptr es:[bx+2], 'b'
 		mov	byte ptr es:[bx+3], 'm'
 		lea	ax, [si+2]
-		push	ax
-		push	word ptr [bp+arg_0+2]
-		push	bx
-		call	sub_EEE2
+		call	@mrs_load$qinxc pascal, ax, word ptr [bp+arg_0+2], bx
 		pop	si
 		pop	bp
 		retn	6
@@ -8903,34 +8897,7 @@ include th03/hardware/input_modes.asm
 include th03/hardware/input_wait.asm
 		db 0
 include th03/formats/hfliplut.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EEE2	proc far
-
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		pushd	[bp+arg_0]
-		call	file_ropen
-		push	8160h
-		call	hmem_allocbyte
-		mov	bx, [bp+arg_4]
-		shl	bx, 2
-		mov	word ptr (_mrs_images[bx] + 2), ax
-		mov	word ptr (_mrs_images[bx] + 0), 0
-		pushd	_mrs_images[bx]
-		push	8160h
-		call	file_read
-		call	file_close
-		pop	bp
-		retf	6
-sub_EEE2	endp
-
+	extern @MRS_LOAD$QINXC:proc
 	extern @MRS_FREE$QI:proc
 	extern @MRS_PUT_8$QIUII:proc
 	extern @MRS_PUT_NOALPHA_8$QIUIIC:proc
