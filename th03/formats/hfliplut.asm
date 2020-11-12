@@ -1,25 +1,25 @@
 public _hflip_lut_generate
-_hflip_lut_generate proc
+_hflip_lut_generate proc far
 	push	di
 	xor	ax, ax
 	mov	di, offset _hflip_lut
 	xor	dl, dl
-	jmp	short @@check
+	jmp	short @@set_and_loop
 
-@@outer:
+@@permutation_loop:
 	xor	dl, dl
 	mov	cx, 8
 
-@@inner:
+@@generation_loop:
 	rol	al, 1
 	rcr	dl, 1
-	loop	@@inner
+	loop	@@generation_loop
 
-@@check:
+@@set_and_loop:
 	mov	[di], dl
 	inc	di
 	inc	al
-	jnz	short @@outer
+	jnz	short @@permutation_loop
 	pop	di
 	ret
 _hflip_lut_generate endp

@@ -8895,8 +8895,7 @@ include th02/initmain.asm
 include th02/formats/pi_load.asm
 include th03/hardware/input_modes.asm
 include th03/hardware/input_wait.asm
-		db 0
-include th03/formats/hfliplut.asm
+	extern _hflip_lut_generate:proc
 	extern @MRS_LOAD$QINXC:proc
 	extern @MRS_FREE$QI:proc
 	extern @MRS_PUT_8$QIUII:proc

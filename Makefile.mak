@@ -41,9 +41,6 @@ bin\exit_dos.obj: th02\exit_dos.c
 
 bin\frmdely2.obj: th02\frmdely2.c
 	$(CC) $(CFLAGS) -ml -n$(@D) -c $**
-
-bin\hfliplut.obj: th03\hfliplut.c
-	$(CC) $(CFLAGS) -ml -n$(@D) -c $**
 # ------------------------------
 
 {th01}.c{bin\th01}.obj:
@@ -104,7 +101,7 @@ bin\th03\op.exe: th03\op_01.cpp bin\th03\op.obj bin\th03\inp_m_w.obj bin\th03\cd
 $**
 |
 
-bin\th03\main.exe: bin\th03\main.obj th03\main_01.cpp th03\mrs.cpp th03\sprite16.cpp
+bin\th03\main.exe: bin\th03\main.obj th03\main_01.cpp bin\hfliplut.obj th03\mrs.cpp th03\sprite16.cpp
 	$(CC) $(CFLAGS) -ml -Z -DGAME=3 -nbin\th03\ -eMAIN.EXE @&&|
 $**
 |
