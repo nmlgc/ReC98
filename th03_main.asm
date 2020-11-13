@@ -8893,8 +8893,13 @@ include th02/snd/se.asm
 include th02/snd/kajaint.asm
 include th02/initmain.asm
 include th02/formats/pi_load.asm
-include th03/hardware/input_modes.asm
-include th03/hardware/input_wait.asm
+	extern INPUT_MODE_KEY_VS_KEY:proc
+	extern INPUT_MODE_JOY_VS_KEY:proc
+	extern INPUT_MODE_KEY_VS_JOY:proc
+	extern INPUT_MODE_1P_VS_CPU:proc
+	extern INPUT_MODE_CPU_VS_1P:proc
+	extern INPUT_MODE_CPU_VS_CPU:proc
+	extern INPUT_MODE_ATTRACT:proc
 	extern _hflip_lut_generate:proc
 	extern @MRS_LOAD$QINXC:proc
 	extern @MRS_FREE$QI:proc

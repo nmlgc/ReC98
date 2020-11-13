@@ -101,7 +101,7 @@ bin\th03\op.exe: th03\op_01.cpp bin\th03\op.obj bin\th03\inp_m_w.obj bin\th03\cd
 $**
 |
 
-bin\th03\main.exe: bin\th03\main.obj th03\main_01.cpp bin\hfliplut.obj th03\mrs.cpp th03\sprite16.cpp
+bin\th03\main.exe: bin\th03\main.obj th03\main_01.cpp bin\th03\inp_m_w.obj bin\hfliplut.obj th03\mrs.cpp th03\sprite16.cpp
 	$(CC) $(CFLAGS) -ml -Z -DGAME=3 -nbin\th03\ -eMAIN.EXE @&&|
 $**
 |
