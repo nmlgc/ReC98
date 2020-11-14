@@ -31,6 +31,8 @@ include th04/music/music.inc
 	extern _memcpy:proc
 	extern _strlen:proc
 
+g_SHARED group SHARED, SHARED_
+
 ; ===========================================================================
 
 ; Segment type:	Pure code
@@ -2667,9 +2669,14 @@ include th04/snd/se.asm
 include th04/hardware/egcrect.asm
 include th04/bgimage.asm
 include th04/bgimage_put_rect.asm
-include th04/formats/cdg_load.asm
-	extern FRAME_DELAY_2:proc
 SHARED	ends
+
+SHARED_	segment	word public 'CODE' use16
+	extern CDG_LOAD_ALL_NOALPHA:proc
+	extern CDG_LOAD_ALL:proc
+	extern CDG_FREE_ALL:proc
+	extern FRAME_DELAY_2:proc
+SHARED_	ends
 
 	.data
 

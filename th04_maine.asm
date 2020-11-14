@@ -4617,7 +4617,10 @@ include th04/hardware/input_sense.asm
 include th04/snd/se.asm
 include th04/bgimage.asm
 include th04/bgimage_put_rect.asm
-include th04/formats/cdg_load.asm
+	extern CDG_LOAD_SINGLE_NOALPHA:proc
+	extern CDG_LOAD_SINGLE:proc
+	extern CDG_FREE:proc
+	extern CDG_FREE_ALL:proc
 SHARED_	ends
 
 	.data

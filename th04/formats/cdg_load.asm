@@ -1,7 +1,30 @@
+	.386
+	.model large SHARED_
+	locals
+
+include th03/formats/cdg.inc
+
+	extrn FILE_ROPEN:proc
+	extrn FILE_READ:proc
+	extrn FILE_SEEK:proc
+	extrn FILE_CLOSE:proc
+	extrn HMEM_ALLOCBYTE:proc
+	extrn HMEM_FREE:proc
+	extrn _cdg_slots:cdg_t:CDG_SLOT_COUNT
+	extrn cdg_noalpha:byte
+	extrn cdg_images_to_load:byte
+
+g_SHARED group SHARED, SHARED_
+SHARED	segment word public 'CODE' use16
+SHARED	ends
+
+SHARED_	segment word public 'CODE' use16
+	assume cs:g_SHARED
+
 public CDG_LOAD_SINGLE_NOALPHA
 public CDG_LOAD_SINGLE
 
-cdg_load_single_noalpha	label proc
+cdg_load_single_noalpha label proc
 	mov	cdg_noalpha, 1
 	align	2
 
@@ -17,15 +40,12 @@ cdg_load_single	proc far
 	push	di
 	mov	di, [bp+@@slot]
 	push	di
-	nopcall	cdg_free
-	shl	di, 4
+	nop	; This was definitely compiled from C...
+	call	cdg_free
+	shl	di, 4	; *= size cdg_t
 	add	di, offset _cdg_slots
-	pushd	[bp+@@fn]
-	call	file_ropen
-	push	ds
-	push	di
-	push	size cdg_t
-	call	file_read
+	call	file_ropen pascal, large [bp+@@fn]
+	call	file_read pascal, ds, di, size cdg_t
 	mov	ax, [di+cdg_t.CDG_plane_size]
 	mov	dx, ax
 	cmp	[di+cdg_t.plane_layout], CDG_COLORS
@@ -38,9 +58,7 @@ cdg_load_single	proc far
 @@read:
 	mul	[bp+@@n]
 	movzx	eax, ax
-	push	eax
-	push	1
-	call	file_seek
+	call	file_seek pascal, eax, 1
 	call	cdg_read_single
 	call	file_close
 	mov	cdg_noalpha, 0
@@ -48,12 +66,12 @@ cdg_load_single	proc far
 	pop	si
 	pop	bp
 	retf	8
-cdg_load_single	endp
+cdg_load_single endp
 	align	2
 
 ; Reads a single CDG image from the master.lib file, which previously has been
 ; positioned at the beginning of the image data, into the slot in DI.
-cdg_read_single	proc near
+cdg_read_single proc near
 	mov	al, [di+cdg_t.plane_layout]
 	or	al, al	; AL == CDG_COLORS?
 	jz	short @@colors
@@ -63,28 +81,21 @@ cdg_read_single	proc near
 	jnz	short @@skip_alpha
 
 @@alpha:
-	push	[di+cdg_t.CDG_plane_size]
-	call	hmem_allocbyte
+	call	hmem_allocbyte pascal, [di+cdg_t.CDG_plane_size]
 	mov	[di+cdg_t.seg_alpha], ax
-	push	ax
-	push	0
-	push	[di+cdg_t.CDG_plane_size]
-	call	file_read
+	call	file_read pascal, ax, 0, [di+cdg_t.CDG_plane_size]
 	jmp	short @@colors
 
 @@skip_alpha:
 	movzx	eax, [di+cdg_t.CDG_plane_size]
-	push	eax
-	push	1
-	call	file_seek
+	call	file_seek pascal, eax, 1
 
 @@colors:
 	cmp	[di+cdg_t.plane_layout], CDG_ALPHA
 	jz	short @@ret
 	mov	ax, [di+cdg_t.CDG_plane_size]
 	shl	ax, 2
-	push	ax
-	call	hmem_allocbyte
+	call	hmem_allocbyte pascal, ax
 	mov	[di+cdg_t.seg_colors], ax
 	push	ax
 	push	0
@@ -95,17 +106,17 @@ cdg_read_single	proc near
 
 @@ret:
 	retn
-cdg_read_single	endp
+cdg_read_single endp
 
 
 public CDG_LOAD_ALL_NOALPHA
 public CDG_LOAD_ALL
 
-cdg_load_all_noalpha	label proc
+cdg_load_all_noalpha label proc
 	mov	cdg_noalpha, 1
 	align	2
 
-cdg_load_all	proc far
+cdg_load_all proc far
 
 @@fn        	= dword	ptr  6
 @@slot_first	=  word ptr  10
@@ -114,27 +125,21 @@ cdg_load_all	proc far
 	mov	bp, sp
 	push	si
 	push	di
-	pushd	[bp+@@fn]
-	call	file_ropen
+	call	file_ropen pascal, large [bp+@@fn]
 	mov	di, [bp+@@slot_first]
-	shl	di, 4
+	shl	di, 4	; *= size cdg_t
 	add	di, offset _cdg_slots
-	push	ds
-	push	di
-	push	size cdg_t
-	call	file_read
+	call	file_read pascal, ds, di, size cdg_t
 	mov	si, di
 	mov	bp, [bp+@@slot_first]
 	mov	al, cdg_t.image_count[si]
 	mov	cdg_images_to_load, al
 	push	ds
 	pop	es
-	assume es:_DATA
 
 @@loop:
-	push	bp
-	call	cdg_free
-	mov	cx, 3
+	call	cdg_free pascal, bp
+	mov	cx, (cdg_t.seg_alpha / dword)
 	rep movsd
 	sub	si, cdg_t.seg_alpha
 	sub	di, cdg_t.seg_alpha
@@ -149,39 +154,40 @@ cdg_load_all	proc far
 	pop	si
 	pop	bp
 	retf	6
-cdg_load_all	endp
+cdg_load_all endp
 
 
 public CDG_FREE
-cdg_free	proc far
+cdg_free proc far
+
+@@slot	= word ptr 4
+
 	mov	bx, sp
 	push	di
-	mov	di, ss:[bx+4]
-	shl	di, 4
+	mov	di, ss:[bx+@@slot]
+	shl	di, 4	; *= size cdg_t
 	add	di, offset _cdg_slots.seg_alpha
 	cmp	word ptr [di], 0
 	jz	short @@colors
-	push	word ptr [di]
-	call	hmem_free
+	call	hmem_free pascal, word ptr [di]
 	mov	word ptr [di], 0
 
 @@colors:
-	add	di, 2
+	add	di, word ; = seg_colors
 	cmp	word ptr [di], 0
 	jz	short @@ret
-	push	word ptr [di]
-	call	hmem_free
+	call	hmem_free pascal, word ptr [di]
 	mov	word ptr [di], 0
 
 @@ret:
 	pop	di
 	retf	2
-cdg_free	endp
+cdg_free endp
 	align 2
 
 
 public CDG_FREE_ALL
-cdg_free_all	proc far
+cdg_free_all proc far
 	push	si
 	mov	si, CDG_SLOT_COUNT - 1
 
@@ -191,4 +197,7 @@ cdg_free_all	proc far
 	jge	short @@loop
 	pop	si
 	retf
-cdg_free_all	endp
+cdg_free_all endp
+SHARED_	ends
+
+	end
