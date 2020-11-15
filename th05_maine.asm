@@ -7551,7 +7551,7 @@ include th05/hardware/input_held.asm
 include th05/hardware/input_wait.asm
 include th05/snd/measure.asm
 include th05/snd/delaymea.asm
-include th05/hardware/frame_delay.asm
+	extern FRAME_DELAY:proc
 	extern CDG_LOAD_ALL_NOALPHA:proc
 	extern CDG_FREE_ALL:proc
 	extern EGC_COPY_RECT_1_TO_0_16:proc

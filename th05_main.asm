@@ -10567,7 +10567,7 @@ include th02/initmain.asm
 include th04/hardware/input_sense.asm
 include th05/hardware/input_held.asm
 include th05/hardware/input_wait.asm
-include th05/hardware/frame_delay.asm
+	extern FRAME_DELAY:proc
 	extern CDG_LOAD_ALL_NOALPHA:proc
 	extern CDG_LOAD_ALL:proc
 	extern CDG_LOAD_SINGLE_NOALPHA:proc
