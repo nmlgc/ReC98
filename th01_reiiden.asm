@@ -2459,12 +2459,12 @@ loc_D118:
 		push	offset aKabe_nD	; "    kabe_n =	%d\n"
 		call	_printf
 		add	sp, 6
-		push	word_39E90
+		push	_card_count
 		push	ds
 		push	offset aPnl_nD	; "    pnl_n  =	%d\n"
 		call	_printf
 		add	sp, 6
-		movsx	eax, word_39E90
+		movsx	eax, _card_count
 		imul	eax, 281h
 		push	eax
 		push	ds
@@ -3936,48 +3936,38 @@ loc_DF9A:
 
 loc_DFBC:
 		call	sub_D47D
-		cmp	font, 0
+		cmp	_cards_left, 0
 		jz	short loc_DFE0
-		pushd	[font]	; font
-		call	@$bdla$qnv
-		add	sp, 4
-		mov	font, 0
+		call	@$bdla$qnv c, large [_cards_left]
+		mov	_cards_left, 0
 		jmp	short $+2
 
 loc_DFE0:
-		cmp	off_39E88, 0
+		cmp	_cards_top, 0
 		jz	short loc_E000
-		pushd	[off_39E88] ; font
-		call	@$bdla$qnv
-		add	sp, 4
-		mov	off_39E88, 0
+		call	@$bdla$qnv c, large [_cards_top]
+		mov	_cards_top, 0
 		jmp	short $+2
 
 loc_E000:
-		cmp	off_39E8C, 0
+		cmp	_cards_flag, 0
 		jz	short loc_E020
-		pushd	[off_39E8C] ; font
-		call	@$bdla$qnv
-		add	sp, 4
-		mov	off_39E8C, 0
+		call	@$bdla$qnv c, large [_cards_flag]
+		mov	_cards_flag, 0
 		jmp	short $+2
 
 loc_E020:
-		cmp	off_39E92, 0
+		cmp	_cards_flip_frames, 0
 		jz	short loc_E040
-		pushd	[off_39E92] ; font
-		call	@$bdla$qnv
-		add	sp, 4
-		mov	off_39E92, 0
+		call	@$bdla$qnv c, large [_cards_flip_frames]
+		mov	_cards_flip_frames, 0
 		jmp	short $+2
 
 loc_E040:
-		cmp	off_39E96, 0
+		cmp	_cards_hp, 0
 		jz	short loc_E060
-		pushd	[off_39E96] ; font
-		call	@$bdla$qnv
-		add	sp, 4
-		mov	off_39E96, 0
+		call	@$bdla$qnv c, large [_cards_hp]
+		mov	_cards_hp, 0
 		jmp	short $+2
 
 loc_E060:
@@ -4029,48 +4019,38 @@ loc_E101:
 ; ---------------------------------------------------------------------------
 
 loc_E104:
-		cmp	font, 0
+		cmp	_cards_left, 0
 		jz	short loc_E124
-		pushd	[font]	; font
-		call	@$bdla$qnv
-		add	sp, 4
-		mov	font, 0
+		call	@$bdla$qnv c, large [_cards_left]
+		mov	_cards_left, 0
 		jmp	short $+2
 
 loc_E124:
-		cmp	off_39E88, 0
+		cmp	_cards_top, 0
 		jz	short loc_E144
-		pushd	[off_39E88] ; font
-		call	@$bdla$qnv
-		add	sp, 4
-		mov	off_39E88, 0
+		call	@$bdla$qnv c, large [_cards_top]
+		mov	_cards_top, 0
 		jmp	short $+2
 
 loc_E144:
-		cmp	off_39E8C, 0
+		cmp	_cards_flag, 0
 		jz	short loc_E164
-		pushd	[off_39E8C] ; font
-		call	@$bdla$qnv
-		add	sp, 4
-		mov	off_39E8C, 0
+		call	@$bdla$qnv c, large [_cards_flag]
+		mov	_cards_flag, 0
 		jmp	short $+2
 
 loc_E164:
-		cmp	off_39E92, 0
+		cmp	_cards_flip_frames, 0
 		jz	short loc_E184
-		pushd	[off_39E92] ; font
-		call	@$bdla$qnv
-		add	sp, 4
-		mov	off_39E92, 0
+		call	@$bdla$qnv c, large [_cards_flip_frames]
+		mov	_cards_flip_frames, 0
 		jmp	short $+2
 
 loc_E184:
-		cmp	off_39E96, 0
+		cmp	_cards_hp, 0
 		jz	short loc_E1A4
-		pushd	[off_39E96] ; font
-		call	@$bdla$qnv
-		add	sp, 4
-		mov	off_39E96, 0
+		call	@$bdla$qnv c, large [_cards_hp]
+		mov	_cards_hp, 0
 		jmp	short $+2
 
 loc_E1A4:
@@ -6756,7 +6736,7 @@ loc_17CB3:
 		mov	byte ptr [bx+5378h], 1
 		mov	ax, cx
 		add	ax, ax
-		les	bx, font
+		les	bx, _cards_left
 		add	bx, ax
 		mov	ax, es:[bx]
 		mov	bx, dx
@@ -6764,7 +6744,7 @@ loc_17CB3:
 		mov	[bx+5370h], ax
 		mov	ax, cx
 		add	ax, ax
-		les	bx, off_39E88
+		les	bx, _cards_top
 		add	bx, ax
 		mov	ax, es:[bx]
 		mov	bx, dx
@@ -7472,7 +7452,7 @@ loc_18221:
 		mov	byte ptr [bx+53A0h], 1
 		mov	ax, cx
 		add	ax, ax
-		les	bx, font
+		les	bx, _cards_left
 		add	bx, ax
 		mov	ax, es:[bx]
 		mov	bx, dx
@@ -7480,7 +7460,7 @@ loc_18221:
 		mov	[bx+5398h], ax
 		mov	ax, cx
 		add	ax, ax
-		les	bx, off_39E88
+		les	bx, _cards_top
 		add	bx, ax
 		mov	ax, es:[bx]
 		mov	bx, dx
@@ -18037,6 +18017,11 @@ main_30_TEXT	segment	byte public 'CODE' use16
 		;org 3
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
+; panel_flag_t
+PANEL_ALIVE = 0
+PANEL_FLIPPING = 1
+PANEL_REMOVED = 2
+
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
@@ -18056,7 +18041,7 @@ arg_0		= word ptr  6
 loc_1FDDD:
 		mov	ax, si
 		add	ax, ax
-		les	bx, font
+		les	bx, _cards_left
 		add	bx, ax
 		mov	ax, es:[bx]
 		sub	ax, _orb_cur_left
@@ -18070,7 +18055,7 @@ loc_1FDDD:
 loc_1FDFC:
 		mov	ax, si
 		add	ax, ax
-		les	bx, font
+		les	bx, _cards_left
 		add	bx, ax
 		mov	ax, es:[bx]
 		sub	ax, _orb_cur_left
@@ -18079,7 +18064,7 @@ loc_1FE0D:
 		mov	[bp+var_2], ax
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E88
+		les	bx, _cards_top
 		add	bx, ax
 		mov	ax, es:[bx]
 		sub	ax, _orb_cur_top
@@ -18093,7 +18078,7 @@ loc_1FE0D:
 loc_1FE2F:
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E88
+		les	bx, _cards_top
 		add	bx, ax
 		mov	ax, es:[bx]
 		sub	ax, _orb_cur_top
@@ -18104,21 +18089,21 @@ loc_1FE40:
 		jnb	short loc_1FE59
 		cmp	[bp+var_4], 18h
 		jnb	short loc_1FE59
-		les	bx, off_39E8C
-		cmp	byte ptr es:[bx+si], 0
+		les	bx, _cards_flag
+		cmp	byte ptr es:[bx+si], PANEL_ALIVE
 		jz	short loc_1FEAB
 
 loc_1FE59:
 		cmp	word_34A72, 1
 		jnz	short loc_1FE6A
-		les	bx, off_39E8C
-		cmp	byte ptr es:[bx+si], 0
+		les	bx, _cards_flag
+		cmp	byte ptr es:[bx+si], PANEL_ALIVE
 		jz	short loc_1FEAB
 
 loc_1FE6A:
 		cmp	byte_34A58, 1
 		jnz	loc_1FF7E
-		movsx	ebx, word_39E90
+		movsx	ebx, _card_count
 		mov	eax, dword_34A62
 		xor	edx, edx
 		div	ebx
@@ -18131,13 +18116,13 @@ loc_1FE6A:
 		idiv	bx
 		or	dx, dx
 		jz	loc_1FF7E
-		les	bx, off_39E8C
-		cmp	byte ptr es:[bx+si], 0
+		les	bx, _cards_flag
+		cmp	byte ptr es:[bx+si], PANEL_ALIVE
 		jnz	loc_1FF7E
 
 loc_1FEAB:
-		les	bx, off_39E8C
-		mov	byte ptr es:[bx+si], 1
+		les	bx, _cards_flag
+		mov	byte ptr es:[bx+si], PANEL_FLIPPING
 		mov	ax, _cardcombo_cur
 		imul	_cardcombo_cur
 		cwde
@@ -18230,7 +18215,7 @@ loc_1FF7E:
 		inc	si
 
 loc_1FF7F:
-		cmp	si, word_39E90
+		cmp	si, _card_count
 		jb	loc_1FDDD
 		pop	si
 		leave
@@ -18267,14 +18252,14 @@ loc_2007C:
 		jz	loc_201B1
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E92
+		les	bx, _cards_flip_frames
 		add	bx, ax
-		cmp	word ptr es:[bx], 0Eh
+		cmp	word ptr es:[bx], 14
 		jle	loc_201B1
-		cmp	word ptr es:[bx], 14h
+		cmp	word ptr es:[bx], 20
 		jle	short loc_200B2
 		mov	ax, es:[bx]
-		add	ax, 0FFECh
+		add	ax, -20
 		mov	di, ax
 		jmp	short loc_200B4
 ; ---------------------------------------------------------------------------
@@ -18328,7 +18313,7 @@ loc_20114:
 loc_20116:
 		mov	dx, si
 		add	dx, dx
-		les	bx, off_39E88
+		les	bx, _cards_top
 		add	bx, dx
 		mov	dx, es:[bx]
 		add	dx, 8
@@ -18336,7 +18321,7 @@ loc_20116:
 		push	dx
 		mov	ax, si
 		add	ax, ax
-		les	bx, font
+		les	bx, _cards_left
 		add	bx, ax
 		mov	ax, es:[bx]
 		add	ax, [bp+@@x]
@@ -18347,9 +18332,9 @@ loc_20116:
 loc_20142:
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E92
+		les	bx, _cards_flip_frames
 		add	bx, ax
-		cmp	word ptr es:[bx], 1Ch
+		cmp	word ptr es:[bx], 28
 		jl	short loc_20167
 		mov	ax, si
 		shl	ax, 2
@@ -18375,7 +18360,7 @@ loc_20167:
 		push	(7 or FX_WEIGHT_BOLD)
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E88
+		les	bx, _cards_top
 		add	bx, ax
 		mov	ax, es:[bx]
 		add	ax, 8
@@ -18383,7 +18368,7 @@ loc_20167:
 		push	ax
 		mov	ax, si
 		add	ax, ax
-		les	bx, font
+		les	bx, _cards_left
 		add	bx, ax
 		mov	ax, es:[bx]
 		add	ax, [bp+@@x]
@@ -18395,7 +18380,7 @@ loc_201B1:
 		inc	si
 
 loc_201B2:
-		cmp	si, word_39E90
+		cmp	si, _card_count
 		jl	loc_2007C
 		pop	di
 		pop	si
@@ -18422,16 +18407,16 @@ sub_201BE	proc far
 ; ---------------------------------------------------------------------------
 
 loc_201CF:
-		les	bx, off_39E8C
+		les	bx, _cards_flag
 		mov	al, es:[bx+si]
 		cbw
-		cmp	ax, 1
+		cmp	ax, PANEL_FLIPPING
 		jnz	loc_2036D
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E92
+		les	bx, _cards_flip_frames
 		add	bx, ax
-		cmp	word ptr es:[bx], 19h
+		cmp	word ptr es:[bx], 25
 		jge	loc_202A6
 		mov	ax, es:[bx]
 		mov	bx, 6
@@ -18443,13 +18428,13 @@ loc_201CF:
 		call	_graph_accesspage_func
 		pop	cx
 		push	si
-		les	bx, off_39E96
+		les	bx, _cards_hp
 		mov	al, es:[bx+si]
 		cbw
 		imul	ax, 5
 		mov	dx, si
 		add	dx, dx
-		les	bx, off_39E92
+		les	bx, _cards_flip_frames
 		add	bx, dx
 		push	ax
 		mov	ax, es:[bx]
@@ -18463,12 +18448,12 @@ loc_201CF:
 		push	ax
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E88
+		les	bx, _cards_top
 		add	bx, ax
 		push	word ptr es:[bx]
 		mov	ax, si
 		add	ax, ax
-		les	bx, font
+		les	bx, _cards_left
 		add	bx, ax
 		push	word ptr es:[bx]
 		call	sub_20496
@@ -18476,13 +18461,13 @@ loc_201CF:
 		call	_graph_accesspage_func
 		add	sp, 0Ah
 		push	si
-		les	bx, off_39E96
+		les	bx, _cards_hp
 		mov	al, es:[bx+si]
 		cbw
 		imul	ax, 5
 		mov	dx, si
 		add	dx, dx
-		les	bx, off_39E92
+		les	bx, _cards_flip_frames
 		add	bx, dx
 		push	ax
 		mov	ax, es:[bx]
@@ -18496,12 +18481,12 @@ loc_201CF:
 		push	ax
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E88
+		les	bx, _cards_top
 		add	bx, ax
 		push	word ptr es:[bx]
 		mov	ax, si
 		add	ax, ax
-		les	bx, font
+		les	bx, _cards_left
 		add	bx, ax
 		push	word ptr es:[bx]
 		call	sub_20496
@@ -18510,10 +18495,10 @@ loc_201CF:
 loc_202A6:
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E92
+		les	bx, _cards_flip_frames
 		add	bx, ax
 		inc	word ptr es:[bx]
-		cmp	word ptr es:[bx], 18h
+		cmp	word ptr es:[bx], 24
 		jl	loc_2036D
 		mov	al, _rank
 		cbw
@@ -18533,22 +18518,22 @@ loc_202D4:
 loc_202D9:
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E92
+		les	bx, _cards_flip_frames
 		add	bx, ax
-		cmp	word ptr es:[bx], 19h
+		cmp	word ptr es:[bx], 25
 		jnz	short loc_2031C
 		push	(3 shl 4) + 8
 		push	[bp+@@pattern]
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E88
+		les	bx, _cards_top
 		add	bx, ax
 		mov	ax, es:[bx]
 		add	ax, 12
 		push	ax
 		mov	ax, si
 		add	ax, ax
-		les	bx, font
+		les	bx, _cards_left
 		add	bx, ax
 		mov	ax, es:[bx]
 		add	ax, 12
@@ -18561,39 +18546,39 @@ loc_202D9:
 loc_2031C:
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E92
+		les	bx, _cards_flip_frames
 		add	bx, ax
-		cmp	word ptr es:[bx], 1Eh
+		cmp	word ptr es:[bx], 30
 		jl	short loc_2036D
-		les	bx, off_39E96
+		les	bx, _cards_hp
 		cmp	byte ptr es:[bx+si], 0
 		jnz	short loc_2034F
-		les	bx, off_39E8C
-		mov	byte ptr es:[bx+si], 2
+		les	bx, _cards_flag
+		mov	byte ptr es:[bx+si], PANEL_REMOVED
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E92
+		les	bx, _cards_flip_frames
 		add	bx, ax
 		mov	word ptr es:[bx], 0
 		jmp	short loc_2036D
 ; ---------------------------------------------------------------------------
 
 loc_2034F:
-		les	bx, off_39E8C
-		mov	byte ptr es:[bx+si], 0
+		les	bx, _cards_flag
+		mov	byte ptr es:[bx+si], PANEL_ALIVE
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E92
+		les	bx, _cards_flip_frames
 		add	bx, ax
 		mov	word ptr es:[bx], 0
-		les	bx, off_39E96
+		les	bx, _cards_hp
 		dec	byte ptr es:[bx+si]
 
 loc_2036D:
-		les	bx, off_39E8C
+		les	bx, _cards_flag
 		mov	al, es:[bx+si]
 		cbw
-		cmp	ax, 2
+		cmp	ax, PANEL_REMOVED
 		jnz	short loc_2037B
 		inc	di
 
@@ -18601,9 +18586,9 @@ loc_2037B:
 		inc	si
 
 loc_2037C:
-		cmp	si, word_39E90
+		cmp	si, _card_count
 		jl	loc_201CF
-		cmp	di, word_39E90
+		cmp	di, _card_count
 		jnz	short loc_20395
 		mov	word_34A82, 1
 
@@ -18722,12 +18707,12 @@ loc_20401:
 		push	9999
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E88
+		les	bx, _cards_top
 		add	bx, ax
 		push	word ptr es:[bx]
 		mov	ax, si
 		add	ax, ax
-		les	bx, font
+		les	bx, _cards_left
 		add	bx, ax
 		push	word ptr es:[bx]
 		nopcall	sub_20496
@@ -18735,7 +18720,7 @@ loc_20401:
 		inc	si
 
 loc_20428:
-		cmp	si, word_39E90
+		cmp	si, _card_count
 		jl	short loc_20401
 		xor	si, si
 		jmp	short loc_2045F
@@ -18743,7 +18728,7 @@ loc_20428:
 
 loc_20432:
 		mov	ax, si
-		add	ax, word_39E90
+		add	ax, _card_count
 		push	ax
 		push	9999
 		mov	ax, si
@@ -19186,7 +19171,7 @@ arg_4		= dword	ptr  0Ah
 		mov	es:[bx], ax
 		les	bx, [bp+arg_4]
 		mov	ax, es:[bx]
-		add	ax, word_39E90
+		add	ax, _card_count
 		push	ax
 		mov	ax, es:[bx]
 		add	ax, ax
@@ -19286,12 +19271,12 @@ loc_208BD:
 loc_208C7:
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E88
+		les	bx, _cards_top
 		add	bx, ax
 		push	word ptr es:[bx]
 		mov	ax, si
 		add	ax, ax
-		les	bx, font
+		les	bx, _cards_left
 		add	bx, ax
 		push	word ptr es:[bx]
 		call	_ptn_copy_8_0_to_1
@@ -19299,7 +19284,7 @@ loc_208C7:
 		inc	si
 
 loc_208EA:
-		cmp	si, word_39E90
+		cmp	si, _card_count
 		jl	short loc_208C7
 
 loc_208F0:
@@ -19363,7 +19348,7 @@ arg_0		= word ptr  6
 		idiv	bx
 		mov	[bp+arg_0], dx
 		mov	word_39EAA, 0
-		mov	word_39E90, 0
+		mov	_card_count, 0
 		cmp	[bp+arg_0], 4
 		jz	loc_20DE4
 		xor	di, di
@@ -19382,7 +19367,7 @@ loc_20957:
 		cbw
 		test	ax, si
 		jz	short loc_2096B
-		inc	word_39E90
+		inc	_card_count
 
 loc_2096B:
 		sar	si, 1
@@ -19420,45 +19405,45 @@ loc_2099B:
 loc_2099C:
 		cmp	di, 0FAh
 		jl	short loc_2097C
-		mov	ax, word_39E90
+		mov	ax, _card_count
 		add	ax, word_39EAA
 		push	ax
 		call	sub_20399
 		pop	cx
-		cmp	word_39E90, 0
+		cmp	_card_count, 0
 		jle	short loc_20A27
-		mov	ax, word_39E90
+		mov	ax, _card_count
 		add	ax, ax
 		push	ax
 		call	@$bnwa$qui
 		pop	cx
-		mov	word ptr font+2, dx
-		mov	word ptr font, ax
-		mov	ax, word_39E90
+		mov	word ptr _cards_left+2, dx
+		mov	word ptr _cards_left, ax
+		mov	ax, _card_count
 		add	ax, ax
 		push	ax
 		call	@$bnwa$qui
 		pop	cx
-		mov	word ptr off_39E88+2, dx
-		mov	word ptr off_39E88, ax
-		push	word_39E90
+		mov	word ptr _cards_top+2, dx
+		mov	word ptr _cards_top, ax
+		push	_card_count
 		call	@$bnwa$qui
 		pop	cx
-		mov	word ptr off_39E8C+2, dx
-		mov	word ptr off_39E8C, ax
-		mov	ax, word_39E90
+		mov	word ptr _cards_flag+2, dx
+		mov	word ptr _cards_flag, ax
+		mov	ax, _card_count
 		add	ax, ax
 		push	ax
 		call	@$bnwa$qui
 		pop	cx
-		mov	word ptr off_39E92+2, dx
-		mov	word ptr off_39E92, ax
-		push	word_39E90
+		mov	word ptr _cards_flip_frames+2, dx
+		mov	word ptr _cards_flip_frames, ax
+		push	_card_count
 		call	@$bnwa$qui
 		pop	cx
-		mov	word ptr off_39E96+2, dx
-		mov	word ptr off_39E96, ax
-		mov	ax, word_39E90
+		mov	word ptr _cards_hp+2, dx
+		mov	word ptr _cards_hp, ax
+		mov	ax, _card_count
 		shl	ax, 2
 		push	ax
 		call	@$bnwa$qui
@@ -19501,7 +19486,7 @@ loc_20A27:
 loc_20A7A:
 		call	IRand
 		cwd
-		idiv	word_39E90
+		idiv	_card_count
 		mov	word_39EB0, dx
 		xor	si, si
 		jmp	short loc_20A9C
@@ -19525,13 +19510,13 @@ loc_20A9C:
 loc_20AA6:
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E92
+		les	bx, _cards_flip_frames
 		add	bx, ax
 		mov	word ptr es:[bx], 0
 		inc	si
 
 loc_20AB6:
-		cmp	si, word_39E90
+		cmp	si, _card_count
 		jl	short loc_20AA6
 		xor	di, di
 		jmp	loc_20B79
@@ -19598,20 +19583,20 @@ loc_20AF0:
 		add	sp, 6
 		mov	ax, [bp+var_4]
 		add	ax, ax
-		les	bx, font
+		les	bx, _cards_left
 		add	bx, ax
 		mov	ax, [bp+var_10]
 		mov	es:[bx], ax
 		mov	ax, [bp+var_4]
 		add	ax, ax
-		les	bx, off_39E88
+		les	bx, _cards_top
 		add	bx, ax
 		mov	ax, [bp+var_12]
 		mov	es:[bx], ax
-		les	bx, off_39E8C
+		les	bx, _cards_flag
 		add	bx, [bp+var_4]
-		mov	byte ptr es:[bx], 0
-		les	bx, off_39E96
+		mov	byte ptr es:[bx], PANEL_ALIVE
+		les	bx, _cards_hp
 		add	bx, [bp+var_4]
 		mov	byte ptr es:[bx], 0
 		inc	[bp+var_4]
@@ -19680,14 +19665,14 @@ loc_20BBC:
 loc_20BE1:
 		mov	ax, [bp+var_6]
 		add	ax, ax
-		les	bx, font
+		les	bx, _cards_left
 		add	bx, ax
 		mov	ax, es:[bx]
 		cmp	ax, [bp+var_8]
 		jnz	short loc_20C20
 		mov	ax, [bp+var_6]
 		add	ax, ax
-		les	bx, off_39E88
+		les	bx, _cards_top
 		add	bx, ax
 		mov	ax, es:[bx]
 		cmp	ax, [bp+var_A]
@@ -19696,7 +19681,7 @@ loc_20BE1:
 		imul	bx, 255
 		mov	al, [bx+di+228Eh]
 		add	al, 0F3h
-		les	bx, off_39E96
+		les	bx, _cards_hp
 		add	bx, [bp+var_6]
 		mov	es:[bx], al
 		jmp	short loc_20C8C
@@ -19707,7 +19692,7 @@ loc_20C20:
 
 loc_20C23:
 		mov	ax, [bp+var_6]
-		cmp	ax, word_39E90
+		cmp	ax, _card_count
 		jl	short loc_20BE1
 		jmp	short loc_20C8C
 ; ---------------------------------------------------------------------------
@@ -19781,7 +19766,7 @@ loc_20C8D:
 ; ---------------------------------------------------------------------------
 
 loc_20CA0:
-		les	bx, off_39E96
+		les	bx, _cards_hp
 		mov	al, es:[bx+si]
 		cbw
 		imul	ax, 5
@@ -19792,12 +19777,12 @@ loc_20CA0:
 		push	ax
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E88
+		les	bx, _cards_top
 		add	bx, ax
 		push	word ptr es:[bx]
 		mov	ax, si
 		add	ax, ax
-		les	bx, font
+		les	bx, _cards_left
 		add	bx, ax
 		push	word ptr es:[bx]
 		call	_ptn_put_8
@@ -19805,7 +19790,7 @@ loc_20CA0:
 		inc	si
 
 loc_20CDA:
-		cmp	si, word_39E90
+		cmp	si, _card_count
 		jl	short loc_20CA0
 		jmp	loc_20DE4
 ; ---------------------------------------------------------------------------
@@ -19860,7 +19845,7 @@ loc_20D15:
 		mov	bx, 6
 		cwd
 		idiv	bx
-		les	bx, off_39E96
+		les	bx, _cards_hp
 		push	ax
 		mov	al, es:[bx+si]
 		cbw
@@ -19873,12 +19858,12 @@ loc_20D15:
 		push	ax
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E88
+		les	bx, _cards_top
 		add	bx, ax
 		push	word ptr es:[bx]
 		mov	ax, si
 		add	ax, ax
-		les	bx, font
+		les	bx, _cards_left
 		add	bx, ax
 		push	word ptr es:[bx]
 		call	_ptn_put_8
@@ -19904,13 +19889,13 @@ loc_20DAC:
 		inc	si
 
 loc_20DAD:
-		cmp	si, word_39E90
+		cmp	si, _card_count
 		jl	loc_20D03
 		mov	ax, [bp+var_16]
-		cmp	ax, word_39E90
+		cmp	ax, _card_count
 		jge	short loc_20DE4
 		mov	ax, [bp+var_14]
-		cmp	ax, word_39E90
+		cmp	ax, _card_count
 		jge	short loc_20DD6
 		mov	bx, [bp+var_14]
 		add	bx, bx
@@ -21079,12 +21064,12 @@ sub_21577	endp
 sub_21819	proc far
 		push	bp
 		mov	bp, sp
-		mov	word_39E90, 1
-		mov	font, 0
-		mov	off_39E88, 0
-		mov	off_39E8C, 0
-		mov	off_39E92, 0
-		mov	off_39E96, 0
+		mov	_card_count, 1
+		mov	_cards_left, 0
+		mov	_cards_top, 0
+		mov	_cards_flag, 0
+		mov	_cards_flip_frames, 0
+		mov	_cards_hp, 0
 		mov	off_39EAC, 0
 		mov	word_39EAA, 1
 		mov	off_39E9A, 0
@@ -45607,17 +45592,15 @@ byte_39E7A	db ?
 ; void far *off_39E7C
 off_39E7C	dd ?
 dword_39E80	dd ?
-; void (*font)(void)
-font		dd ?
-; void (*off_39E88)(void)
-off_39E88	dd ?
-; void (*off_39E8C)(void)
-off_39E8C	dd ?
-word_39E90	dw ?
-; void (*off_39E92)(void)
-off_39E92	dd ?
-; void (*off_39E96)(void)
-off_39E96	dd ?
+
+public _cards
+_cards	label
+_cards_left	dd ?
+_cards_top	dd ?
+_cards_flag	dd ?
+_card_count	dw ?
+_cards_flip_frames	dd ?
+_cards_hp	dd ?
 ; void (*off_39E9A)(void)
 off_39E9A	dd ?
 ; void (*off_39E9E)(void)
