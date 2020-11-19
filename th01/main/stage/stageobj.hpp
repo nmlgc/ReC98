@@ -28,8 +28,23 @@ struct CCards {
 extern CCards cards;
 // -----
 
-// Portals
-// -------
+// "Obstacles"
+// -----------
+// Combines bumpers, bumper bars, portals, and turrets.
+
+struct CObstacles {
+	screen_x_t *left;
+	vram_y_t *top;
+	obstacle_type_t *type;
+	int *type_frames;
+	int count;
+};
+
+extern CObstacles obstacles;
+// -----------
+
+// Current portal state
+// --------------------
 
 extern screen_x_t portal_dst_left;
 extern screen_y_t portal_dst_top;
@@ -37,4 +52,4 @@ extern screen_y_t portal_dst_top;
 // frames after the orb has exited a portal, to prevent it from immediately
 // re-entering.
 extern bool16 portals_blocked;
-// -------
+// --------------------

@@ -2454,7 +2454,7 @@ loc_D118:
 		push	offset aCoreleft7luByt ; "    coreleft %7lu bytes free\n"
 		call	_printf
 		add	sp, 8
-		push	word_39EAA
+		push	_obstacle_count
 		push	ds
 		push	offset aKabe_nD	; "    kabe_n =	%d\n"
 		call	_printf
@@ -3980,21 +3980,17 @@ loc_E060:
 		jmp	short $+2
 
 loc_E080:
-		cmp	off_39E9A, 0
+		cmp	_obstacles_left, 0
 		jz	short loc_E0A0
-		pushd	[off_39E9A] ; font
-		call	@$bdla$qnv
-		add	sp, 4
-		mov	off_39E9A, 0
+		call	@$bdla$qnv c, large [_obstacles_left]
+		mov	_obstacles_left, 0
 		jmp	short $+2
 
 loc_E0A0:
-		cmp	off_39E9E, 0
+		cmp	_obstacles_top, 0
 		jz	short loc_E0C0
-		pushd	[off_39E9E] ; font
-		call	@$bdla$qnv
-		add	sp, 4
-		mov	off_39E9E, 0
+		call	@$bdla$qnv c, large [_obstacles_top]
+		mov	_obstacles_top, 0
 		jmp	short $+2
 
 loc_E0C0:
@@ -4005,12 +4001,10 @@ loc_E0C0:
 		jmp	short $+2
 
 loc_E0E0:
-		cmp	off_39EA6, 0
+		cmp	_obstacles_type_frames, 0
 		jz	short loc_E101
-		pushd	[off_39EA6] ; font
-		call	@$bdla$qnv
-		add	sp, 4
-		mov	off_39EA6, 0
+		call	@$bdla$qnv c, large [_obstacles_type_frames]
+		mov	_obstacles_type_frames, 0
 		jmp	loc_D7E4
 ; ---------------------------------------------------------------------------
 
@@ -4063,21 +4057,17 @@ loc_E1A4:
 		jmp	short $+2
 
 loc_E1C4:
-		cmp	off_39E9A, 0
+		cmp	_obstacles_left, 0
 		jz	short loc_E1E4
-		pushd	[off_39E9A] ; font
-		call	@$bdla$qnv
-		add	sp, 4
-		mov	off_39E9A, 0
+		call	@$bdla$qnv c, large [_obstacles_left]
+		mov	_obstacles_left, 0
 		jmp	short $+2
 
 loc_E1E4:
-		cmp	off_39E9E, 0
+		cmp	_obstacles_top, 0
 		jz	short loc_E204
-		pushd	[off_39E9E] ; font
-		call	@$bdla$qnv
-		add	sp, 4
-		mov	off_39E9E, 0
+		call	@$bdla$qnv c, large [_obstacles_top]
+		mov	_obstacles_top, 0
 		jmp	short $+2
 
 loc_E204:
@@ -4088,12 +4078,10 @@ loc_E204:
 		jmp	short $+2
 
 loc_E224:
-		cmp	off_39EA6, 0
+		cmp	_obstacles_type_frames, 0
 		jz	short loc_E244
-		pushd	[off_39EA6] ; font
-		call	@$bdla$qnv
-		add	sp, 4
-		mov	off_39EA6, 0
+		call	@$bdla$qnv c, large [_obstacles_type_frames]
+		mov	_obstacles_type_frames, 0
 		jmp	short $+2
 
 loc_E244:
@@ -18733,12 +18721,12 @@ loc_20432:
 		push	9999
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E9E
+		les	bx, _obstacles_top
 		add	bx, ax
 		push	word ptr es:[bx]
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E9A
+		les	bx, _obstacles_left
 		add	bx, ax
 		push	word ptr es:[bx]
 		nopcall	sub_20496
@@ -18746,7 +18734,7 @@ loc_20432:
 		inc	si
 
 loc_2045F:
-		cmp	si, word_39EAA
+		cmp	si, _obstacle_count
 		jl	short loc_20432
 		pop	si
 		pop	bp
@@ -19154,7 +19142,7 @@ arg_4		= dword	ptr  0Ah
 		les	bx, [bp+arg_4]
 		mov	ax, es:[bx]
 		add	ax, ax
-		les	bx, off_39E9A
+		les	bx, _obstacles_left
 		add	bx, ax
 		mov	es:[bx], dx
 		lea	ax, [si-50]
@@ -19166,7 +19154,7 @@ arg_4		= dword	ptr  0Ah
 		les	bx, [bp+arg_4]
 		mov	dx, es:[bx]
 		add	dx, dx
-		les	bx, off_39E9E
+		les	bx, _obstacles_top
 		add	bx, dx
 		mov	es:[bx], ax
 		les	bx, [bp+arg_4]
@@ -19175,13 +19163,13 @@ arg_4		= dword	ptr  0Ah
 		push	ax
 		mov	ax, es:[bx]
 		add	ax, ax
-		les	bx, off_39E9E
+		les	bx, _obstacles_top
 		add	bx, ax
 		push	word ptr es:[bx]
 		les	bx, [bp+arg_4]
 		mov	ax, es:[bx]
 		add	ax, ax
-		les	bx, off_39E9A
+		les	bx, _obstacles_left
 		add	bx, ax
 		push	word ptr es:[bx]
 		call	sub_2069A
@@ -19190,13 +19178,13 @@ arg_4		= dword	ptr  0Ah
 		les	bx, [bp+arg_4]
 		mov	ax, es:[bx]
 		add	ax, ax
-		les	bx, off_39E9E
+		les	bx, _obstacles_top
 		add	bx, ax
 		push	word ptr es:[bx]
 		les	bx, [bp+arg_4]
 		mov	ax, es:[bx]
 		add	ax, ax
-		les	bx, off_39E9A
+		les	bx, _obstacles_left
 		add	bx, ax
 		push	word ptr es:[bx]
 		call	_ptn_put_8
@@ -19247,12 +19235,12 @@ loc_20883:
 @@obstacle:
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E9E
+		les	bx, _obstacles_top
 		add	bx, ax
 		push	word ptr es:[bx]
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E9A
+		les	bx, _obstacles_left
 		add	bx, ax
 		push	word ptr es:[bx]
 		call	_ptn_copy_8_0_to_1
@@ -19262,7 +19250,7 @@ loc_20883:
 		inc	si
 
 loc_208BD:
-		cmp	si, word_39EAA
+		cmp	si, _obstacle_count
 		jl	short loc_20883
 		xor	si, si
 		jmp	short loc_208EA
@@ -19347,7 +19335,7 @@ arg_0		= word ptr  6
 		cwd
 		idiv	bx
 		mov	[bp+arg_0], dx
-		mov	word_39EAA, 0
+		mov	_obstacle_count, 0
 		mov	_card_count, 0
 		cmp	[bp+arg_0], 4
 		jz	loc_20DE4
@@ -19397,7 +19385,7 @@ loc_2097C:
 		jmp	cs:off_20E22[bx]
 
 loc_20997:
-		inc	word_39EAA
+		inc	_obstacle_count
 
 loc_2099B:
 		inc	di
@@ -19406,7 +19394,7 @@ loc_2099C:
 		cmp	di, 0FAh
 		jl	short loc_2097C
 		mov	ax, _card_count
-		add	ax, word_39EAA
+		add	ax, _obstacle_count
 		push	ax
 		call	sub_20399
 		pop	cx
@@ -19453,34 +19441,34 @@ loc_2099C:
 		jmp	short $+2
 
 loc_20A27:
-		cmp	word_39EAA, 0
+		cmp	_obstacle_count, 0
 		jle	short loc_20A7A
-		mov	ax, word_39EAA
+		mov	ax, _obstacle_count
 		add	ax, ax
 		push	ax
 		call	@$bnwa$qui
 		pop	cx
-		mov	word ptr off_39E9A+2, dx
-		mov	word ptr off_39E9A, ax
-		mov	ax, word_39EAA
+		mov	word ptr _obstacles_left+2, dx
+		mov	word ptr _obstacles_left, ax
+		mov	ax, _obstacle_count
 		add	ax, ax
 		push	ax
 		call	@$bnwa$qui
 		pop	cx
-		mov	word ptr off_39E9E+2, dx
-		mov	word ptr off_39E9E, ax
-		push	word_39EAA
+		mov	word ptr _obstacles_top+2, dx
+		mov	word ptr _obstacles_top, ax
+		push	_obstacle_count
 		call	@$bnwa$qui
 		pop	cx
 		mov	word ptr _obstacles_type+2, dx
 		mov	word ptr _obstacles_type, ax
-		mov	ax, word_39EAA
+		mov	ax, _obstacle_count
 		add	ax, ax
 		push	ax
 		call	@$bnwa$qui
 		pop	cx
-		mov	word ptr off_39EA6+2, dx
-		mov	word ptr off_39EA6, ax
+		mov	word ptr _obstacles_type_frames+2, dx
+		mov	word ptr _obstacles_type_frames, ax
 		jmp	short $+2
 
 loc_20A7A:
@@ -19495,13 +19483,13 @@ loc_20A7A:
 loc_20A8C:
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39EA6
+		les	bx, _obstacles_type_frames
 		add	bx, ax
 		mov	word ptr es:[bx], 0
 		inc	si
 
 loc_20A9C:
-		cmp	si, word_39EAA
+		cmp	si, _obstacle_count
 		jl	short loc_20A8C
 		xor	si, si
 		jmp	short loc_20AB6
@@ -19749,7 +19737,7 @@ loc_20C59:
 		mov	ax, [bp+var_E]
 		dec	ax
 		add	ax, ax
-		les	bx, off_39EA6
+		les	bx, _obstacles_type_frames
 		add	bx, ax
 		mov	word ptr es:[bx], 0
 
@@ -20001,7 +19989,7 @@ loc_20E5F:
 loc_20E64:
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E9A
+		les	bx, _obstacles_left
 		add	bx, ax
 		mov	ax, es:[bx]
 		sub	ax, _orb_cur_left
@@ -20012,7 +20000,7 @@ loc_20E64:
 		mov	[bp+var_2], ax
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E9E
+		les	bx, _obstacles_top
 		add	bx, ax
 		mov	ax, es:[bx]
 		sub	ax, _orb_cur_top
@@ -20023,14 +20011,14 @@ loc_20E64:
 		mov	[bp+var_4], ax
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E9A
+		les	bx, _obstacles_left
 		add	bx, ax
 		mov	ax, _orb_cur_left
 		sub	ax, es:[bx]
 		mov	[bp+var_6], ax
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E9E
+		les	bx, _obstacles_top
 		add	bx, ax
 		mov	ax, _orb_cur_top
 		sub	ax, es:[bx]
@@ -20052,7 +20040,7 @@ loc_20E64:
 		jnb	short loc_20F67
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39EA6
+		les	bx, _obstacles_type_frames
 		add	bx, ax
 		cmp	word ptr es:[bx], 0
 		jnz	short loc_20F67
@@ -20061,7 +20049,7 @@ loc_20E64:
 		jg	short loc_20F14
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E9E
+		les	bx, _obstacles_top
 		add	bx, ax
 		mov	ax, es:[bx]
 		add	ax, -24
@@ -20071,7 +20059,7 @@ loc_20E64:
 loc_20F14:
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E9E
+		les	bx, _obstacles_top
 		add	bx, ax
 		mov	ax, es:[bx]
 		add	ax, 24
@@ -20105,7 +20093,7 @@ loc_20F4F:
 loc_20F67:
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39EA6
+		les	bx, _obstacles_type_frames
 		add	bx, ax
 		cmp	word ptr es:[bx], 0
 		jz	short loc_20F85
@@ -20125,14 +20113,14 @@ loc_20F85:
 		jz	short loc_20FA3
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39EA6
+		les	bx, _obstacles_type_frames
 		add	bx, ax
 		inc	word ptr es:[bx]
 
 loc_20FA3:
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39EA6
+		les	bx, _obstacles_type_frames
 		add	bx, ax
 		cmp	word ptr es:[bx], 200
 		jl	short loc_20FBF
@@ -20152,14 +20140,14 @@ loc_20FBF:
 		jz	short loc_20FDC
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39EA6
+		les	bx, _obstacles_type_frames
 		add	bx, ax
 		inc	word ptr es:[bx]
 
 loc_20FDC:
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39EA6
+		les	bx, _obstacles_type_frames
 		add	bx, ax
 		cmp	word ptr es:[bx], 100
 		jl	short loc_20FF7
@@ -20175,7 +20163,7 @@ loc_20FF7:
 loc_20FFE:
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39EA6
+		les	bx, _obstacles_type_frames
 		add	bx, ax
 		mov	word ptr es:[bx], 0
 		push	di
@@ -20193,7 +20181,7 @@ loc_20FFE:
 loc_21022:
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39EA6
+		les	bx, _obstacles_type_frames
 		add	bx, ax
 		cmp	word ptr es:[bx], 0
 		jz	short loc_2103D
@@ -20209,7 +20197,7 @@ loc_2103D:
 		jnz	@@card
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39EA6
+		les	bx, _obstacles_type_frames
 		add	bx, ax
 		mov	word ptr es:[bx], 0
 		push	di
@@ -20226,7 +20214,7 @@ loc_2105A:
 		jnb	short loc_210B1
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E9E
+		les	bx, _obstacles_top
 		add	bx, ax
 		mov	ax, _orb_cur_top
 		sub	ax, es:[bx]
@@ -20237,7 +20225,7 @@ loc_2105A:
 		jle	short loc_210B1
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39EA6
+		les	bx, _obstacles_type_frames
 		add	bx, ax
 		cmp	word ptr es:[bx], 0
 		jnz	short loc_210B1
@@ -20254,7 +20242,7 @@ loc_2105A:
 loc_210B1:
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39EA6
+		les	bx, _obstacles_type_frames
 		add	bx, ax
 		cmp	word ptr es:[bx], 0
 		jz	@@card
@@ -20266,7 +20254,7 @@ loc_210B1:
 		jnb	short loc_21117
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E9E
+		les	bx, _obstacles_top
 		add	bx, ax
 		mov	ax, _orb_cur_top
 		sub	ax, es:[bx]
@@ -20277,7 +20265,7 @@ loc_210B1:
 		jl	short loc_21117
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39EA6
+		les	bx, _obstacles_type_frames
 		add	bx, ax
 		cmp	word ptr es:[bx], 0
 		jnz	short loc_21117
@@ -20294,7 +20282,7 @@ loc_210B1:
 loc_21117:
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39EA6
+		les	bx, _obstacles_type_frames
 		add	bx, ax
 		cmp	word ptr es:[bx], 0
 		jz	@@card
@@ -20306,7 +20294,7 @@ loc_21117:
 		jnb	loc_211CD
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E9A
+		les	bx, _obstacles_left
 		add	bx, ax
 		mov	ax, es:[bx]
 		sub	ax, _orb_cur_left
@@ -20317,7 +20305,7 @@ loc_21117:
 		jl	short loc_211CD
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39EA6
+		les	bx, _obstacles_type_frames
 		add	bx, ax
 		cmp	word ptr es:[bx], 0
 		jnz	short loc_211CD
@@ -20375,7 +20363,7 @@ loc_211CA:
 loc_211CD:
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39EA6
+		les	bx, _obstacles_type_frames
 		add	bx, ax
 		cmp	word ptr es:[bx], 0
 		jz	@@card
@@ -20387,7 +20375,7 @@ loc_211CD:
 		jnb	loc_21283
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E9A
+		les	bx, _obstacles_left
 		add	bx, ax
 		mov	ax, es:[bx]
 		sub	ax, _orb_cur_left
@@ -20398,7 +20386,7 @@ loc_211CD:
 		jl	short loc_21283
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39EA6
+		les	bx, _obstacles_type_frames
 		add	bx, ax
 		cmp	word ptr es:[bx], 0
 		jnz	short loc_21283
@@ -20456,7 +20444,7 @@ loc_21280:
 loc_21283:
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39EA6
+		les	bx, _obstacles_type_frames
 		add	bx, ax
 		cmp	word ptr es:[bx], 0
 		jz	short @@card
@@ -20464,7 +20452,7 @@ loc_21283:
 loc_21293:
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39EA6
+		les	bx, _obstacles_type_frames
 		add	bx, ax
 		cmp	word ptr es:[bx], 0
 		jz	short loc_212B6
@@ -20481,7 +20469,7 @@ loc_212B6:
 loc_212BB:
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39EA6
+		les	bx, _obstacles_type_frames
 		add	bx, ax
 		mov	word ptr es:[bx], 0
 
@@ -20489,7 +20477,7 @@ loc_212BB:
 		inc	si
 
 loc_212CB:
-		cmp	si, word_39EAA
+		cmp	si, _obstacle_count
 		jb	loc_20E64
 		pop	di
 		pop	si
@@ -20543,9 +20531,9 @@ arg_2		= word ptr  8
 		mov	off_39EB3, 0
 
 loc_2132D:
-		cmp	word_39EAA, 0
+		cmp	_obstacle_count, 0
 		jz	short loc_21347
-		mov	ax, word_39EAA
+		mov	ax, _obstacle_count
 		add	ax, ax
 		push	ax
 		call	@$bnwa$qui
@@ -20567,7 +20555,7 @@ loc_2134B:
 		inc	si
 
 loc_2135B:
-		cmp	si, word_39EAA
+		cmp	si, _obstacle_count
 		jl	short loc_2134B
 		jmp	loc_2155C
 ; ---------------------------------------------------------------------------
@@ -20585,12 +20573,12 @@ loc_21364:
 		push	18h
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E9E
+		les	bx, _obstacles_top
 		add	bx, ax
 		push	word ptr es:[bx]
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E9A
+		les	bx, _obstacles_left
 		add	bx, ax
 		push	word ptr es:[bx]
 		call	_ptn_put_8
@@ -20601,12 +20589,12 @@ loc_21364:
 		push	18h
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E9E
+		les	bx, _obstacles_top
 		add	bx, ax
 		push	word ptr es:[bx]
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E9A
+		les	bx, _obstacles_left
 		add	bx, ax
 		push	word ptr es:[bx]
 		call	_ptn_put_8
@@ -20628,7 +20616,7 @@ loc_213DE:
 		jnz	short loc_2141A
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39EA6
+		les	bx, _obstacles_type_frames
 		add	bx, ax
 		mov	ax, es:[bx]
 		mov	bx, 10
@@ -20696,14 +20684,14 @@ loc_21467:
 		push	ax
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E9E
+		les	bx, _obstacles_top
 		add	bx, ax
 		mov	ax, es:[bx]
 		add	ax, 12
 		push	ax
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E9A
+		les	bx, _obstacles_left
 		add	bx, ax
 		mov	ax, es:[bx]
 		add	ax, 12
@@ -20715,12 +20703,12 @@ loc_21467:
 		push	18h
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E9E
+		les	bx, _obstacles_top
 		add	bx, ax
 		push	word ptr es:[bx]
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E9A
+		les	bx, _obstacles_left
 		add	bx, ax
 		push	word ptr es:[bx]
 		call	_ptn_put_8
@@ -20747,12 +20735,12 @@ loc_214D3:
 		push	17h
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E9E
+		les	bx, _obstacles_top
 		add	bx, ax
 		push	word ptr es:[bx]
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E9A
+		les	bx, _obstacles_left
 		add	bx, ax
 		push	word ptr es:[bx]
 		call	_ptn_put_8
@@ -20763,12 +20751,12 @@ loc_214D3:
 		push	17h
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E9E
+		les	bx, _obstacles_top
 		add	bx, ax
 		push	word ptr es:[bx]
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E9A
+		les	bx, _obstacles_left
 		add	bx, ax
 		push	word ptr es:[bx]
 		call	_ptn_put_8
@@ -20780,7 +20768,7 @@ loc_214D3:
 		mov	word ptr es:[bx], 0
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39EA6
+		les	bx, _obstacles_type_frames
 		add	bx, ax
 		mov	word ptr es:[bx], 0
 
@@ -20839,7 +20827,7 @@ loc_215B0:
 loc_215BF:
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39EA6
+		les	bx, _obstacles_type_frames
 		add	bx, ax
 		cmp	word ptr es:[bx], 0
 		jz	short loc_215D2
@@ -20848,7 +20836,7 @@ loc_215BF:
 loc_215D2:
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39EA6
+		les	bx, _obstacles_type_frames
 		add	bx, ax
 		cmp	word ptr es:[bx], 0
 		jnz	short loc_21634
@@ -20862,12 +20850,12 @@ loc_215D2:
 loc_2160F:
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E9E
+		les	bx, _obstacles_top
 		add	bx, ax
 		push	word ptr es:[bx]
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E9A
+		les	bx, _obstacles_left
 		add	bx, ax
 		push	word ptr es:[bx]
 
@@ -20880,19 +20868,19 @@ loc_21629:
 loc_21634:
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39EA6
+		les	bx, _obstacles_type_frames
 		add	bx, ax
-		cmp	word ptr es:[bx], 0Ah
+		cmp	word ptr es:[bx], 10
 		jnz	short loc_21670
 		push	(32 shl 16) or 32
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E9E
+		les	bx, _obstacles_top
 		add	bx, ax
 		push	word ptr es:[bx]
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E9A
+		les	bx, _obstacles_left
 		add	bx, ax
 		push	word ptr es:[bx]
 		call	_egc_copy_rect_1_to_0_16
@@ -20904,19 +20892,19 @@ loc_21634:
 loc_21670:
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39EA6
+		les	bx, _obstacles_type_frames
 		add	bx, ax
-		cmp	word ptr es:[bx], 14h
+		cmp	word ptr es:[bx], 20
 		jnz	loc_2174D
 		push	(32 shl 16) or 32
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E9E
+		les	bx, _obstacles_top
 		add	bx, ax
 		push	word ptr es:[bx]
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E9A
+		les	bx, _obstacles_left
 		add	bx, ax
 		push	word ptr es:[bx]
 		call	_egc_copy_rect_1_to_0_16
@@ -20924,12 +20912,12 @@ loc_21670:
 		push	1Dh
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E9E
+		les	bx, _obstacles_top
 		add	bx, ax
 		push	word ptr es:[bx]
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39E9A
+		les	bx, _obstacles_left
 		add	bx, ax
 		push	word ptr es:[bx]
 		call	_ptn_put_8
@@ -20961,7 +20949,7 @@ loc_216F5:
 ; ---------------------------------------------------------------------------
 
 loc_21700:
-		cmp	di, word_39EAA
+		cmp	di, _obstacle_count
 		jl	short loc_216D5
 		xor	di, di
 		inc	[bp+var_2]
@@ -20971,13 +20959,13 @@ loc_21700:
 loc_2170D:
 		mov	ax, di
 		add	ax, ax
-		les	bx, off_39E9A
+		les	bx, _obstacles_left
 		add	bx, ax
 		mov	ax, es:[bx]
 		mov	_portal_dst_left, ax
 		mov	ax, di
 		add	ax, ax
-		les	bx, off_39E9E
+		les	bx, _obstacles_top
 		add	bx, ax
 		mov	ax, es:[bx]
 		mov	_portal_dst_top, ax
@@ -20993,9 +20981,9 @@ loc_21742:
 loc_2174D:
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39EA6
+		les	bx, _obstacles_type_frames
 		add	bx, ax
-		cmp	word ptr es:[bx], 1Eh
+		cmp	word ptr es:[bx], 30
 		jnz	short loc_21777
 		call	_egc_copy_rect_1_to_0_16 c, _portal_dst_left, _portal_dst_top, large (32 shl 16) or 32
 		push	1Eh
@@ -21005,9 +20993,9 @@ loc_2174D:
 loc_21777:
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39EA6
+		les	bx, _obstacles_type_frames
 		add	bx, ax
-		cmp	word ptr es:[bx], 28h ;	'('
+		cmp	word ptr es:[bx], 40
 		jnz	short loc_217FA
 		call	_egc_copy_rect_1_to_0_16 c, _portal_dst_left, _portal_dst_top, large (32 shl 16) or 32
 		call	_ptn_put_8 c, _portal_dst_left, _portal_dst_top, 1Dh
@@ -21042,9 +21030,9 @@ loc_217F2:
 loc_217FA:
 		mov	ax, si
 		add	ax, ax
-		les	bx, off_39EA6
+		les	bx, _obstacles_type_frames
 		add	bx, ax
-		cmp	word ptr es:[bx], 3Ch ;	'<'
+		cmp	word ptr es:[bx], 60
 		jnz	short loc_21815
 		mov	word ptr es:[bx], 0
 		mov	_portals_blocked, 0
@@ -21071,11 +21059,11 @@ sub_21819	proc far
 		mov	_cards_flip_frames, 0
 		mov	_cards_hp, 0
 		mov	off_39EAC, 0
-		mov	word_39EAA, 1
-		mov	off_39E9A, 0
-		mov	off_39E9E, 0
+		mov	_obstacle_count, 1
+		mov	_obstacles_left, 0
+		mov	_obstacles_top, 0
 		mov	_obstacles_type, 0
-		mov	off_39EA6, 0
+		mov	_obstacles_type_frames, 0
 		pop	bp
 		retf
 sub_21819	endp
@@ -45593,7 +45581,7 @@ byte_39E7A	db ?
 off_39E7C	dd ?
 dword_39E80	dd ?
 
-public _cards
+public _cards, _obstacles
 _cards	label
 _cards_left	dd ?
 _cards_top	dd ?
@@ -45601,14 +45589,13 @@ _cards_flag	dd ?
 _card_count	dw ?
 _cards_flip_frames	dd ?
 _cards_hp	dd ?
-; void (*off_39E9A)(void)
-off_39E9A	dd ?
-; void (*off_39E9E)(void)
-off_39E9E	dd ?
+
+_obstacles label
+_obstacles_left	dd ?
+_obstacles_top	dd ?
 _obstacles_type	dd ?
-; void (*off_39EA6)(void)
-off_39EA6	dd ?
-word_39EAA	dw ?
+_obstacles_type_frames	dd ?
+_obstacle_count	dw ?
 ; void (*off_39EAC)(void)
 off_39EAC	dd ?
 word_39EB0	dw ?
