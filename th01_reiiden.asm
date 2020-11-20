@@ -53,7 +53,6 @@ BOMBS_MAX = 5
 	extern _delay:proc
 	extern _execl:proc
 	extern _exit:proc
-	extern _farcalloc:proc
 	extern _farfree:proc
 	extern _farheapcheck:proc
 	extern _farheapchecknode:proc
@@ -81,6 +80,7 @@ main_21 group main_21_TEXT, main_21__TEXT
 main_25 group main_25_TEXT, main_25__TEXT
 main_27 group main_27_TEXT, main_27__TEXT
 main_30 group main_30_TEXT, main_30__TEXT
+main_31 group main_31_TEXT, main_31__TEXT
 
 ; ===========================================================================
 
@@ -2511,7 +2511,7 @@ loc_D1E3:
 		push	offset aAllPtn7lu ; "all   ptn	 = %7lu\n"
 		call	_printf
 		add	sp, 8
-		pushd	[dword_39E80]
+		pushd	[_stageobj_bgs_size]
 		push	ds
 		push	offset aKabeMem7lu ; "kabe  mem	  = %7lu\n"
 		call	_printf
@@ -2534,7 +2534,7 @@ loc_D1E3:
 		pop	eax
 		mov	edx, dword_36C1A
 		sub	edx, eax
-		sub	edx, dword_39E80
+		sub	edx, _stageobj_bgs_size
 		push	edx
 		push	ds
 		push	offset aEtcMem7ld ; "etc   mem	 = %7ld\n\n"
@@ -2621,7 +2621,7 @@ loc_D2F8:
 		call	sub_D095
 		push	ds
 		push	offset aKabe	; "KABE"
-		pushd	[off_39E7C] ; node
+		pushd	[_stageobj_bgs] ; node
 		call	sub_D095
 
 loc_D317:
@@ -2801,7 +2801,7 @@ sub_D340	endp
 sub_D47D	proc far
 		push	bp
 		mov	bp, sp
-		call	sub_20468
+		call	@stageobj_bgs_free$qv
 		pop	bp
 		retf
 sub_D47D	endp
@@ -2815,7 +2815,7 @@ sub_D487	proc far
 		push	bp
 		mov	bp, sp
 		push	si
-		call	sub_20468
+		call	@stageobj_bgs_free$qv
 		mov	si, 2
 		jmp	short loc_D4A9
 ; ---------------------------------------------------------------------------
@@ -3929,7 +3929,7 @@ loc_DF9A:
 		push	1
 		call	_graph_accesspage_func
 		pop	cx
-		call	sub_203F9
+		call	@stageobj_bgs_put_all$qv
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
@@ -18411,7 +18411,7 @@ loc_201CF:
 		push	1
 		call	_graph_accesspage_func
 		pop	cx
-		push	si
+		push	si	; bg_slot
 		les	bx, _cards_hp
 		mov	al, es:[bx+si]
 		cbw
@@ -18429,22 +18429,22 @@ loc_201CF:
 		add	bx, ax
 		mov	al, [bx+126Eh]
 		mov	ah, 0
-		push	ax
+		push	ax	; ptn_id
 		mov	ax, si
 		add	ax, ax
 		les	bx, _cards_top
 		add	bx, ax
-		push	word ptr es:[bx]
+		push	word ptr es:[bx]	; top
 		mov	ax, si
 		add	ax, ax
 		les	bx, _cards_left
 		add	bx, ax
-		push	word ptr es:[bx]
-		call	sub_20496
+		push	word ptr es:[bx]	; left
+		call	@stageobj_put_8$qiiii
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 0Ah
-		push	si
+		push	si	; bg_slot
 		les	bx, _cards_hp
 		mov	al, es:[bx+si]
 		cbw
@@ -18462,18 +18462,18 @@ loc_201CF:
 		add	bx, ax
 		mov	al, [bx+126Eh]
 		mov	ah, 0
-		push	ax
+		push	ax	; ptn_id
 		mov	ax, si
 		add	ax, ax
 		les	bx, _cards_top
 		add	bx, ax
-		push	word ptr es:[bx]
+		push	word ptr es:[bx]	; top
 		mov	ax, si
 		add	ax, ax
 		les	bx, _cards_left
 		add	bx, ax
-		push	word ptr es:[bx]
-		call	sub_20496
+		push	word ptr es:[bx]	; left
+		call	@stageobj_put_8$qiiii
 		add	sp, 8
 
 loc_202A6:
@@ -18592,7 +18592,14 @@ main_30__TEXT	ends
 
 ; Segment type:	Pure code
 main_31_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_31_TEXT
+	extern @stageobj_bgs_new$qi:proc
+	extern @stageobj_bgs_put_all$qv:proc
+	extern @stageobj_bgs_free$qv:proc
+	extern @stageobj_put_8$qiiii:proc
+main_31_TEXT	ends
+
+main_31__TEXT	segment	byte public 'CODE' use16
+		assume cs:main_31
 		;org 9
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -18624,353 +18631,6 @@ OT_BAR_RIGHT = 21
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_20399	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+arg_0]
-		or	si, si
-		jg	short loc_203A9
-		mov	ax, 0FFF7h
-		jmp	short loc_203F6
-; ---------------------------------------------------------------------------
-
-loc_203A9:
-		cmp	off_39E7C, 0
-		jz	short loc_203BE
-		pushd	[off_39E7C]
-		call	_farfree
-		add	sp, 4
-
-loc_203BE:
-		pushd	281h	; unitsz
-		movsx	eax, si
-		push	eax		; nunits
-		call	_farcalloc
-		add	sp, 8
-		mov	word ptr off_39E7C+2, dx
-		mov	word ptr off_39E7C, ax
-		cmp	off_39E7C, 0
-		jnz	short loc_203E6
-		mov	ax, 0FFFDh
-		jmp	short loc_203F6
-; ---------------------------------------------------------------------------
-
-loc_203E6:
-		mov	ax, si
-		imul	ax, 281h
-		movzx	eax, ax
-		mov	dword_39E80, eax
-		xor	ax, ax
-
-loc_203F6:
-		pop	si
-		pop	bp
-		retf
-sub_20399	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_203F9	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_20428
-; ---------------------------------------------------------------------------
-
-loc_20401:
-		push	si
-		push	9999
-		mov	ax, si
-		add	ax, ax
-		les	bx, _cards_top
-		add	bx, ax
-		push	word ptr es:[bx]
-		mov	ax, si
-		add	ax, ax
-		les	bx, _cards_left
-		add	bx, ax
-		push	word ptr es:[bx]
-		nopcall	sub_20496
-		add	sp, 8
-		inc	si
-
-loc_20428:
-		cmp	si, _card_count
-		jl	short loc_20401
-		xor	si, si
-		jmp	short loc_2045F
-; ---------------------------------------------------------------------------
-
-loc_20432:
-		mov	ax, si
-		add	ax, _card_count
-		push	ax
-		push	9999
-		mov	ax, si
-		add	ax, ax
-		les	bx, _obstacles_top
-		add	bx, ax
-		push	word ptr es:[bx]
-		mov	ax, si
-		add	ax, ax
-		les	bx, _obstacles_left
-		add	bx, ax
-		push	word ptr es:[bx]
-		nopcall	sub_20496
-		add	sp, 8
-		inc	si
-
-loc_2045F:
-		cmp	si, _obstacle_count
-		jl	short loc_20432
-		pop	si
-		pop	bp
-		retf
-sub_203F9	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_20468	proc far
-		push	bp
-		mov	bp, sp
-		cmp	off_39E7C, 0
-		jz	short loc_20492
-		pushd	[off_39E7C]
-		call	_farfree
-		add	sp, 4
-		mov	dword_39E80, 0
-		mov	off_39E7C, 0
-
-loc_20492:
-		xor	ax, ax
-		pop	bp
-		retf
-sub_20468	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_20496	proc far
-
-var_10		= dword	ptr -10h
-@@ptn		= dword	ptr -0Ch
-var_8		= dword	ptr -8
-var_4		= dword	ptr -4
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		enter	10h, 0
-		push	si
-		push	di
-		mov	di, [bp+arg_4]
-		mov	[bp+var_4], 0
-		mov	ax, [bp+arg_2]
-		imul	ax, 50h
-		push	ax
-		mov	ax, [bp+arg_0]
-		mov	bx, 8
-		cwd
-		idiv	bx
-		pop	dx
-		add	dx, ax
-		mov	si, dx
-		cmp	di, 9999
-		jz	short loc_204EF
-		mov	ax, di
-		mov	bx, PTN_IMAGES_PER_SLOT
-		cwd
-		idiv	bx
-		shl	ax, 2
-		mov	bx, ax
-		mov	ax, word ptr (_ptn_images + 2)[bx]
-		mov	dx, word ptr _ptn_images[bx]
-		push	ax
-		mov	ax, di
-		mov	bx, PTN_IMAGES_PER_SLOT
-		push	dx
-		cwd
-		idiv	bx
-		imul	dx, size ptn_t
-		pop	ax
-		add	ax, dx
-		pop	dx
-		mov	word ptr [bp+@@ptn+2], dx
-		mov	word ptr [bp+@@ptn], ax
-
-loc_204EF:
-		mov	ax, [bp+arg_6]
-		imul	ax, size ptn_t
-		mov	dx, word ptr off_39E7C+2
-		mov	bx, word ptr off_39E7C
-		add	bx, ax
-		mov	word ptr [bp+var_10+2],	dx
-		mov	word ptr [bp+var_10], bx
-		cmp	di, 9999
-		jz	loc_20622
-		xor	cx, cx
-		jmp	loc_20619
-; ---------------------------------------------------------------------------
-
-loc_20513:
-		mov	ax, cx
-		shl	ax, 2
-		les	bx, [bp+@@ptn]
-		add	bx, ax
-		mov	eax, es:[bx+ptn_t.PTN_alpha]
-		mov	[bp+var_4], eax
-		not	eax
-		mov	dx, cx
-		shl	dx, 2
-		les	bx, [bp+var_10]
-		add	bx, dx
-		and	eax, es:[bx+ptn_t.planes.PTN_B]
-		mov	[bp+var_8], eax
-		mov	ax, cx
-		shl	ax, 2
-		les	bx, [bp+@@ptn]
-		add	bx, ax
-		mov	eax, es:[bx+ptn_t.planes.PTN_B]
-		and	eax, [bp+var_4]
-		or	eax, [bp+var_8]
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		mov	es:[bx], eax
-		mov	eax, [bp+var_4]
-		not	eax
-		mov	dx, cx
-		shl	dx, 2
-		les	bx, [bp+var_10]
-		add	bx, dx
-		and	eax, es:[bx+ptn_t.planes.PTN_R]
-		mov	[bp+var_8], eax
-		mov	ax, cx
-		shl	ax, 2
-		les	bx, [bp+@@ptn]
-		add	bx, ax
-		mov	eax, es:[bx+ptn_t.planes.PTN_R]
-		and	eax, [bp+var_4]
-		or	eax, [bp+var_8]
-		les	bx, _VRAM_PLANE_R
-		add	bx, si
-		mov	es:[bx], eax
-		mov	eax, [bp+var_4]
-		not	eax
-		mov	dx, cx
-		shl	dx, 2
-		les	bx, [bp+var_10]
-		add	bx, dx
-		and	eax, es:[bx+ptn_t.planes.PTN_G]
-		mov	[bp+var_8], eax
-		mov	ax, cx
-		shl	ax, 2
-		les	bx, [bp+@@ptn]
-		add	bx, ax
-		mov	eax, es:[bx+ptn_t.planes.PTN_G]
-		and	eax, [bp+var_4]
-		or	eax, [bp+var_8]
-		les	bx, _VRAM_PLANE_G
-		add	bx, si
-		mov	es:[bx], eax
-		mov	eax, [bp+var_4]
-		not	eax
-		mov	dx, cx
-		shl	dx, 2
-		les	bx, [bp+var_10]
-		add	bx, dx
-		and	eax, es:[bx+ptn_t.planes.PTN_E]
-		mov	[bp+var_8], eax
-		mov	ax, cx
-		shl	ax, 2
-		les	bx, [bp+@@ptn]
-		add	bx, ax
-		mov	eax, es:[bx+ptn_t.planes.PTN_E]
-		and	eax, [bp+var_4]
-		or	eax, [bp+var_8]
-		les	bx, _VRAM_PLANE_E
-		add	bx, si
-		mov	es:[bx], eax
-		add	si, ROW_SIZE
-		inc	cx
-
-loc_20619:
-		cmp	cx, PTN_H
-		jb	loc_20513
-		jmp	short loc_20696
-; ---------------------------------------------------------------------------
-
-loc_20622:
-		xor	cx, cx
-		jmp	short loc_20691
-; ---------------------------------------------------------------------------
-
-loc_20626:
-		mov	ax, cx
-		shl	ax, 2
-		les	bx, [bp+var_10]
-		add	bx, ax
-		mov	eax, es:[bx+ptn_t.planes.PTN_B]
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		mov	es:[bx], eax
-		mov	ax, cx
-		shl	ax, 2
-		les	bx, [bp+var_10]
-		add	bx, ax
-		mov	eax, es:[bx+ptn_t.planes.PTN_R]
-		les	bx, _VRAM_PLANE_R
-		add	bx, si
-		mov	es:[bx], eax
-		mov	ax, cx
-		shl	ax, 2
-		les	bx, [bp+var_10]
-		add	bx, ax
-		mov	eax, es:[bx+ptn_t.planes.PTN_G]
-		les	bx, _VRAM_PLANE_G
-		add	bx, si
-		mov	es:[bx], eax
-		mov	ax, cx
-		shl	ax, 2
-		les	bx, [bp+var_10]
-		add	bx, ax
-		mov	eax, es:[bx+ptn_t.planes.PTN_E]
-		les	bx, _VRAM_PLANE_E
-		add	bx, si
-		mov	es:[bx], eax
-		add	si, ROW_SIZE
-		inc	cx
-
-loc_20691:
-		cmp	cx, PTN_H
-		jb	short loc_20626
-
-loc_20696:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_20496	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
 sub_2069A	proc far
 
 var_4		= dword	ptr -4
@@ -18993,8 +18653,8 @@ arg_4		= word ptr  0Ah
 		mov	di, dx
 		mov	ax, [bp+arg_4]
 		imul	ax, 281h
-		mov	dx, word ptr off_39E7C+2
-		mov	bx, word ptr off_39E7C
+		mov	dx, word ptr _stageobj_bgs+2
+		mov	bx, word ptr _stageobj_bgs
 		add	bx, ax
 		mov	word ptr [bp+var_4+2], dx
 		mov	word ptr [bp+var_4], bx
@@ -19392,7 +19052,7 @@ loc_2099C:
 		mov	ax, _card_count
 		add	ax, _obstacle_count
 		push	ax
-		call	sub_20399
+		call	@stageobj_bgs_new$qi
 		pop	cx
 		cmp	_card_count, 0
 		jle	short loc_20A27
@@ -21064,7 +20724,7 @@ sub_21819	proc far
 		retf
 sub_21819	endp
 
-main_31_TEXT	ends
+main_31__TEXT	ends
 
 ; ===========================================================================
 
@@ -45573,9 +45233,9 @@ word_39E76	dw ?
 word_39E78	dw ?
 byte_39E7A	db ?
 		db ?
-; void far *off_39E7C
-off_39E7C	dd ?
-dword_39E80	dd ?
+public _stageobj_bgs, _stageobj_bgs_size
+_stageobj_bgs	dd ?
+_stageobj_bgs_size	dd ?
 
 public _cards, _obstacles, _cards_score
 _cards	label

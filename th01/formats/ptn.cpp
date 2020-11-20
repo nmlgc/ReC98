@@ -107,13 +107,7 @@ void ptn_put_noalpha_8(screen_x_t left, vram_y_t top, int ptn_id)
 	vram_offset_t vram_offset = vram_offset_shift(left, top);
 	ptn_t *ptn = ptn_with_id(ptn_id);
 	for(pixel_t y = 0; y < PTN_H; y++) {
-		#define put_noalpha(vram_offset, w, ptn) \
-			VRAM_CHUNK(B, vram_offset, w) = (ptn->planes.B[y]); \
-			VRAM_CHUNK(R, vram_offset, w) = (ptn->planes.R[y]); \
-			VRAM_CHUNK(G, vram_offset, w) = (ptn->planes.G[y]); \
-			VRAM_CHUNK(E, vram_offset, w) = (ptn->planes.E[y]);
-		put_noalpha(vram_offset, PTN_W, ptn);
-		#undef put_noalpha
+		vram_put_ptn_planar(vram_offset, ptn);
 		vram_offset += ROW_SIZE;
 	}
 }

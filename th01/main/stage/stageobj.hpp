@@ -57,3 +57,41 @@ extern screen_y_t portal_dst_top;
 // re-entering.
 extern bool16 portals_blocked;
 // --------------------
+
+// Blitting
+// --------
+// Stationary stage objects are blitted to both VRAM pages, which makes it
+// possible to efficiently unblit the other entities moving on top of them, by
+// simply restoring pixels from VRAM page 1. Since the player can remove
+// cards though, the backgrounds behind them also need to be stored somewhere.
+// Storing only the 32×32 regions covered by the cards minimizes the memory
+// needed for this, and doesn't require the full background .GRP to be stored
+// in memory… which the PiLoad library can't do anyway.
+// Since obstacles also need to be removed during a stage transition, their
+// backgrounds are stored as well. This makes absolutely sure that a .GRP only
+// needs to be blitted a single time, when entering a new scene.
+
+// Planar<ptn_plane_t> would have been enough though, since there's no alpha
+// plane to be snapped from VRAM anyway... Assumed by everything to contain
+// [card_count] card backgrounds first, followed by [obstacle_count] obstacle
+// backgrounds.
+extern ptn_t *stageobj_bgs;
+extern unsigned long stageobj_bgs_size;
+
+// Frees [stageobj_bgs], if non-NULL. Always returns 0.
+bool16 stageobj_bgs_free(void);
+
+// Blits the backgrounds for all cards and obstacles at their respective
+// positions, effectively removing those sprites from VRAM.
+void stageobj_bgs_put_all(void);
+
+// Blits both the stage object background with the given [bg_slot], and the
+// given [ptn_id] on top, to (⌊left/8⌋*8, top) in a single blitting operation.
+void stageobj_put_8(screen_x_t left, vram_y_t top, int ptn_id, int bg_slot);
+
+// Blits the stage object background with the given [bg_slot] to
+// (⌊left/8⌋*8, top).
+#define stageobj_bgs_put_8(left, top, slot) \
+	stageobj_put_8(left, top, PTN_STAGEOBJ_NONE, slot)
+#define PTN_STAGEOBJ_NONE 9999
+// --------
