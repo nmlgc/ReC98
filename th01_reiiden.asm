@@ -18596,6 +18596,7 @@ main_31_TEXT	segment	byte public 'CODE' use16
 	extern @stageobj_bgs_put_all$qv:proc
 	extern @stageobj_bgs_free$qv:proc
 	extern @stageobj_put_8$qiiii:proc
+	extern @stageobj_bgs_snap_from_1_8$qiii:proc
 main_31_TEXT	ends
 
 main_31__TEXT	segment	byte public 'CODE' use16
@@ -18627,92 +18628,6 @@ OT_BAR_TOP = 18
 OT_BAR_BOTTOM = 19
 OT_BAR_LEFT = 20
 OT_BAR_RIGHT = 21
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-sub_2069A	proc far
-
-var_4		= dword	ptr -4
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		enter	4, 0
-		push	si
-		push	di
-		mov	ax, [bp+arg_2]
-		imul	ax, 50h
-		push	ax
-		mov	ax, [bp+arg_0]
-		mov	bx, 8
-		cwd
-		idiv	bx
-		pop	dx
-		add	dx, ax
-		mov	di, dx
-		mov	ax, [bp+arg_4]
-		imul	ax, 281h
-		mov	dx, word ptr _stageobj_bgs+2
-		mov	bx, word ptr _stageobj_bgs
-		add	bx, ax
-		mov	word ptr [bp+var_4+2], dx
-		mov	word ptr [bp+var_4], bx
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		xor	si, si
-		jmp	short loc_20743
-; ---------------------------------------------------------------------------
-
-loc_206D8:
-		les	bx, _VRAM_PLANE_B
-		add	bx, di
-		mov	eax, es:[bx]
-		mov	dx, si
-		shl	dx, 2
-		les	bx, [bp+var_4]
-		add	bx, dx
-		mov	es:[bx+1], eax
-		les	bx, _VRAM_PLANE_R
-		add	bx, di
-		mov	eax, es:[bx]
-		mov	dx, si
-		shl	dx, 2
-		les	bx, [bp+var_4]
-		add	bx, dx
-		mov	es:[bx+81h], eax
-		les	bx, _VRAM_PLANE_G
-		add	bx, di
-		mov	eax, es:[bx]
-		mov	dx, si
-		shl	dx, 2
-		les	bx, [bp+var_4]
-		add	bx, dx
-		mov	es:[bx+101h], eax
-		les	bx, _VRAM_PLANE_E
-		add	bx, di
-		mov	eax, es:[bx]
-		mov	dx, si
-		shl	dx, 2
-		les	bx, [bp+var_4]
-		add	bx, dx
-		mov	es:[bx+181h], eax
-		add	di, 50h	; 'P'
-		inc	si
-
-loc_20743:
-		cmp	si, 20h	; ' '
-		jl	short loc_206D8
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		pop	di
-		pop	si
-		leave
-		retf
-sub_2069A	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -18816,19 +18731,19 @@ arg_4		= dword	ptr  0Ah
 		les	bx, [bp+arg_4]
 		mov	ax, es:[bx]
 		add	ax, _card_count
-		push	ax
+		push	ax	; slot
 		mov	ax, es:[bx]
 		add	ax, ax
 		les	bx, _obstacles_top
 		add	bx, ax
-		push	word ptr es:[bx]
+		push	word ptr es:[bx]	; top
 		les	bx, [bp+arg_4]
 		mov	ax, es:[bx]
 		add	ax, ax
 		les	bx, _obstacles_left
 		add	bx, ax
-		push	word ptr es:[bx]
-		call	sub_2069A
+		push	word ptr es:[bx]	; left
+		call	@stageobj_bgs_snap_from_1_8$qiii
 		add	sp, 6
 		push	[bp+@@ptn_id]
 		les	bx, [bp+arg_4]
@@ -18970,21 +18885,21 @@ sub_2091E	proc far
 var_7A		= byte ptr -7Ah
 var_16		= word ptr -16h
 var_14		= word ptr -14h
-var_12		= word ptr -12h
-var_10		= word ptr -10h
+@@top		= word ptr -12h
+@@left		= word ptr -10h
 var_E		= word ptr -0Eh
 var_C		= word ptr -0Ch
 var_A		= word ptr -0Ah
 var_8		= word ptr -8
 var_6		= word ptr -6
-var_4		= word ptr -4
+@@slot		= word ptr -4
 var_2		= word ptr -2
 arg_0		= word ptr  6
 
 		enter	7Ah, 0
 		push	si
 		push	di
-		mov	[bp+var_4], 0
+		mov	[bp+@@slot], 0
 		mov	[bp+var_E], 0
 		mov	ax, [bp+arg_0]
 		mov	bx, 5
@@ -19206,44 +19121,40 @@ loc_20AF0:
 		jz	short loc_20B70
 		mov	ax, di
 		shl	ax, 7
-		mov	bx, 640
+		mov	bx, PLAYFIELD_RIGHT
 		cwd
 		idiv	bx
 		mov	ax, [bp+var_2]
 		shl	ax, 5
 		add	dx, ax
-		mov	[bp+var_10], dx
+		mov	[bp+@@left], dx
 		mov	ax, di
 		mov	bx, 5
 		cwd
 		idiv	bx
 		shl	ax, 5
-		add	ax, 40h
-		mov	[bp+var_12], ax
-		push	[bp+var_4]
-		push	ax
-		push	[bp+var_10]
-		call	sub_2069A
-		add	sp, 6
-		mov	ax, [bp+var_4]
+		add	ax, PLAYFIELD_TOP
+		mov	[bp+@@top], ax
+		call	@stageobj_bgs_snap_from_1_8$qiii c, [bp+@@left], ax, [bp+@@slot]
+		mov	ax, [bp+@@slot]
 		add	ax, ax
 		les	bx, _cards_left
 		add	bx, ax
-		mov	ax, [bp+var_10]
+		mov	ax, [bp+@@left]
 		mov	es:[bx], ax
-		mov	ax, [bp+var_4]
+		mov	ax, [bp+@@slot]
 		add	ax, ax
 		les	bx, _cards_top
 		add	bx, ax
-		mov	ax, [bp+var_12]
+		mov	ax, [bp+@@top]
 		mov	es:[bx], ax
 		les	bx, _cards_flag
-		add	bx, [bp+var_4]
+		add	bx, [bp+@@slot]
 		mov	byte ptr es:[bx], PANEL_ALIVE
 		les	bx, _cards_hp
-		add	bx, [bp+var_4]
+		add	bx, [bp+@@slot]
 		mov	byte ptr es:[bx], 0
-		inc	[bp+var_4]
+		inc	[bp+@@slot]
 
 loc_20B70:
 		sar	si, 1

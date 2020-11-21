@@ -5,6 +5,7 @@ extern "C" {
 #include "planar.h"
 #include "th01/formats/ptn.hpp"
 #include "th01/formats/stagedat.hpp"
+#include "th01/hardware/graph.h"
 }
 
 #include "th01/main/stage/stageobj.hpp"
@@ -100,4 +101,19 @@ void stageobj_put_8(screen_x_t left, vram_y_t top, int ptn_id, int bg_slot)
 			vo += ROW_SIZE;
 		}
 	}
+}
+
+// Overwrites the stage object background in the given [slot] with the current
+// VRAM pixels at (⌊left/8⌋*8, top) on page 1.
+void stageobj_bgs_snap_from_1_8(screen_x_t left, vram_y_t top, int slot)
+{
+	vram_offset_t vo = vram_offset_muldiv(left, top);
+	ptn_t *bg = &stageobj_bgs[slot];
+
+	graph_accesspage_func(1);
+	for(pixel_t y = 0; y < PTN_H; y++) {
+		vram_snap_ptn_planar(bg, vo);
+		vo += ROW_SIZE;
+	}
+	graph_accesspage_func(0);
 }

@@ -99,6 +99,12 @@ extern bool ptn_unput_before_alpha_put;
 	VRAM_PUT(G, vo, ptn->planes.G[y], PTN_W); \
 	VRAM_PUT(E, vo, ptn->planes.E[y], PTN_W);
 
+#define vram_snap_ptn_planar(ptn, vo) \
+	VRAM_SNAP(ptn->planes.B[y], B, vo, PTN_W); \
+	VRAM_SNAP(ptn->planes.R[y], R, vo, PTN_W); \
+	VRAM_SNAP(ptn->planes.G[y], G, vo, PTN_W); \
+	VRAM_SNAP(ptn->planes.E[y], E, vo, PTN_W);
+
 // Displays the given [ptn_id] at (⌊left/8⌋*8, top), disregarding its alpha
 // plane.
 void ptn_put_noalpha_8(screen_x_t left, vram_y_t top, int ptn_id);
