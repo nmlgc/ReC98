@@ -31,6 +31,7 @@ include th01/sprites/main_ptn.inc
 
 LIVES_MAX = 6
 BOMBS_MAX = 5
+STAGES_PER_SCENE = 5
 
 	option emulator
 
@@ -2953,7 +2954,7 @@ _path		= byte ptr -1Eh
 var_E		= word ptr -0Eh
 var_C		= word ptr -0Ch
 s1		= dword	ptr -0Ah
-var_6		= word ptr -6
+@@scene_id		= word ptr -6
 var_4		= word ptr -4
 @@stage		= word ptr -2
 _argc		= word ptr  6
@@ -3158,7 +3159,7 @@ loc_D6EB:
 		mov	ax, 7
 
 loc_D6EE:
-		mov	[bp+var_6], ax
+		mov	[bp+@@scene_id], ax
 		push	seg main_01
 		push	offset sub_D07C
 		call	@set_new_handler$qnqv$v	; set_new_handler(void (*)(void))
@@ -3166,8 +3167,7 @@ loc_D6EE:
 		mov	_arc_key, 76h
 		call	arc_load pascal, ds, offset aUmx	; "“Œ•ûèËˆÙ.“`"
 		call	vram_planes_set
-		push	[bp+var_6]
-		call	sub_20754
+		call	@scene_init_and_load$quc stdcall, [bp+@@scene_id]
 		pop	cx
 		cmp	_mode_debug, 1
 		jnz	short loc_D72E
@@ -3254,7 +3254,7 @@ loc_D7E4:
 		call	@CPellets@unput_and_reset_all$qv c, offset _Pellets, ds
 		call	@CShots@unput_and_reset_all$qv c, offset _Shots, ds
 		mov	word ptr [bp+s1+2], ds
-		mov	word ptr [bp+s1], 1250h
+		mov	word ptr [bp+s1], offset _default_grp_fn
 		mov	byte_34ADF, 0
 		mov	word_360CA, 0
 		mov	_player_invincible, 0
@@ -3420,7 +3420,7 @@ loc_D99F:
 
 loc_D9B7:
 		push	ds		; default
-		push	offset aSt_mdt	; "ST .MDT"
+		push	offset _default_bgm_fn	; "ST .MDT"
 		push	ss
 		lea	ax, [bp+_path]
 		push	ax		; dest
@@ -4928,7 +4928,7 @@ loc_12A1D:
 		push	2
 
 loc_12A1F:
-		call	sub_20754
+		call	@scene_init_and_load$quc
 		pop	cx
 		mov	al, byte ptr [bp+var_A]
 		mov	_route, al
@@ -13958,8 +13958,7 @@ loc_1D74B:
 		cmp	si, 5
 		jl	short loc_1D705
 		call	sub_12A3A
-		push	3
-		call	sub_20754
+		call	@scene_init_and_load$quc stdcall, 3
 		pop	cx
 
 loc_1D75D:
@@ -14648,8 +14647,7 @@ loc_1DFEA:
 		cmp	si, 5
 		jl	short loc_1DFA4
 		call	sub_12A3A
-		push	3
-		call	sub_20754
+		call	@scene_init_and_load$quc stdcall, 3
 		pop	cx
 
 loc_1DFFC:
@@ -17976,8 +17974,7 @@ loc_1FDBD:
 		cmp	si, 5
 		jl	short loc_1FD77
 		call	sub_12A3A
-		push	4
-		call	sub_20754
+		call	@scene_init_and_load$quc stdcall, 4
 
 loc_1FDCE:
 		pop	cx
@@ -18597,6 +18594,7 @@ main_31_TEXT	segment	byte public 'CODE' use16
 	extern @stageobj_bgs_free$qv:proc
 	extern @stageobj_put_8$qiiii:proc
 	extern @stageobj_bgs_snap_from_1_8$qiii:proc
+	extern @scene_init_and_load$quc:proc
 main_31_TEXT	ends
 
 main_31__TEXT	segment	byte public 'CODE' use16
@@ -18628,68 +18626,6 @@ OT_BAR_TOP = 18
 OT_BAR_BOTTOM = 19
 OT_BAR_LEFT = 20
 OT_BAR_RIGHT = 21
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_20754	proc far
-
-var_26		= byte ptr -26h
-var_21		= byte ptr -21h
-var_16		= byte ptr -16h
-arg_0		= byte ptr  6
-
-		enter	26h, 0
-		push	si
-		lea	ax, [bp+var_26]
-		push	ss
-		push	ax
-		push	ds
-		push	offset aStage_dat ; "stage .dat"
-		mov	cx, 0Fh
-		call	SCOPY@
-		mov	al, [bp+arg_0]
-		add	al, 30h	; '0'
-		mov	[bp+var_21], al
-		push	ss
-		lea	ax, [bp+var_26]
-		push	ax
-		call	arc_file_load
-		push	ss
-		lea	ax, [bp+var_16]
-		push	ax
-		push	22
-		call	arc_file_get
-		mov	al, [bp+arg_0]
-		add	al, 30h	; '0'
-		mov	byte ptr aSt_grp+2, al
-		mov	al, [bp+arg_0]
-		add	al, 30h	; '0'
-		mov	byte ptr aSt_mdt+2, al
-		xor	si, si
-		jmp	short loc_207B0
-; ---------------------------------------------------------------------------
-
-loc_2079C:
-		push	ds
-		mov	ax, si
-		imul	ax, 255
-		add	ax, 228Eh
-		push	ax
-		push	250
-		call	arc_file_get
-		inc	si
-
-loc_207B0:
-		cmp	si, 5
-		jl	short loc_2079C
-		call	arc_file_free
-		pop	si
-		leave
-		retf
-sub_20754	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -18921,8 +18857,8 @@ loc_20952:
 
 loc_20957:
 		mov	bx, [bp+arg_0]
-		imul	bx, 255
-		mov	al, [bx+di+228Eh]
+		imul	bx, STAGEDAT_STAGE_SIZE
+		mov	al, _scene_stage[bx+di]
 		cbw
 		test	ax, si
 		jz	short loc_2096B
@@ -18945,8 +18881,8 @@ loc_20972:
 
 loc_2097C:
 		mov	bx, [bp+arg_0]
-		imul	bx, 255
-		mov	al, [bx+di+228Eh]
+		imul	bx, 255 ; TODO: size
+		mov	al, _scene_stage[bx+di]
 		cbw
 		dec	ax
 		mov	bx, ax
@@ -18962,7 +18898,7 @@ loc_2099B:
 		inc	di
 
 loc_2099C:
-		cmp	di, 0FAh
+		cmp	di, 250 ; TODO: size
 		jl	short loc_2097C
 		mov	ax, _card_count
 		add	ax, _obstacle_count
@@ -19114,8 +19050,8 @@ loc_20AEB:
 
 loc_20AF0:
 		mov	bx, [bp+arg_0]
-		imul	bx, 255
-		mov	al, [bx+di+228Eh]
+		imul	bx, STAGEDAT_STAGE_SIZE
+		mov	al, _scene_stage[bx+di]
 		cbw
 		test	ax, si
 		jz	short loc_20B70
@@ -19174,8 +19110,8 @@ loc_20B79:
 
 loc_20B8B:
 		mov	bx, [bp+arg_0]
-		imul	bx, 255
-		mov	al, [bx+di+228Eh]
+		imul	bx, STAGEDAT_STAGE_SIZE
+		mov	al, _scene_stage[bx+di]
 		cbw
 		dec	ax
 		mov	bx, ax
@@ -19233,8 +19169,8 @@ loc_20BE1:
 		cmp	ax, [bp+var_A]
 		jnz	short loc_20C20
 		mov	bx, [bp+arg_0]
-		imul	bx, 255
-		mov	al, [bx+di+228Eh]
+		imul	bx, STAGEDAT_STAGE_SIZE
+		mov	al, _scene_stage[bx+di]
 		add	al, 0F3h
 		les	bx, _cards_hp
 		add	bx, [bp+var_6]
@@ -19295,8 +19231,8 @@ loc_20C59:
 		call	sub_207BD
 		add	sp, 8
 		mov	bx, [bp+arg_0]
-		imul	bx, 255
-		mov	al, [bx+di+228Eh]
+		imul	bx, STAGEDAT_STAGE_SIZE
+		mov	al, _scene_stage[bx+di]
 		mov	bx, [bp+var_E]
 		mov	es, word ptr _obstacles_type+2
 		add	bx, word ptr _obstacles_type
@@ -26592,8 +26528,7 @@ loc_24DE9:
 		cmp	si, 4
 		jl	short loc_24DA3
 		call	sub_12A3A
-		push	6
-		call	sub_20754
+		call	@scene_init_and_load$quc stdcall, 6
 		pop	cx
 
 loc_24DFB:
@@ -32312,7 +32247,7 @@ loc_28643:
 		push	5
 
 loc_2864F:
-		call	sub_20754
+		call	@scene_init_and_load$quc
 
 loc_28654:
 		pop	cx
@@ -44663,17 +44598,18 @@ aBoss3_m_ptn_0	db 'boss3_m.ptn',0
 		db 0
 byte_35BEE	db 0
 		db 0
-aSt_grp		db 'ST .GRP',0
-		dd    0
-		db    0
-		db    0
-		db    0
-; char aSt_mdt[]
-aSt_mdt		db 'ST .MDT',0
-		dd    0
-		db    0
-		db    0
-		db    0
+
+STAGEOBJ_W = PTN_W
+STAGEOBJ_H = PTN_H
+STAGEOBJS_X = (PLAYFIELD_W / STAGEOBJ_W)
+STAGEOBJS_Y = (PLAYFIELD_H / STAGEOBJ_H)
+
+STAGEOBJS_COUNT = (STAGEOBJS_X * STAGEOBJS_Y)
+STAGEDAT_STAGE_SIZE = ((STAGEOBJS_COUNT) + (STAGEOBJS_COUNT / 4) + 5)
+
+public _default_grp_fn, _default_bgm_fn, _scene_fn_
+_default_grp_fn	db 'ST .GRP', 0, 0, 0, 0, 0, 0, 0, 0
+_default_bgm_fn	db 'ST .MDT', 0, 0, 0, 0, 0, 0, 0, 0
 		db  11h
 		db  12h
 		db  13h
@@ -44699,8 +44635,7 @@ aSt_mdt		db 'ST .MDT',0
 		db  0Ah
 		db    9
 		db    8
-aStage_dat	db 'stage .dat',0
-		dd    0
+_scene_fn_	db 'stage .dat', 0, 0, 0, 0, 0
 unk_35C36	db    0
 		dd    0
 		dd    0
@@ -44996,7 +44931,10 @@ _mode_debug	db ?
 dword_36C20	dd ?
 include th01/main/player/player[bss].asm
 include th01/main/player/orb[bss].asm
-		db 1275 dup(?)
+
+public _scene_stage
+_scene_stage db (STAGEDAT_STAGE_SIZE * STAGES_PER_SCENE) dup(?)
+
 include th01/main/player/anim[bss].asm
 include th01/main/bullet/pellets[bss].asm
 include th01/main/player/shots[bss].asm

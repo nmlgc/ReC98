@@ -3,15 +3,29 @@ extern "C" {
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
+#include "th01/common.h"
 #include "th01/formats/ptn.hpp"
+#include "th01/formats/pf.hpp"
+#include "th01/main/playfld.hpp"
 #include "th01/formats/stagedat.hpp"
 #include "th01/hardware/graph.h"
+#include "th01/main/stage/stages.hpp"
 }
 
 #include "th01/main/stage/stageobj.hpp"
 
 static const int TURRET_QUICK_INTERVAL = 100;
 static const int TURRET_SLOW_INTERVAL = 200;
+
+// Globals
+// -------
+
+struct stage_t {
+	stagedat_stage_t dat;
+	int8_t padding[5];
+};
+extern stage_t scene_stage[STAGES_PER_SCENE];
+// -------
 
 // Frees [stageobj_bgs] if non-NULL, then allocates new memory for the given
 // number of stage object backgrounds.
@@ -116,4 +130,27 @@ void stageobj_bgs_snap_from_1_8(screen_x_t left, vram_y_t top, int slot)
 		vo += ROW_SIZE;
 	}
 	graph_accesspage_func(0);
+}
+
+void scene_init_and_load(unsigned char id)
+{
+	struct hack { char x[15]; }; // XXX
+	extern const hack scene_fn_;
+
+	stagedat_header_t header;
+	hack scene_fn = scene_fn_;
+
+	scene_fn.x[5] = (id + '0');
+
+	arc_file_load(scene_fn.x);
+	arc_file_get_near(header);
+
+	default_grp_fn[2] = (id + '0');
+	default_bgm_fn[2] = (id + '0');
+
+	for(int i = 0; i < STAGES_PER_SCENE; i++) {
+		arc_file_get_near(scene_stage[i].dat);
+	}
+
+	arc_file_free();
 }

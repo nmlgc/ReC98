@@ -47,6 +47,14 @@ struct CObstacles {
 extern CObstacles obstacles;
 // -----------
 
+// Initialization
+// --------------
+
+// Loads the contents of STAGE[id].DAT, and sets [default_grp_fn] and
+// [default_bgm_fn] accordingly. [id] must be ≥0 and ≤9.
+void scene_init_and_load(unsigned char id);
+// --------------
+
 // Current portal state
 // --------------------
 

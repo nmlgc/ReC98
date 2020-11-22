@@ -1,6 +1,31 @@
 /// STAGE?.DAT format, describing the object layout of *all* stages in a scene
 /// --------------------------------------------------------------------------
 
+static const int STAGEOBJ_W = PTN_W;
+static const int STAGEOBJ_H = PTN_H;
+
+#define STAGEOBJS_X (PLAYFIELD_W / STAGEOBJ_W)
+#define STAGEOBJS_Y (PLAYFIELD_H / STAGEOBJ_H)
+
+static const int STAGEOBJS_COUNT = (STAGEOBJS_X * STAGEOBJS_Y);
+
+#define CARDS_PER_BYTE 4
+
+#if ((STAGEOBJS_X % CARDS_PER_BYTE) != 0)
+	#error STAGEOBJS_X must be divisible by the amount of cards per byte
+#endif
+
+#define STAGEDAT_MAGIC "STAGE"
+
+// Nothing in here is actually read, and none of the referenced file names are
+// even part of the released game. Beta content right here!
+typedef struct {
+	char magic[sizeof(STAGEDAT_MAGIC) - 1];
+	int8_t id;
+	char bgm_fn[8];
+	char grf_fn[8];
+} stagedat_header_t;
+
 typedef enum {
 	OT_NONE = 0,
 	OT_BUMPER = 1,
@@ -39,4 +64,15 @@ typedef enum {
 	OT_BAR_LEFT = 20,
 	OT_BAR_RIGHT = 21,
 } obstacle_type_t;
+
+union stagedat_stage_t {
+	struct {
+		// Stores the cards of [CARDS_PER_BYTE] horizontal tiles in the lower
+		// [CARDS_PER_BYTE] bits. The other bits are unused.
+		uint8_t cards[STAGEOBJS_Y][STAGEOBJS_X / CARDS_PER_BYTE];
+
+		int8_t obstacles[STAGEOBJS_Y][STAGEOBJS_X]; // obstacle_type_t
+	} type;
+	int8_t byte[sizeof((stagedat_stage_t*)0)->type];
+};
 /// --------------------------------------------------------------------------

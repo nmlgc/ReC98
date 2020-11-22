@@ -3,7 +3,7 @@
  * Common, essential macros for TH01. No types here!
  */
 
-#define STAGES_PER_SCENE 4
+#define STAGES_PER_SCENE 5
 #define SCENE_COUNT 4
 
 #define STAGE_COUNT 20

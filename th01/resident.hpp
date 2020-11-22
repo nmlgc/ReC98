@@ -28,7 +28,10 @@ typedef struct {
 	long score;
 	long continues_total;
 	unsigned int continues_per_scene[SCENE_COUNT];
-	long bonus_per_stage[STAGES_PER_SCENE]; // of the current scene
+
+	// of the current scene, without the boss stage
+	long bonus_per_stage[STAGES_PER_SCENE - 1];
+
 	int stage;
 	unsigned long hiscore;
 	long score_highest; // among all continues
