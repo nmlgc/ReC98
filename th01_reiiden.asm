@@ -18595,6 +18595,7 @@ main_31_TEXT	segment	byte public 'CODE' use16
 	extern @stageobj_put_8$qiiii:proc
 	extern @stageobj_bgs_snap_from_1_8$qiii:proc
 	extern @scene_init_and_load$quc:proc
+	extern @obstacles_init_advance_slot$qiimi:proc
 main_31_TEXT	ends
 
 main_31__TEXT	segment	byte public 'CODE' use16
@@ -18626,83 +18627,6 @@ OT_BAR_TOP = 18
 OT_BAR_BOTTOM = 19
 OT_BAR_LEFT = 20
 OT_BAR_RIGHT = 21
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_207BD	proc far
-
-arg_0		= word ptr  6
-@@ptn_id		= word ptr  8
-arg_4		= dword	ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+arg_0]
-		lea	ax, [si-50]
-		mov	bx, 20
-		cwd
-		idiv	bx
-		shl	dx, 5
-		les	bx, [bp+arg_4]
-		mov	ax, es:[bx]
-		add	ax, ax
-		les	bx, _obstacles_left
-		add	bx, ax
-		mov	es:[bx], dx
-		lea	ax, [si-50]
-		mov	bx, 20
-		cwd
-		idiv	bx
-		shl	ax, 5
-		add	ax, 64
-		les	bx, [bp+arg_4]
-		mov	dx, es:[bx]
-		add	dx, dx
-		les	bx, _obstacles_top
-		add	bx, dx
-		mov	es:[bx], ax
-		les	bx, [bp+arg_4]
-		mov	ax, es:[bx]
-		add	ax, _card_count
-		push	ax	; slot
-		mov	ax, es:[bx]
-		add	ax, ax
-		les	bx, _obstacles_top
-		add	bx, ax
-		push	word ptr es:[bx]	; top
-		les	bx, [bp+arg_4]
-		mov	ax, es:[bx]
-		add	ax, ax
-		les	bx, _obstacles_left
-		add	bx, ax
-		push	word ptr es:[bx]	; left
-		call	@stageobj_bgs_snap_from_1_8$qiii
-		add	sp, 6
-		push	[bp+@@ptn_id]
-		les	bx, [bp+arg_4]
-		mov	ax, es:[bx]
-		add	ax, ax
-		les	bx, _obstacles_top
-		add	bx, ax
-		push	word ptr es:[bx]
-		les	bx, [bp+arg_4]
-		mov	ax, es:[bx]
-		add	ax, ax
-		les	bx, _obstacles_left
-		add	bx, ax
-		push	word ptr es:[bx]
-		call	_ptn_put_8
-		add	sp, 6
-		les	bx, [bp+arg_4]
-		inc	word ptr es:[bx]
-		pop	si
-		pop	bp
-		retf
-sub_207BD	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -18823,7 +18747,7 @@ var_16		= word ptr -16h
 var_14		= word ptr -14h
 @@top		= word ptr -12h
 @@left		= word ptr -10h
-var_E		= word ptr -0Eh
+@@obstacle_slot		= word ptr -0Eh
 var_C		= word ptr -0Ch
 var_A		= word ptr -0Ah
 var_8		= word ptr -8
@@ -18836,7 +18760,7 @@ arg_0		= word ptr  6
 		push	si
 		push	di
 		mov	[bp+@@slot], 0
-		mov	[bp+var_E], 0
+		mov	[bp+@@obstacle_slot], 0
 		mov	ax, [bp+arg_0]
 		mov	bx, 5
 		cwd
@@ -19103,7 +19027,7 @@ loc_20B72:
 loc_20B79:
 		cmp	di, 32h	; '2'
 		jl	loc_20AC1
-		mov	[bp+var_E], 0
+		mov	[bp+@@obstacle_slot], 0
 		mov	di, 32h	; '2'
 		jmp	loc_20C8D
 ; ---------------------------------------------------------------------------
@@ -19122,7 +19046,7 @@ loc_20B8B:
 
 loc_20BA8:
 		push	ss
-		lea	ax, [bp+var_E]
+		lea	ax, [bp+@@obstacle_slot]
 		push	ax
 		push	16h
 		jmp	loc_20C59
@@ -19130,7 +19054,7 @@ loc_20BA8:
 
 loc_20BB2:
 		push	ss
-		lea	ax, [bp+var_E]
+		lea	ax, [bp+@@obstacle_slot]
 		push	ax
 		push	17h
 		jmp	loc_20C59
@@ -19190,7 +19114,7 @@ loc_20C23:
 
 loc_20C2E:
 		push	ss
-		lea	ax, [bp+var_E]
+		lea	ax, [bp+@@obstacle_slot]
 		push	ax
 		push	1Dh
 		jmp	short loc_20C59
@@ -19198,7 +19122,7 @@ loc_20C2E:
 
 loc_20C37:
 		push	ss
-		lea	ax, [bp+var_E]
+		lea	ax, [bp+@@obstacle_slot]
 		push	ax
 		push	19h
 		jmp	short loc_20C59
@@ -19206,7 +19130,7 @@ loc_20C37:
 
 loc_20C40:
 		push	ss
-		lea	ax, [bp+var_E]
+		lea	ax, [bp+@@obstacle_slot]
 		push	ax
 		push	1Bh
 		jmp	short loc_20C59
@@ -19214,7 +19138,7 @@ loc_20C40:
 
 loc_20C49:
 		push	ss
-		lea	ax, [bp+var_E]
+		lea	ax, [bp+@@obstacle_slot]
 		push	ax
 		push	1Ah
 		jmp	short loc_20C59
@@ -19222,22 +19146,22 @@ loc_20C49:
 
 loc_20C52:
 		push	ss
-		lea	ax, [bp+var_E]
+		lea	ax, [bp+@@obstacle_slot]
 		push	ax
 		push	1Ch
 
 loc_20C59:
 		push	di
-		call	sub_207BD
+		call	@obstacles_init_advance_slot$qiimi
 		add	sp, 8
 		mov	bx, [bp+arg_0]
 		imul	bx, STAGEDAT_STAGE_SIZE
 		mov	al, _scene_stage[bx+di]
-		mov	bx, [bp+var_E]
+		mov	bx, [bp+@@obstacle_slot]
 		mov	es, word ptr _obstacles_type+2
 		add	bx, word ptr _obstacles_type
 		mov	es:[bx-1], al
-		mov	ax, [bp+var_E]
+		mov	ax, [bp+@@obstacle_slot]
 		dec	ax
 		add	ax, ax
 		les	bx, _obstacles_type_frames

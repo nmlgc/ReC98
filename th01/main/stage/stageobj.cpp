@@ -1,12 +1,13 @@
 extern "C" {
+#include <stddef.h>
 #include <malloc.h>
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
 #include "th01/common.h"
+#include "th01/main/playfld.hpp"
 #include "th01/formats/ptn.hpp"
 #include "th01/formats/pf.hpp"
-#include "th01/main/playfld.hpp"
 #include "th01/formats/stagedat.hpp"
 #include "th01/hardware/graph.h"
 #include "th01/main/stage/stages.hpp"
@@ -26,6 +27,36 @@ struct stage_t {
 };
 extern stage_t scene_stage[STAGES_PER_SCENE];
 // -------
+
+// Byte-wise iterators for STAGE?.DAT arrays
+// -----------------------------------------
+
+inline int obstacles_begin() {
+	return offsetof(stagedat_stage_t, type.obstacles);
+}
+
+inline int obstacles_end() {
+	return (obstacles_begin() + sizeof(((stagedat_stage_t*)0)->type.obstacles));
+}
+// -----------------------------------------
+
+// On-screen positions
+// -------------------
+
+inline screen_x_t stageobj_left(int col) {
+	return ((col * STAGEOBJ_W) + PLAYFIELD_LEFT);
+}
+
+inline vram_y_t stageobj_top(int row) {
+	return ((row * STAGEOBJ_H) + PLAYFIELD_TOP);
+}
+
+#define obstacle_left_from(dat_offset) \
+	stageobj_left((dat_offset - obstacles_begin()) % STAGEOBJS_X)
+
+#define obstacle_top_from(dat_offset) \
+	stageobj_top((dat_offset - obstacles_begin()) / STAGEOBJS_X)
+// -------------------
 
 // Frees [stageobj_bgs] if non-NULL, then allocates new memory for the given
 // number of stage object backgrounds.
@@ -153,4 +184,15 @@ void scene_init_and_load(unsigned char id)
 	}
 
 	arc_file_free();
+}
+
+void obstacles_init_advance_slot(int dat_offset, int ptn_id, int &slot)
+{
+	obstacles.left[slot] = obstacle_left_from(dat_offset);
+	obstacles.top[slot] = obstacle_top_from(dat_offset);
+	stageobj_bgs_snap_from_1_8(
+		obstacles.left[slot], obstacles.top[slot], (slot + cards.count)
+	);
+	ptn_put_8(obstacles.left[slot], obstacles.top[slot], ptn_id);
+	slot++;
 }
