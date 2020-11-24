@@ -196,3 +196,49 @@ void obstacles_init_advance_slot(int dat_offset, int ptn_id, int &slot)
 	ptn_put_8(obstacles.left[slot], obstacles.top[slot], ptn_id);
 	slot++;
 }
+
+// At least we're going to have "non-exhausive switch statement" warnings on
+// modern compilers.
+#define if_actual_obstacle(type, body) \
+	switch(type) { \
+		case OT_BUMPER: \
+		case OT_TURRET_SLOW_1_AIMED: \
+		case OT_TURRET_SLOW_1_RANDOM_NARROW_AIMED: \
+		case OT_TURRET_SLOW_2_SPREAD_WIDE_AIMED: \
+		case OT_TURRET_SLOW_3_SPREAD_WIDE_AIMED: \
+		case OT_TURRET_SLOW_4_SPREAD_WIDE_AIMED: \
+		case OT_TURRET_SLOW_5_SPREAD_WIDE_AIMED: \
+		case OT_TURRET_QUICK_1_AIMED: \
+		case OT_TURRET_QUICK_1_RANDOM_NARROW_AIMED: \
+		case OT_TURRET_QUICK_2_SPREAD_WIDE_AIMED: \
+		case OT_TURRET_QUICK_3_SPREAD_WIDE_AIMED: \
+		case OT_TURRET_QUICK_4_SPREAD_WIDE_AIMED: \
+		case OT_TURRET_QUICK_5_SPREAD_WIDE_AIMED: \
+		case OT_PORTAL: \
+		case OT_BAR_TOP: \
+		case OT_BAR_BOTTOM: \
+		case OT_BAR_LEFT: \
+		case OT_BAR_RIGHT: \
+			body \
+			break; \
+	}
+
+void stageobj_copy_all_0_to_1(int stage_id)
+{
+	int i;
+
+	int stage_in_scene = stage_id;
+	stage_in_scene = (stage_in_scene % STAGES_PER_SCENE);
+	if(stage_in_scene == BOSS_STAGE) {
+		return;
+	}
+
+	for(i = 0; i < obstacles.count; i++) {
+		if_actual_obstacle(obstacles.type[i], {
+			ptn_copy_8_0_to_1(obstacles.left[i], obstacles.top[i]);
+		});
+	}
+	for(i = 0; i < cards.count; i++) {
+		ptn_copy_8_0_to_1(cards.left[i], cards.top[i]);
+	}
+}

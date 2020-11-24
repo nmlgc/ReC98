@@ -32,6 +32,7 @@ include th01/sprites/main_ptn.inc
 LIVES_MAX = 6
 BOMBS_MAX = 5
 STAGES_PER_SCENE = 5
+BOSS_STAGE = (STAGES_PER_SCENE - 1)
 
 	option emulator
 
@@ -839,8 +840,7 @@ loc_BDAD:
 loc_BDC2:
 		cmp	byte_34A49, 0
 		jnz	short loc_BE00
-		push	si
-		call	sub_20868
+		call	@stageobj_copy_all_0_to_1$qi stdcall, si
 		push	0
 		call	_graph_accesspage_func
 		push	1
@@ -18596,6 +18596,7 @@ main_31_TEXT	segment	byte public 'CODE' use16
 	extern @stageobj_bgs_snap_from_1_8$qiii:proc
 	extern @scene_init_and_load$quc:proc
 	extern @obstacles_init_advance_slot$qiimi:proc
+	extern @stageobj_copy_all_0_to_1$qi:proc
 main_31_TEXT	ends
 
 main_31__TEXT	segment	byte public 'CODE' use16
@@ -18627,114 +18628,6 @@ OT_BAR_TOP = 18
 OT_BAR_BOTTOM = 19
 OT_BAR_LEFT = 20
 OT_BAR_RIGHT = 21
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_20868	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, [bp+arg_0]
-		mov	ax, di
-		mov	bx, 5
-		cwd
-		idiv	bx
-		mov	di, dx
-		cmp	di, 4
-		jz	short loc_208F0
-		xor	si, si
-		jmp	short loc_208BD
-; ---------------------------------------------------------------------------
-
-loc_20883:
-		les	bx, _obstacles_type
-		mov	al, es:[bx+si]
-		cbw
-		dec	ax
-		mov	bx, ax
-		cmp	bx, (OT_BAR_RIGHT - 1)
-		ja	short @@card
-		add	bx, bx
-		jmp	cs:off_208F4[bx]
-
-@@obstacle:
-		mov	ax, si
-		add	ax, ax
-		les	bx, _obstacles_top
-		add	bx, ax
-		push	word ptr es:[bx]
-		mov	ax, si
-		add	ax, ax
-		les	bx, _obstacles_left
-		add	bx, ax
-		push	word ptr es:[bx]
-		call	_ptn_copy_8_0_to_1
-		add	sp, 4
-
-@@card:
-		inc	si
-
-loc_208BD:
-		cmp	si, _obstacle_count
-		jl	short loc_20883
-		xor	si, si
-		jmp	short loc_208EA
-; ---------------------------------------------------------------------------
-
-loc_208C7:
-		mov	ax, si
-		add	ax, ax
-		les	bx, _cards_top
-		add	bx, ax
-		push	word ptr es:[bx]
-		mov	ax, si
-		add	ax, ax
-		les	bx, _cards_left
-		add	bx, ax
-		push	word ptr es:[bx]
-		call	_ptn_copy_8_0_to_1
-		add	sp, 4
-		inc	si
-
-loc_208EA:
-		cmp	si, _card_count
-		jl	short loc_208C7
-
-loc_208F0:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-
-; ---------------------------------------------------------------------------
-off_208F4	dw offset @@obstacle
-		dw offset @@obstacle
-		dw offset @@obstacle
-		dw offset @@obstacle
-		dw offset @@obstacle
-		dw offset @@obstacle
-		dw offset @@obstacle
-		dw offset @@obstacle
-		dw offset @@obstacle
-		dw offset @@obstacle
-		dw offset @@obstacle
-		dw offset @@obstacle
-		dw offset @@obstacle
-		dw offset @@card
-		dw offset @@card
-		dw offset @@card
-		dw offset @@obstacle
-		dw offset @@obstacle
-		dw offset @@obstacle
-		dw offset @@obstacle
-		dw offset @@obstacle
-sub_20868	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 

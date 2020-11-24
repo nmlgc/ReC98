@@ -4,6 +4,7 @@
  */
 
 #define STAGES_PER_SCENE 5
+#define BOSS_STAGE (STAGES_PER_SCENE - 1)
 #define SCENE_COUNT 4
 
 #define STAGE_COUNT 20
