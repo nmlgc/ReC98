@@ -18412,7 +18412,7 @@ loc_201CF:
 		les	bx, _cards_hp
 		mov	al, es:[bx+si]
 		cbw
-		imul	ax, 5
+		imul	ax, CARD_ANIM_CELS
 		mov	dx, si
 		add	dx, dx
 		les	bx, _cards_flip_frames
@@ -18424,7 +18424,7 @@ loc_201CF:
 		idiv	bx
 		pop	bx
 		add	bx, ax
-		mov	al, [bx+126Eh]
+		mov	al, _CARD_ANIM[bx]
 		mov	ah, 0
 		push	ax	; ptn_id
 		mov	ax, si
@@ -18445,7 +18445,7 @@ loc_201CF:
 		les	bx, _cards_hp
 		mov	al, es:[bx+si]
 		cbw
-		imul	ax, 5
+		imul	ax, CARD_ANIM_CELS
 		mov	dx, si
 		add	dx, dx
 		les	bx, _cards_flip_frames
@@ -18457,7 +18457,7 @@ loc_201CF:
 		idiv	bx
 		pop	bx
 		add	bx, ax
-		mov	al, [bx+126Eh]
+		mov	al, _CARD_ANIM[bx]
 		mov	ah, 0
 		push	ax	; ptn_id
 		mov	ax, si
@@ -19077,9 +19077,9 @@ loc_20CA0:
 		les	bx, _cards_hp
 		mov	al, es:[bx+si]
 		cbw
-		imul	ax, 5
+		imul	ax, CARD_ANIM_CELS
 		mov	bx, ax
-		mov	al, [bx+126Eh]
+		mov	al, _CARD_ANIM[bx]
 		mov	ah, 0
 		mov	[bp+var_C], ax
 		push	ax
@@ -19157,10 +19157,10 @@ loc_20D15:
 		push	ax
 		mov	al, es:[bx+si]
 		cbw
-		imul	ax, 5
+		imul	ax, CARD_ANIM_CELS
 		pop	bx
 		add	bx, ax
-		mov	al, [bx+1273h]
+		mov	al, _CARD_ANIM[1 * CARD_ANIM_CELS][bx]
 		mov	ah, 0
 		mov	[bp+var_C], ax
 		push	ax
@@ -19890,7 +19890,7 @@ loc_21364:
 		push	1
 		call	_graph_accesspage_func
 		pop	cx
-		push	18h
+		push	PTN_TURRET_FIRING
 		mov	ax, si
 		add	ax, ax
 		les	bx, _obstacles_top
@@ -19906,7 +19906,7 @@ loc_21364:
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
-		push	18h
+		push	PTN_TURRET_FIRING
 		mov	ax, si
 		add	ax, ax
 		les	bx, _obstacles_top
@@ -20020,7 +20020,7 @@ loc_21467:
 		push	offset _Pellets
 		call	@CPellets@add_pattern$qii16pellet_pattern_ti
 		add	sp, 0Ch
-		push	18h
+		push	PTN_TURRET_FIRING
 		mov	ax, si
 		add	ax, ax
 		les	bx, _obstacles_top
@@ -20052,7 +20052,7 @@ loc_214D3:
 		push	1
 		call	_graph_accesspage_func
 		pop	cx
-		push	17h
+		push	PTN_TURRET
 		mov	ax, si
 		add	ax, ax
 		les	bx, _obstacles_top
@@ -20068,7 +20068,7 @@ loc_214D3:
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
-		push	17h
+		push	PTN_TURRET
 		mov	ax, si
 		add	ax, ax
 		les	bx, _obstacles_top
@@ -20134,7 +20134,7 @@ arg_2		= word ptr  8
 		mov	_portals_blocked, 0
 		cmp	_orb_in_portal, 0
 		jz	loc_21815
-		call	_ptn_put_8 c, _portal_dst_left, _portal_dst_top, 1Dh
+		call	_ptn_put_8 c, _portal_dst_left, _portal_dst_top, PTN_PORTAL
 		jmp	loc_217F2
 ; ---------------------------------------------------------------------------
 
@@ -20165,7 +20165,7 @@ loc_215D2:
 		mov	word_39EB7, si
 		mov	_portals_blocked, 1
 		call	_egc_copy_rect_1_to_0_16 c, _orb_prev_left, _orb_prev_top, large ORB_W or (ORB_H shl 16)
-		push	1Eh
+		push	(PTN_PORTAL_ANIM + 0)
 
 loc_2160F:
 		mov	ax, si
@@ -20205,7 +20205,7 @@ loc_21634:
 		push	word ptr es:[bx]
 		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
-		push	1Fh
+		push	(PTN_PORTAL_ANIM + 1)
 		jmp	short loc_2160F
 ; ---------------------------------------------------------------------------
 
@@ -20229,7 +20229,7 @@ loc_21670:
 		push	word ptr es:[bx]
 		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
-		push	1Dh
+		push	PTN_PORTAL
 		mov	ax, si
 		add	ax, ax
 		les	bx, _obstacles_top
@@ -20290,7 +20290,7 @@ loc_2170D:
 		mov	ax, es:[bx]
 		mov	_portal_dst_top, ax
 		call	_egc_copy_rect_1_to_0_16 c, _portal_dst_left, ax, large (32 shl 16) or 32
-		push	1Fh
+		push	(PTN_PORTAL_ANIM + 1)
 
 loc_21742:
 		push	_portal_dst_top
@@ -20306,7 +20306,7 @@ loc_2174D:
 		cmp	word ptr es:[bx], 30
 		jnz	short loc_21777
 		call	_egc_copy_rect_1_to_0_16 c, _portal_dst_left, _portal_dst_top, large (32 shl 16) or 32
-		push	1Eh
+		push	(PTN_PORTAL_ANIM + 0)
 		jmp	short loc_21742
 ; ---------------------------------------------------------------------------
 
@@ -20318,7 +20318,7 @@ loc_21777:
 		cmp	word ptr es:[bx], 40
 		jnz	short loc_217FA
 		call	_egc_copy_rect_1_to_0_16 c, _portal_dst_left, _portal_dst_top, large (32 shl 16) or 32
-		call	_ptn_put_8 c, _portal_dst_left, _portal_dst_top, 1Dh
+		call	_ptn_put_8 c, _portal_dst_left, _portal_dst_top, PTN_PORTAL
 		call	IRand
 		mov	bx, 5
 		cwd
@@ -44424,34 +44424,17 @@ STAGEOBJS_Y = (PLAYFIELD_H / STAGEOBJ_H)
 STAGEOBJS_COUNT = (STAGEOBJS_X * STAGEOBJS_Y)
 STAGEDAT_STAGE_SIZE = ((STAGEOBJS_COUNT) + (STAGEOBJS_COUNT / 4) + 5)
 
-public _default_grp_fn, _default_bgm_fn, _scene_fn_
+public _default_grp_fn, _default_bgm_fn, _scene_fn_, _CARD_ANIM
 _default_grp_fn	db 'ST .GRP', 0, 0, 0, 0, 0, 0, 0, 0
 _default_bgm_fn	db 'ST .MDT', 0, 0, 0, 0, 0, 0, 0, 0
-		db  11h
-		db  12h
-		db  13h
-		db  14h
-		db  15h
-		db  0Eh
-		db  0Fh
-		db  10h
-		db  12h
-		db  11h
-		db  0Bh
-		db  0Ch
-		db  0Dh
-		db  0Fh
-		db  0Eh
-		db    8
-		db    9
-		db  0Ah
-		db  0Ch
-		db  0Bh
-		db    8
-		db    9
-		db  0Ah
-		db    9
-		db    8
+CARD_ANIM_CELS = 5
+CARD_HP_MAX = 5
+_CARD_ANIM label byte
+	db  PTN_CARD_0HP, PTN_CARD_0HP_HALF, PTN_CARD_0HP_EDGE, PTN_CARD_REMOVED_HALF, PTN_CARD_REMOVED
+	db  PTN_CARD_1HP, PTN_CARD_1HP_HALF, PTN_CARD_1HP_EDGE, PTN_CARD_0HP_HALF, PTN_CARD_0HP
+	db  PTN_CARD_2HP, PTN_CARD_2HP_HALF, PTN_CARD_2HP_EDGE, PTN_CARD_1HP_HALF, PTN_CARD_1HP
+	db  PTN_CARD_3HP, PTN_CARD_3HP_HALF, PTN_CARD_3HP_EDGE, PTN_CARD_2HP_HALF, PTN_CARD_2HP
+	db  PTN_CARD_3HP, PTN_CARD_3HP_HALF, PTN_CARD_3HP_EDGE, PTN_CARD_3HP_HALF, PTN_CARD_3HP
 _scene_fn_	db 'stage .dat', 0, 0, 0, 0, 0
 unk_35C36	db    0
 		dd    0

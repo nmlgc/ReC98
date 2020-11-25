@@ -11,6 +11,10 @@ enum card_flag_t {
 	CARD_REMOVED = 2,
 };
 
+static const int CARD_ANIM_CELS = 5;
+static const int CARD_HP_MAX = 5; // STAGE?.DAT only supports up to 4, though!
+extern unsigned char CARD_ANIM[CARD_HP_MAX][CARD_ANIM_CELS];
+
 // Stored outside the class for some reason... Only valid during the card flip
 // animation, and reset to 0 afterwards.
 extern unsigned long *cards_score;
