@@ -31,6 +31,17 @@ struct CCards {
 	// Stored minus 1: A value of 0 indicates that the card needs to be
 	// flipped one more time to remove it.
 	char *hp;
+
+	void new_counted() {
+		if(count > 0) {
+			left = new screen_x_t[count];
+			top = new vram_y_t[count];
+			flag = new card_flag_t[count];
+			flip_frames = new int[count];
+			hp = new char[count];
+			cards_score = new unsigned long[count];
+		}
+	}
 };
 
 extern CCards cards;
@@ -46,6 +57,15 @@ struct CObstacles {
 	obstacle_type_t *type;
 	int *type_frames;
 	int count;
+
+	void new_counted() {
+		if(count > 0) {
+			left = new screen_x_t[count];
+			top = new vram_y_t[count];
+			type = new obstacle_type_t[count];
+			type_frames = new int[count];
+		}
+	}
 };
 
 extern CObstacles obstacles;
@@ -57,6 +77,12 @@ extern CObstacles obstacles;
 // Loads the contents of STAGE[id].DAT, and sets [default_grp_fn] and
 // [default_bgm_fn] accordingly. [id] must be ≥0 and ≤9.
 void scene_init_and_load(unsigned char id);
+
+// Initializes [cards] and [obstacles] with the objects for the given [stage],
+// using the previously loaded scene data, and renders them to the current
+// VRAM page. If [first_stage_in_scene] is true, a flip-in animation is shown
+// for every card.
+void stageobjs_init_and_render(int stage);
 // --------------
 
 // Current portal state

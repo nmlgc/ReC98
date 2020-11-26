@@ -763,7 +763,7 @@ arg_6		= word ptr  0Ch
 		push	si
 		push	di
 		mov	si, [bp+arg_0]
-		cmp	byte_34A49, 1
+		cmp	_first_stage_in_scene, 1
 		jnz	short loc_BD88
 		push	ds
 		push	offset a1640m	; "\x1B[16;40m"
@@ -828,17 +828,16 @@ loc_BD88:
 		add	sp, 0Ah
 
 loc_BDAD:
-		push	si
-		call	sub_2091E
+		call	@stageobjs_init_and_render$qi stdcall, si
 		pop	cx
-		cmp	byte_34A49, 1
+		cmp	_first_stage_in_scene, 1
 		jnz	short loc_BDC2
 		call	_graph_copy_page_back_to_front
 		jmp	short loc_BE00
 ; ---------------------------------------------------------------------------
 
 loc_BDC2:
-		cmp	byte_34A49, 0
+		cmp	_first_stage_in_scene, 0
 		jnz	short loc_BE00
 		call	@stageobj_copy_all_0_to_1$qi stdcall, si
 		push	0
@@ -3226,7 +3225,7 @@ loc_D795:
 		cwd
 		idiv	bx
 		mov	byte_35BEE, dl
-		mov	byte_34A49, 1
+		mov	_first_stage_in_scene, 1
 		mov	byte_36C1E, 1
 		les	bx, _resident
 		cmp	es:[bx+reiidenconfig_t.snd_need_init], 0
@@ -3432,7 +3431,7 @@ loc_D9CA:
 		cmp	byte_34ADF, 0
 		jz	short loc_DA06
 		xor	si, si
-		mov	byte_34A49, 1
+		mov	_first_stage_in_scene, 1
 		call	sub_17EB8
 		call	sub_1843D
 		cmp	byte_34AA4, 0
@@ -3655,7 +3654,7 @@ loc_DC3A:
 		mov	eax, _rand
 		mov	random_seed, eax
 		mov	_bomb_doubletap_frames, BOMB_DOUBLETAP_WINDOW
-		mov	byte_34A49, 0
+		mov	_first_stage_in_scene, 0
 		mov	[bp+var_C], 0BB8h
 		jmp	loc_DE72
 ; ---------------------------------------------------------------------------
@@ -3863,7 +3862,7 @@ loc_DEDA:
 		jz	short loc_DF03
 		call	sub_D4DD
 		mov	byte_36C1E, 1
-		mov	byte_34A49, 1
+		mov	_first_stage_in_scene, 1
 
 loc_DF03:
 		inc	si
@@ -4090,7 +4089,7 @@ loc_E244:
 		cmp	byte_34ADF, 0
 		jz	short loc_E27B
 		call	sub_D4DD
-		mov	byte_34A49, 1
+		mov	_first_stage_in_scene, 1
 
 loc_E27B:
 		les	bx, _resident
@@ -7930,7 +7929,7 @@ sub_190D6	proc far
 		add	sp, 4
 
 loc_1910C:
-		cmp	byte_34A49, 1
+		cmp	_first_stage_in_scene, 1
 		jnz	short loc_19124
 		call	_lives_put_initial
 		call	_bombs_put_initial
@@ -8009,7 +8008,7 @@ loc_19124:
 		call	_graph_putsa_fx
 		add	sp, 0Ah
 		mov	_hud_cardcombo_max, 0
-		cmp	byte_34A49, 1
+		cmp	_first_stage_in_scene, 1
 		jnz	short loc_19227
 		push	1
 		jmp	short loc_19229
@@ -18589,14 +18588,12 @@ main_30__TEXT	ends
 
 ; Segment type:	Pure code
 main_31_TEXT	segment	byte public 'CODE' use16
-	extern @stageobj_bgs_new$qi:proc
 	extern @stageobj_bgs_put_all$qv:proc
 	extern @stageobj_bgs_free$qv:proc
 	extern @stageobj_put_8$qiiii:proc
-	extern @stageobj_bgs_snap_from_1_8$qiii:proc
 	extern @scene_init_and_load$quc:proc
-	extern @obstacles_init_advance_slot$qiimi:proc
 	extern @stageobj_copy_all_0_to_1$qi:proc
+	extern @stageobjs_init_and_render$qi:proc
 main_31_TEXT	ends
 
 main_31__TEXT	segment	byte public 'CODE' use16
@@ -18628,655 +18625,6 @@ OT_BAR_TOP = 18
 OT_BAR_BOTTOM = 19
 OT_BAR_LEFT = 20
 OT_BAR_RIGHT = 21
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2091E	proc far
-
-var_7A		= byte ptr -7Ah
-var_16		= word ptr -16h
-var_14		= word ptr -14h
-@@top		= word ptr -12h
-@@left		= word ptr -10h
-@@obstacle_slot		= word ptr -0Eh
-var_C		= word ptr -0Ch
-var_A		= word ptr -0Ah
-var_8		= word ptr -8
-var_6		= word ptr -6
-@@slot		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  6
-
-		enter	7Ah, 0
-		push	si
-		push	di
-		mov	[bp+@@slot], 0
-		mov	[bp+@@obstacle_slot], 0
-		mov	ax, [bp+arg_0]
-		mov	bx, 5
-		cwd
-		idiv	bx
-		mov	[bp+arg_0], dx
-		mov	_obstacle_count, 0
-		mov	_card_count, 0
-		cmp	[bp+arg_0], 4
-		jz	loc_20DE4
-		xor	di, di
-		jmp	short loc_20972
-; ---------------------------------------------------------------------------
-
-loc_20952:
-		mov	si, 8
-		jmp	short loc_2096D
-; ---------------------------------------------------------------------------
-
-loc_20957:
-		mov	bx, [bp+arg_0]
-		imul	bx, STAGEDAT_STAGE_SIZE
-		mov	al, _scene_stage[bx+di]
-		cbw
-		test	ax, si
-		jz	short loc_2096B
-		inc	_card_count
-
-loc_2096B:
-		sar	si, 1
-
-loc_2096D:
-		or	si, si
-		jnz	short loc_20957
-		inc	di
-
-loc_20972:
-		cmp	di, 32h	; '2'
-		jl	short loc_20952
-		mov	di, 32h	; '2'
-		jmp	short loc_2099C
-; ---------------------------------------------------------------------------
-
-loc_2097C:
-		mov	bx, [bp+arg_0]
-		imul	bx, 255 ; TODO: size
-		mov	al, _scene_stage[bx+di]
-		cbw
-		dec	ax
-		mov	bx, ax
-		cmp	bx, 14h
-		ja	short loc_2099B
-		add	bx, bx
-		jmp	cs:off_20E22[bx]
-
-loc_20997:
-		inc	_obstacle_count
-
-loc_2099B:
-		inc	di
-
-loc_2099C:
-		cmp	di, 250 ; TODO: size
-		jl	short loc_2097C
-		mov	ax, _card_count
-		add	ax, _obstacle_count
-		push	ax
-		call	@stageobj_bgs_new$qi
-		pop	cx
-		cmp	_card_count, 0
-		jle	short loc_20A27
-		mov	ax, _card_count
-		add	ax, ax
-		push	ax
-		call	@$bnwa$qui
-		pop	cx
-		mov	word ptr _cards_left+2, dx
-		mov	word ptr _cards_left, ax
-		mov	ax, _card_count
-		add	ax, ax
-		push	ax
-		call	@$bnwa$qui
-		pop	cx
-		mov	word ptr _cards_top+2, dx
-		mov	word ptr _cards_top, ax
-		push	_card_count
-		call	@$bnwa$qui
-		pop	cx
-		mov	word ptr _cards_flag+2, dx
-		mov	word ptr _cards_flag, ax
-		mov	ax, _card_count
-		add	ax, ax
-		push	ax
-		call	@$bnwa$qui
-		pop	cx
-		mov	word ptr _cards_flip_frames+2, dx
-		mov	word ptr _cards_flip_frames, ax
-		push	_card_count
-		call	@$bnwa$qui
-		pop	cx
-		mov	word ptr _cards_hp+2, dx
-		mov	word ptr _cards_hp, ax
-		mov	ax, _card_count
-		shl	ax, 2
-		push	ax
-		call	@$bnwa$qui
-		pop	cx
-		mov	word ptr _cards_score+2, dx
-		mov	word ptr _cards_score, ax
-		jmp	short $+2
-
-loc_20A27:
-		cmp	_obstacle_count, 0
-		jle	short loc_20A7A
-		mov	ax, _obstacle_count
-		add	ax, ax
-		push	ax
-		call	@$bnwa$qui
-		pop	cx
-		mov	word ptr _obstacles_left+2, dx
-		mov	word ptr _obstacles_left, ax
-		mov	ax, _obstacle_count
-		add	ax, ax
-		push	ax
-		call	@$bnwa$qui
-		pop	cx
-		mov	word ptr _obstacles_top+2, dx
-		mov	word ptr _obstacles_top, ax
-		push	_obstacle_count
-		call	@$bnwa$qui
-		pop	cx
-		mov	word ptr _obstacles_type+2, dx
-		mov	word ptr _obstacles_type, ax
-		mov	ax, _obstacle_count
-		add	ax, ax
-		push	ax
-		call	@$bnwa$qui
-		pop	cx
-		mov	word ptr _obstacles_type_frames+2, dx
-		mov	word ptr _obstacles_type_frames, ax
-		jmp	short $+2
-
-loc_20A7A:
-		call	IRand
-		cwd
-		idiv	_card_count
-		mov	word_39EB0, dx
-		xor	si, si
-		jmp	short loc_20A9C
-; ---------------------------------------------------------------------------
-
-loc_20A8C:
-		mov	ax, si
-		add	ax, ax
-		les	bx, _obstacles_type_frames
-		add	bx, ax
-		mov	word ptr es:[bx], 0
-		inc	si
-
-loc_20A9C:
-		cmp	si, _obstacle_count
-		jl	short loc_20A8C
-		xor	si, si
-		jmp	short loc_20AB6
-; ---------------------------------------------------------------------------
-
-loc_20AA6:
-		mov	ax, si
-		add	ax, ax
-		les	bx, _cards_flip_frames
-		add	bx, ax
-		mov	word ptr es:[bx], 0
-		inc	si
-
-loc_20AB6:
-		cmp	si, _card_count
-		jl	short loc_20AA6
-		xor	di, di
-		jmp	loc_20B79
-; ---------------------------------------------------------------------------
-
-loc_20AC1:
-		mov	si, 8
-		jmp	loc_20B72
-; ---------------------------------------------------------------------------
-
-loc_20AC7:
-		mov	bx, si
-		dec	bx
-		cmp	bx, 7
-		ja	short loc_20AF0
-		add	bx, bx
-		jmp	cs:off_20E12[bx]
-
-loc_20AD6:
-		mov	[bp+var_2], 3
-		jmp	short loc_20AF0
-; ---------------------------------------------------------------------------
-
-loc_20ADD:
-		mov	[bp+var_2], 2
-		jmp	short loc_20AF0
-; ---------------------------------------------------------------------------
-
-loc_20AE4:
-		mov	[bp+var_2], 1
-		jmp	short loc_20AF0
-; ---------------------------------------------------------------------------
-
-loc_20AEB:
-		mov	[bp+var_2], 0
-
-loc_20AF0:
-		mov	bx, [bp+arg_0]
-		imul	bx, STAGEDAT_STAGE_SIZE
-		mov	al, _scene_stage[bx+di]
-		cbw
-		test	ax, si
-		jz	short loc_20B70
-		mov	ax, di
-		shl	ax, 7
-		mov	bx, PLAYFIELD_RIGHT
-		cwd
-		idiv	bx
-		mov	ax, [bp+var_2]
-		shl	ax, 5
-		add	dx, ax
-		mov	[bp+@@left], dx
-		mov	ax, di
-		mov	bx, 5
-		cwd
-		idiv	bx
-		shl	ax, 5
-		add	ax, PLAYFIELD_TOP
-		mov	[bp+@@top], ax
-		call	@stageobj_bgs_snap_from_1_8$qiii c, [bp+@@left], ax, [bp+@@slot]
-		mov	ax, [bp+@@slot]
-		add	ax, ax
-		les	bx, _cards_left
-		add	bx, ax
-		mov	ax, [bp+@@left]
-		mov	es:[bx], ax
-		mov	ax, [bp+@@slot]
-		add	ax, ax
-		les	bx, _cards_top
-		add	bx, ax
-		mov	ax, [bp+@@top]
-		mov	es:[bx], ax
-		les	bx, _cards_flag
-		add	bx, [bp+@@slot]
-		mov	byte ptr es:[bx], PANEL_ALIVE
-		les	bx, _cards_hp
-		add	bx, [bp+@@slot]
-		mov	byte ptr es:[bx], 0
-		inc	[bp+@@slot]
-
-loc_20B70:
-		sar	si, 1
-
-loc_20B72:
-		or	si, si
-		jnz	loc_20AC7
-		inc	di
-
-loc_20B79:
-		cmp	di, 32h	; '2'
-		jl	loc_20AC1
-		mov	[bp+@@obstacle_slot], 0
-		mov	di, 32h	; '2'
-		jmp	loc_20C8D
-; ---------------------------------------------------------------------------
-
-loc_20B8B:
-		mov	bx, [bp+arg_0]
-		imul	bx, STAGEDAT_STAGE_SIZE
-		mov	al, _scene_stage[bx+di]
-		cbw
-		dec	ax
-		mov	bx, ax
-		cmp	bx, 14h
-		ja	loc_20C8C
-		add	bx, bx
-		jmp	cs:off_20DE8[bx]
-
-loc_20BA8:
-		push	ss
-		lea	ax, [bp+@@obstacle_slot]
-		push	ax
-		push	16h
-		jmp	loc_20C59
-; ---------------------------------------------------------------------------
-
-loc_20BB2:
-		push	ss
-		lea	ax, [bp+@@obstacle_slot]
-		push	ax
-		push	17h
-		jmp	loc_20C59
-; ---------------------------------------------------------------------------
-
-loc_20BBC:
-		lea	ax, [di-50]
-		mov	bx, 20
-		cwd
-		idiv	bx
-		shl	dx, 5
-		mov	[bp+var_8], dx
-		lea	ax, [di-50]
-		cwd
-		idiv	bx
-		shl	ax, 5
-		add	ax, 40h
-		mov	[bp+var_A], ax
-		mov	[bp+var_6], 0
-		jmp	short loc_20C23
-; ---------------------------------------------------------------------------
-
-loc_20BE1:
-		mov	ax, [bp+var_6]
-		add	ax, ax
-		les	bx, _cards_left
-		add	bx, ax
-		mov	ax, es:[bx]
-		cmp	ax, [bp+var_8]
-		jnz	short loc_20C20
-		mov	ax, [bp+var_6]
-		add	ax, ax
-		les	bx, _cards_top
-		add	bx, ax
-		mov	ax, es:[bx]
-		cmp	ax, [bp+var_A]
-		jnz	short loc_20C20
-		mov	bx, [bp+arg_0]
-		imul	bx, STAGEDAT_STAGE_SIZE
-		mov	al, _scene_stage[bx+di]
-		add	al, 0F3h
-		les	bx, _cards_hp
-		add	bx, [bp+var_6]
-		mov	es:[bx], al
-		jmp	short loc_20C8C
-; ---------------------------------------------------------------------------
-
-loc_20C20:
-		inc	[bp+var_6]
-
-loc_20C23:
-		mov	ax, [bp+var_6]
-		cmp	ax, _card_count
-		jl	short loc_20BE1
-		jmp	short loc_20C8C
-; ---------------------------------------------------------------------------
-
-loc_20C2E:
-		push	ss
-		lea	ax, [bp+@@obstacle_slot]
-		push	ax
-		push	1Dh
-		jmp	short loc_20C59
-; ---------------------------------------------------------------------------
-
-loc_20C37:
-		push	ss
-		lea	ax, [bp+@@obstacle_slot]
-		push	ax
-		push	19h
-		jmp	short loc_20C59
-; ---------------------------------------------------------------------------
-
-loc_20C40:
-		push	ss
-		lea	ax, [bp+@@obstacle_slot]
-		push	ax
-		push	1Bh
-		jmp	short loc_20C59
-; ---------------------------------------------------------------------------
-
-loc_20C49:
-		push	ss
-		lea	ax, [bp+@@obstacle_slot]
-		push	ax
-		push	1Ah
-		jmp	short loc_20C59
-; ---------------------------------------------------------------------------
-
-loc_20C52:
-		push	ss
-		lea	ax, [bp+@@obstacle_slot]
-		push	ax
-		push	1Ch
-
-loc_20C59:
-		push	di
-		call	@obstacles_init_advance_slot$qiimi
-		add	sp, 8
-		mov	bx, [bp+arg_0]
-		imul	bx, STAGEDAT_STAGE_SIZE
-		mov	al, _scene_stage[bx+di]
-		mov	bx, [bp+@@obstacle_slot]
-		mov	es, word ptr _obstacles_type+2
-		add	bx, word ptr _obstacles_type
-		mov	es:[bx-1], al
-		mov	ax, [bp+@@obstacle_slot]
-		dec	ax
-		add	ax, ax
-		les	bx, _obstacles_type_frames
-		add	bx, ax
-		mov	word ptr es:[bx], 0
-
-loc_20C8C:
-		inc	di
-
-loc_20C8D:
-		cmp	di, 0FAh
-		jl	loc_20B8B
-		cmp	byte_34A49, 1
-		jnz	short loc_20CE3
-		xor	si, si
-		jmp	short loc_20CDA
-; ---------------------------------------------------------------------------
-
-loc_20CA0:
-		les	bx, _cards_hp
-		mov	al, es:[bx+si]
-		cbw
-		imul	ax, CARD_ANIM_CELS
-		mov	bx, ax
-		mov	al, _CARD_ANIM[bx]
-		mov	ah, 0
-		mov	[bp+var_C], ax
-		push	ax
-		mov	ax, si
-		add	ax, ax
-		les	bx, _cards_top
-		add	bx, ax
-		push	word ptr es:[bx]
-		mov	ax, si
-		add	ax, ax
-		les	bx, _cards_left
-		add	bx, ax
-		push	word ptr es:[bx]
-		call	_ptn_put_8
-		add	sp, 6
-		inc	si
-
-loc_20CDA:
-		cmp	si, _card_count
-		jl	short loc_20CA0
-		jmp	loc_20DE4
-; ---------------------------------------------------------------------------
-
-loc_20CE3:
-		lea	ax, [bp+var_7A]
-		push	ss
-		push	ax
-		push	ds
-		push	offset unk_35C36
-		mov	cx, 64h	; 'd'
-		call	SCOPY@
-		mov	[bp+var_14], 0
-
-loc_20CF9:
-		mov	[bp+var_16], 0
-		xor	si, si
-		jmp	loc_20DAD
-; ---------------------------------------------------------------------------
-
-loc_20D03:
-		mov	bx, si
-		add	bx, bx
-		lea	ax, [bp+var_7A]
-		add	bx, ax
-		cmp	word ptr ss:[bx], 0FFFFh
-		jnz	short loc_20D15
-		inc	[bp+var_16]
-
-loc_20D15:
-		mov	bx, si
-		add	bx, bx
-		lea	ax, [bp+var_7A]
-		add	bx, ax
-		cmp	word ptr ss:[bx], 0Ch
-		jl	loc_20DAC
-		mov	bx, si
-		add	bx, bx
-		lea	ax, [bp+var_7A]
-		add	bx, ax
-		mov	ax, ss:[bx]
-		mov	bx, 6
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_20D89
-		mov	bx, si
-		add	bx, bx
-		lea	ax, [bp+var_7A]
-		add	bx, ax
-		mov	ax, ss:[bx]
-		mov	bx, 6
-		cwd
-		idiv	bx
-		les	bx, _cards_hp
-		push	ax
-		mov	al, es:[bx+si]
-		cbw
-		imul	ax, CARD_ANIM_CELS
-		pop	bx
-		add	bx, ax
-		mov	al, _CARD_ANIM[1 * CARD_ANIM_CELS][bx]
-		mov	ah, 0
-		mov	[bp+var_C], ax
-		push	ax
-		mov	ax, si
-		add	ax, ax
-		les	bx, _cards_top
-		add	bx, ax
-		push	word ptr es:[bx]
-		mov	ax, si
-		add	ax, ax
-		les	bx, _cards_left
-		add	bx, ax
-		push	word ptr es:[bx]
-		call	_ptn_put_8
-		add	sp, 6
-
-loc_20D89:
-		mov	bx, si
-		add	bx, bx
-		lea	ax, [bp+var_7A]
-		add	bx, ax
-		inc	word ptr ss:[bx]
-		mov	bx, si
-		add	bx, bx
-		add	bx, ax
-		cmp	word ptr ss:[bx], 18h
-		jle	short loc_20DAC
-		mov	bx, si
-		add	bx, bx
-		add	bx, ax
-		mov	word ptr ss:[bx], 0FFFFh
-
-loc_20DAC:
-		inc	si
-
-loc_20DAD:
-		cmp	si, _card_count
-		jl	loc_20D03
-		mov	ax, [bp+var_16]
-		cmp	ax, _card_count
-		jge	short loc_20DE4
-		mov	ax, [bp+var_14]
-		cmp	ax, _card_count
-		jge	short loc_20DD6
-		mov	bx, [bp+var_14]
-		add	bx, bx
-		lea	ax, [bp+var_7A]
-		add	bx, ax
-		mov	word ptr ss:[bx], 0Ch
-
-loc_20DD6:
-		inc	[bp+var_14]
-		push	1
-		call	_frame_delay
-		pop	cx
-		jmp	loc_20CF9
-; ---------------------------------------------------------------------------
-
-loc_20DE4:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_2091E	endp
-
-; ---------------------------------------------------------------------------
-off_20DE8	dw offset loc_20BA8
-		dw offset loc_20BB2
-		dw offset loc_20BB2
-		dw offset loc_20BB2
-		dw offset loc_20BB2
-		dw offset loc_20BB2
-		dw offset loc_20BB2
-		dw offset loc_20BB2
-		dw offset loc_20BB2
-		dw offset loc_20BB2
-		dw offset loc_20BB2
-		dw offset loc_20BB2
-		dw offset loc_20BB2
-		dw offset loc_20BBC
-		dw offset loc_20BBC
-		dw offset loc_20BBC
-		dw offset loc_20C2E
-		dw offset loc_20C37
-		dw offset loc_20C40
-		dw offset loc_20C49
-		dw offset loc_20C52
-off_20E12	dw offset loc_20AD6
-		dw offset loc_20ADD
-		dw offset loc_20AF0
-		dw offset loc_20AE4
-		dw offset loc_20AF0
-		dw offset loc_20AF0
-		dw offset loc_20AF0
-		dw offset loc_20AEB
-off_20E22	dw offset loc_20997
-		dw offset loc_20997
-		dw offset loc_20997
-		dw offset loc_20997
-		dw offset loc_20997
-		dw offset loc_20997
-		dw offset loc_20997
-		dw offset loc_20997
-		dw offset loc_20997
-		dw offset loc_20997
-		dw offset loc_20997
-		dw offset loc_20997
-		dw offset loc_20997
-		dw offset loc_2099B
-		dw offset loc_2099B
-		dw offset loc_2099B
-		dw offset loc_20997
-		dw offset loc_20997
-		dw offset loc_20997
-		dw offset loc_20997
-		dw offset loc_20997
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -32170,8 +31518,7 @@ sub_2869E	proc far
 		call	_grp_put_palette_show stdcall, offset aBoss6_h_grp, ds ; "boss6_h.grp"
 		push	0
 		call	_graph_accesspage_func
-		push	4
-		call	sub_2091E
+		call	@stageobjs_init_and_render$qi stdcall, BOSS_STAGE
 		push	ds
 		push	offset aTensi_mdt_0 ; "TENSI.MDT"
 		call	_mdrv2_bgm_load
@@ -34622,7 +33969,7 @@ loc_29D0E:
 		call	_stage_palette_set stdcall, offset _z_Palettes, ds
 		push	0
 		call	_graph_accesspage_func
-		mov	byte_34A49, 1
+		mov	_first_stage_in_scene, 1
 		call	sub_190D6
 		call	_hud_score_and_cardcombo_render
 		push	0FFFFh
@@ -38952,7 +38299,7 @@ loc_2C9DA:
 		call	_grp_put_palette_show c, offset aBoss6_a6_grp, ds ; "boss6_a6.grp"
 		call	_z_palette_set_show c, large (0 shl 16) or 6, large (0 shl 16) or 0
 		call	_graph_copy_page_back_to_front
-		mov	byte_34A49, 1
+		mov	_first_stage_in_scene, 1
 		call	sub_190D6
 		call	_hud_score_and_cardcombo_render
 		call	_z_vsync_wait_and_scrollup stdcall, 0
@@ -39503,8 +38850,7 @@ var_2		= word ptr -2
 		call	text_fillca pascal, (' ' shl 16) + TX_BLACK + TX_REVERSE
 		call	_grp_put_palette_show stdcall, offset aBoss7_d1_grp, ds ; "boss7_d1.grp"
 		call	_stage_palette_set stdcall, offset _z_Palettes, ds
-		push	4
-		call	sub_2091E
+		call	@stageobjs_init_and_render$qi stdcall, BOSS_STAGE
 		push	1
 		call	_graph_accesspage_func
 		call	_grp_put_palette_show stdcall, offset aBoss8_a1_grp, ds ; "boss8_a1.grp"
@@ -43903,7 +43249,8 @@ aRANKS	dd aEasy		; "EASY"
 		dd aLunatic		; "LUNATIC"
 byte_34A47	db 0
 		db    0
-byte_34A49	db 1
+public _first_stage_in_scene
+_first_stage_in_scene	db 1
 		db    0
 include th01/hardware/input_main_end[data].asm
 		db    0
@@ -44427,8 +43774,16 @@ STAGEDAT_STAGE_SIZE = ((STAGEOBJS_COUNT) + (STAGEOBJS_COUNT / 4) + 5)
 public _default_grp_fn, _default_bgm_fn, _scene_fn_, _CARD_ANIM
 _default_grp_fn	db 'ST .GRP', 0, 0, 0, 0, 0, 0, 0, 0
 _default_bgm_fn	db 'ST .MDT', 0, 0, 0, 0, 0, 0, 0, 0
+
+STAGEOBJ_W = PTN_W
+STAGEOBJ_H = PTN_H
+STAGEOBJS_X = (PLAYFIELD_W / STAGEOBJ_W)
+STAGEOBJS_Y = (PLAYFIELD_H / STAGEOBJ_H)
+STAGEOBJS_COUNT = (STAGEOBJS_X * STAGEOBJS_Y)
+
 CARD_ANIM_CELS = 5
 CARD_HP_MAX = 5
+
 _CARD_ANIM label byte
 	db  PTN_CARD_0HP, PTN_CARD_0HP_HALF, PTN_CARD_0HP_EDGE, PTN_CARD_REMOVED_HALF, PTN_CARD_REMOVED
 	db  PTN_CARD_1HP, PTN_CARD_1HP_HALF, PTN_CARD_1HP_EDGE, PTN_CARD_0HP_HALF, PTN_CARD_0HP
@@ -44436,34 +43791,8 @@ _CARD_ANIM label byte
 	db  PTN_CARD_3HP, PTN_CARD_3HP_HALF, PTN_CARD_3HP_EDGE, PTN_CARD_2HP_HALF, PTN_CARD_2HP
 	db  PTN_CARD_3HP, PTN_CARD_3HP_HALF, PTN_CARD_3HP_EDGE, PTN_CARD_3HP_HALF, PTN_CARD_3HP
 _scene_fn_	db 'stage .dat', 0, 0, 0, 0, 0
-unk_35C36	db    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		db    0
-		db    0
-		db    0
+public _stageobjs_init_anim_card_frames
+_stageobjs_init_anim_card_frames dw 50 dup (0)
 flt_35C9A	dd 1.5
 flt_35C9E	dd 16.0
 flt_35CA2	dd 64.0
@@ -44886,7 +44215,7 @@ public _stageobj_bgs, _stageobj_bgs_size
 _stageobj_bgs	dd ?
 _stageobj_bgs_size	dd ?
 
-public _cards, _obstacles, _cards_score
+public _cards, _obstacles, _cards_score, _a_random_unused_card_id
 _cards	label
 _cards_left	dd ?
 _cards_top	dd ?
@@ -44902,7 +44231,7 @@ _obstacles_type	dd ?
 _obstacles_type_frames	dd ?
 _obstacle_count	dw ?
 _cards_score	dd ?
-word_39EB0	dw ?
+_a_random_unused_card_id	dw ?
 byte_39EB2	db ?
 ; void (*off_39EB3)(void)
 off_39EB3	dd ?

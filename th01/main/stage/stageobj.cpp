@@ -4,13 +4,17 @@ extern "C" {
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
+#include "master.hpp"
 #include "th01/common.h"
 #include "th01/main/playfld.hpp"
 #include "th01/formats/ptn.hpp"
 #include "th01/formats/pf.hpp"
 #include "th01/formats/stagedat.hpp"
 #include "th01/hardware/graph.h"
+#include "th01/hardware/vsync.h"
+#include "th01/main/vars.hpp"
 #include "th01/main/stage/stages.hpp"
+#include "th01/sprites/main_ptn.h"
 }
 
 #include "th01/main/stage/stageobj.hpp"
@@ -31,6 +35,14 @@ extern stage_t scene_stage[STAGES_PER_SCENE];
 // Byte-wise iterators for STAGE?.DAT arrays
 // -----------------------------------------
 
+inline int cards_begin() {
+	return offsetof(stagedat_stage_t, type.cards);
+}
+
+inline int cards_end() {
+	return (cards_begin() + sizeof(((stagedat_stage_t*)0)->type.cards));
+}
+
 inline int obstacles_begin() {
 	return offsetof(stagedat_stage_t, type.obstacles);
 }
@@ -50,6 +62,15 @@ inline screen_x_t stageobj_left(int col) {
 inline vram_y_t stageobj_top(int row) {
 	return ((row * STAGEOBJ_H) + PLAYFIELD_TOP);
 }
+
+#define card_left_from(dat_offset, card_bit) \
+	( \
+		((dat_offset - cards_begin()) * (STAGEOBJ_W * CARDS_PER_BYTE)) % \
+		PLAYFIELD_W \
+	) + stageobj_left(card_bit)
+
+#define card_top_from(dat_offset) \
+	stageobj_top((dat_offset - cards_begin()) / (STAGEOBJS_X / CARDS_PER_BYTE))
 
 #define obstacle_left_from(dat_offset) \
 	stageobj_left((dat_offset - obstacles_begin()) % STAGEOBJS_X)
@@ -241,4 +262,212 @@ void stageobj_copy_all_0_to_1(int stage_id)
 	for(i = 0; i < cards.count; i++) {
 		ptn_copy_8_0_to_1(cards.left[i], cards.top[i]);
 	}
+}
+
+void stageobjs_init_and_render(int stage)
+{
+	register int i;
+	int j;
+	int card_bit;
+	int card_slot = 0;
+	int lookup_i;
+	screen_x_t lookup_left;
+	vram_y_t lookup_top;
+	int card_ptn_id;
+	int obstacle_slot = 0;
+	screen_x_t card_left;
+	vram_y_t card_top;
+
+	#define offset j
+	#define nth_bit i
+
+	stage = (stage % STAGES_PER_SCENE);
+
+	obstacles.count = 0;
+	cards.count = 0;
+
+	if(stage == BOSS_STAGE) {
+		return;
+	}
+
+	for(offset = cards_begin(); offset < cards_end(); offset++) {
+		for(nth_bit = (1 << (CARDS_PER_BYTE - 1)); nth_bit != 0; nth_bit >>= 1) {
+			if(scene_stage[stage].dat.byte[offset] & nth_bit) {
+				cards.count++;
+			}
+		}
+	}
+	for(offset = obstacles_begin(); offset < obstacles_end(); offset++) {
+		if_actual_obstacle(scene_stage[stage].dat.byte[offset], {
+			obstacles.count++;
+		});
+	}
+
+	stageobj_bgs_new(cards.count + obstacles.count);
+	cards.new_counted();
+	obstacles.new_counted();
+
+	// No, not the ID of the one card that remains unflipped after a bomb.
+	extern int a_random_unused_card_id;
+	a_random_unused_card_id = (rand() % cards.count);
+
+	for(i = 0; i < obstacles.count; i++) {
+		obstacles.type_frames[i] = 0;
+	}
+	for(i = 0; i < cards.count; i++) {
+		cards.flip_frames[i] = 0;
+	}
+
+	for(offset = cards_begin(); offset < cards_end(); offset++) {
+		for(nth_bit = (1 << (CARDS_PER_BYTE - 1)); nth_bit != 0; nth_bit >>= 1) {
+			switch(nth_bit) {
+			case (1 << 0):	card_bit = 3;	break;
+			case (1 << 1):	card_bit = 2;	break;
+			case (1 << 2):	card_bit = 1;	break;
+			case (1 << 3):	card_bit = 0;	break;
+			}
+			if(scene_stage[stage].dat.byte[offset] & nth_bit) {
+				card_left = card_left_from(offset, card_bit);
+				card_top = card_top_from(offset);
+
+				stageobj_bgs_snap_from_1_8(card_left, card_top, card_slot);
+
+				cards.left[card_slot] = card_left;
+				cards.top[card_slot] = card_top;
+				cards.flag[card_slot] = CARD_ALIVE;
+				// Remember, the HP is actually stored in the obstacle array
+				// if it's ≥1...
+				cards.hp[card_slot] = 0;
+
+				card_slot++;
+			}
+		}
+	}
+
+	obstacle_slot = 0; // Again?!
+	for(offset = obstacles_begin(); offset < obstacles_end(); offset++) {
+		#define obstacle_type scene_stage[stage].dat.byte[offset]
+		switch(obstacle_type) {
+		case OT_BUMPER:
+			obstacles_init_advance_slot(offset, PTN_BUMPER, obstacle_slot);
+			goto actual_obstacle;
+
+		case OT_TURRET_SLOW_1_AIMED:
+		case OT_TURRET_SLOW_1_RANDOM_NARROW_AIMED:
+		case OT_TURRET_SLOW_2_SPREAD_WIDE_AIMED:
+		case OT_TURRET_SLOW_3_SPREAD_WIDE_AIMED:
+		case OT_TURRET_SLOW_4_SPREAD_WIDE_AIMED:
+		case OT_TURRET_SLOW_5_SPREAD_WIDE_AIMED:
+		case OT_TURRET_QUICK_1_AIMED:
+		case OT_TURRET_QUICK_1_RANDOM_NARROW_AIMED:
+		case OT_TURRET_QUICK_2_SPREAD_WIDE_AIMED:
+		case OT_TURRET_QUICK_3_SPREAD_WIDE_AIMED:
+		case OT_TURRET_QUICK_4_SPREAD_WIDE_AIMED:
+		case OT_TURRET_QUICK_5_SPREAD_WIDE_AIMED:
+			obstacles_init_advance_slot(offset, PTN_TURRET, obstacle_slot);
+			goto actual_obstacle;
+
+		case OT_ACTUALLY_A_2FLIP_CARD:
+		case OT_ACTUALLY_A_3FLIP_CARD:
+		case OT_ACTUALLY_A_4FLIP_CARD:
+			lookup_left = obstacle_left_from(offset);
+			lookup_top = obstacle_top_from(offset);
+			for(lookup_i = 0; lookup_i < cards.count; lookup_i++) {
+				if(
+					(cards.left[lookup_i] == lookup_left) &&
+					(cards.top[lookup_i] == lookup_top)
+				) {
+					cards.hp[lookup_i] = (
+						(obstacle_type - OT_ACTUALLY_A_CARD) + 1
+					);
+					break;
+				}
+			}
+			break;
+
+		case OT_PORTAL:
+			obstacles_init_advance_slot(offset, PTN_PORTAL, obstacle_slot);
+			goto actual_obstacle;
+		case OT_BAR_TOP:
+			obstacles_init_advance_slot(offset, PTN_BAR_TOP, obstacle_slot);
+			goto actual_obstacle;
+		case OT_BAR_BOTTOM:
+			obstacles_init_advance_slot(offset, PTN_BAR_BOTTOM, obstacle_slot);
+			goto actual_obstacle;
+		case OT_BAR_LEFT:
+			obstacles_init_advance_slot(offset, PTN_BAR_LEFT, obstacle_slot);
+			goto actual_obstacle;
+		case OT_BAR_RIGHT:
+			obstacles_init_advance_slot(offset, PTN_BAR_RIGHT, obstacle_slot);
+			goto actual_obstacle;
+
+		actual_obstacle:
+			obstacles.type[obstacle_slot - 1] = obstacle_type_t(obstacle_type);
+			obstacles.type_frames[obstacle_slot - 1] = 0; // Again?!
+			break;
+		}
+		#undef obstacle_type
+	}
+
+	if(first_stage_in_scene == true) {
+		for(i = 0; i < cards.count; i++) {
+			card_ptn_id = CARD_ANIM[cards.hp[i]][0];
+			ptn_put_8(cards.left[i], cards.top[i], card_ptn_id);
+		}
+		return;
+	}
+
+	#define CEL_START 2 // *_EDGE
+	#define CEL_END 4 // Regular card with one less HP
+	#define FRAMES_PER_CEL 6
+
+	// ZUN bug: Should be STAGEOBJS_COUNT. This effectively limits stages to a
+	// maximum of 50 cards rather than the original 200, since...
+	struct hack { int x[50]; }; // XXX
+	extern hack stageobjs_init_anim_card_frames;
+
+	hack frames_for = stageobjs_init_anim_card_frames;
+	// ... [total_frames] is the next variable on the stack. Therefore, ...
+	int total_frames = 0;
+	while(1) {
+		int cards_animated = 0;
+		for(i = 0; i < cards.count; i++) {
+			if(frames_for.x[i] == -1) {
+				cards_animated++;
+			}
+			if(frames_for.x[i] < (CEL_START * FRAMES_PER_CEL)) {
+				continue;
+			}
+			if((frames_for.x[i] % FRAMES_PER_CEL) == 0) {
+				card_ptn_id = (
+					CARD_ANIM[cards.hp[i] + 1][frames_for.x[i] / FRAMES_PER_CEL]
+				);
+				ptn_put_8(cards.left[i], cards.top[i], card_ptn_id);
+			}
+			frames_for.x[i]++;
+			// ... trying to access the 51st card here actually accesses
+			// [total_frames], periodically resetting it to -1. Which in turn
+			// means that...
+			if(frames_for.x[i] > (CEL_END * FRAMES_PER_CEL)) {
+				frames_for.x[i] = -1;
+			}
+		}
+		if(cards_animated >= cards.count) {
+			break;
+		}
+		// ... the first 24 cards are animated over and over in an infinite
+		// loop, as the termination condition above can never become true.
+		if(total_frames < cards.count) {
+			frames_for.x[total_frames] = (CEL_START * FRAMES_PER_CEL);
+		}
+		total_frames++;
+		frame_delay(1);
+	}
+
+	#undef FRAMES_PER_CEL
+	#undef CEL_END
+	#undef CEL_START
+
+	#undef nth_bit
+	#undef offset
 }

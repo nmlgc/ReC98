@@ -7,5 +7,6 @@ extern char credit_bombs;
 extern char lives_extra;
 
 extern char stage_num;
+extern unsigned char first_stage_in_scene;
 
 extern unsigned long score;
