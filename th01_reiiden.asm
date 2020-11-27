@@ -4008,12 +4008,10 @@ loc_E0A0:
 		jmp	short $+2
 
 loc_E0C0:
-		cmp	off_39EA2, 0
+		cmp	_obstacles_type, 0
 		jz	short loc_E0E0
-		pushd	[off_39EA2] ; font
-		call	@$bdla$qnv
-		add	sp, 4
-		mov	off_39EA2, 0
+		call	@$bdla$qnv c, large [_obstacles_type]
+		mov	_obstacles_type, 0
 		jmp	short $+2
 
 loc_E0E0:
@@ -4103,12 +4101,10 @@ loc_E1E4:
 		jmp	short $+2
 
 loc_E204:
-		cmp	off_39EA2, 0
+		cmp	_obstacles_type, 0
 		jz	short loc_E224
-		pushd	[off_39EA2] ; font
-		call	@$bdla$qnv
-		add	sp, 4
-		mov	off_39EA2, 0
+		call	@$bdla$qnv c, large [_obstacles_type]
+		mov	_obstacles_type, 0
 		jmp	short $+2
 
 loc_E224:
@@ -18631,6 +18627,31 @@ main_31_TEXT	segment	byte public 'CODE' use16
 		;org 9
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
+OT_NONE = 0
+OT_BUMPER = 1
+OT_TURRET = 2
+OT_TURRET_SLOW_1_AIMED = OT_TURRET
+OT_TURRET_SLOW_1_RANDOM_NARROW_AIMED = 3
+OT_TURRET_SLOW_2_SPREAD_WIDE_AIMED = 4
+OT_TURRET_SLOW_3_SPREAD_WIDE_AIMED = 5
+OT_TURRET_SLOW_4_SPREAD_WIDE_AIMED = 6
+OT_TURRET_SLOW_5_SPREAD_WIDE_AIMED = 7
+OT_TURRET_QUICK_1_AIMED = 8
+OT_TURRET_QUICK_1_RANDOM_NARROW_AIMED = 9
+OT_TURRET_QUICK_2_SPREAD_WIDE_AIMED = 10
+OT_TURRET_QUICK_3_SPREAD_WIDE_AIMED = 11
+OT_TURRET_QUICK_4_SPREAD_WIDE_AIMED = 12
+OT_TURRET_QUICK_5_SPREAD_WIDE_AIMED = 13
+OT_ACTUALLY_A_CARD = 14
+OT_ACTUALLY_A_2FLIP_CARD = OT_ACTUALLY_A_CARD
+OT_ACTUALLY_A_3FLIP_CARD = 15
+OT_ACTUALLY_A_4FLIP_CARD = 16
+OT_PORTAL = 17
+OT_BAR_TOP = 18
+OT_BAR_BOTTOM = 19
+OT_BAR_LEFT = 20
+OT_BAR_RIGHT = 21
+
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
@@ -19228,17 +19249,17 @@ arg_0		= word ptr  6
 ; ---------------------------------------------------------------------------
 
 loc_20883:
-		les	bx, off_39EA2
+		les	bx, _obstacles_type
 		mov	al, es:[bx+si]
 		cbw
 		dec	ax
 		mov	bx, ax
-		cmp	bx, 14h
-		ja	short loc_208BC
+		cmp	bx, (OT_BAR_RIGHT - 1)
+		ja	short @@card
 		add	bx, bx
 		jmp	cs:off_208F4[bx]
 
-loc_2089A:
+@@obstacle:
 		mov	ax, si
 		add	ax, ax
 		les	bx, off_39E9E
@@ -19252,7 +19273,7 @@ loc_2089A:
 		call	_ptn_copy_8_0_to_1
 		add	sp, 4
 
-loc_208BC:
+@@card:
 		inc	si
 
 loc_208BD:
@@ -19286,30 +19307,30 @@ loc_208F0:
 		pop	si
 		pop	bp
 		retf
-sub_20868	endp
 
 ; ---------------------------------------------------------------------------
-off_208F4	dw offset loc_2089A
-		dw offset loc_2089A
-		dw offset loc_2089A
-		dw offset loc_2089A
-		dw offset loc_2089A
-		dw offset loc_2089A
-		dw offset loc_2089A
-		dw offset loc_2089A
-		dw offset loc_2089A
-		dw offset loc_2089A
-		dw offset loc_2089A
-		dw offset loc_2089A
-		dw offset loc_2089A
-		dw offset loc_208BC
-		dw offset loc_208BC
-		dw offset loc_208BC
-		dw offset loc_2089A
-		dw offset loc_2089A
-		dw offset loc_2089A
-		dw offset loc_2089A
-		dw offset loc_2089A
+off_208F4	dw offset @@obstacle
+		dw offset @@obstacle
+		dw offset @@obstacle
+		dw offset @@obstacle
+		dw offset @@obstacle
+		dw offset @@obstacle
+		dw offset @@obstacle
+		dw offset @@obstacle
+		dw offset @@obstacle
+		dw offset @@obstacle
+		dw offset @@obstacle
+		dw offset @@obstacle
+		dw offset @@obstacle
+		dw offset @@card
+		dw offset @@card
+		dw offset @@card
+		dw offset @@obstacle
+		dw offset @@obstacle
+		dw offset @@obstacle
+		dw offset @@obstacle
+		dw offset @@obstacle
+sub_20868	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -19466,8 +19487,8 @@ loc_20A27:
 		push	word_39EAA
 		call	@$bnwa$qui
 		pop	cx
-		mov	word ptr off_39EA2+2, dx
-		mov	word ptr off_39EA2, ax
+		mov	word ptr _obstacles_type+2, dx
+		mov	word ptr _obstacles_type, ax
 		mov	ax, word_39EAA
 		add	ax, ax
 		push	ax
@@ -19737,8 +19758,8 @@ loc_20C59:
 		imul	bx, 255
 		mov	al, [bx+di+228Eh]
 		mov	bx, [bp+var_E]
-		mov	es, word ptr off_39EA2+2
-		add	bx, word ptr off_39EA2
+		mov	es, word ptr _obstacles_type+2
+		add	bx, word ptr _obstacles_type
 		mov	es:[bx-1], al
 		mov	ax, [bp+var_E]
 		dec	ax
@@ -20029,17 +20050,17 @@ loc_20E64:
 		mov	ax, _orb_cur_top
 		sub	ax, es:[bx]
 		mov	[bp+var_8], ax
-		les	bx, off_39EA2
+		les	bx, _obstacles_type
 		mov	al, es:[bx+si]
 		cbw
 		dec	ax
 		mov	bx, ax
-		cmp	bx, 14h
-		ja	loc_212CA
+		cmp	bx, (OT_BAR_RIGHT - 1)
+		ja	@@card
 		add	bx, bx
 		jmp	cs:off_212D7[bx]
 
-loc_20EDB:
+@@bumper:
 		cmp	[bp+var_2], 18h
 		jnb	loc_20F67
 		cmp	[bp+var_4], 18h
@@ -20110,11 +20131,11 @@ loc_20F67:
 
 loc_20F85:
 		cmp	di, 1
-		jnz	loc_212CA
+		jnz	@@card
 		jmp	loc_212BB
 ; ---------------------------------------------------------------------------
 
-loc_20F8F:
+@@turret_slow:
 		cmp	_rank, RANK_EASY
 		jz	short loc_20FA3
 		mov	ax, si
@@ -20128,7 +20149,7 @@ loc_20FA3:
 		add	ax, ax
 		les	bx, off_39EA6
 		add	bx, ax
-		cmp	word ptr es:[bx], 0C8h ; '?'
+		cmp	word ptr es:[bx], 200
 		jl	short loc_20FBF
 		push	0
 		push	si
@@ -20137,11 +20158,11 @@ loc_20FA3:
 
 loc_20FBF:
 		cmp	di, 1
-		jnz	loc_212CA
+		jnz	@@card
 		jmp	short loc_20FFE
 ; ---------------------------------------------------------------------------
 
-loc_20FC8:
+@@turret_quick:
 		cmp	_rank, RANK_EASY
 		jz	short loc_20FDC
 		mov	ax, si
@@ -20155,7 +20176,7 @@ loc_20FDC:
 		add	ax, ax
 		les	bx, off_39EA6
 		add	bx, ax
-		cmp	word ptr es:[bx], 64h ;	'd'
+		cmp	word ptr es:[bx], 100
 		jl	short loc_20FF7
 		push	0
 		push	si
@@ -20164,7 +20185,7 @@ loc_20FDC:
 
 loc_20FF7:
 		cmp	di, 1
-		jnz	loc_212CA
+		jnz	@@card
 
 loc_20FFE:
 		mov	ax, si
@@ -20178,7 +20199,7 @@ loc_20FFE:
 		jmp	short loc_2105A
 ; ---------------------------------------------------------------------------
 
-loc_21016:
+@@portal:
 		cmp	[bp+var_2], 18h
 		jnb	short loc_21022
 		cmp	[bp+var_4], 18h
@@ -20200,7 +20221,7 @@ loc_21032:
 
 loc_2103D:
 		cmp	di, 1
-		jnz	loc_212CA
+		jnz	@@card
 		mov	ax, si
 		add	ax, ax
 		les	bx, off_39EA6
@@ -20212,10 +20233,10 @@ loc_2103D:
 
 loc_2105A:
 		add	sp, 4
-		jmp	loc_212CA
+		jmp	@@card
 ; ---------------------------------------------------------------------------
 
-loc_21060:
+@@bar_bottom:
 		cmp	[bp+var_2], 20h	; ' '
 		jnb	short loc_210B1
 		mov	ax, si
@@ -20251,11 +20272,11 @@ loc_210B1:
 		les	bx, off_39EA6
 		add	bx, ax
 		cmp	word ptr es:[bx], 0
-		jz	loc_212CA
+		jz	@@card
 		jmp	loc_21293
 ; ---------------------------------------------------------------------------
 
-loc_210C6:
+@@bar_top:
 		cmp	[bp+var_2], 20h	; ' '
 		jnb	short loc_21117
 		mov	ax, si
@@ -20291,11 +20312,11 @@ loc_21117:
 		les	bx, off_39EA6
 		add	bx, ax
 		cmp	word ptr es:[bx], 0
-		jz	loc_212CA
+		jz	@@card
 		jmp	loc_21293
 ; ---------------------------------------------------------------------------
 
-loc_2112C:
+@@bar_left:
 		cmp	[bp+var_4], 20h	; ' '
 		jnb	loc_211CD
 		mov	ax, si
@@ -20372,11 +20393,11 @@ loc_211CD:
 		les	bx, off_39EA6
 		add	bx, ax
 		cmp	word ptr es:[bx], 0
-		jz	loc_212CA
+		jz	@@card
 		jmp	loc_21293
 ; ---------------------------------------------------------------------------
 
-loc_211E2:
+@@bar_right:
 		cmp	[bp+var_4], 20h	; ' '
 		jnb	loc_21283
 		mov	ax, si
@@ -20453,7 +20474,7 @@ loc_21283:
 		les	bx, off_39EA6
 		add	bx, ax
 		cmp	word ptr es:[bx], 0
-		jz	short loc_212CA
+		jz	short @@card
 
 loc_21293:
 		mov	ax, si
@@ -20470,7 +20491,7 @@ loc_21293:
 
 loc_212B6:
 		cmp	di, 1
-		jnz	short loc_212CA
+		jnz	short @@card
 
 loc_212BB:
 		mov	ax, si
@@ -20479,7 +20500,7 @@ loc_212BB:
 		add	bx, ax
 		mov	word ptr es:[bx], 0
 
-loc_212CA:
+@@card:
 		inc	si
 
 loc_212CB:
@@ -20489,30 +20510,30 @@ loc_212CB:
 		pop	si
 		leave
 		retf
-sub_20E4C	endp
 
 ; ---------------------------------------------------------------------------
-off_212D7	dw offset loc_20EDB
-		dw offset loc_20F8F
-		dw offset loc_20F8F
-		dw offset loc_20F8F
-		dw offset loc_20F8F
-		dw offset loc_20F8F
-		dw offset loc_20F8F
-		dw offset loc_20FC8
-		dw offset loc_20FC8
-		dw offset loc_20FC8
-		dw offset loc_20FC8
-		dw offset loc_20FC8
-		dw offset loc_20FC8
-		dw offset loc_212CA
-		dw offset loc_212CA
-		dw offset loc_212CA
-		dw offset loc_21016
-		dw offset loc_210C6
-		dw offset loc_21060
-		dw offset loc_2112C
-		dw offset loc_211E2
+off_212D7	dw offset @@bumper
+		dw offset @@turret_slow
+		dw offset @@turret_slow
+		dw offset @@turret_slow
+		dw offset @@turret_slow
+		dw offset @@turret_slow
+		dw offset @@turret_slow
+		dw offset @@turret_quick
+		dw offset @@turret_quick
+		dw offset @@turret_quick
+		dw offset @@turret_quick
+		dw offset @@turret_quick
+		dw offset @@turret_quick
+		dw offset @@card
+		dw offset @@card
+		dw offset @@card
+		dw offset @@portal
+		dw offset @@bar_top
+		dw offset @@bar_bottom
+		dw offset @@bar_left
+		dw offset @@bar_right
+sub_20E4C	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -20645,42 +20666,42 @@ loc_2141A:
 		add	bx, ax
 		cmp	word ptr es:[bx], 2
 		jnz	loc_214D3
-		les	bx, off_39EA2
+		les	bx, _obstacles_type
 		mov	al, es:[bx+si]
 		cbw
-		sub	ax, 2
+		sub	ax, OT_TURRET
 		mov	bx, ax
-		cmp	bx, 0Bh
+		cmp	bx, (OT_TURRET_QUICK_5_SPREAD_WIDE_AIMED - OT_TURRET)
 		ja	short loc_21467
 		add	bx, bx
 		jmp	cs:off_2155F[bx]
 
-loc_21445:
+@@1_aimed:
 		mov	[bp+@@pattern], PP_1_AIMED
 		jmp	short loc_21467
 ; ---------------------------------------------------------------------------
 
-loc_2144B:
+@@1_random_narrow_aimed:
 		mov	[bp+@@pattern], PP_1_RANDOM_NARROW_AIMED
 		jmp	short loc_21467
 ; ---------------------------------------------------------------------------
 
-loc_21451:
+@@2_spread_wide_aimed:
 		mov	[bp+@@pattern], PP_2_SPREAD_WIDE_AIMED
 		jmp	short loc_21467
 ; ---------------------------------------------------------------------------
 
-loc_21457:
+@@3_spread_wide_aimed:
 		mov	[bp+@@pattern], PP_3_SPREAD_WIDE_AIMED
 		jmp	short loc_21467
 ; ---------------------------------------------------------------------------
 
-loc_2145D:
+@@4_spread_wide_aimed:
 		mov	[bp+@@pattern], PP_4_SPREAD_WIDE_AIMED
 		jmp	short loc_21467
 ; ---------------------------------------------------------------------------
 
-loc_21463:
+@@5_spread_wide_aimed:
 		mov	[bp+@@pattern], PP_5_SPREAD_WIDE_AIMED
 
 loc_21467:
@@ -20782,21 +20803,21 @@ loc_2155C:
 		pop	si
 		leave
 		retf
-sub_21301	endp
 
 ; ---------------------------------------------------------------------------
-off_2155F	dw offset loc_21445
-		dw offset loc_2144B
-		dw offset loc_21451
-		dw offset loc_21457
-		dw offset loc_2145D
-		dw offset loc_21463
-		dw offset loc_21445
-		dw offset loc_2144B
-		dw offset loc_21451
-		dw offset loc_21457
-		dw offset loc_2145D
-		dw offset loc_21463
+off_2155F	dw offset @@1_aimed
+		dw offset @@1_random_narrow_aimed
+		dw offset @@2_spread_wide_aimed
+		dw offset @@3_spread_wide_aimed
+		dw offset @@4_spread_wide_aimed
+		dw offset @@5_spread_wide_aimed
+		dw offset @@1_aimed
+		dw offset @@1_random_narrow_aimed
+		dw offset @@2_spread_wide_aimed
+		dw offset @@3_spread_wide_aimed
+		dw offset @@4_spread_wide_aimed
+		dw offset @@5_spread_wide_aimed
+sub_21301	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -20932,10 +20953,10 @@ loc_21670:
 		mov	[bp+var_2], 0
 
 loc_216D5:
-		les	bx, off_39EA2
+		les	bx, _obstacles_type
 		mov	al, es:[bx+di]
 		cbw
-		cmp	ax, 11h
+		cmp	ax, OT_PORTAL
 		jnz	short loc_216F5
 		call	IRand
 		mov	bx, 4
@@ -21068,7 +21089,7 @@ sub_21819	proc far
 		mov	word_39EAA, 1
 		mov	off_39E9A, 0
 		mov	off_39E9E, 0
-		mov	off_39EA2, 0
+		mov	_obstacles_type, 0
 		mov	off_39EA6, 0
 		pop	bp
 		retf
@@ -45601,8 +45622,7 @@ off_39E96	dd ?
 off_39E9A	dd ?
 ; void (*off_39E9E)(void)
 off_39E9E	dd ?
-; void (*off_39EA2)(void)
-off_39EA2	dd ?
+_obstacles_type	dd ?
 ; void (*off_39EA6)(void)
 off_39EA6	dd ?
 word_39EAA	dw ?
