@@ -11,6 +11,10 @@ enum card_flag_t {
 	CARD_REMOVED = 2,
 };
 
+// Stored outside the class for some reason... Only valid during the card flip
+// animation, and reset to 0 afterwards.
+extern unsigned long *cards_score;
+
 struct CCards {
 	screen_x_t *left;
 	vram_y_t *top;

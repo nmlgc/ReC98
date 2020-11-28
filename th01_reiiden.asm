@@ -3971,12 +3971,10 @@ loc_E040:
 		jmp	short $+2
 
 loc_E060:
-		cmp	off_39EAC, 0
+		cmp	_cards_score, 0
 		jz	short loc_E080
-		pushd	[off_39EAC] ; font
-		call	@$bdla$qnv
-		add	sp, 4
-		mov	off_39EAC, 0
+		call	@$bdla$qnv c, large [_cards_score]
+		mov	_cards_score, 0
 		jmp	short $+2
 
 loc_E080:
@@ -4048,12 +4046,10 @@ loc_E184:
 		jmp	short $+2
 
 loc_E1A4:
-		cmp	off_39EAC, 0
+		cmp	_cards_score, 0
 		jz	short loc_E1C4
-		pushd	[off_39EAC] ; font
-		call	@$bdla$qnv
-		add	sp, 4
-		mov	off_39EAC, 0
+		call	@$bdla$qnv c, large [_cards_score]
+		mov	_cards_score, 0
 		jmp	short $+2
 
 loc_E1C4:
@@ -18127,8 +18123,8 @@ loc_1FECC:
 		xor	ax, ax
 
 loc_1FECE:
-		imul	ax, 0Fh
-		add	ax, 14h
+		imul	ax, 15
+		add	ax, 20
 		cwde
 		pop	edx
 		imul	edx, eax
@@ -18137,14 +18133,14 @@ loc_1FECE:
 		push	edx
 		cwd
 		idiv	bx
-		imul	ax, 64h
-		add	ax, 64h	; 'd'
+		imul	ax, 100
+		add	ax, 100
 		cwde
 		pop	edx
 		add	edx, eax
 		mov	ax, si
 		shl	ax, 2
-		les	bx, off_39EAC
+		les	bx, _cards_score
 		add	bx, ax
 		mov	es:[bx], edx
 		cmp	dword ptr es:[bx], 25600
@@ -18154,7 +18150,7 @@ loc_1FECE:
 loc_1FF15:
 		mov	ax, si
 		shl	ax, 2
-		les	bx, off_39EAC
+		les	bx, _cards_score
 		add	bx, ax
 		mov	eax, es:[bx]
 		add	_score, eax
@@ -18234,7 +18230,7 @@ sub_20071	proc far
 loc_2007C:
 		mov	ax, si
 		shl	ax, 2
-		les	bx, off_39EAC
+		les	bx, _cards_score
 		add	bx, ax
 		cmp	dword ptr es:[bx], 0
 		jz	loc_201B1
@@ -18258,9 +18254,9 @@ loc_200B2:
 loc_200B4:
 		mov	ax, si
 		shl	ax, 2
-		les	bx, off_39EAC
+		les	bx, _cards_score
 		add	bx, ax
-		cmp	dword ptr es:[bx], 2710h
+		cmp	dword ptr es:[bx], 10000
 		jbe	short loc_200D0
 		mov	[bp+@@x], -8
 		jmp	short loc_20101
@@ -18269,9 +18265,9 @@ loc_200B4:
 loc_200D0:
 		mov	ax, si
 		shl	ax, 2
-		les	bx, off_39EAC
+		les	bx, _cards_score
 		add	bx, ax
-		cmp	dword ptr es:[bx], 3E8h
+		cmp	dword ptr es:[bx], 1000
 		jbe	short loc_200EC
 		mov	[bp+@@x], 0
 		jmp	short loc_20101
@@ -18280,9 +18276,9 @@ loc_200D0:
 loc_200EC:
 		mov	ax, si
 		shl	ax, 2
-		les	bx, off_39EAC
+		les	bx, _cards_score
 		add	bx, ax
-		cmp	dword ptr es:[bx], 64h ; 'd'
+		cmp	dword ptr es:[bx], 100
 		mov	[bp+@@x], 8
 
 loc_20101:
@@ -18326,7 +18322,7 @@ loc_20142:
 		jl	short loc_20167
 		mov	ax, si
 		shl	ax, 2
-		les	bx, off_39EAC
+		les	bx, _cards_score
 		add	bx, ax
 		mov	dword ptr es:[bx], 0
 		jmp	short loc_201B1
@@ -18338,7 +18334,7 @@ loc_20167:
 		push	ax
 		mov	ax, si
 		shl	ax, 2
-		les	bx, off_39EAC
+		les	bx, _cards_score
 		add	bx, ax
 		push	word ptr es:[bx]
 		call	str_from_positive_int16
@@ -19436,8 +19432,8 @@ loc_2099C:
 		push	ax
 		call	@$bnwa$qui
 		pop	cx
-		mov	word ptr off_39EAC+2, dx
-		mov	word ptr off_39EAC, ax
+		mov	word ptr _cards_score+2, dx
+		mov	word ptr _cards_score, ax
 		jmp	short $+2
 
 loc_20A27:
@@ -21058,7 +21054,7 @@ sub_21819	proc far
 		mov	_cards_flag, 0
 		mov	_cards_flip_frames, 0
 		mov	_cards_hp, 0
-		mov	off_39EAC, 0
+		mov	_cards_score, 0
 		mov	_obstacle_count, 1
 		mov	_obstacles_left, 0
 		mov	_obstacles_top, 0
@@ -45581,7 +45577,7 @@ byte_39E7A	db ?
 off_39E7C	dd ?
 dword_39E80	dd ?
 
-public _cards, _obstacles
+public _cards, _obstacles, _cards_score
 _cards	label
 _cards_left	dd ?
 _cards_top	dd ?
@@ -45596,8 +45592,7 @@ _obstacles_top	dd ?
 _obstacles_type	dd ?
 _obstacles_type_frames	dd ?
 _obstacle_count	dw ?
-; void (*off_39EAC)(void)
-off_39EAC	dd ?
+_cards_score	dd ?
 word_39EB0	dw ?
 byte_39EB2	db ?
 ; void (*off_39EB3)(void)
