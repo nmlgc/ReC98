@@ -1569,7 +1569,7 @@ loc_BE08:
 		cwd
 		idiv	bx
 		push	ax
-		call	pi_put_mask_8
+		call	pi_put_masked_8
 
 loc_BE25:
 		push	1
@@ -2547,7 +2547,7 @@ GRCG_SETCOLOR_DIRECT_DEF 1
 include th04/bgimage_put_rect.asm
 include th05/snd/load.asm
 include th05/snd/kajaint.asm
-include th05/formats/pi_put_mask.asm
+include th05/formats/pi_put_masked.asm
 include th05/formats/pi_load.asm
 include th05/formats/pi_put.asm
 include th05/formats/pi_palette_apply.asm
@@ -2672,7 +2672,7 @@ include th05/music/piano[data].asm
 include th05/sprites/piano_l.asp
 include th05/snd/load[data].asm
 include th04/snd/snd[data].asm
-include th03/formats/pi_put_mask[data].asm
+include th03/formats/pi_put_masked[data].asm
 include th05/formats/pi_buffers[bss].asm
 include th05/hardware/vram_planes[data].asm
 include th03/formats/cdg[data].asm
@@ -3256,7 +3256,7 @@ include th04/snd/interrupt[bss].asm
 include libs/master.lib/bgm[bss].asm
 include th05/music/piano[bss].asm
 include th02/snd/load[bss].asm
-include th05/formats/pi_put_mask[bss].asm
+include th05/formats/pi_put_masked[bss].asm
 include th05/formats/pi_headers[bss].asm
 include th04/hardware/input[bss].asm
 include th04/formats/cdg[bss].asm

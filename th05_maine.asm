@@ -360,7 +360,7 @@ arg_6		= word ptr  0Ah
 		push	0
 		push	[bp+arg_2]
 		push	[bp+arg_0]
-		call	pi_put_quarter_mask_8
+		call	pi_put_quarter_masked_8
 		call	egc_copy_rect_1_to_0_16 pascal, si, di, (320 shl 16) or 200
 		pop	di
 		pop	si
@@ -524,7 +524,7 @@ sub_A826	endp
 maine_01_TEXT	ends
 
 maine_01__TEXT	segment	byte public 'CODE' use16
-	BOX_1_TO_0_MASK procdesc pascal near \
+	BOX_1_TO_0_MASKED procdesc pascal near \
 		mask:word
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -544,7 +544,7 @@ sub_A8EC	proc near
 ; ---------------------------------------------------------------------------
 
 loc_A904:
-		call	box_1_to_0_mask pascal, si
+		call	box_1_to_0_masked pascal, si
 		push	word_15008
 		call	frame_delay
 		inc	si
@@ -554,7 +554,7 @@ loc_A912:
 		jl	short loc_A904
 
 loc_A917:
-		call	box_1_to_0_mask pascal, 4
+		call	box_1_to_0_masked pascal, 4
 		call	egc_off
 		push	1
 		call	frame_delay
@@ -1630,7 +1630,7 @@ loc_B2EE:
 		cwd
 		idiv	bx
 		push	ax
-		call	pi_put_quarter_mask_8
+		call	pi_put_quarter_masked_8
 		call	sub_B37C
 		inc	si
 
@@ -7540,7 +7540,7 @@ include th04/math/vector2_at.asm
 include th04/bgimage_put_rect.asm
 include th05/snd/load.asm
 include th05/snd/kajaint.asm
-include th05/formats/pi_put_mask.asm
+include th05/formats/pi_put_masked.asm
 include th05/formats/pi_load.asm
 include th05/formats/pi_put.asm
 include th05/formats/pi_palette_apply.asm
@@ -7599,7 +7599,7 @@ include th04/bgimage[data].asm
 include th05/mem[data].asm
 include th05/snd/load[data].asm
 include th04/snd/snd[data].asm
-include th03/formats/pi_put_mask[data].asm
+include th03/formats/pi_put_masked[data].asm
 include th05/formats/pi_buffers[bss].asm
 include th05/hardware/vram_planes[data].asm
 include th03/formats/cdg[data].asm
@@ -7882,7 +7882,7 @@ include th03/formats/hfliplut[bss].asm
 include th04/snd/interrupt[bss].asm
 include libs/master.lib/bgm[bss].asm
 include th02/snd/load[bss].asm
-include th05/formats/pi_put_mask[bss].asm
+include th05/formats/pi_put_masked[bss].asm
 include th05/formats/pi_headers[bss].asm
 include th04/hardware/input[bss].asm
 include th04/formats/cdg[bss].asm

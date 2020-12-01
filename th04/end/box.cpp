@@ -24,7 +24,7 @@ typedef enum {
 
 // Copies the text box area from VRAM page 1 to VRAM page 0, applying the
 // given [mask]. Assumes that the EGC is active, and initialized for a copy.
-void pascal near box_1_to_0_mask(box_mask_t mask)
+void pascal near box_1_to_0_masked(box_mask_t mask)
 {
 	extern dots16_t BOX_MASKS[BOX_MASK_COUNT][4];
 	dots16_t dots;

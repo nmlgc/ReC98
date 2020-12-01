@@ -933,7 +933,7 @@ sub_A73B	endp
 maine_01_TEXT	ends
 
 maine_01__TEXT	segment	byte public 'CODE' use16
-	BOX_1_TO_0_MASK procdesc pascal near \
+	BOX_1_TO_0_MASKED procdesc pascal near \
 		mask:word
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -952,7 +952,7 @@ sub_A815	proc near
 ; ---------------------------------------------------------------------------
 
 loc_A827:
-		call	box_1_to_0_mask pascal, si
+		call	box_1_to_0_masked pascal, si
 		push	word_124C0
 		call	frame_delay
 		inc	si
@@ -962,7 +962,7 @@ loc_A835:
 		jl	short loc_A827
 
 loc_A83A:
-		call	box_1_to_0_mask pascal, 4
+		call	box_1_to_0_masked pascal, 4
 		call	egc_off
 		pop	si
 		pop	bp
@@ -4669,7 +4669,7 @@ include th04/hardware/grppsafx[data].asm
 include th03/snd/se_state[data].asm
 include th04/bgimage[data].asm
 include th03/formats/cdg[data].asm
-include th03/formats/pi_put_mask[data].asm
+include th03/formats/pi_put_masked[data].asm
 include th04/end/box[data].asm
 asc_EB84	db '  ', 0
 	even

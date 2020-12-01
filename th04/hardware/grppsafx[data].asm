@@ -3,14 +3,14 @@ GLYPH_WEIGHT_FUNC_TABLE_1	label word
 	dw glyph_weight_heavy  - (grppsafx_glyph_func_1 + 2)
 	dw glyph_weight_bold   - (grppsafx_glyph_func_1 + 2)
 	dw glyph_weight_black  - (grppsafx_glyph_func_1 + 2)
-	dw glyph_double_and_mask - (grppsafx_glyph_func_1 + 2)
+	dw glyph_bold_and_mask - (grppsafx_glyph_func_1 + 2)
 
 GLYPH_WEIGHT_FUNC_TABLE_2	label word
 	dw glyph_weight_normal - (grppsafx_glyph_func_2 + 2)
 	dw glyph_weight_heavy  - (grppsafx_glyph_func_2 + 2)
 	dw glyph_weight_bold   - (grppsafx_glyph_func_2 + 2)
 	dw glyph_weight_black  - (grppsafx_glyph_func_2 + 2)
-	dw glyph_double_and_mask - (grppsafx_glyph_func_2 + 2)
+	dw glyph_bold_and_mask - (grppsafx_glyph_func_2 + 2)
 
 GLYPH_MASK_TABLE	label word
 	dw _grppsafx_mask_1

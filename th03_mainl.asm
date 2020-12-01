@@ -5708,7 +5708,7 @@ include th03/formats/cdg[data].asm
 include th03/snd/se_priority[data].asm
 a0		db  '0',0
 aOver_pi	db 'over.pi',0
-include th03/formats/pi_put_mask[data].asm
+include th03/formats/pi_put_masked[data].asm
 asc_EFC2	db  '  ', 0
 	even
 aSCORE_PLAYCHARS label dword

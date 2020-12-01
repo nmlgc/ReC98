@@ -34,7 +34,7 @@ graph_putsa_fx	proc far
 
 	mov	ax, (GLYPH_MASK_TABLE - (FX_MASK * word))[bx]
 	mov	word ptr cs:grppsafx_glyph_mask, ax
-	mov	bx, (FX_MASK * word) ; offset of the [glyph_double_and_mask] offset
+	mov	bx, (FX_MASK * word) ; offset of the [glyph_bold_and_mask] offset
 
 @@not_masking:
 	mov	ax, GLYPH_WEIGHT_FUNC_TABLE_1[bx]
@@ -185,7 +185,7 @@ glyph_weight_bold	label near
 	and	ax, dx
 	retn
 
-glyph_double_and_mask	proc near
+glyph_bold_and_mask	proc near
 	call	glyph_weight_bold
 	mov	bl, ch
 	and	bx, 3
@@ -194,4 +194,4 @@ glyph_double_and_mask	proc near
 grppsafx_glyph_mask equ $+3
 	and	ax, fs:[bx+1234h]
 	retn
-glyph_double_and_mask	endp
+glyph_bold_and_mask	endp

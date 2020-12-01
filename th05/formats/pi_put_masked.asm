@@ -1,5 +1,5 @@
-public PI_PUT_MASK_8
-pi_put_mask_8 proc far
+public PI_PUT_MASKED_8
+pi_put_masked_8 proc far
 @@mask_id	= word ptr  6
 @@slot	= word ptr  8
 @@top	= word ptr  0Ah
@@ -23,17 +23,17 @@ pi_put_mask_8 proc far
 	push	ax
 	mov	di, _pi_headers._ysize[di]
 	mov	ax, [bp+@@mask_id]
-	call	pi_put_mask_8_rowloop
+	call	pi_put_masked_8_rowloop
 	pop	di
 	pop	si
 	pop	bp
 	retf	8
-pi_put_mask_8 endp
+pi_put_masked_8 endp
 
 ; ---------------------------------------------------------------------------
 
-public PI_PUT_QUARTER_MASK_8
-pi_put_quarter_mask_8 proc far
+public PI_PUT_QUARTER_MASKED_8
+pi_put_quarter_masked_8 proc far
 
 @@mask_id	= word ptr  6
 @@quarter	= byte ptr  8
@@ -72,23 +72,23 @@ pi_put_quarter_mask_8 proc far
 	push	320
 	push	320
 	mov	ax, [bp+@@mask_id]
-	call	pi_put_mask_8_rowloop
+	call	pi_put_masked_8_rowloop
 	pop	di
 	pop	si
 	pop	bp
 	retf	0Ah
-pi_put_quarter_mask_8 endp
+pi_put_quarter_masked_8 endp
 	even
 
 ; ---------------------------------------------------------------------------
 
-; void pascal pi_put_mask_8_rowloop(
+; void pascal pi_put_masked_8_rowloop(
 ;	int mask_id<ax>,
 ;	void far *pi_buf<es:si>,
 ;	pixel_t h<di>,
 ;	screen_x_t left, vram_y_t top, pixel_t w, size_t stride_packed
 ; );
-pi_put_mask_8_rowloop	proc near
+pi_put_masked_8_rowloop proc near
 @@stride_packed	= word ptr [bp+2]
 @@w	= word ptr [bp+4]
 @@top	= word ptr [bp+6]
@@ -109,7 +109,7 @@ TEMP_ROW = RES_Y
 	add	dx, ax
 	shr	ax, 2
 	add	dx, ax
-	mov	_pi_put_mask_vram_offset, dx
+	mov	_pi_put_masked_vram_offset, dx
 	mov	_pi_mask_y, 0
 
 @@put_row:
@@ -118,14 +118,14 @@ TEMP_ROW = RES_Y
 	push	ds
 	push	@@h
 	push	si
-	mov	di, _pi_put_mask_vram_offset
-	add	_pi_put_mask_vram_offset, ROW_SIZE
-	cmp	_pi_put_mask_vram_offset, PLANE_SIZE
+	mov	di, _pi_put_masked_vram_offset
+	add	_pi_put_masked_vram_offset, ROW_SIZE
+	cmp	_pi_put_masked_vram_offset, PLANE_SIZE
 	jb	short @@next_row
-	sub	_pi_put_mask_vram_offset, PLANE_SIZE
+	sub	_pi_put_masked_vram_offset, PLANE_SIZE
 
 @@next_row:
-	call	pi_egc_mask
+	call	egc_setup_copy_with_pi_mask
 	mov	ax, GRAM_400
 	mov	es, ax
 	assume es:nothing
@@ -152,13 +152,13 @@ TEMP_ROW = RES_Y
 	dec	@@h
 	jnz	short @@put_row
 	retn	8
-pi_put_mask_8_rowloop	endp
+pi_put_masked_8_rowloop endp
 
 
 ; ---------------------------------------------------------------------------
 
 
-pi_egc_mask	proc near
+egc_setup_copy_with_pi_mask proc near
 	call	egc_on
 	outw2	EGC_ACTIVEPLANEREG, 0FFF0h
 	egc_selectpat
@@ -173,4 +173,4 @@ pi_egc_mask	proc near
 	outw2	EGC_MASKREG, [bx]
 	inc	_pi_mask_y
 	retn
-pi_egc_mask	endp
+egc_setup_copy_with_pi_mask endp

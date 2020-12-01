@@ -8,6 +8,7 @@ extern enum {
 	FX_WEIGHT_BOLD   = WEIGHT_BOLD,
 	FX_WEIGHT_BLACK  = WEIGHT_BLACK,
 
+	// All of these are hardcoded to FX_WEIGHT_BOLD.
 	FX_MASK,
 	FX_MASK_1 = FX_MASK,
 	FX_MASK_2,
