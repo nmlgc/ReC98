@@ -83,6 +83,7 @@ main_25 group main_25_TEXT, main_25__TEXT
 main_27 group main_27_TEXT, main_27__TEXT
 main_30 group main_30_TEXT, main_30__TEXT
 main_31 group main_31_TEXT, main_31__TEXT
+main_34 group main_34_TEXT, main_34__TEXT
 
 ; ===========================================================================
 
@@ -10783,7 +10784,7 @@ sub_1B383	proc far
 		push	si
 		push	di
 		call	_grp_palette_load_show c, offset aBoss2_grp_0, ds ; "boss2.grp"
-		call	sub_232A4
+		call	@boss_palette_snap$qv
 		mov	eye_0.BE_bos_image, 0
 		mov	eye_1.BE_bos_image, 0
 		mov	eye_2.BE_bos_image, 0
@@ -11659,7 +11660,7 @@ loc_1BE24:
 		mov	word_35B54, 0
 		mov	word_3A6CA, 0
 		call	_z_palette_set_all_show c, offset _stage_palette, ds
-		call	sub_232A4
+		call	@boss_palette_snap$qv
 		mov	byte ptr word_39E14+1, 0
 		mov	eye_west.BE_bos_image, 4
 		mov	eye_east.BE_bos_image, 3
@@ -11869,7 +11870,7 @@ loc_1C02D:
 		mov	word_39E04, 0
 		mov	x_39E06, 0
 		call	_z_palette_set_all_show c, offset _stage_palette, ds
-		call	sub_232A4
+		call	@boss_palette_snap$qv
 		cmp	_rank, RANK_EASY
 		jnz	short loc_1C097
 		mov	ax, 8
@@ -12226,7 +12227,7 @@ loc_1C3EB:
 		mov	word_39E04, 0
 		mov	x_39E06, 0
 		call	_z_palette_set_all_show c, offset _stage_palette, ds
-		call	sub_232A4
+		call	@boss_palette_snap$qv
 		mov	ax, RES_Y
 		sub	ax, eye_west.BE_cur_top
 		mov	y_39E0C, ax
@@ -12542,7 +12543,7 @@ loc_1C741:
 		mov	x_39E06, 0
 		mov	word_39E12, 0
 		call	_z_palette_set_all_show c, offset _stage_palette, ds
-		call	sub_232A4
+		call	@boss_palette_snap$qv
 		cmp	_rank, RANK_EASY
 		jnz	short loc_1C7B1
 		mov	ax, 0Ah
@@ -14095,7 +14096,7 @@ loc_1D88A:
 
 loc_1D8C1:
 		call	_z_palette_set_all_show c, offset _stage_palette, ds
-		call	sub_232A4
+		call	@boss_palette_snap$qv
 		jmp	loc_1DFFC
 ; ---------------------------------------------------------------------------
 
@@ -15571,7 +15572,7 @@ sub_1E739	endp
 sub_1E79B	proc far
 		push	bp
 		mov	bp, sp
-		call	sub_232A4
+		call	@boss_palette_snap$qv
 		mov	mima_still.BE_bos_image, 0
 		mov	mima_animated.BE_bos_image, 1
 		call	_z_palette_white_in
@@ -17735,7 +17736,7 @@ loc_1FAF6:
 		mov	word_39E78, 0
 		mov	byte_39E7A, 0
 		call	_stage_palette_set c, offset _z_Palettes, ds
-		call	sub_232A4
+		call	@boss_palette_snap$qv
 		push	0
 		call	sub_1EF85
 		jmp	loc_1FDCE
@@ -20217,7 +20218,7 @@ loc_21BD5:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_21C0A
-		call	sub_232D3
+		call	@boss_palette_show$qv
 		jmp	short loc_21C0A
 ; ---------------------------------------------------------------------------
 
@@ -20225,7 +20226,7 @@ loc_21BEC:
 		les	bx, [bp+arg_0]
 		cmp	word ptr es:[bx], 28h ;	'('
 		jle	short loc_21C0A
-		call	sub_232D3
+		call	@boss_palette_show$qv
 		les	bx, [bp+arg_0]
 		mov	word ptr es:[bx], 0
 		les	bx, [bp+arg_4]
@@ -21558,7 +21559,7 @@ _singyoku_load	endp
 sub_22731	proc far
 		push	bp
 		mov	bp, sp
-		call	sub_232A4
+		call	@boss_palette_snap$qv
 		call	_z_palette_set_all_show stdcall, offset _z_Palettes, ds
 		call	@CBossEntity@pos_set$qiiiiiii stdcall, offset singyoku_sphere, ds, 640, large 64 or (32 shl 16), large 0 or (736 shl 16), large 64 or (304 shl 16)
 		CBossEntity__hitbox_set	singyoku_sphere, 24, 24, 72, 72
@@ -22662,9 +22663,9 @@ loc_2302C:
 		mov	word_35CE4, 0
 		mov	word_3A37F, 0
 		mov	word_35CE6, 0
-		call	sub_232D3
+		call	@boss_palette_show$qv
 		call	_stage_palette_set c, offset _z_Palettes, ds
-		call	sub_232A4
+		call	@boss_palette_snap$qv
 		mov	singyoku_sphere.BE_hitbox_orb_inactive, 0
 		mov	word_3A381, 0
 		cmp	_rank, RANK_EASY
@@ -22910,62 +22911,14 @@ main_33_TEXT	ends
 
 ; Segment type:	Pure code
 main_34_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_34_TEXT
+	extern @boss_palette_snap$qv:proc
+	extern @boss_palette_show$qv:proc
+main_34_TEXT	ends
+
+main_34__TEXT	segment	byte public 'CODE' use16
+		assume cs:main_34
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_232A4	proc far
-		push	bp
-		mov	bp, sp
-		xor	dx, dx
-		jmp	short loc_232CC
-; ---------------------------------------------------------------------------
-
-loc_232AB:
-		xor	cx, cx
-		jmp	short loc_232C6
-; ---------------------------------------------------------------------------
-
-loc_232AF:
-		mov	bx, dx
-		imul	bx, size rgb_t
-		add	bx, cx
-		mov	al, _z_Palettes[bx]
-		mov	bx, dx
-		imul	bx, size rgb_t
-		add	bx, cx
-		mov	byte ptr palette_3A38E[bx], al
-		inc	cx
-
-loc_232C6:
-		cmp	cx, size rgb_t
-		jl	short loc_232AF
-		inc	dx
-
-loc_232CC:
-		cmp	dx, COLOR_COUNT
-		jl	short loc_232AB
-		pop	bp
-		retf
-sub_232A4	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_232D3	proc far
-		push	bp
-		mov	bp, sp
-		call	_z_palette_set_all_show c, offset palette_3A38E, ds
-		pop	bp
-		retf
-sub_232D3	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -23052,7 +23005,7 @@ loc_23342:
 		mov	al, _z_Palettes[bx+di]
 		mov	bx, si
 		imul	bx, size rgb_t
-		mov	byte ptr palette_3A38E[bx+di], al
+		mov	byte ptr _boss_palette[bx+di], al
 		inc	di
 
 loc_23355:
@@ -25083,7 +25036,7 @@ var_4		= dword	ptr -4
 		mov	word_3A6CA, 0
 		mov	word_3A6C2, 0
 		mov	word_3A6C0, 0
-		call	sub_232A4
+		call	@boss_palette_snap$qv
 		push	(0Fh shl 16) or 0Fh
 		push	(0Fh shl 16) or 02h
 		call	_z_palette_set_show
@@ -25372,7 +25325,7 @@ loc_24A66:
 		mov	byte_3A3BE, 2
 		mov	word_35D16, 0
 		mov	word_3A6CA, 0
-		call	sub_232D3
+		call	@boss_palette_show$qv
 		mov	byte_3A6C6, 0
 		call	_stage_palette_set c, offset _z_Palettes, ds
 		jmp	loc_24DFB
@@ -25392,25 +25345,25 @@ loc_24A9D:
 ; ---------------------------------------------------------------------------
 
 loc_24AB5:
-		mov	al, byte ptr palette_3A38E[2 * size rgb_t][si]
+		mov	al, byte ptr _boss_palette[2 * size rgb_t][si]
 		cmp	al, _z_Palettes[2 * 3][si]
 		jge	short loc_24AC3
 		dec	_z_Palettes[2 * 3][si]
 
 loc_24AC3:
-		mov	al, byte ptr palette_3A38E[6 * size rgb_t][si]
+		mov	al, byte ptr _boss_palette[6 * size rgb_t][si]
 		cmp	al, _z_Palettes[6 * 3][si]
 		jge	short loc_24AD1
 		dec	_z_Palettes[6 * 3][si]
 
 loc_24AD1:
-		mov	al, byte ptr palette_3A38E[8 * size rgb_t][si]
+		mov	al, byte ptr _boss_palette[8 * size rgb_t][si]
 		cmp	al, _z_Palettes[8 * 3][si]
 		jge	short loc_24ADF
 		dec	_z_Palettes[8 * 3][si]
 
 loc_24ADF:
-		mov	al, byte ptr palette_3A38E[11 * size rgb_t][si]
+		mov	al, byte ptr _boss_palette[11 * size rgb_t][si]
 		cmp	al, _z_Palettes[11 * 3][si]
 		jge	short loc_24AED
 		dec	_z_Palettes[11 * 3][si]
@@ -25514,7 +25467,7 @@ loc_24BDA:
 		mov	word_3A6CA, 0
 		mov	word_35D14, 0
 		call	_z_palette_set_all_show c, offset _stage_palette, ds
-		call	sub_232A4
+		call	@boss_palette_snap$qv
 		jmp	loc_24DFB
 ; ---------------------------------------------------------------------------
 
@@ -25732,7 +25685,7 @@ sub_24DFF	proc far
 		retf
 sub_24DFF	endp
 
-main_34_TEXT	ends
+main_34__TEXT	ends
 
 ; ===========================================================================
 
@@ -25936,7 +25889,7 @@ _elis_load	proc far
 		call	_ptn_new stdcall, (12 shl 16) or 2
 		call	_ptn_load stdcall, 3, offset aBoss3_m_ptn_1, ds ;	"boss3_m.ptn"
 		mov	byte_3A1B2, 0C0h ; '?'
-		call	sub_232A4
+		call	@boss_palette_snap$qv
 		nopcall	sub_24FE0
 		push	700FFh
 		call	sub_22264
@@ -30492,7 +30445,7 @@ var_4		= word ptr -4
 		add	sp, 4
 		cmp	byte_3A6CE, 0
 		jnz	loc_281CF
-		call	sub_232A4
+		call	@boss_palette_snap$qv
 		push	1
 		call	sub_24E33
 		pop	cx
@@ -31574,7 +31527,7 @@ _sariel_load	proc far
 		call	_grc_load stdcall, 2, offset aBoss6gr3_grc, ds
 		add	sp, 30h
 		call	_grc_load stdcall, 3, offset aBoss6gr4_grc, ds
-		call	sub_232A4
+		call	@boss_palette_snap$qv
 		nopcall	sub_287D9
 		call	_ptn_new stdcall, (16 shl 16) or 2
 		add	sp, 0Ah
@@ -37502,7 +37455,7 @@ loc_2C117:
 		mov	word_3A6CA, 0FFFFh
 		mov	word_3B433, 0
 		mov	word_3B431, 0
-		call	sub_232A4
+		call	@boss_palette_snap$qv
 		call	_stage_palette_set c, offset _z_Palettes, ds
 		mov	eax, _rand
 		mov	random_seed, eax
@@ -37669,7 +37622,7 @@ loc_2C2F2:
 		mov	word_35E99, dx
 		mov	word_3A6CA, 0
 		mov	byte_3B437, 0
-		call	sub_232D3
+		call	@boss_palette_show$qv
 		mov	sariel_shield.BE_cur_left, 304
 		mov	sariel_shield.BE_cur_top, 144
 		call	sub_28852
@@ -37921,7 +37874,7 @@ loc_2C594:
 		mov	byte_3A6CE, 5
 		mov	word_3A6CA, 0
 		call	sub_28852
-		call	sub_232A4
+		call	@boss_palette_snap$qv
 		call	IRand
 		mov	bx, 4
 		cwd
@@ -38039,7 +37992,7 @@ loc_2C6B0:
 		mov	byte_3A6CE, 7
 		mov	word_3A6CA, 0
 		call	sub_28852
-		call	sub_232A4
+		call	@boss_palette_snap$qv
 		call	IRand
 		mov	bx, 5
 		cwd
@@ -38164,7 +38117,7 @@ loc_2C7F1:
 		mov	byte_3A6CE, 1
 		mov	word_3A6CA, 0
 		call	sub_28852
-		call	sub_232A4
+		call	@boss_palette_snap$qv
 		call	IRand
 		mov	bx, 6
 
@@ -38220,7 +38173,7 @@ loc_2C8AE:
 		pop	cx
 		call	_grp_put_palette_show c, offset aBoss6_grp, ds ; "boss6.grp"
 		call	_z_palette_set_show c, large (0 shl 16) or 0Fh, large (0 shl 16) or 0
-		call	sub_232A4
+		call	@boss_palette_snap$qv
 		call	_graph_copy_page_back_to_front
 		push	1
 		call	_graph_accesspage_func
@@ -38251,7 +38204,7 @@ loc_2C980:
 		idiv	bx
 		cmp	dx, 1
 		jnz	short loc_2C99C
-		call	sub_232D3
+		call	@boss_palette_show$qv
 		call	_z_vsync_wait_and_scrollup stdcall, (RES_Y - 14)
 		pop	cx
 
@@ -38269,7 +38222,7 @@ loc_2C99C:
 loc_2C9B1:
 		cmp	word_3A6CA, 0C8h ; '?'
 		jnz	short loc_2C9C6
-		call	sub_232D3
+		call	@boss_palette_show$qv
 		call	_z_vsync_wait_and_scrollup stdcall, 0
 		pop	cx
 
@@ -38311,7 +38264,7 @@ loc_2C9DA:
 		mov	byte_3A6CE, 64h	; 'd'
 		mov	_player_invincibility_time, 0
 		mov	_player_invincible, 0
-		call	sub_232A4
+		call	@boss_palette_snap$qv
 		call	_stage_palette_set c, offset _z_Palettes, ds
 		mov	word_3A6C8, 6
 		mov	word_3A1E5, 0Ah
@@ -38479,7 +38432,7 @@ loc_2CBC2:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_2CC7C
-		call	sub_232D3
+		call	@boss_palette_show$qv
 		cmp	word_35E97, 0
 		jnz	short loc_2CC3F
 		mov	al, _z_Palettes[6 * 3].r
@@ -38537,7 +38490,7 @@ loc_2CC5F:
 
 loc_2CC6B:
 		call	_z_palette_set_all_show c, offset _z_Palettes, ds
-		call	sub_232A4
+		call	@boss_palette_snap$qv
 
 loc_2CC7C:
 		cmp	word_3A6C8, 0
@@ -38559,7 +38512,7 @@ loc_2CC9E:
 		pop	cx
 		call	_grp_put_palette_show c, offset aBoss6_a6_grp, ds ; "boss6_a6.grp"
 		call	_z_palette_set_show c, large (0 shl 16) or 6, large (0 shl 16) or 0
-		call	sub_232A4
+		call	@boss_palette_snap$qv
 		call	_graph_copy_page_back_to_front
 		push	0
 		call	_graph_accesspage_func
@@ -39142,7 +39095,7 @@ _konngara_load	endp
 sub_2D1FE	proc far
 		push	bp
 		mov	bp, sp
-		call	sub_232A4
+		call	@boss_palette_snap$qv
 		nopcall	sub_2D20D
 		pop	bp
 		retf
@@ -41862,7 +41815,7 @@ var_2		= word ptr -2
 		mov	word_3B52B, 0
 		mov	word_3B529, 0
 		mov	byte_3B52F, 0
-		call	sub_232A4
+		call	@boss_palette_snap$qv
 		mov	eax, _rand
 		mov	random_seed, eax
 		jmp	loc_2FC40
@@ -44257,7 +44210,8 @@ angle_3A387	db ?
 byte_3A388	db ?
 point_3A389	Point <?>
 		db ?
-palette_3A38E	palette_t <?>
+public _boss_palette
+_boss_palette	palette_t <?>
 byte_3A3BE	db ?
 		db 10 dup(?)
 include th01/main/boss/b15j[bss].asm
