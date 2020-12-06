@@ -53,7 +53,7 @@ bin\th01\op.exe: bin\piloadc.obj bin\th01\op.obj th01\op_01.cpp bin\th01\frmdely
 $**
 |
 
-bin\th01\reiiden.exe: bin\piloadc.obj bin\th01\reiiden.obj th01\main_01.cpp th01\main_01_.cpp bin\th01\frmdely.obj bin\th01\vsync.obj bin\th01\ztext.obj bin\th01\initexit.obj bin\th01\graph.obj th01\main_07.cpp th01\main_08.cpp th01\main_09.cpp th01\grpinv32.cpp bin\th01\resstuff.obj th01\main_13.cpp th01\main_13_.cpp th01\main_14.cpp th01\main_15.cpp bin\th01\mdrv2.obj th01\main_19.cpp th01\main_20.cpp th01\main_21.cpp th01\main_23.cpp th01\main_25.cpp th01\main_27.cpp th01\main_30.cpp th01\main_31.cpp th01\main_34.cpp th01\main_38.cpp
+bin\th01\reiiden.exe: bin\piloadc.obj bin\th01\reiiden.obj th01\main_01.cpp th01\main_01_.cpp bin\th01\frmdely.obj bin\th01\vsync.obj bin\th01\ztext.obj bin\th01\initexit.obj bin\th01\graph.obj th01\main_07.cpp th01\main_08.cpp th01\main_09.cpp th01\grpinv32.cpp bin\th01\resstuff.obj th01\main_13.cpp th01\main_13_.cpp th01\main_14.cpp th01\main_15.cpp bin\th01\mdrv2.obj th01\main_19.cpp th01\main_20.cpp th01\main_21.cpp th01\main_23.cpp th01\main_25.cpp th01\main_27.cpp th01\main_29.cpp th01\main_30.cpp th01\main_31.cpp th01\main_33.cpp th01\main_34.cpp th01\main_35.cpp th01\main_36.cpp th01\main_37.cpp th01\main_38.cpp
 	$(CC) $(CFLAGS) -ml -3 -Z -DGAME=1 -DBINARY='M' -nbin\th01\ -eREIIDEN.EXE @&&|
 $**
 |

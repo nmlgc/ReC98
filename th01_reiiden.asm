@@ -81,9 +81,14 @@ main_19 group main_19_TEXT, main_19__TEXT
 main_21 group main_21_TEXT, main_21__TEXT
 main_25 group main_25_TEXT, main_25__TEXT
 main_27 group main_27_TEXT, main_27__TEXT
+main_29 group main_29_TEXT, main_29__TEXT
 main_30 group main_30_TEXT, main_30__TEXT
 main_31 group main_31_TEXT, main_31__TEXT
+main_33 group main_33_TEXT, main_33__TEXT
 main_34 group main_34_TEXT, main_34__TEXT
+main_35 group main_35_TEXT, main_35__TEXT
+main_36 group main_36_TEXT, main_36__TEXT
+main_37 group main_37_TEXT, main_37__TEXT
 
 ; ===========================================================================
 
@@ -15014,7 +15019,7 @@ main_28_TEXT	ends
 
 ; Segment type:	Pure code
 main_29_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_29_TEXT
+		assume cs:main_29
 		;org 0Ah
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -15608,65 +15613,10 @@ _mima_free	proc far
 		retf
 _mima_free	endp
 
+	extern @mima_select_for_rank$qmiiiii:proc
+main_29_TEXT	ends
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1E841	proc far
-
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
-arg_A		= word ptr  10h
-
-		push	bp
-		mov	bp, sp
-		mov	dx, [bp+arg_6]
-		cmp	_rank, RANK_EASY
-		jnz	short loc_1E853
-		mov	ax, [bp+arg_4]
-		jmp	short loc_1E87E
-; ---------------------------------------------------------------------------
-
-loc_1E853:
-		mov	al, _rank
-		cbw
-		cmp	ax, RANK_NORMAL
-		jnz	short loc_1E860
-		mov	ax, dx
-		jmp	short loc_1E87E
-; ---------------------------------------------------------------------------
-
-loc_1E860:
-		mov	al, _rank
-		cbw
-		cmp	ax, RANK_HARD
-		jnz	short loc_1E86E
-		mov	ax, [bp+arg_8]
-		jmp	short loc_1E87E
-; ---------------------------------------------------------------------------
-
-loc_1E86E:
-		mov	al, _rank
-		cbw
-		cmp	ax, RANK_LUNATIC
-		jnz	short loc_1E87C
-		mov	ax, [bp+arg_A]
-		jmp	short loc_1E87E
-; ---------------------------------------------------------------------------
-
-loc_1E87C:
-		mov	ax, dx
-
-loc_1E87E:
-		les	bx, [bp+arg_0]
-		mov	es:[bx], ax
-		pop	bp
-		retf
-sub_1E841	endp
-
+main_29__TEXT	segment	byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15760,11 +15710,7 @@ var_12		= word ptr -12h
 		jnz	short loc_1E947
 		mov	word_39E1A+1, 20h ; ' '
 		mov	byte ptr word_39E1A, 0
-		push	580050h
-		push	480040h
-		push	ds
-		push	offset speed_39E18
-		call	sub_1E841
+		call	@mima_select_for_rank$qmiiiii stdcall, offset speed_39E18, ds, large 40h or (48h shl 16), large 50h or (58h shl 16)
 		push	8
 		call	_mdrv2_se_play
 		add	sp, 0Eh
@@ -16013,12 +15959,7 @@ var_12		= word ptr -12h
 		jnz	short loc_1EB64
 		mov	word_39E1D+1, 20h ; ' '
 		mov	byte ptr word_39E1D, 0
-		push	760070h
-		push	680060h
-		push	ds
-		push	offset speed_39E18
-		call	sub_1E841
-		add	sp, 0Ch
+		call	@mima_select_for_rank$qmiiiii c, offset speed_39E18, ds, large 60h or (68h shl 16), large 70h or (76h shl 16)
 		push	8
 		call	_mdrv2_se_play
 		pop	cx
@@ -16225,11 +16166,7 @@ loc_1ED01:
 		jnz	short loc_1ED3A
 		mov	word_39E22+1, 20h ; ' '
 		mov	byte ptr word_39E22, 0
-		push	580050h
-		push	480040h
-		push	ds
-		push	offset speed_39E18
-		call	sub_1E841
+		call	@mima_select_for_rank$qmiiiii stdcall, offset speed_39E18, ds, large 40h or (48h shl 16), large 50h or (58h shl 16)
 		push	8
 		call	_mdrv2_se_play
 		add	sp, 0Eh
@@ -16600,17 +16537,13 @@ loc_1F051:
 		add	sp, 8
 
 loc_1F087:
-		push	2D0028h
-		push	23001Eh
-		push	ds
-		push	offset speed_39E18
-		call	sub_1E841
-		push	0C000Ah
-		push	80005h
+		call	@mima_select_for_rank$qmiiiii stdcall, offset speed_39E18, ds, large 1Eh or (23h shl 16), large 28h or (2Dh shl 16)
+		push	10 or (12 shl 16)	; (for_hard) or (for_lunatic)
+		push	5 or (8 shl 16)	; (for_easy) or (for_normal)
 		push	ss
 		lea	ax, [bp+var_2]
-		push	ax
-		call	sub_1E841
+		push	ax	; ret (offset)
+		call	@mima_select_for_rank$qmiiiii
 		add	sp, 18h
 		xor	si, si
 		mov	[bp+@@angle], 0
@@ -16868,11 +16801,7 @@ loc_1F263:
 		idiv	bx
 		add	dx, 336
 		mov	word_39E45, dx
-		push	370032h
-		push	2D0028h
-		push	ds
-		push	offset speed_39E18
-		call	sub_1E841
+		call	@mima_select_for_rank$qmiiiii stdcall, offset speed_39E18, ds, large 28h or (2Dh shl 16), large 32h or (37h shl 16)
 		push	8
 		call	_mdrv2_se_play
 		add	sp, 0Eh
@@ -17148,12 +17077,7 @@ var_8		= byte ptr -8
 		mov	word_39E57+1, 20h ; ' '
 		mov	byte ptr word_39E57, 0
 		mov	byte ptr word_39E5A, 0
-		push	370032h
-		push	2D0028h
-		push	ds
-		push	offset speed_39E18
-		call	sub_1E841
-		add	sp, 0Ch
+		call	@mima_select_for_rank$qmiiiii c, offset speed_39E18, ds, large 28h or (2Dh shl 16), large 32h or (37h shl 16)
 		push	8
 		call	_mdrv2_se_play
 		pop	cx
@@ -17351,11 +17275,7 @@ var_8		= byte ptr -8
 		mov	word_39E5C, 20h	; ' '
 		mov	byte ptr word_39E5A+1, 0
 		mov	angle_39E5E, 80h
-		push	380030h
-		push	280020h
-		push	ds
-		push	offset speed_39E18
-		call	sub_1E841
+		call	@mima_select_for_rank$qmiiiii stdcall, offset speed_39E18, ds, large 20h or (28h shl 16), large 30h or (38h shl 16)
 		push	8
 		call	_mdrv2_se_play
 		add	sp, 0Eh
@@ -17546,11 +17466,7 @@ loc_1F91A:
 		jnz	short loc_1F953
 		mov	word_39E60, 20h	; ' '
 		mov	byte_39E5F, 0
-		push	3E003Ah
-		push	360032h
-		push	ds
-		push	offset speed_39E18
-		call	sub_1E841
+		call	@mima_select_for_rank$qmiiiii stdcall, offset speed_39E18, ds, large 32h or (36h shl 16), large 3Ah or (3Eh shl 16)
 		push	8
 		call	_mdrv2_se_play
 		add	sp, 0Eh
@@ -17988,7 +17904,7 @@ sub_1FA7B	endp
 
 mima_still	equ <>
 mima_animated	equ <>
-main_29_TEXT	ends
+main_29__TEXT	ends
 
 ; ===========================================================================
 
@@ -21495,7 +21411,7 @@ main_32_TEXT	ends
 
 ; Segment type:	Pure code
 main_33_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_33_TEXT
+		assume cs:main_33
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -21641,65 +21557,10 @@ locret_22818:
 		retf
 sub_227C8	endp
 
+	extern @singyoku_select_for_rank$qmiiiii:proc
+main_33_TEXT	ends
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2281A	proc far
-
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
-arg_A		= word ptr  10h
-
-		push	bp
-		mov	bp, sp
-		mov	dx, [bp+arg_6]
-		cmp	_rank, RANK_EASY
-		jnz	short loc_2282C
-		mov	ax, [bp+arg_4]
-		jmp	short loc_22857
-; ---------------------------------------------------------------------------
-
-loc_2282C:
-		mov	al, _rank
-		cbw
-		cmp	ax, RANK_NORMAL
-		jnz	short loc_22839
-		mov	ax, dx
-		jmp	short loc_22857
-; ---------------------------------------------------------------------------
-
-loc_22839:
-		mov	al, _rank
-		cbw
-		cmp	ax, RANK_HARD
-		jnz	short loc_22847
-		mov	ax, [bp+arg_8]
-		jmp	short loc_22857
-; ---------------------------------------------------------------------------
-
-loc_22847:
-		mov	al, _rank
-		cbw
-		cmp	ax, RANK_LUNATIC
-		jnz	short loc_22855
-		mov	ax, [bp+arg_A]
-		jmp	short loc_22857
-; ---------------------------------------------------------------------------
-
-loc_22855:
-		mov	ax, dx
-
-loc_22857:
-		les	bx, [bp+arg_0]
-		mov	es:[bx], ax
-		pop	bp
-		retf
-sub_2281A	endp
-
+main_33__TEXT	segment	byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -21932,12 +21793,7 @@ loc_229F4:
 loc_22A07:
 		cmp	_singyoku_phase_frame, 100
 		jnz	short loc_22A37
-		push	1E0014h
-		push	0F000Ah
-		push	ds
-		push	offset speed_3A385
-		call	sub_2281A
-		add	sp, 0Ch
+		call	@singyoku_select_for_rank$qmiiiii c, offset speed_3A385, ds, large 0Ah or (0Fh shl 16), large 14h or (1Eh shl 16)
 		mov	al, byte_3A388
 		cbw
 		cmp	ax, 0FFFFh
@@ -22025,11 +21881,7 @@ sub_22AA7	proc far
 loc_22ABA:
 		cmp	_singyoku_phase_frame, 100
 		jnz	short loc_22AFE
-		push	60005h
-		push	40004h
-		push	ds
-		push	offset speed_3A385
-		call	sub_2281A
+		call	@singyoku_select_for_rank$qmiiiii stdcall, offset speed_3A385, ds, large 04h or (04h shl 16), large 05h or (06h shl 16)
 		push	speed_3A385
 		push	ds
 		push	offset point_3A389.y
@@ -22262,12 +22114,12 @@ sub_22CF6	proc far
 @@chase_speed		= word ptr -2
 
 		enter	2, 0
-		push	41003Eh
-		push	3A0037h
-		push	ss
+		push	3Eh or (41h shl 16)	; (for_hard) or (for_lunatic)
+		push	37h or (3Ah shl 16)	; (for_easy) or (for_normal)
+		push	ss	; ret (segment)
 		lea	ax, [bp+@@chase_speed]
-		push	ax
-		call	sub_2281A
+		push	ax	; ret (offset)
+		call	@singyoku_select_for_rank$qmiiiii
 		pushd	0 or (0 shl 16)
 		push	[bp+@@chase_speed]
 		push	(1 shl 4) or (PM_CHASE shl 16)
@@ -22310,12 +22162,12 @@ sub_22D63	proc far
 @@speed		= word ptr -2
 
 		enter	2, 0
-		push	50004Bh
-		push	46003Ch
-		push	ss
+		push	4Bh or (50h shl 16)	; (for_hard) or (for_lunatic)
+		push	3Ch or (46h shl 16)	; (for_easy) or (for_normal)
+		push	ss	; ret (segment)
 		lea	ax, [bp+@@speed]
-		push	ax
-		call	sub_2281A
+		push	ax	; ret (offset)
+		call	@singyoku_select_for_rank$qmiiiii
 		pushd	0 or (0 shl 16)
 		pushd	PM_NORMAL or (0 shl 16)
 		push	[bp+@@speed]
@@ -22425,12 +22277,7 @@ sub_22E42	proc far
 
 		enter	2, 0
 		push	si
-		push	42003Ch
-		push	360030h
-		push	ds
-		push	offset speed_3A385
-		call	sub_2281A
-		add	sp, 0Ch
+		call	@singyoku_select_for_rank$qmiiiii c, offset speed_3A385, ds, large 30h or (36h shl 16), large 3Ch or (42h shl 16)
 		xor	si, si
 		jmp	short loc_22E94
 ; ---------------------------------------------------------------------------
@@ -22475,12 +22322,7 @@ var_2		= word ptr -2
 
 		enter	4, 0
 		push	si
-		push	600050h
-		push	400030h
-		push	ds
-		push	offset speed_3A385
-		call	sub_2281A
-		add	sp, 0Ch
+		call	@singyoku_select_for_rank$qmiiiii c, offset speed_3A385, ds, large 30h or (40h shl 16), large 50h or (60h shl 16)
 		xor	si, si
 		jmp	short loc_22F02
 ; ---------------------------------------------------------------------------
@@ -22528,11 +22370,11 @@ sub_22E9C	endp
 sub_22F0A	proc far
 		push	bp
 		mov	bp, sp
-		push	seg main_33_TEXT
+		push	seg main_33
 		push	offset sub_22E42
-		push	seg main_33_TEXT
+		push	seg main_33
 		push	offset sub_22E42
-		push	seg main_33_TEXT
+		push	seg main_33
 		push	offset sub_22E42
 		push	1
 		call	sub_22B88
@@ -22549,11 +22391,11 @@ sub_22F0A	endp
 sub_22F2A	proc far
 		push	bp
 		mov	bp, sp
-		push	seg main_33_TEXT
+		push	seg main_33
 		push	offset sub_22E9C
-		push	seg main_33_TEXT
+		push	seg main_33
 		push	offset sub_22E9C
-		push	seg main_33_TEXT
+		push	seg main_33
 		push	offset sub_22E9C
 		push	1
 		call	sub_22B88
@@ -22905,7 +22747,7 @@ sub_22F4A	endp
 singyoku_sphere	equ <>
 singyoku_flash 	equ <>
 singyoku_person	equ <>
-main_33_TEXT	ends
+main_33__TEXT	ends
 
 ; ===========================================================================
 
@@ -22913,71 +22755,13 @@ main_33_TEXT	ends
 main_34_TEXT	segment	byte public 'CODE' use16
 	extern @boss_palette_snap$qv:proc
 	extern @boss_palette_show$qv:proc
+	extern @kikuri_select_for_rank$qmiiiii:proc
 main_34_TEXT	ends
 
 main_34__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_34
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_232E4	proc far
-
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
-arg_A		= word ptr  10h
-
-		push	bp
-		mov	bp, sp
-		mov	dx, [bp+arg_6]
-		cmp	_rank, RANK_EASY
-		jnz	short loc_232F6
-		mov	ax, [bp+arg_4]
-		jmp	short loc_23321
-; ---------------------------------------------------------------------------
-
-loc_232F6:
-		mov	al, _rank
-		cbw
-		cmp	ax, RANK_NORMAL
-		jnz	short loc_23303
-		mov	ax, dx
-		jmp	short loc_23321
-; ---------------------------------------------------------------------------
-
-loc_23303:
-		mov	al, _rank
-		cbw
-		cmp	ax, RANK_HARD
-		jnz	short loc_23311
-		mov	ax, [bp+arg_8]
-		jmp	short loc_23321
-; ---------------------------------------------------------------------------
-
-loc_23311:
-		mov	al, _rank
-		cbw
-		cmp	ax, RANK_LUNATIC
-		jnz	short loc_2331F
-		mov	ax, [bp+arg_A]
-		jmp	short loc_23321
-; ---------------------------------------------------------------------------
-
-loc_2331F:
-		mov	ax, dx
-
-loc_23321:
-		les	bx, [bp+arg_0]
-		mov	es:[bx], ax
-		pop	bp
-		retf
-sub_232E4	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -24006,16 +23790,8 @@ sub_23D19	proc near
 		jnz	short loc_23D63
 		mov	angle_3A6B9, 0
 		mov	angle_3A6BA, 0
-		push	10002h
-		push	30004h
-		push	ds
-		push	offset speed_3A6B7
-		call	sub_232E4
-		push	32005Ah
-		push	5A005Ah
-		push	ds
-		push	offset word_3A6BB
-		call	sub_232E4
+		call	@kikuri_select_for_rank$qmiiiii stdcall, offset speed_3A6B7, ds, large 04h or (03h shl 16), large 02h or (01h shl 16)
+		call	@kikuri_select_for_rank$qmiiiii stdcall, offset word_3A6BB, ds, large 90 or (90 shl 16), large 90 or (50 shl 16)
 		add	sp, 18h
 
 loc_23D63:
@@ -24125,12 +23901,12 @@ var_6		= word ptr -6
 
 		enter	8, 0
 		push	si
-		push	320037h
-		push	3C0050h
-		push	ss
+		push	55 or (50 shl 16)	; (for_hard) or (for_lunatic)
+		push	80 or (60 shl 16)	; (for_easy) or (for_normal)
+		push	ss	; ret (segment)
 		lea	ax, [bp+var_6]
-		push	ax
-		call	sub_232E4
+		push	ax	; ret (offset)
+		call	@kikuri_select_for_rank$qmiiiii
 		add	sp, 0Ch
 		mov	ax, _boss_phase_frame
 		cwd
@@ -24235,12 +24011,12 @@ var_6		= byte ptr -6
 		push	si
 		call	_kikuri_soul_move_and_render stdcall, 0, large 0 or (0 shl 16)
 		call	_kikuri_soul_move_and_render stdcall, 0, large 0 or (1 shl 16)
-		push	3C0046h
-		push	500064h
-		push	ss
+		push	70 or (60 shl 16)	; (for_hard) or (for_lunatic)
+		push	100 or (80 shl 16)	; (for_easy) or (for_normal)
+		push	ss	; ret (segment)
 		lea	ax, [bp+var_6]
-		push	ax
-		call	sub_232E4
+		push	ax	; ret (offset)
+		call	@kikuri_select_for_rank$qmiiiii
 		add	sp, 0Ch
 		mov	ax, _boss_phase_frame
 		mov	bx, 80
@@ -24263,12 +24039,12 @@ loc_23FDE:
 		mov	ax, _kikuri_souls[bx].BE_cur_top
 		add	ax, 8
 		mov	[bp+@@top], ax
-		push	13001Bh
-		push	170015h
-		push	ss
+		push	PP_5_SPREAD_WIDE_AIMED or (PP_5_SPREAD_WIDE shl 16)	; (for_hard) or (for_lunatic)
+		push	PP_2_SPREAD_WIDE_AIMED or (PP_3_SPREAD_WIDE_AIMED shl 16)	; (for_easy) or (for_normal)
+		push	ss	; ret (segment)
 		lea	ax, [bp+@@pattern]
-		push	ax
-		call	sub_232E4
+		push	ax	; ret (offset)
+		call	@kikuri_select_for_rank$qmiiiii
 		call	@CPellets@add_pattern$qii16pellet_pattern_ti stdcall, offset _Pellets, ds, [bp+@@left], [bp+@@top], [bp+@@pattern], (3 shl 4) + 7
 		add	sp, 18h
 		inc	si
@@ -24305,12 +24081,7 @@ sub_24041	proc near
 		push	di
 		cmp	_boss_phase_frame, 10
 		jge	short loc_24064
-		push	78008Ch
-		push	0A000C8h
-		push	ds
-		push	offset speed_3A6B7
-		call	sub_232E4
-		add	sp, 0Ch
+		call	@kikuri_select_for_rank$qmiiiii c, offset speed_3A6B7, ds, large 0C8h or (0A0h shl 16), large 8Ch or (78h shl 16)
 
 loc_24064:
 		mov	ax, _boss_phase_frame
@@ -24491,12 +24262,7 @@ sub_241E7	proc near
 		cmp	_boss_phase_frame, 100
 		jnz	short loc_24219
 		mov	angle_3A6BD, 20h
-		push	40006h
-		push	8000Eh
-		push	ds
-		push	offset speed_3A6B7
-		call	sub_232E4
-		add	sp, 0Ch
+		call	@kikuri_select_for_rank$qmiiiii c, offset speed_3A6B7, ds, large 0Eh or (08h shl 16), large 06h or (04h shl 16)
 
 loc_24219:
 		mov	ax, _boss_phase_frame
@@ -24610,11 +24376,7 @@ sub_24316	proc near
 		jle	loc_244C9
 		cmp	_boss_phase_frame, 250
 		jnz	short loc_24378
-		push	40003Ch
-		push	380034h
-		push	ds
-		push	offset speed_3A6B7
-		call	sub_232E4
+		call	@kikuri_select_for_rank$qmiiiii stdcall, offset speed_3A6B7, ds, large 34h or (38h shl 16), large 3Ch or (40h shl 16)
 		push	6
 		call	_mdrv2_se_play
 		add	sp, 0Eh
@@ -24780,12 +24542,7 @@ sub_244CE	proc near
 		jle	loc_24647
 		cmp	_boss_phase_frame, 100
 		jnz	short loc_244F9
-		push	160017h
-		push	190023h
-		push	ds
-		push	offset speed_3A6B7
-		call	sub_232E4
-		add	sp, 0Ch
+		call	@kikuri_select_for_rank$qmiiiii c, offset speed_3A6B7, ds, large 23h or (19h shl 16), large 17h or (16h shl 16)
 
 loc_244F9:
 		mov	ax, _boss_phase_frame
@@ -24942,16 +24699,8 @@ sub_24660	proc near
 		jl	loc_2471B
 		cmp	_boss_phase_frame, 100
 		jnz	short loc_246A0
-		push	480044h
-		push	40003Ch
-		push	ds
-		push	offset speed_3A6B7
-		call	sub_232E4
-		push	140010h
-		push	0A0000h
-		push	ds
-		push	(offset	word_3A6BE)
-		call	sub_232E4
+		call	@kikuri_select_for_rank$qmiiiii stdcall, offset speed_3A6B7, ds, large 3Ch or (40h shl 16), large 44h or (48h shl 16)
+		call	@kikuri_select_for_rank$qmiiiii stdcall, offset word_3A6BE, ds, large 0 or (10 shl 16), large 16 or (20 shl 16)
 		add	sp, 18h
 
 loc_246A0:
@@ -25691,7 +25440,7 @@ main_34__TEXT	ends
 
 ; Segment type:	Pure code
 main_35_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_35_TEXT
+		assume cs:main_35
 		;org 3
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -26233,65 +25982,10 @@ loc_2539F:
 		retf
 sub_250EE	endp
 
+	extern @elis_select_for_rank$qmiiiii:proc
+main_35_TEXT	ends
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_253A2	proc far
-
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
-arg_A		= word ptr  10h
-
-		push	bp
-		mov	bp, sp
-		mov	dx, [bp+arg_6]
-		cmp	_rank, RANK_EASY
-		jnz	short loc_253B4
-		mov	ax, [bp+arg_4]
-		jmp	short loc_253DF
-; ---------------------------------------------------------------------------
-
-loc_253B4:
-		mov	al, _rank
-		cbw
-		cmp	ax, RANK_NORMAL
-		jnz	short loc_253C1
-		mov	ax, dx
-		jmp	short loc_253DF
-; ---------------------------------------------------------------------------
-
-loc_253C1:
-		mov	al, _rank
-		cbw
-		cmp	ax, RANK_HARD
-		jnz	short loc_253CF
-		mov	ax, [bp+arg_8]
-		jmp	short loc_253DF
-; ---------------------------------------------------------------------------
-
-loc_253CF:
-		mov	al, _rank
-		cbw
-		cmp	ax, RANK_LUNATIC
-		jnz	short loc_253DD
-		mov	ax, [bp+arg_A]
-		jmp	short loc_253DF
-; ---------------------------------------------------------------------------
-
-loc_253DD:
-		mov	ax, dx
-
-loc_253DF:
-		les	bx, [bp+arg_0]
-		mov	es:[bx], ax
-		pop	bp
-		retf
-sub_253A2	endp
-
+main_35__TEXT	segment	byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -26324,11 +26018,7 @@ var_8		= qword	ptr -8
 		mov	elis_still_or_wave.BE_bos_image, 1
 		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
 		add	sp, 1Eh
-		push	41003Ch
-		push	370032h
-		push	ds
-		push	offset word_3A6CC
-		call	sub_253A2
+		call	@elis_select_for_rank$qmiiiii stdcall, offset word_3A6CC, ds, large 50 or (55 shl 16), large 60 or (65 shl 16)
 		jmp	loc_255B1
 ; ---------------------------------------------------------------------------
 
@@ -26586,12 +26276,7 @@ var_2		= word ptr -2
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		mov	elis_still_or_wave.BE_bos_image, 1
 		call	@CBossEntity@move_lock_and_put_8$qiiii c, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
-		push	1D0019h
-		push	15000Fh
-		push	ds
-		push	offset word_3A6CC
-		call	sub_253A2
-		add	sp, 0Ch
+		call	@elis_select_for_rank$qmiiiii c, offset word_3A6CC, ds, large 15 or (21 shl 16), large 25 or (29 shl 16)
 
 loc_25726:
 		cmp	_boss_phase_frame, 60
@@ -26800,11 +26485,7 @@ loc_258D4:
 		mov	elis_still_or_wave.BE_bos_image, 1
 		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
 		mov	angle_3A6FB, 0
-		push	1C0017h
-		push	1D000Ch
-		push	ds
-		push	offset word_3A6CC
-		call	sub_253A2
+		call	@elis_select_for_rank$qmiiiii stdcall, offset word_3A6CC, ds, large 12 or (29 shl 16), large 23 or (28 shl 16)
 		add	sp, 2Ah
 
 loc_25947:
@@ -27616,12 +27297,7 @@ loc_2617F:
 loc_26194:
 		cmp	_boss_phase_frame, 10
 		jnz	short loc_261ED
-		push	140012h
-		push	10000Eh
-		push	ds
-		push	offset word_3A6CC
-		call	sub_253A2
-		add	sp, 0Ch
+		call	@elis_select_for_rank$qmiiiii c, offset word_3A6CC, ds, large 14 or (16 shl 16), large 18 or (20 shl 16)
 		xor	si, si
 		jmp	short loc_261E4
 ; ---------------------------------------------------------------------------
@@ -28030,12 +27706,7 @@ loc_26527:
 loc_26548:
 		cmp	si, 0Ah
 		jl	short loc_26527
-		push	0D0009h
-		push	70005h
-		push	ds
-		push	offset word_3A6CC
-		call	sub_253A2
-		add	sp, 0Ch
+		call	@elis_select_for_rank$qmiiiii c, offset word_3A6CC, ds, large 5 or (7 shl 16), large 9 or (13 shl 16)
 		xor	si, si
 		jmp	short loc_265BF
 ; ---------------------------------------------------------------------------
@@ -28180,12 +27851,7 @@ loc_266C1:
 loc_266D6:
 		cmp	_boss_phase_frame, 30
 		jnz	short loc_266F4
-		push	20002h
-		push	30006h
-		push	ds
-		push	offset word_3A6CC
-		call	sub_253A2
-		add	sp, 0Ch
+		call	@elis_select_for_rank$qmiiiii c, offset word_3A6CC, ds, large 6 or (3 shl 16), large 2 or (2 shl 16)
 
 loc_266F4:
 		cmp	_boss_phase_frame, 60
@@ -28985,12 +28651,12 @@ sub_26E02	proc far
 		idiv	bx
 		or	dx, dx
 		jnz	short locret_26E47
-		push	14001Ch
-		push	1B0017h
-		push	ss
+		push	PP_5_SPREAD_NARROW_AIMED or (PP_5_SPREAD_NARROW shl 16)	; (for_hard) or (for_lunatic)
+		push	PP_3_SPREAD_WIDE_AIMED or (PP_5_SPREAD_WIDE_AIMED shl 16)	; (for_easy) or (for_normal)
+		push	ss	; ret (segment)
 		lea	ax, [bp+@@pattern]
-		push	ax
-		call	sub_253A2
+		push	ax	; ret (offset)
+		call	@elis_select_for_rank$qmiiiii
 		push	(3 shl 4) + 8
 		push	[bp+@@pattern]
 		mov	ax, elis_bat.BE_cur_top
@@ -29210,12 +28876,7 @@ loc_26FF3:
 loc_27008:
 		cmp	_boss_phase_frame, 50
 		jnz	short loc_27088
-		push	40003h
-		push	30002h
-		push	ds
-		push	offset word_3A6CC
-		call	sub_253A2
-		add	sp, 0Ch
+		call	@elis_select_for_rank$qmiiiii c, offset word_3A6CC, ds, large 2 or (3 shl 16), large 3 or (4 shl 16)
 		xor	si, si
 		jmp	short loc_27080
 ; ---------------------------------------------------------------------------
@@ -29499,12 +29160,7 @@ loc_272B5:
 		jl	loc_275EF
 		cmp	_boss_phase_frame, 60
 		jnz	short loc_272E1
-		push	20002h
-		push	20004h
-		push	ds
-		push	offset word_3A6CC
-		call	sub_253A2
-		add	sp, 0Ch
+		call	@elis_select_for_rank$qmiiiii c, offset word_3A6CC, ds, large 4 or (2 shl 16), large 2 or (2 shl 16)
 		mov	angle_3A76F, 0
 
 loc_272E1:
@@ -29859,11 +29515,7 @@ loc_276AD:
 		mov	elis_still_or_wave.BE_bos_image, 1
 		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
 		mov	angle_3A770, 0
-		push	0F0014h
-		push	1E0028h
-		push	ds
-		push	offset word_3A6CC
-		call	sub_253A2
+		call	@elis_select_for_rank$qmiiiii stdcall, offset word_3A6CC, ds, large 40 or (30 shl 16), large 20 or (15 shl 16)
 		add	sp, 2Ah
 
 loc_27729:
@@ -31380,13 +31032,17 @@ sub_27C39	endp
 elis_still_or_wave	equ <>
 elis_attack	equ <>
 elis_bat	equ <>
-main_35_TEXT	ends
+main_35__TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
 main_36_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_36_TEXT
+	extern @sariel_select_for_rank$qmiiiii:proc
+main_36_TEXT	ends
+
+main_36__TEXT	segment	byte public 'CODE' use16
+		assume cs:main_36
 		;org 9
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -31395,65 +31051,6 @@ include th01/main/boss/anim.inc
 sariel_shield	equ <boss_entity_0>
 sariel_dress	equ <boss_anim_0>
 sariel_wand 	equ <boss_anim_1>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_28659	proc far
-
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
-arg_A		= word ptr  10h
-
-		push	bp
-		mov	bp, sp
-		mov	dx, [bp+arg_6]
-		cmp	_rank, RANK_EASY
-		jnz	short loc_2866B
-		mov	ax, [bp+arg_4]
-		jmp	short loc_28696
-; ---------------------------------------------------------------------------
-
-loc_2866B:
-		mov	al, _rank
-		cbw
-		cmp	ax, RANK_NORMAL
-		jnz	short loc_28678
-		mov	ax, dx
-		jmp	short loc_28696
-; ---------------------------------------------------------------------------
-
-loc_28678:
-		mov	al, _rank
-		cbw
-		cmp	ax, RANK_HARD
-		jnz	short loc_28686
-		mov	ax, [bp+arg_8]
-		jmp	short loc_28696
-; ---------------------------------------------------------------------------
-
-loc_28686:
-		mov	al, _rank
-		cbw
-		cmp	ax, RANK_LUNATIC
-		jnz	short loc_28694
-		mov	ax, [bp+arg_A]
-		jmp	short loc_28696
-; ---------------------------------------------------------------------------
-
-loc_28694:
-		mov	ax, dx
-
-loc_28696:
-		les	bx, [bp+arg_0]
-		mov	es:[bx], ax
-		pop	bp
-		retf
-sub_28659	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -32569,12 +32166,7 @@ loc_2910D:
 		jl	loc_29589
 		cmp	_boss_phase_frame, 50
 		jnz	short loc_29134
-		push	9B0096h
-		push	91008Ch
-		push	ds
-		push	offset word_3A780
-		call	sub_28659
-		add	sp, 0Ch
+		call	@sariel_select_for_rank$qmiiiii c, offset word_3A780, ds, large 140 or (145 shl 16), large 150 or (155 shl 16)
 
 loc_29134:
 		cmp	_boss_phase_frame, 100
@@ -33070,12 +32662,7 @@ sub_2958C	proc near
 		jl	loc_296EC
 		cmp	_boss_phase_frame, 50
 		jnz	short loc_295EF
-		push	50004Ch
-		push	480044h
-		push	ds
-		push	offset word_3A780
-		call	sub_28659
-		add	sp, 0Ch
+		call	@sariel_select_for_rank$qmiiiii c, offset word_3A780, ds, large 68 or (72 shl 16), large 76 or (80 shl 16)
 		xor	si, si
 		jmp	short loc_295EA
 ; ---------------------------------------------------------------------------
@@ -33268,12 +32855,7 @@ loc_2970D:
 		sub	ax, dx
 		shl	ax, 4
 		mov	word_3AC54, ax
-		push	8000Ah
-		push	0F0014h
-		push	ds
-		push	offset word_3A780
-		call	sub_28659
-		add	sp, 0Ch
+		call	@sariel_select_for_rank$qmiiiii c, offset word_3A780, ds, large 20 or (15 shl 16), large 10 or (8 shl 16)
 		push	8
 		call	_mdrv2_se_play
 		pop	cx
@@ -34202,12 +33784,7 @@ sub_29FE9	proc near
 		cmp	_boss_phase_frame, 10
 		jge	short loc_2A010
 		mov	word_35E03, 0FFFFh
-		push	0A000A0h
-		push	0A000A0h
-		push	ds
-		push	offset word_3A780
-		call	sub_28659
-		add	sp, 0Ch
+		call	@sariel_select_for_rank$qmiiiii c, offset word_3A780, ds, large 160 or (160 shl 16), large 160 or (160 shl 16)
 
 loc_2A010:
 		mov	ax, _boss_phase_frame
@@ -34468,12 +34045,7 @@ sub_2A2ED	proc near
 		cmp	_boss_phase_frame, 5
 		jge	short loc_2A313
 		mov	angle_3AF44, 0
-		push	8000Ah
-		push	0C0012h
-		push	ds
-		push	offset	word_3AF45
-		call	sub_28659
-		add	sp, 0Ch
+		call	@sariel_select_for_rank$qmiiiii c, offset word_3AF45, ds, large 18 or (12 shl 16), large 10 or (8 shl 16)
 
 loc_2A313:
 		mov	ax, _boss_phase_frame
@@ -34543,12 +34115,7 @@ sub_2A3BA	proc near
 		enter	6, 0
 		cmp	_boss_phase_frame, 10
 		jnz	short loc_2A3DC
-		push	20002h
-		push	30004h
-		push	ds
-		push	offset word_3A780
-		call	sub_28659
-		add	sp, 0Ch
+		call	@sariel_select_for_rank$qmiiiii c, offset word_3A780, ds, large 4 or (3 shl 16), large 2 or (2 shl 16)
 
 loc_2A3DC:
 		mov	ax, _boss_phase_frame
@@ -34854,11 +34421,7 @@ loc_2A6B0:
 		call	_vector2_between stdcall, point_3B037.x, point_3B037.y, _player_left, RES_Y, offset x_3B03D, ds, offset y_3B03B, ds, 16
 		mov	ax, _player_left
 		mov	word_3B03F, ax
-		push	480044h
-		push	40003Ch
-		push	ds
-		push	offset word_3A780
-		call	sub_28659
+		call	@sariel_select_for_rank$qmiiiii stdcall, offset word_3A780, ds, large 60 or (64 shl 16), large 68 or (72 shl 16)
 		add	sp, 1Eh
 		push	50 or (8 shl 16)	; (moveout_at_age) or (w shl 16)
 		push	7	; col
@@ -35059,12 +34622,12 @@ sub_2A8F7	proc near
 		idiv	bx
 		mov	[bp+@@left], dx
 		mov	[bp+@@top], PLAYFIELD_TOP
-		push	1E0001h
-		push	10001h
-		push	ss
+		push	PP_1 or (PP_1_RANDOM_WIDE shl 16)	; (for_hard) or (for_lunatic)
+		push	PP_1 or (PP_1 shl 16)	; (for_easy) or (for_normal)
+		push	ss	; ret (segment)
 		lea	ax, [bp+@@pattern]
-		push	ax
-		call	sub_28659
+		push	ax	; ret (offset)
+		call	@sariel_select_for_rank$qmiiiii
 		call	@CPellets@add_pattern$qii16pellet_pattern_ti stdcall, offset _Pellets, ds, [bp+@@left], [bp+@@top], [bp+@@pattern], (2 shl 4) + 12
 		add	sp, 18h
 
@@ -35094,12 +34657,7 @@ loc_2A960:
 		jnz	short loc_2A99E
 		mov	angle_3B041, 0
 		mov	byte_3B042, 1
-		push	4B0046h
-		push	41003Ch
-		push	ds
-		push	offset word_3A780
-		call	sub_28659
-		add	sp, 0Ch
+		call	@sariel_select_for_rank$qmiiiii c, offset word_3A780, ds, large 60 or (65 shl 16), large 70 or (75 shl 16)
 
 loc_2A993:
 		push	6
@@ -35314,12 +34872,7 @@ var_8		= qword	ptr -8
 		jl	locret_2AECC
 		cmp	_boss_phase_frame, 50
 		jnz	short loc_2AC27
-		push	90008h
-		push	70006h
-		push	ds
-		push	offset word_3A780
-		call	sub_28659
-		add	sp, 0Ch
+		call	@sariel_select_for_rank$qmiiiii c, offset word_3A780, ds, large 6 or (7 shl 16), large 8 or (9 shl 16)
 		mov	point_3B043.x, 2
 		mov	point_3B043.y, (RES_Y - 1)
 		mov	point_3B047.x, 2
@@ -35702,12 +35255,7 @@ var_4		= word ptr -4
 		jl	loc_2B2B6
 		cmp	_boss_phase_frame, 50
 		jnz	short loc_2B01A
-		push	8000Ah
-		push	0D0010h
-		push	ds
-		push	offset word_3A780
-		call	sub_28659
-		add	sp, 0Ch
+		call	@sariel_select_for_rank$qmiiiii c, offset word_3A780, ds, large 16 or (13 shl 16), large 10 or (8 shl 16)
 		mov	x_3B04D, 2
 		mov	y_3B04F, (PLAYFIELD_BOTTOM - 1)
 		jmp	loc_2B2B6
@@ -36465,12 +36013,7 @@ loc_2B71C:
 		mov	y_3B329, PLAYFIELD_BOTTOM
 		mov	speed_3B32B, (7 shl 4)
 		mov	word_3B32E, 0
-		push	100012h
-		push	180020h
-		push	ds
-		push	offset word_3A780
-		call	sub_28659
-		add	sp, 0Ch
+		call	@sariel_select_for_rank$qmiiiii c, offset word_3A780, ds, large 32 or (24 shl 16), large 18 or (16 shl 16)
 
 loc_2B780:
 		cmp	word_3B32E, 0
@@ -36541,12 +36084,7 @@ arg_0		= dword	ptr  4
 		mov	point_3B330.y, RES_Y - 1
 		mov	grc_image_3B334, 3
 		mov	word_3B336, 3
-		push	2D0028h
-		push	23001Eh
-		push	ds
-		push	offset word_3A780
-		call	sub_28659
-		add	sp, 0Ch
+		call	@sariel_select_for_rank$qmiiiii c, offset word_3A780, ds, large 30 or (35 shl 16), large 40 or (45 shl 16)
 
 loc_2B883:
 		cmp	point_3B330.y, 185
@@ -36727,12 +36265,7 @@ arg_0		= dword	ptr  4
 		mov	y_3B338, PLAYFIELD_BOTTOM
 		mov	speed_3B33C, (7 shl 4)
 		mov	word_3B33F, 0
-		push	100012h
-		push	180020h
-		push	ds
-		push	offset word_3A780
-		call	sub_28659
-		add	sp, 0Ch
+		call	@sariel_select_for_rank$qmiiiii c, offset word_3A780, ds, large 32 or (24 shl 16), large 18 or (16 shl 16)
 
 loc_2BA6F:
 		mov	ax, word_3B33F
@@ -38303,12 +37836,7 @@ loc_2CACD:
 		call	sub_2B34F
 		cmp	word_35E95, 0
 		jnz	short loc_2CB05
-		push	140018h
-		push	200038h
-		push	ds
-		push	offset word_3A780
-		call	sub_28659
-		add	sp, 0Ch
+		call	@sariel_select_for_rank$qmiiiii c, offset word_3A780, ds, large 56 or (32 shl 16), large 24 or (20 shl 16)
 		cmp	_boss_phase_frame, 100
 		jle	loc_2CBA4
 		jmp	short loc_2CB51
@@ -38647,80 +38175,23 @@ sub_2C0CA	endp
 sariel_shield	equ <>
 sariel_dress	equ <>
 sariel_wand 	equ <>
-main_36_TEXT	ends
+main_36__TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
 main_37_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_37_TEXT
+	extern @konngara_select_for_rank$qmiiiii:proc
+main_37_TEXT	ends
+
+main_37__TEXT	segment	byte public 'CODE' use16
+		assume cs:main_37
 		;org 2
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 konngara_head	equ <boss_entity_0>
 konngara_face_closed_or_glare	equ <boss_entity_1>
 konngara_face_aim	equ <boss_entity_2>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2CDD2	proc far
-
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
-arg_A		= word ptr  10h
-
-		push	bp
-
-loc_2CDD3:
-		mov	bp, sp
-		mov	dx, [bp+arg_6]
-		cmp	_rank, RANK_EASY
-		jnz	short loc_2CDE4
-		mov	ax, [bp+arg_4]
-		jmp	short loc_2CE0F
-; ---------------------------------------------------------------------------
-
-loc_2CDE4:
-		mov	al, _rank
-		cbw
-		cmp	ax, RANK_NORMAL
-		jnz	short loc_2CDF1
-		mov	ax, dx
-		jmp	short loc_2CE0F
-; ---------------------------------------------------------------------------
-
-loc_2CDF1:
-		mov	al, _rank
-		cbw
-		cmp	ax, RANK_HARD
-		jnz	short loc_2CDFF
-		mov	ax, [bp+arg_8]
-		jmp	short loc_2CE0F
-; ---------------------------------------------------------------------------
-
-loc_2CDFF:
-		mov	al, _rank
-		cbw
-		cmp	ax, RANK_LUNATIC
-		jnz	short loc_2CE0D
-		mov	ax, [bp+arg_A]
-		jmp	short loc_2CE0F
-; ---------------------------------------------------------------------------
-
-loc_2CE0D:
-		mov	ax, dx
-
-loc_2CE0F:
-		les	bx, [bp+arg_0]
-		mov	es:[bx], ax
-		pop	bp
-		retf
-sub_2CDD2	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -39349,11 +38820,7 @@ loc_2D44D:
 		jl	loc_2D7D3
 		cmp	_boss_phase_frame, 100
 		jnz	loc_2D500
-		push	1C001Bh
-		push	180016h
-		push	ds
-		push	offset word_3B438
-		call	sub_2CDD2
+		call	@konngara_select_for_rank$qmiiiii stdcall, offset word_3B438, ds, large PP_2_SPREAD_NARROW_AIMED or (PP_3_SPREAD_NARROW_AIMED shl 16), large PP_5_SPREAD_WIDE_AIMED or (PP_5_SPREAD_NARROW_AIMED shl 16)
 		call	_vector2_between stdcall, large (236 shl 16) or 316, large (384 shl 16) or 0, offset x_3B43A, ds, offset y_3B43E, ds, 7
 		call	_vector2_between stdcall, large (236 shl 16) or 316, large ( 64 shl 16) or 0, offset x_3B43C, ds, offset y_3B440, ds, 7
 		add	sp, 30h
@@ -39374,11 +38841,7 @@ loc_2D4C5:
 		cmp	si, 4
 		jl	short loc_2D4B0
 		call	@CPellets@add_pattern$qii16pellet_pattern_ti stdcall, offset _Pellets, ds, large 312 or (188 shl 16), word_3B438, (3 shl 4)
-		push	0C000Eh
-		push	100012h
-		push	ds
-		push	offset word_3B438
-		call	sub_2CDD2
+		call	@konngara_select_for_rank$qmiiiii stdcall, offset word_3B438, ds, large 18 or (16 shl 16), large 14 or (12 shl 16)
 		push	0Ch
 		call	_mdrv2_se_play
 		add	sp, 1Ah
@@ -39670,12 +39133,7 @@ loc_2D828:
 		jnz	short loc_2D85A
 		mov	angle_3B454, 40h
 		mov	word_3B455, 0FFFFh
-		push	700060h
-		push	500050h
-		push	ds
-		push	offset word_3B438
-		call	sub_2CDD2
-		add	sp, 0Ch
+		call	@konngara_select_for_rank$qmiiiii c, offset word_3B438, ds, large 80 or (80 shl 16), large 96 or (112 shl 16)
 
 loc_2D85A:
 		cmp	_boss_phase_frame, 140
@@ -40289,11 +39747,7 @@ loc_2DD76:
 		push	0Ch
 		call	_mdrv2_se_play
 		mov	word_3B497, 63h	; 'c'
-		push	60008h
-		push	0A000Ch
-		push	ds
-		push	offset word_3B438
-		call	sub_2CDD2
+		call	@konngara_select_for_rank$qmiiiii stdcall, offset word_3B438, ds, large 12 or (10 shl 16), large 8 or (6 shl 16)
 		add	sp, 20h
 		pop	bp
 		retf
@@ -40431,12 +39885,7 @@ loc_2DF1D:
 		mov	byte_3B49B, 20h	; ' '
 		mov	word_3B49D, 0FFF8h
 		mov	word_3B49F, 0
-		push	20003h
-		push	40005h
-		push	ds
-		push	offset word_3B438
-		call	sub_2CDD2
-		add	sp, 0Ch
+		call	@konngara_select_for_rank$qmiiiii c, offset word_3B438, ds, large 5 or (4 shl 16), large 3 or (2 shl 16)
 
 loc_2DF55:
 		mov	ax, _boss_phase_frame
@@ -40566,11 +40015,7 @@ loc_2E072:
 loc_2E07E:
 		cmp	si, 4
 		jl	short loc_2E072
-		push	0C000Eh
-		push	100012h
-		push	ds
-		push	offset word_3B438
-		call	sub_2CDD2
+		call	@konngara_select_for_rank$qmiiiii stdcall, offset word_3B438, ds, large 18 or (16 shl 16), large 14 or (12 shl 16)
 		jmp	loc_2E3D8
 ; ---------------------------------------------------------------------------
 
@@ -40989,12 +40434,7 @@ loc_2E43F:
 		mov	point_3B511.x, 0
 		mov	point_3B511.y, 264
 		mov	word_3B515, 1
-		push	20002h
-		push	30005h
-		push	ds
-		push	offset word_3B438
-		call	sub_2CDD2
-		add	sp, 0Ch
+		call	@konngara_select_for_rank$qmiiiii c, offset word_3B438, ds, large 5 or (3 shl 16), large 2 or (2 shl 16)
 
 loc_2E478:
 		cmp	_boss_phase_frame, 125
@@ -41246,11 +40686,7 @@ sub_2E7C4	proc far
 		mov	word_35FF2, 0
 		mov	left_3B517, 410
 		mov	top_3B519, (PLAYFIELD_TOP + 6)
-		push	10002h
-		push	30005h
-		push	ds
-		push	offset word_3B438
-		call	sub_2CDD2
+		call	@konngara_select_for_rank$qmiiiii stdcall, offset word_3B438, ds, large 5 or (3 shl 16), large 2 or (1 shl 16)
 		add	sp, 10h
 
 loc_2E803:
@@ -41315,12 +40751,7 @@ loc_2E8A1:
 		jnz	short loc_2E8CC
 		mov	left_3B517, 432
 		mov	top_3B519, (PLAYFIELD_TOP + 168)
-		push	20002h
-		push	20003h
-		push	ds
-		push	offset word_3B438
-		call	sub_2CDD2
-		add	sp, 0Ch
+		call	@konngara_select_for_rank$qmiiiii c, offset word_3B438, ds, large 3 or (2 shl 16), large 2 or (2 shl 16)
 
 loc_2E8CC:
 		cmp	_boss_phase_frame, 140
@@ -41362,12 +40793,7 @@ loc_2E93B:
 		jnz	short loc_2E966
 		mov	left_3B517, 198
 		mov	top_3B519, (PLAYFIELD_TOP + 134)
-		push	10001h
-		push	20003h
-		push	ds
-		push	offset word_3B438
-		call	sub_2CDD2
-		add	sp, 0Ch
+		call	@konngara_select_for_rank$qmiiiii c, offset word_3B438, ds, large 3 or (2 shl 16), large 1 or (1 shl 16)
 
 loc_2E966:
 		cmp	_boss_phase_frame, 150
@@ -41446,11 +40872,7 @@ sub_2EA03	proc far
 		mov	word_35FF2, 0
 		mov	left_3B51B, 410
 		mov	top_3B51D, (PLAYFIELD_TOP + 6)
-		push	480040h
-		push	300020h
-		push	ds
-		push	offset word_3B438
-		call	sub_2CDD2
+		call	@konngara_select_for_rank$qmiiiii stdcall, offset word_3B438, ds, large 32 or (48 shl 16), large 64 or (72 shl 16)
 		add	sp, 10h
 
 loc_2EA42:
@@ -41540,12 +40962,7 @@ loc_2EBA2:
 		cwd
 		idiv	bx
 		mov	word_3B523, dx
-		push	400050h
-		push	600080h
-		push	ds
-		push	offset word_3B438
-		call	sub_2CDD2
-		add	sp, 0Ch
+		call	@konngara_select_for_rank$qmiiiii c, offset word_3B438, ds, large 128 or (96 shl 16), large 80 or (64 shl 16)
 
 loc_2EBD8:
 		mov	ax, _boss_phase_frame
@@ -41635,11 +41052,7 @@ sub_2EC9A	proc far
 		mov	word_35FF2, 0
 		mov	word_3B525, 19Ah
 		mov	word_3B527, 46h	; 'F'
-		push	600058h
-		push	500040h
-		push	ds
-		push	offset word_3B438
-		call	sub_2CDD2
+		call	@konngara_select_for_rank$qmiiiii stdcall, offset word_3B438, ds, large 64 or (80 shl 16), large 88 or (96 shl 16)
 		add	sp, 10h
 
 loc_2ECD9:
@@ -43163,7 +42576,7 @@ sub_2EE7D	endp
 konngara_head	equ <>
 konngara_face_closed_or_glare	equ <>
 konngara_face_aim	equ <>
-main_37_TEXT	ends
+main_37__TEXT	ends
 
 ; ===========================================================================
 
