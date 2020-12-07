@@ -4,3 +4,6 @@
 
 extern int boss_phase_frame;
 /// -----------------------
+
+// No-op function for callbacks.
+void far boss_nop(void);

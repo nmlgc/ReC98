@@ -84,6 +84,7 @@ main_27 group main_27_TEXT, main_27__TEXT
 main_29 group main_29_TEXT, main_29__TEXT
 main_30 group main_30_TEXT, main_30__TEXT
 main_31 group main_31_TEXT, main_31__TEXT
+main_32 group main_32_TEXT, main_32__TEXT
 main_33 group main_33_TEXT, main_33__TEXT
 main_34 group main_34_TEXT, main_34__TEXT
 main_35 group main_35_TEXT, main_35__TEXT
@@ -11830,7 +11831,7 @@ loc_1BFED:
 loc_1BFEF:
 		push	ax
 		push	seg main_32_TEXT
-		push	offset sub_21884
+		push	offset @boss_nop$qv
 		push	5000
 		push	2
 		push	ss
@@ -12185,7 +12186,7 @@ loc_1C3AA:
 loc_1C3AC:
 		push	ax
 		push	seg main_32_TEXT
-		push	offset sub_21884
+		push	offset @boss_nop$qv
 		push	5000
 		push	2
 		push	ss
@@ -12500,7 +12501,7 @@ loc_1C700:
 loc_1C702:
 		push	ax
 		push	seg main_32_TEXT
-		push	offset sub_21884
+		push	offset @boss_nop$qv
 		push	5000
 		push	2
 		push	ss
@@ -12859,7 +12860,7 @@ loc_1CABB:
 loc_1CABD:
 		push	ax
 		push	seg main_32_TEXT
-		push	offset sub_21884
+		push	offset @boss_nop$qv
 		push	5000
 		push	2
 		push	ss
@@ -13278,7 +13279,7 @@ loc_1CFDA:
 loc_1CFDC:
 		push	ax
 		push	seg main_32_TEXT
-		push	offset sub_21884
+		push	offset @boss_nop$qv
 		push	5000
 		push	2
 		push	ss
@@ -13933,7 +13934,7 @@ loc_1D6C2:
 loc_1D6C4:
 		push	ax
 		push	seg main_32_TEXT
-		push	offset sub_21884
+		push	offset @boss_nop$qv
 		push	5000
 		push	2
 		push	ss
@@ -14618,7 +14619,7 @@ loc_1DF58:
 loc_1DF5A:
 		push	ax
 		push	seg main_32_TEXT
-		push	offset sub_21884
+		push	offset @boss_nop$qv
 		push	5000
 		push	2
 		push	ss
@@ -17732,7 +17733,7 @@ loc_1FBAC:
 		call	@CBossEntity@hittest_orb$xqv c, offset mima_still, ds
 		push	ax
 		push	seg main_32_TEXT
-		push	offset sub_21884
+		push	offset @boss_nop$qv
 		push	5000
 		push	2
 		push	ss
@@ -17850,7 +17851,7 @@ loc_1FCF7:
 		call	@CBossEntity@hittest_orb$xqv c, offset mima_still, ds
 		push	ax
 		push	seg main_32_TEXT
-		push	offset sub_21884
+		push	offset @boss_nop$qv
 		push	5000
 		push	2
 		push	ss
@@ -19659,21 +19660,13 @@ main_31__TEXT	ends
 
 ; Segment type:	Pure code
 main_32_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_32_TEXT
+	extern @boss_nop$qv:proc
+main_32_TEXT	ends
+
+main_32__TEXT	segment	byte public 'CODE' use16
+		assume cs:main_32
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_21884	proc far
-		push	bp
-		mov	bp, sp
-		pop	bp
-		retf
-sub_21884	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -21405,7 +21398,7 @@ off_22684	dw offset loc_22323
 		dw offset loc_22350
 		dw offset loc_2237D
 		dw offset loc_22323
-main_32_TEXT	ends
+main_32__TEXT	ends
 
 ; ===========================================================================
 
@@ -22209,11 +22202,11 @@ sub_22DC8	proc far
 		push	bp
 		mov	bp, sp
 		push	seg main_32_TEXT
-		push	offset sub_21884
+		push	offset @boss_nop$qv
 		push	seg main_32_TEXT
-		push	offset sub_21884
+		push	offset @boss_nop$qv
 		push	seg main_32_TEXT
-		push	offset sub_21884
+		push	offset @boss_nop$qv
 		push	0
 		call	sub_22B88
 		add	sp, 0Eh
@@ -22243,11 +22236,11 @@ sub_22E09	proc far
 		push	bp
 		mov	bp, sp
 		push	seg main_32_TEXT
-		push	offset sub_21884
+		push	offset @boss_nop$qv
 		push	seg main_32_TEXT
-		push	offset sub_21884
+		push	offset @boss_nop$qv
 		push	seg main_32_TEXT
-		push	offset sub_21884
+		push	offset @boss_nop$qv
 		push	0
 		call	sub_22B88
 		add	sp, 0Eh
@@ -22605,7 +22598,7 @@ loc_23118:
 		call	@CBossEntity@hittest_orb$xqv c, offset singyoku_sphere, ds
 		push	ax
 		push	seg main_32_TEXT
-		push	offset sub_21884
+		push	offset @boss_nop$qv
 		push	3000
 		push	1
 		push	ss
@@ -22702,7 +22695,7 @@ loc_2320E:
 		call	@CBossEntity@hittest_orb$xqv c, offset singyoku_sphere, ds
 		push	ax
 		push	seg main_32_TEXT
-		push	offset sub_21884
+		push	offset @boss_nop$qv
 		push	3000
 		push	1
 		push	ss
@@ -25160,7 +25153,7 @@ loc_24B3E:
 		call	sub_235FD
 		push	ax
 		push	seg main_32_TEXT
-		push	offset sub_21884
+		push	offset @boss_nop$qv
 		push	7000
 		push	4
 		push	ss
@@ -25244,7 +25237,7 @@ loc_24C2A:
 		call	sub_235FD
 		push	ax
 		push	seg main_32_TEXT
-		push	offset sub_21884
+		push	offset @boss_nop$qv
 		push	7000
 		push	4
 		push	ss
@@ -25282,7 +25275,7 @@ loc_24C81:
 		call	sub_235FD
 		push	ax
 		push	seg main_32_TEXT
-		push	offset sub_21884
+		push	offset @boss_nop$qv
 		push	7000
 		push	4
 		push	ss
@@ -25365,7 +25358,7 @@ loc_24D59:
 		call	sub_235FD
 		push	ax
 		push	seg main_32_TEXT
-		push	offset sub_21884
+		push	offset @boss_nop$qv
 		push	7000
 		push	4
 		push	ss
@@ -30655,7 +30648,7 @@ loc_2827D:
 		add	sp, 4
 		push	ax
 		push	seg main_32_TEXT
-		push	offset sub_21884
+		push	offset @boss_nop$qv
 		push	7000
 		push	4
 		push	ss
@@ -30783,7 +30776,7 @@ loc_283D4:
 		add	sp, 4
 		push	ax
 		push	seg main_32_TEXT
-		push	offset sub_21884
+		push	offset @boss_nop$qv
 		push	7000
 		push	4
 		push	ss
@@ -30978,7 +30971,7 @@ loc_285A5:
 		add	sp, 4
 		push	ax
 		push	seg main_32_TEXT
-		push	offset sub_21884
+		push	offset @boss_nop$qv
 		push	7000
 		push	4
 		push	ss
@@ -37271,7 +37264,7 @@ loc_2C440:
 		push	(104 shl 16) or 314
 		push	[bp+var_5]
 		push	seg main_32_TEXT
-		push	offset sub_21884
+		push	offset @boss_nop$qv
 		push	10000
 		push	3
 		push	ss
@@ -37364,7 +37357,7 @@ loc_2C533:
 		push	(104 shl 16) or 314
 		push	[bp+var_5]
 		push	seg main_32_TEXT
-		push	offset sub_21884
+		push	offset @boss_nop$qv
 		push	10000
 		push	3
 		push	ss
@@ -37482,7 +37475,7 @@ loc_2C64F:
 		push	(104 shl 16) or 314
 		push	[bp+var_5]
 		push	seg main_32_TEXT
-		push	offset sub_21884
+		push	offset @boss_nop$qv
 		push	10000
 		push	3
 		push	ss
@@ -37603,7 +37596,7 @@ loc_2C784:
 		push	(104 shl 16) or 314
 		push	[bp+var_5]
 		push	seg main_32_TEXT
-		push	offset sub_21884
+		push	offset @boss_nop$qv
 		push	10000
 		push	3
 		push	ss
@@ -37940,7 +37933,7 @@ loc_2CBC2:
 		push	(104 shl 16) or 314
 		push	[bp+var_5]
 		push	seg main_32_TEXT
-		push	offset sub_21884
+		push	offset @boss_nop$qv
 		push	10000
 		push	3
 		push	ss
@@ -41344,7 +41337,7 @@ loc_2EFDB:
 loc_2EFDD:
 		push	ax
 		push	seg main_32_TEXT
-		push	offset sub_21884
+		push	offset @boss_nop$qv
 		push	10000
 		push	3
 		push	ss
@@ -41456,7 +41449,7 @@ loc_2F0F5:
 loc_2F0F7:
 		push	ax
 		push	seg main_32_TEXT
-		push	offset sub_21884
+		push	offset @boss_nop$qv
 		push	10000
 		push	3
 		push	ss
@@ -41586,7 +41579,7 @@ loc_2F22B:
 loc_2F22D:
 		push	ax
 		push	seg main_32_TEXT
-		push	offset sub_21884
+		push	offset @boss_nop$qv
 		push	10000
 		push	3
 		push	ss
@@ -41698,7 +41691,7 @@ loc_2F345:
 loc_2F347:
 		push	ax
 		push	seg main_32_TEXT
-		push	offset sub_21884
+		push	offset @boss_nop$qv
 		push	10000
 		push	3
 		push	ss
@@ -41821,7 +41814,7 @@ loc_2F46E:
 loc_2F470:
 		push	ax
 		push	seg main_32_TEXT
-		push	offset sub_21884
+		push	offset @boss_nop$qv
 		push	10000
 		push	3
 		push	ss
@@ -41939,7 +41932,7 @@ loc_2F5A0:
 loc_2F5A2:
 		push	ax
 		push	seg main_32_TEXT
-		push	offset sub_21884
+		push	offset @boss_nop$qv
 		push	10000
 		push	3
 		push	ss
@@ -42134,7 +42127,7 @@ loc_2F764:
 loc_2F766:
 		push	ax
 		push	seg main_32_TEXT
-		push	offset sub_21884
+		push	offset @boss_nop$qv
 		push	10000
 		push	3
 		push	ss
