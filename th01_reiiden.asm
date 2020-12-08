@@ -19661,108 +19661,13 @@ main_31__TEXT	ends
 ; Segment type:	Pure code
 main_32_TEXT	segment	byte public 'CODE' use16
 	extern @boss_nop$qv:proc
+	extern @hp_put_with_section_pattern$qi12hp_section_t:proc
 main_32_TEXT	ends
 
 main_32__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_32
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_21889	proc far
-		push	bp
-		mov	bp, sp
-		GRCG_SETMODE_CLOBBERING dx, GC_RMW
-		mov	dx, 126	; Port 007Eh: GRCG tile register
-		mov	al, 01010101b
-		out	dx, al
-		mov	al, 11111111b
-		out	dx, al
-		mov	al, 01010101b
-		out	dx, al
-		mov	al, 10101010b
-		out	dx, al
-		pop	bp
-		retf
-sub_21889	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_218A3	proc far
-
-var_2		= byte ptr -2
-var_1		= byte ptr -1
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	di, [bp+arg_2]
-		mov	[bp+var_1], 0FEh ; '?'
-		mov	ax, [bp+arg_0]
-		add	ax, 0F10h
-		mov	si, ax
-		cmp	di, 2
-		jnz	short loc_218C1
-		push	10
-		jmp	short loc_218C7
-; ---------------------------------------------------------------------------
-
-loc_218C1:
-		or	di, di
-		jnz	short loc_218CF
-		push	7
-
-loc_218C7:
-		call	_grcg_setcolor_rmw
-		pop	cx
-		jmp	short loc_218D8
-; ---------------------------------------------------------------------------
-
-loc_218CF:
-		cmp	di, 1
-		jnz	short loc_218D8
-		call	sub_21889
-
-loc_218D8:
-		mov	[bp+var_2], 0
-		jmp	short loc_2190D
-; ---------------------------------------------------------------------------
-
-loc_218DE:
-		push	1
-		call	_graph_accesspage_func
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		mov	al, [bp+var_1]
-		mov	es:[bx], al
-		push	0
-		call	_graph_accesspage_func
-		add	sp, 4
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		mov	al, [bp+var_1]
-		mov	es:[bx], al
-		add	si, 50h	; 'P'
-		inc	[bp+var_2]
-
-loc_2190D:
-		cmp	[bp+var_2], 0Fh
-		jb	short loc_218DE
-		call	_grcg_off_func
-		pop	di
-		pop	si
-		leave
-		retf
-sub_218A3	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -19857,7 +19762,7 @@ loc_219C1:
 loc_219C3:
 		lea	ax, [si-1]
 		push	ax
-		call	sub_218A3
+		call	@hp_put_with_section_pattern$qi12hp_section_t
 		add	sp, 4
 		jmp	loc_21A84
 ; ---------------------------------------------------------------------------
@@ -19907,7 +19812,7 @@ loc_21A1F:
 
 loc_21A21:
 		push	[bp+var_2]
-		call	sub_218A3
+		call	@hp_put_with_section_pattern$qi12hp_section_t
 		add	sp, 4
 		inc	[bp+var_2]
 
@@ -19953,7 +19858,7 @@ loc_21A6E:
 
 loc_21A70:
 		push	di
-		call	sub_218A3
+		call	@hp_put_with_section_pattern$qi12hp_section_t
 		add	sp, 4
 		lea	ax, [si-1]
 		cmp	ax, di
