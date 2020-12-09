@@ -53,4 +53,80 @@ void hp_put_with_section_pattern(int point, hp_section_t section)
 	}
 	grcg_off();
 }
+
+#define hp_put(point_to_put, point_in_hopefully_same_section) \
+	 if(point_in_hopefully_same_section < hud_hp_first_redwhite) { \
+		hp_put_with_section_pattern(point_to_put, HP_SECTION_RED); \
+	} else if(point_in_hopefully_same_section < hud_hp_first_white) { \
+		hp_put_with_section_pattern(point_to_put, HP_SECTION_REDWHITE); \
+	} else { \
+		hp_put_with_section_pattern(point_to_put, HP_SECTION_WHITE); \
+	}
 /// ----------
+
+/// Background
+/// ----------
+/// Whew, using a 16x16 wrapper around a 32x32 set of graphics functions in
+/// order to handle backgrounds for 16x8 sprites... That's quite the recipe
+// for confusion. *Especially* if you don't write functions to abstract away
+// this needless complexity.
+
+#if (HP_POINT_W != (PTN_QUARTER_W / 2))
+	#error Original code assumes HP_POINT_W == (PTN_QUARTER_W / 2)
+#endif
+
+static const pixel_t HP_2POINT_W = PTN_QUARTER_W;
+
+#define hp_bg_left(point_divided_by_2) \
+	(((point_divided_by_2) * HP_2POINT_W) + HP_LEFT)
+
+// As a result, this one ends up always being called twice as much (i.e., for
+// each hit point) as it needs to be (i.e., once for every 2 HP). Not *really*
+// a ZUN "bug", just slightly sloppy.
+#define hp_bg_snap_nth_doublepoint(point_divided_by_2) \
+	ptn_snap_quarter_8(\
+		hp_bg_left(point_divided_by_2), \
+		HP_TOP, \
+		(((point_divided_by_2) / 4) + PTN_BG_HP), \
+		((point_divided_by_2) % 4) \
+	)
+
+#define hp_bg_put_doublepoint_containing(point) \
+	ptn_put_quarter_noalpha_8( \
+		hp_bg_left((point) / 2), \
+		HP_TOP, \
+		(((point) / 8) + PTN_BG_HP), \
+		(((point) / 2) % 4) \
+	)
+//// ---------
+
+bool16 hud_hp_render(int hp_total, int func)
+{
+	if(func == HUD_HP_FUNC_DECREMENT) {
+		graph_accesspage_func(1); hp_bg_put_doublepoint_containing(hp_total);
+		graph_accesspage_func(0); hp_bg_put_doublepoint_containing(hp_total);
+		// Since a .PTN quarter stores the background of two hit points, the
+		// calls above will unblit two hit points if [hp_total] is odd. So...
+		if((hp_total % 2) == 1) {
+			// ZUN bug: Yes, this will use the wrong section pattern when
+			// the section boundaries are odd. Just use one parameter... sigh.
+			hp_put((hp_total - 1), hp_total);
+		}
+	} else if(func == HUD_HP_FUNC_RERENDER) {
+		for(int i = 0; i < hp_total; i++) {
+			hp_bg_snap_nth_doublepoint(i);
+			hp_put(i, i);
+		}
+	} else { // Increment
+		#define hp_cur func
+
+		hp_bg_snap_nth_doublepoint(hp_cur);
+		hp_put(hp_cur, hp_cur);
+		if((hp_total - 1) == hp_cur) {
+			return true;
+		}
+
+		#undef hp_cur
+	}
+	return false;
+}
