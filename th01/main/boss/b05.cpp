@@ -5,6 +5,7 @@ extern "C" {
 #include "platform.h"
 }
 
+#define boss_hp	singyoku_hp
 #define boss_phase_frame	singyoku_phase_frame
 #include "th01/main/boss/boss.hpp"
 

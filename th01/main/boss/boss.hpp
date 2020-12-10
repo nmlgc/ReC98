@@ -2,6 +2,7 @@
 /// -----------------------
 /// Really just freely usable memory shared between all bosses.
 
+extern int boss_hp;
 extern int boss_phase_frame;
 /// -----------------------
 

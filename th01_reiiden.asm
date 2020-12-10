@@ -10841,7 +10841,7 @@ loc_1B3D8:
 		mov	eye_4.BE_hitbox_orb_inactive, 1
 		mov	_boss_phase_frame, 0
 		mov	byte_3A6CE, 0
-		mov	word_3A6C8, 10h
+		mov	_boss_hp, 16
 		mov	_hud_hp_first_white, 12
 		mov	_hud_hp_first_redwhite, 8
 		push	700FFh
@@ -11378,7 +11378,7 @@ var_2		= word ptr -2
 		jnz	loc_1BEC0
 		cmp	_yuugenmagan_initial_hp_rendered, 0
 		jnz	short loc_1BA6C
-		call	@hud_hp_render$qii c, word_3A6C8, _boss_phase_frame
+		call	@hud_hp_render$qii c, _boss_hp, _boss_phase_frame
 		mov	_yuugenmagan_initial_hp_rendered, al
 
 loc_1BA6C:
@@ -11835,14 +11835,14 @@ loc_1BFEF:
 		lea	ax, [bp+var_2]
 		push	ax
 		push	ds
-		push	offset word_3A6C8
+		push	offset _boss_hp
 		push	ds
 		push	offset word_35B54
 		push	ds
 		push	offset word_39E04
 		call	sub_21A8A
 		add	sp, 22h
-		cmp	word_3A6C8, 0Fh
+		cmp	_boss_hp, 15
 		jle	short loc_1C025
 		cmp	_boss_phase_frame, 1100
 		jle	loc_1DFFC
@@ -12190,14 +12190,14 @@ loc_1C3AC:
 		lea	ax, [bp+var_2]
 		push	ax
 		push	ds
-		push	offset word_3A6C8
+		push	offset _boss_hp
 		push	ds
 		push	offset word_35B54
 		push	ds
 		push	offset word_39E04
 		call	sub_21A8A
 		add	sp, 22h
-		cmp	word_3A6C8, 0Ch
+		cmp	_boss_hp, 12
 		jle	short loc_1C3E3
 		mov	al, byte_39E14
 		cbw
@@ -12505,14 +12505,14 @@ loc_1C702:
 		lea	ax, [bp+var_2]
 		push	ax
 		push	ds
-		push	offset word_3A6C8
+		push	offset _boss_hp
 		push	ds
 		push	offset word_35B54
 		push	ds
 		push	offset word_39E04
 		call	sub_21A8A
 		add	sp, 22h
-		cmp	word_3A6C8, 0Ah
+		cmp	_boss_hp, 10
 		jle	short loc_1C739
 		mov	al, byte_39E14
 		cbw
@@ -12864,14 +12864,14 @@ loc_1CABD:
 		lea	ax, [bp+var_2]
 		push	ax
 		push	ds
-		push	offset word_3A6C8
+		push	offset _boss_hp
 		push	ds
 		push	offset word_35B54
 		push	ds
 		push	offset word_39E04
 		call	sub_21A8A
 		add	sp, 22h
-		cmp	word_3A6C8, 8
+		cmp	_boss_hp, 8
 		jle	short loc_1CAF4
 		mov	al, byte_39E14
 		cbw
@@ -13283,14 +13283,14 @@ loc_1CFDC:
 		lea	ax, [bp+var_2]
 		push	ax
 		push	ds
-		push	offset word_3A6C8
+		push	offset _boss_hp
 		push	ds
 		push	offset word_35B54
 		push	ds
 		push	offset word_39E04
 		call	sub_21A8A
 		add	sp, 22h
-		cmp	word_3A6C8, 2
+		cmp	_boss_hp, 2
 		jle	short loc_1D011
 		cmp	word_39E08, 6
 		jnz	loc_1DFFC
@@ -13938,14 +13938,14 @@ loc_1D6C4:
 		lea	ax, [bp+var_2]
 		push	ax
 		push	ds
-		push	offset word_3A6C8
+		push	offset _boss_hp
 		push	ds
 		push	offset word_35B54
 		push	ds
 		push	offset word_39E04
 		call	sub_21A8A
 		add	sp, 22h
-		cmp	word_3A6C8, 0
+		cmp	_boss_hp, 0
 		jg	short loc_1D75D
 		call	_mdrv2_bgm_fade_out_nonblock
 		call	@CPellets@unput_and_reset_all$qv c, offset _Pellets, ds
@@ -13965,7 +13965,7 @@ loc_1D74B:
 		pop	cx
 
 loc_1D75D:
-		cmp	word_3A6C8, 0
+		cmp	_boss_hp, 0
 		jle	short loc_1D76D
 		cmp	word_39E08, 3
 		jnz	loc_1DFFC
@@ -14623,14 +14623,14 @@ loc_1DF5A:
 		lea	ax, [bp+var_2]
 		push	ax
 		push	ds
-		push	offset word_3A6C8
+		push	offset _boss_hp
 		push	ds
 		push	offset word_35B54
 		push	ds
 		push	offset word_39E04
 		call	sub_21A8A
 		add	sp, 22h
-		cmp	word_3A6C8, 0
+		cmp	_boss_hp, 0
 		jg	short loc_1DFFC
 		call	_mdrv2_bgm_fade_out_nonblock
 		call	@CPellets@unput_and_reset_all$qv stdcall, offset _Pellets, ds
@@ -15584,7 +15584,7 @@ sub_1E79B	proc far
 		mov	mima_still.BE_hitbox_orb_inactive, 0
 		mov	_boss_phase_frame, 0
 		mov	byte_3A6CE, 0
-		mov	word_3A6C8, 0Ch
+		mov	_boss_hp, 12
 		mov	_hud_hp_first_white, 6
 		mov	_hud_hp_first_redwhite, 2
 		push	700FFh
@@ -17663,7 +17663,7 @@ loc_1FB20:
 		jnz	loc_1FC54
 		cmp	_mima_initial_hp_rendered, 0
 		jnz	short loc_1FB45
-		call	@hud_hp_render$qii c, word_3A6C8, _boss_phase_frame
+		call	@hud_hp_render$qii c, _boss_hp, _boss_phase_frame
 		mov	_mima_initial_hp_rendered, al
 
 loc_1FB45:
@@ -17712,7 +17712,7 @@ loc_1FB98:
 
 loc_1FB9C:
 		mov	word_39E78, ax
-		cmp	word_3A6C8, 6
+		cmp	_boss_hp, 6
 		jg	short loc_1FBAC
 		mov	word_39E78, 63h	; 'c'
 
@@ -17734,7 +17734,7 @@ loc_1FBAC:
 		lea	ax, [bp+var_2]
 		push	ax
 		push	ds
-		push	offset word_3A6C8
+		push	offset _boss_hp
 		push	ds
 		push	offset word_39E76
 		push	ds
@@ -17852,14 +17852,14 @@ loc_1FCF7:
 		lea	ax, [bp+var_2]
 		push	ax
 		push	ds
-		push	offset word_3A6C8
+		push	offset _boss_hp
 		push	ds
 		push	offset word_39E76
 		push	ds
 		push	offset word_39E74
 		call	sub_21A8A
 		add	sp, 22h
-		cmp	word_3A6C8, 0
+		cmp	_boss_hp, 0
 		jg	loc_1FDCF
 		push	1
 		call	_graph_accesspage_func
@@ -21164,7 +21164,7 @@ sub_22731	proc far
 		CBossEntity__hitbox_set	singyoku_sphere, 24, 24, 72, 72
 		mov	singyoku_sphere.BE_hitbox_orb_inactive, 0
 		mov	singyoku_sphere.BE_bos_image, 0
-		mov	word_3A383, 8
+		mov	_singyoku_hp, 8
 		mov	_hud_hp_first_white, 6
 		mov	_hud_hp_first_redwhite, 2
 		mov	byte_35CDE, 0
@@ -22241,7 +22241,7 @@ loc_230BA:
 		jnz	loc_23198
 		cmp	_singyoku_initial_hp_rendered, 0
 		jnz	short loc_230DF
-		call	@hud_hp_render$qii c, word_3A383, word_3A381
+		call	@hud_hp_render$qii c, _singyoku_hp, word_3A381
 		mov	_singyoku_initial_hp_rendered, ax
 
 loc_230DF:
@@ -22292,14 +22292,14 @@ loc_23118:
 		lea	ax, [bp+var_2]
 		push	ax
 		push	ds
-		push	offset word_3A383
+		push	offset _singyoku_hp
 		push	ds
 		push	offset word_35CE4
 		push	ds
 		push	offset word_3A381
 		call	sub_21A8A
 		add	sp, 22h
-		cmp	word_3A383, 6
+		cmp	_singyoku_hp, 6
 		jg	loc_232A0
 		cmp	word_35CE4, 0
 		jnz	loc_232A0
@@ -22389,14 +22389,14 @@ loc_2320E:
 		lea	ax, [bp+var_2]
 		push	ax
 		push	ds
-		push	offset word_3A383
+		push	offset _singyoku_hp
 		push	ds
 		push	offset word_35CE4
 		push	ds
 		push	offset word_3A381
 		call	sub_21A8A
 		add	sp, 22h
-		cmp	word_3A383, 0
+		cmp	_singyoku_hp, 0
 		jg	short loc_232A0
 		mov	byte_35CDE, 8
 		push	5
@@ -22565,7 +22565,7 @@ sub_2355F	proc far
 		push	di
 		mov	byte_3A3BE, 0
 		mov	_boss_phase_frame, 0
-		mov	word_3A6C8, 0Eh
+		mov	_boss_hp, 14
 		mov	_hud_hp_first_white, 10
 		mov	_hud_hp_first_redwhite, 6
 		call	@CBossEntity@pos_set$qiiiiiii stdcall, offset kikuri_soul_0, ds, 0, large 0 or (50 shl 16), large 32 or (576 shl 16), large 64 or (400 shl 16)
@@ -24825,7 +24825,7 @@ loc_24B19:
 		jnz	loc_24BA3
 		cmp	_kikuri_initial_hp_rendered, 0
 		jnz	short loc_24B3E
-		call	@hud_hp_render$qii c, word_3A6C8, _boss_phase_frame
+		call	@hud_hp_render$qii c, _boss_hp, _boss_phase_frame
 		mov	_kikuri_initial_hp_rendered, al
 
 loc_24B3E:
@@ -24844,7 +24844,7 @@ loc_24B3E:
 		lea	ax, [bp+var_4]
 		push	ax
 		push	ds
-		push	offset word_3A6C8
+		push	offset _boss_hp
 		push	ds
 		push	offset word_3A6C0
 		push	ds
@@ -24858,7 +24858,7 @@ loc_24B3E:
 loc_24B82:
 		cmp	word_3A6C0, 0
 		jnz	loc_24DFB
-		cmp	word_3A6C8, 0Ah
+		cmp	_boss_hp, 10
 		jle	short loc_24B9B
 		cmp	word_35D16, 6
 		jl	loc_24DFB
@@ -24928,7 +24928,7 @@ loc_24C2A:
 		lea	ax, [bp+var_4]
 		push	ax
 		push	ds
-		push	offset word_3A6C8
+		push	offset _boss_hp
 		push	ds
 		push	offset word_3A6C0
 		push	ds
@@ -24966,7 +24966,7 @@ loc_24C81:
 		lea	ax, [bp+var_4]
 		push	ax
 		push	ds
-		push	offset word_3A6C8
+		push	offset _boss_hp
 		push	ds
 		push	offset word_3A6C0
 		push	ds
@@ -24975,7 +24975,7 @@ loc_24C81:
 		add	sp, 22h
 		cmp	word_3A6C0, 0
 		jnz	loc_24DFB
-		cmp	word_3A6C8, 6
+		cmp	_boss_hp, 6
 		jle	short loc_24CE0
 		cmp	_boss_phase_frame, 1600
 		jle	loc_24DFB
@@ -25034,7 +25034,7 @@ loc_24D41:
 loc_24D4C:
 		cmp	word_35D16, 1Dh
 		jle	short loc_24D59
-		mov	word_3A6C8, 1
+		mov	_boss_hp, 1
 
 loc_24D59:
 		pushd	0 or (0 shl 16)
@@ -25049,14 +25049,14 @@ loc_24D59:
 		lea	ax, [bp+var_4]
 		push	ax
 		push	ds
-		push	offset word_3A6C8
+		push	offset _boss_hp
 		push	ds
 		push	offset word_3A6C0
 		push	ds
 		push	offset word_3A6C2
 		call	sub_21A8A
 		add	sp, 22h
-		cmp	word_3A6C8, 0
+		cmp	_boss_hp, 0
 		jg	short loc_24DFB
 		call	_mdrv2_bgm_fade_out_nonblock
 		call	@CPellets@unput_and_reset_all$qv c, offset _Pellets, ds
@@ -25342,7 +25342,7 @@ sub_24FE0	proc far
 		CBossEntity__hitbox_set	elis_bat, 8, 8, 40, 24
 		mov	byte_3A6CE, 0
 		mov	_boss_phase_frame, 0
-		mov	word_3A6C8, 0Eh
+		mov	_boss_hp, 14
 		mov	_hud_hp_first_white, 10
 		mov	_hud_hp_first_redwhite, 6
 		mov	eax, _rand
@@ -30261,7 +30261,7 @@ loc_281CF:
 		jnz	loc_282DE
 		cmp	_elis_initial_hp_rendered, 0
 		jnz	short loc_281F4
-		call	@hud_hp_render$qii c, word_3A6C8, _boss_phase_frame
+		call	@hud_hp_render$qii c, _boss_hp, _boss_phase_frame
 		mov	_elis_initial_hp_rendered, al
 
 loc_281F4:
@@ -30336,7 +30336,7 @@ loc_2827D:
 		lea	ax, [bp+var_8]
 		push	ax
 		push	ds
-		push	offset word_3A6C8
+		push	offset _boss_hp
 		push	ds
 		push	offset word_3A775
 		push	ds
@@ -30345,7 +30345,7 @@ loc_2827D:
 		add	sp, 22h
 		cmp	word_3A775, 0
 		jnz	loc_28655
-		cmp	word_3A6C8, 0Ah
+		cmp	_boss_hp, 10
 		jg	loc_28655
 		cmp	word_3A779, 1
 		jnz	loc_28655
@@ -30464,7 +30464,7 @@ loc_283D4:
 		lea	ax, [bp+var_8]
 		push	ax
 		push	ds
-		push	offset word_3A6C8
+		push	offset _boss_hp
 		push	ds
 		push	offset word_3A775
 		push	ds
@@ -30473,7 +30473,7 @@ loc_283D4:
 		add	sp, 22h
 		cmp	word_3A775, 0
 		jnz	loc_28655
-		cmp	word_3A6C8, 6
+		cmp	_boss_hp, 6
 		jg	loc_28655
 		cmp	word_3A779, 1
 		jnz	loc_28655
@@ -30659,14 +30659,14 @@ loc_285A5:
 		lea	ax, [bp+var_8]
 		push	ax
 		push	ds
-		push	offset word_3A6C8
+		push	offset _boss_hp
 		push	ds
 		push	offset word_3A775
 		push	ds
 		push	offset word_3A773
 		call	sub_21A8A
 		add	sp, 22h
-		cmp	word_3A6C8, 0
+		cmp	_boss_hp, 0
 		jg	short loc_28655
 		call	_mdrv2_bgm_fade_out_nonblock
 		call	@CPellets@unput_and_reset_all$qv stdcall, offset _Pellets, ds
@@ -30816,7 +30816,7 @@ sub_287D9	proc far
 		mov	bp, sp
 		call	@CBossEntity@pos_set$qiiiiiii c, offset sariel_shield, ds, 304, large 144 or (48 shl 16), large 0 or (640 shl 16), large 0 or (400 shl 16)
 		CBossEntity__hitbox_set	sariel_shield, 0, 0, 48, 48
-		mov	word_3A6C8, 12h
+		mov	_boss_hp, 18
 		mov	_hud_hp_first_white, 8
 		mov	_hud_hp_first_redwhite, 2
 		mov	byte_3A6CE, 0
@@ -33181,7 +33181,7 @@ loc_29D0E:
 		mov	_first_stage_in_scene, 1
 		call	sub_190D6
 		call	_hud_score_and_cardcombo_render
-		call	@hud_hp_render$qii stdcall, word_3A6C8, HUD_HP_FUNC_RERENDER
+		call	@hud_hp_render$qii stdcall, _boss_hp, HUD_HP_FUNC_RERENDER
 		add	sp, 12h
 		mov	_boss_phase_frame, 0
 
@@ -36874,7 +36874,7 @@ loc_2C399:
 		jnz	loc_2C4A1
 		cmp	_sariel_initial_hp_rendered, 0
 		jnz	short loc_2C3BE
-		call	@hud_hp_render$qii c, word_3A6C8, _boss_phase_frame
+		call	@hud_hp_render$qii c, _boss_hp, _boss_phase_frame
 		mov	_sariel_initial_hp_rendered, al
 
 loc_2C3BE:
@@ -36947,14 +36947,14 @@ loc_2C440:
 		lea	ax, [bp+var_5+1]
 		push	ax
 		push	ds
-		push	offset word_3A6C8
+		push	offset _boss_hp
 		push	ds
 		push	offset word_3B431
 		push	ds
 		push	offset word_3B433
 		call	sub_21A8A
 		add	sp, 22h
-		cmp	word_3A6C8, 0
+		cmp	_boss_hp, 0
 		jg	short loc_2C47F
 		mov	byte_3A6CE, 63h	; 'c'
 
@@ -37040,14 +37040,14 @@ loc_2C533:
 		lea	ax, [bp+var_5+1]
 		push	ax
 		push	ds
-		push	offset word_3A6C8
+		push	offset _boss_hp
 		push	ds
 		push	offset word_3B431
 		push	ds
 		push	offset word_3B433
 		call	sub_21A8A
 		add	sp, 22h
-		cmp	word_3A6C8, 0
+		cmp	_boss_hp, 0
 		jg	short loc_2C572
 		mov	byte_3A6CE, 63h	; 'c'
 
@@ -37158,14 +37158,14 @@ loc_2C64F:
 		lea	ax, [bp+var_5+1]
 		push	ax
 		push	ds
-		push	offset word_3A6C8
+		push	offset _boss_hp
 		push	ds
 		push	offset word_3B431
 		push	ds
 		push	offset word_3B433
 		call	sub_21A8A
 		add	sp, 22h
-		cmp	word_3A6C8, 0
+		cmp	_boss_hp, 0
 		jg	short loc_2C68E
 		mov	byte_3A6CE, 63h	; 'c'
 
@@ -37279,14 +37279,14 @@ loc_2C784:
 		lea	ax, [bp+var_5+1]
 		push	ax
 		push	ds
-		push	offset word_3A6C8
+		push	offset _boss_hp
 		push	ds
 		push	offset word_3B431
 		push	ds
 		push	offset word_3B433
 		call	sub_21A8A
 		add	sp, 22h
-		cmp	word_3A6C8, 0
+		cmp	_boss_hp, 0
 		jg	short loc_2C7C3
 		mov	byte_3A6CE, 63h	; 'c'
 
@@ -37468,7 +37468,7 @@ loc_2C9DA:
 		mov	_player_invincible, 0
 		call	@boss_palette_snap$qv
 		call	_stage_palette_set c, offset _z_Palettes, ds
-		mov	word_3A6C8, 6
+		mov	_boss_hp, 6
 		mov	_hud_hp_first_white, 10
 		mov	_hud_hp_first_redwhite, 3
 		mov	_sariel_initial_hp_rendered, 0
@@ -37492,7 +37492,7 @@ loc_2CAA8:
 		jnz	loc_2CC9E
 		cmp	_sariel_initial_hp_rendered, 0
 		jnz	short loc_2CACD
-		call	@hud_hp_render$qii c, word_3A6C8, _boss_phase_frame
+		call	@hud_hp_render$qii c, _boss_hp, _boss_phase_frame
 		mov	_sariel_initial_hp_rendered, al
 
 loc_2CACD:
@@ -37613,7 +37613,7 @@ loc_2CBC2:
 		lea	ax, [bp+var_5+1]
 		push	ax
 		push	ds
-		push	offset word_3A6C8
+		push	offset _boss_hp
 		push	ds
 		push	offset word_3B431
 		push	ds
@@ -37687,7 +37687,7 @@ loc_2CC6B:
 		call	@boss_palette_snap$qv
 
 loc_2CC7C:
-		cmp	word_3A6C8, 0
+		cmp	_boss_hp, 0
 		jg	loc_2CDCE
 		call	_mdrv2_bgm_stop
 		mov	byte_3A6CE, 65h	; 'e'
@@ -38246,7 +38246,7 @@ sub_2D1FE	endp
 sub_2D20D	proc far
 		push	bp
 		mov	bp, sp
-		mov	word_3A6C8, 12h
+		mov	_boss_hp, 18
 		mov	_hud_hp_first_white, 16
 		mov	_hud_hp_first_redwhite, 10
 		mov	byte_3A6CE, 0
@@ -40907,7 +40907,7 @@ loc_2EED9:
 		jnz	loc_2F02C
 		cmp	_konngara_initial_hp_rendered, 0
 		jnz	short loc_2EEFE
-		call	@hud_hp_render$qii c, word_3A6C8, _boss_phase_frame
+		call	@hud_hp_render$qii c, _boss_hp, _boss_phase_frame
 		mov	_konngara_initial_hp_rendered, al
 
 loc_2EEFE:
@@ -41014,7 +41014,7 @@ loc_2EFDD:
 		lea	ax, [bp+var_C]
 		push	ax
 		push	ds
-		push	offset word_3A6C8
+		push	offset _boss_hp
 		push	ds
 		push	offset word_3B529
 		push	ds
@@ -41025,7 +41025,7 @@ loc_2EFDD:
 		jnz	loc_2FC40
 		cmp	word_35FFA, 7
 		jge	short loc_2F01B
-		cmp	word_3A6C8, 10h
+		cmp	_boss_hp, 16
 		jge	loc_2FC40
 
 loc_2F01B:
@@ -41126,7 +41126,7 @@ loc_2F0F7:
 		lea	ax, [bp+var_C]
 		push	ax
 		push	ds
-		push	offset word_3A6C8
+		push	offset _boss_hp
 		push	ds
 		push	offset word_3B529
 		push	ds
@@ -41256,7 +41256,7 @@ loc_2F22D:
 		lea	ax, [bp+var_C]
 		push	ax
 		push	ds
-		push	offset word_3A6C8
+		push	offset _boss_hp
 		push	ds
 		push	offset word_3B529
 		push	ds
@@ -41267,7 +41267,7 @@ loc_2F22D:
 		jnz	loc_2FC40
 		cmp	word_35FFA, 9
 		jge	short loc_2F26B
-		cmp	word_3A6C8, 0Dh
+		cmp	_boss_hp, 13
 		jge	loc_2FC40
 
 loc_2F26B:
@@ -41368,7 +41368,7 @@ loc_2F347:
 		lea	ax, [bp+var_C]
 		push	ax
 		push	ds
-		push	offset word_3A6C8
+		push	offset _boss_hp
 		push	ds
 		push	offset word_3B529
 		push	ds
@@ -41491,7 +41491,7 @@ loc_2F470:
 		lea	ax, [bp+var_C]
 		push	ax
 		push	ds
-		push	offset word_3A6C8
+		push	offset _boss_hp
 		push	ds
 		push	offset word_3B529
 		push	ds
@@ -41502,7 +41502,7 @@ loc_2F470:
 		jnz	loc_2FC40
 		cmp	word_35FFA, 6
 		jge	short loc_2F4AE
-		cmp	word_3A6C8, 0Ah
+		cmp	_boss_hp, 10
 		jge	loc_2FC40
 
 loc_2F4AE:
@@ -41609,7 +41609,7 @@ loc_2F5A2:
 		lea	ax, [bp+var_C]
 		push	ax
 		push	ds
-		push	offset word_3A6C8
+		push	offset _boss_hp
 		push	ds
 		push	offset word_3B529
 		push	ds
@@ -41804,14 +41804,14 @@ loc_2F766:
 		lea	ax, [bp+var_C]
 		push	ax
 		push	ds
-		push	offset word_3A6C8
+		push	offset _boss_hp
 		push	ds
 		push	offset word_3B529
 		push	ds
 		push	offset word_3B52B
 		call	sub_21A8A
 		add	sp, 22h
-		cmp	word_3A6C8, 0
+		cmp	_boss_hp, 0
 		jg	loc_2FC40
 		push	ds
 		push	offset asc_360A1 ; "\x1B*"
@@ -43283,10 +43283,10 @@ word_3A1EB	dw ?
 		db 400 dup (?)
 byte_3A37D	db ?
 _route	db ?
-public _singyoku_phase_frame
+public _singyoku_phase_frame, _singyoku_hp
 _singyoku_phase_frame	dw ?
 word_3A381	dw ?
-word_3A383	dw ?
+_singyoku_hp	dw ?
 speed_3A385	dw ?
 angle_3A387	db ?
 byte_3A388	db ?
@@ -43309,8 +43309,8 @@ word_3A6C4	dw ?
 public _kikuri_initial_hp_rendered
 _kikuri_initial_hp_rendered	db ?
 		db ?
-word_3A6C8	dw ?
-public _boss_phase_frame
+public _boss_hp, _boss_phase_frame
+_boss_hp	dw ?
 _boss_phase_frame	dw ?
 word_3A6CC	dw ?
 byte_3A6CE	db ?
