@@ -100,7 +100,7 @@ typedef struct {
 	int unused_1;
 	char unused_2;
 	unsigned char op_main_retval;
-	unsigned char perf;
+	bool perf;
 	char unused_3;
 	char shottype;
 	char demo_num;

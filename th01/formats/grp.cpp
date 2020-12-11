@@ -17,7 +17,7 @@ extern "C" {
 extern int8_t* grp_buf;
 extern int flag_palette_show; // = true
 extern int flag_grp_put; // = true
-extern unsigned char flag_grp_colorkey; // = false
+extern bool flag_grp_colorkey; // = false
 
 int grp_palette_load_show_sane(const char *fn)
 {

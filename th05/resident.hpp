@@ -13,7 +13,7 @@ typedef struct {
 	unsigned char stage;
 	unsigned char playchar;
 	unsigned char se_mode;
-	unsigned char turbo_mode;
+	bool turbo_mode;
 	bool debug;
 	unsigned char debug_stage;
 	unsigned char debug_power;

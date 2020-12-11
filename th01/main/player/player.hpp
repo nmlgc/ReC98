@@ -24,8 +24,8 @@ inline screen_y_t player_anim_forward_top(void) {
 void player_move_and_clamp(int delta);
 void invincibility_sprites_update_and_render(bool16 invincible);
 
-extern unsigned char player_deflecting;
-extern unsigned char player_sliding;
+extern bool player_deflecting;
+extern bool player_sliding;
 extern bool16 player_invincible;
 
 extern int lives;

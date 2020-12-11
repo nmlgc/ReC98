@@ -8904,7 +8904,7 @@ include th02/formats/pi_load.asm
 	extern @MRS_LOAD$QINXC:proc
 	extern @MRS_FREE$QI:proc
 	extern @MRS_PUT_8$QIUII:proc
-	extern @MRS_PUT_NOALPHA_8$QIUIIC:proc
+	extern @MRS_PUT_NOALPHA_8$QIUIIUC:proc
 	extern @MRS_HFLIP$QI:proc
 	SPRITE16_SPRITES_COMMIT procdesc pascal far
 	SPRITE16_PUT procdesc pascal far \
@@ -18944,7 +18944,7 @@ loc_14967:
 		mov	al, _pid_current
 		mov	ah, 0
 		push	ax	; altered_colors
-		call	@mrs_put_noalpha_8$qiuiic
+		call	@mrs_put_noalpha_8$qiuiiuc
 		mov	al, [bp+@@frame]
 		mov	ah, 0
 		mov	bx, 8
@@ -20079,7 +20079,7 @@ loc_152D7:
 		mov	al, _pid_current
 		mov	ah, 0
 		push	ax	; altered_colors
-		call	@mrs_put_noalpha_8$qiuiic
+		call	@mrs_put_noalpha_8$qiuiiuc
 		jmp	short loc_15323
 ; ---------------------------------------------------------------------------
 
@@ -21159,7 +21159,7 @@ loc_15C32:
 		mov	al, _pid_current
 		mov	ah, 0
 		push	ax	; altered_colors
-		call	@mrs_put_noalpha_8$qiuiic
+		call	@mrs_put_noalpha_8$qiuiiuc
 		jmp	short loc_15CB0
 ; ---------------------------------------------------------------------------
 
@@ -23892,7 +23892,7 @@ loc_172FF:
 		mov	al, _pid_current
 		mov	ah, 0
 		push	ax	; altered_colors
-		call	@mrs_put_noalpha_8$qiuiic
+		call	@mrs_put_noalpha_8$qiuiiuc
 		jmp	short loc_1737D
 ; ---------------------------------------------------------------------------
 
@@ -26162,7 +26162,7 @@ loc_18526:
 		mov	al, _pid_current
 		mov	ah, 0
 		push	ax	; altered_colors
-		call	@mrs_put_noalpha_8$qiuiic
+		call	@mrs_put_noalpha_8$qiuiiuc
 		jmp	short loc_185A3
 ; ---------------------------------------------------------------------------
 
@@ -26551,7 +26551,7 @@ loc_188B2:
 		mov	al, _pid_current
 		mov	ah, 0
 		push	ax	; altered_colors
-		call	@mrs_put_noalpha_8$qiuiic
+		call	@mrs_put_noalpha_8$qiuiiuc
 		mov	al, [bp+@@frame]
 		mov	ah, 0
 		mov	bx, 4
@@ -26797,7 +26797,7 @@ loc_18B3D:
 		mov	al, _pid_current
 		mov	ah, 0
 		push	ax	; altered_colors
-		call	@mrs_put_noalpha_8$qiuiic
+		call	@mrs_put_noalpha_8$qiuiiuc
 		call	egc_on
 		jmp	short @@ret
 ; ---------------------------------------------------------------------------
@@ -27017,7 +27017,7 @@ loc_18D42:
 		mov	al, _pid_current
 		mov	ah, 0
 		push	ax	; altered_colors
-		call	@mrs_put_noalpha_8$qiuiic
+		call	@mrs_put_noalpha_8$qiuiiuc
 		jmp	short loc_18DBF
 ; ---------------------------------------------------------------------------
 
@@ -27154,7 +27154,7 @@ loc_18E7C:
 		mov	al, _pid_current
 		mov	ah, 0
 		push	ax	; altered_colors
-		call	@mrs_put_noalpha_8$qiuiic
+		call	@mrs_put_noalpha_8$qiuiiuc
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
 		mov	ax, 900h
 		sub	ax, word_220EC

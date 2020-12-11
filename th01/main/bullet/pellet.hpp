@@ -129,7 +129,7 @@ protected:
 	}
 
 public:
-	unsigned char moving;
+	bool moving;
 	unsigned char motion_type;
 
 	// Automatically calculated every frame for PM_SPIN

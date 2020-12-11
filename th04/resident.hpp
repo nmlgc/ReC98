@@ -51,7 +51,7 @@ typedef struct {
 	unsigned long slow_frames;
 	unsigned long frames;	// (including bosses, see th04/frames.h)
 	bool zunsoft_shown;
-	unsigned char turbo_mode;
+	bool turbo_mode;
 	int8_t unused_5[182];
 } resident_t;
 

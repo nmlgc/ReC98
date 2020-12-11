@@ -11,7 +11,7 @@ struct CShots {
 	int unknown[SHOT_COUNT];
 
 	// A shot slot can be considered "alive" if either of these are nonzero.
-	unsigned char moving[SHOT_COUNT];
+	bool moving[SHOT_COUNT];
 	unsigned char decay_frame[SHOT_COUNT];
 
 	void add(screen_x_t new_left, screen_y_t new_top);

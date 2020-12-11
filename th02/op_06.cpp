@@ -64,13 +64,13 @@ char angle[MUSIC_POLYGONS];
 char rot_speed[MUSIC_POLYGONS];
 
 unsigned char music_sel;
-unsigned char music_page;
+page_t music_page;
 dots8_t *screen_back_B;
 dots8_t *cmt_back[PL_COUNT];
 
 void pascal near draw_track(unsigned char sel, unsigned char color)
 {
-	unsigned char other_page = 1 - music_page;
+	page_t other_page = (1 - music_page);
 	graph_accesspage(other_page);
 	graph_putsa_fx(
 		16, ((sel + 6) * GLYPH_H), (color | FX_WEIGHT_BOLD), MUSIC_TITLES[sel]
@@ -320,7 +320,7 @@ controls:
 		}
 		if(key_det & INPUT_SHOT || key_det & INPUT_OK) {
 			if(music_sel != SEL_QUIT) {
-				char midi_active = snd_midi_active;
+				bool midi_active = snd_midi_active;
 
 				snd_midi_active = snd_midi_possible;
 				snd_load(MUSIC_FILES[music_sel], SND_LOAD_SONG);

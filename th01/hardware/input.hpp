@@ -1,5 +1,5 @@
 /// Shared input macros
-extern unsigned char input_shot;
+extern bool input_shot;
 extern bool input_ok;
 
 #define input_func_bool(var) { var = true; } else { var = false; }
@@ -11,13 +11,13 @@ extern bool input_ok;
 #define INPUT_RIGHT 0x01
 #define INPUT_LEFT 0x02
 
-extern unsigned char input_up;
-extern unsigned char input_down;
-extern unsigned char input_lr;
-extern unsigned char input_strike;
+extern bool input_up;
+extern bool input_down;
+extern bool input_lr;
+extern bool input_strike;
 extern bool input_mem_enter;
 extern bool input_mem_leave;
-extern unsigned char paused;
+extern bool paused;
 extern bool done;
 extern bool input_bomb;
 

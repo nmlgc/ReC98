@@ -1,7 +1,7 @@
 #include "defconv.h"
 
 extern char snd_interrupt_if_midi;
-extern char snd_midi_possible;
+extern bool snd_midi_possible;
 #if GAME <= 3
 	typedef enum {
 		SND_BGM_OFF,
@@ -9,9 +9,9 @@ extern char snd_midi_possible;
 		SND_BGM_MIDI
 	} snd_bgm_mode_t;
 
-	extern char snd_active;
-	extern unsigned char snd_midi_active;
-	extern char snd_fm_possible;
+	extern bool snd_active;
+	extern bool snd_midi_active;
+	extern bool snd_fm_possible;
 #endif
 
 int snd_pmd_resident(void);

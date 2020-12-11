@@ -59,7 +59,7 @@ static const pixel_t SCORE_AND_CARDCOMBO_W = (CARDCOMBO_RIGHT - SCORE_LEFT);
 /// -------
 // Forces re-rendering of all full-width numbers on the HUD, even if they
 // haven't changed since the last render call.
-extern unsigned char fwnum_force_rerender;
+extern bool fwnum_force_rerender;
 
 // extern uint8_t *hud_bg;
 extern uint8_t hud_bg_rle_run_byte;
@@ -87,7 +87,7 @@ inline screen_x_t col_left(screen_x_t first_left, int col) {
 
 #define digit_changed(var, var_prev, divisor) \
 	((var_prev / divisor) % 10) != ((var / divisor) % 10) || \
-	(fwnum_force_rerender == 1)
+	(fwnum_force_rerender == true)
 
 // Copies the (⌊[w]/16⌋*16)×[ROW_H] pixels starting at (⌊left/8⌋*8, top) from
 // VRAM page 0 to VRAM page 1.
