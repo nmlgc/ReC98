@@ -3722,7 +3722,7 @@ loc_DCFA:
 		jnz	short loc_DD20
 		cmp	_input_ok, 0
 		jz	short loc_DD0E
-		mov	word_34A72, 1
+		mov	_test_damage, 1
 
 loc_DD0E:
 		cmp	_input_down, 0
@@ -3841,7 +3841,7 @@ loc_DE72:
 		les	bx, _resident
 		mov	eax, _rand
 		mov	es:[bx+reiidenconfig_t.rand], eax
-		mov	word_34A72, 0
+		mov	_test_damage, 0
 		mov	dword_34A62, 0C8h ; 'È'
 		cmp	_lives, 0
 		jle	short loc_DEDA
@@ -17986,7 +17986,7 @@ loc_1FE40:
 		jz	short loc_1FEAB
 
 loc_1FE59:
-		cmp	word_34A72, 1
+		cmp	_test_damage, 1
 		jnz	short loc_1FE6A
 		les	bx, _cards_flag
 		cmp	byte ptr es:[bx+si], PANEL_ALIVE
@@ -19688,11 +19688,11 @@ arg_18		= byte ptr  1Eh
 		push	bp
 		mov	bp, sp
 		push	si
-		cmp	word_34A72, 1
+		cmp	_test_damage, 1
 		jnz	short loc_21AAE
 		les	bx, [bp+@@hp]
 		dec	word ptr es:[bx]
-		mov	word_34A72, 0
+		mov	_test_damage, 0
 		call	@hud_hp_render$qii c, word ptr es:[bx], HUD_HP_FUNC_DECREMENT
 
 loc_21AAE:
@@ -42298,7 +42298,8 @@ _mode_test	dw 0
 public _bomb_doubletap_frames
 _bomb_doubletap_frames	dw 0
 word_34A70	dw 0
-word_34A72	dw 0
+public _test_damage
+_test_damage	dw 0
 word_34A74	dw 0
 		dw 0
 public _player_invincible
