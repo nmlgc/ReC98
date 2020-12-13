@@ -10833,7 +10833,7 @@ loc_1B3D8:
 		mov	eye_2.BE_hitbox_orb_inactive, 1
 		mov	eye_3.BE_hitbox_orb_inactive, 1
 		mov	eye_4.BE_hitbox_orb_inactive, 1
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	byte_3A6CE, 0
 		mov	word_3A6C8, 10h
 		mov	word_3A1E5, 0Ch
@@ -10903,9 +10903,9 @@ _yuugenmagan_free	endp
 sub_1B58F	proc far
 		push	bp
 		mov	bp, sp
-		cmp	word_3A6CA, 0A0h ; '?'
+		cmp	_boss_phase_frame, 160
 		jle	loc_1B6CB
-		cmp	word_3A6CA, 12Ch
+		cmp	_boss_phase_frame, 300
 		jge	short loc_1B60E
 		push	(7 shl 16) or 398
 		mov	ax, eye_west.BE_cur_top
@@ -10947,9 +10947,9 @@ loc_1B609:
 		mov	_done, 1
 
 loc_1B60E:
-		cmp	word_3A6CA, 0B4h ; '?'
+		cmp	_boss_phase_frame, 180
 		jle	loc_1B6CB
-		cmp	word_3A6CA, 140h
+		cmp	_boss_phase_frame, 320
 		jge	short loc_1B68A
 		push	(7 shl 16) or 398
 		mov	ax, eye_southwest.BE_cur_top
@@ -10991,7 +10991,7 @@ loc_1B685:
 		mov	_done, 1
 
 loc_1B68A:
-		cmp	word_3A6CA, 0C8h ; '?'
+		cmp	_boss_phase_frame, 200
 		jle	short loc_1B6CB
 		push	(7 shl 16) or 398
 		mov	ax, eye_north.BE_cur_top
@@ -11030,7 +11030,7 @@ sub_1B58F	endp
 sub_1B6D9	proc far
 		push	bp
 		mov	bp, sp
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		cwd
 		idiv	word_39DE4
 		cmp	dx, 10
@@ -11051,7 +11051,7 @@ sub_1B6D9	proc far
 ; ---------------------------------------------------------------------------
 
 loc_1B70E:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		cwd
 		idiv	word_39DE4
 		cmp	dx, 25
@@ -11072,7 +11072,7 @@ loc_1B70E:
 ; ---------------------------------------------------------------------------
 
 loc_1B740:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		cwd
 		idiv	word_39DE4
 		cmp	dx, 40
@@ -11093,7 +11093,7 @@ loc_1B740:
 ; ---------------------------------------------------------------------------
 
 loc_1B771:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		cwd
 		idiv	word_39DE4
 		cmp	dx, 60
@@ -11114,7 +11114,7 @@ loc_1B771:
 ; ---------------------------------------------------------------------------
 
 loc_1B7A2:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		cwd
 		idiv	word_39DE4
 		cmp	dx, 80
@@ -11138,7 +11138,7 @@ loc_1B7D1:
 ; ---------------------------------------------------------------------------
 
 loc_1B7D5:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		cwd
 		idiv	word_39DE4
 		cmp	dx, 110
@@ -11372,14 +11372,14 @@ var_2		= word ptr -2
 		jnz	loc_1BEC0
 		cmp	byte ptr word_39E14+1, 0
 		jnz	short loc_1BA6C
-		push	word_3A6CA
+		push	_boss_phase_frame
 		push	word_3A6C8
 		call	sub_2191C
 		add	sp, 4
 		mov	byte ptr word_39E14+1, al
 
 loc_1BA6C:
-		inc	word_3A6CA
+		inc	_boss_phase_frame
 		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_0, ds, large 0 or (0 shl 16), large 0 or (3 shl 16)
 		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_1, ds, large 0 or (0 shl 16), large 0 or (3 shl 16)
 		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_2, ds, large 0 or (0 shl 16), large 0 or (3 shl 16)
@@ -11387,7 +11387,7 @@ loc_1BA6C:
 		add	sp, 30h
 		call	@CBossEntity@move_lock_unput_and_put_8$qiiii       c, offset eye_4, ds, large 0 or (0 shl 16), large 0 or (3 shl 16)
 		call	sub_1B58F
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 40
 		cwd
 		idiv	bx
@@ -11400,7 +11400,7 @@ loc_1BA6C:
 		call	_z_palette_set_all_show c, offset _stage_palette, ds
 
 loc_1BAFD:
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jnz	short loc_1BB1F
 		mov	eye_west.BE_bos_image, 1
 		mov	eye_east.BE_bos_image, 1
@@ -11410,7 +11410,7 @@ loc_1BAFD:
 ; ---------------------------------------------------------------------------
 
 loc_1BB1F:
-		cmp	word_3A6CA, 78h	; 'x'
+		cmp	_boss_phase_frame, 120
 		jnz	short loc_1BB4D
 		mov	eye_west.BE_bos_image, 2
 		mov	eye_east.BE_bos_image, 2
@@ -11422,7 +11422,7 @@ loc_1BB1F:
 ; ---------------------------------------------------------------------------
 
 loc_1BB4D:
-		cmp	word_3A6CA, 8Ch
+		cmp	_boss_phase_frame, 140
 		jnz	short loc_1BB7C
 		mov	eye_west.BE_bos_image, 6
 		mov	eye_east.BE_bos_image, 6
@@ -11434,7 +11434,7 @@ loc_1BB4D:
 ; ---------------------------------------------------------------------------
 
 loc_1BB7C:
-		cmp	word_3A6CA, 0A0h ; '?'
+		cmp	_boss_phase_frame, 160
 		jnz	short loc_1BBA5
 		mov	eye_west.BE_bos_image, 3
 		mov	eye_east.BE_bos_image, 3
@@ -11445,7 +11445,7 @@ loc_1BB7C:
 ; ---------------------------------------------------------------------------
 
 loc_1BBA5:
-		cmp	word_3A6CA, 0B4h ; '?'
+		cmp	_boss_phase_frame, 180
 		jnz	short loc_1BBC2
 		mov	eye_southwest.BE_bos_image, 3
 		mov	eye_southeast.BE_bos_image, 3
@@ -11454,14 +11454,14 @@ loc_1BBA5:
 ; ---------------------------------------------------------------------------
 
 loc_1BBC2:
-		cmp	word_3A6CA, 0C8h ; '?'
+		cmp	_boss_phase_frame, 200
 		jnz	short loc_1BBD3
 		mov	eye_north.BE_bos_image, 3
 		jmp	loc_1DFFC
 ; ---------------------------------------------------------------------------
 
 loc_1BBD3:
-		cmp	word_3A6CA, 0F0h
+		cmp	_boss_phase_frame, 240
 		jnz	loc_1BC8C
 		mov	eye_0.BE_bos_image, 2
 		mov	eye_1.BE_bos_image, 2
@@ -11516,7 +11516,7 @@ loc_1BBD3:
 ; ---------------------------------------------------------------------------
 
 loc_1BC8C:
-		cmp	word_3A6CA, 104h
+		cmp	_boss_phase_frame, 260
 		jnz	loc_1BD59
 		mov	eye_west.BE_bos_image, 1
 		mov	eye_east.BE_bos_image, 1
@@ -11585,7 +11585,7 @@ loc_1BD19:
 ; ---------------------------------------------------------------------------
 
 loc_1BD59:
-		cmp	word_3A6CA, 118h
+		cmp	_boss_phase_frame, 280
 		jnz	short loc_1BD82
 		mov	eye_west.BE_bos_image, 0
 		mov	eye_east.BE_bos_image, 0
@@ -11596,7 +11596,7 @@ loc_1BD59:
 ; ---------------------------------------------------------------------------
 
 loc_1BD82:
-		cmp	word_3A6CA, 12Ch
+		cmp	_boss_phase_frame, 300
 		jnz	short loc_1BDCD
 		mov	eye_west.BE_bos_image, 1
 		mov	eye_east.BE_bos_image, 1
@@ -11624,7 +11624,7 @@ loc_1BD82:
 ; ---------------------------------------------------------------------------
 
 loc_1BDCD:
-		cmp	word_3A6CA, 140h
+		cmp	_boss_phase_frame, 320
 		jnz	short loc_1BE24
 		mov	eye_west.BE_bos_image, 2
 		mov	eye_east.BE_bos_image, 2
@@ -11654,11 +11654,11 @@ loc_1BDCD:
 ; ---------------------------------------------------------------------------
 
 loc_1BE24:
-		cmp	word_3A6CA, 14Ah
+		cmp	_boss_phase_frame, 330
 		jle	loc_1DFFC
 		mov	byte_3A6CE, 1
 		mov	word_35B54, 0
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		call	_z_palette_set_all_show c, offset _stage_palette, ds
 		call	@boss_palette_snap$qv
 		mov	byte ptr word_39E14+1, 0
@@ -11724,7 +11724,7 @@ loc_1BEC0:
 		cbw
 		cmp	ax, 1
 		jnz	loc_1C02D
-		inc	word_3A6CA
+		inc	_boss_phase_frame
 		inc	word_39E04
 		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_west, ds, large 0, large 0 or (3 shl 16)
 		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_east, ds, large 0, large 0 or (3 shl 16)
@@ -11841,7 +11841,7 @@ loc_1BFEF:
 		add	sp, 22h
 		cmp	word_3A6C8, 0Fh
 		jle	short loc_1C025
-		cmp	word_3A6CA, 44Ch
+		cmp	_boss_phase_frame, 1100
 		jle	loc_1DFFC
 
 loc_1C025:
@@ -11855,18 +11855,18 @@ loc_1C02D:
 		cmp	ax, 2
 		jnz	loc_1C0CA
 		push	ds
-		push	offset word_3A6CA
+		push	offset _boss_phase_frame
 		push	20000h
 		push	0Ch
 		push	3
 		nopcall	sub_1DFFF
 		add	sp, 0Ch
-		cmp	word_3A6CA, 46h	; 'F'
+		cmp	_boss_phase_frame, 70
 		jl	loc_1DFFC
 		mov	byte_3A6CE, 3
 		mov	word_39E08, 0
 		mov	byte ptr word_39E14, 0
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	word_39E04, 0
 		mov	x_39E06, 0
 		call	_z_palette_set_all_show c, offset _stage_palette, ds
@@ -11914,7 +11914,7 @@ loc_1C0CA:
 		cbw
 		cmp	ax, 3
 		jnz	loc_1C3EB
-		inc	word_3A6CA
+		inc	_boss_phase_frame
 		inc	word_39E04
 		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_southwest, ds, large 0, large 0 or (3 shl 16)
 		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_southeast, ds, large 0, large 0 or (3 shl 16)
@@ -11967,7 +11967,7 @@ loc_1C16A:
 		mov	eye_southeast.BE_bos_image, 3
 
 loc_1C170:
-		cmp	word_3A6CA, 5Ah	; 'Z'
+		cmp	_boss_phase_frame, 90
 		jl	short loc_1C191
 		cmp	word_39E08, 0
 		jz	short loc_1C185
@@ -11979,7 +11979,7 @@ loc_1C185:
 		mov	eye_southeast.BE_bos_image, 1
 
 loc_1C191:
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jz	short loc_1C1AF
 		cmp	word_39E08, 1
 		jz	short loc_1C1AF
@@ -12029,7 +12029,7 @@ loc_1C1AF:
 		mov	angle_39E17, al
 
 loc_1C21E:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -12040,7 +12040,7 @@ loc_1C21E:
 		call	sub_1B824
 
 loc_1C236:
-		cmp	word_3A6CA, 0C8h ; '?'
+		cmp	_boss_phase_frame, 200
 		jnz	short loc_1C248
 		inc	word_39E08
 		mov	x_39E06, 0
@@ -12054,7 +12054,7 @@ loc_1C248:
 		jnz	short loc_1C2A2
 
 loc_1C25D:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -12086,7 +12086,7 @@ loc_1C2A2:
 		jnz	short loc_1C327
 
 loc_1C2B7:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -12129,7 +12129,7 @@ loc_1C2FF:
 		jle	short loc_1C327
 		mov	word_39E08, 0
 		mov	x_39E06, 0
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		inc	byte ptr word_39E14
 
 loc_1C327:
@@ -12212,18 +12212,18 @@ loc_1C3EB:
 		cmp	ax, 4
 		jnz	loc_1C493
 		push	ds
-		push	offset word_3A6CA
+		push	offset _boss_phase_frame
 		pushd	1
 		push	3
 		push	0Ch
 		nopcall	sub_1DFFF
 		add	sp, 0Ch
-		cmp	word_3A6CA, 46h	; 'F'
+		cmp	_boss_phase_frame, 70
 		jl	loc_1DFFC
 		mov	byte_3A6CE, 5
 		mov	word_39E08, 0
 		mov	byte ptr word_39E14, 0
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	word_39E04, 0
 		mov	x_39E06, 0
 		call	_z_palette_set_all_show c, offset _stage_palette, ds
@@ -12278,7 +12278,7 @@ loc_1C493:
 		cbw
 		cmp	ax, 5
 		jnz	loc_1C741
-		inc	word_3A6CA
+		inc	_boss_phase_frame
 		inc	word_39E04
 		inc	x_39E06
 		dec	angle_39E16
@@ -12333,7 +12333,7 @@ loc_1C53B:
 		mov	eye_east.BE_bos_image, 3
 
 loc_1C541:
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jnz	short loc_1C55B
 		cmp	word_39E08, 0
 		jnz	short loc_1C55B
@@ -12386,12 +12386,12 @@ loc_1C5BA:
 		cmp	ax, 36
 		jl	short loc_1C5D4
 		mov	word_39E08, 2
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 
 loc_1C5D4:
 		cmp	word_39E08, 2
 		jnz	short loc_1C5F3
-		cmp	word_3A6CA, 32h	; '2'
+		cmp	_boss_phase_frame, 50
 		jle	short loc_1C5F3
 		mov	x_39E06, -15
 		mov	word_39E08, 3
@@ -12443,7 +12443,7 @@ loc_1C65A:
 		cmp	ax, 20
 		jl	short loc_1C67D
 		mov	word_39E08, 0
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		inc	byte ptr word_39E14
 		mov	angle_39E16, 0
 
@@ -12527,18 +12527,18 @@ loc_1C741:
 		cmp	ax, 6
 		jnz	loc_1C7E4
 		push	ds
-		push	offset word_3A6CA
+		push	offset _boss_phase_frame
 		push	30000h
 		push	0Ch
 		push	3
 		nopcall	sub_1DFFF
 		add	sp, 0Ch
-		cmp	word_3A6CA, 46h	; 'F'
+		cmp	_boss_phase_frame, 70
 		jl	loc_1DFFC
 		mov	byte_3A6CE, 7
 		mov	word_39E08, 0
 		mov	byte ptr word_39E14, 0
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	word_39E04, 0
 		mov	x_39E06, 0
 		mov	word_39E12, 0
@@ -12587,7 +12587,7 @@ loc_1C7E4:
 		cbw
 		cmp	ax, 7
 		jnz	loc_1CB08
-		inc	word_3A6CA
+		inc	_boss_phase_frame
 		inc	word_39E04
 		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_southwest, ds, large 0, large 0 or (3 shl 16)
 		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_southeast, ds, large 0, large 0 or (3 shl 16)
@@ -12640,7 +12640,7 @@ loc_1C884:
 		mov	eye_southeast.BE_bos_image, 3
 
 loc_1C88A:
-		cmp	word_3A6CA, 5Ah	; 'Z'
+		cmp	_boss_phase_frame, 90
 		jl	short loc_1C8AB
 		cmp	word_39E08, 0
 		jz	short loc_1C89F
@@ -12652,7 +12652,7 @@ loc_1C89F:
 		mov	eye_southeast.BE_bos_image, 1
 
 loc_1C8AB:
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jz	short loc_1C8C2
 		cmp	word_39E08, 1
 		jz	short loc_1C8C2
@@ -12700,7 +12700,7 @@ loc_1C8C2:
 		mov	angle_39E17, al
 
 loc_1C931:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -12711,7 +12711,7 @@ loc_1C931:
 		call	sub_1B824
 
 loc_1C949:
-		cmp	word_3A6CA, 0C8h ; '?'
+		cmp	_boss_phase_frame, 200
 		jnz	short loc_1C95B
 		inc	word_39E08
 		mov	x_39E06, 0
@@ -12723,7 +12723,7 @@ loc_1C95B:
 		jnz	short loc_1C9C3
 
 loc_1C969:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -12766,7 +12766,7 @@ loc_1C9C3:
 		jnz	short loc_1CA38
 
 loc_1C9D1:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -12803,7 +12803,7 @@ loc_1CA10:
 		jle	short loc_1CA38
 		mov	word_39E08, 0
 		mov	x_39E06, 0
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		inc	byte ptr word_39E14
 
 loc_1CA38:
@@ -12879,7 +12879,7 @@ loc_1CAF4:
 		mov	byte_3A6CE, 8
 
 loc_1CAF9:
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	word_39E04, 0
 		jmp	loc_1DFFC
 ; ---------------------------------------------------------------------------
@@ -12890,13 +12890,13 @@ loc_1CB08:
 		cmp	ax, 8
 		jnz	short loc_1CB3E
 		push	ds
-		push	offset word_3A6CA
+		push	offset _boss_phase_frame
 		push	10002h
 		push	10h
 		push	0Ch
 		nopcall	sub_1DFFF
 		add	sp, 0Ch
-		cmp	word_3A6CA, 46h	; 'F'
+		cmp	_boss_phase_frame, 70
 		jl	loc_1DFFC
 		mov	byte_3A6CE, 9
 		mov	word_39E08, 0
@@ -12908,10 +12908,10 @@ loc_1CB3E:
 		cbw
 		cmp	ax, 9
 		jnz	loc_1D036
-		inc	word_3A6CA
+		inc	_boss_phase_frame
 		inc	word_39E04
 		call	@CBossEntity@move_lock_unput_and_put_8$qiiii c, offset eye_north, ds, large 0, large 0 or (3 shl 16)
-		cmp	word_3A6CA, 1Eh
+		cmp	_boss_phase_frame, 30
 		jl	short loc_1CB88
 		cmp	word_39E08, 0
 		jz	short loc_1CB82
@@ -12924,7 +12924,7 @@ loc_1CB82:
 		mov	eye_north.BE_bos_image, 1
 
 loc_1CB88:
-		cmp	word_3A6CA, 28h	; '('
+		cmp	_boss_phase_frame, 40
 		jnz	short loc_1CB96
 		cmp	word_39E08, 0
 		jz	short loc_1CB9F
@@ -12940,7 +12940,7 @@ loc_1CB9F:
 		mov	word_39E12, 0
 
 loc_1CBB2:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -12996,7 +12996,7 @@ loc_1CBE8:
 		call	sub_114CA
 		add	sp, 8
 		mov	word_39E08, 2
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	x_39E06, 0
 		mov	al, _rank
 		cbw
@@ -13006,7 +13006,7 @@ loc_1CBE8:
 ; ---------------------------------------------------------------------------
 
 loc_1CC8B:
-		cmp	word_3A6CA, 28h	; '('
+		cmp	_boss_phase_frame, 40
 		jnz	short loc_1CC99
 		cmp	word_39E08, 2
 		jz	short loc_1CCA2
@@ -13023,7 +13023,7 @@ loc_1CCA2:
 		mov	x_39E06, 0
 
 loc_1CCBB:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -13083,7 +13083,7 @@ loc_1CCF1:
 		call	sub_114CA
 		add	sp, 8
 		mov	word_39E08, 4
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	x_39E06, 0
 		mov	al, _rank
 		cbw
@@ -13096,7 +13096,7 @@ loc_1CD9D:
 ; ---------------------------------------------------------------------------
 
 loc_1CDA6:
-		cmp	word_3A6CA, 28h	; '('
+		cmp	_boss_phase_frame, 40
 		jnz	short loc_1CDB4
 		cmp	word_39E08, 4
 		jz	short loc_1CDBD
@@ -13113,7 +13113,7 @@ loc_1CDBD:
 		mov	x_39E06, 0
 
 loc_1CDD6:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -13185,7 +13185,7 @@ loc_1CDD6:
 		call	sub_114CA
 		add	sp, 10h
 		mov	word_39E08, 6
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	x_39E06, 0
 		mov	al, _rank
 		cbw
@@ -13294,7 +13294,7 @@ loc_1CFDC:
 
 loc_1D011:
 		mov	byte_3A6CE, 0Ah
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	word_39E04, 0
 		mov	word_39E08, 1
 		mov	byte ptr word_39E14, 0
@@ -13308,7 +13308,7 @@ loc_1D036:
 		cmp	ax, 0Ah
 		jnz	short loc_1D08C
 		push	ds
-		push	offset word_3A6CA
+		push	offset _boss_phase_frame
 		mov	al, byte ptr word_39E14
 		cbw
 		push	ax
@@ -13317,14 +13317,14 @@ loc_1D036:
 		push	0
 		nopcall	sub_1DFFF
 		add	sp, 0Ch
-		cmp	word_3A6CA, 46h	; 'F'
+		cmp	_boss_phase_frame, 70
 		jl	loc_1DFFC
 		mov	byte_3A6CE, 0Bh
 		mov	word_39E08, 0
 		mov	byte ptr word_39E14, 1Fh
 
 loc_1D071:
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	word_39E04, 0
 		mov	x_39E06, 0
 		mov	word_39E12, 0
@@ -13336,7 +13336,7 @@ loc_1D08C:
 		cbw
 		cmp	ax, 0Bh
 		jnz	loc_1D852
-		inc	word_3A6CA
+		inc	_boss_phase_frame
 		inc	word_39E04
 		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset      eye_west, ds, large 0, large 0 or (3 shl 16)
 		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset      eye_east, ds, large 0, large 0 or (3 shl 16)
@@ -13464,7 +13464,7 @@ loc_1D207:
 		mov	eye_north.BE_bos_image, 3
 
 loc_1D20D:
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jz	short loc_1D21D
 		cmp	word_39E08, 1
 		jnz	loc_1D2F6
@@ -13548,7 +13548,7 @@ loc_1D230:
 		push	ax
 		call	sub_114E3
 		add	sp, 32h
-		cmp	word_3A6CA, 8Ch
+		cmp	_boss_phase_frame, 140
 		jnz	short loc_1D2F6
 		mov	word_39E08, 2
 		mov	x_39E06, 0
@@ -13556,7 +13556,7 @@ loc_1D230:
 loc_1D2F6:
 		cmp	word_39E08, 2
 		jnz	loc_1D63F
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -13973,7 +13973,7 @@ loc_1D76D:
 		mov	byte_3A6CE, 0Ch
 		mov	word_39E08, 0
 		mov	byte ptr word_39E14, 1
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	word_39E04, 0
 		mov	x_39E06, 0
 		mov	ax, y_39DF0
@@ -14066,7 +14066,7 @@ loc_1D852:
 		jnz	short loc_1D8D5
 		inc	word_39E04
 		push	ds
-		push	offset word_3A6CA
+		push	offset _boss_phase_frame
 		pushd	1
 		push	1
 		push	1Eh
@@ -14083,12 +14083,12 @@ loc_1D852:
 		call	sub_1B8DE
 
 loc_1D88A:
-		cmp	word_3A6CA, 46h	; 'F'
+		cmp	_boss_phase_frame, 70
 		jl	loc_1DFFC
 		mov	byte_3A6CE, 0Dh
 		mov	word_39E08, 0
 		mov	byte ptr word_39E14, 1
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	word_39E04, 0
 		mov	x_39E06, 0
 		mov	word_39E12, 0
@@ -14105,7 +14105,7 @@ loc_1D8D5:
 		cbw
 		cmp	ax, 0Dh
 		jnz	loc_1DFFC
-		inc	word_3A6CA
+		inc	_boss_phase_frame
 		inc	word_39E04
 		inc	x_39E06
 		mov	al, byte ptr word_39E14
@@ -14326,7 +14326,7 @@ loc_1DB30:
 loc_1DB36:
 		cmp	word_39E08, 0
 		jnz	short loc_1DBAB
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		cwd
 		idiv	word_39DE4
 		or	dx, dx
@@ -14373,20 +14373,20 @@ loc_1DBA6:
 		jl	short loc_1DB5B
 
 loc_1DBAB:
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jnz	short loc_1DBC5
 		cmp	word_39E10, 0
 		jnz	short loc_1DBC5
 		mov	word_39E10, 1
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 
 loc_1DBC5:
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jnz	short loc_1DBDF
 		cmp	word_39E10, 7
 		jnz	short loc_1DBDF
 		mov	word_39E10, 8
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 
 loc_1DBDF:
 		cmp	word_39E10, 1
@@ -14397,13 +14397,13 @@ loc_1DBDF:
 		jnz	short loc_1DC2A
 
 loc_1DBF4:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1DC18
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 64
 		cwd
 		idiv	bx
@@ -14413,10 +14413,10 @@ loc_1DBF4:
 		call	sub_1B8DE
 
 loc_1DC18:
-		cmp	word_3A6CA, 0C8h ; '?'
+		cmp	_boss_phase_frame, 200
 		jl	short loc_1DC2A
 		inc	word_39E10
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 
 loc_1DC2A:
 		cmp	word_39E10, 2
@@ -14425,13 +14425,13 @@ loc_1DC2A:
 		jnz	short loc_1DC6D
 
 loc_1DC38:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1DC5C
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 64
 		cwd
 		idiv	bx
@@ -14441,7 +14441,7 @@ loc_1DC38:
 		call	sub_1B8DE
 
 loc_1DC5C:
-		cmp	word_3A6CA, 0C8h ; '?'
+		cmp	_boss_phase_frame, 200
 		jl	loc_1DDD4
 		inc	word_39E10
 		jmp	loc_1DDAD
@@ -14450,7 +14450,7 @@ loc_1DC5C:
 loc_1DC6D:
 		cmp	word_39E10, 6
 		jnz	loc_1DD70
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -14461,7 +14461,7 @@ loc_1DC6D:
 		call	_vector2_between c, point_39DFC.x, point_39DFC.y, _player_left, RES_Y, offset x_39E02, ds, offset y_39E00, ds, bx
 
 loc_1DCAB:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 64
 		cwd
 		idiv	bx
@@ -14477,7 +14477,7 @@ loc_1DCAB:
 loc_1DCD0:
 		cmp	point_39DFC.y, 420
 		jl	loc_1DDD4
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	byte_3A6CE, 0Ah
 		mov	word_39E08, 3
 		mov	byte ptr word_39E14, 3
@@ -14496,14 +14496,14 @@ loc_1DCD0:
 loc_1DD70:
 		cmp	word_39E10, 8
 		jnz	short loc_1DDD4
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1DD9F
 		inc	word_39DFA
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 64
 		cwd
 		idiv	bx
@@ -14513,18 +14513,18 @@ loc_1DD70:
 		call	sub_1B8DE
 
 loc_1DD9F:
-		cmp	word_3A6CA, 0C8h ; '?'
+		cmp	_boss_phase_frame, 200
 		jl	short loc_1DDD4
 		mov	word_39E10, 9
 
 loc_1DDAD:
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		call	_vector2_between c, point_39DFC.x, point_39DFC.y, _player_left, RES_Y, offset x_39E02, ds, offset y_39E00, ds, 4
 
 loc_1DDD4:
 		cmp	word_39E10, 9
 		jnz	loc_1DED5
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -14539,7 +14539,7 @@ loc_1DE12:
 		add	point_39DFC.y, ax
 		mov	ax, x_39E02
 		add	point_39DFC.x, ax
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 64
 		cwd
 		idiv	bx
@@ -14552,7 +14552,7 @@ loc_1DE37:
 		cmp	point_39DFC.y, 420
 		jl	loc_1DED5
 		mov	word_39E10, 0
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	byte_3A6CE, 0Ah
 		mov	word_39E08, 3
 		mov	byte ptr word_39E14, 3
@@ -15088,7 +15088,7 @@ var_6		= word ptr -6
 		enter	6, 0
 		cmp	byte_35B7A, 0
 		jz	short locret_1E42F
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -15102,7 +15102,7 @@ var_6		= word ptr -6
 		mov	mima_animated.BE_cur_left, ax
 		mov	ax, [bp+@@top]
 		mov	mima_animated.BE_cur_top, ax
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		cwd
 		idiv	bx
 		mov	bx, 4
@@ -15413,9 +15413,9 @@ arg_2		= word ptr  8
 		push	si
 		push	di
 		mov	di, [bp+arg_2]
-		cmp	word_3A6CA, 0Ah
+		cmp	_boss_phase_frame, 10
 		jl	loc_1E735
-		cmp	word_3A6CA, 0Ah
+		cmp	_boss_phase_frame, 10
 		jnz	short loc_1E691
 		mov	[bp+var_4], di
 		mov	ax, [bp+@@left]
@@ -15433,7 +15433,7 @@ loc_1E691:
 		mov	al, byte_35B7B
 		mov	ah, 0
 		push	ax
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		cwd
 		pop	bx
 		idiv	bx
@@ -15447,15 +15447,15 @@ loc_1E691:
 		cwd
 		pop	bx
 		idiv	bx
-		mov	dx, word_3A6CA
-		add	dx, 0FFF6h
+		mov	dx, _boss_phase_frame
+		add	dx, -10
 		imul	dx
 		mov	dx, 50h	; 'P'
 		sub	dx, ax
 		mov	[bp+var_2], dx
 		cmp	[bp+var_2], 0
 		jge	short loc_1E6D7
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		call	sub_1E4EC
 		jmp	short loc_1E735
 ; ---------------------------------------------------------------------------
@@ -15500,8 +15500,8 @@ loc_1E718:
 		cwd
 		pop	bx
 		idiv	bx
-		mov	dx, word_3A6CA
-		add	dx, 0FFF6h
+		mov	dx, _boss_phase_frame
+		add	dx, -10
 		imul	dx
 		cmp	ax, si
 		jg	short loc_1E6DB
@@ -15522,21 +15522,21 @@ sub_1E739	proc far
 		push	bp
 		mov	bp, sp
 		push	si
-		cmp	word_3A6CA, 0Ah
+		cmp	_boss_phase_frame, 10
 		jl	short loc_1E798
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1E798
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		add	ax, -10
 		add	ax, ax
 		mov	si, ax
 		cmp	si, 80
 		jl	short loc_1E768
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		jmp	short loc_1E798
 ; ---------------------------------------------------------------------------
 
@@ -15579,7 +15579,7 @@ sub_1E79B	proc far
 		call	@CBossEntity@pos_set$qiiiiiii stdcall, offset mima_still, ds, 256, large 64 or (48 shl 16), large 0 or (736 shl 16), large 64 or (304 shl 16)
 		CBossEntity__hitbox_set	mima_still, 32, 32, 96, 128
 		mov	mima_still.BE_hitbox_orb_inactive, 0
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	byte_3A6CE, 0
 		mov	word_3A6C8, 0Ch
 		mov	word_3A1E5, 6
@@ -15754,9 +15754,9 @@ var_12		= word ptr -12h
 		enter	14h, 0
 		push	si
 		push	di
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jl	loc_1EB20
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jnz	short loc_1E947
 		mov	word_39E1A+1, 20h ; ' '
 		mov	byte ptr word_39E1A, 0
@@ -15770,7 +15770,7 @@ var_12		= word ptr -12h
 		add	sp, 0Eh
 
 loc_1E947:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -15803,7 +15803,7 @@ loc_1E947:
 		push	ax
 		call	_graph_r_lineloop_unput
 		add	sp, 0Ah
-		cmp	word_3A6CA, 104h
+		cmp	_boss_phase_frame, 260
 		jge	short loc_1E9A2
 		mov	al, 0Ch
 		jmp	short loc_1E9A4
@@ -15822,7 +15822,7 @@ loc_1E9A4:
 ; ---------------------------------------------------------------------------
 
 loc_1E9BA:
-		cmp	word_3A6CA, 118h
+		cmp	_boss_phase_frame, 280
 		jle	short loc_1EA2D
 		xor	si, si
 		jmp	short loc_1EA26
@@ -15950,7 +15950,7 @@ loc_1EA9F:
 		add	sp, 0Ch
 
 loc_1EAD2:
-		cmp	word_3A6CA, 168h
+		cmp	_boss_phase_frame, 360
 		jle	short loc_1EB20
 		mov	ax, mima_still.BE_cur_left
 		add	ax, 64
@@ -15979,7 +15979,7 @@ loc_1EAD2:
 		push	ax
 		call	_graph_r_lineloop_unput
 		add	sp, 0Ah
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 
 loc_1EB20:
 		pop	di
@@ -16007,9 +16007,9 @@ var_12		= word ptr -12h
 		enter	18h, 0
 		push	si
 		push	di
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jl	loc_1ECEC
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jnz	short loc_1EB64
 		mov	word_39E1D+1, 20h ; ' '
 		mov	byte ptr word_39E1D, 0
@@ -16024,7 +16024,7 @@ var_12		= word ptr -12h
 		pop	cx
 
 loc_1EB64:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -16067,7 +16067,7 @@ loc_1EB64:
 ; ---------------------------------------------------------------------------
 
 loc_1EBC7:
-		cmp	word_3A6CA, 0E0h
+		cmp	_boss_phase_frame, 224
 		jnz	short loc_1EBD8
 		mov	ax, _player_left
 		mov	x_39E20, ax
@@ -16075,7 +16075,7 @@ loc_1EBC7:
 ; ---------------------------------------------------------------------------
 
 loc_1EBD8:
-		cmp	word_3A6CA, 0F0h
+		cmp	_boss_phase_frame, 240
 		jle	loc_1EC70
 		push	speed_39E18
 		push	ss
@@ -16159,7 +16159,7 @@ loc_1EC70:
 		add	sp, 0Ch
 
 loc_1ECA1:
-		cmp	word_3A6CA, 140h
+		cmp	_boss_phase_frame, 320
 		jle	short loc_1ECEC
 		mov	ax, mima_still.BE_cur_left
 		add	ax, 64
@@ -16188,7 +16188,7 @@ loc_1ECA1:
 		push	ax
 		call	_graph_r_lineloop_unput
 		add	sp, 0Ah
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 
 loc_1ECEC:
 		pop	di
@@ -16214,14 +16214,14 @@ var_8		= byte ptr -8
 		enter	24h, 0
 		push	si
 		push	di
-		cmp	word_3A6CA, 32h	; '2'
+		cmp	_boss_phase_frame, 50
 		jnz	short loc_1ED01
 		call	sub_1E431
 
 loc_1ED01:
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jl	loc_1EF81
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jnz	short loc_1ED3A
 		mov	word_39E22+1, 20h ; ' '
 		mov	byte ptr word_39E22, 0
@@ -16235,7 +16235,7 @@ loc_1ED01:
 		add	sp, 0Eh
 
 loc_1ED3A:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -16428,7 +16428,7 @@ loc_1EE95:
 		mov	_Pellets.PELLET_spawn_with_cloud, 0
 
 loc_1EF00:
-		cmp	word_3A6CA, 140h
+		cmp	_boss_phase_frame, 320
 		jle	short loc_1EF81
 		mov	ax, mima_still.BE_cur_left
 		add	ax, 64
@@ -16479,7 +16479,7 @@ loc_1EF00:
 		push	ax
 		call	_graph_r_lineloop_unput
 		add	sp, 14h
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		call	sub_1E48B
 
 loc_1EF81:
@@ -16530,7 +16530,7 @@ loc_1EFB1:
 		add	sp, 8
 		mov	byte_35B7A, 0
 		mov	byte_39E25, 0
-		mov	word_3A6CA, 1
+		mov	_boss_phase_frame, 1
 
 loc_1EFE5:
 		cmp	byte_39E25, 0
@@ -16541,7 +16541,7 @@ loc_1EFE5:
 ; ---------------------------------------------------------------------------
 
 loc_1EFF8:
-		cmp	word_3A6CA, 4
+		cmp	_boss_phase_frame, 4
 		jnz	short loc_1F030
 		cmp	byte_39E26, 0
 		jnz	short loc_1F011
@@ -16568,7 +16568,7 @@ loc_1F020:
 		call	sub_1E526
 
 loc_1F030:
-		cmp	word_3A6CA, 0Ch
+		cmp	_boss_phase_frame, 12
 		jge	short loc_1F03F
 		mov	mima_still.BE_hitbox_orb_inactive, 1
 		jmp	short loc_1F045
@@ -16583,7 +16583,7 @@ loc_1F045:
 		add	sp, 4
 
 loc_1F051:
-		cmp	word_3A6CA, 0
+		cmp	_boss_phase_frame, 0
 		jnz	loc_1F19B
 		cmp	byte_39E25, 0
 		jz	loc_1F0F8
@@ -16660,7 +16660,7 @@ loc_1F0F8:
 		sub	al, byte_39E26
 		mov	byte_39E26, al
 		mov	byte_35B7A, 1
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		jmp	short loc_1F19B
 ; ---------------------------------------------------------------------------
 
@@ -16697,7 +16697,7 @@ loc_1F18C:
 		cmp	si, COLOR_COUNT
 		jl	short loc_1F158
 		inc	byte_39E25
-		mov	word_3A6CA, 1
+		mov	_boss_phase_frame, 1
 
 loc_1F19B:
 		pop	si
@@ -16793,14 +16793,14 @@ sub_1F229	proc far
 		push	bp
 		mov	bp, sp
 		push	si
-		cmp	word_3A6CA, 32h	; '2'
+		cmp	_boss_phase_frame, 50
 		jnz	short loc_1F238
 		call	sub_1E431
 
 loc_1F238:
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jl	loc_1F596
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jnz	loc_1F31E
 		xor	si, si
 		jmp	short loc_1F263
@@ -16883,16 +16883,16 @@ loc_1F31E:
 ; ---------------------------------------------------------------------------
 
 loc_1F322:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 8
 		cwd
 		idiv	bx
 		cmp	dx, si
 		jnz	short loc_1F380
 		mov	ax, si
-		imul	ax, 14h
-		add	ax, 64h	; 'd'
-		cmp	ax, word_3A6CA
+		imul	ax, 20
+		add	ax, 100
+		cmp	ax, _boss_phase_frame
 		jge	short loc_1F380
 		mov	bx, si
 		add	bx, bx
@@ -16925,21 +16925,21 @@ loc_1F380:
 loc_1F381:
 		cmp	si, 8
 		jl	short loc_1F322
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jz	short loc_1F3C4
-		cmp	word_3A6CA, 78h	; 'x'
+		cmp	_boss_phase_frame, 120
 		jz	short loc_1F3C4
-		cmp	word_3A6CA, 8Ch
+		cmp	_boss_phase_frame, 140
 		jz	short loc_1F3C4
-		cmp	word_3A6CA, 0A0h ; '?'
+		cmp	_boss_phase_frame, 160
 		jz	short loc_1F3C4
-		cmp	word_3A6CA, 0B4h ; '?'
+		cmp	_boss_phase_frame, 180
 		jz	short loc_1F3C4
-		cmp	word_3A6CA, 0C8h ; '?'
+		cmp	_boss_phase_frame, 200
 		jz	short loc_1F3C4
-		cmp	word_3A6CA, 0DCh ; '?'
+		cmp	_boss_phase_frame, 220
 		jz	short loc_1F3C4
-		cmp	word_3A6CA, 0F0h
+		cmp	_boss_phase_frame, 240
 		jnz	short loc_1F3CC
 
 loc_1F3C4:
@@ -16948,7 +16948,7 @@ loc_1F3C4:
 		pop	cx
 
 loc_1F3CC:
-		cmp	word_3A6CA, 0F0h
+		cmp	_boss_phase_frame, 240
 		jnz	short loc_1F3D8
 		call	sub_1E48B
 
@@ -16958,16 +16958,16 @@ loc_1F3D8:
 ; ---------------------------------------------------------------------------
 
 loc_1F3DD:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 8
 		cwd
 		idiv	bx
 		cmp	dx, si
 		jnz	loc_1F548
 		mov	ax, si
-		imul	ax, 14h
-		add	ax, 64h	; 'd'
-		cmp	ax, word_3A6CA
+		imul	ax, 20
+		add	ax, 100
+		cmp	ax, _boss_phase_frame
 		jge	loc_1F548
 		mov	bx, si
 		add	bx, bx
@@ -17114,7 +17114,7 @@ loc_1F549:
 		jnz	short loc_1F596
 		cmp	word_39E35, 0FC19h
 		jnz	short loc_1F596
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 
 loc_1F596:
 		pop	si
@@ -17141,9 +17141,9 @@ var_8		= byte ptr -8
 		enter	18h, 0
 		push	si
 		push	di
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jl	loc_1F765
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jnz	short loc_1F5DE
 		mov	word_39E57+1, 20h ; ' '
 		mov	byte ptr word_39E57, 0
@@ -17159,7 +17159,7 @@ var_8		= byte ptr -8
 		pop	cx
 
 loc_1F5DE:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -17202,9 +17202,9 @@ loc_1F5DE:
 ; ---------------------------------------------------------------------------
 
 loc_1F644:
-		cmp	word_3A6CA, 0B4h ; '?'
+		cmp	_boss_phase_frame, 180
 		jle	loc_1F6E4
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 16
 		cwd
 		idiv	bx
@@ -17292,7 +17292,7 @@ loc_1F6E4:
 		add	sp, 0Ch
 
 loc_1F717:
-		cmp	word_3A6CA, 154h
+		cmp	_boss_phase_frame, 340
 		jle	short loc_1F765
 		mov	ax, mima_still.BE_cur_left
 		add	ax, 64
@@ -17321,7 +17321,7 @@ loc_1F717:
 		push	ax
 		call	_graph_r_lineloop_unput
 		add	sp, 0Ah
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 
 loc_1F765:
 		pop	di
@@ -17344,9 +17344,9 @@ var_8		= byte ptr -8
 		enter	12h, 0
 		push	si
 		push	di
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jl	loc_1F905
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jnz	short loc_1F7AD
 		mov	word_39E5C, 20h	; ' '
 		mov	byte ptr word_39E5A+1, 0
@@ -17361,7 +17361,7 @@ var_8		= byte ptr -8
 		add	sp, 0Eh
 
 loc_1F7AD:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -17394,7 +17394,7 @@ loc_1F7AD:
 		push	ax
 		call	_graph_r_lineloop_unput
 		add	sp, 0Ah
-		cmp	word_3A6CA, 10Eh
+		cmp	_boss_phase_frame, 270
 		jle	short loc_1F80B
 		mov	al, byte ptr word_39E5A+1
 		add	al, 0Ch
@@ -17414,9 +17414,9 @@ loc_1F810:
 ; ---------------------------------------------------------------------------
 
 loc_1F821:
-		cmp	word_3A6CA, 0B4h ; '?'
+		cmp	_boss_phase_frame, 180
 		jle	short loc_1F884
-		cmp	word_3A6CA, 10Eh
+		cmp	_boss_phase_frame, 270
 		jle	short loc_1F838
 		mov	al, angle_39E5E
 		add	al, 0Ch
@@ -17485,7 +17485,7 @@ loc_1F884:
 		add	sp, 0Ch
 
 loc_1F8B7:
-		cmp	word_3A6CA, 172h
+		cmp	_boss_phase_frame, 370
 		jle	short loc_1F905
 		mov	ax, mima_still.BE_cur_left
 		add	ax, 64
@@ -17514,7 +17514,7 @@ loc_1F8B7:
 		push	ax
 		call	_graph_r_lineloop_unput
 		add	sp, 0Ah
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 
 loc_1F905:
 		pop	di
@@ -17535,14 +17535,14 @@ sub_1F909	proc far
 		enter	2, 0
 		push	si
 		push	di
-		cmp	word_3A6CA, 32h	; '2'
+		cmp	_boss_phase_frame, 50
 		jnz	short loc_1F91A
 		call	sub_1E431
 
 loc_1F91A:
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jl	loc_1FA77
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jnz	short loc_1F953
 		mov	word_39E60, 20h	; ' '
 		mov	byte_39E5F, 0
@@ -17556,7 +17556,7 @@ loc_1F91A:
 		add	sp, 0Eh
 
 loc_1F953:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -17612,11 +17612,11 @@ loc_1F9AD:
 		add	sp, 0Ch
 
 loc_1F9DA:
-		cmp	word_3A6CA, 0B4h ; '?'
+		cmp	_boss_phase_frame, 180
 		jle	short loc_1FA30
-		cmp	word_3A6CA, 12Ch
+		cmp	_boss_phase_frame, 300
 		jge	short loc_1FA30
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -17643,7 +17643,7 @@ loc_1F9DA:
 		add	sp, 14h
 
 loc_1FA30:
-		cmp	word_3A6CA, 12Ch
+		cmp	_boss_phase_frame, 300
 		jle	short loc_1FA77
 		mov	ax, mima_still.BE_cur_left
 		add	ax, 64
@@ -17668,7 +17668,7 @@ loc_1FA30:
 		push	offset left_39E64
 		call	_graph_r_lineloop_unput
 		add	sp, 0Ah
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 
 loc_1FA77:
 		pop	di
@@ -17702,7 +17702,7 @@ var_2		= word ptr -2
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	mima_still.BE_hitbox_orb_inactive, 0
 		xor	di, di
 		mov	byte_35B7B, 1
@@ -17710,7 +17710,7 @@ var_2		= word ptr -2
 		mov	byte_35B7A, 1
 
 loc_1FACA:
-		inc	word_3A6CA
+		inc	_boss_phase_frame
 		or	di, di
 		jnz	short loc_1FADF
 		push	780100h
@@ -17718,7 +17718,7 @@ loc_1FACA:
 		add	sp, 4
 
 loc_1FADF:
-		cmp	word_3A6CA, 0
+		cmp	_boss_phase_frame, 0
 		jnz	short loc_1FAE7
 		inc	di
 
@@ -17749,14 +17749,14 @@ loc_1FB20:
 		jnz	loc_1FC54
 		cmp	byte_39E7A, 0
 		jnz	short loc_1FB45
-		push	word_3A6CA
+		push	_boss_phase_frame
 		push	word_3A6C8
 		call	sub_2191C
 		add	sp, 4
 		mov	byte_39E7A, al
 
 loc_1FB45:
-		inc	word_3A6CA
+		inc	_boss_phase_frame
 		inc	word_39E74
 		call	sub_1E3D7
 		cmp	word_39E78, 0
@@ -17787,7 +17787,7 @@ loc_1FB78:
 		pop	cx
 
 loc_1FB86:
-		cmp	word_3A6CA, 0
+		cmp	_boss_phase_frame, 0
 		jnz	short loc_1FBAC
 		cmp	word_39E78, 3
 		jnz	short loc_1FB98
@@ -17849,7 +17849,7 @@ loc_1FBAC:
 		mov	mima_still.BE_cur_top, 120
 		call	sub_1E526
 		mov	byte_3A6CE, 2
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	word_39E74, 0
 		mov	word_39E78, 0
 		jmp	loc_1FDCF
@@ -17860,15 +17860,15 @@ loc_1FC54:
 		cbw
 		cmp	ax, 2
 		jnz	short loc_1FC95
-		inc	word_3A6CA
+		inc	_boss_phase_frame
 		inc	word_39E74
 		push	780100h
 		call	sub_1E659
 		add	sp, 4
-		cmp	word_3A6CA, 0
+		cmp	_boss_phase_frame, 0
 		jnz	loc_1FDCF
 		mov	byte_3A6CE, 3
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	word_39E74, 0
 		mov	word_39E78, 0
 		jmp	loc_1FDCF
@@ -17879,7 +17879,7 @@ loc_1FC95:
 		cbw
 		cmp	ax, 3
 		jnz	loc_1FDCF
-		inc	word_3A6CA
+		inc	_boss_phase_frame
 		inc	word_39E74
 		call	sub_1E3D7
 		cmp	word_39E78, 0
@@ -17908,7 +17908,7 @@ loc_1FCD3:
 		call	sub_1F909
 
 loc_1FCDE:
-		cmp	word_3A6CA, 0
+		cmp	_boss_phase_frame, 0
 		jnz	short loc_1FCF7
 		cmp	word_39E78, 3
 		jnz	short loc_1FCF0
@@ -21605,7 +21605,7 @@ arg_0		= word ptr  6
 arg_2		= byte ptr  8
 
 		enter	4, 0
-		mov	ax, word_3A37F
+		mov	ax, _singyoku_phase_frame
 		cwd
 		idiv	[bp+arg_0]
 		or	dx, dx
@@ -21711,10 +21711,10 @@ arg_0		= word ptr  6
 
 		push	bp
 		mov	bp, sp
-		cmp	word_3A37F, 32h	; '2'
+		cmp	_singyoku_phase_frame, 50
 		jge	short loc_22895
 		mov	singyoku_sphere.BE_bos_image, 0
-		mov	ax, word_3A37F
+		mov	ax, _singyoku_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -21726,35 +21726,35 @@ arg_0		= word ptr  6
 ; ---------------------------------------------------------------------------
 
 loc_22895:
-		cmp	word_3A37F, 32h	; '2'
+		cmp	_singyoku_phase_frame, 50
 		jnz	short loc_228A4
 		push	8
 		call	_mdrv2_se_play
 		pop	cx
 
 loc_228A4:
-		cmp	word_3A37F, 64h	; 'd'
+		cmp	_singyoku_phase_frame, 100
 		jge	short loc_2290A
-		mov	ax, word_3A37F
+		mov	ax, _singyoku_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_2290A
 		call	@CBossEntity@unput_and_put_8$xqiii c, offset singyoku_sphere, ds, large [dword ptr singyoku_sphere.BE_cur_left], singyoku_sphere.BE_bos_image
-		cmp	word_3A37F, 32h	; '2'
+		cmp	_singyoku_phase_frame, 50
 		jz	short loc_228FE
-		cmp	word_3A37F, 3Ch	; '<'
+		cmp	_singyoku_phase_frame, 60
 		jz	short loc_228FE
-		cmp	word_3A37F, 44h	; 'D'
+		cmp	_singyoku_phase_frame, 68
 		jz	short loc_228FE
-		cmp	word_3A37F, 4Ah	; 'J'
+		cmp	_singyoku_phase_frame, 74
 		jz	short loc_228FE
-		cmp	word_3A37F, 4Eh	; 'N'
+		cmp	_singyoku_phase_frame, 78
 		jz	short loc_228FE
-		cmp	word_3A37F, 52h	; 'R'
+		cmp	_singyoku_phase_frame, 82
 		jz	short loc_228FE
-		cmp	word_3A37F, 52h	; 'R'
+		cmp	_singyoku_phase_frame, 82
 		jle	short loc_2290A
 
 loc_228FE:
@@ -21873,7 +21873,7 @@ loc_229A7:
 		mov	singyoku_sphere.BE_cur_left, ax
 		mov	ax, [bp+var_2]
 		mov	singyoku_sphere.BE_cur_top, ax
-		mov	ax, word_3A37F
+		mov	ax, _singyoku_phase_frame
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -21899,7 +21899,7 @@ sub_2290C	endp
 sub_229D1	proc far
 		push	bp
 		mov	bp, sp
-		cmp	word_3A37F, 0Ah
+		cmp	_singyoku_phase_frame, 10
 		jnz	short loc_229F4
 		call	IRand
 		mov	bx, 2
@@ -21918,7 +21918,7 @@ loc_229F1:
 		mov	byte_3A388, al
 
 loc_229F4:
-		cmp	word_3A37F, 64h	; 'd'
+		cmp	_singyoku_phase_frame, 100
 		jge	short loc_22A07
 		mov	al, byte_3A388
 		cbw
@@ -21930,7 +21930,7 @@ loc_229F4:
 ; ---------------------------------------------------------------------------
 
 loc_22A07:
-		cmp	word_3A37F, 64h	; 'd'
+		cmp	_singyoku_phase_frame, 100
 		jnz	short loc_22A37
 		push	1E0014h
 		push	0F000Ah
@@ -21953,7 +21953,7 @@ loc_22A34:
 		mov	angle_3A387, al
 
 loc_22A37:
-		cmp	word_3A37F, 0A0h ; '?'
+		cmp	_singyoku_phase_frame, 160
 		jge	short loc_22A9F
 		push	1
 		mov	al, byte_3A388
@@ -21965,7 +21965,7 @@ loc_22A37:
 		cwd
 		idiv	speed_3A385
 		push	ax
-		mov	ax, word_3A37F
+		mov	ax, _singyoku_phase_frame
 		cwd
 		pop	bx
 		idiv	bx
@@ -21998,7 +21998,7 @@ loc_22A37:
 ; ---------------------------------------------------------------------------
 
 loc_22A9F:
-		mov	word_3A37F, 0
+		mov	_singyoku_phase_frame, 0
 
 loc_22AA5:
 		pop	bp
@@ -22013,7 +22013,7 @@ sub_229D1	endp
 sub_22AA7	proc far
 		push	bp
 		mov	bp, sp
-		cmp	word_3A37F, 64h	; 'd'
+		cmp	_singyoku_phase_frame, 100
 		jge	short loc_22ABA
 		push	1
 		call	sub_2285F
@@ -22023,7 +22023,7 @@ sub_22AA7	proc far
 ; ---------------------------------------------------------------------------
 
 loc_22ABA:
-		cmp	word_3A37F, 64h	; 'd'
+		cmp	_singyoku_phase_frame, 100
 		jnz	short loc_22AFE
 		push	60005h
 		push	40004h
@@ -22076,7 +22076,7 @@ loc_22B31:
 ; ---------------------------------------------------------------------------
 
 loc_22B5A:
-		mov	word_3A37F, 0
+		mov	_singyoku_phase_frame, 0
 
 loc_22B60:
 		cmp	_player_invincible, 0
@@ -22114,7 +22114,7 @@ arg_A		= dword	ptr  10h
 		enter	6, 0
 		push	si
 		mov	si, [bp+arg_0]
-		cmp	word_3A37F, 64h	; 'd'
+		cmp	_singyoku_phase_frame, 100
 		jge	short loc_22BA1
 		push	1
 		call	sub_2285F
@@ -22123,13 +22123,13 @@ arg_A		= dword	ptr  10h
 ; ---------------------------------------------------------------------------
 
 loc_22BA1:
-		cmp	word_3A37F, 64h	; 'd'
+		cmp	_singyoku_phase_frame, 100
 		jz	loc_22C9C
-		cmp	word_3A37F, 69h	; 'i'
+		cmp	_singyoku_phase_frame, 105
 		jz	loc_22C7D
-		cmp	word_3A37F, 6Eh	; 'n'
+		cmp	_singyoku_phase_frame, 110
 		jz	loc_22C7D
-		cmp	word_3A37F, 73h	; 's'
+		cmp	_singyoku_phase_frame, 115
 		jnz	short loc_22BD5
 		mov	ax, si
 		imul	ax, 3
@@ -22141,7 +22141,7 @@ loc_22BA1:
 ; ---------------------------------------------------------------------------
 
 loc_22BD5:
-		cmp	word_3A37F, 87h
+		cmp	_singyoku_phase_frame, 135
 		jnz	short loc_22C07
 		mov	ax, si
 		imul	ax, 3
@@ -22157,7 +22157,7 @@ loc_22BD5:
 ; ---------------------------------------------------------------------------
 
 loc_22C07:
-		cmp	word_3A37F, 0A0h ; '?'
+		cmp	_singyoku_phase_frame, 160
 		jnz	short loc_22C3E
 		mov	ax, si
 		imul	ax, 3
@@ -22184,7 +22184,7 @@ loc_22C27:
 ; ---------------------------------------------------------------------------
 
 loc_22C3E:
-		cmp	word_3A37F, 0B9h ; '?'
+		cmp	_singyoku_phase_frame, 185
 		jnz	short loc_22C6D
 		mov	ax, si
 		imul	ax, 3
@@ -22198,9 +22198,9 @@ loc_22C3E:
 ; ---------------------------------------------------------------------------
 
 loc_22C6D:
-		cmp	word_3A37F, 0F0h
+		cmp	_singyoku_phase_frame, 240
 		jz	short loc_22C7D
-		cmp	word_3A37F, 0F5h
+		cmp	_singyoku_phase_frame, 245
 		jnz	short loc_22C94
 
 loc_22C7D:
@@ -22219,7 +22219,7 @@ loc_22C8A:
 ; ---------------------------------------------------------------------------
 
 loc_22C94:
-		cmp	word_3A37F, 0FAh
+		cmp	_singyoku_phase_frame, 250
 		jnz	short loc_22CA0
 
 loc_22C9C:
@@ -22228,17 +22228,17 @@ loc_22C9C:
 ; ---------------------------------------------------------------------------
 
 loc_22CA0:
-		cmp	word_3A37F, 104h
+		cmp	_singyoku_phase_frame, 260
 		jnz	short loc_22CC1
 		call	@CBossEntity@unput_and_put_8$xqiii c, offset singyoku_sphere, ds, large [dword ptr singyoku_sphere.BE_cur_left], 0
-		mov	word_3A37F, 0
+		mov	_singyoku_phase_frame, 0
 
 loc_22CC1:
-		cmp	word_3A37F, 87h
+		cmp	_singyoku_phase_frame, 135
 		jle	short loc_22CF3
-		cmp	word_3A37F, 0F0h
+		cmp	_singyoku_phase_frame, 240
 		jge	short loc_22CF3
-		mov	ax, word_3A37F
+		mov	ax, _singyoku_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -22365,15 +22365,15 @@ sub_22DC8	proc far
 		push	0
 		call	sub_22B88
 		add	sp, 0Eh
-		cmp	word_3A37F, 8Ch
+		cmp	_singyoku_phase_frame, 140
 		jle	short loc_22E07
-		mov	ax, word_3A37F
+		mov	ax, _singyoku_phase_frame
 		mov	bx, 8
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_22E07
-		cmp	word_3A37F, 0DCh ; '?'
+		cmp	_singyoku_phase_frame, 220
 		jg	short loc_22E07
 		call	sub_22CF6
 
@@ -22399,9 +22399,9 @@ sub_22E09	proc far
 		push	0
 		call	sub_22B88
 		add	sp, 0Eh
-		cmp	word_3A37F, 8Ch
+		cmp	_singyoku_phase_frame, 140
 		jle	short loc_22E40
-		mov	ax, word_3A37F
+		mov	ax, _singyoku_phase_frame
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -22592,14 +22592,14 @@ var_2		= byte ptr -2
 		add	sp, 18h
 		xor	si, si
 		mov	di, 12h
-		mov	word_3A37F, 0
+		mov	_singyoku_phase_frame, 0
 		jmp	loc_2302C
 ; ---------------------------------------------------------------------------
 
 loc_22F9D:
 		call	@CBossEntity@move_lock_unput_and_put_8$qiiii c, offset singyoku_sphere, ds, large 0, large 0 or (3 shl 16)
-		inc	word_3A37F
-		mov	ax, word_3A37F
+		inc	_singyoku_phase_frame
+		mov	ax, _singyoku_phase_frame
 		cwd
 		idiv	di
 		or	dx, dx
@@ -22613,8 +22613,8 @@ loc_22F9D:
 		mov	di, 1
 
 loc_22FD7:
-		mov	ax, word_3A37F
-		mov	bx, 14h
+		mov	ax, _singyoku_phase_frame
+		mov	bx, 20
 		cwd
 		idiv	bx
 		or	dx, dx
@@ -22655,13 +22655,13 @@ loc_23024:
 		pop	cx
 
 loc_2302C:
-		cmp	word_3A37F, 0C8h ; '?'
+		cmp	_singyoku_phase_frame, 200
 		jl	loc_22F9D
 		mov	byte_35CDE, 1
 		mov	word_35CE0, 0
 		mov	word_35CE2, 0
 		mov	word_35CE4, 0
-		mov	word_3A37F, 0
+		mov	_singyoku_phase_frame, 0
 		mov	word_35CE6, 0
 		call	@boss_palette_show$qv
 		call	_stage_palette_set c, offset _z_Palettes, ds
@@ -22723,7 +22723,7 @@ loc_230BA:
 		mov	word_35CE6, ax
 
 loc_230DF:
-		inc	word_3A37F
+		inc	_singyoku_phase_frame
 		inc	word_3A381
 		cmp	word_35CE0, 0
 		jnz	short loc_230F4
@@ -22737,7 +22737,7 @@ loc_230F4:
 		call	sub_22AA7
 
 loc_230FF:
-		cmp	word_3A37F, 0
+		cmp	_singyoku_phase_frame, 0
 		jnz	short loc_23118
 		cmp	word_35CE0, 1
 		jnz	short loc_23111
@@ -22786,7 +22786,7 @@ loc_23118:
 		mov	byte_35CDE, 2
 		mov	word_35CE2, 0
 		mov	word_35CE0, 0
-		mov	word_3A37F, 0
+		mov	_singyoku_phase_frame, 0
 		mov	word_3A381, 0
 		jmp	loc_232A0
 ; ---------------------------------------------------------------------------
@@ -22796,7 +22796,7 @@ loc_23198:
 		cbw
 		cmp	ax, 2
 		jnz	loc_2326F
-		inc	word_3A37F
+		inc	_singyoku_phase_frame
 		inc	word_3A381
 		cmp	word_35CE0, 0
 		jnz	short loc_231B8
@@ -22831,7 +22831,7 @@ loc_231DF:
 		call	sub_22AA7
 
 loc_231EA:
-		cmp	word_3A37F, 0
+		cmp	_singyoku_phase_frame, 0
 		jnz	short loc_2320E
 		cmp	word_35CE0, 4
 		jnz	short loc_23205
@@ -22880,7 +22880,7 @@ loc_2320E:
 		push	5
 		call	_mdrv2_se_play
 		pop	cx
-		mov	word_3A37F, 0
+		mov	_singyoku_phase_frame, 0
 		jmp	short loc_232A0
 ; ---------------------------------------------------------------------------
 
@@ -23100,7 +23100,7 @@ sub_2355F	proc far
 		push	si
 		push	di
 		mov	byte_3A3BE, 0
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	word_3A6C8, 0Eh
 		mov	word_3A1E5, 0Ah
 		mov	word_3A1E7, 6
@@ -23205,8 +23205,8 @@ _kikuri_soul_move_and_render	proc near
 		push	ax	; this (offset)
 		call	@CBossEntity@move_lock_unput_and_put_8$qiiii
 		add	sp, 0Ch
-		mov	ax, word_3A6CA
-		mov	bx, 0Ch
+		mov	ax, _boss_phase_frame
+		mov	bx, 12
 		cwd
 		idiv	bx
 		or	dx, dx
@@ -24000,9 +24000,9 @@ sub_23D19	proc near
 		mov	bp, sp
 		push	si
 		push	di
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jl	loc_23E6A
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jnz	short loc_23D63
 		mov	angle_3A6B9, 0
 		mov	angle_3A6BA, 0
@@ -24019,7 +24019,7 @@ sub_23D19	proc near
 		add	sp, 18h
 
 loc_23D63:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		cwd
 		idiv	speed_3A6B7
 		or	dx, dx
@@ -24094,9 +24094,9 @@ loc_23D63:
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii
 		add	sp, 28h
-		cmp	word_3A6CA, 384h
+		cmp	_boss_phase_frame, 900
 		jl	short loc_23E5E
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 
 loc_23E5E:
 		mov	al, angle_3A6B9
@@ -24132,7 +24132,7 @@ var_6		= word ptr -6
 		push	ax
 		call	sub_232E4
 		add	sp, 0Ch
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		cwd
 		idiv	[bp+var_6]
 		or	dx, dx
@@ -24187,7 +24187,7 @@ sub_23E6E	endp
 sub_23F16	proc near
 		push	bp
 		mov	bp, sp
-		cmp	word_3A6CA, 0C8h ; '?'
+		cmp	_boss_phase_frame, 200
 		jnz	short loc_23F62
 		call	@CBossEntity@pos_set$qiiiiiii stdcall, offset kikuri_soul_0, ds, 304, large 208 or (50 shl 16), large 32 or (576 shl 16), large 64 or (400 shl 16)
 		call	@CBossEntity@pos_set$qiiiiiii stdcall, offset kikuri_soul_1, ds, 304, large 208 or (50 shl 16), large 32 or (576 shl 16), large 64 or (400 shl 16)
@@ -24196,9 +24196,9 @@ sub_23F16	proc near
 ; ---------------------------------------------------------------------------
 
 loc_23F62:
-		cmp	word_3A6CA, 0C8h ; '?'
+		cmp	_boss_phase_frame, 200
 		jle	short loc_23F99
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -24242,8 +24242,8 @@ var_6		= byte ptr -6
 		push	ax
 		call	sub_232E4
 		add	sp, 0Ch
-		mov	ax, word_3A6CA
-		mov	bx, 50h	; 'P'
+		mov	ax, _boss_phase_frame
+		mov	bx, 80
 		cwd
 		idiv	bx
 		or	dx, dx
@@ -24278,7 +24278,7 @@ loc_24029:
 		jl	short loc_23FDE
 
 loc_2402E:
-		cmp	word_3A6CA, 258h
+		cmp	_boss_phase_frame, 600
 		jle	short loc_2403B
 		mov	ax, 2
 		jmp	short loc_2403E
@@ -24303,7 +24303,7 @@ sub_24041	proc near
 		mov	bp, sp
 		push	si
 		push	di
-		cmp	word_3A6CA, 0Ah
+		cmp	_boss_phase_frame, 10
 		jge	short loc_24064
 		push	78008Ch
 		push	0A000C8h
@@ -24313,7 +24313,7 @@ sub_24041	proc near
 		add	sp, 0Ch
 
 loc_24064:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		cwd
 		idiv	speed_3A6B7
 		or	dx, dx
@@ -24334,14 +24334,14 @@ loc_24064:
 		call	sub_2368E
 
 loc_24092:
-		mov	bx, word_3A6CA
+		mov	bx, _boss_phase_frame
 		and	bx, 255
 		add	bx, bx
 		movsx	eax, _CosTable8[bx]
 		imul	eax, 6
 		sar	eax, 8
 		mov	si, ax
-		mov	bx, word_3A6CA
+		mov	bx, _boss_phase_frame
 		and	bx, 255
 		add	bx, bx
 		movsx	eax, _CosTable8[bx]
@@ -24370,10 +24370,10 @@ sub_24041	endp
 sub_240DE	proc near
 		push	bp
 		mov	bp, sp
-		cmp	word_3A6CA, 0C8h ; '?'
+		cmp	_boss_phase_frame, 200
 		jle	short loc_2414A
-		mov	ax, word_3A6CA
-		mov	bx, 0C8h ; '?'
+		mov	ax, _boss_phase_frame
+		mov	bx, 200
 		cwd
 		idiv	bx
 		or	dx, dx
@@ -24417,8 +24417,8 @@ sub_2414C	proc near
 		mov	bp, sp
 		push	si
 		push	di
-		mov	ax, word_3A6CA
-		mov	bx, 0C8h ; '?'
+		mov	ax, _boss_phase_frame
+		mov	bx, 200
 		cwd
 		idiv	bx
 		or	dx, dx
@@ -24446,14 +24446,14 @@ sub_2414C	proc near
 		add	sp, 18h
 
 loc_2419B:
-		mov	bx, word_3A6CA
+		mov	bx, _boss_phase_frame
 		and	bx, 255
 		add	bx, bx
 		movsx	eax, _CosTable8[bx]
 		shl	eax, 2
 		sar	eax, 8
 		mov	si, ax
-		mov	bx, word_3A6CA
+		mov	bx, _boss_phase_frame
 		and	bx, 255
 		add	bx, bx
 		movsx	eax, _CosTable8[bx]
@@ -24486,9 +24486,9 @@ sub_241E7	proc near
 		enter	2, 0
 		push	si
 		push	di
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jl	loc_24310
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jnz	short loc_24219
 		mov	angle_3A6BD, 20h
 		push	40006h
@@ -24499,7 +24499,7 @@ sub_241E7	proc near
 		add	sp, 0Ch
 
 loc_24219:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		cwd
 		idiv	speed_3A6B7
 		or	dx, dx
@@ -24509,7 +24509,7 @@ loc_24219:
 ; ---------------------------------------------------------------------------
 
 loc_2422C:
-		mov	bx, word_3A6CA
+		mov	bx, _boss_phase_frame
 		shl	bx, 2
 		mov	ax, si
 		shl	ax, 7
@@ -24521,7 +24521,7 @@ loc_2422C:
 		sar	eax, 8
 		add	ax, 320
 		mov	di, ax
-		mov	bx, word_3A6CA
+		mov	bx, _boss_phase_frame
 		shl	bx, 2
 		mov	ax, si
 		shl	ax, 7
@@ -24574,7 +24574,7 @@ loc_2422C:
 loc_242EC:
 		cmp	si, 4
 		jl	loc_2422C
-		cmp	word_3A6CA, 258h
+		cmp	_boss_phase_frame, 600
 		jg	short loc_24305
 		mov	al, angle_3A6BD
 		add	al, -5
@@ -24583,7 +24583,7 @@ loc_242EC:
 ; ---------------------------------------------------------------------------
 
 loc_24305:
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	ax, 1
 		jmp	short loc_24312
 ; ---------------------------------------------------------------------------
@@ -24606,9 +24606,9 @@ sub_241E7	endp
 sub_24316	proc near
 		push	bp
 		mov	bp, sp
-		cmp	word_3A6CA, 0C8h ; '?'
+		cmp	_boss_phase_frame, 200
 		jle	loc_244C9
-		cmp	word_3A6CA, 0FAh
+		cmp	_boss_phase_frame, 250
 		jnz	short loc_24378
 		push	40003Ch
 		push	380034h
@@ -24636,7 +24636,7 @@ sub_24316	proc near
 ; ---------------------------------------------------------------------------
 
 loc_24378:
-		cmp	word_3A6CA, 118h
+		cmp	_boss_phase_frame, 280
 		jnz	short loc_243B7
 		push	6
 		call	_mdrv2_se_play
@@ -24659,7 +24659,7 @@ loc_24378:
 ; ---------------------------------------------------------------------------
 
 loc_243B7:
-		cmp	word_3A6CA, 136h
+		cmp	_boss_phase_frame, 310
 		jnz	short loc_243F6
 		push	6
 		call	_mdrv2_se_play
@@ -24682,7 +24682,7 @@ loc_243B7:
 ; ---------------------------------------------------------------------------
 
 loc_243F6:
-		cmp	word_3A6CA, 154h
+		cmp	_boss_phase_frame, 340
 		jnz	short loc_24434
 		push	6
 		call	_mdrv2_se_play
@@ -24705,7 +24705,7 @@ loc_243F6:
 ; ---------------------------------------------------------------------------
 
 loc_24434:
-		cmp	word_3A6CA, 172h
+		cmp	_boss_phase_frame, 370
 		jnz	short loc_24472
 		push	6
 		call	_mdrv2_se_play
@@ -24728,7 +24728,7 @@ loc_24434:
 ; ---------------------------------------------------------------------------
 
 loc_24472:
-		cmp	word_3A6CA, 190h
+		cmp	_boss_phase_frame, 400
 		jnz	short loc_244B6
 		push	6
 		call	_mdrv2_se_play
@@ -24753,9 +24753,9 @@ loc_244AE:
 		add	sp, 14h
 
 loc_244B6:
-		cmp	word_3A6CA, 1F4h
+		cmp	_boss_phase_frame, 500
 		jle	short loc_244C9
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	ax, 2
 		pop	bp
 		retn
@@ -24776,9 +24776,9 @@ sub_244CE	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jle	loc_24647
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jnz	short loc_244F9
 		push	160017h
 		push	190023h
@@ -24788,7 +24788,7 @@ sub_244CE	proc near
 		add	sp, 0Ch
 
 loc_244F9:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		cwd
 		idiv	speed_3A6B7
 		or	dx, dx
@@ -24912,9 +24912,9 @@ loc_24640:
 		jl	loc_2450C
 
 loc_24647:
-		cmp	word_3A6CA, 0FAh
+		cmp	_boss_phase_frame, 250
 		jle	short loc_2465A
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	ax, 3
 		jmp	short loc_2465D
 ; ---------------------------------------------------------------------------
@@ -24938,9 +24938,9 @@ sub_24660	proc near
 		mov	bp, sp
 		push	si
 		push	di
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jl	loc_2471B
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jnz	short loc_246A0
 		push	480044h
 		push	40003Ch
@@ -24955,14 +24955,14 @@ sub_24660	proc near
 		add	sp, 18h
 
 loc_246A0:
-		mov	ax, word_3A6CA
-		mov	bx, 0Ah
+		mov	ax, _boss_phase_frame
+		mov	bx, 10
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_24709
-		mov	ax, word_3A6CA
-		add	ax, 0FF9Ch
+		mov	ax, _boss_phase_frame
+		add	ax, -100
 		cwd
 		idiv	bx
 		mov	si, ax
@@ -25000,9 +25000,9 @@ loc_246A0:
 		add	sp, 16h
 
 loc_24709:
-		cmp	word_3A6CA, 0BEh ; '?'
+		cmp	_boss_phase_frame, 190
 		jl	short loc_2471B
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		xor	ax, ax
 		jmp	short loc_2471E
 ; ---------------------------------------------------------------------------
@@ -25033,7 +25033,7 @@ var_4		= dword	ptr -4
 		mov	[bp+var_4], eax
 		cmp	byte_3A3BE, 0
 		jnz	loc_24B19
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	word_3A6C2, 0
 		mov	word_3A6C0, 0
 		call	@boss_palette_snap$qv
@@ -25052,8 +25052,8 @@ var_4		= dword	ptr -4
 		add	sp, 20h
 
 loc_24796:
-		inc	word_3A6CA
-		mov	ax, word_3A6CA
+		inc	_boss_phase_frame
+		mov	ax, _boss_phase_frame
 		mov	bx, 3
 		cwd
 		idiv	bx
@@ -25071,7 +25071,7 @@ loc_24796:
 		call	sub_23C4F
 
 loc_247C9:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		add	ax, ax
 		cmp	ax, 8
 		jle	short loc_247F9
@@ -25090,9 +25090,9 @@ loc_247C9:
 		call	sub_23C4F
 
 loc_247F9:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		add	ax, ax
-		cmp	ax, 10h
+		cmp	ax, 16
 		jle	short loc_24829
 		cmp	word_3A6C2, 0D8h ; '?'
 		jge	short loc_24829
@@ -25109,9 +25109,9 @@ loc_247F9:
 		call	sub_23C4F
 
 loc_24829:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		add	ax, ax
-		cmp	ax, 18h
+		cmp	ax, 24
 		jle	short loc_24857
 		cmp	word_3A6C2, 0E0h
 		jg	short loc_24857
@@ -25132,7 +25132,7 @@ loc_24857:
 		cmp	word_3A6C2, 0E0h
 		jle	short loc_24871
 		mov	word_3A6C2, 0
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		jmp	short loc_2489C
 ; ---------------------------------------------------------------------------
 
@@ -25146,15 +25146,15 @@ loc_24871:
 ; ---------------------------------------------------------------------------
 
 loc_2489C:
-		inc	word_3A6CA
-		cmp	word_3A6CA, 46h	; 'F'
+		inc	_boss_phase_frame
+		cmp	_boss_phase_frame, 70
 		jnz	short loc_248B0
 		mov	word_3A6C4, 0
 		jmp	loc_24A9D
 ; ---------------------------------------------------------------------------
 
 loc_248B0:
-		cmp	word_3A6CA, 47h	; 'G'
+		cmp	_boss_phase_frame, 71
 		jnz	loc_24941
 		mov	si, 20h	; ' '
 		jmp	short loc_24938
@@ -25210,9 +25210,9 @@ loc_24938:
 ; ---------------------------------------------------------------------------
 
 loc_24941:
-		cmp	word_3A6CA, 47h	; 'G'
+		cmp	_boss_phase_frame, 71
 		jle	loc_24A9D
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -25324,7 +25324,7 @@ loc_24A66:
 		jl	short loc_24A9D
 		mov	byte_3A3BE, 2
 		mov	word_35D16, 0
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		call	@boss_palette_show$qv
 		mov	byte_3A6C6, 0
 		call	_stage_palette_set c, offset _z_Palettes, ds
@@ -25332,10 +25332,10 @@ loc_24A66:
 ; ---------------------------------------------------------------------------
 
 loc_24A9D:
-		cmp	word_3A6CA, 47h	; 'G'
+		cmp	_boss_phase_frame, 71
 		jle	short loc_24AFF
-		mov	ax, word_3A6CA
-		mov	bx, 1Eh
+		mov	ax, _boss_phase_frame
+		mov	bx, 30
 		cwd
 		idiv	bx
 		or	dx, dx
@@ -25377,7 +25377,7 @@ loc_24AEE:
 		call	_z_palette_set_all_show c, offset _z_Palettes, ds
 
 loc_24AFF:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -25396,14 +25396,14 @@ loc_24B19:
 		jnz	loc_24BA3
 		cmp	byte_3A6C6, 0
 		jnz	short loc_24B3E
-		push	word_3A6CA
+		push	_boss_phase_frame
 		push	word_3A6C8
 		call	sub_2191C
 		add	sp, 4
 		mov	byte_3A6C6, al
 
 loc_24B3E:
-		inc	word_3A6CA
+		inc	_boss_phase_frame
 		inc	word_3A6C2
 		call	sub_23D19
 		pushd	0 or (0 shl 16)
@@ -25425,7 +25425,7 @@ loc_24B3E:
 		push	offset word_3A6C2
 		call	sub_21A8A
 		add	sp, 22h
-		cmp	word_3A6CA, 0
+		cmp	_boss_phase_frame, 0
 		jnz	short loc_24B82
 		inc	word_35D16
 
@@ -25447,9 +25447,9 @@ loc_24BA3:
 		cbw
 		cmp	ax, 3
 		jnz	short loc_24C07
-		inc	word_3A6CA
-		mov	ax, word_3A6CA
-		mov	bx, 14h
+		inc	_boss_phase_frame
+		mov	ax, _boss_phase_frame
+		mov	bx, 20
 		cwd
 		idiv	bx
 		cmp	dx, 13h
@@ -25461,10 +25461,10 @@ loc_24BA3:
 		call	_z_palette_set_all_show c, offset _stage_palette, ds
 
 loc_24BDA:
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jl	loc_24DFB
 		mov	byte_3A3BE, 4
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	word_35D14, 0
 		call	_z_palette_set_all_show c, offset _stage_palette, ds
 		call	@boss_palette_snap$qv
@@ -25476,7 +25476,7 @@ loc_24C07:
 		cbw
 		cmp	ax, 4
 		jnz	short loc_24C81
-		inc	word_3A6CA
+		inc	_boss_phase_frame
 		inc	word_3A6C2
 		call	sub_23E6E
 		cmp	word_35D14, 0
@@ -25515,7 +25515,7 @@ loc_24C2A:
 		jnz	loc_24DFB
 		mov	byte_3A3BE, 5
 		mov	word_35D14, 0
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		jmp	loc_24DFB
 ; ---------------------------------------------------------------------------
 
@@ -25524,7 +25524,7 @@ loc_24C81:
 		cbw
 		cmp	ax, 5
 		jnz	short loc_24CFA
-		inc	word_3A6CA
+		inc	_boss_phase_frame
 		inc	word_3A6C2
 		call	sub_24041
 		call	sub_240DE
@@ -25551,14 +25551,14 @@ loc_24C81:
 		jnz	loc_24DFB
 		cmp	word_3A6C8, 6
 		jle	short loc_24CE0
-		cmp	word_3A6CA, 640h
+		cmp	_boss_phase_frame, 1600
 		jle	loc_24DFB
 
 loc_24CE0:
 		mov	byte_3A3BE, 6
 
 loc_24CE5:
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	word_3A6C2, 0
 		mov	word_35D16, 0
 		jmp	loc_24DFB
@@ -25569,7 +25569,7 @@ loc_24CFA:
 		cbw
 		cmp	ax, 6
 		jnz	loc_24DFB
-		inc	word_3A6CA
+		inc	_boss_phase_frame
 		inc	word_3A6C2
 		call	sub_2414C
 		cmp	word_35D14, 0
@@ -25601,7 +25601,7 @@ loc_24D3E:
 		mov	word_35D14, ax
 
 loc_24D41:
-		cmp	word_3A6CA, 0
+		cmp	_boss_phase_frame, 0
 		jnz	short loc_24D4C
 		inc	word_35D16
 
@@ -25915,7 +25915,7 @@ sub_24FE0	proc far
 		CBossEntity__hitbox_set	elis_still_or_wave, 32, 12, 96, 64
 		CBossEntity__hitbox_set	elis_bat, 8, 8, 40, 24
 		mov	byte_3A6CE, 0
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	word_3A6C8, 0Eh
 		mov	word_3A1E5, 0Ah
 		mov	word_3A1E7, 6
@@ -25992,7 +25992,7 @@ arg_2		= word ptr  8
 		mov	elis_attack.BE_cur_left, ax
 		mov	ax, [bp+var_2]
 		mov	elis_attack.BE_cur_top, ax
-		cmp	word_3A6CA, 14h
+		cmp	_boss_phase_frame, 20
 		jnz	short loc_25150
 		push	1
 		call	_graph_accesspage_func
@@ -26011,7 +26011,7 @@ loc_25132:
 ; ---------------------------------------------------------------------------
 
 loc_25150:
-		cmp	word_3A6CA, 1Ch
+		cmp	_boss_phase_frame, 28
 		jnz	short loc_2516C
 		push	1
 		call	sub_24EC2
@@ -26022,14 +26022,14 @@ loc_25150:
 ; ---------------------------------------------------------------------------
 
 loc_2516C:
-		cmp	word_3A6CA, 24h	; '$'
+		cmp	_boss_phase_frame, 36
 		jnz	short loc_2517B
 		mov	elis_still_or_wave.BE_hitbox_orb_inactive, 1
 		jmp	short loc_251C7
 ; ---------------------------------------------------------------------------
 
 loc_2517B:
-		cmp	word_3A6CA, 2Ch	; ','
+		cmp	_boss_phase_frame, 44
 		jnz	short loc_2519E
 		mov	elis_still_or_wave.BE_hitbox_orb_inactive, 1
 		call	_egc_copy_rect_1_to_0_16 c, [dword ptr elis_still_or_wave.BE_cur_left], large (96 shl 16) or 128
@@ -26037,7 +26037,7 @@ loc_2517B:
 ; ---------------------------------------------------------------------------
 
 loc_2519E:
-		cmp	word_3A6CA, 34h	; '4'
+		cmp	_boss_phase_frame, 52
 		jnz	short loc_251DD
 		mov	elis_still_or_wave.BE_hitbox_orb_inactive, 1
 		mov	ax, [bp+arg_2]
@@ -26061,7 +26061,7 @@ loc_251C7:
 ; ---------------------------------------------------------------------------
 
 loc_251DD:
-		cmp	word_3A6CA, 3Ch	; '<'
+		cmp	_boss_phase_frame, 60
 		jnz	short loc_251FF
 		mov	elis_still_or_wave.BE_hitbox_orb_inactive, 1
 		push	1
@@ -26073,7 +26073,7 @@ loc_251DD:
 ; ---------------------------------------------------------------------------
 
 loc_251FF:
-		cmp	word_3A6CA, 44h	; 'D'
+		cmp	_boss_phase_frame, 68
 		jnz	short loc_25221
 		mov	elis_still_or_wave.BE_hitbox_orb_inactive, 1
 		push	1
@@ -26085,7 +26085,7 @@ loc_251FF:
 ; ---------------------------------------------------------------------------
 
 loc_25221:
-		cmp	word_3A6CA, 4Ch	; 'L'
+		cmp	_boss_phase_frame, 76
 		jnz	short loc_25280
 		mov	elis_still_or_wave.BE_hitbox_orb_inactive, 0
 		push	1
@@ -26105,15 +26105,15 @@ loc_25269:
 ; ---------------------------------------------------------------------------
 
 loc_25280:
-		cmp	word_3A6CA, 50h	; 'P'
+		cmp	_boss_phase_frame, 80
 		jle	short loc_25293
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	ax, 1
 		jmp	loc_2539F
 ; ---------------------------------------------------------------------------
 
 loc_25293:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -26124,7 +26124,7 @@ loc_25293:
 ; ---------------------------------------------------------------------------
 
 loc_252A7:
-		cmp	word_3A6CA, 4
+		cmp	_boss_phase_frame, 4
 		jle	short loc_252CC
 		push	(8 shl 16) or 16
 		mov	bx, si
@@ -26137,9 +26137,9 @@ loc_252A7:
 		add	sp, 8
 
 loc_252CC:
-		cmp	word_3A6CA, 28h	; '('
+		cmp	_boss_phase_frame, 40
 		jl	short loc_252DA
-		cmp	word_3A6CA, 34h	; '4'
+		cmp	_boss_phase_frame, 52
 		jle	short loc_25310
 
 loc_252DA:
@@ -26205,7 +26205,7 @@ loc_25310:
 		mov	[bx+5D39h], ax
 
 loc_25374:
-		cmp	word_3A6CA, 44h	; 'D'
+		cmp	_boss_phase_frame, 68
 		jge	short loc_25395
 		push	2	; col
 		mov	bx, si
@@ -26304,7 +26304,7 @@ var_10		= qword	ptr -10h
 var_8		= qword	ptr -8
 
 		enter	12h, 0
-		cmp	word_3A6CA, 32h	; '2'
+		cmp	_boss_phase_frame, 50
 		jnz	short loc_2546B
 		call	IRand
 		mov	bx, 2
@@ -26333,7 +26333,7 @@ var_8		= qword	ptr -8
 ; ---------------------------------------------------------------------------
 
 loc_2546B:
-		cmp	word_3A6CA, 3Ch	; '<'
+		cmp	_boss_phase_frame, 60
 		jnz	short loc_254A0
 		push	255	; angle_end
 		push	0	; angle_start
@@ -26353,11 +26353,11 @@ loc_2546B:
 ; ---------------------------------------------------------------------------
 
 loc_254A0:
-		cmp	word_3A6CA, 78h	; 'x'
+		cmp	_boss_phase_frame, 120
 		jge	loc_25528
-		cmp	word_3A6CA, 3Ch	; '<'
+		cmp	_boss_phase_frame, 60
 		jle	short loc_25528
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -26379,14 +26379,14 @@ loc_254A0:
 		add	radius_3A6E3, 8
 		push	255	; angle_end
 		push	0	; angle_start
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jge	short loc_254F7
 		mov	al, 2
 		jmp	short loc_25504
 ; ---------------------------------------------------------------------------
 
 loc_254F7:
-		cmp	word_3A6CA, 6Eh	; 'n'
+		cmp	_boss_phase_frame, 110
 		jge	short loc_25502
 		mov	al, 8
 		jmp	short loc_25504
@@ -26412,7 +26412,7 @@ loc_25504:
 ; ---------------------------------------------------------------------------
 
 loc_25528:
-		cmp	word_3A6CA, 78h	; 'x'
+		cmp	_boss_phase_frame, 120
 		jnz	short loc_25556
 		push	255	; angle_end
 		push	0	; angle_start
@@ -26431,7 +26431,7 @@ loc_25528:
 ; ---------------------------------------------------------------------------
 
 loc_25556:
-		cmp	word_3A6CA, 96h
+		cmp	_boss_phase_frame, 150
 		jnz	short loc_255B4
 		push	1
 		call	_graph_accesspage_func
@@ -26451,18 +26451,18 @@ loc_255B1:
 		add	sp, 0Ch
 
 loc_255B4:
-		cmp	word_3A6CA, 46h	; 'F'
+		cmp	_boss_phase_frame, 70
 		jl	loc_256A5
-		mov	ax, word_3A6CA
-		mov	bx, 0Ah
+		mov	ax, _boss_phase_frame
+		mov	bx, 10
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	loc_256A5
 		cmp	word_3A6E5, 0
 		jnz	short loc_255E4
-		mov	ax, word_3A6CA
-		add	ax, 0FFBAh
+		mov	ax, _boss_phase_frame
+		add	ax, -70
 		cwd
 		idiv	bx
 		shl	ax, 6
@@ -26471,9 +26471,9 @@ loc_255B4:
 ; ---------------------------------------------------------------------------
 
 loc_255E4:
-		mov	ax, word_3A6CA
-		add	ax, 0FFBAh
-		mov	bx, 0Ah
+		mov	ax, _boss_phase_frame
+		add	ax, -70
+		mov	bx, 10
 		cwd
 		idiv	bx
 		shl	ax, 6
@@ -26503,8 +26503,8 @@ loc_255FB:
 		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 60
 		push	ax	; origin_left
-		mov	ax, word_3A6CA
-		mov	bx, 0Ah
+		mov	ax, _boss_phase_frame
+		mov	bx, 10
 		cwd
 		idiv	bx
 		cwd
@@ -26540,7 +26540,7 @@ loc_2567E:
 		jb	short loc_256A5
 
 loc_2569B:
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		xor	ax, ax
 		leave
 		retf
@@ -26569,7 +26569,7 @@ var_2		= word ptr -2
 
 		enter	0Ah, 0
 		push	si
-		cmp	word_3A6CA, 32h	; '2'
+		cmp	_boss_phase_frame, 50
 		jnz	short loc_25726
 		push	1
 		call	_graph_accesspage_func
@@ -26594,9 +26594,9 @@ var_2		= word ptr -2
 		add	sp, 0Ch
 
 loc_25726:
-		cmp	word_3A6CA, 3Ch	; '<'
+		cmp	_boss_phase_frame, 60
 		jle	loc_257C3
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 3
 		cwd
 		idiv	bx
@@ -26655,11 +26655,11 @@ loc_25726:
 		add	sp, 1Ah
 
 loc_257C3:
-		cmp	word_3A6CA, 3Ch	; '<'
+		cmp	_boss_phase_frame, 60
 		jl	loc_258AA
-		cmp	word_3A6CA, 0A0h ; '?'
+		cmp	_boss_phase_frame, 160
 		jg	loc_258AA
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -26670,7 +26670,7 @@ loc_257C3:
 ; ---------------------------------------------------------------------------
 
 loc_257EA:
-		cmp	word_3A6CA, 3Ch	; '<'
+		cmp	_boss_phase_frame, 60
 		jle	short loc_2580F
 		push	(32 shl 16) or 48
 		mov	bx, si
@@ -26683,8 +26683,8 @@ loc_257EA:
 		add	sp, 8
 
 loc_2580F:
-		mov	ax, word_3A6CA
-		mov	bx, 10h
+		mov	ax, _boss_phase_frame
+		mov	bx, 16
 		cwd
 		idiv	bx
 		mov	ax, si
@@ -26695,7 +26695,7 @@ loc_2580F:
 		pop	ax
 		cmp	ax, dx
 		jz	short loc_2582D
-		cmp	word_3A6CA, 3Ch	; '<'
+		cmp	_boss_phase_frame, 60
 		jnz	short loc_25861
 
 loc_2582D:
@@ -26719,7 +26719,7 @@ loc_2582D:
 		mov	[bx+5D51h], dx
 
 loc_25861:
-		cmp	word_3A6CA, 0A0h ; '?'
+		cmp	_boss_phase_frame, 160
 		jge	short loc_2589A
 		call	IRand
 		mov	bx, 2
@@ -26751,9 +26751,9 @@ loc_2589B:
 		pop	cx
 
 loc_258AA:
-		cmp	word_3A6CA, 0AAh ; '?'
+		cmp	_boss_phase_frame, 170
 		jle	short loc_258BC
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		xor	ax, ax
 		jmp	short loc_258BF
 ; ---------------------------------------------------------------------------
@@ -26780,12 +26780,12 @@ var_6		= word ptr -6
 
 		enter	6, 0
 		push	si
-		cmp	word_3A6CA, 0Ah
+		cmp	_boss_phase_frame, 10
 		jge	short loc_258D4
 		mov	word_3A6FC, 0
 
 loc_258D4:
-		cmp	word_3A6CA, 32h	; '2'
+		cmp	_boss_phase_frame, 50
 		jnz	short loc_25947
 		push	1
 		call	_graph_accesspage_func
@@ -26808,9 +26808,9 @@ loc_258D4:
 		add	sp, 2Ah
 
 loc_25947:
-		cmp	word_3A6CA, 3Ch	; '<'
+		cmp	_boss_phase_frame, 60
 		jl	loc_25AED
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -26818,7 +26818,7 @@ loc_25947:
 		jnz	loc_25AED
 		cmp	word_3A6FC, 0
 		jnz	loc_25AED
-		cmp	word_3A6CA, 3Ch	; '<'
+		cmp	_boss_phase_frame, 60
 		jnz	short loc_25977
 		push	8
 		call	_mdrv2_se_play
@@ -27060,7 +27060,7 @@ loc_25BCE:
 loc_25C35:
 		cmp	si, 20h	; ' '
 		jl	short loc_25BCE
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	word_3A6FC, 0
 		xor	ax, ax
 		jmp	short loc_25C4D
@@ -27316,15 +27316,15 @@ sub_25DE6	endp
 sub_25E28	proc near
 		push	bp
 		mov	bp, sp
-		cmp	word_3A6CA, 5
+		cmp	_boss_phase_frame, 5
 		jge	short loc_25E3D
 		mov	word_3A6FF, 0
 		mov	angle_3A6FE, 0
 
 loc_25E3D:
-		cmp	word_3A6CA, 0Ah
+		cmp	_boss_phase_frame, 10
 		jl	loc_260D8
-		cmp	word_3A6CA, 0Ah
+		cmp	_boss_phase_frame, 10
 		jnz	short loc_25EB1
 		push	1
 		call	_graph_accesspage_func
@@ -27345,9 +27345,9 @@ loc_25E3D:
 		mov	word_3A6FF, 0
 
 loc_25EB1:
-		cmp	word_3A6CA, 0Ah
+		cmp	_boss_phase_frame, 10
 		jl	loc_25FED
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -27355,7 +27355,7 @@ loc_25EB1:
 		jnz	loc_25FED
 		cmp	word_3A6FF, 0
 		jnz	loc_25FED
-		cmp	word_3A6CA, 0Ah
+		cmp	_boss_phase_frame, 10
 		jnz	short loc_25EE1
 		push	8
 		call	_mdrv2_se_play
@@ -27546,7 +27546,7 @@ loc_26068:
 		push	ax	; center_x
 		call	@shape_ellipse_arc_sloppy_unput$qiiiiucucuc
 		add	sp, 0Eh
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	angle_3A6FE, 0
 		mov	word_3A6FF, 0
 		mov	ax, 1
@@ -27569,7 +27569,7 @@ sub_260DC	proc far
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -27593,7 +27593,7 @@ sub_260DC	proc far
 ; ---------------------------------------------------------------------------
 
 loc_26136:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -27614,7 +27614,7 @@ loc_2617F:
 		call	@CBossEntity@move_lock_and_put_8$qiiii c, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 
 loc_26194:
-		cmp	word_3A6CA, 0Ah
+		cmp	_boss_phase_frame, 10
 		jnz	short loc_261ED
 		push	140012h
 		push	10000Eh
@@ -27654,7 +27654,7 @@ loc_261E4:
 ; ---------------------------------------------------------------------------
 
 loc_261ED:
-		cmp	word_3A6CA, 10h
+		cmp	_boss_phase_frame, 16
 		jnz	short loc_26231
 		xor	si, si
 		jmp	short loc_26228
@@ -27689,7 +27689,7 @@ loc_26228:
 ; ---------------------------------------------------------------------------
 
 loc_26231:
-		cmp	word_3A6CA, 18h
+		cmp	_boss_phase_frame, 24
 		jnz	short loc_26275
 		xor	si, si
 		jmp	short loc_2626C
@@ -27724,7 +27724,7 @@ loc_2626C:
 ; ---------------------------------------------------------------------------
 
 loc_26275:
-		cmp	word_3A6CA, 20h	; ' '
+		cmp	_boss_phase_frame, 32
 		jnz	short loc_262B8
 		xor	si, si
 		jmp	short loc_262B0
@@ -27759,7 +27759,7 @@ loc_262B0:
 ; ---------------------------------------------------------------------------
 
 loc_262B8:
-		cmp	word_3A6CA, 28h	; '('
+		cmp	_boss_phase_frame, 40
 		jnz	short loc_262FB
 		xor	si, si
 		jmp	short loc_262F3
@@ -27794,9 +27794,9 @@ loc_262F3:
 ; ---------------------------------------------------------------------------
 
 loc_262FB:
-		cmp	word_3A6CA, 3Ch	; '<'
+		cmp	_boss_phase_frame, 60
 		jle	short loc_2631C
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		push	1
 		call	_graph_accesspage_func
 		push	2
@@ -27827,7 +27827,7 @@ sub_26322	proc far
 
 		enter	4, 0
 		push	si
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -27851,7 +27851,7 @@ sub_26322	proc far
 ; ---------------------------------------------------------------------------
 
 loc_2637D:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -27872,17 +27872,17 @@ loc_263C6:
 		call	@CBossEntity@move_lock_and_put_8$qiiii c, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 
 loc_263DB:
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jg	loc_264AC
-		mov	ax, word_3A6CA
-		mov	bx, 0Ah
+		mov	ax, _boss_phase_frame
+		mov	bx, 10
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	loc_264AC
 		cmp	elis_still_or_wave.BE_cur_left, 256
 		jge	short loc_26407
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		cwd
 		idiv	bx
 		push	ax
@@ -27891,8 +27891,8 @@ loc_263DB:
 ; ---------------------------------------------------------------------------
 
 loc_26407:
-		mov	ax, word_3A6CA
-		mov	bx, 0Ah
+		mov	ax, _boss_phase_frame
+		mov	bx, 10
 		cwd
 		idiv	bx
 		push	ax
@@ -27909,7 +27909,7 @@ loc_26413:
 		add	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 48
 		push	ax
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		cwd
 		idiv	bx
 		add	ax, ax
@@ -27927,7 +27927,7 @@ loc_26413:
 		cwd
 		idiv	bx
 		push	ax
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		cwd
 		idiv	bx
 		mov	dx, ax
@@ -27936,7 +27936,7 @@ loc_26413:
 		add	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 32
 		push	ax
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		cwd
 		idiv	bx
 		add	ax, ax
@@ -27961,8 +27961,8 @@ loc_2647B:
 		inc	si
 
 loc_2649C:
-		mov	ax, word_3A6CA
-		mov	bx, 0Ah
+		mov	ax, _boss_phase_frame
+		mov	bx, 10
 		cwd
 		idiv	bx
 		cmp	ax, si
@@ -27971,33 +27971,33 @@ loc_2649C:
 ; ---------------------------------------------------------------------------
 
 loc_264AC:
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jle	loc_26605
-		cmp	word_3A6CA, 0E6h
+		cmp	_boss_phase_frame, 230
 		jg	loc_26605
-		mov	ax, word_3A6CA
-		mov	bx, 0Ah
+		mov	ax, _boss_phase_frame
+		mov	bx, 10
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	loc_26605
-		cmp	word_3A6CA, 0C8h ; '?'
+		cmp	_boss_phase_frame, 200
 		jg	loc_265C5
 		push	7
 		call	_mdrv2_se_play
 		push	4 or (4 shl 16)	; (image) or (col)
 		push	0	; slot
-		mov	ax, word_3A6CA
-		add	ax, 0FF9Ch
-		mov	bx, 0Ah
+		mov	ax, _boss_phase_frame
+		add	ax, -100
+		mov	bx, 10
 		cwd
 		idiv	bx
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+5D73h]	; top
-		mov	ax, word_3A6CA
-		add	ax, 0FF9Ch
-		mov	bx, 0Ah
+		mov	ax, _boss_phase_frame
+		add	ax, -100
+		mov	bx, 10
 		cwd
 		idiv	bx
 		add	ax, ax
@@ -28005,9 +28005,9 @@ loc_264AC:
 		push	word ptr [bx+5D5Fh]	; left
 		call	_grc_put_8
 		add	sp, 0Ch
-		mov	ax, word_3A6CA
-		add	ax, 0FF9Ch
-		mov	bx, 0Ah
+		mov	ax, _boss_phase_frame
+		add	ax, -100
+		mov	bx, 10
 		cwd
 		idiv	bx
 		mov	si, ax
@@ -28052,7 +28052,7 @@ loc_26568:
 		pushd	PM_NORMAL or (0 shl 16)
 		push	ax
 		push	word ptr [bp+@@angle]
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		add	ax, -100
 		mov	bx, 10
 		cwd
@@ -28060,7 +28060,7 @@ loc_26568:
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+5D73h]
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		add	ax, -100
 		mov	bx, 10
 		cwd
@@ -28079,20 +28079,20 @@ loc_265BF:
 		jl	short loc_26568
 
 loc_265C5:
-		cmp	word_3A6CA, 82h
+		cmp	_boss_phase_frame, 130
 		jle	short loc_26617
 		push	(32 shl 16) or 48
-		mov	ax, word_3A6CA
-		add	ax, 0FF7Eh
-		mov	bx, 0Ah
+		mov	ax, _boss_phase_frame
+		add	ax, -130
+		mov	bx, 10
 		cwd
 		idiv	bx
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+5D73h]
-		mov	ax, word_3A6CA
-		add	ax, 0FF7Eh
-		mov	bx, 0Ah
+		mov	ax, _boss_phase_frame
+		add	ax, -130
+		mov	bx, 10
 		cwd
 		idiv	bx
 		add	ax, ax
@@ -28104,9 +28104,9 @@ loc_265C5:
 ; ---------------------------------------------------------------------------
 
 loc_26605:
-		cmp	word_3A6CA, 0FAh
+		cmp	_boss_phase_frame, 250
 		jle	short loc_26617
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		xor	ax, ax
 		jmp	short loc_2661A
 ; ---------------------------------------------------------------------------
@@ -28133,7 +28133,7 @@ var_2		= word ptr -2
 
 		enter	4, 0
 		push	si
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -28157,7 +28157,7 @@ var_2		= word ptr -2
 ; ---------------------------------------------------------------------------
 
 loc_26678:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -28178,7 +28178,7 @@ loc_266C1:
 		call	@CBossEntity@move_lock_and_put_8$qiiii c, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 
 loc_266D6:
-		cmp	word_3A6CA, 1Eh
+		cmp	_boss_phase_frame, 30
 		jnz	short loc_266F4
 		push	20002h
 		push	30006h
@@ -28188,14 +28188,14 @@ loc_266D6:
 		add	sp, 0Ch
 
 loc_266F4:
-		cmp	word_3A6CA, 3Ch	; '<'
+		cmp	_boss_phase_frame, 60
 		jle	short loc_2672E
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		cwd
 		idiv	word_3A6CC
 		or	dx, dx
 		jnz	short loc_2672E
-		cmp	word_3A6CA, 78h	; 'x'
+		cmp	_boss_phase_frame, 120
 		jge	short loc_2672E
 		call	IRand
 		mov	bx, 5
@@ -28212,9 +28212,9 @@ loc_266F4:
 ; ---------------------------------------------------------------------------
 
 loc_2672E:
-		cmp	word_3A6CA, 78h	; 'x'
+		cmp	_boss_phase_frame, 120
 		jl	loc_267B8
-		cmp	word_3A6CA, 0C8h ; '?'
+		cmp	_boss_phase_frame, 200
 		jge	short loc_267B8
 		call	IRand
 		mov	bx, 5
@@ -28230,14 +28230,14 @@ loc_2672E:
 		call	IRand
 		test	al, 1
 		jz	short loc_2676D
-		mov	al, byte ptr word_3A6CA
-		add	al, 88h
+		mov	al, byte ptr _boss_phase_frame
+		add	al, -78h
 		jmp	short loc_26774
 ; ---------------------------------------------------------------------------
 
 loc_2676D:
-		mov	al, byte ptr word_3A6CA
-		add	al, 88h
+		mov	al, byte ptr _boss_phase_frame
+		add	al, -78h
 		neg	al
 
 loc_26774:
@@ -28273,11 +28273,11 @@ loc_26791:
 		add	sp, 14h
 
 loc_267B8:
-		cmp	word_3A6CA, 3Ch	; '<'
+		cmp	_boss_phase_frame, 60
 		jl	loc_2689F
-		cmp	word_3A6CA, 0C8h ; '?'
+		cmp	_boss_phase_frame, 200
 		jg	loc_2689F
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -28288,7 +28288,7 @@ loc_267B8:
 ; ---------------------------------------------------------------------------
 
 loc_267DF:
-		cmp	word_3A6CA, 3Ch	; '<'
+		cmp	_boss_phase_frame, 60
 		jle	short loc_26804
 		push	(32 shl 16) or 48
 		mov	bx, si
@@ -28301,8 +28301,8 @@ loc_267DF:
 		add	sp, 8
 
 loc_26804:
-		mov	ax, word_3A6CA
-		mov	bx, 10h
+		mov	ax, _boss_phase_frame
+		mov	bx, 16
 		cwd
 		idiv	bx
 		mov	ax, si
@@ -28313,7 +28313,7 @@ loc_26804:
 		pop	ax
 		cmp	ax, dx
 		jz	short loc_26822
-		cmp	word_3A6CA, 3Ch	; '<'
+		cmp	_boss_phase_frame, 60
 		jnz	short loc_26856
 
 loc_26822:
@@ -28337,7 +28337,7 @@ loc_26822:
 		mov	[bx+5D93h], dx
 
 loc_26856:
-		cmp	word_3A6CA, 0C8h ; '?'
+		cmp	_boss_phase_frame, 200
 		jge	short loc_2688F
 		call	IRand
 		mov	bx, 2
@@ -28369,9 +28369,9 @@ loc_26890:
 		pop	cx
 
 loc_2689F:
-		cmp	word_3A6CA, 0DCh ; '?'
+		cmp	_boss_phase_frame, 220
 		jle	short loc_268B1
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		xor	ax, ax
 		jmp	short loc_268B4
 ; ---------------------------------------------------------------------------
@@ -28492,7 +28492,7 @@ var_2		= word ptr -2
 
 		enter	6, 0
 		push	si
-		cmp	word_3A6CA, 14h
+		cmp	_boss_phase_frame, 20
 		jnz	short loc_269A5
 		push	1
 		call	_graph_accesspage_func
@@ -28511,11 +28511,11 @@ var_2		= word ptr -2
 		add	sp, 20h
 
 loc_269A5:
-		cmp	word_3A6CA, 14h
+		cmp	_boss_phase_frame, 20
 		jl	loc_26A94
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jg	loc_26A94
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -28526,7 +28526,7 @@ loc_269A5:
 ; ---------------------------------------------------------------------------
 
 loc_269CB:
-		cmp	word_3A6CA, 14h
+		cmp	_boss_phase_frame, 20
 		jle	short loc_269F0
 		push	(32 shl 16) or 48
 		mov	bx, si
@@ -28539,8 +28539,8 @@ loc_269CB:
 		add	sp, 8
 
 loc_269F0:
-		mov	ax, word_3A6CA
-		mov	bx, 10h
+		mov	ax, _boss_phase_frame
+		mov	bx, 16
 		cwd
 		idiv	bx
 		mov	ax, si
@@ -28551,7 +28551,7 @@ loc_269F0:
 		pop	ax
 		cmp	ax, dx
 		jz	short loc_26A0E
-		cmp	word_3A6CA, 14h
+		cmp	_boss_phase_frame, 20
 		jnz	short loc_26A42
 
 loc_26A0E:
@@ -28575,7 +28575,7 @@ loc_26A0E:
 		mov	[bx+5DA7h], dx
 
 loc_26A42:
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jge	short loc_26A84
 		call	IRand
 		mov	bx, 2
@@ -28611,15 +28611,15 @@ loc_26A85:
 		pop	cx
 
 loc_26A94:
-		cmp	word_3A6CA, 14h
+		cmp	_boss_phase_frame, 20
 		jl	short loc_26ABF
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 2
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_26ABF
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -28630,7 +28630,7 @@ loc_26A94:
 		pop	cx
 
 loc_26ABF:
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jle	short loc_26B17
 		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 32
@@ -28652,7 +28652,7 @@ loc_26ABF:
 		call	sub_24EC2
 		call	_z_vsync_wait_and_scrollup stdcall, RES_Y
 		add	sp, 0Ah
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	ax, 1
 		jmp	short loc_26B19
 ; ---------------------------------------------------------------------------
@@ -28681,11 +28681,11 @@ var_2		= word ptr -2
 		enter	8, 0
 		push	si
 		push	di
-		cmp	word_3A6CA, 14h
+		cmp	_boss_phase_frame, 20
 		jl	loc_26C11
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jg	loc_26C11
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -28696,7 +28696,7 @@ var_2		= word ptr -2
 ; ---------------------------------------------------------------------------
 
 loc_26B48:
-		cmp	word_3A6CA, 14h
+		cmp	_boss_phase_frame, 20
 		jle	short loc_26B6D
 		push	(32 shl 16) or 48
 		mov	bx, si
@@ -28709,8 +28709,8 @@ loc_26B48:
 		add	sp, 8
 
 loc_26B6D:
-		mov	ax, word_3A6CA
-		mov	bx, 10h
+		mov	ax, _boss_phase_frame
+		mov	bx, 16
 		cwd
 		idiv	bx
 		mov	ax, si
@@ -28721,7 +28721,7 @@ loc_26B6D:
 		pop	ax
 		cmp	ax, dx
 		jz	short loc_26B8B
-		cmp	word_3A6CA, 14h
+		cmp	_boss_phase_frame, 20
 		jnz	short loc_26BBF
 
 loc_26B8B:
@@ -28745,7 +28745,7 @@ loc_26B8B:
 		mov	[bx+5DBBh], dx
 
 loc_26BBF:
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jge	short loc_26C01
 		call	IRand
 		mov	bx, 2
@@ -28781,15 +28781,15 @@ loc_26C02:
 		pop	cx
 
 loc_26C11:
-		cmp	word_3A6CA, 14h
+		cmp	_boss_phase_frame, 20
 		jl	short loc_26C3C
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 2
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_26C3C
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -28800,7 +28800,7 @@ loc_26C11:
 		pop	cx
 
 loc_26C3C:
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jle	loc_26D0B
 		call	_egc_copy_rect_1_to_0_16 c, [dword ptr elis_bat.BE_cur_left], (32 shl 16) or 48
 		mov	ax, elis_bat.BE_cur_left
@@ -28851,7 +28851,7 @@ loc_26C85:
 		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 		call	_z_vsync_wait_and_scrollup stdcall, RES_Y
 		add	sp, 24h
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		xor	ax, ax
 		jmp	short loc_26D0E
 ; ---------------------------------------------------------------------------
@@ -28880,7 +28880,7 @@ arg_0		= dword	ptr  6
 arg_4		= dword	ptr  0Ah
 
 		enter	6, 0
-		cmp	word_3A6CA, 3
+		cmp	_boss_phase_frame, 3
 		jge	short loc_26D30
 		les	bx, [bp+arg_0]
 		mov	word ptr es:[bx], 0
@@ -28890,7 +28890,7 @@ arg_4		= dword	ptr  0Ah
 ; ---------------------------------------------------------------------------
 
 loc_26D30:
-		cmp	word_3A6CA, 3
+		cmp	_boss_phase_frame, 3
 		jnz	loc_26DB8
 
 loc_26D39:
@@ -28947,7 +28947,7 @@ loc_26DB8:
 		idiv	bx
 		les	bx, [bp+arg_4]
 		add	es:[bx], ax
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 3
 		cwd
 		idiv	bx
@@ -28957,7 +28957,7 @@ loc_26DB8:
 		mov	word ptr es:[bx], 0
 		les	bx, [bp+arg_4]
 		mov	word ptr es:[bx], 0
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	ax, 1
 		leave
 		retf
@@ -28979,8 +28979,8 @@ sub_26E02	proc far
 @@pattern		= word ptr -2
 
 		enter	2, 0
-		mov	ax, word_3A6CA
-		mov	bx, 10h
+		mov	ax, _boss_phase_frame
+		mov	bx, 16
 		cwd
 		idiv	bx
 		or	dx, dx
@@ -29017,7 +29017,7 @@ sub_26E02	endp
 sub_26E49	proc far
 		push	bp
 		mov	bp, sp
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -29058,13 +29058,13 @@ sub_26E49	endp
 sub_26E8C	proc far
 		push	bp
 		mov	bp, sp
-		mov	ax, word_3A6CA
-		mov	bx, 32h	; '2'
+		mov	ax, _boss_phase_frame
+		mov	bx, 50
 		cwd
 		idiv	bx
-		cmp	dx, 0Ah
+		cmp	dx, 10
 		jge	short loc_26ECA
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -29083,18 +29083,18 @@ sub_26E8C	proc far
 		add	sp, 0Ch
 
 loc_26ECA:
-		mov	ax, word_3A6CA
-		mov	bx, 32h	; '2'
+		mov	ax, _boss_phase_frame
+		mov	bx, 50
 		cwd
 		idiv	bx
-		cmp	dx, 19h
+		cmp	dx, 25
 		jl	short loc_26F10
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		cwd
 		idiv	bx
-		cmp	dx, 23h	; '#'
+		cmp	dx, 35
 		jge	short loc_26F10
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -29125,7 +29125,7 @@ sub_26E8C	endp
 sub_26F12	proc far
 		push	bp
 		mov	bp, sp
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -29163,7 +29163,7 @@ sub_26F4F	proc far
 
 		enter	2, 0
 		push	si
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -29187,7 +29187,7 @@ sub_26F4F	proc far
 ; ---------------------------------------------------------------------------
 
 loc_26FAA:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -29208,7 +29208,7 @@ loc_26FF3:
 		call	@CBossEntity@move_lock_and_put_8$qiiii c, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 
 loc_27008:
-		cmp	word_3A6CA, 32h	; '2'
+		cmp	_boss_phase_frame, 50
 		jnz	short loc_27088
 		push	40003h
 		push	30002h
@@ -29263,7 +29263,7 @@ loc_27080:
 ; ---------------------------------------------------------------------------
 
 loc_27088:
-		cmp	word_3A6CA, 3Ch	; '<'
+		cmp	_boss_phase_frame, 60
 		jnz	short loc_270F1
 		xor	si, si
 		jmp	short loc_270E9
@@ -29312,7 +29312,7 @@ loc_270E9:
 ; ---------------------------------------------------------------------------
 
 loc_270F1:
-		cmp	word_3A6CA, 46h	; 'F'
+		cmp	_boss_phase_frame, 70
 		jnz	short loc_27159
 		xor	si, si
 		jmp	short loc_27152
@@ -29361,7 +29361,7 @@ loc_27152:
 ; ---------------------------------------------------------------------------
 
 loc_27159:
-		cmp	word_3A6CA, 50h	; 'P'
+		cmp	_boss_phase_frame, 80
 		jnz	short loc_271DA
 		mov	[bp+@@angle], 0
 		xor	si, si
@@ -29421,9 +29421,9 @@ loc_271D0:
 ; ---------------------------------------------------------------------------
 
 loc_271DA:
-		cmp	word_3A6CA, 78h	; 'x'
+		cmp	_boss_phase_frame, 120
 		jl	short loc_271EB
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		xor	ax, ax
 		jmp	short loc_271EE
 ; ---------------------------------------------------------------------------
@@ -29445,12 +29445,12 @@ sub_26F4F	endp
 sub_271F1	proc far
 		push	bp
 		mov	bp, sp
-		cmp	word_3A6CA, 0Ah
+		cmp	_boss_phase_frame, 10
 		jge	short loc_27201
 		mov	word_3A76B, 0
 
 loc_27201:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -29474,7 +29474,7 @@ loc_27201:
 ; ---------------------------------------------------------------------------
 
 loc_27257:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -29495,9 +29495,9 @@ loc_272A0:
 		call	@CBossEntity@move_lock_and_put_8$qiiii c, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 
 loc_272B5:
-		cmp	word_3A6CA, 3Ch	; '<'
+		cmp	_boss_phase_frame, 60
 		jl	loc_275EF
-		cmp	word_3A6CA, 3Ch	; '<'
+		cmp	_boss_phase_frame, 60
 		jnz	short loc_272E1
 		push	20002h
 		push	20004h
@@ -29508,9 +29508,9 @@ loc_272B5:
 		mov	angle_3A76F, 0
 
 loc_272E1:
-		cmp	word_3A6CA, 3Ch	; '<'
+		cmp	_boss_phase_frame, 60
 		jl	loc_27464
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -29518,7 +29518,7 @@ loc_272E1:
 		jnz	loc_27464
 		cmp	word_3A76B, 0
 		jnz	loc_27464
-		cmp	word_3A6CA, 3Ch	; '<'
+		cmp	_boss_phase_frame, 60
 		jnz	short loc_27317
 		push	8
 		call	_mdrv2_se_play
@@ -29680,7 +29680,7 @@ loc_274F2:
 		mov	word_3A76B, 0C8h ; '?'
 
 loc_274FF:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		cwd
 		idiv	word_3A6CC
 		or	dx, dx
@@ -29771,7 +29771,7 @@ loc_275A1:
 loc_275D2:
 		cmp	word_3A76B, 104h
 		jle	short loc_275EF
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	word_3A76B, 0
 		mov	angle_3A76F, 0
 		xor	ax, ax
@@ -29797,7 +29797,7 @@ sub_275F4	proc far
 
 		enter	4, 0
 		push	si
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -29821,7 +29821,7 @@ sub_275F4	proc far
 ; ---------------------------------------------------------------------------
 
 loc_2764F:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -29842,9 +29842,9 @@ loc_27698:
 		call	@CBossEntity@move_lock_and_put_8$qiiii c, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 
 loc_276AD:
-		cmp	word_3A6CA, 32h	; '2'
+		cmp	_boss_phase_frame, 50
 		jl	loc_27ABB
-		cmp	word_3A6CA, 32h	; '2'
+		cmp	_boss_phase_frame, 50
 		jnz	short loc_27729
 		push	1
 		call	_graph_accesspage_func
@@ -29867,9 +29867,9 @@ loc_276AD:
 		add	sp, 2Ah
 
 loc_27729:
-		cmp	word_3A6CA, 3Ch	; '<'
+		cmp	_boss_phase_frame, 60
 		jl	loc_278BE
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -29877,7 +29877,7 @@ loc_27729:
 		jnz	loc_278BE
 		cmp	word_3A771, 0
 		jnz	loc_278BE
-		cmp	word_3A6CA, 3Ch	; '<'
+		cmp	_boss_phase_frame, 60
 		jnz	short loc_27759
 		push	8
 		call	_mdrv2_se_play
@@ -30115,14 +30115,14 @@ loc_2799F:
 loc_27A06:
 		cmp	si, 20h	; ' '
 		jl	short loc_2799F
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	word_3A771, 0
 		xor	ax, ax
 		jmp	loc_27ABE
 ; ---------------------------------------------------------------------------
 
 loc_27A1C:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		cwd
 		idiv	word_3A6CC
 		or	dx, dx
@@ -30153,7 +30153,7 @@ loc_27A65:
 		mov	ax, word_3A6CC
 		add	ax, ax
 		push	ax
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		cwd
 		pop	bx
 		idiv	bx
@@ -30169,8 +30169,8 @@ loc_27A65:
 		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 60
 		push	ax	; origin_left
-		mov	ax, word_3A6CA
-		mov	bx, 0Ah
+		mov	ax, _boss_phase_frame
+		mov	bx, 10
 		cwd
 		idiv	bx
 		cwd
@@ -30906,7 +30906,7 @@ loc_28158:
 ; ---------------------------------------------------------------------------
 
 loc_28163:
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	word_3A773, 0
 		mov	byte_3A6CE, 1
 		mov	elis_still_or_wave.BE_hitbox_orb_inactive, 0
@@ -30932,14 +30932,14 @@ loc_281CF:
 		jnz	loc_282DE
 		cmp	byte_3A77F, 0
 		jnz	short loc_281F4
-		push	word_3A6CA
+		push	_boss_phase_frame
 		push	word_3A6C8
 		call	sub_2191C
 		add	sp, 4
 		mov	byte_3A77F, al
 
 loc_281F4:
-		inc	word_3A6CA
+		inc	_boss_phase_frame
 		inc	word_3A773
 		cmp	word_3A777, 0
 		jz	short loc_28211
@@ -31024,7 +31024,7 @@ loc_2827D:
 		cmp	word_3A779, 1
 		jnz	loc_28655
 		mov	byte_3A6CE, 2
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	word_3A773, 0
 		mov	word_3A777, 0
 		jmp	short loc_28322
@@ -31035,7 +31035,7 @@ loc_282DE:
 		cbw
 		cmp	ax, 2
 		jnz	short loc_2832B
-		inc	word_3A6CA
+		inc	_boss_phase_frame
 		push	600100h
 		call	sub_250EE
 		add	sp, 4
@@ -31046,7 +31046,7 @@ loc_282DE:
 		call	sub_268B7
 		pop	cx
 		mov	byte_3A6CE, 3
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	word_3A773, 0
 		mov	word_3A777, 1
 
@@ -31060,7 +31060,7 @@ loc_2832B:
 		cbw
 		cmp	ax, 3
 		jnz	loc_28442
-		inc	word_3A6CA
+		inc	_boss_phase_frame
 		inc	word_3A773
 		mov	ax, elis_still_or_wave.BE_cur_top
 		mov	[bp+var_C], ax
@@ -31152,7 +31152,7 @@ loc_283D4:
 		cmp	word_3A779, 1
 		jnz	loc_28655
 		mov	byte_3A6CE, 4
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	word_3A773, 0
 		mov	word_3A777, 0
 		mov	word_3A779, 0
@@ -31165,7 +31165,7 @@ loc_28442:
 		cbw
 		cmp	ax, 4
 		jnz	short loc_284B3
-		inc	word_3A6CA
+		inc	_boss_phase_frame
 		cmp	word_3A779, 0
 		jnz	short loc_28468
 		push	600100h
@@ -31183,7 +31183,7 @@ loc_2846F:
 		cmp	word_3A777, 1
 		jnz	loc_28655
 		mov	byte_3A6CE, 5
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	word_3A773, 0
 		mov	word_3A777, 0
 		mov	word_3A779, 0
@@ -31205,7 +31205,7 @@ loc_284B3:
 		cbw
 		cmp	ax, 5
 		jnz	loc_28655
-		inc	word_3A6CA
+		inc	_boss_phase_frame
 		inc	word_3A773
 		mov	ax, elis_still_or_wave.BE_cur_top
 		mov	[bp+var_10], ax
@@ -31224,7 +31224,7 @@ loc_284B3:
 		push	offset elis_bat	; this (offset)
 		call	@CBossEntity@move_lock_unput_and_put_8$qiiii
 		add	sp, 0Ch
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 9
 		cwd
 		idiv	bx
@@ -31235,7 +31235,7 @@ loc_284B3:
 ; ---------------------------------------------------------------------------
 
 loc_2850F:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 9
 		cwd
 		idiv	bx
@@ -31246,7 +31246,7 @@ loc_2850F:
 ; ---------------------------------------------------------------------------
 
 loc_28525:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 9
 		cwd
 		idiv	bx
@@ -31549,7 +31549,7 @@ sub_287D9	proc far
 		mov	word_3A1E5, 8
 		mov	word_3A1E7, 2
 		mov	byte_3A6CE, 0
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	sariel_shield.BE_hitbox_orb_inactive, 0
 		mov	sariel_dress.BA_left, 280
 		mov	sariel_dress.BA_top, 192
@@ -32190,7 +32190,7 @@ loc_28D89:
 
 loc_28DBF:
 		push	15	; col
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 5
 		cwd
 		idiv	bx
@@ -32289,17 +32289,17 @@ sub_28EA6	proc near
 var_2		= word ptr -2
 
 		enter	2, 0
-		mov	ax, word_3A6CA
-		mov	bx, 0Ah
+		mov	ax, _boss_phase_frame
+		mov	bx, 10
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	short locret_28F0F
-		mov	ax, word_3A6CA
-		mov	bx, 28h	; '('
+		mov	ax, _boss_phase_frame
+		mov	bx, 40
 		cwd
 		idiv	bx
-		mov	bx, 0Ah
+		mov	bx, 10
 		mov	ax, dx
 		cwd
 		idiv	bx
@@ -32408,17 +32408,17 @@ sub_28FA9	endp
 
 sub_28FC5	proc near
 		enter	2, 0
-		mov	ax, word_3A6CA
-		mov	bx, 0Fh
+		mov	ax, _boss_phase_frame
+		mov	bx, 15
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	short locret_29013
-		mov	ax, word_3A6CA
-		mov	bx, 3Ch	; '<'
+		mov	ax, _boss_phase_frame
+		mov	bx, 60
 		cwd
 		idiv	bx
-		mov	bx, 0Fh
+		mov	bx, 15
 		mov	ax, dx
 		cwd
 		idiv	bx
@@ -32565,9 +32565,9 @@ sub_290F9	proc near
 		mov	word_35DDF, ax
 
 loc_2910D:
-		cmp	word_3A6CA, 32h	; '2'
+		cmp	_boss_phase_frame, 50
 		jl	loc_29589
-		cmp	word_3A6CA, 32h	; '2'
+		cmp	_boss_phase_frame, 50
 		jnz	short loc_29134
 		push	9B0096h
 		push	91008Ch
@@ -32577,7 +32577,7 @@ loc_2910D:
 		add	sp, 0Ch
 
 loc_29134:
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jge	loc_291FD
 		xor	si, si
 		jmp	loc_291F3
@@ -32601,7 +32601,7 @@ loc_29142:
 		push	word ptr [bx+6204h]
 		call	_egc_copy_rect_1_to_0_16
 		push	7	; col
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 3
 		cwd
 		idiv	bx
@@ -32615,7 +32615,7 @@ loc_29142:
 		push	word ptr [bx+61FCh]	; left
 		call	_grc_put_8
 		add	sp, 12h
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -32659,7 +32659,7 @@ loc_291F3:
 ; ---------------------------------------------------------------------------
 
 loc_291FD:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		cmp	ax, word_3A780
 		jge	loc_29331
 		xor	si, si
@@ -32692,7 +32692,7 @@ loc_29219:
 		push	word ptr [bx+6204h]
 		call	_egc_copy_rect_1_to_0_16
 		push	7	; col
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 3
 		cwd
 		idiv	bx
@@ -32706,7 +32706,7 @@ loc_29219:
 		push	word ptr [bx+61FCh]	; left
 		call	_grc_put_8
 		add	sp, 12h
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -32787,7 +32787,7 @@ loc_29327:
 ; ---------------------------------------------------------------------------
 
 loc_29331:
-		cmp	word_3A6CA, 0C8h ; '?'
+		cmp	_boss_phase_frame, 200
 		jge	short loc_293A3
 		xor	si, si
 		jmp	short loc_2939B
@@ -32803,7 +32803,7 @@ loc_2933D:
 		push	word ptr [bx+6204h]
 		call	_egc_copy_rect_1_to_0_16
 		push	7	; col
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 3
 		cwd
 		idiv	bx
@@ -32817,7 +32817,7 @@ loc_2933D:
 		push	word ptr [bx+61FCh]	; left
 		call	_grc_put_8
 		add	sp, 12h
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -32841,9 +32841,9 @@ loc_2939B:
 ; ---------------------------------------------------------------------------
 
 loc_293A3:
-		cmp	word_3A6CA, 0F0h
+		cmp	_boss_phase_frame, 240
 		jge	loc_2945E
-		cmp	word_3A6CA, 0C8h ; '?'
+		cmp	_boss_phase_frame, 200
 		jnz	short loc_293CE
 		call	IRand
 		mov	bx, 2
@@ -32876,7 +32876,7 @@ loc_293D3:
 		push	word ptr [bx+6204h]
 		call	_egc_copy_rect_1_to_0_16
 		push	7	; col
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 3
 		cwd
 		idiv	bx
@@ -32890,7 +32890,7 @@ loc_293D3:
 		push	word ptr [bx+61FCh]	; left
 		call	_grc_put_8
 		add	sp, 12h
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -32920,9 +32920,9 @@ loc_29454:
 ; ---------------------------------------------------------------------------
 
 loc_2945E:
-		cmp	word_3A6CA, 140h
+		cmp	_boss_phase_frame, 320
 		jge	loc_2954A
-		cmp	word_3A6CA, 0F0h
+		cmp	_boss_phase_frame, 240
 		jnz	short loc_294AA
 		call	IRand
 		mov	bx, 2
@@ -32979,7 +32979,7 @@ loc_294C9:
 		push	word ptr [bx+6204h]
 		call	_egc_copy_rect_1_to_0_16
 		push	7	; col
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 3
 		cwd
 		idiv	bx
@@ -32993,7 +32993,7 @@ loc_294C9:
 		push	word ptr [bx+61FCh]	; left
 		call	_grc_put_8
 		add	sp, 12h
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -33023,7 +33023,7 @@ loc_29541:
 ; ---------------------------------------------------------------------------
 
 loc_2954A:
-		cmp	word_3A6CA, 12Ch
+		cmp	_boss_phase_frame, 300
 		jle	short loc_29589
 		xor	si, si
 		jmp	short loc_29575
@@ -33045,7 +33045,7 @@ loc_29575:
 		cmp	si, 2
 		jl	short loc_29556
 		call	sub_28FA9
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	word_35DDF, 0
 
 loc_29589:
@@ -33066,9 +33066,9 @@ sub_2958C	proc near
 		enter	2, 0
 		push	si
 		push	di
-		cmp	word_3A6CA, 32h	; '2'
+		cmp	_boss_phase_frame, 50
 		jl	loc_296EC
-		cmp	word_3A6CA, 32h	; '2'
+		cmp	_boss_phase_frame, 50
 		jnz	short loc_295EF
 		push	50004Ch
 		push	480044h
@@ -33104,27 +33104,27 @@ loc_295EA:
 		jl	short loc_295BD
 
 loc_295EF:
-		cmp	word_3A6CA, 96h
+		cmp	_boss_phase_frame, 150
 		jge	loc_296DE
-		mov	ax, word_3A6CA
-		add	ax, 0FFCEh
-		mov	bx, 0Ah
+		mov	ax, _boss_phase_frame
+		add	ax, -50
+		mov	bx, 10
 		cwd
 		idiv	bx
 		mov	si, ax
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		cwd
 		idiv	bx
 		cmp	dx, 9
 		jz	loc_29698
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		cwd
 		idiv	bx
 		shl	dx, 3
 		mov	ax, 64
 		sub	ax, dx
 		mov	di, ax
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		dec	ax
 		cwd
 		idiv	bx
@@ -33132,7 +33132,7 @@ loc_295EF:
 		mov	ax, 64
 		sub	ax, dx
 		mov	[bp+@@radius], ax
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		cwd
 		idiv	bx
 		or	dx, dx
@@ -33152,8 +33152,8 @@ loc_295EF:
 		add	sp, 0Eh
 
 loc_29665:
-		mov	ax, word_3A6CA
-		mov	bx, 0Ah
+		mov	ax, _boss_phase_frame
+		mov	bx, 10
 		cwd
 		idiv	bx
 		cmp	dx, 8
@@ -33204,9 +33204,9 @@ loc_29698:
 ; ---------------------------------------------------------------------------
 
 loc_296DE:
-		cmp	word_3A6CA, 0C8h ; '?'
+		cmp	_boss_phase_frame, 200
 		jle	short loc_296EC
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 
 loc_296EC:
 		pop	di
@@ -33234,7 +33234,7 @@ var_6		= word ptr -6
 
 		enter	0Ah, 0
 		push	si
-		cmp	word_3A6CA, 28h	; '('
+		cmp	_boss_phase_frame, 40
 		jl	loc_29A96
 		cmp	byte_35DE1, 0
 		jnz	short loc_2970D
@@ -33243,9 +33243,9 @@ var_6		= word ptr -6
 		mov	byte_35DE1, al
 
 loc_2970D:
-		cmp	word_3A6CA, 32h	; '2'
+		cmp	_boss_phase_frame, 50
 		jl	loc_29A96
-		cmp	word_3A6CA, 32h	; '2'
+		cmp	_boss_phase_frame, 50
 		jnz	short loc_29783
 		mov	word_35DE3, 0
 		mov	subpixel_point_3AC50.x, (340 shl 4)
@@ -33281,7 +33281,7 @@ loc_2970D:
 ; ---------------------------------------------------------------------------
 
 loc_29783:
-		cmp	word_3A6CA, 0C8h ; '?'
+		cmp	_boss_phase_frame, 200
 		jge	loc_298A5
 		cmp	subpixel_point_3AC50.x, (320 shl 4)
 		jge	short loc_2979B
@@ -33338,7 +33338,7 @@ loc_297F6:
 		add	subpixel_point_3AC50.x, ax
 		mov	ax, word_3AC54
 		add	subpixel_point_3AC50.y, ax
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		cwd
 		idiv	word_3A780
 		or	dx, dx
@@ -33374,13 +33374,13 @@ loc_297F6:
 		inc	word_35DE3
 
 loc_29874:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
 		add	dx, 2
 		push	dx	; col
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -33398,9 +33398,9 @@ loc_29874:
 ; ---------------------------------------------------------------------------
 
 loc_298A5:
-		cmp	word_3A6CA, 190h
+		cmp	_boss_phase_frame, 400
 		jge	loc_29A83
-		cmp	word_3A6CA, 0C8h ; '?'
+		cmp	_boss_phase_frame, 200
 		jnz	loc_29995
 		mov	ax, word_3AC54
 		mov	[bp+var_6], ax
@@ -33534,13 +33534,13 @@ loc_29995:
 		jl	short loc_29A29
 		cmp	subpixel_point_3AC50.y, (23 shl 4)
 		jg	short loc_29A29
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
 		add	dx, 2
 		push	dx	; col
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -33552,13 +33552,13 @@ loc_29995:
 		add	sp, 0Ah
 
 loc_29A29:
-		mov	ax, word_3A6CA
-		mov	bx, 10h
+		mov	ax, _boss_phase_frame
+		mov	bx, 16
 		cwd
 		idiv	bx
 		or	dx, dx
 		jz	short loc_29A41
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		cwd
 		idiv	bx
 		cmp	dx, 2
@@ -33591,9 +33591,9 @@ loc_29A41:
 ; ---------------------------------------------------------------------------
 
 loc_29A83:
-		cmp	word_3A6CA, 190h
+		cmp	_boss_phase_frame, 400
 		jnz	short loc_29A96
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	byte_35DE1, 0
 
 loc_29A96:
@@ -33618,14 +33618,14 @@ arg_0		= word ptr  4
 		enter	18h, 0
 		push	si
 		push	di
-		cmp	word_3A6CA, 14h
+		cmp	_boss_phase_frame, 20
 		jnz	short loc_29AAC
 		mov	word_3AC60, 0
 
 loc_29AAC:
-		cmp	word_3A6CA, 32h	; '2'
+		cmp	_boss_phase_frame, 50
 		jl	loc_29D85
-		cmp	word_3A6CA, 32h	; '2'
+		cmp	_boss_phase_frame, 50
 		jnz	short loc_29ADC
 		mov	word_3AC58, 0
 		mov	word_3AC5A, 0
@@ -33909,7 +33909,7 @@ loc_29D0E:
 		cmp	word_3AC58, 260h
 		jle	short loc_29D85
 		inc	word_3AC60
-		mov	word_3A6CA, 31h	; '1'
+		mov	_boss_phase_frame, 49
 		cmp	word_3AC60, 3
 		jl	short loc_29D85
 		call	_z_vsync_wait_and_scrollup stdcall, 0
@@ -33929,7 +33929,7 @@ loc_29D0E:
 		push	word_3A6C8
 		call	sub_2191C
 		add	sp, 12h
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 
 loc_29D85:
 		pop	di
@@ -33954,7 +33954,7 @@ arg_0		= word ptr  4
 		enter	6, 0
 		push	si
 		push	di
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 7
 		cwd
 		idiv	bx
@@ -34030,7 +34030,7 @@ loc_29E2B:
 		jl	loc_29DA5
 
 loc_29E32:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -34199,7 +34199,7 @@ sub_29D8B	endp
 sub_29FE9	proc near
 		push	bp
 		mov	bp, sp
-		cmp	word_3A6CA, 0Ah
+		cmp	_boss_phase_frame, 10
 		jge	short loc_2A010
 		mov	word_35E03, 0FFFFh
 		push	0A000A0h
@@ -34210,7 +34210,7 @@ sub_29FE9	proc near
 		add	sp, 0Ch
 
 loc_2A010:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		cwd
 		idiv	word_3A780
 		or	dx, dx
@@ -34465,7 +34465,7 @@ sub_29FE9	endp
 sub_2A2ED	proc near
 		push	bp
 		mov	bp, sp
-		cmp	word_3A6CA, 5
+		cmp	_boss_phase_frame, 5
 		jge	short loc_2A313
 		mov	angle_3AF44, 0
 		push	8000Ah
@@ -34476,7 +34476,7 @@ sub_2A2ED	proc near
 		add	sp, 0Ch
 
 loc_2A313:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		cwd
 		idiv	word_3AF45
 		or	dx, dx
@@ -34520,9 +34520,9 @@ loc_2A313:
 		mov	angle_3AF44, al
 
 loc_2A3AA:
-		cmp	word_3A6CA, 1DFh
+		cmp	_boss_phase_frame, 479
 		jle	short loc_2A3B8
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 
 loc_2A3B8:
 		pop	bp
@@ -34541,7 +34541,7 @@ sub_2A3BA	proc near
 @@left		= word ptr -2
 
 		enter	6, 0
-		cmp	word_3A6CA, 0Ah
+		cmp	_boss_phase_frame, 10
 		jnz	short loc_2A3DC
 		push	20002h
 		push	30004h
@@ -34551,13 +34551,13 @@ sub_2A3BA	proc near
 		add	sp, 0Ch
 
 loc_2A3DC:
-		mov	ax, word_3A6CA
-		mov	bx, 0C8h ; '?'
+		mov	ax, _boss_phase_frame
+		mov	bx, 200
 		cwd
 		idiv	bx
-		cmp	dx, 96h
+		cmp	dx, 150
 		jl	short loc_2A459
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		cwd
 		idiv	word_3A780
 		or	dx, dx
@@ -34586,9 +34586,9 @@ loc_2A3DC:
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii c, offset _Pellets, ds, [bp+@@left], ax, 0, (0 shl 4), large PM_SLING_AIMED or (((4 shl 4) + 8) shl 16), large 0 or (0 shl 16)
 
 loc_2A459:
-		cmp	word_3A6CA, 12Bh
+		cmp	_boss_phase_frame, 299
 		jl	short locret_2A467
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 
 locret_2A467:
 		leave
@@ -34610,7 +34610,7 @@ var_2		= word ptr -2
 		enter	6, 0
 		push	si
 		push	di
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 7
 		cwd
 		idiv	bx
@@ -34651,7 +34651,7 @@ loc_2A4C0:
 		jl	short loc_2A480
 
 loc_2A4C5:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -34840,14 +34840,14 @@ sub_2A469	endp
 sub_2A69B	proc near
 		push	bp
 		mov	bp, sp
-		cmp	word_3A6CA, 5
+		cmp	_boss_phase_frame, 5
 		jge	short loc_2A6B0
 		call	sub_28948 pascal, large 0, large 0, 99
 
 loc_2A6B0:
-		cmp	word_3A6CA, 32h	; '2'
+		cmp	_boss_phase_frame, 50
 		jl	loc_2A894
-		cmp	word_3A6CA, 32h	; '2'
+		cmp	_boss_phase_frame, 50
 		jnz	short loc_2A735
 		mov	point_3B037.x, 460
 		mov	point_3B037.y, 120
@@ -34879,9 +34879,9 @@ loc_2A724:
 ; ---------------------------------------------------------------------------
 
 loc_2A735:
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jl	loc_2A863
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jnz	short loc_2A79B
 		mov	point_3B037.x, 180
 		mov	point_3B037.y, 120
@@ -34913,9 +34913,9 @@ loc_2A735:
 ; ---------------------------------------------------------------------------
 
 loc_2A79B:
-		cmp	word_3A6CA, 96h
+		cmp	_boss_phase_frame, 150
 		jl	loc_2A863
-		cmp	word_3A6CA, 96h
+		cmp	_boss_phase_frame, 150
 		jnz	short loc_2A7FC
 		mov	point_3B037.x, 608
 		mov	point_3B037.y, 164
@@ -34933,9 +34933,9 @@ loc_2A79B:
 ; ---------------------------------------------------------------------------
 
 loc_2A7FC:
-		cmp	word_3A6CA, 0C8h ; '?'
+		cmp	_boss_phase_frame, 200
 		jl	short loc_2A863
-		cmp	word_3A6CA, 0C8h ; '?'
+		cmp	_boss_phase_frame, 200
 		jnz	short loc_2A85B
 		mov	point_3B037.x, 24
 		mov	point_3B037.y, 164
@@ -34953,7 +34953,7 @@ loc_2A7FC:
 ; ---------------------------------------------------------------------------
 
 loc_2A85B:
-		cmp	word_3A6CA, 0FAh
+		cmp	_boss_phase_frame, 250
 		jge	short loc_2A886
 
 loc_2A863:
@@ -34967,9 +34967,9 @@ loc_2A863:
 ; ---------------------------------------------------------------------------
 
 loc_2A886:
-		cmp	word_3A6CA, 12Ch
+		cmp	_boss_phase_frame, 300
 		jle	short loc_2A894
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 
 loc_2A894:
 		pop	bp
@@ -34984,9 +34984,9 @@ sub_2A69B	endp
 sub_2A896	proc near
 		push	bp
 		mov	bp, sp
-		cmp	word_3A6CA, 32h	; '2'
+		cmp	_boss_phase_frame, 50
 		jge	short loc_2A8E0
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -34997,7 +34997,7 @@ sub_2A896	proc near
 ; ---------------------------------------------------------------------------
 
 loc_2A8B2:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -35010,7 +35010,7 @@ loc_2A8C3:
 		pop	cx
 
 loc_2A8C9:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -35024,11 +35024,11 @@ loc_2A8C9:
 ; ---------------------------------------------------------------------------
 
 loc_2A8E0:
-		cmp	word_3A6CA, 32h	; '2'
+		cmp	_boss_phase_frame, 50
 		jnz	short loc_2A8F5
 		call	_z_vsync_wait_and_scrollup stdcall, 0
 		pop	cx
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 
 loc_2A8F5:
 		pop	bp
@@ -35047,7 +35047,7 @@ sub_2A8F7	proc near
 @@left		= word ptr -2
 
 		enter	6, 0
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -35083,14 +35083,14 @@ sub_2A949	proc near
 		mov	bp, sp
 		push	si
 		push	di
-		cmp	word_3A6CA, 5
+		cmp	_boss_phase_frame, 5
 		jge	short loc_2A960
 		call	sub_28948 pascal, large 0, large 0, 99
 
 loc_2A960:
-		cmp	word_3A6CA, 96h
+		cmp	_boss_phase_frame, 150
 		jl	loc_2ABD8
-		cmp	word_3A6CA, 96h
+		cmp	_boss_phase_frame, 150
 		jnz	short loc_2A99E
 		mov	angle_3B041, 0
 		mov	byte_3B042, 1
@@ -35109,7 +35109,7 @@ loc_2A993:
 ; ---------------------------------------------------------------------------
 
 loc_2A99E:
-		cmp	word_3A6CA, 0C8h ; '?'
+		cmp	_boss_phase_frame, 200
 		jge	short loc_2AA13
 		mov	al, angle_3B041
 		mov	ah, 0
@@ -35135,8 +35135,8 @@ loc_2A99E:
 		mov	al, byte_3B042
 		add	angle_3B041, al
 		inc	byte_3B042
-		mov	ax, word_3A6CA
-		mov	bx, 0Ah
+		mov	ax, _boss_phase_frame
+		mov	bx, 10
 		cwd
 		idiv	bx
 		or	dx, dx
@@ -35145,7 +35145,7 @@ loc_2A99E:
 ; ---------------------------------------------------------------------------
 
 loc_2AA13:
-		cmp	word_3A6CA, 0C8h ; '?'
+		cmp	_boss_phase_frame, 200
 		jnz	short loc_2AA36
 		mov	si, 999
 		mov	di, 999
@@ -35155,9 +35155,9 @@ loc_2AA13:
 ; ---------------------------------------------------------------------------
 
 loc_2AA36:
-		cmp	word_3A6CA, 190h
+		cmp	_boss_phase_frame, 400
 		jg	loc_2ABCA
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 5
 		cwd
 		idiv	bx
@@ -35186,8 +35186,8 @@ loc_2AA36:
 		push	7
 		call	_mdrv2_se_play
 		pop	cx
-		mov	ax, word_3A6CA
-		mov	bx, 0Fh
+		mov	ax, _boss_phase_frame
+		mov	bx, 15
 		cwd
 		idiv	bx
 		or	dx, dx
@@ -35198,8 +35198,8 @@ loc_2AA36:
 		push	di	; target_y
 		push	si	; target_left
 		push	320 or (160 shl 16)	; (origin_left) or (origin_y shl 16)
-		mov	ax, word_3A6CA
-		add	ax, 0FF29h
+		mov	ax, _boss_phase_frame
+		add	ax, -215
 		cwd
 		idiv	bx
 		mov	bx, 0Ah
@@ -35284,9 +35284,9 @@ loc_2ABC0:
 ; ---------------------------------------------------------------------------
 
 loc_2ABCA:
-		cmp	word_3A6CA, 1C2h
+		cmp	_boss_phase_frame, 450
 		jnz	short loc_2ABD8
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 
 loc_2ABD8:
 		pop	di
@@ -35310,9 +35310,9 @@ var_A		= word ptr -0Ah
 var_8		= qword	ptr -8
 
 		enter	0Ah, 0
-		cmp	word_3A6CA, 32h	; '2'
+		cmp	_boss_phase_frame, 50
 		jl	locret_2AECC
-		cmp	word_3A6CA, 32h	; '2'
+		cmp	_boss_phase_frame, 50
 		jnz	short loc_2AC27
 		push	90008h
 		push	70006h
@@ -35330,9 +35330,9 @@ var_8		= qword	ptr -8
 ; ---------------------------------------------------------------------------
 
 loc_2AC27:
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jge	loc_2AE54
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -35361,7 +35361,7 @@ loc_2AC27:
 		call	sub_28948 pascal, ((RES_X / 2) shl 16) or 120, point_3B043.x, point_3B043.y, 7
 
 loc_2AC8A:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -35410,8 +35410,8 @@ loc_2ACFE:
 
 loc_2AD01:
 		add	point_3B043.x, 2
-		mov	ax, word_3A6CA
-		mov	bx, 0Ah
+		mov	ax, _boss_phase_frame
+		mov	bx, 10
 		cwd
 		idiv	bx
 		or	dx, dx
@@ -35419,7 +35419,7 @@ loc_2AD01:
 		push	6
 		call	_mdrv2_se_play
 		pop	cx
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		add	ax, -60
 		imul	ax, 10
 		add	ax, point_3B043.x
@@ -35499,7 +35499,7 @@ loc_2AD01:
 		call	sub_289D0
 
 loc_2AE0C:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 6
 		cwd
 		idiv	bx
@@ -35528,7 +35528,7 @@ loc_2AE0C:
 ; ---------------------------------------------------------------------------
 
 loc_2AE54:
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jnz	short loc_2AE7A
 		push	point_3B043.y
 		mov	ax, RES_X - 1
@@ -35543,8 +35543,8 @@ loc_2AE54:
 ; ---------------------------------------------------------------------------
 
 loc_2AE7A:
-		mov	ax, word_3A6CA
-		mov	bx, 0Ah
+		mov	ax, _boss_phase_frame
+		mov	bx, 10
 		cwd
 		idiv	bx
 		or	dx, dx
@@ -35569,9 +35569,9 @@ loc_2AE7A:
 		call	sub_289D0
 
 loc_2AEBE:
-		cmp	word_3A6CA, 12Ch
+		cmp	_boss_phase_frame, 300
 		jl	short locret_2AECC
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 
 locret_2AECC:
 		leave
@@ -35589,9 +35589,9 @@ sub_2AECE	proc near
 
 		enter	2, 0
 		push	si
-		cmp	word_3A6CA, 32h	; '2'
+		cmp	_boss_phase_frame, 50
 		jl	loc_2AFDC
-		cmp	word_3A6CA, 32h	; '2'
+		cmp	_boss_phase_frame, 50
 		jnz	short loc_2AF19
 		mov	[bp+@@angle], 0
 		xor	si, si
@@ -35612,7 +35612,7 @@ loc_2AF11:
 ; ---------------------------------------------------------------------------
 
 loc_2AF19:
-		cmp	word_3A6CA, 3Ch	; '<'
+		cmp	_boss_phase_frame, 60
 		jnz	short loc_2AF56
 		mov	[bp+@@angle], 4
 		xor	si, si
@@ -35633,7 +35633,7 @@ loc_2AF4E:
 ; ---------------------------------------------------------------------------
 
 loc_2AF56:
-		cmp	word_3A6CA, 46h	; 'F'
+		cmp	_boss_phase_frame, 70
 		jnz	short loc_2AF92
 		mov	[bp+@@angle], 4
 		xor	si, si
@@ -35654,7 +35654,7 @@ loc_2AF8B:
 ; ---------------------------------------------------------------------------
 
 loc_2AF92:
-		cmp	word_3A6CA, 50h	; 'P'
+		cmp	_boss_phase_frame, 80
 		jnz	short loc_2AFCE
 		mov	[bp+@@angle], 0Eh
 		xor	si, si
@@ -35675,9 +35675,9 @@ loc_2AFC7:
 ; ---------------------------------------------------------------------------
 
 loc_2AFCE:
-		cmp	word_3A6CA, 96h
+		cmp	_boss_phase_frame, 150
 		jle	short loc_2AFDC
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 
 loc_2AFDC:
 		pop	si
@@ -35698,9 +35698,9 @@ var_4		= word ptr -4
 
 		enter	6, 0
 		push	si
-		cmp	word_3A6CA, 32h	; '2'
+		cmp	_boss_phase_frame, 50
 		jl	loc_2B2B6
-		cmp	word_3A6CA, 32h	; '2'
+		cmp	_boss_phase_frame, 50
 		jnz	short loc_2B01A
 		push	8000Ah
 		push	0D0010h
@@ -35714,9 +35714,9 @@ var_4		= word ptr -4
 ; ---------------------------------------------------------------------------
 
 loc_2B01A:
-		cmp	word_3A6CA, 82h
+		cmp	_boss_phase_frame, 130
 		jge	loc_2B0F7
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -35744,7 +35744,7 @@ loc_2B01A:
 		call	sub_28948 pascal, ((RES_X / 2) shl 16) or 120, x_3B04D, y_3B04F, 7
 
 loc_2B07B:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -35796,7 +35796,7 @@ loc_2B0EF:
 ; ---------------------------------------------------------------------------
 
 loc_2B0F7:
-		cmp	word_3A6CA, 82h
+		cmp	_boss_phase_frame, 130
 		jnz	short loc_2B125
 		push	y_3B04F
 		mov	ax, RES_X - 1
@@ -35811,12 +35811,12 @@ loc_2B0F7:
 ; ---------------------------------------------------------------------------
 
 loc_2B125:
-		cmp	word_3A6CA, 96h
+		cmp	_boss_phase_frame, 150
 		jle	loc_2B1E6
-		cmp	word_3A6CA, 15Eh
+		cmp	_boss_phase_frame, 350
 		jge	loc_2B1E6
-		mov	ax, word_3A6CA
-		mov	bx, 0Ah
+		mov	ax, _boss_phase_frame
+		mov	bx, 10
 		cwd
 		idiv	bx
 		or	dx, dx
@@ -35891,7 +35891,7 @@ loc_2B1CF:
 ; ---------------------------------------------------------------------------
 
 loc_2B1E6:
-		cmp	word_3A6CA, 15Eh
+		cmp	_boss_phase_frame, 350
 		jnz	short loc_2B1FD
 		mov	x_3B04D, 0
 		mov	y_3B04F, 64
@@ -35899,9 +35899,9 @@ loc_2B1E6:
 ; ---------------------------------------------------------------------------
 
 loc_2B1FD:
-		cmp	word_3A6CA, 226h
+		cmp	_boss_phase_frame, 550
 		jge	loc_2B2A8
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		cwd
 		idiv	word_3A780
 		or	dx, dx
@@ -35956,9 +35956,9 @@ loc_2B29A:
 ; ---------------------------------------------------------------------------
 
 loc_2B2A8:
-		cmp	word_3A6CA, 258h
+		cmp	_boss_phase_frame, 600
 		jle	short loc_2B2B6
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 
 loc_2B2B6:
 		pop	si
@@ -37452,7 +37452,7 @@ loc_2C117:
 		mov	byte ptr [bp+var_5], al
 		cmp	byte_3A6CE, 0
 		jnz	loc_2C399
-		mov	word_3A6CA, 0FFFFh
+		mov	_boss_phase_frame, -1
 		mov	word_3B433, 0
 		mov	word_3B431, 0
 		call	@boss_palette_snap$qv
@@ -37461,15 +37461,15 @@ loc_2C117:
 		mov	random_seed, eax
 
 loc_2C14E:
-		inc	word_3A6CA
-		cmp	word_3A6CA, 1
+		inc	_boss_phase_frame
+		cmp	_boss_phase_frame, 1
 		jnz	short loc_2C162
 		mov	word_3B435, 10h
 		jmp	loc_2C37F
 ; ---------------------------------------------------------------------------
 
 loc_2C162:
-		cmp	word_3A6CA, 2
+		cmp	_boss_phase_frame, 2
 		jnz	short loc_2C1E5
 		mov	si, 20h	; ' '
 		jmp	short loc_2C1DC
@@ -37516,9 +37516,9 @@ loc_2C1DC:
 ; ---------------------------------------------------------------------------
 
 loc_2C1E5:
-		cmp	word_3A6CA, 2
+		cmp	_boss_phase_frame, 2
 		jle	loc_2C37F
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -37620,7 +37620,7 @@ loc_2C2F2:
 		idiv	bx
 		inc	dx
 		mov	word_35E99, dx
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	byte_3B437, 0
 		call	@boss_palette_show$qv
 		mov	sariel_shield.BE_cur_left, 304
@@ -37650,7 +37650,7 @@ loc_2C2F2:
 ; ---------------------------------------------------------------------------
 
 loc_2C37F:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -37669,14 +37669,14 @@ loc_2C399:
 		jnz	loc_2C4A1
 		cmp	byte_3B437, 0
 		jnz	short loc_2C3BE
-		push	word_3A6CA
+		push	_boss_phase_frame
 		push	word_3A6C8
 		call	sub_2191C
 		add	sp, 4
 		mov	byte_3B437, al
 
 loc_2C3BE:
-		inc	word_3A6CA
+		inc	_boss_phase_frame
 		inc	word_3B433
 		call	sub_28EA6
 		call	sub_28FC5
@@ -37717,7 +37717,7 @@ loc_2C419:
 		call	sub_296F0
 
 loc_2C423:
-		cmp	word_3A6CA, 0
+		cmp	_boss_phase_frame, 0
 		jnz	short loc_2C440
 		cmp	word_35E95, 2
 		jnz	short loc_2C435
@@ -37772,14 +37772,14 @@ loc_2C4A1:
 		cbw
 		cmp	ax, 2
 		jnz	short loc_2C4D8
-		inc	word_3A6CA
+		inc	_boss_phase_frame
 		push	1
 		call	sub_29A99
 		call	sub_28FC5
-		cmp	word_3A6CA, 0
+		cmp	_boss_phase_frame, 0
 		jnz	loc_2CDCE
 		mov	byte_3A6CE, 3
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		call	sub_28852
 		call	IRand
 		mov	bx, 5
@@ -37791,7 +37791,7 @@ loc_2C4D8:
 		cbw
 		cmp	ax, 3
 		jnz	loc_2C594
-		inc	word_3A6CA
+		inc	_boss_phase_frame
 		inc	word_3B433
 		call	sub_28EA6
 		call	sub_28FC5
@@ -37814,12 +37814,12 @@ loc_2C50C:
 ; ---------------------------------------------------------------------------
 
 loc_2C511:
-		cmp	word_3A6CA, 3Ch	; '<'
+		cmp	_boss_phase_frame, 60
 		jge	short loc_2C51E
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 
 loc_2C51E:
-		cmp	word_3A6CA, 0
+		cmp	_boss_phase_frame, 0
 		jnz	short loc_2C533
 		mov	ax, 1
 		sub	ax, word_35E95
@@ -37865,14 +37865,14 @@ loc_2C594:
 		cbw
 		cmp	ax, 4
 		jnz	short loc_2C5D6
-		inc	word_3A6CA
+		inc	_boss_phase_frame
 		push	2
 		call	sub_29A99
 		call	sub_28FC5
-		cmp	word_3A6CA, 0
+		cmp	_boss_phase_frame, 0
 		jnz	loc_2CDCE
 		mov	byte_3A6CE, 5
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		call	sub_28852
 		call	@boss_palette_snap$qv
 		call	IRand
@@ -37888,7 +37888,7 @@ loc_2C5D6:
 		cbw
 		cmp	ax, 5
 		jnz	loc_2C6B0
-		inc	word_3A6CA
+		inc	_boss_phase_frame
 		inc	word_3B433
 		call	sub_28EA6
 		call	sub_28FC5
@@ -37928,7 +37928,7 @@ loc_2C62B:
 		call	sub_2A8F7
 
 loc_2C631:
-		cmp	word_3A6CA, 0
+		cmp	_boss_phase_frame, 0
 		jnz	short loc_2C64F
 		cmp	word_35E95, 5
 		jnz	short loc_2C644
@@ -37983,14 +37983,14 @@ loc_2C6B0:
 		cbw
 		cmp	ax, 6
 		jnz	short loc_2C6F2
-		inc	word_3A6CA
+		inc	_boss_phase_frame
 		push	3
 		call	sub_29A99
 		call	sub_28FC5
-		cmp	word_3A6CA, 0
+		cmp	_boss_phase_frame, 0
 		jnz	loc_2CDCE
 		mov	byte_3A6CE, 7
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		call	sub_28852
 		call	@boss_palette_snap$qv
 		call	IRand
@@ -38006,7 +38006,7 @@ loc_2C6F2:
 		cbw
 		cmp	ax, 7
 		jnz	loc_2C7F1
-		inc	word_3A6CA
+		inc	_boss_phase_frame
 		inc	word_3B433
 		call	sub_28EA6
 		call	sub_28FC5
@@ -38049,7 +38049,7 @@ loc_2C75D:
 		call	sub_2AFDF
 
 loc_2C767:
-		cmp	word_3A6CA, 0
+		cmp	_boss_phase_frame, 0
 		jnz	short loc_2C784
 		cmp	word_35E95, 2
 		jnz	short loc_2C779
@@ -38099,7 +38099,7 @@ loc_2C7C3:
 
 loc_2C7E2:
 		mov	word_35E95, 0
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		jmp	loc_2CDCE
 ; ---------------------------------------------------------------------------
 
@@ -38108,14 +38108,14 @@ loc_2C7F1:
 		cbw
 		cmp	ax, 8
 		jnz	short loc_2C835
-		inc	word_3A6CA
+		inc	_boss_phase_frame
 		push	0
 		call	sub_29A99
 		call	sub_28FC5
-		cmp	word_3A6CA, 0
+		cmp	_boss_phase_frame, 0
 		jnz	loc_2CDCE
 		mov	byte_3A6CE, 1
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		call	sub_28852
 		call	@boss_palette_snap$qv
 		call	IRand
@@ -38136,7 +38136,7 @@ loc_2C835:
 		cbw
 		cmp	ax, 63h	; 'c'
 		jnz	loc_2CAA8
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	word_3B433, 18Fh
 		call	@CShots@unput_and_reset_all$qv c, offset _Shots, ds
 		call	@CPellets@unput_and_reset_all$qv c, offset _Pellets, ds
@@ -38184,10 +38184,10 @@ loc_2C8AE:
 
 loc_2C949:
 		pop	cx
-		inc	word_3A6CA
-		cmp	word_3A6CA, 0C8h ; '?'
+		inc	_boss_phase_frame
+		cmp	_boss_phase_frame, 200
 		jge	short loc_2C9B1
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -38198,7 +38198,7 @@ loc_2C949:
 		pop	cx
 
 loc_2C980:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -38209,7 +38209,7 @@ loc_2C980:
 		pop	cx
 
 loc_2C99C:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -38220,14 +38220,14 @@ loc_2C99C:
 		pop	cx
 
 loc_2C9B1:
-		cmp	word_3A6CA, 0C8h ; '?'
+		cmp	_boss_phase_frame, 200
 		jnz	short loc_2C9C6
 		call	@boss_palette_show$qv
 		call	_z_vsync_wait_and_scrollup stdcall, 0
 		pop	cx
 
 loc_2C9C6:
-		cmp	word_3A6CA, 0C8h ; '?'
+		cmp	_boss_phase_frame, 200
 		jle	loc_2CA9E
 		xor	si, si
 		jmp	short loc_2C9DA
@@ -38257,7 +38257,7 @@ loc_2C9DA:
 		call	_hud_score_and_cardcombo_render
 		call	_z_vsync_wait_and_scrollup stdcall, 0
 		pop	cx
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	word_3B433, 0
 		mov	word_35E95, 0
 		mov	word_35E97, 0
@@ -38271,7 +38271,7 @@ loc_2C9DA:
 		mov	word_3A1E7, 3
 		mov	byte_3B437, 0
 		push	ds
-		push	offset word_3A6CA
+		push	offset _boss_phase_frame
 		push	3E7h
 		call	sub_2BB46
 		jmp	loc_2CDCE
@@ -38290,16 +38290,16 @@ loc_2CAA8:
 		jnz	loc_2CC9E
 		cmp	byte_3B437, 0
 		jnz	short loc_2CACD
-		push	word_3A6CA
+		push	_boss_phase_frame
 		push	word_3A6C8
 		call	sub_2191C
 		add	sp, 4
 		mov	byte_3B437, al
 
 loc_2CACD:
-		inc	word_3A6CA
+		inc	_boss_phase_frame
 		inc	word_3B433
-		push	word_3A6CA
+		push	_boss_phase_frame
 		call	sub_2B34F
 		cmp	word_35E95, 0
 		jnz	short loc_2CB05
@@ -38309,7 +38309,7 @@ loc_2CACD:
 		push	offset word_3A780
 		call	sub_28659
 		add	sp, 0Ch
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jle	loc_2CBA4
 		jmp	short loc_2CB51
 ; ---------------------------------------------------------------------------
@@ -38324,10 +38324,10 @@ loc_2CB05:
 		cmp	word_35E95, 4
 		jnz	short loc_2CB38
 		push	ds
-		push	offset word_3A6CA
+		push	offset _boss_phase_frame
 		push	word_3A780
 		call	sub_2BB46
-		cmp	word_3A6CA, 12Ch
+		cmp	_boss_phase_frame, 300
 		jle	short loc_2CBA4
 		jmp	short loc_2CB51
 ; ---------------------------------------------------------------------------
@@ -38336,14 +38336,14 @@ loc_2CB38:
 		cmp	word_35E95, 5
 		jnz	short loc_2CB59
 		push	ds
-		push	offset word_3A6CA
+		push	offset _boss_phase_frame
 		push	1F4h
 		call	sub_2BB46
-		cmp	word_3A6CA, 0C8h ; '?'
+		cmp	_boss_phase_frame, 200
 		jle	short loc_2CBA4
 
 loc_2CB51:
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		jmp	short loc_2CBA4
 ; ---------------------------------------------------------------------------
 
@@ -38351,13 +38351,13 @@ loc_2CB59:
 		cmp	word_35E95, 6
 		jnz	short loc_2CB73
 		push	ds
-		push	offset word_3A6CA
+		push	offset _boss_phase_frame
 		push	1F4h
 		call	sub_2BB46
 
 loc_2CB6A:
 		push	ds
-		push	offset word_3A6CA
+		push	offset _boss_phase_frame
 		call	sub_2B6EA
 		jmp	short loc_2CBA4
 ; ---------------------------------------------------------------------------
@@ -38366,13 +38366,13 @@ loc_2CB73:
 		cmp	word_35E95, 7
 		jnz	short loc_2CB8D
 		push	ds
-		push	offset word_3A6CA
+		push	offset _boss_phase_frame
 		push	1F4h
 		call	sub_2BB46
 
 loc_2CB84:
 		push	ds
-		push	offset word_3A6CA
+		push	offset _boss_phase_frame
 		call	sub_2B83C
 		jmp	short loc_2CBA4
 ; ---------------------------------------------------------------------------
@@ -38381,17 +38381,17 @@ loc_2CB8D:
 		cmp	word_35E95, 8
 		jnz	short loc_2CBA4
 		push	ds
-		push	offset word_3A6CA
+		push	offset _boss_phase_frame
 		push	20h ; ' '
 		call	sub_2BB46
 
 loc_2CB9D:
 		push	ds
-		push	offset word_3A6CA
+		push	offset _boss_phase_frame
 		call	sub_2BA29
 
 loc_2CBA4:
-		cmp	word_3A6CA, 0
+		cmp	_boss_phase_frame, 0
 		jnz	short loc_2CBC2
 		cmp	word_35E95, 8
 		jnz	short loc_2CBB7
@@ -38426,8 +38426,8 @@ loc_2CBC2:
 		push	offset word_3B433
 		call	sub_21A8A
 		add	sp, 22h
-		mov	ax, word_3A6CA
-		mov	bx, 0Ah
+		mov	ax, _boss_phase_frame
+		mov	bx, 10
 		cwd
 		idiv	bx
 		or	dx, dx
@@ -38497,7 +38497,7 @@ loc_2CC7C:
 		jg	loc_2CDCE
 		call	_mdrv2_bgm_stop
 		mov	byte_3A6CE, 65h	; 'e'
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	word_3B433, 0
 		jmp	loc_2CDCE
 ; ---------------------------------------------------------------------------
@@ -38519,10 +38519,10 @@ loc_2CC9E:
 
 loc_2CCDC:
 		pop	cx
-		inc	word_3A6CA
-		cmp	word_3A6CA, 0E6h
+		inc	_boss_phase_frame
+		cmp	_boss_phase_frame, 230
 		jge	short loc_2CD33
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -38532,7 +38532,7 @@ loc_2CCDC:
 		pop	cx
 
 loc_2CCFF:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -38542,9 +38542,9 @@ loc_2CCFF:
 		pop	cx
 
 loc_2CD16:
-		cmp	word_3A6CA, 0C8h ; '?'
+		cmp	_boss_phase_frame, 200
 		jge	short loc_2CD33
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -38555,14 +38555,14 @@ loc_2CD16:
 		pop	cx
 
 loc_2CD33:
-		cmp	word_3A6CA, 0AAh ; '?'
+		cmp	_boss_phase_frame, 170
 		jnz	short loc_2CD40
 		call	_mdrv2_bgm_fade_out_nonblock
 
 loc_2CD40:
-		cmp	word_3A6CA, 0BEh ; '?'
+		cmp	_boss_phase_frame, 190
 		jle	short loc_2CDA0
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -38611,7 +38611,7 @@ loc_2CD87:
 		call	_z_palette_set_all_show c, offset _z_Palettes, ds
 
 loc_2CD98:
-		cmp	word_3A6CA, 0E6h
+		cmp	_boss_phase_frame, 230
 		jg	short loc_2CDAA
 
 loc_2CDA0:
@@ -39113,7 +39113,7 @@ sub_2D20D	proc far
 		mov	word_3A1E5, 10h
 		mov	word_3A1E7, 0Ah
 		mov	byte_3A6CE, 0
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	word_35FF2, 1
 		mov	word_35FF0, 0
 		mov	konngara_image_35FEE, 2
@@ -39338,16 +39338,16 @@ sub_2D439	proc far
 		enter	8, 0
 		push	si
 		push	di
-		cmp	word_3A6CA, 0Ah
+		cmp	_boss_phase_frame, 10
 		jnz	short loc_2D44D
 		push	0
 		call	sub_2D343
 		pop	cx
 
 loc_2D44D:
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jl	loc_2D7D3
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jnz	loc_2D500
 		push	1C001Bh
 		push	180016h
@@ -39619,7 +39619,7 @@ loc_2D62C:
 ; ---------------------------------------------------------------------------
 
 loc_2D7C7:
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 
 loc_2D7CD:
 		mov	word_3B452, 0
@@ -39657,16 +39657,16 @@ sub_2D7D7	endp
 sub_2D817	proc far
 		push	bp
 		mov	bp, sp
-		cmp	word_3A6CA, 0Ah
+		cmp	_boss_phase_frame, 10
 		jnz	short loc_2D828
 		push	1
 		call	sub_2D343
 		pop	cx
 
 loc_2D828:
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jl	loc_2D8E8
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jnz	short loc_2D85A
 		mov	angle_3B454, 40h
 		mov	word_3B455, 0FFFFh
@@ -39678,9 +39678,9 @@ loc_2D828:
 		add	sp, 0Ch
 
 loc_2D85A:
-		cmp	word_3A6CA, 8Ch
+		cmp	_boss_phase_frame, 140
 		jge	short loc_2D873
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -39691,9 +39691,9 @@ loc_2D85A:
 ; ---------------------------------------------------------------------------
 
 loc_2D873:
-		cmp	word_3A6CA, 0DCh ; '?'
+		cmp	_boss_phase_frame, 220
 		jge	short loc_2D8A7
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -39716,9 +39716,9 @@ loc_2D8A0:
 ; ---------------------------------------------------------------------------
 
 loc_2D8A7:
-		cmp	word_3A6CA, 12Ch
+		cmp	_boss_phase_frame, 300
 		jge	short loc_2D8DA
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 8
 		cwd
 		idiv	bx
@@ -39734,9 +39734,9 @@ loc_2D8A7:
 		add	sp, 4
 
 loc_2D8DA:
-		cmp	word_3A6CA, 12Ch
+		cmp	_boss_phase_frame, 300
 		jl	short loc_2D8E8
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 
 loc_2D8E8:
 		pop	bp
@@ -39760,16 +39760,16 @@ sub_2D8EA	proc far
 		enter	0Ch, 0
 		push	si
 		push	di
-		cmp	word_3A6CA, 0Ah
+		cmp	_boss_phase_frame, 10
 		jnz	short loc_2D8FE
 		push	2
 		call	sub_2D343
 		pop	cx
 
 loc_2D8FE:
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jl	loc_2DD61
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jnz	loc_2D996
 		mov	word_3B487, 0
 		mov	word_3B489, 0
@@ -39825,7 +39825,7 @@ loc_2D98D:
 ; ---------------------------------------------------------------------------
 
 loc_2D996:
-		cmp	word_3A6CA, 1F4h
+		cmp	_boss_phase_frame, 500
 		jge	loc_2DD1B
 		xor	si, si
 		jmp	loc_2DB6D
@@ -40022,7 +40022,7 @@ loc_2DB6C:
 loc_2DB6D:
 		cmp	si, 2
 		jl	loc_2D9A5
-		cmp	word_3A6CA, 96h
+		cmp	_boss_phase_frame, 150
 		jnz	short loc_2DBEC
 		xor	si, si
 		jmp	short loc_2DB95
@@ -40076,10 +40076,10 @@ loc_2DBEC:
 		imul	ax, 28h
 		mov	dx, 0F0h
 		sub	dx, ax
-		cmp	dx, word_3A6CA
+		cmp	dx, _boss_phase_frame
 		jge	loc_2DD61
-		mov	ax, word_3A6CA
-		mov	bx, 28h	; '('
+		mov	ax, _boss_phase_frame
+		mov	bx, 40
 		cwd
 		idiv	bx
 		or	dx, dx
@@ -40089,8 +40089,8 @@ loc_2DBEC:
 		cwd
 		idiv	bx
 		mov	[bp+@@angle], dl
-		mov	ax, word_3A6CA
-		mov	bx, 78h	; 'x'
+		mov	ax, _boss_phase_frame
+		mov	bx, 120
 		cwd
 		idiv	bx
 		or	dx, dx
@@ -40100,11 +40100,11 @@ loc_2DBEC:
 ; ---------------------------------------------------------------------------
 
 loc_2DC2F:
-		mov	ax, word_3A6CA
-		mov	bx, 78h	; 'x'
+		mov	ax, _boss_phase_frame
+		mov	bx, 120
 		cwd
 		idiv	bx
-		cmp	dx, 28h	; '('
+		cmp	dx, 40
 		jnz	short loc_2DC42
 		mov	ax, 316
 		jmp	short loc_2DC45
@@ -40115,8 +40115,8 @@ loc_2DC42:
 
 loc_2DC45:
 		mov	[bp+@@left], ax
-		mov	ax, word_3A6CA
-		mov	bx, 78h	; 'x'
+		mov	ax, _boss_phase_frame
+		mov	bx, 120
 		cwd
 		idiv	bx
 		or	dx, dx
@@ -40126,11 +40126,11 @@ loc_2DC45:
 ; ---------------------------------------------------------------------------
 
 loc_2DC5A:
-		mov	ax, word_3A6CA
-		mov	bx, 78h	; 'x'
+		mov	ax, _boss_phase_frame
+		mov	bx, 120
 		cwd
 		idiv	bx
-		cmp	dx, 28h	; '('
+		cmp	dx, 40
 		jnz	short loc_2DC6D
 		mov	ax, (PLAYFIELD_TOP + 76)
 		jmp	short loc_2DC70
@@ -40254,7 +40254,7 @@ loc_2DD50:
 loc_2DD56:
 		cmp	si, 2
 		jl	short loc_2DD1F
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 
 loc_2DD61:
 		pop	di
@@ -40271,16 +40271,16 @@ sub_2D8EA	endp
 sub_2DD65	proc far
 		push	bp
 		mov	bp, sp
-		cmp	word_3A6CA, 0Ah
+		cmp	_boss_phase_frame, 10
 		jnz	short loc_2DD76
 		push	0
 		call	sub_2D343
 		pop	cx
 
 loc_2DD76:
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jl	loc_2DF0A
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jnz	short loc_2DDD9
 		call	_vector2_between stdcall, large (200 shl 16) or 290, large (64 shl 16) or 64, offset x_3B48F, ds, offset y_3B491, ds, 16
 		mov	point_3B493.x, 290
@@ -40379,7 +40379,7 @@ loc_2DEA3:
 loc_2DEB6:
 		cmp	point_3B493.y, 256
 		jl	short loc_2DEC6
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -40387,7 +40387,7 @@ loc_2DEB6:
 loc_2DEC6:
 		cmp	word_3B497, 2
 		jge	short loc_2DEF8
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		cwd
 		idiv	word_3B438
 		or	dx, dx
@@ -40417,16 +40417,16 @@ sub_2DD65	endp
 sub_2DF0C	proc far
 		push	bp
 		mov	bp, sp
-		cmp	word_3A6CA, 0Ah
+		cmp	_boss_phase_frame, 10
 		jnz	short loc_2DF1D
 		push	1
 		call	sub_2D343
 		pop	cx
 
 loc_2DF1D:
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jl	loc_2DFC8
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jnz	short loc_2DF55
 		mov	byte_3B49B, 20h	; ' '
 		mov	word_3B49D, 0FFF8h
@@ -40439,7 +40439,7 @@ loc_2DF1D:
 		add	sp, 0Ch
 
 loc_2DF55:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		cwd
 		idiv	word_3B438
 		or	dx, dx
@@ -40466,9 +40466,9 @@ loc_2DF9C:
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii c, offset _Pellets, ds, large 312 or (188 shl 16), word ptr angle_3B49C, (3 shl 4), large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 
 loc_2DFBA:
-		cmp	word_3A6CA, 2BCh
+		cmp	_boss_phase_frame, 700
 		jl	short loc_2DFC8
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 
 loc_2DFC8:
 		pop	bp
@@ -40487,16 +40487,16 @@ sub_2DFCA	proc far
 		enter	2, 0
 		push	si
 		push	di
-		cmp	word_3A6CA, 0Ah
+		cmp	_boss_phase_frame, 10
 		jnz	short loc_2DFDE
 		push	2
 		call	sub_2D343
 		pop	cx
 
 loc_2DFDE:
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jl	loc_2E42A
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jnz	loc_2E09A
 		xor	si, si
 		jmp	short loc_2DFFF
@@ -40575,7 +40575,7 @@ loc_2E07E:
 ; ---------------------------------------------------------------------------
 
 loc_2E09A:
-		cmp	word_3A6CA, 190h
+		cmp	_boss_phase_frame, 400
 		jge	loc_2E3E4
 		xor	si, si
 		jmp	loc_2E271
@@ -40772,7 +40772,7 @@ loc_2E270:
 loc_2E271:
 		cmp	si, 4
 		jl	loc_2E0A9
-		cmp	word_3A6CA, 96h
+		cmp	_boss_phase_frame, 150
 		jnz	short loc_2E2F0
 		xor	si, si
 		jmp	short loc_2E299
@@ -40821,7 +40821,7 @@ loc_2E2CE:
 		add	sp, 0Eh
 
 loc_2E2F0:
-		cmp	word_3A6CA, 0C8h ; '?'
+		cmp	_boss_phase_frame, 200
 		jnz	short loc_2E368
 		xor	si, si
 		jmp	short loc_2E311
@@ -40870,7 +40870,7 @@ loc_2E346:
 		add	sp, 0Eh
 
 loc_2E368:
-		cmp	word_3A6CA, 0FAh
+		cmp	_boss_phase_frame, 250
 		jnz	loc_2E42A
 		xor	si, si
 		jmp	short loc_2E38B
@@ -40958,7 +40958,7 @@ loc_2E419:
 loc_2E41F:
 		cmp	si, 4
 		jl	short loc_2E3E8
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 
 loc_2E42A:
 		pop	di
@@ -40975,16 +40975,16 @@ sub_2DFCA	endp
 sub_2E42E	proc far
 		push	bp
 		mov	bp, sp
-		cmp	word_3A6CA, 0Ah
+		cmp	_boss_phase_frame, 10
 		jnz	short loc_2E43F
 		push	3
 		call	sub_2D343
 		pop	cx
 
 loc_2E43F:
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jl	loc_2E703
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jnz	short loc_2E478
 		mov	point_3B511.x, 0
 		mov	point_3B511.y, 264
@@ -40997,7 +40997,7 @@ loc_2E43F:
 		add	sp, 0Ch
 
 loc_2E478:
-		cmp	word_3A6CA, 7Dh	; '}'
+		cmp	_boss_phase_frame, 125
 		jge	short loc_2E49E
 		call	sub_2CE17 c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
 		sub	point_3B511.y, 8
@@ -41005,7 +41005,7 @@ loc_2E478:
 ; ---------------------------------------------------------------------------
 
 loc_2E49E:
-		cmp	word_3A6CA, 7Dh	; '}'
+		cmp	_boss_phase_frame, 125
 		jnz	short loc_2E4D0
 		mov	point_3B511.x, 0
 		mov	point_3B511.y, 64
@@ -41015,7 +41015,7 @@ loc_2E49E:
 ; ---------------------------------------------------------------------------
 
 loc_2E4D0:
-		cmp	word_3A6CA, 0CDh ; '?'
+		cmp	_boss_phase_frame, 205
 		jge	short loc_2E4F7
 		call	sub_2CE17 c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
 		add	point_3B511.x, 8
@@ -41023,7 +41023,7 @@ loc_2E4D0:
 ; ---------------------------------------------------------------------------
 
 loc_2E4F7:
-		cmp	word_3A6CA, 0CDh ; '?'
+		cmp	_boss_phase_frame, 205
 		jnz	short loc_2E529
 		mov	point_3B511.x, RES_X - 1
 		mov	point_3B511.y, 64
@@ -41033,7 +41033,7 @@ loc_2E4F7:
 ; ---------------------------------------------------------------------------
 
 loc_2E529:
-		cmp	word_3A6CA, 0E6h
+		cmp	_boss_phase_frame, 230
 		jge	short loc_2E550
 		call	sub_2CE17 c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
 		add	point_3B511.y, 8
@@ -41041,7 +41041,7 @@ loc_2E529:
 ; ---------------------------------------------------------------------------
 
 loc_2E550:
-		cmp	word_3A6CA, 0E6h
+		cmp	_boss_phase_frame, 230
 		jnz	short loc_2E589
 		mov	point_3B511.x, RES_X - 1
 		mov	point_3B511.y, 264
@@ -41054,7 +41054,7 @@ loc_2E580:
 ; ---------------------------------------------------------------------------
 
 loc_2E589:
-		cmp	word_3A6CA, 255
+		cmp	_boss_phase_frame, 255
 		jge	short loc_2E5B0
 		call	sub_2CE17 c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
 		sub	point_3B511.y, 8
@@ -41062,7 +41062,7 @@ loc_2E589:
 ; ---------------------------------------------------------------------------
 
 loc_2E5B0:
-		cmp	word_3A6CA, 255
+		cmp	_boss_phase_frame, 255
 		jnz	short loc_2E5E9
 		mov	point_3B511.x, RES_X - 1
 		mov	point_3B511.y, 64
@@ -41075,7 +41075,7 @@ loc_2E5E0:
 ; ---------------------------------------------------------------------------
 
 loc_2E5E9:
-		cmp	word_3A6CA, 14Fh
+		cmp	_boss_phase_frame, 335
 		jge	short loc_2E610
 		call	sub_2CE17 c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
 		sub	point_3B511.x, 8
@@ -41083,7 +41083,7 @@ loc_2E5E9:
 ; ---------------------------------------------------------------------------
 
 loc_2E610:
-		cmp	word_3A6CA, 14Fh
+		cmp	_boss_phase_frame, 335
 		jnz	short loc_2E648
 		mov	point_3B511.x, 0
 		mov	point_3B511.y, 64
@@ -41094,7 +41094,7 @@ loc_2E610:
 ; ---------------------------------------------------------------------------
 
 loc_2E648:
-		cmp	word_3A6CA, 168h
+		cmp	_boss_phase_frame, 360
 		jge	short loc_2E66E
 		call	sub_2CE17 c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
 		add	point_3B511.y, 8
@@ -41102,15 +41102,15 @@ loc_2E648:
 ; ---------------------------------------------------------------------------
 
 loc_2E66E:
-		cmp	word_3A6CA, 168h
+		cmp	_boss_phase_frame, 360
 		jnz	short loc_2E697
 		sub	point_3B511.y, 8
 		call	_graph_r_line_unput c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 
 loc_2E697:
-		mov	ax, word_3A6CA
-		mov	bx, 0Ah
+		mov	ax, _boss_phase_frame
+		mov	bx, 10
 		cwd
 		idiv	bx
 		or	dx, dx
@@ -41120,7 +41120,7 @@ loc_2E697:
 		pop	cx
 
 loc_2E6AC:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		cwd
 		idiv	word_3B438
 		or	dx, dx
@@ -41162,9 +41162,9 @@ sub_2E42E	endp
 sub_2E705	proc far
 		push	bp
 		mov	bp, sp
-		cmp	word_3A6CA, 32h	; '2'
+		cmp	_boss_phase_frame, 50
 		jl	loc_2E7C2
-		cmp	word_3A6CA, 32h	; '2'
+		cmp	_boss_phase_frame, 50
 		jnz	short loc_2E728
 		call	sub_2D412 stdcall, 0
 		push	8
@@ -41172,57 +41172,57 @@ sub_2E705	proc far
 		add	sp, 4
 
 loc_2E728:
-		cmp	word_3A6CA, 3Ch	; '<'
+		cmp	_boss_phase_frame, 60
 		jl	loc_2E7C2
-		cmp	word_3A6CA, 3Ch	; '<'
+		cmp	_boss_phase_frame, 60
 		jnz	short loc_2E73F
 		call	sub_2D412 stdcall, 1
 		pop	cx
 
 loc_2E73F:
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jl	short loc_2E7C2
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jnz	short loc_2E754
 		call	sub_2D412 stdcall, 2
 		pop	cx
 
 loc_2E754:
-		cmp	word_3A6CA, 78h	; 'x'
+		cmp	_boss_phase_frame, 120
 		jl	short loc_2E7C2
-		cmp	word_3A6CA, 78h	; 'x'
+		cmp	_boss_phase_frame, 120
 		jnz	short loc_2E769
 		call	sub_2D412 stdcall, 3
 		pop	cx
 
 loc_2E769:
-		cmp	word_3A6CA, 8Ch
+		cmp	_boss_phase_frame, 140
 		jl	short loc_2E7C2
-		cmp	word_3A6CA, 8Ch
+		cmp	_boss_phase_frame, 140
 		jnz	short loc_2E780
 		call	sub_2D412 stdcall, 4
 		pop	cx
 
 loc_2E780:
-		cmp	word_3A6CA, 0A0h ; '?'
+		cmp	_boss_phase_frame, 160
 		jl	short loc_2E7C2
-		cmp	word_3A6CA, 0A0h ; '?'
+		cmp	_boss_phase_frame, 160
 		jnz	short loc_2E797
 		call	sub_2D412 stdcall, 5
 		pop	cx
 
 loc_2E797:
-		cmp	word_3A6CA, 0AAh ; '?'
+		cmp	_boss_phase_frame, 170
 		jl	short loc_2E7C2
-		cmp	word_3A6CA, 0AAh ; '?'
+		cmp	_boss_phase_frame, 170
 		jnz	short loc_2E7AE
 		call	sub_2D412 stdcall, 6
 		pop	cx
 
 loc_2E7AE:
-		cmp	word_3A6CA, 0C8h ; '?'
+		cmp	_boss_phase_frame, 200
 		jle	short loc_2E7C2
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	word_35FF2, 1
 
 loc_2E7C2:
@@ -41238,7 +41238,7 @@ sub_2E705	endp
 sub_2E7C4	proc far
 		push	bp
 		mov	bp, sp
-		cmp	word_3A6CA, 0Ah
+		cmp	_boss_phase_frame, 10
 		jnz	short loc_2E803
 		call	sub_2D271 stdcall, 2
 		push	1
@@ -41255,11 +41255,11 @@ sub_2E7C4	proc far
 
 loc_2E803:
 		call	sub_2E705
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jl	loc_2EA01
-		cmp	word_3A6CA, 8Ch
+		cmp	_boss_phase_frame, 140
 		jge	loc_2E8A1
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		cwd
 		idiv	word_3B438
 		or	dx, dx
@@ -41311,7 +41311,7 @@ loc_2E803:
 		add	top_3B519, ax
 
 loc_2E8A1:
-		cmp	word_3A6CA, 8Ch
+		cmp	_boss_phase_frame, 140
 		jnz	short loc_2E8CC
 		mov	left_3B517, 432
 		mov	top_3B519, (PLAYFIELD_TOP + 168)
@@ -41323,9 +41323,9 @@ loc_2E8A1:
 		add	sp, 0Ch
 
 loc_2E8CC:
-		cmp	word_3A6CA, 8Ch
+		cmp	_boss_phase_frame, 140
 		jl	loc_2EA01
-		cmp	word_3A6CA, 96h
+		cmp	_boss_phase_frame, 150
 		jge	short loc_2E93B
 		pushd	0 or (0 shl 16)
 		push	PM_GRAVITY or (1 shl 16)
@@ -41358,7 +41358,7 @@ loc_2E8CC:
 		sub	top_3B519, 3
 
 loc_2E93B:
-		cmp	word_3A6CA, 96h
+		cmp	_boss_phase_frame, 150
 		jnz	short loc_2E966
 		mov	left_3B517, 198
 		mov	top_3B519, (PLAYFIELD_TOP + 134)
@@ -41370,11 +41370,11 @@ loc_2E93B:
 		add	sp, 0Ch
 
 loc_2E966:
-		cmp	word_3A6CA, 96h
+		cmp	_boss_phase_frame, 150
 		jl	loc_2EA01
-		cmp	word_3A6CA, 0AAh ; '?'
+		cmp	_boss_phase_frame, 170
 		jge	loc_2EA01
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		cwd
 		idiv	word_3B438
 		or	dx, dx
@@ -41438,7 +41438,7 @@ sub_2E7C4	endp
 sub_2EA03	proc far
 		push	bp
 		mov	bp, sp
-		cmp	word_3A6CA, 0Ah
+		cmp	_boss_phase_frame, 10
 		jnz	short loc_2EA42
 		call	sub_2D271 stdcall, 2
 		push	3
@@ -41455,11 +41455,11 @@ sub_2EA03	proc far
 
 loc_2EA42:
 		call	sub_2E705
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jl	loc_2EB8F
-		cmp	word_3A6CA, 8Ch
+		cmp	_boss_phase_frame, 140
 		jge	short loc_2EAAA
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 3
 		cwd
 		idiv	bx
@@ -41472,15 +41472,15 @@ loc_2EA42:
 		add	top_3B51D, 12
 
 loc_2EAAA:
-		cmp	word_3A6CA, 8Ch
+		cmp	_boss_phase_frame, 140
 		jnz	short loc_2EABE
 		mov	left_3B51B, 432
 		mov	top_3B51D, (PLAYFIELD_TOP + 168)
 
 loc_2EABE:
-		cmp	word_3A6CA, 8Ch
+		cmp	_boss_phase_frame, 140
 		jl	loc_2EB8F
-		cmp	word_3A6CA, 96h
+		cmp	_boss_phase_frame, 150
 		jge	short loc_2EB17
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii stdcall, offset _Pellets, ds, left_3B51B, top_3B51D, 20h, word_3B438, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 		call	@CPellets@add_single$qiiii15pellet_motion_tiii stdcall, offset _Pellets, ds, left_3B51B, top_3B51D, 60h, word_3B438, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
@@ -41489,17 +41489,17 @@ loc_2EABE:
 		sub	top_3B51D, 3
 
 loc_2EB17:
-		cmp	word_3A6CA, 96h
+		cmp	_boss_phase_frame, 150
 		jnz	short loc_2EB2B
 		mov	left_3B51B, 198
 		mov	top_3B51D, (PLAYFIELD_TOP + 134)
 
 loc_2EB2B:
-		cmp	word_3A6CA, 96h
+		cmp	_boss_phase_frame, 150
 		jl	short loc_2EB8F
-		cmp	word_3A6CA, 0AAh ; '?'
+		cmp	_boss_phase_frame, 170
 		jge	short loc_2EB8F
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -41524,16 +41524,16 @@ sub_2EA03	endp
 sub_2EB91	proc far
 		push	bp
 		mov	bp, sp
-		cmp	word_3A6CA, 0Ah
+		cmp	_boss_phase_frame, 10
 		jnz	short loc_2EBA2
 		push	3
 		call	sub_2D343
 		pop	cx
 
 loc_2EBA2:
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jl	loc_2EC98
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jnz	short loc_2EBD8
 		call	IRand
 		mov	bx, 2
@@ -41548,7 +41548,7 @@ loc_2EBA2:
 		add	sp, 0Ch
 
 loc_2EBD8:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 10
 		cwd
 		idiv	bx
@@ -41556,7 +41556,7 @@ loc_2EBD8:
 		jnz	loc_2EC98
 		cmp	word_3B523, 0
 		jnz	short loc_2EC00
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		add	ax, -100
 		cwd
 		idiv	bx
@@ -41566,7 +41566,7 @@ loc_2EBD8:
 ; ---------------------------------------------------------------------------
 
 loc_2EC00:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		add	ax, -100
 		mov	bx, 10
 		cwd
@@ -41583,8 +41583,8 @@ loc_2EC19:
 		push	laser_target_y_3B521	; target_y
 		push	laser_target_left_3B51F	; target_left
 		push	410 or (70 shl 16)	; (origin_left) or (origin_y shl 16)
-		mov	ax, word_3A6CA
-		mov	bx, 0Ah
+		mov	ax, _boss_phase_frame
+		mov	bx, 10
 		cwd
 		idiv	bx
 		cwd
@@ -41609,7 +41609,7 @@ loc_2EC6C:
 		jg	short loc_2EC80
 
 loc_2EC7A:
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 
 loc_2EC80:
 		call	@CPellets@add_pattern$qii16pellet_pattern_ti c, offset _Pellets, ds, large 410 or (70 shl 16), large PP_3_SPREAD_WIDE_AIMED or (((4 shl 4) + 8) shl 16)
@@ -41627,7 +41627,7 @@ sub_2EB91	endp
 sub_2EC9A	proc far
 		push	bp
 		mov	bp, sp
-		cmp	word_3A6CA, 0Ah
+		cmp	_boss_phase_frame, 10
 		jnz	short loc_2ECD9
 		call	sub_2D271 stdcall, 2
 		push	3
@@ -41644,11 +41644,11 @@ sub_2EC9A	proc far
 
 loc_2ECD9:
 		call	sub_2E705
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jl	loc_2EDBD
-		cmp	word_3A6CA, 8Ch
+		cmp	_boss_phase_frame, 140
 		jge	short loc_2ED1E
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 3
 		cwd
 		idiv	bx
@@ -41659,32 +41659,32 @@ loc_2ECD9:
 		add	word_3B527, 0Ch
 
 loc_2ED1E:
-		cmp	word_3A6CA, 8Ch
+		cmp	_boss_phase_frame, 140
 		jnz	short loc_2ED32
 		mov	word_3B525, 1B0h
 		mov	word_3B527, 0E8h
 
 loc_2ED32:
-		cmp	word_3A6CA, 8Ch
+		cmp	_boss_phase_frame, 140
 		jl	loc_2EDBD
-		cmp	word_3A6CA, 96h
+		cmp	_boss_phase_frame, 150
 		jge	short loc_2ED68
 		call	@CPellets@add_pattern$qii16pellet_pattern_ti c, offset _Pellets, ds, word_3B525, word_3B527, PP_1_AIMED, word_3B438
 		sub	word_3B525, 17h
 		sub	word_3B527, 3
 
 loc_2ED68:
-		cmp	word_3A6CA, 96h
+		cmp	_boss_phase_frame, 150
 		jnz	short loc_2ED7C
 		mov	word_3B525, 0C6h ; '?'
 		mov	word_3B527, 0C6h ; '?'
 
 loc_2ED7C:
-		cmp	word_3A6CA, 96h
+		cmp	_boss_phase_frame, 150
 		jl	short loc_2EDBD
-		cmp	word_3A6CA, 0AAh ; '?'
+		cmp	_boss_phase_frame, 170
 		jge	short loc_2EDBD
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -41710,17 +41710,17 @@ sub_2EDBF	proc far
 
 		enter	2, 0
 		push	si
-		cmp	word_3A6CA, 0Ah
+		cmp	_boss_phase_frame, 10
 		jnz	short loc_2EDD2
 		push	3
 		call	sub_2D343
 		pop	cx
 
 loc_2EDD2:
-		cmp	word_3A6CA, 64h	; 'd'
+		cmp	_boss_phase_frame, 100
 		jl	loc_2EE7A
-		mov	ax, word_3A6CA
-		mov	bx, 14h
+		mov	ax, _boss_phase_frame
+		mov	bx, 20
 		cwd
 		idiv	bx
 		or	dx, dx
@@ -41744,11 +41744,11 @@ loc_2EE19:
 ; ---------------------------------------------------------------------------
 
 loc_2EE20:
-		mov	ax, word_3A6CA
-		mov	bx, 14h
+		mov	ax, _boss_phase_frame
+		mov	bx, 20
 		cwd
 		idiv	bx
-		cmp	dx, 0Ah
+		cmp	dx, 10
 		jnz	short loc_2EE6C
 		xor	si, si
 		mov	[bp+@@angle], 0
@@ -41772,9 +41772,9 @@ loc_2EE64:
 		pop	cx
 
 loc_2EE6C:
-		cmp	word_3A6CA, 12Ch
+		cmp	_boss_phase_frame, 300
 		jl	short loc_2EE7A
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 
 loc_2EE7A:
 		pop	si
@@ -41811,7 +41811,7 @@ var_2		= word ptr -2
 		mov	word_3B52D, 63h	; 'c'
 		mov	word_35FF8, 63h	; 'c'
 		mov	word_35FFA, 0
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	word_3B52B, 0
 		mov	word_3B529, 0
 		mov	byte_3B52F, 0
@@ -41828,14 +41828,14 @@ loc_2EED9:
 		jnz	loc_2F02C
 		cmp	byte_3B52F, 0
 		jnz	short loc_2EEFE
-		push	word_3A6CA
+		push	_boss_phase_frame
 		push	word_3A6C8
 		call	sub_2191C
 		add	sp, 4
 		mov	byte_3B52F, al
 
 loc_2EEFE:
-		inc	word_3A6CA
+		inc	_boss_phase_frame
 		inc	word_3B52B
 		cmp	_player_left, 198
 		jge	short loc_2EF13
@@ -41880,9 +41880,9 @@ loc_2EF45:
 loc_2EF52:
 		cmp	word_35FF8, 63h	; 'c'
 		jnz	short loc_2EF97
-		cmp	word_3A6CA, 78h	; 'x'
+		cmp	_boss_phase_frame, 120
 		jle	short loc_2EF97
-		mov	word_3A6CA, 1
+		mov	_boss_phase_frame, 1
 		call	IRand
 		mov	bx, 3
 		cwd
@@ -41903,7 +41903,7 @@ loc_2EF8D:
 		inc	word_35FFA
 
 loc_2EF97:
-		cmp	word_3A6CA, 0
+		cmp	_boss_phase_frame, 0
 		jnz	short loc_2EFAB
 		push	0
 		call	sub_2D343
@@ -41964,7 +41964,7 @@ loc_2F02C:
 		cbw
 		cmp	ax, 2
 		jnz	loc_2F136
-		inc	word_3A6CA
+		inc	_boss_phase_frame
 		inc	word_3B52B
 		cmp	_player_left, 198
 		jge	short loc_2F04C
@@ -41986,14 +41986,14 @@ loc_2F05B:
 		mov	[bp+@@image], ax
 		call	sub_2D271 stdcall, ax
 		pop	cx
-		cmp	word_3A6CA, 32h	; '2'
+		cmp	_boss_phase_frame, 50
 		jnz	short loc_2F07F
 		call	_z_palette_set_show c, large (0Fh shl 16) or 09h, large (0Fh shl 16) or 0Fh
 
 loc_2F07F:
-		cmp	word_3A6CA, 32h	; '2'
+		cmp	_boss_phase_frame, 50
 		jle	short loc_2F0C5
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -42059,7 +42059,7 @@ loc_2F0F7:
 		add	sp, 22h
 		cmp	word_3B529, 0
 		jnz	loc_2FC40
-		cmp	word_3A6CA, 78h	; 'x'
+		cmp	_boss_phase_frame, 120
 		jle	loc_2FC40
 		mov	byte_3A6CE, 3
 		jmp	loc_2F5DE
@@ -42070,7 +42070,7 @@ loc_2F136:
 		cbw
 		cmp	ax, 3
 		jnz	loc_2F27C
-		inc	word_3A6CA
+		inc	_boss_phase_frame
 		inc	word_3B52B
 		cmp	_player_left, 198
 		jge	short loc_2F156
@@ -42122,9 +42122,9 @@ loc_2F195:
 loc_2F1A2:
 		cmp	word_35FF8, 63h	; 'c'
 		jnz	short loc_2F1E7
-		cmp	word_3A6CA, 78h	; 'x'
+		cmp	_boss_phase_frame, 120
 		jle	short loc_2F1E7
-		mov	word_3A6CA, 1
+		mov	_boss_phase_frame, 1
 		call	IRand
 		mov	bx, 4
 		cwd
@@ -42145,7 +42145,7 @@ loc_2F1DD:
 		inc	word_35FFA
 
 loc_2F1E7:
-		cmp	word_3A6CA, 0
+		cmp	_boss_phase_frame, 0
 		jnz	short loc_2F1FB
 		push	0
 		call	sub_2D343
@@ -42206,7 +42206,7 @@ loc_2F27C:
 		cbw
 		cmp	ax, 4
 		jnz	loc_2F386
-		inc	word_3A6CA
+		inc	_boss_phase_frame
 		inc	word_3B52B
 		cmp	_player_left, 198
 		jge	short loc_2F29C
@@ -42228,14 +42228,14 @@ loc_2F2AB:
 		mov	[bp+@@image], ax
 		call	sub_2D271 stdcall, ax
 		pop	cx
-		cmp	word_3A6CA, 32h	; '2'
+		cmp	_boss_phase_frame, 50
 		jnz	short loc_2F2CF
 		call	_z_palette_set_show c, large (0Fh shl 16) or 09h, large (0Fh shl 16) or 0Fh
 
 loc_2F2CF:
-		cmp	word_3A6CA, 32h	; '2'
+		cmp	_boss_phase_frame, 50
 		jle	short loc_2F315
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -42301,7 +42301,7 @@ loc_2F347:
 		add	sp, 22h
 		cmp	word_3B529, 0
 		jnz	loc_2FC40
-		cmp	word_3A6CA, 78h	; 'x'
+		cmp	_boss_phase_frame, 120
 		jle	loc_2FC40
 		mov	byte_3A6CE, 5
 		jmp	loc_2F5DE
@@ -42312,7 +42312,7 @@ loc_2F386:
 		cbw
 		cmp	ax, 5
 		jnz	loc_2F4D7
-		inc	word_3A6CA
+		inc	_boss_phase_frame
 		inc	word_3B52B
 		cmp	_player_left, 198
 		jge	short loc_2F3A6
@@ -42357,9 +42357,9 @@ loc_2F3D8:
 loc_2F3E5:
 		cmp	word_35FF8, 63h	; 'c'
 		jnz	short loc_2F42A
-		cmp	word_3A6CA, 78h	; 'x'
+		cmp	_boss_phase_frame, 120
 		jle	short loc_2F42A
-		mov	word_3A6CA, 1
+		mov	_boss_phase_frame, 1
 		call	IRand
 		mov	bx, 3
 		cwd
@@ -42380,7 +42380,7 @@ loc_2F420:
 		inc	word_35FFA
 
 loc_2F42A:
-		cmp	word_3A6CA, 0
+		cmp	_boss_phase_frame, 0
 		jnz	short loc_2F43E
 		push	0
 		call	sub_2D343
@@ -42435,7 +42435,7 @@ loc_2F4AE:
 		mov	byte_3A6CE, 6
 
 loc_2F4BC:
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	word_3B52B, 0
 		mov	word_35FF8, 63h	; 'c'
 		mov	word_35FFA, 0
@@ -42447,7 +42447,7 @@ loc_2F4D7:
 		cbw
 		cmp	ax, 6
 		jnz	loc_2F600
-		inc	word_3A6CA
+		inc	_boss_phase_frame
 		inc	word_3B52B
 		cmp	_player_left, 198
 		jge	short loc_2F4F7
@@ -42469,14 +42469,14 @@ loc_2F506:
 		mov	[bp+@@image], ax
 		call	sub_2D271 stdcall, ax
 		pop	cx
-		cmp	word_3A6CA, 32h	; '2'
+		cmp	_boss_phase_frame, 50
 		jnz	short loc_2F52A
 		call	_z_palette_set_show c, large (0Fh shl 16) or 09h, large (0Fh shl 16) or 0Fh
 
 loc_2F52A:
-		cmp	word_3A6CA, 32h	; '2'
+		cmp	_boss_phase_frame, 50
 		jle	short loc_2F570
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -42542,12 +42542,12 @@ loc_2F5A2:
 		add	sp, 22h
 		cmp	word_3B529, 0
 		jnz	loc_2FC40
-		cmp	word_3A6CA, 78h	; 'x'
+		cmp	_boss_phase_frame, 120
 		jle	loc_2FC40
 		mov	byte_3A6CE, 7
 
 loc_2F5DE:
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 		mov	word_3B52B, 0
 		mov	word_35FF8, 63h	; 'c'
 		mov	word_35FFA, 0
@@ -42562,7 +42562,7 @@ loc_2F600:
 		cbw
 		cmp	ax, 7
 		jnz	loc_2FC40
-		inc	word_3A6CA
+		inc	_boss_phase_frame
 		inc	word_3B52B
 		cmp	_player_left, 198
 		jge	short loc_2F620
@@ -42670,9 +42670,9 @@ loc_2F6CE:
 loc_2F6DB:
 		cmp	word_35FF8, 63h	; 'c'
 		jnz	short loc_2F720
-		cmp	word_3A6CA, 5
+		cmp	_boss_phase_frame, 5
 		jle	short loc_2F720
-		mov	word_3A6CA, 1
+		mov	_boss_phase_frame, 1
 		call	IRand
 		mov	bx, 0Ch
 		cwd
@@ -42693,7 +42693,7 @@ loc_2F716:
 		inc	word_35FFA
 
 loc_2F720:
-		cmp	word_3A6CA, 0
+		cmp	_boss_phase_frame, 0
 		jnz	short loc_2F734
 		push	0
 		call	sub_2D343
@@ -42817,11 +42817,11 @@ loc_2F766:
 		push	0Ah
 		call	_frame_delay
 		pop	cx
-		mov	word_3A6CA, 0
+		mov	_boss_phase_frame, 0
 
 loc_2F99A:
-		inc	word_3A6CA
-		mov	ax, word_3A6CA
+		inc	_boss_phase_frame
+		mov	ax, _boss_phase_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -42875,7 +42875,7 @@ loc_2F9E0:
 		pop	cx
 
 loc_2F9F9:
-		mov	ax, word_3A6CA
+		mov	ax, _boss_phase_frame
 		mov	bx, 2
 		cwd
 		idiv	bx
@@ -42884,7 +42884,7 @@ loc_2F9F9:
 		sub	ax, dx
 		call	_z_vsync_wait_and_scrollup stdcall, ax
 		pop	cx
-		cmp	word_3A6CA, 40h
+		cmp	_boss_phase_frame, 64
 		jg	short loc_2FA23
 		push	1
 		call	_frame_delay
@@ -44202,7 +44202,8 @@ word_3A1EB	dw ?
 		db 400 dup (?)
 byte_3A37D	db ?
 _route	db ?
-word_3A37F	dw ?
+public _singyoku_phase_frame
+_singyoku_phase_frame	dw ?
 word_3A381	dw ?
 word_3A383	dw ?
 speed_3A385	dw ?
@@ -44227,7 +44228,8 @@ word_3A6C4	dw ?
 byte_3A6C6	db ?
 		db ?
 word_3A6C8	dw ?
-word_3A6CA	dw ?
+public _boss_phase_frame
+_boss_phase_frame	dw ?
 word_3A6CC	dw ?
 byte_3A6CE	db ?
 		db 20 dup (?)
