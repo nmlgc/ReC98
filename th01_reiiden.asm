@@ -1230,7 +1230,7 @@ loc_C150:
 loc_C16F:
 		cmp	si, 12h
 		jl	short loc_C150
-		mov	byte_34A58, 1
+		mov	_bomb_damaging, 1
 		jmp	loc_C42E
 ; ---------------------------------------------------------------------------
 
@@ -1500,7 +1500,7 @@ loc_C3EE:
 		pop	cx
 		call	_z_palette_set_all_show c, offset _stage_palette, ds
 		mov	_player_invincibility_time, BOMB_INVINCIBILITY_FRAMES_AFTER
-		mov	byte_34A58, 0
+		mov	_bomb_damaging, 0
 		mov	ax, 1
 		jmp	short loc_C430
 ; ---------------------------------------------------------------------------
@@ -3559,7 +3559,7 @@ loc_DB0A:
 		mov	_orb_prev_left, ORB_LEFT_START
 		mov	_orb_prev_top, ORB_TOP_START
 		mov	_player_deflecting, 0
-		mov	byte_34A58, 0
+		mov	_bomb_damaging, 0
 		mov	_cardcombo_cur, 0
 
 loc_DB3E:
@@ -8672,7 +8672,7 @@ arg_0		= word ptr  6
 		mov	byte_39DB2, -1
 		mov	byte_35B45, 1
 		mov	byte_35B46, 0
-		mov	byte_34A58, 0
+		mov	_bomb_damaging, 0
 		mov	_player_sliding, 0
 		mov	_player_deflecting, 0
 		mov	_player_ptn_id, 40h
@@ -17993,7 +17993,7 @@ loc_1FE59:
 		jz	short loc_1FEAB
 
 loc_1FE6A:
-		cmp	byte_34A58, 1
+		cmp	_bomb_damaging, 1
 		jnz	loc_1FF7E
 		movsx	ebx, _card_count
 		mov	eax, dword_34A62
@@ -18082,7 +18082,7 @@ loc_1FF3C:
 		cmp	byte_35BEE, 8Ch
 		jb	short loc_1FF67
 		mov	byte_35BEE, 1
-		cmp	byte_34A58, 0
+		cmp	_bomb_damaging, 0
 		jz	short loc_1FF6F
 
 loc_1FF67:
@@ -20567,7 +20567,7 @@ arg_0		= dword	ptr  6
 		mov	bp, sp
 		cmp	_lives, 0
 		jnz	short loc_22260
-		cmp	byte_34A58, 1
+		cmp	_bomb_damaging, 1
 		jnz	short loc_22260
 		mov	eax, [bp+arg_0]
 		mov	ebx, 50
@@ -37362,7 +37362,7 @@ loc_2C8AE:
 		mov	_orb_force_frame, 0
 		mov	_orb_velocity_x, OVX_4_LEFT
 		mov	_player_deflecting, 0
-		mov	byte_34A58, 0
+		mov	_bomb_damaging, 0
 		push	0
 		call	sub_19E48
 		pop	cx
@@ -42283,9 +42283,9 @@ _first_stage_in_scene	db 1
 		db    0
 include th01/hardware/input_main_end[data].asm
 		db    0
-public _player_deflecting, _player_sliding
+public _player_deflecting, _bomb_damaging, _player_sliding
 _player_deflecting	db 0
-byte_34A58	db 0
+_bomb_damaging	db 0
 _player_sliding	db 0
 public _score
 _score	dd 0
