@@ -2790,7 +2790,7 @@ loc_D414:
 		add	sp, 4
 		pushd	[dword_36C20]
 		push	_bomb_doubletap_frames
-		pushd	[_rand]
+		pushd	[_frame_rand]
 		pushd	[dword_34A62]
 		push	ds
 		push	offset aMain7luRand7lu ; " main:%7lu, rand:%7lu, bomb:%d, timer:%"...
@@ -2986,7 +2986,7 @@ loc_D54F:
 		push	ds
 		push	offset _continues_total
 		push	ds
-		push	offset _rand
+		push	offset _frame_rand
 		push	ds
 		push	offset _lives_extra
 		push	ds
@@ -3016,7 +3016,7 @@ loc_D583:
 		idiv	ebx
 		inc	ax
 		mov	word_34A8A, ax
-		mov	eax, _rand
+		mov	eax, _frame_rand
 		mov	random_seed, eax
 		call	_game_init
 		call	key_start
@@ -3658,7 +3658,7 @@ loc_DC3A:
 		mov	byte_36C1E, 0
 		mov	_input_shot, 0
 		mov	byte_34A47, 1
-		mov	eax, _rand
+		mov	eax, _frame_rand
 		mov	random_seed, eax
 		mov	_bomb_doubletap_frames, BOMB_DOUBLETAP_WINDOW
 		mov	_first_stage_in_scene, 0
@@ -3667,7 +3667,7 @@ loc_DC3A:
 ; ---------------------------------------------------------------------------
 
 loc_DC64:
-		inc	_rand
+		inc	_frame_rand
 		mov	ax, _lives
 		imul	ax, 200
 		mov	dx, 1800
@@ -3678,7 +3678,7 @@ loc_DC64:
 		sub	dx, ax
 		mov	[bp+var_C], dx
 		movsx	ebx, [bp+var_C]
-		mov	eax, _rand
+		mov	eax, _frame_rand
 		xor	edx, edx
 		div	ebx
 		cmp	edx, 0
@@ -3713,7 +3713,7 @@ loc_DCCA:
 		inc	_orb_force_frame
 		inc	dword_34A62
 		inc	_bomb_doubletap_frames
-		test	byte ptr _rand, 3
+		test	byte ptr _frame_rand, 3
 		jnz	short loc_DCFA
 		call	sub_1938A
 
@@ -3839,7 +3839,7 @@ loc_DE72:
 		call	_z_vsync_wait_and_scrollup stdcall, 0
 		pop	cx
 		les	bx, _resident
-		mov	eax, _rand
+		mov	eax, _frame_rand
 		mov	es:[bx+reiidenconfig_t.rand], eax
 		mov	_test_damage, 0
 		mov	dword_34A62, 0C8h ; 'È'
@@ -19704,7 +19704,7 @@ loc_21AAE:
 		jz	short loc_21AE9
 
 loc_21AD5:
-		pushd	[_rand]
+		pushd	[_frame_rand]
 		nopcall	sub_22234
 		add	sp, 4
 		cmp	ax, 1
@@ -20256,7 +20256,7 @@ loc_21F23:
 		cwd
 		idiv	bx
 		movsx	eax, dx
-		mov	edx, _rand
+		mov	edx, _frame_rand
 		and	edx, 1
 		cmp	eax, edx
 		jnz	short loc_21F7D
@@ -20378,7 +20378,7 @@ loc_2207D:
 		cwd
 		idiv	bx
 		movsx	eax, dx
-		mov	edx, _rand
+		mov	edx, _frame_rand
 		and	edx, 1
 		cmp	eax, edx
 		jnz	short loc_220A1
@@ -20430,7 +20430,7 @@ loc_220F6:
 		cwd
 		idiv	bx
 		movsx	eax, dx
-		mov	edx, _rand
+		mov	edx, _frame_rand
 		and	edx, 1
 		cmp	eax, edx
 		jnz	loc_221C1
@@ -25345,7 +25345,7 @@ sub_24FE0	proc far
 		mov	_boss_hp, 14
 		mov	_hud_hp_first_white, 10
 		mov	_hud_hp_first_redwhite, 6
-		mov	eax, _rand
+		mov	eax, _frame_rand
 		mov	random_seed, eax
 		xor	si, si
 		jmp	short loc_250B3
@@ -30775,7 +30775,7 @@ loc_2871C:
 		call	_graph_accesspage_func
 		call	_pagetrans_diagonal_8x8 stdcall, 40
 		add	sp, 0Ch
-		mov	eax, _rand
+		mov	eax, _frame_rand
 		mov	random_seed, eax
 		pop	si
 		pop	bp
@@ -36662,7 +36662,7 @@ loc_2C117:
 		mov	word_3B431, 0
 		call	@boss_palette_snap$qv
 		call	_stage_palette_set c, offset _z_Palettes, ds
-		mov	eax, _rand
+		mov	eax, _frame_rand
 		mov	random_seed, eax
 
 loc_2C14E:
@@ -37367,7 +37367,7 @@ loc_2C8AE:
 		call	sub_19E48
 		pop	cx
 		mov	word_3B431, 0
-		mov	eax, _rand
+		mov	eax, _frame_rand
 		mov	random_seed, eax
 		call	_mdrv2_bgm_fade_out_nonblock
 		push	1
@@ -40895,7 +40895,7 @@ var_2		= word ptr -2
 		mov	word_3B529, 0
 		mov	_konngara_initial_hp_rendered, 0
 		call	@boss_palette_snap$qv
-		mov	eax, _rand
+		mov	eax, _frame_rand
 		mov	random_seed, eax
 		jmp	loc_2FC40
 ; ---------------------------------------------------------------------------
@@ -43083,7 +43083,8 @@ _INIT_	ends
 public _credit_bombs
 _credit_bombs	db ?
 byte_36C15	db ?
-_rand	dd ?
+public _frame_rand
+_frame_rand	dd ?
 dword_36C1A	dd ?
 byte_36C1E	db ?
 public _mode_debug
