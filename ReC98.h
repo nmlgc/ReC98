@@ -61,15 +61,4 @@ typedef union {
 	int16_t v;
 } twobyte_t;
 
-/// Typedefs
-/// --------
-// Generic callback function types. Note the difference between function
-// distance (nearfunc / farfunc) and pointer variable distance
-// (t_near / t_far).
-typedef void (near pascal *near nearfunc_t_near)(void);
-typedef void ( far pascal *near  farfunc_t_near)(void);
-typedef void (near pascal * far  nearfunc_t_far)(void);
-typedef void ( far pascal * far   farfunc_t_far)(void);
-/// --------
-
 #endif /* REC98_H */
