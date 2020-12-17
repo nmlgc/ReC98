@@ -11364,12 +11364,12 @@ var_A		= word ptr -0Ah
 var_8		= word ptr -8
 var_6		= word ptr -6
 var_4		= word ptr -4
-var_2		= word ptr -2
+@@invincibility_flash_colors		= word ptr -2
 
 		enter	32h, 0
 		push	si
-		mov	ax, word_35B52
-		mov	[bp+var_2], ax
+		mov	ax, word ptr _yuugenmagan_invincibility_flash_colors
+		mov	[bp+@@invincibility_flash_colors], ax
 		push	ds
 		push	offset unk_39EC4
 		call	sub_21F19
@@ -11660,7 +11660,7 @@ loc_1BE24:
 		cmp	_boss_phase_frame, 330
 		jle	loc_1DFFC
 		mov	byte_3A6CE, 1
-		mov	word_35B54, 0
+		mov	_yuugenmagan_invincible, 0
 		mov	_boss_phase_frame, 0
 		call	_z_palette_set_all_show c, offset _stage_palette, ds
 		call	@boss_palette_snap$qv
@@ -11728,7 +11728,7 @@ loc_1BEC0:
 		cmp	ax, 1
 		jnz	loc_1C02D
 		inc	_boss_phase_frame
-		inc	word_39E04
+		inc	_yuugenmagan_invincibility_frame
 		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_west, ds, large 0, large 0 or (3 shl 16)
 		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_east, ds, large 0, large 0 or (3 shl 16)
 		add	sp, 18h
@@ -11781,8 +11781,8 @@ loc_1BF60:
 
 loc_1BF66:
 		call	sub_1B6D9
-		pushd	0 or (0 shl 16)
-		pushd	0 or (0 shl 16)
+		pushd	0 or (0 shl 16)	; (hitbox_w) or (hitbox_h)
+		pushd	0 or (0 shl 16)	; (hitbox_left) or (hitbox_top)
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_west, ds
 		cmp	ax, 1
 		jnz	short loc_1BF88
@@ -11826,21 +11826,21 @@ loc_1BFED:
 		xor	ax, ax
 
 loc_1BFEF:
-		push	ax
-		push	seg main_32_TEXT
-		push	offset @boss_nop$qv
-		push	5000
-		push	2
-		push	ss
-		lea	ax, [bp+var_2]
-		push	ax
-		push	ds
-		push	offset _boss_hp
-		push	ds
-		push	offset word_35B54
-		push	ds
-		push	offset word_39E04
-		call	sub_21A8A
+		push	ax	; colliding_with_orb
+		push	seg main_32_TEXT	; hit_callback (segment)
+		push	offset @boss_nop$qv	; hit_callback (offset)
+		push	5000	; hit_score
+		push	2	; invincibility_flash_colors_count
+		push	ss	; invincibility_flash_colors (segment)
+		lea	ax, [bp+@@invincibility_flash_colors]
+		push	ax	; invincibility_flash_colors (offset)
+		push	ds	; hp (segment)
+		push	offset _boss_hp	; hp (offset)
+		push	ds	; is_invincible (segment)
+		push	offset _yuugenmagan_invincible	; is_invincible (offset)
+		push	ds	; invincibility_frame (segment)
+		push	offset _yuugenmagan_invincibility_frame	; invincibility_frame (offset)
+		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_boss_hp, 15
 		jle	short loc_1C025
@@ -11870,7 +11870,7 @@ loc_1C02D:
 		mov	word_39E08, 0
 		mov	byte_39E14, 0
 		mov	_boss_phase_frame, 0
-		mov	word_39E04, 0
+		mov	_yuugenmagan_invincibility_frame, 0
 		mov	x_39E06, 0
 		call	_z_palette_set_all_show c, offset _stage_palette, ds
 		call	@boss_palette_snap$qv
@@ -11918,7 +11918,7 @@ loc_1C0CA:
 		cmp	ax, 3
 		jnz	loc_1C3EB
 		inc	_boss_phase_frame
-		inc	word_39E04
+		inc	_yuugenmagan_invincibility_frame
 		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_southwest, ds, large 0, large 0 or (3 shl 16)
 		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_southeast, ds, large 0, large 0 or (3 shl 16)
 		add	sp, 18h
@@ -12136,8 +12136,8 @@ loc_1C2FF:
 		inc	byte_39E14
 
 loc_1C327:
-		pushd	0 or (0 shl 16)
-		pushd	0 or (0 shl 16)
+		pushd	0 or (0 shl 16)	; (hitbox_w) or (hitbox_h)
+		pushd	0 or (0 shl 16)	; (hitbox_left) or (hitbox_top)
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_west, ds
 		cmp	ax, 1
 		jnz	short loc_1C345
@@ -12181,21 +12181,21 @@ loc_1C3AA:
 		xor	ax, ax
 
 loc_1C3AC:
-		push	ax
-		push	seg main_32_TEXT
-		push	offset @boss_nop$qv
-		push	5000
-		push	2
-		push	ss
-		lea	ax, [bp+var_2]
-		push	ax
-		push	ds
-		push	offset _boss_hp
-		push	ds
-		push	offset word_35B54
-		push	ds
-		push	offset word_39E04
-		call	sub_21A8A
+		push	ax	; colliding_with_orb
+		push	seg main_32_TEXT	; hit_callback (segment)
+		push	offset @boss_nop$qv	; hit_callback (offset)
+		push	5000	; hit_score
+		push	2	; invincibility_flash_colors_count
+		push	ss	; invincibility_flash_colors (segment)
+		lea	ax, [bp+@@invincibility_flash_colors]
+		push	ax	; invincibility_flash_colors (offset)
+		push	ds	; hp (segment)
+		push	offset _boss_hp	; hp (offset)
+		push	ds	; is_invincible (segment)
+		push	offset _yuugenmagan_invincible	; is_invincible (offset)
+		push	ds	; invincibility_frame (segment)
+		push	offset _yuugenmagan_invincibility_frame	; invincibility_frame (offset)
+		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_boss_hp, 12
 		jle	short loc_1C3E3
@@ -12227,7 +12227,7 @@ loc_1C3EB:
 		mov	word_39E08, 0
 		mov	byte_39E14, 0
 		mov	_boss_phase_frame, 0
-		mov	word_39E04, 0
+		mov	_yuugenmagan_invincibility_frame, 0
 		mov	x_39E06, 0
 		call	_z_palette_set_all_show c, offset _stage_palette, ds
 		call	@boss_palette_snap$qv
@@ -12282,7 +12282,7 @@ loc_1C493:
 		cmp	ax, 5
 		jnz	loc_1C741
 		inc	_boss_phase_frame
-		inc	word_39E04
+		inc	_yuugenmagan_invincibility_frame
 		inc	x_39E06
 		dec	angle_39E16
 		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_west, ds, large 0, large 0 or (3 shl 16)
@@ -12451,8 +12451,8 @@ loc_1C65A:
 		mov	angle_39E16, 0
 
 loc_1C67D:
-		pushd	0 or (0 shl 16)
-		pushd	0 or (0 shl 16)
+		pushd	0 or (0 shl 16)	; (hitbox_w) or (hitbox_h)
+		pushd	0 or (0 shl 16)	; (hitbox_left) or (hitbox_top)
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_west, ds
 		cmp	ax, 1
 		jnz	short loc_1C69B
@@ -12496,21 +12496,21 @@ loc_1C700:
 		xor	ax, ax
 
 loc_1C702:
-		push	ax
-		push	seg main_32_TEXT
-		push	offset @boss_nop$qv
-		push	5000
-		push	2
-		push	ss
-		lea	ax, [bp+var_2]
-		push	ax
-		push	ds
-		push	offset _boss_hp
-		push	ds
-		push	offset word_35B54
-		push	ds
-		push	offset word_39E04
-		call	sub_21A8A
+		push	ax	; colliding_with_orb
+		push	seg main_32_TEXT	; hit_callback (segment)
+		push	offset @boss_nop$qv	; hit_callback (offset)
+		push	5000	; hit_score
+		push	2	; invincibility_flash_colors_count
+		push	ss	; invincibility_flash_colors (segment)
+		lea	ax, [bp+@@invincibility_flash_colors]
+		push	ax	; invincibility_flash_colors (offset)
+		push	ds	; hp (segment)
+		push	offset _boss_hp	; hp (offset)
+		push	ds	; is_invincible (segment)
+		push	offset _yuugenmagan_invincible	; is_invincible (offset)
+		push	ds	; invincibility_frame (segment)
+		push	offset _yuugenmagan_invincibility_frame	; invincibility_frame (offset)
+		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_boss_hp, 10
 		jle	short loc_1C739
@@ -12542,7 +12542,7 @@ loc_1C741:
 		mov	word_39E08, 0
 		mov	byte_39E14, 0
 		mov	_boss_phase_frame, 0
-		mov	word_39E04, 0
+		mov	_yuugenmagan_invincibility_frame, 0
 		mov	x_39E06, 0
 		mov	word_39E12, 0
 		call	_z_palette_set_all_show c, offset _stage_palette, ds
@@ -12591,7 +12591,7 @@ loc_1C7E4:
 		cmp	ax, 7
 		jnz	loc_1CB08
 		inc	_boss_phase_frame
-		inc	word_39E04
+		inc	_yuugenmagan_invincibility_frame
 		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_southwest, ds, large 0, large 0 or (3 shl 16)
 		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_southeast, ds, large 0, large 0 or (3 shl 16)
 		add	sp, 18h
@@ -12810,8 +12810,8 @@ loc_1CA10:
 		inc	byte_39E14
 
 loc_1CA38:
-		pushd	0 or (0 shl 16)
-		pushd	0 or (0 shl 16)
+		pushd	0 or (0 shl 16)	; (hitbox_w) or (hitbox_h)
+		pushd	0 or (0 shl 16)	; (hitbox_left) or (hitbox_top)
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_west, ds
 		cmp	ax, 1
 		jnz	short loc_1CA56
@@ -12855,21 +12855,21 @@ loc_1CABB:
 		xor	ax, ax
 
 loc_1CABD:
-		push	ax
-		push	seg main_32_TEXT
-		push	offset @boss_nop$qv
-		push	5000
-		push	2
-		push	ss
-		lea	ax, [bp+var_2]
-		push	ax
-		push	ds
-		push	offset _boss_hp
-		push	ds
-		push	offset word_35B54
-		push	ds
-		push	offset word_39E04
-		call	sub_21A8A
+		push	ax	; colliding_with_orb
+		push	seg main_32_TEXT	; hit_callback (segment)
+		push	offset @boss_nop$qv	; hit_callback (offset)
+		push	5000	; hit_score
+		push	2	; invincibility_flash_colors_count
+		push	ss	; invincibility_flash_colors (segment)
+		lea	ax, [bp+@@invincibility_flash_colors]
+		push	ax	; invincibility_flash_colors (offset)
+		push	ds	; hp (segment)
+		push	offset _boss_hp	; hp (offset)
+		push	ds	; is_invincible (segment)
+		push	offset _yuugenmagan_invincible	; is_invincible (offset)
+		push	ds	; invincibility_frame (segment)
+		push	offset _yuugenmagan_invincibility_frame	; invincibility_frame (offset)
+		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_boss_hp, 8
 		jle	short loc_1CAF4
@@ -12883,7 +12883,7 @@ loc_1CAF4:
 
 loc_1CAF9:
 		mov	_boss_phase_frame, 0
-		mov	word_39E04, 0
+		mov	_yuugenmagan_invincibility_frame, 0
 		jmp	loc_1DFFC
 ; ---------------------------------------------------------------------------
 
@@ -12912,7 +12912,7 @@ loc_1CB3E:
 		cmp	ax, 9
 		jnz	loc_1D036
 		inc	_boss_phase_frame
-		inc	word_39E04
+		inc	_yuugenmagan_invincibility_frame
 		call	@CBossEntity@move_lock_unput_and_put_8$qiiii c, offset eye_north, ds, large 0, large 0 or (3 shl 16)
 		cmp	_boss_phase_frame, 30
 		jl	short loc_1CB88
@@ -13229,8 +13229,8 @@ loc_1CF52:
 		add	x_39E06, 16
 
 loc_1CF57:
-		pushd	0 or (0 shl 16)
-		pushd	0 or (0 shl 16)
+		pushd	0 or (0 shl 16)	; (hitbox_w) or (hitbox_h)
+		pushd	0 or (0 shl 16)	; (hitbox_left) or (hitbox_top)
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_west, ds
 		cmp	ax, 1
 		jnz	short loc_1CF75
@@ -13274,21 +13274,21 @@ loc_1CFDA:
 		xor	ax, ax
 
 loc_1CFDC:
-		push	ax
-		push	seg main_32_TEXT
-		push	offset @boss_nop$qv
-		push	5000
-		push	2
-		push	ss
-		lea	ax, [bp+var_2]
-		push	ax
-		push	ds
-		push	offset _boss_hp
-		push	ds
-		push	offset word_35B54
-		push	ds
-		push	offset word_39E04
-		call	sub_21A8A
+		push	ax	; colliding_with_orb
+		push	seg main_32_TEXT	; hit_callback (segment)
+		push	offset @boss_nop$qv	; hit_callback (offset)
+		push	5000	; hit_score
+		push	2	; invincibility_flash_colors_count
+		push	ss	; invincibility_flash_colors (segment)
+		lea	ax, [bp+@@invincibility_flash_colors]
+		push	ax	; invincibility_flash_colors (offset)
+		push	ds	; hp (segment)
+		push	offset _boss_hp	; hp (offset)
+		push	ds	; is_invincible (segment)
+		push	offset _yuugenmagan_invincible	; is_invincible (offset)
+		push	ds	; invincibility_frame (segment)
+		push	offset _yuugenmagan_invincibility_frame	; invincibility_frame (offset)
+		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_boss_hp, 2
 		jle	short loc_1D011
@@ -13298,7 +13298,7 @@ loc_1CFDC:
 loc_1D011:
 		mov	byte_3A6CE, 0Ah
 		mov	_boss_phase_frame, 0
-		mov	word_39E04, 0
+		mov	_yuugenmagan_invincibility_frame, 0
 		mov	word_39E08, 1
 		mov	byte_39E14, 0
 		mov	word_39E10, 0
@@ -13328,7 +13328,7 @@ loc_1D036:
 
 loc_1D071:
 		mov	_boss_phase_frame, 0
-		mov	word_39E04, 0
+		mov	_yuugenmagan_invincibility_frame, 0
 		mov	x_39E06, 0
 		mov	word_39E12, 0
 		jmp	loc_1D8C1
@@ -13340,7 +13340,7 @@ loc_1D08C:
 		cmp	ax, 0Bh
 		jnz	loc_1D852
 		inc	_boss_phase_frame
-		inc	word_39E04
+		inc	_yuugenmagan_invincibility_frame
 		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset      eye_west, ds, large 0, large 0 or (3 shl 16)
 		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset      eye_east, ds, large 0, large 0 or (3 shl 16)
 		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_southwest, ds, large 0, large 0 or (3 shl 16)
@@ -13884,8 +13884,8 @@ loc_1D2F6:
 		mov	word_39E08, 3
 
 loc_1D63F:
-		pushd	0 or (0 shl 16)
-		pushd	0 or (0 shl 16)
+		pushd	0 or (0 shl 16)	; (hitbox_w) or (hitbox_h)
+		pushd	0 or (0 shl 16)	; (hitbox_left) or (hitbox_top)
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_west, ds
 		cmp	ax, 1
 		jnz	short loc_1D65D
@@ -13929,21 +13929,21 @@ loc_1D6C2:
 		xor	ax, ax
 
 loc_1D6C4:
-		push	ax
-		push	seg main_32_TEXT
-		push	offset @boss_nop$qv
-		push	5000
-		push	2
-		push	ss
-		lea	ax, [bp+var_2]
-		push	ax
-		push	ds
-		push	offset _boss_hp
-		push	ds
-		push	offset word_35B54
-		push	ds
-		push	offset word_39E04
-		call	sub_21A8A
+		push	ax	; colliding_with_orb
+		push	seg main_32_TEXT	; hit_callback (segment)
+		push	offset @boss_nop$qv	; hit_callback (offset)
+		push	5000	; hit_score
+		push	2	; invincibility_flash_colors_count
+		push	ss	; invincibility_flash_colors (segment)
+		lea	ax, [bp+@@invincibility_flash_colors]
+		push	ax	; invincibility_flash_colors (offset)
+		push	ds	; hp (segment)
+		push	offset _boss_hp	; hp (offset)
+		push	ds	; is_invincible (segment)
+		push	offset _yuugenmagan_invincible	; is_invincible (offset)
+		push	ds	; invincibility_frame (segment)
+		push	offset _yuugenmagan_invincibility_frame	; invincibility_frame (offset)
+		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_boss_hp, 0
 		jg	short loc_1D75D
@@ -13971,13 +13971,13 @@ loc_1D75D:
 		jnz	loc_1DFFC
 
 loc_1D76D:
-		cmp	word_35B54, 0
+		cmp	_yuugenmagan_invincible, 0
 		jnz	loc_1DFFC
 		mov	byte_3A6CE, 0Ch
 		mov	word_39E08, 0
 		mov	byte_39E14, 1
 		mov	_boss_phase_frame, 0
-		mov	word_39E04, 0
+		mov	_yuugenmagan_invincibility_frame, 0
 		mov	x_39E06, 0
 		mov	ax, y_39DF0
 		add	ax, 64
@@ -14067,7 +14067,7 @@ loc_1D852:
 		cbw
 		cmp	ax, 0Ch
 		jnz	short loc_1D8D5
-		inc	word_39E04
+		inc	_yuugenmagan_invincibility_frame
 		push	ds
 		push	offset _boss_phase_frame
 		pushd	1
@@ -14075,7 +14075,7 @@ loc_1D852:
 		push	1Eh
 		nopcall	sub_1DFFF
 		add	sp, 0Ch
-		mov	ax, word_39E04
+		mov	ax, _yuugenmagan_invincibility_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -14092,7 +14092,7 @@ loc_1D88A:
 		mov	word_39E08, 0
 		mov	byte_39E14, 1
 		mov	_boss_phase_frame, 0
-		mov	word_39E04, 0
+		mov	_yuugenmagan_invincibility_frame, 0
 		mov	x_39E06, 0
 		mov	word_39E12, 0
 		mov	word_39E0E, 0
@@ -14109,7 +14109,7 @@ loc_1D8D5:
 		cmp	ax, 0Dh
 		jnz	loc_1DFFC
 		inc	_boss_phase_frame
-		inc	word_39E04
+		inc	_yuugenmagan_invincibility_frame
 		inc	x_39E06
 		mov	al, byte_39E14
 		cbw
@@ -14151,7 +14151,7 @@ loc_1D970:
 		call	@CBossEntity@move_lock_unput_and_put_8$qiiii c, offset eye_north, ds, large 0, large 0 or (3 shl 16)
 
 loc_1D991:
-		cmp	word_35B54, 0
+		cmp	_yuugenmagan_invincible, 0
 		jz	short loc_1D9BC
 		cmp	word_39E0E, 0
 		jnz	short loc_1D9BC
@@ -14485,7 +14485,7 @@ loc_1DCD0:
 		mov	word_39E08, 3
 		mov	byte_39E14, 3
 		mov	word_39E10, 7
-		mov	word_39E04, 0
+		mov	_yuugenmagan_invincibility_frame, 0
 		mov	x_39E06, 0
 		call	sub_114CA stdcall, x_39DE6, y_39DF0, x_39DEA, y_39DF4
 		call	sub_114CA stdcall, x_39DEA, y_39DF4, x_39DEE, y_39DF8
@@ -14559,7 +14559,7 @@ loc_1DE37:
 		mov	byte_3A6CE, 0Ah
 		mov	word_39E08, 3
 		mov	byte_39E14, 3
-		mov	word_39E04, 0
+		mov	_yuugenmagan_invincibility_frame, 0
 		mov	x_39E06, 0
 		call	sub_114CA stdcall, x_39DE6, y_39DF0, x_39DEA, y_39DF4
 		call	sub_114CA stdcall, x_39DEA, y_39DF4, x_39DEE, y_39DF8
@@ -14569,8 +14569,8 @@ loc_1DE37:
 		add	sp, 28h
 
 loc_1DED5:
-		pushd	0 or (0 shl 16)
-		pushd	0 or (0 shl 16)
+		pushd	0 or (0 shl 16)	; (hitbox_w) or (hitbox_h)
+		pushd	0 or (0 shl 16)	; (hitbox_left) or (hitbox_top)
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_west, ds
 		cmp	ax, 1
 		jnz	short loc_1DEF3
@@ -14614,21 +14614,21 @@ loc_1DF58:
 		xor	ax, ax
 
 loc_1DF5A:
-		push	ax
-		push	seg main_32_TEXT
-		push	offset @boss_nop$qv
-		push	5000
-		push	2
-		push	ss
-		lea	ax, [bp+var_2]
-		push	ax
-		push	ds
-		push	offset _boss_hp
-		push	ds
-		push	offset word_35B54
-		push	ds
-		push	offset word_39E04
-		call	sub_21A8A
+		push	ax	; colliding_with_orb
+		push	seg main_32_TEXT	; hit_callback (segment)
+		push	offset @boss_nop$qv	; hit_callback (offset)
+		push	5000	; hit_score
+		push	2	; invincibility_flash_colors_count
+		push	ss	; invincibility_flash_colors (segment)
+		lea	ax, [bp+@@invincibility_flash_colors]
+		push	ax	; invincibility_flash_colors (offset)
+		push	ds	; hp (segment)
+		push	offset _boss_hp	; hp (offset)
+		push	ds	; is_invincible (segment)
+		push	offset _yuugenmagan_invincible	; is_invincible (offset)
+		push	ds	; invincibility_frame (segment)
+		push	offset _yuugenmagan_invincibility_frame	; invincibility_frame (offset)
+		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_boss_hp, 0
 		jg	short loc_1DFFC
@@ -17598,13 +17598,13 @@ sub_1F909	endp
 
 sub_1FA7B	proc far
 
-var_2		= word ptr -2
+@@invincibility_flash_colors		= word ptr -2
 
 		enter	2, 0
 		push	si
 		push	di
-		mov	ax, word_35BBD
-		mov	[bp+var_2], ax
+		mov	ax, word ptr _mima_invincibility_flash_colors
+		mov	[bp+@@invincibility_flash_colors], ax
 		push	ds
 		push	offset unk_39EC4
 		call	sub_21F19
@@ -17668,7 +17668,7 @@ loc_1FB20:
 
 loc_1FB45:
 		inc	_boss_phase_frame
-		inc	word_39E74
+		inc	_mima_invincibility_frame
 		call	sub_1E3D7
 		cmp	word_39E78, 0
 		jnz	short loc_1FB5E
@@ -17717,33 +17717,33 @@ loc_1FB9C:
 		mov	word_39E78, 63h	; 'c'
 
 loc_1FBAC:
-		push	(48 shl 16) or 96
+		push	(48 shl 16) or 96	; (hitbox_w) or (hitbox_h)
 		mov	ax, mima_still.BE_cur_top
 		add	ax, 48
-		push	ax
+		push	ax	; hitbox_top
 		mov	ax, mima_still.BE_cur_left
 		add	ax, 16
-		push	ax
+		push	ax	; hitbox_left
 		call	@CBossEntity@hittest_orb$xqv c, offset mima_still, ds
-		push	ax
-		push	seg main_32_TEXT
-		push	offset @boss_nop$qv
-		push	5000
-		push	2
-		push	ss
-		lea	ax, [bp+var_2]
-		push	ax
-		push	ds
-		push	offset _boss_hp
-		push	ds
-		push	offset word_39E76
-		push	ds
-		push	offset word_39E74
-		call	sub_21A8A
+		push	ax	; colliding_with_orb
+		push	seg main_32_TEXT	; hit_callback (segment)
+		push	offset @boss_nop$qv	; hit_callback (offset)
+		push	5000	; hit_score
+		push	2	; invincibility_flash_colors_count
+		push	ss	; invincibility_flash_colors (segment)
+		lea	ax, [bp+@@invincibility_flash_colors]
+		push	ax	; invincibility_flash_colors (offset)
+		push	ds	; hp (segment)
+		push	offset _boss_hp	; hp (offset)
+		push	ds	; is_invincible (segment)
+		push	offset _mima_invincible	; is_invincible (offset)
+		push	ds	; invincibility_frame (segment)
+		push	offset _mima_invincibility_frame	; invincibility_frame (offset)
+		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
 		add	sp, 22h
 		cmp	word_39E78, 63h	; 'c'
 		jnz	loc_1FDCF
-		cmp	word_39E76, 0
+		cmp	_mima_invincible, 0
 		jnz	loc_1FDCF
 		push	1
 		call	_graph_accesspage_func
@@ -17761,7 +17761,7 @@ loc_1FBAC:
 		call	sub_1E526
 		mov	byte_3A6CE, 2
 		mov	_boss_phase_frame, 0
-		mov	word_39E74, 0
+		mov	_mima_invincibility_frame, 0
 		mov	word_39E78, 0
 		jmp	loc_1FDCF
 ; ---------------------------------------------------------------------------
@@ -17772,7 +17772,7 @@ loc_1FC54:
 		cmp	ax, 2
 		jnz	short loc_1FC95
 		inc	_boss_phase_frame
-		inc	word_39E74
+		inc	_mima_invincibility_frame
 		push	780100h
 		call	sub_1E659
 		add	sp, 4
@@ -17780,7 +17780,7 @@ loc_1FC54:
 		jnz	loc_1FDCF
 		mov	byte_3A6CE, 3
 		mov	_boss_phase_frame, 0
-		mov	word_39E74, 0
+		mov	_mima_invincibility_frame, 0
 		mov	word_39E78, 0
 		jmp	loc_1FDCF
 ; ---------------------------------------------------------------------------
@@ -17791,7 +17791,7 @@ loc_1FC95:
 		cmp	ax, 3
 		jnz	loc_1FDCF
 		inc	_boss_phase_frame
-		inc	word_39E74
+		inc	_mima_invincibility_frame
 		call	sub_1E3D7
 		cmp	word_39E78, 0
 		jnz	short loc_1FCB9
@@ -17835,29 +17835,29 @@ loc_1FCF4:
 		mov	word_39E78, ax
 
 loc_1FCF7:
-		push	(48 shl 16) or 96
+		push	(48 shl 16) or 96	; (hitbox_w) or (hitbox_h)
 		mov	ax, mima_still.BE_cur_top
 		add	ax, 48
-		push	ax
+		push	ax	; hitbox_top
 		mov	ax, mima_still.BE_cur_left
 		add	ax, 16
-		push	ax
+		push	ax	; hitbox_left
 		call	@CBossEntity@hittest_orb$xqv c, offset mima_still, ds
-		push	ax
-		push	seg main_32_TEXT
-		push	offset @boss_nop$qv
-		push	5000
-		push	2
-		push	ss
-		lea	ax, [bp+var_2]
-		push	ax
-		push	ds
-		push	offset _boss_hp
-		push	ds
-		push	offset word_39E76
-		push	ds
-		push	offset word_39E74
-		call	sub_21A8A
+		push	ax	; colliding_with_orb
+		push	seg main_32_TEXT	; hit_callback (segment)
+		push	offset @boss_nop$qv	; hit_callback (offset)
+		push	5000	; hit_score
+		push	2	; invincibility_flash_colors_count
+		push	ss	; invincibility_flash_colors (segment)
+		lea	ax, [bp+@@invincibility_flash_colors]
+		push	ax	; invincibility_flash_colors (offset)
+		push	ds	; hp (segment)
+		push	offset _boss_hp	; hp (offset)
+		push	ds	; is_invincible (segment)
+		push	offset _mima_invincible	; is_invincible (offset)
+		push	ds	; invincibility_frame (segment)
+		push	offset _mima_invincibility_frame	; invincibility_frame (offset)
+		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_boss_hp, 0
 		jg	loc_1FDCF
@@ -19656,8 +19656,8 @@ main_31__TEXT	ends
 main_32_TEXT	segment	byte public 'CODE' use16
 	extern @boss_nop$qv:proc
 	extern @hud_hp_render$qii:proc
+	extern @boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii:proc
 
-HUD_HP_FUNC_DECREMENT = 999
 HUD_HP_FUNC_RERENDER = -1
 main_32_TEXT	ends
 
@@ -19665,178 +19665,6 @@ main_32__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_32
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_21A8A	proc far
-
-arg_0		= dword	ptr  6
-arg_4		= dword	ptr  0Ah
-@@hp		= dword	ptr  0Eh
-arg_C		= dword	ptr  12h
-arg_10		= byte ptr  16h
-@@score		= word ptr  18h
-arg_14		= dword	ptr  1Ah
-arg_18		= byte ptr  1Eh
-@@hitbox_left		= word ptr  20h
-@@hitbox_top		= word ptr  22h
-@@hitbox_w		= word ptr  24h
-@@hitbox_h		= word ptr  26h
-
-		push	bp
-		mov	bp, sp
-		push	si
-		cmp	_test_damage, 1
-		jnz	short loc_21AAE
-		les	bx, [bp+@@hp]
-		dec	word ptr es:[bx]
-		mov	_test_damage, 0
-		call	@hud_hp_render$qii c, word ptr es:[bx], HUD_HP_FUNC_DECREMENT
-
-loc_21AAE:
-		call	@CShots@hittest_boss$qiiii c, offset _Shots, ds, [bp+@@hitbox_left], [bp+@@hitbox_top], [bp+@@hitbox_w], [bp+@@hitbox_h]
-		cmp	[bp+arg_18], 1
-		jnz	short loc_21AD5
-		les	bx, [bp+arg_4]
-		cmp	word ptr es:[bx], 0
-		jz	short loc_21AE9
-
-loc_21AD5:
-		pushd	[_frame_rand]
-		nopcall	sub_22234
-		add	sp, 4
-		cmp	ax, 1
-		jnz	loc_21B8A
-
-loc_21AE9:
-		les	bx, [bp+arg_0]
-		mov	word ptr es:[bx], 0
-		xor	si, si
-		jmp	short loc_21B11
-; ---------------------------------------------------------------------------
-
-loc_21AF5:
-		push	(0Fh shl 16) or 0Fh
-		push	0Fh
-		les	bx, [bp+arg_C]
-		add	bx, si
-		mov	al, es:[bx]
-		mov	ah, 0
-		push	ax
-		call	_z_palette_set_show
-		add	sp, 8
-		inc	si
-
-loc_21B11:
-		mov	al, [bp+arg_10]
-		mov	ah, 0
-		cmp	ax, si
-		jg	short loc_21AF5
-		les	bx, [bp+@@hp]
-		dec	word ptr es:[bx]
-		les	bx, [bp+arg_4]
-		mov	word ptr es:[bx], 1
-		cmp	_orb_velocity_x, OVX_4_LEFT
-		jz	short loc_21B53
-		cmp	_orb_velocity_x, OVX_8_LEFT
-		jz	short loc_21B53
-		cmp	_orb_velocity_x, OVX_4_RIGHT
-		jz	short loc_21B5B
-		cmp	_orb_velocity_x, OVX_8_RIGHT
-		jz	short loc_21B5B
-		cmp	_orb_velocity_x, OVX_0
-		jnz	short loc_21B61
-		cmp	_orb_cur_left, (PLAYFIELD_CENTER_X - (ORB_W / 2))
-		jge	short loc_21B5B
-
-loc_21B53:
-		mov	_orb_velocity_x, OVX_4_RIGHT
-		jmp	short loc_21B61
-; ---------------------------------------------------------------------------
-
-loc_21B5B:
-		mov	_orb_velocity_x, OVX_4_LEFT
-
-loc_21B61:
-		movsx	eax, [bp+@@score]
-		add	_score, eax
-		call	_hud_score_and_cardcombo_render
-		push	3
-		call	_mdrv2_se_play
-		call	[bp+arg_14]
-		push	HUD_HP_FUNC_DECREMENT
-		les	bx, [bp+@@hp]
-		push	word ptr es:[bx]
-		call	@hud_hp_render$qii
-		add	sp, 6
-
-loc_21B8A:
-		les	bx, [bp+arg_4]
-		cmp	word ptr es:[bx], 1
-		jnz	short loc_21BEC
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx], 28h ;	'('
-		jge	short loc_21BEC
-		mov	ax, es:[bx]
-		mov	bx, 4
-		cwd
-		idiv	bx
-		cmp	dx, 2
-		jnz	short loc_21BD5
-		xor	si, si
-		jmp	short loc_21BCA
-; ---------------------------------------------------------------------------
-
-loc_21BAE:
-		push	(0Fh shl 16) or 0Fh
-		push	0Fh
-		les	bx, [bp+arg_C]
-		add	bx, si
-		mov	al, es:[bx]
-		mov	ah, 0
-		push	ax
-		call	_z_palette_set_show
-		add	sp, 8
-		inc	si
-
-loc_21BCA:
-		mov	al, [bp+arg_10]
-		mov	ah, 0
-		cmp	ax, si
-		jg	short loc_21BAE
-		jmp	short loc_21C0A
-; ---------------------------------------------------------------------------
-
-loc_21BD5:
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx]
-		mov	bx, 4
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_21C0A
-		call	@boss_palette_show$qv
-		jmp	short loc_21C0A
-; ---------------------------------------------------------------------------
-
-loc_21BEC:
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx], 28h ;	'('
-		jle	short loc_21C0A
-		call	@boss_palette_show$qv
-		les	bx, [bp+arg_0]
-		mov	word ptr es:[bx], 0
-		les	bx, [bp+arg_4]
-		mov	word ptr es:[bx], 0
-
-loc_21C0A:
-		pop	si
-		pop	bp
-		retf
-sub_21A8A	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -20558,8 +20386,8 @@ sub_21F19	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_22234	proc far
+public @is_bomb_damage_frame$qul
+@is_bomb_damage_frame$qul	proc far
 
 arg_0		= dword	ptr  6
 
@@ -20584,7 +20412,7 @@ loc_22260:
 		xor	ax, ax
 		pop	bp
 		retf
-sub_22234	endp
+@is_bomb_damage_frame$qul	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -22094,13 +21922,13 @@ sub_22F2A	endp
 
 sub_22F4A	proc far
 
-var_2		= byte ptr -2
+@@invincibility_flash_colors		= byte ptr -2
 
 		enter	2, 0
 		push	si
 		push	di
-		mov	al, byte_35CDF
-		mov	[bp+var_2], al
+		mov	al, _singyoku_invincibility_flash_colors
+		mov	[bp+@@invincibility_flash_colors], al
 		cmp	byte_35CDE, 0
 		jnz	loc_230BA
 		mov	singyoku_sphere.BE_cur_left, 272
@@ -22185,14 +22013,14 @@ loc_2302C:
 		mov	byte_35CDE, 1
 		mov	word_35CE0, 0
 		mov	word_35CE2, 0
-		mov	word_35CE4, 0
+		mov	_singyoku_invincible, 0
 		mov	_singyoku_phase_frame, 0
 		mov	_singyoku_initial_hp_rendered, 0
 		call	@boss_palette_show$qv
 		call	_stage_palette_set c, offset _z_Palettes, ds
 		call	@boss_palette_snap$qv
 		mov	singyoku_sphere.BE_hitbox_orb_inactive, 0
-		mov	word_3A381, 0
+		mov	_singyoku_invincibility_frame, 0
 		cmp	_rank, RANK_EASY
 		jnz	short loc_23087
 		mov	ax, 46h	; 'F'
@@ -22241,12 +22069,12 @@ loc_230BA:
 		jnz	loc_23198
 		cmp	_singyoku_initial_hp_rendered, 0
 		jnz	short loc_230DF
-		call	@hud_hp_render$qii c, _singyoku_hp, word_3A381
+		call	@hud_hp_render$qii c, _singyoku_hp, _singyoku_invincibility_frame
 		mov	_singyoku_initial_hp_rendered, ax
 
 loc_230DF:
 		inc	_singyoku_phase_frame
-		inc	word_3A381
+		inc	_singyoku_invincibility_frame
 		cmp	word_35CE0, 0
 		jnz	short loc_230F4
 		call	sub_229D1
@@ -22275,33 +22103,33 @@ loc_23115:
 		mov	word_35CE0, ax
 
 loc_23118:
-		push	(48 shl 16) or 96
+		push	(48 shl 16) or 96	; (hitbox_w) or (hitbox_h)
 		mov	ax, singyoku_sphere.BE_cur_top
 		add	ax, 32
-		push	ax
+		push	ax	; hitbox_top
 		mov	ax, singyoku_sphere.BE_cur_left
 		add	ax, 16
-		push	ax
+		push	ax	; hitbox_left
 		call	@CBossEntity@hittest_orb$xqv c, offset singyoku_sphere, ds
-		push	ax
-		push	seg main_32_TEXT
-		push	offset @boss_nop$qv
-		push	3000
-		push	1
-		push	ss
-		lea	ax, [bp+var_2]
-		push	ax
-		push	ds
-		push	offset _singyoku_hp
-		push	ds
-		push	offset word_35CE4
-		push	ds
-		push	offset word_3A381
-		call	sub_21A8A
+		push	ax	; colliding_with_orb
+		push	seg main_32_TEXT	; hit_callback (segment)
+		push	offset @boss_nop$qv	; hit_callback (offset)
+		push	3000	; hit_score
+		push	1	; invincibility_flash_colors_count
+		push	ss	; invincibility_flash_colors (segment)
+		lea	ax, [bp+@@invincibility_flash_colors]
+		push	ax	; invincibility_flash_colors (offset)
+		push	ds	; hp (segment)
+		push	offset _singyoku_hp	; hp (offset)
+		push	ds	; is_invincible (segment)
+		push	offset _singyoku_invincible	; is_invincible (offset)
+		push	ds	; invincibility_frame (segment)
+		push	offset _singyoku_invincibility_frame	; invincibility_frame (offset)
+		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_singyoku_hp, 6
 		jg	loc_232A0
-		cmp	word_35CE4, 0
+		cmp	_singyoku_invincible, 0
 		jnz	loc_232A0
 		cmp	word_35CE0, 1
 		jz	loc_232A0
@@ -22309,7 +22137,7 @@ loc_23118:
 		mov	word_35CE2, 0
 		mov	word_35CE0, 0
 		mov	_singyoku_phase_frame, 0
-		mov	word_3A381, 0
+		mov	_singyoku_invincibility_frame, 0
 		jmp	loc_232A0
 ; ---------------------------------------------------------------------------
 
@@ -22319,7 +22147,7 @@ loc_23198:
 		cmp	ax, 2
 		jnz	loc_2326F
 		inc	_singyoku_phase_frame
-		inc	word_3A381
+		inc	_singyoku_invincibility_frame
 		cmp	word_35CE0, 0
 		jnz	short loc_231B8
 		call	sub_22DC8
@@ -22372,29 +22200,29 @@ loc_2320A:
 		mov	word_35CE0, dx
 
 loc_2320E:
-		push	(48 shl 16) or 96
+		push	(48 shl 16) or 96	; (hitbox_w) or (hitbox_h)
 		mov	ax, singyoku_sphere.BE_cur_top
 		add	ax, 32
-		push	ax
+		push	ax	; hitbox_top
 		mov	ax, singyoku_sphere.BE_cur_left
 		add	ax, 16
-		push	ax
+		push	ax	; hitbox_left
 		call	@CBossEntity@hittest_orb$xqv c, offset singyoku_sphere, ds
-		push	ax
-		push	seg main_32_TEXT
-		push	offset @boss_nop$qv
-		push	3000
-		push	1
-		push	ss
-		lea	ax, [bp+var_2]
-		push	ax
-		push	ds
-		push	offset _singyoku_hp
-		push	ds
-		push	offset word_35CE4
-		push	ds
-		push	offset word_3A381
-		call	sub_21A8A
+		push	ax	; colliding_with_orb
+		push	seg main_32_TEXT	; hit_callback (segment)
+		push	offset @boss_nop$qv	; hit_callback (offset)
+		push	3000	; hit_score
+		push	1	; invincibility_flash_colors_count
+		push	ss	; invincibility_flash_colors (segment)
+		lea	ax, [bp+@@invincibility_flash_colors]
+		push	ax	; invincibility_flash_colors (offset)
+		push	ds	; hp (segment)
+		push	offset _singyoku_hp	; hp (offset)
+		push	ds	; is_invincible (segment)
+		push	offset _singyoku_invincible	; is_invincible (offset)
+		push	ds	; invincibility_frame (segment)
+		push	offset _singyoku_invincibility_frame	; invincibility_frame (offset)
+		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_singyoku_hp, 0
 		jg	short loc_232A0
@@ -24453,18 +24281,18 @@ sub_24660	endp
 
 sub_24722	proc far
 
-var_4		= dword	ptr -4
+@@invincibility_flash_colors		= dword	ptr -4
 
 		enter	4, 0
 		push	si
 		push	di
-		mov	eax, dword_35D18
-		mov	[bp+var_4], eax
+		mov	eax, dword ptr _kikuri_invincibility_flash_colors
+		mov	[bp+@@invincibility_flash_colors], eax
 		cmp	byte_3A3BE, 0
 		jnz	loc_24B19
 		mov	_boss_phase_frame, 0
-		mov	word_3A6C2, 0
-		mov	word_3A6C0, 0
+		mov	_kikuri_invincibility_frame, 0
+		mov	_kikuri_invincible, 0
 		call	@boss_palette_snap$qv
 		push	(0Fh shl 16) or 0Fh
 		push	(0Fh shl 16) or 02h
@@ -24488,13 +24316,13 @@ loc_24796:
 		idiv	bx
 		or	dx, dx
 		jnz	loc_24871
-		cmp	word_3A6C2, 0C8h ; '?'
+		cmp	_kikuri_invincibility_frame, 200
 		jge	short loc_247C9
-		push	word_3A6C2
+		push	_kikuri_invincibility_frame
 		push	2222h
 		call	sub_23C4F
-		mov	ax, 18Fh
-		sub	ax, word_3A6C2
+		mov	ax, 399
+		sub	ax, _kikuri_invincibility_frame
 		push	ax
 		push	2222h
 		call	sub_23C4F
@@ -24504,15 +24332,15 @@ loc_247C9:
 		add	ax, ax
 		cmp	ax, 8
 		jle	short loc_247F9
-		cmp	word_3A6C2, 0D0h ; '?'
+		cmp	_kikuri_invincibility_frame, 208
 		jge	short loc_247F9
-		mov	ax, word_3A6C2
-		add	ax, 0FFF8h
+		mov	ax, _kikuri_invincibility_frame
+		add	ax, -8
 		push	ax
 		push	0AAAAh
 		call	sub_23C4F
-		mov	ax, 18Fh
-		sub	ax, word_3A6C2
+		mov	ax, 399
+		sub	ax, _kikuri_invincibility_frame
 		add	ax, 8
 		push	ax
 		push	0AAAAh
@@ -24523,16 +24351,16 @@ loc_247F9:
 		add	ax, ax
 		cmp	ax, 16
 		jle	short loc_24829
-		cmp	word_3A6C2, 0D8h ; '?'
+		cmp	_kikuri_invincibility_frame, 216
 		jge	short loc_24829
-		mov	ax, word_3A6C2
-		add	ax, 0FFF0h
+		mov	ax, _kikuri_invincibility_frame
+		add	ax, -16
 		push	ax
 		push	0EEEEh
 		call	sub_23C4F
 		mov	ax, 18Fh
-		sub	ax, word_3A6C2
-		add	ax, 10h
+		sub	ax, _kikuri_invincibility_frame
+		add	ax, 16
 		push	ax
 		push	0EEEEh
 		call	sub_23C4F
@@ -24542,25 +24370,25 @@ loc_24829:
 		add	ax, ax
 		cmp	ax, 24
 		jle	short loc_24857
-		cmp	word_3A6C2, 0E0h
+		cmp	_kikuri_invincibility_frame, 224
 		jg	short loc_24857
-		mov	ax, word_3A6C2
-		add	ax, 0FFE8h
+		mov	ax, _kikuri_invincibility_frame
+		add	ax, -24
 		push	ax
 		push	0FFFFh
 		call	sub_23C4F
-		mov	ax, 18Fh
-		sub	ax, word_3A6C2
+		mov	ax, 399
+		sub	ax, _kikuri_invincibility_frame
 		add	ax, 18h
 		push	ax
 		push	0FFFFh
 		call	sub_23C4F
 
 loc_24857:
-		inc	word_3A6C2
-		cmp	word_3A6C2, 0E0h
+		inc	_kikuri_invincibility_frame
+		cmp	_kikuri_invincibility_frame, 224
 		jle	short loc_24871
-		mov	word_3A6C2, 0
+		mov	_kikuri_invincibility_frame, 0
 		mov	_boss_phase_frame, 0
 		jmp	short loc_2489C
 ; ---------------------------------------------------------------------------
@@ -24830,33 +24658,33 @@ loc_24B19:
 
 loc_24B3E:
 		inc	_boss_phase_frame
-		inc	word_3A6C2
+		inc	_kikuri_invincibility_frame
 		call	sub_23D19
-		pushd	0 or (0 shl 16)
-		pushd	0 or (0 shl 16)
+		pushd	0 or (0 shl 16)	; (hitbox_w) or (hitbox_h)
+		pushd	0 or (0 shl 16)	; (hitbox_left) or (hitbox_top)
 		call	sub_235FD
-		push	ax
-		push	seg main_32_TEXT
-		push	offset @boss_nop$qv
-		push	7000
-		push	4
-		push	ss
-		lea	ax, [bp+var_4]
-		push	ax
-		push	ds
-		push	offset _boss_hp
-		push	ds
-		push	offset word_3A6C0
-		push	ds
-		push	offset word_3A6C2
-		call	sub_21A8A
+		push	ax	; colliding_with_orb
+		push	seg main_32_TEXT	; hit_callback (segment)
+		push	offset @boss_nop$qv	; hit_callback (offset)
+		push	7000	; hit_score
+		push	4	; invincibility_flash_colors_count
+		push	ss	; invincibility_flash_colors (segment)
+		lea	ax, [bp+@@invincibility_flash_colors]
+		push	ax	; invincibility_flash_colors (offset)
+		push	ds	; hp (segment)
+		push	offset _boss_hp	; hp (offset)
+		push	ds	; is_invincible (segment)
+		push	offset _kikuri_invincible	; is_invincible (offset)
+		push	ds	; invincibility_frame (segment)
+		push	offset _kikuri_invincibility_frame	; invincibility_frame (offset)
+		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_boss_phase_frame, 0
 		jnz	short loc_24B82
 		inc	word_35D16
 
 loc_24B82:
-		cmp	word_3A6C0, 0
+		cmp	_kikuri_invincible, 0
 		jnz	loc_24DFB
 		cmp	_boss_hp, 10
 		jle	short loc_24B9B
@@ -24903,7 +24731,7 @@ loc_24C07:
 		cmp	ax, 4
 		jnz	short loc_24C81
 		inc	_boss_phase_frame
-		inc	word_3A6C2
+		inc	_kikuri_invincibility_frame
 		call	sub_23E6E
 		cmp	word_35D14, 0
 		jnz	short loc_24C27
@@ -24916,26 +24744,26 @@ loc_24C27:
 
 loc_24C2A:
 		mov	word_35D14, ax
-		pushd	0 or (0 shl 16)
-		pushd	0 or (0 shl 16)
+		pushd	0 or (0 shl 16)	; (hitbox_w) or (hitbox_h)
+		pushd	0 or (0 shl 16)	; (hitbox_left) or (hitbox_top)
 		call	sub_235FD
-		push	ax
-		push	seg main_32_TEXT
-		push	offset @boss_nop$qv
-		push	7000
-		push	4
-		push	ss
-		lea	ax, [bp+var_4]
-		push	ax
-		push	ds
-		push	offset _boss_hp
-		push	ds
-		push	offset word_3A6C0
-		push	ds
-		push	offset word_3A6C2
-		call	sub_21A8A
+		push	ax	; colliding_with_orb
+		push	seg main_32_TEXT	; hit_callback (segment)
+		push	offset @boss_nop$qv	; hit_callback (offset)
+		push	7000	; hit_score
+		push	4	; invincibility_flash_colors_count
+		push	ss	; invincibility_flash_colors (segment)
+		lea	ax, [bp+@@invincibility_flash_colors]
+		push	ax	; invincibility_flash_colors (offset)
+		push	ds	; hp (segment)
+		push	offset _boss_hp	; hp (offset)
+		push	ds	; is_invincible (segment)
+		push	offset _kikuri_invincible	; is_invincible (offset)
+		push	ds	; invincibility_frame (segment)
+		push	offset _kikuri_invincibility_frame	; invincibility_frame (offset)
+		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
 		add	sp, 22h
-		cmp	word_3A6C0, 0
+		cmp	_kikuri_invincible, 0
 		jnz	loc_24DFB
 		cmp	word_35D14, 2
 		jnz	loc_24DFB
@@ -24951,29 +24779,29 @@ loc_24C81:
 		cmp	ax, 5
 		jnz	short loc_24CFA
 		inc	_boss_phase_frame
-		inc	word_3A6C2
+		inc	_kikuri_invincibility_frame
 		call	sub_24041
 		call	sub_240DE
 		pushd	0 or (0 shl 16)
-		pushd	0 or (0 shl 16)
+		pushd	0 or (0 shl 16)	; (hitbox_left) or (hitbox_top)
 		call	sub_235FD
-		push	ax
-		push	seg main_32_TEXT
-		push	offset @boss_nop$qv
-		push	7000
-		push	4
-		push	ss
-		lea	ax, [bp+var_4]
-		push	ax
-		push	ds
-		push	offset _boss_hp
-		push	ds
-		push	offset word_3A6C0
-		push	ds
-		push	offset word_3A6C2
-		call	sub_21A8A
+		push	ax	; colliding_with_orb
+		push	seg main_32_TEXT	; hit_callback (segment)
+		push	offset @boss_nop$qv	; hit_callback (offset)
+		push	7000	; hit_score
+		push	4	; invincibility_flash_colors_count
+		push	ss	; invincibility_flash_colors (segment)
+		lea	ax, [bp+@@invincibility_flash_colors]
+		push	ax	; invincibility_flash_colors (offset)
+		push	ds	; hp (segment)
+		push	offset _boss_hp	; hp (offset)
+		push	ds	; is_invincible (segment)
+		push	offset _kikuri_invincible	; is_invincible (offset)
+		push	ds	; invincibility_frame (segment)
+		push	offset _kikuri_invincibility_frame	; invincibility_frame (offset)
+		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
 		add	sp, 22h
-		cmp	word_3A6C0, 0
+		cmp	_kikuri_invincible, 0
 		jnz	loc_24DFB
 		cmp	_boss_hp, 6
 		jle	short loc_24CE0
@@ -24985,7 +24813,7 @@ loc_24CE0:
 
 loc_24CE5:
 		mov	_boss_phase_frame, 0
-		mov	word_3A6C2, 0
+		mov	_kikuri_invincibility_frame, 0
 		mov	word_35D16, 0
 		jmp	loc_24DFB
 ; ---------------------------------------------------------------------------
@@ -24996,7 +24824,7 @@ loc_24CFA:
 		cmp	ax, 6
 		jnz	loc_24DFB
 		inc	_boss_phase_frame
-		inc	word_3A6C2
+		inc	_kikuri_invincibility_frame
 		call	sub_2414C
 		cmp	word_35D14, 0
 		jnz	short loc_24D1C
@@ -25037,24 +24865,24 @@ loc_24D4C:
 		mov	_boss_hp, 1
 
 loc_24D59:
-		pushd	0 or (0 shl 16)
-		pushd	0 or (0 shl 16)
+		pushd	0 or (0 shl 16)	; (hitbox_w) or (hitbox_h)
+		pushd	0 or (0 shl 16)	; (hitbox_left) or (hitbox_top)
 		call	sub_235FD
-		push	ax
-		push	seg main_32_TEXT
-		push	offset @boss_nop$qv
-		push	7000
-		push	4
-		push	ss
-		lea	ax, [bp+var_4]
-		push	ax
-		push	ds
-		push	offset _boss_hp
-		push	ds
-		push	offset word_3A6C0
-		push	ds
-		push	offset word_3A6C2
-		call	sub_21A8A
+		push	ax	; colliding_with_orb
+		push	seg main_32_TEXT	; hit_callback (segment)
+		push	offset @boss_nop$qv	; hit_callback (offset)
+		push	7000	; hit_score
+		push	4	; invincibility_flash_colors_count
+		push	ss	; invincibility_flash_colors (segment)
+		lea	ax, [bp+@@invincibility_flash_colors]
+		push	ax	; invincibility_flash_colors (offset)
+		push	ds	; hp (segment)
+		push	offset _boss_hp	; hp (offset)
+		push	ds	; is_invincible (segment)
+		push	offset _kikuri_invincible	; is_invincible (offset)
+		push	ds	; invincibility_frame (segment)
+		push	offset _kikuri_invincibility_frame	; invincibility_frame (offset)
+		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_boss_hp, 0
 		jg	short loc_24DFB
@@ -29759,15 +29587,15 @@ var_10		= word ptr -10h
 var_E		= word ptr -0Eh
 var_C		= word ptr -0Ch
 var_9		= byte ptr -9
-var_8		= dword	ptr -8
+@@invincibility_flash_colors		= dword	ptr -8
 var_4		= word ptr -4
 @@top		= word ptr -2
 
 		enter	2Ah, 0
 		push	si
 		push	di
-		mov	eax, dword_35D4E
-		mov	[bp+var_8], eax
+		mov	eax, dword ptr _elis_invincibility_flash_colors
+		mov	[bp+@@invincibility_flash_colors], eax
 		push	ds
 		push	offset unk_39EC4
 		call	sub_21F19
@@ -29779,10 +29607,10 @@ var_4		= word ptr -4
 		call	sub_24E33
 		pop	cx
 		mov	[bp+var_9], 0
-		mov	word_3A773, 0
+		mov	_elis_invincibility_frame, 0
 
 loc_27C72:
-		inc	word_3A773
+		inc	_elis_invincibility_frame
 		xor	si, si
 		jmp	loc_27E35
 ; ---------------------------------------------------------------------------
@@ -29828,7 +29656,7 @@ loc_27C7B:
 		call	_egc_copy_rect_1_to_0_16
 		call	_grc_put_8 stdcall, di, [bp+@@top], 0, large 3 or (8 shl 16)
 		add	sp, 12h
-		cmp	word_3A773, 1
+		cmp	_elis_invincibility_frame, 1
 		jle	loc_27DAF
 		push	(32 shl 16) or 48
 		mov	bx, si
@@ -29856,7 +29684,7 @@ loc_27C7B:
 		push	word ptr ss:[bx]	; left
 		call	_grc_put_8
 		add	sp, 12h
-		cmp	word_3A773, 2
+		cmp	_elis_invincibility_frame, 2
 		jle	short loc_27DAF
 		push	(32 shl 16) or 48
 		mov	bx, si
@@ -29942,14 +29770,14 @@ loc_27DAF:
 loc_27E35:
 		cmp	si, 2
 		jl	loc_27C7B
-		cmp	word_3A773, 78h	; 'x'
+		cmp	_elis_invincibility_frame, 120
 		jge	short loc_27E63
 		mov	al, [bp+var_9]
 		add	al, 18h
 		mov	[bp+var_9], al
-		mov	ax, 78h	; 'x'
-		sub	ax, word_3A773
-		mov	bx, 0Ch
+		mov	ax, 120
+		sub	ax, _elis_invincibility_frame
+		mov	bx, 12
 		cwd
 		idiv	bx
 		inc	ax
@@ -29960,14 +29788,14 @@ loc_27E35:
 ; ---------------------------------------------------------------------------
 
 loc_27E63:
-		mov	word_3A773, 0
+		mov	_elis_invincibility_frame, 0
 		mov	[bp+var_4], 0
 
 loc_27E6E:
-		inc	word_3A773
+		inc	_elis_invincibility_frame
 		cmp	[bp+var_4], 0
 		jnz	loc_2802A
-		mov	ax, word_3A773
+		mov	ax, _elis_invincibility_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
@@ -30124,31 +29952,31 @@ loc_28023:
 		jl	loc_27E8E
 
 loc_2802A:
-		cmp	word_3A773, 14h
+		cmp	_elis_invincibility_frame, 20
 		jle	short loc_280AE
-		cmp	word_3A773, 64h	; 'd'
+		cmp	_elis_invincibility_frame, 100
 		jge	short loc_280AE
-		mov	ax, word_3A773
+		mov	ax, _elis_invincibility_frame
 		mov	bx, 4
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	loc_28158
-		cmp	word_3A773, 18h
+		cmp	_elis_invincibility_frame, 24
 		jz	short loc_28082
 		push	elis_still_or_wave.BE_h
 		mov	ax, elis_still_or_wave.BE_vram_w
 		shl	ax, 3
 		add	ax, 16
 		push	ax
-		mov	ax, word_3A773
+		mov	ax, _elis_invincibility_frame
 		add	ax, -4
 		imul	ax, 6
 		push	ax
-		mov	ax, 68h	; 'h'
-		sub	ax, word_3A773
+		mov	ax, 104
+		sub	ax, _elis_invincibility_frame
 		push	ax
-		mov	ax, word_3A773
+		mov	ax, _elis_invincibility_frame
 		add	ax, -2
 		push	ax
 		pushd	[dword ptr elis_still_or_wave.BE_cur_left]
@@ -30156,13 +29984,13 @@ loc_2802A:
 		add	sp, 0Eh
 
 loc_28082:
-		mov	ax, word_3A773
+		mov	ax, _elis_invincibility_frame
 		imul	ax, 6
 		push	ax
 		mov	ax, 100	; phase
-		sub	ax, word_3A773
+		sub	ax, _elis_invincibility_frame
 		push	ax	; amp
-		mov	ax, word_3A773
+		mov	ax, _elis_invincibility_frame
 		add	ax, 2
 		push	ax	; len
 		push	0	; image
@@ -30175,18 +30003,18 @@ loc_28082:
 ; ---------------------------------------------------------------------------
 
 loc_280AE:
-		cmp	word_3A773, 64h	; 'd'
+		cmp	_elis_invincibility_frame, 100
 		jnz	short loc_28103
 		push	elis_still_or_wave.BE_h
 		mov	ax, elis_still_or_wave.BE_vram_w
 		shl	ax, 3
 		add	ax, 16
 		push	ax
-		push	word_3A773
-		mov	ax, 64h	; 'd'
-		sub	ax, word_3A773
+		push	_elis_invincibility_frame
+		mov	ax, 100
+		sub	ax, _elis_invincibility_frame
 		push	ax
-		mov	ax, word_3A773
+		mov	ax, _elis_invincibility_frame
 		add	ax, 2
 		push	ax
 
@@ -30201,7 +30029,7 @@ loc_280D6:
 ; ---------------------------------------------------------------------------
 
 loc_28103:
-		cmp	word_3A773, 80h	; '?'
+		cmp	_elis_invincibility_frame, 128
 		jnz	short loc_28130
 		push	1
 		call	sub_24EC2
@@ -30211,7 +30039,7 @@ loc_28103:
 ; ---------------------------------------------------------------------------
 
 loc_28130:
-		cmp	word_3A773, 82h
+		cmp	_elis_invincibility_frame, 130
 		jnz	short loc_28150
 		push	elis_still_or_wave.BE_h
 		mov	ax, elis_still_or_wave.BE_vram_w
@@ -30224,7 +30052,7 @@ loc_28130:
 ; ---------------------------------------------------------------------------
 
 loc_28150:
-		cmp	word_3A773, 8Ch
+		cmp	_elis_invincibility_frame, 140
 		jg	short loc_28163
 
 loc_28158:
@@ -30236,7 +30064,7 @@ loc_28158:
 
 loc_28163:
 		mov	_boss_phase_frame, 0
-		mov	word_3A773, 0
+		mov	_elis_invincibility_frame, 0
 		mov	byte_3A6CE, 1
 		mov	elis_still_or_wave.BE_hitbox_orb_inactive, 0
 		push	1
@@ -30266,7 +30094,7 @@ loc_281CF:
 
 loc_281F4:
 		inc	_boss_phase_frame
-		inc	word_3A773
+		inc	_elis_invincibility_frame
 		cmp	word_3A777, 0
 		jz	short loc_28211
 		push	word_3A777
@@ -30306,13 +30134,13 @@ loc_2823F:
 		mov	word_3A779, 0
 
 loc_28258:
-		push	(48 shl 16) or 64
+		push	(48 shl 16) or 64	; (hitbox_w) or (hitbox_h)
 		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 32
-		push	ax
+		push	ax	; hitbox_top
 		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 32
-		push	ax
+		push	ax	; hitbox_left
 		cmp	word_35D4C, 0
 		jnz	short loc_28279
 		push	ds
@@ -30327,23 +30155,23 @@ loc_28279:
 loc_2827D:
 		call	@CBossEntity@hittest_orb$xqv
 		add	sp, 4
-		push	ax
-		push	seg main_32_TEXT
-		push	offset @boss_nop$qv
-		push	7000
-		push	4
-		push	ss
-		lea	ax, [bp+var_8]
-		push	ax
-		push	ds
-		push	offset _boss_hp
-		push	ds
-		push	offset word_3A775
-		push	ds
-		push	offset word_3A773
-		call	sub_21A8A
+		push	ax	; colliding_with_orb
+		push	seg main_32_TEXT	; hit_callback (segment)
+		push	offset @boss_nop$qv	; hit_callback (offset)
+		push	7000	; hit_score
+		push	4	; invincibility_flash_colors_count
+		push	ss	; invincibility_flash_colors (segment)
+		lea	ax, [bp+@@invincibility_flash_colors]
+		push	ax	; invincibility_flash_colors (offset)
+		push	ds	; hp (segment)
+		push	offset _boss_hp	; hp (offset)
+		push	ds	; is_invincible (segment)
+		push	offset _elis_invincible	; is_invincible (offset)
+		push	ds	; invincibility_frame (segment)
+		push	offset _elis_invincibility_frame	; invincibility_frame (offset)
+		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
 		add	sp, 22h
-		cmp	word_3A775, 0
+		cmp	_elis_invincible, 0
 		jnz	loc_28655
 		cmp	_boss_hp, 10
 		jg	loc_28655
@@ -30351,7 +30179,7 @@ loc_2827D:
 		jnz	loc_28655
 		mov	byte_3A6CE, 2
 		mov	_boss_phase_frame, 0
-		mov	word_3A773, 0
+		mov	_elis_invincibility_frame, 0
 		mov	word_3A777, 0
 		jmp	short loc_28322
 ; ---------------------------------------------------------------------------
@@ -30373,7 +30201,7 @@ loc_282DE:
 		pop	cx
 		mov	byte_3A6CE, 3
 		mov	_boss_phase_frame, 0
-		mov	word_3A773, 0
+		mov	_elis_invincibility_frame, 0
 		mov	word_3A777, 1
 
 loc_28322:
@@ -30387,7 +30215,7 @@ loc_2832B:
 		cmp	ax, 3
 		jnz	loc_28442
 		inc	_boss_phase_frame
-		inc	word_3A773
+		inc	_elis_invincibility_frame
 		mov	ax, elis_still_or_wave.BE_cur_top
 		mov	[bp+var_C], ax
 		mov	ax, elis_still_or_wave.BE_cur_left
@@ -30434,13 +30262,13 @@ loc_28396:
 		mov	word_3A779, 0
 
 loc_283AF:
-		push	(48 shl 16) or 64
+		push	(48 shl 16) or 64	; (hitbox_w) or (hitbox_h)
 		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 32
-		push	ax
+		push	ax	; hitbox_top
 		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 32
-		push	ax
+		push	ax	; hitbox_left
 		cmp	word_35D4C, 0
 		jnz	short loc_283D0
 		push	ds
@@ -30455,23 +30283,23 @@ loc_283D0:
 loc_283D4:
 		call	@CBossEntity@hittest_orb$xqv
 		add	sp, 4
-		push	ax
-		push	seg main_32_TEXT
-		push	offset @boss_nop$qv
-		push	7000
-		push	4
-		push	ss
-		lea	ax, [bp+var_8]
-		push	ax
-		push	ds
-		push	offset _boss_hp
-		push	ds
-		push	offset word_3A775
-		push	ds
-		push	offset word_3A773
-		call	sub_21A8A
+		push	ax	; colliding_with_orb
+		push	seg main_32_TEXT	; hit_callback (segment)
+		push	offset @boss_nop$qv	; hit_callback (offset)
+		push	7000	; hit_score
+		push	4	; invincibility_flash_colors_count
+		push	ss	; invincibility_flash_colors (segment)
+		lea	ax, [bp+@@invincibility_flash_colors]
+		push	ax	; invincibility_flash_colors (offset)
+		push	ds	; hp (segment)
+		push	offset _boss_hp	; hp (offset)
+		push	ds	; is_invincible (segment)
+		push	offset _elis_invincible	; is_invincible (offset)
+		push	ds	; invincibility_frame (segment)
+		push	offset _elis_invincibility_frame	; invincibility_frame (offset)
+		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
 		add	sp, 22h
-		cmp	word_3A775, 0
+		cmp	_elis_invincible, 0
 		jnz	loc_28655
 		cmp	_boss_hp, 6
 		jg	loc_28655
@@ -30479,7 +30307,7 @@ loc_283D4:
 		jnz	loc_28655
 		mov	byte_3A6CE, 4
 		mov	_boss_phase_frame, 0
-		mov	word_3A773, 0
+		mov	_elis_invincibility_frame, 0
 		mov	word_3A777, 0
 		mov	word_3A779, 0
 		mov	word_35D4C, 0
@@ -30510,7 +30338,7 @@ loc_2846F:
 		jnz	loc_28655
 		mov	byte_3A6CE, 5
 		mov	_boss_phase_frame, 0
-		mov	word_3A773, 0
+		mov	_elis_invincibility_frame, 0
 		mov	word_3A777, 0
 		mov	word_3A779, 0
 		mov	word_35D4C, 1
@@ -30532,7 +30360,7 @@ loc_284B3:
 		cmp	ax, 5
 		jnz	loc_28655
 		inc	_boss_phase_frame
-		inc	word_3A773
+		inc	_elis_invincibility_frame
 		mov	ax, elis_still_or_wave.BE_cur_top
 		mov	[bp+var_10], ax
 		mov	ax, elis_still_or_wave.BE_cur_left
@@ -30592,26 +30420,26 @@ loc_28539:
 		add	sp, 0Eh
 		cmp	word_35D4C, 0
 		jnz	short loc_2855A
-		mov	ax, 30h	; '0'
+		mov	ax, 48
 		jmp	short loc_2855D
 ; ---------------------------------------------------------------------------
 
 loc_2855A:
-		mov	ax, 20h	; ' '
+		mov	ax, 32
 
 loc_2855D:
-		push	ax
+		push	ax	;  hitbox_h
 		cmp	word_35D4C, 0
 		jnz	short loc_2856A
-		mov	ax, 40h
+		mov	ax, 64
 		jmp	short loc_2856D
 ; ---------------------------------------------------------------------------
 
 loc_2856A:
-		mov	ax, 20h	; ' '
+		mov	ax, 32
 
 loc_2856D:
-		push	ax
+		push	ax	; hitbox_w
 		cmp	word_35D4C, 0
 		jnz	short loc_2857D
 		mov	ax, elis_still_or_wave.BE_cur_top
@@ -30620,10 +30448,10 @@ loc_2856D:
 ; ---------------------------------------------------------------------------
 
 loc_2857D:
-		mov	ax, elis_bat.BE_cur_left
+		mov	ax, elis_bat.BE_cur_left	; ?!
 
 loc_28580:
-		push	ax
+		push	ax	; hitbox_top
 		cmp	word_35D4C, 0
 		jnz	short loc_28590
 		mov	ax, elis_still_or_wave.BE_cur_left
@@ -30635,7 +30463,7 @@ loc_28590:
 		mov	ax, elis_bat.BE_cur_left
 
 loc_28593:
-		push	ax
+		push	ax	; hitbox_left
 		cmp	word_35D4C, 0
 		jnz	short loc_285A1
 		push	ds
@@ -30650,21 +30478,21 @@ loc_285A1:
 loc_285A5:
 		call	@CBossEntity@hittest_orb$xqv
 		add	sp, 4
-		push	ax
-		push	seg main_32_TEXT
-		push	offset @boss_nop$qv
-		push	7000
-		push	4
-		push	ss
-		lea	ax, [bp+var_8]
-		push	ax
-		push	ds
-		push	offset _boss_hp
-		push	ds
-		push	offset word_3A775
-		push	ds
-		push	offset word_3A773
-		call	sub_21A8A
+		push	ax	; colliding_with_orb
+		push	seg main_32_TEXT	; hit_callback (segment)
+		push	offset @boss_nop$qv	; hit_callback (offset)
+		push	7000	; hit_score
+		push	4	; invincibility_flash_colors_count
+		push	ss	; invincibility_flash_colors (segment)
+		lea	ax, [bp+@@invincibility_flash_colors]
+		push	ax	; invincibility_flash_colors (offset)
+		push	ds	; hp (segment)
+		push	offset _boss_hp	; hp (offset)
+		push	ds	; is_invincible (segment)
+		push	offset _elis_invincible	; is_invincible (offset)
+		push	ds	; invincibility_frame (segment)
+		push	offset _elis_invincibility_frame	; invincibility_frame (offset)
+		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_boss_hp, 0
 		jg	short loc_28655
@@ -36619,16 +36447,17 @@ var_2A		= qword	ptr -2Ah
 var_22		= qword	ptr -22h
 var_1A		= qword	ptr -1Ah
 var_12		= qword	ptr -12h
-var_5		= word ptr -5
+@@colliding_with_orb		= byte ptr -5
+@@invincibility_flash_colors		= byte ptr -4
 
 		enter	6, 0
 		push	si
 		push	di
-		lea	ax, [bp+var_5+1]
+		lea	ax, [bp+@@invincibility_flash_colors]
 		push	ss
 		push	ax
 		push	ds
-		push	offset unk_35E9B
+		push	offset _sariel_invincibility_flash_colors
 		mov	cx, 3
 		call	SCOPY@
 		cmp	_orb_cur_left, 314
@@ -36654,12 +36483,12 @@ loc_2C115:
 		xor	ax, ax
 
 loc_2C117:
-		mov	byte ptr [bp+var_5], al
+		mov	[bp+@@colliding_with_orb], al
 		cmp	byte_3A6CE, 0
 		jnz	loc_2C399
 		mov	_boss_phase_frame, -1
-		mov	word_3B433, 0
-		mov	word_3B431, 0
+		mov	_sariel_invincibility_frame, 0
+		mov	_sariel_invincible, 0
 		call	@boss_palette_snap$qv
 		call	_stage_palette_set c, offset _z_Palettes, ds
 		mov	eax, _frame_rand
@@ -36879,7 +36708,7 @@ loc_2C399:
 
 loc_2C3BE:
 		inc	_boss_phase_frame
-		inc	word_3B433
+		inc	_sariel_invincibility_frame
 		call	sub_28EA6
 		call	sub_28FC5
 		fldz
@@ -36936,23 +36765,23 @@ loc_2C439:
 		inc	word_35E97
 
 loc_2C440:
-		push	(32 shl 16) or 64
-		push	(104 shl 16) or 314
-		push	[bp+var_5]
-		push	seg main_32_TEXT
-		push	offset @boss_nop$qv
-		push	10000
-		push	3
-		push	ss
-		lea	ax, [bp+var_5+1]
-		push	ax
-		push	ds
-		push	offset _boss_hp
-		push	ds
-		push	offset word_3B431
-		push	ds
-		push	offset word_3B433
-		call	sub_21A8A
+		push	(32 shl 16) or 64	; (hitbox_w) or (hitbox_h)
+		push	(104 shl 16) or 314	; (hitbox_left) or (hitbox_top)
+		push	word ptr [bp+@@colliding_with_orb]	; colliding_with_orb
+		push	seg main_32_TEXT	; hit_callback (segment)
+		push	offset @boss_nop$qv	; hit_callback (offset)
+		push	10000	; hit_score
+		push	3	; invincibility_flash_colors_count
+		push	ss	; invincibility_flash_colors (segment)
+		lea	ax, [bp+@@invincibility_flash_colors]
+		push	ax	; invincibility_flash_colors (offset)
+		push	ds	; hp (segment)
+		push	offset _boss_hp	; hp (offset)
+		push	ds	; is_invincible (segment)
+		push	offset _sariel_invincible	; is_invincible (offset)
+		push	ds	; invincibility_frame (segment)
+		push	offset _sariel_invincibility_frame	; invincibility_frame (offset)
+		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_boss_hp, 0
 		jg	short loc_2C47F
@@ -36962,7 +36791,7 @@ loc_2C47F:
 		mov	ax, word_35E97
 		cmp	ax, word_35E99
 		jl	loc_2CDCE
-		cmp	word_3B431, 0
+		cmp	_sariel_invincible, 0
 		jnz	loc_2CDCE
 		mov	word_35E97, 0
 		mov	byte_3A6CE, 2
@@ -36994,7 +36823,7 @@ loc_2C4D8:
 		cmp	ax, 3
 		jnz	loc_2C594
 		inc	_boss_phase_frame
-		inc	word_3B433
+		inc	_sariel_invincibility_frame
 		call	sub_28EA6
 		call	sub_28FC5
 		push	0
@@ -37029,23 +36858,23 @@ loc_2C51E:
 		inc	word_35E97
 
 loc_2C533:
-		push	(32 shl 16) or 64
-		push	(104 shl 16) or 314
-		push	[bp+var_5]
-		push	seg main_32_TEXT
-		push	offset @boss_nop$qv
-		push	10000
-		push	3
-		push	ss
-		lea	ax, [bp+var_5+1]
-		push	ax
-		push	ds
-		push	offset _boss_hp
-		push	ds
-		push	offset word_3B431
-		push	ds
-		push	offset word_3B433
-		call	sub_21A8A
+		push	(32 shl 16) or 64	; (hitbox_w) or (hitbox_h)
+		push	(104 shl 16) or 314	; (hitbox_left) or (hitbox_top)
+		push	word ptr [bp+@@colliding_with_orb]	; colliding_with_orb
+		push	seg main_32_TEXT	; hit_callback (segment)
+		push	offset @boss_nop$qv	; hit_callback (offset)
+		push	10000	; hit_score
+		push	3	; invincibility_flash_colors_count
+		push	ss	; invincibility_flash_colors (segment)
+		lea	ax, [bp+@@invincibility_flash_colors]
+		push	ax	; invincibility_flash_colors (offset)
+		push	ds	; hp (segment)
+		push	offset _boss_hp	; hp (offset)
+		push	ds	; is_invincible (segment)
+		push	offset _sariel_invincible	; is_invincible (offset)
+		push	ds	; invincibility_frame (segment)
+		push	offset _sariel_invincibility_frame	; invincibility_frame (offset)
+		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_boss_hp, 0
 		jg	short loc_2C572
@@ -37055,7 +36884,7 @@ loc_2C572:
 		mov	ax, word_35E97
 		cmp	ax, word_35E99
 		jl	loc_2CDCE
-		cmp	word_3B431, 0
+		cmp	_sariel_invincible, 0
 		jnz	loc_2CDCE
 		mov	word_35E97, 0
 		mov	byte_3A6CE, 4
@@ -37091,7 +36920,7 @@ loc_2C5D6:
 		cmp	ax, 5
 		jnz	loc_2C6B0
 		inc	_boss_phase_frame
-		inc	word_3B433
+		inc	_sariel_invincibility_frame
 		call	sub_28EA6
 		call	sub_28FC5
 		call	sub_2A469
@@ -37147,23 +36976,23 @@ loc_2C648:
 		inc	word_35E97
 
 loc_2C64F:
-		push	(32 shl 16) or 64
-		push	(104 shl 16) or 314
-		push	[bp+var_5]
-		push	seg main_32_TEXT
-		push	offset @boss_nop$qv
-		push	10000
-		push	3
-		push	ss
-		lea	ax, [bp+var_5+1]
-		push	ax
-		push	ds
-		push	offset _boss_hp
-		push	ds
-		push	offset word_3B431
-		push	ds
-		push	offset word_3B433
-		call	sub_21A8A
+		push	(32 shl 16) or 64	; (hitbox_w) or (hitbox_h)
+		push	(104 shl 16) or 314	; (hitbox_left) or (hitbox_top)
+		push	word ptr [bp+@@colliding_with_orb]	; colliding_with_orb
+		push	seg main_32_TEXT	; hit_callback (segment)
+		push	offset @boss_nop$qv	; hit_callback (offset)
+		push	10000	; hit_score
+		push	3	; invincibility_flash_colors_count
+		push	ss	; invincibility_flash_colors (segment)
+		lea	ax, [bp+@@invincibility_flash_colors]
+		push	ax	; invincibility_flash_colors (offset)
+		push	ds	; hp (segment)
+		push	offset _boss_hp	; hp (offset)
+		push	ds	; is_invincible (segment)
+		push	offset _sariel_invincible	; is_invincible (offset)
+		push	ds	; invincibility_frame (segment)
+		push	offset _sariel_invincibility_frame	; invincibility_frame (offset)
+		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_boss_hp, 0
 		jg	short loc_2C68E
@@ -37173,7 +37002,7 @@ loc_2C68E:
 		mov	ax, word_35E97
 		cmp	ax, word_35E99
 		jl	loc_2CDCE
-		cmp	word_3B431, 0
+		cmp	_sariel_invincible, 0
 		jnz	loc_2CDCE
 		mov	word_35E97, 0
 		mov	byte_3A6CE, 6
@@ -37209,7 +37038,7 @@ loc_2C6F2:
 		cmp	ax, 7
 		jnz	loc_2C7F1
 		inc	_boss_phase_frame
-		inc	word_3B433
+		inc	_sariel_invincibility_frame
 		call	sub_28EA6
 		call	sub_28FC5
 		push	1
@@ -37268,23 +37097,23 @@ loc_2C77D:
 		inc	word_35E97
 
 loc_2C784:
-		push	(32 shl 16) or 64
-		push	(104 shl 16) or 314
-		push	[bp+var_5]
-		push	seg main_32_TEXT
-		push	offset @boss_nop$qv
-		push	10000
-		push	3
-		push	ss
-		lea	ax, [bp+var_5+1]
-		push	ax
-		push	ds
-		push	offset _boss_hp
-		push	ds
-		push	offset word_3B431
-		push	ds
-		push	offset word_3B433
-		call	sub_21A8A
+		push	(32 shl 16) or 64	; (hitbox_w) or (hitbox_h)
+		push	(104 shl 16) or 314	; (hitbox_left) or (hitbox_top)
+		push	word ptr [bp+@@colliding_with_orb]	; colliding_with_orb
+		push	seg main_32_TEXT	; hit_callback (segment)
+		push	offset @boss_nop$qv	; hit_callback (offset)
+		push	10000	; hit_score
+		push	3	; invincibility_flash_colors_count
+		push	ss	; invincibility_flash_colors (segment)
+		lea	ax, [bp+@@invincibility_flash_colors]
+		push	ax	; invincibility_flash_colors (offset)
+		push	ds	; hp (segment)
+		push	offset _boss_hp	; hp (offset)
+		push	ds	; is_invincible (segment)
+		push	offset _sariel_invincible	; is_invincible (offset)
+		push	ds	; invincibility_frame (segment)
+		push	offset _sariel_invincibility_frame	; invincibility_frame (offset)
+		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_boss_hp, 0
 		jg	short loc_2C7C3
@@ -37294,7 +37123,7 @@ loc_2C7C3:
 		mov	ax, word_35E97
 		cmp	ax, word_35E99
 		jl	loc_2CDCE
-		cmp	word_3B431, 0
+		cmp	_sariel_invincible, 0
 		jnz	loc_2CDCE
 		mov	word_35E97, 0
 		mov	byte_3A6CE, 8
@@ -37339,7 +37168,7 @@ loc_2C835:
 		cmp	ax, 63h	; 'c'
 		jnz	loc_2CAA8
 		mov	_boss_phase_frame, 0
-		mov	word_3B433, 18Fh
+		mov	_sariel_invincibility_frame, 399	; ???
 		call	@CShots@unput_and_reset_all$qv c, offset _Shots, ds
 		call	@CPellets@unput_and_reset_all$qv c, offset _Pellets, ds
 		xor	si, si
@@ -37366,7 +37195,7 @@ loc_2C8AE:
 		push	0
 		call	sub_19E48
 		pop	cx
-		mov	word_3B431, 0
+		mov	_sariel_invincible, 0
 		mov	eax, _frame_rand
 		mov	random_seed, eax
 		call	_mdrv2_bgm_fade_out_nonblock
@@ -37460,7 +37289,7 @@ loc_2C9DA:
 		call	_z_vsync_wait_and_scrollup stdcall, 0
 		pop	cx
 		mov	_boss_phase_frame, 0
-		mov	word_3B433, 0
+		mov	_sariel_invincibility_frame, 0
 		mov	word_35E95, 0
 		mov	word_35E97, 0
 		mov	byte_3A6CE, 64h	; 'd'
@@ -37497,7 +37326,7 @@ loc_2CAA8:
 
 loc_2CACD:
 		inc	_boss_phase_frame
-		inc	word_3B433
+		inc	_sariel_invincibility_frame
 		push	_boss_phase_frame
 		call	sub_2B34F
 		cmp	word_35E95, 0
@@ -37602,23 +37431,23 @@ loc_2CBBB:
 		inc	word_35E97
 
 loc_2CBC2:
-		push	(32 shl 16) or 64
-		push	(104 shl 16) or 314
-		push	[bp+var_5]
-		push	seg main_32_TEXT
-		push	offset @boss_nop$qv
-		push	10000
-		push	3
-		push	ss
-		lea	ax, [bp+var_5+1]
-		push	ax
-		push	ds
-		push	offset _boss_hp
-		push	ds
-		push	offset word_3B431
-		push	ds
-		push	offset word_3B433
-		call	sub_21A8A
+		push	(32 shl 16) or 64	; (hitbox_w) or (hitbox_h)
+		push	(104 shl 16) or 314	; (hitbox_left) or (hitbox_top)
+		push	word ptr [bp+@@colliding_with_orb]	; colliding_with_orb
+		push	seg main_32_TEXT	; hit_callback (segment)
+		push	offset @boss_nop$qv	; hit_callback (offset)
+		push	10000	; hit_score
+		push	3	; invincibility_flash_colors_count
+		push	ss	; invincibility_flash_colors (segment)
+		lea	ax, [bp+@@invincibility_flash_colors]
+		push	ax	; invincibility_flash_colors (offset)
+		push	ds	; hp (segment)
+		push	offset _boss_hp	; hp (offset)
+		push	ds	; is_invincible (segment)
+		push	offset _sariel_invincible	; is_invincible (offset)
+		push	ds	; invincibility_frame (segment)
+		push	offset _sariel_invincibility_frame	; invincibility_frame (offset)
+		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
 		add	sp, 22h
 		mov	ax, _boss_phase_frame
 		mov	bx, 10
@@ -37692,7 +37521,7 @@ loc_2CC7C:
 		call	_mdrv2_bgm_stop
 		mov	byte_3A6CE, 65h	; 'e'
 		mov	_boss_phase_frame, 0
-		mov	word_3B433, 0
+		mov	_sariel_invincibility_frame, 0
 		jmp	loc_2CDCE
 ; ---------------------------------------------------------------------------
 
@@ -40868,7 +40697,7 @@ sub_2EDBF	endp
 
 sub_2EE7D	proc far
 
-var_C		= byte ptr -0Ch
+@@invincibility_flash_colors		= byte ptr -0Ch
 @@image		= word ptr -8
 var_6		= word ptr -6
 var_4		= word ptr -4
@@ -40877,11 +40706,11 @@ var_2		= word ptr -2
 		enter	0Ch, 0
 		push	si
 		push	di
-		lea	ax, [bp+var_C]
+		lea	ax, [bp+@@invincibility_flash_colors]
 		push	ss
 		push	ax
 		push	ds
-		push	offset unk_35FFC
+		push	offset _konngara_invincibility_flash_colors
 		mov	cx, 3
 		call	SCOPY@
 		cmp	byte_3A6CE, 0
@@ -40891,8 +40720,8 @@ var_2		= word ptr -2
 		mov	word_35FF8, 63h	; 'c'
 		mov	word_35FFA, 0
 		mov	_boss_phase_frame, 0
-		mov	word_3B52B, 0
-		mov	word_3B529, 0
+		mov	_konngara_invincibility_frame, 0
+		mov	_konngara_invincible, 0
 		mov	_konngara_initial_hp_rendered, 0
 		call	@boss_palette_snap$qv
 		mov	eax, _frame_rand
@@ -40912,7 +40741,7 @@ loc_2EED9:
 
 loc_2EEFE:
 		inc	_boss_phase_frame
-		inc	word_3B52B
+		inc	_konngara_invincibility_frame
 		cmp	_player_left, 198
 		jge	short loc_2EF13
 		mov	ax, 1
@@ -40987,8 +40816,8 @@ loc_2EF97:
 		mov	word_35FF8, 63h	; 'c'
 
 loc_2EFAB:
-		push	(40 shl 16) or 96
-		push	(120 shl 16) or 288
+		push	(40 shl 16) or 96	; (hitbox_w) or (hitbox_h)
+		push	(120 shl 16) or 288	; (hitbox_left) or (hitbox_top)
 		cmp	_orb_cur_left, 288
 		jl	short loc_2EFDB
 		cmp	_orb_cur_left, 352
@@ -41005,23 +40834,23 @@ loc_2EFDB:
 		xor	ax, ax
 
 loc_2EFDD:
-		push	ax
-		push	seg main_32_TEXT
-		push	offset @boss_nop$qv
-		push	10000
-		push	3
-		push	ss
-		lea	ax, [bp+var_C]
-		push	ax
-		push	ds
-		push	offset _boss_hp
-		push	ds
-		push	offset word_3B529
-		push	ds
-		push	offset word_3B52B
-		call	sub_21A8A
+		push	ax	; colliding_with_orb
+		push	seg main_32_TEXT	; hit_callback (segment)
+		push	offset @boss_nop$qv	; hit_callback (offset)
+		push	10000	; hit_score
+		push	3	; invincibility_flash_colors_count
+		push	ss	; invincibility_flash_colors (segment)
+		lea	ax, [bp+@@invincibility_flash_colors]
+		push	ax	; invincibility_flash_colors (offset)
+		push	ds	; hp (segment)
+		push	offset _boss_hp	; hp (offset)
+		push	ds	; is_invincible (segment)
+		push	offset _konngara_invincible	; is_invincible (offset)
+		push	ds	; invincibility_frame (segment)
+		push	offset _konngara_invincibility_frame	; invincibility_frame (offset)
+		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
 		add	sp, 22h
-		cmp	word_3B529, 0
+		cmp	_konngara_invincible, 0
 		jnz	loc_2FC40
 		cmp	word_35FFA, 7
 		jge	short loc_2F01B
@@ -41041,7 +40870,7 @@ loc_2F02C:
 		cmp	ax, 2
 		jnz	loc_2F136
 		inc	_boss_phase_frame
-		inc	word_3B52B
+		inc	_konngara_invincibility_frame
 		cmp	_player_left, 198
 		jge	short loc_2F04C
 		mov	ax, 1
@@ -41099,8 +40928,8 @@ loc_2F0B9:
 		call	_z_palette_set_all_show c, offset _z_Palettes, ds
 
 loc_2F0C5:
-		push	(40 shl 16) or 96
-		push	(120 shl 16) or 288
+		push	(40 shl 16) or 96	; (hitbox_w) or (hitbox_h)
+		push	(120 shl 16) or 288	; (hitbox_left) or (hitbox_top)
 		cmp	_orb_cur_left, 288
 		jl	short loc_2F0F5
 		cmp	_orb_cur_left, 352
@@ -41117,23 +40946,23 @@ loc_2F0F5:
 		xor	ax, ax
 
 loc_2F0F7:
-		push	ax
-		push	seg main_32_TEXT
-		push	offset @boss_nop$qv
-		push	10000
-		push	3
-		push	ss
-		lea	ax, [bp+var_C]
-		push	ax
-		push	ds
-		push	offset _boss_hp
-		push	ds
-		push	offset word_3B529
-		push	ds
-		push	offset word_3B52B
-		call	sub_21A8A
+		push	ax	; colliding_with_orb
+		push	seg main_32_TEXT	; hit_callback (segment)
+		push	offset @boss_nop$qv	; hit_callback (offset)
+		push	10000	; hit_score
+		push	3	; invincibility_flash_colors_count
+		push	ss	; invincibility_flash_colors (segment)
+		lea	ax, [bp+@@invincibility_flash_colors]
+		push	ax	; invincibility_flash_colors (offset)
+		push	ds	; hp (segment)
+		push	offset _boss_hp	; hp (offset)
+		push	ds	; is_invincible (segment)
+		push	offset _konngara_invincible	; is_invincible (offset)
+		push	ds	; invincibility_frame (segment)
+		push	offset _konngara_invincibility_frame	; invincibility_frame (offset)
+		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
 		add	sp, 22h
-		cmp	word_3B529, 0
+		cmp	_konngara_invincible, 0
 		jnz	loc_2FC40
 		cmp	_boss_phase_frame, 120
 		jle	loc_2FC40
@@ -41147,7 +40976,7 @@ loc_2F136:
 		cmp	ax, 3
 		jnz	loc_2F27C
 		inc	_boss_phase_frame
-		inc	word_3B52B
+		inc	_konngara_invincibility_frame
 		cmp	_player_left, 198
 		jge	short loc_2F156
 		mov	ax, 1
@@ -41229,8 +41058,8 @@ loc_2F1E7:
 		mov	word_35FF8, 63h	; 'c'
 
 loc_2F1FB:
-		push	(40 shl 16) or 96
-		push	(120 shl 16) or 288
+		push	(40 shl 16) or 96	; (hitbox_w) or (hitbox_h)
+		push	(120 shl 16) or 288	; (hitbox_left) or (hitbox_top)
 		cmp	_orb_cur_left, 288
 		jl	short loc_2F22B
 		cmp	_orb_cur_left, 352
@@ -41247,23 +41076,23 @@ loc_2F22B:
 		xor	ax, ax
 
 loc_2F22D:
-		push	ax
-		push	seg main_32_TEXT
-		push	offset @boss_nop$qv
-		push	10000
-		push	3
-		push	ss
-		lea	ax, [bp+var_C]
-		push	ax
-		push	ds
-		push	offset _boss_hp
-		push	ds
-		push	offset word_3B529
-		push	ds
-		push	offset word_3B52B
-		call	sub_21A8A
+		push	ax	; colliding_with_orb
+		push	seg main_32_TEXT	; hit_callback (segment)
+		push	offset @boss_nop$qv	; hit_callback (offset)
+		push	10000	; hit_score
+		push	3	; invincibility_flash_colors_count
+		push	ss	; invincibility_flash_colors (segment)
+		lea	ax, [bp+@@invincibility_flash_colors]
+		push	ax	; invincibility_flash_colors (offset)
+		push	ds	; hp (segment)
+		push	offset _boss_hp	; hp (offset)
+		push	ds	; is_invincible (segment)
+		push	offset _konngara_invincible	; is_invincible (offset)
+		push	ds	; invincibility_frame (segment)
+		push	offset _konngara_invincibility_frame	; invincibility_frame (offset)
+		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
 		add	sp, 22h
-		cmp	word_3B529, 0
+		cmp	_konngara_invincible, 0
 		jnz	loc_2FC40
 		cmp	word_35FFA, 9
 		jge	short loc_2F26B
@@ -41283,7 +41112,7 @@ loc_2F27C:
 		cmp	ax, 4
 		jnz	loc_2F386
 		inc	_boss_phase_frame
-		inc	word_3B52B
+		inc	_konngara_invincibility_frame
 		cmp	_player_left, 198
 		jge	short loc_2F29C
 		mov	ax, 1
@@ -41341,8 +41170,8 @@ loc_2F309:
 		call	_z_palette_set_all_show c, offset _z_Palettes, ds
 
 loc_2F315:
-		push	(40 shl 16) or 96
-		push	(120 shl 16) or 288
+		push	(40 shl 16) or 96	; (hitbox_w) or (hitbox_h)
+		push	(120 shl 16) or 288	; (hitbox_left) or (hitbox_top)
 		cmp	_orb_cur_left, 288
 		jl	short loc_2F345
 		cmp	_orb_cur_left, 352
@@ -41359,23 +41188,23 @@ loc_2F345:
 		xor	ax, ax
 
 loc_2F347:
-		push	ax
-		push	seg main_32_TEXT
-		push	offset @boss_nop$qv
-		push	10000
-		push	3
-		push	ss
-		lea	ax, [bp+var_C]
-		push	ax
-		push	ds
-		push	offset _boss_hp
-		push	ds
-		push	offset word_3B529
-		push	ds
-		push	offset word_3B52B
-		call	sub_21A8A
+		push	ax	; colliding_with_orb
+		push	seg main_32_TEXT	; hit_callback (segment)
+		push	offset @boss_nop$qv	; hit_callback (offset)
+		push	10000	; hit_score
+		push	3	; invincibility_flash_colors_count
+		push	ss	; invincibility_flash_colors (segment)
+		lea	ax, [bp+@@invincibility_flash_colors]
+		push	ax	; invincibility_flash_colors (offset)
+		push	ds	; hp (segment)
+		push	offset _boss_hp	; hp (offset)
+		push	ds	; is_invincible (segment)
+		push	offset _konngara_invincible	; is_invincible (offset)
+		push	ds	; invincibility_frame (segment)
+		push	offset _konngara_invincibility_frame	; invincibility_frame (offset)
+		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
 		add	sp, 22h
-		cmp	word_3B529, 0
+		cmp	_konngara_invincible, 0
 		jnz	loc_2FC40
 		cmp	_boss_phase_frame, 120
 		jle	loc_2FC40
@@ -41389,7 +41218,7 @@ loc_2F386:
 		cmp	ax, 5
 		jnz	loc_2F4D7
 		inc	_boss_phase_frame
-		inc	word_3B52B
+		inc	_konngara_invincibility_frame
 		cmp	_player_left, 198
 		jge	short loc_2F3A6
 		mov	ax, 1
@@ -41464,8 +41293,8 @@ loc_2F42A:
 		mov	word_35FF8, 63h	; 'c'
 
 loc_2F43E:
-		push	(40 shl 16) or 96
-		push	(120 shl 16) or 288
+		push	(40 shl 16) or 96	; (hitbox_w) or (hitbox_h)
+		push	(120 shl 16) or 288	; (hitbox_left) or (hitbox_top)
 		cmp	_orb_cur_left, 288
 		jl	short loc_2F46E
 		cmp	_orb_cur_left, 352
@@ -41482,23 +41311,23 @@ loc_2F46E:
 		xor	ax, ax
 
 loc_2F470:
-		push	ax
-		push	seg main_32_TEXT
-		push	offset @boss_nop$qv
-		push	10000
-		push	3
-		push	ss
-		lea	ax, [bp+var_C]
-		push	ax
-		push	ds
-		push	offset _boss_hp
-		push	ds
-		push	offset word_3B529
-		push	ds
-		push	offset word_3B52B
-		call	sub_21A8A
+		push	ax	; colliding_with_orb
+		push	seg main_32_TEXT	; hit_callback (segment)
+		push	offset @boss_nop$qv	; hit_callback (offset)
+		push	10000	; hit_score
+		push	3	; invincibility_flash_colors_count
+		push	ss	; invincibility_flash_colors (segment)
+		lea	ax, [bp+@@invincibility_flash_colors]
+		push	ax	; invincibility_flash_colors (offset)
+		push	ds	; hp (segment)
+		push	offset _boss_hp	; hp (offset)
+		push	ds	; is_invincible (segment)
+		push	offset _konngara_invincible	; is_invincible (offset)
+		push	ds	; invincibility_frame (segment)
+		push	offset _konngara_invincibility_frame	; invincibility_frame (offset)
+		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
 		add	sp, 22h
-		cmp	word_3B529, 0
+		cmp	_konngara_invincible, 0
 		jnz	loc_2FC40
 		cmp	word_35FFA, 6
 		jge	short loc_2F4AE
@@ -41512,7 +41341,7 @@ loc_2F4AE:
 
 loc_2F4BC:
 		mov	_boss_phase_frame, 0
-		mov	word_3B52B, 0
+		mov	_konngara_invincibility_frame, 0
 		mov	word_35FF8, 63h	; 'c'
 		mov	word_35FFA, 0
 		jmp	loc_2FC40
@@ -41524,7 +41353,7 @@ loc_2F4D7:
 		cmp	ax, 6
 		jnz	loc_2F600
 		inc	_boss_phase_frame
-		inc	word_3B52B
+		inc	_konngara_invincibility_frame
 		cmp	_player_left, 198
 		jge	short loc_2F4F7
 		mov	ax, 1
@@ -41582,8 +41411,8 @@ loc_2F564:
 		call	_z_palette_set_all_show c, offset _z_Palettes, ds
 
 loc_2F570:
-		push	(40 shl 16) or 96
-		push	(120 shl 16) or 288
+		push	(40 shl 16) or 96	; (hitbox_w) or (hitbox_h)
+		push	(120 shl 16) or 288	; (hitbox_left) or (hitbox_top)
 		cmp	_orb_cur_left, 288
 		jl	short loc_2F5A0
 		cmp	_orb_cur_left, 352
@@ -41600,23 +41429,23 @@ loc_2F5A0:
 		xor	ax, ax
 
 loc_2F5A2:
-		push	ax
-		push	seg main_32_TEXT
-		push	offset @boss_nop$qv
-		push	10000
-		push	3
-		push	ss
-		lea	ax, [bp+var_C]
-		push	ax
-		push	ds
-		push	offset _boss_hp
-		push	ds
-		push	offset word_3B529
-		push	ds
-		push	offset word_3B52B
-		call	sub_21A8A
+		push	ax	; colliding_with_orb
+		push	seg main_32_TEXT	; hit_callback (segment)
+		push	offset @boss_nop$qv	; hit_callback (offset)
+		push	10000	; hit_score
+		push	3	; invincibility_flash_colors_count
+		push	ss	; invincibility_flash_colors (segment)
+		lea	ax, [bp+@@invincibility_flash_colors]
+		push	ax	; invincibility_flash_colors (offset)
+		push	ds	; hp (segment)
+		push	offset _boss_hp	; hp (offset)
+		push	ds	; is_invincible (segment)
+		push	offset _konngara_invincible	; is_invincible (offset)
+		push	ds	; invincibility_frame (segment)
+		push	offset _konngara_invincibility_frame	; invincibility_frame (offset)
+		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
 		add	sp, 22h
-		cmp	word_3B529, 0
+		cmp	_konngara_invincible, 0
 		jnz	loc_2FC40
 		cmp	_boss_phase_frame, 120
 		jle	loc_2FC40
@@ -41624,7 +41453,7 @@ loc_2F5A2:
 
 loc_2F5DE:
 		mov	_boss_phase_frame, 0
-		mov	word_3B52B, 0
+		mov	_konngara_invincibility_frame, 0
 		mov	word_35FF8, 63h	; 'c'
 		mov	word_35FFA, 0
 		push	0
@@ -41639,7 +41468,7 @@ loc_2F600:
 		cmp	ax, 7
 		jnz	loc_2FC40
 		inc	_boss_phase_frame
-		inc	word_3B52B
+		inc	_konngara_invincibility_frame
 		cmp	_player_left, 198
 		jge	short loc_2F620
 		mov	ax, 1
@@ -41777,8 +41606,8 @@ loc_2F720:
 		mov	word_35FF8, 63h	; 'c'
 
 loc_2F734:
-		push	(40 shl 16) or 96
-		push	(120 shl 16) or 288
+		push	(40 shl 16) or 96	; (hitbox_w) or (hitbox_h)
+		push	(120 shl 16) or 288	; (hitbox_left) or (hitbox_top)
 		cmp	_orb_cur_left, 288
 		jl	short loc_2F764
 		cmp	_orb_cur_left, 352
@@ -41795,21 +41624,21 @@ loc_2F764:
 		xor	ax, ax
 
 loc_2F766:
-		push	ax
-		push	seg main_32_TEXT
-		push	offset @boss_nop$qv
-		push	10000
-		push	3
-		push	ss
-		lea	ax, [bp+var_C]
-		push	ax
-		push	ds
-		push	offset _boss_hp
-		push	ds
-		push	offset word_3B529
-		push	ds
-		push	offset word_3B52B
-		call	sub_21A8A
+		push	ax	; colliding_with_orb
+		push	seg main_32_TEXT	; hit_callback (segment)
+		push	offset @boss_nop$qv	; hit_callback (offset)
+		push	10000	; hit_score
+		push	3	; invincibility_flash_colors_count
+		push	ss	; invincibility_flash_colors (segment)
+		lea	ax, [bp+@@invincibility_flash_colors]
+		push	ax	; invincibility_flash_colors (offset)
+		push	ds	; hp (segment)
+		push	offset _boss_hp	; hp (offset)
+		push	ds	; is_invincible (segment)
+		push	offset _konngara_invincible	; is_invincible (offset)
+		push	ds	; invincibility_frame (segment)
+		push	offset _konngara_invincibility_frame	; invincibility_frame (offset)
+		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_boss_hp, 0
 		jg	loc_2FC40
@@ -42711,8 +42540,9 @@ byte_35B47	db 0
 byte_35B48	db 0
 dbl_35B49	dq -10.0
 		db 0
-word_35B52	dw 0B01h
-word_35B54	dw 0
+public _yuugenmagan_invincibility_flash_colors, _yuugenmagan_invincible
+_yuugenmagan_invincibility_flash_colors	db 1, 11
+_yuugenmagan_invincible	dw 0
 aBoss2_bos	db 'boss2.bos',0
 aBoss3_m_ptn	db 'boss3_m.ptn',0
 aBoss2_grp_0	db 'boss2.grp',0
@@ -42784,7 +42614,8 @@ byte_35B7C	db 8
 		db 0FFh
 		db 0FFh
 		db 0E0h
-word_35BBD	dw 903h
+public _mima_invincibility_flash_colors
+_mima_invincibility_flash_colors	db 3, 9
 aBoss3_1_bos	db 'boss3_1.bos',0
 aBoss3_2_bos	db 'boss3_2.bos',0
 aBoss3_grp_0	db 'boss3.grp',0
@@ -42841,10 +42672,11 @@ flt_35CD2	dd 208.0
 flt_35CD6	dd 224.0
 flt_35CDA	dd 240.0
 byte_35CDE	db 0
-byte_35CDF	db 0Dh
+public _singyoku_invincibility_flash_colors, _singyoku_invincible
+_singyoku_invincibility_flash_colors	db 13
 word_35CE0	dw 0
 word_35CE2	dw 0
-word_35CE4	dw 0
+_singyoku_invincible	dw 0
 public _singyoku_initial_hp_rendered
 _singyoku_initial_hp_rendered	dw 0
 aBoss1_bos	db 'boss1.bos',0
@@ -42853,7 +42685,8 @@ aBoss1_3_bos	db 'boss1_3.bos',0
 aBoss1_grp_0	db 'boss1.grp',0
 word_35D14	dw 0
 word_35D16	dw 0
-dword_35D18	dd 2080B06h
+public _kikuri_invincibility_flash_colors
+_kikuri_invincibility_flash_colors	db 6, 11, 8, 2
 aTamasii_bos	db 'tamasii.bos',0
 aTamasii2_bos	db 'tamasii2.bos',0
 aTamayen_ptn	db 'tamayen.ptn',0
@@ -42864,7 +42697,8 @@ word_35D46	dw 0
 word_35D48	dw 0
 word_35D4A	dw 0
 word_35D4C	dw 0
-dword_35D4E	dd 2080603h
+public _elis_invincibility_flash_colors
+_elis_invincibility_flash_colors	db 3, 6, 8, 2
 aBoss5_bos	db 'boss5.bos',0
 aBoss5_2_bos	db 'boss5_2.bos',0
 aBoss5_3_bos	db 'boss5_3.bos',0
@@ -42966,9 +42800,8 @@ unk_35E8D	db  80h
 word_35E95	dw 0
 word_35E97	dw 0
 word_35E99	dw 0
-unk_35E9B	db    3
-		db    4
-		db    5
+public _sariel_invincibility_flash_colors
+_sariel_invincibility_flash_colors	db    3, 4, 5
 aAngel		db 'ANGEL',0
 aOf		db 'OF',0
 aDeath		db 'DEATH',0
@@ -43021,9 +42854,8 @@ word_35FF2	dw 1
 point_35FF4	Point <999, 999>
 word_35FF8	dw 0
 word_35FFA	dw 0
-unk_35FFC	db    3
-		db    4
-		db    5
+public _konngara_invincibility_flash_colors
+_konngara_invincibility_flash_colors	db    3, 4, 5
 aAngel_0	db 'ANGEL',0
 aOf_0		db 'OF',0
 aDeath_0	db 'DEATH',0
@@ -43190,7 +43022,8 @@ word_39DFA	dw ?
 point_39DFC	Point <?>
 y_39E00	dw ?
 x_39E02	dw ?
-word_39E04	dw ?
+public _yuugenmagan_invincibility_frame
+_yuugenmagan_invincibility_frame	dw ?
 x_39E06	dw ?
 word_39E08	dw ?
 word_39E0A	dw ?
@@ -43240,8 +43073,9 @@ word_39E60	dw ?
 		dw ?
 left_39E64	dw 4 dup (?)
 top_39E6C 	dw 4 dup (?)
-word_39E74	dw ?
-word_39E76	dw ?
+public _mima_invincibility_frame, _mima_invincible
+_mima_invincibility_frame	dw ?
+_mima_invincible	dw ?
 word_39E78	dw ?
 public _mima_initial_hp_rendered
 _mima_initial_hp_rendered	db ?
@@ -43285,9 +43119,9 @@ word_3A1EB	dw ?
 		db 400 dup (?)
 byte_3A37D	db ?
 _route	db ?
-public _singyoku_phase_frame, _singyoku_hp
+public _singyoku_phase_frame, _singyoku_hp, _singyoku_invincibility_frame
 _singyoku_phase_frame	dw ?
-word_3A381	dw ?
+_singyoku_invincibility_frame	dw ?
 _singyoku_hp	dw ?
 speed_3A385	dw ?
 angle_3A387	db ?
@@ -43305,8 +43139,9 @@ angle_3A6BA	db ?
 word_3A6BB	dw ?
 angle_3A6BD	db ?
 word_3A6BE	dw ?
-word_3A6C0	dw ?
-word_3A6C2	dw ?
+public _kikuri_invincible, _kikuri_invincibility_frame
+_kikuri_invincible	dw ?
+_kikuri_invincibility_frame	dw ?
 word_3A6C4	dw ?
 public _kikuri_initial_hp_rendered
 _kikuri_initial_hp_rendered	db ?
@@ -43333,8 +43168,9 @@ word_3A76D	dw ?
 angle_3A76F	db ?
 angle_3A770	db ?
 word_3A771	dw ?
-word_3A773	dw ?
-word_3A775	dw ?
+public _elis_invincibility_frame, _elis_invincible
+_elis_invincibility_frame	dw ?
+_elis_invincible	dw ?
 word_3A777	dw ?
 word_3A779	dw ?
 elis_bat_move_delta_y	dw ?
@@ -43403,8 +43239,9 @@ word_3B341	dw 30 dup(?)
 word_3B37D	dw 30 dup(?)
 word_3B3B9	dw 30 dup(?)
 word_3B3F5	dw 30 dup(?)
-word_3B431	dw ?
-word_3B433	dw ?
+public _sariel_invincible, _sariel_invincibility_frame
+_sariel_invincible	dw ?
+_sariel_invincibility_frame	dw ?
 word_3B435	dw ?
 public _sariel_initial_hp_rendered
 _sariel_initial_hp_rendered	db ?
@@ -43484,8 +43321,9 @@ laser_target_y_3B521	dw ?
 word_3B523	dw ?
 word_3B525	dw ?
 word_3B527	dw ?
-word_3B529	dw ?
-word_3B52B	dw ?
+public _konngara_invincible, _konngara_invincibility_frame
+_konngara_invincible	dw ?
+_konngara_invincibility_frame	dw ?
 word_3B52D	dw ?
 public _konngara_initial_hp_rendered
 _konngara_initial_hp_rendered	db ?
