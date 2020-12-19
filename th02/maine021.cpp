@@ -13,5 +13,4 @@ extern "C" {
 #include "th02/hardware/keydelay.c"
 #include "th01/hardware/vplanset.c"
 #include "th02/formats/pi_load.c"
-#include "th02/hardware/frmdely1.c"
 }

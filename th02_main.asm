@@ -2671,8 +2671,7 @@ loc_BCA0:
 		mov	[bp+var_1], 2
 
 loc_BCA4:
-		push	1
-		call	frame_delay
+		call	frame_delay pascal, 1
 		jmp	loc_BA1D
 ; ---------------------------------------------------------------------------
 
@@ -3367,15 +3366,13 @@ loc_C348:
 		call	text_putsa pascal, ax, 12, ds, offset asc_1E47E, TX_WHITE
 		lea	ax, [si+6]
 		call	gaiji_putsa pascal, ax, 12, ds, offset gGAMEOVER, TX_WHITE
-		push	1
-		call	frame_delay
+		call	frame_delay pascal, 1
 		dec	si
 
 loc_C3E5:
 		cmp	si, 0Ch
 		jge	loc_C348
-		push	1Eh
-		call	frame_delay
+		call	frame_delay pascal, 30
 		mov	_key_det, 0
 		jmp	short loc_C400
 ; ---------------------------------------------------------------------------
@@ -3449,8 +3446,7 @@ loc_C4CA:
 		jnz	short loc_C4EE
 
 loc_C4E5:
-		push	1
-		call	frame_delay
+		call	frame_delay pascal, 1
 		jmp	short loc_C47A
 ; ---------------------------------------------------------------------------
 
@@ -7099,8 +7095,7 @@ loc_E140:
 loc_E147:
 		cmp	si, 18h
 		jl	short loc_E103
-		push	2
-		call	frame_delay
+		call	frame_delay pascal, 2
 		inc	[bp+var_4]
 
 loc_E156:
@@ -15538,8 +15533,7 @@ loc_12E4F:
 		sub	[bp+var_4], 10h
 		mov	ax, [bp+var_4]
 		mov	[bp+var_2], ax
-		push	1
-		call	frame_delay
+		call	frame_delay pascal, 1
 		call	egc_start_copy_2
 		push	200140h
 		push	1800050h
@@ -15597,8 +15591,7 @@ loc_12EC5:
 		sub	[bp+var_4], 10h
 		mov	ax, [bp+var_4]
 		mov	[bp+var_2], ax
-		push	1
-		call	frame_delay
+		call	frame_delay pascal, 1
 		call	egc_start_copy_2
 		push	200140h
 		push	1800050h
@@ -15849,8 +15842,7 @@ loc_130CF:
 
 loc_130DE:
 		mov	[bp+var_2], 3
-		push	1
-		call	frame_delay
+		call	frame_delay pascal, 1
 
 loc_130EA:
 		mov	ax, di
@@ -16387,27 +16379,21 @@ sub_13439	proc near
 		push	69h ; 'i'
 		call	sub_13055
 		call	sub_13414
-		push	0Ah
-		call	frame_delay
+		call	frame_delay pascal, 10
 		push	69h ; 'i'
 		call	sub_13055
-		push	1Eh
-		call	frame_delay
+		call	frame_delay pascal, 30
 		call	sub_13414
-		push	14h
-		call	frame_delay
+		call	frame_delay pascal, 20
 		push	69h ; 'i'
 		call	sub_13055
-		push	14h
-		call	frame_delay
+		call	frame_delay pascal, 20
 		push	69h ; 'i'
 		call	sub_13055
 		call	sub_13414
-		push	14h
-		call	frame_delay
+		call	frame_delay pascal, 20
 		call	sub_13414
-		push	14h
-		call	frame_delay
+		call	frame_delay pascal, 20
 		call	sub_13414
 		push	3
 		call	palette_white_out
@@ -27769,8 +27755,7 @@ mima_init	proc far
 		call	super_entry_bfnt pascal, ds, offset aMima_bft ; "mima.bft"
 		call	sub_13328
 		mov	vsync_Count1, 0
-		push	0Ah
-		call	frame_delay
+		call	frame_delay pascal, 10
 		call	sub_1A529
 		call	super_clean pascal, (128 shl 16) or 192
 		mov	super_patnum, 80h
@@ -28026,8 +28011,7 @@ sub_19C8D	proc near
 		pop	cx
 		push	0Ah
 		call	palette_white_out
-		push	32h ; '2'
-		call	frame_delay
+		call	frame_delay pascal, 50
 		add	_score, 50000
 		call	sub_19C1D
 		mov	ax, 1
@@ -28962,8 +28946,7 @@ loc_1A54E:
 		imul	dx, 7
 		push	dx
 		call	grcg_circle
-		push	1
-		call	frame_delay
+		call	frame_delay pascal, 1
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		call	grcg_circlefill pascal, (224 shl 16) or 144, si
 		push	(224 shl 16) or 144
@@ -29041,8 +29024,7 @@ loc_1A697:
 		sub	dx, ax
 		mov	PaletteTone, dx
 		call	far ptr	palette_show
-		push	3
-		call	frame_delay
+		call	frame_delay pascal, 3
 		inc	si
 
 loc_1A6B2:
@@ -29076,8 +29058,7 @@ sub_1A6C5	proc near
 		graph_accesspage 1
 		call	graph_clear
 		mov	vsync_Count1, 0
-		push	1
-		call	frame_delay
+		call	frame_delay pascal, 1
 		call	graph_scrollup pascal, 0
 		graph_accesspage _page_front
 		call	super_roll_put pascal, point_205F6.x, point_205F6.y, 0
@@ -29161,8 +29142,7 @@ marisa_init	proc far
 		call	super_entry_bfnt pascal, ds, offset aMima_bft_0 ; "mima.bft"
 		call	sub_1315B
 		mov	vsync_Count1, 0
-		push	0Ah
-		call	frame_delay
+		call	frame_delay pascal, 10
 		call	sub_1A529
 		push	0
 		call	sub_1310B
@@ -33399,8 +33379,7 @@ loc_1CCF7:
 		jnz	short loc_1CD2E
 
 loc_1CCFE:
-		push	1
-		call	frame_delay
+		call	frame_delay pascal, 1
 		mov	ax, _key_det
 		mov	[bp+var_A], ax
 		cmp	[bp+var_A], 0

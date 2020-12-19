@@ -32,4 +32,3 @@ const char pf_fn[] = PF_FN;
 #include "th02/snd/kajaint.c"
 #include "th02/snd/delaymea.c"
 #include "th02/snd/se.c"
-#include "th02/hardware/frmdely1.c"
