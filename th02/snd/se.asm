@@ -1,5 +1,5 @@
 public _snd_se_reset
-_snd_se_reset proc
+_snd_se_reset proc far
 	mov	_snd_se_frame, 0
 	mov	_snd_se_playing, -1
 	ret
@@ -8,9 +8,9 @@ _snd_se_reset endp
 
 retfunc macro
 	if GAME ge 3
-		ret 2
+		retf 2
 	else
-		ret
+		retf
 	endif
 endm
 proc_defconv snd_se_play, SND_SE_PLAY
@@ -45,7 +45,7 @@ endp_defconv
 	even
 
 public _snd_se_update
-_snd_se_update proc
+_snd_se_update proc far
 	cmp	_snd_fm_possible, 0
 	jz	short @@ret
 	cmp	_snd_se_playing, -1
@@ -54,7 +54,7 @@ _snd_se_update proc
 	jnz	short @@unlock?
 	mov	ah, PMD_SE_PLAY
 	mov	al, _snd_se_playing
-	int	60h
+	int	PMD
 
 @@unlock?:
 	inc	_snd_se_frame

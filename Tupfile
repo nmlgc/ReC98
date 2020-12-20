@@ -44,6 +44,7 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 : th05/sprites/piano_l.bmp |> !bmp2arr -sym _sPIANO_LABEL_FONT -of asm -sw 8 -sh 8 |> th05/sprites/piano_l.asp
 
 !as = |> $(AS) %f %o |> bin\\%B.obj
+!as2 = |> $(AS) /dGAME=2 th02\%b %o |> bin\\th02\\%B.obj
 !as3 = |> $(AS) /dGAME=3 th03\%b %o |> bin\\th03\\%B.obj
 !as4 = |> $(AS) /dGAME=4 th04\%b %o |> bin\\th04\\%B.obj
 !as5 = |> $(AS) /dGAME=5 th05\%b %o |> bin\\th05\\%B.obj
@@ -66,6 +67,7 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 : th01_fuuin.asm |> !as |> bin\\th01\\fuuin.obj
 
 : th02_zuninit.asm |> !as |> bin\\th02\\zuninit.obj
+: th02\\snd_se.asm |> !as2 |>
 : th02_op.asm |> !as |> bin\\th02\\op.obj
 : th02_main.asm | \
 	th02/sprites/pellet.asp \
