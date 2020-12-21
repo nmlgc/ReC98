@@ -909,8 +909,7 @@ sub_9AD4	proc near
 		call	sub_9A7E
 		push	4
 		call	palette_white_in
-		push	5
-		call	_snd_delay_until_measure
+		call	_snd_delay_until_measure stdcall, 5
 		pop	cx
 		mov	si, 0A0h
 		jmp	short loc_9B5C
@@ -2261,8 +2260,7 @@ sub_A8FA	proc near
 		enter	4, 0
 		push	si
 		push	di
-		push	6
-		call	_snd_delay_until_measure
+		call	_snd_delay_until_measure stdcall, 6
 		pop	cx
 		xor	si, si
 		jmp	short loc_A920
@@ -2279,8 +2277,7 @@ loc_A920:
 		cmp	si, 37h	; '7'
 		jl	short loc_A90C
 		call	_graph_putsa_fx c, 528, ((15 or FX_WEIGHT_BOLD) shl 16) or 192, offset aVer1_00, ds	; "ver 1.00"
-		push	8
-		call	_snd_delay_until_measure
+		call	_snd_delay_until_measure stdcall, 8
 		pop	cx
 		mov	si, 0B8h
 		jmp	short loc_A992
@@ -2314,8 +2311,7 @@ loc_A947:
 loc_A992:
 		cmp	si, 170h
 		jl	short loc_A947
-		push	9
-		call	_snd_delay_until_measure
+		call	_snd_delay_until_measure stdcall, 9
 		pop	cx
 		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	1B000C0h
@@ -2324,8 +2320,7 @@ loc_A992:
 		push	offset aXxcvsB@b@vrvsv ; "ïïñÇò^Å@Å@ÇrÇsÇ`ÇeÇe"
 		push	0Ch
 		call	sub_9643
-		push	0Dh
-		call	_snd_delay_until_measure
+		call	_snd_delay_until_measure stdcall, 13
 		pop	cx
 		graph_accesspage 1
 		call	_pi_load c, 0, offset aEd06_pi, ds
@@ -2340,8 +2335,7 @@ loc_A992:
 		call	rotrect
 		call	sub_A8A4
 		call	_graph_putsa_fx c, 416, ((15 or FX_WEIGHT_BOLD) shl 16) or 192, offset aGvgngogigab@b@, ds	; "ÉvÉçÉOÉâÉÄÅ@Å@Å@ÇyÇtÇm"
-		push	11h
-		call	_snd_delay_until_measure
+		call	_snd_delay_until_measure stdcall, 17
 		pop	cx
 		push	ds
 		push	offset aEd06b_rgb ; "ed06b.rgb"
@@ -2351,8 +2345,7 @@ loc_A992:
 		push	2
 		push	29h ; ')'
 		call	rotrect
-		push	15h
-		call	_snd_delay_until_measure
+		call	_snd_delay_until_measure stdcall, 21
 		pop	cx
 		push	200064h
 		push	3
@@ -2370,8 +2363,7 @@ loc_A992:
 		call	_pi_put_8 c, 0, large 0
 		freePISlotLarge	0
 		graph_accesspage 0
-		push	19h
-		call	_snd_delay_until_measure
+		call	_snd_delay_until_measure stdcall, 25
 		pop	cx
 		call	sub_A8A4
 		call	_graph_putsa_fx c, 416, ((15 or FX_WEIGHT_BOLD) shl 16) or 192, offset aGogigtgbgbgnb@, ds	; "ÉOÉâÉtÉBÉbÉNÅ@ÇyÇtÇm"
@@ -2385,8 +2377,7 @@ loc_A992:
 		push	0
 		push	29h ; ')'
 		call	rotrect
-		push	1Dh
-		call	_snd_delay_until_measure
+		call	_snd_delay_until_measure stdcall, 29
 		pop	cx
 		push	ds
 		push	offset aEd07b_rgb ; "ed07b.rgb"
@@ -2396,8 +2387,7 @@ loc_A992:
 		push	1
 		push	0E9h
 		call	rotrect
-		push	21h ; '!'
-		call	_snd_delay_until_measure
+		call	_snd_delay_until_measure stdcall, 33
 		pop	cx
 		push	200064h
 		push	2
@@ -2406,8 +2396,7 @@ loc_A992:
 		push	2
 		push	0E9h
 		call	rotrect
-		push	25h ; '%'
-		call	_snd_delay_until_measure
+		call	_snd_delay_until_measure stdcall, 37
 		pop	cx
 		call	sub_A8A4
 		call	_graph_putsa_fx c, 432, ((15 or FX_WEIGHT_BOLD) shl 16) or 192, offset aVlvtvrvhvbb@b@, ds	; "ÇlÇtÇrÇhÇbÅ@Å@ÇyÇtÇm"
@@ -2423,8 +2412,7 @@ loc_A992:
 		call	_pi_load c, 0, offset aEd08_pi, ds
 		call	_pi_put_8 c, 0, large 0
 		graph_accesspage 0
-		push	29h ; ')'
-		call	_snd_delay_until_measure
+		call	_snd_delay_until_measure stdcall, 41
 		pop	cx
 		call	_pi_palette_apply stdcall, 0
 		pop	cx
@@ -2433,8 +2421,7 @@ loc_A992:
 		push	0
 		push	0E9h
 		call	rotrect
-		push	2Dh ; '-'
-		call	_snd_delay_until_measure
+		call	_snd_delay_until_measure stdcall, 45
 		pop	cx
 		push	ds
 		push	offset aEd08a_rgb ; "ed08a.rgb"
@@ -2444,8 +2431,7 @@ loc_A992:
 		push	1
 		push	29h ; ')'
 		call	rotrect
-		push	31h ; '1'
-		call	_snd_delay_until_measure
+		call	_snd_delay_until_measure stdcall, 49
 		pop	cx
 		call	sub_A8A4
 		call	_graph_putsa_fx c, 416, ((15 or FX_WEIGHT_BOLD) shl 16) or 192, offset aVsvdvrvsb@vovk, ds	; "ÇsÇdÇrÇsÅ@ÇoÇkÇ`ÇxÇdÇq"
@@ -2461,8 +2447,7 @@ loc_A992:
 		push	2
 		push	29h ; ')'
 		call	rotrect
-		push	35h ; '5'
-		call	_snd_delay_until_measure
+		call	_snd_delay_until_measure stdcall, 53
 		pop	cx
 		push	ds
 		push	offset aEd08c_rgb ; "ed08c.rgb"
@@ -2472,8 +2457,7 @@ loc_A992:
 		push	3
 		push	29h ; ')'
 		call	rotrect
-		push	39h ; '9'
-		call	_snd_delay_until_measure
+		call	_snd_delay_until_measure stdcall, 57
 		pop	cx
 		push	4
 		call	palette_black_out

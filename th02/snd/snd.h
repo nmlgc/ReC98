@@ -25,6 +25,10 @@ int16_t DEFCONV snd_kaja_interrupt(int16_t ax);
 
 void snd_delay_until_volume(uint8_t volume);
 
+#if (GAME == 2)
+	void snd_delay_until_measure(int measure);
+#endif
+
 #define SND_LOAD_SONG (kaja_func_t)(KAJA_GET_SONG_ADDRESS << 8)
 #define SND_LOAD_SE (kaja_func_t)(PMD_GET_SE_ADDRESS << 8)
 

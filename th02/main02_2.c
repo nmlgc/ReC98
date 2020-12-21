@@ -13,8 +13,6 @@
 #include "th02/mem.h"
 #include "th02/snd/snd.h"
 
-#define frame_delay_2 frame_delay
-
 extern const char pf_fn[];
 
 #include "th02/hardware/input.c"
@@ -60,4 +58,3 @@ int pascal mptn_load_inner(const char *fn)
 #include "th02/initmain.c"
 #include "th02/formats/pi_put.c"
 #include "th02/snd/kajaint.c"
-#include "th02/snd/delaymea.c"
