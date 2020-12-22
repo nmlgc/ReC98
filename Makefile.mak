@@ -76,17 +76,17 @@ bin\th02\zun_res.com: th02\zun_res1.c th02\zun_res2.c th02\zun_res3.c
 $**
 | masters.lib
 
-bin\th02\op.exe: th02\op_01.c bin\exit_dos.obj bin\th02\zunerror.obj bin\th02\grppsafx.obj bin\th02\op.obj th02\op_02_1.cpp bin\frmdely2.obj th02\op_02_2.c th02\op_02_3.cpp bin\th02\snd_se.obj bin\frmdely1.obj th02\op_03.c th02\op_04.c th02\op_05.cpp th02\op_06.cpp
+bin\th02\op.exe: th02\op_01.c bin\exit_dos.obj bin\th02\zunerror.obj bin\th02\grppsafx.obj bin\th02\op.obj th02\op_02_1.cpp bin\frmdely2.obj th02\op_02_2.c bin\th02\snd_kaja.obj th02\op_02_3.cpp bin\th02\snd_se.obj bin\frmdely1.obj th02\op_03.c th02\op_04.c th02\op_05.cpp th02\op_06.cpp
 	$(CC) $(CFLAGS) -ml -Z -DGAME=2 -nbin\th02\ -eOP.EXE @&&|
 $**
 |
 
-bin\th02\main.exe: bin\th02\main.obj bin\th02\zunerror.obj th02\main02_1.cpp bin\frmdely1.obj th02\main02_2.c bin\th02\snd_dlym.obj bin\th02\snd_se.obj th02\main_03.cpp
+bin\th02\main.exe: bin\th02\main.obj bin\th02\zunerror.obj th02\main02_1.cpp bin\frmdely1.obj th02\main02_2.c bin\th02\snd_kaja.obj bin\th02\snd_dlym.obj bin\th02\snd_se.obj th02\main_03.cpp
 	$(CC) $(CFLAGS) -ml -Z -DGAME=2 -nbin\th02\ -eMAIN.EXE @&&|
 $**
 |
 
-bin\th02\maine.exe: bin\th02\maine.obj bin\th02\grppsafx.obj th02\maine021.cpp bin\frmdely1.obj th02\maine022.c bin\th02\snd_dlym.obj th02\maine_03.c th02\maine_04.c th02\maine_05.cpp
+bin\th02\maine.exe: bin\th02\maine.obj bin\th02\grppsafx.obj th02\maine021.cpp bin\frmdely1.obj th02\maine022.c bin\th02\snd_kaja.obj bin\th02\snd_dlym.obj th02\maine_03.c th02\maine_04.c th02\maine_05.cpp
 	$(CC) $(CFLAGS) -ml -3 -Z -DGAME=2 -nbin\th02\ -eMAINE.EXE @&&|
 $**
 |

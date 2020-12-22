@@ -29,4 +29,3 @@ const char pf_fn[] = PF_FN;
 #include "th02/snd/pmd_res.c"
 #include "th02/snd/load.c"
 #include "th02/formats/pi_put.c"
-#include "th02/snd/kajaint.c"

@@ -1,8 +1,15 @@
-int16_t snd_kaja_interrupt(int16_t ax)
+#pragma codeseg SHARED
+
+#include <dos.h>
+#include "platform.h"
+#include "libs/kaja/kaja.h"
+#include "th02/snd/snd.h"
+
+int16_t DEFCONV snd_kaja_interrupt(int16_t ax)
 {
 	if(snd_active) {
 		_AX = ax;
-		if(snd_midi_active != 1) {
+		if(snd_midi_active != true) {
 			geninterrupt(PMD);
 		} else {
 			geninterrupt(MMD);
