@@ -9,7 +9,6 @@
 #include "th02/th02.h"
 #include "th02/hardware/frmdelay.h"
 #include "th02/mem.h"
-#include "th02/formats/pi.h"
 #include "th02/snd/snd.h"
 
 #include "th02/snd/data.c"
@@ -25,4 +24,3 @@ const char pf_fn[] = PF_FN;
 #pragma option -k
 
 #include "th02/initmain.c"
-#include "th02/formats/pi_put.c"

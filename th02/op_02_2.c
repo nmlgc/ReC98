@@ -10,7 +10,6 @@
 #include "th02/th02.h"
 #include "th02/mem.h"
 #include "th02/initexit.h"
-#include "th02/formats/pi.h"
 #include "th02/snd/snd.h"
 #include "th02/hardware/frmdelay.h"
 
@@ -28,4 +27,3 @@ const char pf_fn[] = PF_FN;
 #include "th02/snd/detmode.c"
 #include "th02/snd/pmd_res.c"
 #include "th02/snd/load.c"
-#include "th02/formats/pi_put.c"

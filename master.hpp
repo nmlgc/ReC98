@@ -319,7 +319,11 @@ void MASTER_RET palette_show(void);
 	)
 
 	#define palette_set_all(m) \
-		memcpy(Palettes, (m), sizeof(Palette8))
+		memcpy( \
+			reinterpret_cast<void *>(&Palettes), \
+			reinterpret_cast<void *>(&m), \
+			sizeof(Palette8) \
+		);
 
 	extern Palette8 Palettes;
 #endif
@@ -349,7 +353,7 @@ void MASTER_RET palette_white_out(unsigned speed);
 		void far * maex;	// machine extend data
 		uint16_t xsize;
 		uint16_t ysize;
-		Palette4 palette;
+		Palette8 palette;
 	};
 
 	int MASTER_RET graph_pi_load_pack(

@@ -7909,7 +7909,7 @@ bomb_reimu_c	proc near
 
 var_64		= byte ptr -64h
 var_4		= word ptr -4
-var_2		= word ptr -2
+@@top		= word ptr -2
 
 		push	bp
 		mov	bp, sp
@@ -8007,15 +8007,15 @@ loc_E9A6:
 		test	byte ptr _bomb_frame, 1
 		jz	short loc_E9F3
 		call	grcg_off
-		mov	[bp+var_2], 10h
+		mov	[bp+@@top], 16
 		mov	ax, _scroll_line
-		add	[bp+var_2], ax
-		cmp	[bp+var_2], RES_Y
+		add	[bp+@@top], ax
+		cmp	[bp+@@top], RES_Y
 		jl	short loc_E9DB
-		sub	[bp+var_2], RES_Y
+		sub	[bp+@@top], RES_Y
 
 loc_E9DB:
-		call	_pi_put_8 stdcall, 32, [bp+var_2], 1
+		call	_pi_put_8 stdcall, 32, [bp+@@top], 1
 		call	_snd_se_play stdcall, 16
 		add	sp, 8
 		jmp	short loc_EA60
