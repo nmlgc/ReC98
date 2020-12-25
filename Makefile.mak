@@ -109,7 +109,7 @@ bin\th03\main.exe: bin\th03\main.obj th03\main_01.cpp bin\th03\inp_m_w.obj bin\h
 $**
 |
 
-bin\th03\mainl.exe: bin\th03\mainl.obj bin\th03\inp_m_w.obj bin\th03\cdg_p_na.obj bin\hfliplut.obj
+bin\th03\mainl.exe: bin\th03\mainl.obj bin\th03\pi_put_q.obj bin\th03\inp_m_w.obj bin\th03\cdg_p_na.obj bin\hfliplut.obj
 	$(CC) $(CFLAGS) -ml -DGAME=3 -nbin\th03\ -eMAINL.EXE @&&|
 $**
 |
@@ -135,7 +135,7 @@ bin\th04\main.exe: bin\th04\main.obj bin\th04\scoreupd.obj th04\main011.cpp bin\
 $**
 |
 
-bin\th04\maine.exe: bin\th04\maine.obj th04\maine011.cpp bin\th04\cdg_load.obj bin\hfliplut.obj
+bin\th04\maine.exe: bin\th04\maine.obj th04\maine011.cpp bin\th03\pi_put_q.obj bin\th04\cdg_load.obj bin\hfliplut.obj
 	$(CC) $(CFLAGS) -ml -DGAME=4 -DBINARY='E' -Z -nbin\th04\ -eMAINE.EXE @&&|
 $**
 |

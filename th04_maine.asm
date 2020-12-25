@@ -4593,7 +4593,7 @@ include th02/hardware/frame_delay.asm
 include th02/formats/pi_palette_apply.asm
 include th02/formats/pi_put.asm
 include th02/formats/pi_load.asm
-include th03/formats/pi_put_quarter.asm
+	extern PI_PUT_QUARTER_8:proc
 SHARED	ends
 
 SHARED_	segment	word public 'CODE' use16

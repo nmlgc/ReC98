@@ -5564,7 +5564,7 @@ include th03/hardware/grppsafx.asm
 include th03/snd/delaymea.asm
 include th03/hardware/input_wait_ok.asm
 include th02/formats/pi_load.asm
-include th03/formats/pi_put_quarter.asm
+	extern PI_PUT_QUARTER_8:proc
 	extern INPUT_MODE_INTERFACE:proc
 	extern INPUT_WAIT_FOR_CHANGE:proc
 	extern CDG_PUT_NOALPHA_8:proc
