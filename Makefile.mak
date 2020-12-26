@@ -81,7 +81,7 @@ bin\th02\op.exe: th02\op_01.c bin\exit_dos.obj bin\th02\zunerror.obj bin\th02\gr
 $**
 |
 
-bin\th02\main.exe: bin\th02\main.obj bin\th02\zunerror.obj th02\main02_1.cpp bin\frmdely1.obj th02\main02_2.c bin\th02\pi_put.obj bin\th02\snd_kaja.obj bin\th02\snd_dlym.obj bin\th02\snd_se.obj th02\main_03.cpp
+bin\th02\main.exe: bin\th02\main.obj bin\th02\zunerror.obj th02\main02_1.cpp bin\th02\vector.obj bin\frmdely1.obj th02\main02_2.c bin\th02\pi_put.obj bin\th02\snd_kaja.obj bin\th02\snd_dlym.obj bin\th02\snd_se.obj th02\main_03.cpp
 	$(CC) $(CFLAGS) -ml -Z -DGAME=2 -nbin\th02\ -eMAIN.EXE @&&|
 $**
 |

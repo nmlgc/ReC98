@@ -35,5 +35,4 @@ void pascal mptn_free(void)
 
 #include "th01/hardware/vplanset.c"
 #include "th02/formats/pi_load.c"
-#include "th02/math/vector.cpp"
 }
