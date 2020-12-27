@@ -8,6 +8,7 @@
 #include "th02/th02.h"
 #include "master.hpp"
 #include "th02/hardware/frmdelay.h"
+#include "th02/hardware/grp_rect.h"
 #include "th02/core/zunerror.h"
 #include "th02/initexit.h"
 #include "th02/formats/cfg.h"
@@ -460,27 +461,27 @@ void pascal near option_put(int sel, unsigned int atrb)
 	if(sel == 0) {
 		gaiji_putsa(24, 16, gbRANK, atrb);
 		gaiji_putsa(42, 16, gbcRANKS[rank], atrb);
-		graph_copy_rect_1_to_0(336, 260, 128, 16);
+		graph_copy_rect_1_to_0_16(336, 260, 128, 16);
 		graph_gaiji_puts(340, 260, 16, gbcRANKS[rank], 0);
 	} else if(sel == 1) {
 		gaiji_putsa(24, 17, gbMUSIC, atrb);
 		gaiji_putsa(47, 17, gbcBGM_MODE[snd_bgm_mode], atrb);
-		graph_copy_rect_1_to_0(376, 276, 64, 16);
+		graph_copy_rect_1_to_0_16(376, 276, 64, 16);
 		graph_gaiji_puts(380, 276, 16, gbcBGM_MODE[snd_bgm_mode], 0);
 	} else if(sel == 2) {
 		gaiji_putsa(24, 18, gbPLAYER, atrb);
 		gaiji_putca(49, 18, lives + 1 + gb_0_, atrb);
-		graph_copy_rect_1_to_0(392, 292, 32, 16);
+		graph_copy_rect_1_to_0_16(392, 292, 32, 16);
 		graph_gaiji_putc(396, 292, lives + 1 + gb_0_, 0);
 	} else if(sel == 3) {
 		gaiji_putsa(24, 19, gbBOMB, atrb);
 		gaiji_putca(49, 19, bombs + gb_0_, atrb);
-		graph_copy_rect_1_to_0(392, 308, 32, 16);
+		graph_copy_rect_1_to_0_16(392, 308, 32, 16);
 		graph_gaiji_putc(396, 308, bombs + gb_0_, 0);
 	} else if(sel == 4) {
 		text_putsa(24, 20, PERF_TITLE, atrb);
 		text_putsa(45, 20, PERF_OPTIONS[resident->perf], atrb);
-		graph_copy_rect_1_to_0(360, 324, 128, 16);
+		graph_copy_rect_1_to_0_16(360, 324, 128, 16);
 		graph_putsa_fx(364, 324, 0, PERF_OPTIONS[resident->perf]);
 	} else if(sel == 5) {
 		gaiji_putsa(35, 21, gbRESET, atrb);
