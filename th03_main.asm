@@ -8892,7 +8892,6 @@ include th03/hardware/input_sense.asm
 include th02/snd/se.asm
 include th02/snd/kajaint.asm
 include th02/initmain.asm
-include th02/formats/pi_load.asm
 	extern INPUT_MODE_KEY_VS_KEY:proc
 	extern INPUT_MODE_JOY_VS_KEY:proc
 	extern INPUT_MODE_KEY_VS_JOY:proc

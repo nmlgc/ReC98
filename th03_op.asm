@@ -3630,7 +3630,7 @@ include th02/snd/kajaint.asm
 include th02/initop.asm
 include th03/formats/cdg_load.asm
 include th03/hardware/grppsafx.asm
-include th02/formats/pi_load.asm
+	extern PI_LOAD:proc
 	extern INPUT_MODE_INTERFACE:proc
 	extern INPUT_MODE_KEY_VS_KEY:proc
 	extern INPUT_MODE_JOY_VS_KEY:proc

@@ -4592,7 +4592,7 @@ include th01/hardware/vram_planes_set.asm
 include th02/hardware/frame_delay.asm
 include th02/formats/pi_palette_apply.asm
 include th02/formats/pi_put.asm
-include th02/formats/pi_load.asm
+	extern PI_LOAD:proc
 	extern PI_PUT_QUARTER_8:proc
 SHARED	ends
 

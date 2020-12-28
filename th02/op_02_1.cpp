@@ -8,7 +8,6 @@
 
 extern "C" {
 #include "th02/th02.h"
-#include "th02/formats/pi.h"
 
 resident_t *resident;
 char unused_op_2_3;
@@ -18,5 +17,4 @@ long unused_4;
 long unused_5;
 
 #include "th01/hardware/vplanset.c"
-#include "th02/formats/pi_load.c"
 }

@@ -10,7 +10,6 @@ extern "C" {
 
 #include "th02/th02.h"
 #include "th02/hardware/frmdelay.h"
-#include "th02/formats/pi.h"
 
 #include "th02/hardware/keydelay.c"
 
@@ -34,5 +33,4 @@ void pascal mptn_free(void)
 }
 
 #include "th01/hardware/vplanset.c"
-#include "th02/formats/pi_load.c"
 }

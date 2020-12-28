@@ -5563,7 +5563,7 @@ sub_D16F	endp
 include th03/hardware/grppsafx.asm
 include th03/snd/delaymea.asm
 include th03/hardware/input_wait_ok.asm
-include th02/formats/pi_load.asm
+	extern PI_LOAD:proc
 	extern PI_PUT_QUARTER_8:proc
 	extern INPUT_MODE_INTERFACE:proc
 	extern INPUT_WAIT_FOR_CHANGE:proc
