@@ -18,6 +18,9 @@ typedef enum {
 extern unsigned char snd_se_mode;
 extern unsigned char snd_bgm_mode;
 
+#define snd_bgm_is_fm() \
+	(snd_bgm_mode != SND_BGM_MIDI)
+
 // Checks the requested BGM and SE modes against the available hardware and
 // sets [snd_se_mode] and [snd_bgm_mode] accordingly. Returns [snd_bgm_mode].
 unsigned char pascal snd_determine_modes(int req_bgm_mode, int req_se_mode);

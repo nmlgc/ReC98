@@ -12,6 +12,9 @@ extern bool snd_midi_possible;
 	extern bool snd_active;
 	extern bool snd_midi_active;
 	extern bool snd_fm_possible;
+
+	#define snd_bgm_is_fm() \
+		(snd_midi_active != true)
 #endif
 
 int snd_pmd_resident(void);
