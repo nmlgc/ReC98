@@ -1978,8 +1978,7 @@ loc_A7A2:
 ; ---------------------------------------------------------------------------
 
 loc_A7C4:
-		push	[bp+var_2]
-		call	input_wait_for_ok
+		call	input_wait_for_ok pascal, [bp+var_2]
 		jmp	loc_AB90
 ; ---------------------------------------------------------------------------
 
@@ -2012,9 +2011,7 @@ loc_A7E7:
 ; ---------------------------------------------------------------------------
 
 loc_A814:
-		push	[bp+var_2]
-		push	[bp+var_4]
-		call	input_wait_for_ok_or_measure
+		call	input_wait_for_ok_or_measure pascal, [bp+var_2], [bp+var_4]
 		jmp	loc_AB63
 ; ---------------------------------------------------------------------------
 
@@ -5562,7 +5559,8 @@ sub_D16F	endp
 
 include th03/hardware/grppsafx.asm
 include th03/snd/delaymea.asm
-include th03/hardware/input_wait_ok.asm
+	extern INPUT_WAIT_FOR_OK_OR_MEASURE:proc
+	extern INPUT_WAIT_FOR_OK:proc
 	extern PI_LOAD:proc
 	extern PI_PUT_QUARTER_8:proc
 	extern INPUT_MODE_INTERFACE:proc
@@ -5699,6 +5697,7 @@ include libs/master.lib/wordmask[data].asm
 include libs/master.lib/mem[data].asm
 include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
+public _snd_active
 _snd_active	db 0
 		db 0
 include libs/master.lib/respal_exist[data].asm

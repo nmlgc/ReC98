@@ -51,14 +51,14 @@ void pascal input_mode_attract();
 // keyboard keys.
 void input_reset_sense_key_held();
 
-// Waits the given number of [frames] for OK or SHOT to be pressed. Returns 1
-// if that happened, and 0 otherwise.
-int pascal input_wait_for_ok(unsigned int frames);
+// Waits the given number of [frames] for OK or SHOT to be pressed. Returns
+// `true` if that happened, and `false` otherwise.
+bool16 pascal input_wait_for_ok(unsigned int frames);
 
 // Waits until BGM playback reached the given [measure] for OK or SHOT to be
-// pressed. Returns 1 if that happened, and 0 otherwise. Falls back on
-// input_wait_for_ok() with the given number of [frames] if BGM is disabled.
-int pascal input_wait_for_ok_or_measure(int measure, unsigned int frames);
+// pressed. Returns `true` if that happened, and `false` otherwise. Falls back
+// on input_wait_for_ok() with the given number of [frames] if BGM is disabled.
+bool16 pascal input_wait_for_ok_or_measure(int measure, unsigned int frames);
 
 // Waits for all held inputs to be released, then waits the given number of
 // [frames] for an (interface) input to be pressed. Set [frames] to 0 or 9999
