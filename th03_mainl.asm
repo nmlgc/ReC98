@@ -5558,7 +5558,7 @@ sub_D16F	proc far
 sub_D16F	endp
 
 include th03/hardware/grppsafx.asm
-include th03/snd/delaymea.asm
+	extern SND_DELAY_UNTIL_MEASURE:proc
 	extern INPUT_WAIT_FOR_OK_OR_MEASURE:proc
 	extern INPUT_WAIT_FOR_OK:proc
 	extern PI_LOAD:proc

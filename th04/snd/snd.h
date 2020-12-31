@@ -18,6 +18,12 @@ typedef enum {
 extern unsigned char snd_se_mode;
 extern unsigned char snd_bgm_mode;
 
+#ifdef __cplusplus
+static inline bool snd_is_active() {
+	return snd_bgm_mode;
+}
+#endif
+
 #define snd_bgm_is_fm() \
 	(snd_bgm_mode != SND_BGM_MIDI)
 

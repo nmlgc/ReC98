@@ -13,6 +13,12 @@ extern bool snd_midi_possible;
 	extern bool snd_midi_active;
 	extern bool snd_fm_possible;
 
+	#ifdef __cplusplus
+	static inline bool snd_is_active() {
+		return snd_active;
+	}
+	#endif
+
 	#define snd_bgm_is_fm() \
 		(snd_midi_active != true)
 #endif
