@@ -5557,7 +5557,7 @@ sub_D16F	proc far
 		retf
 sub_D16F	endp
 
-include th03/hardware/grppsafx.asm
+	extern GRAPH_PUTSA_FX:proc
 	extern SND_DELAY_UNTIL_MEASURE:proc
 	extern INPUT_WAIT_FOR_OK_OR_MEASURE:proc
 	extern INPUT_WAIT_FOR_OK:proc

@@ -3629,7 +3629,7 @@ include th02/formats/pi_put.asm
 include th02/snd/kajaint.asm
 include th02/initop.asm
 include th03/formats/cdg_load.asm
-include th03/hardware/grppsafx.asm
+	extern GRAPH_PUTSA_FX:proc
 	extern PI_LOAD:proc
 	extern INPUT_MODE_INTERFACE:proc
 	extern INPUT_MODE_KEY_VS_KEY:proc

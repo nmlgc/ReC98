@@ -29,7 +29,9 @@ th05:: $(TH05:\=bin\th05\)
 	tlink /t /3 $**
 
 bin\Pipeline\grzview.com: Pipeline\grzview.cpp th01\formats\grz.cpp
-	$(CC) $(CFLAGS) -Z -mt -lt -nbin\Pipeline\ $** masters.lib
+	$(CC) $(CFLAGS) -Z -DGAME=1 -mt -lt -nbin\Pipeline\ @&&|
+$**
+| masters.lib
 
 bin\th01\zunsoft.com: th01\zunsoft.c
 	$(CC) $(CFLAGS) -mt -lt -DGAME=1 -nbin\th01\ $** masters.lib
@@ -99,7 +101,7 @@ bin\th03\res_yume.com: th03\res_yume.cpp
 $**
 | masters.lib
 
-bin\th03\op.exe: th03\op_01.cpp bin\th03\op.obj bin\th03\pi_load.obj bin\th03\inp_m_w.obj bin\th03\cdg_p_na.obj bin\hfliplut.obj bin\frmdely2.obj
+bin\th03\op.exe: th03\op_01.cpp bin\th03\op.obj bin\th03\grppsafx.obj bin\th03\pi_load.obj bin\th03\inp_m_w.obj bin\th03\cdg_p_na.obj bin\hfliplut.obj bin\frmdely2.obj
 	$(CC) $(CFLAGS) -ml -3 -Z -DGAME=3 -nbin\th03\ -eOP.EXE @&&|
 $**
 |
@@ -109,7 +111,7 @@ bin\th03\main.exe: bin\th03\main.obj th03\main_01.cpp bin\th03\pi_load.obj bin\t
 $**
 |
 
-bin\th03\mainl.exe: bin\th03\mainl.obj bin\th03\snd_dlym.obj bin\th03\inp_wait.obj bin\th03\pi_load.obj bin\th03\pi_put_q.obj bin\th03\inp_m_w.obj bin\th03\cdg_p_na.obj bin\hfliplut.obj
+bin\th03\mainl.exe: bin\th03\mainl.obj bin\th03\grppsafx.obj bin\th03\snd_dlym.obj bin\th03\inp_wait.obj bin\th03\pi_load.obj bin\th03\pi_put_q.obj bin\th03\inp_m_w.obj bin\th03\cdg_p_na.obj bin\hfliplut.obj
 	$(CC) $(CFLAGS) -ml -DGAME=3 -nbin\th03\ -eMAINL.EXE @&&|
 $**
 |
