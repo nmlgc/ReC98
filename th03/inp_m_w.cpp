@@ -1,7 +1,8 @@
 #pragma codeseg SHARED
 
 extern "C" {
-#include "ReC98.h"
+#include "platform.h"
+#include "master.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th03/hardware/input.h"
 

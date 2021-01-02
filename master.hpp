@@ -240,6 +240,18 @@ void MASTER_RET grcg_off(void);
 #endif
 // -------------------------
 
+// Joystick
+// --------
+
+extern int js_bexist;
+extern unsigned js_stat[2];
+
+int MASTER_RET js_start(int force);
+
+void MASTER_RET js_end(void);
+int MASTER_RET js_sense(void);
+// --------
+
 // Heap
 // ----
 
