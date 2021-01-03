@@ -304,6 +304,15 @@ int MASTER_RET file_exist(const char MASTER_PTR *filename);
 int MASTER_RET file_delete(const char MASTER_PTR *filename);
 // -----------------------------------
 
+// Packfiles
+// ---------
+
+extern unsigned char pfkey; // 復号化キー
+
+void MASTER_RET pfstart(const char MASTER_PTR *parfile);
+void MASTER_RET pfend(void);
+// ---------
+
 // Palette
 // -------
 

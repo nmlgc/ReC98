@@ -1932,9 +1932,7 @@ _musicroom	proc near
 		graph_accesspage 1
 		graph_showpage 0
 		call	pfend
-		push	ds
-		push	offset aMusic_dat ; "music.dat"
-		call	pfstart
+		call	pfstart pascal, ds, offset aMusic_dat ; "music.dat"
 		mov	al, _music_sel
 		mov	ah, 0
 		call	draw_cmt pascal, ax
@@ -2133,9 +2131,7 @@ loc_C77F:
 
 loc_C790:
 		call	pfend
-		push	ds
-		push	offset aKaikidan1_dat1
-		call	pfstart
+		call	pfstart pascal, ds, offset aKaikidan1_dat1
 		kajacall	KAJA_SONG_FADE, 16
 		call	screen_back_B_free
 		graph_showpage 0
