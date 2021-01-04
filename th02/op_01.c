@@ -10,7 +10,7 @@
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/grp_rect.h"
 #include "th02/core/zunerror.h"
-#include "th02/initexit.h"
+#include "th02/core/initexit.h"
 #include "th02/formats/cfg.h"
 #include "th02/formats/pi.h"
 #include "th02/snd/snd.h"

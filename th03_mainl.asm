@@ -1006,7 +1006,7 @@ loc_9EF1:
 		call	gaiji_restore
 
 loc_9F1E:
-		call	sub_D16F
+		call	_game_exit_from_mainl_to_main
 		pushd	0
 		push	ds
 		push	offset aMain	; "main"
@@ -5538,25 +5538,7 @@ include th02/snd/se.asm
 include th02/snd/kajaint.asm
 include th02/initmain.asm
 include th03/formats/cdg_load.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D16F	proc far
-		push	bp
-		mov	bp, sp
-		call	pfend
-		graph_accesspage 0
-		graph_showpage al
-		call	vsync_end
-		call	mem_unassign
-		call	js_end
-		call	egc_start
-		pop	bp
-		retf
-sub_D16F	endp
-
+	extern _game_exit_from_mainl_to_main:proc
 	extern GRAPH_PUTSA_FX:proc
 	extern SND_DELAY_UNTIL_MEASURE:proc
 	extern INPUT_WAIT_FOR_OK_OR_MEASURE:proc

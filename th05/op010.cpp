@@ -11,7 +11,7 @@ extern "C" {
 #include "platform.h"
 #include "libs/kaja/kaja.h"
 #include "th01/ranks.h"
-#include "th02/initexit.h"
+#include "th02/core/initexit.h"
 #include "th04/common.h"
 #include "th04/score.h"
 #include "th04/end/end.h"

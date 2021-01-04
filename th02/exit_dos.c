@@ -1,7 +1,7 @@
 #pragma codeseg SHARED
 
 #include "libs/master.lib/master.h"
-#include "th02/initexit.h"
+#include "th02/core/initexit.h"
 
 void game_exit_to_dos(void)
 {
