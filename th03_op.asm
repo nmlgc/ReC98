@@ -3628,7 +3628,11 @@ include th02/formats/pi_palette_apply.asm
 include th02/formats/pi_put.asm
 include th02/snd/kajaint.asm
 include th02/initop.asm
-include th03/formats/cdg_load.asm
+	extern CDG_LOAD_SINGLE:proc
+	extern CDG_LOAD_SINGLE_NOALPHA:proc
+	extern CDG_LOAD_ALL_NOALPHA:proc
+	extern CDG_LOAD_ALL:proc
+	extern CDG_FREE:proc
 	extern GRAPH_PUTSA_FX:proc
 	extern PI_LOAD:proc
 	extern INPUT_MODE_INTERFACE:proc

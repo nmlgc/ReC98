@@ -5537,7 +5537,11 @@ include th03/formats/pi_put_interlace.asm
 include th02/snd/se.asm
 include th02/snd/kajaint.asm
 include th02/initmain.asm
-include th03/formats/cdg_load.asm
+	extern CDG_LOAD_SINGLE:proc
+	extern CDG_LOAD_SINGLE_NOALPHA:proc
+	extern CDG_LOAD_ALL_NOALPHA:proc
+	extern CDG_LOAD_ALL:proc
+	extern CDG_FREE:proc
 	extern _game_exit_from_mainl_to_main:proc
 	extern GRAPH_PUTSA_FX:proc
 	extern SND_DELAY_UNTIL_MEASURE:proc

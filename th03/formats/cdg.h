@@ -37,8 +37,15 @@ typedef struct {
 	int8_t plane_layout;
 
 	// Memory segments of the loaded data. Must be 0 in the file header!
-	uint16_t seg_alpha;
-	uint16_t seg_colors;
+	dots8_t __seg *seg[2];
+
+	dots8_t __seg*& seg_alpha() {
+		return seg[0];
+	}
+
+	dots8_t __seg*& seg_colors() {
+		return seg[1];
+	}
 } cdg_t;
 
 #if (GAME >= 4)

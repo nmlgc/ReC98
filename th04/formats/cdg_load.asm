@@ -11,7 +11,7 @@ include th03/formats/cdg.inc
 	extrn HMEM_ALLOCBYTE:proc
 	extrn HMEM_FREE:proc
 	extrn _cdg_slots:cdg_t:CDG_SLOT_COUNT
-	extrn cdg_noalpha:byte
+	extrn _cdg_noalpha:byte
 	extrn cdg_images_to_load:byte
 
 g_SHARED group SHARED, SHARED_
@@ -25,7 +25,7 @@ public CDG_LOAD_SINGLE_NOALPHA
 public CDG_LOAD_SINGLE
 
 cdg_load_single_noalpha label proc
-	mov	cdg_noalpha, 1
+	mov	_cdg_noalpha, 1
 	align	2
 
 cdg_load_single	proc far
@@ -61,7 +61,7 @@ cdg_load_single	proc far
 	call	file_seek pascal, eax, 1
 	call	cdg_read_single
 	call	file_close
-	mov	cdg_noalpha, 0
+	mov	_cdg_noalpha, 0
 	pop	di
 	pop	si
 	pop	bp
@@ -77,7 +77,7 @@ cdg_read_single proc near
 	jz	short @@colors
 	cmp	al, CDG_ALPHA
 	jz	short @@alpha
-	cmp	cdg_noalpha, 0
+	cmp	_cdg_noalpha, 0
 	jnz	short @@skip_alpha
 
 @@alpha:
@@ -113,7 +113,7 @@ public CDG_LOAD_ALL_NOALPHA
 public CDG_LOAD_ALL
 
 cdg_load_all_noalpha label proc
-	mov	cdg_noalpha, 1
+	mov	_cdg_noalpha, 1
 	align	2
 
 cdg_load_all proc far
@@ -149,7 +149,7 @@ cdg_load_all proc far
 	dec	cdg_images_to_load
 	jnz	short @@loop
 	call	file_close
-	mov	cdg_noalpha, 0
+	mov	_cdg_noalpha, 0
 	pop	di
 	pop	si
 	pop	bp

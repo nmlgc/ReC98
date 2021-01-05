@@ -1,4 +1,3 @@
-; Won't load the alpha plane of the next CDG file if nonzero.
-public cdg_noalpha
-cdg_noalpha db ?
+public _cdg_noalpha
+_cdg_noalpha db ?
 	align 2
