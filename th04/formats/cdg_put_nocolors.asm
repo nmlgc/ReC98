@@ -1,3 +1,5 @@
+; Identical to the barely decompilable TH05 version, which doesn't rely on
+; self-modifying code for the width.
 public CDG_PUT_NOCOLORS_8
 cdg_put_nocolors_8 proc far
 
@@ -16,41 +18,25 @@ cdg_put_nocolors_8 proc far
 	sar	di, 3
 	add	di, [si+cdg_t.offset_at_bottom_left]
 	mov	ax, [si+cdg_t.vram_dword_w]
-if GAME eq 4
 	mov	word ptr cs:@@width+1, ax
 	jmp	short $+2
-else
-	mov	bx, ax
-endif
 	shl	ax, 2
 	add	ax, (640 / 8)
 	mov	dx, ax
 	mov	ax, [bp+@@top]
-if GAME eq 4
 	mov	bx, ax
 	shl	ax, 2
 	add	ax, bx
-else
-	mov	cx, ax
-	shl	ax, 2
-	add	ax, cx
-endif
 	add	ax, 0A800h
 	mov	es, ax
 	push	ds
 	mov	ds, [si+cdg_t.seg_alpha]
 	xor	si, si
-if GAME eq 4
 	cld
-endif
 	align 2
 
 @@width:
-if GAME eq 4
 	mov	cx, 1234h
-else
-	mov	cx, bx
-endif
 	rep movsd
 	sub	di, dx
 	jns	short @@width

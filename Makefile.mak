@@ -150,7 +150,7 @@ bin\th05\res_kso.com: th05\res_kso.cpp
 $**
 | masters.lib
 
-bin\th05\op.exe: th05\op010.cpp bin\th05\op.obj th05\op011.cpp th05\m_char.cpp bin\th05\frmdelay.obj bin\th04\cdg_load.obj bin\th05\egcrect.obj bin\hfliplut.obj
+bin\th05\op.exe: th05\op010.cpp bin\th05\op.obj th05\op011.cpp th05\m_char.cpp th05\cdg_p_nc.cpp bin\th05\frmdelay.obj bin\th04\cdg_load.obj bin\th05\egcrect.obj bin\hfliplut.obj
 	$(CC) $(CFLAGS) -ml -DGAME=5 -DBINARY='O' -3 -Z -nbin\th05\ -eOP.EXE @&&|
 $**
 |

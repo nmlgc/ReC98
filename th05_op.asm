@@ -2554,7 +2554,7 @@ include th05/hardware/input_held.asm
 include th05/hardware/input_wait.asm
 include th05/snd/measure.asm
 include th05/snd/delaymea.asm
-include th04/formats/cdg_put_nocolors.asm
+	extern CDG_PUT_NOCOLORS_8:proc
 	extern FRAME_DELAY:proc
 	extern CDG_LOAD_SINGLE_NOALPHA:proc
 	extern CDG_LOAD_SINGLE:proc
