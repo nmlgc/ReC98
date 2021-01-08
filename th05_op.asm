@@ -2552,8 +2552,7 @@ include th02/initop.asm
 include th04/hardware/input_sense.asm
 include th05/hardware/input_held.asm
 include th05/hardware/input_wait.asm
-include th05/snd/measure.asm
-include th05/snd/delaymea.asm
+	extern SND_DELAY_UNTIL_MEASURE:proc
 	extern CDG_PUT_NOCOLORS_8:proc
 	extern FRAME_DELAY:proc
 	extern CDG_LOAD_SINGLE_NOALPHA:proc

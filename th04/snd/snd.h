@@ -1,4 +1,4 @@
-#include "th02/snd/snd.h"
+#include "th03/snd/snd.h"
 
 typedef enum {
 	SND_BGM_OFF = 0,

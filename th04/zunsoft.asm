@@ -321,8 +321,7 @@ endif
 @@more_pyros?:
 	cmp	si, ZUNSOFT_PYRO_COUNT
 	jl	short @@next_pyro
-	push	(2 shl 16)
-	call	snd_delay_until_measure
+	call	snd_delay_until_measure pascal, (2 shl 16)
 	mov	PaletteTone, 100
 	call	palette_show
 	call	super_entry_bfnt pascal, ds, offset aZun02_bft

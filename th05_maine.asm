@@ -831,9 +831,7 @@ loc_AB4A:
 		call	sub_A7FE
 		cmp	byte_14F8E, 0
 		jnz	loc_AF8F	; default
-		push	[bp+var_2]
-		push	[bp+var_4]
-		call	snd_delay_until_measure
+		call	snd_delay_until_measure pascal, [bp+var_2], [bp+var_4]
 		jmp	loc_AF8F	; default
 ; ---------------------------------------------------------------------------
 
@@ -7549,8 +7547,8 @@ include th02/initmain.asm
 include th04/hardware/input_sense.asm
 include th05/hardware/input_held.asm
 include th05/hardware/input_wait.asm
-include th05/snd/measure.asm
-include th05/snd/delaymea.asm
+	extern _snd_bgm_measure:proc
+	extern SND_DELAY_UNTIL_MEASURE:proc
 	extern FRAME_DELAY:proc
 	extern CDG_LOAD_ALL_NOALPHA:proc
 	extern CDG_FREE_ALL:proc
