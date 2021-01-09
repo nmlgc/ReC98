@@ -10565,8 +10565,8 @@ include th05/snd/load.asm
 include th05/snd/kajaint.asm
 include th02/initmain.asm
 include th04/hardware/input_sense.asm
-include th05/hardware/input_held.asm
-include th05/hardware/input_wait.asm
+	extern _input_reset_sense_held:proc
+	extern INPUT_WAIT_FOR_CHANGE:proc
 	extern FRAME_DELAY:proc
 	extern CDG_LOAD_ALL_NOALPHA:proc
 	extern CDG_LOAD_ALL:proc
