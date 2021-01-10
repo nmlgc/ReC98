@@ -5,6 +5,7 @@
 
 extern "C" {
 #include "ReC98.h"
+#include "pc98kbd.h"
 #include "th01/hardware/input.hpp"
 #include "th01/main/bomb.hpp"
 #include "th01/main/debug.hpp"

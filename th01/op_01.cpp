@@ -6,6 +6,7 @@
 extern "C" {
 #include <stdio.h>
 #include "ReC98.h"
+#include "pc98kbd.h"
 #include "th01/ranks.h"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/graph.h"

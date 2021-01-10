@@ -1,3 +1,5 @@
+#include "pc98kbd.h"
+
 #pragma option -k-
 void input_sense(void)
 {
