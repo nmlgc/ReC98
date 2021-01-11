@@ -2,6 +2,25 @@
 // -----
 // PC-98 keyboard constants
 
+// BIOS key press bitmap addresses
+typedef enum {
+	KEYGROUP_0 = 0x52A,
+	KEYGROUP_1,
+	KEYGROUP_2,
+	KEYGROUP_3,
+	KEYGROUP_4,
+	KEYGROUP_5,
+	KEYGROUP_6,
+	KEYGROUP_7,
+	KEYGROUP_8,
+	KEYGROUP_9,
+	KEYGROUP_10,
+	KEYGROUP_11,
+	KEYGROUP_12,
+	KEYGROUP_13,
+	KEYGROUP_14,
+} bios_keygroups;
+
 typedef enum {
 	K0_ESC = 0x01,
 	K0_1 = 0x02,

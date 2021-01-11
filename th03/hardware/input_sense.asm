@@ -1,3 +1,5 @@
+include pc98kbd.inc
+
 ; The key state is checked twice, 614.4 µs apart, to ignore the momentary "key
 ; released" events sent by PC-98 keyboards at the typematic rate if a key is
 ; held down. This ensures that the game consistently sees that specific input
@@ -17,7 +19,7 @@ _input_reset_sense_key_held	proc far
 	mov	es, ax
 
 @@up?:
-	mov	ah, byte ptr es:[531h]
+	mov	ah, byte ptr es:[KEYGROUP_7]
 	test	ah, 4
 	jz	short @@down?
 	or	_input_sp, INPUT_UP
@@ -40,7 +42,7 @@ _input_reset_sense_key_held	proc far
 	or	_input_sp, INPUT_RIGHT
 
 @@num6?:
-	mov	ah, byte ptr es:[533h]
+	mov	ah, byte ptr es:[KEYGROUP_9]
 	test	ah, 1
 	jz	short @@num1?
 	or	_input_mp_p2, INPUT_RIGHT
@@ -65,7 +67,7 @@ _input_reset_sense_key_held	proc far
 	or	_input_sp, INPUT_DOWN_RIGHT
 
 @@num4?:
-	mov	ah, byte ptr es:[532h]
+	mov	ah, byte ptr es:[KEYGROUP_8]
 	test	ah, 40h
 	jz	short @@num7?
 	or	_input_mp_p2, INPUT_LEFT
@@ -90,7 +92,7 @@ _input_reset_sense_key_held	proc far
 	or	_input_sp, INPUT_UP_RIGHT
 
 @@z?:
-	mov	ah, byte ptr es:[52Fh]
+	mov	ah, byte ptr es:[KEYGROUP_5]
 	test	ah, 2
 	jz	short @@x?
 	or	_input_mp_p1, INPUT_SHOT
@@ -118,7 +120,7 @@ _input_reset_sense_key_held	proc far
 	or	_input_mp_p1, INPUT_DOWN_RIGHT
 
 @@f?:
-	mov	ah, byte ptr es:[52Eh]
+	mov	ah, byte ptr es:[KEYGROUP_4]
 	test	ah, 1
 	jz	short @@h?
 	or	_input_mp_p1, INPUT_LEFT
@@ -129,7 +131,7 @@ _input_reset_sense_key_held	proc far
 	or	_input_mp_p1, INPUT_RIGHT
 
 @@r?:
-	mov	ah, byte ptr es:[52Ch]
+	mov	ah, byte ptr es:[KEYGROUP_2]
 	test	ah, 8
 	jz	short @@t?
 	or	_input_mp_p1, INPUT_UP_LEFT
@@ -150,19 +152,19 @@ _input_reset_sense_key_held	proc far
 	or	_input_sp, INPUT_Q
 
 @@esc?:
-	mov	ah, byte ptr es:[52Ah]
+	mov	ah, byte ptr es:[KEYGROUP_0]
 	test	ah, 1
 	jz	short @@return?
 	or	_input_sp, INPUT_CANCEL
 
 @@return?:
-	mov	ah, byte ptr es:[52Dh]
+	mov	ah, byte ptr es:[KEYGROUP_3]
 	test	ah, 10h
 	jz	short @@space?
 	or	_input_sp, INPUT_OK
 
 @@space?:
-	mov	ah, byte ptr es:[530h]
+	mov	ah, byte ptr es:[KEYGROUP_6]
 	test	ah, 10h
 	jz	short @@wait?
 	or	_input_sp, INPUT_SHOT
