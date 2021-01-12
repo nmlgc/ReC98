@@ -1,5 +1,10 @@
-#include "ReC98.h"
+#include <dos.h>
+#include "platform.h"
+#include "pc98.h"
+#include "planar.h"
 #include "decomp.h"
+#include "twobyte.h"
+#include "master.hpp"
 
 // Note that this does not correspond to the tiled area painted into TH05's
 // EDBK?.PI images.

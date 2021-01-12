@@ -29,6 +29,7 @@ include libs/master.lib/pf.inc
 include libs/master.lib/clip.inc
 include libs/master.lib/macros.inc
 include libs/kaja/kaja.inc
+include twobyte.inc
 include pc98.inc
 include th01/hardware/egc.inc
 include th02/formats/pi_slots.inc
@@ -46,11 +47,6 @@ setfarfp macro farfp, func
 	mov word ptr farfp+2, seg func
 	mov word ptr farfp, offset func
 endm
-
-twobyte_t struc
-	lo	db ?
-	hi	db ?
-twobyte_t ends
 
 ; master.lib extensions
 ; ---------------------

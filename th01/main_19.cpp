@@ -9,6 +9,7 @@ extern "C" {
 #include <io.h>
 #include <stdio.h>
 #include "ReC98.h"
+#include "twobyte.h"
 #include "th01/ranks.h"
 #include "th01/formats/grp.h"
 #include "th01/hardware/palette.h"

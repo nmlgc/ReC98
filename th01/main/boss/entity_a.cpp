@@ -1,4 +1,9 @@
-#include "ReC98.h"
+#include <stdlib.h>
+#include "platform.h"
+#include "pc98.h"
+#include "planar.h"
+#include "master.hpp"
+#include "twobyte.h"
 #include "th01/math/area.hpp"
 #include "th01/math/wave.hpp"
 #include "th01/hardware/egc.h"
