@@ -407,6 +407,57 @@ unsigned MASTER_RET resdata_create(
 #endif
 // -------------
 
+// Superimpose sprites
+// -------------------
+
+#define SUPER_MAXPAT  512
+
+// pattern_plane
+#define PATTERN_ERASE 0
+#define PATTERN_BLUE  1
+#define PATTERN_RED   2
+#define PATTERN_GREEN 3
+#define PATTERN_INTEN 4
+
+// put_plane
+#define PLANE_ERASE 0x00c0
+#define PLANE_BLUE  0xffce
+#define PLANE_RED   0xffcd
+#define PLANE_GREEN 0xffcb
+#define PLANE_INTEN 0xffc7
+
+extern unsigned super_patnum;
+extern unsigned super_patdata[SUPER_MAXPAT];
+extern unsigned super_patsize[SUPER_MAXPAT];
+
+int MASTER_RET super_cancel_pat(int num);
+void MASTER_RET super_clean(int min_pat, int max_pat);
+int MASTER_RET super_entry_bfnt(const char MASTER_PTR *);
+void MASTER_RET super_free(void);
+
+int MASTER_RET super_convert_tiny(int num);
+void MASTER_RET super_large_put(int x, int y, int num);
+void MASTER_RET super_put(int x, int y, int num);
+void MASTER_RET super_put_1plane(
+	int x, int y, int num, int pattern_plane, unsigned put_plane
+);
+void MASTER_RET super_put_8(int x, int y, int num);
+
+void MASTER_RET super_put_rect(int x, int y, int num);
+void MASTER_RET super_roll_put(int x, int y, int num);
+void MASTER_RET super_roll_put_1plane(
+	int x, int y, int num, int pattern_plane, unsigned put_plane
+);
+void MASTER_RET super_zoom(int x, int y, int num, int zoom);
+
+void MASTER_RET super_put_tiny_small(int x, int y, int num);
+void MASTER_RET super_roll_put_tiny(int x, int y, int num);
+
+void MASTER_RET super_wave_put(
+	int x, int y, int num, int len, char amp, int ph
+);
+// -------------------
+
 // Text RAM
 // --------
 

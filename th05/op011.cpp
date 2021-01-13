@@ -6,8 +6,8 @@
 #pragma codeseg op_01_TEXT
 
 extern "C" {
-#include "libs/master.lib/master.h"
 #include "platform.h"
+#include "master.hpp"
 #include "th01/ranks.h"
 #include "th04/common.h"
 #include "th04/formats/scoredat.h"
