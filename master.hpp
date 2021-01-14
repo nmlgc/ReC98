@@ -252,6 +252,19 @@ void MASTER_RET js_end(void);
 int MASTER_RET js_sense(void);
 // --------
 
+// Keyboard
+// --------
+
+void MASTER_RET key_start(void);
+void MASTER_RET key_end(void);
+
+void MASTER_RET key_beep_on(void);
+void MASTER_RET key_beep_off(void);
+int MASTER_RET key_sense(int keygroup);
+
+unsigned MASTER_RET key_sense_bios(void);
+// --------
+
 // Heap
 // ----
 

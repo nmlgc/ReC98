@@ -4,7 +4,8 @@
  */
 
 extern "C" {
-#include "ReC98.h"
+#include "platform.h"
+#include "master.hpp"
 #include "pc98kbd.h"
 #include "th01/hardware/input.hpp"
 #include "th01/main/bomb.hpp"

@@ -6,7 +6,11 @@
 #pragma codeseg SHARED
 
 extern "C" {
-#include "th02/th02.h"
+#include <dos.h>
+#include "platform.h"
+#include "pc98.h"
+#include "planar.h"
+#include "master.hpp"
 #include "th02/hardware/frmdelay.h"
 
 #include "th02/hardware/keydelay.c"
