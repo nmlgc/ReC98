@@ -66,7 +66,7 @@ void pascal near tiles_invalidate_all(void);
 
 // Width and height, in screen pixels, of a box around the center passed to
 // tiles_invalidate_around(). *Not* the radius.
-extern Point tile_invalidate_box;
+extern point_t tile_invalidate_box;
 
 void pascal near tiles_redraw_invalidated(void);
 /// ------

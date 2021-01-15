@@ -1,6 +1,8 @@
+#include <dos.h>
+#include <string.h>
 #include "platform.h"
 #include "pc98.h"
-#include "libs/master.lib/master.h"
+#include "master.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th04/gaiji/gaiji.h"
 #include "th04/formats/bb.h"

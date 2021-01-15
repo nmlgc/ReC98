@@ -124,6 +124,19 @@ void MASTER_RET egc_start(void);
 #endif
 // ---
 
+// Gaiji
+// -----
+
+void MASTER_RET gaiji_putca(unsigned x, unsigned y, unsigned c, unsigned atrb);
+void MASTER_RET gaiji_putsa(
+	unsigned x, unsigned y, const char MASTER_PTR *str, unsigned atrb
+);
+
+int MASTER_RET gaiji_backup(void);
+int MASTER_RET gaiji_restore(void);
+int MASTER_RET gaiji_entry_bfnt(const char MASTER_PTR *filename);
+// -----
+
 // Graphics
 // --------
 
