@@ -294,6 +294,37 @@ unsigned MASTER_RET smem_wget(unsigned bytesize);
 void MASTER_RET smem_release(unsigned memseg);
 // ----
 
+// Machine identification
+// ----------------------
+
+extern const unsigned Machine_State;
+
+unsigned MASTER_RET get_machine(void);
+
+#define PC_AT        	0x0010
+#define PC9801       	0x0020
+#define FMR          	0x0080	/* 0.23追加 */
+#define DOSBOX       	0x8000	/* 0.22k追加 */
+
+#define DESKTOP      	0x0001
+#define EPSON        	0x0002
+#define PC_MATE      	0x0004
+#define HIRESO       	0x0008
+
+#define LANG_US      	0x0001
+#define PC_TYPE_MASK 	0x000e
+#define PS55         	0x0000
+#define DOSV         	0x0002
+#define PC_AX        	0x0004
+#define J3100        	0x0006
+#define DR_DOS       	0x0008
+#define MSDOSV       	0x000a
+#define VTEXT        	0x0240	/* 0.23追加 */
+#define DOSVEXTENTION	0x0040	/* 0.22d追加 */
+#define SUPERDRIVERS 	0x0200	/* 0.23追加 */
+#define ANSISYS      	0x0100	/* 0.22d追加 */
+// ----------------------
+
 // Math
 // ----
 
