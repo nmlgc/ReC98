@@ -3,7 +3,12 @@
  * Code segment #3 of TH02's MAINE.EXE
  */
 
-#include "th02/th02.h"
+#include <dos.h>
+#include <stddef.h>
+#include "platform.h"
+#include "master.hpp"
+#include "th01/ranks.h"
+#include "th02/resident.hpp"
 #include "th02/formats/cfg.h"
 
 char rank = RANK_NORMAL;

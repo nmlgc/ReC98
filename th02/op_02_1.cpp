@@ -7,7 +7,11 @@
 #pragma option -3
 
 extern "C" {
-#include "th02/th02.h"
+#include <dos.h>
+#include "platform.h"
+#include "pc98.h"
+#include "planar.h"
+#include "th02/resident.hpp"
 
 resident_t *resident;
 char unused_op_2_3;
