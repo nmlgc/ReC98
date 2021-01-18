@@ -7544,7 +7544,6 @@ include th05/formats/pi_put.asm
 include th05/formats/pi_palette_apply.asm
 include th05/formats/pi_free.asm
 include th02/initmain.asm
-include th04/hardware/input_sense.asm
 	extern _input_reset_sense_held:proc
 	extern INPUT_WAIT_FOR_CHANGE:proc
 	extern _snd_bgm_measure:proc

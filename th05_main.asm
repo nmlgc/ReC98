@@ -10564,7 +10564,8 @@ include th04/math/vector2_at.asm
 include th05/snd/load.asm
 include th05/snd/kajaint.asm
 include th02/initmain.asm
-include th04/hardware/input_sense.asm
+	extern _input_reset_sense:proc
+	extern _input_sense:proc
 	extern _input_reset_sense_held:proc
 	extern INPUT_WAIT_FOR_CHANGE:proc
 	extern FRAME_DELAY:proc

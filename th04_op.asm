@@ -2664,7 +2664,7 @@ include th02/exit.asm
 include th02/initop.asm
 		db    0
 include th04/formats/cdg_put_noalpha.asm
-include th04/hardware/input_sense.asm
+include th04/hardware/input_s.asm
 include th04/snd/se.asm
 include th04/hardware/egcrect.asm
 include th04/bgimage.asm

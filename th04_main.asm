@@ -13133,7 +13133,7 @@ include th02/initmain.asm
 
 include th04/formats/cdg_put_noalpha.asm
 include th04/formats/cdg_put_plane_roll.asm
-include th04/hardware/input_sense.asm
+include th04/hardware/input_s.asm
 include th04/snd/se.asm
 	extern CDG_LOAD_SINGLE_NOALPHA:proc
 	extern CDG_LOAD_ALL:proc
