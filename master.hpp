@@ -464,6 +464,16 @@ unsigned MASTER_RET resdata_create(
 #endif
 // -------------
 
+// Resident palettes
+// -----------------
+
+int MASTER_RET respal_exist(void);
+int MASTER_RET respal_create(void);
+void MASTER_RET respal_get_palettes(void);
+void MASTER_RET respal_set_palettes(void);
+void MASTER_RET respal_free(void);
+// -----------------
+
 // Superimpose sprites
 // -------------------
 
