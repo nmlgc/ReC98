@@ -3172,7 +3172,7 @@ loc_D6EE:
 		add	sp, 4
 		mov	_arc_key, 76h
 		call	arc_load pascal, ds, offset aUmx	; "“Œ•ûèËˆÙ.“`"
-		call	vram_planes_set
+		call	_vram_planes_set
 		call	@scene_init_and_load$quc stdcall, [bp+@@scene_id]
 		pop	cx
 		cmp	_mode_debug, 1
@@ -4269,7 +4269,7 @@ graph_TEXT	ends
 ; Segment type:	Pure code
 main_07_TEXT	segment	byte public 'CODE' use16
 	extern _ptn_copy_8_0_to_1:proc
-	extern VRAM_PLANES_SET:proc
+	extern _vram_planes_set:proc
 	extern _egc_copy_rect_1_to_0_16:proc
 	extern _ptn_snap_8:proc
 	extern _ptn_snap_quarter_8:proc

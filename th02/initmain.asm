@@ -29,7 +29,7 @@ if GAME ge 4
 	mov		bbufsiz, 1000h
 endif
 if GAME le 4
-	nopcall	vram_planes_set
+	nopcall	_vram_planes_set
 endif
 	call	vsync_start
 	call	egc_start

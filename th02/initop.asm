@@ -21,7 +21,7 @@ endif
 
 @@assign_success:
 if GAME le 4
-	nopcall	vram_planes_set
+	nopcall	_vram_planes_set
 endif
 	call	graph_start
 	graph_accesspage 1

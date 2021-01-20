@@ -1,6 +1,5 @@
-; void vram_planes_set(void)
-public VRAM_PLANES_SET
-vram_planes_set	proc
+public _vram_planes_set
+_vram_planes_set proc
 	push	bp
 	mov	bp, sp
 	mov	_VRAM_PLANE_B, 0A8000000h
@@ -9,4 +8,4 @@ vram_planes_set	proc
 	mov	_VRAM_PLANE_E, 0E0000000h
 	pop	bp
 	ret
-vram_planes_set	endp
+_vram_planes_set endp

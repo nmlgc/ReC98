@@ -1,4 +1,6 @@
-void pascal vram_planes_set(void)
+#include "th01/hardware/vplanset.h"
+
+void vram_planes_set(void)
 {
 	VRAM_PLANE_B = (dots8_t *)MK_FP(0xA800, 0);
 	VRAM_PLANE_R = (dots8_t *)MK_FP(0xB000, 0);

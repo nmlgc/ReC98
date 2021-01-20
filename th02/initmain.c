@@ -1,3 +1,5 @@
+#include "th01/hardware/vplanset.h"
+
 int game_init_main(void)
 {
 	if(mem_assign_dos(MEM_ASSIGN_PARAS_MAIN)) {

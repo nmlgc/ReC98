@@ -156,5 +156,3 @@ static inline vram_offset_t vram_offset_divshift_wtf(screen_x_t x, vram_y_t y)
 
 #define egc_put  grcg_put
 #define egc_snap grcg_snap
-
-void pascal vram_planes_set(void);

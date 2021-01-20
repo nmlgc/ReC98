@@ -1629,7 +1629,6 @@ fuuin_10_TEXT	ends
 ; ===========================================================================
 
 fuuin_11_TEXT	segment	byte public 'CODE' use16
-	extern VRAM_PLANES_SET:proc
 fuuin_11_TEXT	ends
 
 ; ===========================================================================

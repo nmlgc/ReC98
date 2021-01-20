@@ -8,6 +8,7 @@
 #include "master.hpp"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/palette.h"
+#include "th01/hardware/vplanset.h"
 #include "th01/hardware/vsync.h"
 #include "th01/hardware/ztext.h"
 
