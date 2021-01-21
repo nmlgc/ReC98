@@ -8,6 +8,7 @@
 #include "th02/th02.h"
 #include "master.hpp"
 #include "th02/hardware/frmdelay.h"
+#include "th02/hardware/input.h"
 #include "th02/gaiji/gaiji.h"
 
 char rank = RANK_NORMAL;

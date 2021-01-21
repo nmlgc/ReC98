@@ -12,6 +12,7 @@
 #include "th02/core/initexit.h"
 #include "th02/snd/snd.h"
 #include "th02/hardware/frmdelay.h"
+#include "th02/hardware/input.h"
 
 const char pf_fn[] = PF_FN;
 #include "th02/snd/data.c"

@@ -370,6 +370,12 @@ static_storage  db  2, 0, 6
 
 ## C++
 
+In C++ mode, the value of a `const` scalar-type variable declared at global
+scope is always inlined, and not emitted into the data segment. Also, no
+externally visible symbol for the variable is emitted into the .OBJ file, even
+if the variable was not declared `static`. This makes such variables largely
+equivalent to `#define` macros.
+
 Class methods inline to their ideal representation if all of these are true:
 
 * returns `void` || (returns `*this` && is at the first nesting level of

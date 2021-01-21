@@ -42,33 +42,6 @@ void pascal mptn_free(void);
 #include "th01/hardware/grppsafx.h"
 // -------
 
-typedef enum {
-	INPUT_UP = 0x1,
-	INPUT_DOWN = 0x2,
-	INPUT_LEFT = 0x4,
-	INPUT_RIGHT = 0x8,
-	INPUT_SHOT = 0x10,
-	INPUT_BOMB = 0x20,
-	INPUT_CANCEL = 0x40,
-	INPUT_OK = 0x80,
-	INPUT_Q = 0x100,
-	INPUT_UP_LEFT = 0x1000,
-	INPUT_UP_RIGHT = 0x2000,
-	INPUT_DOWN_LEFT = 0x4000,
-	INPUT_DOWN_RIGHT = 0x8000
-} input_t;
-
-#define INPUT_MOVEMENT_ALIGNED \
-	(INPUT_UP | INPUT_DOWN | INPUT_LEFT | INPUT_RIGHT)
-
-#define INPUT_MOVEMENT_DIAGONAL \
-	(INPUT_UP_LEFT | INPUT_UP_RIGHT | INPUT_DOWN_LEFT | INPUT_DOWN_RIGHT)
-
-extern input_t key_det; /* ZUN symbol [MAGNet2010] */
-
-void input_sense(void);
-void key_delay(void);
-
 // Music Room
 #define MUSIC_CMT_FILE "MUSIC.TXT"
 #define MUSIC_CMT_LINE_LEN 42
