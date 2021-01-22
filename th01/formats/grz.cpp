@@ -1,9 +1,13 @@
+#pragma codeseg PTN_GRP_GRZ
+
 extern "C" {
-
+#include <dos.h>
+#include <mem.h>
 #include <stddef.h>
-#include <string.h>
-
-#include "ReC98.h"
+#include "platform.h"
+#include "pc98.h"
+#include "planar.h"
+#include "master.hpp"
 #include "th01/hardware/graph.h"
 #include "th01/formats/grz.h"
 

@@ -1622,9 +1622,9 @@ grppffx_TEXT	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-fuuin_10_TEXT	segment	byte public 'CODE' use16
+PTN_GRP_GRZ	segment	byte public 'CODE' use16
 	extern _grp_put_palette_show:proc
-fuuin_10_TEXT	ends
+PTN_GRP_GRZ	ends
 
 ; ===========================================================================
 

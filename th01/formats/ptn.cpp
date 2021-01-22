@@ -1,6 +1,11 @@
-extern "C" {
+#pragma codeseg PTN_GRP_GRZ
 
-#include "ReC98.h"
+extern "C" {
+#include <stddef.h>
+#include "platform.h"
+#include "pc98.h"
+#include "planar.h"
+#include "master.hpp"
 #include "th01/hardware/palette.h"
 #include "th01/formats/ptn.hpp"
 #include "th01/formats/pf.hpp"

@@ -4278,7 +4278,7 @@ main_07_TEXT	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-main_08_TEXT	segment	byte public 'CODE' use16
+PTN_GRP_GRZ	segment	byte public 'CODE' use16
 	extern _ptn_new:proc
 	extern _ptn_load:proc
 	extern _ptn_free:proc
@@ -4292,7 +4292,7 @@ main_08_TEXT	segment	byte public 'CODE' use16
 	extern _grx_put:proc
 	extern _grx_free:proc
 	extern _grz_load_single:proc
-main_08_TEXT	ends
+PTN_GRP_GRZ	ends
 
 ; ===========================================================================
 

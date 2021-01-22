@@ -1,8 +1,10 @@
+#pragma codeseg PTN_GRP_GRZ
+
 extern "C" {
-
 #include <stdio.h>
-
-#include "ReC98.h"
+#include "platform.h"
+#include "pc98.h"
+#include "master.hpp"
 #include "libs/piloadc/piloadc.h"
 #include "th01/hardware/palette.h"
 #include "th01/formats/grp.h"
