@@ -3,6 +3,7 @@
  * Code segment #1 of TH02's OP.EXE
  */
 
+extern "C" {
 #include <process.h>
 #include "libs/kaja/kaja.h"
 #include "th02/th02.h"
@@ -10,7 +11,7 @@
 #include "master.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/grp_rect.h"
-#include "th02/hardware/input.h"
+#include "th02/hardware/input.hpp"
 #include "th02/core/zunerror.h"
 #include "th02/core/initexit.h"
 #include "th02/formats/cfg.h"
@@ -23,15 +24,16 @@
 typedef void pascal near putfunc_t(int sel, unsigned int atrb);
 
 char menu_sel = 0;
-char in_option = 0;
-char quit = 0;
+bool in_option = false;
+bool quit = false;
 char unused_1 = 0;
 
-char snd_bgm_mode;
+static bool main_input_allowed;
+unsigned char snd_bgm_mode;
 static int unused_2;
 unsigned int idle_frames;
 unsigned char demo_num;
-void __seg *resident_sgm;
+resident_t __seg *resident_sgm;
 putfunc_t near *putfunc;
 
 // No, we don't want to put these two into th02.h. Apparently, declaring
@@ -62,16 +64,16 @@ int cfg_load(void)
 		if(!resident_sgm) {
 			return 1;
 		}
-		resident = MK_FP(resident_sgm, 0);
+		resident = resident_sgm;
 		resident->perf = cfg.opts.perf;
 		resident->debug = cfg.debug;
 		file_close();
 
 		if(snd_bgm_mode == SND_BGM_OFF) {
-			snd_fm_possible = 0;
-			snd_active = 0;
+			snd_fm_possible = false;
+			snd_active = false;
 		} else if(snd_bgm_mode == SND_BGM_FM) {
-			snd_midi_active = 0;
+			snd_midi_active = false;
 			snd_determine_mode();
 		} else {
 			snd_midi_active = snd_midi_possible;
@@ -150,10 +152,10 @@ void op_animate(void)
 		door_x = 0;
 		if(snd_midi_possible) {
 			door_x = snd_midi_active;
-			snd_midi_active = 1;
+			snd_midi_active = true;
 			snd_load("op.m", SND_LOAD_SONG);
 		}
-		snd_midi_active = 0;
+		snd_midi_active = false;
 		snd_load("op.m", SND_LOAD_SONG);
 		snd_midi_active = door_x;
 	}
@@ -197,20 +199,21 @@ void pascal near start_init(void)
 	resident->score_highest = 0;
 }
 
-#define start_exec() \
-	cfg_save(); \
-	pi_load(0, "ts1.pi"); \
-	text_clear(); \
-	shottype_menu(); \
-	snd_kaja_func(KAJA_SONG_FADE, 15); \
-	gaiji_restore(); \
-	super_free(); \
-	game_exit(); \
-	if(resident->debug) { \
-		execl("select", "select", 0, 0); \
-	} else { \
-		execl("main", "main", 0, 0); \
+inline void start_exec() {
+	cfg_save();
+	pi_load(0, "ts1.pi");
+	text_clear();
+	shottype_menu();
+	snd_kaja_func(KAJA_SONG_FADE, 15);
+	gaiji_restore();
+	super_free();
+	game_exit();
+	if(resident->debug) {
+		execl("select", "select", 0, 0);
+	} else {
+		execl("main", "main", 0, 0);
 	}
+}
 
 void start_game(void)
 {
@@ -268,6 +271,9 @@ const unsigned char gb7SPACES[] = {
 const unsigned char gbSTART[] = {
 	gb_S_,gb_T_,gb_A_,gb_R_,gb_T_,    0,    0,    0,    0, 0
 };
+inline char menu_extra_pos() {
+	return 1;
+}
 const unsigned char gbEXTRA_START[] = {
 	gb_E_,gb_X_,gb_T_,gb_R_,gb_A_,gb_SP,gb_S_,gb_T_,gb_A_,gb_R_,gb_T_, 0
 };
@@ -358,10 +364,10 @@ void pascal near menu_sel_move(char sel_count, char direction)
 {
 	putfunc(menu_sel, TX_YELLOW);
 	menu_sel += direction;
-	if(!in_option && !extra_unlocked && menu_sel == 1) {
+	if(!in_option && !extra_unlocked && menu_sel == menu_extra_pos()) {
 		menu_sel += direction;
 	}
-	if(menu_sel < 0) {
+	if(menu_sel < ring_min()) {
 		menu_sel = sel_count;
 	}
 	if(menu_sel > sel_count) {
@@ -372,12 +378,11 @@ void pascal near menu_sel_move(char sel_count, char direction)
 
 void main_update_and_render(void)
 {
-	static char input_allowed;
-	static char initialized = 0;
+	static bool initialized = false;
 	if(!initialized) {
 		int i;
-		input_allowed = 0;
-		initialized = 1;
+		main_input_allowed = false;
+		initialized = true;
 		text_clear();
 		graph_showpage(1);
 		graph_copy_page(0);
@@ -390,9 +395,9 @@ void main_update_and_render(void)
 		putfunc = main_put;
 	}
 	if(!key_det) {
-		input_allowed = 1;
+		main_input_allowed = true;
 	}
-	if(input_allowed) {
+	if(main_input_allowed) {
 		if(key_det & INPUT_UP) {
 			menu_sel_move(5, -1);
 		}
@@ -417,28 +422,28 @@ void main_update_and_render(void)
 				palette_entry_rgb_show("op.rgb");
 				graph_copy_page(0);
 				graph_accesspage(0);
-				initialized = 0;
+				initialized = false;
 				break;
 			case 3:
 				menu_sel = 0;
-				in_option = 1;
-				initialized = 0;
+				in_option = true;
+				initialized = false;
 				break;
 			case 4:
 				text_clear();
 				musicroom();
-				initialized = 0;
+				initialized = false;
 				break;
 			case 5:
-				quit = 1;
+				quit = true;
 				break;
 			}
 		}
 		if(key_det & INPUT_CANCEL) {
-			quit = 1;
+			quit = true;
 		}
 		if(key_det) {
-			input_allowed = 0;
+			main_input_allowed = false;
 			idle_frames = 0;
 		}
 	}
@@ -467,9 +472,9 @@ void pascal near option_put(int sel, unsigned int atrb)
 		graph_gaiji_puts(340, 260, 16, gbcRANKS[rank], 0);
 	} else if(sel == 1) {
 		gaiji_putsa(24, 17, gbMUSIC, atrb);
-		gaiji_putsa(47, 17, gbcBGM_MODE[snd_bgm_mode], atrb);
+		gaiji_putsa(47, 17, gbcBGM_MODE[(char)snd_bgm_mode], atrb);
 		graph_copy_rect_1_to_0_16(376, 276, 64, 16);
-		graph_gaiji_puts(380, 276, 16, gbcBGM_MODE[snd_bgm_mode], 0);
+		graph_gaiji_puts(380, 276, 16, gbcBGM_MODE[(char)snd_bgm_mode], 0);
 	} else if(sel == 2) {
 		gaiji_putsa(24, 18, gbPLAYER, atrb);
 		gaiji_putca(49, 18, lives + 1 + gb_0_, atrb);
@@ -495,13 +500,13 @@ void pascal near option_put(int sel, unsigned int atrb)
 void pascal near snd_bgm_restart(void)
 {
 	if(snd_bgm_mode == SND_BGM_OFF) {
-		snd_fm_possible = 0;
+		snd_fm_possible = false;
 		snd_kaja_func(KAJA_SONG_STOP, 0);
-		snd_active = 0;
+		snd_active = false;
 		return;
 	} else if(snd_bgm_mode == SND_BGM_FM) {
 		snd_kaja_func(KAJA_SONG_STOP, 0);
-		snd_midi_active = 0;
+		snd_midi_active = false;
 		snd_determine_mode();
 		snd_kaja_func(KAJA_SONG_PLAY, 0);
 	} else if(snd_bgm_mode == SND_BGM_MIDI) {
@@ -512,26 +517,39 @@ void pascal near snd_bgm_restart(void)
 	}
 }
 
+inline void option_quit(bool &initialized) {
+	menu_sel = 3;
+	in_option = false;
+	initialized = false;
+}
+
+// Circumventing 16-bit promition inside comparisons between two 8-bit values
+// in Borland C++'s C++ mode...
+inline char option_rank_max()  { return RANK_LUNATIC; }
+inline char option_bgm_max()   { return SND_BGM_MIDI; }
+inline char option_lives_max() { return CFG_LIVES_MAX; }
+inline char option_bombs_max() { return CFG_BOMBS_MAX; }
+
 void option_update_and_render(void)
 {
-	static char input_allowed = 0;
-	static char initialized = 0;
+	static bool input_allowed = false;
+	static bool initialized = false;
 
 	#define OPTION_CHANGE(direction) \
 		option_put(menu_sel, TX_YELLOW); \
 		switch(menu_sel) { \
 		case 0: \
-			RING_##direction##(rank, RANK_LUNATIC); \
+			RING_##direction##(rank, option_rank_max()); \
 			break; \
 		case 1: \
-			RING_##direction##(snd_bgm_mode, SND_BGM_MIDI); \
+			RING_##direction##((char)snd_bgm_mode, option_bgm_max()); \
 			snd_bgm_restart(); \
 			break; \
 		case 2: \
-			RING_##direction##(lives, CFG_LIVES_MAX); \
+			RING_##direction##(lives, option_lives_max()); \
 			break; \
 		case 3: \
-			RING_##direction##(bombs, CFG_BOMBS_MAX); \
+			RING_##direction##(bombs, option_bombs_max()); \
 			break; \
 		case 4: \
 			resident->perf = 1 - resident->perf; \
@@ -539,15 +557,10 @@ void option_update_and_render(void)
 		} \
 		option_put(menu_sel, TX_WHITE);
 
-	#define OPTION_QUIT \
-		menu_sel = 3; \
-		in_option = 0; \
-		initialized = 0;
-
 	if(!initialized) {
 		int i;
-		input_allowed = 0;
-		initialized = 1;
+		input_allowed = false;
+		initialized = true;
 		text_clear();
 		graph_showpage(1);
 		graph_copy_page(0);
@@ -580,7 +593,7 @@ void option_update_and_render(void)
 				rank = RANK_NORMAL;
 				snd_bgm_mode = SND_BGM_FM;
 				snd_kaja_func(KAJA_SONG_STOP, 0);
-				snd_midi_active = 0;
+				snd_midi_active = false;
 				snd_determine_mode();
 				snd_kaja_func(KAJA_SONG_PLAY ,0);
 				lives = CFG_LIVES_DEFAULT;
@@ -594,15 +607,15 @@ void option_update_and_render(void)
 				option_put(4, TX_YELLOW);
 				break;
 			case 6:
-				OPTION_QUIT;
+				option_quit(initialized);
 				break;
 			}
 		}
 		if(key_det & INPUT_CANCEL) {
-			OPTION_QUIT;
+			option_quit(initialized);
 		}
 		if(key_det) {
-			input_allowed = 0;
+			input_allowed = false;
 		}
 	}
 }
@@ -658,9 +671,9 @@ int main(void)
 
 	while(!quit) {
 		input_sense();
-		if(in_option == 0) {
+		if(in_option == false) {
 			main_update_and_render();
-		} else if(in_option == 1) {
+		} else if(in_option == true) {
 			option_update_and_render();
 		}
 		resident->frame++;
@@ -676,4 +689,6 @@ int main(void)
 	game_exit_to_dos();
 	gaiji_restore();
 	return ret;
+}
+
 }

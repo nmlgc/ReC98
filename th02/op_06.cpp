@@ -9,7 +9,7 @@ extern "C" {
 #include "master.hpp"
 #include "th02/math/vector.hpp"
 #include "th02/hardware/frmdelay.h"
-#include "th02/hardware/input.h"
+#include "th02/hardware/input.hpp"
 #include "th02/formats/pi.h"
 #include "th02/snd/snd.h"
 

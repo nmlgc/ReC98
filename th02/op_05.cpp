@@ -8,7 +8,7 @@ extern "C" {
 #include "th02/resident.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/grp_rect.h"
-#include "th02/hardware/input.h"
+#include "th02/hardware/input.hpp"
 #include "th02/formats/pi.h"
 
 inline char sel_ring_end() {

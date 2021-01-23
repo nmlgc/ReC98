@@ -6,10 +6,11 @@
 #pragma codeseg SHARED
 #pragma option -3
 
+extern "C" {
 #include "libs/kaja/kaja.h"
 #include "th02/th02.h"
 #include "th02/hardware/frmdelay.h"
-#include "th02/hardware/input.h"
+#include "th02/hardware/input.hpp"
 #include "th02/mem.h"
 #include "th02/snd/snd.h"
 
@@ -45,7 +46,9 @@ int pascal mptn_load_inner(const char *fn)
 	if(mptn_buffer) {
 		mptn_free();
 	}
-	mptn_buffer = MK_FP(hmem_allocbyte((mptn_count + 1) * MPTN_SIZE), 0);
+	mptn_buffer = reinterpret_cast<int *>(MK_FP(
+		hmem_allocbyte((mptn_count + 1) * MPTN_SIZE), 0
+	));
 	if(!mptn_buffer) {
 		file_close();
 		return -1;
@@ -56,3 +59,5 @@ int pascal mptn_load_inner(const char *fn)
 }
 
 #include "th02/initmain.c"
+
+}

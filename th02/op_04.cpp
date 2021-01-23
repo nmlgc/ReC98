@@ -3,12 +3,13 @@
  * Code segment #4 of TH02's OP.EXE
  */
 
+extern "C" {
 #include <mbctype.h>
 #include <mbstring.h>
 #include "th02/th02.h"
 #include "master.hpp"
 #include "th02/hardware/frmdelay.h"
-#include "th02/hardware/input.h"
+#include "th02/hardware/input.hpp"
 #include "th02/gaiji/gaiji.h"
 
 char rank = RANK_NORMAL;
@@ -195,6 +196,10 @@ void pascal score_menu(void)
 	grc_setclip(0, 0, 639, 399);
 }
 
+inline char shottype_count() {
+	return SHOTTYPE_COUNT;
+}
+
 int cleardata_load(void)
 {
 	int game_clear_constants[SHOTTYPE_COUNT] = GAME_CLEAR_CONSTANTS;
@@ -202,7 +207,7 @@ int cleardata_load(void)
 	int extra_unlocked = 1;
 	int shottype;
 
-	for(rank = 0; rank < 3; rank++) {
+	for(rank = 0; rank < shottype_count(); rank++) {
 		scoredat_load();
 		if(hi.score.cleared != game_clear_constants[rank]) {
 			cleared_game_with[rank] = 0;
@@ -211,7 +216,7 @@ int cleardata_load(void)
 			cleared_game_with[rank] = 1;
 		}
 	}
-	rank = 3;
+	rank = shottype_count();
 	scoredat_load();
 	for(shottype = 0; shottype < 3; shottype++) {
 		if(hi.score.cleared & extra_clear_flags[shottype]) {
@@ -221,4 +226,6 @@ int cleardata_load(void)
 		}
 	}
 	return extra_unlocked;
+}
+
 }

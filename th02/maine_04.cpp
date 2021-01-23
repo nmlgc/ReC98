@@ -3,10 +3,11 @@
  * Code segment #4 of TH02's MAINE.EXE
  */
 
+extern "C" {
 #include "th02/th02.h"
 #include "th02/resident.hpp"
 #include "th02/hardware/frmdelay.h"
-#include "th02/hardware/input.h"
+#include "th02/hardware/input.hpp"
 #include "th02/gaiji/gaiji.h"
 #include "th02/score.h"
 #include "th02/score.c"
@@ -35,12 +36,13 @@ void pascal scoredat_defaults_set(void)
 
 #include "th02/scorelod.c"
 
-#define scoredat_init() \
-	if(!file_exist(SCOREDAT_FN)) { \
-		scoredat_defaults_set(); \
-	} else { \
-		scoredat_load(); \
+inline void scoredat_init() {
+	if(!file_exist(SCOREDAT_FN)) {
+		scoredat_defaults_set();
+	} else {
+		scoredat_load();
 	}
+}
 
 // Slightly differs from the same function in OP.EXE!
 void pascal score_points_put(tram_y_t y, long points, unsigned atrb)
@@ -266,4 +268,6 @@ int pascal scoredat_is_extra_unlocked(void)
 	}
 	rank = rank_save;
 	return 1;
+}
+
 }

@@ -3,6 +3,7 @@
  * Code segment #3 of TH02's OP.EXE
  */
 
+extern "C" {
 #include "th02/th02.h"
 #include "th02/hardware/frmdelay.h"
 #include "th02/formats/pi.h"
@@ -37,4 +38,6 @@ void title_flash(void)
 	pi_free(0);
 	pi_free(1);
 	pi_free(2);
+}
+
 }
