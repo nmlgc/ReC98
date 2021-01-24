@@ -9,7 +9,9 @@ extern "C" {
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/input.hpp"
 #include "th02/gaiji/gaiji.h"
+#include "th02/formats/scoredat.h"
 #include "th02/score.h"
+
 #include "th02/score.c"
 #include "th02/scoreenc.c"
 

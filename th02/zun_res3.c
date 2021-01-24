@@ -4,6 +4,7 @@
  */
 
 #include "th02/th02.h"
+#include "th02/formats/scoredat.h"
 #include "th02/gaiji/gaiji.h"
 
 extern scoredat_section_t hi;

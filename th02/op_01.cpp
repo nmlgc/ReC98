@@ -18,6 +18,7 @@ extern "C" {
 #include "th02/formats/pi.h"
 #include "th02/snd/snd.h"
 #include "th02/gaiji/gaiji.h"
+#include "th02/op/op.h"
 
 #pragma option -d -a2
 

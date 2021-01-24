@@ -7,6 +7,7 @@
 
 #include <stddef.h>
 #include "th02/th02.h"
+#include "th02/formats/scoredat.h"
 
 extern char rank;
 scoredat_section_t hi;
