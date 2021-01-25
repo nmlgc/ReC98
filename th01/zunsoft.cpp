@@ -3,11 +3,15 @@
  * ZUN Soft logo used in TH01, TH02 and TH03
  */
 
-#include <master.h>
+extern "C" {
+#include <dos.h>
 #include "platform.h"
 #include "pc98.h"
 #include "decomp.h"
+#include "master.hpp"
 #include "th01/hardware/egc.h"
+#include "th01/math/vector.hpp"
+}
 
 #define CIRCLE_COUNT 4
 #define STAR_COUNT 50
@@ -23,8 +27,8 @@ char wave_len;
 char wave_phase;
 char wave_amp;
 char wave_padding;
-Point circle_pos[CIRCLE_COUNT];
-Point star_pos[STAR_COUNT];
+screen_point_t circle_pos[CIRCLE_COUNT];
+screen_point_t star_pos[STAR_COUNT];
 int frame;
 int circle_speed_x[CIRCLE_COUNT];
 int circle_speed_y[CIRCLE_COUNT];
@@ -69,12 +73,14 @@ void zunsoft_exit(void)
 	egc_start();
 }
 
-void pascal vector2(
-	pixel_t *ret_x, pixel_t *ret_y, unsigned char angle, pixel_t length
+// Different parameter list compared to the one from vector.hpp, but still
+// similar enough that Borland C++ can't resolve the ambiguity.
+void pascal zunsoft_vector2(
+	pixel_t &ret_x, pixel_t &ret_y, unsigned char angle, pixel_t length
 )
 {
-	*ret_x = (length * (long)Cos8(angle)) >> 8;
-	*ret_y = (length * (long)Sin8(angle)) >> 8;
+	ret_x = polar_x(0, length, angle);
+	ret_y = polar_y(0, length, angle);
 }
 
 void objects_setup(void)
@@ -137,7 +143,7 @@ void stars_render_and_update(void)
 
 		grcg_pset(star_pos[i].x, star_pos[i].y);
 
-		vector2(&dx, &dy, star_angle, star_speed[i]);
+		zunsoft_vector2(dx, dy, star_angle, star_speed[i]);
 		star_pos[i].x += dx;
 		star_pos[i].y += dy;
 		if(star_pos[i].x < 0) {
@@ -226,11 +232,11 @@ hw_setup_done:
 	objects_setup();
 	while(1) {
 		if(frame > 180) {
-			if(tone <= 0) {
+			if(tone <= tone_black()) {
 				break;
 			}
 			palette_settone(tone -= 2);
-		} else if(tone < 100) {
+		} else if(tone < tone_100()) {
 			palette_settone(tone += 2);
 		}
 

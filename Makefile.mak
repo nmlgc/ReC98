@@ -33,7 +33,7 @@ bin\Pipeline\grzview.com: Pipeline\grzview.cpp th01\formats\grz.cpp
 $**
 | masters.lib
 
-bin\th01\zunsoft.com: th01\zunsoft.c
+bin\th01\zunsoft.com: th01\zunsoft.cpp
 	$(CC) $(CFLAGS) -mt -lt -DGAME=1 -nbin\th01\ $** masters.lib
 
 # Shared (game-independent code)

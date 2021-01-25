@@ -373,6 +373,12 @@ void MASTER_RET pfend(void);
 // Palette
 // -------
 
+#ifdef __cplusplus
+	inline char tone_black() { return   0; }
+	inline char tone_100()   { return 100; }
+	inline char tone_white() { return 200; }
+#endif
+
 void MASTER_RET palette_show(void);
 
 #if !defined(__MASTER_H)
