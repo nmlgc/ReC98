@@ -69,6 +69,9 @@ struct point_t {
 /// ----------------------------------------------------------------------
 /// TODO: Remove the `!defined(__MASTER_H)` branches once we've gotten rid of
 /// of master.h.
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 // DOS
 // ---
@@ -208,8 +211,10 @@ void MASTER_RET grcg_off(void);
 
 #define grcg_setmode(mode) \
 	outportb(0x7C, mode)
-#define grcg_off() \
-	outportb(0x7C, 0)
+#if (GAME != 2)
+	#define grcg_off() \
+		outportb(0x7C, 0)
+	#endif
 #endif
 
 #if defined(PC98_H) && defined(__cplusplus)
@@ -578,6 +583,9 @@ extern unsigned volatile int vsync_Count1, vsync_Count2;
 void MASTER_RET vsync_start(void);
 void MASTER_RET vsync_end(void);
 // -----
+#ifdef __cplusplus
+}
+#endif
 /// ----------------------------------------------------------------------
 
 /// Inlined extensions

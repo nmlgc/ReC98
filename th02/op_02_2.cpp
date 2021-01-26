@@ -7,8 +7,10 @@
 #pragma option -3
 
 extern "C" {
+#include <dos.h>
 #include "libs/kaja/kaja.h"
 #include "th02/th02.h"
+#include "master.hpp"
 #include "th02/mem.h"
 #include "th02/core/initexit.h"
 #include "th02/snd/snd.h"

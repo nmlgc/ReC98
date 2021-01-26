@@ -1,8 +1,8 @@
 extern "C" {
 
-#include <master.h>
 #include "platform.h"
 #include "pc98.h"
+#include "master.hpp"
 #include "th01/math/vector.hpp"
 
 void vector2_between(

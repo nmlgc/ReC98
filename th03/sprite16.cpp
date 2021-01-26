@@ -8,11 +8,11 @@
 
 extern "C" {
 #include <dos.h>
-#include "libs/master.lib/master.h"
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
 #include "decomp.h"
+#include "master.hpp"
 #include "libs/sprite16/sprite16.h"
 #include "th03/sprite16.hpp"
 

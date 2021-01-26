@@ -7,8 +7,11 @@
 #pragma option -3
 
 extern "C" {
+#include <dos.h>
+#include <mem.h>
 #include "libs/kaja/kaja.h"
 #include "th02/th02.h"
+#include "master.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/input.hpp"
 #include "th02/mem.h"

@@ -6,11 +6,14 @@
 #pragma option -O- -1 -Z-
 
 extern "C" {
+#include <dos.h>
 #include <io.h>
 #include <stdio.h>
+#include <string.h>
 #include "ReC98.h"
 #include "pc98kbd.h"
 #include "twobyte.h"
+#include "master.hpp"
 #include "th01/ranks.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/input.hpp"

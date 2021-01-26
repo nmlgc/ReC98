@@ -4,6 +4,7 @@
  */
 
 extern "C" {
+#include <dos.h>
 #include <process.h>
 #include "libs/kaja/kaja.h"
 #include "th02/th02.h"

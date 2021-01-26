@@ -6,7 +6,6 @@
 #pragma codeseg maine_01__TEXT
 
 extern "C" {
-#include "libs/master.lib/master.h"
 #include <stddef.h>
 #include "platform.h"
 #include "pc98.h"

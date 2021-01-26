@@ -6,10 +6,13 @@
 #pragma option -d
 
 extern "C" {
+#include <dos.h>
 #include <io.h>
 #include <stdio.h>
+#include <string.h>
 #include "ReC98.h"
 #include "twobyte.h"
+#include "master.hpp"
 #include "th01/ranks.h"
 #include "th01/formats/grp.h"
 #include "th01/hardware/palette.h"

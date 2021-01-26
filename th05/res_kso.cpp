@@ -4,7 +4,9 @@
  * required in order to run TH05.
  */
 
+#include <dos.h>
 #include <ReC98.h>
+#include "master.hpp"
 #include "th01/ranks.h"
 #include "th04/score.h"
 #include "th04/common.h"

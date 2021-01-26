@@ -7,6 +7,7 @@
 
 extern "C" {
 #include "ReC98.h"
+#include "master.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/main/playfld.hpp"
 #include "th01/main/player/player.hpp"

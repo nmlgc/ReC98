@@ -1,6 +1,6 @@
 #pragma codeseg SHARED
 
-#include "libs/master.lib/master.h"
+#include "master.hpp"
 #include "th02/hardware/frmdelay.h"
 
 void pascal frame_delay(int frames)

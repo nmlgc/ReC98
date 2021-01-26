@@ -2,12 +2,13 @@
 #pragma option -3
 
 extern "C" {
+#include <dos.h>
 #include <mbctype.h>
 #include <mbstring.h>
-#include "libs/master.lib/master.h"
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
+#include "master.hpp"
 #include "th01/hardware/grppsafx.h"
 
 #include "th01/hardware/grppsafx.cpp"

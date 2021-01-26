@@ -3,9 +3,9 @@
  * Rendering code for all bosses
  */
 
-#include <master.h>
 #include "platform.h"
 #include "pc98.h"
+#include "master.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th04/math/vector.hpp"
 #include "th04/main/drawp.hpp"

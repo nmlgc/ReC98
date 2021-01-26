@@ -4,8 +4,10 @@
  */
 
 extern "C" {
-#include "libs/master.lib/master.h"
+#include <stddef.h>
+#include <dos.h>
 #include "platform.h"
+#include "master.hpp"
 #include "th03/common.h"
 #include "th03/chars.hpp"
 #include "th03/score.h"

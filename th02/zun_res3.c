@@ -3,7 +3,9 @@
  * 3rd part of ZUN_RES.COM. Initializes the high score lists.
  */
 
+#include <dos.h>
 #include "th02/th02.h"
+#include "master.hpp"
 #include "th02/formats/scoredat.h"
 #include "th02/gaiji/gaiji.h"
 

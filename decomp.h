@@ -57,6 +57,11 @@
 // types.
 #ifdef __cplusplus
 }
+	#if defined(__TURBOC__) && defined(__MSDOS__)
+		// Declared in <dos.h> in these compilers.
+		void __emit__(unsigned char __byte, ...);
+	#endif
+
 	struct Decomp_ES { void  __seg* value() { return (void  __seg *)(_ES); } };
 	struct Decomp_FS { void  __seg* value() { return (void  __seg *)(_FS); } };
 	struct Decomp_GS { void  __seg* value() { return (void  __seg *)(_GS); } };

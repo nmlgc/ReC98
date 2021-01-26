@@ -4,7 +4,8 @@
  */
 
 extern "C" {
-#include "libs/master.lib/master.h"
+#include <dos.h>
+#include "master.hpp"
 #include "th01/formats/grc.cpp"
 #include "th01/hardware/grcg8x8m.cpp"
 #include "th01/hardware/egc.h"

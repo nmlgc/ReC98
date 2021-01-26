@@ -6,7 +6,6 @@
 #ifndef REC98_H
 #define REC98_H
 
-#include <master.h>
 #include <stddef.h>
 #include "platform.h"
 #include "pc98.h"

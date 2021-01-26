@@ -7,6 +7,7 @@
 
 extern "C" {
 #include "ReC98.h"
+#include "master.hpp"
 #include "th01/formats/grp.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/palette.h"

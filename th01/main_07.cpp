@@ -4,7 +4,9 @@
  */
 
 extern "C" {
+#include <dos.h>
 #include "ReC98.h"
+#include "master.hpp"
 #include "th01/hardware/graph.h"
 
 #include "th01/formats/ptn_0to1.cpp"

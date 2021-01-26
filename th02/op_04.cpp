@@ -4,6 +4,7 @@
  */
 
 extern "C" {
+#include <dos.h>
 #include <mbctype.h>
 #include <mbstring.h>
 #include "th02/th02.h"

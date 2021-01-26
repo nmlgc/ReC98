@@ -7,6 +7,7 @@
 
 extern "C" {
 #include "th05/th05.hpp"
+#include "master.hpp"
 #include "th04/main/null.hpp"
 #include "th04/main/rank.hpp"
 #include "th04/main/item/items.hpp"

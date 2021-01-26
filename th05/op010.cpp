@@ -6,9 +6,10 @@
 #pragma codeseg op_01_TEXT
 
 extern "C" {
+#include <dos.h>
 #include <process.h>
-#include "libs/master.lib/master.h"
 #include "platform.h"
+#include "master.hpp"
 #include "libs/kaja/kaja.h"
 #include "th01/ranks.h"
 #include "th02/core/initexit.h"

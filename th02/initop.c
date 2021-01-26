@@ -17,8 +17,8 @@ int game_init_op(void)
 	graph_clear_both();
 	vsync_start();
 	key_beep_off();
-	text_systemline_off();
-	text_cursor_off();
+	text_systemline_hide();
+	text_cursor_hide();
 	egc_start();
 	pfkey = PF_KEY;
 	pfstart(pf_fn);

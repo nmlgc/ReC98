@@ -5,8 +5,10 @@
 
 #pragma option -O- -k-
 
+#include <dos.h>
 #include <stddef.h>
 #include "th02/th02.h"
+#include "master.hpp"
 #include "th02/formats/scoredat.h"
 
 extern char rank;

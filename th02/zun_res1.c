@@ -4,8 +4,10 @@
  * configuration file required in order to run TH02.
  */
 
+#include <dos.h>
 #include <stddef.h>
 #include "th02/th02.h"
+#include "master.hpp"
 #include "th02/resident.hpp"
 #include "th02/snd/snd.h"
 #include "th02/formats/cfg.h"

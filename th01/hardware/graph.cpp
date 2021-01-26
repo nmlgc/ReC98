@@ -1,8 +1,10 @@
 extern "C" {
 #include <dos.h>
+#include <mem.h>
 #include <mbctype.h>
 #include <mbstring.h>
 #include "ReC98.h"
+#include "master.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/vsync.h"
 #include "th01/hardware/graph.h"
@@ -394,7 +396,7 @@ int z_graph_readdot(screen_x_t x, vram_y_t y)
 /// Restorable line drawing
 /// -----------------------
 // Never read from, so it's supposedly only there for debugging purposes?
-extern Point graph_r_last_line_end;
+extern screen_point_t graph_r_last_line_end;
 // `true` copies the pixels to be drawn from the same position on page 1, thus
 // restoring them with the background image. `false` (the default) draws them
 // regularly in the given [col].
@@ -417,7 +419,7 @@ void graph_r_hline(screen_x_t left, screen_x_t right, vram_y_t y, int col)
 	graph_r_last_line_end.x = right;
 	graph_r_last_line_end.y = y;
 
-	vram_row = (dots8_t *)(MK_FP(GRAM_400, vram_offset_muldiv(left, y)));
+	vram_row = (dots8_t *)(MK_FP(SEG_PLANE_B, vram_offset_muldiv(left, y)));
 	full_bytes_to_put = (right / BYTE_DOTS) - (left / BYTE_DOTS);
 	left_pixels = 0xFF >> (left & (BYTE_DOTS - 1));
 	right_pixels = 0xFF << ((BYTE_DOTS - 1) - (right & (BYTE_DOTS - 1)));
@@ -663,7 +665,7 @@ void z_grcg_boxfill(
 	clip_y(top, bottom);
 
 	grcg_setcolor_rmw(col);
-	vram_row = (dots8_t *)(MK_FP(GRAM_400, vram_offset_mulshift(left, top)));
+	vram_row = (dots8_t *)(MK_FP(SEG_PLANE_B, vram_offset_mulshift(left, top)));
 	for(y = top; y <= bottom; y++) {
 		full_bytes_to_put = (right >> 3) - (left >> 3);
 		left_pixels = 0xFF >> (left & (BYTE_DOTS - 1));
