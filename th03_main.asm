@@ -8891,7 +8891,7 @@ include th03/hardware/input_sense.asm
 		nop
 include th02/snd/se.asm
 include th02/snd/kajaint.asm
-include th02/initmain.asm
+	extern GAME_INIT_MAIN:proc
 	extern INPUT_MODE_KEY_VS_KEY:proc
 	extern INPUT_MODE_JOY_VS_KEY:proc
 	extern INPUT_MODE_KEY_VS_JOY:proc

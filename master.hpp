@@ -72,6 +72,14 @@ struct point_t {
 extern "C" {
 #endif
 
+// "BGM" (only used for Beep sound effects)
+// ----------------------------------------
+
+int MASTER_RET bgm_init(int bufsiz);
+void MASTER_RET bgm_finish(void);
+int MASTER_RET bgm_sound(int num);
+// ----------------------------------------
+
 // DOS
 // ---
 // These use INT 21h syscalls as directly as possible.
@@ -255,7 +263,7 @@ void MASTER_RET grcg_off(void);
 extern int js_bexist;
 extern unsigned js_stat[2];
 
-int MASTER_RET js_start(int force);
+int MASTER_RET js_start();	// ZUN removed the [force] parameter
 
 void MASTER_RET js_end(void);
 int MASTER_RET js_sense(void);
@@ -361,9 +369,12 @@ int MASTER_RET file_delete(const char MASTER_PTR *filename);
 // ---------
 
 extern unsigned char pfkey; // 復号化キー
+extern unsigned bbufsiz;    // バッファサイズ
 
-void MASTER_RET pfstart(const char MASTER_PTR *parfile);
+void MASTER_RET pfstart(const unsigned char MASTER_PTR *parfile);
 void MASTER_RET pfend(void);
+#define pfsetbufsiz(bufsiz) \
+	bbufsiz = bufsiz;
 // ---------
 
 // Palette

@@ -14,9 +14,7 @@ extern "C" {
 #include "master.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/input.hpp"
-#include "th02/mem.h"
 #include "th02/snd/snd.h"
-#include "th02/formats/pf.hpp"
 
 #include "th02/hardware/input.c"
 #include "th02/exit.c"
@@ -59,6 +57,4 @@ int pascal mptn_load_inner(const char *fn)
 	file_close();
 	return 0;
 }
-
-#include "th02/core/initmain.cpp"
 }

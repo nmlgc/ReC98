@@ -1,4 +1,10 @@
+#pragma codeseg SHARED
+
+extern "C" {
+#include "master.hpp"
 #include "th01/hardware/vplanset.h"
+#include "th02/mem.h"
+#include "th02/formats/pf.hpp"
 
 int game_init_main(void)
 {
@@ -11,4 +17,6 @@ int game_init_main(void)
 	graph_400line();
 	game_pfopen();
 	return 0;
+}
+
 }

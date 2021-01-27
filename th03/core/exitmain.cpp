@@ -3,6 +3,7 @@
 
 extern "C" {
 #include <dos.h>
+#include <stddef.h>
 #include "master.hpp"
 #include "th03/core/initexit.h"
 }
