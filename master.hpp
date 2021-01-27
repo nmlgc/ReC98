@@ -1,6 +1,7 @@
 /* ReC98
  * -----
- * C++ redeclarations and ReC98-specific extensions for master.lib.
+ * C++ declarations and ReC98-specific extensions for the subset of master.lib
+ * used by the original game code.
  * Definitions that require types from `pc98.h` are guarded via `#ifdef`,
  * allowing this header to be used on its own if those aren't required.
  */
@@ -67,8 +68,6 @@ struct point_t {
 
 /// Original functions (only contains those actually called from ZUN code)
 /// ----------------------------------------------------------------------
-/// TODO: Remove the `!defined(__MASTER_H)` branches once we've gotten rid of
-/// of master.h.
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -92,7 +91,6 @@ long MASTER_RET dos_axdx(int axval, const char MASTER_PTR *strval);
 // EGC
 // ---
 
-#if !defined(__MASTER_H)
 #define EGC_ACTIVEPLANEREG	0x04a0
 #define EGC_READPLANEREG  	0x04a2
 #define EGC_MODE_ROP_REG  	0x04a4
@@ -111,20 +109,17 @@ long MASTER_RET dos_axdx(int axval, const char MASTER_PTR *strval);
 #define EGC_RL_MEMWRITE	0x0200	/* RL = pattern Register Load */
 #define EGC_RL_MEMREAD 	0x0100	/* ^at mem write, <-at mem read */
 #define EGC_RL_NONE    	0x0000	/* no touch */
-#endif
 
 void MASTER_RET egc_on(void);
 void MASTER_RET egc_off(void);
 void MASTER_RET egc_start(void);
 
-#if !defined(__MASTER_H)
 #define egc_selectpat() \
 	outport(EGC_READPLANEREG, 0x00ff)
 
 // TODO: Document and add helpful macros for the EGC raster ops
 #define egc_setrop(mode_rop) \
 	outport(EGC_MODE_ROP_REG, mode_rop)
-#endif
 // ---
 
 // Gaiji
@@ -143,13 +138,11 @@ int MASTER_RET gaiji_entry_bfnt(const char MASTER_PTR *filename);
 // Graphics
 // --------
 
-#if !defined(__MASTER_H)
 #define graph_showpage(p) \
 	outportb(0xA4, p)
 
 #define graph_accesspage(p) \
 	outportb(0xA6, p)
-#endif
 
 extern unsigned graph_VramZoom;
 
@@ -161,7 +154,7 @@ void MASTER_RET graph_hide(void);
 void MASTER_RET graph_start(void);
 int MASTER_RET graph_copy_page(int to_page);
 
-#if !defined(__MASTER_H) && defined(PC98_H) && defined(__cplusplus)
+#if defined(PC98_H) && defined(__cplusplus)
 	void MASTER_RET graph_gaiji_putc(int x, int y, int c, int color);
 	void MASTER_RET graph_gaiji_puts(
 		int x, int y, int step, const char MASTER_PTR *str, int color
@@ -181,7 +174,6 @@ int MASTER_RET graph_copy_page(int to_page);
 // GRCG-accelerated graphics
 // -------------------------
 
-#if !defined(__MASTER_H)
 /* grcg_setcolor()や vgc_setcolor()に指定するアクセスプレーン指定 */
 #define GC_B	0x0e	/* 青プレーンをアクセスする */
 #define GC_R	0x0d
@@ -214,7 +206,6 @@ void MASTER_RET grcg_off(void);
 #if (GAME != 2)
 	#define grcg_off() \
 		outportb(0x7C, 0)
-	#endif
 #endif
 
 #if defined(PC98_H) && defined(__cplusplus)
@@ -386,7 +377,6 @@ void MASTER_RET pfend(void);
 
 void MASTER_RET palette_show(void);
 
-#if !defined(__MASTER_H)
 #define palette_settone(tone) \
 	(PaletteTone = (tone), palette_show())
 
@@ -398,9 +388,8 @@ void MASTER_RET palette_show(void);
 
 #define palette_white() \
 	palette_settone(200)
-#endif
 
-#if !defined(__MASTER_H) && defined(PC98_H) && defined(__cplusplus)
+#if defined(PC98_H) && defined(__cplusplus)
 	#define palette_set(col, r, g, b) (\
 		Palettes[col].v[0] = (uint8_t)(r), \
 		Palettes[col].v[1] = (uint8_t)(g), \
@@ -429,7 +418,7 @@ void MASTER_RET palette_white_out(unsigned speed);
 // .PI
 // ---
 
-#if defined(__cplusplus) && !defined(__MASTER_H) && defined(PC98_H)
+#if defined(__cplusplus) && defined(PC98_H)
 	struct PiHeader {
 		char far *comment;	// graph_pi_load.*() sets this to NULL
 		uint16_t commentlen;	//
@@ -469,10 +458,8 @@ unsigned MASTER_RET resdata_create(
       const char MASTER_PTR *id, unsigned idlen, unsigned parasize
 );
 
-#if !defined(__MASTER_H)
 #define resdata_free(seg) \
 	dos_free((seg_t)seg)
-#endif
 // -------------
 
 // Resident palettes

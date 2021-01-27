@@ -2,7 +2,7 @@
 # -----
 # Makefile for the 16-bit part of the build process
 
-CFLAGS = -ls -Ilibs\master.lib\ -I. -Lbin\ -O -b-
+CFLAGS = -ls -I. -Lbin\ -O -b-
 AFLAGS = /m /ml
 
 PIPELINE = \grzview.com
