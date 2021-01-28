@@ -2399,7 +2399,7 @@ loc_B8B5:
 		call	sub_4596
 		graph_accesspage 0
 		call	sub_4782
-		call	mptn_free
+		call	_mptn_free
 		push	ds
 		push	offset aMiko_k_mpn ; "miko_k.mpn"
 		call	mptn_load
@@ -3512,7 +3512,7 @@ _arg0		= dword	ptr  6
 		mov	bp, sp
 		freePISlotLarge	0
 		call	sub_E24A
-		call	mptn_free
+		call	_mptn_free
 		call	sub_1C608
 		call	super_free
 		call	graph_clear
@@ -9289,7 +9289,7 @@ SHARED	segment	word public 'CODE' use16
 	extern ZUN_ERROR:proc
 	extern _key_delay:proc
 	extern MPTN_LOAD:proc
-	extern MPTN_FREE:proc
+	extern _mptn_free:proc
 	extern _vram_planes_set:proc
 	extern _pi_load:proc
 	extern VECTOR2:proc

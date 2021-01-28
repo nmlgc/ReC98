@@ -8,26 +8,6 @@
 
 #undef grcg_off
 
-// Formats
-// -------
-typedef struct {
-	char magic[4]; // = "MPTN"
-	char count;
-	char unused;
-} mptn_header_t;
-
-#define MPTN_SIZE (8 * 16)
-
-extern char mptn_show_palette_on_load;
-extern unsigned char mptn_count;
-extern int *mptn_buffer;
-extern char mptn_palette[16 * 3];
-
-int pascal mptn_load(const char *fn);
-void pascal mptn_palette_show(void);
-void pascal mptn_free(void);
-// -------
-
 // Hardware
 // -------
 #define graph_clear_both() \
