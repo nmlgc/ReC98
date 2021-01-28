@@ -29,5 +29,4 @@ const char pf_fn[] = PF_FN;
 #pragma codestring "\x00"
 
 #include "th02/snd/mmd_res.c"
-#include "th02/snd/detmode.c"
 }

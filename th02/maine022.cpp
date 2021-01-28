@@ -21,5 +21,4 @@ extern const char pf_fn[] = PF_FN;
 #include "th02/hardware/input.c"
 #include "th02/exit.c"
 #include "th02/snd/mmd_res.c"
-#include "th02/snd/detmode.c"
 }

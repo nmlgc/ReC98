@@ -31,7 +31,11 @@ bool16 snd_pmd_resident(void);
 	int snd_mmd_resident(void);
 #endif
 
-int snd_determine_mode(void);
+// Checks whether an FM sound source is active, and sets [snd_fm_possible]
+// and [snd_active]. In the absence of an FM source, [snd_active] is set to
+// [snd_midi_active]. Returns the new value of [snd_active].
+bool16 snd_determine_mode(void);
+
 int16_t DEFCONV snd_kaja_interrupt(int16_t ax);
 #define snd_kaja_func(func, param) snd_kaja_interrupt((func) << 8 | (param))
 
