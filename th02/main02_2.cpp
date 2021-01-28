@@ -20,5 +20,4 @@ extern "C" {
 #include "th02/snd/mmd_res.c"
 #include "th02/snd/detmode.c"
 #include "th02/snd/pmd_res.c"
-#include "th02/snd/delayvol.c"
 }

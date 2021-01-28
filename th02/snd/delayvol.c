@@ -1,15 +1,22 @@
+#pragma codeseg SHARED
+
+#include <dos.h>
+#include "platform.h"
+#include "libs/kaja/kaja.h"
+#include "th02/snd/snd.h"
+
 void snd_delay_until_volume(uint8_t volume)
 {
-loop:
-	_AH = KAJA_GET_VOLUME;
-	if(snd_midi_active != 1) {
-		geninterrupt(PMD);
-	} else {
-		geninterrupt(MMD);
+	while(1) {
+		_AH = KAJA_GET_VOLUME;
+		if(snd_midi_active != true) {
+			geninterrupt(PMD);
+		} else {
+			geninterrupt(MMD);
+		}
+		__asm	cmp al, volume;
+		__asm	jz end;
 	}
-	__asm	cmp al, volume;
-	__asm	jz end;
-	__asm	jmp loop;
 end:
 }
 #pragma codestring "\x90"

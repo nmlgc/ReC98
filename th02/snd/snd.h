@@ -32,6 +32,8 @@ int snd_determine_mode(void);
 int16_t DEFCONV snd_kaja_interrupt(int16_t ax);
 #define snd_kaja_func(func, param) snd_kaja_interrupt((func) << 8 | (param))
 
+// Blocks until the active sound driver reports the given [volume] via
+// KAJA_GET_VOLUME. The behavior is undefined if no sound driver is active.
 void snd_delay_until_volume(uint8_t volume);
 
 #if (GAME == 2)
