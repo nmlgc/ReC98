@@ -20,7 +20,6 @@ int game_init_op(void)
 	text_systemline_hide();
 	text_cursor_hide();
 	egc_start();
-	pfkey = PF_KEY;
-	pfstart(pf_fn);
+	game_pfopen();
 	return 0;
 }

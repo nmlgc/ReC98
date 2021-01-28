@@ -26,10 +26,6 @@ extern char mptn_palette[16 * 3];
 int pascal mptn_load(const char *fn);
 void pascal mptn_palette_show(void);
 void pascal mptn_free(void);
-
-// "東方封魔.録" in Shift-JIS
-#define PF_FN "\x93\x8C\x95\xFB\x95\x95\x96\x82\x2E\x98\x5E"
-#define PF_KEY 0x12
 // -------
 
 // Hardware

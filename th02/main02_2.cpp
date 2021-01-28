@@ -16,8 +16,7 @@ extern "C" {
 #include "th02/hardware/input.hpp"
 #include "th02/mem.h"
 #include "th02/snd/snd.h"
-
-extern const char pf_fn[];
+#include "th02/formats/pf.hpp"
 
 #include "th02/hardware/input.c"
 #include "th02/exit.c"
@@ -49,8 +48,8 @@ int pascal mptn_load_inner(const char *fn)
 	if(mptn_buffer) {
 		mptn_free();
 	}
-	mptn_buffer = reinterpret_cast<int *>(MK_FP(
-		hmem_allocbyte((mptn_count + 1) * MPTN_SIZE), 0
+	mptn_buffer = reinterpret_cast<int *>(reinterpret_cast<int __seg*>(
+		hmem_allocbyte((mptn_count + 1) * MPTN_SIZE)
 	));
 	if(!mptn_buffer) {
 		file_close();
@@ -61,6 +60,5 @@ int pascal mptn_load_inner(const char *fn)
 	return 0;
 }
 
-#include "th02/initmain.c"
-
+#include "th02/core/initmain.cpp"
 }

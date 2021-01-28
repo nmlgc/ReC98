@@ -9,7 +9,6 @@ int game_init_main(void)
 	vsync_start();
 	egc_start();
 	graph_400line();
-	pfkey = PF_KEY;
-	pfstart(pf_fn);
+	game_pfopen();
 	return 0;
 }
