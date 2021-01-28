@@ -23,7 +23,10 @@ extern bool snd_midi_possible;
 		(snd_midi_active != true)
 #endif
 
-int snd_pmd_resident(void);
+// Purely returns whether the PMD driver is resident at its interrupt. The
+// check for an actual installed FM sound source is done by
+// snd_determine_mode().
+bool16 snd_pmd_resident(void);
 #if GAME != 3
 	int snd_mmd_resident(void);
 #endif
