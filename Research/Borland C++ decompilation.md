@@ -368,6 +368,19 @@ static_storage  db  2, 0, 6
 @_STCON_$qv	endp
 ```
 
+
+## Padding bytes in code segments
+
+- `0x00` is only emitted to word-align `switch` jump tables with `-a2`.
+  Anywhere else, it indicates the start or end of a word-aligned `SEGMENT`
+  compiled from assembly. Borland C++ never adds padding between functions or
+  segments.
+
+  **Certainty**: Would love to find a proper compiler or linker setting for
+  this, but it doesn't seem to exist. The `#pragma codestring \x00` workaround
+  doesn't respect different alignment requirements of surrounding translation
+  units, after all.
+
 ## C++
 
 In C++ mode, the value of a `const` scalar-type variable declared at global

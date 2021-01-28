@@ -2,7 +2,7 @@ public _snd_mmd_resident
 _snd_mmd_resident proc
 	xor	ax, ax
 	mov	es, ax
-	les	bx, dword ptr es:[61h * 4]
+	les	bx, dword ptr es:[MMD * 4]
 	assume es:nothing
 	cmp	byte ptr es:[bx+2], 'M'
 	jnz	short @@nope
@@ -10,7 +10,7 @@ _snd_mmd_resident proc
 	jnz	short @@nope
 	cmp	byte ptr es:[bx+4], 'D'
 	jnz	short @@nope
-	mov	_snd_interrupt_if_midi, 61h
+	mov	_snd_interrupt_if_midi, MMD
 if GAME le 3
 	mov	_snd_midi_active, 1
 endif
@@ -25,4 +25,4 @@ endif
 	xor	ax, ax
 	ret
 _snd_mmd_resident endp
-	nop	; word alignment
+	even

@@ -68,6 +68,7 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 
 : th02_zuninit.asm |> !as |> bin\\th02\\zuninit.obj
 : th02\\snd_se.asm |> !as2 |>
+: th02\\snd_mmdr.asm |> !as2 |>
 : th02_op.asm |> !as |> bin\\th02\\op.obj
 : th02_main.asm | \
 	th02/sprites/pellet.asp \
