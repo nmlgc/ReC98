@@ -1,6 +1,9 @@
-// Loads a song in .M format ([func] = SND_LOAD_SONG) or a sound effect bank
-// in .EFC format ([func] = SND_LOAD_SE) into the respective work buffer of
-// the sound driver. If MIDI is used, 'md' is appended to the file name.
+#pragma codeseg SHARED
+
+#include <dos.h>
+#include "platform.h"
+#include "libs/kaja/kaja.h"
+#include "th02/snd/snd.h"
 
 extern char snd_load_fn[13];
 

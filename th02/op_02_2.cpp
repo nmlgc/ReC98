@@ -31,5 +31,4 @@ const char pf_fn[] = PF_FN;
 #include "th02/snd/mmd_res.c"
 #include "th02/snd/detmode.c"
 #include "th02/snd/pmd_res.c"
-#include "th02/snd/load.c"
 }
