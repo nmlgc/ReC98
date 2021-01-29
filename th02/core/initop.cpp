@@ -1,3 +1,4 @@
+#include <dos.h>
 #include "th01/hardware/vplanset.h"
 
 int game_init_op(void)

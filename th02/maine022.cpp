@@ -6,8 +6,7 @@
 #pragma codeseg SHARED
 
 extern "C" {
-#include <dos.h>
-#include "th02/th02.h"
+#include "platform.h"
 #include "master.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/input.hpp"
@@ -17,5 +16,4 @@ extern "C" {
 extern const char pf_fn[] = PF_FN;
 
 #include "th02/hardware/input.c"
-#include "th02/exit.c"
 }

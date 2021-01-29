@@ -10,11 +10,6 @@
 
 // Hardware
 // -------
-#define graph_clear_both() \
-	graph_accesspage(1);	graph_clear(); \
-	graph_accesspage(0);	graph_clear(); \
-	graph_accesspage(0);	graph_showpage(0);
-
 #include "th01/hardware/grppsafx.h"
 // -------
 

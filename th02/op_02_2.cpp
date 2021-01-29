@@ -7,8 +7,7 @@
 #pragma option -3
 
 extern "C" {
-#include <dos.h>
-#include "th02/th02.h"
+#include "platform.h"
 #include "master.hpp"
 #include "th02/mem.h"
 #include "th02/core/initexit.h"
@@ -22,5 +21,4 @@ const char pf_fn[] = PF_FN;
 
 #include "th02/hardware/input.c"
 #include "th02/core/initop.cpp"
-#include "th02/exit.c"
 }
