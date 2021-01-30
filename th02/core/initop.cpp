@@ -1,18 +1,20 @@
+#pragma codeseg SHARED
+
+extern "C" {
 #include <dos.h>
+#include "master.hpp"
 #include "th01/hardware/vplanset.h"
+#include "th02/mem.h"
+#include "th02/core/initexit.h"
+#include "th02/formats/pf.hpp"
+
+const char pf_fn[] = PF_FN;
 
 int game_init_op(void)
 {
-#if GAME >= 4
-# define PARAS (mem_assign_paras)
-#else
-# define PARAS (MEM_ASSIGN_PARAS_OP)
-#endif
-	if(mem_assign_dos(PARAS)) {
+	if(mem_assign_dos(MEM_ASSIGN_PARAS_OP)) {
 		return 1;
 	}
-#undef PARAS
-
 	vram_planes_set();
 	graph_start();
 	graph_clear_both();
@@ -23,4 +25,6 @@ int game_init_op(void)
 	egc_start();
 	game_pfopen();
 	return 0;
+}
+
 }

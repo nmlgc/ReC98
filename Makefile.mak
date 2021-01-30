@@ -78,7 +78,7 @@ bin\th02\zun_res.com: th02\zun_res1.c th02\zun_res2.c th02\zun_res3.c
 $**
 | masters.lib
 
-bin\th02\op.exe: th02\op_01.cpp bin\exit_dos.obj bin\th02\zunerror.obj bin\th02\grppsafx.obj bin\th02\op.obj th02\op_02_1.cpp bin\th02\pi_load.obj bin\th02\grp_rect.obj bin\frmdely2.obj th02\op_02_2.cpp bin\th02\exit.obj bin\th02\snd_mmdr.obj bin\th02\snd_mode.obj bin\th02\snd_pmdr.obj bin\th02\snd_load.obj bin\th02\pi_put.obj bin\th02\snd_kaja.obj th02\op_02_3.cpp bin\th02\snd_se.obj bin\frmdely1.obj th02\op_03.cpp th02\op_04.cpp th02\op_05.cpp th02\op_06.cpp
+bin\th02\op.exe: th02\op_01.cpp bin\exit_dos.obj bin\th02\zunerror.obj bin\th02\grppsafx.obj bin\th02\op.obj th02\op_02_1.cpp bin\th02\pi_load.obj bin\th02\grp_rect.obj bin\frmdely2.obj th02\op_02_2.cpp bin\th02\initop.obj bin\th02\exit.obj bin\th02\snd_mmdr.obj bin\th02\snd_mode.obj bin\th02\snd_pmdr.obj bin\th02\snd_load.obj bin\th02\pi_put.obj bin\th02\snd_kaja.obj th02\op_02_3.cpp bin\th02\snd_se.obj bin\frmdely1.obj th02\op_03.cpp th02\op_04.cpp th02\op_05.cpp th02\op_06.cpp
 	$(CC) $(CFLAGS) -ml -Z -DGAME=2 -nbin\th02\ -eOP.EXE @&&|
 $**
 |
@@ -101,7 +101,7 @@ bin\th03\res_yume.com: th03\res_yume.cpp
 $**
 | masters.lib
 
-bin\th03\op.exe: th03\op_01.cpp bin\th03\op.obj bin\th03\cdg_load.obj bin\th03\grppsafx.obj bin\th03\pi_load.obj bin\th03\inp_m_w.obj bin\th03\cdg_p_na.obj bin\hfliplut.obj bin\frmdely2.obj
+bin\th03\op.exe: th03\op_01.cpp bin\th03\op.obj bin\th03\initop.obj bin\th03\cdg_load.obj bin\th03\grppsafx.obj bin\th03\pi_load.obj bin\th03\inp_m_w.obj bin\th03\cdg_p_na.obj bin\hfliplut.obj bin\frmdely2.obj
 	$(CC) $(CFLAGS) -ml -3 -Z -DGAME=3 -nbin\th03\ -eOP.EXE @&&|
 $**
 |
@@ -150,7 +150,7 @@ bin\th05\res_kso.com: th05\res_kso.cpp
 $**
 | masters.lib
 
-bin\th05\op.exe: th05\op010.cpp bin\th05\op.obj th05\op011.cpp th05\m_char.cpp bin\th05\input_s.obj bin\th05\inp_h_w.obj bin\th05\snd_dlym.obj th05\cdg_p_nc.cpp bin\th05\frmdelay.obj bin\th04\cdg_load.obj bin\th05\egcrect.obj bin\hfliplut.obj
+bin\th05\op.exe: th05\op010.cpp bin\th05\op.obj th05\op011.cpp th05\m_char.cpp bin\th05\initop.obj bin\th05\input_s.obj bin\th05\inp_h_w.obj bin\th05\snd_dlym.obj th05\cdg_p_nc.cpp bin\th05\frmdelay.obj bin\th04\cdg_load.obj bin\th05\egcrect.obj bin\hfliplut.obj
 	$(CC) $(CFLAGS) -ml -DGAME=5 -DBINARY='O' -3 -Z -nbin\th05\ -eOP.EXE @&&|
 $**
 |

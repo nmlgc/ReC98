@@ -7,5 +7,9 @@
 // common set of library functions *and* obviously copy-pasted and separately
 // compiled versions of some of these functions?
 
+#include "platform.h"
+#include "th02/snd/data.c"
+#include "th02/snd/se_data.c"
+
 #define frame_delay frame_delay_2
 #include "th02/snd_dlym.cpp"

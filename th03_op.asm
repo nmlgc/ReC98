@@ -3627,7 +3627,7 @@ include th03/hardware/input_sense.asm
 include th02/formats/pi_palette_apply.asm
 include th02/formats/pi_put.asm
 include th02/snd/kajaint.asm
-include th02/initop.asm
+	extern _game_init_op:proc
 	extern CDG_LOAD_SINGLE:proc
 	extern CDG_LOAD_SINGLE_NOALPHA:proc
 	extern CDG_LOAD_ALL_NOALPHA:proc
