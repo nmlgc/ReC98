@@ -55,4 +55,4 @@ typedef struct {
 	int8_t unused_5[182];
 } resident_t;
 
-extern resident_t *resident;
+extern resident_t far *resident;

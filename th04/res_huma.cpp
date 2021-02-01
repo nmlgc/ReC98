@@ -4,8 +4,8 @@
  * required in order to run TH04.
  */
 
-#include <dos.h>
-#include <ReC98.h>
+#include <stddef.h>
+#include "platform.h"
 #include "master.hpp"
 #include "th01/ranks.h"
 #include "th04/score.h"
@@ -19,7 +19,7 @@ const cfg_options_t OPTS_DEFAULT = {
 	SND_BGM_FM26, SND_SE_FM, true
 };
 
-void cfg_init(seg_t resident_sgm)
+void cfg_init(resident_t __seg *resident_sgm)
 {
 	const char *fn = CFG_FN;
 	cfg_options_t opts = OPTS_DEFAULT;
@@ -67,4 +67,4 @@ recreate:
 	} \
 }
 
-#include "th02/res_init.c"
+#include "th02/res_init.cpp"

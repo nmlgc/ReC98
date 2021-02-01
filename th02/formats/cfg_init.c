@@ -1,4 +1,4 @@
-void cfg_init(seg_t resident_sgm)
+void cfg_init(resident_t __seg *resident_sgm)
 {
 	const char *fn = CFG_FN;
 	cfg_options_t opts = OPTS_DEFAULT;

@@ -46,10 +46,6 @@
 	if(val < ring_min()) { \
 		(val) = ring_end; \
 	}
-
-// Resident structure
-#define RES_ID_STRLEN (sizeof(RES_ID) - 1)
-#define RES_PARASIZE ((sizeof(resident_t) + 0xF) >> 4)
 // ------
 
 #endif /* REC98_H */

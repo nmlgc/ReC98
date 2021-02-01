@@ -5,7 +5,7 @@
  */
 
 #include <dos.h>
-#include <ReC98.h>
+#include "platform.h"
 #include "master.hpp"
 #include "th01/ranks.h"
 #include "th02/snd/snd.h"
@@ -28,4 +28,4 @@ const cfg_options_t OPTS_DEFAULT = { SND_BGM_FM, KM_KEY_KEY, RANK_NORMAL };
 #define RES_INIT_BOTTOM \
 	cfg_init(sgm);
 
-#include "th02/res_init.c"
+#include "th02/res_init.cpp"

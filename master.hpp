@@ -87,7 +87,7 @@ int MASTER_RET bgm_sound(int num);
 int MASTER_RET dos_getch(void);
 void MASTER_RET dos_puts2(const char MASTER_PTR *string);
 
-void MASTER_RET dos_free(unsigned seg);
+void MASTER_RET dos_free(void __seg *seg);
 int MASTER_RET dos_create(const char MASTER_PTR *filename, int attrib);
 int MASTER_RET dos_close(int fh);
 int MASTER_RET dos_write(int fh, const void far *buffer, unsigned len);
@@ -462,15 +462,15 @@ void MASTER_RET palette_white_out(unsigned speed);
 // Resident data
 // -------------
 
-unsigned MASTER_RET resdata_exist(
+void __seg* MASTER_RET resdata_exist(
       const char MASTER_PTR *id, unsigned idlen, unsigned parasize
 );
-unsigned MASTER_RET resdata_create(
+void __seg* MASTER_RET resdata_create(
       const char MASTER_PTR *id, unsigned idlen, unsigned parasize
 );
 
 #define resdata_free(seg) \
-	dos_free((seg_t)seg)
+	dos_free(seg)
 // -------------
 
 // Resident palettes
@@ -600,19 +600,32 @@ void MASTER_RET vsync_end(void);
 // Type-safe resident structure allocation and retrieval
 #ifdef __cplusplus
 	template <class T> struct ResData {
+		static unsigned int id_len() {
+			return (sizeof(reinterpret_cast<T *>(0)->id) - 1);
+		}
+
 		static T __seg* create(const char MASTER_PTR *id) {
 			return reinterpret_cast<T __seg *>(resdata_create(
-				id,
-				(sizeof(reinterpret_cast<T *>(0)->id) - 1),
-				((sizeof(T) + 0xF) >> 4)
+				id, id_len(), ((sizeof(T) + 0xF) >> 4)
 			));
 		}
 
 		static T __seg* exist(const char MASTER_PTR *id) {
 			return reinterpret_cast<T __seg *>(resdata_exist(
-				id,
-				(sizeof(reinterpret_cast<T *>(0)->id) - 1),
-				((sizeof(T) + 0xF) >> 4)
+				id, id_len(), ((sizeof(T) + 0xF) >> 4)
+			));
+		}
+
+		// Workarounds for correct code generation
+		static T __seg* create_with_id_from_pointer(const char *&id) {
+			return reinterpret_cast<T __seg *>(resdata_create(
+				id, id_len(), ((sizeof(T) + 0xF) >> 4)
+			));
+		}
+
+		static T __seg* exist_with_id_from_pointer(const char *&id) {
+			return reinterpret_cast<T __seg *>(resdata_exist(
+				id, id_len(), ((sizeof(T) + 0xF) >> 4)
 			));
 		}
 	};

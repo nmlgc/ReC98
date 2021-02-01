@@ -47,4 +47,4 @@ typedef struct {
 	int32_t unused_3;
 } resident_t;
 
-extern resident_t *resident;
+extern resident_t far *resident;

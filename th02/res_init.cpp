@@ -10,19 +10,19 @@
 
 int main(int argc, const unsigned char **argv)
 {
-	seg_t sgm;
-#if GAME == 5
+	resident_t __seg *sgm;
+#if (GAME == 5)
 	int i;
 	resident_t far *resident;
-	char far *resident_bytes;
+	uint8_t far *resident_bytes;
 	const char *res_id = RES_ID;
 #else
 	const char *res_id = RES_ID;
 	int i;
-	char far *resident_bytes;
+	uint8_t far *resident_bytes;
 #endif
 
-	sgm = resdata_exist(res_id, RES_ID_STRLEN, RES_PARASIZE);
+	sgm = ResData<resident_t>::exist_with_id_from_pointer(res_id);
 	dos_puts2("\n\n" LOGO "\n");
 	graph_clear();
 #ifdef RES_INIT_TOP
@@ -53,15 +53,15 @@ int main(int argc, const unsigned char **argv)
 		argv = argv; /* optimization barrier #2 */
 		return 1;
 	}
-	sgm = resdata_create(res_id, RES_ID_STRLEN, RES_PARASIZE);
+	sgm = ResData<resident_t>::create_with_id_from_pointer(res_id);
 	if(!sgm) {
 		dos_puts2("ì‚ê‚Ü‚¹‚ñA‚í‚½‚µ‚Ì‹êŠ‚ª‚È‚¢‚ÌI\n\n");
 		optimization_barrier_3();
 		return 1;
 	}
-	resident_bytes = (char far *)MK_FP(sgm, 0);
+	resident_bytes = reinterpret_cast<uint8_t far *>(sgm);
 	dos_puts2(INITIALIZED "\n\n");
-	for(i = (RES_ID_STRLEN + 1); i < sizeof(resident_t); i++) {
+	for(i = (ResData<resident_t>::id_len() + 1); i < sizeof(resident_t); i++) {
 		resident_bytes[i] = 0;
 	}
 	RES_INIT_BOTTOM;
