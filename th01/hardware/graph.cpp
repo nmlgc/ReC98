@@ -18,10 +18,10 @@ extern page_t page_back;
 /// VRAM plane "structures"
 /// -----------------------
 #define Planes_declare(var) \
-	dots8_t *var##_B = reinterpret_cast<dots8_t *>(MK_FP(SEG_PLANE_B, 0)); \
-	dots8_t *var##_R = reinterpret_cast<dots8_t *>(MK_FP(SEG_PLANE_R, 0)); \
-	dots8_t *var##_G = reinterpret_cast<dots8_t *>(MK_FP(SEG_PLANE_G, 0)); \
-	dots8_t *var##_E = reinterpret_cast<dots8_t *>(MK_FP(SEG_PLANE_E, 0));
+	dots8_t far *var##_B = reinterpret_cast<dots8_t __seg *>(SEG_PLANE_B); \
+	dots8_t far *var##_R = reinterpret_cast<dots8_t __seg *>(SEG_PLANE_R); \
+	dots8_t far *var##_G = reinterpret_cast<dots8_t __seg *>(SEG_PLANE_G); \
+	dots8_t far *var##_E = reinterpret_cast<dots8_t __seg *>(SEG_PLANE_E);
 
 #define Planes_next_row(var) \
 	var##_B += ROW_SIZE; \
@@ -235,7 +235,7 @@ void z_palette_set_show(int col, int r, int g, int b)
 /// --------------------
 void z_graph_clear()
 {
-	dots8_t *plane = reinterpret_cast<dots8_t *>(MK_FP(SEG_PLANE_B, 0));
+	dots8_t far *plane = reinterpret_cast<dots8_t __seg *>(SEG_PLANE_B);
 
 	grcg_setcolor_rmw(0);
 	memset(plane, 0xFF, PLANE_SIZE);
@@ -252,7 +252,7 @@ void z_graph_clear_0(void)
 
 void z_graph_clear_col(uint4_t col)
 {
-	dots8_t *plane = reinterpret_cast<dots8_t *>(MK_FP(SEG_PLANE_B, 0));
+	dots8_t far *plane = reinterpret_cast<dots8_t __seg *>(SEG_PLANE_B);
 
 	grcg_setcolor_rmw(col);
 	memset(plane, 0xFF, PLANE_SIZE);

@@ -6,7 +6,6 @@
 #pragma codeseg SHARED
 
 extern "C" {
-#include <dos.h>
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"

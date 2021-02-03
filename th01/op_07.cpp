@@ -4,7 +4,6 @@
  */
 
 extern "C" {
-#include <dos.h>
 #include "ReC98.h"
 #include "master.hpp"
 #include "th01/hardware/graph.h"

@@ -94,7 +94,7 @@ void pascal near draw_tracks(unsigned char sel)
 void pascal near screen_back_B_snap(void)
 {
 	int p;
-	screen_back_B = (dots8_t *)(MK_FP(hmem_allocbyte(PLANE_SIZE), 0));
+	screen_back_B = (dots8_t __seg *)(hmem_allocbyte(PLANE_SIZE));
 	PLANE_DWORD_BLIT(screen_back_B, VRAM_PLANE_B);
 }
 
@@ -218,9 +218,9 @@ void pascal near cmt_back_snap(void)
 	screen_y_t y;
 	int i;
 	for(i = 0; i < PL_COUNT; i++) {
-		cmt_back[i] = reinterpret_cast<dots8_t *>(MK_FP(
-			hmem_allocbyte(304 * (320 / BYTE_DOTS) + 16 * (320 / BYTE_DOTS)), 0
-		));
+		cmt_back[i] = reinterpret_cast<dots8_t __seg *>(
+			hmem_allocbyte(304 * (320 / BYTE_DOTS) + 16 * (320 / BYTE_DOTS))
+		);
 	}
 	CMT_BACK_BLIT(cmt_back, ps, VRAM_PLANE, pd);
 }

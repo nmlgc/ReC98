@@ -216,6 +216,23 @@ C++, Open Watcom, and Visual C++, which will ease future third-party ports.
   `switch` tables that originally were word-aligned, put a single
   `#pragma option -a2` *after* all header inclusions.
 
+## Portability
+
+* Use `__seg *` wherever it doesn't make the code all too ugly. Type
+  conversions into `far` pointers automatically set the offset to 0, so
+  `MK_FP` is not necessary in such a case:
+
+  ```c++
+  void resident_set(resident __seg *seg)
+  {
+    // Redundant, and requires the MK_FP() macro to be declared
+    resident_t far *resident = MK_FP(resident_seg, 0);
+
+    // Does the same, without requiring a macro
+    resident_t far *resident = resident_seg;
+  }
+  ```
+
 ## Naming conventions
 
 * ASM file extensions: `.asm` if they emit code, `.inc` if they don't

@@ -3,7 +3,6 @@
  * Code segment #3 of TH02's MAINE.EXE
  */
 
-#include <dos.h>
 #include <stddef.h>
 #include "platform.h"
 #include "master.hpp"
@@ -26,7 +25,7 @@ int unused_6;
 
 int pascal cfg_load(void)
 {
-	seg_t resident_sgm;
+	resident_t __seg *resident_sgm;
 
 	file_ropen(CFG_FN);
 	file_seek(offsetof(cfg_t, resident), 0);
@@ -35,7 +34,7 @@ int pascal cfg_load(void)
 	if(!resident_sgm) {
 		return 0;
 	}
-	resident = MK_FP(resident_sgm, 0);
+	resident = resident_sgm;
 	rem_lives = resident->rem_lives;
 	rem_bombs = resident->rem_bombs;
 	rank = resident->rank;

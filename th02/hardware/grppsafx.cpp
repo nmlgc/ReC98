@@ -21,7 +21,7 @@ void DEFCONV graph_putsa_fx(
 {
 	uint16_t codepoint;
 	dots16_t glyph_row;
-	unsigned char far *vram;
+	dots8_t far *vram;
 	int fullwidth;
 	int first_bit;
 	int weight = (col_and_fx >> 4) & 3;

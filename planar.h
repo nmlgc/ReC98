@@ -42,13 +42,13 @@ typedef enum {
 
 // Since array subscripts create slightly different assembly in places, we
 // offer both variants.
-extern dots8_t *VRAM_PLANE[PL_COUNT];
+extern dots8_t far *VRAM_PLANE[PL_COUNT];
 // And no, expressing these as a struct won't generate the same ASM.
 // Been there, tried that.
-extern dots8_t *VRAM_PLANE_B;
-extern dots8_t *VRAM_PLANE_G;
-extern dots8_t *VRAM_PLANE_R;
-extern dots8_t *VRAM_PLANE_E;
+extern dots8_t far *VRAM_PLANE_B;
+extern dots8_t far *VRAM_PLANE_G;
+extern dots8_t far *VRAM_PLANE_R;
+extern dots8_t far *VRAM_PLANE_E;
 
 // Byte offset of an 8-pixel-aligned X/Y position on a VRAM bitplane,
 // relative to the beginning (= top-left corner) of the plane.
