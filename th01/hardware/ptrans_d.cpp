@@ -44,9 +44,7 @@ static const int FRAME_COUNT = (
 );
 
 void pagetrans_diagonal_8x8_with_palette(
-	unsigned int step_ms,
-	Palette4 far &pal_cur,
-	const Palette4 far &pal_target
+	unsigned int step_ms, Palette4 &pal_cur, const Palette4 &pal_target
 )
 {
 	int comp;

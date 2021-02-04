@@ -741,7 +741,7 @@ void graph_putsa_fx(
 	register screen_x_t x = left;
 	uint16_t codepoint;
 	dots16_t glyph_row;
-	unsigned char far *vram;
+	dots8_t far *vram;
 	int fullwidth;
 	int first_bit;
 	int weight = fx_weight_from(col_and_fx);

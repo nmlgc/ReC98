@@ -1,6 +1,6 @@
 extern bb_seg_t bb_stage_seg;
 
-void pascal near bb_stage_load(const char far* fn)
+void pascal near bb_stage_load(const char *fn)
 {
 #if GAME == 5
 	bb_stage_seg = bb_load(fn);

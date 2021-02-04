@@ -233,6 +233,14 @@ C++, Open Watcom, and Visual C++, which will ease future third-party ports.
   }
   ```
 
+* All original `.EXE` binaries use the *large* memory model, meaning that both
+  function and data pointers are `far` by default. Therefore, pointers and
+  references should only explicitly be declared `far` if
+
+  1. they are actually constructed from a segment and an offset via the two
+     methods above, or
+  2. the code performs segment/offset arithmetic on them.
+
 ## Naming conventions
 
 * ASM file extensions: `.asm` if they emit code, `.inc` if they don't
