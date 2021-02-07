@@ -1,7 +1,8 @@
 #pragma codeseg SHARED
 
 extern "C" {
-#include <dos.h>
+#include "platform.h"
+#include "x86real.h"
 #include "master.hpp"
 #include "th01/hardware/vplanset.h"
 #include "th02/mem.h"

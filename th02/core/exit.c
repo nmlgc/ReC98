@@ -1,6 +1,7 @@
 #pragma codeseg SHARED
 
-#include <dos.h>
+#include "platform.h"
+#include "x86real.h"
 #include "master.hpp"
 #include "th02/core/initexit.h"
 

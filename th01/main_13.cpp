@@ -6,7 +6,6 @@
 #pragma option -2 -Z-
 
 extern "C" {
-
 #include <dos.h>
 #include "platform.h"
 #include "pc98.h"

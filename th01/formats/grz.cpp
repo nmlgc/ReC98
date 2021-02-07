@@ -1,10 +1,10 @@
 #pragma codeseg PTN_GRP_GRZ
 
 extern "C" {
-#include <dos.h>
 #include <mem.h>
 #include <stddef.h>
 #include "platform.h"
+#include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"

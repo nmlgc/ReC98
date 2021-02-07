@@ -1,5 +1,5 @@
-#include <dos.h>
 #include <stddef.h>
+#include "x86real.h"
 #include "master.hpp"
 #include "th01/common.h"
 #include "th01/resident.hpp"

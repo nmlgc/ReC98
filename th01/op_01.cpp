@@ -4,10 +4,10 @@
  */
 
 extern "C" {
-#include <dos.h>
 #include <mem.h>
 #include <stdio.h>
 #include "ReC98.h"
+#include "x86real.h"
 #include "pc98kbd.h"
 #include "master.hpp"
 #include "th01/ranks.h"

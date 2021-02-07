@@ -353,6 +353,10 @@ int MASTER_RET irand(void);
 // Optionally buffered single-file I/O
 // -----------------------------------
 
+#define SEEK_CUR    1
+#define SEEK_END    2
+#define SEEK_SET    0
+
 int MASTER_RET file_ropen(const char MASTER_PTR *filename);
 int MASTER_RET file_read(void far *buf, unsigned wsize);
 long MASTER_RET file_size(void);

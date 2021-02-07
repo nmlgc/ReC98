@@ -1,8 +1,8 @@
 #pragma codeseg SHARED
 
 extern "C" {
-#include <dos.h>
 #include "platform.h"
+#include "x86real.h"
 #include "master.hpp"
 #include "libs/kaja/kaja.h"
 #include "th03/hardware/input.h"

@@ -2,7 +2,8 @@
 
 extern "C" {
 #include <stddef.h>
-#include <dos.h>
+#include "platform.h"
+#include "x86real.h"
 #include "master.hpp"
 #include "th01/hardware/vplanset.h"
 #include "th03/core/initexit.h"

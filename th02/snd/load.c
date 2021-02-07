@@ -1,7 +1,7 @@
 #pragma codeseg SHARED
 
-#include <dos.h>
 #include "platform.h"
+#include "x86real.h"
 #include "libs/kaja/kaja.h"
 #include "th02/snd/snd.h"
 

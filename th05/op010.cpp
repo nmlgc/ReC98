@@ -6,7 +6,6 @@
 #pragma codeseg op_01_TEXT
 
 extern "C" {
-#include <dos.h>
 #include <process.h>
 #include "platform.h"
 #include "master.hpp"

@@ -1,6 +1,6 @@
-#include <dos.h>
 #include <string.h>
 #include "platform.h"
+#include "x86real.h"
 #include "pc98.h"
 #include "master.hpp"
 #include "th01/math/subpixel.hpp"

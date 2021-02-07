@@ -2,9 +2,9 @@
 #pragma option -3
 
 extern "C" {
-#include <dos.h>
 #include <mem.h>
 #include "platform.h"
+#include "x86real.h"
 #include "pc98.h"
 #include "master.hpp"
 #include "th02/formats/pi.h"

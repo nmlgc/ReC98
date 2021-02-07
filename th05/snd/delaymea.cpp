@@ -1,8 +1,8 @@
 #pragma codeseg SHARED_
 
 extern "C" {
-#include <dos.h>
 #include "platform.h"
+#include "x86real.h"
 #include "libs/kaja/kaja.h"
 #include "th02/hardware/frmdelay.h"
 #include "th05/snd/snd.h"

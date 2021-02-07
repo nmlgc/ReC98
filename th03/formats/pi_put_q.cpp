@@ -2,8 +2,8 @@
 #pragma option -3
 
 extern "C" {
-#include <dos.h>
 #include "platform.h"
+#include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"

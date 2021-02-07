@@ -4,7 +4,8 @@
  */
 
 extern "C" {
-#include <dos.h>
+#include "platform.h"
+#include "x86real.h"
 #include "master.hpp"
 #include "th01/formats/grc.cpp"
 #include "th01/hardware/grcg8x8m.cpp"

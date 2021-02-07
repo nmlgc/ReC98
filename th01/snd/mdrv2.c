@@ -5,12 +5,12 @@
 
 #pragma option -Z-
 
-#include <dos.h>
 #include <fcntl.h>
 #include <io.h>
 #include <malloc.h>
 #include <string.h>
 #include "platform.h"
+#include "x86real.h"
 
 #define	MDRV2 0xf2
 #define MDRV2_CALL(func) __asm { \

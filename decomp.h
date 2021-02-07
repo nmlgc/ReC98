@@ -59,7 +59,7 @@
 }
 	#if defined(__TURBOC__) && defined(__MSDOS__)
 		// Declared in <dos.h> in these compilers.
-		void __emit__(unsigned char __byte, ...);
+		void __emit__(uint8_t __byte, ...);
 	#endif
 
 	struct Decomp_ES { void  __seg* value() { return (void  __seg *)(_ES); } };

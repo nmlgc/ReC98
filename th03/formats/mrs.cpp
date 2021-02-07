@@ -2,7 +2,6 @@
 #pragma codeseg SHARED
 
 extern "C" {
-#include <dos.h>
 #include <stddef.h>
 #include "platform.h"
 #include "pc98.h"

@@ -6,8 +6,8 @@
 #pragma option -2 -Z-
 #pragma warn -aus
 
-#include <dos.h>
 #include "platform.h"
+#include "x86real.h"
 #include "pc98.h"
 #include "th01/hardware/vsync.h"
 

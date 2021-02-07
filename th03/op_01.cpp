@@ -5,7 +5,6 @@
 
 extern "C" {
 #include <stddef.h>
-#include <dos.h>
 #include "platform.h"
 #include "master.hpp"
 #include "th03/common.h"

@@ -6,12 +6,12 @@
 
 #pragma option -1 -Z-
 
-#include <dos.h>
 #include <mbctype.h>
 #include <mbstring.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include "platform.h"
+#include "x86real.h"
 #include "pc98.h"
 #include "master.hpp"
 #include "th01/hardware/ztext.h"

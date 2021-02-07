@@ -1,7 +1,6 @@
 #pragma codeseg SHARED_
 
 extern "C" {
-#include <dos.h>
 #include "platform.h"
 #include "decomp.h"
 #include "master.hpp"

@@ -4,8 +4,8 @@
  */
 
 extern "C" {
-#include <dos.h>
 #include "th02/th02.h"
+#include "x86real.h"
 #include "master.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/formats/pi.h"
