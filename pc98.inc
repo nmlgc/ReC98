@@ -18,6 +18,17 @@ RES_Y = 400
 ROW_SIZE = (RES_X / 8)
 PLANE_SIZE = (ROW_SIZE * RES_Y)
 COLOR_COUNT = 16
+
+; RGB color triple, used for the Palettes structure
+rgb_t struc
+	r db ?
+	g db ?
+	b db ?
+rgb_t ends
+
+palette_t struc
+	colors	rgb_t COLOR_COUNT dup(<?>)
+palette_t ends
 ; ========
 
 SEG_PLANE_B = 0A800h

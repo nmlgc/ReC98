@@ -2543,7 +2543,7 @@ loc_CE8B:
 		inc	si
 
 loc_CEAA:
-		cmp	si, PALETTE_COLORS
+		cmp	si, COLOR_COUNT
 		jl	short loc_CE8B
 		call	far ptr	palette_show
 		mov	PaletteTone, 100
@@ -2609,7 +2609,7 @@ loc_CF2D:
 		inc	di
 
 loc_CF34:
-		cmp	di, PALETTE_COLORS
+		cmp	di, COLOR_COUNT
 		jl	short loc_CEFA
 		call	far ptr	palette_show
 		push	1
