@@ -10,11 +10,10 @@ MOTION_UPDATE_DEF macro instance
 	;
 	; Point pascal near motion_update(motion_t near *motion);
 	public _MOTION_UPDATE_&instance
-	_motion_update_&instance	proc near
-	motion	= word ptr 2
+	_motion_update_&instance proc near
+	arg_bx	near, @motion:word
 
-		mov	bx, sp
-		mov	bx, ss:[bx+motion]
+		mov	bx, @motion
 		mov	ax, word ptr [bx+motion_t.cur]
 		mov	word ptr [bx+motion_t.prev], ax
 		add	ax, word ptr [bx+motion_t.velocity]
@@ -24,6 +23,6 @@ MOTION_UPDATE_DEF macro instance
 		mov	word ptr [bx+motion_t.prev], dx
 		add	dx, word ptr [bx+motion_t.velocity]
 		mov	word ptr [bx+motion_t.cur], dx
-		retn	2
-	_motion_update_&instance	endp
+		ret_bx
+	_motion_update_&instance endp
 endm

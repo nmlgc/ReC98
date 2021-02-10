@@ -179,6 +179,38 @@ C++, Open Watcom, and Visual C++, which will ease future third-party ports.
         </tr>
     </table>
 
+* In ASM functions with ZUN's silly `MOV BX, SP` stack frame, use the `arg_bx`
+  and `ret_bx` macros from `th03/arg_bx.inc` to declare parameters and return
+  with the correct amount of bytes released from the stack. The parameter
+  names only get a single `@` as their prefix in this case:
+  <table>
+        <tr>
+            <td>
+                <code>foo proc near</code><br />
+                <code>arg_2 = byte ptr 2</code><br />
+                <code>arg_0 = word ptr 4</code><br />
+                <code></code><br />
+                <code>mov bx, sp</code><br />
+                <code>mov	al, ss:[bx+arg_2]</code><br />
+                <code>mov	bx, ss:[bx+arg_0]</code><br />
+                <code>ret 2</code><br />
+                <code>foo endp</code>
+            </td>
+            <td>→</td>
+            <td>
+                <code>foo	proc near</code><br />
+                <code>arg_bx  near, @arg_2:byte, @arg_0:word</code><br />
+                <code></code><br />
+                <code></code><br />
+                <code></code><br />
+                <code>mov	al, @arg_0</code><br />
+                <code>mov	bx, @arg_2</code><br />
+                <code>ret_bx</code><br />
+                <code>foo endp</code>
+            </td>
+        </tr>
+    </table>
+
 * Try moving repeated sections of code into a separate `inline` function
   before grabbing the `#define` hammer. Turbo C++ will generally inline
   everything declared as `inline` that doesn't contain `do`, `for`, `while`,

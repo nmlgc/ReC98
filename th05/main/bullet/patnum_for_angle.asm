@@ -1,11 +1,9 @@
 public BULLET_PATNUM_FOR_ANGLE
-bullet_patnum_for_angle	proc near
-@@angle      	= byte ptr 2
-@@patnum_base	= word ptr 4
+bullet_patnum_for_angle proc near
+arg_bx	near, @angle:byte, @patnum_base:word
 
-	mov	bx, sp
-	mov	al, ss:[bx+@@angle]
-	mov	bx, ss:[bx+@@patnum_base]
+	mov	al, @angle
+	mov	bx, @patnum_base
 	add	al, 3
 	; Yes, this is intended to also cover Yumeko's swords, which start
 	; at patnum 193.
@@ -17,6 +15,6 @@ bullet_patnum_for_angle	proc near
 	xor	ah, ah
 	shr	al, 3
 	add	ax, bx
-	retn	4
-bullet_patnum_for_angle	endp
+	ret_bx
+bullet_patnum_for_angle endp
 	nop

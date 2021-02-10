@@ -63,7 +63,7 @@ MRETURN macro
 	pop	DI
 	pop	SI
 	pop	DS
-	ret	2		; ZUN change, since only one parameter is passed via the stack
+	ret_bx	; ZUN change
 	EVEN
 	endm
 
@@ -73,7 +73,7 @@ public Z_SUPER_ROLL_PUT_TINY_32X32_RAW
 z_super_roll_put_tiny_32x32_raw	proc near
 
 ; Parameters
-@@patnum = word ptr ss:[bx+2]
+arg_bx near, @patnum:word
 @@left equ ax
 @@top equ dx
 
@@ -82,11 +82,10 @@ z_super_roll_put_tiny_32x32_raw	proc near
 @@first_mask equ dl
 @@rows_left equ ch
 
-	mov	bx, sp
 	push	ds
 	push	si
 	push	di
-	mov	bx, @@patnum
+	mov	bx, @patnum
 	shl	bx, 1
 	mov	ds, super_patdata[bx]
 	mov	bx, @@top

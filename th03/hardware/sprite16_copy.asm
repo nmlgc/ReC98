@@ -20,16 +20,16 @@ page_blit endp
 public SPRITE16_SPRITES_COPY_PAGE
 SPRITE16_SPRITES_COPY_PAGE proc far
 
-@@dst_page = 4
-
 	xor	dst_seg, dst_seg
 	mov	bx, SPRITE16_PLANE_SIZE
 	push	bx
 	nopcall	smem_wget
 	xchg	ax, dst_seg
 	jb	short @@ret
-	mov	bx, sp
-	mov	ax, ss:[bx+@@dst_page]
+
+arg_bx	far, @dst_page:word
+
+	mov	ax, @dst_page
 	push	si
 	push	di
 	push	ds
@@ -53,7 +53,7 @@ SPRITE16_SPRITES_COPY_PAGE proc far
 	mov	ax, 1
 
 @@ret:
-	retf	2
+	ret_bx
 SPRITE16_SPRITES_COPY_PAGE endp
 
 src_seg equ <>

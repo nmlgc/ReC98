@@ -2,6 +2,7 @@
 	.model large SHARED_
 	locals
 
+include th03/arg_bx.inc
 include th03/formats/cdg.inc
 
 	extrn FILE_ROPEN:proc
@@ -159,12 +160,10 @@ cdg_load_all endp
 
 public CDG_FREE
 cdg_free proc far
+arg_bx	far, @slot:word
 
-@@slot	= word ptr 4
-
-	mov	bx, sp
 	push	di
-	mov	di, ss:[bx+@@slot]
+	mov	di, @slot
 	shl	di, 4	; *= size cdg_t
 	add	di, offset _cdg_slots.seg_alpha
 	cmp	word ptr [di], 0
@@ -181,7 +180,7 @@ cdg_free proc far
 
 @@ret:
 	pop	di
-	retf	2
+	ret_bx
 cdg_free endp
 	align 2
 

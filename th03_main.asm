@@ -19,6 +19,7 @@
 		; And yes, we can't move this to an include file for some reason.
 
 include ReC98.inc
+include th03/arg_bx.inc
 include th03/th03.inc
 include th03/main/playfld.inc
 include th03/main/player/bomb.inc

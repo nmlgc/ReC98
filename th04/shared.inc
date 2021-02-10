@@ -3,6 +3,7 @@
 ; Types shared between TH04 and TH05
 
 include defconv.inc
+include th03/arg_bx.inc
 include th02/score.inc
 
 ; Formats

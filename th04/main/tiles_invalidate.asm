@@ -1,19 +1,18 @@
 ; void pascal near tiles_invalidate_around(Point center);
 public TILES_INVALIDATE_AROUND
-tiles_invalidate_around	proc near
-@@center	= Point ptr 2
+tiles_invalidate_around proc near
+arg_bx	near, @center:dword
 
-	mov	bx, sp
 	mov	dx, _tile_invalidate_box.x
 	shr	dx, 1
-	mov	ax, ss:[bx+@@center.x]
+	mov	ax, @center.x
 	sar	ax, 4
 	sub	ax, dx
 	cmp	ax, PLAYFIELD_W
 	jl	short @@left_edge_left_of_playfield?
 
 @@outside_playfield:
-	retn	4
+	ret_bx
 ; ---------------------------------------------------------------------------
 
 @@left_edge_left_of_playfield?:
@@ -37,7 +36,7 @@ tiles_invalidate_around	proc near
 	mov	cx, ax	; CX = number of horizontal tiles to invalidate
 	mov	dx, _tile_invalidate_box.y
 	sar	dx, 1
-	mov	ax, ss:[bx+@@center.y]
+	mov	ax, @center.y
 	sar	ax, 4
 	add	ax, TILE_H
 	sub	ax, dx
@@ -105,5 +104,5 @@ tiles_invalidate_around	proc near
 	jg	short @@set_nowrap
 	pop	di
 	pop	si
-	retn	4
-tiles_invalidate_around	endp
+	ret_bx
+tiles_invalidate_around endp

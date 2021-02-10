@@ -1,9 +1,8 @@
 public PLAYPERF_RAISE
-playperf_raise	proc far
-delta	= byte ptr 4
+playperf_raise proc far
+arg_bx	far, @delta:byte
 
-	mov	bx, sp
-	mov	al, ss:[bx+delta]
+	mov	al, @delta
 	add	al, _playperf
 	cmp	al, _playperf_max
 	jbe	short @@ret
@@ -11,23 +10,22 @@ delta	= byte ptr 4
 
 @@ret:
 	mov	_playperf, al
-	retf	2
-playperf_raise	endp
+	ret_bx
+playperf_raise endp
 	even
 
 
 public PLAYPERF_LOWER
-playperf_lower	proc far
-delta	= byte ptr 4
+playperf_lower proc far
+arg_bx	far, @delta:byte
 
-	mov	bx, sp
 	mov	al, _playperf
-	sub	al, ss:[bx+delta]
+	sub	al, @delta
 	cmp	al, _playperf_min
 	jge	short @@ret
 	mov	al, _playperf_min
 
 @@ret:
 	mov	_playperf, al
-	retf	2
-playperf_lower	endp
+	ret_bx
+playperf_lower endp

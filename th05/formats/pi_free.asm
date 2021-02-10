@@ -1,9 +1,8 @@
 public PI_FREE
 func pi_free
-@@slot	= word ptr 4
+arg_bx	far, @slot:word
 
-	mov	bx, sp
-	mov	bx, ss:[bx+@@slot]
+	mov	bx, @slot
 	mov	ax, bx
 	shl	bx, 2
 	add	bx, offset _pi_buffers
@@ -18,5 +17,5 @@ func pi_free
 	mov	dword ptr [bx], 0
 	call	graph_pi_free
 @@ret:
-	ret	2
+	ret_bx
 endfunc

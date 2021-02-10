@@ -2,23 +2,21 @@ scoredat_func macro nam:req
 	public nam
 	nam	proc near
 	if GAME eq 5
+		arg_bx	near
 		push	si
 		mov 	bx, offset _hi
 	else
-		mov 	bx, sp
+		arg_bx	near, @hi:word
 		push	si
-		mov 	bx, ss:[bx+2]
+		mov 	bx, @hi
 	endif
 		mov	si, bx
 
 	endfunc macro
 		pop 	si
-		if GAME eq 5
-			retn
-			nam endp
-		else
-			retn 2
-			nam endp
+		ret_bx
+		nam endp
+		if GAME eq 4
 			; TODO: Turn into unconditional EVEN once this is a separate
 			; translation unit
 			even

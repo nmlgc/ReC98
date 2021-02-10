@@ -6,8 +6,9 @@ endfunc
 
 
 func SND_SE_PLAY
-	mov	bx, sp
-	mov	dx, ss:[bx+4]
+arg_bx	far, @new_se:word
+
+	mov	dx, @new_se
 	cmp	_snd_se_mode, SND_SE_OFF
 	jz	short @@ret
 	cmp	_snd_se_playing, -1
@@ -26,7 +27,7 @@ func SND_SE_PLAY
 	mov	_snd_se_frame, 0
 
 @@ret:
-	ret	2
+	ret_bx
 endfunc
 
 

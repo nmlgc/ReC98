@@ -9,29 +9,25 @@ RANDRING_NEXT_DEF macro instance
 		nop
 
 	public RANDRING&instance&_NEXT16_AND
-	randring&instance&_next16_and	proc near
-	arg @@mask:byte
-
+	randring&instance&_next16_and proc near
 		mov	bx, _randring_p
 		mov	ax, word ptr _randring[bx]
 		inc	byte ptr _randring_p
-		mov	bx, sp
-		and	ax, ss:[bx+2]
-		ret	2
-	randring&instance&_next16_and	endp
+	arg_bx near, @mask:byte
+		and	ax, @mask
+		ret_bx
+	randring&instance&_next16_and endp
 		nop
 
 	public RANDRING&instance&_NEXT16_MOD
-	randring&instance&_next16_mod	proc near
-	arg @@n:word
-
+	randring&instance&_next16_mod proc near
 		mov	bx, _randring_p
 		mov	ax, word ptr _randring[bx]
 		inc	byte ptr _randring_p
 		xor	dx, dx
-		mov	bx, sp
-		div	word ptr ss:[bx+2]
+	arg_bx near, @n:word
+		div	word ptr @mask
 		mov	ax, dx
-		ret	2
-	randring&instance&_next16_mod	endp
+		ret_bx
+	randring&instance&_next16_mod endp
 endm

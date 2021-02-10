@@ -2,6 +2,7 @@
 	locals
 
 include libs/master.lib/master.inc
+include th03/arg_bx.inc
 include th02/main/hud/hud.inc
 include th04/gaiji/gaiji.inc
 
@@ -16,24 +17,21 @@ MAIN_01_TEXT	segment	word public 'CODE' use16
 ; 	utram_y_t y, unsigned char value, unsigned int atrb
 ; );
 public HUD_BAR_PUT
-HUD_BAR_PUT	proc near
-@@atrb	= word ptr ss:[bx+2]
-@@value	= byte ptr ss:[bx+4]
-@@y    	= word ptr ss:[bx+6]
+HUD_BAR_PUT proc near
+arg_bx 	near, @atrb:word, @value:byte, @y:word
 
-	mov	bx, sp
 	push	di
 	push	ds
 	pop	es
 	mov	di, offset _hud_gaiji_row
 	push	HUD_LEFT
-	push	@@y
+	push	@y
 	push	ds
 	push	di
-	push	@@atrb
+	push	@atrb
 	mov	al, g_BAR_MAX
 	mov	cx, HUD_KANJI_W
-	mov	bl, @@value
+	mov	bl, @value
 	cmp	bl, BAR_MAX
 	jb	short @@below_max
 
@@ -68,8 +66,8 @@ HUD_BAR_PUT	proc near
 @@put:
 	call	GAIJI_PUTSA
 	pop	di
-	retn	6
-HUD_BAR_PUT	endp
+	ret_bx
+HUD_BAR_PUT endp
 MAIN_01_TEXT	ends
 
 	end

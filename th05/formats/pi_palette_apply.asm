@@ -1,11 +1,10 @@
 public PI_PALETTE_APPLY
-pi_palette_apply	proc
-@@slot	= word ptr cPtrSize
+pi_palette_apply proc
+arg_bx	far, @slot:word
 
-	mov	bx, sp
 	push	si
 	push	di
-	mov	si, ss:[bx+@@slot]
+	mov	si, @slot
 	imul	si, size PiHeader
 	add	si, offset _pi_headers + PiHeader._palette
 	mov	di, offset Palettes
@@ -16,5 +15,5 @@ pi_palette_apply	proc
 	call	palette_show
 	pop	di
 	pop	si
-	ret	2
-pi_palette_apply	endp
+	ret_bx
+pi_palette_apply endp

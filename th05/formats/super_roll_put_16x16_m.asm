@@ -2,7 +2,7 @@ public Z_SUPER_ROLL_PUT_16X16_MONO_RAW
 z_super_roll_put_16x16_mono_raw	proc near
 
 ; Parameters
-@@patnum = word ptr ss:[bx+2]
+arg_bx near, @patnum:word
 @@left equ cx
 @@top equ ax
 
@@ -11,7 +11,6 @@ z_super_roll_put_16x16_mono_raw	proc near
 @@rows_left equ ch
 @@carry_pixels equ bl
 
-	mov	bx, sp
 	push	ds
 	push	si
 	push	di
@@ -22,7 +21,7 @@ z_super_roll_put_16x16_mono_raw	proc near
 	mov	ax, @@left
 	shr	ax, 3
 	add	di, ax
-	mov	bx, @@patnum
+	mov	bx, @patnum
 	shl	bx, 1
 	mov	ds, super_patdata[bx]
 	xor	si, si
@@ -167,6 +166,6 @@ z_super_roll_put_16x16_mono_raw	proc near
 	pop	di
 	pop	si
 	pop	ds
-	retn	2
-z_super_roll_put_16x16_mono_raw	endp
+	ret_bx
+z_super_roll_put_16x16_mono_raw endp
 	even
