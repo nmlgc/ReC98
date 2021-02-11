@@ -14,7 +14,7 @@ retfunc macro
 	endif
 endm
 proc_defconv snd_se_play, SND_SE_PLAY
-@@se	= [bp+6]
+	arg returns @@se:word
 
 	push	bp
 	mov	bp, sp

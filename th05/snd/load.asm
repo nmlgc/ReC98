@@ -11,9 +11,8 @@
 ; current snd_bgm_mode nor '[fn].m' exist.
 
 ; void __stdcall snd_load(int func, const char *fn)
-snd_load	proc
-@@func	= word ptr (cPtrSize + 2)
-@@fn	= dword ptr (cPtrSize + 2 + 2)
+snd_load proc
+	arg @@func:word, @@fn:far ptr
 
 	push	bp
 	mov	bp, sp
@@ -22,8 +21,8 @@ snd_load	proc
 	mov	dx, ds
 	mov	es, dx
 	mov	di, offset _snd_load_fn
-	lds	si, [bp+@@fn]
-	mov	bp, [bp+@@func]
+	lds	si, @@fn
+	mov	bp, @@func
 	mov	cx, SND_LOAD_FN_LEN
 	rep movsb
 	mov	ds, dx
@@ -95,4 +94,4 @@ snd_load	proc
 	pop	si
 	pop	bp
 	ret	6
-snd_load	endp
+snd_load endp

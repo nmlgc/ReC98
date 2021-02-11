@@ -1,13 +1,13 @@
 public PI_LOAD
 func pi_load
-@@fn	= dword ptr (cPtrSize + 2)
-@@slot	= word ptr (cPtrSize + 2 + dPtrSize)
+	; (PASCAL calling convention, parameter list needs to be reversed here)
+	arg @@fn:ptr, @@slot:word
 
 	push	bp
 	mov	bp, sp
 	push	si
 	push	di
-	mov	di, [bp+@@slot]
+	mov	di, @@slot
 	push	di
 	call	pi_free
 	mov	si, di
@@ -15,8 +15,8 @@ func pi_load
 	add	si, offset _pi_buffers
 	imul	di, size PiHeader
 	add	di, offset _pi_headers
-	push	word ptr [bp+@@fn+2]
-	push	word ptr [bp+@@fn]
+	push	word ptr @@fn+2
+	push	word ptr @@fn
 	push	ds
 	push	di
 	push	ds

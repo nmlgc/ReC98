@@ -15,7 +15,6 @@
 locals
 
 LDATA = @DataSize
-cPtrSize = (@CodeSize + 1) * 2
 dPtrSize = (@DataSize + 1) * 2
 
 ; ctype character classes

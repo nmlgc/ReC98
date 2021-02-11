@@ -1,8 +1,7 @@
 public PI_PUT_8
 pi_put_8 proc
-@@slot	= word ptr [bp + (cPtrSize + 2)]
-@@top	= word ptr [bp + (cPtrSize + 4)]
-@@left	= word ptr [bp + (cPtrSize + 6)]
+	; (PASCAL calling convention, parameter list needs to be reversed here)
+	arg @@slot:word, @@top:word, @@left:word
 
 	push	bp
 	mov	bp, sp
@@ -32,10 +31,8 @@ pi_put_8 endp
 
 public PI_PUT_QUARTER_8
 pi_put_quarter_8 proc
-@@quarter	= byte ptr [bp + (cPtrSize + 2)]
-@@slot	= word ptr [bp + (cPtrSize + 4)]
-@@top	= word ptr [bp + (cPtrSize + 6)]
-@@left	= word ptr [bp + (cPtrSize + 8)]
+	; (PASCAL calling convention, parameter list needs to be reversed here)
+	arg @@quarter:byte, @@slot:word, @@top:word, @@left:word
 
 	push	bp
 	mov	bp, sp

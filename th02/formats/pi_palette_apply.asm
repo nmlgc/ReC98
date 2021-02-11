@@ -3,13 +3,13 @@ if GAME ge 3
 endif
 
 proc_defconv pi_palette_apply, PI_PALETTE_APPLY
-@@slot	= word ptr (cPtrSize + 2)
+	arg returns @@slot:word
 
 	push	bp
 	mov	bp, sp
 	push	(16 * 3)
 	push	ds
-	mov	ax, [bp+@@slot]
+	mov	ax, @@slot
 	imul	ax, size PiHeader
 	add	ax, offset _pi_headers + PiHeader._palette
 	push	ax

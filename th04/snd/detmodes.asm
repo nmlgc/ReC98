@@ -1,14 +1,14 @@
 public SND_DETERMINE_MODES
-snd_determine_modes	proc
-@@req_se_mode	= word ptr (cPtrSize + 2)
-@@req_bgm_mode	= word ptr (cPtrSize + 4)
+snd_determine_modes proc
+	; (PASCAL calling convention, parameter list needs to be reversed here)
+	arg @@req_se_mode:word, @@req_bgm_mode:word
 
 	push	bp
 	mov	bp, sp
 	push	si
 	push	di
-	mov	si, [bp+@@req_bgm_mode]
-	mov	di, [bp+@@req_se_mode]
+	mov	si, @@req_bgm_mode
+	mov	di, @@req_se_mode
 	nopcall	_snd_pmd_resident
 	cmp	si, SND_BGM_MIDI
 	jne	short @@check_PMD
@@ -84,4 +84,4 @@ snd_determine_modes	proc
 	pop	si
 	pop	bp
 	ret	4
-snd_determine_modes	endp
+snd_determine_modes endp

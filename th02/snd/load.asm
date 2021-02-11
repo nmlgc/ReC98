@@ -1,6 +1,5 @@
 proc_defconv snd_load, SND_LOAD
-@@fn	= dword ptr (cPtrSize + 2)
-@@func	= word ptr (cPtrSize + 2 + dPtrSize)
+	arg returns @@fn:ptr, @@func:word
 
 	push	bp
 	mov	bp, sp
@@ -10,13 +9,13 @@ proc_defconv snd_load, SND_LOAD
 	xor	si, si
 
 @@memcpy:
-	les	bx, [bp+@@fn]
+	les	bx, @@fn
 	add	bx, si
 	mov	al, es:[bx]
 	mov	_snd_load_fn[si], al
 	inc	si
 	loop	@@memcpy
-	mov	ax, [bp+@@func]
+	mov	ax, @@func
 	cmp	ax, SND_LOAD_SONG
 	jnz	short @@load
 	cmp	_snd_midi_active, 0
@@ -36,7 +35,7 @@ proc_defconv snd_load, SND_LOAD
 	mov	ax, 3D00h
 	int	21h
 	mov	bx, ax
-	mov	ax, [bp+@@func]
+	mov	ax, @@func
 	cmp	ax, SND_LOAD_SONG
 	jnz	short @@PMD
 	cmp	_snd_midi_active, 0

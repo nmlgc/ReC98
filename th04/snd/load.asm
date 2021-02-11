@@ -9,9 +9,8 @@
 ; • '[fn].efs' if SND_SE_BEEP (using master.lib's BGM driver)
 
 ; void __stdcall snd_load(int func, const char *fn)
-snd_load	proc
-@@func	= word ptr (cPtrSize + 2)
-@@fn	= dword ptr (cPtrSize + 2 + 2)
+snd_load proc
+	arg @@func:word, @@fn:ptr
 
 	push	bp
 	mov	bp, sp
@@ -20,7 +19,7 @@ snd_load	proc
 	jmp	short @@memcpy_cond
 
 @@memcpy_loop:
-	les	bx, [bp+@@fn]
+	les	bx, @@fn
 	add	bx, si
 	mov	al, es:[bx]
 	mov	_snd_load_fn[si], al
@@ -38,7 +37,7 @@ snd_load	proc
 	mov	(_snd_load_fn+4)[si], 0
 	mov	_snd_load_fn[si], '.'
 	inc	si
-	cmp	[bp+@@func], SND_LOAD_SE
+	cmp	@@func, SND_LOAD_SE
 	jnz	short @@song
 	mov	_snd_load_fn[si], 'e'
 	mov	(_snd_load_fn+1)[si], 'f'
@@ -87,7 +86,7 @@ snd_load	proc
 	mov	ax, 3D00h
 	int	21h
 	mov	bx, ax
-	mov	ax, [bp+@@func]
+	mov	ax, @@func
 	cmp	ah, KAJA_GET_SONG_ADDRESS
 	jnz	short @@PMD
 	cmp	_snd_bgm_mode, SND_BGM_MIDI

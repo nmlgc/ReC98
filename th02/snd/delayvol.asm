@@ -1,6 +1,6 @@
 public _snd_delay_until_volume
 _snd_delay_until_volume proc
-@@volume	= byte ptr (cPtrSize + 2)
+	arg @@volume:byte
 
 	push	bp
 	mov	bp, sp
@@ -16,7 +16,7 @@ _snd_delay_until_volume proc
 	int	61h
 
 @@reached?:
-	cmp	al, [bp+@@volume]
+	cmp	al, @@volume
 	jz	short @@ret
 	jmp	short @@loop
 
