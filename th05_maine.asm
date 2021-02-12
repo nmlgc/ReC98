@@ -7542,7 +7542,7 @@ include th05/formats/pi_put_masked.asm
 include th05/formats/pi_load.asm
 include th05/formats/pi_put.asm
 include th05/formats/pi_palette_apply.asm
-include th05/formats/pi_free.asm
+	extern PI_FREE:proc
 	extern GAME_INIT_MAIN:proc
 	extern _input_reset_sense_held:proc
 	extern INPUT_WAIT_FOR_CHANGE:proc

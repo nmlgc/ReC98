@@ -1,7 +1,7 @@
 #include "th03/formats/pi.h"
 
 #undef pi_free
-int pascal pi_free(int slot);
+void pascal pi_free(int slot);
 
 // Like pi_put_8() and pi_put_quarter_8(), but applying the mask with the given
 // ID while blitting.
