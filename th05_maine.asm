@@ -7541,7 +7541,7 @@ include th05/snd/kajaint.asm
 include th05/formats/pi_put_masked.asm
 include th05/formats/pi_load.asm
 include th05/formats/pi_put.asm
-include th05/formats/pi_palette_apply.asm
+	extern PI_PALETTE_APPLY:proc
 	extern PI_FREE:proc
 	extern GAME_INIT_MAIN:proc
 	extern _input_reset_sense_held:proc

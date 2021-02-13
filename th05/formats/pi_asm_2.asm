@@ -9,11 +9,32 @@ include libs/master.lib/func.inc
 include libs/master.lib/master.inc
 include th03/arg_bx.inc
 
+	extrn Palettes:palette_t
 	extrn _pi_headers:PiHeader
 	extrn _pi_buffers:far ptr
 
 SHARED_	segment word public 'CODE' use16
 	assume cs:SHARED_
+
+public PI_PALETTE_APPLY
+func pi_palette_apply
+arg_bx	far, @slot:word
+
+	push	si
+	push	di
+	mov	si, @slot
+	imul	si, size PiHeader
+	add	si, offset _pi_headers + PiHeader._palette
+	mov	di, offset Palettes
+	mov	ax, ds
+	mov	es, ax
+	mov	cx, (size palette_t / dword)
+	rep movsd
+	call	palette_show
+	pop	di
+	pop	si
+	ret_bx
+endfunc
 
 public PI_FREE
 func pi_free
