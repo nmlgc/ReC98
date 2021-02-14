@@ -150,7 +150,7 @@ bin\th05\res_kso.com: th05\res_kso.cpp
 $**
 | masters.lib
 
-bin\th05\op.exe: th05\op010.cpp bin\th05\op.obj th05\op011.cpp th05\m_char.cpp bin\th05\pi_asm_2.obj bin\th05\initop.obj bin\th05\input_s.obj bin\th05\inp_h_w.obj bin\th05\snd_dlym.obj th05\cdg_p_nc.cpp bin\th05\frmdelay.obj bin\th04\cdg_load.obj bin\th05\egcrect.obj bin\hfliplut.obj
+bin\th05\op.exe: th05\op010.cpp bin\th05\op.obj th05\op011.cpp th05\m_char.cpp bin\th05\pi_cpp_2.obj bin\th05\pi_asm_2.obj bin\th05\initop.obj bin\th05\input_s.obj bin\th05\inp_h_w.obj bin\th05\snd_dlym.obj th05\cdg_p_nc.cpp bin\th05\frmdelay.obj bin\th04\cdg_load.obj bin\th05\egcrect.obj bin\hfliplut.obj
 	$(CC) $(CFLAGS) -ml -DGAME=5 -DBINARY='O' -3 -Z -nbin\th05\ -eOP.EXE @&&|
 $**
 |
@@ -160,7 +160,7 @@ bin\th05\main.exe: bin\th05\main.obj th05\main010.cpp th05\main011.cpp th05\p_co
 $**
 |
 
-bin\th05\maine.exe: bin\th05\maine.obj th05\maine011.cpp th05\regist.cpp th05\staff.cpp bin\th05\pi_asm_2.obj bin\th05\initmain.obj bin\th05\input_s.obj bin\th05\inp_h_w.obj bin\th05\snd_dlym.obj bin\th05\frmdelay.obj bin\th04\cdg_load.obj bin\th05\egcrect.obj bin\hfliplut.obj
+bin\th05\maine.exe: bin\th05\maine.obj th05\maine011.cpp th05\regist.cpp th05\staff.cpp bin\th05\pi_cpp_2.obj bin\th05\pi_asm_2.obj bin\th05\initmain.obj bin\th05\input_s.obj bin\th05\inp_h_w.obj bin\th05\snd_dlym.obj bin\th05\frmdelay.obj bin\th04\cdg_load.obj bin\th05\egcrect.obj bin\hfliplut.obj
 	$(CC) $(CFLAGS) -ml -DGAME=5 -DBINARY='E' -Z -nbin\th05\ -eMAINE.EXE @&&|
 $**
 |

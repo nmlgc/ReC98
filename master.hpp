@@ -460,6 +460,11 @@ void MASTER_RET palette_white_out(unsigned speed);
 	void MASTER_RET graph_pack_put_8(
 		int x, int y, const void far *linepat, int len
 	);
+	// Copy of graph_pack_put_8() that does not clip the Y coordinate to
+	// the vertical grc_setclip() coordinates.
+	void MASTER_RET graph_pack_put_8_noclip(
+		screen_x_t left, screen_y_t top, const void far *linepat, pixel_t len
+	);
 #endif
 // ---
 

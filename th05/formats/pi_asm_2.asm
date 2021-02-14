@@ -16,6 +16,43 @@ include th03/arg_bx.inc
 SHARED_	segment word public 'CODE' use16
 	assume cs:SHARED_
 
+public PI_PUT_8_ROWLOOP
+pi_put_8_rowloop proc pascal near
+; Can't use ARG, because the function doesn't `PUSH BP`!
+@@stride_packed	= word ptr [bp+2]
+@@w	= word ptr [bp+4]
+@@top	= word ptr [bp+6]
+@@left	= word ptr [bp+8]
+@@h equ di
+
+	mov	bp, sp
+
+@@put_row:
+	push	es
+	call	graph_pack_put_8_noclip pascal, @@left, @@top, es, si, @@w
+	pop	es
+	inc	@@top
+	cmp	@@top, RES_Y
+	jb	short @@next_row
+	sub	@@top, RES_Y
+
+@@next_row:
+	add	si, @@stride_packed
+
+	; .PI pointer normalization, see pi_buffer_p_normalize()
+	mov	ax, si
+	shr	ax, 4
+	mov	dx, es
+	add	dx, ax
+	mov	es, dx
+	and	si, 0Fh
+
+	dec	@@h
+	jnz	short @@put_row
+	retn	8
+pi_put_8_rowloop endp
+
+
 public PI_PALETTE_APPLY
 func pi_palette_apply
 arg_bx	far, @slot:word

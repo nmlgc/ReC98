@@ -7,6 +7,8 @@ include libs/master.lib/macros.inc
 
 GAIJI_PUTSA procdesc pascal far \
 	x:word, y:word, strp_seg:word, strp_off:word, atrb:word
+GRAPH_PACK_PUT_8_NOCLIP procdesc pascal far \
+	left:word, top:word, linepat_sgm:word, linepat_off:word, len:word
 GRAPH_PI_FREE procdesc pascal far \
 	header:far ptr, image:far ptr
 PALETTE_SHOW procdesc pascal far
