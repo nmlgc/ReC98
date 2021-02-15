@@ -2544,7 +2544,7 @@ include th04/bgimage_put_rect.asm
 include th05/snd/load.asm
 include th05/snd/kajaint.asm
 include th05/formats/pi_put_masked.asm
-include th05/formats/pi_load.asm
+	extern PI_LOAD:proc
 	extern PI_PUT_8:proc
 	extern PI_PALETTE_APPLY:proc
 	extern PI_FREE:proc
