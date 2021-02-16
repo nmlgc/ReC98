@@ -5,11 +5,15 @@
 extern "C" {
 #include <stddef.h>
 #include "platform.h"
+#include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
 #include "th05/formats/pi.h"
 #include "th05/formats/pi_impl.hpp"
+
+extern dots16_t near *pi_mask_ptr;
+extern unsigned int pi_mask_y;
 
 // Additionally takes:
 // • `void far *pi_buf` in ES:SI
@@ -17,6 +21,36 @@ extern "C" {
 void pascal near pi_put_8_rowloop(
 	screen_x_t left, vram_y_t top, pixel_t w, size_t stride_packed
 );
+
+#pragma option -k-
+
+// MODDERS: Just give egc_setup_copy() a mask parameter and remove this
+// abomination of a function.
+void near pi_mask_setup_egc_and_advance(void)
+{
+	#define mask_ptr   	_BX
+
+	egc_on();
+	outport2(EGC_ACTIVEPLANEREG, 0xFFF0);
+	outport2(EGC_READPLANEREG, 0xFF);
+	// EGC_COMPAREREAD | EGC_WS_PATREG | EGC_RL_MEMREAD
+	outport2(EGC_MODE_ROP_REG, 0x3100);
+	// Turbo C++ is too smart to emit this instruction with pseudo-registers!
+	__asm { mov ax, 0; }
+	outport(EGC_ADDRRESSREG, _AX);
+	outport2(EGC_BITLENGTHREG, 0xF);
+
+	mask_ptr = reinterpret_cast<uint16_t>(pi_mask_ptr);
+	_AX = (pi_mask_y & (PI_MASK_H - 1));
+	__asm { shl ax, 1; } // And again!
+	mask_ptr += _AX;
+	outport(EGC_MASKREG, *reinterpret_cast<dots16_t near *>(mask_ptr));
+	pi_mask_y++;
+
+	#undef mask_ptr
+}
+
+#pragma option -k
 
 int DEFCONV pi_load(int slot, const char *fn)
 {

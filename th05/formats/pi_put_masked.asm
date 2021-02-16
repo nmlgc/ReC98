@@ -1,3 +1,5 @@
+_pi_mask_setup_egc_and_advance procdesc near
+
 public PI_PUT_MASKED_8
 pi_put_masked_8 proc far
 @@mask_id	= word ptr  6
@@ -125,7 +127,7 @@ TEMP_ROW = RES_Y
 	sub	_pi_put_masked_vram_offset, PLANE_SIZE
 
 @@next_row:
-	call	egc_setup_copy_with_pi_mask
+	call	_pi_mask_setup_egc_and_advance
 	mov	ax, GRAM_400
 	mov	es, ax
 	assume es:nothing
@@ -153,24 +155,3 @@ TEMP_ROW = RES_Y
 	jnz	short @@put_row
 	retn	8
 pi_put_masked_8_rowloop endp
-
-
-; ---------------------------------------------------------------------------
-
-
-egc_setup_copy_with_pi_mask proc near
-	call	egc_on
-	outw2	EGC_ACTIVEPLANEREG, 0FFF0h
-	egc_selectpat
-	egc_setrop	EGC_COMPAREREAD or EGC_WS_PATREG or EGC_RL_MEMREAD
-	outw2	EGC_ADDRRESSREG, 0
-	outw2	EGC_BITLENGTHREG, 0Fh
-	mov	bx, _pi_mask_ptr
-	mov	ax, _pi_mask_y
-	and	ax, 3
-	shl	ax, 1
-	add	bx, ax
-	outw2	EGC_MASKREG, [bx]
-	inc	_pi_mask_y
-	retn
-egc_setup_copy_with_pi_mask endp
