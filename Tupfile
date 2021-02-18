@@ -109,6 +109,7 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 : th05\\player.asm |> !as5 |>
 : th05\\hud_bar.asm |> !as5 |>
 : th05\\bullet.asm |> !as5 |>
+: th05\\pi_asm_1.asm |> !as5 |>
 : th05\\pi_asm_2.asm |> !as5 |>
 : th05_op.asm | \
 	th05/sprites/piano_l.asp \

@@ -1,4 +1,4 @@
-_pi_mask_setup_egc_and_advance procdesc near
+PI_PUT_MASKED_8_ROWLOOP procdesc near
 
 public PI_PUT_MASKED_8
 pi_put_masked_8 proc far
@@ -81,77 +81,3 @@ pi_put_quarter_masked_8 proc far
 	retf	0Ah
 pi_put_quarter_masked_8 endp
 	even
-
-; ---------------------------------------------------------------------------
-
-; void pascal pi_put_masked_8_rowloop(
-;	int mask_id<ax>,
-;	void far *pi_buf<es:si>,
-;	pixel_t h<di>,
-;	screen_x_t left, vram_y_t top, pixel_t w, size_t stride_packed
-; );
-pi_put_masked_8_rowloop proc near
-@@stride_packed	= word ptr [bp+2]
-@@w	= word ptr [bp+4]
-@@top	= word ptr [bp+6]
-@@left	= word ptr [bp+8]
-@@mask_id equ ax
-@@h equ di
-
-TEMP_ROW = RES_Y
-
-	shl	@@mask_id, 3
-	add	@@mask_id, offset _PI_MASKS
-	mov	_pi_mask_ptr, @@mask_id
-	mov	bp, sp
-	mov	dx, @@left
-	shr	dx, 3
-	mov	ax, @@top
-	shl	ax, 6
-	add	dx, ax
-	shr	ax, 2
-	add	dx, ax
-	mov	_pi_put_masked_vram_offset, dx
-	mov	_pi_mask_y, 0
-
-@@put_row:
-	push	es
-	call	graph_pack_put_8_noclip pascal, 0, TEMP_ROW, es, si, @@w
-	push	ds
-	push	@@h
-	push	si
-	mov	di, _pi_put_masked_vram_offset
-	add	_pi_put_masked_vram_offset, ROW_SIZE
-	cmp	_pi_put_masked_vram_offset, PLANE_SIZE
-	jb	short @@next_row
-	sub	_pi_put_masked_vram_offset, PLANE_SIZE
-
-@@next_row:
-	call	_pi_mask_setup_egc_and_advance
-	mov	ax, GRAM_400
-	mov	es, ax
-	assume es:nothing
-	mov	ds, ax
-	assume ds:nothing
-	mov	si, (ROW_SIZE * TEMP_ROW)
-	mov	cx, @@w
-	shr	cx, 4
-	rep movsw
-	call	egc_off
-	pop	si
-	pop	@@h
-	pop	ds
-	assume ds:_DATA
-	pop	es
-	assume es:nothing
-	add	si, @@stride_packed
-	mov	ax, si
-	shr	ax, 4
-	mov	dx, es
-	add	dx, ax
-	mov	es, dx
-	and	si, 0Fh
-	dec	@@h
-	jnz	short @@put_row
-	retn	8
-pi_put_masked_8_rowloop endp

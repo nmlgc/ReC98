@@ -1,3 +1,5 @@
+PI_MASK_H = 4
+
 public _PI_MASKS
 _PI_MASKS	label word
 ; 0

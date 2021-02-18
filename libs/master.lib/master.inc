@@ -5,6 +5,7 @@
 
 include libs/master.lib/macros.inc
 
+EGC_OFF procdesc pascal far
 GAIJI_PUTSA procdesc pascal far \
 	x:word, y:word, strp_seg:word, strp_off:word, atrb:word
 GRAPH_PACK_PUT_8_NOCLIP procdesc pascal far \
