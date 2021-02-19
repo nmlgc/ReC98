@@ -2543,7 +2543,7 @@ GRCG_SETCOLOR_DIRECT_DEF 1
 include th04/bgimage_put_rect.asm
 include th05/snd/load.asm
 include th05/snd/kajaint.asm
-include th05/formats/pi_put_masked.asm
+	extern PI_PUT_MASKED_8:proc
 	extern PI_LOAD:proc
 	extern PI_PUT_8:proc
 	extern PI_PALETTE_APPLY:proc
