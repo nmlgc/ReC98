@@ -10562,7 +10562,7 @@ include th02/exit.asm
 include th04/math/vector1_at.asm
 include th04/math/vector2_at.asm
 include th05/snd/load.asm
-include th05/snd/kajaint.asm
+	extern SND_KAJA_INTERRUPT:proc
 	extern GAME_INIT_MAIN:proc
 	extern _input_reset_sense:proc
 	extern _input_sense:proc
