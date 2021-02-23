@@ -7536,7 +7536,7 @@ include th02/exit.asm
 include th04/math/vector1_at.asm
 include th04/math/vector2_at.asm
 include th04/bgimage_put_rect.asm
-include th05/snd/load.asm
+	extern SND_LOAD:proc
 	extern SND_KAJA_INTERRUPT:proc
 	extern PI_PUT_QUARTER_MASKED_8:proc
 	extern PI_LOAD:proc

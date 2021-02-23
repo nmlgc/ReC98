@@ -30,3 +30,25 @@ static inline bool snd_is_active() {
 // Checks the requested BGM and SE modes against the available hardware and
 // sets [snd_se_mode] and [snd_bgm_mode] accordingly. Returns [snd_bgm_mode].
 unsigned char pascal snd_determine_modes(int req_bgm_mode, int req_se_mode);
+
+// Loads a song ([func] = SND_LOAD_SONG) or a sound effect bank ([func] =
+// SND_LOAD_SE) into the respective work buffer of the sound driver. [fn] must
+// not have any extension. Depending on [snd_bgm_mode], [snd_se_mode], and
+// game, the following file is loaded:
+//
+// |                | TH04       | TH05      |
+// |----------------+------------+-----------|
+// | [snd_bgm_mode] | [func] = SND_LOAD_SONG |
+// |----------------+------------+-----------|
+// | SND_BGM_FM26   | [fn].m26   | [fn].m    |
+// | SND_BGM_FM86   | [fn].m86   | [fn].m2   |
+// | SND_BGM_MIDI   | [fn].mmd   | [fn].md   | (yes, see TH05's load[data].asm)
+// |----------------+------------+-----------|
+// | [snd_se_mode]  | [func] = SND_LOAD_SE   |
+// |----------------+------------+-----------|
+// | SND_SE_FM      | [fn].efc   | [fn].efc  |
+// | SND_SE_BEEP    | [fn].efs   | [fn].efs  | (using master.lib's BGM driver)
+//
+// Note that the TH05 version will infinitely loop if neither the file for the
+// current [snd_bgm_mode] nor "[fn].m" exist.
+void pascal snd_load(const char fn[SND_FN_LEN], int16_t func);

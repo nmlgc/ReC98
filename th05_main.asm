@@ -10561,7 +10561,7 @@ include th04/formats/cdg_put.asm
 include th02/exit.asm
 include th04/math/vector1_at.asm
 include th04/math/vector2_at.asm
-include th05/snd/load.asm
+	extern SND_LOAD:proc
 	extern SND_KAJA_INTERRUPT:proc
 	extern GAME_INIT_MAIN:proc
 	extern _input_reset_sense:proc

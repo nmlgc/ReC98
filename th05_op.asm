@@ -2541,7 +2541,7 @@ include th05/music/piano.asm
 GRCG_SETCOLOR_DIRECT_DEF 1
 		db 0
 include th04/bgimage_put_rect.asm
-include th05/snd/load.asm
+	extern SND_LOAD:proc
 	extern SND_KAJA_INTERRUPT:proc
 	extern PI_PUT_MASKED_8:proc
 	extern PI_LOAD:proc

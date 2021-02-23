@@ -1,14 +1,3 @@
-; Loads a song ([func] = SND_LOAD_SONG) or a sound effect bank ([func] =
-; SND_LOAD_SE) into the respective work buffer of the sound driver. [fn] must
-; not have any extension. Depending on snd_bgm_mode and snd_se_mode, the
-; following file is loaded:
-; • '[fn].m26' if SND_BGM_FM26
-; • '[fn].m86' if SND_BGM_FM86
-; • '[fn].mmd' if SND_BGM_MIDI
-; • '[fn].efc' if SND_SE_FM
-; • '[fn].efs' if SND_SE_BEEP (using master.lib's BGM driver)
-
-; void __stdcall snd_load(int func, const char *fn)
 snd_load proc
 	arg @@func:word, @@fn:ptr
 

@@ -49,15 +49,18 @@ void snd_delay_until_volume(uint8_t volume);
 	void snd_delay_until_measure(int measure);
 #endif
 
+// Shorter symbols for the [func] parameter of snd_load()
 #define SND_LOAD_SONG (kaja_func_t)(KAJA_GET_SONG_ADDRESS << 8)
 #define SND_LOAD_SE (kaja_func_t)(PMD_GET_SE_ADDRESS << 8)
+
+#define SND_FN_LEN 13
 
 #if defined(PMD) && (GAME <= 3) /* requires kaja.h */
 	// Loads a song in .M format ([func] = SND_LOAD_SONG) or a sound effect
 	// bank in EFC format ([func] = SND_LOAD_SE) into the respective work
 	// buffer of the sound driver. If MIDI is used, 'md' is appended to the
 	// file name.
-	void DEFCONV snd_load(const char *fn, kaja_func_t func);
+	void DEFCONV snd_load(const char fn[SND_FN_LEN], kaja_func_t func);
 #endif
 
 void snd_se_reset(void);

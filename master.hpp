@@ -77,6 +77,7 @@ extern "C" {
 
 int MASTER_RET bgm_init(int bufsiz);
 void MASTER_RET bgm_finish(void);
+int MASTER_RET bgm_read_sdata(const char MASTER_PTR *fn);
 int MASTER_RET bgm_sound(int num);
 // ----------------------------------------
 

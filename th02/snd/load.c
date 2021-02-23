@@ -5,7 +5,7 @@
 #include "libs/kaja/kaja.h"
 #include "th02/snd/snd.h"
 
-extern char snd_load_fn[13];
+extern char snd_load_fn[SND_FN_LEN];
 
 void snd_load(const char *fn, kaja_func_t func)
 {
