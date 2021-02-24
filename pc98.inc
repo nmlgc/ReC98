@@ -19,6 +19,8 @@ ROW_SIZE = (RES_X / 8)
 PLANE_SIZE = (ROW_SIZE * RES_Y)
 COLOR_COUNT = 16
 
+PLANE_COUNT = 4
+
 ; RGB color triple, used for the Palettes structure
 rgb_t struc
 	r db ?

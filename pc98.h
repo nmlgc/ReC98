@@ -64,6 +64,8 @@ typedef unsigned int utram_y_t;
 #define ROW_SIZE (RES_X / BYTE_DOTS)
 #define PLANE_SIZE (ROW_SIZE * RES_Y)
 
+#define PLANE_COUNT 4
+
 typedef bool page_t;
 
 #define COLOR_COUNT 16

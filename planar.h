@@ -17,7 +17,7 @@ typedef int32_t sdots32_t;
 #define PRESHIFT BYTE_DOTS
 
 typedef enum {
-	PL_B, PL_R, PL_G, PL_E, PL_COUNT
+	PL_B, PL_R, PL_G, PL_E
 } vram_plane_t;
 
 #ifdef __cplusplus
@@ -42,7 +42,7 @@ typedef enum {
 
 // Since array subscripts create slightly different assembly in places, we
 // offer both variants.
-extern dots8_t far *VRAM_PLANE[PL_COUNT];
+extern dots8_t far *VRAM_PLANE[PLANE_COUNT];
 // And no, expressing these as a struct won't generate the same ASM.
 // Been there, tried that.
 extern dots8_t far *VRAM_PLANE_B;

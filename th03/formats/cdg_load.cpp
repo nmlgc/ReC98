@@ -22,14 +22,14 @@ extern bool cdg_noalpha;
 
 #define cdg_allocate_and_read_colors(cdg) \
 	(cdg).seg_colors() = reinterpret_cast<dots8_t __seg *>(hmem_allocbyte( \
-		((cdg).bitplane_size * PL_COUNT) \
+		((cdg).bitplane_size * PLANE_COUNT) \
 	)); \
-	file_read((cdg).seg_colors(), ((cdg).bitplane_size * PL_COUNT)); \
+	file_read((cdg).seg_colors(), ((cdg).bitplane_size * PLANE_COUNT)); \
 
 #define cdg_read_header_and_seek_to_image(cdg, n) \
 	file_read(&cdg, sizeof(cdg_t)); \
 	\
-	uint32_t image_size = (cdg.bitplane_size * (PL_COUNT + 1)); \
+	uint32_t image_size = (cdg.bitplane_size * (PLANE_COUNT + 1)); \
 	file_seek((n * image_size), SEEK_CUR);
 
 void pascal cdg_load_single(int slot, const char *fn, int n)

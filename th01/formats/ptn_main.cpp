@@ -191,7 +191,7 @@ void ptn_put_quarter(screen_x_t left, vram_y_t top, int ptn_id, int quarter)
 	}
 	q.init(quarter);
 	for(y = q.y; y < (q.y + PTN_QUARTER_H); y++) {
-		for(plane = 0; plane < PL_COUNT; plane++) {
+		for(plane = 0; plane < PLANE_COUNT; plane++) {
 			sprite[plane] = (ptn->planes[plane][y] >> q.x);
 		}
 		mask = ptn_alpha_from(sprite.B, sprite.R, sprite.G, sprite.E);
@@ -210,7 +210,7 @@ void ptn_put_quarter(screen_x_t left, vram_y_t top, int ptn_id, int quarter)
 			if(mask != 0) {
 				mask_unaligned.set(mask, first_bit);
 				vram_erase(vram_offset, mask_unaligned.d32, 32);
-				for(plane = 0; plane < PL_COUNT; plane++) {
+				for(plane = 0; plane < PLANE_COUNT; plane++) {
 					dots = sprite[plane];
 					if(dots) {
 						dots_unaligned.set(dots, first_bit, mask_unaligned);

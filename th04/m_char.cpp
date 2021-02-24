@@ -43,7 +43,7 @@ static const pixel_t RAISE_W = 8;
 static const pixel_t RAISE_H = 8;
 
 static const vram_byte_amount_t RAISE_BG_SIZE = (
-	(((PIC_W * RAISE_H) + (RAISE_W * PIC_H)) / BYTE_DOTS) * PL_COUNT
+	(((PIC_W * RAISE_H) + (RAISE_W * PIC_H)) / BYTE_DOTS) * PLANE_COUNT
 );
 
 inline vram_offset_t raise(vram_offset_t vram_offset) {

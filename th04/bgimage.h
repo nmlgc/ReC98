@@ -1,5 +1,5 @@
 // Additional 640×400 4-plane background image buffer.
-extern char __seg *bgimage[PL_COUNT];
+extern Planar<dots8_t __seg *> bgimage;
 
 void pascal bgimage_snap(void);
 void pascal bgimage_put(void);

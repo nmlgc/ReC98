@@ -68,7 +68,7 @@ char rot_speed[MUSIC_POLYGONS];
 unsigned char music_sel;
 page_t music_page;
 dots8_t *screen_back_B;
-dots8_t *cmt_back[PL_COUNT];
+Planar<dots8_t far *> cmt_back;
 
 void pascal near draw_track(unsigned char sel, unsigned char color)
 {
@@ -217,7 +217,7 @@ void pascal near cmt_back_snap(void)
 	vram_offset_t pd;
 	screen_y_t y;
 	int i;
-	for(i = 0; i < PL_COUNT; i++) {
+	for(i = 0; i < PLANE_COUNT; i++) {
 		cmt_back[i] = reinterpret_cast<dots8_t __seg *>(
 			hmem_allocbyte(304 * (320 / BYTE_DOTS) + 16 * (320 / BYTE_DOTS))
 		);
@@ -229,10 +229,10 @@ void pascal near cmt_back_snap(void)
 
 void pascal near cmt_back_free(void)
 {
-	hmem_free(FP_SEG(cmt_back[PL_B]));
-	hmem_free(FP_SEG(cmt_back[PL_R]));
-	hmem_free(FP_SEG(cmt_back[PL_G]));
-	hmem_free(FP_SEG(cmt_back[PL_E]));
+	hmem_free(FP_SEG(cmt_back.B));
+	hmem_free(FP_SEG(cmt_back.R));
+	hmem_free(FP_SEG(cmt_back.G));
+	hmem_free(FP_SEG(cmt_back.E));
 }
 
 void pascal near cmt_back_put(void)
