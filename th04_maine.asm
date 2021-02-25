@@ -4615,8 +4615,8 @@ include th02/initmain.asm
 		db    0
 include th04/hardware/input_s.asm
 include th04/snd/se.asm
-include th04/bgimage.asm
-include th04/bgimage_put_rect.asm
+include th04/hardware/bgimage.asm
+include th04/hardware/bgimage_put_rect.asm
 	extern CDG_LOAD_SINGLE_NOALPHA:proc
 	extern CDG_LOAD_SINGLE:proc
 	extern CDG_FREE:proc
@@ -4667,7 +4667,7 @@ include th04/snd/snd[data].asm
 include th04/snd/load[data].asm
 include th04/hardware/grppsafx[data].asm
 include th03/snd/se_state[data].asm
-include th04/bgimage[data].asm
+include th04/hardware/bgimage[data].asm
 include th03/formats/cdg[data].asm
 include th03/formats/pi_put_masked[data].asm
 include th04/end/box[data].asm

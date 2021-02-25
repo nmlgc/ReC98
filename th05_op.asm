@@ -2532,7 +2532,7 @@ include th02/exit_dos.asm
 include th04/hardware/grppsafx.asm
 include th04/formats/cdg_put_noalpha.asm
 include th04/snd/se.asm
-include th04/bgimage.asm
+include th04/hardware/bgimage.asm
 include th04/formats/cdg_put.asm
 include th02/exit.asm
 include th04/math/vector1_at.asm
@@ -2540,7 +2540,7 @@ include th04/math/vector2_at.asm
 include th05/music/piano.asm
 GRCG_SETCOLOR_DIRECT_DEF 1
 		db 0
-include th04/bgimage_put_rect.asm
+include th04/hardware/bgimage_put_rect.asm
 	extern SND_LOAD:proc
 	extern SND_KAJA_INTERRUPT:proc
 	extern PI_PUT_MASKED_8:proc
@@ -2660,7 +2660,7 @@ include libs/master.lib/bgm[data].asm
 include th04/snd/se_priority[data].asm
 include th04/hardware/grppsafx[data].asm
 include th03/snd/se_state[data].asm
-include th04/bgimage[data].asm
+include th04/hardware/bgimage[data].asm
 include th05/mem[data].asm
 include th05/music/piano[data].asm
 include th05/sprites/piano_l.asp

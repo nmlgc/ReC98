@@ -14,7 +14,7 @@ extern "C" {
 #include "th01/ranks.h"
 #include "th02/hardware/frmdelay.h"
 #include "th04/formats/cdg.h"
-#include "th04/bgimage.h"
+#include "th04/hardware/bgimage.h"
 #include "th04/score.h"
 #include "th04/common.h"
 #include "th05/chars.h"

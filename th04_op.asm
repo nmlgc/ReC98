@@ -2667,8 +2667,8 @@ include th04/formats/cdg_put_noalpha.asm
 include th04/hardware/input_s.asm
 include th04/snd/se.asm
 include th04/hardware/egcrect.asm
-include th04/bgimage.asm
-include th04/bgimage_put_rect.asm
+include th04/hardware/bgimage.asm
+include th04/hardware/bgimage_put_rect.asm
 SHARED	ends
 
 SHARED_	segment	word public 'CODE' use16
@@ -2787,7 +2787,7 @@ include th04/snd/snd[data].asm
 include th04/snd/load[data].asm
 include th04/hardware/grppsafx[data].asm
 include th03/snd/se_state[data].asm
-include th04/bgimage[data].asm
+include th04/hardware/bgimage[data].asm
 include th03/formats/cdg[data].asm
 include th04/setup[data].asm
 include th04/zunsoft[data].asm
