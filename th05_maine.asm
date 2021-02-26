@@ -7535,7 +7535,7 @@ include th04/hardware/bgimage.asm
 include th02/exit.asm
 include th04/math/vector1_at.asm
 include th04/math/vector2_at.asm
-include th04/hardware/bgimage_put_rect.asm
+	extern BGIMAGE_PUT_RECT:proc
 	extern SND_LOAD:proc
 	extern SND_KAJA_INTERRUPT:proc
 	extern PI_PUT_QUARTER_MASKED_8:proc

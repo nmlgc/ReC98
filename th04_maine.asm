@@ -4616,7 +4616,7 @@ include th02/initmain.asm
 include th04/hardware/input_s.asm
 include th04/snd/se.asm
 include th04/hardware/bgimage.asm
-include th04/hardware/bgimage_put_rect.asm
+	extern BGIMAGE_PUT_RECT:proc
 	extern CDG_LOAD_SINGLE_NOALPHA:proc
 	extern CDG_LOAD_SINGLE:proc
 	extern CDG_FREE:proc

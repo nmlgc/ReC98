@@ -2540,7 +2540,7 @@ include th04/math/vector2_at.asm
 include th05/music/piano.asm
 GRCG_SETCOLOR_DIRECT_DEF 1
 		db 0
-include th04/hardware/bgimage_put_rect.asm
+	extern BGIMAGE_PUT_RECT:proc
 	extern SND_LOAD:proc
 	extern SND_KAJA_INTERRUPT:proc
 	extern PI_PUT_MASKED_8:proc

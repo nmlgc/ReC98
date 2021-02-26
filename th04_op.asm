@@ -2668,10 +2668,10 @@ include th04/hardware/input_s.asm
 include th04/snd/se.asm
 include th04/hardware/egcrect.asm
 include th04/hardware/bgimage.asm
-include th04/hardware/bgimage_put_rect.asm
 SHARED	ends
 
 SHARED_	segment	word public 'CODE' use16
+	extern BGIMAGE_PUT_RECT:proc
 	extern CDG_LOAD_ALL_NOALPHA:proc
 	extern CDG_LOAD_ALL:proc
 	extern CDG_FREE_ALL:proc
