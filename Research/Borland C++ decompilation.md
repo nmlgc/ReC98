@@ -469,9 +469,12 @@ contains one of the following:
 
 <a id="clobbering-di"></a>
 
-* A reference to the `DI` register. In that case, Turbo C++ always inserts a
-  `PUSH DI` at the beginning (before the `MOV BX, SP`), and a `POP DI` before
-  returning.
+* References to the `SI` or `DI` registers. In that case, Turbo C++ always
+  inserts
+
+  * a `PUSH (SI|DI)` at the beginning (after any `PUSH BP; MOV BP, SP`
+  instructions and *before* anything else)
+  * and a `POP (SI|DI)` before returning.
 
   **Certainty:** Confirmed through reverse-engineering `TCC.EXE`, no way
   around it.

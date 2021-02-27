@@ -13,9 +13,10 @@ GLYPH_H = 16
 
 ; Graphics
 ; ========
+BYTE_DOTS = 8
 RES_X = 640
 RES_Y = 400
-ROW_SIZE = (RES_X / 8)
+ROW_SIZE = (RES_X / BYTE_DOTS)
 PLANE_SIZE = (ROW_SIZE * RES_Y)
 COLOR_COUNT = 16
 

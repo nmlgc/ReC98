@@ -2537,9 +2537,7 @@ include th04/formats/cdg_put.asm
 include th02/exit.asm
 include th04/math/vector1_at.asm
 include th04/math/vector2_at.asm
-include th05/music/piano.asm
-GRCG_SETCOLOR_DIRECT_DEF 1
-		db 0
+include th05/music/piano_c.asm
 	extern BGIMAGE_PUT_RECT:proc
 	extern SND_LOAD:proc
 	extern SND_KAJA_INTERRUPT:proc
