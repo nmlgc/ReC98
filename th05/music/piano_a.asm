@@ -7,6 +7,18 @@ include libs/kaja/kaja.inc
 include th04/hardware/grcg.inc
 include th05/music/piano.inc
 
+PIANO_LEFT = 384
+PIANO_H = 15
+PIANO_KEY_W = 4
+PIANO_BLACK_H = 9
+PIANO_BLACK_PRESSED_H = 8
+
+PIANO_OCTAVES = 8
+PIANO_OCTAVE_W = (7 * PIANO_KEY_W)
+
+PIANO_VRAM_LEFT = (PIANO_LEFT / 8)
+PIANO_VRAM_W = ((PIANO_OCTAVES * PIANO_OCTAVE_W) / 8)
+
 	extern _sPIANO_LABEL_FONT:byte
 	extern _PIANO_KEYS_BLACK:byte:PIANO_VRAM_W
 	extern _piano_notes_cur:piano_notes_t

@@ -1924,7 +1924,7 @@ _musicroom	proc near
 		call	pi_palette_apply pascal, 0
 		call	pi_put_8 pascal, large 0, 0
 		call	pi_free pascal, 0
-		call	_piano_setup
+		call	_piano_setup_and_put_initial
 		call	screen_back_B_snap
 		call	bgimage_snap
 		call	draw_tracks pascal, word ptr _music_sel
@@ -2537,7 +2537,8 @@ include th04/formats/cdg_put.asm
 include th02/exit.asm
 include th04/math/vector1_at.asm
 include th04/math/vector2_at.asm
-include th05/music/piano_c.asm
+	extern _piano_render:proc
+	extern _piano_setup_and_put_initial:proc
 	extern BGIMAGE_PUT_RECT:proc
 	extern SND_LOAD:proc
 	extern SND_KAJA_INTERRUPT:proc
