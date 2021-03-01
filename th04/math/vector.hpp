@@ -7,7 +7,7 @@ int pascal near vector2_near(
 	SPPoint near &ret, unsigned char angle, int length
 );
 
-int pascal vector2_at(
+void pascal vector2_at(
 	SPPoint near &ret,
 	subpixel_t origin_x,
 	subpixel_t origin_y,

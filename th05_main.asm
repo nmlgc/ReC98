@@ -10559,8 +10559,8 @@ include th04/formats/cdg_put_noalpha.asm
 include th04/snd/se.asm
 include th04/formats/cdg_put.asm
 include th02/exit.asm
-include th04/math/vector1_at.asm
-include th04/math/vector2_at.asm
+	extern VECTOR1_AT:proc
+	extern VECTOR2_AT:proc
 	extern SND_LOAD:proc
 	extern SND_KAJA_INTERRUPT:proc
 	extern GAME_INIT_MAIN:proc

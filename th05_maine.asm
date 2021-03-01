@@ -7533,8 +7533,7 @@ include th04/formats/cdg_put_noalpha.asm
 include th04/snd/se.asm
 include th04/hardware/bgimage.asm
 include th02/exit.asm
-include th04/math/vector1_at.asm
-include th04/math/vector2_at.asm
+	extern VECTOR2_AT:proc
 	extern BGIMAGE_PUT_RECT:proc
 	extern SND_LOAD:proc
 	extern SND_KAJA_INTERRUPT:proc
