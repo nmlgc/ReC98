@@ -8891,7 +8891,7 @@ include th02/hardware/frame_delay.asm
 include th03/hardware/input_sense.asm
 		nop
 include th02/snd/se.asm
-include th02/snd/kajaint.asm
+	extern SND_KAJA_INTERRUPT:proc
 	extern GAME_INIT_MAIN:proc
 	extern INPUT_MODE_KEY_VS_KEY:proc
 	extern INPUT_MODE_JOY_VS_KEY:proc
@@ -35044,6 +35044,7 @@ include libs/master.lib/wordmask[data].asm
 include libs/master.lib/mem[data].asm
 include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
+public _snd_active
 _snd_active	db 0
 		db 0
 include libs/master.lib/respal_exist[data].asm
