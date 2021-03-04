@@ -8890,7 +8890,9 @@ include th03/math/vector1_at.asm
 include th02/hardware/frame_delay.asm
 include th03/hardware/input_sense.asm
 		nop
-include th02/snd/se.asm
+	extern _snd_se_reset:proc
+	extern SND_SE_PLAY:proc
+	extern _snd_se_update:proc
 	extern SND_KAJA_INTERRUPT:proc
 	extern GAME_INIT_MAIN:proc
 	extern INPUT_MODE_KEY_VS_KEY:proc

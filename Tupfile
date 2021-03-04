@@ -80,6 +80,7 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 : libs/sprite16/sprite16.asm |> $(AS) /DTHIEF libs\sprite16\sprite16.asm %o |> bin\\th03\\zunsp.obj
 : th03\\cdg_p_na.asm |> !as3 |>
 : th03\\hfliplut.asm |> $(AS) th03\\hfliplut.asm %o |> bin\\%B.obj
+: th03\\snd_se.asm |> !as3 |>
 : th03_op.asm |> !as |> bin\\th03\\op.obj
 : th03_main.asm | \
 	th03/sprites/score.asp \

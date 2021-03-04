@@ -5534,7 +5534,9 @@ include th03/hardware/input_sense.asm
 include th02/formats/pi_palette_apply.asm
 include th02/formats/pi_put.asm
 include th03/formats/pi_put_interlace.asm
-include th02/snd/se.asm
+	extern _snd_se_reset:proc
+	extern SND_SE_PLAY:proc
+	extern _snd_se_update:proc
 	extern SND_KAJA_INTERRUPT:proc
 	extern GAME_INIT_MAIN:proc
 	extern CDG_LOAD_SINGLE:proc

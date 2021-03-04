@@ -1,3 +1,18 @@
+	.386
+	locals
+
+include defconv.inc
+include libs/kaja/kaja.inc
+
+	extrn _snd_se_playing:byte
+	extrn _snd_se_frame:byte
+	extrn _snd_se_priorities:byte
+	extrn _snd_se_priority_frames:byte
+	extrn _snd_fm_possible:byte
+
+SHARED	segment word public 'CODE' use16
+	assume cs:SHARED
+
 public _snd_se_reset
 _snd_se_reset proc far
 	mov	_snd_se_frame, 0
@@ -71,3 +86,6 @@ _snd_se_update proc far
 	ret
 _snd_se_update endp
 	even
+SHARED	ends
+
+	end
