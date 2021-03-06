@@ -115,7 +115,7 @@ bin\th03\main.exe: bin\th03\main.obj th03\main_01.cpp bin\th03\snd_se.obj bin\th
 $**
 |
 
-bin\th03\mainl.exe: bin\th03\mainl.obj bin\th03\snd_se.obj bin\th03\snd_kaja.obj bin\th03\initmain.obj bin\th03\cdg_load.obj th03\exitmain.cpp bin\th03\grppsafx.obj bin\th03\snd_dlym.obj bin\th03\inp_wait.obj bin\th03\pi_load.obj bin\th03\pi_put_q.obj bin\th03\inp_m_w.obj bin\th03\cdg_p_na.obj bin\hfliplut.obj
+bin\th03\mainl.exe: bin\th03\mainl.obj bin\th03\pi_put_i.obj bin\th03\snd_se.obj bin\th03\snd_kaja.obj bin\th03\initmain.obj bin\th03\cdg_load.obj th03\exitmain.cpp bin\th03\grppsafx.obj bin\th03\snd_dlym.obj bin\th03\inp_wait.obj bin\th03\pi_load.obj bin\th03\pi_put_q.obj bin\th03\inp_m_w.obj bin\th03\cdg_p_na.obj bin\hfliplut.obj
 	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -DGAME=3 -nbin\th03\ -eMAINL.EXE @&&|
 $**
 |

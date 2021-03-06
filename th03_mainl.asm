@@ -5533,7 +5533,7 @@ include th02/hardware/frame_delay.asm
 include th03/hardware/input_sense.asm
 include th02/formats/pi_palette_apply.asm
 include th02/formats/pi_put.asm
-include th03/formats/pi_put_interlace.asm
+	extern PI_PUT_INTERLACE_8:proc
 	extern _snd_se_reset:proc
 	extern SND_SE_PLAY:proc
 	extern _snd_se_update:proc
