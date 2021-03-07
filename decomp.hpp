@@ -1,6 +1,6 @@
 /* ReC98
  * -----
- * Macros to help decompiling the seemingly impossible
+ * Macros and inline functions to help decompiling the seemingly impossible
  */
 
 // Flag comparisons
@@ -55,48 +55,48 @@
 //
 // Also, hey, no need for the MK_FP() macro if we directly return the correct
 // types.
-#ifdef __cplusplus
+
+} // extern "C" was a mistake
+
+#if defined(__TURBOC__) && defined(__MSDOS__)
+	// Declared in <dos.h> in these compilers.
+	void __emit__(uint8_t __byte, ...);
+#endif
+
+struct Decomp_ES { void  __seg* value() { return (void  __seg *)(_ES); } };
+struct Decomp_FS { void  __seg* value() { return (void  __seg *)(_FS); } };
+struct Decomp_GS { void  __seg* value() { return (void  __seg *)(_GS); } };
+struct Decomp_DI { void __near* value() { return (void __near *)(_DI); } };
+
+// Removing [val] from the parameter lists of the template functions below
+// perfects the inlining.
+#define poked(sgm, off, val) \
+	_EAX = val; \
+	poked_eax((Decomp##sgm *)NULL, (Decomp##off *)NULL, (uint8_t)(0x89));
+
+#define poke_or_d(sgm, off, val) \
+	_EAX = val; \
+	poked_eax((Decomp##sgm *)NULL, (Decomp##off *)NULL, (uint8_t)(0x09));
+
+template <class Segment, class Offset> inline void poked_eax(
+	Segment *sgm, Offset *off, uint8_t op
+) {
+	if(op == 0x89) {
+		*(uint32_t far *)(sgm->value() + off->value()) = _EAX;
+	} else if(op == 0x09) {
+		*(uint32_t far *)(sgm->value() + off->value()) |= _EAX;
+	}
 }
-	#if defined(__TURBOC__) && defined(__MSDOS__)
-		// Declared in <dos.h> in these compilers.
-		void __emit__(uint8_t __byte, ...);
-	#endif
 
-	struct Decomp_ES { void  __seg* value() { return (void  __seg *)(_ES); } };
-	struct Decomp_FS { void  __seg* value() { return (void  __seg *)(_FS); } };
-	struct Decomp_GS { void  __seg* value() { return (void  __seg *)(_GS); } };
-	struct Decomp_DI { void __near* value() { return (void __near *)(_DI); } };
+inline void poked_eax(Decomp_FS *sgm, Decomp_DI *off, uint8_t op) {
+	__emit__(0x66, 0x64, op, 0x05); // [op] FS:[DI], EAX
+}
 
-	// Removing [val] from the parameter lists of the template functions below
-	// perfects the inlining.
-	#define poked(sgm, off, val) \
-		_EAX = val; \
-		poked_eax((Decomp##sgm *)NULL, (Decomp##off *)NULL, (uint8_t)(0x89));
-
-	#define poke_or_d(sgm, off, val) \
-		_EAX = val; \
-		poked_eax((Decomp##sgm *)NULL, (Decomp##off *)NULL, (uint8_t)(0x09));
-
-	template <class Segment, class Offset> inline void poked_eax(
-		Segment *sgm, Offset *off, uint8_t op
-	) {
-		if(op == 0x89) {
-			*(uint32_t far *)(sgm->value() + off->value()) = _EAX;
-		} else if(op == 0x09) {
-			*(uint32_t far *)(sgm->value() + off->value()) |= _EAX;
-		}
-	}
-
-	inline void poked_eax(Decomp_FS *sgm, Decomp_DI *off, uint8_t op) {
-		__emit__(0x66, 0x64, op, 0x05); // [op] FS:[DI], EAX
-	}
-
-	inline void poked_eax(Decomp_GS *sgm, Decomp_DI *off, uint8_t op) {
-		__emit__(0x66, 0x65, op, 0x05); // [op] GS:[DI], EAX
-	}
+inline void poked_eax(Decomp_GS *sgm, Decomp_DI *off, uint8_t op) {
+	__emit__(0x66, 0x65, op, 0x05); // [op] GS:[DI], EAX
+}
 
 extern "C" {
-#endif
 // ---------------------------------------------------------
 
 // 32-bit ASM instructions not supported by Turbo C++ 4.0J's built-in

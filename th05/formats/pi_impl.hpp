@@ -1,6 +1,6 @@
 // Shared parts of the pi_put_*() functions.
 
-#include "decomp.h"
+#include "decomp.hpp"
 
 inline void imul_di(int8_t factor) {
 	__emit__(0x6B, 0xFF, factor);

@@ -2,7 +2,7 @@
 #include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
-#include "decomp.h"
+#include "decomp.hpp"
 #include "twobyte.h"
 #include "master.hpp"
 

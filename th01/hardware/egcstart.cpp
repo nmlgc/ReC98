@@ -1,5 +1,5 @@
+#include "decomp.hpp"
 #include "th01/hardware/egc.h"
-#include "decomp.h"
 
 void pascal egc_start_copy(void)
 {

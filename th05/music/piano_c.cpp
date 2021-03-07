@@ -6,7 +6,7 @@ extern "C" {
 #include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
-#include "decomp.h"
+#include "decomp.hpp"
 #include "master.hpp"
 #include "libs/kaja/kaja.h"
 #include "th05/music/piano.h"

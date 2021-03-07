@@ -10,7 +10,7 @@ extern "C" {
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
-#include "decomp.h"
+#include "decomp.hpp"
 #include "master.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/graph.h"

@@ -5,7 +5,7 @@ extern "C" {
 #include <errno.h>
 #include "platform.h"
 #include "x86real.h"
-#include "decomp.h"
+#include "decomp.hpp"
 #include "master.hpp"
 #include "libs/kaja/kaja.h"
 #include "th05/snd/snd.h"

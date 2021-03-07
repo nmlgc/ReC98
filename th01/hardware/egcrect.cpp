@@ -1,4 +1,4 @@
-#include "th01/hardware/egcstart.c"
+#include "th01/hardware/egcstart.cpp"
 
 void egc_copy_rect_1_to_0_16(screen_x_t x, vram_y_t y, pixel_t w, pixel_t h)
 {
