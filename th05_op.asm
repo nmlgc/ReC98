@@ -2534,7 +2534,7 @@ include th04/formats/cdg_put_noalpha.asm
 include th04/snd/se.asm
 include th04/hardware/bgimage.asm
 include th04/formats/cdg_put.asm
-include th02/exit.asm
+	extern _game_exit:proc
 	extern VECTOR1_AT:proc
 	extern _piano_render:proc
 	extern _piano_setup_and_put_initial:proc

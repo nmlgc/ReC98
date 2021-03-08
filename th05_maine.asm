@@ -7532,7 +7532,7 @@ include th04/hardware/grppsafx.asm
 include th04/formats/cdg_put_noalpha.asm
 include th04/snd/se.asm
 include th04/hardware/bgimage.asm
-include th02/exit.asm
+	extern _game_exit:proc
 	extern VECTOR2_AT:proc
 	extern BGIMAGE_PUT_RECT:proc
 	extern SND_LOAD:proc
