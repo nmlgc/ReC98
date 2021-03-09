@@ -2533,7 +2533,7 @@ include th04/hardware/grppsafx.asm
 include th04/formats/cdg_put_noalpha.asm
 include th04/snd/se.asm
 include th04/hardware/bgimage.asm
-include th04/formats/cdg_put.asm
+	extern CDG_PUT_8:proc
 	extern _game_exit:proc
 	extern VECTOR1_AT:proc
 	extern _piano_render:proc
