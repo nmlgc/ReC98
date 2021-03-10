@@ -263,7 +263,7 @@ else
 endif
 	push	0
 	call	graph_copy_page
-	call	bgimage_snap
+	call	_bgimage_snap
 	graph_accesspage 1
 	call	graph_clear
 	graph_accesspage 0
@@ -420,7 +420,7 @@ frame_68:	; case 68
 	call	zunsoft_pyro_new
 
 @@no_new_pyro_this_frame:
-	call	bgimage_put	; default
+	call	_bgimage_put	; default
 	call	zunsoft_update_and_render
 if GAME eq 4
 	call	_input_reset_sense
@@ -475,7 +475,7 @@ endif
 
 @@ret:
 	call	super_free
-	call	bgimage_free
+	call	_bgimage_free
 	pop	di
 	pop	si
 	leave

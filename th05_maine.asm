@@ -980,7 +980,7 @@ loc_ACAA:
 		call	graph_clear
 		graph_accesspage 0
 		call	graph_clear
-		call	bgimage_snap
+		call	_bgimage_snap
 		jmp	loc_AF8F	; default
 ; ---------------------------------------------------------------------------
 
@@ -1004,7 +1004,7 @@ loc_ACF4:
 		call	pi_put_8 pascal, large 0, 0
 		call	graph_copy_page pascal, 0
 		graph_accesspage 0
-		call	bgimage_snap
+		call	_bgimage_snap
 		jmp	loc_AF8F	; default
 ; ---------------------------------------------------------------------------
 
@@ -1492,7 +1492,7 @@ loc_B18D:
 ; ---------------------------------------------------------------------------
 
 loc_B196:
-		call	bgimage_free
+		call	_bgimage_free
 		call	pi_free pascal, 0
 		pop	si
 		leave
@@ -3465,7 +3465,7 @@ loc_C2BB:
 		call	graph_putsa_fx pascal, (120 shl 16) or 192, 2, ds, offset aGxgnbGvbGhvV_0
 
 loc_C2EB:
-		call	bgimage_snap
+		call	_bgimage_snap
 		les	bx, _resident
 		cmp	es:[bx+resident_t.end_sequence], ES_EXTRA
 		jb	short loc_C307
@@ -3475,7 +3475,7 @@ loc_C2EB:
 
 loc_C307:
 		call	graph_copy_page pascal, 1
-		call	bgimage_snap
+		call	_bgimage_snap
 		kajacall	KAJA_SONG_STOP
 		call	snd_load pascal, ds, offset aName, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
@@ -3779,7 +3779,7 @@ loc_C5C3:
 		call	input_wait_for_change pascal, 0
 
 loc_C5CD:
-		call	bgimage_free
+		call	_bgimage_free
 		call	super_free
 		call	text_clear
 		push	1
@@ -7531,7 +7531,8 @@ include th04/snd/detmodes.asm
 include th04/hardware/grppsafx.asm
 include th04/formats/cdg_put_noalpha.asm
 include th04/snd/se.asm
-include th04/hardware/bgimage.asm
+	extern _bgimage_snap:proc
+	extern _bgimage_free:proc
 	extern _game_exit:proc
 	extern VECTOR2_AT:proc
 	extern BGIMAGE_PUT_RECT:proc

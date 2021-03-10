@@ -2344,7 +2344,7 @@ sub_B44D	proc near
 		call	pi_put_8 pascal, large 0, 0
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
-		call	bgimage_snap
+		call	_bgimage_snap
 		kajacall	KAJA_SONG_STOP
 		call	snd_load pascal, ds, offset aStaff, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
@@ -2392,7 +2392,7 @@ sub_B44D	proc near
 		call	pi_put_8 pascal, large 0, 0
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
-		call	bgimage_snap
+		call	_bgimage_snap
 		push	4
 		call	palette_black_in
 		call	cdg_load_single pascal, 2, ds, offset aSff4_cdg, 0
@@ -2455,7 +2455,7 @@ sub_B44D	proc near
 		call	sub_B291
 		push	3000A0h
 		call	snd_delay_until_measure
-		call	bgimage_free
+		call	_bgimage_free
 		call	cdg_free_all
 		push	4
 		call	palette_black_out
@@ -4615,7 +4615,8 @@ include th02/initmain.asm
 		db    0
 include th04/hardware/input_s.asm
 include th04/snd/se.asm
-include th04/hardware/bgimage.asm
+	extern _bgimage_snap:proc
+	extern _bgimage_free:proc
 	extern BGIMAGE_PUT_RECT:proc
 	extern CDG_LOAD_SINGLE_NOALPHA:proc
 	extern CDG_LOAD_SINGLE:proc

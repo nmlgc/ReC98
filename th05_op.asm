@@ -1926,7 +1926,7 @@ _musicroom	proc near
 		call	pi_free pascal, 0
 		call	_piano_setup_and_put_initial
 		call	screen_back_B_snap
-		call	bgimage_snap
+		call	_bgimage_snap
 		call	draw_tracks pascal, word ptr _music_sel
 		call	graph_copy_page pascal, 0
 		graph_accesspage 1
@@ -2138,7 +2138,7 @@ loc_C790:
 		graph_accesspage al
 		push	1
 		call	palette_black_out
-		call	bgimage_free
+		call	_bgimage_free
 		call	snd_load pascal, ds, offset aH_op+2, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		pop	si
@@ -2532,7 +2532,9 @@ include th02/exit_dos.asm
 include th04/hardware/grppsafx.asm
 include th04/formats/cdg_put_noalpha.asm
 include th04/snd/se.asm
-include th04/hardware/bgimage.asm
+	extern _bgimage_snap:proc
+	extern _bgimage_put:proc
+	extern _bgimage_free:proc
 	extern CDG_PUT_8:proc
 	extern _game_exit:proc
 	extern VECTOR1_AT:proc

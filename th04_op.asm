@@ -1811,7 +1811,7 @@ _musicroom	proc near
 		mov	_music_sel, al
 		call	draw_tracks pascal, word ptr _music_sel
 		call	graph_copy_page pascal, 0
-		call	bgimage_snap
+		call	_bgimage_snap
 		graph_accesspage 1
 		graph_showpage 0
 		call	screen_back_B_snap
@@ -1917,7 +1917,7 @@ loc_C544:
 		graph_accesspage al
 		push	1
 		call	palette_black_out
-		call	bgimage_free
+		call	_bgimage_free
 		call	snd_load pascal, ds, offset aOp_2, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		pop	bp
@@ -2667,10 +2667,12 @@ include th04/formats/cdg_put_noalpha.asm
 include th04/hardware/input_s.asm
 include th04/snd/se.asm
 include th04/hardware/egcrect.asm
-include th04/hardware/bgimage.asm
 SHARED	ends
 
 SHARED_	segment	word public 'CODE' use16
+	extern _bgimage_snap:proc
+	extern _bgimage_put:proc
+	extern _bgimage_free:proc
 	extern BGIMAGE_PUT_RECT:proc
 	extern CDG_LOAD_ALL_NOALPHA:proc
 	extern CDG_LOAD_ALL:proc
