@@ -133,7 +133,7 @@ bin\th04\res_huma.com: th04\res_huma.cpp
 $**
 | masters.lib
 
-bin\th04\op.exe: bin\th04\op.obj th04\m_char.cpp bin\th04\bgimage.obj bin\th04\bgimager.obj bin\th04\cdg_load.obj th04\frmdely2.c
+bin\th04\op.exe: bin\th04\op.obj th04\m_char.cpp bin\th04\egcrect.obj bin\th04\bgimage.obj bin\th04\bgimager.obj bin\th04\cdg_load.obj th04\frmdely2.c
 	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -DGAME=4 -DBINARY='O' -3 -Z -d -nbin\th04\ -eOP.EXE @&&|
 $**
 |

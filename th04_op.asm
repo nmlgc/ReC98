@@ -2666,10 +2666,10 @@ include th02/initop.asm
 include th04/formats/cdg_put_noalpha.asm
 include th04/hardware/input_s.asm
 include th04/snd/se.asm
-include th04/hardware/egcrect.asm
 SHARED	ends
 
 SHARED_	segment	word public 'CODE' use16
+	extern EGC_COPY_RECT_1_TO_0_16:proc
 	extern _bgimage_snap:proc
 	extern _bgimage_put:proc
 	extern _bgimage_free:proc
