@@ -2665,10 +2665,12 @@ include th02/initop.asm
 		db    0
 include th04/formats/cdg_put_noalpha.asm
 include th04/hardware/input_s.asm
-include th04/snd/se.asm
 SHARED	ends
 
 SHARED_	segment	word public 'CODE' use16
+	extern _snd_se_reset:proc
+	extern SND_SE_PLAY:proc
+	extern _snd_se_update:proc
 	extern EGC_COPY_RECT_1_TO_0_16:proc
 	extern _bgimage_snap:proc
 	extern _bgimage_put:proc

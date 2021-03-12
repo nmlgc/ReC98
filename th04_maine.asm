@@ -4614,7 +4614,9 @@ include th02/exit.asm
 include th02/initmain.asm
 		db    0
 include th04/hardware/input_s.asm
-include th04/snd/se.asm
+	extern _snd_se_reset:proc
+	extern SND_SE_PLAY:proc
+	extern _snd_se_update:proc
 	extern _bgimage_snap:proc
 	extern _bgimage_free:proc
 	extern BGIMAGE_PUT_RECT:proc

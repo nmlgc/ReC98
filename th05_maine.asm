@@ -7530,7 +7530,9 @@ include th02/snd/mmd_res.asm
 include th04/snd/detmodes.asm
 include th04/hardware/grppsafx.asm
 include th04/formats/cdg_put_noalpha.asm
-include th04/snd/se.asm
+	extern _snd_se_reset:proc
+	extern SND_SE_PLAY:proc
+	extern _snd_se_update:proc
 	extern _bgimage_snap:proc
 	extern _bgimage_free:proc
 	extern _game_exit:proc
