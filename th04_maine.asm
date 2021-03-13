@@ -4612,8 +4612,8 @@ include th04/hardware/grppsafx.asm
 include th04/formats/cdg_put.asm
 include th02/exit.asm
 include th02/initmain.asm
-		db    0
-include th04/hardware/input_s.asm
+	extern _input_reset_sense:proc
+	extern _input_sense:proc
 	extern _snd_se_reset:proc
 	extern SND_SE_PLAY:proc
 	extern _snd_se_update:proc

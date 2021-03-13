@@ -2636,7 +2636,7 @@ op_01_TEXT	ends
 
 ; Segment type:	Pure code
 SHARED	segment	word public 'CODE' use16
-		assume cs:SHARED
+		assume cs:g_SHARED
 		;org 2
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -2664,10 +2664,11 @@ include th02/exit.asm
 include th02/initop.asm
 		db    0
 include th04/formats/cdg_put_noalpha.asm
-include th04/hardware/input_s.asm
 SHARED	ends
 
 SHARED_	segment	word public 'CODE' use16
+	extern _input_reset_sense:proc
+	extern _input_sense:proc
 	extern _snd_se_reset:proc
 	extern SND_SE_PLAY:proc
 	extern _snd_se_update:proc

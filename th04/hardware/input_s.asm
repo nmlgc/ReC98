@@ -1,4 +1,20 @@
+	.386
+	.model large SHARED_
+	locals
+
 include pc98kbd.inc
+include twobyte.inc
+include th04/hardware/input.inc
+
+	extrn _key_det:word
+	extrn _shiftkey:byte
+	extrn js_stat:word
+	extrn js_bexist:word
+
+	extrn JS_SENSE:proc
+
+SHARED_	segment word public 'CODE' use16
+	assume cs:SHARED_
 
 ; TH05 insists on only updating the affected byte, so...
 if GAME eq 4
@@ -141,3 +157,6 @@ endif
 	retf
 _input_sense endp
 	even
+SHARED_	ends
+
+	end

@@ -90,6 +90,7 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 : th04_zuninit.asm |> !as |> bin\\th04\\zuninit.obj
 : th04_memchk.asm |> !as |> bin\\th04\\memchk.obj
 : th04\\scoreupd.asm |> !as4 |>
+: th04\\input_s.asm |> !as4 |>
 : th04\\cdg_load.asm |> !as4 |>
 : th04\\bgimager.asm |> !as4 |>
 : th04_op.asm |> !as |> bin\\th04\\op.obj
@@ -106,11 +107,11 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 	th05/sprites/gaiji.asp \
 	|> !as |> bin\\th05\\gjinit.obj
 : th05_memchk.asm |> !as |> bin\\th05\\memchk.obj
-: th04\\input_s.asm |> $(AS) /dGAME=5 th04\%b %o |> bin\\th05\\%B.obj
-: th04\\scoreupd.asm |> $(AS) /dGAME=5 th04\%b %o |> bin\\th05\\%B.obj
+: th04\\scoreupd.asm |> $(AS) /dGAME=5 th04\%b, %o |> bin\\th05\\%B.obj
 : th05\\player.asm |> !as5 |>
 : th05\\hud_bar.asm |> !as5 |>
 : th05\\bullet.asm |> !as5 |>
+: th05\\input_s.asm |> !as5 |>
 : th05\\cdg_put.asm |> !as5 |>
 : th05\\musicp_a.asm |> !as5 |>
 : th05\\bgimager.asm |> !as5 |>

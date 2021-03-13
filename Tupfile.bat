@@ -39,6 +39,7 @@ tasm32 /m /mx /kh32768 /t th03_mainl.asm bin\th03\mainl.obj
 tasm32 /m /mx /kh32768 /t th04_zuninit.asm bin\th04\zuninit.obj
 tasm32 /m /mx /kh32768 /t th04_memchk.asm bin\th04\memchk.obj
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04\scoreupd.asm bin\th04\scoreupd.obj
+tasm32 /m /mx /kh32768 /t /dGAME=4 th04\input_s.asm bin\th04\input_s.obj
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04\cdg_load.asm bin\th04\cdg_load.obj
 tasm32 /m /mx /kh32768 /t th04_op.asm bin\th04\op.obj
 tasm32 /m /mx /kh32768 /t th04_main.asm bin\th04\main.obj
@@ -46,11 +47,11 @@ tasm32 /m /mx /kh32768 /t th04_maine.asm bin\th04\maine.obj
 tasm32 /m /mx /kh32768 /t th05_zuninit.asm bin\th05\zuninit.obj
 tasm32 /m /mx /kh32768 /t th05_gjinit.asm bin\th05\gjinit.obj
 tasm32 /m /mx /kh32768 /t th05_memchk.asm bin\th05\memchk.obj
-tasm32 /m /mx /kh32768 /t /dGAME=5 th04\input_s.asm bin\th05\input_s.obj
 tasm32 /m /mx /kh32768 /t /dGAME=5 th04\scoreupd.asm bin\th05\scoreupd.obj
 tasm32 /m /mx /kh32768 /t /dGAME=5 th05\player.asm bin\th05\player.obj
 tasm32 /m /mx /kh32768 /t /dGAME=5 th05\hud_bar.asm bin\th05\hud_bar.obj
 tasm32 /m /mx /kh32768 /t /dGAME=5 th05\bullet.asm bin\th05\bullet.obj
+tasm32 /m /mx /kh32768 /t /dGAME=5 th05\input_s.asm bin\th05\input_s.obj
 tasm32 /m /mx /kh32768 /t /dGAME=5 th05\cdg_put.asm bin\th05\cdg_put.obj
 tasm32 /m /mx /kh32768 /t /dGAME=5 th05\musicp_a.asm bin\th05\musicp_a.obj
 tasm32 /m /mx /kh32768 /t /dGAME=5 th05\bgimager.asm bin\th05\bgimager.obj
