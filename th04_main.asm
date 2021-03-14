@@ -6144,11 +6144,7 @@ loc_EC24:
 		mov	ax, si
 		shl	ax, 7
 		add	ax, 48
-		push	ax
-		push	[bp+@@top]
-		push	(17 shl 16) or 0
-		push	(0 shl 16) or SEG_PLANE_E
-		call	cdg_put_plane_roll_8
+		call	cdg_put_plane_roll_8 pascal, ax, [bp+@@top], (17 shl 16) or 0, SEG_PLANE_E
 		inc	si
 
 loc_EC51:
@@ -13132,7 +13128,7 @@ include th02/initmain.asm
 		db    0
 
 include th04/formats/cdg_put_noalpha.asm
-include th04/formats/cdg_put_plane_roll.asm
+	extern CDG_PUT_PLANE_ROLL_8:proc
 	extern _input_reset_sense:proc
 	extern _input_sense:proc
 	extern _snd_se_reset:proc

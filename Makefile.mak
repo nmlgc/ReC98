@@ -138,7 +138,7 @@ bin\th04\op.exe: bin\th04\op.obj th04\m_char.cpp bin\th04\input_s.obj bin\th04\s
 $**
 |
 
-bin\th04\main.exe: bin\th04\main.obj bin\th04\scoreupd.obj th04\main011.cpp bin\th04\input_s.obj bin\th04\snd_se.obj bin\th04\cdg_load.obj bin\hfliplut.obj th04\main032.cpp
+bin\th04\main.exe: bin\th04\main.obj bin\th04\scoreupd.obj th04\main011.cpp bin\th04\cdg_p_pr.obj bin\th04\input_s.obj bin\th04\snd_se.obj bin\th04\cdg_load.obj bin\hfliplut.obj th04\main032.cpp
 	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -DGAME=4 -DBINARY='M' -3 -Z -nbin\th04\ -eMAIN.EXE @&&|
 $**
 |

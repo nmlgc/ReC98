@@ -23,7 +23,7 @@ void pascal cdg_put_nocolors_8(screen_x_t left, vram_y_t top, int slot);
 		screen_x_t left,
 		vram_y_t top,
 		int slot,
-		vram_plane_t plane_src,
-		dots8_t *plane_dst
+		vram_plane_t plane_src_id,
+		dots8_t __seg *plane_dst
 	);
 #endif
