@@ -2663,10 +2663,10 @@ include th04/formats/cdg_put.asm
 include th02/exit.asm
 include th02/initop.asm
 		db    0
-include th04/formats/cdg_put_noalpha.asm
 SHARED	ends
 
 SHARED_	segment	word public 'CODE' use16
+	extern CDG_PUT_NOALPHA_8:proc
 	extern _input_reset_sense:proc
 	extern _input_sense:proc
 	extern _snd_se_reset:proc

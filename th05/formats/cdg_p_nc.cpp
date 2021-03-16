@@ -6,8 +6,8 @@ extern "C" {
 #include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
-#include "decomp.hpp"
 #include "th04/formats/cdg.h"
+#include "th04/formats/cdg_impl.hpp"
 }
 
 void pascal cdg_put_nocolors_8(screen_x_t left, vram_y_t top, int slot)
@@ -16,19 +16,10 @@ void pascal cdg_put_nocolors_8(screen_x_t left, vram_y_t top, int slot)
 	#define cdg	reinterpret_cast<cdg_t near *>(_SI)
 	#define stride	static_cast<vram_byte_amount_t>(_DX)
 	#define tmp	static_cast<upixel_t>(_AX)
-	#define top_tmp	static_cast<pixel_t>(_CX)
-	register vram_byte_amount_t cdg_dword_w;
+	#define cdg_dword_w	static_cast<vram_byte_amount_t>(_BX)
 
-	// cdg = cdg_slots[slot];
-	_SI = slot;
-	_SI <<= 4;	// MODDERS: Should be sizeof(cdg_t);
-	_SI += FP_OFF(cdg_slots);
-
-	// _DI = (vram_offset_shift(left, 0) + cdg->offset_at_bottom_left);
-	// [top] is calculated into the segment later, not the offset.
-	_DI = left;
-	_DI >>= 3;
-	_DI += cdg->offset_at_bottom_left;
+	cdg = cdg_src_offset(slot);
+	_DI = cdg_dst_offset(_DI, cdg, left);
 
 	tmp = cdg->vram_dword_w;
 	cdg_dword_w = tmp;
@@ -36,24 +27,14 @@ void pascal cdg_put_nocolors_8(screen_x_t left, vram_y_t top, int slot)
 	// the beginning of the previous one.
 	stride = ((tmp * 4) + ROW_SIZE);
 
-	// _ES = (SEG_PLANE_B + (top * (ROW_SIZE / 16)));
-	tmp = top;
-	top_tmp = tmp;
-	_ES = (((tmp * 4) + top_tmp) + SEG_PLANE_B);
-
+	tmp = cdg_dst_segment(tmp, top, _CX);
+	_ES = tmp;
 	__asm { push ds };
-	_DS = reinterpret_cast<seg_t>(cdg->seg_alpha());
-	_SI = 0;
-
-	do {
-		_CX = cdg_dword_w;
-		REP MOVSD;
-		_DI -= stride;
-	} while(!FLAGS_SIGN);
-
+	reinterpret_cast<dots8_t __seg *>(_DS) = cdg->seg_alpha();
+	cdg_put_plane_raw(_ES, _DI, _DS, 0, cdg_dword_w);
 	__asm { pop ds };
 
-	#undef top_tmp
+	#undef cdg_dword_w
 	#undef tmp
 	#undef stride
 	#undef cdg

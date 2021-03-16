@@ -13126,8 +13126,7 @@ include th04/formats/cdg_put.asm
 include th02/exit.asm
 include th02/initmain.asm
 		db    0
-
-include th04/formats/cdg_put_noalpha.asm
+	extern CDG_PUT_NOALPHA_8:proc
 	extern CDG_PUT_PLANE_ROLL_8:proc
 	extern _input_reset_sense:proc
 	extern _input_sense:proc

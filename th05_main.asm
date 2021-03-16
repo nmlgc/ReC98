@@ -10555,7 +10555,7 @@ SHARED_	segment	word public 'CODE' use16
 include th04/snd/pmd_res.asm
 include th02/snd/mmd_res.asm
 include th04/snd/detmodes.asm
-include th04/formats/cdg_put_noalpha.asm
+	extern CDG_PUT_NOALPHA_8:proc
 	extern SND_SE_PLAY:proc
 	extern _snd_se_update:proc
 	extern CDG_PUT_8:proc
