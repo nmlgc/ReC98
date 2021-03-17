@@ -2661,11 +2661,10 @@ include th04/snd/load.asm
 include th04/hardware/grppsafx.asm
 include th04/formats/cdg_put.asm
 include th02/exit.asm
-include th02/initop.asm
-		db    0
 SHARED	ends
 
 SHARED_	segment	word public 'CODE' use16
+	extern _game_init_op:proc
 	extern CDG_PUT_NOALPHA_8:proc
 	extern _input_reset_sense:proc
 	extern _input_sense:proc

@@ -4611,7 +4611,7 @@ include th04/snd/load.asm
 include th04/hardware/grppsafx.asm
 include th04/formats/cdg_put.asm
 include th02/exit.asm
-include th02/initmain.asm
+	extern GAME_INIT_MAIN:proc
 	extern _input_reset_sense:proc
 	extern _input_sense:proc
 	extern _snd_se_reset:proc
