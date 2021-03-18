@@ -5531,8 +5531,8 @@ include th03/formats/cdg_put_hflip.asm
 include th02/hardware/frame_delay.asm
 		db 0
 include th03/hardware/input_sense.asm
-include th02/formats/pi_palette_apply.asm
-include th02/formats/pi_put.asm
+	extern PI_PALETTE_APPLY:proc
+	extern PI_PUT_8:proc
 	extern PI_PUT_INTERLACE_8:proc
 	extern _snd_se_reset:proc
 	extern SND_SE_PLAY:proc

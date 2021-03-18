@@ -182,3 +182,4 @@ _input_reset_sense_key_held	proc far
 @@ret:
 	retf
 _input_reset_sense_key_held	endp
+	even

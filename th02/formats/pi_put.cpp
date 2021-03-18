@@ -9,7 +9,7 @@ extern "C" {
 #include "master.hpp"
 #include "th02/formats/pi.h"
 
-void pi_palette_apply(int slot)
+void DEFCONV pi_palette_apply(int slot)
 {
 	palette_set_all(pi_headers[slot].palette);
 	palette_show();

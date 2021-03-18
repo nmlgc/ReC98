@@ -8889,7 +8889,6 @@ include th02/exit.asm
 include th03/math/vector1_at.asm
 include th02/hardware/frame_delay.asm
 include th03/hardware/input_sense.asm
-		nop
 	extern _snd_se_reset:proc
 	extern SND_SE_PLAY:proc
 	extern _snd_se_update:proc
