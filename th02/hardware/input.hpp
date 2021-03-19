@@ -1,5 +1,6 @@
 typedef uint16_t input_t;
 
+static const input_t INPUT_NONE       = 0x0000;
 static const input_t INPUT_UP         = 0x0001;
 static const input_t INPUT_DOWN       = 0x0002;
 static const input_t INPUT_LEFT       = 0x0004;
