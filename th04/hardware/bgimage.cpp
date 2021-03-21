@@ -1,5 +1,4 @@
-#pragma codeseg SHARED_
-#pragma option -k-
+#pragma option -zCSHARED_ -k-
 
 extern "C" {
 #include <mem.h>

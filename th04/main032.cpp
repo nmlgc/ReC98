@@ -3,7 +3,7 @@
  * 2nd part of code segment #3 of TH04's MAIN.EXE
  */
 
-#pragma codeseg main_032_TEXT main_03
+#pragma option -zCmain_032_TEXT -zPmain_03
 
 extern "C" {
 #include "ReC98.h"

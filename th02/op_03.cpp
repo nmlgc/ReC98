@@ -11,6 +11,9 @@ extern "C" {
 #include "th02/formats/pi.h"
 #include "th02/snd/snd.h"
 
+#include "th02/snd/data.c"
+#include "th02/snd/se_data.c"
+
 void title_flash(void)
 {
 	int page = 1;

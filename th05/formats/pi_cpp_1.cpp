@@ -1,6 +1,6 @@
 // First TH05 .PI C++ translation unit.
 
-#pragma codeseg SHARED_
+#pragma option -zCSHARED_
 
 extern "C" {
 #include <stddef.h>

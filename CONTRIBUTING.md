@@ -242,10 +242,13 @@ C++, Open Watcom, and Visual C++, which will ease future third-party ports.
   code, not to replace it with an overly nested, "enterprise-y" class
   hierarchy.
 
-* Put `#pragma codeseg` and any file-wide `#pragma option` settings at the top
-  of the translation unit, *after* any header comment, and *before*
-  `extern "C"` and header inclusions. `#pragma codeseg` comes first, followed
-  by `#pragma option`.
+* Use `#pragma option -zC` and `#pragma option -zP` to rename code segments
+  and their groups, not `#pragma codeseg`. Might look uglier, but has the
+  advantage of not generating an empty segment with the default name.
+
+  * These options can only be used "at the beginning" of a translation unit –
+    before the first non-preprocessor and non-comment C language token. Any
+    other `#pragma option` settings should also be put there.
 
 ## Decompilation
 

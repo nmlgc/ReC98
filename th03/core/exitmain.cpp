@@ -1,5 +1,4 @@
-#pragma codeseg SHARED
-#pragma option -Z
+#pragma option -zCSHARED -Z
 
 extern "C" {
 #include <stddef.h>

@@ -3,7 +3,7 @@
  * 2nd part of code segment #1 of TH01's REIIDEN.EXE
  */
 
-#pragma codeseg main_01__TEXT main_01
+#pragma option -zCmain_01__TEXT -zPmain_01
 
 extern "C" {
 #include "ReC98.h"

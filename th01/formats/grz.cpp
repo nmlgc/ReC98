@@ -1,4 +1,4 @@
-#pragma codeseg PTN_GRP_GRZ
+#pragma option -zCPTN_GRP_GRZ
 
 extern "C" {
 #include <mem.h>

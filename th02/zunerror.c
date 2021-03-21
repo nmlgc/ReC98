@@ -1,4 +1,4 @@
-#pragma codeseg SHARED
+#pragma option -zCSHARED
 
 #include "th02/core/zunerror.h"
 

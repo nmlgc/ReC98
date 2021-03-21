@@ -1,4 +1,4 @@
-#pragma codeseg SHARED
+#pragma option -zCSHARED
 
 #include "master.hpp"
 #include "th02/hardware/frmdelay.h"

@@ -1,5 +1,4 @@
-#pragma codeseg SHARED
-#pragma option -3
+#pragma option -zCSHARED -3
 
 extern "C" {
 #include <mbctype.h>

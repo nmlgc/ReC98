@@ -1,6 +1,6 @@
 // Temporary workaround copy of TH02's version, until we can put it into the
 // regular SHARED segment for TH04's OP.EXE as well.
-#pragma codeseg SHARED_
+#pragma option -zCSHARED_
 
 #include "master.hpp"
 #include "th02/hardware/frmdelay.h"

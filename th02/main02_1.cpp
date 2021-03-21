@@ -3,8 +3,7 @@
  * 1st part of code segment #2 of TH02's MAIN.EXE
  */
 
-#pragma codeseg SHARED
-#pragma option -3
+#pragma option -zCSHARED -3
 
 extern "C" {
 #include "platform.h"

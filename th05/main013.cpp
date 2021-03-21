@@ -3,7 +3,7 @@
  * 4th part of code segment #1 of TH05's MAIN.EXE
  */
 
-#pragma codeseg main_01_TEXT main_01
+#pragma option -zCmain_01_TEXT -zPmain_01
 
 extern "C" {
 #include "th05/th05.hpp"

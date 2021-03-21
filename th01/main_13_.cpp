@@ -3,8 +3,7 @@
  * 2nd part of code segment #13 of TH01's REIIDEN.EXE
  */
 
-#pragma codeseg main_13_TEXT
-#pragma option -2 -O- -Z-
+#pragma option -zCmain_13_TEXT -2 -O- -Z-
 
 extern "C" {
 #include <stdlib.h>

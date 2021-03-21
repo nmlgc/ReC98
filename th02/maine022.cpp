@@ -3,7 +3,7 @@
  * 2nd part of code segment #2 of TH02's MAINE.EXE
  */
 
-#pragma codeseg SHARED
+#pragma option -zCSHARED
 
 extern "C" {
 #include "platform.h"

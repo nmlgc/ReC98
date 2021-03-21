@@ -3,7 +3,7 @@
  * TH05 player character selection menu
  */
 
-#pragma codeseg op_01_TEXT
+#pragma option -zCop_01_TEXT
 
 extern "C" {
 #include "platform.h"

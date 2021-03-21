@@ -1,5 +1,4 @@
-#pragma codeseg SHARED
-#pragma option -3 -Z
+#pragma option -zCSHARED -3 -Z
 
 extern "C" {
 #include "platform.h"

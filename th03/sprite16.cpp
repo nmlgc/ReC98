@@ -3,8 +3,7 @@
  * SPRITE16 display calls
  */
 
-#pragma codeseg SHARED
-#pragma option -k-
+#pragma option -zCSHARED -k-
 
 extern "C" {
 #include "platform.h"

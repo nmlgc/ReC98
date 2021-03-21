@@ -1,4 +1,4 @@
-#pragma codeseg SHARED
+#pragma option -zCSHARED
 
 extern "C" {
 #include "master.hpp"
