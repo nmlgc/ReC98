@@ -244,7 +244,11 @@ C++, Open Watcom, and Visual C++, which will ease future third-party ports.
 
 * Use `#pragma option -zC` and `#pragma option -zP` to rename code segments
   and their groups, not `#pragma codeseg`. Might look uglier, but has the
-  advantage of not generating an empty segment with the default name.
+  advantage of not generating an empty segment with the default name and the
+  default padding. This is particularly relevant [if the `-WX` option is used
+  to enforce word-aligned code segments][3]: That empty default segment would
+  otherwise also (unnecessarily) enforce word alignment for the segment that
+  ends up following the empty default one.
 
   * These options can only be used "at the beginning" of a translation unit –
     before the first non-preprocessor and non-comment C language token. Any
@@ -323,3 +327,4 @@ Currently, we know about the following [references]:
 [mzdiff]: https://github.com/nmlgc/mzdiff
 [1]: Research/Borland%20C++%20decompilation.md#c
 [2]: https://github.com/nmlgc/ReC98/invitations
+[3]: Research/Borland%20C++%20decompilation.md#padding-bytes-in-code-segments

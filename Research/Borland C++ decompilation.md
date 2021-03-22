@@ -368,18 +368,26 @@ static_storage  db  2, 0, 6
 @_STCON_$qv	endp
 ```
 
-
 ## Padding bytes in code segments
 
-- `0x00` is only emitted to word-align `switch` jump tables with `-a2`.
-  Anywhere else, it indicates the start or end of a word-aligned `SEGMENT`
-  compiled from assembly. Borland C++ never adds padding between functions or
-  segments.
+* Usually, padding `0x00` bytes are only emitted to word-align `switch` jump
+  tables with `-a2`. Anywhere else, it typically indicates the start or end of
+  a word-aligned `SEGMENT` compiled from assembly. There are two potential
+  workarounds though:
 
-  **Certainty**: Would love to find a proper compiler or linker setting for
-  this, but it doesn't seem to exist. The `#pragma codestring \x00` workaround
-  doesn't respect different alignment requirements of surrounding translation
-  units, after all.
+  * The `-WX` option (Create DPMI application) *will* enforce word alignment
+    for the code segment, at the cost of slightly different code generation in
+    certain places. Since it also adds an additional `INC BP` instruction
+    before `PUSH BP`, and an additional `DEC BP` instruction after `POP BP`,
+    this option can only really be used in translation units with disabled
+    stack frames (`-k-`).
+
+  * `#pragma codestring \x00` unconditionally emits a `0x00` byte. However,
+    this won't respect different alignment requirements of surrounding
+    translation units.
+
+  **Certainty**: Reverse-engineering `TCC.EXE` confirmed that these are the
+  only ways.
 
 ## C++
 
