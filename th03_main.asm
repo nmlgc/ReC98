@@ -8886,7 +8886,7 @@ include th03/math/vector2_between_plus.asm
 include th02/exit.asm
 include th03/math/vector1_at.asm
 include th02/hardware/frame_delay.asm
-include th03/hardware/input_sense.asm
+	extern _input_reset_sense_key_held:proc
 	extern _snd_se_reset:proc
 	extern SND_SE_PLAY:proc
 	extern _snd_se_update:proc

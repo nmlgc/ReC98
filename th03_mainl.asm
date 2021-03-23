@@ -5527,8 +5527,7 @@ include th02/exit.asm
 include th03/formats/cdg_put.asm
 include th03/formats/cdg_put_hflip.asm
 include th02/hardware/frame_delay.asm
-		db 0
-include th03/hardware/input_sense.asm
+	extern _input_reset_sense_key_held:proc
 	extern PI_PALETTE_APPLY:proc
 	extern PI_PUT_8:proc
 	extern PI_PUT_INTERLACE_8:proc
