@@ -24,13 +24,11 @@ tasm32 /m /mx /kh32768 /t th01_op.asm bin\th01\op.obj
 tasm32 /m /mx /kh32768 /t th01_reiiden.asm bin\th01\reiiden.obj
 tasm32 /m /mx /kh32768 /t th01_fuuin.asm bin\th01\fuuin.obj
 tasm32 /m /mx /kh32768 /t th02_zuninit.asm bin\th02\zuninit.obj
-tasm32 /m /mx /kh32768 /t /dGAME=2 th02\snd_se.asm bin\th02\snd_se.obj
 tasm32 /m /mx /kh32768 /t th02_op.asm bin\th02\op.obj
 tasm32 /m /mx /kh32768 /t th02_main.asm bin\th02\main.obj
 tasm32 /m /mx /kh32768 /t th02_maine.asm bin\th02\maine.obj
 tasm32 /m /mx /kh32768 /t /DTHIEF libs\sprite16\sprite16.asm bin\th03\zunsp.obj
 tasm32 /m /mx /kh32768 /t /dGAME=3 th03\cdg_p_na.asm bin\th03\cdg_p_na.obj
-tasm32 /m /mx /kh32768 /t /dGAME=3 th03\snd_se.asm bin\th03\snd_se.obj
 tasm32 /m /mx /kh32768 /t th03\\hfliplut.asm bin\hfliplut.obj
 tasm32 /m /mx /kh32768 /t th03_op.asm bin\th03\op.obj
 tasm32 /m /mx /kh32768 /t th03_main.asm bin\th03\main.obj

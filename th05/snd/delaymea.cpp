@@ -11,7 +11,7 @@ extern "C" {
 
 int snd_bgm_measure(void)
 {
-	if(!snd_is_active()) {
+	if(!snd_bgm_active()) {
 		return -1;
 	}
 	return snd_get_song_measure();

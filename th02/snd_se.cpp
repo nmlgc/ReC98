@@ -1,2 +1,2 @@
-#pragma option -zCSHARED_
+#pragma option -zCSHARED
 #include "th02/snd/se.cpp"

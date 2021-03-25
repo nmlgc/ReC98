@@ -19,8 +19,12 @@ extern unsigned char snd_se_mode;
 extern unsigned char snd_bgm_mode;
 
 #ifdef __cplusplus
-static inline bool snd_is_active() {
+static inline bool snd_bgm_active() {
 	return snd_bgm_mode;
+}
+
+static inline bool16 snd_se_active() {
+	return (snd_se_mode != SND_SE_OFF);
 }
 #endif
 
