@@ -1,4 +1,4 @@
-#pragma option -zCSHARED -k-
+#pragma option -WX -zCSHARED -k-
 
 extern "C" {
 #include "platform.h"

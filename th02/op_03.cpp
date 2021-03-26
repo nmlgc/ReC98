@@ -3,6 +3,8 @@
  * Code segment #3 of TH02's OP.EXE
  */
 
+#pragma codestring "\x00"
+
 extern "C" {
 #include "th02/th02.h"
 #include "x86real.h"

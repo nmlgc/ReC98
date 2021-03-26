@@ -12980,7 +12980,7 @@ include th01/hardware/vram_planes_set.asm
 include th03/math/vector2.asm
 		nop
 include th03/math/vector2_between_plus.asm
-include th02/hardware/frame_delay.asm
+	extern FRAME_DELAY:proc
 SHARED	ends
 
 SHARED_	segment	word public 'CODE' use16
