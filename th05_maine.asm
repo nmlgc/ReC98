@@ -6426,9 +6426,9 @@ var_2     	= word ptr -2
 		push	si
 		push	di
 		mov	di, [bp+@@y_center]
-		mov	ax, [bp+@@slot]
-		shl	ax, 4
-		add	ax, offset _cdg_slots
+
+		cdg_slot_offset	ax, [bp+@@slot]
+
 		mov	si, ax
 		mov	ax, [si+cdg_t.pixel_w]
 		cwd
@@ -6610,9 +6610,9 @@ var_2     	= word ptr -2
 		push	si
 		push	di
 		mov	di, [bp+@@y_center]
-		mov	ax, [bp+@@slot]
-		shl	ax, 4
-		add	ax, offset _cdg_slots
+
+		cdg_slot_offset	ax, [bp+@@slot]
+
 		mov	si, ax
 		mov	ax, [si+cdg_t.pixel_w]
 		cwd

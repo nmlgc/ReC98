@@ -2,7 +2,7 @@
 
 #include "decomp.hpp"
 
-inline cdg_t near* cdg_src_offset(const int &slot) {
+inline cdg_t near* cdg_slot_offset(const int &slot) {
 	_SI = slot;
 	_SI <<= 4;	// MODDERS: Should be sizeof(cdg_t);
 	_SI += FP_OFF(cdg_slots);

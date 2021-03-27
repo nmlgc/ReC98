@@ -18,7 +18,7 @@ void pascal cdg_put_nocolors_8(screen_x_t left, vram_y_t top, int slot)
 	#define tmp	static_cast<upixel_t>(_AX)
 	#define cdg_dword_w	static_cast<vram_byte_amount_t>(_BX)
 
-	cdg = cdg_src_offset(slot);
+	cdg = cdg_slot_offset(slot);
 	_DI = cdg_dst_offset(_DI, cdg, left);
 
 	tmp = cdg->vram_dword_w;

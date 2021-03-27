@@ -11,24 +11,19 @@ cdg_put_nocolors_8 proc far
 	mov	bp, sp
 	push	si
 	push	di
-	mov	si, [bp+@@slot]
-	shl	si, 4
-	add	si, offset _cdg_slots
-	mov	di, [bp+@@left]
-	sar	di, 3
-	add	di, [si+cdg_t.offset_at_bottom_left]
+
+	cdg_slot_offset	si, [bp+@@slot]
+	cdg_dst_offset	di, si, [bp+@@left]
+
 	mov	ax, [si+cdg_t.vram_dword_w]
 	mov	word ptr cs:@@width+1, ax
 	jmp	short $+2
 	shl	ax, 2
 	add	ax, (640 / 8)
 	mov	dx, ax
-	mov	ax, [bp+@@top]
-	mov	bx, ax
-	shl	ax, 2
-	add	ax, bx
-	add	ax, 0A800h
-	mov	es, ax
+
+	cdg_dst_segment	es, [bp+@@top], bx
+
 	push	ds
 	mov	ds, [si+cdg_t.seg_alpha]
 	xor	si, si

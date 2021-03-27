@@ -22,6 +22,27 @@ cdg_t struc
 	seg_colors dw ?
 cdg_t ends
 
+cdg_slot_offset macro retval:req, slot:req
+	mov	retval, slot
+	shl	retval, 4	; *= size cdg_t
+	add	retval, offset _cdg_slots
+endm
+
+cdg_dst_offset macro retval:req, cdg:req, left:req
+	mov	retval, left
+	sar	retval, 3
+	add	retval, [cdg+cdg_t.offset_at_bottom_left]
+endm
+
+cdg_dst_segment macro retval:req, top:req, tmp:req
+	mov	ax, top
+	mov	tmp, ax
+	shl	ax, 2
+	add	ax, tmp
+	add	ax, SEG_PLANE_B
+	mov	retval, ax
+endm
+
 vram_plane_next macro seg:req, label_loop:req
 	; Next segment...
 	mov	ax, seg

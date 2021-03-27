@@ -10,12 +10,10 @@ cdg_put_hflip_8 proc
 	push	si
 	push	di
 	call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-	mov	si, [bp+@@slot]
-	shl	si, 4
-	add	si, offset _cdg_slots
-	mov	ax, [bp+@@left]
-	sar	ax, 3
-	add	ax, [si+cdg_t.offset_at_bottom_left]
+
+	cdg_slot_offset	si, [bp+@@slot]
+	cdg_dst_offset	ax, si, [bp+@@left]
+
 	mov	bx, [si+cdg_t.vram_dword_w]
 	shl	bx, 2
 	add	ax, bx
@@ -30,13 +28,9 @@ cdg_put_hflip_8 proc
 	mov	word ptr cs:@@stride_alpha+1, ax
 	mov	word ptr cs:@@stride_colors+1, ax
 	jmp	short $+2
-	mov	ax, [bp+@@top]
-	mov	bx, ax
-	shl	ax, 2
-	add	ax, bx
-	add	ax, 0A800h
-	mov	es, ax
-	assume es:nothing
+
+	cdg_dst_segment es, [bp+@@top], bx
+
 	mov	bx, offset _hflip_lut
 	mov	fs, [si+cdg_t.seg_alpha]
 	xor	si, si
@@ -62,9 +56,9 @@ cdg_put_hflip_8 proc
 
 @@last_x_alpha:
 	mov	di, 1234h
-	mov	si, [bp+@@slot]
-	shl	si, 4
-	add	si, offset _cdg_slots
+
+	cdg_slot_offset	si, [bp+@@slot]
+
 	mov	fs, [si+cdg_t.seg_colors]
 	xor	si, si
 

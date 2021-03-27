@@ -127,9 +127,7 @@ cdg_load_all proc far
 	push	si
 	push	di
 	call	file_ropen pascal, large [bp+@@fn]
-	mov	di, [bp+@@slot_first]
-	shl	di, 4	; *= size cdg_t
-	add	di, offset _cdg_slots
+	cdg_slot_offset	di, [bp+@@slot_first]
 	call	file_read pascal, ds, di, size cdg_t
 	mov	si, di
 	mov	bp, [bp+@@slot_first]

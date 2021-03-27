@@ -30,7 +30,7 @@ void pascal cdg_put_noalpha_8(screen_x_t left, vram_y_t top, int slot)
 	_AX -= SEG_PLANE_DIST_BRG; // AX == SEG_PLANE_R
 	__asm { push	ax; }
 
-	cdg = cdg_src_offset(slot);
+	cdg = cdg_slot_offset(slot);
 	dst_offset = cdg_dst_offset(dst_offset, cdg, left);
 
 	tmp = cdg->vram_dword_w;

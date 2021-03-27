@@ -27,9 +27,9 @@ cdg_put_plane_roll_8 proc far
 	push	di
 	mov	ax, @@plane_dst
 	mov	es, ax
-	mov	si, @@slot
-	shl	si, 4
-	add	si, offset _cdg_slots
+
+	cdg_slot_offset	si, @@slot
+
 	mov	di, @@left
 	sar	di, 3
 	mov	@@h, [si+cdg_t.pixel_h]

@@ -22,12 +22,10 @@ cdg_put_noalpha_8 proc far
 	mov	bp, sp
 	push	si
 	push	di
-	mov	si, [bp+@@slot]
-	shl	si, 4	; *= size cdg_t
-	add	si, offset _cdg_slots
-	mov	ax, [bp+@@left]
-	sar	ax, 3
-	add	ax, [si+cdg_t.offset_at_bottom_left]
+
+	cdg_slot_offset	si, [bp+@@slot]
+	cdg_dst_offset	ax, si, [bp+@@left]
+
 	mov	di, ax
 	mov	ax, [si+cdg_t.vram_dword_w]
 	mov	word ptr cs:@@width, ax
@@ -35,12 +33,9 @@ cdg_put_noalpha_8 proc far
 	shl	ax, 2
 	add	ax, ROW_SIZE
 	mov	dx, ax
-	mov	ax, [bp+@@top]
-	mov	bx, ax
-	shl	ax, 2
-	add	ax, bx
-	add	ax, SEG_PLANE_B
-	mov	es, ax
+
+	cdg_dst_segment	es, [bp+@@top], bx
+
 	push	ds
 	mov	ax, [si+cdg_t.seg_colors]
 	mov	ds, ax

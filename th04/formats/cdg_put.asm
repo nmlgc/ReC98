@@ -23,24 +23,22 @@ cdg_put_8 proc far
 	out	dx, al
 
 	sti
-	mov	si, @@slot
-	shl	si, 4	; *= size cdg_t
-	add	si, offset _cdg_slots
+
+	cdg_slot_offset	si, @@slot
+
 if GAME eq 4
 	mov	ax, [si+cdg_t.seg_colors]
 	mov	word ptr cs:@@seg_colors, ax
 	jmp	short $+2
-	mov	ax, @@top
-	mov	bx, ax
-	shl	ax, 2
-	add	ax, bx
+
+	cdg_dst_segment	es, @@top, bx
 else
 	mov	ax, @@top
 	shl	ax, 2
 	add	ax, @@top
-endif
 	add	ax, SEG_PLANE_B
 	mov	es, ax
+endif
 	push	0	; (sentinel)
 	add	ax, (SEG_PLANE_E - SEG_PLANE_B)	; AX == SEG_PLANE_E
 	push	ax
@@ -48,9 +46,12 @@ endif
 	push	ax
 	sub	ax, SEG_PLANE_DIST_BRG	; AX == SEG_PLANE_R
 	push	ax
+
+	; cdg_dst_offset() with SHR instead of SAR, for a change
 	mov	ax, @@left
 	shr	ax, 3
 	add	ax, [si+cdg_t.offset_at_bottom_left]
+
 	mov	di, ax
 	mov	@@vram_offset_at_bottom_left, ax
 	mov	ax, [si+cdg_t.vram_dword_w]

@@ -10,14 +10,14 @@ cdg_put_8 proc far
 	push	si
 	push	di
 	call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
-	mov	si, [bp+@@slot]
-	shl	si, 4
-	add	si, offset _cdg_slots
+
+	cdg_slot_offset	si, [bp+@@slot]
+
 	mov	ax, [si+cdg_t.seg_colors]
 	mov	word ptr cs:@@seg_colors+1, ax
-	mov	ax, [bp+@@left]
-	sar	ax, 3
-	add	ax, [si+cdg_t.offset_at_bottom_left]
+
+	cdg_dst_offset	ax, si, [bp+@@left]
+
 	mov	di, ax
 	mov	word ptr cs:@@offset_at_bottom_left+1, ax
 	mov	ax, [si+cdg_t.vram_dword_w]
@@ -27,12 +27,9 @@ cdg_put_8 proc far
 	add	ax, (640 / 8)
 	mov	word ptr cs:@@stride+1, ax
 	jmp	short $+2
-	mov	ax, [bp+@@top]
-	mov	bx, ax
-	shl	ax, 2
-	add	ax, bx
-	add	ax, 0A800h
-	mov	es, ax
+
+	cdg_dst_segment	es, [bp+@@top], bx
+
 	push	ds
 	mov	ax, [si+cdg_t.seg_alpha]
 	mov	ds, ax

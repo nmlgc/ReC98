@@ -10,9 +10,9 @@ cdg_put_plane	proc far
 	mov	bp, sp
 	push	si
 	push	di
-	mov	si, [bp+@@slot]
-	shl	si, 4
-	add	si, offset _cdg_slots
+
+	cdg_slot_offset	si, [bp+@@slot]
+
 	mov	cx, [bp+@@left]
 	mov	di, cx
 	sar	di, 4
@@ -31,12 +31,9 @@ cdg_put_plane	proc far
 	shl	ax, 1
 	add	ax, (640 / 8)
 	mov	dx, ax
-	mov	ax, [bp+@@top]
-	mov	bx, ax
-	shl	ax, 2
-	add	ax, bx
-	add	ax, 0A800h
-	mov	es, ax
+
+	cdg_dst_segment	es, [bp+@@top], bx
+
 	push	ds
 	mov	ax, [si+cdg_t.seg_colors]
 	mov	si, [si+cdg_t.CDG_plane_size]
