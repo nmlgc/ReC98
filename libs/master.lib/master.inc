@@ -12,4 +12,5 @@ GRAPH_PACK_PUT_8_NOCLIP procdesc pascal far \
 	left:word, top:word, linepat_sgm:word, linepat_off:word, len:word
 GRAPH_PI_FREE procdesc pascal far \
 	header:far ptr, image:far ptr
+extrn GRCG_SETCOLOR:proc
 PALETTE_SHOW procdesc pascal far

@@ -3616,9 +3616,8 @@ include th02/snd/pmd_res.asm
 include th02/snd/load.asm
 include th02/exit.asm
 include th03/math/vector1_at.asm
-		db 0
-include th03/formats/cdg_put.asm
-include th03/formats/cdg_put_hflip.asm
+	extern CDG_PUT_8:proc
+	extern CDG_PUT_HFLIP_8:proc
 	extern FRAME_DELAY:proc
 	extern _input_reset_sense_key_held:proc
 	extern PI_PALETTE_APPLY:proc

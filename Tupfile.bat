@@ -28,6 +28,7 @@ tasm32 /m /mx /kh32768 /t th02_op.asm bin\th02\op.obj
 tasm32 /m /mx /kh32768 /t th02_main.asm bin\th02\main.obj
 tasm32 /m /mx /kh32768 /t th02_maine.asm bin\th02\maine.obj
 tasm32 /m /mx /kh32768 /t /DTHIEF libs\sprite16\sprite16.asm bin\th03\zunsp.obj
+tasm32 /m /mx /kh32768 /t /dGAME=3 th03\cdg_put.asm bin\th03\cdg_put.obj
 tasm32 /m /mx /kh32768 /t /dGAME=3 th03\cdg_p_na.asm bin\th03\cdg_p_na.obj
 tasm32 /m /mx /kh32768 /t th03\\hfliplut.asm bin\hfliplut.obj
 tasm32 /m /mx /kh32768 /t th03_op.asm bin\th03\op.obj

@@ -76,6 +76,7 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 : th02_maine.asm |> !as |> bin\\th02\\maine.obj
 
 : libs/sprite16/sprite16.asm |> $(AS) /DTHIEF libs\sprite16\sprite16.asm %o |> bin\\th03\\zunsp.obj
+: th03\\cdg_put.asm |> !as3 |>
 : th03\\cdg_p_na.asm |> !as3 |>
 : th03\\hfliplut.asm |> $(AS) th03\\hfliplut.asm %o |> bin\\%B.obj
 : th03_op.asm |> !as |> bin\\th03\\op.obj

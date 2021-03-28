@@ -56,7 +56,7 @@ endif
 	mov	@@vram_offset_at_bottom_left, ax
 	mov	ax, [si+cdg_t.vram_dword_w]
 	mov	@@vram_dword_w, ax
-	shl	ax, 2
+	shl	ax, 2	; *= size dword
 	add	ax, ROW_SIZE
 	mov	@@stride, ax
 if GAME eq 4
