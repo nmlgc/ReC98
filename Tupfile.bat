@@ -42,6 +42,7 @@ tasm32 /m /mx /kh32768 /t /dGAME=4 th04\scoreupd.asm bin\th04\scoreupd.obj
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04\cdg_p_pr.asm bin\th04\cdg_p_pr.obj
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04\input_s.asm bin\th04\input_s.obj
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04\cdg_load.asm bin\th04\cdg_load.obj
+tasm32 /m /mx /kh32768 /t /dGAME=4 th04\bgimager.asm bin\th04\bgimager.obj
 tasm32 /m /mx /kh32768 /t th04_op.asm bin\th04\op.obj
 tasm32 /m /mx /kh32768 /t th04_main.asm bin\th04\main.obj
 tasm32 /m /mx /kh32768 /t th04_maine.asm bin\th04\maine.obj
