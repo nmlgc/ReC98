@@ -79,6 +79,21 @@ C++, Open Watcom, and Visual C++, which will ease future third-party ports.
 * Documenting function comments exclusively go into C/C++ header files, right
   above the corresponding function prototype, *not* into ASM slices.
 
+* If an ASM translation unit requires the `.MODEL` directive *and* uses 32-bit
+  80386 instructions via `.386`, make sure to specify the `USE16` model
+  modifier, as in
+
+  ```asm
+  .model use16 large
+  ```
+
+  Otherwise, some TASM versions might create 32-bit segments if `.386` is
+  specified before `.MODEL`, causing all sorts of issues and messing up
+  segment alignments. (TASM32 version 5.3 is known to do this, for example.)
+  Specifying `USE16` is a lot more understandable than switching back and
+  forth between CPUs, or relying on the order of the `.MODEL` and `.386`
+  directives to imply the default 16-bit behavior.
+
 * Newly named symbols in ASM land (functions, global variables, `struc`ts, and
   "sequence of numeric equate" enums) should immediately be reflected in C/C++
   land, with the correct types and calling conventions. Typically, these

@@ -1,7 +1,7 @@
 ; First TH05 .PI assembly translation unit.
 
 	.386
-	.model large
+	.model use16 large
 	locals
 
 include pc98.inc

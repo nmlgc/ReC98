@@ -1,5 +1,5 @@
 	.386
-	.model large SHARED
+	.model use16 large SHARED
 	locals
 
 include libs/kaja/kaja.inc

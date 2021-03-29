@@ -13,7 +13,7 @@
 ; Application type:  Executable 16bit
 
 		.386
-		.model tiny
+		.model use16 tiny
 		.code
 		org 100h
 

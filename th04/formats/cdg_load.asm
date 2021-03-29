@@ -1,5 +1,5 @@
 	.386
-	.model large SHARED_
+	.model use16 large SHARED_
 	locals
 
 include th03/arg_bx.inc
