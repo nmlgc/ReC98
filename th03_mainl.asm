@@ -5522,7 +5522,7 @@ include th02/snd/load.asm
 include th03/math/vector2.asm
 		nop
 include th03/math/vector2_between_plus.asm
-include th02/exit.asm
+	extern _game_exit:proc
 	extern CDG_PUT_8:proc
 	extern CDG_PUT_HFLIP_8:proc
 	extern FRAME_DELAY:proc

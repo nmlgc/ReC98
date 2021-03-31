@@ -8883,7 +8883,7 @@ include th02/snd/pmd_res.asm
 include th03/math/vector2.asm
 		nop
 include th03/math/vector2_between_plus.asm
-include th02/exit.asm
+	extern _game_exit:proc
 	extern _vector1_at:proc
 	extern FRAME_DELAY:proc
 	extern _input_reset_sense_key_held:proc

@@ -3614,7 +3614,7 @@ include th01/hardware/vram_planes_set.asm
 include th02/snd/detmode.asm
 include th02/snd/pmd_res.asm
 include th02/snd/load.asm
-include th02/exit.asm
+	extern _game_exit:proc
 	extern _vector1_at:proc
 	extern CDG_PUT_8:proc
 	extern CDG_PUT_HFLIP_8:proc
