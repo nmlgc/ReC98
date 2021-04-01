@@ -10,6 +10,7 @@ extern "C" {
 #include "decomp.hpp"
 #include "master.hpp"
 #include "th01/hardware/egc.h"
+#include "th01/math/polar.hpp"
 #include "th01/math/vector.hpp"
 }
 

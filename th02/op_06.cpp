@@ -8,6 +8,7 @@ extern "C" {
 #include "th02/th02.h"
 #include "x86real.h"
 #include "master.hpp"
+#include "th01/math/polar.hpp"
 #include "th02/math/vector.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/input.hpp"

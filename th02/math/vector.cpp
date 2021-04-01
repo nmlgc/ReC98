@@ -4,6 +4,7 @@ extern "C" {
 #include "platform.h"
 #include "pc98.h"
 #include "master.hpp"
+#include "th01/math/polar.hpp"
 #include "th02/math/vector.hpp"
 
 void pascal vector2(int &ret_x, int &ret_y, unsigned char angle, int length)

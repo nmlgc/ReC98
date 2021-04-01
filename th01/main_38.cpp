@@ -16,6 +16,7 @@ extern "C" {
 #include "th01/hardware/egc.h"
 #include "th01/hardware/input.hpp"
 #include "th01/math/subpixel.hpp"
+#include "th01/math/polar.hpp"
 #include "th01/math/vector.hpp"
 #include "th01/main/vars.hpp"
 #include "th01/main/playfld.hpp"
