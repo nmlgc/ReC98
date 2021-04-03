@@ -8880,9 +8880,8 @@ include th01/hardware/vram_planes_set.asm
 		db 0
 include th02/snd/detmode.asm
 include th02/snd/pmd_res.asm
-include th03/math/vector2.asm
-		nop
-include th03/math/vector2_between_plus.asm
+	extern VECTOR2:proc
+	extern VECTOR2_BETWEEN_PLUS:proc
 	extern _game_exit:proc
 	extern _vector1_at:proc
 	extern FRAME_DELAY:proc

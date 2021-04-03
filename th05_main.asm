@@ -10541,12 +10541,8 @@ main_01_TEXT	ends
 ; Segment type:	Pure code
 SHARED	segment	word public 'CODE' use16
 		assume cs:g_SHARED
-		;org 3
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-include th03/math/vector2.asm
-		nop
-include th03/math/vector2_between_plus.asm
+	extern VECTOR2:proc
+	extern VECTOR2_BETWEEN_PLUS:proc
 SHARED	ends
 
 SHARED_	segment	word public 'CODE' use16
