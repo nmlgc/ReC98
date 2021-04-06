@@ -13118,7 +13118,7 @@ include th02/snd/mmd_res.asm
 include th04/snd/kajaint.asm
 include th04/snd/detmodes.asm
 include th04/snd/load.asm
-include th04/formats/cdg_put.asm
+	extern CDG_PUT_8:proc
 	extern _game_exit:proc
 	extern GAME_INIT_MAIN:proc
 	extern CDG_PUT_NOALPHA_8:proc
