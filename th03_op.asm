@@ -1606,7 +1606,7 @@ loc_AD52:
 		shl	ax, 2
 		mov	bx, ax
 		pushd	_MUSIC_FILES[bx]
-		call	snd_load
+		call	_snd_load
 		add	sp, 6
 		kajacall	KAJA_SONG_PLAY
 		mov	al, _music_sel
@@ -1665,7 +1665,7 @@ var_2		= word ptr -2
 		mov	[bp+@@page], 0
 		call	super_entry_bfnt pascal, ds, offset aOpwin_bft ; "opwin.bft"
 		kajacall	KAJA_SONG_STOP
-		call	snd_load c, offset aOp_m, ds, SND_LOAD_SONG
+		call	_snd_load c, offset aOp_m, ds, SND_LOAD_SONG
 		call	pi_load pascal, 0, ds, offset aTl01_pi
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
@@ -1818,7 +1818,7 @@ sub_B008	proc near
 		push	si
 		call	super_entry_bfnt pascal, ds, offset aOpwin_bft ; "opwin.bft"
 		kajacall	KAJA_SONG_STOP
-		call	snd_load c, offset aOp_m, ds, SND_LOAD_SONG
+		call	_snd_load c, offset aOp_m, ds, SND_LOAD_SONG
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		call	pi_load pascal, 0, ds, offset aTl02_pi
@@ -2411,7 +2411,7 @@ sub_B424	proc near
 		push	si
 		mov	vsync_Count1, 0
 		kajacall	KAJA_SONG_STOP
-		call	snd_load c, offset aSelect_m, ds, SND_LOAD_SONG
+		call	_snd_load c, offset aSelect_m, ds, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		mov	word_FC64, 0C8h	; 'È'
 		les	bx, _resident
@@ -3613,7 +3613,7 @@ include th02/exit_dos.asm
 include th01/hardware/vram_planes_set.asm
 include th02/snd/detmode.asm
 include th02/snd/pmd_res.asm
-include th02/snd/load.asm
+	extern _snd_load:proc
 	extern _game_exit:proc
 	extern _vector1_at:proc
 	extern CDG_PUT_8:proc

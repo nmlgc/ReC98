@@ -64,7 +64,7 @@ void snd_delay_until_volume(uint8_t volume);
 	// bank in EFC format ([func] = SND_LOAD_SE) into the respective work
 	// buffer of the sound driver. If MIDI is used, 'md' is appended to the
 	// file name.
-	void DEFCONV snd_load(const char fn[SND_FN_LEN], kaja_func_t func);
+	void snd_load(const char fn[SND_FN_LEN], kaja_func_t func);
 #endif
 
 void snd_se_reset(void);

@@ -718,9 +718,9 @@ loc_9C1E:
 		push	[bp+var_2]
 
 loc_9C25:
-		call	snd_load
+		call	_snd_load
 		add	sp, 6
-		call	snd_load c, offset aYume_efc, ds, SND_LOAD_SE
+		call	_snd_load c, offset aYume_efc, ds, SND_LOAD_SE
 		mov	_input_sp, INPUT_NONE
 
 loc_9C42:
@@ -889,7 +889,7 @@ loc_9DAD:
 		push	ds
 		push	offset aMikoft_bft ; "MIKOFT.bft"
 		call	gaiji_entry_bfnt
-		call	snd_load c, offset aYume_efc, ds, SND_LOAD_SE
+		call	_snd_load c, offset aYume_efc, ds, SND_LOAD_SE
 		call	_snd_se_reset
 		call	_hflip_lut_generate
 		les	bx, _resident
@@ -928,7 +928,7 @@ loc_9E04:
 		call	sub_B972
 
 loc_9E3F:
-		call	snd_load c,  offset aWin_m, ds, SND_LOAD_SONG
+		call	_snd_load c,  offset aWin_m, ds, SND_LOAD_SONG
 		call	sub_9624
 		call	sub_978D
 		kajacall	KAJA_SONG_STOP
@@ -2408,7 +2408,7 @@ loc_ABDA:
 		push	ss
 		lea	ax, [bp+var_16]
 		push	ax
-		call	snd_load
+		call	_snd_load
 		add	sp, 6
 		jmp	short loc_AB89
 ; ---------------------------------------------------------------------------
@@ -4024,7 +4024,7 @@ sub_B7D2	proc near
 		les	bx, _resident
 		mov	eax, es:[bx+resident_t.rand]
 		mov	random_seed, eax
-		call	snd_load c, offset aScore_m, ds, SND_LOAD_SONG
+		call	_snd_load c, offset aScore_m, ds, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.rank]
@@ -4122,7 +4122,7 @@ sub_B92E	proc near
 		push	bp
 		mov	bp, sp
 		kajacall	KAJA_SONG_STOP
-		call	snd_load c, offset aOver_m, ds, SND_LOAD_SONG
+		call	_snd_load c, offset aOver_m, ds, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		push	1
 		call	palette_black_in
@@ -5333,7 +5333,7 @@ loc_C4CC:
 		mov	_skill, 100
 
 loc_C4D8:
-		call	snd_load c, offset aEd_m, ds, SND_LOAD_SONG
+		call	_snd_load c, offset aEd_m, ds, SND_LOAD_SONG
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		push	ds
@@ -5518,7 +5518,7 @@ include th01/hardware/vram_planes_set.asm
 include th02/snd/detmode.asm
 include th02/snd/pmd_res.asm
 include th02/snd/delayvol.asm
-include th02/snd/load.asm
+	extern _snd_load:proc
 	extern VECTOR2:proc
 	extern _game_exit:proc
 	extern CDG_PUT_8:proc
