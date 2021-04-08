@@ -5517,7 +5517,7 @@ include th01/hardware/vram_planes_set.asm
 		db 0
 include th02/snd/detmode.asm
 include th02/snd/pmd_res.asm
-include th02/snd/delayvol.asm
+	extern _snd_delay_until_volume:proc
 	extern _snd_load:proc
 	extern VECTOR2:proc
 	extern _game_exit:proc
