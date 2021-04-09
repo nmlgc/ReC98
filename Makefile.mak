@@ -105,17 +105,17 @@ bin\th03\res_yume.com: th03\res_yume.cpp
 $**
 | masters.lib
 
-bin\th03\op.exe: th03\op_01.cpp bin\th03\op.obj bin\th02\snd_load.obj bin\th03\exit.obj bin\th03\vector1.obj bin\th03\cdg_put.obj bin\frmdely1.obj bin\th03\input_s.obj bin\th03\pi_put.obj bin\th03\snd_kaja.obj bin\th03\initop.obj bin\th03\cdg_load.obj bin\th03\grppsafx.obj bin\th03\pi_load.obj bin\th03\inp_m_w.obj bin\th03\cdg_p_na.obj bin\hfliplut.obj bin\frmdely2.obj
+bin\th03\op.exe: th03\op_01.cpp bin\th03\op.obj bin\th02\snd_pmdr.obj bin\th02\snd_load.obj bin\th03\exit.obj bin\th03\vector1.obj bin\th03\cdg_put.obj bin\frmdely1.obj bin\th03\input_s.obj bin\th03\pi_put.obj bin\th03\snd_kaja.obj bin\th03\initop.obj bin\th03\cdg_load.obj bin\th03\grppsafx.obj bin\th03\pi_load.obj bin\th03\inp_m_w.obj bin\th03\cdg_p_na.obj bin\hfliplut.obj bin\frmdely2.obj
 	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -3 -Z -DGAME=3 -nbin\th03\ -eOP.EXE @&&|
 $**
 |
 
-bin\th03\main.exe: bin\th03\main.obj th03\main_01.cpp bin\th03\vector2.obj bin\th03\exit.obj bin\th03\vector1.obj bin\frmdely1.obj bin\th03\input_s.obj bin\th02\snd_se_r.obj bin\th03\snd_se.obj bin\th03\snd_kaja.obj bin\th03\initmain.obj bin\th03\pi_load.obj bin\th03\inp_m_w.obj bin\hfliplut.obj th03\mrs.cpp th03\sprite16.cpp
+bin\th03\main.exe: bin\th03\main.obj th03\main_01.cpp bin\th02\snd_pmdr.obj bin\th03\vector2.obj bin\th03\exit.obj bin\th03\vector1.obj bin\frmdely1.obj bin\th03\input_s.obj bin\th02\snd_se_r.obj bin\th03\snd_se.obj bin\th03\snd_kaja.obj bin\th03\initmain.obj bin\th03\pi_load.obj bin\th03\inp_m_w.obj bin\hfliplut.obj th03\mrs.cpp th03\sprite16.cpp
 	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -Z -DGAME=3 -nbin\th03\ -eMAIN.EXE @&&|
 $**
 |
 
-bin\th03\mainl.exe: bin\th03\mainl.obj bin\th02\snd_dlyv.obj bin\th02\snd_load.obj bin\th03\vector2.obj bin\th03\exit.obj bin\th03\cdg_put.obj bin\frmdely1.obj bin\th03\input_s.obj bin\th03\pi_put.obj bin\th03\pi_put_i.obj bin\th02\snd_se_r.obj bin\th03\snd_se.obj bin\th03\snd_kaja.obj bin\th03\initmain.obj bin\th03\cdg_load.obj th03\exitmain.cpp bin\th03\grppsafx.obj bin\th03\snd_dlym.obj bin\th03\inp_wait.obj bin\th03\pi_load.obj bin\th03\pi_put_q.obj bin\th03\inp_m_w.obj bin\th03\cdg_p_na.obj bin\hfliplut.obj
+bin\th03\mainl.exe: bin\th03\mainl.obj bin\th02\snd_pmdr.obj bin\th02\snd_dlyv.obj bin\th02\snd_load.obj bin\th03\vector2.obj bin\th03\exit.obj bin\th03\cdg_put.obj bin\frmdely1.obj bin\th03\input_s.obj bin\th03\pi_put.obj bin\th03\pi_put_i.obj bin\th02\snd_se_r.obj bin\th03\snd_se.obj bin\th03\snd_kaja.obj bin\th03\initmain.obj bin\th03\cdg_load.obj th03\exitmain.cpp bin\th03\grppsafx.obj bin\th03\snd_dlym.obj bin\th03\inp_wait.obj bin\th03\pi_load.obj bin\th03\pi_put_q.obj bin\th03\inp_m_w.obj bin\th03\cdg_p_na.obj bin\hfliplut.obj
 	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -DGAME=3 -nbin\th03\ -eMAINL.EXE @&&|
 $**
 |

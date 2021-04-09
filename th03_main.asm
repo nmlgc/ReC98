@@ -8879,7 +8879,6 @@ SHARED	segment	word public 'CODE' use16
 include th01/hardware/vram_planes_set.asm
 		db 0
 include th02/snd/detmode.asm
-include th02/snd/pmd_res.asm
 	extern VECTOR2:proc
 	extern VECTOR2_BETWEEN_PLUS:proc
 	extern _game_exit:proc
