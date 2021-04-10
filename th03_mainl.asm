@@ -5514,8 +5514,7 @@ SHARED	segment	word public 'CODE' use16
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 include th01/hardware/vram_planes_set.asm
-		db 0
-include th02/snd/detmode.asm
+	extern _snd_determine_mode:proc
 	extern _snd_delay_until_volume:proc
 	extern _snd_load:proc
 	extern VECTOR2:proc

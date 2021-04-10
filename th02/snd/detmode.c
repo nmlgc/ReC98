@@ -1,4 +1,4 @@
-#pragma option -zCSHARED -k-
+#pragma option -WX -zCSHARED -k-
 
 #include "platform.h"
 #include "x86real.h"
@@ -19,5 +19,4 @@ bool16 snd_determine_mode(void)
 	snd_active = _BL;
 	return _BX;
 }
-
 #pragma codestring "\x90"
