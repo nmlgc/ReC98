@@ -4265,13 +4265,13 @@ graph_TEXT	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-main_07_TEXT	segment	byte public 'CODE' use16
+SHARED	segment	byte public 'CODE' use16
 	extern _ptn_copy_8_0_to_1:proc
 	extern _vram_planes_set:proc
 	extern _egc_copy_rect_1_to_0_16:proc
 	extern _ptn_snap_8:proc
 	extern _ptn_snap_quarter_8:proc
-main_07_TEXT	ends
+SHARED	ends
 
 ; ===========================================================================
 

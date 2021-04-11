@@ -1417,9 +1417,9 @@ graph_TEXT	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-op_07_TEXT	segment	byte public 'CODE' use16
+SHARED	segment	byte public 'CODE' use16
 	extern _egc_copy_rect_1_to_0_16:proc
-op_07_TEXT	ends
+SHARED	ends
 
 ; ===========================================================================
 

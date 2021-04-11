@@ -1,4 +1,5 @@
 extern "C" {
+#include "th01/formats/ptn.hpp"
 
 void ptn_snap_8(screen_x_t left, vram_y_t top, int ptn_id)
 {
