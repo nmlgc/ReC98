@@ -12970,13 +12970,11 @@ main_012_TEXT	ends
 
 ; ===========================================================================
 
-; Segment type:	Pure code
 SHARED	segment	word public 'CODE' use16
 		assume cs:g_SHARED
 		;org 0Dh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-include th01/hardware/vram_planes_set.asm
 	extern VECTOR2:proc
 	extern FRAME_DELAY:proc
 SHARED	ends

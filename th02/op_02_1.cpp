@@ -3,12 +3,8 @@
  * 1st part of code segment #2 of TH02's OP.EXE
  */
 
-#pragma option -zCSHARED -3
-
 extern "C" {
 #include "platform.h"
-#include "pc98.h"
-#include "planar.h"
 #include "th02/resident.hpp"
 
 resident_t *resident;
@@ -17,6 +13,4 @@ char lives;
 char bombs;
 long unused_4;
 long unused_5;
-
-#include "th01/hardware/vplanset.c"
 }

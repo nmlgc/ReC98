@@ -5507,13 +5507,7 @@ mainl_01_TEXT	ends
 
 ; ===========================================================================
 
-; Segment type:	Pure code
 SHARED	segment	word public 'CODE' use16
-		assume cs:SHARED
-		;org 2
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-include th01/hardware/vram_planes_set.asm
 	extern _snd_determine_mode:proc
 	extern _snd_delay_until_volume:proc
 	extern _snd_load:proc

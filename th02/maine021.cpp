@@ -6,12 +6,8 @@
 #pragma option -zCSHARED
 
 extern "C" {
-#include "platform.h"
-#include "pc98.h"
-#include "planar.h"
 #include "master.hpp"
 #include "th02/hardware/frmdelay.h"
 
 #include "th02/hardware/keydelay.c"
-#include "th01/hardware/vplanset.c"
 }

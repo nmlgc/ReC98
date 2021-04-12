@@ -35,5 +35,4 @@ void mptn_free(void)
 	mptn_buffer = 0;
 }
 
-#include "th01/hardware/vplanset.c"
 }

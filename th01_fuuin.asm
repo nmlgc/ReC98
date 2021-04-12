@@ -1626,8 +1626,8 @@ PTN_GRP_GRZ	ends
 
 ; ===========================================================================
 
-fuuin_11_TEXT	segment	byte public 'CODE' use16
-fuuin_11_TEXT	ends
+SHARED	segment	byte public 'CODE' use16
+SHARED	ends
 
 ; ===========================================================================
 

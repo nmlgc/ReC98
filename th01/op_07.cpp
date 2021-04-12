@@ -12,7 +12,6 @@ extern "C" {
 #include "master.hpp"
 #include "th01/hardware/graph.h"
 
-#include "th01/hardware/vplanset.c"
 #include "th01/hardware/egcrect.cpp"
 #include "th01/formats/ptn_snap.cpp"
 }

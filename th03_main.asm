@@ -8870,13 +8870,7 @@ main_01_TEXT	ends
 
 ; ===========================================================================
 
-; Segment type:	Pure code
 SHARED	segment	word public 'CODE' use16
-		assume cs:SHARED
-		;org 8
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-include th01/hardware/vram_planes_set.asm
 	extern _snd_determine_mode:proc
 	extern VECTOR2:proc
 	extern VECTOR2_BETWEEN_PLUS:proc
