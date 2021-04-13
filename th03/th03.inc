@@ -1,5 +1,4 @@
 GAME = 3
-include defconv.inc
 
 PLAYER_COUNT = 2
 

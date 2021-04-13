@@ -2632,18 +2632,17 @@ op_01_TEXT	ends
 
 ; ===========================================================================
 
-; Segment type:	Pure code
 SHARED	segment	word public 'CODE' use16
+	extern FRAME_DELAY:proc
+	extern PI_PALETTE_APPLY:proc
+	extern PI_PUT_8:proc
+	extern PI_LOAD:proc
+SHARED	ends
+
+SHARED_	segment	word public 'CODE' use16
 		assume cs:g_SHARED
-		;org 2
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-include th01/hardware/vram_planes_set.asm
-include th02/hardware/frame_delay.asm
-include th02/formats/pi_palette_apply.asm
-include th02/formats/pi_put.asm
-include th02/formats/pi_load.asm
-		db    0
 include th03/formats/hfliplut.asm
 include th04/hardware/input_wait.asm
 include th04/math/vector1_at.asm
@@ -2657,9 +2656,6 @@ include th03/snd/delaymea.asm
 include th02/exit_dos.asm
 include th04/snd/load.asm
 include th04/hardware/grppsafx.asm
-SHARED	ends
-
-SHARED_	segment	word public 'CODE' use16
 	extern CDG_PUT_8:proc
 	extern _game_exit:proc
 	extern _game_init_op:proc
