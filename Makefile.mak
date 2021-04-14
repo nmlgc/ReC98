@@ -133,7 +133,7 @@ bin\th04\res_huma.com: th04\res_huma.cpp
 $**
 | masters.lib
 
-bin\th04\op.exe: bin\th04\op.obj th04\m_char.cpp bin\th01\vplanset.obj bin\frmdely1.obj bin\th03\pi_put.obj bin\th03\pi_load.obj bin\th04\cdg_put.obj bin\th04\exit.obj bin\th04\initop.obj bin\th04\cdg_p_na.obj bin\th04\input_s.obj bin\th04\snd_se_r.obj bin\th04\snd_se.obj bin\th04\egcrect.obj bin\th04\bgimage.obj bin\th04\bgimager.obj bin\th04\cdg_load.obj th04\frmdely2.c
+bin\th04\op.exe: bin\th04\op.obj th04\m_char.cpp bin\th01\vplanset.obj bin\frmdely1.obj bin\th03\pi_put.obj bin\th03\pi_load.obj bin\hfliplut.obj bin\th04\cdg_put.obj bin\th04\exit.obj bin\th04\initop.obj bin\th04\cdg_p_na.obj bin\th04\input_s.obj bin\th04\snd_se_r.obj bin\th04\snd_se.obj bin\th04\egcrect.obj bin\th04\bgimage.obj bin\th04\bgimager.obj bin\th04\cdg_load.obj th04\frmdely2.c
 	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -DGAME=4 -DBINARY='O' -3 -Z -d -nbin\th04\ -eOP.EXE @&&|
 $**
 |

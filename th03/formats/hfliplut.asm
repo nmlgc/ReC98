@@ -1,3 +1,9 @@
+	extern _hflip_lut:byte:256
+
+; Would have been decompilable into a mess.
+SHARED	segment word public 'CODE' use16
+	assume cs:SHARED
+
 public _hflip_lut_generate
 _hflip_lut_generate proc far
 	push	di
@@ -23,3 +29,6 @@ _hflip_lut_generate proc far
 	pop	di
 	ret
 _hflip_lut_generate endp
+SHARED ends
+
+	end
