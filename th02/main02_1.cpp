@@ -9,12 +9,8 @@ extern "C" {
 #include "platform.h"
 #include "x86real.h"
 #include "pc98.h"
-#include "planar.h"
 #include "master.hpp"
-#include "th02/hardware/frmdelay.h"
 #include "th02/formats/mptn.hpp"
-
-#include "th02/hardware/keydelay.c"
 
 int pascal mptn_load(const char *fn)
 {
