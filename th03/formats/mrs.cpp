@@ -117,7 +117,7 @@ void pascal mrs_free(int slot)
 	_DX |= mrs_image_pointer_word(_BX, 0);
 	_DX |= _AX;
 	if(!FLAGS_ZERO) {
-		hmem_free(_AX);
+		hmem_free(reinterpret_cast<void __seg *>(_AX));
 		mrs_image_pointer_word(_BX, 0) = mrs_image_pointer_word(_BX, 1) = NULL;
 	}
 	#undef mrs_image_pointer_word

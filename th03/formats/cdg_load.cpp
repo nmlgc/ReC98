@@ -107,7 +107,7 @@ void pascal cdg_free(int slot)
 	cdg_t near *cdg = &cdg_slots[slot];
 	for(int i = 0; i < (sizeof(cdg->seg) / sizeof(cdg->seg[0])); i++) {
 		if(cdg->seg[i]) {
-			hmem_free(reinterpret_cast<seg_t>(cdg->seg[i]));
+			hmem_free(cdg->seg[i]);
 			cdg->seg[i] = NULL;
 		}
 	}

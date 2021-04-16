@@ -95,13 +95,13 @@ void pascal near draw_tracks(unsigned char sel)
 void pascal near screen_back_B_snap(void)
 {
 	int p;
-	screen_back_B = (dots8_t __seg *)(hmem_allocbyte(PLANE_SIZE));
+	screen_back_B = HMem<dots8_t>::allocbyte(PLANE_SIZE);
 	PLANE_DWORD_BLIT(screen_back_B, VRAM_PLANE_B);
 }
 
 void pascal near screen_back_B_free(void)
 {
-	hmem_free(FP_SEG(screen_back_B));
+	HMem<dots8_t>::free(screen_back_B);
 }
 
 void pascal near screen_back_B_put(void)
@@ -219,8 +219,8 @@ void pascal near cmt_back_snap(void)
 	screen_y_t y;
 	int i;
 	for(i = 0; i < PLANE_COUNT; i++) {
-		cmt_back[i] = reinterpret_cast<dots8_t __seg *>(
-			hmem_allocbyte(304 * (320 / BYTE_DOTS) + 16 * (320 / BYTE_DOTS))
+		cmt_back[i] = HMem<dots8_t>::allocbyte(
+			(304 * (320 / BYTE_DOTS)) + (16 * (320 / BYTE_DOTS))
 		);
 	}
 	CMT_BACK_BLIT(cmt_back, ps, VRAM_PLANE, pd);
@@ -230,10 +230,10 @@ void pascal near cmt_back_snap(void)
 
 void pascal near cmt_back_free(void)
 {
-	hmem_free(FP_SEG(cmt_back.B));
-	hmem_free(FP_SEG(cmt_back.R));
-	hmem_free(FP_SEG(cmt_back.G));
-	hmem_free(FP_SEG(cmt_back.E));
+	HMem<dots8_t>::free(cmt_back.B);
+	HMem<dots8_t>::free(cmt_back.R);
+	HMem<dots8_t>::free(cmt_back.G);
+	HMem<dots8_t>::free(cmt_back.E);
 }
 
 void pascal near cmt_back_put(void)

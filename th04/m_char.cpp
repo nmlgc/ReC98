@@ -169,12 +169,8 @@ void near raise_bg_allocate_and_snap(void)
 	vram_offset_t vo_marisa_row;
 	vram_offset_t vo_marisa;
 
-	raise_bg[PLAYCHAR_REIMU] = reinterpret_cast<dots8_t __seg *>(
-		hmem_allocbyte(RAISE_BG_SIZE)
-	);
-	raise_bg[PLAYCHAR_MARISA] = reinterpret_cast<dots8_t __seg *>(
-		hmem_allocbyte(RAISE_BG_SIZE)
-	);
+	raise_bg[PLAYCHAR_REIMU] = HMem<dots8_t>::allocbyte(RAISE_BG_SIZE);
+	raise_bg[PLAYCHAR_MARISA] = HMem<dots8_t>::allocbyte(RAISE_BG_SIZE);
 
 	vo_reimu_row  = raise(vram_offset_shift(REIMU_LEFT,  REIMU_TOP));
 	vo_marisa_row = raise(vram_offset_shift(MARISA_LEFT, MARISA_TOP));
@@ -244,8 +240,8 @@ void near pascal raise_bg_put(playchars_t playchar_lowered)
 
 void near raise_bg_free(void)
 {
-	hmem_free(FP_SEG(raise_bg[PLAYCHAR_REIMU]));
-	hmem_free(FP_SEG(raise_bg[PLAYCHAR_MARISA]));
+	HMem<dots8_t>::free(raise_bg[PLAYCHAR_REIMU]);
+	HMem<dots8_t>::free(raise_bg[PLAYCHAR_MARISA]);
 }
 
 #include "th04/op/darken.cpp"

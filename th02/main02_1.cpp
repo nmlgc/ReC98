@@ -6,8 +6,8 @@
 #pragma option -zCSHARED -3
 
 extern "C" {
+#include <stddef.h>
 #include "platform.h"
-#include "x86real.h"
 #include "pc98.h"
 #include "master.hpp"
 #include "th02/formats/mptn.hpp"
@@ -26,7 +26,7 @@ int pascal mptn_load(const char *fn)
 void mptn_free(void)
 {
 	if(mptn_buffer) {
-		hmem_free(FP_SEG(mptn_buffer));
+		HMem<int>::free(mptn_buffer);
 	}
 	mptn_buffer = 0;
 }

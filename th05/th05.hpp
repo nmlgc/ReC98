@@ -10,7 +10,7 @@
 
 /// Formats
 /// -------
-bb_seg_t pascal near bb_load(const char far *fn);
+dots8_t __seg* pascal near bb_load(const char far *fn);
 /// -------
 
 /// Stages

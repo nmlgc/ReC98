@@ -292,8 +292,8 @@ int MASTER_RET mem_unassign(void);
 int MASTER_RET mem_assign_dos(unsigned parasize);
 
 // Regular
-unsigned MASTER_RET hmem_allocbyte(unsigned bytesize);
-void MASTER_RET hmem_free(unsigned memseg);
+void __seg* MASTER_RET hmem_allocbyte(unsigned bytesize);
+void MASTER_RET hmem_free(void __seg* memseg);
 // Fast
 unsigned MASTER_RET smem_wget(unsigned bytesize);
 void MASTER_RET smem_release(unsigned memseg);
@@ -607,8 +607,23 @@ void MASTER_RET vsync_end(void);
 	palette_entry_rgb(fn); \
 	palette_show();
 
-// Type-safe resident structure allocation and retrieval
 #ifdef __cplusplus
+	// Type-safe hmem_* memory allocation
+	template<class T> struct HMem {
+		static T __seg* allocbyte(size_t size) {
+			return reinterpret_cast<T __seg *>(hmem_allocbyte(size));
+		}
+
+		static void free(T *&block) {
+			hmem_free(reinterpret_cast<void __seg *>(block));
+		}
+
+		static void free(T __seg *&block) {
+			hmem_free(reinterpret_cast<void __seg *>(block));
+		}
+	};
+
+	// Type-safe resident structure allocation and retrieval
 	template <class T> struct ResData {
 		static unsigned int id_len() {
 			return (sizeof(reinterpret_cast<T *>(0)->id) - 1);

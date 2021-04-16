@@ -1,4 +1,4 @@
-extern bb_seg_t bb_stage_seg;
+extern dots8_t __seg *bb_stage_seg;
 
 void pascal near bb_stage_load(const char *fn)
 {
@@ -6,7 +6,7 @@ void pascal near bb_stage_load(const char *fn)
 	bb_stage_seg = bb_load(fn);
 #else
 	file_ropen(fn);
-	bb_stage_seg = (bb_seg_t)hmem_allocbyte(BB_SIZE);
+	bb_stage_seg = HMem<dots8_t>::allocbyte(BB_SIZE);
 	file_read(bb_stage_seg, BB_SIZE);
 	file_close(fn);
 #endif
@@ -19,7 +19,7 @@ void pascal far bb_stage_free(void)
 #endif
 {
 	if(bb_stage_seg) {
-		hmem_free((seg_t)bb_stage_seg);
+		HMem<dots8_t>::free(bb_stage_seg);
 		bb_stage_seg = 0;
 	}
 }

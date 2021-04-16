@@ -28,9 +28,9 @@ int pascal mptn_load_palette_show(const char *fn)
 	if(mptn_buffer) {
 		mptn_free();
 	}
-	mptn_buffer = reinterpret_cast<int *>(reinterpret_cast<int __seg*>(
+	mptn_buffer = reinterpret_cast<int __seg*>(
 		hmem_allocbyte((mptn_count + 1) * MPTN_SIZE)
-	));
+	);
 	if(!mptn_buffer) {
 		file_close();
 		return -1;

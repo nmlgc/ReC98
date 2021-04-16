@@ -4,7 +4,6 @@ extern "C" {
 #include <mem.h>
 #include <stddef.h>
 #include "platform.h"
-#include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
 #include "decomp.hpp"
@@ -34,10 +33,10 @@ inline void memcpy_movsd(
 void bgimage_snap(void)
 {
 	if(bgimage.B == NULL) {
-		bgimage.B = reinterpret_cast<dots8_t __seg *>(hmem_allocbyte(PLANE_SIZE));
-		bgimage.R = reinterpret_cast<dots8_t __seg *>(hmem_allocbyte(PLANE_SIZE));
-		bgimage.G = reinterpret_cast<dots8_t __seg *>(hmem_allocbyte(PLANE_SIZE));
-		bgimage.E = reinterpret_cast<dots8_t __seg *>(hmem_allocbyte(PLANE_SIZE));
+		bgimage.B = HMem<dots8_t>::allocbyte(PLANE_SIZE);
+		bgimage.R = HMem<dots8_t>::allocbyte(PLANE_SIZE);
+		bgimage.G = HMem<dots8_t>::allocbyte(PLANE_SIZE);
+		bgimage.E = HMem<dots8_t>::allocbyte(PLANE_SIZE);
 	}
 
 	_DL = PLANE_COUNT;
@@ -70,10 +69,10 @@ void bgimage_put(void)
 void bgimage_free(void)
 {
 	if(bgimage.B != NULL) {
-		hmem_free(FP_SEG(bgimage.B));
-		hmem_free(FP_SEG(bgimage.R));
-		hmem_free(FP_SEG(bgimage.G));
-		hmem_free(FP_SEG(bgimage.E));
+		HMem<dots8_t>::free(bgimage.B);
+		HMem<dots8_t>::free(bgimage.R);
+		HMem<dots8_t>::free(bgimage.G);
+		HMem<dots8_t>::free(bgimage.E);
 		bgimage.B = NULL;
 	}
 }
