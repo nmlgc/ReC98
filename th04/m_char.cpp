@@ -14,7 +14,7 @@ extern "C" {
 #include "master.hpp"
 #include "th01/ranks.h"
 #include "th02/hardware/frmdelay.h"
-#include "th03/formats/pi.h"
+#include "th03/formats/pi.hpp"
 #include "th04/common.h"
 #include "th04/chars.h"
 #include "th04/formats/scoredat.h"

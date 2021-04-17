@@ -1,4 +1,4 @@
-#include "th01/sprites/ileave_m.h"
+#include "th01/sprites/ileave_m.hpp"
 #include "th01/hardware/palette.h"
 #include "th01/hardware/ptrans.hpp"
 
@@ -11,7 +11,7 @@ void graph_interleave_pages_8x8_8(screen_x_t left, vram_y_t top, int mask_id)
 
 	vram_offset_t vram_offset = vram_offset_divmul(left, top);
 	dots8_t dots;
-	for(char y = 0; y < INTERLEAVE_W; y++) {
+	for(char y = 0; y < INTERLEAVE_H; y++) {
 		#define mask masks.dots[mask_id][y]
 
 		#define snap(plane, vram_offset) \

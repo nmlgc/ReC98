@@ -23,7 +23,7 @@ extern "C" {
 #include "th05/sprites/op_cdg.h"
 #include "th05/snd/snd.h"
 #include "th05/hardware/input.h"
-#include "th05/formats/pi.h"
+#include "th05/formats/pi.hpp"
 
 #pragma option -a2
 

@@ -1,4 +1,4 @@
-#include "th01/sprites/shape_in.h"
+#include "th01/sprites/shape_in.hpp"
 #include "th01/main/shape.hpp"
 
 static const int INVINCIBILITY_SPRITE_COUNT = 8;

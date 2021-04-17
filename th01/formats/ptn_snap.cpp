@@ -11,9 +11,9 @@ void ptn_snap_8(screen_x_t left, vram_y_t top, int ptn_id)
 	}
 }
 
-static inline ptn_dots_t dot_mask(pixel_t x, pixel_t w)
+static inline ptn_plane_t::row_dots_t dot_mask(pixel_t x, pixel_t w)
 {
-	return static_cast<ptn_dots_t>((1u << w) - 1u) << (w - x);
+	return static_cast<ptn_plane_t::row_dots_t>((1u << w) - 1u) << (w - x);
 }
 
 void ptn_snap_quarter_8(
@@ -23,7 +23,7 @@ void ptn_snap_quarter_8(
 	pixel_t y;
 	vram_offset_t vram_offset = vram_offset_muldiv(left, top);
 	pixel_t q_y;
-	ptn_dots_t q_mask;
+	ptn_plane_t::row_dots_t q_mask;
 	long q_x;
 	ptn_t *ptn = ptn_with_id(ptn_id);
 

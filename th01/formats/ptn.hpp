@@ -20,15 +20,7 @@ extern "C" {
 #define PTN_W 32
 #define PTN_H 32
 
-typedef dots_t(PTN_W) ptn_dots_t;
-
-struct ptn_plane_t {
-	ptn_dots_t row[PTN_H];
-
-	ptn_dots_t& operator [](pixel_t y) {
-		return row[y];
-	}
-};
+typedef dot_rect_t(PTN_W, PTN_H) ptn_plane_t;
 
 // On-disk per-image structure
 struct ptn_file_image_t {
@@ -38,7 +30,7 @@ struct ptn_file_image_t {
 
 // In-memory per-image structure
 struct ptn_t : public ptn_file_image_t {
-	ptn_dots_t alpha[PTN_H]; // Derived from color #15 at load time
+	ptn_plane_t alpha; // Derived from color #15 at load time
 };
 
 #define PTN_SLOT_COUNT 8

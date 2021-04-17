@@ -740,7 +740,7 @@ void graph_putsa_fx(
 {
 	register screen_x_t x = left;
 	uint16_t codepoint;
-	dots16_t glyph_row;
+	dots_t(GLYPH_FULL_W) glyph_row;
 	dots8_t far *vram;
 	int fullwidth;
 	int first_bit;
@@ -751,8 +751,8 @@ void graph_putsa_fx(
 	int reverse = (col_and_fx & FX_REVERSE);
 	pixel_t w;
 	pixel_t line;
-	dots16_t glyph[GLYPH_H];
-	register dots16_t glyph_row_tmp;
+	dot_rect_t(GLYPH_FULL_W, GLYPH_H) glyph;
+	register dots_t(GLYPH_FULL_W) glyph_row_tmp;
 
 	if(clear_bg) {
 		w = text_extent_fx(col_and_fx, str);

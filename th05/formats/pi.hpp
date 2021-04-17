@@ -1,4 +1,4 @@
-#include "th03/formats/pi.h"
+#include "th03/formats/pi.hpp"
 
 #undef pi_free
 void pascal pi_free(int slot);

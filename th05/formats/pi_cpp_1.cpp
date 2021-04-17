@@ -8,7 +8,7 @@ extern "C" {
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
-#include "th05/formats/pi.h"
+#include "th05/formats/pi.hpp"
 #include "th05/formats/pi_impl.hpp"
 
 // Additionally takes:

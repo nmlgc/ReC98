@@ -19,15 +19,15 @@ void DEFCONV graph_putsa_fx(
 )
 {
 	uint16_t codepoint;
-	dots16_t glyph_row;
+	dots_t(GLYPH_FULL_W) glyph_row;
 	dots8_t far *vram;
 	int fullwidth;
 	int first_bit;
 	int weight = (col_and_fx >> 4) & 3;
 	pixel_t spacing = (col_and_fx >> 6) & 7;
 	pixel_t line;
-	dots16_t glyph[GLYPH_H];
-	register dots16_t glyph_row_tmp;
+	dot_rect_t(GLYPH_FULL_W, GLYPH_H) glyph;
+	register dots_t(GLYPH_FULL_W) glyph_row_tmp;
 
 	#if (GAME >= 3)
 		grcg_setcolor(GC_RMW, (col_and_fx & (COLOR_COUNT - 1)));

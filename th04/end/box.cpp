@@ -31,8 +31,8 @@ typedef enum {
 // given [mask]. Assumes that the EGC is active, and initialized for a copy.
 void pascal near box_1_to_0_masked(box_mask_t mask)
 {
-	extern dots16_t BOX_MASKS[BOX_MASK_COUNT][4];
-	dots16_t dots;
+	extern const dot_rect_t(16, 4) BOX_MASKS[BOX_MASK_COUNT];
+	dots_t(16) dots;
 	#define CHUNK_W static_cast<int>(sizeof(dots) * BYTE_DOTS)
 
 	for(screen_y_t y = BOX_TOP; y < BOX_BOTTOM; y++) {

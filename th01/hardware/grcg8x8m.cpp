@@ -3,7 +3,7 @@
 void grcg_put_8x8_mono(
 	vram_offset_t vram_offset_topleft,
 	char first_bit,
-	const dots8_t sprite[8],
+	const dot_rect_t(8, 8)& sprite,
 	int col
 )
 {

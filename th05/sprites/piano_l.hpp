@@ -15,4 +15,6 @@ typedef enum {
 #define PIANO_LABEL_FONT_W 8
 #define PIANO_LABEL_FONT_H 8
 
-extern const dots8_t sPIANO_LABEL_FONT[pl_COUNT][PIANO_LABEL_FONT_H];
+extern const dot_rect_t(
+	PIANO_LABEL_FONT_W, PIANO_LABEL_FONT_H
+) sPIANO_LABEL_FONT[pl_COUNT];

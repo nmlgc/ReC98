@@ -1,15 +1,15 @@
-#include "th01/sprites/shape8x8.h"
-#include "th01/sprites/shape_in.h"
+#include "th01/sprites/shape8x8.hpp"
+#include "th01/sprites/shape_in.hpp"
 #include "th01/main/shape.hpp"
 
 #define shape8x8_put(shape, left, top, col) \
-	dots8x8_t sprite = sSHAPE8X8[shape]; \
+	dot_rect_t(8, 8) sprite = sSHAPE8X8[shape]; \
 	vram_offset_t vram_offset_topleft = vram_offset_divmul(left, top); \
 	int first_bit = (left % BYTE_DOTS); \
 	if((left < 0) || (left >= RES_X) || (top < 0) || (top >= RES_Y)) { \
 		return; \
 	} \
-	grcg_put_8x8_mono(vram_offset_topleft, first_bit, sprite.rows, col);
+	grcg_put_8x8_mono(vram_offset_topleft, first_bit, sprite, col);
 
 void shape8x8_diamond_put(screen_x_t left, vram_y_t top, int col)
 {

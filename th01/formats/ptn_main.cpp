@@ -28,7 +28,7 @@ static inline ptn_t* ptn_with_id_shift(int id)
 
 void ptn_unput_8(screen_x_t left, vram_y_t top, int ptn_id)
 {
-	ptn_dots_t mask = 0;
+	ptn_plane_t::row_dots_t mask = 0;
 	uvram_offset_t vram_offset = vram_offset_shift(left, top);
 	ptn_t *ptn = ptn_with_id_shift(ptn_id);
 
@@ -36,7 +36,7 @@ void ptn_unput_8(screen_x_t left, vram_y_t top, int ptn_id)
 		mask = ptn->alpha[y];
 		graph_accesspage_func(0);
 		if(mask) {
-			Planar<dots_t(PTN_W)> page1;
+			Planar<ptn_plane_t::row_dots_t> page1;
 
 			vram_erase(vram_offset, mask, PTN_W);
 

@@ -22,7 +22,7 @@ static const vram_byte_amount_t MRS_BYTE_W = (MRS_W / BYTE_DOTS);
 static const vram_dword_amount_t MRS_DWORD_W = (MRS_BYTE_W / sizeof(dots32_t));
 
 struct mrs_plane_t {
-	dots32_t dots[MRS_DWORD_W][MRS_H];
+	dots32_t dots[MRS_H][MRS_DWORD_W];
 };
 
 // On-disk per-image structure

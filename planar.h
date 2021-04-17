@@ -20,6 +20,12 @@ typedef enum {
 	PL_B, PL_R, PL_G, PL_E
 } vram_plane_t;
 
+// Abstracted dot and planar types, with their width defined by a macro.
+#define dots_t_(x) dots##x##_t
+#define dots_t(x) dots_t_(x)
+#define sdots_t_(x) sdots##x##_t
+#define sdots_t(x) sdots_t_(x)
+
 #ifdef __cplusplus
 	template <class T> struct Planar {
 		T B, R, G, E;
@@ -32,13 +38,24 @@ typedef enum {
 			return (&B)[plane];
 		}
 	};
-#endif
 
-// Abstracted dot and planar types, with their width defined by a macro.
-#define dots_t_(x) dots##x##_t
-#define dots_t(x) dots_t_(x)
-#define sdots_t_(x) sdots##x##_t
-#define sdots_t(x) sdots_t_(x)
+	// Base template for a 1bpp rectangle, with a custom per-row data type.
+	template <class RowDots, pixel_t H> struct DotRect {
+		typedef RowDots row_dots_t;
+
+		row_dots_t row[H];
+
+		row_dots_t& operator [](pixel_t y) {
+			return row[y];
+		}
+
+		const row_dots_t& operator [](pixel_t y) const {
+			return row[y];
+		}
+	};
+
+	#define dot_rect_t(w, h) DotRect<dots_t(w), h>
+#endif
 
 // Since array subscripts create slightly different assembly in places, we
 // offer both variants.

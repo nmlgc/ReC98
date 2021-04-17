@@ -6,7 +6,7 @@ extern "C" {
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
-#include "th03/formats/pi.h"
+#include "th03/formats/pi.hpp"
 
 void pascal pi_put_quarter_8(
 	screen_x_t left, vram_y_t top, int slot, int quarter
