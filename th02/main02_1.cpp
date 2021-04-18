@@ -9,7 +9,10 @@ extern "C" {
 #include <stddef.h>
 #include "platform.h"
 #include "pc98.h"
+#include "planar.h"
 #include "master.hpp"
+#include "th02/main/playfld.h"
+#include "th02/main/tile.hpp"
 #include "th02/formats/mpn.hpp"
 
 int pascal mpn_load(const char *fn)
@@ -25,10 +28,10 @@ int pascal mpn_load(const char *fn)
 
 void mpn_free(void)
 {
-	if(mpn_buffer) {
-		HMem<int>::free(mpn_buffer);
+	if(mpn_images) {
+		HMem<mpn_image_t>::free(mpn_images);
 	}
-	mpn_buffer = 0;
+	mpn_images = NULL;
 }
 
 }

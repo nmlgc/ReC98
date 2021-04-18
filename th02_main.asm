@@ -162,8 +162,8 @@ arg_4		= word ptr  0Ah
 		mov	di, ax
 		mov	ax, [bp+arg_0]
 		shl	ax, 7
-		mov	dx, word ptr _mpn_buffer+2
-		mov	bx, word ptr _mpn_buffer
+		mov	dx, word ptr _mpn_images+2
+		mov	bx, word ptr _mpn_images
 		add	bx, ax
 		mov	ds, dx
 		mov	si, bx
@@ -2249,7 +2249,7 @@ loc_B4D7:
 		lea	ax, [bp+var_C]
 		push	ax
 		call	mpn_load
-		push	30h ; '0'       ; n
+		push	size palette_t	; n
 		push	ds
 		push	offset _mpn_palette ; src
 		push	ds
@@ -2398,9 +2398,7 @@ loc_B8B5:
 		graph_accesspage 0
 		call	sub_4782
 		call	_mpn_free
-		push	ds
-		push	offset aMiko_k_mpn ; "miko_k.mpn"
-		call	mpn_load
+		call	mpn_load pascal, ds, offset aMiko_k_mpn ; "miko_k.mpn"
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.demo_num], 0
 		jnz	short loc_B922
@@ -33652,9 +33650,8 @@ include th02/formats/pfopen[data].asm
 public _snd_active
 _snd_active	db 0
 		db 0
-public _mpn_show_palette_on_load
+public _mpn_show_palette_on_load, _mpn_count
 _mpn_show_palette_on_load	db 1
-public _mpn_count
 _mpn_count	db 0
 public _pf_fn
 _pf_fn		db '“Œ•û••–‚.˜^',0
@@ -34651,10 +34648,9 @@ include libs/master.lib/pfint21[bss].asm
 include th02/hardware/input_sense[bss].asm
 include th02/snd/snd[bss].asm
 include th02/snd/load[bss].asm
-public _mpn_buffer
-_mpn_buffer	dd ?
-public _mpn_palette
-_mpn_palette	db 16 * 3 dup(?)
+public _mpn_images, _mpn_palette
+_mpn_images	dd ?
+_mpn_palette	palette_t <?>
 word_1FFF0	dw ?
 word_1FFF2	dw ?
 word_1FFF4	dw ?
