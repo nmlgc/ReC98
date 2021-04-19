@@ -194,12 +194,12 @@ arg_6		= word ptr  0Ch
 		mov	bx, [bp+arg_2]
 		shl	bx, 6
 		mov	ax, [bp+arg_0]
-		cmp	ax, [bx+345Eh]
+		cmp	ax, _mpn_slots[bx].MPN_count
 		ja	short loc_36EE
 		shl	ax, 7
 		mov	si, ax
 		add	si, 40h
-		mov	dx, [bx+345Ch]
+		mov	dx, word ptr _mpn_slots[bx].MPN_images+2
 		mov	ds, dx
 		mov	ax, SEG_PLANE_B
 		mov	fs, ax
@@ -12987,22 +12987,21 @@ SHARED_	segment	word public 'CODE' use16
 public MPN_FREE
 mpn_free	proc far
 
-arg_0		= word ptr  6
+@@slot		= word ptr  6
 
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	ax, [bp+arg_0]
-		shl	ax, 6
-		add	ax, 345Ah
+		mov	ax, [bp+@@slot]
+		shl	ax, 6	; *= size mpn_t
+		add	ax, offset _mpn_slots
 		mov	si, ax
-		cmp	dword ptr [si],	0
-		jz	short loc_1320E
-		push	word ptr [si+2]
-		call	hmem_free
-		mov	dword ptr [si],	0
+		cmp	[si+mpn_t.MPN_images], 0
+		jz	short @@ret
+		call	hmem_free pascal, word ptr [si+mpn_t.MPN_images+2]
+		mov	[si+mpn_t.MPN_images], 0
 
-loc_1320E:
+@@ret:
 		pop	si
 		pop	bp
 		retf	2
@@ -13016,15 +13015,15 @@ include th04/hardware/input_wait.asm
 public MPN_PALETTE_SHOW
 mpn_palette_show	proc far
 
-arg_0		= word ptr  6
+@@slot		= word ptr  6
 
 		push	bp
 		mov	bp, sp
 		push	size palette_t	; n
 		push	ds
-		mov	ax, [bp+arg_0]
-		shl	ax, 6
-		add	ax, 3460h
+		mov	ax, [bp+@@slot]
+		shl	ax, 6	; *= size mpn_t
+		add	ax, offset _mpn_slots.MPN_palette
 		push	ax		; src
 		push	ds
 		push	offset Palettes ; dest
@@ -13046,17 +13045,17 @@ var_8		= word ptr -8
 var_6		= byte ptr -6
 var_2		= byte ptr -2
 arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
+@@slot		= word ptr  0Ah
 
 		enter	8, 0
 		push	si
 		push	di
-		mov	di, [bp+arg_4]
+		mov	di, [bp+@@slot]
 		pushd	[bp+arg_0]
 		call	file_ropen
 		mov	ax, di
-		shl	ax, 6
-		add	ax, 345Ah
+		shl	ax, 6	; *= size mpn_t
+		add	ax, offset _mpn_slots
 		mov	si, ax
 		push	ss
 		lea	ax, [bp+var_6]
@@ -13065,16 +13064,16 @@ arg_4		= word ptr  0Ah
 		call	file_read
 		mov	al, [bp+var_2]
 		mov	ah, 0
-		mov	[si+4],	ax
-		mov	ax, [si+4]
+		mov	[si+mpn_t.MPN_count], ax
+		mov	ax, [si+mpn_t.MPN_count]
 		inc	ax
 		shl	ax, 5
 		shl	ax, 2
 		mov	[bp+var_8], ax
 		push	ds
-		lea	ax, [si+6]
+		lea	ax, [si+mpn_t.MPN_palette]
 		push	ax
-		push	30h ; '0'
+		push	size palette_t
 		call	file_read
 		cmp	byte_21AF2, 0
 		jz	short loc_132E3
@@ -13086,9 +13085,9 @@ loc_132E3:
 		nopcall	mpn_free
 		push	[bp+var_8]
 		call	hmem_allocbyte
-		mov	[si+2],	ax
-		mov	word ptr [si], 0
-		cmp	dword ptr [si],	0
+		mov	word ptr [si+mpn_t.MPN_images+2], ax
+		mov	word ptr [si+mpn_t.MPN_images+0], 0
+		cmp	[si+mpn_t.MPN_images], 0
 		jnz	short loc_13308
 		call	file_close
 		mov	ax, 0FFFFh
@@ -13096,9 +13095,7 @@ loc_132E3:
 ; ---------------------------------------------------------------------------
 
 loc_13308:
-		pushd	dword ptr [si]
-		push	[bp+var_8]
-		call	file_read
+		call	file_read pascal, large [si+mpn_t.MPN_images], [bp+var_8]
 		call	file_close
 		xor	ax, ax
 
@@ -35172,7 +35169,16 @@ include libs/master.lib/superpa[bss].asm
 include th01/hardware/vram_planes[bss].asm
 include libs/master.lib/pfint21[bss].asm
 include th03/formats/hfliplut[bss].asm
-		db 512 dup(?)
+
+mpn_t struc
+	MPN_images	dd ?
+	MPN_count	dw ?
+	MPN_palette	palette_t	?
+		db 10 dup(?)
+mpn_t ends
+
+public _mpn_slots
+_mpn_slots	mpn_t	8 dup(?)
 include th04/snd/interrupt[bss].asm
 include libs/master.lib/bgm[bss].asm
 include libs/master.lib/super_wave_put[bss].asm
