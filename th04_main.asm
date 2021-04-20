@@ -1519,8 +1519,7 @@ loc_B952:
 loc_B95E:
 		cmp	[bp+@@tile_x], 4
 		jl	short loc_B91C
-		push	0
-		call	mpn_free
+		call	mpn_free pascal, 0
 		pop	di
 		pop	si
 		leave
@@ -12977,63 +12976,12 @@ SHARED	segment	word public 'CODE' use16
 
 	extern VECTOR2:proc
 	extern FRAME_DELAY:proc
+	extern MPN_FREE:proc
+	extern INPUT_WAIT_FOR_CHANGE:proc
+	extern MPN_PALETTE_SHOW:proc
 SHARED	ends
 
 SHARED_	segment	word public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public MPN_FREE
-mpn_free	proc far
-
-@@slot		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	ax, [bp+@@slot]
-		shl	ax, 6	; *= size mpn_t
-		add	ax, offset _mpn_slots
-		mov	si, ax
-		cmp	[si+mpn_t.MPN_images], 0
-		jz	short @@ret
-		call	hmem_free pascal, word ptr [si+mpn_t.MPN_images+2]
-		mov	[si+mpn_t.MPN_images], 0
-
-@@ret:
-		pop	si
-		pop	bp
-		retf	2
-mpn_free	endp
-
-include th04/hardware/input_wait.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public MPN_PALETTE_SHOW
-mpn_palette_show	proc far
-
-@@slot		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	size palette_t	; n
-		push	ds
-		mov	ax, [bp+@@slot]
-		shl	ax, 6	; *= size mpn_t
-		add	ax, offset _mpn_slots.MPN_palette
-		push	ax		; src
-		push	ds
-		push	offset Palettes ; dest
-		call	_memcpy
-		add	sp, 0Ah
-		call	far ptr	palette_show
-		pop	bp
-		retf	2
-mpn_palette_show	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 

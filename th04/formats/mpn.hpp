@@ -12,3 +12,9 @@ struct mpn_t {
 static const int MPN_COUNT = 8;
 
 extern mpn_t mpn_slots[MPN_COUNT];
+
+// Frees the .MPN images in the given [slot].
+void pascal mpn_free(int slot);
+
+// Sets the hardware color palette to the one in the given .MPN [slot].
+void pascal mpn_palette_show(int slot);
