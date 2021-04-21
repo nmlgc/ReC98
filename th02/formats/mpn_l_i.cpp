@@ -10,6 +10,8 @@ extern "C" {
 #include "th02/main/tile.hpp"
 #include "th02/formats/mpn.hpp"
 
+// TH04 copied this code and adjusted it to work with multiple .MPN slots.
+
 void mpn_palette_show(void)
 {
 	palette_set_all(mpn_palette);

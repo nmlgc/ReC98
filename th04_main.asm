@@ -836,9 +836,7 @@ loc_B0B2:
 		call	cdg_load_all
 		call	super_entry_bfnt pascal, ds, offset aSt03_bft ; "st03.bft"
 		call	stage4_setup
-		push	ds
-		push	offset aSt03_mpn ; "st03.mpn"
-		call	main_01:mpn_load
+		call	mpn_load pascal, ds, offset aSt03_mpn ; "st03.mpn"
 		mov	_stage_render, offset stage4_render
 		jmp	short loc_B144
 ; ---------------------------------------------------------------------------
@@ -872,7 +870,7 @@ loc_B11E:
 		push	offset aSt06_mpn ; "st06.mpn"
 
 loc_B141:
-		call	main_01:mpn_load
+		call	mpn_load
 
 loc_B144:
 		call	main_01:map_load
@@ -1473,14 +1471,12 @@ mpn_load	proc near
 var_6		= word ptr -6
 @@tile_y		= word ptr -4
 @@tile_x		= word ptr -2
-arg_0		= dword	ptr  4
+@@fn		= dword	ptr  4
 
 		enter	6, 0
 		push	si
 		push	di
-		push	0
-		pushd	[bp+arg_0]
-		call	mpn_load_inner
+		call	mpn_load_palette_show pascal, 0, large [bp+@@fn]
 		mov	[bp+var_6], 0
 		mov	[bp+@@tile_x], 0
 		mov	si, 576
@@ -12979,81 +12975,10 @@ SHARED	segment	word public 'CODE' use16
 	extern MPN_FREE:proc
 	extern INPUT_WAIT_FOR_CHANGE:proc
 	extern MPN_PALETTE_SHOW:proc
+	extern MPN_LOAD_PALETTE_SHOW:proc
 SHARED	ends
 
 SHARED_	segment	word public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public MPN_LOAD_INNER
-mpn_load_inner	proc far
-
-var_8		= word ptr -8
-var_6		= byte ptr -6
-var_2		= byte ptr -2
-arg_0		= dword	ptr  6
-@@slot		= word ptr  0Ah
-
-		enter	8, 0
-		push	si
-		push	di
-		mov	di, [bp+@@slot]
-		pushd	[bp+arg_0]
-		call	file_ropen
-		mov	ax, di
-		shl	ax, 6	; *= size mpn_t
-		add	ax, offset _mpn_slots
-		mov	si, ax
-		push	ss
-		lea	ax, [bp+var_6]
-		push	ax
-		push	6
-		call	file_read
-		mov	al, [bp+var_2]
-		mov	ah, 0
-		mov	[si+mpn_t.MPN_count], ax
-		mov	ax, [si+mpn_t.MPN_count]
-		inc	ax
-		shl	ax, 5
-		shl	ax, 2
-		mov	[bp+var_8], ax
-		push	ds
-		lea	ax, [si+mpn_t.MPN_palette]
-		push	ax
-		push	size palette_t
-		call	file_read
-		cmp	byte_21AF2, 0
-		jz	short loc_132E3
-		push	di
-		call	mpn_palette_show
-
-loc_132E3:
-		push	di
-		nopcall	mpn_free
-		push	[bp+var_8]
-		call	hmem_allocbyte
-		mov	word ptr [si+mpn_t.MPN_images+2], ax
-		mov	word ptr [si+mpn_t.MPN_images+0], 0
-		cmp	[si+mpn_t.MPN_images], 0
-		jnz	short loc_13308
-		call	file_close
-		mov	ax, 0FFFFh
-		jmp	short loc_1331A
-; ---------------------------------------------------------------------------
-
-loc_13308:
-		call	file_read pascal, large [si+mpn_t.MPN_images], [bp+var_8]
-		call	file_close
-		xor	ax, ax
-
-loc_1331A:
-		pop	di
-		pop	si
-		leave
-		retf	6
-mpn_load_inner	endp
-
 include th04/math/vector1_at.asm
 include th04/math/vector2_at.asm
 include th04/snd/pmd_res.asm
@@ -34493,8 +34418,9 @@ include libs/master.lib/mem[data].asm
 include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
 include th02/formats/pfopen[data].asm
-byte_21AF2	db 1
-		db 0
+public _mpn_show_palette_on_load
+_mpn_show_palette_on_load	db 1
+	even
 include libs/master.lib/bgm_timerhook[data].asm
 include libs/master.lib/bgm[data].asm
 include th04/snd/se_priority[data].asm
