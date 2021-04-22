@@ -10,25 +10,25 @@ extern "C" {
 #include "platform.h"
 #include "pc98.h"
 #include "master.hpp"
-#include "th02/formats/mptn.hpp"
+#include "th02/formats/mpn.hpp"
 
-int pascal mptn_load(const char *fn)
+int pascal mpn_load(const char *fn)
 {
-	extern bool mptn_show_palette_on_load;
+	extern bool mpn_show_palette_on_load;
 
 	int ret;
-	mptn_show_palette_on_load = false;
-	ret = mptn_load_palette_show(fn);
-	mptn_show_palette_on_load = true;
+	mpn_show_palette_on_load = false;
+	ret = mpn_load_palette_show(fn);
+	mpn_show_palette_on_load = true;
 	return ret;
 }
 
-void mptn_free(void)
+void mpn_free(void)
 {
-	if(mptn_buffer) {
-		HMem<int>::free(mptn_buffer);
+	if(mpn_buffer) {
+		HMem<int>::free(mpn_buffer);
 	}
-	mptn_buffer = 0;
+	mpn_buffer = 0;
 }
 
 }

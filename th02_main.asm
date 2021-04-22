@@ -162,8 +162,8 @@ arg_4		= word ptr  0Ah
 		mov	di, ax
 		mov	ax, [bp+arg_0]
 		shl	ax, 7
-		mov	dx, word ptr _mptn_buffer+2
-		mov	bx, word ptr _mptn_buffer
+		mov	dx, word ptr _mpn_buffer+2
+		mov	bx, word ptr _mpn_buffer
 		add	bx, ax
 		mov	ds, dx
 		mov	si, bx
@@ -2248,10 +2248,10 @@ loc_B4D7:
 		push	ss
 		lea	ax, [bp+var_C]
 		push	ax
-		call	mptn_load
+		call	mpn_load
 		push	30h ; '0'       ; n
 		push	ds
-		push	offset _mptn_palette ; src
+		push	offset _mpn_palette ; src
 		push	ds
 		push	offset unk_1F4AD ; dest
 		call	_memcpy
@@ -2397,10 +2397,10 @@ loc_B8B5:
 		call	sub_4596
 		graph_accesspage 0
 		call	sub_4782
-		call	_mptn_free
+		call	_mpn_free
 		push	ds
 		push	offset aMiko_k_mpn ; "miko_k.mpn"
-		call	mptn_load
+		call	mpn_load
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.demo_num], 0
 		jnz	short loc_B922
@@ -3510,7 +3510,7 @@ _arg0		= dword	ptr  6
 		mov	bp, sp
 		freePISlotLarge	0
 		call	sub_E24A
-		call	_mptn_free
+		call	_mpn_free
 		call	sub_1C608
 		call	super_free
 		call	graph_clear
@@ -9286,8 +9286,8 @@ main_01_TEXT	ends
 SHARED	segment	word public 'CODE' use16
 	extern ZUN_ERROR:proc
 	extern _key_delay:proc
-	extern MPTN_LOAD:proc
-	extern _mptn_free:proc
+	extern MPN_LOAD:proc
+	extern _mpn_free:proc
 	extern _vram_planes_set:proc
 	extern _pi_load:proc
 	extern VECTOR2:proc
@@ -33652,10 +33652,10 @@ include th02/formats/pfopen[data].asm
 public _snd_active
 _snd_active	db 0
 		db 0
-public _mptn_show_palette_on_load
-_mptn_show_palette_on_load	db 1
-public _mptn_count
-_mptn_count	db 0
+public _mpn_show_palette_on_load
+_mpn_show_palette_on_load	db 1
+public _mpn_count
+_mpn_count	db 0
 public _pf_fn
 _pf_fn		db '“Œ•û••–‚.˜^',0
 include th02/snd/se[data].asm
@@ -34651,10 +34651,10 @@ include libs/master.lib/pfint21[bss].asm
 include th02/hardware/input_sense[bss].asm
 include th02/snd/snd[bss].asm
 include th02/snd/load[bss].asm
-public _mptn_buffer
-_mptn_buffer	dd ?
-public _mptn_palette
-_mptn_palette	db 16 * 3 dup(?)
+public _mpn_buffer
+_mpn_buffer	dd ?
+public _mpn_palette
+_mpn_palette	db 16 * 3 dup(?)
 word_1FFF0	dw ?
 word_1FFF2	dw ?
 word_1FFF4	dw ?
