@@ -2638,14 +2638,13 @@ SHARED	segment	word public 'CODE' use16
 	extern PI_PUT_8:proc
 	extern PI_LOAD:proc
 	extern INPUT_WAIT_FOR_CHANGE:proc
+	extern VECTOR1_AT:proc
 SHARED	ends
 
 SHARED_	segment	word public 'CODE' use16
 		assume cs:g_SHARED
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-include th04/math/vector1_at.asm
-include th04/math/vector2_at.asm
 include th04/snd/pmd_res.asm
 include th02/snd/mmd_res.asm
 include th04/snd/kajaint.asm

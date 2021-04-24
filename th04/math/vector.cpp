@@ -1,4 +1,4 @@
-#pragma option -zCSHARED_ -3
+#pragma option -3
 
 extern "C" {
 #include <stddef.h>

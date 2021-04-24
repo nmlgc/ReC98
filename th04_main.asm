@@ -12976,11 +12976,11 @@ SHARED	segment	word public 'CODE' use16
 	extern INPUT_WAIT_FOR_CHANGE:proc
 	extern MPN_PALETTE_SHOW:proc
 	extern MPN_LOAD_PALETTE_SHOW:proc
+	extern VECTOR1_AT:proc
+	extern VECTOR2_AT:proc
 SHARED	ends
 
 SHARED_	segment	word public 'CODE' use16
-include th04/math/vector1_at.asm
-include th04/math/vector2_at.asm
 include th04/snd/pmd_res.asm
 include th02/snd/mmd_res.asm
 include th04/snd/kajaint.asm
