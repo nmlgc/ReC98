@@ -12978,10 +12978,10 @@ SHARED	segment	word public 'CODE' use16
 	extern MPN_LOAD_PALETTE_SHOW:proc
 	extern VECTOR1_AT:proc
 	extern VECTOR2_AT:proc
+	extern _snd_pmd_resident:proc
 SHARED	ends
 
 SHARED_	segment	word public 'CODE' use16
-include th04/snd/pmd_res.asm
 include th02/snd/mmd_res.asm
 include th04/snd/kajaint.asm
 include th04/snd/detmodes.asm

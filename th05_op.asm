@@ -2515,6 +2515,7 @@ op_01_TEXT	ends
 
 ; Segment type:	Pure code
 SHARED	segment	word public 'CODE' use16
+	extern _snd_pmd_resident:proc
 SHARED	ends
 
 SHARED_	segment	word public 'CODE' use16
@@ -2522,7 +2523,6 @@ SHARED_	segment	word public 'CODE' use16
 		; org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-include th04/snd/pmd_res.asm
 include th02/snd/mmd_res.asm
 include th04/snd/detmodes.asm
 include th02/exit_dos.asm
