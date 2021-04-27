@@ -2640,13 +2640,13 @@ SHARED	segment	word public 'CODE' use16
 	extern INPUT_WAIT_FOR_CHANGE:proc
 	extern VECTOR1_AT:proc
 	extern _snd_pmd_resident:proc
+	extern _snd_mmd_resident:proc
 SHARED	ends
 
 SHARED_	segment	word public 'CODE' use16
 		assume cs:g_SHARED
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-include th02/snd/mmd_res.asm
 include th04/snd/kajaint.asm
 include th04/formats/cdg_put_nocolors.asm
 include th04/snd/detmodes.asm
