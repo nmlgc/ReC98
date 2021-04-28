@@ -4590,13 +4590,13 @@ SHARED	segment	word public 'CODE' use16
 	extern VECTOR1_AT:proc
 	extern _snd_pmd_resident:proc
 	extern _snd_mmd_resident:proc
+	extern SND_KAJA_INTERRUPT:proc
 SHARED	ends
 
 SHARED_	segment	word public 'CODE' use16
 		assume cs:g_SHARED
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-include th04/snd/kajaint.asm
 include th04/snd/detmodes.asm
 include th03/snd/delaymea.asm
 		db    0
