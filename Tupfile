@@ -89,6 +89,7 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 : th04_memchk.asm |> !as |> bin\\th04\\memchk.obj
 : th04\\scoreupd.asm |> !as4 |>
 : th04\\cdg_put.asm |> !as4 |>
+: th04\\cdg_p_nc.asm |> !as4 |>
 : th04\\cdg_p_pr.asm |> !as4 |>
 : th04\\input_s.asm |> !as4 |>
 : th04\\cdg_load.asm |> !as4 |>
