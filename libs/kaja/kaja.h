@@ -12,7 +12,14 @@ typedef enum {
 	KAJA_GET_SONG_MEASURE = 0x05,
 	KAJA_GET_SONG_ADDRESS = 0x06,
 	KAJA_GET_VOLUME = 0x08,
-	PMD_GET_DRIVER_VERSION = 0x09,
+
+	// Returns the type of PMD driver in AL, as well as its version in DX.
+	// AL values relevant for PC-98 Touhou:
+	// • AL = 0xFF: Resident but no sound source
+	// • AL = 0x00: PMD.COM (for PC-9801-26K / OPN)
+	// • AL ≥ 0x01: Any other driver compatible to the PC-9801-86 / OPNA
+	PMD_GET_DRIVER_TYPE_AND_VERSION = 0x09,
+
 	PMD_GET_SE_ADDRESS = 0x0B,
 	PMD_SE_PLAY = 0x0C,
 	PMD_GET_WORKAREA_ADDRESS = 0x10,
