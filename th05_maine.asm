@@ -7516,8 +7516,7 @@ maine_01___TEXT	ends
 
 ; Segment type:	Pure code
 SHARED	segment	word public 'CODE' use16
-	extern _snd_pmd_resident:proc
-	extern _snd_mmd_resident:proc
+	extern SND_DETERMINE_MODES:proc
 SHARED	ends
 
 SHARED_	segment	word public 'CODE' use16
@@ -7525,7 +7524,6 @@ SHARED_	segment	word public 'CODE' use16
 		;org 0Ch
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-include th04/snd/detmodes.asm
 include th04/hardware/grppsafx.asm
 	extern CDG_PUT_NOALPHA_8:proc
 	extern _snd_se_reset:proc

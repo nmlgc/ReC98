@@ -4588,16 +4588,14 @@ SHARED	segment	word public 'CODE' use16
 	extern PI_PUT_QUARTER_8:proc
 	extern INPUT_WAIT_FOR_CHANGE:proc
 	extern VECTOR1_AT:proc
-	extern _snd_pmd_resident:proc
-	extern _snd_mmd_resident:proc
 	extern SND_KAJA_INTERRUPT:proc
+	extern SND_DETERMINE_MODES:proc
 SHARED	ends
 
 SHARED_	segment	word public 'CODE' use16
 		assume cs:g_SHARED
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-include th04/snd/detmodes.asm
 include th03/snd/delaymea.asm
 		db    0
 include th04/formats/cdg_put_plane.asm

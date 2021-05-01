@@ -6,6 +6,8 @@ typedef enum {
 	SND_BGM_FM86 = 2,
 	SND_BGM_MODE_COUNT = 3,
 	SND_BGM_MIDI = 3, // unsupported
+
+	_snd_bgm_mode_t_FORCE_UINT8 = 0xFF
 } snd_bgm_mode_t;
 
 typedef enum {
@@ -13,10 +15,12 @@ typedef enum {
 	SND_SE_FM = 1,
 	SND_SE_BEEP = 2,
 	SND_SE_MODE_COUNT = 3,
+
+	_snd_se_mode_t_FORCE_INT16 = 0x7FFF
 } snd_se_mode_t;
 
 extern unsigned char snd_se_mode;
-extern unsigned char snd_bgm_mode;
+extern snd_bgm_mode_t snd_bgm_mode;
 
 #ifdef __cplusplus
 static inline bool snd_bgm_active() {
@@ -33,7 +37,7 @@ static inline bool16 snd_se_active() {
 
 // Checks the requested BGM and SE modes against the available hardware and
 // sets [snd_se_mode] and [snd_bgm_mode] accordingly. Returns [snd_bgm_mode].
-unsigned char pascal snd_determine_modes(int req_bgm_mode, int req_se_mode);
+int pascal snd_determine_modes(int req_bgm_mode, int req_se_mode);
 
 // Loads a song ([func] = SND_LOAD_SONG) or a sound effect bank ([func] =
 // SND_LOAD_SE) into the respective work buffer of the sound driver. [fn] must

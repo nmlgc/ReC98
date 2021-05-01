@@ -10543,12 +10543,10 @@ SHARED	segment	word public 'CODE' use16
 		assume cs:g_SHARED
 	extern VECTOR2:proc
 	extern VECTOR2_BETWEEN_PLUS:proc
-	extern _snd_pmd_resident:proc
-	extern _snd_mmd_resident:proc
+	extern SND_DETERMINE_MODES:proc
 SHARED	ends
 
 SHARED_	segment	word public 'CODE' use16
-include th04/snd/detmodes.asm
 	extern CDG_PUT_NOALPHA_8:proc
 	extern SND_SE_PLAY:proc
 	extern _snd_se_update:proc

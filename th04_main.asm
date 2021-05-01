@@ -12978,13 +12978,11 @@ SHARED	segment	word public 'CODE' use16
 	extern MPN_LOAD_PALETTE_SHOW:proc
 	extern VECTOR1_AT:proc
 	extern VECTOR2_AT:proc
-	extern _snd_pmd_resident:proc
-	extern _snd_mmd_resident:proc
 	extern SND_KAJA_INTERRUPT:proc
+	extern SND_DETERMINE_MODES:proc
 SHARED	ends
 
 SHARED_	segment	word public 'CODE' use16
-include th04/snd/detmodes.asm
 include th04/snd/load.asm
 	extern CDG_PUT_8:proc
 	extern _game_exit:proc
