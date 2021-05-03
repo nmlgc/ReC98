@@ -2642,14 +2642,14 @@ SHARED	segment	word public 'CODE' use16
 	extern SND_KAJA_INTERRUPT:proc
 	extern CDG_PUT_NOCOLORS_8:proc
 	extern SND_DETERMINE_MODES:proc
+	extern SND_DELAY_UNTIL_MEASURE:proc
+	extern _game_exit_to_dos:proc
 SHARED	ends
 
 SHARED_	segment	word public 'CODE' use16
 		assume cs:g_SHARED
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-include th03/snd/delaymea.asm
-include th02/exit_dos.asm
 include th04/snd/load.asm
 include th04/hardware/grppsafx.asm
 	extern CDG_PUT_8:proc

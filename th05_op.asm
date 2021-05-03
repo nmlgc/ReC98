@@ -2516,6 +2516,7 @@ op_01_TEXT	ends
 ; Segment type:	Pure code
 SHARED	segment	word public 'CODE' use16
 	extern SND_DETERMINE_MODES:proc
+	extern _game_exit_to_dos:proc
 SHARED	ends
 
 SHARED_	segment	word public 'CODE' use16
@@ -2523,8 +2524,6 @@ SHARED_	segment	word public 'CODE' use16
 		; org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-include th02/exit_dos.asm
-		db 0
 include th04/hardware/grppsafx.asm
 	extern CDG_PUT_NOALPHA_8:proc
 	extern _snd_se_reset:proc

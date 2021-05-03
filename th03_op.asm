@@ -3603,13 +3603,8 @@ op_01_TEXT	ends
 
 ; ===========================================================================
 
-; Segment type:	Pure code
 SHARED	segment	word public 'CODE' use16
-		assume cs:SHARED
-		;org 8
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-include th02/exit_dos.asm
+	extern _game_exit_to_dos:proc
 	extern _snd_determine_mode:proc
 	extern _snd_load:proc
 	extern _game_exit:proc
