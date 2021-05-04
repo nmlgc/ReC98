@@ -143,7 +143,7 @@ bin\th04\main.exe: bin\th04\main.obj bin\th04\scoreupd.obj th04\main011.cpp bin\
 $**
 |
 
-bin\th04\maine.exe: bin\th04\maine.obj th04\maine011.cpp bin\th01\vplanset.obj bin\frmdely1.obj bin\th03\pi_put.obj bin\th04\cdg_put.obj bin\th04\exit.obj bin\th04\initmain.obj bin\th04\input_s.obj bin\th04\snd_se_r.obj bin\th04\snd_se.obj bin\th04\bgimage.obj bin\th04\bgimager.obj bin\th03\pi_load.obj bin\th03\pi_put_q.obj bin\th04\cdg_load.obj bin\hfliplut.obj bin\th04\input_w.obj bin\th04\vector.obj bin\th04\snd_pmdr.obj bin\th04\snd_mmdr.obj bin\th04\snd_kaja.obj bin\th04\snd_mode.obj bin\th04\snd_dlym.obj
+bin\th04\maine.exe: bin\th04\maine.obj th04\maine011.cpp bin\th01\vplanset.obj bin\frmdely1.obj bin\th03\pi_put.obj bin\th04\cdg_put.obj bin\th04\exit.obj bin\th04\initmain.obj bin\th04\input_s.obj bin\th04\snd_se_r.obj bin\th04\snd_se.obj bin\th04\bgimage.obj bin\th04\bgimager.obj bin\th03\pi_load.obj bin\th03\pi_put_q.obj bin\th04\cdg_load.obj bin\hfliplut.obj bin\th04\input_w.obj bin\th04\vector.obj bin\th04\snd_pmdr.obj bin\th04\snd_mmdr.obj bin\th04\snd_kaja.obj bin\th04\snd_mode.obj bin\th04\snd_dlym.obj bin\th04\cdg_p_pl.obj
 	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -DGAME=4 -DBINARY='E' -Z -nbin\th04\ -eMAINE.EXE @&&|
 $**
 |

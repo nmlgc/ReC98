@@ -4591,13 +4591,13 @@ SHARED	segment	word public 'CODE' use16
 	extern SND_KAJA_INTERRUPT:proc
 	extern SND_DETERMINE_MODES:proc
 	extern SND_DELAY_UNTIL_MEASURE:proc
+	extern CDG_PUT_PLANE:proc
 SHARED	ends
 
 SHARED_	segment	word public 'CODE' use16
 		assume cs:g_SHARED
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-include th04/formats/cdg_put_plane.asm
 include th04/snd/load.asm
 include th04/hardware/grppsafx.asm
 	extern CDG_PUT_8:proc
