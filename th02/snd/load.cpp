@@ -36,9 +36,9 @@ void snd_load(const char fn[SND_FN_LEN], snd_load_func_t func)
 	(char near *)(_DX) = snd_load_fn;
 	_AX = 0x3D00;
 	geninterrupt(0x21);
+	_BX = _AX;
 	// ZUN bug: No error handling
 
-	_BX = _AX;
 	__asm { mov ax, func; }
 	if((_AX == SND_LOAD_SONG) && snd_midi_active) {
 		geninterrupt(MMD);

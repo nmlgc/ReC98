@@ -91,7 +91,7 @@ void pascal snd_load(const char fn[SND_FN_LEN], snd_load_func_t func)
 		ext = *reinterpret_cast<const int32_t *>(SND_LOAD_EXT[SND_BGM_FM26]);
 	}
 
-	_BX = _AX;	// Unnecessary, just remove this line
+	_BX = _AX;
 	_AX = func_local;
 	if((_AH == KAJA_GET_SONG_ADDRESS) && (snd_bgm_mode == SND_BGM_MIDI)) {
 		geninterrupt(MMD);

@@ -12980,10 +12980,10 @@ SHARED	segment	word public 'CODE' use16
 	extern VECTOR2_AT:proc
 	extern SND_KAJA_INTERRUPT:proc
 	extern SND_DETERMINE_MODES:proc
+	extern SND_LOAD:proc
 SHARED	ends
 
 SHARED_	segment	word public 'CODE' use16
-include th04/snd/load.asm
 	extern CDG_PUT_8:proc
 	extern _game_exit:proc
 	extern GAME_INIT_MAIN:proc
