@@ -48,7 +48,7 @@ typedef enum {
 	PTN_BG_LIVES = PTN_ID(PTN_SLOT_BG_HUD, 0),
 	PTN_BG_LIVES_last = last_for_quarters(PTN_BG_LIVES, LIVES_MAX),
 	PTN_BG_STAGE,
-	PTN_BG_STAGE_last, // But the original game onlys need a single quarter?
+	PTN_BG_STAGE_last, // But the original game only need a single quarter?
 	PTN_BG_BOMBS,
 	PTN_BG_BOMBS_last = last_for_quarters(PTN_BG_BOMBS, BOMBS_MAX),
 

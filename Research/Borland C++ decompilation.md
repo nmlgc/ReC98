@@ -309,9 +309,9 @@ Inhibited by:
       int v = set_v();
       do_something_else();
       use(v);
-  } else if(underline) {
+  } else if(b) {
       // Second declaration of [v]. Even though it's assigned to the same stack
-      // offset, the second `PUSH w` call will still be emitted separately.
+      // offset, the second `PUSH c` call will still be emitted separately.
       // Thus, jump optimization only reuses the `CALL use` instruction.
       // Move the `int v;` declaraion to the beginning of the function to avoid
       // this.

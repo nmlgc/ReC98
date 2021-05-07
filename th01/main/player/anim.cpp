@@ -85,7 +85,7 @@ void CPlayerAnim::unput_8(screen_x_t left, vram_y_t top, int image) const
 	graph_accesspage_func(0);
 }
 
-#define put_row(byte_x, vram_offset, bos_p, image) \
+#define put_row(bos_byte_x, vram_offset, bos_p, image) \
 	for(bos_byte_x = 0; vram_w > bos_byte_x; bos_byte_x++) { \
 		if( \
 			((vram_offset / ROW_SIZE) == intended_y) && \

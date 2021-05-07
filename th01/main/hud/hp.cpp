@@ -67,7 +67,7 @@ void hp_put_with_section_pattern(int point, hp_section_t section)
 /// Background
 /// ----------
 /// Whew, using a 16x16 wrapper around a 32x32 set of graphics functions in
-/// order to handle backgrounds for 16x8 sprites... That's quite the recipe
+/// order to handle backgrounds for 8x16 sprites... That's quite the recipe
 // for confusion. *Especially* if you don't write functions to abstract away
 // this needless complexity.
 

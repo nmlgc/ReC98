@@ -389,7 +389,7 @@ int z_graph_readdot(screen_x_t x, vram_y_t y)
 	test(E, vram_offset, mask, 8);
 	return ret;
 
-#undef text
+#undef test
 }
 /// ------
 

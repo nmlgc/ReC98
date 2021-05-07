@@ -72,8 +72,8 @@ enum pellet_sling_direction_t {
 // along this axis of symmetry; even-numbered spreads don't.
 //
 // For aimed patterns, this means that:
-// • all odd-numbered spreads are aimed *at* the player, while
-// • all even-numbered spreads are aimed *around* the player.
+// • spreads with  odd numbers of pellets are aimed *at* the player, while
+// • spreads with even numbers of pellets are aimed *around* the player.
 enum pellet_pattern_t {
 	// Does not actually work, due to a ZUN bug in pattern_velocity_set()!
 	PP_NONE = 0,

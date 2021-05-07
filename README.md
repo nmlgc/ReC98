@@ -15,7 +15,7 @@
 
 ### Overview
 
-This project aims to perfectly reconstruct the source code of the first five [Touhou Project](http://en.wikipedia.org/wiki/Touhou_Project)  games by *ZUN Soft* (now *Team Shanghai Alice*), which were originally released exclusively for the NEC PC-9801 system.
+This project aims to perfectly reconstruct the source code of the first five [Touhou Project](http://en.wikipedia.org/wiki/Touhou_Project) games by *ZUN Soft* (now *Team Shanghai Alice*), which were originally released exclusively for the NEC PC-9801 system.
 
 The original games in question are:
 
@@ -110,7 +110,7 @@ Crossed-out files are identical to their version in the previous game. ONGCHK.CO
   Needed to fulfill the role of being "just *any* native C++ compiler" for our own tools that either don't necessarily *have* to run on 16-bit DOS, or are required by the 32-bit build step, as long as that one still exists (see above).
 
   Currently, this category of tools only includes the [converter for hardcoded sprites]. Since that one is written to be as platform-independent as possible, it could easily be compiled with any other native C compiler you happen to have already installed. (Which also means that future port developers hopefully have one less thing to worry about.)
-  So, if you dislike additional dependencies, feel free to edit the `Tupfile` so that `bmp2arr` is compiled with any others C compiler of your choice.
+  So, if you dislike additional dependencies, feel free to edit the `Tupfile` so that `bmp2arr` is compiled with any other C compiler of your choice.
 
   However, choosing Borland C++ 5.5 as a default for everyone else fits ReC98 very well for several reasons:
 
