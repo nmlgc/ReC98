@@ -1,5 +1,6 @@
 #pragma option -zCSHARED
 
+extern "C" {
 #include "platform.h"
 #include "x86real.h"
 #include "libs/kaja/kaja.h"
@@ -47,7 +48,7 @@ void snd_load(const char fn[SND_FN_LEN], kaja_func_t func)
 
 	// DOS file read; song data address is in DS:DX
 	_AX = 0x3F00;
-	_CX = 0x5000;
+	_CX = snd_load_size();
 	geninterrupt(0x21);
 
 	__asm { pop ds; }
@@ -55,4 +56,6 @@ void snd_load(const char fn[SND_FN_LEN], kaja_func_t func)
 	// DOS file close
 	_AH = 0x3E;
 	geninterrupt(0x21);
+}
+
 }

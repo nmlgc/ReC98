@@ -101,7 +101,7 @@ void pascal snd_load(const char fn[SND_FN_LEN], int16_t func)
 
 	// DOS file read; song data address is in DS:DX
 	_AX = 0x3F00;
-	_CX = 0xFFFF;
+	_CX = snd_load_size();
 	geninterrupt(0x21);
 
 	// DOS file close

@@ -60,6 +60,19 @@ void snd_delay_until_volume(uint8_t volume);
 #define SND_FN_LEN 13
 
 #if defined(PMD) && (GAME <= 3) /* requires kaja.h */
+	#if defined(__cplusplus) && (GAME <= 4)
+		static inline uint16_t snd_load_size() {
+			// ZUN bug: Should rather retrieve the maximum data size for song
+			// or sound effect data via PMD_GET_BUFFER_SIZES, instead of
+			// hardcoding a random maximum and risking overflowing PMD's data
+			// buffer.
+			// (Unfortunately, MMD lacks a similar function...)
+			// MODDERS: When implementing this properly, rearrange the call
+			// sites to make sure that AX isn't destroyed.
+			return 0x5000;
+		}
+	#endif
+
 	// Loads a song in .M format ([func] = SND_LOAD_SONG) or a sound effect
 	// bank in EFC format ([func] = SND_LOAD_SE) into the respective work
 	// buffer of the sound driver. If MIDI is used, 'md' is appended to the
