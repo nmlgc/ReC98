@@ -8,7 +8,7 @@ extern "C" {
 
 extern char snd_load_fn[SND_FN_LEN];
 
-void snd_load(const char fn[SND_FN_LEN], kaja_func_t func)
+void snd_load(const char fn[SND_FN_LEN], snd_load_func_t func)
 {
 	int i;
 	__asm { push ds; }

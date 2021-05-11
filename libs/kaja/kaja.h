@@ -28,8 +28,6 @@ typedef enum {
 	// (DL) buffers, in KiB. These can be customized on the PMD command line
 	// with the /M, /V and /E options respectively.
 	PMD_GET_BUFFER_SIZES = 0x22,
-
-	_kaja_func_t_FORCE_UINT16 = 0xFFFF
 } kaja_func_t;
 
 #define PMD 0x60

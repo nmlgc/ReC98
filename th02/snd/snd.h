@@ -53,13 +53,7 @@ void snd_delay_until_volume(uint8_t volume);
 	void snd_delay_until_measure(int measure);
 #endif
 
-// Shorter symbols for the [func] parameter of snd_load()
-#define SND_LOAD_SONG (kaja_func_t)(KAJA_GET_SONG_ADDRESS << 8)
-#define SND_LOAD_SE (kaja_func_t)(PMD_GET_SE_ADDRESS << 8)
-
-#define SND_FN_LEN 13
-
-#if defined(PMD) && (GAME <= 3) /* requires kaja.h */
+#if defined(PMD) /* requires kaja.h */
 	#if defined(__cplusplus) && (GAME <= 4)
 		static inline uint16_t snd_load_size() {
 			// ZUN bug: Should rather retrieve the maximum data size for song
@@ -73,11 +67,21 @@ void snd_delay_until_volume(uint8_t volume);
 		}
 	#endif
 
-	// Loads a song in .M format ([func] = SND_LOAD_SONG) or a sound effect
-	// bank in EFC format ([func] = SND_LOAD_SE) into the respective work
-	// buffer of the sound driver. If MIDI is used, 'md' is appended to the
-	// file name.
-	void snd_load(const char fn[SND_FN_LEN], kaja_func_t func);
+	typedef enum {
+		SND_LOAD_SONG = (KAJA_GET_SONG_ADDRESS << 8),
+		SND_LOAD_SE = (PMD_GET_SE_ADDRESS << 8),
+	} snd_load_func_t;
+
+	#define SND_FN_LEN 13
+
+	#if (GAME <= 3)
+		// Loads a song in .M format ([func] == SND_LOAD_SONG) or a sound
+		// effect bank in EFC format ([func] == SND_LOAD_SE) into the
+		// respective work buffer of the sound driver. If MIDI is used, 'md'
+		// is appended to the file name.
+		// [fn] still needs to be null-terminated, despite its fixed length.
+		void snd_load(const char fn[SND_FN_LEN], snd_load_func_t func);
+	#endif
 #endif
 
 void snd_se_reset(void);

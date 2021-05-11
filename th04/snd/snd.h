@@ -40,7 +40,7 @@ static inline bool16 snd_se_active() {
 int pascal snd_determine_modes(int req_bgm_mode, int req_se_mode);
 
 #if defined(PMD) /* requires kaja.h */
-// Loads a song ([func] = SND_LOAD_SONG) or a sound effect bank ([func] =
+// Loads a song ([func] == SND_LOAD_SONG) or a sound effect bank ([func] ==
 // SND_LOAD_SE) into the respective work buffer of the sound driver. [fn] must
 // not have any extension. Depending on [snd_bgm_mode], [snd_se_mode], and
 // game, the following file is loaded:
@@ -60,7 +60,7 @@ int pascal snd_determine_modes(int req_bgm_mode, int req_se_mode);
 //
 // Note that the TH05 version will infinitely loop if neither the file for the
 // current [snd_bgm_mode] nor "[fn].m" exist.
-void pascal snd_load(const char fn[SND_FN_LEN], int16_t func);
+void pascal snd_load(const char fn[SND_FN_LEN], snd_load_func_t func);
 
 #if defined(__cplusplus) && (GAME == 5)
 	// Refer to TH02's implementation for an explanation of how wrong this is.
