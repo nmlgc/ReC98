@@ -3460,8 +3460,7 @@ loc_DA7B:
 		cbw
 		cmp	ax, 7
 		jnz	short loc_DA8D
-		push	0
-		call	_konngara_load
+		call	@konngara_load_and_entrance$qc stdcall, 0
 		jmp	short loc_DA9D
 ; ---------------------------------------------------------------------------
 
@@ -37638,6 +37637,7 @@ main_36__TEXT	ends
 main_37_TEXT	segment	byte public 'CODE' use16
 	extern @konngara_select_for_rank$qmiiiii:proc
 	extern @pellet_spawnray_unput_and_put$qiiiii:proc
+	extern @konngara_load_and_entrance$qc:proc
 main_37_TEXT	ends
 
 main_37__TEXT	segment	byte public 'CODE' use16
@@ -37648,309 +37648,6 @@ main_37__TEXT	segment	byte public 'CODE' use16
 konngara_head	equ <boss_entity_0>
 konngara_face_closed_or_glare	equ <boss_entity_1>
 konngara_face_aim	equ <boss_entity_2>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public _konngara_load
-_konngara_load	proc far
-
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-
-		enter	8, 0
-		push	si
-		push	di
-		mov	_pellet_interlace, 1
-		call	text_fillca pascal, (' ' shl 16) + TX_BLACK + TX_REVERSE
-		call	_grp_put_palette_show stdcall, offset aBoss7_d1_grp, ds ; "boss7_d1.grp"
-		call	_stage_palette_set stdcall, offset _z_Palettes, ds
-		call	@stageobjs_init_and_render$qi stdcall, BOSS_STAGE
-		push	1
-		call	_graph_accesspage_func
-		call	_grp_put_palette_show stdcall, offset aBoss8_a1_grp, ds ; "boss8_a1.grp"
-		push	0
-		call	_graph_accesspage_func
-		push	ds
-		push	offset aAlice_mdt_0 ; "ALICE.MDT"
-		call	_mdrv2_bgm_load
-		push	ds
-		push	offset aZigoku_mde_1 ; "zigoku.mde"
-		call	_mdrv2_se_load
-		add	sp, 1Ah
-		call	_mdrv2_bgm_play
-		xor	di, di
-		jmp	short loc_2CF26
-; ---------------------------------------------------------------------------
-
-loc_2CF11:
-		xor	si, si
-		jmp	short loc_2CF20
-; ---------------------------------------------------------------------------
-
-loc_2CF15:
-		mov	bx, di
-		imul	bx, 3
-		mov	_z_Palettes[bx+si], 0
-		inc	si
-
-loc_2CF20:
-		cmp	si, 3
-		jl	short loc_2CF15
-		inc	di
-
-loc_2CF26:
-		cmp	di, 10h
-		jl	short loc_2CF11
-		call	_z_palette_set_all_show stdcall, offset _z_Palettes, ds
-		call	text_fillca pascal, (' ' shl 16) + TX_WHITE
-		CBossEntity__load	konngara_head, 0, aBoss8_1_bos
-		CBossEntity__load	konngara_face_closed_or_glare, 1, aBoss8_e1_bos
-		mov	konngara_face_aim.BE_loading, 1
-		call	@CBossEntity@load_inner$qxnxci stdcall, offset konngara_face_aim, ds, offset aBoss8_e2_bos, ds, 2
-		add	sp, 22h
-		mov	konngara_face_aim.BE_loading, 0
-		xor	di, di
-		mov	si, 32
-		mov	[bp+var_2], 0
-		mov	[bp+var_8], 0
-
-loc_2CFA2:
-		call	_z_vsync_wait_and_scrollup stdcall, di
-		pop	cx
-		add	di, si
-		cmp	[bp+var_2], 0
-		jnz	short loc_2CFBA
-		cmp	di, ((RES_Y / 4) * 1)
-		jle	short loc_2CFBA
-		inc	[bp+var_2]
-		dec	si
-
-loc_2CFBA:
-		cmp	[bp+var_2], 1
-		jnz	short loc_2CFCA
-		cmp	di, ((RES_Y / 4) * 2)
-		jle	short loc_2CFCA
-		inc	[bp+var_2]
-		dec	si
-
-loc_2CFCA:
-		cmp	[bp+var_2], 2
-		jnz	short loc_2CFDA
-		cmp	di, ((RES_Y / 4) * 3)
-		jle	short loc_2CFDA
-		inc	[bp+var_2]
-		dec	si
-
-loc_2CFDA:
-		cmp	[bp+var_2], 3
-		jnz	short loc_2CFF0
-		cmp	di, RES_Y
-		jle	short loc_2CFF0
-		mov	[bp+var_2], 0
-		dec	si
-		sub	di, RES_Y
-
-loc_2CFF0:
-		or	si, si
-		jle	loc_2D079
-		mov	ax, [bp+var_8]
-		mov	bx, 8
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_2D06B
-		mov	[bp+var_4], 0
-		jmp	short loc_2D059
-; ---------------------------------------------------------------------------
-
-loc_2D00A:
-		mov	[bp+var_6], 0
-		jmp	short loc_2D050
-; ---------------------------------------------------------------------------
-
-loc_2D011:
-		mov	bx, [bp+var_4]
-		imul	bx, size rgb_t
-		add	bx, [bp+var_6]
-		mov	al, byte ptr _grp_palette[bx]
-		mov	bx, [bp+var_4]
-		imul	bx, size rgb_t
-		add	bx, [bp+var_6]
-		cmp	al, _z_Palettes[bx]
-		jle	short loc_2D031
-		mov	al, 1
-		jmp	short loc_2D033
-; ---------------------------------------------------------------------------
-
-loc_2D031:
-		mov	al, 0
-
-loc_2D033:
-		mov	bx, [bp+var_4]
-		imul	bx, 3
-		add	bx, [bp+var_6]
-		add	al, _z_Palettes[bx]
-		mov	bx, [bp+var_4]
-		imul	bx, 3
-		add	bx, [bp+var_6]
-		mov	_z_Palettes[bx], al
-		inc	[bp+var_6]
-
-loc_2D050:
-		cmp	[bp+var_6], size rgb_t
-		jl	short loc_2D011
-		inc	[bp+var_4]
-
-loc_2D059:
-		cmp	[bp+var_4], COLOR_COUNT
-		jl	short loc_2D00A
-		call	_z_palette_set_all_show c, offset _z_Palettes, ds
-
-loc_2D06B:
-		inc	[bp+var_8]
-		push	1
-		call	_frame_delay
-		pop	cx
-		jmp	loc_2CFA2
-; ---------------------------------------------------------------------------
-
-loc_2D079:
-		call	_z_vsync_wait_and_scrollup stdcall, 0
-		call	_grz_load_single stdcall, 0, offset aBoss8_grz, ds, 0 ; "boss8.grz"
-		call	_grz_load_single stdcall, 1, offset aBoss8_grz, ds, 1 ; "boss8.grz"
-		call	_grz_load_single stdcall, 2, offset aBoss8_grz, ds, 2 ; "boss8.grz"
-		call	_grz_load_single stdcall, 3, offset aBoss8_grz, ds, 3 ; "boss8.grz"
-		call	_grz_load_single stdcall, 4, offset aBoss8_grz, ds, 4 ; "boss8.grz"
-		call	_grz_load_single stdcall, 5, offset aBoss8_grz, ds, 5 ; "boss8.grz"
-		add	sp, 32h
-		call	_grz_load_single stdcall, 6, offset aBoss8_grz, ds, 6 ; "boss8.grz"
-		push	28h ; '('
-		call	_frame_delay
-		add	sp, 0Ah
-		xor	si, si
-		jmp	short loc_2D120
-; ---------------------------------------------------------------------------
-
-loc_2D0EC:
-		mov	ax, si
-		mov	bx, 2
-		cwd
-		idiv	bx
-		shl	dx, 5
-		mov	ax, (RES_Y + 16)
-		sub	ax, dx
-		call	_z_vsync_wait_and_scrollup stdcall, ax
-		pop	cx
-		mov	ax, si
-		mov	bx, 8
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_2D117
-		push	9
-		call	_mdrv2_se_play
-		pop	cx
-
-loc_2D117:
-		push	1
-		call	_frame_delay
-		pop	cx
-		inc	si
-
-loc_2D120:
-		cmp	si, 32
-		jl	short loc_2D0EC
-		mov	di, RES_Y
-		jmp	short loc_2D145
-; ---------------------------------------------------------------------------
-
-loc_2D12A:
-		call	_z_vsync_wait_and_scrollup stdcall, di
-		call	_egc_copy_rows_1_to_0 stdcall, di, 32
-		push	1
-		call	_frame_delay
-		add	sp, 8
-		sub	di, 32
-
-loc_2D145:
-		or	di, di
-		jge	short loc_2D12A
-		xor	si, si
-		jmp	short loc_2D16E
-; ---------------------------------------------------------------------------
-
-loc_2D14D:
-		mov	ax, si
-		mov	bx, 2
-		cwd
-		idiv	bx
-		shl	dx, 4
-		mov	ax, (RES_Y + 16)
-		sub	ax, dx
-		call	_z_vsync_wait_and_scrollup stdcall, ax
-		push	1
-		call	_frame_delay
-		add	sp, 4
-		inc	si
-
-loc_2D16E:
-		cmp	si, 32
-		jl	short loc_2D14D
-		push	1Eh
-		call	_frame_delay
-		push	(0Fh shl 16) or 0Fh
-		push	(0Fh shl 16) or 09h
-		call	_z_palette_set_show
-		call	_grp_put_colorkey stdcall, offset aBoss8_d1_grp, ds ; "boss8_d1.grp"
-		call	_grp_put_colorkey stdcall, offset aBoss8_d2_grp, ds ; "boss8_d2.grp"
-		call	_grp_put_colorkey stdcall, offset aBoss8_d3_grp, ds ; "boss8_d3.grp"
-		call	_grp_put_colorkey stdcall, offset aBoss8_d4_grp, ds ; "boss8_d4.grp"
-		add	sp, 1Ah
-		xor	di, di
-		jmp	short loc_2D1F0
-; ---------------------------------------------------------------------------
-
-loc_2D1B6:
-		mov	al, _z_Palettes[9 * 3].r
-		cbw
-		or	ax, ax
-		jle	short loc_2D1C2
-		dec	_z_Palettes[9 * 3].r
-
-loc_2D1C2:
-		mov	al, _z_Palettes[9 * 3].g
-		cbw
-		cmp	ax, 9
-		jle	short loc_2D1CF
-		dec	_z_Palettes[9 * 3].g
-
-loc_2D1CF:
-		mov	al, _z_Palettes[9 * 3].b
-		cbw
-		cmp	ax, 0Ah
-		jle	short loc_2D1DC
-		dec	_z_Palettes[9 * 3].b
-
-loc_2D1DC:
-		call	_z_palette_set_all_show stdcall, offset _z_Palettes, ds
-		push	0Ah
-		call	_frame_delay
-		add	sp, 6
-		inc	di
-
-loc_2D1F0:
-		cmp	di, 10h
-		jl	short loc_2D1B6
-		call	_graph_copy_page_back_to_front
-		pop	di
-		pop	si
-		leave
-		retf
-_konngara_load	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -41545,14 +41242,14 @@ loc_2F766:
 		call	_z_graph_clear
 		call	_mdrv2_bgm_stop
 		call	_z_palette_set_show c, large (0 shl 16) or 0, large (0 shl 16) or 0
-		call	_grz_load_single c, 0, offset aBoss8_grz, ds, 7 ; "boss8.grz"
+		call	_grz_load_single c, 0, offset _GRZ_FN, ds, 7 ; "boss8.grz"
 		call	_grx_put stdcall, 0
 		pop	cx
 		push	0Ah
 		call	_frame_delay
 		pop	cx
 		call	_z_graph_clear
-		call	_grz_load_single c, 0, offset aBoss8_grz, ds, 8 ; "boss8.grz"
+		call	_grz_load_single c, 0, offset _GRZ_FN, ds, 8 ; "boss8.grz"
 		call	_z_palette_set_show c, large (0Fh shl 16) or 00h, large (0Fh shl 16) or 0Fh
 		call	_grx_put stdcall, 0
 		pop	cx
@@ -41560,7 +41257,7 @@ loc_2F766:
 		call	_frame_delay
 		pop	cx
 		call	_z_graph_clear
-		call	_grz_load_single c, 0, offset aBoss8_grz, ds, 9 ; "boss8.grz"
+		call	_grz_load_single c, 0, offset _GRZ_FN, ds, 9 ; "boss8.grz"
 		call	_z_palette_set_show c, large (0 shl 16) or 0, large (0 shl 16) or 0
 		call	_grx_put stdcall, 0
 		pop	cx
@@ -41568,7 +41265,7 @@ loc_2F766:
 		call	_frame_delay
 		pop	cx
 		call	_z_graph_clear
-		call	_grz_load_single c, 0, offset aBoss8_grz, ds, 10 ; "boss8.grz"
+		call	_grz_load_single c, 0, offset _GRZ_FN, ds, 10 ; "boss8.grz"
 		call	_z_palette_set_show c, large (0Fh shl 16) or 00h, large (0Fh shl 16) or 0Fh
 		call	_grx_put stdcall, 0
 		pop	cx
@@ -41576,7 +41273,7 @@ loc_2F766:
 		call	_frame_delay
 		pop	cx
 		call	_z_graph_clear
-		call	_grz_load_single c, 0, offset aBoss8_grz, ds, 11 ; "boss8.grz"
+		call	_grz_load_single c, 0, offset _GRZ_FN, ds, 11 ; "boss8.grz"
 		call	_z_palette_set_show c, large (0 shl 16) or 0, large (0 shl 16) or 0
 		call	_grx_put stdcall, 0
 		pop	cx
@@ -41584,7 +41281,7 @@ loc_2F766:
 		call	_frame_delay
 		pop	cx
 		call	_z_graph_clear
-		call	_grz_load_single c, 0, offset aBoss8_grz, ds, 12 ; "boss8.grz"
+		call	_grz_load_single c, 0, offset _GRZ_FN, ds, 12 ; "boss8.grz"
 		call	_z_palette_set_show c, large (0Fh shl 16) or 00h, large (0Fh shl 16) or 0Fh
 		call	_grx_put stdcall, 0
 		pop	cx
@@ -41592,7 +41289,7 @@ loc_2F766:
 		call	_frame_delay
 		pop	cx
 		call	_z_graph_clear
-		call	_grz_load_single c, 0, offset aBoss8_grz, ds, 13 ; "boss8.grz"
+		call	_grz_load_single c, 0, offset _GRZ_FN, ds, 13 ; "boss8.grz"
 		call	_z_palette_set_show c, large (0 shl 16) or 0, large (0 shl 16) or 0
 		call	_grx_put stdcall, 0
 		pop	cx
@@ -41600,7 +41297,7 @@ loc_2F766:
 		call	_frame_delay
 		pop	cx
 		call	_z_graph_clear
-		call	_grz_load_single c, 0, offset aBoss8_grz, ds, 14 ; "boss8.grz"
+		call	_grz_load_single c, 0, offset _GRZ_FN, ds, 14 ; "boss8.grz"
 		call	_z_palette_set_show c, large (0Fh shl 16) or 00h, large (0Fh shl 16) or 0Fh
 		call	_grx_put stdcall, 0
 		pop	cx
@@ -41608,7 +41305,7 @@ loc_2F766:
 		call	_frame_delay
 		pop	cx
 		call	_z_graph_clear
-		call	_grz_load_single c, 0, offset aBoss8_grz, ds, 15 ; "boss8.grz"
+		call	_grz_load_single c, 0, offset _GRZ_FN, ds, 15 ; "boss8.grz"
 		call	_z_palette_set_show c, large (0 shl 16) or 0, large (0 shl 16) or 0
 		call	_grx_put stdcall, 0
 		pop	cx
@@ -41717,7 +41414,7 @@ loc_2FA5C:
 loc_2FA62:
 		cmp	di, 19h
 		jl	short loc_2FA4B
-		call	_grp_put_palette_show c, offset aBoss7_d1_grp, ds ; "boss7_d1.grp"
+		call	_grp_put_palette_show c, offset _SCROLL_BG_FN, ds ; "boss7_d1.grp"
 		xor	si, si
 		jmp	short loc_2FA8C
 ; ---------------------------------------------------------------------------
@@ -42722,21 +42419,9 @@ _konngara_invincibility_flash_colors	db    3, 4, 5
 aAngel_0	db 'ANGEL',0
 aOf_0		db 'OF',0
 aDeath_0	db 'DEATH',0
-aBoss7_d1_grp	db 'boss7_d1.grp',0
-aBoss8_a1_grp	db 'boss8_a1.grp',0
-; char aAlice_mdt_0[]
-aAlice_mdt_0	db 'ALICE.MDT',0
-; char aZigoku_mde_1[]
-aZigoku_mde_1	db 'zigoku.mde',0
-aBoss8_1_bos	db 'boss8_1.bos',0
-aBoss8_e1_bos	db 'boss8_e1.bos',0
-aBoss8_e2_bos	db 'boss8_e2.bos',0
-aBoss8_grz	db 'boss8.grz',0
-aBoss8_d1_grp	db 'boss8_d1.grp',0
-aBoss8_d2_grp	db 'boss8_d2.grp',0
-aBoss8_d3_grp	db 'boss8_d3.grp',0
-aBoss8_d4_grp	db 'boss8_d4.grp',0
-_konngara_esc_cls	db 1Bh,'*',0
+	extern _SCROLL_BG_FN:byte
+	extern _GRZ_FN:byte
+	extern _konngara_esc_cls:byte
 	extern _konngara_esc_mode_graph:byte
 	extern _konngara_esc_color_bg_black_fg_b:byte
 	extern _konngara_esc_cursor_to_x0_y0_0:byte
@@ -42827,6 +42512,7 @@ include th01/hiscore/hiscore[bss].asm
 		db 4 dup(?)
 include th01/formats/bos[bss].asm
 
+public _boss_entities
 _boss_entities	CBossEntity 5 dup(<?>)
 _boss_entities_unused	CBossEntity 5 dup(<?>)
 boss_entity_0	equ <_boss_entities[0 * size CBossEntity]>

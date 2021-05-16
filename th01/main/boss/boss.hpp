@@ -41,3 +41,9 @@ void boss_hit_update_and_render(
 	pixel_t hitbox_w,
 	pixel_t hitbox_h
 );
+
+// Individual bosses
+// -----------------
+
+void konngara_load_and_entrance(int8_t unused);
+// -----------------

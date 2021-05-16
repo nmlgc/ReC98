@@ -43,7 +43,33 @@ void z_palette_white_in(void);
 // without modifiying z_Palettes;
 void z_palette_black_out(void);
 void z_palette_white_out(void);
-/// ---------------
+
+#define z_Palettes_set_func_and_show(tmp_col, tmp_comp, func) \
+	for(tmp_col = 0; tmp_col < COLOR_COUNT; tmp_col++) { \
+		for(tmp_comp = 0; tmp_comp < COMPONENT_COUNT; tmp_comp++) { \
+			func \
+		} \
+	} \
+	z_palette_set_all_show(z_Palettes);
+
+// Sets all colors in both the hardware palette and z_Palettes to #000.
+#define z_palette_set_black(tmp_col, tmp_comp) \
+	z_Palettes_set_func_and_show(tmp_col, tmp_comp, { \
+		z_Palettes[tmp_col].v[tmp_comp] = 0; \
+	})
+
+// Performs a single ramping step from z_Palettes to [target_pal]. Every color
+// in z_Palettes is assumed to not be brighter than the corresponding color in
+// [target_pal].
+#define z_palette_black_in_step_to(tmp_col, tmp_comp, target_pal) \
+	z_Palettes_set_func_and_show(tmp_col, tmp_comp, { \
+		z_Palettes.colors[tmp_col].v[tmp_comp] += ( \
+			target_pal[tmp_col].v[tmp_comp] > z_Palettes[tmp_col].v[tmp_comp] \
+				? 1 \
+				: 0 \
+		); \
+	})
+/// ----------------
 
 /// Resident palette
 /// ----------------

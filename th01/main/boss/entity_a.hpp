@@ -193,6 +193,8 @@ public:
 
 // Frees all images in the given [slot].
 void bos_entity_free(int slot);
+
+extern CBossEntity boss_entities[5];
 /// --------
 
 /// Non-entity animations
