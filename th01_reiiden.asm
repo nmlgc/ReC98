@@ -22,6 +22,7 @@ include ReC98.inc
 include th01/th01.inc
 include th01/hardware/grppsafx.inc
 include th01/math/area.inc
+include th01/math/subpixel.inc
 include th01/main/playfld.inc
 include th01/main/boss/entity_a.inc
 include th01/formats/cfg.inc
@@ -37636,6 +37637,7 @@ main_36__TEXT	ends
 ; Segment type:	Pure code
 main_37_TEXT	segment	byte public 'CODE' use16
 	extern @konngara_select_for_rank$qmiiiii:proc
+	extern @pellet_spawnray_unput_and_put$qiiiii:proc
 main_37_TEXT	ends
 
 main_37__TEXT	segment	byte public 'CODE' use16
@@ -37646,69 +37648,6 @@ main_37__TEXT	segment	byte public 'CODE' use16
 konngara_head	equ <boss_entity_0>
 konngara_face_closed_or_glare	equ <boss_entity_1>
 konngara_face_aim	equ <boss_entity_2>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2CE17	proc far
-
-@@left		= word ptr  6
-@@top		= word ptr  8
-@@right		= word ptr  0Ah
-@@bottom		= word ptr  0Ch
-@@col		= word ptr  0Eh
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+@@right]
-		mov	di, [bp+@@bottom]
-		cmp	[bp+@@col], 63h	; 'c'
-		jnz	short loc_2CE36
-		mov	point_35FF4.x, 999
-		mov	point_35FF4.y, 999
-		jmp	short loc_2CEA9
-; ---------------------------------------------------------------------------
-
-loc_2CE36:
-		cmp	point_35FF4.x, 999
-		jz	short loc_2CE7A
-		cmp	point_35FF4.y, 999
-		jz	short loc_2CE7A
-		cmp	point_35FF4.x, 0
-		jl	short loc_2CE7A
-		cmp	point_35FF4.x, RES_X
-		jge	short loc_2CE7A
-		cmp	point_35FF4.y, 0
-		jl	short loc_2CE7A
-		cmp	point_35FF4.y, RES_Y
-		jge	short loc_2CE7A
-		call	_graph_r_line_unput c, [bp+@@left], [bp+@@top], point_35FF4.x, point_35FF4.y
-
-loc_2CE7A:
-		or	si, si
-		jl	short loc_2CEA1
-		cmp	si, RES_X
-		jge	short loc_2CEA1
-		or	di, di
-		jl	short loc_2CEA1
-		cmp	di, RES_Y
-		jge	short loc_2CEA1
-		call	_graph_r_line c, [bp+@@left], [bp+@@top], si, di, [bp+@@col]
-
-loc_2CEA1:
-		mov	point_35FF4.x, si
-		mov	point_35FF4.y, di
-
-loc_2CEA9:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_2CE17	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -39893,7 +39832,7 @@ loc_2E43F:
 loc_2E478:
 		cmp	_boss_phase_frame, 125
 		jge	short loc_2E49E
-		call	sub_2CE17 c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
+		call	@pellet_spawnray_unput_and_put$qiiiii c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
 		sub	point_3B511.y, 8
 		jmp	loc_2E697
 ; ---------------------------------------------------------------------------
@@ -39903,7 +39842,7 @@ loc_2E49E:
 		jnz	short loc_2E4D0
 		mov	point_3B511.x, 0
 		mov	point_3B511.y, 64
-		call	sub_2CE17 c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
+		call	@pellet_spawnray_unput_and_put$qiiiii c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
 		add	point_3B511.x, 8
 		jmp	loc_2E5E0
 ; ---------------------------------------------------------------------------
@@ -39911,7 +39850,7 @@ loc_2E49E:
 loc_2E4D0:
 		cmp	_boss_phase_frame, 205
 		jge	short loc_2E4F7
-		call	sub_2CE17 c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
+		call	@pellet_spawnray_unput_and_put$qiiiii c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
 		add	point_3B511.x, 8
 		jmp	loc_2E697
 ; ---------------------------------------------------------------------------
@@ -39921,7 +39860,7 @@ loc_2E4F7:
 		jnz	short loc_2E529
 		mov	point_3B511.x, RES_X - 1
 		mov	point_3B511.y, 64
-		call	sub_2CE17 c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
+		call	@pellet_spawnray_unput_and_put$qiiiii c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
 		add	point_3B511.y, 8
 		jmp	short loc_2E580
 ; ---------------------------------------------------------------------------
@@ -39929,7 +39868,7 @@ loc_2E4F7:
 loc_2E529:
 		cmp	_boss_phase_frame, 230
 		jge	short loc_2E550
-		call	sub_2CE17 c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
+		call	@pellet_spawnray_unput_and_put$qiiiii c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
 		add	point_3B511.y, 8
 		jmp	loc_2E697
 ; ---------------------------------------------------------------------------
@@ -39939,7 +39878,7 @@ loc_2E550:
 		jnz	short loc_2E589
 		mov	point_3B511.x, RES_X - 1
 		mov	point_3B511.y, 264
-		call	sub_2CE17 c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
+		call	@pellet_spawnray_unput_and_put$qiiiii c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
 		sub	point_3B511.y, 8
 
 loc_2E580:
@@ -39950,7 +39889,7 @@ loc_2E580:
 loc_2E589:
 		cmp	_boss_phase_frame, 255
 		jge	short loc_2E5B0
-		call	sub_2CE17 c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
+		call	@pellet_spawnray_unput_and_put$qiiiii c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
 		sub	point_3B511.y, 8
 		jmp	loc_2E697
 ; ---------------------------------------------------------------------------
@@ -39960,7 +39899,7 @@ loc_2E5B0:
 		jnz	short loc_2E5E9
 		mov	point_3B511.x, RES_X - 1
 		mov	point_3B511.y, 64
-		call	sub_2CE17 c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
+		call	@pellet_spawnray_unput_and_put$qiiiii c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
 		sub	point_3B511.x, 8
 
 loc_2E5E0:
@@ -39971,7 +39910,7 @@ loc_2E5E0:
 loc_2E5E9:
 		cmp	_boss_phase_frame, 335
 		jge	short loc_2E610
-		call	sub_2CE17 c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
+		call	@pellet_spawnray_unput_and_put$qiiiii c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
 		sub	point_3B511.x, 8
 		jmp	loc_2E697
 ; ---------------------------------------------------------------------------
@@ -39981,7 +39920,7 @@ loc_2E610:
 		jnz	short loc_2E648
 		mov	point_3B511.x, 0
 		mov	point_3B511.y, 64
-		call	sub_2CE17 c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
+		call	@pellet_spawnray_unput_and_put$qiiiii c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
 		add	point_3B511.y, 8
 		mov	word_3B515, 1
 		jmp	short loc_2E697
@@ -39990,7 +39929,7 @@ loc_2E610:
 loc_2E648:
 		cmp	_boss_phase_frame, 360
 		jge	short loc_2E66E
-		call	sub_2CE17 c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
+		call	@pellet_spawnray_unput_and_put$qiiiii c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
 		add	point_3B511.y, 8
 		jmp	short loc_2E697
 ; ---------------------------------------------------------------------------
@@ -42773,7 +42712,9 @@ aBoss6_a6_grp	db 'boss6_a6.grp',0
 konngara_image_35FEE	dw 9
 word_35FF0	dw 0
 word_35FF2	dw 1
-point_35FF4	Point <999, 999>
+public _target_prev_x, _target_prev_y
+_target_prev_x	dw -PIXEL_NONE
+_target_prev_y	dw -PIXEL_NONE
 word_35FF8	dw 0
 word_35FFA	dw 0
 public _konngara_invincibility_flash_colors
