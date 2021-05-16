@@ -36,7 +36,13 @@ public:
 	// Loads all images from the .BOS file with the given [fn] inside the
 	// currently active packfile into the given CBossEntity .BOS [slot], and
 	// keeps the .BOS metadata in this CBossEntity instance. Always returns 0.
-	int load(const char fn[PF_FN_LEN], int slot);
+	void load(const char fn[PF_FN_LEN], int slot) {
+		loading = true;
+		load_inner(fn, slot);
+		loading = false;
+	}
+
+	int load_inner(const char fn[PF_FN_LEN], int slot);
 
 	// Copies the .BOS header data of this instance to the given variables. In
 	// practice, only used to copy these values from one CBossEntity to

@@ -6541,7 +6541,7 @@ main_20_TEXT	ends
 
 ; Segment type:	Pure code
 main_21_TEXT	segment	byte public 'CODE' use16
-	extern @CBossEntity@load$qxnxci:proc
+	extern @CBossEntity@load_inner$qxnxci:proc
 	extern @CBossEntity@metadata_get$xqmimuct1t1:proc
 	extern @CBossEntity@put_8$xqiii:proc
 	extern @CBossEntity@unput_and_put_1line$xqiiii:proc
@@ -37770,7 +37770,7 @@ loc_2CF26:
 		CBossEntity__load	konngara_head, 0, aBoss8_1_bos
 		CBossEntity__load	konngara_face_closed_or_glare, 1, aBoss8_e1_bos
 		mov	konngara_face_aim.BE_loading, 1
-		call	@CBossEntity@load$qxnxci stdcall, offset konngara_face_aim, ds, offset aBoss8_e2_bos, ds, 2
+		call	@CBossEntity@load_inner$qxnxci stdcall, offset konngara_face_aim, ds, offset aBoss8_e2_bos, ds, 2
 		add	sp, 22h
 		mov	konngara_face_aim.BE_loading, 0
 		xor	di, di

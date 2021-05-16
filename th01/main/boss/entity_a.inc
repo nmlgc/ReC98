@@ -68,7 +68,7 @@ endm
 
 CBossEntity__load	macro that:req, slot:req, fn:req
 	mov that.BE_loading, 1
-	call	@CBossEntity@load$qxnxci stdcall, offset that, ds, offset fn, ds, slot
+	call	@CBossEntity@load_inner$qxnxci stdcall, offset that, ds, offset fn, ds, slot
 	mov that.BE_loading, 0
 endm
 

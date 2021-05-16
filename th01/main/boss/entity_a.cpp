@@ -74,7 +74,7 @@ void bos_reset_all_broken(void)
 	}
 }
 
-int CBossEntity::load(const char fn[PF_FN_LEN], int slot)
+int CBossEntity::load_inner(const char fn[PF_FN_LEN], int slot)
 {
 	int plane_size;
 
