@@ -77,7 +77,7 @@ void pagetrans_diagonal_8x8_with_palette(
 		if((frame % (FRAME_COUNT / COLOR_COUNT)) == 0) {
 			for(col = 0; col < COLOR_COUNT; col++) {
 				// Not identical to the ramping loop in z_palette_fade_from()!
-				for(comp = 0; comp < sizeof(RGB4); comp++) {
+				for(comp = 0; comp < COMPONENT_COUNT; comp++) {
 					if(pal_cur[col].v[comp] != pal_target[col].v[comp]) {
 						pal_cur.colors[col].v[comp] +=
 							(pal_cur[col].v[comp] > pal_target[col].v[comp])

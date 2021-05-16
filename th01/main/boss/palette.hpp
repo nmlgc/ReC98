@@ -3,7 +3,7 @@ extern Palette4 boss_palette;
 
 #define boss_palette_snap_inlined() \
 	for(int col = 0; col < COLOR_COUNT; col++) { \
-		for(int comp = 0; comp < sizeof(RGB4); comp++) { \
+		for(int comp = 0; comp < COMPONENT_COUNT; comp++) { \
 			boss_palette[col].v[comp] = z_Palettes[col].v[comp]; \
 		} \
 	}

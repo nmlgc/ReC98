@@ -69,6 +69,7 @@ typedef unsigned int utram_y_t;
 typedef bool page_t;
 
 #define COLOR_COUNT 16
+#define COMPONENT_COUNT 3
 
 // The 16-color mode supports 4 bits per RGB component, for a total of
 // 4,096 colors
@@ -79,7 +80,7 @@ typedef int8_t uint4_t;
 		struct {
 			ComponentType r, g, b;
 		} c;
-		ComponentType v[3];
+		ComponentType v[COMPONENT_COUNT];
 
 		// Yes, we actually need this function in certain cases where code
 		// generation calls for a 0 in the ComponentType.

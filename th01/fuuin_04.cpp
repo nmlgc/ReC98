@@ -49,7 +49,7 @@ void pascal grp_palette_settone(int tone)
 		tone = 200;
 	}
 	for(col = 1; col < COLOR_COUNT; col++) {
-		for(comp = 0; comp < sizeof(RGB4); comp++) {
+		for(comp = 0; comp < COMPONENT_COUNT; comp++) {
 			if(tone > 100) {
 				blend = (RGB4::max() - grp_palette[col].v[comp]);
 				blend *= (tone - 100);

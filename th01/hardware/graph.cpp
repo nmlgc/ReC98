@@ -282,7 +282,7 @@ void graph_copy_page_back_to_front(void)
 	for(int i = 0; i < pal.range(); i++) { \
 		z_vsync_wait(); \
 		for(int col = 0; col < COLOR_COUNT; col++) { \
-			for(int comp = 0; comp < sizeof(RGB4); comp++) { \
+			for(int comp = 0; comp < COMPONENT_COUNT; comp++) { \
 				per_comp; \
 			} \
 			z_palette_show_single_col(col, pal[col]); \
@@ -869,7 +869,7 @@ void z_palette_fade_from(
 	for(i = 0; i < fadepal.range(); i++) {
 		z_vsync_wait();
 		for(col = 0; col < COLOR_COUNT; col++) {
-			for(comp = 0; comp < sizeof(RGB4); comp++) {
+			for(comp = 0; comp < COMPONENT_COUNT; comp++) {
 				if(fadepal[col].v[comp] != z_Palettes[col].v[comp]) {
 					fadepal.colors[col].v[comp] +=
 						(fadepal[col].v[comp] < z_Palettes[col].v[comp])
