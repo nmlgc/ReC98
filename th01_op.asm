@@ -1357,9 +1357,9 @@ op_01__TEXT	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-frmdely_TEXT	segment	byte public 'CODE' use16
+frmdelay_TEXT	segment	byte public 'CODE' use16
 	extern _frame_delay:proc
-frmdely_TEXT	ends
+frmdelay_TEXT	ends
 
 ; ===========================================================================
 

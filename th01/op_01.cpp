@@ -12,9 +12,9 @@ extern "C" {
 #include "master.hpp"
 #include "th01/ranks.h"
 #include "th01/hardware/egc.h"
+#include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/input.hpp"
-#include "th01/hardware/vsync.h"
 #include "th01/formats/cfg.hpp"
 
 // Unused. The only thing on the main menu with this color is the "1996 ZUN"

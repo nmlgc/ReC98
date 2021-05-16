@@ -1,7 +1,7 @@
 #include "th01/hardware/egc.h"
+#include "th01/hardware/frmdelay.h"
 #include "th01/hardware/grp2xscs.h"
 #include "th01/hardware/input.hpp"
-#include "th01/hardware/vsync.h"
 #include "th01/score.h"
 
 #define COL_SELECTED 3
