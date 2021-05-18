@@ -3260,7 +3260,7 @@ loc_D7E4:
 		mov	word ptr [bp+s1+2], ds
 		mov	word ptr [bp+s1], offset _default_grp_fn
 		mov	byte_34ADF, 0
-		mov	word_360CA, 0
+		mov	_unused_boss_stage_flag, 0
 		mov	_player_invincible, 0
 		mov	_player_invincibility_time, 0
 		mov	ax, [bp+@@stage]
@@ -3282,7 +3282,7 @@ loc_D85B:
 
 loc_D85F:
 		mov	byte_34ADF, 1	; jumptable 0000D85B case 4
-		mov	word_360CA, 1
+		mov	_unused_boss_stage_flag, 1
 		push	ds
 		push	offset src	; "boss1.grp"
 		pushd	[bp+s1]	; dest
@@ -3307,7 +3307,7 @@ loc_D89B:
 		mov	al, _route	; jumptable 0000D85B case 9
 		add	al, 2
 		mov	byte_34ADF, al
-		mov	word_360CA, 1
+		mov	_unused_boss_stage_flag, 1
 		cmp	_route, 0
 		jnz	short loc_D8D9
 		push	ds
@@ -3348,7 +3348,7 @@ loc_D901:
 		sub	al, _route
 		add	al, 4
 		mov	byte_34ADF, al
-		mov	word_360CA, 1
+		mov	_unused_boss_stage_flag, 1
 		mov	al, _route
 		cbw
 		cmp	ax, 1
@@ -3396,7 +3396,7 @@ loc_D972:
 		mov	al, _route	; jumptable 0000D85B case 19
 		add	al, 6
 		mov	byte_34ADF, al
-		mov	word_360CA, 1
+		mov	_unused_boss_stage_flag, 1
 		cmp	_route, 0
 		jnz	short loc_D99F
 		push	ds
@@ -42887,7 +42887,7 @@ a0		db 1Bh,')0',0
 a0m_0		db 1Bh,'[0m',0
 ; char a11h[]
 a11h		db 1Bh,'[1;1H',0
-word_360CA	dw 0
+	extern _unused_boss_stage_flag:word
 	extern _pellet_interlace:byte
 	extern _pellet_destroy_score_delta:word
 _INIT_	segment word public 'INITDATA' use16

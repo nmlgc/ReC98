@@ -40,4 +40,7 @@ struct CShots {
 	);
 };
 
+// Might even be related to pellets, and not to shots.
+extern bool16 unused_boss_stage_flag;
+
 extern CShots Shots;

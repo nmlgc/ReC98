@@ -1,5 +1,7 @@
 #include "th01/sprites/main_ptn.h"
 
+bool16 unused_boss_stage_flag = false;
+
 static const pixel_t SHOT_SPRITE_MARGIN = 2;
 static const int SHOT_DECAY_FRAMES = 7;
 
