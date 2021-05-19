@@ -2536,7 +2536,7 @@ loc_A992:
 		mov	al, _rank
 		cbw
 		shl	ax, 3
-		add	ax, offset _RANKS_CENTER
+		add	ax, offset _gbcRANKS
 		push	ax
 		push	15
 		call	graph_gaiji_puts
@@ -2965,7 +2965,7 @@ maine_05_TEXT	ends
 
 	.data
 
-include th02/strings/ranks_center[data].asm
+	extern _gbcRANKS:byte
 unk_D030	db 50h dup(0)
 label byte_D080 byte
 	db 0AAh, 0AAh,  55h,  55h, 0AAh, 0AAh,  55h,  55h
