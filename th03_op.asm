@@ -3857,7 +3857,7 @@ off_E1FE	dd a00sl_cd2
 		db    5
 		db    5
 		db    3
-include th03/strings/p_cursor[data].asm
+include th03/gaiji/p_cursor[data].asm
 		db    0
 		db    0
 a00sl_cd2	db '00SL.CD2',0

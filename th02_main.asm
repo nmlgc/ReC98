@@ -33682,7 +33682,7 @@ aGngkga		db 'クリア',0
 aGGxi		db 'ミス回数',0
 aGGai		db 'ボム回数',0
 aGngkgagGcga	db 'クリアタイム',0
-include th02/strings/gameover[data].asm
+include th02/gaiji/gameover[data].asm
 asc_1E47E	db '                ',0
 		db 0
 		db 0E8h
@@ -33790,7 +33790,7 @@ include th02/main/hud/power[data].asm
 word_1E5E7	dw 0CFCFh
 word_1E5E9	dw 0CFCFh
 word_1E5EB	dw 0CFh
-include th02/strings/ranks_left[data].asm
+include th02/gaiji/ranks_left[data].asm
 gsSCORE		db 0C4h, 0C5h, 0C6h, 0,	0
 gsHISCORE	db 0CEh, 0C4h, 0C5h, 0C6h, 0
 gsREIMU		db 0C9h, 0CAh, 0, 0, 0
@@ -34534,7 +34534,8 @@ byte_1EDA6	db 1
 word_1EDA8	dw 0
 word_1EDAA	dw 0
 aBoss4_m	db 'boss4.m',0
-include th02/strings/hiscore[data].asm
+HUUHI_DAT	dd aHuuhi_dat
+include th02/gaiji/hiscore[data].asm
 unk_1EE02	db  3Eh	; >
 		db    1
 		db  76h	; v

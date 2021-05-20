@@ -1,4 +1,3 @@
-HUUHI_DAT	dd aHuuhi_dat
 gHI_SCORE	db 0B1h, 0B2h, 0CFh, 0BCh, 0ACh, 0B8h, 0BBh, 0AEh, 0
 gALPHABET	db 0AAh, 0ABh, 0ACh, 0ADh, 0AEh, 0AFh, 0B0h, 0B1h, 0B2h
 		db 0B3h, 0B4h, 0B5h, 0B7h, 0B6h, 0B8h, 0B9h, 0BAh, 0BBh

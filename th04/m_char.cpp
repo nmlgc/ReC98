@@ -26,7 +26,7 @@ extern "C" {
 #include "th04/sprites/op_cdg.h"
 #include "th04/op/op.h"
 
-#include "th04/strings/m_char.c"
+#include "th04/shiftjis/m_char.cpp"
 
 static const pixel_t PIC_W = 256;
 static const pixel_t PIC_H = 244;

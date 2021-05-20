@@ -34339,7 +34339,7 @@ main_033_TEXT	ends
 
 	.data
 
-include th04/strings/pause[data].asm
+include th04/gaiji/pause[data].asm
 		db    0
 eyename	dd aEye0_cdg	; original ZUN variable name
 word_213DE	dw 0
@@ -34484,7 +34484,7 @@ aBb1_cdg	db 'bb1.cdg',0
 include th04/main/boss/explosions_big[data].asm
 byte_22C1A	db 0
 		db    0
-include th04/strings/gameover[data].asm
+include th04/gaiji/gameover[data].asm
 asc_22C3F	db '  ',0
 asc_22C42	db '  ',0
 ; char aMaine_2[]
@@ -34798,7 +34798,7 @@ unk_22D9E	db 0DCh
 		db 0C2h
 		db    1
 include th04/score[data].asm
-include th04/strings/hud[data].asm
+include th04/gaiji/hud[data].asm
 include th04/main/hud/power[data].asm
 include th04/main/hud/hp[data].asm
 include th04/main/hud/bar_put[data].asm
@@ -34890,7 +34890,7 @@ _BGM_TITLES		label dword
 		dd aGbgcghmSzb@bIc	; "ÉÅÉCÉhå∂ëzÅ@Å` Icemilk Magic	"
 		dd aVivavvvvilcvb@	; "Ç©ÇÌÇ¢Ç¢à´ñÇÅ@Å` Innocence"
 		dd aPnpcuyszlB@bCa	; "è≠èó„Yëzã»Å@Å` Capriccio "
-include th04/strings/demoplay[data].asm
+include th04/gaiji/demoplay[data].asm
 aPLAYFIELD_BLANK_ROW	db '                                                ',0
 aMCB@bPhantomLa	db 'å∂ñÏÅ@Å` Phantom Land ',0
 aMCsb@bPhantomN	db 'å∂ñÈÅ@Å` Phantom Night',0

@@ -262,7 +262,7 @@ void start_extra(void)
 
 #pragma option -d-
 
-#include "th02/strings/ranks_c.c"
+#include "th02/gaiji/ranks_c.c"
 const unsigned char gbHIT_KEY[] = {
 	gb_H_, gb_I_, gb_T_, gb_SP, gb_K_, gb_E_, gb_Y_, 0
 };

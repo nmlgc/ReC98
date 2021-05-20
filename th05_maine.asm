@@ -7795,7 +7795,7 @@ col_116E4	dw 2
 word_116E6	dw 6
 y_116E8	dw 48
 byte_116EA	db 0
-include th04/strings/verdict[data].asm
+include th04/gaiji/verdict[data].asm
 byte_11713	db 0
 aU__0		db 'ì_',0
 aBd		db 'ÅD',0

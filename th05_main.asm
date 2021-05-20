@@ -27280,7 +27280,7 @@ main_035_TEXT	ends
 byte_20A70	db 0
 byte_20A71	db 0
 		dd aVersion1_01		; "version 1.01"
-include th04/strings/pause[data].asm
+include th04/gaiji/pause[data].asm
 		db    0
 off_20A80	dd aEye_cdg
 					; "eye.cdg"
@@ -27490,7 +27490,7 @@ include th04/main/item/items[data].asm
 include th04/main/hud/hud[data].asm
 angle_2268E	db 0
 		db 0
-include th04/strings/gameover[data].asm
+include th04/gaiji/gameover[data].asm
 asc_226B3	db '  ',0
 asc_226B6	db '  ',0
 ; char aMaine_1[]
@@ -27502,7 +27502,7 @@ _bullet_clear_drop_point_items	db 0
 byte_226C2	db 0
 		db 0
 include th04/score[data].asm
-include th04/strings/hud[data].asm
+include th04/gaiji/hud[data].asm
 gsRUIKEI	db 0EDh, 0EEh, 0, 0, 0
 byte_22720	db 0
 include th05/main/hud/dream[data].asm
@@ -27643,7 +27643,7 @@ include th04/formats/bb_txt[data].asm
 include th04/main/hud/popup[data].asm
 public _PLAYFIELD_BLANK_ROW
 _PLAYFIELD_BLANK_ROW	dd aPLAYFIELD_BLANK_ROW
-include th04/strings/demoplay[data].asm
+include th04/gaiji/demoplay[data].asm
 aPLAYFIELD_BLANK_ROW	db '                                                ',0
 		db 0
 _SHOT_FUNCS label word

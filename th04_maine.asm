@@ -4690,7 +4690,7 @@ aSff7_cdg	db 'sff7.cdg',0
 aSff7b_cdg	db 'sff7b.cdg',0
 		db    0
 byte_EC4A	db 0
-include th04/strings/verdict[data].asm
+include th04/gaiji/verdict[data].asm
 byte_EC73	db 0
 aU_		db 'ì_',0
 aBd		db 'ÅD',0
