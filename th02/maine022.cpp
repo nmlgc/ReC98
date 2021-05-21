@@ -7,8 +7,7 @@
 
 extern "C" {
 #include "platform.h"
-#include "master.hpp"
-#include "th02/formats/pf.hpp"
+#include "th02/shiftjis/fns.hpp"
 
 #include "th02/snd/data.c"
 extern const char pf_fn[] = PF_FN;
