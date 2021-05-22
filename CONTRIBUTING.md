@@ -50,6 +50,16 @@ These cases should gradually be removed as development goes along, though.
 
 ## Compatibility
 
+* Despite the games' native encoding being Shift-JIS, most files should be
+  encoded in UTF-8, as it's simply more comfortable to work with in modern
+  tools. The only (necessary) exceptions are
+
+  * the big .ASM dump files in the root directory,
+  * and any files in the per-game `shiftjis/` subdirectory. All hardcoded
+    Shift-JIS strings should be put there. With files full of Shift-JIS text,
+    it's also easier to see when an editor didn't recognize the encoding,
+    which keeps the annoyance from accidentally destroyed files to a minimum.
+
 * Use `__asm` as the keyword for inline assembly. This form works in Borland
 C++, Open Watcom, and Visual C++, which will ease future third-party ports.
 
