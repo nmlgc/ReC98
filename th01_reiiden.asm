@@ -700,9 +700,7 @@ loc_BC58:
 		call	sub_B933
 		push	23h ; '#'
 		call	_frame_delay
-		push	ds
-		push	offset format	; "\x1B*"
-		call	_printf
+		call	_printf stdcall, offset _esc_cls, ds
 		add	sp, 0Eh
 		pop	di
 		pop	si
@@ -770,12 +768,8 @@ arg_6		= word ptr  0Ch
 		mov	si, [bp+arg_0]
 		cmp	_first_stage_in_scene, 1
 		jnz	short loc_BD88
-		push	ds
-		push	offset a1640m	; "\x1B[16;40m"
-		call	_printf
-		push	ds
-		push	offset a00h	; "\x1B[0;0H"
-		call	_printf
+		call	_printf stdcall, offset _esc_color_bg_black_fg_black, ds
+		call	_printf stdcall, offset _esc_cursor_to_x0_y0, ds
 		add	sp, 8
 		mov	[bp+var_2], 0
 		jmp	short loc_BD43
@@ -787,10 +781,7 @@ loc_BD2A:
 ; ---------------------------------------------------------------------------
 
 loc_BD2E:
-		push	ds
-		push	offset asc_34B3F ; " "
-		call	_printf
-		add	sp, 4
+		call	_printf c, offset _space, ds
 		inc	di
 
 loc_BD3B:
@@ -801,10 +792,7 @@ loc_BD3B:
 loc_BD43:
 		cmp	[bp+var_2], 19h
 		jl	short loc_BD2A
-		push	ds
-		push	offset a0m	; "\x1B[0m"
-		call	_printf
-		add	sp, 4
+		call	_printf c, offset _esc_color_reset, ds
 		push	ds
 		push	offset s2	; "empty.grf"
 		pushd	[bp+s1]	; s1
@@ -2439,10 +2427,7 @@ loc_D118:
 		cmp	_mode_test, 1
 		jnz	loc_D317
 		call	_z_graph_hide
-		push	ds
-		push	offset format	; "\x1B*"
-		call	_printf
-		add	sp, 4
+		call	_printf c, offset _esc_cls, ds
 		push	ds
 		push	offset aB@b@b@vVVriCVi ; "Å@Å@Å@Ç±ÇÍÇ‡â^ñΩÇ©...\n"
 		call	_puts
@@ -2588,10 +2573,7 @@ loc_D2A5:
 		call	@CPellets@unput_and_reset_all$qv c, offset _Pellets, ds
 
 loc_D2B8:
-		push	ds
-		push	offset format	; "\x1B*"
-		call	_printf
-		add	sp, 4
+		call	_printf c, offset _esc_cls, ds
 		jmp	loc_D118
 ; ---------------------------------------------------------------------------
 
@@ -2600,10 +2582,7 @@ loc_D2C7:
 		jnz	short loc_D2B8
 		cmp	_input_ok, 0
 		jz	short loc_D317
-		push	ds
-		push	offset format	; "\x1B*"
-		call	_printf
-		add	sp, 4
+		call	_printf c, offset _esc_cls, ds
 		xor	si, si
 		jmp	short loc_D2F8
 ; ---------------------------------------------------------------------------
@@ -2648,10 +2627,7 @@ _test_show_game	proc far
 		cmp	_mode_test, 1
 		jnz	short loc_D33E
 		call	_z_graph_show
-		push	ds
-		push	offset format	; "\x1B*"
-		call	_printf
-		add	sp, 4
+		call	_printf c, offset _esc_cls, ds
 
 loc_D33E:
 		pop	bp
@@ -2673,10 +2649,7 @@ sub_D340	proc far
 		idiv	ebx
 		cmp	edx, 100
 		jnz	short loc_D37C
-		push	ds
-		push	offset a30h	; "\x1B[3;0H"
-		call	_printf
-		add	sp, 4
+		call	_printf c, offset _esc_cursor_to_x0_y2, ds
 		call	_coreleft
 		push	dx
 		push	ax
@@ -2686,10 +2659,7 @@ sub_D340	proc far
 		add	sp, 8
 
 loc_D37C:
-		push	ds
-		push	offset a360h	; "\x1B[3;60H"
-		call	_printf
-		add	sp, 4
+		call	_printf c, offset _esc_cursor_to_x59_y2, ds
 		push	ds
 		push	offset aHeapCheak ; "HEAP Cheak	 "
 		call	_printf
@@ -2741,10 +2711,7 @@ loc_D3D9:
 loc_D3E1:
 		call	_farheapcheck
 		mov	word_3880E, ax
-		push	ds
-		push	offset a20h	; "\x1B[2;0H"
-		call	_printf
-		add	sp, 4
+		call	_printf c, offset _esc_cursor_to_x0_y1, ds
 		mov	ax, _player_left_prev
 		cmp	ax, _player_left
 		jz	short loc_D414
@@ -2757,10 +2724,7 @@ loc_D3E1:
 		mov	_player_left_prev, ax
 
 loc_D414:
-		push	ds
-		push	offset a40h	; "\x1B[4;0H"
-		call	_printf
-		add	sp, 4
+		call	_printf c, offset _esc_cursor_to_x0_y3, ds
 		mov	al, _done
 		mov	ah, 0
 		push	ax
@@ -2782,10 +2746,7 @@ loc_D414:
 		push	offset aKbhitDDirDSpDS ; " kbhit:%d,dir:%d, sp:%d, sh:%d, exit:%d"...
 		call	_printf
 		add	sp, 10h
-		push	ds
-		push	offset a50h	; "\x1B[5;0H"
-		call	_printf
-		add	sp, 4
+		call	_printf c, offset _esc_cursor_to_x0_y4, ds
 		pushd	[dword_36C20]
 		push	_bomb_doubletap_frames
 		pushd	[_frame_rand]
@@ -41640,10 +41601,7 @@ loc_2F766:
 		add	sp, 22h
 		cmp	_boss_hp, 0
 		jg	loc_2FC40
-		push	ds
-		push	offset asc_360A1 ; "\x1B*"
-		call	_printf
-		add	sp, 4
+		call	_printf c, offset _konngara_esc_cls, ds
 		call	_konngara_free
 		call	_z_graph_clear
 		call	_mdrv2_bgm_stop
@@ -41796,18 +41754,9 @@ loc_2F9F9:
 ; ---------------------------------------------------------------------------
 
 loc_2FA23:
-		push	ds
-		push	offset a3_0	; "\x1B)3"
-		call	_printf
-		add	sp, 4
-		push	ds
-		push	offset a1640m_0	; "\x1B[16;40m"
-		call	_printf
-		add	sp, 4
-		push	ds
-		push	offset a00h_0	; "\x1B[0;0H"
-		call	_printf
-		add	sp, 4
+		call	_printf c, offset _konngara_esc_mode_graph, ds
+		call	_printf c, offset _konngara_esc_color_bg_black_fg_b, ds
+		call	_printf c, offset _konngara_esc_cursor_to_x0_y0_0, ds
 		xor	di, di
 		jmp	short loc_2FA62
 ; ---------------------------------------------------------------------------
@@ -41818,10 +41767,7 @@ loc_2FA4B:
 ; ---------------------------------------------------------------------------
 
 loc_2FA4F:
-		push	ds
-		push	offset asc_360B8 ; " "
-		call	_printf
-		add	sp, 4
+		call	_printf c, offset _konngara_space, ds
 		inc	si
 
 loc_2FA5C:
@@ -41857,18 +41803,9 @@ loc_2FA8C:
 		cmp	si, 10h
 		jl	short loc_2FA77
 		call	_z_palette_set_all_show c, offset _z_Palettes, ds
-		push	ds
-		push	offset a0	; "\x1B)0"
-		call	_printf
-		add	sp, 4
-		push	ds
-		push	offset a0m_0	; "\x1B[0m"
-		call	_printf
-		add	sp, 4
-		push	ds
-		push	offset a11h	; "\x1B[1;1H"
-		call	_printf
-		add	sp, 4
+		call	_printf c, offset _konngara_esc_mode_kanji, ds
+		call	_printf c, offset _konngara_esc_color_reset, ds
+		call	_printf c, offset _konngara_esc_cursor_to_x0_y0_1, ds
 		xor	di, di
 		jmp	short loc_2FADC
 ; ---------------------------------------------------------------------------
@@ -41879,10 +41816,7 @@ loc_2FAC5:
 ; ---------------------------------------------------------------------------
 
 loc_2FAC9:
-		push	ds
-		push	offset asc_360B8 ; " "
-		call	_printf
-		add	sp, 4
+		call	_printf c, offset _konngara_space, ds
 		inc	si
 
 loc_2FAD6:
@@ -42206,21 +42140,16 @@ aEasy		db 'EASY',0
 aNormal		db 'NORMAL',0
 aHard		db 'HARD',0
 aLunatic	db 'LUNATIC',0
-; char format[3]
-format		db 1Bh,'*',0
+_esc_cls		db 1Bh,'*',0
 aMask_grf	db 'mask.grf',0
 aMiko_ac_bos	db 'miko_ac.bos',0
 aMiko_ac2_bos	db 'miko_ac2.bos',0
 aStg_ptn	db 'stg.ptn',0
 aMiko_ptn	db 'miko.ptn',0
-; char a1640m[]
-a1640m		db 1Bh,'[16;40m',0
-; char a00h[]
-a00h		db 1Bh,'[0;0H',0
-; char asc_34B3F[]
-asc_34B3F	db ' ',0
-; char a0m[]
-a0m		db 1Bh,'[0m',0
+_esc_color_bg_black_fg_black		db 1Bh,'[16;40m',0
+_esc_cursor_to_x0_y0		db 1Bh,'[0;0H',0
+_space	db ' ',0
+_esc_color_reset		db 1Bh,'[0m',0
 ; char s2[]
 s2		db 'empty.grf',0
 aKuzi1_grc	db 'kuzi1.grc',0
@@ -42287,10 +42216,8 @@ aZPtnFreeXBossF	db 'Z = PTN FREE, X = BOSS FREE, UP = TAMA DEL, DOWN = REWIRTE, 
 aPtn		db 'PTN ',0
 aMask		db 'MASK',0
 aKabe		db 'KABE',0
-; char a30h[]
-a30h		db 1Bh,'[3;0H',0
-; char a360h[]
-a360h		db 1Bh,'[3;60H',0
+_esc_cursor_to_x0_y2		db 1Bh,'[3;0H',0
+_esc_cursor_to_x59_y2		db 1Bh,'[3;60H',0
 ; char aHeapCheak[]
 aHeapCheak	db 'HEAP Cheak  ',0
 aEmpty		db 'EMPTY   ',0
@@ -42298,16 +42225,13 @@ aEmpty		db 'EMPTY   ',0
 aOk		db 'OK      ',0
 ; char aCorrupt[]
 aCorrupt	db 'CORRUPT ',0
-; char a20h[]
-a20h		db 1Bh,'[2;0H',0
+_esc_cursor_to_x0_y1		db 1Bh,'[2;0H',0
 ; char aGx3d[]
 aGx3d		db 'gx = %3d',0
-; char a40h[]
-a40h		db 1Bh,'[4;0H',0
+_esc_cursor_to_x0_y3		db 1Bh,'[4;0H',0
 ; char aKbhitDDirDSpDS[]
 aKbhitDDirDSpDS	db ' kbhit:%d,dir:%d, sp:%d, sh:%d, exit:%d, end:%d',0Ah,0
-; char a50h[]
-a50h		db 1Bh,'[5;0H',0
+_esc_cursor_to_x0_y4		db 1Bh,'[5;0H',0
 ; char aMain7luRand7lu[]
 aMain7luRand7lu	db ' main:%7lu, rand:%7lu, bomb:%d, timer:%7lu',0Ah,0
 ; char aGogbgGtg[]
@@ -42871,22 +42795,14 @@ aBoss8_d1_grp	db 'boss8_d1.grp',0
 aBoss8_d2_grp	db 'boss8_d2.grp',0
 aBoss8_d3_grp	db 'boss8_d3.grp',0
 aBoss8_d4_grp	db 'boss8_d4.grp',0
-; char asc_360A1[]
-asc_360A1	db 1Bh,'*',0
-; char a3_0[]
-a3_0		db 1Bh,')3',0
-; char a1640m_0[]
-a1640m_0	db 1Bh,'[16;40m',0
-; char a00h_0[]
-a00h_0		db 1Bh,'[0;0H',0
-; char asc_360B8[]
-asc_360B8	db ' ',0
-; char a0[]
-a0		db 1Bh,')0',0
-; char a0m_0[]
-a0m_0		db 1Bh,'[0m',0
-; char a11h[]
-a11h		db 1Bh,'[1;1H',0
+_konngara_esc_cls	db 1Bh,'*',0
+	extern _konngara_esc_mode_graph:byte
+	extern _konngara_esc_color_bg_black_fg_b:byte
+	extern _konngara_esc_cursor_to_x0_y0_0:byte
+	extern _konngara_space:byte
+	extern _konngara_esc_mode_kanji:byte
+	extern _konngara_esc_color_reset:byte
+	extern _konngara_esc_cursor_to_x0_y0_1:byte
 	extern _unused_boss_stage_flag:word
 	extern _pellet_interlace:byte
 	extern _pellet_destroy_score_delta:word
