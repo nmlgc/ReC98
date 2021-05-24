@@ -28,7 +28,9 @@ extern "C" {
 }
 #include "th01/main/stage/stageobj.hpp"
 #include "th01/main/boss/boss.hpp"
+#include "th01/main/boss/palette.hpp"
 #include "th01/main/bullet/pellet.hpp"
+#include "th01/main/hud/hp.hpp"
 
 #define flash_colors	konngara_flash_colors
 #define invincible	konngara_invincible
@@ -39,9 +41,35 @@ extern int invincibility_frame;
 extern bool initial_hp_rendered;
 
 // Entities
+// --------
+
+enum face_direction_t {
+	FD_RIGHT = 0,
+	FD_LEFT = 1,
+	FD_CENTER = 2,
+	FD_COUNT = 3,
+	FD_UNINITIALIZED = 9, // :zunpet:
+
+	_face_direction_t_FORCE_INT16 = 0x7FFF
+};
+
+enum face_expression_t {
+	FE_NEUTRAL = 0,
+	FE_CLOSED = 1,
+	FE_GLARE = 2,
+	FE_AIM = 3,
+
+	_face_expression_t_FORCE_INT16 = 0x7FFF
+};
+
+extern face_direction_t face_direction;
+extern face_expression_t face_expression;
+extern bool16 face_direction_can_change;
+
 #define ent_head                	boss_entities[0]
 #define ent_face_closed_or_glare	boss_entities[1]
 #define ent_face_aim            	boss_entities[2]
+// --------
 
 // File names
 // ----------
@@ -262,6 +290,25 @@ void konngara_load_and_entrance(int8_t)
 	}
 	graph_copy_page_back_to_front();
 	// -------------------------------
+}
+
+void konngara_init(void)
+{
+	boss_palette_snap();
+	void konngara_setup();
+	konngara_setup();
+}
+
+void konngara_setup(void)
+{
+	boss_hp = 18;
+	hud_hp_first_white = 16;
+	hud_hp_first_redwhite = 10;
+	boss_phase = 0;
+	boss_phase_frame = 0;
+	face_direction_can_change = true;
+	face_expression = FE_NEUTRAL;
+	face_direction = FD_CENTER;
 }
 
 char konngara_esc_cls[] = "\x1B*";

@@ -3380,7 +3380,7 @@ loc_D99F:
 		push	ax		; dest
 		call	_strcpy
 		add	sp, 8
-		call	sub_2D1FE
+		call	@konngara_init$qv
 		jmp	short loc_D96D
 ; ---------------------------------------------------------------------------
 
@@ -37638,6 +37638,7 @@ main_37_TEXT	segment	byte public 'CODE' use16
 	extern @konngara_select_for_rank$qmiiiii:proc
 	extern @pellet_spawnray_unput_and_put$qiiiii:proc
 	extern @konngara_load_and_entrance$qc:proc
+	extern @konngara_init$qv:proc
 main_37_TEXT	ends
 
 main_37__TEXT	segment	byte public 'CODE' use16
@@ -37645,43 +37646,21 @@ main_37__TEXT	segment	byte public 'CODE' use16
 		;org 2
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
+; face_direction_t
+FD_RIGHT = 0
+FD_LEFT = 1
+FD_CENTER = 2
+FD_UNINITIALIZED = 9
+
+; face_expression_t
+FE_NEUTRAL = 0
+FE_CLOSED = 1
+FE_GLARE = 2
+FE_AIM = 3
+
 konngara_head	equ <boss_entity_0>
 konngara_face_closed_or_glare	equ <boss_entity_1>
 konngara_face_aim	equ <boss_entity_2>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2D1FE	proc far
-		push	bp
-		mov	bp, sp
-		call	@boss_palette_snap$qv
-		nopcall	sub_2D20D
-		pop	bp
-		retf
-sub_2D1FE	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2D20D	proc far
-		push	bp
-		mov	bp, sp
-		mov	_boss_hp, 18
-		mov	_hud_hp_first_white, 16
-		mov	_hud_hp_first_redwhite, 10
-		mov	_boss_phase, 0
-		mov	_boss_phase_frame, 0
-		mov	word_35FF2, 1
-		mov	word_35FF0, 0
-		mov	konngara_image_35FEE, 2
-		pop	bp
-		retf
-sub_2D20D	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -37719,15 +37698,15 @@ _konngara_free	endp
 
 sub_2D271	proc far
 
-@@image		= word ptr  6
+@@fd_new		= word ptr  6
 
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, [bp+@@image]
-		cmp	word_35FF2, 0
+		mov	si, [bp+@@fd_new]
+		cmp	_face_direction_can_change, 0
 		jz	loc_2D340
-		cmp	konngara_image_35FEE, si
+		cmp	_face_direction, si
 		jz	loc_2D340
 		push	1
 		call	_graph_accesspage_func
@@ -37736,7 +37715,7 @@ sub_2D271	proc far
 		call	_graph_accesspage_func
 		call	@CBossEntity@put_8$xqiii stdcall, offset konngara_head, ds, large 280 or (80 shl 16), si
 		add	sp, 18h
-		cmp	word_35FF0, 3
+		cmp	_face_expression, 3
 		jnz	short loc_2D2EF
 		push	1
 		call	_graph_accesspage_func
@@ -37752,11 +37731,11 @@ sub_2D271	proc far
 ; ---------------------------------------------------------------------------
 
 loc_2D2EF:
-		cmp	word_35FF0, 0
+		cmp	_face_expression, 0
 		jz	short loc_2D33C
 		push	1
 		call	_graph_accesspage_func
-		mov	ax, word_35FF0
+		mov	ax, _face_expression
 		dec	ax
 		imul	ax, 3
 		add	ax, si
@@ -37764,7 +37743,7 @@ loc_2D2EF:
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 0Eh
-		mov	ax, word_35FF0
+		mov	ax, _face_expression
 		dec	ax
 		imul	ax, 3
 		add	ax, si
@@ -37778,7 +37757,7 @@ loc_2D334:
 		add	sp, 0Ah
 
 loc_2D33C:
-		mov	konngara_image_35FEE, si
+		mov	_face_direction, si
 
 loc_2D340:
 		pop	si
@@ -37793,23 +37772,23 @@ sub_2D271	endp
 
 sub_2D343	proc far
 
-arg_0		= word ptr  6
+@@fe_new		= word ptr  6
 
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, [bp+arg_0]
-		cmp	word_35FF0, si
+		mov	si, [bp+@@fe_new]
+		cmp	_face_expression, si
 		jz	loc_2D40F
 		cmp	si, 3
 		jnz	short loc_2D38B
 		push	1
 		call	_graph_accesspage_func
-		call	@CBossEntity@put_8$xqiii stdcall, offset konngara_face_aim, ds, large 	280 or (128 shl 16), konngara_image_35FEE
+		call	@CBossEntity@put_8$xqiii stdcall, offset konngara_face_aim, ds, large 280 or (128 shl 16), _face_direction
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 0Eh
-		push	konngara_image_35FEE
+		push	_face_direction
 		push	280 or (128 shl 16)
 		push	ds
 		push	offset konngara_face_aim
@@ -37823,14 +37802,14 @@ loc_2D38B:
 		call	_graph_accesspage_func
 		lea	ax, [si-1]
 		imul	ax, 3
-		add	ax, konngara_image_35FEE
+		add	ax, _face_direction
 		call	@CBossEntity@put_8$xqiii stdcall, offset konngara_face_closed_or_glare, ds, large 280 or (128 shl 16), ax
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 0Eh
 		lea	ax, [si-1]
 		imul	ax, 3
-		add	ax, konngara_image_35FEE
+		add	ax, _face_direction
 		push	ax
 		push	280 or (128 shl 16)
 		push	ds
@@ -37841,11 +37820,11 @@ loc_2D38B:
 loc_2D3D1:
 		push	1
 		call	_graph_accesspage_func
-		call	@CBossEntity@put_8$xqiii stdcall, offset konngara_head, ds, large 280 or (80 shl 16), konngara_image_35FEE
+		call	@CBossEntity@put_8$xqiii stdcall, offset konngara_head, ds, large 280 or (80 shl 16), _face_direction
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 0Eh
-		push	konngara_image_35FEE
+		push	_face_direction
 		push	280 or (80 shl 16)
 		push	ds
 		push	offset konngara_head
@@ -37853,7 +37832,7 @@ loc_2D3D1:
 loc_2D403:
 		call	@CBossEntity@put_8$xqiii
 		add	sp, 0Ah
-		mov	word_35FF0, si
+		mov	_face_expression, si
 
 loc_2D40F:
 		pop	si
@@ -37901,8 +37880,7 @@ sub_2D439	proc far
 		push	di
 		cmp	_boss_phase_frame, 10
 		jnz	short loc_2D44D
-		push	0
-		call	sub_2D343
+		call	sub_2D343 stdcall, FE_NEUTRAL
 		pop	cx
 
 loc_2D44D:
@@ -38212,8 +38190,7 @@ sub_2D817	proc far
 		mov	bp, sp
 		cmp	_boss_phase_frame, 10
 		jnz	short loc_2D828
-		push	1
-		call	sub_2D343
+		call	sub_2D343 stdcall, FE_CLOSED
 		pop	cx
 
 loc_2D828:
@@ -38310,8 +38287,7 @@ sub_2D8EA	proc far
 		push	di
 		cmp	_boss_phase_frame, 10
 		jnz	short loc_2D8FE
-		push	2
-		call	sub_2D343
+		call	sub_2D343 stdcall, FE_GLARE
 		pop	cx
 
 loc_2D8FE:
@@ -38821,8 +38797,7 @@ sub_2DD65	proc far
 		mov	bp, sp
 		cmp	_boss_phase_frame, 10
 		jnz	short loc_2DD76
-		push	0
-		call	sub_2D343
+		call	sub_2D343 stdcall, FE_NEUTRAL
 		pop	cx
 
 loc_2DD76:
@@ -38963,8 +38938,7 @@ sub_2DF0C	proc far
 		mov	bp, sp
 		cmp	_boss_phase_frame, 10
 		jnz	short loc_2DF1D
-		push	1
-		call	sub_2D343
+		call	sub_2D343 stdcall, FE_CLOSED
 		pop	cx
 
 loc_2DF1D:
@@ -39028,8 +39002,7 @@ sub_2DFCA	proc far
 		push	di
 		cmp	_boss_phase_frame, 10
 		jnz	short loc_2DFDE
-		push	2
-		call	sub_2D343
+		call	sub_2D343 stdcall, FE_GLARE
 		pop	cx
 
 loc_2DFDE:
@@ -39512,8 +39485,7 @@ sub_2E42E	proc far
 		mov	bp, sp
 		cmp	_boss_phase_frame, 10
 		jnz	short loc_2E43F
-		push	3
-		call	sub_2D343
+		call	sub_2D343 stdcall, FE_AIM
 		pop	cx
 
 loc_2E43F:
@@ -39753,7 +39725,7 @@ loc_2E7AE:
 		cmp	_boss_phase_frame, 200
 		jle	short loc_2E7C2
 		mov	_boss_phase_frame, 0
-		mov	word_35FF2, 1
+		mov	_face_direction_can_change, 1
 
 loc_2E7C2:
 		pop	bp
@@ -39770,10 +39742,9 @@ sub_2E7C4	proc far
 		mov	bp, sp
 		cmp	_boss_phase_frame, 10
 		jnz	short loc_2E803
-		call	sub_2D271 stdcall, 2
-		push	1
-		call	sub_2D343
-		mov	word_35FF2, 0
+		call	sub_2D271 stdcall, FD_CENTER
+		call	sub_2D343 stdcall, FE_CLOSED
+		mov	_face_direction_can_change, 0
 		mov	left_3B517, 410
 		mov	top_3B519, (PLAYFIELD_TOP + 6)
 		call	@konngara_select_for_rank$qmiiiii stdcall, offset word_3B438, ds, large 5 or (3 shl 16), large 2 or (1 shl 16)
@@ -39956,10 +39927,9 @@ sub_2EA03	proc far
 		mov	bp, sp
 		cmp	_boss_phase_frame, 10
 		jnz	short loc_2EA42
-		call	sub_2D271 stdcall, 2
-		push	3
-		call	sub_2D343
-		mov	word_35FF2, 0
+		call	sub_2D271 stdcall, FD_CENTER
+		call	sub_2D343 stdcall, FE_AIM
+		mov	_face_direction_can_change, 0
 		mov	left_3B51B, 410
 		mov	top_3B51D, (PLAYFIELD_TOP + 6)
 		call	@konngara_select_for_rank$qmiiiii stdcall, offset word_3B438, ds, large 32 or (48 shl 16), large 64 or (72 shl 16)
@@ -40038,8 +40008,7 @@ sub_2EB91	proc far
 		mov	bp, sp
 		cmp	_boss_phase_frame, 10
 		jnz	short loc_2EBA2
-		push	3
-		call	sub_2D343
+		call	sub_2D343 stdcall, FE_AIM
 		pop	cx
 
 loc_2EBA2:
@@ -40136,10 +40105,9 @@ sub_2EC9A	proc far
 		mov	bp, sp
 		cmp	_boss_phase_frame, 10
 		jnz	short loc_2ECD9
-		call	sub_2D271 stdcall, 2
-		push	3
-		call	sub_2D343
-		mov	word_35FF2, 0
+		call	sub_2D271 stdcall, FD_CENTER
+		call	sub_2D343 stdcall, FE_AIM
+		mov	_face_direction_can_change, 0
 		mov	word_3B525, 19Ah
 		mov	word_3B527, 46h	; 'F'
 		call	@konngara_select_for_rank$qmiiiii stdcall, offset word_3B438, ds, large 64 or (80 shl 16), large 88 or (96 shl 16)
@@ -40215,8 +40183,7 @@ sub_2EDBF	proc far
 		push	si
 		cmp	_boss_phase_frame, 10
 		jnz	short loc_2EDD2
-		push	3
-		call	sub_2D343
+		call	sub_2D343 stdcall, FE_AIM
 		pop	cx
 
 loc_2EDD2:
@@ -40293,7 +40260,7 @@ sub_2EDBF	endp
 sub_2EE7D	proc far
 
 @@invincibility_flash_colors		= byte ptr -0Ch
-@@image		= word ptr -8
+@@fd_new		= word ptr -8
 var_6		= word ptr -6
 var_4		= word ptr -4
 var_2		= word ptr -2
@@ -40339,22 +40306,22 @@ loc_2EEFE:
 		inc	_konngara_invincibility_frame
 		cmp	_player_left, 198
 		jge	short loc_2EF13
-		mov	ax, 1
+		mov	ax, FD_LEFT
 		jmp	short loc_2EF22
 ; ---------------------------------------------------------------------------
 
 loc_2EF13:
 		cmp	_player_left, 396
 		jle	short loc_2EF1F
-		xor	ax, ax
+		xor	ax, ax	; FD_RIGHT
 		jmp	short loc_2EF22
 ; ---------------------------------------------------------------------------
 
 loc_2EF1F:
-		mov	ax, 2
+		mov	ax, FD_CENTER
 
 loc_2EF22:
-		mov	[bp+@@image], ax
+		mov	[bp+@@fd_new], ax
 		call	sub_2D271 stdcall, ax
 		pop	cx
 		cmp	word_35FF8, 0
@@ -40405,8 +40372,7 @@ loc_2EF8D:
 loc_2EF97:
 		cmp	_boss_phase_frame, 0
 		jnz	short loc_2EFAB
-		push	0
-		call	sub_2D343
+		call	sub_2D343 stdcall, FE_NEUTRAL
 		pop	cx
 		mov	word_35FF8, 63h	; 'c'
 
@@ -40468,22 +40434,22 @@ loc_2F02C:
 		inc	_konngara_invincibility_frame
 		cmp	_player_left, 198
 		jge	short loc_2F04C
-		mov	ax, 1
+		mov	ax, FD_LEFT
 		jmp	short loc_2F05B
 ; ---------------------------------------------------------------------------
 
 loc_2F04C:
 		cmp	_player_left, 396
 		jle	short loc_2F058
-		xor	ax, ax
+		xor	ax, ax	; FD_RIGHT
 		jmp	short loc_2F05B
 ; ---------------------------------------------------------------------------
 
 loc_2F058:
-		mov	ax, 2
+		mov	ax, FD_CENTER
 
 loc_2F05B:
-		mov	[bp+@@image], ax
+		mov	[bp+@@fd_new], ax
 		call	sub_2D271 stdcall, ax
 		pop	cx
 		cmp	_boss_phase_frame, 50
@@ -40574,22 +40540,22 @@ loc_2F136:
 		inc	_konngara_invincibility_frame
 		cmp	_player_left, 198
 		jge	short loc_2F156
-		mov	ax, 1
+		mov	ax, FD_LEFT
 		jmp	short loc_2F165
 ; ---------------------------------------------------------------------------
 
 loc_2F156:
 		cmp	_player_left, 396
 		jle	short loc_2F162
-		xor	ax, ax
+		xor	ax, ax	; FD_RIGHT
 		jmp	short loc_2F165
 ; ---------------------------------------------------------------------------
 
 loc_2F162:
-		mov	ax, 2
+		mov	ax, FD_CENTER
 
 loc_2F165:
-		mov	[bp+@@image], ax
+		mov	[bp+@@fd_new], ax
 		call	sub_2D271 stdcall, ax
 		pop	cx
 		cmp	word_35FF8, 0
@@ -40647,8 +40613,7 @@ loc_2F1DD:
 loc_2F1E7:
 		cmp	_boss_phase_frame, 0
 		jnz	short loc_2F1FB
-		push	0
-		call	sub_2D343
+		call	sub_2D343 stdcall, FE_NEUTRAL
 		pop	cx
 		mov	word_35FF8, 63h	; 'c'
 
@@ -40710,22 +40675,22 @@ loc_2F27C:
 		inc	_konngara_invincibility_frame
 		cmp	_player_left, 198
 		jge	short loc_2F29C
-		mov	ax, 1
+		mov	ax, FD_LEFT
 		jmp	short loc_2F2AB
 ; ---------------------------------------------------------------------------
 
 loc_2F29C:
 		cmp	_player_left, 396
 		jle	short loc_2F2A8
-		xor	ax, ax
+		xor	ax, ax	; FD_RIGHT
 		jmp	short loc_2F2AB
 ; ---------------------------------------------------------------------------
 
 loc_2F2A8:
-		mov	ax, 2
+		mov	ax, FD_CENTER
 
 loc_2F2AB:
-		mov	[bp+@@image], ax
+		mov	[bp+@@fd_new], ax
 		call	sub_2D271 stdcall, ax
 		pop	cx
 		cmp	_boss_phase_frame, 50
@@ -40816,22 +40781,22 @@ loc_2F386:
 		inc	_konngara_invincibility_frame
 		cmp	_player_left, 198
 		jge	short loc_2F3A6
-		mov	ax, 1
+		mov	ax, FD_LEFT
 		jmp	short loc_2F3B5
 ; ---------------------------------------------------------------------------
 
 loc_2F3A6:
 		cmp	_player_left, 396
 		jle	short loc_2F3B2
-		xor	ax, ax
+		xor	ax, ax	; FD_RIGHT
 		jmp	short loc_2F3B5
 ; ---------------------------------------------------------------------------
 
 loc_2F3B2:
-		mov	ax, 2
+		mov	ax, FD_CENTER
 
 loc_2F3B5:
-		mov	[bp+@@image], ax
+		mov	[bp+@@fd_new], ax
 		call	sub_2D271 stdcall, ax
 		pop	cx
 		cmp	word_35FF8, 0
@@ -40882,8 +40847,7 @@ loc_2F420:
 loc_2F42A:
 		cmp	_boss_phase_frame, 0
 		jnz	short loc_2F43E
-		push	0
-		call	sub_2D343
+		call	sub_2D343 stdcall, FE_NEUTRAL
 		pop	cx
 		mov	word_35FF8, 63h	; 'c'
 
@@ -40951,22 +40915,22 @@ loc_2F4D7:
 		inc	_konngara_invincibility_frame
 		cmp	_player_left, 198
 		jge	short loc_2F4F7
-		mov	ax, 1
+		mov	ax, FD_LEFT
 		jmp	short loc_2F506
 ; ---------------------------------------------------------------------------
 
 loc_2F4F7:
 		cmp	_player_left, 396
 		jle	short loc_2F503
-		xor	ax, ax
+		xor	ax, ax	; FD_RIGHT
 		jmp	short loc_2F506
 ; ---------------------------------------------------------------------------
 
 loc_2F503:
-		mov	ax, 2
+		mov	ax, FD_CENTER
 
 loc_2F506:
-		mov	[bp+@@image], ax
+		mov	[bp+@@fd_new], ax
 		call	sub_2D271 stdcall, ax
 		pop	cx
 		cmp	_boss_phase_frame, 50
@@ -41051,8 +41015,7 @@ loc_2F5DE:
 		mov	_konngara_invincibility_frame, 0
 		mov	word_35FF8, 63h	; 'c'
 		mov	word_35FFA, 0
-		push	0
-		call	sub_2D343
+		call	sub_2D343 stdcall, FE_NEUTRAL
 		pop	cx
 		jmp	loc_2FC40
 ; ---------------------------------------------------------------------------
@@ -41066,22 +41029,22 @@ loc_2F600:
 		inc	_konngara_invincibility_frame
 		cmp	_player_left, 198
 		jge	short loc_2F620
-		mov	ax, 1
+		mov	ax, FD_LEFT
 		jmp	short loc_2F62F
 ; ---------------------------------------------------------------------------
 
 loc_2F620:
 		cmp	_player_left, 396
 		jle	short loc_2F62C
-		xor	ax, ax
+		xor	ax, ax	; FD_RIGHT
 		jmp	short loc_2F62F
 ; ---------------------------------------------------------------------------
 
 loc_2F62C:
-		mov	ax, 2
+		mov	ax, FD_CENTER
 
 loc_2F62F:
-		mov	[bp+@@image], ax
+		mov	[bp+@@fd_new], ax
 		call	sub_2D271 stdcall, ax
 		pop	cx
 		cmp	word_35FF8, 0
@@ -41195,8 +41158,7 @@ loc_2F716:
 loc_2F720:
 		cmp	_boss_phase_frame, 0
 		jnz	short loc_2F734
-		push	0
-		call	sub_2D343
+		call	sub_2D343 stdcall, FE_NEUTRAL
 		pop	cx
 		mov	word_35FF8, 63h	; 'c'
 
@@ -42406,9 +42368,10 @@ aBoss6_a6_grp	db 'boss6_a6.grp',0
 		dd aAngel_0		; "ANGEL"
 		dd aOf_0		; "OF"
 		dd aDeath_0		; "DEATH"
-konngara_image_35FEE	dw 9
-word_35FF0	dw 0
-word_35FF2	dw 1
+public _face_direction, _face_expression, _face_direction_can_change
+_face_direction	dw FD_UNINITIALIZED
+_face_expression	dw FE_NEUTRAL
+_face_direction_can_change	dw 1
 public _target_prev_x, _target_prev_y
 _target_prev_x	dw -PIXEL_NONE
 _target_prev_y	dw -PIXEL_NONE
