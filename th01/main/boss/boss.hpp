@@ -4,6 +4,7 @@
 
 extern int boss_hp;
 extern int boss_phase_frame;
+extern int8_t boss_phase;
 /// -----------------------
 
 // No-op function for callbacks.

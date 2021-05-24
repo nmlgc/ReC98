@@ -10799,7 +10799,7 @@ loc_1B3D8:
 		mov	eye_3.BE_hitbox_orb_inactive, 1
 		mov	eye_4.BE_hitbox_orb_inactive, 1
 		mov	_boss_phase_frame, 0
-		mov	byte_3A6CE, 0
+		mov	_boss_phase, 0
 		mov	_boss_hp, 16
 		mov	_hud_hp_first_white, 12
 		mov	_hud_hp_first_redwhite, 8
@@ -11333,7 +11333,7 @@ var_4		= word ptr -4
 		push	offset unk_39EC4
 		call	sub_21F19
 		add	sp, 4
-		cmp	byte_3A6CE, 0
+		cmp	_boss_phase, 0
 		jnz	loc_1BEC0
 		cmp	_yuugenmagan_initial_hp_rendered, 0
 		jnz	short loc_1BA6C
@@ -11618,7 +11618,7 @@ loc_1BDCD:
 loc_1BE24:
 		cmp	_boss_phase_frame, 330
 		jle	loc_1DFFC
-		mov	byte_3A6CE, 1
+		mov	_boss_phase, 1
 		mov	_yuugenmagan_invincible, 0
 		mov	_boss_phase_frame, 0
 		call	_z_palette_set_all_show c, offset _stage_palette, ds
@@ -11682,7 +11682,7 @@ loc_1BEB1:
 ; ---------------------------------------------------------------------------
 
 loc_1BEC0:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
 		cmp	ax, 1
 		jnz	loc_1C02D
@@ -11807,12 +11807,12 @@ loc_1BFEF:
 		jle	loc_1DFFC
 
 loc_1C025:
-		mov	byte_3A6CE, 2
+		mov	_boss_phase, 2
 		jmp	loc_1CAF9
 ; ---------------------------------------------------------------------------
 
 loc_1C02D:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
 		cmp	ax, 2
 		jnz	loc_1C0CA
@@ -11825,7 +11825,7 @@ loc_1C02D:
 		add	sp, 0Ch
 		cmp	_boss_phase_frame, 70
 		jl	loc_1DFFC
-		mov	byte_3A6CE, 3
+		mov	_boss_phase, 3
 		mov	word_39E08, 0
 		mov	byte_39E14, 0
 		mov	_boss_phase_frame, 0
@@ -11872,7 +11872,7 @@ loc_1C0C4:
 ; ---------------------------------------------------------------------------
 
 loc_1C0CA:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
 		cmp	ax, 3
 		jnz	loc_1C3EB
@@ -12164,12 +12164,12 @@ loc_1C3AC:
 		jl	loc_1DFFC
 
 loc_1C3E3:
-		mov	byte_3A6CE, 4
+		mov	_boss_phase, 4
 		jmp	loc_1CAF9
 ; ---------------------------------------------------------------------------
 
 loc_1C3EB:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
 		cmp	ax, 4
 		jnz	loc_1C493
@@ -12182,7 +12182,7 @@ loc_1C3EB:
 		add	sp, 0Ch
 		cmp	_boss_phase_frame, 70
 		jl	loc_1DFFC
-		mov	byte_3A6CE, 5
+		mov	_boss_phase, 5
 		mov	word_39E08, 0
 		mov	byte_39E14, 0
 		mov	_boss_phase_frame, 0
@@ -12236,7 +12236,7 @@ loc_1C488:
 ; ---------------------------------------------------------------------------
 
 loc_1C493:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
 		cmp	ax, 5
 		jnz	loc_1C741
@@ -12479,12 +12479,12 @@ loc_1C702:
 		jle	loc_1DFFC
 
 loc_1C739:
-		mov	byte_3A6CE, 6
+		mov	_boss_phase, 6
 		jmp	loc_1CAF9
 ; ---------------------------------------------------------------------------
 
 loc_1C741:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
 		cmp	ax, 6
 		jnz	loc_1C7E4
@@ -12497,7 +12497,7 @@ loc_1C741:
 		add	sp, 0Ch
 		cmp	_boss_phase_frame, 70
 		jl	loc_1DFFC
-		mov	byte_3A6CE, 7
+		mov	_boss_phase, 7
 		mov	word_39E08, 0
 		mov	byte_39E14, 0
 		mov	_boss_phase_frame, 0
@@ -12545,7 +12545,7 @@ loc_1C7DE:
 ; ---------------------------------------------------------------------------
 
 loc_1C7E4:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
 		cmp	ax, 7
 		jnz	loc_1CB08
@@ -12838,7 +12838,7 @@ loc_1CABD:
 		jle	loc_1DFFC
 
 loc_1CAF4:
-		mov	byte_3A6CE, 8
+		mov	_boss_phase, 8
 
 loc_1CAF9:
 		mov	_boss_phase_frame, 0
@@ -12847,7 +12847,7 @@ loc_1CAF9:
 ; ---------------------------------------------------------------------------
 
 loc_1CB08:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
 		cmp	ax, 8
 		jnz	short loc_1CB3E
@@ -12860,13 +12860,13 @@ loc_1CB08:
 		add	sp, 0Ch
 		cmp	_boss_phase_frame, 70
 		jl	loc_1DFFC
-		mov	byte_3A6CE, 9
+		mov	_boss_phase, 9
 		mov	word_39E08, 0
 		jmp	loc_1D071
 ; ---------------------------------------------------------------------------
 
 loc_1CB3E:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
 		cmp	ax, 9
 		jnz	loc_1D036
@@ -13255,7 +13255,7 @@ loc_1CFDC:
 		jnz	loc_1DFFC
 
 loc_1D011:
-		mov	byte_3A6CE, 0Ah
+		mov	_boss_phase, 10
 		mov	_boss_phase_frame, 0
 		mov	_yuugenmagan_invincibility_frame, 0
 		mov	word_39E08, 1
@@ -13265,9 +13265,9 @@ loc_1D011:
 ; ---------------------------------------------------------------------------
 
 loc_1D036:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
-		cmp	ax, 0Ah
+		cmp	ax, 10
 		jnz	short loc_1D08C
 		push	ds
 		push	offset _boss_phase_frame
@@ -13281,7 +13281,7 @@ loc_1D036:
 		add	sp, 0Ch
 		cmp	_boss_phase_frame, 70
 		jl	loc_1DFFC
-		mov	byte_3A6CE, 0Bh
+		mov	_boss_phase, 11
 		mov	word_39E08, 0
 		mov	byte_39E14, 1Fh
 
@@ -13294,9 +13294,9 @@ loc_1D071:
 ; ---------------------------------------------------------------------------
 
 loc_1D08C:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
-		cmp	ax, 0Bh
+		cmp	ax, 11
 		jnz	loc_1D852
 		inc	_boss_phase_frame
 		inc	_yuugenmagan_invincibility_frame
@@ -13932,7 +13932,7 @@ loc_1D75D:
 loc_1D76D:
 		cmp	_yuugenmagan_invincible, 0
 		jnz	loc_1DFFC
-		mov	byte_3A6CE, 0Ch
+		mov	_boss_phase, 12
 		mov	word_39E08, 0
 		mov	byte_39E14, 1
 		mov	_boss_phase_frame, 0
@@ -14022,9 +14022,9 @@ loc_1D84C:
 ; ---------------------------------------------------------------------------
 
 loc_1D852:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
-		cmp	ax, 0Ch
+		cmp	ax, 12
 		jnz	short loc_1D8D5
 		inc	_yuugenmagan_invincibility_frame
 		push	ds
@@ -14047,7 +14047,7 @@ loc_1D852:
 loc_1D88A:
 		cmp	_boss_phase_frame, 70
 		jl	loc_1DFFC
-		mov	byte_3A6CE, 0Dh
+		mov	_boss_phase, 13
 		mov	word_39E08, 0
 		mov	byte_39E14, 1
 		mov	_boss_phase_frame, 0
@@ -14063,9 +14063,9 @@ loc_1D8C1:
 ; ---------------------------------------------------------------------------
 
 loc_1D8D5:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
-		cmp	ax, 0Dh
+		cmp	ax, 13
 		jnz	loc_1DFFC
 		inc	_boss_phase_frame
 		inc	_yuugenmagan_invincibility_frame
@@ -14440,7 +14440,7 @@ loc_1DCD0:
 		cmp	point_39DFC.y, 420
 		jl	loc_1DDD4
 		mov	_boss_phase_frame, 0
-		mov	byte_3A6CE, 0Ah
+		mov	_boss_phase, 10
 		mov	word_39E08, 3
 		mov	byte_39E14, 3
 		mov	word_39E10, 7
@@ -14515,7 +14515,7 @@ loc_1DE37:
 		jl	loc_1DED5
 		mov	word_39E10, 0
 		mov	_boss_phase_frame, 0
-		mov	byte_3A6CE, 0Ah
+		mov	_boss_phase, 10
 		mov	word_39E08, 3
 		mov	byte_39E14, 3
 		mov	_yuugenmagan_invincibility_frame, 0
@@ -15542,7 +15542,7 @@ sub_1E79B	proc far
 		CBossEntity__hitbox_set	mima_still, 32, 32, 96, 128
 		mov	mima_still.BE_hitbox_orb_inactive, 0
 		mov	_boss_phase_frame, 0
-		mov	byte_3A6CE, 0
+		mov	_boss_phase, 0
 		mov	_boss_hp, 12
 		mov	_hud_hp_first_white, 6
 		mov	_hud_hp_first_redwhite, 2
@@ -17570,7 +17570,7 @@ sub_1FA7B	proc far
 		push	70001h
 		call	sub_22264
 		add	sp, 8
-		cmp	byte_3A6CE, 0
+		cmp	_boss_phase, 0
 		jnz	short loc_1FB20
 		push	0
 		call	_graph_accesspage_func
@@ -17605,7 +17605,7 @@ loc_1FAE7:
 ; ---------------------------------------------------------------------------
 
 loc_1FAF6:
-		mov	byte_3A6CE, 1
+		mov	_boss_phase, 1
 		mov	word_39E78, 0
 		mov	_mima_initial_hp_rendered, 0
 		call	_stage_palette_set c, offset _z_Palettes, ds
@@ -17616,7 +17616,7 @@ loc_1FAF6:
 ; ---------------------------------------------------------------------------
 
 loc_1FB20:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
 		cmp	ax, 1
 		jnz	loc_1FC54
@@ -17718,7 +17718,7 @@ loc_1FBAC:
 		mov	mima_still.BE_cur_left, 256
 		mov	mima_still.BE_cur_top, 120
 		call	sub_1E526
-		mov	byte_3A6CE, 2
+		mov	_boss_phase, 2
 		mov	_boss_phase_frame, 0
 		mov	_mima_invincibility_frame, 0
 		mov	word_39E78, 0
@@ -17726,7 +17726,7 @@ loc_1FBAC:
 ; ---------------------------------------------------------------------------
 
 loc_1FC54:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
 		cmp	ax, 2
 		jnz	short loc_1FC95
@@ -17737,7 +17737,7 @@ loc_1FC54:
 		add	sp, 4
 		cmp	_boss_phase_frame, 0
 		jnz	loc_1FDCF
-		mov	byte_3A6CE, 3
+		mov	_boss_phase, 3
 		mov	_boss_phase_frame, 0
 		mov	_mima_invincibility_frame, 0
 		mov	word_39E78, 0
@@ -17745,7 +17745,7 @@ loc_1FC54:
 ; ---------------------------------------------------------------------------
 
 loc_1FC95:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
 		cmp	ax, 3
 		jnz	loc_1FDCF
@@ -25127,7 +25127,7 @@ sub_24FE0	proc far
 		call	@CBossEntity@pos_set$qiiiiiii       c, offset           elis_bat, ds, 256, large 96 or (48 shl 16), large 0 or (736 shl 16), large 64 or (304 shl 16)
 		CBossEntity__hitbox_set	elis_still_or_wave, 32, 12, 96, 64
 		CBossEntity__hitbox_set	elis_bat, 8, 8, 40, 24
-		mov	byte_3A6CE, 0
+		mov	_boss_phase, 0
 		mov	_boss_phase_frame, 0
 		mov	_boss_hp, 14
 		mov	_hud_hp_first_white, 10
@@ -29559,7 +29559,7 @@ var_4		= word ptr -4
 		push	offset unk_39EC4
 		call	sub_21F19
 		add	sp, 4
-		cmp	byte_3A6CE, 0
+		cmp	_boss_phase, 0
 		jnz	loc_281CF
 		call	@boss_palette_snap$qv
 		push	1
@@ -30024,7 +30024,7 @@ loc_28158:
 loc_28163:
 		mov	_boss_phase_frame, 0
 		mov	_elis_invincibility_frame, 0
-		mov	byte_3A6CE, 1
+		mov	_boss_phase, 1
 		mov	elis_still_or_wave.BE_hitbox_orb_inactive, 0
 		push	1
 		call	_graph_accesspage_func
@@ -30042,7 +30042,7 @@ loc_28163:
 ; ---------------------------------------------------------------------------
 
 loc_281CF:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
 		cmp	ax, 1
 		jnz	loc_282DE
@@ -30136,7 +30136,7 @@ loc_2827D:
 		jg	loc_28655
 		cmp	word_3A779, 1
 		jnz	loc_28655
-		mov	byte_3A6CE, 2
+		mov	_boss_phase, 2
 		mov	_boss_phase_frame, 0
 		mov	_elis_invincibility_frame, 0
 		mov	word_3A777, 0
@@ -30144,7 +30144,7 @@ loc_2827D:
 ; ---------------------------------------------------------------------------
 
 loc_282DE:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
 		cmp	ax, 2
 		jnz	short loc_2832B
@@ -30158,7 +30158,7 @@ loc_282DE:
 		push	63h ; 'c'
 		call	sub_268B7
 		pop	cx
-		mov	byte_3A6CE, 3
+		mov	_boss_phase, 3
 		mov	_boss_phase_frame, 0
 		mov	_elis_invincibility_frame, 0
 		mov	word_3A777, 1
@@ -30169,7 +30169,7 @@ loc_28322:
 ; ---------------------------------------------------------------------------
 
 loc_2832B:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
 		cmp	ax, 3
 		jnz	loc_28442
@@ -30264,7 +30264,7 @@ loc_283D4:
 		jg	loc_28655
 		cmp	word_3A779, 1
 		jnz	loc_28655
-		mov	byte_3A6CE, 4
+		mov	_boss_phase, 4
 		mov	_boss_phase_frame, 0
 		mov	_elis_invincibility_frame, 0
 		mov	word_3A777, 0
@@ -30274,7 +30274,7 @@ loc_283D4:
 ; ---------------------------------------------------------------------------
 
 loc_28442:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
 		cmp	ax, 4
 		jnz	short loc_284B3
@@ -30295,7 +30295,7 @@ loc_28468:
 loc_2846F:
 		cmp	word_3A777, 1
 		jnz	loc_28655
-		mov	byte_3A6CE, 5
+		mov	_boss_phase, 5
 		mov	_boss_phase_frame, 0
 		mov	_elis_invincibility_frame, 0
 		mov	word_3A777, 0
@@ -30314,7 +30314,7 @@ loc_2846F:
 ; ---------------------------------------------------------------------------
 
 loc_284B3:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
 		cmp	ax, 5
 		jnz	loc_28655
@@ -30606,7 +30606,7 @@ sub_287D9	proc far
 		mov	_boss_hp, 18
 		mov	_hud_hp_first_white, 8
 		mov	_hud_hp_first_redwhite, 2
-		mov	byte_3A6CE, 0
+		mov	_boss_phase, 0
 		mov	_boss_phase_frame, 0
 		mov	sariel_shield.BE_hitbox_orb_inactive, 0
 		mov	sariel_dress.BA_left, 280
@@ -36443,7 +36443,7 @@ loc_2C115:
 
 loc_2C117:
 		mov	[bp+@@colliding_with_orb], al
-		cmp	byte_3A6CE, 0
+		cmp	_boss_phase, 0
 		jnz	loc_2C399
 		mov	_boss_phase_frame, -1
 		mov	_sariel_invincibility_frame, 0
@@ -36604,7 +36604,7 @@ loc_2C2F2:
 		jb	short loc_2C282
 		cmp	di, 80h	; '?'
 		jb	loc_2C37F
-		mov	byte_3A6CE, 1
+		mov	_boss_phase, 1
 		mov	word_35E95, 0
 		mov	word_35E97, 0
 		call	IRand
@@ -36656,7 +36656,7 @@ loc_2C37F:
 ; ---------------------------------------------------------------------------
 
 loc_2C399:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
 		cmp	ax, 1
 		jnz	loc_2C4A1
@@ -36744,7 +36744,7 @@ loc_2C440:
 		add	sp, 22h
 		cmp	_boss_hp, 0
 		jg	short loc_2C47F
-		mov	byte_3A6CE, 63h	; 'c'
+		mov	_boss_phase, 99
 
 loc_2C47F:
 		mov	ax, word_35E97
@@ -36753,12 +36753,12 @@ loc_2C47F:
 		cmp	_sariel_invincible, 0
 		jnz	loc_2CDCE
 		mov	word_35E97, 0
-		mov	byte_3A6CE, 2
+		mov	_boss_phase, 2
 		jmp	loc_2C7E2
 ; ---------------------------------------------------------------------------
 
 loc_2C4A1:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
 		cmp	ax, 2
 		jnz	short loc_2C4D8
@@ -36768,7 +36768,7 @@ loc_2C4A1:
 		call	sub_28FC5
 		cmp	_boss_phase_frame, 0
 		jnz	loc_2CDCE
-		mov	byte_3A6CE, 3
+		mov	_boss_phase, 3
 		mov	_boss_phase_frame, 0
 		call	sub_28852
 		call	IRand
@@ -36777,7 +36777,7 @@ loc_2C4A1:
 ; ---------------------------------------------------------------------------
 
 loc_2C4D8:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
 		cmp	ax, 3
 		jnz	loc_2C594
@@ -36837,7 +36837,7 @@ loc_2C533:
 		add	sp, 22h
 		cmp	_boss_hp, 0
 		jg	short loc_2C572
-		mov	byte_3A6CE, 63h	; 'c'
+		mov	_boss_phase, 99
 
 loc_2C572:
 		mov	ax, word_35E97
@@ -36846,12 +36846,12 @@ loc_2C572:
 		cmp	_sariel_invincible, 0
 		jnz	loc_2CDCE
 		mov	word_35E97, 0
-		mov	byte_3A6CE, 4
+		mov	_boss_phase, 4
 		jmp	loc_2C7E2
 ; ---------------------------------------------------------------------------
 
 loc_2C594:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
 		cmp	ax, 4
 		jnz	short loc_2C5D6
@@ -36861,7 +36861,7 @@ loc_2C594:
 		call	sub_28FC5
 		cmp	_boss_phase_frame, 0
 		jnz	loc_2CDCE
-		mov	byte_3A6CE, 5
+		mov	_boss_phase, 5
 		mov	_boss_phase_frame, 0
 		call	sub_28852
 		call	@boss_palette_snap$qv
@@ -36874,7 +36874,7 @@ loc_2C594:
 ; ---------------------------------------------------------------------------
 
 loc_2C5D6:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
 		cmp	ax, 5
 		jnz	loc_2C6B0
@@ -36955,7 +36955,7 @@ loc_2C64F:
 		add	sp, 22h
 		cmp	_boss_hp, 0
 		jg	short loc_2C68E
-		mov	byte_3A6CE, 63h	; 'c'
+		mov	_boss_phase, 99
 
 loc_2C68E:
 		mov	ax, word_35E97
@@ -36964,12 +36964,12 @@ loc_2C68E:
 		cmp	_sariel_invincible, 0
 		jnz	loc_2CDCE
 		mov	word_35E97, 0
-		mov	byte_3A6CE, 6
+		mov	_boss_phase, 6
 		jmp	loc_2C7E2
 ; ---------------------------------------------------------------------------
 
 loc_2C6B0:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
 		cmp	ax, 6
 		jnz	short loc_2C6F2
@@ -36979,7 +36979,7 @@ loc_2C6B0:
 		call	sub_28FC5
 		cmp	_boss_phase_frame, 0
 		jnz	loc_2CDCE
-		mov	byte_3A6CE, 7
+		mov	_boss_phase, 7
 		mov	_boss_phase_frame, 0
 		call	sub_28852
 		call	@boss_palette_snap$qv
@@ -36992,7 +36992,7 @@ loc_2C6B0:
 ; ---------------------------------------------------------------------------
 
 loc_2C6F2:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
 		cmp	ax, 7
 		jnz	loc_2C7F1
@@ -37076,7 +37076,7 @@ loc_2C784:
 		add	sp, 22h
 		cmp	_boss_hp, 0
 		jg	short loc_2C7C3
-		mov	byte_3A6CE, 63h	; 'c'
+		mov	_boss_phase, 99
 
 loc_2C7C3:
 		mov	ax, word_35E97
@@ -37085,7 +37085,7 @@ loc_2C7C3:
 		cmp	_sariel_invincible, 0
 		jnz	loc_2CDCE
 		mov	word_35E97, 0
-		mov	byte_3A6CE, 8
+		mov	_boss_phase, 8
 
 loc_2C7E2:
 		mov	word_35E95, 0
@@ -37094,7 +37094,7 @@ loc_2C7E2:
 ; ---------------------------------------------------------------------------
 
 loc_2C7F1:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
 		cmp	ax, 8
 		jnz	short loc_2C835
@@ -37104,7 +37104,7 @@ loc_2C7F1:
 		call	sub_28FC5
 		cmp	_boss_phase_frame, 0
 		jnz	loc_2CDCE
-		mov	byte_3A6CE, 1
+		mov	_boss_phase, 1
 		mov	_boss_phase_frame, 0
 		call	sub_28852
 		call	@boss_palette_snap$qv
@@ -37122,9 +37122,9 @@ loc_2C82E:
 ; ---------------------------------------------------------------------------
 
 loc_2C835:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
-		cmp	ax, 63h	; 'c'
+		cmp	ax, 99
 		jnz	loc_2CAA8
 		mov	_boss_phase_frame, 0
 		mov	_sariel_invincibility_frame, 399	; ???
@@ -37251,7 +37251,7 @@ loc_2C9DA:
 		mov	_sariel_invincibility_frame, 0
 		mov	word_35E95, 0
 		mov	word_35E97, 0
-		mov	byte_3A6CE, 64h	; 'd'
+		mov	_boss_phase, 100
 		mov	_player_invincibility_time, 0
 		mov	_player_invincible, 0
 		call	@boss_palette_snap$qv
@@ -37274,9 +37274,9 @@ loc_2CA9E:
 ; ---------------------------------------------------------------------------
 
 loc_2CAA8:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
-		cmp	ax, 64h	; 'd'
+		cmp	ax, 100
 		jnz	loc_2CC9E
 		cmp	_sariel_initial_hp_rendered, 0
 		jnz	short loc_2CACD
@@ -37478,16 +37478,16 @@ loc_2CC7C:
 		cmp	_boss_hp, 0
 		jg	loc_2CDCE
 		call	_mdrv2_bgm_stop
-		mov	byte_3A6CE, 65h	; 'e'
+		mov	_boss_phase, 101
 		mov	_boss_phase_frame, 0
 		mov	_sariel_invincibility_frame, 0
 		jmp	loc_2CDCE
 ; ---------------------------------------------------------------------------
 
 loc_2CC9E:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
-		cmp	ax, 65h	; 'e'
+		cmp	ax, 101
 		jnz	loc_2CDCE
 		push	1
 		call	_graph_accesspage_func
@@ -37673,7 +37673,7 @@ sub_2D20D	proc far
 		mov	_boss_hp, 18
 		mov	_hud_hp_first_white, 16
 		mov	_hud_hp_first_redwhite, 10
-		mov	byte_3A6CE, 0
+		mov	_boss_phase, 0
 		mov	_boss_phase_frame, 0
 		mov	word_35FF2, 1
 		mov	word_35FF0, 0
@@ -40308,9 +40308,9 @@ var_2		= word ptr -2
 		push	offset _konngara_invincibility_flash_colors
 		mov	cx, 3
 		call	SCOPY@
-		cmp	byte_3A6CE, 0
+		cmp	_boss_phase, 0
 		jnz	short loc_2EED9
-		mov	byte_3A6CE, 1
+		mov	_boss_phase, 1
 		mov	word_3B52D, 63h	; 'c'
 		mov	word_35FF8, 63h	; 'c'
 		mov	word_35FFA, 0
@@ -40325,7 +40325,7 @@ var_2		= word ptr -2
 ; ---------------------------------------------------------------------------
 
 loc_2EED9:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
 		cmp	ax, 1
 		jnz	loc_2F02C
@@ -40455,12 +40455,12 @@ loc_2EFDD:
 loc_2F01B:
 		cmp	word_35FF8, 63h	; 'c'
 		jnz	loc_2FC40
-		mov	byte_3A6CE, 2
+		mov	_boss_phase, 2
 		jmp	loc_2F4BC
 ; ---------------------------------------------------------------------------
 
 loc_2F02C:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
 		cmp	ax, 2
 		jnz	loc_2F136
@@ -40561,12 +40561,12 @@ loc_2F0F7:
 		jnz	loc_2FC40
 		cmp	_boss_phase_frame, 120
 		jle	loc_2FC40
-		mov	byte_3A6CE, 3
+		mov	_boss_phase, 3
 		jmp	loc_2F5DE
 ; ---------------------------------------------------------------------------
 
 loc_2F136:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
 		cmp	ax, 3
 		jnz	loc_2F27C
@@ -40697,12 +40697,12 @@ loc_2F22D:
 loc_2F26B:
 		cmp	word_35FF8, 63h	; 'c'
 		jnz	loc_2FC40
-		mov	byte_3A6CE, 4
+		mov	_boss_phase, 4
 		jmp	loc_2F4BC
 ; ---------------------------------------------------------------------------
 
 loc_2F27C:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
 		cmp	ax, 4
 		jnz	loc_2F386
@@ -40803,12 +40803,12 @@ loc_2F347:
 		jnz	loc_2FC40
 		cmp	_boss_phase_frame, 120
 		jle	loc_2FC40
-		mov	byte_3A6CE, 5
+		mov	_boss_phase, 5
 		jmp	loc_2F5DE
 ; ---------------------------------------------------------------------------
 
 loc_2F386:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
 		cmp	ax, 5
 		jnz	loc_2F4D7
@@ -40932,7 +40932,7 @@ loc_2F470:
 loc_2F4AE:
 		cmp	word_35FF8, 63h	; 'c'
 		jnz	loc_2FC40
-		mov	byte_3A6CE, 6
+		mov	_boss_phase, 6
 
 loc_2F4BC:
 		mov	_boss_phase_frame, 0
@@ -40943,7 +40943,7 @@ loc_2F4BC:
 ; ---------------------------------------------------------------------------
 
 loc_2F4D7:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
 		cmp	ax, 6
 		jnz	loc_2F600
@@ -41044,7 +41044,7 @@ loc_2F5A2:
 		jnz	loc_2FC40
 		cmp	_boss_phase_frame, 120
 		jle	loc_2FC40
-		mov	byte_3A6CE, 7
+		mov	_boss_phase, 7
 
 loc_2F5DE:
 		mov	_boss_phase_frame, 0
@@ -41058,7 +41058,7 @@ loc_2F5DE:
 ; ---------------------------------------------------------------------------
 
 loc_2F600:
-		mov	al, byte_3A6CE
+		mov	al, _boss_phase
 		cbw
 		cmp	ax, 7
 		jnz	loc_2FC40
@@ -42687,11 +42687,11 @@ word_3A6C4	dw ?
 public _kikuri_initial_hp_rendered
 _kikuri_initial_hp_rendered	db ?
 		db ?
-public _boss_hp, _boss_phase_frame
+public _boss_hp, _boss_phase_frame, _boss_phase
 _boss_hp	dw ?
 _boss_phase_frame	dw ?
 word_3A6CC	dw ?
-byte_3A6CE	db ?
+_boss_phase	db ?
 		db 20 dup (?)
 radius_3A6E3	dw ?
 word_3A6E5	dw ?
