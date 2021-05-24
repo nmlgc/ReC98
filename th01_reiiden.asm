@@ -37642,6 +37642,7 @@ main_37_TEXT	segment	byte public 'CODE' use16
 	extern @konngara_free$qv:proc
 	extern @face_direction_set_and_put$q16face_direction_t:proc
 	extern @face_expression_set_and_put$q17face_expression_t:proc
+	extern @slash_put$qi:proc
 main_37_TEXT	ends
 
 main_37__TEXT	segment	byte public 'CODE' use16
@@ -37660,29 +37661,6 @@ FE_NEUTRAL = 0
 FE_CLOSED = 1
 FE_GLARE = 2
 FE_AIM = 3
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2D412	proc far
-
-@@slot		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+@@slot]
-		call	_graph_accesspage_func stdcall, 1
-		call	_grx_put stdcall, si
-		call	_graph_accesspage_func stdcall, 0
-		call	_grx_put stdcall, si
-		add	sp, 8
-		pop	si
-		pop	bp
-		retf
-sub_2D412	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -39488,7 +39466,7 @@ sub_2E705	proc far
 		jl	loc_2E7C2
 		cmp	_boss_phase_frame, 50
 		jnz	short loc_2E728
-		call	sub_2D412 stdcall, 0
+		call	@slash_put$qi stdcall, 0
 		push	8
 		call	_mdrv2_se_play
 		add	sp, 4
@@ -39498,7 +39476,7 @@ loc_2E728:
 		jl	loc_2E7C2
 		cmp	_boss_phase_frame, 60
 		jnz	short loc_2E73F
-		call	sub_2D412 stdcall, 1
+		call	@slash_put$qi stdcall, 1
 		pop	cx
 
 loc_2E73F:
@@ -39506,7 +39484,7 @@ loc_2E73F:
 		jl	short loc_2E7C2
 		cmp	_boss_phase_frame, 100
 		jnz	short loc_2E754
-		call	sub_2D412 stdcall, 2
+		call	@slash_put$qi stdcall, 2
 		pop	cx
 
 loc_2E754:
@@ -39514,7 +39492,7 @@ loc_2E754:
 		jl	short loc_2E7C2
 		cmp	_boss_phase_frame, 120
 		jnz	short loc_2E769
-		call	sub_2D412 stdcall, 3
+		call	@slash_put$qi stdcall, 3
 		pop	cx
 
 loc_2E769:
@@ -39522,7 +39500,7 @@ loc_2E769:
 		jl	short loc_2E7C2
 		cmp	_boss_phase_frame, 140
 		jnz	short loc_2E780
-		call	sub_2D412 stdcall, 4
+		call	@slash_put$qi stdcall, 4
 		pop	cx
 
 loc_2E780:
@@ -39530,7 +39508,7 @@ loc_2E780:
 		jl	short loc_2E7C2
 		cmp	_boss_phase_frame, 160
 		jnz	short loc_2E797
-		call	sub_2D412 stdcall, 5
+		call	@slash_put$qi stdcall, 5
 		pop	cx
 
 loc_2E797:
@@ -39538,7 +39516,7 @@ loc_2E797:
 		jl	short loc_2E7C2
 		cmp	_boss_phase_frame, 170
 		jnz	short loc_2E7AE
-		call	sub_2D412 stdcall, 6
+		call	@slash_put$qi stdcall, 6
 		pop	cx
 
 loc_2E7AE:

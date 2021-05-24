@@ -376,6 +376,12 @@ void face_expression_set_and_put(face_expression_t fe_new)
 	face_expression = fe_new;
 }
 
+void slash_put(int image)
+{
+	graph_accesspage_func(1);	grx_put(image);
+	graph_accesspage_func(0);	grx_put(image);
+}
+
 char konngara_esc_cls[] = "\x1B*";
 char konngara_esc_mode_graph[] = "\x1B)3";
 char konngara_esc_color_bg_black_fg_black[] = "\x1B[16;40m";
