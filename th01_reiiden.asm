@@ -37640,6 +37640,8 @@ main_37_TEXT	segment	byte public 'CODE' use16
 	extern @konngara_load_and_entrance$qc:proc
 	extern @konngara_init$qv:proc
 	extern @konngara_free$qv:proc
+	extern @face_direction_set_and_put$q16face_direction_t:proc
+	extern @face_expression_set_and_put$q17face_expression_t:proc
 main_37_TEXT	ends
 
 main_37__TEXT	segment	byte public 'CODE' use16
@@ -37658,159 +37660,6 @@ FE_NEUTRAL = 0
 FE_CLOSED = 1
 FE_GLARE = 2
 FE_AIM = 3
-
-konngara_head	equ <boss_entity_0>
-konngara_face_closed_or_glare	equ <boss_entity_1>
-konngara_face_aim	equ <boss_entity_2>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2D271	proc far
-
-@@fd_new		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+@@fd_new]
-		cmp	_face_direction_can_change, 0
-		jz	loc_2D340
-		cmp	_face_direction, si
-		jz	loc_2D340
-		push	1
-		call	_graph_accesspage_func
-		call	@CBossEntity@put_8$xqiii stdcall, offset konngara_head, ds, large 280 or (80 shl 16), si
-		push	0
-		call	_graph_accesspage_func
-		call	@CBossEntity@put_8$xqiii stdcall, offset konngara_head, ds, large 280 or (80 shl 16), si
-		add	sp, 18h
-		cmp	_face_expression, 3
-		jnz	short loc_2D2EF
-		push	1
-		call	_graph_accesspage_func
-		call	@CBossEntity@put_8$xqiii stdcall, offset konngara_face_aim, ds, large 280 or (128 shl 16), si
-		push	0
-		call	_graph_accesspage_func
-		add	sp, 0Eh
-		push	si
-		push	280 or (128 shl 16)
-		push	ds
-		push	offset konngara_face_aim
-		jmp	short loc_2D334
-; ---------------------------------------------------------------------------
-
-loc_2D2EF:
-		cmp	_face_expression, 0
-		jz	short loc_2D33C
-		push	1
-		call	_graph_accesspage_func
-		mov	ax, _face_expression
-		dec	ax
-		imul	ax, 3
-		add	ax, si
-		call	@CBossEntity@put_8$xqiii stdcall, offset konngara_face_closed_or_glare, ds, large 	280 or (128 shl 16), ax
-		push	0
-		call	_graph_accesspage_func
-		add	sp, 0Eh
-		mov	ax, _face_expression
-		dec	ax
-		imul	ax, 3
-		add	ax, si
-		push	ax
-		push	280 or (128 shl 16)
-		push	ds
-		push	offset konngara_face_closed_or_glare
-
-loc_2D334:
-		call	@CBossEntity@put_8$xqiii
-		add	sp, 0Ah
-
-loc_2D33C:
-		mov	_face_direction, si
-
-loc_2D340:
-		pop	si
-		pop	bp
-		retf
-sub_2D271	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2D343	proc far
-
-@@fe_new		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+@@fe_new]
-		cmp	_face_expression, si
-		jz	loc_2D40F
-		cmp	si, 3
-		jnz	short loc_2D38B
-		push	1
-		call	_graph_accesspage_func
-		call	@CBossEntity@put_8$xqiii stdcall, offset konngara_face_aim, ds, large 280 or (128 shl 16), _face_direction
-		push	0
-		call	_graph_accesspage_func
-		add	sp, 0Eh
-		push	_face_direction
-		push	280 or (128 shl 16)
-		push	ds
-		push	offset konngara_face_aim
-		jmp	short loc_2D403
-; ---------------------------------------------------------------------------
-
-loc_2D38B:
-		or	si, si
-		jz	short loc_2D3D1
-		push	1
-		call	_graph_accesspage_func
-		lea	ax, [si-1]
-		imul	ax, 3
-		add	ax, _face_direction
-		call	@CBossEntity@put_8$xqiii stdcall, offset konngara_face_closed_or_glare, ds, large 280 or (128 shl 16), ax
-		push	0
-		call	_graph_accesspage_func
-		add	sp, 0Eh
-		lea	ax, [si-1]
-		imul	ax, 3
-		add	ax, _face_direction
-		push	ax
-		push	280 or (128 shl 16)
-		push	ds
-		push	offset konngara_face_closed_or_glare
-		jmp	short loc_2D403
-; ---------------------------------------------------------------------------
-
-loc_2D3D1:
-		push	1
-		call	_graph_accesspage_func
-		call	@CBossEntity@put_8$xqiii stdcall, offset konngara_head, ds, large 280 or (80 shl 16), _face_direction
-		push	0
-		call	_graph_accesspage_func
-		add	sp, 0Eh
-		push	_face_direction
-		push	280 or (80 shl 16)
-		push	ds
-		push	offset konngara_head
-
-loc_2D403:
-		call	@CBossEntity@put_8$xqiii
-		add	sp, 0Ah
-		mov	_face_expression, si
-
-loc_2D40F:
-		pop	si
-		pop	bp
-		retf
-sub_2D343	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -37851,7 +37700,7 @@ sub_2D439	proc far
 		push	di
 		cmp	_boss_phase_frame, 10
 		jnz	short loc_2D44D
-		call	sub_2D343 stdcall, FE_NEUTRAL
+		call	@face_expression_set_and_put$q17face_expression_t stdcall, FE_NEUTRAL
 		pop	cx
 
 loc_2D44D:
@@ -38161,7 +38010,7 @@ sub_2D817	proc far
 		mov	bp, sp
 		cmp	_boss_phase_frame, 10
 		jnz	short loc_2D828
-		call	sub_2D343 stdcall, FE_CLOSED
+		call	@face_expression_set_and_put$q17face_expression_t stdcall, FE_CLOSED
 		pop	cx
 
 loc_2D828:
@@ -38258,7 +38107,7 @@ sub_2D8EA	proc far
 		push	di
 		cmp	_boss_phase_frame, 10
 		jnz	short loc_2D8FE
-		call	sub_2D343 stdcall, FE_GLARE
+		call	@face_expression_set_and_put$q17face_expression_t stdcall, FE_GLARE
 		pop	cx
 
 loc_2D8FE:
@@ -38768,7 +38617,7 @@ sub_2DD65	proc far
 		mov	bp, sp
 		cmp	_boss_phase_frame, 10
 		jnz	short loc_2DD76
-		call	sub_2D343 stdcall, FE_NEUTRAL
+		call	@face_expression_set_and_put$q17face_expression_t stdcall, FE_NEUTRAL
 		pop	cx
 
 loc_2DD76:
@@ -38909,7 +38758,7 @@ sub_2DF0C	proc far
 		mov	bp, sp
 		cmp	_boss_phase_frame, 10
 		jnz	short loc_2DF1D
-		call	sub_2D343 stdcall, FE_CLOSED
+		call	@face_expression_set_and_put$q17face_expression_t stdcall, FE_CLOSED
 		pop	cx
 
 loc_2DF1D:
@@ -38973,7 +38822,7 @@ sub_2DFCA	proc far
 		push	di
 		cmp	_boss_phase_frame, 10
 		jnz	short loc_2DFDE
-		call	sub_2D343 stdcall, FE_GLARE
+		call	@face_expression_set_and_put$q17face_expression_t stdcall, FE_GLARE
 		pop	cx
 
 loc_2DFDE:
@@ -39456,7 +39305,7 @@ sub_2E42E	proc far
 		mov	bp, sp
 		cmp	_boss_phase_frame, 10
 		jnz	short loc_2E43F
-		call	sub_2D343 stdcall, FE_AIM
+		call	@face_expression_set_and_put$q17face_expression_t stdcall, FE_AIM
 		pop	cx
 
 loc_2E43F:
@@ -39713,8 +39562,8 @@ sub_2E7C4	proc far
 		mov	bp, sp
 		cmp	_boss_phase_frame, 10
 		jnz	short loc_2E803
-		call	sub_2D271 stdcall, FD_CENTER
-		call	sub_2D343 stdcall, FE_CLOSED
+		call	@face_direction_set_and_put$q16face_direction_t stdcall, FD_CENTER
+		call	@face_expression_set_and_put$q17face_expression_t stdcall, FE_CLOSED
 		mov	_face_direction_can_change, 0
 		mov	left_3B517, 410
 		mov	top_3B519, (PLAYFIELD_TOP + 6)
@@ -39898,8 +39747,8 @@ sub_2EA03	proc far
 		mov	bp, sp
 		cmp	_boss_phase_frame, 10
 		jnz	short loc_2EA42
-		call	sub_2D271 stdcall, FD_CENTER
-		call	sub_2D343 stdcall, FE_AIM
+		call	@face_direction_set_and_put$q16face_direction_t stdcall, FD_CENTER
+		call	@face_expression_set_and_put$q17face_expression_t stdcall, FE_AIM
 		mov	_face_direction_can_change, 0
 		mov	left_3B51B, 410
 		mov	top_3B51D, (PLAYFIELD_TOP + 6)
@@ -39979,7 +39828,7 @@ sub_2EB91	proc far
 		mov	bp, sp
 		cmp	_boss_phase_frame, 10
 		jnz	short loc_2EBA2
-		call	sub_2D343 stdcall, FE_AIM
+		call	@face_expression_set_and_put$q17face_expression_t stdcall, FE_AIM
 		pop	cx
 
 loc_2EBA2:
@@ -40076,8 +39925,8 @@ sub_2EC9A	proc far
 		mov	bp, sp
 		cmp	_boss_phase_frame, 10
 		jnz	short loc_2ECD9
-		call	sub_2D271 stdcall, FD_CENTER
-		call	sub_2D343 stdcall, FE_AIM
+		call	@face_direction_set_and_put$q16face_direction_t stdcall, FD_CENTER
+		call	@face_expression_set_and_put$q17face_expression_t stdcall, FE_AIM
 		mov	_face_direction_can_change, 0
 		mov	word_3B525, 19Ah
 		mov	word_3B527, 46h	; 'F'
@@ -40154,7 +40003,7 @@ sub_2EDBF	proc far
 		push	si
 		cmp	_boss_phase_frame, 10
 		jnz	short loc_2EDD2
-		call	sub_2D343 stdcall, FE_AIM
+		call	@face_expression_set_and_put$q17face_expression_t stdcall, FE_AIM
 		pop	cx
 
 loc_2EDD2:
@@ -40293,7 +40142,7 @@ loc_2EF1F:
 
 loc_2EF22:
 		mov	[bp+@@fd_new], ax
-		call	sub_2D271 stdcall, ax
+		call	@face_direction_set_and_put$q16face_direction_t stdcall, ax
 		pop	cx
 		cmp	word_35FF8, 0
 		jnz	short loc_2EF38
@@ -40343,7 +40192,7 @@ loc_2EF8D:
 loc_2EF97:
 		cmp	_boss_phase_frame, 0
 		jnz	short loc_2EFAB
-		call	sub_2D343 stdcall, FE_NEUTRAL
+		call	@face_expression_set_and_put$q17face_expression_t stdcall, FE_NEUTRAL
 		pop	cx
 		mov	word_35FF8, 63h	; 'c'
 
@@ -40421,7 +40270,7 @@ loc_2F058:
 
 loc_2F05B:
 		mov	[bp+@@fd_new], ax
-		call	sub_2D271 stdcall, ax
+		call	@face_direction_set_and_put$q16face_direction_t stdcall, ax
 		pop	cx
 		cmp	_boss_phase_frame, 50
 		jnz	short loc_2F07F
@@ -40527,7 +40376,7 @@ loc_2F162:
 
 loc_2F165:
 		mov	[bp+@@fd_new], ax
-		call	sub_2D271 stdcall, ax
+		call	@face_direction_set_and_put$q16face_direction_t stdcall, ax
 		pop	cx
 		cmp	word_35FF8, 0
 		jnz	short loc_2F17B
@@ -40584,7 +40433,7 @@ loc_2F1DD:
 loc_2F1E7:
 		cmp	_boss_phase_frame, 0
 		jnz	short loc_2F1FB
-		call	sub_2D343 stdcall, FE_NEUTRAL
+		call	@face_expression_set_and_put$q17face_expression_t stdcall, FE_NEUTRAL
 		pop	cx
 		mov	word_35FF8, 63h	; 'c'
 
@@ -40662,7 +40511,7 @@ loc_2F2A8:
 
 loc_2F2AB:
 		mov	[bp+@@fd_new], ax
-		call	sub_2D271 stdcall, ax
+		call	@face_direction_set_and_put$q16face_direction_t stdcall, ax
 		pop	cx
 		cmp	_boss_phase_frame, 50
 		jnz	short loc_2F2CF
@@ -40768,7 +40617,7 @@ loc_2F3B2:
 
 loc_2F3B5:
 		mov	[bp+@@fd_new], ax
-		call	sub_2D271 stdcall, ax
+		call	@face_direction_set_and_put$q16face_direction_t stdcall, ax
 		pop	cx
 		cmp	word_35FF8, 0
 		jnz	short loc_2F3CB
@@ -40818,7 +40667,7 @@ loc_2F420:
 loc_2F42A:
 		cmp	_boss_phase_frame, 0
 		jnz	short loc_2F43E
-		call	sub_2D343 stdcall, FE_NEUTRAL
+		call	@face_expression_set_and_put$q17face_expression_t stdcall, FE_NEUTRAL
 		pop	cx
 		mov	word_35FF8, 63h	; 'c'
 
@@ -40902,7 +40751,7 @@ loc_2F503:
 
 loc_2F506:
 		mov	[bp+@@fd_new], ax
-		call	sub_2D271 stdcall, ax
+		call	@face_direction_set_and_put$q16face_direction_t stdcall, ax
 		pop	cx
 		cmp	_boss_phase_frame, 50
 		jnz	short loc_2F52A
@@ -40986,7 +40835,7 @@ loc_2F5DE:
 		mov	_konngara_invincibility_frame, 0
 		mov	word_35FF8, 63h	; 'c'
 		mov	word_35FFA, 0
-		call	sub_2D343 stdcall, FE_NEUTRAL
+		call	@face_expression_set_and_put$q17face_expression_t stdcall, FE_NEUTRAL
 		pop	cx
 		jmp	loc_2FC40
 ; ---------------------------------------------------------------------------
@@ -41016,7 +40865,7 @@ loc_2F62C:
 
 loc_2F62F:
 		mov	[bp+@@fd_new], ax
-		call	sub_2D271 stdcall, ax
+		call	@face_direction_set_and_put$q16face_direction_t stdcall, ax
 		pop	cx
 		cmp	word_35FF8, 0
 		jnz	short loc_2F646
@@ -41129,7 +40978,7 @@ loc_2F716:
 loc_2F720:
 		cmp	_boss_phase_frame, 0
 		jnz	short loc_2F734
-		call	sub_2D343 stdcall, FE_NEUTRAL
+		call	@face_expression_set_and_put$q17face_expression_t stdcall, FE_NEUTRAL
 		pop	cx
 		mov	word_35FF8, 63h	; 'c'
 
@@ -41565,10 +41414,6 @@ loc_2FC40:
 		leave
 		retf
 sub_2EE7D	endp
-
-konngara_head	equ <>
-konngara_face_closed_or_glare	equ <>
-konngara_face_aim	equ <>
 main_37__TEXT	ends
 
 ; ===========================================================================

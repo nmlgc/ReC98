@@ -32,6 +32,15 @@ extern "C" {
 #include "th01/main/bullet/pellet.hpp"
 #include "th01/main/hud/hp.hpp"
 
+// Coordinates
+// -----------
+
+static const screen_x_t HEAD_LEFT = 280;
+static const screen_y_t HEAD_TOP = 80;
+static const screen_x_t FACE_LEFT = 280;
+static const screen_y_t FACE_TOP = 128;
+// -----------
+
 #define flash_colors	konngara_flash_colors
 #define invincible	konngara_invincible
 #define invincibility_frame	konngara_invincibility_frame
@@ -69,6 +78,17 @@ extern bool16 face_direction_can_change;
 #define ent_head                	boss_entities[0]
 #define ent_face_closed_or_glare	boss_entities[1]
 #define ent_face_aim            	boss_entities[2]
+
+#define head_put(direction) \
+	ent_head.put_8(HEAD_LEFT, HEAD_TOP, direction);
+
+#define face_aim_put(direction) \
+	ent_face_aim.put_8(FACE_LEFT, FACE_TOP, direction);
+
+#define face_put(expression, direction) \
+	ent_face_closed_or_glare.put_8( \
+		FACE_LEFT, FACE_TOP, (((expression - FE_CLOSED) * FD_COUNT) + direction) \
+	);
 // --------
 
 // File names
@@ -319,6 +339,41 @@ void konngara_free(void)
 	for(int i = 0; i < 7; i++) {
 		grx_free(i);
 	}
+}
+
+void face_direction_set_and_put(face_direction_t fd_new)
+{
+	if(!face_direction_can_change || (face_direction == fd_new)) {
+		return;
+	}
+	graph_accesspage_func(1);	head_put(fd_new);
+	graph_accesspage_func(0);	head_put(fd_new);
+	if(face_expression == FE_AIM) {
+		graph_accesspage_func(1);	face_aim_put(fd_new);
+		graph_accesspage_func(0);	face_aim_put(fd_new);
+	} else if(face_expression != FE_NEUTRAL) {
+		graph_accesspage_func(1);	face_put(face_expression, fd_new);
+		graph_accesspage_func(0);	face_put(face_expression, fd_new);
+	}
+	face_direction = fd_new;
+}
+
+void face_expression_set_and_put(face_expression_t fe_new)
+{
+	if(face_expression == fe_new) {
+		return;
+	}
+	if(fe_new == FE_AIM) {
+		graph_accesspage_func(1);	face_aim_put(face_direction);
+		graph_accesspage_func(0);	face_aim_put(face_direction);
+	} else if(fe_new != FE_NEUTRAL) {
+		graph_accesspage_func(1);	face_put(fe_new, face_direction);
+		graph_accesspage_func(0);	face_put(fe_new, face_direction);
+	} else {
+		graph_accesspage_func(1);	head_put(face_direction);
+		graph_accesspage_func(0);	head_put(face_direction);
+	}
+	face_expression = fe_new;
 }
 
 char konngara_esc_cls[] = "\x1B*";
