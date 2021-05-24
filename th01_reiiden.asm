@@ -12324,7 +12324,7 @@ loc_1C55B:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		pushd	0 or (0 shl 16)
 		pushd	PM_NORMAL or (0 shl 16)
 		push	(4 shl 4)
@@ -12337,7 +12337,7 @@ loc_1C55B:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 28h
 
 loc_1C5BA:
@@ -12381,7 +12381,7 @@ loc_1C5F3:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		pushd	0 or (0 shl 16)
 		push	PM_FALL_STRAIGHT_FROM_TOP_THEN_NORMAL or ((4 shl 4) shl 16)
 		push	(4 shl 4)
@@ -12394,7 +12394,7 @@ loc_1C5F3:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 28h
 
 loc_1C65A:
@@ -14326,7 +14326,7 @@ loc_1DB5B:
 		push	word ptr [bx+5446h]
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 14h
 		inc	si
 
@@ -15764,7 +15764,7 @@ loc_1E9C6:
 		push	word ptr ss:[bx]
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		push	7
 		call	_mdrv2_se_play
 		add	sp, 16h
@@ -15819,7 +15819,7 @@ loc_1EA31:
 		push	word ptr ss:[bx]
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		push	7
 		call	_mdrv2_se_play
 		add	sp, 16h
@@ -16232,7 +16232,7 @@ loc_1EDD9:
 		push	word ptr ss:[bx]
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		mov	bx, si
 		add	bx, bx
 		lea	ax, [bp+var_20]
@@ -16265,7 +16265,7 @@ loc_1EDD9:
 		push	word ptr ss:[bx]
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		push	7
 		call	_mdrv2_se_play
 		add	sp, 2Ah
@@ -16521,7 +16521,7 @@ loc_1F0BB:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 14h
 		inc	si
 		mov	ax, 256
@@ -17327,7 +17327,7 @@ loc_1F844:
 		push	word ptr ss:[bx]
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 14h
 		inc	si
 
@@ -21309,7 +21309,7 @@ loc_22A37:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 14h
 		mov	al, byte_3A388
 		cbw
@@ -21602,7 +21602,7 @@ sub_22CF6	proc far
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 20h
 		pushd	0 or (0 shl 16)
 		push	[bp+@@chase_speed]
@@ -21616,7 +21616,7 @@ sub_22CF6	proc far
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 14h
 		leave
 		retf
@@ -21650,7 +21650,7 @@ sub_22D63	proc far
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 20h
 		pushd	0 or (0 shl 16)
 		pushd	PM_NORMAL or (0 shl 16)
@@ -21664,7 +21664,7 @@ sub_22D63	proc far
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 14h
 		leave
 		retf
@@ -21768,7 +21768,7 @@ loc_22E62:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 14h
 		inc	si
 
@@ -21820,7 +21820,7 @@ loc_22EBC:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 14h
 		inc	si
 
@@ -23299,7 +23299,7 @@ loc_23D63:
 		push	si
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		movsx	eax, word_3A6BB
 		mov	dl, angle_3A6B9
 		mov	dh, 0
@@ -23335,7 +23335,7 @@ loc_23D63:
 		push	si
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 28h
 		cmp	_boss_phase_frame, 900
 		jl	short loc_23E5E
@@ -23409,7 +23409,7 @@ loc_23E9A:
 		push	ax
 		call	iatan2
 		mov	[bp+@@angle], al
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii c, offset _Pellets, ds, [bp+@@left], [bp+@@top], word ptr [bp+@@angle], (3 shl 4), large PM_SPIN or ((2 shl 4) shl 16), large 312 or (224 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii c, offset _Pellets, ds, [bp+@@left], [bp+@@top], word ptr [bp+@@angle], (3 shl 4), large PM_SPIN or ((2 shl 4) shl 16), large 312 or (224 shl 16)
 		inc	si
 
 loc_23F0E:
@@ -23766,7 +23766,7 @@ loc_2422C:
 		sar	eax, 8
 		add	ax, 180
 		mov	[bp+@@top], ax
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii stdcall, offset _Pellets, ds, di, ax, word ptr angle_3A6BD, (2 shl 4) + 4, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, di, ax, word ptr angle_3A6BD, (2 shl 4) + 4, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 		pushd	0 or (0 shl 16)
 		pushd	PM_NORMAL or (0 shl 16)
 		push	(2 shl 4) + 4
@@ -23777,7 +23777,7 @@ loc_2422C:
 		push	di
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 28h
 		pushd	0 or (0 shl 16)
 		pushd	PM_NORMAL or (0 shl 16)
@@ -23789,7 +23789,7 @@ loc_2422C:
 		push	di
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		pushd	0 or (0 shl 16)
 		pushd	PM_NORMAL or (0 shl 16)
 		push	(2 shl 4) + 4
@@ -23800,7 +23800,7 @@ loc_2422C:
 		push	di
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 28h
 		add	si, 2
 
@@ -24038,7 +24038,7 @@ loc_2450C:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		pushd	0 or (0 shl 16)
 		push	PM_GRAVITY or (1 shl 16)
 		push	(2 shl 4)
@@ -24055,7 +24055,7 @@ loc_2450C:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 28h
 		pushd	0 or (0 shl 16)
 		push	PM_GRAVITY or (1 shl 16)
@@ -24073,7 +24073,7 @@ loc_2450C:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		pushd	0 or (0 shl 16)
 		push	PM_GRAVITY or (1 shl 16)
 		push	(1 shl 4)
@@ -24090,7 +24090,7 @@ loc_2450C:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 28h
 		pushd	0 or (0 shl 16)
 		push	PM_GRAVITY or (1 shl 16)
@@ -24108,7 +24108,7 @@ loc_2450C:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		pushd	0 or (0 shl 16)
 		push	PM_GRAVITY or (1 shl 16)
 		push	(3 shl 4)
@@ -24125,7 +24125,7 @@ loc_2450C:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		push	7
 		call	_mdrv2_se_play
 		add	sp, 2Ah
@@ -26783,7 +26783,7 @@ loc_261B6:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 14h
 		inc	si
 
@@ -26818,7 +26818,7 @@ loc_261F8:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 14h
 		inc	si
 
@@ -26853,7 +26853,7 @@ loc_2623C:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 14h
 		inc	si
 
@@ -26888,7 +26888,7 @@ loc_26280:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 14h
 		inc	si
 
@@ -26923,7 +26923,7 @@ loc_262C3:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 14h
 		inc	si
 
@@ -27205,7 +27205,7 @@ loc_26568:
 		push	word ptr [bx+5D5Fh]
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 14h
 		inc	si
 
@@ -27399,7 +27399,7 @@ loc_26791:
 		push	word ptr [bx+5D89h]
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 14h
 
 loc_267B8:
@@ -28274,7 +28274,7 @@ sub_26F12	proc far
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 14h
 
 loc_26F4D:
@@ -28361,7 +28361,7 @@ loc_2702A:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		pushd	0 or (0 shl 16)
 		pushd	PM_NORMAL or (0 shl 16)
 		mov	ax, si
@@ -28377,7 +28377,7 @@ loc_2702A:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 28h
 		inc	si
 
@@ -28410,7 +28410,7 @@ loc_27093:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		pushd	0 or (0 shl 16)
 		pushd	PM_NORMAL or (0 shl 16)
 		mov	ax, si
@@ -28426,7 +28426,7 @@ loc_27093:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 28h
 		inc	si
 
@@ -28459,7 +28459,7 @@ loc_270FC:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		pushd	0 or (0 shl 16)
 		pushd	PM_NORMAL or (0 shl 16)
 		mov	ax, si
@@ -28475,7 +28475,7 @@ loc_270FC:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 28h
 		inc	si
 
@@ -28511,7 +28511,7 @@ loc_27168:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		pushd	0 or (0 shl 16)
 		pushd	PM_NORMAL or (0 shl 16)
 		mov	ax, word_3A6CC
@@ -28527,7 +28527,7 @@ loc_27168:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 28h
 		mov	al, [bp+@@angle]
 		add	al, 6
@@ -30951,7 +30951,7 @@ loc_28A94:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 14h
 		inc	di
 
@@ -31006,7 +31006,7 @@ loc_28B00:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 14h
 
 loc_28B59:
@@ -31532,7 +31532,7 @@ arg_8		= dword	ptr  0Ch
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		mov	ax, si
 		add	ax, ax
 		les	bx, [bp+arg_4]
@@ -31574,7 +31574,7 @@ arg_8		= dword	ptr  0Ch
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 28h
 		pushd	0 or (0 shl 16)
 		pushd	PM_NORMAL or (0 shl 16)
@@ -31598,7 +31598,7 @@ arg_8		= dword	ptr  0Ch
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 14h
 		pop	si
 		pop	bp
@@ -31815,7 +31815,7 @@ loc_29219:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 20h
 
 loc_29306:
@@ -33522,7 +33522,7 @@ loc_2A313:
 		push	568 or (160 shl 16)
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		pushd	0 or (0 shl 16)
 		pushd	PM_NORMAL or (0 shl 16)
 		push	(3 shl 4) + 8
@@ -33532,9 +33532,9 @@ loc_2A313:
 		push	568 or (160 shl 16)
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 28h
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii stdcall, offset _Pellets, ds, large 64 or (160 shl 16), word ptr angle_3AF44, (3 shl 4) + 8, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, large 64 or (160 shl 16), word ptr angle_3AF44, (3 shl 4) + 8, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 		pushd	0 or (0 shl 16)
 		pushd	PM_NORMAL or (0 shl 16)
 		push	(3 shl 4) + 8
@@ -33544,7 +33544,7 @@ loc_2A313:
 		push	64 or (160 shl 16)
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 28h
 		mov	al, angle_3AF44
 		add	al, byte ptr word_3AF45
@@ -33609,7 +33609,7 @@ loc_2A3DC:
 		sar	eax, 8
 		add	ax, 180
 		mov	[bp+@@top], ax
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii c, offset _Pellets, ds, [bp+@@left], ax, 0, (0 shl 4), large PM_SLING_AIMED or (((4 shl 4) + 8) shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii c, offset _Pellets, ds, [bp+@@left], ax, 0, (0 shl 4), large PM_SLING_AIMED or (((4 shl 4) + 8) shl 16), large 0 or (0 shl 16)
 
 loc_2A459:
 		cmp	_boss_phase_frame, 299
@@ -34231,7 +34231,7 @@ loc_2AA36:
 ; ---------------------------------------------------------------------------
 
 loc_2AADB:
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii stdcall, offset _Pellets, ds, large 320 or (160 shl 16), word ptr angle_3B041, (6 shl 4) + 4, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, large 320 or (160 shl 16), word ptr angle_3B041, (6 shl 4) + 4, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 
 loc_2AAF6:
 		add	sp, 14h
@@ -34244,7 +34244,7 @@ loc_2AAF6:
 		push	320 or (160 shl 16)
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		pushd	0 or (0 shl 16)
 		pushd	PM_NORMAL or (0 shl 16)
 		push	(6 shl 4)
@@ -34254,7 +34254,7 @@ loc_2AAF6:
 		push	320 or (160 shl 16)
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 28h
 		mov	al, _rank
 		cbw
@@ -34273,7 +34273,7 @@ loc_2AAF6:
 		push	320 or (160 shl 16)
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		pushd	0 or (0 shl 16)
 		pushd	PM_NORMAL or (0 shl 16)
 		push	(4 shl 4)
@@ -34283,14 +34283,14 @@ loc_2AAF6:
 		push	320 or (160 shl 16)
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 28h
 		mov	al, _rank
 		cbw
 		cmp	ax, RANK_LUNATIC
 		jnz	short loc_2ABC0
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii stdcall, offset _Pellets, ds, large 320 or (160 shl 16), word ptr angle_3B041, (4 shl 4), large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii stdcall, offset _Pellets, ds, large 320 or (160 shl 16), word ptr angle_3B041, (3 shl 4), large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, large 320 or (160 shl 16), word ptr angle_3B041, (4 shl 4), large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, large 320 or (160 shl 16), word ptr angle_3B041, (3 shl 4), large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 		add	sp, 28h
 
 loc_2ABC0:
@@ -34611,7 +34611,7 @@ sub_2AECE	proc near
 ; ---------------------------------------------------------------------------
 
 loc_2AEEB:
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii c, offset _Pellets, ds, large 320 or (160 shl 16), word ptr [bp+@@angle], (2 shl 4), large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii c, offset _Pellets, ds, large 320 or (160 shl 16), word ptr [bp+@@angle], (2 shl 4), large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 		mov	al, [bp+@@angle]
 		add	al, 7
 		mov	[bp+@@angle], al
@@ -34632,7 +34632,7 @@ loc_2AF19:
 ; ---------------------------------------------------------------------------
 
 loc_2AF28:
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii c, offset _Pellets, ds, large 320 or (160 shl 16), word ptr [bp+@@angle], (3 shl 4), large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii c, offset _Pellets, ds, large 320 or (160 shl 16), word ptr [bp+@@angle], (3 shl 4), large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 		mov	al, [bp+@@angle]
 		add	al, 0Ch
 		mov	[bp+@@angle], al
@@ -34653,7 +34653,7 @@ loc_2AF56:
 ; ---------------------------------------------------------------------------
 
 loc_2AF65:
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii c, offset _Pellets, ds, large 320 or (160 shl 16), word ptr [bp+@@angle], (4 shl 4), large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii c, offset _Pellets, ds, large 320 or (160 shl 16), word ptr [bp+@@angle], (4 shl 4), large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 		mov	al, [bp+@@angle]
 		add	al, 0Eh
 		mov	[bp+@@angle], al
@@ -34674,7 +34674,7 @@ loc_2AF92:
 ; ---------------------------------------------------------------------------
 
 loc_2AFA1:
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii c, offset _Pellets, ds, large 320 or (160 shl 16), word ptr [bp+@@angle], (3 shl 4), large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii c, offset _Pellets, ds, large 320 or (160 shl 16), word ptr [bp+@@angle], (3 shl 4), large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 		mov	al, [bp+@@angle]
 		add	al, 0Ah
 		mov	[bp+@@angle], al
@@ -34853,7 +34853,7 @@ loc_2B14D:
 		push	x_3B04D
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 14h
 
 loc_2B188:
@@ -34881,7 +34881,7 @@ loc_2B188:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 14h
 
 loc_2B1CC:
@@ -34929,7 +34929,7 @@ loc_2B21A:
 		push	dx
 		call	iatan2
 		mov	[bp+@@angle], al
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii stdcall, offset _Pellets, ds, x_3B04D, y_3B04F, word ptr [bp+@@angle], (3 shl 4), large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, x_3B04D, y_3B04F, word ptr [bp+@@angle], (3 shl 4), large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 		mov	ax, PLAYFIELD_BOTTOM
 		sub	ax, y_3B04F
 		push	ax
@@ -34951,7 +34951,7 @@ loc_2B21A:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 28h
 		inc	si
 
@@ -35485,7 +35485,7 @@ loc_2B780:
 		push	ax
 		call	iatan2
 		mov	angle_3B32D, al
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii c, offset _Pellets, ds, large 320 or (185 shl 16), word ptr angle_3B32D, speed_3B32B, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii c, offset _Pellets, ds, large 320 or (185 shl 16), word ptr angle_3B32D, speed_3B32B, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 		sub	speed_3B32B, 4
 		mov	ax, word_3A780
 		add	x_3B327, ax
@@ -35507,7 +35507,7 @@ loc_2B7E7:
 		push	ax
 		call	iatan2
 		mov	angle_3B32D, al
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii c, offset _Pellets, ds, large 320 or (185 shl 16), word ptr angle_3B32D, speed_3B32B, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii c, offset _Pellets, ds, large 320 or (185 shl 16), word ptr angle_3B32D, speed_3B32B, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 		sub	speed_3B32B, 4
 		mov	ax, word_3A780
 		sub	x_3B327, ax
@@ -35687,7 +35687,7 @@ loc_2B9EA:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 14h
 		inc	si
 
@@ -35741,7 +35741,7 @@ loc_2BA6F:
 		push	ax
 		call	iatan2
 		mov	angle_3B33E, al
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii c, offset _Pellets, ds, large 320 or (185 shl 16), word ptr angle_3B33E, speed_3B33C, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii c, offset _Pellets, ds, large 320 or (185 shl 16), word ptr angle_3B33E, speed_3B33C, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 		sub	speed_3B33C, 4
 		mov	ax, word_3A780
 		add	x_3B338, ax
@@ -35763,7 +35763,7 @@ loc_2BADA:
 		push	ax
 		call	iatan2
 		mov	angle_3B33E, al
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii c, offset _Pellets, ds, large 320 or (185 shl 16), word ptr angle_3B33E, speed_3B33C, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii c, offset _Pellets, ds, large 320 or (185 shl 16), word ptr angle_3B33E, speed_3B33C, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 		sub	speed_3B33C, 4
 		mov	ax, word_3A780
 		sub	x_3B338, ax
@@ -38094,7 +38094,7 @@ loc_2D62C:
 		push	ax
 		call	iatan2
 		mov	[bp+@@angle], al
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii stdcall, offset _Pellets, ds, di, [bp+@@top], word ptr [bp+@@angle], (2 shl 4) + 8, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, di, [bp+@@top], word ptr [bp+@@angle], (2 shl 4) + 8, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 		mov	di, (PLAYFIELD_RIGHT - 8)
 		call	IRand
 		mov	bx, 200
@@ -38116,7 +38116,7 @@ loc_2D62C:
 		push	ax
 		call	iatan2
 		mov	[bp+@@angle], al
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii stdcall, offset _Pellets, ds, di, [bp+@@top], word ptr [bp+@@angle], (2 shl 4) + 8, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, di, [bp+@@top], word ptr [bp+@@angle], (2 shl 4) + 8, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 		add	sp, 28h
 		mov	[bp+@@top], PLAYFIELD_TOP
 		call	IRand
@@ -38138,7 +38138,7 @@ loc_2D62C:
 		push	ax
 		call	iatan2
 		mov	[bp+@@angle], al
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii stdcall, offset _Pellets, ds, di, [bp+@@top], word ptr [bp+@@angle], (2 shl 4) + 8, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, di, [bp+@@top], word ptr [bp+@@angle], (2 shl 4) + 8, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 		mov	[bp+@@top], PLAYFIELD_TOP
 		call	IRand
 		mov	bx, PLAYFIELD_RIGHT
@@ -38159,7 +38159,7 @@ loc_2D62C:
 		push	ax
 		call	iatan2
 		mov	[bp+@@angle], al
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii stdcall, offset _Pellets, ds, di, [bp+@@top], word ptr [bp+@@angle], (2 shl 4) + 8, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, di, [bp+@@top], word ptr [bp+@@angle], (2 shl 4) + 8, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 		add	sp, 28h
 		mov	[bp+@@top], PLAYFIELD_TOP
 		call	IRand
@@ -38195,8 +38195,8 @@ sub_2D7D7	proc far
 
 		push	bp
 		mov	bp, sp
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii stdcall, offset _Pellets, ds, large 328 or (188 shl 16), [bp+@@angle], word_3B438, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii stdcall, offset _Pellets, ds, large 296 or (188 shl 16), [bp+@@angle], word_3B438, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, large 328 or (188 shl 16), [bp+@@angle], word_3B438, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, large 296 or (188 shl 16), [bp+@@angle], word_3B438, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 		add	sp, 28h
 		pop	bp
 		retf
@@ -38751,9 +38751,9 @@ loc_2DCAE:
 		push	[bp+@@left]
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 20h
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii c, offset _Pellets, ds, [bp+@@left], [bp+@@top], word ptr [bp+@@angle], [bp+@@speed], large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii c, offset _Pellets, ds, [bp+@@left], [bp+@@top], word ptr [bp+@@angle], [bp+@@speed], large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 		mov	al, [bp+@@angle]
 		add	al, 0Ch
 		mov	[bp+@@angle], al
@@ -39002,7 +39002,7 @@ loc_2DF55:
 		mov	word_3B49F, 0
 
 loc_2DF9C:
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii c, offset _Pellets, ds, large 312 or (188 shl 16), word ptr angle_3B49C, (3 shl 4), large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii c, offset _Pellets, ds, large 312 or (188 shl 16), word ptr angle_3B49C, (3 shl 4), large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 
 loc_2DFBA:
 		cmp	_boss_phase_frame, 700
@@ -39665,7 +39665,7 @@ loc_2E6AC:
 		push	point_3B511.x
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		pushd	0 or (0 shl 16)
 		push	PM_GRAVITY or (1 shl 16)
 		push	(2 shl 4)
@@ -39676,7 +39676,7 @@ loc_2E6AC:
 		push	point_3B511.x
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 28h
 
 loc_2E703:
@@ -39802,7 +39802,7 @@ loc_2E803:
 		push	left_3B517
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		pushd	0 or (0 shl 16)
 		push	PM_GRAVITY or (1 shl 16)
 		push	(0 shl 4)
@@ -39815,7 +39815,7 @@ loc_2E803:
 		push	left_3B517
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 28h
 		mov	ax, 40
 		cwd
@@ -39860,7 +39860,7 @@ loc_2E8CC:
 		push	left_3B517
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		pushd	0 or (0 shl 16)
 		push	PM_GRAVITY or (1 shl 16)
 		push	(0 shl 4)
@@ -39873,7 +39873,7 @@ loc_2E8CC:
 		push	left_3B517
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 28h
 		sub	left_3B517, 23
 		sub	top_3B519, 3
@@ -39907,7 +39907,7 @@ loc_2E966:
 		push	left_3B517
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		pushd	0 or (0 shl 16)
 		push	PM_GRAVITY or (1 shl 16)
 		push	(0 shl 4)
@@ -39920,7 +39920,7 @@ loc_2E966:
 		push	left_3B517
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 28h
 		mov	ax, 20
 		cwd
@@ -39977,8 +39977,8 @@ loc_2EA42:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_2EAAA
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii stdcall, offset _Pellets, ds, left_3B51B, top_3B51D, 20h, word_3B438, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii stdcall, offset _Pellets, ds, left_3B51B, top_3B51D, 60h, word_3B438, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, left_3B51B, top_3B51D, 20h, word_3B438, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, left_3B51B, top_3B51D, 60h, word_3B438, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 		add	sp, 28h
 		inc	left_3B51B
 		add	top_3B51D, 12
@@ -39994,8 +39994,8 @@ loc_2EABE:
 		jl	loc_2EB8F
 		cmp	_boss_phase_frame, 150
 		jge	short loc_2EB17
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii stdcall, offset _Pellets, ds, left_3B51B, top_3B51D, 20h, word_3B438, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii stdcall, offset _Pellets, ds, left_3B51B, top_3B51D, 60h, word_3B438, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, left_3B51B, top_3B51D, 20h, word_3B438, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, left_3B51B, top_3B51D, 60h, word_3B438, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 		add	sp, 28h
 		sub	left_3B51B, 23
 		sub	top_3B51D, 3
@@ -40017,8 +40017,8 @@ loc_2EB2B:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_2EB8F
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii stdcall, offset _Pellets, ds, left_3B51B, top_3B51D, 20h, word_3B438, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii stdcall, offset _Pellets, ds, left_3B51B, top_3B51D, 60h, word_3B438, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, left_3B51B, top_3B51D, 20h, word_3B438, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, left_3B51B, top_3B51D, 60h, word_3B438, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 		add	sp, 28h
 		sub	left_3B51B, -21
 		sub	top_3B51D, 12
@@ -40234,7 +40234,7 @@ loc_2EDD2:
 ; ---------------------------------------------------------------------------
 
 loc_2EDF0:
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii c, offset _Pellets, ds, large 290 or (200 shl 16), word ptr [bp+@@angle], (2 shl 4), large PM_GRAVITY or (1 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii c, offset _Pellets, ds, large 290 or (200 shl 16), word ptr [bp+@@angle], (2 shl 4), large PM_GRAVITY or (1 shl 16), large 0 or (0 shl 16)
 		inc	si
 		mov	al, [bp+@@angle]
 		add	al, -0Ch
@@ -40259,7 +40259,7 @@ loc_2EE20:
 ; ---------------------------------------------------------------------------
 
 loc_2EE36:
-		call	@CPellets@add_single$qiiii15pellet_motion_tiii c, offset _Pellets, ds, large 290 or (200 shl 16), word ptr [bp+@@angle], (2 shl 4), large PM_FALL_STRAIGHT_FROM_TOP_THEN_NORMAL or ((3 shl 4) shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii c, offset _Pellets, ds, large 290 or (200 shl 16), word ptr [bp+@@angle], (2 shl 4), large PM_FALL_STRAIGHT_FROM_TOP_THEN_NORMAL or ((3 shl 4) shl 16), large 0 or (0 shl 16)
 		inc	si
 		mov	al, [bp+@@angle]
 		add	al, -0Ch
@@ -41649,7 +41649,7 @@ main_38_TEXT	segment	byte public 'CODE' use16
 	extern @CShots@hittest_boss$qiiii:proc
 	extern @CPellets@$bctr$qv:proc
 	extern @CPellets@add_pattern$qii16pellet_pattern_ti:proc
-	extern @CPellets@add_single$qiiii15pellet_motion_tiii:proc
+	extern @CPellets@add_single$qiiuci15pellet_motion_tiii:proc
 	extern @CPellets@unput_update_render$qv:proc
 	extern @CPellets@unput_and_reset_all$qv:proc
 	extern @CPellets@decay_all$qv:proc

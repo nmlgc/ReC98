@@ -244,7 +244,7 @@ void CPellets::add_pattern(
 void CPellets::add_single(
 	screen_x_t left,
 	screen_y_t top,
-	int angle,
+	unsigned char angle,
 	subpixel_t speed_base,
 	pellet_motion_t motion_type,
 	subpixel_t speed_for_motion_fixed,

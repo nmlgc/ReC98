@@ -220,7 +220,7 @@ public:
 	void add_single(
 		screen_x_t left,
 		screen_y_t top,
-		int angle,
+		unsigned char angle,
 		subpixel_t speed_base,
 		pellet_motion_t motion_type,
 		subpixel_t speed_for_motion_fixed = to_sp(0.0f),
