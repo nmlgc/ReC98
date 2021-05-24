@@ -311,6 +311,16 @@ void konngara_setup(void)
 	face_direction = FD_CENTER;
 }
 
+void konngara_free(void)
+{
+	bos_entity_free(0);
+	bos_entity_free(1);
+	bos_entity_free(2);
+	for(int i = 0; i < 7; i++) {
+		grx_free(i);
+	}
+}
+
 char konngara_esc_cls[] = "\x1B*";
 char konngara_esc_mode_graph[] = "\x1B)3";
 char konngara_esc_color_bg_black_fg_black[] = "\x1B[16;40m";

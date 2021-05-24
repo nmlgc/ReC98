@@ -2892,7 +2892,7 @@ loc_D516:
 ; ---------------------------------------------------------------------------
 
 loc_D51D:
-		call	_konngara_free
+		call	@konngara_free$qv
 
 loc_D522:
 		pop	bp
@@ -37639,6 +37639,7 @@ main_37_TEXT	segment	byte public 'CODE' use16
 	extern @pellet_spawnray_unput_and_put$qiiiii:proc
 	extern @konngara_load_and_entrance$qc:proc
 	extern @konngara_init$qv:proc
+	extern @konngara_free$qv:proc
 main_37_TEXT	ends
 
 main_37__TEXT	segment	byte public 'CODE' use16
@@ -37661,36 +37662,6 @@ FE_AIM = 3
 konngara_head	equ <boss_entity_0>
 konngara_face_closed_or_glare	equ <boss_entity_1>
 konngara_face_aim	equ <boss_entity_2>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public _konngara_free
-_konngara_free	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		call	_bos_entity_free stdcall, 0
-		call	_bos_entity_free stdcall, 1
-		call	_bos_entity_free stdcall, 2
-		add	sp, 6
-		xor	si, si
-		jmp	short loc_2D269
-; ---------------------------------------------------------------------------
-
-loc_2D261:
-		call	_grx_free stdcall, si
-		pop	cx
-		inc	si
-
-loc_2D269:
-		cmp	si, 7
-		jl	short loc_2D261
-		pop	si
-		pop	bp
-		retf
-_konngara_free	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -41200,7 +41171,7 @@ loc_2F766:
 		cmp	_boss_hp, 0
 		jg	loc_2FC40
 		call	_printf c, offset _konngara_esc_cls, ds
-		call	_konngara_free
+		call	@konngara_free$qv
 		call	_z_graph_clear
 		call	_mdrv2_bgm_stop
 		call	_z_palette_set_show c, large (0 shl 16) or 0, large (0 shl 16) or 0
@@ -41585,7 +41556,7 @@ loc_2FC28:
 loc_2FC32:
 		cmp	si, 5
 		jl	short loc_2FC28
-		call	_konngara_free
+		call	@konngara_free$qv
 		mov	byte_35DAA, 1
 
 loc_2FC40:

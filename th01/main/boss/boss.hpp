@@ -48,4 +48,5 @@ void boss_hit_update_and_render(
 
 void konngara_load_and_entrance(int8_t unused);
 void konngara_init(void);
+void konngara_free(void);
 // -----------------
