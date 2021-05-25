@@ -37643,6 +37643,7 @@ main_37_TEXT	segment	byte public 'CODE' use16
 	extern @face_direction_set_and_put$q16face_direction_t:proc
 	extern @face_expression_set_and_put$q17face_expression_t:proc
 	extern @slash_put$qi:proc
+	extern @pattern_diamond_cross_to_edges_f$qv:proc
 main_37_TEXT	ends
 
 main_37__TEXT	segment	byte public 'CODE' use16
@@ -37661,305 +37662,6 @@ FE_NEUTRAL = 0
 FE_CLOSED = 1
 FE_GLARE = 2
 FE_AIM = 3
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2D439	proc far
-
-@@angle		= byte ptr -7
-@@y		= word ptr -6
-@@x		= word ptr -4
-@@top		= word ptr -2
-
-		enter	8, 0
-		push	si
-		push	di
-		cmp	_boss_phase_frame, 10
-		jnz	short loc_2D44D
-		call	@face_expression_set_and_put$q17face_expression_t stdcall, FE_NEUTRAL
-		pop	cx
-
-loc_2D44D:
-		cmp	_boss_phase_frame, 100
-		jl	loc_2D7D3
-		cmp	_boss_phase_frame, 100
-		jnz	loc_2D500
-		call	@konngara_select_for_rank$qmiiiii stdcall, offset _konngara_pattern_state, ds, large PG_2_SPREAD_NARROW_AIMED or (PG_3_SPREAD_NARROW_AIMED shl 16), large PG_5_SPREAD_WIDE_AIMED or (PG_5_SPREAD_NARROW_AIMED shl 16)
-		call	_vector2_between stdcall, large (236 shl 16) or 316, large (384 shl 16) or 0, offset x_3B43A, ds, offset y_3B43E, ds, 7
-		call	_vector2_between stdcall, large (236 shl 16) or 316, large ( 64 shl 16) or 0, offset x_3B43C, ds, offset y_3B440, ds, 7
-		add	sp, 30h
-		xor	si, si
-		jmp	short loc_2D4C5
-; ---------------------------------------------------------------------------
-
-loc_2D4B0:
-		mov	bx, si
-		add	bx, bx
-		mov	word ptr [bx+6AA2h], 13Ch
-		mov	bx, si
-		add	bx, bx
-		mov	word ptr [bx+6AAAh], 0ECh
-		inc	si
-
-loc_2D4C5:
-		cmp	si, 4
-		jl	short loc_2D4B0
-		call	@CPellets@add_group$qii14pellet_group_ti stdcall, offset _Pellets, ds, large 312 or (188 shl 16), _konngara_pattern_state, (3 shl 4)
-		call	@konngara_select_for_rank$qmiiiii stdcall, offset _konngara_pattern_state, ds, large 18 or (16 shl 16), large 14 or (12 shl 16)
-		push	0Ch
-		call	_mdrv2_se_play
-		add	sp, 1Ah
-		jmp	loc_2D7CD
-; ---------------------------------------------------------------------------
-
-loc_2D500:
-		cmp	word_3B442, 0
-		jle	loc_2D5B2
-		xor	si, si
-		jmp	short loc_2D52C
-; ---------------------------------------------------------------------------
-
-loc_2D50D:
-		push	(8 shl 16) or 16
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+6AAAh]
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+6AA2h]
-		call	_egc_copy_rect_1_to_0_16
-		add	sp, 8
-		inc	si
-
-loc_2D52C:
-		cmp	si, 4
-		jl	short loc_2D50D
-		mov	ax, x_3B43A
-		add	word_3B442, ax
-		mov	ax, y_3B43E
-		add	word_3B44A, ax
-		mov	ax, x_3B43A
-		sub	word_3B444, ax
-		mov	ax, y_3B43E
-		add	word_3B44C, ax
-		mov	ax, x_3B43C
-		add	word_3B446, ax
-		mov	ax, y_3B440
-		add	word_3B44E, ax
-		mov	ax, x_3B43C
-		sub	word_3B448, ax
-		mov	ax, y_3B440
-		add	word_3B450, ax
-		cmp	word_3B442, 0
-		jg	short loc_2D58B
-		mov	word_3B442, 0
-		mov	word_3B446, 0
-		mov	word_3B444, 278h
-		mov	word_3B448, 278h
-		jmp	loc_2D7D3
-; ---------------------------------------------------------------------------
-
-loc_2D58B:
-		xor	si, si
-		jmp	short loc_2D5AA
-; ---------------------------------------------------------------------------
-
-loc_2D58F:
-		push	9	; col
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+6AAAh]	; top
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+6AA2h]	; left
-		call	@shape8x8_diamond_put$qiii
-		add	sp, 6
-		inc	si
-
-loc_2D5AA:
-		cmp	si, 4
-		jl	short loc_2D58F
-		jmp	loc_2D7D3
-; ---------------------------------------------------------------------------
-
-loc_2D5B2:
-		cmp	word_3B44A, 40h
-		jle	short loc_2D62C
-		xor	si, si
-		jmp	short loc_2D5DC
-; ---------------------------------------------------------------------------
-
-loc_2D5BD:
-		push	(8 shl 16) or 16
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+6AAAh]
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+6AA2h]
-		call	_egc_copy_rect_1_to_0_16
-		add	sp, 8
-		inc	si
-
-loc_2D5DC:
-		cmp	si, 4
-		jl	short loc_2D5BD
-		sub	word_3B44A, 3
-		sub	word_3B44C, 3
-		add	word_3B446, 6
-		sub	word_3B448, 6
-		cmp	word_3B44A, 40h
-		jg	short loc_2D605
-		mov	word_3B44A, 40h
-		jmp	loc_2D7D3
-; ---------------------------------------------------------------------------
-
-loc_2D605:
-		xor	si, si
-		jmp	short loc_2D624
-; ---------------------------------------------------------------------------
-
-loc_2D609:
-		push	9	; col
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+6AAAh]	; top
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+6AA2h]	; left
-		call	@shape8x8_diamond_put$qiii
-		add	sp, 6
-		inc	si
-
-loc_2D624:
-		cmp	si, 4
-		jl	short loc_2D609
-		jmp	loc_2D7D3
-; ---------------------------------------------------------------------------
-
-loc_2D62C:
-		cmp	word_3B452, 0C8h ; '?'
-		jge	loc_2D7C7
-		inc	word_3B452
-		mov	ax, word_3B452
-		cwd
-		idiv	_konngara_pattern_state
-		or	dx, dx
-		jnz	loc_2D7D3
-		xor	di, di
-		call	IRand
-		mov	bx, 200
-		cwd
-		idiv	bx
-		add	dx, PLAYFIELD_TOP
-		mov	[bp+@@top], dx
-		call	IRand
-		mov	bx, 400
-		cwd
-		idiv	bx
-		add	dx, 240
-		mov	[bp+@@x], dx
-		mov	[bp+@@y], PLAYFIELD_BOTTOM
-		mov	ax, [bp+@@y]
-		sub	ax, [bp+@@top]
-		push	ax
-		mov	ax, [bp+@@x]
-		sub	ax, di
-		push	ax
-		call	iatan2
-		mov	[bp+@@angle], al
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, di, [bp+@@top], word ptr [bp+@@angle], (2 shl 4) + 8, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
-		mov	di, (PLAYFIELD_RIGHT - 8)
-		call	IRand
-		mov	bx, 200
-		cwd
-		idiv	bx
-		add	dx, PLAYFIELD_TOP
-		mov	[bp+@@top], dx
-		call	IRand
-		mov	bx, PLAYFIELD_BOTTOM
-		cwd
-		idiv	bx
-		mov	[bp+@@x], dx
-		mov	[bp+@@y], PLAYFIELD_BOTTOM
-		mov	ax, [bp+@@y]
-		sub	ax, [bp+@@top]
-		push	ax
-		mov	ax, [bp+@@x]
-		sub	ax, di
-		push	ax
-		call	iatan2
-		mov	[bp+@@angle], al
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, di, [bp+@@top], word ptr [bp+@@angle], (2 shl 4) + 8, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
-		add	sp, 28h
-		mov	[bp+@@top], PLAYFIELD_TOP
-		call	IRand
-		mov	bx, PLAYFIELD_RIGHT
-		cwd
-		idiv	bx
-		mov	di, dx
-		mov	[bp+@@y], PLAYFIELD_BOTTOM
-		call	IRand
-		mov	bx, PLAYFIELD_RIGHT
-		cwd
-		idiv	bx
-		mov	[bp+@@x], dx
-		mov	ax, [bp+@@y]
-		sub	ax, [bp+@@top]
-		push	ax
-		mov	ax, [bp+@@x]
-		sub	ax, di
-		push	ax
-		call	iatan2
-		mov	[bp+@@angle], al
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, di, [bp+@@top], word ptr [bp+@@angle], (2 shl 4) + 8, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
-		mov	[bp+@@top], PLAYFIELD_TOP
-		call	IRand
-		mov	bx, PLAYFIELD_RIGHT
-		cwd
-		idiv	bx
-		mov	di, dx
-		mov	[bp+@@y], PLAYFIELD_BOTTOM
-		call	IRand
-		mov	bx, PLAYFIELD_RIGHT
-		cwd
-		idiv	bx
-		mov	[bp+@@x], dx
-		mov	ax, [bp+@@y]
-		sub	ax, [bp+@@top]
-		push	ax
-		mov	ax, [bp+@@x]
-		sub	ax, di
-		push	ax
-		call	iatan2
-		mov	[bp+@@angle], al
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, di, [bp+@@top], word ptr [bp+@@angle], (2 shl 4) + 8, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
-		add	sp, 28h
-		mov	[bp+@@top], PLAYFIELD_TOP
-		call	IRand
-		mov	bx, PLAYFIELD_RIGHT
-		cwd
-		idiv	bx
-		mov	di, dx
-		call	@CPellets@add_group$qii14pellet_group_ti c, offset _Pellets, ds, dx, [bp+@@top], large PG_1_AIMED or (((2 shl 4) + 8) shl 16)
-		jmp	short loc_2D7D3
-; ---------------------------------------------------------------------------
-
-loc_2D7C7:
-		mov	_boss_phase_frame, 0
-
-loc_2D7CD:
-		mov	word_3B452, 0
-
-loc_2D7D3:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_2D439	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -40124,7 +39826,7 @@ loc_2EF22:
 		pop	cx
 		cmp	word_35FF8, 0
 		jnz	short loc_2EF38
-		call	sub_2D439
+		call	@pattern_diamond_cross_to_edges_f$qv
 		jmp	short loc_2EF97
 ; ---------------------------------------------------------------------------
 
@@ -40847,7 +40549,7 @@ loc_2F62F:
 		pop	cx
 		cmp	word_35FF8, 0
 		jnz	short loc_2F646
-		call	sub_2D439
+		call	@pattern_diamond_cross_to_edges_f$qv
 		jmp	loc_2F720
 ; ---------------------------------------------------------------------------
 
@@ -42544,21 +42246,16 @@ word_3B435	dw ?
 public _sariel_initial_hp_rendered
 _sariel_initial_hp_rendered	db ?
 
-public _konngara_pattern_state
+public _konngara_pattern_state, _pattern0_diamonds, _frames_with_diamonds_at_edges
 _konngara_pattern_state	dw ?
-x_3B43A	dw ?
-x_3B43C	dw ?
-y_3B43E	dw ?
-y_3B440	dw ?
-word_3B442	dw ?
-word_3B444	dw ?
-word_3B446	dw ?
-word_3B448	dw ?
-word_3B44A	dw ?
-word_3B44C	dw ?
-word_3B44E	dw ?
-word_3B450	dw ?
-word_3B452	dw ?
+_pattern0_diamonds label byte
+	P0D_velocity_bottomleft_x	dw ?
+	P0D_velocity_topleft_x	dw ?
+	P0D_velocity_bottomleft_y	dw ?
+	P0D_velocity_topleft_y	dw ?
+	P0D_left	dw 4 dup(?)
+	P0D_top	dw 4 dup(?)
+_frames_with_diamonds_at_edges	dw ?
 angle_3B454	db ?
 word_3B455	dw ?
 word_3B457	dw ?

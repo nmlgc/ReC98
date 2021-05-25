@@ -10,6 +10,7 @@ extern "C" {
 #include "th01/common.h"
 #include "th01/math/area.hpp"
 #include "th01/math/subpixel.hpp"
+#include "th01/math/vector.hpp"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/palette.h"
 #include "th01/hardware/graph.h"
@@ -23,10 +24,13 @@ extern "C" {
 #include "th01/formats/ptn.hpp"
 #include "th01/formats/stagedat.hpp"
 #include "th01/sprites/pellet.h"
+#include "th01/sprites/shape8x8.hpp"
 #include "th01/main/boss/entity_a.hpp"
 #include "th01/main/stage/palette.hpp"
 }
 #include "th01/main/stage/stageobj.hpp"
+#include "th01/main/shape.hpp"
+#include "th01/main/player/player.hpp"
 #include "th01/main/boss/boss.hpp"
 #include "th01/main/boss/palette.hpp"
 #include "th01/main/bullet/pellet.hpp"
@@ -385,6 +389,167 @@ void slash_put(int image)
 {
 	graph_accesspage_func(1);	grx_put(image);
 	graph_accesspage_func(0);	grx_put(image);
+}
+
+void pattern_diamond_cross_to_edges_followed_by_rain(void)
+{
+	#define DIAMOND_COUNT 4
+	#define DIAMOND_ORIGIN_X (PLAYFIELD_CENTER_X - (DIAMOND_W / 2))
+	#define DIAMOND_ORIGIN_Y (PLAYFIELD_CENTER_Y + (DIAMOND_H / 2))
+
+	int i;
+
+	#define diamonds pattern0_diamonds
+	extern struct {
+		pixel_t velocity_bottomleft_x, velocity_topleft_x;
+		pixel_t velocity_bottomleft_y, velocity_topleft_y;
+		screen_x_t left[DIAMOND_COUNT];
+		screen_y_t top[DIAMOND_COUNT];
+	} diamonds;
+	extern int frames_with_diamonds_at_edges;
+
+	#define diamonds_unput(i) \
+		for(i = 0; i < DIAMOND_COUNT; i++) { \
+			egc_copy_rect_1_to_0_16( \
+				diamonds.left[i], diamonds.top[i], 16, DIAMOND_H \
+			); \
+		}
+
+	#define diamonds_put(i) \
+		for(i = 0; i < DIAMOND_COUNT; i++) { \
+			shape8x8_diamond_put(diamonds.left[i], diamonds.top[i], 9); \
+		}
+
+	if(boss_phase_frame == 10) {
+		face_expression_set_and_put(FE_NEUTRAL);
+	}
+	if(boss_phase_frame < 100) {
+		return;
+	} else if(boss_phase_frame == 100) {
+		// MODDERS: Just use a local variable.
+		select_for_rank(pattern_state.group,
+			PG_2_SPREAD_NARROW_AIMED,
+			PG_3_SPREAD_NARROW_AIMED,
+			PG_5_SPREAD_WIDE_AIMED,
+			PG_5_SPREAD_NARROW_AIMED
+		);
+
+		vector2_between(
+			DIAMOND_ORIGIN_X, DIAMOND_ORIGIN_Y,
+			PLAYFIELD_LEFT, player_center_y,
+			diamonds.velocity_bottomleft_x, diamonds.velocity_bottomleft_y,
+			7
+		);
+		vector2_between(
+			DIAMOND_ORIGIN_X, DIAMOND_ORIGIN_Y,
+			PLAYFIELD_LEFT, PLAYFIELD_TOP,
+			diamonds.velocity_topleft_x, diamonds.velocity_topleft_y,
+			7
+		);
+
+		for(i = 0; i < DIAMOND_COUNT; i++) {
+			diamonds.left[i] = DIAMOND_ORIGIN_X;
+			diamonds.top[i] = DIAMOND_ORIGIN_Y;
+		}
+		Pellets.add_group(
+			(PLAYFIELD_LEFT + (PLAYFIELD_W / 2) - PELLET_W),
+			(PLAYFIELD_TOP + playfield_fraction_y(8 / 21.0f) - (PELLET_H / 2)),
+			static_cast<pellet_group_t>(pattern_state.group),
+			to_sp(3.0f)
+		);
+		select_for_rank(pattern_state.interval, 18, 16, 14, 12);
+		mdrv2_se_play(12);
+	} else if(diamonds.left[0] > PLAYFIELD_LEFT) {
+		diamonds_unput(i);
+		diamonds.left[0] += diamonds.velocity_bottomleft_x;
+		diamonds.top[0]  += diamonds.velocity_bottomleft_y;
+		diamonds.left[1] -= diamonds.velocity_bottomleft_x;
+		diamonds.top[1]  += diamonds.velocity_bottomleft_y;
+		diamonds.left[2] += diamonds.velocity_topleft_x;
+		diamonds.top[2]  += diamonds.velocity_topleft_y;
+		diamonds.left[3] -= diamonds.velocity_topleft_x;
+		diamonds.top[3]  += diamonds.velocity_topleft_y;
+		if(diamonds.left[0] <= PLAYFIELD_LEFT) {
+			diamonds.left[0] = PLAYFIELD_LEFT;
+			diamonds.left[2] = PLAYFIELD_LEFT;
+			diamonds.left[1] = (PLAYFIELD_RIGHT - DIAMOND_W);
+			diamonds.left[3] = (PLAYFIELD_RIGHT - DIAMOND_W);
+		} else {
+			diamonds_put(i);
+		}
+		return;
+	} else if(diamonds.top[0] > PLAYFIELD_TOP) {
+		diamonds_unput(i);
+		diamonds.top[0] -= 3;
+		diamonds.top[1] -= 3;
+		diamonds.left[2] += 6;
+		diamonds.left[3] -= 6;
+		if(diamonds.top[0] <= PLAYFIELD_TOP) {
+			diamonds.top[0] = PLAYFIELD_TOP;
+		} else {
+			diamonds_put(i);
+		}
+		return;
+	} else if(frames_with_diamonds_at_edges < 200) {
+		frames_with_diamonds_at_edges++;
+		if((frames_with_diamonds_at_edges % pattern_state.interval) == 0)  {
+			#define speed to_sp(2.5f)
+			screen_x_t from_left;
+			screen_y_t from_top;
+			screen_x_t to_left;
+			screen_y_t to_top;
+			unsigned char angle;
+
+			from_left = PLAYFIELD_LEFT;
+			from_top = (PLAYFIELD_TOP + playfield_rand_y(25 / 42.0f));
+			// Should actually be
+			// 	to_left = (PLAYFIELD_RIGHT - playfield_rand_x(5 / 8.0f));
+			to_left = (PLAYFIELD_LEFT +
+				playfield_rand_x(5 / 8.0f) + playfield_fraction_x(3 / 8.0f)
+			);
+			to_top = PLAYFIELD_BOTTOM;
+			angle = iatan2((to_top - from_top), (to_left - from_left));
+			Pellets.add_single(from_left, from_top, angle, speed, PM_NORMAL);
+
+			from_left = (PLAYFIELD_RIGHT - PELLET_W);
+			from_top = (PLAYFIELD_TOP + playfield_rand_y(25 / 42.0f));
+			to_left = (PLAYFIELD_LEFT + playfield_rand_x( 5 /  8.0f));
+			to_top = PLAYFIELD_BOTTOM;
+			angle = iatan2((to_top - from_top), (to_left - from_left));
+			Pellets.add_single(from_left, from_top, angle, speed, PM_NORMAL);
+
+			from_top = PLAYFIELD_TOP;
+			from_left = (PLAYFIELD_LEFT + playfield_rand_x());
+			to_top = PLAYFIELD_BOTTOM;
+			to_left = (PLAYFIELD_LEFT + playfield_rand_x());
+			angle = iatan2((to_top - from_top), (to_left - from_left));
+			Pellets.add_single(from_left, from_top, angle, speed, PM_NORMAL);
+
+			from_top = PLAYFIELD_TOP;
+			from_left = (PLAYFIELD_LEFT + playfield_rand_x());
+			to_top = PLAYFIELD_BOTTOM;
+			to_left = (PLAYFIELD_LEFT + playfield_rand_x());
+			angle = iatan2((to_top - from_top), (to_left - from_left));
+			Pellets.add_single(from_left, from_top, angle, speed, PM_NORMAL);
+
+			from_top = PLAYFIELD_TOP;
+			from_left = (PLAYFIELD_LEFT + playfield_rand_x());
+			Pellets.add_group(from_left, from_top, PG_1_AIMED, speed);
+
+			#undef speed
+		}
+		return;
+	} else {
+		boss_phase_frame = 0;
+	}
+	frames_with_diamonds_at_edges = 0;
+
+	#undef diamonds_put
+	#undef diamonds_unput
+	#undef diamonds
+	#undef DIAMOND_ORIGIN_Y
+	#undef DIAMOND_ORIGIN_X
+	#undef DIAMOND_COUNT
 }
 
 char konngara_esc_cls[] = "\x1B*";

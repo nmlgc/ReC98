@@ -10,6 +10,10 @@ static const screen_x_t PLAYFIELD_CENTER_X = (
 	((PLAYFIELD_RIGHT - PLAYFIELD_LEFT) / 2) + PLAYFIELD_LEFT
 );
 
+static const screen_y_t PLAYFIELD_CENTER_Y = (
+	((PLAYFIELD_BOTTOM - PLAYFIELD_TOP) / 2) + PLAYFIELD_TOP
+);
+
 inline pixel_t playfield_fraction_x(float fraction = 1.0f) {
 	return ((int)(PLAYFIELD_W * fraction));
 }
