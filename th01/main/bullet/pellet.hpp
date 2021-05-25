@@ -60,55 +60,55 @@ enum pellet_sling_direction_t {
 	_pellet_sling_direction_t_FORCE_INT16 = 0x7FFF
 };
 
-// Types for predefined multi-pellet patterns. In TH01, individual bullets of
-// such a pattern only differ in their angle.
+// Types for predefined multi-pellet groups. In TH01, individual bullets of
+// such a group only differ in their angle.
 //
-// The PP_?_ number indicates the number of pellets created by this pattern.
+// The PG_?_ number indicates the number of pellets created by this group.
 //
-// All patterns (including the random-angle ones) are symmetrical around
-// • a (0, 1) vector, pointing downwards (for static patterns)
-// • a vector from the pellet's origin to the player (for aimed patterns)
+// All groups (including the random-angle ones) are symmetrical around
+// • a (0, 1) vector, pointing downwards (for static groups)
+// • a vector from the pellet's origin to the player (for aimed groups)
 // Odd-numbered spreads always contain a pellet in the center, which moves
 // along this axis of symmetry; even-numbered spreads don't.
 //
-// For aimed patterns, this means that:
+// For aimed groups, this means that:
 // • spreads with  odd numbers of pellets are aimed *at* the player, while
 // • spreads with even numbers of pellets are aimed *around* the player.
-enum pellet_pattern_t {
-	// Does not actually work, due to a ZUN bug in pattern_velocity_set()!
-	PP_NONE = 0,
+enum pellet_group_t {
+	// Does not actually work, due to a ZUN bug in group_velocity_set()!
+	PG_NONE = 0,
 
-	PP_1 = 1,
-	PP_1_AIMED = 12,
+	PG_1 = 1,
+	PG_1_AIMED = 12,
 
-	PP_2_SPREAD_WIDE,
-	PP_2_SPREAD_NARROW,
-	PP_3_SPREAD_WIDE,
-	PP_3_SPREAD_NARROW,
-	PP_4_SPREAD_WIDE,
-	PP_4_SPREAD_NARROW,
-	PP_5_SPREAD_WIDE,
-	PP_5_SPREAD_NARROW,
+	PG_2_SPREAD_WIDE,
+	PG_2_SPREAD_NARROW,
+	PG_3_SPREAD_WIDE,
+	PG_3_SPREAD_NARROW,
+	PG_4_SPREAD_WIDE,
+	PG_4_SPREAD_NARROW,
+	PG_5_SPREAD_WIDE,
+	PG_5_SPREAD_NARROW,
 
 	// Aimed versions of the n-way spreads above. Expected to have enum values
 	// >= this one!
-	PP_AIMED_SPREADS,
+	PG_AIMED_SPREADS,
 
-	PP_2_SPREAD_WIDE_AIMED = PP_AIMED_SPREADS,
-	PP_2_SPREAD_NARROW_AIMED,
-	PP_3_SPREAD_WIDE_AIMED,
-	PP_3_SPREAD_NARROW_AIMED,
-	PP_4_SPREAD_WIDE_AIMED,
-	PP_4_SPREAD_NARROW_AIMED,
-	PP_5_SPREAD_WIDE_AIMED,
-	PP_5_SPREAD_NARROW_AIMED,
+	PG_2_SPREAD_WIDE_AIMED = PG_AIMED_SPREADS,
+	PG_2_SPREAD_NARROW_AIMED,
+	PG_3_SPREAD_WIDE_AIMED,
+	PG_3_SPREAD_NARROW_AIMED,
+	PG_4_SPREAD_WIDE_AIMED,
+	PG_4_SPREAD_NARROW_AIMED,
+	PG_5_SPREAD_WIDE_AIMED,
+	PG_5_SPREAD_NARROW_AIMED,
 
 	// -11.25 deg to +11.25 deg, around the player
-	PP_1_RANDOM_NARROW_AIMED = 29,
+	PG_1_RANDOM_NARROW_AIMED = 29,
 	// -45 deg to +45 deg, facing down
-	PP_1_RANDOM_WIDE = 30,
+	PG_1_RANDOM_WIDE = 30,
 
-	_pellet_pattern_t_FORCE_INT16 = 0x7FFF
+	_pellet_group_t_FORCE_INT16 = 0x7FFF
 };
 
 struct pellet_t {
@@ -139,7 +139,7 @@ public:
 	SPPoint spin_center; // only used for PM_SPIN
 	Subpixel prev_left;
 	Subpixel prev_top;
-	pellet_pattern_t from_pattern;
+	pellet_group_t from_group;
 	SPPoint velocity; // unused for PM_SPIN
 	SPPoint spin_velocity; // only used for PM_SPIN
 
@@ -200,14 +200,14 @@ protected:
 public:
 	CPellets(void);
 
-	// Spawns a number of bullets according to the given [pattern], with their
+	// Spawns a number of bullets according to the given [group], with their
 	// corresponding velocities, at (left, top). [speed_base] is tuned
 	// according to the currently played difficulty and the resident
 	// [pellet_speed]. The [motion_type] for the new pellets is PM_NORMAL.
-	void add_pattern(
+	void add_group(
 		screen_x_t left,
 		screen_y_t top,
-		pellet_pattern_t pattern,
+		pellet_group_t group,
 		subpixel_t speed_base
 	);
 

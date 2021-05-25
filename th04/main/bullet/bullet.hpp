@@ -1,13 +1,13 @@
 #include "th04/sprites/cels.h"
 
-/// Game-specific pattern and spawn types
-/// -------------------------------------
+/// Game-specific group and spawn types
+/// -----------------------------------
 #if GAME == 5
-# include "th05/main/bullet/pattypes.h"
+# include "th05/main/bullet/types.h"
 #else
-# include "th04/main/bullet/pattypes.h"
+# include "th04/main/bullet/types.h"
 #endif
-/// -------------------------------------
+/// -----------------------------------
 
 /// States and modes
 /// ----------------
@@ -61,7 +61,7 @@ struct bullet_t {
 	char flag;
 	char age;
 	motion_t pos;
-	unsigned char from_pattern; // unused
+	unsigned char from_group; // unused
 	int8_t unused;
 	SubpixelLength8 speed_cur;
 	unsigned char angle;
@@ -163,7 +163,7 @@ struct bullet_template_t {
 	unsigned char patnum;	// TH05: 0 = pellet
 	SPPoint origin;
 #if GAME == 5
-	bullet_pattern_t pattern;
+	bullet_group_t group;
 	bullet_special_motion_t special_motion;
 	unsigned char spread;
 	unsigned char spread_angle_delta;
@@ -173,7 +173,7 @@ struct bullet_template_t {
 	SubpixelLength8 speed;
 #else
 	SPPoint velocity;
-	bullet_pattern_t pattern;
+	bullet_group_t group;
 	unsigned char angle;
 	SubpixelLength8 speed;
 	unsigned char count;

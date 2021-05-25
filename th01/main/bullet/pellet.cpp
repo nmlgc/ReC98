@@ -57,40 +57,40 @@ void vector2_to_player_from(
 	ret_y = polar_y(0, length, plus_angle);
 }
 
-// Sets the velocity for pellet #[i] in the given [pattern]. Returns true if
-// this was the last pellet for this pattern.
-bool16 pattern_velocity_set(
+// Sets the velocity for pellet #[i] in the given [group]. Returns true if
+// this was the last pellet for this group.
+bool16 group_velocity_set(
 	Subpixel &ret_x,
 	Subpixel &ret_y,
-	pellet_pattern_t pattern,
+	pellet_group_t group,
 	subpixel_t speed,
 	int &i,
 	screen_x_t pellet_left,
 	screen_y_t pellet_top
 )
 {
-	// ZUN bug: Due to this default, add_pattern() ends up repeatedly calling
-	// this function for [pattern] values not covered by the switch below,
+	// ZUN bug: Due to this default, add_group() ends up repeatedly calling
+	// this function for [group] values not covered by the switch below,
 	// until it iterated over the entire pellet array...
 	bool16 done = false;
 	unsigned char angle = 0x00;
 	unsigned char spread_delta = 0x00;
 
 	#define to_aim_or_not_to_aim() \
-		if(pattern >= PP_AIMED_SPREADS) { \
+		if(group >= PG_AIMED_SPREADS) { \
 			goto aim; \
 		} \
-		/* Static pattern; add a 90° angle, so that 0° points downwards */ \
+		/* Static group; add a 90° angle, so that 0° points downwards */ \
 		angle += 0x40; \
 		goto no_aim;
 
-	switch(pattern) {
-	case PP_1:
+	switch(group) {
+	case PG_1:
 		ret_y.v = speed;
 		ret_x.set(0.0f);
 		done = true;
 		break;
-	case PP_1_AIMED:
+	case PG_1_AIMED:
 		vector2_between(
 			pellet_left,
 			pellet_top,
@@ -103,37 +103,37 @@ bool16 pattern_velocity_set(
 		done = true;
 		break;
 
-	case PP_2_SPREAD_WIDE:
-	case PP_2_SPREAD_WIDE_AIMED:	spread_delta = 0x08;	// fallthrough
-	case PP_2_SPREAD_NARROW:
-	case PP_2_SPREAD_NARROW_AIMED:
+	case PG_2_SPREAD_WIDE:
+	case PG_2_SPREAD_WIDE_AIMED:	spread_delta = 0x08;	// fallthrough
+	case PG_2_SPREAD_NARROW:
+	case PG_2_SPREAD_NARROW_AIMED:
 		/**/ if(i == 0) { angle = (+0x04 + spread_delta); }
 		else if(i == 1) { angle = (-0x04 - spread_delta); done = true; }
 		to_aim_or_not_to_aim();
 
-	case PP_3_SPREAD_WIDE:
-	case PP_3_SPREAD_WIDE_AIMED:	spread_delta = 0x05;	// fallthrough
-	case PP_3_SPREAD_NARROW:
-	case PP_3_SPREAD_NARROW_AIMED:
+	case PG_3_SPREAD_WIDE:
+	case PG_3_SPREAD_WIDE_AIMED:	spread_delta = 0x05;	// fallthrough
+	case PG_3_SPREAD_NARROW:
+	case PG_3_SPREAD_NARROW_AIMED:
 		/**/ if(i == 0) { angle =   0x00; }
 		else if(i == 1) { angle = (+0x04 + spread_delta); }
 		else if(i == 2) { angle = (-0x04 - spread_delta); done = true; }
 		to_aim_or_not_to_aim();
 
-	case PP_4_SPREAD_WIDE:
-	case PP_4_SPREAD_WIDE_AIMED:	spread_delta = 0x04;	// fallthrough
-	case PP_4_SPREAD_NARROW:
-	case PP_4_SPREAD_NARROW_AIMED:
+	case PG_4_SPREAD_WIDE:
+	case PG_4_SPREAD_WIDE_AIMED:	spread_delta = 0x04;	// fallthrough
+	case PG_4_SPREAD_NARROW:
+	case PG_4_SPREAD_NARROW_AIMED:
 		/**/ if(i == 0) { angle = (+0x04 +  spread_delta); }
 		else if(i == 1) { angle = (-0x04 -  spread_delta); }
 		else if(i == 2) { angle = (+0x0C + (spread_delta * 3)); }
 		else if(i == 3) { angle = (-0x0C - (spread_delta * 3)); done = true; }
 		to_aim_or_not_to_aim();
 
-	case PP_5_SPREAD_WIDE:
-	case PP_5_SPREAD_WIDE_AIMED:	spread_delta = 0x04;	// fallthrough
-	case PP_5_SPREAD_NARROW:
-	case PP_5_SPREAD_NARROW_AIMED:
+	case PG_5_SPREAD_WIDE:
+	case PG_5_SPREAD_WIDE_AIMED:	spread_delta = 0x04;	// fallthrough
+	case PG_5_SPREAD_NARROW:
+	case PG_5_SPREAD_NARROW_AIMED:
 		/**/ if(i == 0) { angle =   0x00; }
 		else if(i == 1) { angle = (+0x04 +  spread_delta); }
 		else if(i == 2) { angle = (-0x04 -  spread_delta); }
@@ -141,12 +141,12 @@ bool16 pattern_velocity_set(
 		else if(i == 4) { angle = (-0x08 - (spread_delta * 2)); done = true; }
 		to_aim_or_not_to_aim();
 
-	case PP_1_RANDOM_NARROW_AIMED:
+	case PG_1_RANDOM_NARROW_AIMED:
 		angle = ((rand() & 0x0F) - 0x07);
 		done = true;
 		goto aim;
 
-	case PP_1_RANDOM_WIDE:
+	case PG_1_RANDOM_WIDE:
 		angle = ((rand() & 0x3F) + 0x20);
 		done = true;
 		goto no_aim;
@@ -181,7 +181,7 @@ inline subpixel_t base_speed_for_rank(void)
 		speed = to_sp(1.0f); \
 	}
 
-#define pellet_init(pellet, left, top, pattern) \
+#define pellet_init(pellet, left, top, group) \
 	pellet->decay_frame = 0; \
 	pellet->cur_left.v = TO_SP(left); \
 	pellet->cur_top.v = TO_SP(top); \
@@ -192,15 +192,15 @@ inline subpixel_t base_speed_for_rank(void)
 	} else { \
 		pellet->moving = true; \
 	} \
-	pellet->from_pattern = pattern;
+	pellet->from_group = group;
 
-void CPellets::add_pattern(
-	screen_x_t left, screen_y_t top, pellet_pattern_t pattern, subpixel_t speed
+void CPellets::add_group(
+	screen_x_t left, screen_y_t top, pellet_group_t group, subpixel_t speed
 )
 {
 	int i;
-	int pattern_i = 0;
-	int pattern_done;
+	int group_i = 0;
+	int group_done;
 	Subpixel vel_x;
 	Subpixel vel_y;
 
@@ -226,16 +226,16 @@ void CPellets::add_pattern(
 		if(p->cloud_frame) {
 			continue;
 		}
-		pellet_init(p, left, top, pattern);
+		pellet_init(p, left, top, group);
 		p->prev_left.v = -1;
 		p->age = 0;
 		alive_count++;
-		pattern_done = pattern_velocity_set(
-			vel_x, vel_y, pattern, speed, pattern_i, left, top
+		group_done = group_velocity_set(
+			vel_x, vel_y, group, speed, group_i, left, top
 		);
 		p->velocity.x.v = vel_x.v;
 		p->velocity.y.v = vel_y.v;
-		if(pattern_done == true) {
+		if(group_done == true) {
 			return;
 		}
 	}
@@ -270,7 +270,7 @@ void CPellets::add_single(
 		if(p->cloud_frame) {
 			continue;
 		}
-		pellet_init(p, left, top, PP_NONE);
+		pellet_init(p, left, top, PG_NONE);
 		p->motion_type = motion_type;
 		p->prev_left.v = -1;
 		p->age = 0;
@@ -325,7 +325,7 @@ void CPellets::motion_type_apply_for_cur(void)
 				p->velocity.y.v,
 				p->speed.v
 			);
-			p->from_pattern = PP_1_AIMED;
+			p->from_group = PG_1_AIMED;
 			p->angle = 0x00;
 		}
 		break;
@@ -536,7 +536,7 @@ bool16 CPellets::visible_after_hittests_for_cur(
 			deflect_angle = 0x00;
 		}
 		vector2(p->velocity.x.v, p->velocity.y.v, to_sp(8.0f), deflect_angle);
-		if(!p->from_pattern) {
+		if(!p->from_group) {
 			p->motion_type = PM_NORMAL;
 		}
 		// Yes, deflected pellets aren't rendered on the frames they're
@@ -574,7 +574,7 @@ void CPellets::unput_update_render(void)
 				p->sloppy_wide_unput();
 			}
 		}
-		if(p->from_pattern == PP_NONE && p->motion_type) {
+		if(p->from_group == PG_NONE && p->motion_type) {
 			motion_type_apply_for_cur();
 		}
 		if(p->velocity.y.v > PELLET_VELOCITY_MAX) {

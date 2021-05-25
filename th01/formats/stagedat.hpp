@@ -30,8 +30,8 @@ typedef enum {
 	OT_NONE = 0,
 	OT_BUMPER = 1,
 
-	// On ≥Normal difficulty, these fire the given pellet pattern (see
-	// pellet_pattern_t) either every [TURRET_SLOW_INTERVAL] frames...
+	// On ≥Normal difficulty, these fire the given pellet group (see
+	// pellet_group_t) either every [TURRET_SLOW_INTERVAL] frames...
 	OT_TURRET_SLOW_1_AIMED = 2,
 	OT_TURRET_SLOW_1_RANDOM_NARROW_AIMED = 3,
 	OT_TURRET_SLOW_2_SPREAD_WIDE_AIMED = 4,

@@ -5,25 +5,25 @@
 
 void near tune_for_easy(void)
 {
-	switch(tmpl.pattern) {
-	case BP_STACK:
-	case BP_STACK_AIMED:
+	switch(tmpl.group) {
+	case BG_STACK:
+	case BG_STACK_AIMED:
 		tmpl.delta.stack_speed -= (tmpl.delta.stack_speed / 4);
 		if(tmpl.count >= 2) {
 			tmpl.count--;
 		}
 		break;
 
-	case BP_SPREAD:
-	case BP_SPREAD_AIMED:
+	case BG_SPREAD:
+	case BG_SPREAD_AIMED:
 		if(tmpl.count >= 3) {
 			tmpl.count -= 2;
 		}
 		break;
 
-	case BP_RANDOM_ANGLE:
-	case BP_RING:
-	case BP_RING_AIMED:
+	case BG_RANDOM_ANGLE:
+	case BG_RING:
+	case BG_RING_AIMED:
 		tmpl.count /= 2;
 		break;
 	}
@@ -31,30 +31,30 @@ void near tune_for_easy(void)
 
 void near tune_for_hard(void)
 {
-	switch(tmpl.pattern) {
-	case BP_SINGLE_AIMED:
-		tmpl.pattern = BP_STACK_AIMED;
+	switch(tmpl.group) {
+	case BG_SINGLE_AIMED:
+		tmpl.group = BG_STACK_AIMED;
 		tmpl.count = 2;
 		tmpl.delta.stack_speed = to_sp(0.375f);
 		break;
-	case BP_SINGLE:
-		tmpl.pattern = BP_STACK;
+	case BG_SINGLE:
+		tmpl.group = BG_STACK;
 		tmpl.count = 2;
 		tmpl.delta.stack_speed = to_sp(0.375f);
 		break;
 
-	case BP_STACK:
-	case BP_STACK_AIMED:
+	case BG_STACK:
+	case BG_STACK_AIMED:
 		tmpl.delta.stack_speed += (tmpl.delta.stack_speed / 2);
 		break;
 
-	case BP_SPREAD:
-	case BP_SPREAD_AIMED:
+	case BG_SPREAD:
+	case BG_SPREAD_AIMED:
 		tmpl.count += 2;
 		break;
 
-	case BP_RING:
-	case BP_RING_AIMED:
+	case BG_RING:
+	case BG_RING_AIMED:
 		tmpl.count *= 3;
 		tmpl.count /= 2;
 		if(tmpl.count > 48) {
@@ -62,8 +62,8 @@ void near tune_for_hard(void)
 		}
 		break;
 
-	case BP_RANDOM_ANGLE:
-	case BP_RANDOM_ANGLE_AND_SPEED:
+	case BG_RANDOM_ANGLE:
+	case BG_RANDOM_ANGLE_AND_SPEED:
 		tmpl.count += (tmpl.count / 2);
 		break;
 	}
@@ -71,39 +71,39 @@ void near tune_for_hard(void)
 
 void near tune_for_lunatic(void)
 {
-	switch(tmpl.pattern) {
-	case BP_SINGLE_AIMED:
-		tmpl.pattern = BP_SPREAD_AIMED;
+	switch(tmpl.group) {
+	case BG_SINGLE_AIMED:
+		tmpl.group = BG_SPREAD_AIMED;
 		tmpl.count = 3;
 		tmpl.delta.spread_angle = +0x06;
 		break;
-	case BP_SINGLE:
-		tmpl.pattern = BP_SPREAD;
+	case BG_SINGLE:
+		tmpl.group = BG_SPREAD;
 		tmpl.count = 3;
 		tmpl.delta.spread_angle = +0x06;
 		break;
 
-	case BP_STACK:
-	case BP_STACK_AIMED:
+	case BG_STACK:
+	case BG_STACK_AIMED:
 		tmpl.delta.stack_speed += (tmpl.delta.stack_speed / 2);
 		tmpl.count++;
 		break;
 
-	case BP_SPREAD:
-	case BP_SPREAD_AIMED:
+	case BG_SPREAD:
+	case BG_SPREAD_AIMED:
 		tmpl.count += 4;
 		break;
 
-	case BP_RING:
-	case BP_RING_AIMED:
+	case BG_RING:
+	case BG_RING_AIMED:
 		tmpl.count *= 2;
 		if(tmpl.count > 48) {
 			tmpl.count = 48;
 		}
 		break;
 
-	case BP_RANDOM_ANGLE:
-	case BP_RANDOM_ANGLE_AND_SPEED:
+	case BG_RANDOM_ANGLE:
+	case BG_RANDOM_ANGLE_AND_SPEED:
 		tmpl.count *= 2;
 		break;
 	}
@@ -111,9 +111,9 @@ void near tune_for_lunatic(void)
 
 void near tune_for_playperf(void)
 {
-	switch(tmpl.pattern) {
-	case BP_STACK:
-	case BP_STACK_AIMED:
+	switch(tmpl.group) {
+	case BG_STACK:
+	case BG_STACK_AIMED:
 		if(playperf >= 24) {
 			tmpl.count++;
 		} else if((playperf <= 6) && (tmpl.count >= 2)) {
@@ -121,8 +121,8 @@ void near tune_for_playperf(void)
 		}
 		break;
 
-	case BP_SPREAD:
-	case BP_SPREAD_AIMED:
+	case BG_SPREAD:
+	case BG_SPREAD_AIMED:
 		if(playperf >= 24) {
 			tmpl.count += 2;
 		} else if((playperf <= 6) && (tmpl.count >= 3)) {
@@ -130,8 +130,8 @@ void near tune_for_playperf(void)
 		}
 		break;
 
-	case BP_RING:
-	case BP_RING_AIMED:
+	case BG_RING:
+	case BG_RING_AIMED:
 		if(playperf >= 24) {
 			tmpl.count += 4;
 		} else if(playperf >= 20) {

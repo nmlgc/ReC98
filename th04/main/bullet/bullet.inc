@@ -28,7 +28,7 @@ bullet_t struc
 	flag	db ?
 	age	db ?
 	pos	motion_t <?>
-	from_pattern	db ?
+	from_group	db ?
 		db ?
 	speed_cur	db ?
 	BULLET_angle	db ?
@@ -58,7 +58,7 @@ bullet_template_t struc
 	patnum	db ?
 	BT_origin	Point <?>
 if GAME eq 5
-	pattern	db ?
+	BT_group	db ?
 	BT_special_motion	db ?
 	spread	db ?
 	spread_angle_delta	db ?
@@ -68,7 +68,7 @@ if GAME eq 5
 	speed	db ?
 else
 	BT_velocity	Point <?>
-	pattern	db ?
+	BT_group	db ?
 	BT_angle	db ?
 	speed	db ?
 	count	db ?

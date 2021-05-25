@@ -10,12 +10,12 @@ void pascal near tune_for_hard(void);
 void pascal near tune_for_lunatic(void);
 
 static inline uint8_t not_aimed() {
-	return ~BPC0_AIMED;
+	return ~BGC0_AIMED;
 }
 
 void pascal near tune_for_playperf(void)
 {
-	if((bullet_template.pattern & not_aimed()) != BP_STACK) {
+	if((bullet_template.group & not_aimed()) != BG_STACK) {
 		return;
 	}
 	_AL = playperf;

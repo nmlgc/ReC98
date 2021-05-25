@@ -3,7 +3,7 @@
 
 include libs/master.lib/macros.inc
 include th04/math/motion.inc
-include th05/main/bullet/pattypes.inc
+include th05/main/bullet/types.inc
 include th04/main/bullet/bullet.inc
 
 MAIN_03 group MAIN_031_TEXT
@@ -23,10 +23,10 @@ public TUNE_FOR_LUNATIC
 
 ; Local variable registers
 ; ------------------------
-@@pattern_reg equ <bx>
-@@pattern equ <bl>
+@@group_reg equ <bx>
+@@group equ <bl>
 
-@@pattern_table equ <cx>
+@@group_table equ <cx>
 
 @@spread_reg equ <ax>
 @@spread equ <al>
@@ -38,13 +38,13 @@ public TUNE_FOR_LUNATIC
 ; ------------------------
 
 TUNE_FOR_EASY	label near
-	movzx	@@pattern_reg, _bullet_template.pattern
-	cmp	@@pattern, BP_SPREAD
+	movzx	@@group_reg, _bullet_template.BT_group
+	cmp	@@group, BG_SPREAD
 	jb	short @@easy_ret
-	cmp	@@pattern, BP_RANDOM_ANGLE_AND_SPEED
+	cmp	@@group, BG_RANDOM_ANGLE_AND_SPEED
 	ja	short @@easy_ret
-	sub	@@pattern, BP_SPREAD
-	mov	@@pattern_table, offset @@easy_pattern_table
+	sub	@@group, BG_SPREAD
+	mov	@@group_table, offset @@easy_group_table
 	jmp	short @@set_vars_and_dispatch
 ; ---------------------------------------------------------------------------
 
@@ -79,7 +79,7 @@ TUNE_FOR_EASY	label near
 ; ---------------------------------------------------------------------------
 
 	even
-@@easy_pattern_table	label word
+@@easy_group_table	label word
 	dw offset @@easy_spread
 	dw offset @@easy_ring
 	dw offset @@easy_stack
@@ -91,30 +91,30 @@ TUNE_FOR_EASY	label near
 ; ---------------------------------------------------------------------------
 
 TUNE_FOR_HARD	label near
-	movzx	@@pattern_reg, _bullet_template.pattern
+	movzx	@@group_reg, _bullet_template.BT_group
 
 	; "Well, I'd like to tune single bullets on Hard, but not spreads… so
 	; let's just handle single bullets outside the table dispatch! :zunpet:"
-	cmp	@@pattern, BP_SINGLE_AIMED
+	cmp	@@group, BG_SINGLE_AIMED
 	jbe	short @@hard_single
 
-	cmp	@@pattern, BP_RING
+	cmp	@@group, BG_RING
 	jb	short @@hard_ret
-	cmp	@@pattern, BP_RANDOM_ANGLE_AND_SPEED
+	cmp	@@group, BG_RANDOM_ANGLE_AND_SPEED
 	ja	short @@hard_ret
-	sub	@@pattern, BP_RING
-	mov	@@pattern_table, offset @@hard_pattern_table
+	sub	@@group, BG_RING
+	mov	@@group_table, offset @@hard_group_table
 
 @@set_vars_and_dispatch:
 	mov	@@spread_reg, word ptr _bullet_template.spread
 	mov	@@stack_reg, word ptr _bullet_template.BT_stack
-	and	@@pattern, (not BPC0_AIMED)
-	add	@@pattern_reg, @@pattern_table
-	jmp	word ptr cs:[@@pattern_reg]
+	and	@@group, (not BGC0_AIMED)
+	add	@@group_reg, @@group_table
+	jmp	word ptr cs:[@@group_reg]
 ; ---------------------------------------------------------------------------
 
 @@hard_single:
-	add	_bullet_template.pattern, BPCS_STACK
+	add	_bullet_template.BT_group, BGCS_STACK
 	mov	word ptr _bullet_template.BT_stack, (6 shl 8) or 2
 	retn
 ; ---------------------------------------------------------------------------
@@ -145,7 +145,7 @@ TUNE_FOR_HARD	label near
 	jmp	short @@hard_add_to_spread
 
 	even
-@@hard_pattern_table	label word
+@@hard_group_table	label word
 	dw offset @@hard_ring
 	dw offset @@hard_stack
 	dw offset @@hard_spread_stack
@@ -156,15 +156,15 @@ TUNE_FOR_HARD	label near
 ; ---------------------------------------------------------------------------
 
 TUNE_FOR_LUNATIC	label near
-	movzx	@@pattern_reg, _bullet_template.pattern
-	cmp	@@pattern, BP_RANDOM_ANGLE_AND_SPEED
+	movzx	@@group_reg, _bullet_template.BT_group
+	cmp	@@group, BG_RANDOM_ANGLE_AND_SPEED
 	ja	short @@lunatic_ret
-	mov	@@pattern_table, offset @@lunatic_pattern_table
+	mov	@@group_table, offset @@lunatic_group_table
 	jmp	short @@set_vars_and_dispatch
 ; ---------------------------------------------------------------------------
 
 @@lunatic_single:
-	add	_bullet_template.pattern, BPCC_SPREAD
+	add	_bullet_template.BT_group, BGCC_SPREAD
 	mov	word ptr _bullet_template.spread, (6 shl 8) or 3
 	retn
 ; ---------------------------------------------------------------------------
@@ -200,7 +200,7 @@ TUNE_FOR_LUNATIC	label near
 	retn
 
 	even
-@@lunatic_pattern_table	label word
+@@lunatic_group_table	label word
 	dw offset @@lunatic_single
 	dw offset @@lunatic_spread
 	dw offset @@lunatic_ring

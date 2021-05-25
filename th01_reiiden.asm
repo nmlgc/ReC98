@@ -8557,7 +8557,7 @@ loc_1963B:
 ; ---------------------------------------------------------------------------
 
 loc_1964A:
-		push	PP_1_RANDOM_WIDE or ((3 shl 4) shl 16)
+		push	PG_1_RANDOM_WIDE or ((3 shl 4) shl 16)
 		push	PLAYFIELD_TOP
 		call	IRand
 		mov	bx, PLAYFIELD_RIGHT
@@ -8566,7 +8566,7 @@ loc_1964A:
 		push	dx
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
+		call	@CPellets@add_group$qii14pellet_group_ti
 		add	sp, 0Ch
 		inc	[bp+var_2]
 
@@ -11000,7 +11000,7 @@ sub_1B6D9	proc far
 		idiv	word_39DE4
 		cmp	dx, 10
 		jnz	short loc_1B70E
-		push	PP_2_SPREAD_WIDE_AIMED or (((1 shl 4) + 8) shl 16)
+		push	PG_2_SPREAD_WIDE_AIMED or (((1 shl 4) + 8) shl 16)
 		mov	ax, eye_west.BE_cur_top
 		add	ax, 32
 		push	ax
@@ -11009,7 +11009,7 @@ sub_1B6D9	proc far
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
+		call	@CPellets@add_group$qii14pellet_group_ti
 		add	sp, 0Ch
 		push	(1 shl 4) + 8
 		jmp	loc_1B7D1
@@ -11021,7 +11021,7 @@ loc_1B70E:
 		idiv	word_39DE4
 		cmp	dx, 25
 		jnz	short loc_1B740
-		push	PP_2_SPREAD_WIDE_AIMED or (((1 shl 4) + 12) shl 16)
+		push	PG_2_SPREAD_WIDE_AIMED or (((1 shl 4) + 12) shl 16)
 		mov	ax, eye_west.BE_cur_top
 		add	ax, 32
 		push	ax
@@ -11030,7 +11030,7 @@ loc_1B70E:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
+		call	@CPellets@add_group$qii14pellet_group_ti
 		add	sp, 0Ch
 		push	(1 shl 4) + 12
 		jmp	loc_1B7D1
@@ -11042,7 +11042,7 @@ loc_1B740:
 		idiv	word_39DE4
 		cmp	dx, 40
 		jnz	short loc_1B771
-		push	PP_2_SPREAD_WIDE_AIMED or ((2 shl 4) shl 16)
+		push	PG_2_SPREAD_WIDE_AIMED or ((2 shl 4) shl 16)
 		mov	ax, eye_west.BE_cur_top
 		add	ax, 32
 		push	ax
@@ -11051,7 +11051,7 @@ loc_1B740:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
+		call	@CPellets@add_group$qii14pellet_group_ti
 		add	sp, 0Ch
 		push	(2 shl 4)
 		jmp	short loc_1B7D1
@@ -11063,7 +11063,7 @@ loc_1B771:
 		idiv	word_39DE4
 		cmp	dx, 60
 		jnz	short loc_1B7A2
-		push	PP_2_SPREAD_WIDE_AIMED or (((2 shl 4) + 12) shl 16)
+		push	PG_2_SPREAD_WIDE_AIMED or (((2 shl 4) + 12) shl 16)
 		mov	ax, eye_west.BE_cur_top
 		add	ax, 32
 		push	ax
@@ -11072,7 +11072,7 @@ loc_1B771:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
+		call	@CPellets@add_group$qii14pellet_group_ti
 		add	sp, 0Ch
 		push	(2 shl 4) + 12
 		jmp	short loc_1B7D1
@@ -11084,7 +11084,7 @@ loc_1B7A2:
 		idiv	word_39DE4
 		cmp	dx, 80
 		jnz	short loc_1B7D5
-		push	PP_2_SPREAD_WIDE_AIMED or (((3 shl 4) + 2) shl 16)
+		push	PG_2_SPREAD_WIDE_AIMED or (((3 shl 4) + 2) shl 16)
 		mov	ax, eye_west.BE_cur_top
 		add	ax, 32
 		push	ax
@@ -11093,12 +11093,12 @@ loc_1B7A2:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
+		call	@CPellets@add_group$qii14pellet_group_ti
 		add	sp, 0Ch
 		push	(3 shl 4) + 2
 
 loc_1B7D1:
-		push	PP_2_SPREAD_WIDE_AIMED
+		push	PG_2_SPREAD_WIDE_AIMED
 		jmp	short loc_1B808
 ; ---------------------------------------------------------------------------
 
@@ -11108,7 +11108,7 @@ loc_1B7D5:
 		idiv	word_39DE4
 		cmp	dx, 110
 		jnz	short loc_1B822
-		push	PP_1_AIMED or (((4 shl 4) + 4) shl 16)
+		push	PG_1_AIMED or (((4 shl 4) + 4) shl 16)
 		mov	ax, eye_west.BE_cur_top
 		add	ax, 32
 		push	ax
@@ -11117,9 +11117,9 @@ loc_1B7D5:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
+		call	@CPellets@add_group$qii14pellet_group_ti
 		add	sp, 0Ch
-		push	PP_1_AIMED or (((4 shl 4) + 4) shl 16)
+		push	PG_1_AIMED or (((4 shl 4) + 4) shl 16)
 
 loc_1B808:
 		mov	ax, eye_east.BE_cur_top
@@ -11130,7 +11130,7 @@ loc_1B808:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
+		call	@CPellets@add_group$qii14pellet_group_ti
 		add	sp, 0Ch
 
 loc_1B822:
@@ -11439,7 +11439,7 @@ loc_1BBD3:
 		cbw
 		cmp	ax, 2
 		jnz	loc_1DFFC
-		push	PP_5_SPREAD_WIDE_AIMED or (((3 shl 4) + 6) shl 16)
+		push	PG_5_SPREAD_WIDE_AIMED or (((3 shl 4) + 6) shl 16)
 		mov	ax, eye_north.BE_cur_top
 		add	ax, 28
 		push	ax
@@ -11448,8 +11448,8 @@ loc_1BBD3:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
-		push	PP_5_SPREAD_WIDE_AIMED or (((3 shl 4) + 6) shl 16)
+		call	@CPellets@add_group$qii14pellet_group_ti
+		push	PG_5_SPREAD_WIDE_AIMED or (((3 shl 4) + 6) shl 16)
 		mov	ax, eye_southeast.BE_cur_top
 		add	ax, 28
 		push	ax
@@ -11458,8 +11458,8 @@ loc_1BBD3:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
-		push	PP_5_SPREAD_WIDE_AIMED or (((3 shl 4) + 6) shl 16)
+		call	@CPellets@add_group$qii14pellet_group_ti
+		push	PG_5_SPREAD_WIDE_AIMED or (((3 shl 4) + 6) shl 16)
 		mov	ax, eye_southwest.BE_cur_top
 		add	ax, 28
 		push	ax
@@ -11468,7 +11468,7 @@ loc_1BBD3:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
+		call	@CPellets@add_group$qii14pellet_group_ti
 		add	sp, 24h
 		mov	al, _rank
 		cbw
@@ -11489,7 +11489,7 @@ loc_1BC8C:
 		cbw
 		cmp	ax, 3
 		jnz	loc_1DFFC
-		push	PP_5_SPREAD_WIDE_AIMED or (((3 shl 4) + 6) shl 16)
+		push	PG_5_SPREAD_WIDE_AIMED or (((3 shl 4) + 6) shl 16)
 		mov	ax, eye_north.BE_cur_top
 		add	ax, 28
 		push	ax
@@ -11498,8 +11498,8 @@ loc_1BC8C:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
-		push	PP_5_SPREAD_WIDE_AIMED or (((3 shl 4) + 6) shl 16)
+		call	@CPellets@add_group$qii14pellet_group_ti
+		push	PG_5_SPREAD_WIDE_AIMED or (((3 shl 4) + 6) shl 16)
 		mov	ax, eye_southeast.BE_cur_top
 		add	ax, 28
 		push	ax
@@ -11508,8 +11508,8 @@ loc_1BC8C:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
-		push	PP_5_SPREAD_WIDE_AIMED or (((3 shl 4) + 6) shl 16)
+		call	@CPellets@add_group$qii14pellet_group_ti
+		push	PG_5_SPREAD_WIDE_AIMED or (((3 shl 4) + 6) shl 16)
 		mov	ax, eye_southwest.BE_cur_top
 		add	ax, 28
 		push	ax
@@ -11518,11 +11518,11 @@ loc_1BC8C:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
+		call	@CPellets@add_group$qii14pellet_group_ti
 		add	sp, 24h
 
 loc_1BD19:
-		push	PP_5_SPREAD_WIDE_AIMED or (((3 shl 4) + 6) shl 16)
+		push	PG_5_SPREAD_WIDE_AIMED or (((3 shl 4) + 6) shl 16)
 		mov	ax, eye_west.BE_cur_top
 		add	ax, 28
 		push	ax
@@ -11531,8 +11531,8 @@ loc_1BD19:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
-		push	PP_5_SPREAD_WIDE_AIMED or (((3 shl 4) + 6) shl 16)
+		call	@CPellets@add_group$qii14pellet_group_ti
+		push	PG_5_SPREAD_WIDE_AIMED or (((3 shl 4) + 6) shl 16)
 		mov	ax, eye_east.BE_cur_top
 		add	ax, 28
 		push	ax
@@ -11541,7 +11541,7 @@ loc_1BD19:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
+		call	@CPellets@add_group$qii14pellet_group_ti
 		add	sp, 18h
 		jmp	loc_1DFFC
 ; ---------------------------------------------------------------------------
@@ -13053,7 +13053,7 @@ loc_1CCF1:
 		jle	loc_1CF52
 
 loc_1CD9D:
-		push	PP_3_SPREAD_NARROW_AIMED or (3 shl 16)
+		push	PG_3_SPREAD_NARROW_AIMED or (3 shl 16)
 		jmp	loc_1CF38
 ; ---------------------------------------------------------------------------
 
@@ -13153,7 +13153,7 @@ loc_1CDD6:
 		cbw
 		cmp	ax, RANK_HARD
 		jnz	short loc_1CF29
-		push	PP_3_SPREAD_NARROW_AIMED or (3 shl 16)
+		push	PG_3_SPREAD_NARROW_AIMED or (3 shl 16)
 		mov	ax, eye_north.BE_cur_top
 		add	ax, 28
 		push	ax
@@ -13162,7 +13162,7 @@ loc_1CDD6:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
+		call	@CPellets@add_group$qii14pellet_group_ti
 		add	sp, 0Ch
 
 loc_1CF29:
@@ -13170,7 +13170,7 @@ loc_1CF29:
 		cbw
 		cmp	ax, RANK_LUNATIC
 		jnz	short loc_1CF52
-		push	PP_5_SPREAD_NARROW_AIMED or (4 shl 16)
+		push	PG_5_SPREAD_NARROW_AIMED or (4 shl 16)
 
 loc_1CF38:
 		mov	ax, eye_north.BE_cur_top
@@ -13181,7 +13181,7 @@ loc_1CF38:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
+		call	@CPellets@add_group$qii14pellet_group_ti
 		add	sp, 0Ch
 
 loc_1CF52:
@@ -16955,7 +16955,7 @@ loc_1F4F8:
 		add	bx, bx
 		cmp	word ptr [bx+5487h], 0FC19h
 		jz	short loc_1F548
-		push	PP_3_SPREAD_WIDE_AIMED or (((2 shl 4) + 4) shl 16)
+		push	PG_3_SPREAD_WIDE_AIMED or (((2 shl 4) + 4) shl 16)
 		mov	ax, mima_still.BE_cur_top
 		add	ax, 80
 		push	ax
@@ -16964,7 +16964,7 @@ loc_1F4F8:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
+		call	@CPellets@add_group$qii14pellet_group_ti
 		push	(224 shl 16) or 32
 		push	176
 		mov	bx, si
@@ -18246,7 +18246,7 @@ sub_20071	endp
 
 sub_201BE	proc far
 
-@@pattern		= word ptr -2
+@@group		= word ptr -2
 
 		enter	2, 0
 		push	si
@@ -18359,12 +18359,12 @@ loc_202A6:
 		cbw
 		cmp	ax, 10
 		jge	short loc_202D4
-		mov	[bp+@@pattern], PP_1_AIMED
+		mov	[bp+@@group], PG_1_AIMED
 		jmp	short loc_202D9
 ; ---------------------------------------------------------------------------
 
 loc_202D4:
-		mov	[bp+@@pattern], PP_1_RANDOM_NARROW_AIMED
+		mov	[bp+@@group], PG_1_RANDOM_NARROW_AIMED
 
 loc_202D9:
 		mov	ax, si
@@ -18374,7 +18374,7 @@ loc_202D9:
 		cmp	word ptr es:[bx], 25
 		jnz	short loc_2031C
 		push	(3 shl 4) + 8
-		push	[bp+@@pattern]
+		push	[bp+@@group]
 		mov	ax, si
 		add	ax, ax
 		les	bx, _cards_top
@@ -18391,7 +18391,7 @@ loc_202D9:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
+		call	@CPellets@add_group$qii14pellet_group_ti
 		add	sp, 0Ch
 
 loc_2031C:
@@ -19053,7 +19053,7 @@ sub_20E4C	endp
 
 sub_21301	proc far
 
-@@pattern		= byte ptr -1
+@@group		= byte ptr -1
 arg_0		= word ptr  6
 arg_2		= word ptr  8
 
@@ -19189,36 +19189,36 @@ loc_2141A:
 		jmp	cs:off_2155F[bx]
 
 @@1_aimed:
-		mov	[bp+@@pattern], PP_1_AIMED
+		mov	[bp+@@group], PG_1_AIMED
 		jmp	short loc_21467
 ; ---------------------------------------------------------------------------
 
 @@1_random_narrow_aimed:
-		mov	[bp+@@pattern], PP_1_RANDOM_NARROW_AIMED
+		mov	[bp+@@group], PG_1_RANDOM_NARROW_AIMED
 		jmp	short loc_21467
 ; ---------------------------------------------------------------------------
 
 @@2_spread_wide_aimed:
-		mov	[bp+@@pattern], PP_2_SPREAD_WIDE_AIMED
+		mov	[bp+@@group], PG_2_SPREAD_WIDE_AIMED
 		jmp	short loc_21467
 ; ---------------------------------------------------------------------------
 
 @@3_spread_wide_aimed:
-		mov	[bp+@@pattern], PP_3_SPREAD_WIDE_AIMED
+		mov	[bp+@@group], PG_3_SPREAD_WIDE_AIMED
 		jmp	short loc_21467
 ; ---------------------------------------------------------------------------
 
 @@4_spread_wide_aimed:
-		mov	[bp+@@pattern], PP_4_SPREAD_WIDE_AIMED
+		mov	[bp+@@group], PG_4_SPREAD_WIDE_AIMED
 		jmp	short loc_21467
 ; ---------------------------------------------------------------------------
 
 @@5_spread_wide_aimed:
-		mov	[bp+@@pattern], PP_5_SPREAD_WIDE_AIMED
+		mov	[bp+@@group], PG_5_SPREAD_WIDE_AIMED
 
 loc_21467:
 		push	(3 shl 4) + 8
-		mov	al, [bp+@@pattern]
+		mov	al, [bp+@@group]
 		mov	ah, 0
 		push	ax
 		mov	ax, si
@@ -19237,7 +19237,7 @@ loc_21467:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
+		call	@CPellets@add_group$qii14pellet_group_ti
 		add	sp, 0Ch
 		push	PTN_TURRET_FIRING
 		mov	ax, si
@@ -23469,7 +23469,7 @@ sub_23F16	endp
 
 sub_23F9D	proc near
 
-@@pattern		= word ptr -8
+@@group		= word ptr -8
 var_6		= byte ptr -6
 @@top		= word ptr -4
 @@left		= word ptr -2
@@ -23506,13 +23506,13 @@ loc_23FDE:
 		mov	ax, _kikuri_souls[bx].BE_cur_top
 		add	ax, 8
 		mov	[bp+@@top], ax
-		push	PP_5_SPREAD_WIDE_AIMED or (PP_5_SPREAD_WIDE shl 16)	; (for_hard) or (for_lunatic)
-		push	PP_2_SPREAD_WIDE_AIMED or (PP_3_SPREAD_WIDE_AIMED shl 16)	; (for_easy) or (for_normal)
+		push	PG_5_SPREAD_WIDE_AIMED or (PG_5_SPREAD_WIDE shl 16)	; (for_hard) or (for_lunatic)
+		push	PG_2_SPREAD_WIDE_AIMED or (PG_3_SPREAD_WIDE_AIMED shl 16)	; (for_easy) or (for_normal)
 		push	ss	; ret (segment)
-		lea	ax, [bp+@@pattern]
+		lea	ax, [bp+@@group]
 		push	ax	; ret (offset)
 		call	@kikuri_select_for_rank$qmiiiii
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti stdcall, offset _Pellets, ds, [bp+@@left], [bp+@@top], [bp+@@pattern], (3 shl 4) + 7
+		call	@CPellets@add_group$qii14pellet_group_ti stdcall, offset _Pellets, ds, [bp+@@left], [bp+@@top], [bp+@@group], (3 shl 4) + 7
 		add	sp, 18h
 		inc	si
 
@@ -23661,7 +23661,7 @@ sub_2414C	proc near
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_2419B
-		push	PP_1_AIMED or (((2 shl 4) + 8) shl 16)
+		push	PG_1_AIMED or (((2 shl 4) + 8) shl 16)
 		mov	ax, kikuri_soul_0.BE_cur_top
 		add	ax, 12
 		push	ax
@@ -23670,8 +23670,8 @@ sub_2414C	proc near
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
-		push	PP_1_AIMED or (((2 shl 4) + 8) shl 16)
+		call	@CPellets@add_group$qii14pellet_group_ti
+		push	PG_1_AIMED or (((2 shl 4) + 8) shl 16)
 		mov	ax, kikuri_soul_1.BE_cur_top
 		add	ax, 12
 		push	ax
@@ -23680,7 +23680,7 @@ sub_2414C	proc near
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
+		call	@CPellets@add_group$qii14pellet_group_ti
 		add	sp, 18h
 
 loc_2419B:
@@ -26196,7 +26196,7 @@ loc_25BCE:
 		add	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
 		mov	[bp+@@top], ax
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti c, offset _Pellets, ds, [bp+@@left], ax, word_3A6CC, 4
+		call	@CPellets@add_group$qii14pellet_group_ti c, offset _Pellets, ds, [bp+@@left], ax, word_3A6CC, 4
 		mov	al, angle_3A6FB
 		add	al, 8
 		mov	angle_3A6FB, al
@@ -28106,7 +28106,7 @@ sub_26D12	endp
 
 sub_26E02	proc far
 
-@@pattern		= word ptr -2
+@@group		= word ptr -2
 
 		enter	2, 0
 		mov	ax, _boss_phase_frame
@@ -28115,14 +28115,14 @@ sub_26E02	proc far
 		idiv	bx
 		or	dx, dx
 		jnz	short locret_26E47
-		push	PP_5_SPREAD_NARROW_AIMED or (PP_5_SPREAD_NARROW shl 16)	; (for_hard) or (for_lunatic)
-		push	PP_3_SPREAD_WIDE_AIMED or (PP_5_SPREAD_WIDE_AIMED shl 16)	; (for_easy) or (for_normal)
+		push	PG_5_SPREAD_NARROW_AIMED or (PG_5_SPREAD_NARROW shl 16)	; (for_hard) or (for_lunatic)
+		push	PG_3_SPREAD_WIDE_AIMED or (PG_5_SPREAD_WIDE_AIMED shl 16)	; (for_easy) or (for_normal)
 		push	ss	; ret (segment)
-		lea	ax, [bp+@@pattern]
+		lea	ax, [bp+@@group]
 		push	ax	; ret (offset)
 		call	@elis_select_for_rank$qmiiiii
 		push	(3 shl 4) + 8
-		push	[bp+@@pattern]
+		push	[bp+@@group]
 		mov	ax, elis_bat.BE_cur_top
 		add	ax, 12
 		push	ax
@@ -28131,7 +28131,7 @@ sub_26E02	proc far
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
+		call	@CPellets@add_group$qii14pellet_group_ti
 		add	sp, 18h
 
 locret_26E47:
@@ -28156,12 +28156,12 @@ sub_26E49	proc far
 		call	IRand
 		test	al, 1
 		jz	short loc_26E6A
-		push	PP_2_SPREAD_NARROW_AIMED or (((5 shl 4) + 8) shl 16)
+		push	PG_2_SPREAD_NARROW_AIMED or (((5 shl 4) + 8) shl 16)
 		jmp	short loc_26E70
 ; ---------------------------------------------------------------------------
 
 loc_26E6A:
-		push	PP_2_SPREAD_WIDE_AIMED or (((5 shl 4) + 8) shl 16)
+		push	PG_2_SPREAD_WIDE_AIMED or (((5 shl 4) + 8) shl 16)
 
 loc_26E70:
 		mov	ax, elis_bat.BE_cur_top
@@ -28172,7 +28172,7 @@ loc_26E70:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
+		call	@CPellets@add_group$qii14pellet_group_ti
 		add	sp, 0Ch
 
 loc_26E8A:
@@ -28200,7 +28200,7 @@ sub_26E8C	proc far
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_26ECA
-		push	PP_2_SPREAD_NARROW_AIMED or (((5 shl 4) + 5) shl 16)
+		push	PG_2_SPREAD_NARROW_AIMED or (((5 shl 4) + 5) shl 16)
 		mov	ax, elis_bat.BE_cur_top
 		add	ax, 12
 		push	ax
@@ -28209,7 +28209,7 @@ sub_26E8C	proc far
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
+		call	@CPellets@add_group$qii14pellet_group_ti
 		add	sp, 0Ch
 
 loc_26ECA:
@@ -28230,7 +28230,7 @@ loc_26ECA:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_26F10
-		push	PP_3_SPREAD_NARROW_AIMED or (((5 shl 4) + 5) shl 16)
+		push	PG_3_SPREAD_NARROW_AIMED or (((5 shl 4) + 5) shl 16)
 		mov	ax, elis_bat.BE_cur_top
 		add	ax, 12
 		push	ax
@@ -28239,7 +28239,7 @@ loc_26ECA:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
+		call	@CPellets@add_group$qii14pellet_group_ti
 		add	sp, 0Ch
 
 loc_26F10:
@@ -28810,12 +28810,12 @@ loc_274FF:
 		cbw
 		cmp	ax, RANK_LUNATIC
 		jnz	short loc_2751B
-		mov	ax, PP_1_RANDOM_WIDE
+		mov	ax, PG_1_RANDOM_WIDE
 		jmp	short loc_2751E
 ; ---------------------------------------------------------------------------
 
 loc_2751B:
-		mov	ax, PP_1
+		mov	ax, PG_1
 
 loc_2751E:
 		push	ax
@@ -28827,7 +28827,7 @@ loc_2751E:
 		push	dx
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
+		call	@CPellets@add_group$qii14pellet_group_ti
 		add	sp, 0Ch
 
 loc_27539:
@@ -28839,7 +28839,7 @@ loc_27539:
 		idiv	bx
 		or	dx, dx
 		jnz	loc_275EF
-		push	PP_1_AIMED or (((4 shl 4) + 8) shl 16)
+		push	PG_1_AIMED or (((4 shl 4) + 8) shl 16)
 		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 44
 		push	ax
@@ -28848,7 +28848,7 @@ loc_27539:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
+		call	@CPellets@add_group$qii14pellet_group_ti
 		jmp	loc_2745E
 ; ---------------------------------------------------------------------------
 
@@ -28876,7 +28876,7 @@ loc_275A1:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_275D2
-		push	PP_1_AIMED or (((4 shl 4) + 8) shl 16)
+		push	PG_1_AIMED or (((4 shl 4) + 8) shl 16)
 		mov	ax, elis_bat.BE_cur_top
 		add	ax, 44
 		push	ax
@@ -28885,7 +28885,7 @@ loc_275A1:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
+		call	@CPellets@add_group$qii14pellet_group_ti
 		add	sp, 0Ch
 
 loc_275D2:
@@ -29222,7 +29222,7 @@ loc_2799F:
 		add	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 28
 		mov	[bp+@@top], ax
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti c, offset _Pellets, ds, [bp+@@left], ax, large PP_1 or ((4 shl 4) shl 16)
+		call	@CPellets@add_group$qii14pellet_group_ti c, offset _Pellets, ds, [bp+@@left], ax, large PG_1 or ((4 shl 4) shl 16)
 		mov	al, angle_3A770
 		add	al, 8
 		mov	angle_3A770, al
@@ -29243,7 +29243,7 @@ loc_27A1C:
 		idiv	word_3A6CC
 		or	dx, dx
 		jnz	short loc_27A65
-		push	PP_5_SPREAD_WIDE_AIMED or ((4 shl 4) shl 16)
+		push	PG_5_SPREAD_WIDE_AIMED or ((4 shl 4) shl 16)
 		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 40
 		push	ax
@@ -29252,8 +29252,8 @@ loc_27A1C:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
-		push	PP_5_SPREAD_WIDE_AIMED or ((4 shl 4) shl 16)
+		call	@CPellets@add_group$qii14pellet_group_ti
+		push	PG_5_SPREAD_WIDE_AIMED or ((4 shl 4) shl 16)
 		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 40
 		push	ax
@@ -29262,7 +29262,7 @@ loc_27A1C:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
+		call	@CPellets@add_group$qii14pellet_group_ti
 		add	sp, 18h
 
 loc_27A65:
@@ -30882,7 +30882,7 @@ loc_28A16:
 		jz	short loc_28A60
 		cmp	byte ptr [si+61C0h], 0
 		jnz	short loc_28A60
-		push	PP_1_AIMED or ((3 shl 4) shl 16)
+		push	PG_1_AIMED or ((3 shl 4) shl 16)
 		mov	bx, si
 		shl	bx, 3
 		fld	qword ptr [bx+5ED2h]
@@ -30897,7 +30897,7 @@ loc_28A16:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
+		call	@CPellets@add_group$qii14pellet_group_ti
 		add	sp, 0Ch
 
 loc_28A60:
@@ -31674,7 +31674,7 @@ loc_29142:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_291D2
-		push	PP_1 or ((7 shl 4) shl 16)
+		push	PG_1 or ((7 shl 4) shl 16)
 		mov	bx, si
 		add	bx, bx
 		mov	ax, [bx+6200h]
@@ -31687,7 +31687,7 @@ loc_29142:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
+		call	@CPellets@add_group$qii14pellet_group_ti
 		add	sp, 0Ch
 
 loc_291D2:
@@ -31765,7 +31765,7 @@ loc_29219:
 		idiv	bx
 		or	dx, dx
 		jnz	loc_29306
-		push	PP_1 or ((7 shl 4) shl 16)
+		push	PG_1 or ((7 shl 4) shl 16)
 		mov	bx, si
 		add	bx, bx
 		mov	ax, [bx+6200h]
@@ -31778,7 +31778,7 @@ loc_29219:
 		push	ax
 		push	ds
 		push	offset _Pellets
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti
+		call	@CPellets@add_group$qii14pellet_group_ti
 		mov	bx, si
 		add	bx, bx
 		mov	ax, PLAYFIELD_BOTTOM
@@ -34064,7 +34064,7 @@ sub_2A896	endp
 
 sub_2A8F7	proc near
 
-@@pattern		= word ptr -6
+@@group		= word ptr -6
 @@top		= word ptr -4
 @@left		= word ptr -2
 
@@ -34081,13 +34081,13 @@ sub_2A8F7	proc near
 		idiv	bx
 		mov	[bp+@@left], dx
 		mov	[bp+@@top], PLAYFIELD_TOP
-		push	PP_1 or (PP_1_RANDOM_WIDE shl 16)	; (for_hard) or (for_lunatic)
-		push	PP_1 or (PP_1 shl 16)	; (for_easy) or (for_normal)
+		push	PG_1 or (PG_1_RANDOM_WIDE shl 16)	; (for_hard) or (for_lunatic)
+		push	PG_1 or (PG_1 shl 16)	; (for_easy) or (for_normal)
 		push	ss	; ret (segment)
-		lea	ax, [bp+@@pattern]
+		lea	ax, [bp+@@group]
 		push	ax	; ret (offset)
 		call	@sariel_select_for_rank$qmiiiii
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti stdcall, offset _Pellets, ds, [bp+@@left], [bp+@@top], [bp+@@pattern], (2 shl 4) + 12
+		call	@CPellets@add_group$qii14pellet_group_ti stdcall, offset _Pellets, ds, [bp+@@left], [bp+@@top], [bp+@@group], (2 shl 4) + 12
 		add	sp, 18h
 
 locret_2A947:
@@ -37910,7 +37910,7 @@ loc_2D44D:
 		jl	loc_2D7D3
 		cmp	_boss_phase_frame, 100
 		jnz	loc_2D500
-		call	@konngara_select_for_rank$qmiiiii stdcall, offset word_3B438, ds, large PP_2_SPREAD_NARROW_AIMED or (PP_3_SPREAD_NARROW_AIMED shl 16), large PP_5_SPREAD_WIDE_AIMED or (PP_5_SPREAD_NARROW_AIMED shl 16)
+		call	@konngara_select_for_rank$qmiiiii stdcall, offset word_3B438, ds, large PG_2_SPREAD_NARROW_AIMED or (PG_3_SPREAD_NARROW_AIMED shl 16), large PG_5_SPREAD_WIDE_AIMED or (PG_5_SPREAD_NARROW_AIMED shl 16)
 		call	_vector2_between stdcall, large (236 shl 16) or 316, large (384 shl 16) or 0, offset x_3B43A, ds, offset y_3B43E, ds, 7
 		call	_vector2_between stdcall, large (236 shl 16) or 316, large ( 64 shl 16) or 0, offset x_3B43C, ds, offset y_3B440, ds, 7
 		add	sp, 30h
@@ -37930,7 +37930,7 @@ loc_2D4B0:
 loc_2D4C5:
 		cmp	si, 4
 		jl	short loc_2D4B0
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti stdcall, offset _Pellets, ds, large 312 or (188 shl 16), word_3B438, (3 shl 4)
+		call	@CPellets@add_group$qii14pellet_group_ti stdcall, offset _Pellets, ds, large 312 or (188 shl 16), word_3B438, (3 shl 4)
 		call	@konngara_select_for_rank$qmiiiii stdcall, offset word_3B438, ds, large 18 or (16 shl 16), large 14 or (12 shl 16)
 		push	0Ch
 		call	_mdrv2_se_play
@@ -38167,7 +38167,7 @@ loc_2D62C:
 		cwd
 		idiv	bx
 		mov	di, dx
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti c, offset _Pellets, ds, dx, [bp+@@top], large PP_1_AIMED or (((2 shl 4) + 8) shl 16)
+		call	@CPellets@add_group$qii14pellet_group_ti c, offset _Pellets, ds, dx, [bp+@@top], large PG_1_AIMED or (((2 shl 4) + 8) shl 16)
 		jmp	short loc_2D7D3
 ; ---------------------------------------------------------------------------
 
@@ -38936,7 +38936,7 @@ loc_2DEC6:
 		idiv	word_3B438
 		or	dx, dx
 		jnz	short loc_2DEF8
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti c, offset _Pellets, ds, point_3B493.x, point_3B493.y, PP_1_AIMED, speed_3B499
+		call	@CPellets@add_group$qii14pellet_group_ti c, offset _Pellets, ds, point_3B493.x, point_3B493.y, PG_1_AIMED, speed_3B499
 		add	speed_3B499, 2
 
 loc_2DEF8:
@@ -40119,7 +40119,7 @@ loc_2EC7A:
 		mov	_boss_phase_frame, 0
 
 loc_2EC80:
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti c, offset _Pellets, ds, large 410 or (70 shl 16), large PP_3_SPREAD_WIDE_AIMED or (((4 shl 4) + 8) shl 16)
+		call	@CPellets@add_group$qii14pellet_group_ti c, offset _Pellets, ds, large 410 or (70 shl 16), large PG_3_SPREAD_WIDE_AIMED or (((4 shl 4) + 8) shl 16)
 
 loc_2EC98:
 		pop	bp
@@ -40157,7 +40157,7 @@ loc_2ECD9:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_2ED1E
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti c, offset _Pellets, ds, word_3B525, word_3B527, PP_1_AIMED, word_3B438
+		call	@CPellets@add_group$qii14pellet_group_ti c, offset _Pellets, ds, word_3B525, word_3B527, PG_1_AIMED, word_3B438
 		inc	word_3B525
 		add	word_3B527, 0Ch
 
@@ -40172,7 +40172,7 @@ loc_2ED32:
 		jl	loc_2EDBD
 		cmp	_boss_phase_frame, 150
 		jge	short loc_2ED68
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti c, offset _Pellets, ds, word_3B525, word_3B527, PP_1_AIMED, word_3B438
+		call	@CPellets@add_group$qii14pellet_group_ti c, offset _Pellets, ds, word_3B525, word_3B527, PG_1_AIMED, word_3B438
 		sub	word_3B525, 17h
 		sub	word_3B527, 3
 
@@ -40193,7 +40193,7 @@ loc_2ED7C:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_2EDBD
-		call	@CPellets@add_pattern$qii16pellet_pattern_ti c, offset _Pellets, ds, word_3B525, word_3B527, PP_1_AIMED, word_3B438
+		call	@CPellets@add_group$qii14pellet_group_ti c, offset _Pellets, ds, word_3B525, word_3B527, PG_1_AIMED, word_3B438
 		sub	word_3B525, 0FFEBh
 		sub	word_3B527, 0Ch
 
@@ -41648,7 +41648,7 @@ main_38_TEXT	segment	byte public 'CODE' use16
 	extern @CShots@hittest_pellet$qii:proc
 	extern @CShots@hittest_boss$qiiii:proc
 	extern @CPellets@$bctr$qv:proc
-	extern @CPellets@add_pattern$qii16pellet_pattern_ti:proc
+	extern @CPellets@add_group$qii14pellet_group_ti:proc
 	extern @CPellets@add_single$qiiuci15pellet_motion_tiii:proc
 	extern @CPellets@unput_update_render$qv:proc
 	extern @CPellets@unput_and_reset_all$qv:proc
