@@ -37686,7 +37686,7 @@ loc_2D44D:
 		jl	loc_2D7D3
 		cmp	_boss_phase_frame, 100
 		jnz	loc_2D500
-		call	@konngara_select_for_rank$qmiiiii stdcall, offset word_3B438, ds, large PG_2_SPREAD_NARROW_AIMED or (PG_3_SPREAD_NARROW_AIMED shl 16), large PG_5_SPREAD_WIDE_AIMED or (PG_5_SPREAD_NARROW_AIMED shl 16)
+		call	@konngara_select_for_rank$qmiiiii stdcall, offset _konngara_pattern_state, ds, large PG_2_SPREAD_NARROW_AIMED or (PG_3_SPREAD_NARROW_AIMED shl 16), large PG_5_SPREAD_WIDE_AIMED or (PG_5_SPREAD_NARROW_AIMED shl 16)
 		call	_vector2_between stdcall, large (236 shl 16) or 316, large (384 shl 16) or 0, offset x_3B43A, ds, offset y_3B43E, ds, 7
 		call	_vector2_between stdcall, large (236 shl 16) or 316, large ( 64 shl 16) or 0, offset x_3B43C, ds, offset y_3B440, ds, 7
 		add	sp, 30h
@@ -37706,8 +37706,8 @@ loc_2D4B0:
 loc_2D4C5:
 		cmp	si, 4
 		jl	short loc_2D4B0
-		call	@CPellets@add_group$qii14pellet_group_ti stdcall, offset _Pellets, ds, large 312 or (188 shl 16), word_3B438, (3 shl 4)
-		call	@konngara_select_for_rank$qmiiiii stdcall, offset word_3B438, ds, large 18 or (16 shl 16), large 14 or (12 shl 16)
+		call	@CPellets@add_group$qii14pellet_group_ti stdcall, offset _Pellets, ds, large 312 or (188 shl 16), _konngara_pattern_state, (3 shl 4)
+		call	@konngara_select_for_rank$qmiiiii stdcall, offset _konngara_pattern_state, ds, large 18 or (16 shl 16), large 14 or (12 shl 16)
 		push	0Ch
 		call	_mdrv2_se_play
 		add	sp, 1Ah
@@ -37845,7 +37845,7 @@ loc_2D62C:
 		inc	word_3B452
 		mov	ax, word_3B452
 		cwd
-		idiv	word_3B438
+		idiv	_konngara_pattern_state
 		or	dx, dx
 		jnz	loc_2D7D3
 		xor	di, di
@@ -37971,8 +37971,8 @@ sub_2D7D7	proc far
 
 		push	bp
 		mov	bp, sp
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, large 328 or (188 shl 16), [bp+@@angle], word_3B438, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, large 296 or (188 shl 16), [bp+@@angle], word_3B438, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, large 328 or (188 shl 16), [bp+@@angle], _konngara_pattern_state, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, large 296 or (188 shl 16), [bp+@@angle], _konngara_pattern_state, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 		add	sp, 28h
 		pop	bp
 		retf
@@ -37998,7 +37998,7 @@ loc_2D828:
 		jnz	short loc_2D85A
 		mov	angle_3B454, 40h
 		mov	word_3B455, 0FFFFh
-		call	@konngara_select_for_rank$qmiiiii c, offset word_3B438, ds, large 80 or (80 shl 16), large 96 or (112 shl 16)
+		call	@konngara_select_for_rank$qmiiiii c, offset _konngara_pattern_state, ds, large 80 or (80 shl 16), large 96 or (112 shl 16)
 
 loc_2D85A:
 		cmp	_boss_phase_frame, 140
@@ -38610,7 +38610,7 @@ loc_2DD76:
 		push	0Ch
 		call	_mdrv2_se_play
 		mov	word_3B497, 63h	; 'c'
-		call	@konngara_select_for_rank$qmiiiii stdcall, offset word_3B438, ds, large 12 or (10 shl 16), large 8 or (6 shl 16)
+		call	@konngara_select_for_rank$qmiiiii stdcall, offset _konngara_pattern_state, ds, large 12 or (10 shl 16), large 8 or (6 shl 16)
 		add	sp, 20h
 		pop	bp
 		retf
@@ -38706,7 +38706,7 @@ loc_2DEC6:
 		jge	short loc_2DEF8
 		mov	ax, _boss_phase_frame
 		cwd
-		idiv	word_3B438
+		idiv	_konngara_pattern_state
 		or	dx, dx
 		jnz	short loc_2DEF8
 		call	@CPellets@add_group$qii14pellet_group_ti c, offset _Pellets, ds, point_3B493.x, point_3B493.y, PG_1_AIMED, speed_3B499
@@ -38747,12 +38747,12 @@ loc_2DF1D:
 		mov	byte_3B49B, 20h	; ' '
 		mov	word_3B49D, 0FFF8h
 		mov	word_3B49F, 0
-		call	@konngara_select_for_rank$qmiiiii c, offset word_3B438, ds, large 5 or (4 shl 16), large 3 or (2 shl 16)
+		call	@konngara_select_for_rank$qmiiiii c, offset _konngara_pattern_state, ds, large 5 or (4 shl 16), large 3 or (2 shl 16)
 
 loc_2DF55:
 		mov	ax, _boss_phase_frame
 		cwd
-		idiv	word_3B438
+		idiv	_konngara_pattern_state
 		or	dx, dx
 		jnz	short loc_2DFBA
 		push	(PLAYFIELD_TOP + 120)
@@ -38876,7 +38876,7 @@ loc_2E072:
 loc_2E07E:
 		cmp	si, 4
 		jl	short loc_2E072
-		call	@konngara_select_for_rank$qmiiiii stdcall, offset word_3B438, ds, large 18 or (16 shl 16), large 14 or (12 shl 16)
+		call	@konngara_select_for_rank$qmiiiii stdcall, offset _konngara_pattern_state, ds, large 18 or (16 shl 16), large 14 or (12 shl 16)
 		jmp	loc_2E3D8
 ; ---------------------------------------------------------------------------
 
@@ -39294,7 +39294,7 @@ loc_2E43F:
 		mov	point_3B511.x, 0
 		mov	point_3B511.y, 264
 		mov	word_3B515, 1
-		call	@konngara_select_for_rank$qmiiiii c, offset word_3B438, ds, large 5 or (3 shl 16), large 2 or (2 shl 16)
+		call	@konngara_select_for_rank$qmiiiii c, offset _konngara_pattern_state, ds, large 5 or (3 shl 16), large 2 or (2 shl 16)
 
 loc_2E478:
 		cmp	_boss_phase_frame, 125
@@ -39422,7 +39422,7 @@ loc_2E697:
 loc_2E6AC:
 		mov	ax, _boss_phase_frame
 		cwd
-		idiv	word_3B438
+		idiv	_konngara_pattern_state
 		or	dx, dx
 		jnz	short loc_2E703
 		pushd	0 or (0 shl 16)
@@ -39545,7 +39545,7 @@ sub_2E7C4	proc far
 		mov	_face_direction_can_change, 0
 		mov	left_3B517, 410
 		mov	top_3B519, (PLAYFIELD_TOP + 6)
-		call	@konngara_select_for_rank$qmiiiii stdcall, offset word_3B438, ds, large 5 or (3 shl 16), large 2 or (1 shl 16)
+		call	@konngara_select_for_rank$qmiiiii stdcall, offset _konngara_pattern_state, ds, large 5 or (3 shl 16), large 2 or (1 shl 16)
 		add	sp, 10h
 
 loc_2E803:
@@ -39556,7 +39556,7 @@ loc_2E803:
 		jge	loc_2E8A1
 		mov	ax, _boss_phase_frame
 		cwd
-		idiv	word_3B438
+		idiv	_konngara_pattern_state
 		or	dx, dx
 		jnz	short loc_2E8A1
 		pushd	0 or (0 shl 16)
@@ -39588,7 +39588,7 @@ loc_2E803:
 		add	sp, 28h
 		mov	ax, 40
 		cwd
-		idiv	word_3B438
+		idiv	_konngara_pattern_state
 		push	ax
 		mov	ax, 22
 		cwd
@@ -39597,7 +39597,7 @@ loc_2E803:
 		add	left_3B517, ax
 		mov	ax, 40
 		cwd
-		idiv	word_3B438
+		idiv	_konngara_pattern_state
 		push	ax
 		mov	ax, 162
 		cwd
@@ -39610,7 +39610,7 @@ loc_2E8A1:
 		jnz	short loc_2E8CC
 		mov	left_3B517, 432
 		mov	top_3B519, (PLAYFIELD_TOP + 168)
-		call	@konngara_select_for_rank$qmiiiii c, offset word_3B438, ds, large 3 or (2 shl 16), large 2 or (2 shl 16)
+		call	@konngara_select_for_rank$qmiiiii c, offset _konngara_pattern_state, ds, large 3 or (2 shl 16), large 2 or (2 shl 16)
 
 loc_2E8CC:
 		cmp	_boss_phase_frame, 140
@@ -39652,7 +39652,7 @@ loc_2E93B:
 		jnz	short loc_2E966
 		mov	left_3B517, 198
 		mov	top_3B519, (PLAYFIELD_TOP + 134)
-		call	@konngara_select_for_rank$qmiiiii c, offset word_3B438, ds, large 3 or (2 shl 16), large 1 or (1 shl 16)
+		call	@konngara_select_for_rank$qmiiiii c, offset _konngara_pattern_state, ds, large 3 or (2 shl 16), large 1 or (1 shl 16)
 
 loc_2E966:
 		cmp	_boss_phase_frame, 150
@@ -39661,7 +39661,7 @@ loc_2E966:
 		jge	loc_2EA01
 		mov	ax, _boss_phase_frame
 		cwd
-		idiv	word_3B438
+		idiv	_konngara_pattern_state
 		or	dx, dx
 		jnz	short loc_2EA01
 		pushd	0 or (0 shl 16)
@@ -39693,7 +39693,7 @@ loc_2E966:
 		add	sp, 28h
 		mov	ax, 20
 		cwd
-		idiv	word_3B438
+		idiv	_konngara_pattern_state
 		push	ax
 		mov	ax, -212
 		cwd
@@ -39702,7 +39702,7 @@ loc_2E966:
 		sub	left_3B517, ax
 		mov	ax, 20
 		cwd
-		idiv	word_3B438
+		idiv	_konngara_pattern_state
 		push	ax
 		mov	ax, 128
 		cwd
@@ -39730,7 +39730,7 @@ sub_2EA03	proc far
 		mov	_face_direction_can_change, 0
 		mov	left_3B51B, 410
 		mov	top_3B51D, (PLAYFIELD_TOP + 6)
-		call	@konngara_select_for_rank$qmiiiii stdcall, offset word_3B438, ds, large 32 or (48 shl 16), large 64 or (72 shl 16)
+		call	@konngara_select_for_rank$qmiiiii stdcall, offset _konngara_pattern_state, ds, large 32 or (48 shl 16), large 64 or (72 shl 16)
 		add	sp, 10h
 
 loc_2EA42:
@@ -39745,8 +39745,8 @@ loc_2EA42:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_2EAAA
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, left_3B51B, top_3B51D, 20h, word_3B438, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, left_3B51B, top_3B51D, 60h, word_3B438, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, left_3B51B, top_3B51D, 20h, _konngara_pattern_state, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, left_3B51B, top_3B51D, 60h, _konngara_pattern_state, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 		add	sp, 28h
 		inc	left_3B51B
 		add	top_3B51D, 12
@@ -39762,8 +39762,8 @@ loc_2EABE:
 		jl	loc_2EB8F
 		cmp	_boss_phase_frame, 150
 		jge	short loc_2EB17
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, left_3B51B, top_3B51D, 20h, word_3B438, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, left_3B51B, top_3B51D, 60h, word_3B438, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, left_3B51B, top_3B51D, 20h, _konngara_pattern_state, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, left_3B51B, top_3B51D, 60h, _konngara_pattern_state, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 		add	sp, 28h
 		sub	left_3B51B, 23
 		sub	top_3B51D, 3
@@ -39785,8 +39785,8 @@ loc_2EB2B:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_2EB8F
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, left_3B51B, top_3B51D, 20h, word_3B438, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, left_3B51B, top_3B51D, 60h, word_3B438, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, left_3B51B, top_3B51D, 20h, _konngara_pattern_state, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, left_3B51B, top_3B51D, 60h, _konngara_pattern_state, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 		add	sp, 28h
 		sub	left_3B51B, -21
 		sub	top_3B51D, 12
@@ -39819,7 +39819,7 @@ loc_2EBA2:
 		cwd
 		idiv	bx
 		mov	word_3B523, dx
-		call	@konngara_select_for_rank$qmiiiii c, offset word_3B438, ds, large 128 or (96 shl 16), large 80 or (64 shl 16)
+		call	@konngara_select_for_rank$qmiiiii c, offset _konngara_pattern_state, ds, large 128 or (96 shl 16), large 80 or (64 shl 16)
 
 loc_2EBD8:
 		mov	ax, _boss_phase_frame
@@ -39834,7 +39834,7 @@ loc_2EBD8:
 		add	ax, -100
 		cwd
 		idiv	bx
-		imul	word_3B438
+		imul	_konngara_pattern_state
 		mov	laser_target_left_3B51F, ax
 		jmp	short loc_2EC19
 ; ---------------------------------------------------------------------------
@@ -39845,7 +39845,7 @@ loc_2EC00:
 		mov	bx, 10
 		cwd
 		idiv	bx
-		imul	word_3B438
+		imul	_konngara_pattern_state
 		mov	dx, PLAYFIELD_RIGHT
 		sub	dx, ax
 		mov	laser_target_left_3B51F, dx
@@ -39908,7 +39908,7 @@ sub_2EC9A	proc far
 		mov	_face_direction_can_change, 0
 		mov	word_3B525, 19Ah
 		mov	word_3B527, 46h	; 'F'
-		call	@konngara_select_for_rank$qmiiiii stdcall, offset word_3B438, ds, large 64 or (80 shl 16), large 88 or (96 shl 16)
+		call	@konngara_select_for_rank$qmiiiii stdcall, offset _konngara_pattern_state, ds, large 64 or (80 shl 16), large 88 or (96 shl 16)
 		add	sp, 10h
 
 loc_2ECD9:
@@ -39923,7 +39923,7 @@ loc_2ECD9:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_2ED1E
-		call	@CPellets@add_group$qii14pellet_group_ti c, offset _Pellets, ds, word_3B525, word_3B527, PG_1_AIMED, word_3B438
+		call	@CPellets@add_group$qii14pellet_group_ti c, offset _Pellets, ds, word_3B525, word_3B527, PG_1_AIMED, _konngara_pattern_state
 		inc	word_3B525
 		add	word_3B527, 0Ch
 
@@ -39938,7 +39938,7 @@ loc_2ED32:
 		jl	loc_2EDBD
 		cmp	_boss_phase_frame, 150
 		jge	short loc_2ED68
-		call	@CPellets@add_group$qii14pellet_group_ti c, offset _Pellets, ds, word_3B525, word_3B527, PG_1_AIMED, word_3B438
+		call	@CPellets@add_group$qii14pellet_group_ti c, offset _Pellets, ds, word_3B525, word_3B527, PG_1_AIMED, _konngara_pattern_state
 		sub	word_3B525, 17h
 		sub	word_3B527, 3
 
@@ -39959,7 +39959,7 @@ loc_2ED7C:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_2EDBD
-		call	@CPellets@add_group$qii14pellet_group_ti c, offset _Pellets, ds, word_3B525, word_3B527, PG_1_AIMED, word_3B438
+		call	@CPellets@add_group$qii14pellet_group_ti c, offset _Pellets, ds, word_3B525, word_3B527, PG_1_AIMED, _konngara_pattern_state
 		sub	word_3B525, 0FFEBh
 		sub	word_3B527, 0Ch
 
@@ -42543,7 +42543,9 @@ _sariel_invincibility_frame	dw ?
 word_3B435	dw ?
 public _sariel_initial_hp_rendered
 _sariel_initial_hp_rendered	db ?
-word_3B438	dw ?
+
+public _konngara_pattern_state
+_konngara_pattern_state	dw ?
 x_3B43A	dw ?
 x_3B43C	dw ?
 y_3B43E	dw ?
