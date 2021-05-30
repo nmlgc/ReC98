@@ -5,6 +5,7 @@
 
 #include "platform.h"
 #include "pc98.h"
+#include "decomp.hpp"
 #include "master.hpp"
 #include "th01/math/area.hpp"
 #include "th01/math/subpixel.hpp"
@@ -13,6 +14,8 @@
 #include "th04/math/randring.h"
 #include "th04/main/drawp.hpp"
 #include "th04/main/playfld.hpp"
+#include "th05/sprites/main_pat.h"
+#include "th05/formats/super.h"
 #include "th05/main/boss/boss.hpp"
 
 /// Structures
@@ -57,6 +60,60 @@ static const int PARTICLES_UNINITIALIZED = (-1 & 0xFF);
 
 extern unsigned char shinki_bg_linesets_zoomed_out;
 extern int shinki_bg_type_a_particles_alive;
+
+void near shinki_bg_particles_render(void)
+{
+	_ES = SEG_PLANE_B;
+	boss_particle_t near *particle = boss_particles;
+	int patnum;
+	screen_x_t left_;
+	int i = 0;
+	while(i < BOSS_PARTICLE_COUNT) {
+		if(particle->pos.x.v != Subpixel::None()) {
+			particle->pos.x.v += particle->velocity.x.v;
+			particle->pos.y.v += particle->velocity.y.v;
+			if(particle->patnum == 0) {
+				patnum = (particle->age / 8);
+				if(patnum >= PARTICLE_CELS) {
+					patnum = (PARTICLE_CELS - 1);
+				}
+				patnum += PAT_PARTICLE;
+			} else {
+				patnum = particle->patnum;
+			}
+
+			#define left	static_cast<pixel_t>(_CX)
+			#define top 	static_cast<pixel_t>(_AX)
+
+			// Lol, is this only not directly assigned to _CX because ZUN was
+			// scared that the _AX assignment might overwrite _CX?
+			left_ = (
+				particle->pos.x.to_pixel() + PLAYFIELD_LEFT - (PARTICLE_W / 2)
+			);
+			top = (
+				particle->pos.y.to_pixel() + PLAYFIELD_TOP - (PARTICLE_H / 2)
+			);
+			left = left_;
+			if(!(
+				(left > (PLAYFIELD_LEFT - PARTICLE_W)) &&
+				(left < PLAYFIELD_RIGHT) &&
+				(top > keep_0(PLAYFIELD_TOP - PARTICLE_H)) &&
+				(top < PLAYFIELD_BOTTOM)
+			)) {
+				particle->pos = particle->origin;
+				particle->age = 0;
+			} else {
+				z_super_roll_put_16x16_mono(left, top, patnum);
+				particle->age++;
+			}
+
+			#undef top
+			#undef left
+		}
+		i++;
+		particle++;
+	}
+}
 
 void near shinki_bg_type_a_update_part1(void)
 {

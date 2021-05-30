@@ -3532,96 +3532,7 @@ loc_D322:
 		retn
 yumeko_bg_render	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D327	proc near
-
-@@i		= word ptr -4
-@@left		= word ptr -2
-
-		enter	4, 0
-		push	si
-		push	di
-		mov	ax, GRAM_400
-		mov	es, ax
-		mov	si, offset _boss_particles
-		mov	[bp+@@i], 0
-		jmp	short loc_D3BA
-; ---------------------------------------------------------------------------
-
-loc_D33C:
-		cmp	[si+boss_particle_t.BP_pos.x], SUBPIXEL_NONE
-		jz	short loc_D3B4
-		mov	ax, [si+boss_particle_t.BP_velocity.x]
-		add	[si+boss_particle_t.BP_pos.x], ax
-		mov	ax, [si+boss_particle_t.BP_velocity.y]
-		add	[si+boss_particle_t.BP_pos.y], ax
-		cmp	[si+boss_particle_t.BP_patnum], 0
-		jnz	short loc_D36C
-		mov	ax, [si+boss_particle_t.BP_age]
-		mov	bx, 8
-		cwd
-		idiv	bx
-		mov	di, ax
-		cmp	di, PARTICLE_CELS
-		jl	short loc_D366
-		mov	di, (PARTICLE_CELS - 1)
-
-loc_D366:
-		add	di, PAT_PARTICLE
-		jmp	short loc_D373
-; ---------------------------------------------------------------------------
-
-loc_D36C:
-		mov	al, [si+boss_particle_t.BP_patnum]
-		mov	ah, 0
-		mov	di, ax
-
-loc_D373:
-		mov	ax, [si+boss_particle_t.BP_pos.x]
-		sar	ax, 4
-		add	ax, (PLAYFIELD_LEFT - (PARTICLE_W / 2))
-		mov	[bp+@@left], ax
-		mov	ax, [si+boss_particle_t.BP_pos.y]
-		sar	ax, 4
-		add	ax, (PLAYFIELD_TOP - (PARTICLE_H / 2))
-		mov	cx, [bp+@@left]
-		cmp	cx, (PLAYFIELD_LEFT - PARTICLE_W)
-		jle	short loc_D39F
-		cmp	cx, PLAYFIELD_RIGHT
-		jge	short loc_D39F
-		cmp	ax, (PLAYFIELD_TOP - PARTICLE_H)
-		jle	short loc_D39F
-		cmp	ax, PLAYFIELD_BOTTOM
-		jl	short loc_D3AD
-
-loc_D39F:
-		mov	eax, dword ptr [si+boss_particle_t.BP_origin]
-		mov	dword ptr [si+boss_particle_t.BP_pos], eax
-		mov	[si+boss_particle_t.BP_age], 0
-		jmp	short loc_D3B4
-; ---------------------------------------------------------------------------
-
-loc_D3AD:
-		call	z_super_roll_put_16x16_mono_raw pascal, di
-		inc	[si+boss_particle_t.BP_age]
-
-loc_D3B4:
-		inc	[bp+@@i]
-		add	si, size boss_particle_t
-
-loc_D3BA:
-		cmp	[bp+@@i], BOSS_PARTICLE_COUNT
-		jl	loc_D33C
-		pop	di
-		pop	si
-		leave
-		retn
-sub_D327	endp
-
+	_shinki_bg_particles_render procdesc c near
 	_shinki_bg_type_a_update_part1 procdesc c near
 	GRCG_LINESET_LINE_PUT procdesc pascal near \
 		set:near ptr, i:word
@@ -3677,7 +3588,7 @@ loc_D630:
 		call	_grcg_setmode_rmw_seg1
 		mov	ah, GC_BRG
 		call	_grcg_setcolor_direct_seg1_raw
-		call	sub_D327
+		call	_shinki_bg_particles_render
 		call	grcg_lineset_line_put pascal, offset lineset0, 18
 		call	grcg_lineset_line_put pascal, offset lineset0, 12
 		call	grcg_lineset_line_put pascal, offset lineset1, 18
@@ -3921,7 +3832,7 @@ loc_D82E:
 		call	_grcg_setmode_rmw_seg1
 		mov	ah, GC_BRG
 		call	_grcg_setcolor_direct_seg1_raw
-		call	sub_D327
+		call	_shinki_bg_particles_render
 		call	grcg_lineset_line_put pascal, offset lineset0, 18
 		call	grcg_lineset_line_put pascal, offset lineset0, 12
 		call	grcg_lineset_line_put pascal, offset lineset1, 18
@@ -4130,7 +4041,7 @@ loc_D9C6:
 		call	_grcg_setmode_rmw_seg1
 		mov	ah, GC_BRG
 		call	_grcg_setcolor_direct_seg1_raw
-		call	sub_D327
+		call	_shinki_bg_particles_render
 		call	grcg_lineset_line_put pascal, offset lineset0, 18
 		call	grcg_lineset_line_put pascal, offset lineset0, 12
 		call	grcg_lineset_line_put pascal, offset lineset1, 18
@@ -4291,7 +4202,7 @@ loc_DB0A:
 		call	sub_E950
 		call	sub_DA25
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 6
-		call	sub_D327
+		call	_shinki_bg_particles_render
 		GRCG_OFF_CLOBBERING dx
 		leave
 		retn
