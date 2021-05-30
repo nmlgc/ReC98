@@ -70,6 +70,22 @@ must be spelled out to silence the `Possibly incorrect assignment` warning.
 `SUB` means that `??` is unsigned. Might require suffixing `imm` with `u` in
 case it's part of an arithmetic expression that was promoted to `int`.
 
+### Comparisons
+
+* Any comparison of a register with a literal 0 is optimized to `OR reg, reg`
+  followed by a conditional jump, no matter how many calculations and inlined
+  functions are involved. Any `CMP reg, 0` instructions must have either come
+  from assembly, or referred to a *pointer* at address 0:
+
+  ```c++
+  extern void near *address_0; // Public symbol at near address 0
+  register int i;
+
+  if(i != reinterpret_cast<int>(address_0)) {
+    // ↑ Will emit `CMP reg, 0`
+  }
+  ```
+
 ## Floating-point arithmetic
 
 * Since the x87 FPU can only load from memory, all temporary results of

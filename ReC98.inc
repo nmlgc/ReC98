@@ -47,6 +47,10 @@ setfarfp macro farfp, func
 	mov word ptr farfp, offset func
 endm
 
+; See decomp.hpp
+public _address_0
+_address_0 = 0
+
 ; master.lib extensions
 ; ---------------------
 ; super_roll_put_1plane() plane_put constants

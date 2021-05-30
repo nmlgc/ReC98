@@ -35,14 +35,13 @@ void near pi_mask_setup_egc_and_advance(void)
 	outport2(EGC_READPLANEREG, 0xFF);
 	// EGC_COMPAREREAD | EGC_WS_PATREG | EGC_RL_MEMREAD
 	outport2(EGC_MODE_ROP_REG, 0x3100);
-	// Turbo C++ is too smart to emit this instruction with pseudo-registers!
-	__asm { mov ax, 0; }
-	outport(EGC_ADDRRESSREG, _AX);
+	outport(EGC_ADDRRESSREG, keep_0(0));
 	outport2(EGC_BITLENGTHREG, 0xF);
 
 	mask_ptr = reinterpret_cast<uint16_t>(pi_mask_ptr);
 	_AX = (pi_mask_y & (PI_MASK_H - 1));
-	__asm { shl ax, 1; } // And again!
+	// Turbo C++ is too smart to emit this instruction with pseudo-registers!
+	__asm { shl ax, 1; }
 	mask_ptr += _AX;
 	outport(EGC_MASKREG, *reinterpret_cast<dots16_t near *>(mask_ptr));
 	pi_mask_y++;

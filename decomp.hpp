@@ -27,6 +27,8 @@
 	out dx, ax; \
 }
 
+} // extern "C" was a mistake
+
 // poke() versions that actually inline with pseudoregisters
 // ---------------------------------------------------------
 #define pokew(sgm, off, val) { *(uint16_t far *)(MK_FP(sgm, off)) = val; }
@@ -55,8 +57,6 @@
 //
 // Also, hey, no need for the MK_FP() macro if we directly return the correct
 // types.
-
-} // extern "C" was a mistake
 
 #if defined(__TURBOC__) && defined(__MSDOS__)
 	// Declared in <dos.h> in these compilers.
@@ -95,9 +95,26 @@ inline void poked_eax(Decomp_FS *sgm, Decomp_DI *off, uint8_t op) {
 inline void poked_eax(Decomp_GS *sgm, Decomp_DI *off, uint8_t op) {
 	__emit__(0x66, 0x65, op, 0x05); // [op] GS:[DI], EAX
 }
+// ---------------------------------------------------------
+
+#if defined(__TURBOC__) && defined(__MSDOS__)
+	// Use this function wherever the original code used a immediate 0 literal
+	// that Turbo C++ would optimize away, e.g. in register assignments
+	// (_AX = 0 → XOR AX, AX) or comparisons (_AX == 0 → OR AX, AX). This way,
+	// the compiler is forced to leave space for any potential offset, with the
+	// literal 0 then being spelled out by the linker.
+	template <class T> inline T keep_0(T x) {
+		if(x == 0) {
+			extern void *near address_0;
+			return reinterpret_cast<pixel_t>(&address_0);
+		}
+		return x;
+	}
+#else
+	#define keep_0(x) x
+#endif
 
 extern "C" {
-// ---------------------------------------------------------
 
 // 32-bit ASM instructions not supported by Turbo C++ 4.0J's built-in
 // assembler. Makes no sense to compile with `#pragma inline` (and thus,
