@@ -3622,155 +3622,7 @@ loc_D3BA:
 		retn
 sub_D327	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D3C6	proc near
-
-@@set		= word ptr -6
-@@line_i		= word ptr -4
-@@angle		= word ptr -2
-
-		enter	6, 0
-		push	si
-		push	di
-		cmp	word_21D6E, (-1 and 255)
-		jnz	loc_D456
-		mov	[bp+@@set], offset _linesets
-		xor	di, di
-		mov	[bp+@@angle], 40h
-		jmp	short loc_D433
-; ---------------------------------------------------------------------------
-
-loc_D3E4:
-		mov	[bp+@@line_i], 0
-		jmp	short loc_D422
-; ---------------------------------------------------------------------------
-
-loc_D3EB:
-		mov	bx, [bp+@@line_i]
-		shl	bx, 2
-		add	bx, [bp+@@set]
-		mov	[bx+lineset_t.LS_center.x], ((PLAYFIELD_W / 2) shl 4)
-		mov	bx, [bp+@@line_i]
-		shl	bx, 2
-		add	bx, [bp+@@set]
-		mov	[bx+lineset_t.LS_center.y], ((PLAYFIELD_H / 2) shl 4)
-		mov	bx, [bp+@@line_i]
-		add	bx, bx
-		add	bx, [bp+@@set]
-		mov	[bx+lineset_t.LS_radius], (1 shl 4)
-		mov	bx, [bp+@@set]
-		add	bx, [bp+@@line_i]
-		mov	al, byte ptr [bp+@@angle]
-		mov	[bx+lineset_t.LS_angle], al
-		inc	[bp+@@line_i]
-
-loc_D422:
-		cmp	[bp+@@line_i], LINESET_LINE_COUNT
-		jl	short loc_D3EB
-		inc	di
-		add	[bp+@@set], size lineset_t
-		sub	[bp+@@angle], 80h
-
-loc_D433:
-		cmp	di, 2
-		jl	short loc_D3E4
-		mov	si, offset _boss_particles
-		xor	di, di
-		jmp	short loc_D44B
-; ---------------------------------------------------------------------------
-
-loc_D43F:
-		mov	[si+boss_particle_t.BP_pos.x], SUBPIXEL_NONE
-		mov	[si+boss_particle_t.BP_patnum], 0
-		inc	di
-		add	si, size boss_particle_t
-
-loc_D44B:
-		cmp	di, BOSS_PARTICLE_COUNT
-		jl	short loc_D43F
-		mov	word_21D6E, 0
-
-loc_D456:
-		cmp	word_21D6E, BOSS_PARTICLE_COUNT
-		jge	short loc_D4BE
-		mov	ax, _boss_phase_frame
-		mov	bx, 4
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_D46F
-		mov	ax, 1
-		jmp	short loc_D471
-; ---------------------------------------------------------------------------
-
-loc_D46F:
-		xor	ax, ax
-
-loc_D471:
-		cmp	ax, 1
-		jnz	short loc_D4BE
-		mov	ax, word_21D6E
-		shl	ax, 4
-		add	ax, offset _boss_particles
-		mov	si, ax
-		mov	[si+boss_particle_t.BP_pos.x], ((PLAYFIELD_W / 2) shl 4)
-		mov	[si+boss_particle_t.BP_pos.y], ((PLAYFIELD_H / 2) shl 4)
-		mov	[si+boss_particle_t.BP_origin.x], ((PLAYFIELD_W / 2) shl 4)
-		mov	[si+boss_particle_t.BP_origin.y], ((PLAYFIELD_H / 2) shl 4)
-		call	randring1_next16
-		mov	[si+boss_particle_t.BP_angle], al
-		mov	[si+boss_particle_t.BP_age], 0
-		lea	ax, [si+boss_particle_t.BP_velocity]
-		push	ax
-		pushd	(0 shl 16) or 0
-		call	randring1_next16_and pascal, 3Fh
-		add	ax, (2 shl 4)
-		push	ax
-		mov	al, [si+boss_particle_t.BP_angle]
-		mov	ah, 0
-		push	ax
-		call	vector2_at
-		inc	word_21D6E
-
-loc_D4BE:
-		cmp	_boss_phase, 3
-		jnz	short loc_D4F4
-		mov	al, byte_21D6C
-		mov	ah, 0
-		mov	bx, 4
-		cwd
-		idiv	bx
-		cmp	dx, 2
-		jge	short loc_D4E4
-		mov	al, lineset0.LS_angle
-		add	al, 2
-		mov	lineset0.LS_angle, al
-		mov	al, lineset1.LS_angle
-		add	al, 2
-		jmp	short loc_D4F1
-; ---------------------------------------------------------------------------
-
-loc_D4E4:
-		mov	al, lineset0.LS_angle
-		add	al, -2
-		mov	lineset0.LS_angle, al
-		mov	al, lineset1.LS_angle
-		add	al, -2
-
-loc_D4F1:
-		mov	lineset1.LS_angle, al
-
-loc_D4F4:
-		pop	di
-		pop	si
-		leave
-		retn
-sub_D3C6	endp
-
+	_shinki_bg_type_a_update_part1 procdesc c near
 	GRCG_LINESET_LINE_PUT procdesc pascal near \
 		set:near ptr, i:word
 	LINESET_FORWARD_COPY procdesc pascal near \
@@ -3788,7 +3640,7 @@ sub_D5E2	proc near
 		mov	bp, sp
 		push	si
 		push	di
-		call	sub_D3C6
+		call	_shinki_bg_type_a_update_part1
 		mov	si, offset _linesets
 		xor	di, di
 		jmp	short loc_D630
@@ -3812,7 +3664,7 @@ loc_D5F1:
 		call	vector2_at
 		cmp	[si+lineset_t.LS_radius], (224 shl 4)
 		jl	short loc_D62B
-		inc	byte_21D6C
+		inc	_shinki_bg_linesets_zoomed_out
 		mov	[si+lineset_t.LS_radius], 0
 
 loc_D62B:
@@ -27386,9 +27238,10 @@ byte_21762	db 0
 		db    0
 include th04/sprites/pointnum.asp
 include th05/formats/bb_playchar[data].asm
-byte_21D6C	db 0
+public _shinki_bg_linesets_zoomed_out, _shinki_bg_type_a_particles_alive
+_shinki_bg_linesets_zoomed_out	db 0
 		db 0
-word_21D6E	dw (-1 and 255)
+_shinki_bg_type_a_particles_alive	dw (-1 and 255)
 byte_21D70	db 0
 		db 0
 word_21D72	dw 0
