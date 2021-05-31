@@ -9,7 +9,7 @@
 #include "th04/hardware/grcg.h"
 #include "th04/math/motion.hpp"
 #include "th04/main/null.hpp"
-#include "th04/main/playfld.h"
+#include "th04/main/playfld.hpp"
 #include "th04/main/tile.hpp"
 #include "th04/main/scroll.hpp"
 #include "th04/main/hud/popup.hpp"

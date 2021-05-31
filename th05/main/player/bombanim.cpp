@@ -3,7 +3,7 @@
 #include "th01/math/subpixel.hpp"
 #include "th04/math/vector.hpp"
 #include "th04/math/randring.h"
-#include "th04/main/playfld.h"
+#include "th04/main/playfld.hpp"
 #include "th04/main/frames.h"
 #include "th04/main/circles.hpp"
 #include "th05/sprites/main_pat.h"

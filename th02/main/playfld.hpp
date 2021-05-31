@@ -23,3 +23,5 @@
 	// (Future games use a near function.)
 	void far playfield_tram_wipe(void);
 #endif
+
+#include "th01/main/playfld.hpp"

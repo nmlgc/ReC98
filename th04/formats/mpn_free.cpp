@@ -6,7 +6,7 @@ extern "C" {
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
-#include "th04/main/playfld.h"
+#include "th04/main/playfld.hpp"
 #include "th04/main/tile.hpp"
 #include "th04/formats/mpn.hpp"
 

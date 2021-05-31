@@ -3,7 +3,6 @@
  * Update code for Part 1 of the Stage 4 boss fight, against both Mai and Yuki
  */
 
-#include "th04/main/playfld.h"
 #include "th04/math/vector.hpp"
 #include "th05/sprites/main_pat.h"
 

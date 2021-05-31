@@ -1,4 +1,4 @@
-#include "th02/main/playfld.h"
+#include "th02/main/playfld.hpp"
 
 // Fills the playfield area on the text RAM with transparent spaces.
 void near playfield_tram_wipe(void);

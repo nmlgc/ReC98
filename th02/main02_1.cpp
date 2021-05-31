@@ -11,7 +11,7 @@ extern "C" {
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
-#include "th02/main/playfld.h"
+#include "th02/main/playfld.hpp"
 #include "th02/main/tile.hpp"
 #include "th02/formats/mpn.hpp"
 

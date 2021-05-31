@@ -24,7 +24,7 @@
 #include "th04/score.h"
 /// ------
 
-#include "th04/main/playfld.h"
+#include "th04/main/playfld.hpp"
 
 /// Stages
 /// ------

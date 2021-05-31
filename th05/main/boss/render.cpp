@@ -9,7 +9,7 @@
 #include "th01/math/subpixel.hpp"
 #include "th04/math/vector.hpp"
 #include "th04/main/drawp.hpp"
-#include "th04/main/playfld.h"
+#include "th04/main/playfld.hpp"
 
 /// Structures
 /// ----------
