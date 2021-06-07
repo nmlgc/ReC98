@@ -3533,81 +3533,14 @@ loc_D322:
 yumeko_bg_render	endp
 
 	_shinki_bg_particles_render procdesc c near
-	_shinki_bg_type_a_update_part1 procdesc c near
 	GRCG_LINESET_LINE_PUT procdesc pascal near \
 		set:near ptr, i:word
 	LINESET_FORWARD_COPY procdesc pascal near \
 		set:near ptr
+	_shinki_bg_type_a_update_and_rend procdesc c near
 main__TEXT	ends
 
 main_0_TEXT	segment	word public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D5E2	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		call	_shinki_bg_type_a_update_part1
-		mov	si, offset _linesets
-		xor	di, di
-		jmp	short loc_D630
-; ---------------------------------------------------------------------------
-
-loc_D5F1:
-		call	lineset_forward_copy pascal, si
-		add	[si+lineset_t.LS_radius], (4 shl 4)
-		push	si
-		push	((192 shl 4) shl 16) or (184 shl 4)
-		mov	ax, [si+lineset_t.LS_radius]
-		imul	ax, 3
-		mov	bx, 4
-		cwd
-		idiv	bx
-		push	ax
-		mov	al, [si+lineset_t.LS_angle]
-		mov	ah, 0
-		add	ax, -64
-		push	ax
-		call	vector2_at
-		cmp	[si+lineset_t.LS_radius], (224 shl 4)
-		jl	short loc_D62B
-		inc	_shinki_bg_linesets_zoomed_out
-		mov	[si+lineset_t.LS_radius], 0
-
-loc_D62B:
-		inc	di
-		add	si, size lineset_t
-
-loc_D630:
-		cmp	di, 2
-		jl	short loc_D5F1
-		call	_grcg_setmode_rmw_seg1
-		mov	ah, GC_BRG
-		call	_grcg_setcolor_direct_seg1_raw
-		call	_shinki_bg_particles_render
-		call	grcg_lineset_line_put pascal, offset lineset0, 18
-		call	grcg_lineset_line_put pascal, offset lineset0, 12
-		call	grcg_lineset_line_put pascal, offset lineset1, 18
-		call	grcg_lineset_line_put pascal, offset lineset1, 12
-		mov	ah, GC_RG
-		call	_grcg_setcolor_direct_seg1_raw
-		call	grcg_lineset_line_put pascal, offset lineset0, 6
-		call	grcg_lineset_line_put pascal, offset lineset1, 6
-		mov	ah, 0Fh
-		call	_grcg_setcolor_direct_seg1_raw
-		call	grcg_lineset_line_put pascal, offset lineset0, 0
-		call	grcg_lineset_line_put pascal, offset lineset1, 0
-		GRCG_OFF_CLOBBERING dx
-		pop	di
-		pop	si
-		pop	bp
-		retn
-sub_D5E2	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4174,7 +4107,7 @@ loc_DADD:
 		cmp	_boss_phase, 4
 		jnb	short loc_DAEC
 		call	sub_E92E
-		call	sub_D5E2
+		call	_shinki_bg_type_a_update_and_rend
 		leave
 		retn
 ; ---------------------------------------------------------------------------

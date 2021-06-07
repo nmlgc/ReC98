@@ -4,11 +4,13 @@
  */
 
 #include "platform.h"
+#include "x86real.h"
 #include "pc98.h"
 #include "decomp.hpp"
 #include "master.hpp"
 #include "th01/math/area.hpp"
 #include "th01/math/subpixel.hpp"
+#include "th04/hardware/grcg.h"
 #include "th04/math/vector.hpp"
 #include "th04/math/motion.hpp"
 #include "th04/math/randring.h"
@@ -57,6 +59,12 @@ extern lineset_t linesets[LINESET_COUNT];
 
 static const int SHINKI_LINESET_COUNT = 2;
 static const int PARTICLES_UNINITIALIZED = (-1 & 0xFF);
+
+// Maps one of Shinki's four visible lines to its index in a line set.
+static const int SHINKI_LINE_MAIN = (0 * 6);
+static const int SHINKI_LINE_2 = (1 * 6);
+static const int SHINKI_LINE_3 = (2 * 6);
+static const int SHINKI_LINE_4 = (3 * 6);
 
 extern unsigned char shinki_bg_linesets_zoomed_out;
 extern int shinki_bg_type_a_particles_alive;
@@ -203,5 +211,58 @@ void pascal near lineset_forward_copy(lineset_t near &set)
 		set.angle[i] = set.angle[i - 1];
 		set.radius[i].v = set.radius[i - 1].v;
 	}
+}
+
+inline void shinki_bg_render_blue_particles_and_lines(void)
+{
+	grcg_setmode_rmw_seg1();
+
+	grcg_setcolor_direct_seg1(8);
+	shinki_bg_particles_render();
+	grcg_lineset_line_put(linesets[0], SHINKI_LINE_4);
+	grcg_lineset_line_put(linesets[0], SHINKI_LINE_3);
+	grcg_lineset_line_put(linesets[1], SHINKI_LINE_4);
+	grcg_lineset_line_put(linesets[1], SHINKI_LINE_3);
+
+	grcg_setcolor_direct_seg1(9);
+	grcg_lineset_line_put(linesets[0], SHINKI_LINE_2);
+	grcg_lineset_line_put(linesets[1], SHINKI_LINE_2);
+
+	grcg_setcolor_direct_seg1(15);
+	grcg_lineset_line_put(linesets[0], SHINKI_LINE_MAIN);
+	grcg_lineset_line_put(linesets[1], SHINKI_LINE_MAIN);
+
+	grcg_off();
+}
+
+// Particles: Blue, shooting out from the center in random directions and at
+//            random speeds
+// Lines: Two parallel, repeatedly zooming lines that give the impression of
+//        flying into a corridor, with random blue particles
+void near shinki_bg_type_a_update_and_render(void)
+{
+	// MODDERS: Just fuse into this function.
+	shinki_bg_type_a_update_part1();
+
+	lineset_t near *set = linesets;
+	int i = 0;
+	while(i < SHINKI_LINESET_COUNT) {
+		lineset_forward_copy(*set);
+		set->radius[SHINKI_LINE_MAIN] += 4.0f;
+		vector2_at(
+			set->center[SHINKI_LINE_MAIN],
+			to_sp(PLAYFIELD_W / 2),
+			to_sp(PLAYFIELD_H / 2),
+			((set->radius[SHINKI_LINE_MAIN].v * 3) / 4),
+			(set->angle[SHINKI_LINE_MAIN] - 0x40)
+		);
+		if(set->radius[SHINKI_LINE_MAIN] >= to_sp(224.0f)) {
+			shinki_bg_linesets_zoomed_out++;
+			set->radius[SHINKI_LINE_MAIN].set(0.0f);
+		}
+		i++;
+		set++;
+	}
+	shinki_bg_render_blue_particles_and_lines();
 }
 /// ----------------
