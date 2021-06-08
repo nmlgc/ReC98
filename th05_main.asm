@@ -3538,123 +3538,10 @@ yumeko_bg_render	endp
 	LINESET_FORWARD_COPY procdesc pascal near \
 		set:near ptr
 	_shinki_bg_type_a_update_and_rend procdesc c near
+	_shinki_bg_type_b_update_part1 procdesc c near
 main__TEXT	ends
 
 main_0_TEXT	segment	word public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D694	proc near
-
-@@set		= word ptr -6
-@@line_i		= word ptr -4
-@@center_x		= word ptr -2
-
-		enter	6, 0
-		push	si
-		push	di
-		cmp	byte_21D70, 0
-		jnz	loc_D751
-		mov	[bp+@@center_x], (64 shl 4)
-		mov	[bp+@@set], offset _linesets
-		xor	di, di
-		jmp	short loc_D707
-; ---------------------------------------------------------------------------
-
-loc_D6B1:
-		mov	[bp+@@line_i], (LINESET_LINE_COUNT - 2)
-		jmp	short loc_D6EE
-; ---------------------------------------------------------------------------
-
-loc_D6B8:
-		mov	bx, [bp+@@line_i]
-		shl	bx, 2
-		add	bx, [bp+@@set]
-		mov	ax, [bp+@@center_x]
-		mov	[bx+lineset_t.LS_center.x], ax
-		mov	bx, [bp+@@line_i]
-		shl	bx, 2
-		add	bx, [bp+@@set]
-		mov	[bx+lineset_t.LS_center.y], (216 shl 4)
-		mov	bx, [bp+@@line_i]
-		add	bx, bx
-		add	bx, [bp+@@set]
-		mov	word ptr [bx+lineset_t.LS_radius], (256 shl 4)
-		mov	bx, [bp+@@set]
-		add	bx, [bp+@@line_i]
-		mov	byte ptr [bx+lineset_t.LS_angle], 40h
-		dec	[bp+@@line_i]
-
-loc_D6EE:
-		cmp	[bp+@@line_i], 0
-		jge	short loc_D6B8
-		mov	bx, [bp+@@set]
-		mov	word ptr [bx+lineset_t.LS_velocity_y], 0
-		inc	di
-		add	[bp+@@set], size lineset_t
-		add	[bp+@@center_x], (256 shl 4)
-
-loc_D707:
-		cmp	di, 2
-		jl	short loc_D6B1
-		mov	si, offset _boss_particles
-		xor	di, di
-		jmp	short loc_D746
-; ---------------------------------------------------------------------------
-
-loc_D713:
-		call	randring1_next16_mod pascal, (PLAYFIELD_W shl 4)
-		mov	[si+boss_particle_t.BP_pos.x], ax
-		call	randring1_next16_mod pascal, (PLAYFIELD_W shl 4) ; Huh?
-		mov	[si+boss_particle_t.BP_pos.y], ax
-		mov	ax, [si+boss_particle_t.BP_pos.x]
-		mov	[si+boss_particle_t.BP_origin.x], ax
-		mov	[si+boss_particle_t.BP_origin.y], (-1 shl 4)
-		mov	[si+boss_particle_t.BP_velocity.x], 0
-		mov	[si+boss_particle_t.BP_velocity.y], 0
-		call	randring1_next16_and pascal, 3
-		add	al, PAT_PARTICLE
-		mov	[si+boss_particle_t.BP_patnum], al
-		inc	di
-		add	si, size boss_particle_t
-
-loc_D746:
-		cmp	di, BOSS_PARTICLE_COUNT
-		jl	short loc_D713
-		inc	byte_21D70
-		jmp	short loc_D770
-; ---------------------------------------------------------------------------
-
-loc_D751:
-		mov	si, offset _boss_particles
-		xor	di, di
-		jmp	short loc_D76B
-; ---------------------------------------------------------------------------
-
-loc_D758:
-		cmp	[si+boss_particle_t.BP_velocity.y], (10 shl 4)
-		jge	short loc_D767
-		mov	al, _stage_frame_mod2
-		mov	ah, 0
-		add	[si+boss_particle_t.BP_velocity.y], ax
-
-loc_D767:
-		inc	di
-		add	si, size boss_particle_t
-
-loc_D76B:
-		cmp	di, BOSS_PARTICLE_COUNT
-		jl	short loc_D758
-
-loc_D770:
-		pop	di
-		pop	si
-		leave
-		retn
-sub_D694	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3668,7 +3555,7 @@ var_2		= word ptr -2
 		enter	4, 0
 		push	si
 		push	di
-		call	sub_D694
+		call	_shinki_bg_type_b_update_part1
 		mov	[bp+var_2], 4
 		mov	si, offset _linesets
 		xor	di, di
@@ -27083,10 +26970,11 @@ byte_21762	db 0
 include th04/sprites/pointnum.asp
 include th05/formats/bb_playchar[data].asm
 public _shinki_bg_linesets_zoomed_out, _shinki_bg_type_a_particles_alive
+public _shinki_bg_type_b_initialized
 _shinki_bg_linesets_zoomed_out	db 0
 		db 0
 _shinki_bg_type_a_particles_alive	dw (-1 and 255)
-byte_21D70	db 0
+_shinki_bg_type_b_initialized	db 0
 		db 0
 word_21D72	dw 0
 byte_21D74	db 0

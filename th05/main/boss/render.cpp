@@ -15,6 +15,7 @@
 #include "th04/math/motion.hpp"
 #include "th04/math/randring.h"
 #include "th04/main/drawp.hpp"
+#include "th04/main/frames.h"
 #include "th04/main/playfld.hpp"
 #include "th05/sprites/main_pat.h"
 #include "th05/formats/super.h"
@@ -68,6 +69,7 @@ static const int SHINKI_LINE_4 = (3 * 6);
 
 extern unsigned char shinki_bg_linesets_zoomed_out;
 extern int shinki_bg_type_a_particles_alive;
+extern bool shinki_bg_type_b_initialized;
 
 void near shinki_bg_particles_render(void)
 {
@@ -264,5 +266,59 @@ void near shinki_bg_type_a_update_and_render(void)
 		set++;
 	}
 	shinki_bg_render_blue_particles_and_lines();
+}
+
+void near shinki_bg_type_b_update_part1(void)
+{
+	boss_particle_t near *particle;
+	int i;
+	subpixel_t center_x;
+	int line_i;
+	lineset_t near *set;
+
+	if(!shinki_bg_type_b_initialized) {
+		center_x = to_sp(playfield_fraction_x(1 / 6.0f));
+		set = linesets;
+		i = 0;
+		while(i < SHINKI_LINESET_COUNT) {
+			for(line_i = SHINKI_LINE_4; line_i >= 0; line_i--) {
+				set->center[line_i].x.v = center_x;
+				set->center[line_i].y.v = to_sp((PLAYFIELD_H / 2) + 32);
+				set->radius[line_i].set(256.0f);
+				set->angle[line_i] = 0x40;
+			}
+			set->velocity_y.set(0.0f);
+			i++;
+			set++;
+			center_x += to_sp(playfield_fraction_x(4 / 6.0f));
+		}
+		particle = boss_particles;
+		i = 0;
+		while(i < BOSS_PARTICLE_COUNT) {
+			particle->pos.x.v = randring1_next16_mod(to_sp(PLAYFIELD_W));
+			// Huh? Not PLAYFIELD_H?
+			particle->pos.y.v = randring1_next16_mod(to_sp(PLAYFIELD_W));
+			particle->origin.x = particle->pos.x;
+			particle->origin.y.set(-1.0f);
+			particle->velocity.set(0.0f, 0.0f);
+			particle->patnum = (
+				PAT_PARTICLE + randring1_next16_and(PARTICLE_CELS - 1)
+			);
+			i++;
+			particle++;
+		}
+		shinki_bg_type_b_initialized++;
+		return;
+	}
+
+	particle = boss_particles;
+	i = 0;
+	while(i < BOSS_PARTICLE_COUNT) {
+		if(particle->velocity.y < to_sp(10.0f)) {
+			particle->velocity.y.v += stage_frame_mod2;
+		}
+		i++;
+		particle++;
+	}
 }
 /// ----------------
