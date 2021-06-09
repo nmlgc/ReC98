@@ -3533,416 +3533,13 @@ loc_D322:
 yumeko_bg_render	endp
 
 	_shinki_bg_particles_render procdesc c near
-	GRCG_LINESET_LINE_PUT procdesc pascal near \
-		set:near ptr, i:word
-	LINESET_FORWARD_COPY procdesc pascal near \
-		set:near ptr
 	_shinki_bg_type_a_update_and_rend procdesc c near
-	_shinki_bg_type_b_update_part1 procdesc c near
+	_shinki_bg_type_b_update_and_rend procdesc c near
+	_shinki_bg_type_c_update_and_rend procdesc c near
+	_shinki_bg_type_d_update procdesc c near
 main__TEXT	ends
 
 main_0_TEXT	segment	word public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D774	proc near
-
-var_4		= word ptr -4
-var_2		= word ptr -2
-
-		enter	4, 0
-		push	si
-		push	di
-		call	_shinki_bg_type_b_update_part1
-		mov	[bp+var_2], 4
-		mov	si, offset _linesets
-		xor	di, di
-		jmp	short loc_D7E8
-; ---------------------------------------------------------------------------
-
-loc_D789:
-		call	lineset_forward_copy pascal, si
-		mov	ax, [si+lineset_t.LS_velocity_y]
-		add	[si+lineset_t.LS_center.y], ax
-		cmp	[si+lineset_t.LS_velocity_y], (-14 shl 4)
-		jle	short loc_D7AB
-		cmp	_stage_frame_mod4, 0
-		jnz	short loc_D7A6
-		mov	ax, 1
-		jmp	short loc_D7A8
-; ---------------------------------------------------------------------------
-
-loc_D7A6:
-		xor	ax, ax
-
-loc_D7A8:
-		sub	[si+lineset_t.LS_velocity_y], ax
-
-loc_D7AB:
-		cmp	[si+lineset_t.LS_radius], (96 shl 4)
-		jle	short loc_D7B6
-		sub	[si+lineset_t.LS_radius], 2
-
-loc_D7B6:
-		mov	ax, word_21D72
-		and	ax, 511
-		cmp	ax, 256
-		jnb	short loc_D7C8
-		mov	ax, [bp+var_2]
-		add	[si+lineset_t.LS_center.x], ax
-		jmp	short loc_D7CD
-; ---------------------------------------------------------------------------
-
-loc_D7C8:
-		mov	ax, [bp+var_2]
-		sub	[si+lineset_t.LS_center.x], ax
-
-loc_D7CD:
-		mov	ax, [bp+var_2]
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		add	al, [si+lineset_t.LS_angle]
-		mov	[si+lineset_t.LS_angle], al
-		inc	di
-		add	si, size lineset_t
-		mov	ax, [bp+var_2]
-		neg	ax
-		mov	[bp+var_2], ax
-
-loc_D7E8:
-		cmp	di, 2
-		jl	short loc_D789
-		inc	word_21D72
-		mov	si, offset _linesets
-		cmp	[si+lineset_t.LS_center.y], (80 shl 4)
-		jge	short loc_D82E
-		mov	ax, (80 shl 4)
-		sub	ax, [si+lineset_t.LS_center.y]
-		mov	[bp+var_2], ax
-		xor	di, di
-		jmp	short loc_D829
-; ---------------------------------------------------------------------------
-
-loc_D808:
-		mov	[bp+var_4], (LINESET_LINE_COUNT - 2)
-		jmp	short loc_D81E
-; ---------------------------------------------------------------------------
-
-loc_D80F:
-		mov	bx, [bp+var_4]
-		shl	bx, 2
-		mov	ax, [bp+var_2]
-		add	[bx+si+lineset_t.LS_center.y], ax
-		dec	[bp+var_4]
-
-loc_D81E:
-		cmp	[bp+var_4], 0
-		jge	short loc_D80F
-		inc	di
-		add	si, size lineset_t
-
-loc_D829:
-		cmp	di, 2
-		jl	short loc_D808
-
-loc_D82E:
-		call	_grcg_setmode_rmw_seg1
-		mov	ah, GC_BRG
-		call	_grcg_setcolor_direct_seg1_raw
-		call	_shinki_bg_particles_render
-		call	grcg_lineset_line_put pascal, offset lineset0, 18
-		call	grcg_lineset_line_put pascal, offset lineset0, 12
-		call	grcg_lineset_line_put pascal, offset lineset1, 18
-		call	grcg_lineset_line_put pascal, offset lineset1, 12
-		mov	ah, GC_RG
-		call	_grcg_setcolor_direct_seg1_raw
-		call	grcg_lineset_line_put pascal, offset lineset0, 6
-		call	grcg_lineset_line_put pascal, offset lineset1, 6
-		mov	ah, 0Fh
-		call	_grcg_setcolor_direct_seg1_raw
-		call	grcg_lineset_line_put pascal, offset lineset0, 0
-		call	grcg_lineset_line_put pascal, offset lineset1, 0
-		GRCG_OFF_CLOBBERING dx
-		pop	di
-		pop	si
-		leave
-		retn
-sub_D774	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D88D	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		cmp	byte_21D74, 0
-		jnz	short loc_D8B7
-		mov	si, offset _boss_particles
-		cmp	[si+boss_particle_t.BP_velocity.y], 0
-		jge	short loc_D8B7
-		xor	dx, dx
-		jmp	short loc_D8AE
-; ---------------------------------------------------------------------------
-
-loc_D8A5:
-		mov	[si+boss_particle_t.BP_origin.y], ((PLAYFIELD_H + 1) shl 4)
-		inc	dx
-		add	si, size boss_particle_t
-
-loc_D8AE:
-		cmp	dx, BOSS_PARTICLE_COUNT
-		jl	short loc_D8A5
-		inc	byte_21D74
-
-loc_D8B7:
-		mov	si, offset _boss_particles
-		xor	dx, dx
-		jmp	short loc_D8D1
-; ---------------------------------------------------------------------------
-
-loc_D8BE:
-		cmp	[si+boss_particle_t.BP_velocity.y], (-10 shl 4)
-		jle	short loc_D8CD
-		mov	al, _stage_frame_mod2
-		mov	ah, 0
-		sub	[si+boss_particle_t.BP_velocity.y], ax
-
-loc_D8CD:
-		inc	dx
-		add	si, size boss_particle_t
-
-loc_D8D1:
-		cmp	dx, BOSS_PARTICLE_COUNT
-		jl	short loc_D8BE
-		pop	si
-		pop	bp
-		retn
-sub_D88D	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D8D9	proc near
-
-@@line_i		= word ptr -4
-var_2		= word ptr -2
-
-		enter	4, 0
-		push	si
-		push	di
-		call	sub_D88D
-		mov	[bp+var_2], 4
-		mov	si, offset _linesets
-		xor	di, di
-		jmp	short loc_D944
-; ---------------------------------------------------------------------------
-
-loc_D8EE:
-		call	lineset_forward_copy pascal, si
-		mov	ax, [si+lineset_t.LS_velocity_y]
-		add	[si+lineset_t.LS_center.y], ax
-		cmp	[si+lineset_t.LS_velocity_y], (14 shl 4)
-		jge	short loc_D907
-		mov	al, _stage_frame_mod2
-		mov	ah, 0
-		add	[si+lineset_t.LS_velocity_y], ax
-
-loc_D907:
-		cmp	[si+lineset_t.LS_radius], (96 shl 4)
-		jle	short loc_D912
-		sub	[si+lineset_t.LS_radius], 2
-
-loc_D912:
-		mov	ax, word_21D72
-		and	ax, 511
-		cmp	ax, 256
-		jnb	short loc_D924
-		mov	ax, [bp+var_2]
-		add	[si+lineset_t.LS_center.x], ax
-		jmp	short loc_D929
-; ---------------------------------------------------------------------------
-
-loc_D924:
-		mov	ax, [bp+var_2]
-		sub	[si+lineset_t.LS_center.x], ax
-
-loc_D929:
-		mov	ax, [bp+var_2]
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		add	al, [si+lineset_t.LS_angle]
-		mov	[si+lineset_t.LS_angle], al
-		inc	di
-		add	si, size lineset_t
-		mov	ax, [bp+var_2]
-		neg	ax
-		mov	[bp+var_2], ax
-
-loc_D944:
-		cmp	di, 2
-		jl	short loc_D8EE
-		inc	word_21D72
-		mov	si, offset _linesets
-		cmp	[si+lineset_t.LS_center.y], (80 shl 4)
-		jge	short loc_D98C
-		mov	ax, (80 shl 4)
-		sub	ax, [si+lineset_t.LS_center.y]
-		mov	[bp+var_2], ax
-		xor	di, di
-		jmp	short loc_D985
-; ---------------------------------------------------------------------------
-
-loc_D964:
-		mov	[bp+@@line_i], (LINESET_LINE_COUNT - 2)
-		jmp	short loc_D97A
-; ---------------------------------------------------------------------------
-
-loc_D96B:
-		mov	bx, [bp+@@line_i]
-		shl	bx, 2
-		mov	ax, [bp+var_2]
-		add	[bx+si+lineset_t.LS_center.y], ax
-		dec	[bp+@@line_i]
-
-loc_D97A:
-		cmp	[bp+@@line_i], 0
-		jge	short loc_D96B
-		inc	di
-		add	si, size lineset_t
-
-loc_D985:
-		cmp	di, 2
-		jl	short loc_D964
-		jmp	short loc_D9C6
-; ---------------------------------------------------------------------------
-
-loc_D98C:
-		cmp	[si+lineset_t.LS_center.y], (304 shl 4)
-		jle	short loc_D9C6
-		mov	ax, [si+lineset_t.LS_center.y]
-		add	ax, (-304 shl 4)
-		mov	[bp+var_2], ax
-		xor	di, di
-		jmp	short loc_D9C1
-; ---------------------------------------------------------------------------
-
-loc_D9A0:
-		mov	[bp+@@line_i], (LINESET_LINE_COUNT - 2)
-		jmp	short loc_D9B6
-; ---------------------------------------------------------------------------
-
-loc_D9A7:
-		mov	bx, [bp+@@line_i]
-		shl	bx, 2
-		mov	ax, [bp+var_2]
-		sub	[bx+si+lineset_t.LS_center.y], ax
-		dec	[bp+@@line_i]
-
-loc_D9B6:
-		cmp	[bp+@@line_i], 0
-		jge	short loc_D9A7
-		inc	di
-		add	si, size lineset_t
-
-loc_D9C1:
-		cmp	di, 2
-		jl	short loc_D9A0
-
-loc_D9C6:
-		call	_grcg_setmode_rmw_seg1
-		mov	ah, GC_BRG
-		call	_grcg_setcolor_direct_seg1_raw
-		call	_shinki_bg_particles_render
-		call	grcg_lineset_line_put pascal, offset lineset0, 18
-		call	grcg_lineset_line_put pascal, offset lineset0, 12
-		call	grcg_lineset_line_put pascal, offset lineset1, 18
-		call	grcg_lineset_line_put pascal, offset lineset1, 12
-		mov	ah, GC_RG
-		call	_grcg_setcolor_direct_seg1_raw
-		call	grcg_lineset_line_put pascal, offset lineset0, 6
-		call	grcg_lineset_line_put pascal, offset lineset1, 6
-		mov	ah, 0Fh
-		call	_grcg_setcolor_direct_seg1_raw
-		call	grcg_lineset_line_put pascal, offset lineset0, 0
-		call	grcg_lineset_line_put pascal, offset lineset1, 0
-		GRCG_OFF_CLOBBERING dx
-		pop	di
-		pop	si
-		leave
-		retn
-sub_D8D9	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_DA25	proc near
-
-@@cel		= word ptr -2
-
-		enter	2, 0
-		push	si
-		cmp	byte_21D75, 0
-		jnz	short loc_DA4F
-		mov	si, offset _boss_particles
-		xor	cx, cx
-		jmp	short loc_DA46
-; ---------------------------------------------------------------------------
-
-loc_DA38:
-		mov	[si+boss_particle_t.BP_origin.y], (240 shl 4)
-		mov	[si+boss_particle_t.BP_velocity.y], (-1 shl 4)
-		inc	cx
-		add	si, size boss_particle_t
-
-loc_DA46:
-		cmp	cx, BOSS_PARTICLE_COUNT
-		jl	short loc_DA38
-		inc	byte_21D75
-
-loc_DA4F:
-		mov	si, offset _boss_particles
-		xor	cx, cx
-		jmp	short loc_DA7E
-; ---------------------------------------------------------------------------
-
-loc_DA56:
-		mov	ax, [si+boss_particle_t.BP_pos.y]
-		mov	bx, (64 shl 4)
-		cwd
-		idiv	bx
-		mov	dx, (PARTICLE_CELS - 1)
-		sub	dx, ax
-		mov	[bp+@@cel], dx
-		cmp	[bp+@@cel], 0
-		jge	short loc_DA72
-		mov	[bp+@@cel], 0
-
-loc_DA72:
-		mov	al, byte ptr [bp+@@cel]
-		add	al, PAT_PARTICLE
-		mov	[si+boss_particle_t.BP_patnum], al
-		inc	cx
-		add	si, size boss_particle_t
-
-loc_DA7E:
-		cmp	cx, BOSS_PARTICLE_COUNT
-		jl	short loc_DA56
-		pop	si
-		leave
-		retn
-sub_DA25	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4003,7 +3600,7 @@ loc_DAEC:
 		cmp	_boss_phase, 8
 		jnb	short loc_DAFB
 		call	sub_E92E
-		call	sub_D774
+		call	_shinki_bg_type_b_update_and_rend
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -4012,7 +3609,7 @@ loc_DAFB:
 		cmp	_boss_phase, 0Ch
 		jnb	short loc_DB0A
 		call	sub_E92E
-		call	sub_D8D9
+		call	_shinki_bg_type_c_update_and_rend
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -4020,7 +3617,7 @@ loc_DAFB:
 loc_DB0A:
 		call	cdg_put_noalpha_8 pascal, large (32 shl 16) or 256, 17
 		call	sub_E950
-		call	sub_DA25
+		call	_shinki_bg_type_d_update
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 6
 		call	_shinki_bg_particles_render
 		GRCG_OFF_CLOBBERING dx
@@ -26970,15 +26567,17 @@ byte_21762	db 0
 include th04/sprites/pointnum.asp
 include th05/formats/bb_playchar[data].asm
 public _shinki_bg_linesets_zoomed_out, _shinki_bg_type_a_particles_alive
-public _shinki_bg_type_b_initialized
+public _shinki_bg_type_b_initialized, _shinki_bg_spinline_frames
+public _shinki_bg_type_c_initialized
+public _shinki_bg_type_d_initialized
 _shinki_bg_linesets_zoomed_out	db 0
 		db 0
 _shinki_bg_type_a_particles_alive	dw (-1 and 255)
 _shinki_bg_type_b_initialized	db 0
 		db 0
-word_21D72	dw 0
-byte_21D74	db 0
-byte_21D75	db 0
+_shinki_bg_spinline_frames	dw 0
+_shinki_bg_type_c_initialized	db 0
+_shinki_bg_type_d_initialized	db 0
 byte_21D76	db 0
 		db 0
 include th04/main/player/shot_laser[data].asm
