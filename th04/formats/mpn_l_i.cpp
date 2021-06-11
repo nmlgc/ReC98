@@ -8,7 +8,7 @@ extern "C" {
 #include "planar.h"
 #include "master.hpp"
 #include "th04/main/playfld.hpp"
-#include "th04/main/tile.hpp"
+#include "th04/main/tile/tile.hpp"
 #include "th04/formats/mpn.hpp"
 
 // Basically just a copy of the TH02 one, adjusted to work with multiple slots.

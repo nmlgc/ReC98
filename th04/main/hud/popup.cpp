@@ -10,7 +10,7 @@
 #include "th04/math/motion.hpp"
 #include "th04/main/null.hpp"
 #include "th04/main/playfld.hpp"
-#include "th04/main/tile.hpp"
+#include "th04/main/tile/tile.hpp"
 #include "th04/main/scroll.hpp"
 #include "th04/main/hud/popup.hpp"
 #include "th04/main/stage/stage.hpp"

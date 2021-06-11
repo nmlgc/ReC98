@@ -26,7 +26,7 @@ include th02/main/sparks.inc
 include th05/sprites/main_pat.inc
 include th04/sprites/blit.inc
 include th04/main/phase.inc
-include th04/main/tile.inc
+include th04/main/tile/tile.inc
 include th05/main/bullet/types.inc
 include th04/main/bullet/bullet.inc
 include th05/main/player/shot_types.inc
@@ -1637,8 +1637,8 @@ locret_BB98:
 map_free	endp
 		even
 
-include th04/main/tiles_fill_initial.asm
-include th04/main/tiles_render_all.asm
+include th04/main/tile/fill_ini.asm
+include th04/main/tile/render_a.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1824,7 +1824,7 @@ loc_BDE8:
 sub_BD20	endp
 
 include th05/formats/std.asm
-include th04/main/tiles_invalidate_all.asm
+include th04/main/tile/inv_all.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1903,7 +1903,7 @@ sub_BF32	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
-include th04/main/tiles_redraw.asm
+include th04/main/tile/redraw.asm
 include th04/main/scroll_y_1.asm
 MOTION_UPDATE_DEF 1
 include th03/math/randring_fill.asm
@@ -4053,7 +4053,7 @@ playfield_fillm_0_0_384_192__2	proc near
 playfield_fillm_0_0_384_192__2	endp
 
 include th04/formats/z_super_roll_put_tiny.asm
-include th04/main/tiles_invalidate.asm
+include th04/main/tile/inv.asm
 include th05/formats/super_roll_put_16x16_m.asm
 include th04/main/enemy/inv.asm
 
@@ -26554,7 +26554,7 @@ include th04/formats/cfg_lres[data].asm
 		db 0
 aSt00_map	db  'st00.map',0
 	evendata
-include th04/main/tile_section[data].asm
+include th04/main/tile/section[data].asm
 include th04/formats/std[data].asm
 off_2129C	dw offset sub_15A5C
 		dw offset sub_15A8E
@@ -26920,7 +26920,7 @@ byte_23F04	db ?
 		db ?
 word_23F06	dw ?
 include th04/formats/std[bss].asm
-include th04/main/tiles_invalidate[bss].asm
+include th04/main/tile/inv[bss].asm
 _boss_bg_render	dw ?
 fp_23F58	dw ?
 fp_23F5A	dw ?
@@ -26962,7 +26962,7 @@ _lives	db ?
 _bombs	db ?
 include th02/hardware/pages[bss].asm
 map_seg	dw ?
-include th04/main/tiles[bss].asm
+include th04/main/tile/tiles[bss].asm
 include th04/main/frames[bss].asm
 word_25FE6	dw ?
 byte_25FE8	db ?

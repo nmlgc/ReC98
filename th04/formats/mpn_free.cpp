@@ -7,7 +7,7 @@ extern "C" {
 #include "planar.h"
 #include "master.hpp"
 #include "th04/main/playfld.hpp"
-#include "th04/main/tile.hpp"
+#include "th04/main/tile/tile.hpp"
 #include "th04/formats/mpn.hpp"
 
 void pascal mpn_free(int slot)

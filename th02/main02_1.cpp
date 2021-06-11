@@ -12,7 +12,7 @@ extern "C" {
 #include "planar.h"
 #include "master.hpp"
 #include "th02/main/playfld.hpp"
-#include "th02/main/tile.hpp"
+#include "th02/main/tile/tile.hpp"
 #include "th02/formats/mpn.hpp"
 
 int pascal mpn_load(const char *fn)

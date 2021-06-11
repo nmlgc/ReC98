@@ -34824,7 +34824,7 @@ word_22862	dw ?
 word_22864	dw ?
 		db 24 dup(?)
 byte_2287E	db ?
-include th02/main/tiles[bss].asm
+include th02/main/tile/tiles[bss].asm
 		db 625 dup(?)
 byte_22D48	db ?
 		db ?

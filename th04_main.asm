@@ -25,7 +25,7 @@ include th02/main/sparks.inc
 include th04/sprites/main_pat.inc
 include th04/sprites/blit.inc
 include th04/main/phase.inc
-include th04/main/tile.inc
+include th04/main/tile/tile.inc
 include th04/main/bullet/types.inc
 
 bullet_template_delta_t union
@@ -1577,8 +1577,8 @@ loc_B9D4:
 		retn
 map_free	endp
 
-include th04/main/tiles_invalidate.asm
-include th04/main/tiles_fill_initial.asm
+include th04/main/tile/inv.asm
+include th04/main/tile/fill_ini.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1672,7 +1672,7 @@ loc_BB8F:
 		retn
 sub_BAEE	endp
 
-include th04/main/tiles_redraw.asm
+include th04/main/tile/redraw.asm
 include th04/main/scroll_y_1.asm
 MOTION_UPDATE_DEF 1
 include th03/math/randring_fill.asm
@@ -2219,7 +2219,7 @@ midbossx_render	endp
 		db    0
 include th04/main/bullet/pellet_r.asm
 include th04/main/bullets_gather_inv.asm
-include th04/main/tiles_invalidate_all.asm
+include th04/main/tile/inv_all.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2295,7 +2295,7 @@ sub_CBA4	endp
 
 ; ---------------------------------------------------------------------------
 		db    0
-include th04/main/tiles_render_all.asm
+include th04/main/tile/render_a.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -34434,7 +34434,7 @@ aMaine		db 'maine',0
 aMaine_0	db 'maine',0
 ; char aMaine_1[]
 aMaine_1	db 'maine',0
-include th04/main/tile_section[data].asm
+include th04/main/tile/section[data].asm
 off_21CBA	dd aSt00_map
 					; "ST00.MAP"
 aSt00_map	db 'ST00.MAP',0
@@ -35080,7 +35080,7 @@ byte_25598	db ?
 byte_25599	db ?
 byte_2559A	db ?
 		db 5 dup(?)
-include th04/main/tiles_invalidate[bss].asm
+include th04/main/tile/inv[bss].asm
 _boss_bg_render	dw ?
 fp_255AA	dw ?
 fp_255AC	dw ?
@@ -35233,7 +35233,7 @@ byte_25A38	db ?
 word_25A3A	dw ?
 include th02/hardware/pages[bss].asm
 map_seg	dw ?
-include th04/main/tiles[bss].asm
+include th04/main/tile/tiles[bss].asm
 include th04/main/frames[bss].asm
 word_266D0	dw ?
 byte_266D2	db ?

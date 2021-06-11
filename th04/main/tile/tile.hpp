@@ -1,4 +1,4 @@
-#include "th02/main/tile.hpp"
+#include "th02/main/tile/tile.hpp"
 
 // No idea why ZUN just didn't go with the actually visible space of 384
 // horizontal tiles. That's 8 wasted tiles per row that the game doesn't do
