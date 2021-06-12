@@ -2867,51 +2867,7 @@ bomb_yuuka	endp
 		db    0
 
 include th05/formats/bb_playchar.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_CE80	proc near
-		push	di
-		mov	bx, dx
-		sar	ax, 3
-		shl	dx, 6
-		add	ax, dx
-		shr	dx, 2
-		add	ax, dx
-		mov	di, ax
-		mov	ax, GRAM_400
-		mov	es, ax
-		assume es:nothing
-		cmp	bx, PLAYFIELD_BOTTOM
-		ja	short loc_CEA4
-		mov	cx, TILE_H
-		xor	bx, bx
-		jmp	short loc_CEAE
-; ---------------------------------------------------------------------------
-
-loc_CEA4:
-		mov	cx, RES_Y
-		sub	cx, bx
-		mov	bx, TILE_H
-		sub	bx, cx
-
-loc_CEAE:
-		stosw
-		add	di, (ROW_SIZE - word)
-		loop	loc_CEAE
-		or	bx, bx
-		jz	short loc_CEC0
-		sub	di, PLANE_SIZE
-		xchg	cx, bx
-		jmp	short loc_CEAE
-; ---------------------------------------------------------------------------
-
-loc_CEC0:
-		pop	di
-		retn
-sub_CE80	endp
-
+include th04/main/tile/bb_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3962,7 +3918,7 @@ loc_DF7F:
 		sub	dx, RES_Y
 
 loc_DF89:
-		call	sub_CE80
+		call	@grcg_tile_bb_put_8
 
 loc_DF8C:
 		shl	[bp+var_1], 1

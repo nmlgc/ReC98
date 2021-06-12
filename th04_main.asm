@@ -1740,7 +1740,7 @@ loc_BF48:
 		sub	dx, RES_Y
 
 loc_BF62:
-		call	main_01:sub_11FC8
+		call	@grcg_tile_bb_put_8
 
 loc_BF65:
 		shl	[bp+var_1], 1
@@ -10879,51 +10879,7 @@ sub_11ECB	endp
 
 include th03/formats/cfg_lres.asm
 		db    0
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_11FC8	proc near
-		push	di
-		mov	bx, dx
-		sar	ax, 3
-		shl	dx, 6
-		add	ax, dx
-		shr	dx, 2
-		add	ax, dx
-		mov	di, ax
-		mov	ax, GRAM_400
-		mov	es, ax
-		assume es:nothing
-		cmp	bx, PLAYFIELD_BOTTOM
-		ja	short loc_11FEC
-		mov	cx, TILE_H
-		xor	bx, bx
-		jmp	short loc_11FF6
-; ---------------------------------------------------------------------------
-
-loc_11FEC:
-		mov	cx, RES_Y
-		sub	cx, bx
-		mov	bx, TILE_H
-		sub	bx, cx
-
-loc_11FF6:
-		stosw
-		add	di, (ROW_SIZE - word)
-		loop	loc_11FF6
-		or	bx, bx
-		jz	short loc_12008
-		sub	di, PLANE_SIZE
-		xchg	cx, bx
-		jmp	short loc_11FF6
-; ---------------------------------------------------------------------------
-
-loc_12008:
-		pop	di
-		retn
-sub_11FC8	endp
-
+include th04/main/tile/bb_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
