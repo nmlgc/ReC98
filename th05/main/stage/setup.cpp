@@ -3,6 +3,8 @@
  * TH05 stage initialization
  */
 
+#include "th04/main/midboss/midboss.hpp"
+
 void pascal near stage1_setup(void)
 {
 	midboss_update_func = midboss1_update;

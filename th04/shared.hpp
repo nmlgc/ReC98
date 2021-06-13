@@ -32,31 +32,6 @@ extern nearfunc_t_near stage_invalidate;
 extern nearfunc_t_near stage_render;
 /// ------
 
-/// Midbosses
-/// ---------
-typedef struct {
-	motion_t pos;
-	unsigned int frames_until;
-	int hp;
-	unsigned char sprite;
-	unsigned char phase;
-	int phase_frame;
-	// Treated as a bool in TH04
-	unsigned char damage_this_frame;
-	unsigned char angle;
-} midboss_stuff_t;
-
-extern midboss_stuff_t midboss;
-
-// Callbacks
-extern  farfunc_t_near midboss_update_func;
-extern nearfunc_t_near midboss_render_func;
-
-#define MIDBOSS_DEC(stage) \
-	void pascal  far midboss##stage##_update(void); \
-	void pascal near midboss##stage##_render(void);
-/// ---------
-
 /// Score
 /// -----
 extern unsigned long score_delta;

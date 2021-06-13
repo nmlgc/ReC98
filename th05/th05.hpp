@@ -19,16 +19,6 @@ void pascal near stage2_update(void);
 void pascal near stage2_invalidate(void);
 /// ------
 
-/// Midbosses
-/// ---------
-MIDBOSS_DEC(1);
-MIDBOSS_DEC(2);
-MIDBOSS_DEC(3);
-MIDBOSS_DEC(4);
-MIDBOSS_DEC(5);
-MIDBOSS_DEC(x);
-/// ---------
-
 /// Bosses
 /// ------
 #include "th05/main/boss/boss.hpp"
