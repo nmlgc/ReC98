@@ -2023,14 +2023,13 @@ player_bomb	endp
 
 sub_C51A	proc near
 
-arg_0		= word ptr  4
+@@cel		= word ptr  4
 
 		push	bp
 		mov	bp, sp
 		mov	ax, _bb_playchar_seg
-		mov	word_2449C, ax
-		push	[bp+arg_0]
-		call	sub_DF36
+		mov	_tiles_bb_seg, ax
+		call	tiles_bb_put_raw pascal, [bp+@@cel]
 		pop	bp
 		retn	2
 sub_C51A	endp
@@ -2124,14 +2123,13 @@ bomb_reimu	proc near
 		mov	bp, sp
 		cmp	_bomb_frame, 32
 		jnb	short loc_C7AE
-		mov	byte_24498, 0Fh
+		mov	_tiles_bb_col, 15
 		mov	al, _bomb_frame
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		push	ax
-		call	sub_C51A
+		call	sub_C51A pascal, ax
 
 loc_C7AB:
 		jmp	loc_C849
@@ -2784,14 +2782,13 @@ bomb_yuuka	proc near
 		mov	bp, sp
 		cmp	_bomb_frame, 32
 		jnb	short loc_CDB4
-		mov	byte_24498, 0Fh
+		mov	_tiles_bb_col, 15
 		mov	al, _bomb_frame
 		mov	ah, 0
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		push	ax
-		call	sub_C51A
+		call	sub_C51A pascal, ax
 
 loc_CDB1:
 		jmp	loc_CE4F
@@ -3150,7 +3147,7 @@ loc_D09F:
 		jnz	short loc_D0C8
 		call	boss_backdrop_render pascal, (64 shl 16) or 16, 0
 		mov	ax, _bb_stage_seg
-		mov	word_2449C, ax
+		mov	_tiles_bb_seg, ax
 		mov	ax, _boss_phase_frame
 		cwd
 		sub	ax, dx
@@ -3228,11 +3225,10 @@ loc_D124:
 		call	cdg_put_noalpha_8 pascal, large (32 shl 16) or 16, 16
 
 loc_D142:
-		mov	byte_24498, 0
+		mov	_tiles_bb_col, 0
 		mov	ax, _bb_stage_seg
-		mov	word_2449C, ax
-		push	si
-		call	sub_DF36
+		mov	_tiles_bb_seg, ax
+		call	tiles_bb_put_raw pascal, si
 		jmp	short loc_D17D
 ; ---------------------------------------------------------------------------
 
@@ -3303,11 +3299,10 @@ loc_D1B0:
 		call	cdg_put_noalpha_8 pascal, large (32 shl 16) or 221, 16
 
 loc_D1CE:
-		mov	byte_24498, 0Fh
+		mov	_tiles_bb_col, 15
 		mov	ax, _bb_stage_seg
-		mov	word_2449C, ax
-		push	si
-		call	sub_DF36
+		mov	_tiles_bb_seg, ax
+		call	tiles_bb_put_raw pascal, si
 		jmp	short loc_D209
 ; ---------------------------------------------------------------------------
 
@@ -3346,7 +3341,7 @@ alice_bg_render	endp
 public MAI_YUKI_BG_RENDER
 mai_yuki_bg_render	proc near
 
-var_1		= byte ptr -1
+@@entrance_cel		= byte ptr -1
 
 		enter	2, 0
 		cmp	_boss_phase, 0
@@ -3363,8 +3358,8 @@ loc_D220:
 		mov	bx, 4
 		cwd
 		idiv	bx
-		mov	[bp+var_1], al
-		cmp	[bp+var_1], 8
+		mov	[bp+@@entrance_cel], al
+		cmp	[bp+@@entrance_cel], 8
 		jnb	short loc_D23E
 		call	tiles_render_all
 		jmp	short loc_D25C
@@ -3379,13 +3374,12 @@ loc_D23E:
 		call	cdg_put_noalpha_8 pascal, large (96 shl 16) or 72, 16
 
 loc_D25C:
-		mov	byte_24498, 9
+		mov	_tiles_bb_col, 9
 		mov	ax, _bb_stage_seg
-		mov	word_2449C, ax
-		mov	al, [bp+var_1]
+		mov	_tiles_bb_seg, ax
+		mov	al, [bp+@@entrance_cel]
 		mov	ah, 0
-		push	ax
-		call	sub_DF36
+		call	tiles_bb_put_raw pascal, ax
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -3424,7 +3418,7 @@ mai_yuki_bg_render	endp
 public YUMEKO_BG_RENDER
 yumeko_bg_render	proc near
 
-var_1		= byte ptr -1
+@@entrance_cel		= byte ptr -1
 
 		enter	2, 0
 		cmp	_boss_phase, 0
@@ -3435,8 +3429,8 @@ var_1		= byte ptr -1
 		mov	bx, 4
 		cwd
 		idiv	bx
-		mov	[bp+var_1], al
-		cmp	[bp+var_1], 8
+		mov	[bp+@@entrance_cel], al
+		cmp	[bp+@@entrance_cel], 8
 		jnb	short loc_D2C7
 		call	tiles_render_all
 		jmp	short loc_D2E5
@@ -3451,13 +3445,12 @@ loc_D2C7:
 		call	cdg_put_noalpha_8 pascal, large (32 shl 16) or 16, 16
 
 loc_D2E5:
-		mov	byte_24498, 0Fh
+		mov	_tiles_bb_col, 15
 		mov	ax, _bb_stage_seg
-		mov	word_2449C, ax
-		mov	al, [bp+var_1]
+		mov	_tiles_bb_seg, ax
+		mov	al, [bp+@@entrance_cel]
 		mov	ah, 0
-		push	ax
-		call	sub_DF36
+		call	tiles_bb_put_raw pascal, ax
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -3504,7 +3497,7 @@ main_0_TEXT	segment	word public 'CODE' use16
 public SHINKI_BG_RENDER
 shinki_bg_render	proc near
 
-var_1		= byte ptr -1
+@@entrance_cel		= byte ptr -1
 
 		enter	2, 0
 		cmp	_boss_phase, 0
@@ -3521,8 +3514,8 @@ loc_DA9E:
 		mov	bx, 4
 		cwd
 		idiv	bx
-		mov	[bp+var_1], al
-		cmp	[bp+var_1], 8
+		mov	[bp+@@entrance_cel], al
+		cmp	[bp+@@entrance_cel], 8
 		jnb	short loc_DAC4
 		call	boss_backdrop_render pascal, (32 shl 16) or 120, 1
 		jmp	short loc_DAC7
@@ -3532,13 +3525,12 @@ loc_DAC4:
 		call	sub_E92E
 
 loc_DAC7:
-		mov	byte_24498, 0Fh
+		mov	_tiles_bb_col, 15
 		mov	ax, _bb_stage_seg
-		mov	word_2449C, ax
-		mov	al, [bp+var_1]
+		mov	_tiles_bb_seg, ax
+		mov	al, [bp+@@entrance_cel]
 		mov	ah, 0
-		push	ax
-		call	sub_DF36
+		call	tiles_bb_put_raw pascal, ax
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -3754,7 +3746,7 @@ sub_DBFF	endp
 public EXALICE_BG_RENDER
 exalice_bg_render	proc near
 
-var_1		= byte ptr -1
+@@entrance_cel		= byte ptr -1
 
 		enter	2, 0
 		cmp	_boss_phase, 0
@@ -3771,15 +3763,14 @@ loc_DCEF:
 		mov	bx, 4
 		cwd
 		idiv	bx
-		mov	[bp+var_1], al
+		mov	[bp+@@entrance_cel], al
 		call	sub_E92E
-		mov	byte_24498, 0Fh
+		mov	_tiles_bb_col, 15
 		mov	ax, _bb_stage_seg
-		mov	word_2449C, ax
-		mov	al, [bp+var_1]
+		mov	_tiles_bb_seg, ax
+		mov	al, [bp+@@entrance_cel]
 		mov	ah, 0
-		push	ax
-		call	sub_DF36
+		call	tiles_bb_put_raw pascal, ax
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -3869,79 +3860,7 @@ playfield_fillm_0_205_384_163	endp
 
 include th04/hardware/fillm64-56_256-256.asm
 include th05/formats/bb_load.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_DF36	proc near
-
-@@top		= word ptr -6
-@@left		= word ptr -4
-var_2		= byte ptr -2
-var_1		= byte ptr -1
-arg_0		= word ptr  4
-
-		enter	6, 0
-		push	di
-		push	GC_TDW
-		mov	al, byte_24498
-		mov	ah, 0
-		push	ax
-		call	grcg_setcolor
-		mov	ax, word_2449C
-		mov	fs, ax
-		mov	di, [bp+arg_0]
-		shl	di, 7
-		mov	[bp+@@top], PLAYFIELD_TOP
-
-loc_DF59:
-		mov	[bp+@@left], PLAYFIELD_LEFT
-		mov	[bp+var_2], TILES_X
-
-loc_DF62:
-		mov	al, fs:[di]
-		mov	[bp+var_1], al
-
-loc_DF68:
-		test	[bp+var_1], 80h
-		jz	short loc_DF8C
-		mov	ax, [bp+@@left]
-		mov	dx, [bp+@@top]
-		cmp	_scroll_active, 0
-		jz	short loc_DF7F
-		add	dx, _scroll_line
-
-loc_DF7F:
-		cmp	dx, RES_Y
-		jl	short loc_DF89
-		sub	dx, RES_Y
-
-loc_DF89:
-		call	@grcg_tile_bb_put_8
-
-loc_DF8C:
-		shl	[bp+var_1], 1
-		add	[bp+@@left], TILE_W
-		dec	[bp+var_2]
-		jz	short loc_DFA1
-		test	[bp+var_2], 7
-		jnz	short loc_DF68
-		inc	di
-		jmp	short loc_DF62
-; ---------------------------------------------------------------------------
-
-loc_DFA1:
-		add	di, 2
-		add	[bp+@@top], TILE_H
-		cmp	[bp+@@top], PLAYFIELD_BOTTOM
-		jb	short loc_DF59
-		GRCG_OFF_CLOBBERING dx
-		pop	di
-		leave
-		retn	2
-sub_DF36	endp
-
+include th04/main/tile/bb_put_a.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -26891,10 +26810,7 @@ include th04/formats/bb_playchar[bss].asm
 include th05/main/player/bombanim[bss].asm
 point_24490	Point <?>
 point_24494	Point <?>
-byte_24498	db ?
-		db ?
-include th04/main/boss/backdrop[bss].asm
-word_2449C	dw ?
+include th04/main/boss/bg[bss].asm
 	dw ?
 include th05/main/boss/render[bss].asm
 include th05/formats/bb_curvebullet[bss].asm

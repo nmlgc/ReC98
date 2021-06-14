@@ -1695,77 +1695,7 @@ playfield_fillm_0_0_384_112	proc near
 playfield_fillm_0_0_384_112	endp
 
 include th04/hardware/fillm64-56_256-256.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BF16	proc near
-
-@@top		= word ptr -6
-@@left		= word ptr -4
-var_2		= byte ptr -2
-var_1		= byte ptr -1
-arg_0		= word ptr  4
-
-		enter	6, 0
-		push	di
-		push	GC_TDW
-		mov	al, byte_2CDCA
-		mov	ah, 0
-		push	ax
-		call	grcg_setcolor
-		mov	ax, word_2CDCE
-		mov	fs, ax
-		mov	di, [bp+arg_0]
-		shl	di, 7
-		mov	[bp+@@top], PLAYFIELD_TOP
-
-loc_BF39:
-		mov	[bp+@@left], PLAYFIELD_LEFT
-		mov	[bp+var_2], TILES_X
-
-loc_BF42:
-		mov	al, fs:[di]
-		mov	[bp+var_1], al
-
-loc_BF48:
-		test	[bp+var_1], 80h
-		jz	short loc_BF65
-		mov	ax, [bp+@@left]
-		mov	dx, [bp+@@top]
-		add	dx, _scroll_line
-		cmp	dx, RES_Y
-		jl	short loc_BF62
-		sub	dx, RES_Y
-
-loc_BF62:
-		call	@grcg_tile_bb_put_8
-
-loc_BF65:
-		shl	[bp+var_1], 1
-		add	[bp+@@left], TILE_W
-		dec	[bp+var_2]
-		jz	short loc_BF7A
-		test	[bp+var_2], 7
-		jnz	short loc_BF48
-		inc	di
-		jmp	short loc_BF42
-; ---------------------------------------------------------------------------
-
-loc_BF7A:
-		add	di, 2
-		add	[bp+@@top], TILE_H
-		cmp	[bp+@@top], PLAYFIELD_BOTTOM
-		jb	short loc_BF39
-		GRCG_OFF_CLOBBERING dx
-		pop	di
-		leave
-		retn	2
-sub_BF16	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th04/main/tile/bb_put_a.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -8630,7 +8560,7 @@ player_bomb	endp
 
 sub_1002A	proc near
 
-arg_0		= word ptr  4
+@@cel		= word ptr  4
 
 		push	bp
 		mov	bp, sp
@@ -8644,11 +8574,10 @@ loc_10038:
 		mov	al, 2
 
 loc_1003A:
-		mov	byte_2CDCA, al
+		mov	_tiles_bb_col, al
 		mov	ax, _bb_playchar_seg
-		mov	word_2CDCE, ax
-		push	[bp+arg_0]
-		call	main_01:sub_BF16
+		mov	_tiles_bb_seg, ax
+		call	tiles_bb_put_raw pascal, [bp+@@cel]
 		pop	bp
 		retn	2
 sub_1002A	endp
@@ -8857,8 +8786,7 @@ loc_1022A:
 		add	ax, -8
 
 loc_1023E:
-		push	ax
-		call	main_01:sub_1002A
+		call	sub_1002A pascal, ax
 
 loc_10242:
 		jmp	loc_10307
@@ -11080,7 +11008,7 @@ loc_12199:
 		jnz	short loc_121BF
 		call	main_01:boss_backdrop_render pascal, (32 shl 16) or 136, 1
 		mov	ax, _bb_stage_seg
-		mov	word_2CDCE, ax
+		mov	_tiles_bb_seg, ax
 		mov	ax, _boss_phase_frame
 		sar	ax, 1
 		push	ax
@@ -11130,7 +11058,7 @@ kurumi_bg_render	proc near
 		jnz	short loc_1221B
 		call	main_01:boss_backdrop_render pascal, (32 shl 16) or 96, 0
 		mov	ax, _bb_stage_seg
-		mov	word_2CDCE, ax
+		mov	_tiles_bb_seg, ax
 		mov	ax, _boss_phase_frame
 		sar	ax, 1
 		push	ax
@@ -11207,7 +11135,7 @@ loc_12285:
 		jnz	short loc_122AB
 		call	main_01:boss_backdrop_render pascal, (32 shl 16) or 16, 0
 		mov	ax, _bb_stage_seg
-		mov	word_2CDCE, ax
+		mov	_tiles_bb_seg, ax
 		mov	ax, _boss_phase_frame
 		sar	ax, 1
 		push	ax
@@ -11250,7 +11178,7 @@ elly_bg_render	endp
 
 reimu_marisa_bg_render	proc near
 
-var_1		= byte ptr -1
+@@entrance_cel		= byte ptr -1
 
 		enter	2, 0
 		cmp	_boss_phase, 0
@@ -11267,8 +11195,8 @@ loc_122EB:
 		mov	bx, 8
 		cwd
 		idiv	bx
-		mov	[bp+var_1], al
-		cmp	[bp+var_1], 8
+		mov	[bp+@@entrance_cel], al
+		cmp	[bp+@@entrance_cel], 8
 		jnb	short loc_12309
 		call	main_01:tiles_render_all
 		jmp	short loc_12327
@@ -11284,11 +11212,10 @@ loc_12309:
 
 loc_12327:
 		mov	ax, _bb_stage_seg
-		mov	word_2CDCE, ax
-		mov	al, [bp+var_1]
+		mov	_tiles_bb_seg, ax
+		mov	al, [bp+@@entrance_cel]
 		mov	ah, 0
-		push	ax
-		call	main_01:sub_BF16
+		call	tiles_bb_put_raw pascal, ax
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -11326,7 +11253,7 @@ reimu_marisa_bg_render	endp
 
 yuuka5_bg_render	proc near
 
-var_1		= byte ptr -1
+@@entrance_cel		= byte ptr -1
 
 		enter	2, 0
 		cmp	_boss_phase, 0
@@ -11343,8 +11270,8 @@ loc_12378:
 		mov	bx, 4
 		cwd
 		idiv	bx
-		mov	[bp+var_1], al
-		cmp	[bp+var_1], 8
+		mov	[bp+@@entrance_cel], al
+		cmp	[bp+@@entrance_cel], 8
 		jnb	short loc_12396
 		call	main_01:tiles_render_all
 		jmp	short loc_123B4
@@ -11360,11 +11287,10 @@ loc_12396:
 
 loc_123B4:
 		mov	ax, _bb_stage_seg
-		mov	word_2CDCE, ax
-		mov	al, [bp+var_1]
+		mov	_tiles_bb_seg, ax
+		mov	al, [bp+@@entrance_cel]
 		mov	ah, 0
-		push	ax
-		call	main_01:sub_BF16
+		call	tiles_bb_put_raw pascal, ax
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -12010,7 +11936,7 @@ table_1289F	dw loc_12484
 
 yuuka6_bg_render	proc near
 
-var_1		= byte ptr -1
+@@entrance_cel		= byte ptr -1
 
 		enter	2, 0
 		push	si
@@ -12058,10 +11984,10 @@ loc_12921:
 		mov	bx, 4
 		cwd
 		idiv	bx
-		mov	[bp+var_1], al
+		mov	[bp+@@entrance_cel], al
 		mov	ah, GC_RGI
 		call	_grcg_setcolor_direct_seg1_raw
-		cmp	[bp+var_1], 8
+		cmp	[bp+@@entrance_cel], 8
 		jnb	short loc_12944
 		call	main_01:playfield_fill
 		jmp	short loc_12947
@@ -12072,11 +11998,10 @@ loc_12944:
 
 loc_12947:
 		mov	ax, _bb_stage_seg
-		mov	word_2CDCE, ax
-		mov	al, [bp+var_1]
+		mov	_tiles_bb_seg, ax
+		mov	al, [bp+@@entrance_cel]
 		mov	ah, 0
-		push	ax
-		call	main_01:sub_BF16
+		call	tiles_bb_put_raw pascal, ax
 		jmp	short loc_12975
 ; ---------------------------------------------------------------------------
 
@@ -12110,7 +12035,7 @@ yuuka6_bg_render	endp
 
 mugetsu_gengetsu_bg_render	proc near
 
-var_1		= byte ptr -1
+@@entrance_cel		= byte ptr -1
 
 		enter	2, 0
 		cmp	_boss_phase, 0
@@ -12132,8 +12057,8 @@ loc_12996:
 		mov	bx, 4
 		cwd
 		idiv	bx
-		mov	[bp+var_1], al
-		cmp	[bp+var_1], 8
+		mov	[bp+@@entrance_cel], al
+		cmp	[bp+@@entrance_cel], 8
 		jnb	short loc_129B4
 		call	main_01:tiles_render_all
 		jmp	short loc_129D2
@@ -12149,11 +12074,10 @@ loc_129B4:
 
 loc_129D2:
 		mov	ax, _bb_stage_seg
-		mov	word_2CDCE, ax
-		mov	al, [bp+var_1]
+		mov	_tiles_bb_seg, ax
+		mov	al, [bp+@@entrance_cel]
 		mov	ah, 0
-		push	ax
-		call	main_01:sub_BF16
+		call	tiles_bb_put_raw pascal, ax
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -17167,7 +17091,7 @@ loc_16651:
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
 		mov	byte_25667, 0
-		mov	byte_2CDCA, 0Fh
+		mov	_tiles_bb_col, 15
 		mov	fp_255AC, offset yuuka5_bg_render
 		jmp	loc_169B8
 ; ---------------------------------------------------------------------------
@@ -19458,7 +19382,7 @@ loc_17A31:
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
 		mov	fp_255AC, offset reimu_marisa_bg_render
-		mov	byte_2CDCA, 0Fh
+		mov	_tiles_bb_col, 15
 		mov	byte_25670, 0
 		jmp	loc_17CA4
 ; ---------------------------------------------------------------------------
@@ -21029,7 +20953,7 @@ loc_1876B:
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
-		mov	byte_2CDCA, 0Fh
+		mov	_tiles_bb_col, 15
 		mov	fp_255AC, offset mugetsu_gengetsu_bg_render
 		jmp	loc_189A1
 ; ---------------------------------------------------------------------------
@@ -22224,7 +22148,7 @@ loc_191FB:
 		call	snd_se_play pascal, 13
 		mov	byte_259F1, 0
 		mov	fp_255AC, offset kurumi_bg_render
-		mov	byte_2CDCA, 0
+		mov	_tiles_bb_col, 0
 		jmp	short loc_19235
 ; ---------------------------------------------------------------------------
 
@@ -23236,7 +23160,7 @@ loc_19B56:
 		mov	byte_2D02D, 0
 		mov	byte_2D02C, -1
 		mov	fp_255AC, offset orange_bg_render
-		mov	byte_2CDCA, 0
+		mov	_tiles_bb_col, 0
 		jmp	short loc_19C02
 ; ---------------------------------------------------------------------------
 
@@ -25682,7 +25606,7 @@ loc_1B4BA:
 		call	snd_se_play pascal, 13
 		mov	byte_25A02, 0
 		mov	fp_255AC, offset yuuka6_bg_render
-		mov	byte_2CDCA, 0Fh
+		mov	_tiles_bb_col, 15
 		jmp	loc_1B8EA
 ; ---------------------------------------------------------------------------
 
@@ -27349,7 +27273,7 @@ loc_1C39E:
 		call	snd_se_play pascal, 13
 		mov	_boss_pos.velocity.y, 8
 		mov	fp_255AC, offset elly_bg_render
-		mov	byte_2CDCA, 0
+		mov	_tiles_bb_col, 0
 		jmp	loc_1C67A
 ; ---------------------------------------------------------------------------
 
@@ -32112,7 +32036,7 @@ loc_1F3E2:
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
 		mov	fp_255AC, offset reimu_marisa_bg_render
-		mov	byte_2CDCA, 0Fh
+		mov	_tiles_bb_col, 15
 		jmp	loc_1F8A5
 ; ---------------------------------------------------------------------------
 
@@ -33826,7 +33750,7 @@ loc_202B0:
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
-		mov	byte_2CDCA, 0Fh
+		mov	_tiles_bb_col, 15
 		mov	fp_255AC, offset mugetsu_gengetsu_bg_render
 		jmp	loc_206B6
 ; ---------------------------------------------------------------------------
@@ -35214,10 +35138,7 @@ include th04/main/player/shots[bss].asm
 		db 96 dup(?)
 public _resident
 _resident	dd ?
-byte_2CDCA	db ?
-		db ?
-include th04/main/boss/backdrop[bss].asm
-word_2CDCE	dw ?
+include th04/main/boss/bg[bss].asm
 byte_2CDD0	db ?
 byte_2CDD1	db ?
 		db 342 dup(?)

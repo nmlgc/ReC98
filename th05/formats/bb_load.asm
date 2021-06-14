@@ -1,4 +1,3 @@
-; void* pascal near bb_load(const char far *fn);
 public BB_LOAD
 bb_load proc near
 	push	si

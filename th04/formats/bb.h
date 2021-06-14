@@ -1,5 +1,8 @@
 #define BB_SIZE 2048
 
+// Bitmap format, storing 1-bit values for 8 tiles in one byte.
+typedef uint8_t bb_tiles8_t;
+
 void pascal near bb_stage_load(const char far* fn);
 
 /// Text dissolve circles
