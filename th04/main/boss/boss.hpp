@@ -23,7 +23,11 @@ extern SPPoint boss_hitbox_radius;
 // Callbacks
 extern  farfunc_t_near boss_update;
 extern nearfunc_t_near boss_fg_render;
+
+// Also responsible to set [bg_render_bombing_func] to the
+// [boss_bg_render_func]!
 extern  farfunc_t_near boss_update_func;
+
 extern nearfunc_t_near boss_backdrop_colorfill;
 extern nearfunc_t_near boss_bg_render_func;
 extern nearfunc_t_near boss_fg_render_func;

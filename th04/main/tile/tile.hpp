@@ -69,4 +69,7 @@ void pascal near tiles_invalidate_all(void);
 extern point_t tile_invalidate_box;
 
 void pascal near tiles_redraw_invalidated(void);
+
+// Invalidates all entity types, then redraws the invalidated tiles.
+void pascal near tiles_render(void);
 /// ------

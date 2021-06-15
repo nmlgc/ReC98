@@ -377,15 +377,15 @@ loc_ABBA:
 		call	sub_19EE4
 		call	_stage_vm
 		cmp	_bombing, 0
-		jnz	short loc_ABD4
-		call	_boss_bg_render
-		jmp	short loc_ABD8
+		jnz	short @@bombing
+		call	_bg_render_not_bombing
+		jmp	short @@update
 ; ---------------------------------------------------------------------------
 
-loc_ABD4:
-		call	fp_255AA
+@@bombing:
+		call	_bg_render_bombing
 
-loc_ABD8:
+@@update:
 		call	main_01:pointnums_update
 		call	main_01:circles_update
 		call	sparks_update
@@ -962,7 +962,7 @@ sub_B1D0	proc near
 		call	sub_15D74
 		call	main_01:pointnums_init
 		nopcall	main_01:hud_put
-		mov	fp_255AC, offset tiles_render_all
+		mov	_bg_render_bombing_func, offset tiles_render_all
 		call	main_01:tiles_invalidate_reset
 		pop	bp
 		retn
@@ -2154,8 +2154,8 @@ include th04/main/tile/inv_all.asm
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_CB58	proc near
+public TILES_RENDER
+tiles_render	proc near
 		push	bp
 		mov	bp, sp
 		call	main_01:popup_titles_invalidate
@@ -2171,7 +2171,7 @@ sub_CB58	proc near
 		call	main_01:tiles_redraw_invalidated
 		pop	bp
 		retn
-sub_CB58	endp
+tiles_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -2185,7 +2185,7 @@ sub_CB80	proc near
 		dec	byte_255B0
 		cmp	byte_255B0, 0
 		jnz	short loc_CB97
-		mov	_boss_bg_render, offset sub_CB58
+		mov	_bg_render_not_bombing, offset tiles_render
 
 loc_CB97:
 		pop	bp
@@ -2200,7 +2200,7 @@ sub_CB80	endp
 sub_CB99	proc far
 		push	bp
 		mov	bp, sp
-		mov	_boss_bg_render, offset sub_CB58
+		mov	_bg_render_not_bombing, offset tiles_render
 		pop	bp
 		retf
 sub_CB99	endp
@@ -2218,7 +2218,7 @@ arg_0		= byte ptr  6
 		mov	bp, sp
 		mov	al, [bp+arg_0]
 		mov	byte_255B0, al
-		mov	_boss_bg_render, offset sub_CB80
+		mov	_bg_render_not_bombing, offset sub_CB80
 		pop	bp
 		retf	2
 sub_CBA4	endp
@@ -2636,7 +2636,7 @@ loc_CF70:
 		nopcall	main_01:sub_D6EB
 		mov	fp_255CA, offset sub_CF3D
 		mov	ax, _boss_bg_render_func
-		mov	_boss_bg_render, ax
+		mov	_bg_render_not_bombing, ax
 		mov	eax, _boss_update_func
 		mov	_boss_update, eax
 		mov	ax, _boss_fg_render_func
@@ -8505,7 +8505,7 @@ sub_FFA4	proc near
 		push	bp
 		mov	bp, sp
 		mov	_bombing, 0
-		mov	fp_255AA, offset nullfunc_near
+		mov	_bg_render_bombing, offset nullfunc_near
 		pop	bp
 		retn
 sub_FFA4	endp
@@ -8540,8 +8540,8 @@ loc_FFED:
 		mov	_bombing, 1
 		mov	_bomb_frame, 0
 		mov	_player_invincibility_time, BOMB_INVINCIBILITY_FRAMES
-		mov	ax, fp_255AC
-		mov	fp_255AA, ax
+		mov	ax, _bg_render_bombing_func
+		mov	_bg_render_bombing, ax
 		mov	_bullet_clear_time, 192
 		call	snd_se_play pascal, 13
 		mov	_items_pull_to_player, 1
@@ -8769,7 +8769,7 @@ loc_10245:
 		jnz	short loc_10281
 		mov	_scroll_active, 0
 		call	graph_scrollup pascal, 0
-		mov	fp_255AA, offset nullfunc_near
+		mov	_bg_render_bombing, offset nullfunc_near
 		mov	al, Palettes[14 * size rgb_t].r
 		mov	rgb_257D6.r, al
 		mov	al, Palettes[14 * size rgb_t].g
@@ -8811,8 +8811,8 @@ loc_102AF:
 		mov	Palettes[14 * size rgb_t].g, al
 		mov	al, rgb_257D6.b
 		mov	Palettes[14 * size rgb_t].b, al
-		mov	ax, fp_255AC
-		mov	fp_255AA, ax
+		mov	ax, _bg_render_bombing_func
+		mov	_bg_render_bombing, ax
 		mov	al, _bomb_frame
 		mov	ah, 0
 		add	ax, -176
@@ -11011,7 +11011,7 @@ loc_121E1:
 ; ---------------------------------------------------------------------------
 
 loc_121E6:
-		call	main_01:sub_CB58
+		call	tiles_render
 		pop	bp
 		retn
 orange_bg_render	endp
@@ -11061,7 +11061,7 @@ loc_1223D:
 ; ---------------------------------------------------------------------------
 
 loc_12242:
-		call	main_01:sub_CB58
+		call	tiles_render
 		pop	bp
 		retn
 kurumi_bg_render	endp
@@ -11138,7 +11138,7 @@ loc_122CD:
 ; ---------------------------------------------------------------------------
 
 loc_122D2:
-		call	main_01:sub_CB58
+		call	tiles_render
 		pop	bp
 		retn
 elly_bg_render	endp
@@ -11213,7 +11213,7 @@ loc_1235A:
 ; ---------------------------------------------------------------------------
 
 loc_1235F:
-		call	main_01:sub_CB58
+		call	tiles_render
 		leave
 		retn
 reimu_marisa_bg_render	endp
@@ -11288,7 +11288,7 @@ loc_123E7:
 ; ---------------------------------------------------------------------------
 
 loc_123EC:
-		call	main_01:sub_CB58
+		call	tiles_render
 		leave
 		retn
 yuuka5_bg_render	endp
@@ -12069,7 +12069,7 @@ loc_129F7:
 		jle	short loc_12991
 
 loc_12A05:
-		call	main_01:sub_CB58
+		call	tiles_render
 		leave
 		retn
 mugetsu_gengetsu_bg_render	endp
@@ -17064,7 +17064,7 @@ loc_16651:
 		call	snd_se_play pascal, 13
 		mov	byte_25667, 0
 		mov	_tiles_bb_col, 15
-		mov	fp_255AC, offset yuuka5_bg_render
+		mov	_bg_render_bombing_func, offset yuuka5_bg_render
 		jmp	loc_169B8
 ; ---------------------------------------------------------------------------
 
@@ -19353,7 +19353,7 @@ loc_17A31:
 		mov	_palette_changed, 1
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
-		mov	fp_255AC, offset reimu_marisa_bg_render
+		mov	_bg_render_bombing_func, offset reimu_marisa_bg_render
 		mov	_tiles_bb_col, 15
 		mov	byte_25670, 0
 		jmp	loc_17CA4
@@ -20926,7 +20926,7 @@ loc_1876B:
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
 		mov	_tiles_bb_col, 15
-		mov	fp_255AC, offset mugetsu_gengetsu_bg_render
+		mov	_bg_render_bombing_func, offset mugetsu_gengetsu_bg_render
 		jmp	loc_189A1
 ; ---------------------------------------------------------------------------
 
@@ -22119,7 +22119,7 @@ loc_191FB:
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
 		mov	byte_259F1, 0
-		mov	fp_255AC, offset kurumi_bg_render
+		mov	_bg_render_bombing_func, offset kurumi_bg_render
 		mov	_tiles_bb_col, 0
 		jmp	short loc_19235
 ; ---------------------------------------------------------------------------
@@ -23131,7 +23131,7 @@ loc_19B56:
 		call	snd_se_play pascal, 13
 		mov	byte_2D02D, 0
 		mov	byte_2D02C, -1
-		mov	fp_255AC, offset orange_bg_render
+		mov	_bg_render_bombing_func, offset orange_bg_render
 		mov	_tiles_bb_col, 0
 		jmp	short loc_19C02
 ; ---------------------------------------------------------------------------
@@ -25577,7 +25577,7 @@ loc_1B4BA:
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
 		mov	byte_25A02, 0
-		mov	fp_255AC, offset yuuka6_bg_render
+		mov	_bg_render_bombing_func, offset yuuka6_bg_render
 		mov	_tiles_bb_col, 15
 		jmp	loc_1B8EA
 ; ---------------------------------------------------------------------------
@@ -27244,7 +27244,7 @@ loc_1C39E:
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
 		mov	_boss_pos.velocity.y, 8
-		mov	fp_255AC, offset elly_bg_render
+		mov	_bg_render_bombing_func, offset elly_bg_render
 		mov	_tiles_bb_col, 0
 		jmp	loc_1C67A
 ; ---------------------------------------------------------------------------
@@ -30616,7 +30616,7 @@ loc_1E775:
 		mov	word_255C0, ax
 
 loc_1E778:
-		mov	fp_255AC, offset tiles_render_all
+		mov	_bg_render_bombing_func, offset tiles_render_all
 		mov	word_266D0, 2
 		inc	_boss_phase_frame
 		mov	ax, _boss_phase_frame
@@ -30670,7 +30670,7 @@ loc_1E801:
 		mov	_boss_pos.prev.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (96 shl 4)
 		mov	_boss_pos.prev.y, (96 shl 4)
-		mov	_boss_bg_render, offset mugetsu_gengetsu_bg_render
+		mov	_bg_render_not_bombing, offset mugetsu_gengetsu_bg_render
 		setfarfp	_boss_update, gengetsu_update
 		mov	_boss_fg_render, offset gengetsu_fg_render
 		mov	_boss_sprite, 128
@@ -32007,7 +32007,7 @@ loc_1F3E2:
 		mov	_palette_changed, 1
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
-		mov	fp_255AC, offset reimu_marisa_bg_render
+		mov	_bg_render_bombing_func, offset reimu_marisa_bg_render
 		mov	_tiles_bb_col, 15
 		jmp	loc_1F8A5
 ; ---------------------------------------------------------------------------
@@ -33723,7 +33723,7 @@ loc_202B0:
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
 		mov	_tiles_bb_col, 15
-		mov	fp_255AC, offset mugetsu_gengetsu_bg_render
+		mov	_bg_render_bombing_func, offset mugetsu_gengetsu_bg_render
 		jmp	loc_206B6
 ; ---------------------------------------------------------------------------
 
@@ -34933,9 +34933,6 @@ byte_25599	db ?
 byte_2559A	db ?
 		db 5 dup(?)
 include th04/main/tile/inv[bss].asm
-_boss_bg_render	dw ?
-fp_255AA	dw ?
-fp_255AC	dw ?
 		db 2 dup(?)
 byte_255B0	db ?
 		db ?

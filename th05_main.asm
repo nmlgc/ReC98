@@ -415,15 +415,15 @@ loc_AED7:
 		call	fp_2C92E
 		call	_stage_vm
 		cmp	_bombing, 0
-		jnz	short loc_AEEC
-		call	_boss_bg_render
-		jmp	short loc_AEF0
+		jnz	short @@bombing
+		call	_bg_render_not_bombing
+		jmp	short @@update
 ; ---------------------------------------------------------------------------
 
-loc_AEEC:
-		call	fp_23F58
+@@bombing:
+		call	_bg_render_bombing
 
-loc_AEF0:
+@@update:
 		call	pointnums_update
 		call	circles_update
 		call	sparks_update
@@ -985,8 +985,8 @@ loc_B469:
 		call	sub_B9CC
 		call	super_entry_bfnt pascal, ds, offset aSt04_bft_0 ; "st04.bft"
 		call	stage6_setup
-		mov	_boss_bg_render, offset shinki_bg_render
-		mov	fp_23F5A, offset shinki_bg_render
+		mov	_bg_render_not_bombing, offset shinki_bg_render
+		mov	_bg_render_bombing_func, offset shinki_bg_render
 		jmp	short loc_B4A9
 ; ---------------------------------------------------------------------------
 
@@ -1107,7 +1107,7 @@ sub_B55A	proc near
 		call	hud_score_put
 		call	pointnums_init
 		nopcall	hud_put
-		mov	fp_23F5A, offset tiles_render_all
+		mov	_bg_render_bombing_func, offset tiles_render_all
 		call	tiles_invalidate_reset
 		pop	bp
 		retn
@@ -1829,8 +1829,8 @@ include th04/main/tile/inv_all.asm
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_BEE6	proc near
+public TILES_RENDER
+tiles_render	proc near
 		push	bp
 		mov	bp, sp
 		call	popup_titles_invalidate
@@ -1846,7 +1846,7 @@ sub_BEE6	proc near
 		call	tiles_redraw_invalidated
 		pop	bp
 		retn
-sub_BEE6	endp
+tiles_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -1860,7 +1860,7 @@ sub_BF0E	proc near
 		dec	byte_23F5E
 		cmp	byte_23F5E, 0
 		jnz	short loc_BF25
-		mov	_boss_bg_render, offset sub_BEE6
+		mov	_bg_render_not_bombing, offset tiles_render
 
 loc_BF25:
 		pop	bp
@@ -1875,7 +1875,7 @@ sub_BF0E	endp
 sub_BF27	proc far
 		push	bp
 		mov	bp, sp
-		mov	_boss_bg_render, offset sub_BEE6
+		mov	_bg_render_not_bombing, offset tiles_render
 		pop	bp
 		retf
 sub_BF27	endp
@@ -1893,7 +1893,7 @@ arg_0		= byte ptr  6
 		mov	bp, sp
 		mov	al, [bp+arg_0]
 		mov	byte_23F5E, al
-		mov	_boss_bg_render, offset sub_BF0E
+		mov	_bg_render_not_bombing, offset sub_BF0E
 		pop	bp
 		retf	2
 sub_BF32	endp
@@ -1961,7 +1961,7 @@ sub_C473	proc near
 		push	bp
 		mov	bp, sp
 		mov	_bombing, 0
-		mov	fp_23F58, offset nullfunc_near
+		mov	_bg_render_bombing, offset nullfunc_near
 		pop	bp
 		retn
 sub_C473	endp
@@ -2001,8 +2001,8 @@ loc_C4BC:
 		push	( 96 shl 16) or 192
 		nopcall	select_for_playchar
 		mov	_bullet_clear_time, al
-		mov	ax, fp_23F5A
-		mov	fp_23F58, ax
+		mov	ax, _bg_render_bombing_func
+		mov	_bg_render_bombing, ax
 		call	snd_se_play pascal, 13
 		mov	_items_pull_to_player, 1
 		les	bx, _resident
@@ -2123,7 +2123,7 @@ loc_C7AE:
 		jnz	short loc_C7C9
 		mov	_scroll_active, 0
 		call	graph_scrollup pascal, 0
-		mov	fp_23F58, offset nullfunc_near
+		mov	_bg_render_bombing, offset nullfunc_near
 		jmp	short loc_C7D0
 ; ---------------------------------------------------------------------------
 
@@ -2155,8 +2155,8 @@ loc_C7F9:
 		jnb	short loc_C839
 
 loc_C800:
-		mov	ax, fp_23F5A
-		mov	fp_23F58, ax
+		mov	ax, _bg_render_bombing_func
+		mov	_bg_render_bombing, ax
 		mov	al, _bomb_frame
 		mov	ah, 0
 		add	ax, -128
@@ -2376,7 +2376,7 @@ bomb_marisa	proc near
 		jnz	short loc_C9FD
 		mov	_scroll_active, 0
 		call	graph_scrollup pascal, 0
-		mov	fp_23F58, offset nullfunc_near
+		mov	_bg_render_bombing, offset nullfunc_near
 
 loc_C9FD:
 		call	sub_C99E
@@ -2402,8 +2402,8 @@ loc_CA26:
 		jnb	short loc_CA65
 
 loc_CA2D:
-		mov	ax, fp_23F5A
-		mov	fp_23F58, ax
+		mov	ax, _bg_render_bombing_func
+		mov	_bg_render_bombing, ax
 		mov	al, _bomb_frame
 		mov	ah, 0
 		add	ax, -80
@@ -2589,7 +2589,7 @@ bomb_mima	proc near
 		jnz	short loc_CC20
 		mov	_scroll_active, 0
 		call	graph_scrollup pascal, 0
-		mov	fp_23F58, offset nullfunc_near
+		mov	_bg_render_bombing, offset nullfunc_near
 
 loc_CC20:
 		call	sub_CB30
@@ -2615,8 +2615,8 @@ loc_CC49:
 		jnb	short loc_CC88
 
 loc_CC50:
-		mov	ax, fp_23F5A
-		mov	fp_23F58, ax
+		mov	ax, _bg_render_bombing_func
+		mov	_bg_render_bombing, ax
 		mov	al, _bomb_frame
 		mov	ah, 0
 		add	ax, -64
@@ -2782,7 +2782,7 @@ loc_CDB4:
 		jnz	short loc_CDCF
 		mov	_scroll_active, 0
 		call	graph_scrollup pascal, 0
-		mov	fp_23F58, offset nullfunc_near
+		mov	_bg_render_bombing, offset nullfunc_near
 		jmp	short loc_CDD6
 ; ---------------------------------------------------------------------------
 
@@ -2814,8 +2814,8 @@ loc_CDFF:
 		jnb	short loc_CE3F
 
 loc_CE06:
-		mov	ax, fp_23F5A
-		mov	fp_23F58, ax
+		mov	ax, _bg_render_bombing_func
+		mov	_bg_render_bombing, ax
 		mov	al, _bomb_frame
 		mov	ah, 0
 		add	ax, -160
@@ -3163,7 +3163,7 @@ loc_D0EA:
 ; ---------------------------------------------------------------------------
 
 loc_D0EF:
-		call	sub_BEE6
+		call	tiles_render
 		pop	bp
 		retn
 sara_bg_render	endp
@@ -3234,7 +3234,7 @@ loc_D175:
 ; ---------------------------------------------------------------------------
 
 loc_D17A:
-		call	sub_BEE6
+		call	tiles_render
 
 loc_D17D:
 		pop	si
@@ -3308,7 +3308,7 @@ loc_D201:
 ; ---------------------------------------------------------------------------
 
 loc_D206:
-		call	sub_BEE6
+		call	tiles_render
 
 loc_D209:
 		pop	si
@@ -3388,7 +3388,7 @@ loc_D294:
 ; ---------------------------------------------------------------------------
 
 loc_D299:
-		call	sub_BEE6
+		call	tiles_render
 		leave
 		retn
 mai_yuki_bg_render	endp
@@ -3459,7 +3459,7 @@ loc_D31D:
 ; ---------------------------------------------------------------------------
 
 loc_D322:
-		call	sub_BEE6
+		call	tiles_render
 		leave
 		retn
 yumeko_bg_render	endp
@@ -3780,7 +3780,7 @@ loc_DD38:
 ; ---------------------------------------------------------------------------
 
 loc_DD3D:
-		call	sub_BEE6
+		call	tiles_render
 		leave
 		retn
 exalice_bg_render	endp
@@ -4449,7 +4449,7 @@ sub_EE58	proc near
 		nopcall	sub_F2B4
 		mov	fp_2C92E, offset sub_EE51
 		mov	ax, _boss_bg_render_func
-		mov	_boss_bg_render, ax
+		mov	_bg_render_not_bombing, ax
 		mov	eax, _boss_update_func
 		mov	_boss_update, eax
 		mov	ax, _boss_fg_render_func
@@ -14364,7 +14364,7 @@ loc_1874E:
 		call	snd_se_play pascal, 13
 
 loc_1877A:
-		mov	fp_23F5A, offset sara_bg_render
+		mov	_bg_render_bombing_func, offset sara_bg_render
 		jmp	loc_188EE
 ; ---------------------------------------------------------------------------
 
@@ -15386,7 +15386,7 @@ loc_19097:
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
-		mov	fp_23F5A, offset louise_bg_render
+		mov	_bg_render_bombing_func, offset louise_bg_render
 		jmp	loc_19263
 ; ---------------------------------------------------------------------------
 
@@ -17173,7 +17173,7 @@ loc_1A0AD:
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
-		mov	fp_23F5A, offset alice_bg_render
+		mov	_bg_render_bombing_func, offset alice_bg_render
 		jmp	loc_1A3B2
 ; ---------------------------------------------------------------------------
 
@@ -18364,7 +18364,7 @@ loc_1AC5E:
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
-		mov	fp_23F5A, offset mai_yuki_bg_render
+		mov	_bg_render_bombing_func, offset mai_yuki_bg_render
 		jmp	loc_1AFA7	; default
 ; ---------------------------------------------------------------------------
 
@@ -18606,7 +18606,7 @@ loc_1AEDF:
 		mov	word_2CE04, ax
 
 loc_1AEE2:
-		mov	fp_23F5A, offset tiles_render_all
+		mov	_bg_render_bombing_func, offset tiles_render_all
 		mov	word_25FE6, 2
 		mov	ax, _boss_phase_frame
 		mov	bx, 8
@@ -19798,7 +19798,7 @@ loc_1BA63:
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
-		mov	fp_23F5A, offset mai_yuki_bg_render
+		mov	_bg_render_bombing_func, offset mai_yuki_bg_render
 		jmp	loc_1BD09
 ; ---------------------------------------------------------------------------
 
@@ -20985,7 +20985,7 @@ loc_1C58E:
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
-		mov	fp_23F5A, offset mai_yuki_bg_render
+		mov	_bg_render_bombing_func, offset mai_yuki_bg_render
 		jmp	loc_1C805
 ; ---------------------------------------------------------------------------
 
@@ -22134,7 +22134,7 @@ loc_1D32D:
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
-		mov	fp_23F5A, offset yumeko_bg_render
+		mov	_bg_render_bombing_func, offset yumeko_bg_render
 		jmp	loc_1D513
 ; ---------------------------------------------------------------------------
 
@@ -23513,7 +23513,7 @@ loc_1E220:
 		mov	_boss_phase_frame, 0
 		inc	_boss_phase
 		call	snd_se_play pascal, 13
-		mov	fp_23F5A, offset shinki_bg_render
+		mov	_bg_render_bombing_func, offset shinki_bg_render
 		jmp	loc_1E527
 ; ---------------------------------------------------------------------------
 
@@ -25320,7 +25320,7 @@ loc_1F333:
 		mov	Palettes[0 * size rgb_t].b, 0
 		mov	_palette_changed, 1
 		mov	patnum_2CE64, 196
-		mov	fp_23F5A, offset exalice_bg_render
+		mov	_bg_render_bombing_func, offset exalice_bg_render
 		jmp	loc_1F666
 ; ---------------------------------------------------------------------------
 
@@ -26179,7 +26179,7 @@ loc_1FC52:
 		mov	word_2CE04, ax
 
 loc_1FC55:
-		mov	fp_23F5A, offset tiles_render_all
+		mov	_bg_render_bombing_func, offset tiles_render_all
 		mov	word_25FE6, 2
 		mov	ax, _boss_phase_frame
 		mov	bx, 8
@@ -26779,9 +26779,6 @@ byte_23F04	db ?
 word_23F06	dw ?
 include th04/formats/std[bss].asm
 include th04/main/tile/inv[bss].asm
-_boss_bg_render	dw ?
-fp_23F58	dw ?
-fp_23F5A	dw ?
 		db 2 dup(?)
 byte_23F5E	db ?
 		db    ?	;
