@@ -4,6 +4,8 @@
  */
 
 #include "th04/main/midboss/midboss.hpp"
+#include "th05/main/stage/stages.hpp"
+#include "th05/main/boss/bosses.hpp"
 
 void pascal near stage1_setup(void)
 {

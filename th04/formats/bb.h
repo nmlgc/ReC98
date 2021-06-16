@@ -5,6 +5,8 @@ typedef uint8_t bb_tiles8_t;
 
 void pascal near bb_stage_load(const char far* fn);
 
+extern bb_tiles8_t __seg *bb_stage_seg;
+
 /// Text dissolve circles
 /// ---------------------
 #define BB_TXT_W 32

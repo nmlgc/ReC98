@@ -2,6 +2,11 @@
 
 #pragma option -k-
 
+#include "platform.h"
+#include "pc98.h"
+#include "planar.h"
+#include "th01/math/subpixel.hpp"
+#include "th04/math/motion.hpp"
 #include "th04/main/playperf.hpp"
 #include "th04/main/bullet/bullet.hpp"
 

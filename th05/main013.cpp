@@ -6,11 +6,18 @@
 #pragma option -zCmain_01_TEXT -zPmain_01
 
 extern "C" {
-#include "th05/th05.hpp"
+#include <stddef.h>
+#include "platform.h"
+#include "pc98.h"
+#include "planar.h"
 #include "master.hpp"
+#include "th01/math/area.hpp"
+#include "th04/shared.hpp"
 #include "th04/main/null.hpp"
 #include "th04/main/rank.hpp"
 #include "th04/main/item/items.hpp"
+#include "th05/formats/bb.h"
+#include "th05/main/boss/boss.hpp"
 
 void pascal near playfield_fillm_32_0_320_192(void);
 void pascal near playfield_fillm_0_0_384_192__2(void);

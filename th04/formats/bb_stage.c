@@ -1,5 +1,3 @@
-extern bb_tiles8_t __seg *bb_stage_seg;
-
 void pascal near bb_stage_load(const char *fn)
 {
 #if GAME == 5

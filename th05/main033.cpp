@@ -6,6 +6,5 @@
 #pragma option -zCmain_033_TEXT
 
 extern "C" {
-#include "th05/th05.hpp"
 #include "th05/main/boss/b4_both.cpp"
 }
