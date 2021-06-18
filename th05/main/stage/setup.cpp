@@ -3,6 +3,7 @@
  * TH05 stage initialization
  */
 
+#include "th04/sprites/main_cdg.h"
 #include "th04/main/midboss/midboss.hpp"
 #include "th05/main/stage/stages.hpp"
 #include "th05/main/boss/bosses.hpp"
@@ -31,7 +32,7 @@ void pascal near stage1_setup(void)
 	boss_backdrop_colorfill = playfield_fillm_32_0_320_192;
 
 	super_entry_bfnt("st00.bmt");
-	cdg_load_all_noalpha(16, "st00bk.cdg");
+	cdg_load_all_noalpha(CDG_BG_BOSS, "st00bk.cdg");
 	bb_stage_load("st00.bb");
 
 	stage_render = nullfunc_near;
@@ -58,7 +59,7 @@ void pascal near stage2_setup(void)
 	boss_backdrop_colorfill = playfield_fillm_0_0_384_192__1;
 
 	super_entry_bfnt("st01.bmt");
-	cdg_load_all_noalpha(16, "st01bk.cdg");
+	cdg_load_all_noalpha(CDG_BG_BOSS, "st01bk.cdg");
 	bb_stage_load("st01.bb");
 
 	stage_render = stage2_update;
@@ -88,7 +89,7 @@ void pascal near stage3_setup(void)
 	boss_sprite_stay = 180;
 
 	super_entry_bfnt("st02.bmt");
-	cdg_load_all_noalpha(16, "st02bk.cdg");
+	cdg_load_all_noalpha(CDG_BG_BOSS, "st02bk.cdg");
 	bb_stage_load("st02.bb");
 
 	stage_render = nullfunc_near;
@@ -117,7 +118,7 @@ void pascal near stage4_setup(void)
 	boss_backdrop_colorfill = playfield_fillm_64_56_256_256;
 
 	super_entry_bfnt("st03.bmt");
-	cdg_load_all_noalpha(16, "st03bk.cdg");
+	cdg_load_all_noalpha(CDG_BG_BOSS, "st03bk.cdg");
 	bb_stage_load("st03.bb");
 
 	stage_render = nullfunc_near;
@@ -145,7 +146,7 @@ void pascal near stage5_setup(void)
 	boss_backdrop_colorfill = playfield_fillm_0_0_384_192__2;
 
 	super_entry_bfnt("st04.bmt");
-	cdg_load_all_noalpha(16, "st04bk.cdg");
+	cdg_load_all_noalpha(CDG_BG_BOSS, "st04bk.cdg");
 	bb_stage_load("st04.bb");
 
 	/* TODO: Replace with the decompiled calls
@@ -181,8 +182,8 @@ void pascal near stage6_setup(void)
 	boss_hitbox_radius.set(24, 24);
 	boss_backdrop_colorfill = playfield_fillm_0_104_384_192;
 
-	cdg_load_all_noalpha(16, "st05bk.cdg");
-	cdg_load_all_noalpha(17, "st05bk2.cdg");
+	cdg_load_all_noalpha(CDG_BG_BOSS, "st05bk.cdg");
+	cdg_load_all_noalpha(CDG_BG_2, "st05bk2.cdg");
 	bb_stage_load("st05.bb");
 
 	stage_render = nullfunc_near;

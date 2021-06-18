@@ -23,6 +23,7 @@ include th04/th04.inc
 include th01/math/subpixel.inc
 include th02/main/sparks.inc
 include th04/sprites/main_pat.inc
+include th04/sprites/main_cdg.inc
 include th04/sprites/blit.inc
 include th04/main/phase.inc
 include th04/main/tile/tile.inc
@@ -776,7 +777,7 @@ loc_AFD5:
 
 loc_B003:
 		mov	word_2CFF4, 9
-		call	cdg_load_all pascal, 8, ds, offset aBss0_cd2
+		call	cdg_load_all pascal, CDG_FACESET_BOSS, ds, offset aBss0_cd2
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.playchar_ascii]
 		les	bx, off_213E0
@@ -799,7 +800,7 @@ loc_B044:
 
 loc_B04B:
 		mov	word_2CFF4, 9
-		call	cdg_load_all pascal, 8, ds, offset aBss1_cd2
+		call	cdg_load_all pascal, CDG_FACESET_BOSS, ds, offset aBss1_cd2
 		call	super_entry_bfnt pascal, ds, offset aSt01_bft ; "st01.bft"
 		call	stage2_setup
 		push	ds
@@ -809,7 +810,7 @@ loc_B04B:
 
 loc_B071:
 		mov	word_2CFF4, 9
-		call	cdg_load_all pascal, 8, ds, offset aBss2_cd2
+		call	cdg_load_all pascal, CDG_FACESET_BOSS, ds, offset aBss2_cd2
 		call	super_entry_bfnt pascal, ds, offset aSt02_bft ; "st02.bft"
 		call	stage3_setup
 		push	ds
@@ -821,14 +822,14 @@ loc_B097:
 		mov	word_2CFF4, 9
 		cmp	_playchar, PLAYCHAR_REIMU
 		jnz	short loc_B0AC
-		push	8
+		push	CDG_FACESET_BOSS
 		push	ds
 		push	offset aKao3_cd2 ; "KAO3.CD2"
 		jmp	short loc_B0B2
 ; ---------------------------------------------------------------------------
 
 loc_B0AC:
-		push	8
+		push	CDG_FACESET_BOSS
 		push	ds
 		push	offset aKao2_cd2 ; "KAO2.CD2"
 
@@ -843,7 +844,7 @@ loc_B0B2:
 
 loc_B0D4:
 		mov	word_2CFF4, 9
-		call	cdg_load_all pascal, 8, ds, offset aBss4_cd2
+		call	cdg_load_all pascal, CDG_FACESET_BOSS, ds, offset aBss4_cd2
 		call	super_entry_bfnt pascal, ds, offset aSt04_bft ; "st04.bft"
 		call	stage5_setup
 		push	ds
@@ -854,7 +855,7 @@ loc_B0D4:
 loc_B0F9:
 		mov	word_2CFF4, 9
 		call	super_entry_bfnt pascal, ds, offset aSt05_bft ; "st05.bft"
-		call	cdg_load_all pascal, 8, ds, offset aBss5_cd2
+		call	cdg_load_all pascal, CDG_FACESET_BOSS, ds, offset aBss5_cd2
 		call	stage6_setup
 		push	ds
 		push	offset aSt05_mpn ; "st05.mpn"
@@ -864,7 +865,7 @@ loc_B0F9:
 loc_B11E:
 		mov	word_2CFF4, 9
 		call	super_entry_bfnt pascal, ds, offset aSt06_bft ; "st06.bft"
-		call	cdg_load_all pascal, 8, ds, offset aBss6_cd2
+		call	cdg_load_all pascal, CDG_FACESET_BOSS, ds, offset aBss6_cd2
 		call	stagex_setup
 		push	ds
 		push	offset aSt06_mpn ; "st06.mpn"
@@ -982,7 +983,7 @@ sub_B29E	proc near
 		call	main_01:std_free
 		call	main_01:map_free
 		call	super_clean pascal, (128 shl 16) or 256
-		mov	si, 8
+		mov	si, CDG_FACESET_BOSS
 		jmp	short loc_B2C7
 ; ---------------------------------------------------------------------------
 
@@ -991,7 +992,7 @@ loc_B2C0:
 		inc	si
 
 loc_B2C7:
-		cmp	si, 31
+		cmp	si, (CDG_COUNT - 1)
 		jl	short loc_B2C0
 		pop	si
 		pop	bp
@@ -1111,17 +1112,17 @@ loc_B4AF:
 		push	ds
 		push	offset aGensoems ; "GENSOEMS"
 		call	ems_setname
-		call	cdg_load_single_noalpha pascal, 31, [eyename], 0
+		call	cdg_load_single_noalpha pascal, CDG_EYE, [eyename], 0
 		push	_Ems
 		pushd	0
-		push	_cdg_slots.seg_colors + (size cdg_t * 31)
+		push	_cdg_slots.seg_colors + (size cdg_t * CDG_EYE)
 		push	0
-		mov	ax, _cdg_slots.CDG_plane_size + (size cdg_t * 31)
+		mov	ax, _cdg_slots.CDG_plane_size + (size cdg_t * CDG_EYE)
 		shl	ax, 2
 		movzx	eax, ax
 		push	eax
 		call	ems_write
-		call	cdg_free pascal, 31
+		call	cdg_free pascal, CDG_EYE
 
 @@ret:
 		pop	bp
@@ -1144,7 +1145,7 @@ EmsLoad	proc near ; ZUN symbol [MAGNet2010]
 		mov	al, es:[bx+resident_t.playchar_ascii]
 		les	bx, bbname
 		mov	es:[bx+2], al
-		call	cdg_load_single_noalpha pascal, 0, word ptr bbname+2, bx, 0
+		call	cdg_load_single_noalpha pascal, CDG_BG_PLAYCHAR_BOMB, word ptr bbname+2, bx, 0
 		cmp	_Ems, 0
 		jz	@@ret
 		push	_Ems
@@ -1158,22 +1159,22 @@ EmsLoad	proc near ; ZUN symbol [MAGNet2010]
 		call	ems_write
 		cmp	_playchar, PLAYCHAR_REIMU
 		jnz	short @@not_reimu
-		push	2
+		push	CDG_FACESET_PLAYCHAR
 		push	ds
 		push	offset aKao0_cd2 ; "KAO0.cd2"
 		jmp	short loc_B593
 ; ---------------------------------------------------------------------------
 
 @@not_reimu:
-		push	2
+		push	CDG_FACESET_PLAYCHAR
 		push	ds
 		push	offset aKao1_cd2 ; "KAO1.cd2"
 
 loc_B593:
 		call	cdg_load_all
-		mov	si, 2
+		mov	si, CDG_FACESET_PLAYCHAR
 		mov	[bp+@@size], 94000
-		mov	di, _cdg_slots.CDG_plane_size + (size cdg_t * 2)
+		mov	di, _cdg_slots.CDG_plane_size + (size cdg_t * CDG_FACESET_PLAYCHAR)
 		jmp	short loc_B606
 ; ---------------------------------------------------------------------------
 
@@ -1230,16 +1231,16 @@ sub_B616	proc near
 		mov	bp, sp
 		cmp	_Ems, 0
 		jz	short loc_B64C
-		mov	ax, _cdg_slots.CDG_plane_size + (size cdg_t * 31)
+		mov	ax, _cdg_slots.CDG_plane_size + (size cdg_t * CDG_EYE)
 		shl	ax, 2
 		push	ax
 		call	hmem_allocbyte
-		mov	_cdg_slots.seg_colors + (size cdg_t * 31), ax
+		mov	_cdg_slots.seg_colors + (size cdg_t * CDG_EYE), ax
 		push	_Ems
 		pushd	0
 		push	ax
 		push	0
-		mov	ax, _cdg_slots.CDG_plane_size + (size cdg_t * 31)
+		mov	ax, _cdg_slots.CDG_plane_size + (size cdg_t * CDG_EYE)
 		shl	ax, 2
 		movzx	eax, ax
 		push	eax
@@ -1248,13 +1249,13 @@ sub_B616	proc near
 ; ---------------------------------------------------------------------------
 
 loc_B64C:
-		call	cdg_load_single_noalpha pascal, 31, [eyename], 0
+		call	cdg_load_single_noalpha pascal, CDG_EYE, [eyename], 0
 
 loc_B65A:
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		call	cdg_put_noalpha_8 pascal, large (32 shl 16) or 112, 31
-		call	cdg_free pascal, 31
+		call	cdg_put_noalpha_8 pascal, large (32 shl 16) or 112, CDG_EYE
+		call	cdg_free pascal, CDG_EYE
 		push	1
 		call	palette_black_in
 		pop	bp
@@ -2628,7 +2629,7 @@ sub_CF44	proc near
 		jnz	short loc_CF70
 
 loc_CF63:
-		call	cdg_free pascal, 31
+		call	cdg_free pascal, CDG_EYE
 		call	main_01:std_free
 		call	main_01:map_free
 
@@ -3256,7 +3257,7 @@ loc_D508:
 ; ---------------------------------------------------------------------------
 
 loc_D50A:
-		mov	di, 1		; jumptable 0000D1EC case 100
+		mov	di, CDG_PER_STAGE		; jumptable 0000D1EC case 100
 		jmp	short loc_D516
 ; ---------------------------------------------------------------------------
 
@@ -3265,7 +3266,7 @@ loc_D50F:
 		inc	di
 
 loc_D516:
-		cmp	di, 32
+		cmp	di, CDG_COUNT
 		jl	short loc_D50F
 		jmp	short loc_D528	; default
 ; ---------------------------------------------------------------------------
@@ -3522,12 +3523,12 @@ var_4		= dword	ptr -4
 		enter	4, 0
 		push	si
 		push	di
-		call	cdg_free pascal, 0
+		call	cdg_free pascal, CDG_BG_PLAYCHAR_BOMB
 		cmp	_Ems, 0
 		jz	loc_D7D0
 		mov	[bp+var_4], 16F30h
-		mov	si, _cdg_slots.CDG_plane_size + (size cdg_t * 2)
-		mov	di, 2
+		mov	si, _cdg_slots.CDG_plane_size + (size cdg_t * CDG_FACESET_PLAYCHAR)
+		mov	di, CDG_FACESET_PLAYCHAR
 		jmp	short loc_D7C9
 ; ---------------------------------------------------------------------------
 
@@ -3573,7 +3574,7 @@ loc_D750:
 		inc	di
 
 loc_D7C9:
-		cmp	di, 8
+		cmp	di, (CDG_FACESET_PLAYCHAR_last + 1)
 		jl	short loc_D750
 		jmp	short loc_D7EA
 ; ---------------------------------------------------------------------------
@@ -3581,14 +3582,14 @@ loc_D7C9:
 loc_D7D0:
 		cmp	_playchar, PLAYCHAR_REIMU
 		jnz	short loc_D7DF
-		push	2
+		push	CDG_FACESET_PLAYCHAR
 		push	ds
 		push	offset aKao0_cd2_0 ; "KAO0.cd2"
 		jmp	short loc_D7E5
 ; ---------------------------------------------------------------------------
 
 loc_D7DF:
-		push	2
+		push	CDG_FACESET_PLAYCHAR
 		push	ds
 		push	offset aKao1_cd2_0 ; "KAO1.cd2"
 
@@ -3612,7 +3613,7 @@ sub_D7EE	proc near
 		mov	bp, sp
 		push	si
 		push	di
-		mov	si, 2
+		mov	si, CDG_FACESET_PLAYCHAR
 		jmp	short loc_D7FF
 ; ---------------------------------------------------------------------------
 
@@ -3621,11 +3622,11 @@ loc_D7F8:
 		inc	si
 
 loc_D7FF:
-		cmp	si, 8
+		cmp	si, (CDG_FACESET_PLAYCHAR_last + 1)
 		jl	short loc_D7F8
 		cmp	_stage_id, 6
 		jnz	short loc_D83A
-		mov	si, 8
+		mov	si, CDG_FACESET_BOSS
 		jmp	short loc_D817
 ; ---------------------------------------------------------------------------
 
@@ -3634,20 +3635,22 @@ loc_D810:
 		inc	si
 
 loc_D817:
-		cmp	si, 11
+		; MODDERS: This assumes that BSS6.CD2, BSS7.CD2, and BSS8.CD2 each have
+		; at most 3 slots.
+		cmp	si, (CDG_FACESET_BOSS + 3)
 		jl	short loc_D810
 		mov	al, byte_22BCA
 		inc	byte_22BCA
 		or	al, al
 		jnz	short loc_D82F
-		push	8
+		push	CDG_FACESET_BOSS
 		push	ds
 		push	offset aBss7_cd2 ; "bss7.cd2"
 		jmp	short loc_D835
 ; ---------------------------------------------------------------------------
 
 loc_D82F:
-		push	8
+		push	CDG_FACESET_BOSS
 		push	ds
 		push	offset aBss8_cd2 ; "bss8.cd2"
 
@@ -3676,14 +3679,14 @@ loc_D83A:
 loc_D86C:
 		cmp	_playchar, PLAYCHAR_REIMU
 		jnz	short loc_D87B
-		push	0
+		push	CDG_BG_PLAYCHAR_BOMB
 		push	ds
 		push	offset aBb0_cdg	; "bb0.cdg"
 		jmp	short loc_D881
 ; ---------------------------------------------------------------------------
 
 loc_D87B:
-		push	0
+		push	CDG_BG_PLAYCHAR_BOMB
 		push	ds
 		push	offset aBb1_cdg	; "bb1.cdg"
 
@@ -30161,7 +30164,7 @@ stage1_setup	proc far
 		mov	_boss_hitbox_radius.y, (16 shl 4)
 		mov	_boss_backdrop_colorfill, offset playfield_fillm_0_120_384_128
 		call	super_entry_bfnt pascal, ds, offset aSt00_bmt ; "st00.bmt"
-		call	cdg_load_single_noalpha pascal, 16, ds, offset aSt00bk_cdg, 0
+		call	cdg_load_single_noalpha pascal, CDG_BG_BOSS, ds, offset aSt00bk_cdg, 0
 		call	bb_stage_load pascal, ds, offset aSt00_bb
 		mov	Palettes[0 * size rgb_t].r, 255
 		mov	Palettes[0 * size rgb_t].g, 255
@@ -30203,7 +30206,7 @@ stage2_setup	proc far
 		mov	_boss_hitbox_radius.y, (24 shl 4)
 		mov	_boss_backdrop_colorfill, offset playfield_fillm_0_80_384_112
 		call	super_entry_bfnt pascal, ds, offset aSt01_bmt ; "st01.bmt"
-		call	cdg_load_single_noalpha pascal, 16, ds, offset aSt01bk_cdg, 0
+		call	cdg_load_single_noalpha pascal, CDG_BG_BOSS, ds, offset aSt01bk_cdg, 0
 		call	bb_stage_load pascal, ds, offset aSt01_bb
 		push	(255 shl 16) or 128
 		push	( 32 shl 16) or   8
@@ -30247,7 +30250,7 @@ stage3_setup	proc far
 		mov	_boss_hitbox_radius.y, (24 shl 4)
 		mov	_boss_backdrop_colorfill, offset playfield_fillm_0_0_384_112
 		call	super_entry_bfnt pascal, ds, offset aSt02_bmt ; "st02.bmt"
-		call	cdg_load_single_noalpha pascal, 16, ds, offset aSt02bk_cdg, 0
+		call	cdg_load_single_noalpha pascal, CDG_BG_BOSS, ds, offset aSt02bk_cdg, 0
 		call	bb_stage_load pascal, ds, offset aSt02_bb
 		mov	_stage_render, offset nullfunc_near
 		mov	_stage_invalidate, offset nullfunc_near
@@ -30328,14 +30331,14 @@ loc_1E371:
 		call	super_entry_bfnt pascal, ds, offset aSt03_bmt ; "st03.bmt"
 		cmp	_playchar, PLAYCHAR_REIMU
 		jz	short loc_1E3A0
-		push	10h
+		push	CDG_BG_BOSS
 		push	ds
 		push	offset aSt03bk_cdg ; "st03bk.cdg"
 		jmp	short loc_1E3A6
 ; ---------------------------------------------------------------------------
 
 loc_1E3A0:
-		push	10h
+		push	CDG_BG_BOSS
 		push	ds
 		push	offset aSt03bk2_cdg ; "st03bk2.cdg"
 
@@ -30372,9 +30375,9 @@ stage5_setup	proc far
 		mov	_boss_hitbox_radius.x, (26 shl 4)
 		mov	_boss_hitbox_radius.y, (26 shl 4)
 		mov	_boss_backdrop_colorfill, offset playfield_fillm_96_112_288_256
-		call	cdg_load_single_noalpha pascal, 16, ds, offset aSt04bk_cdg, 0
+		call	cdg_load_single_noalpha pascal, CDG_BG_BOSS, ds, offset aSt04bk_cdg, 0
 		call	bb_stage_load pascal, ds, offset aSt04_bb
-		call	cdg_load_single_noalpha pascal, 17, ds, offset aSt04_cdg, 0
+		call	cdg_load_single_noalpha pascal, CDG_BG_2, ds, offset aSt04_cdg, 0
 		mov	word_2D034, 1400h
 		mov	word_2D036, 280h
 		mov	word_2D038, 0BE0h
@@ -30458,7 +30461,7 @@ stagex_setup	proc far
 		mov	_boss_hitbox_radius.y, (48 shl 4)
 		mov	_boss_backdrop_colorfill, offset playfield_fillm_0_0_384_192
 		mov	byte_2D01E, 0
-		call	cdg_load_single_noalpha pascal, 16, ds, offset aSt06bk_cdg, 0
+		call	cdg_load_single_noalpha pascal, CDG_BG_BOSS, ds, offset aSt06bk_cdg, 0
 		call	bb_stage_load pascal, ds, offset aSt06_bb
 		mov	_stage_render, offset nullfunc_near
 		mov	_stage_invalidate, offset nullfunc_near
@@ -30678,9 +30681,9 @@ loc_1E801:
 		mov	_boss_hitbox_radius.y, (48 shl 4)
 		mov	_bgm_title_id, 0Fh
 		mov	_overlay_text, offset popup_boss_bgm_update_and_render
-		call	cdg_free pascal, 16
+		call	cdg_free pascal, CDG_BG_BOSS
 		call	bb_stage_free
-		call	cdg_load_single_noalpha pascal, 16, ds, offset aSt06bk2_cdg, 0
+		call	cdg_load_single_noalpha pascal, CDG_BG_BOSS, ds, offset aSt06bk2_cdg, 0
 		call	bb_stage_load pascal, ds, offset aSt06b_bb
 		mov	_bombing_disabled, 0
 		pop	bp

@@ -1,0 +1,23 @@
+#define FACESET_PLAYCHAR_COUNT 6
+#if (GAME == 5)
+	#define FACESET_BOSS_COUNT 6
+#else
+	#define FACESET_BOSS_COUNT 4
+#endif
+
+// CDG slots for TH04's and TH05's MAIN.EXE.
+typedef enum {
+	CDG_BG_PLAYCHAR_BOMB = 0,
+
+	CDG_PER_STAGE,
+	CDG_FACESET_PLAYCHAR,
+	CDG_FACESET_PLAYCHAR_last = (CDG_FACESET_PLAYCHAR + (FACESET_PLAYCHAR_COUNT - 1)),
+	CDG_FACESET_BOSS,
+	CDG_FACESET_BOSS_last = (CDG_FACESET_BOSS + (FACESET_BOSS_COUNT - 1)),
+	CDG_BG_BOSS = 16,
+	CDG_BG_2,	// Second background slot
+	CDG_PER_STAGE_last = 30,
+
+	CDG_EYE,
+	CDG_COUNT
+} main_cdg_slot_t;

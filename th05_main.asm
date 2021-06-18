@@ -24,6 +24,7 @@ include th01/math/area.inc
 include th01/math/subpixel.inc
 include th02/main/sparks.inc
 include th05/sprites/main_pat.inc
+include th04/sprites/main_cdg.inc
 include th04/sprites/blit.inc
 include th04/main/phase.inc
 include th04/main/tile/tile.inc
@@ -1127,7 +1128,7 @@ sub_B609	proc near
 		call	std_free
 		call	map_free
 		call	super_clean pascal, (180 shl 16) or 256
-		mov	si, 1
+		mov	si, CDG_PER_STAGE
 		jmp	short loc_B630
 ; ---------------------------------------------------------------------------
 
@@ -1136,7 +1137,7 @@ loc_B629:
 		inc	si
 
 loc_B630:
-		cmp	si, 31
+		cmp	si, (CDG_PER_STAGE_last + 1)
 		jl	short loc_B629
 		pop	si
 		pop	bp
@@ -1283,17 +1284,17 @@ loc_B84E:
 		push	ds
 		push	offset aKaikiems ; "KAIKIEMS"
 		call	ems_setname
-		call	cdg_load_single_noalpha pascal, 31, [off_20A80], 0
+		call	cdg_load_single_noalpha pascal, CDG_EYE, [off_20A80], 0
 		push	_Ems
 		pushd	0
-		push	_cdg_slots.seg_colors + (size cdg_t * 31)
+		push	_cdg_slots.seg_colors + (size cdg_t * CDG_EYE)
 		push	0
-		mov	ax, _cdg_slots.CDG_plane_size + (size cdg_t * 31)
+		mov	ax, _cdg_slots.CDG_plane_size + (size cdg_t * CDG_EYE)
 		shl	ax, 2
 		movzx	eax, ax
 		push	eax
 		call	ems_write
-		call	cdg_free pascal, 31
+		call	cdg_free pascal, CDG_EYE
 
 @@ret:
 		pop	bp
@@ -1317,7 +1318,7 @@ EmsLoad	proc near ; ZUN symbol [MAGNet2010]
 		add	al, '0'
 		les	bx, bbname
 		mov	es:[bx+2], al
-		call	cdg_load_all_noalpha pascal, 0, word ptr bbname+2, bx
+		call	cdg_load_all_noalpha pascal, CDG_BG_PLAYCHAR_BOMB, word ptr bbname+2, bx
 		cmp	_Ems, 0
 		jz	@@ret
 		push	_Ems
@@ -1338,28 +1339,28 @@ EmsLoad	proc near ; ZUN symbol [MAGNet2010]
 		jmp	cs:off_B9C4[bx]
 
 @@reimu:
-		push	2
+		push	CDG_FACESET_PLAYCHAR
 		push	ds
 		push	offset aKao0_cd2 ; "KAO0.cd2"
 		jmp	short loc_B941
 ; ---------------------------------------------------------------------------
 
 @@marisa:
-		push	2
+		push	CDG_FACESET_PLAYCHAR
 		push	ds
 		push	offset aKao1_cd2 ; "KAO1.cd2"
 		jmp	short loc_B941
 ; ---------------------------------------------------------------------------
 
 @@mima:
-		push	2
+		push	CDG_FACESET_PLAYCHAR
 		push	ds
 		push	offset aKao2_cd2 ; "KAO2.cd2"
 		jmp	short loc_B941
 ; ---------------------------------------------------------------------------
 
 @@yuuka:
-		push	2
+		push	CDG_FACESET_PLAYCHAR
 		push	ds
 		push	offset aKao3_cd2 ; "KAO3.cd2"
 
@@ -1367,9 +1368,9 @@ loc_B941:
 		call	cdg_load_all
 
 loc_B946:
-		mov	si, 2
+		mov	si, CDG_FACESET_PLAYCHAR
 		mov	[bp+@@size], 100000
-		mov	di, _cdg_slots.CDG_plane_size + (size cdg_t * 2)
+		mov	di, _cdg_slots.CDG_plane_size + (size cdg_t * CDG_FACESET_PLAYCHAR)
 		jmp	short loc_B9B4
 ; ---------------------------------------------------------------------------
 
@@ -1435,10 +1436,10 @@ arg_0		= dword	ptr  4
 		push	di
 		cmp	_Ems, 0
 		jz	loc_BA60
-		call	cdg_load_all pascal, 8, [bp+arg_0]
-		mov	si, 8
+		call	cdg_load_all pascal, CDG_FACESET_BOSS, [bp+arg_0]
+		mov	si, CDG_FACESET_BOSS
 		mov	[bp+var_4], 200000
-		mov	di, _cdg_slots.CDG_plane_size + (size cdg_t * 8)
+		mov	di, _cdg_slots.CDG_plane_size + (size cdg_t * CDG_FACESET_BOSS)
 		jmp	short loc_BA54
 ; ---------------------------------------------------------------------------
 
@@ -1495,16 +1496,16 @@ sub_BA66	proc near
 		mov	bp, sp
 		cmp	_Ems, 0
 		jz	short loc_BA9C
-		mov	ax, _cdg_slots.CDG_plane_size + (size cdg_t * 31)
+		mov	ax, _cdg_slots.CDG_plane_size + (size cdg_t * CDG_EYE)
 		shl	ax, 2
 		push	ax
 		call	hmem_allocbyte
-		mov	_cdg_slots.seg_colors + (size cdg_t * 31), ax
+		mov	_cdg_slots.seg_colors + (size cdg_t * CDG_EYE), ax
 		push	_Ems
 		pushd	0
 		push	ax
 		push	0
-		mov	ax, _cdg_slots.CDG_plane_size + (size cdg_t * 31)
+		mov	ax, _cdg_slots.CDG_plane_size + (size cdg_t * CDG_EYE)
 		shl	ax, 2
 		movzx	eax, ax
 		push	eax
@@ -1513,13 +1514,13 @@ sub_BA66	proc near
 ; ---------------------------------------------------------------------------
 
 loc_BA9C:
-		call	cdg_load_single_noalpha pascal, 31, [off_20A80], 0
+		call	cdg_load_single_noalpha pascal, CDG_EYE, [off_20A80], 0
 
 loc_BAAA:
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		call	cdg_put_noalpha_8 pascal, large (80 shl 16) or 112, 31
-		call	cdg_free pascal, 31
+		call	cdg_put_noalpha_8 pascal, large (80 shl 16) or 112, CDG_EYE
+		call	cdg_free pascal, CDG_EYE
 		push	1
 		call	palette_black_in
 		pop	bp
@@ -4960,7 +4961,7 @@ loc_F318:
 ; ---------------------------------------------------------------------------
 
 loc_F333:
-		call	cdg_free pascal, 0
+		call	cdg_free pascal, CDG_BG_PLAYCHAR_BOMB
 		call	_playfield_tram_wipe
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
@@ -5058,7 +5059,7 @@ loc_F41B:
 loc_F421:
 		add	al, 30h	; '0'
 		mov	[di+3],	al
-		call	cdg_load_single pascal, 2, ds, di, [bp+arg_0]
+		call	cdg_load_single pascal, CDG_FACESET_PLAYCHAR, ds, di, [bp+arg_0]
 
 loc_F432:
 		push	1
@@ -5068,8 +5069,8 @@ loc_F432:
 		call	sub_EF2A
 		cmp	[bp+arg_0], (-1 and 255)
 		jz	short loc_F45D
-		call	cdg_put_8 pascal, [bp+@@left], [bp+@@top], 2
-		call	cdg_free pascal, 2
+		call	cdg_put_8 pascal, [bp+@@left], [bp+@@top], CDG_FACESET_PLAYCHAR
+		call	cdg_free pascal, CDG_FACESET_PLAYCHAR
 
 loc_F45D:
 		pop	di
@@ -5115,28 +5116,28 @@ loc_F499:
 		jmp	cs:off_F4D5[bx]
 
 @@reimu:
-		push	0
+		push	CDG_BG_PLAYCHAR_BOMB
 		push	ds
 		push	offset aBb0_cdg	; "bb0.cdg"
 		jmp	short loc_F4CA
 ; ---------------------------------------------------------------------------
 
 @@marisa:
-		push	0
+		push	CDG_BG_PLAYCHAR_BOMB
 		push	ds
 		push	offset aBb1_cdg	; "bb1.cdg"
 		jmp	short loc_F4CA
 ; ---------------------------------------------------------------------------
 
 @@mima:
-		push	0
+		push	CDG_BG_PLAYCHAR_BOMB
 		push	ds
 		push	offset aBb2_cdg	; "bb2.cdg"
 		jmp	short loc_F4CA
 ; ---------------------------------------------------------------------------
 
 @@yuuka:
-		push	0
+		push	CDG_BG_PLAYCHAR_BOMB
 		push	ds
 		push	offset aBb3_cdg	; "bb3.cdg"
 

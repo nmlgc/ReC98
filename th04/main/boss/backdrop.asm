@@ -11,7 +11,7 @@ boss_backdrop_render	proc near
 
 	push	bp
 	mov	bp, sp
-	call	cdg_put_noalpha_8 pascal, [bp+@@x], [bp+@@y], 16
+	call	cdg_put_noalpha_8 pascal, [bp+@@x], [bp+@@y], CDG_BG_BOSS
 	call	grcg_setmode_tdw
 	mov	ah, [bp+@@color]
 	call	_grcg_setcolor_direct_seg1_raw
