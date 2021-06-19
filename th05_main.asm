@@ -3465,327 +3465,11 @@ loc_D322:
 		retn
 yumeko_bg_render	endp
 
-	_shinki_bg_particles_render procdesc c near
-	_shinki_bg_type_a_update_and_rend procdesc c near
-	_shinki_bg_type_b_update_and_rend procdesc c near
-	_shinki_bg_type_c_update_and_rend procdesc c near
-	_shinki_bg_type_d_update procdesc c near
+	SHINKI_BG_RENDER procdesc pascal near
+	EXALICE_BG_RENDER procdesc pascal near
 main__TEXT	ends
 
 main_0_TEXT	segment	word public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-public SHINKI_BG_RENDER
-shinki_bg_render	proc near
-
-@@entrance_cel		= byte ptr -1
-
-		enter	2, 0
-		cmp	_boss_phase, 0
-		jnz	short loc_DA9E
-		call	boss_backdrop_render pascal, (32 shl 16) or 120, 1
-		leave
-		retn
-; ---------------------------------------------------------------------------
-
-loc_DA9E:
-		cmp	_boss_phase, 1
-		jnz	short loc_DADD
-		mov	ax, _boss_phase_frame
-		mov	bx, 4
-		cwd
-		idiv	bx
-		mov	[bp+@@entrance_cel], al
-		cmp	[bp+@@entrance_cel], 8
-		jnb	short loc_DAC4
-		call	boss_backdrop_render pascal, (32 shl 16) or 120, 1
-		jmp	short loc_DAC7
-; ---------------------------------------------------------------------------
-
-loc_DAC4:
-		call	sub_E92E
-
-loc_DAC7:
-		mov	_tiles_bb_col, 15
-		mov	ax, _bb_stage_seg
-		mov	_tiles_bb_seg, ax
-		mov	al, [bp+@@entrance_cel]
-		mov	ah, 0
-		call	tiles_bb_put_raw pascal, ax
-		leave
-		retn
-; ---------------------------------------------------------------------------
-
-loc_DADD:
-		cmp	_boss_phase, 4
-		jnb	short loc_DAEC
-		call	sub_E92E
-		call	_shinki_bg_type_a_update_and_rend
-		leave
-		retn
-; ---------------------------------------------------------------------------
-
-loc_DAEC:
-		cmp	_boss_phase, 8
-		jnb	short loc_DAFB
-		call	sub_E92E
-		call	_shinki_bg_type_b_update_and_rend
-		leave
-		retn
-; ---------------------------------------------------------------------------
-
-loc_DAFB:
-		cmp	_boss_phase, 0Ch
-		jnb	short loc_DB0A
-		call	sub_E92E
-		call	_shinki_bg_type_c_update_and_rend
-		leave
-		retn
-; ---------------------------------------------------------------------------
-
-loc_DB0A:
-		call	cdg_put_noalpha_8 pascal, large (32 shl 16) or 256, 17
-		call	sub_E950
-		call	_shinki_bg_type_d_update
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 6
-		call	_shinki_bg_particles_render
-		GRCG_OFF_CLOBBERING dx
-		leave
-		retn
-shinki_bg_render	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_DB33	proc near
-
-var_2		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	di, [bp+arg_2]
-		mov	si, [bp+arg_0]
-		push	(224 shl 16) or 200
-		mov	ax, di
-		sar	ax, 4
-		push	ax
-		call	grcg_circle
-		mov	[bp+var_2], 0
-		jmp	loc_DBF1
-; ---------------------------------------------------------------------------
-
-loc_DB58:
-		call	vector2_at pascal, offset _drawpoint, ((224 shl 4) shl 16) or (200 shl 4), di, si
-		push	offset point_24490
-		push	((224 shl 4) shl 16) or (200 shl 4)
-		push	di
-		lea	ax, [si+85]
-		push	ax
-		call	vector2_at
-		push	offset point_24494
-		push	((224 shl 4) shl 16) or (200 shl 4)
-		push	di
-		lea	ax, [si-85]
-		push	ax
-		call	vector2_at
-		sar	_drawpoint.x, 4
-		sar	_drawpoint.y, 4
-		sar	point_24490.x, 4
-		sar	point_24490.y, 4
-		sar	point_24494.x, 4
-		sar	point_24494.y, 4
-		call	grcg_line pascal, _drawpoint.x, _drawpoint.y, point_24490.x, point_24490.y
-		call	grcg_line pascal, point_24490.x, point_24490.y, point_24494.x, point_24494.y
-		call	grcg_line pascal, _drawpoint.x, _drawpoint.y, point_24494.x, point_24494.y
-		inc	[bp+var_2]
-		add	si, 2Ah	; '*'
-
-loc_DBF1:
-		cmp	[bp+var_2], 2
-		jl	loc_DB58
-		pop	di
-		pop	si
-		leave
-		retn	4
-sub_DB33	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_DBFF	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, offset _linesets
-		cmp	byte_21D76, 0
-		jnz	short loc_DC2C
-		xor	di, di
-		jmp	short loc_DC22
-; ---------------------------------------------------------------------------
-
-loc_DC12:
-		mov	bx, di
-		add	bx, bx
-		mov	[bx+si+lineset_t.LS_radius], (1 shl 4)
-		mov	bx, di
-		mov	byte ptr [bx+si+lineset_t.LS_angle], 0
-		inc	di
-
-loc_DC22:
-		cmp	di, (LINESET_LINE_COUNT - 1)
-		jl	short loc_DC12
-		mov	byte_21D76, 1
-
-loc_DC2C:
-		mov	di, (LINESET_LINE_COUNT - 2)
-		jmp	short loc_DC49
-; ---------------------------------------------------------------------------
-
-loc_DC31:
-		lea	bx, [di-1]
-		add	bx, bx
-		mov	ax, [bx+si+lineset_t.LS_radius]
-		mov	bx, di
-		add	bx, bx
-		mov	[bx+si+lineset_t.LS_radius], ax
-		mov	bx, di
-		mov	al, [bx+si+(lineset_t.LS_angle - 1)]
-		mov	[bx+si+(lineset_t.LS_angle - 0)], al
-		dec	di
-
-loc_DC49:
-		or	di, di
-		jg	short loc_DC31
-		add	[si+lineset_t.LS_radius], (5 shl 4)
-		cmp	[si+lineset_t.LS_radius], (320 shl 4)
-		jl	short loc_DC66
-		mov	[si+lineset_t.LS_radius], (1 shl 4)
-		mov	al, 3
-		sub	al, byte_21D76
-		mov	byte_21D76, al
-
-loc_DC66:
-		cmp	byte_21D76, 1
-		jnz	short loc_DC74
-		mov	al, [si+lineset_t.LS_angle]
-		inc	al
-		jmp	short loc_DC79
-; ---------------------------------------------------------------------------
-
-loc_DC74:
-		mov	al, [si+lineset_t.LS_angle]
-		add	al, -1
-
-loc_DC79:
-		mov	[si+lineset_t.LS_angle], al
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 8
-		push	[si+lineset_t.LS_radius[18 * word]]
-		mov	al, [si+lineset_t.LS_angle[18 * byte]]
-		mov	ah, 0
-		push	ax
-		call	sub_DB33
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 9
-		push	[si+lineset_t.LS_radius[9 * word]]
-		mov	al, [si+lineset_t.LS_angle[9 * byte]]
-		mov	ah, 0
-		push	ax
-		call	sub_DB33
-		cmp	_boss_phase, 9
-		jb	short loc_DCBA
-		cmp	_boss_phase, 0Ch
-		jbe	short loc_DCC5
-
-loc_DCBA:
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
-
-loc_DCC5:
-		push	[si+lineset_t.LS_radius]
-		mov	al, [si+lineset_t.LS_angle]
-		mov	ah, 0
-		push	ax
-		call	sub_DB33
-		GRCG_OFF_CLOBBERING dx
-		pop	di
-		pop	si
-		pop	bp
-		retn
-sub_DBFF	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-public EXALICE_BG_RENDER
-exalice_bg_render	proc near
-
-@@entrance_cel		= byte ptr -1
-
-		enter	2, 0
-		cmp	_boss_phase, 0
-		jnz	short loc_DCEF
-		cmp	_boss_phase_frame, 2
-		jg	short loc_DD3D
-		jmp	short loc_DD38
-; ---------------------------------------------------------------------------
-
-loc_DCEF:
-		cmp	_boss_phase, 1
-		jnz	short loc_DD1B
-		mov	ax, _boss_phase_frame
-		mov	bx, 4
-		cwd
-		idiv	bx
-		mov	[bp+@@entrance_cel], al
-		call	sub_E92E
-		mov	_tiles_bb_col, 15
-		mov	ax, _bb_stage_seg
-		mov	_tiles_bb_seg, ax
-		mov	al, [bp+@@entrance_cel]
-		mov	ah, 0
-		call	tiles_bb_put_raw pascal, ax
-		leave
-		retn
-; ---------------------------------------------------------------------------
-
-loc_DD1B:
-		cmp	_boss_phase, PHASE_BOSS_EXPLODE_BIG
-		jnb	short loc_DD2A
-		call	sub_E92E
-		call	sub_DBFF
-		leave
-		retn
-; ---------------------------------------------------------------------------
-
-loc_DD2A:
-		cmp	_boss_phase, PHASE_BOSS_EXPLODE_BIG
-		jz	short loc_DD38
-		cmp	_boss_phase_frame, 2
-		jg	short loc_DD3D
-
-loc_DD38:
-		call	tiles_render_all
-		leave
-		retn
-; ---------------------------------------------------------------------------
-
-loc_DD3D:
-		call	tiles_render
-		leave
-		retn
-exalice_bg_render	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4207,8 +3891,8 @@ playfield_fillm_0_104_384_192	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
-
-sub_E92E	proc near
+public _playfield_fill_col_0
+_playfield_fill_col_0	proc near
 		pushf
 		cli
 		GRCG_SETMODE_VIA_MOV al, GC_TDW
@@ -4224,13 +3908,13 @@ sub_E92E	proc near
 		GRCG_OFF_VIA_XOR al
 		pop	di
 		retn
-sub_E92E	endp
+_playfield_fill_col_0	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
-
-sub_E950	proc near
+public _playfield_fillm_0_0_384_240_col_
+_playfield_fillm_0_0_384_240_col_	proc near
 		pushf
 		cli
 		GRCG_SETMODE_VIA_MOV al, GC_TDW
@@ -4246,7 +3930,7 @@ sub_E950	proc near
 		GRCG_OFF_VIA_XOR al
 		pop	di
 		retn
-sub_E950	endp
+_playfield_fillm_0_0_384_240_col_	endp
 
 include th05/main/laser_render_hittest.asm
 
@@ -26437,7 +26121,8 @@ _shinki_bg_type_b_initialized	db 0
 _shinki_bg_spinline_frames	dw 0
 _shinki_bg_type_c_initialized	db 0
 _shinki_bg_type_d_initialized	db 0
-byte_21D76	db 0
+public _exalice_hexagrams_state
+_exalice_hexagrams_state	db 0
 		db 0
 include th04/main/player/shot_laser[data].asm
 include th05/formats/bb_curvebullet[data].asm
@@ -26789,8 +26474,9 @@ include th04/main/pointnum/render[bss].asm
 include th04/main/player/bomb[bss].asm
 include th04/formats/bb_playchar[bss].asm
 include th05/main/player/bombanim[bss].asm
-point_24490	Point <?>
-point_24494	Point <?>
+public _tri_point_1, _tri_point_2
+_tri_point_1	Point <?>
+_tri_point_2	Point <?>
 include th04/main/boss/bg[bss].asm
 	dw ?
 include th05/main/boss/render[bss].asm

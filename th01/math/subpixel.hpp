@@ -8,6 +8,13 @@ typedef int subpixel_t;
 #define TO_SP(v) \
 	(v << 4)
 
+#define TO_PIXEL(v) \
+	(v >> 4)
+
+// In-place conversion to a pixel. Ugly, and should not exist.
+#define TO_PIXEL_INPLACE(v) \
+	(v >>= 4)
+
 inline subpixel_t to_sp(float pixel_v) {
 	return static_cast<subpixel_t>(pixel_v * 16.0f);
 }
@@ -47,7 +54,7 @@ public:
 	}
 
 	PixelType to_pixel() const {
-		return static_cast<PixelType>(v >> 4);
+		return static_cast<PixelType>(TO_PIXEL(v));
 	}
 
 	PixelType to_pixel_slow() const { // MODDERS: Delete

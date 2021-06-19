@@ -1,7 +1,3 @@
-; Renders the boss battle background image at the given position, surrounded
-; by the given background [color].
-
-; void pascal near boss_backdrop_render(screen_x_t left, screen_y_t top, uint4_t color);
 public BOSS_BACKDROP_RENDER
 boss_backdrop_render	proc near
 

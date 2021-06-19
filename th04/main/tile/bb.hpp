@@ -2,6 +2,8 @@
 // one colored 16×16 tile per bit. Used for the flashy transitions from regular
 // stage backgrounds to the bomb and boss backgrounds.
 
+#define TILES_BB_CELS 8
+
 extern unsigned char tiles_bb_col;
 
 extern bb_tiles8_t __seg *tiles_bb_seg;

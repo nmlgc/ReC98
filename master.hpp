@@ -239,7 +239,9 @@ void MASTER_RET grcg_off(void);
 	// Straight lines
 	void MASTER_RET grcg_hline(int x1, int x2, int y);
 	void MASTER_RET grcg_vline(int x, int y1, int y2);
-	void MASTER_RET grcg_line(int x1, int y1, int x2, int y2);
+	void MASTER_RET grcg_line(
+		screen_x_t x1, vram_y_t y1, screen_x_t x2, vram_y_t y2
+	);
 
 	// Rectangles
 	void MASTER_RET grcg_boxfill(int x1, int y1, int x2, int y2);
@@ -253,7 +255,9 @@ void MASTER_RET grcg_off(void);
 	);
 
 	// Circles
-	void MASTER_RET grcg_circle(int x, int y, unsigned r);
+	void MASTER_RET grcg_circle(
+		screen_x_t center_x, vram_y_t center_y, unsigned r
+	);
 	void MASTER_RET grcg_circlefill(int x, int y, unsigned r);
 #endif
 // -------------------------

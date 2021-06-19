@@ -6,6 +6,7 @@
 #include "platform.h"
 #include "x86real.h"
 #include "pc98.h"
+#include "planar.h"
 #include "decomp.hpp"
 #include "master.hpp"
 #include "th01/math/area.hpp"
@@ -14,9 +15,15 @@
 #include "th04/math/vector.hpp"
 #include "th04/math/motion.hpp"
 #include "th04/math/randring.h"
+#include "th04/formats/bb.h"
+#include "th04/formats/cdg.h"
 #include "th04/main/drawp.hpp"
 #include "th04/main/frames.h"
-#include "th04/main/playfld.hpp"
+#include "th04/main/phase.h"
+#include "th05/main/playfld.hpp"
+#include "th04/main/tile/bb.hpp"
+#include "th04/main/tile/tile.hpp"
+#include "th04/sprites/main_cdg.h"
 #include "th05/sprites/main_pat.h"
 #include "th05/formats/super.h"
 #include "th05/main/boss/boss.hpp"
@@ -62,7 +69,10 @@ extern lineset_t linesets[LINESET_COUNT];
 #define SHINKI_SPINLINE_MOVE_SPEED to_sp(0.25f)
 #define SHINKI_SPINLINE_TOP to_sp(80.0f)
 #define SHINKI_SPINLINE_BOTTOM to_sp(PLAYFIELD_H - 64)
+
+#define SHINKI_STAGE_BG_TOP (PLAYFIELD_TOP + (PLAYFIELD_H / 2) - 80)
 #define SHINKI_TYPE_D_BG_H 128
+#define SHINKI_TYPE_D_BG_TOP (PLAYFIELD_H - SHINKI_TYPE_D_BG_H)
 
 #define SHINKI_SPINLINE_MOVE_DURATION \
 	(SHINKI_SPINLINE_MOVE_W * SHINKI_SPINLINE_MOVE_SPEED)
@@ -498,7 +508,7 @@ void near shinki_bg_type_d_update(void)
 		particle = boss_particles;
 		i = 0;
 		while(i < BOSS_PARTICLE_COUNT) {
-			particle->origin.y.v = to_sp(PLAYFIELD_H - SHINKI_TYPE_D_BG_H);
+			particle->origin.y.v = to_sp(SHINKI_TYPE_D_BG_TOP);
 			particle->velocity.y.set(-1.0f);
 			i++;
 			particle++;
@@ -518,4 +528,156 @@ void near shinki_bg_type_d_update(void)
 		particle++;
 	}
 }
+
+void pascal near shinki_bg_render(void)
+{
+	if(boss.phase == 0) {
+		boss_backdrop_render(PLAYFIELD_LEFT, SHINKI_STAGE_BG_TOP, 1);
+	} else if(boss.phase == 1) {
+		unsigned char entrance_cel = (boss.phase_frame / 4);
+		if(entrance_cel < TILES_BB_CELS) {
+			boss_backdrop_render(PLAYFIELD_LEFT, SHINKI_STAGE_BG_TOP, 1);
+		} else {
+			playfield_fill_col_0();
+		}
+		tiles_bb_col = 15;
+		tiles_bb_put(bb_stage_seg, entrance_cel);
+	} else if(boss.phase < 4) {
+		playfield_fill_col_0();
+		shinki_bg_type_a_update_and_render();
+	} else if(boss.phase < 8) {
+		playfield_fill_col_0();
+		shinki_bg_type_b_update_and_render();
+	} else if(boss.phase < 12) {
+		playfield_fill_col_0();
+		shinki_bg_type_c_update_and_render();
+	} else {
+		playfield_bg_put(0, SHINKI_TYPE_D_BG_TOP, CDG_BG_2);
+		playfield_fillm_0_0_384_240_col_0();
+		shinki_bg_type_d_update();
+
+		grcg_setcolor(GC_RMW, 6);
+		shinki_bg_particles_render();
+		grcg_off();
+	}
+}
 /// ----------------
+
+/// Extra Stage - EX-Alice
+/// ----------------------
+
+static const screen_x_t HEXAGRAM_CENTER_X = (
+	PLAYFIELD_LEFT + (PLAYFIELD_W / 2)
+);
+static const vram_y_t HEXAGRAM_CENTER_Y = (PLAYFIELD_TOP + (PLAYFIELD_H / 2));
+
+#define exalice_hexagram_point_set(ret, radius, angle) \
+	vector2_at( \
+		ret, to_sp(HEXAGRAM_CENTER_X), to_sp(HEXAGRAM_CENTER_Y), radius, angle \
+	)
+
+void pascal near exalice_grcg_hexagram_put(subpixel_t radius, int angle)
+{
+	#define tri_point_0 drawpoint
+	extern SPPoint tri_point_1;
+	extern SPPoint tri_point_2;
+
+	grcg_circle(HEXAGRAM_CENTER_X, HEXAGRAM_CENTER_Y, TO_PIXEL(radius));
+	int i = 0;
+	while(i < 2) {
+		exalice_hexagram_point_set(tri_point_0, radius, angle);
+		exalice_hexagram_point_set(tri_point_1, radius, (angle + (0x100 / 3)));
+		exalice_hexagram_point_set(tri_point_2, radius, (angle - (0x100 / 3)));
+
+		TO_PIXEL_INPLACE(tri_point_0.x.v);
+		TO_PIXEL_INPLACE(tri_point_0.y.v);
+		TO_PIXEL_INPLACE(tri_point_1.x.v);
+		TO_PIXEL_INPLACE(tri_point_1.y.v);
+		TO_PIXEL_INPLACE(tri_point_2.x.v);
+		TO_PIXEL_INPLACE(tri_point_2.y.v);
+
+		grcg_line(
+			tri_point_0.x.v, tri_point_0.y.v, tri_point_1.x.v, tri_point_1.y.v
+		);
+		grcg_line(
+			tri_point_1.x.v, tri_point_1.y.v, tri_point_2.x.v, tri_point_2.y.v
+		);
+		grcg_line(
+			tri_point_0.x.v, tri_point_0.y.v, tri_point_2.x.v, tri_point_2.y.v
+		);
+
+		i++;
+		angle += (0x100 / 6);
+	}
+
+	#undef tri_point_0
+}
+
+void near exalice_hexagrams_update_and_render(void)
+{
+	enum exalice_hexagrams_state_t {
+		UNINITIALIZED = 0,
+		TURN_RIGHT = 1,
+		TURN_LEFT = 2,
+		STATE_COUNT,
+	};
+	extern exalice_hexagrams_state_t exalice_hexagrams_state;
+	int i;
+
+	lineset_t near &set = linesets[0];
+	if(exalice_hexagrams_state == UNINITIALIZED) {
+		for(i = 0; i < (LINESET_LINE_COUNT - 1); i++) {
+			set.radius[i].set(1.0f);
+			set.angle[i] = 0x00;
+		}
+		exalice_hexagrams_state = TURN_RIGHT;
+	}
+	for(i = (LINESET_LINE_COUNT - 2); i > 0; i--) {
+		set.radius[i] = set.radius[i - 1];
+		set.angle[i] = set.angle[i - 1];
+	}
+	set.radius[0] += 5.0f;
+	if(set.radius[0].v >= to_sp(320.0f)) {
+		set.radius[0].set(1.0f);
+		exalice_hexagrams_state = static_cast<exalice_hexagrams_state_t>(
+			STATE_COUNT - exalice_hexagrams_state
+		);
+	}
+	if(exalice_hexagrams_state == TURN_RIGHT) {
+		set.angle[0] += 0x01;
+	} else {
+		set.angle[0] -= 0x01;
+	}
+
+	grcg_setcolor(GC_RMW, 8);
+	exalice_grcg_hexagram_put(set.radius[18].v, set.angle[18]);
+	grcg_setcolor(GC_RMW, 9);
+	exalice_grcg_hexagram_put(set.radius[9].v, set.angle[9]);
+	if(boss.phase < 9 || boss.phase > 12) {
+		grcg_setcolor(GC_RMW, 15);
+	}
+	exalice_grcg_hexagram_put(set.radius[0].v, set.angle[0]);
+	grcg_off();
+
+	#undef state
+}
+
+void pascal near exalice_bg_render(void)
+{
+	if(boss.phase == 0) {
+		tiles_render_after_custom_bg(boss.phase_frame);
+	} else if(boss.phase == 1) {
+		unsigned char entrance_cel = (boss.phase_frame / 4);
+		playfield_fill_col_0();
+		tiles_bb_col = 15;
+		tiles_bb_put(bb_stage_seg, entrance_cel);
+	} else if(boss.phase < PHASE_BOSS_EXPLODE_BIG) {
+		playfield_fill_col_0();
+		exalice_hexagrams_update_and_render();
+	} else if(boss.phase == PHASE_BOSS_EXPLODE_BIG) {
+		tiles_render_all();
+	} else {
+		tiles_render_after_custom_bg(boss.phase_frame);
+	}
+}
+/// ----------------------
