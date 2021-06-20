@@ -2016,24 +2016,7 @@ loc_C518:
 		retn
 player_bomb	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C51A	proc near
-
-@@cel		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		mov	ax, _bb_playchar_seg
-		mov	_tiles_bb_seg, ax
-		call	tiles_bb_put_raw pascal, [bp+@@cel]
-		pop	bp
-		retn	2
-sub_C51A	endp
-
+include th04/main/player/bb_playchar_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2129,7 +2112,7 @@ bomb_reimu	proc near
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		call	sub_C51A pascal, ax
+		call	bb_playchar_put pascal, ax
 
 loc_C7AB:
 		jmp	loc_C849
@@ -2788,7 +2771,7 @@ bomb_yuuka	proc near
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		call	sub_C51A pascal, ax
+		call	bb_playchar_put pascal, ax
 
 loc_CDB1:
 		jmp	loc_CE4F

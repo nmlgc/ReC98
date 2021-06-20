@@ -8553,35 +8553,7 @@ loc_10028:
 		retn
 player_bomb	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1002A	proc near
-
-@@cel		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		cmp	_playchar, PLAYCHAR_REIMU
-		jnz	short loc_10038
-		mov	al, 0Fh
-		jmp	short loc_1003A
-; ---------------------------------------------------------------------------
-
-loc_10038:
-		mov	al, 2
-
-loc_1003A:
-		mov	_tiles_bb_col, al
-		mov	ax, _bb_playchar_seg
-		mov	_tiles_bb_seg, ax
-		call	tiles_bb_put_raw pascal, [bp+@@cel]
-		pop	bp
-		retn	2
-sub_1002A	endp
-
+include th04/main/player/bb_playchar_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -8786,7 +8758,7 @@ loc_1022A:
 		add	ax, -8
 
 loc_1023E:
-		call	sub_1002A pascal, ax
+		call	bb_playchar_put pascal, ax
 
 loc_10242:
 		jmp	loc_10307
