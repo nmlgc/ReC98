@@ -175,3 +175,64 @@ void pascal near bullet_template_tune_lunatic(void)
 	tune_for_playperf();
 	tune_for_lunatic();
 }
+
+void pascal near bullets_add_regular_easy(void)
+{
+	unsigned char speed;
+	unsigned char count;
+
+	if(bullet_zap.active) {
+		return;
+	}
+	count = bullet_template.count;
+	speed = bullet_template.speed.v;
+	bullets_add_regular_raw();
+	bullet_template.count = count;
+	bullet_template.speed.v = speed;
+}
+
+inline void keep_speed_from_being_mutated_when_calling(nearfunc_t_near func) {
+	unsigned char speed = bullet_template.speed.v;
+	func();
+	bullet_template.speed.v = speed;
+}
+
+void pascal near bullets_add_regular_normal(void)
+{
+	if(bullet_zap.active) {
+		return;
+	}
+	keep_speed_from_being_mutated_when_calling(bullets_add_regular_raw);
+}
+
+void pascal near bullets_add_regular_hard_lunatic(void)
+{
+	if(bullet_zap.active) {
+		return;
+	}
+	keep_speed_from_being_mutated_when_calling(bullets_add_regular_raw);
+}
+
+void pascal near bullets_add_special_easy(void)
+{
+	if(bullet_zap.active) {
+		return;
+	}
+	keep_speed_from_being_mutated_when_calling(bullets_add_special_raw);
+}
+
+void pascal near bullets_add_special_normal(void)
+{
+	if(bullet_zap.active) {
+		return;
+	}
+	keep_speed_from_being_mutated_when_calling(bullets_add_special_raw);
+}
+
+void pascal near bullets_add_special_hard_lunatic(void)
+{
+	if(bullet_zap.active) {
+		return;
+	}
+	keep_speed_from_being_mutated_when_calling(bullets_add_special_raw);
+}

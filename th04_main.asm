@@ -615,8 +615,8 @@ loc_ADFC:
 		mov	score_2CFFE, 100
 		mov	_playperf_min, 4
 		mov	_playperf_max, 16
-		mov	_bullets_add_regular, offset sub_1CEEE
-		mov	_bullets_add_special, offset sub_1CF4E
+		mov	_bullets_add_regular, offset bullets_add_regular_easy
+		mov	_bullets_add_special, offset bullets_add_special_easy
 		mov	_bullet_template_tune, offset bullet_template_tune_easy
 		jmp	@@ret
 ; ---------------------------------------------------------------------------
@@ -633,8 +633,8 @@ loc_ADFC:
 		mov	score_2CFFE, 400
 		mov	_playperf_min, 20
 		mov	_playperf_max, 32
-		mov	_bullets_add_regular, offset sub_1CF32
-		mov	_bullets_add_special, offset sub_1CF86
+		mov	_bullets_add_regular, offset bullets_add_regular_hard_lunatic
+		mov	_bullets_add_special, offset bullets_add_special_hard_lunatic
 		mov	_bullet_template_tune, offset bullet_template_tune_hard
 		jmp	short @@ret
 ; ---------------------------------------------------------------------------
@@ -644,8 +644,8 @@ loc_ADFC:
 		mov	_playperf, 22
 		mov	_playperf_min, 22
 		mov	_playperf_max, 34
-		mov	_bullets_add_regular, offset sub_1CF32
-		mov	_bullets_add_special, offset sub_1CF86
+		mov	_bullets_add_regular, offset bullets_add_regular_hard_lunatic
+		mov	_bullets_add_special, offset bullets_add_special_hard_lunatic
 		mov	_bullet_template_tune, offset bullet_template_tune_lunatic
 		jmp	short @@ret
 ; ---------------------------------------------------------------------------
@@ -656,8 +656,8 @@ loc_ADFC:
 		mov	_playperf_max, 20
 
 @@tune_normal:
-		mov	_bullets_add_regular, offset sub_1CF16
-		mov	_bullets_add_special, offset sub_1CF6A
+		mov	_bullets_add_regular, offset bullets_add_regular_normal
+		mov	_bullets_add_special, offset bullets_add_special_normal
 		mov	_bullet_template_tune, offset bullet_template_tune_normal
 
 @@ret:
@@ -28217,149 +28217,12 @@ main_033_TEXT	segment	byte public 'CODE' use16
 	BULLET_TEMPLATE_TUNE_NORMAL procdesc near
 	BULLET_TEMPLATE_TUNE_HARD procdesc near
 	BULLET_TEMPLATE_TUNE_LUNATIC procdesc near
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1CEEE	proc near
-
-var_2		= byte ptr -2
-var_1		= byte ptr -1
-
-		enter	2, 0
-		cmp	_bullet_zap_active, 0
-		jnz	short locret_1CF14
-		mov	al, _bullet_template.count
-		mov	[bp+var_2], al
-		mov	al, _bullet_template.speed
-		mov	[bp+var_1], al
-		call	bullets_add_regular_raw
-		mov	al, [bp+var_2]
-		mov	_bullet_template.count, al
-		mov	al, [bp+var_1]
-		mov	_bullet_template.speed, al
-
-locret_1CF14:
-		leave
-		retn
-sub_1CEEE	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1CF16	proc near
-
-var_1		= byte ptr -1
-
-		enter	2, 0
-		cmp	_bullet_zap_active, 0
-		jnz	short locret_1CF30
-		mov	al, _bullet_template.speed
-		mov	[bp+var_1], al
-		call	bullets_add_regular_raw
-		mov	al, [bp+var_1]
-		mov	_bullet_template.speed, al
-
-locret_1CF30:
-		leave
-		retn
-sub_1CF16	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1CF32	proc near
-
-var_1		= byte ptr -1
-
-		enter	2, 0
-		cmp	_bullet_zap_active, 0
-		jnz	short locret_1CF4C
-		mov	al, _bullet_template.speed
-		mov	[bp+var_1], al
-		call	bullets_add_regular_raw
-		mov	al, [bp+var_1]
-		mov	_bullet_template.speed, al
-
-locret_1CF4C:
-		leave
-		retn
-sub_1CF32	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1CF4E	proc near
-
-var_1		= byte ptr -1
-
-		enter	2, 0
-		cmp	_bullet_zap_active, 0
-		jnz	short locret_1CF68
-		mov	al, _bullet_template.speed
-		mov	[bp+var_1], al
-		call	bullets_add_special_raw
-		mov	al, [bp+var_1]
-		mov	_bullet_template.speed, al
-
-locret_1CF68:
-		leave
-		retn
-sub_1CF4E	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1CF6A	proc near
-
-var_1		= byte ptr -1
-
-		enter	2, 0
-		cmp	_bullet_zap_active, 0
-		jnz	short locret_1CF84
-		mov	al, _bullet_template.speed
-		mov	[bp+var_1], al
-		call	bullets_add_special_raw
-		mov	al, [bp+var_1]
-		mov	_bullet_template.speed, al
-
-locret_1CF84:
-		leave
-		retn
-sub_1CF6A	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1CF86	proc near
-
-var_1		= byte ptr -1
-
-		enter	2, 0
-		cmp	_bullet_zap_active, 0
-		jnz	short locret_1CFA0
-		mov	al, _bullet_template.speed
-		mov	[bp+var_1], al
-		call	bullets_add_special_raw
-		mov	al, [bp+var_1]
-		mov	_bullet_template.speed, al
-
-locret_1CFA0:
-		leave
-		retn
-sub_1CF86	endp
-
+	BULLETS_ADD_REGULAR_EASY procdesc pascal near
+	BULLETS_ADD_REGULAR_NORMAL procdesc pascal near
+	BULLETS_ADD_REGULAR_HARD_LUNATIC procdesc pascal near
+	BULLETS_ADD_SPECIAL_EASY procdesc pascal near
+	BULLETS_ADD_SPECIAL_NORMAL procdesc pascal near
+	BULLETS_ADD_SPECIAL_HARD_LUNATIC procdesc pascal near
 
 ; =============== S U B	R O U T	I N E =======================================
 

@@ -221,6 +221,15 @@ extern nearfunc_t_near bullet_template_tune;
 	void near bullets_add_regular(void);
 	void near bullets_add_special(void);
 #else
+	// TH04 additionally uses pointless per-difficulty wrappers around these
+	// spawn functions that don't actually do anything difficulty-specific.
+	void pascal near bullets_add_regular_easy(void);
+	void pascal near bullets_add_regular_normal(void);
+	void pascal near bullets_add_regular_hard_lunatic(void);
+	void pascal near bullets_add_special_easy(void);
+	void pascal near bullets_add_special_normal(void);
+	void pascal near bullets_add_special_hard_lunatic(void);
+
 	// Set to the version of the wrapper functions above that match the
 	// current difficulty.
 	extern nearfunc_t_near bullets_add_regular;
