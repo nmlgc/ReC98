@@ -28227,50 +28227,7 @@ main_033_TEXT	segment	byte public 'CODE' use16
 	_bullets_add_special_fixedspeed procdesc near
 	BULLET_VELOCITY_AND_ANGLE_SET procdesc pascal near \
 		i:word
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1D1CD	proc near
-		push	bp
-		mov	bp, sp
-		mov	al, _bullet_template.speed
-		mov	ah, 0
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	_bullet_template.speed, al
-		mov	ah, 0
-		mov	cx, ax
-		mov	al, _playperf
-		mov	ah, 0
-		imul	cx
-		mov	cx, ax
-		mov	bx, 16
-		mov	ax, cx
-		cwd
-		idiv	bx
-		mov	cx, ax
-		mov	al, _bullet_template.speed
-		add	al, cl
-		mov	_bullet_template.speed, al
-		cmp	_bullet_template.speed, (8 shl 4)
-		jbe	short loc_1D20A
-		mov	_bullet_template.speed, (8 shl 4)
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_1D20A:
-		cmp	_bullet_template.speed, 8
-		jnb	short loc_1D216
-		mov	_bullet_template.speed, 8
-
-loc_1D216:
-		pop	bp
-		retn
-sub_1D1CD	endp
+	_bullet_template_speedtune_for_pl procdesc near
 
 include th04/main/bullet/patnum_for_angle.asm
 
@@ -28316,7 +28273,7 @@ loc_1D282:
 loc_1D286:
 		cmp	_group_fixedspeed, 0
 		jnz	short loc_1D290
-		call	sub_1D1CD
+		call	_bullet_template_speedtune_for_pl
 
 loc_1D290:
 		mov	al, 0

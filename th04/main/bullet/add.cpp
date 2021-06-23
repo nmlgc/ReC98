@@ -404,3 +404,18 @@ no_aim:
 	group_i_absolute_angle = (angle + bullet_template.angle);
 	return done;
 }
+
+void near bullet_template_speedtune_for_playperf(void)
+{
+	bullet_template.speed.v /= 2;
+	subpixel_t speed_from_playperf = bullet_template.speed.v;
+	speed_from_playperf *= playperf;
+	speed_from_playperf /= 16;
+
+	bullet_template.speed.v += speed_from_playperf;
+	if(bullet_template.speed > to_sp8(8.0f)) {
+		bullet_template.speed.set(8.0f);
+	} else if(bullet_template.speed < to_sp8(0.5f)) {
+		bullet_template.speed.set(0.5f);
+	}
+}
