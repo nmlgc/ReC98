@@ -28228,8 +28228,8 @@ main_033_TEXT	segment	byte public 'CODE' use16
 	BULLET_VELOCITY_AND_ANGLE_SET procdesc pascal near \
 		i:word
 	_bullet_template_speedtune_for_pl procdesc near
-
-include th04/main/bullet/patnum_for_angle.asm
+	BULLET_PATNUM_FOR_ANGLE procdesc pascal near \
+		angle:byte
 
 ; =============== S U B	R O U T	I N E =======================================
 

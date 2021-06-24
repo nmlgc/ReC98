@@ -419,3 +419,12 @@ void near bullet_template_speedtune_for_playperf(void)
 		bullet_template.speed.set(0.5f);
 	}
 }
+
+static const unsigned char ANGLE_PER_SPRITE = (0x80 / BULLET_D_CELS);
+
+unsigned char pascal near bullet_patnum_for_angle(unsigned char angle)
+{
+	return (
+		((angle + (ANGLE_PER_SPRITE / 2) - 1) & (0x80 - 1)) / ANGLE_PER_SPRITE
+	);
+}

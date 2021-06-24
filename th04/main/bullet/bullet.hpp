@@ -107,7 +107,7 @@ void pascal near bullet_update_patnum(bullet_t near *bullet);
 
 // Returns the offset for a directional bullet sprite that shows the given
 // [angle].
-int pascal near bullet_patnum_for_angle(unsigned char angle);
+unsigned char pascal near bullet_patnum_for_angle(unsigned char angle);
 
 // Turns every 4th bullet into a point item when zapping bullets.
 extern bool bullet_zap_drop_point_items;
