@@ -1,6 +1,3 @@
-#include "th04/main/playperf.hpp"
-#include "th04/main/bullet/bullet.hpp"
-
 void pascal near bullets_add_regular_raw(void);
 void pascal near bullets_add_special_raw(void);
 
@@ -9,6 +6,12 @@ void pascal near bullets_add_special_raw(void);
 /// Has no reason to be global.
 
 extern bool group_fixedspeed;
+
+// "(group_i * bullet_template.delta.spread_angle) is probably too expensive,
+// let's rather do an addition for each additional spawned bullet :zunpet:"
+extern unsigned char group_i_spread_angle;
+
+extern unsigned char group_i_absolute_angle;
 /// ---------------
 
 #define tmpl bullet_template
@@ -256,4 +259,148 @@ void near bullets_add_special_fixedspeed(void)
 	group_fixedspeed = true;
 	bullets_add_special();
 	group_fixedspeed = false;
+}
+
+#define last_bullet_in_group(group_ii) \
+	(group_i >= (bullet_template.count - 1))
+
+// Necessary to compile the switch statement in bullet_velocity_and_angle_set()
+// to a binary search. Strangely, it's not used for the functions above?
+#pragma option -G
+
+// Sets the bullet template's velocity for bullet #[group_i] in the template's
+// current group, as well as [group_i_absolute_angle]. Returns true if this
+// was the last bullet for this group.
+bool16 pascal near bullet_velocity_and_angle_set(int group_i)
+{
+	int angle = 0x00;
+	unsigned char speed;
+	bool done;
+
+	// Due to this default, invalid group values lead to the spawn functions
+	// repeatedly calling this function, until they completely filled the
+	// pellet / 16×16 part of the array with identical bullets using the given
+	// angle and speed.
+	// (Not really a ZUN bug until we can discover a game state where this can
+	// actually happen.)
+	done = false;
+	speed = bullet_template.speed.v;
+
+	switch(bullet_template.group) {
+	case BG_SPREAD:
+	case BG_SPREAD_AIMED:
+		if(bullet_template.count & 1) {
+			// Odd-numbered spreads always contain a bullet in the center.
+			if(group_i == 0) {
+				group_i_spread_angle = 0x00;
+				angle = 0x00;
+			} else if(group_i & 1) {
+				// Symmetric version of even-numbered bullets
+				group_i_spread_angle += bullet_template.delta.spread_angle;
+				angle = (0x100 - group_i_spread_angle);
+			} else {
+				angle = group_i_spread_angle;
+			}
+		} else {
+			// Even-numbered spreads are aimed around the 0° point, and
+			// therefore need to be shifted by half of the angle. Yes, this
+			// whole separate branch, with its whole pointlessly mirrored
+			// logic, wouldn't have been necessary, and ZUN could have just
+			// added the angle offset after the fact...
+			if(group_i == 0) {
+				group_i_spread_angle = (bullet_template.delta.spread_angle / 2);
+				angle = group_i_spread_angle;
+			} else if(group_i & 1) {
+				// Symmetric version of even-numbered bullets
+				angle = (0x100 - group_i_spread_angle);
+			} else {
+				group_i_spread_angle += bullet_template.delta.spread_angle;
+				angle = group_i_spread_angle;
+			}
+		}
+		if(last_bullet_in_group(group_i)) {
+			done = true;
+		}
+		if(bullet_template.group == BG_SPREAD) {
+			goto no_aim;
+		}
+		goto aim;
+
+	case BG_RING:
+		angle = ((group_i * 0x100) / bullet_template.count);
+		if(last_bullet_in_group(group_i)) {
+			done = true;
+		}
+		goto no_aim;
+	case BG_RING_AIMED:
+		angle = ((group_i * 0x100) / bullet_template.count);
+		if(last_bullet_in_group(group_i)) {
+			done = true;
+		}
+		goto aim;
+
+	// All these 16-bit randring operations seem to waste 8 bits of randomness,
+	// but each next16 call only advances the pointer by one byte anyway.
+	case BG_FORCESINGLE_RANDOM_ANGLE:
+		angle = randring2_next16();
+		done = true;
+		goto no_aim;
+
+	case BG_FORCESINGLE:
+	case BG_SINGLE:
+		done = true;
+		goto no_aim;
+
+	case BG_RANDOM_ANGLE:
+		angle = randring2_next16();
+		if(last_bullet_in_group(group_i)) {
+			done = true;
+		}
+		goto no_aim;
+	case BG_RANDOM_ANGLE_AND_SPEED:
+		angle = randring2_next16();
+		speed += randring2_next16_and(to_sp(2.0f) - 1);
+		if(last_bullet_in_group(group_i)) {
+			done = true;
+		}
+		goto no_aim;
+	case BG_RANDOM_CONSTRAINED_ANGLE_AIMED:
+		angle = randring2_next16_and(0x1F);
+		angle -= 0x10;
+		if(last_bullet_in_group(group_i)) {
+			done = true;
+		}
+		goto aim;
+
+	case BG_FORCESINGLE_AIMED:
+	case BG_SINGLE_AIMED:
+		done = true;
+		goto aim;
+
+	case BG_STACK:
+	case BG_STACK_AIMED:
+		speed += (bullet_template.delta.stack_speed * group_i);
+		if(
+			last_bullet_in_group(group_i) ||
+			(bullet_template.speed >= to_sp8(10.0f))
+		) {
+			done = true;
+		}
+		if(bullet_template.group == BG_STACK) {
+			goto no_aim;
+		}
+		goto aim;
+	}
+aim:
+	angle += iatan2(
+		(player_pos.cur.y - bullet_template.origin.y),
+		(player_pos.cur.x - bullet_template.origin.x)
+	);
+
+no_aim:
+	vector2_near(
+		bullet_template.velocity, (angle + bullet_template.angle), speed
+	);
+	group_i_absolute_angle = (angle + bullet_template.angle);
+	return done;
 }

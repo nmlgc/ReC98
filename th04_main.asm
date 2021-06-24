@@ -28225,272 +28225,8 @@ main_033_TEXT	segment	byte public 'CODE' use16
 	BULLETS_ADD_SPECIAL_HARD_LUNATIC procdesc pascal near
 	_bullets_add_regular_fixedspeed procdesc near
 	_bullets_add_special_fixedspeed procdesc near
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1CFC8	proc near
-
-var_4		= byte ptr -4
-@@speed		= byte ptr -3
-var_2		= word ptr -2
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 4
-		push	si
-		mov	si, [bp+arg_0]
-		mov	[bp+var_2], 0
-		mov	[bp+var_4], 0
-		mov	al, _bullet_template.speed
-		mov	[bp+@@speed], al
-		mov	al, _bullet_template.BT_group
-		mov	ah, 0
-		cmp	ax, BG_RING_AIMED
-		jz	@@ring_aimed
-		jg	short loc_1D027
-		cmp	ax, BG_RANDOM_ANGLE
-		jz	@@random_angle
-		jg	short loc_1D00F
-		or	ax, ax
-		jz	@@single
-		cmp	ax, BG_SINGLE_AIMED
-		jz	@@single_aimed
-		cmp	ax, BG_FORCESINGLE_RANDOM_ANGLE
-		jz	@@single_random_angle
-		jmp	@@aim
-; ---------------------------------------------------------------------------
-
-loc_1D00F:
-		cmp	ax, BG_RANDOM_ANGLE_AND_SPEED
-		jz	@@random_angle_and_speed
-		cmp	ax, BG_RANDOM_CONSTRAINED_ANGLE_AIMED
-		jz	@@spread_random_angle_aimed
-		cmp	ax, BG_RING
-		jz	@@ring
-		jmp	@@aim
-; ---------------------------------------------------------------------------
-
-loc_1D027:
-		cmp	ax, BG_STACK_AIMED
-		jz	@@stack
-		jg	short loc_1D044
-		cmp	ax, BG_SPREAD
-		jz	short @@spread
-		cmp	ax, BG_SPREAD_AIMED
-		jz	short @@spread
-		cmp	ax, BG_STACK
-		jz	@@stack
-		jmp	@@aim
-; ---------------------------------------------------------------------------
-
-loc_1D044:
-		cmp	ax, BG_FORCESINGLE
-		jz	@@single
-		cmp	ax, BG_FORCESINGLE_AIMED
-		jz	@@single_aimed
-		jmp	@@aim
-; ---------------------------------------------------------------------------
-
-@@spread:
-		test	_bullet_template.count, 1
-		jz	short loc_1D088
-		or	si, si
-		jnz	short loc_1D06C
-		mov	byte_2CFF6, 0
-		mov	[bp+var_2], 0
-		jmp	short loc_1D0B0
-; ---------------------------------------------------------------------------
-
-loc_1D06C:
-		test	si, 1
-		jz	short loc_1D0A8
-		mov	al, _bullet_template.BT_delta.spread_angle
-		add	byte_2CFF6, al
-
-loc_1D079:
-		mov	al, byte_2CFF6
-		mov	ah, 0
-		mov	dx, 100h
-		sub	dx, ax
-		mov	[bp+var_2], dx
-		jmp	short loc_1D0B0
-; ---------------------------------------------------------------------------
-
-loc_1D088:
-		or	si, si
-		jnz	short loc_1D09B
-		mov	al, _bullet_template.BT_delta.spread_angle
-		mov	ah, 0
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	byte_2CFF6, al
-		jmp	short loc_1D0A8
-; ---------------------------------------------------------------------------
-
-loc_1D09B:
-		test	si, 1
-		jnz	short loc_1D079
-		mov	al, _bullet_template.BT_delta.spread_angle
-		add	byte_2CFF6, al
-
-loc_1D0A8:
-		mov	al, byte_2CFF6
-		mov	ah, 0
-		mov	[bp+var_2], ax
-
-loc_1D0B0:
-		mov	al, _bullet_template.count
-		mov	ah, 0
-		dec	ax
-		cmp	ax, si
-		jg	short loc_1D0BE
-		mov	[bp+var_4], 1
-
-loc_1D0BE:
-		cmp	_bullet_template.BT_group, BG_SPREAD
-		jnz	@@aim
-		jmp	@@static
-; ---------------------------------------------------------------------------
-
-@@ring:
-		mov	ax, si
-		shl	ax, 8
-		mov	dl, _bullet_template.count
-		mov	dh, 0
-		push	dx
-		cwd
-		pop	bx
-		idiv	bx
-		mov	[bp+var_2], ax
-		mov	al, _bullet_template.count
-		mov	ah, 0
-		dec	ax
-		cmp	ax, si
-		jg	@@static
-		jmp	short @@single
-; ---------------------------------------------------------------------------
-
-@@ring_aimed:
-		mov	ax, si
-		shl	ax, 8
-		mov	dl, _bullet_template.count
-		mov	dh, 0
-		push	dx
-		cwd
-		pop	bx
-		idiv	bx
-		mov	[bp+var_2], ax
-		mov	al, _bullet_template.count
-		mov	ah, 0
-		dec	ax
-		cmp	ax, si
-		jg	@@aim
-		jmp	short @@single_aimed
-; ---------------------------------------------------------------------------
-
-@@single_random_angle:
-		call	randring2_next16
-		mov	[bp+var_2], ax
-
-@@single:
-		mov	[bp+var_4], 1
-		jmp	@@static
-; ---------------------------------------------------------------------------
-
-@@random_angle:
-		call	randring2_next16
-		mov	[bp+var_2], ax
-		mov	al, _bullet_template.count
-		mov	ah, 0
-		dec	ax
-		cmp	ax, si
-		jg	short @@static
-		jmp	short @@single
-; ---------------------------------------------------------------------------
-
-@@random_angle_and_speed:
-		call	randring2_next16
-		mov	[bp+var_2], ax
-		call	randring2_next16_and pascal, 1Fh
-		add	al, [bp+@@speed]
-		mov	[bp+@@speed], al
-		mov	al, _bullet_template.count
-		mov	ah, 0
-		dec	ax
-		cmp	ax, si
-		jg	short @@static
-		jmp	short @@single
-; ---------------------------------------------------------------------------
-
-@@spread_random_angle_aimed:
-		call	randring2_next16_and pascal, 1Fh
-		mov	[bp+var_2], ax
-		sub	[bp+var_2], 10h
-		mov	al, _bullet_template.count
-		mov	ah, 0
-		dec	ax
-		cmp	ax, si
-		jg	short @@aim
-
-@@single_aimed:
-		mov	[bp+var_4], 1
-		jmp	short @@aim
-; ---------------------------------------------------------------------------
-
-@@stack:
-		mov	al, _bullet_template.BT_delta.stack_speed
-		mov	ah, 0
-		imul	si
-		add	al, [bp+@@speed]
-		mov	[bp+@@speed], al
-		mov	al, _bullet_template.count
-		mov	ah, 0
-		dec	ax
-		cmp	ax, si
-		jle	short loc_1D182
-		cmp	_bullet_template.speed, (10 shl 4)
-		jb	short loc_1D186
-
-loc_1D182:
-		mov	[bp+var_4], 1
-
-loc_1D186:
-		cmp	_bullet_template.BT_group, BG_STACK
-		jz	short @@static
-
-@@aim:
-		mov	ax, _player_pos.cur.y
-		sub	ax, _bullet_template.BT_origin.y
-		push	ax
-		mov	ax, _player_pos.cur.x
-		sub	ax, _bullet_template.BT_origin.x
-		push	ax
-		call	iatan2
-		add	[bp+var_2], ax
-
-@@static:
-		push	offset _bullet_template.BT_velocity
-		mov	al, byte ptr [bp+var_2]
-		add	al, _bullet_template.BT_angle
-		push	ax
-		mov	al, [bp+@@speed]
-		mov	ah, 0
-		push	ax
-		call	vector2_near
-		mov	al, byte ptr [bp+var_2]
-		add	al, _bullet_template.BT_angle
-		mov	angle_2D008, al
-		mov	al, [bp+var_4]
-		mov	ah, 0
-		pop	si
-		leave
-		retn	2
-sub_1CFC8	endp
-
+	BULLET_VELOCITY_AND_ANGLE_SET procdesc pascal near \
+		i:word
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -28596,7 +28332,7 @@ public BULLETS_ADD_REGULAR_RAW
 bullets_add_regular_raw	proc near
 
 @@spawn_state		= byte ptr -5
-var_4		= byte ptr -4
+@@done		= byte ptr -4
 @@move_state		= byte ptr -3
 @@i		= word ptr -2
 
@@ -28692,24 +28428,23 @@ loc_1D33C:
 		mov	[si+bullet_t.BULLET_patnum], ax
 		mov	al, [bp+@@spawn_state]
 		mov	[si+bullet_t.spawn_state], al
-		push	di
-		call	sub_1CFC8
-		mov	[bp+var_4], al
+		call	BULLET_VELOCITY_AND_ANGLE_SET pascal, di
+		mov	[bp+@@done], al
 		cmp	_bullet_template.patnum, PAT_BULLET16_D
 		jb	short loc_1D391
-		call	bullet_patnum_for_angle pascal, word ptr angle_2D008
+		call	bullet_patnum_for_angle pascal, word ptr _group_i_absolute_angle
 		mov	ah, 0
 		add	[si+bullet_t.BULLET_patnum], ax
 
 loc_1D391:
 		mov	eax, _bullet_template.BT_velocity
 		mov	dword ptr [si+bullet_t.pos.velocity], eax
-		mov	al, angle_2D008
+		mov	al, _group_i_absolute_angle
 		mov	[si+bullet_t.BULLET_angle], al
 		mov	al, _bullet_template.speed
 		mov	[si+bullet_t.speed_final], al
 		mov	[si+bullet_t.speed_cur], al
-		cmp	[bp+var_4], 0
+		cmp	[bp+@@done], 0
 		jnz	short loc_1D3BB
 		inc	di
 
@@ -28736,7 +28471,7 @@ public BULLETS_ADD_SPECIAL_RAW
 bullets_add_special_raw	proc near
 
 @@spawn_state		= byte ptr -4
-var_3		= byte ptr -3
+@@done		= byte ptr -3
 @@i		= word ptr -2
 
 		push	bp
@@ -28802,24 +28537,23 @@ loc_1D40A:
 		mov	[si+bullet_t.BULLET_patnum], ax
 		mov	al, [bp+@@spawn_state]
 		mov	[si+bullet_t.spawn_state], al
-		push	di
-		call	sub_1CFC8
-		mov	[bp+var_3], al
+		call	BULLET_VELOCITY_AND_ANGLE_SET pascal, di
+		mov	[bp+@@done], al
 		cmp	_bullet_template.patnum, PAT_BULLET16_D
 		jb	short loc_1D460
-		call	bullet_patnum_for_angle pascal, word ptr angle_2D008
+		call	bullet_patnum_for_angle pascal, word ptr _group_i_absolute_angle
 		mov	ah, 0
 		add	[si+bullet_t.BULLET_patnum], ax
 
 loc_1D460:
 		mov	eax, _bullet_template.BT_velocity
 		mov	dword ptr [si+bullet_t.pos.velocity], eax
-		mov	al, angle_2D008
+		mov	al, _group_i_absolute_angle
 		mov	[si+bullet_t.BULLET_angle], al
 		mov	al, _bullet_template.speed
 		mov	[si+bullet_t.speed_final], al
 		mov	[si+bullet_t.speed_cur], al
-		cmp	[bp+var_3], 0
+		cmp	[bp+@@done], 0
 		jnz	short loc_1D48A
 		inc	di
 
@@ -34969,7 +34703,8 @@ include th04/formats/scoredat[bss].asm
 byte_2CFF2	db ?
 		db ?
 word_2CFF4	dw ?
-byte_2CFF6	db ?
+public _group_i_spread_angle
+_group_i_spread_angle	db ?
 include th04/main/bullet/update[bss].asm
 		db ?
 public _stage_graze
@@ -34980,7 +34715,8 @@ _bullets_add_regular	dw ?
 _bullets_add_special	dw ?
 include th04/main/bullet/tune[bss].asm
 include th04/main/bullet/pellet_r[bss].asm
-angle_2D008	db ?
+public _group_i_absolute_angle
+_group_i_absolute_angle	db ?
 	evendata
 public _bombing_disabled
 _bombing_disabled	db ?

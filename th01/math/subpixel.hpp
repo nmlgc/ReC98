@@ -21,6 +21,10 @@ inline subpixel_t to_sp(float pixel_v) {
 	return static_cast<subpixel_t>(pixel_v * 16.0f);
 }
 
+inline unsigned char to_sp8(float pixel_v) {
+	return static_cast<unsigned char>(to_sp(pixel_v));
+}
+
 template <class SubpixelType, class PixelType> class SubpixelBase {
 public:
 	typedef SubpixelBase<SubpixelType, PixelType> SelfType;

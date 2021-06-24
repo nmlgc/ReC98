@@ -244,6 +244,62 @@ Calling conventions can be added before the `*`.
 * Sequence of the individual cases is identical in both C and ASM
 * Multiple cases with the same offset in the table, to code that doesn't
   return? Code was compiled with `-O`
+* With the `-G` (Generate for speed) option, complicated `switch` statements
+  that require both value and jump tables are compiled to a binary search with
+  regular conditional branches:
+
+  ```c
+  switch(foo) {
+  case 0x4B: /* […] */ break;
+  case 0x4D: /* […] */ break;
+  case 0x11: /* […] */ break;
+  case 0x1F: /* […] */ break;
+  case 0x20: /* […] */ break;
+  case 0x17: /* […] */ break;
+  case 0x26: /* […] */ break;
+  case 0x19: /* […] */ break;
+  case 0x01: /* […] */ break;
+  case 0x1C: /* […] */ break;
+  }
+  ```
+
+  Resulting ASM:
+
+  ```asm
+  @@switch:
+    MOV AX, foo
+    CMP AX, 1Fh
+    JZ  @@case_1Fh
+    JG  @@GT_1Fh
+    CMP AX, 17h
+    JZ  @@case_17h
+    JG  @@GT_17h_LT_1Fh
+    CMP AX, 01h
+    JZ  @@case_01h
+    CMP AX, 11h
+    JZ  @@case_11h
+    JMP @@no_case_found
+
+  @@GT_17h_LT_1Fh:
+    CMP AX, 1Ch
+    JZ  @@case_1Ch
+    JMP @@no_case_found
+
+  @@GT_1Fh:
+    CMP AX, 4Bh
+    JZ  @@case_4Bh
+    JG  @@GT_4Bh
+    CMP AX, 20h
+    JZ  @@case_
+    CMP AX, 26h
+    JZ  @@case_26h
+    JMP @@no_case_found
+
+  @@GT_4Bh:
+    CMP AX, 4Dh
+    JZ  @@case_4Dh
+    JMP @@no_case_found
+  ```
 
 ## Function calls
 
