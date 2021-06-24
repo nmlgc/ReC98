@@ -946,7 +946,7 @@ sub_B1D0	proc near
 		mov	word_259A0, 30h	; '0'
 		mov	byte_259A3, 0
 		mov	_miss_time, 0
-		mov	byte_259A9, 0
+		mov	_player_is_hit, 0
 		mov	_player_invincibility_time, STAGE_START_INVINCIBILITY_FRAMES
 		mov	_stage_point_items_collected, 0
 		mov	_dream_items_collected, 0
@@ -8532,7 +8532,7 @@ player_bomb	proc near
 		cmp	_miss_time, MISS_ANIM_FRAMES
 		jbe	short loc_10028
 		mov	_miss_time, 0
-		mov	byte_259A9, 0
+		mov	_player_is_hit, 0
 		mov	byte_259A3, 0
 
 loc_FFED:
@@ -9008,7 +9008,7 @@ sub_1042A	proc near
 		mov	word_25608, 0
 		mov	byte_2560A, 0
 		mov	_shot_time, 0
-		mov	_player_is_hit, 0
+		mov	byte_259A7, 0
 		pop	bp
 		retn
 sub_1042A	endp
@@ -9500,11 +9500,11 @@ var_1     	= byte ptr -1
 		dec	_player_invincibility_time
 
 loc_10ACF:
-		cmp	byte_259A9, 0
+		cmp	_player_is_hit, 0
 		jz	short loc_10B11
 		cmp	_player_invincibility_time, 0
 		jz	short loc_10AE4
-		mov	byte_259A9, 0
+		mov	_player_is_hit, 0
 		jmp	short loc_10B11
 ; ---------------------------------------------------------------------------
 
@@ -9515,7 +9515,7 @@ loc_10AE4:
 
 loc_10AF1:
 		mov	_miss_time, MISS_ANIM_FRAMES + DEATHBOMB_WINDOW
-		mov	byte_259A9, 0
+		mov	_player_is_hit, 0
 		mov	_player_invincibility_time, MISS_INVINCIBILITY_FRAMES
 		mov	byte_259A3, 48h	; 'H'
 		mov	_player_pos.velocity.x, 0
@@ -16293,7 +16293,7 @@ loc_15E97:
 		add	ax, di
 		cmp	ax, _player_pos.cur.x
 		jl	short loc_15EBC
-		mov	byte_259A9, 1
+		mov	_player_is_hit, 1
 
 loc_15EBC:
 		inc	[bp+var_2]
@@ -17911,7 +17911,7 @@ loc_16D53:
 		sub	ax, [bp+var_4]
 		cmp	ax, 180h
 		jnb	short loc_16D7E
-		mov	byte_259A9, 1
+		mov	_player_is_hit, 1
 
 loc_16D7E:
 		mov	ax, [si+4]
@@ -19884,7 +19884,7 @@ var_1		= byte ptr -1
 		add	ax, (12 shl 4)
 		cmp	ax, (24 shl 4)
 		jnb	short loc_17ECA
-		mov	byte_259A9, 1
+		mov	_player_is_hit, 1
 		jmp	short loc_17F3C
 ; ---------------------------------------------------------------------------
 
@@ -23834,7 +23834,7 @@ loc_1A16C:
 		sub	ax, [bp+var_4]
 		cmp	ax, (24 shl 4)
 		jnb	short loc_1A199
-		mov	byte_259A9, 1
+		mov	_player_is_hit, 1
 
 loc_1A199:
 		cmp	word ptr [si+0Eh], 38h ; '8'
@@ -26377,7 +26377,7 @@ loc_1BBA8:
 		add	ax, (24 shl 4)
 		cmp	ax, _player_pos.cur.y
 		jle	short locret_1BC2A
-		mov	byte_259A9, 1
+		mov	_player_is_hit, 1
 
 locret_1BC2A:
 		leave
@@ -28031,7 +28031,7 @@ loc_1CA49:
 		cmp	dx, (8 shl 4)
 		ja	short loc_1CAC5
 		mov	[si+bullet_t.flag], 2
-		mov	byte_259A9, 1
+		mov	_player_is_hit, 1
 		jmp	short loc_1CAF8
 ; ---------------------------------------------------------------------------
 
@@ -28262,7 +28262,7 @@ loc_1D241:
 		add	ax, (4 shl 4)
 		cmp	ax, (8 shl 4)
 		ja	short loc_1D286
-		mov	byte_259A9, 1
+		mov	_player_is_hit, 1
 
 loc_1D282:
 		mov	al, 1
@@ -30809,7 +30809,7 @@ loc_1ECBC:
 		sub	ax, [bp+var_4]
 		cmp	ax, 180h
 		jnb	short loc_1ED06
-		mov	byte_259A9, 1
+		mov	_player_is_hit, 1
 
 loc_1ED06:
 		inc	di
@@ -34570,9 +34570,9 @@ byte_259A3	db ?
 _power	db ?
 _shot_level	db ?
 _shot_time	db ?
-include th01/main/player_is_hit[bss].asm
+byte_259A7	db ?
 		db    ?	;
-byte_259A9	db ?
+include th01/main/player_is_hit[bss].asm
 public _miss_time, _stage_point_items_collected, _dream_items_collected
 _miss_time	db ?
 _stage_point_items_collected	db ?
