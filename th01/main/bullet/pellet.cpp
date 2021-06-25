@@ -447,7 +447,7 @@ inline bool16 overlaps_shot(
 	screen_x_t pellet_left, screen_y_t pellet_top, int i
 )
 {
-	return overlap_lt_gt(
+	return overlap_xywh_xywh_lt_gt(
 		pellet_left, pellet_top, PELLET_W, PELLET_H,
 		Shots.left[i], Shots.top[i], SHOT_W, SHOT_H
 	);
@@ -455,7 +455,7 @@ inline bool16 overlaps_shot(
 
 inline bool16 overlaps_orb(screen_x_t pellet_left, screen_y_t pellet_top)
 {
-	return overlap_lt_gt(
+	return overlap_xywh_xywh_lt_gt(
 		pellet_left, pellet_top, PELLET_W, PELLET_H,
 		orb_cur_left, orb_cur_top, ORB_W, ORB_H
 	);
@@ -519,7 +519,7 @@ bool16 CPellets::visible_after_hittests_for_cur(
 		pellet_destroy_score_delta += PELLET_DESTROY_SCORE;
 		return true;
 	}
-	if((player_deflecting == true) && (overlap_lt_gt(
+	if((player_deflecting == true) && (overlap_xywh_xywh_lt_gt(
 		pellet_left,
 		pellet_top,
 		PELLET_W,

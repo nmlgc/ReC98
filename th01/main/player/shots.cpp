@@ -85,7 +85,7 @@ bool16 CShots::hittest_orb(int i, screen_x_t orb_left, screen_y_t orb_top)
 	if(moving[i] == false) {
 		return false;
 	}
-	if(overlap_lt_gt(
+	if(overlap_xywh_xywh_lt_gt(
 		left[i], top[i], SHOT_W, SHOT_H,
 		orb_left, orb_top, ORB_W, ORB_H
 	)) {
@@ -122,8 +122,9 @@ bool16 CShots::hittest_pellet(screen_x_t pellet_left, screen_y_t pellet_top)
 		if(decay_frame[i] == 1) {
 			continue;
 		}
-		if(overlap_le_ge(
-			left[i], top[i],
+		if(overlap_xywh_xywh_le_ge(
+			left[i],
+			top[i],
 			(SHOT_W - SHOT_SPRITE_MARGIN),
 			(SHOT_H - SHOT_SPRITE_MARGIN),
 			pellet_left,
@@ -149,7 +150,7 @@ bool16 CShots::hittest_boss(
 		if(moving[i] == false) {
 			continue;
 		}
-		if(overlap_point_le_ge_wh(
+		if(overlap_xy_xywh_le_ge(
 			left[i], top[i], hitbox_left, hitbox_top, hitbox_w, hitbox_h
 		)) {
 			on_hit(i);
