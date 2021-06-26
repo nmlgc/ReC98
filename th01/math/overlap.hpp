@@ -22,3 +22,8 @@
 
 #define overlap_xy_xywh_le_ge(x1, y1, x2, y2, w2, h2) \
 	overlap_xy_ltrb_le_ge(x1, y1, x2, y2, (x2 + w2), (y2 + h2))
+
+#define overlap_points_wh_fast(p1, p2, p1_w, p1_h) ( \
+	((unsigned int)((p1.x - p2.x) + (p1_w / 2)) <= (p1_w)) && \
+	((unsigned int)((p1.y - p2.y) + (p1_h / 2)) <= (p1_h)) \
+)

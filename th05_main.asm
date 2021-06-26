@@ -10388,7 +10388,7 @@ sub_15AAA	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 
-sub_15C36	proc near
+_bullet_template_clip	proc near
 		cmp	_bullet_clear_time, 0
 		jz	short loc_15C47
 		cmp	_bullet_clear_time, 17
@@ -10430,7 +10430,7 @@ loc_15C81:
 loc_15C91:
 		mov	al, 0
 		retn
-sub_15C36	endp
+_bullet_template_clip	endp
 
 ; ---------------------------------------------------------------------------
 
@@ -10463,7 +10463,7 @@ locret_15CE4:
 ; ---------------------------------------------------------------------------
 
 loc_15CE5:
-		call	sub_15C36
+		call	_bullet_template_clip
 		or	al, al
 		jnz	short locret_15CE4
 		push	si

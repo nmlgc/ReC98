@@ -428,3 +428,33 @@ unsigned char pascal near bullet_patnum_for_angle(unsigned char angle)
 		((angle + (ANGLE_PER_SPRITE / 2) - 1) & (0x80 - 1)) / ANGLE_PER_SPRITE
 	);
 }
+
+bool near bullet_template_clip(void)
+{
+	if(
+		(bullet_clear_time > 0) &&
+		(bullet_clear_time <= (BMS_DECAY_FRAMES + 1))
+	) {
+		return true;
+	}
+	// Also applies to 8×8 pellets, because why wouldn't you combine both
+	// cases. #goodcode
+	if(!playfield_encloses_point(
+		bullet_template.origin, BULLET16_W, BULLET16_H
+	)) {
+		return true;
+	}
+	if(overlap_points_wh_fast(
+		bullet_template.origin,
+		player_pos.cur,
+		BULLET_KILLBOX_W,
+		BULLET_KILLBOX_H
+	)) {
+		player_is_hit = true;
+		return true;
+	}
+	if(!group_fixedspeed) {
+		bullet_template_speedtune_for_playperf();
+	}
+	return false;
+}

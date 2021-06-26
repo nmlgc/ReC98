@@ -28230,57 +28230,7 @@ main_033_TEXT	segment	byte public 'CODE' use16
 	_bullet_template_speedtune_for_pl procdesc near
 	BULLET_PATNUM_FOR_ANGLE procdesc pascal near \
 		angle:byte
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1D230	proc near
-		push	bp
-		mov	bp, sp
-		cmp	_bullet_clear_time, 0
-		jbe	short loc_1D241
-		cmp	_bullet_clear_time, 17
-		jbe	short loc_1D282
-
-loc_1D241:
-		cmp	_bullet_template.BT_origin.x, (-8 shl 4)
-		jle	short loc_1D282
-		cmp	_bullet_template.BT_origin.x, ((PLAYFIELD_W + 8) shl 4)
-		jge	short loc_1D282
-		cmp	_bullet_template.BT_origin.y, (-8 shl 4)
-		jle	short loc_1D282
-		cmp	_bullet_template.BT_origin.y, ((PLAYFIELD_H + 8) shl 4)
-		jge	short loc_1D282
-		mov	ax, _bullet_template.BT_origin.x
-		sub	ax, _player_pos.cur.x
-		add	ax, (4 shl 4)
-		cmp	ax, (8 shl 4)
-		ja	short loc_1D286
-		mov	ax, _bullet_template.BT_origin.y
-		sub	ax, _player_pos.cur.y
-		add	ax, (4 shl 4)
-		cmp	ax, (8 shl 4)
-		ja	short loc_1D286
-		mov	_player_is_hit, 1
-
-loc_1D282:
-		mov	al, 1
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_1D286:
-		cmp	_group_fixedspeed, 0
-		jnz	short loc_1D290
-		call	_bullet_template_speedtune_for_pl
-
-loc_1D290:
-		mov	al, 0
-		pop	bp
-		retn
-sub_1D230	endp
-
+	_bullet_template_clip procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -28313,7 +28263,7 @@ bullets_add_regular_raw	proc near
 ; ---------------------------------------------------------------------------
 
 loc_1D2D5:
-		call	sub_1D230
+		call	_bullet_template_clip
 		or	al, al
 		jnz	loc_1D3BB
 		mov	[bp+@@spawn_state], BSS_GRAZEABLE
@@ -28436,7 +28386,7 @@ bullets_add_special_raw	proc near
 		sub	sp, 4
 		push	si
 		push	di
-		call	sub_1D230
+		call	_bullet_template_clip
 		or	al, al
 		jnz	loc_1D48A
 		mov	[bp+@@spawn_state], 0

@@ -91,6 +91,11 @@ struct bullet_t {
 #define BULLET16_W 16
 #define BULLET16_H 16
 
+// Symmetrical around the center point of each bullet, and treated in relation
+// to a 1×1 "hitbox" around the player's center point.
+static const subpixel_t BULLET_KILLBOX_W = TO_SP(8);
+static const subpixel_t BULLET_KILLBOX_H = TO_SP(8);
+
 #if GAME == 5
 # define PELLET_COUNT 180
 # define BULLET16_COUNT 220

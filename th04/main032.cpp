@@ -11,6 +11,7 @@ extern "C" {
 #include "planar.h"
 #include "master.hpp"
 #include "th01/math/subpixel.hpp"
+#include "th01/math/overlap.hpp"
 #include "th04/math/motion.hpp"
 #include "th04/math/randring.h"
 #include "th04/math/vector.hpp"
