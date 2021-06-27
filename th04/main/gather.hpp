@@ -34,6 +34,7 @@ struct gather_template_t {
 #define GATHER_POINT_W 8
 #define GATHER_POINT_H 8
 #define GATHER_FRAMES 32
+#define GATHER_RADIUS_START 64.0f
 #define GATHER_RADIUS_END 2.0f
 
 #define GATHER_COUNT 16

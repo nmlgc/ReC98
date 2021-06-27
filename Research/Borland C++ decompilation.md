@@ -15,6 +15,9 @@ Example:
 | `[bp-1]` | `char var_2;`             |
 | `[bp-2]` | `char var_3;`             |
 
+* Local `enum` variables with underlying 1-byte types are always word-aligned,
+  regardless of the value of `-a`.
+
 ### Grouping
 
 Any structures or classes that contain more than a single scalar-type member

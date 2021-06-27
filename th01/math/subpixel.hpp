@@ -87,7 +87,15 @@ template <class T> struct SPPointBase {
 
 // 16-bit (Q12.4)
 typedef SubpixelBase<subpixel_t, pixel_t> Subpixel;
-typedef SPPointBase<Subpixel> SPPoint;
+
+struct SPPoint : public SPPointBase<Subpixel> {
+	void set_long(subpixel_t subpixel_x, subpixel_t subpixel_y) {
+		reinterpret_cast<uint32_t &>(x) = (
+			subpixel_x | (static_cast<uint32_t>(subpixel_y) << 16)
+		);
+	}
+};
+
 // 8-bit (Q4.4)
 typedef SubpixelBase<unsigned char, unsigned char> SubpixelLength8;
 typedef SubpixelBase<char, char> Subpixel8;

@@ -15,7 +15,14 @@
 /// bullet.hpp!
 #define BSS_CLOUD_FRAMES (BULLET_CLOUD_CELS * 4)
 #define BMS_DECAY_FRAMES (BULLET_DECAY_CELS * 4)
+
+// Regular bullets with a given speed below BMS_SLOWDOWN_THRESHOLD are set to
+// BMS_SLOWDOWN. This fires them at BMS_SLOWDOWN_BASE_SPEED instead, and then
+// gradually slows them down to their given speed over the next
+// BMS_SLOWDOWN_FRAMES.
+// • In TH04, this is not done for stacks.
 #define BMS_SLOWDOWN_BASE_SPEED 4.5f
+#define BMS_SLOWDOWN_THRESHOLD (BMS_SLOWDOWN_BASE_SPEED - 0.5f)
 #define BMS_SLOWDOWN_FRAMES 32
 
 enum bullet_spawn_state_t {

@@ -458,3 +458,102 @@ bool near bullet_template_clip(void)
 	}
 	return false;
 }
+
+#define bullet_set_spawn_vars(ptr, available, spawn_state, spawn_type) \
+	spawn_state = BSS_GRAZEABLE; \
+	switch(spawn_type) { \
+	case BST_PELLET: \
+		ptr = &pellets[PELLET_COUNT - 1]; \
+		available = PELLET_COUNT; \
+		break; \
+	case BST_BULLET16_CLOUD_BACKWARDS: \
+		spawn_state = BSS_CLOUD_BACKWARDS; \
+		goto bullet16; \
+	case BST_BULLET16_CLOUD_FORWARDS: \
+		spawn_state = BSS_CLOUD_FORWARDS; \
+		goto bullet16; \
+	default: \
+	bullet16: \
+		ptr = &bullets16[BULLET16_COUNT - 1]; \
+		available = BULLET16_COUNT; \
+		break; \
+	}
+
+#define bullet_init_from_template(bullet, group_done, group_i, spawn_state) \
+	bullet->age = 0; \
+	bullet->pos.cur = bullet_template.origin; \
+	bullet->from_group = bullet_template.group; \
+	bullet->patnum = bullet_template.patnum; \
+	bullet->spawn_state = static_cast<bullet_spawn_state_t>(spawn_state); \
+	\
+	group_done = bullet_velocity_and_angle_set(group_i); \
+	\
+	if(bullet_template.patnum >= PAT_BULLET16_D) { \
+		bullet->patnum += bullet_patnum_for_angle(group_i_absolute_angle); \
+	} \
+	\
+	bullet->pos.velocity = bullet_template.velocity; \
+	bullet->angle = group_i_absolute_angle; \
+	bullet->speed_final = bullet_template.speed; \
+	bullet->speed_cur = bullet_template.speed; \
+
+void pascal near bullets_add_regular_raw(void)
+{
+	bullet_t near *bullet;
+	int group_i;
+	int bullets_available;
+	unsigned char move_state;
+	bool group_done;
+	unsigned char spawn_state; // MODDERS: Should be bullet_spawn_state_t
+
+	if(bullet_template.spawn_type == BST_GATHER_PELLET) {
+		gather_template.center = bullet_template.origin;
+		gather_template.velocity.set_long(0.0f, 0.0f);
+		gather_template.radius.set(GATHER_RADIUS_START);
+		gather_template.angle_delta = 0x02;
+		gather_template.col = 9;
+		gather_template.ring_points = 8;
+		bullet_template.spawn_type = BST_PELLET;
+		gather_add_bullets();
+		return;
+	}
+	if(bullet_template_clip()) {
+		return;
+	}
+
+	bullet_set_spawn_vars(
+		bullet, bullets_available, spawn_state, bullet_template.spawn_type
+	);
+
+	move_state = BMS_REGULAR;
+	if(
+		(bullet_template.speed < to_sp8(BMS_SLOWDOWN_THRESHOLD)) ||
+		bullet_clear_time
+	) {
+		if(
+			(bullet_template.group != BG_STACK) &&
+			(bullet_template.group != BG_STACK_AIMED)
+		) {
+			move_state = BMS_SLOWDOWN;
+		}
+	}
+
+	group_i = 0;
+	while(bullets_available > 0) {
+		if(bullet->flag == 0) {
+			bullet->flag = 1;
+			bullet->move_state = static_cast<bullet_move_state_t>(move_state);
+			bullet->ax.slowdown_time = BMS_SLOWDOWN_FRAMES;
+			bullet->dx.slowdown_speed_delta = (
+				to_sp8(BMS_SLOWDOWN_BASE_SPEED) - bullet_template.speed
+			);
+			bullet_init_from_template(bullet, group_done, group_i, spawn_state);
+			if(group_done) {
+				break;
+			}
+			group_i++;
+		}
+		bullets_available--;
+		bullet--;
+	}
+}
