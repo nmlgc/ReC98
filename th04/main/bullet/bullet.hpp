@@ -205,7 +205,8 @@ extern bullet_template_t bullet_template;
 extern unsigned char bullet_template_turn_angle;
 
 // Modifies [bullet_template] based on [playperf] and the respective
-// difficulty.
+// difficulty. These don't modify the base [speed]; that is done by the spawn
+// functions themselves, unless overridden via the _fixedspeed() variants.
 void pascal near bullet_template_tune_easy(void);
 void pascal near bullet_template_tune_normal(void);
 void pascal near bullet_template_tune_hard(void);
@@ -235,4 +236,10 @@ extern nearfunc_t_near bullet_template_tune;
 	extern nearfunc_t_near bullets_add_regular;
 	extern nearfunc_t_near bullets_add_special;
 #endif
+
+// Further wrappers around the spawn functions that bypass base [speed] tuning
+// of the resulting bullets based on [playperf], and fire them at a constant
+// speed instead.
+void near bullets_add_regular_fixedspeed(void);
+void near bullets_add_special_fixedspeed(void);
 /// --------

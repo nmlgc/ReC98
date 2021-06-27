@@ -4,6 +4,13 @@
 void pascal near bullets_add_regular_raw(void);
 void pascal near bullets_add_special_raw(void);
 
+/// Per-spawn state
+/// ---------------
+/// Has no reason to be global.
+
+extern bool group_fixedspeed;
+/// ---------------
+
 #define tmpl bullet_template
 
 void near tune_for_easy(void)
@@ -235,4 +242,18 @@ void pascal near bullets_add_special_hard_lunatic(void)
 		return;
 	}
 	keep_speed_from_being_mutated_when_calling(bullets_add_special_raw);
+}
+
+void near bullets_add_regular_fixedspeed(void)
+{
+	group_fixedspeed = true;
+	bullets_add_regular();
+	group_fixedspeed = false;
+}
+
+void near bullets_add_special_fixedspeed(void)
+{
+	group_fixedspeed = true;
+	bullets_add_special();
+	group_fixedspeed = false;
 }
