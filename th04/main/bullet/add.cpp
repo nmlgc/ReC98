@@ -557,3 +557,37 @@ void pascal near bullets_add_regular_raw(void)
 		bullet--;
 	}
 }
+
+void pascal near bullets_add_special_raw(void)
+{
+	bullet_t near *bullet;
+	int group_i;
+	int bullets_available;
+	bool group_done;
+	bullet_spawn_state_t spawn_state;
+
+	if(bullet_template_clip()) {
+		return;
+	}
+
+	bullet_set_spawn_vars(
+		bullet, bullets_available, spawn_state, bullet_template.spawn_type
+	);
+	group_i = 0;
+	while(bullets_available > 0) {
+		if(bullet->flag == 0) {
+			bullet->flag = 1;
+			bullet->move_state = BMS_SPECIAL;
+			bullet->special_motion = bullet_template.special_motion;
+			bullet->ax.turn_count = 0;
+			bullet->dx.turn_angle = bullet_template_turn_angle;
+			bullet_init_from_template(bullet, group_done, group_i, spawn_state);
+			if(group_done) {
+				break;
+			}
+			group_i++;
+		}
+		bullets_available--;
+		bullet--;
+	}
+}
