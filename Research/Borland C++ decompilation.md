@@ -447,6 +447,19 @@ externally visible symbol for the variable is emitted into the .OBJ file, even
 if the variable was not declared `static`. This makes such variables largely
 equivalent to `#define` macros.
 
+### Methods
+
+Note the distinction between *`struct`/`class` distance* and *method distance*:
+
+* Declaring the *type* as `near` or `far` controls whether `this` is passed as
+  a near or far pointer.
+* Declaring a *method* as `near` or `far` controls whether a method call
+  generates a `CALL near ptr` or `CALL far ptr` instruction.
+
+These can be freely combined, and one does not imply the other.
+
+#### Inlining
+
 Class methods inline to their ideal representation if all of these are true:
 
 * returns `void` || (returns `*this` && is at the first nesting level of

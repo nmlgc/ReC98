@@ -60,7 +60,7 @@ enum bullet_special_motion_t {
 struct bullet_t {
 	char flag;
 	char age;
-	motion_t pos;
+	PlayfieldMotion pos;
 	unsigned char from_group; // unused
 	int8_t unused;
 	SubpixelLength8 speed_cur;

@@ -16,7 +16,7 @@ enum item_type_t {
 struct item_t {
 	char flag;
 	char unused;
-	motion_t pos;
+	PlayfieldMotion pos;
 	unsigned char type;
 	char unknown;
 	int patnum;	// Assumed to be a 16×16 sprite.

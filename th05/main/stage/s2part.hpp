@@ -5,7 +5,7 @@
 typedef struct {
 	unsigned char flag;
 	unsigned char angle;
-	motion_t pos;
+	PlayfieldMotion pos;
 	unsigned int zoom;
 	int16_t unused[5];
 } s2particle_t;

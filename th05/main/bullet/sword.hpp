@@ -5,7 +5,7 @@
 typedef struct {
 	unsigned char flag;
 	unsigned char angle;
-	motion_t pos;
+	PlayfieldMotion pos;
 	unsigned int twirl_time;
 	uint16_t unused_1;
 	int patnum_tiny;

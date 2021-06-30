@@ -9104,7 +9104,7 @@ loc_104D7:
 		cmp	byte ptr [si], 0
 		jz	short loc_10527
 		lea	ax, [si+2]
-		call	motion_update_seg1 pascal, ax
+		call	@PlayfieldMotion@update_seg1$qv pascal, ax
 		cmp	ax, (-(SHOT_W / 2) shl 4)
 		jle	short loc_104F8
 		cmp	ax, ((PLAYFIELD_W + (SHOT_W / 2)) shl 4)
@@ -9592,7 +9592,7 @@ loc_10BB0:
 ; ---------------------------------------------------------------------------
 
 loc_10BBD:
-		call	motion_update_seg1 pascal, offset _player_pos
+		call	@PlayfieldMotion@update_seg1$qv pascal, offset _player_pos
 		dec	byte_259A3
 
 loc_10BC7:
@@ -12923,7 +12923,7 @@ gather_update	proc far
 
 @@alive:
 		lea	ax, [si+gather_t.G_center]
-		call	motion_update_seg3 pascal, ax
+		call	@PlayfieldMotion@update_seg3$qv pascal, ax
 		mov	ax, [si+gather_t.G_radius_cur]
 		mov	[si+gather_t.G_radius_prev], ax
 		mov	ax, [si+gather_t.G_radius_delta]
@@ -12967,7 +12967,7 @@ SCROLLY3_TEXT	segment	word public 'CODE' use16
 SCROLLY3_TEXT	ends
 
 MOTION_3_TEXT	segment	word public 'CODE' use16
-	MOTION_UPDATE_SEG3 procdesc pascal near \
+	@PlayfieldMotion@update_seg3$qv procdesc pascal near \
 		motion:word
 MOTION_3_TEXT	ends
 
@@ -13040,7 +13040,7 @@ midboss1_update	proc far
 		jnz	loc_1411F
 		mov	_midboss_pos.velocity.y, (-1 shl 4)
 		push	offset _midboss_pos
-		call	motion_update_seg3
+		call	@PlayfieldMotion@update_seg3$qv
 		mov	ax, _midboss_pos.cur.x
 		add	ax, (-16 shl 4)
 		push	ax
@@ -13114,7 +13114,7 @@ loc_1411F:
 		cmp	_midboss_phase, 1
 		jnz	loc_141BF
 		push	offset _midboss_pos
-		call	motion_update_seg3
+		call	@PlayfieldMotion@update_seg3$qv
 		mov	ax, _midboss_pos.cur.x
 		mov	_homing_target.x, ax
 		mov	ax, _midboss_pos.cur.y
@@ -13163,7 +13163,7 @@ loc_141BF:
 		cmp	_midboss_phase, 2
 		jnz	short loc_1422D
 		push	offset _midboss_pos
-		call	motion_update_seg3
+		call	@PlayfieldMotion@update_seg3$qv
 		mov	ax, _midboss_pos.cur.x
 		mov	_homing_target.x, ax
 		mov	ax, _midboss_pos.cur.y
@@ -13207,7 +13207,7 @@ loc_1422D:
 		cmp	_midboss_phase, 3
 		jnz	loc_142E1
 		push	offset _midboss_pos
-		call	motion_update_seg3
+		call	@PlayfieldMotion@update_seg3$qv
 		cmp	_scroll_speed, 2
 		ja	short loc_142AC
 		mov	ax, _midboss_pos.cur.x
@@ -13455,7 +13455,7 @@ var_4		= word ptr -4
 		cmp	_midboss_phase, 0
 		jnz	short loc_144F1
 		push	offset _midboss_pos
-		call	motion_update_seg3
+		call	@PlayfieldMotion@update_seg3$qv
 		inc	_midboss_phase_frame
 		call	sub_1E618 pascal, (24 shl 4) or ((24 shl 4) shl 16), 10
 		mov	si, ax
@@ -13479,7 +13479,7 @@ loc_144F1:
 		cmp	_midboss_phase, 1
 		jnz	loc_1468A
 		push	offset _midboss_pos
-		call	motion_update_seg3
+		call	@PlayfieldMotion@update_seg3$qv
 		inc	_midboss_phase_frame
 		mov	_bullet_template.spawn_type, BST_PELLET
 		mov	ax, _midboss_pos.cur.x
@@ -14345,7 +14345,7 @@ var_2		= word ptr -2
 		cmp	_midboss_phase, 0
 		jnz	short loc_14D5D
 		push	offset _midboss_pos
-		call	motion_update_seg3
+		call	@PlayfieldMotion@update_seg3$qv
 		inc	_midboss_phase_frame
 		call	sub_1E618 pascal, (24 shl 4) or ((24 shl 4) shl 16), 10
 		mov	si, ax
@@ -14365,7 +14365,7 @@ loc_14D5D:
 		cmp	_midboss_phase, 1
 		jnz	loc_14F16
 		push	offset _midboss_pos
-		call	motion_update_seg3
+		call	@PlayfieldMotion@update_seg3$qv
 		inc	_midboss_phase_frame
 		mov	_bullet_template.spawn_type, BST_PELLET
 		mov	ax, _midboss_pos.cur.x
@@ -14530,7 +14530,7 @@ loc_14F16:
 		cmp	_midboss_phase, 2
 		jnz	short loc_14F52
 		push	offset _midboss_pos
-		call	motion_update_seg3
+		call	@PlayfieldMotion@update_seg3$qv
 		inc	_midboss_phase_frame
 		cmp	_midboss_pos.cur.y, 0
 		jg	short loc_14F38
@@ -14945,7 +14945,7 @@ var_2		= word ptr -2
 		cmp	_midboss_phase, 0
 		jnz	short loc_15314
 		push	offset _midboss_pos
-		call	motion_update_seg3
+		call	@PlayfieldMotion@update_seg3$qv
 		inc	_midboss_phase_frame
 		call	sub_1E618 pascal, (24 shl 4) or ((24 shl 4) shl 16), 10
 		mov	si, ax
@@ -14965,7 +14965,7 @@ loc_15314:
 		cmp	_midboss_phase, 1
 		jnz	loc_15490
 		push	offset _midboss_pos
-		call	motion_update_seg3
+		call	@PlayfieldMotion@update_seg3$qv
 		inc	_midboss_phase_frame
 		mov	_bullet_template.spawn_type, BST_PELLET
 		mov	ax, _midboss_pos.cur.x
@@ -15124,7 +15124,7 @@ loc_15490:
 		mov	_midboss_pos.velocity.x, 0
 		mov	_midboss_pos.velocity.y, 0
 		push	offset _midboss_pos
-		call	motion_update_seg3
+		call	@PlayfieldMotion@update_seg3$qv
 		inc	_midboss_phase_frame
 		mov	ax, _midboss_phase_frame
 		mov	bx, 16
@@ -15191,7 +15191,7 @@ enemy_pos_update	proc near
 		mov	ax, _enemy_cur
 		mov	[bp+@@enemy], ax
 		add	ax, enemy_t.pos
-		call	motion_update_seg3 pascal, ax
+		call	@PlayfieldMotion@update_seg3$qv pascal, ax
 		mov	si, [bp+@@enemy]
 		cmp	[si+enemy_t.E_clip_x], 0
 		jz	short @@clip_y?
@@ -16370,7 +16370,7 @@ loc_15F46:
 		cmp	byte_25667, 2
 		jnz	short loc_15F67
 		push	offset _boss_pos
-		call	motion_update_seg3
+		call	@PlayfieldMotion@update_seg3$qv
 		cmp	_boss_phase_frame, 64
 		jl	short loc_15F8F
 		mov	_boss_phase_frame, 0
@@ -17660,7 +17660,7 @@ loc_16B7A:
 
 loc_16B7D:
 		push	offset _boss_pos
-		call	motion_update_seg3
+		call	@PlayfieldMotion@update_seg3$qv
 		leave
 		retn
 sub_16AE9	endp
@@ -17734,7 +17734,7 @@ loc_16BEB:
 
 loc_16BF8:
 		push	offset _boss_pos
-		call	motion_update_seg3
+		call	@PlayfieldMotion@update_seg3$qv
 		mov	al, 0
 
 loc_16C00:
@@ -19994,7 +19994,7 @@ loc_17F94:
 
 loc_17FF4:
 		lea	ax, [si+enemy_t.pos]
-		call	motion_update_seg3 pascal, ax
+		call	@PlayfieldMotion@update_seg3$qv pascal, ax
 		mov	al, [si+enemy_t.flag]
 		inc	al
 		mov	[si+enemy_t.flag], al
@@ -22432,7 +22432,7 @@ loc_194A8:
 
 loc_194B6:
 		push	offset _boss_pos
-		call	motion_update_seg3
+		call	@PlayfieldMotion@update_seg3$qv
 		jmp	short loc_194C1
 ; ---------------------------------------------------------------------------
 
@@ -22491,7 +22491,7 @@ loc_1953A:
 
 loc_19548:
 		push	offset _boss_pos
-		call	motion_update_seg3
+		call	@PlayfieldMotion@update_seg3$qv
 		inc	_boss_phase_frame
 		cmp	_boss_phase_frame, 16
 		jnz	short loc_1955E
@@ -22600,7 +22600,7 @@ loc_19647:
 		cmp	_boss_phase_frame, 70
 		jge	short loc_19656
 		push	offset _boss_pos
-		call	motion_update_seg3
+		call	@PlayfieldMotion@update_seg3$qv
 		jmp	short loc_19682
 ; ---------------------------------------------------------------------------
 
@@ -22892,7 +22892,7 @@ loc_198CE:
 		add	al, 2
 		mov	_boss_angle, al
 		push	offset _boss_pos
-		call	motion_update_seg3
+		call	@PlayfieldMotion@update_seg3$qv
 		cmp	ax, (32 shl 4)
 		jbe	short loc_198E6
 		cmp	ax, (352 shl 4)
@@ -23368,7 +23368,7 @@ loc_19D85:
 
 loc_19D93:
 		push	offset _boss_pos
-		call	motion_update_seg3
+		call	@PlayfieldMotion@update_seg3$qv
 		jmp	short loc_19D9E
 ; ---------------------------------------------------------------------------
 
@@ -23427,7 +23427,7 @@ loc_19E19:
 
 loc_19E27:
 		push	offset _boss_pos
-		call	motion_update_seg3
+		call	@PlayfieldMotion@update_seg3$qv
 		inc	_boss_phase_frame
 		cmp	_boss_phase_frame, 16
 		jnz	short loc_19E3D
@@ -26360,7 +26360,7 @@ loc_1BBA8:
 		mov	dx, motion_25A28.velocity.y
 		sub	dx, ax
 		mov	motion_25A28.velocity.y, dx
-		call	motion_update_seg3 pascal, offset motion_25A28
+		call	@PlayfieldMotion@update_seg3$qv pascal, offset motion_25A28
 		mov	ax, motion_25A28.cur.x
 		add	ax, (-24 shl 4)
 		cmp	ax, _player_pos.cur.x
@@ -27203,7 +27203,7 @@ loc_1C301:
 
 loc_1C32D:
 		push	offset _boss_pos
-		call	motion_update_seg3
+		call	@PlayfieldMotion@update_seg3$qv
 		mov	al, _boss_mode
 		mov	ah, 0
 		or	ax, ax
@@ -27273,7 +27273,7 @@ loc_1C39E:
 
 loc_1C3D4:
 		push	offset _boss_pos
-		call	motion_update_seg3
+		call	@PlayfieldMotion@update_seg3$qv
 		cmp	_boss_pos.cur.x, (192 shl 4)
 		jge	short loc_1C3EA
 		mov	_boss_pos.velocity.x, (2 shl 4)
@@ -27893,7 +27893,7 @@ loc_1C939:
 		cmp	[si+bullet_t.move_state], BMS_DECAY_END
 		jb	short loc_1C94F
 		lea	ax, [si+bullet_t.pos]
-		call	motion_update_seg3 pascal, ax
+		call	@PlayfieldMotion@update_seg3$qv pascal, ax
 		mov	[si+bullet_t.flag], 2
 		jmp	loc_1CAF8
 ; ---------------------------------------------------------------------------
@@ -27937,7 +27937,7 @@ loc_1C99C:
 		cmp	[si+bullet_t.spawn_state], BSS_CLOUD_FORWARDS
 		jnz	short loc_1C9AB
 		lea	ax, [si+bullet_t.pos]
-		call	motion_update_seg3 pascal, ax
+		call	@PlayfieldMotion@update_seg3$qv pascal, ax
 		jmp	short loc_1C9C8
 ; ---------------------------------------------------------------------------
 
@@ -28000,7 +28000,7 @@ loc_1CA17:
 
 loc_1CA27:
 		lea	ax, [si+bullet_t.pos]
-		call	motion_update_seg3 pascal, ax
+		call	@PlayfieldMotion@update_seg3$qv pascal, ax
 		cmp	ax, (-8 shl 4)
 		jle	short loc_1CA43
 		cmp	ax, ((PLAYFIELD_W + 8) shl 4)
@@ -28148,7 +28148,7 @@ loc_1CB91:
 		mov	[si+bullet_t.pos.velocity.x], 0
 		mov	[si+bullet_t.pos.velocity.y], 0
 		lea	ax, [si+bullet_t.pos]
-		call	motion_update_seg3 pascal, ax
+		call	@PlayfieldMotion@update_seg3$qv pascal, ax
 		cmp	[bp+@@patnum], PAT_BULLET16_D
 		jnb	short loc_1CBB7
 		mov	al, [bp+@@patnum]
@@ -30065,7 +30065,7 @@ loc_1DEC6:
 loc_1DEDB:
 		lea	ax, [si+item_t.pos]
 		push	ax
-		call	motion_update_seg3
+		call	@PlayfieldMotion@update_seg3$qv
 		cmp	ax, (-(ITEM_W / 2) shl 4)
 		jle	short loc_1DEF2
 		cmp	ax, ((PLAYFIELD_W + (ITEM_W / 2)) shl 4)
@@ -30810,7 +30810,7 @@ loc_1E962:
 
 loc_1E96E:
 		push	offset _boss_pos
-		call	motion_update_seg3
+		call	@PlayfieldMotion@update_seg3$qv
 		mov	si, 20h	; ' '
 		mov	al, _boss_mode_change
 		mov	ah, 0
@@ -30883,7 +30883,7 @@ loc_1E9FC:
 
 loc_1EA08:
 		push	offset _boss_pos
-		call	motion_update_seg3
+		call	@PlayfieldMotion@update_seg3$qv
 		mov	si, 20h	; ' '
 		mov	al, _boss_mode_change
 		mov	ah, 0
@@ -32122,7 +32122,7 @@ loc_1F4D6:
 
 loc_1F4DC:
 		push	offset _boss_pos
-		call	motion_update_seg3
+		call	@PlayfieldMotion@update_seg3$qv
 		call	sub_1F378
 		call	sub_1E64E
 		cmp	_boss_phase_frame, 64
@@ -32228,7 +32228,7 @@ loc_1F5C3:
 
 loc_1F5C9:
 		push	offset _boss_pos
-		call	motion_update_seg3
+		call	@PlayfieldMotion@update_seg3$qv
 		call	sub_1F378
 		call	sub_1E64E
 		cmp	_boss_phase_frame, 64
@@ -32319,7 +32319,7 @@ loc_1F67D:
 		push	offset _boss_pos
 
 loc_1F680:
-		call	motion_update_seg3
+		call	@PlayfieldMotion@update_seg3$qv
 		call	sub_1F378
 		call	sub_1E64E
 		cmp	_boss_phase_frame, 64
@@ -32461,7 +32461,7 @@ loc_1F7B4:
 
 loc_1F7BA:
 		push	offset _boss_pos
-		call	motion_update_seg3
+		call	@PlayfieldMotion@update_seg3$qv
 		mov	al, Palettes[0 * size rgb_t].r
 		add	al, 3
 		mov	Palettes[0 * size rgb_t].r, al

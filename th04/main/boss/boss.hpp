@@ -4,7 +4,7 @@ static const pixel_t BOSS_W = 64;
 static const pixel_t BOSS_H = 64;
 
 typedef struct {
-	motion_t pos;
+	PlayfieldMotion pos;
 	int hp;
 	unsigned char sprite;
 	unsigned char phase;

@@ -6,7 +6,7 @@
 
 // Reset to 0 when moving to a new stage.
 extern unsigned int stage_graze;
-extern motion_t player_pos;
+extern PlayfieldMotion player_pos;
 
 void near player_pos_update_and_clamp(void);
 

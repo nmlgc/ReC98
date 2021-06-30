@@ -1,9 +1,9 @@
 /* ReC98
  * -----
- * 4th part of code segment #3 of TH05's MAIN.EXE
+ * 5th part of code segment #3 of TH05's MAIN.EXE
  */
 
-#pragma option -zCmain_034_TEXT
+#pragma option -zCmain_035_TEXT
 
 extern "C" {
 #include "ReC98.h"

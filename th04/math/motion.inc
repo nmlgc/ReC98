@@ -5,8 +5,8 @@ motion_t	struc
 motion_t	ends
 
 MOTION_UPDATE_DEF macro instance
-	public MOTION_UPDATE_SEG&instance
-	motion_update_seg&instance proc near
+	public @PlayfieldMotion@update_seg&instance&$qv
+	@PlayfieldMotion@update_seg&instance&$qv proc near
 	arg_bx	near, @motion:word
 
 		mov	bx, @motion
@@ -20,5 +20,5 @@ MOTION_UPDATE_DEF macro instance
 		add	dx, word ptr [bx+motion_t.velocity]
 		mov	word ptr [bx+motion_t.cur], dx
 		ret_bx
-	motion_update_seg&instance endp
+	@PlayfieldMotion@update_seg&instance&$qv endp
 endm

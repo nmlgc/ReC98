@@ -1,5 +1,5 @@
 typedef struct {
-	motion_t pos;
+	PlayfieldMotion pos;
 	unsigned int frames_until;
 	int hp;
 	unsigned char sprite;

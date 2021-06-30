@@ -1,6 +1,8 @@
 // Fixed-point format for expressing world-space coordinates, with 4 bits of
 // fractional resolution.
 
+#define SUBPIXEL_HPP
+
 #define PIXEL_NONE (-999)
 
 typedef int subpixel_t;

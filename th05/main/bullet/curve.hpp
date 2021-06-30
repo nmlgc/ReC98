@@ -7,7 +7,7 @@
 typedef struct {
 	unsigned char flag;
 	unsigned char angle;
-	motion_t pos;
+	PlayfieldMotion pos;
 	unsigned int age;
 	int16_t unused_2;
 	int col;
@@ -19,7 +19,7 @@ typedef struct {
 typedef struct {
 	unsigned char flag;
 	unsigned char angle;
-	motion_t pos;
+	PlayfieldMotion pos;
 	unsigned int age;
 	int16_t unused_1;
 	int sprite;

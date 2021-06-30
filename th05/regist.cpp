@@ -60,7 +60,7 @@ typedef enum {
 typedef struct {
 	glyphball_phase_t phase;
 	gaiji_th04_t glyph;
-	motion_t pos;	// Relative to the top-left corner of the screen.
+	MotionBase<SPPoint> pos; // Relative to the top-left corner of the screen.
 	SPPoint target;
 	unsigned char angle;
 	SubpixelLength8 speed;

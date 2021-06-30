@@ -10,7 +10,7 @@ SPPoint pascal near shot_velocity_set(
 struct shot_t {
 	char flag;
 	char age;
-	motion_t pos;
+	PlayfieldMotion pos;
 	// The displayed sprite changes between this one and
 	// [patnum_base + 1] every two frames.
 #if GAME == 5

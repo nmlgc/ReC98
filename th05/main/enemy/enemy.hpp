@@ -7,7 +7,7 @@
 struct enemy_t {
 	unsigned char flag;
 	unsigned char age;
-	motion_t pos;
+	PlayfieldMotion pos;
 	int hp;
 	int score;
 	unsigned char near *script;

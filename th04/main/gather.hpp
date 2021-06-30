@@ -4,7 +4,7 @@
 struct gather_t {
 	unsigned char flag;
 	uint4_t col;
-	motion_t center;
+	PlayfieldMotion center;
 	Subpixel radius_cur;
 	int ring_points;
 	// Added to the automatically calculated angle of each ring point

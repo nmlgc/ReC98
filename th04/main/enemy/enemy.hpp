@@ -17,7 +17,7 @@ enum enemy_flag_t {
 struct enemy_t {
 	unsigned char flag;
 	unsigned char age;
-	motion_t pos;
+	PlayfieldMotion pos;
 	unsigned char patnum_base;
 	int8_t unused_1;
 	int hp;

@@ -9,6 +9,7 @@ extern "C" {
 #include "ReC98.h"
 #include "th01/math/subpixel.hpp"
 #include "th04/math/motion.hpp"
+#include "th04/main/playfld.hpp"
 
 #pragma option -a2
 

@@ -8,7 +8,7 @@
 typedef struct {
 	uint8_t flag;
 	uint8_t angle;
-	motion_t pos;
+	PlayfieldMotion pos;
 	uint16_t val1;
 	uint16_t val2;
 	int16_t sprite;

@@ -34,4 +34,8 @@
 #define playfield_encloses_point(center, w, h) \
 	playfield_encloses(center.x, center.y, w, h)
 
+#ifdef SUBPIXEL_HPP
+	typedef SPPoint PlayfieldPoint;
+#endif
+
 #include "th01/main/playfld.hpp"

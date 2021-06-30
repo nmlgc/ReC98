@@ -1,4 +1,4 @@
-#include "th04/main/player/player.h"
+#include "th04/main/player/player.hpp"
 
 // Calculates the angle from ([x], [y]) to the current player position, and
 // optionally adds [plus_angle] to the result.
