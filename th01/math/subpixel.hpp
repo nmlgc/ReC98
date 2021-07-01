@@ -29,11 +29,11 @@ public:
 	// arithmetic with a local variable...
 	SubpixelType v;
 
-	SubpixelType operator +(float pixel_v) {
+	SubpixelType operator +(float pixel_v) const {
 		return (this->v + static_cast<SubpixelType>(to_sp(pixel_v)));
 	}
 
-	SubpixelType operator -(const SelfType &other) {
+	SubpixelType operator -(const SelfType &other) const {
 		return (this->v - other.v);
 	}
 

@@ -35,7 +35,25 @@
 	playfield_encloses(center.x, center.y, w, h)
 
 #ifdef SUBPIXEL_HPP
-	typedef SPPoint PlayfieldPoint;
+	struct PlayfieldPoint : public SPPoint {
+		screen_x_t to_screen_left(pixel_t sprite_w_if_centered = 0) const {
+			return (PLAYFIELD_LEFT + x.to_pixel() - (sprite_w_if_centered / 2));
+		}
+
+		screen_y_t to_screen_top(pixel_t sprite_h_if_centered = 0) const {
+			return (PLAYFIELD_TOP + y.to_pixel() - (sprite_h_if_centered / 2));
+		}
+
+		#ifdef SCROLL_HPP
+			vram_y_t to_vram_top_scrolled_seg3(
+				pixel_t sprite_h_if_centered
+			) const {
+				return scroll_subpixel_y_to_vram_seg3(
+					y + (PLAYFIELD_TOP - (sprite_h_if_centered / 2))
+				);
+			}
+		#endif
+	};
 #endif
 
 #include "th01/main/playfld.hpp"

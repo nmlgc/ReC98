@@ -17,10 +17,10 @@
 #include "th04/math/randring.h"
 #include "th04/formats/bb.h"
 #include "th04/formats/cdg.h"
-#include "th04/main/drawp.hpp"
 #include "th04/main/frames.h"
 #include "th04/main/phase.h"
 #include "th05/main/playfld.hpp"
+#include "th04/main/drawp.hpp"
 #include "th04/main/tile/bb.hpp"
 #include "th04/main/tile/tile.hpp"
 #include "th04/sprites/main_cdg.h"
@@ -37,11 +37,11 @@
 // `boss_` to differentiate this structure from `s2particle_t`, which uses the
 // same sprites.
 struct boss_particle_t {
-	SPPoint pos; // [x] == Subpixel::None() indicates a dead particle
+	PlayfieldPoint pos; // [x] == Subpixel::None() indicates a dead particle
 
 	// [pos] is reset to this value once it has left the playfield, restarting
 	// the particle movement.
-	SPPoint origin;
+	PlayfieldPoint origin;
 
 	SPPoint velocity;
 	int age;
@@ -156,12 +156,8 @@ void near shinki_bg_particles_render(void)
 
 			// Lol, is this only not directly assigned to _CX because ZUN was
 			// scared that the _AX assignment might overwrite _CX?
-			left_ = (
-				particle->pos.x.to_pixel() + PLAYFIELD_LEFT - (PARTICLE_W / 2)
-			);
-			top = (
-				particle->pos.y.to_pixel() + PLAYFIELD_TOP - (PARTICLE_H / 2)
-			);
+			left_ = particle->pos.to_screen_left(PARTICLE_W);
+			top = particle->pos.to_screen_top(PARTICLE_H);
 			left = left_;
 			if(!(
 				(left > (PLAYFIELD_LEFT - PARTICLE_W)) &&
@@ -252,14 +248,14 @@ void pascal near grcg_lineset_line_put(lineset_t near &set, int i)
 	vector2_at(drawpoint,
 		set.center[i].x, set.center[i].y, set.radius[i], set.angle[i]
 	);
-	screen_x_t x1 = (PLAYFIELD_LEFT + drawpoint.x.to_pixel());
-	screen_y_t y1 = (PLAYFIELD_TOP  + drawpoint.y.to_pixel());
+	screen_x_t x1 = drawpoint.to_screen_left();
+	screen_y_t y1 = drawpoint.to_screen_top();
 
 	vector2_at(drawpoint,
 		set.center[i].x, set.center[i].y, set.radius[i], (set.angle[i] + 0x80)
 	);
-	screen_x_t x2 = (PLAYFIELD_LEFT + drawpoint.x.to_pixel());
-	screen_y_t y2 = (PLAYFIELD_TOP  + drawpoint.y.to_pixel());
+	screen_x_t x2 = drawpoint.to_screen_left();
+	screen_y_t y2 = drawpoint.to_screen_top();
 
 	grcg_line(x1, y1, x2, y2);
 }

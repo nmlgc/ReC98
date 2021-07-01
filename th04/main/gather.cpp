@@ -6,8 +6,8 @@ extern "C" {
 #include "th04/math/motion.hpp"
 #include "th04/math/vector.hpp"
 #include "th04/hardware/grcg.h"
-#include "th04/main/playfld.hpp"
 #include "th04/main/scroll.hpp"
+#include "th04/main/playfld.hpp"
 #include "th04/main/drawp.hpp"
 #include "th04/main/bullet/bullet.hpp"
 #include "th04/main/gather.hpp"
@@ -51,12 +51,8 @@ void gather_render(void)
 			if(!gather_point_on_playfield()) {
 				continue;
 			}
-			_DX = scroll_subpixel_y_to_vram_seg3(
-				to_sp(PLAYFIELD_TOP - (GATHER_POINT_H / 2)) + drawpoint.y
-			);
-			_AX = (PLAYFIELD_LEFT - (GATHER_POINT_W / 2) +
-				drawpoint.x.to_pixel()
-			);
+			_DX = drawpoint.to_vram_top_scrolled_seg3(GATHER_POINT_H);
+			_AX = drawpoint.to_screen_left(GATHER_POINT_W);
 			gather_point_render(_AX, _DX);
 		}
 	}

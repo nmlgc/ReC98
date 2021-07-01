@@ -177,7 +177,7 @@ void near pellets_render_bottom();
 struct bullet_template_t {
 	uint8_t spawn_type;
 	unsigned char patnum;	// TH05: 0 = pellet
-	SPPoint origin;
+	PlayfieldPoint origin;
 #if GAME == 5
 	bullet_group_t group;
 	bullet_special_motion_t special_motion;
@@ -188,7 +188,7 @@ struct bullet_template_t {
 	unsigned char angle;
 	SubpixelLength8 speed;
 #else
-	SPPoint velocity;
+	PlayfieldPoint velocity;
 	bullet_group_t group;
 	unsigned char angle;
 	SubpixelLength8 speed;
