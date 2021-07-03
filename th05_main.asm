@@ -684,7 +684,7 @@ loc_B16F:
 
 @@easy:
 		mov	_item_point_score_at_full_dream, 6000
-		mov	score_2C97C, 25
+		mov	_graze_score, 25
 		mov	_playperf_min, 16
 		mov	_playperf_max, 32
 		mov	_bullet_template_tune, offset bullet_template_tune_easy
@@ -693,7 +693,7 @@ loc_B16F:
 
 @@normal:
 		mov	_item_point_score_at_full_dream, 10000
-		mov	score_2C97C, 50
+		mov	_graze_score, 50
 		mov	_playperf_min, 24
 		mov	_playperf_max, 40
 		jmp	short @@tune_normal
@@ -702,7 +702,7 @@ loc_B16F:
 @@hard:
 		mov	_item_point_score_at_full_dream, 15000
 		mov	_playperf, 44
-		mov	score_2C97C, 100
+		mov	_graze_score, 100
 		mov	_playperf_min, 44
 		mov	_playperf_max, 54
 		mov	_bullet_template_tune, offset bullet_template_tune_hard
@@ -711,7 +711,7 @@ loc_B16F:
 
 @@lunatic:
 		mov	_item_point_score_at_full_dream, 20000
-		mov	score_2C97C, 200
+		mov	_graze_score, 200
 		mov	_playperf, 48
 		mov	_playperf_min, 48
 		mov	_playperf_max, 58
@@ -721,7 +721,7 @@ loc_B16F:
 
 @@extra:
 		mov	_item_point_score_at_full_dream, 40000
-		mov	score_2C97C, 500
+		mov	_graze_score, 500
 		mov	_playperf_min, 32
 		mov	_playperf_max, 36
 
@@ -13104,7 +13104,7 @@ loc_17DFE:
 		jnb	short loc_17E41
 		inc	_stage_graze
 		call	hud_graze_put
-		movzx	eax, score_2C97C
+		movzx	eax, _graze_score
 		add	_score_delta, eax
 
 loc_17E41:
@@ -26557,9 +26557,6 @@ _bombing_disabled	db ?
 	evendata
 include th05/main/boss/sprites[bss].asm
 include th04/main/bullet/update[bss].asm
-public _stage_graze
-_stage_graze	dw ?
-score_2C97C	dw ?
 include th04/main/bullet/pellet_r[bss].asm
 		db 6 dup(?)
 word_2C986	dw ?

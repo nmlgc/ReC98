@@ -17,7 +17,7 @@ extern "C" {
 #include "th04/math/motion.hpp"
 #include "th05/main/playfld.hpp"
 #include "th04/main/null.hpp"
-#include "th04/main/score.h"
+#include "th04/main/score.hpp"
 #include "th04/main/rank.hpp"
 #include "th04/main/item/items.hpp"
 #include "th04/main/stage/stage.hpp"

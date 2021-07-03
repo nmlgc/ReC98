@@ -1,5 +1,8 @@
 #include "th04/score.h"
 
+extern unsigned int graze_score;	// Set per difficulty.
+extern unsigned int stage_graze;	// Reset to 0 when moving to a new stage.
+
 extern unsigned char extends_gained;
 extern unsigned long score_delta;
 

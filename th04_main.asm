@@ -612,7 +612,7 @@ loc_ADFC:
 		jmp	cs:off_AEC6[bx]
 
 @@easy:
-		mov	score_2CFFE, 100
+		mov	_graze_score, 100
 		mov	_playperf_min, 4
 		mov	_playperf_max, 16
 		mov	_bullets_add_regular, offset bullets_add_regular_easy
@@ -622,7 +622,7 @@ loc_ADFC:
 ; ---------------------------------------------------------------------------
 
 @@normal:
-		mov	score_2CFFE, 250
+		mov	_graze_score, 250
 		mov	_playperf_min, 11
 		mov	_playperf_max, 24
 		jmp	short @@tune_normal
@@ -630,7 +630,7 @@ loc_ADFC:
 
 @@hard:
 		mov	_playperf, 20
-		mov	score_2CFFE, 400
+		mov	_graze_score, 400
 		mov	_playperf_min, 20
 		mov	_playperf_max, 32
 		mov	_bullets_add_regular, offset bullets_add_regular_hard_lunatic
@@ -640,7 +640,7 @@ loc_ADFC:
 ; ---------------------------------------------------------------------------
 
 @@lunatic:
-		mov	score_2CFFE, 500
+		mov	_graze_score, 500
 		mov	_playperf, 22
 		mov	_playperf_min, 22
 		mov	_playperf_max, 34
@@ -651,7 +651,7 @@ loc_ADFC:
 ; ---------------------------------------------------------------------------
 
 @@extra:
-		mov	score_2CFFE, 2560
+		mov	_graze_score, 2560
 		mov	_playperf_min, 16
 		mov	_playperf_max, 20
 
@@ -28051,7 +28051,7 @@ loc_1CA82:
 		jnb	short loc_1CAC5
 		inc	_stage_graze
 		call	hud_graze_put
-		movzx	eax, score_2CFFE
+		movzx	eax, _graze_score
 		add	_score_delta, eax
 
 loc_1CAC5:
@@ -34359,10 +34359,6 @@ word_2CFF4	dw ?
 public _group_i_spread_angle
 _group_i_spread_angle	db ?
 include th04/main/bullet/update[bss].asm
-		db ?
-public _stage_graze
-_stage_graze	dw ?
-score_2CFFE	dw ?
 public _bullets_add_regular, _bullets_add_special
 _bullets_add_regular	dw ?
 _bullets_add_special	dw ?
