@@ -388,7 +388,7 @@ loc_ABBA:
 @@update:
 		call	main_01:pointnums_update
 		call	main_01:circles_update
-		call	sparks_update
+		call	_sparks_update
 		call	main_01:sub_10ABF
 		call	main_01:sub_104B6
 		call	_bullets_update
@@ -406,7 +406,7 @@ loc_ABBA:
 		call	main_01:player_render
 		call	_grcg_setmode_rmw_seg1
 		call	_gather_render
-		call	main_01:sparks_render
+		call	_sparks_render
 		call	main_01:items_render
 		call	main_01:pointnums_render
 		call	main_01:bullets_render
@@ -957,7 +957,7 @@ sub_B1D0	proc near
 		call	main_01:randring_fill
 		call	sub_1DA1B
 		call	main_01:sub_FFA4
-		call	sparks_init
+		call	_sparks_init
 		call	hud_score_put
 		call	sub_15D74
 		call	main_01:pointnums_init
@@ -2164,7 +2164,7 @@ tiles_render	proc near
 		call	main_01:enemies_invalidate
 		call	main_01:bullets_gather_invalidate
 		call	items_invalidate
-		call	sparks_invalidate
+		call	_sparks_invalidate
 		call	main_01:pointnums_invalidate
 		call	_midboss_invalidate?
 		call	_stage_invalidate

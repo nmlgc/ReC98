@@ -1,6 +1,5 @@
-; void pascal near sparks_update(void);
-public SPARKS_UPDATE
-sparks_update	proc near
+public _sparks_update
+_sparks_update proc near
 	push	si
 	push	di
 	mov	di, SPARK_COUNT
@@ -42,12 +41,11 @@ sparks_update	proc near
 	pop	di
 	pop	si
 	retn
-sparks_update	endp
+_sparks_update endp
 
 
-; void pascal near sparks_render(void);
-public SPARKS_RENDER
-sparks_render	proc near
+public _sparks_render
+_sparks_render proc near
 	push	si
 	push	di
 	mov	ah, GC_BR
@@ -78,13 +76,12 @@ sparks_render	proc near
 	pop	di
 	pop	si
 	retn
-sparks_render	endp
+_sparks_render endp
 	even
 
 
-; void pascal near sparks_invalidate(void);
-public SPARKS_INVALIDATE
-sparks_invalidate	proc near
+public _sparks_invalidate
+_sparks_invalidate proc near
 	push	si
 	push	di
 	mov	_tile_invalidate_box, (SPARK_W shl 16) or SPARK_H
@@ -103,12 +100,11 @@ sparks_invalidate	proc near
 	pop	di
 	pop	si
 	retn
-sparks_invalidate	endp
+_sparks_invalidate endp
 
 
-; void pascal near sparks_init(void);
-public SPARKS_INIT
-sparks_init	proc near
+public _sparks_init
+_sparks_init proc near
 	push	si
 	push	di
 	mov	si, offset _sparks
@@ -124,4 +120,4 @@ sparks_init	proc near
 	pop	di
 	pop	si
 	retn
-sparks_init	endp
+_sparks_init endp

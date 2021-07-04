@@ -1,7 +1,3 @@
-; Adds [count] new spark sprites with the given [distance] in random
-; directions away from ([center_x], [center_y]).
-
-; int pascal sparks_add_random(Subpixel center_x, Subpixel center_y, Subpixel distance, int count);
 public SPARKS_ADD_RANDOM
 sparks_add_random	proc far
 
@@ -50,14 +46,9 @@ sparks_add_random	proc far
 @@ret:
 	pop	bp
 	retf	8
-sparks_add_random	endp
+sparks_add_random endp
 
 
-; Adds [count] new spark sprites along a circle with the given [distance] away
-; from ([center_x], [center_y]). Obviously ignores the random angle set in
-; sparks_init().
-
-; int pascal sparks_add_circle(Subpixel center_x, Subpixel center_y, Subpixel distance, int count);
 public SPARKS_ADD_CIRCLE
 sparks_add_circle	proc near
 
@@ -112,5 +103,5 @@ sparks_add_circle	proc near
 @@ret:
 	pop	bp
 	retn	8
-sparks_add_circle	endp
+sparks_add_circle endp
 	nop

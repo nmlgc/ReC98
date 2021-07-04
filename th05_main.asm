@@ -427,7 +427,7 @@ loc_AED7:
 @@update:
 		call	pointnums_update
 		call	circles_update
-		call	sparks_update
+		call	_sparks_update
 		call	sub_1214A
 		call	sub_1240B
 		call	lasers_update
@@ -452,7 +452,7 @@ loc_AF2D:
 		call	_boss_custombullets_render
 		call	lasers_render
 		call	_gather_render
-		call	sparks_render
+		call	_sparks_render
 		call	items_render
 		call	pointnums_render
 		call	sub_100C6
@@ -1104,7 +1104,7 @@ sub_B55A	proc near
 		call	randring_fill
 		call	sub_16D67
 		call	sub_C473
-		call	sparks_init
+		call	_sparks_init
 		call	hud_score_put
 		call	pointnums_init
 		nopcall	hud_put
@@ -1845,7 +1845,7 @@ tiles_render	proc near
 		call	enemies_invalidate
 		call	bullets_gather_invalidate
 		call	items_invalidate
-		call	sparks_invalidate
+		call	_sparks_invalidate
 		call	pointnums_invalidate
 		call	_midboss_invalidate?
 		call	_stage_invalidate
