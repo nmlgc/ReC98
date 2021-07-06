@@ -462,7 +462,7 @@ loc_AF2D:
 		call	_popup
 		call	sub_10287
 		call	far ptr	_input_reset_sense
-		mov	al, byte_25FF8
+		mov	al, _slowdown_caused_by_bullets
 		mov	ah, 0
 		push	ax
 		mov	ax, vsync_Count1
@@ -3956,7 +3956,7 @@ sub_EACE	proc near
 		mov	_stage_frame_mod8, 0
 		mov	_stage_frame_mod16, 0
 		mov	word_25FE6, 1
-		mov	byte_25FF8, 0
+		mov	_slowdown_caused_by_bullets, 0
 		mov	byte_25FE8, 0
 		mov	_palette_changed, 0
 		mov	_bullet_zap_active, 0
@@ -13133,7 +13133,7 @@ loc_17E78:
 		jl	loc_17C2E
 		cmp	_turbo_mode, 0
 		jnz	loc_17FB7
-		mov	byte_25FF8, 0
+		mov	_slowdown_caused_by_bullets, 0
 		mov	di, 2Ah	; '*'
 		mov	al, _rank
 		mov	ah, 0
@@ -13153,7 +13153,7 @@ loc_17EAB:
 
 loc_17EB5:
 		mov	word_25FE6, 2
-		mov	byte_25FF8, 1
+		mov	_slowdown_caused_by_bullets, 1
 		jmp	loc_17FB7
 ; ---------------------------------------------------------------------------
 
@@ -26522,8 +26522,9 @@ include th04/main/ems[bss].asm
 _turbo_mode	db ?
 		db ?
 include th02/main/demo[bss].asm
-byte_25FF8	db ?
-		db ?
+public _slowdown_caused_by_bullets
+_slowdown_caused_by_bullets	db ?
+	evendata
 include th04/main/bullet/template[bss].asm
 include th05/main/lasers[bss].asm
 include th04/main/midboss/vars[bss].asm
