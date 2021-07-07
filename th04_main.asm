@@ -44,7 +44,7 @@ include th04/main/enemy/enemy.inc
 	extern __ctype:byte
 
 	.seq
-main_01 group main__TEXT, PLAYER_P_TEXT, main_0_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT
+main_01 group SLOWDOWN_TEXT, main__TEXT, PLAYER_P_TEXT, main_0_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT
 g_SHARED group SHARED, SHARED_
 main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, main_033_TEXT
 
@@ -266,30 +266,15 @@ _TEXT		ends
 
 ; ===========================================================================
 
+SLOWDOWN_TEXT segment word public 'CODE' use16
+	_slowdown_frame_delay procdesc near
+SLOWDOWN_TEXT ends
+
 ; Segment type:	Pure code
 main__TEXT	segment	word public 'CODE' use16
 		assume cs:main_01
 		;org 1
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_AAF2	proc near
-		push	bp
-		mov	bp, sp
-
-loc_AAF5:
-		mov	ax, vsync_Count1
-		cmp	ax, word_266D0
-		jb	short loc_AAF5
-		mov	vsync_Count1, 0
-		mov	word_266D0, 1
-		pop	bp
-		retn
-sub_AAF2	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -357,7 +342,7 @@ sub_AB88	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	word_266D0, 1
+		mov	_slowdown_factor, 1
 		push	1
 		call	frame_delay
 		call	main_01:far ptr	_input_reset_sense
@@ -417,7 +402,7 @@ loc_ABBA:
 		call	main_01:sub_CD36
 		call	main_01:far ptr	_input_reset_sense
 		mov	ax, vsync_Count1
-		cmp	ax, word_266D0
+		cmp	ax, _slowdown_factor
 		jb	short loc_AC56
 		mov	ax, 1
 		jmp	short loc_AC58
@@ -430,7 +415,7 @@ loc_AC58:
 		cwde
 		add	_total_slow_frames, eax
 		inc	_total_frames
-		call	main_01:sub_AAF2
+		call	_slowdown_frame_delay
 		cmp	_palette_changed, 0
 		jz	short loc_AC7A
 		call	far ptr	palette_show
@@ -10740,7 +10725,7 @@ sub_11ECB	proc near
 		mov	_stage_frame_mod4, 0
 		mov	_stage_frame_mod8, 0
 		mov	_stage_frame_mod16, 0
-		mov	word_266D0, 1
+		mov	_slowdown_factor, 1
 		mov	byte_266D2, 0
 		mov	_palette_changed, 0
 		mov	_bullet_zap_active, 0
@@ -28101,7 +28086,7 @@ loc_1CB31:
 		jg	loc_1CC19
 
 loc_1CB3B:
-		mov	word_266D0, 2
+		mov	_slowdown_factor, 2
 		jmp	loc_1CC19
 ; ---------------------------------------------------------------------------
 
@@ -29861,7 +29846,7 @@ loc_1E775:
 
 loc_1E778:
 		mov	_bg_render_bombing_func, offset tiles_render_all
-		mov	word_266D0, 2
+		mov	_slowdown_factor, 2
 		inc	_boss_phase_frame
 		mov	ax, _boss_phase_frame
 		mov	bx, 8
@@ -34322,14 +34307,12 @@ include th02/hardware/pages[bss].asm
 map_seg	dw ?
 include th04/main/tile/tiles[bss].asm
 include th04/main/frames[bss].asm
-word_266D0	dw ?
 byte_266D2	db ?
 include th03/hardware/palette_changed[bss].asm
 include th04/main/play[bss].asm
 include th04/main/drawpoint[bss].asm
 include th04/main/ems[bss].asm
-_turbo_mode	db ?
-		db ?
+include th04/main/slowdown[bss].asm
 include th04/main/bullet/template[bss].asm
 include th04/main/midboss/vars[bss].asm
 include th04/main/boss/vars[bss].asm

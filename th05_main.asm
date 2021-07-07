@@ -37,7 +37,7 @@ include th05/main/enemy/enemy.inc
 	extern _strlen:proc
 
 	.seq
-main_01 group mai_TEXT, CFG_LRES_TEXT, main_TEXT, main__TEXT, main_0_TEXT, PLAYER_P_TEXT, main_01_TEXT
+main_01 group SLOWDOWN_TEXT, mai_TEXT, CFG_LRES_TEXT, main_TEXT, main__TEXT, main_0_TEXT, PLAYER_P_TEXT, main_01_TEXT
 g_SHARED group SHARED, SHARED_
 main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, main_032_TEXT, main_033_TEXT, main_034_TEXT, main_035_TEXT, main_036_TEXT
 
@@ -311,30 +311,15 @@ _TEXT		ends
 
 ; ===========================================================================
 
+SLOWDOWN_TEXT segment word public 'CODE' use16
+	_slowdown_frame_delay procdesc near
+SLOWDOWN_TEXT ends
+
 ; Segment type:	Pure code
 mai_TEXT	segment	word public 'CODE' use16
 		assume cs:main_01
 		;org 0Dh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_AE1E	proc near
-		push	bp
-		mov	bp, sp
-
-loc_AE21:
-		mov	ax, vsync_Count1
-		cmp	ax, word_25FE6
-		jb	short loc_AE21
-		mov	vsync_Count1, 0
-		mov	word_25FE6, 1
-		pop	bp
-		retn
-sub_AE1E	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -397,7 +382,7 @@ _main		endp
 sub_AEA6	proc near
 		push	bp
 		mov	bp, sp
-		mov	word_25FE6, 1
+		mov	_slowdown_factor, 1
 		push	1
 		call	frame_delay
 		call	far ptr	_input_reset_sense
@@ -466,7 +451,7 @@ loc_AF2D:
 		mov	ah, 0
 		push	ax
 		mov	ax, vsync_Count1
-		cmp	ax, word_25FE6
+		cmp	ax, _slowdown_factor
 		jb	short loc_AF86
 		mov	ax, 1
 		jmp	short loc_AF88
@@ -514,7 +499,7 @@ loc_AFD1:
 loc_AFDF:
 		cmp	byte_20A70, 0
 		jnz	short loc_AFEB
-		call	sub_AE1E
+		call	_slowdown_frame_delay
 		jmp	short loc_AFF0
 ; ---------------------------------------------------------------------------
 
@@ -3955,7 +3940,7 @@ sub_EACE	proc near
 		mov	_stage_frame_mod4, 0
 		mov	_stage_frame_mod8, 0
 		mov	_stage_frame_mod16, 0
-		mov	word_25FE6, 1
+		mov	_slowdown_factor, 1
 		mov	_slowdown_caused_by_bullets, 0
 		mov	byte_25FE8, 0
 		mov	_palette_changed, 0
@@ -13152,7 +13137,7 @@ loc_17EAB:
 		jg	loc_17FB7
 
 loc_17EB5:
-		mov	word_25FE6, 2
+		mov	_slowdown_factor, 2
 		mov	_slowdown_caused_by_bullets, 1
 		jmp	loc_17FB7
 ; ---------------------------------------------------------------------------
@@ -18309,7 +18294,7 @@ loc_1AEDF:
 
 loc_1AEE2:
 		mov	_bg_render_bombing_func, offset tiles_render_all
-		mov	word_25FE6, 2
+		mov	_slowdown_factor, 2
 		mov	ax, _boss_phase_frame
 		mov	bx, 8
 		cwd
@@ -25882,7 +25867,7 @@ loc_1FC52:
 
 loc_1FC55:
 		mov	_bg_render_bombing_func, offset tiles_render_all
-		mov	word_25FE6, 2
+		mov	_slowdown_factor, 2
 		mov	ax, _boss_phase_frame
 		mov	bx, 8
 		cwd
@@ -26514,13 +26499,11 @@ include th02/hardware/pages[bss].asm
 map_seg	dw ?
 include th04/main/tile/tiles[bss].asm
 include th04/main/frames[bss].asm
-word_25FE6	dw ?
 byte_25FE8	db ?
 include th03/hardware/palette_changed[bss].asm
 include th04/main/play[bss].asm
 include th04/main/ems[bss].asm
-_turbo_mode	db ?
-		db ?
+include th04/main/slowdown[bss].asm
 include th02/main/demo[bss].asm
 public _slowdown_caused_by_bullets
 _slowdown_caused_by_bullets	db ?
