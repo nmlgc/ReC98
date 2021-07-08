@@ -26363,17 +26363,10 @@ off_22884	dw offset sub_1F776
 		dw offset sub_1F7BA
 		dw offset sub_1F823
 byte_2288A	db 0
-public _popup_frame, _popup_boss_bgm_frame
-_popup_boss_bgm_frame	db 0
-_popup_frame	db 0
-		db 0
-include th04/formats/bb_txt[data].asm
 include th04/main/hud/popup[data].asm
-public _PLAYFIELD_BLANK_ROW
-_PLAYFIELD_BLANK_ROW	dd aPLAYFIELD_BLANK_ROW
 include th04/gaiji/demoplay[data].asm
 aPLAYFIELD_BLANK_ROW	db '                                                ',0
-		db 0
+	evendata
 _SHOT_FUNCS label word
 	; Reimu
 	dw shot_l0

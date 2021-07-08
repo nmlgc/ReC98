@@ -34709,14 +34709,7 @@ byte_22E9C	db 0
 _enemies_gone	dw 0
 _enemies_killed	dw 0
 byte_22EA2	db 0
-public _popup_frame, _popup_boss_bgm_frame
-_popup_boss_bgm_frame	db 0
-_popup_frame	db 0
-		db    0
-include th04/formats/bb_txt[data].asm
 include th04/main/hud/popup[data].asm
-public _PLAYFIELD_BLANK_ROW
-_PLAYFIELD_BLANK_ROW	dd aPLAYFIELD_BLANK_ROW
 public _STAGE_TITLES, _BGM_TITLES
 _STAGE_TITLES	label dword
 		dd aMCB@bPhantomLa	; "å∂ñÏÅ@Å` Phantom Land "
