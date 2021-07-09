@@ -8313,10 +8313,9 @@ main_0_TEXT	ends
 	POPUP_TITLES_INVALIDATE procdesc near
 	POPUP_TITLES_UPDATE_AND_RENDER procdesc near
 	POPUP_BOSS_BGM_UPDATE_AND_RENDER procdesc near
+	POPUP_UPDATE_AND_RENDER procdesc near
 
 main_01_TEXT	segment	byte public 'CODE' use16
-
-include th04/main/hud/popup.asm
 include th04/main/player/pos_update_and_clamp.asm
 
 ; =============== S U B	R O U T	I N E =======================================

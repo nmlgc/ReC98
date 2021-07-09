@@ -40,7 +40,6 @@ include th04/main/enemy/enemy.inc
 	extern SCOPY@:proc
 	extern _execl:proc
 	extern _memcpy:proc
-	extern _strlen:proc
 	extern _tolower:proc
 	extern __ctype:byte
 
@@ -9779,9 +9778,9 @@ main_0_TEXT	ends
 	POPUP_TITLES_INVALIDATE procdesc near
 	POPUP_TITLES_UPDATE_AND_RENDER procdesc near
 	POPUP_BOSS_BGM_UPDATE_AND_RENDER procdesc near
+	POPUP_UPDATE_AND_RENDER procdesc near
 
 main_01_TEXT	segment	byte public 'CODE' use16
-
 include th04/main/hud/popup.asm
 include th04/formats/bb_txt_load.asm
 

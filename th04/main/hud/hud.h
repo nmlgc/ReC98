@@ -5,6 +5,17 @@
 // Renders the "Enemy!!" caption and the HP bar, showing the given [bar_value]
 // between 0 and BAR_MAX.
 void pascal hud_hp_put(int bar_value);
+
+#if (GAME == 5)
+	// Prints [points] using the bold gaiji font, right-aligned at
+	// 	([left+8], [y]),
+	// in white, using up to 7 digits (8 if the "continue" digit is included).
+	// Larger numbers will overflow the most significant digit into the A-Z
+	// range.
+	void pascal hud_points_put(
+		utram_x_t left, utram_y_t y, unsigned long points
+	);
+#endif
 // ---------
 
 // High-level

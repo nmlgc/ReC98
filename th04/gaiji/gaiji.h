@@ -6,6 +6,7 @@
 #include "th04/gaiji/bar.h"
 
 typedef enum {
+	g_NULL = '\0',
 	g_EMPTY = 0x02,
 	gaiji_bar(0x20),
 	gaiji_bar_max(0x30),

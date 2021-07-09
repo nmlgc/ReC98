@@ -6,6 +6,8 @@ enum popup_id_t {
 	#if (GAME == 5)
 		POPUP_ID_DREAMBONUS_MAX = 4,
 	#endif
+
+	_popup_id_t_FORCE_UINT8 = 0xFF
 };
 
 extern unsigned char bgm_title_id;	// only used in TH04

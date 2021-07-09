@@ -24,11 +24,6 @@ hud_int_put	endp
 	nop
 
 
-; Prints [points] using the bold gaiji font, right-aligned at ([left+8], [y]),
-; in white, using up to 7 digits (8 if the "continue" digit is included).
-; Larger numbers will overflow the most significant digit into the A-Z range.
-
-; void pascal far hud_points_put(utram_x_t left, utram_y_t y, unsigned long points);
 public HUD_POINTS_PUT
 hud_points_put	proc far
 
