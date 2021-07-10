@@ -3,6 +3,7 @@
 #include "x86real.h"
 #include "pc98.h"
 #include "master.hpp"
+#include "th04/score.h"
 #include "th01/math/subpixel.hpp"
 #include "th04/gaiji/gaiji.h"
 #include "th04/formats/bb.h"
@@ -423,3 +424,35 @@ void pascal near popup_update_and_render(void)
 	#undef gaiji_len
 	#undef frame
 }
+
+#if (GAME == 4)
+	void pascal near popup_put_points_th04(unsigned long points)
+	{
+		int i;
+		bool16 past_leading_zeroes;
+		gaiji_th04_t buf[SCORE_DIGITS + 1];
+		unsigned long divisor = 1000000; // Must match SCORE_DIGITS!
+		unsigned long digit;
+
+		i = 0;
+		past_leading_zeroes = false;
+		while(divisor > 1) {
+			digit = (points / divisor);
+			points = (points % divisor);
+			past_leading_zeroes |= digit;
+			if(past_leading_zeroes) {
+				buf[i] = static_cast<gaiji_th04_t>(gb_0_ + digit);
+			} else {
+				buf[i] = g_EMPTY;
+			}
+			divisor /= 10;
+			i++;
+		}
+		// (ones)
+		buf[SCORE_DIGITS - 2] = static_cast<gaiji_th04_t>(gb_0_ + points);
+		buf[SCORE_DIGITS - 1] = gb_0_;  // ("continues used" digit)
+		buf[SCORE_DIGITS - 0] = g_NULL; // (null terminator)
+
+		popup_put(PLAYFIELD_TRAM_CENTER_X, POPUP_TRAM_Y, buf);
+	}
+#endif

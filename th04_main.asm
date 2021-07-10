@@ -9781,7 +9781,6 @@ main_0_TEXT	ends
 	POPUP_UPDATE_AND_RENDER procdesc near
 
 main_01_TEXT	segment	byte public 'CODE' use16
-include th04/main/hud/popup.asm
 include th04/formats/bb_txt_load.asm
 
 ; =============== S U B	R O U T	I N E =======================================
