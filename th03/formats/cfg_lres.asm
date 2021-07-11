@@ -1,5 +1,5 @@
-public CFG_LOAD_RESIDENT
-cfg_load_resident	proc near
+public _cfg_load_resident_ptr
+_cfg_load_resident_ptr	proc near
 
 @@cfg	= cfg_t ptr -(size cfg_t)
 
@@ -19,4 +19,4 @@ cfg_load_resident	proc near
 	pop	si
 	leave
 	retn
-cfg_load_resident	endp
+_cfg_load_resident_ptr	endp

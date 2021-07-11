@@ -228,7 +228,7 @@ _envp		= dword	ptr  0Ch
 		enter	4, 0
 		mov	word ptr [bp+var_4+2], ds
 		mov	word ptr [bp+var_4], 0A8h ; '¨'
-		call	cfg_load_resident
+		call	_cfg_load_resident_ptr
 		or	ax, ax
 		jz	locret_A290
 		les	bx, _resident

@@ -1,5 +1,5 @@
-public CFG_LOAD_RESIDENT
-cfg_load_resident	proc near
+public _cfg_load_resident_ptr
+_cfg_load_resident_ptr	proc near
 	mov	ax, 3D00h
 	mov	dx, offset _CFG_FN
 	int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
@@ -20,5 +20,5 @@ cfg_load_resident	proc near
 	mov	word ptr _resident+2, ax
 	mov	word ptr _resident, 0
 	retn
-cfg_load_resident	endp
+_cfg_load_resident_ptr	endp
 	nop

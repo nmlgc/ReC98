@@ -244,7 +244,7 @@ _envp		= dword	ptr  0Ch
 
 		push	bp
 		mov	bp, sp
-		call	cfg_load_resident
+		call	_cfg_load_resident_ptr
 		or	ax, ax
 		jz	loc_A693
 		mov	_mem_assign_paras, MEM_ASSIGN_PARAS_MAINE

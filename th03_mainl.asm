@@ -873,7 +873,7 @@ _argv		= dword	ptr  8
 _envp		= dword	ptr  0Ch
 
 		enter	2, 0
-		call	cfg_load_resident
+		call	_cfg_load_resident_ptr
 		or	ax, ax
 		jz	@@ret
 		call	game_init_main pascal, ds, offset aCOul

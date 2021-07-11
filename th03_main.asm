@@ -150,7 +150,7 @@ _envp		= dword	ptr  0Ch
 		mov	bp, sp
 		push	si
 		call	game_init_main pascal, ds, offset aCOul
-		call	cfg_load_resident
+		call	_cfg_load_resident_ptr
 		or	ax, ax
 		jz	short @@ret
 		mov	_snd_midi_active, 0
