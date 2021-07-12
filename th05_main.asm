@@ -37,7 +37,7 @@ include th05/main/enemy/enemy.inc
 	extern _strlen:proc
 
 	.seq
-main_01 group main_TEXT, main__TEXT, main_0_TEXT, main_01_TEXT
+main_01 group mai_TEXT, CFG_LRES_TEXT, main_TEXT, main__TEXT, main_0_TEXT, main_01_TEXT
 g_SHARED group SHARED, SHARED_
 main_03 group main_031_TEXT, main_032_TEXT, main_033_TEXT, main_034_TEXT, main_035_TEXT
 
@@ -312,7 +312,7 @@ _TEXT		ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-main_TEXT	segment	word public 'CODE' use16
+mai_TEXT	segment	word public 'CODE' use16
 		assume cs:main_01
 		;org 0Dh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
@@ -1526,8 +1526,13 @@ loc_BAAA:
 		pop	bp
 		retn
 sub_BA66	endp
+mai_TEXT	ends
 
-include th05/formats/cfg_lres.asm
+CFG_LRES_TEXT	segment	byte public 'CODE' use16
+	_cfg_load_resident_ptr procdesc near
+CFG_LRES_TEXT	ends
+
+main_TEXT	segment	word public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 

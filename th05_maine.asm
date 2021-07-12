@@ -27,7 +27,7 @@ include th04/hardware/grppsafx.inc
 	extern _tolower:proc
 	extern __ctype:byte
 
-maine_01 group maine_01_TEXT, maine_01__TEXT, maine_01___TEXT
+maine_01 group CFG_LRES_TEXT, maine_01_TEXT, maine_01__TEXT, maine_01___TEXT
 g_SHARED group SHARED, SHARED_
 
 ; ===========================================================================
@@ -154,13 +154,15 @@ _TEXT		ends
 
 ; ===========================================================================
 
+CFG_LRES_TEXT	segment	byte public 'CODE' use16
+	_cfg_load_resident_ptr procdesc near
+CFG_LRES_TEXT	ends
+
 ; Segment type:	Pure code
 maine_01_TEXT	segment	byte public 'CODE' use16
 		assume cs:maine_01
 		;org 5
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-include th03/formats/cfg_lres.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

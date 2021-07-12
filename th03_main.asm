@@ -27,6 +27,8 @@ include libs/sprite16/sprite16.inc
 	extern _execl:proc
 	.seq
 
+main_01 group main_0_TEXT, CFG_LRES_TEXT, main_01_TEXT
+
 ; ===========================================================================
 
 ; Segment type:	Pure code
@@ -129,8 +131,8 @@ _TEXT		ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-main_01_TEXT	segment	word public 'CODE' use16
-		assume cs:main_01_TEXT
+main_0_TEXT	segment	word public 'CODE' use16
+		assume cs:main_01
 		;org 5
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -1403,8 +1405,13 @@ sub_A310	endp
 
 ; ---------------------------------------------------------------------------
 		nop
-include th03/formats/cfg_lres.asm
-		db 0
+main_0_TEXT	ends
+
+CFG_LRES_TEXT	segment	byte public 'CODE' use16
+	_cfg_load_resident_ptr procdesc near
+CFG_LRES_TEXT	ends
+
+main_01_TEXT	segment	word public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 

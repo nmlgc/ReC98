@@ -44,7 +44,7 @@ include th04/main/enemy/enemy.inc
 	extern __ctype:byte
 
 	.seq
-main_01 group main_0_TEXT, main_01_TEXT, main_012_TEXT
+main_01 group main_0_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT
 g_SHARED group SHARED, SHARED_
 main_03 group main_032_TEXT, main_033_TEXT
 
@@ -10777,9 +10777,13 @@ sub_11ECB	proc near
 		pop	bp
 		retn
 sub_11ECB	endp
+main_012_TEXT	ends
 
-include th03/formats/cfg_lres.asm
-		db    0
+CFG_LRES_TEXT	segment	byte public 'CODE' use16
+	_cfg_load_resident_ptr procdesc near
+CFG_LRES_TEXT	ends
+
+main_013_TEXT	segment	word public 'CODE' use16
 include th04/main/tile/bb_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -12813,8 +12817,7 @@ loc_130E9:
 		leave
 		retn
 gengetsu_fg_render	endp
-
-main_012_TEXT	ends
+main_013_TEXT	ends
 
 ; ===========================================================================
 

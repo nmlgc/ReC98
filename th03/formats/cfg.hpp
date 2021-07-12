@@ -19,13 +19,16 @@ void near pascal cfg_load(void);
 // value.
 resident_t __seg* near cfg_load_resident_ptr(void);
 
-static inline void cfg_load_and_set_resident(cfg_t &cfg, const char *cfg_fn) {
+static inline resident_t __seg* cfg_load_and_set_resident(
+	cfg_t &cfg, const char *cfg_fn
+) {
 	file_ropen(cfg_fn);
 	file_read(&cfg, sizeof(cfg));
 	file_close();
 
 	resident_t __seg *resident_seg = cfg.resident;
 	resident = resident_seg;
+	return resident_seg;
 }
 
 // Saves the .CFG file, without changing its resident segment pointer.

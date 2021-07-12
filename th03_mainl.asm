@@ -28,6 +28,8 @@ include th01/hardware/grppsafx.inc
 	extern _memcpy:proc
 	extern _tolower:proc
 
+mainl_01 group CFG_LRES_TEXT, mainl_01_TEXT
+
 ; ===========================================================================
 
 ; Segment type:	Pure code
@@ -129,13 +131,15 @@ _TEXT		ends
 
 ; ===========================================================================
 
+CFG_LRES_TEXT	segment	byte public 'CODE' use16
+	_cfg_load_resident_ptr procdesc near
+CFG_LRES_TEXT	ends
+
 ; Segment type:	Pure code
 mainl_01_TEXT	segment	byte public 'CODE' use16
-		assume cs:mainl_01_TEXT
+		assume cs:mainl_01
 		;org 3
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-include th03/formats/cfg_lres.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
