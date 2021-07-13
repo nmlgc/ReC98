@@ -1,6 +1,9 @@
 #include "th04/main/playperf.hpp"
 #include "th04/main/bullet/bullet.hpp"
 
+void pascal near bullets_add_regular_raw(void);
+void pascal near bullets_add_special_raw(void);
+
 #define tmpl bullet_template
 
 void near tune_for_easy(void)

@@ -10109,7 +10109,7 @@ sub_15A5C	proc near
 		cmp	_bullet_zap_active, 0
 		jnz	short locret_15A6E
 		push	word ptr _bullet_template.BT_angle
-		call	loc_15C94
+		call	_bullets_add_raw
 		pop	word ptr _bullet_template.BT_angle
 
 locret_15A6E:
@@ -10127,7 +10127,7 @@ sub_15A70	proc near
 		jnz	short locret_15A8C
 		mov	byte_221C0, 1
 		push	word ptr _bullet_template.BT_angle
-		call	loc_15C94
+		call	_bullets_add_raw
 		pop	word ptr _bullet_template.BT_angle
 		mov	byte_221C0, 0
 
@@ -10434,7 +10434,7 @@ sub_15C36	endp
 
 ; ---------------------------------------------------------------------------
 
-loc_15C94	proc near
+_bullets_add_raw	proc near
 		cmp	_bullet_template.spawn_type, BST_GATHER_PELLET or BST_SLOWDOWN
 		jz	short loc_15CA2
 		cmp	_bullet_template.spawn_type, BST_GATHER_PELLET
@@ -10579,7 +10579,7 @@ loc_15DDF:
 		pop	di
 		pop	si
 		retn
-loc_15C94	endp
+_bullets_add_raw	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 

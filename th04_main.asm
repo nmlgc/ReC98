@@ -28234,7 +28234,7 @@ var_1		= byte ptr -1
 		mov	[bp+var_2], al
 		mov	al, _bullet_template.speed
 		mov	[bp+var_1], al
-		call	sub_1D294
+		call	bullets_add_regular_raw
 		mov	al, [bp+var_2]
 		mov	_bullet_template.count, al
 		mov	al, [bp+var_1]
@@ -28259,7 +28259,7 @@ var_1		= byte ptr -1
 		jnz	short locret_1CF30
 		mov	al, _bullet_template.speed
 		mov	[bp+var_1], al
-		call	sub_1D294
+		call	bullets_add_regular_raw
 		mov	al, [bp+var_1]
 		mov	_bullet_template.speed, al
 
@@ -28282,7 +28282,7 @@ var_1		= byte ptr -1
 		jnz	short locret_1CF4C
 		mov	al, _bullet_template.speed
 		mov	[bp+var_1], al
-		call	sub_1D294
+		call	bullets_add_regular_raw
 		mov	al, [bp+var_1]
 		mov	_bullet_template.speed, al
 
@@ -28305,7 +28305,7 @@ var_1		= byte ptr -1
 		jnz	short locret_1CF68
 		mov	al, _bullet_template.speed
 		mov	[bp+var_1], al
-		call	sub_1D3BF
+		call	bullets_add_special_raw
 		mov	al, [bp+var_1]
 		mov	_bullet_template.speed, al
 
@@ -28328,7 +28328,7 @@ var_1		= byte ptr -1
 		jnz	short locret_1CF84
 		mov	al, _bullet_template.speed
 		mov	[bp+var_1], al
-		call	sub_1D3BF
+		call	bullets_add_special_raw
 		mov	al, [bp+var_1]
 		mov	_bullet_template.speed, al
 
@@ -28351,7 +28351,7 @@ var_1		= byte ptr -1
 		jnz	short locret_1CFA0
 		mov	al, _bullet_template.speed
 		mov	[bp+var_1], al
-		call	sub_1D3BF
+		call	bullets_add_special_raw
 		mov	al, [bp+var_1]
 		mov	_bullet_template.speed, al
 
@@ -28757,8 +28757,8 @@ sub_1D230	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_1D294	proc near
+public BULLETS_ADD_REGULAR_RAW
+bullets_add_regular_raw	proc near
 
 @@spawn_state		= byte ptr -5
 var_4		= byte ptr -4
@@ -28891,14 +28891,14 @@ loc_1D3BB:
 		pop	si
 		leave
 		retn
-sub_1D294	endp
+bullets_add_regular_raw	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_1D3BF	proc near
+public BULLETS_ADD_SPECIAL_RAW
+bullets_add_special_raw	proc near
 
 @@spawn_state		= byte ptr -4
 var_3		= byte ptr -3
@@ -29001,7 +29001,7 @@ loc_1D48A:
 		pop	si
 		leave
 		retn
-sub_1D3BF	endp
+bullets_add_special_raw	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
