@@ -46,7 +46,7 @@ include th04/main/enemy/enemy.inc
 	.seq
 main_01 group main_0_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT
 g_SHARED group SHARED, SHARED_
-main_03 group main_032_TEXT, main_033_TEXT
+main_03 group GATHER_TEXT, main_032_TEXT, main_033_TEXT
 
 ; ===========================================================================
 
@@ -405,7 +405,7 @@ loc_ABBA:
 		call	main_01:shots_render
 		call	main_01:player_render
 		call	_grcg_setmode_rmw_seg1
-		call	gather_render
+		call	_gather_render
 		call	main_01:sparks_render
 		call	main_01:items_render
 		call	main_01:pointnums_render
@@ -12859,7 +12859,7 @@ SHARED_	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-main_032_TEXT	segment	byte public 'CODE' use16
+GATHER_TEXT	segment	byte public 'CODE' use16
 		assume cs:main_03
 		;org 0Ch
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
@@ -12950,8 +12950,10 @@ gather_update	proc far
 		retf
 gather_update	endp
 
-include th04/main/gather_render.asm
-		db    0
+	extern _gather_render:proc
+GATHER_TEXT	ends
+
+main_032_TEXT	segment	word public 'CODE' use16
 include th04/main/scroll_y_3.asm
 MOTION_UPDATE_DEF 2
 RANDRING_NEXT_DEF 2

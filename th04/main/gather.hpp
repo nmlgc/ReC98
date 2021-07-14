@@ -61,7 +61,12 @@ void near gather_add_only(void);
 // for any other value of [frame].
 void pascal near gather_add_only_3stack(
 	int frame, uint4_t col_for_0, uint4_t col_for_2_and_4
-)
+);
+
+// Blits the gather point sprite to ([left], [top]). Assumptions:
+// • ES is already be set to the beginning of a VRAM segment
+// • The GRCG is active, and set to the intended color
+void __fastcall near gather_point_render(screen_x_t left, vram_y_t top);
 
 void pascal gather_update(void);
-void pascal gather_render(void);
+void gather_render(void);

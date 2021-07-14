@@ -24,4 +24,14 @@
 	void far playfield_tram_wipe(void);
 #endif
 
+#define playfield_encloses(center_x, center_y, w, h) ( \
+	(center_x > to_sp(0 - (w / 2))) && \
+	(center_x < to_sp(PLAYFIELD_W + (w / 2))) && \
+	(center_y > to_sp(0 - (h  / 2))) && \
+	(center_y < to_sp(PLAYFIELD_H + (h / 2))) \
+)
+
+#define playfield_encloses_point(center, w, h) \
+	playfield_encloses(center.x, center.y, w, h)
+
 #include "th01/main/playfld.hpp"

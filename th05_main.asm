@@ -451,7 +451,7 @@ loc_AF2D:
 		call	_grcg_setmode_rmw_seg1
 		call	_boss_custombullets_render
 		call	lasers_render
-		call	gather_render
+		call	_gather_render
 		call	sparks_render
 		call	items_render
 		call	pointnums_render
@@ -11606,7 +11606,7 @@ loc_16B0F:
 		retf
 gather_update	endp
 
-include th04/main/gather_render.asm
+	extern _gather_render:proc
 main_032_TEXT	ends
 
 main_033_TEXT	segment	byte public 'CODE' use16
