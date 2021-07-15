@@ -46,7 +46,7 @@ include th04/main/enemy/enemy.inc
 	.seq
 main_01 group main_0_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT
 g_SHARED group SHARED, SHARED_
-main_03 group GATHER_TEXT, main_032_TEXT, main_033_TEXT
+main_03 group GATHER_TEXT, SCROLLY3_TEXT, main_032_TEXT, main_033_TEXT
 
 ; ===========================================================================
 
@@ -12953,8 +12953,14 @@ gather_update	endp
 	extern _gather_render:proc
 GATHER_TEXT	ends
 
+SCROLLY3_TEXT	segment	word public 'CODE' use16
+	SCROLL_SUBPIXEL_Y_TO_VRAM_SEG3 procdesc pascal near \
+		y:word
+	SCROLL_SUBPIXEL_Y_TO_VRAM_ALWAYS procdesc pascal near \
+		y:word
+SCROLLY3_TEXT	ends
+
 main_032_TEXT	segment	word public 'CODE' use16
-include th04/main/scroll_y_3.asm
 MOTION_UPDATE_DEF 2
 RANDRING_NEXT_DEF 2
 		db    0

@@ -44,7 +44,7 @@ TUNE_FOR_EASY	label near
 	cmp	@@group, BG_RANDOM_ANGLE_AND_SPEED
 	ja	short @@easy_ret
 	sub	@@group, BG_SPREAD
-	mov	@@group_table, offset @@easy_group_table
+	mov	@@group_table, offset MAIN_03:@@easy_group_table
 	jmp	short @@set_vars_and_dispatch
 ; ---------------------------------------------------------------------------
 
@@ -103,7 +103,7 @@ TUNE_FOR_HARD	label near
 	cmp	@@group, BG_RANDOM_ANGLE_AND_SPEED
 	ja	short @@hard_ret
 	sub	@@group, BG_RING
-	mov	@@group_table, offset @@hard_group_table
+	mov	@@group_table, offset MAIN_03:@@hard_group_table
 
 @@set_vars_and_dispatch:
 	mov	@@spread_reg, word ptr _bullet_template.spread
@@ -159,7 +159,7 @@ TUNE_FOR_LUNATIC	label near
 	movzx	@@group_reg, _bullet_template.BT_group
 	cmp	@@group, BG_RANDOM_ANGLE_AND_SPEED
 	ja	short @@lunatic_ret
-	mov	@@group_table, offset @@lunatic_group_table
+	mov	@@group_table, offset MAIN_03:@@lunatic_group_table
 	jmp	short @@set_vars_and_dispatch
 ; ---------------------------------------------------------------------------
 

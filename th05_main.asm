@@ -39,7 +39,7 @@ include th05/main/enemy/enemy.inc
 	.seq
 main_01 group mai_TEXT, CFG_LRES_TEXT, main_TEXT, main__TEXT, main_0_TEXT, main_01_TEXT
 g_SHARED group SHARED, SHARED_
-main_03 group main_031_TEXT, main_032_TEXT, main_033_TEXT, main_034_TEXT, main_035_TEXT
+main_03 group SCROLLY3_TEXT, main_031_TEXT, main_032_TEXT, main_033_TEXT, main_034_TEXT, main_035_TEXT
 
 ; ===========================================================================
 
@@ -9299,13 +9299,17 @@ SHARED_	ends
 
 ; ===========================================================================
 
-; Segment type:	Pure code
-main_031_TEXT	segment	byte public 'CODE' use16
+SCROLLY3_TEXT	segment	byte public 'CODE' use16
 		assume cs:main_03
 		;org 8
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-include th04/main/scroll_y_3.asm
+	SCROLL_SUBPIXEL_Y_TO_VRAM_SEG3 procdesc pascal near \
+		y:word
+SCROLLY3_TEXT	ends
+
+; Segment type:	Pure code
+main_031_TEXT	segment	byte public 'CODE' use16
 MOTION_UPDATE_DEF 2
 
 ; =============== S U B	R O U T	I N E =======================================
