@@ -2,7 +2,7 @@ public PLAYER_POS_UPDATE_AND_CLAMP
 player_pos_update_and_clamp	proc near
 	push	bp
 	mov	bp, sp
-	call	_motion_update_1 pascal, offset _player_pos
+	call	motion_update_seg1 pascal, offset _player_pos
 	cmp	ax, ((0 + PLAYER_MOVE_MARGIN_LEFT) shl 4)
 	jge	short @@clamp_right?
 	mov	ax, ((0 + PLAYER_MOVE_MARGIN_LEFT) shl 4)

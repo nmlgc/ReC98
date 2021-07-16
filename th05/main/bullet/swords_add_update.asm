@@ -107,7 +107,7 @@ swords_update proc near
 
 @@no_twirl:
 	lea	ax, [si+sword_t.pos]
-	call	_motion_update_2 pascal, ax
+	call	motion_update_seg3 pascal, ax
 	cmp	ax, (-16 shl 4)
 	jle	short @@clip
 	cmp	ax, ((PLAYFIELD_W + 16) shl 4)

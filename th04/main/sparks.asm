@@ -17,7 +17,7 @@ sparks_update	proc near
 @@update:
 	lea	ax, [si+spark_t.pos]
 	push	ax
-	call	_motion_update_1
+	call	motion_update_seg1
 	add	ax, ((SPARK_W / 2) shl 4)
 	cmp	ax, ((PLAYFIELD_W + SPARK_W) shl 4)
 	jnb	short @@remove

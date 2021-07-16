@@ -1,4 +1,3 @@
-; For increased precision, all values are stored in units of 1/16th of a pixel.
 motion_t	struc
 	cur      	Point ?
 	prev    	Point ?
@@ -6,11 +5,8 @@ motion_t	struc
 motion_t	ends
 
 MOTION_UPDATE_DEF macro instance
-	; Returns the new current position in AX (X) and DX (Y).
-	;
-	; Point pascal near motion_update(motion_t near *motion);
-	public _MOTION_UPDATE_&instance
-	_motion_update_&instance proc near
+	public MOTION_UPDATE_SEG&instance
+	motion_update_seg&instance proc near
 	arg_bx	near, @motion:word
 
 		mov	bx, @motion
@@ -24,5 +20,5 @@ MOTION_UPDATE_DEF macro instance
 		add	dx, word ptr [bx+motion_t.velocity]
 		mov	word ptr [bx+motion_t.cur], dx
 		ret_bx
-	_motion_update_&instance endp
+	motion_update_seg&instance endp
 endm
