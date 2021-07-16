@@ -391,7 +391,7 @@ loc_ABBA:
 		call	sparks_update
 		call	main_01:sub_10ABF
 		call	main_01:sub_104B6
-		call	bullets_update
+		call	_bullets_update
 		call	enemies_update
 		call	_midboss_update
 		call	_boss_update
@@ -27827,8 +27827,8 @@ bullet_update_special	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public BULLETS_UPDATE
-bullets_update	proc far
+public _bullets_update
+_bullets_update	proc far
 
 @@patnum		= byte ptr -9
 var_8		= word ptr -8
@@ -28209,7 +28209,7 @@ off_1CC29	dw offset loc_1CB71
 		dw offset loc_1CB78
 		dw offset loc_1CB78
 		dw offset loc_1CB7F
-bullets_update	endp
+_bullets_update	endp
 main_032_TEXT	ends
 
 main_033_TEXT	segment	byte public 'CODE' use16

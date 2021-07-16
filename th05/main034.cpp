@@ -6,11 +6,5 @@
 #pragma option -zCmain_034_TEXT
 
 extern "C" {
-#include "ReC98.h"
-#include "th01/math/subpixel.hpp"
-#include "th01/math/area.hpp"
-#include "th04/math/motion.hpp"
-#include "th04/main/playfld.hpp"
-#include "th05/main/boss/boss.hpp"
-#include "th05/main/boss/bx.cpp"
+#include "th05/main/boss/b4_both.cpp"
 }

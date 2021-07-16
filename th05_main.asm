@@ -39,7 +39,7 @@ include th05/main/enemy/enemy.inc
 	.seq
 main_01 group mai_TEXT, CFG_LRES_TEXT, main_TEXT, main__TEXT, main_0_TEXT, PLAYER_P_TEXT, main_01_TEXT
 g_SHARED group SHARED, SHARED_
-main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, main_032_TEXT, main_033_TEXT, main_034_TEXT, main_035_TEXT
+main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, main_032_TEXT, main_033_TEXT, main_034_TEXT, main_035_TEXT, main_036_TEXT
 
 ; ===========================================================================
 
@@ -431,7 +431,7 @@ loc_AED7:
 		call	sub_1214A
 		call	sub_1240B
 		call	lasers_update
-		call	sub_17C04
+		call	_bullets_update
 		call	enemies_update
 		call	_midboss_update
 		call	_boss_update
@@ -12855,7 +12855,7 @@ bullet_update_special	endp
 
 ; Attributes: bp-based frame
 
-sub_17C04	proc far
+_bullets_update	proc far
 
 @@patnum		= byte ptr -9
 var_8		= word ptr -8
@@ -13257,8 +13257,10 @@ loc_17FC2:
 		pop	si
 		leave
 		retf
-sub_17C04	endp
+_bullets_update	endp
+main_033_TEXT	ends
 
+main_034_TEXT	segment	byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -17205,9 +17207,9 @@ loc_1A45A:
 		pop	bp
 		retn
 mai_yuki_1A42B	endp
-main_033_TEXT	ends
+main_034_TEXT	ends
 
-main_034_TEXT	segment	byte public 'CODE' use16
+main_035_TEXT	segment	byte public 'CODE' use16
 	MAI_YUKI_FLYSTEP_RANDOM procdesc pascal near \
 		frame:word
 
@@ -23897,9 +23899,9 @@ midbossx_update	endp
 	FIREWAVES_ADD procdesc pascal near \
 		amp:word, is_right:byte
 	FIREWAVES_UPDATE procdesc pascal near
-main_034_TEXT	ends
+main_035_TEXT	ends
 
-main_035_TEXT	segment	byte public 'CODE' use16
+main_036_TEXT	segment	byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -26011,7 +26013,7 @@ loc_1FD8B:
 		retn
 sub_1FD62	endp
 
-main_035_TEXT	ends
+main_036_TEXT	ends
 
 	.data
 
