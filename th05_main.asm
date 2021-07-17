@@ -39,7 +39,7 @@ include th05/main/enemy/enemy.inc
 	.seq
 main_01 group mai_TEXT, CFG_LRES_TEXT, main_TEXT, main__TEXT, main_0_TEXT, main_01_TEXT
 g_SHARED group SHARED, SHARED_
-main_03 group SCROLLY3_TEXT, main_031_TEXT, main_032_TEXT, main_033_TEXT, main_034_TEXT, main_035_TEXT
+main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, main_032_TEXT, main_033_TEXT, main_034_TEXT, main_035_TEXT
 
 ; ===========================================================================
 
@@ -9308,9 +9308,13 @@ SCROLLY3_TEXT	segment	byte public 'CODE' use16
 		y:word
 SCROLLY3_TEXT	ends
 
+MOTION_3_TEXT	segment	word public 'CODE' use16
+	MOTION_UPDATE_SEG3 procdesc pascal near \
+		motion:word
+MOTION_3_TEXT	ends
+
 ; Segment type:	Pure code
 main_031_TEXT	segment	byte public 'CODE' use16
-MOTION_UPDATE_DEF 3
 
 ; =============== S U B	R O U T	I N E =======================================
 

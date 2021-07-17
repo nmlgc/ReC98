@@ -95,6 +95,7 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 : th04\\input_s.asm |> !as4 |>
 : th04\\cdg_load.asm |> !as4 |>
 : th04\\bgimager.asm |> !as4 |>
+: th04\\motion_3.asm |> !as4 |>
 : th04_op.asm |> !as |> bin\\th04\\op.obj
 : th04_main.asm | \
 	th02/sprites/pellet.asp \
