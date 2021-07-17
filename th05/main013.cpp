@@ -14,6 +14,7 @@ extern "C" {
 #include "th01/math/area.hpp"
 #include "th04/shared.hpp"
 #include "th04/main/null.hpp"
+#include "th04/main/score.h"
 #include "th04/main/rank.hpp"
 #include "th04/main/item/items.hpp"
 #include "th05/formats/bb.h"
@@ -25,7 +26,6 @@ extern "C" {
 #include "th04/formats/bb_stage.c"
 #include "th05/main/stage/setup.cpp"
 
-// Adds the entire score delta at once to the current score.
 void pascal score_delta_commit(void)
 {
 	while(score_delta > 0) {

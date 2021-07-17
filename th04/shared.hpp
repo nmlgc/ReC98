@@ -21,7 +21,6 @@
 /// Player
 /// ------
 #include "th04/main/player/player.h"
-#include "th04/score.h"
 /// ------
 
 /// Stages
@@ -29,13 +28,3 @@
 extern nearfunc_t_near stage_invalidate;
 extern nearfunc_t_near stage_render;
 /// ------
-
-/// Score
-/// -----
-extern unsigned long score_delta;
-
-void pascal near score_update_and_render(void);
-
-// Adds the entire score delta at once to the current score.
-void pascal score_delta_commit(void);
-/// -----
