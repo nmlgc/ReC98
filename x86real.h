@@ -5,6 +5,8 @@
 // architectures would remove this file and rewrite any code that then causes
 // compile errors.
 
+#define X86REAL_H
+
 // This is a subset of Turbo C++ 4.0's <dos.h>.
 #if !(defined(__TURBOC__) && defined(__MSDOS__) && defined(__DOS_H))
 

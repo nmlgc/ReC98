@@ -120,7 +120,6 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 : th05\\bgimager.asm |> !as5 |>
 : th05\\pi_asm_1.asm |> !as5 |>
 : th05\\pi_asm_2.asm |> !as5 |>
-: th05\\snd_kaja.asm |> !as5 |>
 : th05_op.asm | \
 	th05/sprites/piano_l.asp \
 	|> !as |> bin\\th05\\op.obj

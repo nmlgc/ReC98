@@ -21,6 +21,11 @@ extern bool snd_midi_possible;
 	static inline bool snd_se_active() {
 		return snd_fm_possible;
 	}
+
+	// MODDERS: Just use [new_se] directly.
+	static inline int16_t snd_get_param(int16_t &param) {
+		return param;
+	}
 	#endif
 
 	#define snd_bgm_is_fm() \
@@ -42,6 +47,8 @@ bool16 snd_pmd_resident(void);
 // [snd_midi_active]. Returns the new value of [snd_active].
 bool16 snd_determine_mode(void);
 
+// Calls the interrupt handler of the installed sound driver with AX = [ax],
+// if any. If BGM is disabled, the return value is undefined.
 int16_t DEFCONV snd_kaja_interrupt(int16_t ax);
 #define snd_kaja_func(func, param) snd_kaja_interrupt((func) << 8 | (param))
 

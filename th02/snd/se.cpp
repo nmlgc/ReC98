@@ -9,12 +9,6 @@ extern "C" {
 	#include "master.hpp"
 	#include "th04/snd/snd.h"
 
-	// MODDERS: Just use [new_se] directly.
-	inline int get_param(int &param) {
-		_BX = _SP;
-		return *reinterpret_cast<int *>(MK_FP(_SS, (_BX + 4)));
-	}
-
 	// MODDERS: Just replace with [snd_se_playing].
 	inline uint16_t for_current(void) {
 		_BL = snd_se_playing;
@@ -35,11 +29,6 @@ extern "C" {
 #else
 	#include "th02/snd/snd.h"
 
-	// MODDERS: Just use [new_se] directly.
-	inline int get_param(int &param) {
-		return param;
-	}
-
 	// MODDERS: Just replace with [snd_se_playing].
 	inline uint16_t for_current(void) {
 		return snd_se_playing;
@@ -54,7 +43,7 @@ extern "C" {
 
 void DEFCONV snd_se_play(int new_se)
 {
-	register int se = get_param(new_se);
+	register int se = snd_get_param(new_se);
 	if(!snd_se_active()) {
 		return;
 	}

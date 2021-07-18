@@ -30,6 +30,14 @@ static inline bool snd_bgm_active() {
 static inline bool16 snd_se_active() {
 	return (snd_se_mode != SND_SE_OFF);
 }
+
+#ifdef X86REAL_H
+	// MODDERS: Just use [new_se] directly.
+	static inline int16_t snd_get_param(int16_t &param) {
+		_BX = _SP;
+		return *reinterpret_cast<int *>(MK_FP(_SS, (_BX + 4)));
+	}
+#endif
 #endif
 
 #define snd_bgm_is_fm() \

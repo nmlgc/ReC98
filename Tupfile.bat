@@ -61,7 +61,6 @@ tasm32 /m /mx /kh32768 /t /dGAME=5 th05\musicp_a.asm bin\th05\musicp_a.obj
 tasm32 /m /mx /kh32768 /t /dGAME=5 th05\bgimager.asm bin\th05\bgimager.obj
 tasm32 /m /mx /kh32768 /t /dGAME=5 th05\pi_asm_1.asm bin\th05\pi_asm_1.obj
 tasm32 /m /mx /kh32768 /t /dGAME=5 th05\pi_asm_2.asm bin\th05\pi_asm_2.obj
-tasm32 /m /mx /kh32768 /t /dGAME=5 th05\snd_kaja.asm bin\th05\snd_kaja.obj
 tasm32 /m /mx /kh32768 /t th05_op.asm bin\th05\op.obj
 tasm32 /m /mx /kh32768 /t th05_main.asm bin\th05\main.obj
 tasm32 /m /mx /kh32768 /t th05_maine.asm bin\th05\maine.obj
