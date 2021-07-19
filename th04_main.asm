@@ -44,7 +44,7 @@ include th04/main/enemy/enemy.inc
 	extern __ctype:byte
 
 	.seq
-main_01 group main_0_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT
+main_01 group main__TEXT, PLAYER_P_TEXT, main_0_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT
 g_SHARED group SHARED, SHARED_
 main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, main_033_TEXT
 
@@ -267,7 +267,7 @@ _TEXT		ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-main_0_TEXT	segment	word public 'CODE' use16
+main__TEXT	segment	word public 'CODE' use16
 		assume cs:main_01
 		;org 1
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
@@ -9364,7 +9364,13 @@ sub_105B9	endp
 include th04/main/enemy/render.asm
 include th04/main/player/invalidate.asm
 include th04/main/player/move.asm
-include th04/main/player/pos_update_and_clamp.asm
+main__TEXT	ends
+
+PLAYER_P_TEXT	segment	byte public 'CODE' use16
+	_player_pos_update_and_clamp procdesc near
+PLAYER_P_TEXT	ends
+
+main_0_TEXT	segment	word public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9556,7 +9562,7 @@ loc_10B58:
 		mov	_player_pos.velocity.y, ax
 
 loc_10B75:
-		call	main_01:player_pos_update_and_clamp
+		call	_player_pos_update_and_clamp
 		cmp	[bp+var_1], 0
 		jz	short loc_10B82
 		mov	word_2598C, si
