@@ -205,6 +205,40 @@ case it's part of an arithmetic expression that was promoted to `int`.
   However, this only generates identical code to the original optimization if
   passing the `other` parameter can be inlined, which isn't always the case.
 
+## Function pointers
+
+Type syntax (cf. [platform.h](../platform.h)):
+
+|                  | … near function           | … far function           |
+|------------------|---------------------------|--------------------------|
+| Near pointer to… | `int (near *near nn_t)()` | `int (far *near fn_t)()` |
+| Far pointer to…  | `int (near *far  nf_t)()` | `int (far *far  ff_t)()` |
+
+Calling conventions can be added before the `*`.
+
+* Assigning a `near` function defined in a different group to a `nn_t` will
+  cause a fixup overflow error at link time. The reason for that is pointed
+  out in the compiler's assembly output (`-S)`:
+
+  | C                        | ASM                                                                                    |
+  |--------------------------|----------------------------------------------------------------------------------------|
+  | `void near bar();`       | `extrn	_bar:near`                                                                      |
+  | `static nn_t foo = bar;` | `mov	word ptr DGROUP:_popup, offset CURRENTLY_​COMPILED_​BUT_​NOT_​ACTUAL_​GROUP_​OF:_bar` |
+
+  The only known way of enforcing this assignment involves declaring `bar()` as
+  a far function and then casting its implicit segment away:
+
+  ```c++
+  void far bar();
+  static nn_t foo = reinterpret_cast<nn_t>(bar);
+  ```
+
+  This wrong declaration of `bar()` must, of course, not be `#include`d into
+  the translation unit that actually defines `bar()` as a `near` function, as
+  it was intended. It can't also be local to an inlined function that's part of
+  a public header, since those declarations seem to escape to the global scope
+  there.
+
 ## `switch` statements
 
 * Sequence of the individual cases is identical in both C and ASM

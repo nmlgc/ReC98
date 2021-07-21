@@ -16,7 +16,16 @@ extern nearfunc_t_near overlay_text;
 extern nearfunc_t_near popup;
 extern unsigned long popup_bonus;
 
-void pascal near popup_update_and_render(void);
+#define popup_show(popup_new) \
+	/* Yup, the only known way of assigning a `near` function to a `near` */ \
+	/* function pointer from a group outside the one where the `near` */ \
+	/* function was declared in involves lying to the compiler about the */ \
+	/* true distance of the function. That's also why we can't correctly */ \
+	/* declare this function at global scope. */ \
+	void pascal far popup_update_and_render(void); \
+	\
+	popup_id_new = popup_new; \
+	popup = reinterpret_cast<nearfunc_t_near>(popup_update_and_render);
 
 /// Stage and BGM titles
 /// --------------------
