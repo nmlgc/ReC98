@@ -13,8 +13,9 @@
 /// ----------------
 /// Everything here needs to be kept in sync with the ASM versions in
 /// bullet.hpp!
+static const int BMS_DECAY_FRAMES_PER_CEL = 4;
 #define BSS_CLOUD_FRAMES (BULLET_CLOUD_CELS * 4)
-#define BMS_DECAY_FRAMES (BULLET_DECAY_CELS * 4)
+#define BMS_DECAY_FRAMES (BULLET_DECAY_CELS * BMS_DECAY_FRAMES_PER_CEL)
 
 // Regular bullets with a given speed below BMS_SLOWDOWN_THRESHOLD are set to
 // BMS_SLOWDOWN. This fires them at BMS_SLOWDOWN_BASE_SPEED instead, and then
@@ -39,6 +40,8 @@ enum bullet_spawn_state_t {
 	BSS_CLOUD_FORWARDS = 4,
 	BSS_CLOUD_END = (BSS_CLOUD_FORWARDS + BSS_CLOUD_FRAMES),
 	/// ------------------------
+
+	_bullet_spawn_state_t_FORCE_UINT8 = 0xFF
 };
 
 enum bullet_move_state_t {
@@ -57,6 +60,8 @@ enum bullet_move_state_t {
 	BMS_DECAY = 4,
 	BMS_DECAY_END = (BMS_DECAY + BMS_DECAY_FRAMES),
 	/// ----------------
+
+	_bullet_move_state_t_FORCE_UINT8 = 0xFF
 };
 
 enum bullet_special_motion_t {
@@ -65,7 +70,7 @@ enum bullet_special_motion_t {
 
 // Needs to be kept in sync with the ASM version in bullet.inc!
 struct bullet_t {
-	char flag;
+	unsigned char flag;
 	char age;
 	PlayfieldMotion pos;
 	unsigned char from_group; // unused
@@ -75,12 +80,14 @@ struct bullet_t {
 	bullet_spawn_state_t spawn_state;
 	bullet_move_state_t move_state;
 	bullet_special_motion_t special_motion;
-	unsigned char speed_final;
+	SubpixelLength8 speed_final;
 	union {
 		unsigned char slowdown_time;	// with BMS_SLOWDOWN
 		unsigned char turn_count;	// with BMS_SPECIAL
 	} ax;
 	union {
+		// Difference between [speed_final] and the BMS_SLOWDOWN_BASE_SPEED.
+		// Always positive for BMS_SLOWDOWN bullets.
 		unsigned char slowdown_speed_delta;	// with BMS_SLOWDOWN
 		unsigned char turn_angle;	// with BMS_SPECIAL
 	} dx;
@@ -113,6 +120,8 @@ int pascal near bullet_patnum_for_angle(int patnum_base, unsigned char angle);
 // Updates [bullet]'s patnum based on its current angle.
 void pascal near bullet_update_patnum(bullet_t near *bullet);
 
+// Turns every 4th bullet into a point item when zapping bullets.
+extern bool bullet_zap_drop_point_items;
 #else
 # define PELLET_COUNT 240
 # define BULLET16_COUNT 200
@@ -120,9 +129,6 @@ void pascal near bullet_update_patnum(bullet_t near *bullet);
 // Returns the offset for a directional bullet sprite that shows the given
 // [angle].
 unsigned char pascal near bullet_patnum_for_angle(unsigned char angle);
-
-// Turns every 4th bullet into a point item when zapping bullets.
-extern bool bullet_zap_drop_point_items;
 #endif
 
 #define BULLET_COUNT (PELLET_COUNT + BULLET16_COUNT)
@@ -144,6 +150,7 @@ extern union {
 	unsigned char frames; // doubles as the animation timer
 } bullet_zap;
 static const int BULLET_ZAP_FRAMES_PER_CEL = 4;
+// ZUN bug: Effectively 1 in TH05, see bullets_update() for the cause.
 static const int BULLET_ZAP_FRAMES = (
 	BULLET_ZAP_CELS * BULLET_ZAP_FRAMES_PER_CEL
 );

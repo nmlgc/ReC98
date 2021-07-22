@@ -345,6 +345,22 @@ void foo(int i) {
 
 ## Flags
 
+### `-G` (Generate for speed)
+
+* Replaces
+
+```asm
+ENTER <stack size>, 0
+```
+
+with
+
+```asm
+PUSH BP
+MOV  BP, SP
+SUB  SP, <stack size>
+```
+
 ### `-Z` (Suppress register reloads)
 
 * The tracked contents of `ES` are reset after a conditional statement. If the

@@ -1,5 +1,7 @@
 #include "th04/score.h"
 
+static const unsigned int STAGE_GRAZE_CAP = 999;
+
 extern unsigned int graze_score;	// Set per difficulty.
 extern unsigned int stage_graze;	// Reset to 0 when moving to a new stage.
 

@@ -134,4 +134,6 @@ typedef enum {
 	PAT_DECAY_B6BALL_last = (PAT_DECAY_B6BALL + BULLET_DECAY_CELS - 1),
 	/// -------
 	/// =======
+
+	_main_patnum_t_FORCE_INT16 = 0x7FFF,
 } main_patnum_t;

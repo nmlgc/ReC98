@@ -101,4 +101,6 @@ typedef enum {
 	PAT_YUUKA6_VANISH_3 = 180,
 	// --------
 	/// =======
+
+	_main_patnum_t_FORCE_INT16 = 0x7FFF,
 } main_patnum_t;

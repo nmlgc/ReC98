@@ -23,4 +23,7 @@ void pascal hud_hp_put(int bar_value);
 // Renders the HP bar at the fraction of ([hp_cur] / [hp_max]), or instead
 // takes asingle fill step if the previous bar value was lower.
 void pascal hud_hp_update_and_render(int hp_cur, int hp_max);
+
+// Displays [stage_graze] in the graze row.
+void pascal hud_graze_put();
 // ----------
