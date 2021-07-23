@@ -7,16 +7,6 @@ pellet_render_t struc
 		dw ?
 pellet_render_t ends
 
-if GAME eq 5
-	PELLET_COUNT = 180
-	BULLET16_COUNT = 220
-else
-	PELLET_COUNT = 240
-	BULLET16_COUNT = 200
-endif
-
-BULLET_COUNT = (PELLET_COUNT + BULLET16_COUNT)
-
 public _bullets, _pellets, _bullets16, _pellets_render
 _bullets label bullet_t
 _pellets	bullet_t PELLET_COUNT dup(<?>)

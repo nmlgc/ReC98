@@ -10128,9 +10128,9 @@ _bullets_add_special	endp
 
 
 sub_15A8E	proc near
-		mov	byte_25346, 1
+		mov	_group_fixedspeed, 1
 		call	_bullets_add_regular
-		mov	byte_25346, 0
+		mov	_group_fixedspeed, 0
 		retn
 sub_15A8E	endp
 
@@ -10139,21 +10139,21 @@ sub_15A8E	endp
 
 
 sub_15A9C	proc near
-		mov	byte_25346, 1
+		mov	_group_fixedspeed, 1
 		call	_bullets_add_special
-		mov	byte_25346, 0
+		mov	_group_fixedspeed, 0
 		retn
 sub_15A9C	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
-
-sub_15AAA	proc near
+public _bullet_velocity_and_angle_set
+_bullet_velocity_and_angle_set	proc near
 		push	si
 		push	di
 		xor	si, si
-		mov	ch, byte_25348
+		mov	ch, _group_i
 		mov	cl, _bullet_template.speed
 
 loc_15AB6:
@@ -10224,7 +10224,7 @@ loc_15B21:
 		jz	short loc_15B4F
 		or	ch, ch
 		jnz	short loc_15B33
-		mov	angle_25347, 0
+		mov	_group_i_spread_angle, 0
 		jmp	short loc_15B66
 ; ---------------------------------------------------------------------------
 
@@ -10234,14 +10234,14 @@ loc_15B33:
 
 loc_15B38:
 		mov	al, _bullet_template.spread_angle_delta
-		add	angle_25347, al
-		mov	al, angle_25347
+		add	_group_i_spread_angle, al
+		mov	al, _group_i_spread_angle
 		mov	si, ax
 		jmp	short loc_15B66
 ; ---------------------------------------------------------------------------
 
 loc_15B46:
-		mov	al, angle_25347
+		mov	al, _group_i_spread_angle
 		neg	al
 		mov	si, ax
 		jmp	short loc_15B66
@@ -10252,7 +10252,7 @@ loc_15B4F:
 		jnz	short loc_15B5F
 		mov	al, _bullet_template.spread_angle_delta
 		shr	al, 1
-		mov	angle_25347, al
+		mov	_group_i_spread_angle, al
 		mov	si, ax
 		jmp	short loc_15B66
 ; ---------------------------------------------------------------------------
@@ -10331,18 +10331,18 @@ loc_15BDB:
 		jz	short @@static
 
 @@aim:
-		mov	byte_2534A, cl
+		mov	_group_i_speed, cl
 		call	player_angle_from pascal, _bullet_template.BT_origin.x, _bullet_template.BT_origin.y, si
-		mov	cl, byte_2534A
+		mov	cl, _group_i_speed
 		mov	si, ax
 
 @@static:
-		push	offset point_2534B
+		push	offset _group_i_velocity
 		mov	ax, si
 		add	al, _bullet_template.BT_angle
 		push	ax
-		mov	angle_25349, al
-		mov	byte_2534A, cl
+		mov	_group_i_absolute_angle, al
+		mov	_group_i_speed, cl
 		mov	al, cl
 		mov	ah, 0
 		push	ax
@@ -10369,11 +10369,11 @@ off_15C16	dw offset @@single
 		dw offset @@random_angle_and_speed
 		dw offset @@single
 		dw offset @@single_aimed
-sub_15AAA	endp
+_bullet_velocity_and_angle_set	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
-
+public _bullet_template_clip
 _bullet_template_clip	proc near
 		cmp	_bullet_clear_time, 0
 		jz	short loc_15C47
@@ -10407,7 +10407,7 @@ loc_15C47:
 		mov	_player_is_hit, 1
 
 loc_15C81:
-		cmp	byte_25346, 0
+		cmp	_group_fixedspeed, 0
 		jnz	short loc_15C91
 		mov	al, _bullet_template.speed
 		call	@playperf_adjust_speed
@@ -10417,158 +10417,10 @@ loc_15C91:
 		mov	al, 0
 		retn
 _bullet_template_clip	endp
-
-; ---------------------------------------------------------------------------
-
-_bullets_add_raw	proc near
-		cmp	_bullet_template.spawn_type, BST_GATHER_PELLET or BST_NO_SLOWDOWN
-		jz	short loc_15CA2
-		cmp	_bullet_template.spawn_type, BST_GATHER_PELLET
-		jnz	short loc_15CE5
-
-loc_15CA2:
-		mov	eax, _bullet_template.BT_origin
-		mov	_gather_template.GT_center, eax
-		mov	_gather_template.GT_velocity, 0
-		mov	_gather_template.GT_radius, (64 shl 4)
-		mov	_gather_template.GT_angle_delta, 2
-		mov	_gather_template.GT_col, 9
-		mov	_gather_template.GT_ring_points, 8
-		push	word ptr _bullet_template.spawn_type
-		dec	_bullet_template.spawn_type
-		cmp	_group_is_special, 0
-		jz	short loc_15CDD
-		mov	_bullet_template.spawn_type, BST_GATHER_NORMAL_SPECIAL_MOVE
-
-loc_15CDD:
-		call	_gather_add_bullets
-		pop	word ptr _bullet_template.spawn_type
-
-locret_15CE4:
-		retn
-; ---------------------------------------------------------------------------
-
-loc_15CE5:
-		call	_bullet_template_clip
-		or	al, al
-		jnz	short locret_15CE4
-		push	si
-		push	di
-		cmp	_bullet_template.patnum, 0
-		jnz	short loc_15CFD
-		mov	si, offset _pellets[(PELLET_COUNT - 1) * size bullet_t]
-		mov	di, PELLET_COUNT
-		jmp	short loc_15D03
-; ---------------------------------------------------------------------------
-
-loc_15CFD:
-		mov	si, offset _bullets16[(BULLET16_COUNT - 1) * size bullet_t]
-		mov	di, BULLET16_COUNT
-
-loc_15D03:
-		mov	dl, BSS_GRAZEABLE
-		mov	al, _bullet_template.spawn_type
-		and	al, (BST_NO_SLOWDOWN - 1)
-		cmp	al, BST_CLOUD_BACKWARDS
-		jz	short loc_15D16
-		cmp	al, BST_CLOUD_FORWARDS
-		jnz	short loc_15D18
-		mov	dl, BSS_CLOUD_FORWARDS
-		jmp	short loc_15D18
-; ---------------------------------------------------------------------------
-
-loc_15D16:
-		mov	dl, BSS_CLOUD_BACKWARDS
-
-loc_15D18:
-		cmp	_group_is_special, 0
-		jnz	short loc_15D38
-		mov	al, BMS_REGULAR
-		cmp	_bullet_template.speed, (4 shl 4)
-		jb	short loc_15D2F
-		cmp	_bullet_clear_time, 0
-		jz	short loc_15D38
-
-loc_15D2F:
-		test	_bullet_template.spawn_type, BST_NO_SLOWDOWN
-		jnz	short loc_15D38
-		xor	al, al
-
-loc_15D38:
-		mov	cs:@@spawn_state, dl
-		mov	cs:@@move_state, al
-		mov	byte_25348, 0
-		jmp	short $+2
-
-loc_15D48:
-		cmp	[si+bullet_t.flag], 0
-		jnz	loc_15DD7
-		mov	[si+bullet_t.flag], 1
-
-@@spawn_state	= byte ptr $+3
-		mov	[si+bullet_t.spawn_state], 123
-		mov	eax, _bullet_template.BT_origin
-		mov	dword ptr [si+bullet_t.pos.cur], eax
-		cmp	_group_is_special, 0
-		jnz	short loc_15D78
-
-@@move_state	= byte ptr $+3
-		mov	[si+bullet_t.move_state], 123
-		mov	[si+bullet_t.slowdown_time], BMS_SLOWDOWN_FRAMES
-		mov	al, BMS_SLOWDOWN_BASE_SPEED
-		sub	al, _bullet_template.speed
-		mov	[si+bullet_t.slowdown_speed_delta], al
-		jmp	short loc_15D95
-; ---------------------------------------------------------------------------
-
-loc_15D78:
-		mov	dword ptr [si+bullet_t.BULLET_origin], eax
-		mov	[si+bullet_t.move_state], BMS_SPECIAL
-		mov	[si+bullet_t.distance], 0
-		mov	[si+bullet_t.turn_count], 0
-		mov	al, _bullet_template_turn_angle
-		mov	[si+bullet_t.turn_angle], al
-		mov	al, _bullet_template.BT_special_motion
-		mov	[si+bullet_t.special_motion], al
-
-loc_15D95:
-		mov	[si+bullet_t.age], 0
-		mov	al, _bullet_template.BT_group
-		mov	[si+bullet_t.from_group], al
-		call	sub_15AAA
-		mov	cl, al
-		mov	al, _bullet_template.patnum
-		mov	ah, 0
-		cmp	al, PAT_BULLET16_D
-		jb	short loc_15DB5
-		call	bullet_patnum_for_angle pascal, ax, word ptr angle_25349
-
-loc_15DB5:
-		mov	[si+bullet_t.BULLET_patnum], ax
-		mov	eax, point_2534B
-		mov	dword ptr [si+bullet_t.pos.velocity], eax
-		mov	al, angle_25349
-		mov	[si+bullet_t.BULLET_angle], al
-		mov	al, byte_2534A
-		mov	[si+bullet_t.speed_final], al
-		mov	[si+bullet_t.speed_cur], al
-		or	cl, cl
-		jnz	short loc_15DDF
-		inc	byte_25348
-
-loc_15DD7:
-		sub	si, size bullet_t
-		dec	di
-		jnz	loc_15D48
-
-loc_15DDF:
-		pop	di
-		pop	si
-		retn
-_bullets_add_raw	endp
 main_031_TEXT	ends
 
 main_032_TEXT	segment	byte public 'CODE' use16
+	_bullets_add_raw procdesc near
 	extern _bullets_add_regular_far:proc
 	BULLET_TEMPLATE_TUNE_EASY procdesc near
 	BULLET_TEMPLATE_TUNE_NORMAL procdesc near
@@ -26073,13 +25925,15 @@ include th04/formats/scoredat[bss].asm
 byte_25342	db ?
 		db ?
 include th04/main/bullet/tune[bss].asm
-byte_25346	db ?
-angle_25347	db ?
-byte_25348	db ?
-angle_25349	db ?
-byte_2534A	db ?
-point_2534B	Point <?>
-		db ?
+public _group_fixedspeed, _group_i_spread_angle, _group_i
+public _group_i_absolute_angle, _group_i_speed, _group_i_velocity
+_group_fixedspeed	db ?
+_group_i_spread_angle	db ?
+_group_i	db ?
+_group_i_absolute_angle	db ?
+_group_i_speed	db ?
+_group_i_velocity	Point <?>
+	evendata
 public _lives, _bombs
 _lives	db ?
 _bombs	db ?
