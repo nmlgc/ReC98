@@ -127,7 +127,10 @@ extern unsigned char bullet_turn_count_max;
 // Set to `true` to clear all on-screen bullets, giving out a semi-exponential
 // bonus for all bullets that were alive on the first frame of activity.
 // Lasts for BULLET_ZAP_FRAMES and resets to `false` afterwards.
-extern bool bullet_zap_active;
+extern union {
+	bool active;
+	unsigned char frames; // doubles as the animation timer
+} bullet_zap;
 static const int BULLET_ZAP_FRAMES_PER_CEL = 4;
 static const int BULLET_ZAP_FRAMES = (
 	BULLET_ZAP_CELS * BULLET_ZAP_FRAMES_PER_CEL
