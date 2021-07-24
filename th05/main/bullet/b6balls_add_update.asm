@@ -69,7 +69,7 @@ b6balls_update	proc near
 @@no_cloud:
 	cmp	_bullet_clear_time, 0
 	jnz	short @@decay
-	cmp	_bullet_clear_trigger, 0
+	cmp	_bullet_zap_active, 0
 	jz	short @@motion_update
 
 @@decay:

@@ -3959,7 +3959,7 @@ sub_EACE	proc near
 		mov	byte_25FF8, 0
 		mov	byte_25FE8, 0
 		mov	_palette_changed, 0
-		mov	_bullet_clear_trigger, 0
+		mov	_bullet_zap_active, 0
 		mov	_stage_graze, 0
 		mov	_circles_color, GC_R
 		call	grc_setclip pascal, large (PLAYFIELD_LEFT shl 16) or PLAYFIELD_TOP, large ((PLAYFIELD_RIGHT - 1) shl 16) or (PLAYFIELD_BOTTOM - 1)
@@ -5558,7 +5558,7 @@ loc_1016B:
 loc_10171:
 		cmp	[bp+@@i], BULLET16_COUNT
 		jl	loc_100DE
-		cmp	_bullet_clear_trigger, 0
+		cmp	_bullet_zap_active, 0
 		jnz	short loc_101DC
 		cmp	_bullet_clear_time, 0
 		jnz	short loc_101DC
@@ -10106,7 +10106,7 @@ include th05/main/playperf_adjust_speed.asm
 
 
 sub_15A5C	proc near
-		cmp	_bullet_clear_trigger, 0
+		cmp	_bullet_zap_active, 0
 		jnz	short locret_15A6E
 		push	word ptr _bullet_template.BT_angle
 		call	loc_15C94
@@ -10123,7 +10123,7 @@ sub_15A5C	endp
 
 
 sub_15A70	proc near
-		cmp	_bullet_clear_trigger, 0
+		cmp	_bullet_zap_active, 0
 		jnz	short locret_15A8C
 		mov	byte_221C0, 1
 		push	word ptr _bullet_template.BT_angle
@@ -12872,7 +12872,7 @@ var_2		= word ptr -2
 		mov	_pellet_clouds_render_count, 0
 		mov	_pellets_render_count, 0
 		mov	si, offset _bullets[(BULLET_COUNT - 1) * size bullet_t]
-		cmp	_bullet_clear_trigger, 0
+		cmp	_bullet_zap_active, 0
 		jnz	loc_17EC3
 		xor	di, di
 		jmp	loc_17E78
@@ -13158,12 +13158,12 @@ loc_17EB5:
 ; ---------------------------------------------------------------------------
 
 loc_17EC3:
-		mov	al, _bullet_clear_trigger
+		mov	al, _bullet_zap_active
 		mov	ah, 0
-		mov	bx, BULLET_DECAY_CELS
+		mov	bx, BULLET_ZAP_CELS
 		cwd
 		idiv	bx
-		add	al, PAT_BULLET_KILL
+		add	al, PAT_BULLET_ZAP
 		mov	[bp+@@patnum], al
 		mov	[bp+@@points], 1
 		mov	[bp+var_6], 1
@@ -13216,7 +13216,7 @@ loc_17F31:
 
 loc_17F64:
 		mov	[si+bullet_t.flag], 2
-		cmp	_bullet_clear_drop_point_items, 0
+		cmp	_bullet_zap_drop_point_items, 0
 		jz	short loc_17F86
 		mov	ax, [bp+var_2]
 		mov	bx, 4
@@ -13242,10 +13242,10 @@ loc_17F8D:
 		mov	_popup, offset popup_update_and_render
 
 loc_17FA8:
-		inc	_bullet_clear_trigger
+		inc	_bullet_zap_active
 		cmp	[bp+@@patnum], 76	; TH04 leftover; PAT_BULLET16_D in that game, unused here
 		jb	short loc_17FB7
-		mov	_bullet_clear_trigger, 0
+		mov	_bullet_zap_active, 0
 
 loc_17FB7:
 		cmp	_bullet_clear_time, 0
@@ -13420,7 +13420,7 @@ loc_1812B:
 		jge	short loc_1818B
 		cmp	_midboss_hp, 0
 		jg	short loc_181C4
-		mov	_bullet_clear_trigger, 1
+		mov	_bullet_zap_active, 1
 		push	5
 		call	sub_173AC
 		call	items_add pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, IT_BIGPOWER
@@ -14446,7 +14446,7 @@ loc_18B24:
 		jge	short loc_18B67
 		cmp	_midboss_hp, 0
 		jg	short loc_18BA0
-		mov	_bullet_clear_trigger, 1
+		mov	_bullet_zap_active, 1
 		push	0Fh
 		call	sub_173AC
 		call	items_add pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, IT_BOMB
@@ -15656,7 +15656,7 @@ loc_195A1:
 loc_195BC:
 		cmp	_midboss_hp, 0
 		jg	short loc_19613
-		mov	_bullet_clear_trigger, 1
+		mov	_bullet_zap_active, 1
 		push	0Fh
 		call	sub_173AC
 		call	items_add pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, IT_1UP
@@ -18272,7 +18272,7 @@ loc_1AE8B:
 loc_1AE98:
 		inc	_boss_phase
 		mov	al, _boss_mode_change
-		mov	_bullet_clear_trigger, al
+		mov	_bullet_zap_active, al
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 12
 		mov	_player_invincibility_time, BOSS_DEFEAT_INVINCIBILITY_FRAMES
@@ -18780,7 +18780,7 @@ loc_1B32F:
 loc_1B34A:
 		cmp	_midboss_hp, 0
 		jg	short loc_1B3A1
-		mov	_bullet_clear_trigger, 1
+		mov	_bullet_zap_active, 1
 		push	0Fh
 		call	sub_173AC
 		call	items_add pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, IT_BOMB
@@ -23863,7 +23863,7 @@ loc_1E7F2:
 		jnb	short loc_1E82B
 		cmp	_midboss_hp, 0
 		jg	short loc_1E864
-		mov	_bullet_clear_trigger, 1
+		mov	_bullet_zap_active, 1
 		push	1Eh
 		call	sub_173AC
 		call	items_add pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, IT_1UP
@@ -25310,7 +25310,7 @@ loc_1F643:
 		mov	_boss_phase_frame, 0
 		mov	_boss_phase, PHASE_BOSS_EXPLODE_SMALL
 		mov	_boss_custombullets_render, offset nullfunc_near
-		mov	_bullet_clear_drop_point_items, 0
+		mov	_bullet_zap_drop_point_items, 0
 		jmp	short loc_1F666
 ; ---------------------------------------------------------------------------
 
@@ -25659,7 +25659,7 @@ loc_1F936:
 		sub	_midboss_hp, ax
 		cmp	_midboss_hp, 0
 		jg	short loc_1F9A1
-		mov	_bullet_clear_trigger, 1
+		mov	_bullet_zap_active, 1
 		push	1Eh
 		call	sub_173AC
 		call	items_add pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, IT_1UP
@@ -25838,7 +25838,7 @@ loc_1FBED:
 		call	boss_explode_big
 		inc	_boss_phase
 		mov	al, _boss_mode_change
-		mov	_bullet_clear_trigger, al
+		mov	_bullet_zap_active, al
 		cmp	_boss_mode_change, 0;m_bSuccessDefeat
 		jz	short loc_1FC10
 		call	sub_17416 pascal, [bp+n1000]
@@ -26239,8 +26239,8 @@ asc_226B6	db '  ',0
 ; char aMaine_1[]
 aMaine_1	db 'maine',0
 		db 0
-public _bullet_clear_drop_point_items
-_bullet_clear_drop_point_items	db 0
+public _bullet_zap_drop_point_items
+_bullet_zap_drop_point_items	db 0
 		db 0
 byte_226C2	db 0
 		db 0

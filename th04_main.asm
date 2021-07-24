@@ -10743,7 +10743,7 @@ sub_11ECB	proc near
 		mov	word_266D0, 1
 		mov	byte_266D2, 0
 		mov	_palette_changed, 0
-		mov	_bullet_clear_trigger, 0
+		mov	_bullet_zap_active, 0
 		mov	_stage_graze, 0
 		mov	_circles_color, GC_R
 		call	grc_setclip pascal, large (PLAYFIELD_LEFT shl 16) or PLAYFIELD_TOP, large ((PLAYFIELD_RIGHT - 1) shl 16) or (PLAYFIELD_BOTTOM - 1)
@@ -12435,7 +12435,7 @@ loc_12D6D:
 @@bullets16_more?:
 		cmp	di, BULLET16_COUNT
 		jl	@@sprite_bullet_loop
-		cmp	_bullet_clear_trigger, 0
+		cmp	_bullet_zap_active, 0
 		jnz	short loc_12DBE
 		cmp	_bullet_clear_time, 0
 		jnz	short loc_12DBE
@@ -13241,7 +13241,7 @@ loc_1422D:
 ; ---------------------------------------------------------------------------
 
 loc_142A2:
-		mov	_bullet_clear_trigger, 1
+		mov	_bullet_zap_active, 1
 		push	5
 		call	sub_19F6E
 
@@ -13605,7 +13605,7 @@ loc_14629:
 		add	ax, (-16 shl 4)
 		call	scroll_subpixel_y_to_vram_always pascal, ax
 		mov	si, ax
-		mov	_bullet_clear_trigger, 1
+		mov	_bullet_zap_active, 1
 		mov	al, byte_2559A
 		mov	ah, 0
 		mov	dx, 14h
@@ -14502,7 +14502,7 @@ loc_14E8E:	; default
 
 loc_14EB5:
 		mov	_midboss_damage_this_frame, 1
-		mov	_bullet_clear_trigger, 1
+		mov	_bullet_zap_active, 1
 		mov	al, byte_255B4
 		mov	ah, 0
 		mov	dx, 12h
@@ -15086,7 +15086,7 @@ loc_15414:
 		add	ax, (-16 shl 4)
 		call	scroll_subpixel_y_to_vram_always pascal, ax
 		mov	si, ax
-		mov	_bullet_clear_trigger, 1
+		mov	_bullet_zap_active, 1
 		mov	al, byte_255C7
 		mov	ah, 0
 		mov	dx, 1Eh
@@ -17400,7 +17400,7 @@ loc_16963:
 		call	boss_explode_big pascal, 2
 		mov	_boss_phase, PHASE_EXPLODE_BIG
 		mov	al, _boss_mode_change
-		mov	_bullet_clear_trigger, al
+		mov	_bullet_zap_active, al
 		cmp	_boss_mode_change, 0
 		jz	short loc_16986
 		push	3Ch ; '<'
@@ -19600,7 +19600,7 @@ loc_17C54:
 		call	boss_explode_big pascal, 2
 		mov	_boss_phase, PHASE_EXPLODE_BIG
 		mov	al, _boss_mode_change
-		mov	_bullet_clear_trigger, al
+		mov	_bullet_zap_active, al
 		cmp	_boss_mode_change, 0
 		jz	short loc_17C77
 		push	28h ; '('
@@ -21151,7 +21151,7 @@ loc_1895A:
 		call	boss_explode_big pascal, 2
 		mov	_boss_phase, PHASE_EXPLODE_BIG
 		mov	al, _boss_mode_change
-		mov	_bullet_clear_trigger, al
+		mov	_bullet_zap_active, al
 		cmp	_boss_mode_change, 0
 		jz	short loc_1897E
 		push	0C8h
@@ -22503,7 +22503,7 @@ loc_1955E:
 		call	boss_explode_big pascal, 0
 		mov	_boss_phase, PHASE_EXPLODE_BIG
 		mov	al, _boss_mode_change
-		mov	_bullet_clear_trigger, al
+		mov	_bullet_zap_active, al
 		cmp	_boss_mode_change, 0
 		jz	short loc_19581
 		push	14h
@@ -23439,7 +23439,7 @@ loc_19E3D:
 		call	boss_explode_big pascal, 0
 		mov	_boss_phase, PHASE_EXPLODE_BIG
 		mov	al, _boss_mode_change
-		mov	_bullet_clear_trigger, al
+		mov	_bullet_zap_active, al
 		cmp	_boss_mode_change, 0
 		jz	short loc_19E60
 		push	0Ah
@@ -26020,7 +26020,7 @@ loc_1B8A4:
 		call	boss_explode_big pascal, 2
 		mov	_boss_phase, PHASE_EXPLODE_BIG
 		mov	al, _boss_mode_change
-		mov	_bullet_clear_trigger, al
+		mov	_bullet_zap_active, al
 		cmp	_boss_mode_change, 0
 		jz	short loc_1B8C7
 		push	46h ; 'F'
@@ -27539,7 +27539,7 @@ loc_1C62F:
 		call	boss_explode_big pascal, 3
 		mov	_boss_phase, PHASE_EXPLODE_BIG
 		mov	al, _boss_mode_change
-		mov	_bullet_clear_trigger, al
+		mov	_bullet_zap_active, al
 		cmp	_boss_mode_change, 0
 		jz	short loc_1C652
 		push	28h ; '('
@@ -27844,7 +27844,7 @@ var_2		= word ptr -2
 		mov	[bp+var_2], 0
 		mov	_pellets_render_count, 0
 		mov	si, offset _bullets[(BULLET_COUNT - 1) * size bullet_t]
-		cmp	_bullet_clear_trigger, 0
+		cmp	_bullet_zap_active, 0
 		jnz	loc_1CB44
 		xor	di, di
 		jmp	loc_1CAFC
@@ -28106,12 +28106,12 @@ loc_1CB3B:
 ; ---------------------------------------------------------------------------
 
 loc_1CB44:
-		mov	al, _bullet_clear_trigger
+		mov	al, _bullet_zap_active
 		mov	ah, 0
-		mov	bx, BULLET_DECAY_CELS
+		mov	bx, BULLET_ZAP_CELS
 		cwd
 		idiv	bx
-		add	al, PAT_BULLET_KILL
+		add	al, PAT_BULLET_ZAP
 		mov	[bp+@@patnum], al
 		mov	[bp+@@points], 1
 		mov	[bp+var_6], 1
@@ -28187,10 +28187,10 @@ loc_1CBF1:
 		mov	_popup, offset popup_update_and_render
 
 loc_1CC0A:
-		inc	_bullet_clear_trigger
+		inc	_bullet_zap_active
 		cmp	[bp+@@patnum], PAT_BULLET16_D
 		jb	short loc_1CC19
-		mov	_bullet_clear_trigger, 0
+		mov	_bullet_zap_active, 0
 
 loc_1CC19:
 		cmp	_bullet_clear_time, 0
@@ -28228,7 +28228,7 @@ var_2		= byte ptr -2
 var_1		= byte ptr -1
 
 		enter	2, 0
-		cmp	_bullet_clear_trigger, 0
+		cmp	_bullet_zap_active, 0
 		jnz	short locret_1CF14
 		mov	al, _bullet_template.count
 		mov	[bp+var_2], al
@@ -28255,7 +28255,7 @@ sub_1CF16	proc near
 var_1		= byte ptr -1
 
 		enter	2, 0
-		cmp	_bullet_clear_trigger, 0
+		cmp	_bullet_zap_active, 0
 		jnz	short locret_1CF30
 		mov	al, _bullet_template.speed
 		mov	[bp+var_1], al
@@ -28278,7 +28278,7 @@ sub_1CF32	proc near
 var_1		= byte ptr -1
 
 		enter	2, 0
-		cmp	_bullet_clear_trigger, 0
+		cmp	_bullet_zap_active, 0
 		jnz	short locret_1CF4C
 		mov	al, _bullet_template.speed
 		mov	[bp+var_1], al
@@ -28301,7 +28301,7 @@ sub_1CF4E	proc near
 var_1		= byte ptr -1
 
 		enter	2, 0
-		cmp	_bullet_clear_trigger, 0
+		cmp	_bullet_zap_active, 0
 		jnz	short locret_1CF68
 		mov	al, _bullet_template.speed
 		mov	[bp+var_1], al
@@ -28324,7 +28324,7 @@ sub_1CF6A	proc near
 var_1		= byte ptr -1
 
 		enter	2, 0
-		cmp	_bullet_clear_trigger, 0
+		cmp	_bullet_zap_active, 0
 		jnz	short locret_1CF84
 		mov	al, _bullet_template.speed
 		mov	[bp+var_1], al
@@ -28347,7 +28347,7 @@ sub_1CF86	proc near
 var_1		= byte ptr -1
 
 		enter	2, 0
-		cmp	_bullet_clear_trigger, 0
+		cmp	_bullet_zap_active, 0
 		jnz	short locret_1CFA0
 		mov	al, _bullet_template.speed
 		mov	[bp+var_1], al
@@ -32520,7 +32520,7 @@ loc_1F855:
 		call	boss_explode_big pascal, 2
 		mov	_boss_phase, PHASE_EXPLODE_BIG
 		mov	al, _boss_mode_change
-		mov	_bullet_clear_trigger, al
+		mov	_bullet_zap_active, al
 		cmp	_boss_mode_change, 0
 		jz	short loc_1F878
 		push	28h ; '('
@@ -34159,7 +34159,7 @@ loc_2066F:
 		call	boss_explode_big pascal, 3
 		mov	_boss_phase, PHASE_EXPLODE_BIG
 		mov	al, _boss_mode_change
-		mov	_bullet_clear_trigger, al
+		mov	_bullet_zap_active, al
 		cmp	_boss_mode_change, 0
 		jz	short loc_20693
 		push	0C8h

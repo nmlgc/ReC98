@@ -14,7 +14,7 @@ lasers_update	proc near
 	jz	@@next
 	cmp	_bullet_clear_time, 0
 	jnz	short @@shootout
-	cmp	_bullet_clear_trigger, 0
+	cmp	_bullet_zap_active, 0
 	jz	short @@switch
 
 @@shootout:

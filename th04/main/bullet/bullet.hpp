@@ -109,8 +109,8 @@ void pascal near bullet_update_patnum(bullet_t near *bullet);
 // [angle].
 int pascal near bullet_patnum_for_angle(unsigned char angle);
 
-// Turns every 4th bullet into a point item when clearing bullets.
-extern bool bullet_clear_drop_point_items;
+// Turns every 4th bullet into a point item when zapping bullets.
+extern bool bullet_zap_drop_point_items;
 #endif
 
 #define BULLET_COUNT (PELLET_COUNT + BULLET16_COUNT)
@@ -123,6 +123,19 @@ extern bullet_t bullets[BULLET_COUNT];
 // automatically turns into a BMS_NORMAL bullet. Global state, not set
 // per-bullet!
 extern unsigned char bullet_turn_count_max;
+
+// Set to `true` to clear all on-screen bullets, giving out a semi-exponential
+// bonus for all bullets that were alive on the first frame of activity.
+// Lasts for BULLET_ZAP_FRAMES and resets to `false` afterwards.
+extern bool bullet_zap_active;
+static const int BULLET_ZAP_FRAMES_PER_CEL = 4;
+static const int BULLET_ZAP_FRAMES = (
+	BULLET_ZAP_CELS * BULLET_ZAP_FRAMES_PER_CEL
+);
+
+// # of frames left during which all on-screen bullets should decay.
+// Gives a constant point bonus for every bullet decayed during that time.
+extern unsigned char bullet_clear_time;
 
 /// Rendering
 /// ---------
