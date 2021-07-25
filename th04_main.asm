@@ -35,6 +35,7 @@ bullet_template_delta_t union
 bullet_template_delta_t ends
 
 include th04/main/bullet/bullet.inc
+include th04/main/gather.inc
 include th04/main/enemy/enemy.inc
 
 	extern SCOPY@:proc

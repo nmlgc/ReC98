@@ -30,6 +30,7 @@ include th04/main/phase.inc
 include th04/main/tile/tile.inc
 include th05/main/bullet/types.inc
 include th04/main/bullet/bullet.inc
+include th04/main/gather.inc
 include th05/main/player/shot_types.inc
 include th05/main/enemy/enemy.inc
 
