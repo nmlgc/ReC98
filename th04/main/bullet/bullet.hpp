@@ -241,6 +241,9 @@ extern nearfunc_t_near bullet_template_tune;
 #if (GAME == 5)
 	void near bullets_add_regular(void);
 	void near bullets_add_special(void);
+
+	// Only used for the revenge bullets fired from Stage 3 Alice's barrier.
+	void far bullets_add_regular_far(void);
 #else
 	// TH04 additionally uses pointless per-difficulty wrappers around these
 	// spawn functions that don't actually do anything difficulty-specific.

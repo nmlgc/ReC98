@@ -9176,7 +9176,7 @@ loc_128D8:
 		mov	_bullet_template.BT_origin, eax
 		call	randring1_next16
 		mov	_bullet_template.BT_angle, al
-		call	sub_15DE2
+		call	_bullets_add_regular_far
 
 loc_128EA:
 		call	hitshot_from pascal, [si+shot_alive_t.SA_shot]
@@ -10566,17 +10566,10 @@ loc_15DDF:
 		pop	si
 		retn
 _bullets_add_raw	endp
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_15DE2	proc far
-		call	_bullets_add_regular
-		retf
-sub_15DE2	endp
 main_031_TEXT	ends
 
 main_032_TEXT	segment	byte public 'CODE' use16
+	extern _bullets_add_regular_far:proc
 	BULLET_TEMPLATE_TUNE_EASY procdesc near
 	BULLET_TEMPLATE_TUNE_NORMAL procdesc near
 	BULLET_TEMPLATE_TUNE_HARD procdesc near

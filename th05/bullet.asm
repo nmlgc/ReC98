@@ -11,10 +11,19 @@ MAIN_03 group MAIN_031_TEXT
 extrn _bullet_template:bullet_template_t
 extrn _playperf:byte
 
+_bullets_add_regular procdesc near
+
 ; ----------------------------------------------------------------------------
 
 MAIN_031_TEXT	segment	word public 'CODE' use16
 	assume cs:MAIN_03
+
+public _bullets_add_regular_far
+_bullets_add_regular_far proc far
+		call	_bullets_add_regular
+		retf
+_bullets_add_regular_far endp
+
 
 tune	proc
 public TUNE_FOR_EASY
