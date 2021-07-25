@@ -22,6 +22,7 @@ static const int BMS_DECAY_FRAMES_PER_CEL = 4;
 // gradually slows them down to their given speed over the next
 // BMS_SLOWDOWN_FRAMES.
 // • In TH04, this is not done for stacks.
+// • In TH05, this is not done for any group with BST_NO_SLOWDOWN set.
 #define BMS_SLOWDOWN_BASE_SPEED 4.5f
 #define BMS_SLOWDOWN_THRESHOLD (BMS_SLOWDOWN_BASE_SPEED - 0.5f)
 #define BMS_SLOWDOWN_FRAMES 32
