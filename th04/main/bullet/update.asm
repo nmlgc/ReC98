@@ -14,7 +14,7 @@ bullet_turn_x proc near
 	mov	al, [si+bullet_t.turn_count]
 	cmp	al, _bullet_turn_count_max
 	jb	short @@still_allowed_to_turn
-	mov	[si+bullet_t.move_state], BMS_NORMAL
+	mov	[si+bullet_t.move_state], BMS_REGULAR
 
 @@still_allowed_to_turn:
 	lea	ax, [si+bullet_t.pos.velocity]
@@ -49,7 +49,7 @@ bullet_turn_y proc near
 	mov	al, [si+bullet_t.turn_count]
 	cmp	al, _bullet_turn_count_max
 	jb	short @@still_allowed_to_turn
-	mov	[si+bullet_t.move_state], BMS_NORMAL
+	mov	[si+bullet_t.move_state], BMS_REGULAR
 
 @@still_allowed_to_turn:
 	lea	ax, [si+bullet_t.pos.velocity]

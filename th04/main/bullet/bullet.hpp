@@ -42,7 +42,7 @@ enum bullet_move_state_t {
 	// Special processing according to [special_motion]
 	BMS_SPECIAL = 1,
 	// No special processing
-	BMS_NORMAL = 2,
+	BMS_REGULAR = 2,
 	/// ----------------
 
 	/// Decay, no hitbox
@@ -120,7 +120,7 @@ extern bullet_t bullets[BULLET_COUNT];
 #define bullets16 (&bullets[PELLET_COUNT])
 
 // Number of times a bouncing bullet can change its direction before it
-// automatically turns into a BMS_NORMAL bullet. Global state, not set
+// automatically turns into a BMS_REGULAR bullet. Global state, not set
 // per-bullet!
 extern unsigned char bullet_turn_count_max;
 
@@ -212,4 +212,18 @@ void pascal near bullet_template_tune_hard(void);
 void pascal near bullet_template_tune_lunatic(void);
 
 extern nearfunc_t_near bullet_template_tune;
+
+// The actual functions for spawning bullets based on the [bullet_template].
+// Both TH04 and TH05 pointlessly use separate functions for spawning "regular"
+// bullets (which receive a move state of BMS_SLOWDOWN or BMS_REGULAR) or
+// "special" ones (which are BMS_SPECIAL).
+#if (GAME == 5)
+	void near bullets_add_regular(void);
+	void near bullets_add_special(void);
+#else
+	// Set to the version of the wrapper functions above that match the
+	// current difficulty.
+	extern nearfunc_t_near bullets_add_regular;
+	extern nearfunc_t_near bullets_add_special;
+#endif
 /// --------
