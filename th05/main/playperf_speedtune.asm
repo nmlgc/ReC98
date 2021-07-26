@@ -1,5 +1,5 @@
-public @playperf_adjust_speed
-@playperf_adjust_speed	proc near
+public @playperf_speedtune
+@playperf_speedtune	proc near
 	shr	al, 1
 	mov	cl, al
 	mul	_playperf
@@ -16,4 +16,4 @@ public @playperf_adjust_speed
 
 @@ret:
 	ret
-@playperf_adjust_speed	endp
+@playperf_speedtune	endp

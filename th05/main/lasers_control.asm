@@ -10,7 +10,7 @@ lasers_add_shoutout	proc near
 	push	si
 	push	di
 	mov	al, byte ptr _laser_template.shootout_speed
-	call	@playperf_adjust_speed
+	call	@playperf_speedtune
 	mov	ah, 0
 	mov	[bp+@@speed], ax
 	mov	si, offset _lasers

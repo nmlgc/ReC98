@@ -7,7 +7,7 @@ swords_add proc near
 	push	si
 	push	di
 	mov	al, sword_template.SWORD_speed
-	call	@playperf_adjust_speed
+	call	@playperf_speedtune
 	mov	ah, 0
 	mov	[bp+@@speed], ax
 	mov	_circles_color, GC_RG

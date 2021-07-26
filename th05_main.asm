@@ -10086,7 +10086,7 @@ include th05/main/bullet/patnum_for_angle.asm
 GRCG_SETCOLOR_DIRECT_DEF 3
 GRCG_SETMODE_RMW_DEF 3
 include th05/main/player/angle.asm
-include th05/main/playperf_adjust_speed.asm
+include th05/main/playperf_speedtune.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -10410,7 +10410,7 @@ loc_15C81:
 		cmp	_group_fixedspeed, 0
 		jnz	short loc_15C91
 		mov	al, _bullet_template.speed
-		call	@playperf_adjust_speed
+		call	@playperf_speedtune
 		mov	_bullet_template.speed, al
 
 loc_15C91:
