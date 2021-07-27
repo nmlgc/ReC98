@@ -306,7 +306,10 @@ bool16 pascal near bullet_velocity_and_angle_set(int group_i)
 			// therefore need to be shifted by half of the angle. Yes, this
 			// whole separate branch, with its whole pointlessly mirrored
 			// logic, wouldn't have been necessary, and ZUN could have just
-			// added the angle offset after the fact...
+			// added the angle offset after the fact. Or heck, even leaving it
+			// at that one branch and using the same code for odd- and
+			// even-numbered spreads beyond the first bullet would have been
+			// better. (He did the latter in TH05.)
 			if(group_i == 0) {
 				group_i_spread_angle = (bullet_template.delta.spread_angle / 2);
 				angle = group_i_spread_angle;
