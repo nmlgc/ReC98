@@ -10370,53 +10370,6 @@ off_15C16	dw offset @@single
 		dw offset @@single
 		dw offset @@single_aimed
 _bullet_velocity_and_angle_set	endp
-
-; =============== S U B	R O U T	I N E =======================================
-
-public _bullet_template_clip
-_bullet_template_clip	proc near
-		cmp	_bullet_clear_time, 0
-		jz	short loc_15C47
-		cmp	_bullet_clear_time, 17
-		jnb	short loc_15C47
-
-loc_15C44:
-		mov	al, 1
-		retn
-; ---------------------------------------------------------------------------
-
-loc_15C47:
-		mov	ax, _bullet_template.BT_origin.x
-		mov	dx, _bullet_template.BT_origin.y
-		cmp	ax, (-8 shl 4)
-		jle	short loc_15C44
-		cmp	ax, ((PLAYFIELD_W + 8) shl 4)
-		jge	short loc_15C44
-		cmp	dx, (-8 shl 4)
-		jle	short loc_15C44
-		cmp	dx, ((PLAYFIELD_H + 8) shl 4)
-		jge	short loc_15C44
-		sub	ax, _player_pos.cur.x
-		add	ax, 4 * 16
-		cmp	ax, 8 * 16
-		ja	short loc_15C81
-		sub	dx, _player_pos.cur.y
-		add	dx, 4 * 16
-		cmp	dx, 8 * 16
-		ja	short loc_15C81
-		mov	_player_is_hit, 1
-
-loc_15C81:
-		cmp	_group_fixedspeed, 0
-		jnz	short loc_15C91
-		mov	al, _bullet_template.speed
-		call	@playperf_speedtune
-		mov	_bullet_template.speed, al
-
-loc_15C91:
-		mov	al, 0
-		retn
-_bullet_template_clip	endp
 main_031_TEXT	ends
 
 main_032_TEXT	segment	byte public 'CODE' use16

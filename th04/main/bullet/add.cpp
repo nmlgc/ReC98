@@ -436,7 +436,7 @@ bool near bullet_template_clip(void)
 		// If a newly spawned bullet wouldn't fully decay during the remaining
 		// time, let's simply not spawn it at all? This way, they don't award
 		// points either.
-		(bullet_clear_time <= (BMS_DECAY_FRAMES + 1))
+		(bullet_clear_time <= (BMS_DECAY_FRAMES + 1)) // differs from TH05!
 	) {
 		return true;
 	}
