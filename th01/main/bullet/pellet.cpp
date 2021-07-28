@@ -69,9 +69,12 @@ bool16 group_velocity_set(
 	screen_y_t pellet_top
 )
 {
-	// ZUN bug: Due to this default, add_group() ends up repeatedly calling
-	// this function for [group] values not covered by the switch below,
-	// until it iterated over the entire pellet array...
+	// Due to this default, invalid group values will lead to add_group()
+	// repeatedly calling this function, until it completely filled the pellet
+	// array with identical bullets, moving at the same velocity – which is not
+	// initialized anywhere.
+	// (Not really a ZUN bug until we can discover a game state where this can
+	// actually happen.)
 	bool16 done = false;
 	unsigned char angle = 0x00;
 	unsigned char spread_delta = 0x00;
