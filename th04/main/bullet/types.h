@@ -15,6 +15,7 @@ typedef enum {
 
 	// Multiple random bullets, number in [count]. Both angle and speed are
 	// added to the template's [angle] and [speed] values, respectively.
+	// The added speed is within the [0.0f; 2.0f[ range.
 	BG_RANDOM_ANGLE = 0x1B,
 	BG_RANDOM_ANGLE_AND_SPEED = 0x1C,
 
