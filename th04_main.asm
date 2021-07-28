@@ -28431,7 +28431,7 @@ arg_0		= word ptr  4
 loc_1D00F:
 		cmp	ax, BG_RANDOM_ANGLE_AND_SPEED
 		jz	@@random_angle_and_speed
-		cmp	ax, BG_SPREAD_RANDOM_ANGLE_AIMED
+		cmp	ax, BG_RANDOM_CONSTRAINED_ANGLE_AIMED
 		jz	@@spread_random_angle_aimed
 		cmp	ax, BG_RING
 		jz	@@ring

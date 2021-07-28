@@ -18,6 +18,8 @@ typedef enum {
 	// The added speed is within the [0.0f; 2.0f[ range.
 	BG_RANDOM_ANGLE = 0x1B,
 	BG_RANDOM_ANGLE_AND_SPEED = 0x1C,
+	// Constrains the random angle to the [-22.5 deg; +22.5 deg[ range.
+	BG_RANDOM_CONSTRAINED_ANGLE_AIMED = 0x1D,
 
 	// Ring out of [count] bullets, ignoring [delta].
 	BG_RING = 0x26,
@@ -26,7 +28,6 @@ typedef enum {
 	// [count]-way arc centered around 0°, with [delta.spread_angle]° between
 	// each bullet.
 	BG_SPREAD = 0x2D,
-	BG_SPREAD_RANDOM_ANGLE_AIMED = 0x1D,
 	BG_SPREAD_AIMED = 0x2E,
 
 	// Multi-bullet stack with varying speeds. Number of bullets in [count],
