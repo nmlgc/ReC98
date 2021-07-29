@@ -10086,10 +10086,10 @@ include th05/main/bullet/patnum_for_angle.asm
 GRCG_SETCOLOR_DIRECT_DEF 3
 GRCG_SETMODE_RMW_DEF 3
 include th05/main/player/angle.asm
-include th05/main/playperf_speedtune.asm
 main_031_TEXT	ends
 
 main_032_TEXT	segment	byte public 'CODE' use16
+	@playperf_speedtune procdesc near
 	_bullets_add_regular procdesc near
 	_bullets_add_special procdesc near
 	_bullets_add_regular_fixedspeed procdesc near

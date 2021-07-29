@@ -8,6 +8,7 @@ include th05/main/bullet/types.inc
 
 extrn _randring:byte
 extrn _randring_p:word
+extrn _playperf:byte
 
 extrn _group_is_special:byte
 
@@ -32,6 +33,31 @@ MAIN_03 group MAIN_031_TEXT
 
 MAIN_031_TEXT	segment	word public 'CODE' use16
 	assume cs:MAIN_03
+
+; The main algorithm is identical to the TH04 version...
+public @playperf_speedtune
+@playperf_speedtune proc near
+	@@speed_from_playperf	equ <cl>
+
+	shr	al, 1
+	mov	@@speed_from_playperf, al
+	mul	_playperf
+	; ...except for this divisor (32 here vs. 16 in TH04)
+	shr	ax, 5
+	add	al, @@speed_from_playperf
+	cmp	al, (8 shl 4)
+	jbe	short @@below_half_a_pixel_per_frame?
+	mov	al, (8 shl 4)
+
+@@below_half_a_pixel_per_frame?:
+	cmp	al, ((1 shl 4) / 2)
+	jnb	short @@ret
+	mov	al, ((1 shl 4) / 2)
+
+@@ret:
+	ret
+@playperf_speedtune endp
+
 
 public _bullets_add_regular
 _bullets_add_regular proc near
