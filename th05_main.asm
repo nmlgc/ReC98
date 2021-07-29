@@ -10087,67 +10087,13 @@ GRCG_SETCOLOR_DIRECT_DEF 3
 GRCG_SETMODE_RMW_DEF 3
 include th05/main/player/angle.asm
 include th05/main/playperf_speedtune.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-public _bullets_add_regular
-_bullets_add_regular	proc near
-		cmp	_bullet_zap_active, 0
-		jnz	short locret_15A6E
-		push	word ptr _bullet_template.BT_angle
-		call	_bullets_add_raw
-		pop	word ptr _bullet_template.BT_angle
-
-locret_15A6E:
-		retn
-_bullets_add_regular	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-public _bullets_add_special
-_bullets_add_special	proc near
-		cmp	_bullet_zap_active, 0
-		jnz	short locret_15A8C
-		mov	_group_is_special, 1
-		push	word ptr _bullet_template.BT_angle
-		call	_bullets_add_raw
-		pop	word ptr _bullet_template.BT_angle
-		mov	_group_is_special, 0
-
-locret_15A8C:
-		retn
-_bullets_add_special	endp
-
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_15A8E	proc near
-		mov	_group_fixedspeed, 1
-		call	_bullets_add_regular
-		mov	_group_fixedspeed, 0
-		retn
-sub_15A8E	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_15A9C	proc near
-		mov	_group_fixedspeed, 1
-		call	_bullets_add_special
-		mov	_group_fixedspeed, 0
-		retn
-sub_15A9C	endp
 main_031_TEXT	ends
 
 main_032_TEXT	segment	byte public 'CODE' use16
-	_bullets_add_raw procdesc near
+	_bullets_add_regular procdesc near
+	_bullets_add_special procdesc near
+	_bullets_add_regular_fixedspeed procdesc near
+	_bullets_add_special_fixedspeed procdesc near
 	extern _bullets_add_regular_far:proc
 	BULLET_TEMPLATE_TUNE_EASY procdesc near
 	BULLET_TEMPLATE_TUNE_NORMAL procdesc near
@@ -16508,7 +16454,7 @@ sub_1A651	proc near
 		mov	word ptr _bullet_template.spread, (8 shl 8) or 16
 		mov	_bullet_template.speed, (3 shl 4) + 12
 		call	_bullet_template_tune
-		call	sub_15A9C
+		call	_bullets_add_special_fixedspeed
 		call	snd_se_play pascal, 3
 
 loc_1A69C:
@@ -16559,7 +16505,7 @@ loc_1A6BA:
 		mov	word ptr _bullet_template.spread, (10 shl 8) or 5
 		mov	_bullet_template.speed, (3 shl 4) + 2
 		call	_bullet_template_tune
-		call	sub_15A8E
+		call	_bullets_add_regular_fixedspeed
 		call	snd_se_play pascal, 3
 
 loc_1A709:
@@ -17701,7 +17647,7 @@ loc_1B0FE:
 		add	ax, _midboss_pos.cur.y
 		sub	ax, (32 shl 4)
 		mov	_bullet_template.BT_origin.y, ax
-		call	sub_15A8E
+		call	_bullets_add_regular_fixedspeed
 		mov	al, _bullet_template.speed
 		add	al, (1 shl 4)
 		mov	_bullet_template.speed, al
@@ -19049,7 +18995,7 @@ loc_1BE40:
 		mov	_bullet_template_turn_angle, 40h
 
 loc_1BE4E:
-		call	sub_15A9C
+		call	_bullets_add_special_fixedspeed
 		mov	al, angle_2D085
 		add	al, 9
 		mov	angle_2D085, al
@@ -19368,12 +19314,12 @@ loc_1C121:
 		or	dx, dx
 		jnz	short loc_1C15E
 		mov	_bullet_template.BT_angle, 80h
-		call	sub_15A9C
+		call	_bullets_add_special_fixedspeed
 		mov	al, _bullet_template_turn_angle
 		neg	al
 		mov	_bullet_template_turn_angle, al
 		mov	_bullet_template.BT_angle, 0
-		call	sub_15A9C
+		call	_bullets_add_special_fixedspeed
 		mov	al, _bullet_template_turn_angle
 		neg	al
 		add	al, 8
@@ -20900,7 +20846,7 @@ loc_1D252:
 		mov	_bullet_template_turn_angle, -40h
 
 loc_1D257:
-		call	sub_15A9C
+		call	_bullets_add_special_fixedspeed
 		inc	angle_2D084
 		inc	angle_2D085
 		call	snd_se_play pascal, 3
@@ -21969,21 +21915,21 @@ loc_1DDF7:
 		add	_bullet_template.BT_origin.x, (96 shl 4)
 		mov	al, angle_2D085
 		mov	_bullet_template.BT_angle, al
-		call	sub_15A8E
+		call	_bullets_add_regular_fixedspeed
 		sub	_bullet_template.BT_origin.x, (64 shl 4)
 		mov	al, angle_2D084
 		mov	_bullet_template.BT_angle, al
-		call	sub_15A8E
+		call	_bullets_add_regular_fixedspeed
 		sub	_bullet_template.BT_origin.x, (64 shl 4)
 		mov	al, 80h
 		sub	al, angle_2D084
 		mov	_bullet_template.BT_angle, al
-		call	sub_15A8E
+		call	_bullets_add_regular_fixedspeed
 		sub	_bullet_template.BT_origin.x, (64 shl 4)
 		mov	al, 80h
 		sub	al, angle_2D085
 		mov	_bullet_template.BT_angle, al
-		call	sub_15A8E
+		call	_bullets_add_regular_fixedspeed
 		cmp	byte_2D082, 0
 		jnz	short loc_1DE5D
 		mov	al, angle_2D085
@@ -22003,22 +21949,22 @@ loc_1DE5D:
 		add	al, 80h
 		mov	_bullet_template.BT_angle, al
 		add	_bullet_template.BT_origin.x, (192 shl 4)
-		call	sub_15A8E
+		call	_bullets_add_regular_fixedspeed
 		sub	_bullet_template.BT_origin.x, (64 shl 4)
 		mov	al, angle_2D084
 		add	al, 80h
 		mov	_bullet_template.BT_angle, al
-		call	sub_15A8E
+		call	_bullets_add_regular_fixedspeed
 		sub	_bullet_template.BT_origin.x, (64 shl 4)
 		mov	al, 0
 		sub	al, angle_2D084
 		mov	_bullet_template.BT_angle, al
-		call	sub_15A8E
+		call	_bullets_add_regular_fixedspeed
 		sub	_bullet_template.BT_origin.x, (64 shl 4)
 		mov	al, 0
 		sub	al, angle_2D085
 		mov	_bullet_template.BT_angle, al
-		call	sub_15A8E
+		call	_bullets_add_regular_fixedspeed
 		cmp	byte_2D081, 0
 		jnz	short loc_1DED3
 		mov	al, angle_2D085
@@ -23954,11 +23900,11 @@ loc_1F0D0:
 		mov	al, 80h
 		sub	al, _bullet_template.BT_angle
 		mov	_bullet_template.BT_angle, al
-		call	sub_15A8E
+		call	_bullets_add_regular_fixedspeed
 		mov	al, 80h
 		sub	al, _bullet_template.BT_angle
 		mov	_bullet_template.BT_angle, al
-		call	sub_15A8E
+		call	_bullets_add_regular_fixedspeed
 		call	snd_se_play pascal, 3
 		mov	al, angle_2D085
 		sub	_bullet_template.BT_angle, al
@@ -25269,7 +25215,7 @@ aSt00_map	db  'st00.map',0
 include th04/main/tile/section[data].asm
 include th04/formats/std[data].asm
 off_2129C	dw offset _bullets_add_regular
-		dw offset sub_15A8E
+		dw offset _bullets_add_regular_fixedspeed
 		dw offset _bullets_add_special
 include th02/sprites/pellet.asp
 include th04/sprites/pelletbt.asp

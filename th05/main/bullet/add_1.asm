@@ -9,17 +9,22 @@ include th05/main/bullet/types.inc
 extrn _randring:byte
 extrn _randring_p:word
 
+extrn _group_is_special:byte
+
+extrn _group_fixedspeed:byte
 extrn _group_i_spread_angle:byte
 extrn _group_i:byte
 extrn _group_i_absolute_angle:byte
 extrn _group_i_speed:byte
 extrn _group_i_velocity:Point
 extrn _bullet_template:bullet_template_t
+extrn _bullet_zap:byte
 
 PLAYER_ANGLE_FROM procdesc pascal near \
 	x:word, y:word, plus_angle:byte
 VECTOR2_NEAR procdesc pascal near \
 	ret:word, angle:byte, length:word
+_bullets_add_raw procdesc near
 
 MAIN_03 group MAIN_031_TEXT
 
@@ -27,6 +32,54 @@ MAIN_03 group MAIN_031_TEXT
 
 MAIN_031_TEXT	segment	word public 'CODE' use16
 	assume cs:MAIN_03
+
+public _bullets_add_regular
+_bullets_add_regular proc near
+	cmp	_bullet_zap, 0
+	jnz	short @@ret
+	push	word ptr _bullet_template.BT_angle
+	call	_bullets_add_raw
+	pop	word ptr _bullet_template.BT_angle
+
+@@ret:
+	retn
+_bullets_add_regular endp
+	even
+
+
+public _bullets_add_special
+_bullets_add_special proc near
+	cmp	_bullet_zap, 0
+	jnz	short @@ret
+	mov	_group_is_special, 1
+	push	word ptr _bullet_template.BT_angle
+	call	_bullets_add_raw
+	pop	word ptr _bullet_template.BT_angle
+	mov	_group_is_special, 0
+
+@@ret:
+	retn
+_bullets_add_special endp
+	even
+
+
+public _bullets_add_regular_fixedspeed
+_bullets_add_regular_fixedspeed proc near
+	mov	_group_fixedspeed, 1
+	call	_bullets_add_regular
+	mov	_group_fixedspeed, 0
+	retn
+_bullets_add_regular_fixedspeed endp
+
+
+public _bullets_add_special_fixedspeed
+_bullets_add_special_fixedspeed proc near
+	mov	_group_fixedspeed, 1
+	call	_bullets_add_special
+	mov	_group_fixedspeed, 0
+	retn
+_bullets_add_special_fixedspeed endp
+
 
 public _bullet_velocity_and_angle_set
 _bullet_velocity_and_angle_set proc pascal near
