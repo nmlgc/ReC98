@@ -69,24 +69,6 @@ Crossed-out files are identical to their version in the previous game. ONGCHK.CO
 
   This was the compiler ZUN originally used, so it's the only one that can deterministically compile this code to executables that are bit-perfect to ZUN's original ones.
 
-  On 32-bit Windows ≥Vista, `TLINK` might fail with
-
-  ```text
-  Loader error (0000): Unrecognized Error
-  ```
-
-  This can be fixed by configuring the NTVDM DPMI driver to be loaded into conventional memory rather than upper memory, by editing `%WINDIR%\System32\autoexec.nt`:
-
-  ```patch
-   REM Install DPMI support
-  -LH %SystemRoot%\system32\dosx
-  +%SystemRoot%\system32\dosx
-  ```
-
-  Requires a reboot after that edit to take effect.
-
-  ([Source](http://oshow.txt-nifty.com/blog/2008/11/loader-error-00.html))
-
   ----
 
 * **Borland Turbo Assembler (TASM), version 5.0 or later, for 32-bit Windows (`TASM32.EXE`)**
@@ -160,6 +142,22 @@ The most performant OS for building ReC98 is therefore a 32-bit Windows ≥Vista
 All batch files will abort with an error if any of the necessary tools can't be found in the `PATH`.
 
 The final executables will be put into `bin\th0?`, using the same names as the originals.
+
+### Troubleshooting
+
+* TLINK fails with `Loader error (0000): Unrecognized Error` on 32-bit Windows ≥Vista
+
+  This can be fixed by configuring the NTVDM DPMI driver to be loaded into conventional memory rather than upper memory, by editing `%WINDIR%\System32\autoexec.nt`:
+
+  ```patch
+  REM Install DPMI support
+  -LH %SystemRoot%\system32\dosx
+  +%SystemRoot%\system32\dosx
+  ```
+
+  Requires a reboot after that edit to take effect.
+
+  ([Source](http://oshow.txt-nifty.com/blog/2008/11/loader-error-00.html))
 
 ----
 
