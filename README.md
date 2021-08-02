@@ -145,6 +145,13 @@ The final executables will be put into `bin\th0?`, using the same names as the o
 
 ### Troubleshooting
 
+* TCC compiles, but fails to link, with `Error: Unable to execute command 'tlink.exe'`
+
+  **Cause:** To locate TLINK, TCC needlessly copies the `PATH` environment variable into a statically allocated 128-byte buffer. It then constructs absolute `tlink.exe` filenames for each of the semicolon- or `\0`-terminated paths, writing these into a buffer that immediately follows the 128-byte `PATH` buffer in memory. The search is finished as soon as TCC found an existing file, which gives precedence to earlier paths in the `PATH`. If the search didn't complete until a potential "final" path that runs past the 128 bytes, the final attempted filename will consist of the part that still fit into the buffer, followed by the previously attempted path.
+
+  **Workaround:** Make sure that the `BIN\` path to Turbo C++ 4.0J is fully contained within the first 127 bytes of the `PATH` inside your DOS system.
+  (The 128<sup>th</sup> byte must either be a separating `;` or the terminating `\0` of the `PATH` string.)
+
 * TLINK fails with `Loader error (0000): Unrecognized Error` on 32-bit Windows ≥Vista
 
   This can be fixed by configuring the NTVDM DPMI driver to be loaded into conventional memory rather than upper memory, by editing `%WINDIR%\System32\autoexec.nt`:
