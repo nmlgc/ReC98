@@ -50,8 +50,7 @@ void vector2_to_player_from(
 )
 {
 	plus_angle = iatan2(
-		(player_center_y - y),
-		((player_left + (PLAYER_W / 2) - (PELLET_W / 2)) - x)
+		(player_center_y() - y), ((player_center_x() - (PELLET_W / 2)) - x)
 	) + plus_angle;
 	ret_x = polar_x(0, length, plus_angle);
 	ret_y = polar_y(0, length, plus_angle);
@@ -97,8 +96,8 @@ bool16 group_velocity_set(
 		vector2_between(
 			pellet_left,
 			pellet_top,
-			player_left + 8,
-			player_center_y,
+			(player_center_x() - PELLET_W),
+			player_center_y(),
 			ret_x.v,
 			ret_y.v,
 			speed
@@ -322,8 +321,8 @@ void CPellets::motion_type_apply_for_cur(void)
 			vector2_between(
 				p->cur_left.to_pixel(),
 				p->cur_top.to_pixel(),
-				player_left + 8,
-				player_center_y,
+				(player_center_x() - PELLET_W),
+				player_center_y(),
 				p->velocity.x.v,
 				p->velocity.y.v,
 				p->speed.v
@@ -387,8 +386,8 @@ void CPellets::motion_type_apply_for_cur(void)
 		vector2_between(
 			p->cur_left.to_pixel(),
 			p->cur_top.to_pixel(),
-			player_left + 8,
-			player_center_y,
+			(player_center_x() - PELLET_W),
+			player_center_y(),
 			velocity_to_player_x.v,
 			velocity_to_player_y.v,
 			p->speed.v

@@ -11,7 +11,14 @@ static const screen_x_t PLAYER_LEFT_START = (PLAYFIELD_CENTER_X - (PLAYER_W / 2)
 
 extern screen_x_t player_left;
 static const screen_y_t player_top = (PLAYFIELD_BOTTOM - PLAYER_H);
-static const screen_y_t player_center_y = (PLAYFIELD_BOTTOM - (PLAYER_H / 2));
+
+inline screen_x_t player_center_x(void) {
+	return (player_left + (PLAYER_W / 2));
+}
+
+inline screen_y_t player_center_y(void) {
+	return (player_top + (PLAYER_H / 2));
+}
 
 inline screen_y_t player_anim_left(void) {
 	return (player_left - ((PLAYER_ANIM_W - PLAYER_W) / 2));

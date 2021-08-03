@@ -434,7 +434,7 @@ void pattern_diamond_cross_to_edges_followed_by_rain(void)
 
 		vector2_between(
 			DIAMOND_ORIGIN_X, DIAMOND_ORIGIN_Y,
-			PLAYFIELD_LEFT, player_center_y,
+			PLAYFIELD_LEFT, player_center_y(),
 			diamonds.velocity_bottomleft_x, diamonds.velocity_bottomleft_y,
 			7
 		);
