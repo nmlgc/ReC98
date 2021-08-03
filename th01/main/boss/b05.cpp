@@ -4,6 +4,7 @@
 extern "C" {
 #include "platform.h"
 #include "pc98.h"
+#include "th01/main/vars.hpp"
 }
 
 #define boss_hp	singyoku_hp

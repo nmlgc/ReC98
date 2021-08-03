@@ -2,6 +2,7 @@
 /// -----------------------------
 
 #include "th01/main/boss/palette.cpp"
+#include "th01/main/vars.hpp"
 
 #define flash_colors	kikuri_flash_colors
 #define invincible	kikuri_invincible

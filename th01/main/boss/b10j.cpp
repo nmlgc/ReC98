@@ -3,6 +3,7 @@
 
 extern "C" {
 #include "platform.h"
+#include "th01/main/vars.hpp"
 }
 
 #define flash_colors	mima_flash_colors

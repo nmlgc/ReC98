@@ -3,6 +3,7 @@
 
 extern "C" {
 #include "platform.h"
+#include "th01/main/vars.hpp"
 }
 
 #define flash_colors	elis_flash_colors
