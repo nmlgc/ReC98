@@ -37643,6 +37643,7 @@ main_37_TEXT	segment	byte public 'CODE' use16
 	extern @face_expression_set_and_put$q17face_expression_t:proc
 	extern @slash_put$qi:proc
 	extern @pattern_diamond_cross_to_edges_f$qv:proc
+	extern @pattern_symmetrical_from_cup$qv:proc
 main_37_TEXT	ends
 
 main_37__TEXT	segment	byte public 'CODE' use16
@@ -37661,112 +37662,6 @@ FE_NEUTRAL = 0
 FE_CLOSED = 1
 FE_GLARE = 2
 FE_AIM = 3
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2D7D7	proc far
-
-@@angle		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, large 328 or (188 shl 16), [bp+@@angle], _konngara_pattern_state, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, large 296 or (188 shl 16), [bp+@@angle], _konngara_pattern_state, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
-		add	sp, 28h
-		pop	bp
-		retf
-sub_2D7D7	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2D817	proc far
-		push	bp
-		mov	bp, sp
-		cmp	_boss_phase_frame, 10
-		jnz	short loc_2D828
-		call	@face_expression_set_and_put$q17face_expression_t stdcall, FE_CLOSED
-		pop	cx
-
-loc_2D828:
-		cmp	_boss_phase_frame, 100
-		jl	loc_2D8E8
-		cmp	_boss_phase_frame, 100
-		jnz	short loc_2D85A
-		mov	angle_3B454, 40h
-		mov	word_3B455, 0FFFFh
-		call	@konngara_select_for_rank$qmiiiii c, offset _konngara_pattern_state, ds, large 80 or (80 shl 16), large 96 or (112 shl 16)
-
-loc_2D85A:
-		cmp	_boss_phase_frame, 140
-		jge	short loc_2D873
-		mov	ax, _boss_phase_frame
-		mov	bx, 8
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_2D873
-		push	40h
-		jmp	short loc_2D8A0
-; ---------------------------------------------------------------------------
-
-loc_2D873:
-		cmp	_boss_phase_frame, 220
-		jge	short loc_2D8A7
-		mov	ax, _boss_phase_frame
-		mov	bx, 8
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_2D8A7
-		mov	al, angle_3B454
-		add	al, 5
-		mov	angle_3B454, al
-		call	sub_2D7D7 stdcall, word ptr angle_3B454
-		pop	cx
-		mov	al, 80h
-		sub	al, angle_3B454
-		push	ax
-
-loc_2D8A0:
-		call	sub_2D7D7
-		pop	cx
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_2D8A7:
-		cmp	_boss_phase_frame, 300
-		jge	short loc_2D8DA
-		mov	ax, _boss_phase_frame
-		mov	bx, 8
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_2D8DA
-		mov	al, angle_3B454
-		add	al, -0Ch
-		mov	angle_3B454, al
-		call	sub_2D7D7 stdcall, word ptr angle_3B454
-		mov	al, 80h
-		sub	al, angle_3B454
-		call	sub_2D7D7 stdcall, ax
-		add	sp, 4
-
-loc_2D8DA:
-		cmp	_boss_phase_frame, 300
-		jl	short loc_2D8E8
-		mov	_boss_phase_frame, 0
-
-loc_2D8E8:
-		pop	bp
-		retf
-sub_2D817	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -39832,7 +39727,7 @@ loc_2EF22:
 loc_2EF38:
 		cmp	word_35FF8, 1
 		jnz	short loc_2EF45
-		call	sub_2D817
+		call	@pattern_symmetrical_from_cup$qv
 		jmp	short loc_2EF97
 ; ---------------------------------------------------------------------------
 
@@ -40555,7 +40450,7 @@ loc_2F62F:
 loc_2F646:
 		cmp	word_35FF8, 1
 		jnz	short loc_2F654
-		call	sub_2D817
+		call	@pattern_symmetrical_from_cup$qv
 		jmp	loc_2F720
 ; ---------------------------------------------------------------------------
 
@@ -42254,8 +42149,10 @@ _pattern0_diamonds label byte
 	P0D_left	dw 4 dup(?)
 	P0D_top	dw 4 dup(?)
 _frames_with_diamonds_at_edges	dw ?
-angle_3B454	db ?
-word_3B455	dw ?
+
+public _pattern1_angle, _pattern1_unused
+_pattern1_angle	db ?
+_pattern1_unused	dw ?
 word_3B457	dw ?
 		db 8 dup(?)
 word_3B461	dw ?

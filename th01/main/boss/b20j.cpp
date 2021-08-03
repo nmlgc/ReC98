@@ -44,6 +44,12 @@ static const screen_x_t HEAD_LEFT = 280;
 static const screen_y_t HEAD_TOP = 80;
 static const screen_x_t FACE_LEFT = 280;
 static const screen_y_t FACE_TOP = 128;
+static const screen_x_t CUP_LEFT = 296;
+static const screen_y_t CUP_TOP = 188;
+
+static const pixel_t CUP_W = 32;
+
+static const screen_x_t CUP_RIGHT = (CUP_LEFT + CUP_W);
 // -----------
 
 #define pattern_state	konngara_pattern_state
@@ -54,6 +60,7 @@ static const screen_y_t FACE_TOP = 128;
 extern union {
 	int group; // pellet_group_t
 	int interval;
+	subpixel_t speed;
 } pattern_state;
 extern bool16 invincible;
 extern int invincibility_frame;
@@ -549,6 +556,56 @@ void pattern_diamond_cross_to_edges_followed_by_rain(void)
 	#undef DIAMOND_ORIGIN_Y
 	#undef DIAMOND_ORIGIN_X
 	#undef DIAMOND_COUNT
+}
+
+void pattern_symmetrical_from_cup_fire(unsigned char angle)
+{
+	Pellets.add_single(
+		CUP_RIGHT, CUP_TOP, angle, pattern_state.speed, PM_NORMAL
+	);
+	Pellets.add_single(
+		CUP_LEFT,  CUP_TOP, angle, pattern_state.speed, PM_NORMAL
+	);
+}
+
+void pattern_symmetrical_from_cup(void)
+{
+	#define angle pattern1_angle
+	#define unused pattern1_unused
+	extern unsigned char angle;
+	extern int16_t unused;
+
+	if(boss_phase_frame == 10) {
+		face_expression_set_and_put(FE_CLOSED);
+	}
+	if(boss_phase_frame < 100) {
+		return;
+	}
+	if(boss_phase_frame == 100) {
+		angle = 0x40;
+		unused = -1;
+		select_for_rank(pattern_state.speed,
+			to_sp(5.0f), to_sp(5.0f), to_sp(6.0f), to_sp(7.0f)
+		);
+	}
+	if((boss_phase_frame < 140) && ((boss_phase_frame % 8) == 0)) {
+		pattern_symmetrical_from_cup_fire(0x40);
+		return;
+	}
+	if((boss_phase_frame < 220) && ((boss_phase_frame % 8) == 0)) {
+		angle += 0x05;
+		pattern_symmetrical_from_cup_fire(angle);
+		pattern_symmetrical_from_cup_fire(0x80 - angle);
+		return;
+	}
+	if((boss_phase_frame < 300) && ((boss_phase_frame % 8) == 0)) {
+		angle -= 0x0C;
+		pattern_symmetrical_from_cup_fire(angle);
+		pattern_symmetrical_from_cup_fire(0x80 - angle);
+	}
+	if(boss_phase_frame >= 300) {
+		boss_phase_frame = 0;
+	}
 }
 
 char konngara_esc_cls[] = "\x1B*";
