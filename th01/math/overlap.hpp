@@ -13,6 +13,13 @@
 	(((y1) - (y2)) >= -(h1)) \
 )
 
+#define overlap_xy_ltrb_lt_gt(x1, y1, left2, top2, right2, bottom2) ( \
+	((x1) > (left2)) && \
+	((x1) < (right2)) && \
+	((y1) > (top2)) && \
+	((y1) < (bottom2)) \
+)
+
 #define overlap_xy_ltrb_le_ge(x1, y1, left2, top2, right2, bottom2) ( \
 	((x1) >= (left2)) && \
 	((x1) <= (right2)) && \

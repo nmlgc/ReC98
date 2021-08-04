@@ -20,6 +20,14 @@ inline screen_y_t player_center_y(void) {
 	return (player_top + (PLAYER_H / 2));
 }
 
+inline screen_x_t player_right(void) {
+	return (player_left + PLAYER_W);
+}
+
+inline screen_y_t player_bottom(void) {
+	return (player_top + PLAYER_H);
+}
+
 inline screen_y_t player_anim_left(void) {
 	return (player_left - ((PLAYER_ANIM_W - PLAYER_W) / 2));
 }
