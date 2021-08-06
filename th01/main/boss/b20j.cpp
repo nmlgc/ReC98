@@ -48,6 +48,8 @@ static const screen_x_t FACE_LEFT = 280;
 static const screen_y_t FACE_TOP = 128;
 static const screen_x_t CUP_LEFT = 296;
 static const screen_y_t CUP_TOP = 188;
+static const screen_x_t LEFT_SLEEVE_LEFT = 290;
+static const screen_y_t LEFT_SLEEVE_TOP = 200;
 static const screen_x_t EYE_CENTER_X = 316;
 static const screen_y_t EYE_BOTTOM = 140;
 static const screen_x_t SWORD_CENTER_X = 410;
@@ -812,6 +814,113 @@ void pattern_two_homing_snakes_and_semicircle_spreads(void)
 	}
 
 	#undef snakes
+}
+
+void pattern_aimed_rows_from_top(void)
+{
+	enum {
+		DIAMOND_SPEED = 8,
+		ROW_MARGIN = (PLAYFIELD_W / 10),
+	};
+	#define diamond_velocity pattern3_diamond_velocity
+	#define diamond_left pattern3_diamond_left
+	#define diamond_top pattern3_diamond_top
+	#define diamond_direction pattern3_diamond_direction
+	#define pellet_speed pattern3_pellet_speed
+
+	extern point_t diamond_velocity;
+	// screen_point_t would generate too good ASM here
+	extern screen_x_t diamond_left;
+	extern screen_y_t diamond_top;
+	extern enum {
+		RIGHT = 0,
+		LEFT = 1,
+		DOWN_START = 2,
+		DOWN_END = (DOWN_START + (ROW_MARGIN / DIAMOND_SPEED)),
+		TO_INITIAL_POSITION = 99,
+
+		_diamond_direction_t_FORCE_INT16 = 0x7FFF
+	} diamond_direction;
+	extern Subpixel pellet_speed;
+
+	if(boss_phase_frame == 10) {
+		face_expression_set_and_put(FE_NEUTRAL);
+	}
+	if(boss_phase_frame < 100) {
+		return;
+	}
+	if(boss_phase_frame == 100) {
+		vector2_between(
+			LEFT_SLEEVE_LEFT, LEFT_SLEEVE_TOP,
+			(PLAYFIELD_LEFT + ROW_MARGIN), PLAYFIELD_TOP,
+			diamond_velocity.x, diamond_velocity.y,
+			(DIAMOND_SPEED * 2)
+		);
+		diamond_left = LEFT_SLEEVE_LEFT;
+		diamond_top = LEFT_SLEEVE_TOP;
+		pellet_speed.set(3.0f);
+		mdrv2_se_play(12);
+		diamond_direction = TO_INITIAL_POSITION;
+		select_for_rank(pattern_state.interval, 12, 10, 8, 6);
+		return;
+	}
+	if(diamond_direction == TO_INITIAL_POSITION) {
+		shape8x8_sloppy_unput(diamond_left, diamond_top);
+		diamond_left += diamond_velocity.x;
+		diamond_top += diamond_velocity.y;
+
+		if(diamond_top <= PLAYFIELD_TOP) {
+			diamond_left = (PLAYFIELD_LEFT + ROW_MARGIN);
+			diamond_top = PLAYFIELD_TOP;
+			diamond_direction = RIGHT;
+			return;
+		}
+		shape8x8_diamond_put(diamond_left, diamond_top, 9);
+	} else if(diamond_direction < TO_INITIAL_POSITION) {
+		shape8x8_sloppy_unput(diamond_left, diamond_top);
+
+		// That's quite the roundabout way of saying "-8, 0, or +8"...
+		diamond_left += (DIAMOND_SPEED + (
+			(diamond_direction == RIGHT) ?   0 :
+			(diamond_direction ==  LEFT) ? (-DIAMOND_SPEED * 2) :
+			/*            >= DOWN_START */  -DIAMOND_SPEED
+		));
+		if(diamond_direction >= DOWN_START) {
+			diamond_top += DIAMOND_SPEED;
+			reinterpret_cast<int &>(diamond_direction)++;
+			if(diamond_direction >= DOWN_END) {
+				diamond_direction = (diamond_left > PLAYFIELD_CENTER_X)
+					? LEFT
+					: RIGHT;
+			}
+		}
+		if(diamond_left > (PLAYFIELD_RIGHT - ROW_MARGIN)) {
+			diamond_direction = DOWN_START;
+			diamond_left = (PLAYFIELD_RIGHT - ROW_MARGIN);
+		} else if(diamond_left < (PLAYFIELD_LEFT + ROW_MARGIN)) {
+			diamond_direction = DOWN_START;
+			diamond_left = (PLAYFIELD_LEFT + ROW_MARGIN);
+		}
+		if(diamond_top >= (PLAYFIELD_TOP + (ROW_MARGIN * 3))) {
+			boss_phase_frame = 0;
+			return;
+		}
+		if(diamond_direction < DOWN_START) {
+			if((boss_phase_frame % pattern_state.interval) == 0) {
+				Pellets.add_group(
+					diamond_left, diamond_top, PG_1_AIMED, pellet_speed
+				);
+				pellet_speed += 0.125f;
+			}
+		}
+		shape8x8_diamond_put(diamond_left, diamond_top, 6);
+	}
+
+	#undef pellet_speed
+	#undef diamond_direction
+	#undef diamond_top
+	#undef diamond_left
+	#undef diamond_velocity
 }
 
 char konngara_esc_cls[] = "\x1B*";

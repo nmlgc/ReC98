@@ -37645,6 +37645,7 @@ main_37_TEXT	segment	byte public 'CODE' use16
 	extern @pattern_diamond_cross_to_edges_f$qv:proc
 	extern @pattern_symmetrical_from_cup$qv:proc
 	extern @pattern_two_homing_snakes_and_se$qv:proc
+	extern @pattern_aimed_rows_from_top$qv:proc
 main_37_TEXT	ends
 
 main_37__TEXT	segment	byte public 'CODE' use16
@@ -37663,147 +37664,6 @@ FE_NEUTRAL = 0
 FE_CLOSED = 1
 FE_GLARE = 2
 FE_AIM = 3
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2DD65	proc far
-		push	bp
-		mov	bp, sp
-		cmp	_boss_phase_frame, 10
-		jnz	short loc_2DD76
-		call	@face_expression_set_and_put$q17face_expression_t stdcall, FE_NEUTRAL
-		pop	cx
-
-loc_2DD76:
-		cmp	_boss_phase_frame, 100
-		jl	loc_2DF0A
-		cmp	_boss_phase_frame, 100
-		jnz	short loc_2DDD9
-		call	_vector2_between stdcall, large (200 shl 16) or 290, large (64 shl 16) or 64, offset x_3B48F, ds, offset y_3B491, ds, 16
-		mov	point_3B493.x, 290
-		mov	point_3B493.y, 200
-		mov	speed_3B499, (3 shl 4)
-		push	0Ch
-		call	_mdrv2_se_play
-		mov	word_3B497, 63h	; 'c'
-		call	@konngara_select_for_rank$qmiiiii stdcall, offset _konngara_pattern_state, ds, large 12 or (10 shl 16), large 8 or (6 shl 16)
-		add	sp, 20h
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_2DDD9:
-		cmp	word_3B497, 63h	; 'c'
-		jnz	short loc_2DE24
-		call	_egc_copy_rect_1_to_0_16 c, point_3B493.x, point_3B493.y, large (8 shl 16) or 16
-		mov	ax, x_3B48F
-		add	point_3B493.x, ax
-		mov	ax, y_3B491
-		add	point_3B493.y, ax
-		cmp	point_3B493.y, 64
-		jg	short loc_2DE1F
-		mov	point_3B493.x, 64
-		mov	point_3B493.y, 64
-		mov	word_3B497, 0
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_2DE1F:
-		push	9	; col
-		jmp	loc_2DEFA
-; ---------------------------------------------------------------------------
-
-loc_2DE24:
-		cmp	word_3B497, 63h	; 'c'
-		jge	loc_2DF0A
-		call	_egc_copy_rect_1_to_0_16 c, point_3B493.x, point_3B493.y, large (8 shl 16) or 16
-		cmp	word_3B497, 0
-		jnz	short loc_2DE4E
-		xor	ax, ax
-		jmp	short loc_2DE5D
-; ---------------------------------------------------------------------------
-
-loc_2DE4E:
-		cmp	word_3B497, 1
-		jnz	short loc_2DE5A
-		mov	ax, -16
-		jmp	short loc_2DE5D
-; ---------------------------------------------------------------------------
-
-loc_2DE5A:
-		mov	ax, -8
-
-loc_2DE5D:
-		add	ax, 8
-		add	point_3B493.x, ax
-		cmp	word_3B497, 2
-		jl	short loc_2DE8D
-		add	point_3B493.y, 8
-		inc	word_3B497
-		cmp	word_3B497, 0Ah
-		jl	short loc_2DE8D
-		cmp	point_3B493.x, 320
-		jle	short loc_2DE88
-		mov	ax, 1
-		jmp	short loc_2DE8A
-; ---------------------------------------------------------------------------
-
-loc_2DE88:
-		xor	ax, ax
-
-loc_2DE8A:
-		mov	word_3B497, ax
-
-loc_2DE8D:
-		cmp	point_3B493.x, 576
-		jle	short loc_2DEA3
-		mov	word_3B497, 2
-		mov	point_3B493.x, 576
-		jmp	short loc_2DEB6
-; ---------------------------------------------------------------------------
-
-loc_2DEA3:
-		cmp	point_3B493.x, 64
-		jge	short loc_2DEB6
-		mov	word_3B497, 2
-		mov	point_3B493.x, 64
-
-loc_2DEB6:
-		cmp	point_3B493.y, 256
-		jl	short loc_2DEC6
-		mov	_boss_phase_frame, 0
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_2DEC6:
-		cmp	word_3B497, 2
-		jge	short loc_2DEF8
-		mov	ax, _boss_phase_frame
-		cwd
-		idiv	_konngara_pattern_state
-		or	dx, dx
-		jnz	short loc_2DEF8
-		call	@CPellets@add_group$qii14pellet_group_ti c, offset _Pellets, ds, point_3B493.x, point_3B493.y, PG_1_AIMED, speed_3B499
-		add	speed_3B499, 2
-
-loc_2DEF8:
-		push	6	; col
-
-loc_2DEFA:
-		push	point_3B493.y
-		push	point_3B493.x
-		call	@shape8x8_diamond_put$qiii
-		add	sp, 6
-
-loc_2DF0A:
-		pop	bp
-		retf
-sub_2DD65	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -39436,7 +39296,7 @@ loc_2F165:
 		pop	cx
 		cmp	word_35FF8, 0
 		jnz	short loc_2F17B
-		call	sub_2DD65
+		call	@pattern_aimed_rows_from_top$qv
 		jmp	short loc_2F1E7
 ; ---------------------------------------------------------------------------
 
@@ -39946,7 +39806,7 @@ loc_2F654:
 loc_2F662:
 		cmp	word_35FF8, 3
 		jnz	short loc_2F670
-		call	sub_2DD65
+		call	@pattern_aimed_rows_from_top$qv
 		jmp	loc_2F720
 ; ---------------------------------------------------------------------------
 
@@ -41649,11 +41509,14 @@ _pattern1_angle	db ?
 _pattern1_unused	dw ?
 
 Snakes pattern2, 2
-x_3B48F	dw ?
-y_3B491	dw ?
-point_3B493	Point <?>
-word_3B497	dw ?
-speed_3B499	dw ?
+
+public _pattern3_diamond_velocity, _pattern3_diamond_left, _pattern3_diamond_top
+public _pattern3_diamond_direction, _pattern3_pellet_speed
+_pattern3_diamond_velocity 	Point <?>
+_pattern3_diamond_left     	dw ?
+_pattern3_diamond_top      	dw ?
+_pattern3_diamond_direction	dw ?
+_pattern3_pellet_speed     	dw ?
 byte_3B49B	db ?
 angle_3B49C	db ?
 word_3B49D	dw ?
