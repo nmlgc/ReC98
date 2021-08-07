@@ -923,6 +923,59 @@ void pattern_aimed_rows_from_top(void)
 	#undef diamond_velocity
 }
 
+void pattern_aimed_spray_from_cup(void)
+{
+	#define spray_offset pattern4_spray_offset
+	#define angle pattern4_angle
+	#define spray_delta pattern4_spray_delta
+	#define frames_in_current_direction pattern4_frames_in_current_direction
+
+	extern unsigned char spray_offset;
+	extern unsigned char angle; // should be local
+	extern int spray_delta; // should be unsigned char
+	extern int frames_in_current_direction;
+
+	if(boss_phase_frame == 10) {
+		face_expression_set_and_put(FE_CLOSED);
+	}
+	if(boss_phase_frame < 100) {
+		return;
+	}
+	if(boss_phase_frame == 100) {
+		spray_offset = 0x20;
+		spray_delta = -0x08;
+		frames_in_current_direction = 0;
+		select_for_rank(pattern_state.interval, 5, 4, 3, 2);
+	}
+	if((boss_phase_frame % pattern_state.interval) == 0) {
+		// Yes, the point from which these are aimed to the top-left player
+		// coordinate is quite a bit away from where they're actually fired,
+		// leading to some quite imperfect aiming. Probably done on purpose
+		// though, and largely mitigated by the spraying motion anyway.
+		angle = iatan2(
+			(player_top - (CUP_TOP - 4)), (player_left - (CUP_CENTER_X - 34))
+		);
+		angle += spray_offset;
+		spray_offset += spray_delta;
+		frames_in_current_direction++;
+		if(frames_in_current_direction > 8) {
+			spray_delta *= -1;
+			frames_in_current_direction = 0;
+		}
+		Pellets.add_single(
+			CUP_CENTER_X, CUP_TOP, angle, to_sp(3.0f), PM_NORMAL
+		);
+	}
+	if(boss_phase_frame >= 700) {
+		boss_phase_frame = 0;
+	}
+
+	#undef frames_in_current_direction
+	#undef spray_delta
+	#undef angle
+	#undef spray_offset
+}
+
 char konngara_esc_cls[] = "\x1B*";
 char konngara_esc_mode_graph[] = "\x1B)3";
 char konngara_esc_color_bg_black_fg_black[] = "\x1B[16;40m";

@@ -37646,6 +37646,7 @@ main_37_TEXT	segment	byte public 'CODE' use16
 	extern @pattern_symmetrical_from_cup$qv:proc
 	extern @pattern_two_homing_snakes_and_se$qv:proc
 	extern @pattern_aimed_rows_from_top$qv:proc
+	extern @pattern_aimed_spray_from_cup$qv:proc
 main_37_TEXT	ends
 
 main_37__TEXT	segment	byte public 'CODE' use16
@@ -37664,66 +37665,6 @@ FE_NEUTRAL = 0
 FE_CLOSED = 1
 FE_GLARE = 2
 FE_AIM = 3
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2DF0C	proc far
-		push	bp
-		mov	bp, sp
-		cmp	_boss_phase_frame, 10
-		jnz	short loc_2DF1D
-		call	@face_expression_set_and_put$q17face_expression_t stdcall, FE_CLOSED
-		pop	cx
-
-loc_2DF1D:
-		cmp	_boss_phase_frame, 100
-		jl	loc_2DFC8
-		cmp	_boss_phase_frame, 100
-		jnz	short loc_2DF55
-		mov	byte_3B49B, 20h	; ' '
-		mov	word_3B49D, 0FFF8h
-		mov	word_3B49F, 0
-		call	@konngara_select_for_rank$qmiiiii c, offset _konngara_pattern_state, ds, large 5 or (4 shl 16), large 3 or (2 shl 16)
-
-loc_2DF55:
-		mov	ax, _boss_phase_frame
-		cwd
-		idiv	_konngara_pattern_state
-		or	dx, dx
-		jnz	short loc_2DFBA
-		push	(PLAYFIELD_TOP + 120)
-		mov	ax, _player_left
-		add	ax, -278
-		push	ax
-		call	iatan2
-		mov	angle_3B49C, al
-		mov	al, byte_3B49B
-		add	angle_3B49C, al
-		add	al, byte ptr word_3B49D
-		mov	byte_3B49B, al
-		inc	word_3B49F
-		cmp	word_3B49F, 8
-		jle	short loc_2DF9C
-		mov	ax, 0FFFFh
-		imul	word_3B49D
-		mov	word_3B49D, ax
-		mov	word_3B49F, 0
-
-loc_2DF9C:
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii c, offset _Pellets, ds, large 312 or (188 shl 16), word ptr angle_3B49C, (3 shl 4), large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
-
-loc_2DFBA:
-		cmp	_boss_phase_frame, 700
-		jl	short loc_2DFC8
-		mov	_boss_phase_frame, 0
-
-loc_2DFC8:
-		pop	bp
-		retf
-sub_2DF0C	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -39303,7 +39244,7 @@ loc_2F165:
 loc_2F17B:
 		cmp	word_35FF8, 1
 		jnz	short loc_2F188
-		call	sub_2DF0C
+		call	@pattern_aimed_spray_from_cup$qv
 		jmp	short loc_2F1E7
 ; ---------------------------------------------------------------------------
 
@@ -39813,7 +39754,7 @@ loc_2F662:
 loc_2F670:
 		cmp	word_35FF8, 4
 		jnz	short loc_2F67E
-		call	sub_2DF0C
+		call	@pattern_aimed_spray_from_cup$qv
 		jmp	loc_2F720
 ; ---------------------------------------------------------------------------
 
@@ -41517,10 +41458,13 @@ _pattern3_diamond_left     	dw ?
 _pattern3_diamond_top      	dw ?
 _pattern3_diamond_direction	dw ?
 _pattern3_pellet_speed     	dw ?
-byte_3B49B	db ?
-angle_3B49C	db ?
-word_3B49D	dw ?
-word_3B49F	dw ?
+
+public _pattern4_spray_offset, _pattern4_angle, _pattern4_spray_delta
+public _pattern4_frames_in_current_direc
+_pattern4_spray_offset	         	db ?
+_pattern4_angle	                 	db ?
+_pattern4_spray_delta            	dw ?
+_pattern4_frames_in_current_direc	dw ?
 word_3B4A1	dw ?
 		db 8 dup(?)
 word_3B4AB	dw ?
