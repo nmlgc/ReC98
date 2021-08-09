@@ -37634,7 +37634,6 @@ main_36__TEXT	ends
 ; Segment type:	Pure code
 main_37_TEXT	segment	byte public 'CODE' use16
 	extern @konngara_select_for_rank$qmiiiii:proc
-	extern @pellet_spawnray_unput_and_put$qiiiii:proc
 	extern @konngara_load_and_entrance$qc:proc
 	extern @konngara_init$qv:proc
 	extern @konngara_free$qv:proc
@@ -37647,6 +37646,7 @@ main_37_TEXT	segment	byte public 'CODE' use16
 	extern @pattern_aimed_rows_from_top$qv:proc
 	extern @pattern_aimed_spray_from_cup$qv:proc
 	extern @pattern_four_homing_snakes$qv:proc
+	extern @pattern_rain_from_edges$qv:proc
 main_37_TEXT	ends
 
 main_37__TEXT	segment	byte public 'CODE' use16
@@ -37664,187 +37664,6 @@ FD_UNINITIALIZED = 9
 FE_NEUTRAL = 0
 FE_CLOSED = 1
 FE_AIM = 3
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2E42E	proc far
-		push	bp
-		mov	bp, sp
-		cmp	_boss_phase_frame, 10
-		jnz	short loc_2E43F
-		call	@face_expression_set_and_put$q17face_expression_t stdcall, FE_AIM
-		pop	cx
-
-loc_2E43F:
-		cmp	_boss_phase_frame, 100
-		jl	loc_2E703
-		cmp	_boss_phase_frame, 100
-		jnz	short loc_2E478
-		mov	point_3B511.x, 0
-		mov	point_3B511.y, 264
-		mov	word_3B515, 1
-		call	@konngara_select_for_rank$qmiiiii c, offset _konngara_pattern_state, ds, large 5 or (3 shl 16), large 2 or (2 shl 16)
-
-loc_2E478:
-		cmp	_boss_phase_frame, 125
-		jge	short loc_2E49E
-		call	@pellet_spawnray_unput_and_put$qiiiii c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
-		sub	point_3B511.y, 8
-		jmp	loc_2E697
-; ---------------------------------------------------------------------------
-
-loc_2E49E:
-		cmp	_boss_phase_frame, 125
-		jnz	short loc_2E4D0
-		mov	point_3B511.x, 0
-		mov	point_3B511.y, 64
-		call	@pellet_spawnray_unput_and_put$qiiiii c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
-		add	point_3B511.x, 8
-		jmp	loc_2E5E0
-; ---------------------------------------------------------------------------
-
-loc_2E4D0:
-		cmp	_boss_phase_frame, 205
-		jge	short loc_2E4F7
-		call	@pellet_spawnray_unput_and_put$qiiiii c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
-		add	point_3B511.x, 8
-		jmp	loc_2E697
-; ---------------------------------------------------------------------------
-
-loc_2E4F7:
-		cmp	_boss_phase_frame, 205
-		jnz	short loc_2E529
-		mov	point_3B511.x, RES_X - 1
-		mov	point_3B511.y, 64
-		call	@pellet_spawnray_unput_and_put$qiiiii c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
-		add	point_3B511.y, 8
-		jmp	short loc_2E580
-; ---------------------------------------------------------------------------
-
-loc_2E529:
-		cmp	_boss_phase_frame, 230
-		jge	short loc_2E550
-		call	@pellet_spawnray_unput_and_put$qiiiii c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
-		add	point_3B511.y, 8
-		jmp	loc_2E697
-; ---------------------------------------------------------------------------
-
-loc_2E550:
-		cmp	_boss_phase_frame, 230
-		jnz	short loc_2E589
-		mov	point_3B511.x, RES_X - 1
-		mov	point_3B511.y, 264
-		call	@pellet_spawnray_unput_and_put$qiiiii c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
-		sub	point_3B511.y, 8
-
-loc_2E580:
-		mov	word_3B515, 2
-		jmp	loc_2E697
-; ---------------------------------------------------------------------------
-
-loc_2E589:
-		cmp	_boss_phase_frame, 255
-		jge	short loc_2E5B0
-		call	@pellet_spawnray_unput_and_put$qiiiii c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
-		sub	point_3B511.y, 8
-		jmp	loc_2E697
-; ---------------------------------------------------------------------------
-
-loc_2E5B0:
-		cmp	_boss_phase_frame, 255
-		jnz	short loc_2E5E9
-		mov	point_3B511.x, RES_X - 1
-		mov	point_3B511.y, 64
-		call	@pellet_spawnray_unput_and_put$qiiiii c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
-		sub	point_3B511.x, 8
-
-loc_2E5E0:
-		mov	word_3B515, 0
-		jmp	loc_2E697
-; ---------------------------------------------------------------------------
-
-loc_2E5E9:
-		cmp	_boss_phase_frame, 335
-		jge	short loc_2E610
-		call	@pellet_spawnray_unput_and_put$qiiiii c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
-		sub	point_3B511.x, 8
-		jmp	loc_2E697
-; ---------------------------------------------------------------------------
-
-loc_2E610:
-		cmp	_boss_phase_frame, 335
-		jnz	short loc_2E648
-		mov	point_3B511.x, 0
-		mov	point_3B511.y, 64
-		call	@pellet_spawnray_unput_and_put$qiiiii c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
-		add	point_3B511.y, 8
-		mov	word_3B515, 1
-		jmp	short loc_2E697
-; ---------------------------------------------------------------------------
-
-loc_2E648:
-		cmp	_boss_phase_frame, 360
-		jge	short loc_2E66E
-		call	@pellet_spawnray_unput_and_put$qiiiii c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y, 6
-		add	point_3B511.y, 8
-		jmp	short loc_2E697
-; ---------------------------------------------------------------------------
-
-loc_2E66E:
-		cmp	_boss_phase_frame, 360
-		jnz	short loc_2E697
-		sub	point_3B511.y, 8
-		call	_graph_r_line_unput c, large (70 shl 16) or 410, point_3B511.x, point_3B511.y
-		mov	_boss_phase_frame, 0
-
-loc_2E697:
-		mov	ax, _boss_phase_frame
-		mov	bx, 10
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_2E6AC
-		push	6
-		call	_mdrv2_se_play
-		pop	cx
-
-loc_2E6AC:
-		mov	ax, _boss_phase_frame
-		cwd
-		idiv	_konngara_pattern_state
-		or	dx, dx
-		jnz	short loc_2E703
-		pushd	0 or (0 shl 16)
-		push	PM_GRAVITY or (1 shl 16)
-		push	(2 shl 4)
-		call	IRand
-		and	al, 7Fh
-		push	ax
-		push	point_3B511.y
-		push	point_3B511.x
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		pushd	0 or (0 shl 16)
-		push	PM_GRAVITY or (1 shl 16)
-		push	(2 shl 4)
-		call	IRand
-		and	al, 7Fh
-		push	ax
-		push	point_3B511.y
-		push	point_3B511.x
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		add	sp, 28h
-
-loc_2E703:
-		pop	bp
-		retf
-sub_2E42E	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -38770,7 +38589,7 @@ loc_2F188:
 loc_2F195:
 		cmp	word_35FF8, 3
 		jnz	short loc_2F1A2
-		call	sub_2E42E
+		call	@pattern_rain_from_edges$qv
 		jmp	short loc_2F1E7
 ; ---------------------------------------------------------------------------
 
@@ -39280,7 +39099,7 @@ loc_2F67E:
 loc_2F68C:
 		cmp	word_35FF8, 6
 		jnz	short loc_2F69A
-		call	sub_2E42E
+		call	@pattern_rain_from_edges$qv
 		jmp	loc_2F720
 ; ---------------------------------------------------------------------------
 
@@ -40980,8 +40799,11 @@ _pattern4_frames_in_current_direc	dw ?
 
 Snakes pattern5, 4
 
-point_3B511	Point <?>
-word_3B515	dw ?
+public _pattern6_end_x, _pattern6_end_y, _pattern6_unused
+_pattern6_end_x 	dw ?
+_pattern6_end_y 	dw ?
+_pattern6_unused	dw ?
+
 left_3B517	dw ?
 top_3B519	dw ?
 left_3B51B	dw ?
