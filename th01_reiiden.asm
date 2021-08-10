@@ -37639,7 +37639,6 @@ main_37_TEXT	segment	byte public 'CODE' use16
 	extern @konngara_free$qv:proc
 	extern @face_direction_set_and_put$q16face_direction_t:proc
 	extern @face_expression_set_and_put$q17face_expression_t:proc
-	extern @slash_put$qi:proc
 	extern @pattern_diamond_cross_to_edges_f$qv:proc
 	extern @pattern_symmetrical_from_cup$qv:proc
 	extern @pattern_two_homing_snakes_and_se$qv:proc
@@ -37647,6 +37646,7 @@ main_37_TEXT	segment	byte public 'CODE' use16
 	extern @pattern_aimed_spray_from_cup$qv:proc
 	extern @pattern_four_homing_snakes$qv:proc
 	extern @pattern_rain_from_edges$qv:proc
+	extern @slash_animate$qv:proc
 main_37_TEXT	ends
 
 main_37__TEXT	segment	byte public 'CODE' use16
@@ -37669,82 +37669,6 @@ FE_AIM = 3
 
 ; Attributes: bp-based frame
 
-sub_2E705	proc far
-		push	bp
-		mov	bp, sp
-		cmp	_boss_phase_frame, 50
-		jl	loc_2E7C2
-		cmp	_boss_phase_frame, 50
-		jnz	short loc_2E728
-		call	@slash_put$qi stdcall, 0
-		push	8
-		call	_mdrv2_se_play
-		add	sp, 4
-
-loc_2E728:
-		cmp	_boss_phase_frame, 60
-		jl	loc_2E7C2
-		cmp	_boss_phase_frame, 60
-		jnz	short loc_2E73F
-		call	@slash_put$qi stdcall, 1
-		pop	cx
-
-loc_2E73F:
-		cmp	_boss_phase_frame, 100
-		jl	short loc_2E7C2
-		cmp	_boss_phase_frame, 100
-		jnz	short loc_2E754
-		call	@slash_put$qi stdcall, 2
-		pop	cx
-
-loc_2E754:
-		cmp	_boss_phase_frame, 120
-		jl	short loc_2E7C2
-		cmp	_boss_phase_frame, 120
-		jnz	short loc_2E769
-		call	@slash_put$qi stdcall, 3
-		pop	cx
-
-loc_2E769:
-		cmp	_boss_phase_frame, 140
-		jl	short loc_2E7C2
-		cmp	_boss_phase_frame, 140
-		jnz	short loc_2E780
-		call	@slash_put$qi stdcall, 4
-		pop	cx
-
-loc_2E780:
-		cmp	_boss_phase_frame, 160
-		jl	short loc_2E7C2
-		cmp	_boss_phase_frame, 160
-		jnz	short loc_2E797
-		call	@slash_put$qi stdcall, 5
-		pop	cx
-
-loc_2E797:
-		cmp	_boss_phase_frame, 170
-		jl	short loc_2E7C2
-		cmp	_boss_phase_frame, 170
-		jnz	short loc_2E7AE
-		call	@slash_put$qi stdcall, 6
-		pop	cx
-
-loc_2E7AE:
-		cmp	_boss_phase_frame, 200
-		jle	short loc_2E7C2
-		mov	_boss_phase_frame, 0
-		mov	_face_direction_can_change, 1
-
-loc_2E7C2:
-		pop	bp
-		retf
-sub_2E705	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
 sub_2E7C4	proc far
 		push	bp
 		mov	bp, sp
@@ -37759,7 +37683,7 @@ sub_2E7C4	proc far
 		add	sp, 10h
 
 loc_2E803:
-		call	sub_2E705
+		call	@slash_animate$qv
 		cmp	_boss_phase_frame, 100
 		jl	loc_2EA01
 		cmp	_boss_phase_frame, 140
@@ -37944,7 +37868,7 @@ sub_2EA03	proc far
 		add	sp, 10h
 
 loc_2EA42:
-		call	sub_2E705
+		call	@slash_animate$qv
 		cmp	_boss_phase_frame, 100
 		jl	loc_2EB8F
 		cmp	_boss_phase_frame, 140
@@ -38122,7 +38046,7 @@ sub_2EC9A	proc far
 		add	sp, 10h
 
 loc_2ECD9:
-		call	sub_2E705
+		call	@slash_animate$qv
 		cmp	_boss_phase_frame, 100
 		jl	loc_2EDBD
 		cmp	_boss_phase_frame, 140

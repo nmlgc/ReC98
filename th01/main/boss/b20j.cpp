@@ -1155,6 +1155,52 @@ void pattern_rain_from_edges(void)
 	#undef end_x
 }
 
+enum slash_cel_frame_t {
+	SLASH_0_FRAME = 50,
+	SLASH_1_FRAME = 60,
+	SLASH_2_FRAME = 100,
+	SLASH_3_FRAME = 120,
+	SLASH_4_FRAME = 140,
+	SLASH_5_FRAME = 160,
+	SLASH_6_FRAME = 170,
+};
+
+void slash_animate(void)
+{
+	// MODDERS: Just use a switch.
+	#define boss_phase_at_frame(frame) \
+		boss_phase_frame < frame) return; if(boss_phase_frame == frame
+
+	if(boss_phase_at_frame(SLASH_0_FRAME)) {
+		slash_put(0);
+		mdrv2_se_play(8);
+	}
+	if(boss_phase_at_frame(SLASH_1_FRAME)) {
+		slash_put(1);
+	}
+	if(boss_phase_at_frame(SLASH_2_FRAME)) {
+		slash_put(2);
+	}
+	if(boss_phase_at_frame(SLASH_3_FRAME)) {
+		slash_put(3);
+	}
+	if(boss_phase_at_frame(SLASH_4_FRAME)) {
+		slash_put(4);
+	}
+	if(boss_phase_at_frame(SLASH_5_FRAME)) {
+		slash_put(5);
+	}
+	if(boss_phase_at_frame(SLASH_6_FRAME)) {
+		slash_put(6);
+	}
+	if(boss_phase_frame > 200) {
+		boss_phase_frame = 0;
+		face_direction_can_change = true;
+	}
+
+	#undef boss_phase_at_frame
+}
+
 char konngara_esc_cls[] = "\x1B*";
 char konngara_esc_mode_graph[] = "\x1B)3";
 char konngara_esc_color_bg_black_fg_black[] = "\x1B[16;40m";
