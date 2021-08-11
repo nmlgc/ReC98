@@ -37647,6 +37647,7 @@ main_37_TEXT	segment	byte public 'CODE' use16
 	extern @pattern_four_homing_snakes$qv:proc
 	extern @pattern_rain_from_edges$qv:proc
 	extern @slash_animate$qv:proc
+	extern @pattern_slash_rain$qv:proc
 main_37_TEXT	ends
 
 main_37__TEXT	segment	byte public 'CODE' use16
@@ -37662,193 +37663,7 @@ FD_UNINITIALIZED = 9
 
 ; face_expression_t
 FE_NEUTRAL = 0
-FE_CLOSED = 1
 FE_AIM = 3
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2E7C4	proc far
-		push	bp
-		mov	bp, sp
-		cmp	_boss_phase_frame, 10
-		jnz	short loc_2E803
-		call	@face_direction_set_and_put$q16face_direction_t stdcall, FD_CENTER
-		call	@face_expression_set_and_put$q17face_expression_t stdcall, FE_CLOSED
-		mov	_face_direction_can_change, 0
-		mov	left_3B517, 410
-		mov	top_3B519, (PLAYFIELD_TOP + 6)
-		call	@konngara_select_for_rank$qmiiiii stdcall, offset _konngara_pattern_state, ds, large 5 or (3 shl 16), large 2 or (1 shl 16)
-		add	sp, 10h
-
-loc_2E803:
-		call	@slash_animate$qv
-		cmp	_boss_phase_frame, 100
-		jl	loc_2EA01
-		cmp	_boss_phase_frame, 140
-		jge	loc_2E8A1
-		mov	ax, _boss_phase_frame
-		cwd
-		idiv	_konngara_pattern_state
-		or	dx, dx
-		jnz	short loc_2E8A1
-		pushd	0 or (0 shl 16)
-		push	PM_GRAVITY or (1 shl 16)
-		push	(0 shl 4)
-		call	IRand
-		mov	bx, 7Fh
-		cwd
-		idiv	bx
-		push	dx
-		push	top_3B519
-		push	left_3B517
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		pushd	0 or (0 shl 16)
-		push	PM_GRAVITY or (1 shl 16)
-		push	(0 shl 4)
-		call	IRand
-		mov	bx, 7Fh
-		cwd
-		idiv	bx
-		push	dx
-		push	top_3B519
-		push	left_3B517
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		add	sp, 28h
-		mov	ax, 40
-		cwd
-		idiv	_konngara_pattern_state
-		push	ax
-		mov	ax, 22
-		cwd
-		pop	bx
-		idiv	bx
-		add	left_3B517, ax
-		mov	ax, 40
-		cwd
-		idiv	_konngara_pattern_state
-		push	ax
-		mov	ax, 162
-		cwd
-		pop	bx
-		idiv	bx
-		add	top_3B519, ax
-
-loc_2E8A1:
-		cmp	_boss_phase_frame, 140
-		jnz	short loc_2E8CC
-		mov	left_3B517, 432
-		mov	top_3B519, (PLAYFIELD_TOP + 168)
-		call	@konngara_select_for_rank$qmiiiii c, offset _konngara_pattern_state, ds, large 3 or (2 shl 16), large 2 or (2 shl 16)
-
-loc_2E8CC:
-		cmp	_boss_phase_frame, 140
-		jl	loc_2EA01
-		cmp	_boss_phase_frame, 150
-		jge	short loc_2E93B
-		pushd	0 or (0 shl 16)
-		push	PM_GRAVITY or (1 shl 16)
-		push	(0 shl 4)
-		call	IRand
-		mov	bx, 7Fh
-		cwd
-		idiv	bx
-		push	dx
-		push	top_3B519
-		push	left_3B517
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		pushd	0 or (0 shl 16)
-		push	PM_GRAVITY or (1 shl 16)
-		push	(0 shl 4)
-		call	IRand
-		mov	bx, 7Fh
-		cwd
-		idiv	bx
-		push	dx
-		push	top_3B519
-		push	left_3B517
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		add	sp, 28h
-		sub	left_3B517, 23
-		sub	top_3B519, 3
-
-loc_2E93B:
-		cmp	_boss_phase_frame, 150
-		jnz	short loc_2E966
-		mov	left_3B517, 198
-		mov	top_3B519, (PLAYFIELD_TOP + 134)
-		call	@konngara_select_for_rank$qmiiiii c, offset _konngara_pattern_state, ds, large 3 or (2 shl 16), large 1 or (1 shl 16)
-
-loc_2E966:
-		cmp	_boss_phase_frame, 150
-		jl	loc_2EA01
-		cmp	_boss_phase_frame, 170
-		jge	loc_2EA01
-		mov	ax, _boss_phase_frame
-		cwd
-		idiv	_konngara_pattern_state
-		or	dx, dx
-		jnz	short loc_2EA01
-		pushd	0 or (0 shl 16)
-		push	PM_GRAVITY or (1 shl 16)
-		push	(0 shl 4)
-		call	IRand
-		mov	bx, 7Fh
-		cwd
-		idiv	bx
-		push	dx
-		push	top_3B519
-		push	left_3B517
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		pushd	0 or (0 shl 16)
-		push	PM_GRAVITY or (1 shl 16)
-		push	(0 shl 4)
-		call	IRand
-		mov	bx, 7Fh
-		cwd
-		idiv	bx
-		push	dx
-		push	top_3B519
-		push	left_3B517
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		add	sp, 28h
-		mov	ax, 20
-		cwd
-		idiv	_konngara_pattern_state
-		push	ax
-		mov	ax, -212
-		cwd
-		pop	bx
-		idiv	bx
-		sub	left_3B517, ax
-		mov	ax, 20
-		cwd
-		idiv	_konngara_pattern_state
-		push	ax
-		mov	ax, 128
-		cwd
-		pop	bx
-		idiv	bx
-		sub	top_3B519, ax
-
-loc_2EA01:
-		pop	bp
-		retf
-sub_2E7C4	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -38733,7 +38548,7 @@ loc_2F3B5:
 		pop	cx
 		cmp	word_35FF8, 0
 		jnz	short loc_2F3CB
-		call	sub_2E7C4
+		call	@pattern_slash_rain$qv
 		jmp	short loc_2F42A
 ; ---------------------------------------------------------------------------
 
@@ -39030,7 +38845,7 @@ loc_2F68C:
 loc_2F69A:
 		cmp	word_35FF8, 7
 		jnz	short loc_2F6A7
-		call	sub_2E7C4
+		call	@pattern_slash_rain$qv
 		jmp	short loc_2F720
 ; ---------------------------------------------------------------------------
 
@@ -40728,8 +40543,10 @@ _pattern6_end_x 	dw ?
 _pattern6_end_y 	dw ?
 _pattern6_unused	dw ?
 
-left_3B517	dw ?
-top_3B519	dw ?
+public _pattern7_spawner_left, _pattern7_spawner_top
+_pattern7_spawner_left	dw ?
+_pattern7_spawner_top	dw ?
+
 left_3B51B	dw ?
 top_3B51D	dw ?
 laser_target_left_3B51F	dw ?
