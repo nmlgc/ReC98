@@ -37648,6 +37648,7 @@ main_37_TEXT	segment	byte public 'CODE' use16
 	extern @pattern_rain_from_edges$qv:proc
 	extern @slash_animate$qv:proc
 	extern @pattern_slash_rain$qv:proc
+	extern @pattern_slash_triangular$qv:proc
 main_37_TEXT	ends
 
 main_37__TEXT	segment	byte public 'CODE' use16
@@ -37664,87 +37665,6 @@ FD_UNINITIALIZED = 9
 ; face_expression_t
 FE_NEUTRAL = 0
 FE_AIM = 3
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2EA03	proc far
-		push	bp
-		mov	bp, sp
-		cmp	_boss_phase_frame, 10
-		jnz	short loc_2EA42
-		call	@face_direction_set_and_put$q16face_direction_t stdcall, FD_CENTER
-		call	@face_expression_set_and_put$q17face_expression_t stdcall, FE_AIM
-		mov	_face_direction_can_change, 0
-		mov	left_3B51B, 410
-		mov	top_3B51D, (PLAYFIELD_TOP + 6)
-		call	@konngara_select_for_rank$qmiiiii stdcall, offset _konngara_pattern_state, ds, large 32 or (48 shl 16), large 64 or (72 shl 16)
-		add	sp, 10h
-
-loc_2EA42:
-		call	@slash_animate$qv
-		cmp	_boss_phase_frame, 100
-		jl	loc_2EB8F
-		cmp	_boss_phase_frame, 140
-		jge	short loc_2EAAA
-		mov	ax, _boss_phase_frame
-		mov	bx, 3
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_2EAAA
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, left_3B51B, top_3B51D, 20h, _konngara_pattern_state, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, left_3B51B, top_3B51D, 60h, _konngara_pattern_state, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
-		add	sp, 28h
-		inc	left_3B51B
-		add	top_3B51D, 12
-
-loc_2EAAA:
-		cmp	_boss_phase_frame, 140
-		jnz	short loc_2EABE
-		mov	left_3B51B, 432
-		mov	top_3B51D, (PLAYFIELD_TOP + 168)
-
-loc_2EABE:
-		cmp	_boss_phase_frame, 140
-		jl	loc_2EB8F
-		cmp	_boss_phase_frame, 150
-		jge	short loc_2EB17
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, left_3B51B, top_3B51D, 20h, _konngara_pattern_state, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, left_3B51B, top_3B51D, 60h, _konngara_pattern_state, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
-		add	sp, 28h
-		sub	left_3B51B, 23
-		sub	top_3B51D, 3
-
-loc_2EB17:
-		cmp	_boss_phase_frame, 150
-		jnz	short loc_2EB2B
-		mov	left_3B51B, 198
-		mov	top_3B51D, (PLAYFIELD_TOP + 134)
-
-loc_2EB2B:
-		cmp	_boss_phase_frame, 150
-		jl	short loc_2EB8F
-		cmp	_boss_phase_frame, 170
-		jge	short loc_2EB8F
-		mov	ax, _boss_phase_frame
-		mov	bx, 2
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_2EB8F
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, left_3B51B, top_3B51D, 20h, _konngara_pattern_state, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, left_3B51B, top_3B51D, 60h, _konngara_pattern_state, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
-		add	sp, 28h
-		sub	left_3B51B, -21
-		sub	top_3B51D, 12
-
-loc_2EB8F:
-		pop	bp
-		retf
-sub_2EA03	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -38562,7 +38482,7 @@ loc_2F3CB:
 loc_2F3D8:
 		cmp	word_35FF8, 2
 		jnz	short loc_2F3E5
-		call	sub_2EA03
+		call	@pattern_slash_triangular$qv
 		jmp	short loc_2F42A
 ; ---------------------------------------------------------------------------
 
@@ -38859,7 +38779,7 @@ loc_2F6A7:
 loc_2F6B4:
 		cmp	word_35FF8, 9
 		jnz	short loc_2F6C1
-		call	sub_2EA03
+		call	@pattern_slash_triangular$qv
 		jmp	short loc_2F720
 ; ---------------------------------------------------------------------------
 
@@ -40547,8 +40467,10 @@ public _pattern7_spawner_left, _pattern7_spawner_top
 _pattern7_spawner_left	dw ?
 _pattern7_spawner_top	dw ?
 
-left_3B51B	dw ?
-top_3B51D	dw ?
+public _pattern8_spawner_left, _pattern8_spawner_top
+_pattern8_spawner_left	dw ?
+_pattern8_spawner_top	dw ?
+
 laser_target_left_3B51F	dw ?
 laser_target_y_3B521	dw ?
 word_3B523	dw ?
