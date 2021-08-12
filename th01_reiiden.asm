@@ -4410,7 +4410,7 @@ main_14_TEXT	ends
 
 ; Segment type:	Pure code
 main_15_TEXT	segment	byte public 'CODE' use16
-	extern @CShootoutLaser@spawn$qiiiiiucii:proc
+	extern @CShootoutLaser@spawn$qiiiiiiii:proc
 	extern @CShootoutLaser@update_hittest_and_render$qv:proc
 include th01/main/bullet/laser_s.inc
 main_15_TEXT	ends
@@ -17510,7 +17510,7 @@ loc_1F9DA:
 		add	ax, offset _shootout_lasers
 		push	ds	; this (segment)
 		push	ax	; this (offset)
-		call	@CShootoutLaser@spawn$qiiiiiucii
+		call	@CShootoutLaser@spawn$qiiiiiiii
 		add	sp, 14h
 
 loc_1FA30:
@@ -23623,7 +23623,7 @@ sub_240DE	proc near
 		push	307 or (147 shl 16)	; (origin_left) or (origin_y shl 16)
 		push	ds	; this (segment)
 		push	offset shootout_laser_0	; this (offset)
-		call	@CShootoutLaser@spawn$qiiiiiucii
+		call	@CShootoutLaser@spawn$qiiiiiiii
 		push	20 or (8 shl 16)	; (moveout_at_age) or (w shl 16)
 		push	((6 * 8) + 2) or (10 shl 16)	; (speed_multiplied_by_8) or (col shl 16)
 		push	PLAYFIELD_BOTTOM	; target_y
@@ -23633,7 +23633,7 @@ sub_240DE	proc near
 		push	336 or (147 shl 16)	; (origin_left) or (origin_y shl 16)
 		push	ds	; this (segment)
 		push	offset shootout_laser_1	; this (offset)
-		call	@CShootoutLaser@spawn$qiiiiiucii
+		call	@CShootoutLaser@spawn$qiiiiiiii
 		push	6
 		call	_mdrv2_se_play
 		add	sp, 2Ah
@@ -23976,7 +23976,7 @@ loc_24472:
 		push	offset shootout_laser_5	; this (offset)
 
 loc_244AE:
-		call	@CShootoutLaser@spawn$qiiiiiucii
+		call	@CShootoutLaser@spawn$qiiiiiiii
 		add	sp, 14h
 
 loc_244B6:
@@ -24208,7 +24208,7 @@ loc_246A0:
 		add	ax, offset _shootout_lasers
 		push	ds	; this (segment)
 		push	ax	; this (offset)
-		call	@CShootoutLaser@spawn$qiiiiiucii
+		call	@CShootoutLaser@spawn$qiiiiiiii
 		push	6
 		call	_mdrv2_se_play
 		add	sp, 16h
@@ -25665,7 +25665,7 @@ loc_255FB:
 		add	dx, offset _shootout_lasers
 		push	ds	; this (segment)
 		push	dx	; this (offset)
-		call	@CShootoutLaser@spawn$qiiiiiucii
+		call	@CShootoutLaser@spawn$qiiiiiiii
 		push	6
 		call	_mdrv2_se_play
 		add	sp, 16h
@@ -29293,7 +29293,7 @@ loc_27A65:
 		add	dx, offset _shootout_lasers
 		push	ds	; this (segment)
 		push	dx	; this (offset)
-		call	@CShootoutLaser@spawn$qiiiiiucii
+		call	@CShootoutLaser@spawn$qiiiiiiii
 		push	6
 		call	_mdrv2_se_play
 		add	sp, 16h
@@ -32244,7 +32244,7 @@ loc_29698:
 		add	ax, offset _shootout_lasers
 		push	ds	; this (segment)
 		push	ax	; this (offset)
-		call	@CShootoutLaser@spawn$qiiiiiucii
+		call	@CShootoutLaser@spawn$qiiiiiiii
 		add	sp, 16h
 		jmp	short loc_296EC
 ; ---------------------------------------------------------------------------
@@ -33890,7 +33890,7 @@ loc_2A6B0:
 		push	offset shootout_laser_0	; this (offset)
 
 loc_2A724:
-		call	@CShootoutLaser@spawn$qiiiiiucii
+		call	@CShootoutLaser@spawn$qiiiiiiii
 		push	6
 		call	_mdrv2_se_play
 		add	sp, 16h
@@ -34224,7 +34224,7 @@ loc_2AA36:
 		add	dx, offset _shootout_lasers
 		push	ds	; this (segment)
 		push	dx	; this (offset)
-		call	@CShootoutLaser@spawn$qiiiiiucii
+		call	@CShootoutLaser@spawn$qiiiiiiii
 		jmp	short loc_2AAF6
 ; ---------------------------------------------------------------------------
 
@@ -37736,7 +37736,7 @@ loc_2EC19:
 		add	dx, offset _shootout_lasers
 		push	ds	; this (segment)
 		push	dx	; this (offset)
-		call	@CShootoutLaser@spawn$qiiiiiucii
+		call	@CShootoutLaser@spawn$qiiiiiiii
 		push	6
 		call	_mdrv2_se_play
 		add	sp, 16h
