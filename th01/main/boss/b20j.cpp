@@ -37,6 +37,7 @@ extern "C" {
 #include "th01/main/boss/boss.hpp"
 #include "th01/main/boss/palette.hpp"
 #include "th01/main/bullet/pellet.hpp"
+#include "th01/main/bullet/laser_s.hpp"
 #include "th01/main/hud/hp.hpp"
 
 // Coordinates
@@ -101,6 +102,7 @@ extern union {
 	int group; // pellet_group_t
 	int interval;
 	subpixel_t speed;
+	pixel_t delta_x;
 	int unused;
 } pattern_state;
 extern bool16 invincible;
@@ -1380,6 +1382,78 @@ void pattern_slash_triangular(void)
 
 	#undef spawner_top
 	#undef spawner_left
+}
+
+void pattern_lasers_and_3_spread(void)
+{
+	#define target_left pattern9_target_left
+	#define target_y pattern9_target_y
+	#define right_to_left pattern9_right_to_left
+
+	// These have no reason to be static.
+	extern screen_x_t target_left;
+	extern screen_y_t target_y;
+
+	extern bool16 right_to_left;
+
+	enum {
+		INTERVAL = 10,
+	};
+
+	if(boss_phase_frame == 10) {
+		face_expression_set_and_put(FE_AIM);
+	}
+	if(boss_phase_frame < 100) {
+		return;
+	}
+	if(boss_phase_frame == 100) {
+		right_to_left = (rand() % 2);
+
+		// Divisor = number of lasers that are effectively fired.
+		select_for_rank(pattern_state.delta_x,
+			(PLAYFIELD_W / 5),
+			(PLAYFIELD_W / 6.66),
+			(PLAYFIELD_W / 8),
+			(PLAYFIELD_W / 10)
+		);
+	}
+	if((boss_phase_frame % INTERVAL) == 0) {
+		if(right_to_left == 0) {
+			target_left = (PLAYFIELD_LEFT + (
+				((boss_phase_frame - 100) / INTERVAL) * pattern_state.delta_x
+			));
+		} else {
+			target_left = (PLAYFIELD_RIGHT - (
+				((boss_phase_frame - 100) / INTERVAL) * pattern_state.delta_x
+			));
+		}
+		target_y = PLAYFIELD_BOTTOM;
+
+		// Quite a roundabout way of preventing a buffer overflow, but fine.
+		shootout_lasers[
+			(boss_phase_frame / INTERVAL) % SHOOTOUT_LASER_COUNT
+		].spawn(
+			SWORD_CENTER_X, SWORD_CENTER_Y,
+			target_left, target_y,
+			(to_sp(8.5f) / 2), 7, 30, 5
+		);
+		mdrv2_se_play(6);
+
+		if(
+			((right_to_left == false) && (target_left >= PLAYFIELD_RIGHT)) ||
+			((right_to_left == true)  && (target_left <= PLAYFIELD_LEFT))
+		) {
+			boss_phase_frame = 0;
+		}
+
+		Pellets.add_group(
+			SWORD_CENTER_X, SWORD_CENTER_Y, PG_3_SPREAD_WIDE_AIMED, to_sp(4.5f)
+		);
+	}
+
+	#undef right_to_left
+	#undef target_y
+	#undef target_left
 }
 
 char konngara_esc_cls[] = "\x1B*";

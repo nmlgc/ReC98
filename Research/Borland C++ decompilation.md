@@ -390,6 +390,8 @@ SUB  SP, <stack size>
   }
   ```
 
+  This also applies to divisors stored in `BX`.
+
 ### `-3` (80386 Instructions) + `-Z` (Suppress register reloads)
 
 Bundles two consecutive 16-bit function parameters into a single 32-bit one,

@@ -37649,6 +37649,7 @@ main_37_TEXT	segment	byte public 'CODE' use16
 	extern @slash_animate$qv:proc
 	extern @pattern_slash_rain$qv:proc
 	extern @pattern_slash_triangular$qv:proc
+	extern @pattern_lasers_and_3_spread$qv:proc
 main_37_TEXT	ends
 
 main_37__TEXT	segment	byte public 'CODE' use16
@@ -37665,103 +37666,6 @@ FD_UNINITIALIZED = 9
 ; face_expression_t
 FE_NEUTRAL = 0
 FE_AIM = 3
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2EB91	proc far
-		push	bp
-		mov	bp, sp
-		cmp	_boss_phase_frame, 10
-		jnz	short loc_2EBA2
-		call	@face_expression_set_and_put$q17face_expression_t stdcall, FE_AIM
-		pop	cx
-
-loc_2EBA2:
-		cmp	_boss_phase_frame, 100
-		jl	loc_2EC98
-		cmp	_boss_phase_frame, 100
-		jnz	short loc_2EBD8
-		call	IRand
-		mov	bx, 2
-		cwd
-		idiv	bx
-		mov	word_3B523, dx
-		call	@konngara_select_for_rank$qmiiiii c, offset _konngara_pattern_state, ds, large 128 or (96 shl 16), large 80 or (64 shl 16)
-
-loc_2EBD8:
-		mov	ax, _boss_phase_frame
-		mov	bx, 10
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	loc_2EC98
-		cmp	word_3B523, 0
-		jnz	short loc_2EC00
-		mov	ax, _boss_phase_frame
-		add	ax, -100
-		cwd
-		idiv	bx
-		imul	_konngara_pattern_state
-		mov	laser_target_left_3B51F, ax
-		jmp	short loc_2EC19
-; ---------------------------------------------------------------------------
-
-loc_2EC00:
-		mov	ax, _boss_phase_frame
-		add	ax, -100
-		mov	bx, 10
-		cwd
-		idiv	bx
-		imul	_konngara_pattern_state
-		mov	dx, PLAYFIELD_RIGHT
-		sub	dx, ax
-		mov	laser_target_left_3B51F, dx
-
-loc_2EC19:
-		mov	laser_target_y_3B521, PLAYFIELD_BOTTOM
-		push	30 or (5 shl 16)	; (moveout_at_age) or (w shl 16)
-		push	((8 * 8) + 4) or (7 shl 16)	; (speed_multiplied_by_8) or (col shl 16)
-		push	laser_target_y_3B521	; target_y
-		push	laser_target_left_3B51F	; target_left
-		push	410 or (70 shl 16)	; (origin_left) or (origin_y shl 16)
-		mov	ax, _boss_phase_frame
-		mov	bx, 10
-		cwd
-		idiv	bx
-		cwd
-		idiv	bx
-		imul	dx, size CShootoutLaser
-		add	dx, offset _shootout_lasers
-		push	ds	; this (segment)
-		push	dx	; this (offset)
-		call	@CShootoutLaser@spawn$qiiiiiiii
-		push	6
-		call	_mdrv2_se_play
-		add	sp, 16h
-		cmp	word_3B523, 0
-		jnz	short loc_2EC6C
-		cmp	laser_target_left_3B51F, PLAYFIELD_RIGHT
-		jge	short loc_2EC7A
-
-loc_2EC6C:
-		cmp	word_3B523, 1
-		jnz	short loc_2EC80
-		cmp	laser_target_left_3B51F, 0
-		jg	short loc_2EC80
-
-loc_2EC7A:
-		mov	_boss_phase_frame, 0
-
-loc_2EC80:
-		call	@CPellets@add_group$qii14pellet_group_ti c, offset _Pellets, ds, large 410 or (70 shl 16), large PG_3_SPREAD_WIDE_AIMED or (((4 shl 4) + 8) shl 16)
-
-loc_2EC98:
-		pop	bp
-		retf
-sub_2EB91	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -38475,7 +38379,7 @@ loc_2F3B5:
 loc_2F3CB:
 		cmp	word_35FF8, 1
 		jnz	short loc_2F3D8
-		call	sub_2EB91
+		call	@pattern_lasers_and_3_spread$qv
 		jmp	short loc_2F42A
 ; ---------------------------------------------------------------------------
 
@@ -38772,7 +38676,7 @@ loc_2F69A:
 loc_2F6A7:
 		cmp	word_35FF8, 8
 		jnz	short loc_2F6B4
-		call	sub_2EB91
+		call	@pattern_lasers_and_3_spread$qv
 		jmp	short loc_2F720
 ; ---------------------------------------------------------------------------
 
@@ -40471,9 +40375,11 @@ public _pattern8_spawner_left, _pattern8_spawner_top
 _pattern8_spawner_left	dw ?
 _pattern8_spawner_top	dw ?
 
-laser_target_left_3B51F	dw ?
-laser_target_y_3B521	dw ?
-word_3B523	dw ?
+public _pattern9_target_left, _pattern9_target_y, _pattern9_right_to_left
+_pattern9_target_left  	dw ?
+_pattern9_target_y     	dw ?
+_pattern9_right_to_left	dw ?
+
 word_3B525	dw ?
 word_3B527	dw ?
 public _konngara_invincible, _konngara_invincibility_frame

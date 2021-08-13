@@ -29,6 +29,7 @@ CShootoutLaser struc
 		db ?
 CShootoutLaser ends
 
+public _shootout_lasers
 _shootout_lasers	CShootoutLaser SHOOTOUT_LASER_COUNT dup(<?>)
 shootout_laser_0	equ <_shootout_lasers[0 * size CShootoutLaser]>
 shootout_laser_1	equ <_shootout_lasers[1 * size CShootoutLaser]>
