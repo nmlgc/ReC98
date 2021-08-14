@@ -37633,7 +37633,6 @@ main_36__TEXT	ends
 
 ; Segment type:	Pure code
 main_37_TEXT	segment	byte public 'CODE' use16
-	extern @konngara_select_for_rank$qmiiiii:proc
 	extern @konngara_load_and_entrance$qc:proc
 	extern @konngara_init$qv:proc
 	extern @konngara_free$qv:proc
@@ -37646,10 +37645,10 @@ main_37_TEXT	segment	byte public 'CODE' use16
 	extern @pattern_aimed_spray_from_cup$qv:proc
 	extern @pattern_four_homing_snakes$qv:proc
 	extern @pattern_rain_from_edges$qv:proc
-	extern @slash_animate$qv:proc
 	extern @pattern_slash_rain$qv:proc
 	extern @pattern_slash_triangular$qv:proc
 	extern @pattern_lasers_and_3_spread$qv:proc
+	extern @pattern_slash_aimed$qv:proc
 main_37_TEXT	ends
 
 main_37__TEXT	segment	byte public 'CODE' use16
@@ -37666,81 +37665,6 @@ FD_UNINITIALIZED = 9
 ; face_expression_t
 FE_NEUTRAL = 0
 FE_AIM = 3
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2EC9A	proc far
-		push	bp
-		mov	bp, sp
-		cmp	_boss_phase_frame, 10
-		jnz	short loc_2ECD9
-		call	@face_direction_set_and_put$q16face_direction_t stdcall, FD_CENTER
-		call	@face_expression_set_and_put$q17face_expression_t stdcall, FE_AIM
-		mov	_face_direction_can_change, 0
-		mov	word_3B525, 19Ah
-		mov	word_3B527, 46h	; 'F'
-		call	@konngara_select_for_rank$qmiiiii stdcall, offset _konngara_pattern_state, ds, large 64 or (80 shl 16), large 88 or (96 shl 16)
-		add	sp, 10h
-
-loc_2ECD9:
-		call	@slash_animate$qv
-		cmp	_boss_phase_frame, 100
-		jl	loc_2EDBD
-		cmp	_boss_phase_frame, 140
-		jge	short loc_2ED1E
-		mov	ax, _boss_phase_frame
-		mov	bx, 3
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_2ED1E
-		call	@CPellets@add_group$qii14pellet_group_ti c, offset _Pellets, ds, word_3B525, word_3B527, PG_1_AIMED, _konngara_pattern_state
-		inc	word_3B525
-		add	word_3B527, 0Ch
-
-loc_2ED1E:
-		cmp	_boss_phase_frame, 140
-		jnz	short loc_2ED32
-		mov	word_3B525, 1B0h
-		mov	word_3B527, 0E8h
-
-loc_2ED32:
-		cmp	_boss_phase_frame, 140
-		jl	loc_2EDBD
-		cmp	_boss_phase_frame, 150
-		jge	short loc_2ED68
-		call	@CPellets@add_group$qii14pellet_group_ti c, offset _Pellets, ds, word_3B525, word_3B527, PG_1_AIMED, _konngara_pattern_state
-		sub	word_3B525, 17h
-		sub	word_3B527, 3
-
-loc_2ED68:
-		cmp	_boss_phase_frame, 150
-		jnz	short loc_2ED7C
-		mov	word_3B525, 0C6h ; '?'
-		mov	word_3B527, 0C6h ; '?'
-
-loc_2ED7C:
-		cmp	_boss_phase_frame, 150
-		jl	short loc_2EDBD
-		cmp	_boss_phase_frame, 170
-		jge	short loc_2EDBD
-		mov	ax, _boss_phase_frame
-		mov	bx, 2
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_2EDBD
-		call	@CPellets@add_group$qii14pellet_group_ti c, offset _Pellets, ds, word_3B525, word_3B527, PG_1_AIMED, _konngara_pattern_state
-		sub	word_3B525, 0FFEBh
-		sub	word_3B527, 0Ch
-
-loc_2EDBD:
-		pop	bp
-		retf
-sub_2EC9A	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -38697,7 +38621,7 @@ loc_2F6C1:
 loc_2F6CE:
 		cmp	word_35FF8, 0Bh
 		jnz	short loc_2F6DB
-		call	sub_2EC9A
+		call	@pattern_slash_aimed$qv
 		jmp	short loc_2F720
 ; ---------------------------------------------------------------------------
 
@@ -40380,8 +40304,10 @@ _pattern9_target_left  	dw ?
 _pattern9_target_y     	dw ?
 _pattern9_right_to_left	dw ?
 
-word_3B525	dw ?
-word_3B527	dw ?
+public _pattern10_spawner_left, _pattern10_spawner_top
+_pattern10_spawner_left	dw ?
+_pattern10_spawner_top	dw ?
+
 public _konngara_invincible, _konngara_invincibility_frame
 _konngara_invincible	dw ?
 _konngara_invincibility_frame	dw ?

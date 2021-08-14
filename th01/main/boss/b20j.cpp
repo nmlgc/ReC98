@@ -1456,6 +1456,67 @@ void pattern_lasers_and_3_spread(void)
 	#undef target_left
 }
 
+inline void slash_aimed_fire(
+	const screen_x_t& left, const screen_y_t& top, const subpixel_t& speed
+) {
+	Pellets.add_group(left, top, PG_1_AIMED, speed);
+}
+
+void pattern_slash_aimed(void)
+{
+	#define spawner_left pattern10_spawner_left
+	#define spawner_top pattern10_spawner_top
+	extern screen_x_t spawner_left;
+	extern screen_y_t spawner_top;
+
+	if(boss_phase_frame == 10) {
+		face_direction_set_and_put(FD_CENTER);
+		face_expression_set_and_put(FE_AIM);
+		face_direction_can_change = false;
+		spawner_left = SWORD_CENTER_X;
+		spawner_top = SWORD_CENTER_Y;
+		konngara_select_for_rank(pattern_state.speed,
+			to_sp(4.0f), to_sp(5.0f), to_sp(5.5f), to_sp(6.0f)
+		);
+	}
+
+	slash_animate();
+	if(boss_phase_frame < SLASH_2_FRAME) {
+		return;
+	}
+	if((boss_phase_frame < SLASH_4_FRAME) && ((boss_phase_frame % 3) == 0)) {
+		slash_aimed_fire(spawner_left, spawner_top, pattern_state.speed);
+		slash_spawner_step_from_2_to_4(spawner_left, spawner_top, 3);
+	}
+
+	if(boss_phase_frame == SLASH_4_FRAME) {
+		spawner_left = SLASH_4_CORNER_X;
+		spawner_top = SLASH_4_CORNER_Y;
+	}
+	if(boss_phase_frame < SLASH_4_FRAME) {
+		return;
+	}
+	if(boss_phase_frame < SLASH_4_5_FRAME) {
+		slash_aimed_fire(spawner_left, spawner_top, pattern_state.speed);
+		slash_spawner_step_from_4_to_4_5(spawner_left, spawner_top, 1);
+	}
+
+	if(boss_phase_frame == SLASH_4_5_FRAME) {
+		spawner_left = SLASH_5_CORNER_X;
+		spawner_top = SLASH_5_CORNER_Y;
+	}
+	if(boss_phase_frame < SLASH_4_5_FRAME) {
+		return;
+	}
+	if((boss_phase_frame < SLASH_6_FRAME) && ((boss_phase_frame % 2) == 0)) {
+		slash_aimed_fire(spawner_left, spawner_top, pattern_state.speed);
+		slash_spawner_step_from_4_5_to_6(spawner_left, spawner_top, 2);
+	}
+
+	#undef spawner_top
+	#undef spawner_left
+}
+
 char konngara_esc_cls[] = "\x1B*";
 char konngara_esc_mode_graph[] = "\x1B)3";
 char konngara_esc_color_bg_black_fg_black[] = "\x1B[16;40m";
