@@ -37649,6 +37649,7 @@ main_37_TEXT	segment	byte public 'CODE' use16
 	extern @pattern_slash_triangular$qv:proc
 	extern @pattern_lasers_and_3_spread$qv:proc
 	extern @pattern_slash_aimed$qv:proc
+	extern @pattern_semicircle_rain_from_sle$qv:proc
 main_37_TEXT	ends
 
 main_37__TEXT	segment	byte public 'CODE' use16
@@ -37664,89 +37665,6 @@ FD_UNINITIALIZED = 9
 
 ; face_expression_t
 FE_NEUTRAL = 0
-FE_AIM = 3
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2EDBF	proc far
-
-@@angle		= byte ptr -1
-
-		enter	2, 0
-		push	si
-		cmp	_boss_phase_frame, 10
-		jnz	short loc_2EDD2
-		call	@face_expression_set_and_put$q17face_expression_t stdcall, FE_AIM
-		pop	cx
-
-loc_2EDD2:
-		cmp	_boss_phase_frame, 100
-		jl	loc_2EE7A
-		mov	ax, _boss_phase_frame
-		mov	bx, 20
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_2EE20
-		xor	si, si
-		mov	[bp+@@angle], 0
-		jmp	short loc_2EE19
-; ---------------------------------------------------------------------------
-
-loc_2EDF0:
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii c, offset _Pellets, ds, large 290 or (200 shl 16), word ptr [bp+@@angle], (2 shl 4), large PM_GRAVITY or (1 shl 16), large 0 or (0 shl 16)
-		inc	si
-		mov	al, [bp+@@angle]
-		add	al, -0Ch
-		mov	[bp+@@angle], al
-
-loc_2EE19:
-		cmp	si, 0Ah
-		jl	short loc_2EDF0
-		jmp	short loc_2EE64
-; ---------------------------------------------------------------------------
-
-loc_2EE20:
-		mov	ax, _boss_phase_frame
-		mov	bx, 20
-		cwd
-		idiv	bx
-		cmp	dx, 10
-		jnz	short loc_2EE6C
-		xor	si, si
-		mov	[bp+@@angle], 0
-		jmp	short loc_2EE5F
-; ---------------------------------------------------------------------------
-
-loc_2EE36:
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii c, offset _Pellets, ds, large 290 or (200 shl 16), word ptr [bp+@@angle], (2 shl 4), large PM_FALL_STRAIGHT_FROM_TOP_THEN_NORMAL or ((3 shl 4) shl 16), large 0 or (0 shl 16)
-		inc	si
-		mov	al, [bp+@@angle]
-		add	al, -0Ch
-		mov	[bp+@@angle], al
-
-loc_2EE5F:
-		cmp	si, 0Ah
-		jl	short loc_2EE36
-
-loc_2EE64:
-		push	7
-		call	_mdrv2_se_play
-		pop	cx
-
-loc_2EE6C:
-		cmp	_boss_phase_frame, 300
-		jl	short loc_2EE7A
-		mov	_boss_phase_frame, 0
-
-loc_2EE7A:
-		pop	si
-		leave
-		retf
-sub_2EDBF	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -38614,7 +38532,7 @@ loc_2F6B4:
 loc_2F6C1:
 		cmp	word_35FF8, 0Ah
 		jnz	short loc_2F6CE
-		call	sub_2EDBF
+		call	@pattern_semicircle_rain_from_sle$qv
 		jmp	short loc_2F720
 ; ---------------------------------------------------------------------------
 
