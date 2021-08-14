@@ -3756,7 +3756,7 @@ loc_DDF8:
 		call	sub_D340
 
 loc_DE0F:
-		mov	al, byte_35DAA
+		mov	al, _game_cleared
 		cbw
 		cmp	ax, 1
 		jnz	short loc_DE67
@@ -37615,7 +37615,7 @@ loc_2CDBA:
 loc_2CDC4:
 		cmp	si, 5
 		jb	short loc_2CDBA
-		mov	byte_35DAA, 1
+		mov	_game_cleared, 1
 
 loc_2CDCE:
 		pop	di
@@ -38999,7 +38999,7 @@ loc_2FC32:
 		cmp	si, 5
 		jl	short loc_2FC28
 		call	@konngara_free$qv
-		mov	byte_35DAA, 1
+		mov	_game_cleared, 1
 
 loc_2FC40:
 		pop	di
@@ -39640,7 +39640,8 @@ dbl_35D95	db 09ah, 099h, 099h, 099h, 099h, 099h, 0a9h, 03fh
 		dd aAngel		; "ANGEL"
 		dd aOf			; "OF"
 		dd aDeath		; "DEATH"
-byte_35DAA	db 0
+public _game_cleared
+_game_cleared	db 0
 off_35DAB	dd aBoss6_a1_grp
 					; "BOSS6_A1.GRP"
 		dd aBoss6_a2_grp	; "BOSS6_A2.GRP"

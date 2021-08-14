@@ -16,3 +16,5 @@ extern char stage_num;
 extern bool first_stage_in_scene;
 
 extern unsigned long score;
+
+extern bool game_cleared;
