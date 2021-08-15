@@ -52,6 +52,14 @@ typedef enum {
 		const row_dots_t& operator [](pixel_t y) const {
 			return row[y];
 		}
+
+		static pixel_t w() {
+			return (sizeof(row_dots_t) * 8);
+		}
+
+		static pixel_t h() {
+			return H;
+		}
 	};
 
 	#define dot_rect_t(w, h) DotRect<dots_t(w), h>
