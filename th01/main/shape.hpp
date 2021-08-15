@@ -8,6 +8,11 @@ void shape8x8_flake_put(screen_x_t left, vram_y_t top, int col);
 // position.
 void shape8x8_invincibility_put(screen_x_t left, vram_y_t top, int cel);
 
+// Attempts to unblit a 8×8 sprite, but ends up unblitting a 16×8 rectangle
+// instead.
+#define shape8x8_sloppy_unput(left, top) \
+	egc_copy_rect_1_to_0_16(left, top, 16, 8);
+
 void shape_ellipse_arc_put(
 	screen_x_t center_x,
 	vram_y_t center_y,

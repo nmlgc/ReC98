@@ -15,17 +15,12 @@ void invincibility_sprites_update_and_render(bool16 invincible)
 	} invincibility_sprites;
 	#define sprites invincibility_sprites
 
-	#define sloppy_unput(i) \
-		egc_copy_rect_1_to_0_16( \
-			sprites.left[i], sprites.top[i], 16, sSHAPE8X8[0].h() \
-		);
-
 	if(!invincible) {
 		if(sprites.frame[0] == INVINCIBILITY_SPRITES_DONE) {
 			return;
 		}
 		for(i = 0; i < INVINCIBILITY_SPRITE_COUNT; i++) {
-			sloppy_unput(i);
+			shape8x8_sloppy_unput(sprites.left[i], sprites.top[i]);
 		}
 		sprites.frame[0] = INVINCIBILITY_SPRITES_DONE;
 		return;
@@ -43,7 +38,7 @@ void invincibility_sprites_update_and_render(bool16 invincible)
 			(sprites.frame[i] == 0)
 		) {
 			if(sprites.frame[i] == (INVINCIBILITY_SPRITE_FRAMES + 1)) {
-				sloppy_unput(i);
+				shape8x8_sloppy_unput(sprites.left[i], sprites.top[i]);
 			}
 			sprites.left[i]  = ((rand() % 48) + (player_left - 8));
 			sprites.top[i]   = ((rand() % 48) + (player_top - 16));
@@ -64,6 +59,5 @@ void invincibility_sprites_update_and_render(bool16 invincible)
 		}
 		sprites.frame[i]++;
 	}
-	#undef sloppy_unput
 	#undef sprites
 }

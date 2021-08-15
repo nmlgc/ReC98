@@ -410,9 +410,7 @@ void pattern_diamond_cross_to_edges_followed_by_rain(void)
 
 	#define diamonds_unput(i) \
 		for(i = 0; i < DIAMOND_COUNT; i++) { \
-			egc_copy_rect_1_to_0_16( \
-				diamonds.left[i], diamonds.top[i], 16, DIAMOND_H \
-			); \
+			shape8x8_sloppy_unput(diamonds.left[i], diamonds.top[i]); \
 		}
 
 	#define diamonds_put(i) \
