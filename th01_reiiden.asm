@@ -11797,7 +11797,7 @@ loc_1BFEF:
 		push	offset _yuugenmagan_invincible	; is_invincible (offset)
 		push	ds	; invincibility_frame (segment)
 		push	offset _yuugenmagan_invincibility_frame	; invincibility_frame (offset)
-		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
+		call	@boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_boss_hp, 15
 		jle	short loc_1C025
@@ -12152,7 +12152,7 @@ loc_1C3AC:
 		push	offset _yuugenmagan_invincible	; is_invincible (offset)
 		push	ds	; invincibility_frame (segment)
 		push	offset _yuugenmagan_invincibility_frame	; invincibility_frame (offset)
-		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
+		call	@boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_boss_hp, 12
 		jle	short loc_1C3E3
@@ -12467,7 +12467,7 @@ loc_1C702:
 		push	offset _yuugenmagan_invincible	; is_invincible (offset)
 		push	ds	; invincibility_frame (segment)
 		push	offset _yuugenmagan_invincibility_frame	; invincibility_frame (offset)
-		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
+		call	@boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_boss_hp, 10
 		jle	short loc_1C739
@@ -12826,7 +12826,7 @@ loc_1CABD:
 		push	offset _yuugenmagan_invincible	; is_invincible (offset)
 		push	ds	; invincibility_frame (segment)
 		push	offset _yuugenmagan_invincibility_frame	; invincibility_frame (offset)
-		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
+		call	@boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_boss_hp, 8
 		jle	short loc_1CAF4
@@ -13245,7 +13245,7 @@ loc_1CFDC:
 		push	offset _yuugenmagan_invincible	; is_invincible (offset)
 		push	ds	; invincibility_frame (segment)
 		push	offset _yuugenmagan_invincibility_frame	; invincibility_frame (offset)
-		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
+		call	@boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_boss_hp, 2
 		jle	short loc_1D011
@@ -13900,7 +13900,7 @@ loc_1D6C4:
 		push	offset _yuugenmagan_invincible	; is_invincible (offset)
 		push	ds	; invincibility_frame (segment)
 		push	offset _yuugenmagan_invincibility_frame	; invincibility_frame (offset)
-		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
+		call	@boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_boss_hp, 0
 		jg	short loc_1D75D
@@ -14585,7 +14585,7 @@ loc_1DF5A:
 		push	offset _yuugenmagan_invincible	; is_invincible (offset)
 		push	ds	; invincibility_frame (segment)
 		push	offset _yuugenmagan_invincibility_frame	; invincibility_frame (offset)
-		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
+		call	@boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_boss_hp, 0
 		jg	short loc_1DFFC
@@ -17696,7 +17696,7 @@ loc_1FBAC:
 		push	offset _mima_invincible	; is_invincible (offset)
 		push	ds	; invincibility_frame (segment)
 		push	offset _mima_invincibility_frame	; invincibility_frame (offset)
-		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
+		call	@boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii
 		add	sp, 22h
 		cmp	word_39E78, 63h	; 'c'
 		jnz	loc_1FDCF
@@ -17814,7 +17814,7 @@ loc_1FCF7:
 		push	offset _mima_invincible	; is_invincible (offset)
 		push	ds	; invincibility_frame (segment)
 		push	offset _mima_invincibility_frame	; invincibility_frame (offset)
-		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
+		call	@boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_boss_hp, 0
 		jg	loc_1FDCF
@@ -19611,9 +19611,9 @@ main_31__TEXT	ends
 
 ; Segment type:	Pure code
 main_32_TEXT	segment	byte public 'CODE' use16
-	extern @boss_nop$qv:proc
+	extern @BOSS_NOP$QV:proc
 	extern @hud_hp_render$qii:proc
-	extern @boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii:proc
+	extern @boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii:proc
 
 HUD_HP_FUNC_RERENDER = -1
 main_32_TEXT	ends
@@ -22082,7 +22082,7 @@ loc_23118:
 		push	offset _singyoku_invincible	; is_invincible (offset)
 		push	ds	; invincibility_frame (segment)
 		push	offset _singyoku_invincibility_frame	; invincibility_frame (offset)
-		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
+		call	@boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_singyoku_hp, 6
 		jg	loc_232A0
@@ -22179,7 +22179,7 @@ loc_2320E:
 		push	offset _singyoku_invincible	; is_invincible (offset)
 		push	ds	; invincibility_frame (segment)
 		push	offset _singyoku_invincibility_frame	; invincibility_frame (offset)
-		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
+		call	@boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_singyoku_hp, 0
 		jg	short loc_232A0
@@ -24634,7 +24634,7 @@ loc_24B3E:
 		push	offset _kikuri_invincible	; is_invincible (offset)
 		push	ds	; invincibility_frame (segment)
 		push	offset _kikuri_invincibility_frame	; invincibility_frame (offset)
-		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
+		call	@boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_boss_phase_frame, 0
 		jnz	short loc_24B82
@@ -24718,7 +24718,7 @@ loc_24C2A:
 		push	offset _kikuri_invincible	; is_invincible (offset)
 		push	ds	; invincibility_frame (segment)
 		push	offset _kikuri_invincibility_frame	; invincibility_frame (offset)
-		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
+		call	@boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_kikuri_invincible, 0
 		jnz	loc_24DFB
@@ -24756,7 +24756,7 @@ loc_24C81:
 		push	offset _kikuri_invincible	; is_invincible (offset)
 		push	ds	; invincibility_frame (segment)
 		push	offset _kikuri_invincibility_frame	; invincibility_frame (offset)
-		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
+		call	@boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_kikuri_invincible, 0
 		jnz	loc_24DFB
@@ -24839,7 +24839,7 @@ loc_24D59:
 		push	offset _kikuri_invincible	; is_invincible (offset)
 		push	ds	; invincibility_frame (segment)
 		push	offset _kikuri_invincibility_frame	; invincibility_frame (offset)
-		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
+		call	@boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_boss_hp, 0
 		jg	short loc_24DFB
@@ -30126,7 +30126,7 @@ loc_2827D:
 		push	offset _elis_invincible	; is_invincible (offset)
 		push	ds	; invincibility_frame (segment)
 		push	offset _elis_invincibility_frame	; invincibility_frame (offset)
-		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
+		call	@boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_elis_invincible, 0
 		jnz	loc_28655
@@ -30254,7 +30254,7 @@ loc_283D4:
 		push	offset _elis_invincible	; is_invincible (offset)
 		push	ds	; invincibility_frame (segment)
 		push	offset _elis_invincibility_frame	; invincibility_frame (offset)
-		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
+		call	@boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_elis_invincible, 0
 		jnz	loc_28655
@@ -30449,7 +30449,7 @@ loc_285A5:
 		push	offset _elis_invincible	; is_invincible (offset)
 		push	ds	; invincibility_frame (segment)
 		push	offset _elis_invincibility_frame	; invincibility_frame (offset)
-		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
+		call	@boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_boss_hp, 0
 		jg	short loc_28655
@@ -36738,7 +36738,7 @@ loc_2C440:
 		push	offset _sariel_invincible	; is_invincible (offset)
 		push	ds	; invincibility_frame (segment)
 		push	offset _sariel_invincibility_frame	; invincibility_frame (offset)
-		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
+		call	@boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_boss_hp, 0
 		jg	short loc_2C47F
@@ -36831,7 +36831,7 @@ loc_2C533:
 		push	offset _sariel_invincible	; is_invincible (offset)
 		push	ds	; invincibility_frame (segment)
 		push	offset _sariel_invincibility_frame	; invincibility_frame (offset)
-		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
+		call	@boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_boss_hp, 0
 		jg	short loc_2C572
@@ -36949,7 +36949,7 @@ loc_2C64F:
 		push	offset _sariel_invincible	; is_invincible (offset)
 		push	ds	; invincibility_frame (segment)
 		push	offset _sariel_invincibility_frame	; invincibility_frame (offset)
-		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
+		call	@boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_boss_hp, 0
 		jg	short loc_2C68E
@@ -37070,7 +37070,7 @@ loc_2C784:
 		push	offset _sariel_invincible	; is_invincible (offset)
 		push	ds	; invincibility_frame (segment)
 		push	offset _sariel_invincibility_frame	; invincibility_frame (offset)
-		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
+		call	@boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_boss_hp, 0
 		jg	short loc_2C7C3
@@ -37404,7 +37404,7 @@ loc_2CBC2:
 		push	offset _sariel_invincible	; is_invincible (offset)
 		push	ds	; invincibility_frame (segment)
 		push	offset _sariel_invincibility_frame	; invincibility_frame (offset)
-		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
+		call	@boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii
 		add	sp, 22h
 		mov	ax, _boss_phase_frame
 		mov	bx, 10
@@ -37822,7 +37822,7 @@ loc_2EFDD:
 		push	offset _konngara_invincible	; is_invincible (offset)
 		push	ds	; invincibility_frame (segment)
 		push	offset _konngara_invincibility_frame	; invincibility_frame (offset)
-		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
+		call	@boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_konngara_invincible, 0
 		jnz	loc_2FC40
@@ -37934,7 +37934,7 @@ loc_2F0F7:
 		push	offset _konngara_invincible	; is_invincible (offset)
 		push	ds	; invincibility_frame (segment)
 		push	offset _konngara_invincibility_frame	; invincibility_frame (offset)
-		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
+		call	@boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_konngara_invincible, 0
 		jnz	loc_2FC40
@@ -38063,7 +38063,7 @@ loc_2F22D:
 		push	offset _konngara_invincible	; is_invincible (offset)
 		push	ds	; invincibility_frame (segment)
 		push	offset _konngara_invincibility_frame	; invincibility_frame (offset)
-		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
+		call	@boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_konngara_invincible, 0
 		jnz	loc_2FC40
@@ -38175,7 +38175,7 @@ loc_2F347:
 		push	offset _konngara_invincible	; is_invincible (offset)
 		push	ds	; invincibility_frame (segment)
 		push	offset _konngara_invincibility_frame	; invincibility_frame (offset)
-		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
+		call	@boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_konngara_invincible, 0
 		jnz	loc_2FC40
@@ -38297,7 +38297,7 @@ loc_2F470:
 		push	offset _konngara_invincible	; is_invincible (offset)
 		push	ds	; invincibility_frame (segment)
 		push	offset _konngara_invincibility_frame	; invincibility_frame (offset)
-		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
+		call	@boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_konngara_invincible, 0
 		jnz	loc_2FC40
@@ -38415,7 +38415,7 @@ loc_2F5A2:
 		push	offset _konngara_invincible	; is_invincible (offset)
 		push	ds	; invincibility_frame (segment)
 		push	offset _konngara_invincibility_frame	; invincibility_frame (offset)
-		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
+		call	@boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_konngara_invincible, 0
 		jnz	loc_2FC40
@@ -38608,7 +38608,7 @@ loc_2F766:
 		push	offset _konngara_invincible	; is_invincible (offset)
 		push	ds	; invincibility_frame (segment)
 		push	offset _konngara_invincibility_frame	; invincibility_frame (offset)
-		call	@boss_hit_update_and_render$qmit1t1nucucinqv$vuciiii
+		call	@boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii
 		add	sp, 22h
 		cmp	_boss_hp, 0
 		jg	loc_2FC40

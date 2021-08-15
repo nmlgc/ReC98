@@ -9,7 +9,7 @@ void boss_hit_update_and_render(
 	int &invincibility_frame,
 	bool16 &is_invincible,
 	int &hp,
-	unsigned char invincibility_flash_colors[],
+	const unsigned char invincibility_flash_colors[],
 	unsigned char invincibility_flash_colors_count,
 	int hit_score,
 	farfunc_t_far hit_callback,
