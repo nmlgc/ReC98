@@ -1,4 +1,4 @@
-#include "th01/sprites/shape_in.hpp"
+#include "th01/sprites/shape8x8.hpp"
 #include "th01/main/shape.hpp"
 
 static const int INVINCIBILITY_SPRITE_COUNT = 8;
@@ -17,7 +17,7 @@ void invincibility_sprites_update_and_render(bool16 invincible)
 
 	#define sloppy_unput(i) \
 		egc_copy_rect_1_to_0_16( \
-			sprites.left[i], sprites.top[i], 16, SHAPE_INVINCIBILITY_H \
+			sprites.left[i], sprites.top[i], 16, sSHAPE8X8[0].h() \
 		);
 
 	if(!invincible) {
@@ -52,12 +52,12 @@ void invincibility_sprites_update_and_render(bool16 invincible)
 		// ZUN bug: Did you mean: `sprites.left[i]`?
 		if(
 			(sprites.top[i] >= 0) &&
-			(sprites.top[i] < (RES_X - SHAPE_INVINCIBILITY_W))
+			(sprites.top[i] < (RES_X - sSHAPE8X8[0].w()))
 		) {
-			shape_invincibility_put(
+			shape8x8_invincibility_put(
 				sprites.left[i],
 				sprites.top[i],
-				(sprites.frame[i] <= SHAPE_INVINCIBILITY_COUNT)
+				(sprites.frame[i] <= SHAPE8X8_INVINCIBILITY_CELS)
 					? (sprites.frame[i] - 1)
 					: (INVINCIBILITY_SPRITE_FRAMES - sprites.frame[i])
 			);

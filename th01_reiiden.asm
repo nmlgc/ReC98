@@ -6647,7 +6647,6 @@ main_23_TEXT	segment	byte public 'CODE' use16
 	extern @shape8x8_flake_put$qiii:proc
 	extern @shape_ellipse_arc_put$qiiiiiucucuc:proc
 	extern @shape_ellipse_arc_sloppy_unput$qiiiiucucuc:proc
-	extern @shape_invincibility_put$qiii:proc
 	extern _graph_r_lineloop_put:proc
 	extern _graph_r_lineloop_unput:proc
 main_23_TEXT	ends
@@ -41463,7 +41462,6 @@ include th01/hiscore/regist[data].asm
 include th01/main/boss/entity_a[data].asm
 include th01/formats/pf[data].asm
 include th01/sprites/shape8x8.asp
-include th01/sprites/shape_in.asp
 aBomb		db 'Bomb',0
 aExtend		db 'Extend!!',0
 aVpf		db 'ÇP‰›',0
