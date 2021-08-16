@@ -44,9 +44,6 @@ static const screen_y_t WAND_TOP = 48;
 
 static const pixel_t WAND_W = 128; // That's 32 more than BOSS6_2.BOS is wide?
 static const pixel_t WAND_H = 96;
-
-static const int WAND_PTN_W = (WAND_W / PTN_W);
-static const int WAND_PTN_H = (WAND_H / PTN_H);
 // -----------
 
 #define flash_colors	sariel_flash_colors
@@ -137,7 +134,7 @@ void sariel_load_and_init(void)
 	boss_palette_snap();
 	void sariel_setup(void);
 	sariel_setup();
-	ptn_new(PTN_SLOT_BG_ENT, ((WAND_PTN_W * WAND_PTN_H) + 4)); // ???
+	ptn_new(PTN_SLOT_BG_ENT, (((WAND_W / PTN_W) * (WAND_H / PTN_H)) + 4)); // ?
 }
 
 void sariel_setup(void)
@@ -154,4 +151,34 @@ void sariel_setup(void)
 	anm_dress.top = DRESS_TOP;
 	anm_wand.left = WAND_LEFT;
 	anm_wand.top = WAND_TOP;
+}
+
+void near wand_bg_snap(void)
+{
+	int ptn_x;
+	int ptn_y;
+	screen_x_t left = anm_wand.left;
+	screen_y_t top = anm_wand.top;
+	int image = 0;
+
+	ptn_snap_rect_from_1_8(
+		left, top, WAND_W, WAND_H, PTN_SLOT_BG_ENT, image, ptn_x, ptn_y
+	);
+}
+
+void near wand_bg_put(void)
+{
+	int ptn_x;
+	int ptn_y;
+	screen_x_t left;
+	screen_y_t top;
+	int image;
+
+	image = 0;
+	left = anm_wand.left;
+	top = anm_wand.top;
+
+	ptn_put_rect_noalpha_8(
+		left, top, WAND_W, WAND_H, PTN_SLOT_BG_ENT, image, ptn_x, ptn_y
+	)
 }

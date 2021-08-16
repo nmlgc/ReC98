@@ -3561,7 +3561,6 @@ graph_TEXT	ends
 SHARED	segment	byte public 'CODE' use16
 	extern _vram_planes_set:proc
 	extern _egc_copy_rect_1_to_0_16:proc
-	extern _ptn_snap_8:proc
 SHARED	ends
 
 ; ===========================================================================
@@ -3571,7 +3570,6 @@ PTN_GRP_GRZ	segment	byte public 'CODE' use16
 	extern _ptn_new:proc
 	extern _ptn_load:proc
 	extern _ptn_free:proc
-	extern _ptn_put_noalpha_8:proc
 	extern _grp_palette_load_show_sane:proc
 	extern _grp_palette_load_show:proc
 	extern _grp_put_palette_show:proc
@@ -23227,6 +23225,8 @@ main_36_TEXT	segment	byte public 'CODE' use16
 	extern @sariel_select_for_rank$qmiiiii:proc
 	extern @sariel_entrance$qc:proc
 	extern @sariel_load_and_init$qv:proc
+	@wand_bg_snap$qv procdesc near
+	@wand_bg_put$qv procdesc near
 main_36_TEXT	ends
 
 main_36__TEXT	segment	byte public 'CODE' use16
@@ -23241,130 +23241,6 @@ sariel_dress	equ <boss_anim_0>
 sariel_wand 	equ <boss_anim_1>
 
 PTN_SLOT_BG_ENT = PTN_SLOT_BOSS_1
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_28852	proc near
-
-@@image		= word ptr -6
-@@top		= word ptr -4
-@@left		= word ptr -2
-
-		enter	6, 0
-		push	si
-		push	di
-		mov	ax, sariel_wand.BA_left
-		mov	[bp+@@left], ax
-		mov	ax, sariel_wand.BA_top
-		mov	[bp+@@top], ax
-		mov	[bp+@@image], 0
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		xor	di, di
-		jmp	short loc_288A4
-; ---------------------------------------------------------------------------
-
-loc_28875:
-		xor	si, si
-		jmp	short loc_2889E
-; ---------------------------------------------------------------------------
-
-loc_28879:
-		mov	ax, [bp+@@image]
-		add	ax, PTN_SLOT_2
-		push	ax
-		mov	ax, di
-		shl	ax, 5
-		add	ax, [bp+@@top]
-		push	ax
-		mov	ax, si
-		shl	ax, 5
-		add	ax, [bp+@@left]
-		push	ax
-		call	_ptn_snap_8
-		add	sp, 6
-		inc	[bp+@@image]
-		inc	si
-
-loc_2889E:
-		cmp	si, 4
-		jl	short loc_28879
-		inc	di
-
-loc_288A4:
-		cmp	di, 3
-		jl	short loc_28875
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		pop	di
-		pop	si
-		leave
-		retn
-sub_28852	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_288B5	proc near
-
-@@image		= word ptr -6
-@@top		= word ptr -4
-@@left		= word ptr -2
-
-		enter	6, 0
-		push	si
-		push	di
-		mov	[bp+@@image], 0
-		mov	ax, sariel_wand.BA_left
-		mov	[bp+@@left], ax
-		mov	ax, sariel_wand.BA_top
-		mov	[bp+@@top], ax
-		xor	di, di
-		jmp	short loc_288FF
-; ---------------------------------------------------------------------------
-
-loc_288D0:
-		xor	si, si
-		jmp	short loc_288F9
-; ---------------------------------------------------------------------------
-
-loc_288D4:
-		mov	ax, [bp+@@image]
-		add	ax, PTN_SLOT_2
-		push	ax
-		mov	ax, di
-		shl	ax, 5
-		add	ax, [bp+@@top]
-		push	ax
-		mov	ax, si
-		shl	ax, 5
-		add	ax, [bp+@@left]
-		push	ax
-		call	_ptn_put_noalpha_8
-		add	sp, 6
-		inc	[bp+@@image]
-		inc	si
-
-loc_288F9:
-		cmp	si, 4
-		jl	short loc_288D4
-		inc	di
-
-loc_288FF:
-		cmp	di, 3
-		jl	short loc_288D0
-		pop	di
-		pop	si
-		leave
-		retn
-sub_288B5	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -24074,11 +23950,11 @@ sub_28FA9	proc near
 		mov	bp, sp
 		push	1
 		call	_graph_accesspage_func
-		call	sub_288B5
+		call	@wand_bg_put$qv
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 4
-		call	sub_288B5
+		call	@wand_bg_put$qv
 		pop	bp
 		retn
 sub_28FA9	endp
@@ -29242,7 +29118,7 @@ loc_2C2F2:
 		call	@boss_palette_show$qv
 		mov	sariel_shield.BE_cur_left, 304
 		mov	sariel_shield.BE_cur_top, 144
-		call	sub_28852
+		call	@wand_bg_snap$qv
 		push	1
 		call	sub_28F11
 		fld	flt_35F66
@@ -29394,7 +29270,7 @@ loc_2C4A1:
 		jnz	loc_2CDCE
 		mov	_boss_phase, 3
 		mov	_boss_phase_frame, 0
-		call	sub_28852
+		call	@wand_bg_snap$qv
 		call	IRand
 		mov	bx, 5
 		jmp	loc_2C82A
@@ -29487,7 +29363,7 @@ loc_2C594:
 		jnz	loc_2CDCE
 		mov	_boss_phase, 5
 		mov	_boss_phase_frame, 0
-		call	sub_28852
+		call	@wand_bg_snap$qv
 		call	@boss_palette_snap$qv
 		call	IRand
 		mov	bx, 4
@@ -29605,7 +29481,7 @@ loc_2C6B0:
 		jnz	loc_2CDCE
 		mov	_boss_phase, 7
 		mov	_boss_phase_frame, 0
-		call	sub_28852
+		call	@wand_bg_snap$qv
 		call	@boss_palette_snap$qv
 		call	IRand
 		mov	bx, 5
@@ -29730,7 +29606,7 @@ loc_2C7F1:
 		jnz	loc_2CDCE
 		mov	_boss_phase, 1
 		mov	_boss_phase_frame, 0
-		call	sub_28852
+		call	@wand_bg_snap$qv
 		call	@boss_palette_snap$qv
 		call	IRand
 		mov	bx, 6
