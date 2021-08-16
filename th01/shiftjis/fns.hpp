@@ -1,1 +1,1 @@
-static const char SE_FN[] = "zigoku.mde";
+char SE_FN[] = "zigoku.mde";

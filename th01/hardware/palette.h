@@ -58,6 +58,19 @@ void z_palette_white_out(void);
 		z_Palettes[tmp_col].v[tmp_comp] = 0; \
 	})
 
+// Performs a single black-out step.
+#define z_palette_black_out_step(tmp_col, tmp_comp) \
+	z_Palettes_set_func_and_show(tmp_col, tmp_comp, { \
+		z_Palettes.colors[tmp_col].v[tmp_comp] -= \
+			(z_Palettes.colors[tmp_col].v[tmp_comp] > 0) ? 1 : 0; \
+	})
+
+#define z_palette_black_out_step_2(tmp_col, tmp_comp) \
+	z_Palettes_set_func_and_show(tmp_col, tmp_comp, { \
+		z_Palettes.colors[tmp_col].v[tmp_comp] += \
+			(z_Palettes.colors[tmp_col].v[tmp_comp] > 0) ? -1 : 0; \
+	})
+
 // Performs a single ramping step from z_Palettes to [target_pal]. Every color
 // in z_Palettes is assumed to not be brighter than the corresponding color in
 // [target_pal].

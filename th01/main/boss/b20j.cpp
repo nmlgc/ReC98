@@ -3,6 +3,7 @@
 
 extern "C" {
 #include <stddef.h>
+#include <stdio.h>
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
@@ -34,6 +35,7 @@ extern "C" {
 #include "th01/main/stage/stageobj.hpp"
 #include "th01/main/shape.hpp"
 #include "th01/main/player/player.hpp"
+#include "th01/main/player/orb.hpp"
 #include "th01/main/boss/boss.hpp"
 #include "th01/main/boss/palette.hpp"
 #include "th01/main/bullet/pellet.hpp"
@@ -53,6 +55,11 @@ static const screen_x_t LEFT_SLEEVE_LEFT = 290;
 static const screen_y_t LEFT_SLEEVE_TOP = 200;
 static const screen_x_t EYE_CENTER_X = 316;
 static const screen_y_t EYE_BOTTOM = 140;
+
+static const screen_x_t HITBOX_LEFT = 288;
+static const screen_y_t HITBOX_TOP = 120;
+static const pixel_t HITBOX_W = 96;
+static const pixel_t HITBOX_H = 40;
 
 // Slash pattern spawners are moved on a triangle along these points.
 static const screen_x_t SWORD_CENTER_X = 410;
@@ -105,9 +112,6 @@ extern union {
 	pixel_t delta_x;
 	int unused;
 } pattern_state;
-extern bool16 invincible;
-extern int invincibility_frame;
-extern bool initial_hp_rendered;
 
 // Entities
 // --------
@@ -503,6 +507,7 @@ void konngara_setup(void)
 	face_direction = FD_CENTER;
 }
 
+// Happens to be entirely protected to double frees. Yes, this matters.
 void konngara_free(void)
 {
 	bos_entity_free(0);
@@ -1553,11 +1558,402 @@ void pattern_semicircle_rain_from_sleeve(void)
 	}
 }
 
-char konngara_esc_cls[] = "\x1B*";
-char konngara_esc_mode_graph[] = "\x1B)3";
-char konngara_esc_color_bg_black_fg_black[] = "\x1B[16;40m";
-char konngara_esc_cursor_to_x0_y0_0[] = "\x1B[0;0H";
-char konngara_space[] = " ";
-char konngara_esc_mode_kanji[] = "\x1B)0";
-char konngara_esc_color_reset[] = "\x1B[0m";
-char konngara_esc_cursor_to_x0_y0_1[] = "\x1B[1;1H";
+enum kuji_flash_color_t {
+	BLACK,
+	WHITE
+};
+
+inline void kuji_flash(kuji_flash_color_t color) {
+	if(color == BLACK) {
+		z_palette_set_show(0, 0x0, 0x0, 0x0);
+	} else {
+		z_palette_set_show(0, 0xF, 0xF, 0xF);
+	}
+}
+
+inline void kuji_put(kuji_flash_color_t flash_color, int image) {
+	if(image == 7) {
+		kuji_flash(flash_color);
+		grz_load_single(0, GRZ_FN, image);
+	} else {
+		z_graph_clear();
+		grz_load_single(0, GRZ_FN, image);
+		kuji_flash(flash_color);
+	}
+	grx_put(0);
+	if(image == 15) {
+		grx_free(0);
+	}
+	frame_delay(10);
+}
+
+void konngara_main(void)
+{
+	extern struct {
+		bool16 invincible;
+		int invincibility_frame;
+
+		void update_and_render(const unsigned char (&flash_colors)[3]) {
+			boss_hit_update_and_render(
+				invincibility_frame,
+				invincible,
+				boss_hp,
+				flash_colors,
+				sizeof(flash_colors),
+				10000,
+				boss_nop,
+				overlap_xy_xywh_le_ge_2(
+					orb_cur_left, orb_cur_top,
+					HITBOX_LEFT, HITBOX_TOP, (HITBOX_W - ORB_W), HITBOX_H // ???
+				),
+				HITBOX_LEFT, HITBOX_TOP, HITBOX_W, HITBOX_H
+			);
+		}
+	} hit;
+
+	enum {
+		CHOOSE_NEW = 99,
+	};
+
+	// The IDs are associated with a different pattern in every phase.
+	extern int pattern_prev;
+
+	extern struct {
+		int pattern_cur;
+		int patterns_done;
+
+		void next(int8_t phase_new) {
+			boss_phase = phase_new;
+			boss_phase_frame = 0;
+			hit.invincibility_frame = 0;
+			pattern_cur = CHOOSE_NEW;
+			patterns_done = 0;
+			if(phase_new & 1) {
+				face_expression_set_and_put(FE_NEUTRAL);
+			}
+		}
+
+		void frame_common(face_direction_t& fd_new) {
+			boss_phase_frame++;
+			hit.invincibility_frame++;
+
+			fd_new =
+				(player_left < 198) ? FD_LEFT :
+				(player_left > 396) ? FD_RIGHT : FD_CENTER;
+			face_direction_set_and_put(fd_new);
+		}
+	} phase;
+	extern bool initial_hp_rendered;
+
+	int i;
+	int j;
+	int col;
+	int comp;
+	int scroll_frame;
+	face_direction_t fd_track;
+
+	struct hack { unsigned char col[3]; }; // XXX
+	extern struct hack konngara_invincibility_flash_colors;
+	struct hack flash_colors = konngara_invincibility_flash_colors;
+
+	#define pattern_choose( \
+		phase, frame_min, count_on_first_try, count_on_second_try \
+	) { \
+		if(boss_phase_frame > frame_min) { \
+			boss_phase_frame = 1; \
+			phase.pattern_cur = (rand() % count_on_first_try); \
+			if(phase.pattern_cur == pattern_prev) { \
+				phase.pattern_cur = (rand() % count_on_second_try); \
+			} \
+			pattern_prev = phase.pattern_cur; \
+			phase.patterns_done++; \
+		} \
+	}
+
+	#define phase_frame_siddham_flash(phase, next_phase) { \
+		if(boss_phase_frame == 50) { \
+			siddham_col_white(); \
+		} \
+		if((boss_phase_frame > 50) && ((boss_phase_frame % 4) == 0)) { \
+			siddham_col_white_in_step(); \
+		} \
+		\
+		hit.update_and_render(flash_colors.col); \
+		if(!hit.invincible && (boss_phase_frame > 120)) { \
+			phase.next(next_phase); \
+		} \
+	}
+
+	if(boss_phase == 0) {
+		boss_phase = 1;
+		pattern_prev = CHOOSE_NEW;
+		phase.pattern_cur = CHOOSE_NEW;
+		phase.patterns_done = 0;
+		boss_phase_frame = 0;
+		hit.invincibility_frame = 0;
+		hit.invincible = false;
+		initial_hp_rendered = false;
+		boss_palette_snap();
+		random_seed = frame_rand;
+	} else if(boss_phase == 1) {
+		if(!initial_hp_rendered) {
+			initial_hp_rendered = hud_hp_increment(boss_hp, boss_phase_frame);
+		}
+		phase.frame_common(fd_track);
+
+		if(phase.pattern_cur == 0) {
+			pattern_diamond_cross_to_edges_followed_by_rain();
+		} else if(phase.pattern_cur == 1) {
+			pattern_symmetrical_from_cup();
+		} else if(phase.pattern_cur == 2) {
+			pattern_two_homing_snakes_and_semicircle_spreads();
+		} else if(phase.pattern_cur == CHOOSE_NEW) {
+			pattern_choose(phase, 120, 3, 3);
+		}
+		if(boss_phase_frame == 0) {
+			face_expression_set_and_put(FE_NEUTRAL);
+			phase.pattern_cur = CHOOSE_NEW;
+		}
+		hit.update_and_render(flash_colors.col);
+		if(!hit.invincible && ((phase.patterns_done >= 7) || (boss_hp < 16))) {
+			if(phase.pattern_cur == CHOOSE_NEW) {
+				phase.next(2);
+			}
+		}
+	} else if(boss_phase == 2) {
+		phase.frame_common(fd_track);
+		phase_frame_siddham_flash(phase, 3);
+	} else if(boss_phase == 3) {
+		phase.frame_common(fd_track);
+
+		if(phase.pattern_cur == 0) {
+			pattern_aimed_rows_from_top();
+		} else if(phase.pattern_cur == 1) {
+			pattern_aimed_spray_from_cup();
+		} else if(phase.pattern_cur == 2) {
+			pattern_four_homing_snakes();
+		} else if(phase.pattern_cur == 3) {
+			pattern_rain_from_edges();
+		} else if(phase.pattern_cur == CHOOSE_NEW) {
+			pattern_choose(phase, 120, 4, 4);
+		}
+
+		if(boss_phase_frame == 0) {
+			face_expression_set_and_put(FE_NEUTRAL);
+			phase.pattern_cur = CHOOSE_NEW;
+		}
+
+		hit.update_and_render(flash_colors.col);
+		if(!hit.invincible && ((phase.patterns_done >= 9) || (boss_hp < 13))) {
+			if(phase.pattern_cur == CHOOSE_NEW) {
+				phase.next(4);
+			}
+		}
+	} else if(boss_phase == 4) {
+		phase.frame_common(fd_track);
+		phase_frame_siddham_flash(phase, 5);
+	} else if(boss_phase == 5) {
+		phase.frame_common(fd_track);
+
+		if(phase.pattern_cur == 0) {
+			pattern_slash_rain();
+		} else if(phase.pattern_cur == 1) {
+			pattern_lasers_and_3_spread();
+		} else if(phase.pattern_cur == 2) {
+			pattern_slash_triangular();
+		} else if(phase.pattern_cur == CHOOSE_NEW) {
+			pattern_choose(phase, 120, 3, 2);
+		}
+
+		if(boss_phase_frame == 0) {
+			face_expression_set_and_put(FE_NEUTRAL);
+			phase.pattern_cur = CHOOSE_NEW;
+		}
+
+		hit.update_and_render(flash_colors.col);
+		if(!hit.invincible && ((phase.patterns_done >= 6) || (boss_hp < 10))) {
+			if(phase.pattern_cur == CHOOSE_NEW) {
+				phase.next(6);
+			}
+		}
+	} else if(boss_phase == 6) {
+		phase.frame_common(fd_track);
+		phase_frame_siddham_flash(phase, 7);
+	} else if(boss_phase == 7) {
+		phase.frame_common(fd_track);
+
+		if(phase.pattern_cur == 0) {
+			pattern_diamond_cross_to_edges_followed_by_rain();
+		} else if(phase.pattern_cur == 1) {
+			pattern_symmetrical_from_cup();
+		} else if(phase.pattern_cur == 2) {
+			pattern_two_homing_snakes_and_semicircle_spreads();
+		} else if(phase.pattern_cur == 3) {
+			pattern_aimed_rows_from_top();
+		} else if(phase.pattern_cur == 4) {
+			pattern_aimed_spray_from_cup();
+		} else if(phase.pattern_cur == 5) {
+			pattern_four_homing_snakes();
+		} else if(phase.pattern_cur == 6) {
+			pattern_rain_from_edges();
+		} else if(phase.pattern_cur == 7) {
+			pattern_slash_rain();
+		} else if(phase.pattern_cur == 8) {
+			pattern_lasers_and_3_spread();
+		} else if(phase.pattern_cur == 9) {
+			pattern_slash_triangular();
+		} else if(phase.pattern_cur == 10) {
+			pattern_semicircle_rain_from_sleeve();
+		} else if(phase.pattern_cur == 11) {
+			pattern_slash_aimed();
+		} else if(phase.pattern_cur == CHOOSE_NEW) {
+			pattern_choose(phase, 5, 12, 2);
+		}
+
+		if(boss_phase_frame == 0) {
+			face_expression_set_and_put(FE_NEUTRAL);
+			phase.pattern_cur = CHOOSE_NEW;
+		}
+
+		hit.update_and_render(flash_colors.col);
+		if(boss_hp > 0) {
+			return;
+		}
+
+		// Defeat sequence (blocking)
+		// ==========================
+
+		printf("\x1B*"); // Clear text RAM
+		konngara_free();
+		z_graph_clear();
+		mdrv2_bgm_stop();
+
+		kuji_put(BLACK, 7);
+		kuji_put(WHITE, 8);
+		kuji_put(BLACK, 9);
+		kuji_put(WHITE, 10);
+		kuji_put(BLACK, 11);
+		kuji_put(WHITE, 12);
+		kuji_put(BLACK, 13);
+		kuji_put(WHITE, 14);
+		kuji_put(BLACK, 15);
+
+		boss_phase_frame = 0;
+		while(1) {
+			enum {
+				MAGNITUDE = -8
+			};
+
+			boss_phase_frame++;
+			if((boss_phase_frame % 4) == 0) {
+				z_palette_black_out_step(j, i);
+				mdrv2_se_play(7);
+			}
+			z_vsync_wait_and_scrollup(
+				(RES_Y - MAGNITUDE) - ((boss_phase_frame % 2) * (MAGNITUDE * 2))
+			);
+			if(boss_phase_frame > 64) {
+				break;
+			}
+			frame_delay(1);
+		}
+
+		// Blit the scroll background, while covering the blit with ridiculously
+		// slow text RAM clears to black and back to transparency.
+		//
+		// "Graph mode" (as opposed to "kanji mode") disables Shift-JIS decoding
+		// inside NEC's IO.SYS. This allows new half-width glyphs at the
+		// Shift-JIS lead byte codepoints, 0x81-0x9F and 0xE0-0xFF, to be
+		// accessed via regular INT 29h text output, and consequently, printf().
+		// Had to reverse-engineer that, only to find out that it has exactly
+		// zero effect when printing spaces...
+		// See https://github.com/joncampbell123/dosbox-x/pull/2547 for a
+		// reimplementation of the original functionality into DOSBox-X.
+		// --------------------------------------------------------------------
+
+		#define y i
+		#define x j
+
+		printf("\x1B)3"); // Enter graph mode
+		printf("\x1B[16;40m"); // Set black foreground and background text color
+		printf("\x1B[0;0H"); // Move text cursor to (0, 0)
+
+		for(y = 0; y < (RES_Y / GLYPH_H); y++) {
+			for(x = 0; x < (RES_X / GLYPH_HALF_W); x++) {
+				printf(" ");
+			}
+		}
+
+		grp_put_palette_show(SCROLL_BG_FN);
+		z_palette_set_black(j, i);
+
+		printf("\x1B)0"); // Back to regular kanji mode
+		printf("\x1B[0m"); // Reset text mode color
+		printf("\x1B[1;1H"); // Move text cursor to (0, 0)
+		// (yes, this escape sequence is actually 1-based)
+
+		for(y = 0; y < (RES_Y / GLYPH_H); y++) {
+			for(x = 0; x < (RES_X / GLYPH_HALF_W); x++) {
+				printf(" ");
+			}
+		}
+
+		#undef x
+		#undef y
+		// --------------------------------------------------------------------
+
+		// Final scroll
+		// ------------
+
+		#define scroll_speed	i
+		#define line_on_top 	j
+
+		line_on_top = 0;
+		scroll_speed = 32;
+		scroll_frame = 0;
+
+		while(1) {
+			z_vsync_wait_and_scrollup(line_on_top);
+			line_on_top += scroll_speed;
+			if(line_on_top > RES_Y) {
+				line_on_top -= RES_Y;
+			}
+			if(scroll_frame < 150) {
+				if((scroll_frame % 8) == 0) {
+					z_palette_black_in_step_to(col, comp, grp_palette);
+					mdrv2_se_play(7);
+				}
+			} else if((scroll_frame % 8) == 0) {
+				if(scroll_frame == 192) {
+					// We aren't playing anything, though?
+					mdrv2_bgm_fade_out_nonblock();
+				}
+				z_palette_black_out_step_2(col, comp);
+				if(z_Palettes[7].c.r == 0) {
+					break;
+				}
+				if(scroll_frame < 220) {
+					mdrv2_se_play(7);
+				}
+			}
+			scroll_frame++;
+			frame_delay(1);
+		}
+
+		#undef line_on_top
+		#undef scroll_speed
+		// ------------
+
+		z_vsync_wait_and_scrollup(0);
+
+		// Jigoku clear! Grant 50,000 points in the fanciest way
+		for(j = 0; j < 5; j++) {
+			score += 10000;
+		}
+		konngara_free(); // Yes, we already did this above :zunpet:
+		game_cleared = true;
+	}
+
+	#undef phase_frame_siddham_flash
+	#undef pattern_choose
+}
