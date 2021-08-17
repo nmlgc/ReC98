@@ -42,6 +42,8 @@ extern "C" {
 #include "th01/main/bullet/laser_s.hpp"
 #include "th01/main/hud/hp.hpp"
 
+static const char* unused_redletters_maybe[] = { "ANGEL", "OF", "DEATH" };
+
 // Coordinates
 // -----------
 
@@ -100,12 +102,7 @@ static const pixel_t SLASH_DISTANCE_5_TO_6_Y = (
 #define RAIN_G to_sp(0.0625f) /* Rain gravity */
 // ----------------
 
-#define pattern_state	konngara_pattern_state
-#define flash_colors	konngara_flash_colors
-#define invincible	konngara_invincible
-#define invincibility_frame	konngara_invincibility_frame
-#define initial_hp_rendered	konngara_initial_hp_rendered
-extern union {
+static union {
 	int group; // pellet_group_t
 	int interval;
 	subpixel_t speed;
@@ -135,9 +132,9 @@ enum face_expression_t {
 	_face_expression_t_FORCE_INT16 = 0x7FFF
 };
 
-extern face_direction_t face_direction;
-extern face_expression_t face_expression;
-extern bool16 face_direction_can_change;
+static face_direction_t face_direction = FD_UNINITIALIZED;
+static face_expression_t face_expression = FE_NEUTRAL;
+static bool16 face_direction_can_change = true;
 
 #define ent_head                	boss_entities[0]
 #define ent_face_closed_or_glare	boss_entities[1]
@@ -270,20 +267,9 @@ template <int SnakeCount> struct Snakes {
 // File names
 // ----------
 
-// TODO: Inline (if used 1×), or make `const` (if used >1×), once Konngara is
-// done
-char SCROLL_BG_FN[] = "boss7_d1.grp";
-char boss8_a1_grp[] = "boss8_a1.grp";
-char ALICE_MDT[] = "ALICE.MDT";
+#define SCROLL_BG_FN "boss7_d1.grp"
 #include "th01/shiftjis/fns.hpp"
-char boss8_1_bos[] = "boss8_1.bos";
-char boss8_e1_bos[] = "boss8_e1.bos";
-char boss8_e2_bos[] = "boss8_e2.bos";
-char GRZ_FN[] = "boss8.grz";
-char boss8_d1_grp[] = "boss8_d1.grp";
-char boss8_d2_grp[] = "boss8_d2.grp";
-char boss8_d3_grp[] = "boss8_d3.grp";
-char boss8_d4_grp[] = "boss8_d4.grp";
+#define GRZ_FN "boss8.grz"
 // ----------
 
 #define select_for_rank konngara_select_for_rank
@@ -295,8 +281,8 @@ void pellet_spawnray_unput_and_put(
 	int col
 )
 {
-	extern screen_x_t target_prev_x;
-	extern vram_y_t target_prev_y;
+	static screen_x_t target_prev_x = -PIXEL_NONE;
+	static vram_y_t target_prev_y = -PIXEL_NONE;
 	if(col == 99) {
 		target_prev_x = -PIXEL_NONE;
 		target_prev_y = -PIXEL_NONE;
@@ -361,19 +347,19 @@ void konngara_load_and_entrance(int8_t)
 	stageobjs_init_and_render(BOSS_STAGE);
 
 	graph_accesspage_func(1);
-	grp_put_palette_show(boss8_a1_grp);
+	grp_put_palette_show("boss8_a1.grp");
 
 	graph_accesspage_func(0);
-	mdrv2_bgm_load(ALICE_MDT);
+	mdrv2_bgm_load("ALICE.MDT");
 	mdrv2_se_load(SE_FN);
 	mdrv2_bgm_play();
 
 	z_palette_set_black(j, i);
 
 	text_fillca(' ', TX_WHITE);
-	ent_head.load(boss8_1_bos, 0);
-	ent_face_closed_or_glare.load(boss8_e1_bos, 1);
-	ent_face_aim.load(boss8_e2_bos, 2);
+	ent_head.load("boss8_1.bos", 0);
+	ent_face_closed_or_glare.load("boss8_e1.bos", 1);
+	ent_face_aim.load("boss8_e2.bos", 2);
 
 	// Decelerating scroll
 	// -------------------
@@ -475,10 +461,10 @@ void konngara_load_and_entrance(int8_t)
 	// -------------------------------
 
 	siddham_col_white();
-	grp_put_colorkey(boss8_d1_grp);
-	grp_put_colorkey(boss8_d2_grp);
-	grp_put_colorkey(boss8_d3_grp);
-	grp_put_colorkey(boss8_d4_grp);
+	grp_put_colorkey("boss8_d1.grp");
+	grp_put_colorkey("boss8_d2.grp");
+	grp_put_colorkey("boss8_d3.grp");
+	grp_put_colorkey("boss8_d4.grp");
 
 	for(j = 0; j < RGB4::Range; j++) {
 		siddham_col_white_in_step();
@@ -567,14 +553,13 @@ void pattern_diamond_cross_to_edges_followed_by_rain(void)
 
 	int i;
 
-	#define diamonds pattern0_diamonds
-	extern struct {
+	static struct {
 		pixel_t velocity_bottomleft_x, velocity_topleft_x;
 		pixel_t velocity_bottomleft_y, velocity_topleft_y;
 		screen_x_t left[DIAMOND_COUNT];
 		screen_y_t top[DIAMOND_COUNT];
 	} diamonds;
-	extern int frames_with_diamonds_at_edges;
+	static int frames_with_diamonds_at_edges;
 
 	#define diamonds_unput(i) \
 		for(i = 0; i < DIAMOND_COUNT; i++) { \
@@ -730,10 +715,8 @@ void pattern_symmetrical_from_cup_fire(unsigned char angle)
 
 void pattern_symmetrical_from_cup(void)
 {
-	#define angle pattern1_angle
-	#define unused pattern1_unused
-	extern unsigned char angle;
-	extern int16_t unused;
+	static unsigned char angle;
+	static int16_t unused;
 
 	if(boss_phase_frame == 10) {
 		face_expression_set_and_put(FE_CLOSED);
@@ -766,15 +749,11 @@ void pattern_symmetrical_from_cup(void)
 	if(boss_phase_frame >= 300) {
 		boss_phase_frame = 0;
 	}
-
-	#undef unused
-	#undef angle
 }
 
 void pattern_two_homing_snakes_and_semicircle_spreads(void)
 {
-	#define snakes pattern2_snakes
-	extern Snakes<2> snakes;
+	static Snakes<2> snakes;
 
 	int i;
 	int j;
@@ -851,8 +830,6 @@ void pattern_two_homing_snakes_and_semicircle_spreads(void)
 		snakes_unput_all(snakes, i, j);
 		boss_phase_frame = 0;
 	}
-
-	#undef snakes
 }
 
 void pattern_aimed_rows_from_top(void)
@@ -861,17 +838,14 @@ void pattern_aimed_rows_from_top(void)
 		DIAMOND_SPEED = 8,
 		ROW_MARGIN = (PLAYFIELD_W / 10),
 	};
-	#define diamond_velocity pattern3_diamond_velocity
-	#define diamond_left pattern3_diamond_left
-	#define diamond_top pattern3_diamond_top
-	#define diamond_direction pattern3_diamond_direction
-	#define pellet_speed pattern3_pellet_speed
 
-	extern point_t diamond_velocity;
+	static point_t diamond_velocity;
+
 	// screen_point_t would generate too good ASM here
-	extern screen_x_t diamond_left;
-	extern screen_y_t diamond_top;
-	extern enum {
+	static screen_x_t diamond_left;
+	static screen_y_t diamond_top;
+
+	static enum {
 		RIGHT = 0,
 		LEFT = 1,
 		DOWN_START = 2,
@@ -880,7 +854,7 @@ void pattern_aimed_rows_from_top(void)
 
 		_diamond_direction_t_FORCE_INT16 = 0x7FFF
 	} diamond_direction;
-	extern Subpixel pellet_speed;
+	static Subpixel pellet_speed;
 
 	if(boss_phase_frame == 10) {
 		face_expression_set_and_put(FE_NEUTRAL);
@@ -954,25 +928,14 @@ void pattern_aimed_rows_from_top(void)
 		}
 		shape8x8_diamond_put(diamond_left, diamond_top, 6);
 	}
-
-	#undef pellet_speed
-	#undef diamond_direction
-	#undef diamond_top
-	#undef diamond_left
-	#undef diamond_velocity
 }
 
 void pattern_aimed_spray_from_cup(void)
 {
-	#define spray_offset pattern4_spray_offset
-	#define angle pattern4_angle
-	#define spray_delta pattern4_spray_delta
-	#define frames_in_current_direction pattern4_frames_in_current_direction
-
-	extern unsigned char spray_offset;
-	extern unsigned char angle; // should be local
-	extern int spray_delta; // should be unsigned char
-	extern int frames_in_current_direction;
+	static unsigned char spray_offset;
+	static unsigned char angle; // should be local
+	static int spray_delta; // should be unsigned char
+	static int frames_in_current_direction;
 
 	if(boss_phase_frame == 10) {
 		face_expression_set_and_put(FE_CLOSED);
@@ -1008,17 +971,11 @@ void pattern_aimed_spray_from_cup(void)
 	if(boss_phase_frame >= 700) {
 		boss_phase_frame = 0;
 	}
-
-	#undef frames_in_current_direction
-	#undef spray_delta
-	#undef angle
-	#undef spray_offset
 }
 
 void pattern_four_homing_snakes(void)
 {
-	#define snakes pattern5_snakes
-	extern Snakes<4> snakes;
+	static Snakes<4> snakes;
 
 	int i;
 	int j;
@@ -1066,8 +1023,6 @@ void pattern_four_homing_snakes(void)
 		snakes_unput_all(snakes, i, j);
 		boss_phase_frame = 0;
 	}
-
-	#undef snakes
 }
 
 inline void swordray_unput_put_and_move(
@@ -1087,12 +1042,9 @@ inline void swordray_unput(const screen_x_t& end_x, const screen_x_t& end_y) {
 
 void pattern_rain_from_edges(void)
 {
-	#define end_x pattern6_end_x
-	#define end_y pattern6_end_y
-	#define unused pattern6_unused
-	extern screen_x_t end_x;
-	extern screen_y_t end_y;
-	extern int unused;
+	static screen_x_t end_x;
+	static screen_y_t end_y;
+	static int unused;
 
 	enum {
 		SPAWNRAY_SPEED = 8,
@@ -1181,10 +1133,6 @@ void pattern_rain_from_edges(void)
 			end_x, end_y, (rand() & 0x7F), to_sp(2.0f), PM_GRAVITY, RAIN_G
 		);
 	}
-
-	#undef unused
-	#undef end_y
-	#undef end_x
 }
 
 enum slash_cel_frame_t {
@@ -1260,10 +1208,8 @@ inline void slash_rain_fire(
 
 void pattern_slash_rain(void)
 {
-	#define spawner_left pattern7_spawner_left
-	#define spawner_top pattern7_spawner_top
-	extern screen_x_t spawner_left;
-	extern screen_y_t spawner_top;
+	static screen_x_t spawner_left;
+	static screen_y_t spawner_top;
 
 	if(boss_phase_frame == 10) {
 		face_direction_set_and_put(FD_CENTER);
@@ -1320,9 +1266,6 @@ void pattern_slash_rain(void)
 			spawner_left, spawner_top, pattern_state.interval
 		);
 	}
-
-	#undef spawner_top
-	#undef spawner_left
 }
 
 inline void slash_triangular_fire(
@@ -1334,10 +1277,8 @@ inline void slash_triangular_fire(
 
 void pattern_slash_triangular(void)
 {
-	#define spawner_left pattern8_spawner_left
-	#define spawner_top pattern8_spawner_top
-	extern screen_x_t spawner_left;
-	extern screen_y_t spawner_top;
+	static screen_x_t spawner_left;
+	static screen_y_t spawner_top;
 
 	if(boss_phase_frame == 10) {
 		face_direction_set_and_put(FD_CENTER);
@@ -1384,22 +1325,15 @@ void pattern_slash_triangular(void)
 		slash_triangular_fire(spawner_left, spawner_top, pattern_state.speed);
 		slash_spawner_step_from_4_5_to_6(spawner_left, spawner_top, 2);
 	}
-
-	#undef spawner_top
-	#undef spawner_left
 }
 
 void pattern_lasers_and_3_spread(void)
 {
-	#define target_left pattern9_target_left
-	#define target_y pattern9_target_y
-	#define right_to_left pattern9_right_to_left
-
 	// These have no reason to be static.
-	extern screen_x_t target_left;
-	extern screen_y_t target_y;
+	static screen_x_t target_left;
+	static screen_y_t target_y;
 
-	extern bool16 right_to_left;
+	static bool16 right_to_left;
 
 	enum {
 		INTERVAL = 10,
@@ -1455,10 +1389,6 @@ void pattern_lasers_and_3_spread(void)
 			SWORD_CENTER_X, SWORD_CENTER_Y, PG_3_SPREAD_WIDE_AIMED, to_sp(4.5f)
 		);
 	}
-
-	#undef right_to_left
-	#undef target_y
-	#undef target_left
 }
 
 inline void slash_aimed_fire(
@@ -1469,10 +1399,8 @@ inline void slash_aimed_fire(
 
 void pattern_slash_aimed(void)
 {
-	#define spawner_left pattern10_spawner_left
-	#define spawner_top pattern10_spawner_top
-	extern screen_x_t spawner_left;
-	extern screen_y_t spawner_top;
+	static screen_x_t spawner_left;
+	static screen_y_t spawner_top;
 
 	if(boss_phase_frame == 10) {
 		face_direction_set_and_put(FD_CENTER);
@@ -1517,9 +1445,6 @@ void pattern_slash_aimed(void)
 		slash_aimed_fire(spawner_left, spawner_top, pattern_state.speed);
 		slash_spawner_step_from_4_5_to_6(spawner_left, spawner_top, 2);
 	}
-
-	#undef spawner_top
-	#undef spawner_left
 }
 
 void pattern_semicircle_rain_from_sleeve(void)
@@ -1589,7 +1514,7 @@ inline void kuji_put(kuji_flash_color_t flash_color, int image) {
 
 void konngara_main(void)
 {
-	extern struct {
+	static struct {
 		bool16 invincible;
 		int invincibility_frame;
 
@@ -1616,9 +1541,10 @@ void konngara_main(void)
 	};
 
 	// The IDs are associated with a different pattern in every phase.
-	extern int pattern_prev;
+	static int pattern_prev;
+	static bool initial_hp_rendered;
 
-	extern struct {
+	static struct {
 		int pattern_cur;
 		int patterns_done;
 
@@ -1642,8 +1568,7 @@ void konngara_main(void)
 				(player_left > 396) ? FD_RIGHT : FD_CENTER;
 			face_direction_set_and_put(fd_new);
 		}
-	} phase;
-	extern bool initial_hp_rendered;
+	} phase = { 0, 0 };
 
 	int i;
 	int j;
@@ -1651,10 +1576,7 @@ void konngara_main(void)
 	int comp;
 	int scroll_frame;
 	face_direction_t fd_track;
-
-	struct hack { unsigned char col[3]; }; // XXX
-	extern struct hack konngara_invincibility_flash_colors;
-	struct hack flash_colors = konngara_invincibility_flash_colors;
+	const unsigned char flash_colors[3] = { 3, 4, 5 };
 
 	#define pattern_choose( \
 		phase, frame_min, count_on_first_try, count_on_second_try \
@@ -1678,7 +1600,7 @@ void konngara_main(void)
 			siddham_col_white_in_step(); \
 		} \
 		\
-		hit.update_and_render(flash_colors.col); \
+		hit.update_and_render(flash_colors); \
 		if(!hit.invincible && (boss_phase_frame > 120)) { \
 			phase.next(next_phase); \
 		} \
@@ -1714,7 +1636,7 @@ void konngara_main(void)
 			face_expression_set_and_put(FE_NEUTRAL);
 			phase.pattern_cur = CHOOSE_NEW;
 		}
-		hit.update_and_render(flash_colors.col);
+		hit.update_and_render(flash_colors);
 		if(!hit.invincible && ((phase.patterns_done >= 7) || (boss_hp < 16))) {
 			if(phase.pattern_cur == CHOOSE_NEW) {
 				phase.next(2);
@@ -1743,7 +1665,7 @@ void konngara_main(void)
 			phase.pattern_cur = CHOOSE_NEW;
 		}
 
-		hit.update_and_render(flash_colors.col);
+		hit.update_and_render(flash_colors);
 		if(!hit.invincible && ((phase.patterns_done >= 9) || (boss_hp < 13))) {
 			if(phase.pattern_cur == CHOOSE_NEW) {
 				phase.next(4);
@@ -1770,7 +1692,7 @@ void konngara_main(void)
 			phase.pattern_cur = CHOOSE_NEW;
 		}
 
-		hit.update_and_render(flash_colors.col);
+		hit.update_and_render(flash_colors);
 		if(!hit.invincible && ((phase.patterns_done >= 6) || (boss_hp < 10))) {
 			if(phase.pattern_cur == CHOOSE_NEW) {
 				phase.next(6);
@@ -1815,7 +1737,7 @@ void konngara_main(void)
 			phase.pattern_cur = CHOOSE_NEW;
 		}
 
-		hit.update_and_render(flash_colors.col);
+		hit.update_and_render(flash_colors);
 		if(boss_hp > 0) {
 			return;
 		}

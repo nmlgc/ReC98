@@ -37633,12 +37633,6 @@ main_37_TEXT	segment	byte public 'CODE' use16
 	extern @konngara_init$qv:proc
 	extern @konngara_free$qv:proc
 	extern @konngara_main$qv:proc
-
-; face_direction_t
-FD_UNINITIALIZED = 9
-
-; face_expression_t
-FE_NEUTRAL = 0
 main_37_TEXT	ends
 
 ; ===========================================================================
@@ -38406,22 +38400,6 @@ aBoss6_a5_grp	db 'boss6_a5.grp',0
 aSyugen_mdt	db 'syugen.MDT',0
 aBoss6_a6_grp	db 'boss6_a6.grp',0
 		db 0
-		dd aAngel_0		; "ANGEL"
-		dd aOf_0		; "OF"
-		dd aDeath_0		; "DEATH"
-public _face_direction, _face_expression, _face_direction_can_change
-_face_direction	dw FD_UNINITIALIZED
-_face_expression	dw FE_NEUTRAL
-_face_direction_can_change	dw 1
-public _target_prev_x, _target_prev_y
-_target_prev_x	dw -PIXEL_NONE
-_target_prev_y	dw -PIXEL_NONE
-public _phase, _konngara_invincibility_flash_col
-_phase	dw 2 dup(0)
-_konngara_invincibility_flash_col	db    3, 4, 5
-aAngel_0	db 'ANGEL',0
-aOf_0		db 'OF',0
-aDeath_0	db 'DEATH',0
 	extern _unused_boss_stage_flag:word
 	extern _pellet_interlace:byte
 	extern _pellet_destroy_score_delta:word
@@ -38779,78 +38757,5 @@ _sariel_invincibility_frame	dw ?
 word_3B435	dw ?
 public _sariel_initial_hp_rendered
 _sariel_initial_hp_rendered	db ?
-
-SNAKE_TRAIL_COUNT = 5
-Snakes macro prefix:req, count:req
-	public _&prefix&_snakes
-	_&prefix&_snakes label byte
-	dw (count * SNAKE_TRAIL_COUNT) dup(?) ; left
-	dw (count * SNAKE_TRAIL_COUNT) dup(?) ; top
-	dw count dup(?) ; velocity_x
-	dw count dup(?) ; velocity_y
-	dw count dup(?) ; target_locked
-	dw count dup(?) ; target_left
-endm
-
-public _konngara_pattern_state, _pattern0_diamonds, _frames_with_diamonds_at_edges
-_konngara_pattern_state	dw ?
-_pattern0_diamonds label byte
-	P0D_velocity_bottomleft_x	dw ?
-	P0D_velocity_topleft_x	dw ?
-	P0D_velocity_bottomleft_y	dw ?
-	P0D_velocity_topleft_y	dw ?
-	P0D_left	dw 4 dup(?)
-	P0D_top	dw 4 dup(?)
-_frames_with_diamonds_at_edges	dw ?
-
-public _pattern1_angle, _pattern1_unused
-_pattern1_angle	db ?
-_pattern1_unused	dw ?
-
-Snakes pattern2, 2
-
-public _pattern3_diamond_velocity, _pattern3_diamond_left, _pattern3_diamond_top
-public _pattern3_diamond_direction, _pattern3_pellet_speed
-_pattern3_diamond_velocity 	Point <?>
-_pattern3_diamond_left     	dw ?
-_pattern3_diamond_top      	dw ?
-_pattern3_diamond_direction	dw ?
-_pattern3_pellet_speed     	dw ?
-
-public _pattern4_spray_offset, _pattern4_angle, _pattern4_spray_delta
-public _pattern4_frames_in_current_direc
-_pattern4_spray_offset	         	db ?
-_pattern4_angle	                 	db ?
-_pattern4_spray_delta            	dw ?
-_pattern4_frames_in_current_direc	dw ?
-
-Snakes pattern5, 4
-
-public _pattern6_end_x, _pattern6_end_y, _pattern6_unused
-_pattern6_end_x 	dw ?
-_pattern6_end_y 	dw ?
-_pattern6_unused	dw ?
-
-public _pattern7_spawner_left, _pattern7_spawner_top
-_pattern7_spawner_left	dw ?
-_pattern7_spawner_top	dw ?
-
-public _pattern8_spawner_left, _pattern8_spawner_top
-_pattern8_spawner_left	dw ?
-_pattern8_spawner_top	dw ?
-
-public _pattern9_target_left, _pattern9_target_y, _pattern9_right_to_left
-_pattern9_target_left  	dw ?
-_pattern9_target_y     	dw ?
-_pattern9_right_to_left	dw ?
-
-public _pattern10_spawner_left, _pattern10_spawner_top
-_pattern10_spawner_left	dw ?
-_pattern10_spawner_top	dw ?
-
-public _hit, _pattern_prev, _konngara_initial_hp_rendered
-_hit	dw 2 dup(?)
-_pattern_prev	dw ?
-_konngara_initial_hp_rendered	db ?
 
 		end

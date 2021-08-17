@@ -1,1 +1,1 @@
-char SE_FN[] = "zigoku.mde";
+#define SE_FN "zigoku.mde"
