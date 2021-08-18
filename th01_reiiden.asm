@@ -3469,7 +3469,7 @@ loc_DA8D:
 		cmp	ax, 6
 		jnz	short loc_DA9E
 		push	0
-		call	sub_2869E
+		call	@sariel_entrance$qc
 
 loc_DA9D:
 		pop	cx
@@ -30494,6 +30494,7 @@ main_35__TEXT	ends
 ; Segment type:	Pure code
 main_36_TEXT	segment	byte public 'CODE' use16
 	extern @sariel_select_for_rank$qmiiiii:proc
+	extern @sariel_entrance$qc:proc
 main_36_TEXT	ends
 
 main_36__TEXT	segment	byte public 'CODE' use16
@@ -30506,63 +30507,6 @@ include th01/main/boss/anim.inc
 sariel_shield	equ <boss_entity_0>
 sariel_dress	equ <boss_anim_0>
 sariel_wand 	equ <boss_anim_1>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2869E	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	_pellet_interlace, 1
-		call	text_fillca pascal, (' ' shl 16) + TX_BLACK + TX_REVERSE
-		call	_grp_put_palette_show stdcall, offset aBoss6_l_grp, ds ; "boss6_l.grp"
-		push	1
-		call	_graph_accesspage_func
-		call	_grp_put_palette_show stdcall, offset aBoss6_h_grp, ds ; "boss6_h.grp"
-		push	0
-		call	_graph_accesspage_func
-		call	@stageobjs_init_and_render$qi stdcall, BOSS_STAGE
-		push	ds
-		push	offset aTensi_mdt_0 ; "TENSI.MDT"
-		call	_mdrv2_bgm_load
-		push	ds
-		push	offset aZigoku_mde_0 ; "zigoku.mde"
-		call	_mdrv2_se_load
-		add	sp, 16h
-		call	_mdrv2_bgm_play
-		call	text_fillca pascal, (' ' shl 16) + TX_WHITE
-		mov	si, (RES_Y - 1)
-		jmp	short loc_2871C
-; ---------------------------------------------------------------------------
-
-loc_28703:
-		call	_z_vsync_wait_and_scrollup stdcall, si
-		call	_egc_copy_rows_1_to_0 stdcall, si, 1
-		push	1
-		call	_frame_delay
-		add	sp, 8
-		dec	si
-
-loc_2871C:
-		or	si, si
-		jge	short loc_28703
-		call	_z_vsync_wait_and_scrollup stdcall, 0
-		push	1
-		call	_graph_accesspage_func
-		call	_grp_put_palette_show stdcall, large [off_35DAB]
-		push	0
-		call	_graph_accesspage_func
-		call	_pagetrans_diagonal_8x8 stdcall, 40
-		add	sp, 0Ch
-		mov	eax, _frame_rand
-		mov	random_seed, eax
-		pop	si
-		pop	bp
-		retf
-sub_2869E	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -32954,7 +32898,7 @@ loc_29D0E:
 		call	_graph_accesspage_func
 		mov	bx, [bp+arg_0]
 		shl	bx, 2
-		call	_grp_put_palette_show stdcall, large off_35DAB[bx]
+		call	_grp_put_palette_show stdcall, large _BG_IMAGES[bx]
 		call	_graph_copy_page_back_to_front
 		call	_stage_palette_set stdcall, offset _z_Palettes, ds
 		push	0
@@ -38268,8 +38212,10 @@ dbl_35D95	db 09ah, 099h, 099h, 099h, 099h, 099h, 0a9h, 03fh
 		dd aDeath		; "DEATH"
 public _game_cleared
 _game_cleared	db 0
-off_35DAB	dd aBoss6_a1_grp
-					; "BOSS6_A1.GRP"
+
+public _BG_IMAGES
+_BG_IMAGES label dword
+		dd aBoss6_a1_grp ; "BOSS6_A1.GRP"
 		dd aBoss6_a2_grp	; "BOSS6_A2.GRP"
 		dd aBoss6_a3_grp	; "BOSS6_A3.GRP"
 		dd aBoss6_a4_grp	; "BOSS6_A4.GRP"
@@ -38364,12 +38310,11 @@ aBoss6_a1_grp	db 'BOSS6_A1.GRP',0
 aBoss6_a2_grp	db 'BOSS6_A2.GRP',0
 aBoss6_a3_grp	db 'BOSS6_A3.GRP',0
 aBoss6_a4_grp	db 'BOSS6_A4.GRP',0
-aBoss6_l_grp	db 'boss6_l.grp',0
-aBoss6_h_grp	db 'boss6_h.grp',0
-; char aTensi_mdt_0[]
-aTensi_mdt_0	db 'TENSI.MDT',0
-; char aZigoku_mde_0[]
-aZigoku_mde_0	db 'zigoku.mde',0
+public _boss6_l_grp, _boss6_h_grp, _TENSI_MDT, _SE_FN
+_boss6_l_grp	db 'boss6_l.grp',0
+_boss6_h_grp	db 'boss6_h.grp',0
+_TENSI_MDT	db 'TENSI.MDT',0
+_SE_FN	db 'zigoku.mde',0
 aBoss6_1_bos	db 'boss6_1.bos',0
 aBoss6_2_bos	db 'boss6_2.bos',0
 aBoss6_3_bos	db 'boss6_3.bos',0
