@@ -3367,7 +3367,7 @@ loc_D972:
 		push	ax		; dest
 		call	_strcpy
 		add	sp, 8
-		call	_sariel_load
+		call	@sariel_load_and_init$qv
 		jmp	short loc_D941
 ; ---------------------------------------------------------------------------
 
@@ -6548,7 +6548,6 @@ main_21_TEXT	segment	byte public 'CODE' use16
 	extern @CBossEntity@move_lock_and_put_8$qiiii:proc
 	extern @CBossEntity@hittest_orb$xqv:proc
 	extern _bos_entity_free:proc
-	extern @CBossAnim@load$qxnxci:proc
 	extern @CBossAnim@put_8$xqv:proc
 	extern _bos_anim_free:proc
 main_21_TEXT	ends
@@ -30495,6 +30494,7 @@ main_35__TEXT	ends
 main_36_TEXT	segment	byte public 'CODE' use16
 	extern @sariel_select_for_rank$qmiiiii:proc
 	extern @sariel_entrance$qc:proc
+	extern @sariel_load_and_init$qv:proc
 main_36_TEXT	ends
 
 main_36__TEXT	segment	byte public 'CODE' use16
@@ -30507,54 +30507,6 @@ include th01/main/boss/anim.inc
 sariel_shield	equ <boss_entity_0>
 sariel_dress	equ <boss_anim_0>
 sariel_wand 	equ <boss_anim_1>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public _sariel_load
-_sariel_load	proc far
-		push	bp
-		mov	bp, sp
-		CBossEntity__load	sariel_shield, 0, aBoss6_1_bos
-		call	@CBossAnim@load$qxnxci stdcall, offset sariel_wand,  ds, offset aBoss6_2_bos, ds, 0	; "boss6_2.bos"
-		call	@CBossAnim@load$qxnxci stdcall, offset sariel_dress, ds, offset aBoss6_3_bos, ds, 1	; "boss6_3.bos"
-		call	_grc_load stdcall, 0, offset aBoss6gr1_grc, ds
-		call	_grc_load stdcall, 1, offset aBoss6gr2_grc, ds
-		call	_grc_load stdcall, 2, offset aBoss6gr3_grc, ds
-		add	sp, 30h
-		call	_grc_load stdcall, 3, offset aBoss6gr4_grc, ds
-		call	@boss_palette_snap$qv
-		nopcall	sub_287D9
-		call	_ptn_new stdcall, (16 shl 16) or 2
-		add	sp, 0Ah
-		pop	bp
-		retf
-_sariel_load	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_287D9	proc far
-		push	bp
-		mov	bp, sp
-		call	@CBossEntity@pos_set$qiiiiiii c, offset sariel_shield, ds, 304, large 144 or (48 shl 16), large 0 or (640 shl 16), large 0 or (400 shl 16)
-		CBossEntity__hitbox_set	sariel_shield, 0, 0, 48, 48
-		mov	_boss_hp, 18
-		mov	_hud_hp_first_white, 8
-		mov	_hud_hp_first_redwhite, 2
-		mov	_boss_phase, 0
-		mov	_boss_phase_frame, 0
-		mov	sariel_shield.BE_hitbox_orb_inactive, 0
-		mov	sariel_dress.BA_left, 280
-		mov	sariel_dress.BA_top, 192
-		mov	sariel_wand.BA_left, 296
-		mov	sariel_wand.BA_top, 48
-		pop	bp
-		retf
-sub_287D9	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -38315,13 +38267,15 @@ _boss6_l_grp	db 'boss6_l.grp',0
 _boss6_h_grp	db 'boss6_h.grp',0
 _TENSI_MDT	db 'TENSI.MDT',0
 _SE_FN	db 'zigoku.mde',0
-aBoss6_1_bos	db 'boss6_1.bos',0
-aBoss6_2_bos	db 'boss6_2.bos',0
-aBoss6_3_bos	db 'boss6_3.bos',0
-aBoss6gr1_grc	db 'boss6gr1.grc',0
-aBoss6gr2_grc	db 'boss6gr2.grc',0
-aBoss6gr3_grc	db 'boss6gr3.grc',0
-aBoss6gr4_grc	db 'boss6gr4.grc',0
+public _boss6_1_bos, _boss6_2_bos, _boss6_3_bos
+public _boss6gr1_grc, _boss6gr2_grc, _boss6gr3_grc, _boss6gr4_grc
+_boss6_1_bos	db 'boss6_1.bos',0
+_boss6_2_bos	db 'boss6_2.bos',0
+_boss6_3_bos	db 'boss6_3.bos',0
+_boss6gr1_grc	db 'boss6gr1.grc',0
+_boss6gr2_grc	db 'boss6gr2.grc',0
+_boss6gr3_grc	db 'boss6gr3.grc',0
+_boss6gr4_grc	db 'boss6gr4.grc',0
 flt_35F66	dd 1000.0
 flt_35F6A	dd 1001.0
 flt_35F6E	dd 12.0
@@ -38438,6 +38392,7 @@ boss_entity_3	equ <_boss_entities[3 * size CBossEntity]>
 boss_entity_4	equ <_boss_entities[4 * size CBossEntity]>
 boss	equ boss_entity_0
 
+public _boss_anims
 _boss_anims	CBossAnim 2 dup(<?>)
 boss_anim_0	equ <_boss_anims[0 * size CBossAnim]>
 boss_anim_1	equ <_boss_anims[1 * size CBossAnim]>

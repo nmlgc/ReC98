@@ -172,6 +172,15 @@ public:
 		screen_y_t move_clamp_bottom
 	);
 
+	// Sets [hitbox_orb] to the given coordinates, relative to the top-left
+	// corner of the image.
+	void hitbox_set(pixel_t left, pixel_t top, pixel_t right, pixel_t bottom) {
+		hitbox_orb.left = left;
+		hitbox_orb.right = right;
+		hitbox_orb.top = top;
+		hitbox_orb.bottom = bottom;
+	}
+
 	// (Just read the actual function code, it's impossible to summarize these
 	// without spelling out every single line here.)
 	void move_lock_and_put_8(
@@ -232,4 +241,6 @@ public:
 
 // Frees all images in the given [slot].
 void bos_anim_free(int slot);
+
+extern CBossAnim boss_anims[2];
 /// ---------------------

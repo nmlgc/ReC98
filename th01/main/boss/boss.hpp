@@ -47,7 +47,8 @@ void boss_hit_update_and_render(
 // -----------------
 
 // Makai
-void sariel_load_and_entrance(int8_t unused);
+void sariel_entrance(int8_t unused);
+void sariel_load_and_init(void);
 
 // Jigoku
 void konngara_load_and_entrance(int8_t unused);

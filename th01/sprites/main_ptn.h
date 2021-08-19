@@ -10,6 +10,7 @@ static const int PORTAL_ANIM_CELS = 2;
 typedef enum {
 	PTN_SLOT_STG = 0, // stg(_b).ptn
 	PTN_SLOT_MIKO = 1, // miko.ptn
+	PTN_SLOT_BG_BOSS = 2, // Backgrounds behind animated boss entities
 	PTN_SLOT_BG_HUD = 5,
 	PTN_SLOT_NUMB = 7, // numb.ptn
 } main_ptn_slot_t;
