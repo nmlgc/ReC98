@@ -1,3 +1,6 @@
+// Amount of time until the player has to HARRY UP.
+extern unsigned int stage_timer;
+
 // Default filenames for the background image and music. Adjusted by
 // scene_init_and_load().
 extern char default_grp_fn[15];

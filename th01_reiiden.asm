@@ -5816,7 +5816,7 @@ arg_0		= word ptr  6
 		call	_graph_putsa_fx c,  48, large ((7  or FX_WEIGHT_BOLD) shl 16) or 224, offset aB@b@vrvsvVfvd, ds ;	"Å@Å@ÇrÇsÇ`ÇfÇd"
 		call	_graph_putsa_fx c,  48, large ((7  or FX_WEIGHT_BOLD) shl 16) or 256, offset aVavnvmvtvrb@vo, ds ; "ÇaÇnÇmÇtÇrÅ@ÇoÇèÇâÇéÇî"
 		call	_graph_putsa_fx c, 160, large ((10 or FX_WEIGHT_BOLD) shl 16) or 288, offset aVgvivfb@vyb@vj, ds ; "ÇgÇâÇîÅ@ÇyÅ@ÇjÇÖÇô"
-		mov	ax, word_39DAC
+		mov	ax, _stage_timer
 		imul	ax, 3
 		mov	si, ax
 		cmp	si, 6553
@@ -6105,7 +6105,7 @@ arg_0		= word ptr  6
 		push	1Eh
 		call	_frame_delay
 		pop	cx
-		mov	ax, word_39DAC
+		mov	ax, _stage_timer
 		imul	ax, 5
 		movzx	eax, ax
 		mov	[bp+var_6], eax
@@ -8025,7 +8025,7 @@ loc_19252:
 loc_1925A:
 		add	bx, bx
 		mov	ax, [bx+1142h]
-		mov	word_39DAC, ax
+		mov	_stage_timer, ax
 		mov	word_39DAE, 0
 		pop	bp
 		retf
@@ -8056,7 +8056,7 @@ loc_19287:
 		push	ss
 		lea	ax, [bp+@@str]
 		push	ax
-		push	word_39DAC
+		push	_stage_timer
 		push	4
 		call	str_right_aligned_from_uint16
 		push	1
@@ -8092,7 +8092,7 @@ sub_192D6	proc far
 
 		enter	6, 0
 		push	si
-		cmp	word_39DAC, 0C8h ; '»'
+		cmp	_stage_timer, 200
 		jnb	short loc_192E8
 		mov	ax, 2Ah
 		jmp	short loc_192EB
@@ -8110,7 +8110,7 @@ loc_192EB:
 		push	ss
 		lea	ax, [bp+@@str]
 		push	ax
-		push	word_39DAC
+		push	_stage_timer
 		push	4
 		call	str_right_aligned_from_uint16
 		push	ss
@@ -8127,7 +8127,7 @@ loc_192EB:
 		push	ss
 		lea	ax, [bp+@@str]
 		push	ax
-		push	word_39DAC
+		push	_stage_timer
 		push	4
 		call	str_right_aligned_from_uint16
 		push	ss
@@ -8150,11 +8150,11 @@ sub_192D6	endp
 sub_1938A	proc far
 		push	bp
 		mov	bp, sp
-		cmp	word_39DAC, 0
+		cmp	_stage_timer, 0
 		jbe	short loc_193B3
-		sub	word_39DAC, 2
+		sub	_stage_timer, 2
 		call	sub_192D6
-		cmp	word_39DAC, 0
+		cmp	_stage_timer, 0
 		jnz	short loc_193B8
 		push	2
 		call	sub_CBF2
@@ -8180,14 +8180,14 @@ sub_1938A	endp
 sub_193BA	proc far
 		push	bp
 		mov	bp, sp
-		cmp	word_39DAC, 0
+		cmp	_stage_timer, 0
 		jz	short loc_193CC
-		add	word_39DAC, 0C8h ; '»'
+		add	_stage_timer, 200
 		jmp	short loc_193D2
 ; ---------------------------------------------------------------------------
 
 loc_193CC:
-		add	word_39DAC, 3E8h
+		add	_stage_timer, 1000
 
 loc_193D2:
 		call	sub_192D6
@@ -38411,7 +38411,8 @@ byte_39D2C	db ?
 byte_39D36	db ?
 		db 101 dup(?)
 include th01/main/hud/hud[bss].asm
-word_39DAC	dw ?
+public _stage_timer
+_stage_timer	dw ?
 word_39DAE	dw ?
 byte_39DB0	db ?
 		db ?
