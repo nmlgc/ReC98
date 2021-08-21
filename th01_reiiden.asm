@@ -8026,7 +8026,7 @@ loc_1925A:
 		add	bx, bx
 		mov	ax, [bx+1142h]
 		mov	_stage_timer, ax
-		mov	word_39DAE, 0
+		mov	_frames_since_harryup, 0
 		pop	bp
 		retf
 sub_19243	endp
@@ -8165,7 +8165,7 @@ sub_1938A	proc far
 ; ---------------------------------------------------------------------------
 
 loc_193B3:
-		nopcall	sub_195AD
+		nopcall	@pattern_harryup$qv
 
 loc_193B8:
 		pop	bp
@@ -8191,7 +8191,7 @@ loc_193CC:
 
 loc_193D2:
 		call	sub_192D6
-		mov	word_39DAE, 0
+		mov	_frames_since_harryup, 0
 		pop	bp
 		retf
 sub_193BA	endp
@@ -8448,140 +8448,7 @@ loc_19595:
 		retf
 sub_193DE	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_195AD	proc far
-
-var_2		= byte ptr -2
-var_1		= byte ptr -1
-
-		enter	2, 0
-		inc	word_39DAE
-		inc	byte_39DB0
-		cmp	word_39DAE, 0C8h ; 'È'
-		jnb	short loc_195D9
-		mov	al, byte_39DB0
-		mov	ah, 0
-		mov	bx, 5
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_195D5
-		mov	ax, 1
-		jmp	short loc_1963B
-; ---------------------------------------------------------------------------
-
-loc_195D5:
-		xor	ax, ax
-		jmp	short loc_1963B
-; ---------------------------------------------------------------------------
-
-loc_195D9:
-		cmp	word_39DAE, 12Ch
-		jnb	short loc_195F9
-		mov	al, byte_39DB0
-		mov	ah, 0
-		mov	bx, 4
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_195F5
-		mov	ax, 1
-		jmp	short loc_1963B
-; ---------------------------------------------------------------------------
-
-loc_195F5:
-		xor	ax, ax
-		jmp	short loc_1963B
-; ---------------------------------------------------------------------------
-
-loc_195F9:
-		cmp	word_39DAE, 190h
-		jnb	short loc_19619
-		mov	al, byte_39DB0
-		mov	ah, 0
-		mov	bx, 3
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_19615
-		mov	ax, 1
-		jmp	short loc_1963B
-; ---------------------------------------------------------------------------
-
-loc_19615:
-		xor	ax, ax
-		jmp	short loc_1963B
-; ---------------------------------------------------------------------------
-
-loc_19619:
-		cmp	word_39DAE, 1F4h
-		jnb	short loc_19639
-		mov	al, byte_39DB0
-		mov	ah, 0
-		mov	bx, 2
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_19635
-		mov	ax, 1
-		jmp	short loc_19637
-; ---------------------------------------------------------------------------
-
-loc_19635:
-		xor	ax, ax
-
-loc_19637:
-		jmp	short loc_1963B
-; ---------------------------------------------------------------------------
-
-loc_19639:
-		mov	al, 1
-
-loc_1963B:
-		mov	[bp+var_1], al
-		cmp	[bp+var_1], 0
-		jz	short locret_1967C
-		mov	[bp+var_2], 0
-		jmp	short loc_1966D
-; ---------------------------------------------------------------------------
-
-loc_1964A:
-		push	PG_1_RANDOM_WIDE or ((3 shl 4) shl 16)
-		push	PLAYFIELD_TOP
-		call	IRand
-		mov	bx, PLAYFIELD_RIGHT
-		cwd
-		idiv	bx
-		push	dx
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_group$qii14pellet_group_ti
-		add	sp, 0Ch
-		inc	[bp+var_2]
-
-loc_1966D:
-		mov	al, [bp+var_2]
-
-loc_19670:
-		mov	ah, 0
-		push	ax
-
-loc_19673:
-		mov	al, _rank
-		cbw
-		pop	dx
-		cmp	dx, ax
-		jle	short loc_1964A
-
-locret_1967C:
-		leave
-		retf
-sub_195AD	endp
-
+	extern @pattern_harryup$qv:proc
 main_26_TEXT	ends
 
 ; ===========================================================================
@@ -38411,11 +38278,11 @@ byte_39D2C	db ?
 byte_39D36	db ?
 		db 101 dup(?)
 include th01/main/hud/hud[bss].asm
-public _stage_timer
+public _stage_timer, _frames_since_harryup, _harryup_cycle
 _stage_timer	dw ?
-word_39DAE	dw ?
-byte_39DB0	db ?
-		db ?
+_frames_since_harryup	dw ?
+_harryup_cycle	db ?
+	evendata
 byte_39DB2	db ?
 public _player_ptn_id
 _player_ptn_id	db ?
