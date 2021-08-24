@@ -35,7 +35,7 @@ static inline bool16 snd_se_active() {
 	// MODDERS: Just use [new_se] directly.
 	static inline int16_t snd_get_param(int16_t &param) {
 		_BX = _SP;
-		return *reinterpret_cast<int *>(MK_FP(_SS, (_BX + 4)));
+		return peek(_SS, (_BX + 4));
 	}
 #endif
 #endif

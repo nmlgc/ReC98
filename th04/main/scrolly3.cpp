@@ -22,7 +22,7 @@ vram_y_t pascal near scroll_subpixel_y_to_vram_seg3(subpixel_t y)
 	#define ret static_cast<vram_y_t>(_AX) // Must be signed!
 
 	_BX = _SP;
-	ret = *reinterpret_cast<vram_y_t *>(MK_FP(_SS, _BX + 2)); /* = */ (y);
+	ret = peek(_SS, (_BX + 2)); /* = */ (y);
 
 	ret = TO_PIXEL(ret);
 	if(scroll_active) {
@@ -39,7 +39,7 @@ vram_y_t pascal near scroll_subpixel_y_to_vram_always(subpixel_t y)
 	#define ret static_cast<vram_y_t>(_AX) // Must be signed!
 
 	_BX = _SP;
-	ret = *reinterpret_cast<vram_y_t *>(MK_FP(_SS, _BX + 2)); /* = */ (y);
+	ret = peek(_SS, (_BX + 2)); /* = */ (y);
 
 	ret = (TO_PIXEL(ret) + scroll_line);
 	ret = roll(ret);

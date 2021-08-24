@@ -96,10 +96,25 @@ int int86(int __intno, union REGS *__inregs, union REGS *__outregs);
 #define FP_SEG(fp)     ((uint16_t)(void __seg *)(void __far *)(fp))
 #define FP_OFF(fp)     ((uint16_t)(fp))
 
-#define peek(a,b)    (*((int16_t __far * )MK_FP((a),(b))))
-#define peekb(a,b)   (*(( int8_t __far * )MK_FP((a),(b))))
-#define poke(a,b,c)  (*((int16_t __far * )MK_FP((a),(b))) = (int16_t)(c))
-#define pokeb(a,b,c) (*(( int8_t __far * )MK_FP((a),(b))) = ( int8_t)(c))
+#ifdef __cplusplus
+	int16_t inline peek(uint16_t __segment, uint16_t __offset) {
+		return (*((int16_t __far *)MK_FP(__segment, __offset)));
+	}
+	int8_t inline peekb(uint16_t __segment, uint16_t __offset) {
+		return (*((int8_t __far *)MK_FP(__segment, __offset)));
+	}
+	void inline poke(uint16_t __segment, uint16_t __offset, int16_t __value) {
+		(*((int16_t __far *)MK_FP(__segment, __offset)) = __value);
+	}
+	void inline pokeb(uint16_t __segment, uint16_t __offset, int8_t __value) {
+		(*((int8_t __far *)MK_FP(__segment, __offset)) = __value);
+	}
+#else
+	#define peek(a,b)    (*((int16_t __far * )MK_FP((a),(b))))
+	#define peekb(a,b)   (*(( int8_t __far * )MK_FP((a),(b))))
+	#define poke(a,b,c)  (*((int16_t __far * )MK_FP((a),(b))) = (int16_t)(c))
+	#define pokeb(a,b,c) (*(( int8_t __far * )MK_FP((a),(b))) = ( int8_t)(c))
+#endif
 /// ----------------
 
 #endif

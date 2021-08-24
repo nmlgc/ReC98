@@ -56,11 +56,6 @@ void grx_put_col(unsigned int slot, uint4_t col)
 	grx_col = 0;
 }
 
-inline void vram_put(seg_t segment, uint16_t offset, dots8_t dots)
-{
-	*reinterpret_cast<dots8_t far *>(MK_FP(segment, offset)) = dots;
-}
-
 void grx_put(unsigned int slot)
 {
 	uint8_t command;
@@ -70,12 +65,12 @@ void grx_put(unsigned int slot)
 
 #define put(vram_offset, vram_offset_last, planar) \
 	if(!grx_col) { \
-		vram_put(SEG_PLANE_B, vram_offset, *(planar++)); \
-		vram_put(SEG_PLANE_R, vram_offset, *(planar++)); \
-		vram_put(SEG_PLANE_G, vram_offset, *(planar++)); \
-		vram_put(SEG_PLANE_E, vram_offset_last, *(planar++)); \
+		pokeb(SEG_PLANE_B, vram_offset, *(planar++)); \
+		pokeb(SEG_PLANE_R, vram_offset, *(planar++)); \
+		pokeb(SEG_PLANE_G, vram_offset, *(planar++)); \
+		pokeb(SEG_PLANE_E, vram_offset_last, *(planar++)); \
 	} else { \
-		vram_put(SEG_PLANE_B, vram_offset_last, 0xFF); \
+		pokeb(SEG_PLANE_B, vram_offset_last, 0xFF); \
 	}
 
 	if(grx_col) {
