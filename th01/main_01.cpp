@@ -4,9 +4,13 @@
  */
 
 extern "C" {
+#include <stddef.h>
 #include "platform.h"
+#include "x86real.h"
+#include "pc98.h"
 #include "master.hpp"
 #include "pc98kbd.h"
+#include "twobyte.h"
 #include "th01/hardware/input.hpp"
 #include "th01/main/bomb.hpp"
 #include "th01/main/debug.hpp"
@@ -131,5 +135,6 @@ void input_sense(bool16 reset_repeat)
 }
 
 #include "th01/hardware/input_rs.cpp"
+#include "th01/hardware/tram_x16.cpp"
 
 }

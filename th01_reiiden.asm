@@ -140,126 +140,8 @@ main_01__TEXT	segment	byte public 'CODE' use16
 
 	extern _input_sense:proc
 	extern _input_reset_sense:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B8B5	proc far
-
-var_C		= word ptr -0Ch
-var_9		= byte ptr -9
-var_8		= word ptr -8
-var_5		= byte ptr -5
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-arg_6		= byte ptr  0Ch
-
-		enter	0Ch, 0
-		push	si
-		push	di
-		mov	cx, [bp+arg_4]
-		mov	[bp+var_2], cx
-		les	bx, [bp+arg_0]
-		mov	si, es:[bx]
-		mov	ax, 0A000h
-		mov	dx, [bp+var_2]
-		mov	es, ax
-		assume es:nothing
-		mov	es:[si], dx
-		mov	[bp+var_4], cx
-		mov	es, word ptr [bp+arg_0+2]
-		assume es:nothing
-		mov	ax, es:[bx]
-		add	ax, 2
-		mov	di, ax
-		mov	ax, 0A000h
-		mov	dx, [bp+var_4]
-		mov	es, ax
-		assume es:nothing
-		mov	es:[di], dx
-		mov	al, [bp+arg_6]
-		mov	[bp+var_5], al
-		mov	es, word ptr [bp+arg_0+2]
-		assume es:nothing
-		mov	ax, es:[bx]
-		mov	[bp+var_8], ax
-		mov	ax, 0A200h
-		mov	bx, [bp+var_8]
-		mov	dl, [bp+var_5]
-		mov	es, ax
-		assume es:nothing
-		mov	es:[bx], dl
-		mov	al, [bp+arg_6]
-		mov	[bp+var_9], al
-		les	bx, [bp+arg_0]
-		assume es:nothing
-		mov	ax, es:[bx]
-		add	ax, 2
-		mov	[bp+var_C], ax
-		mov	ax, 0A200h
-		mov	bx, [bp+var_C]
-		mov	dl, [bp+var_9]
-		mov	es, ax
-		assume es:nothing
-		mov	es:[bx], dl
-		les	bx, [bp+arg_0]
-		assume es:nothing
-		add	word ptr es:[bx], 4
-		pop	di
-		pop	si
-		leave
-		retf
-sub_B8B5	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B933	proc far
-
-arg_0		= dword	ptr  6
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		xor	si, si
-		jmp	short loc_B958
-; ---------------------------------------------------------------------------
-
-loc_B93C:
-		xor	di, di
-		jmp	short loc_B952
-; ---------------------------------------------------------------------------
-
-loc_B940:
-		push	[bp+arg_6]
-		push	[bp+arg_4]
-		pushd	[bp+arg_0]
-		call	sub_B8B5
-		add	sp, 8
-		inc	di
-
-loc_B952:
-		cmp	di, 28h	; '('
-		jl	short loc_B940
-		inc	si
-
-loc_B958:
-		cmp	si, 5
-		jl	short loc_B93C
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_B933	endp
-
+	extern @TRAMCursor@putkanji$quii:proc
+	extern @TRAMCursor@putkanji_for_5_rows$quii:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -272,7 +154,7 @@ outregs		= REGS ptr -26h
 inregs		= REGS ptr -16h
 var_6		= word ptr -6
 var_4		= word ptr -4
-var_2		= word ptr -2
+@@cursor		= word ptr -2
 arg_0		= word ptr  6
 
 		enter	48h, 0
@@ -292,12 +174,12 @@ arg_0		= word ptr  6
 		push	ax		; inregs
 		push	18h		; intno
 		call	_int86
-		mov	[bp+var_2], 0
-		push	50020h
+		mov	[bp+@@cursor], 0
+		push	((TX_BLACK or TX_REVERSE) shl 16) or ' '
 		push	ss
-		lea	ax, [bp+var_2]
+		lea	ax, [bp+@@cursor]
 		push	ax
-		call	sub_B933
+		call	@TRAMCursor@putkanji_for_5_rows$quii
 		add	sp, 12h
 		mov	di, 1
 		jmp	loc_BA34
@@ -326,11 +208,11 @@ loc_B9A8:
 ; ---------------------------------------------------------------------------
 
 loc_B9D6:
-		push	50020h
+		push	((TX_BLACK or TX_REVERSE) shl 16) or ' '
 		push	ss
-		lea	ax, [bp+var_2]
+		lea	ax, [bp+@@cursor]
 		push	ax
-		call	sub_B8B5
+		call	@TRAMCursor@putkanji$quii
 		add	sp, 8
 		inc	si
 
@@ -345,19 +227,19 @@ loc_B9F2:
 		mov	ax, [bp+var_6]
 		test	[bp+var_4], ax
 		jnz	short loc_B9FE
-		push	5
+		push	(TX_BLACK or TX_REVERSE)
 		jmp	short loc_BA00
 ; ---------------------------------------------------------------------------
 
 loc_B9FE:
-		push	1
+		push	TX_BLACK
 
 loc_BA00:
-		push	20h ; ' '
+		push	' '
 		push	ss
-		lea	ax, [bp+var_2]
+		lea	ax, [bp+@@cursor]
 		push	ax
-		call	sub_B8B5
+		call	@TRAMCursor@putkanji$quii
 		add	sp, 8
 		shr	[bp+var_6], 1
 		inc	si
@@ -370,11 +252,11 @@ loc_BA12:
 ; ---------------------------------------------------------------------------
 
 loc_BA1B:
-		push	50020h
+		push	((TX_BLACK or TX_REVERSE) shl 16) or ' '
 		push	ss
-		lea	ax, [bp+var_2]
+		lea	ax, [bp+@@cursor]
 		push	ax
-		call	sub_B8B5
+		call	@TRAMCursor@putkanji$quii
 		add	sp, 8
 		inc	si
 
@@ -386,11 +268,11 @@ loc_BA2E:
 loc_BA34:
 		cmp	di, 10h
 		jbe	loc_B9A8
-		push	50020h
+		push	((TX_BLACK or TX_REVERSE) shl 16) or ' '
 		push	ss
-		lea	ax, [bp+var_2]
+		lea	ax, [bp+@@cursor]
 		push	ax
-		call	sub_B933
+		call	@TRAMCursor@putkanji_for_5_rows$quii
 		add	sp, 8
 		pop	di
 		pop	si
@@ -451,7 +333,7 @@ var_2A		= word ptr -2Ah
 inregs		= REGS ptr -18h
 var_8		= word ptr -8
 var_6		= word ptr -6
-var_4		= word ptr -4
+@@cursor		= word ptr -4
 var_2		= byte ptr -2
 var_1		= byte ptr -1
 arg_0		= word ptr  6
@@ -528,12 +410,12 @@ arg_0		= word ptr  6
 		lea	ax, [bp+inregs]
 		push	ax		; inregs
 		call	sub_BA53
-		mov	[bp+var_4], 0
-		push	10020h
+		mov	[bp+@@cursor], 0
+		push	(TX_BLACK shl 16) or ' '
 		push	ss
-		lea	ax, [bp+var_4]
+		lea	ax, [bp+@@cursor]
 		push	ax
-		call	sub_B933
+		call	@TRAMCursor@putkanji_for_5_rows$quii
 		add	sp, 1Ch
 		mov	di, 2
 		jmp	short loc_BB96
@@ -561,19 +443,19 @@ loc_BB67:
 		mov	al, [bp+var_2]
 		test	[bp+var_1], al
 		jnz	short loc_BB73
-		push	1
+		push	TX_BLACK
 		jmp	short loc_BB75
 ; ---------------------------------------------------------------------------
 
 loc_BB73:
-		push	45h ; 'E'
+		push	(TX_RED or TX_REVERSE)
 
 loc_BB75:
-		push	20h ; ' '
+		push	' '
 		push	ss
-		lea	ax, [bp+var_4]
+		lea	ax, [bp+@@cursor]
 		push	ax
-		call	sub_B8B5
+		call	@TRAMCursor@putkanji$quii
 		add	sp, 8
 		shr	[bp+var_2], 1
 		inc	si
@@ -591,19 +473,19 @@ loc_BB8F:
 loc_BB96:
 		cmp	di, 11h
 		jbe	short loc_BB44
-		push	10020h
+		push	(TX_BLACK shl 16) or ' '
 		push	ss
-		lea	ax, [bp+var_4]
+		lea	ax, [bp+@@cursor]
 		push	ax
-		call	sub_B933
+		call	@TRAMCursor@putkanji_for_5_rows$quii
 		push	23h ; '#'
 		call	_frame_delay
-		mov	[bp+var_4], 0
-		push	10020h
+		mov	[bp+@@cursor], 0
+		push	(TX_BLACK shl 16) or ' '
 		push	ss
-		lea	ax, [bp+var_4]
+		lea	ax, [bp+@@cursor]
 		push	ax
-		call	sub_B933
+		call	@TRAMCursor@putkanji_for_5_rows$quii
 		add	sp, 12h
 		mov	di, 2
 		jmp	loc_BC58
@@ -615,11 +497,11 @@ loc_BBCE:
 ; ---------------------------------------------------------------------------
 
 loc_BBD2:
-		push	10020h
+		push	(TX_BLACK shl 16) or ' '
 		push	ss
-		lea	ax, [bp+var_4]
+		lea	ax, [bp+@@cursor]
 		push	ax
-		call	sub_B8B5
+		call	@TRAMCursor@putkanji$quii
 		add	sp, 8
 		inc	si
 
@@ -647,19 +529,19 @@ loc_BC0D:
 		mov	al, [bp+var_2]
 		test	[bp+var_1], al
 		jnz	short loc_BC19
-		push	1
+		push	TX_BLACK
 		jmp	short loc_BC1B
 ; ---------------------------------------------------------------------------
 
 loc_BC19:
-		push	45h ; 'E'
+		push	(TX_RED or TX_REVERSE)
 
 loc_BC1B:
-		push	20h ; ' '
+		push	' '
 		push	ss
-		lea	ax, [bp+var_4]
+		lea	ax, [bp+@@cursor]
 		push	ax
-		call	sub_B8B5
+		call	@TRAMCursor@putkanji$quii
 		add	sp, 8
 		shr	[bp+var_2], 1
 		inc	si
@@ -677,11 +559,11 @@ loc_BC35:
 ; ---------------------------------------------------------------------------
 
 loc_BC3F:
-		push	10020h
+		push	(TX_BLACK shl 16) or ' '
 		push	ss
-		lea	ax, [bp+var_4]
+		lea	ax, [bp+@@cursor]
 		push	ax
-		call	sub_B8B5
+		call	@TRAMCursor@putkanji$quii
 		add	sp, 8
 		inc	si
 
@@ -693,11 +575,11 @@ loc_BC52:
 loc_BC58:
 		cmp	di, 11h
 		jbe	loc_BBCE
-		push	10020h
+		push	(TX_BLACK shl 16) or ' '
 		push	ss
-		lea	ax, [bp+var_4]
+		lea	ax, [bp+@@cursor]
 		push	ax
-		call	sub_B933
+		call	@TRAMCursor@putkanji_for_5_rows$quii
 		push	23h ; '#'
 		call	_frame_delay
 		call	_printf stdcall, offset _esc_cls, ds
@@ -8212,7 +8094,7 @@ var_3A		= word ptr -3Ah
 var_28		= word ptr -28h
 inregs		= REGS ptr -16h
 var_6		= word ptr -6
-var_4		= word ptr -4
+@@cursor		= word ptr -4
 var_2		= byte ptr -2
 var_1		= byte ptr -1
 
@@ -8278,12 +8160,12 @@ var_1		= byte ptr -1
 		lea	ax, [bp+inregs]
 		push	ax		; inregs
 		call	sub_BA53
-		mov	[bp+var_4], 0
-		push	10020h
+		mov	[bp+@@cursor], 0
+		push	(TX_BLACK shl 16) or ' '
 		push	ss
-		lea	ax, [bp+var_4]
+		lea	ax, [bp+@@cursor]
 		push	ax
-		call	sub_B933
+		call	@TRAMCursor@putkanji_for_5_rows$quii
 		add	sp, 26h
 		mov	di, 2
 		jmp	short loc_194DE
@@ -8311,19 +8193,19 @@ loc_194AE:
 		mov	al, [bp+var_2]
 		test	[bp+var_1], al
 		jnz	short loc_194BA
-		push	1
+		push	TX_BLACK
 		jmp	short loc_194BC
 ; ---------------------------------------------------------------------------
 
 loc_194BA:
-		push	45h ; 'E'
+		push	(TX_RED or TX_REVERSE)
 
 loc_194BC:
-		push	20h ; ' '
+		push	' '
 		push	ss
-		lea	ax, [bp+var_4]
+		lea	ax, [bp+@@cursor]
 		push	ax
-		call	sub_B8B5
+		call	@TRAMCursor@putkanji$quii
 		add	sp, 8
 		shr	[bp+var_2], 1
 		inc	si
@@ -8343,12 +8225,12 @@ loc_194DE:
 		jbe	short loc_1948B
 		push	1Bh
 		call	_frame_delay
-		mov	[bp+var_4], 0
-		push	10020h
+		mov	[bp+@@cursor], 0
+		push	(TX_BLACK shl 16) or ' '
 		push	ss
-		lea	ax, [bp+var_4]
+		lea	ax, [bp+@@cursor]
 		push	ax
-		call	sub_B933
+		call	@TRAMCursor@putkanji_for_5_rows$quii
 		add	sp, 0Ah
 		mov	di, 2
 		jmp	loc_19595
@@ -8360,11 +8242,11 @@ loc_19508:
 ; ---------------------------------------------------------------------------
 
 loc_1950C:
-		push	10020h
+		push	(TX_BLACK shl 16) or ' '
 		push	ss
-		lea	ax, [bp+var_4]
+		lea	ax, [bp+@@cursor]
 		push	ax
-		call	sub_B8B5
+		call	@TRAMCursor@putkanji$quii
 		add	sp, 8
 		inc	si
 
@@ -8392,19 +8274,19 @@ loc_19548:
 		mov	al, [bp+var_2]
 		test	[bp+var_1], al
 		jnz	short loc_19554
-		push	1
+		push	TX_BLACK
 		jmp	short loc_19556
 ; ---------------------------------------------------------------------------
 
 loc_19554:
-		push	45h ; 'E'
+		push	(TX_RED or TX_REVERSE)
 
 loc_19556:
-		push	20h ; ' '
+		push	' '
 		push	ss
-		lea	ax, [bp+var_4]
+		lea	ax, [bp+@@cursor]
 		push	ax
-		call	sub_B8B5
+		call	@TRAMCursor@putkanji$quii
 		add	sp, 8
 		shr	[bp+var_2], 1
 		inc	si
@@ -8422,11 +8304,11 @@ loc_19571:
 ; ---------------------------------------------------------------------------
 
 loc_1957B:
-		push	10020h
+		push	(TX_BLACK shl 16) or ' '
 		push	ss
-		lea	ax, [bp+var_4]
+		lea	ax, [bp+@@cursor]
 		push	ax
-		call	sub_B8B5
+		call	@TRAMCursor@putkanji$quii
 		add	sp, 8
 		inc	si
 

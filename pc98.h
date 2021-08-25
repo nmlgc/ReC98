@@ -115,6 +115,9 @@ typedef int8_t uint4_t;
 
 /// Memory segments
 /// ---------------
+#define SEG_TRAM_JIS 0xA000
+#define SEG_TRAM_ATRB 0xA200
+
 #define SEG_PLANE_B 0xA800
 #define SEG_PLANE_R 0xB000
 #define SEG_PLANE_G 0xB800
