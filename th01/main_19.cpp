@@ -11,6 +11,7 @@ extern "C" {
 #include <string.h>
 #include "ReC98.h"
 #include "x86real.h"
+#include "decomp.hpp"
 #include "twobyte.h"
 #include "master.hpp"
 #include "th01/ranks.h"

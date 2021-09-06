@@ -13,13 +13,6 @@
 
 #define SCOREDAT_NAME_KEY 0x9C
 
-// Exclusively used to store full-width Shift-JIS code points.
-// Not null-terminated.
-union scoredat_name_t {
-	int16_t codepoint[SCOREDAT_NAME_KANJI];
-	int8_t byte[SCOREDAT_NAME_BYTES];
-};
-
 // Encodes or decodes a single name byte.
 int8_t scoredat_name_byte_encode(int8_t byte);
 int8_t scoredat_name_byte_decode(int8_t byte);
@@ -29,7 +22,11 @@ int8_t scoredat_name_byte_decode(int8_t byte);
 struct scoredat_t {
 	// Not null-terminated!
 	char magic[sizeof(SCOREDAT_MAGIC) - 1];
-	scoredat_name_t name[SCOREDAT_PLACES];
+
+	// Exclusively used to store full-width Shift-JIS code points.
+	// Not null-terminated.
+	int16_t name[SCOREDAT_PLACES][SCOREDAT_NAME_KANJI];
+
 	uint32_t points[SCOREDAT_PLACES];
 	int16_t stage[SCOREDAT_PLACES];
 	twobyte_t route[SCOREDAT_PLACES];
@@ -50,10 +47,9 @@ inline int8_t& scoredat_route_byte(int place, int byte)
 }
 
 // Null-terminated version of scoredat_name_t, used internally.
-union scoredat_name_z_t {
+typedef StupidBytewiseWrapperAround<struct {
 	int16_t codepoint[SCOREDAT_NAME_KANJI + 1];
-	int8_t byte[SCOREDAT_NAME_BYTES + 1];
-};
+}> scoredat_name_z_t;
 
 // Loads the score file for the current [rank], recreating it if necessary.
 // Returns 0 on success, 1 on failure.

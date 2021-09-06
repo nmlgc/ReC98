@@ -3,6 +3,7 @@ extern "C" {
 #include <malloc.h>
 #include "platform.h"
 #include "pc98.h"
+#include "decomp.hpp"
 #include "planar.h"
 #include "master.hpp"
 #include "th01/common.h"
@@ -26,7 +27,7 @@ static const int TURRET_SLOW_INTERVAL = 200;
 // -------
 
 struct stage_t {
-	stagedat_stage_t dat;
+	StupidBytewiseWrapperAround<stagedat_stage_t> dat;
 	int8_t padding[5];
 };
 extern stage_t scene_stage[STAGES_PER_SCENE];
@@ -36,19 +37,19 @@ extern stage_t scene_stage[STAGES_PER_SCENE];
 // -----------------------------------------
 
 inline int cards_begin() {
-	return offsetof(stagedat_stage_t, type.cards);
+	return offsetof(stagedat_stage_t, cards);
 }
 
 inline int cards_end() {
-	return (cards_begin() + sizeof(((stagedat_stage_t*)0)->type.cards));
+	return (cards_begin() + sizeof(((stagedat_stage_t*)0)->cards));
 }
 
 inline int obstacles_begin() {
-	return offsetof(stagedat_stage_t, type.obstacles);
+	return offsetof(stagedat_stage_t, obstacles);
 }
 
 inline int obstacles_end() {
-	return (obstacles_begin() + sizeof(((stagedat_stage_t*)0)->type.obstacles));
+	return (obstacles_begin() + sizeof(((stagedat_stage_t*)0)->obstacles));
 }
 // -----------------------------------------
 

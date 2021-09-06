@@ -1,6 +1,6 @@
 /* ReC98
  * -----
- * Macros and inline functions to help decompiling the seemingly impossible
+ * Declarations to help decompiling the seemingly impossible
  */
 
 // Flag comparisons
@@ -28,6 +28,14 @@
 }
 
 } // extern "C" was a mistake
+
+// Should just be unwrapped wherever it appears. Code that directly uses T
+// would be much cleaner.
+template <class T> union StupidBytewiseWrapperAround {
+	T t;
+	int8_t byte[sizeof(T)];
+	uint8_t ubyte[sizeof(T)];
+};
 
 // poke() versions that actually inline with pseudoregisters
 // ---------------------------------------------------------

@@ -65,14 +65,11 @@ typedef enum {
 	OT_BAR_RIGHT = 21,
 } obstacle_type_t;
 
-union stagedat_stage_t {
-	struct {
-		// Stores the cards of [CARDS_PER_BYTE] horizontal tiles in the lower
-		// [CARDS_PER_BYTE] bits. The other bits are unused.
-		uint8_t cards[STAGEOBJS_Y][STAGEOBJS_X / CARDS_PER_BYTE];
+struct stagedat_stage_t {
+	// Stores the cards of [CARDS_PER_BYTE] horizontal tiles in the lower
+	// [CARDS_PER_BYTE] bits. The other bits are unused.
+	uint8_t cards[STAGEOBJS_Y][STAGEOBJS_X / CARDS_PER_BYTE];
 
-		int8_t obstacles[STAGEOBJS_Y][STAGEOBJS_X]; // obstacle_type_t
-	} type;
-	int8_t byte[sizeof((stagedat_stage_t*)0)->type];
+	int8_t obstacles[STAGEOBJS_Y][STAGEOBJS_X]; // obstacle_type_t
 };
 /// --------------------------------------------------------------------------

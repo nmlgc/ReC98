@@ -11,6 +11,7 @@ extern "C" {
 #include <string.h>
 #include "ReC98.h"
 #include "x86real.h"
+#include "decomp.hpp"
 #include "pc98kbd.h"
 #include "twobyte.h"
 #include "master.hpp"
