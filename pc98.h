@@ -17,6 +17,10 @@ typedef unsigned int upixel_t;
 typedef int vram_byte_amount_t;
 typedef int vram_word_amount_t;
 typedef int vram_dword_amount_t;
+
+// TRAM widths and object-space coordinates
+typedef int tram_kanji_amount_t;
+typedef unsigned int utram_kanji_amount_t;
 /// ------
 
 /// Coordinate systems

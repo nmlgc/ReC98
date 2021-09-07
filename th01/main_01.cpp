@@ -7,7 +7,9 @@ extern "C" {
 #include <stddef.h>
 #include "platform.h"
 #include "x86real.h"
+#include "decomp.hpp"
 #include "pc98.h"
+#include "planar.h"
 #include "master.hpp"
 #include "pc98kbd.h"
 #include "twobyte.h"

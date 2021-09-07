@@ -142,144 +142,7 @@ main_01__TEXT	segment	byte public 'CODE' use16
 	extern _input_reset_sense:proc
 	extern @TRAMCursor@putkanji$quii:proc
 	extern @TRAMCursor@putkanji_for_5_rows$quii:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B961	proc far
-
-var_48		= byte ptr -48h
-outregs		= REGS ptr -26h
-inregs		= REGS ptr -16h
-var_6		= word ptr -6
-var_4		= word ptr -4
-@@cursor		= word ptr -2
-arg_0		= word ptr  6
-
-		enter	48h, 0
-		push	si
-		push	di
-		mov	word ptr [bp+inregs+2],	ss
-		lea	ax, [bp+var_48]
-		mov	word ptr [bp+inregs+4],	ax
-		mov	ax, [bp+arg_0]
-		mov	word ptr [bp+inregs+6],	ax
-		mov	byte ptr [bp+inregs+1],	14h
-		push	ss
-		lea	ax, [bp+outregs]
-		push	ax		; outregs
-		push	ss
-		lea	ax, [bp+inregs]
-		push	ax		; inregs
-		push	18h		; intno
-		call	_int86
-		mov	[bp+@@cursor], 0
-		push	((TX_BLACK or TX_REVERSE) shl 16) or ' '
-		push	ss
-		lea	ax, [bp+@@cursor]
-		push	ax
-		call	@TRAMCursor@putkanji_for_5_rows$quii
-		add	sp, 12h
-		mov	di, 1
-		jmp	loc_BA34
-; ---------------------------------------------------------------------------
-
-loc_B9A8:
-		mov	bx, di
-		add	bx, bx
-		lea	ax, [bp+var_48]
-		add	bx, ax
-		mov	al, ss:[bx]
-		mov	ah, 0
-		shl	ax, 8
-		mov	bx, di
-		add	bx, bx
-		inc	bx
-		lea	dx, [bp+var_48]
-		add	bx, dx
-		mov	dl, ss:[bx]
-		mov	dh, 0
-		add	ax, dx
-		mov	[bp+var_4], ax
-		mov	[bp+var_6], 8000h
-		xor	si, si
-		jmp	short loc_B9E9
-; ---------------------------------------------------------------------------
-
-loc_B9D6:
-		push	((TX_BLACK or TX_REVERSE) shl 16) or ' '
-		push	ss
-		lea	ax, [bp+@@cursor]
-		push	ax
-		call	@TRAMCursor@putkanji$quii
-		add	sp, 8
-		inc	si
-
-loc_B9E9:
-		cmp	si, 0Ch
-		jb	short loc_B9D6
-		xor	si, si
-		jmp	short loc_BA12
-; ---------------------------------------------------------------------------
-
-loc_B9F2:
-		mov	ax, [bp+var_6]
-		test	[bp+var_4], ax
-		jnz	short loc_B9FE
-		push	(TX_BLACK or TX_REVERSE)
-		jmp	short loc_BA00
-; ---------------------------------------------------------------------------
-
-loc_B9FE:
-		push	TX_BLACK
-
-loc_BA00:
-		push	' '
-		push	ss
-		lea	ax, [bp+@@cursor]
-		push	ax
-		call	@TRAMCursor@putkanji$quii
-		add	sp, 8
-		shr	[bp+var_6], 1
-		inc	si
-
-loc_BA12:
-		cmp	si, 10h
-		jb	short loc_B9F2
-		xor	si, si
-		jmp	short loc_BA2E
-; ---------------------------------------------------------------------------
-
-loc_BA1B:
-		push	((TX_BLACK or TX_REVERSE) shl 16) or ' '
-		push	ss
-		lea	ax, [bp+@@cursor]
-		push	ax
-		call	@TRAMCursor@putkanji$quii
-		add	sp, 8
-		inc	si
-
-loc_BA2E:
-		cmp	si, 0Ch
-		jb	short loc_BA1B
-		inc	di
-
-loc_BA34:
-		cmp	di, 10h
-		jbe	loc_B9A8
-		push	((TX_BLACK or TX_REVERSE) shl 16) or ' '
-		push	ss
-		lea	ax, [bp+@@cursor]
-		push	ax
-		call	@TRAMCursor@putkanji_for_5_rows$quii
-		add	sp, 8
-		pop	di
-		pop	si
-		leave
-		retf	2
-sub_B961	endp
-
+	extern TRAM_X16_KANJI_CENTER_REVERSE:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -746,24 +609,24 @@ loc_BE0B:
 
 loc_BE23:
 		call	_mdrv2_se_play pascal, 14
-		call	sub_B961 pascal, 456Ch	; ìå (JIS CODE)
+		call	tram_x16_kanji_center_reverse pascal, 456Ch	; ìå (JIS CODE)
 		call	_frame_delay pascal, 8
 		call	_mdrv2_se_play pascal, 14
-		call	sub_B961 pascal, 4A7Dh	; ï˚ (JIS CODE)
+		call	tram_x16_kanji_center_reverse pascal, 4A7Dh	; ï˚ (JIS CODE)
 		call	_frame_delay pascal, 8
 		call	_mdrv2_se_play pascal, 14
-		call	sub_B961 pascal, 217Ah	; Åö (JIS CODE)
+		call	tram_x16_kanji_center_reverse pascal, 217Ah	; Åö (JIS CODE)
 		call	_frame_delay pascal, 8
 		call	_mdrv2_se_play pascal, 14
-		call	sub_B961 pascal, 704Dh	; ËÀ (JIS CODE)
+		call	tram_x16_kanji_center_reverse pascal, 704Dh	; ËÀ (JIS CODE)
 		call	_frame_delay pascal, 8
 		call	_mdrv2_se_play pascal, 14
-		call	sub_B961 pascal, 305Bh	; àŸ (JIS CODE)
+		call	tram_x16_kanji_center_reverse pascal, 305Bh	; àŸ (JIS CODE)
 		call	_frame_delay pascal, 8
 		call	_mdrv2_se_play pascal, 14
-		call	sub_B961 pascal, 4541h	; ì` (JIS CODE)
+		call	tram_x16_kanji_center_reverse pascal, 4541h	; ì` (JIS CODE)
 		call	_frame_delay pascal, 8
-		add	sp, 18h	; (only sub_B961 actually uses Pascal calling convention!)
+		add	sp, 18h	; (only tram_x16_kanji_center_reverse actually uses Pascal calling convention!)
 
 loc_BEA4:
 		mov	al, _stage_num
