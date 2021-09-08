@@ -12,6 +12,8 @@ struct pc98_glyph_t {
 struct pc98_glyph_kanji_t : public pc98_glyph_t {
 	DotRect<dots_t(GLYPH_FULL_W), GLYPH_H> dots;
 };
+
+void int18h_14h(REGS& in, pc98_glyph_t& glyph, uint16_t jis);
 // ------------------------
 
 class TRAMCursor {

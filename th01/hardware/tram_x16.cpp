@@ -56,3 +56,14 @@ void pascal tram_x16_kanji_center_reverse(uint16_t jis_kanji)
 	}
 	tram_cursor.putkanji_until_end(' ', (TX_BLACK | TX_REVERSE));
 }
+
+// Where was this function above? :P
+void int18h_14h(REGS& in, pc98_glyph_t& glyph, uint16_t jis)
+{
+	REGS out;
+	in.w.bx = FP_SEG(&glyph);
+	in.w.cx = FP_OFF(&glyph);
+	in.w.dx = jis;
+	in.h.ah = 0x14;
+	int86(0x18, &in, &out);
+}

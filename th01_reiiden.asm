@@ -143,41 +143,7 @@ main_01__TEXT	segment	byte public 'CODE' use16
 	extern @TRAMCursor@putkanji$quii:proc
 	extern @TRAMCursor@putkanji_for_5_rows$quii:proc
 	extern TRAM_X16_KANJI_CENTER_REVERSE:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-; int __cdecl __far sub_BA53(union REGS	*inregs, int, int, int)
-sub_BA53	proc far
-
-outregs		= REGS ptr -10h
-inregs		= dword	ptr  6
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
-
-		enter	10h, 0
-		les	bx, [bp+inregs]
-		mov	ax, [bp+arg_6]
-		mov	es:[bx+2], ax
-		mov	ax, [bp+arg_4]
-		mov	es:[bx+4], ax
-		mov	ax, [bp+arg_8]
-		mov	es:[bx+6], ax
-		mov	byte ptr es:[bx+1], 14h
-		push	ss
-		lea	ax, [bp+outregs]
-		push	ax		; outregs
-		push	word ptr [bp+inregs+2]
-		push	bx		; inregs
-		push	18h		; intno
-		call	_int86
-		add	sp, 0Ah
-		leave
-		retf
-sub_BA53	endp
-
+	extern _int18h_14h:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -213,7 +179,7 @@ arg_0		= word ptr  6
 		push	ss
 		lea	ax, [bp+inregs]
 		push	ax		; inregs
-		call	sub_BA53
+		call	_int18h_14h
 		push	8054h		; int
 		push	ss		; int
 		lea	ax, [bp+var_84]
@@ -221,7 +187,7 @@ arg_0		= word ptr  6
 		push	ss
 		lea	ax, [bp+inregs]
 		push	ax		; inregs
-		call	sub_BA53
+		call	_int18h_14h
 		push	8041h		; int
 		push	ss		; int
 		lea	ax, [bp+var_72]
@@ -229,7 +195,7 @@ arg_0		= word ptr  6
 		push	ss
 		lea	ax, [bp+inregs]
 		push	ax		; inregs
-		call	sub_BA53
+		call	_int18h_14h
 		push	8047h		; int
 		push	ss		; int
 		lea	ax, [bp+var_60]
@@ -237,7 +203,7 @@ arg_0		= word ptr  6
 		push	ss
 		lea	ax, [bp+inregs]
 		push	ax		; inregs
-		call	sub_BA53
+		call	_int18h_14h
 		push	8045h		; int
 		push	ss		; int
 		lea	ax, [bp+var_4E]
@@ -245,7 +211,7 @@ arg_0		= word ptr  6
 		push	ss
 		lea	ax, [bp+inregs]
 		push	ax		; inregs
-		call	sub_BA53
+		call	_int18h_14h
 		add	sp, 32h
 		mov	ax, [bp+var_6]
 		mov	bx, 10
@@ -259,7 +225,7 @@ arg_0		= word ptr  6
 		push	ss
 		lea	ax, [bp+inregs]
 		push	ax		; inregs
-		call	sub_BA53
+		call	_int18h_14h
 		mov	ax, [bp+var_6]
 		mov	bx, 10
 		xor	dx, dx
@@ -272,7 +238,7 @@ arg_0		= word ptr  6
 		push	ss
 		lea	ax, [bp+inregs]
 		push	ax		; inregs
-		call	sub_BA53
+		call	_int18h_14h
 		mov	[bp+@@cursor], 0
 		push	(TX_BLACK shl 16) or ' '
 		push	ss
@@ -7973,7 +7939,7 @@ var_1		= byte ptr -1
 		push	ss
 		lea	ax, [bp+inregs]
 		push	ax		; inregs
-		call	sub_BA53
+		call	_int18h_14h
 		push	8041h		; int
 		push	ss		; int
 		lea	ax, [bp+var_82]
@@ -7981,7 +7947,7 @@ var_1		= byte ptr -1
 		push	ss
 		lea	ax, [bp+inregs]
 		push	ax		; inregs
-		call	sub_BA53
+		call	_int18h_14h
 		push	8052h		; int
 		push	ss		; int
 		lea	ax, [bp+var_70]
@@ -7989,7 +7955,7 @@ var_1		= byte ptr -1
 		push	ss
 		lea	ax, [bp+inregs]
 		push	ax		; inregs
-		call	sub_BA53
+		call	_int18h_14h
 		push	8052h		; int
 		push	ss		; int
 		lea	ax, [bp+var_5E]
@@ -7997,7 +7963,7 @@ var_1		= byte ptr -1
 		push	ss
 		lea	ax, [bp+inregs]
 		push	ax		; inregs
-		call	sub_BA53
+		call	_int18h_14h
 		add	sp, 2Ah
 		push	8059h		; int
 		push	ss		; int
@@ -8006,7 +7972,7 @@ var_1		= byte ptr -1
 		push	ss
 		lea	ax, [bp+inregs]
 		push	ax		; inregs
-		call	sub_BA53
+		call	_int18h_14h
 		push	8055h		; int
 		push	ss		; int
 		lea	ax, [bp+var_3A]
@@ -8014,7 +7980,7 @@ var_1		= byte ptr -1
 		push	ss
 		lea	ax, [bp+inregs]
 		push	ax		; inregs
-		call	sub_BA53
+		call	_int18h_14h
 		push	8050h		; int
 		push	ss		; int
 		lea	ax, [bp+var_28]
@@ -8022,7 +7988,7 @@ var_1		= byte ptr -1
 		push	ss
 		lea	ax, [bp+inregs]
 		push	ax		; inregs
-		call	sub_BA53
+		call	_int18h_14h
 		mov	[bp+@@cursor], 0
 		push	(TX_BLACK shl 16) or ' '
 		push	ss
