@@ -9,11 +9,19 @@ struct pc98_glyph_t {
 	uint8_t h_divided_by_8;
 };
 
+struct pc98_glyph_ank_8x16_t : public pc98_glyph_t {
+	DotRect<dots_t(GLYPH_HALF_W), GLYPH_H> dots;
+};
+
 struct pc98_glyph_kanji_t : public pc98_glyph_t {
 	DotRect<dots_t(GLYPH_FULL_W), GLYPH_H> dots;
 };
 
 void int18h_14h(REGS& in, pc98_glyph_t& glyph, uint16_t jis);
+
+inline void fontrom_get(REGS& in, pc98_glyph_ank_8x16_t& glyph, char ank) {
+	int18h_14h(in, glyph, (0x8000 + ank));
+}
 // ------------------------
 
 class TRAMCursor {
@@ -53,6 +61,9 @@ public:
 // center.
 void pascal tram_x16_kanji_center_reverse(uint16_t jis_kanji);
 
+// Shows the red "STAGE [stage_num]" letters.
+void pascal tram_x16_stage(unsigned int stage_num);
+
 #define tram_x16_put_center_margin(tram_cursor, x, atrb) \
 	for(x = 0; x < (((RES_X / GLYPH_FULL_W) - GLYPH_FULL_W) / 2); x++) { \
 		tram_cursor.putkanji(' ', atrb); \
@@ -83,5 +94,9 @@ template <class RowDots> struct TRAMx16Row {
 		} \
 		row.dot_cur >>= 1; \
 	}
+
+#define tram_x16_row_put_red(row, tram_cursor, x, row_dots) \
+	tram_x16_row_init(row, glyphs[i].byte[glyph_y]); \
+	tram_x16_row_put(row, tram_cursor, x, (TX_RED | TX_REVERSE), TX_BLACK);
 // ----------------
 // --------------------

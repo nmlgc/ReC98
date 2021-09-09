@@ -5,6 +5,7 @@
 
 extern "C" {
 #include <stddef.h>
+#include <stdio.h>
 #include "platform.h"
 #include "x86real.h"
 #include "decomp.hpp"
@@ -13,9 +14,12 @@ extern "C" {
 #include "master.hpp"
 #include "pc98kbd.h"
 #include "twobyte.h"
+#include "th01/hardware/frmdelay.h"
 #include "th01/hardware/input.hpp"
 #include "th01/main/bomb.hpp"
 #include "th01/main/debug.hpp"
+
+extern const char esc_cls[];
 
 inline void bomb_doubletap_update(uint8_t& pressed, uint8_t& other)
 {
@@ -138,5 +142,60 @@ void input_sense(bool16 reset_repeat)
 
 #include "th01/hardware/input_rs.cpp"
 #include "th01/hardware/tram_x16.cpp"
+
+void pascal stage_num_animate(unsigned int stage_num)
+{
+	utram_kanji_amount_t x;
+	upixel_t glyph_y;
+	TRAMx16Row<dots_t(GLYPH_HALF_W)> row;
+	TRAMCursor tram_cursor;
+	unsigned int stage_num_local = stage_num;
+	unsigned int i;
+	REGS in;
+	StupidBytewiseWrapperAround<pc98_glyph_ank_8x16_t> glyphs[7];
+
+	fontrom_get(in, glyphs[0].t, 'S');
+	fontrom_get(in, glyphs[1].t, 'T');
+	fontrom_get(in, glyphs[2].t, 'A');
+	fontrom_get(in, glyphs[3].t, 'G');
+	fontrom_get(in, glyphs[4].t, 'E');
+	// Yes, these are technically fontrom_get() calls as well, and were just
+	// inlined for code generation reasons.
+	int18h_14h(in, glyphs[5].t, (0x8000 + '0' + (stage_num_local / 10)));
+	int18h_14h(in, glyphs[6].t, (0x8000 + '0' + (stage_num_local % 10)));
+
+	tram_cursor.rewind_to_topleft();
+	tram_cursor.putkanji_for_5_rows(' ', TX_BLACK);
+
+	glyph_y = offsetof(pc98_glyph_ank_8x16_t, dots);
+	while(glyph_y <= (sizeof(pc98_glyph_ank_8x16_t) - 1)) {
+		for(i = 0; i < 5; i++) {
+			tram_x16_row_put_red(row, tram_cursor, x, glyphs[i].byte[glyph_y]);
+		}
+		// 5 halfwidth glyphs scaled a factor of 16 just happen to exactly fit
+		// into one TRAM row, so we're already at the next one here.
+		glyph_y++;
+	}
+	tram_cursor.putkanji_until_end(' ', TX_BLACK);
+
+	frame_delay(35);
+
+	tram_cursor.rewind_to_topleft();
+	tram_cursor.putkanji_for_5_rows(' ', TX_BLACK);
+
+	glyph_y = offsetof(pc98_glyph_ank_8x16_t, dots);
+	while(glyph_y <= (sizeof(pc98_glyph_ank_8x16_t) - 1)) {
+		tram_x16_put_center_margin(tram_cursor, x, TX_BLACK);
+		for(i = 5; i < 7; i++) {
+			tram_x16_row_put_red(row, tram_cursor, x, glyphs[i].byte[glyph_y]);
+		}
+		tram_x16_put_center_margin(tram_cursor, x, TX_BLACK);
+		glyph_y++;
+	}
+	tram_cursor.putkanji_until_end(' ', TX_BLACK);
+
+	frame_delay(35);
+	printf(esc_cls);
+}
 
 }
