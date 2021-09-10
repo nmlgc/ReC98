@@ -143,6 +143,7 @@ void input_sense(bool16 reset_repeat)
 #include "th01/hardware/input_rs.cpp"
 #include "th01/hardware/tram_x16.cpp"
 
+// Largely copy-pasted from harryup_animate().
 void pascal stage_num_animate(unsigned int stage_num)
 {
 	utram_kanji_amount_t x;
