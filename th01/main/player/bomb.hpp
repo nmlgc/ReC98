@@ -9,6 +9,8 @@ extern int bomb_doubletap_frames;
 // screen.
 extern bool bomb_damaging;
 
+extern unsigned long bomb_frames;
+
 // Renders the given [frame] of the bomb animation, and applies any
 // frame-specific game state modifications. Returns false if the animation is
 // done.

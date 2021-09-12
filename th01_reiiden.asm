@@ -2168,7 +2168,7 @@ loc_D414:
 		pushd	[dword_36C20]
 		push	_bomb_doubletap_frames
 		pushd	[_frame_rand]
-		pushd	[dword_34A62]
+		pushd	[_bomb_frames]
 		push	ds
 		push	offset aMain7luRand7lu ; " main:%7lu, rand:%7lu, bomb:%d, timer:%"...
 		call	_printf
@@ -2898,7 +2898,7 @@ loc_DA9E:
 		call	sub_190D6
 		mov	_cardcombo_max, 0
 		mov	_orb_in_portal, 0
-		mov	dword_34A62, 0
+		mov	_bomb_frames, 0
 		mov	_Pellets.PELLET_unknown_seven, 7
 		cmp	_mode_debug, 1
 		jnz	short loc_DAD7
@@ -3024,7 +3024,7 @@ loc_DC17:
 		push	1
 		call	_frame_delay
 		pop	cx
-		inc	dword_34A62
+		inc	_bomb_frames
 
 loc_DC33:
 		cmp	_input_shot, 0
@@ -3087,7 +3087,7 @@ loc_DCCA:
 		call	@items_point_unput_update_render$qv
 		inc	dword_36C20
 		inc	_orb_force_frame
-		inc	dword_34A62
+		inc	_bomb_frames
 		inc	_bomb_doubletap_frames
 		test	byte ptr _frame_rand, 3
 		jnz	short loc_DCFA
@@ -3218,7 +3218,7 @@ loc_DE72:
 		mov	eax, _frame_rand
 		mov	es:[bx+reiidenconfig_t.rand], eax
 		mov	_test_damage, 0
-		mov	dword_34A62, 0C8h ; 'È'
+		mov	_bomb_frames, 200 ; ???
 		cmp	_lives, 0
 		jle	short loc_DEDA
 		cmp	word_34A82, 0
@@ -6518,7 +6518,7 @@ loc_19EEF:
 		cbw
 		cmp	ax, 2
 		jnz	short loc_19F2B
-		mov	dword_34A62, 0
+		mov	_bomb_frames, 0
 		mov	byte_35B46, 3
 		mov	_player_deflecting, 1
 		mov	byte_35B47, 1
@@ -6533,7 +6533,7 @@ loc_19F2B:
 		push	1
 		nopcall	sub_1AC6E
 		pop	cx
-		call	_bomb_update_and_render stdcall, word ptr dword_34A62
+		call	_bomb_update_and_render stdcall, word ptr _bomb_frames
 		pop	cx
 		mov	[bp+var_4], ax
 		cmp	[bp+var_4], 0
@@ -6557,7 +6557,7 @@ loc_19F4C:
 ; ---------------------------------------------------------------------------
 
 loc_19F77:
-		cmp	dword_34A62, 3Ch ; '<'
+		cmp	_bomb_frames, 60
 		jbe	short loc_19F90
 		call	_ptn_put_8 c, _player_left, large (43h shl 16) or _player_top
 
@@ -6855,7 +6855,7 @@ loc_1A29E:
 		cbw
 		cmp	ax, 2
 		jl	loc_1A3B9
-		mov	dword_34A62, 0
+		mov	_bomb_frames, 0
 		mov	byte_35B44, 0
 		mov	_input_shot, 0
 		mov	byte_39DB2, 3
@@ -6938,7 +6938,7 @@ loc_1A390:
 		push	offset _Shots
 		call	@CShots@add$qii
 		add	sp, 8
-		mov	dword_34A62, 0
+		mov	_bomb_frames, 0
 		mov	_input_shot, 0
 		mov	byte_35B44, 0
 
@@ -7184,7 +7184,7 @@ loc_1A5C0:
 
 loc_1A5D8:
 		mov	_input_strike, 0
-		mov	dword_34A62, 0
+		mov	_bomb_frames, 0
 		mov	byte_35B48, 0
 		jmp	loc_1A706
 ; ---------------------------------------------------------------------------
@@ -7305,7 +7305,7 @@ loc_1A6F0:
 
 loc_1A6F8:
 		mov	_input_strike, 0
-		mov	dword_34A62, 0
+		mov	_bomb_frames, 0
 
 loc_1A706:
 		mov	byte_35B28, 0
@@ -7831,7 +7831,7 @@ loc_1AAEE:
 		add	sp, 0Ah
 
 loc_1AAF6:
-		mov	dword_34A62, 0
+		mov	_bomb_frames, 0
 		mov	byte_35B43, 0
 		mov	_player_sliding, 0
 		mov	_player_deflecting, 0
@@ -15776,7 +15776,7 @@ loc_1FE6A:
 		cmp	_bomb_damaging, 1
 		jnz	loc_1FF7E
 		movsx	ebx, _card_count
-		mov	eax, dword_34A62
+		mov	eax, _bomb_frames
 		xor	edx, edx
 		div	ebx
 		movzx	eax, si
@@ -35400,10 +35400,10 @@ public _player_deflecting, _bomb_damaging, _player_sliding
 _player_deflecting	db 0
 _bomb_damaging	db 0
 _player_sliding	db 0
-public _score
+public _score, _bomb_frames
 _score	dd 0
 score_34A5E	dd 0
-dword_34A62	dd 0
+_bomb_frames	dd 0
 _continues_total	dd 0
 		dw 0
 public _mode_test
