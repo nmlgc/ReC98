@@ -1,6 +1,13 @@
+#define BOMB_DOUBLETAP_WINDOW 20
+
+// Current frame within the BOMB_DOUBLETAP_WINDOW. A bomb is fired if both
+// shot and strike keys are double-tapped before this variable reaches that
+// window.
+extern int bomb_doubletap_frames;
+
 // Indicates whether a bomb is active and dealing damage to everything on
 // screen.
-bool bomb_damaging;
+extern bool bomb_damaging;
 
 // Renders the given [frame] of the bomb animation, and applies any
 // frame-specific game state modifications. Returns false if the animation is

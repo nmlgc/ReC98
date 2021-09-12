@@ -16,8 +16,8 @@ extern "C" {
 #include "twobyte.h"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/input.hpp"
-#include "th01/main/bomb.hpp"
 #include "th01/main/debug.hpp"
+#include "th01/main/player/bomb.hpp"
 
 extern const char esc_cls[];
 
