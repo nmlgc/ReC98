@@ -6045,54 +6045,63 @@ main_24_TEXT	segment	byte public 'CODE' use16
 		;org 9
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
+IF_FREE = 0
+IF_SPLASH = 1
+IF_FALL = 2
+IF_BOUNCE = 3
+IF_COLLECTED = 99
+IF_COLLECTED_OVER_CAP = 100
+ITEM_W = PTN_W
+ITEM_H = PTN_H
+
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
 sub_17CA9	proc far
 
-arg_0		= word ptr  6
+@@from_card_slot		= word ptr  6
 
 		push	bp
 		mov	bp, sp
-		mov	cx, [bp+arg_0]
+		mov	cx, [bp+@@from_card_slot]
 		xor	dx, dx
 		jmp	short loc_17D18
 ; ---------------------------------------------------------------------------
 
 loc_17CB3:
 		mov	bx, dx
-		imul	bx, 0Ah
-		cmp	byte ptr [bx+5378h], 0
+		imul	bx, size item_t
+		cmp	_items_bomb.ITEM_flag[bx], IF_FREE
 		jnz	short loc_17D17
 		mov	bx, dx
-		imul	bx, 0Ah
-		mov	byte ptr [bx+5378h], 1
+		imul	bx, size item_t
+		mov	_items_bomb.ITEM_flag[bx], IF_SPLASH
 		mov	ax, cx
 		add	ax, ax
 		les	bx, _cards_left
 		add	bx, ax
 		mov	ax, es:[bx]
 		mov	bx, dx
-		imul	bx, 0Ah
-		mov	[bx+5370h], ax
+		imul	bx, size item_t
+		mov	_items_bomb.ITEM_left[bx], ax
 		mov	ax, cx
 		add	ax, ax
 		les	bx, _cards_top
 		add	bx, ax
 		mov	ax, es:[bx]
 		mov	bx, dx
-		imul	bx, 0Ah
-		mov	[bx+5372h], ax
+		imul	bx, size item_t
+		mov	_items_bomb.ITEM_top[bx], ax
 		mov	bx, dx
-		imul	bx, 0Ah
-		mov	word ptr [bx+5374h], 0
+		imul	bx, size item_t
+		mov	_items_bomb.ITEM_unknown_zero[bx], 0
 		mov	bx, dx
-		imul	bx, 0Ah
-		mov	word ptr [bx+5376h], 2
+		imul	bx, size item_t
+		mov	_items_bomb.ITEM_velocity_y[bx], 2
 		mov	bx, dx
-		imul	bx, 0Ah
-		mov	byte ptr [bx+5379h], 4
+		imul	bx, size item_t
+		mov	_items_bomb.ITEM_splash_radius[bx], 4
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -6101,7 +6110,7 @@ loc_17D17:
 		inc	dx
 
 loc_17D18:
-		cmp	dx, 4
+		cmp	dx, ITEM_BOMB_COUNT
 		jl	short loc_17CB3
 		pop	bp
 		retf
@@ -6114,72 +6123,72 @@ sub_17CA9	endp
 
 sub_17D1F	proc far
 
-arg_0		= word ptr  6
+@@slot		= word ptr  6
 
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, [bp+arg_0]
+		mov	si, [bp+@@slot]
 		mov	bx, si
-		imul	bx, 0Ah
+		imul	bx, size item_t
 		mov	ax, _player_left
 		add	ax, -24
-		cmp	[bx+5370h], ax
+		cmp	_items_bomb.ITEM_left[bx], ax
 		jle	loc_17E1B
 		mov	bx, si
-		imul	bx, 0Ah
+		imul	bx, size item_t
 		mov	ax, _player_left
 		add	ax, 24
-		cmp	[bx+5370h], ax
+		cmp	_items_bomb.ITEM_left[bx], ax
 		jge	loc_17E1B
 		mov	bx, si
-		imul	bx, 0Ah
-		cmp	word ptr [bx+5372h], 158h
+		imul	bx, size item_t
+		cmp	_items_bomb.ITEM_top[bx], (_player_top - 24)
 		jle	loc_17E1B
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	al, [bx+5378h]
+		imul	bx, size item_t
+		mov	al, _items_bomb.ITEM_flag[bx]
 		cbw
-		cmp	ax, 1
+		cmp	ax, IF_SPLASH
 		jle	loc_17E1B
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	al, [bx+5378h]
+		imul	bx, size item_t
+		mov	al, _items_bomb.ITEM_flag[bx]
 		cbw
-		cmp	ax, 63h	; 'c'
+		cmp	ax, IF_COLLECTED
 		jge	loc_17E1B
 		push	(32 shl 16) or 32
 		mov	bx, si
-		imul	bx, 0Ah
-		push	word ptr [bx+5372h]
+		imul	bx, size item_t
+		push	_items_bomb.ITEM_top[bx]
 		mov	bx, si
-		imul	bx, 0Ah
-		push	word ptr [bx+5370h]
+		imul	bx, size item_t
+		push	word ptr _items_bomb.ITEM_left[bx]
 		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	word ptr [bx+5376h], 0FFFEh
+		imul	bx, size item_t
+		mov	_items_bomb.ITEM_velocity_y[bx], -2
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	byte ptr [bx+5379h], 10h
+		imul	bx, size item_t
+		mov	_items_bomb.ITEM_collect_time[bx], 16
 		mov	bx, si
-		imul	bx, 0Ah
-		cmp	word ptr [bx+5372h], 170h
+		imul	bx, size item_t
+		cmp	_items_bomb.ITEM_top[bx], (PLAYFIELD_BOTTOM - ITEM_H)
 		jl	short loc_17DC4
-		mov	ax, 170h
+		mov	ax, (PLAYFIELD_BOTTOM - ITEM_H)
 		jmp	short loc_17DCD
 ; ---------------------------------------------------------------------------
 
 loc_17DC4:
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	ax, [bx+5372h]
+		imul	bx, size item_t
+		mov	ax, _items_bomb.ITEM_top[bx]
 
 loc_17DCD:
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	[bx+5372h], ax
+		imul	bx, size item_t
+		mov	_items_bomb.ITEM_top[bx], ax
 		mov	al, _bombs
 		cbw
 		cmp	ax, BOMBS_MAX
@@ -6191,8 +6200,8 @@ loc_17DCD:
 		call	@hud_bombs_put$qi stdcall, ax
 		pop	cx
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	byte ptr [bx+5378h], 63h ; 'c'
+		imul	bx, size item_t
+		mov	_items_bomb.ITEM_flag[bx], IF_COLLECTED
 		jmp	short loc_17E13
 ; ---------------------------------------------------------------------------
 
@@ -6200,8 +6209,8 @@ loc_17DFB:
 		add	_score, 10000
 		call	@hud_score_and_cardcombo_render$qv
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	byte ptr [bx+5378h], 64h ; 'd'
+		imul	bx, size item_t
+		mov	_items_bomb.ITEM_flag[bx], IF_COLLECTED_OVER_CAP
 
 loc_17E13:
 		push	0Fh
@@ -6229,24 +6238,24 @@ sub_17E1E	proc far
 
 loc_17E26:
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	al, [bx+5378h]
+		imul	bx, size item_t
+		mov	al, _items_bomb.ITEM_flag[bx]
 		cbw
-		cmp	ax, 1
+		cmp	ax, IF_SPLASH
 		jle	short loc_17E60
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	al, [bx+5378h]
+		imul	bx, size item_t
+		mov	al, _items_bomb.ITEM_flag[bx]
 		cbw
-		cmp	ax, 63h	; 'c'
+		cmp	ax, IF_COLLECTED
 		jge	short loc_17E60
 		push	20h
 		mov	bx, si
-		imul	bx, 0Ah
-		push	word ptr [bx+5372h]
+		imul	bx, size item_t
+		push	_items_bomb.ITEM_top[bx]
 		mov	bx, si
-		imul	bx, 0Ah
-		push	word ptr [bx+5370h]
+		imul	bx, size item_t
+		push	word ptr _items_bomb.ITEM_left[bx]
 		call	_ptn_put_8
 		add	sp, 6
 
@@ -6254,7 +6263,7 @@ loc_17E60:
 		inc	si
 
 loc_17E61:
-		cmp	si, 4
+		cmp	si, ITEM_BOMB_COUNT
 		jl	short loc_17E26
 		pop	si
 		pop	bp
@@ -6276,24 +6285,24 @@ sub_17E69	proc far
 
 loc_17E71:
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	al, [bx+5378h]
+		imul	bx, size item_t
+		mov	al, _items_bomb.ITEM_flag[bx]
 		cbw
-		cmp	ax, 1
+		cmp	ax, IF_SPLASH
 		jle	short loc_17EAF
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	al, [bx+5378h]
+		imul	bx, size item_t
+		mov	al, _items_bomb.ITEM_flag[bx]
 		cbw
-		cmp	ax, 63h	; 'c'
+		cmp	ax, IF_COLLECTED
 		jge	short loc_17EAF
 		push	(32 shl 16) or 32
 		mov	bx, si
-		imul	bx, 0Ah
-		push	word ptr [bx+5372h]
+		imul	bx, size item_t
+		push	_items_bomb.ITEM_top[bx]
 		mov	bx, si
-		imul	bx, 0Ah
-		push	word ptr [bx+5370h]
+		imul	bx, size item_t
+		push	word ptr _items_bomb.ITEM_left[bx]
 		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 
@@ -6301,7 +6310,7 @@ loc_17EAF:
 		inc	si
 
 loc_17EB0:
-		cmp	si, 4
+		cmp	si, ITEM_BOMB_COUNT
 		jl	short loc_17E71
 		pop	si
 		pop	bp
@@ -6316,10 +6325,10 @@ sub_17E69	endp
 sub_17EB8	proc far
 		push	bp
 		mov	bp, sp
-		mov	byte_39D18, 0
-		mov	byte_39D22, 0
-		mov	byte_39D2C, 0
-		mov	byte_39D36, 0
+		mov	_items_bomb[0 * size item_t].ITEM_flag, IF_FREE
+		mov	_items_bomb[1 * size item_t].ITEM_flag, IF_FREE
+		mov	_items_bomb[2 * size item_t].ITEM_flag, IF_FREE
+		mov	_items_bomb[3 * size item_t].ITEM_flag, IF_FREE
 		pop	bp
 		retf
 sub_17EB8	endp
@@ -6332,12 +6341,12 @@ sub_17EB8	endp
 sub_17ED1	proc far
 
 arg_0		= word ptr  6
-arg_2		= dword	ptr  8
+@@flag		= dword	ptr  8
 arg_6		= dword	ptr  0Ch
 @@left		= dword	ptr  10h
 @@top		= dword	ptr  14h
-arg_12		= dword	ptr  18h
-arg_16		= dword	ptr  1Ch
+@@velocity_y		= dword	ptr  18h
+@@al		= dword	ptr  1Ch
 @@ptn_id		= word ptr  20h
 arg_1C		= dword	ptr  22h
 arg_20		= dword	ptr  26h
@@ -6351,15 +6360,15 @@ arg_20		= dword	ptr  26h
 		push	di
 		call	[bp+arg_6]
 		pop	cx
-		les	bx, [bp+arg_2]
+		les	bx, [bp+@@flag]
 		mov	al, es:[bx]
 		cbw
-		cmp	ax, 1
+		cmp	ax, IF_SPLASH
 		jnz	loc_17F73
 		push	255	; angle_end
 		push	0	; angle_start
 		push	8	; angle_step
-		les	bx, [bp+arg_16]
+		les	bx, [bp+@@al]
 		mov	al, es:[bx]
 		mov	ah, 0
 		push	ax	; radius_y
@@ -6376,14 +6385,14 @@ arg_20		= dword	ptr  26h
 		push	ax	; center_x
 		call	@shape_ellipse_arc_sloppy_unput$qiiiiucucuc
 		add	sp, 0Eh
-		les	bx, [bp+arg_16]
+		les	bx, [bp+@@al]
 		mov	al, es:[bx]
 		add	al, 4
 		mov	es:[bx], al
-		cmp	byte ptr es:[bx], 30h ;	'0'
+		cmp	byte ptr es:[bx], 48
 		jb	short loc_17F3C
-		les	bx, [bp+arg_2]
-		mov	byte ptr es:[bx], 2
+		les	bx, [bp+@@flag]
+		mov	byte ptr es:[bx], IF_FALL
 		jmp	loc_18029
 ; ---------------------------------------------------------------------------
 
@@ -6392,7 +6401,7 @@ loc_17F3C:
 		push	0	; angle_start
 		push	8	; angle_step
 		push	7	; col
-		les	bx, [bp+arg_16]
+		les	bx, [bp+@@al]
 		mov	al, es:[bx]
 		mov	ah, 0
 		push	ax	; radius_y
@@ -6413,10 +6422,10 @@ loc_17F3C:
 ; ---------------------------------------------------------------------------
 
 loc_17F73:
-		les	bx, [bp+arg_2]
+		les	bx, [bp+@@flag]
 		mov	al, es:[bx]
 		cbw
-		cmp	ax, 2
+		cmp	ax, IF_FALL
 		jnz	short loc_17FB8
 		push	si
 		les	bx, [bp+@@top]
@@ -6425,24 +6434,24 @@ loc_17F73:
 		push	word ptr es:[bx]
 		call	_ptn_unput_8
 		add	sp, 6
-		les	bx, [bp+arg_12]
+		les	bx, [bp+@@velocity_y]
 		mov	ax, es:[bx]
 		les	bx, [bp+@@top]
 		add	es:[bx], ax
-		cmp	word ptr es:[bx], 170h
+		cmp	word ptr es:[bx], (PLAYFIELD_BOTTOM - ITEM_H)
 		jl	short loc_18001
-		les	bx, [bp+arg_12]
-		mov	word ptr es:[bx], 0FFF8h
-		les	bx, [bp+arg_2]
-		mov	byte ptr es:[bx], 3
+		les	bx, [bp+@@velocity_y]
+		mov	word ptr es:[bx], -8
+		les	bx, [bp+@@flag]
+		mov	byte ptr es:[bx], IF_BOUNCE
 		jmp	short loc_17FD9
 ; ---------------------------------------------------------------------------
 
 loc_17FB8:
-		les	bx, [bp+arg_2]
+		les	bx, [bp+@@flag]
 		mov	al, es:[bx]
 		cbw
-		cmp	ax, 3
+		cmp	ax, IF_BOUNCE
 		jnz	short loc_18018
 		push	si
 		les	bx, [bp+@@top]
@@ -6453,17 +6462,17 @@ loc_17FB8:
 		add	sp, 6
 
 loc_17FD9:
-		les	bx, [bp+arg_12]
+		les	bx, [bp+@@velocity_y]
 		mov	ax, es:[bx]
 		les	bx, [bp+@@top]
 		add	es:[bx], ax
-		les	bx, [bp+arg_12]
+		les	bx, [bp+@@velocity_y]
 		inc	word ptr es:[bx]
 		les	bx, [bp+@@top]
-		cmp	word ptr es:[bx], 190h
+		cmp	word ptr es:[bx], PLAYFIELD_BOTTOM
 		jl	short loc_18001
-		les	bx, [bp+arg_2]
-		mov	byte ptr es:[bx], 0
+		les	bx, [bp+@@flag]
+		mov	byte ptr es:[bx], IF_FREE
 		call	[bp+arg_20]
 		jmp	short loc_18029
 ; ---------------------------------------------------------------------------
@@ -6480,10 +6489,10 @@ loc_18001:
 ; ---------------------------------------------------------------------------
 
 loc_18018:
-		les	bx, [bp+arg_2]
+		les	bx, [bp+@@flag]
 		mov	al, es:[bx]
 		cbw
-		cmp	ax, 63h	; 'c'
+		cmp	ax, IF_COLLECTED
 		jl	short loc_18029
 		push	di
 		call	[bp+arg_1C]
@@ -6511,28 +6520,28 @@ arg_0		= word ptr  6
 		mov	si, [bp+arg_0]
 		push	(16 shl 16) or 32
 		mov	bx, si
-		imul	bx, 0Ah
-		push	word ptr [bx+5372h]
+		imul	bx, size item_t
+		push	_items_bomb.ITEM_top[bx]
 		mov	bx, si
-		imul	bx, 0Ah
-		push	word ptr [bx+5370h]
+		imul	bx, size item_t
+		push	word ptr _items_bomb.ITEM_left[bx]
 		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	al, [bx+5378h]
+		imul	bx, size item_t
+		mov	al, _items_bomb.ITEM_flag[bx]
 		cbw
-		cmp	ax, 63h	; 'c'
+		cmp	ax, IF_COLLECTED
 		jnz	short loc_180C5
 		push	(16 shl 16) or 64
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	ax, [bx+5372h]
-		add	ax, 10h
+		imul	bx, size item_t
+		mov	ax, _items_bomb.ITEM_top[bx]
+		add	ax, 16
 		push	ax
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	ax, [bx+5370h]
+		imul	bx, size item_t
+		mov	ax, _items_bomb.ITEM_left[bx]
 		add	ax, -16
 		jge	short loc_18088
 		xor	ax, ax
@@ -6541,21 +6550,21 @@ arg_0		= word ptr  6
 
 loc_18088:
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	ax, [bx+5370h]
+		imul	bx, size item_t
+		mov	ax, _items_bomb.ITEM_left[bx]
 		add	ax, -16
 
 loc_18094:
-		cmp	ax, 576
+		cmp	ax, (PLAYFIELD_RIGHT - (8 * GLYPH_HALF_W))
 		jle	short loc_1809E
-		mov	ax, 576
+		mov	ax, (PLAYFIELD_RIGHT - (8 * GLYPH_HALF_W))
 		jmp	short loc_180BC
 ; ---------------------------------------------------------------------------
 
 loc_1809E:
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	ax, [bx+5370h]
+		imul	bx, size item_t
+		mov	ax, _items_bomb.ITEM_left[bx]
 		add	ax, -16
 		jge	short loc_180B0
 		xor	ax, ax
@@ -6564,8 +6573,8 @@ loc_1809E:
 
 loc_180B0:
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	ax, [bx+5370h]
+		imul	bx, size item_t
+		mov	ax, _items_bomb.ITEM_left[bx]
 		add	ax, -16
 
 loc_180BC:
@@ -6575,54 +6584,54 @@ loc_180BC:
 
 loc_180C5:
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	ax, [bx+5376h]
+		imul	bx, size item_t
+		mov	ax, _items_bomb.ITEM_velocity_y[bx]
 		mov	bx, si
-		imul	bx, 0Ah
-		add	[bx+5372h], ax
+		imul	bx, size item_t
+		add	_items_bomb.ITEM_top[bx], ax
 		mov	bx, si
-		imul	bx, 0Ah
-		dec	byte ptr [bx+5379h]
+		imul	bx, size item_t
+		dec	_items_bomb.ITEM_collect_time[bx]
 		mov	bx, si
-		imul	bx, 0Ah
-		cmp	byte ptr [bx+5379h], 0
+		imul	bx, size item_t
+		cmp	_items_bomb.ITEM_collect_time[bx], 0
 		jnz	short loc_180F9
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	byte ptr [bx+5378h], 0
+		imul	bx, size item_t
+		mov	_items_bomb.ITEM_flag[bx], IF_FREE
 		jmp	loc_181A4
 ; ---------------------------------------------------------------------------
 
 loc_180F9:
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	al, [bx+5378h]
+		imul	bx, size item_t
+		mov	al, _items_bomb.ITEM_flag[bx]
 		cbw
-		cmp	ax, 63h	; 'c'
+		cmp	ax, IF_COLLECTED
 		jnz	short loc_18184
 		push	ds
 		push	offset aBomb	; "Bomb"
 		push	7
 		mov	bx, si
-		imul	bx, 0Ah
-		push	word ptr [bx+5372h]
+		imul	bx, size item_t
+		push	_items_bomb.ITEM_top[bx]
 		mov	bx, si
-		imul	bx, 0Ah
-		push	word ptr [bx+5370h]
+		imul	bx, size item_t
+		push	word ptr _items_bomb.ITEM_left[bx]
 		call	_graph_putsa_fx
 		add	sp, 0Ah
 		push	ds
 		push	offset aExtend	; "Extend!!"
 		push	7
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	ax, [bx+5372h]
-		add	ax, 10h
+		imul	bx, size item_t
+		mov	ax, _items_bomb.ITEM_top[bx]
+		add	ax, 16
 		push	ax
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	ax, [bx+5370h]
-		add	ax, 0FFF0h
+		imul	bx, size item_t
+		mov	ax, _items_bomb.ITEM_left[bx]
+		add	ax, -16
 		jge	short loc_1814D
 		xor	ax, ax
 		jmp	short loc_18159
@@ -6630,22 +6639,22 @@ loc_180F9:
 
 loc_1814D:
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	ax, [bx+5370h]
-		add	ax, 0FFF0h
+		imul	bx, size item_t
+		mov	ax, _items_bomb.ITEM_left[bx]
+		add	ax, -16
 
 loc_18159:
-		cmp	ax, 240h
+		cmp	ax, (PLAYFIELD_RIGHT - (8 * GLYPH_HALF_W))
 		jle	short loc_18163
-		mov	ax, 240h
+		mov	ax, (PLAYFIELD_RIGHT - (8 * GLYPH_HALF_W))
 		jmp	short loc_18181
 ; ---------------------------------------------------------------------------
 
 loc_18163:
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	ax, [bx+5370h]
-		add	ax, 0FFF0h
+		imul	bx, size item_t
+		mov	ax, _items_bomb.ITEM_left[bx]
+		add	ax, -16
 		jge	short loc_18175
 		xor	ax, ax
 		jmp	short loc_18181
@@ -6653,9 +6662,9 @@ loc_18163:
 
 loc_18175:
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	ax, [bx+5370h]
-		add	ax, 0FFF0h
+		imul	bx, size item_t
+		mov	ax, _items_bomb.ITEM_left[bx]
+		add	ax, -16
 
 loc_18181:
 		push	ax
@@ -6667,11 +6676,11 @@ loc_18184:
 		push	offset aVpf	; "ÇP‰›"
 		push	7
 		mov	bx, si
-		imul	bx, 0Ah
-		push	word ptr [bx+5372h]
+		imul	bx, size item_t
+		push	_items_bomb.ITEM_top[bx]
 		mov	bx, si
-		imul	bx, 0Ah
-		push	word ptr [bx+5370h]
+		imul	bx, size item_t
+		push	word ptr _items_bomb.ITEM_left[bx]
 
 loc_1819C:
 		call	_graph_putsa_fx
@@ -6710,8 +6719,8 @@ sub_181AC	proc far
 
 loc_181B4:
 		mov	bx, si
-		imul	bx, 0Ah
-		cmp	byte ptr [bx+5378h], 0
+		imul	bx, size item_t
+		cmp	_items_bomb.ITEM_flag[bx], IF_FREE
 		jz	short loc_1820E
 		push	seg main_24_TEXT
 		push	offset sub_181A7
@@ -6720,30 +6729,30 @@ loc_181B4:
 		push	20h ; ' '
 		push	ds
 		mov	ax, si
-		imul	ax, 0Ah
-		add	ax, 5379h
+		imul ax, size item_t
+		add	ax, offset _items_bomb.ITEM_splash_radius
 		push	ax
 		push	ds
 		mov	ax, si
-		imul	ax, 0Ah
-		add	ax, 5376h
+		imul ax, size item_t
+		add	ax, offset _items_bomb.ITEM_velocity_y
 		push	ax
 		push	ds
 		mov	ax, si
-		imul	ax, 0Ah
-		add	ax, 5372h
+		imul ax, size item_t
+		add	ax, offset _items_bomb.ITEM_top
 		push	ax
 		push	ds
 		mov	ax, si
-		imul	ax, 0Ah
-		add	ax, 5370h
+		imul ax, size item_t
+		add	ax, offset _items_bomb.ITEM_left
 		push	ax
 		push	seg main_24_TEXT
 		push	offset sub_17D1F
 		push	ds
 		mov	ax, si
-		imul	ax, 0Ah
-		add	ax, 5378h
+		imul ax, size item_t
+		add	ax, offset _items_bomb.ITEM_flag
 		push	ax
 		push	si
 		call	sub_17ED1
@@ -6753,7 +6762,7 @@ loc_1820E:
 		inc	si
 
 loc_1820F:
-		cmp	si, 4
+		cmp	si, ITEM_BOMB_COUNT
 		jl	short loc_181B4
 		pop	si
 		pop	bp
@@ -6767,48 +6776,48 @@ sub_181AC	endp
 
 sub_18217	proc far
 
-arg_0		= word ptr  6
+@@from_card_slot		= word ptr  6
 
 		push	bp
 		mov	bp, sp
-		mov	cx, [bp+arg_0]
+		mov	cx, [bp+@@from_card_slot]
 		xor	dx, dx
 		jmp	short loc_18286
 ; ---------------------------------------------------------------------------
 
 loc_18221:
 		mov	bx, dx
-		imul	bx, 0Ah
-		cmp	byte ptr [bx+53A0h], 0
+		imul	bx, size item_t
+		cmp	_items_point.ITEM_flag[bx], IF_FREE
 		jnz	short loc_18285
 		mov	bx, dx
-		imul	bx, 0Ah
-		mov	byte ptr [bx+53A0h], 1
+		imul	bx, size item_t
+		mov	_items_point.ITEM_flag[bx], IF_SPLASH
 		mov	ax, cx
 		add	ax, ax
 		les	bx, _cards_left
 		add	bx, ax
 		mov	ax, es:[bx]
 		mov	bx, dx
-		imul	bx, 0Ah
-		mov	[bx+5398h], ax
+		imul	bx, size item_t
+		mov	_items_point.ITEM_left[bx], ax
 		mov	ax, cx
 		add	ax, ax
 		les	bx, _cards_top
 		add	bx, ax
 		mov	ax, es:[bx]
 		mov	bx, dx
-		imul	bx, 0Ah
-		mov	[bx+539Ah], ax
+		imul	bx, size item_t
+		mov	_items_point.ITEM_top[bx], ax
 		mov	bx, dx
-		imul	bx, 0Ah
-		mov	word ptr [bx+539Ch], 0
+		imul	bx, size item_t
+		mov	_items_point.ITEM_unknown_zero[bx], 0
 		mov	bx, dx
-		imul	bx, 0Ah
-		mov	word ptr [bx+539Eh], 2
+		imul	bx, size item_t
+		mov	_items_point.ITEM_velocity_y[bx], 2
 		mov	bx, dx
-		imul	bx, 0Ah
-		mov	byte ptr [bx+53A1h], 4
+		imul	bx, size item_t
+		mov	_items_point.ITEM_splash_radius[bx], 4
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -6817,7 +6826,7 @@ loc_18285:
 		inc	dx
 
 loc_18286:
-		cmp	dx, 0Ah
+		cmp	dx, ITEM_POINT_COUNT
 		jl	short loc_18221
 		pop	bp
 		retf
@@ -6830,72 +6839,72 @@ sub_18217	endp
 
 sub_1828D	proc far
 
-arg_0		= word ptr  6
+@@slot		= word ptr  6
 
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, [bp+arg_0]
+		mov	si, [bp+@@slot]
 		mov	bx, si
-		imul	bx, 0Ah
+		imul	bx, size item_t
 		mov	ax, _player_left
 		add	ax, -24
-		cmp	[bx+5398h], ax
+		cmp	_items_point.ITEM_left[bx], ax
 		jle	loc_183A0
 		mov	bx, si
-		imul	bx, 0Ah
+		imul	bx, size item_t
 		mov	ax, _player_left
 		add	ax, 24
-		cmp	[bx+5398h], ax
+		cmp	_items_point.ITEM_left[bx], ax
 		jge	loc_183A0
 		mov	bx, si
-		imul	bx, 0Ah
-		cmp	word ptr [bx+539Ah], 158h
+		imul	bx, size item_t
+		cmp	_items_point.ITEM_top[bx],  (_player_top - 24)
 		jle	loc_183A0
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	al, [bx+53A0h]
+		imul	bx, size item_t
+		mov	al, _items_point.ITEM_flag[bx]
 		cbw
-		cmp	ax, 1
+		cmp	ax, IF_SPLASH
 		jle	loc_183A0
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	al, [bx+53A0h]
+		imul	bx, size item_t
+		mov	al, _items_point.ITEM_flag[bx]
 		cbw
-		cmp	ax, 63h	; 'c'
+		cmp	ax, IF_COLLECTED
 		jge	loc_183A0
 		push	(32 shl 16) or 32
 		mov	bx, si
-		imul	bx, 0Ah
-		push	word ptr [bx+539Ah]
+		imul	bx, size item_t
+		push	_items_point.ITEM_top[bx]
 		mov	bx, si
-		imul	bx, 0Ah
-		push	word ptr [bx+5398h]
+		imul	bx, size item_t
+		push	_items_point.ITEM_left[bx]
 		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	word ptr [bx+539Eh], 0FFFEh
+		imul	bx, size item_t
+		mov	_items_point.ITEM_velocity_y[bx], -2
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	byte ptr [bx+53A1h], 10h
+		imul	bx, size item_t
+		mov	_items_point.ITEM_collect_time[bx], 16
 		mov	bx, si
-		imul	bx, 0Ah
-		cmp	word ptr [bx+539Ah], 170h
+		imul	bx, size item_t
+		cmp	_items_point.ITEM_top[bx], (PLAYFIELD_BOTTOM - ITEM_H)
 		jl	short loc_18332
-		mov	ax, 170h
+		mov	ax, (PLAYFIELD_BOTTOM - ITEM_H)
 		jmp	short loc_1833B
 ; ---------------------------------------------------------------------------
 
 loc_18332:
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	ax, [bx+539Ah]
+		imul	bx, size item_t
+		mov	ax, _items_point.ITEM_top[bx]
 
 loc_1833B:
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	[bx+539Ah], ax
+		imul	bx, size item_t
+		mov	_items_point.ITEM_top[bx], ax
 		les	bx, _resident
 		cmp	es:[bx+reiidenconfig_t.p_value], 59999
 		jnb	short loc_18368
@@ -6924,8 +6933,8 @@ loc_1837A:
 		add	_score, eax
 		call	@hud_score_and_cardcombo_render$qv
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	byte ptr [bx+53A0h], 64h ; 'd'
+		imul	bx, size item_t
+		mov	_items_point.ITEM_flag[bx], IF_COLLECTED_OVER_CAP
 		push	0Fh
 		call	_mdrv2_se_play
 		pop	cx
@@ -6951,24 +6960,24 @@ sub_183A3	proc far
 
 loc_183AB:
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	al, [bx+53A0h]
+		imul	bx, size item_t
+		mov	al, _items_point.ITEM_flag[bx]
 		cbw
-		cmp	ax, 1
+		cmp	ax, IF_SPLASH
 		jle	short loc_183E5
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	al, [bx+53A0h]
+		imul	bx, size item_t
+		mov	al, _items_point.ITEM_flag[bx]
 		cbw
-		cmp	ax, 63h	; 'c'
+		cmp	ax, IF_COLLECTED
 		jge	short loc_183E5
 		push	21h
 		mov	bx, si
-		imul	bx, 0Ah
-		push	word ptr [bx+539Ah]
+		imul	bx, size item_t
+		push	_items_point.ITEM_top[bx]
 		mov	bx, si
-		imul	bx, 0Ah
-		push	word ptr [bx+5398h]
+		imul	bx, size item_t
+		push	_items_point.ITEM_left[bx]
 		call	_ptn_put_8
 		add	sp, 6
 
@@ -6976,7 +6985,7 @@ loc_183E5:
 		inc	si
 
 loc_183E6:
-		cmp	si, 0Ah
+		cmp	si, ITEM_POINT_COUNT
 		jl	short loc_183AB
 		pop	si
 		pop	bp
@@ -6998,24 +7007,24 @@ sub_183EE	proc far
 
 loc_183F6:
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	al, [bx+53A0h]
+		imul	bx, size item_t
+		mov	al, _items_point.ITEM_flag[bx]
 		cbw
-		cmp	ax, 1
+		cmp	ax, IF_SPLASH
 		jle	short loc_18434
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	al, [bx+53A0h]
+		imul	bx, size item_t
+		mov	al, _items_point.ITEM_flag[bx]
 		cbw
-		cmp	ax, 63h	; 'c'
+		cmp	ax, IF_COLLECTED
 		jge	short loc_18434
 		push	(32 shl 16) or 32
 		mov	bx, si
-		imul	bx, 0Ah
-		push	word ptr [bx+539Ah]
+		imul	bx, size item_t
+		push	_items_point.ITEM_top[bx]
 		mov	bx, si
-		imul	bx, 0Ah
-		push	word ptr [bx+5398h]
+		imul	bx, size item_t
+		push	_items_point.ITEM_left[bx]
 		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 
@@ -7023,7 +7032,7 @@ loc_18434:
 		inc	si
 
 loc_18435:
-		cmp	si, 0Ah
+		cmp	si, ITEM_POINT_COUNT
 		jl	short loc_183F6
 		pop	si
 		pop	bp
@@ -7044,12 +7053,12 @@ sub_1843D	proc far
 
 loc_18444:
 		mov	bx, ax
-		imul	bx, 0Ah
-		mov	byte ptr [bx+53A0h], 0
+		imul	bx, size item_t
+		mov	_items_point.ITEM_flag[bx], IF_FREE
 		inc	ax
 
 loc_1844F:
-		cmp	ax, 0Ah
+		cmp	ax, ITEM_POINT_COUNT
 		jl	short loc_18444
 		pop	bp
 		retf
@@ -7077,48 +7086,48 @@ sub_18456	endp
 sub_18465	proc far
 
 @@str		= byte ptr -6
-arg_0		= word ptr  6
+@@slot		= word ptr  6
 
 		enter	6, 0
 		push	si
-		mov	si, [bp+arg_0]
+		mov	si, [bp+@@slot]
 		push	(16 shl 16) or 48
 		mov	bx, si
-		imul	bx, 0Ah
-		push	word ptr [bx+539Ah]
+		imul	bx, size item_t
+		push	_items_point.ITEM_top[bx]
 		mov	bx, si
-		imul	bx, 0Ah
-		cmp	word ptr [bx+5398h], 258h
+		imul	bx, size item_t
+		cmp	_items_point.ITEM_left[bx], (PLAYFIELD_RIGHT - (5 * GLYPH_HALF_W))
 		jle	short loc_1848E
-		mov	ax, 600
+		mov	ax, (PLAYFIELD_RIGHT - (5 * GLYPH_HALF_W))
 		jmp	short loc_18497
 ; ---------------------------------------------------------------------------
 
 loc_1848E:
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	ax, [bx+5398h]
+		imul	bx, size item_t
+		mov	ax, _items_point.ITEM_left[bx]
 
 loc_18497:
 		push	ax
 		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	ax, [bx+539Eh]
+		imul	bx, size item_t
+		mov	ax, _items_point.ITEM_velocity_y[bx]
 		mov	bx, si
-		imul	bx, 0Ah
-		add	[bx+539Ah], ax
+		imul	bx, size item_t
+		add	_items_point.ITEM_top[bx], ax
 		mov	bx, si
-		imul	bx, 0Ah
-		dec	byte ptr [bx+53A1h]
+		imul	bx, size item_t
+		dec	_items_point.ITEM_collect_time[bx]
 		mov	bx, si
-		imul	bx, 0Ah
-		cmp	byte ptr [bx+53A1h], 0
+		imul	bx, size item_t
+		cmp	_items_point.ITEM_collect_time[bx], 0
 		jnz	short loc_184D3
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	byte ptr [bx+53A0h], 0
+		imul	bx, size item_t
+		mov	_items_point.ITEM_flag[bx], IF_FREE
 		jmp	short loc_1851B
 ; ---------------------------------------------------------------------------
 
@@ -7135,20 +7144,20 @@ loc_184D3:
 		push	ax
 		push	7
 		mov	bx, si
-		imul	bx, 0Ah
-		push	word ptr [bx+539Ah]
+		imul	bx, size item_t
+		push	_items_point.ITEM_top[bx]
 		mov	bx, si
-		imul	bx, 0Ah
-		cmp	word ptr [bx+5398h], 600
+		imul	bx, size item_t
+		cmp	_items_point.ITEM_left[bx], (PLAYFIELD_RIGHT - (5 * GLYPH_HALF_W))
 		jle	short loc_18509
-		mov	ax, 600
+		mov	ax, (PLAYFIELD_RIGHT - (5 * GLYPH_HALF_W))
 		jmp	short loc_18512
 ; ---------------------------------------------------------------------------
 
 loc_18509:
 		mov	bx, si
-		imul	bx, 0Ah
-		mov	ax, [bx+5398h]
+		imul	bx, size item_t
+		mov	ax, _items_point.ITEM_left[bx]
 
 loc_18512:
 		push	ax
@@ -7176,8 +7185,8 @@ sub_1851E	proc far
 
 loc_18526:
 		mov	bx, si
-		imul	bx, 0Ah
-		cmp	byte ptr [bx+53A0h], 0
+		imul	bx, size item_t
+		cmp	_items_point.ITEM_flag[bx], IF_FREE
 		jz	short loc_18580
 		push	seg main_24_TEXT
 		push	offset sub_18456
@@ -7186,30 +7195,30 @@ loc_18526:
 		push	21h ; '!'
 		push	ds
 		mov	ax, si
-		imul	ax, 0Ah
-		add	ax, 53A1h
+		imul ax, size item_t
+		add	ax, offset _items_point.ITEM_splash_radius
 		push	ax
 		push	ds
 		mov	ax, si
-		imul	ax, 0Ah
-		add	ax, 539Eh
+		imul ax, size item_t
+		add	ax, offset _items_point.ITEM_velocity_y
 		push	ax
 		push	ds
 		mov	ax, si
-		imul	ax, 0Ah
-		add	ax, 539Ah
+		imul ax, size item_t
+		add	ax, offset _items_point.ITEM_top
 		push	ax
 		push	ds
 		mov	ax, si
-		imul	ax, 0Ah
-		add	ax, 5398h
+		imul ax, size item_t
+		add	ax, offset _items_point.ITEM_left
 		push	ax
 		push	seg main_24_TEXT
 		push	offset sub_1828D
 		push	ds
 		mov	ax, si
-		imul	ax, 0Ah
-		add	ax, 53A0h
+		imul ax, size item_t
+		add	ax, offset _items_point.ITEM_flag
 		push	ax
 		push	si
 		call	sub_17ED1
@@ -7219,7 +7228,7 @@ loc_18580:
 		inc	si
 
 loc_18581:
-		cmp	si, 0Ah
+		cmp	si, ITEM_POINT_COUNT
 
 loc_18584:
 		jl	short loc_18526
@@ -17045,14 +17054,12 @@ loc_1FF3C:
 		jz	short loc_1FF6F
 
 loc_1FF67:
-		push	si
-		call	sub_18217
+		call	sub_18217 pascal, si
 		jmp	short loc_1FF75
 ; ---------------------------------------------------------------------------
 
 loc_1FF6F:
-		push	si
-		call	sub_17CA9
+		call	sub_17CA9 pascal, si
 
 loc_1FF75:
 		pop	cx
@@ -37406,15 +37413,26 @@ include th01/formats/pf[bss].asm
 include th01/formats/grc[bss].asm
 public _stage_palette
 _stage_palette	palette_t <?>
-		db 348 dup(?)
-byte_39D18	db ?
-		db 9 dup(?)
-byte_39D22	db ?
-		db 9 dup(?)
-byte_39D2C	db ?
-		db 9 dup(?)
-byte_39D36	db ?
-		db 101 dup(?)
+		db 340 dup(?)
+
+item_t struc
+	ITEM_left         	dw ?
+	ITEM_top          	dw ?
+	ITEM_unknown_zero 	dw ?
+	ITEM_velocity_y   	dw ?
+	ITEM_flag         	db ?
+	ITEM_splash_radius	label byte
+	ITEM_collect_time 	label byte
+		db ?
+item_t ends
+
+ITEM_BOMB_COUNT = 4
+ITEM_POINT_COUNT = 10
+
+public _items_bomb, _items_point
+_items_bomb 	item_t ITEM_BOMB_COUNT dup(<?>)
+_items_point	item_t ITEM_POINT_COUNT dup(<?>)
+
 include th01/main/hud/hud[bss].asm
 public _stage_timer, _frames_since_harryup, _harryup_cycle
 _stage_timer	dw ?
