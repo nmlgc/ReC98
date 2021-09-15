@@ -63,6 +63,7 @@ main_01 group main_01_TEXT, main_01__TEXT, main_01___TEXT
 main_15 group main_15_TEXT, main_15__TEXT
 main_19 group main_19_TEXT, main_19__TEXT
 main_21 group main_21_TEXT, main_21__TEXT
+main_24 group main_24_TEXT, main_24__TEXT
 main_25 group main_25_TEXT, main_25__TEXT
 main_27 group main_27_TEXT, main_27__TEXT
 main_29 group main_29_TEXT, main_29__TEXT
@@ -6041,7 +6042,11 @@ main_23_TEXT	ends
 
 ; Segment type:	Pure code
 main_24_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_24_TEXT
+	extern @items_bomb_add$qi:proc
+main_24_TEXT	ends
+
+main_24__TEXT	segment	byte public 'CODE' use16
+		assume cs:main_24
 		;org 9
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -6053,69 +6058,6 @@ IF_COLLECTED = 99
 IF_COLLECTED_OVER_CAP = 100
 ITEM_W = PTN_W
 ITEM_H = PTN_H
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_17CA9	proc far
-
-@@from_card_slot		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	cx, [bp+@@from_card_slot]
-		xor	dx, dx
-		jmp	short loc_17D18
-; ---------------------------------------------------------------------------
-
-loc_17CB3:
-		mov	bx, dx
-		imul	bx, size item_t
-		cmp	_items_bomb.ITEM_flag[bx], IF_FREE
-		jnz	short loc_17D17
-		mov	bx, dx
-		imul	bx, size item_t
-		mov	_items_bomb.ITEM_flag[bx], IF_SPLASH
-		mov	ax, cx
-		add	ax, ax
-		les	bx, _cards_left
-		add	bx, ax
-		mov	ax, es:[bx]
-		mov	bx, dx
-		imul	bx, size item_t
-		mov	_items_bomb.ITEM_left[bx], ax
-		mov	ax, cx
-		add	ax, ax
-		les	bx, _cards_top
-		add	bx, ax
-		mov	ax, es:[bx]
-		mov	bx, dx
-		imul	bx, size item_t
-		mov	_items_bomb.ITEM_top[bx], ax
-		mov	bx, dx
-		imul	bx, size item_t
-		mov	_items_bomb.ITEM_unknown_zero[bx], 0
-		mov	bx, dx
-		imul	bx, size item_t
-		mov	_items_bomb.ITEM_velocity_y[bx], 2
-		mov	bx, dx
-		imul	bx, size item_t
-		mov	_items_bomb.ITEM_splash_radius[bx], 4
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_17D17:
-		inc	dx
-
-loc_17D18:
-		cmp	dx, ITEM_BOMB_COUNT
-		jl	short loc_17CB3
-		pop	bp
-		retf
-sub_17CA9	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6722,9 +6664,9 @@ loc_181B4:
 		imul	bx, size item_t
 		cmp	_items_bomb.ITEM_flag[bx], IF_FREE
 		jz	short loc_1820E
-		push	seg main_24_TEXT
+		push	seg main_24
 		push	offset sub_181A7
-		push	seg main_24_TEXT
+		push	seg main_24
 		push	offset sub_1802D
 		push	20h ; ' '
 		push	ds
@@ -6747,7 +6689,7 @@ loc_181B4:
 		imul ax, size item_t
 		add	ax, offset _items_bomb.ITEM_left
 		push	ax
-		push	seg main_24_TEXT
+		push	seg main_24
 		push	offset sub_17D1F
 		push	ds
 		mov	ax, si
@@ -7188,9 +7130,9 @@ loc_18526:
 		imul	bx, size item_t
 		cmp	_items_point.ITEM_flag[bx], IF_FREE
 		jz	short loc_18580
-		push	seg main_24_TEXT
+		push	seg main_24
 		push	offset sub_18456
-		push	seg main_24_TEXT
+		push	seg main_24
 		push	offset sub_18465
 		push	21h ; '!'
 		push	ds
@@ -7213,7 +7155,7 @@ loc_18526:
 		imul ax, size item_t
 		add	ax, offset _items_point.ITEM_left
 		push	ax
-		push	seg main_24_TEXT
+		push	seg main_24
 		push	offset sub_1828D
 		push	ds
 		mov	ax, si
@@ -7237,7 +7179,7 @@ loc_18584:
 		retf
 sub_1851E	endp
 
-main_24_TEXT	ends
+main_24__TEXT	ends
 
 ; ===========================================================================
 
@@ -17059,7 +17001,7 @@ loc_1FF67:
 ; ---------------------------------------------------------------------------
 
 loc_1FF6F:
-		call	sub_17CA9 pascal, si
+		call	@items_bomb_add$qi pascal, si
 
 loc_1FF75:
 		pop	cx

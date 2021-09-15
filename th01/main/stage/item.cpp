@@ -2,8 +2,12 @@ extern "C" {
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
+#include "th01/main/playfld.hpp"
 #include "th01/formats/ptn.hpp"
+#include "th01/formats/stagedat.hpp"
+#include "th01/main/stage/stageobj.hpp"
 }
+#include "th01/main/stage/item.hpp"
 
 /// Constants
 /// ---------
@@ -48,3 +52,26 @@ static const int ITEM_POINT_COUNT = 10;
 extern item_t items_bomb[ITEM_BOMB_COUNT];
 extern item_t items_point[ITEM_POINT_COUNT];
 /// ----------
+
+/// Helper functions
+/// ----------------
+
+#define item_add(item, from_card_slot) { \
+	item.flag = IF_SPLASH; \
+	item.left = cards.left[from_card_slot]; \
+	item.top = cards.top[from_card_slot]; \
+	item.unknown_zero = 0; \
+	item.velocity_y = 2; \
+	item.flag_state.splash_radius = 4; \
+}
+/// ----------------
+
+void items_bomb_add(int from_card_slot)
+{
+	for(int i = 0; i < ITEM_BOMB_COUNT; i++) {
+		if(items_bomb[i].flag == IF_FREE) {
+			item_add(items_bomb[i], from_card_slot);
+			return;
+		}
+	}
+}
