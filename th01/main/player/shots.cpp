@@ -5,9 +5,6 @@ bool16 unused_boss_stage_flag = false;
 static const pixel_t SHOT_SPRITE_MARGIN = 2;
 static const int SHOT_DECAY_FRAMES = 7;
 
-#define sloppy_unput(i) \
-	egc_copy_rect_1_to_0_16(left[i], top[i], SHOT_W, SHOT_H);
-
 void CShots::add(screen_x_t new_left, screen_y_t new_top)
 {
 	if(new_left < PLAYFIELD_LEFT || new_left > (PLAYFIELD_RIGHT - 1)) {
@@ -33,10 +30,10 @@ void CShots::unput_and_reset_all(void)
 {
 	for(int i = 0; i < SHOT_COUNT; i++) {
 		if(moving[i]) {
-			sloppy_unput(i);
+			ptn_sloppy_unput_quarter_16(left[i], top[i]);
 			moving[i] = false;
 		} else if(decay_frame[i]) {
-			sloppy_unput(i);
+			ptn_sloppy_unput_quarter_16(left[i], top[i]);
 			decay_frame[i] = false;
 		}
 	}
@@ -50,7 +47,7 @@ void CShots::unput_update_render(void)
 {
 	for(int i = 0; i < SHOT_COUNT; i++) {
 		if(moving[i] == true) {
-			sloppy_unput(i);
+			ptn_sloppy_unput_quarter_16(left[i], top[i]);
 			top[i] -= 12;
 
 			if(!orb_in_portal) {
@@ -108,7 +105,7 @@ bool16 CShots::hittest_orb(int i, screen_x_t orb_left, screen_y_t orb_top)
 }
 
 #define on_hit(i) \
-	sloppy_unput(i); \
+	ptn_sloppy_unput_quarter_16(left[i], top[i]); \
 	moving[i] = false; \
 	decay_frame[i] = 1; \
 	mdrv2_se_play(16);
@@ -159,5 +156,3 @@ bool16 CShots::hittest_boss(
 	}
 	return false;
 }
-
-#undef sloppy_unput

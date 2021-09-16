@@ -109,6 +109,11 @@ void ptn_snap_8(screen_x_t left, vram_y_t top, int ptn_id);
 // VRAM page 1.
 void ptn_copy_8_0_to_1(screen_x_t left, vram_y_t top);
 
+// Restores the 32×32 pixels starting at (⌊left/16⌋*16, top) on VRAM page 0
+// with the same (background) pixels from VRAM page 1.
+#define ptn_sloppy_unput_16(left, top) \
+	egc_copy_rect_1_to_0_16(left, top, PTN_W, PTN_H)
+
 // Restores the 32×32 pixels starting at (⌊left/8⌋*8, top) on VRAM page 0 with
 // the same (background) pixels from VRAM page 1, applying the alpha mask from
 // the given [ptn_id].
@@ -151,6 +156,11 @@ void ptn_put_quarter_noalpha_8(
 void ptn_snap_quarter_8(
 	screen_x_t left, vram_y_t top, int ptn_id, int quarter
 );
+
+// Restores the 16×16 pixels starting at (⌊left/16⌋*16, top) on VRAM page 0
+// with the same (background) pixels from VRAM page 1.
+#define ptn_sloppy_unput_quarter_16(left, top) \
+	egc_copy_rect_1_to_0_16(left, top, PTN_QUARTER_W, PTN_QUARTER_H)
 
 // Restores the 16×16 pixels starting at (⌊left/8⌋*8, top) on VRAM page 0 with
 // the same (background) pixels from VRAM page 1, applying the alpha mask from
