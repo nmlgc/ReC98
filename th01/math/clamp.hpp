@@ -3,6 +3,7 @@
 // MODDERS: Turn into template functions.
 #define clamp_max(v, max) ((v) < max ? (v) : max)
 #define clamp_min(v, min) ((v) > min ? (v) : min)
+#define clamp_max_2_ge(v, max) ((v) >= max ? max : (v))
 
 #define clamp_inc(v, max) \
 	(v)++; \

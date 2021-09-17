@@ -1,12 +1,20 @@
 extern "C" {
+#include <stddef.h>
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
+#include "th01/common.h"
+#include "th01/math/clamp.hpp"
+#include "th01/hardware/egc.h"
 #include "th01/main/playfld.hpp"
 #include "th01/formats/ptn.hpp"
 #include "th01/formats/stagedat.hpp"
+#include "th01/snd/mdrv2.h"
+#include "th01/main/vars.hpp"
 #include "th01/main/stage/stageobj.hpp"
+#include "th01/main/player/player.hpp"
 }
+#include "th01/main/hud/hud.hpp"
 #include "th01/main/stage/item.hpp"
 
 /// Constants
@@ -64,6 +72,25 @@ extern item_t items_point[ITEM_POINT_COUNT];
 	item.velocity_y = 2; \
 	item.flag_state.splash_radius = 4; \
 }
+
+#define item_is_visible(item) ( \
+	(item.flag > IF_SPLASH) && (item.flag < IF_COLLECTED) \
+)
+
+// Note that this hitbox is actually perfectly symmetrical around the
+// player's center point, even though it might not look like it.
+#define item_player_hittest(item) ( \
+	(item.left > (player_left - (PLAYER_W - (ITEM_W / 4)))) && \
+	(item.left < (player_left + (PLAYER_W - (ITEM_W / 4)))) && \
+	(item.top  > (player_top  - (PLAYER_H - (ITEM_H / 4)))) && \
+	item_is_visible(item) \
+)
+
+#define item_collect_init(item) { \
+	item.velocity_y = -2; \
+	item.flag_state.collect_time = 16; \
+	item.top = clamp_max_2_ge(item.top, (PLAYFIELD_BOTTOM - ITEM_H)); \
+}
 /// ----------------
 
 void items_bomb_add(int from_card_slot)
@@ -74,4 +101,25 @@ void items_bomb_add(int from_card_slot)
 			return;
 		}
 	}
+}
+
+void bomb_hittest(int slot)
+{
+	if(!item_player_hittest(items_bomb[slot])) {
+		return;
+	}
+	ptn_sloppy_unput_16(items_bomb[slot].left, items_bomb[slot].top);
+
+	item_collect_init(items_bomb[slot]);
+
+	if(bombs < BOMBS_MAX) {
+		bombs++;
+		hud_bombs_put(bombs - 1);
+		items_bomb[slot].flag = IF_COLLECTED;
+	} else {
+		score += 10000;
+		hud_score_and_cardcombo_render();
+		items_bomb[slot].flag = IF_COLLECTED_OVER_CAP;
+	}
+	mdrv2_se_play(15);
 }

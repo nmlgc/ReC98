@@ -6043,6 +6043,7 @@ main_23_TEXT	ends
 ; Segment type:	Pure code
 main_24_TEXT	segment	byte public 'CODE' use16
 	extern @items_bomb_add$qi:proc
+	extern @bomb_hittest$qi:proc
 main_24_TEXT	ends
 
 main_24__TEXT	segment	byte public 'CODE' use16
@@ -6058,113 +6059,6 @@ IF_COLLECTED = 99
 IF_COLLECTED_OVER_CAP = 100
 ITEM_W = PTN_W
 ITEM_H = PTN_H
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_17D1F	proc far
-
-@@slot		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+@@slot]
-		mov	bx, si
-		imul	bx, size item_t
-		mov	ax, _player_left
-		add	ax, -24
-		cmp	_items_bomb.ITEM_left[bx], ax
-		jle	loc_17E1B
-		mov	bx, si
-		imul	bx, size item_t
-		mov	ax, _player_left
-		add	ax, 24
-		cmp	_items_bomb.ITEM_left[bx], ax
-		jge	loc_17E1B
-		mov	bx, si
-		imul	bx, size item_t
-		cmp	_items_bomb.ITEM_top[bx], (_player_top - 24)
-		jle	loc_17E1B
-		mov	bx, si
-		imul	bx, size item_t
-		mov	al, _items_bomb.ITEM_flag[bx]
-		cbw
-		cmp	ax, IF_SPLASH
-		jle	loc_17E1B
-		mov	bx, si
-		imul	bx, size item_t
-		mov	al, _items_bomb.ITEM_flag[bx]
-		cbw
-		cmp	ax, IF_COLLECTED
-		jge	loc_17E1B
-		push	(32 shl 16) or 32
-		mov	bx, si
-		imul	bx, size item_t
-		push	_items_bomb.ITEM_top[bx]
-		mov	bx, si
-		imul	bx, size item_t
-		push	word ptr _items_bomb.ITEM_left[bx]
-		call	_egc_copy_rect_1_to_0_16
-		add	sp, 8
-		mov	bx, si
-		imul	bx, size item_t
-		mov	_items_bomb.ITEM_velocity_y[bx], -2
-		mov	bx, si
-		imul	bx, size item_t
-		mov	_items_bomb.ITEM_collect_time[bx], 16
-		mov	bx, si
-		imul	bx, size item_t
-		cmp	_items_bomb.ITEM_top[bx], (PLAYFIELD_BOTTOM - ITEM_H)
-		jl	short loc_17DC4
-		mov	ax, (PLAYFIELD_BOTTOM - ITEM_H)
-		jmp	short loc_17DCD
-; ---------------------------------------------------------------------------
-
-loc_17DC4:
-		mov	bx, si
-		imul	bx, size item_t
-		mov	ax, _items_bomb.ITEM_top[bx]
-
-loc_17DCD:
-		mov	bx, si
-		imul	bx, size item_t
-		mov	_items_bomb.ITEM_top[bx], ax
-		mov	al, _bombs
-		cbw
-		cmp	ax, BOMBS_MAX
-		jge	short loc_17DFB
-		inc	_bombs
-		mov	al, _bombs
-		cbw
-		dec	ax
-		call	@hud_bombs_put$qi stdcall, ax
-		pop	cx
-		mov	bx, si
-		imul	bx, size item_t
-		mov	_items_bomb.ITEM_flag[bx], IF_COLLECTED
-		jmp	short loc_17E13
-; ---------------------------------------------------------------------------
-
-loc_17DFB:
-		add	_score, 10000
-		call	@hud_score_and_cardcombo_render$qv
-		mov	bx, si
-		imul	bx, size item_t
-		mov	_items_bomb.ITEM_flag[bx], IF_COLLECTED_OVER_CAP
-
-loc_17E13:
-		push	0Fh
-		call	_mdrv2_se_play
-		pop	cx
-
-loc_17E1B:
-		pop	si
-		pop	bp
-		retf
-sub_17D1F	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6690,7 +6584,7 @@ loc_181B4:
 		add	ax, offset _items_bomb.ITEM_left
 		push	ax
 		push	seg main_24
-		push	offset sub_17D1F
+		push	offset @bomb_hittest$qi
 		push	ds
 		mov	ax, si
 		imul ax, size item_t
