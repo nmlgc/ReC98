@@ -13,6 +13,7 @@ extern "C" {
 #include "th01/main/vars.hpp"
 #include "th01/main/stage/stageobj.hpp"
 #include "th01/main/player/player.hpp"
+#include "th01/sprites/main_ptn.h"
 }
 #include "th01/main/hud/hud.hpp"
 #include "th01/main/stage/item.hpp"
@@ -122,4 +123,23 @@ void bomb_hittest(int slot)
 		items_bomb[slot].flag = IF_COLLECTED_OVER_CAP;
 	}
 	mdrv2_se_play(15);
+}
+
+void items_bomb_render(void)
+{
+	for(int i = 0; i < ITEM_BOMB_COUNT; i++) {
+		if(item_is_visible(items_bomb[i])) {
+			ptn_put_8(items_bomb[i].left, items_bomb[i].top, PTN_ITEM_BOMB);
+		}
+	}
+}
+
+// Unused.
+void items_bomb_unput(void)
+{
+	for(int i = 0; i < ITEM_BOMB_COUNT; i++) {
+		if(item_is_visible(items_bomb[i])) {
+			ptn_sloppy_unput_16(items_bomb[i].left, items_bomb[i].top);
+		}
+	}
 }

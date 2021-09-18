@@ -261,7 +261,7 @@ loc_BDC2:
 		call	_graph_accesspage_func
 		call	_ptn_put_8 stdcall, _player_left, (40h shl 16) or _player_top
 		add	sp, 0Eh
-		call	sub_17E1E
+		call	@items_bomb_render$qv
 		call	sub_183A3
 
 loc_BE00:
@@ -6044,6 +6044,7 @@ main_23_TEXT	ends
 main_24_TEXT	segment	byte public 'CODE' use16
 	extern @items_bomb_add$qi:proc
 	extern @bomb_hittest$qi:proc
+	extern @items_bomb_render$qv:proc
 main_24_TEXT	ends
 
 main_24__TEXT	segment	byte public 'CODE' use16
@@ -6059,100 +6060,6 @@ IF_COLLECTED = 99
 IF_COLLECTED_OVER_CAP = 100
 ITEM_W = PTN_W
 ITEM_H = PTN_H
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_17E1E	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_17E61
-; ---------------------------------------------------------------------------
-
-loc_17E26:
-		mov	bx, si
-		imul	bx, size item_t
-		mov	al, _items_bomb.ITEM_flag[bx]
-		cbw
-		cmp	ax, IF_SPLASH
-		jle	short loc_17E60
-		mov	bx, si
-		imul	bx, size item_t
-		mov	al, _items_bomb.ITEM_flag[bx]
-		cbw
-		cmp	ax, IF_COLLECTED
-		jge	short loc_17E60
-		push	20h
-		mov	bx, si
-		imul	bx, size item_t
-		push	_items_bomb.ITEM_top[bx]
-		mov	bx, si
-		imul	bx, size item_t
-		push	word ptr _items_bomb.ITEM_left[bx]
-		call	_ptn_put_8
-		add	sp, 6
-
-loc_17E60:
-		inc	si
-
-loc_17E61:
-		cmp	si, ITEM_BOMB_COUNT
-		jl	short loc_17E26
-		pop	si
-		pop	bp
-		retf
-sub_17E1E	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_17E69	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_17EB0
-; ---------------------------------------------------------------------------
-
-loc_17E71:
-		mov	bx, si
-		imul	bx, size item_t
-		mov	al, _items_bomb.ITEM_flag[bx]
-		cbw
-		cmp	ax, IF_SPLASH
-		jle	short loc_17EAF
-		mov	bx, si
-		imul	bx, size item_t
-		mov	al, _items_bomb.ITEM_flag[bx]
-		cbw
-		cmp	ax, IF_COLLECTED
-		jge	short loc_17EAF
-		push	(32 shl 16) or 32
-		mov	bx, si
-		imul	bx, size item_t
-		push	_items_bomb.ITEM_top[bx]
-		mov	bx, si
-		imul	bx, size item_t
-		push	word ptr _items_bomb.ITEM_left[bx]
-		call	_egc_copy_rect_1_to_0_16
-		add	sp, 8
-
-loc_17EAF:
-		inc	si
-
-loc_17EB0:
-		cmp	si, ITEM_BOMB_COUNT
-		jl	short loc_17E71
-		pop	si
-		pop	bp
-		retf
-sub_17E69	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6562,7 +6469,7 @@ loc_181B4:
 		push	offset sub_181A7
 		push	seg main_24
 		push	offset sub_1802D
-		push	20h ; ' '
+		push	PTN_ITEM_BOMB
 		push	ds
 		mov	ax, si
 		imul ax, size item_t
