@@ -143,3 +143,11 @@ void items_bomb_unput(void)
 		}
 	}
 }
+
+void items_bomb_reset(void)
+{
+	items_bomb[0].flag = IF_FREE;
+	items_bomb[1].flag = IF_FREE;
+	items_bomb[2].flag = IF_FREE;
+	items_bomb[3].flag = IF_FREE;
+}

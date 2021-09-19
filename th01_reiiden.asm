@@ -1496,7 +1496,7 @@ var_2		= word ptr -2
 		push	(offset	word_34AD4+1)
 		mov	cx, 0Ah
 		call	SCOPY@
-		call	sub_17EB8
+		call	@items_bomb_reset$qv
 		call	sub_1843D
 		call	_ptn_put_8 c, _orb_cur_left, _orb_cur_top, 3
 		call	IRand
@@ -2817,7 +2817,7 @@ loc_D9CA:
 		jz	short loc_DA06
 		xor	si, si
 		mov	_first_stage_in_scene, 1
-		call	sub_17EB8
+		call	@items_bomb_reset$qv
 		call	sub_1843D
 		cmp	byte_34AA4, 0
 		jnz	short loc_DA2A
@@ -6045,6 +6045,7 @@ main_24_TEXT	segment	byte public 'CODE' use16
 	extern @items_bomb_add$qi:proc
 	extern @bomb_hittest$qi:proc
 	extern @items_bomb_render$qv:proc
+	extern @items_bomb_reset$qv:proc
 main_24_TEXT	ends
 
 main_24__TEXT	segment	byte public 'CODE' use16
@@ -6060,22 +6061,6 @@ IF_COLLECTED = 99
 IF_COLLECTED_OVER_CAP = 100
 ITEM_W = PTN_W
 ITEM_H = PTN_H
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_17EB8	proc far
-		push	bp
-		mov	bp, sp
-		mov	_items_bomb[0 * size item_t].ITEM_flag, IF_FREE
-		mov	_items_bomb[1 * size item_t].ITEM_flag, IF_FREE
-		mov	_items_bomb[2 * size item_t].ITEM_flag, IF_FREE
-		mov	_items_bomb[3 * size item_t].ITEM_flag, IF_FREE
-		pop	bp
-		retf
-sub_17EB8	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
