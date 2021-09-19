@@ -24,6 +24,11 @@ void shape_ellipse_arc_put(
 	unsigned char angle_end
 );
 
+#define shape_circle_put(center_x, center_y, radius, col, angle_step) \
+	shape_ellipse_arc_put( \
+		center_x, center_y, radius, radius, col, angle_step, 0x00, 0xFF \
+	);
+
 // Makes a sloppy attempt at restoring the pixels along the given ellipse arc
 // from VRAM page 1, but ends up restoring horizontal 16×1 lines along that
 // arc.
@@ -36,3 +41,8 @@ void shape_ellipse_arc_sloppy_unput(
 	unsigned char angle_start,
 	unsigned char angle_end
 );
+
+#define shape_circle_sloppy_unput(center_x, center_y, radius, angle_step) \
+	shape_ellipse_arc_sloppy_unput( \
+		center_x, center_y, radius, radius, angle_step, 0x00, 0xFF \
+	);

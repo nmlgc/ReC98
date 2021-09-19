@@ -6046,6 +6046,7 @@ main_24_TEXT	segment	byte public 'CODE' use16
 	extern @bomb_hittest$qi:proc
 	extern @items_bomb_render$qv:proc
 	extern @items_bomb_reset$qv:proc
+	extern @item_unput_update_render$qimcmqi$vmit4t4muc13main_ptn_id_tt3mqv$v:proc
 main_24_TEXT	ends
 
 main_24__TEXT	segment	byte public 'CODE' use16
@@ -6055,184 +6056,9 @@ main_24__TEXT	segment	byte public 'CODE' use16
 
 IF_FREE = 0
 IF_SPLASH = 1
-IF_FALL = 2
-IF_BOUNCE = 3
 IF_COLLECTED = 99
 IF_COLLECTED_OVER_CAP = 100
-ITEM_W = PTN_W
 ITEM_H = PTN_H
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_17ED1	proc far
-
-arg_0		= word ptr  6
-@@flag		= dword	ptr  8
-arg_6		= dword	ptr  0Ch
-@@left		= dword	ptr  10h
-@@top		= dword	ptr  14h
-@@velocity_y		= dword	ptr  18h
-@@al		= dword	ptr  1Ch
-@@ptn_id		= word ptr  20h
-arg_1C		= dword	ptr  22h
-arg_20		= dword	ptr  26h
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, [bp+arg_0]
-		mov	si, [bp+@@ptn_id]
-		push	di
-		call	[bp+arg_6]
-		pop	cx
-		les	bx, [bp+@@flag]
-		mov	al, es:[bx]
-		cbw
-		cmp	ax, IF_SPLASH
-		jnz	loc_17F73
-		push	255	; angle_end
-		push	0	; angle_start
-		push	8	; angle_step
-		les	bx, [bp+@@al]
-		mov	al, es:[bx]
-		mov	ah, 0
-		push	ax	; radius_y
-		mov	al, es:[bx]
-		mov	ah, 0
-		push	ax	; radius_x
-		les	bx, [bp+@@top]
-		mov	ax, es:[bx]
-		add	ax, 16
-		push	ax	; center_y
-		les	bx, [bp+@@left]
-		mov	ax, es:[bx]
-		add	ax, 16
-		push	ax	; center_x
-		call	@shape_ellipse_arc_sloppy_unput$qiiiiucucuc
-		add	sp, 0Eh
-		les	bx, [bp+@@al]
-		mov	al, es:[bx]
-		add	al, 4
-		mov	es:[bx], al
-		cmp	byte ptr es:[bx], 48
-		jb	short loc_17F3C
-		les	bx, [bp+@@flag]
-		mov	byte ptr es:[bx], IF_FALL
-		jmp	loc_18029
-; ---------------------------------------------------------------------------
-
-loc_17F3C:
-		push	255	; angle_end
-		push	0	; angle_start
-		push	8	; angle_step
-		push	7	; col
-		les	bx, [bp+@@al]
-		mov	al, es:[bx]
-		mov	ah, 0
-		push	ax	; radius_y
-		mov	al, es:[bx]
-		mov	ah, 0
-		push	ax	; radius_x
-		les	bx, [bp+@@top]
-		mov	ax, es:[bx]
-		add	ax, 16
-		push	ax	; center_y
-		les	bx, [bp+@@left]
-		mov	ax, es:[bx]
-		add	ax, 16
-		push	ax	; center_x
-		call	@shape_ellipse_arc_put$qiiiiiucucuc
-		add	sp, 10h
-		jmp	loc_18029
-; ---------------------------------------------------------------------------
-
-loc_17F73:
-		les	bx, [bp+@@flag]
-		mov	al, es:[bx]
-		cbw
-		cmp	ax, IF_FALL
-		jnz	short loc_17FB8
-		push	si
-		les	bx, [bp+@@top]
-		push	word ptr es:[bx]
-		les	bx, [bp+@@left]
-		push	word ptr es:[bx]
-		call	_ptn_unput_8
-		add	sp, 6
-		les	bx, [bp+@@velocity_y]
-		mov	ax, es:[bx]
-		les	bx, [bp+@@top]
-		add	es:[bx], ax
-		cmp	word ptr es:[bx], (PLAYFIELD_BOTTOM - ITEM_H)
-		jl	short loc_18001
-		les	bx, [bp+@@velocity_y]
-		mov	word ptr es:[bx], -8
-		les	bx, [bp+@@flag]
-		mov	byte ptr es:[bx], IF_BOUNCE
-		jmp	short loc_17FD9
-; ---------------------------------------------------------------------------
-
-loc_17FB8:
-		les	bx, [bp+@@flag]
-		mov	al, es:[bx]
-		cbw
-		cmp	ax, IF_BOUNCE
-		jnz	short loc_18018
-		push	si
-		les	bx, [bp+@@top]
-		push	word ptr es:[bx]
-		les	bx, [bp+@@left]
-		push	word ptr es:[bx]
-		call	_ptn_unput_8
-		add	sp, 6
-
-loc_17FD9:
-		les	bx, [bp+@@velocity_y]
-		mov	ax, es:[bx]
-		les	bx, [bp+@@top]
-		add	es:[bx], ax
-		les	bx, [bp+@@velocity_y]
-		inc	word ptr es:[bx]
-		les	bx, [bp+@@top]
-		cmp	word ptr es:[bx], PLAYFIELD_BOTTOM
-		jl	short loc_18001
-		les	bx, [bp+@@flag]
-		mov	byte ptr es:[bx], IF_FREE
-		call	[bp+arg_20]
-		jmp	short loc_18029
-; ---------------------------------------------------------------------------
-
-loc_18001:
-		push	si
-		les	bx, [bp+@@top]
-		push	word ptr es:[bx]
-		les	bx, [bp+@@left]
-		push	word ptr es:[bx]
-		call	_ptn_put_8
-		add	sp, 6
-		jmp	short loc_18029
-; ---------------------------------------------------------------------------
-
-loc_18018:
-		les	bx, [bp+@@flag]
-		mov	al, es:[bx]
-		cbw
-		cmp	ax, IF_COLLECTED
-		jl	short loc_18029
-		push	di
-		call	[bp+arg_1C]
-		pop	cx
-
-loc_18029:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_17ED1	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6483,7 +6309,7 @@ loc_181B4:
 		add	ax, offset _items_bomb.ITEM_flag
 		push	ax
 		push	si
-		call	sub_17ED1
+		call	@item_unput_update_render$qimcmqi$vmit4t4muc13main_ptn_id_tt3mqv$v
 		add	sp, 24h
 
 loc_1820E:
@@ -6949,7 +6775,7 @@ loc_18526:
 		add	ax, offset _items_point.ITEM_flag
 		push	ax
 		push	si
-		call	sub_17ED1
+		call	@item_unput_update_render$qimcmqi$vmit4t4muc13main_ptn_id_tt3mqv$v
 		add	sp, 24h
 
 loc_18580:
