@@ -1,3 +1,4 @@
+#include "th01/math/clamp.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/grp2xscs.h"
@@ -393,8 +394,8 @@ int regist_on_shot(
 
 	alphabet_if(kanji, left, top,
 		{ kanji = kanji_swap('Å@'); },
-		{ CLAMP_DEC(entered_name_cursor, 0); },
-		{ CLAMP_INC(entered_name_cursor, (SCOREDAT_NAME_KANJI - 1)); },
+		{ clamp_dec(entered_name_cursor, 0); },
+		{ clamp_inc(entered_name_cursor, (SCOREDAT_NAME_KANJI - 1)); },
 		{ return 1; }
 	);
 

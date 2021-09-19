@@ -7,6 +7,7 @@ extern "C" {
 #include <dos.h>
 #include "th02/th02.h"
 #include "master.hpp"
+#include "th01/math/clamp.hpp"
 #include "th02/resident.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/input.hpp"
@@ -211,15 +212,15 @@ void pascal score_enter(void)
 				row = ALPHABET_ENTER_ROW; \
 				alphabet_putca(col, row, TX_GREEN | TX_REVERSE); \
 			} \
-			CLAMP_INC(name_pos, 5); \
+			clamp_inc(name_pos, 5); \
 		} else if(col == 13) { \
 			hi.score.g_name[place][name_pos] = gb_SP; \
-			CLAMP_INC(name_pos, 5); \
+			clamp_inc(name_pos, 5); \
 		} else if(col == 14) { \
-			CLAMP_DEC(name_pos, 0); \
+			clamp_dec(name_pos, 0); \
 			hi.score.g_name[place][name_pos] = gb_SP; \
 		} else if(col == 15) { \
-			CLAMP_INC(name_pos, 5); \
+			clamp_inc(name_pos, 5); \
 		} else if(col == 16) { \
 			break; \
 		} \
@@ -227,7 +228,7 @@ void pascal score_enter(void)
 	} \
 	if(key_det & INPUT_BOMB) { \
 		hi.score.g_name[place][name_pos] = gb_SP; \
-		CLAMP_DEC(name_pos, 0); \
+		clamp_dec(name_pos, 0); \
 		scoredat_name_puts(place, name_pos); \
 	} \
 	if(key_det & INPUT_CANCEL) { \

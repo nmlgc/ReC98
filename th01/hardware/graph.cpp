@@ -5,6 +5,7 @@ extern "C" {
 #include <mbstring.h>
 #include "ReC98.h"
 #include "master.hpp"
+#include "th01/math/clamp.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/vsync.h"
 #include "th01/hardware/graph.h"
@@ -216,18 +217,14 @@ void z_palette_set_all_show(const Palette4& pal)
 
 void z_palette_set_show(int col, int r, int g, int b)
 {
-#define clamp_max(comp) ((comp) < RGB4::max() ? (comp) : RGB4::max())
-#define clamp_min(comp) ((comp) > 0 ? (comp) : 0)
-	r = clamp_min(clamp_max(r));
-	g = clamp_min(clamp_max(g));
-	b = clamp_min(clamp_max(b));
+	r = clamp_min(clamp_max(r, RGB4::max()), 0);
+	g = clamp_min(clamp_max(g, RGB4::max()), 0);
+	b = clamp_min(clamp_max(b, RGB4::max()), 0);
 
 	z_Palettes[col].c.r = r;
 	z_Palettes[col].c.g = g;
 	z_Palettes[col].c.b = b;
 	z_palette_show_single(col, r, g, b);
-#undef clamp_max
-#undef clamp_min
 }
 /// -------
 

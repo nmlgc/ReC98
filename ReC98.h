@@ -13,18 +13,6 @@
 
 // Macros
 // ------
-#define CLAMP_INC(val, max) \
-	(val)++; \
-	if((val) > (max)) { \
-		(val) = (max); \
-	}
-
-#define CLAMP_DEC(val, min) \
-	(val)--; \
-	if((val) < (min)) { \
-		(val) = (min); \
-	}
-
 #ifdef __cplusplus
 	// This is, in fact, the only way to circumvent 16-bit promotion inside
 	// comparisons between two 8-bit values in C++. I kid you not.
