@@ -8,6 +8,7 @@ extern "C" {
 #include "th01/v_colors.hpp"
 #include "th01/math/clamp.hpp"
 #include "th01/hardware/egc.h"
+#include "th01/hardware/graph.h"
 #include "th01/main/playfld.hpp"
 #include "th01/formats/ptn.hpp"
 #include "th01/formats/stagedat.hpp"
@@ -20,12 +21,27 @@ extern "C" {
 #include "th01/main/hud/hud.hpp"
 #include "th01/main/shape.hpp"
 #include "th01/main/stage/item.hpp"
+#include "th01/shiftjis/item.hpp"
 
 /// Constants
 /// ---------
 
 static const pixel_t ITEM_W = PTN_W;
 static const pixel_t ITEM_H = PTN_H;
+
+// Assumes that [BOMB_COLLECT_1] and [BOMB_COLLECT_CAP] have the same length
+// in bytes!
+static const pixel_t BOMB_COLLECT_1_W = shiftjis_w(BOMB_COLLECT_1);
+
+static const pixel_t BOMB_COLLECT_2_W = shiftjis_w(BOMB_COLLECT_2);
+
+// TODO: Remove, once data can be emitted here
+#undef BOMB_COLLECT_1
+#undef BOMB_COLLECT_2
+#undef BOMB_COLLECT_CAP
+extern const unsigned char BOMB_COLLECT_1[];
+extern const unsigned char BOMB_COLLECT_2[];
+extern const unsigned char BOMB_COLLECT_CAP[];
 /// ---------
 
 /// Structures
@@ -111,6 +127,17 @@ typedef void drop_func_t(void);
 	item.velocity_y = -2; \
 	item.flag_state.collect_time = 16; \
 	item.top = clamp_max_2_ge(item.top, (PLAYFIELD_BOTTOM - ITEM_H)); \
+}
+
+inline screen_x_t bomb_collect_2_left(item_t* slots, const int i) {
+	// Line 2 is centered relative to line 1.
+	enum {
+		X_OFFSET = ((BOMB_COLLECT_2_W - BOMB_COLLECT_1_W) / 2)
+	};
+	return clamp_max_2(
+		clamp_min_2((slots[i].left - X_OFFSET), PLAYFIELD_LEFT),
+		(PLAYFIELD_RIGHT - BOMB_COLLECT_2_W)
+	);
 }
 /// ----------------
 
@@ -219,10 +246,49 @@ bounce_update:
 		if(top >= PLAYFIELD_BOTTOM) {
 			flag = IF_FREE;
 			on_drop();
-		} else {
-			ptn_put_8(left, top, ptn_id);
+			return;
 		}
+		ptn_put_8(left, top, ptn_id);
 	} else if(flag >= IF_COLLECTED) {
 		collect_update_and_render(slot);
 	}
+}
+
+void bomb_collect_update_and_render(int slot)
+{
+	#define item items_bomb[slot]
+
+	egc_copy_rect_1_to_0_16(item.left, item.top, BOMB_COLLECT_1_W, GLYPH_H);
+	if(item.flag == IF_COLLECTED) {
+		egc_copy_rect_1_to_0_16(
+			bomb_collect_2_left(items_bomb, slot),
+			(item.top + GLYPH_H),
+			BOMB_COLLECT_2_W,
+			GLYPH_H
+		);
+	}
+
+	item.top += item.velocity_y;
+	item.flag_state.collect_time--;
+	if(item.flag_state.collect_time == 0) {
+		item.flag = IF_FREE;
+		return;
+	}
+	if(item.flag == IF_COLLECTED) {
+		graph_putsa_fx(item.left, item.top, V_WHITE, BOMB_COLLECT_1);
+		graph_putsa_fx(
+			bomb_collect_2_left(items_bomb, slot),
+			(item.top + GLYPH_H),
+			V_WHITE,
+			BOMB_COLLECT_2
+		);
+	} else /* item.flag == IF_COLLECTED_OVER_CAP */ {
+		graph_putsa_fx(item.left, item.top, V_WHITE, BOMB_COLLECT_CAP);
+	}
+
+	#undef item
+}
+
+void bomb_drop(void)
+{
 }

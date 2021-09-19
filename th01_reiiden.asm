@@ -6047,6 +6047,8 @@ main_24_TEXT	segment	byte public 'CODE' use16
 	extern @items_bomb_render$qv:proc
 	extern @items_bomb_reset$qv:proc
 	extern @item_unput_update_render$qimcmqi$vmit4t4muc13main_ptn_id_tt3mqv$v:proc
+	extern @bomb_collect_update_and_render$qi:proc
+	extern @bomb_drop$qv:proc
 main_24_TEXT	ends
 
 main_24__TEXT	segment	byte public 'CODE' use16
@@ -6059,205 +6061,6 @@ IF_SPLASH = 1
 IF_COLLECTED = 99
 IF_COLLECTED_OVER_CAP = 100
 ITEM_H = PTN_H
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1802D	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+arg_0]
-		push	(16 shl 16) or 32
-		mov	bx, si
-		imul	bx, size item_t
-		push	_items_bomb.ITEM_top[bx]
-		mov	bx, si
-		imul	bx, size item_t
-		push	word ptr _items_bomb.ITEM_left[bx]
-		call	_egc_copy_rect_1_to_0_16
-		add	sp, 8
-		mov	bx, si
-		imul	bx, size item_t
-		mov	al, _items_bomb.ITEM_flag[bx]
-		cbw
-		cmp	ax, IF_COLLECTED
-		jnz	short loc_180C5
-		push	(16 shl 16) or 64
-		mov	bx, si
-		imul	bx, size item_t
-		mov	ax, _items_bomb.ITEM_top[bx]
-		add	ax, 16
-		push	ax
-		mov	bx, si
-		imul	bx, size item_t
-		mov	ax, _items_bomb.ITEM_left[bx]
-		add	ax, -16
-		jge	short loc_18088
-		xor	ax, ax
-		jmp	short loc_18094
-; ---------------------------------------------------------------------------
-
-loc_18088:
-		mov	bx, si
-		imul	bx, size item_t
-		mov	ax, _items_bomb.ITEM_left[bx]
-		add	ax, -16
-
-loc_18094:
-		cmp	ax, (PLAYFIELD_RIGHT - (8 * GLYPH_HALF_W))
-		jle	short loc_1809E
-		mov	ax, (PLAYFIELD_RIGHT - (8 * GLYPH_HALF_W))
-		jmp	short loc_180BC
-; ---------------------------------------------------------------------------
-
-loc_1809E:
-		mov	bx, si
-		imul	bx, size item_t
-		mov	ax, _items_bomb.ITEM_left[bx]
-		add	ax, -16
-		jge	short loc_180B0
-		xor	ax, ax
-		jmp	short loc_180BC
-; ---------------------------------------------------------------------------
-
-loc_180B0:
-		mov	bx, si
-		imul	bx, size item_t
-		mov	ax, _items_bomb.ITEM_left[bx]
-		add	ax, -16
-
-loc_180BC:
-		push	ax
-		call	_egc_copy_rect_1_to_0_16
-		add	sp, 8
-
-loc_180C5:
-		mov	bx, si
-		imul	bx, size item_t
-		mov	ax, _items_bomb.ITEM_velocity_y[bx]
-		mov	bx, si
-		imul	bx, size item_t
-		add	_items_bomb.ITEM_top[bx], ax
-		mov	bx, si
-		imul	bx, size item_t
-		dec	_items_bomb.ITEM_collect_time[bx]
-		mov	bx, si
-		imul	bx, size item_t
-		cmp	_items_bomb.ITEM_collect_time[bx], 0
-		jnz	short loc_180F9
-		mov	bx, si
-		imul	bx, size item_t
-		mov	_items_bomb.ITEM_flag[bx], IF_FREE
-		jmp	loc_181A4
-; ---------------------------------------------------------------------------
-
-loc_180F9:
-		mov	bx, si
-		imul	bx, size item_t
-		mov	al, _items_bomb.ITEM_flag[bx]
-		cbw
-		cmp	ax, IF_COLLECTED
-		jnz	short loc_18184
-		push	ds
-		push	offset aBomb	; "Bomb"
-		push	7
-		mov	bx, si
-		imul	bx, size item_t
-		push	_items_bomb.ITEM_top[bx]
-		mov	bx, si
-		imul	bx, size item_t
-		push	word ptr _items_bomb.ITEM_left[bx]
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-		push	ds
-		push	offset aExtend	; "Extend!!"
-		push	7
-		mov	bx, si
-		imul	bx, size item_t
-		mov	ax, _items_bomb.ITEM_top[bx]
-		add	ax, 16
-		push	ax
-		mov	bx, si
-		imul	bx, size item_t
-		mov	ax, _items_bomb.ITEM_left[bx]
-		add	ax, -16
-		jge	short loc_1814D
-		xor	ax, ax
-		jmp	short loc_18159
-; ---------------------------------------------------------------------------
-
-loc_1814D:
-		mov	bx, si
-		imul	bx, size item_t
-		mov	ax, _items_bomb.ITEM_left[bx]
-		add	ax, -16
-
-loc_18159:
-		cmp	ax, (PLAYFIELD_RIGHT - (8 * GLYPH_HALF_W))
-		jle	short loc_18163
-		mov	ax, (PLAYFIELD_RIGHT - (8 * GLYPH_HALF_W))
-		jmp	short loc_18181
-; ---------------------------------------------------------------------------
-
-loc_18163:
-		mov	bx, si
-		imul	bx, size item_t
-		mov	ax, _items_bomb.ITEM_left[bx]
-		add	ax, -16
-		jge	short loc_18175
-		xor	ax, ax
-		jmp	short loc_18181
-; ---------------------------------------------------------------------------
-
-loc_18175:
-		mov	bx, si
-		imul	bx, size item_t
-		mov	ax, _items_bomb.ITEM_left[bx]
-		add	ax, -16
-
-loc_18181:
-		push	ax
-		jmp	short loc_1819C
-; ---------------------------------------------------------------------------
-
-loc_18184:
-		push	ds
-		push	offset aVpf	; "ÇP‰›"
-		push	7
-		mov	bx, si
-		imul	bx, size item_t
-		push	_items_bomb.ITEM_top[bx]
-		mov	bx, si
-		imul	bx, size item_t
-		push	word ptr _items_bomb.ITEM_left[bx]
-
-loc_1819C:
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-
-loc_181A4:
-		pop	si
-		pop	bp
-		retf
-sub_1802D	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_181A7	proc far
-		push	bp
-		mov	bp, sp
-		pop	bp
-		retf
-sub_181A7	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6277,9 +6080,9 @@ loc_181B4:
 		cmp	_items_bomb.ITEM_flag[bx], IF_FREE
 		jz	short loc_1820E
 		push	seg main_24
-		push	offset sub_181A7
+		push	offset @bomb_drop$qv
 		push	seg main_24
-		push	offset sub_1802D
+		push	offset @bomb_collect_update_and_render$qi
 		push	PTN_ITEM_BOMB
 		push	ds
 		mov	ax, si
@@ -36464,10 +36267,11 @@ include th01/hiscore/regist[data].asm
 include th01/main/boss/entity_a[data].asm
 include th01/formats/pf[data].asm
 include th01/sprites/shape8x8.asp
-aBomb		db 'Bomb',0
-aExtend		db 'Extend!!',0
-aVpf		db 'ÇP‰›',0
-		db 0
+public _BOMB_COLLECT_1, _BOMB_COLLECT_2, _BOMB_COLLECT_CAP
+_BOMB_COLLECT_1  	db 'Bomb',0
+_BOMB_COLLECT_2  	db 'Extend!!',0
+_BOMB_COLLECT_CAP	db 'ÇP‰›',0
+	evendata
 public _fwnum_force_rerender
 _fwnum_force_rerender	db 0
 include th01/hardware/grppfnfx_ptrs[data].asm

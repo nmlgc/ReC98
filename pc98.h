@@ -58,6 +58,9 @@ typedef unsigned int utram_y_t;
 #define GLYPH_HALF_W 8
 #define GLYPH_FULL_W 16
 #define GLYPH_H 16
+
+#define shiftjis_w(literal) \
+	((sizeof(literal) - 1) * GLYPH_HALF_W)
 /// ----
 
 /// Graphics
