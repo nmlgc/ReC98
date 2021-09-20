@@ -292,3 +292,23 @@ void bomb_collect_update_and_render(int slot)
 void bomb_drop(void)
 {
 }
+
+void items_bomb_unput_update_render(void)
+{
+	for(int i = 0; i < ITEM_BOMB_COUNT; i++) {
+		if(items_bomb[i].flag != IF_FREE) {
+			item_unput_update_render(
+				i,
+				items_bomb[i].flag,
+				bomb_hittest,
+				items_bomb[i].left,
+				items_bomb[i].top,
+				items_bomb[i].velocity_y,
+				items_bomb[i].flag_state.splash_radius,
+				PTN_ITEM_BOMB,
+				bomb_collect_update_and_render,
+				bomb_drop
+			);
+		}
+	}
+}

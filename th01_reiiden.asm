@@ -3084,7 +3084,7 @@ loc_DCCA:
 		push	1
 		call	sub_19E48
 		pop	cx
-		call	sub_181AC
+		call	@items_bomb_unput_update_render$qv
 		call	sub_1851E
 		inc	dword_36C20
 		inc	_orb_force_frame
@@ -6043,12 +6043,10 @@ main_23_TEXT	ends
 ; Segment type:	Pure code
 main_24_TEXT	segment	byte public 'CODE' use16
 	extern @items_bomb_add$qi:proc
-	extern @bomb_hittest$qi:proc
 	extern @items_bomb_render$qv:proc
 	extern @items_bomb_reset$qv:proc
 	extern @item_unput_update_render$qimcmqi$vmit4t4muc13main_ptn_id_tt3mqv$v:proc
-	extern @bomb_collect_update_and_render$qi:proc
-	extern @bomb_drop$qv:proc
+	extern @items_bomb_unput_update_render$qv:proc
 main_24_TEXT	ends
 
 main_24__TEXT	segment	byte public 'CODE' use16
@@ -6061,71 +6059,6 @@ IF_SPLASH = 1
 IF_COLLECTED = 99
 IF_COLLECTED_OVER_CAP = 100
 ITEM_H = PTN_H
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_181AC	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_1820F
-; ---------------------------------------------------------------------------
-
-loc_181B4:
-		mov	bx, si
-		imul	bx, size item_t
-		cmp	_items_bomb.ITEM_flag[bx], IF_FREE
-		jz	short loc_1820E
-		push	seg main_24
-		push	offset @bomb_drop$qv
-		push	seg main_24
-		push	offset @bomb_collect_update_and_render$qi
-		push	PTN_ITEM_BOMB
-		push	ds
-		mov	ax, si
-		imul ax, size item_t
-		add	ax, offset _items_bomb.ITEM_splash_radius
-		push	ax
-		push	ds
-		mov	ax, si
-		imul ax, size item_t
-		add	ax, offset _items_bomb.ITEM_velocity_y
-		push	ax
-		push	ds
-		mov	ax, si
-		imul ax, size item_t
-		add	ax, offset _items_bomb.ITEM_top
-		push	ax
-		push	ds
-		mov	ax, si
-		imul ax, size item_t
-		add	ax, offset _items_bomb.ITEM_left
-		push	ax
-		push	seg main_24
-		push	offset @bomb_hittest$qi
-		push	ds
-		mov	ax, si
-		imul ax, size item_t
-		add	ax, offset _items_bomb.ITEM_flag
-		push	ax
-		push	si
-		call	@item_unput_update_render$qimcmqi$vmit4t4muc13main_ptn_id_tt3mqv$v
-		add	sp, 24h
-
-loc_1820E:
-		inc	si
-
-loc_1820F:
-		cmp	si, ITEM_BOMB_COUNT
-		jl	short loc_181B4
-		pop	si
-		pop	bp
-		retf
-sub_181AC	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
