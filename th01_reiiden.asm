@@ -6047,6 +6047,7 @@ main_24_TEXT	segment	byte public 'CODE' use16
 	extern @items_bomb_reset$qv:proc
 	extern @item_unput_update_render$qimcmqi$vmit4t4muc13main_ptn_id_tt3mqv$v:proc
 	extern @items_bomb_unput_update_render$qv:proc
+	extern @items_point_add$qi:proc
 main_24_TEXT	ends
 
 main_24__TEXT	segment	byte public 'CODE' use16
@@ -6059,69 +6060,6 @@ IF_SPLASH = 1
 IF_COLLECTED = 99
 IF_COLLECTED_OVER_CAP = 100
 ITEM_H = PTN_H
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_18217	proc far
-
-@@from_card_slot		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	cx, [bp+@@from_card_slot]
-		xor	dx, dx
-		jmp	short loc_18286
-; ---------------------------------------------------------------------------
-
-loc_18221:
-		mov	bx, dx
-		imul	bx, size item_t
-		cmp	_items_point.ITEM_flag[bx], IF_FREE
-		jnz	short loc_18285
-		mov	bx, dx
-		imul	bx, size item_t
-		mov	_items_point.ITEM_flag[bx], IF_SPLASH
-		mov	ax, cx
-		add	ax, ax
-		les	bx, _cards_left
-		add	bx, ax
-		mov	ax, es:[bx]
-		mov	bx, dx
-		imul	bx, size item_t
-		mov	_items_point.ITEM_left[bx], ax
-		mov	ax, cx
-		add	ax, ax
-		les	bx, _cards_top
-		add	bx, ax
-		mov	ax, es:[bx]
-		mov	bx, dx
-		imul	bx, size item_t
-		mov	_items_point.ITEM_top[bx], ax
-		mov	bx, dx
-		imul	bx, size item_t
-		mov	_items_point.ITEM_unknown_zero[bx], 0
-		mov	bx, dx
-		imul	bx, size item_t
-		mov	_items_point.ITEM_velocity_y[bx], 2
-		mov	bx, dx
-		imul	bx, size item_t
-		mov	_items_point.ITEM_splash_radius[bx], 4
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_18285:
-		inc	dx
-
-loc_18286:
-		cmp	dx, ITEM_POINT_COUNT
-		jl	short loc_18221
-		pop	bp
-		retf
-sub_18217	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -16344,7 +16282,7 @@ loc_1FF3C:
 		jz	short loc_1FF6F
 
 loc_1FF67:
-		call	sub_18217 pascal, si
+		call	@items_point_add$qi pascal, si
 		jmp	short loc_1FF75
 ; ---------------------------------------------------------------------------
 

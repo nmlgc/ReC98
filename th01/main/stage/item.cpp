@@ -312,3 +312,13 @@ void items_bomb_unput_update_render(void)
 		}
 	}
 }
+
+void items_point_add(int from_card_slot)
+{
+	for(int i = 0; i < ITEM_POINT_COUNT; i++) {
+		if(items_point[i].flag == IF_FREE) {
+			item_add(items_point[i], from_card_slot);
+			return;
+		}
+	}
+}
