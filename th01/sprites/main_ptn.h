@@ -43,6 +43,7 @@ typedef enum {
 	PTN_PORTAL_ANIM_last = (PTN_PORTAL_ANIM + (PORTAL_ANIM_CELS - 1)),
 
 	PTN_ITEM_BOMB,
+	PTN_ITEM_POINT,
 	// -----------
 
 	// HUD (snapped backgrounds)

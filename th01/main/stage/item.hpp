@@ -14,4 +14,6 @@ void items_bomb_unput_update_render(void);
 
 // Spawns a new point item from the position of the card in the given slot.
 void items_point_add(int from_card_slot);
+
+void items_point_render(void);
 /// -----

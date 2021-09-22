@@ -262,7 +262,7 @@ loc_BDC2:
 		call	_ptn_put_8 stdcall, _player_left, (40h shl 16) or _player_top
 		add	sp, 0Eh
 		call	@items_bomb_render$qv
-		call	sub_183A3
+		call	@items_point_render$qv
 
 loc_BE00:
 		cmp	[bp+arg_6], 0
@@ -6049,6 +6049,7 @@ main_24_TEXT	segment	byte public 'CODE' use16
 	extern @items_bomb_unput_update_render$qv:proc
 	extern @items_point_add$qi:proc
 	extern @point_hittest$qi:proc
+	extern @items_point_render$qv:proc
 main_24_TEXT	ends
 
 main_24__TEXT	segment	byte public 'CODE' use16
@@ -6057,102 +6058,6 @@ main_24__TEXT	segment	byte public 'CODE' use16
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 IF_FREE = 0
-IF_SPLASH = 1
-IF_COLLECTED = 99
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_183A3	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_183E6
-; ---------------------------------------------------------------------------
-
-loc_183AB:
-		mov	bx, si
-		imul	bx, size item_t
-		mov	al, _items_point.ITEM_flag[bx]
-		cbw
-		cmp	ax, IF_SPLASH
-		jle	short loc_183E5
-		mov	bx, si
-		imul	bx, size item_t
-		mov	al, _items_point.ITEM_flag[bx]
-		cbw
-		cmp	ax, IF_COLLECTED
-		jge	short loc_183E5
-		push	21h
-		mov	bx, si
-		imul	bx, size item_t
-		push	_items_point.ITEM_top[bx]
-		mov	bx, si
-		imul	bx, size item_t
-		push	_items_point.ITEM_left[bx]
-		call	_ptn_put_8
-		add	sp, 6
-
-loc_183E5:
-		inc	si
-
-loc_183E6:
-		cmp	si, ITEM_POINT_COUNT
-		jl	short loc_183AB
-		pop	si
-		pop	bp
-		retf
-sub_183A3	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_183EE	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_18435
-; ---------------------------------------------------------------------------
-
-loc_183F6:
-		mov	bx, si
-		imul	bx, size item_t
-		mov	al, _items_point.ITEM_flag[bx]
-		cbw
-		cmp	ax, IF_SPLASH
-		jle	short loc_18434
-		mov	bx, si
-		imul	bx, size item_t
-		mov	al, _items_point.ITEM_flag[bx]
-		cbw
-		cmp	ax, IF_COLLECTED
-		jge	short loc_18434
-		push	(32 shl 16) or 32
-		mov	bx, si
-		imul	bx, size item_t
-		push	_items_point.ITEM_top[bx]
-		mov	bx, si
-		imul	bx, size item_t
-		push	_items_point.ITEM_left[bx]
-		call	_egc_copy_rect_1_to_0_16
-		add	sp, 8
-
-loc_18434:
-		inc	si
-
-loc_18435:
-		cmp	si, ITEM_POINT_COUNT
-		jl	short loc_183F6
-		pop	si
-		pop	bp
-		retf
-sub_183EE	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6306,7 +6211,7 @@ loc_18526:
 		push	offset sub_18456
 		push	seg main_24
 		push	offset sub_18465
-		push	21h ; '!'
+		push	PTN_ITEM_POINT
 		push	ds
 		mov	ax, si
 		imul ax, size item_t

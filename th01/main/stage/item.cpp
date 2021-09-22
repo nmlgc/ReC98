@@ -347,3 +347,22 @@ void point_hittest(int slot)
 
 	mdrv2_se_play(15);
 }
+
+void items_point_render(void)
+{
+	for(int i = 0; i < ITEM_POINT_COUNT; i++) {
+		if(item_is_visible(items_point[i])) {
+			ptn_put_8(items_point[i].left, items_point[i].top, PTN_ITEM_POINT);
+		}
+	}
+}
+
+// Unused.
+void items_point_unput(void)
+{
+	for(int i = 0; i < ITEM_POINT_COUNT; i++) {
+		if(item_is_visible(items_point[i])) {
+			ptn_sloppy_unput_16(items_point[i].left, items_point[i].top);
+		}
+	}
+}
