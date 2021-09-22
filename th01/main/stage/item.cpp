@@ -7,6 +7,7 @@ extern "C" {
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/math/clamp.hpp"
+#include "th01/math/digit.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/graph.h"
 #include "th01/main/playfld.hpp"
@@ -18,6 +19,7 @@ extern "C" {
 #include "th01/main/player/player.hpp"
 #include "th01/sprites/main_ptn.h"
 }
+#include "th01/core/str_val.hpp"
 #include "th01/main/hud/hud.hpp"
 #include "th01/main/shape.hpp"
 #include "th01/main/stage/item.hpp"
@@ -30,12 +32,14 @@ static const pixel_t ITEM_W = PTN_W;
 static const pixel_t ITEM_H = PTN_H;
 
 static const unsigned int POINT_CAP = 65530;
+static const unsigned int POINT_CAP_DIGITS = digit_count(POINT_CAP);
 
 // Assumes that [BOMB_COLLECT_1] and [BOMB_COLLECT_CAP] have the same length
 // in bytes!
 static const pixel_t BOMB_COLLECT_1_W = shiftjis_w(BOMB_COLLECT_1);
 
 static const pixel_t BOMB_COLLECT_2_W = shiftjis_w(BOMB_COLLECT_2);
+static const pixel_t POINT_COLLECT_W = (POINT_CAP_DIGITS * GLYPH_HALF_W);
 
 // TODO: Remove, once data can be emitted here
 #undef BOMB_COLLECT_1
@@ -129,6 +133,10 @@ typedef void drop_func_t(void);
 	item.velocity_y = -2; \
 	item.flag_state.collect_time = 16; \
 	item.top = clamp_max_2_ge(item.top, (PLAYFIELD_BOTTOM - ITEM_H)); \
+}
+
+inline screen_x_t point_collect_left(item_t* slots, const int i) {
+	return clamp_max_2(slots[i].left, (PLAYFIELD_RIGHT - POINT_COLLECT_W));
 }
 
 inline screen_x_t bomb_collect_2_left(item_t* slots, const int i) {
@@ -372,4 +380,31 @@ void items_point_reset(void)
 	for(int i = 0; i < ITEM_POINT_COUNT; i++) {
 		items_point[i].flag = IF_FREE;
 	}
+}
+
+void point_drop(void)
+{
+	resident->point_value = 0;
+}
+
+void point_collect_update_and_render(int slot)
+{
+	#define item items_point[slot]
+	#define left point_collect_left(items_point, slot)
+	char str[POINT_CAP_DIGITS + 1];
+
+	egc_copy_rect_1_to_0_16_word_w(left, item.top, POINT_COLLECT_W, GLYPH_H);
+
+	item.top += item.velocity_y;
+	item.flag_state.collect_time--;
+	if(item.flag_state.collect_time == 0) {
+		item.flag = IF_FREE;
+		return;
+	}
+
+	str_right_aligned_from_uint16(str, resident->point_value, POINT_CAP_DIGITS);
+	graph_putsa_fx(left, item.top, V_WHITE, str);
+
+	#undef left
+	#undef item
 }

@@ -6051,6 +6051,8 @@ main_24_TEXT	segment	byte public 'CODE' use16
 	extern @point_hittest$qi:proc
 	extern @items_point_render$qv:proc
 	extern @items_point_reset$qv:proc
+	extern @point_drop$qv:proc
+	extern @point_collect_update_and_render$qi:proc
 main_24_TEXT	ends
 
 main_24__TEXT	segment	byte public 'CODE' use16
@@ -6059,112 +6061,6 @@ main_24__TEXT	segment	byte public 'CODE' use16
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 IF_FREE = 0
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_18456	proc far
-		push	bp
-		mov	bp, sp
-		les	bx, _resident
-		mov	es:[bx+reiidenconfig_t.p_value], 0
-		pop	bp
-		retf
-sub_18456	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_18465	proc far
-
-@@str		= byte ptr -6
-@@slot		= word ptr  6
-
-		enter	6, 0
-		push	si
-		mov	si, [bp+@@slot]
-		push	(16 shl 16) or 48
-		mov	bx, si
-		imul	bx, size item_t
-		push	_items_point.ITEM_top[bx]
-		mov	bx, si
-		imul	bx, size item_t
-		cmp	_items_point.ITEM_left[bx], (PLAYFIELD_RIGHT - (5 * GLYPH_HALF_W))
-		jle	short loc_1848E
-		mov	ax, (PLAYFIELD_RIGHT - (5 * GLYPH_HALF_W))
-		jmp	short loc_18497
-; ---------------------------------------------------------------------------
-
-loc_1848E:
-		mov	bx, si
-		imul	bx, size item_t
-		mov	ax, _items_point.ITEM_left[bx]
-
-loc_18497:
-		push	ax
-		call	_egc_copy_rect_1_to_0_16
-		add	sp, 8
-		mov	bx, si
-		imul	bx, size item_t
-		mov	ax, _items_point.ITEM_velocity_y[bx]
-		mov	bx, si
-		imul	bx, size item_t
-		add	_items_point.ITEM_top[bx], ax
-		mov	bx, si
-		imul	bx, size item_t
-		dec	_items_point.ITEM_collect_time[bx]
-		mov	bx, si
-		imul	bx, size item_t
-		cmp	_items_point.ITEM_collect_time[bx], 0
-		jnz	short loc_184D3
-		mov	bx, si
-		imul	bx, size item_t
-		mov	_items_point.ITEM_flag[bx], IF_FREE
-		jmp	short loc_1851B
-; ---------------------------------------------------------------------------
-
-loc_184D3:
-		push	ss
-		lea	ax, [bp+@@str]
-		push	ax
-		les	bx, _resident
-		push	es:[bx+reiidenconfig_t.p_value]
-		push	5
-		call	@str_right_aligned_from_uint16$qncuiui
-		push	ss
-		lea	ax, [bp+@@str]
-		push	ax
-		push	7
-		mov	bx, si
-		imul	bx, size item_t
-		push	_items_point.ITEM_top[bx]
-		mov	bx, si
-		imul	bx, size item_t
-		cmp	_items_point.ITEM_left[bx], (PLAYFIELD_RIGHT - (5 * GLYPH_HALF_W))
-		jle	short loc_18509
-		mov	ax, (PLAYFIELD_RIGHT - (5 * GLYPH_HALF_W))
-		jmp	short loc_18512
-; ---------------------------------------------------------------------------
-
-loc_18509:
-		mov	bx, si
-		imul	bx, size item_t
-		mov	ax, _items_point.ITEM_left[bx]
-
-loc_18512:
-		push	ax
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-
-loc_1851B:
-		pop	si
-		leave
-		retf
-sub_18465	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6184,9 +6080,9 @@ loc_18526:
 		cmp	_items_point.ITEM_flag[bx], IF_FREE
 		jz	short loc_18580
 		push	seg main_24
-		push	offset sub_18456
+		push	offset @point_drop$qv
 		push	seg main_24
-		push	offset sub_18465
+		push	offset @point_collect_update_and_render$qi
 		push	PTN_ITEM_POINT
 		push	ds
 		mov	ax, si
