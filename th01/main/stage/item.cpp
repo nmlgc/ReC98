@@ -366,3 +366,10 @@ void items_point_unput(void)
 		}
 	}
 }
+
+void items_point_reset(void)
+{
+	for(int i = 0; i < ITEM_POINT_COUNT; i++) {
+		items_point[i].flag = IF_FREE;
+	}
+}

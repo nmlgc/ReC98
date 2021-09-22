@@ -1497,7 +1497,7 @@ var_2		= word ptr -2
 		mov	cx, 0Ah
 		call	SCOPY@
 		call	@items_bomb_reset$qv
-		call	sub_1843D
+		call	@items_point_reset$qv
 		call	_ptn_put_8 c, _orb_cur_left, _orb_cur_top, 3
 		call	IRand
 		mov	bx, 8
@@ -2818,7 +2818,7 @@ loc_D9CA:
 		xor	si, si
 		mov	_first_stage_in_scene, 1
 		call	@items_bomb_reset$qv
-		call	sub_1843D
+		call	@items_point_reset$qv
 		cmp	byte_34AA4, 0
 		jnz	short loc_DA2A
 		call	_ptn_free stdcall, PTN_SLOT_STG
@@ -6050,6 +6050,7 @@ main_24_TEXT	segment	byte public 'CODE' use16
 	extern @items_point_add$qi:proc
 	extern @point_hittest$qi:proc
 	extern @items_point_render$qv:proc
+	extern @items_point_reset$qv:proc
 main_24_TEXT	ends
 
 main_24__TEXT	segment	byte public 'CODE' use16
@@ -6058,31 +6059,6 @@ main_24__TEXT	segment	byte public 'CODE' use16
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 IF_FREE = 0
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1843D	proc far
-		push	bp
-		mov	bp, sp
-		xor	ax, ax
-		jmp	short loc_1844F
-; ---------------------------------------------------------------------------
-
-loc_18444:
-		mov	bx, ax
-		imul	bx, size item_t
-		mov	_items_point.ITEM_flag[bx], IF_FREE
-		inc	ax
-
-loc_1844F:
-		cmp	ax, ITEM_POINT_COUNT
-		jl	short loc_18444
-		pop	bp
-		retf
-sub_1843D	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
