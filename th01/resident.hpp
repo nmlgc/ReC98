@@ -35,7 +35,7 @@ typedef struct {
 	int stage;
 	unsigned long hiscore;
 	long score_highest; // among all continues
-	unsigned int p_value;
+	uint16_t point_value;
 } resident_t;
 
 extern resident_t *resident;

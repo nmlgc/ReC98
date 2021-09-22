@@ -29,6 +29,8 @@ extern "C" {
 static const pixel_t ITEM_W = PTN_W;
 static const pixel_t ITEM_H = PTN_H;
 
+static const unsigned int POINT_CAP = 65530;
+
 // Assumes that [BOMB_COLLECT_1] and [BOMB_COLLECT_CAP] have the same length
 // in bytes!
 static const pixel_t BOMB_COLLECT_1_W = shiftjis_w(BOMB_COLLECT_1);
@@ -321,4 +323,27 @@ void items_point_add(int from_card_slot)
 			return;
 		}
 	}
+}
+
+void point_hittest(int slot)
+{
+	if(!item_player_hittest(items_point[slot])) {
+		return;
+	}
+	ptn_sloppy_unput_16(items_point[slot].left, items_point[slot].top);
+
+	item_collect_init(items_point[slot]);
+
+	// Well… that's one way to prevent a unsigned 16-bit integer overflow.
+	if(resident->point_value < 59999) {
+		resident->point_value += (resident->point_value < 10000) ? 1000 : 10000;
+	}
+	if(resident->point_value >= 60000) {
+		resident->point_value = POINT_CAP;
+	}
+	score += resident->point_value;
+	hud_score_and_cardcombo_render();
+	items_point[slot].flag = IF_COLLECTED_OVER_CAP;
+
+	mdrv2_se_play(15);
 }

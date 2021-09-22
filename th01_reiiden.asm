@@ -6048,6 +6048,7 @@ main_24_TEXT	segment	byte public 'CODE' use16
 	extern @item_unput_update_render$qimcmqi$vmit4t4muc13main_ptn_id_tt3mqv$v:proc
 	extern @items_bomb_unput_update_render$qv:proc
 	extern @items_point_add$qi:proc
+	extern @point_hittest$qi:proc
 main_24_TEXT	ends
 
 main_24__TEXT	segment	byte public 'CODE' use16
@@ -6058,121 +6059,6 @@ main_24__TEXT	segment	byte public 'CODE' use16
 IF_FREE = 0
 IF_SPLASH = 1
 IF_COLLECTED = 99
-IF_COLLECTED_OVER_CAP = 100
-ITEM_H = PTN_H
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1828D	proc far
-
-@@slot		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+@@slot]
-		mov	bx, si
-		imul	bx, size item_t
-		mov	ax, _player_left
-		add	ax, -24
-		cmp	_items_point.ITEM_left[bx], ax
-		jle	loc_183A0
-		mov	bx, si
-		imul	bx, size item_t
-		mov	ax, _player_left
-		add	ax, 24
-		cmp	_items_point.ITEM_left[bx], ax
-		jge	loc_183A0
-		mov	bx, si
-		imul	bx, size item_t
-		cmp	_items_point.ITEM_top[bx],  (_player_top - 24)
-		jle	loc_183A0
-		mov	bx, si
-		imul	bx, size item_t
-		mov	al, _items_point.ITEM_flag[bx]
-		cbw
-		cmp	ax, IF_SPLASH
-		jle	loc_183A0
-		mov	bx, si
-		imul	bx, size item_t
-		mov	al, _items_point.ITEM_flag[bx]
-		cbw
-		cmp	ax, IF_COLLECTED
-		jge	loc_183A0
-		push	(32 shl 16) or 32
-		mov	bx, si
-		imul	bx, size item_t
-		push	_items_point.ITEM_top[bx]
-		mov	bx, si
-		imul	bx, size item_t
-		push	_items_point.ITEM_left[bx]
-		call	_egc_copy_rect_1_to_0_16
-		add	sp, 8
-		mov	bx, si
-		imul	bx, size item_t
-		mov	_items_point.ITEM_velocity_y[bx], -2
-		mov	bx, si
-		imul	bx, size item_t
-		mov	_items_point.ITEM_collect_time[bx], 16
-		mov	bx, si
-		imul	bx, size item_t
-		cmp	_items_point.ITEM_top[bx], (PLAYFIELD_BOTTOM - ITEM_H)
-		jl	short loc_18332
-		mov	ax, (PLAYFIELD_BOTTOM - ITEM_H)
-		jmp	short loc_1833B
-; ---------------------------------------------------------------------------
-
-loc_18332:
-		mov	bx, si
-		imul	bx, size item_t
-		mov	ax, _items_point.ITEM_top[bx]
-
-loc_1833B:
-		mov	bx, si
-		imul	bx, size item_t
-		mov	_items_point.ITEM_top[bx], ax
-		les	bx, _resident
-		cmp	es:[bx+reiidenconfig_t.p_value], 59999
-		jnb	short loc_18368
-		cmp	es:[bx+reiidenconfig_t.p_value], 10000
-		jnb	short loc_1835D
-		mov	ax, 3E8h
-		jmp	short loc_18360
-; ---------------------------------------------------------------------------
-
-loc_1835D:
-		mov	ax, 2710h
-
-loc_18360:
-		les	bx, _resident
-		add	es:[bx+reiidenconfig_t.p_value], ax
-
-loc_18368:
-		les	bx, _resident
-		cmp	es:[bx+reiidenconfig_t.p_value], 60000
-		jb	short loc_1837A
-		mov	es:[bx+reiidenconfig_t.p_value], 65530
-
-loc_1837A:
-		les	bx, _resident
-		movzx	eax, es:[bx+reiidenconfig_t.p_value]
-		add	_score, eax
-		call	@hud_score_and_cardcombo_render$qv
-		mov	bx, si
-		imul	bx, size item_t
-		mov	_items_point.ITEM_flag[bx], IF_COLLECTED_OVER_CAP
-		push	0Fh
-		call	_mdrv2_se_play
-		pop	cx
-
-loc_183A0:
-		pop	si
-		pop	bp
-		retf
-sub_1828D	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6442,7 +6328,7 @@ loc_18526:
 		add	ax, offset _items_point.ITEM_left
 		push	ax
 		push	seg main_24
-		push	offset sub_1828D
+		push	offset @point_hittest$qi
 		push	ds
 		mov	ax, si
 		imul ax, size item_t
