@@ -408,3 +408,23 @@ void point_collect_update_and_render(int slot)
 	#undef left
 	#undef item
 }
+
+void items_point_unput_update_render(void)
+{
+	for(int i = 0; i < ITEM_POINT_COUNT; i++) {
+		if(items_point[i].flag != IF_FREE) {
+			item_unput_update_render(
+				i,
+				items_point[i].flag,
+				point_hittest,
+				items_point[i].left,
+				items_point[i].top,
+				items_point[i].velocity_y,
+				items_point[i].flag_state.splash_radius,
+				PTN_ITEM_POINT,
+				point_collect_update_and_render,
+				point_drop
+			);
+		}
+	}
+}

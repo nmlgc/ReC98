@@ -63,7 +63,6 @@ main_01 group main_01_TEXT, main_01__TEXT, main_01___TEXT
 main_15 group main_15_TEXT, main_15__TEXT
 main_19 group main_19_TEXT, main_19__TEXT
 main_21 group main_21_TEXT, main_21__TEXT
-main_24 group main_24_TEXT, main_24__TEXT
 main_25 group main_25_TEXT, main_25__TEXT
 main_27 group main_27_TEXT, main_27__TEXT
 main_29 group main_29_TEXT, main_29__TEXT
@@ -3085,7 +3084,7 @@ loc_DCCA:
 		call	sub_19E48
 		pop	cx
 		call	@items_bomb_unput_update_render$qv
-		call	sub_1851E
+		call	@items_point_unput_update_render$qv
 		inc	dword_36C20
 		inc	_orb_force_frame
 		inc	dword_34A62
@@ -6045,90 +6044,12 @@ main_24_TEXT	segment	byte public 'CODE' use16
 	extern @items_bomb_add$qi:proc
 	extern @items_bomb_render$qv:proc
 	extern @items_bomb_reset$qv:proc
-	extern @item_unput_update_render$qimcmqi$vmit4t4muc13main_ptn_id_tt3mqv$v:proc
 	extern @items_bomb_unput_update_render$qv:proc
 	extern @items_point_add$qi:proc
-	extern @point_hittest$qi:proc
 	extern @items_point_render$qv:proc
 	extern @items_point_reset$qv:proc
-	extern @point_drop$qv:proc
-	extern @point_collect_update_and_render$qi:proc
+	extern @items_point_unput_update_render$qv:proc
 main_24_TEXT	ends
-
-main_24__TEXT	segment	byte public 'CODE' use16
-		assume cs:main_24
-		;org 9
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-IF_FREE = 0
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1851E	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_18581
-; ---------------------------------------------------------------------------
-
-loc_18526:
-		mov	bx, si
-		imul	bx, size item_t
-		cmp	_items_point.ITEM_flag[bx], IF_FREE
-		jz	short loc_18580
-		push	seg main_24
-		push	offset @point_drop$qv
-		push	seg main_24
-		push	offset @point_collect_update_and_render$qi
-		push	PTN_ITEM_POINT
-		push	ds
-		mov	ax, si
-		imul ax, size item_t
-		add	ax, offset _items_point.ITEM_splash_radius
-		push	ax
-		push	ds
-		mov	ax, si
-		imul ax, size item_t
-		add	ax, offset _items_point.ITEM_velocity_y
-		push	ax
-		push	ds
-		mov	ax, si
-		imul ax, size item_t
-		add	ax, offset _items_point.ITEM_top
-		push	ax
-		push	ds
-		mov	ax, si
-		imul ax, size item_t
-		add	ax, offset _items_point.ITEM_left
-		push	ax
-		push	seg main_24
-		push	offset @point_hittest$qi
-		push	ds
-		mov	ax, si
-		imul ax, size item_t
-		add	ax, offset _items_point.ITEM_flag
-		push	ax
-		push	si
-		call	@item_unput_update_render$qimcmqi$vmit4t4muc13main_ptn_id_tt3mqv$v
-		add	sp, 24h
-
-loc_18580:
-		inc	si
-
-loc_18581:
-		cmp	si, ITEM_POINT_COUNT
-
-loc_18584:
-		jl	short loc_18526
-		pop	si
-		pop	bp
-		retf
-sub_1851E	endp
-
-main_24__TEXT	ends
 
 ; ===========================================================================
 
