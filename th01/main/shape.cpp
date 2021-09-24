@@ -1,3 +1,4 @@
+#include "th01/v_colors.hpp"
 #include "th01/sprites/shape8x8.hpp"
 #include "th01/main/shape.hpp"
 
@@ -119,7 +120,7 @@ void shape8x8_invincibility_put(screen_x_t left, vram_y_t top, int cel)
 		return;
 	}
 
-	grcg_setcolor_rmw(10);
+	grcg_setcolor_rmw(V_RED);
 	for(pixel_t y = 0; y < sSHAPE8X8[0].h(); y++) {
 		#define sprite sSHAPE8X8[SHAPE8X8_INVINCIBILITY + cel][y]
 
@@ -175,7 +176,7 @@ void shape8x8_invincibility_put_with_mask_from_B_plane(
 		return;
 	}
 
-	grcg_setcolor_rmw(10);
+	grcg_setcolor_rmw(V_RED);
 	for(pixel_t y = 0; y < sSHAPE8X8[0].h(); y++) {
 		#define sprite sSHAPE8X8[SHAPE8X8_INVINCIBILITY + cel][y]
 

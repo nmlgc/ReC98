@@ -39,9 +39,9 @@ void hp_put_with_section_pattern(int point, hp_section_t section)
 	);
 
 	if(section == HP_SECTION_RED) {
-		grcg_setcolor_rmw(10);
+		grcg_setcolor_rmw(V_RED);
 	} else if(section == HP_SECTION_WHITE) {
-		grcg_setcolor_rmw(7);
+		grcg_setcolor_rmw(V_WHITE);
 	} else if(section == HP_SECTION_REDWHITE) {
 		grcg_set_redwhite();
 	}

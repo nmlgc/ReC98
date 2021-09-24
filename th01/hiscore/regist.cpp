@@ -3,10 +3,11 @@
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/grp2xscs.h"
 #include "th01/hardware/input.hpp"
+#include "th01/v_colors.hpp"
 #include "th01/score.h"
 
 #define COL_SELECTED 3
-#define COL_REGULAR 7
+#define COL_REGULAR V_WHITE
 
 #define TITLE_LEFT 48
 #define TITLE_TOP 0

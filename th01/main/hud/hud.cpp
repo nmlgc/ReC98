@@ -3,6 +3,7 @@
 #include "master.hpp"
 #include "th01/common.h"
 #include "th01/resident.hpp"
+#include "th01/v_colors.hpp"
 #include "th01/hardware/graph.h"
 #include "th01/main/vars.hpp"
 #include "th01/core/str_val.hpp"
@@ -32,8 +33,8 @@ static const screen_y_t STAGE_TOP = 32;
 static const int PTN_LIFE_QUARTER = 0;
 static const int PTN_BOMB_QUARTER = 1;
 
-static const int16_t MAX_FX = (7 | FX_WEIGHT_BOLD);
-static const int16_t CUR_FX = (7 | FX_WEIGHT_BLACK);
+static const int16_t MAX_FX = (V_WHITE | FX_WEIGHT_BOLD);
+static const int16_t CUR_FX = (V_WHITE | FX_WEIGHT_BLACK);
 
 #if (PTN_QUARTER_W < GLYPH_FULL_W)
 	#error Original code assumes PTN_QUARTER_W >= GLYPH_FULL_W
@@ -285,7 +286,7 @@ void hud_bg_put(void)
 	uint8_t rle_run_byte = hud_bg_rle_run_byte;
 
 	disable();
-	grcg_setcolor_rmw(10);
+	grcg_setcolor_rmw(V_RED);
 	for(vram_offset = 0; vram_offset < (66 * ROW_SIZE); vram_offset++) {
 		// Effectively the same algorithm as used for .GRX files, except for
 		// • the customizable RLE run byte, and

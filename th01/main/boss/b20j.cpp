@@ -9,6 +9,7 @@ extern "C" {
 #include "planar.h"
 #include "master.hpp"
 #include "th01/common.h"
+#include "th01/v_colors.hpp"
 #include "th01/math/area.hpp"
 #include "th01/math/overlap.hpp"
 #include "th01/math/subpixel.hpp"
@@ -220,7 +221,9 @@ template <int SnakeCount> struct Snakes {
 				snakes.left[tmp_i][tmp_j], snakes.top[i][tmp_j], 9 \
 			); \
 		} \
-		shape8x8_diamond_put(snakes.left[tmp_i][0], snakes.top[tmp_i][0], 7); \
+		shape8x8_diamond_put( \
+			snakes.left[tmp_i][0], snakes.top[tmp_i][0], V_WHITE \
+		); \
 		\
 		/* Update */ \
 		if(snakes.target_locked[tmp_i] == false) { \
@@ -1374,7 +1377,7 @@ void pattern_lasers_and_3_spread(void)
 		].spawn(
 			SWORD_CENTER_X, SWORD_CENTER_Y,
 			target_left, target_y,
-			(to_sp(8.5f) / 2), 7, 30, 5
+			(to_sp(8.5f) / 2), V_WHITE, 30, 5
 		);
 		mdrv2_se_play(6);
 
@@ -1851,7 +1854,7 @@ void konngara_main(void)
 					mdrv2_bgm_fade_out_nonblock();
 				}
 				z_palette_black_out_step_2(col, comp);
-				if(z_Palettes[7].c.r == 0) {
+				if(z_Palettes[V_WHITE].c.r == 0) {
 					break;
 				}
 				if(scroll_frame < 220) {

@@ -5,6 +5,7 @@ extern "C" {
 #include <mbstring.h>
 #include "ReC98.h"
 #include "master.hpp"
+#include "th01/v_colors.hpp"
 #include "th01/math/clamp.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/vsync.h"
@@ -478,7 +479,7 @@ void graph_r_line_unput(
 )
 {
 	graph_r_unput = true;
-	graph_r_line(left, top, right, bottom, 7);
+	graph_r_line(left, top, right, bottom, V_WHITE);
 	graph_r_unput = false;
 }
 
@@ -755,13 +756,13 @@ void graph_putsa_fx(
 		w = text_extent_fx(col_and_fx, str);
 		if(underline) {
 			z_grcg_boxfill(x, top, (x + w - 1), (top + GLYPH_H + 1), 0);
-			graph_r_hline(x, (x + w - 1), (top + GLYPH_H + 1), 7);
+			graph_r_hline(x, (x + w - 1), (top + GLYPH_H + 1), V_WHITE);
 		} else {
 			z_grcg_boxfill(x, top, (x + w - 1), (top + GLYPH_H - 1), 0);
 		}
 	} else if(underline) {
 		w = text_extent_fx(col_and_fx, str);
-		graph_r_hline(x, (x + w - 1), (top + GLYPH_H + 1), 7);
+		graph_r_hline(x, (x + w - 1), (top + GLYPH_H + 1), V_WHITE);
 	}
 
 	grcg_setcolor_rmw(col_and_fx);

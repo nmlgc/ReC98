@@ -440,7 +440,7 @@ void pellet_put(screen_x_t left, vram_y_t top, int cel)
 
 void pellet_render(screen_x_t left, screen_y_t top, int cel)
 {
-	grcg_setcolor_rmw(7);
+	grcg_setcolor_rmw(V_WHITE);
 	pellet_put(left, top, cel);
 	grcg_off();
 }
@@ -725,8 +725,6 @@ bool16 CPellets::hittest_player_for_cur(void)
 	return false;
 }
 
-static const int CLOUD_COL = 7;
-
 void CPellets::clouds_unput_update_render(void)
 {
 	p = iteration_start();
@@ -736,11 +734,11 @@ void CPellets::clouds_unput_update_render(void)
 		}
 		p->cloud_frame++;
 		if(p->cloud_frame == 2) {
-			pellet_cloud_put_8(p->cloud_left, p->cloud_top, CLOUD_COL, 0);
+			pellet_cloud_put_8(p->cloud_left, p->cloud_top, V_WHITE, 0);
 		} else if(p->cloud_frame == 5) {
 			pellet_cloud_unput_8(p->cloud_left, p->cloud_top, 0);
 		} else if(p->cloud_frame == 6) {
-			pellet_cloud_put_8(p->cloud_left, p->cloud_top, CLOUD_COL, 1);
+			pellet_cloud_put_8(p->cloud_left, p->cloud_top, V_WHITE, 1);
 		} else if(p->cloud_frame == 9) {
 			pellet_cloud_unput_8(p->cloud_left, p->cloud_top, 1);
 			p->cloud_frame = 0;
