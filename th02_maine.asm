@@ -2927,7 +2927,6 @@ maine_01_TEXT	ends
 SHARED	segment	word public 'CODE' use16
 	extern _graph_putsa_fx:proc
 	extern _key_delay:proc
-	extern _vram_planes_set:proc
 	extern _pi_load:proc
 	extern FRAME_DELAY:proc
 	extern _input_sense:proc

@@ -21,13 +21,8 @@ include th03/th03.inc
 include th01/hardware/grppsafx.inc
 include th02/music/music.inc
 
-	extern SCOPY@:proc
-	extern __mbcjmstojis:proc
-	extern __mbctype:byte
-	extern __ctype:byte
 	extern _execl:proc
 	extern _getch:proc
-	extern _memcpy:proc
 
 ; ===========================================================================
 
@@ -3620,7 +3615,6 @@ SHARED	segment	word public 'CODE' use16
 	extern CDG_LOAD_SINGLE:proc
 	extern CDG_LOAD_SINGLE_NOALPHA:proc
 	extern CDG_LOAD_ALL_NOALPHA:proc
-	extern CDG_LOAD_ALL:proc
 	extern CDG_FREE:proc
 	extern GRAPH_PUTSA_FX:proc
 	extern PI_LOAD:proc

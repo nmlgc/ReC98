@@ -23,32 +23,14 @@ include th01/th01.inc
 include th01/hardware/grppsafx.inc
 include th01/formats/cfg.inc
 
-	option emulator
-
-	extern @$bdla$qnv:proc
-	extern @$bnwa$qui:proc
-	extern FTOL@:proc
 	extern SCOPY@:proc
-	extern __mbcjmstojis:proc
-	extern __mscjmstojis:proc
 	extern __setargv__:proc ; main() needs both to be set
 	extern __setenvp__:proc
 	extern _atol:proc
-	extern _close:proc
 	extern _execl:proc
-	extern _exit:proc
-	extern _farfree:proc
-	extern _farmalloc:proc
-	extern _filelength:proc
 	extern _int86:proc
-	extern _intdosx:proc
 	extern _memcmp:proc
-	extern _open:proc
 	extern _printf:proc
-	extern _segread:proc
-	extern _strcmp:proc
-	extern _toupper:proc
-	extern _vsprintf:proc
 
 	.seq
 op_01 group op_01_TEXT, op_01__TEXT
@@ -1365,20 +1347,11 @@ frmdelay_TEXT	ends
 
 ; Segment type:	Pure code
 vsync_TEXT	segment	byte public 'CODE' use16
-	extern _vsync_init:proc
-	extern _vsync_exit:proc
-	extern _z_vsync_wait:proc
 vsync_TEXT	ends
 
 ; ===========================================================================
 
 ztext_TEXT	segment	byte public 'CODE' use16
-	extern _z_text_init:proc
-	extern _z_text_25line:proc
-	extern _z_text_setcursor:proc
-	extern _z_text_clear:proc
-	extern _z_text_show:proc
-	extern _z_text_print:proc
 ztext_TEXT	ends
 
 ; ===========================================================================
@@ -1395,22 +1368,12 @@ initexit_TEXT	ends
 
 ; Segment type:	Pure code
 graph_TEXT	segment	byte public 'CODE' use16
-	extern _z_graph_exit:proc
-	extern _graph_showpage_func:proc
 	extern _graph_accesspage_func:proc
-	extern _grcg_setcolor_rmw:proc
-	extern _grcg_setcolor_tdw:proc
-	extern _grcg_off_func:proc
-	extern _z_palette_set_all_show:proc
-	extern _z_palette_set_show:proc
 	extern _z_graph_clear:proc
-	extern _z_graph_clear_0:proc
 	extern _graph_copy_page_back_to_front:proc
 	extern _z_palette_black:proc
 	extern _z_palette_black_in:proc
-	extern _z_palette_black_out:proc
 	extern _graph_putsa_fx:proc
-	extern _z_respal_set:proc
 graph_TEXT	ends
 
 ; ---------------------------------------------------------------------------

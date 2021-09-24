@@ -26,7 +26,6 @@ include th04/music/music.inc
 	extern SCOPY@:proc
 	extern _execl:proc
 	extern _getch:proc
-	extern _memcpy:proc
 	extern _strlen:proc
 
 g_SHARED group SHARED, SHARED_
@@ -2655,7 +2654,6 @@ include th04/hardware/grppsafx.asm
 	extern CDG_PUT_8:proc
 	extern _game_exit:proc
 	extern _game_init_op:proc
-	extern CDG_PUT_NOALPHA_8:proc
 	extern _input_reset_sense:proc
 	extern _input_sense:proc
 	extern _snd_se_reset:proc
@@ -2951,6 +2949,5 @@ _cleared_with_reimu 	db RANK_COUNT dup (?)
 _cleared_with_marisa	db RANK_COUNT dup (?)
 _extra_unlocked	db ?
 		db 49 dup(?)
-	extern _selectable_with:byte
 
 		end

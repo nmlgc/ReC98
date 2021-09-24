@@ -9239,8 +9239,6 @@ sub_12842	endp
 	HUD_BAR_PUT procdesc near
 	HUD_SCORE_PUT procdesc near
 	SCORE_UPDATE_AND_RENDER procdesc near
-	BOSS_RESET procdesc near
-	BB_STAGE_LOAD procdesc near
 	BB_STAGE_FREE procdesc near
 	STAGE1_SETUP procdesc near
 	STAGE2_SETUP procdesc near
@@ -9290,11 +9288,6 @@ SHARED_	ends
 
 SCROLLY3_TEXT	segment	byte public 'CODE' use16
 		assume cs:main_03
-		;org 8
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-	SCROLL_SUBPIXEL_Y_TO_VRAM_SEG3 procdesc pascal near \
-		y:word
 SCROLLY3_TEXT	ends
 
 MOTION_3_TEXT	segment	word public 'CODE' use16

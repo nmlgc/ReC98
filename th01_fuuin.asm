@@ -21,37 +21,10 @@ BINARY = 'E'
 include ReC98.inc
 include th01/th01.inc
 
-	option emulator
-
-	extern @$bdla$qnv:proc
-	extern @$bnwa$qui:proc
-	extern FTOL@:proc
-	extern F_LUDIV@:proc
-	extern LUMOD@:proc
-	extern LXMUL@:proc
 	extern SCOPY@:proc
-	extern __mbcjmstojis:proc
 	extern __setargv__:proc ; main() needs both to be set
 	extern __setenvp__:proc
-	extern _access:proc
-	extern _close:proc
 	extern _execl:proc
-	extern _exit:proc
-	extern _farfree:proc
-	extern _farmalloc:proc
-	extern _filelength:proc
-	extern _int86:proc
-	extern _intdosx:proc
-	extern _memcmp:proc
-	extern _open:proc
-	extern _printf:proc
-	extern _proc:proc
-	extern _puts:proc
-	extern _read:proc
-	extern _segread:proc
-	extern _strcmp:proc
-	extern _strcpy:proc
-	extern _vsprintf:proc
 
 	.seq
 fuuin_01 group fuuin_01_TEXT, fuuin_01__TEXT
@@ -1567,20 +1540,11 @@ fuuin_04_TEXT	ends
 
 ; Segment type:	Pure code
 vsync_TEXT	segment	byte public 'CODE' use16
-	extern _vsync_init:proc
-	extern _vsync_exit:proc
-	extern _z_vsync_wait:proc
 vsync_TEXT	ends
 
 ; ===========================================================================
 
 ztext_TEXT	segment	byte public 'CODE' use16
-	extern _z_text_init:proc
-	extern _z_text_25line:proc
-	extern _z_text_setcursor:proc
-	extern _z_text_clear:proc
-	extern _z_text_show:proc
-	extern _z_text_print:proc
 ztext_TEXT	ends
 
 ; ===========================================================================
@@ -1595,19 +1559,10 @@ initexit_TEXT	ends
 
 ; Segment type:	Pure code
 graph_TEXT	segment	byte public 'CODE' use16
-	extern _z_graph_exit:proc
-	extern _graph_showpage_func:proc
 	extern _graph_accesspage_func:proc
 	extern _z_palette_set_all_show:proc
-	extern _z_palette_set_show:proc
 	extern _z_graph_clear:proc
-	extern _z_graph_clear_0:proc
 	extern _graph_copy_page_back_to_front:proc
-	extern _z_palette_black:proc
-	extern _z_palette_black_out:proc
-	extern _graph_putsa_fx:proc
-	extern _graph_move_byterect_interpage:proc
-	extern _z_respal_set:proc
 graph_TEXT	ends
 
 ; ===========================================================================
@@ -1641,12 +1596,10 @@ fuuin_12_TEXT	ends
 mdrv2_TEXT	segment	byte public 'CODE' use16
 	extern _mdrv2_resident:proc
 	extern _mdrv2_bgm_load:proc
-	extern _mdrv2_se_load:proc
 	extern _mdrv2_bgm_play:proc
 	extern _mdrv2_bgm_stop:proc
 	extern _mdrv2_bgm_fade_out_nonblock:proc
 	extern _mdrv2_check_board:proc
-	extern _mdrv2_se_play:proc
 mdrv2_TEXT	ends
 
 	.data

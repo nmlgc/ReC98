@@ -25,7 +25,6 @@ include th05/music/music.inc
 include th05/music/piano.inc
 
 	extern SCOPY@:proc
-	extern _execl:proc
 	extern _getch:proc
 	extern _strlen:proc
 
@@ -2508,7 +2507,6 @@ loc_CD64:
 _regist_view_menu endp
 
 	_cleardata_and_regist_view_sprite procdesc near
-	_playchar_menu procdesc near
 op_01_TEXT	ends
 
 ; ===========================================================================
@@ -2525,7 +2523,6 @@ SHARED_	segment	word public 'CODE' use16
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 include th04/hardware/grppsafx.asm
-	extern CDG_PUT_NOALPHA_8:proc
 	extern _snd_se_reset:proc
 	extern SND_SE_PLAY:proc
 	extern _snd_se_update:proc
@@ -2533,7 +2530,6 @@ include th04/hardware/grppsafx.asm
 	extern _bgimage_put:proc
 	extern _bgimage_free:proc
 	extern CDG_PUT_8:proc
-	extern _game_exit:proc
 	extern VECTOR1_AT:proc
 	extern _piano_render:proc
 	extern _piano_setup_and_put_initial:proc
@@ -3267,8 +3263,6 @@ musicroom_trackcount	dw ?
 	extern _hi:scoredat_section_t
 	extern _hi2:scoredat_section_t
 	extern _rank:byte
-	extern _cleared_with:byte
 	extern _extra_unlocked:byte
-	extern _extra_playable_with:byte
 
 		end

@@ -40,7 +40,6 @@ include th04/main/enemy/enemy.inc
 
 	extern SCOPY@:proc
 	extern _execl:proc
-	extern _memcpy:proc
 	extern _tolower:proc
 	extern __ctype:byte
 
@@ -12822,7 +12821,6 @@ SHARED	segment	word public 'CODE' use16
 	extern FRAME_DELAY:proc
 	extern MPN_FREE:proc
 	extern INPUT_WAIT_FOR_CHANGE:proc
-	extern MPN_PALETTE_SHOW:proc
 	extern MPN_LOAD_PALETTE_SHOW:proc
 	extern VECTOR1_AT:proc
 	extern VECTOR2_AT:proc

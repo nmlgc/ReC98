@@ -9286,7 +9286,6 @@ SHARED	segment	word public 'CODE' use16
 	extern _key_delay:proc
 	extern MPN_LOAD:proc
 	extern _mpn_free:proc
-	extern _vram_planes_set:proc
 	extern _pi_load:proc
 	extern VECTOR2:proc
 	extern VECTOR2_BETWEEN_PLUS:proc

@@ -13,7 +13,6 @@ extrn _bullet_template_turn_angle:byte
 extrn _bullet_clear_time:byte
 extrn _pellets:bullet_t:PELLET_COUNT
 extrn _bullets16:bullet_t:PELLET_COUNT
-extrn _playperf:byte
 extrn _gather_template:gather_template_t
 
 BULLET_PATNUM_FOR_ANGLE procdesc pascal near \

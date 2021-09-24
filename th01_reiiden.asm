@@ -41,37 +41,22 @@ BOSS_STAGE = (STAGES_PER_SCENE - 1)
 	extern @_vector_new_$qnvuiuluie:proc
 	extern @set_new_handler$qnqv$v:proc
 	extern FTOL@:proc
-	extern LDIV@:proc
-	extern LXMUL@:proc
 	extern SCOPY@:proc
 	extern __control87:proc
-	extern __lrotl:proc
-	extern __lrotr:proc
-	extern __mbcjmstojis:proc
 	extern __turboFloat
-	extern _close:proc
 	extern _coreleft:proc
 	extern _delay:proc
 	extern _execl:proc
 	extern _exit:proc
-	extern _farfree:proc
 	extern _farheapcheck:proc
 	extern _farheapchecknode:proc
-	extern _farmalloc:proc
-	extern _filelength:proc
-	extern _int86:proc
-	extern _intdosx:proc
 	extern _kbhit:proc
-	extern _memcmp:proc
-	extern _open:proc
 	extern _printf:proc
 	extern _puts:proc
 	extern _scanf:proc
-	extern _segread:proc
 	extern _strcmp:proc
 	extern _strcpy:proc
 	extern _toupper:proc
-	extern _vsprintf:proc
 
 	.seq
 main_01 group main_01_TEXT, main_01__TEXT, main_01___TEXT
@@ -3598,21 +3583,12 @@ frmdelay_TEXT	ends
 
 ; Segment type:	Pure code
 vsync_TEXT	segment	byte public 'CODE' use16
-	extern _vsync_init:proc
-	extern _vsync_exit:proc
-	extern _z_vsync_wait:proc
 vsync_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
 ztext_TEXT	segment	byte public 'CODE' use16
-	extern _z_text_init:proc
-	extern _z_text_25line:proc
-	extern _z_text_setcursor:proc
-	extern _z_text_clear:proc
-	extern _z_text_show:proc
-	extern _z_text_print:proc
 ztext_TEXT	ends
 
 ; ===========================================================================
@@ -3628,10 +3604,8 @@ initexit_TEXT	ends
 ; Segment type:	Pure code
 graph_TEXT	segment	byte public 'CODE' use16
 	extern _z_graph_init:proc
-	extern _z_graph_exit:proc
 	extern _z_graph_show:proc
 	extern _z_graph_hide:proc
-	extern _graph_showpage_func:proc
 	extern _graph_accesspage_func:proc
 	extern _grcg_setcolor_rmw:proc
 	extern _grcg_setcolor_tdw:proc
@@ -3639,11 +3613,7 @@ graph_TEXT	segment	byte public 'CODE' use16
 	extern _z_palette_set_all_show:proc
 	extern _z_palette_set_show:proc
 	extern _z_graph_clear:proc
-	extern _z_graph_clear_0:proc
 	extern _graph_copy_page_back_to_front:proc
-	extern _z_palette_black:proc
-	extern _z_palette_black_in:proc
-	extern _z_palette_black_out:proc
 	extern _z_palette_white_in:proc
 	extern _graph_r_vline:proc
 	extern _graph_r_line_unput:proc
@@ -3651,15 +3621,12 @@ graph_TEXT	segment	byte public 'CODE' use16
 	extern _graph_r_line:proc
 	extern _text_extent_fx:proc
 	extern _graph_putsa_fx:proc
-	extern _graph_move_byterect_interpage:proc
-	extern _z_respal_set:proc
 graph_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
 SHARED	segment	byte public 'CODE' use16
-	extern _ptn_copy_8_0_to_1:proc
 	extern _vram_planes_set:proc
 	extern _egc_copy_rect_1_to_0_16:proc
 	extern _ptn_snap_8:proc
@@ -3679,15 +3646,12 @@ PTN_GRP_GRZ	segment	byte public 'CODE' use16
 	extern _grp_palette_load_show:proc
 	extern _grp_put_palette_show:proc
 	extern _grp_put:proc
-	extern _grp_put_colorkey:proc
 PTN_GRP_GRZ	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
 main_09_TEXT	segment	byte public 'CODE' use16
-	extern _pellet_cloud_put_8:proc
-	extern _pellet_cloud_unput_8:proc
 main_09_TEXT	ends
 
 ; ===========================================================================
@@ -3820,9 +3784,6 @@ resstuff_TEXT	ends
 ; Segment type:	Pure code
 main_13_TEXT	segment	byte public 'CODE' use16
 	extern _z_vsync_wait_and_scrollup:proc
-	extern _egc_copy_rows_1_to_0:proc
-	extern _graph_interleave_pages_8x8_8:proc
-	extern _pagetrans_diagonal_8x8:proc
 	extern _pagetrans_diagonal_8x8_with_pale:proc
 	extern _graph_2xscale_byterect_1_to_0_sl:proc
 	extern _egc_wave_unput:proc
@@ -3917,8 +3878,6 @@ mdrv2_TEXT	segment	byte public 'CODE' use16
 	extern _mdrv2_bgm_play:proc
 	extern _mdrv2_bgm_stop:proc
 	extern _mdrv2_bgm_fade_out_nonblock:proc
-	extern _mdrv2_bgm_fade_out_block:proc
-	extern _mdrv2_bgm_fade_in:proc
 	extern _mdrv2_check_board:proc
 	extern _mdrv2_se_play:proc
 mdrv2_TEXT	ends
@@ -7647,7 +7606,6 @@ main_27__TEXT	segment	byte public 'CODE' use16
 	extern _player_move_and_clamp:proc
 	extern _ptn_unput_8:proc
 	extern _ptn_put_8:proc
-	extern _ptn_unput_quarter_8:proc
 	extern _ptn_put_quarter_8:proc
 	extern _ptn_put_quarter:proc
 
@@ -36586,9 +36544,6 @@ main_37_TEXT	ends
 main_38_TEXT	segment	byte public 'CODE' use16
 	extern @CShots@add$qii:proc
 	extern @CShots@unput_and_reset_all$qv:proc
-	extern @CShots@unput_update_render$qv:proc
-	extern @CShots@hittest_pellet$qii:proc
-	extern @CShots@hittest_boss$qiiii:proc
 	extern @CPellets@$bctr$qv:proc
 	extern @CPellets@add_group$qii14pellet_group_ti:proc
 	extern @CPellets@add_single$qiiuci15pellet_motion_tiii:proc

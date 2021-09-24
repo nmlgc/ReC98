@@ -23,7 +23,6 @@ include th04/th04.inc
 include th04/hardware/grppsafx.inc
 
 	extern _execl:proc
-	extern _memcpy:proc
 	extern _tolower:proc
 	extern __ctype:byte
 

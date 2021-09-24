@@ -21,11 +21,8 @@ include th03/th03.inc
 include th01/hardware/grppsafx.inc
 
 	extern SCOPY@:proc
-	extern __mbcjmstojis:proc
-	extern __mbctype:byte
 	extern __ctype:byte
 	extern _execl:proc
-	extern _memcpy:proc
 	extern _tolower:proc
 
 mainl_01 group CFG_LRES_TEXT, mainl_01_TEXT
@@ -5520,7 +5517,6 @@ SHARED	segment	word public 'CODE' use16
 	extern CDG_PUT_8:proc
 	extern CDG_PUT_HFLIP_8:proc
 	extern FRAME_DELAY:proc
-	extern _input_reset_sense_key_held:proc
 	extern PI_PALETTE_APPLY:proc
 	extern PI_PUT_8:proc
 	extern PI_PUT_INTERLACE_8:proc
