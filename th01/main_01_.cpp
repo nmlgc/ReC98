@@ -16,7 +16,4 @@ extern "C" {
 
 #include "th01/main/stage/palette.cpp"
 #include "th01/main/player/inv_spr.cpp"
-
-extern "C" {
 #include "th01/main/player/orb.cpp"
-}

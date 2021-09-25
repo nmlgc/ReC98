@@ -3,7 +3,6 @@
  * 1st part of code segment #2 of TH02's OP.EXE
  */
 
-extern "C" {
 #include "platform.h"
 #include "th02/resident.hpp"
 
@@ -13,4 +12,3 @@ char lives;
 char bombs;
 long unused_4;
 long unused_5;
-}

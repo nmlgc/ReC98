@@ -139,7 +139,7 @@ sub_BC87	proc far
 		enter	2, 0
 		push	si
 		call	sub_14BD2
-		call	_hud_bg_load stdcall, offset aMask_grf, ds
+		call	 @hud_bg_load$qnxc stdcall, offset aMask_grf, ds
 		call	@CPlayerAnim@load$qxnxc stdcall, offset _player_anim_forward, ds, offset aMiko_ac_bos,  ds ; "miko_ac.bos"
 		call	@CPlayerAnim@load$qxnxc stdcall, offset _player_anim_slide,   ds, offset aMiko_ac2_bos, ds ; "miko_ac2.bos"
 		call	_ptn_load stdcall, PTN_SLOT_STG, offset aStg_ptn, ds	; "stg.ptn"
@@ -922,9 +922,9 @@ main_01__TEXT	ends
 main_01___TEXT	segment	byte public 'CODE' use16
 	extern _stage_palette_set:proc
 	extern _invincibility_sprites_update_and:proc
-	extern _orb_velocity_y_update:proc
-	extern _orb_force_new:proc
-	extern _orb_move_x:proc
+	extern @orb_velocity_y_update$qv:proc
+	extern @orb_force_new$qd11orb_force_t:proc
+	extern @orb_move_x$q16orb_velocity_x_t:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -941,9 +941,9 @@ arg_0		= word ptr  6
 		mov	si, [bp+arg_0]
 		cmp	_orb_in_portal, 0
 		jnz	loc_C816
-		call	_orb_move_x stdcall, _orb_velocity_x
+		call	@orb_move_x$q16orb_velocity_x_t stdcall, _orb_velocity_x
 		pop	cx
-		call	_orb_velocity_y_update
+		call	@orb_velocity_y_update$qv
 		add	_orb_cur_top, ax
 		inc	word_34A92
 		cmp	_orb_velocity_x, OVX_4_LEFT
@@ -981,7 +981,7 @@ loc_C7C9:
 		sub	sp, 8
 		fstp	[bp+var_C]
 		fwait
-		call	_orb_force_new
+		call	@orb_force_new$qd11orb_force_t
 		add	sp, 0Ah
 		mov	_orb_cur_top, ORB_TOP_MAX
 		mov	_cardcombo_cur, 0
@@ -994,7 +994,7 @@ loc_C7F4:
 		sub	sp, 8
 		fstp	[bp+var_C]
 		fwait
-		call	_orb_force_new
+		call	@orb_force_new$qd11orb_force_t
 		add	sp, 0Ah
 		mov	_orb_cur_top, ORB_TOP_MIN
 
@@ -1712,7 +1712,7 @@ sub_D02F	proc far
 		mov	es:[bx+reiidenconfig_t.rem_lives], al
 		mov	ax, _lives
 		dec	ax
-		call	_hud_lives_put stdcall, ax
+		call	@hud_lives_put$qi stdcall, ax
 		pop	cx
 		push	0Fh
 		call	_mdrv2_se_play
@@ -2249,7 +2249,7 @@ sub_D4C2	proc far
 		mov	bp, sp
 		movzx	eax, _pellet_destroy_score_delta
 		add	_score, eax
-		call	_hud_score_and_cardcombo_render
+		call	@hud_score_and_cardcombo_render$qv
 		mov	_pellet_destroy_score_delta, 0
 		pop	bp
 		retf
@@ -2949,7 +2949,7 @@ loc_DB3E:
 		mov	_input_shot, 0
 		mov	_input_ok, 0
 		mov	_paused, 0
-		call	_hud_score_and_cardcombo_render
+		call	@hud_score_and_cardcombo_render$qv
 		mov	_bomb_doubletap_frames, (BOMB_DOUBLETAP_WINDOW * 3)
 		mov	word_34A70, 3Ch	; '<'
 		push	1
@@ -5433,7 +5433,7 @@ loc_13313:
 		push	240
 		call	_graph_putsa_fx
 		add	sp, 0Ah
-		call	_hud_score_and_cardcombo_render
+		call	@hud_score_and_cardcombo_render$qv
 		call	sub_D02F
 		call	_input_reset_sense
 		mov	_input_shot, 1
@@ -6188,7 +6188,7 @@ loc_17DCD:
 		mov	al, _bombs
 		cbw
 		dec	ax
-		call	_hud_bombs_put stdcall, ax
+		call	@hud_bombs_put$qi stdcall, ax
 		pop	cx
 		mov	bx, si
 		imul	bx, 0Ah
@@ -6198,7 +6198,7 @@ loc_17DCD:
 
 loc_17DFB:
 		add	_score, 10000
-		call	_hud_score_and_cardcombo_render
+		call	@hud_score_and_cardcombo_render$qv
 		mov	bx, si
 		imul	bx, 0Ah
 		mov	byte ptr [bx+5378h], 64h ; 'd'
@@ -6922,7 +6922,7 @@ loc_1837A:
 		les	bx, _resident
 		movzx	eax, es:[bx+reiidenconfig_t.p_value]
 		add	_score, eax
-		call	_hud_score_and_cardcombo_render
+		call	@hud_score_and_cardcombo_render$qv
 		mov	bx, si
 		imul	bx, 0Ah
 		mov	byte ptr [bx+53A0h], 64h ; 'd'
@@ -7129,7 +7129,7 @@ loc_184D3:
 		les	bx, _resident
 		push	es:[bx+reiidenconfig_t.p_value]
 		push	5
-		call	str_right_aligned_from_uint16
+		call	@str_right_aligned_from_uint16$qncuiui
 		push	ss
 		lea	ax, [bp+@@str]
 		push	ax
@@ -7234,15 +7234,15 @@ main_24_TEXT	ends
 
 ; Segment type:	Pure code
 main_25_TEXT	segment	byte public 'CODE' use16
-	extern _hud_score_and_cardcombo_render:proc
-	extern _score_and_cardcombo_put_initial:proc
-	extern _hud_bg_put:proc
-	extern _hud_bg_load:proc
-	extern _lives_put_initial:proc
-	extern _hud_lives_put:proc
-	extern _bombs_put_initial:proc
-	extern _hud_bombs_put:proc
-	extern _stage_put_initial:proc
+	extern @hud_score_and_cardcombo_render$qv:proc
+	extern @score_and_cardcombo_put_initial$qi:proc
+	extern @hud_bg_put$qv:proc
+	extern  @hud_bg_load$qnxc:proc
+	extern @lives_put_initial$qv:proc
+	extern @hud_lives_put$qi:proc
+	extern @bombs_put_initial$qv:proc
+	extern @hud_bombs_put$qi:proc
+	extern @stage_put_initial$qv:proc
 main_25_TEXT	ends
 
 main_25__TEXT	segment	byte public 'CODE' use16
@@ -7262,11 +7262,11 @@ sub_190D6	proc far
 		push	1
 		call	_graph_accesspage_func
 		pop	cx
-		call	_hud_bg_put
+		call	@hud_bg_put$qv
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
-		call	_hud_bg_put
+		call	@hud_bg_put$qv
 		cmp	byte_34A47, 0
 		jnz	short loc_1910C
 		mov	al, _route
@@ -7282,9 +7282,9 @@ sub_190D6	proc far
 loc_1910C:
 		cmp	_first_stage_in_scene, 1
 		jnz	short loc_19124
-		call	_lives_put_initial
-		call	_bombs_put_initial
-		call	_stage_put_initial
+		call	@lives_put_initial$qv
+		call	@bombs_put_initial$qv
+		call	@stage_put_initial$qv
 		call	sub_1926B
 
 loc_19124:
@@ -7319,7 +7319,7 @@ loc_19124:
 		cbw
 		push	ax
 		push	2
-		call	str_right_aligned_from_uint16
+		call	@str_right_aligned_from_uint16$qncuiui
 		push	ss
 		lea	ax, [bp+@@str]
 		push	ax
@@ -7369,11 +7369,11 @@ loc_19227:
 		push	0
 
 loc_19229:
-		call	_score_and_cardcombo_put_initial
+		call	@score_and_cardcombo_put_initial$qi
 		pop	cx
 		call	sub_192D6
 		mov	_fwnum_force_rerender, 1
-		call	_hud_score_and_cardcombo_render
+		call	@hud_score_and_cardcombo_render$qv
 		mov	_fwnum_force_rerender, 0
 		leave
 		retf
@@ -7450,7 +7450,7 @@ loc_19287:
 		push	ax
 		push	_stage_timer
 		push	4
-		call	str_right_aligned_from_uint16
+		call	@str_right_aligned_from_uint16$qncuiui
 		push	1
 		call	_graph_accesspage_func
 		push	ss
@@ -7504,7 +7504,7 @@ loc_192EB:
 		push	ax
 		push	_stage_timer
 		push	4
-		call	str_right_aligned_from_uint16
+		call	@str_right_aligned_from_uint16$qncuiui
 		push	ss
 		lea	ax, [bp+@@str]
 		push	ax
@@ -7521,7 +7521,7 @@ loc_192EB:
 		push	ax
 		push	_stage_timer
 		push	4
-		call	str_right_aligned_from_uint16
+		call	@str_right_aligned_from_uint16$qncuiui
 		push	ss
 		lea	ax, [bp+@@str]
 		push	ax
@@ -7705,7 +7705,7 @@ loc_19EEF:
 		mov	al, _bombs
 		cbw
 		inc	ax
-		call	_hud_bombs_put stdcall, ax
+		call	@hud_bombs_put$qi stdcall, ax
 		pop	cx
 
 loc_19F2B:
@@ -9428,7 +9428,7 @@ loc_1ADF9:
 		sub	sp, 8
 		fstp	[bp+var_E]
 		fwait
-		call	_orb_force_new
+		call	@orb_force_new$qd11orb_force_t
 		add	sp, 0Ah
 
 loc_1AE0A:
@@ -9609,7 +9609,7 @@ loc_1AFC8:
 		call	_egc_copy_rect_1_to_0_16 c, di, _player_top, large (32 shl 16) or 32
 		mov	ax, _lives
 		inc	ax
-		call	_hud_lives_put stdcall, ax
+		call	@hud_lives_put$qi stdcall, ax
 		pop	cx
 		mov	al, _bombs
 		cbw
@@ -9625,7 +9625,7 @@ loc_1AFC8:
 ; ---------------------------------------------------------------------------
 
 loc_1B01F:
-		call	_hud_bombs_put stdcall, [bp+@@prev_bombs]
+		call	@hud_bombs_put$qi stdcall, [bp+@@prev_bombs]
 		pop	cx
 
 loc_1B028:
@@ -17029,7 +17029,7 @@ loc_1FF15:
 		mov	_cardcombo_max, ax
 
 loc_1FF3C:
-		call	_hud_score_and_cardcombo_render
+		call	@hud_score_and_cardcombo_render$qv
 		mov	al, byte_35BEE
 		inc	byte_35BEE
 		mov	ah, 0
@@ -17075,8 +17075,8 @@ sub_1FDD3	endp
 main_30_TEXT	ends
 
 main_30__TEXT	segment	byte public 'CODE' use16
-	extern STR_RIGHT_ALIGNED_FROM_UINT16:proc
-	extern STR_FROM_POSITIVE_INT16:proc
+	extern @STR_RIGHT_ALIGNED_FROM_UINT16$QNCUIUI:proc
+	extern @STR_FROM_POSITIVE_INT16$QNCI:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -17204,7 +17204,7 @@ loc_20167:
 		les	bx, _cards_score
 		add	bx, ax
 		push	word ptr es:[bx]
-		call	str_from_positive_int16
+		call	@str_from_positive_int16$qnci
 		push	ss
 		lea	ax, [bp+@@str]
 		push	ax
@@ -17626,7 +17626,7 @@ loc_20F4F:
 		sub	sp, 8
 		fstp	[bp+var_1A]
 		fwait
-		call	_orb_force_new
+		call	@orb_force_new$qd11orb_force_t
 		add	sp, 0Ah
 
 loc_20F67:
@@ -17775,7 +17775,7 @@ loc_2105A:
 		sub	sp, 8
 		fstp	[bp+var_1A]
 		fwait
-		call	_orb_force_new
+		call	@orb_force_new$qd11orb_force_t
 		add	sp, 0Ah
 
 loc_210B1:
@@ -17815,7 +17815,7 @@ loc_210B1:
 		sub	sp, 8
 		fstp	[bp+var_1A]
 		fwait
-		call	_orb_force_new
+		call	@orb_force_new$qd11orb_force_t
 		add	sp, 0Ah
 
 loc_21117:
@@ -17860,7 +17860,7 @@ loc_21117:
 		sub	sp, 8
 		fstp	[bp+var_1A]
 		fwait
-		call	_orb_force_new
+		call	@orb_force_new$qd11orb_force_t
 		add	sp, 0Ah
 		jmp	short loc_211CD
 ; ---------------------------------------------------------------------------
@@ -17941,7 +17941,7 @@ loc_211CD:
 		sub	sp, 8
 		fstp	[bp+var_1A]
 		fwait
-		call	_orb_force_new
+		call	@orb_force_new$qd11orb_force_t
 		add	sp, 0Ah
 		jmp	short loc_21283
 ; ---------------------------------------------------------------------------
@@ -18554,7 +18554,7 @@ loc_21777:
 		sub	sp, 8
 		fstp	[bp+var_12]
 		fwait
-		call	_orb_force_new
+		call	@orb_force_new$qd11orb_force_t
 		add	sp, 0Ah
 		mov	ax, _portal_dst_left
 		mov	_orb_cur_left, ax
@@ -31864,7 +31864,7 @@ loc_29D0E:
 		call	_graph_accesspage_func
 		mov	_first_stage_in_scene, 1
 		call	sub_190D6
-		call	_hud_score_and_cardcombo_render
+		call	@hud_score_and_cardcombo_render$qv
 		call	@hud_hp_render$qii stdcall, _boss_hp, HUD_HP_FUNC_RERENDER
 		add	sp, 12h
 		mov	_boss_phase_frame, 0
@@ -36141,7 +36141,7 @@ loc_2C9DA:
 		call	_graph_copy_page_back_to_front
 		mov	_first_stage_in_scene, 1
 		call	sub_190D6
-		call	_hud_score_and_cardcombo_render
+		call	@hud_score_and_cardcombo_render$qv
 		call	_z_vsync_wait_and_scrollup stdcall, 0
 		pop	cx
 		mov	_boss_phase_frame, 0

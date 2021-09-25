@@ -6,12 +6,14 @@
 #include "th01/v_colors.hpp"
 #include "th01/hardware/graph.h"
 #include "th01/main/vars.hpp"
-#include "th01/core/str_val.hpp"
 #include "th01/formats/ptn.hpp"
 #include "th01/formats/grf.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/player/player.hpp"
 #include "th01/sprites/main_ptn.h"
+}
+
+#include "th01/core/str_val.hpp"
 #include "th01/main/hud/hud.hpp"
 
 /// Constants
@@ -94,7 +96,6 @@ inline screen_x_t col_left(screen_x_t first_left, int col) {
 // VRAM page 0 to VRAM page 1.
 void graph_copy_hud_row_0_to_1_8(screen_x_t left, vram_y_t top, pixel_t w);
 /// ---------
-}
 
 template <class T1, class T2> inline void fwnum_put(
 	screen_x_t left,
@@ -129,8 +130,6 @@ inline void score_put(screen_y_t top, int fx, const long &prev) {
 inline void cardcombo_put(screen_y_t top, int fx, const int &prev) {
 	fwnum_put(CARDCOMBO_LEFT, top, fx, CARDCOMBO_DIGITS, cardcombo_cur, prev);
 }
-
-extern "C" {
 
 void hiscore_update_and_render(void)
 {
@@ -445,3 +444,5 @@ void stage_put_initial(void)
 		STAGE_LEFT, STAGE_TOP, STAGE_DIGITS * GLYPH_HALF_W
 	);
 }
+
+extern "C" {
