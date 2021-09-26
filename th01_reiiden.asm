@@ -15695,172 +15695,10 @@ PANEL_REMOVED = 2
 
 	extern @cards_hittest$qi:proc
 	extern @STR_RIGHT_ALIGNED_FROM_UINT16$QNCUIUI:proc
-	extern @STR_FROM_POSITIVE_INT16$QNCI:proc
+	extern @cards_score_render$qv:proc
 main_30_TEXT	ends
 
 main_30__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_20071	proc far
-
-@@str		= byte ptr -8
-@@x		= word ptr -2
-
-		enter	8, 0
-		push	si
-		push	di
-		xor	si, si
-		jmp	loc_201B2
-; ---------------------------------------------------------------------------
-
-loc_2007C:
-		mov	ax, si
-		shl	ax, 2
-		les	bx, _cards_score
-		add	bx, ax
-		cmp	dword ptr es:[bx], 0
-		jz	loc_201B1
-		mov	ax, si
-		add	ax, ax
-		les	bx, _cards_flip_frames
-		add	bx, ax
-		cmp	word ptr es:[bx], 14
-		jle	loc_201B1
-		cmp	word ptr es:[bx], 20
-		jle	short loc_200B2
-		mov	ax, es:[bx]
-		add	ax, -20
-		mov	di, ax
-		jmp	short loc_200B4
-; ---------------------------------------------------------------------------
-
-loc_200B2:
-		xor	di, di
-
-loc_200B4:
-		mov	ax, si
-		shl	ax, 2
-		les	bx, _cards_score
-		add	bx, ax
-		cmp	dword ptr es:[bx], 10000
-		jbe	short loc_200D0
-		mov	[bp+@@x], -8
-		jmp	short loc_20101
-; ---------------------------------------------------------------------------
-
-loc_200D0:
-		mov	ax, si
-		shl	ax, 2
-		les	bx, _cards_score
-		add	bx, ax
-		cmp	dword ptr es:[bx], 1000
-		jbe	short loc_200EC
-		mov	[bp+@@x], 0
-		jmp	short loc_20101
-; ---------------------------------------------------------------------------
-
-loc_200EC:
-		mov	ax, si
-		shl	ax, 2
-		les	bx, _cards_score
-		add	bx, ax
-		cmp	dword ptr es:[bx], 100
-		mov	[bp+@@x], 8
-
-loc_20101:
-		or	di, di
-		jz	short loc_20142
-		push	100030h
-		or	di, di
-		jle	short loc_20114
-		lea	ax, [di-1]
-		jmp	short loc_20116
-; ---------------------------------------------------------------------------
-
-loc_20114:
-		xor	ax, ax
-
-loc_20116:
-		mov	dx, si
-		add	dx, dx
-		les	bx, _cards_top
-		add	bx, dx
-		mov	dx, es:[bx]
-		add	dx, 8
-		sub	dx, ax
-		push	dx
-		mov	ax, si
-		add	ax, ax
-		les	bx, _cards_left
-		add	bx, ax
-		mov	ax, es:[bx]
-		add	ax, [bp+@@x]
-		push	ax
-		call	_egc_copy_rect_1_to_0_16
-		add	sp, 8
-
-loc_20142:
-		mov	ax, si
-		add	ax, ax
-		les	bx, _cards_flip_frames
-		add	bx, ax
-		cmp	word ptr es:[bx], 28
-		jl	short loc_20167
-		mov	ax, si
-		shl	ax, 2
-		les	bx, _cards_score
-		add	bx, ax
-		mov	dword ptr es:[bx], 0
-		jmp	short loc_201B1
-; ---------------------------------------------------------------------------
-
-loc_20167:
-		push	ss
-		lea	ax, [bp+@@str]
-		push	ax
-		mov	ax, si
-		shl	ax, 2
-		les	bx, _cards_score
-		add	bx, ax
-		push	word ptr es:[bx]
-		call	@str_from_positive_int16$qnci
-		push	ss
-		lea	ax, [bp+@@str]
-		push	ax
-		push	(7 or FX_WEIGHT_BOLD)
-		mov	ax, si
-		add	ax, ax
-		les	bx, _cards_top
-		add	bx, ax
-		mov	ax, es:[bx]
-		add	ax, 8
-		sub	ax, di
-		push	ax
-		mov	ax, si
-		add	ax, ax
-		les	bx, _cards_left
-		add	bx, ax
-		mov	ax, es:[bx]
-		add	ax, [bp+@@x]
-		push	ax
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-
-loc_201B1:
-		inc	si
-
-loc_201B2:
-		cmp	si, _card_count
-		jl	loc_2007C
-		pop	di
-		pop	si
-		leave
-		retf
-sub_20071	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15874,7 +15712,7 @@ sub_201BE	proc far
 		push	si
 		push	di
 		xor	di, di
-		call	sub_20071
+		call	@cards_score_render$qv
 		xor	si, si
 		jmp	loc_2037C
 ; ---------------------------------------------------------------------------

@@ -9,7 +9,11 @@ extern "C" {
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
+#include "th01/v_colors.hpp"
 #include "th01/formats/ptn.hpp"
+#include "th01/math/digit.hpp"
+#include "th01/hardware/egc.h"
+#include "th01/hardware/graph.h"
 #include "th01/main/playfld.hpp"
 #include "th01/formats/stagedat.hpp"
 #include "th01/main/debug.hpp"
@@ -25,3 +29,4 @@ extern "C" {
 
 #include "th01/main/stage/card_hit.cpp"
 #include "th01/core/str_val.cpp"
+#include "th01/main/stage/card_r.cpp"

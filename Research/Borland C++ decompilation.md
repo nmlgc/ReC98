@@ -89,6 +89,14 @@ case it's part of an arithmetic expression that was promoted to `int`.
   }
   ```
 
+* `CMP` instructions not followed by jumps correspond to empty `if` statements:
+
+  ```c++
+  if(foo > 100) { // CMP foo, 100
+  }
+  bar = 8;        // MOV bar, 8
+  ```
+
 ## Floating-point arithmetic
 
 * Since the x87 FPU can only load from memory, all temporary results of
