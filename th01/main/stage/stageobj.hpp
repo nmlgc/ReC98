@@ -9,6 +9,8 @@ enum card_flag_t {
 	CARD_FLIPPING = 1,
 
 	CARD_REMOVED = 2,
+
+	_card_flag_t_FORCE_INT16 = 0x7FFF
 };
 
 static const int CARD_FRAMES_PER_CEL = 6;
@@ -42,7 +44,7 @@ extern unsigned long *cards_score;
 struct CCards {
 	screen_x_t *left;
 	vram_y_t *top;
-	card_flag_t *flag;
+	char *flag;	// card_flag_t
 	int count;
 
 	// Current frame within the CARD_FLIPPING animation.
@@ -56,7 +58,7 @@ struct CCards {
 		if(count > 0) {
 			left = new screen_x_t[count];
 			top = new vram_y_t[count];
-			flag = new card_flag_t[count];
+			flag = new char[count];
 			flip_frames = new int[count];
 			hp = new char[count];
 			cards_score = new unsigned long[count];
@@ -72,6 +74,10 @@ extern bool16 stage_cleared;
 // immediate effects of such collisions. Score points for collisisions are
 // granted in relation to the [stage_num].
 void cards_hittest(int stage_num);
+
+// Also sets the [stage_cleared] flag if all cards were cleared, and fires
+// revenge pellets on Lunatic.
+void cards_update_and_render(void);
 // -----
 
 // "Obstacles"

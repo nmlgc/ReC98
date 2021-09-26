@@ -66,7 +66,6 @@ main_21 group main_21_TEXT, main_21__TEXT
 main_25 group main_25_TEXT, main_25__TEXT
 main_27 group main_27_TEXT, main_27__TEXT
 main_29 group main_29_TEXT, main_29__TEXT
-main_30 group main_30_TEXT, main_30__TEXT
 main_31 group main_31_TEXT, main_31__TEXT
 main_32 group main_32_TEXT, main_32__TEXT
 main_33 group main_33_TEXT, main_33__TEXT
@@ -1039,7 +1038,7 @@ loc_C879:
 		idiv	bx
 		cmp	dx, 4
 		jz	short loc_C88B
-		call	sub_201BE
+		call	@cards_update_and_render$qv
 
 loc_C88B:
 		cmp	_orb_in_portal, 0
@@ -15684,236 +15683,10 @@ main_29__TEXT	ends
 
 ; Segment type:	Pure code
 main_30_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_30
-		;org 3
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; panel_flag_t
-PANEL_ALIVE = 0
-PANEL_FLIPPING = 1
-PANEL_REMOVED = 2
-
 	extern @cards_hittest$qi:proc
 	extern @STR_RIGHT_ALIGNED_FROM_UINT16$QNCUIUI:proc
-	extern @cards_score_render$qv:proc
+	extern @cards_update_and_render$qv:proc
 main_30_TEXT	ends
-
-main_30__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_201BE	proc far
-
-@@group		= word ptr -2
-
-		enter	2, 0
-		push	si
-		push	di
-		xor	di, di
-		call	@cards_score_render$qv
-		xor	si, si
-		jmp	loc_2037C
-; ---------------------------------------------------------------------------
-
-loc_201CF:
-		les	bx, _cards_flag
-		mov	al, es:[bx+si]
-		cbw
-		cmp	ax, PANEL_FLIPPING
-		jnz	loc_2036D
-		mov	ax, si
-		add	ax, ax
-		les	bx, _cards_flip_frames
-		add	bx, ax
-		cmp	word ptr es:[bx], 25
-		jge	loc_202A6
-		mov	ax, es:[bx]
-		mov	bx, 6
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	loc_202A6
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		push	si	; bg_slot
-		les	bx, _cards_hp
-		mov	al, es:[bx+si]
-		cbw
-		imul	ax, CARD_ANIM_CELS
-		mov	dx, si
-		add	dx, dx
-		les	bx, _cards_flip_frames
-		add	bx, dx
-		push	ax
-		mov	ax, es:[bx]
-		mov	bx, 6
-		cwd
-		idiv	bx
-		pop	bx
-		add	bx, ax
-		mov	al, _CARD_ANIM[bx]
-		mov	ah, 0
-		push	ax	; ptn_id
-		mov	ax, si
-		add	ax, ax
-		les	bx, _cards_top
-		add	bx, ax
-		push	word ptr es:[bx]	; top
-		mov	ax, si
-		add	ax, ax
-		les	bx, _cards_left
-		add	bx, ax
-		push	word ptr es:[bx]	; left
-		call	@stageobj_put_8$qiiii
-		push	0
-		call	_graph_accesspage_func
-		add	sp, 0Ah
-		push	si	; bg_slot
-		les	bx, _cards_hp
-		mov	al, es:[bx+si]
-		cbw
-		imul	ax, CARD_ANIM_CELS
-		mov	dx, si
-		add	dx, dx
-		les	bx, _cards_flip_frames
-		add	bx, dx
-		push	ax
-		mov	ax, es:[bx]
-		mov	bx, 6
-		cwd
-		idiv	bx
-		pop	bx
-		add	bx, ax
-		mov	al, _CARD_ANIM[bx]
-		mov	ah, 0
-		push	ax	; ptn_id
-		mov	ax, si
-		add	ax, ax
-		les	bx, _cards_top
-		add	bx, ax
-		push	word ptr es:[bx]	; top
-		mov	ax, si
-		add	ax, ax
-		les	bx, _cards_left
-		add	bx, ax
-		push	word ptr es:[bx]	; left
-		call	@stageobj_put_8$qiiii
-		add	sp, 8
-
-loc_202A6:
-		mov	ax, si
-		add	ax, ax
-		les	bx, _cards_flip_frames
-		add	bx, ax
-		inc	word ptr es:[bx]
-		cmp	word ptr es:[bx], 24
-		jl	loc_2036D
-		mov	al, _rank
-		cbw
-		cmp	ax, RANK_LUNATIC
-		jnz	short loc_2031C
-		mov	al, _stage_num
-		cbw
-		cmp	ax, 10
-		jge	short loc_202D4
-		mov	[bp+@@group], PG_1_AIMED
-		jmp	short loc_202D9
-; ---------------------------------------------------------------------------
-
-loc_202D4:
-		mov	[bp+@@group], PG_1_RANDOM_NARROW_AIMED
-
-loc_202D9:
-		mov	ax, si
-		add	ax, ax
-		les	bx, _cards_flip_frames
-		add	bx, ax
-		cmp	word ptr es:[bx], 25
-		jnz	short loc_2031C
-		push	(3 shl 4) + 8
-		push	[bp+@@group]
-		mov	ax, si
-		add	ax, ax
-		les	bx, _cards_top
-		add	bx, ax
-		mov	ax, es:[bx]
-		add	ax, 12
-		push	ax
-		mov	ax, si
-		add	ax, ax
-		les	bx, _cards_left
-		add	bx, ax
-		mov	ax, es:[bx]
-		add	ax, 12
-		push	ax
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_group$qii14pellet_group_ti
-		add	sp, 0Ch
-
-loc_2031C:
-		mov	ax, si
-		add	ax, ax
-		les	bx, _cards_flip_frames
-		add	bx, ax
-		cmp	word ptr es:[bx], 30
-		jl	short loc_2036D
-		les	bx, _cards_hp
-		cmp	byte ptr es:[bx+si], 0
-		jnz	short loc_2034F
-		les	bx, _cards_flag
-		mov	byte ptr es:[bx+si], PANEL_REMOVED
-		mov	ax, si
-		add	ax, ax
-		les	bx, _cards_flip_frames
-		add	bx, ax
-		mov	word ptr es:[bx], 0
-		jmp	short loc_2036D
-; ---------------------------------------------------------------------------
-
-loc_2034F:
-		les	bx, _cards_flag
-		mov	byte ptr es:[bx+si], PANEL_ALIVE
-		mov	ax, si
-		add	ax, ax
-		les	bx, _cards_flip_frames
-		add	bx, ax
-		mov	word ptr es:[bx], 0
-		les	bx, _cards_hp
-		dec	byte ptr es:[bx+si]
-
-loc_2036D:
-		les	bx, _cards_flag
-		mov	al, es:[bx+si]
-		cbw
-		cmp	ax, PANEL_REMOVED
-		jnz	short loc_2037B
-		inc	di
-
-loc_2037B:
-		inc	si
-
-loc_2037C:
-		cmp	si, _card_count
-		jl	loc_201CF
-		cmp	di, _card_count
-		jnz	short loc_20395
-		mov	_stage_cleared, 1
-
-loc_20390:
-		mov	_done, 1
-
-loc_20395:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_201BE	endp
-
-main_30__TEXT	ends
 
 ; ===========================================================================
 
@@ -35552,15 +35325,6 @@ STAGEDAT_STAGE_SIZE = ((STAGEOBJS_COUNT) + (STAGEOBJS_COUNT / 4) + 5)
 public _default_grp_fn, _default_bgm_fn, _scene_fn_, _CARD_ANIM
 _default_grp_fn	db 'ST .GRP', 0, 0, 0, 0, 0, 0, 0, 0
 _default_bgm_fn	db 'ST .MDT', 0, 0, 0, 0, 0, 0, 0, 0
-
-STAGEOBJ_W = PTN_W
-STAGEOBJ_H = PTN_H
-STAGEOBJS_X = (PLAYFIELD_W / STAGEOBJ_W)
-STAGEOBJS_Y = (PLAYFIELD_H / STAGEOBJ_H)
-STAGEOBJS_COUNT = (STAGEOBJS_X * STAGEOBJS_Y)
-
-CARD_ANIM_CELS = 5
-CARD_HP_MAX = 5
 
 _CARD_ANIM label byte
 	db  PTN_CARD_0HP, PTN_CARD_0HP_HALF, PTN_CARD_0HP_EDGE, PTN_CARD_REMOVED_HALF, PTN_CARD_REMOVED
