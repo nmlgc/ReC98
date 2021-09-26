@@ -33,6 +33,8 @@ enum card_cel_t {
 static const int CARD_HP_MAX = 5; // STAGE?.DAT only supports up to 4, though!
 extern unsigned char CARD_ANIM[CARD_HP_MAX][CARD_CELS];
 
+static const int CARD_SCORE_CAP = 25600;
+
 // Stored outside the class for some reason... Only valid during the card flip
 // animation, and reset to 0 afterwards.
 extern unsigned long *cards_score;
@@ -65,6 +67,11 @@ struct CCards {
 extern CCards cards;
 
 extern bool16 stage_cleared;
+
+// Processes any collision between a card and the Orb, together with any
+// immediate effects of such collisions. Score points for collisisions are
+// granted in relation to the [stage_num].
+void cards_hittest(int stage_num);
 // -----
 
 // "Obstacles"

@@ -1,4 +1,3 @@
-#include "platform.h"
 #include "th01/core/str_val.hpp"
 
 void pascal str_right_aligned_from_uint16(

@@ -308,7 +308,9 @@ void stageobjs_init_and_render(int stage)
 	cards.new_counted();
 	obstacles.new_counted();
 
-	// No, not the ID of the one card that remains unflipped after a bomb.
+	// No, not the ID of the one card that might remain unflipped after a bomb.
+	// That's down to a per-frame rand(), see cards_hittest() for the actual
+	// algorithm.
 	extern int a_random_unused_card_id;
 	a_random_unused_card_id = (rand() % cards.count);
 

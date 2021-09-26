@@ -1009,8 +1009,7 @@ loc_C816:
 		idiv	bx
 		cmp	dx, 4
 		jz	short loc_C846
-		push	si
-		call	sub_1FDD3
+		call	@cards_hittest$qi pascal, si
 		pop	cx
 		push	0
 		call	sub_20E4C
@@ -2608,7 +2607,7 @@ loc_D795:
 		mov	bx, 60
 		cwd
 		idiv	bx
-		mov	byte_35BEE, dl
+		mov	_card_flip_cycle, dl
 		mov	_first_stage_in_scene, 1
 		mov	byte_36C1E, 1
 		les	bx, _resident
@@ -15694,208 +15693,12 @@ PANEL_ALIVE = 0
 PANEL_FLIPPING = 1
 PANEL_REMOVED = 2
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1FDD3	proc far
-
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  6
-
-		enter	4, 0
-		push	si
-		xor	si, si
-		jmp	loc_1FF7F
-; ---------------------------------------------------------------------------
-
-loc_1FDDD:
-		mov	ax, si
-		add	ax, ax
-		les	bx, _cards_left
-		add	bx, ax
-		mov	ax, es:[bx]
-		sub	ax, _orb_cur_left
-		jge	short loc_1FDFC
-		mov	ax, es:[bx]
-		sub	ax, _orb_cur_left
-		imul	ax, -1
-		jmp	short loc_1FE0D
-; ---------------------------------------------------------------------------
-
-loc_1FDFC:
-		mov	ax, si
-		add	ax, ax
-		les	bx, _cards_left
-		add	bx, ax
-		mov	ax, es:[bx]
-		sub	ax, _orb_cur_left
-
-loc_1FE0D:
-		mov	[bp+var_2], ax
-		mov	ax, si
-		add	ax, ax
-		les	bx, _cards_top
-		add	bx, ax
-		mov	ax, es:[bx]
-		sub	ax, _orb_cur_top
-		jge	short loc_1FE2F
-		mov	ax, es:[bx]
-		sub	ax, _orb_cur_top
-		imul	ax, -1
-		jmp	short loc_1FE40
-; ---------------------------------------------------------------------------
-
-loc_1FE2F:
-		mov	ax, si
-		add	ax, ax
-		les	bx, _cards_top
-		add	bx, ax
-		mov	ax, es:[bx]
-		sub	ax, _orb_cur_top
-
-loc_1FE40:
-		mov	[bp+var_4], ax
-		cmp	[bp+var_2], 18h
-		jnb	short loc_1FE59
-		cmp	[bp+var_4], 18h
-		jnb	short loc_1FE59
-		les	bx, _cards_flag
-		cmp	byte ptr es:[bx+si], PANEL_ALIVE
-		jz	short loc_1FEAB
-
-loc_1FE59:
-		cmp	_test_damage, 1
-		jnz	short loc_1FE6A
-		les	bx, _cards_flag
-		cmp	byte ptr es:[bx+si], PANEL_ALIVE
-		jz	short loc_1FEAB
-
-loc_1FE6A:
-		cmp	_bomb_damaging, 1
-		jnz	loc_1FF7E
-		movsx	ebx, _card_count
-		mov	eax, _bomb_frames
-		xor	edx, edx
-		div	ebx
-		movzx	eax, si
-		cmp	edx, eax
-		jnz	loc_1FF7E
-		call	IRand
-		mov	bx, 4
-		cwd
-		idiv	bx
-		or	dx, dx
-		jz	loc_1FF7E
-		les	bx, _cards_flag
-		cmp	byte ptr es:[bx+si], PANEL_ALIVE
-		jnz	loc_1FF7E
-
-loc_1FEAB:
-		les	bx, _cards_flag
-		mov	byte ptr es:[bx+si], PANEL_FLIPPING
-		mov	ax, _cardcombo_cur
-		imul	_cardcombo_cur
-		cwde
-		push	eax
-		mov	al, _rank
-		cbw
-		cmp	ax, RANK_LUNATIC
-		jnz	short loc_1FECC
-		mov	ax, 1
-		jmp	short loc_1FECE
-; ---------------------------------------------------------------------------
-
-loc_1FECC:
-		xor	ax, ax
-
-loc_1FECE:
-		imul	ax, 15
-		add	ax, 20
-		cwde
-		pop	edx
-		imul	edx, eax
-		mov	ax, [bp+arg_0]
-		mov	bx, 5
-		push	edx
-		cwd
-		idiv	bx
-		imul	ax, 100
-		add	ax, 100
-		cwde
-		pop	edx
-		add	edx, eax
-		mov	ax, si
-		shl	ax, 2
-		les	bx, _cards_score
-		add	bx, ax
-		mov	es:[bx], edx
-		cmp	dword ptr es:[bx], 25600
-		jbe	short loc_1FF15
-		mov	dword ptr es:[bx], 25600
-
-loc_1FF15:
-		mov	ax, si
-		shl	ax, 2
-		les	bx, _cards_score
-		add	bx, ax
-		mov	eax, es:[bx]
-		add	_score, eax
-		inc	_cardcombo_cur
-		mov	ax, _cardcombo_max
-		cmp	ax, _cardcombo_cur
-		jge	short loc_1FF3C
-		mov	ax, _cardcombo_cur
-		mov	_cardcombo_max, ax
-
-loc_1FF3C:
-		call	@hud_score_and_cardcombo_render$qv
-		mov	al, byte_35BEE
-		inc	byte_35BEE
-		mov	ah, 0
-		mov	bx, 10
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_1FF76
-		cmp	byte_35BEE, 8Ch
-		jb	short loc_1FF67
-		mov	byte_35BEE, 1
-		cmp	_bomb_damaging, 0
-		jz	short loc_1FF6F
-
-loc_1FF67:
-		call	@items_point_add$qi pascal, si
-		jmp	short loc_1FF75
-; ---------------------------------------------------------------------------
-
-loc_1FF6F:
-		call	@items_bomb_add$qi pascal, si
-
-loc_1FF75:
-		pop	cx
-
-loc_1FF76:
-		push	2
-		call	_mdrv2_se_play
-		pop	cx
-
-loc_1FF7E:
-		inc	si
-
-loc_1FF7F:
-		cmp	si, _card_count
-		jb	loc_1FDDD
-		pop	si
-		leave
-		retf
-sub_1FDD3	endp
+	extern @cards_hittest$qi:proc
+	extern @STR_RIGHT_ALIGNED_FROM_UINT16$QNCUIUI:proc
+	extern @STR_FROM_POSITIVE_INT16$QNCI:proc
 main_30_TEXT	ends
 
 main_30__TEXT	segment	byte public 'CODE' use16
-	extern @STR_RIGHT_ALIGNED_FROM_UINT16$QNCUIUI:proc
-	extern @STR_FROM_POSITIVE_INT16$QNCI:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -35896,8 +35699,9 @@ aBoss3_2_bos	db 'boss3_2.bos',0
 aBoss3_grp_0	db 'boss3.grp',0
 aBoss3_m_ptn_0	db 'boss3_m.ptn',0
 		db 0
-byte_35BEE	db 0
-		db 0
+public _card_flip_cycle
+_card_flip_cycle	db 0
+	evendata
 
 STAGEOBJ_W = PTN_W
 STAGEOBJ_H = PTN_H
