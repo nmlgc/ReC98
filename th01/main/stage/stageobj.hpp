@@ -63,6 +63,8 @@ struct CCards {
 };
 
 extern CCards cards;
+
+extern bool16 stage_cleared;
 // -----
 
 // "Obstacles"

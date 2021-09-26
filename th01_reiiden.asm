@@ -3221,7 +3221,7 @@ loc_DE72:
 		mov	_bomb_frames, 200 ; ???
 		cmp	_lives, 0
 		jle	short loc_DEDA
-		cmp	word_34A82, 0
+		cmp	_stage_cleared, 0
 		jnz	short loc_DEDA
 		push	5
 		call	_mdrv2_se_play
@@ -3237,9 +3237,9 @@ loc_DE72:
 ; ---------------------------------------------------------------------------
 
 loc_DEDA:
-		cmp	word_34A82, 1
+		cmp	_stage_cleared, 1
 		jnz	loc_E104
-		mov	word_34A82, 0
+		mov	_stage_cleared, 0
 		mov	_done, 0
 		cmp	byte_34ADF, 0
 		jz	short loc_DF03
@@ -4285,7 +4285,7 @@ loc_12A1F:
 		pop	cx
 		mov	al, byte ptr [bp+var_A]
 		mov	_route, al
-		mov	word_34A82, 1
+		mov	_stage_cleared, 1
 		mov	_done, 1
 		pop	di
 		pop	si
@@ -4480,7 +4480,7 @@ loc_12B8C:
 ; ---------------------------------------------------------------------------
 
 loc_12B9C:
-		mov	word_34A82, 1
+		mov	_stage_cleared, 1
 
 loc_12BA2:
 		mov	_done, 1
@@ -16260,7 +16260,7 @@ loc_2037C:
 		jl	loc_201CF
 		cmp	di, _card_count
 		jnz	short loc_20395
-		mov	word_34A82, 1
+		mov	_stage_cleared, 1
 
 loc_20390:
 		mov	_done, 1
@@ -35418,11 +35418,11 @@ word_34A74	dw 0
 public _player_invincible
 _player_invincible	dw 0
 		dw 0
-public _orb_velocity_x, _lives
+public _orb_velocity_x, _lives, _stage_cleared
 _orb_velocity_x	dw 0
 word_34A7E	dw 0
 _lives	dw 4
-word_34A82	dw 0
+_stage_cleared	dw 0
 public _cardcombo_cur, _orb_in_portal, _cardcombo_max
 _cardcombo_cur	dw 0
 _orb_in_portal	dw 0
