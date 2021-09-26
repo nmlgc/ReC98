@@ -434,10 +434,6 @@ void CBossEntity::wave_unput_and_put(
 	wave_func(unput_and_put_1line, left, top, image, len, amp, phase);
 }
 
-inline int word_align(int v) {
-	return (((v / 16) * 16) + 16);
-}
-
 void CBossEntity::egc_sloppy_wave_unput_double_broken(
 	screen_x_t left_1, vram_y_t top, int,
 	int len_1, pixel_t amp_1, int phase_1,
@@ -456,12 +452,12 @@ void CBossEntity::egc_sloppy_wave_unput_double_broken(
 		t_2 += (0x100 / len_2);
 		// ZUN bug: Shouldn't the [h] parameter be 1?
 		if(x_1 > x_2) {
-			egc_copy_rect_1_to_0_16(
-				x_2, (top + bos_y), word_align(x_1 - x_2), bos_y
+			egc_copy_rect_1_to_0_16_word_w(
+				x_2, (top + bos_y), (x_1 - x_2), bos_y
 			);
 		} else {
-			egc_copy_rect_1_to_0_16(
-				(x_1 - vram_w), (top + bos_y), word_align(x_2 - x_1), bos_y
+			egc_copy_rect_1_to_0_16_word_w(
+				(x_1 - vram_w), (top + bos_y), (x_2 - x_1), bos_y
 			);
 		}
 	}

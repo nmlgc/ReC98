@@ -117,14 +117,14 @@ protected:
 
 	// Why, I don't even?!?
 	void sloppy_wide_unput(void) {
-		egc_copy_rect_1_to_0_16(
-			prev_left.to_pixel(), prev_top.to_pixel(), 16, PELLET_H
+		egc_copy_rect_1_to_0_16_word_w(
+			prev_left.to_pixel(), prev_top.to_pixel(), PELLET_W, PELLET_H
 		);
 	}
 
 	void sloppy_wide_unput_at_cur_pos(void) {
-		egc_copy_rect_1_to_0_16(
-			cur_left.to_pixel(), cur_top.to_pixel(), 16, PELLET_H
+		egc_copy_rect_1_to_0_16_word_w(
+			cur_left.to_pixel(), cur_top.to_pixel(), PELLET_W, PELLET_H
 		);
 	}
 
