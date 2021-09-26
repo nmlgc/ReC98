@@ -1,6 +1,6 @@
 #include "th01/ranks.h"
 
-extern rank_t rank;
+extern char rank; // rank_t
 extern bool bgm_mode;
 extern char bombs;
 extern char credit_bombs;

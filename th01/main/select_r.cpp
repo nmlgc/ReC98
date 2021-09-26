@@ -6,9 +6,9 @@ void select_for_rank(
 )
 {
 	ret =
-		(static_cast<int>(rank) == RANK_EASY) ? for_easy :
-		(static_cast<int>(rank) == RANK_NORMAL) ? for_normal :
-		(static_cast<int>(rank) == RANK_HARD) ? for_hard :
-		(static_cast<int>(rank) == RANK_LUNATIC) ? for_lunatic :
+		(rank == RANK_EASY) ? for_easy :
+		(rank == RANK_NORMAL) ? for_normal :
+		(rank == RANK_HARD) ? for_hard :
+		(rank == RANK_LUNATIC) ? for_lunatic :
 		for_normal;
 }

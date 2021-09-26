@@ -170,9 +170,9 @@ bool16 group_velocity_set(
 inline subpixel_t base_speed_for_rank(void)
 {
 	return
-		(static_cast<int>(rank) == RANK_EASY) ? to_sp(0.0f) :
-		(static_cast<int>(rank) == RANK_NORMAL) ? to_sp(0.375f) :
-		(static_cast<int>(rank) == RANK_HARD) ? to_sp(0.75f) :
+		(rank == RANK_EASY) ? to_sp(0.0f) :
+		(rank == RANK_NORMAL) ? to_sp(0.375f) :
+		(rank == RANK_HARD) ? to_sp(0.75f) :
 		to_sp(1.125f);
 }
 

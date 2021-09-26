@@ -366,9 +366,7 @@ void near pascal shottype_title_put(int shottype_sel)
 	int rank;
 	uint8_t clearflag;
 
-	rank = (resident->stage == STAGE_EXTRA)
-		? static_cast<int>(RANK_EXTRA)
-		: resident->rank;
+	rank = (resident->stage == STAGE_EXTRA) ? RANK_EXTRA : resident->rank;
 
 	#define put(top, clearflag, rank, col) \
 		if(cleared_with[playchar_menu_sel][rank] & clearflag) { \

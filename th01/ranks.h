@@ -7,4 +7,6 @@ typedef enum {
 	RANK_EXTRA,
 	RANK_COUNT,
 	RANK_DEFAULT = -1,
+
+	_rank_t_FORCE_INT16 = 0x7FFF
 } rank_t;
