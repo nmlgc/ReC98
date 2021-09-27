@@ -418,10 +418,6 @@ void stageobjs_init_and_render(int stage)
 		return;
 	}
 
-	#define CEL_START 2 // *_EDGE
-	#define CEL_END 4 // Regular card with one less HP
-	#define FRAMES_PER_CEL 6
-
 	// ZUN bug: Should be STAGEOBJS_COUNT. This effectively limits stages to a
 	// maximum of 50 cards rather than the original 200, since...
 	struct hack { int x[50]; }; // XXX
@@ -436,12 +432,12 @@ void stageobjs_init_and_render(int stage)
 			if(frames_for.x[i] == -1) {
 				cards_animated++;
 			}
-			if(frames_for.x[i] < (CEL_START * FRAMES_PER_CEL)) {
+			if(frames_for.x[i] < card_first_frame_of(CARD_CEL_EDGE)) {
 				continue;
 			}
-			if((frames_for.x[i] % FRAMES_PER_CEL) == 0) {
+			if((frames_for.x[i] % CARD_FRAMES_PER_CEL) == 0) {
 				card_ptn_id = (
-					CARD_ANIM[cards.hp[i] + 1][frames_for.x[i] / FRAMES_PER_CEL]
+					CARD_ANIM[cards.hp[i] + 1][card_cel_at(frames_for.x[i])]
 				);
 				ptn_put_8(cards.left[i], cards.top[i], card_ptn_id);
 			}
@@ -449,7 +445,7 @@ void stageobjs_init_and_render(int stage)
 			// ... trying to access the 51st card here actually accesses
 			// [total_frames], periodically resetting it to -1. Which in turn
 			// means that...
-			if(frames_for.x[i] > (CEL_END * FRAMES_PER_CEL)) {
+			if(frames_for.x[i] > card_first_frame_of(CARD_CEL_FLIPPED)) {
 				frames_for.x[i] = -1;
 			}
 		}
@@ -459,15 +455,11 @@ void stageobjs_init_and_render(int stage)
 		// ... the first 24 cards are animated over and over in an infinite
 		// loop, as the termination condition above can never become true.
 		if(total_frames < cards.count) {
-			frames_for.x[total_frames] = (CEL_START * FRAMES_PER_CEL);
+			frames_for.x[total_frames] = card_first_frame_of(CARD_CEL_EDGE);
 		}
 		total_frames++;
 		frame_delay(1);
 	}
-
-	#undef FRAMES_PER_CEL
-	#undef CEL_END
-	#undef CEL_START
 
 	#undef nth_bit
 	#undef offset

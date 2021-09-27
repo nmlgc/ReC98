@@ -11,9 +11,27 @@ enum card_flag_t {
 	CARD_REMOVED = 2,
 };
 
-static const int CARD_ANIM_CELS = 5;
+static const int CARD_FRAMES_PER_CEL = 6;
+
+enum card_cel_t {
+	CARD_CEL_NOT_FLIPPING = 0,
+	CARD_CEL_FRONT_HALF = 1,
+	CARD_CEL_EDGE = 2,
+	CARD_CEL_BACK_HALF = 3,
+	CARD_CEL_FLIPPED = 4,
+	CARD_CELS,
+
+	_card_cel_t_FORCE_INT16 = 0x7FFF,
+};
+
+#define card_first_frame_of(cel) \
+	(cel * CARD_FRAMES_PER_CEL)
+
+#define card_cel_at(frame) \
+	(frame / CARD_FRAMES_PER_CEL)
+
 static const int CARD_HP_MAX = 5; // STAGE?.DAT only supports up to 4, though!
-extern unsigned char CARD_ANIM[CARD_HP_MAX][CARD_ANIM_CELS];
+extern unsigned char CARD_ANIM[CARD_HP_MAX][CARD_CELS];
 
 // Stored outside the class for some reason... Only valid during the card flip
 // animation, and reset to 0 afterwards.
