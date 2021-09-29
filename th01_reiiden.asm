@@ -59,7 +59,7 @@ BOSS_STAGE = (STAGES_PER_SCENE - 1)
 	extern _toupper:proc
 
 	.seq
-main_01 group main_01_TEXT, main_01__TEXT, main_01___TEXT
+main_01 group main_010_TEXT, main_011_TEXT, main_012_TEXT, main_013_TEXT
 main_15 group main_15_TEXT, main_15__TEXT
 main_19 group main_19_TEXT, main_19__TEXT
 main_21 group main_21_TEXT, main_21__TEXT
@@ -114,10 +114,10 @@ _TEXT		ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-main_01_TEXT	segment	byte public 'CODE' use16
-main_01_TEXT	ends
+main_010_TEXT	segment	byte public 'CODE' use16
+main_010_TEXT	ends
 
-main_01__TEXT	segment	byte public 'CODE' use16
+main_011_TEXT	segment	byte public 'CODE' use16
 		assume cs:main_01
 		;org 2
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
@@ -916,9 +916,9 @@ loc_C430:
 		leave
 		retf
 _bomb_update_and_render	endp
-main_01__TEXT	ends
+main_011_TEXT	ends
 
-main_01___TEXT	segment	byte public 'CODE' use16
+main_012_TEXT	segment	byte public 'CODE' use16
 	extern _stage_palette_set:proc
 	extern _invincibility_sprites_update_and:proc
 	extern @orb_velocity_y_update$qv:proc
@@ -1273,7 +1273,9 @@ loc_CB96:
 		leave
 		retf
 sub_C942	endp
+main_012_TEXT	ends
 
+main_013_TEXT	segment	byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3567,8 +3569,7 @@ sub_E319	proc far
 		pop	bp
 		retf
 sub_E319	endp
-
-main_01___TEXT	ends
+main_013_TEXT	ends
 
 ; ===========================================================================
 
