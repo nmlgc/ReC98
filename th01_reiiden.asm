@@ -1276,65 +1276,8 @@ sub_C942	endp
 main_012_TEXT	ends
 
 main_013_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CBBE	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		mov	dx, [bp+arg_0]
-		les	bx, _resident
-		cmp	es:[bx+reiidenconfig_t.bullet_speed], dx
-		jle	short loc_CBD4
-		mov	es:[bx+reiidenconfig_t.bullet_speed], dx
-		jmp	short loc_CBDF
-; ---------------------------------------------------------------------------
-
-loc_CBD4:
-		les	bx, _resident
-		mov	ax, [bp+arg_2]
-		add	es:[bx+reiidenconfig_t.bullet_speed], ax
-
-loc_CBDF:
-		les	bx, _resident
-		cmp	es:[bx+reiidenconfig_t.bullet_speed], -15
-		jge	short loc_CBF0
-		mov	es:[bx+reiidenconfig_t.bullet_speed], -15
-
-loc_CBF0:
-		pop	bp
-		retf
-sub_CBBE	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CBF2	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		les	bx, _resident
-		mov	ax, [bp+arg_0]
-		add	es:[bx+reiidenconfig_t.bullet_speed], ax
-		cmp	es:[bx+reiidenconfig_t.bullet_speed], 20
-		jle	short loc_CC0D
-		mov	es:[bx+reiidenconfig_t.bullet_speed], 20
-
-loc_CC0D:
-		pop	bp
-		retf
-sub_CBF2	endp
-
+	extern @pellet_speed_lower$qii:proc
+	extern @pellet_speed_raise$qi:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1390,9 +1333,7 @@ loc_CD2E:
 		mov	al, es:[bx+reiidenconfig_t.start_lives_extra]
 		add	al, 2
 		mov	es:[bx+reiidenconfig_t.rem_lives], al
-		push	0FFFBFFFEh
-		call	sub_CBBE
-		add	sp, 4
+		call	@pellet_speed_lower$qii c, large (-2 and 0FFFFh) or (-5 shl 16)
 
 loc_CD52:
 		call	_input_sense stdcall, 0
@@ -1717,8 +1658,7 @@ sub_D02F	proc far
 		push	0Fh
 		call	_mdrv2_se_play
 		pop	cx
-		push	1
-		call	sub_CBF2
+		call	@pellet_speed_raise$qi stdcall, 1
 		pop	cx
 
 loc_D076:
@@ -3059,8 +2999,7 @@ loc_DC64:
 		div	ebx
 		cmp	edx, 0
 		jnz	short loc_DC9D
-		push	1
-		call	sub_CBF2
+		call	@pellet_speed_raise$qi stdcall, 1
 		pop	cx
 
 loc_DC9D:
@@ -6368,8 +6307,7 @@ sub_1938A	proc far
 		call	sub_192D6
 		cmp	_stage_timer, 0
 		jnz	short loc_193B8
-		push	2
-		call	sub_CBF2
+		call	@pellet_speed_raise$qi stdcall, 2
 		pop	cx
 		nopcall	@harryup_animate$qv
 		pop	bp
@@ -6581,8 +6519,7 @@ loc_19FB0:
 		jz	short loc_19FDB
 		mov	byte_35B46, 2
 		mov	_input_bomb, 0
-		push	1
-		call	sub_CBF2
+		call	@pellet_speed_raise$qi stdcall, 1
 		jmp	loc_1AC29
 ; ---------------------------------------------------------------------------
 
@@ -8450,13 +8387,7 @@ loc_1B01F:
 
 loc_1B028:
 		call	sub_193BA
-
-loc_1B02D:
-		push	0FFFE0000h
-
-loc_1B033:
-		call	sub_CBBE
-		add	sp, 4
+		call	@pellet_speed_lower$qii c, large 0 or (-2 shl 16)
 		pop	di
 		pop	si
 		leave

@@ -178,7 +178,9 @@ inline subpixel_t base_speed_for_rank(void)
 
 #define speed_set(speed) \
 	speed += base_speed_for_rank(); \
-	speed += ((resident->pellet_speed * speed) / to_sp(2.5f)); \
+	/* Note that ((subpixel * pellet_speed_t) / pellet_speed_t) still gives a
+	/* correct subpixel result. */ \
+	speed += ((resident->pellet_speed * speed) / PELLET_SPEED_MULTIPLIER); \
 	if(speed < to_sp(1.0f)) { \
 		speed = to_sp(1.0f); \
 	}
