@@ -50,4 +50,5 @@ typedef struct {
 	uint16_t point_value;
 } resident_t;
 
+extern route_t route;
 extern resident_t *resident;

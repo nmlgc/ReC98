@@ -63,7 +63,6 @@ main_01 group main_010_TEXT, main_011_TEXT, main_012_TEXT, main_013_TEXT
 main_15 group main_15_TEXT, main_15__TEXT
 main_19 group main_19_TEXT, main_19__TEXT
 main_21 group main_21_TEXT, main_21__TEXT
-main_25 group main_25_TEXT, main_25__TEXT
 main_27 group main_27_TEXT, main_27__TEXT
 main_29 group main_29_TEXT, main_29__TEXT
 main_31 group main_31_TEXT, main_31__TEXT
@@ -2835,7 +2834,7 @@ loc_DA9D:
 loc_DA9E:
 		mov	ax, word_34A8A
 		mov	word_34A8C, ax
-		call	sub_190D6
+		call	@hud_bg_snap_and_put$qv
 		mov	_cardcombo_max, 0
 		mov	_orb_in_portal, 0
 		mov	_bomb_frames, 0
@@ -2973,7 +2972,7 @@ loc_DC33:
 loc_DC3A:
 		mov	byte_36C1E, 0
 		mov	_input_shot, 0
-		mov	byte_34A47, 1
+		mov	_timer_initialized, 1
 		mov	eax, _frame_rand
 		mov	random_seed, eax
 		mov	_bomb_doubletap_frames, BOMB_DOUBLETAP_WINDOW
@@ -3150,7 +3149,7 @@ loc_DE67:
 loc_DE72:
 		cmp	_done, 0
 		jz	loc_DC64
-		mov	byte_34A47, 0
+		mov	_timer_initialized, 0
 		call	_z_vsync_wait_and_scrollup stdcall, 0
 		pop	cx
 		les	bx, _resident
@@ -5993,159 +5992,16 @@ main_24_TEXT	ends
 ; Segment type:	Pure code
 main_25_TEXT	segment	byte public 'CODE' use16
 	extern @hud_score_and_cardcombo_render$qv:proc
-	extern @score_and_cardcombo_bg_snap_and_$qi:proc
-	extern @hud_bg_put$qv:proc
-	extern  @hud_bg_load$qnxc:proc
-	extern @lives_bg_snap_and_put$qv:proc
+	extern @hud_bg_load$qnxc:proc
 	extern @hud_lives_put$qi:proc
-	extern @bombs_bg_snap_and_put$qv:proc
 	extern @hud_bombs_put$qi:proc
-	extern @stage_bg_snap_and_put$qv:proc
+	extern @hud_bg_snap_and_put$qv:proc
 main_25_TEXT	ends
-
-main_25__TEXT	segment	byte public 'CODE' use16
-		assume cs:main_25
-		;org 9
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_190D6	proc far
-
-@@str		= byte ptr -4
-
-		enter	4, 0
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		call	@hud_bg_put$qv
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		call	@hud_bg_put$qv
-		cmp	byte_34A47, 0
-		jnz	short loc_1910C
-		mov	al, _route
-		cbw
-		push	ax
-		mov	al, _stage_num
-		cbw
-		dec	ax
-		push	ax
-		call	@timer_init_for$qii
-		add	sp, 4
-
-loc_1910C:
-		cmp	_first_stage_in_scene, 1
-		jnz	short loc_19124
-		call	@lives_bg_snap_and_put$qv
-		call	@bombs_bg_snap_and_put$qv
-		call	@stage_bg_snap_and_put$qv
-		call	@timer_bg_snap_and_put$qv
-
-loc_19124:
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		mov	al, _rank
-		cbw
-		shl	ax, 2
-		mov	bx, ax
-		pushd	aRANKS[bx]
-		push	((7 or FX_WEIGHT_BOLD) shl 16) or 48
-		mov	al, _rank
-		cbw
-		shl	ax, 2
-		mov	bx, ax
-		call	_text_extent_fx c, 7, large aRANKS[bx]
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	dx, 600
-		sub	dx, ax
-		push	dx
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-		call	_ptn_put_quarter_noalpha_8 stdcall, large (32 shl 16) or 608, large (0 shl 16) or (PTN_SLOT_5 + 2)
-		add	sp, 8
-		push	ss
-		lea	ax, [bp+@@str]
-		push	ax
-		mov	al, _stage_num
-		cbw
-		push	ax
-		push	2
-		call	@str_right_aligned_from_uint16$qncuiui
-		push	ss
-		lea	ax, [bp+@@str]
-		push	ax
-		push	((7 or FX_WEIGHT_BOLD) shl 16) or 32
-		push	608
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		mov	al, _rank
-		cbw
-		shl	ax, 2
-		mov	bx, ax
-		pushd	aRANKS[bx]
-		push	((7 or FX_WEIGHT_BOLD) shl 16) or 48
-		mov	al, _rank
-		cbw
-		shl	ax, 2
-		mov	bx, ax
-		call	_text_extent_fx c, 7, large aRANKS[bx]
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	dx, 600
-		sub	dx, ax
-		push	dx
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-		call	_ptn_put_quarter_noalpha_8 stdcall, large (32 shl 16) or 608, large (0 shl 16) or (PTN_SLOT_5 + 2)
-		add	sp, 8
-		push	ss
-		lea	ax, [bp+@@str]
-		push	ax
-		push	((7 or FX_WEIGHT_BOLD) shl 16) or 32
-		push	608
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-		mov	_hud_cardcombo_max, 0
-		cmp	_first_stage_in_scene, 1
-		jnz	short loc_19227
-		push	1
-		jmp	short loc_19229
-; ---------------------------------------------------------------------------
-
-loc_19227:
-		push	0
-
-loc_19229:
-		call	@score_and_cardcombo_bg_snap_and_$qi
-		pop	cx
-		call	@timer_put$qv
-		mov	_fwnum_force_rerender, 1
-		call	@hud_score_and_cardcombo_render$qv
-		mov	_fwnum_force_rerender, 0
-		leave
-		retf
-sub_190D6	endp
-
-main_25__TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
 main_26_TEXT	segment	byte public 'CODE' use16
-	extern @timer_init_for$qii:proc
-	extern @timer_bg_snap_and_put$qv:proc
-	extern @timer_put$qv:proc
 	extern @timer_tick_and_put$qv:proc
 	extern @timer_extend_and_put$qv:proc
 main_26_TEXT	ends
@@ -15416,7 +15272,6 @@ main_29__TEXT	ends
 ; Segment type:	Pure code
 main_30_TEXT	segment	byte public 'CODE' use16
 	extern @cards_hittest$qi:proc
-	extern @STR_RIGHT_ALIGNED_FROM_UINT16$QNCUIUI:proc
 	extern @cards_update_and_render$qv:proc
 main_30_TEXT	ends
 
@@ -29828,7 +29683,7 @@ loc_29D0E:
 		push	0
 		call	_graph_accesspage_func
 		mov	_first_stage_in_scene, 1
-		call	sub_190D6
+		call	@hud_bg_snap_and_put$qv
 		call	@hud_score_and_cardcombo_render$qv
 		call	@hud_hp_render$qii stdcall, _boss_hp, HUD_HP_FUNC_RERENDER
 		add	sp, 12h
@@ -34105,7 +33960,7 @@ loc_2C9DA:
 		call	_z_palette_set_show c, large (0 shl 16) or 6, large (0 shl 16) or 0
 		call	_graph_copy_page_back_to_front
 		mov	_first_stage_in_scene, 1
-		call	sub_190D6
+		call	@hud_bg_snap_and_put$qv
 		call	@hud_score_and_cardcombo_render$qv
 		call	_z_vsync_wait_and_scrollup stdcall, 0
 		pop	cx
@@ -34531,13 +34386,14 @@ public _stage_num
 _stage_num	db 0
 byte_34A35	db 0
 		db    0
-aRANKS	dd aEasy		; "EASY"
+public _RANKS, _first_stage_in_scene, _timer_initialized
+_RANKS label dword
+		dd aEasy		; "EASY"
 		dd aNormal		; "NORMAL"
 		dd aHard		; "HARD"
 		dd aLunatic		; "LUNATIC"
-byte_34A47	db 0
+_timer_initialized	db 0
 		db    0
-public _first_stage_in_scene
 _first_stage_in_scene	db 1
 		db    0
 include th01/hardware/input_main_end[data].asm
@@ -35445,6 +35301,7 @@ word_3A1E9	dw ?
 word_3A1EB	dw ?
 		db 400 dup (?)
 byte_3A37D	db ?
+public _route
 _route	db ?
 public _singyoku_phase_frame, _singyoku_hp, _singyoku_invincibility_frame
 _singyoku_phase_frame	dw ?

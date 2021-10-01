@@ -12,9 +12,9 @@
 #include "th01/main/player/player.hpp"
 #include "th01/sprites/main_ptn.h"
 }
-
 #include "th01/core/str_val.hpp"
 #include "th01/main/hud/hud.hpp"
+#include "th01/main/stage/timer.hpp"
 
 /// Constants
 /// ---------
@@ -31,6 +31,9 @@ static const screen_y_t CUR_TOP = 16;
 
 static const screen_x_t STAGE_LEFT = 608;
 static const screen_y_t STAGE_TOP = 32;
+
+static const screen_x_t RANK_CENTER_X = 600;
+static const screen_y_t RANK_TOP = 48;
 
 static const int PTN_LIFE_QUARTER = 0;
 static const int PTN_BOMB_QUARTER = 1;
@@ -432,17 +435,73 @@ void hud_bombs_put(int prev)
 #undef put_change
 /// ---------------
 
-// Assumes page 0.
+inline void stage_unput(void) {
+	ptn_put_quarter_noalpha_8(STAGE_LEFT, STAGE_TOP, PTN_BG_STAGE, 0);
+}
+
+inline void stage_num_to(char tmp_str[STAGE_DIGITS + 1]) {
+	str_right_aligned_from_uint16(tmp_str, stage_num, STAGE_DIGITS);
+}
+
+inline void stage_put(const char str[STAGE_DIGITS + 1]) {
+	graph_putsa_fx(STAGE_LEFT, STAGE_TOP, MAX_FX, str);
+}
+
 void stage_bg_snap_and_put(void)
 {
 	char str[STAGE_DIGITS + 1];
 
 	bg_snap(STAGE_LEFT, 0, STAGE_TOP, PTN_BG_STAGE, 0);
-	str_right_aligned_from_uint16(str, stage_num, STAGE_DIGITS);
-	graph_putsa_fx(STAGE_LEFT, STAGE_TOP, MAX_FX, str);
+	stage_num_to(str);
+	stage_put(str);
 	graph_copy_hud_row_0_to_1_8(
 		STAGE_LEFT, STAGE_TOP, STAGE_DIGITS * GLYPH_HALF_W
 	);
+}
+
+inline void rank_put(void) {
+	extern const char* RANKS[RANK_COUNT];
+	graph_putsa_fx(
+		(RANK_CENTER_X - (text_extent_fx(V_WHITE, RANKS[rank]) / 2)),
+		RANK_TOP,
+		MAX_FX,
+		RANKS[rank]
+	);
+}
+
+void hud_bg_snap_and_put(void)
+{
+	char str[STAGE_DIGITS + 1];
+
+	graph_accesspage_func(1); hud_bg_put();
+	graph_accesspage_func(0); hud_bg_put();
+
+	if(!timer_initialized) {
+		timer_init_for((stage_num - 1), route);
+	}
+	if(first_stage_in_scene == true) {
+		lives_bg_snap_and_put();
+		bombs_bg_snap_and_put();
+		stage_bg_snap_and_put();
+		timer_bg_snap_and_put();
+	}
+
+	graph_accesspage_func(1);
+	rank_put();	stage_unput();	stage_num_to(str);	stage_put(str);
+	graph_accesspage_func(0);
+	rank_put();	stage_unput();	stage_put(str);
+
+	hud_cardcombo_max = 0;
+	if(first_stage_in_scene == true) {
+		score_and_cardcombo_bg_snap_and_put(true);
+	} else {
+		score_and_cardcombo_bg_snap_and_put(false);
+	}
+	timer_put();
+
+	fwnum_force_rerender = true;
+	hud_score_and_cardcombo_render();
+	fwnum_force_rerender = false;
 }
 
 extern "C" {
