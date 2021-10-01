@@ -63,6 +63,19 @@ inline void unput(void) {
 }
 /// ----------------
 
+void timer_init_for(int stage_id, int route)
+{
+	extern unsigned int STAGE_TIMES[
+		STAGES_OUTSIDE_ROUTE + (STAGES_ON_ROUTE * ROUTE_COUNT)
+	];
+	if(stage_id < STAGES_OUTSIDE_ROUTE) {
+		stage_timer = STAGE_TIMES[stage_id];
+	} else {
+		stage_timer = STAGE_TIMES[(route * STAGES_ON_ROUTE) + stage_id];
+	}
+	frames_since_harryup = 0;
+}
+
 void timer_bg_snap_and_put(void)
 {
 	char str[TIMER_DIGITS + 1];

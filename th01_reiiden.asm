@@ -6034,7 +6034,7 @@ sub_190D6	proc far
 		cbw
 		dec	ax
 		push	ax
-		call	sub_19243
+		call	@timer_init_for$qii
 		add	sp, 4
 
 loc_1910C:
@@ -6143,44 +6143,7 @@ main_25__TEXT	ends
 
 ; Segment type:	Pure code
 main_26_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_26_TEXT
-		;org 3
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_19243	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		push	bp
-
-loc_19244:
-		mov	bp, sp
-		mov	dx, [bp+arg_0]
-		cmp	dx, 5
-		jge	short loc_19252
-		mov	bx, dx
-		jmp	short loc_1925A
-; ---------------------------------------------------------------------------
-
-loc_19252:
-		mov	bx, [bp+arg_2]
-		imul	bx, 0Fh
-		add	bx, dx
-
-loc_1925A:
-		add	bx, bx
-		mov	ax, [bx+1142h]
-		mov	_stage_timer, ax
-		mov	_frames_since_harryup, 0
-		pop	bp
-		retf
-sub_19243	endp
-
+	extern @timer_init_for$qii:proc
 	extern @timer_bg_snap_and_put$qv:proc
 	extern @timer_put$qv:proc
 	extern @timer_tick_and_put$qv:proc
@@ -34916,77 +34879,17 @@ include th01/hardware/grppfnfx_ptrs[data].asm
 public _score_prev
 _score_prev	dd 0
 include th01/hardware/grppfnfx[data].asm
-		db    0
-		db 0E8h
-		db    3
-		db 0E8h
-		db    3
-		db 0E8h
-		db    3
-		db 0E8h
-		db    3
-		db 0D0h	; Ð
-		db    7
-		db 0B0h	; °
-		db    4
-		db 0B0h	; °
-		db    4
-		db 0B0h	; °
-		db    4
-		db 0B0h	; °
-		db    4
-		db 0B8h	; ¸
-		db  0Bh
-		db  78h	; x
-		db    5
-		db  78h	; x
-		db    5
-		db  78h	; x
-		db    5
-		db  78h	; x
-		db    5
-		db 0A0h
-		db  0Fh
-		db  40h
-		db    6
-		db  40h
-		db    6
-		db  40h
-		db    6
-		db  58h	; X
-		db    2
-		db  70h	; p
-		db  17h
-		db 0B0h	; °
-		db    4
-		db 0B0h	; °
-		db    4
-		db 0B0h	; °
-		db    4
-		db 0B0h	; °
-		db    4
-		db 0D0h	; Ð
-		db    7
-		db  78h	; x
-		db    5
-		db  78h	; x
-		db    5
-		db  78h	; x
-		db    5
-		db  78h	; x
-		db    5
-		db 0A0h
-		db  0Fh
-		db  40h
-		db    6
-		db    8
-		db    7
-		db    8
-		db    7
-		db  40h
-		db    6
-		db  40h
-		db  1Fh
+public _STAGE_TIMES
+_STAGE_TIMES	label word
+	dw 1000, 1000, 1000, 1000, 2000	; Shrine
+	; Makai
+	dw 1200, 1200, 1200, 1200, 3000	; (06 - 10)
+	dw 1400, 1400, 1400, 1400, 4000	; (11 - 15)
+	dw 1600, 1600, 1600,  600, 6000	; (16 - 20)
+	; Jigoku
+	dw 1200, 1200, 1200, 1200, 2000	; (06 - 10)
+	dw 1400, 1400, 1400, 1400, 4000	; (11 - 15)
+	dw 1600, 1800, 1800, 1600, 8000	; (16 - 20)
 byte_35B28	db 0
 include th01/formats/ptn_main[data].asm
 byte_35B42	db 0
