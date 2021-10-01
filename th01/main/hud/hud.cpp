@@ -229,11 +229,11 @@ void hud_score_and_cardcombo_render(void)
 		cardcombo_bg(func, digit, top, ptn_id); \
 	} \
 
-inline void cardcombo_put_initial(screen_y_t top, int fx) {
+inline void cardcombo_bg_snap_and_put(screen_y_t top, int fx) {
 	graph_putfwnum_fx(CARDCOMBO_LEFT, top, fx, CARDCOMBO_DIGITS, 0, 99, true);
 }
 
-#define score_snap_bg_and_put(digit, top, ptn_id, fx, score) \
+#define score_bg_snap_and_put(digit, top, ptn_id, fx, score) \
 	graph_accesspage_func(1); \
 	for(digit = 0; digit < SCORE_DIGITS; digit++) { \
 		score_bg(bg_snap, digit, top, ptn_id); \
@@ -242,23 +242,23 @@ inline void cardcombo_put_initial(screen_y_t top, int fx) {
 	graph_putfwnum_fx(SCORE_LEFT, top, fx, SCORE_DIGITS, score, 0, true);
 
 // Setting [first_run] to false will only reset the card combo display.
-void score_and_cardcombo_put_initial(bool16 first_run)
+void score_and_cardcombo_bg_snap_and_put(bool16 first_run)
 {
 	int digit;
 
 	// Spot the difference… :(
 	if(first_run) {
-		score_snap_bg_and_put(digit, CUR_TOP, PTN_BG_CUR_SCORE, CUR_FX, score);
+		score_bg_snap_and_put(digit, CUR_TOP, PTN_BG_CUR_SCORE, CUR_FX, score);
 		graph_accesspage_func(1);
 		cardcombo_bg_loop(bg_snap, digit, CUR_TOP, PTN_BG_CUR_CARDCOMBO);
 	} else {
 		cardcombo_bg_loop(bg_put, digit, CUR_TOP, PTN_BG_CUR_CARDCOMBO);
 	}
 	graph_accesspage_func(0);
-	cardcombo_put_initial(CUR_TOP, CUR_FX);
+	cardcombo_bg_snap_and_put(CUR_TOP, CUR_FX);
 
 	if(first_run) {
-		score_snap_bg_and_put(
+		score_bg_snap_and_put(
 			digit, MAX_TOP, PTN_BG_MAX_SCORE, MAX_FX, resident->hiscore
 		);
 		graph_accesspage_func(1);
@@ -267,7 +267,7 @@ void score_and_cardcombo_put_initial(bool16 first_run)
 	} else {
 		cardcombo_bg_loop(bg_put, digit, MAX_TOP, PTN_BG_MAX_CARDCOMBO);
 	}
-	cardcombo_put_initial(MAX_TOP, MAX_FX);
+	cardcombo_bg_snap_and_put(MAX_TOP, MAX_FX);
 
 	graph_copy_hud_row_0_to_1_8(SCORE_LEFT, MAX_TOP, SCORE_AND_CARDCOMBO_W);
 	graph_copy_hud_row_0_to_1_8(SCORE_LEFT, CUR_TOP, SCORE_AND_CARDCOMBO_W);
@@ -385,7 +385,7 @@ inline screen_y_t lives_top(int i) {
 #define bombs_put(left, i) \
 	sprite_put(left, i, BOMBS_TOP, PTN_HUD, PTN_BOMB_QUARTER)
 
-#define put_initial(left, top, func_bg, func_sprite, var) \
+#define bg_snap_and_put(left, top, func_bg, func_sprite, var) \
 	for(int i = 0; i < var; i++) { \
 		func_bg(bg_snap, left, i); \
 		func_sprite(left, i); \
@@ -408,9 +408,9 @@ inline screen_y_t lives_top(int i) {
 		graph_copy_hud_row_0_to_1_8(left, top, var_new * COL_W); \
 	} \
 
-void lives_put_initial(void)
+void lives_bg_snap_and_put(void)
 {
-	put_initial(LIVES_LEFT, LIVES_TOP, lives_bg, lives_put, lives);
+	bg_snap_and_put(LIVES_LEFT, LIVES_TOP, lives_bg, lives_put, lives);
 }
 
 void hud_lives_put(int prev)
@@ -418,9 +418,9 @@ void hud_lives_put(int prev)
 	put_change(LIVES_LEFT, LIVES_TOP, lives_bg, lives_put, prev, lives);
 }
 
-void bombs_put_initial(void)
+void bombs_bg_snap_and_put(void)
 {
-	put_initial(BOMBS_LEFT, BOMBS_TOP, bombs_bg, bombs_put, bombs);
+	bg_snap_and_put(BOMBS_LEFT, BOMBS_TOP, bombs_bg, bombs_put, bombs);
 }
 
 void hud_bombs_put(int prev)
@@ -428,12 +428,12 @@ void hud_bombs_put(int prev)
 	put_change(BOMBS_LEFT, BOMBS_TOP, bombs_bg, bombs_put, prev, bombs);
 }
 
-#undef put_initial
+#undef bg_snap_and_put
 #undef put_change
 /// ---------------
 
 // Assumes page 0.
-void stage_put_initial(void)
+void stage_bg_snap_and_put(void)
 {
 	char str[STAGE_DIGITS + 1];
 

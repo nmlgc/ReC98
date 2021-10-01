@@ -5994,14 +5994,14 @@ main_24_TEXT	ends
 ; Segment type:	Pure code
 main_25_TEXT	segment	byte public 'CODE' use16
 	extern @hud_score_and_cardcombo_render$qv:proc
-	extern @score_and_cardcombo_put_initial$qi:proc
+	extern @score_and_cardcombo_bg_snap_and_$qi:proc
 	extern @hud_bg_put$qv:proc
 	extern  @hud_bg_load$qnxc:proc
-	extern @lives_put_initial$qv:proc
+	extern @lives_bg_snap_and_put$qv:proc
 	extern @hud_lives_put$qi:proc
-	extern @bombs_put_initial$qv:proc
+	extern @bombs_bg_snap_and_put$qv:proc
 	extern @hud_bombs_put$qi:proc
-	extern @stage_put_initial$qv:proc
+	extern @stage_bg_snap_and_put$qv:proc
 main_25_TEXT	ends
 
 main_25__TEXT	segment	byte public 'CODE' use16
@@ -6041,9 +6041,9 @@ sub_190D6	proc far
 loc_1910C:
 		cmp	_first_stage_in_scene, 1
 		jnz	short loc_19124
-		call	@lives_put_initial$qv
-		call	@bombs_put_initial$qv
-		call	@stage_put_initial$qv
+		call	@lives_bg_snap_and_put$qv
+		call	@bombs_bg_snap_and_put$qv
+		call	@stage_bg_snap_and_put$qv
 		call	sub_1926B
 
 loc_19124:
@@ -6128,7 +6128,7 @@ loc_19227:
 		push	0
 
 loc_19229:
-		call	@score_and_cardcombo_put_initial$qi
+		call	@score_and_cardcombo_bg_snap_and_$qi
 		pop	cx
 		call	sub_192D6
 		mov	_fwnum_force_rerender, 1
