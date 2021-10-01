@@ -6,20 +6,100 @@ extern "C" {
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
+#include "th01/common.h"
+#include "th01/resident.hpp"
+#include "th01/v_colors.hpp"
 #include "th01/hardware/egc.h"
+#include "th01/hardware/graph.h"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/tram_x16.hpp"
+#include "th01/formats/ptn.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th01/snd/mdrv2.h"
 #include "th01/sprites/pellet.h"
+#include "th01/sprites/main_ptn.h"
 #include "th01/main/vars.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/bullet/pellet.hpp"
 }
+#include "th01/core/str_val.hpp"
+#include "th01/main/bullet/pellet_s.hpp"
+#include "th01/main/stage/stages.hpp"
+#include "th01/main/stage/timer.hpp"
 
 extern unsigned int frames_since_harryup;
 
-// Largely copy-pasted from stage_num_animate().
+void harryup_animate(void);
+void pattern_harryup(void);
+
+/// Constants
+/// ---------
+
+static const screen_x_t TIMER_LEFT = 512;
+static const screen_y_t TIMER_TOP = 0;
+static const int16_t TIMER_COL_AND_FX = (FX_WEIGHT_BOLD | V_WHITE);
+
+static const int TIMER_PTN_QUARTERS = (
+	(TIMER_DIGITS * GLYPH_HALF_W) / PTN_QUARTER_W
+);
+/// ---------
+
+/// Helper functions
+/// ----------------
+
+inline void unput(void) {
+	// MODDERS: Loop over TIMER_PTN_QUARTERS instead.
+	enum {
+		LEFT_1 = (TIMER_LEFT + (0 * GLYPH_HALF_W)),
+		LEFT_2 = (TIMER_LEFT + (2 * GLYPH_HALF_W)),
+	};
+	ptn_put_quarter_noalpha_8(LEFT_1, TIMER_TOP, PTN_BG_TIMER, 0);
+	ptn_put_quarter_noalpha_8(LEFT_2, TIMER_TOP, PTN_BG_TIMER, 1);
+}
+
+#define put(tmp_str, col_and_fx) { \
+	str_right_aligned_from_uint16(tmp_str, stage_timer, TIMER_DIGITS); \
+	graph_putsa_fx(TIMER_LEFT, TIMER_TOP, col_and_fx, tmp_str); \
+}
+/// ----------------
+
+void timer_put(void)
+{
+	int16_t col_and_fx = (stage_timer < 200)
+		? (FX_WEIGHT_BOLD | V_RED)
+		: TIMER_COL_AND_FX;
+	char tmp_str[TIMER_DIGITS + 1];
+
+	graph_accesspage_func(1); unput(); put(tmp_str, col_and_fx);
+	graph_accesspage_func(0); unput(); put(tmp_str, col_and_fx);
+}
+
+void timer_tick_and_put(void)
+{
+	if(stage_timer > 0) {
+		stage_timer -= TIMER_TICK;
+		timer_put();
+		if(stage_timer == 0) {
+			pellet_speed_raise(0.05f);
+			harryup_animate();
+		}
+	} else {
+		pattern_harryup();
+	}
+}
+
+void timer_extend_and_put(void)
+{
+	if(stage_timer != 0) {
+		stage_timer += 200;
+	} else {
+		stage_timer += 1000;
+	}
+	timer_put();
+	frames_since_harryup = 0;
+}
+
+// Largely copy-pasted from stage_num_animate()
 void harryup_animate(void)
 {
 	utram_kanji_amount_t x;

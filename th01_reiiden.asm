@@ -3030,7 +3030,7 @@ loc_DCCA:
 		inc	_bomb_doubletap_frames
 		test	byte ptr _frame_rand, 3
 		jnz	short loc_DCFA
-		call	sub_1938A
+		call	@timer_tick_and_put$qv
 
 loc_DCFA:
 		cmp	_mode_test, 1
@@ -6130,7 +6130,7 @@ loc_19227:
 loc_19229:
 		call	@score_and_cardcombo_bg_snap_and_$qi
 		pop	cx
-		call	sub_192D6
+		call	@timer_put$qv
 		mov	_fwnum_force_rerender, 1
 		call	@hud_score_and_cardcombo_render$qv
 		mov	_fwnum_force_rerender, 0
@@ -6232,122 +6232,9 @@ loc_19287:
 		retf
 sub_1926B	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_192D6	proc far
-
-@@str		= byte ptr -6
-
-		enter	6, 0
-		push	si
-		cmp	_stage_timer, 200
-		jnb	short loc_192E8
-		mov	ax, 2Ah
-		jmp	short loc_192EB
-; ---------------------------------------------------------------------------
-
-loc_192E8:
-		mov	ax, 27h
-
-loc_192EB:
-		mov	si, ax
-		push	1
-		call	_graph_accesspage_func
-		call	_ptn_put_quarter_noalpha_8 stdcall, large (0 shl 16) or 512, large (0 shl 16) or (PTN_SLOT_5 + 13)
-		call	_ptn_put_quarter_noalpha_8 stdcall, large (0 shl 16) or 528, large (1 shl 16) or (PTN_SLOT_5 + 13)
-		push	ss
-		lea	ax, [bp+@@str]
-		push	ax
-		push	_stage_timer
-		push	4
-		call	@str_right_aligned_from_uint16$qncuiui
-		push	ss
-		lea	ax, [bp+@@str]
-		push	ax
-		push	si
-		pushd	(0 shl 16) or 512
-		call	_graph_putsa_fx
-		push	0
-		call	_graph_accesspage_func
-		call	_ptn_put_quarter_noalpha_8 stdcall, large (0 shl 16) or 512, large (0 shl 16) or (PTN_SLOT_5 + 13)
-		call	_ptn_put_quarter_noalpha_8 stdcall, large (0 shl 16) or 528, large (1 shl 16) or (PTN_SLOT_5 + 13)
-		add	sp, 2Eh
-		push	ss
-		lea	ax, [bp+@@str]
-		push	ax
-		push	_stage_timer
-		push	4
-		call	@str_right_aligned_from_uint16$qncuiui
-		push	ss
-		lea	ax, [bp+@@str]
-		push	ax
-		push	si
-		pushd	(0 shl 16) or 512
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-		pop	si
-		leave
-		retf
-sub_192D6	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1938A	proc far
-		push	bp
-		mov	bp, sp
-		cmp	_stage_timer, 0
-		jbe	short loc_193B3
-		sub	_stage_timer, 2
-		call	sub_192D6
-		cmp	_stage_timer, 0
-		jnz	short loc_193B8
-		call	@pellet_speed_raise$qi stdcall, 2
-		pop	cx
-		nopcall	@harryup_animate$qv
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_193B3:
-		nopcall	@pattern_harryup$qv
-
-loc_193B8:
-		pop	bp
-		retf
-sub_1938A	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_193BA	proc far
-		push	bp
-		mov	bp, sp
-		cmp	_stage_timer, 0
-		jz	short loc_193CC
-		add	_stage_timer, 200
-		jmp	short loc_193D2
-; ---------------------------------------------------------------------------
-
-loc_193CC:
-		add	_stage_timer, 1000
-
-loc_193D2:
-		call	sub_192D6
-		mov	_frames_since_harryup, 0
-		pop	bp
-		retf
-sub_193BA	endp
-
-	extern @harryup_animate$qv:proc
-	extern @pattern_harryup$qv:proc
+	extern @timer_put$qv:proc
+	extern @timer_tick_and_put$qv:proc
+	extern @timer_extend_and_put$qv:proc
 main_26_TEXT	ends
 
 ; ===========================================================================
@@ -8386,7 +8273,7 @@ loc_1B01F:
 		pop	cx
 
 loc_1B028:
-		call	sub_193BA
+		call	@timer_extend_and_put$qv
 		call	@pellet_speed_lower$qii c, large 0 or (-2 shl 16)
 		pop	di
 		pop	si

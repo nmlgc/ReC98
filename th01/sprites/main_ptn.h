@@ -6,6 +6,7 @@
 
 static const int CARDCOMBO_DIGITS = 2;
 static const int PORTAL_ANIM_CELS = 2;
+static const int TIMER_DIGITS = 4;
 
 typedef enum {
 	PTN_SLOT_STG = 0, // stg(_b).ptn
@@ -64,6 +65,9 @@ typedef enum {
 	PTN_BG_MAX_SCORE_last = last_for_quarters(PTN_BG_MAX_SCORE, SCORE_DIGITS),
 	PTN_BG_MAX_CARDCOMBO,
 
-	PTN_BG_HP = PTN_ID(PTN_SLOT_BG_HUD, 14),
+	PTN_BG_TIMER,
+	PTN_BG_TIMER_last = last_for_quarters(PTN_BG_TIMER, (TIMER_DIGITS / 2)),
+
+	PTN_BG_HP,
 	// -------------------------
 } main_ptn_id_t;
