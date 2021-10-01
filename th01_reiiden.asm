@@ -3568,7 +3568,6 @@ SHARED	segment	byte public 'CODE' use16
 	extern _vram_planes_set:proc
 	extern _egc_copy_rect_1_to_0_16:proc
 	extern _ptn_snap_8:proc
-	extern _ptn_snap_quarter_8:proc
 SHARED	ends
 
 ; ===========================================================================
@@ -6044,7 +6043,7 @@ loc_1910C:
 		call	@lives_bg_snap_and_put$qv
 		call	@bombs_bg_snap_and_put$qv
 		call	@stage_bg_snap_and_put$qv
-		call	sub_1926B
+		call	@timer_bg_snap_and_put$qv
 
 loc_19124:
 		push	1
@@ -6182,56 +6181,7 @@ loc_1925A:
 		retf
 sub_19243	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1926B	proc far
-
-@@str		= byte ptr -6
-
-		enter	6, 0
-		push	si
-		xor	si, si
-		jmp	short loc_19287
-; ---------------------------------------------------------------------------
-
-loc_19274:
-		call	_ptn_snap_quarter_8 c, 512, large ((PTN_SLOT_5 + 13) shl 16) or 0, si
-		inc	si
-
-loc_19287:
-		cmp	si, 2
-		jl	short loc_19274
-		push	ss
-		lea	ax, [bp+@@str]
-		push	ax
-		push	_stage_timer
-		push	4
-		call	@str_right_aligned_from_uint16$qncuiui
-		push	1
-		call	_graph_accesspage_func
-		push	ss
-		lea	ax, [bp+@@str]
-		push	ax
-		push	((7 or FX_WEIGHT_BOLD) shl 16) or 0
-		push	512
-		call	_graph_putsa_fx
-		push	0
-		call	_graph_accesspage_func
-		push	ss
-		lea	ax, [bp+@@str]
-		push	ax
-		push	((7 or FX_WEIGHT_BOLD) shl 16) or 0
-		push	512
-		call	_graph_putsa_fx
-		add	sp, 18h
-		pop	si
-		leave
-		retf
-sub_1926B	endp
-
+	extern @timer_bg_snap_and_put$qv:proc
 	extern @timer_put$qv:proc
 	extern @timer_tick_and_put$qv:proc
 	extern @timer_extend_and_put$qv:proc

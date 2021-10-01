@@ -63,6 +63,22 @@ inline void unput(void) {
 }
 /// ----------------
 
+void timer_bg_snap_and_put(void)
+{
+	char str[TIMER_DIGITS + 1];
+
+	for(int i = 0; i < TIMER_PTN_QUARTERS; i++) {
+		ptn_snap_quarter_8(TIMER_LEFT, TIMER_TOP, PTN_BG_TIMER, i);
+	}
+
+	str_right_aligned_from_uint16(str, stage_timer, TIMER_DIGITS);
+
+	graph_accesspage_func(1);
+	graph_putsa_fx(TIMER_LEFT, TIMER_TOP, TIMER_COL_AND_FX, str);
+	graph_accesspage_func(0);
+	graph_putsa_fx(TIMER_LEFT, TIMER_TOP, TIMER_COL_AND_FX, str);
+}
+
 void timer_put(void)
 {
 	int16_t col_and_fx = (stage_timer < 200)
