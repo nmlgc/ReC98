@@ -433,13 +433,13 @@ int regist_on_shot(
 	return 0;
 }
 
-#pragma option -b
 enum regist_input_ret_t {
 	RI_REGULAR = 0,
 	RI_ENTER = 1,
-	RI_NONE = 2
+	RI_NONE = 2,
+
+	_regist_input_ret_t_FORCE_INT16 = 0x7FFF
 };
-#pragma option -b.
 
 regist_input_ret_t regist_on_input(
 	screen_x_t &left, screen_y_t &top,

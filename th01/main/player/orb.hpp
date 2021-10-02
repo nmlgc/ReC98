@@ -17,13 +17,14 @@ extern bool16 orb_in_portal;
 
 /// Physics
 /// -------
-#pragma option -b
 enum orb_velocity_x_t {
 	OVX_0 = 0,
 	OVX_4_LEFT = 1,
 	OVX_4_RIGHT = 2,
 	OVX_8_LEFT = 3,
 	OVX_8_RIGHT = 4,
+
+	_orb_velocity_x_t_FORCE_INT16 = 0x7FFF
 };
 
 enum orb_force_t {
@@ -31,8 +32,9 @@ enum orb_force_t {
 	OF_BOUNCE_FROM_TOP = 1,
 	OF_SHOT = 2,
 	OF_IMMEDIATE = 3, // new force passed directly in [immediate]
+
+	_orb_force_t_FORCE_INT16 = 0x7FFF
 };
-#pragma option -b.
 
 // Initial value of the current force acting on the orb
 extern double orb_force;
