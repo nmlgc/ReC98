@@ -459,6 +459,13 @@ Inhibited by:
 
 * inlined calls to empty functions
 
+### `-y` (Produce line number info)
+
+Provides its own kind of slight jump optimization if combined with `-O-`. Yes,
+seriously. Might be required to decompile code that seems to contain both some
+of the jump optimizations from `-O` and the stack-clearing instructions after
+every function call from `-O-`.
+
 ## Inlining
 
 Always worth a try to get rid of a potential macro. Some edge cases don't
