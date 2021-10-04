@@ -43,7 +43,7 @@ extern "C" {
 #include "th01/main/bullet/laser_s.hpp"
 #include "th01/main/hud/hp.hpp"
 
-static const char* unused_redletters_maybe[] = { "ANGEL", "OF", "DEATH" };
+static const char* unused_entrace_letters_maybe[] = { "ANGEL", "OF", "DEATH" };
 
 // Coordinates
 // -----------
@@ -998,7 +998,7 @@ void pattern_four_homing_snakes(void)
 		for(i = 1; i < snakes.count(); i++) {
 			snakes.left[i][0] = -PIXEL_NONE;
 		}
-		konngara_select_for_rank(pattern_state.unused, 18, 16, 14, 12);
+		select_for_rank(pattern_state.unused, 18, 16, 14, 12);
 		mdrv2_se_play(12);
 		return;
 	}
@@ -1411,7 +1411,7 @@ void pattern_slash_aimed(void)
 		face_direction_can_change = false;
 		spawner_left = SWORD_CENTER_X;
 		spawner_top = SWORD_CENTER_Y;
-		konngara_select_for_rank(pattern_state.speed,
+		select_for_rank(pattern_state.speed,
 			to_sp(4.0f), to_sp(5.0f), to_sp(5.5f), to_sp(6.0f)
 		);
 	}
@@ -1788,7 +1788,7 @@ void konngara_main(void)
 		//
 		// "Graph mode" (as opposed to "kanji mode") disables Shift-JIS decoding
 		// inside NEC's IO.SYS. This allows new half-width glyphs at the
-		// Shift-JIS lead byte codepoints, 0x81-0x9F and 0xE0-0xFF, to be
+		// Shift-JIS lead byte code points, 0x81-0x9F and 0xE0-0xFF, to be
 		// accessed via regular INT 29h text output, and consequently, printf().
 		// Had to reverse-engineer that, only to find out that it has exactly
 		// zero effect when printing spaces...

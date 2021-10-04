@@ -350,12 +350,9 @@ void alphabet_put_at(screen_x_t left, screen_y_t top, bool16 is_selected)
 
 	egc_copy_rect_1_to_0_16(left, top, KANJI_PADDED_W, GLYPH_H);
 
-	// TODO OCTOBER 2020: Try flipping
-	int16_t col_and_fx = (
-		FX_WEIGHT_BOLD | (
-			!is_selected ? (COL_REGULAR) : (FX_REVERSE | COL_SELECTED)
-		)
-	);
+	int16_t col_and_fx = (FX_WEIGHT_BOLD | (
+		!is_selected ? COL_REGULAR : (FX_REVERSE | COL_SELECTED)
+	));
 
 	alphabet_if(kanji, left, top,
 		{ graph_printf_fx(left, top, col_and_fx, ALPHABET_SPACE_0); },

@@ -1,3 +1,6 @@
+/// Everything here needs to be kept in sync with the ASM versions in
+/// bullet.inc!
+
 #include "th04/sprites/cels.h"
 
 /// Game-specific group and spawn types
@@ -11,8 +14,6 @@
 
 /// States and modes
 /// ----------------
-/// Everything here needs to be kept in sync with the ASM versions in
-/// bullet.hpp!
 static const int BMS_DECAY_FRAMES_PER_CEL = 4;
 #define BSS_CLOUD_FRAMES (BULLET_CLOUD_CELS * 4)
 #define BMS_DECAY_FRAMES (BULLET_DECAY_CELS * BMS_DECAY_FRAMES_PER_CEL)
@@ -69,7 +70,6 @@ enum bullet_special_motion_t {
 };
 /// ----------------
 
-// Needs to be kept in sync with the ASM version in bullet.inc!
 struct bullet_t {
 	unsigned char flag;
 	char age;
@@ -193,7 +193,6 @@ void near pellets_render_bottom();
 
 /// Template
 /// --------
-// Needs to be kept in sync with the ASM version in bullet.inc!
 struct bullet_template_t {
 	uint8_t spawn_type;
 	unsigned char patnum;	// TH05: 0 = pellet

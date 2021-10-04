@@ -39,9 +39,9 @@ public:
 	// Calls putkanji() for the next 5 TRAM rows.
 	void putkanji_for_5_rows(uint16_t jis_kanji, int atrb);
 
-	// This is always called at line 21, and therefore always ends up writing
-	// into the second TRAM page. Luckily, that page is used, and no code cares
-	// about it...
+	// This is always called at the (0-based) line 21, and therefore always
+	// ends up writing into the second TRAM page. Luckily, that page is used,
+	// and no code cares about it...
 	void putkanji_until_end(uint16_t jis_kanji, int atrb) {
 		putkanji_for_5_rows(jis_kanji, atrb);
 	}

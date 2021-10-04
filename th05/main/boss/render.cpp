@@ -239,7 +239,6 @@ void near shinki_bg_type_a_update_part1(void)
 			linesets[1].angle[0] -= 0x02;
 		}
 	}
-	#undef PARTICLES_UNINITIALIZED
 }
 
 // Draws the given line out of [set] with the current GRCG tile and color.

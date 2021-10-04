@@ -11,7 +11,7 @@ extern "C" {
 /// String-to-color map
 /// -------------------
 /// Used to automatically change the text color whenever a specific
-/// Shift-JIS codepoint is encountered.
+/// Shift-JIS code point is encountered.
 static const int COLMAP_COUNT = 8;
 
 typedef struct {

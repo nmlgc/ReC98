@@ -290,10 +290,10 @@ C++, Open Watcom, and Visual C++, which will ease future third-party ports.
   void resident_set(resident __seg *seg)
   {
     // Redundant, and requires the MK_FP() macro to be declared
-    resident_t far *resident = MK_FP(resident_seg, 0);
+    resident_t far *resident = MK_FP(seg, 0);
 
     // Does the same, without requiring a macro
-    resident_t far *resident = resident_seg;
+    resident_t far *resident = seg;
   }
   ```
 

@@ -45,7 +45,7 @@ where the scalar-type variable is declared in relation to them.
 | `CWD`<br />`SUB AX, DX`<br />`SAR AX, 1` | `AX / 2`, `AX` is *int* |
 | `MOV [new_var], AX`<br />`CWD`<br />`XOR AX, DX`<br />`SUB AX, DX` | `abs(AX)`, defined in `<stdlib.h>`. `AX` is *int* |
 
-* When bit-testing the a variable with a 16-bit mask via `&` in a conditional
+* When bit-testing a variable with a 16-bit mask via `&` in a conditional
   expression, the `TEST` is optimized to cover just the high or low byte, if
   possible:
   ```c
@@ -231,10 +231,10 @@ Calling conventions can be added before the `*`.
   cause a fixup overflow error at link time. The reason for that is pointed
   out in the compiler's assembly output (`-S)`:
 
-  | C                        | ASM                                                                                    |
-  |--------------------------|----------------------------------------------------------------------------------------|
-  | `void near bar();`       | `extrn	_bar:near`                                                                      |
-  | `static nn_t foo = bar;` | `mov	word ptr DGROUP:_popup, offset CURRENTLY_​COMPILED_​BUT_​NOT_​ACTUAL_​GROUP_​OF:_bar` |
+  | C                        | ASM                                                                                  |
+  |--------------------------|--------------------------------------------------------------------------------------|
+  | `void near bar();`       | `extrn _bar:near`                                                                    |
+  | `static nn_t foo = bar;` | `mov   word ptr DGROUP:_foo, offset CURRENTLY_​COMPILED_​BUT_​NOT_​ACTUAL_​GROUP_​OF:_bar` |
 
   The only known way of enforcing this assignment involves declaring `bar()` as
   a far function and then casting its implicit segment away:
@@ -357,17 +357,17 @@ void foo(int i) {
 
 * Replaces
 
-```asm
-ENTER <stack size>, 0
-```
+  ```asm
+  ENTER <stack size>, 0
+  ```
 
-with
+  with
 
-```asm
-PUSH BP
-MOV  BP, SP
-SUB  SP, <stack size>
-```
+  ```asm
+  PUSH BP
+  MOV  BP, SP
+  SUB  SP, <stack size>
+  ```
 
 ### `-Z` (Suppress register reloads)
 
@@ -635,7 +635,7 @@ contains one of the following:
   **Certainty:** Confirmed through reverse-engineering `TCC.EXE`, no way
   around it.
 
-### Compiler bugs
+## Compiler bugs
 
 * Dereferencing a `far` pointer constructed from the `_FS` and `_GS`
   pseudoregisters emits wrong segment prefix opcodes – 0x46 (`INC SI`) and

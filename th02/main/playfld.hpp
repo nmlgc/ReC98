@@ -25,8 +25,8 @@
 #endif
 
 #define playfield_encloses_yx_lt_ge(center_x, center_y, w, h) ( \
-	/* Casting the center coordinate allows macro to easily be used with */ \
-	/* the _AX and _DX pseudoregisters after motion_update(). */ \
+	/* Casting the center coordinate allows this macro to easily be used */ \
+	/* with the _AX and _DX pseudoregisters after motion_update(). */ \
 	(static_cast<subpixel_t>(center_y) >= to_sp(0 - (h  / 2))) && \
 	(static_cast<subpixel_t>(center_y) < to_sp(PLAYFIELD_H + (h / 2))) && \
 	(static_cast<subpixel_t>(center_x) >= to_sp(0 - (w / 2))) && \
@@ -34,8 +34,8 @@
 )
 
 #define playfield_encloses(center_x, center_y, w, h) ( \
-	/* Casting the center coordinate allows macro to easily be used with */ \
-	/* the _AX and _DX pseudoregisters after motion_update(). */ \
+	/* Casting the center coordinate allows this macro to easily be used */ \
+	/* with the _AX and _DX pseudoregisters after motion_update(). */ \
 	(static_cast<subpixel_t>(center_x) > to_sp(0 - (w / 2))) && \
 	(static_cast<subpixel_t>(center_x) < to_sp(PLAYFIELD_W + (w / 2))) && \
 	(static_cast<subpixel_t>(center_y) > to_sp(0 - (h  / 2))) && \
