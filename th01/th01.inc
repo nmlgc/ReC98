@@ -71,3 +71,8 @@ MISS_INVINCIBILITY_FRAMES = 150
 ; -----
 BOMB_INVINCIBILITY_FRAMES_AFTER = 100
 ; -----
+
+; VRAM colors
+; -----------
+V_WHITE = 7
+; -----------

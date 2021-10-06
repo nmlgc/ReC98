@@ -27,6 +27,13 @@
 	((y1) <= (bottom2)) \
 )
 
+#define overlap_xyxy_lrtb_le_ge(x1, y1, left2, top2, right2, bottom2) ( \
+	((x1) >= (left2)) && \
+	((y1) <= (bottom2)) && \
+	((x1) <= (right2)) && \
+	((y1) >= (top2)) \
+)
+
 #define overlap_xy_lrbt_le_ge(x1, y1, left2, top2, right2, bottom2) ( \
 	((x1) >= (left2)) && \
 	((x1) <= (right2)) && \

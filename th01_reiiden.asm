@@ -8210,8 +8210,7 @@ loc_1B3D8:
 		mov	_boss_hp, 16
 		mov	_hud_hp_first_white, 12
 		mov	_hud_hp_first_redwhite, 8
-		push	700FFh
-		call	sub_22264
+		call	@particles_unput_update_render$q17particle_origin_ti stdcall, large PO_INITIALIZE or (V_WHITE shl 16)
 		add	sp, 16h
 		pop	di
 		pop	si
@@ -12953,8 +12952,7 @@ sub_1E79B	proc far
 		mov	_boss_hp, 12
 		mov	_hud_hp_first_white, 6
 		mov	_hud_hp_first_redwhite, 2
-		push	700FFh
-		call	sub_22264
+		call	@particles_unput_update_render$q17particle_origin_ti stdcall, large PO_INITIALIZE or (V_WHITE shl 16)
 		add	sp, 16h
 		pop	bp
 		retf
@@ -14974,8 +14972,7 @@ sub_1FA7B	proc far
 		push	ds
 		push	offset unk_39EC4
 		call	sub_21F19
-		push	70001h
-		call	sub_22264
+		call	@particles_unput_update_render$q17particle_origin_ti stdcall, large PO_TOP_RIGHT or (V_WHITE shl 16)
 		add	sp, 8
 		cmp	_boss_phase, 0
 		jnz	short loc_1FB20
@@ -17193,508 +17190,7 @@ loc_22260:
 		retf
 @is_bomb_damage_frame$qul	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_22264	proc far
-
-var_1		= byte ptr -1
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		enter	2, 0
-		push	si
-		mov	si, [bp+arg_0]
-		cmp	si, 255
-		jnz	short loc_2229C
-		mov	[bp+var_1], 0
-		jmp	short loc_22287
-; ---------------------------------------------------------------------------
-
-loc_22278:
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		mov	bx, ax
-		mov	byte ptr [bx+598Dh], 0
-		inc	[bp+var_1]
-
-loc_22287:
-		cmp	[bp+var_1], 28h	; '('
-		jb	short loc_22278
-		mov	word_3A1E9, 2
-		mov	word_3A1EB, 10
-		jmp	loc_22661
-; ---------------------------------------------------------------------------
-
-loc_2229C:
-		inc	byte_3A37D
-		mov	al, byte_3A37D
-		mov	ah, 0
-		mov	dx, word_3A1E9
-		imul	dx, 28h
-		cmp	ax, dx
-		jle	short loc_222B5
-		mov	byte_3A37D, 0
-
-loc_222B5:
-		mov	al, byte_3A37D
-		mov	ah, 0
-		cwd
-		idiv	word_3A1E9
-		or	dx, dx
-		jnz	loc_22538
-		mov	al, byte_3A37D
-		mov	ah, 0
-		cwd
-		idiv	word_3A1E9
-		mov	[bp+var_1], al
-		mov	ah, 0
-		mov	bx, ax
-		cmp	byte ptr [bx+598Dh], 0
-		jnz	loc_22538
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		mov	bx, ax
-		mov	byte ptr [bx+598Dh], 1
-		call	IRand
-		cwd
-		idiv	word_3A1EB
-		inc	dl
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		mov	bx, ax
-		mov	[bx+59B5h], dl
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		mov	bx, 2
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	loc_22398
-		mov	bx, si
-		cmp	bx, 7
-		ja	loc_22416
-		add	bx, bx
-		jmp	cs:off_22684[bx]
-
-loc_22323:
-		call	IRand
-		mov	bx, 640
-		cwd
-		idiv	bx
-		shl	dx, 4
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		mov	[bx+584Dh], dx
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		mov	word ptr [bx+589Dh], 0
-		jmp	loc_22416
-; ---------------------------------------------------------------------------
-
-loc_22350:
-		call	IRand
-		mov	bx, 640
-		cwd
-		idiv	bx
-		shl	dx, 4
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		mov	[bx+584Dh], dx
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		mov	word ptr [bx+589Dh], 18F0h
-		jmp	loc_22416
-; ---------------------------------------------------------------------------
-
-loc_2237D:
-		cmp	si, 2
-		jnz	short loc_22387
-		mov	ax, 27F0h
-		jmp	short loc_22389
-; ---------------------------------------------------------------------------
-
-loc_22387:
-		xor	ax, ax
-
-loc_22389:
-		mov	dl, [bp+var_1]
-		mov	dh, 0
-		add	dx, dx
-		mov	bx, dx
-		mov	[bx+584Dh], ax
-		jmp	short loc_223C6
-; ---------------------------------------------------------------------------
-
-loc_22398:
-		mov	bx, si
-		cmp	bx, 7
-		ja	short loc_22416
-		add	bx, bx
-		jmp	cs:off_22674[bx]
-
-loc_223A6:
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		mov	word ptr [bx+584Dh], 27F0h
-		jmp	short loc_223C6
-; ---------------------------------------------------------------------------
-
-loc_223B7:
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		mov	word ptr [bx+584Dh], 0
-
-loc_223C6:
-		call	IRand
-		mov	bx, 400
-		cwd
-		idiv	bx
-		shl	dx, 4
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		mov	[bx+589Dh], dx
-		jmp	short loc_22416
-; ---------------------------------------------------------------------------
-
-loc_223E3:
-		call	IRand
-		mov	bx, 640
-		cwd
-		idiv	bx
-		shl	dx, 4
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		mov	[bx+584Dh], dx
-		or	si, si
-		jnz	short loc_22406
-		xor	ax, ax
-		jmp	short loc_22409
-; ---------------------------------------------------------------------------
-
-loc_22406:
-		mov	ax, 18F0h
-
-loc_22409:
-		mov	dl, [bp+var_1]
-		mov	dh, 0
-		add	dx, dx
-		mov	bx, dx
-		mov	[bx+589Dh], ax
-
-loc_22416:
-		mov	bx, si
-		cmp	bx, 7
-		ja	loc_22538
-		add	bx, bx
-		jmp	cs:off_22664[bx]
-
-loc_22426:
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		mov	bx, ax
-		mov	al, [bx+59B5h]
-		mov	ah, 0
-		jmp	loc_224BB
-; ---------------------------------------------------------------------------
-
-loc_22436:
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		mov	bx, ax
-		mov	al, [bx+59B5h]
-		mov	ah, 0
-		imul	ax, 0Dh
-		neg	ax
-		jmp	loc_2250E
-; ---------------------------------------------------------------------------
-
-loc_2244B:
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		mov	bx, ax
-		mov	al, [bx+59B5h]
-		mov	ah, 0
-		neg	ax
-
-loc_2245A:
-		shl	ax, 4
-		mov	dl, [bp+var_1]
-		mov	dh, 0
-		add	dx, dx
-		mov	bx, dx
-		mov	[bx+58EDh], ax
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		mov	word ptr [bx+593Dh], 0
-		jmp	loc_22538
-; ---------------------------------------------------------------------------
-
-loc_2247C:
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		mov	bx, ax
-		mov	al, [bx+59B5h]
-		mov	ah, 0
-		imul	ax, 0Dh
-		neg	ax
-
-loc_2248E:
-		mov	dl, [bp+var_1]
-		mov	dh, 0
-		add	dx, dx
-		mov	bx, dx
-		mov	[bx+58EDh], ax
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		mov	bx, ax
-		mov	al, [bx+59B5h]
-		mov	ah, 0
-		neg	ax
-		jmp	short loc_22528
-; ---------------------------------------------------------------------------
-
-loc_224AC:
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		mov	bx, ax
-		mov	al, [bx+59B5h]
-		mov	ah, 0
-		neg	ax
-
-loc_224BB:
-		shl	ax, 4
-		mov	dl, [bp+var_1]
-		mov	dh, 0
-		add	dx, dx
-		mov	bx, dx
-		mov	[bx+593Dh], ax
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		mov	word ptr [bx+58EDh], 0
-		jmp	short loc_22538
-; ---------------------------------------------------------------------------
-
-loc_224DC:
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		mov	bx, ax
-		mov	al, [bx+59B5h]
-		mov	ah, 0
-		imul	ax, 0Dh
-		jmp	short loc_2248E
-; ---------------------------------------------------------------------------
-
-loc_224EE:
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		mov	bx, ax
-		mov	al, [bx+59B5h]
-		mov	ah, 0
-		jmp	loc_2245A
-; ---------------------------------------------------------------------------
-
-loc_224FE:
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		mov	bx, ax
-		mov	al, [bx+59B5h]
-		mov	ah, 0
-		imul	ax, 0Dh
-
-loc_2250E:
-		mov	dl, [bp+var_1]
-		mov	dh, 0
-		add	dx, dx
-		mov	bx, dx
-		mov	[bx+58EDh], ax
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		mov	bx, ax
-		mov	al, [bx+59B5h]
-		mov	ah, 0
-
-loc_22528:
-		shl	ax, 3
-		mov	dl, [bp+var_1]
-		mov	dh, 0
-		add	dx, dx
-		mov	bx, dx
-		mov	[bx+593Dh], ax
-
-loc_22538:
-		mov	[bp+var_1], 0
-		jmp	loc_22604
-; ---------------------------------------------------------------------------
-
-loc_2253F:
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		mov	bx, ax
-		cmp	byte ptr [bx+598Dh], 0
-		jz	loc_22601
-		push	(1 shl 16) or 8
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		mov	ax, [bx+589Dh]
-		sar	ax, 4
-		push	ax
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		mov	ax, [bx+584Dh]
-		sar	ax, 4
-		push	ax
-		call	_egc_copy_rect_1_to_0_16
-		add	sp, 8
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		mov	ax, [bx+58EDh]
-		mov	dl, [bp+var_1]
-		mov	dh, 0
-		add	dx, dx
-		mov	bx, dx
-		add	[bx+584Dh], ax
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		mov	ax, [bx+593Dh]
-		mov	dl, [bp+var_1]
-		mov	dh, 0
-		add	dx, dx
-		mov	bx, dx
-		add	[bx+589Dh], ax
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		cmp	word ptr [bx+584Dh], 0
-		jl	short loc_225F5
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		cmp	word ptr [bx+589Dh], 18F0h
-		jg	short loc_225F5
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		cmp	word ptr [bx+584Dh], 27F0h
-		jg	short loc_225F5
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		cmp	word ptr [bx+589Dh], 0
-		jge	short loc_22601
-
-loc_225F5:
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		mov	bx, ax
-		mov	byte ptr [bx+598Dh], 0
-
-loc_22601:
-		inc	[bp+var_1]
-
-loc_22604:
-		cmp	[bp+var_1], 28h	; '('
-		jb	loc_2253F
-		call	grcg_setcolor pascal, GC_RMW, [bp+arg_2]
-		mov	[bp+var_1], 0
-		jmp	short loc_22655
-; ---------------------------------------------------------------------------
-
-loc_2261D:
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		mov	bx, ax
-		cmp	byte ptr [bx+598Dh], 0
-		jz	short loc_22652
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		mov	ax, [bx+584Dh]
-		sar	ax, 4
-		push	ax
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		mov	ax, [bx+589Dh]
-		sar	ax, 4
-		push	ax
-		call	grcg_pset
-
-loc_22652:
-		inc	[bp+var_1]
-
-loc_22655:
-		cmp	[bp+var_1], 28h	; '('
-		jb	short loc_2261D
-		GRCG_OFF_CLOBBERING dx
-
-loc_22661:
-		pop	si
-		leave
-		retf
-sub_22264	endp
-
-; ---------------------------------------------------------------------------
-off_22664	dw offset loc_22426
-		dw offset loc_22436
-		dw offset loc_2244B
-		dw offset loc_2247C
-		dw offset loc_224AC
-		dw offset loc_224DC
-		dw offset loc_224EE
-		dw offset loc_224FE
-off_22674	dw offset loc_223E3
-		dw offset loc_223A6
-		dw offset loc_223A6
-		dw offset loc_223A6
-		dw offset loc_223E3
-		dw offset loc_223B7
-		dw offset loc_223B7
-		dw offset loc_223B7
-off_22684	dw offset loc_22323
-		dw offset loc_22323
-		dw offset loc_2237D
-		dw offset loc_22350
-		dw offset loc_22350
-		dw offset loc_22350
-		dw offset loc_2237D
-		dw offset loc_22323
+	extern @particles_unput_update_render$q17particle_origin_ti:proc
 main_32__TEXT	ends
 
 ; ===========================================================================
@@ -17775,8 +17271,7 @@ sub_22731	proc far
 		mov	_hud_hp_first_white, 6
 		mov	_hud_hp_first_redwhite, 2
 		mov	byte_35CDE, 0
-		push	700FFh
-		call	sub_22264
+		call	@particles_unput_update_render$q17particle_origin_ti stdcall, large PO_INITIALIZE or (V_WHITE shl 16)
 		add	sp, 1Ah
 		pop	bp
 		retf
@@ -19152,9 +18647,7 @@ loc_23541:
 		cmp	si, KIKURI_TEAR_COUNT
 		jl	loc_2346F
 		nopcall	sub_2355F
-		push	700FFh
-		call	sub_22264
-		add	sp, 4
+		call	@particles_unput_update_render$q17particle_origin_ti c, large PO_INITIALIZE or (V_WHITE shl 16)
 		pop	di
 		pop	si
 		ret
@@ -21924,8 +21417,7 @@ _elis_load	proc far
 		mov	byte_3A1B2, 0C0h ; '?'
 		call	@boss_palette_snap$qv
 		nopcall	sub_24FE0
-		push	700FFh
-		call	sub_22264
+		call	@particles_unput_update_render$q17particle_origin_ti stdcall, large PO_INITIALIZE or (V_WHITE shl 16)
 		add	sp, 32h
 		pop	bp
 		retf
@@ -35297,10 +34789,24 @@ byte_3A1B2	db ?
 public _hud_hp_first_white, _hud_hp_first_redwhite
 _hud_hp_first_white	dw ?
 _hud_hp_first_redwhite	dw ?
-word_3A1E9	dw ?
-word_3A1EB	dw ?
-		db 400 dup (?)
-byte_3A37D	db ?
+
+PARTICLE_COUNT = 40
+PO_TOP_RIGHT = 1
+PO_INITIALIZE = 255
+public _particles_spawn_interval, _particles_velocity_base_max, _particles_x
+public _particles_y, _particles_velocity_x, _particles_velocity_y
+public _particles_alive, _particles_velocity_base, _particles_spawn_cycle
+
+_particles_spawn_interval   	dw ?
+_particles_velocity_base_max	dw ?
+_particles_x                	dw PARTICLE_COUNT dup(?)
+_particles_y                	dw PARTICLE_COUNT dup(?)
+_particles_velocity_x       	dw PARTICLE_COUNT dup(?)
+_particles_velocity_y       	dw PARTICLE_COUNT dup(?)
+_particles_alive            	db PARTICLE_COUNT dup(?)
+_particles_velocity_base    	db PARTICLE_COUNT dup(?)
+_particles_spawn_cycle      	db ?
+
 public _route
 _route	db ?
 public _singyoku_phase_frame, _singyoku_hp, _singyoku_invincibility_frame
