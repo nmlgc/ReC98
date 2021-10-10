@@ -234,7 +234,7 @@ loc_BD88:
 		call	_graph_copy_page_back_to_front
 		push	0
 		call	_graph_accesspage_func
-		call	_ptn_put_8 stdcall, _player_left, (40h shl 16) or _player_top
+		call	_ptn_put_8 stdcall, _player_left, (PTN_MIKO_L shl 16) or _player_top
 		add	sp, 0Ah
 
 loc_BDAD:
@@ -256,7 +256,7 @@ loc_BDC2:
 		call	_graph_accesspage_func
 		push	0
 		call	_graph_accesspage_func
-		call	_ptn_put_8 stdcall, _player_left, (40h shl 16) or _player_top
+		call	_ptn_put_8 stdcall, _player_left, (PTN_MIKO_L shl 16) or _player_top
 		add	sp, 0Eh
 		call	@items_bomb_render$qv
 		call	@items_point_render$qv
@@ -349,7 +349,7 @@ var_2		= word ptr -2
 		cmp	[bp+@@frame], 0
 		jnz	loc_BF82
 		call	@CPellets@decay_all$qv c, offset _Pellets, ds
-		call	_ptn_put_8 c, _player_left, (43h shl 16) or _player_top
+		call	_ptn_put_8 c, _player_left, (PTN_MIKO_L_CAST shl 16) or _player_top
 		xor	si, si
 		jmp	short loc_BF75
 ; ---------------------------------------------------------------------------
@@ -2881,7 +2881,7 @@ loc_DB3E:
 		push	0
 		call	sub_19E48
 		pop	cx
-		call	_ptn_put_8 c, _player_left, large (40h shl 16) or _player_top
+		call	_ptn_put_8 c, _player_left, large (PTN_MIKO_L shl 16) or _player_top
 		call	_ptn_put_8 c, _orb_cur_left, _orb_cur_top, 3
 		mov	word_34A74, 0
 		mov	_input_lr, 0
@@ -3993,7 +3993,7 @@ loc_126E1:
 		call	_graph_copy_page_back_to_front
 		push	0
 		call	_graph_accesspage_func
-		call	_ptn_put_8 stdcall, _player_left, (40h shl 16) or _player_top
+		call	_ptn_put_8 stdcall, _player_left, (PTN_MIKO_L shl 16) or _player_top
 		add	sp, 0Eh
 
 loc_12714:
@@ -4355,7 +4355,7 @@ loc_12B02:
 		call	_graph_copy_page_back_to_front
 		push	0
 		call	_graph_accesspage_func
-		call	_ptn_put_8 stdcall, _player_left, (40h shl 16) or _player_top
+		call	_ptn_put_8 stdcall, _player_left, (PTN_MIKO_L shl 16) or _player_top
 		add	sp, 0Eh
 
 loc_12B35:
@@ -6048,7 +6048,7 @@ arg_0		= word ptr  6
 		mov	_bomb_damaging, 0
 		mov	_player_sliding, 0
 		mov	_player_deflecting, 0
-		mov	_player_ptn_id, 40h
+		mov	_player_ptn_id, PTN_MIKO_L
 		cmp	_rank, RANK_EASY
 		jnz	short loc_19E93
 		mov	al, 0Fh
@@ -6144,15 +6144,15 @@ loc_19F4C:
 		jz	short loc_19F77
 		mov	byte_35B47, 0
 		mov	_input_bomb, 0
-		call	_ptn_put_8 c, _player_left, large (40h shl 16) or _player_top
-		mov	_player_ptn_id, 40h
+		call	_ptn_put_8 c, _player_left, large (PTN_MIKO_L shl 16) or _player_top
+		mov	_player_ptn_id, PTN_MIKO_L
 		jmp	short loc_19F90
 ; ---------------------------------------------------------------------------
 
 loc_19F77:
 		cmp	_bomb_frames, 60
 		jbe	short loc_19F90
-		call	_ptn_put_8 c, _player_left, large (43h shl 16) or _player_top
+		call	_ptn_put_8 c, _player_left, large (PTN_MIKO_L_CAST shl 16) or _player_top
 
 loc_19F90:
 		mov	_input_shot, 0
@@ -6192,12 +6192,12 @@ loc_19FDB:
 		jnz	short loc_1A042
 		cmp	byte_35B45, 0
 		jz	short loc_1A00A
-		mov	[bp+@@ptn_id], 40h
+		mov	[bp+@@ptn_id], PTN_MIKO_L
 		jmp	short loc_1A00F
 ; ---------------------------------------------------------------------------
 
 loc_1A00A:
-		mov	[bp+@@ptn_id], 4Ah
+		mov	[bp+@@ptn_id], PTN_MIKO_R
 
 loc_1A00F:
 		mov	al, _player_ptn_id
@@ -6236,12 +6236,12 @@ loc_1A075:
 		idiv	bx
 		cmp	dx, 4
 		jge	short loc_1A089
-		mov	ax, 4Bh
+		mov	ax, PTN_MIKO_R_DASH_0
 		jmp	short loc_1A08C
 ; ---------------------------------------------------------------------------
 
 loc_1A089:
-		mov	ax, 4Ch
+		mov	ax, PTN_MIKO_R_DASH_1
 
 loc_1A08C:
 		call	_ptn_put_8 c, _player_left, _player_top, ax
@@ -6252,12 +6252,12 @@ loc_1A08C:
 		idiv	bx
 		cmp	dx, 4
 		jge	short loc_1A0AE
-		mov	al, 4Bh
+		mov	al, PTN_MIKO_R_DASH_0
 		jmp	short loc_1A0B0
 ; ---------------------------------------------------------------------------
 
 loc_1A0AE:
-		mov	al, 4Ch
+		mov	al, PTN_MIKO_R_DASH_1
 
 loc_1A0B0:
 		mov	_player_ptn_id, al
@@ -6283,12 +6283,12 @@ loc_1A0E4:
 		idiv	bx
 		cmp	dx, 4
 		jge	short loc_1A0F8
-		mov	ax, 41h	; 'A'
+		mov	ax, PTN_MIKO_L_DASH_0
 		jmp	short loc_1A0FB
 ; ---------------------------------------------------------------------------
 
 loc_1A0F8:
-		mov	ax, 42h	; 'B'
+		mov	ax, PTN_MIKO_L_DASH_1
 
 loc_1A0FB:
 		call	_ptn_put_8 c, _player_left, _player_top, ax
@@ -6299,12 +6299,12 @@ loc_1A0FB:
 		idiv	bx
 		cmp	dx, 4
 		jge	short loc_1A11D
-		mov	al, 41h
+		mov	al, PTN_MIKO_L_DASH_0
 		jmp	short loc_1A11F
 ; ---------------------------------------------------------------------------
 
 loc_1A11D:
-		mov	al, 42h
+		mov	al, PTN_MIKO_L_DASH_1
 
 loc_1A11F:
 		mov	_player_ptn_id, al
@@ -6330,12 +6330,12 @@ loc_1A15E:
 		jnz	short loc_1A191
 		cmp	byte_35B45, 0
 		jz	short loc_1A173
-		mov	[bp+@@ptn_id], 43h
+		mov	[bp+@@ptn_id], PTN_MIKO_L_CAST
 		jmp	short loc_1A178
 ; ---------------------------------------------------------------------------
 
 loc_1A173:
-		mov	[bp+@@ptn_id], 4Dh
+		mov	[bp+@@ptn_id], PTN_MIKO_R_CAST
 
 loc_1A178:
 		call	_ptn_put_8 c, _player_left, _player_top, [bp+@@ptn_id]
@@ -6349,8 +6349,8 @@ loc_1A191:
 		cbw
 		cmp	ax, 1
 		jnz	short loc_1A1B2
-		call	_ptn_put_8 c, _player_left, large (4Eh shl 16) or _player_top
-		mov	_player_ptn_id, 4Eh
+		call	_ptn_put_8 c, _player_left, large (PTN_MIKO_R_DASH_SHOOT shl 16) or _player_top
+		mov	_player_ptn_id, PTN_MIKO_R_DASH_SHOOT
 		jmp	short loc_1A1D1
 ; ---------------------------------------------------------------------------
 
@@ -6359,8 +6359,8 @@ loc_1A1B2:
 		cbw
 		cmp	ax, 2
 		jnz	short loc_1A1D1
-		call	_ptn_put_8 c, _player_left, large (44h shl 16) or _player_top
-		mov	_player_ptn_id, 44h
+		call	_ptn_put_8 c, _player_left, large (PTN_MIKO_L_DASH_SHOOT shl 16) or _player_top
+		mov	_player_ptn_id, PTN_MIKO_L_DASH_SHOOT
 
 loc_1A1D1:
 		cmp	_input_strike, 1
@@ -6472,14 +6472,14 @@ loc_1A2F8:
 		mov	al, byte_35B43
 		cbw
 		and	ax, 3
-		add	ax, 4Eh
+		add	ax, PTN_MIKO_R_DASH_SHOOT
 		call	_ptn_put_8 c, _player_left, _player_top, ax
 		mov	al, byte_35B43
 		cbw
 		mov	bx, 3
 		cwd
 		idiv	bx
-		add	dl, 4Eh
+		add	dl, PTN_MIKO_R_DASH_SHOOT
 		mov	_player_ptn_id, dl
 		mov	al, byte_35B43
 		cbw
@@ -6510,11 +6510,11 @@ loc_1A364:
 		mov	al, byte_35B43
 		cbw
 		and	ax, 3
-		add	ax, 44h
+		add	ax, PTN_MIKO_L_DASH_SHOOT
 		call	_ptn_put_8 c, _player_left, _player_top, ax
 		mov	al, byte_35B43
 		and	al, 3
-		add	al, 44h
+		add	al, PTN_MIKO_L_DASH_SHOOT
 		mov	_player_ptn_id, al
 		mov	al, byte_35B43
 		cbw
@@ -20666,7 +20666,7 @@ loc_24857:
 ; ---------------------------------------------------------------------------
 
 loc_24871:
-		call	_ptn_put_8 stdcall, _player_left, (40h shl 16) or _player_top
+		call	_ptn_put_8 stdcall, _player_left, (PTN_MIKO_L shl 16) or _player_top
 		call	_ptn_put_8 stdcall, _orb_cur_left, _orb_cur_top, PTN_ORB
 		push	1
 		call	_frame_delay

@@ -8,6 +8,8 @@ static const int CARDCOMBO_DIGITS = 2;
 static const int PORTAL_ANIM_CELS = 2;
 static const int TIMER_DIGITS = 4;
 
+static const int DASH_CELS = 2;
+
 typedef enum {
 	PTN_SLOT_STG = 0, // stg(_b).ptn
 	PTN_SLOT_MIKO = 1, // miko.ptn
@@ -46,6 +48,22 @@ typedef enum {
 	PTN_ITEM_BOMB,
 	PTN_ITEM_POINT,
 	// -----------
+
+	// miko.ptn
+	// --------
+	// Facing left
+	PTN_MIKO_L = PTN_ID(PTN_SLOT_MIKO, 0),
+	PTN_MIKO_L_DASH,
+	PTN_MIKO_L_DASH_last = (PTN_MIKO_L_DASH + DASH_CELS - 1),
+	PTN_MIKO_L_CAST,
+	PTN_MIKO_L_DASH_SHOOT,
+	// Facing right
+	PTN_MIKO_R = PTN_ID(PTN_SLOT_MIKO, 10),
+	PTN_MIKO_R_DASH,
+	PTN_MIKO_R_DASH_last = (PTN_MIKO_R_DASH + DASH_CELS - 1),
+	PTN_MIKO_R_CAST,
+	PTN_MIKO_R_DASH_SHOOT,
+	// --------
 
 	// HUD (snapped backgrounds)
 	// -------------------------
