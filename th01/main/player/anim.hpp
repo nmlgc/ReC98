@@ -67,5 +67,7 @@ class CPlayerAnim {
 	/// --------
 };
 
-extern CPlayerAnim player_anim_forward;
-extern CPlayerAnim player_anim_slide;
+// Really though, everything about this is bad, these do not deserve more
+// semantic names
+extern CPlayerAnim player_48x48;
+extern CPlayerAnim player_48x32;

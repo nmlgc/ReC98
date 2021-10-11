@@ -138,8 +138,8 @@ sub_BC87	proc far
 		push	si
 		call	sub_14BD2
 		call	 @hud_bg_load$qnxc stdcall, offset aMask_grf, ds
-		call	@CPlayerAnim@load$qxnxc stdcall, offset _player_anim_forward, ds, offset aMiko_ac_bos,  ds ; "miko_ac.bos"
-		call	@CPlayerAnim@load$qxnxc stdcall, offset _player_anim_slide,   ds, offset aMiko_ac2_bos, ds ; "miko_ac2.bos"
+		call	@CPlayerAnim@load$qxnxc stdcall, offset _player_48x48, ds, offset aMiko_ac_bos,  ds ; "miko_ac.bos"
+		call	@CPlayerAnim@load$qxnxc stdcall, offset _player_48x32, ds, offset aMiko_ac2_bos, ds ; "miko_ac2.bos"
 		call	_ptn_load stdcall, PTN_SLOT_STG, offset aStg_ptn, ds	; "stg.ptn"
 		call	_ptn_load stdcall, PTN_SLOT_MIKO, offset aMiko_ptn, ds ; "miko.ptn"
 		call	_ptn_new stdcall, (26 shl 16) or 5
@@ -6413,7 +6413,7 @@ loc_1A24D:
 		add	ax, -8
 		push	ax
 		push	ds
-		push	offset _player_anim_slide
+		push	offset _player_48x32
 		call	@CPlayerAnim@put_0_8$xqiii
 		add	sp, 0Ah
 
@@ -6605,16 +6605,16 @@ loc_1A43F:
 		mov	si, ax
 		push	ax
 		push	[bp+@@ptn_id]
-		push	_player_anim_forward_top
+		push	_player_48x48_top
 		mov	ax, _player_left
 		add	ax, -8
 		push	ax
-		push	_player_anim_forward_top
+		push	_player_48x48_top
 		mov	ax, _player_left
 		add	ax, -8
 		push	ax
 		push	ds
-		push	offset _player_anim_forward
+		push	offset _player_48x48
 		call	@CPlayerAnim@unput_and_put_overlapped_8$xqiiiiii
 		add	sp, 10h
 
@@ -6647,12 +6647,12 @@ loc_1A49F:
 		cwd
 		idiv	bx
 		push	ax
-		push	_player_anim_forward_top
+		push	_player_48x48_top
 		mov	ax, _player_left
 		add	ax, -8
 		push	ax
 		push	ds
-		push	offset _player_anim_forward
+		push	offset _player_48x48
 		call	@CPlayerAnim@unput_8$xqiii
 		add	sp, 0Ah
 		mov	byte_39DB2, 3
@@ -6695,7 +6695,7 @@ loc_1A4EB:
 		add	ax, -8
 		push	ax
 		push	ds
-		push	offset _player_anim_slide
+		push	offset _player_48x32
 		call	@CPlayerAnim@unput_and_put_overlapped_8$xqiiiiii
 		add	sp, 10h
 		mov	al, byte_35B43
@@ -6726,7 +6726,7 @@ loc_1A542:
 		add	ax, -8
 		push	ax
 		push	ds
-		push	offset _player_anim_slide
+		push	offset _player_48x32
 		call	@CPlayerAnim@unput_8$xqiii
 		add	sp, 0Ah
 		mov	byte_39DB2, 3
@@ -6814,7 +6814,7 @@ loc_1A60F:
 		add	ax, -8
 		push	ax
 		push	ds
-		push	offset _player_anim_slide
+		push	offset _player_48x32
 		call	@CPlayerAnim@unput_and_put_overlapped_8$xqiiiiii
 		add	sp, 10h
 		mov	al, byte_35B43
@@ -6844,7 +6844,7 @@ loc_1A660:
 		add	ax, -8
 		push	ax
 		push	ds
-		push	offset _player_anim_slide
+		push	offset _player_48x32
 		call	@CPlayerAnim@unput_8$xqiii
 		add	sp, 0Ah
 		mov	byte_39DB2, 3
@@ -7049,12 +7049,12 @@ loc_1A806:
 
 loc_1A80A:
 		push	[bp+@@ptn_id]
-		push	_player_anim_forward_top
+		push	_player_48x48_top
 		mov	ax, _player_left
 		add	ax, -8
 		push	ax
 		push	ds
-		push	offset _player_anim_forward
+		push	offset _player_48x48
 		call	@CPlayerAnim@put_0_8$xqiii
 		add	sp, 0Ah
 		jmp	loc_1A972
@@ -7187,7 +7187,7 @@ loc_1A8FE:
 		add	ax, -8
 		push	ax
 		push	ds
-		push	offset _player_anim_slide
+		push	offset _player_48x32
 		jmp	short loc_1A96A
 ; ---------------------------------------------------------------------------
 
@@ -7229,18 +7229,18 @@ loc_1A94B:
 
 loc_1A94F:
 		push	[bp+@@ptn_id]
-		push	_player_anim_forward_top
+		push	_player_48x48_top
 		mov	ax, _player_left
 		add	ax, -8
 		push	ax
 
 loc_1A95C:
-		push	_player_anim_forward_top
+		push	_player_48x48_top
 		mov	ax, _player_left
 		add	ax, -8
 		push	ax
 		push	ds
-		push	offset _player_anim_forward
+		push	offset _player_48x48
 
 loc_1A96A:
 		call	@CPlayerAnim@unput_and_put_overlapped_8$xqiiiiii
@@ -7400,12 +7400,12 @@ loc_1AAA9:
 
 loc_1AACA:
 		push	[bp+@@ptn_id]
-		push	_player_anim_forward_top
+		push	_player_48x48_top
 		mov	ax, _player_left
 		add	ax, -8
 		push	ax
 		push	ds
-		push	offset _player_anim_forward
+		push	offset _player_48x48
 		jmp	short loc_1AAEE
 ; ---------------------------------------------------------------------------
 
@@ -7416,7 +7416,7 @@ loc_1AADD:
 		add	ax, -8
 		push	ax
 		push	ds
-		push	offset _player_anim_slide
+		push	offset _player_48x32
 
 loc_1AAEE:
 		call	@CPlayerAnim@unput_8$xqiii

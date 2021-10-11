@@ -11,6 +11,6 @@ CPlayerAnim struc
 	PA_bos_image_count	dw ?
 CPlayerAnim ends
 
-public _player_anim_forward, _player_anim_slide
-_player_anim_forward	CPlayerAnim <?>
-_player_anim_slide	CPlayerAnim <?>
+public _player_48x48, _player_48x32
+_player_48x48	CPlayerAnim <?>
+_player_48x32	CPlayerAnim <?>
