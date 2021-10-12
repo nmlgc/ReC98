@@ -6023,6 +6023,29 @@ main_27__TEXT	segment	byte public 'CODE' use16
 	extern _ptn_put_quarter_8:proc
 	extern _ptn_put_quarter:proc
 
+SWING_FRAMES_PER_CEL = 3
+SWING_FRAMES = 23
+SHOTCOMBO_FRAMES_PER_CEL = 6
+
+SWING_CELS = 8
+FLIPKICK_CELS = 6
+SHOTCOMBO_CELS = 4
+SLIDE_CELS = 2
+
+C_SWING = 0
+C_SWING_last = (C_SWING + SWING_CELS - 1)
+C_L_FLIPKICK = 8
+C_R_FLIPKICK = 14
+C_L_SHOTCOMBO = 20
+C_R_SHOTCOMBO = 24
+
+C_L_SLIDE = 0
+C_L_SLIDE_last = (C_L_SLIDE + SLIDE_CELS - 1)
+C_R_SLIDE = 2
+C_R_SLIDE_last = (C_R_SLIDE + SLIDE_CELS - 1)
+C_L_SLIDEKICK = 4
+C_R_SLIDEKICK = 5
+
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
@@ -6399,12 +6422,12 @@ loc_1A211:
 		cbw
 		cmp	ax, 1
 		jnz	short loc_1A24A
-		mov	ax, 3
+		mov	ax, C_R_SLIDE_last
 		jmp	short loc_1A24D
 ; ---------------------------------------------------------------------------
 
 loc_1A24A:
-		mov	ax, 1
+		mov	ax, C_L_SLIDE_last
 
 loc_1A24D:
 		push	ax
@@ -6585,9 +6608,9 @@ loc_1A41D:
 		mov	al, byte_35B43
 		cbw
 		inc	ax
-		cmp	ax, 17h
+		cmp	ax, SWING_FRAMES
 		jl	short loc_1A43A
-		mov	ax, 15h
+		mov	ax, (C_SWING_last * SWING_FRAMES_PER_CEL)
 		jmp	short loc_1A43F
 ; ---------------------------------------------------------------------------
 
@@ -6597,7 +6620,7 @@ loc_1A43A:
 		inc	ax
 
 loc_1A43F:
-		mov	bx, 3
+		mov	bx, SWING_FRAMES_PER_CEL
 		cwd
 		idiv	bx
 		mov	[bp+@@ptn_id], ax
@@ -6632,9 +6655,9 @@ loc_1A47D:
 		mov	byte_35B44, 0
 		mov	al, byte_35B43
 		cbw
-		cmp	ax, 17h
+		cmp	ax, SWING_FRAMES
 		jl	short loc_1A49B
-		mov	ax, 15h
+		mov	ax, (C_SWING_last * SWING_FRAMES_PER_CEL)
 		jmp	short loc_1A49F
 ; ---------------------------------------------------------------------------
 
@@ -6643,7 +6666,7 @@ loc_1A49B:
 		cbw
 
 loc_1A49F:
-		mov	bx, 3
+		mov	bx, SWING_FRAMES_PER_CEL
 		cwd
 		idiv	bx
 		push	ax
@@ -6674,18 +6697,18 @@ loc_1A4C9:
 loc_1A4EB:
 		mov	al, byte_35B43
 		cbw
-		mov	bx, 2
+		mov	bx, SLIDE_CELS
 		cwd
 		idiv	bx
-		mov	ax, 1
+		mov	ax, (SLIDE_CELS - 1)
 		sub	ax, dx
-		add	ax, 2
+		add	ax, C_R_SLIDE
 		push	ax
 		mov	al, byte_35B43
 		cbw
 		cwd
 		idiv	bx
-		add	dx, 2
+		add	dx, C_R_SLIDE
 		push	dx
 		push	_player_top
 		lea	ax, [si-8]
@@ -6716,10 +6739,10 @@ loc_1A542:
 		mov	byte_35B44, 0
 		mov	al, byte_35B43
 		cbw
-		mov	bx, 2
+		mov	bx, SLIDE_CELS
 		cwd
 		idiv	bx
-		add	dx, 2
+		add	dx, C_R_SLIDE
 		push	dx
 		push	_player_top
 		mov	ax, _player_left
@@ -6795,10 +6818,10 @@ loc_1A5EE:
 loc_1A60F:
 		mov	al, byte_35B43
 		cbw
-		mov	bx, 2
+		mov	bx, SLIDE_CELS
 		cwd
 		idiv	bx
-		mov	ax, 1
+		mov	ax, (SLIDE_CELS - 1)
 		sub	ax, dx
 		push	ax
 		mov	al, byte_35B43
@@ -6960,7 +6983,7 @@ loc_1A776:
 		dec	ax
 		cmp	ax, 4
 		jge	short loc_1A785
-		mov	ax, 0Eh
+		mov	ax, C_R_FLIPKICK
 		jmp	short loc_1A795
 ; ---------------------------------------------------------------------------
 
@@ -6971,7 +6994,7 @@ loc_1A785:
 		mov	bx, 4
 		cwd
 		idiv	bx
-		add	ax, 0Eh
+		add	ax, C_R_FLIPKICK
 
 loc_1A795:
 		mov	si, ax
@@ -6979,7 +7002,7 @@ loc_1A795:
 		cbw
 		cmp	ax, 4
 		jge	short loc_1A7A5
-		mov	ax, 0Eh
+		mov	ax, C_R_FLIPKICK
 		jmp	short loc_1A7B5
 ; ---------------------------------------------------------------------------
 
@@ -6990,7 +7013,7 @@ loc_1A7A5:
 		mov	bx, 4
 		cwd
 		idiv	bx
-		add	ax, 0Eh
+		add	ax, C_R_FLIPKICK
 
 loc_1A7B5:
 		mov	[bp+@@ptn_id], ax
@@ -7005,7 +7028,7 @@ loc_1A7BF:
 		dec	ax
 		cmp	ax, 4
 		jge	short loc_1A7CE
-		mov	ax, 8
+		mov	ax, C_L_FLIPKICK
 		jmp	short loc_1A7DE
 ; ---------------------------------------------------------------------------
 
@@ -7016,7 +7039,7 @@ loc_1A7CE:
 		mov	bx, 4
 		cwd
 		idiv	bx
-		add	ax, 8
+		add	ax, C_L_FLIPKICK
 
 loc_1A7DE:
 		mov	si, ax
@@ -7024,7 +7047,7 @@ loc_1A7DE:
 		cbw
 		cmp	ax, 4
 		jge	short loc_1A7EE
-		mov	ax, 8
+		mov	ax, C_L_FLIPKICK
 		jmp	short loc_1A7FE
 ; ---------------------------------------------------------------------------
 
@@ -7035,7 +7058,7 @@ loc_1A7EE:
 		mov	bx, 4
 		cwd
 		idiv	bx
-		add	ax, 8
+		add	ax, C_L_FLIPKICK
 
 loc_1A7FE:
 		mov	[bp+@@ptn_id], ax
@@ -7195,16 +7218,16 @@ loc_1A915:
 		mov	al, byte_35B43
 		cbw
 		dec	ax
-		mov	bx, 6
+		mov	bx, SHOTCOMBO_FRAMES_PER_CEL
 		cwd
 		idiv	bx
-		add	ax, 18h
+		add	ax, C_R_SHOTCOMBO
 		mov	di, ax
 		mov	al, byte_35B43
 		cbw
 		cwd
 		idiv	bx
-		add	ax, 18h
+		add	ax, C_R_SHOTCOMBO
 		jmp	short loc_1A94B
 ; ---------------------------------------------------------------------------
 
@@ -7212,16 +7235,16 @@ loc_1A931:
 		mov	al, byte_35B43
 		cbw
 		dec	ax
-		mov	bx, 6
+		mov	bx, SHOTCOMBO_FRAMES_PER_CEL
 		cwd
 		idiv	bx
-		add	ax, 14h
+		add	ax, C_L_SHOTCOMBO
 		mov	di, ax
 		mov	al, byte_35B43
 		cbw
 		cwd
 		idiv	bx
-		add	ax, 14h
+		add	ax, C_L_SHOTCOMBO
 
 loc_1A94B:
 		mov	[bp+@@ptn_id], ax
