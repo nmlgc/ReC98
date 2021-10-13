@@ -19,6 +19,7 @@ extern "C" {
 #include "th01/ranks.h"
 #include "th01/formats/grp.h"
 #include "th01/hardware/palette.h"
+#include "th01/hardware/input.hpp"
 #include "th01/hardware/graph.h"
 #include "th01/hiscore/scoredat.hpp"
 

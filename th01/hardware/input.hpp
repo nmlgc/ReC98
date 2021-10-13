@@ -6,14 +6,17 @@ extern bool input_ok;
 
 // REIIDEN.EXE and FUUIN.EXE
 // -------------------------
-// [input_lr] flags… hey, at least two inputs merged into a single variable.
-// It's a start.
-#define INPUT_RIGHT 0x01
-#define INPUT_LEFT 0x02
+// Hey, at least two inputs merged into a single variable! It's a start.
+enum input_lr_t {
+	INPUT_RIGHT = 1,
+	INPUT_LEFT = 2,
+	INPUT_RIGHT_LEFT = 3,
+	INPUT_LEFT_RIGHT = 3,
+};
 
 extern bool input_up;
 extern bool input_down;
-extern bool input_lr;
+extern uint8_t input_lr; // input_lr_t
 extern bool input_strike;
 extern bool input_mem_enter;
 extern bool input_mem_leave;

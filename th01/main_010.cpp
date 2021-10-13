@@ -97,7 +97,7 @@ void input_sense(bool16 reset_repeat)
 
 	if(
 		(bomb_doubletap_strike >= 2 && bomb_doubletap_shot >= 2) ||
-		(input_lr == (INPUT_LEFT | INPUT_RIGHT) && input_shot)
+		((input_lr == INPUT_LEFT_RIGHT) && input_shot)
 	) {
 		input_bomb = true;
 		bomb_doubletap_strike = 0;
