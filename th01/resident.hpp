@@ -4,11 +4,11 @@ typedef enum {
 	ROUTE_COUNT,
 } route_t;
 
-typedef enum {
-	MODE_REGULAR = 0,
-	MODE_TEST = 1,
-	MODE_DEBUG = 3
-} mode_t;
+enum debug_mode_t {
+	DM_OFF = 0,
+	DM_TEST = 1,
+	DM_FULL = 3
+};
 
 // Much like subpixels, pellet speeds are stored pre-multiplied by 40 to allow
 // an effective resolution of 0.025 pixels to be losslessly stored in an
@@ -34,7 +34,7 @@ typedef struct {
 	char rem_lives;
 	char snd_need_init;
 	char unused_2;
-	char mode;
+	debug_mode_t debug_mode;
 	pellet_speed_t pellet_speed;
 	long rand;
 	long score;

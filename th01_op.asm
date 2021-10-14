@@ -172,7 +172,7 @@ sub_A7B5	proc far
 		cmp	ax, 2
 		jnz	short loc_A7FC
 		les	bx, _resident
-		mov	es:[bx+reiidenconfig_t.mode], 1
+		mov	es:[bx+reiidenconfig_t.debug_mode], DM_TEST
 		jmp	short loc_A820
 ; ---------------------------------------------------------------------------
 
@@ -182,7 +182,7 @@ loc_A7FC:
 		cmp	ax, 3
 		jnz	short loc_A810
 		les	bx, _resident
-		mov	es:[bx+reiidenconfig_t.mode], 3
+		mov	es:[bx+reiidenconfig_t.debug_mode], DM_FULL
 		jmp	short loc_A820
 ; ---------------------------------------------------------------------------
 
@@ -190,7 +190,7 @@ loc_A810:
 		cmp	_mode, 0
 		jnz	short loc_A820
 		les	bx, _resident
-		mov	es:[bx+reiidenconfig_t.mode], 0
+		mov	es:[bx+reiidenconfig_t.debug_mode], DM_OFF
 
 loc_A820:
 		les	bx, _resident
@@ -262,7 +262,7 @@ loc_A8E1:
 		call	_game_switch_binary
 		les	bx, _resident
 		assume es:nothing
-		mov	es:[bx+reiidenconfig_t.mode], 0
+		mov	es:[bx+reiidenconfig_t.debug_mode], DM_OFF
 		mov	es:[bx+reiidenconfig_t.snd_need_init], 1
 		mov	al, _opts.O_lives_extra
 		add	al, 2

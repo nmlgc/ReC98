@@ -2342,7 +2342,7 @@ loc_D583:
 		les	bx, _resident
 		mov	al, es:[bx+reiidenconfig_t.route]
 		mov	_route, al
-		cmp	es:[bx+reiidenconfig_t.mode], 0
+		cmp	es:[bx+reiidenconfig_t.debug_mode], DM_OFF
 		jz	loc_D68E
 		cmp	es:[bx+reiidenconfig_t.stage], 0
 		jnz	short loc_D649
@@ -2396,9 +2396,9 @@ loc_D644:
 
 loc_D649:
 		les	bx, _resident
-		mov	al, es:[bx+reiidenconfig_t.mode]
+		mov	al, es:[bx+reiidenconfig_t.debug_mode]
 		cbw
-		cmp	ax, 1
+		cmp	ax, DM_TEST
 		jnz	short loc_D669
 		push	ds
 		push	offset aGegxgggvbGhbib ; "テストモード！！\n"
@@ -2408,9 +2408,9 @@ loc_D649:
 
 loc_D669:
 		les	bx, _resident
-		mov	al, es:[bx+reiidenconfig_t.mode]
+		mov	al, es:[bx+reiidenconfig_t.debug_mode]
 		cbw
-		cmp	ax, 3
+		cmp	ax, DM_FULL
 		jnz	short loc_D68E
 		push	ds
 		push	offset aGfgogbgogvbGhb ; "デバッグモード！！\n"
