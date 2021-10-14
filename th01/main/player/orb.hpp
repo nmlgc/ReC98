@@ -58,3 +58,25 @@ int orb_velocity_y_update(void);
 // edge of the playfield, if necessary.
 void orb_move_x(orb_velocity_x_t velocity_x);
 /// -------
+
+static const int ORB_FORCE_REPEL = -13;
+
+enum orb_repel_friction_t {
+	OR_NONE = 0, // No repulsion, kills player on collision
+	OR_MAX = (-ORB_FORCE_REPEL * 2),
+
+	// Wouldn't it be cool if those *exactly* matched the orb_velocity_x_t
+	// order?
+	OR_3_X_UNCHANGED = 100,
+	OR_3_X_4_LEFT = 101,
+	OR_3_X_4_RIGHT = 102,
+	OR_3_X_8_RIGHT = 103,
+	OR_3_X_8_LEFT = 104,
+};
+
+// Processes any collision between the Orb and the player. If a friction is
+// given (either from orb_repel_friction_t or as an immediate force), the Orb
+// is repelled with [ORB_FORCE_REPEL] minus the given friction. Make sure that
+// number is below OR_MAX, otherwise the new force will end up pointing into
+// the ground.
+void orb_player_hittest(int repel_friction);

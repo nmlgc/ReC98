@@ -99,6 +99,12 @@ union submode_t {
 };
 /// -----
 
+/// Shared state
+/// ------------
+
+extern bool player_invincible_against_orb;
+/// ------------
+
 {
 	extern int8_t mode; // mode_t
 	extern int8_t dash_direction; // x_direction_t

@@ -1016,8 +1016,7 @@ loc_C816:
 loc_C846:
 		cmp	_orb_in_portal, 0
 		jnz	short loc_C855
-		push	0
-		call	sub_1AC6E
+		call	@orb_player_hittest$qi stdcall, OR_NONE
 		pop	cx
 
 loc_C855:
@@ -6017,6 +6016,13 @@ main_27__TEXT	segment	byte public 'CODE' use16
 		;org 0Eh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
+OR_NONE = 0
+OR_3_X_UNCHANGED = 100
+OR_3_X_4_LEFT = 101
+OR_3_X_4_RIGHT = 102
+OR_3_X_8_RIGHT = 103
+OR_3_X_8_LEFT = 104
+
 	extern _player_move_and_clamp:proc
 	extern _ptn_unput_8:proc
 	extern _ptn_put_8:proc
@@ -6113,7 +6119,7 @@ loc_19EBC:
 		mov	byte_35B47, 0
 		mov	byte_35B48, 0
 		mov	_input_bomb, 0
-		mov	byte_35B28, 0
+		mov	_player_invincible_against_orb, 0
 		jmp	loc_1AC2A
 ; ---------------------------------------------------------------------------
 
@@ -6147,7 +6153,7 @@ loc_19EEF:
 
 loc_19F2B:
 		push	1
-		nopcall	sub_1AC6E
+		nopcall	@orb_player_hittest$qi
 		pop	cx
 		call	_bomb_update_and_render stdcall, word ptr _bomb_frames
 		pop	cx
@@ -6441,7 +6447,7 @@ loc_1A24D:
 		add	sp, 0Ah
 
 loc_1A264:
-		mov	byte_35B28, 1
+		mov	_player_invincible_against_orb, 1
 		jmp	loc_1AC2A
 ; ---------------------------------------------------------------------------
 
@@ -6923,7 +6929,7 @@ loc_1A6F8:
 		mov	_bomb_frames, 0
 
 loc_1A706:
-		mov	byte_35B28, 0
+		mov	_player_invincible_against_orb, 0
 
 loc_1A70B:
 		inc	byte_35B43
@@ -6941,8 +6947,8 @@ loc_1A724:
 		cbw
 		cmp	ax, SD_RIGHT
 		jnz	short loc_1A735
-		push	66h ; 'f'
-		nopcall	sub_1AC6E
+		push	OR_3_X_4_RIGHT
+		nopcall	@orb_player_hittest$qi
 		pop	cx
 
 loc_1A735:
@@ -6950,7 +6956,7 @@ loc_1A735:
 		cbw
 		cmp	ax, SD_LEFT
 		jnz	loc_1AC2A
-		push	65h ; 'e'
+		push	OR_3_X_4_LEFT
 		jmp	loc_1AC24
 ; ---------------------------------------------------------------------------
 
@@ -7572,7 +7578,7 @@ loc_1ABD6:
 ; ---------------------------------------------------------------------------
 
 loc_1ABE5:
-		mov	byte_35B28, 0
+		mov	_player_invincible_against_orb, 0
 		mov	_player_mode, M_REGULAR
 		jmp	short loc_1AC2A
 ; ---------------------------------------------------------------------------
@@ -7596,12 +7602,12 @@ loc_1ABF1:
 ; ---------------------------------------------------------------------------
 
 @@slidekick_right_4:
-		push	67h ; 'g'
+		push	OR_3_X_8_RIGHT
 		jmp	short loc_1AC24
 ; ---------------------------------------------------------------------------
 
 @@slidekick_left_4:
-		push	68h ; 'h'
+		push	OR_3_X_8_LEFT
 		jmp	short loc_1AC24
 ; ---------------------------------------------------------------------------
 
@@ -7619,7 +7625,7 @@ loc_1AC23:
 		push	ax
 
 loc_1AC24:
-		nopcall	sub_1AC6E
+		nopcall	@orb_player_hittest$qi
 
 loc_1AC29:
 		pop	cx
@@ -7668,8 +7674,8 @@ sub_19E48	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_1AC6E	proc far
+public @orb_player_hittest$qi
+@orb_player_hittest$qi	proc far
 
 var_E		= qword	ptr -0Eh
 var_2		= word ptr -2
@@ -7682,7 +7688,7 @@ arg_0		= word ptr  6
 		jnz	short loc_1ACD7
 		cmp	_player_invincible, 0
 		jnz	loc_1AE0A
-		cmp	byte_35B28, 0
+		cmp	_player_invincible_against_orb, 0
 		jnz	loc_1AE0A
 		mov	ax, _orb_cur_left
 		sub	ax, _player_left
@@ -7721,7 +7727,7 @@ loc_1ACC8:
 ; ---------------------------------------------------------------------------
 
 loc_1ACD7:
-		cmp	si, 64h	; 'd'
+		cmp	si, OR_3_X_UNCHANGED
 		jge	loc_1AD81
 		mov	ax, _orb_cur_left
 		sub	ax, _player_left
@@ -7753,7 +7759,7 @@ loc_1AD14:
 		add	ax, -ORB_TOP_MAX
 
 loc_1AD1A:
-		cmp	ax, 20h	; ' '
+		cmp	ax, 32
 		jge	loc_1AE0A
 		mov	ax, _player_left
 		sub	ax, _orb_cur_left
@@ -7792,7 +7798,7 @@ loc_1AD6C:
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, 0FFF3h
+		add	ax, -13
 		mov	[bp+var_2], ax
 		fild	[bp+var_2]
 		jmp	short loc_1ADF9
@@ -7831,34 +7837,34 @@ loc_1ADB5:
 loc_1ADBB:
 		cmp	ax, 32
 		jge	short loc_1AE0A
-		cmp	si, 65h	; 'e'
-		jnz	short loc_1ADCD
+		cmp	si, OR_3_X_4_LEFT
+		jnz	short @@x_4_right?
 		mov	_orb_velocity_x, OVX_4_LEFT
 		jmp	short loc_1ADF2
 ; ---------------------------------------------------------------------------
 
-loc_1ADCD:
-		cmp	si, 66h	; 'f'
-		jnz	short loc_1ADDA
+@@x_4_right?:
+		cmp	si, OR_3_X_4_RIGHT
+		jnz	short @@x_8_right?
 		mov	_orb_velocity_x, OVX_4_RIGHT
 		jmp	short loc_1ADF2
 ; ---------------------------------------------------------------------------
 
-loc_1ADDA:
-		cmp	si, 67h	; 'g'
-		jnz	short loc_1ADE7
+@@x_8_right?:
+		cmp	si, OR_3_X_8_RIGHT
+		jnz	short @@x_8_left?
 		mov	_orb_velocity_x, OVX_8_RIGHT
 		jmp	short loc_1ADF2
 ; ---------------------------------------------------------------------------
 
-loc_1ADE7:
-		cmp	si, 68h	; 'h'
+@@x_8_left?:
+		cmp	si, OR_3_X_8_LEFT
 		jnz	short loc_1ADF2
 		mov	_orb_velocity_x, OVX_8_LEFT
 
 loc_1ADF2:
 		push	OF_IMMEDIATE
-		fld	dbl_35B49
+		fld	_ORB_FORCE_REPEL_CONSTANT
 
 loc_1ADF9:
 		sub	sp, 8
@@ -7871,7 +7877,7 @@ loc_1AE0A:
 		pop	si
 		leave
 		retf
-sub_1AC6E	endp
+@orb_player_hittest$qi	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -34283,7 +34289,8 @@ SS_COUNT = 8
 X_RIGHT = 0
 X_LEFT = 1
 
-byte_35B28	db 0
+public _player_invincible_against_orb
+_player_invincible_against_orb	db 0
 include th01/formats/ptn_main[data].asm
 public _player_mode, _player_dash_direction
 byte_35B42	db 0
@@ -34293,8 +34300,9 @@ _player_dash_direction	db X_LEFT
 byte_35B46	db 0
 byte_35B47	db 0
 byte_35B48	db 0
-dbl_35B49	dq -10.0
-		db 0
+public _ORB_FORCE_REPEL_CONSTANT
+_ORB_FORCE_REPEL_CONSTANT	dq -10.0
+	evendata
 public _yuugenmagan_invincibility_flash_colors, _yuugenmagan_invincible
 _yuugenmagan_invincibility_flash_colors	db 1, 11
 _yuugenmagan_invincible	dw 0
