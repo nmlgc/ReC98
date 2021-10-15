@@ -10,4 +10,3 @@ public _PLAYER_INVINCIBILITY_TIME, _player_left
 _player_invincibility_time	dw ?
 _player_left	dw ?
 _player_top = (PLAYFIELD_BOTTOM - PLAYER_H)
-_player_48x48_top = (PLAYFIELD_BOTTOM - 48)

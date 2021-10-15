@@ -13,6 +13,8 @@ enum input_lr_t {
 	INPUT_LEFT = 2,
 	INPUT_RIGHT_LEFT = 3,
 	INPUT_LEFT_RIGHT = 3,
+
+	_input_lr_t_FORCE_INT16 = 0x7FFF
 };
 
 extern bool input_up;

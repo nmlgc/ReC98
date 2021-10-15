@@ -25,16 +25,15 @@ inline screen_y_t player_bottom(void) {
 	return (player_top + PLAYER_H);
 }
 
-inline screen_y_t player_48_left(void) {
-	return (player_left - ((48 - PLAYER_W) / 2));
-}
-
-inline screen_y_t player_48x48_top(void) {
-	return (PLAYFIELD_BOTTOM - 48);
-}
-
-void player_move_and_clamp(int delta);
+void player_move_and_clamp(pixel_t delta);
 void invincibility_sprites_update_and_render(bool16 invincible);
+
+// Unblits, updates, and renders the player based on the current input,
+// handling all possible special moves together with any orb repulsion, but
+// *not* performing regular player/Orb collision detection. Setting that
+// hilarious double negative of a parameter to `false` resets the player state
+// instead.
+void player_unput_update_render(bool16 do_not_reset_player_state);
 
 extern bool player_deflecting;
 extern bool player_sliding;

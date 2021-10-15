@@ -1,7 +1,7 @@
 #include "th01/main/playfld.hpp"
 #include "th01/main/player/player.hpp"
 
-void player_move_and_clamp(int delta)
+void player_move_and_clamp(pixel_t delta)
 {
 	player_left += delta;
 	if(player_left < PLAYER_LEFT_MIN) {

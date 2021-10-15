@@ -255,6 +255,24 @@ Calling conventions can be added before the `*`.
 * Sequence of the individual cases is identical in both C and ASM
 * Multiple cases with the same offset in the table, to code that doesn't
   return? Code was compiled with `-O`
+* Having no more than 3 `case`s (4 with an additional `default`) generates
+  comparison/branching code instead of a jump table. The comparisons will be
+  sorted in ascending order of the `case` values, while the individual branch
+  bodies still match their order given in the code:
+
+  ```c
+  switch(foo) {            // MOV AX, foo
+  default: foo = 0; break; // CMP AX, 10; JZ @@case_10
+  case 30: foo = 3; break; // CMP AX, 20; JZ @@case_20
+  case 10: foo = 1; break; // CMP AX, 30; JZ @@case_30
+  case 20: foo = 2; break; // MOV foo, 0
+  }                        // JMP @@after_switch
+                           // @@case_30: MOV foo, 3; JMP @@after_switch
+                           // @@case_10: MOV foo, 1; JMP @@after_switch
+                           // @@case_20: MOV foo, 2;
+                           // @@after_switch:
+  ```
+
 * With the `-G` (Generate for speed) option, complicated `switch` statements
   that require both value and jump tables are compiled to a binary search with
   regular conditional branches:
