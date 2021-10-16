@@ -8,6 +8,7 @@ extern bool input_ok;
 // -------------------------
 // Hey, at least two inputs merged into a single variable! It's a start.
 enum input_lr_t {
+	INPUT_NONE = 0,
 	INPUT_RIGHT = 1,
 	INPUT_LEFT = 2,
 	INPUT_RIGHT_LEFT = 3,

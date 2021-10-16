@@ -12,6 +12,7 @@ _input_strike	db 0
 _input_up	db 0
 _input_down	db 0
 
+INPUT_NONE = 00h
 INPUT_RIGHT = 01h
 INPUT_LEFT = 02h
 INPUT_LEFT_RIGHT = 03h

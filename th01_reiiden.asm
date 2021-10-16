@@ -6064,9 +6064,9 @@ arg_0		= word ptr  6
 		jnz	loc_19ED6
 		mov	byte_35B42, 0
 		mov	byte_35B43, 0
-		mov	byte_35B44, 0
-		mov	byte_39DB2, -1
-		mov	byte_35B45, 1
+		mov	_player_mode, M_REGULAR
+		mov	_player_submode_initial, -1
+		mov	_player_dash_direction, X_LEFT
 		mov	byte_35B46, 0
 		mov	_bomb_damaging, 0
 		mov	_player_sliding, 0
@@ -6180,7 +6180,7 @@ loc_19F77:
 loc_19F90:
 		mov	_input_shot, 0
 		mov	_input_strike, 0
-		mov	byte_35B44, 0
+		mov	_player_mode, M_REGULAR
 		cmp	byte_35B46, 0
 		jnz	loc_1AC2A
 		mov	_player_deflecting, 0
@@ -6190,9 +6190,9 @@ loc_19F90:
 loc_19FB0:
 		cmp	_input_bomb, 1
 		jnz	short loc_19FDB
-		mov	al, byte_35B44
+		mov	al, _player_mode
 		cbw
-		cmp	ax, 3
+		cmp	ax, M_SPECIAL_FIRST
 		jz	short loc_19FDB
 		cmp	_bombs, 0
 		jz	short loc_19FDB
@@ -6203,7 +6203,7 @@ loc_19FB0:
 ; ---------------------------------------------------------------------------
 
 loc_19FDB:
-		cmp	byte_35B44, 0
+		cmp	_player_mode, M_REGULAR
 		jnz	loc_1A26C
 		mov	al, _input_lr
 		mov	ah, 0
@@ -6211,9 +6211,9 @@ loc_19FDB:
 		jz	short loc_1A04A
 		cmp	ax, INPUT_LEFT
 		jz	loc_1A0BA
-		cmp	byte_39DB2, 0
+		cmp	_player_submode_direction, SD_STATIONARY
 		jnz	short loc_1A042
-		cmp	byte_35B45, 0
+		cmp	_player_dash_direction, X_RIGHT
 		jz	short loc_1A00A
 		mov	[bp+@@ptn_id], PTN_MIKO_L
 		jmp	short loc_1A00F
@@ -6237,12 +6237,12 @@ loc_1A02B:
 		mov	_player_ptn_id, al
 
 loc_1A042:
-		mov	byte_39DB2, 0
+		mov	_player_submode_direction, SD_STATIONARY
 		jmp	loc_1A127
 ; ---------------------------------------------------------------------------
 
 loc_1A04A:
-		mov	byte_35B45, 0
+		mov	_player_dash_direction, X_RIGHT
 		mov	al, _player_ptn_id
 		cbw
 		call	_ptn_unput_8 c, _player_left, _player_top, ax
@@ -6284,12 +6284,12 @@ loc_1A0AE:
 
 loc_1A0B0:
 		mov	_player_ptn_id, al
-		mov	byte_39DB2, 1
+		mov	_player_submode_direction, SD_RIGHT
 		jmp	short loc_1A127
 ; ---------------------------------------------------------------------------
 
 loc_1A0BA:
-		mov	byte_35B45, 1
+		mov	_player_dash_direction, X_LEFT
 		mov	al, _player_ptn_id
 		cbw
 		call	_ptn_unput_8 c, _player_left, _player_top, ax
@@ -6331,7 +6331,7 @@ loc_1A11D:
 
 loc_1A11F:
 		mov	_player_ptn_id, al
-		mov	byte_39DB2, 2
+		mov	_player_submode_direction, SD_LEFT
 
 loc_1A127:
 		cmp	_input_shot, 1
@@ -6339,19 +6339,19 @@ loc_1A127:
 		mov	al, _player_ptn_id
 		cbw
 		call	_ptn_unput_8 c, _player_left, _player_top, ax
-		mov	byte_35B44, 1
+		mov	_player_mode, M_SHOOT
 		mov	byte_35B43, 0
 		mov	al, _input_lr
-		mov	byte_39DB2, al
+		mov	_player_submode_direction, al
 		cbw
-		cmp	ax, 3
+		cmp	ax, INPUT_LEFT_RIGHT
 		jnz	short loc_1A15E
-		mov	byte_39DB2, 0
+		mov	_player_submode_direction, SD_STATIONARY
 
 loc_1A15E:
-		cmp	byte_39DB2, 0
+		cmp	_player_submode_direction, SD_STATIONARY
 		jnz	short loc_1A191
-		cmp	byte_35B45, 0
+		cmp	_player_dash_direction, X_RIGHT
 		jz	short loc_1A173
 		mov	[bp+@@ptn_id], PTN_MIKO_L_CAST
 		jmp	short loc_1A178
@@ -6368,9 +6368,9 @@ loc_1A178:
 ; ---------------------------------------------------------------------------
 
 loc_1A191:
-		mov	al, byte_39DB2
+		mov	al, _player_submode_direction
 		cbw
-		cmp	ax, 1
+		cmp	ax, SD_RIGHT
 		jnz	short loc_1A1B2
 		call	_ptn_put_8 c, _player_left, large (PTN_MIKO_R_DASH_SHOOT shl 16) or _player_top
 		mov	_player_ptn_id, PTN_MIKO_R_DASH_SHOOT
@@ -6378,9 +6378,9 @@ loc_1A191:
 ; ---------------------------------------------------------------------------
 
 loc_1A1B2:
-		mov	al, byte_39DB2
+		mov	al, _player_submode_direction
 		cbw
-		cmp	ax, 2
+		cmp	ax, SD_LEFT
 		jnz	short loc_1A1D1
 		call	_ptn_put_8 c, _player_left, large (PTN_MIKO_L_DASH_SHOOT shl 16) or _player_top
 		mov	_player_ptn_id, PTN_MIKO_L_DASH_SHOOT
@@ -6398,8 +6398,8 @@ loc_1A1D1:
 
 loc_1A1FB:
 		mov	byte_35B43, 0
-		mov	byte_35B44, 2
-		mov	byte_39DB2, 0
+		mov	_player_mode, M_SWING_OR_SLIDE
+		mov	_player_submode_direction, SD_STATIONARY
 		mov	_player_deflecting, 1
 		jmp	short loc_1A264
 ; ---------------------------------------------------------------------------
@@ -6409,18 +6409,18 @@ loc_1A211:
 		call	_mdrv2_se_play
 		pop	cx
 		mov	byte_35B43, 0
-		mov	byte_35B44, 2
+		mov	_player_mode, M_SWING_OR_SLIDE
 		mov	al, _input_lr
 		mov	ah, 0
 		mov	bx, (INPUT_LEFT or INPUT_RIGHT)
 		cwd
 		idiv	bx
-		mov	byte_39DB2, dl
+		mov	_player_submode_direction, dl
 		mov	_player_sliding, 1
 		mov	byte_35B48, 0
-		mov	al, byte_39DB2
+		mov	al, _player_submode_direction
 		cbw
-		cmp	ax, 1
+		cmp	ax, SD_RIGHT
 		jnz	short loc_1A24A
 		mov	ax, C_R_SLIDE_last
 		jmp	short loc_1A24D
@@ -6446,11 +6446,11 @@ loc_1A264:
 ; ---------------------------------------------------------------------------
 
 loc_1A26C:
-		mov	al, byte_35B44
+		mov	al, _player_mode
 		cbw
-		cmp	ax, 1
+		cmp	ax, M_SHOOT
 		jnz	loc_1A3C0
-		cmp	byte_39DB2, 0
+		cmp	_player_submode_direction, SD_STATIONARY
 		jnz	short loc_1A2C4
 		cmp	byte_35B43, 0
 		jnz	short loc_1A29E
@@ -6471,18 +6471,18 @@ loc_1A29E:
 		cmp	ax, 2
 		jl	loc_1A3B9
 		mov	_bomb_frames, 0
-		mov	byte_35B44, 0
+		mov	_player_mode, M_REGULAR
 		mov	_input_shot, 0
-		mov	byte_39DB2, 3
+		mov	_player_submode_direction, SD_NO_ORB_REPEL_THEN_STATIONARY_BUG
 		jmp	loc_1A3B9
 ; ---------------------------------------------------------------------------
 
 loc_1A2C4:
-		mov	al, byte_39DB2
+		mov	al, _player_submode_direction
 		cbw
-		cmp	ax, 1
+		cmp	ax, SD_RIGHT
 		jnz	short loc_1A32F
-		mov	byte_35B45, 0
+		mov	_player_dash_direction, X_RIGHT
 		mov	al, _player_ptn_id
 		cbw
 		call	_ptn_unput_8 c, _player_left, _player_top, ax
@@ -6512,15 +6512,15 @@ loc_1A2F8:
 ; ---------------------------------------------------------------------------
 
 loc_1A32F:
-		mov	al, byte_39DB2
+		mov	al, _player_submode_direction
 		cbw
-		cmp	ax, 2
+		cmp	ax, SD_LEFT
 		; Hack (jnz loc_1A3B9)
 		db 00fh
 		db 085h
 		db 07fh
 		db 000h
-		mov	byte_35B45, 1
+		mov	_player_dash_direction, X_LEFT
 		mov	al, _player_ptn_id
 		cbw
 		call	_ptn_unput_8 c, _player_left, _player_top, ax
@@ -6555,7 +6555,7 @@ loc_1A390:
 		add	sp, 8
 		mov	_bomb_frames, 0
 		mov	_input_shot, 0
-		mov	byte_35B44, 0
+		mov	_player_mode, M_REGULAR
 
 loc_1A3B9:
 		inc	byte_35B43
@@ -6563,11 +6563,11 @@ loc_1A3B9:
 ; ---------------------------------------------------------------------------
 
 loc_1A3C0:
-		mov	al, byte_35B44
+		mov	al, _player_mode
 		cbw
-		cmp	ax, 2
+		cmp	ax, M_SWING_OR_SLIDE
 		jnz	loc_1A745
-		cmp	byte_39DB2, 0
+		cmp	_player_submode_direction, SD_STATIONARY
 		jnz	loc_1A4C9
 		mov	al, byte_35B43
 		cbw
@@ -6578,14 +6578,14 @@ loc_1A3C0:
 		mov	bx, (INPUT_LEFT or INPUT_RIGHT)
 		cwd
 		idiv	bx
-		mov	byte_39DB2, dl
-		cmp	byte_39DB2, 0
+		mov	_player_submode_direction, dl
+		cmp	_player_submode_direction, SD_STATIONARY
 		jz	loc_1A70B
-		mov	al, byte_39DB2
+		mov	al, _player_submode_direction
 		cbw
-		cmp	ax, 3
+		cmp	ax, INPUT_LEFT_RIGHT
 		jnz	short loc_1A403
-		mov	byte_39DB2, 0
+		mov	_player_submode_direction, SD_STATIONARY
 
 loc_1A403:
 		mov	byte_35B43, 0
@@ -6652,7 +6652,7 @@ loc_1A47D:
 		cbw
 		cmp	ax, 17h
 		jl	loc_1A70B
-		mov	byte_35B44, 0
+		mov	_player_mode, M_REGULAR
 		mov	al, byte_35B43
 		cbw
 		cmp	ax, SWING_FRAMES
@@ -6678,15 +6678,15 @@ loc_1A49F:
 		push	offset _player_48x48
 		call	@CPlayerAnim@unput_8$xqiii
 		add	sp, 0Ah
-		mov	byte_39DB2, 3
+		mov	_player_submode_direction, SD_NO_ORB_REPEL_THEN_STATIONARY_BUG
 		mov	byte_35B43, 0
 		jmp	loc_1A6F8
 ; ---------------------------------------------------------------------------
 
 loc_1A4C9:
-		mov	al, byte_39DB2
+		mov	al, _player_submode_direction
 		cbw
-		cmp	ax, 1
+		cmp	ax, SD_RIGHT
 		jnz	loc_1A5EE
 		mov	si, _player_left
 		add	_player_left, 6
@@ -6736,7 +6736,7 @@ loc_1A542:
 		cbw
 		cmp	ax, 0Ch
 		jl	loc_1A70B
-		mov	byte_35B44, 0
+		mov	_player_mode, M_REGULAR
 		mov	al, byte_35B43
 		cbw
 		mov	bx, SLIDE_CELS
@@ -6752,7 +6752,7 @@ loc_1A542:
 		push	offset _player_48x32
 		call	@CPlayerAnim@unput_8$xqiii
 		add	sp, 0Ah
-		mov	byte_39DB2, 3
+		mov	_player_submode_direction, SD_NO_ORB_REPEL_THEN_STATIONARY_BUG
 		mov	byte_35B43, 0
 		mov	_player_sliding, 0
 		mov	al, byte_35B48
@@ -6763,25 +6763,25 @@ loc_1A542:
 		jnz	short loc_1A5C0
 		cmp	_input_lr, INPUT_LEFT
 		jnz	short loc_1A5A0
-		mov	al, 2
+		mov	al, (SS_FLIPKICK_STATIONARY or X_RIGHT)
 		jmp	short loc_1A5AD
 ; ---------------------------------------------------------------------------
 
 loc_1A5A0:
 		cmp	_input_lr, INPUT_RIGHT
 		jnz	short loc_1A5AB
-		mov	al, 4
+		mov	al, (SS_SLIDEKICK or X_RIGHT)
 		jmp	short loc_1A5AD
 ; ---------------------------------------------------------------------------
 
 loc_1A5AB:
-		mov	al, 0
+		mov	al, (SS_FLIPKICK_MOVING or X_RIGHT)
 
 loc_1A5AD:
-		mov	byte_39DB2, al
-		mov	byte_35B44, 3
+		mov	_player_submode_special, al
+		mov	_player_mode, M_SPECIAL_FIRST
 		cbw
-		cmp	ax, 4
+		cmp	ax, SS_SLIDEKICK
 		jge	loc_1ABD6
 		jmp	loc_1ABD1
 ; ---------------------------------------------------------------------------
@@ -6793,7 +6793,7 @@ loc_1A5C0:
 		jnz	short loc_1A5D8
 		cmp	_input_shot, 1
 		jnz	short loc_1A5D8
-		mov	byte_39DB2, 6
+		mov	_player_submode_special, (SS_SHOTCOMBO or X_RIGHT)
 		jmp	loc_1A6F0
 ; ---------------------------------------------------------------------------
 
@@ -6805,9 +6805,9 @@ loc_1A5D8:
 ; ---------------------------------------------------------------------------
 
 loc_1A5EE:
-		mov	al, byte_39DB2
+		mov	al, _player_submode_direction
 		cbw
-		cmp	ax, 2
+		cmp	ax, SD_LEFT
 		jnz	loc_1A70B
 		mov	si, _player_left
 		sub	_player_left, 6
@@ -6855,7 +6855,7 @@ loc_1A660:
 		cbw
 		cmp	ax, 0Ch
 		jl	loc_1A70B
-		mov	byte_35B44, 0
+		mov	_player_mode, M_REGULAR
 		mov	al, byte_35B43
 		cbw
 		mov	bx, 2
@@ -6870,7 +6870,7 @@ loc_1A660:
 		push	offset _player_48x32
 		call	@CPlayerAnim@unput_8$xqiii
 		add	sp, 0Ah
-		mov	byte_39DB2, 3
+		mov	_player_submode_direction, SD_NO_ORB_REPEL_THEN_STATIONARY_BUG
 		mov	byte_35B43, 0
 		mov	_player_sliding, 0
 		mov	al, byte_35B48
@@ -6881,25 +6881,25 @@ loc_1A660:
 		jnz	short loc_1A6DB
 		cmp	_input_lr, INPUT_RIGHT
 		jnz	short loc_1A6BB
-		mov	al, 3
+		mov	al, (SS_FLIPKICK_STATIONARY or X_LEFT)
 		jmp	short loc_1A6C8
 ; ---------------------------------------------------------------------------
 
 loc_1A6BB:
 		cmp	_input_lr, INPUT_LEFT
 		jnz	short loc_1A6C6
-		mov	al, 5
+		mov	al, (SS_SLIDEKICK or X_LEFT)
 		jmp	short loc_1A6C8
 ; ---------------------------------------------------------------------------
 
 loc_1A6C6:
-		mov	al, 1
+		mov	al, (SS_FLIPKICK_MOVING or X_LEFT)
 
 loc_1A6C8:
-		mov	byte_39DB2, al
-		mov	byte_35B44, 3
+		mov	_player_submode_special, al
+		mov	_player_mode, M_SPECIAL_FIRST
 		cbw
-		cmp	ax, 4
+		cmp	ax, SS_SLIDEKICK
 		jge	loc_1ABD6
 		jmp	loc_1ABD1
 ; ---------------------------------------------------------------------------
@@ -6911,10 +6911,10 @@ loc_1A6DB:
 		jnz	short loc_1A6F8
 		cmp	_input_shot, 1
 		jnz	short loc_1A6F8
-		mov	byte_39DB2, 7
+		mov	_player_submode_special, (SS_SHOTCOMBO or X_LEFT)
 
 loc_1A6F0:
-		mov	byte_35B44, 3
+		mov	_player_mode, M_SPECIAL_FIRST
 		jmp	loc_1ABD1
 ; ---------------------------------------------------------------------------
 
@@ -6927,7 +6927,7 @@ loc_1A706:
 
 loc_1A70B:
 		inc	byte_35B43
-		cmp	byte_39DB2, 0
+		cmp	_player_submode_direction, SD_STATIONARY
 		jnz	short loc_1A724
 		mov	al, byte_35B43
 		cbw
@@ -6937,47 +6937,47 @@ loc_1A70B:
 ; ---------------------------------------------------------------------------
 
 loc_1A724:
-		mov	al, byte_39DB2
+		mov	al, _player_submode_direction
 		cbw
-		cmp	ax, 1
+		cmp	ax, SD_RIGHT
 		jnz	short loc_1A735
 		push	66h ; 'f'
 		nopcall	sub_1AC6E
 		pop	cx
 
 loc_1A735:
-		mov	al, byte_39DB2
+		mov	al, _player_submode_direction
 		cbw
-		cmp	ax, 2
+		cmp	ax, SD_LEFT
 		jnz	loc_1AC2A
 		push	65h ; 'e'
 		jmp	loc_1AC24
 ; ---------------------------------------------------------------------------
 
 loc_1A745:
-		mov	al, byte_35B44
+		mov	al, _player_mode
 		cbw
-		cmp	ax, 3
+		cmp	ax, M_SPECIAL_FIRST
 		jz	short loc_1A762
-		mov	al, byte_35B44
+		mov	al, _player_mode
 		cbw
-		cmp	ax, 4
+		cmp	ax, M_SPECIAL_SECOND
 		jz	short loc_1A762
-		mov	al, byte_35B44
+		mov	al, _player_mode
 		cbw
-		cmp	ax, 5
+		cmp	ax, M_SPECIAL_THIRD
 		jnz	loc_1AC2A
 
 loc_1A762:
-		mov	al, byte_39DB2
+		mov	al, _player_submode_special
 		cbw
 		mov	bx, ax
-		cmp	bx, 7
+		cmp	bx, (SS_COUNT - 1)
 		ja	loc_1A972
 		add	bx, bx
-		jmp	cs:off_1AC5E[bx]
+		jmp	cs:@@submode_special_switch_1[bx]
 
-loc_1A776:
+@@flipkick_stationary_right_1:
 		mov	al, byte_35B43
 		cbw
 		dec	ax
@@ -7022,7 +7022,7 @@ loc_1A7B5:
 		jmp	short loc_1A806
 ; ---------------------------------------------------------------------------
 
-loc_1A7BF:
+@@flipkick_stationary_left_1:
 		mov	al, byte_35B43
 		cbw
 		dec	ax
@@ -7083,7 +7083,7 @@ loc_1A80A:
 		jmp	loc_1A972
 ; ---------------------------------------------------------------------------
 
-loc_1A826:
+@@flipkick_moving_right_1:
 		mov	al, byte_35B43
 		cbw
 		dec	ax
@@ -7130,7 +7130,7 @@ loc_1A865:
 		jmp	short loc_1A8C0
 ; ---------------------------------------------------------------------------
 
-loc_1A874:
+@@flipkick_moving_left_1:
 		mov	al, byte_35B43
 		cbw
 		dec	ax
@@ -7185,7 +7185,7 @@ loc_1A8C0:
 		jmp	loc_1A95C
 ; ---------------------------------------------------------------------------
 
-loc_1A8D0:
+@@slidekick_right_1:
 		mov	[bp+@@ptn_id], 5
 		mov	si, _player_left
 		call	_player_move_and_clamp stdcall, 6
@@ -7194,7 +7194,7 @@ loc_1A8D0:
 		jmp	short loc_1A8FE
 ; ---------------------------------------------------------------------------
 
-loc_1A8E8:
+@@slidekick_left_1:
 		mov	[bp+@@ptn_id], 4
 		mov	si, _player_left
 		call	_player_move_and_clamp stdcall, -6
@@ -7214,7 +7214,7 @@ loc_1A8FE:
 		jmp	short loc_1A96A
 ; ---------------------------------------------------------------------------
 
-loc_1A915:
+@@shotcombo_right_1:
 		mov	al, byte_35B43
 		cbw
 		dec	ax
@@ -7231,7 +7231,7 @@ loc_1A915:
 		jmp	short loc_1A94B
 ; ---------------------------------------------------------------------------
 
-loc_1A931:
+@@shotcombo_left_1:
 		mov	al, byte_35B43
 		cbw
 		dec	ax
@@ -7270,15 +7270,15 @@ loc_1A96A:
 		add	sp, 10h
 
 loc_1A972:
-		mov	al, byte_39DB2
+		mov	al, _player_submode_special
 		cbw
 		mov	bx, ax
-		cmp	bx, 7
+		cmp	bx, (SS_COUNT - 1)
 		ja	loc_1AAA9
 		add	bx, bx
-		jmp	cs:off_1AC4E[bx]
+		jmp	cs:@@submode_special_switch_2[bx]
 
-loc_1A986:
+@@flipkick_2:
 		mov	al, byte_35B43
 		cbw
 		cmp	ax, 14h
@@ -7301,12 +7301,12 @@ loc_1A9B0:
 		jmp	loc_1AAA9
 ; ---------------------------------------------------------------------------
 
-loc_1A9B8:
+@@slidekick_2:
 		mov	[bp+var_6], 0Dh
 		jmp	loc_1AAA9
 ; ---------------------------------------------------------------------------
 
-loc_1A9C0:
+@@shotcombo_2:
 		mov	al, byte_35B43
 		cbw
 		cmp	ax, 1
@@ -7413,15 +7413,15 @@ loc_1AAA9:
 		cbw
 		cmp	ax, [bp+var_6]
 		jle	loc_1ABF1
-		mov	al, byte_39DB2
+		mov	al, _player_submode_special
 		cbw
 		mov	bx, ax
-		cmp	bx, 7
+		cmp	bx, (SS_COUNT - 1)
 		ja	short loc_1AAF6
 		add	bx, bx
-		jmp	cs:off_1AC3E[bx]
+		jmp	cs:@@submode_special_switch_3[bx]
 
-loc_1AACA:
+@@not_slidekick_3:
 		push	[bp+@@ptn_id]
 		push	_player_48x48_top
 		mov	ax, _player_left
@@ -7432,7 +7432,7 @@ loc_1AACA:
 		jmp	short loc_1AAEE
 ; ---------------------------------------------------------------------------
 
-loc_1AADD:
+@@slidekick_3:
 		push	[bp+@@ptn_id]
 		push	_player_top
 		mov	ax, _player_left
@@ -7450,9 +7450,9 @@ loc_1AAF6:
 		mov	byte_35B43, 0
 		mov	_player_sliding, 0
 		mov	_player_deflecting, 0
-		mov	al, byte_35B44
+		mov	al, _player_mode
 		cbw
-		cmp	ax, 5
+		cmp	ax, M_SPECIAL_THIRD
 		jge	loc_1ABE5
 		mov	al, byte_35B48
 		cbw
@@ -7460,67 +7460,67 @@ loc_1AAF6:
 		jnz	short loc_1AB8F
 		cmp	_input_strike, 1
 		jnz	short loc_1AB8F
-		mov	al, byte_39DB2
+		mov	al, _player_submode_special
 		cbw
-		cmp	ax, 3
+		cmp	ax, (SS_FLIPKICK_STATIONARY or X_LEFT)
 		jz	short loc_1AB3B
-		mov	al, byte_39DB2
+		mov	al, _player_submode_special
 		cbw
-		cmp	ax, 1
+		cmp	ax, (SS_FLIPKICK_MOVING or X_LEFT)
 		jnz	short loc_1AB55
 
 loc_1AB3B:
 		cmp	_input_lr, INPUT_RIGHT
 		jnz	short loc_1AB46
-		mov	al, 3
+		mov	al, (SS_FLIPKICK_STATIONARY or X_LEFT)
 		jmp	short loc_1AB7D
 ; ---------------------------------------------------------------------------
 
 loc_1AB46:
 		cmp	_input_lr, INPUT_LEFT
 		jnz	short loc_1AB51
-		mov	al, 5
+		mov	al, (SS_SLIDEKICK or X_LEFT)
 		jmp	short loc_1AB7D
 ; ---------------------------------------------------------------------------
 
 loc_1AB51:
-		mov	al, 1
+		mov	al, (SS_FLIPKICK_MOVING or X_LEFT)
 		jmp	short loc_1AB7D
 ; ---------------------------------------------------------------------------
 
 loc_1AB55:
-		mov	al, byte_39DB2
+		mov	al, _player_submode_special
 		cbw
-		cmp	ax, 2
+		cmp	ax, (SS_FLIPKICK_STATIONARY or X_RIGHT)
 		jz	short loc_1AB65
-		cmp	byte_39DB2, 0
+		cmp	_player_submode_special, (SS_FLIPKICK_MOVING or X_RIGHT)
 		jnz	short loc_1AB80
 
 loc_1AB65:
 		cmp	_input_lr, INPUT_LEFT
 		jnz	short loc_1AB70
-		mov	al, 2
+		mov	al, (SS_FLIPKICK_STATIONARY or X_RIGHT)
 		jmp	short loc_1AB7D
 ; ---------------------------------------------------------------------------
 
 loc_1AB70:
 		cmp	_input_lr, INPUT_RIGHT
 		jnz	short loc_1AB7B
-		mov	al, 4
+		mov	al, (SS_SLIDEKICK or X_RIGHT)
 		jmp	short loc_1AB7D
 ; ---------------------------------------------------------------------------
 
 loc_1AB7B:
-		mov	al, 0
+		mov	al, (SS_FLIPKICK_MOVING or X_RIGHT)
 
 loc_1AB7D:
-		mov	byte_39DB2, al
+		mov	_player_submode_special, al
 
 loc_1AB80:
-		inc	byte_35B44
-		mov	al, byte_39DB2
+		inc	_player_mode
+		mov	al, _player_submode_special
 		cbw
-		cmp	ax, 4
+		cmp	ax, SS_SLIDEKICK
 		jge	short loc_1ABD6
 		jmp	short loc_1ABD1
 ; ---------------------------------------------------------------------------
@@ -7532,33 +7532,33 @@ loc_1AB8F:
 		jnz	short loc_1ABE5
 		cmp	_input_shot, 1
 		jnz	short loc_1ABE5
-		mov	al, byte_39DB2
+		mov	al, _player_submode_special
 		cbw
-		cmp	ax, 3
+		cmp	ax, (SS_FLIPKICK_STATIONARY or X_LEFT)
 		jz	short loc_1ABB1
-		mov	al, byte_39DB2
+		mov	al, _player_submode_special
 		cbw
-		cmp	ax, 1
+		cmp	ax, (SS_FLIPKICK_MOVING or X_LEFT)
 		jnz	short loc_1ABB8
 
 loc_1ABB1:
-		mov	byte_39DB2, 7
+		mov	_player_submode_special, (SS_SHOTCOMBO or X_LEFT)
 		jmp	short loc_1ABCD
 ; ---------------------------------------------------------------------------
 
 loc_1ABB8:
-		mov	al, byte_39DB2
+		mov	al, _player_submode_special
 		cbw
-		cmp	ax, 2
+		cmp	ax, (SS_FLIPKICK_STATIONARY or X_RIGHT)
 		jz	short loc_1ABC8
-		cmp	byte_39DB2, 0
+		cmp	_player_submode_special, (SS_FLIPKICK_MOVING or X_RIGHT)
 		jnz	short loc_1ABCD
 
 loc_1ABC8:
-		mov	byte_39DB2, 6
+		mov	_player_submode_special, (SS_SHOTCOMBO or X_RIGHT)
 
 loc_1ABCD:
-		inc	byte_35B44
+		inc	_player_mode
 
 loc_1ABD1:
 		mov	_player_deflecting, 1
@@ -7573,20 +7573,20 @@ loc_1ABD6:
 
 loc_1ABE5:
 		mov	byte_35B28, 0
-		mov	byte_35B44, 0
+		mov	_player_mode, M_REGULAR
 		jmp	short loc_1AC2A
 ; ---------------------------------------------------------------------------
 
 loc_1ABF1:
-		mov	al, byte_39DB2
+		mov	al, _player_submode_special
 		cbw
 		mov	bx, ax
-		cmp	bx, 7
+		cmp	bx, (SS_COUNT - 1)
 		ja	short loc_1AC2A
 		add	bx, bx
-		jmp	cs:off_1AC2E[bx]
+		jmp	cs:@@submode_special_switch_4[bx]
 
-loc_1AC03:
+@@flipkick_4:
 		mov	al, byte_35B43
 		cbw
 		cwd
@@ -7595,17 +7595,17 @@ loc_1AC03:
 		jmp	short loc_1AC23
 ; ---------------------------------------------------------------------------
 
-loc_1AC0E:
+@@slidekick_right_4:
 		push	67h ; 'g'
 		jmp	short loc_1AC24
 ; ---------------------------------------------------------------------------
 
-loc_1AC12:
+@@slidekick_left_4:
 		push	68h ; 'h'
 		jmp	short loc_1AC24
 ; ---------------------------------------------------------------------------
 
-loc_1AC16:
+@@shotcombo_4:
 		mov	al, byte_35B43
 		cbw
 		cmp	ax, 10h
@@ -7629,41 +7629,41 @@ loc_1AC2A:
 		pop	si
 		leave
 		retf
-sub_19E48	endp
 
 ; ---------------------------------------------------------------------------
-off_1AC2E	dw offset loc_1AC03
-		dw offset loc_1AC03
-		dw offset loc_1AC03
-		dw offset loc_1AC03
-		dw offset loc_1AC0E
-		dw offset loc_1AC12
-		dw offset loc_1AC16
-		dw offset loc_1AC16
-off_1AC3E	dw offset loc_1AACA
-		dw offset loc_1AACA
-		dw offset loc_1AACA
-		dw offset loc_1AACA
-		dw offset loc_1AADD
-		dw offset loc_1AADD
-		dw offset loc_1AACA
-		dw offset loc_1AACA
-off_1AC4E	dw offset loc_1A986
-		dw offset loc_1A986
-		dw offset loc_1A986
-		dw offset loc_1A986
-		dw offset loc_1A9B8
-		dw offset loc_1A9B8
-		dw offset loc_1A9C0
-		dw offset loc_1A9C0
-off_1AC5E	dw offset loc_1A826
-		dw offset loc_1A874
-		dw offset loc_1A776
-		dw offset loc_1A7BF
-		dw offset loc_1A8D0
-		dw offset loc_1A8E8
-		dw offset loc_1A915
-		dw offset loc_1A931
+@@submode_special_switch_4	dw offset @@flipkick_4
+		dw offset @@flipkick_4
+		dw offset @@flipkick_4
+		dw offset @@flipkick_4
+		dw offset @@slidekick_right_4
+		dw offset @@slidekick_left_4
+		dw offset @@shotcombo_4
+		dw offset @@shotcombo_4
+@@submode_special_switch_3	dw offset @@not_slidekick_3
+		dw offset @@not_slidekick_3
+		dw offset @@not_slidekick_3
+		dw offset @@not_slidekick_3
+		dw offset @@slidekick_3
+		dw offset @@slidekick_3
+		dw offset @@not_slidekick_3
+		dw offset @@not_slidekick_3
+@@submode_special_switch_2	dw offset @@flipkick_2
+		dw offset @@flipkick_2
+		dw offset @@flipkick_2
+		dw offset @@flipkick_2
+		dw offset @@slidekick_2
+		dw offset @@slidekick_2
+		dw offset @@shotcombo_2
+		dw offset @@shotcombo_2
+@@submode_special_switch_1	dw offset @@flipkick_moving_right_1
+		dw offset @@flipkick_moving_left_1
+		dw offset @@flipkick_stationary_right_1
+		dw offset @@flipkick_stationary_left_1
+		dw offset @@slidekick_right_1
+		dw offset @@slidekick_left_1
+		dw offset @@shotcombo_right_1
+		dw offset @@shotcombo_left_1
+sub_19E48	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -34261,12 +34261,35 @@ _STAGE_TIMES	label word
 	dw 1200, 1200, 1200, 1200, 2000	; (06 - 10)
 	dw 1400, 1400, 1400, 1400, 4000	; (11 - 15)
 	dw 1600, 1800, 1800, 1600, 8000	; (16 - 20)
+
+M_REGULAR = 0
+M_SHOOT = 1
+M_SWING_OR_SLIDE = 2
+M_SPECIAL_FIRST = 3
+M_SPECIAL_SECOND = 4
+M_SPECIAL_THIRD = 5
+
+SD_STATIONARY = INPUT_NONE
+SD_LEFT = INPUT_LEFT
+SD_RIGHT = INPUT_RIGHT
+SD_NO_ORB_REPEL_THEN_STATIONARY_BUG = INPUT_LEFT_RIGHT
+
+SS_FLIPKICK_MOVING = 0
+SS_FLIPKICK_STATIONARY = 2
+SS_SLIDEKICK = 4
+SS_SHOTCOMBO = 6
+SS_COUNT = 8
+
+X_RIGHT = 0
+X_LEFT = 1
+
 byte_35B28	db 0
 include th01/formats/ptn_main[data].asm
+public _player_mode, _player_dash_direction
 byte_35B42	db 0
 byte_35B43	db 0
-byte_35B44	db 0
-byte_35B45	db 1
+_player_mode	db M_REGULAR
+_player_dash_direction	db X_LEFT
 byte_35B46	db 0
 byte_35B47	db 0
 byte_35B48	db 0
@@ -34701,8 +34724,11 @@ _stage_timer	dw ?
 _frames_since_harryup	dw ?
 _harryup_cycle	db ?
 	evendata
-byte_39DB2	db ?
 public _player_ptn_id
+_player_submode_initial label byte
+_player_submode_direction label byte
+_player_submode_special label byte
+	db ?
 _player_ptn_id	db ?
 palette_39DB4	palette_t <?>
 word_39DE4	dw ?
