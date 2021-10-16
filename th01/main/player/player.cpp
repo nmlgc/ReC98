@@ -199,6 +199,13 @@ struct mode_frame_t {
 /// Shared state
 /// ------------
 
+// Seems pointless, as it's only `true` in modes where the Orb is repelled,
+// which only execute a branch of orb_player_hittest() that doesn't check this
+// flag to begin with. Except that some of them actually do, on the initial
+// frames where the (attack frame-based) friction parameter is still 0.
+// So it's actually a *workaround* for the fact that the one parameter to
+// orb_player_hittest() bundles both the "repel/no repel" flag and the repel
+// friction.
 extern bool player_invincible_against_orb;
 /// ------------
 
@@ -436,17 +443,7 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 			bombs--;
 			hud_bombs_put(bombs + 1);
 		}
-		/* TODO: Replace with the decompiled call
-		 * 	orb_player_hittest(1);
-		 * once that function is part of this translation unit */
-		__asm {
-			push 1;
-			nop;
-			push cs;
-			call near ptr orb_player_hittest;
-			pop cx;
-		}
-
+		orb_player_hittest(1);
 		bomb_done = bomb_update_and_render(bomb_frames);
 		bomb_state = (bomb_done == false) ? BS_ACTIVE : BS_NONE;
 		if(bomb_done) {
@@ -469,14 +466,7 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 	) {
 		bomb_state = BS_START;
 		input_bomb = false;
-		/* TODO: Replace with the decompiled call
-		 * 	pellet_speed_raise(0.025f);
-		 * once orb_player_hittest() is part of this translation unit */
-		__asm {
-			push	1;
-			call	far ptr pellet_speed_raise;
-		}
-		goto pop_cx_and_return;
+		pellet_speed_raise(0.025f);
 	} else if(mode == M_REGULAR) {
 		switch(input_lr) {
 		default:
@@ -659,7 +649,10 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 				} else if((combo_enabled == true) && (input_shot == true)) {
 					submode.special = (SS_SHOTCOMBO | X_RIGHT);
 					mode = M_SPECIAL_FIRST;
-					goto deflect_and_play_11;
+					player_deflecting = true;
+					mdrv2_se_play(11);
+					combo_enabled = false;
+					return;
 				}
 				input_strike = false;
 				bomb_frames = 0;
@@ -678,7 +671,10 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 				} else if((combo_enabled == true) && (input_shot == true)) {
 					submode.special = (SS_SHOTCOMBO | X_LEFT);
 					mode = M_SPECIAL_FIRST;
-					goto deflect_and_play_11;
+					player_deflecting = true;
+					mdrv2_se_play(11);
+					combo_enabled = false;
+					return;
 				}
 				input_strike = false;
 				bomb_frames = 0;
@@ -696,27 +692,14 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 		// done outside this function.)
 		if((submode.direction == SD_STATIONARY)) {
 			if(mode_frame.v < 21) {
-				goto orb_player_hittest_with_mode_frame;
+				orb_player_hittest(mode_frame.v);
 			}
 		} else {
 			if(submode.direction == SD_RIGHT) {
-				/* TODO: Replace with the decompiled call
-				 * 	orb_player_hittest(OR_3_X_4_RIGHT);
-				 * once that function is part of this translation unit */
-				__asm {
-					push	OR_3_X_4_RIGHT;
-					nop;
-					push	cs;
-					call	near ptr orb_player_hittest;
-					pop 	cx;
-				};
+				orb_player_hittest(OR_3_X_4_RIGHT);
 			}
 			if(submode.direction == SD_LEFT) {
-				/* TODO: Replace with the decompiled call
-				 * 	orb_player_hittest(OR_3_X_4_LEFT);
-				 * once that function is part of this translation unit */
-				__asm { push OR_3_X_4_LEFT; }
-				goto orb_player_hittest_with_pushed_parameter;
+				orb_player_hittest(OR_3_X_4_LEFT);
 			}
 		}
 	} else if(
@@ -879,7 +862,6 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 						submode.special = (SS_SHOTCOMBO | X_RIGHT);
 					}
 					mode++;
-				deflect_and_play_11:
 					player_deflecting = true;
 					mdrv2_se_play(11);
 					combo_enabled = false;
@@ -898,48 +880,18 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 			case (SS_FLIPKICK_MOVING | X_LEFT):
 			case (SS_FLIPKICK_STATIONARY | X_RIGHT):
 			case (SS_FLIPKICK_STATIONARY | X_LEFT):
-				/* TODO: Replace with the decompiled call
-				 * 	orb_player_hittest(mode_frame.v / 2);
-				 * once that function is part of this translation unit */
-				__asm {
-					mov 	al, mode_frame;
-					cbw;
-					cwd;
-					db  	0x2B, 0xC2;
-					sar 	ax, 1;
-				}
-				goto orb_player_hittest_with_ax;
+				orb_player_hittest(mode_frame.v / 2);
+				break;
 			case (SS_SLIDEKICK | X_RIGHT):
-				/* TODO: Replace with the decompiled call
-				 * 	orb_player_hittest(OR_3_X_8_RIGHT);
-				 * once that function is part of this translation unit */
-				__asm { push OR_3_X_8_RIGHT; }
-				goto orb_player_hittest_with_pushed_parameter;
+				orb_player_hittest(OR_3_X_8_RIGHT);
+				break;
 			case (SS_SLIDEKICK | X_LEFT):
-				/* TODO: Replace with the decompiled call
-				 * 	orb_player_hittest(OR_3_X_8_LEFT);
-				 * once that function is part of this translation unit */
-				__asm { push OR_3_X_8_LEFT; }
-				goto orb_player_hittest_with_pushed_parameter;
+				orb_player_hittest(OR_3_X_8_LEFT);
+				break;
 			case (SS_SHOTCOMBO | X_RIGHT):
 			case (SS_SHOTCOMBO | X_LEFT):
 				if(mode_frame.v < 16) {
-					/* TODO: Replace with the decompiled call
-					 * 	orb_player_hittest(mode_frame.v);
-					 * once that function is part of this translation unit */
-				orb_player_hittest_with_mode_frame:
-					__asm {
-						mov 	al, mode_frame;
-						cbw;
-				orb_player_hittest_with_ax:
-						push	ax;
-				orb_player_hittest_with_pushed_parameter:
-						nop;
-						push	cs;
-						call	near ptr orb_player_hittest;
-				pop_cx_and_return:
-						pop 	cx
-					};
+					orb_player_hittest(mode_frame.v);
 				}
 				break;
 			}
@@ -948,4 +900,60 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 
 	#undef prev_left
 	#undef prev_cel_48x48
+}
+
+template <class T> inline T delta_abs(const T p1, const T p2) {
+	return ((p1 - p2) < 0) ? ((p1 - p2) * -1) : (p1 - p2);
+}
+
+#define orb_hits_player(hitbox_w, hitbox_h) ( \
+	(delta_abs(orb_cur_left, player_left) < hitbox_w) && \
+	(delta_abs(orb_cur_top,  player_top)  < hitbox_h) \
+)
+
+#define player_in_repel_range() \
+	orb_hits_player((PLAYER_W + (ORB_W / 4)), PLAYER_H)
+
+void orb_player_hittest(int repel_friction)
+{
+	if(repel_friction == OR_NONE) {
+		if(
+			!player_invincible &&
+			!player_invincible_against_orb &&
+			orb_hits_player((PLAYER_W - (ORB_W / 4)), (PLAYER_H - (ORB_H / 2)))
+		) {
+			done = true;
+		}
+	} else if(repel_friction < OR_3_X_UNCHANGED) {
+		if(!player_in_repel_range()) {
+			return;
+		}
+		if((player_left - orb_cur_left) > 0) {
+			orb_velocity_x = OVX_4_LEFT;
+		} else if((player_left - orb_cur_left) == 0) {
+			orb_velocity_x = OVX_0;
+			if((rand() % 8) == 0) {
+				orb_velocity_x = OVX_4_LEFT;
+			}
+			// ZUN bug? Shouldn't this be OVX_4_RIGHT, maybe?
+			if((rand() % 8) == 4) {
+				orb_velocity_x = OVX_4_LEFT;
+			}
+		} else {
+			orb_velocity_x = OVX_4_RIGHT;
+		}
+		orb_force_new(((repel_friction / 2) + ORB_FORCE_REPEL), OF_IMMEDIATE);
+	} else if(player_in_repel_range()) {
+		if(repel_friction == OR_3_X_4_LEFT) {
+			orb_velocity_x = OVX_4_LEFT;
+		} else if(repel_friction == OR_3_X_4_RIGHT) {
+			orb_velocity_x = OVX_4_RIGHT;
+		} else if(repel_friction == OR_3_X_8_RIGHT) {
+			orb_velocity_x = OVX_8_RIGHT;
+		} else if(repel_friction == OR_3_X_8_LEFT) {
+			orb_velocity_x = OVX_8_LEFT;
+		}
+		extern double ORB_FORCE_REPEL_CONSTANT;
+		orb_force_new(ORB_FORCE_REPEL_CONSTANT, OF_IMMEDIATE);
+	}
 }
