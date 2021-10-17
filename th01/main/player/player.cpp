@@ -343,6 +343,14 @@ inline void slide_stop(
 	mode = M_SPECIAL_FIRST; \
 	special_start(combo_enabled, (submode.special < SS_SLIDEKICK)); \
 }
+
+inline void special_start_shot(
+	int8_t& mode, submode_t& submode, int8_t& combo_enabled, x_direction_t dir
+) {
+	submode.special = (SS_SHOTCOMBO | dir);
+	mode = M_SPECIAL_FIRST;
+	special_start(combo_enabled, true);
+}
 /// ----------------
 
 void player_unput_update_render(bool16 do_not_reset_player_state)
@@ -647,11 +655,7 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 					special_start_strike(mode, submode, combo_enabled, X_RIGHT);
 					return;
 				} else if((combo_enabled == true) && (input_shot == true)) {
-					submode.special = (SS_SHOTCOMBO | X_RIGHT);
-					mode = M_SPECIAL_FIRST;
-					player_deflecting = true;
-					mdrv2_se_play(11);
-					combo_enabled = false;
+					special_start_shot(mode, submode, combo_enabled, X_RIGHT);
 					return;
 				}
 				input_strike = false;
@@ -669,11 +673,7 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 					special_start_strike(mode, submode, combo_enabled, X_LEFT);
 					return;
 				} else if((combo_enabled == true) && (input_shot == true)) {
-					submode.special = (SS_SHOTCOMBO | X_LEFT);
-					mode = M_SPECIAL_FIRST;
-					player_deflecting = true;
-					mdrv2_se_play(11);
-					combo_enabled = false;
+					special_start_shot(mode, submode, combo_enabled, X_LEFT);
 					return;
 				}
 				input_strike = false;
