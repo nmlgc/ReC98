@@ -63,7 +63,6 @@ main_01 group main_010_TEXT, main_011_TEXT, main_012_TEXT, main_013_TEXT
 main_15 group main_15_TEXT, main_15__TEXT
 main_19 group main_19_TEXT, main_19__TEXT
 main_21 group main_21_TEXT, main_21__TEXT
-main_27 group main_27_TEXT, main_27__TEXT
 main_29 group main_29_TEXT, main_29__TEXT
 main_31 group main_31_TEXT, main_31__TEXT
 main_32 group main_32_TEXT, main_32__TEXT
@@ -3163,7 +3162,7 @@ loc_DE72:
 		les	bx, _resident
 		dec	es:[bx+reiidenconfig_t.rem_lives]
 		dec	_lives
-		call	sub_1AE0D
+		call	_player_miss_animate_and_update
 		mov	_done, 0
 		inc	si
 		mov	_player_invincibility_time, MISS_INVINCIBILITY_FRAMES
@@ -5987,7 +5986,6 @@ main_25_TEXT	segment	byte public 'CODE' use16
 	extern @hud_score_and_cardcombo_render$qv:proc
 	extern @hud_bg_load$qnxc:proc
 	extern @hud_lives_put$qi:proc
-	extern @hud_bombs_put$qi:proc
 	extern @hud_bg_snap_and_put$qv:proc
 main_25_TEXT	ends
 
@@ -5996,228 +5994,21 @@ main_25_TEXT	ends
 ; Segment type:	Pure code
 main_26_TEXT	segment	byte public 'CODE' use16
 	extern @timer_tick_and_put$qv:proc
-	extern @timer_extend_and_put$qv:proc
 main_26_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
 main_27_TEXT	segment	byte public 'CODE' use16
-main_27_TEXT	ends
-
-main_27__TEXT	segment	byte public 'CODE' use16
-		assume cs:main_27
-		;org 0Eh
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-OR_NONE = 0
-
 	extern _ptn_unput_8:proc
 	extern _ptn_put_8:proc
 	extern _ptn_put_quarter_8:proc
 	extern _ptn_put_quarter:proc
 	extern _player_unput_update_render:proc
+OR_NONE = 0
 	extern @orb_player_hittest$qi:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1AE0D	proc far
-
-@@prev_bombs		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-
-		enter	6, 0
-		push	si
-		push	di
-		call	_egc_copy_rect_1_to_0_16 c, _player_left, _player_top, large (32 shl 16) or 32
-		call	_ptn_put_8 c, _orb_cur_left, _orb_cur_top, PTN_ORB
-		call	IRand
-		mov	bx, 8
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_1AE4D
-		mov	ax, 1
-		jmp	short loc_1AE4F
-; ---------------------------------------------------------------------------
-
-loc_1AE4D:
-		xor	ax, ax
-
-loc_1AE4F:
-		add	ax, 56h
-		call	_ptn_put_8 c, _player_left, _player_top, ax
-		xor	si, si
-		jmp	short loc_1AE85
-; ---------------------------------------------------------------------------
-
-loc_1AE65:
-		mov	ax, si
-		mov	bx, 2
-		cwd
-		idiv	bx
-		shl	dx, 3
-		mov	ax, RES_Y
-		sub	ax, dx
-		call	_z_vsync_wait_and_scrollup stdcall, ax
-		pop	cx
-		push	2
-		call	_frame_delay
-		pop	cx
-		inc	si
-
-loc_1AE85:
-		cmp	si, 16
-		jl	short loc_1AE65
-		call	_z_vsync_wait_and_scrollup stdcall, 0
-		pop	cx
-		push	(48 shl 16) or 48
-		push	352
-		mov	ax, _player_left
-		add	ax, -8
-		push	ax
-		call	_egc_copy_rect_1_to_0_16
-		add	sp, 8
-		call	@CShots@unput_and_reset_all$qv c, offset _Shots, ds
-		call	@CPellets@decay_all$qv c, offset _Pellets, ds
-		call	_player_unput_update_render stdcall, 0
-		pop	cx
-		mov	ax, _player_left
-		add	ax, 160
-		mov	[bp+var_2], ax
-		cmp	[bp+var_2], PLAYER_LEFT_MAX
-		jl	short loc_1AEDE
-		mov	[bp+var_2], PLAYER_LEFT_MAX
-
-loc_1AEDE:
-		mov	ax, _player_left
-		add	ax, -160
-		mov	[bp+var_4], ax
-		cmp	[bp+var_4], PLAYER_LEFT_MIN
-		jge	short loc_1AEF2
-		mov	[bp+var_4], PLAYER_LEFT_MIN
-
-loc_1AEF2:
-		mov	di, _player_left
-		xor	si, si
-		jmp	loc_1AFC8
-; ---------------------------------------------------------------------------
-
-loc_1AEFB:
-		call	_egc_copy_rect_1_to_0_16 c, _player_left, _player_top, large (32 shl 16) or 32
-		call	_egc_copy_rect_1_to_0_16 c, di, _player_top, large (32 shl 16) or 32
-		cmp	si, 0Ah
-		jge	short loc_1AF2C
-		mov	ax, 16
-		jmp	short loc_1AF38
-; ---------------------------------------------------------------------------
-
-loc_1AF2C:
-		mov	ax, 304
-		sub	ax, [bp+var_2]
-		mov	bx, 20
-		cwd
-		idiv	bx
-
-loc_1AF38:
-		add	_player_left, ax
-		cmp	si, 0Ah
-		jge	short loc_1AF46
-		mov	ax, 0FFF0h
-		jmp	short loc_1AF52
-; ---------------------------------------------------------------------------
-
-loc_1AF46:
-		mov	ax, 304
-		sub	ax, [bp+var_4]
-		mov	bx, 20
-		cwd
-		idiv	bx
-
-loc_1AF52:
-		add	di, ax
-		cmp	_player_left, PLAYER_LEFT_MAX
-		jl	short loc_1AF62
-		mov	_player_left, PLAYER_LEFT_MAX
-
-loc_1AF62:
-		or	di, di
-		jge	short loc_1AF68
-		xor	di, di
-
-loc_1AF68:
-		call	_ptn_put_8 c, _orb_cur_left, _orb_cur_top, PTN_ORB
-		mov	ax, si
-		mov	bx, 2
-		cwd
-		idiv	bx
-		add	dx, 54h
-		call	_ptn_put_8 c, _player_left, _player_top, dx
-		mov	ax, si
-		mov	bx, 2
-		cwd
-		idiv	bx
-		add	dx, 54h
-		call	_ptn_put_8 c, di, _player_top, dx
-		cmp	si, 6
-		jge	short loc_1AFB4
-		mov	ax, 1
-		jmp	short loc_1AFC0
-; ---------------------------------------------------------------------------
-
-loc_1AFB4:
-		mov	ax, 30
-		sub	ax, si
-		mov	bx, 10
-		cwd
-		idiv	bx
-		inc	ax
-
-loc_1AFC0:
-		push	ax
-		call	_frame_delay
-		pop	cx
-		inc	si
-
-loc_1AFC8:
-		cmp	si, 1Eh
-		jl	loc_1AEFB
-		call	_egc_copy_rect_1_to_0_16 c, _player_left, _player_top, large (32 shl 16) or 32
-		call	_egc_copy_rect_1_to_0_16 c, di, _player_top, large (32 shl 16) or 32
-		mov	ax, _lives
-		inc	ax
-		call	@hud_lives_put$qi stdcall, ax
-		pop	cx
-		mov	al, _bombs
-		cbw
-		mov	[bp+@@prev_bombs], ax
-		mov	al, _credit_bombs
-		add	al, _bombs
-		mov	_bombs, al
-		cbw
-		cmp	ax, BOMBS_MAX
-		jle	short loc_1B01F
-		mov	_bombs, BOMBS_MAX
-		jmp	short loc_1B028
-; ---------------------------------------------------------------------------
-
-loc_1B01F:
-		call	@hud_bombs_put$qi stdcall, [bp+@@prev_bombs]
-		pop	cx
-
-loc_1B028:
-		call	@timer_extend_and_put$qv
-		call	@pellet_speed_lower$qii c, large 0 or (-2 shl 16)
-		pop	di
-		pop	si
-		leave
-		retf
-sub_1AE0D	endp
-
-main_27__TEXT	ends
+	extern _player_miss_animate_and_update:proc
+main_27_TEXT	ends
 
 ; ===========================================================================
 

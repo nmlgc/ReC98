@@ -8,6 +8,7 @@ static const int CARDCOMBO_DIGITS = 2;
 static const int PORTAL_ANIM_CELS = 2;
 static const int TIMER_DIGITS = 4;
 
+static const int MISS_EFFECT_CELS = 2;
 static const int DASH_CELS = 2;
 
 typedef enum {
@@ -65,6 +66,12 @@ typedef enum {
 	PTN_MIKO_R_CAST,
 	PTN_MIKO_R_DASH_SHOOT,
 	PTN_MIKO_R_DASH_SHOOT_last = (PTN_MIKO_R_DASH_SHOOT + DASH_CELS - 1),
+
+	PTN_MISS_EFFECT = PTN_ID(PTN_SLOT_MIKO, 20),
+	PTN_MISS_EFFECT_last = (PTN_MISS_EFFECT + MISS_EFFECT_CELS - 1),
+
+	PTN_MIKO_MISS,
+	PTN_MIKO_MISS_ALTERNATE,
 	// --------
 
 	// HUD (snapped backgrounds)

@@ -35,6 +35,12 @@ void invincibility_sprites_update_and_render(bool16 invincible);
 // instead.
 void player_unput_update_render(bool16 do_not_reset_player_state);
 
+// Shows the player hit/respawn animation in a blocking way, and updates the
+// HUD to reflect the lost life, together with all related game state. Except
+// for, ironically, [lives], which is assumed to have been decremented prior
+// to calling this function.
+void player_miss_animate_and_update(void);
+
 extern bool player_deflecting;
 extern bool player_sliding;
 extern bool16 player_invincible;
