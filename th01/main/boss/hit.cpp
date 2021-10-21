@@ -1,4 +1,4 @@
-bool16 is_bomb_damage_frame(unsigned long frame);
+#include "th01/main/player/bomb.hpp"
 
 #define z_palette_flash_colors(colors, colors_count, i) \
 	for(i = 0; colors_count > i; i++) { \
@@ -35,7 +35,7 @@ void boss_hit_update_and_render(
 	/* TODO: Replace with the decompiled expression
 	 * 	if(
 	 * 		((colliding_with_orb == true) && (is_invincible == false)) ||
-	  *		(is_bomb_damage_frame(frame_rand) == true)
+	  *		(bomb_deals_damage(frame_rand) == true)
 	 * 	)
 	 * once that function is part of this translation unit */
 	if((colliding_with_orb == true) && (is_invincible == false)) {
@@ -46,7 +46,7 @@ void boss_hit_update_and_render(
 		dw  	offset frame_rand;
 		nop;
 		push	cs;
-		call	near ptr is_bomb_damage_frame;
+		call	near ptr bomb_deals_damage;
 		add 	sp, 4;
 	}
 	if(_AX != 1) {

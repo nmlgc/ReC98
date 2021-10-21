@@ -1,10 +1,7 @@
 extern "C" {
-#include "platform.h"
-#include "x86real.h"
-#include "pc98.h"
 #include "master.hpp"
+#include "x86real.h"
 #include "th01/math/overlap.hpp"
-#include "th01/math/subpixel.hpp"
 #include "th01/hardware/egc.h"
 }
 #include "th01/main/particle.hpp"

@@ -15116,38 +15116,6 @@ loc_22231:
 		retf
 sub_21F19	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public @is_bomb_damage_frame$qul
-@is_bomb_damage_frame$qul	proc far
-
-arg_0		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		cmp	_lives, 0
-		jnz	short loc_22260
-		cmp	_bomb_damaging, 1
-		jnz	short loc_22260
-		mov	eax, [bp+arg_0]
-		mov	ebx, 50
-		xor	edx, edx
-		div	ebx
-		cmp	edx, 0
-		jnz	short loc_22260
-		mov	ax, 1
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_22260:
-		xor	ax, ax
-		pop	bp
-		retf
-@is_bomb_damage_frame$qul	endp
-
 	extern @particles_unput_update_render$q17particle_origin_ti:proc
 main_32__TEXT	ends
 
