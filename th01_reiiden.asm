@@ -6030,6 +6030,8 @@ eye_southwest	equ <boss_entity_2>
 eye_southeast	equ <boss_entity_3>
 eye_north	equ <boss_entity_4>
 
+PTN_SLOT_MISSILE = PTN_SLOT_BOSS_1
+
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
@@ -6095,7 +6097,7 @@ _yuugenmagan_load	proc c
 		push	ax
 		call	@CBossEntity@metadata_get$xqmimuct1t1
 		nopcall	sub_1B383
-		call	_ptn_load stdcall, 2, offset aBoss3_m_ptn, ds ; "boss3_m.ptn"
+		call	_ptn_load stdcall, PTN_SLOT_MISSILE, offset aBoss3_m_ptn, ds ; "boss3_m.ptn"
 		mov	byte_3A1B2, 80h	; '?'
 		push	ds
 		push	offset unk_39EC4
@@ -6219,7 +6221,7 @@ _yuugenmagan_free	proc far
 		push	bp
 		mov	bp, sp
 		call	_bos_entity_free stdcall, 0
-		call	_ptn_free stdcall, 2
+		call	_ptn_free stdcall, PTN_SLOT_MISSILE
 		add	sp, 4
 		pop	bp
 		retf
@@ -10348,6 +10350,9 @@ main_29_TEXT	segment	byte public 'CODE' use16
 mima_still	equ <boss_entity_0>
 mima_animated	equ <boss_entity_1>
 
+PTN_SLOT_BG_ENT = PTN_SLOT_BOSS_1
+PTN_SLOT_MISSILE = PTN_SLOT_BOSS_2
+
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
@@ -10388,8 +10393,8 @@ loc_1E3A2:
 		cmp	si, COLOR_COUNT
 		jl	short loc_1E385
 		nopcall	sub_1E79B
-		call	_ptn_new stdcall, (24 shl 16) or 2
-		call	_ptn_load stdcall, 3, offset aBoss3_m_ptn_0, ds ;	"boss3_m.ptn"
+		call	_ptn_new stdcall, (24 shl 16) or PTN_SLOT_BG_ENT
+		call	_ptn_load stdcall, PTN_SLOT_MISSILE, offset aBoss3_m_ptn_0, ds ;	"boss3_m.ptn"
 		mov	byte_3A1B2, 0C0h ; '?'
 		push	ds
 		push	offset unk_39EC4
@@ -10927,8 +10932,8 @@ _mima_free	proc far
 		mov	bp, sp
 		call	_bos_entity_free stdcall, 0
 		call	_bos_entity_free stdcall, 1
-		call	_ptn_free stdcall, 2
-		call	_ptn_free stdcall, 3
+		call	_ptn_free stdcall, PTN_SLOT_BG_ENT
+		call	_ptn_free stdcall, PTN_SLOT_MISSILE
 		add	sp, 8
 		pop	bp
 		retf
@@ -16465,6 +16470,9 @@ main_34_TEXT	segment	byte public 'CODE' use16
 	extern @boss_palette_snap$qv:proc
 	extern @boss_palette_show$qv:proc
 	extern @kikuri_select_for_rank$qmiiiii:proc
+
+PTN_SLOT_WAVE = PTN_SLOT_BOSS_1
+
 main_34_TEXT	ends
 
 main_34__TEXT	segment	byte public 'CODE' use16
@@ -16535,7 +16543,7 @@ loc_2336A:
 		push	ax
 		call	@CBossEntity@metadata_get$xqmimuct1t1
 		CBossEntity__load	kikuri_tear_0, 1, aTamasii2_bos
-		call	_ptn_load stdcall, 2, offset aTamayen_ptn, ds ; "tamayen.ptn"
+		call	_ptn_load stdcall, PTN_SLOT_WAVE, offset aTamayen_ptn, ds ; "tamayen.ptn"
 		add	sp, 2Eh
 		mov	si, 1
 		jmp	loc_23541
@@ -16637,7 +16645,7 @@ _kikuri_free	proc far
 		mov	bp, sp
 		call	_bos_entity_free stdcall, 0
 		call	_bos_entity_free stdcall, 1
-		call	_ptn_free stdcall, 2
+		call	_ptn_free stdcall, PTN_SLOT_WAVE
 		add	sp, 6
 		pop	bp
 		retf
@@ -19152,6 +19160,9 @@ elis_still_or_wave	equ <boss_entity_0>
 elis_attack	equ <boss_entity_1>
 elis_bat	equ <boss_entity_2>
 
+PTN_SLOT_BG_ENT = PTN_SLOT_BOSS_1
+PTN_SLOT_MISSILE = PTN_SLOT_BOSS_2
+
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
@@ -19339,8 +19350,8 @@ _elis_load	proc far
 		CBossEntity__load	elis_attack, 1, aBoss5_2_bos
 		CBossEntity__load	elis_bat, 2, aBoss5_3_bos
 		call	_grc_load stdcall, 0, offset aBoss5_gr_grc, ds
-		call	_ptn_new stdcall, (12 shl 16) or 2
-		call	_ptn_load stdcall, 3, offset aBoss3_m_ptn_1, ds ;	"boss3_m.ptn"
+		call	_ptn_new stdcall, (12 shl 16) or PTN_SLOT_BG_ENT
+		call	_ptn_load stdcall, PTN_SLOT_MISSILE, offset aBoss3_m_ptn_1, ds ;	"boss3_m.ptn"
 		mov	byte_3A1B2, 0C0h ; '?'
 		call	@boss_palette_snap$qv
 		nopcall	sub_24FE0
@@ -19414,8 +19425,8 @@ _elis_free	proc far
 		call	_bos_entity_free stdcall, 1
 		call	_bos_entity_free stdcall, 2
 		call	_grc_free stdcall, 0
-		call	_ptn_free stdcall, 2
-		call	_ptn_free stdcall, 3
+		call	_ptn_free stdcall, PTN_SLOT_BG_ENT
+		call	_ptn_free stdcall, PTN_SLOT_MISSILE
 		add	sp, 0Ch
 		pop	bp
 		retf
@@ -24754,6 +24765,8 @@ sariel_shield	equ <boss_entity_0>
 sariel_dress	equ <boss_anim_0>
 sariel_wand 	equ <boss_anim_1>
 
+PTN_SLOT_BG_ENT = PTN_SLOT_BOSS_1
+
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
@@ -24892,7 +24905,7 @@ _sariel_free	proc far
 		call	_grc_free stdcall, GRC_SLOT_BOSS_2
 		call	_grc_free stdcall, GRC_SLOT_BOSS_3
 		call	_grc_free stdcall, GRC_SLOT_BOSS_4
-		call	_ptn_free stdcall, 2
+		call	_ptn_free stdcall, PTN_SLOT_BG_ENT
 		add	sp, 10h
 		pop	bp
 		retf

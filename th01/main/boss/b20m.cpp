@@ -60,6 +60,8 @@ extern bool initial_hp_rendered;
 // Entities (and animations)
 // --------
 
+static const main_ptn_slot_t PTN_SLOT_BG_ENT = PTN_SLOT_BOSS_1;
+
 #define ent_shield	boss_entities[0]
 #define anm_dress 	boss_anims[0]
 #define anm_wand  	boss_anims[1]
@@ -135,7 +137,7 @@ void sariel_load_and_init(void)
 	boss_palette_snap();
 	void sariel_setup(void);
 	sariel_setup();
-	ptn_new(PTN_SLOT_BG_BOSS, ((WAND_PTN_W * WAND_PTN_H) + 4)); // ???
+	ptn_new(PTN_SLOT_BG_ENT, ((WAND_PTN_W * WAND_PTN_H) + 4)); // ???
 }
 
 void sariel_setup(void)

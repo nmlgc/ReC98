@@ -3,6 +3,10 @@
 
 extern "C" {
 #include "platform.h"
+#include "pc98.h"
+#include "planar.h"
+#include "th01/main/vars.hpp"
+#include "th01/formats/ptn.hpp"
 }
 
 #define flash_colors	yuugenmagan_flash_colors
@@ -12,3 +16,9 @@ extern "C" {
 extern bool16 invincible;
 extern int invincibility_frame;
 extern bool initial_hp_rendered;
+
+// Entities
+// --------
+
+static const main_ptn_slot_t PTN_SLOT_MISSILE = PTN_SLOT_BOSS_1;
+// --------

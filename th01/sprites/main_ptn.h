@@ -23,7 +23,13 @@ static const int DASH_CELS = 2;
 typedef enum {
 	PTN_SLOT_STG = 0, // stg(_b).ptn
 	PTN_SLOT_MIKO = 1, // miko.ptn
-	PTN_SLOT_BG_BOSS = 2, // Backgrounds behind animated boss entities
+
+	// .PTN slots that can be freely used by bosses. Randomly assigned to the
+	// backgrounds behind animated boss entities, as well as the missile
+	// sprites from boss3_m.ptn and Kikuri's wave sprites from tamayen.ptn.
+	PTN_SLOT_BOSS_1 = 2,
+	PTN_SLOT_BOSS_2 = 3,
+
 	PTN_SLOT_BG_HUD = 5,
 	PTN_SLOT_NUMB = 7, // numb.ptn
 	PTN_SLOT_COUNT,
