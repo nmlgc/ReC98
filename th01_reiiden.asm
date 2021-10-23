@@ -6098,10 +6098,8 @@ _yuugenmagan_load	proc c
 		call	@CBossEntity@metadata_get$xqmimuct1t1
 		nopcall	sub_1B383
 		call	_ptn_load stdcall, PTN_SLOT_MISSILE, offset aBoss3_m_ptn, ds ; "boss3_m.ptn"
-		mov	byte_3A1B2, 80h	; '?'
-		push	ds
-		push	offset unk_39EC4
-		call	sub_21EFF
+		mov	_Missiles.MISSILE_ptn_id_base, (PTN_SLOT_MISSILE * PTN_IMAGES_PER_SLOT)
+		call	sub_21EFF stdcall, offset _Missiles, ds
 		add	sp, 32h
 		ret
 _yuugenmagan_load	endp
@@ -6551,7 +6549,7 @@ arg_2		= word ptr  6
 		add	ax, 28
 		push	ax		; int
 		push	ds
-		push	offset unk_39EC4 ; __int32
+		push	offset _Missiles ; this
 		call	sub_21C0D
 		add	sp, 1Ah
 		push	[bp+arg_0]
@@ -6584,7 +6582,7 @@ arg_2		= word ptr  6
 		add	ax, 28
 		push	ax		; int
 		push	ds
-		push	offset unk_39EC4 ; __int32
+		push	offset _Missiles ; this
 		call	sub_21C0D
 		add	sp, 1Ah
 		leave
@@ -6696,10 +6694,7 @@ var_4		= word ptr -4
 		push	si
 		mov	ax, word ptr _yuugenmagan_invincibility_flash_colors
 		mov	[bp+@@invincibility_flash_colors], ax
-		push	ds
-		push	offset unk_39EC4
-		call	sub_21F19
-		add	sp, 4
+		call	sub_21F19 c, offset _Missiles, ds
 		cmp	_boss_phase, 0
 		jnz	loc_1BEC0
 		cmp	_yuugenmagan_initial_hp_rendered, 0
@@ -9960,9 +9955,7 @@ loc_1DF5A:
 		jg	short loc_1DFFC
 		call	_mdrv2_bgm_fade_out_nonblock
 		call	@CPellets@unput_and_reset$qv stdcall, offset _Pellets, ds
-		push	ds
-		push	offset unk_39EC4
-		call	sub_21EFF
+		call	sub_21EFF stdcall, offset _Missiles, ds
 		add	sp, 8
 		xor	si, si
 		jmp	short loc_1DFEA
@@ -10395,10 +10388,8 @@ loc_1E3A2:
 		nopcall	sub_1E79B
 		call	_ptn_new stdcall, (24 shl 16) or PTN_SLOT_BG_ENT
 		call	_ptn_load stdcall, PTN_SLOT_MISSILE, offset aBoss3_m_ptn_0, ds ;	"boss3_m.ptn"
-		mov	byte_3A1B2, 0C0h ; '?'
-		push	ds
-		push	offset unk_39EC4
-		call	sub_21EFF
+		mov	_Missiles.MISSILE_ptn_id_base, (PTN_SLOT_MISSILE * PTN_IMAGES_PER_SLOT)
+		call	sub_21EFF stdcall, offset _Missiles, ds
 		add	sp, 0Eh
 		pop	di
 		pop	si
@@ -11390,7 +11381,7 @@ loc_1EC0B:
 		add	bx, ax
 		push	word ptr ss:[bx] ; int
 		push	ds
-		push	offset unk_39EC4 ; __int32
+		push	offset _Missiles ; this
 		call	sub_21C0D
 		add	sp, 1Ah
 		inc	[bp+var_12]
@@ -12503,7 +12494,7 @@ loc_1F682:
 		add	bx, ax
 		push	word ptr ss:[bx] ; int
 		push	ds
-		push	offset unk_39EC4 ; __int32
+		push	offset _Missiles ; this
 		call	sub_21C0D
 		add	sp, 1Ah
 		inc	si
@@ -12933,9 +12924,7 @@ sub_1FA7B	proc far
 		push	di
 		mov	ax, word ptr _mima_invincibility_flash_colors
 		mov	[bp+@@invincibility_flash_colors], ax
-		push	ds
-		push	offset unk_39EC4
-		call	sub_21F19
+		call	sub_21F19 stdcall, offset _Missiles, ds
 		call	@particles_unput_update_render$q17particle_origin_ti stdcall, large PO_TOP_RIGHT or (V_WHITE shl 16)
 		add	sp, 8
 		cmp	_boss_phase, 0
@@ -13196,9 +13185,7 @@ loc_1FCF7:
 		call	_graph_accesspage_func
 		call	_mdrv2_bgm_fade_out_nonblock
 		call	@CPellets@unput_and_reset$qv stdcall, offset _Pellets, ds
-		push	ds
-		push	offset unk_39EC4
-		call	sub_21EFF
+		call	sub_21EFF stdcall, offset _Missiles, ds
 		add	sp, 0Eh
 		xor	si, si
 		jmp	short loc_1FDBD
@@ -14406,6 +14393,23 @@ main_32__TEXT	segment	byte public 'CODE' use16
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
+MISSILE_W = 16
+MISSILE_H = 16
+MISSILE_LEFT_MIN = PLAYFIELD_LEFT
+MISSILE_TOP_MIN = PLAYFIELD_TOP
+MISSILE_LEFT_MAX = (PLAYFIELD_RIGHT - MISSILE_W)
+MISSILE_TOP_MAX = (PLAYFIELD_BOTTOM - 1)
+
+MISSILE_NEW = -1
+
+MISSILE_HIT_CELS = 2
+MISSILE_HIT_IMAGE = 4
+
+MF_FREE = 0
+MF_MOVING = 1
+MF_HIT = 2
+MF_HIT_last = (MF_HIT + MISSILE_HIT_CELS - 1)
+
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
@@ -14413,7 +14417,7 @@ main_32__TEXT	segment	byte public 'CODE' use16
 ; int __cdecl __far sub_21C0D(__int32, int, int, double, double, char)
 sub_21C0D	proc far
 
-arg_0		= dword	ptr  6
+@@this		= dword	ptr  6
 arg_4		= word ptr  0Ah
 arg_6		= word ptr  0Ch
 arg_8		= qword	ptr  0Eh
@@ -14428,44 +14432,44 @@ arg_18		= byte ptr  1Eh
 ; ---------------------------------------------------------------------------
 
 loc_21C16:
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@this]
 		add	bx, si
-		cmp	byte ptr es:[bx+2EFh], 0
+		cmp	es:[bx+CMissiles.MISSILE_flag], MF_FREE
 		jnz	short loc_21C98
 		mov	ax, [bp+arg_4]
 		shl	ax, 4
 		mov	dx, si
 		add	dx, dx
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@this]
 		add	bx, dx
-		mov	es:[bx], ax
+		mov	es:[bx+CMissiles.MISSILE_cur_left], ax
 		mov	ax, [bp+arg_6]
 		shl	ax, 4
-		mov	es:[bx+64h], ax
-		mov	word ptr es:[bx+0C8h], 0FFFFh
+		mov	es:[bx+CMissiles.MISSILE_cur_top], ax
+		mov	es:[bx+CMissiles.MISSILE_prev_left], MISSILE_NEW
 		fld	[bp+arg_8]
 		fmul	flt_35C9E
 		call	ftol@
 		mov	dx, si
 		add	dx, dx
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@this]
 		add	bx, dx
-		mov	es:[bx+190h], ax
+		mov	es:[bx+CMissiles.MISSILE_velocity_x], ax
 		fld	[bp+arg_10]
 		fmul	flt_35C9E
 		call	ftol@
 		mov	dx, si
 		add	dx, dx
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@this]
 		add	bx, dx
-		mov	es:[bx+1F4h], ax
-		mov	bx, word ptr [bp+arg_0]
+		mov	es:[bx+CMissiles.MISSILE_velocity_y], ax
+		mov	bx, word ptr [bp+@@this]
 		add	bx, si
 		mov	al, [bp+arg_18]
-		mov	es:[bx+2BCh], al
-		mov	bx, word ptr [bp+arg_0]
+		mov	es:[bx+CMissiles.MISSILE_unknown], al
+		mov	bx, word ptr [bp+@@this]
 		add	bx, si
-		mov	byte ptr es:[bx+2EFh], 1
+		mov	es:[bx+CMissiles.MISSILE_flag], MF_MOVING
 		jmp	short loc_21CA0
 ; ---------------------------------------------------------------------------
 
@@ -14473,7 +14477,7 @@ loc_21C98:
 		inc	si
 
 loc_21C99:
-		cmp	si, 32h	; '2'
+		cmp	si, MISSILE_COUNT
 		jl	loc_21C16
 
 loc_21CA0:
@@ -14491,7 +14495,7 @@ sub_21CA3	proc far
 
 var_A		= word ptr -0Ah
 var_8		= qword	ptr -8
-arg_0		= dword	ptr  6
+@@this		= dword	ptr  6
 arg_4		= word ptr  0Ah
 arg_6		= dword	ptr  0Ch
 arg_A		= dword	ptr  10h
@@ -14501,10 +14505,10 @@ arg_A		= dword	ptr  10h
 		mov	si, [bp+arg_4]
 		mov	ax, si
 		add	ax, ax
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@this]
 		add	bx, ax
-		push	word ptr es:[bx+1F4h]
-		push	word ptr es:[bx+190h]
+		push	es:[bx+CMissiles.MISSILE_velocity_y]
+		push	es:[bx+CMissiles.MISSILE_velocity_x]
 		call	iatan2
 		mov	[bp+var_A], ax
 		fild	[bp+var_A]
@@ -14562,8 +14566,8 @@ loc_21D35:
 loc_21D37:
 		les	bx, [bp+arg_6]
 		mov	es:[bx], ax
-		les	bx, [bp+arg_0]
-		mov	al, es:[bx+2EEh]
+		les	bx, [bp+@@this]
+		mov	al, es:[bx+CMissiles.MISSILE_ptn_id_base]
 		mov	ah, 0
 		les	bx, [bp+arg_6]
 		add	es:[bx], ax
@@ -14776,7 +14780,7 @@ sub_21CA3	endp
 
 sub_21EFF	proc far
 
-arg_0		= dword	ptr  6
+@@this		= dword	ptr  6
 
 		push	bp
 		mov	bp, sp
@@ -14785,13 +14789,13 @@ arg_0		= dword	ptr  6
 ; ---------------------------------------------------------------------------
 
 loc_21F06:
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@this]
 		add	bx, ax
-		mov	byte ptr es:[bx+2EFh], 0
+		mov	es:[bx+CMissiles.MISSILE_flag], MF_FREE
 		inc	ax
 
 loc_21F12:
-		cmp	ax, 32h	; '2'
+		cmp	ax, MISSILE_COUNT
 		jl	short loc_21F06
 		pop	bp
 		retf
@@ -14806,7 +14810,7 @@ sub_21F19	proc far
 
 var_4		= word ptr -4
 var_2		= word ptr -2
-arg_0		= dword	ptr  6
+@@this		= dword	ptr  6
 
 		enter	4, 0
 		push	si
@@ -14815,9 +14819,9 @@ arg_0		= dword	ptr  6
 ; ---------------------------------------------------------------------------
 
 loc_21F23:
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@this]
 		add	bx, si
-		cmp	byte ptr es:[bx+2EFh], 0
+		cmp	es:[bx+CMissiles.MISSILE_flag], MF_FREE
 		jz	loc_220E9
 		mov	ax, si
 		mov	bx, 2
@@ -14830,113 +14834,113 @@ loc_21F23:
 		jnz	short loc_21F7D
 		mov	ax, si
 		add	ax, ax
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@this]
 		add	bx, ax
-		cmp	word ptr es:[bx+0C8h], 0FFFFh
+		cmp	es:[bx+CMissiles.MISSILE_prev_left], MISSILE_NEW
 		jz	short loc_21F7D
 		push	(16 shl 16) or 32
-		mov	ax, es:[bx+12Ch]
+		mov	ax, es:[bx+CMissiles.MISSILE_prev_top]
 		sar	ax, 4
 		push	ax
-		mov	ax, es:[bx+0C8h]
+		mov	ax, es:[bx+CMissiles.MISSILE_prev_left]
 		sar	ax, 4
 		push	ax
 		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 
 loc_21F7D:
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@this]
 		add	bx, si
-		cmp	byte ptr es:[bx+2EFh], 1
+		cmp	es:[bx+CMissiles.MISSILE_flag], MF_MOVING
 		jnz	loc_2207D
 		mov	ax, si
 		add	ax, ax
-		mov	bx, word ptr [bp+arg_0]
+		mov	bx, word ptr [bp+@@this]
 		add	bx, ax
-		mov	ax, es:[bx+190h]
-		add	es:[bx], ax
-		mov	ax, es:[bx+1F4h]
-		add	es:[bx+64h], ax
-		mov	ax, es:[bx]
+		mov	ax, es:[bx+CMissiles.MISSILE_velocity_x]
+		add	es:[bx+CMissiles.MISSILE_cur_left], ax
+		mov	ax, es:[bx+CMissiles.MISSILE_velocity_y]
+		add	es:[bx+CMissiles.MISSILE_cur_top], ax
+		mov	ax, es:[bx+CMissiles.MISSILE_cur_left]
 		sar	ax, 4
 		or	ax, ax
 		jl	short loc_21FD5
-		mov	ax, es:[bx]
+		mov	ax, es:[bx+CMissiles.MISSILE_cur_left]
 		sar	ax, 4
-		cmp	ax, 270h
+		cmp	ax, MISSILE_LEFT_MAX
 		jg	short loc_21FD5
-		mov	ax, es:[bx+64h]
+		mov	ax, es:[bx+CMissiles.MISSILE_cur_top]
 		sar	ax, 4
-		cmp	ax, 40h
+		cmp	ax, MISSILE_TOP_MIN
 		jl	short loc_21FD5
-		mov	ax, es:[bx+64h]
+		mov	ax, es:[bx+CMissiles.MISSILE_cur_top]
 		sar	ax, 4
-		cmp	ax, 18Fh
+		cmp	ax, MISSILE_TOP_MAX
 		jle	loc_220E9
 
 loc_21FD5:
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@this]
 		add	bx, si
-		mov	byte ptr es:[bx+2EFh], 2
+		mov	es:[bx+CMissiles.MISSILE_flag], MF_HIT
 		push	(16 shl 16) or 32
 		mov	ax, si
 		add	ax, ax
-		mov	bx, word ptr [bp+arg_0]
+		mov	bx, word ptr [bp+@@this]
 		add	bx, ax
-		mov	ax, es:[bx+12Ch]
+		mov	ax, es:[bx+CMissiles.MISSILE_prev_top]
 		sar	ax, 4
 		push	ax
-		mov	ax, es:[bx+0C8h]
+		mov	ax, es:[bx+CMissiles.MISSILE_prev_left]
 		sar	ax, 4
 		push	ax
 		call	_egc_copy_rect_1_to_0_16
 		add	sp, 8
 		mov	ax, si
 		add	ax, ax
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@this]
 		add	bx, ax
-		mov	ax, es:[bx]
+		mov	ax, es:[bx+CMissiles.MISSILE_cur_left]
 		sar	ax, 4
 		or	ax, ax
 		jge	short loc_22025
-		mov	word ptr es:[bx+0C8h], 0
+		mov	es:[bx+CMissiles.MISSILE_prev_left], (MISSILE_LEFT_MIN shl 4)
 		jmp	short loc_22040
 ; ---------------------------------------------------------------------------
 
 loc_22025:
 		mov	ax, si
 		add	ax, ax
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@this]
 		add	bx, ax
-		mov	ax, es:[bx]
+		mov	ax, es:[bx+CMissiles.MISSILE_cur_left]
 		sar	ax, 4
-		cmp	ax, 270h
+		cmp	ax, MISSILE_LEFT_MAX
 		jle	short loc_22040
-		mov	word ptr es:[bx+0C8h], 2700h
+		mov	es:[bx+CMissiles.MISSILE_prev_left], (MISSILE_LEFT_MAX shl 4)
 
 loc_22040:
 		mov	ax, si
 		add	ax, ax
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@this]
 		add	bx, ax
-		mov	ax, es:[bx+64h]
+		mov	ax, es:[bx+CMissiles.MISSILE_cur_top]
 		sar	ax, 4
-		cmp	ax, 40h
+		cmp	ax, MISSILE_TOP_MIN
 		jge	short loc_2205F
-		mov	word ptr es:[bx+12Ch], 400h
+		mov	es:[bx+CMissiles.MISSILE_prev_top], (MISSILE_TOP_MIN shl 4)
 		jmp	loc_220E9
 ; ---------------------------------------------------------------------------
 
 loc_2205F:
 		mov	ax, si
 		add	ax, ax
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@this]
 		add	bx, ax
-		mov	ax, es:[bx+64h]
+		mov	ax, es:[bx+CMissiles.MISSILE_cur_top]
 		sar	ax, 4
-		cmp	ax, 18Fh
+		cmp	ax, MISSILE_TOP_MAX
 		jle	short loc_220E9
-		mov	word ptr es:[bx+12Ch], 1880h
+		mov	es:[bx+CMissiles.MISSILE_prev_top], ((PLAYFIELD_BOTTOM - (MISSILE_H / 2)) shl 4)
 		jmp	short loc_220E9
 ; ---------------------------------------------------------------------------
 
@@ -14950,27 +14954,27 @@ loc_2207D:
 		and	edx, 1
 		cmp	eax, edx
 		jnz	short loc_220A1
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@this]
 		add	bx, si
-		inc	byte ptr es:[bx+2EFh]
+		inc	es:[bx+CMissiles.MISSILE_flag]
 
 loc_220A1:
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@this]
 		add	bx, si
-		cmp	byte ptr es:[bx+2EFh], 3
+		cmp	es:[bx+CMissiles.MISSILE_flag], MF_HIT_last
 		jbe	short loc_220E9
-		mov	bx, word ptr [bp+arg_0]
+		mov	bx, word ptr [bp+@@this]
 		add	bx, si
-		mov	byte ptr es:[bx+2EFh], 0
+		mov	es:[bx+CMissiles.MISSILE_flag], MF_FREE
 		push	(16 shl 16) or 32
 		mov	ax, si
 		add	ax, ax
-		mov	bx, word ptr [bp+arg_0]
+		mov	bx, word ptr [bp+@@this]
 		add	bx, ax
-		mov	ax, es:[bx+12Ch]
+		mov	ax, es:[bx+CMissiles.MISSILE_prev_top]
 		sar	ax, 4
 		push	ax
-		mov	ax, es:[bx+0C8h]
+		mov	ax, es:[bx+CMissiles.MISSILE_prev_left]
 		sar	ax, 4
 		push	ax
 		call	_egc_copy_rect_1_to_0_16
@@ -14982,16 +14986,16 @@ loc_220E9:
 		inc	si
 
 loc_220EA:
-		cmp	si, 32h	; '2'
+		cmp	si, MISSILE_COUNT
 		jl	loc_21F23
 		xor	si, si
 		jmp	loc_221C2
 ; ---------------------------------------------------------------------------
 
 loc_220F6:
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@this]
 		add	bx, si
-		cmp	byte ptr es:[bx+2EFh], 0
+		cmp	es:[bx+CMissiles.MISSILE_flag], MF_FREE
 		jz	loc_221C1
 		mov	ax, si
 		mov	bx, 2
@@ -15002,9 +15006,9 @@ loc_220F6:
 		and	edx, 1
 		cmp	eax, edx
 		jnz	loc_221C1
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@this]
 		add	bx, si
-		cmp	byte ptr es:[bx+2EFh], 1
+		cmp	es:[bx+CMissiles.MISSILE_flag], MF_MOVING
 		jnz	short loc_22183
 		push	ss
 		lea	ax, [bp+var_4]
@@ -15013,52 +15017,52 @@ loc_220F6:
 		lea	ax, [bp+var_2]
 		push	ax
 		push	si
-		pushd	[bp+arg_0]
+		pushd	[bp+@@this]
 		call	sub_21CA3
 		push	[bp+var_4]
 		push	[bp+var_2]
 		mov	ax, si
 		add	ax, ax
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@this]
 		add	bx, ax
-		mov	ax, es:[bx+64h]
+		mov	ax, es:[bx+CMissiles.MISSILE_cur_top]
 		sar	ax, 4
 		push	ax
-		mov	ax, es:[bx]
+		mov	ax, es:[bx+CMissiles.MISSILE_cur_left]
 		sar	ax, 4
 		push	ax
 		call	_ptn_put_quarter
 		add	sp, 16h
 		mov	ax, si
 		add	ax, ax
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@this]
 		add	bx, ax
-		mov	ax, es:[bx]
-		mov	es:[bx+0C8h], ax
-		mov	ax, es:[bx+64h]
-		mov	es:[bx+12Ch], ax
+		mov	ax, es:[bx+CMissiles.MISSILE_cur_left]
+		mov	es:[bx+CMissiles.MISSILE_prev_left], ax
+		mov	ax, es:[bx+CMissiles.MISSILE_cur_top]
+		mov	es:[bx+CMissiles.MISSILE_prev_top], ax
 		jmp	short loc_221C1
 ; ---------------------------------------------------------------------------
 
 loc_22183:
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@this]
 		add	bx, si
-		mov	al, es:[bx+2EFh]
+		mov	al, es:[bx+CMissiles.MISSILE_flag]
 		mov	ah, 0
-		add	ax, 0FFFEh
+		add	ax, -MF_HIT
 		push	ax
-		mov	bx, word ptr [bp+arg_0]
-		mov	al, es:[bx+2EEh]
+		mov	bx, word ptr [bp+@@this]
+		mov	al, es:[bx+CMissiles.MISSILE_ptn_id_base]
 		mov	ah, 0
-		add	ax, 4
+		add	ax, MISSILE_HIT_IMAGE
 		push	ax
 		mov	ax, si
 		add	ax, ax
 		add	bx, ax
-		mov	ax, es:[bx+12Ch]
+		mov	ax, es:[bx+CMissiles.MISSILE_prev_top]
 		sar	ax, 4
 		push	ax
-		mov	ax, es:[bx+0C8h]
+		mov	ax, es:[bx+CMissiles.MISSILE_prev_left]
 		sar	ax, 4
 		push	ax
 		call	_ptn_put_quarter
@@ -15068,7 +15072,7 @@ loc_221C1:
 		inc	si
 
 loc_221C2:
-		cmp	si, 32h	; '2'
+		cmp	si, MISSILE_COUNT
 		jl	loc_220F6
 		cmp	_player_invincible, 0
 		jnz	short loc_22231
@@ -15077,33 +15081,33 @@ loc_221C2:
 ; ---------------------------------------------------------------------------
 
 loc_221D4:
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@this]
 		add	bx, si
-		cmp	byte ptr es:[bx+2EFh], 0
+		cmp	es:[bx+CMissiles.MISSILE_flag], MF_FREE
 		jz	short loc_2222B
 		mov	ax, si
 		add	ax, ax
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@this]
 		add	bx, ax
-		mov	ax, es:[bx]
+		mov	ax, es:[bx+CMissiles.MISSILE_cur_left]
 		sar	ax, 4
 		mov	dx, _player_left
 		add	dx, -8
 		cmp	ax, dx
 		jle	short loc_2222B
-		mov	ax, es:[bx]
+		mov	ax, es:[bx+CMissiles.MISSILE_cur_left]
 		sar	ax, 4
 		mov	dx, _player_left
 		add	dx, 24
 		cmp	ax, dx
 		jge	short loc_2222B
-		mov	ax, es:[bx+64h]
+		mov	ax, es:[bx+CMissiles.MISSILE_cur_top]
 		sar	ax, 4
-		cmp	ax, 190h
+		cmp	ax, (_player_top + PLAYER_H)
 		jge	short loc_2222B
-		mov	ax, es:[bx+64h]
+		mov	ax, es:[bx+CMissiles.MISSILE_cur_top]
 		sar	ax, 4
-		cmp	ax, 168h
+		cmp	ax, (_player_top - 8)
 		jle	short loc_2222B
 		mov	_done, 1
 		jmp	short loc_22231
@@ -15113,7 +15117,7 @@ loc_2222B:
 		inc	si
 
 loc_2222C:
-		cmp	si, 32h	; '2'
+		cmp	si, MISSILE_COUNT
 		jl	short loc_221D4
 
 loc_22231:
@@ -19352,7 +19356,7 @@ _elis_load	proc far
 		call	_grc_load stdcall, 0, offset aBoss5_gr_grc, ds
 		call	_ptn_new stdcall, (12 shl 16) or PTN_SLOT_BG_ENT
 		call	_ptn_load stdcall, PTN_SLOT_MISSILE, offset aBoss3_m_ptn_1, ds ;	"boss3_m.ptn"
-		mov	byte_3A1B2, 0C0h ; '?'
+		mov	_Missiles.MISSILE_ptn_id_base, (PTN_SLOT_MISSILE * PTN_IMAGES_PER_SLOT)
 		call	@boss_palette_snap$qv
 		nopcall	sub_24FE0
 		call	@particles_unput_update_render$q17particle_origin_ti stdcall, large PO_INITIALIZE or (V_WHITE shl 16)
@@ -20049,7 +20053,7 @@ loc_25726:
 		add	bx, bx
 		push	word ptr [bx+5D47h] ; int
 		push	ds
-		push	offset unk_39EC4 ; __int32
+		push	offset _Missiles ; this
 		call	sub_21C0D
 		add	sp, 1Ah
 
@@ -23805,10 +23809,7 @@ var_4		= word ptr -4
 		push	di
 		mov	eax, dword ptr _elis_invincibility_flash_colors
 		mov	[bp+@@invincibility_flash_colors], eax
-		push	ds
-		push	offset unk_39EC4
-		call	sub_21F19
-		add	sp, 4
+		call	sub_21F19 c, offset _Missiles, ds
 		cmp	_boss_phase, 0
 		jnz	loc_281CF
 		call	@boss_palette_snap$qv
@@ -24709,9 +24710,7 @@ loc_285A5:
 		call	@CPellets@unput_and_reset$qv stdcall, offset _Pellets, ds
 		push	1
 		call	sub_24EC2
-		push	ds
-		push	offset unk_39EC4
-		call	sub_21EFF
+		call	sub_21EFF stdcall, offset _Missiles, ds
 		add	sp, 0Ah
 		xor	si, si
 		jmp	short loc_28643
@@ -32729,10 +32728,25 @@ off_39EB3	dd ?
 word_39EB7	dw ?
 include th01/main/portals[bss].asm
 		db 5 dup(?)
-unk_39EC4	db    ?	;
-		db 749 dup(?)
-byte_3A1B2	db ?
-		db 50 dup(?)
+
+MISSILE_COUNT = 50
+
+CMissiles struc
+	MISSILE_cur_left   	dw MISSILE_COUNT dup(?)
+	MISSILE_cur_top    	dw MISSILE_COUNT dup(?)
+	MISSILE_prev_left  	dw MISSILE_COUNT dup(?)
+	MISSILE_prev_top   	dw MISSILE_COUNT dup(?)
+	MISSILE_velocity_x 	dw MISSILE_COUNT dup(?)
+	MISSILE_velocity_y 	dw MISSILE_COUNT dup(?)
+	MISSILE_unused     	dw MISSILE_COUNT dup(?)
+	MISSILE_unknown    	db MISSILE_COUNT dup(?)
+	MISSILE_ptn_id_base	db ?
+	MISSILE_flag       	db MISSILE_COUNT dup(?)
+CMissiles ends
+
+public _Missiles
+_Missiles	CMissiles <?>
+
 public _hud_hp_first_white, _hud_hp_first_redwhite
 _hud_hp_first_white	dw ?
 _hud_hp_first_redwhite	dw ?
