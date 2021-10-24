@@ -2223,7 +2223,7 @@ loc_D4FA:
 ; ---------------------------------------------------------------------------
 
 loc_D501:
-		call	_mima_free
+		call	@mima_free$qv
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -10912,23 +10912,7 @@ sub_1E79B	proc far
 		retf
 sub_1E79B	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public _mima_free
-_mima_free	proc far
-		push	bp
-		mov	bp, sp
-		call	_bos_entity_free stdcall, 0
-		call	_bos_entity_free stdcall, 1
-		call	_ptn_free stdcall, PTN_SLOT_BG_ENT
-		call	_ptn_free stdcall, PTN_SLOT_MISSILE
-		add	sp, 8
-		pop	bp
-		retf
-_mima_free	endp
-
+	extern @mima_free$qv:proc
 	extern @mima_select_for_rank$qmiiiii:proc
 main_29_TEXT	ends
 
