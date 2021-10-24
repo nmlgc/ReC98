@@ -40,6 +40,9 @@ class CMissiles {
 	int8_t unknown[MISSILE_COUNT];
 	uint8_t ptn_id_base; // main_ptn_id_t. Very bold to limit this to 8 bits!
 	missile_flag_t flag[MISSILE_COUNT];
+
+public:
+	void unput_update_render(void);
 };
 
 extern CMissiles Missiles;
