@@ -998,8 +998,8 @@ void player_miss_animate_and_update(void)
 		player_48_left_for(player_left), player_48x48_top(), 48, 48
 	);
 
-	Shots.unput_and_reset_all();
-	Pellets.decay_all();
+	Shots.unput_and_reset();
+	Pellets.decay();
 	player_unput_update_render(false);
 
 	// Effect

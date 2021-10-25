@@ -661,7 +661,7 @@ void CPellets::unput_update_render(void)
 	}
 }
 
-void CPellets::unput_and_reset_all(void)
+void CPellets::unput_and_reset(void)
 {
 	p = iteration_start();
 	for(int i = 0; i < PELLET_COUNT; i++, p++) {
@@ -678,7 +678,7 @@ void CPellets::unput_and_reset_all(void)
 	alive_count = 0;
 }
 
-void CPellets::decay_all(void)
+void CPellets::decay(void)
 {
 	p = iteration_start();
 	for(int i = 0; i < PELLET_COUNT; i++, p++) {
@@ -695,7 +695,7 @@ void CPellets::decay_all(void)
 	}
 }
 
-void CPellets::reset_all(void)
+void CPellets::reset(void)
 {
 	p = iteration_start();
 	for(int i = 0; i < PELLET_COUNT; i++, p++) {

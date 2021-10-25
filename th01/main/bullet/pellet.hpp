@@ -230,13 +230,13 @@ public:
 
 	// Transitions all living pellets into their decay state, awarding points
 	// for each one.
-	void decay_all(void);
+	void decay(void);
 
 	// Also calls Shots.unput_update_render()!
 	void unput_update_render(void);
 
-	void unput_and_reset_all(void);
-	void reset_all(void);
+	void unput_and_reset(void);
+	void reset(void);
 };
 
 /// Globals

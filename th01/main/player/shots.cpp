@@ -26,7 +26,7 @@ void CShots::add(screen_x_t new_left, screen_y_t new_top)
 	}
 }
 
-void CShots::unput_and_reset_all(void)
+void CShots::unput_and_reset(void)
 {
 	for(int i = 0; i < SHOT_COUNT; i++) {
 		if(moving[i]) {

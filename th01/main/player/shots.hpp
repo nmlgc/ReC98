@@ -15,7 +15,7 @@ struct CShots {
 	unsigned char decay_frame[SHOT_COUNT];
 
 	void add(screen_x_t new_left, screen_y_t new_top);
-	void unput_and_reset_all(void);
+	void unput_and_reset(void);
 	void unput_update_render(void);
 
 	bool16 is_moving(int i) {

@@ -347,7 +347,7 @@ var_2		= word ptr -2
 		mov	_player_invincible, 1
 		cmp	[bp+@@frame], 0
 		jnz	loc_BF82
-		call	@CPellets@decay_all$qv c, offset _Pellets, ds
+		call	@CPellets@decay$qv c, offset _Pellets, ds
 		call	_ptn_put_8 c, _player_left, (PTN_MIKO_L_CAST shl 16) or _player_top
 		xor	si, si
 		jmp	short loc_BF75
@@ -605,7 +605,7 @@ loc_C128:
 		idiv	bx
 		or	dx, dx
 		jnz	loc_C42E
-		call	@CPellets@decay_all$qv c, offset _Pellets, ds
+		call	@CPellets@decay$qv c, offset _Pellets, ds
 		jmp	loc_C42E
 ; ---------------------------------------------------------------------------
 
@@ -729,7 +729,7 @@ loc_C21C:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_C235
-		call	@CPellets@decay_all$qv c, offset _Pellets, ds
+		call	@CPellets@decay$qv c, offset _Pellets, ds
 
 loc_C235:
 		xor	si, si
@@ -1925,7 +1925,7 @@ loc_D29E:
 loc_D2A5:
 		cmp	_input_up, 0
 		jz	short loc_D2C7
-		call	@CPellets@unput_and_reset_all$qv c, offset _Pellets, ds
+		call	@CPellets@unput_and_reset$qv c, offset _Pellets, ds
 
 loc_D2B8:
 		call	_printf c, offset _esc_cls, ds
@@ -2571,8 +2571,8 @@ loc_D7E4:
 		mov	es:[bx+reiidenconfig_t.score], eax
 		mov	eax, _continues_total
 		mov	es:[bx+reiidenconfig_t.continues_total], eax
-		call	@CPellets@unput_and_reset_all$qv c, offset _Pellets, ds
-		call	@CShots@unput_and_reset_all$qv c, offset _Shots, ds
+		call	@CPellets@unput_and_reset$qv c, offset _Pellets, ds
+		call	@CShots@unput_and_reset$qv c, offset _Shots, ds
 		mov	word ptr [bp+s1+2], ds
 		mov	word ptr [bp+s1], offset _default_grp_fn
 		mov	byte_34ADF, 0
@@ -3398,8 +3398,8 @@ loc_E224:
 loc_E244:
 		inc	si
 		call	sub_CE5C
-		call	@CShots@unput_and_reset_all$qv c, offset _Shots, ds
-		call	@CPellets@unput_and_reset_all$qv c, offset _Pellets, ds
+		call	@CShots@unput_and_reset$qv c, offset _Shots, ds
+		call	@CPellets@unput_and_reset$qv c, offset _Pellets, ds
 		call	sub_D47D
 		mov	word_34A8A, 1
 		cmp	byte_34ADF, 0
@@ -5404,8 +5404,8 @@ arg_0		= word ptr  6
 		enter	6, 0
 		push	si
 		push	di
-		call	@CShots@unput_and_reset_all$qv c, offset _Shots, ds
-		call	@CPellets@unput_and_reset_all$qv c, offset _Pellets, ds
+		call	@CShots@unput_and_reset$qv c, offset _Shots, ds
+		call	@CPellets@unput_and_reset$qv c, offset _Pellets, ds
 		push	32h ; '2'
 		call	_frame_delay
 		pop	cx
@@ -9271,7 +9271,7 @@ loc_1D6C4:
 		cmp	_boss_hp, 0
 		jg	short loc_1D75D
 		call	_mdrv2_bgm_fade_out_nonblock
-		call	@CPellets@unput_and_reset_all$qv c, offset _Pellets, ds
+		call	@CPellets@unput_and_reset$qv c, offset _Pellets, ds
 		xor	si, si
 		jmp	short loc_1D74B
 ; ---------------------------------------------------------------------------
@@ -9956,7 +9956,7 @@ loc_1DF5A:
 		cmp	_boss_hp, 0
 		jg	short loc_1DFFC
 		call	_mdrv2_bgm_fade_out_nonblock
-		call	@CPellets@unput_and_reset_all$qv stdcall, offset _Pellets, ds
+		call	@CPellets@unput_and_reset$qv stdcall, offset _Pellets, ds
 		push	ds
 		push	offset unk_39EC4
 		call	sub_21EFF
@@ -13189,7 +13189,7 @@ loc_1FCF7:
 		push	0
 		call	_graph_accesspage_func
 		call	_mdrv2_bgm_fade_out_nonblock
-		call	@CPellets@unput_and_reset_all$qv stdcall, offset _Pellets, ds
+		call	@CPellets@unput_and_reset$qv stdcall, offset _Pellets, ds
 		push	ds
 		push	offset unk_39EC4
 		call	sub_21EFF
@@ -16473,7 +16473,7 @@ loc_2326F:
 		jnz	short loc_232A0
 		call	@CBossEntity@put_8$xqiii stdcall, offset singyoku_sphere, ds, large [dword ptr singyoku_sphere.BE_cur_left], singyoku_sphere.BE_bos_image
 		call	_mdrv2_bgm_fade_out_nonblock
-		call	@CPellets@unput_and_reset_all$qv stdcall, offset _Pellets, ds
+		call	@CPellets@unput_and_reset$qv stdcall, offset _Pellets, ds
 		add	sp, 0Eh
 		call	sub_1261B
 
@@ -19117,7 +19117,7 @@ loc_24D59:
 		cmp	_boss_hp, 0
 		jg	short loc_24DFB
 		call	_mdrv2_bgm_fade_out_nonblock
-		call	@CPellets@unput_and_reset_all$qv c, offset _Pellets, ds
+		call	@CPellets@unput_and_reset$qv c, offset _Pellets, ds
 		xor	si, si
 		jmp	short loc_24DE9
 ; ---------------------------------------------------------------------------
@@ -24726,7 +24726,7 @@ loc_285A5:
 		cmp	_boss_hp, 0
 		jg	short loc_28655
 		call	_mdrv2_bgm_fade_out_nonblock
-		call	@CPellets@unput_and_reset_all$qv stdcall, offset _Pellets, ds
+		call	@CPellets@unput_and_reset$qv stdcall, offset _Pellets, ds
 		push	1
 		call	sub_24EC2
 		push	ds
@@ -31295,8 +31295,8 @@ loc_2C835:
 		jnz	loc_2CAA8
 		mov	_boss_phase_frame, 0
 		mov	_sariel_invincibility_frame, 399	; ???
-		call	@CShots@unput_and_reset_all$qv c, offset _Shots, ds
-		call	@CPellets@unput_and_reset_all$qv c, offset _Pellets, ds
+		call	@CShots@unput_and_reset$qv c, offset _Shots, ds
+		call	@CPellets@unput_and_reset$qv c, offset _Pellets, ds
 		xor	si, si
 		jmp	short loc_2C8AE
 ; ---------------------------------------------------------------------------
@@ -31811,13 +31811,13 @@ main_37_TEXT	ends
 
 ; Segment type:	Pure code
 main_38_TEXT	segment	byte public 'CODE' use16
-	extern @CShots@unput_and_reset_all$qv:proc
+	extern @CShots@unput_and_reset$qv:proc
 	extern @CPellets@$bctr$qv:proc
 	extern @CPellets@add_group$qii14pellet_group_ti:proc
 	extern @CPellets@add_single$qiiuci15pellet_motion_tiii:proc
 	extern @CPellets@unput_update_render$qv:proc
-	extern @CPellets@unput_and_reset_all$qv:proc
-	extern @CPellets@decay_all$qv:proc
+	extern @CPellets@unput_and_reset$qv:proc
+	extern @CPellets@decay$qv:proc
 main_38_TEXT	ends
 
 	.data
