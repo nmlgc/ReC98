@@ -42,6 +42,7 @@ class CMissiles {
 	missile_flag_t flag[MISSILE_COUNT];
 
 public:
+	void reset(void);
 	void unput_update_render(void);
 };
 

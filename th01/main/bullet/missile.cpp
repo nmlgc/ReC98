@@ -9,6 +9,13 @@ extern "C" {
 #include "th01/main/vars.hpp"
 #include "th01/main/bullet/missile.hpp"
 
+void CMissiles::reset(void)
+{
+	for(int i = 0; i < MISSILE_COUNT; i++) {
+		flag[i] = MF_FREE;
+	}
+}
+
 // Missiles are blitted to unaligned X positions (and are, in fact, the only
 // 16×16 .PTN entity where this is the case), so a missile sprite is likely
 // to cover two 16-pixel words. Since the left coordinate is rounded down to

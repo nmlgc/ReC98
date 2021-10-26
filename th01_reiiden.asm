@@ -6098,7 +6098,7 @@ _yuugenmagan_load	proc c
 		nopcall	sub_1B383
 		call	_ptn_load stdcall, PTN_SLOT_MISSILE, offset aBoss3_m_ptn, ds ; "boss3_m.ptn"
 		mov	_Missiles.MISSILE_ptn_id_base, (PTN_SLOT_MISSILE * PTN_IMAGES_PER_SLOT)
-		call	sub_21EFF stdcall, offset _Missiles, ds
+		call	@CMissiles@reset$qv stdcall, offset _Missiles, ds
 		add	sp, 32h
 		ret
 _yuugenmagan_load	endp
@@ -9954,7 +9954,7 @@ loc_1DF5A:
 		jg	short loc_1DFFC
 		call	_mdrv2_bgm_fade_out_nonblock
 		call	@CPellets@unput_and_reset$qv stdcall, offset _Pellets, ds
-		call	sub_21EFF stdcall, offset _Missiles, ds
+		call	@CMissiles@reset$qv stdcall, offset _Missiles, ds
 		add	sp, 8
 		xor	si, si
 		jmp	short loc_1DFEA
@@ -10388,7 +10388,7 @@ loc_1E3A2:
 		call	_ptn_new stdcall, (24 shl 16) or PTN_SLOT_BG_ENT
 		call	_ptn_load stdcall, PTN_SLOT_MISSILE, offset aBoss3_m_ptn_0, ds ;	"boss3_m.ptn"
 		mov	_Missiles.MISSILE_ptn_id_base, (PTN_SLOT_MISSILE * PTN_IMAGES_PER_SLOT)
-		call	sub_21EFF stdcall, offset _Missiles, ds
+		call	@CMissiles@reset$qv stdcall, offset _Missiles, ds
 		add	sp, 0Eh
 		pop	di
 		pop	si
@@ -13184,7 +13184,7 @@ loc_1FCF7:
 		call	_graph_accesspage_func
 		call	_mdrv2_bgm_fade_out_nonblock
 		call	@CPellets@unput_and_reset$qv stdcall, offset _Pellets, ds
-		call	sub_21EFF stdcall, offset _Missiles, ds
+		call	@CMissiles@reset$qv stdcall, offset _Missiles, ds
 		add	sp, 0Eh
 		xor	si, si
 		jmp	short loc_1FDBD
@@ -14760,34 +14760,7 @@ loc_21EF6:
 		retf
 @ptn_cel_for$qm9CMissilesim13main_ptn_id_tmi	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_21EFF	proc far
-
-@@this		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		xor	ax, ax
-		jmp	short loc_21F12
-; ---------------------------------------------------------------------------
-
-loc_21F06:
-		les	bx, [bp+@@this]
-		add	bx, ax
-		mov	es:[bx+CMissiles.MISSILE_flag], MF_FREE
-		inc	ax
-
-loc_21F12:
-		cmp	ax, MISSILE_COUNT
-		jl	short loc_21F06
-		pop	bp
-		retf
-sub_21EFF	endp
-
+	extern @CMissiles@reset$qv:proc
 	extern @CMissiles@unput_update_render$qv:proc
 	extern @particles_unput_update_render$q17particle_origin_ti:proc
 main_32__TEXT	ends
@@ -24373,7 +24346,7 @@ loc_285A5:
 		call	@CPellets@unput_and_reset$qv stdcall, offset _Pellets, ds
 		push	1
 		call	sub_24EC2
-		call	sub_21EFF stdcall, offset _Missiles, ds
+		call	@CMissiles@reset$qv stdcall, offset _Missiles, ds
 		add	sp, 0Ah
 		xor	si, si
 		jmp	short loc_28643
