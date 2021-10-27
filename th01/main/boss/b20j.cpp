@@ -141,6 +141,12 @@ static bool16 face_direction_can_change = true;
 #define ent_face_closed_or_glare	boss_entities[1]
 #define ent_face_aim            	boss_entities[2]
 
+static inline void ent_free(void) {
+	bos_entity_free(0);
+	bos_entity_free(1);
+	bos_entity_free(2);
+}
+
 #define head_put(direction) \
 	ent_head.put_8(HEAD_LEFT, HEAD_TOP, direction);
 
@@ -499,9 +505,7 @@ void konngara_setup(void)
 // Happens to be entirely protected to double frees. Yes, this matters.
 void konngara_free(void)
 {
-	bos_entity_free(0);
-	bos_entity_free(1);
-	bos_entity_free(2);
+	ent_free();
 	for(int i = 0; i < 7; i++) {
 		grx_free(i);
 	}
