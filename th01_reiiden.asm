@@ -3547,7 +3547,6 @@ graph_TEXT	segment	byte public 'CODE' use16
 	extern _z_palette_set_show:proc
 	extern _z_graph_clear:proc
 	extern _graph_copy_page_back_to_front:proc
-	extern _z_palette_white_in:proc
 	extern _graph_r_vline:proc
 	extern _graph_r_line_unput:proc
 	extern _graph_r_line_patterned:proc
@@ -10384,7 +10383,7 @@ loc_1E39C:
 loc_1E3A2:
 		cmp	si, COLOR_COUNT
 		jl	short loc_1E385
-		nopcall	sub_1E79B
+		nopcall	@mima_setup$qv
 		call	_ptn_new stdcall, (24 shl 16) or PTN_SLOT_BG_ENT
 		call	_ptn_load stdcall, PTN_SLOT_MISSILE, offset aBoss3_m_ptn_0, ds ;	"boss3_m.ptn"
 		mov	_Missiles.MISSILE_ptn_id_base, (PTN_SLOT_MISSILE * PTN_IMAGES_PER_SLOT)
@@ -10886,32 +10885,7 @@ loc_1E798:
 		retf
 sub_1E739	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1E79B	proc far
-		push	bp
-		mov	bp, sp
-		call	@boss_palette_snap$qv
-		mov	mima_still.BE_bos_image, 0
-		mov	mima_animated.BE_bos_image, 1
-		call	_z_palette_white_in
-		call	@CBossEntity@pos_set$qiiiiiii stdcall, offset mima_still, ds, 256, large 64 or (48 shl 16), large 0 or (736 shl 16), large 64 or (304 shl 16)
-		CBossEntity__hitbox_set	mima_still, 32, 32, 96, 128
-		mov	mima_still.BE_hitbox_orb_inactive, 0
-		mov	_boss_phase_frame, 0
-		mov	_boss_phase, 0
-		mov	_boss_hp, 12
-		mov	_hud_hp_first_white, 6
-		mov	_hud_hp_first_redwhite, 2
-		call	@particles_unput_update_render$q17particle_origin_ti stdcall, large PO_INITIALIZE or (V_WHITE shl 16)
-		add	sp, 16h
-		pop	bp
-		retf
-sub_1E79B	endp
-
+	extern @mima_setup$qv:proc
 	extern @mima_free$qv:proc
 	extern @mima_select_for_rank$qmiiiii:proc
 main_29_TEXT	ends
