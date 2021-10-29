@@ -28,6 +28,8 @@ static const pixel_t MIMA_W = 128;
 static const pixel_t MIMA_H = 160;
 // -----------
 
+#define spreadin_interval	mima_spreadin_interval
+#define spreadin_speed	mima_spreadin_speed
 #define flash_colors	mima_flash_colors
 #define invincibility_frame	mima_invincibility_frame
 #define invincible	mima_invincible
@@ -35,6 +37,11 @@ static const pixel_t MIMA_H = 160;
 extern int invincibility_frame;
 extern bool16 invincible;
 extern bool initial_hp_rendered;
+
+// Amount of frames between the individual steps of the spread-in transition
+extern uint8_t spreadin_interval;
+// Sprite pixels to spread in per frame, in one half of Mima's sprite
+extern uint8_t spreadin_speed;
 
 // Entities
 // --------
@@ -57,6 +64,59 @@ static inline void ent_free(void) {
 	ptn_free(PTN_SLOT_MISSILE);
 }
 // --------
+
+// TODO: Remove once all functions are part of this translation unit
+#define nopcall_workaround(func) __asm { \
+	push cs; call near ptr func; \
+}
+
+void mima_put_still_both(void)
+;
+#define mima_put_still_both() nopcall_workaround(mima_put_still_both)
+
+void mima_bg_snap(void)
+;
+#define mima_bg_snap() nopcall_workaround(mima_bg_snap)
+
+inline pixel_t spreadin_bottom_cur(void) {
+	return ((spreadin_speed / spreadin_interval) * (boss_phase_frame - 10));
+}
+
+void spreadin_unput_and_put(screen_x_t left, screen_y_t top)
+{
+	pixel_t row;
+	pixel_t line_on_top;
+
+	if(boss_phase_frame < 10) {
+		return;
+	} else if(boss_phase_frame == 10) {
+		ent_still.pos_cur_set(left, top);
+		mima_bg_snap();
+		line_on_top = (top + (MIMA_H / 2));
+		return;
+	} else if((boss_phase_frame % spreadin_interval) != 0) {
+		return;
+	}
+
+	line_on_top = ((MIMA_H / 2) - spreadin_bottom_cur());
+	if(line_on_top < 0) {
+		boss_phase_frame = 0;
+		mima_put_still_both();
+		return;
+	}
+	for(row = 0; spreadin_bottom_cur() > row; row++) {
+		ent_still.unput_and_put_1line(
+			left, (top + line_on_top + row), ent_still.bos_image, row
+		);
+		ent_still.unput_and_put_1line(
+			left,
+			((top + MIMA_H) - line_on_top - row),
+			ent_still.bos_image,
+			((MIMA_H - 1) - row)
+		);
+	}
+
+}
 
 // Only called while Mima isn't visible anyway. But even apart from that, it
 // barely would have any effect anywhere, as the Mima sprite is blitted to both

@@ -5860,7 +5860,6 @@ main_21_TEXT	segment	byte public 'CODE' use16
 	extern @CBossEntity@load_inner$qxnxci:proc
 	extern @CBossEntity@metadata_get$xqmimuct1t1:proc
 	extern @CBossEntity@put_8$xqiii:proc
-	extern @CBossEntity@unput_and_put_1line$xqiiii:proc
 	extern @CBossEntity@unput_and_put_8$xqiii:proc
 	extern @CBossEntity@wave_put$xqiiiiii:proc
 	extern @CBossEntity@pos_set$qiiiiiii:proc
@@ -10512,8 +10511,8 @@ sub_1E48B	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_1E4EC	proc far
+public @mima_put_still_both$qv
+@mima_put_still_both$qv	proc far
 		push	bp
 		mov	bp, sp
 		push	1
@@ -10525,14 +10524,14 @@ sub_1E4EC	proc far
 		add	sp, 18h
 		pop	bp
 		retf
-sub_1E4EC	endp
+@mima_put_still_both$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_1E526	proc far
+public @mima_bg_snap$qv
+@mima_bg_snap$qv	proc far
 
 @@image		= word ptr -6
 @@top		= word ptr -4
@@ -10590,7 +10589,7 @@ loc_1E578:
 		pop	si
 		leave
 		retf
-sub_1E526	endp
+@mima_bg_snap$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -10717,123 +10716,7 @@ loc_1E655:
 		retf
 sub_1E589	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1E659	proc far
-
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-@@left		= word ptr  6
-arg_2		= word ptr  8
-
-		enter	6, 0
-		push	si
-		push	di
-		mov	di, [bp+arg_2]
-		cmp	_boss_phase_frame, 10
-		jl	loc_1E735
-		cmp	_boss_phase_frame, 10
-		jnz	short loc_1E691
-		mov	[bp+var_4], di
-		mov	ax, [bp+@@left]
-		mov	[bp+var_6], ax
-		mov	mima_still.BE_cur_left, ax
-		mov	ax, [bp+var_4]
-		mov	mima_still.BE_cur_top, ax
-		call	sub_1E526
-		lea	ax, [di+50h]
-		mov	[bp+var_2], ax
-		jmp	loc_1E735
-; ---------------------------------------------------------------------------
-
-loc_1E691:
-		mov	al, byte_35B7B
-		mov	ah, 0
-		push	ax
-		mov	ax, _boss_phase_frame
-		cwd
-		pop	bx
-		idiv	bx
-		or	dx, dx
-		jnz	loc_1E735
-		mov	al, byte_35B7C
-		mov	ah, 0
-		mov	dl, byte_35B7B
-		mov	dh, 0
-		push	dx
-		cwd
-		pop	bx
-		idiv	bx
-		mov	dx, _boss_phase_frame
-		add	dx, -10
-		imul	dx
-		mov	dx, 50h	; 'P'
-		sub	dx, ax
-		mov	[bp+var_2], dx
-		cmp	[bp+var_2], 0
-		jge	short loc_1E6D7
-		mov	_boss_phase_frame, 0
-		call	sub_1E4EC
-		jmp	short loc_1E735
-; ---------------------------------------------------------------------------
-
-loc_1E6D7:
-		xor	si, si
-		jmp	short loc_1E718
-; ---------------------------------------------------------------------------
-
-loc_1E6DB:
-		push	si
-		push	mima_still.BE_bos_image
-		mov	ax, di
-		add	ax, [bp+var_2]
-		add	ax, si
-		push	ax
-		push	[bp+@@left]
-		push	ds
-		push	offset mima_still
-		call	@CBossEntity@unput_and_put_1line$xqiiii
-		mov	ax, 159
-		sub	ax, si
-		push	ax
-		push	mima_still.BE_bos_image
-		lea	ax, [di+0A0h]
-		sub	ax, [bp+var_2]
-		sub	ax, si
-		push	ax
-		push	[bp+@@left]
-		push	ds
-		push	offset mima_still
-		call	@CBossEntity@unput_and_put_1line$xqiiii
-		add	sp, 18h
-		inc	si
-
-loc_1E718:
-		mov	al, byte_35B7C
-		mov	ah, 0
-		mov	dl, byte_35B7B
-		mov	dh, 0
-		push	dx
-		cwd
-		pop	bx
-		idiv	bx
-		mov	dx, _boss_phase_frame
-		add	dx, -10
-		imul	dx
-		cmp	ax, si
-		jg	short loc_1E6DB
-
-loc_1E735:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_1E659	endp
-
+	extern @spreadin_unput_and_put$qii:proc
 	extern @mima_vertical_sprite_transition_$qv:proc
 	extern @mima_setup$qv:proc
 	extern @mima_free$qv:proc
@@ -11667,13 +11550,13 @@ arg_0		= word ptr  6
 		cmp	[bp+arg_0], 0
 		jnz	short loc_1EFB1
 		mov	byte_39E25, -1
-		mov	byte_35B7B, 4
+		mov	_mima_spreadin_interval, 4
 		call	IRand
 		mov	bx, 2
 		cwd
 		idiv	bx
 		mov	byte_39E26, dl
-		mov	byte_35B7C, 10h
+		mov	_mima_spreadin_speed, 16
 		jmp	loc_1F19B
 ; ---------------------------------------------------------------------------
 
@@ -11726,7 +11609,7 @@ loc_1F020:
 		mov	[bp+var_6], ax
 		mov	mima_still.BE_cur_left, ax
 		mov	mima_still.BE_cur_top, 96
-		call	sub_1E526
+		call	@mima_bg_snap$qv
 
 loc_1F030:
 		cmp	_boss_phase_frame, 12
@@ -11739,9 +11622,7 @@ loc_1F03F:
 		mov	mima_still.BE_hitbox_orb_inactive, 0
 
 loc_1F045:
-		pushd	[dword ptr mima_still.BE_cur_left]
-		call	sub_1E659
-		add	sp, 4
+		call	@spreadin_unput_and_put$qii c, large [dword ptr mima_still.BE_cur_left]
 
 loc_1F051:
 		cmp	_boss_phase_frame, 0
@@ -12842,17 +12723,15 @@ sub_1FA7B	proc far
 		mov	_boss_phase_frame, 0
 		mov	mima_still.BE_hitbox_orb_inactive, 0
 		xor	di, di
-		mov	byte_35B7B, 1
-		mov	byte_35B7C, 2
+		mov	_mima_spreadin_interval, 1
+		mov	_mima_spreadin_speed, 2
 		mov	byte_35B7A, 1
 
 loc_1FACA:
 		inc	_boss_phase_frame
 		or	di, di
 		jnz	short loc_1FADF
-		push	780100h
-		call	sub_1E659
-		add	sp, 4
+		call	@spreadin_unput_and_put$qii c, 256 or (120 shl 16)
 
 loc_1FADF:
 		cmp	_boss_phase_frame, 0
@@ -12977,11 +12856,11 @@ loc_1FBAC:
 		push	0
 		call	sub_1E589
 		add	sp, 8
-		mov	byte_35B7B, 4
-		mov	byte_35B7C, 8
+		mov	_mima_spreadin_interval, 4
+		mov	_mima_spreadin_speed, 8
 		mov	mima_still.BE_cur_left, 256
 		mov	mima_still.BE_cur_top, 120
-		call	sub_1E526
+		call	@mima_bg_snap$qv
 		mov	_boss_phase, 2
 		mov	_boss_phase_frame, 0
 		mov	_mima_invincibility_frame, 0
@@ -12996,9 +12875,7 @@ loc_1FC54:
 		jnz	short loc_1FC95
 		inc	_boss_phase_frame
 		inc	_mima_invincibility_frame
-		push	780100h
-		call	sub_1E659
-		add	sp, 4
+		call	@spreadin_unput_and_put$qii c, 256 or (120 shl 16)
 		cmp	_boss_phase_frame, 0
 		jnz	loc_1FDCF
 		mov	_boss_phase, 3
@@ -31747,8 +31624,9 @@ aBoss3_m_ptn	db 'boss3_m.ptn',0
 aBoss2_grp_0	db 'boss2.grp',0
 flt_35B76	dd 2.0
 byte_35B7A	db 1
-byte_35B7B	db 4
-byte_35B7C	db 8
+public _mima_spreadin_interval, _mima_spreadin_speed
+_mima_spreadin_interval	db 4
+_mima_spreadin_speed   	db 8
 		db  8Fh
 		db 0FFh
 		db 0FFh

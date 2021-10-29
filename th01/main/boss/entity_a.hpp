@@ -161,6 +161,11 @@ protected:
 	}
 
 public:
+	void pos_cur_set(screen_x_t left, screen_x_t top) {
+		cur_left = left;
+		cur_top = top;
+	}
+
 	// Sets [cur_left], [cur_top], [unknown], and the [move_clamp] area.
 	void pos_set(
 		screen_x_t left,
