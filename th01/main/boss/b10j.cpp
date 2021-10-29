@@ -8,6 +8,7 @@ extern "C" {
 #include "planar.h"
 #include "th01/v_colors.hpp"
 #include "th01/math/area.hpp"
+#include "th01/hardware/egc.h"
 #include "th01/hardware/palette.h"
 #include "th01/formats/pf.hpp"
 #include "th01/formats/ptn.hpp"
@@ -56,6 +57,32 @@ static inline void ent_free(void) {
 	ptn_free(PTN_SLOT_MISSILE);
 }
 // --------
+
+// Only called while Mima isn't visible anyway. But even apart from that, it
+// barely would have any effect anywhere, as the Mima sprite is blitted to both
+// VRAM pages. This *might* have been supposed to crossfade between various
+// cels? …Nah, why would you do that by blitting whole lines.
+void mima_vertical_sprite_transition_broken(void)
+{
+	if((boss_phase_frame < 10) || ((boss_phase_frame % 4) != 0)) {
+		return;
+	}
+	pixel_t half_h = ((boss_phase_frame - 10) * 2);
+	if(half_h >= (MIMA_H / 2)) {
+		boss_phase_frame = 0;
+		return;
+	}
+	// And besides, *VRAM width*?! This is completely broken.
+	egc_copy_rect_1_to_0_16(
+		ent_still.cur_left, (ent_still.cur_top + half_h), ent_still.vram_w, 8
+	);
+	egc_copy_rect_1_to_0_16(
+		ent_still.cur_left,
+		(ent_still.cur_top + (MIMA_H - 8) - half_h),
+		ent_still.vram_w,
+		8
+	);
+}
 
 void mima_setup(void)
 {

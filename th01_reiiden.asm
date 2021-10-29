@@ -10834,57 +10834,7 @@ loc_1E735:
 		retf
 sub_1E659	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1E739	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		cmp	_boss_phase_frame, 10
-		jl	short loc_1E798
-		mov	ax, _boss_phase_frame
-		mov	bx, 4
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_1E798
-		mov	ax, _boss_phase_frame
-		add	ax, -10
-		add	ax, ax
-		mov	si, ax
-		cmp	si, 80
-		jl	short loc_1E768
-		mov	_boss_phase_frame, 0
-		jmp	short loc_1E798
-; ---------------------------------------------------------------------------
-
-loc_1E768:
-		push	8
-		push	mima_still.BE_vram_w
-		mov	ax, mima_still.BE_cur_top
-		add	ax, si
-		push	ax
-		push	mima_still.BE_cur_left
-		call	_egc_copy_rect_1_to_0_16
-		push	8
-		push	mima_still.BE_vram_w
-		mov	ax, mima_still.BE_cur_top
-		add	ax, 152
-		sub	ax, si
-		push	ax
-		push	mima_still.BE_cur_left
-		call	_egc_copy_rect_1_to_0_16
-		add	sp, 10h
-
-loc_1E798:
-		pop	si
-		pop	bp
-		retf
-sub_1E739	endp
-
+	extern @mima_vertical_sprite_transition_$qv:proc
 	extern @mima_setup$qv:proc
 	extern @mima_free$qv:proc
 	extern @mima_select_for_rank$qmiiiii:proc
@@ -11747,7 +11697,7 @@ loc_1EFE5:
 		cmp	byte_39E25, 0
 		jnz	short loc_1EFF8
 		mov	mima_still.BE_hitbox_orb_inactive, 1
-		call	sub_1E739
+		call	@mima_vertical_sprite_transition_$qv
 		jmp	short loc_1F051
 ; ---------------------------------------------------------------------------
 
