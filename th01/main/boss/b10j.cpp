@@ -9,6 +9,7 @@ extern "C" {
 #include "th01/v_colors.hpp"
 #include "th01/math/area.hpp"
 #include "th01/hardware/egc.h"
+#include "th01/hardware/graph.h"
 #include "th01/hardware/palette.h"
 #include "th01/formats/pf.hpp"
 #include "th01/formats/ptn.hpp"
@@ -26,6 +27,9 @@ extern "C" {
 
 static const pixel_t MIMA_W = 128;
 static const pixel_t MIMA_H = 160;
+
+static const pixel_t MIMA_ANIM_TOP = 48; // relative to the sprite's top edge
+static const pixel_t MIMA_ANIM_H = 64;
 // -----------
 
 #define spreadin_interval	mima_spreadin_interval
@@ -57,6 +61,9 @@ enum anim_cel_t {
 static const main_ptn_slot_t PTN_SLOT_BG_ENT = PTN_SLOT_BOSS_1;
 static const main_ptn_slot_t PTN_SLOT_MISSILE = PTN_SLOT_BOSS_2;
 
+// Three unused background .PTN IDs, for three unused 32×32 animations?
+static const int BG_ENT_OFFSET = 3;
+
 static inline void ent_free(void) {
 	bos_entity_free(0);
 	bos_entity_free(1);
@@ -75,8 +82,68 @@ void mima_put_still_both(void)
 #define mima_put_still_both() nopcall_workaround(mima_put_still_both)
 
 void mima_bg_snap(void)
-;
-#define mima_bg_snap() nopcall_workaround(mima_bg_snap)
+{
+	int ptn_x;
+	int ptn_y;
+	screen_x_t left = ent_still.cur_left;
+	screen_y_t top = ent_still.cur_top;
+	int image = BG_ENT_OFFSET;
+
+	ptn_snap_rect_from_1_8(
+		left, top, MIMA_W, MIMA_H, PTN_SLOT_BG_ENT, image, ptn_x, ptn_y
+	);
+}
+
+void mima_unput(bool16 just_the_animated_part = false)
+{
+	int ptn_x;
+	int image = BG_ENT_OFFSET;
+	screen_x_t left = ent_still.cur_left;
+	screen_y_t top = ent_still.cur_top;
+
+	if(!just_the_animated_part) {
+		int ptn_y;
+		ptn_put_rect_noalpha_8(
+			left, top, MIMA_W, MIMA_H, PTN_SLOT_BG_ENT, image, ptn_x, ptn_y
+		);
+		return;
+	}
+
+	// (The code below is never executed in the original game.)
+
+	// Advance to the .PTN background row that contains the background behind
+	// the animating part of Mima's sprite (i.e., the second one)
+	image = (BG_ENT_OFFSET + ((MIMA_ANIM_TOP / PTN_H) * (MIMA_W / PTN_W)));
+
+	// And since MIMA_ANIM_TOP is only a multiple of 16 and not 32, we have to
+	// first awkwardly unblit a MIMA_W×16 area...
+	for(ptn_x = 0; ptn_x < (MIMA_W / PTN_W); ptn_x++) {
+		ptn_put_quarter_noalpha_8(
+			(left + (0 * PTN_QUARTER_W) + (ptn_x * PTN_W)),
+			(top + MIMA_ANIM_TOP),
+			PTN_ID(PTN_SLOT_BG_ENT, image),
+			(((MIMA_ANIM_TOP % PTN_H) / PTN_QUARTER_H) * 2)
+		);
+		ptn_put_quarter_noalpha_8(
+			(left + (1 * PTN_QUARTER_W) + (ptn_x * PTN_W)),
+			(top + MIMA_ANIM_TOP),
+			PTN_ID(PTN_SLOT_BG_ENT, image),
+			((((MIMA_ANIM_TOP % PTN_H) / PTN_QUARTER_H) * 2) + 1)
+		);
+		image++;
+	}
+
+	// ZUN bug (?): Why is MIMA_ANIM_H assumed to be 48 (16 above + 32 here)?
+	// This might have even worked if the bottom 16 pixels of all [ent_anim]
+	// cels were identical, but they differ between C_CAST and C_METEOR.
+	//
+	// Note that this has nothing to do with Mima's infamous "third arm"
+	// (remember, the game never executes this code), but wouldn't exactly
+	// prevent it from happening either.
+	#define bug_top (top + MIMA_ANIM_TOP + PTN_QUARTER_H)
+	ptn_put_row_noalpha_8(left, bug_top, MIMA_W, PTN_SLOT_BG_ENT, image, ptn_x);
+	#undef bug_top
+}
 
 inline pixel_t spreadin_bottom_cur(void) {
 	return ((spreadin_speed / spreadin_interval) * (boss_phase_frame - 10));

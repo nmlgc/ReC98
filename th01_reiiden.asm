@@ -3572,7 +3572,6 @@ PTN_GRP_GRZ	segment	byte public 'CODE' use16
 	extern _ptn_load:proc
 	extern _ptn_free:proc
 	extern _ptn_put_noalpha_8:proc
-	extern _ptn_put_quarter_noalpha_8:proc
 	extern _grp_palette_load_show_sane:proc
 	extern _grp_palette_load_show:proc
 	extern _grp_put_palette_show:proc
@@ -10526,196 +10525,8 @@ public @mima_put_still_both$qv
 		retf
 @mima_put_still_both$qv	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public @mima_bg_snap$qv
-@mima_bg_snap$qv	proc far
-
-@@image		= word ptr -6
-@@top		= word ptr -4
-@@left		= word ptr -2
-
-		enter	6, 0
-		push	si
-		push	di
-		mov	ax, mima_still.BE_cur_left
-		mov	[bp+@@left], ax
-		mov	ax, mima_still.BE_cur_top
-		mov	[bp+@@top], ax
-		mov	[bp+@@image], 3
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		xor	di, di
-		jmp	short loc_1E578
-; ---------------------------------------------------------------------------
-
-loc_1E549:
-		xor	si, si
-		jmp	short loc_1E572
-; ---------------------------------------------------------------------------
-
-loc_1E54D:
-		mov	ax, [bp+@@image]
-		add	ax, PTN_SLOT_2
-		push	ax
-		mov	ax, di
-		shl	ax, 5
-		add	ax, [bp+@@top]
-		push	ax
-		mov	ax, si
-		shl	ax, 5
-		add	ax, [bp+@@left]
-		push	ax
-		call	_ptn_snap_8
-		add	sp, 6
-		inc	[bp+@@image]
-		inc	si
-
-loc_1E572:
-		cmp	si, 4
-		jl	short loc_1E54D
-		inc	di
-
-loc_1E578:
-		cmp	di, 5
-		jl	short loc_1E549
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		pop	di
-		pop	si
-		leave
-		retf
-@mima_bg_snap$qv	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1E589	proc far
-
-var_6		= word ptr -6
-@@top		= word ptr -4
-@@left		= word ptr -2
-arg_0		= word ptr  6
-
-		enter	6, 0
-		push	si
-		push	di
-		mov	di, 3
-		mov	ax, mima_still.BE_cur_left
-		mov	[bp+@@left], ax
-		mov	ax, mima_still.BE_cur_top
-		mov	[bp+@@top], ax
-		cmp	[bp+arg_0], 0
-		jnz	short loc_1E5E1
-		mov	[bp+var_6], 0
-		jmp	short loc_1E5D9
-; ---------------------------------------------------------------------------
-
-loc_1E5AB:
-		xor	si, si
-		jmp	short loc_1E5D1
-; ---------------------------------------------------------------------------
-
-loc_1E5AF:
-		lea	ax, [PTN_SLOT_2+di]
-		push	ax
-		mov	ax, [bp+var_6]
-		shl	ax, 5
-		add	ax, [bp+@@top]
-		push	ax
-		mov	ax, si
-		shl	ax, 5
-		add	ax, [bp+@@left]
-		push	ax
-		call	_ptn_put_noalpha_8
-		add	sp, 6
-		inc	di
-		inc	si
-
-loc_1E5D1:
-		cmp	si, 4
-		jl	short loc_1E5AF
-		inc	[bp+var_6]
-
-loc_1E5D9:
-		cmp	[bp+var_6], 5
-		jl	short loc_1E5AB
-		jmp	short loc_1E655
-; ---------------------------------------------------------------------------
-
-loc_1E5E1:
-		mov	di, 7
-		xor	si, si
-		jmp	short loc_1E628
-; ---------------------------------------------------------------------------
-
-loc_1E5E8:
-		push	2
-		lea	ax, [PTN_SLOT_2+di]
-		push	ax
-		mov	ax, [bp+@@top]
-		add	ax, 48
-		push	ax
-		mov	ax, si
-		shl	ax, 5
-		add	ax, [bp+@@left]
-		push	ax
-		call	_ptn_put_quarter_noalpha_8
-		push	3
-		lea	ax, [di+PTN_SLOT_2]
-		push	ax
-		mov	ax, [bp+@@top]
-		add	ax, 48
-		push	ax
-		mov	ax, si
-		shl	ax, 5
-		add	ax, [bp+@@left]
-		add	ax, 10h
-		push	ax
-		call	_ptn_put_quarter_noalpha_8
-		add	sp, 10h
-		inc	di
-		inc	si
-
-loc_1E628:
-		cmp	si, 4
-		jl	short loc_1E5E8
-		xor	si, si
-		jmp	short loc_1E650
-; ---------------------------------------------------------------------------
-
-loc_1E631:
-		lea	ax, [PTN_SLOT_2+di]
-		push	ax
-		mov	ax, [bp+@@top]
-		add	ax, 64
-		push	ax
-		mov	ax, si
-		shl	ax, 5
-		add	ax, [bp+@@left]
-		push	ax
-		call	_ptn_put_noalpha_8
-		add	sp, 6
-		inc	di
-		inc	si
-
-loc_1E650:
-		cmp	si, 4
-		jl	short loc_1E631
-
-loc_1E655:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_1E589	endp
-
+	extern @mima_bg_snap$qv:proc
+	extern @mima_unput$qi:proc
 	extern @spreadin_unput_and_put$qii:proc
 	extern @mima_vertical_sprite_transition_$qv:proc
 	extern @mima_setup$qv:proc
@@ -11565,12 +11376,10 @@ loc_1EFB1:
 		jnz	short loc_1EFE5
 		push	1
 		call	_graph_accesspage_func
-		push	0
-		call	sub_1E589
+		call	@mima_unput$qi stdcall, 0
 		push	0
 		call	_graph_accesspage_func
-		push	0
-		call	sub_1E589
+		call	@mima_unput$qi stdcall, 0
 		add	sp, 8
 		mov	byte_35B7A, 0
 		mov	byte_39E25, 0
@@ -11633,12 +11442,10 @@ loc_1F051:
 		jz	short loc_1F087
 		push	1
 		call	_graph_accesspage_func
-		push	0
-		call	sub_1E589
+		call	@mima_unput$qi stdcall, 0
 		push	0
 		call	_graph_accesspage_func
-		push	0
-		call	sub_1E589
+		call	@mima_unput$qi stdcall, 0
 		add	sp, 8
 
 loc_1F087:
@@ -12849,12 +12656,10 @@ loc_1FBAC:
 		jnz	loc_1FDCF
 		push	1
 		call	_graph_accesspage_func
-		push	0
-		call	sub_1E589
+		call	@mima_unput$qi stdcall, 0
 		push	0
 		call	_graph_accesspage_func
-		push	0
-		call	sub_1E589
+		call	@mima_unput$qi stdcall, 0
 		add	sp, 8
 		mov	_mima_spreadin_interval, 4
 		mov	_mima_spreadin_speed, 8
@@ -12963,8 +12768,7 @@ loc_1FCF7:
 		jg	loc_1FDCF
 		push	1
 		call	_graph_accesspage_func
-		push	0
-		call	sub_1E589
+		call	@mima_unput$qi stdcall, 0
 		push	0
 		call	_graph_accesspage_func
 		call	_mdrv2_bgm_fade_out_nonblock
