@@ -58,11 +58,9 @@ int getkanji(FILE *fp)
 
 void grp_palette_set_all(const Palette4& pal)
 {
-	for(int col = 0; col < COLOR_COUNT; col++) {
-		for(int comp = 0; comp < COMPONENT_COUNT; comp++) {
-			grp_palette[col].v[comp] = pal[col].v[comp];
-		}
-	}
+	int col;
+	int comp;
+	palette_copy(grp_palette, pal, col, comp);
 }
 
 int grp_put_palette_show(const char *fn)

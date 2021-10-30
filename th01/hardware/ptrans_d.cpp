@@ -75,17 +75,15 @@ void pagetrans_diagonal_8x8_with_palette(
 			: (tip_top + INTERLEAVE_H);
 
 		if((frame % (FRAME_COUNT / COLOR_COUNT)) == 0) {
-			for(col = 0; col < COLOR_COUNT; col++) {
-				// Not identical to the ramping loop in z_palette_fade_from()!
-				for(comp = 0; comp < COMPONENT_COUNT; comp++) {
-					if(pal_cur[col].v[comp] != pal_target[col].v[comp]) {
-						pal_cur.colors[col].v[comp] +=
-							(pal_cur[col].v[comp] > pal_target[col].v[comp])
-							? -1
-							:  1;
-					}
+			// Not identical to the ramping loop in z_palette_fade_from()!
+			palette_foreach(col, comp, {
+				if(pal_cur[col].v[comp] != pal_target[col].v[comp]) {
+					pal_cur.colors[col].v[comp] +=
+						(pal_cur[col].v[comp] > pal_target[col].v[comp])
+						? -1
+						:  1;
 				}
-			}
+			});
 			z_palette_set_all_show(pal_cur);
 		}
 

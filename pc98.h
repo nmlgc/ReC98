@@ -117,6 +117,25 @@ typedef int8_t uint4_t;
 
 	typedef RGB<uint4_t, 16> RGB4;
 	typedef Palette<RGB4> Palette4;
+
+	#define palette_foreach(tmp_col, tmp_comp, func) { \
+		for(tmp_col = 0; tmp_col < COLOR_COUNT; tmp_col++) { \
+			for(tmp_comp = 0; tmp_comp < COMPONENT_COUNT; tmp_comp++) { \
+				func \
+			} \
+		} \
+	}
+
+	// Sets all components of all colors to the given grayscale [value].
+	#define palette_set_grayscale(dst, value, tmp_col, tmp_comp) \
+		palette_foreach(tmp_col, tmp_comp, { \
+			dst[tmp_col].v[tmp_comp] = value; \
+		})
+
+	#define palette_copy(dst, src, tmp_col, tmp_comp) \
+		palette_foreach(tmp_col, tmp_comp, { \
+			dst[col].v[comp] = src[col].v[comp]; \
+		})
 #endif
 /// --------
 

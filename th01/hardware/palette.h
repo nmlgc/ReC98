@@ -44,19 +44,16 @@ void z_palette_white_in(void);
 void z_palette_black_out(void);
 void z_palette_white_out(void);
 
-#define z_Palettes_set_func_and_show(tmp_col, tmp_comp, func) \
-	for(tmp_col = 0; tmp_col < COLOR_COUNT; tmp_col++) { \
-		for(tmp_comp = 0; tmp_comp < COMPONENT_COUNT; tmp_comp++) { \
-			func \
-		} \
-	} \
-	z_palette_set_all_show(z_Palettes);
+#define z_Palettes_set_func_and_show(tmp_col, tmp_comp, func) { \
+	palette_foreach(tmp_col, tmp_comp, func); \
+	z_palette_set_all_show(z_Palettes); \
+}
 
 // Sets all colors in both the hardware palette and z_Palettes to #000.
-#define z_palette_set_black(tmp_col, tmp_comp) \
-	z_Palettes_set_func_and_show(tmp_col, tmp_comp, { \
-		z_Palettes[tmp_col].v[tmp_comp] = 0; \
-	})
+#define z_palette_set_black(tmp_col, tmp_comp) { \
+	palette_set_grayscale(z_Palettes, 0, tmp_col, tmp_comp); \
+	z_palette_set_all_show(z_Palettes); \
+}
 
 // Performs a single black-out step.
 #define z_palette_black_out_step(tmp_col, tmp_comp) \
