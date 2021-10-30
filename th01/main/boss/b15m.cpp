@@ -93,18 +93,46 @@ static inline void ent_free(void) {
 }
 // --------
 
-// TODO: Remove once all functions are part of this translation unit
-#define nopcall_workaround(func, v) __asm { \
-	push v; push cs; call near ptr func; pop cx; \
+#define bg_func_init(left, top, entity_src) { \
+	ent_attack_sync_with_still_or_wave(); \
+	if(entity_src == 1) { \
+		left = ent_still_or_wave.cur_left; \
+		top = ent_still_or_wave.cur_top; \
+	} else if(entity_src == 2) { \
+		left = ent_attack.cur_left; \
+		top = ent_attack.cur_top; \
+	} \
 }
 
 void girl_bg_snap(int unncessary_parameter_that_still_needs_to_be_1_or_2)
-;
-#define girl_bg_snap(v) nopcall_workaround(girl_bg_snap, v)
+{
+	int ptn_x;
+	int ptn_y;
+	screen_x_t left;
+	screen_y_t top;
+	int image;
+
+	bg_func_init(left, top, unncessary_parameter_that_still_needs_to_be_1_or_2);
+
+	image = 0;
+	ptn_snap_rect_from_1_8(
+		left, top, GIRL_W, GIRL_H, PTN_SLOT_BG_ENT, image, ptn_x, ptn_y
+	);
+}
 
 void girl_bg_put(int unncessary_parameter_that_still_needs_to_be_1_or_2)
-;
-#define girl_bg_put(v) nopcall_workaround(girl_bg_put, v)
+{
+	int ptn_x;
+	int ptn_y;
+	screen_x_t left;
+	screen_y_t top;
+	int image = 0;
+
+	bg_func_init(left, top, unncessary_parameter_that_still_needs_to_be_1_or_2);
+	ptn_put_rect_noalpha_8(
+		left, top, GIRL_W, GIRL_H, PTN_SLOT_BG_ENT, image, ptn_x, ptn_y
+	);
+}
 
 void elis_load(void)
 {
@@ -188,7 +216,8 @@ bool16 wave_teleport(screen_x_t target_left, screen_y_t target_top)
 		ent_still_or_wave.hitbox_orb_inactive = true;
 	} else if(boss_phase_frame == 36) {
 		ent_still_or_wave.hitbox_orb_inactive = true;
-		goto put_wave_3;
+		girl_bg_put(1);
+		ent_still_or_wave.move_lock_and_put_image_8(C_WAVE_3);
 	} else if(boss_phase_frame == 44) {
 		ent_still_or_wave.hitbox_orb_inactive = true;
 		egc_copy_rect_1_to_0_16(
@@ -201,7 +230,6 @@ bool16 wave_teleport(screen_x_t target_left, screen_y_t target_top)
 		ent_still_or_wave.hitbox_orb_inactive = true;
 		ent_still_or_wave.pos_cur_set(target_left, target_top);
 		girl_bg_snap(1);
-	put_wave_3:
 		girl_bg_put(1); // unnecessary
 		ent_still_or_wave.move_lock_and_put_image_8(C_WAVE_3);
 	} else if(boss_phase_frame == 60) {
