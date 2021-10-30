@@ -18395,8 +18395,8 @@ PTN_SLOT_MISSILE = PTN_SLOT_BOSS_2
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_24E33	proc far
+public @girl_bg_snap$qi
+@girl_bg_snap$qi	proc far
 
 var_A		= word ptr -0Ah
 var_8		= word ptr -8
@@ -18479,14 +18479,14 @@ loc_24EB1:
 		pop	si
 		leave
 		retf
-sub_24E33	endp
+@girl_bg_snap$qi	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_24EC2	proc far
+public @girl_bg_put$qi
+@girl_bg_put$qi	proc far
 
 var_A		= word ptr -0Ah
 var_8		= word ptr -8
@@ -18563,7 +18563,7 @@ loc_24F38:
 		pop	si
 		leave
 		retf
-sub_24EC2	endp
+@girl_bg_put$qi	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -18688,8 +18688,7 @@ arg_2		= word ptr  8
 		jnz	short loc_25150
 		push	1
 		call	_graph_accesspage_func
-		push	1
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 1
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 6
@@ -18705,8 +18704,7 @@ loc_25132:
 loc_25150:
 		cmp	_boss_phase_frame, 28
 		jnz	short loc_2516C
-		push	1
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 1
 		pop	cx
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		mov	elis_still_or_wave.BE_bos_image, 3
@@ -18739,13 +18737,11 @@ loc_2519E:
 		mov	elis_still_or_wave.BE_cur_left, ax
 		mov	ax, [bp+var_6]
 		mov	elis_still_or_wave.BE_cur_top, ax
-		push	1
-		call	sub_24E33
+		call	@girl_bg_snap$qi stdcall, 1
 		pop	cx
 
 loc_251C7:
-		push	1
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 1
 		pop	cx
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		mov	elis_still_or_wave.BE_bos_image, 4
@@ -18756,8 +18752,7 @@ loc_251DD:
 		cmp	_boss_phase_frame, 60
 		jnz	short loc_251FF
 		mov	elis_still_or_wave.BE_hitbox_orb_inactive, 1
-		push	1
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 1
 		pop	cx
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		mov	elis_still_or_wave.BE_bos_image, 3
@@ -18768,8 +18763,7 @@ loc_251FF:
 		cmp	_boss_phase_frame, 68
 		jnz	short loc_25221
 		mov	elis_still_or_wave.BE_hitbox_orb_inactive, 1
-		push	1
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 1
 		pop	cx
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		mov	elis_still_or_wave.BE_bos_image, 2
@@ -18950,8 +18944,7 @@ var_8		= qword	ptr -8
 		mov	word_3A6E5, dx
 		push	1
 		call	_graph_accesspage_func
-		push	1
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 1
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		mov	elis_still_or_wave.BE_bos_image, 1
 		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
@@ -19068,8 +19061,7 @@ loc_25556:
 		jnz	short loc_255B4
 		push	1
 		call	_graph_accesspage_func
-		push	1
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 1
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		mov	elis_still_or_wave.BE_bos_image, 0
 		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
@@ -19207,8 +19199,7 @@ var_2		= word ptr -2
 		push	1
 		call	_graph_accesspage_func
 		pop	cx
-		push	1
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 1
 		pop	cx
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		mov	elis_still_or_wave.BE_bos_image, 1
@@ -19417,8 +19408,7 @@ loc_258D4:
 		jnz	short loc_25947
 		push	1
 		call	_graph_accesspage_func
-		push	1
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 1
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		mov	elis_still_or_wave.BE_bos_image, 1
 		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
@@ -19548,15 +19538,13 @@ loc_25977:
 		mov	word_3A6FC, 1
 		push	1
 		call	_graph_accesspage_func
-		push	1
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 1
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		mov	elis_still_or_wave.BE_bos_image, 0
 		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
 		push	0
 		call	_graph_accesspage_func
-		push	1
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 1
 		add	sp, 32h
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		mov	elis_still_or_wave.BE_bos_image, 0
@@ -19952,15 +19940,13 @@ loc_25E3D:
 		jnz	short loc_25EB1
 		push	1
 		call	_graph_accesspage_func
-		push	2
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 2
 		mov	elis_attack.BE_move_lock_frame, 0
 		mov	elis_attack.BE_bos_image, 0
 		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 		push	0
 		call	_graph_accesspage_func
-		push	2
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 2
 		mov	elis_attack.BE_move_lock_frame, 0
 		mov	elis_attack.BE_bos_image, 0
 		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
@@ -20201,15 +20187,13 @@ sub_260DC	proc far
 		jnz	short loc_26136
 		push	1
 		call	_graph_accesspage_func
-		push	2
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 2
 		mov	elis_attack.BE_move_lock_frame, 0
 		mov	elis_attack.BE_bos_image, 1
 		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 		push	0
 		call	_graph_accesspage_func
-		push	2
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 2
 		add	sp, 14h
 		mov	elis_attack.BE_move_lock_frame, 0
 		mov	elis_attack.BE_bos_image, 1
@@ -20418,8 +20402,7 @@ loc_262FB:
 		mov	_boss_phase_frame, 0
 		push	1
 		call	_graph_accesspage_func
-		push	2
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 2
 		add	sp, 4
 		xor	ax, ax
 		jmp	short loc_2631F
@@ -20454,15 +20437,13 @@ sub_26322	proc far
 		jnz	short loc_2637D
 		push	1
 		call	_graph_accesspage_func
-		push	2
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 2
 		mov	elis_attack.BE_move_lock_frame, 0
 		mov	elis_attack.BE_bos_image, 1
 		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 		push	0
 		call	_graph_accesspage_func
-		push	2
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 2
 		add	sp, 14h
 		mov	elis_attack.BE_move_lock_frame, 0
 		mov	elis_attack.BE_bos_image, 1
@@ -20755,15 +20736,13 @@ var_2		= word ptr -2
 		jnz	short loc_26678
 		push	1
 		call	_graph_accesspage_func
-		push	2
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 2
 		mov	elis_attack.BE_move_lock_frame, 0
 		mov	elis_attack.BE_bos_image, 1
 		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 		push	0
 		call	_graph_accesspage_func
-		push	2
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 2
 		add	sp, 14h
 		mov	elis_attack.BE_move_lock_frame, 0
 		mov	elis_attack.BE_bos_image, 1
@@ -21105,15 +21084,13 @@ var_2		= word ptr -2
 		jnz	short loc_269A5
 		push	1
 		call	_graph_accesspage_func
-		push	2
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 2
 		mov	elis_attack.BE_move_lock_frame, 0
 		mov	elis_attack.BE_bos_image, 0
 		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 		push	0
 		call	_graph_accesspage_func
-		push	2
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 2
 		mov	elis_attack.BE_move_lock_frame, 0
 		mov	elis_attack.BE_bos_image, 0
 		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
@@ -21253,12 +21230,10 @@ loc_26ABF:
 		mov	elis_bat.BE_bos_image, 0
 		push	1
 		call	_graph_accesspage_func
-		push	2
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 2
 		push	0
 		call	_graph_accesspage_func
-		push	2
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 2
 		call	_z_vsync_wait_and_scrollup stdcall, RES_Y
 		add	sp, 0Ah
 		mov	_boss_phase_frame, 0
@@ -21442,19 +21417,16 @@ loc_26C85:
 		mov	elis_still_or_wave.BE_cur_left, ax
 		mov	ax, [bp+var_6]
 		mov	elis_still_or_wave.BE_cur_top, ax
-		push	1
-		call	sub_24E33
+		call	@girl_bg_snap$qi stdcall, 1
 		push	1
 		call	_graph_accesspage_func
-		push	2
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 2
 		mov	elis_attack.BE_move_lock_frame, 0
 		mov	elis_attack.BE_bos_image, 1
 		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 		push	0
 		call	_graph_accesspage_func
-		push	2
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 2
 		mov	elis_attack.BE_move_lock_frame, 0
 		mov	elis_attack.BE_bos_image, 1
 		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
@@ -21780,15 +21752,13 @@ sub_26F4F	proc far
 		jnz	short loc_26FAA
 		push	1
 		call	_graph_accesspage_func
-		push	2
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 2
 		mov	elis_attack.BE_move_lock_frame, 0
 		mov	elis_attack.BE_bos_image, 1
 		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 		push	0
 		call	_graph_accesspage_func
-		push	2
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 2
 		add	sp, 14h
 		mov	elis_attack.BE_move_lock_frame, 0
 		mov	elis_attack.BE_bos_image, 1
@@ -22062,15 +22032,13 @@ loc_27201:
 		jnz	short loc_27257
 		push	1
 		call	_graph_accesspage_func
-		push	2
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 2
 		mov	elis_attack.BE_move_lock_frame, 0
 		mov	elis_attack.BE_bos_image, 1
 		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 		push	0
 		call	_graph_accesspage_func
-		push	2
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 2
 		add	sp, 14h
 		mov	elis_attack.BE_move_lock_frame, 0
 		mov	elis_attack.BE_bos_image, 1
@@ -22204,15 +22172,13 @@ loc_27317:
 		mov	word_3A76B, 1
 		push	1
 		call	_graph_accesspage_func
-		push	1
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 1
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		mov	elis_still_or_wave.BE_bos_image, 0
 		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
 		push	0
 		call	_graph_accesspage_func
-		push	1
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 1
 		add	sp, 32h
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		mov	elis_still_or_wave.BE_bos_image, 0
@@ -22404,15 +22370,13 @@ sub_275F4	proc far
 		jnz	short loc_2764F
 		push	1
 		call	_graph_accesspage_func
-		push	2
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 2
 		mov	elis_attack.BE_move_lock_frame, 0
 		mov	elis_attack.BE_bos_image, 1
 		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
 		push	0
 		call	_graph_accesspage_func
-		push	2
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 2
 		add	sp, 14h
 		mov	elis_attack.BE_move_lock_frame, 0
 		mov	elis_attack.BE_bos_image, 1
@@ -22447,8 +22411,7 @@ loc_276AD:
 		jnz	short loc_27729
 		push	1
 		call	_graph_accesspage_func
-		push	1
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 1
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		mov	elis_still_or_wave.BE_bos_image, 1
 		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
@@ -22574,15 +22537,13 @@ loc_27759:
 		mov	word_3A771, 1
 		push	1
 		call	_graph_accesspage_func
-		push	1
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 1
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		mov	elis_still_or_wave.BE_bos_image, 0
 		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
 		push	0
 		call	_graph_accesspage_func
-		push	1
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 1
 		add	sp, 32h
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		mov	elis_still_or_wave.BE_bos_image, 0
@@ -23038,8 +22999,7 @@ var_4		= word ptr -4
 		cmp	_boss_phase, 0
 		jnz	loc_281CF
 		call	@boss_palette_snap$qv
-		push	1
-		call	sub_24E33
+		call	@girl_bg_snap$qi stdcall, 1
 		pop	cx
 		mov	[bp+var_9], 0
 		mov	_elis_invincibility_frame, 0
@@ -23466,8 +23426,7 @@ loc_280D6:
 loc_28103:
 		cmp	_elis_invincibility_frame, 128
 		jnz	short loc_28130
-		push	1
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 1
 		call	@CBossEntity@wave_put$xqiiiiii stdcall, offset elis_still_or_wave, ds, large [dword ptr elis_still_or_wave.BE_cur_left], large 0 or (3 shl 16), large 8 or (64 shl 16)
 		add	sp, 12h
 		jmp	short loc_28158
@@ -23933,8 +23892,7 @@ loc_285A5:
 		jg	short loc_28655
 		call	_mdrv2_bgm_fade_out_nonblock
 		call	@CPellets@unput_and_reset$qv stdcall, offset _Pellets, ds
-		push	1
-		call	sub_24EC2
+		call	@girl_bg_put$qi stdcall, 1
 		call	@CMissiles@reset$qv stdcall, offset _Missiles, ds
 		add	sp, 0Ah
 		xor	si, si
