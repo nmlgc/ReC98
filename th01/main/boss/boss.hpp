@@ -47,6 +47,8 @@ void boss_hit_update_and_render(
 // -----------------
 
 // Makai
+void elis_free(void);
+
 void sariel_entrance(int8_t unused);
 void sariel_load_and_init(void);
 

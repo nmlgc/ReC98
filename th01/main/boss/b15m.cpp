@@ -11,6 +11,7 @@ extern "C" {
 #include "th01/hardware/egc.h"
 #include "th01/hardware/graph.h"
 #include "th01/formats/pf.hpp"
+#include "th01/formats/grc.hpp"
 #include "th01/formats/ptn.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/vars.hpp"
@@ -67,6 +68,15 @@ inline void ent_attack_sync_with_still_or_wave(void) {
 
 static const main_ptn_slot_t PTN_SLOT_BG_ENT = PTN_SLOT_BOSS_1;
 static const main_ptn_slot_t PTN_SLOT_MISSILE = PTN_SLOT_BOSS_2;
+
+static inline void ent_free(void) {
+	bos_entity_free(0);
+	bos_entity_free(1);
+	bos_entity_free(2);
+	grc_free(GRC_SLOT_BOSS_1);
+	ptn_free(PTN_SLOT_BG_ENT);
+	ptn_free(PTN_SLOT_MISSILE);
+}
 // --------
 
 // TODO: Remove once all functions are part of this translation unit
@@ -81,6 +91,11 @@ void girl_bg_snap(int unncessary_parameter_that_still_needs_to_be_1_or_2)
 void girl_bg_put(int unncessary_parameter_that_still_needs_to_be_1_or_2)
 ;
 #define girl_bg_put(v) nopcall_workaround(girl_bg_put, v)
+
+void elis_free(void)
+{
+	ent_free();
+}
 
 bool16 wave_teleport(screen_x_t target_left, screen_y_t target_top)
 {

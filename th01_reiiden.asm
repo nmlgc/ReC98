@@ -2235,7 +2235,7 @@ loc_D508:
 ; ---------------------------------------------------------------------------
 
 loc_D50F:
-		call	_elis_free
+		call	@elis_free$qv
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -18647,25 +18647,7 @@ loc_250B3:
 		retf
 sub_24FE0	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public _elis_free
-_elis_free	proc far
-		push	bp
-		mov	bp, sp
-		call	_bos_entity_free stdcall, 0
-		call	_bos_entity_free stdcall, 1
-		call	_bos_entity_free stdcall, 2
-		call	_grc_free stdcall, 0
-		call	_ptn_free stdcall, PTN_SLOT_BG_ENT
-		call	_ptn_free stdcall, PTN_SLOT_MISSILE
-		add	sp, 0Ch
-		pop	bp
-		retf
-_elis_free	endp
-
+	extern @elis_free$qv:proc
 	extern @wave_teleport$qii:proc
 	extern @elis_select_for_rank$qmiiiii:proc
 main_35_TEXT	ends
