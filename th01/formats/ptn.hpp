@@ -168,4 +168,50 @@ void ptn_put_quarter_8(
 // Displays the given [quarter] of the given [ptn_id] at (left, top).
 void ptn_put_quarter(screen_x_t left, vram_y_t top, int ptn_id, int quarter);
 // ------------
+
+// Rectangular access
+// ------------------
+
+// Calls [func] for every .PTN along a (⌈w/32⌉*32 × 32) row of successive
+// sprites starting at (⌊left/8⌋*8, top), and [image_first] in [slot].
+#define ptn_row(func, left, top, w, slot, image_first, tmp_ptn_x) { \
+	for(tmp_ptn_x = 0; tmp_ptn_x < (w / PTN_W); tmp_ptn_x++) { \
+		func((left + (tmp_ptn_x * PTN_W)), top, PTN_ID(slot, image_first)); \
+		image_first++; \
+	} \
+}
+
+// Overwrites the 4 color planes of the successive .PTN sprites starting at
+// [image_first] in [slot] with the current content of the
+// (⌈w/32⌉*32 × ⌈h/32⌉*32) rectangle starting at (⌊left/8⌋*8, top) on VRAM page
+// 1.
+#define ptn_snap_rect_from_1_8( \
+	left, top, w, h, slot, image_first, tmp_ptn_x, tmp_ptn_y \
+) { \
+	graph_accesspage_func(1); \
+	for(tmp_ptn_y = 0; tmp_ptn_y < (h / PTN_H); tmp_ptn_y++) { \
+		ptn_row(ptn_snap_8, \
+			left, (top + (tmp_ptn_y * PTN_H)), w, slot, image_first, tmp_ptn_x \
+		); \
+	} \
+	graph_accesspage_func(0); \
+}
+
+// Blits a single (⌈w/32⌉*32 × 32) row of successive .PTN sprites, starting at
+// [image_first] in [slot], to (⌊left/8⌋*8, top).
+#define ptn_put_row_noalpha_8(left, top, w, slot, image_first, tmp_ptn_x) \
+	ptn_row(ptn_put_noalpha_8, left, top, w, slot, image_first, tmp_ptn_x)
+
+// Blits a (⌈w/32⌉*32 × ⌈h/32⌉*32) rectangle of successive .PTN sprites,
+// starting at [image_first] in [slot], to (⌊left/8⌋*8, top).
+#define ptn_put_rect_noalpha_8( \
+	left, top, w, h, slot, image_first, tmp_ptn_x, tmp_ptn_y \
+) { \
+	for(tmp_ptn_y = 0; tmp_ptn_y < (h / PTN_H); tmp_ptn_y++) { \
+		ptn_put_row_noalpha_8( \
+			left, (top + (tmp_ptn_y * PTN_H)), w, slot, image_first, tmp_ptn_x \
+		); \
+	} \
+}
+// ------------------
 /// -----------------------------------------
