@@ -57,6 +57,7 @@ void sariel_entrance(int8_t unused);
 void sariel_load_and_init(void);
 
 // Jigoku
+void mima_load(void);
 void mima_free(void);
 
 void konngara_load_and_entrance(int8_t unused);

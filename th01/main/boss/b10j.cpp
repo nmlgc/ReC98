@@ -8,18 +8,25 @@ extern "C" {
 #include "planar.h"
 #include "th01/v_colors.hpp"
 #include "th01/math/area.hpp"
+#include "th01/math/subpixel.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/palette.h"
+#include "th01/formats/grp.h"
 #include "th01/formats/pf.hpp"
 #include "th01/formats/ptn.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/vars.hpp"
 #include "th01/main/boss/entity_a.hpp"
 }
+#include "th01/shiftjis/fns.hpp"
+#undef MISSILE_FN
+#define MISSILE_FN boss3_m_ptn_0
+extern const char MISSILE_FN[];
 #include "th01/main/particle.hpp"
 #include "th01/main/boss/boss.hpp"
 #include "th01/main/boss/palette.hpp"
+#include "th01/main/bullet/missile.hpp"
 #include "th01/main/hud/hp.hpp"
 
 // Coordinates
@@ -77,6 +84,30 @@ static inline void ent_free(void) {
 	ptn_free(PTN_SLOT_MISSILE);
 }
 // --------
+
+void mima_load(void)
+{
+	extern const char boss3_1_bos[];
+	extern const char boss3_2_bos[];
+	extern const char boss3_grp_0[];
+	extern const char boss5_gr_grc[];
+
+	int col;
+	int comp;
+
+	ent_still.load(boss3_1_bos, 0);
+	ent_anim.load(boss3_2_bos, 1);
+	grp_palette_load_show(boss3_grp_0);
+	palette_copy(boss_post_defeat_palette, z_Palettes, col, comp);
+	void mima_setup(void);
+	mima_setup();
+	ptn_new(
+		PTN_SLOT_BG_ENT,
+		(((MIMA_W / PTN_W) * (MIMA_H / PTN_H)) + BG_ENT_OFFSET + 1)
+	);
+	Missiles.load(PTN_SLOT_MISSILE);
+	Missiles.reset();
+}
 
 inline void ent_anim_sync_with_still(void) {
 	ent_anim.pos_cur_set(

@@ -2656,7 +2656,7 @@ loc_D8D9:
 		pushd	[bp+s1]	; dest
 		call	_strcpy
 		add	sp, 8
-		call	_mima_load
+		call	@mima_load$qv
 		jmp	short loc_D96D
 ; ---------------------------------------------------------------------------
 
@@ -10337,62 +10337,8 @@ main_29_TEXT	segment	byte public 'CODE' use16
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 mima_still	equ <boss_entity_0>
-mima_animated	equ <boss_entity_1>
 
-PTN_SLOT_BG_ENT = PTN_SLOT_BOSS_1
-PTN_SLOT_MISSILE = PTN_SLOT_BOSS_2
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public _mima_load
-_mima_load	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		CBossEntity__load	mima_still, 0, aBoss3_1_bos
-		CBossEntity__load	mima_animated, 1, aBoss3_2_bos
-		call	_grp_palette_load_show stdcall, offset aBoss3_grp_0, ds ; "boss3.grp"
-		add	sp, 18h
-		xor	si, si
-		jmp	short loc_1E3A2
-; ---------------------------------------------------------------------------
-
-loc_1E385:
-		xor	di, di
-		jmp	short loc_1E39C
-; ---------------------------------------------------------------------------
-
-loc_1E389:
-		mov	bx, si
-		imul	bx, size rgb_t
-		mov	al, _z_Palettes[bx+di]
-		mov	bx, si
-		imul	bx, size rgb_t
-		mov	byte ptr _boss_post_defeat_palette[bx+di], al
-		inc	di
-
-loc_1E39C:
-		cmp	di, size rgb_t
-		jl	short loc_1E389
-		inc	si
-
-loc_1E3A2:
-		cmp	si, COLOR_COUNT
-		jl	short loc_1E385
-		nopcall	@mima_setup$qv
-		call	_ptn_new stdcall, (24 shl 16) or PTN_SLOT_BG_ENT
-		call	_ptn_load stdcall, PTN_SLOT_MISSILE, offset aBoss3_m_ptn_0, ds ;	"boss3_m.ptn"
-		mov	_Missiles.MISSILE_ptn_id_base, (PTN_SLOT_MISSILE * PTN_IMAGES_PER_SLOT)
-		call	@CMissiles@reset$qv stdcall, offset _Missiles, ds
-		add	sp, 0Eh
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_mima_load	endp
-
+	extern @mima_load$qv:proc
 	extern @meteor_put$qv:proc
 	extern @mima_put_cast_both$qv:proc
 	extern @meteor_activate$qv:proc
@@ -30803,11 +30749,12 @@ _mima_spreadin_speed   	db 8
 		db 0E0h
 public _mima_invincibility_flash_colors
 _mima_invincibility_flash_colors	db 3, 9
-aBoss3_1_bos	db 'boss3_1.bos',0
-aBoss3_2_bos	db 'boss3_2.bos',0
-aBoss3_grp_0	db 'boss3.grp',0
-aBoss3_m_ptn_0	db 'boss3_m.ptn',0
-		db 0
+public _boss3_1_bos, _boss3_2_bos, _boss3_grp_0, _boss3_m_ptn_0
+_boss3_1_bos	db 'boss3_1.bos',0
+_boss3_2_bos	db 'boss3_2.bos',0
+_boss3_grp_0	db 'boss3.grp',0
+_boss3_m_ptn_0	db 'boss3_m.ptn',0
+	evendata
 public _card_flip_cycle
 _card_flip_cycle	db 0
 	evendata
