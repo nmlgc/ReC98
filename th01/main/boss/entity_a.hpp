@@ -58,10 +58,33 @@ public:
 	/// --------
 	// All functions with an [image] parameter use that image from [bos_slot],
 	// *not* the [bos_image] of this instance.
+	// Well, OK, except for the next one, with...
+
+	// Sets [bos_image] and blits the image to the entity's current position.
+	// Additionally clips at the bottom edge of VRAM.
+	void set_image_unput_and_put_8(int image) {
+		bos_image = image;
+		unput_and_put_8(cur_left, cur_top, bos_image);
+	}
+
 	// Like CPlayerAnim, all of these also make an attempt at clipping the
 	// sprite at the left and right edges of VRAM. This only really works if
 	// [left] is a multiple of 16 and inside the [-RES_X, RES_X[ range,
 	// though, and is pretty much broken otherwise.
+
+	// Blits [image] to the entity's current position. Additionally clips at
+	// the bottom edge of VRAM.
+	// (This function really shouldn't exist, as it can introduce a disparity
+	// between [bos_image] and the one on screen.)
+	void put_8(int image) const {
+		put_8(cur_left, cur_top, image);
+	}
+
+	// Blits [bos_image] to the entity's current position.
+	// Additionally clips at the bottom edge of VRAM.
+	void put_8(void) const {
+		put_8(cur_left, cur_top, bos_image);
+	}
 
 	// Blits [image] to (⌊left/8⌋*8, top).
 	// Additionally clips at the bottom edge of VRAM.

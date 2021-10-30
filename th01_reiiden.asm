@@ -10393,138 +10393,9 @@ loc_1E3A2:
 		retf
 _mima_load	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1E3D7	proc far
-
-var_6		= word ptr -6
-@@left		= word ptr -4
-@@top		= word ptr -2
-
-		enter	6, 0
-		cmp	byte_35B7A, 0
-		jz	short locret_1E42F
-		mov	ax, _boss_phase_frame
-		mov	bx, 8
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short locret_1E42F
-		mov	ax, mima_still.BE_cur_top
-		add	ax, 48
-		mov	[bp+@@top], ax
-		mov	ax, mima_still.BE_cur_left
-		mov	[bp+@@left], ax
-		mov	mima_animated.BE_cur_left, ax
-		mov	ax, [bp+@@top]
-		mov	mima_animated.BE_cur_top, ax
-		mov	ax, _boss_phase_frame
-		cwd
-		idiv	bx
-		mov	bx, 4
-		cwd
-		idiv	bx
-		inc	dx
-		mov	[bp+var_6], dx
-		mov	ax, [bp+var_6]
-		mov	mima_animated.BE_bos_image, ax
-		call	@CBossEntity@unput_and_put_8$xqiii c, offset mima_animated, ds, large [dword ptr mima_animated.BE_cur_left], ax
-
-locret_1E42F:
-		leave
-		retf
-sub_1E3D7	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1E431	proc far
-
-@@left		= word ptr -4
-@@top		= word ptr -2
-
-		enter	4, 0
-		mov	byte_35B7A, 0
-		mov	ax, mima_still.BE_cur_top
-		add	ax, 48
-		mov	[bp+@@top], ax
-		mov	ax, mima_still.BE_cur_left
-		mov	[bp+@@left], ax
-		mov	mima_animated.BE_cur_left, ax
-		mov	ax, [bp+@@top]
-		mov	mima_animated.BE_cur_top, ax
-		mov	mima_animated.BE_bos_image, 0
-		push	1
-		call	_graph_accesspage_func
-		call	@CBossEntity@put_8$xqiii stdcall, offset mima_animated, ds, large [dword ptr mima_animated.BE_cur_left], 0
-		push	0
-		call	_graph_accesspage_func
-		call	@CBossEntity@put_8$xqiii stdcall, offset mima_animated, ds, large [dword ptr mima_animated.BE_cur_left], 0
-		add	sp, 18h
-		leave
-		retf
-sub_1E431	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1E48B	proc far
-
-@@left		= word ptr -4
-@@top		= word ptr -2
-
-		enter	4, 0
-		cmp	byte_35B7A, 0
-		jnz	short locret_1E4EA
-		mov	byte_35B7A, 1
-		mov	ax, mima_still.BE_cur_top
-		add	ax, 48
-		mov	[bp+@@top], ax
-		mov	ax, mima_still.BE_cur_left
-		mov	[bp+@@left], ax
-		mov	mima_animated.BE_cur_left, ax
-		mov	ax, [bp+@@top]
-		mov	mima_animated.BE_cur_top, ax
-		mov	mima_animated.BE_bos_image, 1
-		push	1
-		call	_graph_accesspage_func
-		call	@CBossEntity@put_8$xqiii stdcall, offset mima_animated, ds, large [dword ptr mima_animated.BE_cur_left], 1
-		push	0
-		call	_graph_accesspage_func
-		call	@CBossEntity@put_8$xqiii stdcall, offset mima_animated, ds, large [dword ptr mima_animated.BE_cur_left], 1
-		add	sp, 18h
-
-locret_1E4EA:
-		leave
-		retf
-sub_1E48B	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public @mima_put_still_both$qv
-@mima_put_still_both$qv	proc far
-		push	bp
-		mov	bp, sp
-		push	1
-		call	_graph_accesspage_func
-		call	@CBossEntity@put_8$xqiii stdcall, offset mima_still, ds, large [dword ptr mima_still.BE_cur_left], mima_still.BE_bos_image
-		push	0
-		call	_graph_accesspage_func
-		call	@CBossEntity@put_8$xqiii stdcall, offset mima_still, ds, large [dword ptr mima_still.BE_cur_left], mima_still.BE_bos_image
-		add	sp, 18h
-		pop	bp
-		retf
-@mima_put_still_both$qv	endp
-
+	extern @meteor_put$qv:proc
+	extern @mima_put_cast_both$qv:proc
+	extern @meteor_activate$qv:proc
 	extern @mima_bg_snap$qv:proc
 	extern @mima_unput$qi:proc
 	extern @spreadin_unput_and_put$qii:proc
@@ -11075,7 +10946,7 @@ var_8		= byte ptr -8
 		push	di
 		cmp	_boss_phase_frame, 50
 		jnz	short loc_1ED01
-		call	sub_1E431
+		call	@mima_put_cast_both$qv
 
 loc_1ED01:
 		cmp	_boss_phase_frame, 100
@@ -11335,7 +11206,7 @@ loc_1EF00:
 		call	_graph_r_lineloop_unput
 		add	sp, 14h
 		mov	_boss_phase_frame, 0
-		call	sub_1E48B
+		call	@meteor_activate$qv
 
 loc_1EF81:
 		pop	di
@@ -11381,7 +11252,7 @@ loc_1EFB1:
 		call	_graph_accesspage_func
 		call	@mima_unput$qi stdcall, 0
 		add	sp, 8
-		mov	byte_35B7A, 0
+		mov	_mima_meteor_active, 0
 		mov	byte_39E25, 0
 		mov	_boss_phase_frame, 1
 
@@ -11504,7 +11375,7 @@ loc_1F0F8:
 		mov	al, 1
 		sub	al, byte_39E26
 		mov	byte_39E26, al
-		mov	byte_35B7A, 1
+		mov	_mima_meteor_active, 1
 		mov	_boss_phase_frame, 0
 		jmp	short loc_1F19B
 ; ---------------------------------------------------------------------------
@@ -11640,7 +11511,7 @@ sub_1F229	proc far
 		push	si
 		cmp	_boss_phase_frame, 50
 		jnz	short loc_1F238
-		call	sub_1E431
+		call	@mima_put_cast_both$qv
 
 loc_1F238:
 		cmp	_boss_phase_frame, 100
@@ -11791,7 +11662,7 @@ loc_1F3C4:
 loc_1F3CC:
 		cmp	_boss_phase_frame, 240
 		jnz	short loc_1F3D8
-		call	sub_1E48B
+		call	@meteor_activate$qv
 
 loc_1F3D8:
 		xor	si, si
@@ -12369,7 +12240,7 @@ sub_1F909	proc far
 		push	di
 		cmp	_boss_phase_frame, 50
 		jnz	short loc_1F91A
-		call	sub_1E431
+		call	@mima_put_cast_both$qv
 
 loc_1F91A:
 		cmp	_boss_phase_frame, 100
@@ -12532,7 +12403,7 @@ sub_1FA7B	proc far
 		xor	di, di
 		mov	_mima_spreadin_interval, 1
 		mov	_mima_spreadin_speed, 2
-		mov	byte_35B7A, 1
+		mov	_mima_meteor_active, 1
 
 loc_1FACA:
 		inc	_boss_phase_frame
@@ -12578,7 +12449,7 @@ loc_1FB20:
 loc_1FB45:
 		inc	_boss_phase_frame
 		inc	_mima_invincibility_frame
-		call	sub_1E3D7
+		call	@meteor_put$qv
 		cmp	word_39E78, 0
 		jnz	short loc_1FB5E
 		call	sub_1E908
@@ -12697,7 +12568,7 @@ loc_1FC95:
 		jnz	loc_1FDCF
 		inc	_boss_phase_frame
 		inc	_mima_invincibility_frame
-		call	sub_1E3D7
+		call	@meteor_put$qv
 		cmp	word_39E78, 0
 		jnz	short loc_1FCB9
 		call	sub_1F229
@@ -30861,7 +30732,8 @@ aBoss2_bos	db 'boss2.bos',0
 aBoss3_m_ptn	db 'boss3_m.ptn',0
 aBoss2_grp_0	db 'boss2.grp',0
 flt_35B76	dd 2.0
-byte_35B7A	db 1
+public _mima_meteor_active
+_mima_meteor_active	db 1
 public _mima_spreadin_interval, _mima_spreadin_speed
 _mima_spreadin_interval	db 4
 _mima_spreadin_speed   	db 8

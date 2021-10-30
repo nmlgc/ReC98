@@ -32,6 +32,7 @@ static const pixel_t MIMA_ANIM_TOP = 48; // relative to the sprite's top edge
 static const pixel_t MIMA_ANIM_H = 64;
 // -----------
 
+#define meteor_active	mima_meteor_active
 #define spreadin_interval	mima_spreadin_interval
 #define spreadin_speed	mima_spreadin_speed
 #define flash_colors	mima_flash_colors
@@ -42,6 +43,8 @@ extern int invincibility_frame;
 extern bool16 invincible;
 extern bool initial_hp_rendered;
 
+extern bool meteor_active;
+
 // Amount of frames between the individual steps of the spread-in transition
 extern uint8_t spreadin_interval;
 // Sprite pixels to spread in per frame, in one half of Mima's sprite
@@ -50,9 +53,12 @@ extern uint8_t spreadin_speed;
 // Entities
 // --------
 
+static const int METEOR_CELS = 4;
+
 enum anim_cel_t {
 	C_CAST = 0,
 	C_METEOR = 1,
+	C_METEOR_last = (C_METEOR + METEOR_CELS - 1),
 };
 
 #define ent_still	boss_entities[0]
@@ -72,14 +78,48 @@ static inline void ent_free(void) {
 }
 // --------
 
-// TODO: Remove once all functions are part of this translation unit
-#define nopcall_workaround(func) __asm { \
-	push cs; call near ptr func; \
+inline void ent_anim_sync_with_still(void) {
+	ent_anim.pos_cur_set(
+		ent_still.cur_left, (ent_still.cur_top + MIMA_ANIM_TOP)
+	);
+}
+
+#define ent_anim_sync_with_still_and_put_both(cel) { \
+	ent_anim_sync_with_still(); \
+	ent_anim.bos_image = cel; \
+	graph_accesspage_func(1);	ent_anim.put_8(cel); \
+	graph_accesspage_func(0);	ent_anim.put_8(cel); \
+}
+
+void meteor_put(void)
+{
+	if(meteor_active && ((boss_phase_frame % 8) == 0)) {
+		ent_anim_sync_with_still();
+		ent_anim.set_image_unput_and_put_8(
+			(C_METEOR + ((boss_phase_frame / 8) % METEOR_CELS))
+		);
+	}
+}
+
+void mima_put_cast_both(void)
+{
+	meteor_active = false;
+	ent_anim_sync_with_still_and_put_both(C_CAST);
+}
+
+void meteor_activate(void)
+{
+	if(!meteor_active) {
+		meteor_active = true;
+		ent_anim_sync_with_still_and_put_both(C_METEOR);
+	}
 }
 
 void mima_put_still_both(void)
-;
-#define mima_put_still_both() nopcall_workaround(mima_put_still_both)
+{
+	graph_accesspage_func(1);	ent_still.put_8();
+	graph_accesspage_func(0);	ent_still.put_8();
+}
 
 void mima_bg_snap(void)
 {
