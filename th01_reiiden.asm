@@ -4014,7 +4014,7 @@ loc_12731:
 		mov	al, _z_Palettes[bx+di]
 		mov	bx, si
 		imul	bx, size rgb_t
-		cmp	al, byte ptr palette_39DB4[bx+di]
+		cmp	al, byte ptr _boss_post_defeat_palette[bx+di]
 		jle	short loc_12750
 		mov	bx, si
 		imul	bx, size rgb_t
@@ -4376,7 +4376,7 @@ loc_12B52:
 		mov	al, _z_Palettes[bx+di]
 		mov	bx, si
 		imul	bx, size rgb_t
-		cmp	al, byte ptr palette_39DB4[bx+di]
+		cmp	al, byte ptr _boss_post_defeat_palette[bx+di]
 		jle	short loc_12B71
 		mov	bx, si
 		imul	bx, size rgb_t
@@ -6132,7 +6132,7 @@ loc_1B3BF:
 		mov	al, _z_Palettes[bx+di]
 		mov	bx, si
 		imul	bx, size rgb_t
-		mov	byte ptr palette_39DB4[bx+di], al
+		mov	byte ptr _boss_post_defeat_palette[bx+di], al
 		inc	di
 
 loc_1B3D2:
@@ -10370,7 +10370,7 @@ loc_1E389:
 		mov	al, _z_Palettes[bx+di]
 		mov	bx, si
 		imul	bx, size rgb_t
-		mov	byte ptr palette_39DB4[bx+di], al
+		mov	byte ptr _boss_post_defeat_palette[bx+di], al
 		inc	di
 
 loc_1E39C:
@@ -14395,7 +14395,7 @@ loc_226FE:
 		mov	al, _z_Palettes[bx+di]
 		mov	bx, si
 		imul	bx, size rgb_t
-		mov	byte ptr palette_39DB4[bx+di], al
+		mov	byte ptr _boss_post_defeat_palette[bx+di], al
 		inc	di
 
 loc_22711:
@@ -14406,7 +14406,7 @@ loc_22711:
 loc_22717:
 		cmp	si, COLOR_COUNT
 		jl	short loc_226FA
-		call	_stage_palette_set c, offset palette_39DB4, ds
+		call	_stage_palette_set c, offset _boss_post_defeat_palette, ds
 		nopcall	sub_22731
 		pop	di
 		pop	si
@@ -15847,7 +15847,7 @@ loc_235C2:
 loc_235C6:
 		mov	bx, si
 		imul	bx, size rgb_t
-		mov	byte ptr palette_39DB4[bx+di], 0
+		mov	byte ptr _boss_post_defeat_palette[bx+di], 0
 		inc	di
 
 loc_235D1:
@@ -18630,7 +18630,7 @@ loc_2509E:
 loc_250A2:
 		mov	bx, si
 		imul	bx, size rgb_t
-		mov	byte ptr palette_39DB4[bx+di], 0
+		mov	byte ptr _boss_post_defeat_palette[bx+di], 0
 		inc	di
 
 loc_250AD:
@@ -31537,7 +31537,8 @@ _harryup_cycle	db ?
 public _player_submode, _player_ptn_id_prev
 _player_submode	db ?
 _player_ptn_id_prev	db ?
-palette_39DB4	palette_t <?>
+public _boss_post_defeat_palette
+_boss_post_defeat_palette	palette_t <?>
 word_39DE4	dw ?
 x_39DE6	dw ?
 x_39DE8	dw ?

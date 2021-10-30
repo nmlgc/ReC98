@@ -43,6 +43,9 @@ void boss_hit_update_and_render(
 	pixel_t hitbox_h
 );
 
+// Palette to fade to after the white boss defeat flash.
+extern Palette4 boss_post_defeat_palette;
+
 // Individual bosses
 // -----------------
 
