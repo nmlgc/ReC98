@@ -18389,6 +18389,11 @@ elis_still_or_wave	equ <boss_entity_0>
 elis_attack	equ <boss_entity_1>
 elis_bat	equ <boss_entity_2>
 
+ELIS_GIRL_W = 128
+ELIS_GIRL_H = 96
+ELIS_BASE_LEFT = (PLAYFIELD_CENTER_X - (ELIS_GIRL_W / 2))
+ELIS_BASE_TOP = (PLAYFIELD_TOP + ((PLAYFIELD_H / 21) * 5) - (ELIS_GIRL_H / 2))
+
 PTN_SLOT_BG_ENT = PTN_SLOT_BOSS_1
 PTN_SLOT_MISSILE = PTN_SLOT_BOSS_2
 
@@ -18661,264 +18666,7 @@ _elis_free	proc far
 		retf
 _elis_free	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_250EE	proc far
-
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		enter	8, 0
-		push	si
-		mov	ax, elis_still_or_wave.BE_cur_top
-		mov	[bp+var_2], ax
-		mov	ax, elis_still_or_wave.BE_cur_left
-		mov	[bp+var_4], ax
-		mov	elis_attack.BE_cur_left, ax
-		mov	ax, [bp+var_2]
-		mov	elis_attack.BE_cur_top, ax
-		cmp	_boss_phase_frame, 20
-		jnz	short loc_25150
-		push	1
-		call	_graph_accesspage_func
-		call	@girl_bg_put$qi stdcall, 1
-		push	0
-		call	_graph_accesspage_func
-		add	sp, 6
-		mov	elis_still_or_wave.BE_move_lock_frame, 0
-		mov	elis_still_or_wave.BE_bos_image, 2
-
-loc_25132:
-		call	@CBossEntity@move_lock_and_put_8$qiiii c, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
-		mov	elis_still_or_wave.BE_hitbox_orb_inactive, 1
-		jmp	loc_25293
-; ---------------------------------------------------------------------------
-
-loc_25150:
-		cmp	_boss_phase_frame, 28
-		jnz	short loc_2516C
-		call	@girl_bg_put$qi stdcall, 1
-		pop	cx
-		mov	elis_still_or_wave.BE_move_lock_frame, 0
-		mov	elis_still_or_wave.BE_bos_image, 3
-		jmp	short loc_25132
-; ---------------------------------------------------------------------------
-
-loc_2516C:
-		cmp	_boss_phase_frame, 36
-		jnz	short loc_2517B
-		mov	elis_still_or_wave.BE_hitbox_orb_inactive, 1
-		jmp	short loc_251C7
-; ---------------------------------------------------------------------------
-
-loc_2517B:
-		cmp	_boss_phase_frame, 44
-		jnz	short loc_2519E
-		mov	elis_still_or_wave.BE_hitbox_orb_inactive, 1
-		call	_egc_copy_rect_1_to_0_16 c, [dword ptr elis_still_or_wave.BE_cur_left], large (96 shl 16) or 128
-		jmp	loc_25293
-; ---------------------------------------------------------------------------
-
-loc_2519E:
-		cmp	_boss_phase_frame, 52
-		jnz	short loc_251DD
-		mov	elis_still_or_wave.BE_hitbox_orb_inactive, 1
-		mov	ax, [bp+arg_2]
-		mov	[bp+var_6], ax
-		mov	ax, [bp+arg_0]
-		mov	[bp+var_8], ax
-		mov	elis_still_or_wave.BE_cur_left, ax
-		mov	ax, [bp+var_6]
-		mov	elis_still_or_wave.BE_cur_top, ax
-		call	@girl_bg_snap$qi stdcall, 1
-		pop	cx
-
-loc_251C7:
-		call	@girl_bg_put$qi stdcall, 1
-		pop	cx
-		mov	elis_still_or_wave.BE_move_lock_frame, 0
-		mov	elis_still_or_wave.BE_bos_image, 4
-		jmp	loc_25269
-; ---------------------------------------------------------------------------
-
-loc_251DD:
-		cmp	_boss_phase_frame, 60
-		jnz	short loc_251FF
-		mov	elis_still_or_wave.BE_hitbox_orb_inactive, 1
-		call	@girl_bg_put$qi stdcall, 1
-		pop	cx
-		mov	elis_still_or_wave.BE_move_lock_frame, 0
-		mov	elis_still_or_wave.BE_bos_image, 3
-		jmp	short loc_25269
-; ---------------------------------------------------------------------------
-
-loc_251FF:
-		cmp	_boss_phase_frame, 68
-		jnz	short loc_25221
-		mov	elis_still_or_wave.BE_hitbox_orb_inactive, 1
-		call	@girl_bg_put$qi stdcall, 1
-		pop	cx
-		mov	elis_still_or_wave.BE_move_lock_frame, 0
-		mov	elis_still_or_wave.BE_bos_image, 2
-		jmp	short loc_25269
-; ---------------------------------------------------------------------------
-
-loc_25221:
-		cmp	_boss_phase_frame, 76
-		jnz	short loc_25280
-		mov	elis_still_or_wave.BE_hitbox_orb_inactive, 0
-		push	1
-		call	_graph_accesspage_func
-		mov	elis_still_or_wave.BE_move_lock_frame, 0
-		mov	elis_still_or_wave.BE_bos_image, 0
-		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
-		push	0
-		call	_graph_accesspage_func
-		add	sp, 10h
-		mov	elis_still_or_wave.BE_move_lock_frame, 0
-		mov	elis_still_or_wave.BE_bos_image, 0
-
-loc_25269:
-		call	@CBossEntity@move_lock_and_put_8$qiiii c, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
-		jmp	short loc_25293
-; ---------------------------------------------------------------------------
-
-loc_25280:
-		cmp	_boss_phase_frame, 80
-		jle	short loc_25293
-		mov	_boss_phase_frame, 0
-		mov	ax, 1
-		jmp	loc_2539F
-; ---------------------------------------------------------------------------
-
-loc_25293:
-		mov	ax, _boss_phase_frame
-		mov	bx, 4
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	loc_2539D
-		xor	si, si
-		jmp	loc_25396
-; ---------------------------------------------------------------------------
-
-loc_252A7:
-		cmp	_boss_phase_frame, 4
-		jle	short loc_252CC
-		push	(8 shl 16) or 16
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+5D39h]
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+5D2Fh]
-		call	_egc_copy_rect_1_to_0_16
-		add	sp, 8
-
-loc_252CC:
-		cmp	_boss_phase_frame, 40
-		jl	short loc_252DA
-		cmp	_boss_phase_frame, 52
-		jle	short loc_25310
-
-loc_252DA:
-		call	IRand
-		mov	bx, 192
-		cwd
-		idiv	bx
-		add	dx, elis_still_or_wave.BE_cur_left
-		add	dx, -32
-		mov	bx, si
-		add	bx, bx
-		mov	[bx+5D2Fh], dx
-		call	IRand
-		mov	bx, 128
-		cwd
-		idiv	bx
-		add	dx, elis_still_or_wave.BE_cur_top
-		add	dx, -32
-		mov	bx, si
-		add	bx, bx
-		mov	[bx+5D39h], dx
-		jmp	short loc_25374
-; ---------------------------------------------------------------------------
-
-loc_25310:
-		call	IRand
-		mov	bx, 192
-		cwd
-		idiv	bx
-		add	dx, elis_still_or_wave.BE_cur_left
-		add	dx, -32
-		mov	bx, si
-		add	bx, bx
-		sub	dx, [bx+5D2Fh]
-		mov	bx, 3
-		mov	ax, dx
-		cwd
-		idiv	bx
-		mov	bx, si
-		add	bx, bx
-		add	ax, [bx+5D2Fh]
-		mov	bx, si
-		add	bx, bx
-		mov	[bx+5D2Fh], ax
-		call	IRand
-		mov	bx, 128
-		cwd
-		idiv	bx
-		add	dx, elis_still_or_wave.BE_cur_top
-		add	dx, -32
-		mov	bx, si
-		add	bx, bx
-		sub	dx, [bx+5D39h]
-		mov	bx, 3
-		mov	ax, dx
-		cwd
-		idiv	bx
-		mov	bx, si
-		add	bx, bx
-		add	ax, [bx+5D39h]
-		mov	bx, si
-		add	bx, bx
-		mov	[bx+5D39h], ax
-
-loc_25374:
-		cmp	_boss_phase_frame, 68
-		jge	short loc_25395
-		push	2	; col
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+5D39h]	; top
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+5D2Fh]	; left
-		call	@shape8x8_star_put$qiii
-		add	sp, 6
-
-loc_25395:
-		inc	si
-
-loc_25396:
-		cmp	si, 5
-		jl	loc_252A7
-
-loc_2539D:
-		xor	ax, ax
-
-loc_2539F:
-		pop	si
-		leave
-		retf
-sub_250EE	endp
-
+	extern @wave_teleport$qii:proc
 	extern @elis_select_for_rank$qmiiiii:proc
 main_35_TEXT	ends
 
@@ -23470,7 +23218,7 @@ loc_28163:
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
 		add	sp, 1Ch
-		mov	word_3A779, 0
+		mov	_elis_wave_teleport_done, 0
 		mov	word_3A777, 1
 		mov	_elis_initial_hp_rendered, 0
 		jmp	loc_28655
@@ -23499,33 +23247,33 @@ loc_281F4:
 ; ---------------------------------------------------------------------------
 
 loc_28211:
-		cmp	word_3A779, 0
+		cmp	_elis_wave_teleport_done, 0
 		jnz	short loc_2823F
 		call	IRand
-		mov	bx, 88h
+		mov	bx, (((PLAYFIELD_H / 42) * 29) - ELIS_GIRL_H)
 		cwd
 		idiv	bx
-		add	dx, 40h
-		push	dx
+		add	dx, PLAYFIELD_TOP
+		push	dx	; target_top
 		call	IRand
-		mov	bx, 200h
+		mov	bx, (PLAYFIELD_RIGHT - ELIS_GIRL_W)
 		cwd
 		idiv	bx
-		push	dx
-		call	sub_250EE
+		push	dx	; target_left
+		call	@wave_teleport$qii
 		add	sp, 4
-		mov	word_3A779, ax
+		mov	_elis_wave_teleport_done, ax
 		jmp	short loc_28258
 ; ---------------------------------------------------------------------------
 
 loc_2823F:
-		cmp	word_3A779, 1
+		cmp	_elis_wave_teleport_done, 1
 		jnz	short loc_28258
 		push	word_3A777
 		call	sub_25DA7
 		pop	cx
 		mov	word_3A777, ax
-		mov	word_3A779, 0
+		mov	_elis_wave_teleport_done, 0
 
 loc_28258:
 		push	(48 shl 16) or 64	; (hitbox_w) or (hitbox_h)
@@ -23569,7 +23317,7 @@ loc_2827D:
 		jnz	loc_28655
 		cmp	_boss_hp, 10
 		jg	loc_28655
-		cmp	word_3A779, 1
+		cmp	_elis_wave_teleport_done, 1
 		jnz	loc_28655
 		mov	_boss_phase, 2
 		mov	_boss_phase_frame, 0
@@ -23584,11 +23332,9 @@ loc_282DE:
 		cmp	ax, 2
 		jnz	short loc_2832B
 		inc	_boss_phase_frame
-		push	600100h
-		call	sub_250EE
-		add	sp, 4
-		mov	word_3A779, ax
-		cmp	word_3A779, 1
+		call	@wave_teleport$qii c, large ELIS_BASE_LEFT or (ELIS_BASE_TOP shl 16)
+		mov	_elis_wave_teleport_done, ax
+		cmp	_elis_wave_teleport_done, 1
 		jnz	loc_28655
 		push	63h ; 'c'
 		call	sub_268B7
@@ -23599,7 +23345,7 @@ loc_282DE:
 		mov	word_3A777, 1
 
 loc_28322:
-		mov	word_3A779, 0
+		mov	_elis_wave_teleport_done, 0
 		jmp	loc_28655
 ; ---------------------------------------------------------------------------
 
@@ -23627,33 +23373,33 @@ loc_2832B:
 ; ---------------------------------------------------------------------------
 
 loc_28368:
-		cmp	word_3A779, 0
+		cmp	_elis_wave_teleport_done, 0
 		jnz	short loc_28396
 		call	IRand
-		mov	bx, 88h
+		mov	bx, (((PLAYFIELD_H / 42) * 29) - ELIS_GIRL_H)
 		cwd
 		idiv	bx
-		add	dx, 40h
-		push	dx
+		add	dx, PLAYFIELD_TOP
+		push	dx	; target_top
 		call	IRand
-		mov	bx, 200h
+		mov	bx, (PLAYFIELD_RIGHT - ELIS_GIRL_W)
 		cwd
 		idiv	bx
-		push	dx
-		call	sub_250EE
+		push	dx	; target_left
+		call	@wave_teleport$qii
 		add	sp, 4
-		mov	word_3A779, ax
+		mov	_elis_wave_teleport_done, ax
 		jmp	short loc_283AF
 ; ---------------------------------------------------------------------------
 
 loc_28396:
-		cmp	word_3A779, 1
+		cmp	_elis_wave_teleport_done, 1
 		jnz	short loc_283AF
 		push	word_3A777
 		call	sub_268B7
 		pop	cx
 		mov	word_3A777, ax
-		mov	word_3A779, 0
+		mov	_elis_wave_teleport_done, 0
 
 loc_283AF:
 		push	(48 shl 16) or 64	; (hitbox_w) or (hitbox_h)
@@ -23697,13 +23443,13 @@ loc_283D4:
 		jnz	loc_28655
 		cmp	_boss_hp, 6
 		jg	loc_28655
-		cmp	word_3A779, 1
+		cmp	_elis_wave_teleport_done, 1
 		jnz	loc_28655
 		mov	_boss_phase, 4
 		mov	_boss_phase_frame, 0
 		mov	_elis_invincibility_frame, 0
 		mov	word_3A777, 0
-		mov	word_3A779, 0
+		mov	_elis_wave_teleport_done, 0
 		mov	word_35D4C, 0
 		jmp	loc_28655
 ; ---------------------------------------------------------------------------
@@ -23714,12 +23460,10 @@ loc_28442:
 		cmp	ax, 4
 		jnz	short loc_284B3
 		inc	_boss_phase_frame
-		cmp	word_3A779, 0
+		cmp	_elis_wave_teleport_done, 0
 		jnz	short loc_28468
-		push	600100h
-		call	sub_250EE
-		add	sp, 4
-		mov	word_3A779, ax
+		call	@wave_teleport$qii c, large ELIS_BASE_LEFT or (ELIS_BASE_TOP shl 16)
+		mov	_elis_wave_teleport_done, ax
 		jmp	short loc_2846F
 ; ---------------------------------------------------------------------------
 
@@ -23734,7 +23478,7 @@ loc_2846F:
 		mov	_boss_phase_frame, 0
 		mov	_elis_invincibility_frame, 0
 		mov	word_3A777, 0
-		mov	word_3A779, 0
+		mov	_elis_wave_teleport_done, 0
 		mov	word_35D4C, 1
 		push	1
 		push	ds
@@ -31986,7 +31730,10 @@ _boss_hp	dw ?
 _boss_phase_frame	dw ?
 word_3A6CC	dw ?
 _boss_phase	db ?
-		db 20 dup (?)
+public _elis_stars
+_elis_stars label word
+_elis_stars_left	dw 5 dup (?)
+_elis_stars_top	dw 5 dup (?)
 radius_3A6E3	dw ?
 word_3A6E5	dw ?
 		db 20 dup(?)
@@ -32003,11 +31750,11 @@ word_3A76D	dw ?
 angle_3A76F	db ?
 angle_3A770	db ?
 word_3A771	dw ?
-public _elis_invincibility_frame, _elis_invincible
+public _elis_invincibility_frame, _elis_invincible, _elis_wave_teleport_done
 _elis_invincibility_frame	dw ?
 _elis_invincible	dw ?
 word_3A777	dw ?
-word_3A779	dw ?
+_elis_wave_teleport_done	dw ?
 elis_bat_move_delta_y	dw ?
 elis_bat_move_delta_x	dw ?
 public _elis_initial_hp_rendered
