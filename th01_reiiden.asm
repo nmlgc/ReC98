@@ -18588,65 +18588,14 @@ _elis_load	proc far
 		call	_ptn_load stdcall, PTN_SLOT_MISSILE, offset aBoss3_m_ptn_1, ds ;	"boss3_m.ptn"
 		mov	_Missiles.MISSILE_ptn_id_base, (PTN_SLOT_MISSILE * PTN_IMAGES_PER_SLOT)
 		call	@boss_palette_snap$qv
-		nopcall	sub_24FE0
+		nopcall	@elis_setup$qv
 		call	@particles_unput_update_render$q17particle_origin_ti stdcall, large PO_INITIALIZE or (V_WHITE shl 16)
 		add	sp, 32h
 		pop	bp
 		retf
 _elis_load	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_24FE0	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		call	@CBossEntity@pos_set$qiiiiiii stdcall, offset elis_still_or_wave, ds, 256, large 96 or (48 shl 16), large 0 or (736 shl 16), large 64 or (304 shl 16)
-		call	@CBossEntity@pos_set$qiiiiiii stdcall, offset        elis_attack, ds, 256, large 96 or (48 shl 16), large 0 or (736 shl 16), large 64 or (304 shl 16)
-		add	sp, 24h
-		call	@CBossEntity@pos_set$qiiiiiii       c, offset           elis_bat, ds, 256, large 96 or (48 shl 16), large 0 or (736 shl 16), large 64 or (304 shl 16)
-		CBossEntity__hitbox_set	elis_still_or_wave, 32, 12, 96, 64
-		CBossEntity__hitbox_set	elis_bat, 8, 8, 40, 24
-		mov	_boss_phase, 0
-		mov	_boss_phase_frame, 0
-		mov	_boss_hp, 14
-		mov	_hud_hp_first_white, 10
-		mov	_hud_hp_first_redwhite, 6
-		mov	eax, _frame_rand
-		mov	random_seed, eax
-		xor	si, si
-		jmp	short loc_250B3
-; ---------------------------------------------------------------------------
-
-loc_2509E:
-		xor	di, di
-		jmp	short loc_250AD
-; ---------------------------------------------------------------------------
-
-loc_250A2:
-		mov	bx, si
-		imul	bx, size rgb_t
-		mov	byte ptr _boss_post_defeat_palette[bx+di], 0
-		inc	di
-
-loc_250AD:
-		cmp	di, size rgb_t
-		jl	short loc_250A2
-		inc	si
-
-loc_250B3:
-		cmp	si, COLOR_COUNT
-		jl	short loc_2509E
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_24FE0	endp
-
+	extern @elis_setup$qv:proc
 	extern @elis_free$qv:proc
 	extern @wave_teleport$qii:proc
 	extern @elis_select_for_rank$qmiiiii:proc

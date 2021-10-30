@@ -19,12 +19,15 @@ extern "C" {
 }
 #include "th01/main/shape.hpp"
 #include "th01/main/boss/boss.hpp"
+#include "th01/main/hud/hp.hpp"
 
 // Coordinates
 // -----------
 
 static const pixel_t GIRL_W = 128;
 static const pixel_t GIRL_H = 96;
+static const pixel_t BAT_W = 48;
+static const pixel_t BAT_H = 32;
 
 static const pixel_t BASE_LEFT = (PLAYFIELD_CENTER_X - (GIRL_W / 2));
 static const pixel_t BASE_TOP = (
@@ -91,6 +94,45 @@ void girl_bg_snap(int unncessary_parameter_that_still_needs_to_be_1_or_2)
 void girl_bg_put(int unncessary_parameter_that_still_needs_to_be_1_or_2)
 ;
 #define girl_bg_put(v) nopcall_workaround(girl_bg_put, v)
+
+void elis_setup(void)
+{
+	int col;
+	int comp;
+
+	ent_still_or_wave.pos_set(
+		BASE_LEFT, BASE_TOP, 48,
+		PLAYFIELD_LEFT, (PLAYFIELD_RIGHT + ((GIRL_W / 4) * 3)),
+		PLAYFIELD_TOP, (PLAYFIELD_BOTTOM - GIRL_H)
+	);
+	ent_attack.pos_set(
+		BASE_LEFT, BASE_TOP, 48,
+		PLAYFIELD_LEFT, (PLAYFIELD_RIGHT + ((GIRL_W / 4) * 3)),
+		PLAYFIELD_TOP, (PLAYFIELD_BOTTOM - GIRL_H)
+	);
+	ent_bat.pos_set(
+		BASE_LEFT, BASE_TOP, 48,
+		PLAYFIELD_LEFT, (PLAYFIELD_RIGHT + (BAT_W * 2)),
+		PLAYFIELD_TOP, (PLAYFIELD_BOTTOM - (BAT_H * 3))
+	);
+	ent_still_or_wave.hitbox_set(
+		((GIRL_W / 4) * 1), ((GIRL_H / 8) * 1),
+		((GIRL_W / 4) * 3), ((GIRL_H / 3) * 2)
+	);
+	// Note that [ent_attack] doesn't receive a hitbox!
+	ent_bat.hitbox_set(
+		((BAT_W / 6) * 1), ((BAT_H / 4) * 1),
+		((BAT_W / 6) * 5), ((BAT_H / 4) * 3)
+	);
+
+	boss_phase = 0;
+	boss_phase_frame = 0;
+	boss_hp = 14;
+	hud_hp_first_white = 10;
+	hud_hp_first_redwhite = 6;
+	random_seed = frame_rand;
+	palette_set_grayscale(boss_post_defeat_palette, 0x0, col, comp);
+}
 
 void elis_free(void)
 {
