@@ -50,6 +50,7 @@ extern Palette4 boss_post_defeat_palette;
 // -----------------
 
 // Makai
+void elis_load(void);
 void elis_free(void);
 
 void sariel_entrance(int8_t unused);

@@ -7,7 +7,9 @@ extern "C" {
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
+#include "th01/v_colors.hpp"
 #include "th01/math/area.hpp"
+#include "th01/math/subpixel.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/graph.h"
 #include "th01/formats/pf.hpp"
@@ -17,8 +19,17 @@ extern "C" {
 #include "th01/main/vars.hpp"
 #include "th01/main/boss/entity_a.hpp"
 }
+#include "th01/shiftjis/fns.hpp"
+#undef MISSILE_FN
+#define MISSILE_FN boss3_m_ptn_1
+extern const char MISSILE_FN[];
+#include "th01/sprites/pellet.h"
 #include "th01/main/shape.hpp"
+#include "th01/main/particle.hpp"
 #include "th01/main/boss/boss.hpp"
+#include "th01/main/boss/palette.hpp"
+#include "th01/main/bullet/missile.hpp"
+#include "th01/main/bullet/pellet.hpp"
 #include "th01/main/hud/hp.hpp"
 
 // Coordinates
@@ -94,6 +105,27 @@ void girl_bg_snap(int unncessary_parameter_that_still_needs_to_be_1_or_2)
 void girl_bg_put(int unncessary_parameter_that_still_needs_to_be_1_or_2)
 ;
 #define girl_bg_put(v) nopcall_workaround(girl_bg_put, v)
+
+void elis_load(void)
+{
+	extern const char boss5_bos[];
+	extern const char boss5_2_bos[];
+	extern const char boss5_3_bos[];
+	extern const char boss5_gr_grc[];
+
+	pellet_interlace = true;
+	Pellets.unknown_seven = 7;
+	ent_still_or_wave.load(boss5_bos, 0);
+	ent_attack.load(boss5_2_bos, 1);
+	ent_bat.load(boss5_3_bos, 2);
+	grc_load(GRC_SLOT_BOSS_1, boss5_gr_grc);
+	ptn_new(PTN_SLOT_BG_ENT, ((GIRL_W / PTN_W) * (GIRL_H / PTN_H)));
+	Missiles.load(PTN_SLOT_MISSILE);
+	boss_palette_snap();
+	void elis_setup(void);
+	elis_setup();
+	particles_unput_update_render(PO_INITIALIZE, V_WHITE);
+}
 
 void elis_setup(void)
 {

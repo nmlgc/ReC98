@@ -2702,7 +2702,7 @@ loc_D947:
 		pushd	[bp+s1]	; dest
 		call	_strcpy
 		add	sp, 8
-		call	_elis_load
+		call	@elis_load$qv
 
 loc_D96D:
 		xor	di, di
@@ -18394,9 +18394,6 @@ ELIS_GIRL_H = 96
 ELIS_BASE_LEFT = (PLAYFIELD_CENTER_X - (ELIS_GIRL_W / 2))
 ELIS_BASE_TOP = (PLAYFIELD_TOP + ((PLAYFIELD_H / 21) * 5) - (ELIS_GIRL_H / 2))
 
-PTN_SLOT_BG_ENT = PTN_SLOT_BOSS_1
-PTN_SLOT_MISSILE = PTN_SLOT_BOSS_2
-
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
@@ -18570,32 +18567,7 @@ loc_24F38:
 		retf
 @girl_bg_put$qi	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public _elis_load
-_elis_load	proc far
-		push	bp
-		mov	bp, sp
-		mov	_pellet_interlace, 1
-		mov	_Pellets.PELLET_unknown_seven, 7
-		CBossEntity__load	elis_still_or_wave, 0, aBoss5_bos
-		CBossEntity__load	elis_attack, 1, aBoss5_2_bos
-		CBossEntity__load	elis_bat, 2, aBoss5_3_bos
-		call	_grc_load stdcall, 0, offset aBoss5_gr_grc, ds
-		call	_ptn_new stdcall, (12 shl 16) or PTN_SLOT_BG_ENT
-		call	_ptn_load stdcall, PTN_SLOT_MISSILE, offset aBoss3_m_ptn_1, ds ;	"boss3_m.ptn"
-		mov	_Missiles.MISSILE_ptn_id_base, (PTN_SLOT_MISSILE * PTN_IMAGES_PER_SLOT)
-		call	@boss_palette_snap$qv
-		nopcall	@elis_setup$qv
-		call	@particles_unput_update_render$q17particle_origin_ti stdcall, large PO_INITIALIZE or (V_WHITE shl 16)
-		add	sp, 32h
-		pop	bp
-		retf
-_elis_load	endp
-
-	extern @elis_setup$qv:proc
+	extern @elis_load$qv:proc
 	extern @elis_free$qv:proc
 	extern @wave_teleport$qii:proc
 	extern @elis_select_for_rank$qmiiiii:proc
@@ -31205,11 +31177,12 @@ word_35D4A	dw 0
 word_35D4C	dw 0
 public _elis_invincibility_flash_colors
 _elis_invincibility_flash_colors	db 3, 6, 8, 2
-aBoss5_bos	db 'boss5.bos',0
-aBoss5_2_bos	db 'boss5_2.bos',0
-aBoss5_3_bos	db 'boss5_3.bos',0
-aBoss5_gr_grc	db 'boss5_gr.grc',0
-aBoss3_m_ptn_1	db 'boss3_m.ptn',0
+public _boss5_bos, _boss5_2_bos, _boss5_3_bos, _boss5_gr_grc, _boss3_m_ptn_1
+_boss5_bos	db 'boss5.bos',0
+_boss5_2_bos	db 'boss5_2.bos',0
+_boss5_3_bos	db 'boss5_3.bos',0
+_boss5_gr_grc	db 'boss5_gr.grc',0
+_boss3_m_ptn_1	db 'boss3_m.ptn',0
 flt_35D8D	dd 400.0
 flt_35D91	dd 640.0
 		; Hack. Let's better use bytes for accuracy here.

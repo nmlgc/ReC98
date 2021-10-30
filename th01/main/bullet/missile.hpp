@@ -42,6 +42,12 @@ class CMissiles {
 	missile_flag_t flag[MISSILE_COUNT];
 
 public:
+	// Loads the missile sprites into the given .PTN [slot].
+	void load(main_ptn_slot_t slot) {
+		ptn_load(slot, MISSILE_FN);
+		ptn_id_base = PTN_ID(slot, 0);
+	}
+
 	void reset(void);
 	void unput_update_render(void);
 };
