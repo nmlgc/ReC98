@@ -28,8 +28,8 @@ extern "C" {
 #include "th01/formats/pf.hpp"
 }
 #include "th01/formats/ptn.hpp"
-extern "C" {
 #include "th01/formats/scoredat.hpp"
+extern "C" {
 #include "th01/main/debug.hpp"
 }
 #include "th01/main/playfld.hpp"

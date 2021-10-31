@@ -454,6 +454,30 @@ void foo(int i) {
 
   This also applies to divisors stored in `BX`.
 
+### `-3` (80386 Instructions)
+
+* 32-bit function return values are stored in `DX:AX` even with this option
+  enabled. Assigning such a returned value generates different instructions
+  if the signedness of the return type differs from the signedness of the
+  target variable:
+
+  ```c
+  /*    */ long ret_signed(void)   { return 0x12345678; }
+  unsigned long ret_unsigned(void) { return 0x12345678; }
+
+  void foo(void) {
+    long s;
+    unsigned long u;
+
+    s = ret_signed();   // MOV WORD PTR [s+2], DX; MOV WORD PTR [s+0], AX;
+    s = ret_unsigned(); // PUSH DX; PUSH AX; POP EAX; MOV DWORD PTR [s], EAX;
+    u = ret_signed();   // PUSH DX; PUSH AX; POP EAX; MOV DWORD PTR [u], EAX;
+    u = ret_unsigned(); // MOV WORD PTR [u+2], DX; MOV WORD PTR [u+0], AX;
+  }
+  ```
+
+  Without `-3`, the two-`MOV WORD PTR` variant is generated in all four cases.
+
 ### `-3` (80386 Instructions) + `-Z` (Suppress register reloads)
 
 Bundles two consecutive 16-bit function parameters into a single 32-bit one,

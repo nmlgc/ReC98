@@ -57,7 +57,6 @@ BOSS_STAGE = (STAGES_PER_SCENE - 1)
 
 main_01 group main_010_TEXT, main_011_TEXT, main_012_TEXT, main_013_TEXT
 main_15 group main_15_TEXT, main_15__TEXT
-main_19 group main_19_TEXT, main_19__TEXT
 
 ; ===========================================================================
 
@@ -2897,36 +2896,8 @@ main_18_TEXT	ends
 
 ; Segment type:	Pure code
 main_19_TEXT	segment	byte public 'CODE' use16
-	extern @scoredat_load$qv:proc
-	extern @scoredat_hiscore_get$qv:proc
-main_19_TEXT	ends
-
-main_19__TEXT	segment	byte public 'CODE' use16
-		assume cs:main_19
-	extern @scoredat_free$qv:proc
 	extern @regist$qlixnxuc:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public _scoredat_load_hiscore
-_scoredat_load_hiscore	proc far
-		push	bp
-		mov	bp, sp
-		call	@scoredat_load$qv
-		call	@scoredat_hiscore_get$qv
-		push	dx
-		push	ax
-		pop	eax
-		les	bx, _resident
-		assume es:nothing
-		mov	es:[bx+reiidenconfig_t.hiscore], eax
-		call	@scoredat_free$qv
-		pop	bp
-		retf
-_scoredat_load_hiscore	endp
-
-main_19__TEXT	ends
+main_19_TEXT	ends
 
 ; ===========================================================================
 
