@@ -29,7 +29,7 @@ extern "C" {
 }
 #include "th01/formats/ptn.hpp"
 extern "C" {
-#include "th01/hiscore/scoredat.hpp"
+#include "th01/formats/scoredat.hpp"
 #include "th01/main/debug.hpp"
 }
 #include "th01/main/playfld.hpp"

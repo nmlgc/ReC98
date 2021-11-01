@@ -25,7 +25,7 @@ extern "C" {
 }
 #include "th01/shiftjis/fns.hpp"
 #include "th01/shiftjis/regist.hpp"
-#include "th01/hiscore/scoredat.hpp"
+#include "th01/formats/scoredat.hpp"
 
 extern char rank;
 
