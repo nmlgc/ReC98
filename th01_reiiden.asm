@@ -209,7 +209,7 @@ loc_BDAD:
 loc_BDC2:
 		cmp	_first_stage_in_scene, 0
 		jnz	short loc_BE00
-		call	@stageobj_copy_all_0_to_1$qi stdcall, si
+		call	@stageobjs_copy_0_to_1$qi stdcall, si
 		push	0
 		call	_graph_accesspage_func
 		push	1
@@ -12591,7 +12591,7 @@ main_31_TEXT	segment	byte public 'CODE' use16
 	extern @stageobj_bgs_free$qv:proc
 	extern @stageobj_put_8$qiiii:proc
 	extern @scene_init_and_load$quc:proc
-	extern @stageobj_copy_all_0_to_1$qi:proc
+	extern @stageobjs_copy_0_to_1$qi:proc
 	extern @stageobjs_init_and_render$qi:proc
 main_31_TEXT	ends
 

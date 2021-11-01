@@ -244,7 +244,7 @@ void obstacles_init_advance_slot(int dat_offset, int ptn_id, int &slot)
 			break; \
 	}
 
-void stageobj_copy_all_0_to_1(int stage_id)
+void stageobjs_copy_0_to_1(int stage_id)
 {
 	int i;
 
@@ -264,7 +264,7 @@ void stageobj_copy_all_0_to_1(int stage_id)
 	}
 }
 
-void stageobjs_init_and_render(int stage)
+void stageobjs_init_and_render(int stage_id)
 {
 	register int i;
 	int j;
@@ -281,24 +281,24 @@ void stageobjs_init_and_render(int stage)
 	#define offset j
 	#define nth_bit i
 
-	stage = (stage % STAGES_PER_SCENE);
+	stage_id = (stage_id % STAGES_PER_SCENE);
 
 	obstacles.count = 0;
 	cards.count = 0;
 
-	if(stage == BOSS_STAGE) {
+	if(stage_id == BOSS_STAGE) {
 		return;
 	}
 
 	for(offset = cards_begin(); offset < cards_end(); offset++) {
 		for(nth_bit = (1 << (CARDS_PER_BYTE - 1)); nth_bit != 0; nth_bit >>= 1) {
-			if(scene_stage[stage].dat.byte[offset] & nth_bit) {
+			if(scene_stage[stage_id].dat.byte[offset] & nth_bit) {
 				cards.count++;
 			}
 		}
 	}
 	for(offset = obstacles_begin(); offset < obstacles_end(); offset++) {
-		if_actual_obstacle(scene_stage[stage].dat.byte[offset], {
+		if_actual_obstacle(scene_stage[stage_id].dat.byte[offset], {
 			obstacles.count++;
 		});
 	}
@@ -328,7 +328,7 @@ void stageobjs_init_and_render(int stage)
 			case (1 << 2):	card_bit = 1;	break;
 			case (1 << 3):	card_bit = 0;	break;
 			}
-			if(scene_stage[stage].dat.byte[offset] & nth_bit) {
+			if(scene_stage[stage_id].dat.byte[offset] & nth_bit) {
 				card_left = card_left_from(offset, card_bit);
 				card_top = card_top_from(offset);
 
@@ -348,7 +348,7 @@ void stageobjs_init_and_render(int stage)
 
 	obstacle_slot = 0; // Again?!
 	for(offset = obstacles_begin(); offset < obstacles_end(); offset++) {
-		#define obstacle_type scene_stage[stage].dat.byte[offset]
+		#define obstacle_type scene_stage[stage_id].dat.byte[offset]
 		switch(obstacle_type) {
 		case OT_BUMPER:
 			obstacles_init_advance_slot(offset, PTN_BUMPER, obstacle_slot);

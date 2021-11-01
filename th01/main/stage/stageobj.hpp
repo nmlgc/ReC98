@@ -111,11 +111,14 @@ extern CObstacles obstacles;
 // [default_bgm_fn] accordingly. [id] must be ≥0 and ≤9.
 void scene_init_and_load(unsigned char id);
 
-// Initializes [cards] and [obstacles] with the objects for the given [stage],
-// using the previously loaded scene data, and renders them to the current
-// VRAM page. If [first_stage_in_scene] is true, a flip-in animation is shown
-// for every card.
-void stageobjs_init_and_render(int stage);
+// Copies all stage objects from VRAM page 0 to VRAM page 1.
+void stageobjs_copy_0_to_1(int stage_id);
+
+// Initializes [cards] and [obstacles] with the objects for the given
+// [stage_id], using the previously loaded scene data, and renders them to the
+// current VRAM page. If [first_stage_in_scene] is true, a flip-in animation
+// is shown for every card.
+void stageobjs_init_and_render(int stage_id);
 // --------------
 
 // Current portal state
