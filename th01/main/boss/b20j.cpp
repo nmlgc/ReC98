@@ -20,6 +20,7 @@ extern "C" {
 #include "th01/hardware/egc.h"
 #include "th01/hardware/scrollup.hpp"
 #include "th01/hardware/input.hpp"
+#include "th01/hardware/text.h"
 #include "th01/snd/mdrv2.h"
 #include "th01/main/playfld.hpp"
 #include "th01/formats/grp.h"
@@ -1800,35 +1801,14 @@ void konngara_main(void)
 		// reimplementation of the original functionality into DOSBox-X.
 		// --------------------------------------------------------------------
 
-		#define y i
-		#define x j
-
 		printf("\x1B)3"); // Enter graph mode
-		printf("\x1B[16;40m"); // Set black foreground and background text color
-		printf("\x1B[0;0H"); // Move text cursor to (0, 0)
-
-		for(y = 0; y < (RES_Y / GLYPH_H); y++) {
-			for(x = 0; x < (RES_X / GLYPH_HALF_W); x++) {
-				printf(" ");
-			}
-		}
+		text_fill_black("\x1B[16;40m", "\x1B[0;0H", " ", j, i);
 
 		grp_put_palette_show(SCROLL_BG_FN);
 		z_palette_set_black(j, i);
 
 		printf("\x1B)0"); // Back to regular kanji mode
-		printf("\x1B[0m"); // Reset text mode color
-		printf("\x1B[1;1H"); // Move text cursor to (0, 0)
-		// (yes, this escape sequence is actually 1-based)
-
-		for(y = 0; y < (RES_Y / GLYPH_H); y++) {
-			for(x = 0; x < (RES_X / GLYPH_HALF_W); x++) {
-				printf(" ");
-			}
-		}
-
-		#undef x
-		#undef y
+		text_clear_sloppy(j, i);
 		// --------------------------------------------------------------------
 
 		// Final scroll
