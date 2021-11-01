@@ -1,6 +1,7 @@
 /// Uncompressed monochrome 8w×h sprite format
 /// ------------------------------------------
 #include "th01/formats/sprfmt_h.hpp"
+#include "th01/sprites/main_grc.h"
 
 #define GRC_MAGIC "GRCG"
 
@@ -12,7 +13,6 @@ struct grc_header_t {
 	spriteformat_header_inner_t inner;
 };
 
-static const int GRC_SLOT_COUNT = 8;
 static const int GRC_IMAGES_PER_SLOT = 8;
 
 // In-memory slot structure
@@ -27,12 +27,14 @@ extern grc_t grc_images[GRC_SLOT_COUNT];
 
 // Loads all images from the .GRC file with the given [fn] inside the
 // currently active packfile into the given .GRC [slot]. Always returns 0.
-int grc_load(int slot, const char fn[PF_FN_LEN]);
+int grc_load(main_grc_slot_t slot, const char fn[PF_FN_LEN]);
 
 // Frees all images in the given [slot].
-void grc_free(int slot);
+void grc_free(main_grc_slot_t slot);
 
 // Blits the sub[image] from the given [slot] to (⌊left/8⌋*8, top) with the
 // given [col]. Correctly clips the sprite at all 4 edges of VRAM.
-void grc_put_8(screen_x_t left, vram_y_t top, int slot, int image, int col);
+void grc_put_8(
+	screen_x_t left, vram_y_t top, main_grc_slot_t slot, int image, int col
+);
 /// ------------------------------------------

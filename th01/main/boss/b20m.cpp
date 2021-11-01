@@ -128,10 +128,10 @@ void sariel_load_and_init(void)
 	ent_shield.load(boss6_1_bos, 0);
 	anm_wand.load(boss6_2_bos, 0);
 	anm_dress.load(boss6_3_bos, 1);
-	grc_load(0, boss6gr1_grc);
-	grc_load(1, boss6gr2_grc);
-	grc_load(2, boss6gr3_grc);
-	grc_load(3, boss6gr4_grc);
+	grc_load(GRC_SLOT_BOSS_1, boss6gr1_grc);
+	grc_load(GRC_SLOT_BOSS_2, boss6gr2_grc);
+	grc_load(GRC_SLOT_BOSS_3, boss6gr3_grc);
+	grc_load(GRC_SLOT_BOSS_4, boss6gr4_grc);
 	boss_palette_snap();
 	void sariel_setup(void);
 	sariel_setup();

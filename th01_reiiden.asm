@@ -26,6 +26,7 @@ include th01/math/subpixel.inc
 include th01/main/playfld.inc
 include th01/main/boss/entity_a.inc
 include th01/formats/cfg.inc
+include th01/sprites/main_grc.inc
 include th01/sprites/main_ptn.inc
 
 LIVES_MAX = 6
@@ -317,8 +318,8 @@ sub_BCFE	endp
 sub_BEB1	proc far
 		push	bp
 		mov	bp, sp
-		call	_grc_load stdcall, 6, offset aKuzi1_grc, ds
-		call	_grc_load stdcall, 7, offset aKuzi2_grc, ds
+		call	_grc_load stdcall, GRC_SLOT_BOMB_KUJI_1, offset aKuzi1_grc, ds
+		call	_grc_load stdcall, GRC_SLOT_BOMB_KUJI_2, offset aKuzi2_grc, ds
 		add	sp, 0Ch
 		pop	bp
 		retf
@@ -551,13 +552,13 @@ loc_C014:
 		mov	ax, si
 		sub	ax, [bp+var_2]
 		push	ax
-		push	6
+		push	GRC_SLOT_BOMB_KUJI_1
 		jmp	short loc_C0D2
 ; ---------------------------------------------------------------------------
 
 loc_C0CA:
 		push	0 or (7 shl 16) ; (image) or (col)
-		push	7 ; slot
+		push	GRC_SLOT_BOMB_KUJI_2 ; slot
 
 loc_C0D2:
 		mov	bx, si
@@ -20117,7 +20118,7 @@ loc_25861:
 		mov	ax, [bp+var_2]
 		add	ax, 4
 		push	ax	; image
-		push	0	; slot
+		push	GRC_SLOT_BOSS_1	; slot
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+5D51h]	; top
@@ -21327,7 +21328,7 @@ loc_26413:
 
 loc_2647B:
 		push	3 or (4 shl 16)	; (image) or (col)
-		push	0	; slot
+		push	GRC_SLOT_BOSS_1	; slot
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+5D75h]	; top
@@ -21364,7 +21365,7 @@ loc_264AC:
 		push	7
 		call	_mdrv2_se_play
 		push	4 or (4 shl 16)	; (image) or (col)
-		push	0	; slot
+		push	GRC_SLOT_BOSS_1	; slot
 		mov	ax, _boss_phase_frame
 		add	ax, -100
 		mov	bx, 10
@@ -21394,7 +21395,7 @@ loc_264AC:
 
 loc_26527:
 		push	3 or (4 shl 16)	; (image) or (col)
-		push	0	; slot
+		push	GRC_SLOT_BOSS_1	; slot
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+5D75h] ; top
@@ -21716,7 +21717,7 @@ loc_26856:
 		mov	ax, [bp+var_2]
 		add	ax, 4
 		push	ax	; image
-		push	0	; slot
+		push	GRC_SLOT_BOSS_1	; slot
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+5D93h]	; top
@@ -21958,7 +21959,7 @@ loc_26A42:
 		mov	ax, [bp+var_2]
 		add	ax, 4
 		push	ax	; image
-		push	0	; slot
+		push	GRC_SLOT_BOSS_1	; slot
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+5DA7h]	; top
@@ -22128,7 +22129,7 @@ loc_26BBF:
 		mov	ax, [bp+var_2]
 		add	ax, 4
 		push	ax	; image
-		push	0	; slot
+		push	GRC_SLOT_BOSS_1	; slot
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+5DBBh]	; top
@@ -23851,7 +23852,7 @@ loc_27C7B:
 		add	bx, ax
 		push	word ptr ss:[bx]
 		call	_egc_copy_rect_1_to_0_16
-		call	_grc_put_8 stdcall, di, [bp+@@top], 0, large 3 or (8 shl 16)
+		call	_grc_put_8 stdcall, di, [bp+@@top], GRC_SLOT_BOSS_1, large 3 or (8 shl 16)
 		add	sp, 12h
 		cmp	_elis_invincibility_frame, 1
 		jle	loc_27DAF
@@ -23868,7 +23869,7 @@ loc_27C7B:
 		push	word ptr ss:[bx]
 		call	_egc_copy_rect_1_to_0_16
 		push	2 or (8 shl 16)	; (image) or (col)
-		push	0	; slot
+		push	GRC_SLOT_BOSS_1	; slot
 		mov	bx, si
 		imul	bx, 6
 		lea	ax, [bp+var_2A]
@@ -23896,7 +23897,7 @@ loc_27C7B:
 		push	word ptr ss:[bx]
 		call	_egc_copy_rect_1_to_0_16
 		push	1 or (8 shl 16)	; (image) or (col)
-		push	0	; slot
+		push	GRC_SLOT_BOSS_1	; slot
 		mov	bx, si
 		imul	bx, 6
 		lea	ax, [bp+var_28]
@@ -24031,7 +24032,7 @@ loc_27E8E:
 		add	bx, ax
 		push	word ptr ss:[bx]
 		call	_egc_copy_rect_1_to_0_16
-		call	_grc_put_8 stdcall, di, [bp+@@top], 0, large 3 or (8 shl 16)
+		call	_grc_put_8 stdcall, di, [bp+@@top], GRC_SLOT_BOSS_1, large 3 or (8 shl 16)
 		push	(32 shl 16) or 48
 		mov	bx, si
 		imul	bx, 6
@@ -24045,7 +24046,7 @@ loc_27E8E:
 		push	word ptr ss:[bx]
 		call	_egc_copy_rect_1_to_0_16
 		push	2 or (8 shl 16)	; (image) or (col)
-		push	0	; slot
+		push	GRC_SLOT_BOSS_1	; slot
 		mov	bx, si
 		imul	bx, 6
 		lea	ax, [bp+var_2A]
@@ -24071,7 +24072,7 @@ loc_27E8E:
 		call	_egc_copy_rect_1_to_0_16
 		add	sp, 2Ch
 		push	1 or (8 shl 16)	; (image) or (col)
-		push	0	; slot
+		push	GRC_SLOT_BOSS_1	; slot
 		mov	bx, si
 		imul	bx, 6
 		lea	ax, [bp+var_28]
@@ -24887,10 +24888,10 @@ _sariel_free	proc far
 		call	_bos_entity_free stdcall, 0
 		call	_bos_anim_free stdcall, 0
 		call	_bos_anim_free stdcall, 1
-		call	_grc_free stdcall, 0
-		call	_grc_free stdcall, 1
-		call	_grc_free stdcall, 2
-		call	_grc_free stdcall, 3
+		call	_grc_free stdcall, GRC_SLOT_BOSS_1
+		call	_grc_free stdcall, GRC_SLOT_BOSS_2
+		call	_grc_free stdcall, GRC_SLOT_BOSS_3
+		call	_grc_free stdcall, GRC_SLOT_BOSS_4
 		call	_ptn_free stdcall, 2
 		add	sp, 10h
 		pop	bp
@@ -25259,7 +25260,7 @@ loc_28C2A:
 		idiv	bx
 		inc	ax
 		push	ax	; image
-		push	1	; slot
+		push	GRC_SLOT_BOSS_2	; slot
 		mov	bx, si
 		shl	bx, 3
 		fld	qword ptr [bx+5ED2h]
@@ -25392,7 +25393,7 @@ loc_28DBF:
 		idiv	bx
 		add	dx, 6
 		push	dx	; image
-		push	1	; slot
+		push	GRC_SLOT_BOSS_2	; slot
 		mov	bx, si
 		shl	bx, 3
 		fld	qword ptr [bx+5ED2h]
@@ -25794,7 +25795,7 @@ loc_29142:
 		cwd
 		idiv	bx
 		push	dx	; image
-		push	0	; slot
+		push	GRC_SLOT_BOSS_1	; slot
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+6200h]	; top
@@ -25885,7 +25886,7 @@ loc_29219:
 		cwd
 		idiv	bx
 		push	dx	; image
-		push	0	; slot
+		push	GRC_SLOT_BOSS_1	; slot
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+6200h]	; top
@@ -25996,7 +25997,7 @@ loc_2933D:
 		cwd
 		idiv	bx
 		push	dx	; image
-		push	0	; slot
+		push	GRC_SLOT_BOSS_1	; slot
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+6200h]	; top
@@ -26069,7 +26070,7 @@ loc_293D3:
 		cwd
 		idiv	bx
 		push	dx	; image
-		push	0	; slot
+		push	GRC_SLOT_BOSS_1	; slot
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+6200h]	; top
@@ -26172,7 +26173,7 @@ loc_294C9:
 		cwd
 		idiv	bx
 		push	dx	; image
-		push	0	; slot
+		push	GRC_SLOT_BOSS_1	; slot
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+6200h]	; top
@@ -26498,7 +26499,7 @@ loc_297B1:
 
 loc_297D5:
 		push	0 or (15 shl 16)	; (image) or (col)
-		push	1	; slot
+		push	GRC_SLOT_BOSS_2	; slot
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+6274h]	; top
@@ -26540,7 +26541,7 @@ loc_297F6:
 		add	bx, bx
 		mov	[bx+6274h], ax
 		push	0 or (15 shl 16) ; (image) or (col)
-		push	1	; slot
+		push	GRC_SLOT_BOSS_2	; slot
 		mov	ax, subpixel_point_3AC50.y
 		sar	ax, 4
 		push	ax	; top
@@ -28496,7 +28497,7 @@ loc_2AC27:
 		add	sp, 8
 		push	7	; col
 		push	grc_image_3B04B	; image
-		push	0	; slot
+		push	GRC_SLOT_BOSS_1	; slot
 		mov	ax, point_3B043.y
 		add	ax, -16
 		push	ax	; top
@@ -28526,7 +28527,7 @@ loc_2AC8A:
 		add	sp, 8
 		push	7	; col
 		push	grc_image_3B04B	; image
-		push	0	; slot
+		push	GRC_SLOT_BOSS_1	; slot
 		mov	ax, point_3B043.y
 		add	ax, -16
 		push	ax	; top
@@ -28874,7 +28875,7 @@ loc_2B01A:
 		call	_egc_copy_rect_1_to_0_16
 		push	7	; col
 		push	grc_image_3B051	; image
-		push	0	; slot
+		push	GRC_SLOT_BOSS_1	; slot
 		mov	ax, y_3B04F
 		add	ax, -16
 		push	ax	; top
@@ -28903,7 +28904,7 @@ loc_2B07B:
 		call	_egc_copy_rect_1_to_0_16
 		push	7 ; col
 		push	grc_image_3B051	; image
-		push	0	; slot
+		push	GRC_SLOT_BOSS_1	; slot
 		mov	ax, y_3B04F
 		add	ax, -16
 		push	ax	; top
@@ -29699,7 +29700,7 @@ loc_2B883:
 		call	sub_28948 pascal, ((RES_X / 2) shl 16) or 185, point_3B330.x, point_3B330.y, 7
 		push	7	; col
 		push	grc_image_3B334	; image
-		push	0	; slot
+		push	GRC_SLOT_BOSS_1	; slot
 		mov	ax, point_3B330.y
 		add	ax, -16
 		push	ax	; top
@@ -29734,7 +29735,7 @@ loc_2B8E3:
 		call	sub_28948
 		push	7	; col
 		push	grc_image_3B334	; image
-		push	0	; slot
+		push	GRC_SLOT_BOSS_1	; slot
 		mov	ax, point_3B330.y
 		add	ax, -16
 		push	ax	; top
@@ -30388,7 +30389,7 @@ loc_2BF45:
 		mov	ax, [bx+14A1h]
 		add	ax, 0FFFEh
 		push	ax
-		push	3
+		push	GRC_SLOT_BOSS_4
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+69DDh]	; top

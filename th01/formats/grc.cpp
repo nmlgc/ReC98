@@ -6,7 +6,7 @@
 #include "th01/formats/pf.hpp"
 #include "th01/formats/grc.hpp"
 
-int grc_load(int slot, const char fn[PF_FN_LEN])
+int grc_load(main_grc_slot_t slot, const char fn[PF_FN_LEN])
 {
 	union {
 		spriteformat_header_inner_t inner;
@@ -43,7 +43,9 @@ int grc_load(int slot, const char fn[PF_FN_LEN])
 	return 0;
 }
 
-void grc_put_8(screen_x_t left, vram_y_t top, int slot, int image, int col)
+void grc_put_8(
+	screen_x_t left, vram_y_t top, main_grc_slot_t slot, int image, int col
+)
 {
 	vram_offset_t vram_offset_row = vram_offset_shift(left, top);
 	vram_offset_t vram_offset;
@@ -91,7 +93,7 @@ void grc_put_8(screen_x_t left, vram_y_t top, int slot, int image, int col)
 	#undef grc_slot
 }
 
-void grc_free(int slot)
+void grc_free(main_grc_slot_t slot)
 {
 	for(int i = 0; grc_images[slot].image_count > i; i++) {
 		if(grc_images[slot].dots[i]) {
