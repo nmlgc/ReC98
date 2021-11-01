@@ -16,8 +16,18 @@ extern "C" {
 #include "twobyte.h"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/input.hpp"
+#include "th01/formats/pf.hpp"
+#include "th01/formats/ptn.hpp"
+#include "th01/hiscore/scoredat.hpp"
 #include "th01/main/debug.hpp"
+#include "th01/main/player/anim.hpp"
 #include "th01/main/player/bomb.hpp"
+#include "th01/main/bullet/laser_s.hpp"
+}
+#include "th01/main/stage/stages.hpp"
+#include "th01/main/hud/hud.hpp"
+#include "th01/shiftjis/fns.hpp"
+extern "C" {
 
 extern const char esc_cls[];
 
@@ -197,6 +207,34 @@ void pascal stage_num_animate(unsigned int stage_num)
 
 	frame_delay(35);
 	printf(esc_cls);
+}
+
+void load_and_init_stuff_used_in_all_stages(void)
+{
+	extern const char mask_grf[];
+	extern const char miko_ac_bos[];
+	extern const char miko_ac2_bos[];
+	#undef PTN_STG_CARDFLIP_FN
+	extern const char PTN_STG_CARDFLIP_FN[];
+	extern const char miko_ptn[];
+
+	int i;
+
+	scoredat_load_hiscore();
+	hud_bg_load(mask_grf);
+	player_48x48.load(miko_ac_bos);
+	player_48x32.load(miko_ac2_bos);
+	ptn_load(PTN_SLOT_STG, PTN_STG_CARDFLIP_FN);
+	ptn_load(PTN_SLOT_MIKO, miko_ptn);
+	ptn_new(PTN_SLOT_BG_HUD, (PTN_BG_last - PTN_BG_first));
+	/* TODO: Replace with the decompiled call
+	 * 	bomb_kuji_load();
+	 * once that function is part of this translation unit */
+	__asm {
+		nop; push cs; call near ptr bomb_kuji_load;
+	}
+	shootout_lasers_init(i);
+	ptn_slot_stg_has_reduced_sprites = false;
 }
 
 }

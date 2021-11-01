@@ -91,3 +91,10 @@ public:
 };
 
 extern CShootoutLaser shootout_lasers[SHOOTOUT_LASER_COUNT];
+
+#define shootout_lasers_init(i) { \
+	for(i = 0; i < SHOOTOUT_LASER_COUNT; i++) { \
+		int id = i; \
+		shootout_lasers[i].id = id; \
+	} \
+}

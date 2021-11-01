@@ -22,6 +22,7 @@ class CPlayerAnim {
 	pixel_t h;
 	int bos_image_count;
 
+public:
 	// Loads all images from the .BOS file with the given [fn] inside the
 	// currently active packfile. Always returns 0.
 	int load(const char fn[PF_FN_LEN]);
@@ -37,7 +38,6 @@ class CPlayerAnim {
 	// multiple of 16 and inside the [-RES_X, RES_X[ range, and is pretty much
 	// broken otherwise.
 
-public:
 	// Precisely restores pixels according to the alpha mask of [image] from
 	// VRAM page 1, starting at (⌊left/8⌋*8, top).
 	void unput_8(screen_x_t left, vram_y_t top, int image) const;

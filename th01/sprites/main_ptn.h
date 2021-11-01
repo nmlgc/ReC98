@@ -38,13 +38,15 @@ typedef enum {
 } main_ptn_slot_t;
 
 typedef enum {
-	// stg(_b).ptn
-	// -----------
+	/// stg(_b).ptn
+	/// -----------
 	PTN_HUD = PTN_ID(PTN_SLOT_STG, 0),
 	PTN_SHOT,
 	PTN_BLAST, // ???
 	PTN_ORB,
 
+	// stg.ptn exclusives
+	// ------------------
 	PTN_CARD_UNUSED = 7,
 	PTN_CARD_3HP, PTN_CARD_3HP_HALF, PTN_CARD_3HP_EDGE,
 	PTN_CARD_2HP, PTN_CARD_2HP_HALF, PTN_CARD_2HP_EDGE,
@@ -66,7 +68,8 @@ typedef enum {
 
 	PTN_ITEM_BOMB,
 	PTN_ITEM_POINT,
-	// -----------
+	// ------------------
+	/// -----------
 
 	// miko.ptn
 	// --------
@@ -95,7 +98,8 @@ typedef enum {
 	// HUD (snapped backgrounds)
 	// -------------------------
 	// The usage code doesn't really cap either of these, though...
-	PTN_BG_LIVES = PTN_ID(PTN_SLOT_BG_HUD, 0),
+	PTN_BG_first = PTN_ID(PTN_SLOT_BG_HUD, 0),
+	PTN_BG_LIVES = PTN_BG_first,
 	PTN_BG_LIVES_last = last_for_quarters(PTN_BG_LIVES, LIVES_MAX),
 	PTN_BG_STAGE,
 	PTN_BG_STAGE_last, // But the original game only need a single quarter?
@@ -114,5 +118,6 @@ typedef enum {
 	PTN_BG_TIMER_last = last_for_quarters(PTN_BG_TIMER, (TIMER_DIGITS / 2)),
 
 	PTN_BG_HP,
+	PTN_BG_last = PTN_ID(PTN_SLOT_BG_HUD, 26)
 	// -------------------------
 } main_ptn_id_t;

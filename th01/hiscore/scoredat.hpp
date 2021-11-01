@@ -55,9 +55,9 @@ typedef StupidBytewiseWrapperAround<struct {
 // Returns 0 on success, 1 on failure.
 int scoredat_load();
 
-// Returns the high score for the difficulty previously loaded by
-// scoredat_load().
-uint32_t scoredat_hiscore_get();
+// Loads only the high score for the current [rank] into the resident
+// structure.
+void scoredat_load_hiscore();
 
 // Sets [str] to the null-terminated name at the given [place] for the
 // difficulty previously loaded by scoredat_load().

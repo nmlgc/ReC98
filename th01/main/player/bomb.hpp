@@ -19,3 +19,6 @@ bool16 bomb_update_and_render(int frame);
 // Returns `true` if an active bomb deals damage to the boss on the current
 // [frame].
 bool16 bomb_deals_damage(unsigned long frame);
+
+// Loads the kuji-in .GRC sprites used at the beginning of the bomb animation.
+void bomb_kuji_load(void);

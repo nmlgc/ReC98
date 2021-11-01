@@ -125,47 +125,7 @@ main_011_TEXT	segment	byte public 'CODE' use16
 	extern _input_reset_sense:proc
 	extern TRAM_X16_KANJI_CENTER_REVERSE:proc
 	extern STAGE_NUM_ANIMATE:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BC87	proc far
-
-@@i		= word ptr -2
-
-		enter	2, 0
-		push	si
-		call	sub_14BD2
-		call	 @hud_bg_load$qnxc stdcall, offset aMask_grf, ds
-		call	@CPlayerAnim@load$qxnxc stdcall, offset _player_48x48, ds, offset aMiko_ac_bos,  ds ; "miko_ac.bos"
-		call	@CPlayerAnim@load$qxnxc stdcall, offset _player_48x32, ds, offset aMiko_ac2_bos, ds ; "miko_ac2.bos"
-		call	_ptn_load stdcall, PTN_SLOT_STG, offset aStg_ptn, ds	; "stg.ptn"
-		call	_ptn_load stdcall, PTN_SLOT_MIKO, offset aMiko_ptn, ds ; "miko.ptn"
-		call	_ptn_new stdcall, (26 shl 16) or PTN_SLOT_BG_HUD
-		add	sp, 24h
-		nopcall	sub_BEB1
-		xor	si, si
-		jmp	short loc_BCF1
-; ---------------------------------------------------------------------------
-
-loc_BCE1:
-		mov	[bp+@@i], si
-		mov	bx, si
-		imul	bx, size CShootoutLaser
-		mov	al, byte ptr [bp+@@i]
-		mov	_shootout_lasers[bx].SL_id, al
-		inc	si
-
-loc_BCF1:
-		cmp	si, SHOOTOUT_LASER_COUNT
-		jl	short loc_BCE1
-		mov	byte_34AA4, 0
-		pop	si
-		leave
-		retf
-sub_BC87	endp
-
+	extern _load_and_init_stuff_used_in_all_:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -314,8 +274,8 @@ sub_BCFE	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_BEB1	proc far
+public _bomb_kuji_load
+_bomb_kuji_load	proc far
 		push	bp
 		mov	bp, sp
 		call	_grc_load stdcall, GRC_SLOT_BOMB_KUJI_1, offset aKuzi1_grc, ds
@@ -323,7 +283,7 @@ sub_BEB1	proc far
 		add	sp, 0Ch
 		pop	bp
 		retf
-sub_BEB1	endp
+_bomb_kuji_load	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -2536,7 +2496,7 @@ loc_D795:
 		call	_coreleft
 		mov	word ptr dword_36C1A+2,	dx
 		mov	word ptr dword_36C1A, ax
-		call	sub_BC87
+		call	_load_and_init_stuff_used_in_all_
 		call	_z_graph_init
 		push	0
 		call	_graph_accesspage_func
@@ -2756,22 +2716,22 @@ loc_D9CA:
 		mov	_first_stage_in_scene, 1
 		call	@items_bomb_reset$qv
 		call	@items_point_reset$qv
-		cmp	byte_34AA4, 0
+		cmp	_ptn_slot_stg_has_reduced_sprites, 0
 		jnz	short loc_DA2A
 		call	_ptn_free stdcall, PTN_SLOT_STG
 		pop	cx
 		call	_ptn_load c, PTN_SLOT_STG, offset aStg_b_ptn, ds ; "stg_b.ptn"
-		mov	byte_34AA4, 1
+		mov	_ptn_slot_stg_has_reduced_sprites, 1
 		jmp	short loc_DA2A
 ; ---------------------------------------------------------------------------
 
 loc_DA06:
-		cmp	byte_34AA4, 0
+		cmp	_ptn_slot_stg_has_reduced_sprites, 0
 		jz	short loc_DA2A
 		call	_ptn_free stdcall, PTN_SLOT_STG
 		pop	cx
-		call	_ptn_load c, PTN_SLOT_STG, offset aStg_ptn, ds	; "stg.ptn"
-		mov	byte_34AA4, 0
+		call	_ptn_load c, PTN_SLOT_STG, offset _PTN_STG_CARDFLIP_FN, ds	; "stg.ptn"
+		mov	_ptn_slot_stg_has_reduced_sprites, 0
 		jmp	short $+2
 
 loc_DA2A:
@@ -3567,7 +3527,6 @@ SHARED	ends
 
 ; Segment type:	Pure code
 PTN_GRP_GRZ	segment	byte public 'CODE' use16
-	extern _ptn_new:proc
 	extern _ptn_load:proc
 	extern _ptn_free:proc
 	extern _grp_palette_load_show_sane:proc
@@ -5824,8 +5783,8 @@ main_19__TEXT	segment	byte public 'CODE' use16
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_14BD2	proc far
+public _scoredat_load_hiscore
+_scoredat_load_hiscore	proc far
 		push	bp
 		mov	bp, sp
 		call	main_19:_scoredat_load
@@ -5839,7 +5798,7 @@ sub_14BD2	proc far
 		call	_scoredat_free
 		pop	bp
 		retf
-sub_14BD2	endp
+_scoredat_load_hiscore	endp
 
 main_19__TEXT	ends
 
@@ -5847,7 +5806,6 @@ main_19__TEXT	ends
 
 ; Segment type:	Pure code
 main_20_TEXT	segment	byte public 'CODE' use16
-	extern @CPlayerAnim@load$qxnxc:proc
 main_20_TEXT	ends
 
 ; ===========================================================================
@@ -5980,7 +5938,6 @@ main_24_TEXT	ends
 ; Segment type:	Pure code
 main_25_TEXT	segment	byte public 'CODE' use16
 	extern @hud_score_and_cardcombo_render$qv:proc
-	extern @hud_bg_load$qnxc:proc
 	extern @hud_lives_put$qi:proc
 	extern @hud_bg_snap_and_put$qv:proc
 main_25_TEXT	ends
@@ -30217,7 +30174,8 @@ _orb_prev_left	dw ORB_LEFT_START
 _orb_prev_top 	dw  ORB_TOP_START
 word_34A92	dw 0
 include th01/main/player/orb[data].asm
-byte_34AA4	db 0
+public _ptn_slot_stg_has_reduced_sprites
+_ptn_slot_stg_has_reduced_sprites	db 0
 unk_34AA5	db  0Fh
 		db  0Fh
 		db  0Fh
@@ -30277,11 +30235,12 @@ aHard		db 'HARD',0
 aLunatic	db 'LUNATIC',0
 public _esc_cls
 _esc_cls		db 1Bh,'*',0
-aMask_grf	db 'mask.grf',0
-aMiko_ac_bos	db 'miko_ac.bos',0
-aMiko_ac2_bos	db 'miko_ac2.bos',0
-aStg_ptn	db 'stg.ptn',0
-aMiko_ptn	db 'miko.ptn',0
+public _mask_grf, _miko_ac_bos, _miko_ac2_bos, _PTN_STG_CARDFLIP_FN, _miko_ptn
+_mask_grf	db 'mask.grf',0
+_miko_ac_bos	db 'miko_ac.bos',0
+_miko_ac2_bos	db 'miko_ac2.bos',0
+_PTN_STG_CARDFLIP_FN	db 'stg.ptn',0
+_miko_ptn	db 'miko.ptn',0
 _esc_color_bg_black_fg_black		db 1Bh,'[16;40m',0
 _esc_cursor_to_x0_y0		db 1Bh,'[0;0H',0
 _space	db ' ',0

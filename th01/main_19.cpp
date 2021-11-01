@@ -36,6 +36,8 @@ extern char rank;
 #define scoredat_close() file_close()
 #include "th01/hiscore/scorelod.cpp"
 
+// Returns the high score for the difficulty previously loaded by
+// scoredat_load().
 uint32_t scoredat_hiscore_get()
 {
 	return scoredat_points[0];
