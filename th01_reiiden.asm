@@ -141,7 +141,7 @@ sub_BC87	proc far
 		call	@CPlayerAnim@load$qxnxc stdcall, offset _player_48x32, ds, offset aMiko_ac2_bos, ds ; "miko_ac2.bos"
 		call	_ptn_load stdcall, PTN_SLOT_STG, offset aStg_ptn, ds	; "stg.ptn"
 		call	_ptn_load stdcall, PTN_SLOT_MIKO, offset aMiko_ptn, ds ; "miko.ptn"
-		call	_ptn_new stdcall, (26 shl 16) or 5
+		call	_ptn_new stdcall, (26 shl 16) or PTN_SLOT_BG_HUD
 		add	sp, 24h
 		nopcall	sub_BEB1
 		xor	si, si

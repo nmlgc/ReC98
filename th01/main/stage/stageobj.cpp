@@ -15,7 +15,6 @@ extern "C" {
 #include "th01/hardware/graph.h"
 #include "th01/main/vars.hpp"
 #include "th01/main/stage/stages.hpp"
-#include "th01/sprites/main_ptn.h"
 }
 
 #include "th01/main/stage/stageobj.hpp"

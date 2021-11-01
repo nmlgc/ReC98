@@ -3,7 +3,6 @@ extern "C" {
 #include "th01/hardware/input.hpp"
 #include "th01/hardware/scrollup.hpp"
 #include "th01/snd/mdrv2.h"
-#include "th01/sprites/main_ptn.h"
 #include "th01/main/vars.hpp"
 #include "th01/main/player/bomb.hpp"
 }

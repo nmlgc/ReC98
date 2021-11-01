@@ -1,4 +1,3 @@
-#include "th01/sprites/main_ptn.h"
 #include "th01/main/hud/hp.hpp"
 
 /// Constants

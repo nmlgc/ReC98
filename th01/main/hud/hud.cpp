@@ -10,7 +10,6 @@
 #include "th01/formats/grf.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/player/player.hpp"
-#include "th01/sprites/main_ptn.h"
 }
 #include "th01/core/str_val.hpp"
 #include "th01/main/hud/hud.hpp"

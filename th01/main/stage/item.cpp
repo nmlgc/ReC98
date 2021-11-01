@@ -17,7 +17,6 @@ extern "C" {
 #include "th01/main/vars.hpp"
 #include "th01/main/stage/stageobj.hpp"
 #include "th01/main/player/player.hpp"
-#include "th01/sprites/main_ptn.h"
 }
 #include "th01/core/str_val.hpp"
 #include "th01/main/hud/hud.hpp"

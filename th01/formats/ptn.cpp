@@ -23,7 +23,7 @@ typedef struct {
 } ptn_header_t;
 // -----------------------------
 
-ptn_error_t ptn_load_palette_show(int slot, const char *fn)
+ptn_error_t ptn_load_palette_show(main_ptn_slot_t slot, const char *fn)
 {
 	union {
 		Palette4 pal;
@@ -74,7 +74,7 @@ ptn_error_t ptn_load_palette_show(int slot, const char *fn)
 	return PE_OK;
 }
 
-ptn_error_t ptn_new(int slot, int image_count)
+ptn_error_t ptn_new(main_ptn_slot_t slot, int image_count)
 {
 	if(image_count <= 0 || image_count > PTN_IMAGES_PER_SLOT) {
 		return PE_IMAGE_COUNT_INVALID;
@@ -90,7 +90,7 @@ ptn_error_t ptn_new(int slot, int image_count)
 	return PE_OK;
 }
 
-void ptn_load(int slot, const char *fn)
+void ptn_load(main_ptn_slot_t slot, const char *fn)
 {
 	flag_palette_show = false;
 	int ret = ptn_load_palette_show(slot, fn);
@@ -98,7 +98,7 @@ void ptn_load(int slot, const char *fn)
 	ret;
 }
 
-void ptn_free(int slot)
+void ptn_free(main_ptn_slot_t slot)
 {
 	if(ptn_images[slot]) {
 		delete[] ptn_images[slot];

@@ -7,6 +7,8 @@
 
 }
 
+#include "th01/sprites/main_ptn.h"
+
 // Color #15 (1111) is always the transparent one, meaning that transparent
 // dots are 1 in all 4 bitplanes. The alpha mask therefore simply is the
 // negation of ANDing all bitplanes together. Nifty!
@@ -33,10 +35,13 @@ struct ptn_t : public ptn_file_image_t {
 	ptn_plane_t alpha; // Derived from color #15 at load time
 };
 
-#define PTN_SLOT_COUNT 8
-
 extern ptn_t* ptn_images[PTN_SLOT_COUNT];
 extern int8_t ptn_image_count[PTN_SLOT_COUNT];
+
+// MODDERS: Make [id] unsigned
+static inline ptn_t* ptn_with_id(int id) {
+	return &ptn_images[id / PTN_IMAGES_PER_SLOT][id % PTN_IMAGES_PER_SLOT];
+}
 
 // Loading and freeing
 // -------------------
@@ -50,33 +55,19 @@ typedef enum {
 
 // Frees all images in [slot], then allocates new memory for the given number
 // of images.
-ptn_error_t ptn_new(int slot, int image_count);
+ptn_error_t ptn_new(main_ptn_slot_t slot, int image_count);
 
 // Frees all images in [slot], then loads all images from the .PTN file with
 // the given name into the same slot, retaining the current hardware palette.
 // Also derives the alpha plane from color #15 of every image.
-void ptn_load(int slot, const char *fn);
+void ptn_load(main_ptn_slot_t slot, const char *fn);
 
 // Like ptn_load(), but sets the hardware palette to the one in [fn]'s header.
-ptn_error_t ptn_load_palette_show(int slot, const char *fn);
+ptn_error_t ptn_load_palette_show(main_ptn_slot_t slot, const char *fn);
 
 // Frees all images in [slot].
-void ptn_free(int slot);
+void ptn_free(main_ptn_slot_t slot);
 // -------------------
-
-// ID system
-// ---------
-// Internal assumption for mapping a ptn_id to a slot and image.
-#define PTN_IMAGES_PER_SLOT 64
-#define PTN_SLOT(slot) ((slot) * PTN_IMAGES_PER_SLOT)
-#define PTN_ID(slot, image) (PTN_SLOT(slot) + image)
-
-// MODDERS: Make [id] unsigned
-static inline ptn_t* ptn_with_id(int id)
-{
-	return &ptn_images[id / PTN_IMAGES_PER_SLOT][id % PTN_IMAGES_PER_SLOT];
-}
-// ---------
 
 // If true, the affected 32×32 or 16×16 area is restored from VRAM page 1
 // before a byte-aligned alpha put operation.

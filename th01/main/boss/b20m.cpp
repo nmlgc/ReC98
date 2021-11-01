@@ -22,7 +22,6 @@ extern "C" {
 #include "th01/formats/grp.h"
 #include "th01/formats/ptn.hpp"
 #include "th01/formats/stagedat.hpp"
-#include "th01/sprites/main_ptn.h"
 #include "th01/sprites/pellet.h"
 #include "th01/main/vars.hpp"
 #include "th01/main/boss/entity_a.hpp"

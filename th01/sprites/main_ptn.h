@@ -1,6 +1,15 @@
 #include "th01/common.h"
 #include "th01/score.h"
 
+// ID system
+// ---------
+// Internal assumption for mapping a ptn_id to a slot and image.
+
+#define PTN_IMAGES_PER_SLOT 64
+#define PTN_SLOT(slot) ((slot) * PTN_IMAGES_PER_SLOT)
+#define PTN_ID(slot, image) (PTN_SLOT(slot) + image)
+// ---------
+
 #define last_for_quarters(base, quarters) \
 	((base + ((quarters + 3) / 4)) - 1)
 
@@ -17,6 +26,9 @@ typedef enum {
 	PTN_SLOT_BG_BOSS = 2, // Backgrounds behind animated boss entities
 	PTN_SLOT_BG_HUD = 5,
 	PTN_SLOT_NUMB = 7, // numb.ptn
+	PTN_SLOT_COUNT,
+
+	_main_ptn_slot_t_FORCE_INT16 = 0x7FFF
 } main_ptn_slot_t;
 
 typedef enum {
