@@ -6,6 +6,7 @@
 extern "C" {
 #include <stddef.h>
 #include <stdio.h>
+#include <string.h>
 #include "platform.h"
 #include "x86real.h"
 #include "decomp.hpp"
@@ -15,17 +16,31 @@ extern "C" {
 #include "pc98kbd.h"
 #include "twobyte.h"
 #include "th01/hardware/frmdelay.h"
+#include "th01/hardware/graph.h"
 #include "th01/hardware/input.hpp"
+#include "th01/hardware/palette.h"
+#include "th01/hardware/text.h"
+#include "th01/hardware/tram_x16.hpp"
+#include "th01/snd/mdrv2.h"
+#include "th01/formats/grp.h"
 #include "th01/formats/pf.hpp"
 #include "th01/formats/ptn.hpp"
 #include "th01/hiscore/scoredat.hpp"
 #include "th01/main/debug.hpp"
+#include "th01/main/playfld.hpp"
+#include "th01/main/vars.hpp"
+#include "th01/formats/stagedat.hpp"
 #include "th01/main/player/anim.hpp"
 #include "th01/main/player/bomb.hpp"
+#include "th01/main/player/player.hpp"
 #include "th01/main/bullet/laser_s.hpp"
+#include "th01/main/stage/palette.hpp"
 }
+#include "th01/main/stage/item.hpp"
 #include "th01/main/stage/stages.hpp"
+#include "th01/main/stage/stageobj.hpp"
 #include "th01/main/hud/hud.hpp"
+#include "th01/shiftjis/entrance.hpp"
 #include "th01/shiftjis/fns.hpp"
 extern "C" {
 
@@ -236,5 +251,71 @@ void load_and_init_stuff_used_in_all_stages(void)
 	shootout_lasers_init(i);
 	ptn_slot_stg_has_reduced_sprites = false;
 }
+}
 
+void stage_entrance(int stage_id, const char* bg_fn, bool16 clear_vram_page_0)
+{
+	int x;
+	int y;
+
+	if(first_stage_in_scene == true) {
+		extern const char esc_color_bg_black_fg_black[];
+		extern const char esc_cursor_to_x0_y0[];
+		extern const char space[];
+		extern const char esc_color_reset[];
+		extern const char empty_grf[];
+
+		text_fill_black(
+			esc_color_bg_black_fg_black, esc_cursor_to_x0_y0, space, x, y
+		);
+		printf(esc_color_reset);
+
+		if(strcmp(bg_fn, empty_grf)) {
+			grp_put_palette_show(bg_fn);
+		}
+		/* TODO: Replace with the decompiled call
+		 * 	stage_palette_set(z_Palettes);
+		 * once that function is part of this translation unit */
+		__asm {
+			push	ds;
+			push	offset z_Palettes;
+			nop;
+			push	cs;
+			call	near ptr stage_palette_set;
+			add 	sp, 4;
+		}
+		graph_copy_accessed_page_to_other(); // 0 → 1, redundant
+	} else {
+		graph_accesspage_func(1);
+		graph_copy_accessed_page_to_other();
+		graph_accesspage_func(0);
+		ptn_put_8(player_left, player_top, PTN_MIKO_L); // redundant
+	}
+
+	stageobjs_init_and_render(stage_id); // rendered to page 0
+
+	if(first_stage_in_scene == true) {
+		graph_copy_accessed_page_to_other(); // 0 → 1
+	} else if(first_stage_in_scene == false) {
+		// Yes, this entire function would not have been necessary.
+		stageobjs_copy_0_to_1(stage_id);
+
+		// :zunpet:
+		graph_accesspage_func(0);
+		graph_accesspage_func(1);
+		graph_accesspage_func(0);
+		ptn_put_8(player_left, player_top, PTN_MIKO_L);
+		items_bomb_render();
+		items_point_render();
+	}
+	if(clear_vram_page_0) {
+		z_graph_clear();
+	}
+	if(
+		((stage_id % STAGES_PER_SCENE) == 0) ||
+		((stage_id % STAGES_PER_SCENE) == BOSS_STAGE)
+	) {
+		touhou_reiiden_animate();
+	}
+	stage_num_animate(stage_num);
 }

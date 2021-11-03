@@ -123,153 +123,8 @@ main_011_TEXT	segment	byte public 'CODE' use16
 
 	extern _input_sense:proc
 	extern _input_reset_sense:proc
-	extern TRAM_X16_KANJI_CENTER_REVERSE:proc
-	extern STAGE_NUM_ANIMATE:proc
 	extern _load_and_init_stuff_used_in_all_:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-; int __cdecl __far sub_BCFE(int, char *s1, int)
-sub_BCFE	proc far
-
-var_2		= word ptr -2
-arg_0		= word ptr  6
-s1		= dword	ptr  8
-arg_6		= word ptr  0Ch
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	si, [bp+arg_0]
-		cmp	_first_stage_in_scene, 1
-		jnz	short loc_BD88
-		call	_printf stdcall, offset _esc_color_bg_black_fg_black, ds
-		call	_printf stdcall, offset _esc_cursor_to_x0_y0, ds
-		add	sp, 8
-		mov	[bp+var_2], 0
-		jmp	short loc_BD43
-; ---------------------------------------------------------------------------
-
-loc_BD2A:
-		xor	di, di
-		jmp	short loc_BD3B
-; ---------------------------------------------------------------------------
-
-loc_BD2E:
-		call	_printf c, offset _space, ds
-		inc	di
-
-loc_BD3B:
-		cmp	di, 50h	; 'P'
-		jl	short loc_BD2E
-		inc	[bp+var_2]
-
-loc_BD43:
-		cmp	[bp+var_2], 19h
-		jl	short loc_BD2A
-		call	_printf c, offset _esc_color_reset, ds
-		push	ds
-		push	offset s2	; "empty.grf"
-		pushd	[bp+s1]	; s1
-		call	_strcmp
-		add	sp, 8
-		or	ax, ax
-		jz	short loc_BD75
-		call	_grp_put_palette_show c, large [bp+s1]
-
-loc_BD75:
-		push	ds
-		push	offset _z_Palettes
-		nopcall	_stage_palette_set
-		add	sp, 4
-		call	_graph_copy_accessed_page_to_othe
-		jmp	short loc_BDAD
-; ---------------------------------------------------------------------------
-
-loc_BD88:
-		push	1
-		call	_graph_accesspage_func
-		call	_graph_copy_accessed_page_to_othe
-		push	0
-		call	_graph_accesspage_func
-		call	_ptn_put_8 stdcall, _player_left, (PTN_MIKO_L shl 16) or _player_top
-		add	sp, 0Ah
-
-loc_BDAD:
-		call	@stageobjs_init_and_render$qi stdcall, si
-		pop	cx
-		cmp	_first_stage_in_scene, 1
-		jnz	short loc_BDC2
-		call	_graph_copy_accessed_page_to_othe
-		jmp	short loc_BE00
-; ---------------------------------------------------------------------------
-
-loc_BDC2:
-		cmp	_first_stage_in_scene, 0
-		jnz	short loc_BE00
-		call	@stageobjs_copy_0_to_1$qi stdcall, si
-		push	0
-		call	_graph_accesspage_func
-		push	1
-		call	_graph_accesspage_func
-		push	0
-		call	_graph_accesspage_func
-		call	_ptn_put_8 stdcall, _player_left, (PTN_MIKO_L shl 16) or _player_top
-		add	sp, 0Eh
-		call	@items_bomb_render$qv
-		call	@items_point_render$qv
-
-loc_BE00:
-		cmp	[bp+arg_6], 0
-		jz	short loc_BE0B
-		call	_z_graph_clear
-
-loc_BE0B:
-		mov	ax, si
-		mov	bx, 5
-		cwd
-		idiv	bx
-		or	dx, dx
-		jz	short loc_BE23
-		mov	ax, si
-		cwd			; int
-		idiv	bx
-		cmp	dx, 4
-		jnz	loc_BEA4
-
-loc_BE23:
-		call	_mdrv2_se_play pascal, 14
-		call	tram_x16_kanji_center_reverse pascal, 456Ch	; ìå (JIS CODE)
-		call	_frame_delay pascal, 8
-		call	_mdrv2_se_play pascal, 14
-		call	tram_x16_kanji_center_reverse pascal, 4A7Dh	; ï˚ (JIS CODE)
-		call	_frame_delay pascal, 8
-		call	_mdrv2_se_play pascal, 14
-		call	tram_x16_kanji_center_reverse pascal, 217Ah	; Åö (JIS CODE)
-		call	_frame_delay pascal, 8
-		call	_mdrv2_se_play pascal, 14
-		call	tram_x16_kanji_center_reverse pascal, 704Dh	; ËÀ (JIS CODE)
-		call	_frame_delay pascal, 8
-		call	_mdrv2_se_play pascal, 14
-		call	tram_x16_kanji_center_reverse pascal, 305Bh	; àŸ (JIS CODE)
-		call	_frame_delay pascal, 8
-		call	_mdrv2_se_play pascal, 14
-		call	tram_x16_kanji_center_reverse pascal, 4541h	; ì` (JIS CODE)
-		call	_frame_delay pascal, 8
-		add	sp, 18h	; (only tram_x16_kanji_center_reverse actually uses Pascal calling convention!)
-
-loc_BEA4:
-		mov	al, _stage_num
-		cbw			; int
-		call	STAGE_NUM_ANIMATE pascal, ax
-		pop	di
-		pop	si
-		leave
-		retf
-sub_BCFE	endp
-
+	extern @stage_entrance$qinxci:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2758,14 +2613,14 @@ loc_DA49:
 		cbw
 		cmp	ax, 7
 		jz	short loc_DA7B
-		push	di		; int
-		pushd	[bp+s1]	; s1
+		push	di		; clear_vram_page_0
+		pushd	[bp+s1]	; bg_fn
 		mov	ax, [bp+@@stage]
 		mov	bx, 5
 		cwd
 		idiv	bx
 		push	dx		; int
-		call	sub_BCFE
+		call	@stage_entrance$qinxci
 		add	sp, 8
 		jmp	short loc_DA9E
 ; ---------------------------------------------------------------------------
@@ -12589,10 +12444,7 @@ main_30_TEXT	ends
 main_31_TEXT	segment	byte public 'CODE' use16
 	extern @stageobj_bgs_put_all$qv:proc
 	extern @stageobj_bgs_free$qv:proc
-	extern @stageobj_put_8$qiiii:proc
 	extern @scene_init_and_load$quc:proc
-	extern @stageobjs_copy_0_to_1$qi:proc
-	extern @stageobjs_init_and_render$qi:proc
 main_31_TEXT	ends
 
 main_31__TEXT	segment	byte public 'CODE' use16
@@ -30241,12 +30093,13 @@ _miko_ac_bos	db 'miko_ac.bos',0
 _miko_ac2_bos	db 'miko_ac2.bos',0
 _PTN_STG_CARDFLIP_FN	db 'stg.ptn',0
 _miko_ptn	db 'miko.ptn',0
+public _esc_color_bg_black_fg_black, _esc_cursor_to_x0_y0, _space
+public _esc_color_reset, _empty_grf
 _esc_color_bg_black_fg_black		db 1Bh,'[16;40m',0
 _esc_cursor_to_x0_y0		db 1Bh,'[0;0H',0
 _space	db ' ',0
 _esc_color_reset		db 1Bh,'[0m',0
-; char s2[]
-s2		db 'empty.grf',0
+_empty_grf		db 'empty.grf',0
 aKuzi1_grc	db 'kuzi1.grc',0
 aKuzi2_grc	db 'kuzi2.grc',0
 public _ORB_VELOCITY_Y_MAX, _ORB_VELOCITY_Y_MIN

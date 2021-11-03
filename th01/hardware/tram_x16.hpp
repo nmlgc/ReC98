@@ -1,3 +1,12 @@
+inline uint16_t shiftjis_to_jis(uint16_t shiftjis) {
+	return (0x1F21 +
+		(((shiftjis >> 8) - (shiftjis >> 15) < 0x9E)
+			? ((((shiftjis >> 8) - (shiftjis >> 15) - 0x40) & 0x1FF))
+			: ((shiftjis >> 8) - (shiftjis >> 15) + 0x62)
+		) + ((shiftjis & 0x3F) << 9)
+	);
+}
+
 // Font ROM glyph retrieval
 // ------------------------
 

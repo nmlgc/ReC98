@@ -1,5 +1,3 @@
-#include "th01/hardware/tram_x16.hpp"
-
 void TRAMCursor::putkanji(uint16_t jis_kanji, int atrb)
 {
 	// Yes, this is a correct way of writing any fullwidth character to TRAM.

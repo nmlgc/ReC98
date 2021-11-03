@@ -10,3 +10,8 @@ extern char default_bgm_fn[15];
 // card-flipping stages (`false`), or the trimmed-down version for boss stages
 // (`true`).
 extern bool ptn_slot_stg_has_reduced_sprites;
+
+// Render the initial stage screen and animations, depending on whether the
+// current stage is the [first_stage_in_scene]. If this is the case, this
+// function must be called with VRAM page 0 as the accessed page.
+void stage_entrance(int stage_id, const char* bg_fn, bool16 clear_vram_page_0);
