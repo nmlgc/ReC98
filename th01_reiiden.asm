@@ -62,6 +62,7 @@ BOSS_STAGE = (STAGES_PER_SCENE - 1)
 	.seq
 main_01 group main_010_TEXT, main_011_TEXT, main_012_TEXT, main_013_TEXT
 main_15 group main_15_TEXT, main_15__TEXT
+main_17 group main_17_TEXT, main_17__TEXT
 main_19 group main_19_TEXT, main_19__TEXT
 main_21 group main_21_TEXT, main_21__TEXT
 main_29 group main_29_TEXT, main_29__TEXT
@@ -3628,48 +3629,14 @@ mdrv2_TEXT	ends
 
 ; Segment type:	Pure code
 main_17_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_17_TEXT
+main_17_TEXT	ends
+
+main_17__TEXT	segment	byte public 'CODE' use16
+		assume cs:main_17
 		;org 5
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_125E5	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, [bp+arg_0]
-		imul	ax, 50h
-		mov	si, ax
-		call	_grcg_setcolor_rmw stdcall, 7
-		pop	cx
-		xor	di, di
-		jmp	short loc_1260D
-; ---------------------------------------------------------------------------
-
-loc_125FE:
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		mov	word ptr es:[bx], 0FFFFh
-		add	si, 2
-		inc	di
-
-loc_1260D:
-		cmp	di, 28h	; '('
-		jl	short loc_125FE
-		call	_grcg_off_func
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_125E5	endp
-
+	extern @grcg_whiteline$qi:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3682,8 +3649,8 @@ var_C		= word ptr -0Ch
 var_A		= word ptr -0Ah
 var_8		= word ptr -8
 var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@bottom		= word ptr -4
+@@top		= word ptr -2
 
 		enter	0Eh, 0
 		push	si
@@ -3693,32 +3660,30 @@ var_2		= word ptr -2
 		pop	cx
 		mov	ax, boss.BE_cur_top
 		add	ax, 48
-		mov	[bp+var_2], ax
+		mov	[bp+@@top], ax
 		mov	ax, boss.BE_cur_top
 		add	ax, 48
-		mov	[bp+var_4], ax
+		mov	[bp+@@bottom], ax
 
 loc_12640:
-		cmp	[bp+var_2], 0
+		cmp	[bp+@@top], 0
 		jl	short loc_1264E
-		push	[bp+var_2]
-		call	sub_125E5
+		call	@grcg_whiteline$qi stdcall, [bp+@@top]
 		pop	cx
 
 loc_1264E:
-		cmp	[bp+var_4], 18Fh
+		cmp	[bp+@@bottom], (RES_Y - 1)
 		jg	short loc_1265D
-		push	[bp+var_4]
-		call	sub_125E5
+		call	@grcg_whiteline$qi stdcall, [bp+@@bottom]
 		pop	cx
 
 loc_1265D:
-		dec	[bp+var_2]
-		inc	[bp+var_4]
+		dec	[bp+@@top]
+		inc	[bp+@@bottom]
 		inc	[bp+var_8]
-		cmp	[bp+var_2], 0
+		cmp	[bp+@@top], 0
 		jge	short loc_12673
-		cmp	[bp+var_4], 18Fh
+		cmp	[bp+@@bottom], (RES_Y - 1)
 		jg	short loc_126C3
 
 loc_12673:
@@ -4063,15 +4028,13 @@ var_6		= word ptr -6
 loc_12A5F:
 		cmp	[bp+@@orb_center_x], PLAYFIELD_LEFT
 		jl	short loc_12A6D
-		push	[bp+@@orb_center_x]
-		call	sub_125E5
+		call	@grcg_whiteline$qi stdcall, [bp+@@orb_center_x]
 		pop	cx
 
 loc_12A6D:
 		cmp	[bp+@@orb_center_y], (PLAYFIELD_BOTTOM - 1)
 		jg	short loc_12A7C
-		push	[bp+@@orb_center_y]
-		call	sub_125E5
+		call	@grcg_whiteline$qi stdcall, [bp+@@orb_center_y]
 		pop	cx
 
 loc_12A7C:
@@ -4232,7 +4195,7 @@ loc_12BA2:
 		retf
 sub_12A3A	endp
 
-main_17_TEXT	ends
+main_17__TEXT	ends
 
 ; ===========================================================================
 
