@@ -97,6 +97,12 @@ typedef int8_t uint4_t;
 		static ComponentType max() {
 			return (Range - 1);
 		}
+
+		void set(ComponentType r, ComponentType g, ComponentType b) {
+			this->c.r = r;
+			this->c.g = g;
+			this->c.b = b;
+		}
 	};
 
 	template <class RGBType> struct Palette {

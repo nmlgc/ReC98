@@ -49,6 +49,11 @@ extern Palette4 boss_post_defeat_palette;
 // Individual bosses
 // -----------------
 
+static const pixel_t SINGYOKU_W = 96;
+// Actually required publically, as singyoku_defeat_animate_and_select_route()
+// is part of the regular boss defeat translation unit.
+static const pixel_t SINGYOKU_H = 96;
+
 // Makai
 void elis_load(void);
 void elis_free(void);

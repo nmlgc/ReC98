@@ -55,6 +55,12 @@ void z_palette_white_out(void);
 	z_palette_set_all_show(z_Palettes); \
 }
 
+// Sets all colors in both the hardware palette and z_Palettes to #FFF.
+#define z_palette_set_white(tmp_col, tmp_comp) { \
+	palette_set_grayscale(z_Palettes, RGB4::max(), tmp_col, tmp_comp); \
+	z_palette_set_all_show(z_Palettes); \
+}
+
 // Performs a single black-out step.
 #define z_palette_black_out_step(tmp_col, tmp_comp) \
 	z_Palettes_set_func_and_show(tmp_col, tmp_comp, { \
@@ -66,6 +72,14 @@ void z_palette_white_out(void);
 	z_Palettes_set_func_and_show(tmp_col, tmp_comp, { \
 		z_Palettes.colors[tmp_col].v[tmp_comp] += \
 			(z_Palettes.colors[tmp_col].v[tmp_comp] > 0) ? -1 : 0; \
+	})
+
+// Performs a single white-out step.
+#define z_palette_white_out_step(tmp_col, tmp_comp) \
+	z_Palettes_set_func_and_show(tmp_col, tmp_comp, { \
+		if(z_Palettes.colors[tmp_col].v[tmp_comp] < 0xF) { \
+			z_Palettes.colors[tmp_col].v[tmp_comp]++; \
+		} \
 	})
 
 // Performs a single ramping step from z_Palettes to [target_pal]. Every color
