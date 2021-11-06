@@ -8,3 +8,6 @@ enum route_col_t {
 // as cleared. Repurposes the VRAM colors [COL_MAKAI] and [COL_JIGOKU] for the
 // route selection cursor.
 void singyoku_defeat_animate_and_select_route(void);
+
+// Shows the boss defeat animation and marks the current stage as cleared.
+void boss_defeat_animate(void);

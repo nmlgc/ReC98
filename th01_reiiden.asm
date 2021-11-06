@@ -62,7 +62,6 @@ BOSS_STAGE = (STAGES_PER_SCENE - 1)
 	.seq
 main_01 group main_010_TEXT, main_011_TEXT, main_012_TEXT, main_013_TEXT
 main_15 group main_15_TEXT, main_15__TEXT
-main_17 group main_17_TEXT, main_17__TEXT
 main_19 group main_19_TEXT, main_19__TEXT
 main_21 group main_21_TEXT, main_21__TEXT
 main_29 group main_29_TEXT, main_29__TEXT
@@ -3629,211 +3628,9 @@ mdrv2_TEXT	ends
 
 ; Segment type:	Pure code
 main_17_TEXT	segment	byte public 'CODE' use16
-main_17_TEXT	ends
-
-main_17__TEXT	segment	byte public 'CODE' use16
-		assume cs:main_17
-		;org 5
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-	extern @grcg_whiteline$qi:proc
 	extern @singyoku_defeat_animate_and_sele$qv:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12A3A	proc far
-
-var_8		= word ptr -8
-var_6		= word ptr -6
-@@orb_center_y		= word ptr -4
-@@orb_center_x		= word ptr -2
-
-		enter	8, 0
-		push	si
-		push	di
-		mov	[bp+var_8], 0
-		call	_z_vsync_wait_and_scrollup stdcall, 0
-		pop	cx
-		mov	ax, _orb_cur_top
-		add	ax, (ORB_W / 2)
-		mov	[bp+@@orb_center_x], ax
-		mov	ax, _orb_cur_top
-		add	ax, (ORB_H / 2)
-		mov	[bp+@@orb_center_y], ax
-
-loc_12A5F:
-		cmp	[bp+@@orb_center_x], PLAYFIELD_LEFT
-		jl	short loc_12A6D
-		call	@grcg_whiteline$qi stdcall, [bp+@@orb_center_x]
-		pop	cx
-
-loc_12A6D:
-		cmp	[bp+@@orb_center_y], (PLAYFIELD_BOTTOM - 1)
-		jg	short loc_12A7C
-		call	@grcg_whiteline$qi stdcall, [bp+@@orb_center_y]
-		pop	cx
-
-loc_12A7C:
-		sub	[bp+@@orb_center_x], 2
-		add	[bp+@@orb_center_y], 2
-		inc	[bp+var_8]
-		cmp	[bp+@@orb_center_x], PLAYFIELD_LEFT
-		jge	short loc_12A94
-		cmp	[bp+@@orb_center_y], (PLAYFIELD_BOTTOM - 1)
-		jg	short loc_12AE4
-
-loc_12A94:
-		mov	ax, [bp+var_8]
-		mov	bx, 7
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_12AD9
-		xor	si, si
-		jmp	short loc_12AC8
-; ---------------------------------------------------------------------------
-
-loc_12AA5:
-		xor	di, di
-		jmp	short loc_12AC2
-; ---------------------------------------------------------------------------
-
-loc_12AA9:
-		mov	bx, si
-		imul	bx, 3
-		mov	al, _z_Palettes[bx+di]
-		cbw
-		cmp	ax, 0Fh
-		jge	short loc_12AC1
-		mov	bx, si
-		imul	bx, 3
-		inc	byte ptr _z_Palettes[bx+di]
-
-loc_12AC1:
-		inc	di
-
-loc_12AC2:
-		cmp	di, 3
-		jl	short loc_12AA9
-		inc	si
-
-loc_12AC8:
-		cmp	si, 10h
-		jl	short loc_12AA5
-		call	_z_palette_set_all_show c, offset _z_Palettes, ds
-
-loc_12AD9:
-		push	1
-		call	_frame_delay
-		pop	cx
-		jmp	loc_12A5F
-; ---------------------------------------------------------------------------
-
-loc_12AE4:
-		mov	[bp+var_8], 0
-		xor	si, si
-		jmp	short loc_12B02
-; ---------------------------------------------------------------------------
-
-loc_12AED:
-		xor	di, di
-		jmp	short loc_12AFC
-; ---------------------------------------------------------------------------
-
-loc_12AF1:
-		mov	bx, si
-		imul	bx, 3
-		mov	byte ptr _z_Palettes[bx+di], 0Fh
-		inc	di
-
-loc_12AFC:
-		cmp	di, 3
-		jl	short loc_12AF1
-		inc	si
-
-loc_12B02:
-		cmp	si, 10h
-		jl	short loc_12AED
-		call	_z_palette_set_all_show stdcall, offset _z_Palettes, ds
-		push	1
-		call	_graph_accesspage_func
-		call	_graph_copy_accessed_page_to_othe
-		push	0
-		call	_graph_accesspage_func
-		call	_ptn_put_8 stdcall, _player_left, (PTN_MIKO_L shl 16) or _player_top
-		add	sp, 0Eh
-
-loc_12B35:
-		inc	[bp+var_8]
-		mov	[bp+var_6], 0
-		mov	ax, [bp+var_8]
-		mov	bx, 5
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_12B8C
-		xor	si, si
-		jmp	short loc_12B7B
-; ---------------------------------------------------------------------------
-
-loc_12B4E:
-		xor	di, di
-		jmp	short loc_12B75
-; ---------------------------------------------------------------------------
-
-loc_12B52:
-		mov	bx, si
-		imul	bx, size rgb_t
-		mov	al, _z_Palettes[bx+di]
-		mov	bx, si
-		imul	bx, size rgb_t
-		cmp	al, byte ptr _boss_post_defeat_palette[bx+di]
-		jle	short loc_12B71
-		mov	bx, si
-		imul	bx, size rgb_t
-		dec	byte ptr _z_Palettes[bx+di]
-		jmp	short loc_12B74
-; ---------------------------------------------------------------------------
-
-loc_12B71:
-		inc	[bp+var_6]
-
-loc_12B74:
-		inc	di
-
-loc_12B75:
-		cmp	di, size rgb_t
-		jl	short loc_12B52
-		inc	si
-
-loc_12B7B:
-		cmp	si, COLOR_COUNT
-		jl	short loc_12B4E
-		call	_z_palette_set_all_show c, offset _z_Palettes, ds
-
-loc_12B8C:
-		cmp	[bp+var_6], 30h	; '0'
-		jge	short loc_12B9C
-		push	1
-		call	_frame_delay
-		pop	cx
-		jmp	short loc_12B35
-; ---------------------------------------------------------------------------
-
-loc_12B9C:
-		mov	_stage_cleared, 1
-
-loc_12BA2:
-		mov	_done, 1
-		pop	di
-		pop	si
-		leave
-		retf
-sub_12A3A	endp
-
-main_17__TEXT	ends
+	extern @boss_defeat_animate$qv:proc
+main_17_TEXT	ends
 
 ; ===========================================================================
 
@@ -8688,7 +8485,7 @@ loc_1D705:
 loc_1D74B:
 		cmp	si, 5
 		jl	short loc_1D705
-		call	sub_12A3A
+		call	@boss_defeat_animate$qv
 		call	@scene_init_and_load$quc stdcall, 3
 		pop	cx
 
@@ -9375,7 +9172,7 @@ loc_1DFA4:
 loc_1DFEA:
 		cmp	si, 5
 		jl	short loc_1DFA4
-		call	sub_12A3A
+		call	@boss_defeat_animate$qv
 		call	@scene_init_and_load$quc stdcall, 3
 		pop	cx
 
@@ -12014,7 +11811,7 @@ loc_1FD77:
 loc_1FDBD:
 		cmp	si, 5
 		jl	short loc_1FD77
-		call	sub_12A3A
+		call	@boss_defeat_animate$qv
 		call	@scene_init_and_load$quc stdcall, 4
 
 loc_1FDCE:
@@ -17560,7 +17357,7 @@ loc_24DA3:
 loc_24DE9:
 		cmp	si, 4
 		jl	short loc_24DA3
-		call	sub_12A3A
+		call	@boss_defeat_animate$qv
 		call	@scene_init_and_load$quc stdcall, 6
 		pop	cx
 
@@ -22607,7 +22404,7 @@ loc_285FD:
 loc_28643:
 		cmp	si, SHOOTOUT_LASER_COUNT
 		jl	short loc_285FD
-		call	sub_12A3A
+		call	@boss_defeat_animate$qv
 		push	5
 
 loc_2864F:

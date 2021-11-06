@@ -229,3 +229,10 @@ void singyoku_defeat_animate_and_select_route(void)
 	stage_cleared = true;
 	done = true;
 }
+
+void boss_defeat_animate(void)
+{
+	defeat_animate((orb_cur_top + (ORB_H / 2)), 2, 7, 5);
+	stage_cleared = true;
+	done = true;
+}
