@@ -15,7 +15,7 @@ extern "C" {
 #undef grcg_off
 #define grcg_off() outportb(0x7C, 0);
 
-extern page_t page_back;
+extern page_t page_accessed;
 
 /// VRAM plane "structures"
 /// -----------------------
@@ -169,7 +169,7 @@ void graph_showpage_func(page_t page)
 
 void graph_accesspage_func(int page)
 {
-	page_back = page;
+	page_accessed = page;
 	outportb(0xA6, page);
 }
 /// -------------
@@ -257,17 +257,17 @@ void z_graph_clear_col(uint4_t col)
 	grcg_off_func();
 }
 
-void graph_copy_page_back_to_front(void)
+void graph_copy_accessed_page_to_other(void)
 {
 	PlanarRow_declare(tmp);
 	Planes_declare(p);
-	page_t page_front = (page_back ^ 1);
+	page_t page_front = (page_accessed ^ 1);
 
 	for(screen_y_t y = 0; y < RES_Y; y++) {
 		PlanarRow_blit(tmp, p, ROW_SIZE);
 		graph_accesspage(page_front);
 		PlanarRow_blit(p, tmp, ROW_SIZE);
-		graph_accesspage(page_back);
+		graph_accesspage(page_accessed);
 		Planes_next_row(p);
 	}
 }
@@ -790,14 +790,14 @@ void graph_putsa_fx(
 	grcg_off_func();
 }
 
-void graph_copy_byterect_back_to_front(
+void graph_copy_byterect_from_accessed_page_to_other(
 	screen_x_t left, vram_y_t top, screen_x_t right, vram_y_t bottom
 )
 {
 	pixel_t w = (right - left) / BYTE_DOTS;
 	pixel_t h = (bottom - top);
 	Planes_declare(p);
-	page_t page_front = page_back ^ 1;
+	page_t page_front = page_accessed ^ 1;
 	pixel_t row;
 	PlanarRow_declare(tmp);
 
@@ -806,7 +806,7 @@ void graph_copy_byterect_back_to_front(
 		PlanarRow_blit(tmp, p, w);
 		graph_accesspage(page_front);
 		PlanarRow_blit(p, tmp, w);
-		graph_accesspage(page_back);
+		graph_accesspage(page_accessed);
 		Planes_next_row(p);
 	}
 }
@@ -838,7 +838,7 @@ void graph_move_byterect_interpage(
 		Planes_next_row(src);
 		Planes_next_row(dst);
 	}
-	graph_accesspage(page_back);
+	graph_accesspage(page_accessed);
 }
 
 void z_palette_fade_from(

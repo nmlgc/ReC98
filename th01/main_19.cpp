@@ -97,7 +97,7 @@ void pascal near str_from_kanji(char str[3], uint16_t kanji)
 	} else { \
 		grp_put(REGIST_BG_CLEARED); \
 	} \
-	graph_copy_page_back_to_front(); \
+	graph_copy_accessed_page_to_other(); \
 	z_palette_black_in(); \
 }
 

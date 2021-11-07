@@ -1327,7 +1327,7 @@ var_10		= byte ptr -10h
 		call	_graph_accesspage_func
 		pop	cx
 		call	_grp_put_palette_show c, offset aEndm_a_grp, ds	; "endm_a.grp"
-		call	_graph_copy_page_back_to_front
+		call	_graph_copy_accessed_page_to_othe
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
@@ -1482,7 +1482,7 @@ loc_C6C7:
 		push	1
 		call	_graph_accesspage_func
 		pop	cx
-		call	_graph_copy_page_back_to_front
+		call	_graph_copy_accessed_page_to_othe
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
@@ -1562,7 +1562,7 @@ graph_TEXT	segment	byte public 'CODE' use16
 	extern _graph_accesspage_func:proc
 	extern _z_palette_set_all_show:proc
 	extern _z_graph_clear:proc
-	extern _graph_copy_page_back_to_front:proc
+	extern _graph_copy_accessed_page_to_othe:proc
 graph_TEXT	ends
 
 ; ===========================================================================

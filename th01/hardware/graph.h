@@ -13,8 +13,6 @@ void z_graph_hide(void);
 /// Pages
 /// -----
 void graph_showpage_func(page_t page);
-
-// Also updates [page_back].
 void graph_accesspage_func(int page);
 
 // Fills the entire active page with hardware color 0 or the given [col].
@@ -24,7 +22,9 @@ void z_graph_clear_col(uint4_t col);
 // Fills page #0 with hardware color 0.
 void z_graph_clear_0(void);
 
-void graph_copy_page_back_to_front(void);
+// Copies the content of the VRAM page that was previously set as the accessed
+// one via a call to graph_accesspage_func() to the opposite one.
+void graph_copy_accessed_page_to_other(void);
 /// -----
 
 /// GRCG
@@ -113,12 +113,13 @@ void graph_putfwnum_fx(
 
 /// Blitting
 /// --------
-// Copies the given rectangle from
+// Copies the given rectangle on the current from
 //     (⌊left/8⌋*8, top)
 // to
 //     (⌊left/8⌋*8 + ⌊(right-left)/8⌋*8, bottom)
-// on the current back page to the same position on the current front page.
-void graph_copy_byterect_back_to_front(
+// from the VRAM page that was previously set as the accessed one via a call
+// to  graph_accesspage_func() to the same position on the opposite page.
+void graph_copy_byterect_from_accessed_page_to_other(
 	screen_x_t left, vram_y_t top, screen_x_t right, vram_y_t bottom
 );
 

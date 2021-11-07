@@ -184,14 +184,14 @@ loc_BD75:
 		push	offset _z_Palettes
 		nopcall	_stage_palette_set
 		add	sp, 4
-		call	_graph_copy_page_back_to_front
+		call	_graph_copy_accessed_page_to_othe
 		jmp	short loc_BDAD
 ; ---------------------------------------------------------------------------
 
 loc_BD88:
 		push	1
 		call	_graph_accesspage_func
-		call	_graph_copy_page_back_to_front
+		call	_graph_copy_accessed_page_to_othe
 		push	0
 		call	_graph_accesspage_func
 		call	_ptn_put_8 stdcall, _player_left, (PTN_MIKO_L shl 16) or _player_top
@@ -202,7 +202,7 @@ loc_BDAD:
 		pop	cx
 		cmp	_first_stage_in_scene, 1
 		jnz	short loc_BDC2
-		call	_graph_copy_page_back_to_front
+		call	_graph_copy_accessed_page_to_othe
 		jmp	short loc_BE00
 ; ---------------------------------------------------------------------------
 
@@ -856,7 +856,7 @@ loc_C3EE:
 		push	1
 		call	_graph_accesspage_func
 		pop	cx
-		call	_graph_copy_page_back_to_front
+		call	_graph_copy_accessed_page_to_othe
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
@@ -1250,7 +1250,7 @@ sub_CC0F	proc far
 		push	1
 		call	_graph_accesspage_func
 		pop	cx
-		call	_graph_copy_page_back_to_front
+		call	_graph_copy_accessed_page_to_othe
 		call	_graph_putsa_fx c, 0, ((FX_CLEAR_BG or (7 or FX_WEIGHT_BOLD)) shl 16) or 0, offset aVgvpvovfvivovx, ds ; "ｃｏｎｔｉｎｕｅ？　　　  "
 		call	_graph_putsa_fx c, 0, ((FX_CLEAR_BG or (7 or FX_WEIGHT_BOLD)) shl 16) or 16, offset aVxvevub@b@B@, ds ; "Ｙｅｓ　　  　"
 		call	_graph_putsa_fx c, 0, ((FX_CLEAR_BG or (7 or FX_WEIGHT_BOLD)) shl 16) or 32, offset aVmvpb@b@B@, ds ; "Ｎｏ　　	　 "
@@ -1434,7 +1434,7 @@ loc_CEBC:
 loc_CEDA:
 		cmp	di, 5
 		jl	short loc_CEBC
-		call	_graph_copy_page_back_to_front
+		call	_graph_copy_accessed_page_to_othe
 		xor	di, di
 		jmp	loc_D00D
 ; ---------------------------------------------------------------------------
@@ -3506,7 +3506,7 @@ graph_TEXT	segment	byte public 'CODE' use16
 	extern _z_palette_set_all_show:proc
 	extern _z_palette_set_show:proc
 	extern _z_graph_clear:proc
-	extern _graph_copy_page_back_to_front:proc
+	extern _graph_copy_accessed_page_to_othe:proc
 	extern _graph_r_vline:proc
 	extern _graph_r_line_unput:proc
 	extern _graph_r_line_patterned:proc
@@ -3941,7 +3941,7 @@ loc_126E1:
 		call	_z_palette_set_all_show stdcall, offset _z_Palettes, ds
 		push	1
 		call	_graph_accesspage_func
-		call	_graph_copy_page_back_to_front
+		call	_graph_copy_accessed_page_to_othe
 		push	0
 		call	_graph_accesspage_func
 		call	_ptn_put_8 stdcall, _player_left, (PTN_MIKO_L shl 16) or _player_top
@@ -4068,7 +4068,7 @@ loc_127AC:
 		call	_graph_2xscale_byterect_1_to_0_sl stdcall, large (250 shl 16) or 256, large ( 96 shl 16) or 0, large (16 shl 16) or  48
 		call	_graph_2xscale_byterect_1_to_0_sl stdcall, large (300 shl 16) or 256, large (128 shl 16) or 0, large (16 shl 16) or  48
 		add	sp, 30h
-		call	_graph_copy_page_back_to_front
+		call	_graph_copy_accessed_page_to_othe
 		call	_ptn_put_8 stdcall, 128, (3 shl 16) or 250
 		add	sp, 6
 		mov	[bp+var_A], 0
@@ -4303,7 +4303,7 @@ loc_12B02:
 		call	_z_palette_set_all_show stdcall, offset _z_Palettes, ds
 		push	1
 		call	_graph_accesspage_func
-		call	_graph_copy_page_back_to_front
+		call	_graph_copy_accessed_page_to_othe
 		push	0
 		call	_graph_accesspage_func
 		call	_ptn_put_8 stdcall, _player_left, (PTN_MIKO_L shl 16) or _player_top
@@ -25418,7 +25418,7 @@ loc_29D0E:
 		mov	bx, [bp+arg_0]
 		shl	bx, 2
 		call	_grp_put_palette_show stdcall, large _BG_IMAGES[bx]
-		call	_graph_copy_page_back_to_front
+		call	_graph_copy_accessed_page_to_othe
 		call	_stage_palette_set stdcall, offset _z_Palettes, ds
 		push	0
 		call	_graph_accesspage_func
@@ -29620,7 +29620,7 @@ loc_2C8AE:
 		call	_grp_put_palette_show c, offset aBoss6_grp, ds ; "boss6.grp"
 		call	_z_palette_set_show c, large (0 shl 16) or 0Fh, large (0 shl 16) or 0
 		call	@boss_palette_snap$qv
-		call	_graph_copy_page_back_to_front
+		call	_graph_copy_accessed_page_to_othe
 		push	1
 		call	_graph_accesspage_func
 		pop	cx
@@ -29697,7 +29697,7 @@ loc_2C9DA:
 		call	_mdrv2_bgm_play
 		call	_grp_put_palette_show c, offset aBoss6_a6_grp, ds ; "boss6_a6.grp"
 		call	_z_palette_set_show c, large (0 shl 16) or 6, large (0 shl 16) or 0
-		call	_graph_copy_page_back_to_front
+		call	_graph_copy_accessed_page_to_othe
 		mov	_first_stage_in_scene, 1
 		call	@hud_bg_snap_and_put$qv
 		call	@hud_score_and_cardcombo_render$qv
@@ -29951,7 +29951,7 @@ loc_2CC9E:
 		call	_grp_put_palette_show c, offset aBoss6_a6_grp, ds ; "boss6_a6.grp"
 		call	_z_palette_set_show c, large (0 shl 16) or 6, large (0 shl 16) or 0
 		call	@boss_palette_snap$qv
-		call	_graph_copy_page_back_to_front
+		call	_graph_copy_accessed_page_to_othe
 		push	0
 		call	_graph_accesspage_func
 

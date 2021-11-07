@@ -98,7 +98,7 @@ sub_A719	proc far
 		pop	cx
 		call	_grp_put_palette_show c, offset aReiiden2_grp, ds ; "REIIDEN2.grp"
 		call	_z_palette_black
-		call	_graph_copy_page_back_to_front
+		call	_graph_copy_accessed_page_to_othe
 		call	_grp_put c, offset aReiiden3_grp, ds ; "REIIDEN3.grp"
 		push	0
 		call	_graph_accesspage_func
@@ -123,12 +123,12 @@ sub_A772	proc far
 		push	1
 		call	_graph_accesspage_func
 		pop	cx
-		call	_graph_copy_page_back_to_front
+		call	_graph_copy_accessed_page_to_othe
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
 		call	_grp_put_colorkey c, offset aOp_win_grp, ds ; "op_win.grp"
-		call	_graph_copy_page_back_to_front
+		call	_graph_copy_accessed_page_to_othe
 		pop	bp
 		retf
 sub_A772	endp
@@ -1370,7 +1370,7 @@ initexit_TEXT	ends
 graph_TEXT	segment	byte public 'CODE' use16
 	extern _graph_accesspage_func:proc
 	extern _z_graph_clear:proc
-	extern _graph_copy_page_back_to_front:proc
+	extern _graph_copy_accessed_page_to_othe:proc
 	extern _z_palette_black:proc
 	extern _z_palette_black_in:proc
 	extern _graph_putsa_fx:proc
