@@ -131,6 +131,19 @@ void MASTER_RET egc_start(void);
 	outport(EGC_MODE_ROP_REG, mode_rop)
 // ---
 
+// EMS
+// ---
+
+unsigned MASTER_RET ems_allocate(unsigned long len);
+int MASTER_RET ems_exist(void);
+int MASTER_RET ems_read(unsigned handle, long offset, void far *mem, long size);
+int MASTER_RET ems_setname(unsigned handle, const char MASTER_PTR * name);
+unsigned long MASTER_RET ems_space(void);
+int MASTER_RET ems_write(
+	unsigned handle, long offset, const void far *mem, long size
+);
+// ---
+
 // Gaiji
 // -----
 
