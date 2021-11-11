@@ -321,9 +321,12 @@ C++, Open Watcom, and Visual C++, which will ease future third-party ports.
 
 On some occasions, ZUN leaked pieces of the actual PC-98 Touhou source code
 during interviews. From these, we can derive ZUN's original names for certain
-variables, functions, or macros. To indicate one of those and protect them
-from being renamed, put a `/* ZUN symbol [reference] */` comment next to the
-declaration of the identifier in question.
+variables, functions, or macros. To indicate one of those, put a
+`/* ZUN symbol [reference] */` comment next to the declaration and definition
+of the identifier in question. Preserving any aspect from leaked ZUN code just
+for the sake of it is not mandatory though, and in fact tends to make the
+resulting code harder to understand. If you can come up with a better (or less
+wrong) name, go for it.
 
 Currently, we know about the following [references]:
 
