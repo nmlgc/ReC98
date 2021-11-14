@@ -52,4 +52,6 @@ static const uint32_t EMS_FACESET_PLAYCHAR_END = (EMS_FACESET_PLAYCHAR_OFFSET +
 // ------
 
 extern seg_t Ems; /* ZUN symbol [MAGNet2010] */
+
+void near ems_allocate_and_preload_eyecatch(void);
 /// --------------

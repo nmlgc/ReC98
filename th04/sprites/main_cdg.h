@@ -33,6 +33,6 @@ typedef enum {
 	CDG_BG_2,	// Second background slot
 	CDG_PER_STAGE_last = 30,
 
-	CDG_EYE,
+	CDG_EYECATCH,
 	CDG_COUNT
 } main_cdg_slot_t;

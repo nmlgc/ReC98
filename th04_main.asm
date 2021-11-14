@@ -44,7 +44,7 @@ include th04/main/enemy/enemy.inc
 	extern __ctype:byte
 
 	.seq
-main_01 group SLOWDOWN_TEXT, mai_TEXT, main_TEXT, main__TEXT, PLAYER_P_TEXT, main_0_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT
+main_01 group SLOWDOWN_TEXT, mai_TEXT, EMS_TEXT, main_TEXT, main__TEXT, PLAYER_P_TEXT, main_0_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT
 g_SHARED group SHARED, SHARED_
 main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, main_033_TEXT
 
@@ -298,7 +298,7 @@ _envp		= dword	ptr  0Ch
 		les	bx, _resident
 		mov	eax, es:[bx+resident_t.rand]
 		mov	random_seed, eax
-		call	main_01:EmsSetup
+		call	@ems_allocate_and_preload_eyecatc$qv
 		call	text_clear
 		call	gaiji_backup
 		push	ds
@@ -1052,69 +1052,11 @@ DemoPlay	proc near
 DemoPlay	endp
 mai_TEXT	ends
 
+EMS_TEXT	segment	byte public 'CODE' use16
+	@ems_allocate_and_preload_eyecatc$qv procdesc near
+EMS_TEXT	ends
+
 main_TEXT	segment	word public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public EMSSETUP
-EmsSetup	proc near ; ZUN symbol [MAGNet2010]
-		push	bp
-		mov	bp, sp
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.stage]
-		mov	_stage_id, al
-		cmp	_stage_id, 6
-		jnz	short @@game_is_not_extra
-		mov	_rank, RANK_EXTRA
-		jmp	short loc_B4AF
-; ---------------------------------------------------------------------------
-
-@@game_is_not_extra:
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.rank]
-		mov	_rank, al
-
-loc_B4AF:
-		les	bx, eyename
-		mov	al, _rank
-		add	al, 30h	; '0'
-		mov	es:[bx+3], al
-		mov	_Ems, 0
-		call	ems_exist
-		or	ax, ax
-		jz	short @@ret
-		call	ems_space
-		push	dx
-		push	ax
-		pop	eax
-		cmp	eax, EMSSIZE
-		jb	short @@ret
-		call	ems_allocate pascal, EMSSIZE
-		mov	_Ems, ax
-		cmp	_Ems, 0
-		jz	short @@ret
-		push	ax
-		push	ds
-		push	offset aGensoems ; "GENSOEMS"
-		call	ems_setname
-		call	cdg_load_single_noalpha pascal, CDG_EYE, [eyename], 0
-		push	_Ems
-		pushd	0
-		push	_cdg_slots.seg_colors + (size cdg_t * CDG_EYE)
-		push	0
-		mov	ax, _cdg_slots.CDG_plane_size + (size cdg_t * CDG_EYE)
-		shl	ax, 2
-		movzx	eax, ax
-		push	eax
-		call	ems_write
-		call	cdg_free pascal, CDG_EYE
-
-@@ret:
-		pop	bp
-		retn
-EmsSetup	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1235,7 +1177,7 @@ sub_B616	proc near
 ; ---------------------------------------------------------------------------
 
 loc_B64C:
-		call	cdg_load_single_noalpha pascal, CDG_EYE, [eyename], 0
+		call	cdg_load_single_noalpha pascal, CDG_EYE, [_eyename], 0
 
 loc_B65A:
 		mov	PaletteTone, 0
@@ -33038,13 +32980,14 @@ main_033_TEXT	ends
 	.data
 
 include th04/gaiji/pause[data].asm
-		db    0
-eyename	dd aEye0_cdg	; original ZUN variable name
+	evendata
+public _eyename
+_eyename	dd _EYECATCH_FN_FORMAT	; ZUN symbol [MAGNet2010]
 word_213DE	dw 0
 off_213E0	dd aSt00
 					; "ST00"
 bbname	dd aBb0_cdg_0	; original ZUN variable name
-aEye0_cdg	db 'eye0.cdg',0
+_EYECATCH_FN_FORMAT	db 'eye0.cdg',0
 aUmx		db '“Œ•ûŒ¶‘z.‹½',0
 aGameft_bft	db 'GAMEFT.bft',0
 aMiko		db 'miko',0
@@ -33083,7 +33026,8 @@ aSt06_mpn	db 'st06.mpn',0
 include th04/main/pause[data].asm
 aDemo0_rec	db 'DEMO0.REC',0
 aOp_0		db 'op',0
-aGensoems	db 'GENSOEMS',0
+public _EMS_NAME
+_EMS_NAME	db 'GENSOEMS',0
 aBb0_cdg_0	db 'BB0.CDG',0
 aKao0_cd2	db 'KAO0.cd2',0
 aKao1_cd2	db 'KAO1.cd2',0
