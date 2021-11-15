@@ -802,7 +802,7 @@ loc_B2DD:
 		cmp	word_20A84, 0
 		jz	loc_B3CA
 		call	bb_curvebullet_load
-		call	EmsLoad
+		call	@bomb_bg_load__ems_preload_playch$qv
 		call	bb_playchar_load
 		mov	al, _playchar
 		mov	ah, 0
@@ -1232,129 +1232,10 @@ ma_TEXT	ends
 
 EMS_TEXT	segment	byte public 'CODE' use16
 	@ems_allocate_and_preload_eyecatc$qv procdesc near
+	@bomb_bg_load__ems_preload_playch$qv procdesc near
 EMS_TEXT	ends
 
 CFG_LRES_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public EMSLOAD
-EmsLoad	proc near ; ZUN symbol [MAGNet2010]
-
-@@size		= dword	ptr -4 ; ZUN symbol [MAGNet2010]
-
-		enter	4, 0
-		push	si
-		push	di
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.playchar]
-		add	al, '0'
-		les	bx, bbname
-		mov	es:[bx+2], al
-		call	cdg_load_all_noalpha pascal, CDG_BG_PLAYCHAR_BOMB, word ptr bbname+2, bx
-		cmp	_Ems, 0
-		jz	@@ret
-		push	_Ems
-		pushd	34000
-		push	_cdg_slots.seg_colors + (size cdg_t * 0)
-		push	0
-		mov	ax, _cdg_slots.CDG_plane_size + (size cdg_t * 0)
-		shl	ax, 2
-		movzx	eax, ax
-		push	eax
-		call	ems_write
-		mov	al, _playchar
-		mov	ah, 0
-		mov	bx, ax
-		cmp	bx, PLAYCHAR_COUNT - 1
-		ja	short loc_B946
-		add	bx, bx
-		jmp	cs:off_B9C4[bx]
-
-@@reimu:
-		push	CDG_FACESET_PLAYCHAR
-		push	ds
-		push	offset aKao0_cd2 ; "KAO0.cd2"
-		jmp	short loc_B941
-; ---------------------------------------------------------------------------
-
-@@marisa:
-		push	CDG_FACESET_PLAYCHAR
-		push	ds
-		push	offset aKao1_cd2 ; "KAO1.cd2"
-		jmp	short loc_B941
-; ---------------------------------------------------------------------------
-
-@@mima:
-		push	CDG_FACESET_PLAYCHAR
-		push	ds
-		push	offset aKao2_cd2 ; "KAO2.cd2"
-		jmp	short loc_B941
-; ---------------------------------------------------------------------------
-
-@@yuuka:
-		push	CDG_FACESET_PLAYCHAR
-		push	ds
-		push	offset aKao3_cd2 ; "KAO3.cd2"
-
-loc_B941:
-		call	cdg_load_all
-
-loc_B946:
-		mov	si, CDG_FACESET_PLAYCHAR
-		mov	[bp+@@size], 100000
-		mov	di, _cdg_slots.CDG_plane_size + (size cdg_t * CDG_FACESET_PLAYCHAR)
-		jmp	short loc_B9B4
-; ---------------------------------------------------------------------------
-
-loc_B957:
-		push	_Ems
-		pushd	[bp+@@size]
-		mov	bx, si
-		shl	bx, 4
-		push	_cdg_slots.seg_alpha[bx]
-		push	0
-		movzx	eax, di
-		push	eax
-		call	ems_write
-		movzx	eax, di
-		add	[bp+@@size], eax
-		push	_Ems
-		pushd	[bp+@@size]
-		mov	bx, si
-		shl	bx, 4
-		push	_cdg_slots.seg_colors[bx]
-		push	0
-		mov	ax, di
-		shl	ax, 2
-		movzx	eax, ax
-		push	eax
-		call	ems_write
-		mov	ax, di
-		shl	ax, 2
-		movzx	eax, ax
-		add	[bp+@@size], eax
-		call	cdg_free pascal, si
-		inc	si
-
-loc_B9B4:
-		mov	bx, si
-		shl	bx, 4
-		cmp	_cdg_slots.seg_alpha[bx], 0
-		jnz	short loc_B957
-
-@@ret:
-		pop	di
-		pop	si
-		leave
-		retn
-
-off_B9C4	dw offset @@reimu
-		dw offset @@marisa
-		dw offset @@mima
-		dw offset @@yuuka
-EmsLoad	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -25062,12 +24943,12 @@ byte_20A71	db 0
 		dd aVersion1_01		; "version 1.01"
 include th04/gaiji/pause[data].asm
 	evendata
-public _eyename
+public _eyename, _bbname
 _eyename	dd _EYECATCH_FN
 word_20A84	dw 0
 off_20A86	dd aSt00
 					; "ST00"
-bbname	dd aBb0_cdg_0	; ZUN symbol [MAGNet2010]
+_bbname	dd aBb0_cdg_0	; ZUN symbol [MAGNet2010]
 aVersion1_01	db 'version 1.01',0
 _EYECATCH_FN	db 'eye.cdg',0
 aKAIKIDAN2_DAT	db '‰öãY’k2.dat',0
@@ -25115,11 +24996,13 @@ aOp_1		db 'op',0
 public _EMS_NAME
 _EMS_NAME	db 'KAIKIEMS',0
 aBb0_cdg_0	db 'BB0.CDG',0
-aKao0_cd2	db 'KAO0.cd2',0
-aKao1_cd2	db 'KAO1.cd2',0
-aKao2_cd2	db 'KAO2.cd2',0
-aKao3_cd2	db 'KAO3.cd2',0
-		db    0
+public _FACESET_REIMU_FN_0, _FACESET_MARISA_FN_0
+public _FACESET_MIMA_FN, _FACESET_YUUKA_FN
+_FACESET_REIMU_FN_0 	db 'KAO0.cd2',0
+_FACESET_MARISA_FN_0	db 'KAO1.cd2',0
+_FACESET_MIMA_FN    	db 'KAO2.cd2',0
+_FACESET_YUUKA_FN   	db 'KAO3.cd2',0
+	evendata
 include libs/master.lib/atan8[data].asm
 include libs/master.lib/atrtcmod[data].asm
 include libs/master.lib/bfnt_id[data].asm

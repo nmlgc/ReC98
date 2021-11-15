@@ -71,7 +71,7 @@ void pascal cdg_load_single(int slot, const char *fn, int n);
 // Like cdg_load_single(), but not loading any alpha planes.
 void pascal cdg_load_single_noalpha(int slot, const char *fn, int n);
 
-// Frees the CDG image in the given [slot].
+// Frees the CDG image in the given [slot], but retains the metadata.
 void pascal cdg_free(int slot);
 
 // Frees the CDG images in all slots.

@@ -54,4 +54,14 @@ static const uint32_t EMS_FACESET_PLAYCHAR_END = (EMS_FACESET_PLAYCHAR_OFFSET +
 extern seg_t Ems; /* ZUN symbol [MAGNet2010] */
 
 void near ems_allocate_and_preload_eyecatch(void);
+
+// MODDERS: Doesn't actually limit the amount of copied .CDG images to at most
+// PLAYCHAR_FACESET_COUNT, and instead copies all currently loaded color/alpha
+// bitplanes, starting at CDG_FACESET_PLAYCHAR, until reaching a slot with no
+// alpha plane. Therefore, CDG_FACESET_BOSS is assumed to be freed prior to
+// calling this function.
+// (As long as original game data is used, this might only become a problem
+// with TH04 Reimu though, who has the only faceset with the maximum image
+// count.)
+void near bomb_bg_load__ems_preload_playchar_cdgs(void);
 /// --------------

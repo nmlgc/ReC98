@@ -714,7 +714,7 @@ loc_AF4A:
 		call	sub_19EBC
 		cmp	word_213DE, 0
 		jz	short loc_AFD5
-		call	main_01:EmsLoad
+		call	@bomb_bg_load__ems_preload_playch$qv
 		call	main_01:bb_playchar_load
 		cmp	_playchar, PLAYCHAR_REIMU
 		jnz	short loc_AFA0
@@ -1054,101 +1054,10 @@ mai_TEXT	ends
 
 EMS_TEXT	segment	byte public 'CODE' use16
 	@ems_allocate_and_preload_eyecatc$qv procdesc near
+	@bomb_bg_load__ems_preload_playch$qv procdesc near
 EMS_TEXT	ends
 
 main_TEXT	segment	word public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public EMSLOAD
-EmsLoad	proc near ; ZUN symbol [MAGNet2010]
-
-@@size		= dword	ptr -4 ; ZUN symbol [MAGNet2010]
-
-		enter	4, 0
-		push	si
-		push	di
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.playchar_ascii]
-		les	bx, bbname
-		mov	es:[bx+2], al
-		call	cdg_load_single_noalpha pascal, CDG_BG_PLAYCHAR_BOMB, word ptr bbname+2, bx, 0
-		cmp	_Ems, 0
-		jz	@@ret
-		push	_Ems
-		pushd	34000
-		push	_cdg_slots.seg_colors + (size cdg_t * 0)
-		push	0
-		mov	ax, _cdg_slots.CDG_plane_size + (size cdg_t * 0)
-		shl	ax, 2
-		movzx	eax, ax
-		push	eax
-		call	ems_write
-		cmp	_playchar, PLAYCHAR_REIMU
-		jnz	short @@not_reimu
-		push	CDG_FACESET_PLAYCHAR
-		push	ds
-		push	offset aKao0_cd2 ; "KAO0.cd2"
-		jmp	short loc_B593
-; ---------------------------------------------------------------------------
-
-@@not_reimu:
-		push	CDG_FACESET_PLAYCHAR
-		push	ds
-		push	offset aKao1_cd2 ; "KAO1.cd2"
-
-loc_B593:
-		call	cdg_load_all
-		mov	si, CDG_FACESET_PLAYCHAR
-		mov	[bp+@@size], 94000
-		mov	di, _cdg_slots.CDG_plane_size + (size cdg_t * CDG_FACESET_PLAYCHAR)
-		jmp	short loc_B606
-; ---------------------------------------------------------------------------
-
-loc_B5A9:
-		push	_Ems
-		pushd	[bp+@@size]
-		mov	bx, si
-		shl	bx, 4
-		push	_cdg_slots.seg_alpha[bx]
-		push	0
-		movzx	eax, di
-		push	eax
-		call	ems_write
-		movzx	eax, di
-		add	[bp+@@size], eax
-		push	_Ems
-		pushd	[bp+@@size]
-		mov	bx, si
-		shl	bx, 4
-		push	_cdg_slots.seg_colors[bx]
-		push	0
-		mov	ax, di
-		shl	ax, 2
-		movzx	eax, ax
-		push	eax
-		call	ems_write
-		mov	ax, di
-		shl	ax, 2
-		movzx	eax, ax
-		add	[bp+@@size], eax
-		call	cdg_free pascal, si
-		inc	si
-
-loc_B606:
-		mov	bx, si
-		shl	bx, 4
-		cmp	_cdg_slots.seg_alpha[bx], 0
-		jnz	short loc_B5A9
-
-@@ret:
-		pop	di
-		pop	si
-		leave
-		retn
-EmsLoad	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -32981,12 +32890,12 @@ main_033_TEXT	ends
 
 include th04/gaiji/pause[data].asm
 	evendata
-public _eyename
+public _eyename, _bbname
 _eyename	dd _EYECATCH_FN_FORMAT	; ZUN symbol [MAGNet2010]
 word_213DE	dw 0
 off_213E0	dd aSt00
 					; "ST00"
-bbname	dd aBb0_cdg_0	; original ZUN variable name
+_bbname	dd aBb0_cdg_0	; original ZUN variable name
 _EYECATCH_FN_FORMAT	db 'eye0.cdg',0
 aUmx		db '“Œ•ûŒ¶‘z.‹½',0
 aGameft_bft	db 'GAMEFT.bft',0
@@ -33029,9 +32938,10 @@ aOp_0		db 'op',0
 public _EMS_NAME
 _EMS_NAME	db 'GENSOEMS',0
 aBb0_cdg_0	db 'BB0.CDG',0
-aKao0_cd2	db 'KAO0.cd2',0
-aKao1_cd2	db 'KAO1.cd2',0
-		db    0
+public _FACESET_REIMU_FN_0, _FACESET_MARISA_FN_0
+_FACESET_REIMU_FN_0 	db 'KAO0.cd2',0
+_FACESET_MARISA_FN_0	db 'KAO1.cd2',0
+	evendata
 include libs/master.lib/atan8[data].asm
 include libs/master.lib/atrtcmod[data].asm
 include libs/master.lib/bfnt_id[data].asm
