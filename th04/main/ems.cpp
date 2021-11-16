@@ -123,3 +123,16 @@ void near bomb_bg_load__ems_preload_playchar_cdgs(void)
 		)
 	}
 }
+
+#if (GAME == 5)
+	void pascal near ems_preload_boss_faceset(const char *fn)
+	{
+		if(!Ems) {
+			return;
+		}
+		cdg_load_all(CDG_FACESET_BOSS, fn);
+		ems_transfer_cdgs_until_freed_slot(
+			EMS_FACESET_BOSS_OFFSET, CDG_FACESET_BOSS
+		);
+	}
+#endif

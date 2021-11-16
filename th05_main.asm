@@ -912,9 +912,7 @@ loc_B3CA:
 		jmp	cs:off_B53C[bx]
 
 loc_B3EA:
-		push	ds
-		push	offset aBss0_cd2 ; "BSS0.CD2"
-		call	sub_B9CC
+		call	@ems_preload_boss_faceset$qnxc pascal, ds, offset aBss0_cd2 ; "BSS0.CD2"
 		call	super_entry_bfnt pascal, ds, offset aSt00_bft ; "st00.bft"
 		call	stage1_setup
 		push	ds
@@ -923,9 +921,7 @@ loc_B3EA:
 ; ---------------------------------------------------------------------------
 
 loc_B404:
-		push	ds
-		push	offset aBss1_cd2 ; "BSS1.CD2"
-		call	sub_B9CC
+		call	@ems_preload_boss_faceset$qnxc pascal, ds, offset aBss1_cd2 ; "BSS1.CD2"
 		call	super_entry_bfnt pascal, ds, offset aSt01_bft ; "st01.bft"
 		call	stage2_setup
 		push	ds
@@ -934,9 +930,7 @@ loc_B404:
 ; ---------------------------------------------------------------------------
 
 loc_B41E:
-		push	ds
-		push	offset aBss2_cd2 ; "BSS2.CD2"
-		call	sub_B9CC
+		call	@ems_preload_boss_faceset$qnxc pascal, ds, offset aBss2_cd2 ; "BSS2.CD2"
 		call	super_entry_bfnt pascal, ds, offset aSt02_bft ; "st02.bft"
 		call	stage3_setup
 		push	ds
@@ -945,9 +939,7 @@ loc_B41E:
 ; ---------------------------------------------------------------------------
 
 loc_B437:
-		push	ds
-		push	offset aBss3_cd2 ; "BSS3.CD2"
-		call	sub_B9CC
+		call	@ems_preload_boss_faceset$qnxc pascal, ds, offset aBss3_cd2 ; "BSS3.CD2"
 		call	super_entry_bfnt pascal, ds, offset aSt03_bft ; "st03.bft"
 		call	stage4_setup
 		push	ds
@@ -956,9 +948,7 @@ loc_B437:
 ; ---------------------------------------------------------------------------
 
 loc_B450:
-		push	ds
-		push	offset aBss4_cd2 ; "BSS4.CD2"
-		call	sub_B9CC
+		call	@ems_preload_boss_faceset$qnxc pascal, ds, offset aBss4_cd2 ; "BSS4.CD2"
 		call	super_entry_bfnt pascal, ds, offset aSt04_bft ; "st04.bft"
 		call	stage5_setup
 		push	ds
@@ -967,9 +957,7 @@ loc_B450:
 ; ---------------------------------------------------------------------------
 
 loc_B469:
-		push	ds
-		push	offset aBss4_cd2_0 ; "BSS4.CD2"
-		call	sub_B9CC
+		call	@ems_preload_boss_faceset$qnxc pascal, ds, offset aBss4_cd2_0 ; "BSS4.CD2"
 		call	super_entry_bfnt pascal, ds, offset aSt04_bft_0 ; "st04.bft"
 		call	stage6_setup
 		mov	_bg_render_not_bombing, offset shinki_bg_render
@@ -979,9 +967,7 @@ loc_B469:
 
 loc_B48A:
 		nopcall	sub_E4FC
-		push	ds
-		push	offset aBss6_cd2 ; "BSS6.CD2"
-		call	sub_B9CC
+		call	@ems_preload_boss_faceset$qnxc pascal, ds, offset aBss6_cd2 ; "BSS6.CD2"
 		call	super_entry_bfnt pascal, ds, offset aSt06_bft ; "st06.bft"
 		call	stagex_setup
 		push	ds
@@ -1233,74 +1219,11 @@ ma_TEXT	ends
 EMS_TEXT	segment	byte public 'CODE' use16
 	@ems_allocate_and_preload_eyecatc$qv procdesc near
 	@bomb_bg_load__ems_preload_playch$qv procdesc near
+	@EMS_PRELOAD_BOSS_FACESET$QNXC procdesc pascal near \
+		fn_seg:word, fn_off:word
 EMS_TEXT	ends
 
 CFG_LRES_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B9CC	proc near
-
-var_4		= dword	ptr -4
-arg_0		= dword	ptr  4
-
-		enter	4, 0
-		push	si
-		push	di
-		cmp	_Ems, 0
-		jz	loc_BA60
-		call	cdg_load_all pascal, CDG_FACESET_BOSS, [bp+arg_0]
-		mov	si, CDG_FACESET_BOSS
-		mov	[bp+var_4], 200000
-		mov	di, _cdg_slots.CDG_plane_size + (size cdg_t * CDG_FACESET_BOSS)
-		jmp	short loc_BA54
-; ---------------------------------------------------------------------------
-
-loc_B9F7:
-		push	_Ems
-		pushd	[bp+var_4]
-		mov	bx, si
-		shl	bx, 4
-		push	_cdg_slots.seg_alpha[bx]
-		push	0
-		movzx	eax, di
-		push	eax
-		call	ems_write
-		movzx	eax, di
-		add	[bp+var_4], eax
-		push	_Ems
-		pushd	[bp+var_4]
-		mov	bx, si
-		shl	bx, 4
-		push	_cdg_slots.seg_colors[bx]
-		push	0
-		mov	ax, di
-		shl	ax, 2
-		movzx	eax, ax
-		push	eax
-		call	ems_write
-		mov	ax, di
-		shl	ax, 2
-		movzx	eax, ax
-		add	[bp+var_4], eax
-		call	cdg_free pascal, si
-		inc	si
-
-loc_BA54:
-		mov	bx, si
-		shl	bx, 4
-		cmp	_cdg_slots.seg_alpha[bx], 0
-		jnz	short loc_B9F7
-
-loc_BA60:
-		pop	di
-		pop	si
-		leave
-		retn	4
-sub_B9CC	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 

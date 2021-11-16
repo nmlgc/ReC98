@@ -64,4 +64,8 @@ void near ems_allocate_and_preload_eyecatch(void);
 // with TH04 Reimu though, who has the only faceset with the maximum image
 // count.)
 void near bomb_bg_load__ems_preload_playchar_cdgs(void);
+
+#if (GAME == 5)
+	void pascal near ems_preload_boss_faceset(const char *fn);
+#endif
 /// --------------

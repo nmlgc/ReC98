@@ -29,6 +29,12 @@ typedef enum {
 	CDG_FACESET_PLAYCHAR_last = (CDG_FACESET_PLAYCHAR + (FACESET_PLAYCHAR_COUNT - 1)),
 	CDG_FACESET_BOSS,
 	CDG_FACESET_BOSS_last = (CDG_FACESET_BOSS + (FACESET_BOSS_COUNT - 1)),
+
+	// The original TH05 implementation of ems_preload_boss_faceset() requires
+	// this slot to stay empty. Can be deleted after clamping the amount of
+	// face images written to the EMS cache area.
+	CDG_FACESET_BOSS_sentinel,
+
 	CDG_BG_BOSS = 16,
 	CDG_BG_2,	// Second background slot
 	CDG_PER_STAGE_last = 30,
