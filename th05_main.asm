@@ -797,7 +797,7 @@ loc_B2DD:
 		call	_playfield_tram_wipe
 		call	sub_B55A
 		nopcall	hud_put
-		call	sub_BA66
+		call	@eyecatch_animate$qv
 		call	sub_172FF
 		cmp	word_20A84, 0
 		jz	loc_B3CA
@@ -1221,50 +1221,10 @@ EMS_TEXT	segment	byte public 'CODE' use16
 	@bomb_bg_load__ems_preload_playch$qv procdesc near
 	@EMS_PRELOAD_BOSS_FACESET$QNXC procdesc pascal near \
 		fn_seg:word, fn_off:word
+	@eyecatch_animate$qv procdesc near
 EMS_TEXT	ends
 
 CFG_LRES_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BA66	proc near
-		push	bp
-		mov	bp, sp
-		cmp	_Ems, 0
-		jz	short loc_BA9C
-		mov	ax, _cdg_slots.CDG_plane_size + (size cdg_t * CDG_EYE)
-		shl	ax, 2
-		push	ax
-		call	hmem_allocbyte
-		mov	_cdg_slots.seg_colors + (size cdg_t * CDG_EYE), ax
-		push	_Ems
-		pushd	0
-		push	ax
-		push	0
-		mov	ax, _cdg_slots.CDG_plane_size + (size cdg_t * CDG_EYE)
-		shl	ax, 2
-		movzx	eax, ax
-		push	eax
-		call	ems_read
-		jmp	short loc_BAAA
-; ---------------------------------------------------------------------------
-
-loc_BA9C:
-		call	cdg_load_single_noalpha pascal, CDG_EYE, [_eyename], 0
-
-loc_BAAA:
-		mov	PaletteTone, 0
-		call	far ptr	palette_show
-		call	cdg_put_noalpha_8 pascal, large (80 shl 16) or 112, CDG_EYE
-		call	cdg_free pascal, CDG_EYE
-		push	1
-		call	palette_black_in
-		pop	bp
-		retn
-sub_BA66	endp
-
 	_cfg_load_resident_ptr procdesc near
 CFG_LRES_TEXT	ends
 

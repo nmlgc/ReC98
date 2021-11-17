@@ -136,3 +136,24 @@ void near bomb_bg_load__ems_preload_playchar_cdgs(void)
 		);
 	}
 #endif
+
+void near eyecatch_animate(void)
+{
+	if(Ems) {
+		allocate_and_load_from_ems(
+			cdg_slots[CDG_EYECATCH].seg_colors(),
+			EMS_EYECATCH_OFFSET,
+			(cdg_slots[CDG_EYECATCH].bitplane_size * PLANE_COUNT)
+		);
+	} else {
+		cdg_load_single_noalpha(CDG_EYECATCH, eyename, 0);
+	}
+	palette_black();
+	cdg_put_noalpha_8(
+		(PLAYFIELD_LEFT + (PLAYFIELD_W / 2) - (EYECATCH_W / 2)),
+		(PLAYFIELD_TOP + (PLAYFIELD_H / 2) - (EYECATCH_H / 2)),
+		CDG_EYECATCH
+	);
+	cdg_free(CDG_EYECATCH);
+	palette_black_in(1);
+}

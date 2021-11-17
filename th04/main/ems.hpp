@@ -68,4 +68,15 @@ void near bomb_bg_load__ems_preload_playchar_cdgs(void);
 #if (GAME == 5)
 	void pascal near ems_preload_boss_faceset(const char *fn);
 #endif
+
+void near eyecatch_animate(void);
+
+// Helper functions
+// ----------------
+
+#define allocate_and_load_from_ems(dst_seg, src_off, size) { \
+	reinterpret_cast<void __seg *>(dst_seg) = hmem_allocbyte(size); \
+	ems_read(Ems, src_off, dst_seg, size); \
+}
+// ----------------
 /// --------------

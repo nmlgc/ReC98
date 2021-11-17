@@ -3,7 +3,8 @@
 	#define FACESET_BOSS_COUNT 6
 
 	#define EYECATCH_W 288
-	#define EYECATCH_H 130
+	// 130 in the file, and therefore shifted towards the top of the playfield.
+	#define EYECATCH_H 176
 
 	#define BOMB_BG_W_MAX ((PLAYFIELD_W / 6) * 5)
 	#define BOMB_BG_H_MAX PLAYFIELD_H
