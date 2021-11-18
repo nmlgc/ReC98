@@ -1,3 +1,6 @@
+/// This translation unit contains EMS functions used during game or stage
+/// initialization. See dialog.cpp for the dialog-related ones.
+
 #pragma option -zPmain_01
 
 extern "C" {

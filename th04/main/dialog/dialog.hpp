@@ -29,3 +29,15 @@ extern dialog_side_t dialog_side;
 // Restores the [FACE_W]×[FACE_H] pixels starting at (⌊left/8⌋*8, top) on the
 // currently active VRAM page with the same pixels from the other VRAM page.
 void pascal near dialog_face_unput_8(uscreen_x_t left, uvram_y_t top);
+
+#if (GAME == 4)
+	// Dialog-related image functions with optional EMS support
+	// --------------------------------------------------------
+
+	// Loads the remaining .CDG images for in-game dialog that haven't been in
+	// memory since the start of the stage (i.e., the player character
+	// faceset), freeing any images that aren't used during a dialog (i.e.,
+	// the bomb background) in exchange for the necessary conventional memory.
+	void near dialog_init(void);
+	// --------------------------------------------------------
+#endif

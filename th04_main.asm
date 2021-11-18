@@ -44,7 +44,7 @@ include th04/main/enemy/enemy.inc
 	extern __ctype:byte
 
 	.seq
-main_01 group SLOWDOWN_TEXT, mai_TEXT, EMS_TEXT, main_TEXT, main__TEXT, PLAYER_P_TEXT, main_0_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT
+main_01 group SLOWDOWN_TEXT, mai_TEXT, EMS_TEXT, main_TEXT, DIALOG_TEXT, main__TEXT, PLAYER_P_TEXT, main_0_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT
 g_SHARED group SHARED, SHARED_
 main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, main_033_TEXT
 
@@ -3241,7 +3241,7 @@ sub_D56C	endp
 sub_D6EB	proc far
 		push	bp
 		mov	bp, sp
-		call	main_01:sub_D729
+		call	@dialog_init$qv
 		call	main_01:_playfield_tram_wipe
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
@@ -3260,99 +3260,11 @@ sub_D6EB	proc far
 sub_D6EB	endp
 main_TEXT	ends
 
+DIALOG_TEXT	segment	byte public 'CODE' use16
+	@dialog_init$qv procdesc near
+DIALOG_TEXT	ends
+
 main__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D729	proc near
-
-var_4		= dword	ptr -4
-
-		enter	4, 0
-		push	si
-		push	di
-		call	cdg_free pascal, CDG_BG_PLAYCHAR_BOMB
-		cmp	_Ems, 0
-		jz	loc_D7D0
-		mov	[bp+var_4], 16F30h
-		mov	si, _cdg_slots.CDG_plane_size + (size cdg_t * CDG_FACESET_PLAYCHAR)
-		mov	di, CDG_FACESET_PLAYCHAR
-		jmp	short loc_D7C9
-; ---------------------------------------------------------------------------
-
-loc_D750:
-		push	si
-		call	hmem_allocbyte
-		mov	bx, di
-		shl	bx, 4
-		mov	_cdg_slots.seg_alpha[bx], ax
-		push	_Ems
-		pushd	[bp+var_4]
-		mov	bx, di
-		shl	bx, 4
-		push	_cdg_slots.seg_alpha[bx]
-		push	0
-		movzx	eax, si
-		push	eax
-		call	ems_read
-		movzx	eax, si
-		add	[bp+var_4], eax
-		mov	ax, 4
-		imul	si
-		mov	si, ax
-		push	si
-		call	hmem_allocbyte
-		mov	bx, di
-		shl	bx, 4
-		mov	_cdg_slots.seg_colors[bx], ax
-		push	_Ems
-		pushd	[bp+var_4]
-		mov	bx, di
-		shl	bx, 4
-		push	_cdg_slots.seg_colors[bx]
-		push	0
-		movzx	eax, si
-		push	eax
-		call	ems_read
-		movzx	eax, si
-		add	[bp+var_4], eax
-		mov	ax, si
-		shr	ax, 2
-		mov	si, ax
-		inc	di
-
-loc_D7C9:
-		cmp	di, (CDG_FACESET_PLAYCHAR_last + 1)
-		jl	short loc_D750
-		jmp	short loc_D7EA
-; ---------------------------------------------------------------------------
-
-loc_D7D0:
-		cmp	_playchar, PLAYCHAR_REIMU
-		jnz	short loc_D7DF
-		push	CDG_FACESET_PLAYCHAR
-		push	ds
-		push	offset aKao0_cd2_0 ; "KAO0.cd2"
-		jmp	short loc_D7E5
-; ---------------------------------------------------------------------------
-
-loc_D7DF:
-		push	CDG_FACESET_PLAYCHAR
-		push	ds
-		push	offset aKao1_cd2_0 ; "KAO1.cd2"
-
-loc_D7E5:
-		call	cdg_load_all
-
-loc_D7EA:
-		pop	di
-		pop	si
-		leave
-		retn
-sub_D729	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -32935,10 +32847,10 @@ include th04/main/dialog/dialog[data].asm
 byte_22BCA	db 0
 a_dm00_txt	db '_DM00.TXT',0
 a_dm04b_txt	db '_DM04B.txt',0
-public _dialog_kanji_buf
+public _dialog_kanji_buf, _FACESET_REIMU_FN_1, _FACESET_MARISA_FN_1
 _dialog_kanji_buf	db '  ',0
-aKao0_cd2_0	db 'KAO0.cd2',0
-aKao1_cd2_0	db 'KAO1.cd2',0
+_FACESET_REIMU_FN_1 	db 'KAO0.cd2',0
+_FACESET_MARISA_FN_1	db 'KAO1.cd2',0
 aBss7_cd2	db 'bss7.cd2',0
 aBss8_cd2	db 'bss8.cd2',0
 aBb0_cdg	db 'bb0.cdg',0
