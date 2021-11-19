@@ -3251,7 +3251,7 @@ sub_D6EB	proc far
 		call	main_01:sub_D56C
 		push	2
 		nopcall	main_01:sub_CBA4
-		call	main_01:sub_D7EE
+		call	@dialog_exit$qv
 		graph_accesspage _page_back
 		push	1
 		call	frame_delay
@@ -3262,107 +3262,10 @@ main_TEXT	ends
 
 DIALOG_TEXT	segment	byte public 'CODE' use16
 	@dialog_init$qv procdesc near
+	@dialog_exit$qv procdesc near
 DIALOG_TEXT	ends
 
 main__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D7EE	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, CDG_FACESET_PLAYCHAR
-		jmp	short loc_D7FF
-; ---------------------------------------------------------------------------
-
-loc_D7F8:
-		call	cdg_free pascal, si
-		inc	si
-
-loc_D7FF:
-		cmp	si, (CDG_FACESET_PLAYCHAR_last + 1)
-		jl	short loc_D7F8
-		cmp	_stage_id, 6
-		jnz	short loc_D83A
-		mov	si, CDG_FACESET_BOSS
-		jmp	short loc_D817
-; ---------------------------------------------------------------------------
-
-loc_D810:
-		call	cdg_free pascal, si
-		inc	si
-
-loc_D817:
-		; MODDERS: This assumes that BSS6.CD2, BSS7.CD2, and BSS8.CD2 each have
-		; at most 3 slots.
-		cmp	si, (CDG_FACESET_BOSS + 3)
-		jl	short loc_D810
-		mov	al, byte_22BCA
-		inc	byte_22BCA
-		or	al, al
-		jnz	short loc_D82F
-		push	CDG_FACESET_BOSS
-		push	ds
-		push	offset aBss7_cd2 ; "bss7.cd2"
-		jmp	short loc_D835
-; ---------------------------------------------------------------------------
-
-loc_D82F:
-		push	CDG_FACESET_BOSS
-		push	ds
-		push	offset aBss8_cd2 ; "bss8.cd2"
-
-loc_D835:
-		call	cdg_load_all
-
-loc_D83A:
-		cmp	_Ems, 0
-		jz	short loc_D86C
-		mov	ax, _cdg_slots.CDG_plane_size + (size cdg_t * 0)
-		shl	ax, 2
-		mov	di, ax
-		push	ax
-		call	hmem_allocbyte
-		mov	_cdg_slots.seg_colors + (size cdg_t * 0), ax
-		push	_Ems
-		pushd	34000
-		push	ax
-		push	0
-		movzx	eax, di
-		push	eax
-		call	ems_read
-		jmp	short loc_D888
-; ---------------------------------------------------------------------------
-
-loc_D86C:
-		cmp	_playchar, PLAYCHAR_REIMU
-		jnz	short loc_D87B
-		push	CDG_BG_PLAYCHAR_BOMB
-		push	ds
-		push	offset aBb0_cdg	; "bb0.cdg"
-		jmp	short loc_D881
-; ---------------------------------------------------------------------------
-
-loc_D87B:
-		push	CDG_BG_PLAYCHAR_BOMB
-		push	ds
-		push	offset aBb1_cdg	; "bb1.cdg"
-
-loc_D881:
-		push	0
-		call	cdg_load_single_noalpha
-
-loc_D888:
-		pop	di
-		pop	si
-		pop	bp
-		retn
-sub_D7EE	endp
-
 include th04/main/boss/explosions_small.asm
 include th04/main/boss/explosions_big.asm
 
@@ -32844,18 +32747,21 @@ off_22BAA	dd a_dm00_txt
 off_22BAE	dd a_dm04b_txt
 					; "_DM04B.txt"
 include th04/main/dialog/dialog[data].asm
-byte_22BCA	db 0
+public _number_of_calls_to_this_function
+_number_of_calls_to_this_function	db 0
 a_dm00_txt	db '_DM00.TXT',0
 a_dm04b_txt	db '_DM04B.txt',0
 public _dialog_kanji_buf, _FACESET_REIMU_FN_1, _FACESET_MARISA_FN_1
 _dialog_kanji_buf	db '  ',0
 _FACESET_REIMU_FN_1 	db 'KAO0.cd2',0
 _FACESET_MARISA_FN_1	db 'KAO1.cd2',0
-aBss7_cd2	db 'bss7.cd2',0
-aBss8_cd2	db 'bss8.cd2',0
-aBb0_cdg	db 'bb0.cdg',0
-aBb1_cdg	db 'bb1.cdg',0
-		db    0
+public _FACESET_MUGETSU_DEFEAT_FN, _FACESET_GENGETSU_DEFEAT_FN
+public _BOMB_BG_REIMU_FN, _BOMB_BG_MARISA_FN
+_FACESET_MUGETSU_DEFEAT_FN 	db 'bss7.cd2',0
+_FACESET_GENGETSU_DEFEAT_FN	db 'bss8.cd2',0
+_BOMB_BG_REIMU_FN 	db 'bb0.cdg',0
+_BOMB_BG_MARISA_FN	db 'bb1.cdg',0
+	evendata
 include th04/main/boss/explosions_big[data].asm
 byte_22C1A	db 0
 		db    0

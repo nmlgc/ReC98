@@ -39,5 +39,14 @@ void pascal near dialog_face_unput_8(uscreen_x_t left, uvram_y_t top);
 	// faceset), freeing any images that aren't used during a dialog (i.e.,
 	// the bomb background) in exchange for the necessary conventional memory.
 	void near dialog_init(void);
+
+	// Restores the bomb background image, after freeing any dialog-only images
+	// (i.e., the player character faceset) in exchange for the necessary
+	// conventional memory.
+	// Apparently, this was also the most convenient place to load the boss
+	// faceset used for both the Mugetsu defeat / Gengetsu entrance dialog and
+	// the Gengetsu defeat dialogue? To differentiate between those two, the
+	// function tracks how often it has been called during the Extra Stage.
+	void near dialog_exit(void);
 	// --------------------------------------------------------
 #endif

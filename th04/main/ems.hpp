@@ -78,5 +78,15 @@ void near eyecatch_animate(void);
 	reinterpret_cast<void __seg *>(dst_seg) = hmem_allocbyte(size); \
 	ems_read(Ems, src_off, dst_seg, size); \
 }
+
+// Assumes [Ems] to be non-NULL.
+inline void playchar_bomb_bg_load_from_ems(void) {
+	size_t size = (cdg_slots[CDG_BG_PLAYCHAR_BOMB].bitplane_size * PLANE_COUNT);
+	allocate_and_load_from_ems(
+		cdg_slots[CDG_BG_PLAYCHAR_BOMB].seg_colors(),
+		EMS_PLAYCHAR_BOMB_BG_OFFSET,
+		size
+	);
+}
 // ----------------
 /// --------------
