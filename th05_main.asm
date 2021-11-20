@@ -4010,14 +4010,14 @@ arg_0		= byte ptr  4
 loc_EFF7:
 		mov	word_2C934, 14h
 		mov	word_2C936, 14h
-		mov	word_2C938, 0
+		mov	_dialog_side, DIALOG_SIDE_PLAYCHAR
 		jmp	loc_F181
 ; ---------------------------------------------------------------------------
 
 loc_F00C:
 		mov	word_2C934, 6
 		mov	word_2C936, 0Ch
-		mov	word_2C938, 1
+		mov	_dialog_side, DIALOG_SIDE_BOSS
 		jmp	loc_F181
 ; ---------------------------------------------------------------------------
 
@@ -4028,7 +4028,7 @@ loc_F021:
 		inc	word ptr dword_2C930
 		push	1
 		call	frame_delay
-		cmp	word_2C938, 0
+		cmp	_dialog_side, DIALOG_SIDE_PLAYCHAR
 		jnz	short loc_F045
 		push	(32 shl 16) or 240
 		jmp	short loc_F04B
@@ -4139,7 +4139,7 @@ loc_F11A:
 
 loc_F132:
 		inc	word_2C936
-		cmp	word_2C938, 0
+		cmp	_dialog_side, DIALOG_SIDE_PLAYCHAR
 		jnz	short loc_F142
 		mov	ax, 14h
 		jmp	short loc_F145
@@ -4225,7 +4225,7 @@ loc_F1B3:
 		jz	loc_F2AE
 		cmp	[bp+@@c], 0Dh
 		jnz	loc_F2A5
-		cmp	word_2C938, 0
+		cmp	_dialog_side, DIALOG_SIDE_PLAYCHAR
 		jnz	short loc_F1E6
 		mov	word_2C934, 14h
 		mov	word_2C936, 14h
@@ -4386,7 +4386,7 @@ arg_0		= word ptr  4
 		jz	loc_F432
 		cmp	_Ems, 0
 		jz	loc_F40F
-		cmp	word_2C938, 0
+		cmp	_dialog_side, DIALOG_SIDE_PLAYCHAR
 		jnz	short loc_F39C
 		mov	[bp+var_4], 100000
 		jmp	short loc_F3A4
@@ -4433,7 +4433,7 @@ loc_F3A4:
 ; ---------------------------------------------------------------------------
 
 loc_F40F:
-		cmp	word_2C938, 0
+		cmp	_dialog_side, DIALOG_SIDE_PLAYCHAR
 		jz	short loc_F41B
 		mov	al, _stage_id
 		jmp	short loc_F421
@@ -25357,7 +25357,8 @@ fp_2C92E	dw ?
 dword_2C930	dd ?
 word_2C934	dw ?
 word_2C936	dw ?
-word_2C938	dw ?
+public _dialog_side
+_dialog_side	dw ?
 		db 2 dup(?)
 include th04/main/boss/explosions[bss].asm
 public _bombing_disabled

@@ -16,3 +16,13 @@ extern const dot_rect_t(DIALOG_BOX_TILE_W, DIALOG_BOX_TILE_H) DIALOG_BOX_TILES[
 void pascal near dialog_box_put(uscreen_x_t left, uvram_y_t top, int tile);
 void pascal near dialog_box_fade_in();
 // ---
+
+enum dialog_side_t {
+	DIALOG_SIDE_PLAYCHAR = 0,
+	DIALOG_SIDE_BOSS = 1,
+
+	_dialog_side_t_FORCE_INT16 = 0x7FFF
+};
+
+extern dialog_side_t dialog_side;
+

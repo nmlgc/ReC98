@@ -2715,7 +2715,7 @@ loc_D1EC:
 
 loc_D1F0:
 		add	word_255D2, 10h	; jumptable 0000D1EC case 110
-		cmp	word_255D4, 0
+		cmp	_dialog_side, DIALOG_SIDE_PLAYCHAR
 		jnz	short loc_D201
 		mov	ax, 0A0h
 		jmp	short loc_D204
@@ -2879,7 +2879,7 @@ loc_D350:
 		call	main_01:sub_D0CA
 		push	1
 		call	frame_delay
-		cmp	word_255D4, 0
+		cmp	_dialog_side, DIALOG_SIDE_PLAYCHAR
 		jnz	short loc_D38A
 		push	(32 shl 16) or 240
 		call	main_01:sub_D04E
@@ -3158,14 +3158,14 @@ loc_D5C6:
 		jnz	short loc_D5E0
 		mov	word_255D0, 0A0h
 		mov	word_255D2, 140h
-		mov	word_255D4, 0
+		mov	_dialog_side, DIALOG_SIDE_PLAYCHAR
 		jmp	short loc_D5F2
 ; ---------------------------------------------------------------------------
 
 loc_D5E0:
 		mov	word_255D0, 30h	; '0'
 		mov	word_255D2, 0C0h
-		mov	word_255D4, 1
+		mov	_dialog_side, DIALOG_SIDE_BOSS
 
 loc_D5F2:
 		mov	ax, word_255D2
@@ -33607,7 +33607,8 @@ fp_255CA	dw ?
 dword_255CC	dd ?
 word_255D0	dw ?
 word_255D2	dw ?
-word_255D4	dw ?
+public _dialog_side
+_dialog_side	dw ?
 word_255D6	dw ?
 include th04/main/boss/explosions[bss].asm
 word_25608	dw ?
