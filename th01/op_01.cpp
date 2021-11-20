@@ -4,6 +4,7 @@
  */
 
 #include <mem.h>
+#include <process.h>
 #include <stdio.h>
 #include "platform.h"
 #include "x86real.h"
@@ -11,13 +12,20 @@
 #include "planar.h"
 #include "pc98kbd.h"
 #include "master.hpp"
+#include "shiftjis.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
+#include "th01/core/initexit.hpp"
+#include "th01/core/resstuff.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
+#include "th01/hardware/grppsafx.h"
 #include "th01/hardware/input.hpp"
+#include "th01/hardware/palette.h"
 #include "th01/formats/cfg.hpp"
+#include "th01/formats/grp.h"
+#include "th01/snd/mdrv2.h"
 
 // Unused. The only thing on the main menu with this color is the "1996 ZUN"
 // text at the bottom... probably part of an effect that we never got to see.
@@ -267,4 +275,212 @@ void whitelines_animate(void)
 	graph_copy_accessed_page_to_other();
 	graph_accesspage_func(0);
 }
+
+void titlescreen_init(void) {
+	extern const char aReimu_mdt[];
+	extern const char aReiiden2_grp[];
+	extern const char aReiiden3_grp[];
+
+	mdrv2_bgm_load(aReimu_mdt);
+	mdrv2_bgm_play();
+	graph_accesspage_func(1);
+	grp_put_palette_show(aReiiden2_grp);
+	z_palette_black();
+	graph_copy_accessed_page_to_other();
+	grp_put(aReiiden3_grp);
+	graph_accesspage_func(0);
+	z_palette_black_in();
+	frame_delay(100);
+	whitelines_animate();
+}
+
+void titlescreen_create_op_win(void) {
+	extern const char aOp_win_grp[];
+
+	graph_accesspage_func(1);
+	graph_copy_accessed_page_to_other();
+	graph_accesspage_func(0);
+	grp_put_colorkey(aOp_win_grp);
+	graph_copy_accessed_page_to_other();
+}
+
+void key_end_resident_free(void) {
+	extern char quit_flag;
+
+	if(quit_flag == 1)
+		resident_free();
+
+	key_end();
+}
+
+extern long rand;
+extern char mode;
+
+void start(void) {
+	extern char aReiiden_0[];
+
+	cfg_save();
+	resident_stuff_set(opts.rank, opts.bgm_mode, opts.bombs, opts.lives_extra, rand);
+	key_end_resident_free();
+	mdrv2_bgm_fade_out_nonblock();
+	game_switch_binary();
+
+	if(mode == 2) {
+		resident->debug_mode = DM_TEST;
+	} else if(mode == 3) {
+		resident->debug_mode = DM_FULL;
+	} else if(mode == 0) {
+		resident->debug_mode = DM_OFF;
+	}
+
+	resident->route = 0;
+	resident->stage_id = 0;
+	resident->rem_lives = opts.lives_extra + 2;
+	resident->point_value = 0;
+
+	for(int i = 0; i < 4; i++) {
+		resident->continues_per_scene[i] = 0;
+		resident->bonus_per_stage[i] = 0;
+	}
+
+	resident->score_highest = 0;
+	resident->continues_total = 0;
+	resident->end_flag = ES_NONE;
+	resident->unused_1 = 0;
+	resident->snd_need_init = 1;
+	resident->pellet_speed = -4;
+
+	execl(aReiiden_0, aReiiden_0, NULL);
+}
+
+void Continue(void) { // Reserved keyword
+	cfg_save();
+	resident_stuff_set(opts.rank, opts.bgm_mode, opts.bombs, opts.lives_extra, rand);
+
+	if(resident->stage_id == 0) {
+		_ES = FP_SEG(cfg_load); // Yes, no point to this at all
+	}
+
+	key_end_resident_free();
+	mdrv2_bgm_fade_out_nonblock();
+	game_switch_binary();
+
+	resident->debug_mode = DM_OFF;
+	resident->snd_need_init = 1;
+	resident->rem_lives = opts.lives_extra + 2;
+	resident->unused_1 = 0;
+	resident->pellet_speed = -4;
+	resident->point_value = 0;
+
+	execl((char*)MK_FP(_DS, CFG_ID), (char*)MK_FP(_DS, CFG_ID), NULL);
+}
+
+#define HIT_KEY_CYCLE_DUR 70
+#define HIT_KEY_SHOW_FRAMES 50
+
+#define HIT_KEY_LEFT 244
+#define MAIN_MENU_LEFT 228
+#define MAIN_MENU_TOP 306
+#define MAIN_MENU_TEXT_WIDTH 128
+#define MAIN_MENU_TEXT_HEIGHT 16
+#define MAIN_MENU_OPTION_DISTANCE 20
+#define MAIN_MENU_OPTION_TOP 276
+
+void titlescreen_flash_hit_key_prompt(int frame) {
+	extern const char GP_HIT_KEY[];
+
+	if(frame % HIT_KEY_CYCLE_DUR < HIT_KEY_SHOW_FRAMES) {
+		graph_putsa_fx(HIT_KEY_LEFT, MAIN_MENU_TOP, FX_WEIGHT_BOLD | 0xF, GP_HIT_KEY);
+	} else {
+		egc_copy_rect_1_to_0_16(HIT_KEY_LEFT, MAIN_MENU_TOP, MAIN_MENU_TEXT_WIDTH, MAIN_MENU_TEXT_HEIGHT);
+	}
+}
+
+#define MAIN_MENU_ENTRY_COUNT 4
+#define OPTIONS_COUNT 5
+#define RANK_COUNT 4
+#define FM_OPTION_COUNT 2
+#define LIFES_AMOUNT_TEXT_COUNT 5
+
+#define MUSIC_TEST_MENU_OPTION_COUNT 2
+#define MUSIC_TEST_SONG_COUNT 15
+
+template <int c> struct text_array_t {
+	const char* t[c];
+};
+
+void main_menu_draw_option(int str_idx, int col) {
+	extern text_array_t<MAIN_MENU_ENTRY_COUNT> MAIN_MENU_TEXT;
+
+	int _str_idx = str_idx;
+	int x;
+	int y;
+
+	text_array_t<MAIN_MENU_ENTRY_COUNT> _main_menu_text = MAIN_MENU_TEXT;
+
+	x = HIT_KEY_LEFT;
+	y = _str_idx * MAIN_MENU_OPTION_DISTANCE + MAIN_MENU_OPTION_TOP;
+
+	graph_putsa_fx(x, y, col | FX_WEIGHT_BLACK, _main_menu_text.t[_str_idx]);
+}
+
+extern const char aSS[];
+
+void option_menu_draw_option(int option, int col) {
+	extern text_array_t<OPTIONS_COUNT> OPTIONS_TEXT;
+	extern text_array_t<RANK_COUNT> RANK_TEXT;
+	extern text_array_t<FM_OPTION_COUNT> FM_OPTION;
+	extern text_array_t<LIFES_AMOUNT_TEXT_COUNT> LIFES_AMOUNT_TEXT;
+
+	int _option = option;
+
+	text_array_t<OPTIONS_COUNT> _options_text = OPTIONS_TEXT;
+	text_array_t<RANK_COUNT> _rank_text = RANK_TEXT;
+	text_array_t<FM_OPTION_COUNT> _fm_option = FM_OPTION;
+	text_array_t<LIFES_AMOUNT_TEXT_COUNT> _lifes_amount_text = LIFES_AMOUNT_TEXT;
+
+	int left = MAIN_MENU_LEFT;
+	int top = _option * 20 + 266;
+
+	egc_copy_rect_1_to_0_16(left, top, 0xB0, 0x10);
+
+	if(_option == 0) {
+		graph_printf_fx(left, top, col | FX_WEIGHT_BLACK, aSS, _options_text.t[_option], _rank_text.t[opts.rank]);
+	} else if(_option == 1) {
+		graph_printf_fx(left, top, col | FX_WEIGHT_BLACK, aSS, _options_text.t[_option], _fm_option.t[opts.bgm_mode]);
+	} else if(_option == 2) {
+		graph_printf_fx(left, top, col | FX_WEIGHT_BLACK, aSS, _options_text.t[_option], _lifes_amount_text.t[opts.lives_extra]);
+	} else if(_option == 3) {
+		graph_printf_fx(left, top, col | FX_WEIGHT_BLACK, aSS + 2, _options_text.t[_option]);
+	} else if(_option == 4) {
+		graph_printf_fx(left, top, col | FX_WEIGHT_BLACK, aSS + 2, _options_text.t[_option]);
+	}
+}
+
+extern char bgm_playing;
+extern const char aS_2d[];
+
+void music_test_draw(int line, int col) {
+	int _line = line;
+
+	extern text_array_t<MUSIC_TEST_MENU_OPTION_COUNT> MUSIC_TEST_MENU_TEXT;
+	extern text_array_t<MUSIC_TEST_SONG_COUNT> MUSIC_TEST_SONGS;
+
+	text_array_t<MUSIC_TEST_MENU_OPTION_COUNT> _music_test_menu_text = MUSIC_TEST_MENU_TEXT;
+	text_array_t<MUSIC_TEST_SONG_COUNT> _music_test_songs = MUSIC_TEST_SONGS;
+
+	int left = MAIN_MENU_LEFT;
+	int top = _line * 40 + 286;
+
+	egc_copy_rect_1_to_0_16(left, top, 176, 16);
+
+	if(_line == 0) {
+		egc_copy_rect_1_to_0_16(left, top + 20, 192, 16);
+		graph_printf_fx(left, top, col | FX_WEIGHT_BLACK, aS_2d, _music_test_menu_text.t[_line], bgm_playing);
+		graph_printf_fx(left, top + 20, col | FX_WEIGHT_BLACK, aSS + 2, _music_test_songs.t[bgm_playing]);
+	} else if(_line == 1){
+		graph_printf_fx(left, top, col | FX_WEIGHT_BLACK, aSS + 2, _music_test_menu_text.t[_line]);
+	}
+}
+
 /// --------------------

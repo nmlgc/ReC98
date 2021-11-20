@@ -14,7 +14,7 @@ _opts	cfg_options_t <CFG_RANK_DEFAULT, CFG_BGM_MODE_DEFAULT, CFG_BOMBS_DEFAULT, 
 _mode	db 0
 public _menu_sel, _option_rows
 public _input_left, _input_right, _input_ok, _input_shot, _input_cancel
-public byte_1232A, byte_1232C, byte_1232D, byte_1232E, byte_1232F, dword_12330
+public byte_1232A, byte_1232C, byte_1232D, byte_1232E, _quit_flag, dword_12330
 public _main_input_prev, _option_input_prev
 _menu_sel	db 0
 _input_left	db 0
@@ -26,7 +26,7 @@ _input_right	db 0
 byte_1232C	db 0
 byte_1232D	db 0
 byte_1232E	db 0
-byte_1232F	db 0
+_quit_flag	db 0
 dword_12330	dd 0
 _main_input_prev	dw 2 dup (0)
 _option_rows	db 3

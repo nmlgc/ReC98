@@ -79,512 +79,15 @@ op_01__TEXT	segment	byte public 'CODE' use16
 	extern @main_input_sense$qv:proc
 	extern @option_input_sense$qv:proc
 	extern @whitelines_animate$qv:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A719	proc far
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	offset aReimu_mdt ; "reimu.mdt"
-		call	@mdrv2_bgm_load$qnxc
-		add	sp, 4
-		call	@mdrv2_bgm_play$qv
-		push	1
-		call	@graph_accesspage_func$qi
-		pop	cx
-		call	@grp_put_palette_show$qnxc c, offset aReiiden2_grp, ds ; "REIIDEN2.grp"
-		call	@z_palette_black$qv
-		call	@graph_copy_accessed_page_to_othe$qv
-		call	@grp_put$qnxc c, offset aReiiden3_grp, ds ; "REIIDEN3.grp"
-		push	0
-		call	@graph_accesspage_func$qi
-		pop	cx
-		call	@z_palette_black_in$qv
-		push	64h ; 'd'
-		call	@frame_delay$qui
-		pop	cx
-		call	@whitelines_animate$qv
-		pop	bp
-		retf
-sub_A719	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A772	proc far
-		push	bp
-		mov	bp, sp
-		push	1
-		call	@graph_accesspage_func$qi
-		pop	cx
-		call	@graph_copy_accessed_page_to_othe$qv
-		push	0
-		call	@graph_accesspage_func$qi
-		pop	cx
-		call	@grp_put_colorkey$qnxc c, offset aOp_win_grp, ds ; "op_win.grp"
-		call	@graph_copy_accessed_page_to_othe$qv
-		pop	bp
-		retf
-sub_A772	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A79D	proc far
-		push	bp
-		mov	bp, sp
-		mov	al, byte_1232F
-		cbw
-		cmp	ax, 1
-		jnz	short loc_A7AE
-		call	@resident_free$qv
-
-loc_A7AE:
-		call	key_end
-		pop	bp
-		retf
-sub_A79D	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A7B5	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		call	@cfg_save$qv
-		call	@resident_stuff_set$qc10bgm_mode_tccl c, word ptr _opts.O_rank, word ptr _opts.O_bgm_mode, word ptr _opts.O_bombs, word ptr _opts.O_lives_extra, large [_rand]
-		call	sub_A79D
-		call	@mdrv2_bgm_fade_out_nonblock$qv
-		call	@game_switch_binary$qv
-		mov	al, _mode
-		cbw
-		cmp	ax, 2
-		jnz	short loc_A7FC
-		les	bx, _resident
-		mov	es:[bx+reiidenconfig_t.debug_mode], DM_TEST
-		jmp	short loc_A820
-; ---------------------------------------------------------------------------
-
-loc_A7FC:
-		mov	al, _mode
-		cbw
-		cmp	ax, 3
-		jnz	short loc_A810
-		les	bx, _resident
-		mov	es:[bx+reiidenconfig_t.debug_mode], DM_FULL
-		jmp	short loc_A820
-; ---------------------------------------------------------------------------
-
-loc_A810:
-		cmp	_mode, 0
-		jnz	short loc_A820
-		les	bx, _resident
-		mov	es:[bx+reiidenconfig_t.debug_mode], DM_OFF
-
-loc_A820:
-		les	bx, _resident
-		mov	es:[bx+reiidenconfig_t.route], 0
-		mov	es:[bx+reiidenconfig_t.stage], 0
-		mov	al, _opts.O_lives_extra
-		add	al, 2
-		mov	es:[bx+reiidenconfig_t.rem_lives], al
-		mov	es:[bx+reiidenconfig_t.p_value], 0
-		xor	si, si
-		jmp	short loc_A867
-; ---------------------------------------------------------------------------
-
-loc_A842:
-		mov	ax, si
-		add	ax, ax
-		les	bx, _resident
-		add	bx, ax
-		mov	es:[bx+reiidenconfig_t.continues_per_scene], 0
-		mov	ax, si
-		shl	ax, 2
-		mov	bx, word ptr _resident
-		add	bx, ax
-		mov	es:[bx+reiidenconfig_t.bonus_per_stage], 0
-		inc	si
-
-loc_A867:
-		cmp	si, 4
-		jl	short loc_A842
-		les	bx, _resident
-		mov	es:[bx+reiidenconfig_t.score_highest], 0
-		mov	es:[bx+reiidenconfig_t.continues_total], 0
-		mov	es:[bx+reiidenconfig_t.end_flag], 0
-		mov	es:[bx+reiidenconfig_t.unused_1], 0
-		mov	es:[bx+reiidenconfig_t.snd_need_init], 1
-		mov	es:[bx+reiidenconfig_t.bullet_speed], -4
-		pushd	0
-		push	ds
-		push	offset aReiiden_0 ; "reiiden"
-		push	ds
-		push	offset aReiiden_0 ; "reiiden"
-		call	_execl
-		add	sp, 0Ch
-		pop	si
-		pop	bp
-		retf
-sub_A7B5	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A8AD	proc far
-		push	bp
-		mov	bp, sp
-		call	@cfg_save$qv
-		call	@resident_stuff_set$qc10bgm_mode_tccl c, word ptr _opts.O_rank, word ptr _opts.O_bgm_mode, word ptr _opts.O_bombs, word ptr _opts.O_lives_extra, large [_rand]
-		les	bx, _resident
-		cmp	es:[bx+reiidenconfig_t.stage], 0
-		jnz	short loc_A8E1
-		mov	ax, seg	op_01
-		mov	es, ax
-		assume es:op_01
-
-loc_A8E1:
-		call	sub_A79D
-		call	@mdrv2_bgm_fade_out_nonblock$qv
-		call	@game_switch_binary$qv
-		les	bx, _resident
-		assume es:nothing
-		mov	es:[bx+reiidenconfig_t.debug_mode], DM_OFF
-		mov	es:[bx+reiidenconfig_t.snd_need_init], 1
-		mov	al, _opts.O_lives_extra
-		add	al, 2
-		mov	es:[bx+reiidenconfig_t.rem_lives], al
-		mov	es:[bx+reiidenconfig_t.unused_1], 0
-		mov	es:[bx+reiidenconfig_t.bullet_speed], -4
-		mov	es:[bx+reiidenconfig_t.p_value], 0
-		call	_execl c, offset _REIIDEN, ds, offset _REIIDEN, ds, large 0
-		pop	bp
-		retf
-sub_A8AD	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A92C	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	ax, [bp+arg_0]
-		mov	bx, 70
-		cwd
-		idiv	bx
-		cmp	dx, 50
-		jge	short loc_A954
-		call	@graph_putsa_fx$qiiinxuc c, 244, ((15 or FX_WEIGHT_BOLD) shl 16) or 306, offset aVgvhvsb@vjvdvx, ds ; " ÇgÇhÇsÅ@ÇjÇdÇx"
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_A954:
-		call	@egc_copy_rect_1_to_0_16$qiiii c, large (306 shl 16) or 244, large (16 shl 16) or 128
-		pop	bp
-		retf
-sub_A92C	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A96A	proc far
-
-var_14		= byte ptr -14h
-@@y		= word ptr -4
-@@x		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		enter	14h, 0
-		push	si
-		mov	si, [bp+arg_0]
-		lea	ax, [bp+var_14]
-		push	ss
-		push	ax
-		push	ds
-		push	offset off_124CD
-		mov	cx, 10h
-		call	SCOPY@
-		mov	[bp+@@x], 244
-		mov	ax, si
-		imul	ax, 14h
-		add	ax, 276
-		mov	[bp+@@y], ax
-		mov	bx, si
-		shl	bx, 2
-		lea	ax, [bp+var_14]
-		add	bx, ax
-		pushd	dword ptr ss:[bx]
-		mov	ax, [bp+arg_2]
-		or	ax, FX_WEIGHT_BLACK
-		push	ax
-		push	[bp+@@y]
-		push	[bp+@@x]
-		call	@graph_putsa_fx$qiiinxuc
-		add	sp, 0Ah
-		pop	si
-		leave
-		retf
-sub_A96A	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A9B9	proc far
-
-var_42		= byte ptr -42h
-var_2E		= byte ptr -2Eh
-var_1E		= byte ptr -1Eh
-var_A		= word ptr -0Ah
-var_8		= byte ptr -8
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		enter	42h, 0
-		push	si
-		push	di
-		mov	si, [bp+arg_0]
-		lea	ax, [bp+var_1E]
-		push	ss
-		push	ax
-		push	ds
-		push	offset off_124DD
-		mov	cx, 14h
-		call	SCOPY@
-		lea	ax, [bp+var_2E]
-		push	ss
-		push	ax
-		push	ds
-		push	offset off_124F1
-		mov	cx, 10h
-		call	SCOPY@
-		lea	ax, [bp+var_8]
-		push	ss
-		push	ax
-		push	ds
-		push	offset off_12501
-		mov	cx, 8
-		call	SCOPY@
-		lea	ax, [bp+var_42]
-		push	ss
-		push	ax
-		push	ds
-		push	offset off_12509
-		mov	cx, 14h
-		call	SCOPY@
-		mov	di, 228
-		mov	ax, si
-		imul	ax, 20
-		add	ax, 266
-		mov	[bp+var_A], ax
-		call	@egc_copy_rect_1_to_0_16$qiiii c, di, ax, large (16 shl 16) or 176
-		or	si, si
-		jnz	short loc_AA34
-		mov	al, _opts.O_rank
-		cbw
-		shl	ax, 2
-		lea	dx, [bp+var_2E]
-		jmp	short loc_AA54
-; ---------------------------------------------------------------------------
-
-loc_AA34:
-		cmp	si, 1
-		jnz	short loc_AA45
-		mov	al, _opts.O_bgm_mode
-		cbw
-		shl	ax, 2
-		lea	dx, [bp+var_8]
-		jmp	short loc_AA54
-; ---------------------------------------------------------------------------
-
-loc_AA45:
-		cmp	si, 2
-		jnz	short loc_AA83
-		mov	al, _opts.O_lives_extra
-		cbw
-		shl	ax, 2
-		lea	dx, [bp+var_42]
-
-loc_AA54:
-		add	ax, dx
-		mov	bx, ax
-		pushd	dword ptr ss:[bx]
-		mov	bx, si
-		shl	bx, 2
-		lea	ax, [bp+var_1E]
-		add	bx, ax
-		pushd	dword ptr ss:[bx]	; arglist
-		push	ds
-		push	offset aSS	; "%s%s"
-		mov	ax, [bp+arg_2]
-		or	ax, 30h
-		push	ax		; int
-		push	[bp+var_A]	; int
-		push	di		; int
-		call	@graph_printf_fx$qiiinxuce
-		add	sp, 12h
-		jmp	short loc_AAB2
-; ---------------------------------------------------------------------------
-
-loc_AA83:
-		cmp	si, 3
-		jz	short loc_AA8D
-		cmp	si, 4
-		jnz	short loc_AAB2
-
-loc_AA8D:
-		mov	bx, si
-		shl	bx, 2
-		lea	ax, [bp+var_1E]
-		add	bx, ax
-		pushd	dword ptr ss:[bx]	; arglist
-		push	ds
-		push	(offset	aSS+2)	; format
-		mov	ax, [bp+arg_2]
-		or	ax, 30h
-		push	ax		; int
-		push	[bp+var_A]	; int
-		push	di		; int
-		call	@graph_printf_fx$qiiinxuce
-		add	sp, 0Eh
-
-loc_AAB2:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_A9B9	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_AAB6	proc far
-
-var_46		= byte ptr -46h
-var_A		= word ptr -0Ah
-var_8		= byte ptr -8
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-
-		enter	46h, 0
-		push	si
-		push	di
-		mov	si, [bp+arg_0]
-		lea	ax, [bp+var_8]
-		push	ss
-		push	ax
-		push	ds
-		push	offset off_1251E
-		mov	cx, 8
-		call	SCOPY@
-		lea	ax, [bp+var_46]
-		push	ss
-		push	ax
-		push	ds
-		push	offset off_12526
-		mov	cx, 3Ch	; '<'
-		call	SCOPY@
-		mov	di, 228
-		mov	ax, si
-		imul	ax, 40
-		add	ax, 286
-		mov	[bp+var_A], ax
-		call	@egc_copy_rect_1_to_0_16$qiiii c, di, ax, large (16 shl 16) or 176
-		or	si, si
-		jnz	short loc_AB69
-		push	(16 shl 16) or 192
-		mov	ax, [bp+var_A]
-		add	ax, 20
-		push	ax
-		push	di
-		call	@egc_copy_rect_1_to_0_16$qiiii
-		add	sp, 8
-		mov	al, byte_1251D
-		cbw
-		push	ax
-		mov	bx, si
-		shl	bx, 2
-		lea	ax, [bp+var_8]
-		add	bx, ax
-		pushd	dword ptr ss:[bx]	; arglist
-		push	ds
-		push	offset aS_2d	; "%s%.2d"
-		mov	ax, [bp+arg_2]
-		or	ax, 30h
-		push	ax		; int
-		push	[bp+var_A]	; int
-		push	di		; int
-		call	@graph_printf_fx$qiiinxuce
-		add	sp, 10h
-		mov	al, byte_1251D
-		cbw
-		shl	ax, 2
-		lea	dx, [bp+var_46]
-		add	ax, dx
-		mov	bx, ax
-		pushd	dword ptr ss:[bx]
-		push	ds
-		push	(offset	aSS+2)
-		mov	ax, [bp+arg_2]
-		or	ax, 30h
-		push	ax
-		mov	ax, [bp+var_A]
-		add	ax, 14h
-		push	ax
-		jmp	short loc_AB8A
-; ---------------------------------------------------------------------------
-
-loc_AB69:
-		cmp	si, 1
-		jnz	short loc_AB93
-		mov	bx, si
-		shl	bx, 2
-		lea	ax, [bp+var_8]
-		add	bx, ax
-		pushd	dword ptr ss:[bx]	; arglist
-		push	ds
-		push	(offset	aSS+2)	; format
-		mov	ax, [bp+arg_2]
-		or	ax, 30h
-		push	ax		; int
-		push	[bp+var_A]	; int
-
-loc_AB8A:
-		push	di		; int
-		call	@graph_printf_fx$qiiinxuce
-		add	sp, 0Eh
-
-loc_AB93:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_AAB6	endp
-
+	extern @titlescreen_init$qv:proc
+	extern @titlescreen_create_op_win$qv:proc
+	extern @key_end_resident_free$qv:proc
+	extern @start$qv:proc
+	extern @Continue$qv:proc
+	extern @titlescreen_flash_hit_key_prompt$qi:proc
+	extern @main_menu_draw_option$qii:proc
+	extern @option_menu_draw_option$qii:proc
+	extern @music_test_draw$qii:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -597,22 +100,22 @@ sub_AB97	proc far
 		jnz	short loc_AC04
 		call	@egc_copy_rect_1_to_0_16$qiiii c, large (266 shl 16) or 220, large (100 shl 16) or 176
 		push	50000h
-		call	sub_A96A
+		call	@main_menu_draw_option$qii
 		add	sp, 4
 		push	50001h
-		call	sub_A96A
+		call	@main_menu_draw_option$qii
 		add	sp, 4
 		push	50002h
-		call	sub_A96A
+		call	@main_menu_draw_option$qii
 		add	sp, 4
 		push	50003h
-		call	sub_A96A
+		call	@main_menu_draw_option$qii
 		add	sp, 4
 		push	0Fh
 		mov	al, _menu_sel
 		cbw
 		push	ax
-		call	sub_A96A
+		call	@main_menu_draw_option$qii
 		add	sp, 4
 		mov	word_12564, 1
 		mov	al, _menu_sel
@@ -626,13 +129,13 @@ loc_AC04:
 		jz	short loc_AC30
 		push	5
 		push	word_12562
-		call	sub_A96A
+		call	@main_menu_draw_option$qii
 		add	sp, 4
 		push	0Fh
 		mov	al, _menu_sel
 		cbw
 		push	ax
-		call	sub_A96A
+		call	@main_menu_draw_option$qii
 		add	sp, 4
 		mov	al, _menu_sel
 		cbw
@@ -654,12 +157,12 @@ loc_AC3E:
 		jmp	cs:off_AC7C[bx]
 
 loc_AC50:
-		call	sub_A7B5
+		call	@start$qv
 		jmp	short loc_AC6E
 ; ---------------------------------------------------------------------------
 
 loc_AC56:
-		call	sub_A8AD
+		call	@Continue$qv
 		jmp	short loc_AC6E
 ; ---------------------------------------------------------------------------
 
@@ -703,19 +206,19 @@ sub_AC84	proc far
 		mov	_option_rows, 4
 		call	@egc_copy_rect_1_to_0_16$qiiii c, large (276 shl 16) or 220, large (80 shl 16) or 176
 		push	0F0000h
-		call	sub_A9B9
+		call	@option_menu_draw_option$qii
 		add	sp, 4
 		push	50001h
-		call	sub_A9B9
+		call	@option_menu_draw_option$qii
 		add	sp, 4
 		push	50002h
-		call	sub_A9B9
+		call	@option_menu_draw_option$qii
 		add	sp, 4
 		push	50003h
-		call	sub_A9B9
+		call	@option_menu_draw_option$qii
 		add	sp, 4
 		push	50004h
-		call	sub_A9B9
+		call	@option_menu_draw_option$qii
 		add	sp, 4
 
 loc_ACF9:
@@ -725,13 +228,13 @@ loc_ACF9:
 		jz	short loc_AD25
 		push	5
 		push	word_12568
-		call	sub_A9B9
+		call	@option_menu_draw_option$qii
 		add	sp, 4
 		push	0Fh
 		mov	al, _menu_sel
 		cbw
 		push	ax
-		call	sub_A9B9
+		call	@option_menu_draw_option$qii
 		add	sp, 4
 		mov	al, _menu_sel
 		cbw
@@ -788,7 +291,7 @@ loc_AD80:
 		mov	al, _menu_sel
 		cbw
 		push	ax
-		call	sub_A9B9
+		call	@option_menu_draw_option$qii
 		add	sp, 4
 		mov	word_1256A, 1
 		jmp	short loc_AD9C
@@ -848,7 +351,7 @@ loc_ADFA:
 		mov	al, _menu_sel
 		cbw
 		push	ax
-		call	sub_A9B9
+		call	@option_menu_draw_option$qii
 		add	sp, 4
 		mov	word_1256C, 1
 		jmp	short loc_AE16
@@ -912,11 +415,11 @@ var_3C		= byte ptr -3Ch
 		push	ss
 		push	ax
 		push	ds
-		push	offset off_1256E
+		push	offset _MUSIC_TEST_SONG_FILES
 		mov	cx, 3Ch	; '<'
 		call	SCOPY@
 		call	@mdrv2_bgm_stop$qv
-		mov	al, byte_1251D
+		mov	al, _bgm_playing
 		cbw
 		shl	ax, 2
 		lea	dx, [bp+var_3C]
@@ -948,10 +451,10 @@ sub_AEA8	proc far
 		mov	_option_rows, 1
 		call	@egc_copy_rect_1_to_0_16$qiiii c, large (266 shl 16) or 220, large (100 shl 16) or 176
 		push	0F0000h
-		call	sub_AAB6
+		call	@music_test_draw$qii
 		add	sp, 4
 		push	50001h
-		call	sub_AAB6
+		call	@music_test_draw$qii
 		add	sp, 4
 
 loc_AF00:
@@ -961,13 +464,13 @@ loc_AF00:
 		jz	short loc_AF2C
 		push	5
 		push	word_125AC
-		call	sub_AAB6
+		call	@music_test_draw$qii
 		add	sp, 4
 		push	0Fh
 		mov	al, _menu_sel
 		cbw
 		push	ax
-		call	sub_AAB6
+		call	@music_test_draw$qii
 		add	sp, 4
 		mov	al, _menu_sel
 		cbw
@@ -982,17 +485,17 @@ loc_AF2C:
 		jnz	short loc_AF6F
 		cmp	_menu_sel, 0
 		jnz	short loc_AF53
-		dec	byte_1251D
-		cmp	byte_1251D, 0
+		dec	_bgm_playing
+		cmp	_bgm_playing, 0
 		jge	short loc_AF53
-		mov	byte_1251D, 0Eh
+		mov	_bgm_playing, 0Eh
 
 loc_AF53:
 		push	0Fh
 		mov	al, _menu_sel
 		cbw
 		push	ax
-		call	sub_AAB6
+		call	@music_test_draw$qii
 		add	sp, 4
 		mov	word_125AE, 1
 		jmp	short loc_AF6F
@@ -1010,17 +513,17 @@ loc_AF6F:
 		jnz	short loc_AFB2
 		cmp	_menu_sel, 0
 		jnz	short loc_AF96
-		inc	byte_1251D
-		cmp	byte_1251D, 0Fh
+		inc	_bgm_playing
+		cmp	_bgm_playing, 0Fh
 		jl	short loc_AF96
-		mov	byte_1251D, 0
+		mov	_bgm_playing, 0
 
 loc_AF96:
 		push	0Fh
 		mov	al, _menu_sel
 		cbw
 		push	ax
-		call	sub_AAB6
+		call	@music_test_draw$qii
 		add	sp, 4
 		mov	word_125B0, 1
 		jmp	short loc_AFB2
@@ -1179,7 +682,7 @@ loc_B0D6:
 		call	_int86
 		add	sp, 0Ah
 		call	key_start
-		call	sub_A719
+		call	@titlescreen_init$qv
 		xor	ax, ax
 		mov	es, ax
 		mov	al, es:((50h shl 4) + 00h) ; BIOS_FLAG
@@ -1197,7 +700,7 @@ loc_B126:
 		call	@frame_delay$qui
 		pop	cx
 		push	di
-		call	sub_A92C
+		call	@titlescreen_flash_hit_key_prompt$qi
 		pop	cx
 		inc	di
 
@@ -1205,7 +708,7 @@ loc_B135:
 		call	key_sense_bios
 		or	ax, ax
 		jz	short loc_B126
-		call	sub_A772
+		call	@titlescreen_create_op_win$qv
 		mov	eax, _rand
 		mov	random_seed, eax
 		jmp	loc_B21A
@@ -1261,7 +764,7 @@ loc_B1A4:
 		jnz	short loc_B1C3
 		call	@mdrv2_bgm_stop$qv
 		push	ds
-		push	offset aReimu_mdt ; "reimu.mdt"
+		push	offset _aReimu_mdt ; "reimu.mdt"
 		call	@mdrv2_bgm_load$qnxc
 		add	sp, 4
 		call	@mdrv2_bgm_play$qv
@@ -1309,9 +812,9 @@ loc_B21A:
 		cmp	byte_1232C, 0
 		jz	loc_B14D
 		call	@cfg_save$qv
-		mov	byte_1232F, 1
+		mov	_quit_flag, 1
 		call	@mdrv2_bgm_stop$qv
-		call	sub_A79D
+		call	@key_end_resident_free$qv
 		push	1
 		call	@graph_accesspage_func$qi
 		pop	cx
@@ -1440,92 +943,109 @@ op_12_TEXT	ends
 	extern byte_1232C:byte
 	extern byte_1232D:byte
 	extern byte_1232E:byte
-	extern byte_1232F:byte
+	extern _quit_flag:byte
 	extern dword_12330:dword
 	extern _option_rows:byte
 
 		db 0
 
-off_124CD	dd aVrvsvVqvs
-					; "   ÇrÇsÇ`ÇqÇs   "
-		dd aVbvnvmvsvhvmvt	; "ÇbÇnÇmÇsÇhÇmÇtÇd"
-		dd aB@vnvovsvhvnvm	; "Å@ÇnÇoÇsÇhÇnÇmÅ@"
-		dd aB@b@vpvtvhvsb@	; "Å@Å@ÇpÇtÇhÇsÅ@Å@"
-off_124DD	dd aB@vqvVmvjb@
-					; "Å@ÇqÇ`ÇmÇjÅ@	"
-		dd aVlvtvrvhvb		; " ÇlÇtÇrÇhÇb	"
-		dd aVovkvVxvdvq		; "ÇoÇkÇ`ÇxÇdÇq	"
-		dd aVlbdvsvdvrvs	; "ÇlÅDÇsÇdÇrÇs	"
-		dd aB@vpvtvhvsb@	; "Å@ÇpÇtÇhÇsÅ@	"
-off_124F1	dd aEasy
-					; " EASY "
-		dd aNormal		; "NORMAL"
-		dd aHard		; " HARD "
-		dd aLunatic		; "LUNATIC"
-off_12501	dd aOff
-					; "  OFF "
-		dd aFm			; "  FM	 "
-off_12509	dd a3
-					; "   3	 "
-		dd a4			; "   4	 "
-		dd a5			; "   5	 "
-		dd a6			; "   6	 "
-		dd a7			; "   7	 "
-byte_1251D	db 0
-off_1251E	dd aVlvtvrvhvbb@vm
-					; "ÇlÇtÇrÇhÇbÅ@ÇmÇèÅD"
-		dd aB@b@vpvxvivf	; "Å@Å@ÇpÇïÇâÇî	     "
-off_12526	dd aASacretLot
-					; "    A Sacret	Lot"
-		dd aXcvR_o		; "	 ïóÇÃê_é–     "
-		dd aIiiuvIPc		; "	âiâìÇÃõﬁèó    "
-		dd aHighlyResponsi	; "  Highly Responsive"
-		dd aUmx
-		dd aOrientalMagici	; "  Oriental Magician"
-		dd aB@FjoVPmsUbb@	; "Å@  îjé◊ÇÃè¨ëæìÅÅ@ "
-		dd aTheLegendOfKag	; " The	Legend of KAGE"
-		dd aPositiveAndNeg	; "Positive and	Negative"
-		dd aB@b@UvoguRrb@b	; "Å@Å@	 ìVégì`ê‡Å@Å@ "
-		dd aB@b@b@CvlB@b@b	; "Å@Å@Å@  ñÇãæÅ@Å@Å@ "
-		dd aVvvUVRVnvVOuvV	; "Ç¢Ç¥ì|ÇÍê¿Ç≠ÇªÇÃéûÇ‹Ç≈"
-		dd aB@b@oavVVrvivV	; "Å@Å@éÄÇ»ÇŒÇ‡ÇÎÇ∆Ç‡Å@Å@"
-		dd aB@b@Rpchmxom	; "Å@Å@	 êØóHåïém"
-		dd aB@b@b@gagcgkgx	; "Å@Å@Å@ÉAÉCÉäÉX"
+public _MAIN_MENU_TEXT
+_MAIN_MENU_TEXT	label dword
+	dd aVrvsvVqvs	; "   ÇrÇsÇ`ÇqÇs   "
+	dd aVbvnvmvsvhvmvt	; "ÇbÇnÇmÇsÇhÇmÇtÇd"
+	dd aB@vnvovsvhvnvm	; "Å@ÇnÇoÇsÇhÇnÇmÅ@"
+	dd aB@b@vpvtvhvsb@	; "Å@Å@ÇpÇtÇhÇsÅ@Å@"
+
+public _OPTIONS_TEXT, _RANK_TEXT, _FM_OPTION, _LIFES_AMOUNT_TEXT
+_OPTIONS_TEXT label dword
+	dd aB@vqvVmvjb@	; "Å@ÇqÇ`ÇmÇjÅ@	"
+	dd aVlvtvrvhvb	; " ÇlÇtÇrÇhÇb	"
+	dd aVovkvVxvdvq	; "ÇoÇkÇ`ÇxÇdÇq	"
+	dd aVlbdvsvdvrvs	; "ÇlÅDÇsÇdÇrÇs	"
+	dd aB@vpvtvhvsb@	; "Å@ÇpÇtÇhÇsÅ@	"
+_RANK_TEXT label dword
+	dd aEasy	; " EASY "
+	dd aNormal		; "NORMAL"
+	dd aHard		; " HARD "
+	dd aLunatic		; "LUNATIC"
+_FM_OPTION	label dword
+	dd aOff	; "  OFF "
+	dd aFm	; "  FM	 "
+_LIFES_AMOUNT_TEXT	label dword
+	dd a3	; "   3	 "
+	dd a4	; "   4	 "
+	dd a5	; "   5	 "
+	dd a6	; "   6	 "
+	dd a7	; "   7	 "
+
+public _bgm_playing
+_bgm_playing	db 0
+
+public _MUSIC_TEST_MENU_TEXT
+_MUSIC_TEST_MENU_TEXT label dword
+	dd aVlvtvrvhvbb@vm	; "ÇlÇtÇrÇhÇbÅ@ÇmÇèÅD"
+	dd aB@b@vpvxvivf	; "Å@Å@ÇpÇïÇâÇî	     "
+
+public _MUSIC_TEST_SONGS
+_MUSIC_TEST_SONGS	label dword
+	dd aASacretLot	; "    A Sacret	Lot"
+	dd aXcvR_o	; "	 ïóÇÃê_é–     "
+	dd aIiiuvIPc	; "	âiâìÇÃõﬁèó    "
+	dd aHighlyResponsi	; "  Highly Responsive"
+	dd aUmx
+	dd aOrientalMagici	; "  Oriental Magician"
+	dd aB@FjoVPmsUbb@	; "Å@  îjé◊ÇÃè¨ëæìÅÅ@ "
+	dd aTheLegendOfKag	; " The Legend of KAGE"
+	dd aPositiveAndNeg	; "Positive and	Negative"
+	dd aB@b@UvoguRrb@b	; "Å@Å@	 ìVégì`ê‡Å@Å@ "
+	dd aB@b@b@CvlB@b@b	; "Å@Å@Å@  ñÇãæÅ@Å@Å@ "
+	dd aVvvUVRVnvVOuvV	; "Ç¢Ç¥ì|ÇÍê¿Ç≠ÇªÇÃéûÇ‹Ç≈"
+	dd aB@b@oavVVrvivV	; "Å@Å@éÄÇ»ÇŒÇ‡ÇÎÇ∆Ç‡Å@Å@"
+	dd aB@b@Rpchmxom	; "Å@Å@	 êØóHåïém"
+	dd aB@b@b@gagcgkgx	; "Å@Å@Å@ÉAÉCÉäÉX"
+
 word_12562	dw 63h
 word_12564	dw 0
 word_12566	dw 0
 word_12568	dw 0
 word_1256A	dw 0
 word_1256C	dw 0
-off_1256E	dd aReimu_mdt
-					; "reimu.mdt"
-		dd aZipangu_mdt		; "ZIPANGU.mdt"
-		dd aSt0_mdt		; "st0.mdt"
-		dd aSt1_mdt		; "st1.mdt"
-		dd aSt2_mdt		; "st2.mdt"
-		dd aSt3_mdt		; "st3.mdt"
-		dd aSt4_mdt		; "st4.mdt"
-		dd aSt5_mdt		; "st5.mdt"
-		dd aPositive_mdt	; "positive.mdt"
-		dd aLegend_mdt		; "legend.mdt"
-		dd aKami_mdt		; "kami.mdt"
-		dd aTensi_mdt		; "tensi.mdt"
-		dd aSyugen_mdt		; "syugen.mdt"
-		dd aAlice_mdt		; "alice.mdt"
-		dd aIris_mdt		; "iris.mdt"
+
+public _MUSIC_TEST_SONG_FILES
+_MUSIC_TEST_SONG_FILES	label dword
+	dd _aReimu_mdt	; "reimu.mdt"
+	dd aZipangu_mdt		; "ZIPANGU.mdt"
+	dd aSt0_mdt		; "st0.mdt"
+	dd aSt1_mdt		; "st1.mdt"
+	dd aSt2_mdt		; "st2.mdt"
+	dd aSt3_mdt		; "st3.mdt"
+	dd aSt4_mdt		; "st4.mdt"
+	dd aSt5_mdt		; "st5.mdt"
+	dd aPositive_mdt	; "positive.mdt"
+	dd aLegend_mdt		; "legend.mdt"
+	dd aKami_mdt		; "kami.mdt"
+	dd aTensi_mdt		; "tensi.mdt"
+	dd aSyugen_mdt		; "syugen.mdt"
+	dd aAlice_mdt		; "alice.mdt"
+	dd aIris_mdt		; "iris.mdt"
+
 word_125AA	dw 0
 word_125AC	dw 0
 word_125AE	dw 0
 word_125B0	dw 0
 include th01/formats/cfg[data].asm
-; char aReimu_mdt[]
-aReimu_mdt	db 'reimu.mdt',0
-aReiiden2_grp	db 'REIIDEN2.grp',0
-aReiiden3_grp	db 'REIIDEN3.grp',0
-aOp_win_grp	db 'op_win.grp',0
-; char aReiiden_0[]
-aReiiden_0	db 'reiiden',0
-aVgvhvsb@vjvdvx	db ' ÇgÇhÇsÅ@ÇjÇdÇx',0
+; char _aReimu_mdt[]
+public _aReimu_mdt, _aReiiden2_grp, _aReiiden3_grp, _aOp_win_grp
+_aReimu_mdt	db 'reimu.mdt',0
+_aReiiden2_grp	db 'REIIDEN2.grp',0
+_aReiiden3_grp	db 'REIIDEN3.grp',0
+_aOp_win_grp	db 'op_win.grp',0
+
+public _aReiiden_0
+_aReiiden_0	db 'reiiden',0
+
+public _GP_HIT_KEY
+_GP_HIT_KEY	db ' ÇgÇhÇsÅ@ÇjÇdÇx',0
 aVrvsvVqvs	db '   ÇrÇsÇ`ÇqÇs   ',0
 aVbvnvmvsvhvmvt	db 'ÇbÇnÇmÇsÇhÇmÇtÇd',0
 aB@vnvovsvhvnvm	db 'Å@ÇnÇoÇsÇhÇnÇmÅ@',0
@@ -1547,7 +1067,8 @@ a5		db '   5  ',0
 a6		db '   6  ',0
 a7		db '   7  ',0
 ; char aSS[]
-aSS		db '%s%s',0
+public _aSS
+_aSS		db '%s%s',0
 aVlvtvrvhvbb@vm	db 'ÇlÇtÇrÇhÇbÅ@ÇmÇèÅD',0
 aB@b@vpvxvivf	db 'Å@Å@ÇpÇïÇâÇî      ',0
 aASacretLot	db '    A Sacret Lot',0
@@ -1565,8 +1086,9 @@ aVvvUVRVnvVOuvV	db 'Ç¢Ç¥ì|ÇÍê¿Ç≠ÇªÇÃéûÇ‹Ç≈',0
 aB@b@oavVVrvivV	db 'Å@Å@éÄÇ»ÇŒÇ‡ÇÎÇ∆Ç‡Å@Å@',0
 aB@b@Rpchmxom	db 'Å@Å@  êØóHåïém',0
 aB@b@b@gagcgkgx	db 'Å@Å@Å@ÉAÉCÉäÉX',0
-; char aS_2d[]
-aS_2d		db '%s%.2d',0
+
+public _aS_2d
+_aS_2d		db '%s%.2d',0
 aZipangu_mdt	db 'ZIPANGU.mdt',0
 aSt0_mdt	db 'st0.mdt',0
 aSt1_mdt	db 'st1.mdt',0
