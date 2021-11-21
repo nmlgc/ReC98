@@ -3892,54 +3892,7 @@ loc_EF0A:
 		retn
 sub_EEF2	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EF2A	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	di
-		call	egc_start_copy_inlined_noframe
-		mov	ax, [bp+arg_0]
-		mov	bx, ax
-		shl	ax, 2
-		add	ax, bx
-		add	ax, GRAM_400
-		mov	es, ax
-		assume es:nothing
-		mov	di, (127 * ROW_SIZE)
-		mov	ax, [bp+arg_2]
-		shr	ax, 3
-		add	di, ax
-		mov	dx, 166	; Port 00A6h: Page access register
-		mov	al, _page_back
-
-loc_EF51:
-		mov	cx, 8
-
-loc_EF54:
-		out	dx, al
-		xor	al, 1
-		mov	bx, es:[di]
-		out	dx, al
-		xor	al, 1
-		mov	es:[di], bx
-		add	di, 2
-		loop	loc_EF54
-		sub	di, ROW_SIZE + (8 * 2)
-		jge	short loc_EF51
-		call	egc_off
-		pop	di
-		pop	bp
-		retn	4
-sub_EF2A	endp
-
+include th04/main/dialog/face_unput_8.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4451,9 +4404,7 @@ loc_F421:
 loc_F432:
 		push	1
 		call	frame_delay
-		push	[bp+@@left]
-		push	[bp+@@top]
-		call	sub_EF2A
+		call	@dialog_face_unput_8$quiui pascal, [bp+@@left], [bp+@@top]
 		cmp	[bp+arg_0], (-1 and 255)
 		jz	short loc_F45D
 		call	cdg_put_8 pascal, [bp+@@left], [bp+@@top], CDG_FACESET_PLAYCHAR

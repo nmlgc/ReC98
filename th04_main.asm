@@ -2502,54 +2502,7 @@ loc_D02E:
 		retn
 sub_D016	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D04E	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	di
-		call	main_01:egc_start_copy_inlined_noframe
-		mov	ax, [bp+arg_0]
-		mov	bx, ax
-		shl	ax, 2
-		add	ax, bx
-		add	ax, GRAM_400
-		mov	es, ax
-		assume es:nothing
-		mov	di, 127 * ROW_SIZE
-		mov	ax, [bp+arg_2]
-		shr	ax, 3
-		add	di, ax
-		mov	dx, 166	; Port 00A6h: Page access register
-		mov	al, _page_back
-
-loc_D075:
-		mov	cx, 8
-
-loc_D078:
-		out	dx, al
-		xor	al, 1
-		mov	bx, es:[di]
-		out	dx, al
-		xor	al, 1
-		mov	es:[di], bx
-		add	di, 2
-		loop	loc_D078
-		sub	di, ROW_SIZE + 16
-		jge	short loc_D075
-		call	egc_off
-		pop	di
-		pop	bp
-		retn	4
-sub_D04E	endp
-
+include th04/main/dialog/face_unput_8.asm
 include th04/main/dialog/box_fade_in.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -2881,8 +2834,7 @@ loc_D350:
 		call	frame_delay
 		cmp	_dialog_side, DIALOG_SIDE_PLAYCHAR
 		jnz	short loc_D38A
-		push	(32 shl 16) or 240
-		call	main_01:sub_D04E
+		call	@dialog_face_unput_8$quiui pascal, (32 shl 16) or 240
 		cmp	[bp+var_2], (-1 and 255)
 		jz	loc_D528	; default
 		add	[bp+var_2], 2
@@ -2891,8 +2843,7 @@ loc_D350:
 ; ---------------------------------------------------------------------------
 
 loc_D38A:
-		push	(288 shl 16) or 112
-		call	main_01:sub_D04E
+		call	@dialog_face_unput_8$quiui pascal, (288 shl 16) or 112
 		cmp	[bp+var_2], (-1 and 255)
 		jz	loc_D528	; default
 		add	[bp+var_2], 8

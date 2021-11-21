@@ -26,3 +26,6 @@ enum dialog_side_t {
 
 extern dialog_side_t dialog_side;
 
+// Restores the [FACE_W]×[FACE_H] pixels starting at (⌊left/8⌋*8, top) on the
+// currently active VRAM page with the same pixels from the other VRAM page.
+void pascal near dialog_face_unput_8(uscreen_x_t left, uvram_y_t top);
