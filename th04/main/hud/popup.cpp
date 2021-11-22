@@ -16,7 +16,7 @@
 #include "th04/main/hud/hud.h"
 #include "th04/main/hud/popup.hpp"
 #include "th04/main/stage/stage.hpp"
-#include "th04/main/item/items.hpp"
+#include "th04/main/item/item.hpp"
 
 #if (GAME == 4)
 	#include "th04/chars.h"

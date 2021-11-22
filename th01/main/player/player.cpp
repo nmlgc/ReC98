@@ -12,7 +12,7 @@ extern "C" {
 #include "th01/main/hud/hud.hpp"
 #include "th01/main/player/anim.hpp"
 #include "th01/main/player/orb.hpp"
-#include "th01/main/player/shots.hpp"
+#include "th01/main/player/shot.hpp"
 #include "th01/main/bullet/pellet.hpp"
 #include "th01/main/bullet/pellet_s.hpp"
 #include "th01/main/stage/timer.hpp"

@@ -11,7 +11,7 @@ extern "C" {
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
-#include "th01/ranks.h"
+#include "th01/rank.h"
 #include "th02/hardware/frmdelay.h"
 #include "th04/formats/cdg.h"
 #include "th04/hardware/bgimage.hpp"

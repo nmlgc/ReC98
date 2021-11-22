@@ -30105,7 +30105,7 @@ _scene_stage db (STAGEDAT_STAGE_SIZE * STAGES_PER_SCENE) dup(?)
 
 include th01/main/player/anim[bss].asm
 include th01/main/bullet/pellets[bss].asm
-include th01/main/player/shots[bss].asm
+include th01/main/player/shot[bss].asm
 		db 4 dup(?)
 public _input_prev
 _input_prev	db 16 dup (?)

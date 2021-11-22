@@ -1,4 +1,4 @@
-#include "th01/ranks.h"
+#include "th01/rank.h"
 
 extern char rank; // rank_t
 extern bool bgm_mode;

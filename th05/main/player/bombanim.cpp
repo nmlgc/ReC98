@@ -5,7 +5,7 @@
 #include "th04/math/randring.h"
 #include "th04/main/playfld.hpp"
 #include "th04/main/frames.h"
-#include "th04/main/circles.hpp"
+#include "th04/main/circle.hpp"
 #include "th05/sprites/main_pat.h"
 #include "th05/main/player/bomb.hpp"
 

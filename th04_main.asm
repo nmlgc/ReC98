@@ -1877,7 +1877,7 @@ include th04/main/playperf.asm
 include th04/main/select_for_rank.asm
 include th04/formats/scoredat_code_asm.asm
 include th04/formats/z_super_roll_put_tiny.asm
-include th04/main/circles.asm
+include th04/main/circle.asm
 		db    0
 include th04/main/enemy/inv.asm
 

@@ -5,13 +5,13 @@ speed_t struc
 	diagonal SPPoint8 <?>
 speed_t ends
 
-playchar_speeds_t struc
+playchar_speed_t struc
 	motion speed_t <?>
 	gauge_charge db ?
-playchar_speeds_t ends
+playchar_speed_t ends
 
 public _PLAYCHAR_SPEEDS
-_PLAYCHAR_SPEEDS label playchar_speeds_t
+_PLAYCHAR_SPEEDS label playchar_speed_t
 	db (4 shl 4),     (4 shl 4),     (3 shl 4),      (3 shl 4),      32	; Reimu
 	db (4 shl 4) + 8, (4 shl 4) + 8, (3 shl 4) +  6, (3 shl 4) +  6, 20	; Mima
 	db (4 shl 4),     (4 shl 4),     (3 shl 4),      (3 shl 4),      28	; Marisa
@@ -21,4 +21,4 @@ _PLAYCHAR_SPEEDS label playchar_speeds_t
 	db (4 shl 4) + 8, (4 shl 4) + 8, (3 shl 4) +  6, (3 shl 4) +  6, 16	; Rikako
 	db (5 shl 4),     (5 shl 4),     (4 shl 4),      (4 shl 4),      28	; Chiyuri
 	db (5 shl 4),     (5 shl 4),     (4 shl 4),      (4 shl 4),      20	; Yumemi
-	db (size playchar_speeds_t) dup(0)
+	db (size playchar_speed_t) dup(0)

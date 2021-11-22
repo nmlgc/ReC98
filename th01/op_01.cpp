@@ -10,7 +10,7 @@ extern "C" {
 #include "x86real.h"
 #include "pc98kbd.h"
 #include "master.hpp"
-#include "th01/ranks.h"
+#include "th01/rank.h"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"

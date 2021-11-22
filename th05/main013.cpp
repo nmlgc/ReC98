@@ -19,7 +19,7 @@ extern "C" {
 #include "th04/main/null.hpp"
 #include "th04/main/score.hpp"
 #include "th04/main/rank.hpp"
-#include "th04/main/item/items.hpp"
+#include "th04/main/item/item.hpp"
 #include "th04/main/stage/stage.hpp"
 #include "th05/formats/bb.h"
 #include "th05/main/boss/boss.hpp"

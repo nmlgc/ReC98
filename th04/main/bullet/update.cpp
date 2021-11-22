@@ -24,7 +24,7 @@ extern "C" {
 #include "th04/main/gather.hpp"
 
 #if (GAME == 5)
-	#include "th04/main/item/items.hpp"
+	#include "th04/main/item/item.hpp"
 	#include "th05/sprites/main_pat.h"
 
 	static const int SLOWDOWN_BULLET_THRESHOLD_UNUSED = 32;

@@ -16,7 +16,7 @@ extern "C" {
 #include "decomp.hpp"
 #include "twobyte.h"
 #include "master.hpp"
-#include "th01/ranks.h"
+#include "th01/rank.h"
 #include "th01/formats/grp.h"
 #include "th01/hardware/palette.h"
 #include "th01/hardware/input.hpp"

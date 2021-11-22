@@ -17,7 +17,7 @@ extern "C" {
 #include "pc98kbd.h"
 #include "twobyte.h"
 #include "master.hpp"
-#include "th01/ranks.h"
+#include "th01/rank.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/input.hpp"
 #include "th01/hiscore/scoredat.hpp"

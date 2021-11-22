@@ -7,7 +7,7 @@
 #include <stddef.h>
 #include "platform.h"
 #include "master.hpp"
-#include "th01/ranks.h"
+#include "th01/rank.h"
 #include "th04/score.h"
 #include "th04/resident.hpp"
 #include "th04/snd/snd.h"

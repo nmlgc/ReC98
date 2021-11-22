@@ -10,7 +10,7 @@ extern "C" {
 #include "platform.h"
 #include "master.hpp"
 #include "libs/kaja/kaja.h"
-#include "th01/ranks.h"
+#include "th01/rank.h"
 #include "th02/core/initexit.h"
 #include "th04/common.h"
 #include "th04/score.h"

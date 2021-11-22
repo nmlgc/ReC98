@@ -3993,7 +3993,7 @@ sub_EACE	proc near
 sub_EACE	endp
 
 include th04/main/enemy/render.asm
-include th04/main/circles.asm
+include th04/main/circle.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

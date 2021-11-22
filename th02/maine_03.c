@@ -6,7 +6,7 @@
 #include <stddef.h>
 #include "platform.h"
 #include "master.hpp"
-#include "th01/ranks.h"
+#include "th01/rank.h"
 #include "th02/resident.hpp"
 #include "th02/formats/cfg.h"
 

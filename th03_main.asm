@@ -792,7 +792,7 @@ loc_9D85:
 		sub	ax, dx
 		sar	ax, 1
 		mov	[bp+var_2], ax
-		imul	ax, size playchar_speeds_t
+		imul	ax, size playchar_speed_t
 		add	ax, offset _PLAYCHAR_SPEEDS
 		mov	[bp+var_8], ax
 		mov	ax, si
