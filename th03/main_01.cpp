@@ -3,8 +3,7 @@
  * Code segment #1 of TH03's MAIN.EXE
  */
 
-extern "C"
-{
+extern "C" {
 #include "platform.h"
 #include "pc98.h"
 #include "th03/sprite16.hpp"
