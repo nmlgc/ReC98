@@ -288,14 +288,7 @@ _envp		= dword	ptr  0Ch
 		call	@cfg_load_resident_ptr$qv
 		or	ax, ax
 		jz	short loc_AB86
-
-		; ZUN landmine: This is roughly 3.8 KB below what this game would need
-		; when running without an EMS driver, and thus causes the infamous
-		; crash after Reimu's Stage 5 pre-battle dialog.
-		; https://rec98.nmlgc.net/blog/2021-11-29 documents this issue in full
-		; detail.
-		mov	_mem_assign_paras, (320000 shr 4)
-
+		mov	_mem_assign_paras, (324000 shr 4)
 		call	@game_init_main$qnxuc pascal, ds, offset aUmx
 		les	bx, _resident
 		mov	eax, es:[bx+resident_t.rand]
