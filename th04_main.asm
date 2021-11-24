@@ -2463,7 +2463,7 @@ loc_CFB6:
 		retn
 sub_CF44	endp
 
-include th04/formats/dialog_box_put.asm
+include th04/main/dialog/box_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2550,7 +2550,7 @@ loc_D078:
 		retn	4
 sub_D04E	endp
 
-include th04/formats/dialog_box_fade_in.asm
+include th04/main/dialog/box_fade_in.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -32980,7 +32980,7 @@ off_22BAA	dd a_dm00_txt
 					; "_DM00.TXT"
 off_22BAE	dd a_dm04b_txt
 					; "_DM04B.txt"
-include th04/formats/dialog[data].asm
+include th04/main/dialog/dialog[data].asm
 byte_22BCA	db 0
 a_dm00_txt	db '_DM00.TXT',0
 a_dm04b_txt	db '_DM04B.txt',0

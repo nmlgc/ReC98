@@ -3853,7 +3853,7 @@ loc_EE92:
 		retn
 sub_EE58	endp
 
-include th04/formats/dialog_box_put.asm
+include th04/main/dialog/box_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3985,7 +3985,7 @@ loc_EF9C:
 		retn	4
 sub_EF74	endp
 
-include th04/formats/dialog_box_fade_in.asm
+include th04/main/dialog/box_fade_in.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -24967,7 +24967,7 @@ _enemies_killed	dw 0
 include th04/main/frames[data].asm
 off_221D0	dd a_dm00_tx2
 					; "_DM00.TX2"
-include th04/formats/dialog[data].asm
+include th04/main/dialog/dialog[data].asm
 byte_221EC	db 0
 a_dm00_tx2	db '_DM00.TX2',0
 public _dialog_kanji_buf
