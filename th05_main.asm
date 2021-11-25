@@ -38,7 +38,7 @@ include th05/main/enemy/enemy.inc
 	extern _strlen:proc
 
 	.seq
-main_01 group SLOWDOWN_TEXT, ma_TEXT, EMS_TEXT, mai_TEXT, CFG_LRES_TEXT, main_TEXT, main__TEXT, main_0_TEXT, PLAYER_P_TEXT, main_01_TEXT
+main_01 group SLOWDOWN_TEXT, ma_TEXT, EMS_TEXT, mai_TEXT, CFG_LRES_TEXT, main_TEXT, main__TEXT, main_0_TEXT, DIALOG_TEXT, PLAYER_P_TEXT, main_01_TEXT
 g_SHARED group SHARED, SHARED_
 main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, main_032_TEXT, main_033_TEXT, main_034_TEXT, main_035_TEXT, main_036_TEXT
 
@@ -3994,7 +3994,7 @@ loc_F04B:
 		mov	al, [bp+arg_0]
 		mov	ah, 0
 		push	ax
-		call	sub_F36B
+		call	@dialog_face_load_unput_put_free_$qiii
 		jmp	loc_F0ED
 ; ---------------------------------------------------------------------------
 
@@ -4316,107 +4316,12 @@ loc_F333:
 sub_F2B4	endp
 main__TEXT	ends
 
+DIALOG_TEXT	segment	byte public 'CODE' use16
+	@DIALOG_FACE_LOAD_UNPUT_PUT_FREE_$QIII procdesc pascal near \
+		left:word, top:word, cel:word
+DIALOG_TEXT	ends
+
 main_0_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F36B	proc near
-
-var_6		= word ptr -6
-var_4		= dword	ptr -4
-arg_0		= word ptr  4
-@@top		= word ptr  6
-@@left		= word ptr  8
-
-		enter	6, 0
-		push	si
-		push	di
-		mov	di, offset aBss0_cd2_0
-		mov	[bp+var_6], offset aKao0_cd2_0
-		cmp	[bp+arg_0], (-1 and 255)
-		jz	loc_F432
-		cmp	_Ems, 0
-		jz	loc_F40F
-		cmp	_dialog_side, DIALOG_SIDE_PLAYCHAR
-		jnz	short loc_F39C
-		mov	[bp+var_4], 100000
-		jmp	short loc_F3A4
-; ---------------------------------------------------------------------------
-
-loc_F39C:
-		mov	[bp+var_4], 200000
-
-loc_F3A4:
-		mov	si, _cdg_slots.CDG_plane_size + (size cdg_t * 2)
-		mov	ax, [bp+arg_0]
-		imul	si
-		imul	ax, 5
-		movzx	eax, ax
-		add	[bp+var_4], eax
-		push	si
-		call	hmem_allocbyte
-		mov	_cdg_slots.seg_alpha + (size cdg_t * 2), ax
-		push	_Ems
-		pushd	[bp+var_4]
-		push	ax
-		push	0
-		movzx	eax, si
-		push	eax
-		call	ems_read
-		movzx	eax, si
-		add	[bp+var_4], eax
-		mov	ax, 4
-		imul	si
-		mov	si, ax
-		push	si
-		call	hmem_allocbyte
-		mov	_cdg_slots.seg_colors + (size cdg_t * 2), ax
-		push	_Ems
-		pushd	[bp+var_4]
-		push	ax
-		push	0
-		movzx	eax, si
-		push	eax
-		call	ems_read
-		movzx	eax, si
-		add	[bp+var_4], eax
-		jmp	short loc_F432
-; ---------------------------------------------------------------------------
-
-loc_F40F:
-		cmp	_dialog_side, DIALOG_SIDE_PLAYCHAR
-		jz	short loc_F41B
-		mov	al, _stage_id
-		jmp	short loc_F421
-; ---------------------------------------------------------------------------
-
-loc_F41B:
-		mov	di, [bp+var_6]
-		mov	al, _playchar
-
-loc_F421:
-		add	al, 30h	; '0'
-		mov	[di+3],	al
-		call	cdg_load_single pascal, CDG_FACESET_PLAYCHAR, ds, di, [bp+arg_0]
-
-loc_F432:
-		push	1
-		call	frame_delay
-		call	@dialog_face_unput_8$quiui pascal, [bp+@@left], [bp+@@top]
-		cmp	[bp+arg_0], (-1 and 255)
-		jz	short loc_F45D
-		call	cdg_put_8 pascal, [bp+@@left], [bp+@@top], CDG_FACESET_PLAYCHAR
-		call	cdg_free pascal, CDG_FACESET_PLAYCHAR
-
-loc_F45D:
-		pop	di
-		pop	si
-		leave
-		retn	6
-sub_F36B	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -24929,8 +24834,9 @@ aSt06b		db 'st06b',0
 aDemo5_rec	db 'DEMO5.REC',0
 ; char aOp_0[]
 aOp_0		db 'op',0
-aBss0_cd2_0	db 'BsS0.cD2',0
-aKao0_cd2_0	db 'KaO0.cD2',0
+public _faceset_boss_format, _faceset_playchar_format
+_faceset_boss_format    	db 'BsS0.cD2',0
+_faceset_playchar_format	db 'KaO0.cD2',0
 aBb0_cdg	db 'bb0.cdg',0
 aBb1_cdg	db 'bb1.cdg',0
 aBb2_cdg	db 'bb2.cdg',0

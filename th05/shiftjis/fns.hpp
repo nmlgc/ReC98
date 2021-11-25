@@ -1,9 +1,10 @@
 #define EYECATCH_FN	"eye.cdg"
 
-#define FACESET_REIMU_FN 	"KAO0.cd2"
-#define FACESET_MARISA_FN	"KAO1.cd2"
-#define FACESET_MIMA_FN  	"KAO2.cd2"
-#define FACESET_YUUKA_FN 	"KAO3.cd2"
+#define FACESET_PLAYCHAR_FORMAT	"KaO0.cD2"
+#define FACESET_REIMU_FN     	"KAO0.cd2"
+#define FACESET_MARISA_FN    	"KAO1.cd2"
+#define FACESET_MIMA_FN      	"KAO2.cd2"
+#define FACESET_YUUKA_FN     	"KAO3.cd2"
 
 #define main_cdg_load_faceset_playchar() { \
 	switch(playchar) { \
@@ -21,3 +22,5 @@
 			break; \
 	} \
 }
+
+#define FACESET_BOSS_FORMAT	"BsS0.cD2"

@@ -27,6 +27,14 @@ typedef enum {
 
 	CDG_PER_STAGE,
 	CDG_FACESET_PLAYCHAR,
+	#if (GAME == 5)
+		// TH05 only uses the CDG_FACESET_PLAYCHAR and CDG_FACESET_BOSS ranges
+		// as temporary storage for EMS area preloading. During in-game dialog,
+		// every single rendered face image is individually loaded to this one
+		// slot, either from the EMS area or from disk, and then immediately
+		// freed.
+		CDG_DIALOG_FACE = CDG_FACESET_PLAYCHAR,
+	#endif
 	CDG_FACESET_PLAYCHAR_last = (CDG_FACESET_PLAYCHAR + (FACESET_PLAYCHAR_COUNT - 1)),
 	CDG_FACESET_BOSS,
 	CDG_FACESET_BOSS_last = (CDG_FACESET_BOSS + (FACESET_BOSS_COUNT - 1)),
