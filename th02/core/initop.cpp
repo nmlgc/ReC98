@@ -14,9 +14,9 @@ const char pf_fn[] = PF_FN;
 
 int game_init_op(void)
 {
-	if(mem_assign_dos(MEM_ASSIGN_PARAS_OP)) {
-		return 1;
-	}
+	_asm { nop; nop; nop; }
+	mem_assign_all();
+	_asm { nop; nop; nop; nop; nop; nop; nop; nop; nop; }
 	vram_planes_set();
 	graph_start();
 	graph_clear_both();

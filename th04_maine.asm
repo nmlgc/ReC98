@@ -236,7 +236,12 @@ _envp		= dword	ptr  0Ch
 		mov	al, es:[bx+resident_t.playchar_ascii]
 		les	bx, [bp+var_4]
 		mov	es:[bx+4], al
-		mov	_mem_assign_paras, MEM_ASSIGN_PARAS_MAINE
+		nop
+		nop
+		nop
+		nop
+		nop
+		nop
 		call	game_init_main pascal, ds, offset aMSzlEd_dat
 		call	gaiji_backup
 		push	ds

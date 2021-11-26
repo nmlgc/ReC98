@@ -1069,7 +1069,12 @@ _envp		= dword	ptr  0Ch
 		xor	si, si
 		call	text_clear
 		call	respal_create
-		mov	_mem_assign_paras, MEM_ASSIGN_PARAS_OP
+		nop
+		nop
+		nop
+		nop
+		nop
+		nop
 		call	_game_init_op c, offset aKaikidan1_dat0, ds
 		or	ax, ax
 		jz	short loc_AF7D

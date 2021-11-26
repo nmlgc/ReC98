@@ -249,7 +249,12 @@ _envp		= dword	ptr  0Ch
 		call	_cfg_load_resident_ptr
 		or	ax, ax
 		jz	loc_A693
-		mov	_mem_assign_paras, MEM_ASSIGN_PARAS_MAINE
+		nop
+		nop
+		nop
+		nop
+		nop
+		nop
 		call	game_init_main pascal, ds, offset aKaikidan1_dat
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.bgm_mode]

@@ -8,16 +8,14 @@ extern "C" {
 #include "th01/hardware/vplanset.h"
 #include "th03/core/initexit.h"
 
-#if (GAME <= 3)
-	#include "th03/mem.h"
-	#define mem_assign_paras MEM_ASSIGN_PARAS_OP
-#endif
-
 int game_init_op(const unsigned char *pf_fn)
 {
-	if(mem_assign_dos(mem_assign_paras)) {
-		return 1;
-	}
+	__asm { nop; nop; nop; }
+	#if (GAME >= 4)
+		__asm { nop; }
+	#endif
+	mem_assign_all();
+	__asm { nop; nop; nop; nop; nop; nop; nop; nop; nop; }
 	#if (GAME <= 4)
 		vram_planes_set();
 	#endif
