@@ -4307,7 +4307,7 @@ loc_F333:
 		call	dialog_box_fade_in
 		call	sub_EEF2
 		call	sub_F1A6
-		call	sub_F463
+		call	@dialog_exit$qv
 		graph_accesspage _page_back
 		push	1
 		call	frame_delay
@@ -4319,86 +4319,10 @@ main__TEXT	ends
 DIALOG_TEXT	segment	byte public 'CODE' use16
 	@DIALOG_FACE_LOAD_UNPUT_PUT_FREE_$QIII procdesc pascal near \
 		left:word, top:word, cel:word
+	@dialog_exit$qv	procdesc near
 DIALOG_TEXT	ends
 
 main_0_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F463	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		cmp	_Ems, 0
-		jz	short loc_F499
-		mov	ax, _cdg_slots.CDG_plane_size + (size cdg_t * 0)
-		shl	ax, 2
-		mov	si, ax
-		push	ax
-		call	hmem_allocbyte
-		mov	_cdg_slots.seg_colors + (size cdg_t * 0), ax
-		push	_Ems
-		pushd	34000
-		push	ax
-		push	0
-		movzx	eax, si
-		push	eax
-		call	ems_read
-		jmp	short loc_F4D1
-; ---------------------------------------------------------------------------
-
-loc_F499:
-		mov	al, _playchar
-		mov	ah, 0
-		mov	bx, ax
-		cmp	bx, PLAYCHAR_COUNT - 1
-		ja	short loc_F4D1
-		add	bx, bx
-		jmp	cs:off_F4D5[bx]
-
-@@reimu:
-		push	CDG_BG_PLAYCHAR_BOMB
-		push	ds
-		push	offset aBb0_cdg	; "bb0.cdg"
-		jmp	short loc_F4CA
-; ---------------------------------------------------------------------------
-
-@@marisa:
-		push	CDG_BG_PLAYCHAR_BOMB
-		push	ds
-		push	offset aBb1_cdg	; "bb1.cdg"
-		jmp	short loc_F4CA
-; ---------------------------------------------------------------------------
-
-@@mima:
-		push	CDG_BG_PLAYCHAR_BOMB
-		push	ds
-		push	offset aBb2_cdg	; "bb2.cdg"
-		jmp	short loc_F4CA
-; ---------------------------------------------------------------------------
-
-@@yuuka:
-		push	CDG_BG_PLAYCHAR_BOMB
-		push	ds
-		push	offset aBb3_cdg	; "bb3.cdg"
-
-loc_F4CA:
-		push	0
-		call	cdg_load_single_noalpha
-
-loc_F4D1:
-		pop	si
-		pop	bp
-		retn
-
-		db 0
-off_F4D5	dw offset @@reimu
-		dw offset @@marisa
-		dw offset @@mima
-		dw offset @@yuuka
-sub_F463	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -24835,12 +24759,14 @@ aDemo5_rec	db 'DEMO5.REC',0
 ; char aOp_0[]
 aOp_0		db 'op',0
 public _faceset_boss_format, _faceset_playchar_format
+public _BOMB_BG_REIMU_FN, _BOMB_BG_MARISA_FN, _BOMB_BG_MIMA_FN
+public _BOMB_BG_YUUKA_FN
 _faceset_boss_format    	db 'BsS0.cD2',0
 _faceset_playchar_format	db 'KaO0.cD2',0
-aBb0_cdg	db 'bb0.cdg',0
-aBb1_cdg	db 'bb1.cdg',0
-aBb2_cdg	db 'bb2.cdg',0
-aBb3_cdg	db 'bb3.cdg',0
+_BOMB_BG_REIMU_FN	db 'bb0.cdg',0
+_BOMB_BG_MARISA_FN	db 'bb1.cdg',0
+_BOMB_BG_MIMA_FN	db 'bb2.cdg',0
+_BOMB_BG_YUUKA_FN	db 'bb3.cdg',0
 aSt06_16_bft	db 'st06_16.bft',0
 aBomb3_bft_0	db 'bomb3.bft',0
 aBomb0_bft_0	db 'bomb0.bft',0

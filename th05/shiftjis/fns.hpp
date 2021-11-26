@@ -24,3 +24,8 @@
 }
 
 #define FACESET_BOSS_FORMAT	"BsS0.cD2"
+
+#define BOMB_BG_REIMU_FN 	"bb0.cdg"
+#define BOMB_BG_MARISA_FN	"bb1.cdg"
+#define BOMB_BG_MIMA_FN  	"bb2.cdg"
+#define BOMB_BG_YUUKA_FN 	"bb3.cdg"

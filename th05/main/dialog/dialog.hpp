@@ -12,4 +12,8 @@
 void pascal near dialog_face_load_unput_put_free_8(
 	screen_x_t left, vram_y_t top, int face_id
 );
+
+// Restores the bomb background image by loading it from either the EMS area
+// or disk.
+void near dialog_exit(void);
 // --------------------------------------------------------
