@@ -3,12 +3,14 @@
 [![4-week crowdfunding goal…](https://rec98.nmlgc.net/badge/cap)](https://rec98.nmlgc.net)
 
 |    Reverse-engineered: | [![All games…](https://rec98.nmlgc.net/badge/re)][HP] | [![TH01…](https://rec98.nmlgc.net/badge/re/1)][HP] | [![TH02…](https://rec98.nmlgc.net/badge/re/2)][HP] | [![TH03…](https://rec98.nmlgc.net/badge/re/3)][HP] | [![TH04…](https://rec98.nmlgc.net/badge/re/4)][HP] | [![TH05…](https://rec98.nmlgc.net/badge/re/5)][HP] |
-|-----------------------:|---|---|---|---|---|--|
+|-----------------------:|:---|:---|:---|:---|:---|:---|
+| [Finalized]: | [![All games…](https://rec98.nmlgc.net/badge/td)][HP] | [![TH01…](https://rec98.nmlgc.net/badge/td/1)][HP] | [![TH02…](https://rec98.nmlgc.net/badge/td/2)][HP] | [![TH03…](https://rec98.nmlgc.net/badge/td/3)][HP] | [![TH04…](https://rec98.nmlgc.net/badge/td/4)][HP] | [![TH05…](https://rec98.nmlgc.net/badge/td/5)][HP] |
 | [Position independence]: | [![All games…](https://rec98.nmlgc.net/badge/pi)][HP] | [![TH01…](https://rec98.nmlgc.net/badge/pi/1)][HP] | [![TH02…](https://rec98.nmlgc.net/badge/pi/2)][HP] | [![TH03…](https://rec98.nmlgc.net/badge/pi/3)][HP] | [![TH04…](https://rec98.nmlgc.net/badge/pi/4)][HP] | [![TH05…](https://rec98.nmlgc.net/badge/pi/5)][HP] |
 
 [Check the homepage for more detailed progress numbers and information about the crowdfunding!][HP]
 
 [HP]: https://rec98.nmlgc.net
+[Finalized]: https://rec98.nmlgc.net/blog/2021-12-15
 [Position independence]: https://rec98.nmlgc.net/faq#position-independence
 
 ----
