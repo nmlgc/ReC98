@@ -16,7 +16,7 @@
 
 typedef struct {
 	unsigned char g_name[SCOREDAT_PLACES][SCOREDAT_NAME_LEN + 1];
-	score_lebcd_t g_points[SCOREDAT_PLACES];
+	score_lebcd_t g_score[SCOREDAT_PLACES];
 
 #if GAME == 5
 	unsigned char g_stage[SCOREDAT_PLACES];

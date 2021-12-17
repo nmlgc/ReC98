@@ -27,14 +27,14 @@ struct scoredat_t {
 	// Not null-terminated.
 	int16_t name[SCOREDAT_PLACES][SCOREDAT_NAME_KANJI];
 
-	uint32_t points[SCOREDAT_PLACES];
+	uint32_t score[SCOREDAT_PLACES];
 	int16_t stage[SCOREDAT_PLACES];
 	twobyte_t route[SCOREDAT_PLACES];
 };
 
 extern int8_t* scoredat_names; // Yeah, technically a scoredat_name_t.
 extern int16_t* scoredat_stages;
-extern int32_t* scoredat_points;
+extern int32_t* scoredat_score;
 extern int8_t* scoredat_routes; // Yeah, technically a twobyte_t.
 
 // Byte-wise access to [scoredat_routes].

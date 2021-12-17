@@ -3432,7 +3432,7 @@ loc_C3C2:
 		mov	bx, [bp+@@place]
 		shl	bx, 3
 		add	bx, cx
-		mov	dl, _hi.score.g_points[bx]
+		mov	dl, _hi.score.g_score[bx]
 		mov	dh, 0
 		add	dx, -gb_0_
 		cmp	ax, dx
@@ -3444,7 +3444,7 @@ loc_C3C2:
 		mov	bx, [bp+@@place]
 		shl	bx, 3
 		add	bx, cx
-		mov	dl, _hi.score.g_points[bx]
+		mov	dl, _hi.score.g_score[bx]
 		mov	dh, 0
 		add	dx, -gb_0_
 		cmp	ax, dx
@@ -3510,11 +3510,11 @@ loc_C45E:
 		mov	bx, [bp+@@place]
 		shl	bx, 3
 		add	bx, cx
-		mov	al, _hi.score.g_points[0 * SCORE_DIGITS][bx]
+		mov	al, _hi.score.g_score[0 * SCORE_DIGITS][bx]
 		mov	bx, [bp+@@place]
 		shl	bx, 3
 		add	bx, cx
-		mov	_hi.score.g_points[1 * SCORE_DIGITS][bx], al
+		mov	_hi.score.g_score[1 * SCORE_DIGITS][bx], al
 		dec	cx
 
 loc_C477:
@@ -3560,7 +3560,7 @@ loc_C4B3:
 		shl	dx, 3
 		add	dx, cx
 		mov	bx, dx
-		mov	_hi.score.g_points[bx], al
+		mov	_hi.score.g_score[bx], al
 		dec	cx
 
 loc_C4D1:
@@ -3647,7 +3647,7 @@ loc_C54B:
 		mov	[bp+arg_0], al
 		mov	bx, si
 		shl	bx, 3
-		mov	al, _hi.score.g_points[bx][SCORE_DIGITS - 1]
+		mov	al, _hi.score.g_score[bx][SCORE_DIGITS - 1]
 		mov	ah, 0
 		add	ax, -gb_0_
 		cmp	ax, 10
@@ -3657,7 +3657,7 @@ loc_C54B:
 		push	[bp+@@y]
 		mov	bx, si
 		shl	bx, 3
-		mov	al, _hi.score.g_points[bx][SCORE_DIGITS - 1]
+		mov	al, _hi.score.g_score[bx][SCORE_DIGITS - 1]
 		mov	ah, 0
 		add	ax, -gb_0_
 		mov	bx, 10
@@ -3675,7 +3675,7 @@ loc_C589:
 		push	[bp+@@y]
 		mov	bx, si
 		shl	bx, 3
-		mov	al, _hi.score.g_points[bx][SCORE_DIGITS - 1]
+		mov	al, _hi.score.g_score[bx][SCORE_DIGITS - 1]
 		mov	ah, 0
 		add	ax, -gb_0_
 		mov	bx, 10
@@ -3696,7 +3696,7 @@ loc_C5B8:
 		mov	bx, si
 		shl	bx, 3
 		add	bx, [bp+var_2]
-		mov	al, _hi.score.g_points[bx]
+		mov	al, _hi.score.g_score[bx]
 		mov	ah, 0
 		mov	dl, [bp+arg_0]
 		mov	dh, 0

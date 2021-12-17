@@ -40,7 +40,7 @@ unsigned int score_duration;
 #include "th02/scorelod.c"
 
 // Slightly differs from the same function in MAINE.EXE!
-void pascal near score_points_put(unsigned y, long points, unsigned atrb)
+void pascal near score_put(unsigned y, long score, unsigned atrb)
 {
 	unsigned digit = gb_0_;
 	long divisor = 10000000;
@@ -48,7 +48,7 @@ void pascal near score_points_put(unsigned y, long points, unsigned atrb)
 	char putting = 0;
 	int i;
 	for(i = 0; i < 8; i++) {
-		result = divisor ? (points / divisor) % 10 : points % 10;
+		result = divisor ? ((score / divisor) % 10) : (score % 10);
 		divisor /= 10;
 		digit = result + gb_0_;
 		if(result) {
@@ -110,7 +110,7 @@ void pascal near scores_put(int place_to_highlight)
 	for(i = 0; i < SCOREDAT_PLACES; i++) {
 		ATRB_SET(i);
 		gaiji_putsa(12, 7+i, hi.score.g_name[i], atrb);
-		score_points_put(7+i, hi.score.points[i], atrb);
+		score_put(7+i, hi.score.score[i], atrb);
 		if(hi.score.stage[i] != STAGE_ALL) {
 			gaiji_putca(44, 7+i, hi.score.stage[i] + gb_0_, atrb);
 		} else {

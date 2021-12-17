@@ -26,7 +26,7 @@ void pascal scoredat_defaults_set(void)
 	int i;
 	for(i = 0; i < SCOREDAT_PLACES; i++) {
 		int c;
-		hi.score.points[i] = 10000 - (i * 1000);
+		hi.score.score[i] = 10000 - (i * 1000);
 		hi.score.stage[i] = 5 - (i >> 1);
 		for(c = 0; c < SCOREDAT_NAME_LEN; c++) {
 			hi.score.g_name[i][c] = gs_BULLET;
@@ -50,7 +50,7 @@ inline void scoredat_init() {
 }
 
 // Slightly differs from the same function in OP.EXE!
-void pascal score_points_put(tram_y_t y, long points, unsigned atrb)
+void pascal score_put(tram_y_t y, long score, unsigned atrb)
 {
 	tram_x_t x;
 	int digit;
@@ -58,7 +58,7 @@ void pascal score_points_put(tram_y_t y, long points, unsigned atrb)
 	long result;
 	char putting = 0;
 	for(x = 26; x < 26 + (8 * 2); x += 2) {
-		result = (points / divisor) % 10;
+		result = (score / divisor) % 10;
 		divisor /= 10;
 		digit = result + gb_0_;
 		if(result) {
@@ -93,7 +93,7 @@ void pascal near scores_put(int place_to_highlight)
 	for(i = 0; i < SCOREDAT_PLACES; i++) {
 		ATRB_SET(i);
 		gaiji_putsa(10, 6+i, (const char*)hi.score.g_name[i], atrb);
-		score_points_put(6+i, hi.score.points[i], atrb);
+		score_put(6+i, hi.score.score[i], atrb);
 		if(hi.score.stage[i] != STAGE_ALL) {
 			gaiji_putca(44, 6+i, hi.score.stage[i] + gb_0_, atrb);
 		} else {
@@ -147,18 +147,18 @@ void pascal score_enter(void)
 	int input_locked;
 	unsigned char input_delay;
 	scoredat_init();
-	if(hi.score.points[SCOREDAT_PLACES - 1] > score) {
+	if(hi.score.score[SCOREDAT_PLACES - 1] > score) {
 		scores_put(-1);
 		key_delay();
 		return;
 	}
 	for(place = SCOREDAT_PLACES - 1; place > 0; place--) {
-		if(hi.score.points[place-1] > score) {
+		if(hi.score.score[place-1] > score) {
 			break;
 		}
 	}
 	for(shift = SCOREDAT_PLACES - 1; shift > place; shift--) {
-		hi.score.points[shift] = hi.score.points[shift-1];
+		hi.score.score[shift] = hi.score.score[shift-1];
 		for(c = 0; c < SCOREDAT_NAME_LEN; c++) {
 			hi.score.g_name[shift][c] = hi.score.g_name[shift-1][c];
 		}
@@ -168,7 +168,7 @@ void pascal score_enter(void)
 		hi.score.date[shift].da_day = hi.score.date[shift-1].da_day;
 		hi.score.shottype[shift] = hi.score.shottype[shift-1];
 	}
-	hi.score.points[place] = score;
+	hi.score.score[place] = score;
 	hi.score.stage[place] = STAGE_ALL;
 	getdate(&hi.score.date[place]);
 	hi.score.shottype[place] = resident->shottype;
@@ -257,7 +257,7 @@ void pascal score_enter(void)
 void pascal score_highest_get(void)
 {
 	scoredat_init();
-	score_highest = hi.score.points[0] >= score ? hi.score.points[0] : score;
+	score_highest = (hi.score.score[0] >= score) ? hi.score.score[0] : score;
 }
 
 int pascal scoredat_is_extra_unlocked(void)

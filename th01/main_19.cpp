@@ -40,7 +40,7 @@ extern char rank;
 // scoredat_load().
 uint32_t scoredat_hiscore_get()
 {
-	return scoredat_points[0];
+	return scoredat_score[0];
 }
 
 #include "th01/hiscore/score_nm.cpp"

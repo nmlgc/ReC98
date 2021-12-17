@@ -1855,7 +1855,7 @@ void konngara_main(void)
 
 		z_vsync_wait_and_scrollup(0);
 
-		// Jigoku clear! Grant 50,000 points in the fanciest way
+		// Jigoku clear! Grant 50,000 score points in the fanciest way
 		for(j = 0; j < 5; j++) {
 			score += 10000;
 		}

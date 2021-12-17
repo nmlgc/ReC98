@@ -38,12 +38,12 @@ inline screen_x_t table_name_left(int x_kanji) {
 	return table_place_left(7 + x_kanji);
 }
 
-inline screen_x_t table_points_left(int x_kanji) {
+inline screen_x_t table_score_left(int x_kanji) {
 	return table_name_left(SCOREDAT_NAME_KANJI + 5 + x_kanji);
 }
 
 inline screen_x_t table_stage_route_left(int x_kanji) {
-	return table_points_left(SCORE_DIGITS + 3 + x_kanji);
+	return table_score_left(SCORE_DIGITS + 3 + x_kanji);
 }
 
 inline screen_x_t table_stage_left(int x_kanji) {
@@ -187,7 +187,7 @@ inline void header_cell_put(screen_x_t left, const char str[])
 
 void regist_put_initial(
 	int entered_place,
-	long entered_points,
+	long entered_score,
 	int entered_stage,
 	const char entered_route[SCOREDAT_ROUTE_LEN + 1],
 	const scoredat_name_z_t names_z[SCOREDAT_PLACES]
@@ -199,7 +199,7 @@ void regist_put_initial(
 	extern const hack REGIST_NAME_BLANK;
 	extern const char REGIST_HEADER_PLACE[];
 	extern const char REGIST_HEADER_NAME[];
-	extern const char REGIST_HEADER_POINTS[];
+	extern const char REGIST_HEADER_SCORE[];
 	extern const char REGIST_HEADER_STAGE_ROUTE[];
 	extern const char REGIST_PLACE_0[];
 	extern const char REGIST_PLACE_1[];
@@ -221,7 +221,7 @@ void regist_put_initial(
 
 	header_cell_put(table_place_left(0), REGIST_HEADER_PLACE);
 	header_cell_put(table_name_left(0), REGIST_HEADER_NAME);
-	header_cell_put(table_points_left(0), REGIST_HEADER_POINTS);
+	header_cell_put(table_score_left(0), REGIST_HEADER_SCORE);
 	header_cell_put(table_stage_route_left(0), REGIST_HEADER_STAGE_ROUTE);
 
 	for(int i = 0; i < SCOREDAT_PLACES; i++) {
@@ -258,11 +258,11 @@ void regist_put_initial(
 			(i == entered_place) ? name.byte : names_z[i].byte
 		);
 		graph_putfwnum_fx(
-			table_points_left(0),
+			table_score_left(0),
 			top,
 			(place_col | FX_WEIGHT_BLACK),
 			SCORE_DIGITS,
-			(entered_place == i) ? entered_points : scoredat_points[i],
+			(entered_place == i) ? entered_score : scoredat_score[i],
 			0,
 			false
 		);
@@ -552,7 +552,7 @@ regist_input_ret_t regist_on_input(
 	delete[] scoredat_names;
 	delete[] scoredat_stages;
 	delete[] scoredat_routes;
-	delete[] scoredat_points;
+	delete[] scoredat_score;
 }
 
 void scoredat_save(void)
@@ -582,7 +582,7 @@ void scoredat_save(void)
 		scoredat_names[i] = scoredat_name_byte_encode(scoredat_names[i]);
 	}
 	write(fileno(fp), scoredat_names, SCOREDAT_NAMES_SIZE);
-	write(fileno(fp), scoredat_points, sizeof(uint32_t) * SCOREDAT_PLACES);
+	write(fileno(fp), scoredat_score, sizeof(uint32_t) * SCOREDAT_PLACES);
 	write(fileno(fp), scoredat_stages, sizeof(int16_t) * SCOREDAT_PLACES);
 	write(fileno(fp), scoredat_routes, sizeof(twobyte_t) * SCOREDAT_PLACES);
 	fclose(fp);
@@ -641,7 +641,7 @@ static const int PLACE_NONE = (SCOREDAT_PLACES + 20);
 static const int SCOREDAT_NOT_CLEARED = (SCOREDAT_CLEARED - 10);
 
 void regist(
-	int32_t points, int16_t stage, const char route[SCOREDAT_ROUTE_LEN + 1]
+	int32_t score, int16_t stage, const char route[SCOREDAT_ROUTE_LEN + 1]
 )
 {
 	struct hack {
@@ -692,7 +692,7 @@ void regist(
 		scoredat_name_get(place, names[place].byte);
 	}
 	for(place = 0; place < SCOREDAT_PLACES; place++) {
-		if(points >= scoredat_points[place]) {
+		if(score >= scoredat_score[place]) {
 			break;
 		}
 	}
@@ -702,7 +702,7 @@ void regist(
 	if(place < SCOREDAT_PLACES) {
 		for(long shift = (SCOREDAT_PLACES - 1); shift > place; shift--) {
 			strcpy(names[shift].byte, names[shift - 1].byte);
-			scoredat_points[shift] = scoredat_points[shift - 1];
+			scoredat_score[shift] = scoredat_score[shift - 1];
 			scoredat_stages[shift] = scoredat_stages[shift - 1];
 			scoredat_route_byte(shift, 0) = scoredat_route_byte(shift, -2);
 			scoredat_route_byte(shift, 1) = scoredat_route_byte(shift, -1);
@@ -712,10 +712,10 @@ void regist(
 			scoredat_names[p] = scoredat_names[p - SCOREDAT_NAME_BYTES];
 			p--;
 		}
-		regist_put_initial(place, points, stage, route, names);
+		regist_put_initial(place, score, stage, route, names);
 		alphabet_put_initial();
 
-		scoredat_points[place] = points;
+		scoredat_score[place] = score;
 		scoredat_stages[place] = stage;
 		scoredat_route_byte(place, 0) = route[0];
 		scoredat_route_byte(place, 1) = route[1];
@@ -727,7 +727,7 @@ void regist(
 		scoredat_free();
 		return;
 	}
-	regist_put_initial(PLACE_NONE, points, stage, route, names);
+	regist_put_initial(PLACE_NONE, score, stage, route, names);
 	input_ok = true;
 	input_shot = true;
 	while(1) {

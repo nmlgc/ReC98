@@ -20,7 +20,7 @@ bool near bullet_template_clip(void)
 		(bullet_clear_time != 0) &&
 		// If a newly spawned bullet wouldn't fully decay during the remaining
 		// time, let's simply not spawn it at all? This way, they don't award
-		// points either.
+		// score points either.
 		(bullet_clear_time < (BMS_DECAY_FRAMES + 1)) // differs from TH04!
 	) {
 clipped:

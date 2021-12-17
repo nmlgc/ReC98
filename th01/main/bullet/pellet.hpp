@@ -228,8 +228,8 @@ public:
 		screen_y_t spin_center_y = 0
 	);
 
-	// Transitions all living pellets into their decay state, awarding points
-	// for each one.
+	// Transitions all living pellets into their decay state, awarding score
+	// points for each one.
 	void decay(void);
 
 	// Also calls Shots.unput_update_render()!

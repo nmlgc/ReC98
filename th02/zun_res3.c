@@ -25,7 +25,7 @@ void pascal scoredat_defaults_set(void)
 
 place_set:
 	hi.score.cleared = 0;
-	hi.score.points[_SI] = _DI;
+	hi.score.score[_SI] = _DI;
 	_DI -= 1000;
 	hi.score.stage[_SI] = 5 - ((int)_SI >> 1);
 	_BX = _SI;

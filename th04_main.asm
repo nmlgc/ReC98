@@ -11715,7 +11715,7 @@ loc_12B93:
 		mov	ah, 0
 		mov	bx, [bp+var_2]
 		shl	bx, 3
-		mov	dl, _hi.score.g_points[bx+si]
+		mov	dl, _hi.score.g_score[bx+si]
 		mov	dh, 0
 		add	dx, -gb_0_
 		cmp	ax, dx
@@ -11724,7 +11724,7 @@ loc_12B93:
 		mov	ah, 0
 		mov	bx, [bp+var_2]
 		shl	bx, 3
-		mov	dl, _hi.score.g_points[bx+si]
+		mov	dl, _hi.score.g_score[bx+si]
 		mov	dh, 0
 		add	dx, -gb_0_
 		cmp	ax, dx
@@ -11786,10 +11786,10 @@ loc_12C13:
 loc_12C1C:
 		mov	bx, [bp+var_2]
 		shl	bx, 3
-		mov	al, _hi.score.g_points[0 * SCORE_DIGITS][bx+si]
+		mov	al, _hi.score.g_score[0 * SCORE_DIGITS][bx+si]
 		mov	bx, [bp+var_2]
 		shl	bx, 3
-		mov	_hi.score.g_points[1 * SCORE_DIGITS][bx+si], al
+		mov	_hi.score.g_score[1 * SCORE_DIGITS][bx+si], al
 		dec	si
 
 loc_12C31:
@@ -11832,7 +11832,7 @@ loc_12C6E:
 		mov	dh, 0
 		shl	dx, 3
 		mov	bx, dx
-		mov	_hi.score.g_points[bx+si], al
+		mov	_hi.score.g_score[bx+si], al
 		dec	si
 
 loc_12C84:
@@ -11897,7 +11897,7 @@ sub_12CC7	proc near
 ; ---------------------------------------------------------------------------
 
 loc_12CD2:
-		mov	al, _hi.score.g_points[si]
+		mov	al, _hi.score.g_score[si]
 		add	al, -gb_0_
 		mov	_hiscore_lebcd[si], al
 		inc	si

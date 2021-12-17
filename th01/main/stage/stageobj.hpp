@@ -71,7 +71,7 @@ extern CCards cards;
 extern bool16 stage_cleared;
 
 // Processes any collision between a card and the Orb, together with any
-// immediate effects of such collisions. Score points for collisisions are
+// immediate effects of such collisions. Score points for collisions are
 // granted in relation to the [stage_num].
 void cards_hittest(int stage_num);
 

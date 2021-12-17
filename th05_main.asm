@@ -3457,7 +3457,7 @@ sub_E84A	proc near
 loc_E84F:
 		mov	si, dx
 		shl	si, 3
-		add	si, offset _hi.score.g_points[SCORE_DIGITS - 1]
+		add	si, offset _hi.score.g_score[SCORE_DIGITS - 1]
 		mov	bx, offset _score_lebcd[SCORE_DIGITS - 1]
 		mov	cx, SCORE_DIGITS
 
@@ -3496,8 +3496,8 @@ loc_E880:
 		mov	di, bx
 		shl	di, 3
 		mov	si, di
-		add	si, offset _hi.score.g_points[0 * SCORE_DIGITS]
-		add	di, offset _hi.score.g_points[1 * SCORE_DIGITS]
+		add	si, offset _hi.score.g_score[0 * SCORE_DIGITS]
+		add	di, offset _hi.score.g_score[1 * SCORE_DIGITS]
 		movsd
 		movsd
 		mov	al, _hi.score.g_stage+0[bx]
@@ -3514,7 +3514,7 @@ loc_E8AD:
 		movsd
 		mov	di, dx
 		shl	di, 3
-		add	di, offset _hi.score.g_points
+		add	di, offset _hi.score.g_score
 		mov	si, offset _score_lebcd
 		movsd
 		movsd
@@ -3567,7 +3567,7 @@ sub_E8FE	proc near
 		mov	cx, SCORE_DIGITS
 
 loc_E906:
-		mov	al, _hi.score.g_points[bx]
+		mov	al, _hi.score.g_score[bx]
 		sub	al, gb_0_
 		mov	_hiscore_lebcd[bx], al
 		inc	bx

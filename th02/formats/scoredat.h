@@ -22,8 +22,8 @@ typedef struct {
 	 */
 	int16_t cleared;
 
-	int32_t points[SCOREDAT_PLACES];
-	int32_t points_sum;
+	int32_t score[SCOREDAT_PLACES];
+	int32_t score_sum;
 	unsigned char g_name[SCOREDAT_PLACES][SCOREDAT_NAME_LEN + 1];
 	unsigned char g_name_first_sum;
 	unsigned char stage[SCOREDAT_PLACES];
@@ -34,5 +34,5 @@ typedef struct {
 
 typedef struct {
 	scoredat_t score;
-	int32_t score_sum; // Sum of all bytes in [score], pre-encraption
+	int32_t section_sum; // Sum of all bytes in [score], pre-encraption
 } scoredat_section_t;

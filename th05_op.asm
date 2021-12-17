@@ -2166,7 +2166,7 @@ arg_4		= word ptr  8
 		mov	di, [bp+arg_0]
 		mov	bx, di
 		shl	bx, 3
-		mov	al, _hi.score.g_points[bx][SCORE_DIGITS - 1]
+		mov	al, _hi.score.g_score[bx][SCORE_DIGITS - 1]
 		mov	ah, 0
 		add	ax, -gb_0_
 		cmp	ax, 10
@@ -2176,7 +2176,7 @@ arg_4		= word ptr  8
 		push	[bp+@@y]
 		mov	bx, di
 		shl	bx, 3
-		mov	al, _hi.score.g_points[bx][SCORE_DIGITS - 1]
+		mov	al, _hi.score.g_score[bx][SCORE_DIGITS - 1]
 		mov	ah, 0
 		add	ax, -gb_0_
 		mov	bx, 10
@@ -2190,7 +2190,7 @@ loc_CA5B:
 		push	[bp+@@y]
 		mov	bx, di
 		shl	bx, 3
-		mov	al, _hi.score.g_points[bx][SCORE_DIGITS - 1]
+		mov	al, _hi.score.g_score[bx][SCORE_DIGITS - 1]
 		mov	ah, 0
 		add	ax, -gb_0_
 		mov	bx, 10
@@ -2209,7 +2209,7 @@ loc_CA83:
 		mov	bx, di
 		shl	bx, 3
 		add	bx, [bp+var_2]
-		mov	al, _hi.score.g_points[bx]
+		mov	al, _hi.score.g_score[bx]
 		mov	ah, 0
 		add	ax, -gb_0_
 		push	ax

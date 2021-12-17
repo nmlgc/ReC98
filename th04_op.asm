@@ -1945,7 +1945,7 @@ arg_2		= word ptr  6
 		mov	[bp+var_4], 16
 		mov	bx, si
 		shl	bx, 3
-		mov	al, _hi_reimu.score.g_points[bx][SCORE_DIGITS - 1]
+		mov	al, _hi_reimu.score.g_score[bx][SCORE_DIGITS - 1]
 		mov	ah, 0
 		add	ax, -gb_0_
 		cmp	ax, 10
@@ -1954,7 +1954,7 @@ arg_2		= word ptr  6
 		push	di
 		mov	bx, si
 		shl	bx, 3
-		mov	al, _hi_reimu.score.g_points[bx][SCORE_DIGITS - 1]
+		mov	al, _hi_reimu.score.g_score[bx][SCORE_DIGITS - 1]
 		mov	ah, 0
 		add	ax, -gb_0_
 		mov	bx, 10
@@ -1966,7 +1966,7 @@ arg_2		= word ptr  6
 loc_C7E0:
 		mov	bx, si
 		shl	bx, 3
-		mov	al, _hi_marisa.score.g_points[bx][SCORE_DIGITS - 1]
+		mov	al, _hi_marisa.score.g_score[bx][SCORE_DIGITS - 1]
 		mov	ah, 0
 		add	ax, -gb_0_
 		cmp	ax, 10
@@ -1975,7 +1975,7 @@ loc_C7E0:
 		push	di
 		mov	bx, si
 		shl	bx, 3
-		mov	al, _hi_marisa.score.g_points[bx][SCORE_DIGITS - 1]
+		mov	al, _hi_marisa.score.g_score[bx][SCORE_DIGITS - 1]
 		mov	ah, 0
 		add	ax, -gb_0_
 		mov	bx, 10
@@ -1989,7 +1989,7 @@ loc_C811:
 		push	di
 		mov	bx, si
 		shl	bx, 3
-		mov	al, _hi_reimu.score.g_points[bx][SCORE_DIGITS - 1]
+		mov	al, _hi_reimu.score.g_score[bx][SCORE_DIGITS - 1]
 		mov	ah, 0
 		add	ax, -gb_0_
 		mov	bx, 10
@@ -2001,7 +2001,7 @@ loc_C811:
 		push	di
 		mov	bx, si
 		shl	bx, 3
-		mov	al, _hi_marisa.score.g_points[bx][SCORE_DIGITS - 1]
+		mov	al, _hi_marisa.score.g_score[bx][SCORE_DIGITS - 1]
 		mov	ah, 0
 		add	ax, -gb_0_
 		mov	bx, 10
@@ -2021,7 +2021,7 @@ loc_C854:
 		mov	bx, si
 		shl	bx, 3
 		add	bx, [bp+var_2]
-		mov	al, _hi_reimu.score.g_points[bx]
+		mov	al, _hi_reimu.score.g_score[bx]
 		mov	ah, 0
 		add	ax, -gb_0_
 		push	ax
@@ -2033,7 +2033,7 @@ loc_C854:
 		mov	bx, si
 		shl	bx, 3
 		add	bx, [bp+var_2]
-		mov	al, _hi_marisa.score.g_points[bx]
+		mov	al, _hi_marisa.score.g_score[bx]
 		mov	ah, 0
 		add	ax, -gb_0_
 		push	ax
