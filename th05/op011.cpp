@@ -11,7 +11,7 @@ extern "C" {
 #include "th01/rank.h"
 #include "th04/common.h"
 #include "th04/formats/scoredat.h"
-#include "th05/chars.h"
+#include "th05/playchar.h"
 #include "th05/resident.hpp"
 #include "th05/op/op.h"
 

@@ -12,6 +12,6 @@ struct bomb_star_t {
 
 extern bomb_star_t bomb_stars[BOMB_STAR_COUNT];
 
-void pascal near bomb_stars_update_and_render_for(playchars_t playchar)
+void pascal near bomb_stars_update_and_render_for(playchar_t playchar)
 ;
 // --------------

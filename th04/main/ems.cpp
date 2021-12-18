@@ -19,11 +19,11 @@ extern "C" {
 }
 #if (GAME == 5)
 	#include "th05/resident.hpp"
-	#include "th05/chars.h"
+	#include "th05/playchar.h"
 	#include "th05/shiftjis/fns.hpp"
 #else
 	#include "th04/resident.hpp"
-	#include "th04/chars.h"
+	#include "th04/playchar.h"
 	#include "th04/shiftjis/fns.hpp"
 #endif
 #include "th04/main/ems.hpp"

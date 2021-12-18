@@ -19,7 +19,7 @@
 #include "th04/main/item/item.hpp"
 
 #if (GAME == 4)
-	#include "th04/chars.h"
+	#include "th04/playchar.h"
 #endif
 
 // See tile.hpp for the reason this declaration is necessary

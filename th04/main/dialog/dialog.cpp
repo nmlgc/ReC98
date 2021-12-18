@@ -13,7 +13,7 @@ extern "C" {
 #include "th04/sprites/main_cdg.h"
 }
 #include "th04/shiftjis/fns.hpp"
-#include "th04/chars.h"
+#include "th04/playchar.h"
 #include "th04/main/ems.hpp"
 #include "th04/main/dialog/dialog.hpp"
 

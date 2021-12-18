@@ -16,7 +16,7 @@ extern "C" {
 #include "th02/hardware/frmdelay.h"
 #include "th03/formats/pi.hpp"
 #include "th04/common.h"
-#include "th04/chars.h"
+#include "th04/playchar.h"
 #include "th04/formats/scoredat.h"
 #include "th04/resident.hpp"
 #include "th04/hardware/input.h"
@@ -205,7 +205,7 @@ void near raise_bg_allocate_and_snap(void)
 	}
 }
 
-void near pascal raise_bg_put(playchars_t playchar_lowered)
+void near pascal raise_bg_put(playchar_t playchar_lowered)
 {
 	vram_byte_amount_t x;
 	pixel_t y;
@@ -246,7 +246,7 @@ void near raise_bg_free(void)
 
 #include "th04/op/darken.cpp"
 
-void near pascal pic_darken(playchars_t playchar)
+void near pascal pic_darken(playchar_t playchar)
 {
 	vram_offset_t vo;
 	vram_byte_amount_t x;
@@ -315,7 +315,7 @@ void near pascal playchar_title_box_put(int playchar)
 }
 
 inline void pic_put_for(
-	playchars_t playchar_sel,
+	playchar_t playchar_sel,
 	screen_x_t sel_left,
 	vram_y_t sel_top,
 	screen_x_t other_left,

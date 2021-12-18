@@ -5,7 +5,7 @@ typedef enum {
 	PLAYCHAR_YUUKA = 3,
 	PLAYCHAR_COUNT = 4,
 
-	_playchars_t_FORCE_UINT8 = 0xFF
-} playchars_t;
+	_playchar_t_FORCE_UINT8 = 0xFF
+} playchar_t;
 
-extern playchars_t playchar;
+extern playchar_t playchar;

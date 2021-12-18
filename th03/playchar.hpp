@@ -9,9 +9,9 @@ typedef enum {
 	PLAYCHAR_CHIYURI = 7,
 	PLAYCHAR_YUMEMI = 8,
 	PLAYCHAR_COUNT = 9,
-} playchars_t;
+} playchar_t;
 
-// Encodes a playchars_t together with its alternate palette flag.
+// Encodes a playchar_t together with its alternate palette flag.
 struct playchar_paletted_t {
 	unsigned char v;
 
@@ -19,8 +19,8 @@ struct playchar_paletted_t {
 		return (v - 1);
 	}
 
-	playchars_t char_id() const {
-		return static_cast<playchars_t>(filename_id() / 2);
+	playchar_t char_id() const {
+		return static_cast<playchar_t>(filename_id() / 2);
 	}
 };
 

@@ -13,7 +13,7 @@ extern "C" {
 #include "th04/main/stage/stage.hpp"
 #include "th04/sprites/main_cdg.h"
 #include "th04/main/ems.hpp"
-#include "th05/chars.h"
+#include "th05/playchar.h"
 #include "th05/formats/tx2.hpp"
 #include "th05/shiftjis/fns.hpp"
 #include "th05/main/dialog/dialog.hpp"

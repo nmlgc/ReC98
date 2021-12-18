@@ -17,7 +17,7 @@ extern "C" {
 #include "th04/hardware/bgimage.hpp"
 #include "th04/score.h"
 #include "th04/common.h"
-#include "th05/chars.h"
+#include "th05/playchar.h"
 #include "th05/resident.hpp"
 #include "th05/op/op.h"
 #include "th05/sprites/op_cdg.h"
