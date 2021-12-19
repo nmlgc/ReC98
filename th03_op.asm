@@ -2030,7 +2030,7 @@ loc_B1D4:
 		or	di, di
 		jge	short loc_B1B6
 		push	ds
-		push	word_E1F2
+		push	_SCOREDAT_FN
 		call	file_append
 		mov	ax, [bp+arg_0]
 		imul	ax, 0CEh
@@ -2229,12 +2229,12 @@ arg_0		= word ptr  4
 		push	bp
 		mov	bp, sp
 		push	ds
-		push	word_E1F2
+		push	_SCOREDAT_FN
 		call	file_exist
 		or	ax, ax
 		jnz	short loc_B314
 		push	ds
-		push	word_E1F2
+		push	_SCOREDAT_FN
 		call	file_create
 		call	file_close
 		jmp	short loc_B34D
@@ -2242,7 +2242,7 @@ arg_0		= word ptr  4
 
 loc_B314:
 		push	ds
-		push	word_E1F2
+		push	_SCOREDAT_FN
 		call	file_ropen
 		mov	ax, [bp+arg_0]
 		imul	ax, 0CEh
@@ -3813,9 +3813,10 @@ aOp_m		db 'op.m',0
 aTl01_pi	db 'TL01.PI',0
 aTl02_pi	db 'TL02.PI',0
 		db 0
-word_E1F2	dw 0A04h
+public _SCOREDAT_FN
+_SCOREDAT_FN	dw offset aYume_nem
 aYume_nem	db 'YUME.NEM',0
-		db 0
+	evendata
 off_E1FE	dd a00sl_cd2
 					; "00SL.CD2"
 		dd a02sl_cd2		; "02SL.CD2"

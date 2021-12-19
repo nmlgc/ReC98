@@ -2777,12 +2777,12 @@ arg_0		= word ptr  4
 		push	bp
 		mov	bp, sp
 		push	ds
-		push	word_ED66
+		push	_SCOREDAT_FN
 		call	file_exist
 		or	ax, ax
 		jnz	short loc_AEB0
 		push	ds
-		push	word_ED66
+		push	_SCOREDAT_FN
 		call	file_create
 		call	file_close
 		jmp	short loc_AEE9
@@ -2790,7 +2790,7 @@ arg_0		= word ptr  4
 
 loc_AEB0:
 		push	ds
-		push	word_ED66
+		push	_SCOREDAT_FN
 		call	file_ropen
 		mov	ax, [bp+arg_0]
 		imul	ax, 0CEh
@@ -2888,7 +2888,7 @@ loc_AF73:
 		or	di, di
 		jge	short loc_AF55
 		push	ds
-		push	word_ED66
+		push	_SCOREDAT_FN
 		call	file_append
 		mov	ax, [bp+arg_0]
 		imul	ax, 0CEh
@@ -5707,7 +5707,8 @@ _REGI_PLAYCHAR label byte
 	db REGI_R, REGI_I, REGI_K, REGI_A, REGI_K, REGI_O, regi_sp, regi_sp
 	db REGI_C, REGI_H, REGI_I, REGI_Y, REGI_U, REGI_R, REGI_I, regi_sp
 	db REGI_Y, REGI_U, REGI_M, REGI_E, REGI_M, REGI_I, regi_sp, regi_sp
-word_ED66	dw 0A04h
+public _SCOREDAT_FN
+_SCOREDAT_FN	dw offset aYume_nem
 word_ED68	dw 0A0Dh
 unk_ED6A	db    0
 		db    0
