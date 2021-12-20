@@ -24,6 +24,8 @@ include th02/music/music.inc
 	extern _execl:proc
 	extern _getch:proc
 
+group_01 group op_01_TEXT
+
 ; ===========================================================================
 
 ; Segment type:	Pure code
@@ -129,7 +131,7 @@ _TEXT		ends
 
 ; Segment type:	Pure code
 op_01_TEXT	segment	byte public 'CODE' use16
-		assume cs:op_01_TEXT
+		assume cs:group_01
 		;org 8
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 

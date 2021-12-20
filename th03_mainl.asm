@@ -25,7 +25,7 @@ include th01/hardware/grppsafx.inc
 	extern _execl:proc
 	extern _tolower:proc
 
-mainl_01 group CFG_LRES_TEXT, mainl_01_TEXT
+group_01 group CFG_LRES_TEXT, mainl_01_TEXT
 
 ; ===========================================================================
 
@@ -134,7 +134,7 @@ CFG_LRES_TEXT	ends
 
 ; Segment type:	Pure code
 mainl_01_TEXT	segment	byte public 'CODE' use16
-		assume cs:mainl_01
+		assume cs:group_01
 		;org 3
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
