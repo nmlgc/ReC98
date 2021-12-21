@@ -24,4 +24,17 @@ struct playchar_paletted_t {
 	}
 };
 
+// Uses 0 to indicate "no character" and shifts all IDs up by 1.
+struct playchar_optional_t {
+	unsigned char v;
+
+	playchar_t char_id() const {
+		return static_cast<playchar_t>(v - 1);
+	}
+
+	void set_none() {
+		v = 0;
+	}
+};
+
 #define TO_PALETTED(playchar) ((playchar << 1) + 1)

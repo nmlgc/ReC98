@@ -1,2 +1,0 @@
-#define SCOREDAT_FN "YUME.NEM"
-#define SCOREDAT_PLACES 10
