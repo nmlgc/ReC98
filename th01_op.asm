@@ -32,7 +32,6 @@ include th01/formats/cfg.inc
 	extern _memcmp:proc
 	extern _printf:proc
 
-	.seq
 op_01 group op_01_TEXT, op_01__TEXT
 
 ; ===========================================================================

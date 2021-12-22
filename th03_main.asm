@@ -14,7 +14,7 @@
 ; Application type:  Executable	16bit
 
 		.386
-		.model use16 large
+		.model use16 large _TEXT
 
 include ReC98.inc
 include th03/arg_bx.inc
@@ -25,7 +25,6 @@ include th03/sprite16.inc
 include libs/sprite16/sprite16.inc
 
 	extern _execl:proc
-	.seq
 
 main_01 group main_0_TEXT, CFG_LRES_TEXT, main_01_TEXT
 

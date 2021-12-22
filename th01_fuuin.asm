@@ -26,7 +26,6 @@ include th01/th01.inc
 	extern __setenvp__:proc
 	extern _execl:proc
 
-	.seq
 fuuin_01 group fuuin_01_TEXT, fuuin_01__TEXT
 
 ; ===========================================================================

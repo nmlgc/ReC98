@@ -14,7 +14,7 @@
 ; Application type:  Executable	16bit
 
 		.386
-		.model use16 large
+		.model use16 large _TEXT
 
 BINARY = 'M'
 
@@ -43,7 +43,6 @@ include th04/main/enemy/enemy.inc
 	extern _tolower:proc
 	extern __ctype:byte
 
-	.seq
 main_01 group SLOWDOWN_TEXT, mai_TEXT, EMS_TEXT, main_TEXT, DIALOG_TEXT, main__TEXT, PLAYER_P_TEXT, main_0_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT
 g_SHARED group SHARED, SHARED_
 main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, main_033_TEXT

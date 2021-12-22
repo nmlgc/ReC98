@@ -14,7 +14,7 @@
 ; Application type:  Executable	16bit
 
 		.386
-		.model use16 large
+		.model use16 large _TEXT
 
 include ReC98.inc
 include th02/th02.inc
@@ -28,7 +28,6 @@ include th02/sprites/main_pat.inc
 	extern _getdate:proc
 	extern _memcpy:proc
 
-	.seq
 main_03 group main_03_TEXT, main_03__TEXT
 
 ; ===========================================================================

@@ -14,7 +14,7 @@
 ; Application type:  Executable	16bit
 
 		.386
-		.model use16 large
+		.model use16 large _TEXT
 
 include ReC98.inc
 include th03/th03.inc

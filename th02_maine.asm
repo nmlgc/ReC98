@@ -23,7 +23,6 @@ include th02/th02.inc
 	extern SCOPY@:proc
 	extern _execl:proc
 
-	.seq
 ; ===========================================================================
 
 ; Segment type:	Pure code

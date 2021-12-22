@@ -1,17 +1,6 @@
 ; ReC98
 ; Main include file
 
-; Order segments alphabetically.
-; Rather ugly workaround to prevent the automatically generated code segment
-; for the large model (filename_TEXT) from enforcing its word alignment
-; between _TEXT and the first code segment even though we never emit anything
-; into it.
-; However, this merely pushes filename_TEXT before _TEXTC, and therefore
-; breaks another group of files. In these, we actually have to rename that
-; automatically generated code segment to one that is expected to have word
-; alignment.
-.alpha
-
 locals
 
 LDATA = @DataSize

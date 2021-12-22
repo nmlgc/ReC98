@@ -59,7 +59,6 @@ BOSS_STAGE = (STAGES_PER_SCENE - 1)
 	extern _strcpy:proc
 	extern _toupper:proc
 
-	.seq
 main_01 group main_010_TEXT, main_011_TEXT, main_012_TEXT, main_013_TEXT
 main_15 group main_15_TEXT, main_15__TEXT
 main_19 group main_19_TEXT, main_19__TEXT

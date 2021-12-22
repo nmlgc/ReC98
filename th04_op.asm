@@ -14,7 +14,7 @@
 ; Application type:  Executable	16bit
 
 		.386
-		.model use16 large SHARED
+		.model use16 large _TEXT
 
 BINARY = 'O'
 
