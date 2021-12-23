@@ -14,7 +14,7 @@
 ; Application type:  Executable	16bit
 
 		.386
-		.model use16 large
+		.model use16 large _TEXT
 
 include ReC98.inc
 include th03/th03.inc
@@ -26,7 +26,7 @@ include th03/formats/scoredat.inc
 	extern _execl:proc
 	extern _getch:proc
 
-group_01 group op_01_TEXT
+group_01 group op_01_TEXT, SCOREDAT_TEXT, op_02_TEXT
 
 ; ===========================================================================
 
@@ -2050,48 +2050,13 @@ loc_B1D4:
 		leave
 		retn	2
 sub_B168	endp
+op_01_TEXT	ends
 
+SCOREDAT_TEXT segment byte public 'CODE' use16
+	@scoredat_decode$qv procdesc near
+SCOREDAT_TEXT ends
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B20D	proc near
-
-var_1		= byte ptr -1
-
-		enter	2, 0
-		push	si
-		mov	si, offset _hi
-		xor	dx, dx
-		jmp	short loc_B235
-; ---------------------------------------------------------------------------
-
-loc_B219:
-		mov	al, [si+1]
-		mov	[bp+var_1], al
-		mov	al, _hi.SDS_score.SD_key2
-		ror	[bp+var_1], 3
-		xor	[bp+var_1], al
-		mov	al, _hi.SDS_score.SD_key1
-		add	al, [bp+var_1]
-		add	al, [si]
-		mov	[si], al
-		inc	dx
-		inc	si
-
-loc_B235:
-		cmp	dx, (SDS_score.SD_key1 - 1)
-		jl	short loc_B219
-		mov	al, _hi.SDS_score.SD_key1
-		add	al, _hi.SDS_score.SD_key2
-		add	al, [si]
-		mov	[si], al
-		pop	si
-		leave
-		retn
-sub_B20D	endp
-
+op_02_TEXT segment byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2167,7 +2132,7 @@ loc_B2A9:
 loc_B2B7:
 		push	si
 		call	sub_B168
-		call	sub_B20D
+		call	@scoredat_decode$qv
 		inc	si
 
 loc_B2BF:
@@ -2257,7 +2222,7 @@ loc_B314:
 		push	size scoredat_section_t
 		call	file_read
 		call	file_close
-		call	sub_B20D
+		call	@scoredat_decode$qv
 		call	sub_B2C8
 		or	al, al
 		jz	short loc_B357
@@ -3598,7 +3563,7 @@ loc_BEB0:
 sub_BD9A	endp
 		db 0
 
-op_01_TEXT	ends
+op_02_TEXT	ends
 
 ; ===========================================================================
 

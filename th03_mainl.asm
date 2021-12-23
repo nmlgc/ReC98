@@ -27,7 +27,7 @@ include th03/formats/scoredat.inc
 	extern _execl:proc
 	extern _tolower:proc
 
-group_01 group CFG_LRES_TEXT, mainl_01_TEXT
+group_01 group CFG_LRES_TEXT, mainl_01_TEXT, SCOREDAT_TEXT, mainl_03_TEXT
 
 ; ===========================================================================
 
@@ -2597,48 +2597,13 @@ loc_ADA0:
 		leave
 		retn
 sub_AC6E	endp
+mainl_01_TEXT	ends
 
+SCOREDAT_TEXT segment byte public 'CODE' use16
+	@scoredat_decode$qv procdesc near
+SCOREDAT_TEXT ends
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_ADA9	proc near
-
-var_1		= byte ptr -1
-
-		enter	2, 0
-		push	si
-		mov	si, offset _hi
-		xor	dx, dx
-		jmp	short loc_ADD1
-; ---------------------------------------------------------------------------
-
-loc_ADB5:
-		mov	al, [si+1]
-		mov	[bp+var_1], al
-		mov	al, _hi.SDS_score.SD_key2
-		ror	[bp+var_1], 3
-		xor	[bp+var_1], al
-		mov	al, _hi.SDS_score.SD_key1
-		add	al, [bp+var_1]
-		add	al, [si]
-		mov	[si], al
-		inc	dx
-		inc	si
-
-loc_ADD1:
-		cmp	dx, (SDS_score.SD_key1 - 1)
-		jl	short loc_ADB5
-		mov	al, _hi.SDS_score.SD_key1
-		add	al, _hi.SDS_score.SD_key2
-		add	al, [si]
-		mov	[si], al
-		pop	si
-		leave
-		retn
-sub_ADA9	endp
-
+mainl_03_TEXT	segment	byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2714,7 +2679,7 @@ loc_AE45:
 loc_AE53:
 		push	si
 		call	sub_AEF0
-		call	sub_ADA9
+		call	@scoredat_decode$qv
 		inc	si
 
 loc_AE5B:
@@ -2804,7 +2769,7 @@ loc_AEB0:
 		push	size scoredat_section_t
 		call	file_read
 		call	file_close
-		call	sub_ADA9
+		call	@scoredat_decode$qv
 		call	sub_AE64
 		or	al, al
 		jz	short loc_AEEC
@@ -5503,9 +5468,7 @@ loc_C7D8:
 		pop	bp
 		retn
 sub_C40D	endp
-		db 0
-
-mainl_01_TEXT	ends
+mainl_03_TEXT	ends
 
 ; ===========================================================================
 

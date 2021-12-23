@@ -30,3 +30,10 @@ struct scoredat_section_t {
 };
 
 extern scoredat_section_t hi;
+
+/// Functions
+/// ---------
+// All of those write to and read from [hi], except where mentioned otherwise.
+
+void near scoredat_decode(void);
+/// ---------
