@@ -19,6 +19,7 @@
 include ReC98.inc
 include th03/th03.inc
 include th01/hardware/grppsafx.inc
+include th03/sprites/regi.inc
 
 	extern SCOPY@:proc
 	extern __ctype:byte
@@ -5695,78 +5696,17 @@ aSCORE_PLAYCHARS label dword
 		dd aB@canboq		; " 　理香子   "
 		dd aB@vVfvsb@		; " 　ちゆり　 "
 		dd aB@CF		; " 　 夢美　  "
-		db  14h
-		db    4
-		db    8
-		db  0Ch
-		db  17h
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Ch
-		db    8
-		db  0Ch
-		db    0
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Ch
-		db    0
-		db  14h
-		db    8
-		db  15h
-		db    0
-		db  0Eh
-		db  0Eh
-		db    4
-		db  0Bh
-		db    4
-		db  10h
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Ah
-		db  11h
-		db  16h
-		db  11h
-		db    7
-		db    8
-		db  0Ch
-		db    4
-		db  0Ah
-		db    0
-		db  10h
-		db    0
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  0Eh
-		db  14h
-		db    8
-		db  0Ah
-		db    0
-		db  0Ah
-		db  11h
-		db  0Eh
-		db  0Eh
-		db    2
-		db    7
-		db    8
-		db  1Bh
-		db  17h
-		db  14h
-		db    8
-		db  0Eh
-		db  1Bh
-		db  17h
-		db  0Ch
-		db    4
-		db  0Ch
-		db    8
-		db  0Eh
-		db  0Eh
+public _REGI_PLAYCHAR
+_REGI_PLAYCHAR label byte
+	db REGI_R, REGI_E, REGI_I, REGI_M, REGI_U, regi_sp, regi_sp, regi_sp
+	db REGI_M, REGI_I, REGI_M, REGI_A, regi_sp, regi_sp, regi_sp, regi_sp
+	db REGI_M, REGI_A, REGI_R, REGI_I, REGI_S, REGI_A, regi_sp, regi_sp
+	db REGI_E, REGI_L, REGI_E, REGI_N, regi_sp, regi_sp, regi_sp, regi_sp
+	db REGI_K, REGI_O, REGI_T, REGI_O, REGI_H, REGI_I, REGI_M, REGI_E
+	db REGI_K, REGI_A, REGI_N, REGI_A, regi_sp, regi_sp, regi_sp, regi_sp
+	db REGI_R, REGI_I, REGI_K, REGI_A, REGI_K, REGI_O, regi_sp, regi_sp
+	db REGI_C, REGI_H, REGI_I, REGI_Y, REGI_U, REGI_R, REGI_I, regi_sp
+	db REGI_Y, REGI_U, REGI_M, REGI_E, REGI_M, REGI_I, regi_sp, regi_sp
 word_ED66	dw 0A04h
 word_ED68	dw 0A0Dh
 unk_ED6A	db    0
