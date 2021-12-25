@@ -19,7 +19,9 @@ struct scoredat_t {
 	int8_t unknown;
 
 	// Stored as little-endian sprite IDs with leading zeroes as REGI_0
-	// sprites, analogous to this game's score_lebcd_t type.
+	// sprites, analogous to this game's score_lebcd_t type. One of those
+	// additional digits corresponds to the amount of continues used, the
+	// other one is stored for no reason.
 	regi_patnum_t score[SCOREDAT_PLACES][SCORE_DIGITS + 2];
 
 	playchar_optional_t playchar[SCOREDAT_PLACES];

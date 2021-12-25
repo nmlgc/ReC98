@@ -1,7 +1,7 @@
 #include "th02/score.h"
 
 typedef struct {
-	// Stored without the last 0 digit.
+	// Not including the amount of continues used.
 	unsigned char digits[SCORE_DIGITS];
 } score_lebcd_t;
 

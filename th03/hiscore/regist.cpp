@@ -20,6 +20,8 @@ extern "C" {
 #include "th03/formats/score_ld.cpp"
 #include "th03/formats/score_es.cpp"
 
+static const int PLACE_NONE = -1;
+
 void near regist_load_and_put_initial(void)
 {
 	enum {
@@ -51,4 +53,64 @@ void near regist_load_and_put_initial(void)
 
 	graph_copy_page(1);
 	graph_accesspage(0);
+}
+
+inline int score_digit_as_regi(int digit) {
+	return (REGI_0 + resident->score_last[0].digits[digit]);
+}
+
+int near regist_score_enter_from_resident(void)
+{
+	int place;
+	int shift;
+	int c;
+
+	for(place = 0; place < SCOREDAT_PLACES; place++) {
+		for(c = (SCORE_DIGITS - 1); c >= 0; c--) {
+			if(score_digit_as_regi(c) > hi.score.score[place][c + 1]) {
+				goto found;
+			} else if(score_digit_as_regi(c) < hi.score.score[place][c + 1]) {
+				break;
+			}
+		}
+	}
+	if(place == SCOREDAT_PLACES) {
+		return PLACE_NONE;
+	}
+
+found:
+	if(place < (SCOREDAT_PLACES - 1)) {
+		for(shift = (SCOREDAT_PLACES - 2); shift >= place; shift--) {
+			for(c = 0; c < SCOREDAT_NAME_LEN; c++) {
+				hi.score.name[shift + 1][c] = hi.score.name[shift][c];
+			}
+			for(c = 0; c < sizeof(hi.score.score[0]); c++) {
+				hi.score.score[shift + 1][c] = hi.score.score[shift][c];
+			}
+			hi.score.stage[shift + 1] = hi.score.stage[shift];
+			hi.score.playchar[shift + 1] = hi.score.playchar[shift];
+		}
+	}
+
+	for(c = 0; c < SCOREDAT_NAME_LEN; c++) {
+		hi.score.name[place][c] = REGI_ASCII(' ');
+	}
+
+	for(c = 1; c < (SCORE_DIGITS + 1); c++) {
+		hi.score.score[place][c] = REGI_DIGIT(
+			resident->score_last[0].digits[c - 1]
+		);
+	}
+	hi.score.score[place][0] = static_cast<regi_patnum_t>(
+		REGI_3 - resident->rem_credits
+	);
+
+	if(resident->story_stage == STAGE_ALL) {
+		hi.score.stage[place] = REGI_ALL;
+	} else {
+		hi.score.stage[place] = REGI_DIGIT(resident->story_stage);
+	}
+
+	hi.score.playchar[place].v = (resident->playchar_paletted[0].char_id() + 1);
+	return place;
 }

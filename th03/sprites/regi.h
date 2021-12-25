@@ -59,6 +59,8 @@ enum regi_patnum_t {
 	REGI_ALL,
 
 	REGI_COUNT,
+
+	_regi_patnum_t_FORCE_UINT8 = 0xFF,
 };
 
 // Eh, not really shorter, but it will syntax-highlight more nicely.
