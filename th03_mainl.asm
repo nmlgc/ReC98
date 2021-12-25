@@ -2612,87 +2612,11 @@ REGIST_TEXT segment byte public 'CODE' use16
 	@alphabet_put_initial$qv procdesc near
 	@ALPHABET_PUTCA$QII procdesc pascal near \
 		regi:word, selected:word
+	@REGI_UNPUT$QII procdesc pascal near \
+		left:word, top:word
 REGIST_TEXT ends
 
 mainl_03_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B1F6	proc near
-
-var_14		= dword	ptr -14h
-var_10		= dword	ptr -10h
-var_C		= dword	ptr -0Ch
-var_8		= dword	ptr -8
-var_4		= dword	ptr -4
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		enter	14h, 0
-		push	si
-		mov	si, [bp+arg_0]
-		mov	ax, [bp+arg_2]
-		sar	ax, 3
-		mov	dx, si
-		shl	dx, 6
-		add	ax, dx
-		mov	dx, si
-		shl	dx, 4
-		add	ax, dx
-		mov	cx, ax
-		mov	[bp+var_4], 0
-		jmp	loc_B29F
-; ---------------------------------------------------------------------------
-
-loc_B21F:
-		graph_accesspage 1
-		les	bx, _VRAM_PLANE_B
-		add	bx, cx
-		mov	eax, es:[bx]
-		mov	[bp+var_14], eax
-		les	bx, _VRAM_PLANE_R
-		add	bx, cx
-		mov	eax, es:[bx]
-		mov	[bp+var_10], eax
-		les	bx, _VRAM_PLANE_G
-		add	bx, cx
-		mov	eax, es:[bx]
-		mov	[bp+var_C], eax
-		les	bx, _VRAM_PLANE_E
-		add	bx, cx
-		mov	eax, es:[bx]
-		mov	[bp+var_8], eax
-		mov	al, 0
-		out	dx, al
-		les	bx, _VRAM_PLANE_B
-		add	bx, cx
-		mov	eax, [bp+var_14]
-		mov	es:[bx], eax
-		les	bx, _VRAM_PLANE_R
-		add	bx, cx
-		mov	eax, [bp+var_10]
-		mov	es:[bx], eax
-		les	bx, _VRAM_PLANE_G
-		add	bx, cx
-		mov	eax, [bp+var_C]
-		mov	es:[bx], eax
-		les	bx, _VRAM_PLANE_E
-		add	bx, cx
-		mov	eax, [bp+var_8]
-		mov	es:[bx], eax
-		add	cx, 50h	; 'P'
-		inc	[bp+var_4]
-
-loc_B29F:
-		cmp	[bp+var_4], 20h	; ' '
-		jb	loc_B21F
-		pop	si
-		leave
-		retn	4
-sub_B1F6	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3186,9 +3110,7 @@ loc_B60C:
 		sub	dx, ax
 		imul	dx, 18h
 		add	dx, 48h	; 'H'
-		push	dx
-		push	si
-		call	sub_B1F6
+		call	@REGI_UNPUT$qii pascal, dx, si
 		mov	bx, _entered_place
 		shl	bx, 3
 		mov	al, [bp+var_E]
@@ -3243,11 +3165,9 @@ loc_B687:
 		mov	ah, 0
 		mov	dx, 7
 		sub	dx, ax
-		imul	dx, 18h
-		add	dx, 48h	; 'H'
-		push	dx
-		push	si
-		call	sub_B1F6
+		imul	dx, 24
+		add	dx, 72
+		call	@REGI_UNPUT$qii pascal, dx, si
 		mov	bx, _entered_place
 		shl	bx, 3
 		mov	al, [bp+var_E]
@@ -3277,11 +3197,9 @@ loc_B6D3:
 		mov	ah, 0
 		mov	dx, 7
 		sub	dx, ax
-		imul	dx, 18h
-		add	dx, 48h	; 'H'
-		push	dx
-		push	si
-		call	sub_B1F6
+		imul	dx, 24
+		add	dx, 72
+		call	@REGI_UNPUT$qii pascal, dx, si
 		mov	bx, _entered_place
 		shl	bx, 3
 		mov	al, [bp+var_E]

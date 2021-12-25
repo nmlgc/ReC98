@@ -175,3 +175,15 @@ void pascal near alphabet_putca(int regi, bool16 highlight)
 	);
 	regi_put(left, top, regi, highlight);
 }
+
+// What's a EGC?
+void pascal near regi_unput(screen_x_t left, screen_y_t top)
+{
+	vram_offset_t vo = vram_offset_shift(left, top);
+	for(unsigned long y = 0; y < REGI_GLYPH_H; y++) {
+		Planar<dots_t(REGI_GLYPH_W)> row;
+		graph_accesspage(1);	VRAM_SNAP_PLANAR(row, vo, REGI_GLYPH_W);
+		graph_accesspage(0);	VRAM_PUT_PLANAR(vo, row, REGI_GLYPH_W);
+		vo += ROW_SIZE;
+	}
+}
