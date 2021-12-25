@@ -28,6 +28,7 @@ static const int PLACE_NONE = -1;
 // REGI_W and REGI_H are already used for, well, regi_patnum_t members...
 #define REGI_GLYPH_W 32
 #define REGI_GLYPH_H 32
+static const int REGI_DOUBLEWIDE_X = REGI_SP;
 
 static const int ALPHABET_ROWS = 3;
 static const int ALPHABET_GLYPHS = REGI_ALL;
@@ -185,5 +186,22 @@ void pascal near regi_unput(screen_x_t left, screen_y_t top)
 		graph_accesspage(1);	VRAM_SNAP_PLANAR(row, vo, REGI_GLYPH_W);
 		graph_accesspage(0);	VRAM_PUT_PLANAR(vo, row, REGI_GLYPH_W);
 		vo += ROW_SIZE;
+	}
+}
+
+void pascal near regi_put(
+	screen_x_t left, screen_y_t top, int regi, bool16 highlight
+)
+{
+	// ZUN bug: A bounds check either here or in super_put() would be nice, to
+	// prevent uninitialized data from being accessed once a score reaches
+	// 8,000,000,000 points.
+	int patnum = regi;
+	if(highlight) {
+		patnum += REGI_COUNT;
+	}
+	super_put(left, top, patnum);
+	if((regi % ALPHABET_GLYPHS_PER_ROW) == REGI_DOUBLEWIDE_X) {
+		super_put((left + REGI_GLYPH_W), top, (patnum + 1));
 	}
 }

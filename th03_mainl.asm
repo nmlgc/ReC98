@@ -2614,53 +2614,11 @@ REGIST_TEXT segment byte public 'CODE' use16
 		regi:word, selected:word
 	@REGI_UNPUT$QII procdesc pascal near \
 		left:word, top:word
+	@REGI_PUT$QIIII procdesc pascal near \
+		left:word, top:word, regi:word, selected:word
 REGIST_TEXT ends
 
 mainl_03_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public @REGI_PUT$QIIII
-@regi_put$qiiii	proc near
-
-@@selected	= word ptr  4
-@@regi    	= word ptr  6
-@@top     	= word ptr  8
-@@left    	= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, [bp+@@left]
-		mov	si, [bp+@@regi]
-		cmp	[bp+@@selected], 0
-		jz	short loc_B2C1
-		add	si, REGI_COUNT
-
-loc_B2C1:
-		call	super_put pascal, di, [bp+@@top], si
-		mov	ax, [bp+@@regi]
-		mov	bx, 16
-		cwd
-		idiv	bx
-		cmp	dx, 14
-		jnz	short loc_B2E9
-		lea	ax, [di+32]
-		push	ax
-		push	[bp+@@top]
-		lea	ax, [si+1]
-		push	ax
-		call	super_put
-
-loc_B2E9:
-		pop	di
-		pop	si
-		pop	bp
-		retn	8
-@regi_put$qiiii	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
