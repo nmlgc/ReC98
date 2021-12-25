@@ -2607,39 +2607,10 @@ SCOREDAT_TEXT ends
 REGIST_TEXT segment byte public 'CODE' use16
 	@SCOREDAT_ENCODE_AND_SAVE$Q6RANK_T procdesc pascal near \
 		rank:word
+	@regist_load_and_put_initial$qv procdesc near
 REGIST_TEXT ends
 
 mainl_03_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_AFAC	proc near
-		push	bp
-		mov	bp, sp
-		mov	PaletteTone, 0
-		call	far ptr	palette_show
-		graph_accesspage 0
-		graph_showpage al
-		call	pi_load pascal, 0, ds, offset aRegib_pi
-		call	pi_palette_apply pascal, 0
-		call	pi_put_8 pascal, large 0, 0
-		freePISlotLarge	0
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.rank]
-		mov	bx, word_ED68
-		add	[bx+3],	al
-		call	cdg_load_single pascal, 0, ds, bx, 0
-		call	cdg_put_8 pascal, large (320 shl 16) or 312, 0
-		call	cdg_free pascal, 0
-		call	super_entry_bfnt pascal, ds, offset aRegi2_bft ; "regi2.bft"
-		call	super_entry_bfnt pascal, ds, offset aRegi1_bft ; "regi1.bft"
-		call	graph_copy_page pascal, 1
-		graph_accesspage 0
-		pop	bp
-		retn
-sub_AFAC	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3746,7 +3717,7 @@ loc_B819:
 		mov	_entered_place, ax
 
 loc_B81F:
-		call	sub_AFAC
+		call	@regist_load_and_put_initial$qv
 		cmp	_entered_place, -1
 		jnz	short loc_B835
 		call	sub_B429
@@ -5407,7 +5378,8 @@ _REGI_PLAYCHAR label byte
 	db REGI_Y, REGI_U, REGI_M, REGI_E, REGI_M, REGI_I, regi_sp, regi_sp
 public _SCOREDAT_FN
 _SCOREDAT_FN	dw offset aYume_nem
-word_ED68	dw 0A0Dh
+public _rank_image_fn
+_rank_image_fn	dw offset aRft0_cdg
 unk_ED6A	db    0
 		db    0
 		db    0
@@ -5428,9 +5400,10 @@ aB@vVfvsb@	db ' 　ちゆり　 ',0
 aB@CF		db ' 　 夢美　  ',0
 aYume_nem	db 'YUME.NEM',0
 aRft0_cdg	db 'rft0.cdg',0
-aRegib_pi	db 'regib.pi',0
-aRegi2_bft	db 'regi2.bft',0
-aRegi1_bft	db 'regi1.bft',0
+public _regib_pi, _regi2_bft, _regi1_bft
+_regib_pi 	db 'regib.pi',0
+_regi2_bft	db 'regi2.bft',0
+_regi1_bft	db 'regi1.bft',0
 aScore_m	db 'score.m',0
 aConti_pi	db 'conti.pi',0
 aConti_cd2	db 'conti.cd2',0
