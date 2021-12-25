@@ -56,4 +56,8 @@ void near scoredat_decode(void);
 	// [cleared] based on resident data.
 	void pascal near scoredat_encode_and_save(rank_t rank);
 #endif
+
+// Fills [hi] with default (decrypted) score data, and writes it to the score
+// file under all ranks.
+void near scoredat_recreate(void);
 /// ---------

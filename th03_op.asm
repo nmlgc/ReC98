@@ -1970,101 +1970,14 @@ sub_B10A	endp
 op_01_TEXT	ends
 
 op_02_TEXT segment byte public 'CODE' use16
-	@SCOREDAT_ENCODE_AND_SAVE$Q6RANK_T procdesc pascal near \
-		rank:word
 op_02_TEXT ends
 
 SCOREDAT_TEXT segment byte public 'CODE' use16
 	@scoredat_decode$qv procdesc near
+	@scoredat_recreate$qv procdesc near
 SCOREDAT_TEXT ends
 
 op_03_TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B249	proc near
-
-@@regi		= byte ptr -1
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	[bp+@@regi], REGI_9
-		xor	si, si
-		jmp	short loc_B28A
-; ---------------------------------------------------------------------------
-
-loc_B257:
-		xor	di, di
-		jmp	short loc_B266
-; ---------------------------------------------------------------------------
-
-loc_B25B:
-		mov	bx, si
-		shl	bx, 3
-		mov	_hi.SDS_score.SD_name[bx+di], REGI_PERIOD
-		inc	di
-
-loc_B266:
-		cmp	di, SCOREDAT_NAME_LEN
-		jl	short loc_B25B
-		xor	di, di
-		jmp	short loc_B27A
-; ---------------------------------------------------------------------------
-
-loc_B26F:
-		mov	bx, si
-		imul	bx, (SCORE_DIGITS + 2)
-		mov	_hi.SDS_score.SD_score[bx+di], REGI_0
-		inc	di
-
-loc_B27A:
-		cmp	di, (SCORE_DIGITS + 2)
-		jl	short loc_B26F
-		mov	_hi.SDS_score.SD_playchar[si], 0
-		mov	_hi.SDS_score.SD_stage[si], REGI_1
-		inc	si
-
-loc_B28A:
-		cmp	si, SCOREDAT_PLACES
-		jl	short loc_B257
-		mov	_hi.SDS_score.SD_score+4, REGI_1
-		mov	di, 1
-		jmp	short loc_B2A9
-; ---------------------------------------------------------------------------
-
-loc_B299:
-		mov	bx, di
-		imul	bx, (SCORE_DIGITS + 2)
-		mov	al, [bp+@@regi]
-		mov	_hi.SDS_score.SD_score[bx]+3, al
-		inc	di
-		dec	[bp+@@regi]
-
-loc_B2A9:
-		cmp	di, SCOREDAT_PLACES
-		jl	short loc_B299
-		mov	_hi.SDS_score.SD_cleared, SCOREDAT_NOT_CLEARED
-		xor	si, si
-		jmp	short loc_B2BF
-; ---------------------------------------------------------------------------
-
-loc_B2B7:
-		call	@scoredat_encode_and_save$q6rank_t pascal, si
-		call	@scoredat_decode$qv
-		inc	si
-
-loc_B2BF:
-		cmp	si, (RANK_LUNATIC + 1)
-		jl	short loc_B2B7
-		pop	di
-		pop	si
-		leave
-		retn
-sub_B249	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2149,7 +2062,7 @@ loc_B314:
 		jz	short loc_B357
 
 loc_B34D:
-		call	sub_B249
+		call	@scoredat_recreate$qv
 		mov	ax, 1
 		pop	bp
 		retn	2

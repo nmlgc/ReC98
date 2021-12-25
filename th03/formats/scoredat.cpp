@@ -1,5 +1,8 @@
+#pragma option -zPgroup_01
+
 #include <stddef.h>
 #include "platform.h"
+#include "th01/rank.h"
 #include "th03/common.h"
 #include "th03/score.h"
 #include "th03/playchar.hpp"
@@ -19,4 +22,36 @@ void near scoredat_decode(void)
 		p++;
 	}
 	p[0] = (hi.score.key1 + hi.score.key2 + p[0]);
+}
+
+void near scoredat_recreate(void)
+{
+	int i;
+	int j;
+	uint8_t regi = REGI_9; // regi_patnum_t
+
+	for(i = 0; i < SCOREDAT_PLACES; i++) {
+		for(j = 0; j < SCOREDAT_NAME_LEN; j++) {
+			hi.score.name[i][j] = REGI_PERIOD;
+		}
+		for(j = 0; j < sizeof(hi.score.score[0]); j++) {
+			hi.score.score[i][j] = REGI_0;
+		}
+		hi.score.playchar[i].set_none();
+		hi.score.stage[i] = REGI_1;
+	}
+
+	hi.score.score[0][4] = REGI_1;
+	j = 1;
+	while(j < SCOREDAT_PLACES) {
+		hi.score.score[j][3] = static_cast<regi_patnum_t>(regi);
+		j++;
+		regi--;
+	}
+	hi.score.cleared = SCOREDAT_NOT_CLEARED;
+
+	for(i = RANK_EASY; i < (RANK_LUNATIC + 1); i++) {
+		scoredat_encode_and_save(static_cast<rank_t>(i));
+		scoredat_decode();
+	}
 }

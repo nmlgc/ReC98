@@ -2601,95 +2601,10 @@ mainl_01_TEXT	ends
 
 SCOREDAT_TEXT segment byte public 'CODE' use16
 	@scoredat_decode$qv procdesc near
+	@scoredat_recreate$qv procdesc near
 SCOREDAT_TEXT ends
 
 mainl_02_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_ADE5	proc near
-
-@@regi		= byte ptr -1
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	[bp+@@regi], REGI_9
-		xor	si, si
-		jmp	short loc_AE26
-; ---------------------------------------------------------------------------
-
-loc_ADF3:
-		xor	di, di
-		jmp	short loc_AE02
-; ---------------------------------------------------------------------------
-
-loc_ADF7:
-		mov	bx, si
-		shl	bx, 3
-		mov	_hi.SDS_score.SD_name[bx+di], REGI_PERIOD
-		inc	di
-
-loc_AE02:
-		cmp	di, SCOREDAT_NAME_LEN
-		jl	short loc_ADF7
-		xor	di, di
-		jmp	short loc_AE16
-; ---------------------------------------------------------------------------
-
-loc_AE0B:
-		mov	bx, si
-		imul	bx, (SCORE_DIGITS + 2)
-		mov	_hi.SDS_score.SD_score[bx+di], REGI_0
-		inc	di
-
-loc_AE16:
-		cmp	di, (SCORE_DIGITS + 2)
-		jl	short loc_AE0B
-		mov	_hi.SDS_score.SD_playchar[si], 0
-		mov	_hi.SDS_score.SD_stage[si], REGI_1
-		inc	si
-
-loc_AE26:
-		cmp	si, SCOREDAT_PLACES
-		jl	short loc_ADF3
-		mov	_hi.SDS_score.SD_score+4, REGI_1
-		mov	di, 1
-		jmp	short loc_AE45
-; ---------------------------------------------------------------------------
-
-loc_AE35:
-		mov	bx, di
-		imul	bx, (SCORE_DIGITS + 2)
-		mov	al, [bp+@@regi]
-		mov	_hi.SDS_score.SD_score[bx]+3, al
-		inc	di
-		dec	[bp+@@regi]
-
-loc_AE45:
-		cmp	di, SCOREDAT_PLACES
-		jl	short loc_AE35
-		mov	_hi.SDS_score.SD_cleared, SCOREDAT_NOT_CLEARED
-		xor	si, si
-		jmp	short loc_AE5B
-; ---------------------------------------------------------------------------
-
-loc_AE53:
-		call	@scoredat_encode_and_save$q6rank_t pascal, si
-		call	@scoredat_decode$qv
-		inc	si
-
-loc_AE5B:
-		cmp	si, (RANK_LUNATIC + 1)
-		jl	short loc_AE53
-		pop	di
-		pop	si
-		leave
-		retn
-sub_ADE5	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2774,7 +2689,7 @@ loc_AEB0:
 		jz	short loc_AEEC
 
 loc_AEE9:
-		call	sub_ADE5
+		call	@scoredat_recreate$qv
 
 loc_AEEC:
 		pop	bp
