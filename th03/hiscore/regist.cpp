@@ -44,6 +44,15 @@ inline screen_y_t alphabet_top_for_row(int row) {
 }
 /// -----------
 
+/// Function ordering fails
+/// -----------------------
+
+// [regi] should, obviously, be a regi_patnum_t.
+void pascal near regi_put(
+	screen_x_t left, screen_y_t top, int regi, bool16 highlight
+);
+/// -----------------------
+
 void near regist_load_and_put_initial(void)
 {
 	enum {
@@ -153,4 +162,16 @@ void near alphabet_put_initial(void)
 		}
 		top += ALPHABET_ROW_SPACING;
 	}
+}
+
+// [regi] should, obviously, be a regi_patnum_t.
+void pascal near alphabet_putca(int regi, bool16 highlight)
+{
+	screen_x_t left = (
+		((regi % ALPHABET_GLYPHS_PER_ROW) * REGI_GLYPH_W) + ALPHABET_LEFT
+	);
+	screen_y_t top = (
+		((regi / ALPHABET_GLYPHS_PER_ROW) * ALPHABET_ROW_SPACING) + ALPHABET_TOP
+	);
+	regi_put(left, top, regi, highlight);
 }

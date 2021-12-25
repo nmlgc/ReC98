@@ -2610,47 +2610,11 @@ REGIST_TEXT segment byte public 'CODE' use16
 	@regist_load_and_put_initial$qv procdesc near
 	@regist_score_enter_from_resident$qv procdesc near
 	@alphabet_put_initial$qv procdesc near
+	@ALPHABET_PUTCA$QII procdesc pascal near \
+		regi:word, selected:word
 REGIST_TEXT ends
 
 mainl_03_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B1BF	proc near
-
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		enter	4, 0
-		push	si
-		mov	si, [bp+arg_2]
-		mov	ax, si
-		mov	bx, 16
-		cwd
-		idiv	bx
-		shl	dx, 5
-		add	dx, 40h
-		mov	[bp+var_2], dx
-		mov	ax, si
-		cwd
-		idiv	bx
-		imul	ax, 18h
-		add	ax, 140h
-		mov	[bp+var_4], ax
-		push	[bp+var_2]
-		push	ax
-		push	si
-		push	[bp+arg_0]
-		call	sub_B2AD
-		pop	si
-		leave
-		retn	4
-sub_B1BF	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2733,27 +2697,27 @@ sub_B1F6	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public @REGI_PUT$QIIII
+@regi_put$qiiii	proc near
 
-sub_B2AD	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-@@y		= word ptr  8
-arg_6		= word ptr  0Ah
+@@selected	= word ptr  4
+@@regi    	= word ptr  6
+@@top     	= word ptr  8
+@@left    	= word ptr  0Ah
 
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
-		mov	di, [bp+arg_6]
-		mov	si, [bp+arg_2]
-		cmp	[bp+arg_0], 0
+		mov	di, [bp+@@left]
+		mov	si, [bp+@@regi]
+		cmp	[bp+@@selected], 0
 		jz	short loc_B2C1
-		add	si, 49
+		add	si, REGI_COUNT
 
 loc_B2C1:
-		call	super_put pascal, di, [bp+@@y], si
-		mov	ax, [bp+arg_2]
+		call	super_put pascal, di, [bp+@@top], si
+		mov	ax, [bp+@@regi]
 		mov	bx, 16
 		cwd
 		idiv	bx
@@ -2761,7 +2725,7 @@ loc_B2C1:
 		jnz	short loc_B2E9
 		lea	ax, [di+32]
 		push	ax
-		push	[bp+@@y]
+		push	[bp+@@top]
 		lea	ax, [si+1]
 		push	ax
 		call	super_put
@@ -2771,7 +2735,7 @@ loc_B2E9:
 		pop	si
 		pop	bp
 		retn	8
-sub_B2AD	endp
+@regi_put$qiiii	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -2781,11 +2745,11 @@ sub_B2AD	endp
 sub_B2EF	proc near
 
 var_7		= byte ptr -7
-var_6		= word ptr -6
+@@selected		= word ptr -6
 var_4		= word ptr -4
 var_2		= word ptr -2
 @@place		= word ptr  4
-arg_2		= word ptr  6
+@@top		= word ptr  6
 arg_4		= word ptr  8
 
 		enter	8, 0
@@ -2803,7 +2767,7 @@ loc_B306:
 		xor	ax, ax
 
 loc_B308:
-		mov	[bp+var_6], ax
+		mov	[bp+@@selected], ax
 		cmp	_entered_place, di
 		jnz	short loc_B315
 		mov	al, 0Fh
@@ -2817,34 +2781,30 @@ loc_B317:
 		mov	[bp+var_7], al
 		cmp	_entered_place, -1
 		jnz	short loc_B32A
-		mov	[bp+var_6], 1
+		mov	[bp+@@selected], 1
 		mov	[bp+var_7], 0Fh
 
 loc_B32A:
 		cmp	di, 9
 		jz	short loc_B339
 		push	si
-		push	[bp+arg_2]
-		lea	ax, [di+21h]
+		push	[bp+@@top]
+		lea	ax, [di+REGI_1]
 		push	ax
 		jmp	short loc_B351
 ; ---------------------------------------------------------------------------
 
 loc_B339:
 		lea	ax, [si-8]
-		push	ax
-		push	[bp+arg_2]
-		push	21h ; '!'
-		push	[bp+var_6]
-		call	sub_B2AD
+		call	@regi_put$qiiii pascal, ax, [bp+@@top], REGI_1, [bp+@@selected]
 		lea	ax, [si+8]
 		push	ax
-		push	[bp+arg_2]
-		push	20h ; ' '
+		push	[bp+@@top]
+		push	REGI_0
 
 loc_B351:
-		push	[bp+var_6]
-		call	sub_B2AD
+		push	[bp+@@selected]
+		call	@regi_put$qiiii
 		add	si, 30h	; '0'
 		mov	[bp+var_2], 7
 		jmp	short loc_B38F
@@ -2857,15 +2817,15 @@ loc_B361:
 		cmp	_hi.SDS_score.SD_name[bx], REGI_SP
 		jz	short loc_B389
 		push	si
-		push	[bp+arg_2]
+		push	[bp+@@top]
 		mov	bx, di
 		shl	bx, 3
 		add	bx, [bp+var_2]
 		mov	al, _hi.SDS_score.SD_name[bx]
 		mov	ah, 0
 		push	ax
-		push	[bp+var_6]
-		call	sub_B2AD
+		push	[bp+@@selected]
+		call	@regi_put$qiiii
 
 loc_B389:
 		dec	[bp+var_2]
@@ -2876,7 +2836,7 @@ loc_B38F:
 		jge	short loc_B361
 		add	si, 10h
 		mov	[bp+var_4], 20h	; ' '
-		mov	[bp+var_2], 9
+		mov	[bp+var_2], (SCORE_DIGITS + 1)
 		jmp	short loc_B3E0
 ; ---------------------------------------------------------------------------
 
@@ -2894,15 +2854,15 @@ loc_B3BB:
 		cmp	[bp+var_4], 20h	; ' '
 		jz	short loc_B3DA
 		push	si
-		push	[bp+arg_2]
+		push	[bp+@@top]
 		mov	bx, di
 		imul	bx, SCOREDAT_PLACES
 		add	bx, [bp+var_2]
 		mov	al, _hi.SDS_score.SD_score[bx]
 		mov	ah, 0
 		push	ax
-		push	[bp+var_6]
-		call	sub_B2AD
+		push	[bp+@@selected]
+		call	@regi_put$qiiii
 
 loc_B3DA:
 		dec	[bp+var_2]
@@ -2913,7 +2873,7 @@ loc_B3E0:
 		jge	short loc_B3A4
 		add	si, 10h
 		push	si
-		mov	ax, [bp+arg_2]
+		mov	ax, [bp+@@top]
 		add	ax, 8
 		push	ax
 		mov	al, [bp+var_7]
@@ -2928,12 +2888,12 @@ loc_B3E0:
 		call	graph_putsa_fx
 		add	si, 70h	; 'p'
 		push	si
-		push	[bp+arg_2]
+		push	[bp+@@top]
 		mov	al, _hi.SDS_score.SD_stage[di]
 		mov	ah, 0
 		push	ax
-		push	[bp+var_6]
-		call	sub_B2AD
+		push	[bp+@@selected]
+		call	@regi_put$qiiii
 		pop	di
 		pop	si
 		leave
@@ -3014,11 +2974,11 @@ var_A		= word ptr -0Ah
 var_8		= word ptr -8
 var_6		= word ptr -6
 var_4		= word ptr -4
-var_2		= word ptr -2
+@@regi		= word ptr -2
 
 		enter	10h, 0
 		push	si
-		mov	[bp+var_2], 0
+		mov	[bp+@@regi], REGI_A
 		lea	ax, [bp+var_A]
 		push	ss
 		push	ax
@@ -3054,15 +3014,13 @@ loc_B4A8:
 		jnz	short loc_B4ED
 
 loc_B4CD:
-		cmp	[bp+var_2], 2Dh	; '-'
+		cmp	[bp+@@regi], REGI_QUESTION
 		jz	short loc_B4ED
-		push	[bp+var_2]
-		push	0
-		call	sub_B1BF
-		sub	[bp+var_2], 10h
-		cmp	[bp+var_2], 0
+		call	@alphabet_putca$qii pascal, [bp+@@regi], 0
+		sub	[bp+@@regi], 16
+		cmp	[bp+@@regi], 0
 		jge	short loc_B4E9
-		add	[bp+var_2], 30h	; '0'
+		add	[bp+@@regi], 48
 
 loc_B4E9:
 		mov	[bp+var_C], 1
@@ -3090,15 +3048,13 @@ loc_B4F7:
 		jnz	short loc_B537
 
 loc_B517:
-		cmp	[bp+var_2], 2Dh	; '-'
+		cmp	[bp+@@regi], REGI_QUESTION
 		jz	short loc_B537
-		push	[bp+var_2]
-		push	0
-		call	sub_B1BF
-		add	[bp+var_2], 10h
-		cmp	[bp+var_2], 30h	; '0'
+		call	@alphabet_putca$qii pascal, [bp+@@regi], 0
+		add	[bp+@@regi], 16
+		cmp	[bp+@@regi], 48
 		jl	short loc_B533
-		sub	[bp+var_2], 30h	; '0'
+		sub	[bp+@@regi], 48
 
 loc_B533:
 		mov	[bp+var_C], 1
@@ -3126,32 +3082,30 @@ loc_B541:
 		jnz	short loc_B595
 
 loc_B561:
-		push	[bp+var_2]
-		push	0
-		call	sub_B1BF
-		mov	ax, [bp+var_2]
+		call	@alphabet_putca$qii pascal, [bp+@@regi], 0
+		mov	ax, [bp+@@regi]
 		mov	bx, 16
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_B57C
-		add	[bp+var_2], 0Eh
+		add	[bp+@@regi], regi_sp
 		jmp	short loc_B591
 ; ---------------------------------------------------------------------------
 
 loc_B57C:
-		cmp	[bp+var_2], 1Eh
+		cmp	[bp+@@regi], REGI_BS
 		jz	short loc_B588
-		cmp	[bp+var_2], 0Eh
+		cmp	[bp+@@regi], regi_sp
 		jnz	short loc_B58E
 
 loc_B588:
-		sub	[bp+var_2], 2
+		sub	[bp+@@regi], 2
 		jmp	short loc_B591
 ; ---------------------------------------------------------------------------
 
 loc_B58E:
-		dec	[bp+var_2]
+		dec	[bp+@@regi]
 
 loc_B591:
 		mov	[bp+var_C], 1
@@ -3179,32 +3133,30 @@ loc_B59F:
 		jnz	short loc_B5F4
 
 loc_B5BF:
-		push	[bp+var_2]
-		push	0
-		call	sub_B1BF
-		mov	ax, [bp+var_2]
+		call	@alphabet_putca$qii pascal, [bp+@@regi], 0
+		mov	ax, [bp+@@regi]
 		mov	bx, 16
 		cwd
 		idiv	bx
-		cmp	dx, 0Eh
+		cmp	dx, regi_sp
 		jnz	short loc_B5DB
-		sub	[bp+var_2], 0Eh
+		sub	[bp+@@regi], regi_sp
 		jmp	short loc_B5F0
 ; ---------------------------------------------------------------------------
 
 loc_B5DB:
-		cmp	[bp+var_2], 0Ch
+		cmp	[bp+@@regi], REGI_M
 		jz	short loc_B5E7
-		cmp	[bp+var_2], 1Ch
+		cmp	[bp+@@regi], REGI_Z
 		jnz	short loc_B5ED
 
 loc_B5E7:
-		add	[bp+var_2], 2
+		add	[bp+@@regi], 2
 		jmp	short loc_B5F0
 ; ---------------------------------------------------------------------------
 
 loc_B5ED:
-		inc	[bp+var_2]
+		inc	[bp+@@regi]
 
 loc_B5F0:
 		mov	[bp+var_C], 1
@@ -3226,7 +3178,7 @@ loc_B5FE:
 loc_B60C:
 		cmp	[bp+var_D], 0
 		jnz	short loc_B67D
-		cmp	[bp+var_2], 1Eh
+		cmp	[bp+@@regi], REGI_BS
 		jnz	short loc_B64B
 		mov	al, [bp+var_E]
 		mov	ah, 0
@@ -3250,7 +3202,7 @@ loc_B60C:
 ; ---------------------------------------------------------------------------
 
 loc_B64B:
-		cmp	[bp+var_2], 2Eh	; '.'
+		cmp	[bp+@@regi], REGI_END
 		jnz	short loc_B657
 		mov	[bp+var_B], 1
 		jmp	short loc_B679
@@ -3262,7 +3214,7 @@ loc_B657:
 		mov	al, [bp+var_E]
 		mov	ah, 0
 		add	bx, ax
-		mov	al, byte ptr [bp+var_2]
+		mov	al, byte ptr [bp+@@regi]
 		mov	_hi.SDS_score.SD_name[bx], al
 		cmp	[bp+var_E], 0
 		jnz	short loc_B676
@@ -3320,9 +3272,7 @@ loc_B6CF:
 loc_B6D3:
 		cmp	[bp+var_C], 1
 		jnz	short loc_B73C
-		push	[bp+var_2]
-		push	1
-		call	sub_B1BF
+		call	@alphabet_putca$qii pascal, [bp+@@regi], 1
 		mov	al, [bp+var_E]
 		mov	ah, 0
 		mov	dx, 7
@@ -3340,7 +3290,7 @@ loc_B6D3:
 		mov	_hi.SDS_score.SD_name[bx], REGI_SP
 		push	_entered_place
 		call	sub_B450
-		mov	ax, [bp+var_2]
+		mov	ax, [bp+@@regi]
 		mov	bx, 16
 		cwd
 		idiv	bx
@@ -3350,13 +3300,9 @@ loc_B6D3:
 		mov	ah, 0
 		mov	dx, 7
 		sub	dx, ax
-		imul	dx, 18h
-		add	dx, 48h	; 'H'
-		push	dx
-		push	si
-		push	[bp+var_2]
-		push	0
-		call	sub_B2AD
+		imul	dx, 24
+		add	dx, 72
+		call	@regi_put$qiiii pascal, dx, si, [bp+@@regi], 0
 
 loc_B738:
 		mov	[bp+var_C], 0
