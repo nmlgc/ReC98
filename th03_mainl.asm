@@ -2609,50 +2609,10 @@ REGIST_TEXT segment byte public 'CODE' use16
 		rank:word
 	@regist_load_and_put_initial$qv procdesc near
 	@regist_score_enter_from_resident$qv procdesc near
+	@alphabet_put_initial$qv procdesc near
 REGIST_TEXT ends
 
 mainl_03_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B187	proc near
-
-@@patnum	= word ptr -2
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	[bp+@@patnum], 0
-		mov	di, 320
-		jmp	short loc_B1B5
-; ---------------------------------------------------------------------------
-
-loc_B197:
-		mov	si, 64
-		jmp	short loc_B1AC
-; ---------------------------------------------------------------------------
-
-loc_B19C:
-		call	super_put pascal, si, di, [bp+@@patnum]
-		add	si, 32
-		inc	[bp+@@patnum]
-
-loc_B1AC:
-		cmp	si, 576
-		jl	short loc_B19C
-		add	di, 24
-
-loc_B1B5:
-		cmp	di, 368
-		jle	short loc_B197
-		pop	di
-		pop	si
-		leave
-		retn
-sub_B187	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3544,7 +3504,7 @@ loc_B835:
 		call	sub_B429
 		call	graph_copy_page pascal, 1
 		graph_accesspage 0
-		call	sub_B187
+		call	@alphabet_put_initial$qv
 		push	2
 		call	palette_black_in
 		call	sub_B46B

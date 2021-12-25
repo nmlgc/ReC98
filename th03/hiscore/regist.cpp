@@ -22,6 +22,28 @@ extern "C" {
 
 static const int PLACE_NONE = -1;
 
+/// Coordinates
+/// -----------
+
+// REGI_W and REGI_H are already used for, well, regi_patnum_t members...
+#define REGI_GLYPH_W 32
+#define REGI_GLYPH_H 32
+
+static const int ALPHABET_ROWS = 3;
+static const int ALPHABET_GLYPHS = REGI_ALL;
+static const int ALPHABET_GLYPHS_PER_ROW = (ALPHABET_GLYPHS / ALPHABET_ROWS);
+static const pixel_t ALPHABET_ROW_W = (ALPHABET_GLYPHS_PER_ROW * REGI_GLYPH_W);
+static const pixel_t ALPHABET_ROW_SPACING = 24;
+
+static const screen_x_t ALPHABET_LEFT = 64;
+static const screen_y_t ALPHABET_TOP = 320;
+static const screen_x_t ALPHABET_RIGHT = (ALPHABET_LEFT + ALPHABET_ROW_W);
+
+inline screen_y_t alphabet_top_for_row(int row) {
+	return (ALPHABET_TOP + (row * ALPHABET_ROW_SPACING));
+}
+/// -----------
+
 void near regist_load_and_put_initial(void)
 {
 	enum {
@@ -113,4 +135,22 @@ found:
 
 	hi.score.playchar[place].v = (resident->playchar_paletted[0].char_id() + 1);
 	return place;
+}
+
+void near alphabet_put_initial(void)
+{
+	screen_x_t left;
+	screen_y_t top;
+	int regi = REGI_A; // regi_patnum_t
+
+	top = alphabet_top_for_row(0);
+	while(top <= alphabet_top_for_row(ALPHABET_ROWS - 1)) {
+		left = ALPHABET_LEFT;
+		while(left < ALPHABET_RIGHT) {
+			super_put(left, top, regi);
+			left += REGI_GLYPH_W;
+			regi++;
+		}
+		top += ALPHABET_ROW_SPACING;
+	}
 }
