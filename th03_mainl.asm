@@ -27,7 +27,7 @@ include th03/formats/scoredat.inc
 	extern _execl:proc
 	extern _tolower:proc
 
-group_01 group CFG_LRES_TEXT, mainl_01_TEXT, SCOREDAT_TEXT, mainl_03_TEXT
+group_01 group CFG_LRES_TEXT, mainl_01_TEXT, SCOREDAT_TEXT, mainl_02_TEXT, REGIST_TEXT, mainl_03_TEXT
 
 ; ===========================================================================
 
@@ -2603,7 +2603,7 @@ SCOREDAT_TEXT segment byte public 'CODE' use16
 	@scoredat_decode$qv procdesc near
 SCOREDAT_TEXT ends
 
-mainl_03_TEXT	segment	byte public 'CODE' use16
+mainl_02_TEXT	segment	byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2677,8 +2677,7 @@ loc_AE45:
 ; ---------------------------------------------------------------------------
 
 loc_AE53:
-		push	si
-		call	sub_AEF0
+		call	@scoredat_encode_and_save$q6rank_t pascal, si
 		call	@scoredat_decode$qv
 		inc	si
 
@@ -2781,98 +2780,14 @@ loc_AEEC:
 		pop	bp
 		retn	2
 sub_AE8E	endp
+mainl_02_TEXT	ends
 
+REGIST_TEXT segment byte public 'CODE' use16
+	@SCOREDAT_ENCODE_AND_SAVE$Q6RANK_T procdesc pascal near \
+		rank:word
+REGIST_TEXT ends
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_AEF0	proc near
-
-var_4		= word ptr -4
-var_1		= byte ptr -1
-arg_0		= word ptr  4
-
-		enter	4, 0
-		push	si
-		push	di
-		mov	[bp+var_4], 0
-		call	IRand
-		mov	_hi.SDS_score.SD_key1, al
-		call	IRand
-		mov	_hi.SDS_score.SD_key2, al
-		call	IRand
-		mov	_hi.SDS_score.SD_unknown, al
-		les	bx, _resident
-		cmp	es:[bx+resident_t.story_stage], STAGE_ALL
-		jnz	short loc_AF2A
-		cmp	es:[bx+resident_t.rem_credits], 3
-		jnz	short loc_AF2A
-		mov	_hi.SDS_score.SD_cleared, SCOREDAT_CLEARED
-
-loc_AF2A:
-		mov	si, offset _hi.SDS_score
-		xor	di, di
-		jmp	short loc_AF3A
-; ---------------------------------------------------------------------------
-
-loc_AF31:
-		mov	al, [si]
-		mov	ah, 0
-		add	[bp+var_4], ax
-		inc	di
-		inc	si
-
-loc_AF3A:
-		cmp	di, size scoredat_t
-		jl	short loc_AF31
-		mov	ax, [bp+var_4]
-		mov	_hi.SDS_sum, ax
-		mov	si,  offset _hi.SDS_score.SD_key1
-		dec	si
-		mov	al, _hi.SDS_score.SD_key2
-		mov	[bp+var_1], al
-		mov	di, (size scoredat_t - 1)
-		jmp	short loc_AF73
-; ---------------------------------------------------------------------------
-
-loc_AF55:
-		mov	al, [si]
-		mov	dl, _hi.SDS_score.SD_key1
-		add	dl, [bp+var_1]
-		sub	al, dl
-		mov	[si], al
-		mov	al, [si]
-		mov	[bp+var_1], al
-		mov	al, _hi.SDS_score.SD_key2
-		ror	[bp+var_1], 3
-		xor	[bp+var_1], al
-		dec	di
-		dec	si
-
-loc_AF73:
-		or	di, di
-		jge	short loc_AF55
-		push	ds
-		push	_SCOREDAT_FN
-		call	file_append
-		mov	ax, [bp+arg_0]
-		imul	ax, size scoredat_section_t
-		movzx	eax, ax
-		push	eax
-		push	0
-		call	file_seek
-		push	ds
-		push	offset _hi
-		push	size scoredat_section_t
-		call	file_write
-		call	file_close
-		pop	di
-		pop	si
-		leave
-		retn	2
-sub_AEF0	endp
-
+mainl_03_TEXT	segment	byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4047,8 +3962,7 @@ loc_B879:
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.rank]
 		mov	ah, 0
-		push	ax
-		call	sub_AEF0
+		call	@scoredat_encode_and_save$q6rank_t pascal, ax
 		call	super_free
 		graph_accesspage 0
 		graph_showpage al

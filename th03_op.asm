@@ -26,7 +26,7 @@ include th03/formats/scoredat.inc
 	extern _execl:proc
 	extern _getch:proc
 
-group_01 group op_01_TEXT, SCOREDAT_TEXT, op_02_TEXT
+group_01 group op_01_TEXT, op_02_TEXT, SCOREDAT_TEXT, op_03_TEXT
 
 ; ===========================================================================
 
@@ -1967,96 +1967,18 @@ loc_B11F:
 		pop	bp
 		retn	2
 sub_B10A	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B168	proc near
-
-var_4		= word ptr -4
-var_1		= byte ptr -1
-arg_0		= word ptr  4
-
-		enter	4, 0
-		push	si
-		push	di
-		mov	[bp+var_4], 0
-		call	IRand
-		mov	_hi.SDS_score.SD_key1, al
-		call	IRand
-		mov	_hi.SDS_score.SD_key2, al
-		call	IRand
-		mov	_hi.SDS_score.SD_unknown, al
-		mov	si, offset _hi.SDS_score
-		xor	di, di
-		jmp	short loc_B19B
-; ---------------------------------------------------------------------------
-
-loc_B192:
-		mov	al, [si]
-		mov	ah, 0
-		add	[bp+var_4], ax
-		inc	di
-		inc	si
-
-loc_B19B:
-		cmp	di, size scoredat_t
-		jl	short loc_B192
-		mov	ax, [bp+var_4]
-		mov	_hi.SDS_sum, ax
-		mov	si, offset _hi.SDS_score.SD_key1
-		dec	si
-		mov	al, _hi.SDS_score.SD_key2
-		mov	[bp+var_1], al
-		mov	di, (size scoredat_t - 1)
-		jmp	short loc_B1D4
-; ---------------------------------------------------------------------------
-
-loc_B1B6:
-		mov	al, [si]
-		mov	dl, _hi.SDS_score.SD_key1
-		add	dl, [bp+var_1]
-		sub	al, dl
-		mov	[si], al
-		mov	al, [si]
-		mov	[bp+var_1], al
-		mov	al, _hi.SDS_score.SD_key2
-		ror	[bp+var_1], 3
-		xor	[bp+var_1], al
-		dec	di
-		dec	si
-
-loc_B1D4:
-		or	di, di
-		jge	short loc_B1B6
-		push	ds
-		push	_SCOREDAT_FN
-		call	file_append
-		mov	ax, [bp+arg_0]
-		imul	ax, size scoredat_section_t
-		movzx	eax, ax
-		push	eax
-		push	0
-		call	file_seek
-		push	ds
-		push	offset _hi
-		push	size scoredat_section_t
-		call	file_write
-		call	file_close
-		pop	di
-		pop	si
-		leave
-		retn	2
-sub_B168	endp
 op_01_TEXT	ends
+
+op_02_TEXT segment byte public 'CODE' use16
+	@SCOREDAT_ENCODE_AND_SAVE$Q6RANK_T procdesc pascal near \
+		rank:word
+op_02_TEXT ends
 
 SCOREDAT_TEXT segment byte public 'CODE' use16
 	@scoredat_decode$qv procdesc near
 SCOREDAT_TEXT ends
 
-op_02_TEXT segment byte public 'CODE' use16
+op_03_TEXT segment byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2130,8 +2052,7 @@ loc_B2A9:
 ; ---------------------------------------------------------------------------
 
 loc_B2B7:
-		push	si
-		call	sub_B168
+		call	@scoredat_encode_and_save$q6rank_t pascal, si
 		call	@scoredat_decode$qv
 		inc	si
 
@@ -3563,7 +3484,7 @@ loc_BEB0:
 sub_BD9A	endp
 		db 0
 
-op_02_TEXT	ends
+op_03_TEXT	ends
 
 ; ===========================================================================
 

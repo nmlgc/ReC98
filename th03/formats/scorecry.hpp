@@ -1,4 +1,13 @@
-/// Score data file decryption algorithm
+/// Score data file encryption and decryption algorithms
+
+// Encrypts backwards.
+#define scoredat_encode_byte_at(p, feedback, key1, key2) { \
+	p[0] = (p[0] - (key1 + feedback)); \
+	feedback = p[0]; \
+	_AL = key2; \
+	__asm {	ror feedback, 3 } \
+	feedback ^= _AL; \
+}
 
 // Decrypts forwards.
 #define scoredat_decode_byte_at(p, tmp, key1, key2) { \

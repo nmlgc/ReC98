@@ -1,3 +1,5 @@
+#define RANK_H
+
 // Rank definitions
 typedef enum {
 	RANK_EASY,

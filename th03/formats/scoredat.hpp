@@ -1,4 +1,8 @@
 #define SCOREDAT_FN "YUME.NEM"
+
+#undef SCOREDAT_FN
+extern const char near* SCOREDAT_FN;
+
 static const int SCOREDAT_PLACES = 10;
 static const int SCOREDAT_NAME_LEN = 8;
 
@@ -35,5 +39,21 @@ extern scoredat_section_t hi;
 /// ---------
 // All of those write to and read from [hi], except where mentioned otherwise.
 
+#define scoredat_sum(sum, p, i) \
+	p = reinterpret_cast<uint8_t near *>(&hi.score); \
+	i = 0; \
+	while(i < sizeof(hi.score)) { \
+		sum += *p; \
+		i++; \
+		p++; \
+	}
+
 void near scoredat_decode(void);
+
+#ifdef RANK_H
+	// Calculates the checksum and encrypts [hi] in-place, then saves it to
+	// the score file under the given [rank]. The MAINL version also sets
+	// [cleared] based on resident data.
+	void pascal near scoredat_encode_and_save(rank_t rank);
+#endif
 /// ---------
