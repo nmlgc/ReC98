@@ -1973,68 +1973,11 @@ op_02_TEXT segment byte public 'CODE' use16
 op_02_TEXT ends
 
 SCOREDAT_TEXT segment byte public 'CODE' use16
-	@scoredat_decode$qv procdesc near
-	@scoredat_recreate$qv procdesc near
-	@scoredat_sum_invalid$qv procdesc near
 SCOREDAT_TEXT ends
 
 op_03_TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B2F2	proc near
-
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	_SCOREDAT_FN
-		call	file_exist
-		or	ax, ax
-		jnz	short loc_B314
-		push	ds
-		push	_SCOREDAT_FN
-		call	file_create
-		call	file_close
-		jmp	short loc_B34D
-; ---------------------------------------------------------------------------
-
-loc_B314:
-		push	ds
-		push	_SCOREDAT_FN
-		call	file_ropen
-		mov	ax, [bp+arg_0]
-		imul	ax, size scoredat_section_t
-		movzx	eax, ax
-		push	eax
-		push	0
-		call	file_seek
-		push	ds
-		push	offset _hi
-		push	size scoredat_section_t
-		call	file_read
-		call	file_close
-		call	@scoredat_decode$qv
-		call	@scoredat_sum_invalid$qv
-		or	al, al
-		jz	short loc_B357
-
-loc_B34D:
-		call	@scoredat_recreate$qv
-		mov	ax, 1
-		pop	bp
-		retn	2
-; ---------------------------------------------------------------------------
-
-loc_B357:
-		xor	ax, ax
-		pop	bp
-		retn	2
-sub_B2F2	endp
-
+	@SCOREDAT_LOAD_AND_DECODE$Q6RANK_T procdesc pascal near \
+		rank:word
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2052,8 +1995,7 @@ var_1		= byte ptr -1
 ; ---------------------------------------------------------------------------
 
 loc_B36A:
-		push	si
-		call	sub_B2F2
+		call	@scoredat_load_and_decode$q6rank_t pascal, si
 		or	ax, ax
 		jz	short loc_B376
 		mov	al, 7
@@ -2069,7 +2011,7 @@ loc_B381:
 		inc	si
 
 loc_B382:
-		cmp	si, 4
+		cmp	si, (RANK_LUNATIC + 1)
 		jl	short loc_B36A
 		mov	al, [bp+var_1]
 

@@ -27,7 +27,7 @@ include th03/formats/scoredat.inc
 	extern _execl:proc
 	extern _tolower:proc
 
-group_01 group CFG_LRES_TEXT, mainl_01_TEXT, SCOREDAT_TEXT, mainl_02_TEXT, REGIST_TEXT, mainl_03_TEXT
+group_01 group CFG_LRES_TEXT, mainl_01_TEXT, SCOREDAT_TEXT, REGIST_TEXT, mainl_03_TEXT
 
 ; ===========================================================================
 
@@ -2600,63 +2600,9 @@ sub_AC6E	endp
 mainl_01_TEXT	ends
 
 SCOREDAT_TEXT segment byte public 'CODE' use16
-	@scoredat_decode$qv procdesc near
-	@scoredat_recreate$qv procdesc near
-	@scoredat_sum_invalid$qv procdesc near
+	@SCOREDAT_LOAD_AND_DECODE$Q6RANK_T procdesc pascal near \
+		rank:word
 SCOREDAT_TEXT ends
-
-mainl_02_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_AE8E	proc near
-
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	_SCOREDAT_FN
-		call	file_exist
-		or	ax, ax
-		jnz	short loc_AEB0
-		push	ds
-		push	_SCOREDAT_FN
-		call	file_create
-		call	file_close
-		jmp	short loc_AEE9
-; ---------------------------------------------------------------------------
-
-loc_AEB0:
-		push	ds
-		push	_SCOREDAT_FN
-		call	file_ropen
-		mov	ax, [bp+arg_0]
-		imul	ax, size scoredat_section_t
-		movzx	eax, ax
-		push	eax
-		push	0
-		call	file_seek
-		push	ds
-		push	offset _hi
-		push	size scoredat_section_t
-		call	file_read
-		call	file_close
-		call	@scoredat_decode$qv
-		call	@scoredat_sum_invalid$qv
-		or	al, al
-		jz	short loc_AEEC
-
-loc_AEE9:
-		call	@scoredat_recreate$qv
-
-loc_AEEC:
-		pop	bp
-		retn	2
-sub_AE8E	endp
-mainl_02_TEXT	ends
 
 REGIST_TEXT segment byte public 'CODE' use16
 	@SCOREDAT_ENCODE_AND_SAVE$Q6RANK_T procdesc pascal near \
@@ -3787,8 +3733,7 @@ sub_B7D2	proc near
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.rank]
 		mov	ah, 0
-		push	ax
-		call	sub_AE8E
+		call	@scoredat_load_and_decode$q6rank_t pascal, ax
 		les	bx, _resident
 		cmp	es:[bx+resident_t.story_stage], STAGE_NONE
 		jnz	short loc_B819
