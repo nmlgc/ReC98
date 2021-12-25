@@ -60,4 +60,7 @@ void near scoredat_decode(void);
 // Fills [hi] with default (decrypted) score data, and writes it to the score
 // file under all ranks.
 void near scoredat_recreate(void);
+
+// Returns `false` if the contents of [hi] match its checksum.
+bool near scoredat_sum_invalid(void);
 /// ---------

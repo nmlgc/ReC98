@@ -55,3 +55,13 @@ void near scoredat_recreate(void)
 		scoredat_decode();
 	}
 }
+
+bool near scoredat_sum_invalid(void)
+{
+	int i;
+	uint16_t sum = 0;
+	uint8_t near *p;
+
+	scoredat_sum(sum, p, i);
+	return (hi.sum != sum) ? true : false;
+}

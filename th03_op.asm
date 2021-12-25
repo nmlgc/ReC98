@@ -1975,49 +1975,10 @@ op_02_TEXT ends
 SCOREDAT_TEXT segment byte public 'CODE' use16
 	@scoredat_decode$qv procdesc near
 	@scoredat_recreate$qv procdesc near
+	@scoredat_sum_invalid$qv procdesc near
 SCOREDAT_TEXT ends
 
 op_03_TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B2C8	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	cx, cx
-		mov	si, offset _hi.SDS_score
-		xor	dx, dx
-		jmp	short loc_B2DD
-; ---------------------------------------------------------------------------
-
-loc_B2D5:
-		mov	al, [si]
-		mov	ah, 0
-		add	cx, ax
-		inc	dx
-		inc	si
-
-loc_B2DD:
-		cmp	dx, (size scoredat_t)
-		jl	short loc_B2D5
-		cmp	_hi.SDS_sum, cx
-		jz	short loc_B2ED
-		mov	al, 1
-		jmp	short loc_B2EF
-; ---------------------------------------------------------------------------
-
-loc_B2ED:
-		mov	al, 0
-
-loc_B2EF:
-		pop	si
-		pop	bp
-		retn
-sub_B2C8	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2057,7 +2018,7 @@ loc_B314:
 		call	file_read
 		call	file_close
 		call	@scoredat_decode$qv
-		call	sub_B2C8
+		call	@scoredat_sum_invalid$qv
 		or	al, al
 		jz	short loc_B357
 
