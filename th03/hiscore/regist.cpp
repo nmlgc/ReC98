@@ -32,10 +32,18 @@ static const int PLACE_NONE = -1;
 #define REGI_GLYPH_H 32
 static const int REGI_DOUBLEWIDE_X = REGI_SP;
 
+static const screen_x_t TABLE_LEFT = 24;
+static const screen_y_t TABLE_TOP = 104;
+static const pixel_t TABLE_ROW_SPACING = 20;
+
 static const pixel_t NAME_SPACING = 24;
 static const pixel_t SCORE_SPACING = 16;
 static const pixel_t CELL_PADDING_X = 16;
 static const pixel_t PLACE_NUMBER_PADDED_W = (REGI_GLYPH_W + CELL_PADDING_X);
+
+inline screen_y_t place_top(int place) {
+	return (TABLE_TOP + (place * TABLE_ROW_SPACING));
+}
 
 static const int ALPHABET_ROWS = 3;
 static const int ALPHABET_GLYPHS = REGI_ALL;
@@ -277,4 +285,22 @@ void pascal near regist_row_put_at(screen_x_t left, screen_y_t top, int place)
 
 	// Stage
 	regi_put(left, top, hi.score.stage[place], highlight);
+}
+
+void near regist_rows_put(void)
+{
+	graph_copy_page(0);
+
+	int place = 0;
+	screen_y_t top = TABLE_TOP;
+	while(place < SCOREDAT_PLACES) {
+		regist_row_put_at(TABLE_LEFT, top, place);
+		place++;
+		top += TABLE_ROW_SPACING;
+	}
+}
+
+void pascal near regist_row_put(int place)
+{
+	regist_row_put_at(TABLE_LEFT, place_top(place), place);
 }

@@ -2616,66 +2616,12 @@ REGIST_TEXT segment byte public 'CODE' use16
 		left:word, top:word
 	@REGI_PUT$QIIII procdesc pascal near \
 		left:word, top:word, regi:word, selected:word
-	@REGIST_ROW_PUT_AT$QIII procdesc pascal near \
-		left:word, top:word, place:word
+	@regist_rows_put$qv procdesc near
+	@REGIST_ROW_PUT$QI procdesc pascal near \
+		place:word
 REGIST_TEXT ends
 
 mainl_03_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B429	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		call	graph_copy_page pascal, 0
-		xor	si, si
-		mov	di, 104
-		jmp	short loc_B447
-; ---------------------------------------------------------------------------
-
-loc_B43C:
-		call	@regist_row_put_at$qiii pascal, 24, di, si
-		inc	si
-		add	di, 20
-
-loc_B447:
-		cmp	si, SCOREDAT_PLACES
-		jl	short loc_B43C
-		pop	di
-		pop	si
-		pop	bp
-		retn
-sub_B429	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B450	proc near
-
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+arg_0]
-		push	24
-		mov	ax, si
-		imul	ax, 20
-		add	ax, 104
-		push	ax
-		push	si
-		call	@regist_row_put_at$qiii
-		pop	si
-		pop	bp
-		retn	2
-sub_B450	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3000,8 +2946,7 @@ loc_B6D3:
 		mov	ah, 0
 		add	bx, ax
 		mov	_hi.SDS_score.SD_name[bx], REGI_SP
-		push	_entered_place
-		call	sub_B450
+		call	@regist_row_put$qi pascal, _entered_place
 		mov	ax, [bp+@@regi]
 		mov	bx, 16
 		cwd
@@ -3152,14 +3097,14 @@ loc_B81F:
 		call	@regist_load_and_put_initial$qv
 		cmp	_entered_place, -1
 		jnz	short loc_B835
-		call	sub_B429
+		call	@regist_rows_put$qv
 		push	2
 		call	palette_black_in
 		jmp	short loc_B858
 ; ---------------------------------------------------------------------------
 
 loc_B835:
-		call	sub_B429
+		call	@regist_rows_put$qv
 		call	graph_copy_page pascal, 1
 		graph_accesspage 0
 		call	@alphabet_put_initial$qv
@@ -3167,7 +3112,7 @@ loc_B835:
 		call	palette_black_in
 		call	sub_B46B
 		call	sub_B74E
-		call	sub_B429
+		call	@regist_rows_put$qv
 
 loc_B858:
 		call	input_wait_for_change pascal, 0
