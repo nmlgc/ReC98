@@ -7,6 +7,7 @@ extern "C" {
 #include "planar.h"
 #include "master.hpp"
 #include "th01/rank.h"
+#include "th01/hardware/grppsafx.h"
 #include "th03/common.h"
 #include "th03/score.h"
 #include "th03/playchar.hpp"
@@ -15,6 +16,7 @@ extern "C" {
 #include "th03/formats/cdg.h"
 #include "th03/formats/pi.hpp"
 }
+#include "th03/shiftjis/regist.hpp"
 #include "th03/formats/scoredat.hpp"
 
 #include "th03/formats/score_ld.cpp"
@@ -29,6 +31,11 @@ static const int PLACE_NONE = -1;
 #define REGI_GLYPH_W 32
 #define REGI_GLYPH_H 32
 static const int REGI_DOUBLEWIDE_X = REGI_SP;
+
+static const pixel_t NAME_SPACING = 24;
+static const pixel_t SCORE_SPACING = 16;
+static const pixel_t CELL_PADDING_X = 16;
+static const pixel_t PLACE_NUMBER_PADDED_W = (REGI_GLYPH_W + CELL_PADDING_X);
 
 static const int ALPHABET_ROWS = 3;
 static const int ALPHABET_GLYPHS = REGI_ALL;
@@ -53,6 +60,12 @@ void pascal near regi_put(
 	screen_x_t left, screen_y_t top, int regi, bool16 highlight
 );
 /// -----------------------
+
+/// State
+/// -----
+
+extern int entered_place;
+/// -----
 
 void near regist_load_and_put_initial(void)
 {
@@ -204,4 +217,64 @@ void pascal near regi_put(
 	if((regi % ALPHABET_GLYPHS_PER_ROW) == REGI_DOUBLEWIDE_X) {
 		super_put((left + REGI_GLYPH_W), top, (patnum + 1));
 	}
+}
+
+void pascal near regist_row_put_at(screen_x_t left, screen_y_t top, int place)
+{
+	int c;
+	int score_digit_first_nonzero; // regi_patnum_t
+	bool16 highlight = (entered_place == place);
+	unsigned char col = (entered_place == place) ? 0xF : 0x4;
+
+	if(entered_place == PLACE_NONE) {
+		highlight = true;
+		col = 0xF;
+	}
+
+	// Place number
+	if(place != 9) { // If the 10 is hardcoded in the branch below anyway...
+		regi_put(left, top, (REGI_1 + place), highlight);
+	} else {
+		regi_put((left - (REGI_GLYPH_W / 4)), top, REGI_1, highlight);
+		regi_put((left + (REGI_GLYPH_W / 4)), top, REGI_0, highlight);
+	}
+	left += PLACE_NUMBER_PADDED_W;
+
+	// Name
+	c = (SCOREDAT_NAME_LEN - 1);
+	while(c >= 0) {
+		if(hi.score.name[place][c] != REGI_ASCII(' ')) {
+			regi_put(left, top, hi.score.name[place][c], highlight);
+		}
+		c--;
+		left += NAME_SPACING;
+	}
+	left += CELL_PADDING_X;
+
+	// Score
+	score_digit_first_nonzero = REGI_0;
+	c = (sizeof(hi.score.score[0]) - 1);
+	while(c >= 0) {
+		if(score_digit_first_nonzero == REGI_0) {
+			score_digit_first_nonzero = hi.score.score[place][c];
+		}
+		if(score_digit_first_nonzero != REGI_0) {
+			regi_put(left, top, hi.score.score[place][c], highlight);
+		}
+		c--;
+		left += SCORE_SPACING;
+	}
+	left += CELL_PADDING_X;
+
+	// Player character
+	graph_putsa_fx(
+		left,
+		(top + ((REGI_GLYPH_H - GLYPH_H) / 2)),
+		(col | FX_WEIGHT_BOLD),
+		REGIST_PLAYCHARS[hi.score.playchar[place].v]
+	);
+	left += (REGIST_PLAYCHAR_W + CELL_PADDING_X);
+
+	// Stage
+	regi_put(left, top, hi.score.stage[place], highlight);
 }

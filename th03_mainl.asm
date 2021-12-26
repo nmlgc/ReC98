@@ -2616,172 +2616,11 @@ REGIST_TEXT segment byte public 'CODE' use16
 		left:word, top:word
 	@REGI_PUT$QIIII procdesc pascal near \
 		left:word, top:word, regi:word, selected:word
+	@REGIST_ROW_PUT_AT$QIII procdesc pascal near \
+		left:word, top:word, place:word
 REGIST_TEXT ends
 
 mainl_03_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B2EF	proc near
-
-var_7		= byte ptr -7
-@@selected		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-@@place		= word ptr  4
-@@top		= word ptr  6
-arg_4		= word ptr  8
-
-		enter	8, 0
-		push	si
-		push	di
-		mov	si, [bp+arg_4]
-		mov	di, [bp+@@place]
-		cmp	_entered_place, di
-		jnz	short loc_B306
-		mov	ax, 1
-		jmp	short loc_B308
-; ---------------------------------------------------------------------------
-
-loc_B306:
-		xor	ax, ax
-
-loc_B308:
-		mov	[bp+@@selected], ax
-		cmp	_entered_place, di
-		jnz	short loc_B315
-		mov	al, 0Fh
-		jmp	short loc_B317
-; ---------------------------------------------------------------------------
-
-loc_B315:
-		mov	al, 4
-
-loc_B317:
-		mov	[bp+var_7], al
-		cmp	_entered_place, -1
-		jnz	short loc_B32A
-		mov	[bp+@@selected], 1
-		mov	[bp+var_7], 0Fh
-
-loc_B32A:
-		cmp	di, 9
-		jz	short loc_B339
-		push	si
-		push	[bp+@@top]
-		lea	ax, [di+REGI_1]
-		push	ax
-		jmp	short loc_B351
-; ---------------------------------------------------------------------------
-
-loc_B339:
-		lea	ax, [si-8]
-		call	@regi_put$qiiii pascal, ax, [bp+@@top], REGI_1, [bp+@@selected]
-		lea	ax, [si+8]
-		push	ax
-		push	[bp+@@top]
-		push	REGI_0
-
-loc_B351:
-		push	[bp+@@selected]
-		call	@regi_put$qiiii
-		add	si, 30h	; '0'
-		mov	[bp+var_2], 7
-		jmp	short loc_B38F
-; ---------------------------------------------------------------------------
-
-loc_B361:
-		mov	bx, di
-		shl	bx, 3
-		add	bx, [bp+var_2]
-		cmp	_hi.SDS_score.SD_name[bx], REGI_SP
-		jz	short loc_B389
-		push	si
-		push	[bp+@@top]
-		mov	bx, di
-		shl	bx, 3
-		add	bx, [bp+var_2]
-		mov	al, _hi.SDS_score.SD_name[bx]
-		mov	ah, 0
-		push	ax
-		push	[bp+@@selected]
-		call	@regi_put$qiiii
-
-loc_B389:
-		dec	[bp+var_2]
-		add	si, 18h
-
-loc_B38F:
-		cmp	[bp+var_2], 0
-		jge	short loc_B361
-		add	si, 10h
-		mov	[bp+var_4], 20h	; ' '
-		mov	[bp+var_2], (SCORE_DIGITS + 1)
-		jmp	short loc_B3E0
-; ---------------------------------------------------------------------------
-
-loc_B3A4:
-		cmp	[bp+var_4], 20h	; ' '
-		jnz	short loc_B3BB
-		mov	bx, di
-		imul	bx, SCOREDAT_PLACES
-		add	bx, [bp+var_2]
-		mov	al, _hi.SDS_score.SD_score[bx]
-		mov	ah, 0
-		mov	[bp+var_4], ax
-
-loc_B3BB:
-		cmp	[bp+var_4], 20h	; ' '
-		jz	short loc_B3DA
-		push	si
-		push	[bp+@@top]
-		mov	bx, di
-		imul	bx, SCOREDAT_PLACES
-		add	bx, [bp+var_2]
-		mov	al, _hi.SDS_score.SD_score[bx]
-		mov	ah, 0
-		push	ax
-		push	[bp+@@selected]
-		call	@regi_put$qiiii
-
-loc_B3DA:
-		dec	[bp+var_2]
-		add	si, 10h
-
-loc_B3E0:
-		cmp	[bp+var_2], 0
-		jge	short loc_B3A4
-		add	si, 10h
-		push	si
-		mov	ax, [bp+@@top]
-		add	ax, 8
-		push	ax
-		mov	al, [bp+var_7]
-		mov	ah, 0
-		or	ax, FX_WEIGHT_BOLD
-		push	ax
-		mov	al, _hi.SDS_score.SD_playchar[di]
-		mov	ah, 0
-		shl	ax, 2
-		mov	bx, ax
-		pushd	aSCORE_PLAYCHARS[bx]
-		call	graph_putsa_fx
-		add	si, 70h	; 'p'
-		push	si
-		push	[bp+@@top]
-		mov	al, _hi.SDS_score.SD_stage[di]
-		mov	ah, 0
-		push	ax
-		push	[bp+@@selected]
-		call	@regi_put$qiiii
-		pop	di
-		pop	si
-		leave
-		retn	6
-sub_B2EF	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2794,20 +2633,17 @@ sub_B429	proc near
 		push	di
 		call	graph_copy_page pascal, 0
 		xor	si, si
-		mov	di, 68h	; 'h'
+		mov	di, 104
 		jmp	short loc_B447
 ; ---------------------------------------------------------------------------
 
 loc_B43C:
-		push	18h
-		push	di
-		push	si
-		call	sub_B2EF
+		call	@regist_row_put_at$qiii pascal, 24, di, si
 		inc	si
-		add	di, 14h
+		add	di, 20
 
 loc_B447:
-		cmp	si, 0Ah
+		cmp	si, SCOREDAT_PLACES
 		jl	short loc_B43C
 		pop	di
 		pop	si
@@ -2828,13 +2664,13 @@ arg_0		= word ptr  4
 		mov	bp, sp
 		push	si
 		mov	si, [bp+arg_0]
-		push	18h
+		push	24
 		mov	ax, si
-		imul	ax, 14h
-		add	ax, 68h	; 'h'
+		imul	ax, 20
+		add	ax, 104
 		push	ax
 		push	si
-		call	sub_B2EF
+		call	@regist_row_put_at$qiii
 		pop	si
 		pop	bp
 		retn	2
@@ -4950,7 +4786,8 @@ aOver_pi	db 'over.pi',0
 include th03/formats/pi_put_masked[data].asm
 asc_EFC2	db  '  ', 0
 	even
-aSCORE_PLAYCHARS label dword
+public _REGIST_PLAYCHARS
+_REGIST_PLAYCHARS label dword
 		dd aNoEntry		; "  No	Entry! "
 		dd aB@b@sCB@b@		; "　　靈夢　　"
 		dd aB@b@cgcvb@b@	; "　　魅魔　　"
