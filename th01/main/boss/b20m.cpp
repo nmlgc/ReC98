@@ -62,19 +62,9 @@ extern bool initial_hp_rendered;
 // File names
 // ----------
 
-// TODO: Inline (if used 1×), or #define (if used >1×), once Sariel is done
-extern const char boss6_l_grp[];
-extern const char boss6_h_grp[];
-extern const char TENSI_MDT[];
-extern const char SE_FN[];
+#include "th01/shiftjis/fns.hpp"
+
 extern const char* BG_IMAGES[4];
-extern const char boss6_1_bos[];
-extern const char boss6_2_bos[];
-extern const char boss6_3_bos[];
-extern const char boss6gr1_grc[];
-extern const char boss6gr2_grc[];
-extern const char boss6gr3_grc[];
-extern const char boss6gr4_grc[];
 // ----------
 
 // Entities (and animations)
@@ -85,9 +75,9 @@ extern const char boss6gr4_grc[];
 #define anm_wand  	boss_anims[1]
 
 inline void sariel_ent_load(void) {
-	ent_shield.load(boss6_1_bos, 0);
-	anm_wand.load(boss6_2_bos, 0);
-	anm_dress.load(boss6_3_bos, 1);
+	ent_shield.load("boss6_1.bos", 0);
+	anm_wand.load("boss6_2.bos", 0);
+	anm_dress.load("boss6_3.bos", 1);
 }
 
 inline void sariel_ent_free(void) {
@@ -106,10 +96,10 @@ static const main_grc_slot_t GRC_SLOT_SPAWNCROSS = GRC_SLOT_BOSS_3;
 static const main_grc_slot_t GRC_SLOT_LEAFSPLASH = GRC_SLOT_BOSS_4;
 
 inline void sariel_grc_load(void) {
-	grc_load(GRC_SLOT_VORTEX_DEBRIS, boss6gr1_grc);
-	grc_load(GRC_SLOT_BIRD, boss6gr2_grc);
-	grc_load(GRC_SLOT_SPAWNCROSS, boss6gr3_grc);
-	grc_load(GRC_SLOT_LEAFSPLASH, boss6gr4_grc);
+	grc_load(GRC_SLOT_VORTEX_DEBRIS, "boss6gr1.grc");
+	grc_load(GRC_SLOT_BIRD, "boss6gr2.grc");
+	grc_load(GRC_SLOT_SPAWNCROSS, "boss6gr3.grc");
+	grc_load(GRC_SLOT_LEAFSPLASH, "boss6gr4.grc");
 }
 
 inline void sariel_grc_free(void) {
@@ -126,6 +116,18 @@ inline void sariel_grc_free(void) {
 static const main_ptn_slot_t PTN_SLOT_BG_ENT = PTN_SLOT_BOSS_1;
 // ----
 
+// Temporary storage for compiler-generated string literals
+// --------------------------------------------------------
+
+char ANGEL[] = "ANGEL";
+char OF[] = "OF";
+char DEATH[] = "DEATH";
+char boss6_a1_grp[] = "BOSS6_A1.GRP";
+char boss6_a2_grp[] = "BOSS6_A2.GRP";
+char boss6_a3_grp[] = "BOSS6_A3.GRP";
+char boss6_a4_grp[] = "BOSS6_A4.GRP";
+// --------------------------------------------------------
+
 #define select_for_rank sariel_select_for_rank
 #include "th01/main/select_r.cpp"
 
@@ -135,12 +137,12 @@ void sariel_entrance(int8_t)
 
 	text_fillca(' ', (TX_BLACK | TX_REVERSE));
 
-	/*  graph_accesspage_func(0);  */	grp_put_palette_show(boss6_l_grp);
-	/**/graph_accesspage_func(1)/**/;	grp_put_palette_show(boss6_h_grp);
+	/*  graph_accesspage_func(0);  */	grp_put_palette_show("boss6_l.grp");
+	/**/graph_accesspage_func(1)/**/;	grp_put_palette_show("boss6_h.grp");
 
 	graph_accesspage_func(0);
 	stageobjs_init_and_render(BOSS_STAGE);
-	mdrv2_bgm_load(TENSI_MDT);
+	mdrv2_bgm_load("TENSI.MDT");
 	mdrv2_se_load(SE_FN);
 	mdrv2_bgm_play();
 

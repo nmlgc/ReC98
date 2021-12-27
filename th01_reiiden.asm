@@ -29848,18 +29848,18 @@ flt_35D91	dd 640.0
 		; Hack. Let's better use bytes for accuracy here.
 dbl_35D95	db 09ah, 099h, 099h, 099h, 099h, 099h, 0a9h, 03fh
 		db 0
-		dd aAngel		; "ANGEL"
-		dd aOf			; "OF"
-		dd aDeath		; "DEATH"
+		dd _ANGEL
+		dd _OF
+		dd _DEATH
 public _game_cleared
 _game_cleared	db 0
 
 public _BG_IMAGES
 _BG_IMAGES label dword
-		dd aBoss6_a1_grp ; "BOSS6_A1.GRP"
-		dd aBoss6_a2_grp	; "BOSS6_A2.GRP"
-		dd aBoss6_a3_grp	; "BOSS6_A3.GRP"
-		dd aBoss6_a4_grp	; "BOSS6_A4.GRP"
+		dd _boss6_a1_grp
+		dd _boss6_a2_grp
+		dd _boss6_a3_grp
+		dd _boss6_a4_grp
 public _spawnray_target_prev_x, _spawnray_target_prev_y
 _spawnray_target_prev_x	dw 999
 _spawnray_target_prev_y	dw 999
@@ -29946,27 +29946,13 @@ word_35E97	dw 0
 word_35E99	dw 0
 public _sariel_invincibility_flash_colors
 _sariel_invincibility_flash_colors	db    3, 4, 5
-aAngel		db 'ANGEL',0
-aOf		db 'OF',0
-aDeath		db 'DEATH',0
-aBoss6_a1_grp	db 'BOSS6_A1.GRP',0
-aBoss6_a2_grp	db 'BOSS6_A2.GRP',0
-aBoss6_a3_grp	db 'BOSS6_A3.GRP',0
-aBoss6_a4_grp	db 'BOSS6_A4.GRP',0
-public _boss6_l_grp, _boss6_h_grp, _TENSI_MDT, _SE_FN
-_boss6_l_grp	db 'boss6_l.grp',0
-_boss6_h_grp	db 'boss6_h.grp',0
-_TENSI_MDT	db 'TENSI.MDT',0
-_SE_FN	db 'zigoku.mde',0
-public _boss6_1_bos, _boss6_2_bos, _boss6_3_bos
-public _boss6gr1_grc, _boss6gr2_grc, _boss6gr3_grc, _boss6gr4_grc
-_boss6_1_bos	db 'boss6_1.bos',0
-_boss6_2_bos	db 'boss6_2.bos',0
-_boss6_3_bos	db 'boss6_3.bos',0
-_boss6gr1_grc	db 'boss6gr1.grc',0
-_boss6gr2_grc	db 'boss6gr2.grc',0
-_boss6gr3_grc	db 'boss6gr3.grc',0
-_boss6gr4_grc	db 'boss6gr4.grc',0
+	extern _ANGEL:byte
+	extern _OF:byte
+	extern _DEATH:byte
+	extern _boss6_a1_grp:byte
+	extern _boss6_a2_grp:byte
+	extern _boss6_a3_grp:byte
+	extern _boss6_a4_grp:byte
 	extern _f1000_0:dword
 	extern _f1001_0:dword
 	extern _f12_0:dword
