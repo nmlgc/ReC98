@@ -2055,7 +2055,7 @@ loc_D50F:
 ; ---------------------------------------------------------------------------
 
 loc_D516:
-		call	_sariel_free
+		call	@sariel_free$qv
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -5075,7 +5075,6 @@ main_21_TEXT	segment	byte public 'CODE' use16
 	extern @CBossEntity@hittest_orb$xqv:proc
 	extern _bos_entity_free:proc
 	extern @CBossAnim@put_8$xqv:proc
-	extern _bos_anim_free:proc
 main_21_TEXT	ends
 
 main_21__TEXT	segment	byte public 'CODE' use16
@@ -5161,7 +5160,6 @@ main_22_TEXT	ends
 main_23_TEXT	segment	byte public 'CODE' use16
 	extern _grc_load:proc
 	extern _grc_put_8:proc
-	extern _grc_free:proc
 	extern _grcg_put_8x8_mono:proc
 	extern @shape8x8_star_put$qiii:proc
 	extern @shape8x8_flake_put$qiii:proc
@@ -22433,6 +22431,7 @@ main_36_TEXT	segment	byte public 'CODE' use16
 	extern @sariel_load_and_init$qv:proc
 	@wand_bg_snap$qv procdesc near
 	@wand_bg_put$qv procdesc near
+	extern @sariel_free$qv:proc
 main_36_TEXT	ends
 
 main_36__TEXT	segment	byte public 'CODE' use16
@@ -22445,29 +22444,6 @@ include th01/main/boss/anim.inc
 sariel_shield	equ <boss_entity_0>
 sariel_dress	equ <boss_anim_0>
 sariel_wand 	equ <boss_anim_1>
-
-PTN_SLOT_BG_ENT = PTN_SLOT_BOSS_1
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public _sariel_free
-_sariel_free	proc far
-		push	bp
-		mov	bp, sp
-		call	_bos_entity_free stdcall, 0
-		call	_bos_anim_free stdcall, 0
-		call	_bos_anim_free stdcall, 1
-		call	_grc_free stdcall, GRC_SLOT_BOSS_1
-		call	_grc_free stdcall, GRC_SLOT_BOSS_2
-		call	_grc_free stdcall, GRC_SLOT_BOSS_3
-		call	_grc_free stdcall, GRC_SLOT_BOSS_4
-		call	_ptn_free stdcall, PTN_SLOT_BG_ENT
-		add	sp, 10h
-		pop	bp
-		retf
-_sariel_free	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -29310,7 +29286,7 @@ loc_2CDA0:
 loc_2CDAA:
 		call	_z_vsync_wait_and_scrollup stdcall, 0
 		pop	cx
-		call	_sariel_free
+		call	@sariel_free$qv
 		xor	si, si
 		jmp	short loc_2CDC4
 ; ---------------------------------------------------------------------------

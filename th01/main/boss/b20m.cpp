@@ -88,6 +88,12 @@ inline void sariel_ent_load(void) {
 	anm_wand.load(boss6_2_bos, 0);
 	anm_dress.load(boss6_3_bos, 1);
 }
+
+inline void sariel_ent_free(void) {
+	bos_entity_free(0);
+	bos_anim_free(0);
+	bos_anim_free(1);
+}
 // --------
 
 /// .GRC entities
@@ -103,6 +109,13 @@ inline void sariel_grc_load(void) {
 	grc_load(GRC_SLOT_BIRD, boss6gr2_grc);
 	grc_load(GRC_SLOT_SPAWNCROSS, boss6gr3_grc);
 	grc_load(GRC_SLOT_LEAFSPLASH, boss6gr4_grc);
+}
+
+inline void sariel_grc_free(void) {
+	grc_free(GRC_SLOT_VORTEX_DEBRIS);
+	grc_free(GRC_SLOT_BIRD);
+	grc_free(GRC_SLOT_SPAWNCROSS);
+	grc_free(GRC_SLOT_LEAFSPLASH);
 }
 /// -------------
 
@@ -205,4 +218,11 @@ void near wand_bg_put(void)
 	ptn_put_rect_noalpha_8(
 		left, top, WAND_W, WAND_H, PTN_SLOT_BG_ENT, image, ptn_x, ptn_y
 	)
+}
+
+void sariel_free(void)
+{
+	sariel_ent_free();
+	sariel_grc_free();
+	ptn_free(PTN_SLOT_BG_ENT);
 }
