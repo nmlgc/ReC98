@@ -22432,6 +22432,8 @@ main_36_TEXT	segment	byte public 'CODE' use16
 	@wand_bg_snap$qv procdesc near
 	@wand_bg_put$qv procdesc near
 	extern @sariel_free$qv:proc
+	@SPAWNRAY_UNPUT_AND_PUT$QIIIII procdesc pascal near \
+		origin:Point, target_x:word, target_y:word, col:word
 main_36_TEXT	ends
 
 main_36__TEXT	segment	byte public 'CODE' use16
@@ -22444,65 +22446,6 @@ include th01/main/boss/anim.inc
 sariel_shield	equ <boss_entity_0>
 sariel_dress	equ <boss_anim_0>
 sariel_wand 	equ <boss_anim_1>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_28948	proc near
-
-@@col		= word ptr  4
-@@bottom		= word ptr  6
-@@right		= word ptr  8
-@@top		= word ptr  0Ah
-@@left		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+@@right]
-		mov	di, [bp+@@bottom]
-		cmp	[bp+@@col], 99
-		jnz	short loc_28967
-		mov	point_35DBB.x, 999
-		mov	point_35DBB.y, 999
-		jmp	short loc_289CA
-; ---------------------------------------------------------------------------
-
-loc_28967:
-		cmp	point_35DBB.x, 0
-		jl	short loc_2899B
-		cmp	point_35DBB.x, RES_X
-		jge	short loc_2899B
-		cmp	point_35DBB.y, 0
-		jl	short loc_2899B
-		cmp	point_35DBB.y, RES_Y
-		jge	short loc_2899B
-		call	_graph_r_line_unput c, [bp+@@left], [bp+@@top], point_35DBB.x, point_35DBB.y
-
-loc_2899B:
-		or	si, si
-		jl	short loc_289C2
-		cmp	si, RES_X
-		jge	short loc_289C2
-		or	di, di
-		jl	short loc_289C2
-		cmp	di, RES_Y
-		jge	short loc_289C2
-		call	_graph_r_line c, [bp+@@left], [bp+@@top], si, di, [bp+@@col]
-
-loc_289C2:
-		mov	point_35DBB.x, si
-		mov	point_35DBB.y, di
-
-loc_289CA:
-		pop	di
-		pop	si
-		pop	bp
-		retn	0Ah
-sub_28948	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -25550,7 +25493,10 @@ sub_2A69B	proc near
 		mov	bp, sp
 		cmp	_boss_phase_frame, 5
 		jge	short loc_2A6B0
-		call	sub_28948 pascal, large 0, large 0, 99
+		push	large 0
+		push	large 0
+		push	99
+		call	@spawnray_unput_and_put$qiiiii
 
 loc_2A6B0:
 		cmp	_boss_phase_frame, 50
@@ -25661,7 +25607,7 @@ loc_2A85B:
 		jge	short loc_2A886
 
 loc_2A863:
-		call	sub_28948 pascal, ((RES_X / 2) shl 16) or 120, point_3B037.x, point_3B037.y, 7
+		call	@spawnray_unput_and_put$qiiiii pascal, ((RES_X / 2) shl 16) or 120, point_3B037.x, point_3B037.y, 7
 		mov	ax, x_3B03D
 		add	point_3B037.x, ax
 		mov	ax, y_3B03B
@@ -25789,7 +25735,10 @@ sub_2A949	proc near
 		push	di
 		cmp	_boss_phase_frame, 5
 		jge	short loc_2A960
-		call	sub_28948 pascal, large 0, large 0, 99
+		push	large 0
+		push	large 0
+		push	99
+		call	@spawnray_unput_and_put$qiiiii
 
 loc_2A960:
 		cmp	_boss_phase_frame, 150
@@ -25830,7 +25779,7 @@ loc_2A99E:
 		sar	eax, 8
 		add	ax, 160
 		mov	di, ax
-		call	sub_28948 pascal, ((RES_X / 2) shl 16) or 160, si, ax, 7
+		call	@spawnray_unput_and_put$qiiiii pascal, ((RES_X / 2) shl 16) or 160, si, ax, 7
 		mov	al, byte_3B042
 		add	angle_3B041, al
 		inc	byte_3B042
@@ -25848,7 +25797,7 @@ loc_2AA13:
 		jnz	short loc_2AA36
 		mov	si, 999
 		mov	di, 999
-		call	sub_28948 pascal, ((RES_X / 2) shl 16) or 160, si, di, 7
+		call	@spawnray_unput_and_put$qiiiii pascal, ((RES_X / 2) shl 16) or 160, si, di, 7
 		mov	angle_3B041, 0
 		jmp	loc_2ABD8
 ; ---------------------------------------------------------------------------
@@ -26052,7 +26001,7 @@ loc_2AC27:
 		push	ax	; left
 		call	_grc_put_8
 		add	sp, 0Ah
-		call	sub_28948 pascal, ((RES_X / 2) shl 16) or 120, point_3B043.x, point_3B043.y, 7
+		call	@spawnray_unput_and_put$qiiiii pascal, ((RES_X / 2) shl 16) or 120, point_3B043.x, point_3B043.y, 7
 
 loc_2AC8A:
 		mov	ax, _boss_phase_frame
@@ -26088,7 +26037,7 @@ loc_2AC8A:
 		push	ax
 		push	point_3B043.y
 		push	7
-		call	sub_28948
+		call	@spawnray_unput_and_put$qiiiii
 		cmp	grc_image_3B04B, 5
 		jge	short loc_2ACFB
 		mov	ax, grc_image_3B04B
@@ -26430,7 +26379,7 @@ loc_2B01A:
 		push	ax	; left
 		call	_grc_put_8
 		add	sp, 12h
-		call	sub_28948 pascal, ((RES_X / 2) shl 16) or 120, x_3B04D, y_3B04F, 7
+		call	@spawnray_unput_and_put$qiiiii pascal, ((RES_X / 2) shl 16) or 120, x_3B04D, y_3B04F, 7
 
 loc_2B07B:
 		mov	ax, _boss_phase_frame
@@ -26465,7 +26414,7 @@ loc_2B07B:
 		push	ax
 		push	y_3B04F
 		push	7
-		call	sub_28948
+		call	@spawnray_unput_and_put$qiiiii
 		cmp	grc_image_3B051, 5
 		jge	short loc_2B0E9
 		mov	ax, grc_image_3B051
@@ -27243,7 +27192,7 @@ loc_2B883:
 		push	ax
 		push	point_3B330.x
 		call	_egc_copy_rect_1_to_0_16
-		call	sub_28948 pascal, ((RES_X / 2) shl 16) or 185, point_3B330.x, point_3B330.y, 7
+		call	@spawnray_unput_and_put$qiiiii pascal, ((RES_X / 2) shl 16) or 185, point_3B330.x, point_3B330.y, 7
 		push	7	; col
 		push	grc_image_3B334	; image
 		push	GRC_SLOT_BOSS_1	; slot
@@ -27278,7 +27227,7 @@ loc_2B8E3:
 		push	ax
 		push	point_3B330.y
 		push	7
-		call	sub_28948
+		call	@spawnray_unput_and_put$qiiiii
 		push	7	; col
 		push	grc_image_3B334	; image
 		push	GRC_SLOT_BOSS_1	; slot
@@ -29911,7 +29860,9 @@ _BG_IMAGES label dword
 		dd aBoss6_a2_grp	; "BOSS6_A2.GRP"
 		dd aBoss6_a3_grp	; "BOSS6_A3.GRP"
 		dd aBoss6_a4_grp	; "BOSS6_A4.GRP"
-point_35DBB	Point <999, 999>
+public _spawnray_target_prev_x, _spawnray_target_prev_y
+_spawnray_target_prev_x	dw 999
+_spawnray_target_prev_y	dw 999
 		dd    0
 		dd    0
 		dd    0

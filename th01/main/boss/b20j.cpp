@@ -30,6 +30,7 @@ extern "C" {
 #include "th01/formats/stagedat.hpp"
 #include "th01/sprites/pellet.h"
 #include "th01/sprites/shape8x8.hpp"
+#include "th01/main/spawnray.hpp"
 #include "th01/main/vars.hpp"
 #include "th01/main/boss/entity_a.hpp"
 #include "th01/main/stage/palette.hpp"
@@ -291,7 +292,8 @@ template <int SnakeCount> struct Snakes {
 #define select_for_rank konngara_select_for_rank
 #include "th01/main/select_r.cpp"
 
-void pellet_spawnray_unput_and_put(
+// Almost identical to Sariel's version. This one is better.
+static void spawnray_unput_and_put(
 	screen_x_t origin_x, vram_y_t origin_y,
 	screen_x_t target_x, vram_y_t target_y,
 	int col
@@ -299,27 +301,10 @@ void pellet_spawnray_unput_and_put(
 {
 	static screen_x_t target_prev_x = -PIXEL_NONE;
 	static vram_y_t target_prev_y = -PIXEL_NONE;
-	if(col == 99) {
-		target_prev_x = -PIXEL_NONE;
-		target_prev_y = -PIXEL_NONE;
-		// Umm, shouldn't we unblit in this case?
-		return;
-	}
-	if(
-		(target_prev_x != -PIXEL_NONE) && (target_prev_y != -PIXEL_NONE) &&
-		(target_prev_x >= 0) && (target_prev_x < RES_X) &&
-		(target_prev_y >= 0) && (target_prev_y < RES_Y)
-	) {
-		graph_r_line_unput(origin_x, origin_y, target_prev_x, target_prev_y);
-	}
-	if(
-		(target_x >= 0) && (target_x < RES_X) &&
-		(target_y >= 0) && (target_y < RES_Y)
-	) {
-		graph_r_line(origin_x, origin_y, target_x, target_y, col);
-	}
-	target_prev_x = target_x;
-	target_prev_y = target_y;
+	spawnray_unput_and_put_func(
+		target_prev_x, target_prev_y,
+		origin_x, origin_y, target_x, target_y, col, false
+	);
 }
 
 // Siddhaṃ seed syllables
@@ -1032,9 +1017,7 @@ void pattern_four_homing_snakes(void)
 inline void swordray_unput_put_and_move(
 	screen_x_t& end_x, screen_x_t& end_y, screen_x_t delta_x, screen_y_t delta_y
 ) {
-	pellet_spawnray_unput_and_put(
-		SWORD_CENTER_X, SWORD_CENTER_Y, end_x, end_y, 6
-	);
+	spawnray_unput_and_put(SWORD_CENTER_X, SWORD_CENTER_Y, end_x, end_y, 6);
 	// Gimme those original instructions!
 	if(delta_x < 0) { end_x -= -delta_x; } else { end_x += delta_x; }
 	if(delta_y < 0) { end_y -= -delta_y; } else { end_y += delta_y; }

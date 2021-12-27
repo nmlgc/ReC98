@@ -23,6 +23,7 @@ extern "C" {
 #include "th01/formats/ptn.hpp"
 #include "th01/formats/stagedat.hpp"
 #include "th01/sprites/pellet.h"
+#include "th01/main/spawnray.hpp"
 #include "th01/main/vars.hpp"
 #include "th01/main/boss/entity_a.hpp"
 }
@@ -225,4 +226,25 @@ void sariel_free(void)
 	sariel_ent_free();
 	sariel_grc_free();
 	ptn_free(PTN_SLOT_BG_ENT);
+}
+
+// Almost identical to Konngara's version. This one is worse.
+void pascal near spawnray_unput_and_put(
+	screen_x_t origin_x, vram_y_t origin_y,
+	screen_x_t target_x, vram_y_t target_y,
+	int col
+)
+{
+	#define target_prev_x	spawnray_target_prev_x
+	#define target_prev_y	spawnray_target_prev_y
+
+	extern screen_x_t target_prev_x;
+	extern vram_y_t target_prev_y;
+	spawnray_unput_and_put_func(
+		target_prev_x, target_prev_y,
+		origin_x, origin_y, target_x, target_y, col, true
+	);
+
+	#undef target_prev_x
+	#undef target_prev_y
 }
