@@ -22470,7 +22470,7 @@ arg_1A		= qword	ptr  1Eh
 		push	si
 		push	di
 		fld	[bp+arg_1A]
-		fcomp	flt_35F66
+		fcomp	_f1000_0
 		fstsw	[bp+var_2]
 		fwait
 		mov	ax, [bp+var_2]
@@ -22492,7 +22492,7 @@ loc_289F5:
 
 loc_289FD:
 		fld	[bp+arg_1A]
-		fcomp	flt_35F6A
+		fcomp	_f1001_0
 		fstsw	[bp+var_2]
 		fwait
 		mov	ax, [bp+var_2]
@@ -22511,13 +22511,13 @@ loc_28A16:
 		mov	bx, si
 		shl	bx, 3
 		fld	qword ptr [bx+5ED2h]
-		fadd	flt_35F6E
+		fadd	_f12_0
 		call	ftol@
 		push	ax
 		mov	bx, si
 		shl	bx, 3
 		fld	qword ptr [bx+5DE2h]
-		fadd	flt_35F6E
+		fadd	_f12_0
 		call	ftol@
 		push	ax
 		push	ds
@@ -22536,7 +22536,7 @@ loc_28A61:
 
 loc_28A69:
 		fld	[bp+arg_1A]
-		fcomp	flt_35F72
+		fcomp	_f1002_0
 		fstsw	[bp+var_2]
 		fwait
 		mov	ax, [bp+var_2]
@@ -22565,13 +22565,13 @@ loc_28A94:
 		mov	bx, si
 		shl	bx, 3
 		fld	qword ptr [bx+5ED2h]
-		fadd	flt_35F6E
+		fadd	_f12_0
 		call	ftol@
 		push	ax
 		mov	bx, si
 		shl	bx, 3
 		fld	qword ptr [bx+5DE2h]
-		fadd	flt_35F6E
+		fadd	_f12_0
 		call	ftol@
 		push	ax
 		push	ds
@@ -22595,7 +22595,7 @@ loc_28ADF:
 
 loc_28AE7:
 		fld	[bp+arg_1A]
-		fcomp	flt_35F76
+		fcomp	_f1003_0
 		fstsw	[bp+var_2]
 		fwait
 		mov	ax, [bp+var_2]
@@ -22620,13 +22620,13 @@ loc_28B00:
 		mov	bx, si
 		shl	bx, 3
 		fld	qword ptr [bx+5ED2h]
-		fadd	flt_35F6E
+		fadd	_f12_0
 		call	ftol@
 		push	ax
 		mov	bx, si
 		shl	bx, 3
 		fld	qword ptr [bx+5DE2h]
-		fadd	flt_35F6E
+		fadd	_f12_0
 		call	ftol@
 		push	ax
 		push	ds
@@ -22827,7 +22827,7 @@ loc_28CCD:
 		mov	bx, si
 		shl	bx, 3
 		fld	qword ptr [bx+5DE2h]
-		fcomp	flt_35F7A
+		fcomp	_f639_0
 		fstsw	[bp+var_2]
 		fwait
 		mov	ax, [bp+var_2]
@@ -22846,7 +22846,7 @@ loc_28CCD:
 		mov	bx, si
 		shl	bx, 3
 		fld	qword ptr [bx+5ED2h]
-		fcomp	flt_35F7E
+		fcomp	_f399_0
 		fstsw	[bp+var_2]
 		fwait
 		mov	ax, [bp+var_2]
@@ -22926,7 +22926,7 @@ loc_28DBF:
 		mov	bx, si
 		shl	bx, 3
 		fld	qword ptr [bx+5ED2h]
-		fcomp	flt_35F82
+		fcomp	_f344_0
 		fstsw	[bp+var_2]
 		fwait
 		mov	ax, [bp+var_2]
@@ -22935,7 +22935,7 @@ loc_28DBF:
 		mov	bx, si
 		shl	bx, 3
 		fld	qword ptr [bx+5ED2h]
-		fcomp	flt_35F86
+		fcomp	_f384_0
 		fstsw	[bp+var_2]
 		fwait
 		mov	ax, [bp+var_2]
@@ -24714,11 +24714,11 @@ loc_29E46:
 		mov	bx, si
 		shl	bx, 3
 		fld	qword ptr [bx+62C2h]
-		fdiv	flt_35F8A
+		fdiv	_f8_0
 		mov	bx, si
 		shl	bx, 3
 		fld	qword ptr [bx+63B2h]
-		fmul	flt_35F8E
+		fmul	_f80_0
 		faddp	st(1), st
 		call	ftol@
 		mov	di, ax
@@ -24784,11 +24784,11 @@ loc_29F0B:
 		mov	bx, si
 		shl	bx, 3
 		fld	qword ptr [bx+62C2h]
-		fdiv	flt_35F8A
+		fdiv	_f8_0
 		mov	bx, si
 		shl	bx, 3
 		fld	qword ptr [bx+63B2h]
-		fmul	flt_35F8E
+		fmul	_f80_0
 		faddp	st(1), st
 		call	ftol@
 		mov	di, ax
@@ -26148,7 +26148,7 @@ loc_2AE0C:
 		idiv	bx
 		or	dx, dx
 		jnz	locret_2AECC
-		fld	flt_35F76
+		fld	_f1003_0
 		sub	sp, 8
 		fstp	[bp+var_12]
 		fldz
@@ -26192,7 +26192,7 @@ loc_2AE7A:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_2AEBE
-		fld	flt_35F76
+		fld	_f1003_0
 		sub	sp, 8
 		fstp	[bp+var_12]
 		fldz
@@ -26793,11 +26793,11 @@ loc_2B3F4:
 		mov	bx, si
 		shl	bx, 3
 		fld	qword ptr [bx+66B7h]
-		fdiv	flt_35F8A
+		fdiv	_f8_0
 		mov	bx, si
 		shl	bx, 3
 		fld	qword ptr [bx+67A7h]
-		fmul	flt_35F8E
+		fmul	_f80_0
 		faddp	st(1), st
 		call	ftol@
 		mov	di, ax
@@ -26898,12 +26898,12 @@ loc_2B504:
 		mov	ax, [bp+var_8]
 		sahf
 		jbe	short loc_2B545
-		fld	qword ptr dbl_35F92
+		fld	qword ptr _d0_1
 		jmp	short loc_2B54A
 ; ---------------------------------------------------------------------------
 
 loc_2B545:
-		fld	qword ptr dbl_35F9A
+		fld	qword ptr _dminus0_1
 
 loc_2B54A:
 		mov	bx, si
@@ -26915,11 +26915,11 @@ loc_2B54A:
 		mov	bx, si
 		shl	bx, 3
 		fld	qword ptr [bx+66B7h]
-		fdiv	flt_35F8A
+		fdiv	_f8_0
 		mov	bx, si
 		shl	bx, 3
 		fld	qword ptr [bx+67A7h]
-		fmul	flt_35F8E
+		fmul	_f80_0
 		faddp	st(1), st
 		call	ftol@
 		mov	di, ax
@@ -26934,7 +26934,7 @@ loc_2B54A:
 		mov	bx, si
 		shl	bx, 3
 		fld	qword ptr [bx+66B7h]
-		fcomp	flt_35FA2
+		fcomp	_f640_0
 		fstsw	[bp+var_8]
 		fwait
 		mov	ax, [bp+var_8]
@@ -26960,7 +26960,7 @@ loc_2B54A:
 		sub	ax, dx
 		mov	[bp+var_8], ax
 		fild	[bp+var_8]
-		fcomp	flt_35FA6
+		fcomp	_f0_5
 		fstsw	[bp+var_8]
 		fwait
 		mov	ax, [bp+var_8]
@@ -28252,7 +28252,7 @@ loc_2C2F2:
 		call	@wand_bg_snap$qv
 		push	1
 		call	sub_28F11
-		fld	flt_35F66
+		fld	_f1000_0
 		sub	sp, 8
 		fstp	[bp+var_12]
 		fldz
@@ -28775,7 +28775,7 @@ loc_2C8AE:
 		mov	_orb_cur_left, ORB_LEFT_START
 		mov	_orb_cur_top, ORB_TOP_START
 		mov	_player_left, PLAYER_LEFT_START
-		fld	dbl_35FAA
+		fld	_dminus8_0
 		fstp	_orb_force
 		fwait
 		mov	_orb_force_frame, 0
@@ -28791,14 +28791,14 @@ loc_2C8AE:
 		push	1
 		call	_graph_accesspage_func
 		pop	cx
-		call	_grp_put_palette_show c, offset aBoss6_grp, ds ; "boss6.grp"
+		call	_grp_put_palette_show c, offset _boss6_grp, ds ; "boss6.grp"
 		call	_z_palette_set_show c, large (0 shl 16) or 0Fh, large (0 shl 16) or 0
 		call	@boss_palette_snap$qv
 		call	_graph_copy_accessed_page_to_othe
 		push	1
 		call	_graph_accesspage_func
 		pop	cx
-		call	_grp_put c, offset aBoss6_a5_grp, ds ; "boss6_a5.grp"
+		call	_grp_put c, offset _boss6_a5_grp, ds ; "boss6_a5.grp"
 		push	0
 		call	_graph_accesspage_func
 
@@ -28865,11 +28865,11 @@ loc_2C9DA:
 		call	_graph_accesspage_func
 		pop	cx
 		push	ds
-		push	offset aSyugen_mdt ; "syugen.MDT"
+		push	offset _syugen_mdt ; "syugen.MDT"
 		call	_mdrv2_bgm_load
 		add	sp, 4
 		call	_mdrv2_bgm_play
-		call	_grp_put_palette_show c, offset aBoss6_a6_grp, ds ; "boss6_a6.grp"
+		call	_grp_put_palette_show c, offset _boss6_a6_grp, ds ; "boss6_a6.grp"
 		call	_z_palette_set_show c, large (0 shl 16) or 6, large (0 shl 16) or 0
 		call	_graph_copy_accessed_page_to_othe
 		mov	_first_stage_in_scene, 1
@@ -29122,7 +29122,7 @@ loc_2CC9E:
 		push	1
 		call	_graph_accesspage_func
 		pop	cx
-		call	_grp_put_palette_show c, offset aBoss6_a6_grp, ds ; "boss6_a6.grp"
+		call	_grp_put_palette_show c, offset _boss6_a6_grp, ds ; "boss6_a6.grp"
 		call	_z_palette_set_show c, large (0 shl 16) or 6, large (0 shl 16) or 0
 		call	@boss_palette_snap$qv
 		call	_graph_copy_accessed_page_to_othe
@@ -29967,29 +29967,26 @@ _boss6gr1_grc	db 'boss6gr1.grc',0
 _boss6gr2_grc	db 'boss6gr2.grc',0
 _boss6gr3_grc	db 'boss6gr3.grc',0
 _boss6gr4_grc	db 'boss6gr4.grc',0
-flt_35F66	dd 1000.0
-flt_35F6A	dd 1001.0
-flt_35F6E	dd 12.0
-flt_35F72	dd 1002.0
-flt_35F76	dd 1003.0
-flt_35F7A	dd 639.0
-flt_35F7E	dd 399.0
-flt_35F82	dd 344.0
-flt_35F86	dd 384.0
-flt_35F8A	dd 8.0
-flt_35F8E	dd 80.0
-		; Hack. Let's better use bytes for accuracy here.
-dbl_35F92	db 09ah, 099h, 099h, 099h, 099h, 099h, 0b9h, 03fh
-dbl_35F9A	db 09ah, 099h, 099h, 099h, 099h, 099h, 0b9h, 0bfh
-flt_35FA2	dd 640.0
-flt_35FA6	dd 0.5
-dbl_35FAA	dq -8.0
-aBoss6_grp	db 'boss6.grp',0
-aBoss6_a5_grp	db 'boss6_a5.grp',0
-; char aSyugen_mdt[]
-aSyugen_mdt	db 'syugen.MDT',0
-aBoss6_a6_grp	db 'boss6_a6.grp',0
-		db 0
+	extern _f1000_0:dword
+	extern _f1001_0:dword
+	extern _f12_0:dword
+	extern _f1002_0:dword
+	extern _f1003_0:dword
+	extern _f639_0:dword
+	extern _f399_0:dword
+	extern _f344_0:dword
+	extern _f384_0:dword
+	extern _f8_0:dword
+	extern _f80_0:dword
+	extern _d0_1:qword
+	extern _dminus0_1:qword
+	extern _f640_0:dword
+	extern _f0_5:dword
+	extern _dminus8_0:qword
+	extern _boss6_grp:byte
+	extern _boss6_a5_grp:byte
+	extern _syugen_mdt:byte
+	extern _boss6_a6_grp:byte
 	extern _unused_boss_stage_flag:word
 	extern _pellet_interlace:byte
 	extern _pellet_destroy_score_delta:word
