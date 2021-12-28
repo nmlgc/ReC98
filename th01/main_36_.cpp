@@ -1,15 +1,6 @@
 // Temporary data storage
 // ----------------------
 
-float f1000_0 = 1000.0;
-float f1001_0 = 1001.0;
-float f12_0 = 12.0;
-float f1002_0 = 1002.0;
-float f1003_0 = 1003.0;
-float f639_0 = 639.0;
-float f399_0 = 399.0;
-float f344_0 = 344.0;
-float f384_0 = 384.0;
 float f8_0 = 8.0;
 float f80_0 = 80.0;
 double d0_1 = 0.1;

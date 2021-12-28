@@ -22434,6 +22434,7 @@ main_36_TEXT	segment	byte public 'CODE' use16
 	extern @sariel_free$qv:proc
 	@SPAWNRAY_UNPUT_AND_PUT$QIIIII procdesc pascal near \
 		origin:Point, target_x:word, target_y:word, col:word
+	@BIRDS_RESET_FIRE_SPAWN_UNPUT_UPD$QDDDDC procdesc pascal near
 main_36_TEXT	ends
 
 main_36__TEXT	segment	byte public 'CODE' use16
@@ -22446,522 +22447,6 @@ include th01/main/boss/anim.inc
 sariel_shield	equ <boss_entity_0>
 sariel_dress	equ <boss_anim_0>
 sariel_wand 	equ <boss_anim_1>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-; int __stdcall	sub_289D0(char,	double,	double,	double,	double)
-sub_289D0	proc near
-
-var_1E		= qword	ptr -1Eh
-var_16		= qword	ptr -16h
-var_E		= dword	ptr -0Eh
-var_A		= dword	ptr -0Ah
-var_6		= dword	ptr -6
-var_2		= word ptr -2
-arg_0		= byte ptr  4
-arg_2		= qword	ptr  6
-arg_A		= qword	ptr  0Eh
-arg_12		= qword	ptr  16h
-arg_1A		= qword	ptr  1Eh
-
-		enter	1Eh, 0
-		push	si
-		push	di
-		fld	[bp+arg_1A]
-		fcomp	_f1000_0
-		fstsw	[bp+var_2]
-		fwait
-		mov	ax, [bp+var_2]
-		sahf
-		jnz	short loc_289FD
-		xor	si, si
-		jmp	short loc_289F5
-; ---------------------------------------------------------------------------
-
-loc_289EF:
-		mov	byte ptr [si+141Fh], 0
-		inc	si
-
-loc_289F5:
-		cmp	si, 1Eh
-		jl	short loc_289EF
-		jmp	loc_28EA0
-; ---------------------------------------------------------------------------
-
-loc_289FD:
-		fld	[bp+arg_1A]
-		fcomp	_f1001_0
-		fstsw	[bp+var_2]
-		fwait
-		mov	ax, [bp+var_2]
-		sahf
-		jnz	short loc_28A69
-		xor	si, si
-		jmp	short loc_28A61
-; ---------------------------------------------------------------------------
-
-loc_28A16:
-		cmp	byte ptr [si+141Fh], 0
-		jz	short loc_28A60
-		cmp	byte ptr [si+61C0h], 0
-		jnz	short loc_28A60
-		push	PG_1_AIMED or ((3 shl 4) shl 16)
-		mov	bx, si
-		shl	bx, 3
-		fld	qword ptr [bx+5ED2h]
-		fadd	_f12_0
-		call	ftol@
-		push	ax
-		mov	bx, si
-		shl	bx, 3
-		fld	qword ptr [bx+5DE2h]
-		fadd	_f12_0
-		call	ftol@
-		push	ax
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_group$qii14pellet_group_ti
-		add	sp, 0Ch
-
-loc_28A60:
-		inc	si
-
-loc_28A61:
-		cmp	si, 1Eh
-		jl	short loc_28A16
-		jmp	loc_28EA0
-; ---------------------------------------------------------------------------
-
-loc_28A69:
-		fld	[bp+arg_1A]
-		fcomp	_f1002_0
-		fstsw	[bp+var_2]
-		fwait
-		mov	ax, [bp+var_2]
-		sahf
-		jnz	short loc_28AE7
-		xor	si, si
-		jmp	short loc_28ADF
-; ---------------------------------------------------------------------------
-
-loc_28A82:
-		cmp	byte ptr [si+141Fh], 0
-		jz	short loc_28ADE
-		cmp	byte ptr [si+61C0h], 0
-		jnz	short loc_28ADE
-		xor	di, di
-		jmp	short loc_28AD9
-; ---------------------------------------------------------------------------
-
-loc_28A94:
-		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
-		push	(4 shl 4)
-		mov	ax, di
-		imul	ax, 42
-		push	ax
-		mov	bx, si
-		shl	bx, 3
-		fld	qword ptr [bx+5ED2h]
-		fadd	_f12_0
-		call	ftol@
-		push	ax
-		mov	bx, si
-		shl	bx, 3
-		fld	qword ptr [bx+5DE2h]
-		fadd	_f12_0
-		call	ftol@
-		push	ax
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		add	sp, 14h
-		inc	di
-
-loc_28AD9:
-		cmp	di, 6
-		jl	short loc_28A94
-
-loc_28ADE:
-		inc	si
-
-loc_28ADF:
-		cmp	si, 1Eh
-		jl	short loc_28A82
-		jmp	loc_28EA0
-; ---------------------------------------------------------------------------
-
-loc_28AE7:
-		fld	[bp+arg_1A]
-		fcomp	_f1003_0
-		fstsw	[bp+var_2]
-		fwait
-		mov	ax, [bp+var_2]
-		sahf
-		jnz	short loc_28B62
-		xor	si, si
-		jmp	short loc_28B5A
-; ---------------------------------------------------------------------------
-
-loc_28B00:
-		cmp	byte ptr [si+141Fh], 0
-		jz	short loc_28B59
-		cmp	byte ptr [si+61C0h], 0
-		jnz	short loc_28B59
-		pushd	0 or (0 shl 16)
-		push	PM_GRAVITY or (1 shl 16)
-		push	(4 shl 4)
-		call	IRand
-		and	al, 7Fh
-		add	al, 80h
-		push	ax
-		mov	bx, si
-		shl	bx, 3
-		fld	qword ptr [bx+5ED2h]
-		fadd	_f12_0
-		call	ftol@
-		push	ax
-		mov	bx, si
-		shl	bx, 3
-		fld	qword ptr [bx+5DE2h]
-		fadd	_f12_0
-		call	ftol@
-		push	ax
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		add	sp, 14h
-
-loc_28B59:
-		inc	si
-
-loc_28B5A:
-		cmp	si, 1Eh
-		jl	short loc_28B00
-		jmp	loc_28EA0
-; ---------------------------------------------------------------------------
-
-loc_28B62:
-		fld	[bp+arg_1A]
-		fldz
-		fcompp
-		fstsw	[bp+var_2]
-		fwait
-		mov	ax, [bp+var_2]
-		sahf
-		jz	loc_28C25
-		xor	si, si
-		jmp	loc_28C1B
-; ---------------------------------------------------------------------------
-
-loc_28B7F:
-		mov	al, [si+141Fh]
-		cbw
-		cmp	ax, 1
-		jz	loc_28C1A
-		mov	byte ptr [si+141Fh], 1
-		mov	ax, si
-		add	ax, 61C0h
-		mov	word ptr [bp+var_6+2], ds
-		mov	word ptr [bp+var_6], ax
-		mov	ax, si
-		shl	ax, 3
-		add	ax, 60B2h
-		mov	word ptr [bp+var_A+2], ds
-		mov	word ptr [bp+var_A], ax
-		mov	ax, si
-		shl	ax, 3
-		add	ax, 5FC2h
-		mov	word ptr [bp+var_E+2], ds
-		mov	word ptr [bp+var_E], ax
-		fld	[bp+arg_2]
-		fstp	[bp+var_16]
-		fld	[bp+arg_A]
-		fstp	[bp+var_1E]
-		fwait
-		les	bx, [bp+var_E]
-		fld	[bp+var_1E]
-		fstp	qword ptr es:[bx]
-		fwait
-		les	bx, [bp+var_A]
-		fld	[bp+var_16]
-		fstp	qword ptr es:[bx]
-		fwait
-		les	bx, [bp+var_6]
-		mov	byte ptr es:[bx], 19h
-		mov	bx, si
-		shl	bx, 3
-		fld	[bp+arg_1A]
-		fstp	qword ptr [bx+5DE2h]
-		mov	bx, si
-		shl	bx, 3
-		fld	[bp+arg_12]
-		fstp	qword ptr [bx+5ED2h]
-		fwait
-		mov	al, [bp+arg_0]
-		mov	[si+61A2h], al
-		mov	al, [si+61C0h]
-		mov	[si+61DEh], al
-		jmp	loc_28EA0
-; ---------------------------------------------------------------------------
-
-loc_28C1A:
-		inc	si
-
-loc_28C1B:
-		cmp	si, 1Eh
-		jl	loc_28B7F
-		jmp	loc_28EA0
-; ---------------------------------------------------------------------------
-
-loc_28C25:
-		xor	si, si
-		jmp	loc_28CC1
-; ---------------------------------------------------------------------------
-
-loc_28C2A:
-		cmp	byte ptr [si+141Fh], 0
-		jz	loc_28CC0
-		mov	al, [si+61C0h]
-		cbw
-		or	ax, ax
-		jle	short loc_28C92
-		push	15	; col
-		mov	al, [si+61DEh]
-		cbw
-		push	ax
-		mov	al, [si+61C0h]
-		cbw
-		mov	dx, ax
-		pop	ax
-		sub	ax, dx
-		push	ax
-		mov	al, [si+61DEh]
-		cbw
-		mov	bx, 5
-		cwd
-		idiv	bx
-		mov	bx, ax
-		pop	ax
-		cwd
-		idiv	bx
-		inc	ax
-		push	ax	; image
-		push	GRC_SLOT_BOSS_2	; slot
-		mov	bx, si
-		shl	bx, 3
-		fld	qword ptr [bx+5ED2h]
-		call	ftol@
-		push	ax	; top
-		mov	bx, si
-		shl	bx, 3
-		fld	qword ptr [bx+5DE2h]
-		call	ftol@
-		push	ax	; left
-		call	_grc_put_8
-		add	sp, 0Ah
-		dec	byte ptr [si+61C0h]
-		jmp	short loc_28CC0
-; ---------------------------------------------------------------------------
-
-loc_28C92:
-		push	(32 shl 16) or 48
-		mov	bx, si
-		shl	bx, 3
-		fld	qword ptr [bx+5ED2h]
-		call	ftol@
-		push	ax
-		mov	bx, si
-		shl	bx, 3
-		fld	qword ptr [bx+5DE2h]
-		call	ftol@
-		push	ax
-		call	_egc_copy_rect_1_to_0_16
-		add	sp, 8
-
-loc_28CC0:
-		inc	si
-
-loc_28CC1:
-		cmp	si, 1Eh
-		jl	loc_28C2A
-		xor	si, si
-		jmp	loc_28E99
-; ---------------------------------------------------------------------------
-
-loc_28CCD:
-		cmp	byte ptr [si+141Fh], 0
-		jz	loc_28E98
-		cmp	byte ptr [si+61C0h], 0
-		jnz	loc_28E98
-		mov	bx, si
-		shl	bx, 3
-		fld	qword ptr [bx+5FC2h]
-		mov	bx, si
-		shl	bx, 3
-		fadd	qword ptr [bx+5DE2h]
-		mov	bx, si
-		shl	bx, 3
-		fstp	qword ptr [bx+5DE2h]
-		mov	bx, si
-		shl	bx, 3
-		fld	qword ptr [bx+60B2h]
-		mov	bx, si
-		shl	bx, 3
-		fadd	qword ptr [bx+5ED2h]
-		mov	bx, si
-		shl	bx, 3
-		fstp	qword ptr [bx+5ED2h]
-		mov	bx, si
-		shl	bx, 3
-		fld	qword ptr [bx+5DE2h]
-		fldz
-		fcompp
-		fstsw	[bp+var_2]
-		fwait
-		mov	ax, [bp+var_2]
-		sahf
-		ja	short loc_28D89
-		mov	bx, si
-		shl	bx, 3
-		fld	qword ptr [bx+5DE2h]
-		fcomp	_f639_0
-		fstsw	[bp+var_2]
-		fwait
-		mov	ax, [bp+var_2]
-		sahf
-		ja	short loc_28D89
-		mov	bx, si
-		shl	bx, 3
-		fld	qword ptr [bx+5ED2h]
-		fldz
-		fcompp
-		fstsw	[bp+var_2]
-		fwait
-		mov	ax, [bp+var_2]
-		sahf
-		ja	short loc_28D89
-		mov	bx, si
-		shl	bx, 3
-		fld	qword ptr [bx+5ED2h]
-		fcomp	_f399_0
-		fstsw	[bp+var_2]
-		fwait
-		mov	ax, [bp+var_2]
-		sahf
-		jbe	short loc_28DBF
-
-loc_28D89:
-		push	(32 shl 16) or 48
-		mov	bx, si
-		shl	bx, 3
-		fld	qword ptr [bx+5ED2h]
-		call	ftol@
-		push	ax
-		mov	bx, si
-		shl	bx, 3
-		fld	qword ptr [bx+5DE2h]
-		call	ftol@
-		push	ax
-		call	_egc_copy_rect_1_to_0_16
-		add	sp, 8
-		mov	byte ptr [si+141Fh], 0
-		jmp	loc_28E98
-; ---------------------------------------------------------------------------
-
-loc_28DBF:
-		push	15	; col
-		mov	ax, _boss_phase_frame
-		mov	bx, 5
-		cwd
-		idiv	bx
-		mov	bx, 2
-		cwd
-		idiv	bx
-		add	dx, 6
-		push	dx	; image
-		push	GRC_SLOT_BOSS_2	; slot
-		mov	bx, si
-		shl	bx, 3
-		fld	qword ptr [bx+5ED2h]
-		call	ftol@
-		push	ax	; top
-		mov	bx, si
-		shl	bx, 3
-		fld	qword ptr [bx+5DE2h]
-		call	ftol@
-		push	ax	; left
-		call	_grc_put_8
-		add	sp, 0Ah
-		cmp	_player_invincible, 0
-		jnz	loc_28E98
-		mov	bx, si
-		shl	bx, 3
-		fld	qword ptr [bx+5DE2h]
-		mov	ax, _player_left
-		add	ax, -8
-		mov	[bp+var_2], ax
-		fild	[bp+var_2]
-		fcompp
-		fstsw	[bp+var_2]
-		fwait
-		mov	ax, [bp+var_2]
-		sahf
-		jnb	short loc_28E98
-		mov	bx, si
-		shl	bx, 3
-		fld	qword ptr [bx+5DE2h]
-		mov	ax, _player_left
-		add	ax, 8
-		mov	[bp+var_2], ax
-		fild	[bp+var_2]
-		fcompp
-		fstsw	[bp+var_2]
-		fwait
-		mov	ax, [bp+var_2]
-		sahf
-		jbe	short loc_28E98
-		mov	bx, si
-		shl	bx, 3
-		fld	qword ptr [bx+5ED2h]
-		fcomp	_f344_0
-		fstsw	[bp+var_2]
-		fwait
-		mov	ax, [bp+var_2]
-		sahf
-		jbe	short loc_28E98
-		mov	bx, si
-		shl	bx, 3
-		fld	qword ptr [bx+5ED2h]
-		fcomp	_f384_0
-		fstsw	[bp+var_2]
-		fwait
-		mov	ax, [bp+var_2]
-		sahf
-		jnb	short loc_28E98
-		mov	_done, 1
-		push	64h ; 'd'
-		call	_delay
-		pop	cx
-		jmp	short loc_28EA0
-; ---------------------------------------------------------------------------
-
-loc_28E98:
-		inc	si
-
-loc_28E99:
-		cmp	si, 1Eh
-		jl	loc_28CCD
-
-loc_28EA0:
-		pop	di
-		pop	si
-		leave
-		retn	22h
-sub_289D0	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -24159,7 +23644,7 @@ loc_29905:
 		fstp	[bp+var_2C]
 		push	1		; char
 		fwait
-		call	sub_289D0
+		call	@birds_reset_fire_spawn_unput_upd$qddddc
 		dec	si
 
 loc_2997F:
@@ -24254,7 +23739,7 @@ loc_29A41:
 		fstp	[bp+var_2C]
 		push	0		; char
 		fwait
-		call	sub_289D0
+		call	@birds_reset_fire_spawn_unput_upd$qddddc
 		jmp	short loc_29A96
 ; ---------------------------------------------------------------------------
 
@@ -26110,7 +25595,7 @@ loc_2AD01:
 		fstp	[bp+var_2A]
 		push	1		; char
 		fwait
-		call	sub_289D0
+		call	@birds_reset_fire_spawn_unput_upd$qddddc
 		mov	ax, (RES_X - 1)
 		sub	ax, point_3B043.x
 		mov	[bp+var_A], ax
@@ -26139,7 +25624,7 @@ loc_2AD01:
 		fstp	[bp+var_2A]
 		push	1		; char
 		fwait
-		call	sub_289D0
+		call	@birds_reset_fire_spawn_unput_upd$qddddc
 
 loc_2AE0C:
 		mov	ax, _boss_phase_frame
@@ -26148,7 +25633,7 @@ loc_2AE0C:
 		idiv	bx
 		or	dx, dx
 		jnz	locret_2AECC
-		fld	_f1003_0
+		fld	dword ptr ds:[15D6h]
 		sub	sp, 8
 		fstp	[bp+var_12]
 		fldz
@@ -26165,7 +25650,7 @@ loc_2AE0C:
 		fstp	[bp+var_2A]
 		push	0		; char
 		fwait
-		call	sub_289D0
+		call	@birds_reset_fire_spawn_unput_upd$qddddc
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -26192,7 +25677,7 @@ loc_2AE7A:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_2AEBE
-		fld	_f1003_0
+		fld	dword ptr ds:[15D6h]
 		sub	sp, 8
 		fstp	[bp+var_12]
 		fldz
@@ -26209,7 +25694,7 @@ loc_2AE7A:
 		fstp	[bp+var_2A]
 		push	0		; char
 		fwait
-		call	sub_289D0
+		call	@birds_reset_fire_spawn_unput_upd$qddddc
 
 loc_2AEBE:
 		cmp	_boss_phase_frame, 300
@@ -28252,7 +27737,7 @@ loc_2C2F2:
 		call	@wand_bg_snap$qv
 		push	1
 		call	sub_28F11
-		fld	_f1000_0
+		fld	dword ptr ds:[15C6h]
 		sub	sp, 8
 		fstp	[bp+var_12]
 		fldz
@@ -28269,7 +27754,7 @@ loc_2C2F2:
 		fstp	[bp+var_2A]
 		push	0		; char
 		fwait
-		call	sub_289D0
+		call	@birds_reset_fire_spawn_unput_upd$qddddc
 		jmp	loc_2CDCE
 ; ---------------------------------------------------------------------------
 
@@ -28318,7 +27803,7 @@ loc_2C3BE:
 		fstp	[bp+var_2A]
 		push	0		; char
 		fwait
-		call	sub_289D0
+		call	@birds_reset_fire_spawn_unput_upd$qddddc
 		cmp	word_35E95, 0
 		jnz	short loc_2C40D
 		call	sub_2958C
@@ -28650,7 +28135,7 @@ loc_2C6F2:
 		fstp	[bp+var_2A]
 		push	0		; char
 		fwait
-		call	sub_289D0
+		call	@birds_reset_fire_spawn_unput_upd$qddddc
 		cmp	word_35E95, 0
 		jnz	short loc_2C751
 		call	sub_2ABDC
@@ -29863,15 +29348,11 @@ _BG_IMAGES label dword
 public _spawnray_target_prev_x, _spawnray_target_prev_y
 _spawnray_target_prev_x	dw 999
 _spawnray_target_prev_y	dw 999
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		db    0
-		db    0
+
+BIRD_COUNT = 30
+
+public _birds_alive
+_birds_alive	db BIRD_COUNT dup(0)
 word_35DDD	dw 0
 word_35DDF	dw 0
 byte_35DE1	db 0
@@ -29953,15 +29434,6 @@ _sariel_invincibility_flash_colors	db    3, 4, 5
 	extern _boss6_a2_grp:byte
 	extern _boss6_a3_grp:byte
 	extern _boss6_a4_grp:byte
-	extern _f1000_0:dword
-	extern _f1001_0:dword
-	extern _f12_0:dword
-	extern _f1002_0:dword
-	extern _f1003_0:dword
-	extern _f639_0:dword
-	extern _f399_0:dword
-	extern _f344_0:dword
-	extern _f384_0:dword
 	extern _f8_0:dword
 	extern _f80_0:dword
 	extern _d0_1:qword
@@ -30312,7 +29784,19 @@ _elis_initial_hp_rendered	db ?
 
 public _sariel_pattern_state
 _sariel_pattern_state	dw ?
-		db 1050 dup (?)
+
+CBirds struc
+	dq BIRD_COUNT dup(?)	; left
+	dq BIRD_COUNT dup(?)	; top
+	dq BIRD_COUNT dup(?)	; velocity_x
+	dq BIRD_COUNT dup(?)	; velocity_y
+	db BIRD_COUNT dup(?)	; unknown
+	db BIRD_COUNT dup(?)	; hatch_time
+	db BIRD_COUNT dup(?)	; hatch_duration
+CBirds ends
+
+public _birds
+_birds	CBirds <?>
 unk_3AB9C	db    ?	;
 		db 3 dup(?)
 unk_3ABA0	db    ?	;
