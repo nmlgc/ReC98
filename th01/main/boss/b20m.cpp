@@ -9,7 +9,9 @@ extern "C" {
 #include "planar.h"
 #include "master.hpp"
 #include "th01/common.h"
+#include "th01/v_colors.hpp"
 #include "th01/math/area.hpp"
+#include "th01/math/dir.hpp"
 #include "th01/math/overlap.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th01/hardware/frmdelay.h"
@@ -64,6 +66,7 @@ enum sariel_colors_t {
 #define invincibility_frame	sariel_invincibility_frame
 #define initial_hp_rendered	sariel_initial_hp_rendered
 extern union {
+	int frame;
 	int unknown;
 } pattern_state;
 extern bool16 invincible;
@@ -124,6 +127,25 @@ inline void sariel_grc_free(void) {
 // than 32×32. Why?!
 #define sloppy_unput_32x32(left, top) \
 	egc_copy_rect_1_to_0_16(left, top, 48, 32);
+
+// Vortex and debris sprites (BOSS6GR1.GRC)
+// ----------------------------------------
+
+static const pixel_t VORTEX_W = 32;
+static const pixel_t VORTEX_H = 32;
+
+static const int VORTEX_COUNT = 2;
+
+enum vortex_or_debris_cel_t {
+	VORTEX_CELS = 3,
+
+	C_VORTEX = 0,
+	C_VORTEX_last = (C_VORTEX + VORTEX_CELS - 1),
+};
+
+#define vortex_or_debris_put_8(left, top, cel) \
+	grc_put_8(left, top, GRC_SLOT_VORTEX_DEBRIS, cel, V_WHITE);
+// ----------------------------------------
 
 // Birds (BOSS6GR2.GRC)
 // --------------------
@@ -520,4 +542,194 @@ void near dress_render_both(void)
 	anm_dress.bos_image = cel;
 	graph_accesspage_func(1);	anm_dress.put_8();
 	graph_accesspage_func(0);	anm_dress.put_8();
+}
+
+static const subpixel_t VORTEX_PELLET_SPEED = TO_SP(7);
+
+#define vortex_pellet_left(vortex_left) \
+	((vortex_left) + ((VORTEX_W / 2) - (PELLET_W / 2)))
+
+#define vortex_pellet_top(vortex_top) \
+	((vortex_top) + ((VORTEX_H / 2) - (PELLET_H / 2)))
+
+inline screen_y_t vortex_pellet_bottom(screen_y_t vortex_bottom) {
+	return (vortex_bottom - ((VORTEX_H / 2) - (PELLET_H / 2)));
+}
+
+// Shouldn't really take [angle] as a parameter...
+void pascal near vortex_fire_3_spread(
+	const screen_x_t left[VORTEX_COUNT],
+	const vram_y_t top[VORTEX_COUNT],
+	int i,
+	unsigned char angle
+)
+{
+	Pellets.add_single(
+		vortex_pellet_left(left[i]),
+		vortex_pellet_top(top[i]),
+		0x40,
+		VORTEX_PELLET_SPEED
+	);
+	angle = iatan2(
+		(vortex_pellet_bottom(PLAYFIELD_BOTTOM) - top[i]),
+		(left[1 - i] - left[i])
+	);
+	Pellets.add_single(
+		vortex_pellet_left(left[i]),
+		vortex_pellet_top(top[i]),
+		angle,
+		VORTEX_PELLET_SPEED
+	);
+	Pellets.add_single(
+		vortex_pellet_left(left[i]),
+		vortex_pellet_top(top[i]),
+		(0x80 - angle),
+		VORTEX_PELLET_SPEED
+	);
+}
+
+void near pattern_vortices(void)
+{
+	#define wand_raise_animation_done	pattern1_wand_raise_animation_done
+	#define cur_left                 	pattern1_cur_left
+	#define cur_top                  	pattern1_cur_top
+	#define prev_left                	pattern1_prev_left
+	#define prev_top                 	pattern1_prev_top
+	#define dir_first                	pattern1_dir_first
+	#define dir_second               	pattern1_dir_second
+
+	extern bool16 wand_raise_animation_done;
+	extern screen_x_t cur_left[VORTEX_COUNT];
+	extern vram_y_t cur_top[VORTEX_COUNT];
+	extern screen_x_t prev_left[VORTEX_COUNT];
+	extern vram_y_t prev_top[VORTEX_COUNT];
+	extern bool16 dir_first; // x_direction_t
+	extern bool16 dir_second; // x_direction_t
+
+	#define vortex_unput_and_put_8(i) { \
+		sloppy_unput_32x32(prev_left[i], prev_top[i]); \
+		vortex_or_debris_put_8( \
+			cur_left[i], \
+			cur_top[i], \
+			(C_VORTEX + (boss_phase_frame % VORTEX_CELS)) \
+		); \
+	}
+
+	#define vortex_fire_down(i) { \
+		Pellets.add_group( \
+			vortex_pellet_left(cur_left[i]), \
+			vortex_pellet_top(cur_top[i]), \
+			PG_1, \
+			VORTEX_PELLET_SPEED \
+		); \
+	}
+
+	#define vortex_unput_put_3_spread(i) { \
+		vortex_unput_and_put_8(i); \
+		if((boss_phase_frame % 4) == 0) { \
+			vortex_fire_3_spread(cur_left, cur_top, i, angle); \
+		} \
+	}
+
+	unsigned char angle;
+
+	if(wand_raise_animation_done == false) {
+		wand_raise_animation_done = wand_render_raise_both();
+	}
+
+	if(boss_phase_frame < 50) {
+		return;
+	} else if(boss_phase_frame == 50) {
+		select_for_rank(pattern_state.frame, 140, 145, 150, 155);
+	}
+	if(boss_phase_frame < 100) {
+		for(int i = 0; i < VORTEX_COUNT; i++) {
+			cur_left[i] = (i * (PLAYFIELD_RIGHT - VORTEX_W));
+			cur_top[i] = (PLAYFIELD_TOP + playfield_fraction_y(17 / 42.0f));
+
+			vortex_unput_and_put_8(i);
+			if((boss_phase_frame % 4) == 0) {
+				vortex_fire_down(i);
+			}
+			prev_left[i] = cur_left[i];
+			prev_top[i] = cur_top[i];
+		}
+	} else if(boss_phase_frame < pattern_state.frame) {
+		for(int i = 0; i < VORTEX_COUNT; i++) {
+			cur_left[i] += (i == 0) ? 5 : -5;
+			cur_top[i] -= 2;
+
+			vortex_unput_and_put_8(i);
+			if((boss_phase_frame % 4) == 0) {
+				vortex_fire_down(i);
+				angle = iatan2(
+					vortex_pellet_top(PLAYFIELD_BOTTOM - cur_top[i]),
+					vortex_pellet_left(cur_left[i] +
+						(i * ((PLAYFIELD_W / 8) * 2)) - (PLAYFIELD_W / 8) -
+					cur_left[i])
+				);
+				Pellets.add_single(
+					vortex_pellet_left(cur_left[i]),
+					vortex_pellet_top(cur_top[i]),
+					angle,
+					VORTEX_PELLET_SPEED
+				);
+			}
+			prev_left[i] = cur_left[i];
+			prev_top[i] = cur_top[i];
+		}
+	} else if(boss_phase_frame < 200) {
+		for(int i = 0; i < VORTEX_COUNT; i++) {
+			vortex_unput_put_3_spread(i);
+		}
+	} else if(boss_phase_frame < 240) {
+		if(boss_phase_frame == 200) {
+			static_cast<int>(dir_first) = (rand() % 2);
+			if(dir_first == X_LEFT) {
+				wand_lower_both();
+			}
+		}
+		for(int i = 0; i < VORTEX_COUNT; i++) {
+			cur_left[i] += (2 - (dir_first * 4));
+			vortex_unput_put_3_spread(i);
+			prev_left[i] = cur_left[i];
+		}
+	} else if(boss_phase_frame < 320) {
+		if(boss_phase_frame == 240) {
+			static_cast<int>(dir_second) = (rand() % 2);
+			if((dir_second == X_RIGHT) && (dir_second == dir_first)) {
+				wand_lower_both();
+			} else if((dir_second == X_LEFT) && (dir_second == dir_first)) {
+				wand_raise_animation_done = false;
+			}
+		}
+		for(int i = 0; i < VORTEX_COUNT; i++) {
+			if(dir_second != dir_first) {
+				cur_left[i] -= (2 - (dir_second * 4));
+			} else {
+				cur_left[i] -= (4 - (dir_second * 8));
+			}
+			vortex_unput_put_3_spread(i);
+			prev_left[i] = cur_left[i];
+		}
+	} else if(boss_phase_frame > 300) {
+		for(int i = 0; i < VORTEX_COUNT; i++) {
+			sloppy_unput_32x32(cur_left[i], cur_top[i]);
+		}
+		wand_lower_both();
+		boss_phase_frame = 0;
+		wand_raise_animation_done = false;
+	}
+
+	#undef vortex_unput_put_3_spread
+	#undef vortex_fire_down
+	#undef vortex_unput_and_put_8
+
+	#undef dir_second
+	#undef dir_first
+	#undef prev_top
+	#undef prev_left
+	#undef cur_top
+	#undef cur_left
+	#undef wand_raise_animation_done
 }
