@@ -6,6 +6,7 @@ extern "C" {
 #include "th01/main/vars.hpp"
 #include "th01/main/player/bomb.hpp"
 }
+#include "th01/math/dir.hpp"
 #include "th01/formats/pf.hpp"
 #include "th01/resident.hpp"
 #include "th01/math/subpixel.hpp"
@@ -106,11 +107,6 @@ enum submode_special_t {
 	SS_SHOTCOMBO = 6,
 
 	_submode_special_t_FORCE_INT16 = 0x7FFF
-};
-
-enum x_direction_t {
-	X_RIGHT = 0,
-	X_LEFT = 1,
 };
 
 union submode_t {

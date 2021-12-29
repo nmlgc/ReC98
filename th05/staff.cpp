@@ -11,6 +11,7 @@ extern "C" {
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
+#include "th01/math/dir.hpp"
 #include "th01/math/subpixel.hpp"
 
 /// Pattern numbers for the super_*() functions
@@ -36,11 +37,6 @@ typedef enum {
 static const pixel_t ORB_RADIUS_FULL = 16;
 static const pixel_t ORB_W = 32;
 static const pixel_t ORB_H = 32;
-
-typedef enum {
-	X_RIGHT = 0,
-	X_LEFT = 1,
-} x_direction_t;
 
 struct orb_particle_t {
 	SPPointBase< SubpixelBase< long, pixel_t > > center;
