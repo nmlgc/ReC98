@@ -446,3 +446,18 @@ void pascal near birds_reset_fire_spawn_unput_update_render(
 		}
 	}
 }
+
+void near shield_render_both(void)
+{
+	enum {
+		CELS = 4,
+		FRAMES_PER_CEL = 10,
+	};
+	if((boss_phase_frame % FRAMES_PER_CEL) != 0) {
+		return;
+	}
+	int cel = ((boss_phase_frame % (FRAMES_PER_CEL * CELS)) / FRAMES_PER_CEL);
+	ent_shield.bos_image = cel;
+	graph_accesspage_func(1);	ent_shield.move_lock_and_put_8();
+	graph_accesspage_func(0);	ent_shield.move_lock_and_put_8();
+}

@@ -22435,6 +22435,7 @@ main_36_TEXT	segment	byte public 'CODE' use16
 	@SPAWNRAY_UNPUT_AND_PUT$QIIIII procdesc pascal near \
 		origin:Point, target_x:word, target_y:word, col:word
 	@BIRDS_RESET_FIRE_SPAWN_UNPUT_UPD$QDDDDC procdesc pascal near
+	@shield_render_both$qv procdesc near
 main_36_TEXT	ends
 
 main_36__TEXT	segment	byte public 'CODE' use16
@@ -22447,47 +22448,6 @@ include th01/main/boss/anim.inc
 sariel_shield	equ <boss_entity_0>
 sariel_dress	equ <boss_anim_0>
 sariel_wand 	equ <boss_anim_1>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_28EA6	proc near
-
-var_2		= word ptr -2
-
-		enter	2, 0
-		mov	ax, _boss_phase_frame
-		mov	bx, 10
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short locret_28F0F
-		mov	ax, _boss_phase_frame
-		mov	bx, 40
-		cwd
-		idiv	bx
-		mov	bx, 10
-		mov	ax, dx
-		cwd
-		idiv	bx
-		mov	[bp+var_2], ax
-		mov	sariel_shield.BE_bos_image, ax
-		push	1
-		call	_graph_accesspage_func
-		mov	sariel_shield.BE_move_lock_frame, 0
-		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset sariel_shield, ds, large 0, large 0 or (3 shl 16)
-		push	0
-		call	_graph_accesspage_func
-		mov	sariel_shield.BE_move_lock_frame, 0
-		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset sariel_shield, ds, large 0, large 0 or (3 shl 16)
-		add	sp, 1Ch
-
-locret_28F0F:
-		leave
-		retn
-sub_28EA6	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -27784,7 +27744,7 @@ loc_2C399:
 loc_2C3BE:
 		inc	_boss_phase_frame
 		inc	_sariel_invincibility_frame
-		call	sub_28EA6
+		call	@shield_render_both$qv
 		call	sub_28FC5
 		fldz
 		sub	sp, 8
@@ -27899,7 +27859,7 @@ loc_2C4D8:
 		jnz	loc_2C594
 		inc	_boss_phase_frame
 		inc	_sariel_invincibility_frame
-		call	sub_28EA6
+		call	@shield_render_both$qv
 		call	sub_28FC5
 		push	0
 		call	sub_29D8B
@@ -27996,7 +27956,7 @@ loc_2C5D6:
 		jnz	loc_2C6B0
 		inc	_boss_phase_frame
 		inc	_sariel_invincibility_frame
-		call	sub_28EA6
+		call	@shield_render_both$qv
 		call	sub_28FC5
 		call	sub_2A469
 		cmp	word_35E95, 0
@@ -28114,7 +28074,7 @@ loc_2C6F2:
 		jnz	loc_2C7F1
 		inc	_boss_phase_frame
 		inc	_sariel_invincibility_frame
-		call	sub_28EA6
+		call	@shield_render_both$qv
 		call	sub_28FC5
 		push	1
 		call	sub_29D8B

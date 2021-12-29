@@ -54,6 +54,10 @@ public:
 		pixel_t &h
 	) const;
 
+	void set_image(int image) {
+		bos_image = image;
+	}
+
 	/// Blitting
 	/// --------
 	// All functions with an [image] parameter use that image from [bos_slot],
@@ -217,6 +221,11 @@ public:
 	void move_lock_unput_and_put_8(
 		int unused, pixel_t delta_x, pixel_t delta_y, int lock_frames
 	);
+
+	void move_lock_and_put_8(void) {
+		move_lock_frame = 0;
+		move_lock_and_put_8(0, 0, 0, 3);
+	}
 
 	void move_lock_and_put_image_8(int image) {
 		move_lock_frame = 0;
