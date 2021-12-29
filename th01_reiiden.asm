@@ -23333,7 +23333,7 @@ loc_2910D:
 		jl	loc_29589
 		cmp	_boss_phase_frame, 50
 		jnz	short loc_29134
-		call	@sariel_select_for_rank$qmiiiii c, offset word_3A780, ds, large 140 or (145 shl 16), large 150 or (155 shl 16)
+		call	@sariel_select_for_rank$qmiiiii c, offset _sariel_pattern_state, ds, large 140 or (145 shl 16), large 150 or (155 shl 16)
 
 loc_29134:
 		cmp	_boss_phase_frame, 100
@@ -23419,7 +23419,7 @@ loc_291F3:
 
 loc_291FD:
 		mov	ax, _boss_phase_frame
-		cmp	ax, word_3A780
+		cmp	ax, _sariel_pattern_state
 		jge	loc_29331
 		xor	si, si
 		jmp	loc_29327
@@ -23829,7 +23829,7 @@ sub_2958C	proc near
 		jl	loc_296EC
 		cmp	_boss_phase_frame, 50
 		jnz	short loc_295EF
-		call	@sariel_select_for_rank$qmiiiii c, offset word_3A780, ds, large 68 or (72 shl 16), large 76 or (80 shl 16)
+		call	@sariel_select_for_rank$qmiiiii c, offset _sariel_pattern_state, ds, large 68 or (72 shl 16), large 76 or (80 shl 16)
 		xor	si, si
 		jmp	short loc_295EA
 ; ---------------------------------------------------------------------------
@@ -23934,7 +23934,7 @@ loc_29698:
 		call	_mdrv2_se_play
 		push	25 or (5 shl 16)	; (moveout_at_age) or (w shl 16)
 		push	4	; col
-		push	word_3A780	; speed_multiplied_by_8
+		push	_sariel_pattern_state	; speed_multiplied_by_8
 		push	PLAYFIELD_BOTTOM	; target_y
 		call	IRand
 		mov	bx, PLAYFIELD_RIGHT
@@ -24022,7 +24022,7 @@ loc_2970D:
 		sub	ax, dx
 		shl	ax, 4
 		mov	word_3AC54, ax
-		call	@sariel_select_for_rank$qmiiiii c, offset word_3A780, ds, large 20 or (15 shl 16), large 10 or (8 shl 16)
+		call	@sariel_select_for_rank$qmiiiii c, offset _sariel_pattern_state, ds, large 20 or (15 shl 16), large 10 or (8 shl 16)
 		push	8
 		call	_mdrv2_se_play
 		pop	cx
@@ -24089,7 +24089,7 @@ loc_297F6:
 		add	subpixel_point_3AC50.y, ax
 		mov	ax, _boss_phase_frame
 		cwd
-		idiv	word_3A780
+		idiv	_sariel_pattern_state
 		or	dx, dx
 		jnz	short loc_29874
 		cmp	subpixel_point_3AC50.x, 0
@@ -24949,12 +24949,12 @@ sub_29FE9	proc near
 		cmp	_boss_phase_frame, 10
 		jge	short loc_2A010
 		mov	word_35E03, 0FFFFh
-		call	@sariel_select_for_rank$qmiiiii c, offset word_3A780, ds, large 160 or (160 shl 16), large 160 or (160 shl 16)
+		call	@sariel_select_for_rank$qmiiiii c, offset _sariel_pattern_state, ds, large 160 or (160 shl 16), large 160 or (160 shl 16)
 
 loc_2A010:
 		mov	ax, _boss_phase_frame
 		cwd
-		idiv	word_3A780
+		idiv	_sariel_pattern_state
 		or	dx, dx
 		jnz	short loc_2A022
 		mov	word_35E03, 0
@@ -25280,7 +25280,7 @@ sub_2A3BA	proc near
 		enter	6, 0
 		cmp	_boss_phase_frame, 10
 		jnz	short loc_2A3DC
-		call	@sariel_select_for_rank$qmiiiii c, offset word_3A780, ds, large 4 or (3 shl 16), large 2 or (2 shl 16)
+		call	@sariel_select_for_rank$qmiiiii c, offset _sariel_pattern_state, ds, large 4 or (3 shl 16), large 2 or (2 shl 16)
 
 loc_2A3DC:
 		mov	ax, _boss_phase_frame
@@ -25291,7 +25291,7 @@ loc_2A3DC:
 		jl	short loc_2A459
 		mov	ax, _boss_phase_frame
 		cwd
-		idiv	word_3A780
+		idiv	_sariel_pattern_state
 		or	dx, dx
 		jnz	short loc_2A459
 		call	IRand
@@ -25586,11 +25586,11 @@ loc_2A6B0:
 		call	_vector2_between stdcall, point_3B037.x, point_3B037.y, _player_left, RES_Y, offset x_3B03D, ds, offset y_3B03B, ds, 16
 		mov	ax, _player_left
 		mov	word_3B03F, ax
-		call	@sariel_select_for_rank$qmiiiii stdcall, offset word_3A780, ds, large 60 or (64 shl 16), large 68 or (72 shl 16)
+		call	@sariel_select_for_rank$qmiiiii stdcall, offset _sariel_pattern_state, ds, large 60 or (64 shl 16), large 68 or (72 shl 16)
 		add	sp, 1Eh
 		push	50 or (8 shl 16)	; (moveout_at_age) or (w shl 16)
 		push	7	; col
-		push	word_3A780	; speed_multiplied_by_8
+		push	_sariel_pattern_state	; speed_multiplied_by_8
 		push	PLAYFIELD_BOTTOM	; target_y
 		push	_player_left	; target_left
 		push	460 or (120 shl 16)	; (origin_left) or (origin_y shl 16)
@@ -25628,7 +25628,7 @@ loc_2A735:
 		add	sp, 12h
 		push	50 or (8 shl 16)	; (moveout_at_age) or (w shl 16)
 		push	7	; col
-		push	word_3A780	; speed_multiplied_by_8
+		push	_sariel_pattern_state	; speed_multiplied_by_8
 		push	PLAYFIELD_BOTTOM	; target_y
 		mov	ax, (PLAYFIELD_RIGHT - 1)
 		sub	ax, word_3B03F
@@ -25650,7 +25650,7 @@ loc_2A79B:
 		call	_vector2_between c, point_3B037.x, point_3B037.y, _player_left, RES_Y, offset x_3B03D, ds, offset y_3B03B, ds, 16
 		push	50 or (8 shl 16)	; (moveout_at_age) or (w shl 16)
 		push	7	; col
-		push	word_3A780	; speed_multiplied_by_8
+		push	_sariel_pattern_state	; speed_multiplied_by_8
 		push	PLAYFIELD_BOTTOM	; target_y
 		push	_player_left	; target_left
 		push	point_3B037.y	; origin_y
@@ -25670,7 +25670,7 @@ loc_2A7FC:
 		call	_vector2_between c, point_3B037.x, point_3B037.y, _player_left, RES_Y, offset x_3B03D, ds, offset y_3B03B, ds, 16
 		push	50 or (8 shl 16)	; (moveout_at_age) or (w shl 16)
 		push	7	; col
-		push	word_3A780	; speed_multiplied_by_8
+		push	_sariel_pattern_state	; speed_multiplied_by_8
 		push	PLAYFIELD_BOTTOM	; target_y
 		push	_player_left	; target_left
 		push	point_3B037.y	; origin_y
@@ -25822,7 +25822,7 @@ loc_2A960:
 		jnz	short loc_2A99E
 		mov	angle_3B041, 0
 		mov	byte_3B042, 1
-		call	@sariel_select_for_rank$qmiiiii c, offset word_3A780, ds, large 60 or (65 shl 16), large 70 or (75 shl 16)
+		call	@sariel_select_for_rank$qmiiiii c, offset _sariel_pattern_state, ds, large 60 or (65 shl 16), large 70 or (75 shl 16)
 
 loc_2A993:
 		push	6
@@ -25917,7 +25917,7 @@ loc_2AA36:
 		jnz	short loc_2AADB
 		push	20 or (4 shl 16)	; (moveout_at_age) or (w shl 16)
 		push	7	; col
-		push	word_3A780	; speed_multiplied_by_8
+		push	_sariel_pattern_state	; speed_multiplied_by_8
 		push	di	; target_y
 		push	si	; target_left
 		push	320 or (160 shl 16)	; (origin_left) or (origin_y shl 16)
@@ -26037,7 +26037,7 @@ var_8		= qword	ptr -8
 		jl	locret_2AECC
 		cmp	_boss_phase_frame, 50
 		jnz	short loc_2AC27
-		call	@sariel_select_for_rank$qmiiiii c, offset word_3A780, ds, large 6 or (7 shl 16), large 8 or (9 shl 16)
+		call	@sariel_select_for_rank$qmiiiii c, offset _sariel_pattern_state, ds, large 6 or (7 shl 16), large 8 or (9 shl 16)
 		mov	point_3B043.x, 2
 		mov	point_3B043.y, (RES_Y - 1)
 		mov	point_3B047.x, 2
@@ -26420,7 +26420,7 @@ var_4		= word ptr -4
 		jl	loc_2B2B6
 		cmp	_boss_phase_frame, 50
 		jnz	short loc_2B01A
-		call	@sariel_select_for_rank$qmiiiii c, offset word_3A780, ds, large 16 or (13 shl 16), large 10 or (8 shl 16)
+		call	@sariel_select_for_rank$qmiiiii c, offset _sariel_pattern_state, ds, large 16 or (13 shl 16), large 10 or (8 shl 16)
 		mov	x_3B04D, 2
 		mov	y_3B04F, (PLAYFIELD_BOTTOM - 1)
 		jmp	loc_2B2B6
@@ -26616,7 +26616,7 @@ loc_2B1FD:
 		jge	loc_2B2A8
 		mov	ax, _boss_phase_frame
 		cwd
-		idiv	word_3A780
+		idiv	_sariel_pattern_state
 		or	dx, dx
 		jnz	loc_2B2B6
 		xor	si, si
@@ -27178,7 +27178,7 @@ loc_2B71C:
 		mov	y_3B329, PLAYFIELD_BOTTOM
 		mov	speed_3B32B, (7 shl 4)
 		mov	word_3B32E, 0
-		call	@sariel_select_for_rank$qmiiiii c, offset word_3A780, ds, large 32 or (24 shl 16), large 18 or (16 shl 16)
+		call	@sariel_select_for_rank$qmiiiii c, offset _sariel_pattern_state, ds, large 32 or (24 shl 16), large 18 or (16 shl 16)
 
 loc_2B780:
 		cmp	word_3B32E, 0
@@ -27193,7 +27193,7 @@ loc_2B780:
 		mov	angle_3B32D, al
 		call	@CPellets@add_single$qiiuci15pellet_motion_tiii c, offset _Pellets, ds, large 320 or (185 shl 16), word ptr angle_3B32D, speed_3B32B, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 		sub	speed_3B32B, 4
-		mov	ax, word_3A780
+		mov	ax, _sariel_pattern_state
 		add	x_3B327, ax
 		cmp	x_3B327, PLAYFIELD_RIGHT
 		jl	short loc_2B838
@@ -27215,7 +27215,7 @@ loc_2B7E7:
 		mov	angle_3B32D, al
 		call	@CPellets@add_single$qiiuci15pellet_motion_tiii c, offset _Pellets, ds, large 320 or (185 shl 16), word ptr angle_3B32D, speed_3B32B, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 		sub	speed_3B32B, 4
-		mov	ax, word_3A780
+		mov	ax, _sariel_pattern_state
 		sub	x_3B327, ax
 		cmp	x_3B327, 0
 		jge	short loc_2B838
@@ -27249,7 +27249,7 @@ arg_0		= dword	ptr  4
 		mov	point_3B330.y, RES_Y - 1
 		mov	grc_image_3B334, 3
 		mov	word_3B336, 3
-		call	@sariel_select_for_rank$qmiiiii c, offset word_3A780, ds, large 30 or (35 shl 16), large 40 or (45 shl 16)
+		call	@sariel_select_for_rank$qmiiiii c, offset _sariel_pattern_state, ds, large 30 or (35 shl 16), large 40 or (45 shl 16)
 
 loc_2B883:
 		cmp	point_3B330.y, 185
@@ -27388,7 +27388,7 @@ loc_2B9EA:
 		push	185
 		mov	ax, PLAYFIELD_RIGHT
 		cwd
-		idiv	word_3A780
+		idiv	_sariel_pattern_state
 		imul	si
 		push	ax
 		push	ds
@@ -27398,7 +27398,7 @@ loc_2B9EA:
 		inc	si
 
 loc_2BA16:
-		cmp	si, word_3A780
+		cmp	si, _sariel_pattern_state
 		jl	short loc_2B9EA
 		les	bx, [bp+arg_0]
 		mov	word ptr es:[bx], 0
@@ -27430,7 +27430,7 @@ arg_0		= dword	ptr  4
 		mov	y_3B338, PLAYFIELD_BOTTOM
 		mov	speed_3B33C, (7 shl 4)
 		mov	word_3B33F, 0
-		call	@sariel_select_for_rank$qmiiiii c, offset word_3A780, ds, large 32 or (24 shl 16), large 18 or (16 shl 16)
+		call	@sariel_select_for_rank$qmiiiii c, offset _sariel_pattern_state, ds, large 32 or (24 shl 16), large 18 or (16 shl 16)
 
 loc_2BA6F:
 		mov	ax, word_3B33F
@@ -27449,7 +27449,7 @@ loc_2BA6F:
 		mov	angle_3B33E, al
 		call	@CPellets@add_single$qiiuci15pellet_motion_tiii c, offset _Pellets, ds, large 320 or (185 shl 16), word ptr angle_3B33E, speed_3B33C, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 		sub	speed_3B33C, 4
-		mov	ax, word_3A780
+		mov	ax, _sariel_pattern_state
 		add	x_3B338, ax
 		cmp	x_3B338, PLAYFIELD_RIGHT
 		jl	short loc_2BB42
@@ -27471,7 +27471,7 @@ loc_2BADA:
 		mov	angle_3B33E, al
 		call	@CPellets@add_single$qiiuci15pellet_motion_tiii c, offset _Pellets, ds, large 320 or (185 shl 16), word ptr angle_3B33E, speed_3B33C, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
 		sub	speed_3B33C, 4
-		mov	ax, word_3A780
+		mov	ax, _sariel_pattern_state
 		sub	x_3B338, ax
 		cmp	x_3B338, 0
 		jge	short loc_2BB42
@@ -28995,7 +28995,7 @@ loc_2CACD:
 		call	sub_2B34F
 		cmp	word_35E95, 0
 		jnz	short loc_2CB05
-		call	@sariel_select_for_rank$qmiiiii c, offset word_3A780, ds, large 56 or (32 shl 16), large 24 or (20 shl 16)
+		call	@sariel_select_for_rank$qmiiiii c, offset _sariel_pattern_state, ds, large 56 or (32 shl 16), large 24 or (20 shl 16)
 		cmp	_boss_phase_frame, 100
 		jle	loc_2CBA4
 		jmp	short loc_2CB51
@@ -29012,7 +29012,7 @@ loc_2CB05:
 		jnz	short loc_2CB38
 		push	ds
 		push	offset _boss_phase_frame
-		push	word_3A780
+		push	_sariel_pattern_state
 		call	sub_2BB46
 		cmp	_boss_phase_frame, 300
 		jle	short loc_2CBA4
@@ -30399,7 +30399,9 @@ elis_bat_move_delta_y	dw ?
 elis_bat_move_delta_x	dw ?
 public _elis_initial_hp_rendered
 _elis_initial_hp_rendered	db ?
-word_3A780	dw ?
+
+public _sariel_pattern_state
+_sariel_pattern_state	dw ?
 		db 1050 dup (?)
 unk_3AB9C	db    ?	;
 		db 3 dup(?)

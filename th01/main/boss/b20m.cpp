@@ -46,10 +46,14 @@ static const pixel_t WAND_W = 128; // That's 32 more than BOSS6_2.BOS is wide?
 static const pixel_t WAND_H = 96;
 // -----------
 
+#define pattern_state	sariel_pattern_state
 #define flash_colors	sariel_flash_colors
 #define invincible	sariel_invincible
 #define invincibility_frame	sariel_invincibility_frame
 #define initial_hp_rendered	sariel_initial_hp_rendered
+extern union {
+	int unknown;
+} pattern_state;
 extern bool16 invincible;
 extern int invincibility_frame;
 extern bool initial_hp_rendered;
