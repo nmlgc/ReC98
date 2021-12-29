@@ -5074,7 +5074,6 @@ main_21_TEXT	segment	byte public 'CODE' use16
 	extern @CBossEntity@move_lock_and_put_8$qiiii:proc
 	extern @CBossEntity@hittest_orb$xqv:proc
 	extern _bos_entity_free:proc
-	extern @CBossAnim@put_8$xqv:proc
 main_21_TEXT	ends
 
 main_21__TEXT	segment	byte public 'CODE' use16
@@ -22438,6 +22437,7 @@ main_36_TEXT	segment	byte public 'CODE' use16
 	@WAND_RENDER_RAISE_BOTH$QI procdesc pascal near \
 		restart:word
 	@wand_lower_both$qv procdesc near
+	@dress_render_both$qv procdesc near
 main_36_TEXT	ends
 
 main_36__TEXT	segment	byte public 'CODE' use16
@@ -22448,44 +22448,6 @@ main_36__TEXT	segment	byte public 'CODE' use16
 include th01/main/boss/anim.inc
 
 sariel_shield	equ <boss_entity_0>
-sariel_dress	equ <boss_anim_0>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_28FC5	proc near
-		enter	2, 0
-		mov	ax, _boss_phase_frame
-		mov	bx, 15
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short locret_29013
-		mov	ax, _boss_phase_frame
-		mov	bx, 60
-		cwd
-		idiv	bx
-		mov	bx, 15
-		mov	ax, dx
-		cwd
-		idiv	bx
-		mov	[bp-2],	ax
-		mov	al, [bp-2]
-		mov	sariel_dress.BA_bos_image, al
-		push	1
-		call	_graph_accesspage_func
-		call	@CBossAnim@put_8$xqv stdcall, offset sariel_dress, ds
-		push	0
-		call	_graph_accesspage_func
-		call	@CBossAnim@put_8$xqv stdcall, offset sariel_dress, ds
-		add	sp, 0Ch
-
-locret_29013:
-		leave
-		retn
-sub_28FC5	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -27661,7 +27623,7 @@ loc_2C3BE:
 		inc	_boss_phase_frame
 		inc	_sariel_invincibility_frame
 		call	@shield_render_both$qv
-		call	sub_28FC5
+		call	@dress_render_both$qv
 		fldz
 		sub	sp, 8
 		fstp	[bp+var_12]
@@ -27757,7 +27719,7 @@ loc_2C4A1:
 		inc	_boss_phase_frame
 		push	1
 		call	sub_29A99
-		call	sub_28FC5
+		call	@dress_render_both$qv
 		cmp	_boss_phase_frame, 0
 		jnz	loc_2CDCE
 		mov	_boss_phase, 3
@@ -27776,7 +27738,7 @@ loc_2C4D8:
 		inc	_boss_phase_frame
 		inc	_sariel_invincibility_frame
 		call	@shield_render_both$qv
-		call	sub_28FC5
+		call	@dress_render_both$qv
 		push	0
 		call	sub_29D8B
 		cmp	word_35E95, 0
@@ -27850,7 +27812,7 @@ loc_2C594:
 		inc	_boss_phase_frame
 		push	2
 		call	sub_29A99
-		call	sub_28FC5
+		call	@dress_render_both$qv
 		cmp	_boss_phase_frame, 0
 		jnz	loc_2CDCE
 		mov	_boss_phase, 5
@@ -27873,7 +27835,7 @@ loc_2C5D6:
 		inc	_boss_phase_frame
 		inc	_sariel_invincibility_frame
 		call	@shield_render_both$qv
-		call	sub_28FC5
+		call	@dress_render_both$qv
 		call	sub_2A469
 		cmp	word_35E95, 0
 		jnz	short loc_2C5FE
@@ -27968,7 +27930,7 @@ loc_2C6B0:
 		inc	_boss_phase_frame
 		push	3
 		call	sub_29A99
-		call	sub_28FC5
+		call	@dress_render_both$qv
 		cmp	_boss_phase_frame, 0
 		jnz	loc_2CDCE
 		mov	_boss_phase, 7
@@ -27991,7 +27953,7 @@ loc_2C6F2:
 		inc	_boss_phase_frame
 		inc	_sariel_invincibility_frame
 		call	@shield_render_both$qv
-		call	sub_28FC5
+		call	@dress_render_both$qv
 		push	1
 		call	sub_29D8B
 		fldz
@@ -28093,7 +28055,7 @@ loc_2C7F1:
 		inc	_boss_phase_frame
 		push	0
 		call	sub_29A99
-		call	sub_28FC5
+		call	@dress_render_both$qv
 		cmp	_boss_phase_frame, 0
 		jnz	loc_2CDCE
 		mov	_boss_phase, 1
@@ -28618,7 +28580,6 @@ loc_2CDCE:
 sub_2C0CA	endp
 
 sariel_shield	equ <>
-sariel_dress	equ <>
 main_36__TEXT	ends
 
 ; ===========================================================================
