@@ -222,7 +222,7 @@ public:
 		screen_y_t top,
 		unsigned char angle,
 		subpixel_t speed_base,
-		pellet_motion_t motion_type,
+		pellet_motion_t motion_type = PM_NORMAL,
 		subpixel_t speed_for_motion_fixed = to_sp(0.0f),
 		screen_x_t spin_center_x = 0,
 		screen_y_t spin_center_y = 0

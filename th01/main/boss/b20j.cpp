@@ -668,28 +668,28 @@ void pattern_diamond_cross_to_edges_followed_by_rain(void)
 			);
 			to_top = PLAYFIELD_BOTTOM;
 			angle = iatan2((to_top - from_top), (to_left - from_left));
-			Pellets.add_single(from_left, from_top, angle, speed, PM_NORMAL);
+			Pellets.add_single(from_left, from_top, angle, speed);
 
 			from_left = (PLAYFIELD_RIGHT - PELLET_W);
 			from_top = (PLAYFIELD_TOP + playfield_rand_y(25 / 42.0f));
 			to_left = (PLAYFIELD_LEFT + playfield_rand_x( 5 /  8.0f));
 			to_top = PLAYFIELD_BOTTOM;
 			angle = iatan2((to_top - from_top), (to_left - from_left));
-			Pellets.add_single(from_left, from_top, angle, speed, PM_NORMAL);
+			Pellets.add_single(from_left, from_top, angle, speed);
 
 			from_top = PLAYFIELD_TOP;
 			from_left = (PLAYFIELD_LEFT + playfield_rand_x());
 			to_top = PLAYFIELD_BOTTOM;
 			to_left = (PLAYFIELD_LEFT + playfield_rand_x());
 			angle = iatan2((to_top - from_top), (to_left - from_left));
-			Pellets.add_single(from_left, from_top, angle, speed, PM_NORMAL);
+			Pellets.add_single(from_left, from_top, angle, speed);
 
 			from_top = PLAYFIELD_TOP;
 			from_left = (PLAYFIELD_LEFT + playfield_rand_x());
 			to_top = PLAYFIELD_BOTTOM;
 			to_left = (PLAYFIELD_LEFT + playfield_rand_x());
 			angle = iatan2((to_top - from_top), (to_left - from_left));
-			Pellets.add_single(from_left, from_top, angle, speed, PM_NORMAL);
+			Pellets.add_single(from_left, from_top, angle, speed);
 
 			from_top = PLAYFIELD_TOP;
 			from_left = (PLAYFIELD_LEFT + playfield_rand_x());
@@ -713,12 +713,8 @@ void pattern_diamond_cross_to_edges_followed_by_rain(void)
 
 void pattern_symmetrical_from_cup_fire(unsigned char angle)
 {
-	Pellets.add_single(
-		CUP_RIGHT, CUP_TOP, angle, pattern_state.speed, PM_NORMAL
-	);
-	Pellets.add_single(
-		CUP_LEFT,  CUP_TOP, angle, pattern_state.speed, PM_NORMAL
-	);
+	Pellets.add_single(CUP_RIGHT, CUP_TOP, angle, pattern_state.speed);
+	Pellets.add_single(CUP_LEFT,  CUP_TOP, angle, pattern_state.speed);
 }
 
 void pattern_symmetrical_from_cup(void)
@@ -825,11 +821,9 @@ void pattern_two_homing_snakes_and_semicircle_spreads(void)
 				vector2(velocity_x, velocity_y, speed, angle);
 
 				Pellets.add_single(
-					pellet_left, pellet_top, (0x80 - angle), speed, PM_NORMAL
+					pellet_left, pellet_top, (0x80 - angle), speed
 				);
-				Pellets.add_single(
-					pellet_left, pellet_top, angle, speed, PM_NORMAL
-				);
+				Pellets.add_single(pellet_left, pellet_top, angle, speed);
 				angle += (0x80 / SPREAD);
 			}
 			mdrv2_se_play(7);
@@ -972,9 +966,7 @@ void pattern_aimed_spray_from_cup(void)
 			spray_delta *= -1;
 			frames_in_current_direction = 0;
 		}
-		Pellets.add_single(
-			CUP_CENTER_X, CUP_TOP, angle, to_sp(3.0f), PM_NORMAL
-		);
+		Pellets.add_single(CUP_CENTER_X, CUP_TOP, angle, to_sp(3.0f));
 	}
 	if(boss_phase_frame >= 700) {
 		boss_phase_frame = 0;
@@ -1279,8 +1271,8 @@ void pattern_slash_rain(void)
 inline void slash_triangular_fire(
 	const screen_x_t& left, const screen_y_t& top, const subpixel_t& speed
 ) {
-	Pellets.add_single(left, top, 0x20, speed, PM_NORMAL);
-	Pellets.add_single(left, top, 0x60, speed, PM_NORMAL);
+	Pellets.add_single(left, top, 0x20, speed);
+	Pellets.add_single(left, top, 0x60, speed);
 }
 
 void pattern_slash_triangular(void)
