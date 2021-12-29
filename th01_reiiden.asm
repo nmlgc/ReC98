@@ -22429,8 +22429,7 @@ main_36_TEXT	segment	byte public 'CODE' use16
 	extern @sariel_select_for_rank$qmiiiii:proc
 	extern @sariel_entrance$qc:proc
 	extern @sariel_load_and_init$qv:proc
-	@wand_bg_snap$qv procdesc near
-	@wand_bg_put$qv procdesc near
+	@wand_lowered_snap$qv procdesc near
 	extern @sariel_free$qv:proc
 	@SPAWNRAY_UNPUT_AND_PUT$QIIIII procdesc pascal near \
 		origin:Point, target_x:word, target_y:word, col:word
@@ -22438,6 +22437,7 @@ main_36_TEXT	segment	byte public 'CODE' use16
 	@shield_render_both$qv procdesc near
 	@WAND_RENDER_RAISE_BOTH$QI procdesc pascal near \
 		restart:word
+	@wand_lower_both$qv procdesc near
 main_36_TEXT	ends
 
 main_36__TEXT	segment	byte public 'CODE' use16
@@ -22449,25 +22449,6 @@ include th01/main/boss/anim.inc
 
 sariel_shield	equ <boss_entity_0>
 sariel_dress	equ <boss_anim_0>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_28FA9	proc near
-		push	bp
-		mov	bp, sp
-		push	1
-		call	_graph_accesspage_func
-		call	@wand_bg_put$qv
-		push	0
-		call	_graph_accesspage_func
-		add	sp, 4
-		call	@wand_bg_put$qv
-		pop	bp
-		retn
-sub_28FA9	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -22913,7 +22894,7 @@ loc_293A3:
 		mov	word_3ABAC, dx
 		cmp	word_3ABAC, 1
 		jnz	short loc_293CE
-		call	sub_28FA9
+		call	@wand_lower_both$qv
 
 loc_293CE:
 		xor	si, si
@@ -22995,7 +22976,7 @@ loc_2945E:
 		mov	ax, word_3ABAE
 		cmp	ax, word_3ABAC
 		jnz	short loc_29494
-		call	sub_28FA9
+		call	@wand_lower_both$qv
 		jmp	short loc_294AA
 ; ---------------------------------------------------------------------------
 
@@ -23105,7 +23086,7 @@ loc_29556:
 loc_29575:
 		cmp	si, 2
 		jl	short loc_29556
-		call	sub_28FA9
+		call	@wand_lower_both$qv
 		mov	_boss_phase_frame, 0
 		mov	word_35DDF, 0
 
@@ -23547,7 +23528,7 @@ loc_29905:
 loc_2997F:
 		or	si, si
 		jge	short loc_29905
-		call	sub_28FA9
+		call	@wand_lower_both$qv
 		call	IRand
 		mov	bx, 2
 		cwd
@@ -24304,7 +24285,7 @@ loc_2A073:
 		cmp	subpixel_y_3AF36, (396 shl 4)
 		jl	short loc_2A0B0
 		mov	word_35E03, 3
-		call	sub_28FA9
+		call	@wand_lower_both$qv
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -27630,7 +27611,7 @@ loc_2C2F2:
 		call	@boss_palette_show$qv
 		mov	sariel_shield.BE_cur_left, 304
 		mov	sariel_shield.BE_cur_top, 144
-		call	@wand_bg_snap$qv
+		call	@wand_lowered_snap$qv
 		call	@wand_render_raise_both$qi pascal, 1
 		fld	dword ptr ds:[15C6h]
 		sub	sp, 8
@@ -27781,7 +27762,7 @@ loc_2C4A1:
 		jnz	loc_2CDCE
 		mov	_boss_phase, 3
 		mov	_boss_phase_frame, 0
-		call	@wand_bg_snap$qv
+		call	@wand_lowered_snap$qv
 		call	IRand
 		mov	bx, 5
 		jmp	loc_2C82A
@@ -27874,7 +27855,7 @@ loc_2C594:
 		jnz	loc_2CDCE
 		mov	_boss_phase, 5
 		mov	_boss_phase_frame, 0
-		call	@wand_bg_snap$qv
+		call	@wand_lowered_snap$qv
 		call	@boss_palette_snap$qv
 		call	IRand
 		mov	bx, 4
@@ -27992,7 +27973,7 @@ loc_2C6B0:
 		jnz	loc_2CDCE
 		mov	_boss_phase, 7
 		mov	_boss_phase_frame, 0
-		call	@wand_bg_snap$qv
+		call	@wand_lowered_snap$qv
 		call	@boss_palette_snap$qv
 		call	IRand
 		mov	bx, 5
@@ -28117,7 +28098,7 @@ loc_2C7F1:
 		jnz	loc_2CDCE
 		mov	_boss_phase, 1
 		mov	_boss_phase_frame, 0
-		call	@wand_bg_snap$qv
+		call	@wand_lowered_snap$qv
 		call	@boss_palette_snap$qv
 		call	IRand
 		mov	bx, 6

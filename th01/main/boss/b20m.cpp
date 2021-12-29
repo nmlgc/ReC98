@@ -47,7 +47,10 @@ static const screen_x_t DRESS_TOP = 192;
 static const screen_x_t WAND_LEFT = 296;
 static const screen_y_t WAND_TOP = 48;
 
-static const pixel_t WAND_W = 128; // That's 32 more than BOSS6_2.BOS is wide?
+// MODDERS: That's 32 more than BOSS6_2.BOS is wide? Reducing it to 96 works
+// fine as well.
+static const pixel_t WAND_W = 128;
+
 static const pixel_t WAND_H = 96;
 // -----------
 
@@ -147,7 +150,9 @@ enum bird_cel_t {
 // .PTN
 // ----
 
-static const main_ptn_slot_t PTN_SLOT_BG_ENT = PTN_SLOT_BOSS_1;
+// The original wand sprite together with its background, as it appears in the
+// .GRP images, snapped from VRAM.
+static const main_ptn_slot_t PTN_SLOT_WAND_LOWERED = PTN_SLOT_BOSS_1;
 // ----
 
 // Temporary storage for compiler-generated string literals
@@ -208,7 +213,9 @@ void sariel_load_and_init(void)
 	boss_palette_snap();
 	void sariel_setup(void);
 	sariel_setup();
-	ptn_new(PTN_SLOT_BG_ENT, (((WAND_W / PTN_W) * (WAND_H / PTN_H)) + 4)); // ?
+	ptn_new(
+		PTN_SLOT_WAND_LOWERED, (((WAND_W / PTN_W) * (WAND_H / PTN_H)) + 4)
+	); // ?
 }
 
 void sariel_setup(void)
@@ -227,7 +234,7 @@ void sariel_setup(void)
 	anm_wand.top = WAND_TOP;
 }
 
-void near wand_bg_snap(void)
+void near wand_lowered_snap(void)
 {
 	int ptn_x;
 	int ptn_y;
@@ -236,11 +243,11 @@ void near wand_bg_snap(void)
 	int image = 0;
 
 	ptn_snap_rect_from_1_8(
-		left, top, WAND_W, WAND_H, PTN_SLOT_BG_ENT, image, ptn_x, ptn_y
+		left, top, WAND_W, WAND_H, PTN_SLOT_WAND_LOWERED, image, ptn_x, ptn_y
 	);
 }
 
-void near wand_bg_put(void)
+void near wand_lowered_put(void)
 {
 	int ptn_x;
 	int ptn_y;
@@ -253,7 +260,7 @@ void near wand_bg_put(void)
 	top = anm_wand.top;
 
 	ptn_put_rect_noalpha_8(
-		left, top, WAND_W, WAND_H, PTN_SLOT_BG_ENT, image, ptn_x, ptn_y
+		left, top, WAND_W, WAND_H, PTN_SLOT_WAND_LOWERED, image, ptn_x, ptn_y
 	)
 }
 
@@ -261,7 +268,7 @@ void sariel_free(void)
 {
 	sariel_ent_free();
 	sariel_grc_free();
-	ptn_free(PTN_SLOT_BG_ENT);
+	ptn_free(PTN_SLOT_WAND_LOWERED);
 }
 
 // Almost identical to Konngara's version. This one is worse.
@@ -491,4 +498,11 @@ bool16 pascal near wand_render_raise_both(bool16 restart = false)
 	return false;
 
 	#undef frames
+}
+
+// Should maybe return `false`, for consistency with wand_render_raise_both().
+void near wand_lower_both(void)
+{
+	graph_accesspage_func(1);	wand_lowered_put();
+	graph_accesspage_func(0);	wand_lowered_put();
 }
