@@ -33,9 +33,11 @@ extern "C" {
 #include "th01/main/boss/entity_a.hpp"
 #include "th01/main/player/player.hpp"
 }
+#include "th01/main/shape.hpp"
 #include "th01/main/stage/stageobj.hpp"
 #include "th01/main/boss/boss.hpp"
 #include "th01/main/boss/palette.hpp"
+#include "th01/main/bullet/laser_s.hpp"
 #include "th01/main/bullet/pellet.hpp"
 #include "th01/main/hud/hp.hpp"
 
@@ -57,6 +59,7 @@ static const pixel_t WAND_H = 96;
 // -----------
 
 enum sariel_colors_t {
+	COL_LASER = 4,
 	COL_BIRD = 15, // Yes, just a single one, changed by the background image.
 };
 
@@ -67,6 +70,7 @@ enum sariel_colors_t {
 #define initial_hp_rendered	sariel_initial_hp_rendered
 extern union {
 	int frame;
+	int speed_multiplied_by_8;
 	int unknown;
 } pattern_state;
 extern bool16 invincible;
@@ -732,4 +736,76 @@ void near pattern_vortices(void)
 	#undef cur_top
 	#undef cur_left
 	#undef wand_raise_animation_done
+}
+
+void near pattern_random_purple_lasers(void)
+{
+	enum {
+		LASER_COUNT = 10,
+		INTERVAL = 10,
+
+		KEYFRAME_0 = 50,
+		KEYFRAME_1 = (KEYFRAME_0 + (LASER_COUNT * INTERVAL)),
+		KEYFRAME_2 = (KEYFRAME_1 + 50),
+	};
+
+	#define spawner_x	pattern0_spawner_x
+	#define spawner_y	pattern0_spawner_y
+
+	extern screen_x_t spawner_x[LASER_COUNT];
+	extern vram_y_t spawner_y[LASER_COUNT];
+
+	if(boss_phase_frame < KEYFRAME_0) {
+		return;
+	}
+	if(boss_phase_frame == KEYFRAME_0) {
+		select_for_rank(pattern_state.speed_multiplied_by_8,
+			(to_sp( 8.5f) / 2),
+			(to_sp( 9.0f) / 2),
+			(to_sp( 9.5f) / 2),
+			(to_sp(10.0f) / 2)
+		);
+		for(int i = 0; i < LASER_COUNT; i++) {
+			spawner_x[i] = (PLAYFIELD_LEFT +
+				playfield_fraction_x(3 / 16.0f) + playfield_rand_x(10 / 16.0f)
+			);
+			spawner_y[i] = (PLAYFIELD_TOP +
+				playfield_fraction_y(9 / 84.0f) + playfield_rand_y(25 / 84.0f)
+			);
+		}
+	}
+	if(boss_phase_frame < KEYFRAME_1) {
+		int i = ((boss_phase_frame - KEYFRAME_0) / INTERVAL);
+		if((boss_phase_frame % INTERVAL) != (INTERVAL - 1)) {
+			int radius_cur  = (64 - (( boss_phase_frame      % INTERVAL) * 8));
+			int radius_prev = (64 - (((boss_phase_frame - 1) % INTERVAL) * 8));
+			if((boss_phase_frame % INTERVAL) != 0) {
+				shape_circle_sloppy_unput(
+					spawner_x[i], spawner_y[i], radius_prev, 1
+				);
+			}
+			if((boss_phase_frame % INTERVAL) != (INTERVAL - 2)) {
+				shape_circle_put(
+					spawner_x[i], spawner_y[i], radius_cur, COL_LASER, 1
+				);
+			}
+		} else {
+			mdrv2_se_play(6);
+			shootout_lasers[i].spawn(
+				spawner_x[i],
+				spawner_y[i],
+				playfield_rand_x(),
+				PLAYFIELD_BOTTOM,
+				pattern_state.speed_multiplied_by_8,
+				COL_LASER,
+				25,
+				5
+			);
+		}
+	} else if(boss_phase_frame > KEYFRAME_2) {
+		boss_phase_frame = 0;
+	}
+
+	#undef spawner_y
+	#undef spawner_x
 }

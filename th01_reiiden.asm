@@ -22439,6 +22439,7 @@ main_36_TEXT	segment	byte public 'CODE' use16
 	@wand_lower_both$qv procdesc near
 	@dress_render_both$qv procdesc near
 	@pattern_vortices$qv procdesc near
+	@pattern_random_purple_lasers$qv procdesc near
 main_36_TEXT	ends
 
 main_36__TEXT	segment	byte public 'CODE' use16
@@ -22449,162 +22450,6 @@ main_36__TEXT	segment	byte public 'CODE' use16
 include th01/main/boss/anim.inc
 
 sariel_shield	equ <boss_entity_0>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2958C	proc near
-
-@@radius		= word ptr -2
-
-		enter	2, 0
-		push	si
-		push	di
-		cmp	_boss_phase_frame, 50
-		jl	loc_296EC
-		cmp	_boss_phase_frame, 50
-		jnz	short loc_295EF
-		call	@sariel_select_for_rank$qmiiiii c, offset _sariel_pattern_state, ds, large 68 or (72 shl 16), large 76 or (80 shl 16)
-		xor	si, si
-		jmp	short loc_295EA
-; ---------------------------------------------------------------------------
-
-loc_295BD:
-		call	IRand
-		mov	bx, 190h
-		cwd
-		idiv	bx
-		add	dx, 78h	; 'x'
-		mov	bx, si
-		add	bx, bx
-		mov	[bx+6210h], dx
-		call	IRand
-		mov	bx, 64h	; 'd'
-		cwd
-		idiv	bx
-		add	dx, 64h	; 'd'
-		mov	bx, si
-		add	bx, bx
-		mov	[bx+6224h], dx
-		inc	si
-
-loc_295EA:
-		cmp	si, 0Ah
-		jl	short loc_295BD
-
-loc_295EF:
-		cmp	_boss_phase_frame, 150
-		jge	loc_296DE
-		mov	ax, _boss_phase_frame
-		add	ax, -50
-		mov	bx, 10
-		cwd
-		idiv	bx
-		mov	si, ax
-		mov	ax, _boss_phase_frame
-		cwd
-		idiv	bx
-		cmp	dx, 9
-		jz	loc_29698
-		mov	ax, _boss_phase_frame
-		cwd
-		idiv	bx
-		shl	dx, 3
-		mov	ax, 64
-		sub	ax, dx
-		mov	di, ax
-		mov	ax, _boss_phase_frame
-		dec	ax
-		cwd
-		idiv	bx
-		shl	dx, 3
-		mov	ax, 64
-		sub	ax, dx
-		mov	[bp+@@radius], ax
-		mov	ax, _boss_phase_frame
-		cwd
-		idiv	bx
-		or	dx, dx
-		jz	short loc_29665
-		push	255	; angle_end
-		push	0	; angle_start
-		push	1	; angle_step
-		push	[bp+@@radius]	; radius_y
-		push	[bp+@@radius]	; radius_x
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+6224h]	; center_y
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+6210h]	; center_x
-		call	@shape_ellipse_arc_sloppy_unput$qiiiiucucuc
-		add	sp, 0Eh
-
-loc_29665:
-		mov	ax, _boss_phase_frame
-		mov	bx, 10
-		cwd
-		idiv	bx
-		cmp	dx, 8
-		jz	short loc_296EC
-		push	255	; angle_end
-		push	0	; angle_start
-		push	1	; angle_step
-		push	4	; col
-		push	di	; radius_y
-		push	di	; radius_x
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+6224h]	; center_y
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+6210h]	; center_x
-		call	@shape_ellipse_arc_put$qiiiiiucucuc
-		add	sp, 10h
-		jmp	short loc_296EC
-; ---------------------------------------------------------------------------
-
-loc_29698:
-		push	6
-		call	_mdrv2_se_play
-		push	25 or (5 shl 16)	; (moveout_at_age) or (w shl 16)
-		push	4	; col
-		push	_sariel_pattern_state	; speed_multiplied_by_8
-		push	PLAYFIELD_BOTTOM	; target_y
-		call	IRand
-		mov	bx, PLAYFIELD_RIGHT
-		cwd
-		idiv	bx
-		push	dx	; target_left
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+6224h]	; origin_y
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+6210h]	; origin_left
-		mov	ax, si
-		imul	ax, size CShootoutLaser
-		add	ax, offset _shootout_lasers
-		push	ds	; this (segment)
-		push	ax	; this (offset)
-		call	@CShootoutLaser@spawn$qiiiiiiii
-		add	sp, 16h
-		jmp	short loc_296EC
-; ---------------------------------------------------------------------------
-
-loc_296DE:
-		cmp	_boss_phase_frame, 200
-		jle	short loc_296EC
-		mov	_boss_phase_frame, 0
-
-loc_296EC:
-		pop	di
-		pop	si
-		leave
-		retn
-sub_2958C	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -27035,7 +26880,7 @@ loc_2C3BE:
 		call	@birds_reset_fire_spawn_unput_upd$qddddc
 		cmp	word_35E95, 0
 		jnz	short loc_2C40D
-		call	sub_2958C
+		call	@pattern_random_purple_lasers$qv
 		jmp	short loc_2C423
 ; ---------------------------------------------------------------------------
 
@@ -29041,7 +28886,11 @@ _pattern1_prev_top  	dw VORTEX_COUNT dup(?)
 _pattern1_dir_first 	dw ?
 _pattern1_dir_second	dw ?
 
-		db 160 dup(?)
+public _pattern0_spawner_x, _pattern0_spawner_y
+_pattern0_spawner_x	dw 10 dup(?)
+_pattern0_spawner_y	dw 10 dup(?)
+
+		db 120 dup(?)
 subpixel_point_3AC50	Point <?>
 word_3AC54	dw ?
 word_3AC56	dw ?
