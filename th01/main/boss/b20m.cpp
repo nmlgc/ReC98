@@ -461,3 +461,34 @@ void near shield_render_both(void)
 	graph_accesspage_func(1);	ent_shield.move_lock_and_put_8();
 	graph_accesspage_func(0);	ent_shield.move_lock_and_put_8();
 }
+
+// Renders a frame of Sariel's wand raise animation on both VRAM pages, and
+// returns `true` once the animation completed.
+bool16 pascal near wand_render_raise_both(bool16 restart = false)
+{
+	#define frames wand_raise_frames
+
+	extern int frames;
+
+	if(restart == true) {
+		frames = 0;
+	} else if (frames == 0) {
+		frames = 1;
+	} else {
+		frames++;
+		if(frames == 2) {
+			anm_wand.bos_image = 0;
+			graph_accesspage_func(1);	anm_wand.put_8();
+			graph_accesspage_func(0);	anm_wand.put_8();
+		} else if(frames == 16) {
+			anm_wand.bos_image = 1;
+			graph_accesspage_func(1);	anm_wand.put_8();
+			graph_accesspage_func(0);	anm_wand.put_8();
+			frames = 0;
+			return true;
+		}
+	}
+	return false;
+
+	#undef frames
+}

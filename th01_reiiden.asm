@@ -22436,6 +22436,8 @@ main_36_TEXT	segment	byte public 'CODE' use16
 		origin:Point, target_x:word, target_y:word, col:word
 	@BIRDS_RESET_FIRE_SPAWN_UNPUT_UPD$QDDDDC procdesc pascal near
 	@shield_render_both$qv procdesc near
+	@WAND_RENDER_RAISE_BOTH$QI procdesc pascal near \
+		restart:word
 main_36_TEXT	ends
 
 main_36__TEXT	segment	byte public 'CODE' use16
@@ -22447,69 +22449,6 @@ include th01/main/boss/anim.inc
 
 sariel_shield	equ <boss_entity_0>
 sariel_dress	equ <boss_anim_0>
-sariel_wand 	equ <boss_anim_1>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_28F11	proc near
-
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		cmp	[bp+arg_0], 1
-		jnz	short loc_28F23
-		mov	word_35DDD, 0
-		jmp	loc_28FA3
-; ---------------------------------------------------------------------------
-
-loc_28F23:
-		cmp	word_35DDD, 0
-		jnz	short loc_28F32
-		mov	word_35DDD, 1
-		jmp	short loc_28FA3
-; ---------------------------------------------------------------------------
-
-loc_28F32:
-		inc	word_35DDD
-		cmp	word_35DDD, 2
-		jnz	short loc_28F67
-		mov	sariel_wand.BA_bos_image, 0
-		push	1
-		call	_graph_accesspage_func
-		call	@CBossAnim@put_8$xqv stdcall, offset sariel_wand, ds
-		push	0
-		call	_graph_accesspage_func
-		call	@CBossAnim@put_8$xqv stdcall, offset sariel_wand, ds
-		add	sp, 0Ch
-		jmp	short loc_28FA3
-; ---------------------------------------------------------------------------
-
-loc_28F67:
-		cmp	word_35DDD, 10h
-		jnz	short loc_28FA3
-		mov	sariel_wand.BA_bos_image, 1
-		push	1
-		call	_graph_accesspage_func
-		call	@CBossAnim@put_8$xqv stdcall, offset sariel_wand, ds
-		push	0
-		call	_graph_accesspage_func
-		call	@CBossAnim@put_8$xqv stdcall, offset sariel_wand, ds
-		add	sp, 0Ch
-		mov	word_35DDD, 0
-		mov	ax, 1
-		pop	bp
-		retn	2
-; ---------------------------------------------------------------------------
-
-loc_28FA3:
-		xor	ax, ax
-		pop	bp
-		retn	2
-sub_28F11	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -22688,8 +22627,7 @@ sub_290F9	proc near
 		push	si
 		cmp	word_35DDF, 0
 		jnz	short loc_2910D
-		push	0
-		call	sub_28F11
+		call	@wand_render_raise_both$qi pascal, 0
 		mov	word_35DDF, ax
 
 loc_2910D:
@@ -23356,8 +23294,7 @@ var_6		= word ptr -6
 		jl	loc_29A96
 		cmp	byte_35DE1, 0
 		jnz	short loc_2970D
-		push	0
-		call	sub_28F11
+		call	@wand_render_raise_both$qi pascal, 0
 		mov	byte_35DE1, al
 
 loc_2970D:
@@ -24326,8 +24263,7 @@ loc_2A010:
 loc_2A022:
 		cmp	word_35E03, 0
 		jnz	short loc_2A031
-		push	0
-		call	sub_28F11
+		call	@wand_render_raise_both$qi pascal, 0
 		mov	word_35E03, ax
 
 loc_2A031:
@@ -27695,8 +27631,7 @@ loc_2C2F2:
 		mov	sariel_shield.BE_cur_left, 304
 		mov	sariel_shield.BE_cur_top, 144
 		call	@wand_bg_snap$qv
-		push	1
-		call	sub_28F11
+		call	@wand_render_raise_both$qi pascal, 1
 		fld	dword ptr ds:[15C6h]
 		sub	sp, 8
 		fstp	[bp+var_12]
@@ -28703,7 +28638,6 @@ sub_2C0CA	endp
 
 sariel_shield	equ <>
 sariel_dress	equ <>
-sariel_wand 	equ <>
 main_36__TEXT	ends
 
 ; ===========================================================================
@@ -29313,7 +29247,10 @@ BIRD_COUNT = 30
 
 public _birds_alive
 _birds_alive	db BIRD_COUNT dup(0)
-word_35DDD	dw 0
+
+public _wand_raise_frames
+_wand_raise_frames	dw 0
+
 word_35DDF	dw 0
 byte_35DE1	db 0
 byte_35DE2	db 0
