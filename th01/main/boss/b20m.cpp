@@ -3,6 +3,7 @@
 
 extern "C" {
 #include <stddef.h>
+#include <stdlib.h>
 #include <dos.h>
 #include "platform.h"
 #include "pc98.h"
@@ -14,6 +15,7 @@ extern "C" {
 #include "th01/math/dir.hpp"
 #include "th01/math/overlap.hpp"
 #include "th01/math/subpixel.hpp"
+#include "th01/math/vector.hpp"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/egc.h"
@@ -47,9 +49,16 @@ extern "C" {
 static const screen_x_t SHIELD_LEFT = 304;
 static const screen_y_t SHIELD_TOP = 144;
 static const screen_x_t DRESS_LEFT = 280;
-static const screen_x_t DRESS_TOP = 192;
+static const screen_y_t DRESS_TOP = 192;
 static const screen_x_t WAND_LEFT = 296;
 static const screen_y_t WAND_TOP = 48;
+
+static const screen_y_t SHIELD_CENTER_X = 320;
+static const screen_y_t SHIELD_CENTER_Y = 164;
+
+// That's… not quite where the sphere is?
+static const screen_x_t WAND_EMIT_LEFT = 340;
+static const screen_y_t WAND_EMIT_TOP = 64;
 
 // MODDERS: That's 32 more than BOSS6_2.BOS is wide? Reducing it to 96 works
 // fine as well.
@@ -71,6 +80,7 @@ enum sariel_colors_t {
 extern union {
 	int frame;
 	int speed_multiplied_by_8;
+	int interval;
 	int unknown;
 } pattern_state;
 extern bool16 invincible;
@@ -162,7 +172,8 @@ static const int BIRD_HATCH_CELS = 5;
 static const int BIRD_FLY_CELS = 2;
 
 enum bird_cel_t {
-	C_HATCH = 1,
+	C_EGG = 0,
+	C_HATCH,
 	C_HATCH_last = (C_HATCH + BIRD_HATCH_CELS - 1),
 	C_FLY,
 	C_FLY_last = (C_FLY + BIRD_FLY_CELS - 1),
@@ -171,6 +182,14 @@ enum bird_cel_t {
 #define bird_put_8(left, top, cel) \
 	grc_put_8(left, top, GRC_SLOT_BIRD, cel, COL_BIRD);
 // --------------------
+
+// Spawn cross (BOSS6GR3.GRC)
+// --------------------------
+
+static const pixel_t SPAWNCROSS_W = 32;
+static const pixel_t SPAWNCROSS_H = 32;
+static const int SPAWNCROSS_CELS = 2;
+// --------------------------
 /// -------------
 
 // .PTN
@@ -479,6 +498,14 @@ void pascal near birds_reset_fire_spawn_unput_update_render(
 		}
 	}
 }
+
+#define birds_spawn(left, top, velocity_x, velocity_y) \
+	birds_reset_fire_spawn_unput_update_render( \
+		left, top, velocity_x, velocity_y, 1 \
+	);
+
+#define birds_fire(pellet_group) \
+	birds_reset_fire_spawn_unput_update_render(BF_FIRE + pellet_group);
 
 void near shield_render_both(void)
 {
@@ -808,4 +835,158 @@ void near pattern_random_purple_lasers(void)
 
 	#undef spawner_y
 	#undef spawner_x
+}
+
+void near pattern_birds_on_ellipse_arc(void)
+{
+	#define wand_raise_animation_done	pattern2_wand_raise_animation_done
+	#define pellet_group             	pattern2_pellet_group
+	#define eggs_alive               	pattern2_eggs_alive
+	#define spawner_left             	pattern2_spawner_left
+	#define spawner_top              	pattern2_spawner_top
+	#define spawner_velocity_x       	pattern2_spawner_velocity_x
+	#define spawner_velocity_y       	pattern2_spawner_velocity_y
+	#define egg_left                 	pattern2_egg_left
+	#define egg_top                  	pattern2_egg_top
+
+	extern bool wand_raise_animation_done;
+	extern bird_pellet_group_t pellet_group;
+	extern int eggs_alive;
+	extern screen_x_t egg_left[BIRD_COUNT];
+	extern vram_y_t egg_top[BIRD_COUNT];
+	extern Subpixel spawner_left;
+	extern Subpixel spawner_top;
+	extern Subpixel spawner_velocity_y;
+	extern Subpixel spawner_velocity_x;
+
+	point_t velocity;
+
+	if(boss_phase_frame < 40) {
+		return;
+	}
+
+	if(wand_raise_animation_done == false) {
+		wand_raise_animation_done = wand_render_raise_both();
+	}
+	if(boss_phase_frame < 50) {
+		return;
+	} else if(boss_phase_frame == 50) {
+		eggs_alive = 0;
+		spawner_left.v = to_sp(WAND_EMIT_LEFT);
+		spawner_top.v = to_sp(WAND_EMIT_TOP);
+		spawner_velocity_x.v = TO_SP(4 - ((rand() % 2) * 8));
+		spawner_velocity_y.v = TO_SP(2 - ((rand() % 2) * 4));
+		select_for_rank(pattern_state.interval, 20, 15, 10, 8);
+		mdrv2_se_play(8);
+	} else if(boss_phase_frame < 200) {
+		if(spawner_left.v < to_sp(SHIELD_CENTER_X)) {
+			spawner_velocity_x.v += to_sp(0.0625f);
+		} else {
+			spawner_velocity_x.v -= to_sp(0.0625f);
+		}
+		if(spawner_top.v < to_sp(SHIELD_CENTER_Y)) {
+			spawner_velocity_y.v += to_sp(0.0625f);
+		} else {
+			spawner_velocity_y.v -= to_sp(0.0625f);
+		}
+		sloppy_unput_32x32(spawner_left.to_pixel(), spawner_top.to_pixel());
+		for(int i = (eggs_alive - 1); i >= 0; i--) {
+			bird_put_8(egg_left[i], egg_top[i], C_EGG);
+		}
+		spawner_left.v += spawner_velocity_x.v;
+		spawner_top.v += spawner_velocity_y.v;
+		if((boss_phase_frame % pattern_state.interval) == 0) {
+			if(overlap_xy_lrtb_le_ge(
+				spawner_left.v, spawner_top.v,
+				to_sp(0.0), to_sp(0.0f),
+				to_sp(RES_X - SPAWNCROSS_W), to_sp(RES_Y - SPAWNCROSS_H)
+			)) {
+				egg_left[eggs_alive] = spawner_left.to_pixel();
+				egg_top[eggs_alive] = spawner_top.to_pixel();
+				bird_put_8(
+					spawner_left.to_pixel(), spawner_top.to_pixel(), C_EGG
+				);
+				eggs_alive++;
+			}
+		}
+		grc_put_8(
+			spawner_left.to_pixel(),
+			spawner_top.to_pixel(),
+			GRC_SLOT_SPAWNCROSS,
+			(boss_phase_frame % SPAWNCROSS_CELS),
+			((boss_phase_frame % 4) + 2)
+		);
+	} else if(boss_phase_frame < 400) {
+		if(boss_phase_frame == 200) {
+			if(abs(spawner_velocity_y.v) < to_sp(0.25f)) {
+				spawner_velocity_y.v = (spawner_velocity_y.v < 0)
+					? to_sp(-0.25f)
+					: to_sp( 0.25f);
+			}
+			if(abs(spawner_velocity_x.v) < to_sp(0.25f)) {
+				spawner_velocity_x.v = (spawner_velocity_x.v < 0)
+					? to_sp(-0.25f)
+					: to_sp( 0.25f);
+			}
+			for(int i = (eggs_alive - 1); i >= 0; i--) {
+				vector2(velocity.x, velocity.y, 3, ((rand() & 0x7F) + 0x80));
+				birds_spawn(egg_left[i], egg_top[i], velocity.x, velocity.y);
+			}
+			wand_lower_both();
+			pellet_group = static_cast<bird_pellet_group_t>(
+				rand() % (BPG_6_RING + 1) // excluding random rain here
+			);
+		}
+
+		if(overlap_xy_lrtb_le_ge(
+			spawner_left, spawner_top,
+			to_sp(-SPAWNCROSS_W), to_sp(-SPAWNCROSS_H),
+			to_sp(RES_X), to_sp(RES_Y)
+		)) {
+			sloppy_unput_32x32(spawner_left.to_pixel(), spawner_top.to_pixel());
+			spawner_left.v += spawner_velocity_x.v;
+			spawner_top.v += spawner_velocity_y.v;
+
+			// ZUN bug: ZUN suddenly forgot that [spawner] uses subpixels, not
+			// pixels. Comparing its position to the pixel equivalent of
+			// 	((RES_X - SPAWNCROSS_W), (RES_Y - SPAWNCROSS_H))
+			// effectively clips the top-left coordinate of the spawner to a
+			// screen-space rectangle from (0, 0) to (38, 23). Since that's
+			// quite far from its actual position, the code below never gets
+			// executed.
+			if(overlap_xy_lrtb_le_ge(
+				spawner_left, spawner_top,
+				0, 0,
+				(RES_X - SPAWNCROSS_W), // should be subpixels
+				(RES_Y - SPAWNCROSS_H) // should be subpixels
+			)) {
+				// ZUN bug: Also, here. Quite ironic given that there's a
+				// correct version of this blitting call above… Copy-pasta
+				// confirmed.
+				grc_put_8(
+					spawner_left, // should be pixels
+					spawner_top, // should be pixels
+					GRC_SLOT_SPAWNCROSS,
+					(boss_phase_frame % SPAWNCROSS_CELS),
+					((boss_phase_frame % 4) + 2)
+				);
+			}
+		}
+		if(((boss_phase_frame % 16) == 0) || ((boss_phase_frame % 16) == 2)) {
+			birds_fire(pellet_group);
+		}
+	} else if(boss_phase_frame == 400) {
+		boss_phase_frame = 0;
+		wand_raise_animation_done = false;
+	}
+
+	#undef egg_top
+	#undef egg_left
+	#undef spawner_velocity_y
+	#undef spawner_velocity_x
+	#undef spawner_top
+	#undef spawner_left
+	#undef eggs_alive
+	#undef pellet_group
+	#undef wand_raise_animation_done
 }

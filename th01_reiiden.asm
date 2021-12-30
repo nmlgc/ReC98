@@ -22440,6 +22440,7 @@ main_36_TEXT	segment	byte public 'CODE' use16
 	@dress_render_both$qv procdesc near
 	@pattern_vortices$qv procdesc near
 	@pattern_random_purple_lasers$qv procdesc near
+	@pattern_birds_on_ellipse_arc$qv procdesc near
 main_36_TEXT	ends
 
 main_36__TEXT	segment	byte public 'CODE' use16
@@ -22450,387 +22451,6 @@ main_36__TEXT	segment	byte public 'CODE' use16
 include th01/main/boss/anim.inc
 
 sariel_shield	equ <boss_entity_0>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_296F0	proc near
-
-var_2C		= qword	ptr -2Ch
-var_24		= qword	ptr -24h
-var_1C		= qword	ptr -1Ch
-var_14		= qword	ptr -14h
-var_A		= word ptr -0Ah
-var_8		= word ptr -8
-var_6		= word ptr -6
-@@vector_x		= word ptr -4
-@@vector_y		= word ptr -2
-
-		enter	0Ah, 0
-		push	si
-		cmp	_boss_phase_frame, 40
-		jl	loc_29A96
-		cmp	byte_35DE1, 0
-		jnz	short loc_2970D
-		call	@wand_render_raise_both$qi pascal, 0
-		mov	byte_35DE1, al
-
-loc_2970D:
-		cmp	_boss_phase_frame, 50
-		jl	loc_29A96
-		cmp	_boss_phase_frame, 50
-		jnz	short loc_29783
-		mov	word_35DE3, 0
-		mov	subpixel_point_3AC50.x, (340 shl 4)
-		mov	subpixel_point_3AC50.y, (64 shl 4)
-		call	IRand
-		mov	bx, 2
-		cwd
-		idiv	bx
-		shl	dx, 3
-		mov	ax, 4
-		sub	ax, dx
-		shl	ax, 4
-		mov	word_3AC56, ax
-		call	IRand
-		mov	bx, 2
-		cwd
-		idiv	bx
-		shl	dx, 2
-		mov	ax, 2
-		sub	ax, dx
-		shl	ax, 4
-		mov	word_3AC54, ax
-		call	@sariel_select_for_rank$qmiiiii c, offset _sariel_pattern_state, ds, large 20 or (15 shl 16), large 10 or (8 shl 16)
-		push	8
-		call	_mdrv2_se_play
-		pop	cx
-		jmp	loc_29A96
-; ---------------------------------------------------------------------------
-
-loc_29783:
-		cmp	_boss_phase_frame, 200
-		jge	loc_298A5
-		cmp	subpixel_point_3AC50.x, (320 shl 4)
-		jge	short loc_2979B
-		inc	word_3AC56
-		jmp	short loc_2979F
-; ---------------------------------------------------------------------------
-
-loc_2979B:
-		dec	word_3AC56
-
-loc_2979F:
-		cmp	subpixel_point_3AC50.y, (164 shl 4)
-		jge	short loc_297AD
-		inc	word_3AC54
-		jmp	short loc_297B1
-; ---------------------------------------------------------------------------
-
-loc_297AD:
-		dec	word_3AC54
-
-loc_297B1:
-		push	(32 shl 16) or 48
-		mov	ax, subpixel_point_3AC50.y
-		sar	ax, 4
-		push	ax
-		mov	ax, subpixel_point_3AC50.x
-		sar	ax, 4
-		push	ax
-		call	_egc_copy_rect_1_to_0_16
-		add	sp, 8
-		mov	ax, word_35DE3
-		dec	ax
-		mov	si, ax
-		jmp	short loc_297F6
-; ---------------------------------------------------------------------------
-
-loc_297D5:
-		push	0 or (15 shl 16)	; (image) or (col)
-		push	GRC_SLOT_BOSS_2	; slot
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+6274h]	; top
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+6238h]	; left
-		call	_grc_put_8
-		add	sp, 0Ah
-		dec	si
-
-loc_297F6:
-		or	si, si
-		jge	short loc_297D5
-		mov	ax, word_3AC56
-		add	subpixel_point_3AC50.x, ax
-		mov	ax, word_3AC54
-		add	subpixel_point_3AC50.y, ax
-		mov	ax, _boss_phase_frame
-		cwd
-		idiv	_sariel_pattern_state
-		or	dx, dx
-		jnz	short loc_29874
-		cmp	subpixel_point_3AC50.x, 0
-		jl	short loc_29874
-		cmp	subpixel_point_3AC50.x, (608 shl 4)
-		jg	short loc_29874
-		cmp	subpixel_point_3AC50.y, 0
-		jl	short loc_29874
-		cmp	subpixel_point_3AC50.y, (368 shl 4)
-		jg	short loc_29874
-		mov	ax, subpixel_point_3AC50.x
-		sar	ax, 4
-		mov	bx, word_35DE3
-		add	bx, bx
-		mov	[bx+6238h], ax
-		mov	ax, subpixel_point_3AC50.y
-		sar	ax, 4
-		mov	bx, word_35DE3
-		add	bx, bx
-		mov	[bx+6274h], ax
-		push	0 or (15 shl 16) ; (image) or (col)
-		push	GRC_SLOT_BOSS_2	; slot
-		mov	ax, subpixel_point_3AC50.y
-		sar	ax, 4
-		push	ax	; top
-		mov	ax, subpixel_point_3AC50.x
-		sar	ax, 4
-		push	ax	; left
-		call	_grc_put_8
-		add	sp, 0Ah
-		inc	word_35DE3
-
-loc_29874:
-		mov	ax, _boss_phase_frame
-		mov	bx, 4
-		cwd
-		idiv	bx
-		add	dx, 2
-		push	dx	; col
-		mov	ax, _boss_phase_frame
-		mov	bx, 2
-		cwd
-		idiv	bx
-		push	dx	; image
-		push	bx	; slot
-		mov	ax, subpixel_point_3AC50.y
-		sar	ax, 4
-		push	ax	; top
-		mov	ax, subpixel_point_3AC50.x
-		sar	ax, 4
-		push	ax	; left
-		call	_grc_put_8
-		add	sp, 0Ah
-		jmp	loc_29A96
-; ---------------------------------------------------------------------------
-
-loc_298A5:
-		cmp	_boss_phase_frame, 400
-		jge	loc_29A83
-		cmp	_boss_phase_frame, 200
-		jnz	loc_29995
-		mov	ax, word_3AC54
-		mov	[bp+var_6], ax
-		cwd
-		xor	ax, dx
-		sub	ax, dx
-		cmp	ax, 4
-		jge	short loc_298DB
-		cmp	word_3AC54, 0
-		jge	short loc_298D5
-		mov	ax, 0FFFCh
-		jmp	short loc_298D8
-; ---------------------------------------------------------------------------
-
-loc_298D5:
-		mov	ax, 4
-
-loc_298D8:
-		mov	word_3AC54, ax
-
-loc_298DB:
-		mov	ax, word_3AC56
-		mov	[bp+var_8], ax
-		cwd
-		xor	ax, dx
-		sub	ax, dx
-		cmp	ax, 4
-		jge	short loc_298FD
-		cmp	word_3AC56, 0
-		jge	short loc_298F7
-		mov	ax, 0FFFCh
-		jmp	short loc_298FA
-; ---------------------------------------------------------------------------
-
-loc_298F7:
-		mov	ax, 4
-
-loc_298FA:
-		mov	word_3AC56, ax
-
-loc_298FD:
-		mov	ax, word_35DE3
-		dec	ax
-		mov	si, ax
-		jmp	short loc_2997F
-; ---------------------------------------------------------------------------
-
-loc_29905:
-		call	IRand
-		and	al, 7Fh
-		add	al, 128
-		push	ax
-		push	3
-		push	ss
-		lea	ax, [bp+@@vector_y]
-		push	ax
-		push	ss
-		lea	ax, [bp+@@vector_x]
-		push	ax
-		call	_vector2
-		add	sp, 0Ch
-		mov	bx, si
-		add	bx, bx
-		mov	ax, [bx+6238h]
-		mov	[bp+var_A], ax
-		fild	[bp+var_A]
-		sub	sp, 8
-		fstp	[bp+var_14]
-		mov	bx, si
-		add	bx, bx
-		fwait
-		mov	ax, [bx+6274h]
-		mov	[bp+var_A], ax
-		fild	[bp+var_A]
-		sub	sp, 8
-		fstp	[bp+var_1C]
-		fwait
-		mov	ax, [bp+@@vector_x]
-		mov	[bp+var_A], ax
-		fild	[bp+var_A]
-		sub	sp, 8
-		fstp	[bp+var_24]
-		fwait
-		mov	ax, [bp+var_2]
-		mov	[bp+var_A], ax
-		fild	[bp+var_A]
-		sub	sp, 8
-		fstp	[bp+var_2C]
-		push	1		; char
-		fwait
-		call	@birds_reset_fire_spawn_unput_upd$qddddc
-		dec	si
-
-loc_2997F:
-		or	si, si
-		jge	short loc_29905
-		call	@wand_lower_both$qv
-		call	IRand
-		mov	bx, 2
-		cwd
-		idiv	bx
-		mov	byte_35DE2, dl
-
-loc_29995:
-		cmp	subpixel_point_3AC50.x, (-32 shl 4)
-		jl	loc_29A29
-		cmp	subpixel_point_3AC50.x, (640 shl 4)
-		jg	loc_29A29
-		cmp	subpixel_point_3AC50.y, (-32 shl 4)
-		jl	short loc_29A29
-		cmp	subpixel_point_3AC50.y, (400 shl 4)
-		jg	short loc_29A29
-		push	(32 shl 16) or 48
-		mov	ax, subpixel_point_3AC50.y
-		sar	ax, 4
-		push	ax
-		mov	ax, subpixel_point_3AC50.x
-		sar	ax, 4
-		push	ax
-		call	_egc_copy_rect_1_to_0_16
-		add	sp, 8
-		mov	ax, word_3AC56
-		add	subpixel_point_3AC50.x, ax
-		mov	ax, word_3AC54
-		add	subpixel_point_3AC50.y, ax
-		cmp	subpixel_point_3AC50.x, 0
-		jl	short loc_29A29
-		cmp	subpixel_point_3AC50.x, (38 shl 4)
-		jg	short loc_29A29
-		cmp	subpixel_point_3AC50.y, 0
-		jl	short loc_29A29
-		cmp	subpixel_point_3AC50.y, (23 shl 4)
-		jg	short loc_29A29
-		mov	ax, _boss_phase_frame
-		mov	bx, 4
-		cwd
-		idiv	bx
-		add	dx, 2
-		push	dx	; col
-		mov	ax, _boss_phase_frame
-		mov	bx, 2
-		cwd
-		idiv	bx
-		push	dx	; image
-		push	bx	; slot
-		push	subpixel_point_3AC50.y	; top
-		push	subpixel_point_3AC50.x	; left
-		call	_grc_put_8
-		add	sp, 0Ah
-
-loc_29A29:
-		mov	ax, _boss_phase_frame
-		mov	bx, 16
-		cwd
-		idiv	bx
-		or	dx, dx
-		jz	short loc_29A41
-		mov	ax, _boss_phase_frame
-		cwd
-		idiv	bx
-		cmp	dx, 2
-		jnz	short loc_29A96
-
-loc_29A41:
-		mov	al, byte_35DE2
-		cbw
-		add	ax, 3E9h
-		mov	[bp+var_A], ax
-		fild	[bp+var_A]
-		sub	sp, 8
-		fstp	[bp+var_14]
-		fldz
-		fwait
-		sub	sp, 8
-		fstp	[bp+var_1C]
-		fldz
-		fwait
-		sub	sp, 8
-		fstp	[bp+var_24]
-		fldz
-		fwait
-		sub	sp, 8
-		fstp	[bp+var_2C]
-		push	0		; char
-		fwait
-		call	@birds_reset_fire_spawn_unput_upd$qddddc
-		jmp	short loc_29A96
-; ---------------------------------------------------------------------------
-
-loc_29A83:
-		cmp	_boss_phase_frame, 400
-		jnz	short loc_29A96
-		mov	_boss_phase_frame, 0
-		mov	byte_35DE1, 0
-
-loc_29A96:
-		pop	si
-		leave
-		retn
-sub_296F0	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -26894,7 +26514,7 @@ loc_2C40D:
 loc_2C419:
 		cmp	word_35E95, 2
 		jnz	short loc_2C423
-		call	sub_296F0
+		call	@pattern_birds_on_ellipse_arc$qv
 
 loc_2C423:
 		cmp	_boss_phase_frame, 0
@@ -28433,9 +28053,12 @@ _wand_raise_frames	dw 0
 public _pattern1_wand_raise_animation_do
 _pattern1_wand_raise_animation_do	dw 0
 
-byte_35DE1	db 0
-byte_35DE2	db 0
-word_35DE3	dw 0
+public _pattern2_wand_raise_animation_do, _pattern2_pellet_group
+public _pattern2_eggs_alive
+_pattern2_wand_raise_animation_do	db 0
+_pattern2_pellet_group           	db 0
+_pattern2_eggs_alive             	dw 0
+
 		dd    0
 		dd    0
 		dd    0
@@ -28890,10 +28513,16 @@ public _pattern0_spawner_x, _pattern0_spawner_y
 _pattern0_spawner_x	dw 10 dup(?)
 _pattern0_spawner_y	dw 10 dup(?)
 
-		db 120 dup(?)
-subpixel_point_3AC50	Point <?>
-word_3AC54	dw ?
-word_3AC56	dw ?
+public _pattern2_egg_left, _pattern2_egg_top
+public _pattern2_spawner_left, _pattern2_spawner_top,
+public _pattern2_spawner_velocity_x, _pattern2_spawner_velocity_y
+_pattern2_egg_left	dw BIRD_COUNT dup(?)
+_pattern2_egg_top 	dw BIRD_COUNT dup(?)
+_pattern2_spawner_left	dw ?
+_pattern2_spawner_top 	dw ?
+_pattern2_spawner_velocity_y	dw ?
+_pattern2_spawner_velocity_x	dw ?
+
 word_3AC58	dw ?
 word_3AC5A	dw ?
 word_3AC5C	dw ?
