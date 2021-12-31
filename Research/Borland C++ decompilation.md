@@ -97,6 +97,38 @@ case it's part of an arithmetic expression that was promoted to `int`.
   bar = 8;        // MOV bar, 8
   ```
 
+## Pointer arithmetic
+
+* Using parentheses or subscripts in an offset calculation implies a certain
+  order of operations, which can greatly impact the generated code:
+
+  ```c++
+  char far *plane = reinterpret_cast<char __seg *>(0xA800);
+  int y = (17 * (640 / 8)); // MOV DX, 1360
+  int x = 4;                // MOV CX, 4
+
+  // LES BX, [plane]
+  // ADD BX, DX
+  // ADD BX, CX
+  // MOV AL, ES:[BX]
+  _AL = *(plane + y + x);
+  _AL = *(y + plane + x);
+
+  // LES BX, [plane]
+  // ADD BX, CX      ; CX and DX swapped, compared to the one above
+  // ADD BX, DX
+  // MOV AL, ES:[BX]
+  _AL = *(y + (plane + x));
+
+  // MOV BX, DX
+  // ADD BX, CX
+  // MOV ES, WORD PTR [plane + 2]
+  // ADD BX, WORD PTR [plane]
+  // MOV AL, ES:[BX]
+  _AL = *(plane + (y + x));
+  _AL = plane[y + x];
+  ```
+
 ## Floating-point arithmetic
 
 * Since the x87 FPU can only load from memory, all temporary results of

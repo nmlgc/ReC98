@@ -3,13 +3,22 @@ void hiscore_update_and_render(void);
 
 void hud_score_and_cardcombo_render(void);
 
-// Saves the current VRAM contents for all modified HUD elements, then redraws
-// the entire HUD. Must be called after every background change.
+// Saves the current VRAM contents for all modified HUD elements if
+// [first_stage_in_scene] is true, then redraws the entire HUD.
 //
 // Also calls timer_init_for() for the current stage and route if
 // [timer_initialized] is false. Will not actually set that variable though...
 void hud_bg_snap_and_put(void);
 extern bool timer_initialized;
+
+// Must be called after every background change.
+inline void hud_rerender(void) {
+	first_stage_in_scene = true;
+	hud_bg_snap_and_put();
+
+	// Unnecessary, already done as part of hud_bg_snap_and_put()
+	hud_score_and_cardcombo_render();
+}
 
 // Re-renders the life or bomb display. Assumes [prev] to be the number of
 // lives or bombs displayed before calling this function, with the new count

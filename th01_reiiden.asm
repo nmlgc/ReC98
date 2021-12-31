@@ -12990,8 +12990,6 @@ main_32_TEXT	segment	byte public 'CODE' use16
 	extern @BOSS_NOP$QV:proc
 	extern @hud_hp_render$qii:proc
 	extern @boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii:proc
-
-HUD_HP_FUNC_RERENDER = -1
 main_32_TEXT	ends
 
 main_32__TEXT	segment	byte public 'CODE' use16
@@ -22441,6 +22439,8 @@ main_36_TEXT	segment	byte public 'CODE' use16
 	@pattern_vortices$qv procdesc near
 	@pattern_random_purple_lasers$qv procdesc near
 	@pattern_birds_on_ellipse_arc$qv procdesc near
+	@BG_TRANSITION$QI procdesc pascal near \
+		image_id_new:word
 main_36_TEXT	ends
 
 main_36__TEXT	segment	byte public 'CODE' use16
@@ -22451,340 +22451,6 @@ main_36__TEXT	segment	byte public 'CODE' use16
 include th01/main/boss/anim.inc
 
 sariel_shield	equ <boss_entity_0>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_29A99	proc near
-
-var_18		= byte ptr -18h
-var_E		= byte ptr -0Eh
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  4
-
-		enter	18h, 0
-		push	si
-		push	di
-		cmp	_boss_phase_frame, 20
-		jnz	short loc_29AAC
-		mov	word_3AC60, 0
-
-loc_29AAC:
-		cmp	_boss_phase_frame, 50
-		jl	loc_29D85
-		cmp	_boss_phase_frame, 50
-		jnz	short loc_29ADC
-		mov	word_3AC58, 0
-		mov	word_3AC5A, 0
-		mov	word_3AC5E, 2
-		mov	word_3AC5C, 0
-		push	0Ah
-		call	_mdrv2_se_play
-		pop	cx
-
-loc_29ADC:
-		mov	[bp+var_2], 0
-		jmp	loc_29D0E
-; ---------------------------------------------------------------------------
-
-loc_29AE4:
-		call	_grcg_setcolor_tcr stdcall, 12
-		pop	cx
-		call	IRand
-		mov	bx, 8
-		cwd
-		idiv	bx
-		mov	[bp+var_4], dx
-		graph_accesspage 1
-		xor	di, di
-		jmp	short loc_29B77
-; ---------------------------------------------------------------------------
-
-loc_29B04:
-		mov	ax, di
-		add	ax, ax
-		push	ax
-		mov	ax, word_3AC5C
-		add	ax, [bp+var_4]
-		pop	dx
-		sub	ax, dx
-		mov	bx, 50h	; 'P'
-		cwd
-		idiv	bx
-		push	ax
-		mov	ax, word_3AC5C
-		add	ax, [bp+var_4]
-		cwd
-		idiv	bx
-		pop	dx
-		cmp	dx, ax
-		jnz	short loc_29B7C
-		mov	ax, di
-		add	ax, ax
-		push	ax
-		mov	ax, word_3AC5C
-		add	ax, [bp+var_4]
-		pop	dx
-		sub	ax, dx
-		mov	bx, 50h	; 'P'
-		cwd
-		idiv	bx
-		push	ax
-		mov	ax, word_3AC5C
-		cwd
-		idiv	bx
-		pop	dx
-		cmp	dx, ax
-		jnz	short loc_29B76
-		mov	ax, di
-		add	ax, ax
-		mov	dx, word_3AC5C
-		add	dx, [bp+var_4]
-		sub	dx, ax
-		jl	short loc_29B76
-		les	bx, _VRAM_PLANE_B
-		add	bx, word_3AC5C
-		add	bx, [bp+var_4]
-		mov	ax, di
-		add	ax, ax
-		sub	bx, ax
-		mov	ax, es:[bx]
-		mov	bx, di
-		add	bx, bx
-		lea	dx, [bp+var_18]
-		add	bx, dx
-		mov	ss:[bx], ax
-
-loc_29B76:
-		inc	di
-
-loc_29B77:
-		cmp	di, 0Ah
-		jl	short loc_29B04
-
-loc_29B7C:
-		graph_accesspage 0
-		xor	di, di
-		jmp	loc_29C16
-; ---------------------------------------------------------------------------
-
-loc_29B87:
-		mov	ax, di
-		add	ax, ax
-		push	ax
-		mov	ax, word_3AC5C
-		add	ax, [bp+var_4]
-		pop	dx
-		sub	ax, dx
-		mov	bx, 50h	; 'P'
-		cwd
-		idiv	bx
-		push	ax
-		mov	ax, word_3AC5C
-		add	ax, [bp+var_4]
-		cwd
-		idiv	bx
-		pop	dx
-		cmp	dx, ax
-		jnz	short loc_29C1D
-		mov	ax, di
-		add	ax, ax
-		push	ax
-		mov	ax, word_3AC5C
-		add	ax, [bp+var_4]
-		pop	dx
-		sub	ax, dx
-		mov	bx, 50h	; 'P'
-		cwd
-		idiv	bx
-		push	ax
-		mov	ax, word_3AC5C
-		cwd
-		idiv	bx
-		pop	dx
-		cmp	dx, ax
-		jnz	short loc_29C15
-		mov	ax, di
-		add	ax, ax
-		mov	dx, word_3AC5C
-		add	dx, [bp+var_4]
-		sub	dx, ax
-		jl	short loc_29C15
-		cmp	di, 2
-		jle	short loc_29BE5
-		mov	ax, 4
-		sub	ax, di
-		jmp	short loc_29BE7
-; ---------------------------------------------------------------------------
-
-loc_29BE5:
-		mov	ax, di
-
-loc_29BE7:
-		add	ax, word_3AC5E
-		call	_grcg_setcolor_rmw stdcall, ax
-		pop	cx
-		les	bx, _VRAM_PLANE_B
-		add	bx, word_3AC5C
-		add	bx, [bp+var_4]
-		mov	ax, di
-		add	ax, ax
-		sub	bx, ax
-		mov	si, di
-		add	si, si
-		lea	ax, [bp+var_18]
-		add	si, ax
-		mov	ax, ss:[si]
-		and	ax, 11111111b
-		mov	es:[bx], ax
-
-loc_29C15:
-		inc	di
-
-loc_29C16:
-		cmp	di, 5
-		jl	loc_29B87
-
-loc_29C1D:
-		call	_grcg_setcolor_rmw stdcall, 12
-		pop	cx
-		xor	di, di
-		jmp	loc_29CAC
-; ---------------------------------------------------------------------------
-
-loc_29C2A:
-		mov	ax, di
-		add	ax, ax
-		push	ax
-		mov	ax, word_3AC5C
-		add	ax, [bp+var_4]
-		add	ax, 0FFF6h
-		pop	dx
-		sub	ax, dx
-		mov	bx, 50h	; 'P'
-		cwd
-		idiv	bx
-		push	ax
-		mov	ax, word_3AC5C
-		add	ax, [bp+var_4]
-		cwd
-		idiv	bx
-		pop	dx
-		cmp	dx, ax
-		jnz	short loc_29CB8
-		mov	ax, di
-		add	ax, ax
-		push	ax
-		mov	ax, word_3AC5C
-		add	ax, [bp+var_4]
-		add	ax, 0FFF6h
-		pop	dx
-		sub	ax, dx
-		mov	bx, 50h	; 'P'
-		cwd
-		idiv	bx
-		push	ax
-		mov	ax, word_3AC5C
-		cwd
-		idiv	bx
-		pop	dx
-		cmp	dx, ax
-		jnz	short loc_29CAB
-		mov	ax, di
-		add	ax, ax
-		mov	dx, word_3AC5C
-		add	dx, [bp+var_4]
-		add	dx, 0FFF6h
-		sub	dx, ax
-		jl	short loc_29CAB
-		les	bx, _VRAM_PLANE_B
-		add	bx, word_3AC5C
-		add	bx, [bp+var_4]
-		add	bx, 0FFF6h
-		mov	ax, di
-		add	ax, ax
-		sub	bx, ax
-		mov	si, di
-		add	si, si
-		lea	ax, [bp+var_E]
-		add	si, ax
-		mov	ax, ss:[si]
-		and	ax, 11111111b
-		mov	es:[bx], ax
-
-loc_29CAB:
-		inc	di
-
-loc_29CAC:
-		mov	ax, word_3AC60
-		add	ax, 2
-		cmp	ax, di
-		jg	loc_29C2A
-
-loc_29CB8:
-		add	word_3AC5A, 4
-		mov	ax, word_3AC58
-		sar	ax, 3
-		mov	dx, word_3AC5A
-		shl	dx, 6
-		add	ax, dx
-		mov	dx, word_3AC5A
-		shl	dx, 4
-		add	ax, dx
-		mov	word_3AC5C, ax
-		cmp	word_3AC5C, 7D00h
-		jl	short loc_29D06
-		mov	word_3AC5A, 0
-		add	word_3AC58, 20h	; ' '
-		mov	ax, word_3AC58
-		sar	ax, 3
-		mov	dx, word_3AC5A
-		shl	dx, 6
-		add	ax, dx
-		mov	dx, word_3AC5A
-		shl	dx, 4
-		add	ax, dx
-		mov	word_3AC5C, ax
-
-loc_29D06:
-		call	_grcg_off_func
-		inc	[bp+var_2]
-
-loc_29D0E:
-		cmp	[bp+var_2], 64h	; 'd'
-		jl	loc_29AE4
-		cmp	word_3AC58, 260h
-		jle	short loc_29D85
-		inc	word_3AC60
-		mov	_boss_phase_frame, 49
-		cmp	word_3AC60, 3
-		jl	short loc_29D85
-		call	_z_vsync_wait_and_scrollup stdcall, 0
-		push	1
-		call	_graph_accesspage_func
-		mov	bx, [bp+arg_0]
-		shl	bx, 2
-		call	_grp_put_palette_show stdcall, large _BG_IMAGES[bx]
-		call	_graph_copy_accessed_page_to_othe
-		call	_stage_palette_set stdcall, offset _z_Palettes, ds
-		push	0
-		call	_graph_accesspage_func
-		mov	_first_stage_in_scene, 1
-		call	@hud_bg_snap_and_put$qv
-		call	@hud_score_and_cardcombo_render$qv
-		call	@hud_hp_render$qii stdcall, _boss_hp, HUD_HP_FUNC_RERENDER
-		add	sp, 12h
-		mov	_boss_phase_frame, 0
-
-loc_29D85:
-		pop	di
-		pop	si
-		leave
-		retn	2
-sub_29A99	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -26573,8 +26239,7 @@ loc_2C4A1:
 		cmp	ax, 2
 		jnz	short loc_2C4D8
 		inc	_boss_phase_frame
-		push	1
-		call	sub_29A99
+		call	@bg_transition$qi pascal, 1
 		call	@dress_render_both$qv
 		cmp	_boss_phase_frame, 0
 		jnz	loc_2CDCE
@@ -26666,8 +26331,7 @@ loc_2C594:
 		cmp	ax, 4
 		jnz	short loc_2C5D6
 		inc	_boss_phase_frame
-		push	2
-		call	sub_29A99
+		call	@bg_transition$qi pascal, 2
 		call	@dress_render_both$qv
 		cmp	_boss_phase_frame, 0
 		jnz	loc_2CDCE
@@ -26784,8 +26448,7 @@ loc_2C6B0:
 		cmp	ax, 6
 		jnz	short loc_2C6F2
 		inc	_boss_phase_frame
-		push	3
-		call	sub_29A99
+		call	@bg_transition$qi pascal, 3
 		call	@dress_render_both$qv
 		cmp	_boss_phase_frame, 0
 		jnz	loc_2CDCE
@@ -26909,8 +26572,7 @@ loc_2C7F1:
 		cmp	ax, 8
 		jnz	short loc_2C835
 		inc	_boss_phase_frame
-		push	0
-		call	sub_29A99
+		call	@bg_transition$qi pascal, 0
 		call	@dress_render_both$qv
 		cmp	_boss_phase_frame, 0
 		jnz	loc_2CDCE
@@ -28523,11 +28185,13 @@ _pattern2_spawner_top 	dw ?
 _pattern2_spawner_velocity_y	dw ?
 _pattern2_spawner_velocity_x	dw ?
 
-word_3AC58	dw ?
-word_3AC5A	dw ?
-word_3AC5C	dw ?
-word_3AC5E	dw ?
-word_3AC60	dw ?
+public _bg_transition_cell_x, _bg_transition_cell_y, _bg_transition_cell_vo
+public _bg_transition_stripe_col_base, _bg_transition_gust_id
+_bg_transition_cell_x         	dw ?
+_bg_transition_cell_y         	dw ?
+_bg_transition_cell_vo        	dw ?
+_bg_transition_stripe_col_base	dw ?
+_bg_transition_gust_id        	dw ?
 		db 720 dup(?)
 subpixel_x_3AF32	dw ?
 x_3AF34	dw ?
