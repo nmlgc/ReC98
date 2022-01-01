@@ -30,7 +30,12 @@ void graph_copy_accessed_page_to_other(void);
 /// GRCG
 /// ----
 void grcg_setcolor_rmw(int col);
-void grcg_setcolor_tdw(int col);
+
+// Enters TCR (Tile Compare Read / "color extraction") mode. VRAM reads will
+// return 1 for any dot whose corresponding pixel has the given [col], and 0
+// otherwise.
+void grcg_setcolor_tcr(int col);
+
 void grcg_off_func(void);
 #undef grcg_off
 #define grcg_off grcg_off_func

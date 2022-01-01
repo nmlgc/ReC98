@@ -29,7 +29,7 @@ void snap_col_4(void)
 	for(x = 0; x < ROW_SIZE; x++) {
 		columns[x] = new dots8_t[RES_Y];
 	}
-	grcg_setcolor_tdw(4);
+	grcg_setcolor_tcr(4);
 	graph_accesspage_func(1);
 
 	for(x = 0; x < ROW_SIZE; x++) {

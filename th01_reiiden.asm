@@ -3355,7 +3355,7 @@ graph_TEXT	segment	byte public 'CODE' use16
 	extern _z_graph_hide:proc
 	extern _graph_accesspage_func:proc
 	extern _grcg_setcolor_rmw:proc
-	extern _grcg_setcolor_tdw:proc
+	extern _grcg_setcolor_tcr:proc
 	extern _grcg_off_func:proc
 	extern _z_palette_set_all_show:proc
 	extern _z_palette_set_show:proc
@@ -22490,7 +22490,7 @@ loc_29ADC:
 ; ---------------------------------------------------------------------------
 
 loc_29AE4:
-		call	_grcg_setcolor_tdw stdcall, 12
+		call	_grcg_setcolor_tcr stdcall, 12
 		pop	cx
 		call	IRand
 		mov	bx, 8
@@ -22890,7 +22890,7 @@ loc_29E32:
 loc_29E46:
 		cmp	byte ptr [si+1445h], 0
 		jz	loc_29FD6
-		call	_grcg_setcolor_tdw stdcall, 12
+		call	_grcg_setcolor_tcr stdcall, 12
 		pop	cx
 		mov	bx, si
 		shl	bx, 3
@@ -22984,7 +22984,7 @@ loc_29F5B:
 ; ---------------------------------------------------------------------------
 
 loc_29F62:
-		call	_grcg_setcolor_tdw stdcall, 12
+		call	_grcg_setcolor_tcr stdcall, 12
 		push	1
 		call	_graph_accesspage_func
 		les	bx, _VRAM_PLANE_B
@@ -23495,7 +23495,7 @@ loc_2A4C5:
 loc_2A4D9:
 		cmp	byte ptr [si+1465h], 0
 		jz	loc_2A68A
-		call	_grcg_setcolor_tdw stdcall, 12
+		call	_grcg_setcolor_tcr stdcall, 12
 		mov	bx, si
 		add	bx, bx
 		mov	bx, [bx+665Bh]
@@ -23607,7 +23607,7 @@ loc_2A59F:
 ; ---------------------------------------------------------------------------
 
 loc_2A618:
-		call	_grcg_setcolor_tdw stdcall, 12
+		call	_grcg_setcolor_tcr stdcall, 12
 		push	1
 		call	_graph_accesspage_func
 		mov	ax, 0A800h
@@ -24969,7 +24969,7 @@ loc_2B3E0:
 loc_2B3F4:
 		cmp	byte ptr [si+1483h], 0
 		jz	loc_2B6D7
-		call	_grcg_setcolor_tdw stdcall, 12
+		call	_grcg_setcolor_tcr stdcall, 12
 		mov	bx, si
 		shl	bx, 3
 		fld	qword ptr [bx+66B7h]
@@ -25153,7 +25153,7 @@ loc_2B604:
 ; ---------------------------------------------------------------------------
 
 loc_2B60C:
-		call	_grcg_setcolor_tdw stdcall, 12
+		call	_grcg_setcolor_tcr stdcall, 12
 		push	1
 		call	_graph_accesspage_func
 		add	sp, 4

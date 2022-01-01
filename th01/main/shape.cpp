@@ -146,11 +146,11 @@ void shape8x8_invincibility_put(screen_x_t left, vram_y_t top, int cel)
 }
 
 // Surely this function was meant to just regularly unblit the sprite via the
-// EGC? The GRCG RMW mode has no effect on VRAM reads, and simply returns the
-// exact bytes at the given offset on the given (that is, the B) plane. As a
-// result, this unblitting attempt actually blits the sprite again, masked by
-// whatever was in VRAM plane B at the given position before calling this
-// function.
+// EGC, or even the GRCG's TCR mode? The RMW mode has no effect on VRAM reads,
+// and simply returns the exact bytes at the given offset on the given (that
+// is, the B) plane. As a result, this unblitting attempt actually blits the
+// sprite again, masked by whatever was in VRAM plane B at the given position
+// before calling this function.
 void shape8x8_invincibility_put_with_mask_from_B_plane(
 	screen_x_t left, vram_y_t top, int cel
 )

@@ -196,7 +196,7 @@ void grcg_setcolor_rmw(int col)
 	grcg_setcolor(0xC0, col);
 }
 
-void grcg_setcolor_tdw(int col)
+void grcg_setcolor_tcr(int col)
 {
 	grcg_setcolor(0x80, col);
 }
