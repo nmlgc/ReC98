@@ -101,6 +101,11 @@ static inline vram_offset_t vram_offset_divmul(screen_x_t x, vram_y_t y)
 	return (x / BYTE_DOTS) + (y * ROW_SIZE);
 }
 
+static inline vram_offset_t vram_offset_divmul_double(double x, double y)
+{
+	return (x / BYTE_DOTS) + (y * ROW_SIZE);
+}
+
 static inline vram_offset_t vram_offset_divmul_wtf(screen_x_t x, vram_y_t y)
 {
 	return ((((x + RES_X) / BYTE_DOTS) + (y * ROW_SIZE)) - ROW_SIZE);
@@ -182,6 +187,11 @@ static inline vram_offset_t vram_offset_divshift_wtf(screen_x_t x, vram_y_t y)
 #define grcg_put(offset, src, bit_count) \
 	VRAM_PUT(B, offset, src, bit_count)
 
+#define grcg_put_emptyopt(offset, src, bit_count) \
+	if(src) { \
+		grcg_put(offset, src, bit_count); \
+	}
+
 #define grcg_put_8(offset, src) \
 	/* Nope, pokeb() doesn't generate the same code */ \
 	*reinterpret_cast<dots8_t *>(MK_FP(SEG_PLANE_B, offset)) = src
@@ -189,5 +199,6 @@ static inline vram_offset_t vram_offset_divshift_wtf(screen_x_t x, vram_y_t y)
 #define grcg_snap(dst, offset, bit_count) \
 	VRAM_SNAP(dst, B, offset, bit_count)
 
-#define egc_put  grcg_put
-#define egc_snap grcg_snap
+#define egc_put         	grcg_put
+#define egc_put_emptyopt	grcg_put_emptyopt
+#define egc_snap        	grcg_snap

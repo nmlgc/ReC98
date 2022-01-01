@@ -72,6 +72,7 @@ static const pixel_t WAND_H = 96;
 
 enum sariel_colors_t {
 	COL_LASER = 4,
+	COL_PARTICLE2X2 = 4,
 	COL_AIR = 12,
 	COL_BIRD = 15, // Yes, just a single one, changed by the background image.
 };
@@ -203,6 +204,34 @@ static const int SPAWNCROSS_CELS = 2;
 // .GRP images, snapped from VRAM.
 static const main_ptn_slot_t PTN_SLOT_WAND_LOWERED = PTN_SLOT_BOSS_1;
 // ----
+
+// 2×2 particles (just "particles" was taken)
+// -------------
+
+static const pixel_t PARTICLE2X2_W = 2;
+static const pixel_t PARTICLE2X2_H = 2;
+static const int PARTICLE2X2_COUNT = 30;
+static const dots8_t sPARTICLE2X2 = 0xC0; // (**      )
+
+#define particle2x2_linear_vram_offset(vo, first_bit, left, top) { \
+	vo = vram_offset_divmul_double(left, top); \
+	first_bit = (static_cast<screen_x_t>(left) % BYTE_DOTS); \
+}
+
+#define particle2x2_snap_2(dots, vo, first_bit) { \
+	dots[0] = grcg_chunk(vo, 8); \
+	/* Parentheses omitted for code generation reasons */ \
+	dots[1] = grcg_chunk(vo + ROW_SIZE, 8); \
+	dots[0] &= (sPARTICLE2X2 >> first_bit); \
+	dots[1] &= (sPARTICLE2X2 >> first_bit); \
+}
+
+#define particle2x2_put(vo, first_bit, dots) { \
+	grcg_put_emptyopt(vo, dots[0], 8); \
+	/* Parentheses omitted for code generation reasons */ \
+	grcg_put_emptyopt(vo + ROW_SIZE, dots[1], 8); \
+}
+// -------------
 
 // Temporary storage for compiler-generated string literals
 // --------------------------------------------------------
@@ -1150,4 +1179,87 @@ void pascal near bg_transition(int image_id_new)
 	#undef cell_vo
 	#undef cell_y
 	#undef cell_x
+}
+
+void pascal near particles2x2_vertical_unput_update_render(bool16 from_bottom)
+{
+	#define col       	particles2x2_vertical_col
+	#define left      	particles2x2_vertical_left
+	#define top       	particles2x2_vertical_top
+	#define velocity_y	particles2x2_vertical_velocity_y
+
+	// Also indicates whether a particle is alive.
+	extern uint4_t col[PARTICLE2X2_COUNT];
+
+	extern double left[PARTICLE2X2_COUNT];
+	extern double top[PARTICLE2X2_COUNT];
+	extern double velocity_y[PARTICLE2X2_COUNT];
+
+	int i;
+	vram_offset_t vo;
+	int first_bit;
+	DotRect<dots8_t, PARTICLE2X2_H> dots;
+
+	if((boss_phase_frame % 7) == 0) {
+		for(i = 0; i < PARTICLE2X2_COUNT; i++) {
+			if(col[i] != 0) {
+				continue;
+			}
+			left[i] = (rand() % RES_X);
+			top[i] = ((from_bottom == false) ? 0 : (RES_Y - 1 - PARTICLE2X2_H));
+			velocity_y[i] = ((from_bottom == false)
+				? (( rand() % 15) + 2)
+				: ((-rand() % 15) - 8)
+			);
+			col[i] = COL_PARTICLE2X2;
+			break;
+		}
+	}
+	if((boss_phase_frame % 2) != 0) {
+		return;
+	}
+	for(i = 0; i < PARTICLE2X2_COUNT; i++) {
+		if(col[i] == 0) {
+			continue;
+		}
+
+		grcg_setcolor_tcr(COL_AIR);
+
+		particle2x2_linear_vram_offset(vo, first_bit, left[i], top[i]);
+
+		// Lazy trick to avoid having to touch two adjacent VRAM bytes? Why
+		// though, you've got a 16-bit CPU. And why not just shift it to the
+		// next VRAM byte (= 1 pixel to the right) rather than 7 pixels to the
+		// left? And why is this done every frame?
+		if(first_bit == ((BYTE_DOTS - PARTICLE2X2_W) + 1)) {
+			first_bit = 0;
+		}
+
+		// Unblit
+		graph_accesspage_func(1);	particle2x2_snap_2(dots, vo, first_bit);
+		grcg_setcolor_rmw(COL_AIR);
+		graph_accesspage_func(0);	particle2x2_put(vo, first_bit, dots);
+
+		// Update
+		top[i] += velocity_y[i];
+
+		// Recalculate VRAM offset and clip
+		vo = vram_offset_divmul_double(left[i], top[i]);
+		if((vo >= (((RES_Y - PARTICLE2X2_H) + 1) * ROW_SIZE) || (vo < 0))) {
+			col[i] = 0;
+			continue;
+		}
+
+		// Render
+		grcg_setcolor_tcr(COL_AIR);
+		graph_accesspage_func(1);	particle2x2_snap_2(dots, vo, first_bit);
+		grcg_setcolor_rmw(col[i]);
+		graph_accesspage_func(0);	particle2x2_put(vo, first_bit, dots);
+	}
+	grcg_off();
+
+	#undef velocity_y
+	#undef top
+	#undef left
+	#undef col
 }

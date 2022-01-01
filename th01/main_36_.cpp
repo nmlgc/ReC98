@@ -1,8 +1,6 @@
 // Temporary data storage
 // ----------------------
 
-float f8_0 = 8.0;
-float f80_0 = 80.0;
 double d0_1 = 0.1;
 double dminus0_1 = -0.1;
 float f640_0 = 640.0;
