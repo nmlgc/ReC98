@@ -22441,6 +22441,7 @@ main_36_TEXT	segment	byte public 'CODE' use16
 	@PARTICLES2X2_VERTICAL_UNPUT_UPDA$QI procdesc pascal near \
 		from_bottom:word
 	@pattern_detonating_snowflake$qv procdesc near
+	@pattern_2_rings_from_a2_orbs$qv procdesc near
 main_36_TEXT	ends
 
 main_36__TEXT	segment	byte public 'CODE' use16
@@ -22451,73 +22452,6 @@ main_36__TEXT	segment	byte public 'CODE' use16
 include th01/main/boss/anim.inc
 
 sariel_shield	equ <boss_entity_0>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2A2ED	proc near
-		push	bp
-		mov	bp, sp
-		cmp	_boss_phase_frame, 5
-		jge	short loc_2A313
-		mov	angle_3AF44, 0
-		call	@sariel_select_for_rank$qmiiiii c, offset word_3AF45, ds, large 18 or (12 shl 16), large 10 or (8 shl 16)
-
-loc_2A313:
-		mov	ax, _boss_phase_frame
-		cwd
-		idiv	word_3AF45
-		or	dx, dx
-		jnz	loc_2A3AA
-		mov	_Pellets.PELLET_spawn_with_cloud, 1
-		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
-		push	(3 shl 4) + 8
-		mov	al, 0
-		sub	al, angle_3AF44
-		push	ax
-		push	568 or (160 shl 16)
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
-		push	(3 shl 4) + 8
-		mov	al, 80h
-		sub	al, angle_3AF44
-		push	ax
-		push	568 or (160 shl 16)
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		add	sp, 28h
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, large 64 or (160 shl 16), word ptr angle_3AF44, (3 shl 4) + 8, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
-		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
-		push	(3 shl 4) + 8
-		mov	al, angle_3AF44
-		add	al, 80h
-		push	ax
-		push	64 or (160 shl 16)
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		add	sp, 28h
-		mov	al, angle_3AF44
-		add	al, byte ptr word_3AF45
-		mov	angle_3AF44, al
-
-loc_2A3AA:
-		cmp	_boss_phase_frame, 479
-		jle	short loc_2A3B8
-		mov	_boss_phase_frame, 0
-
-loc_2A3B8:
-		pop	bp
-		retn
-sub_2A2ED	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -25760,7 +25694,7 @@ loc_2C502:
 		call	sub_2A3BA
 
 loc_2C50C:
-		call	sub_2A2ED
+		call	@pattern_2_rings_from_a2_orbs$qv
 		jmp	short loc_2C51E
 ; ---------------------------------------------------------------------------
 
@@ -27691,8 +27625,10 @@ _pattern3_radius_outer_1	dw ?
 _pattern3_radius_outer_2	dw ?
 _pattern3_radius_inner  	dw ?
 
-angle_3AF44	db ?
-word_3AF45	dw ?
+public _pattern4_angle, _pattern4_interval
+_pattern4_angle     	db ?
+_pattern4_interval	dw ?
+
 		db 240 dup(?)
 point_3B037	Point <?>
 y_3B03B	dw ?

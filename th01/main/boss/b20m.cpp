@@ -69,6 +69,11 @@ static const screen_y_t WAND_EMIT_TOP = 64;
 static const pixel_t WAND_W = 128;
 
 static const pixel_t WAND_H = 96;
+
+// BOSS6_A2.GRP
+static const screen_x_t A2_ORBS_L_CENTER_X = 64;
+static const screen_x_t A2_ORBS_R_CENTER_X = 568;
+static const screen_y_t A2_ORBS_CENTER_Y = 160;
 // -----------
 
 enum sariel_colors_t {
@@ -1431,4 +1436,40 @@ void near pattern_detonating_snowflake(void)
 	#undef star_left
 	#undef left
 	#undef state
+}
+
+void near pattern_2_rings_from_a2_orbs(void)
+{
+	#define angle   	pattern4_angle
+	#define interval	pattern4_interval
+
+	extern unsigned char angle;
+	extern int interval;
+
+	if(boss_phase_frame < 5) {
+		angle = 0x00;
+		select_for_rank(interval, 18, 12, 10, 8);
+	}
+	if((boss_phase_frame % interval) == 0) {
+		Pellets.spawn_with_cloud = true;
+		Pellets.add_single(
+			A2_ORBS_R_CENTER_X, A2_ORBS_CENTER_Y, (0x00 - angle), to_sp(3.5f)
+		);
+		Pellets.add_single(
+			A2_ORBS_R_CENTER_X, A2_ORBS_CENTER_Y, (0x80 - angle), to_sp(3.5f)
+		);
+		Pellets.add_single(
+			A2_ORBS_L_CENTER_X, A2_ORBS_CENTER_Y, (0x00 + angle), to_sp(3.5f)
+		);
+		Pellets.add_single(
+			A2_ORBS_L_CENTER_X, A2_ORBS_CENTER_Y, (0x80 + angle), to_sp(3.5f)
+		);
+		angle += interval;
+	}
+	if(boss_phase_frame > 479) {
+		boss_phase_frame = 0;
+	}
+
+	#undef interval
+	#undef angle
 }
