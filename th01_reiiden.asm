@@ -5160,8 +5160,6 @@ main_23_TEXT	segment	byte public 'CODE' use16
 	extern _grc_load:proc
 	extern _grc_put_8:proc
 	extern _grcg_put_8x8_mono:proc
-	extern @shape8x8_star_put$qiii:proc
-	extern @shape8x8_flake_put$qiii:proc
 	extern @shape_ellipse_arc_put$qiiiiiucucuc:proc
 	extern @shape_ellipse_arc_sloppy_unput$qiiiiucucuc:proc
 	extern _graph_r_lineloop_put:proc
@@ -22434,7 +22432,6 @@ main_36_TEXT	segment	byte public 'CODE' use16
 	@shield_render_both$qv procdesc near
 	@WAND_RENDER_RAISE_BOTH$QI procdesc pascal near \
 		restart:word
-	@wand_lower_both$qv procdesc near
 	@dress_render_both$qv procdesc near
 	@pattern_vortices$qv procdesc near
 	@pattern_random_purple_lasers$qv procdesc near
@@ -22443,6 +22440,7 @@ main_36_TEXT	segment	byte public 'CODE' use16
 		image_id_new:word
 	@PARTICLES2X2_VERTICAL_UNPUT_UPDA$QI procdesc pascal near \
 		from_bottom:word
+	@pattern_detonating_snowflake$qv procdesc near
 main_36_TEXT	ends
 
 main_36__TEXT	segment	byte public 'CODE' use16
@@ -22453,266 +22451,6 @@ main_36__TEXT	segment	byte public 'CODE' use16
 include th01/main/boss/anim.inc
 
 sariel_shield	equ <boss_entity_0>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_29FE9	proc near
-		push	bp
-		mov	bp, sp
-		cmp	_boss_phase_frame, 10
-		jge	short loc_2A010
-		mov	word_35E03, 0FFFFh
-		call	@sariel_select_for_rank$qmiiiii c, offset _sariel_pattern_state, ds, large 160 or (160 shl 16), large 160 or (160 shl 16)
-
-loc_2A010:
-		mov	ax, _boss_phase_frame
-		cwd
-		idiv	_sariel_pattern_state
-		or	dx, dx
-		jnz	short loc_2A022
-		mov	word_35E03, 0
-
-loc_2A022:
-		cmp	word_35E03, 0
-		jnz	short loc_2A031
-		call	@wand_render_raise_both$qi pascal, 0
-		mov	word_35E03, ax
-
-loc_2A031:
-		cmp	word_35E03, 1
-		jnz	short loc_2A073
-		push	6
-		call	_mdrv2_se_play
-		mov	subpixel_x_3AF32, (340 shl 4)
-		mov	subpixel_y_3AF36, (64 shl 4)
-		push	112
-		push	ds
-		push	offset y_3AF3A
-		push	ds
-		push	offset x_3AF3C
-		push	380
-		mov	ax, _player_left
-		add	ax, 12
-		push	ax
-		push	(64 shl 16) or 340
-		call	_vector2_between
-		add	sp, 14h
-		mov	word_35E03, 2
-
-loc_2A073:
-		cmp	word_35E03, 2
-		jnz	short loc_2A0CF
-		push	(8 shl 16) or 16
-		mov	ax, subpixel_y_3AF36
-		sar	ax, 4
-		push	ax
-		mov	ax, subpixel_x_3AF32
-		sar	ax, 4
-		push	ax
-		call	_egc_copy_rect_1_to_0_16
-		add	sp, 8
-		mov	ax, y_3AF3A
-		add	subpixel_y_3AF36, ax
-		cmp	subpixel_y_3AF36, (396 shl 4)
-		jl	short loc_2A0B0
-		mov	word_35E03, 3
-		call	@wand_lower_both$qv
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_2A0B0:
-		mov	ax, x_3AF3C
-		add	subpixel_x_3AF32, ax
-		push	7	; col
-		mov	ax, subpixel_y_3AF36
-		sar	ax, 4
-		push	ax	; top
-		mov	ax, subpixel_x_3AF32
-		sar	ax, 4
-		push	ax	; left
-		call	@shape8x8_flake_put$qiii
-		add	sp, 6
-
-loc_2A0CF:
-		cmp	word_35E03, 3
-		jnz	loc_2A16A
-		push	255	; angle_end
-		push	0	; angle_start
-		push	8	; angle_step
-		push	16 or (6 shl 16)	; (radius_y) or (col shl 16)
-		push	384 or (48 shl 16)	; (center_y) or (radius_x shl 16)
-		mov	ax, subpixel_x_3AF32
-		sar	ax, 4
-		push	ax	; center_x
-		call	@shape_ellipse_arc_put$qiiiiiucucuc
-		push	255
-		push	0	; angle_start
-		push	8	; angle_step
-		push	48 or (6 shl 16)	; (radius_y) or (col shl 16)
-		push	384 or (16 shl 16)	; (center_y) or (radius_x shl 16)
-		mov	ax, subpixel_x_3AF32
-		sar	ax, 4
-		push	ax	; center_x
-		call	@shape_ellipse_arc_put$qiiiiiucucuc
-		push	255	; angle_end
-		push	0	; angle_start
-		push	6	; angle_step
-		push	24 or (7 shl 16)	; (radius_y) or (col shl 16)
-		push	384 or (24 shl 16)	; (center_y) or (radius_x shl 16)
-		mov	ax, subpixel_x_3AF32
-		sar	ax, 4
-		push	ax	; center_x
-		call	@shape_ellipse_arc_put$qiiiiiucucuc
-		mov	pixel_3AF3E, 48
-		mov	pixel_3AF40, 16
-		mov	pixel_3AF42, 24
-		mov	ax, subpixel_x_3AF32
-		mov	x_3AF34, ax
-		call	IRand
-		mov	bx, 48
-		cwd
-		idiv	bx
-		mov	ax, RES_Y
-		sub	ax, dx
-		mov	y_3AF38, ax
-		push	0Ah
-		call	_mdrv2_se_play
-		add	sp, 32h
-
-loc_2A16A:
-		cmp	word_35E03, 3
-		jl	short loc_2A175
-		inc	word_35E03
-
-loc_2A175:
-		cmp	word_35E03, 5
-		jl	loc_2A2BA
-		mov	ax, word_35E03
-		mov	bx, 8
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	loc_2A2BA
-		call	_egc_copy_rect_1_to_0_16 stdcall, x_3AF34, y_3AF38, 16, bx
-		push	255	; angle_end
-		push	0	; angle_start
-		push	8	; angle_step
-		push	pixel_3AF40	; radius_y
-		push	pixel_3AF3E	; radius_x
-		push	384	; center_y
-		mov	ax, subpixel_x_3AF32
-		sar	ax, 4
-		push	ax	; center_x
-		call	@shape_ellipse_arc_sloppy_unput$qiiiiucucuc
-		push	255	; angle_end
-		push	0	; angle_start
-		push	8	; angle_step
-		push	pixel_3AF3E	; radius_y
-		push	pixel_3AF40	; radius_x
-		push	384	; center_y
-		mov	ax, subpixel_x_3AF32
-		sar	ax, 4
-		push	ax	; center_x
-		call	@shape_ellipse_arc_sloppy_unput$qiiiiucucuc
-		push	255	; angle_end
-		push	0	; angle_start
-		push	6	; angle_step
-		push	pixel_3AF42	; radius_y
-		push	pixel_3AF42	; radius_x
-		push	384	; center_y
-		mov	ax, subpixel_x_3AF32
-		sar	ax, 4
-		push	ax	; center_x
-		call	@shape_ellipse_arc_sloppy_unput$qiiiiucucuc
-		add	sp, 32h
-		sub	pixel_3AF3E, 6
-		add	pixel_3AF40, 6
-		add	pixel_3AF42, 4
-		call	IRand
-		mov	bx, 40h
-		cwd
-		idiv	bx
-		mov	ax, subpixel_x_3AF32
-		sar	ax, 4
-		add	dx, ax
-		add	dx, -28
-		mov	x_3AF34, dx
-		call	IRand
-		mov	bx, 48
-		cwd
-		idiv	bx
-		mov	ax, RES_Y
-		sub	ax, dx
-		mov	y_3AF38, ax
-		cmp	pixel_3AF3E, 8
-		jg	short loc_2A245
-		mov	word_35E03, 0FFFFh
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_2A245:
-		push	255	; angle_end
-		push	0	; angle_start
-		push	8	; angle_step
-		push	5	; col
-		push	pixel_3AF40	; radius_y
-		push	pixel_3AF3E	; radius_x
-		push	384	; center_y
-		mov	ax, subpixel_x_3AF32
-		sar	ax, 4
-		push	ax	; center_x
-		call	@shape_ellipse_arc_put$qiiiiiucucuc
-		push	255	; angle_end
-		push	0	; angle_start
-		push	8	; angle_step
-		push	5	; col
-		push	pixel_3AF3E	; radius_y
-		push	pixel_3AF40	; radius_x
-		push	384	; center_y
-		mov	ax, subpixel_x_3AF32
-		sar	ax, 4
-		push	ax	; center_x
-		call	@shape_ellipse_arc_put$qiiiiiucucuc
-		push	255	; angle_end
-		push	0	; angle_start
-		push	6	; angle_step
-		push	7	; col
-		push	pixel_3AF42	; radius_y
-		push	pixel_3AF42	; radius_x
-		push	384	; center_y
-		mov	ax, subpixel_x_3AF32
-		sar	ax, 4
-		push	ax	; center_x
-		call	@shape_ellipse_arc_put$qiiiiiucucuc
-		add	sp, 30h
-		call	@shape8x8_star_put$qiii c, x_3AF34, y_3AF38, 7
-
-loc_2A2BA:
-		cmp	_player_invincible, 0
-		jnz	short loc_2A2EB
-		mov	ax, subpixel_x_3AF32
-		sar	ax, 4
-		add	ax, 32
-		cmp	ax, _player_left
-		jle	short loc_2A2EB
-		mov	ax, subpixel_x_3AF32
-		sar	ax, 4
-		add	ax, -64
-		cmp	ax, _player_left
-		jge	short loc_2A2EB
-		cmp	word_35E03, 3
-		jl	short loc_2A2EB
-		mov	_done, 1
-
-loc_2A2EB:
-		pop	bp
-		retn
-sub_29FE9	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -26012,7 +25750,7 @@ loc_2C4D8:
 		call	@particles2x2_vertical_unput_upda$qi pascal, 0
 		cmp	word_35E95, 0
 		jnz	short loc_2C502
-		call	sub_29FE9
+		call	@pattern_detonating_snowflake$qv
 		jmp	short loc_2C50C
 ; ---------------------------------------------------------------------------
 
@@ -27472,7 +27210,8 @@ _pattern2_eggs_alive             	dw 0
 public _particles2x2_vertical_col
 _particles2x2_vertical_col	db PARTICLE2X2_COUNT dup(0)
 
-word_35E03	dw 0FFFFh
+public _pattern3_state
+_pattern3_state	dw -1
 		dd    0
 		dd    0
 		dd    0
@@ -27939,15 +27678,19 @@ _particles2x2_vertical_left      	dq PARTICLE2X2_COUNT dup(?)
 _particles2x2_vertical_top       	dq PARTICLE2X2_COUNT dup(?)
 _particles2x2_vertical_velocity_y	dq PARTICLE2X2_COUNT dup(?)
 
-subpixel_x_3AF32	dw ?
-x_3AF34	dw ?
-subpixel_y_3AF36	dw ?
-y_3AF38	dw ?
-y_3AF3A	dw ?
-x_3AF3C	dw ?
-pixel_3AF3E	dw ?
-pixel_3AF40	dw ?
-pixel_3AF42	dw ?
+public _pattern3_left, _pattern3_star_left, _pattern3_top, _pattern3_star_top
+public _pattern3_velocity_y, _pattern3_velocity_x, _pattern3_radius_outer_1
+public _pattern3_radius_outer_2, _pattern3_radius_inner
+_pattern3_left          	dw ?
+_pattern3_star_left     	dw ?
+_pattern3_top           	dw ?
+_pattern3_star_top      	dw ?
+_pattern3_velocity_y    	dw ?
+_pattern3_velocity_x    	dw ?
+_pattern3_radius_outer_1	dw ?
+_pattern3_radius_outer_2	dw ?
+_pattern3_radius_inner  	dw ?
+
 angle_3AF44	db ?
 word_3AF45	dw ?
 		db 240 dup(?)
