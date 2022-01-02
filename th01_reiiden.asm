@@ -22442,6 +22442,7 @@ main_36_TEXT	segment	byte public 'CODE' use16
 		from_bottom:word
 	@pattern_detonating_snowflake$qv procdesc near
 	@pattern_2_rings_from_a2_orbs$qv procdesc near
+	@pattern_aimed_sling_clusters$qv procdesc near
 main_36_TEXT	ends
 
 main_36__TEXT	segment	byte public 'CODE' use16
@@ -22452,67 +22453,6 @@ main_36__TEXT	segment	byte public 'CODE' use16
 include th01/main/boss/anim.inc
 
 sariel_shield	equ <boss_entity_0>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2A3BA	proc near
-
-@@angle		= byte ptr -5
-@@top		= word ptr -4
-@@left		= word ptr -2
-
-		enter	6, 0
-		cmp	_boss_phase_frame, 10
-		jnz	short loc_2A3DC
-		call	@sariel_select_for_rank$qmiiiii c, offset _sariel_pattern_state, ds, large 4 or (3 shl 16), large 2 or (2 shl 16)
-
-loc_2A3DC:
-		mov	ax, _boss_phase_frame
-		mov	bx, 200
-		cwd
-		idiv	bx
-		cmp	dx, 150
-		jl	short loc_2A459
-		mov	ax, _boss_phase_frame
-		cwd
-		idiv	_sariel_pattern_state
-		or	dx, dx
-		jnz	short loc_2A459
-		call	IRand
-		mov	[bp+@@angle], al
-		mov	ah, 0
-		and	ax, 255
-		add	ax, ax
-		mov	bx, ax
-		movsx	eax, _SinTable8[bx]
-		imul	eax, 40
-		sar	eax, 8
-		add	ax, 320
-		mov	[bp+@@left], ax
-		mov	al, [bp+@@angle]
-		mov	ah, 0
-		and	ax, 255
-		add	ax, ax
-		mov	bx, ax
-		movsx	eax, _CosTable8[bx]
-		imul	eax, 40
-		sar	eax, 8
-		add	ax, 180
-		mov	[bp+@@top], ax
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii c, offset _Pellets, ds, [bp+@@left], ax, 0, (0 shl 4), large PM_SLING_AIMED or (((4 shl 4) + 8) shl 16), large 0 or (0 shl 16)
-
-loc_2A459:
-		cmp	_boss_phase_frame, 299
-		jl	short locret_2A467
-		mov	_boss_phase_frame, 0
-
-locret_2A467:
-		leave
-		retn
-sub_2A3BA	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -25691,7 +25631,7 @@ loc_2C4D8:
 loc_2C502:
 		cmp	word_35E95, 1
 		jnz	short loc_2C511
-		call	sub_2A3BA
+		call	@pattern_aimed_sling_clusters$qv
 
 loc_2C50C:
 		call	@pattern_2_rings_from_a2_orbs$qv

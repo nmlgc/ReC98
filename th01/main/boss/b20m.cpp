@@ -14,6 +14,7 @@ extern "C" {
 #include "th01/math/area.hpp"
 #include "th01/math/dir.hpp"
 #include "th01/math/overlap.hpp"
+#include "th01/math/polar.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th01/math/vector.hpp"
 #include "th01/hardware/frmdelay.h"
@@ -59,6 +60,9 @@ static const screen_y_t WAND_TOP = 48;
 
 static const screen_y_t SHIELD_CENTER_X = 320;
 static const screen_y_t SHIELD_CENTER_Y = 164;
+
+static const screen_x_t SEAL_CENTER_X = 320;
+static const screen_x_t SEAL_CENTER_Y = 185;
 
 // That's… not quite where the sphere is?
 static const screen_x_t WAND_EMIT_LEFT = 340;
@@ -1472,4 +1476,30 @@ void near pattern_2_rings_from_a2_orbs(void)
 
 	#undef interval
 	#undef angle
+}
+
+void near pattern_aimed_sling_clusters(void)
+{
+	if(boss_phase_frame == 10) {
+		select_for_rank(pattern_state.interval, 4, 3, 2, 2);
+	}
+	if(
+		((boss_phase_frame % 200) >= 150) &&
+		((boss_phase_frame % pattern_state.interval) == 0)
+	) {
+		screen_x_t left;
+		vram_y_t top;
+		unsigned char angle = rand();
+
+		left = polar_y(PLAYFIELD_CENTER_X, (PLAYFIELD_W / 16), angle);
+		top = polar_x(
+			(SEAL_CENTER_Y - (PELLET_H / 2) - 1),
+			playfield_fraction_y(5 / 42.0f),
+			angle
+		);
+		Pellets.add_single(left, top, 0x00, 0x00, PM_SLING_AIMED, to_sp(4.5f));
+	}
+	if(boss_phase_frame >= 299) {
+		boss_phase_frame = 0;
+	}
 }
