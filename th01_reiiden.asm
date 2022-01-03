@@ -22443,6 +22443,7 @@ main_36_TEXT	segment	byte public 'CODE' use16
 	@pattern_detonating_snowflake$qv procdesc near
 	@pattern_2_rings_from_a2_orbs$qv procdesc near
 	@pattern_aimed_sling_clusters$qv procdesc near
+	@particles2x2_wavy_unput_update_r$qv procdesc near
 main_36_TEXT	ends
 
 main_36__TEXT	segment	byte public 'CODE' use16
@@ -22453,243 +22454,6 @@ main_36__TEXT	segment	byte public 'CODE' use16
 include th01/main/boss/anim.inc
 
 sariel_shield	equ <boss_entity_0>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2A469	proc near
-
-var_6		= byte ptr -6
-var_5		= byte ptr -5
-var_4		= word ptr -4
-var_2		= word ptr -2
-
-		enter	6, 0
-		push	si
-		push	di
-		mov	ax, _boss_phase_frame
-		mov	bx, 7
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_2A4C5
-		xor	si, si
-		jmp	short loc_2A4C0
-; ---------------------------------------------------------------------------
-
-loc_2A480:
-		cmp	byte ptr [si+1465h], 0
-		jnz	short loc_2A4BF
-		call	IRand
-		mov	bx, 280h
-		cwd
-		idiv	bx
-		mov	bx, si
-		add	bx, bx
-		mov	[bx+65A7h], dx
-		mov	bx, si
-		add	bx, bx
-		mov	word ptr [bx+65E3h], 190h
-		mov	bx, si
-		add	bx, bx
-		mov	word ptr [bx+661Fh], 0FFFFh
-		mov	bx, si
-		add	bx, bx
-		mov	word ptr [bx+665Bh], 0
-		mov	byte ptr [si+1465h], 4
-		jmp	short loc_2A4C5
-; ---------------------------------------------------------------------------
-
-loc_2A4BF:
-		inc	si
-
-loc_2A4C0:
-		cmp	si, 1Eh
-		jl	short loc_2A480
-
-loc_2A4C5:
-		mov	ax, _boss_phase_frame
-		mov	bx, 2
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	loc_2A697
-		xor	si, si
-		jmp	loc_2A68B
-; ---------------------------------------------------------------------------
-
-loc_2A4D9:
-		cmp	byte ptr [si+1465h], 0
-		jz	loc_2A68A
-		call	_grcg_setcolor_tcr stdcall, 12
-		mov	bx, si
-		add	bx, bx
-		mov	bx, [bx+665Bh]
-		and	bx, 255
-		add	bx, bx
-		movsx	eax, _SinTable8[bx]
-		shl	eax, 4
-		sar	eax, 8
-		mov	bx, si
-		add	bx, bx
-		add	ax, [bx+65A7h]
-		mov	[bp+var_4], ax
-		sar	ax, 3
-		mov	bx, si
-		add	bx, bx
-		mov	dx, [bx+65E3h]
-		shl	dx, 6
-		add	ax, dx
-		mov	bx, si
-		add	bx, bx
-		mov	dx, [bx+65E3h]
-		shl	dx, 4
-		add	ax, dx
-		mov	di, ax
-		mov	ax, [bp+var_4]
-		and	ax, 7
-		mov	[bp+var_2], ax
-		push	1
-		call	_graph_accesspage_func
-		mov	ax, 0A800h
-		mov	es, ax
-		assume es:nothing
-		mov	al, es:[di]
-		mov	[bp+var_6], al
-		mov	ax, 0A800h
-		mov	es, ax
-		mov	al, es:[di+50h]
-		mov	[bp+var_5], al
-		mov	ax, 0C0h ; '?'
-		mov	cl, byte ptr [bp+var_2]
-		sar	ax, cl
-		and	[bp+var_6], al
-		mov	ax, 0C0h ; '?'
-		sar	ax, cl
-		and	[bp+var_5], al
-		call	_grcg_setcolor_rmw stdcall, 12
-		push	0
-		call	_graph_accesspage_func
-		add	sp, 8
-		cmp	[bp+var_6], 0
-		jz	short loc_2A58C
-		les	bx, _VRAM_PLANE_B
-		assume es:nothing
-		add	bx, di
-		mov	al, [bp+var_6]
-		mov	es:[bx], al
-
-loc_2A58C:
-		cmp	[bp+var_5], 0
-		jz	short loc_2A59F
-		les	bx, _VRAM_PLANE_B
-		add	bx, di
-		mov	al, [bp+var_5]
-		mov	es:[bx+50h], al
-
-loc_2A59F:
-		mov	bx, si
-		add	bx, bx
-		mov	ax, [bx+661Fh]
-		mov	bx, si
-		add	bx, bx
-		add	[bx+65E3h], ax
-		mov	bx, si
-		add	bx, bx
-		inc	word ptr [bx+665Bh]
-		mov	bx, si
-		add	bx, bx
-		mov	bx, [bx+665Bh]
-		and	bx, 255
-		add	bx, bx
-		movsx	eax, _SinTable8[bx]
-		shl	eax, 4
-		sar	eax, 8
-		mov	bx, si
-		add	bx, bx
-		add	ax, [bx+65A7h]
-		mov	[bp+var_4], ax
-		sar	ax, 3
-		mov	bx, si
-		add	bx, bx
-		mov	dx, [bx+65E3h]
-		shl	dx, 6
-		add	ax, dx
-		mov	bx, si
-		add	bx, bx
-		mov	dx, [bx+65E3h]
-		shl	dx, 4
-		add	ax, dx
-		mov	di, ax
-		mov	ax, [bp+var_4]
-		and	ax, 7
-		mov	[bp+var_2], ax
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+665Bh], 64h ; 'd'
-		jl	short loc_2A618
-		mov	byte ptr [si+1465h], 0
-		jmp	short loc_2A68A
-; ---------------------------------------------------------------------------
-
-loc_2A618:
-		call	_grcg_setcolor_tcr stdcall, 12
-		push	1
-		call	_graph_accesspage_func
-		mov	ax, 0A800h
-		mov	es, ax
-		assume es:nothing
-		mov	al, es:[di]
-		mov	[bp+var_6], al
-		mov	ax, 0A800h
-		mov	es, ax
-		mov	al, es:[di+50h]
-		mov	[bp+var_5], al
-		mov	ax, 0C0h ; '?'
-		mov	cl, byte ptr [bp+var_2]
-		sar	ax, cl
-		and	[bp+var_6], al
-		mov	ax, 0C0h ; '?'
-		sar	ax, cl
-		and	[bp+var_5], al
-		mov	al, [si+1465h]
-		cbw
-		call	_grcg_setcolor_rmw stdcall, ax
-		push	0
-		call	_graph_accesspage_func
-		add	sp, 8
-		cmp	[bp+var_6], 0
-		jz	short loc_2A677
-		les	bx, _VRAM_PLANE_B
-		assume es:nothing
-		add	bx, di
-		mov	al, [bp+var_6]
-		mov	es:[bx], al
-
-loc_2A677:
-		cmp	[bp+var_5], 0
-		jz	short loc_2A68A
-		les	bx, _VRAM_PLANE_B
-		add	bx, di
-		mov	al, [bp+var_5]
-		mov	es:[bx+50h], al
-
-loc_2A68A:
-		inc	si
-
-loc_2A68B:
-		cmp	si, 1Eh
-		jl	loc_2A4D9
-		call	_grcg_off_func
-
-loc_2A697:
-		pop	di
-		pop	si
-		leave
-		retn
-sub_2A469	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -25716,7 +25480,7 @@ loc_2C5D6:
 		inc	_sariel_invincibility_frame
 		call	@shield_render_both$qv
 		call	@dress_render_both$qv
-		call	sub_2A469
+		call	@particles2x2_wavy_unput_update_r$qv
 		cmp	word_35E95, 0
 		jnz	short loc_2C5FE
 		call	sub_2A69B
@@ -27086,36 +26850,11 @@ _particles2x2_vertical_col	db PARTICLE2X2_COUNT dup(0)
 
 public _pattern3_state
 _pattern3_state	dw -1
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
-		dd    0
+
+public _particles2x2_wavy_col
+_particles2x2_wavy_col	db PARTICLE2X2_COUNT dup(0)
+
+		db 90 dup(0)
 unk_35E7D	db  10h
 		db  18h
 		db  18h
@@ -27569,7 +27308,13 @@ public _pattern4_angle, _pattern4_interval
 _pattern4_angle     	db ?
 _pattern4_interval	dw ?
 
-		db 240 dup(?)
+public _particles2x2_wavy_left, _particles2x2_wavy_top
+public _particles2x2_wavy_velocity_y, _particles2x2_wavy_age
+_particles2x2_wavy_left      	dw PARTICLE2X2_COUNT dup(?)
+_particles2x2_wavy_top       	dw PARTICLE2X2_COUNT dup(?)
+_particles2x2_wavy_velocity_y	dw PARTICLE2X2_COUNT dup(?)
+_particles2x2_wavy_age       	dw PARTICLE2X2_COUNT dup(?)
+
 point_3B037	Point <?>
 y_3B03B	dw ?
 x_3B03D	dw ?

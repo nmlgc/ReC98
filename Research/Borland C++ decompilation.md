@@ -505,9 +505,12 @@ Inhibited by:
 
 * inlined calls to empty functions
 
-`-O` also merges individual `ADD SP, imm8` or `POP CX` stack-clearing
-instructions after `__cdecl` function calls into a single one with their
-combined parameter size.
+`-O` also merges the `ADD SP, imm8` or `POP CX` stack-clearing instructions
+after successive `__cdecl` function calls into a single one with their combined
+parameter size after the final function call in such a series. Declaring a
+local variable after a function call, with or without assigning a value, will
+interrupt such a series and force a stack-clearing instruction after the final
+function call before the declaration.
 
 * **[Bug:]** Any emitted call to `SCOPY@` will disable this feature of `-O` for
   all generated code in a translation unit that follows the `SCOPY@` call.

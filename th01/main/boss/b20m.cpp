@@ -231,6 +231,15 @@ static const dots8_t sPARTICLE2X2 = 0xC0; // (**      )
 	first_bit = (static_cast<screen_x_t>(left) % BYTE_DOTS); \
 }
 
+// Better.
+#define particle2x2_snap(dots, vo, first_bit) { \
+	dots[0] = grcg_chunk_8(vo); \
+	dots[1] = grcg_chunk_8(vo + ROW_SIZE); \
+	dots[0] &= (sPARTICLE2X2 >> first_bit); \
+	dots[1] &= (sPARTICLE2X2 >> first_bit); \
+}
+
+// Worse.
 #define particle2x2_snap_2(dots, vo, first_bit) { \
 	dots[0] = grcg_chunk(vo, 8); \
 	/* Parentheses omitted for code generation reasons */ \
@@ -1502,4 +1511,86 @@ void near pattern_aimed_sling_clusters(void)
 	if(boss_phase_frame >= 299) {
 		boss_phase_frame = 0;
 	}
+}
+
+void near particles2x2_wavy_unput_update_render()
+{
+	#define col       	particles2x2_wavy_col
+	#define left      	particles2x2_wavy_left
+	#define top       	particles2x2_wavy_top
+	#define velocity_y	particles2x2_wavy_velocity_y
+	#define age       	particles2x2_wavy_age
+
+	// Also indicates whether a particle is alive.
+	extern uint4_t col[PARTICLE2X2_COUNT];
+
+	extern screen_x_t left[PARTICLE2X2_COUNT];
+	extern vram_y_t top[PARTICLE2X2_COUNT];
+	extern pixel_t velocity_y[PARTICLE2X2_COUNT];
+	extern int age[PARTICLE2X2_COUNT];
+
+	int i;
+	int first_bit;
+	vram_offset_t vo;
+	screen_x_t wave_left;
+	DotRect<dots8_t, PARTICLE2X2_H> dots;
+
+	if((boss_phase_frame % 7) == 0) {
+		for(i = 0; i < PARTICLE2X2_COUNT; i++) {
+			if(col[i] != 0) {
+				continue;
+			}
+			left[i] = (rand() % RES_X);
+			top[i] = RES_Y;
+			velocity_y[i] = -1;
+			age[i] = 0;
+			col[i] = COL_PARTICLE2X2;
+			break;
+		}
+	}
+	if((boss_phase_frame % 2) != 0) {
+		return;
+	}
+	for(i = 0; i < PARTICLE2X2_COUNT; i++) {
+		if(col[i] == 0) {
+			continue;
+		}
+
+		grcg_setcolor_tcr(COL_AIR);
+
+		wave_left = polar_y(left[i], 16, age[i]);
+		vo = vram_offset_shift(wave_left, top[i]);
+		first_bit = (wave_left & (BYTE_DOTS - 1));
+
+		// Unblit
+		graph_accesspage_func(1);	particle2x2_snap(dots, vo, first_bit);
+		grcg_setcolor_rmw(COL_AIR);
+		graph_accesspage_func(0);	particle2x2_put(vo, first_bit, dots);
+
+		// Update
+		top[i] += velocity_y[i];
+		age[i]++;
+
+		// Recalculate VRAM offset and clip
+		wave_left = polar_y(left[i], 16, age[i]);
+		vo = vram_offset_shift(wave_left, top[i]);
+		first_bit = (wave_left & (BYTE_DOTS - 1));
+		if(age[i] >= 100) {
+			col[i] = 0;
+			continue;
+		}
+
+		// Render
+		grcg_setcolor_tcr(COL_AIR);
+		graph_accesspage_func(1);	particle2x2_snap(dots, vo, first_bit);
+		grcg_setcolor_rmw(col[i]);
+		graph_accesspage_func(0);	particle2x2_put(vo, first_bit, dots);
+	}
+	grcg_off();
+
+	#undef age
+	#undef velocity_y
+	#undef top
+	#undef left
+	#undef col
 }
