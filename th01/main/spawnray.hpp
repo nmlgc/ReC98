@@ -1,8 +1,10 @@
+static const int SPAWNRAY_RESET = 99;
+
 #define spawnray_unput_and_put_func( \
 	target_prev_x, target_prev_y, \
 	origin_x, origin_y, target_x, target_y, col, unblit_always \
 ) { \
-	if(col == 99) { \
+	if(col == SPAWNRAY_RESET) { \
 		target_prev_x = -PIXEL_NONE; \
 		target_prev_y = -PIXEL_NONE; \
 		/* Umm, shouldn't we unblit in this case? */ \

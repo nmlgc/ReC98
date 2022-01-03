@@ -22444,6 +22444,7 @@ main_36_TEXT	segment	byte public 'CODE' use16
 	@pattern_2_rings_from_a2_orbs$qv procdesc near
 	@pattern_aimed_sling_clusters$qv procdesc near
 	@particles2x2_wavy_unput_update_r$qv procdesc near
+	@pattern_four_aimed_lasers$qv procdesc near
 main_36_TEXT	ends
 
 main_36__TEXT	segment	byte public 'CODE' use16
@@ -22454,149 +22455,6 @@ main_36__TEXT	segment	byte public 'CODE' use16
 include th01/main/boss/anim.inc
 
 sariel_shield	equ <boss_entity_0>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2A69B	proc near
-		push	bp
-		mov	bp, sp
-		cmp	_boss_phase_frame, 5
-		jge	short loc_2A6B0
-		push	large 0
-		push	large 0
-		push	99
-		call	@spawnray_unput_and_put$qiiiii
-
-loc_2A6B0:
-		cmp	_boss_phase_frame, 50
-		jl	loc_2A894
-		cmp	_boss_phase_frame, 50
-		jnz	short loc_2A735
-		mov	point_3B037.x, 460
-		mov	point_3B037.y, 120
-		call	_vector2_between stdcall, point_3B037.x, point_3B037.y, _player_left, RES_Y, offset x_3B03D, ds, offset y_3B03B, ds, 16
-		mov	ax, _player_left
-		mov	word_3B03F, ax
-		call	@sariel_select_for_rank$qmiiiii stdcall, offset _sariel_pattern_state, ds, large 60 or (64 shl 16), large 68 or (72 shl 16)
-		add	sp, 1Eh
-		push	50 or (8 shl 16)	; (moveout_at_age) or (w shl 16)
-		push	7	; col
-		push	_sariel_pattern_state	; speed_multiplied_by_8
-		push	PLAYFIELD_BOTTOM	; target_y
-		push	_player_left	; target_left
-		push	460 or (120 shl 16)	; (origin_left) or (origin_y shl 16)
-		push	ds	; this (segment)
-		push	offset shootout_laser_0	; this (offset)
-
-loc_2A724:
-		call	@CShootoutLaser@spawn$qiiiiiiii
-		push	6
-		call	_mdrv2_se_play
-		add	sp, 16h
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_2A735:
-		cmp	_boss_phase_frame, 100
-		jl	loc_2A863
-		cmp	_boss_phase_frame, 100
-		jnz	short loc_2A79B
-		mov	point_3B037.x, 180
-		mov	point_3B037.y, 120
-		push	16
-		push	ds
-		push	offset y_3B03B
-		push	ds
-		push	offset x_3B03D
-		push	RES_Y
-		mov	ax, RES_X - 1
-		sub	ax, word_3B03F
-		push	ax
-		push	point_3B037.y
-		push	point_3B037.x
-		call	_vector2_between
-		add	sp, 12h
-		push	50 or (8 shl 16)	; (moveout_at_age) or (w shl 16)
-		push	7	; col
-		push	_sariel_pattern_state	; speed_multiplied_by_8
-		push	PLAYFIELD_BOTTOM	; target_y
-		mov	ax, (PLAYFIELD_RIGHT - 1)
-		sub	ax, word_3B03F
-		push	ax	; target_left
-		push	point_3B037.y	; origin_y
-		push	point_3B037.x	; origin_left
-		push	ds	; this (segment)
-		push	offset shootout_laser_1	; this (offset)
-		jmp	short loc_2A724
-; ---------------------------------------------------------------------------
-
-loc_2A79B:
-		cmp	_boss_phase_frame, 150
-		jl	loc_2A863
-		cmp	_boss_phase_frame, 150
-		jnz	short loc_2A7FC
-		mov	point_3B037.x, 608
-		mov	point_3B037.y, 164
-		call	_vector2_between c, point_3B037.x, point_3B037.y, _player_left, RES_Y, offset x_3B03D, ds, offset y_3B03B, ds, 16
-		push	50 or (8 shl 16)	; (moveout_at_age) or (w shl 16)
-		push	7	; col
-		push	_sariel_pattern_state	; speed_multiplied_by_8
-		push	PLAYFIELD_BOTTOM	; target_y
-		push	_player_left	; target_left
-		push	point_3B037.y	; origin_y
-		push	point_3B037.x	; origin_left
-		push	ds	; this (segment)
-		push	offset shootout_laser_2	; this (offset)
-		jmp	loc_2A724
-; ---------------------------------------------------------------------------
-
-loc_2A7FC:
-		cmp	_boss_phase_frame, 200
-		jl	short loc_2A863
-		cmp	_boss_phase_frame, 200
-		jnz	short loc_2A85B
-		mov	point_3B037.x, 24
-		mov	point_3B037.y, 164
-		call	_vector2_between c, point_3B037.x, point_3B037.y, _player_left, RES_Y, offset x_3B03D, ds, offset y_3B03B, ds, 16
-		push	50 or (8 shl 16)	; (moveout_at_age) or (w shl 16)
-		push	7	; col
-		push	_sariel_pattern_state	; speed_multiplied_by_8
-		push	PLAYFIELD_BOTTOM	; target_y
-		push	_player_left	; target_left
-		push	point_3B037.y	; origin_y
-		push	point_3B037.x	; origin_left
-		push	ds	; this (segment)
-		push	offset shootout_laser_3	; this (offset)
-		jmp	loc_2A724
-; ---------------------------------------------------------------------------
-
-loc_2A85B:
-		cmp	_boss_phase_frame, 250
-		jge	short loc_2A886
-
-loc_2A863:
-		call	@spawnray_unput_and_put$qiiiii pascal, ((RES_X / 2) shl 16) or 120, point_3B037.x, point_3B037.y, 7
-		mov	ax, x_3B03D
-		add	point_3B037.x, ax
-		mov	ax, y_3B03B
-		add	point_3B037.y, ax
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_2A886:
-		cmp	_boss_phase_frame, 300
-		jle	short loc_2A894
-		mov	_boss_phase_frame, 0
-
-loc_2A894:
-		pop	bp
-		retn
-sub_2A69B	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -25483,7 +25341,7 @@ loc_2C5D6:
 		call	@particles2x2_wavy_unput_update_r$qv
 		cmp	word_35E95, 0
 		jnz	short loc_2C5FE
-		call	sub_2A69B
+		call	@pattern_four_aimed_lasers$qv
 		jmp	short loc_2C631
 ; ---------------------------------------------------------------------------
 
@@ -25512,7 +25370,7 @@ loc_2C624:
 		jnz	short loc_2C631
 
 loc_2C62B:
-		call	sub_2A69B
+		call	@pattern_four_aimed_lasers$qv
 		call	sub_2A8F7
 
 loc_2C631:
@@ -27315,10 +27173,15 @@ _particles2x2_wavy_top       	dw PARTICLE2X2_COUNT dup(?)
 _particles2x2_wavy_velocity_y	dw PARTICLE2X2_COUNT dup(?)
 _particles2x2_wavy_age       	dw PARTICLE2X2_COUNT dup(?)
 
-point_3B037	Point <?>
-y_3B03B	dw ?
-x_3B03D	dw ?
-word_3B03F	dw ?
+public _pattern6_origin_x, _pattern6_origin_y, _pattern6_spawnray
+public _pattern6_target_first
+_pattern6_origin_x	dw ?	; origin_x
+_pattern6_origin_y	dw ?	; origin_y
+_pattern6_spawnray label byte
+	dw ?	; velocity_y
+	dw ?	; velocity_x
+_pattern6_target_first	dw ?
+
 angle_3B041	db ?
 byte_3B042	db ?
 point_3B043	Point <?>
