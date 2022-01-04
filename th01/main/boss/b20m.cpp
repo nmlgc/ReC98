@@ -1723,3 +1723,20 @@ void near pattern_four_aimed_lasers(void)
 	#undef ORIGIN_Y_1
 	#undef ORIGIN_DISTANCE_X_1
 }
+
+void near shake_for_50_frames(void)
+{
+	if(boss_phase_frame < 50) {
+		if((boss_phase_frame % 8) == 0) {
+			z_vsync_wait_and_scrollup(RES_Y - 4);
+		} else if((boss_phase_frame % 8) == 4) {
+			z_vsync_wait_and_scrollup(RES_Y + 4);
+		}
+		if((boss_phase_frame % 4) == 0) {
+			mdrv2_se_play(7);
+		}
+	} else if(boss_phase_frame == 50) {
+		z_vsync_wait_and_scrollup(0);
+		boss_phase_frame = 0;
+	}
+}

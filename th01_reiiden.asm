@@ -22445,6 +22445,7 @@ main_36_TEXT	segment	byte public 'CODE' use16
 	@pattern_aimed_sling_clusters$qv procdesc near
 	@particles2x2_wavy_unput_update_r$qv procdesc near
 	@pattern_four_aimed_lasers$qv procdesc near
+	@shake_for_50_frames$qv	procdesc near
 main_36_TEXT	ends
 
 main_36__TEXT	segment	byte public 'CODE' use16
@@ -22455,65 +22456,6 @@ main_36__TEXT	segment	byte public 'CODE' use16
 include th01/main/boss/anim.inc
 
 sariel_shield	equ <boss_entity_0>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2A896	proc near
-		push	bp
-		mov	bp, sp
-		cmp	_boss_phase_frame, 50
-		jge	short loc_2A8E0
-		mov	ax, _boss_phase_frame
-		mov	bx, 8
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_2A8B2
-		push	(RES_Y - 4)
-		jmp	short loc_2A8C3
-; ---------------------------------------------------------------------------
-
-loc_2A8B2:
-		mov	ax, _boss_phase_frame
-		mov	bx, 8
-		cwd
-		idiv	bx
-		cmp	dx, 4
-		jnz	short loc_2A8C9
-		push	(RES_Y + 4)
-
-loc_2A8C3:
-		call	_z_vsync_wait_and_scrollup
-		pop	cx
-
-loc_2A8C9:
-		mov	ax, _boss_phase_frame
-		mov	bx, 4
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_2A8F5
-		push	7
-		call	_mdrv2_se_play
-		pop	cx
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_2A8E0:
-		cmp	_boss_phase_frame, 50
-		jnz	short loc_2A8F5
-		call	_z_vsync_wait_and_scrollup stdcall, 0
-		pop	cx
-		mov	_boss_phase_frame, 0
-
-loc_2A8F5:
-		pop	bp
-		retn
-sub_2A896	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -25361,7 +25303,7 @@ loc_2C618:
 		jnz	short loc_2C624
 
 loc_2C61F:
-		call	sub_2A896
+		call	@shake_for_50_frames$qv
 		jmp	short loc_2C631
 ; ---------------------------------------------------------------------------
 
