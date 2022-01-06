@@ -22446,6 +22446,7 @@ main_36_TEXT	segment	byte public 'CODE' use16
 	@particles2x2_wavy_unput_update_r$qv procdesc near
 	@pattern_four_aimed_lasers$qv procdesc near
 	@shake_for_50_frames$qv	procdesc near
+	@pattern_rain_from_top$qv procdesc near
 main_36_TEXT	ends
 
 main_36__TEXT	segment	byte public 'CODE' use16
@@ -22456,44 +22457,6 @@ main_36__TEXT	segment	byte public 'CODE' use16
 include th01/main/boss/anim.inc
 
 sariel_shield	equ <boss_entity_0>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2A8F7	proc near
-
-@@group		= word ptr -6
-@@top		= word ptr -4
-@@left		= word ptr -2
-
-		enter	6, 0
-		mov	ax, _boss_phase_frame
-		mov	bx, 8
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short locret_2A947
-		call	IRand
-		mov	bx, PLAYFIELD_RIGHT
-		cwd
-		idiv	bx
-		mov	[bp+@@left], dx
-		mov	[bp+@@top], PLAYFIELD_TOP
-		push	PG_1 or (PG_1_RANDOM_WIDE shl 16)	; (for_hard) or (for_lunatic)
-		push	PG_1 or (PG_1 shl 16)	; (for_easy) or (for_normal)
-		push	ss	; ret (segment)
-		lea	ax, [bp+@@group]
-		push	ax	; ret (offset)
-		call	@sariel_select_for_rank$qmiiiii
-		call	@CPellets@add_group$qii14pellet_group_ti stdcall, offset _Pellets, ds, [bp+@@left], [bp+@@top], [bp+@@group], (2 shl 4) + 12
-		add	sp, 18h
-
-locret_2A947:
-		leave
-		retn
-sub_2A8F7	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -25313,7 +25276,7 @@ loc_2C624:
 
 loc_2C62B:
 		call	@pattern_four_aimed_lasers$qv
-		call	sub_2A8F7
+		call	@pattern_rain_from_top$qv
 
 loc_2C631:
 		cmp	_boss_phase_frame, 0
