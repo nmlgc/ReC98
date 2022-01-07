@@ -22447,6 +22447,7 @@ main_36_TEXT	segment	byte public 'CODE' use16
 	@pattern_four_aimed_lasers$qv procdesc near
 	@shake_for_50_frames$qv	procdesc near
 	@pattern_rain_from_top$qv procdesc near
+	@pattern_radial_stacks_and_lasers$qv procdesc near
 main_36_TEXT	ends
 
 main_36__TEXT	segment	byte public 'CODE' use16
@@ -22457,226 +22458,6 @@ main_36__TEXT	segment	byte public 'CODE' use16
 include th01/main/boss/anim.inc
 
 sariel_shield	equ <boss_entity_0>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2A949	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		cmp	_boss_phase_frame, 5
-		jge	short loc_2A960
-		push	large 0
-		push	large 0
-		push	99
-		call	@spawnray_unput_and_put$qiiiii
-
-loc_2A960:
-		cmp	_boss_phase_frame, 150
-		jl	loc_2ABD8
-		cmp	_boss_phase_frame, 150
-		jnz	short loc_2A99E
-		mov	angle_3B041, 0
-		mov	byte_3B042, 1
-		call	@sariel_select_for_rank$qmiiiii c, offset _sariel_pattern_state, ds, large 60 or (65 shl 16), large 70 or (75 shl 16)
-
-loc_2A993:
-		push	6
-		call	_mdrv2_se_play
-		pop	cx
-		jmp	loc_2ABD8
-; ---------------------------------------------------------------------------
-
-loc_2A99E:
-		cmp	_boss_phase_frame, 200
-		jge	short loc_2AA13
-		mov	al, angle_3B041
-		mov	ah, 0
-		and	ax, 255
-		add	ax, ax
-		mov	bx, ax
-		movsx	eax, _CosTable8[bx]
-		imul	eax, 140
-		sar	eax, 8
-		add	ax, 320
-		mov	si, ax
-		mov	al, angle_3B041
-		mov	ah, 0
-		and	ax, 255
-		add	ax, ax
-		mov	bx, ax
-		movsx	eax, _SinTable8[bx]
-		imul	eax, 140
-		sar	eax, 8
-		add	ax, 160
-		mov	di, ax
-		call	@spawnray_unput_and_put$qiiiii pascal, ((RES_X / 2) shl 16) or 160, si, ax, 7
-		mov	al, byte_3B042
-		add	angle_3B041, al
-		inc	byte_3B042
-		mov	ax, _boss_phase_frame
-		mov	bx, 10
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	loc_2ABD8
-		jmp	short loc_2A993
-; ---------------------------------------------------------------------------
-
-loc_2AA13:
-		cmp	_boss_phase_frame, 200
-		jnz	short loc_2AA36
-		mov	si, 999
-		mov	di, 999
-		call	@spawnray_unput_and_put$qiiiii pascal, ((RES_X / 2) shl 16) or 160, si, di, 7
-		mov	angle_3B041, 0
-		jmp	loc_2ABD8
-; ---------------------------------------------------------------------------
-
-loc_2AA36:
-		cmp	_boss_phase_frame, 400
-		jg	loc_2ABCA
-		mov	ax, _boss_phase_frame
-		mov	bx, 5
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	loc_2ABD8
-		mov	al, angle_3B041
-		mov	ah, 0
-		and	ax, 255
-		add	ax, ax
-		mov	bx, ax
-		movsx	eax, _CosTable8[bx]
-		imul	eax, 258h
-		sar	eax, 8
-		add	ax, 140h
-		mov	si, ax
-		mov	al, angle_3B041
-		mov	ah, 0
-		and	ax, 255
-		add	ax, ax
-		mov	bx, ax
-		movsx	eax, _SinTable8[bx]
-		imul	eax, 258h
-		sar	eax, 8
-		add	ax, 0A0h
-		mov	di, ax
-		push	7
-		call	_mdrv2_se_play
-		pop	cx
-		mov	ax, _boss_phase_frame
-		mov	bx, 15
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_2AADB
-		push	20 or (4 shl 16)	; (moveout_at_age) or (w shl 16)
-		push	7	; col
-		push	_sariel_pattern_state	; speed_multiplied_by_8
-		push	di	; target_y
-		push	si	; target_left
-		push	320 or (160 shl 16)	; (origin_left) or (origin_y shl 16)
-		mov	ax, _boss_phase_frame
-		add	ax, -215
-		cwd
-		idiv	bx
-		mov	bx, 0Ah
-		cwd
-		idiv	bx
-		imul	dx, size CShootoutLaser
-		add	dx, offset _shootout_lasers
-		push	ds	; this (segment)
-		push	dx	; this (offset)
-		call	@CShootoutLaser@spawn$qiiiiiiii
-		jmp	short loc_2AAF6
-; ---------------------------------------------------------------------------
-
-loc_2AADB:
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, large 320 or (160 shl 16), word ptr angle_3B041, (6 shl 4) + 4, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
-
-loc_2AAF6:
-		add	sp, 14h
-		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
-		push	(6 shl 4)
-		mov	al, angle_3B041
-		add	al, -4
-		push	ax
-		push	320 or (160 shl 16)
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
-		push	(6 shl 4)
-		mov	al, angle_3B041
-		add	al, 4
-		push	ax
-		push	320 or (160 shl 16)
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		add	sp, 28h
-		mov	al, _rank
-		cbw
-		cmp	ax, RANK_HARD
-		; Hack (jl loc_2ABC0)
-		db 00fh
-		db 08ch
-		db 07fh
-		db 000h
-		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
-		push	(4 shl 4)
-		mov	al, angle_3B041
-		add	al, -4
-		push	ax
-		push	320 or (160 shl 16)
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
-		push	(4 shl 4)
-		mov	al, angle_3B041
-		add	al, 4
-		push	ax
-		push	320 or (160 shl 16)
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		add	sp, 28h
-		mov	al, _rank
-		cbw
-		cmp	ax, RANK_LUNATIC
-		jnz	short loc_2ABC0
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, large 320 or (160 shl 16), word ptr angle_3B041, (4 shl 4), large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, large 320 or (160 shl 16), word ptr angle_3B041, (3 shl 4), large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
-		add	sp, 28h
-
-loc_2ABC0:
-		mov	al, angle_3B041
-		add	al, 0Ch
-		mov	angle_3B041, al
-		jmp	short loc_2ABD8
-; ---------------------------------------------------------------------------
-
-loc_2ABCA:
-		cmp	_boss_phase_frame, 450
-		jnz	short loc_2ABD8
-		mov	_boss_phase_frame, 0
-
-loc_2ABD8:
-		pop	di
-		pop	si
-		pop	bp
-		retn
-sub_2A949	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -25257,7 +25038,7 @@ loc_2C5FE:
 		jz	short loc_2C62B
 		cmp	word_35E95, 3
 		jnz	short loc_2C618
-		call	sub_2A949
+		call	@pattern_radial_stacks_and_lasers$qv
 		jmp	short loc_2C631
 ; ---------------------------------------------------------------------------
 
@@ -27087,8 +26868,10 @@ _pattern6_spawnray label byte
 	dw ?	; velocity_x
 _pattern6_target_first	dw ?
 
-angle_3B041	db ?
-byte_3B042	db ?
+public _pattern8_angle, _pattern8_angle_velocity
+_pattern8_angle	db ?
+_pattern8_angle_velocity	db ?
+
 point_3B043	Point <?>
 point_3B047	Point <?>
 grc_image_3B04B	dw ?
