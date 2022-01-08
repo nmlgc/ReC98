@@ -145,16 +145,6 @@ void shape8x8_invincibility_put(screen_x_t left, vram_y_t top, int cel)
 	grcg_off();
 }
 
-// How do you even?!
-#undef grcg_put
-
-#define grcg_put(vram_offset, src) \
-	/* Nope, pokeb() doesn't generate the same code */ \
-	*reinterpret_cast<dots8_t *>(MK_FP(SEG_PLANE_B, vram_offset)) = src
-
-#define grcg_peek(vram_offset) \
-	peekb(SEG_PLANE_B, vram_offset)
-
 // Surely this function was meant to just regularly unblit the sprite via the
 // EGC? The GRCG RMW mode has no effect on VRAM reads, and simply returns the
 // exact bytes at the given offset on the given (that is, the B) plane. As a
@@ -183,24 +173,26 @@ void shape8x8_invincibility_put_with_mask_from_B_plane(
 		if(first_bit == 0) {
 			dots8_t bg_B;
 
-			graph_accesspage_func(1); bg_B = (grcg_peek(vram_offset) & sprite);
-			graph_accesspage_func(0); grcg_put(vram_offset, bg_B);
+			graph_accesspage_func(1);
+			bg_B = (grcg_chunk_8(vram_offset) & sprite);
+			graph_accesspage_func(0);
+			grcg_put_8(vram_offset, bg_B);
 		} else {
 			// MODDERS: Add clipping at the right edge
 			dots8_t bg_B_left;
 			dots8_t bg_B_right;
 
 			graph_accesspage_func(1);
-			bg_B_left = (grcg_peek(vram_offset + 0) & (sprite >> first_bit));
+			bg_B_left = (grcg_chunk_8(vram_offset + 0) & (sprite >> first_bit));
 
 			graph_accesspage_func(1);
 			bg_B_right = (
-				grcg_peek(vram_offset + 1) &
+				grcg_chunk_8(vram_offset + 1) &
 				(sprite << (BYTE_DOTS - first_bit))
 			);
 
-			graph_accesspage_func(0); grcg_put((vram_offset + 0), bg_B_left);
-			graph_accesspage_func(0); grcg_put((vram_offset + 1), bg_B_right);
+			graph_accesspage_func(0); grcg_put_8((vram_offset + 0), bg_B_left);
+			graph_accesspage_func(0); grcg_put_8((vram_offset + 1), bg_B_right);
 		}
 
 		vram_offset += ROW_SIZE;

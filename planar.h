@@ -173,8 +173,18 @@ static inline vram_offset_t vram_offset_divshift_wtf(screen_x_t x, vram_y_t y)
 		*(dots32_t*)((dst) + p) = *(dots32_t*)((src) + p); \
 	}
 
+#define grcg_chunk(vram_offset, bit_count) \
+	VRAM_CHUNK(B, vram_offset, bit_count)
+
+#define grcg_chunk_8(vram_offset) \
+	peekb(SEG_PLANE_B, vram_offset)
+
 #define grcg_put(offset, src, bit_count) \
 	VRAM_PUT(B, offset, src, bit_count)
+
+#define grcg_put_8(offset, src) \
+	/* Nope, pokeb() doesn't generate the same code */ \
+	*reinterpret_cast<dots8_t *>(MK_FP(SEG_PLANE_B, offset)) = src
 
 #define grcg_snap(dst, offset, bit_count) \
 	VRAM_SNAP(dst, B, offset, bit_count)
