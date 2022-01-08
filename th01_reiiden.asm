@@ -22448,6 +22448,7 @@ main_36_TEXT	segment	byte public 'CODE' use16
 	@shake_for_50_frames$qv	procdesc near
 	@pattern_rain_from_top$qv procdesc near
 	@pattern_radial_stacks_and_lasers$qv procdesc near
+	@pattern_symmetric_birds_from_bot$qv procdesc near
 main_36_TEXT	ends
 
 main_36__TEXT	segment	byte public 'CODE' use16
@@ -22458,284 +22459,6 @@ main_36__TEXT	segment	byte public 'CODE' use16
 include th01/main/boss/anim.inc
 
 sariel_shield	equ <boss_entity_0>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2ABDC	proc near
-
-var_2A		= qword	ptr -2Ah
-var_22		= qword	ptr -22h
-var_1A		= qword	ptr -1Ah
-var_12		= qword	ptr -12h
-var_A		= word ptr -0Ah
-var_8		= qword	ptr -8
-
-		enter	0Ah, 0
-		cmp	_boss_phase_frame, 50
-		jl	locret_2AECC
-		cmp	_boss_phase_frame, 50
-		jnz	short loc_2AC27
-		call	@sariel_select_for_rank$qmiiiii c, offset _sariel_pattern_state, ds, large 6 or (7 shl 16), large 8 or (9 shl 16)
-		mov	point_3B043.x, 2
-		mov	point_3B043.y, (RES_Y - 1)
-		mov	point_3B047.x, 2
-		mov	point_3B047.y, -2
-		mov	grc_image_3B04B, 3
-		leave
-		retn
-; ---------------------------------------------------------------------------
-
-loc_2AC27:
-		cmp	_boss_phase_frame, 100
-		jge	loc_2AE54
-		mov	ax, _boss_phase_frame
-		mov	bx, 2
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_2AC8A
-		push	(32 shl 16) or 48
-		mov	ax, point_3B043.y
-		add	ax, -32
-		push	ax
-		mov	ax, point_3B043.x
-		add	ax, -28
-		push	ax
-		call	_egc_copy_rect_1_to_0_16
-		add	sp, 8
-		push	7	; col
-		push	grc_image_3B04B	; image
-		push	GRC_SLOT_BOSS_1	; slot
-		mov	ax, point_3B043.y
-		add	ax, -16
-		push	ax	; top
-		mov	ax, point_3B043.x
-		add	ax, -24
-		push	ax	; left
-		call	_grc_put_8
-		add	sp, 0Ah
-		call	@spawnray_unput_and_put$qiiiii pascal, ((RES_X / 2) shl 16) or 120, point_3B043.x, point_3B043.y, 7
-
-loc_2AC8A:
-		mov	ax, _boss_phase_frame
-		mov	bx, 2
-		cwd
-		idiv	bx
-		cmp	dx, 1
-		jnz	short loc_2AD01
-		push	(32 shl 16) or 48
-		mov	ax, point_3B043.y
-		add	ax, -32
-		push	ax
-		mov	ax, 632
-		sub	ax, point_3B043.x
-		add	ax, 4
-		push	ax
-		call	_egc_copy_rect_1_to_0_16
-		add	sp, 8
-		push	7	; col
-		push	grc_image_3B04B	; image
-		push	GRC_SLOT_BOSS_1	; slot
-		mov	ax, point_3B043.y
-		add	ax, -16
-		push	ax	; top
-		mov	ax, (RES_X - 8)
-		sub	ax, point_3B043.x
-		push	ax	; left
-		call	_grc_put_8
-		add	sp, 0Ah
-		push	((RES_X / 2) shl 16) or 120
-		mov	ax, (RES_X - 1)
-		sub	ax, point_3B043.x
-		push	ax
-		push	point_3B043.y
-		push	7
-		call	@spawnray_unput_and_put$qiiiii
-		cmp	grc_image_3B04B, 5
-		jge	short loc_2ACFB
-		mov	ax, grc_image_3B04B
-		inc	ax
-		jmp	short loc_2ACFE
-; ---------------------------------------------------------------------------
-
-loc_2ACFB:
-		mov	ax, 3
-
-loc_2ACFE:
-		mov	grc_image_3B04B, ax
-
-loc_2AD01:
-		add	point_3B043.x, 2
-		mov	ax, _boss_phase_frame
-		mov	bx, 10
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	loc_2AE0C
-		push	6
-		call	_mdrv2_se_play
-		pop	cx
-		mov	ax, _boss_phase_frame
-		add	ax, -60
-		imul	ax, 10
-		add	ax, point_3B043.x
-		mov	[bp+var_A], ax
-		fild	[bp+var_A]
-		fstp	[bp+var_8]
-		push	4
-		push	ds
-		push	offset point_3B047.y
-		push	ds
-		push	offset point_3B047.x
-		push	0
-		fld	[bp+var_8]
-		call	ftol@
-		push	ax
-		mov	ax, point_3B043.y
-		add	ax, -32
-		push	ax
-		push	point_3B043.x
-		call	_vector2_between
-		add	sp, 12h
-		mov	ax, point_3B043.x
-		mov	[bp+var_A], ax
-		fild	[bp+var_A]
-		sub	sp, 8
-		fstp	[bp+var_12]
-		fwait
-		mov	ax, point_3B043.y
-		add	ax, -32
-		mov	[bp+var_A], ax
-		fild	[bp+var_A]
-		sub	sp, 8
-		fstp	[bp+var_1A]
-		fwait
-		mov	ax, point_3B047.x
-		mov	[bp+var_A], ax
-		fild	[bp+var_A]
-		sub	sp, 8
-		fstp	[bp+var_22]
-		fwait
-		mov	ax, point_3B047.y
-		mov	[bp+var_A], ax
-		fild	[bp+var_A]
-		sub	sp, 8
-		fstp	[bp+var_2A]
-		push	1		; char
-		fwait
-		call	@birds_reset_fire_spawn_unput_upd$qddddc
-		mov	ax, (RES_X - 1)
-		sub	ax, point_3B043.x
-		mov	[bp+var_A], ax
-		fild	[bp+var_A]
-		sub	sp, 8
-		fstp	[bp+var_12]
-		fwait
-		mov	ax, point_3B043.y
-		add	ax, -32
-		mov	[bp+var_A], ax
-		fild	[bp+var_A]
-		sub	sp, 8
-		fstp	[bp+var_1A]
-		fwait
-		mov	ax, point_3B047.x
-		neg	ax
-		mov	[bp+var_A], ax
-		fild	[bp+var_A]
-		sub	sp, 8
-		fstp	[bp+var_22]
-		fwait
-		mov	ax, point_3B047.y
-		mov	[bp+var_A], ax
-		fild	[bp+var_A]
-		sub	sp, 8
-		fstp	[bp+var_2A]
-		push	1		; char
-		fwait
-		call	@birds_reset_fire_spawn_unput_upd$qddddc
-
-loc_2AE0C:
-		mov	ax, _boss_phase_frame
-		mov	bx, 6
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	locret_2AECC
-		fld	dword ptr ds:[15D6h]
-		sub	sp, 8
-		fstp	[bp+var_12]
-		fldz
-		fwait
-		sub	sp, 8
-		fstp	[bp+var_1A]
-		fldz
-		fwait
-		sub	sp, 8
-		fstp	[bp+var_22]
-		fldz
-		fwait
-		sub	sp, 8
-		fstp	[bp+var_2A]
-		push	0		; char
-		fwait
-		call	@birds_reset_fire_spawn_unput_upd$qddddc
-		leave
-		retn
-; ---------------------------------------------------------------------------
-
-loc_2AE54:
-		cmp	_boss_phase_frame, 100
-		jnz	short loc_2AE7A
-		push	point_3B043.y
-		mov	ax, RES_X - 1
-		sub	ax, point_3B043.x
-		add	ax, 2
-		push	ax
-		push	(120 shl 16) or 320
-		call	_graph_r_line_unput
-		add	sp, 8
-		leave
-		retn
-; ---------------------------------------------------------------------------
-
-loc_2AE7A:
-		mov	ax, _boss_phase_frame
-		mov	bx, 10
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_2AEBE
-		fld	dword ptr ds:[15D6h]
-		sub	sp, 8
-		fstp	[bp+var_12]
-		fldz
-		fwait
-		sub	sp, 8
-		fstp	[bp+var_1A]
-		fldz
-		fwait
-		sub	sp, 8
-		fstp	[bp+var_22]
-		fldz
-		fwait
-		sub	sp, 8
-		fstp	[bp+var_2A]
-		push	0		; char
-		fwait
-		call	@birds_reset_fire_spawn_unput_upd$qddddc
-
-loc_2AEBE:
-		cmp	_boss_phase_frame, 300
-		jl	short locret_2AECC
-		mov	_boss_phase_frame, 0
-
-locret_2AECC:
-		leave
-		retn
-sub_2ABDC	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -25162,7 +24885,7 @@ loc_2C6F2:
 		call	@birds_reset_fire_spawn_unput_upd$qddddc
 		cmp	word_35E95, 0
 		jnz	short loc_2C751
-		call	sub_2ABDC
+		call	@pattern_symmetric_birds_from_bot$qv
 		jmp	short loc_2C767
 ; ---------------------------------------------------------------------------
 
@@ -26784,6 +26507,11 @@ _elis_initial_hp_rendered	db ?
 public _sariel_pattern_state
 _sariel_pattern_state	dw ?
 
+SymmetricSpawnraysWithDebris struc
+	dw ?	; left_x
+	dw ?	; y
+SymmetricSpawnraysWithDebris ends
+
 CBirds struc
 	dq BIRD_COUNT dup(?)	; left
 	dq BIRD_COUNT dup(?)	; top
@@ -26872,9 +26600,11 @@ public _pattern8_angle, _pattern8_angle_velocity
 _pattern8_angle	db ?
 _pattern8_angle_velocity	db ?
 
-point_3B043	Point <?>
-point_3B047	Point <?>
-grc_image_3B04B	dw ?
+public _pattern9_rays, _pattern9_velocity, _pattern9_debris_cel
+_pattern9_rays      	SymmetricSpawnraysWithDebris <?>
+_pattern9_velocity  	Point <?>
+_pattern9_debris_cel	dw ?
+
 x_3B04D	dw ?
 y_3B04F	dw ?
 grc_image_3B051	dw ?

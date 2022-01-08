@@ -173,15 +173,28 @@ inline void sariel_grc_free(void) {
 
 static const pixel_t VORTEX_W = 32;
 static const pixel_t VORTEX_H = 32;
+static const pixel_t DEBRIS_W = 32;
+static const pixel_t DEBRIS_H = 32;
 
 static const int VORTEX_COUNT = 2;
 
 enum vortex_or_debris_cel_t {
 	VORTEX_CELS = 3,
+	DEBRIS_CELS = 3,
 
 	C_VORTEX = 0,
 	C_VORTEX_last = (C_VORTEX + VORTEX_CELS - 1),
+	C_DEBRIS,
+	C_DEBRIS_last = (C_DEBRIS + DEBRIS_CELS - 1),
+
+	_vortex_or_debris_cel_t_FORCE_INT16 = 0x7FFF
 };
+
+inline vortex_or_debris_cel_t debris_cel_next(vortex_or_debris_cel_t &cur) {
+	return (cur < C_DEBRIS_last)
+		? static_cast<vortex_or_debris_cel_t>(cur + 1)
+		: C_DEBRIS;
+}
 
 #define vortex_or_debris_put_8(left, top, cel) \
 	grc_put_8(left, top, GRC_SLOT_VORTEX_DEBRIS, cel, V_WHITE);
@@ -403,6 +416,68 @@ void pascal near spawnray_unput_and_put(
 inline void spawnray_reset(void) {
 	spawnray_unput_and_put(0, 0, 0, 0, SPAWNRAY_RESET);
 }
+
+// Two symmetric spawn rays with debris
+// ------------------------------------
+
+template <
+	screen_x_t OriginX, screen_y_t OriginY, pixel_t DebrisOffsetX
+> struct SymmetricSpawnraysWithDebris {
+	screen_x_t target_l_x;	// Left ray target, used to calculate the right one.
+	screen_y_t target_y;
+
+	screen_x_t target_x(x_direction_t ray_id) const {
+		return (ray_id == X_LEFT)
+			? target_l_x
+			: ((PLAYFIELD_RIGHT - 1) - target_l_x);
+	}
+
+	screen_x_t debris_left(x_direction_t ray_id, pixel_t offset = 0) const {
+		return (ray_id == X_LEFT)
+			? ((target_l_x - (DEBRIS_W - DebrisOffsetX)) - offset)
+			: (((PLAYFIELD_RIGHT - DebrisOffsetX) - target_l_x) + offset);
+	}
+
+	void unput_and_put(
+		x_direction_t ray_id,
+		const vortex_or_debris_cel_t &debris_cel,
+		pixel_t velocity_x
+	) const {
+		// ZUN bug: Due to egc_copy_rect_1_to_0_16()'s lack of horizontal
+		// clamping, an initially negative X coordinate for the left debris
+		// sprite, and an extra sloppy 48-pixel width, this unblitting call
+		// will wrap around to the other side of the screen for *both* the left
+		// and right sprites, unblitting most of the other sprite as well.
+		// It will take until
+		//
+		// 	(target_l_x - (DEBRIS_W / 4) - (velocity_x * 2)) >= 32
+		//
+		// for both the left and right sprite coordinates to have diverged
+		// enough for these wraparounds to stop.
+		sloppy_unput_32x32(
+			debris_left(ray_id, (velocity_x * 2)), (target_y - DEBRIS_H)
+		);
+
+		// Also, why only the top half?
+		vortex_or_debris_put_8(
+			debris_left(ray_id), (target_y - (DEBRIS_H / 2)), debris_cel
+		);
+		spawnray_unput_and_put(
+			OriginX, OriginY, target_x(ray_id), target_y, V_WHITE
+		);
+	}
+
+	void ray_unput_right(pixel_t velocity_x) const {
+		// spawnray_unput_and_put() could have done this as well, no need to
+		// change APIs...
+		// Also, [target_l_x] was updated after the last time the right ray was
+		// rendered, so we have to undo this movement here.
+		graph_r_line_unput(
+			OriginX, OriginY, (target_x(X_RIGHT) + velocity_x), target_y
+		);
+	}
+};
+// ------------------------------------
 
 enum bird_pellet_group_t {
 	BPG_AIMED = 0,
@@ -1840,4 +1915,84 @@ void near pattern_radial_stacks_and_lasers(void)
 
 	#undef CENTER_Y
 	#undef CENTER_X
+}
+
+void near pattern_symmetric_birds_from_bottom(void)
+{
+	enum {
+		VELOCITY_X = 2,
+	};
+
+	#define rays      	pattern9_rays
+	#define velocity  	pattern9_velocity
+	#define debris_cel	pattern9_debris_cel
+
+	extern SymmetricSpawnraysWithDebris<
+		PLAYFIELD_CENTER_X, FACE_CENTER_Y, (DEBRIS_W / 4)
+	> rays;
+	extern point_t velocity;
+	extern vortex_or_debris_cel_t debris_cel;
+
+	double target_x; // double?!
+
+	if(boss_phase_frame < 50) {
+		return;
+	}
+	if(boss_phase_frame == 50) {
+		select_for_rank(pattern_state.unknown, 6, 7, 8, 9);
+		rays.target_l_x = VELOCITY_X;
+		rays.target_y = (PLAYFIELD_BOTTOM - 1);
+		velocity.x = VELOCITY_X;
+		velocity.y = -2; // could have been a constant
+		debris_cel = C_DEBRIS;
+		return;
+	} else if(boss_phase_frame < 100) {
+		if((boss_phase_frame % 2) == 0) {
+			rays.unput_and_put(X_LEFT, debris_cel, VELOCITY_X);
+		}
+		if((boss_phase_frame % 2) == 1) {
+			rays.unput_and_put(X_RIGHT, debris_cel, VELOCITY_X);
+			debris_cel = debris_cel_next(debris_cel);
+		}
+		rays.target_l_x += VELOCITY_X;
+		if((boss_phase_frame % 10) == 0) {
+			mdrv2_se_play(6);
+
+			target_x = (((boss_phase_frame - 60) * 10) + rays.target_l_x);
+			vector2_between(
+				rays.target_x(X_LEFT), (rays.target_y - BIRD_H),
+				target_x, 0,
+				velocity.x, velocity.y,
+				4
+			);
+			birds_spawn(
+				rays.target_x(X_LEFT),
+				(rays.target_y - BIRD_H),
+				velocity.x,
+				velocity.y
+			);
+			birds_spawn(
+				rays.target_x(X_RIGHT),
+				(rays.target_y - BIRD_H),
+				-velocity.x,
+				velocity.y
+			);
+		}
+		if((boss_phase_frame % 6) == 0) {
+			birds_fire(BPG_RANDOM_RAIN);
+		}
+		return;
+	} else if(boss_phase_frame == 100) {
+		rays.ray_unput_right(VELOCITY_X);
+		return;
+	} else if((boss_phase_frame % 10) == 0) {
+		birds_fire(BPG_RANDOM_RAIN);
+	}
+	if(boss_phase_frame >= 300) {
+		boss_phase_frame = 0;
+	}
+
+	#undef debris_cel
+	#undef velocity
+	#undef rays
 }
