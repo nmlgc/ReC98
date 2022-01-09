@@ -22449,6 +22449,7 @@ main_36_TEXT	segment	byte public 'CODE' use16
 	@pattern_rain_from_top$qv procdesc near
 	@pattern_radial_stacks_and_lasers$qv procdesc near
 	@pattern_symmetric_birds_from_bot$qv procdesc near
+	@pattern_four_semicircle_spreads$qv procdesc near
 main_36_TEXT	ends
 
 main_36__TEXT	segment	byte public 'CODE' use16
@@ -22459,113 +22460,6 @@ main_36__TEXT	segment	byte public 'CODE' use16
 include th01/main/boss/anim.inc
 
 sariel_shield	equ <boss_entity_0>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2AECE	proc near
-
-@@angle		= byte ptr -1
-
-		enter	2, 0
-		push	si
-		cmp	_boss_phase_frame, 50
-		jl	loc_2AFDC
-		cmp	_boss_phase_frame, 50
-		jnz	short loc_2AF19
-		mov	[bp+@@angle], 0
-		xor	si, si
-		jmp	short loc_2AF11
-; ---------------------------------------------------------------------------
-
-loc_2AEEB:
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii c, offset _Pellets, ds, large 320 or (160 shl 16), word ptr [bp+@@angle], (2 shl 4), large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
-		mov	al, [bp+@@angle]
-		add	al, 7
-		mov	[bp+@@angle], al
-		inc	si
-
-loc_2AF11:
-		cmp	si, 14h
-		jl	short loc_2AEEB
-		jmp	loc_2AFDC
-; ---------------------------------------------------------------------------
-
-loc_2AF19:
-		cmp	_boss_phase_frame, 60
-		jnz	short loc_2AF56
-		mov	[bp+@@angle], 4
-		xor	si, si
-		jmp	short loc_2AF4E
-; ---------------------------------------------------------------------------
-
-loc_2AF28:
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii c, offset _Pellets, ds, large 320 or (160 shl 16), word ptr [bp+@@angle], (3 shl 4), large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
-		mov	al, [bp+@@angle]
-		add	al, 0Ch
-		mov	[bp+@@angle], al
-		inc	si
-
-loc_2AF4E:
-		cmp	si, 0Ah
-		jl	short loc_2AF28
-		jmp	loc_2AFDC
-; ---------------------------------------------------------------------------
-
-loc_2AF56:
-		cmp	_boss_phase_frame, 70
-		jnz	short loc_2AF92
-		mov	[bp+@@angle], 4
-		xor	si, si
-		jmp	short loc_2AF8B
-; ---------------------------------------------------------------------------
-
-loc_2AF65:
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii c, offset _Pellets, ds, large 320 or (160 shl 16), word ptr [bp+@@angle], (4 shl 4), large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
-		mov	al, [bp+@@angle]
-		add	al, 0Eh
-		mov	[bp+@@angle], al
-		inc	si
-
-loc_2AF8B:
-		cmp	si, 8
-		jl	short loc_2AF65
-		jmp	short loc_2AFDC
-; ---------------------------------------------------------------------------
-
-loc_2AF92:
-		cmp	_boss_phase_frame, 80
-		jnz	short loc_2AFCE
-		mov	[bp+@@angle], 0Eh
-		xor	si, si
-		jmp	short loc_2AFC7
-; ---------------------------------------------------------------------------
-
-loc_2AFA1:
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii c, offset _Pellets, ds, large 320 or (160 shl 16), word ptr [bp+@@angle], (3 shl 4), large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
-		mov	al, [bp+@@angle]
-		add	al, 0Ah
-		mov	[bp+@@angle], al
-		inc	si
-
-loc_2AFC7:
-		cmp	si, 0Ah
-		jl	short loc_2AFA1
-		jmp	short loc_2AFDC
-; ---------------------------------------------------------------------------
-
-loc_2AFCE:
-		cmp	_boss_phase_frame, 150
-		jle	short loc_2AFDC
-		mov	_boss_phase_frame, 0
-
-loc_2AFDC:
-		pop	si
-		leave
-		retn
-sub_2AECE	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -24892,7 +24786,7 @@ loc_2C6F2:
 loc_2C751:
 		cmp	word_35E95, 1
 		jnz	short loc_2C75D
-		call	sub_2AECE
+		call	@pattern_four_semicircle_spreads$qv
 		jmp	short loc_2C767
 ; ---------------------------------------------------------------------------
 
