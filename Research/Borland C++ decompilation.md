@@ -457,7 +457,8 @@ passed via a single 32-bit `PUSH`. Currently confirmed to happen for literals
 and structure members whose memory layout matches the parameter list and
 calling convention. Signedness doesn't matter.
 
-Won't happen for two consecutive 8-bit parameters.
+Won't happen for two consecutive 8-bit parameters, and can be circumvented by
+casting a near pointer to a 16-bit integer and back.
 
 ```c
 // Works for all storage durations
@@ -475,6 +476,10 @@ foo_u(p.x, p.y); // PUSH LARGE [p]
 foo_s(q.x, q.y); // PUSH LARGE [p]
 foo_u(q.x, q.y); // PUSH LARGE [p]
 foo_c(100, 200); // PUSH 200; PUSH 100
+
+// PUSH [p.x]; PUSH [p.y];
+foo_u(*reinterpret_cast<int near *>(reinterpret_cast<unsigned int>(&p.x)), p.y);
+foo_s(*reinterpret_cast<int near *>(reinterpret_cast<unsigned int>(&p.x)), p.y);
 ```
 
 ### `-O` (Optimize jumps)

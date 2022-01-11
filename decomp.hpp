@@ -105,6 +105,11 @@ inline void poked_eax(Decomp_GS *sgm, Decomp_DI *off, uint8_t op) {
 }
 // ---------------------------------------------------------
 
+// Circumventing compiler optimizations
+// ------------------------------------
+// If you don't want to recreate the code layout of the original PC-98
+// binaries, these can be safely deleted. They just make the code worse.
+
 #if defined(__TURBOC__) && defined(__MSDOS__)
 	// Use this function wherever the original code used a immediate 0 literal
 	// that Turbo C++ would optimize away, e.g. in register assignments
@@ -118,9 +123,21 @@ inline void poked_eax(Decomp_GS *sgm, Decomp_DI *off, uint8_t op) {
 		}
 		return x;
 	}
+
+	// Bypasses the -Z -3 function parameter optimization, where [x] would be
+	// combined with any potential subsequent 16-bit parameter adjacent in
+	// memory to form a 32-bit PUSH.
+	// (Interestingly, using a template function inlines either too well or
+	// too badly. Only this macro guarantees the intended 16-bit PUSH to be
+	// consistently emitted.)
+	#define inhibit_Z3(type, x) \
+		*reinterpret_cast<type near *>(reinterpret_cast<uint16_t>(&x))
+
 #else
 	#define keep_0(x) x
+	#define inhibit_Z3(type, x) x
 #endif
+// ------------------------------------
 
 extern "C" {
 

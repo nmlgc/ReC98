@@ -22450,6 +22450,7 @@ main_36_TEXT	segment	byte public 'CODE' use16
 	@pattern_radial_stacks_and_lasers$qv procdesc near
 	@pattern_symmetric_birds_from_bot$qv procdesc near
 	@pattern_four_semicircle_spreads$qv procdesc near
+	@pattern_vertical_stacks_from_bot$qv procdesc near
 main_36_TEXT	ends
 
 main_36__TEXT	segment	byte public 'CODE' use16
@@ -22460,282 +22461,6 @@ main_36__TEXT	segment	byte public 'CODE' use16
 include th01/main/boss/anim.inc
 
 sariel_shield	equ <boss_entity_0>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2AFDF	proc near
-
-var_6		= word ptr -6
-var_4		= word ptr -4
-@@angle		= byte ptr -1
-
-		enter	6, 0
-		push	si
-		cmp	_boss_phase_frame, 50
-		jl	loc_2B2B6
-		cmp	_boss_phase_frame, 50
-		jnz	short loc_2B01A
-		call	@sariel_select_for_rank$qmiiiii c, offset _sariel_pattern_state, ds, large 16 or (13 shl 16), large 10 or (8 shl 16)
-		mov	x_3B04D, 2
-		mov	y_3B04F, (PLAYFIELD_BOTTOM - 1)
-		jmp	loc_2B2B6
-; ---------------------------------------------------------------------------
-
-loc_2B01A:
-		cmp	_boss_phase_frame, 130
-		jge	loc_2B0F7
-		mov	ax, _boss_phase_frame
-		mov	bx, 2
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_2B07B
-		push	(32 shl 16) or 48
-		mov	ax, y_3B04F
-		add	ax, -32
-		push	ax
-		mov	ax, x_3B04D
-		add	ax, -40
-		push	ax
-		call	_egc_copy_rect_1_to_0_16
-		push	7	; col
-		push	grc_image_3B051	; image
-		push	GRC_SLOT_BOSS_1	; slot
-		mov	ax, y_3B04F
-		add	ax, -16
-		push	ax	; top
-		mov	ax, x_3B04D
-		add	ax, -24
-		push	ax	; left
-		call	_grc_put_8
-		add	sp, 12h
-		call	@spawnray_unput_and_put$qiiiii pascal, ((RES_X / 2) shl 16) or 120, x_3B04D, y_3B04F, 7
-
-loc_2B07B:
-		mov	ax, _boss_phase_frame
-		mov	bx, 2
-		cwd
-		idiv	bx
-		cmp	dx, 1
-		jnz	short loc_2B0EF
-		push	(32 shl 16) or 48
-		mov	ax, y_3B04F
-		add	ax, -32
-		push	ax
-		mov	ax, 632
-		sub	ax, x_3B04D
-		add	ax, 16
-		push	ax
-		call	_egc_copy_rect_1_to_0_16
-		push	7 ; col
-		push	grc_image_3B051	; image
-		push	GRC_SLOT_BOSS_1	; slot
-		mov	ax, y_3B04F
-		add	ax, -16
-		push	ax	; top
-		mov	ax, (PLAYFIELD_RIGHT - 8)
-		sub	ax, x_3B04D
-		push	ax	; left
-		call	_grc_put_8
-		add	sp, 12h
-		push	((RES_X / 2) shl 16) or 120
-		mov	ax, (RES_X - 1)
-		sub	ax, x_3B04D
-		push	ax
-		push	y_3B04F
-		push	7
-		call	@spawnray_unput_and_put$qiiiii
-		cmp	grc_image_3B051, 5
-		jge	short loc_2B0E9
-		mov	ax, grc_image_3B051
-		inc	ax
-		jmp	short loc_2B0EC
-; ---------------------------------------------------------------------------
-
-loc_2B0E9:
-		mov	ax, 3
-
-loc_2B0EC:
-		mov	grc_image_3B051, ax
-
-loc_2B0EF:
-		add	x_3B04D, 8
-		jmp	loc_2B2B6
-; ---------------------------------------------------------------------------
-
-loc_2B0F7:
-		cmp	_boss_phase_frame, 130
-		jnz	short loc_2B125
-		push	y_3B04F
-		mov	ax, RES_X - 1
-		sub	ax, x_3B04D
-		add	ax, 8
-		push	ax
-		push	(120 shl 16) or 320
-		call	_graph_r_line_unput
-		add	sp, 8
-		mov	x_3B04D, 0
-		jmp	loc_2B2B6
-; ---------------------------------------------------------------------------
-
-loc_2B125:
-		cmp	_boss_phase_frame, 150
-		jle	loc_2B1E6
-		cmp	_boss_phase_frame, 350
-		jge	loc_2B1E6
-		mov	ax, _boss_phase_frame
-		mov	bx, 10
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	loc_2B2B6
-		xor	si, si
-		jmp	loc_2B1CF
-; ---------------------------------------------------------------------------
-
-loc_2B14D:
-		mov	ax, _player_left
-		add	ax, 16
-		sub	ax, x_3B04D
-		mov	[bp+var_4], ax
-		cwd
-		xor	ax, dx
-		sub	ax, dx
-		cmp	ax, 20h	; ' '
-		jle	short loc_2B188
-		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
-		lea	ax, [si+(3 shl 4)]
-		push	ax
-		push	(-40h and 255)
-		mov	ax, y_3B04F
-		add	ax, -8
-		push	ax
-		push	x_3B04D
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		add	sp, 14h
-
-loc_2B188:
-		mov	ax, _player_left
-		add	ax, 16
-		mov	dx, (PLAYFIELD_RIGHT - 1)
-		sub	dx, x_3B04D
-		sub	ax, dx
-		mov	[bp+var_6], ax
-		cwd
-		xor	ax, dx
-		sub	ax, dx
-		cmp	ax, 20h	; ' '
-		jle	short loc_2B1CC
-		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
-		lea	ax, [si+(3 shl 4)]
-		push	ax
-		push	(-40h and 255)
-		mov	ax, y_3B04F
-		add	ax, -8
-		push	ax
-		mov	ax, (PLAYFIELD_RIGHT - 1)
-		sub	ax, x_3B04D
-		push	ax
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		add	sp, 14h
-
-loc_2B1CC:
-		add	si, (1 shl 4)
-
-loc_2B1CF:
-		cmp	si, (4 shl 4)
-		jl	loc_2B14D
-		add	x_3B04D, 32
-		push	7
-		call	_mdrv2_se_play
-		pop	cx
-		jmp	loc_2B2B6
-; ---------------------------------------------------------------------------
-
-loc_2B1E6:
-		cmp	_boss_phase_frame, 350
-		jnz	short loc_2B1FD
-		mov	x_3B04D, 0
-		mov	y_3B04F, 64
-		jmp	loc_2B2B6
-; ---------------------------------------------------------------------------
-
-loc_2B1FD:
-		cmp	_boss_phase_frame, 550
-		jge	loc_2B2A8
-		mov	ax, _boss_phase_frame
-		cwd
-		idiv	_sariel_pattern_state
-		or	dx, dx
-		jnz	loc_2B2B6
-		xor	si, si
-		jmp	loc_2B29A
-; ---------------------------------------------------------------------------
-
-loc_2B21A:
-		mov	ax, PLAYFIELD_BOTTOM
-		sub	ax, y_3B04F
-		push	ax
-		call	IRand
-		mov	bx, PLAYFIELD_RIGHT
-		cwd
-		idiv	bx
-		sub	dx, x_3B04D
-		push	dx
-		call	iatan2
-		mov	[bp+@@angle], al
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, x_3B04D, y_3B04F, word ptr [bp+@@angle], (3 shl 4), large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
-		mov	ax, PLAYFIELD_BOTTOM
-		sub	ax, y_3B04F
-		push	ax
-		call	IRand
-		mov	bx, PLAYFIELD_RIGHT
-		cwd
-		idiv	bx
-		sub	dx, x_3B04D
-		push	dx
-		call	iatan2
-		mov	[bp+@@angle], al
-		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
-		push	(3 shl 4)
-		push	word ptr [bp+@@angle]
-		push	y_3B04F
-		mov	ax, (PLAYFIELD_RIGHT - 1)
-		sub	ax, x_3B04D
-		push	ax
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		add	sp, 28h
-		inc	si
-
-loc_2B29A:
-		cmp	si, 2
-		jl	loc_2B21A
-		add	x_3B04D, 32
-		jmp	short loc_2B2B6
-; ---------------------------------------------------------------------------
-
-loc_2B2A8:
-		cmp	_boss_phase_frame, 600
-		jle	short loc_2B2B6
-		mov	_boss_phase_frame, 0
-
-loc_2B2B6:
-		pop	si
-		leave
-		retn
-sub_2AFDF	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -24793,7 +24518,7 @@ loc_2C751:
 loc_2C75D:
 		cmp	word_35E95, 2
 		jnz	short loc_2C767
-		call	sub_2AFDF
+		call	@pattern_vertical_stacks_from_bot$qv
 
 loc_2C767:
 		cmp	_boss_phase_frame, 0
@@ -26499,9 +26224,10 @@ _pattern9_rays      	SymmetricSpawnraysWithDebris <?>
 _pattern9_velocity  	Point <?>
 _pattern9_debris_cel	dw ?
 
-x_3B04D	dw ?
-y_3B04F	dw ?
-grc_image_3B051	dw ?
+public _pattern11_rays, _pattern11_debris_cel
+_pattern11_rays      	SymmetricSpawnraysWithDebris <?>
+_pattern11_debris_cel	dw ?
+
 radius_3B053	dw ?
 word_3B055	dw ?
 		db 720 dup(?)
