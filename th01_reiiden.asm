@@ -22451,6 +22451,8 @@ main_36_TEXT	segment	byte public 'CODE' use16
 	@pattern_symmetric_birds_from_bot$qv procdesc near
 	@pattern_four_semicircle_spreads$qv procdesc near
 	@pattern_vertical_stacks_from_bot$qv procdesc near
+	@DOTTEDCIRCLE_UNPUT_UPDATE_RENDER$QIIIIIIII procdesc pascal near \
+		center:dword, frame_interval:dword, radius_step_col:dword, radius_initial_duration:dword
 main_36_TEXT	ends
 
 main_36__TEXT	segment	byte public 'CODE' use16
@@ -22461,94 +22463,6 @@ main_36__TEXT	segment	byte public 'CODE' use16
 include th01/main/boss/anim.inc
 
 sariel_shield	equ <boss_entity_0>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2B2B9	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-@@col		= word ptr  8
-arg_6		= word ptr  0Ah
-arg_8		= word ptr  0Ch
-arg_A		= word ptr  0Eh
-@@center_y		= word ptr  10h
-@@center_x		= word ptr  12h
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+arg_A]
-		mov	di, [bp+arg_8]
-		cmp	si, 1
-		jnz	short loc_2B2D1
-		mov	word_3B055, 1
-		jmp	short loc_2B33B
-; ---------------------------------------------------------------------------
-
-loc_2B2D1:
-		cmp	word_3B055, 1
-		jnz	short loc_2B349
-		mov	ax, si
-		cwd
-		idiv	di
-		or	dx, dx
-		jnz	short loc_2B349
-		push	255	; angle_end
-		push	0	; angle_start
-		push	1	; angle_step
-		push	radius_3B053	; radius_y
-		push	radius_3B053	; radius_x
-		push	[bp+@@center_y]
-		push	[bp+@@center_x]
-		call	@shape_ellipse_arc_sloppy_unput$qiiiiucucuc
-		add	sp, 0Eh
-		cmp	si, [bp+arg_0]
-		jl	short loc_2B30B
-		mov	word_3B055, 0
-		jmp	short loc_2B349
-; ---------------------------------------------------------------------------
-
-loc_2B30B:
-		push	255	; angle_end
-		push	0	; angle_start
-		push	1	; angle_step
-		push	[bp+@@col]
-		mov	ax, si
-		cwd
-		idiv	di
-		imul	[bp+arg_6]
-		add	ax, [bp+arg_2]
-		push	ax	; radius_y
-		mov	ax, si
-		cwd
-		idiv	di
-		imul	[bp+arg_6]
-		add	ax, [bp+arg_2]
-		push	ax	; radius_x
-		push	[bp+@@center_y]
-		push	[bp+@@center_x]
-		call	@shape_ellipse_arc_put$qiiiiiucucuc
-		add	sp, 10h
-
-loc_2B33B:
-		mov	ax, si
-		cwd
-		idiv	di
-		imul	[bp+arg_6]
-		add	ax, [bp+arg_2]
-		mov	radius_3B053, ax
-
-loc_2B349:
-		pop	di
-		pop	si
-		pop	bp
-		retn	10h
-sub_2B2B9	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -22934,22 +22848,18 @@ arg_0		= dword	ptr  4
 		les	bx, [bp+arg_0]
 		cmp	word ptr es:[bx], 32h ;	'2'
 		jnz	short loc_2B71C
-		push	14000B9h
-		push	10004h
-		push	100007h
-		push	2000A0h
-		call	sub_2B2B9
+		call	@dottedcircle_unput_update_render$qiiiiiiii pascal, large (320 shl 16) or 185, large (1 shl 16) or 4, large (16 shl 16) or 7, large (32 shl 16) or 160
 
 loc_2B71C:
-		push	14000B9h
+		push	(320 shl 16) or 185	; (center_x) or (center_y)
 		les	bx, [bp+arg_0]
 		mov	ax, es:[bx]
-		add	ax, 0FFCFh
-		push	ax
-		push	40010h
-		push	70020h
-		push	5Ah ; 'Z'
-		call	sub_2B2B9
+		add	ax, -49
+		push	ax	; frame_1based
+		push	(4 shl 16) or 16	; (interval) or (radius_step)
+		push	(7 shl 16) or 32	; (col) or (radius_initial)
+		push	90	; duration
+		call	@dottedcircle_unput_update_render$qiiiiiiii
 		les	bx, [bp+arg_0]
 		cmp	word ptr es:[bx], 64h ;	'd'
 		jl	loc_2B838
@@ -26228,8 +26138,10 @@ public _pattern11_rays, _pattern11_debris_cel
 _pattern11_rays      	SymmetricSpawnraysWithDebris <?>
 _pattern11_debris_cel	dw ?
 
-radius_3B053	dw ?
-word_3B055	dw ?
+public _dottedcircle_radius_prev, _dottedcircle_active
+_dottedcircle_radius_prev	dw ?
+_dottedcircle_active     	dw ?
+
 		db 720 dup(?)
 x_3B327	dw ?
 y_3B329	dw ?
