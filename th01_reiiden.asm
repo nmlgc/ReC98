@@ -3355,7 +3355,6 @@ graph_TEXT	segment	byte public 'CODE' use16
 	extern _z_graph_hide:proc
 	extern _graph_accesspage_func:proc
 	extern _grcg_setcolor_rmw:proc
-	extern _grcg_setcolor_tcr:proc
 	extern _grcg_off_func:proc
 	extern _z_palette_set_all_show:proc
 	extern _z_palette_set_show:proc
@@ -22453,6 +22452,8 @@ main_36_TEXT	segment	byte public 'CODE' use16
 	@pattern_vertical_stacks_from_bot$qv procdesc near
 	@DOTTEDCIRCLE_UNPUT_UPDATE_RENDER$QIIIIIIII procdesc pascal near \
 		center:dword, frame_interval:dword, radius_step_col:dword, radius_initial_duration:dword
+	@PARTICLES2X2_HORIZONTAL_UNPUT_UP$QI procdesc pascal near \
+		frame:word
 main_36_TEXT	ends
 
 main_36__TEXT	segment	byte public 'CODE' use16
@@ -22463,374 +22464,6 @@ main_36__TEXT	segment	byte public 'CODE' use16
 include th01/main/boss/anim.inc
 
 sariel_shield	equ <boss_entity_0>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2B34F	proc near
-
-var_A		= word ptr -0Ah
-var_8		= word ptr -8
-var_6		= byte ptr -6
-var_5		= byte ptr -5
-var_4		= byte ptr -4
-var_3		= byte ptr -3
-var_2		= word ptr -2
-arg_0		= word ptr  4
-
-		enter	0Ah, 0
-		push	si
-		push	di
-		mov	ax, [bp+arg_0]
-		mov	bx, 7
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_2B3E0
-		xor	si, si
-		jmp	short loc_2B3DB
-; ---------------------------------------------------------------------------
-
-loc_2B366:
-		cmp	byte ptr [si+1483h], 0
-		jnz	short loc_2B3DA
-		call	IRand
-		mov	bx, 280h
-		cwd
-		idiv	bx
-		mov	[bp+var_8], dx
-		fild	[bp+var_8]
-		mov	bx, si
-		shl	bx, 3
-		fstp	qword ptr [bx+66B7h]
-		fwait
-		call	IRand
-		mov	bx, 190h
-		cwd
-		idiv	bx
-		mov	[bp+var_8], dx
-		fild	[bp+var_8]
-		mov	bx, si
-		shl	bx, 3
-		fstp	qword ptr [bx+67A7h]
-		fwait
-		call	IRand
-		mov	bx, 2
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_2B3BD
-		mov	ax, 0FFFAh
-		jmp	short loc_2B3C0
-; ---------------------------------------------------------------------------
-
-loc_2B3BD:
-		mov	ax, 6
-
-loc_2B3C0:
-		mov	[bp+var_8], ax
-		fild	[bp+var_8]
-		mov	bx, si
-		shl	bx, 3
-		fstp	qword ptr [bx+6897h]
-		fwait
-		mov	byte ptr [si+1483h], 4
-		jmp	short loc_2B3E0
-; ---------------------------------------------------------------------------
-
-loc_2B3DA:
-		inc	si
-
-loc_2B3DB:
-		cmp	si, 1Eh
-		jl	short loc_2B366
-
-loc_2B3E0:
-		mov	ax, [bp+arg_0]
-		mov	bx, 2
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	loc_2B6E4
-		xor	si, si
-		jmp	loc_2B6D8
-; ---------------------------------------------------------------------------
-
-loc_2B3F4:
-		cmp	byte ptr [si+1483h], 0
-		jz	loc_2B6D7
-		call	_grcg_setcolor_tcr stdcall, 12
-		mov	bx, si
-		shl	bx, 3
-		fld	qword ptr [bx+66B7h]
-		fdiv	dword ptr ds:[15EAh]
-		mov	bx, si
-		shl	bx, 3
-		fld	qword ptr [bx+67A7h]
-		fmul	dword ptr ds:[15EEh]
-		faddp	st(1), st
-		call	ftol@
-		mov	di, ax
-		mov	bx, si
-		shl	bx, 3
-		fld	qword ptr [bx+66B7h]
-		call	ftol@
-		mov	bx, 8
-		cwd
-		idiv	bx
-		mov	[bp+var_2], dx
-		push	1
-		call	_graph_accesspage_func
-		add	sp, 4
-		les	bx, _VRAM_PLANE_B
-		add	bx, di
-		mov	al, es:[bx]
-		mov	[bp+var_6], al
-		mov	bx, word ptr _VRAM_PLANE_B
-		add	bx, di
-		mov	al, es:[bx+50h]
-		mov	[bp+var_5], al
-		mov	ax, 0C0h ; '?'
-		mov	cl, byte ptr [bp+var_2]
-		sar	ax, cl
-		and	[bp+var_6], al
-		mov	ax, 0C0h ; '?'
-		sar	ax, cl
-		and	[bp+var_5], al
-		cmp	[bp+var_2], 7
-		jnz	short loc_2B4A2
-		mov	bx, word ptr _VRAM_PLANE_B
-		add	bx, di
-		mov	al, es:[bx+1]
-		mov	[bp+var_4], al
-		mov	bx, word ptr _VRAM_PLANE_B
-		add	bx, di
-		mov	al, es:[bx+51h]
-		mov	[bp+var_3], al
-		and	[bp+var_4], 80h
-		and	[bp+var_3], 80h
-
-loc_2B4A2:
-		call	_grcg_setcolor_rmw stdcall, 12
-		push	0
-		call	_graph_accesspage_func
-		add	sp, 4
-		cmp	[bp+var_6], 0
-		jz	short loc_2B4C5
-		les	bx, _VRAM_PLANE_B
-		add	bx, di
-		mov	al, [bp+var_6]
-		mov	es:[bx], al
-
-loc_2B4C5:
-		cmp	[bp+var_5], 0
-		jz	short loc_2B4D8
-		les	bx, _VRAM_PLANE_B
-		add	bx, di
-		mov	al, [bp+var_5]
-		mov	es:[bx+50h], al
-
-loc_2B4D8:
-		cmp	[bp+var_2], 7
-		jnz	short loc_2B504
-		cmp	[bp+var_4], 0
-		jz	short loc_2B4F1
-		les	bx, _VRAM_PLANE_B
-		add	bx, di
-		mov	al, [bp+var_4]
-		mov	es:[bx+1], al
-
-loc_2B4F1:
-		cmp	[bp+var_3], 0
-		jz	short loc_2B504
-		les	bx, _VRAM_PLANE_B
-		add	bx, di
-		mov	al, [bp+var_3]
-		mov	es:[bx+51h], al
-
-loc_2B504:
-		mov	bx, si
-		shl	bx, 3
-		fld	qword ptr [bx+6897h]
-		mov	bx, si
-		shl	bx, 3
-		fadd	qword ptr [bx+66B7h]
-		mov	bx, si
-		shl	bx, 3
-		fstp	qword ptr [bx+66B7h]
-		mov	bx, si
-		shl	bx, 3
-		fld	qword ptr [bx+6897h]
-		fldz
-		fcompp
-		fstsw	[bp+var_8]
-		fwait
-		mov	ax, [bp+var_8]
-		sahf
-		jbe	short loc_2B545
-		fld	qword ptr _d0_1
-		jmp	short loc_2B54A
-; ---------------------------------------------------------------------------
-
-loc_2B545:
-		fld	qword ptr _dminus0_1
-
-loc_2B54A:
-		mov	bx, si
-		shl	bx, 3
-		fadd	qword ptr [bx+6897h]
-		mov	bx, si
-		shl	bx, 3
-		fstp	qword ptr [bx+6897h]
-		mov	bx, si
-		shl	bx, 3
-		fld	qword ptr [bx+66B7h]
-		fdiv	dword ptr ds:[15EAh]
-		mov	bx, si
-		shl	bx, 3
-		fld	qword ptr [bx+67A7h]
-		fmul	dword ptr ds:[15EEh]
-		faddp	st(1), st
-		call	ftol@
-		mov	di, ax
-		mov	bx, si
-		shl	bx, 3
-		fld	qword ptr [bx+66B7h]
-		call	ftol@
-		mov	bx, 8
-		cwd
-		idiv	bx
-		mov	[bp+var_2], dx
-		mov	bx, si
-		shl	bx, 3
-		fld	qword ptr [bx+66B7h]
-		fcomp	_f640_0
-		fstsw	[bp+var_8]
-		fwait
-		mov	ax, [bp+var_8]
-		sahf
-		jnb	short loc_2B604
-		mov	bx, si
-		shl	bx, 3
-		fld	qword ptr [bx+66B7h]
-		fldz
-		fcompp
-		fstsw	[bp+var_8]
-		fwait
-		mov	ax, [bp+var_8]
-		sahf
-		ja	short loc_2B604
-		mov	bx, si
-		shl	bx, 3
-		fld	qword ptr [bx+6897h]
-		call	ftol@
-		mov	[bp+var_A], ax
-		cwd
-		xor	ax, dx
-		sub	ax, dx
-		mov	[bp+var_8], ax
-		fild	[bp+var_8]
-		fcomp	_f0_5
-		fstsw	[bp+var_8]
-		fwait
-		mov	ax, [bp+var_8]
-		sahf
-		jnb	short loc_2B60C
-
-loc_2B604:
-		mov	byte ptr [si+1483h], 0
-		jmp	loc_2B6D7
-; ---------------------------------------------------------------------------
-
-loc_2B60C:
-		call	_grcg_setcolor_tcr stdcall, 12
-		push	1
-		call	_graph_accesspage_func
-		add	sp, 4
-		les	bx, _VRAM_PLANE_B
-		add	bx, di
-		mov	al, es:[bx]
-		mov	[bp+var_6], al
-		mov	bx, word ptr _VRAM_PLANE_B
-		add	bx, di
-		mov	al, es:[bx+50h]
-		mov	[bp+var_5], al
-		mov	ax, 0C0h ; '?'
-		mov	cl, byte ptr [bp+var_2]
-		sar	ax, cl
-		and	[bp+var_6], al
-		mov	ax, 0C0h ; '?'
-		sar	ax, cl
-		and	[bp+var_5], al
-		cmp	[bp+var_2], 7
-		jnz	short loc_2B671
-		mov	bx, word ptr _VRAM_PLANE_B
-		add	bx, di
-		mov	al, es:[bx+1]
-		mov	[bp+var_4], al
-		mov	bx, word ptr _VRAM_PLANE_B
-		add	bx, di
-		mov	al, es:[bx+51h]
-		mov	[bp+var_3], al
-		and	[bp+var_4], 80h
-		and	[bp+var_3], 80h
-
-loc_2B671:
-		mov	al, [si+1483h]
-		cbw
-		call	_grcg_setcolor_rmw stdcall, ax
-		push	0
-		call	_graph_accesspage_func
-		add	sp, 4
-		cmp	[bp+var_6], 0
-		jz	short loc_2B698
-		les	bx, _VRAM_PLANE_B
-		add	bx, di
-		mov	al, [bp+var_6]
-		mov	es:[bx], al
-
-loc_2B698:
-		cmp	[bp+var_5], 0
-		jz	short loc_2B6AB
-		les	bx, _VRAM_PLANE_B
-		add	bx, di
-		mov	al, [bp+var_5]
-		mov	es:[bx+50h], al
-
-loc_2B6AB:
-		cmp	[bp+var_2], 7
-		jnz	short loc_2B6D7
-		cmp	[bp+var_4], 0
-		jz	short loc_2B6C4
-		les	bx, _VRAM_PLANE_B
-		add	bx, di
-		mov	al, [bp+var_4]
-		mov	es:[bx+1], al
-
-loc_2B6C4:
-		cmp	[bp+var_3], 0
-		jz	short loc_2B6D7
-		les	bx, _VRAM_PLANE_B
-		add	bx, di
-		mov	al, [bp+var_3]
-		mov	es:[bx+51h], al
-
-loc_2B6D7:
-		inc	si
-
-loc_2B6D8:
-		cmp	si, 1Eh
-		jl	loc_2B3F4
-		call	_grcg_off_func
-
-loc_2B6E4:
-		pop	di
-		pop	si
-		leave
-		retn	2
-sub_2B34F	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -24676,8 +24309,7 @@ loc_2CAA8:
 loc_2CACD:
 		inc	_boss_phase_frame
 		inc	_sariel_invincibility_frame
-		push	_boss_phase_frame
-		call	sub_2B34F
+		call	@particles2x2_horizontal_unput_up$qi pascal, _boss_phase_frame
 		cmp	word_35E95, 0
 		jnz	short loc_2CB05
 		call	@sariel_select_for_rank$qmiiiii c, offset _sariel_pattern_state, ds, large 56 or (32 shl 16), large 24 or (20 shl 16)
@@ -25650,7 +25282,10 @@ _pattern3_state	dw -1
 public _particles2x2_wavy_col
 _particles2x2_wavy_col	db PARTICLE2X2_COUNT dup(0)
 
-		db 90 dup(0)
+public _particles2x2_horizontal_col
+_particles2x2_horizontal_col	db PARTICLE2X2_COUNT dup(0)
+
+		db 60 dup(0)
 unk_35E7D	db  10h
 		db  18h
 		db  18h
@@ -25687,10 +25322,6 @@ _sariel_invincibility_flash_colors	db    3, 4, 5
 	extern _boss6_a2_grp:byte
 	extern _boss6_a3_grp:byte
 	extern _boss6_a4_grp:byte
-	extern _d0_1:qword
-	extern _dminus0_1:qword
-	extern _f640_0:dword
-	extern _f0_5:dword
 	extern _dminus8_0:qword
 	extern _boss6_grp:byte
 	extern _boss6_a5_grp:byte
@@ -26142,7 +25773,12 @@ public _dottedcircle_radius_prev, _dottedcircle_active
 _dottedcircle_radius_prev	dw ?
 _dottedcircle_active     	dw ?
 
-		db 720 dup(?)
+public _particles2x2_horizontal_left, _particles2x2_horizontal_top
+public _particles2x2_horizontal_velocity
+_particles2x2_horizontal_left    	dq PARTICLE2X2_COUNT dup(?)
+_particles2x2_horizontal_top     	dq PARTICLE2X2_COUNT dup(?)
+_particles2x2_horizontal_velocity	dq PARTICLE2X2_COUNT dup(?)
+
 x_3B327	dw ?
 y_3B329	dw ?
 speed_3B32B	dw ?

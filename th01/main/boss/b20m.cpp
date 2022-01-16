@@ -270,10 +270,29 @@ static const dots8_t sPARTICLE2X2 = 0xC0; // (**      )
 	dots[1] &= (sPARTICLE2X2 >> first_bit); \
 }
 
+#define particle2x2_snap_left_right(dots_left, dots_right, vo, first_bit) { \
+	particle2x2_snap_2(dots_left, vo, first_bit); \
+	if(first_bit == ((BYTE_DOTS - PARTICLE2X2_W) + 1)) { \
+		/* Parentheses omitted for code generation reasons */ \
+		dots_right[0] = grcg_chunk(vo + 1, 8); \
+		dots_right[1] = grcg_chunk(vo + 1 + ROW_SIZE, 8); \
+		/* We only care about the leftmost dot, if anything */ \
+		dots_right[0] &= 0x80; \
+		dots_right[1] &= 0x80; \
+	} \
+}
+
 #define particle2x2_put(vo, first_bit, dots) { \
 	grcg_put_emptyopt(vo, dots[0], 8); \
 	/* Parentheses omitted for code generation reasons */ \
 	grcg_put_emptyopt(vo + ROW_SIZE, dots[1], 8); \
+}
+
+#define particle2x2_put_left_right(vo, first_bit, dots_left, dots_right) { \
+	particle2x2_put(vo, first_bit, dots_left); \
+	if(first_bit == ((BYTE_DOTS - PARTICLE2X2_W) + 1)) { \
+		particle2x2_put(vo + 1, first_bit, dots_right); \
+	} \
 }
 // -------------
 
@@ -2185,4 +2204,83 @@ void near pascal dottedcircle_unput_update_render(
 
 	#undef active
 	#undef radius_prev
+}
+
+void pascal near particles2x2_horizontal_unput_update_render(int frame)
+{
+	#define col       	particles2x2_horizontal_col
+	#define left      	particles2x2_horizontal_left
+	#define top       	particles2x2_horizontal_top
+	#define velocity_x	particles2x2_horizontal_velocity_x
+
+	// Also indicates whether a particle is alive.
+	extern uint4_t col[PARTICLE2X2_COUNT];
+
+	extern double left[PARTICLE2X2_COUNT];
+	extern double top[PARTICLE2X2_COUNT];
+	extern double velocity_x[PARTICLE2X2_COUNT];
+
+	int i;
+	int first_bit;
+	vram_offset_t vo;
+	DotRect<dots8_t, PARTICLE2X2_H> dots_right;
+	DotRect<dots8_t, PARTICLE2X2_H> dots_left;
+
+	if((frame % 7) == 0) {
+		for(i = 0; i < PARTICLE2X2_COUNT; i++) {
+			if(col[i] != 0) {
+				continue;
+			}
+			left[i] = (rand() % RES_X);
+			top[i] = (rand() % RES_Y);
+			velocity_x[i] = ((rand() % 2) == 0) ? -6 : 6;
+			col[i] = COL_PARTICLE2X2;
+			break;
+		}
+	}
+	if((frame % 2) != 0) {
+		return;
+	}
+	for(i = 0; i < PARTICLE2X2_COUNT; i++) {
+		if(col[i] == 0) {
+			continue;
+		}
+
+		grcg_setcolor_tcr(COL_AIR);
+
+		particle2x2_linear_vram_offset(vo, first_bit, left[i], top[i]);
+
+		// Unblit
+		graph_accesspage_func(1);
+		particle2x2_snap_left_right(dots_left, dots_right, vo, first_bit);
+		grcg_setcolor_rmw(COL_AIR);
+		graph_accesspage_func(0);
+		particle2x2_put_left_right(vo, first_bit, dots_left, dots_right);
+
+		// Update
+		left[i] += velocity_x[i];
+		velocity_x[i] += (velocity_x[i] < 0) ? 0.1 : -0.1;
+
+		// Recalculate VRAM offset and clip
+		particle2x2_linear_vram_offset(vo, first_bit, left[i], top[i]);
+		if((left[i] >= RES_X) || (left[i] < 0) || (abs(velocity_x[i]) < 0.5)) {
+			col[i] = 0;
+			continue;
+		}
+
+		// Render
+		grcg_setcolor_tcr(COL_AIR);
+		graph_accesspage_func(1);
+		particle2x2_snap_left_right(dots_left, dots_right, vo, first_bit);
+
+		grcg_setcolor_rmw(col[i]);
+		graph_accesspage_func(0);
+		particle2x2_put_left_right(vo, first_bit, dots_left, dots_right);
+	}
+	grcg_off();
+
+	#undef velocity_x
+	#undef top
+	#undef left
+	#undef col
 }
