@@ -22450,10 +22450,10 @@ main_36_TEXT	segment	byte public 'CODE' use16
 	@pattern_symmetric_birds_from_bot$qv procdesc near
 	@pattern_four_semicircle_spreads$qv procdesc near
 	@pattern_vertical_stacks_from_bot$qv procdesc near
-	@DOTTEDCIRCLE_UNPUT_UPDATE_RENDER$QIIIIIIII procdesc pascal near \
-		center:dword, frame_interval:dword, radius_step_col:dword, radius_initial_duration:dword
 	@PARTICLES2X2_HORIZONTAL_UNPUT_UP$QI procdesc pascal near \
 		frame:word
+	@PATTERN_CURVED_SPRAY_LEFTRIGHT_O$QMI procdesc pascal near \
+		frame_seg:word, frame_off:word
 main_36_TEXT	ends
 
 main_36__TEXT	segment	byte public 'CODE' use16
@@ -22464,94 +22464,6 @@ main_36__TEXT	segment	byte public 'CODE' use16
 include th01/main/boss/anim.inc
 
 sariel_shield	equ <boss_entity_0>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2B6EA	proc near
-
-arg_0		= dword	ptr  4
-
-		push	bp
-		mov	bp, sp
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx], 32h ;	'2'
-		jl	loc_2B838
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx], 32h ;	'2'
-		jnz	short loc_2B71C
-		call	@dottedcircle_unput_update_render$qiiiiiiii pascal, large (320 shl 16) or 185, large (1 shl 16) or 4, large (16 shl 16) or 7, large (32 shl 16) or 160
-
-loc_2B71C:
-		push	(320 shl 16) or 185	; (center_x) or (center_y)
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx]
-		add	ax, -49
-		push	ax	; frame_1based
-		push	(4 shl 16) or 16	; (interval) or (radius_step)
-		push	(7 shl 16) or 32	; (col) or (radius_initial)
-		push	90	; duration
-		call	@dottedcircle_unput_update_render$qiiiiiiii
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx], 64h ;	'd'
-		jl	loc_2B838
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx], 64h ;	'd'
-		jnz	short loc_2B780
-		mov	x_3B327, 0
-		mov	y_3B329, PLAYFIELD_BOTTOM
-		mov	speed_3B32B, (7 shl 4)
-		mov	word_3B32E, 0
-		call	@sariel_select_for_rank$qmiiiii c, offset _sariel_pattern_state, ds, large 32 or (24 shl 16), large 18 or (16 shl 16)
-
-loc_2B780:
-		cmp	word_3B32E, 0
-		jnz	short loc_2B7E7
-		mov	ax, y_3B329
-		add	ax, -185
-		push	ax
-		mov	ax, x_3B327
-		add	ax, -320
-		push	ax
-		call	iatan2
-		mov	angle_3B32D, al
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii c, offset _Pellets, ds, large 320 or (185 shl 16), word ptr angle_3B32D, speed_3B32B, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
-		sub	speed_3B32B, 4
-		mov	ax, _sariel_pattern_state
-		add	x_3B327, ax
-		cmp	x_3B327, PLAYFIELD_RIGHT
-		jl	short loc_2B838
-		mov	word_3B32E, 1
-		mov	speed_3B32B, (7 shl 4)
-		mov	x_3B327, PLAYFIELD_RIGHT
-		pop	bp
-		retn	4
-; ---------------------------------------------------------------------------
-
-loc_2B7E7:
-		mov	ax, y_3B329
-		add	ax, -185
-		push	ax
-		mov	ax, x_3B327
-		add	ax, -320
-		push	ax
-		call	iatan2
-		mov	angle_3B32D, al
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii c, offset _Pellets, ds, large 320 or (185 shl 16), word ptr angle_3B32D, speed_3B32B, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
-		sub	speed_3B32B, 4
-		mov	ax, _sariel_pattern_state
-		sub	x_3B327, ax
-		cmp	x_3B327, 0
-		jge	short loc_2B838
-		les	bx, [bp+arg_0]
-		mov	word ptr es:[bx], 0
-
-loc_2B838:
-		pop	bp
-		retn	4
-sub_2B6EA	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -24360,9 +24272,7 @@ loc_2CB59:
 		call	sub_2BB46
 
 loc_2CB6A:
-		push	ds
-		push	offset _boss_phase_frame
-		call	sub_2B6EA
+		call	@pattern_curved_spray_leftright_o$qmi pascal, ds, offset _boss_phase_frame
 		jmp	short loc_2CBA4
 ; ---------------------------------------------------------------------------
 
@@ -25779,11 +25689,16 @@ _particles2x2_horizontal_left    	dq PARTICLE2X2_COUNT dup(?)
 _particles2x2_horizontal_top     	dq PARTICLE2X2_COUNT dup(?)
 _particles2x2_horizontal_velocity	dq PARTICLE2X2_COUNT dup(?)
 
-x_3B327	dw ?
-y_3B329	dw ?
-speed_3B32B	dw ?
-angle_3B32D	db ?
-word_3B32E	dw ?
+CurvedSpray struc
+	Point <?>	; target
+	dw ?     	; speed
+	db ?     	; angle
+	dw ?     	; subpattern_id
+CurvedSpray ends
+
+public _pattern12_spray
+_pattern12_spray	CurvedSpray <?>
+
 point_3B330	Point <?>
 grc_image_3B334	dw ?
 word_3B336	dw ?
