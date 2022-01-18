@@ -22425,8 +22425,6 @@ main_36_TEXT	segment	byte public 'CODE' use16
 	extern @sariel_load_and_init$qv:proc
 	@wand_lowered_snap$qv procdesc near
 	extern @sariel_free$qv:proc
-	@SPAWNRAY_UNPUT_AND_PUT$QIIIII procdesc pascal near \
-		origin:Point, target_x:word, target_y:word, col:word
 	@BIRDS_RESET_FIRE_SPAWN_UNPUT_UPD$QDDDDC procdesc pascal near
 	@shield_render_both$qv procdesc near
 	@WAND_RENDER_RAISE_BOTH$QI procdesc pascal near \
@@ -22454,6 +22452,8 @@ main_36_TEXT	segment	byte public 'CODE' use16
 		frame:word
 	@PATTERN_CURVED_SPRAY_LEFTRIGHT_O$QMI procdesc pascal near \
 		frame_seg:word, frame_off:word
+	@PATTERN_RAIN_FROM_SEAL_CENTER$QMI procdesc pascal near \
+		frame_seg:word, frame_off:word
 main_36_TEXT	ends
 
 main_36__TEXT	segment	byte public 'CODE' use16
@@ -22464,188 +22464,6 @@ main_36__TEXT	segment	byte public 'CODE' use16
 include th01/main/boss/anim.inc
 
 sariel_shield	equ <boss_entity_0>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2B83C	proc near
-
-arg_0		= dword	ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx], 32h ;	'2'
-		jl	loc_2BA24
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx], 32h ;	'2'
-		jnz	short loc_2B883
-		mov	point_3B330.x, 0
-		mov	point_3B330.y, RES_Y - 1
-		mov	grc_image_3B334, 3
-		mov	word_3B336, 3
-		call	@sariel_select_for_rank$qmiiiii c, offset _sariel_pattern_state, ds, large 30 or (35 shl 16), large 40 or (45 shl 16)
-
-loc_2B883:
-		cmp	point_3B330.y, 185
-		jle	loc_2B97C
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx]
-		mov	bx, 2
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_2B8E3
-		push	(32 shl 16) or 32
-		mov	ax, point_3B330.y
-		add	ax, -8
-		push	ax
-		push	point_3B330.x
-		call	_egc_copy_rect_1_to_0_16
-		call	@spawnray_unput_and_put$qiiiii pascal, ((RES_X / 2) shl 16) or 185, point_3B330.x, point_3B330.y, 7
-		push	7	; col
-		push	grc_image_3B334	; image
-		push	GRC_SLOT_BOSS_1	; slot
-		mov	ax, point_3B330.y
-		add	ax, -16
-		push	ax	; top
-		push	point_3B330.x	; left
-		call	_grc_put_8
-		add	sp, 12h
-		jmp	short loc_2B95F
-; ---------------------------------------------------------------------------
-
-loc_2B8E3:
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx]
-		mov	bx, 2
-		cwd
-		idiv	bx
-		cmp	dx, 1
-		jnz	short loc_2B95F
-		push	(32 shl 16) or 32
-		mov	ax, point_3B330.y
-		add	ax, -8
-		push	ax
-		mov	ax, 608
-		sub	ax, point_3B330.x
-		push	ax
-		call	_egc_copy_rect_1_to_0_16
-		push	((RES_X / 2) shl 16) or 185
-		mov	ax, RES_X - 1
-		sub	ax, point_3B330.x
-		push	ax
-		push	point_3B330.y
-		push	7
-		call	@spawnray_unput_and_put$qiiiii
-		push	7	; col
-		push	grc_image_3B334	; image
-		push	GRC_SLOT_BOSS_1	; slot
-		mov	ax, point_3B330.y
-		add	ax, -16
-		push	ax	; top
-		mov	ax, 608
-		sub	ax, point_3B330.x
-		push	ax	; left
-		call	_grc_put_8
-		add	sp, 12h
-		mov	ax, grc_image_3B334
-		mov	word_3B336, ax
-		cmp	grc_image_3B334, 5
-		jge	short loc_2B954
-		inc	ax
-		jmp	short loc_2B957
-; ---------------------------------------------------------------------------
-
-loc_2B954:
-		mov	ax, 3
-
-loc_2B957:
-		mov	grc_image_3B334, ax
-		sub	point_3B330.y, 8
-
-loc_2B95F:
-		les	bx, [bp+arg_0]
-		mov	ax, es:[bx]
-		mov	bx, 0Ah
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	loc_2BA24
-		push	6
-		call	_mdrv2_se_play
-		pop	cx
-		jmp	loc_2BA24
-; ---------------------------------------------------------------------------
-
-loc_2B97C:
-		push	3
-		call	_mdrv2_se_play
-		push	(40 shl 16) or 32
-		mov	ax, point_3B330.y
-		add	ax, -16
-		push	ax
-		mov	ax, 608
-		sub	ax, point_3B330.x
-		push	ax
-		call	_egc_copy_rect_1_to_0_16
-		push	(50 shl 16) or 32
-		mov	ax, point_3B330.y
-		add	ax, -16
-		push	ax
-		push	point_3B330.x
-		call	_egc_copy_rect_1_to_0_16
-		mov	ax, point_3B330.y
-		add	ax, 4
-		push	ax
-		push	point_3B330.x
-		push	(185 shl 16) or 320
-		call	_graph_r_line_unput
-		mov	ax, point_3B330.y
-		add	ax, 4
-		push	ax
-		mov	ax, RES_X - 1
-		sub	ax, point_3B330.x
-		push	ax
-		push	(185 shl 16) or 320
-		call	_graph_r_line_unput
-		add	sp, 22h
-		xor	si, si
-		jmp	short loc_2BA16
-; ---------------------------------------------------------------------------
-
-loc_2B9EA:
-		pushd	0 or (0 shl 16)
-		push	PM_GRAVITY or (1 shl 16)
-		push	(1 shl 4)
-		call	IRand
-		push	ax
-		push	185
-		mov	ax, PLAYFIELD_RIGHT
-		cwd
-		idiv	_sariel_pattern_state
-		imul	si
-		push	ax
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		add	sp, 14h
-		inc	si
-
-loc_2BA16:
-		cmp	si, _sariel_pattern_state
-		jl	short loc_2B9EA
-		les	bx, [bp+arg_0]
-		mov	word ptr es:[bx], 0
-
-loc_2BA24:
-		pop	si
-		pop	bp
-		retn	4
-sub_2B83C	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -24285,9 +24103,7 @@ loc_2CB73:
 		call	sub_2BB46
 
 loc_2CB84:
-		push	ds
-		push	offset _boss_phase_frame
-		call	sub_2B83C
+		call	@pattern_rain_from_seal_center$qmi pascal, ds, offset _boss_phase_frame
 		jmp	short loc_2CBA4
 ; ---------------------------------------------------------------------------
 
@@ -25699,9 +25515,11 @@ CurvedSpray ends
 public _pattern12_spray
 _pattern12_spray	CurvedSpray <?>
 
-point_3B330	Point <?>
-grc_image_3B334	dw ?
-word_3B336	dw ?
+public _pattern13_rays, _pattern13_debris_cel_cur, _pattern13_debris_cel_prev
+_pattern13_rays           	SymmetricSpawnraysWithDebris <?>
+_pattern13_debris_cel_cur 	dw ?
+_pattern13_debris_cel_prev	dw ?
+
 x_3B338	dw ?
 y_3B338	dw ?
 speed_3B33C	dw ?

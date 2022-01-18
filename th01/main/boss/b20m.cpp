@@ -109,6 +109,7 @@ extern union {
 	int interval;
 	int start_frame;
 	pixel_t velocity_x;
+	int pellet_count;
 	int unknown;
 } pattern_state;
 extern bool16 invincible;
@@ -459,6 +460,19 @@ template <
 			: (((PLAYFIELD_RIGHT - DebrisOffsetX) - target_l_x) + offset);
 	}
 
+	// Almost a correct unblitting call, except for the top coordinate...
+	void debris_sloppy_unput(
+		x_direction_t ray_id, pixel_t offset = 0, pixel_t additional_h = 0
+	) const {
+		egc_copy_rect_1_to_0_16(
+			debris_left(ray_id),
+			((target_y - (DEBRIS_H / 4)) + offset),
+			DEBRIS_W,
+			(DEBRIS_H + additional_h)
+		);
+	}
+
+	// Worse.
 	void unput_and_put(
 		x_direction_t ray_id,
 		const vortex_or_debris_cel_t &debris_cel,
@@ -488,6 +502,19 @@ template <
 		);
 	}
 
+	// Better.
+	void unput_and_put(
+		x_direction_t ray_id, const vortex_or_debris_cel_t &debris_cel
+	) const {
+		debris_sloppy_unput(ray_id);
+		spawnray_unput_and_put(
+			OriginX, OriginY, target_x(ray_id), target_y, V_WHITE
+		);
+		vortex_or_debris_put_8(
+			debris_left(ray_id), (target_y - (DEBRIS_H / 2)), debris_cel
+		);
+	}
+
 	void ray_unput_right(pixel_t velocity_x) const {
 		// spawnray_unput_and_put() could have done this as well, no need to
 		// change APIs...
@@ -496,6 +523,25 @@ template <
 		graph_r_line_unput(
 			OriginX, OriginY, (target_x(X_RIGHT) + velocity_x), target_y
 		);
+	}
+
+	void unput_broken(pixel_t velocity_y) const {
+		debris_sloppy_unput(X_RIGHT, -velocity_y, velocity_y);
+		debris_sloppy_unput(X_LEFT, -velocity_y, (velocity_y + 10)); // ???
+
+		// ZUN bug: Should of course be [velocity_y] rather than 4. These calls
+		// therefore unblit lines at angles that completely differ from the
+		// intended spawn rays. It doesn't matter for the left one, which
+		// actually isn't visible when this code gets to run, but the right one
+		// does indeed stay visible after this function. You only barely notice
+		// it because the one pattern that calls this function then spawns
+		// pellets on top of both rays, and it's *their* sloppy unblitting code
+		// that ends up gradually unblitting the right ray over the next few
+		// frames, as a side effect.
+		// Again, spawnray_unput_and_put() would have just done the correct
+		// thing.
+		graph_r_line_unput(OriginX, OriginY, target_x(X_LEFT),  (target_y + 4));
+		graph_r_line_unput(OriginX, OriginY, target_x(X_RIGHT), (target_y + 4));
 	}
 
 	void fire_random_to_bottom(
@@ -2369,4 +2415,65 @@ void pascal near pattern_curved_spray_leftright_once(int &frame)
 	}
 
 	#undef spray
+}
+
+void pascal near pattern_rain_from_seal_center(int &frame)
+{
+	enum {
+		VELOCITY_Y = 8,
+	};
+
+	#define rays           	pattern13_rays
+	#define debris_cel_cur 	pattern13_debris_cel_cur
+	#define debris_cel_prev	pattern13_debris_cel_prev
+
+	extern struct SymmetricSpawnraysWithDebris<
+		SEAL_CENTER_X, SEAL_CENTER_Y, DEBRIS_W
+	> rays;
+	extern vortex_or_debris_cel_t debris_cel_cur;
+	extern vortex_or_debris_cel_t debris_cel_prev;
+
+	if(frame < 50) {
+		return;
+	} else if(frame == 50) {
+		rays.target_l_x = PLAYFIELD_LEFT;
+		rays.target_y = (PLAYFIELD_BOTTOM - 1);
+		debris_cel_cur = C_DEBRIS;
+		debris_cel_prev = C_DEBRIS;
+		sariel_select_for_rank(pattern_state.pellet_count, 30, 35, 40, 45);
+	}
+
+	if(rays.target_y > SEAL_CENTER_Y) {
+		if((frame % 2) == 0) {
+			rays.unput_and_put(X_LEFT, debris_cel_cur);
+		} else if((frame % 2) == 1) {
+			rays.unput_and_put(X_RIGHT, debris_cel_cur);
+			debris_cel_prev = debris_cel_cur;
+			debris_cel_cur = debris_cel_next(debris_cel_cur);
+			rays.target_y -= VELOCITY_Y;
+		}
+		if((frame % 10) == 0) {
+			mdrv2_se_play(6);
+		}
+		return;
+	}
+
+	mdrv2_se_play(3);
+	rays.unput_broken(VELOCITY_Y);
+
+	for(int i = 0; i < pattern_state.pellet_count; i++) {
+		Pellets.add_single(
+			(PLAYFIELD_LEFT + ((PLAYFIELD_W / pattern_state.pellet_count) * i)),
+			SEAL_CENTER_Y,
+			rand(),
+			to_sp(1.0f),
+			PM_GRAVITY,
+			to_sp(0.1f)
+		);
+	}
+	frame = 0;
+
+	#undef debris_cel_prev
+	#undef debris_cel_cur
+	#undef ray
 }
