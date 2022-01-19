@@ -2368,6 +2368,11 @@ struct CurvedSpray {
 		speed.set(7.0f);
 		target.x = new_target;
 	}
+
+	void reset_2(screen_x_t new_target) {
+		target.x = new_target;
+		speed.set(7.0f);
+	}
 };
 
 void pascal near pattern_curved_spray_leftright_once(int &frame)
@@ -2476,4 +2481,35 @@ void pascal near pattern_rain_from_seal_center(int &frame)
 	#undef debris_cel_prev
 	#undef debris_cel_cur
 	#undef ray
+}
+
+void pascal near pattern_curved_spray_leftright_twice(int &frame)
+{
+	#define spray	pattern14_spray
+
+	extern CurvedSpray spray;
+
+	if(frame < 80) {
+		return;
+	} else if(frame == 80) {
+		spray.init();
+	}
+	if((spray.subpattern_id % 2) == 0) {
+		spray.fire_and_advance(X_RIGHT);
+		if(spray.target.x >= PLAYFIELD_RIGHT) {
+			spray.subpattern_id++;
+			spray.reset(PLAYFIELD_RIGHT);
+		}
+	} else {
+		spray.fire_and_advance(X_LEFT);
+		if(spray.target.x < PLAYFIELD_LEFT) {
+			spray.subpattern_id++;
+			spray.reset_2(PLAYFIELD_LEFT);
+			if(spray.subpattern_id == 4) {
+				frame = 0;
+			}
+		}
+	}
+
+	#undef spray
 }

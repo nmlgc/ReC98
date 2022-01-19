@@ -22454,6 +22454,8 @@ main_36_TEXT	segment	byte public 'CODE' use16
 		frame_seg:word, frame_off:word
 	@PATTERN_RAIN_FROM_SEAL_CENTER$QMI procdesc pascal near \
 		frame_seg:word, frame_off:word
+	@PATTERN_CURVED_SPRAY_LEFTRIGHT_T$QMI procdesc pascal near \
+		frame_seg:word, frame_off:word
 main_36_TEXT	ends
 
 main_36__TEXT	segment	byte public 'CODE' use16
@@ -22464,85 +22466,6 @@ main_36__TEXT	segment	byte public 'CODE' use16
 include th01/main/boss/anim.inc
 
 sariel_shield	equ <boss_entity_0>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2BA29	proc near
-
-arg_0		= dword	ptr  4
-
-		push	bp
-		mov	bp, sp
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx], 50h ;	'P'
-		jl	loc_2BB42
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx], 50h ;	'P'
-		jnz	short loc_2BA6F
-		mov	x_3B338, 0
-		mov	y_3B338, PLAYFIELD_BOTTOM
-		mov	speed_3B33C, (7 shl 4)
-		mov	word_3B33F, 0
-		call	@sariel_select_for_rank$qmiiiii c, offset _sariel_pattern_state, ds, large 32 or (24 shl 16), large 18 or (16 shl 16)
-
-loc_2BA6F:
-		mov	ax, word_3B33F
-		mov	bx, 2
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_2BADA
-		mov	ax, y_3B338
-		add	ax, -185
-		push	ax
-		mov	ax, x_3B338
-		add	ax, -320
-		push	ax
-		call	iatan2
-		mov	angle_3B33E, al
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii c, offset _Pellets, ds, large 320 or (185 shl 16), word ptr angle_3B33E, speed_3B33C, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
-		sub	speed_3B33C, 4
-		mov	ax, _sariel_pattern_state
-		add	x_3B338, ax
-		cmp	x_3B338, PLAYFIELD_RIGHT
-		jl	short loc_2BB42
-		inc	word_3B33F
-		mov	speed_3B33C, (7 shl 4)
-		mov	x_3B338, PLAYFIELD_RIGHT
-		pop	bp
-		retn	4
-; ---------------------------------------------------------------------------
-
-loc_2BADA:
-		mov	ax, y_3B338
-		add	ax, -185
-		push	ax
-		mov	ax, x_3B338
-		add	ax, -320
-		push	ax
-		call	iatan2
-		mov	angle_3B33E, al
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii c, offset _Pellets, ds, large 320 or (185 shl 16), word ptr angle_3B33E, speed_3B33C, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
-		sub	speed_3B33C, 4
-		mov	ax, _sariel_pattern_state
-		sub	x_3B338, ax
-		cmp	x_3B338, 0
-		jge	short loc_2BB42
-		inc	word_3B33F
-		mov	x_3B338, 0
-		mov	speed_3B33C, (7 shl 4)
-		cmp	word_3B33F, 4
-		jnz	short loc_2BB42
-		les	bx, [bp+arg_0]
-		mov	word ptr es:[bx], 0
-
-loc_2BB42:
-		pop	bp
-		retn	4
-sub_2BA29	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -24116,9 +24039,7 @@ loc_2CB8D:
 		call	sub_2BB46
 
 loc_2CB9D:
-		push	ds
-		push	offset _boss_phase_frame
-		call	sub_2BA29
+		call	@pattern_curved_spray_leftright_t$qmi pascal, ds, offset _boss_phase_frame
 
 loc_2CBA4:
 		cmp	_boss_phase_frame, 0
@@ -25520,11 +25441,9 @@ _pattern13_rays           	SymmetricSpawnraysWithDebris <?>
 _pattern13_debris_cel_cur 	dw ?
 _pattern13_debris_cel_prev	dw ?
 
-x_3B338	dw ?
-y_3B338	dw ?
-speed_3B33C	dw ?
-angle_3B33E	db ?
-word_3B33F	dw ?
+public _pattern14_spray
+_pattern14_spray	CurvedSpray <?>
+
 word_3B341	dw 30 dup(?)
 word_3B37D	dw 30 dup(?)
 word_3B3B9	dw 30 dup(?)
