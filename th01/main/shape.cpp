@@ -9,7 +9,7 @@
 	if((left < 0) || (left >= RES_X) || (top < 0) || (top >= RES_Y)) { \
 		return; \
 	} \
-	grcg_put_8x8_mono(vram_offset_topleft, first_bit, sprite, col);
+	grcg_put_8x8_mono(vram_offset_topleft, first_bit, sprite.row, col);
 
 void shape8x8_diamond_put(screen_x_t left, vram_y_t top, int col)
 {

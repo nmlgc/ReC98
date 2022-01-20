@@ -23,6 +23,7 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 
 !bmp2arr = | $(BMP2ARR) |> $(BMP2ARR) -q -i %f -o %o |> %o
 
+: th01/sprites/leaf.bmp |> !bmp2arr -sym _sLEAF -of asm -sw 8 -sh 8 |> th01/sprites/leaf.asp
 : th01/sprites/ileave_m.bmp |> !bmp2arr -sym _sINTERLEAVE_MASKS -of asm -sw 8 -sh 8 |> th01/sprites/ileave_m.asp
 
 # ZUN bug: Supposed to be 8 preshifted sprites, with a height of 1 and a width
@@ -57,6 +58,7 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 
 : th01_op.asm |> !as |> bin\\th01\\op.obj
 : th01_reiiden.asm | \
+	th01/sprites/leaf.asp \
 	th01/sprites/ileave_m.asp \
 	th01/sprites/laser_s.asp \
 	th01/sprites/pellet_c.asp \

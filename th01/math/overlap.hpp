@@ -41,6 +41,13 @@
 	((y1) >= (top2)) \
 )
 
+#define overlap_xy_rltb_lt_ge(x1, y1, left2, top2, right2, bottom2) ( \
+	((x1) < (right2)) && \
+	((x1) >= (left2)) && \
+	((y1) >= (top2)) && \
+	((y1) < (bottom2)) \
+)
+
 #define overlap_xy_xywh_le_ge(x1, y1, x2, y2, w2, h2) \
 	overlap_xy_lrtb_le_ge(x1, y1, x2, y2, (x2 + w2), (y2 + h2))
 

@@ -20,6 +20,7 @@ extern "C" {
 #include "th01/math/vector.hpp"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
+#include "th01/hardware/grcg8x8m.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/palette.h"
 #include "th01/hardware/ptrans.hpp"
@@ -32,6 +33,7 @@ extern "C" {
 #include "th01/formats/grp.h"
 #include "th01/formats/ptn.hpp"
 #include "th01/formats/stagedat.hpp"
+#include "th01/sprites/leaf.hpp"
 #include "th01/sprites/pellet.h"
 #include "th01/sprites/shape8x8.hpp"
 #include "th01/main/spawnray.hpp"
@@ -232,6 +234,16 @@ static const pixel_t SPAWNCROSS_W = 32;
 static const pixel_t SPAWNCROSS_H = 32;
 static const int SPAWNCROSS_CELS = 2;
 // --------------------------
+
+// Leaf splash animation (BOSS6GR4.GRC)
+// ------------------------------------
+// Never seen in the original game, due to a ZUN bug in the only pattern that
+// uses it.
+
+static const pixel_t LEAFSPLASH_W = 32;
+static const pixel_t LEAFSPLASH_H = 32;
+static const int LEAFSPLASH_CELS = 3;
+// ------------------------------------
 /// -------------
 
 // .PTN
@@ -2512,4 +2524,208 @@ void pascal near pattern_curved_spray_leftright_twice(int &frame)
 	}
 
 	#undef spray
+}
+
+// Subpixels with one decimal digit of fractional resolution?! Sure, if you
+// absolutely want those precise multiples of 0.1 in your movement code...
+typedef int decimal_subpixel_t;
+
+struct DecimalSubpixel {
+	decimal_subpixel_t v;
+
+	pixel_t to_pixel() const {
+		return static_cast<pixel_t>(v / 10);
+	}
+};
+
+inline decimal_subpixel_t to_dsp(float pixel_v) {
+	return static_cast<decimal_subpixel_t>(pixel_v * 10);
+}
+
+void pascal near pattern_swaying_leaves(int &frame, int spawn_interval_or_reset)
+{
+	enum {
+		LEAF_COUNT = 30,
+	};
+
+	enum leaf_flag_t {
+		LF_FREE = 0,
+		LF_SPARK = 1,
+		LF_SPLASH = 2,
+
+		// Separate state because it assigns the velocity for the next one.
+		LF_SPLASH_DONE = (LF_SPLASH + LEAFSPLASH_CELS),
+
+		LF_LEAF,
+
+		_leaf_flag_t_FORCE_INT16 = 0x7FFF,
+	};
+
+	#define flag      	pattern15_flag
+	#define left      	pattern15_left
+	#define top       	pattern15_top
+	#define velocity_x	pattern15_velocity_x
+	#define velocity_y	pattern15_velocity_y
+
+	extern leaf_flag_t flag[LEAF_COUNT];
+	extern DecimalSubpixel left[LEAF_COUNT];
+	extern DecimalSubpixel top[LEAF_COUNT];
+	extern DecimalSubpixel velocity_x[LEAF_COUNT];
+	extern DecimalSubpixel velocity_y[LEAF_COUNT];
+
+	#define leaf_on_screen(i) \
+		overlap_xy_rltb_lt_ge( \
+			left[i].v, \
+			top[i].v, \
+			to_dsp(0.0f), \
+			to_dsp(0.0f), \
+			to_dsp(RES_X - LEAF_W), \
+			to_dsp(RES_Y - LEAF_H) \
+		)
+
+	#define leaf_put(tmp_vo, tmp_first_bit, i, sprite) { \
+		if(leaf_on_screen(i)) { \
+			vo = vram_offset_divmul(left[i].to_pixel(), top[i].to_pixel()); \
+			tmp_first_bit = (left[i].to_pixel() % BYTE_DOTS); \
+			grcg_put_8x8_mono(vo, tmp_first_bit, sprite, V_WHITE); \
+		} \
+	}
+
+	const dot_rect_t(8, 8) sSPARK = sLEAF[0];
+	const dot_rect_t(8, 8) sLEAF_LEFT = sLEAF[1];
+	const dot_rect_t(8, 8) sLEAF_RIGHT = sLEAF[2];
+	int i;
+	vram_offset_t vo;
+	int first_bit;
+
+	if(spawn_interval_or_reset == 999) {
+		for(i = 0; i < LEAF_COUNT; i++) {
+			flag[i] = LF_FREE;
+		}
+		return;
+	}
+	if((frame % spawn_interval_or_reset) == 0) {
+		for(i = 0; i < LEAF_COUNT; i++) {
+			if(flag[i] != LF_FREE) {
+				continue;
+			}
+			left[i].v = (
+				to_dsp(PLAYFIELD_LEFT) + (rand() % to_dsp(PLAYFIELD_W))
+			);
+			top[i].v = (
+				to_dsp(FACE_CENTER_Y) +
+				(rand() % to_dsp((PLAYFIELD_H * 25) / 84))
+			);
+			vector2_between(
+				left[i].to_pixel(),
+				top[i].to_pixel(),
+				(PLAYFIELD_LEFT + playfield_rand_x()),
+				PLAYFIELD_TOP,
+				velocity_x[i].v,
+				velocity_y[i].v,
+				to_dsp(4.0f)
+			);
+			flag[i] = LF_SPARK;
+			break;
+		}
+	}
+
+	if((frame % 2) != 0) {
+		return;
+	}
+
+	// Unblit and update
+	for(i = 0; i < LEAF_COUNT; i++) {
+		if(flag[i] == LF_FREE) {
+			continue;
+		}
+		if(flag[i] == LF_SPARK) {
+			if(leaf_on_screen(i)) {
+				egc_copy_rect_1_to_0_16_word_w(
+					left[i].to_pixel(), top[i].to_pixel(), LEAF_W, LEAF_H
+				);
+			}
+			left[i].v += velocity_x[i].v;
+			top[i].v += velocity_y[i].v;
+			if(top[i].v < to_dsp(PLAYFIELD_TOP)) {
+				flag[i] = LF_SPLASH;
+			}
+		} else if(flag[i] <= LF_SPLASH_DONE) {
+			if(leaf_on_screen(i)) {
+				sloppy_unput_32x32(left[i].to_pixel(), top[i].to_pixel());
+			}
+			if(flag[i] == LF_SPLASH_DONE) {
+				flag[i] = LF_LEAF;
+				velocity_y[i].v = (to_dsp(0.3f) + (rand() % to_dsp(0.2f)));
+				velocity_x[i].v = to_dsp(0.2f);
+			}
+		} else if(flag[i] == LF_LEAF) {
+			if(leaf_on_screen(i)) {
+				egc_copy_rect_1_to_0_16_word_w(
+					left[i].to_pixel(), top[i].to_pixel(), LEAF_W, LEAF_H
+				);
+			}
+			left[i].v += velocity_x[i].v;
+			top[i].v += velocity_y[i].v;
+			velocity_y[i].v--;
+			if(velocity_y[i].v < to_dsp(-0.1f)) {
+				velocity_y[i].v = (to_dsp(3.0f) + (rand() % to_dsp(2.0f)));
+				velocity_x[i].v = (velocity_x[i].v < to_dsp(0.0f))
+					? to_dsp(+2.0f)
+					: to_dsp(-2.0f);
+			}
+			if(top[i].to_pixel() > PLAYFIELD_BOTTOM) {
+				flag[i] = LF_FREE;
+			}
+		}
+	}
+
+	// Render and detect player collisions
+	for(i = 0; i < LEAF_COUNT; i++) {
+		if(flag[i] == LF_FREE) {
+			continue;
+		}
+		if(flag[i] == LF_SPARK) {
+			leaf_put(vo, first_bit, i, sSPARK.row);
+		} else if(flag[i] <= LF_SPLASH_DONE) {
+			if(leaf_on_screen(i)) {
+				// ZUN bug: Another missing conversion to screen pixels,
+				// resulting in the entire leaf splash animation never being
+				// actually rendered, and becoming effectively unused.
+				grc_put_8(
+					left[i].v, // should be pixels
+					top[i].v, // should be pixels
+					GRC_SLOT_LEAFSPLASH,
+					(flag[i] - LF_SPLASH),
+					V_WHITE
+				);
+			}
+			if((frame % 4) == 0) {
+				static_cast<int>(flag[i])++;
+			}
+		} else if(flag[i] == LF_LEAF) {
+			leaf_put(vo, first_bit, i, ((velocity_x[i].v < to_dsp(0.0f))
+				? sLEAF_LEFT.row
+				: sLEAF_RIGHT.row
+			));
+			if(
+				(top[i].v > to_dsp(player_top)) &&
+				(top[i].v < to_dsp(player_bottom() - LEAF_H)) &&
+				(left[i].to_pixel() > player_left) &&
+				(left[i].to_pixel() < (player_left + PLAYER_W - LEAF_W)) &&
+				!player_invincible
+			) {
+				done = true;
+			}
+		}
+	}
+
+	#undef leaf_put
+	#undef leaf_on_screen
+
+	#undef velocity_y
+	#undef velocity_x
+	#undef top
+	#undef left
+	#undef flag
 }

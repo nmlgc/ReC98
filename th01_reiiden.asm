@@ -5158,7 +5158,6 @@ main_22_TEXT	ends
 main_23_TEXT	segment	byte public 'CODE' use16
 	extern _grc_load:proc
 	extern _grc_put_8:proc
-	extern _grcg_put_8x8_mono:proc
 	extern @shape_ellipse_arc_put$qiiiiiucucuc:proc
 	extern @shape_ellipse_arc_sloppy_unput$qiiiiucucuc:proc
 	extern _graph_r_lineloop_put:proc
@@ -22456,6 +22455,8 @@ main_36_TEXT	segment	byte public 'CODE' use16
 		frame_seg:word, frame_off:word
 	@PATTERN_CURVED_SPRAY_LEFTRIGHT_T$QMI procdesc pascal near \
 		frame_seg:word, frame_off:word
+	@PATTERN_SWAYING_LEAVES$QMII procdesc pascal near \
+		frame_seg:word, frame_off:word, spawn_interval_or_reset:word
 main_36_TEXT	ends
 
 main_36__TEXT	segment	byte public 'CODE' use16
@@ -22466,619 +22467,6 @@ main_36__TEXT	segment	byte public 'CODE' use16
 include th01/main/boss/anim.inc
 
 sariel_shield	equ <boss_entity_0>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2BB46	proc near
-
-@@first_bit		= word ptr -1Ah
-var_18		= byte ptr -18h
-var_10		= byte ptr -10h
-var_8		= byte ptr -8
-arg_0		= word ptr  4
-arg_2		= dword	ptr  6
-
-		enter	1Ah, 0
-		push	si
-		push	di
-		lea	ax, [bp+var_8]
-		push	ss
-		push	ax
-		push	ds
-		push	offset unk_35E7D
-		mov	cx, 8
-		call	SCOPY@
-		lea	ax, [bp+var_10]
-		push	ss
-		push	ax
-		push	ds
-		push	offset unk_35E85
-		mov	cx, 8
-		call	SCOPY@
-		lea	ax, [bp+var_18]
-		push	ss
-		push	ax
-		push	ds
-		push	offset unk_35E8D
-		mov	cx, 8
-		call	SCOPY@
-		cmp	[bp+arg_0], 3E7h
-		jnz	short loc_2BB9D
-		xor	si, si
-		jmp	short loc_2BB95
-; ---------------------------------------------------------------------------
-
-loc_2BB8A:
-		mov	bx, si
-		add	bx, bx
-		mov	word ptr [bx+14A1h], 0
-		inc	si
-
-loc_2BB95:
-		cmp	si, 1Eh
-		jl	short loc_2BB8A
-		jmp	loc_2C0C4
-; ---------------------------------------------------------------------------
-
-loc_2BB9D:
-		les	bx, [bp+arg_2]
-		mov	ax, es:[bx]
-		cwd
-		idiv	[bp+arg_0]
-		or	dx, dx
-		jnz	loc_2BC43
-		xor	si, si
-		jmp	loc_2BC3C
-; ---------------------------------------------------------------------------
-
-loc_2BBB2:
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+14A1h], 0
-		jnz	short loc_2BC3B
-		call	IRand
-		mov	bx, 1900h
-		cwd
-		idiv	bx
-		mov	bx, si
-		add	bx, bx
-		mov	[bx+69A1h], dx
-		call	IRand
-		mov	bx, 3E8h
-		cwd
-		idiv	bx
-		add	dx, 4B0h
-		mov	bx, si
-		add	bx, bx
-		mov	 word_3B37D[bx], dx
-		push	28h ; '('
-		push	ds
-		mov	ax, si
-		add	ax, ax
-		add	ax, offset word_3B3F5
-		push	ax
-		push	ds
-		mov	ax, si
-		add	ax, ax
-		add	ax, offset word_3B3B9
-		push	ax
-		push	40h
-		call	IRand
-		mov	bx, 280h
-		cwd
-		idiv	bx
-		push	dx
-		mov	bx, si
-		add	bx, bx
-		mov	ax, word_3B37D[bx]
-		mov	bx, 0Ah
-		cwd
-		idiv	bx
-		push	ax
-		mov	bx, si
-		add	bx, bx
-		mov	ax, word_3B341[bx]
-		mov	bx, 0Ah
-		cwd
-		idiv	bx
-		push	ax
-		call	_vector2_between
-		add	sp, 12h
-		mov	bx, si
-		add	bx, bx
-		mov	word ptr [bx+14A1h], 1
-		jmp	short loc_2BC43
-; ---------------------------------------------------------------------------
-
-loc_2BC3B:
-		inc	si
-
-loc_2BC3C:
-		cmp	si, 1Eh
-		jl	loc_2BBB2
-
-loc_2BC43:
-		les	bx, [bp+arg_2]
-		mov	ax, es:[bx]
-		mov	bx, 2
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	loc_2C0C4
-		xor	si, si
-		jmp	loc_2BE93
-; ---------------------------------------------------------------------------
-
-loc_2BC5A:
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+14A1h], 0
-		jz	loc_2BE92
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+14A1h], 1
-		jnz	loc_2BD09
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+69A1h], 18B0h
-		jge	short loc_2BCCE
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+69A1h], 0
-		jl	short loc_2BCCE
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+69DDh], 0
-		jl	short loc_2BCCE
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+69DDh], 0F50h
-		jge	short loc_2BCCE
-		push	(8 shl 16) or 16
-		mov	bx, si
-		add	bx, bx
-		mov	ax, [bx+69DDh]
-		mov	bx, 0Ah
-		cwd
-		idiv	bx
-		push	ax
-		mov	bx, si
-		add	bx, bx
-		mov	ax, [bx+69A1h]
-		mov	bx, 0Ah
-		cwd
-		idiv	bx
-		push	ax
-		call	_egc_copy_rect_1_to_0_16
-		add	sp, 8
-
-loc_2BCCE:
-		mov	bx, si
-		add	bx, bx
-		mov	ax, [bx+6A19h]
-		mov	bx, si
-		add	bx, bx
-		add	[bx+69A1h], ax
-		mov	bx, si
-		add	bx, bx
-		mov	ax, [bx+6A55h]
-		mov	bx, si
-		add	bx, bx
-		add	[bx+69DDh], ax
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+69DDh], 280h
-		jge	loc_2BE92
-		mov	bx, si
-		add	bx, bx
-		mov	word ptr [bx+14A1h], 2
-		jmp	loc_2BE92
-; ---------------------------------------------------------------------------
-
-loc_2BD09:
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+14A1h], 5
-		jg	loc_2BDAA
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+69A1h], 18B0h
-		jge	short loc_2BD70
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+69A1h], 0
-		jl	short loc_2BD70
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+69DDh], 0
-		jl	short loc_2BD70
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+69DDh], 0F50h
-		jge	short loc_2BD70
-		push	(32 shl 16) or 48
-		mov	bx, si
-		add	bx, bx
-		mov	ax, [bx+69DDh]
-		mov	bx, 0Ah
-		cwd
-		idiv	bx
-		push	ax
-		mov	bx, si
-		add	bx, bx
-		mov	ax, [bx+69A1h]
-		mov	bx, 0Ah
-		cwd
-		idiv	bx
-		push	ax
-		call	_egc_copy_rect_1_to_0_16
-		add	sp, 8
-
-loc_2BD70:
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+14A1h], 5
-		jnz	loc_2BE92
-		mov	bx, si
-		add	bx, bx
-		mov	word ptr [bx+14A1h], 6
-		call	IRand
-		mov	bx, 2
-		cwd
-		idiv	bx
-		add	dx, 3
-		mov	bx, si
-		add	bx, bx
-		mov	[bx+6A55h], dx
-		mov	bx, si
-		add	bx, bx
-		mov	word ptr [bx+6A19h], 2
-		jmp	loc_2BE92
-; ---------------------------------------------------------------------------
-
-loc_2BDAA:
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+14A1h], 6
-		jnz	loc_2BE92
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+69A1h], 18B0h
-		jge	short loc_2BE11
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+69A1h], 0
-		jl	short loc_2BE11
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+69DDh], 0
-		jl	short loc_2BE11
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+69DDh], 0F50h
-		jge	short loc_2BE11
-		push	(8 shl 16) or 16
-		mov	bx, si
-		add	bx, bx
-		mov	ax, [bx+69DDh]
-		mov	bx, 0Ah
-		cwd
-		idiv	bx
-		push	ax
-		mov	bx, si
-		add	bx, bx
-		mov	ax, [bx+69A1h]
-		mov	bx, 0Ah
-		cwd
-		idiv	bx
-		push	ax
-		call	_egc_copy_rect_1_to_0_16
-		add	sp, 8
-
-loc_2BE11:
-		mov	bx, si
-		add	bx, bx
-		mov	ax, [bx+6A19h]
-		mov	bx, si
-		add	bx, bx
-		add	[bx+69A1h], ax
-		mov	bx, si
-		add	bx, bx
-		mov	ax, [bx+6A55h]
-		mov	bx, si
-		add	bx, bx
-		add	[bx+69DDh], ax
-		mov	bx, si
-		add	bx, bx
-		dec	word ptr [bx+6A55h]
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+6A55h], 0FFFFh
-		jge	short loc_2BE75
-		call	IRand
-		mov	bx, 14h
-		cwd
-		idiv	bx
-		add	dx, 1Eh
-		mov	bx, si
-		add	bx, bx
-		mov	[bx+6A55h], dx
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+6A19h], 0
-		jge	short loc_2BE6A
-		mov	ax, 14h
-		jmp	short loc_2BE6D
-; ---------------------------------------------------------------------------
-
-loc_2BE6A:
-		mov	ax, 0FFECh
-
-loc_2BE6D:
-		mov	bx, si
-		add	bx, bx
-		mov	[bx+6A19h], ax
-
-loc_2BE75:
-		mov	bx, si
-		add	bx, bx
-		mov	ax, [bx+69DDh]
-		mov	bx, 0Ah
-		cwd
-		idiv	bx
-		cmp	ax, 190h
-		jle	short loc_2BE92
-		mov	bx, si
-		add	bx, bx
-		mov	word ptr [bx+14A1h], 0
-
-loc_2BE92:
-		inc	si
-
-loc_2BE93:
-		cmp	si, 1Eh
-		jl	loc_2BC5A
-		xor	si, si
-		jmp	loc_2C0BD
-; ---------------------------------------------------------------------------
-
-loc_2BE9F:
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+14A1h], 0
-		jz	loc_2C0BC
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+14A1h], 1
-		jnz	loc_2BF45
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+69A1h], 18B0h
-		jge	loc_2C0BC
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+69A1h], 0
-		jl	loc_2C0BC
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+69DDh], 0
-		jl	loc_2C0BC
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+69DDh], 0F50h
-		jge	loc_2C0BC
-		mov	bx, si
-		add	bx, bx
-		mov	ax, [bx+69A1h]
-		mov	bx, 0Ah
-		cwd
-		idiv	bx
-		mov	bx, 8
-		cwd
-		idiv	bx
-		mov	bx, si
-		add	bx, bx
-		push	ax
-		mov	ax, [bx+69DDh]
-		mov	bx, 0Ah
-		cwd
-		idiv	bx
-		imul	ax, ROW_SIZE
-		pop	dx
-		add	dx, ax
-		mov	di, dx
-		mov	bx, si
-		add	bx, bx
-		mov	ax, [bx+69A1h]
-		mov	bx, 0Ah
-		cwd
-		idiv	bx
-		mov	bx, 8
-		cwd
-		idiv	bx
-		mov	[bp+@@first_bit], dx
-		push	7	; col
-		push	ss	; sprite (segment)
-		lea	ax, [bp+var_8]
-		push	ax	; sprite (offset)
-		push	dx	; first_bit
-		push	di	; vram_offset_topleft
-		call	_grcg_put_8x8_mono
-		add	sp, 0Ah
-		jmp	loc_2C0BC
-; ---------------------------------------------------------------------------
-
-loc_2BF45:
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+14A1h], 5
-		jg	short loc_2BFC3
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+69A1h], 18B0h
-		jge	short loc_2BFA6
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+69A1h], 0
-		jl	short loc_2BFA6
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+69DDh], 0
-		jl	short loc_2BFA6
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+69DDh], 0F50h
-		jge	short loc_2BFA6
-		push	7
-		mov	bx, si
-		add	bx, bx
-		mov	ax, [bx+14A1h]
-		add	ax, 0FFFEh
-		push	ax
-		push	GRC_SLOT_BOSS_4
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+69DDh]	; top
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+69A1h]	; left
-		call	_grc_put_8
-		add	sp, 0Ah
-
-loc_2BFA6:
-		les	bx, [bp+arg_2]
-		mov	ax, es:[bx]
-		mov	bx, 4
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	loc_2C0BC
-		mov	bx, si
-		add	bx, bx
-		inc	word ptr [bx+14A1h]
-		jmp	loc_2C0BC
-; ---------------------------------------------------------------------------
-
-loc_2BFC3:
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+14A1h], 6
-		jnz	loc_2C0BC
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+69A1h], 18B0h
-		jge	loc_2C06B
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+69A1h], 0
-		jl	loc_2C06B
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+69DDh], 0
-		jl	short loc_2C06B
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+69DDh], 0F50h
-		jge	short loc_2C06B
-		mov	bx, si
-		add	bx, bx
-		mov	ax, [bx+69A1h]
-		mov	bx, 0Ah
-		cwd
-		idiv	bx
-		mov	bx, 8
-		cwd
-		idiv	bx
-		mov	bx, si
-		add	bx, bx
-		push	ax
-		mov	ax, [bx+69DDh]
-		mov	bx, 0Ah
-		cwd
-		idiv	bx
-		imul	ax, 50h
-		pop	dx
-		add	dx, ax
-		mov	di, dx
-		mov	bx, si
-		add	bx, bx
-		mov	ax, [bx+69A1h]
-		mov	bx, 0Ah
-		cwd
-		idiv	bx
-		mov	bx, 8
-		cwd
-		idiv	bx
-		mov	[bp+@@first_bit], dx
-		push	7	; col
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+6A19h], 0
-		jge	short loc_2C058
-		mov	dx, ss
-		lea	ax, [bp+var_10]
-		jmp	short loc_2C05D
-; ---------------------------------------------------------------------------
-
-loc_2C058:
-		mov	dx, ss
-		lea	ax, [bp+var_18]
-
-loc_2C05D:
-		push	dx	; sprite (segment)
-		push	ax	; sprite (offset)
-		push	[bp+@@first_bit]	; first_bit
-		push	di	; vram_offset_topleft
-		call	_grcg_put_8x8_mono
-		add	sp, 0Ah
-
-loc_2C06B:
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+69DDh], 0E60h
-		jle	short loc_2C0BC
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx+69DDh], 0F50h
-		jge	short loc_2C0BC
-		mov	bx, si
-		add	bx, bx
-		mov	ax, [bx+69A1h]
-		mov	bx, 0Ah
-		cwd
-		idiv	bx
-		cmp	ax, _player_left
-		jle	short loc_2C0BC
-		mov	bx, si
-		add	bx, bx
-		mov	ax, [bx+69A1h]
-		mov	bx, 0Ah
-		cwd
-		idiv	bx
-		mov	dx, _player_left
-		add	dx, 24
-		cmp	ax, dx
-		jge	short loc_2C0BC
-		cmp	_player_invincible, 0
-		jnz	short loc_2C0BC
-		mov	_done, 1
-
-loc_2C0BC:
-		inc	si
-
-loc_2C0BD:
-		cmp	si, 1Eh
-		jl	loc_2BE9F
-
-loc_2C0C4:
-		pop	di
-		pop	si
-		leave
-		retn	6
-sub_2BB46	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -23936,10 +23324,7 @@ loc_2C9DA:
 		mov	_hud_hp_first_white, 10
 		mov	_hud_hp_first_redwhite, 3
 		mov	_sariel_initial_hp_rendered, 0
-		push	ds
-		push	offset _boss_phase_frame
-		push	3E7h
-		call	sub_2BB46
+		call	@pattern_swaying_leaves$qmii pascal, ds, offset _boss_phase_frame, 999
 		jmp	loc_2CDCE
 ; ---------------------------------------------------------------------------
 
@@ -23980,10 +23365,7 @@ loc_2CB05:
 		jz	loc_2CB9D
 		cmp	word_35E95, 4
 		jnz	short loc_2CB38
-		push	ds
-		push	offset _boss_phase_frame
-		push	_sariel_pattern_state
-		call	sub_2BB46
+		call	@pattern_swaying_leaves$qmii pascal, ds, offset _boss_phase_frame, _sariel_pattern_state
 		cmp	_boss_phase_frame, 300
 		jle	short loc_2CBA4
 		jmp	short loc_2CB51
@@ -23992,10 +23374,7 @@ loc_2CB05:
 loc_2CB38:
 		cmp	word_35E95, 5
 		jnz	short loc_2CB59
-		push	ds
-		push	offset _boss_phase_frame
-		push	1F4h
-		call	sub_2BB46
+		call	@pattern_swaying_leaves$qmii pascal, ds, offset _boss_phase_frame, 500
 		cmp	_boss_phase_frame, 200
 		jle	short loc_2CBA4
 
@@ -24007,10 +23386,7 @@ loc_2CB51:
 loc_2CB59:
 		cmp	word_35E95, 6
 		jnz	short loc_2CB73
-		push	ds
-		push	offset _boss_phase_frame
-		push	1F4h
-		call	sub_2BB46
+		call	@pattern_swaying_leaves$qmii pascal, ds, offset _boss_phase_frame, 500
 
 loc_2CB6A:
 		call	@pattern_curved_spray_leftright_o$qmi pascal, ds, offset _boss_phase_frame
@@ -24020,10 +23396,7 @@ loc_2CB6A:
 loc_2CB73:
 		cmp	word_35E95, 7
 		jnz	short loc_2CB8D
-		push	ds
-		push	offset _boss_phase_frame
-		push	1F4h
-		call	sub_2BB46
+		call	@pattern_swaying_leaves$qmii pascal, ds, offset _boss_phase_frame, 500
 
 loc_2CB84:
 		call	@pattern_rain_from_seal_center$qmi pascal, ds, offset _boss_phase_frame
@@ -24033,10 +23406,7 @@ loc_2CB84:
 loc_2CB8D:
 		cmp	word_35E95, 8
 		jnz	short loc_2CBA4
-		push	ds
-		push	offset _boss_phase_frame
-		push	20h ; ' '
-		call	sub_2BB46
+		call	@pattern_swaying_leaves$qmii pascal, ds, offset _boss_phase_frame, 32
 
 loc_2CB9D:
 		call	@pattern_curved_spray_leftright_t$qmi pascal, ds, offset _boss_phase_frame
@@ -24904,6 +24274,7 @@ _spawnray_target_prev_y	dw 999
 BIRD_COUNT = 30
 VORTEX_COUNT = 2
 PARTICLE2X2_COUNT = 30
+LEAF_COUNT = 30
 
 public _birds_alive
 _birds_alive	db BIRD_COUNT dup(0)
@@ -24932,31 +24303,11 @@ _particles2x2_wavy_col	db PARTICLE2X2_COUNT dup(0)
 public _particles2x2_horizontal_col
 _particles2x2_horizontal_col	db PARTICLE2X2_COUNT dup(0)
 
-		db 60 dup(0)
-unk_35E7D	db  10h
-		db  18h
-		db  18h
-		db  7Fh
-		db 0FEh
-		db  18h
-		db  18h
-		db    8
-unk_35E85	db    1
-		db  0Eh
-		db  3Eh	; >
-		db  7Eh	; ~
-		db  7Ch	; |
-		db  7Ch	; |
-		db 0F8h
-		db 0C0h	; À
-unk_35E8D	db  80h
-		db  70h	; p
-		db  7Ch	; |
-		db  7Eh	; ~
-		db  3Eh	; >
-		db  3Eh	; >
-		db  1Fh
-		db    3
+public _pattern15_flag
+_pattern15_flag	dw LEAF_COUNT dup(0)
+
+include th01/sprites/leaf.asp
+
 word_35E95	dw 0
 word_35E97	dw 0
 word_35E99	dw 0
@@ -25444,10 +24795,13 @@ _pattern13_debris_cel_prev	dw ?
 public _pattern14_spray
 _pattern14_spray	CurvedSpray <?>
 
-word_3B341	dw 30 dup(?)
-word_3B37D	dw 30 dup(?)
-word_3B3B9	dw 30 dup(?)
-word_3B3F5	dw 30 dup(?)
+public _pattern15_left, _pattern15_top
+public _pattern15_velocity_x, _pattern15_velocity_y
+_pattern15_left      	dw LEAF_COUNT dup(?)
+_pattern15_top       	dw LEAF_COUNT dup(?)
+_pattern15_velocity_x	dw LEAF_COUNT dup(?)
+_pattern15_velocity_y	dw LEAF_COUNT dup(?)
+
 public _sariel_invincible, _sariel_invincibility_frame
 _sariel_invincible	dw ?
 _sariel_invincibility_frame	dw ?

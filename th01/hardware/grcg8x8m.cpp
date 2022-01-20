@@ -3,12 +3,12 @@
 void grcg_put_8x8_mono(
 	vram_offset_t vram_offset_topleft,
 	char first_bit,
-	const dot_rect_t(8, 8)& sprite,
+	const dots8_t sprite[8],
 	int col
 )
 {
 	grcg_setcolor_rmw(col);
-	for(pixel_t y = 0; y < sprite.h(); y++) {
+	for(pixel_t y = 0; y < 8; y++) {
 		dots16_t d = (
 			(sprite[y] >> first_bit) + (sprite[y] << (16 - first_bit))
 		);
