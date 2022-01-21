@@ -88,6 +88,33 @@ public:
 
 	// Directly sets [done] if the laser collides with the player.
 	void update_hittest_and_render(void);
+
+	// Tries to unblit the entire laser, but fails hilariously.
+	void unput_and_reset(void) {
+		if(alive) {
+			// Two ZUN bugs here:
+			//
+			// 1) Surely this should have unblitted from the start to the end
+			//    of the ray instead? Except that this class doesn't explicitly
+			//    store that end point… so the best alternative would be the
+			//    target point. But given that we use our own blitting routine,
+			//    who knows how accurate that actually is?
+			//
+			// 2) graph_r_line_unput() takes screen_x_t and vram_y_t, not
+			//    LaserPixels truncated to 16-bits :zunpet: As a result, this
+			//    call effectively unblit random 32-bit pixel chunks.
+			//
+			// Not that it matters a lot. This function is only called at the
+			// end of a boss battle, immediately before transitioning to the
+			// tally screen. Still, not doing anything would have been the
+			// better choice.
+			graph_r_line_unput(
+				ray_start_left.v, ray_start_y.v, origin_left.v, origin_y.v
+			);
+
+			alive = false;
+		}
+	}
 };
 
 extern CShootoutLaser shootout_lasers[SHOOTOUT_LASER_COUNT];
@@ -96,5 +123,11 @@ extern CShootoutLaser shootout_lasers[SHOOTOUT_LASER_COUNT];
 	for(i = 0; i < SHOOTOUT_LASER_COUNT; i++) { \
 		int id = i; \
 		shootout_lasers[i].id = id; \
+	} \
+}
+
+#define shootout_lasers_unput_and_reset_broken(i) { \
+	for(i = 0; i < SHOOTOUT_LASER_COUNT; i++) { \
+		shootout_lasers[i].unput_and_reset(); \
 	} \
 }
