@@ -16854,20 +16854,20 @@ loc_2489C:
 		inc	_boss_phase_frame
 		cmp	_boss_phase_frame, 70
 		jnz	short loc_248B0
-		mov	word_3A6C4, 0
+		mov	_kikuri_entrance_ring_radius_base, 0
 		jmp	loc_24A9D
 ; ---------------------------------------------------------------------------
 
 loc_248B0:
 		cmp	_boss_phase_frame, 71
 		jnz	loc_24941
-		mov	si, 20h	; ' '
+		mov	si, (1 * 32)
 		jmp	short loc_24938
 ; ---------------------------------------------------------------------------
 
 loc_248BE:
 		pushd	[_VRAM_PLANE_R]	; plane
-		movsx	eax, word_3A6C4
+		movsx	eax, _kikuri_entrance_ring_radius_base
 		push	eax
 		mov	ax, si
 		mov	bx, 32
@@ -16885,7 +16885,7 @@ loc_248BE:
 		sar	edx, 8
 		add	dx, 180
 		push	dx	; top
-		movsx	eax, word_3A6C4
+		movsx	eax, _kikuri_entrance_ring_radius_base
 		push	eax
 		mov	ax, si
 		mov	bx, 32
@@ -16908,7 +16908,7 @@ loc_248BE:
 		inc	si
 
 loc_24938:
-		cmp	si, 0A0h ; '?'
+		cmp	si, (5 * 32)
 		; Hack (jl	short loc_248BE) (1 byte too much for JWasm)
 		db	07ch, 080h
 		jmp	loc_24A9D
@@ -16923,13 +16923,13 @@ loc_24941:
 		idiv	bx
 		or	dx, dx
 		jnz	loc_24A9D
-		mov	si, 20h	; ' '
+		mov	si, (1 * 32)
 		jmp	short loc_249D8
 ; ---------------------------------------------------------------------------
 
 loc_2495E:
 		pushd	[_VRAM_PLANE_R]	; plane
-		movsx	eax, word_3A6C4
+		movsx	eax, _kikuri_entrance_ring_radius_base
 		push	eax
 		mov	ax, si
 		mov	bx, 32
@@ -16947,7 +16947,7 @@ loc_2495E:
 		sar	edx, 8
 		add	dx, 180
 		push	dx	; top
-		movsx	eax, word_3A6C4
+		movsx	eax, _kikuri_entrance_ring_radius_base
 		push	eax
 		mov	ax, si
 		mov	bx, 32
@@ -16970,18 +16970,18 @@ loc_2495E:
 		inc	si
 
 loc_249D8:
-		cmp	si, 0A0h ; '?'
+		cmp	si, (5 * 32)
 		; Hack (jl	short loc_2495E) (1 byte too much for JWasm)
 		db	07ch, 080h
-		add	word_3A6C4, 10h
+		add	_kikuri_entrance_ring_radius_base, 16
 		xor	di, di
-		mov	si, 20h	; ' '
+		mov	si, (1 * 32)
 		jmp	short loc_24A66
 ; ---------------------------------------------------------------------------
 
 loc_249EA:
 		pushd	[_VRAM_PLANE_R]	; plane
-		movsx	eax, word_3A6C4
+		movsx	eax, _kikuri_entrance_ring_radius_base
 		push	eax
 		mov	ax, si
 		mov	bx, 32
@@ -16999,7 +16999,7 @@ loc_249EA:
 		sar	edx, 8
 		add	dx, 180
 		push	dx	; top
-		movsx	eax, word_3A6C4
+		movsx	eax, _kikuri_entrance_ring_radius_base
 		push	eax
 		mov	ax, si
 		mov	bx, 32
@@ -17023,9 +17023,9 @@ loc_249EA:
 		inc	si
 
 loc_24A66:
-		cmp	si, 0A0h ; '?'
+		cmp	si, (5 * 32)
 		jl	loc_249EA
-		cmp	di, 80h	; '?'
+		cmp	di, (4 * 32)
 		jl	short loc_24A9D
 		mov	byte_3A3BE, 2
 		mov	word_35D16, 0
@@ -22529,20 +22529,20 @@ loc_2C14E:
 		inc	_boss_phase_frame
 		cmp	_boss_phase_frame, 1
 		jnz	short loc_2C162
-		mov	word_3B435, 10h
+		mov	_sariel_entrance_ring_radius_base, 16
 		jmp	loc_2C37F
 ; ---------------------------------------------------------------------------
 
 loc_2C162:
 		cmp	_boss_phase_frame, 2
 		jnz	short loc_2C1E5
-		mov	si, 20h	; ' '
+		mov	si, (1 * 32)
 		jmp	short loc_2C1DC
 ; ---------------------------------------------------------------------------
 
 loc_2C16E:
 		pushd	[_VRAM_PLANE_R]	; plane
-		movsx	eax, word_3B435
+		movsx	eax, _sariel_entrance_ring_radius_base
 		mov	dx, si
 		shr	dx, 5
 		movzx	edx, dx
@@ -22556,7 +22556,7 @@ loc_2C16E:
 		sar	eax, 8
 		add	ax, 180
 		push	ax	; top
-		movsx	eax, word_3B435
+		movsx	eax, _sariel_entrance_ring_radius_base
 		mov	dx, si
 		shr	dx, 5
 		movzx	edx, dx
@@ -22575,7 +22575,7 @@ loc_2C16E:
 		inc	si
 
 loc_2C1DC:
-		cmp	si, 0A0h ; '?'
+		cmp	si, (5 * 32)
 		jb	short loc_2C16E
 		jmp	loc_2C37F
 ; ---------------------------------------------------------------------------
@@ -22589,13 +22589,13 @@ loc_2C1E5:
 		idiv	bx
 		or	dx, dx
 		jnz	loc_2C37F
-		mov	si, 20h	; ' '
+		mov	si, (1 * 32)
 		jmp	short loc_2C270
 ; ---------------------------------------------------------------------------
 
 loc_2C202:
 		pushd	[_VRAM_PLANE_R]	; plane
-		movsx	eax, word_3B435
+		movsx	eax, _sariel_entrance_ring_radius_base
 		mov	dx, si
 		shr	dx, 5
 		movzx	edx, dx
@@ -22609,7 +22609,7 @@ loc_2C202:
 		sar	eax, 8
 		add	ax, 180
 		push	ax	; top
-		movsx	eax, word_3B435
+		movsx	eax, _sariel_entrance_ring_radius_base
 		mov	dx, si
 		shr	dx, 5
 		movzx	edx, dx
@@ -22628,17 +22628,17 @@ loc_2C202:
 		inc	si
 
 loc_2C270:
-		cmp	si, 0A0h ; '?'
+		cmp	si, (5 * 32)
 		jb	short loc_2C202
-		add	word_3B435, 10h
+		add	_sariel_entrance_ring_radius_base, 16
 		xor	di, di
-		mov	si, 20h	; ' '
+		mov	si, (1 * 32)
 		jmp	short loc_2C2F2
 ; ---------------------------------------------------------------------------
 
 loc_2C282:
 		pushd	[_VRAM_PLANE_R]	; plane
-		movsx	eax, word_3B435
+		movsx	eax, _sariel_entrance_ring_radius_base
 		mov	dx, si
 		shr	dx, 5
 		movzx	edx, dx
@@ -22652,7 +22652,7 @@ loc_2C282:
 		sar	eax, 8
 		add	ax, 180
 		push	ax	; top
-		movsx	eax, word_3B435
+		movsx	eax, _sariel_entrance_ring_radius_base
 		mov	dx, si
 		shr	dx, 5
 		movzx	edx, dx
@@ -22672,9 +22672,9 @@ loc_2C282:
 		inc	si
 
 loc_2C2F2:
-		cmp	si, 0A0h ; '?'
+		cmp	si, (5 * 32)
 		jb	short loc_2C282
-		cmp	di, 80h	; '?'
+		cmp	di, (4 * 32)
 		jb	loc_2C37F
 		mov	_boss_phase, 1
 		mov	word_35E95, 0
@@ -24621,10 +24621,10 @@ word_3A6BB	dw ?
 angle_3A6BD	db ?
 word_3A6BE	dw ?
 public _kikuri_invincible, _kikuri_invincibility_frame
+public _kikuri_entrance_ring_radius_base, _kikuri_initial_hp_rendered
 _kikuri_invincible	dw ?
 _kikuri_invincibility_frame	dw ?
-word_3A6C4	dw ?
-public _kikuri_initial_hp_rendered
+_kikuri_entrance_ring_radius_base	dw ?
 _kikuri_initial_hp_rendered	db ?
 		db ?
 public _boss_hp, _boss_phase_frame, _boss_phase
@@ -24803,10 +24803,10 @@ _pattern15_velocity_x	dw LEAF_COUNT dup(?)
 _pattern15_velocity_y	dw LEAF_COUNT dup(?)
 
 public _sariel_invincible, _sariel_invincibility_frame
+public _sariel_entrance_ring_radius_base, _sariel_initial_hp_rendered
 _sariel_invincible	dw ?
 _sariel_invincibility_frame	dw ?
-word_3B435	dw ?
-public _sariel_initial_hp_rendered
+_sariel_entrance_ring_radius_base	dw ?
 _sariel_initial_hp_rendered	db ?
 
 		end
