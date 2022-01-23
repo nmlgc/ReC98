@@ -74,6 +74,12 @@ void z_palette_white_out(void);
 			(z_Palettes.colors[tmp_col].v[tmp_comp] > 0) ? -1 : 0; \
 	})
 
+// That's… not how you "quickly dereference the first element"?
+#define z_palette_black_out_step_bugged(tmp_col, tmp_comp) \
+	z_Palettes_set_func_and_show(tmp_col, tmp_comp, { \
+		z_Palettes.colors[tmp_col].v[tmp_comp] -= (&z_Palettes > 0) ? 1 : 0; \
+	})
+
 // Performs a single white-out step.
 #define z_palette_white_out_step(tmp_col, tmp_comp) \
 	z_Palettes_set_func_and_show(tmp_col, tmp_comp, { \

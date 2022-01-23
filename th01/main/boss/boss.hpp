@@ -28,6 +28,8 @@ static const int BOSS_HIT_INVINCIBILITY_FRAMES = 40;
 // • Therefore, it only indirectly returns whether the boss was hit this
 //   frame, via ([is_invincible] == true) && ([invincibility_frame] == 0).
 //   (That fact makes [is_invincible] not quite as redundant as it might seem.)
+// Once the flash effect is done, the entire palette is reset to the
+// [boss_palette].
 void boss_hit_update_and_render(
 	int &invincibility_frame,
 	bool16 &is_invincible,

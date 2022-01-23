@@ -34,7 +34,6 @@ extern "C" {
 #include "th01/formats/ptn.hpp"
 #include "th01/formats/stagedat.hpp"
 #include "th01/sprites/leaf.hpp"
-#include "th01/sprites/pellet.h"
 #include "th01/sprites/shape8x8.hpp"
 #include "th01/main/spawnray.hpp"
 #include "th01/main/vars.hpp"
@@ -42,8 +41,12 @@ extern "C" {
 #include "th01/main/player/player.hpp"
 #include "th01/main/stage/palette.hpp"
 }
+#include "th01/hardware/grpinv32.hpp"
 #include "th01/main/shape.hpp"
 #include "th01/main/stage/stageobj.hpp"
+#include "th01/main/player/bomb.hpp"
+#include "th01/main/player/orb.hpp"
+#include "th01/main/player/shot.hpp"
 #include "th01/main/boss/boss.hpp"
 #include "th01/main/boss/palette.hpp"
 #include "th01/main/bullet/laser_s.hpp"
@@ -96,12 +99,12 @@ enum sariel_colors_t {
 	COL_PARTICLE2X2 = 4,
 	COL_DETONATION = 5,
 	COL_DETONATION_START = 6,
+	COL_FORM2_PULSE = 6,
 	COL_AIR = 12,
 	COL_BIRD = 15, // Yes, just a single one, changed by the background image.
 };
 
 #define pattern_state	sariel_pattern_state
-#define flash_colors	sariel_flash_colors
 #define invincible	sariel_invincible
 #define invincibility_frame	sariel_invincibility_frame
 #define initial_hp_rendered	sariel_initial_hp_rendered
@@ -736,6 +739,10 @@ void pascal near birds_reset_fire_spawn_unput_update_render(
 	}
 }
 
+inline void birds_reset(void) {
+	birds_reset_fire_spawn_unput_update_render(BF_RESET);
+}
+
 #define birds_spawn(left, top, velocity_x, velocity_y) \
 	birds_reset_fire_spawn_unput_update_render( \
 		left, top, velocity_x, velocity_y, 1 \
@@ -743,6 +750,10 @@ void pascal near birds_reset_fire_spawn_unput_update_render(
 
 #define birds_fire(pellet_group) \
 	birds_reset_fire_spawn_unput_update_render(BF_FIRE + pellet_group);
+
+inline void birds_unput_update_render(void) {
+	birds_reset_fire_spawn_unput_update_render(BF_UNPUT_UPDATE_RENDER);
+}
 
 void near shield_render_both(void)
 {
@@ -2728,4 +2739,503 @@ void pascal near pattern_swaying_leaves(int &frame, int spawn_interval_or_reset)
 	#undef top
 	#undef left
 	#undef flag
+}
+
+void sariel_main(void)
+{
+	enum {
+		PHASE_FORM1_DEFEATED = 99,
+		PHASE_FORM2 = 100,
+		PHASE_FORM2_DEFEATED = 101,
+
+		MAGNITUDE = 16,
+	};
+
+	#define entrance_ring_radius_base	sariel_entrance_ring_radius_base
+
+	struct hack { unsigned char col[3]; }; // XXX
+	extern struct hack sariel_invincibility_flash_colors;
+
+	extern pixel_t entrance_ring_radius_base;
+	extern struct {
+		int pattern_cur;
+		union {
+			int patterns_done;
+			int pulse_fade_direction;
+		} ax;
+		int patterns_until_next;
+
+		void next(int phase) {
+			boss_phase = phase;
+			boss_phase_frame = 0;
+			// Shouldn't this be bg_transition()'s job?
+			wand_lowered_snap();
+		}
+
+		void frame_common(bool form2) {
+			boss_phase_frame++;
+			invincibility_frame++;
+			if(!form2) {
+				shield_render_both();
+				dress_render_both();
+			}
+		}
+
+		void frame_bg_transition(int next_bg_id) {
+			boss_phase_frame++;
+			bg_transition(next_bg_id);
+			dress_render_both();
+		}
+
+		void pattern_next(int ring_min, int ring_max) {
+			if(ring_max == 1) {
+				pattern_cur = (1 - pattern_cur);
+			} else {
+				pattern_cur = (pattern_cur == ring_max)
+					? ring_min
+					: (pattern_cur + 1);
+			}
+			// Modifying this variable during the second form also causes the
+			// pulse effect to switch its fade direction. Too inconsequential
+			// to be really called a ZUN bug though, and it might have even
+			// been sort of intended.
+			ax.patterns_done++;
+		}
+	} phase;
+
+	#define phase_form1_next_if_done(next_phase) { \
+		if(boss_hp <= 0) { \
+			boss_phase = PHASE_FORM1_DEFEATED; \
+		} \
+		if( \
+			(phase.ax.patterns_done >= phase.patterns_until_next) && \
+			!invincible \
+		) { \
+			phase.ax.patterns_done = 0; \
+			boss_phase = next_phase; \
+			phase.pattern_cur = 0; \
+			boss_phase_frame = 0; \
+		} \
+	}
+
+	unsigned int i;
+	struct hack flash_colors = sariel_invincibility_flash_colors;
+
+	struct {
+		bool padding;
+		bool colliding_with_orb;
+
+		void update_and_render(const struct hack &flash_colors) {
+			boss_hit_update_and_render(
+				invincibility_frame,
+				invincible,
+				boss_hp,
+				flash_colors.col,
+				sizeof(flash_colors),
+				10000,
+				boss_nop,
+				colliding_with_orb,
+				FACE_LEFT,
+				FACE_TOP,
+				(FACE_W * 2),
+				FACE_H
+			);
+		}
+	} hit;
+
+	hit.colliding_with_orb = overlap_xy_xywh_le_ge(
+		orb_cur_left, orb_cur_top, FACE_LEFT, FACE_TOP, FACE_W, FACE_H
+	) || ent_shield.hittest_orb();
+
+	if(boss_phase == 0) {
+		boss_phase_frame = -1;
+		invincibility_frame = 0;
+		invincible = false;
+		boss_palette_snap();
+		stage_palette_set(z_Palettes);
+		random_seed = frame_rand;
+
+		while(1) {
+			boss_phase_frame++;
+			if(boss_phase_frame == 1) {
+				entrance_ring_radius_base = 16;
+			} else if(boss_phase_frame == 2) {
+				entrance_rings_invert(i, {}, entrance_ring_radius_base);
+			} else if((boss_phase_frame > 2) && ((boss_phase_frame % 4) == 0)) {
+				// "Un-invert" the previous frame
+				entrance_rings_invert(i, {}, entrance_ring_radius_base);
+
+				entrance_ring_radius_base += 16;
+				unsigned int squares_offscreen = 0;
+
+				entrance_rings_invert(
+					i, squares_offscreen +=, entrance_ring_radius_base
+				);
+				if(entrance_rings_done(squares_offscreen)) {
+					boss_phase = 1;
+					phase.pattern_cur = 0;
+					phase.ax.patterns_done = 0;
+					phase.patterns_until_next = ((rand() % 6) + 1);
+					boss_phase_frame = 0;
+					initial_hp_rendered = 0;
+					boss_palette_show(); // Unnecessary.
+					ent_shield.pos_cur_set(SHIELD_LEFT, SHIELD_TOP);
+					wand_lowered_snap();
+					wand_render_raise_both(true);
+					birds_reset();
+					return;
+				}
+			}
+			if(boss_phase_frame % 2) {
+				frame_delay(1);
+			}
+		}
+	} else if(boss_phase == 1) {
+		if(!initial_hp_rendered) {
+			initial_hp_rendered = hud_hp_increment(boss_hp, boss_phase_frame);
+		}
+		phase.frame_common(false);
+		birds_unput_update_render();
+
+		if(phase.pattern_cur == 0) {
+			pattern_random_purple_lasers();
+		} else if(phase.pattern_cur == 1) {
+			pattern_vortices();
+		} else if(phase.pattern_cur == 2) {
+			pattern_birds_on_ellipse_arc();
+		}
+
+		if(boss_phase_frame == 0) {
+			phase.pattern_next(0, 2);
+		}
+		hit.update_and_render(flash_colors);
+		phase_form1_next_if_done(2);
+	} else if(boss_phase == 2) {
+		phase.frame_bg_transition(1);
+		if(boss_phase_frame == 0) {
+			phase.next(3);
+			// Assume that the palette didn't change between background ID 0
+			// and 1...
+			// boss_palette_snap();
+			phase.patterns_until_next = ((rand() % 5) + 1);
+		}
+	} else if(boss_phase == 3) {
+		phase.frame_common(false);
+		particles2x2_vertical_unput_update_render(false);
+
+		if(phase.pattern_cur == 0) {
+			pattern_detonating_snowflake();
+			pattern_2_rings_from_a2_orbs();
+		} else if(phase.pattern_cur == 1) {
+			pattern_aimed_sling_clusters();
+			pattern_2_rings_from_a2_orbs();
+		} else if(boss_phase_frame < 60) {
+			boss_phase_frame = 0;
+		}
+
+		if(boss_phase_frame == 0) {
+			phase.pattern_next(0, 1);
+		}
+		hit.update_and_render(flash_colors);
+		phase_form1_next_if_done(4);
+	} else if(boss_phase == 4) {
+		phase.frame_bg_transition(2);
+		if(boss_phase_frame == 0) {
+			phase.next(5);
+			boss_palette_snap();
+			phase.patterns_until_next = ((rand() % 4) + 3);
+		}
+	} else if(boss_phase == 5) {
+		phase.frame_common(false);
+		particles2x2_wavy_unput_update_render();
+
+		if(phase.pattern_cur == 0) {
+			pattern_four_aimed_lasers();
+		} else if(phase.pattern_cur == 1) {
+			shake_for_50_frames();
+		} else if(phase.pattern_cur == 2) {
+			pattern_four_aimed_lasers();
+			pattern_rain_from_top();
+		} else if(phase.pattern_cur == 3) {
+			pattern_radial_stacks_and_lasers();
+		} else if(phase.pattern_cur == 4) {
+			shake_for_50_frames();
+		} else if(phase.pattern_cur == 5) {
+			pattern_four_aimed_lasers();
+			pattern_rain_from_top();
+		}
+
+		if(boss_phase_frame == 0) {
+			phase.pattern_next(10, 5); // ???
+		}
+		hit.update_and_render(flash_colors);
+		phase_form1_next_if_done(6);
+	} else if(boss_phase == 6) {
+		phase.frame_bg_transition(3);
+		if(boss_phase_frame == 0) {
+			phase.next(7);
+			boss_palette_snap();
+			phase.patterns_until_next = ((rand() % 5) + 2);
+		}
+	} else if(boss_phase == 7) {
+		phase.frame_common(false);
+		particles2x2_vertical_unput_update_render(true);
+		birds_unput_update_render();
+
+		if(phase.pattern_cur == 0) {
+			pattern_symmetric_birds_from_bottom();
+		} else if(phase.pattern_cur == 1) {
+			pattern_four_semicircle_spreads();
+		} else if(phase.pattern_cur == 2) {
+			pattern_vertical_stacks_from_bottom_then_random_rain_from_top();
+		}
+
+		if(boss_phase_frame == 0) {
+			phase.pattern_next(0, 2);
+		}
+		hit.update_and_render(flash_colors);
+		phase_form1_next_if_done(8);
+	} else if(boss_phase == 8) {
+		phase.frame_bg_transition(0);
+		if(boss_phase_frame == 0) {
+			phase.next(1);
+			boss_palette_snap();
+			phase.patterns_until_next = ((rand() % 6) + 1);
+		}
+	} else if(boss_phase == PHASE_FORM1_DEFEATED) {
+		boss_phase_frame = 0;
+
+		// Not that this variable is ever read from, before it's set back to 0
+		// at the end of the transition animation.
+		invincibility_frame = 399;
+
+		Shots.unput_and_reset();
+		Pellets.unput_and_reset();
+		shootout_lasers_unput_and_reset_broken(i);
+
+		// MODDERS: Move this to a common player reset function.
+		orb_cur_left = ORB_LEFT_START;
+		orb_cur_top = ORB_TOP_START;
+		player_left = PLAYER_LEFT_START;
+		orb_force = ORB_FORCE_START;
+		orb_force_frame = 0;
+		orb_velocity_x = OVX_4_LEFT;
+		player_deflecting = false;
+		bomb_damaging = false;
+		player_unput_update_render(false);
+
+		invincible = false;
+		random_seed = frame_rand;
+		mdrv2_bgm_fade_out_nonblock();
+
+		// boss6.grp is not part of the game? Might have been a defeat graphic.
+		graph_accesspage_func(1);
+		grp_put_palette_show("boss6.grp");
+		z_palette_set_show(0xF, 0x0, 0x0, 0x0);
+		boss_palette_snap();
+		graph_copy_accessed_page_to_other();
+
+		graph_accesspage_func(1);
+		grp_put("boss6_a5.grp");
+		graph_accesspage_func(0);
+
+		while(1) {
+			boss_phase_frame++;
+			if(boss_phase_frame < 200) {
+				if((boss_phase_frame % 2) == 0) {
+					z_palette_set_show(
+						0xF, RGB4::max(), RGB4::max(), RGB4::max()
+					);
+					z_vsync_wait_and_scrollup(RES_Y + MAGNITUDE);
+				}
+				if((boss_phase_frame % 2) == 1) {
+					boss_palette_show();
+					z_vsync_wait_and_scrollup(RES_Y - (MAGNITUDE - 2)); // ???
+				}
+				if((boss_phase_frame % 4) == 0) {
+					mdrv2_se_play(9);
+				}
+			}
+			if(boss_phase_frame == 200) {
+				boss_palette_show();
+				z_vsync_wait_and_scrollup(0);
+			}
+			if(boss_phase_frame > 200) {
+				for(i = 0; i < COMPONENT_COUNT; i++) {
+					grp_palette[0xF].v[i] = 0x0;
+				}
+				// The palette was loaded from boss6_a5.grp earlier.
+				pagetrans_diagonal_8x8_with_palette(0, z_Palettes, grp_palette);
+				graph_accesspage_func(1);
+				mdrv2_bgm_load("syugen.MDT");
+				mdrv2_bgm_play();
+				grp_put_palette_show("boss6_a6.grp");
+				z_palette_set_show(COL_FORM2_PULSE, 0x0, 0x0, 0x0);
+				graph_copy_accessed_page_to_other();
+				hud_rerender();
+				z_vsync_wait_and_scrollup(0);
+				boss_phase_frame = 0;
+				invincibility_frame = 0;
+				phase.pattern_cur = 0;
+				phase.ax.pulse_fade_direction = 0;
+				boss_phase = PHASE_FORM2;
+				player_invincibility_time = 0;
+				player_invincible = false;
+				boss_palette_snap();
+				stage_palette_set(z_Palettes);
+
+				boss_hp = 6;
+				hud_hp_first_white = 10;
+				hud_hp_first_redwhite = 3;
+				initial_hp_rendered = false;
+				pattern_swaying_leaves(boss_phase_frame, 999);
+				return;
+			} else {
+				frame_delay(1);
+			}
+		}
+	} else if(boss_phase == PHASE_FORM2) {
+		if(!initial_hp_rendered) {
+			initial_hp_rendered = hud_hp_increment(boss_hp, boss_phase_frame);
+		}
+		phase.frame_common(true);
+		particles2x2_horizontal_unput_update_render(boss_phase_frame);
+
+		if(phase.pattern_cur == 0) {
+			// Hey, that variable is supposed to be off-limits to the main
+			// function! (And also completely pointless, since it could have
+			// just been done locally for pattern 4.)
+			select_for_rank(pattern_state.interval, 56, 32, 24, 20);
+
+			if(boss_phase_frame > 100) {
+				boss_phase_frame = 0;
+			}
+		} else if(phase.pattern_cur == 1) {
+			pattern_curved_spray_leftright_once(boss_phase_frame);
+		} else if(phase.pattern_cur == 2) {
+			pattern_rain_from_seal_center(boss_phase_frame);
+		} else if(phase.pattern_cur == 3) {
+			pattern_curved_spray_leftright_twice(boss_phase_frame);
+		} else if(phase.pattern_cur == 4) {
+			pattern_swaying_leaves(boss_phase_frame, pattern_state.interval);
+			if(boss_phase_frame > 300) {
+				boss_phase_frame = 0;
+			}
+		} else if(phase.pattern_cur == 5) {
+			pattern_swaying_leaves(boss_phase_frame, 500);
+			if(boss_phase_frame > 200) {
+				boss_phase_frame = 0;
+			}
+		} else if(phase.pattern_cur == 6) {
+			pattern_swaying_leaves(boss_phase_frame, 500);
+			pattern_curved_spray_leftright_once(boss_phase_frame);
+		} else if(phase.pattern_cur == 7) {
+			pattern_swaying_leaves(boss_phase_frame, 500);
+			pattern_rain_from_seal_center(boss_phase_frame);
+		} else if(phase.pattern_cur == 8) {
+			pattern_swaying_leaves(boss_phase_frame, 32);
+			pattern_curved_spray_leftright_twice(boss_phase_frame);
+		}
+
+		if(boss_phase_frame == 0) {
+			phase.pattern_next(4, 8);
+		}
+		hit.update_and_render(flash_colors);
+
+		if((boss_phase_frame % 10) == 0) {
+			// Setting just the COL_FORM2_PULSE entry in this palette surely
+			// doesn't require resetting the hardware palette to the intended
+			// boss palette, modifying the one entry, and then capturing the
+			// palette again...
+			boss_palette_show();
+			if(phase.ax.pulse_fade_direction == 0) {
+				if(z_Palettes[COL_FORM2_PULSE].c.r < 0xA) {
+					z_Palettes[COL_FORM2_PULSE].c.r++;
+				} else {
+					phase.ax.pulse_fade_direction = 1;
+				}
+				if(z_Palettes[COL_FORM2_PULSE].c.g < 0xA) {
+					z_Palettes[COL_FORM2_PULSE].c.g++;
+				}
+				if(z_Palettes[COL_FORM2_PULSE].c.b < 0x6) {
+					z_Palettes[COL_FORM2_PULSE].c.b++;
+				}
+			} else {
+				if(z_Palettes[COL_FORM2_PULSE].c.r > 0x0) {
+					z_Palettes[COL_FORM2_PULSE].c.r--;
+				} else {
+					phase.ax.pulse_fade_direction = 0;
+				}
+				if(z_Palettes[COL_FORM2_PULSE].c.g > 0x0) {
+					z_Palettes[COL_FORM2_PULSE].c.g--;
+				}
+				if(z_Palettes[COL_FORM2_PULSE].c.b > 0x0) {
+					z_Palettes[COL_FORM2_PULSE].c.b--;
+				}
+			}
+			// Yeah, what a waste.
+			z_palette_set_all_show(z_Palettes);
+			boss_palette_snap();
+		}
+
+		if(boss_hp <= 0) {
+			mdrv2_bgm_stop();
+			boss_phase = PHASE_FORM2_DEFEATED;
+			boss_phase_frame = 0;
+			invincibility_frame = 0;
+		}
+	} else if(boss_phase == PHASE_FORM2_DEFEATED) {
+		graph_accesspage_func(1);
+		grp_put_palette_show("boss6_a6.grp");
+
+		// Actually a different color inside the .GRP! Would have been nicer to
+		// reuse the previous state of the color from above.
+		z_palette_set_show(COL_FORM2_PULSE, 0x0, 0x0, 0x0);
+
+		boss_palette_snap(); // No longer necessary.
+
+		graph_copy_accessed_page_to_other();
+		graph_accesspage_func(0);
+
+		while(1) {
+			boss_phase_frame++;
+			if(boss_phase_frame < 230) {
+				if((boss_phase_frame % 2) == 0) {
+					z_vsync_wait_and_scrollup(RES_Y + MAGNITUDE);
+				}
+				if((boss_phase_frame % 2) == 1) {
+					z_vsync_wait_and_scrollup(RES_Y - (MAGNITUDE - 2)); // ???
+				}
+				if((boss_phase_frame < 200) && ((boss_phase_frame % 4) == 0)) {
+					mdrv2_se_play(9);
+				}
+			}
+			if(boss_phase_frame == 170) {
+				mdrv2_bgm_fade_out_nonblock();
+			}
+			if(boss_phase_frame > 190) {
+				if((boss_phase_frame % 2) == 0) {
+					unsigned int comp;
+					z_palette_black_out_step_bugged(i, comp);
+				}
+				if(boss_phase_frame > 230) {
+					break;
+				}
+			}
+			frame_delay(2);
+		}
+
+		z_vsync_wait_and_scrollup(0);
+		sariel_free();
+
+		// Makai clear! Grant 50,000 score points in the fanciest way
+		for(i = 0; i < 5; i++) {
+			score += 10000;
+		}
+		game_cleared = true;
+	}
+
+	#undef phase_form1_next_if_done
+
+	#undef entrance_ring_radius_base
 }

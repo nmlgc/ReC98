@@ -8,6 +8,7 @@ static const screen_y_t ORB_TOP_MAX = (PLAYFIELD_BOTTOM - ORB_H);
 
 static const screen_x_t ORB_LEFT_START = (ORB_LEFT_MAX -  8);
 static const screen_y_t  ORB_TOP_START = ( ORB_TOP_MAX - 88);
+#define ORB_FORCE_START -8.0
 
 extern screen_x_t orb_cur_left;
 extern screen_y_t orb_cur_top;
