@@ -674,17 +674,18 @@ void pascal near birds_reset_fire_spawn_unput_update_render(
 			if(!birds_alive[i]) {
 				continue;
 			}
+			sloppy_unput_32x32(birds.left[i], birds.top[i]);
+		}
+		for(i = 0; i < BIRD_COUNT; i++) {
+			if(!birds_alive[i]) {
+				continue;
+			}
 			if(birds.hatch_time[i] > 0) {
 				bird_put_8(birds.left[i], birds.top[i], ((
 					(birds.hatch_duration[i] - birds.hatch_time[i]) /
 					(birds.hatch_duration[i] / BIRD_HATCH_CELS)
 				) + C_HATCH));
 				birds.hatch_time[i]--;
-			} else {
-				// ZUN bug: Shouldn't these be unblitted unconditionally?
-				// Because they aren't, each cel of the hatch animation is
-				// blitted on top of the previous one...
-				sloppy_unput_32x32(birds.left[i], birds.top[i]);
 			}
 		}
 		for(i = 0; i < BIRD_COUNT; i++) {
@@ -696,7 +697,6 @@ void pascal near birds_reset_fire_spawn_unput_update_render(
 			if(!overlap_xy_lrtb_le_ge(
 				birds.left[i], birds.top[i], 0, 0, (RES_X - 1), (RES_Y - 1)
 			)) {
-				sloppy_unput_32x32(birds.left[i], birds.top[i]);
 				birds_alive[i] = false;
 				continue;
 			}
