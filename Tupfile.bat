@@ -3,7 +3,9 @@
 : if the Tupfile changes.
 @echo on
 bcc32 -w-8004 -w-8012 -O2 -v- -x- -nbin/Pipeline/ Pipeline/bmp2arr.c Pipeline/bmp2arrl.c
-bin\\Pipeline\\bmp2arr.exe -q -i th01/sprites/leaf.bmp -o th01/sprites/leaf.asp -sym _sLEAF -of asm -sw 8 -sh 8
+bin\\Pipeline\\bmp2arr.exe -q -i th01/sprites/leaf_s.bmp -o th01/sprites/leaf_s.csp -sym sSPARK -of c -sw 8 -sh 8
+bin\\Pipeline\\bmp2arr.exe -q -i th01/sprites/leaf_l.bmp -o th01/sprites/leaf_l.csp -sym sLEAF_LEFT -of c -sw 8 -sh 8
+bin\\Pipeline\\bmp2arr.exe -q -i th01/sprites/leaf_r.bmp -o th01/sprites/leaf_r.csp -sym sLEAF_RIGHT -of c -sw 8 -sh 8
 bin\\Pipeline\\bmp2arr.exe -q -i th01/sprites/ileave_m.bmp -o th01/sprites/ileave_m.asp -sym _sINTERLEAVE_MASKS -of asm -sw 8 -sh 8
 bin\\Pipeline\\bmp2arr.exe -q -i th01/sprites/laser_s.bmp -o th01/sprites/laser_s.asp -sym _sSHOOTOUT_LASER -of asm -sw 16 -sh 8
 bin\\Pipeline\\bmp2arr.exe -q -i th01/sprites/pellet.bmp -o th01/sprites/pellet.csp -sym sPELLET -of c -sw 8 -sh 8 -pshf inner

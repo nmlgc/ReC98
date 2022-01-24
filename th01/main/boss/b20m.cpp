@@ -54,6 +54,9 @@ extern "C" {
 #include "th01/main/hud/hp.hpp"
 #include "th01/main/hud/hud.hpp"
 
+static const char* unused_entrance_letters_maybe[] = { "ANGEL", "OF", "DEATH" };
+bool game_cleared = false;
+
 // Coordinates
 // -----------
 
@@ -104,11 +107,7 @@ enum sariel_colors_t {
 	COL_BIRD = 15, // Yes, just a single one, changed by the background image.
 };
 
-#define pattern_state	sariel_pattern_state
-#define invincible	sariel_invincible
-#define invincibility_frame	sariel_invincibility_frame
-#define initial_hp_rendered	sariel_initial_hp_rendered
-extern union {
+static union {
 	int frame;
 	int speed_multiplied_by_8;
 	int interval;
@@ -117,16 +116,15 @@ extern union {
 	int pellet_count;
 	int unknown;
 } pattern_state;
-extern bool16 invincible;
-extern int invincibility_frame;
-extern bool initial_hp_rendered;
 
 // File names
 // ----------
 
 #include "th01/shiftjis/fns.hpp"
 
-extern const char* BG_IMAGES[4];
+const char* BG_IMAGES[4] = {
+	"BOSS6_A1.GRP", "BOSS6_A2.GRP", "BOSS6_A3.GRP", "BOSS6_A4.GRP"
+};
 // ----------
 
 // Entities (and animations)
@@ -313,18 +311,6 @@ static const dots8_t sPARTICLE2X2 = 0xC0; // (**      )
 }
 // -------------
 
-// Temporary storage for compiler-generated string literals
-// --------------------------------------------------------
-
-char ANGEL[] = "ANGEL";
-char OF[] = "OF";
-char DEATH[] = "DEATH";
-char boss6_a1_grp[] = "BOSS6_A1.GRP";
-char boss6_a2_grp[] = "BOSS6_A2.GRP";
-char boss6_a3_grp[] = "BOSS6_A3.GRP";
-char boss6_a4_grp[] = "BOSS6_A4.GRP";
-// --------------------------------------------------------
-
 #define select_for_rank sariel_select_for_rank
 #include "th01/main/select_r.cpp"
 
@@ -436,18 +422,12 @@ void pascal near spawnray_unput_and_put(
 	int col
 )
 {
-	#define target_prev_x	spawnray_target_prev_x
-	#define target_prev_y	spawnray_target_prev_y
-
-	extern screen_x_t target_prev_x;
-	extern vram_y_t target_prev_y;
+	static screen_x_t target_prev_x = -PIXEL_NONE;
+	static vram_y_t target_prev_y = -PIXEL_NONE;
 	spawnray_unput_and_put_func(
 		target_prev_x, target_prev_y,
 		origin_x, origin_y, target_x, target_y, col, true
 	);
-
-	#undef target_prev_x
-	#undef target_prev_y
 }
 
 inline void spawnray_reset(void) {
@@ -595,8 +575,8 @@ void pascal near birds_reset_fire_spawn_unput_update_render(
 	int8_t unknown = 0
 )
 {
-	extern char birds_alive[BIRD_COUNT]; // Should be bool.
-	extern struct {
+	static char birds_alive[BIRD_COUNT] = { false }; // Should be bool.
+	static struct {
 		double left[BIRD_COUNT];
 		double top[BIRD_COUNT];
 		double velocity_x[BIRD_COUNT];
@@ -774,9 +754,7 @@ void near shield_render_both(void)
 // returns `true` once the animation completed.
 bool16 pascal near wand_render_raise_both(bool16 restart = false)
 {
-	#define frames wand_raise_frames
-
-	extern int frames;
+	static int frames = 0;
 
 	if(restart == true) {
 		frames = 0;
@@ -797,8 +775,6 @@ bool16 pascal near wand_render_raise_both(bool16 restart = false)
 		}
 	}
 	return false;
-
-	#undef frames
 }
 
 // Should maybe return `false`, for consistency with wand_render_raise_both().
@@ -869,21 +845,13 @@ void pascal near vortex_fire_3_spread(
 
 void near pattern_vortices(void)
 {
-	#define wand_raise_animation_done	pattern1_wand_raise_animation_done
-	#define cur_left                 	pattern1_cur_left
-	#define cur_top                  	pattern1_cur_top
-	#define prev_left                	pattern1_prev_left
-	#define prev_top                 	pattern1_prev_top
-	#define dir_first                	pattern1_dir_first
-	#define dir_second               	pattern1_dir_second
-
-	extern bool16 wand_raise_animation_done;
-	extern screen_x_t cur_left[VORTEX_COUNT];
-	extern vram_y_t cur_top[VORTEX_COUNT];
-	extern screen_x_t prev_left[VORTEX_COUNT];
-	extern vram_y_t prev_top[VORTEX_COUNT];
-	extern bool16 dir_first; // x_direction_t
-	extern bool16 dir_second; // x_direction_t
+	static bool16 wand_raise_animation_done = false;
+	static screen_x_t cur_left[VORTEX_COUNT];
+	static vram_y_t cur_top[VORTEX_COUNT];
+	static screen_x_t prev_left[VORTEX_COUNT];
+	static vram_y_t prev_top[VORTEX_COUNT];
+	static bool16 dir_first; // x_direction_t
+	static bool16 dir_second; // x_direction_t
 
 	#define vortex_unput_and_put_8(i) { \
 		sloppy_unput_32x32(prev_left[i], prev_top[i]); \
@@ -1003,14 +971,6 @@ void near pattern_vortices(void)
 	#undef vortex_unput_put_3_spread
 	#undef vortex_fire_down
 	#undef vortex_unput_and_put_8
-
-	#undef dir_second
-	#undef dir_first
-	#undef prev_top
-	#undef prev_left
-	#undef cur_top
-	#undef cur_left
-	#undef wand_raise_animation_done
 }
 
 void near pattern_random_purple_lasers(void)
@@ -1024,11 +984,8 @@ void near pattern_random_purple_lasers(void)
 		KEYFRAME_2 = (KEYFRAME_1 + 50),
 	};
 
-	#define spawner_x	pattern0_spawner_x
-	#define spawner_y	pattern0_spawner_y
-
-	extern screen_x_t spawner_x[LASER_COUNT];
-	extern vram_y_t spawner_y[LASER_COUNT];
+	static screen_x_t spawner_x[LASER_COUNT];
+	static vram_y_t spawner_y[LASER_COUNT];
 
 	if(boss_phase_frame < KEYFRAME_0) {
 		return;
@@ -1080,32 +1037,19 @@ void near pattern_random_purple_lasers(void)
 	} else if(boss_phase_frame > KEYFRAME_2) {
 		boss_phase_frame = 0;
 	}
-
-	#undef spawner_y
-	#undef spawner_x
 }
 
 void near pattern_birds_on_ellipse_arc(void)
 {
-	#define wand_raise_animation_done	pattern2_wand_raise_animation_done
-	#define pellet_group             	pattern2_pellet_group
-	#define eggs_alive               	pattern2_eggs_alive
-	#define spawner_left             	pattern2_spawner_left
-	#define spawner_top              	pattern2_spawner_top
-	#define spawner_velocity_x       	pattern2_spawner_velocity_x
-	#define spawner_velocity_y       	pattern2_spawner_velocity_y
-	#define egg_left                 	pattern2_egg_left
-	#define egg_top                  	pattern2_egg_top
-
-	extern bool wand_raise_animation_done;
-	extern bird_pellet_group_t pellet_group;
-	extern int eggs_alive;
-	extern screen_x_t egg_left[BIRD_COUNT];
-	extern vram_y_t egg_top[BIRD_COUNT];
-	extern Subpixel spawner_left;
-	extern Subpixel spawner_top;
-	extern Subpixel spawner_velocity_y;
-	extern Subpixel spawner_velocity_x;
+	static bool wand_raise_animation_done = false;
+	static bird_pellet_group_t pellet_group = BPG_AIMED;
+	static int eggs_alive = 0;
+	static screen_x_t egg_left[BIRD_COUNT];
+	static vram_y_t egg_top[BIRD_COUNT];
+	static Subpixel spawner_left;
+	static Subpixel spawner_top;
+	static Subpixel spawner_velocity_y;
+	static Subpixel spawner_velocity_x;
 
 	point_t velocity;
 
@@ -1227,16 +1171,6 @@ void near pattern_birds_on_ellipse_arc(void)
 		boss_phase_frame = 0;
 		wand_raise_animation_done = false;
 	}
-
-	#undef egg_top
-	#undef egg_left
-	#undef spawner_velocity_y
-	#undef spawner_velocity_x
-	#undef spawner_top
-	#undef spawner_left
-	#undef eggs_alive
-	#undef pellet_group
-	#undef wand_raise_animation_done
 }
 
 void pascal near bg_transition(int image_id_new)
@@ -1253,17 +1187,11 @@ void pascal near bg_transition(int image_id_new)
 		STRIPE_PADDED_VRAM_W = 2,
 	};
 
-	#define cell_x         	bg_transition_cell_x
-	#define cell_y         	bg_transition_cell_y
-	#define cell_vo        	bg_transition_cell_vo
-	#define stripe_col_base	bg_transition_stripe_col_base
-	#define gust_id        	bg_transition_gust_id
-
-	extern screen_x_t cell_x;
-	extern vram_y_t cell_y;
-	extern vram_offset_t cell_vo;
-	extern int stripe_col_base;
-	extern int gust_id;
+	static screen_x_t cell_x;
+	static vram_y_t cell_y;
+	static vram_offset_t cell_vo;
+	static int stripe_col_base;
+	static int gust_id;
 
 	int row;
 	vram_word_amount_t stripe_id;
@@ -1388,27 +1316,16 @@ void pascal near bg_transition(int image_id_new)
 	#undef stripe_vram
 	#undef stripe_y
 	#undef stripe_vram_offset
-
-	#undef gust_id
-	#undef stripe_col_base
-	#undef cell_vo
-	#undef cell_y
-	#undef cell_x
 }
 
 void pascal near particles2x2_vertical_unput_update_render(bool16 from_bottom)
 {
-	#define col       	particles2x2_vertical_col
-	#define left      	particles2x2_vertical_left
-	#define top       	particles2x2_vertical_top
-	#define velocity_y	particles2x2_vertical_velocity_y
-
 	// Also indicates whether a particle is alive.
-	extern uint4_t col[PARTICLE2X2_COUNT];
+	static uint4_t col[PARTICLE2X2_COUNT] = { 0 };
 
-	extern double left[PARTICLE2X2_COUNT];
-	extern double top[PARTICLE2X2_COUNT];
-	extern double velocity_y[PARTICLE2X2_COUNT];
+	static double left[PARTICLE2X2_COUNT];
+	static double top[PARTICLE2X2_COUNT];
+	static double velocity_y[PARTICLE2X2_COUNT];
 
 	int i;
 	vram_offset_t vo;
@@ -1472,11 +1389,6 @@ void pascal near particles2x2_vertical_unput_update_render(bool16 from_bottom)
 		graph_accesspage_func(0);	particle2x2_put(vo, first_bit, dots);
 	}
 	grcg_off();
-
-	#undef velocity_y
-	#undef top
-	#undef left
-	#undef col
 }
 
 void near pattern_detonating_snowflake(void)
@@ -1499,30 +1411,19 @@ void near pattern_detonating_snowflake(void)
 		_phase_t_FORCE_INT16 = 0x7FFF
 	};
 
-	#define state         	pattern3_state
-	#define left          	pattern3_left
-	#define star_left     	pattern3_star_left
-	#define top           	pattern3_top
-	#define star_top      	pattern3_star_top
-	#define velocity_y    	pattern3_velocity_y
-	#define velocity_x    	pattern3_velocity_x
-	#define radius_outer_1	pattern3_radius_outer_1
-	#define radius_outer_2	pattern3_radius_outer_2
-	#define radius_inner  	pattern3_radius_inner
-
-	extern union {
+	static union {
 		phase_t phase;
 		int detonation_frame;
-	} state;
-	extern Subpixel left;
-	extern screen_x_t star_left;
-	extern Subpixel top;
-	extern vram_y_t star_top;
-	extern Subpixel velocity_y;
-	extern Subpixel velocity_x;
-	extern pixel_t radius_outer_1;
-	extern pixel_t radius_outer_2;
-	extern pixel_t radius_inner;
+	} state = { P_RESET };
+	static Subpixel left;
+	static screen_x_t star_left;
+	static Subpixel top;
+	static vram_y_t star_top;
+	static Subpixel velocity_y;
+	static Subpixel velocity_x;
+	static pixel_t radius_outer_1;
+	static pixel_t radius_outer_2;
+	static pixel_t radius_inner;
 
 	#define ellipse_put(radius_x, radius_y, col, angle_step) { \
 		shape_ellipse_arc_put( \
@@ -1631,26 +1532,12 @@ void near pattern_detonating_snowflake(void)
 
 	#undef ellipse_put
 	#undef ellipse_sloppy_unput
-
-	#undef radius_inner
-	#undef radius_outer_2
-	#undef radius_outer_1
-	#undef velocity_x
-	#undef velocity_y
-	#undef star_top
-	#undef top
-	#undef star_left
-	#undef left
-	#undef state
 }
 
 void near pattern_2_rings_from_a2_orbs(void)
 {
-	#define angle   	pattern4_angle
-	#define interval	pattern4_interval
-
-	extern unsigned char angle;
-	extern int interval;
+	static unsigned char angle;
+	static int interval;
 
 	if(boss_phase_frame < 5) {
 		angle = 0x00;
@@ -1675,9 +1562,6 @@ void near pattern_2_rings_from_a2_orbs(void)
 	if(boss_phase_frame > 479) {
 		boss_phase_frame = 0;
 	}
-
-	#undef interval
-	#undef angle
 }
 
 void near pattern_aimed_sling_clusters(void)
@@ -1708,19 +1592,13 @@ void near pattern_aimed_sling_clusters(void)
 
 void near particles2x2_wavy_unput_update_render()
 {
-	#define col       	particles2x2_wavy_col
-	#define left      	particles2x2_wavy_left
-	#define top       	particles2x2_wavy_top
-	#define velocity_y	particles2x2_wavy_velocity_y
-	#define age       	particles2x2_wavy_age
-
 	// Also indicates whether a particle is alive.
-	extern uint4_t col[PARTICLE2X2_COUNT];
+	static uint4_t col[PARTICLE2X2_COUNT] = { 0 };
 
-	extern screen_x_t left[PARTICLE2X2_COUNT];
-	extern vram_y_t top[PARTICLE2X2_COUNT];
-	extern pixel_t velocity_y[PARTICLE2X2_COUNT];
-	extern int age[PARTICLE2X2_COUNT];
+	static screen_x_t left[PARTICLE2X2_COUNT];
+	static vram_y_t top[PARTICLE2X2_COUNT];
+	static pixel_t velocity_y[PARTICLE2X2_COUNT];
+	static int age[PARTICLE2X2_COUNT];
 
 	int i;
 	int first_bit;
@@ -1780,12 +1658,6 @@ void near particles2x2_wavy_unput_update_render()
 		graph_accesspage_func(0);	particle2x2_put(vo, first_bit, dots);
 	}
 	grcg_off();
-
-	#undef age
-	#undef velocity_y
-	#undef top
-	#undef left
-	#undef col
 }
 
 void near pattern_four_aimed_lasers(void)
@@ -1794,14 +1666,9 @@ void near pattern_four_aimed_lasers(void)
 	#define ORIGIN_Y_1 FACE_CENTER_Y
 	#define ORIGIN_Y_2 SHIELD_CENTER_Y
 
-	#define origin_x    	pattern6_origin_x
-	#define origin_y    	pattern6_origin_y
-	#define spawnray    	pattern6_spawnray
-	#define target_first	pattern6_target_first
-
-	extern screen_x_t origin_x;
-	extern screen_y_t origin_y;
-	extern struct {
+	static screen_x_t origin_x;
+	static screen_y_t origin_y;
+	static struct {
 		pixel_t velocity_y;
 		pixel_t velocity_x;
 
@@ -1813,7 +1680,7 @@ void near pattern_four_aimed_lasers(void)
 			origin_y += velocity_y;
 		}
 	} spawnray;
-	extern screen_x_t target_first;
+	static screen_x_t target_first;
 
 	#define spawnray_init(origin_x_, origin_y_, target_left) { \
 		origin_x = origin_x_; \
@@ -1895,11 +1762,6 @@ void near pattern_four_aimed_lasers(void)
 	#undef fire
 	#undef spawnray_init
 
-	#undef target_first
-	#undef spawnray
-	#undef origin_y
-	#undef origin_x
-
 	#undef ORIGIN_Y_2
 	#undef ORIGIN_Y_1
 	#undef ORIGIN_DISTANCE_X_1
@@ -1943,11 +1805,8 @@ void near pattern_radial_stacks_and_lasers(void)
 	// Technically wrong as the ray's origin point, but who cares.
 	#define CENTER_Y	(SHIELD_CENTER_Y - (PELLET_H / 2))
 
-	#define angle         	pattern8_angle
-	#define angle_velocity	pattern8_angle_velocity
-
-	extern unsigned char angle;
-	extern unsigned char angle_velocity;
+	static unsigned char angle;
+	static unsigned char angle_velocity;
 
 	screen_x_t target_x;
 	screen_y_t target_y;
@@ -2016,9 +1875,6 @@ void near pattern_radial_stacks_and_lasers(void)
 		boss_phase_frame = 0;
 	}
 
-	#undef angle_velocity
-	#undef angle
-
 	#undef CENTER_Y
 	#undef CENTER_X
 }
@@ -2029,15 +1885,11 @@ void near pattern_symmetric_birds_from_bottom(void)
 		VELOCITY_X = 2,
 	};
 
-	#define rays      	pattern9_rays
-	#define velocity  	pattern9_velocity
-	#define debris_cel	pattern9_debris_cel
-
-	extern SymmetricSpawnraysWithDebris<
+	static SymmetricSpawnraysWithDebris<
 		PLAYFIELD_CENTER_X, FACE_CENTER_Y, (DEBRIS_W / 4)
 	> rays;
-	extern point_t velocity;
-	extern vortex_or_debris_cel_t debris_cel;
+	static point_t velocity;
+	static vortex_or_debris_cel_t debris_cel;
 
 	double target_x; // double?!
 
@@ -2097,10 +1949,6 @@ void near pattern_symmetric_birds_from_bottom(void)
 	if(boss_phase_frame >= 300) {
 		boss_phase_frame = 0;
 	}
-
-	#undef debris_cel
-	#undef velocity
-	#undef rays
 }
 
 void near pattern_four_semicircle_spreads(void)
@@ -2152,16 +2000,13 @@ void near pattern_vertical_stacks_from_bottom_then_random_rain_from_top(void)
 		KEYFRAME_5 = (KEYFRAME_4 + 50),
 	};
 
-	#define rays      	pattern11_rays
-	#define debris_cel	pattern11_debris_cel
-
-	extern SymmetricSpawnraysWithDebris<
+	static SymmetricSpawnraysWithDebris<
 		PLAYFIELD_CENTER_X, FACE_CENTER_Y, (DEBRIS_W / 4)
 	> rays;
 
 	// ZUN bug: Leaving this uninitalized indeed implies vortex sprites for the
 	// first 5 frames, until this actually reaches C_DEBRIS...
-	extern vortex_or_debris_cel_t debris_cel;
+	static vortex_or_debris_cel_t debris_cel;
 
 	unsigned char angle;
 
@@ -2229,9 +2074,6 @@ void near pattern_vertical_stacks_from_bottom_then_random_rain_from_top(void)
 	} else if(boss_phase_frame > KEYFRAME_5) {
 		boss_phase_frame = 0;
 	}
-
-	#undef debris_cel
-	#undef rays
 }
 
 void near pascal dottedcircle_unput_update_render(
@@ -2245,11 +2087,8 @@ void near pascal dottedcircle_unput_update_render(
 	int duration
 )
 {
-	#define radius_prev	dottedcircle_radius_prev
-	#define active     	dottedcircle_active
-
-	extern pixel_t radius_prev;
-	extern bool16 active;
+	static pixel_t radius_prev;
+	static bool16 active;
 
 	#define radius_cur \
 		(((frame_1based / interval) * radius_step) + radius_initial)
@@ -2271,24 +2110,16 @@ void near pascal dottedcircle_unput_update_render(
 	radius_prev = radius_cur;
 
 	#undef radius_cur
-
-	#undef active
-	#undef radius_prev
 }
 
 void pascal near particles2x2_horizontal_unput_update_render(int frame)
 {
-	#define col       	particles2x2_horizontal_col
-	#define left      	particles2x2_horizontal_left
-	#define top       	particles2x2_horizontal_top
-	#define velocity_x	particles2x2_horizontal_velocity_x
-
 	// Also indicates whether a particle is alive.
-	extern uint4_t col[PARTICLE2X2_COUNT];
+	static uint4_t col[PARTICLE2X2_COUNT] = { 0 };
 
-	extern double left[PARTICLE2X2_COUNT];
-	extern double top[PARTICLE2X2_COUNT];
-	extern double velocity_x[PARTICLE2X2_COUNT];
+	static double left[PARTICLE2X2_COUNT];
+	static double top[PARTICLE2X2_COUNT];
+	static double velocity_x[PARTICLE2X2_COUNT];
 
 	int i;
 	int first_bit;
@@ -2348,11 +2179,6 @@ void pascal near particles2x2_horizontal_unput_update_render(int frame)
 		particle2x2_put_left_right(vo, first_bit, dots_left, dots_right);
 	}
 	grcg_off();
-
-	#undef velocity_x
-	#undef top
-	#undef left
-	#undef col
 }
 
 struct CurvedSpray {
@@ -2400,9 +2226,7 @@ struct CurvedSpray {
 
 void pascal near pattern_curved_spray_leftright_once(int &frame)
 {
-	#define spray	pattern12_spray
-
-	extern CurvedSpray spray;
+	static CurvedSpray spray;
 
 	if(frame < 50) {
 		return;
@@ -2451,15 +2275,11 @@ void pascal near pattern_rain_from_seal_center(int &frame)
 		VELOCITY_Y = 8,
 	};
 
-	#define rays           	pattern13_rays
-	#define debris_cel_cur 	pattern13_debris_cel_cur
-	#define debris_cel_prev	pattern13_debris_cel_prev
-
-	extern struct SymmetricSpawnraysWithDebris<
+	static struct SymmetricSpawnraysWithDebris<
 		SEAL_CENTER_X, SEAL_CENTER_Y, DEBRIS_W
 	> rays;
-	extern vortex_or_debris_cel_t debris_cel_cur;
-	extern vortex_or_debris_cel_t debris_cel_prev;
+	static vortex_or_debris_cel_t debris_cel_cur;
+	static vortex_or_debris_cel_t debris_cel_prev;
 
 	if(frame < 50) {
 		return;
@@ -2500,17 +2320,11 @@ void pascal near pattern_rain_from_seal_center(int &frame)
 		);
 	}
 	frame = 0;
-
-	#undef debris_cel_prev
-	#undef debris_cel_cur
-	#undef ray
 }
 
 void pascal near pattern_curved_spray_leftright_twice(int &frame)
 {
-	#define spray	pattern14_spray
-
-	extern CurvedSpray spray;
+	static CurvedSpray spray;
 
 	if(frame < 80) {
 		return;
@@ -2533,8 +2347,6 @@ void pascal near pattern_curved_spray_leftright_twice(int &frame)
 			}
 		}
 	}
-
-	#undef spray
 }
 
 // Subpixels with one decimal digit of fractional resolution?! Sure, if you
@@ -2572,17 +2384,11 @@ void pascal near pattern_swaying_leaves(int &frame, int spawn_interval_or_reset)
 		_leaf_flag_t_FORCE_INT16 = 0x7FFF,
 	};
 
-	#define flag      	pattern15_flag
-	#define left      	pattern15_left
-	#define top       	pattern15_top
-	#define velocity_x	pattern15_velocity_x
-	#define velocity_y	pattern15_velocity_y
-
-	extern leaf_flag_t flag[LEAF_COUNT];
-	extern DecimalSubpixel left[LEAF_COUNT];
-	extern DecimalSubpixel top[LEAF_COUNT];
-	extern DecimalSubpixel velocity_x[LEAF_COUNT];
-	extern DecimalSubpixel velocity_y[LEAF_COUNT];
+	static leaf_flag_t flag[LEAF_COUNT] = { LF_FREE };
+	static DecimalSubpixel left[LEAF_COUNT];
+	static DecimalSubpixel top[LEAF_COUNT];
+	static DecimalSubpixel velocity_x[LEAF_COUNT];
+	static DecimalSubpixel velocity_y[LEAF_COUNT];
 
 	#define leaf_on_screen(i) \
 		overlap_xy_rltb_lt_ge( \
@@ -2598,13 +2404,15 @@ void pascal near pattern_swaying_leaves(int &frame, int spawn_interval_or_reset)
 		if(leaf_on_screen(i)) { \
 			vo = vram_offset_divmul(left[i].to_pixel(), top[i].to_pixel()); \
 			tmp_first_bit = (left[i].to_pixel() % BYTE_DOTS); \
-			grcg_put_8x8_mono(vo, tmp_first_bit, sprite, V_WHITE); \
+			grcg_put_8x8_mono(vo, tmp_first_bit, sprite[0], V_WHITE); \
 		} \
 	}
 
-	const dot_rect_t(8, 8) sSPARK = sLEAF[0];
-	const dot_rect_t(8, 8) sLEAF_LEFT = sLEAF[1];
-	const dot_rect_t(8, 8) sLEAF_RIGHT = sLEAF[2];
+	// Code generation needs them to be separate, unfortunately...
+	#include "th01/sprites/leaf_s.csp"
+	#include "th01/sprites/leaf_l.csp"
+	#include "th01/sprites/leaf_r.csp"
+
 	int i;
 	vram_offset_t vo;
 	int first_bit;
@@ -2697,7 +2505,7 @@ void pascal near pattern_swaying_leaves(int &frame, int spawn_interval_or_reset)
 			continue;
 		}
 		if(flag[i] == LF_SPARK) {
-			leaf_put(vo, first_bit, i, sSPARK.row);
+			leaf_put(vo, first_bit, i, sSPARK);
 		} else if(flag[i] <= LF_SPLASH_DONE) {
 			if(leaf_on_screen(i)) {
 				// ZUN bug: Another missing conversion to screen pixels,
@@ -2716,8 +2524,8 @@ void pascal near pattern_swaying_leaves(int &frame, int spawn_interval_or_reset)
 			}
 		} else if(flag[i] == LF_LEAF) {
 			leaf_put(vo, first_bit, i, ((velocity_x[i].v < to_dsp(0.0f))
-				? sLEAF_LEFT.row
-				: sLEAF_RIGHT.row
+				? sLEAF_LEFT
+				: sLEAF_RIGHT
 			));
 			if(
 				(top[i].v > to_dsp(player_top)) &&
@@ -2733,12 +2541,6 @@ void pascal near pattern_swaying_leaves(int &frame, int spawn_interval_or_reset)
 
 	#undef leaf_put
 	#undef leaf_on_screen
-
-	#undef velocity_y
-	#undef velocity_x
-	#undef top
-	#undef left
-	#undef flag
 }
 
 void sariel_main(void)
@@ -2751,13 +2553,11 @@ void sariel_main(void)
 		MAGNITUDE = 16,
 	};
 
-	#define entrance_ring_radius_base	sariel_entrance_ring_radius_base
-
-	struct hack { unsigned char col[3]; }; // XXX
-	extern struct hack sariel_invincibility_flash_colors;
-
-	extern pixel_t entrance_ring_radius_base;
-	extern struct {
+	static bool16 invincible;
+	static int invincibility_frame;
+	static pixel_t entrance_ring_radius_base;
+	static bool initial_hp_rendered;
+	static struct {
 		int pattern_cur;
 		union {
 			int patterns_done;
@@ -2801,7 +2601,7 @@ void sariel_main(void)
 			// been sort of intended.
 			ax.patterns_done++;
 		}
-	} phase;
+	} phase = { 0, 0, 0 };
 
 	#define phase_form1_next_if_done(next_phase) { \
 		if(boss_hp <= 0) { \
@@ -2819,18 +2619,18 @@ void sariel_main(void)
 	}
 
 	unsigned int i;
-	struct hack flash_colors = sariel_invincibility_flash_colors;
+	const unsigned char flash_colors[3] = { 3, 4, 5 };
 
 	struct {
 		bool padding;
 		bool colliding_with_orb;
 
-		void update_and_render(const struct hack &flash_colors) {
+		void update_and_render(const unsigned char (&flash_colors)[3]) {
 			boss_hit_update_and_render(
 				invincibility_frame,
 				invincible,
 				boss_hp,
-				flash_colors.col,
+				flash_colors,
 				sizeof(flash_colors),
 				10000,
 				boss_nop,
@@ -3236,6 +3036,4 @@ void sariel_main(void)
 	}
 
 	#undef phase_form1_next_if_done
-
-	#undef entrance_ring_radius_base
 }
