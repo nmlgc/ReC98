@@ -90,6 +90,22 @@ inline void sariel_ent_load(void) {
 }
 // --------
 
+/// .GRC entities
+/// -------------
+
+static const main_grc_slot_t GRC_SLOT_VORTEX_DEBRIS = GRC_SLOT_BOSS_1;
+static const main_grc_slot_t GRC_SLOT_BIRD = GRC_SLOT_BOSS_2;
+static const main_grc_slot_t GRC_SLOT_SPAWNCROSS = GRC_SLOT_BOSS_3;
+static const main_grc_slot_t GRC_SLOT_LEAFSPLASH = GRC_SLOT_BOSS_4;
+
+inline void sariel_grc_load(void) {
+	grc_load(GRC_SLOT_VORTEX_DEBRIS, boss6gr1_grc);
+	grc_load(GRC_SLOT_BIRD, boss6gr2_grc);
+	grc_load(GRC_SLOT_SPAWNCROSS, boss6gr3_grc);
+	grc_load(GRC_SLOT_LEAFSPLASH, boss6gr4_grc);
+}
+/// -------------
+
 // .PTN
 // ----
 
@@ -138,10 +154,7 @@ void sariel_entrance(int8_t)
 void sariel_load_and_init(void)
 {
 	sariel_ent_load();
-	grc_load(GRC_SLOT_BOSS_1, boss6gr1_grc);
-	grc_load(GRC_SLOT_BOSS_2, boss6gr2_grc);
-	grc_load(GRC_SLOT_BOSS_3, boss6gr3_grc);
-	grc_load(GRC_SLOT_BOSS_4, boss6gr4_grc);
+	sariel_grc_load();
 	boss_palette_snap();
 	void sariel_setup(void);
 	sariel_setup();
