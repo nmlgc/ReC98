@@ -194,7 +194,7 @@ loc_A810:
 loc_A820:
 		les	bx, _resident
 		mov	es:[bx+reiidenconfig_t.route], 0
-		mov	es:[bx+reiidenconfig_t.stage], 0
+		mov	es:[bx+reiidenconfig_t.stage], 19
 		mov	al, _opts.O_lives_extra
 		add	al, 2
 		mov	es:[bx+reiidenconfig_t.rem_lives], al
