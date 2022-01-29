@@ -54,20 +54,6 @@ extern bool16 invincible;
 extern int invincibility_frame;
 extern bool initial_hp_rendered;
 
-// Entities (and animations)
-// --------
-
-#define ent_shield	boss_entities[0]
-#define anm_dress 	boss_anims[0]
-#define anm_wand  	boss_anims[1]
-// --------
-
-// .PTN
-// ----
-
-static const main_ptn_slot_t PTN_SLOT_BG_ENT = PTN_SLOT_BOSS_1;
-// ----
-
 // File names
 // ----------
 
@@ -86,6 +72,25 @@ extern const char boss6gr3_grc[];
 extern const char boss6gr4_grc[];
 // ----------
 
+// Entities (and animations)
+// --------
+
+#define ent_shield	boss_entities[0]
+#define anm_dress 	boss_anims[0]
+#define anm_wand  	boss_anims[1]
+
+inline void sariel_ent_load(void) {
+	ent_shield.load(boss6_1_bos, 0);
+	anm_wand.load(boss6_2_bos, 0);
+	anm_dress.load(boss6_3_bos, 1);
+}
+// --------
+
+// .PTN
+// ----
+
+static const main_ptn_slot_t PTN_SLOT_BG_ENT = PTN_SLOT_BOSS_1;
+// ----
 
 #define select_for_rank sariel_select_for_rank
 #include "th01/main/select_r.cpp"
@@ -128,9 +133,7 @@ void sariel_entrance(int8_t)
 
 void sariel_load_and_init(void)
 {
-	ent_shield.load(boss6_1_bos, 0);
-	anm_wand.load(boss6_2_bos, 0);
-	anm_dress.load(boss6_3_bos, 1);
+	sariel_ent_load();
 	grc_load(GRC_SLOT_BOSS_1, boss6gr1_grc);
 	grc_load(GRC_SLOT_BOSS_2, boss6gr2_grc);
 	grc_load(GRC_SLOT_BOSS_3, boss6gr3_grc);

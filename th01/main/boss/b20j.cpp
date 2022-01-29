@@ -142,7 +142,13 @@ static bool16 face_direction_can_change = true;
 #define ent_face_closed_or_glare	boss_entities[1]
 #define ent_face_aim            	boss_entities[2]
 
-static inline void ent_free(void) {
+inline void konngara_ent_load(void) {
+	ent_head.load("boss8_1.bos", 0);
+	ent_face_closed_or_glare.load("boss8_e1.bos", 1);
+	ent_face_aim.load("boss8_e2.bos", 2);
+}
+
+inline void konngara_ent_free(void) {
 	bos_entity_free(0);
 	bos_entity_free(1);
 	bos_entity_free(2);
@@ -367,9 +373,7 @@ void konngara_load_and_entrance(int8_t)
 	z_palette_set_black(j, i);
 
 	text_fillca(' ', TX_WHITE);
-	ent_head.load("boss8_1.bos", 0);
-	ent_face_closed_or_glare.load("boss8_e1.bos", 1);
-	ent_face_aim.load("boss8_e2.bos", 2);
+	konngara_ent_load();
 
 	// Decelerating scroll
 	// -------------------
@@ -506,7 +510,7 @@ void konngara_setup(void)
 // Happens to be entirely protected to double frees. Yes, this matters.
 void konngara_free(void)
 {
-	ent_free();
+	konngara_ent_free();
 	for(int i = 0; i < 7; i++) {
 		grx_free(i);
 	}

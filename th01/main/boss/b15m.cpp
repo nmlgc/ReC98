@@ -57,6 +57,15 @@ extern bool16 invincible;
 extern bool16 wave_teleport_done;
 extern bool initial_hp_rendered;
 
+// File names
+// ----------
+
+extern const char boss5_bos[];
+extern const char boss5_2_bos[];
+extern const char boss5_3_bos[];
+extern const char boss5_gr_grc[];
+// ----------
+
 // Entities
 // --------
 
@@ -74,16 +83,22 @@ enum still_or_wave_cel_t {
 
 #define ent_bat          	boss_entities[2]
 
+inline void elis_ent_load(void) {
+	ent_still_or_wave.load(boss5_bos, 0);
+	ent_attack.load(boss5_2_bos, 1);
+	ent_bat.load(boss5_3_bos, 2);
+}
+
+inline void elis_ent_free(void) {
+	bos_entity_free(0);
+	bos_entity_free(1);
+	bos_entity_free(2);
+}
+
 inline void ent_attack_sync_with_still_or_wave(void) {
 	ent_attack.pos_cur_set(
 		ent_still_or_wave.cur_left, ent_still_or_wave.cur_top
 	);
-}
-
-static inline void ent_free(void) {
-	bos_entity_free(0);
-	bos_entity_free(1);
-	bos_entity_free(2);
 }
 // --------
 
@@ -137,16 +152,9 @@ void girl_bg_put(int unncessary_parameter_that_still_needs_to_be_1_or_2)
 
 void elis_load(void)
 {
-	extern const char boss5_bos[];
-	extern const char boss5_2_bos[];
-	extern const char boss5_3_bos[];
-	extern const char boss5_gr_grc[];
-
 	pellet_interlace = true;
 	Pellets.unknown_seven = 7;
-	ent_still_or_wave.load(boss5_bos, 0);
-	ent_attack.load(boss5_2_bos, 1);
-	ent_bat.load(boss5_3_bos, 2);
+	elis_ent_load();
 	grc_load(GRC_SLOT_BOSS_1, boss5_gr_grc);
 	ptn_new(PTN_SLOT_BG_ENT, ((GIRL_W / PTN_W) * (GIRL_H / PTN_H)));
 	Missiles.load(PTN_SLOT_MISSILE);
@@ -197,7 +205,7 @@ void elis_setup(void)
 
 void elis_free(void)
 {
-	ent_free();
+	elis_ent_free();
 	grc_free(GRC_SLOT_BOSS_1);
 	ptn_free(PTN_SLOT_BG_ENT);
 	ptn_free(PTN_SLOT_MISSILE);

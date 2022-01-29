@@ -57,6 +57,15 @@ extern uint8_t spreadin_interval;
 // Sprite pixels to spread in per frame, in one half of Mima's sprite
 extern uint8_t spreadin_speed;
 
+// File names
+// ----------
+
+extern const char boss3_1_bos[];
+extern const char boss3_2_bos[];
+extern const char boss3_grp_0[];
+extern const char boss5_gr_grc[];
+// ----------
+
 // Entities
 // --------
 
@@ -71,7 +80,12 @@ enum anim_cel_t {
 #define ent_still	boss_entities[0]
 #define ent_anim 	boss_entities[1]
 
-static inline void ent_free(void) {
+inline void mima_ent_load(void) {
+	ent_still.load(boss3_1_bos, 0);
+	ent_anim.load(boss3_2_bos, 1);
+}
+
+inline void mima_ent_free(void) {
 	bos_entity_free(0);
 	bos_entity_free(1);
 }
@@ -89,16 +103,10 @@ static const int BG_ENT_OFFSET = 3;
 
 void mima_load(void)
 {
-	extern const char boss3_1_bos[];
-	extern const char boss3_2_bos[];
-	extern const char boss3_grp_0[];
-	extern const char boss5_gr_grc[];
-
 	int col;
 	int comp;
 
-	ent_still.load(boss3_1_bos, 0);
-	ent_anim.load(boss3_2_bos, 1);
+	mima_ent_load();
 	grp_palette_load_show(boss3_grp_0);
 	palette_copy(boss_post_defeat_palette, z_Palettes, col, comp);
 	void mima_setup(void);
@@ -310,7 +318,7 @@ void mima_setup(void)
 
 void mima_free(void)
 {
-	ent_free();
+	mima_ent_free();
 	ptn_free(PTN_SLOT_BG_ENT);
 	ptn_free(PTN_SLOT_MISSILE);
 }
