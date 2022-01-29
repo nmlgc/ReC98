@@ -71,19 +71,21 @@ enum anim_cel_t {
 #define ent_still	boss_entities[0]
 #define ent_anim 	boss_entities[1]
 
+static inline void ent_free(void) {
+	bos_entity_free(0);
+	bos_entity_free(1);
+}
+// --------
+
+// .PTN
+// ----
+
 static const main_ptn_slot_t PTN_SLOT_BG_ENT = PTN_SLOT_BOSS_1;
 static const main_ptn_slot_t PTN_SLOT_MISSILE = PTN_SLOT_BOSS_2;
 
 // Three unused background .PTN IDs, for three unused 32×32 animations?
 static const int BG_ENT_OFFSET = 3;
-
-static inline void ent_free(void) {
-	bos_entity_free(0);
-	bos_entity_free(1);
-	ptn_free(PTN_SLOT_BG_ENT);
-	ptn_free(PTN_SLOT_MISSILE);
-}
-// --------
+// ----
 
 void mima_load(void)
 {
@@ -309,6 +311,8 @@ void mima_setup(void)
 void mima_free(void)
 {
 	ent_free();
+	ptn_free(PTN_SLOT_BG_ENT);
+	ptn_free(PTN_SLOT_MISSILE);
 }
 
 #define select_for_rank mima_select_for_rank

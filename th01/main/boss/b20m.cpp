@@ -57,12 +57,16 @@ extern bool initial_hp_rendered;
 // Entities (and animations)
 // --------
 
-static const main_ptn_slot_t PTN_SLOT_BG_ENT = PTN_SLOT_BOSS_1;
-
 #define ent_shield	boss_entities[0]
 #define anm_dress 	boss_anims[0]
 #define anm_wand  	boss_anims[1]
 // --------
+
+// .PTN
+// ----
+
+static const main_ptn_slot_t PTN_SLOT_BG_ENT = PTN_SLOT_BOSS_1;
+// ----
 
 // File names
 // ----------

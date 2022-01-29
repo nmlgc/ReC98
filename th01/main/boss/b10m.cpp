@@ -17,8 +17,8 @@ extern bool16 invincible;
 extern int invincibility_frame;
 extern bool initial_hp_rendered;
 
-// Entities
-// --------
+// .PTN
+// ----
 
 static const main_ptn_slot_t PTN_SLOT_MISSILE = PTN_SLOT_BOSS_1;
-// --------
+// ----

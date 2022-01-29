@@ -80,18 +80,19 @@ inline void ent_attack_sync_with_still_or_wave(void) {
 	);
 }
 
-static const main_ptn_slot_t PTN_SLOT_BG_ENT = PTN_SLOT_BOSS_1;
-static const main_ptn_slot_t PTN_SLOT_MISSILE = PTN_SLOT_BOSS_2;
-
 static inline void ent_free(void) {
 	bos_entity_free(0);
 	bos_entity_free(1);
 	bos_entity_free(2);
-	grc_free(GRC_SLOT_BOSS_1);
-	ptn_free(PTN_SLOT_BG_ENT);
-	ptn_free(PTN_SLOT_MISSILE);
 }
 // --------
+
+// .PTN
+// ----
+
+static const main_ptn_slot_t PTN_SLOT_BG_ENT = PTN_SLOT_BOSS_1;
+static const main_ptn_slot_t PTN_SLOT_MISSILE = PTN_SLOT_BOSS_2;
+// ----
 
 #define bg_func_init(left, top, entity_src) { \
 	ent_attack_sync_with_still_or_wave(); \
@@ -197,6 +198,9 @@ void elis_setup(void)
 void elis_free(void)
 {
 	ent_free();
+	grc_free(GRC_SLOT_BOSS_1);
+	ptn_free(PTN_SLOT_BG_ENT);
+	ptn_free(PTN_SLOT_MISSILE);
 }
 
 bool16 wave_teleport(screen_x_t target_left, screen_y_t target_top)

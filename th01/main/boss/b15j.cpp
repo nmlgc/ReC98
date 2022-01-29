@@ -17,11 +17,11 @@ extern bool16 invincible;
 extern int invincibility_frame;
 extern bool initial_hp_rendered;
 
-// Entities (and animations)
-// --------
+// .PTN
+// ----
 
 static const main_ptn_slot_t PTN_SLOT_WAVE = PTN_SLOT_BOSS_1;
-// --------
+// ----
 
 #define select_for_rank kikuri_select_for_rank
 #include "th01/main/select_r.cpp"
