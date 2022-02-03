@@ -30,7 +30,7 @@ extern farfunc_t_near chargeshot_render[PLAYER_COUNT];
 // ------------
 
 typedef struct {
-	SPPoint center;
+	PlayfieldPoint center;
 	bool is_hit;
 	uint8_t unused_1;
 	unsigned char invincibility_time;

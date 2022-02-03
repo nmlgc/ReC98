@@ -19,6 +19,10 @@
 
 #define PLAYFIELD_VRAM_W_BORDERED (PLAYFIELD_W_BORDERED / BYTE_DOTS)
 
+// A subpixel point within one of the playfields. No conversion methods to
+// screen space here, since the instance doesn't know the playfield it is on.
+typedef SPPoint PlayfieldPoint;
+
 extern screen_x_t playfield_fg_shift_x[PLAYFIELD_COUNT];
 
 screen_x_t pascal playfield_fg_x_to_screen(Subpixel x, unsigned int pid);

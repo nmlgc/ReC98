@@ -24,7 +24,7 @@ enum shot_active_t {
 struct shotpair_t {
 	char flag;
 	char unused_1;
-	SPPoint topleft;
+	PlayfieldPoint topleft;
 	Subpixel velocity_y;
 	unsigned int so_pid;
 	unsigned char so_anim;
