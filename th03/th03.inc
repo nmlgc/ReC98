@@ -1,7 +1,6 @@
 GAME = 3
 
-PLAYER_COUNT = 2
-
+include th03/common.inc
 include th03/mem.inc
 include th03/gaiji/gaiji.inc
 include th03/math/randring.inc

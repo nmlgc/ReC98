@@ -20,6 +20,7 @@ include ReC98.inc
 include th03/arg_bx.inc
 include th03/th03.inc
 include th03/main/playfld.inc
+include th03/main/collmap.inc
 include th03/main/player/bomb.inc
 include th03/sprite16.inc
 include libs/sprite16/sprite16.inc
@@ -220,7 +221,7 @@ sub_9778	proc near
 ; ---------------------------------------------------------------------------
 
 loc_977E:
-		call	sub_A438
+		call	_collmap_reset
 		call	sub_1797F
 		mov	_pid_current, 0
 		mov	byte ptr word_23AF0, 0
@@ -1522,24 +1523,7 @@ sub_A3D2	endp
 
 include th03/math/randring_fill.asm
 RANDRING_NEXT_DEF_NOMOD 1, near
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_A438	proc near
-		push	di
-		mov	ax, ds
-		mov	es, ax
-		mov	di, 4BA0h
-		mov	cx, 678h
-		xor	eax, eax
-		rep stosd
-		pop	di
-		retn
-sub_A438	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th03/main/collmap_reset.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -8134,9 +8118,9 @@ loc_E112:
 ; ---------------------------------------------------------------------------
 
 loc_E133:
-		cmp	bx, 0B8h
+		cmp	bx, COLLMAP_H
 		jl	short loc_E13C
-		mov	bx, 0B7h
+		mov	bx, (COLLMAP_H - 1)
 
 loc_E13C:
 		mov	[bp+var_3], bl
@@ -8162,13 +8146,13 @@ loc_E13C:
 
 loc_E163:
 		mov	al, dl
-		mov	bl, 0B8h
+		mov	bl, COLLMAP_H
 		mul	bl
-		mov	bx, 4BA0h
+		mov	bx, offset _collmap
 		add	bx, ax
 		cmp	byte ptr word_23AF0, 1
 		jnz	short loc_E179
-		add	bx, 0CF0h
+		add	bx, COLLMAP_SIZE
 
 loc_E179:
 		add	bx, [bp+var_2]
@@ -8176,12 +8160,12 @@ loc_E179:
 		mov	ax, [bp+var_2]
 
 loc_E182:
-		cmp	dl, 12h
+		cmp	dl, COLLMAP_MEMORY_W
 		jge	short loc_E1CF
 		or	dl, dl
 		jl	short loc_E1B3
 		mov	ah, al
-		mov	cl, 0B8h
+		mov	cl, COLLMAP_H
 
 loc_E18F:
 		test	[bx], ch
@@ -9750,13 +9734,13 @@ loc_F8F2:
 
 loc_F8F5:
 		mov	ax, word_1F33E	; default
-		mov	word_220EE, ax
+		mov	_collmap_center.x, ax
 		mov	ax, word_1F340
-		mov	word_220F0, ax
-		mov	word_220F2, 1Ch
-		mov	word_220F4, 1Ch
+		mov	_collmap_center.y, ax
+		mov	_collmap_stripe_tile_w, (56 / COLLMAP_TILE_W)
+		mov	_collmap_tile_h, (56 / COLLMAP_TILE_H)
 		mov	al, [bp+@@pid_other]
-		mov	byte_220FA, al
+		mov	_collmap_pid, al
 		call	sub_13A6E
 		mov	byte_20E2C, 1
 		mov	word_20E32, 200h
@@ -10483,13 +10467,13 @@ loc_FF9F:
 
 loc_FFA2:
 		mov	ax, word_1F33E	; default
-		mov	word_220EE, ax
+		mov	_collmap_center.x, ax
 		mov	ax, word_1F340
-		mov	word_220F0, ax
-		mov	word_220F2, 1Ch
-		mov	word_220F4, 1Ch
+		mov	_collmap_center.y, ax
+		mov	_collmap_stripe_tile_w, (56 / COLLMAP_TILE_W)
+		mov	_collmap_tile_h, (56 / COLLMAP_TILE_H)
 		mov	al, [bp+@@pid_other]
-		mov	byte_220FA, al
+		mov	_collmap_pid, al
 		call	sub_13A6E
 		mov	byte_20E2C, 1
 		mov	word_20E32, 200h
@@ -11388,13 +11372,13 @@ loc_1080F:
 
 loc_1081A:
 		mov	ax, word_1F33E
-		mov	word_220EE, ax
+		mov	_collmap_center.x, ax
 		mov	ax, word_1F340
-		mov	word_220F0, ax
-		mov	word_220F2, 1Ch
-		mov	word_220F4, 1Ch
+		mov	_collmap_center.y, ax
+		mov	_collmap_stripe_tile_w, (56 / COLLMAP_TILE_W)
+		mov	_collmap_tile_h, (56 / COLLMAP_TILE_H)
 		mov	al, [bp+@@pid_other]
-		mov	byte_220FA, al
+		mov	_collmap_pid, al
 		call	sub_13A6E
 		mov	byte_20E2C, 1
 		mov	word_20E32, 200h
@@ -12342,13 +12326,13 @@ loc_110F8:
 
 loc_110FB:
 		mov	ax, word_1F33E	; default
-		mov	word_220EE, ax
+		mov	_collmap_center.x, ax
 		mov	ax, word_1F340
-		mov	word_220F0, ax
-		mov	word_220F2, 1Ch
-		mov	word_220F4, 1Ch
+		mov	_collmap_center.y, ax
+		mov	_collmap_stripe_tile_w, (56 / COLLMAP_TILE_W)
+		mov	_collmap_tile_h, (56 / COLLMAP_TILE_H)
 		mov	al, [bp+@@pid_other]
-		mov	byte_220FA, al
+		mov	_collmap_pid, al
 		call	sub_13A6E
 		mov	byte_20E2C, 1
 		mov	word_20E32, 200h
@@ -13088,13 +13072,13 @@ loc_11760:
 
 loc_11763:
 		mov	ax, word_1F33E	; default
-		mov	word_220EE, ax
+		mov	_collmap_center.x, ax
 		mov	ax, word_1F340
-		mov	word_220F0, ax
-		mov	word_220F2, 14h
-		mov	word_220F4, 18h
+		mov	_collmap_center.y, ax
+		mov	_collmap_stripe_tile_w, (40 / COLLMAP_TILE_W)
+		mov	_collmap_tile_h, (48 / COLLMAP_TILE_H)
 		mov	al, [bp+@@pid_other]
-		mov	byte_220FA, al
+		mov	_collmap_pid, al
 		call	sub_13A6E
 		mov	byte_20E2C, 1
 		mov	word_20E32, 180h
@@ -13976,13 +13960,13 @@ loc_11F31:
 
 loc_11F34:
 		mov	ax, word_1F33E	; default
-		mov	word_220EE, ax
+		mov	_collmap_center.x, ax
 		mov	ax, word_1F340
-		mov	word_220F0, ax
-		mov	word_220F2, 20h	; ' '
-		mov	word_220F4, 18h
+		mov	_collmap_center.y, ax
+		mov	_collmap_stripe_tile_w, (64 / COLLMAP_TILE_W)
+		mov	_collmap_tile_h, (48 / COLLMAP_TILE_H)
 		mov	al, [bp+@@pid_other]
-		mov	byte_220FA, al
+		mov	_collmap_pid, al
 		call	sub_13A6E
 		mov	byte_20E2C, 1
 		mov	word_20E32, 200h
@@ -15013,13 +14997,13 @@ loc_128A2:
 
 loc_128AD:
 		mov	ax, word_1F33E
-		mov	word_220EE, ax
+		mov	_collmap_center.x, ax
 		mov	ax, word_1F340
-		mov	word_220F0, ax
-		mov	word_220F2, 20h	; ' '
-		mov	word_220F4, 18h
+		mov	_collmap_center.y, ax
+		mov	_collmap_stripe_tile_w, (64 / COLLMAP_TILE_W)
+		mov	_collmap_tile_h, (48 / COLLMAP_TILE_H)
 		mov	al, [bp+@@pid_other]
-		mov	byte_220FA, al
+		mov	_collmap_pid, al
 		call	sub_13A6E
 		mov	byte_20E2C, 1
 		mov	word_20E32, 200h
@@ -15938,13 +15922,13 @@ loc_130BD:
 loc_130C0:
 		inc	byte_1F354	; default
 		mov	ax, word_1F33E
-		mov	word_220EE, ax
+		mov	_collmap_center.x, ax
 		mov	ax, word_1F340
-		mov	word_220F0, ax
-		mov	word_220F2, 20h	; ' '
-		mov	word_220F4, 18h
+		mov	_collmap_center.y, ax
+		mov	_collmap_stripe_tile_w, (64 / COLLMAP_TILE_W)
+		mov	_collmap_tile_h, (48 / COLLMAP_TILE_H)
 		mov	al, [bp+@@pid_other]
-		mov	byte_220FA, al
+		mov	_collmap_pid, al
 		call	sub_13A6E
 		mov	byte_20E2C, 1
 		mov	word_20E32, 200h
@@ -16681,13 +16665,13 @@ loc_13717:
 		mov	al, byte_1F358	; default
 		add	byte_1F354, al
 		mov	ax, word_1F33E
-		mov	word_220EE, ax
+		mov	_collmap_center.x, ax
 		mov	ax, word_1F340
-		mov	word_220F0, ax
-		mov	word_220F2, 20h	; ' '
-		mov	word_220F4, 18h
+		mov	_collmap_center.y, ax
+		mov	_collmap_stripe_tile_w, (64 / COLLMAP_TILE_W)
+		mov	_collmap_tile_h, (48 / COLLMAP_TILE_H)
 		mov	al, [bp+@@pid_other]
-		mov	byte_220FA, al
+		mov	_collmap_pid, al
 		call	sub_13A6E
 		mov	byte_20E2C, 1
 		mov	word_20E32, 200h
@@ -16990,21 +16974,21 @@ RANDRING_NEXT_DEF _far, far
 
 
 sub_13A6E	proc far
-		mov	dx, word_220F0
+		mov	dx, _collmap_center.y
 		or	dx, dx
 		js	locret_13B41
-		cmp	dx, 1700h
+		cmp	dx, (PLAYFIELD_H shl 4)
 		jge	locret_13B41
 		xor	ax, ax
-		cmp	byte_220FA, 0
+		cmp	_collmap_pid, 0
 		jz	short loc_13A8C
-		mov	ax, 0CF0h
+		mov	ax, COLLMAP_SIZE
 
 loc_13A8C:
-		add	ax, 4BA0h
+		add	ax, offset _collmap
 		mov	word ptr cs:loc_13AFC+2, ax
 		sar	dx, 5
-		mov	cx, word_220F4
+		mov	cx, _collmap_tile_h
 		mov	ax, cx
 		shr	ax, 1
 		sub	dx, ax
@@ -17014,20 +16998,20 @@ loc_13A8C:
 		xor	dx, dx
 
 loc_13AA8:
-		cmp	cx, 0B8h
+		cmp	cx, COLLMAP_H
 		jb	short loc_13AB1
-		mov	cx, 0B7h
+		mov	cx, (COLLMAP_H - 1)
 
 loc_13AB1:
 		add	word ptr cs:loc_13AFC+2, dx
 		sub	cx, dx
 		mov	word ptr cs:loc_13B18+1, cx
-		mov	ax, 0B8h
+		mov	ax, COLLMAP_H
 		sub	ax, cx
 		mov	word ptr cs:loc_13B2C+2, ax
-		mov	ax, word_220EE
+		mov	ax, _collmap_center.x
 		sar	ax, 5
-		mov	dx, word_220F2
+		mov	dx, _collmap_stripe_tile_w
 		mov	bx, dx
 		shr	bx, 1
 		sub	ax, bx
@@ -17046,7 +17030,7 @@ loc_13AE3:
 		add	dx, cx
 		jmp	short $+2
 		mov	cx, ax
-		mov	ah, 0B8h
+		mov	ah, COLLMAP_H
 		mul	ah
 		mov	bx, ax
 
@@ -17065,7 +17049,7 @@ loc_13B04:
 		xor	ah, ch
 
 loc_13B14:
-		cmp	al, 12h
+		cmp	al, COLLMAP_MEMORY_W
 		jnb	short locret_13B41
 
 loc_13B18:
@@ -17101,38 +17085,38 @@ sub_13A6E	endp
 
 
 sub_13B42	proc far
-		mov	ax, word_220EE
-		mov	dx, word_220F0
+		mov	ax, _collmap_topleft.x
+		mov	dx, _collmap_topleft.y
 		or	ax, ax
 		js	short locret_13B98
-		cmp	ax, 1200h
+		cmp	ax, (PLAYFIELD_W shl 4)
 		jge	short locret_13B98
 		or	dx, dx
 		js	short locret_13B98
-		cmp	dx, 1700h
+		cmp	dx, (PLAYFIELD_H shl 4)
 		jge	short locret_13B98
 		xor	bx, bx
-		cmp	byte_220FA, 0
+		cmp	_collmap_pid, 0
 		jz	short loc_13B68
-		mov	bx, 0CF0h
+		mov	bx, COLLMAP_SIZE
 
 loc_13B68:
-		add	bx, 4BA0h
+		add	bx, offset _collmap
 		sar	ax, 5
 		sar	dx, 5
 		mov	cx, ax
 		sar	ax, 3
 		and	cx, 7
 		add	bx, dx
-		mov	ah, 0B8h
+		mov	ah, COLLMAP_H
 		mul	ah
 		add	bx, ax
-		mov	ax, 0B8h
+		mov	ax, COLLMAP_H
 		sub	ax, dx
 		mov	dx, ax
 		mov	ah, 80h
 		shr	ah, cl
-		mov	cx, word_220F4
+		mov	cx, _collmap_tile_h
 		nop
 
 loc_13B92:
@@ -17154,25 +17138,25 @@ sub_13B42	endp
 sub_13B9A	proc far
 		push	si
 		push	di
-		mov	bx, 0B7h
-		cmp	byte_220FA, 0
+		mov	bx, (COLLMAP_H - 1)
+		cmp	_collmap_pid, 0
 		jz	short loc_13BAA
-		add	bx, 0CF0h
+		add	bx, COLLMAP_SIZE
 
 loc_13BAA:
-		add	bx, 4BA0h
+		add	bx, offset _collmap
 		mov	word ptr cs:loc_13BE9+1, bx
 		mov	al, 11111111b
-		mov	cx, word_220F2
+		mov	cx, _collmap_stripe_tile_w
 		shr	al, cl
 		not	al
 		xor	ah, ah
 		mov	word ptr cs:loc_13BEE+1, ax
-		mov	ax, word_220F6
-		sub	ax, word_220EE
+		mov	ax, _collmap_bottomright.x
+		sub	ax, _collmap_topleft.x
 		mov	word ptr cs:loc_13C02+1, ax
 		jmp	short $+2
-		mov	si, word_220F6
+		mov	si, _collmap_bottomright.x
 		mov	di, 5Bh	; '['
 		nop
 
@@ -17182,7 +17166,7 @@ loc_13BD8:
 		mov	cx, ax
 		and	cx, 7
 		shr	ax, 3
-		mov	ah, 0B8h
+		mov	ah, COLLMAP_H
 		mul	ah
 
 loc_13BE9:
@@ -17195,7 +17179,7 @@ loc_13BEE:
 		or	[bx], al
 		or	ah, ah
 		jz	short loc_13BFF
-		add	bx, 0B8h
+		add	bx, COLLMAP_H
 		or	[bx], ah
 
 loc_13BFF:
@@ -17207,7 +17191,7 @@ loc_13C02:
 		imul	di
 		mov	cx, 5Ch
 		idiv	cx
-		mov	si, word_220EE
+		mov	si, _collmap_topleft.x
 		add	si, ax
 		sub	word ptr cs:loc_13BE9+1, 2
 		jmp	short loc_13BD8
@@ -21727,19 +21711,19 @@ loc_160D1:
 		mov	al, [bx+9]
 		mov	ah, 0
 		imul	ax, 3
-		mov	bx, 10h
+		mov	bx, 16
 		cwd
 		idiv	bx
 		mov	di, ax
 		mov	bx, word_2203C
 		mov	ax, [bx+2]
-		mov	word_220EE, ax
+		mov	_collmap_center.x, ax
 		mov	ax, [bx+4]
-		mov	word_220F0, ax
-		mov	word_220F2, di
-		mov	word_220F4, di
+		mov	_collmap_center.y, ax
+		mov	_collmap_stripe_tile_w, di
+		mov	_collmap_tile_h, di
 		mov	al, [bx+8]
-		mov	byte_220FA, al
+		mov	_collmap_pid, al
 		nopcall	sub_13A6E
 
 loc_16123:
@@ -24847,7 +24831,7 @@ var_1		= byte ptr -1
 		push	si
 		push	di
 		mov	[bp+var_1], 0
-		mov	word_220F4, 1
+		mov	_collmap_tile_h, 1
 		mov	byte_2203A, 1
 		mov	di, 141h
 		mov	ax, 68F2h
@@ -25036,11 +25020,11 @@ loc_17BA9:
 		cmp	byte ptr [si+15h], 0
 		jz	short loc_17BCA
 		mov	ax, [si+2]
-		mov	word_220EE, ax
+		mov	_collmap_topleft.x, ax
 		mov	ax, [si+4]
-		mov	word_220F0, ax
+		mov	_collmap_topleft.y, ax
 		mov	al, [si+10h]
-		mov	byte_220FA, al
+		mov	_collmap_pid, al
 		call	sub_13B42
 
 loc_17BCA:
@@ -25608,8 +25592,8 @@ sub_18059	proc far
 		mov	bp, sp
 		push	si
 		push	di
-		mov	word_220F2, 8
-		mov	word_220F4, 8
+		mov	_collmap_stripe_tile_w, (16 / COLLMAP_TILE_W)
+		mov	_collmap_tile_h, (16 / COLLMAP_TILE_H)
 		mov	word_2203C, 4656h
 		xor	di, di
 		jmp	loc_18162
@@ -25661,12 +25645,12 @@ loc_180C5:
 		cmp	byte ptr [bx], 1
 		jnz	short loc_1815C
 		mov	ax, [bx+2]
-		mov	word_220EE, ax
+		mov	_collmap_center.x, ax
 		mov	ax, [bx+4]
 		add	ax, 80h
-		mov	word_220F0, ax
+		mov	_collmap_center.y, ax
 		mov	al, [bx+8]
-		mov	byte_220FA, al
+		mov	_collmap_pid, al
 		nopcall	sub_13A6E
 		jmp	short loc_1815C
 ; ---------------------------------------------------------------------------
@@ -27592,8 +27576,8 @@ var_2		= word ptr -2
 		mov	al, 1
 		sub	al, _pid_current
 		mov	[bp+@@pid_other], al
-		mov	word_220F2, 2
-		mov	byte_220FA, al
+		mov	_collmap_stripe_tile_w, (4 / COLLMAP_TILE_W)
+		mov	_collmap_pid, al
 		xor	di, di
 		jmp	loc_1937F
 ; ---------------------------------------------------------------------------
@@ -27637,10 +27621,10 @@ loc_192DB:
 		cmp	byte ptr [si+1], 70h ; 'p'
 		jnb	short loc_192FD
 		mov	ax, [si+2]
-		mov	word_220EE, ax
+		mov	_collmap_topleft.x, ax
 		add	si, 20h	; ' '
 		mov	ax, [si+2]
-		mov	word_220F6, ax
+		mov	_collmap_bottomright.x, ax
 		call	sub_13B9A
 		jmp	short loc_1930C
 ; ---------------------------------------------------------------------------
@@ -28109,9 +28093,9 @@ var_2		= word ptr -2
 		mov	[bp+@@pid_other], al
 		mov	word_1F2EC, 0FE80h
 		mov	word_1F2EE, 0FE80h
-		mov	word_220F2, 6
-		mov	word_220F4, 6
-		mov	byte_220FA, al
+		mov	_collmap_stripe_tile_w, (12 / COLLMAP_TILE_W)
+		mov	_collmap_tile_h, (12 / COLLMAP_TILE_H)
+		mov	_collmap_pid, al
 		mov	[bp+var_2], 0
 		jmp	loc_197E7
 ; ---------------------------------------------------------------------------
@@ -28222,9 +28206,9 @@ loc_19740:
 		call	sub_158F5
 		mov	byte_20E2C, 0
 		mov	ax, [di+2]
-		mov	word_220EE, ax
+		mov	_collmap_center.x, ax
 		mov	ax, [di+10h]
-		mov	word_220F0, ax
+		mov	_collmap_center.y, ax
 		call	sub_13A6E
 		jmp	short loc_197DC
 ; ---------------------------------------------------------------------------
@@ -28943,7 +28927,7 @@ var_2		= word ptr -2
 		enter	6, 0
 		push	si
 		push	di
-		mov	word_220F2, 2
+		mov	_collmap_stripe_tile_w, (4 / COLLMAP_TILE_W)
 		mov	al, _pid_current
 		mov	ah, 0
 		shl	ax, 9
@@ -28990,21 +28974,21 @@ loc_19C9B:
 		cmp	byte ptr [si+1], 64h ; 'd'
 		jnb	short loc_19D1C
 		mov	ax, [bp+var_6]
-		mov	word_220EE, ax
+		mov	_collmap_center.x, ax
 		mov	ax, [bp+var_4]
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		add	ax, di
-		mov	word_220F0, ax
+		mov	_collmap_center.y, ax
 		mov	ax, [bp+var_4]
-		mov	bx, 20h	; ' '
+		mov	bx, (64 / COLLMAP_TILE_H)
 		cwd
 		idiv	bx
-		mov	word_220F4, ax
+		mov	_collmap_tile_h, ax
 		mov	al, 1
 		sub	al, _pid_current
-		mov	byte_220FA, al
+		mov	_collmap_pid, al
 		call	sub_13A6E
 		jmp	short loc_19D1C
 ; ---------------------------------------------------------------------------
@@ -29468,9 +29452,9 @@ kotohime_19FEF	proc far
 		mov	al, 1
 		sub	al, _pid_current
 		mov	[bp+@@pid_other], al
-		mov	word_220F2, 6
-		mov	word_220F4, 6
-		mov	byte_220FA, al
+		mov	_collmap_stripe_tile_w, (12 / COLLMAP_TILE_W)
+		mov	_collmap_tile_h, (12 / COLLMAP_TILE_H)
+		mov	_collmap_pid, al
 		xor	di, di
 		jmp	loc_1A143
 ; ---------------------------------------------------------------------------
@@ -29563,9 +29547,9 @@ loc_1A0DA:
 		call	sub_158F5
 		mov	byte_20E2C, 0
 		mov	ax, [si+2]
-		mov	word_220EE, ax
+		mov	_collmap_center.x, ax
 		mov	ax, [si+4]
-		mov	word_220F0, ax
+		mov	_collmap_center.y, ax
 		call	sub_13A6E
 		jmp	short loc_1A13A
 ; ---------------------------------------------------------------------------
@@ -30124,20 +30108,20 @@ arg_2		= word ptr  6
 		push	bp
 		mov	bp, sp
 		mov	ax, [bp+arg_2]
-		mov	word_220EE, ax
+		mov	_collmap_center.x, ax
 		mov	ax, [bp+arg_0]
-		mov	word_220F0, ax
-		mov	word_220F2, 8
-		mov	word_220F4, 10h
+		mov	_collmap_center.y, ax
+		mov	_collmap_stripe_tile_w, (16 / COLLMAP_TILE_W)
+		mov	_collmap_tile_h, (32 / COLLMAP_TILE_H)
 		mov	al, 1
 		sub	al, _pid_current
-		mov	byte_220FA, al
+		mov	_collmap_pid, al
 		call	sub_13A6E
-		sub	word_220EE, 0C0h
-		mov	word_220F2, 4
-		mov	word_220F4, 8
+		sub	_collmap_center.x, (12 shl 4)
+		mov	_collmap_stripe_tile_w, (8 / COLLMAP_TILE_W)
+		mov	_collmap_tile_h, (16 / COLLMAP_TILE_H)
 		call	sub_13A6E
-		add	word_220EE, 180h
+		add	_collmap_center.x, (24 shl 4)
 		call	sub_13A6E
 		pop	bp
 		retn	4
@@ -30500,9 +30484,9 @@ var_2		= word ptr -2
 		mov	al, 1
 		sub	al, _pid_current
 		mov	[bp+@@pid_other], al
-		mov	word_220F2, 8
-		mov	word_220F4, 8
-		mov	byte_220FA, al
+		mov	_collmap_stripe_tile_w, (16 / COLLMAP_TILE_W)
+		mov	_collmap_tile_h, (16 / COLLMAP_TILE_H)
+		mov	_collmap_pid, al
 		mov	[bp+var_2], 0
 		jmp	loc_1A8C7
 ; ---------------------------------------------------------------------------
@@ -30616,9 +30600,9 @@ loc_1A83A:
 
 loc_1A868:
 		mov	byte_20E2C, 0
-		mov	word_220EE, di
+		mov	_collmap_center.x, di
 		mov	ax, [bp+var_4]
-		mov	word_220F0, ax
+		mov	_collmap_center.y, ax
 		call	sub_13A6E
 		jmp	short loc_1A8BE
 ; ---------------------------------------------------------------------------
@@ -31357,7 +31341,7 @@ yumemi_1AE2E	proc far
 		mov	al, 1
 		sub	al, _pid_current
 		mov	[bp+@@pid_other], al
-		mov	byte_220FA, al
+		mov	_collmap_pid, al
 		xor	di, di
 		jmp	loc_1AF67
 ; ---------------------------------------------------------------------------
@@ -31421,24 +31405,24 @@ loc_1AE9D:
 		call	sub_158F5
 		mov	byte_20E2C, 0
 		mov	ax, [si+14h]
-		mov	word_220F2, ax
-		mov	word_220F4, 8
+		mov	_collmap_stripe_tile_w, ax
+		mov	_collmap_tile_h, (16 / COLLMAP_TILE_H)
 		mov	ax, [si+2]
-		mov	word_220EE, ax
+		mov	_collmap_center.x, ax
 		mov	ax, [si+4]
-		mov	word_220F0, ax
+		mov	_collmap_center.y, ax
 		call	sub_13A6E
 		mov	ax, [si+14h]
 		shl	ax, 2
 		add	ax, [si+4]
-		mov	word_220F0, ax
-		mov	word_220F2, 8
+		mov	_collmap_center.y, ax
+		mov	_collmap_stripe_tile_w, (16 / COLLMAP_TILE_W)
 		mov	ax, [si+14h]
 		mov	bx, 4
 		cwd
 		idiv	bx
 		add	ax, [si+14h]
-		mov	word_220F4, ax
+		mov	_collmap_tile_h, ax
 		call	sub_13A6E
 		jmp	short loc_1AF60
 ; ---------------------------------------------------------------------------
@@ -36270,14 +36254,17 @@ byte_220E0	db ?
 byte_220E6	db ?
 		db 5 dup(?)
 word_220EC	dw ?
-word_220EE	dw ?
-word_220F0	dw ?
-word_220F2	dw ?
-word_220F4	dw ?
-word_220F6	dw ?
-		db 2 dup(?)
-byte_220FA	db ?
-		db 6629 dup(?)
+public _collmap_topleft, _collmap_center, _collmap_stripe_tile_w,
+public _collmap_tile_h, _collmap_bottomright, _collmap_pid, _collmap
+_collmap_topleft label Point
+_collmap_center label Point
+	Point <?>
+_collmap_stripe_tile_w	dw ?
+_collmap_tile_h	dw ?
+_collmap_bottomright	Point <?>
+_collmap_pid	db ?
+		db 5 dup(?)
+_collmap	db (PLAYER_COUNT * COLLMAP_SIZE) dup(?)
 public _bomb_state
 _bomb_state	db PLAYER_COUNT dup(?)
 byte_23AE2	db ?
