@@ -80,6 +80,7 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 : th03\\cdg_put.asm |> !as3 |>
 : th03\\cdg_p_na.asm |> !as3 |>
 : th03\\hfliplut.asm |> !as3 |>
+: th03\\collmap.asm |> !as3 |>
 : th03_op.asm |> !as |> bin\\th03\\op.obj
 : th03_main.asm | \
 	th03/sprites/score.asp \

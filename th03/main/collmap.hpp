@@ -19,6 +19,8 @@ static const char COLLMAP_TILE_H_BITS = 1;
 static const size_t COLLMAP_MEMORY_W = ((PLAYFIELD_W / COLLMAP_TILE_W) / 8);
 static const size_t COLLMAP_H = (PLAYFIELD_H / COLLMAP_TILE_H);
 static const size_t COLLMAP_SIZE = (COLLMAP_MEMORY_W * COLLMAP_H);
+
+static const collmap_tile_amount_t COLLMAP_SLOPE_VSTRIPE_DISTANCE = 2;
 // ---------
 
 // Function parameters
@@ -38,4 +40,13 @@ extern unsigned char collmap_pid;
 // Stored as columns from left to right, not rows from top to bottom.
 extern uint8_t collmap[PLAYER_COUNT][COLLMAP_MEMORY_W][COLLMAP_H];
 // -------------------
+
+// Sets all bits on every [COLLMAP_SLOPE_VSTRIPE_DISTANCE]th row of a
+// potentially sloped vertical line across one whole playfield.
+// Takes the following parameters:
+// • [collmap_topleft.x] (always uses 0 for [y])
+// • [collmap_bottomright.x] (always uses to_sp(PLAYFIELD_H) for [y])
+// • [collmap_stripe_tile_w] (between 0 and 7)
+// • [collmap_pid]
+void collmap_set_slope_striped();
 /// ----------------

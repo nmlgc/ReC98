@@ -28,6 +28,7 @@ include libs/sprite16/sprite16.inc
 	extern _execl:proc
 
 main_01 group main_0_TEXT, CFG_LRES_TEXT, main_01_TEXT
+main_04 group main_04_TEXT, COLLMAP_TEXT, main_04__TEXT
 
 ; ===========================================================================
 
@@ -16963,7 +16964,7 @@ main_03_TEXT	ends
 
 ; Segment type:	Pure code
 main_04_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_04_TEXT
+		assume cs:main_04
 		;org 0Ah
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -17131,80 +17132,13 @@ sub_13B42	endp
 
 ; ---------------------------------------------------------------------------
 		nop
+main_04_TEXT	ends
 
-; =============== S U B	R O U T	I N E =======================================
+COLLMAP_TEXT	segment byte public 'CODE' use16
+	extern _collmap_set_slope_striped:proc
+COLLMAP_TEXT	ends
 
-
-sub_13B9A	proc far
-		push	si
-		push	di
-		mov	bx, (COLLMAP_H - 1)
-		cmp	_collmap_pid, 0
-		jz	short loc_13BAA
-		add	bx, COLLMAP_SIZE
-
-loc_13BAA:
-		add	bx, offset _collmap
-		mov	word ptr cs:loc_13BE9+1, bx
-		mov	al, 11111111b
-		mov	cx, _collmap_stripe_tile_w
-		shr	al, cl
-		not	al
-		xor	ah, ah
-		mov	word ptr cs:loc_13BEE+1, ax
-		mov	ax, _collmap_bottomright.x
-		sub	ax, _collmap_topleft.x
-		mov	word ptr cs:loc_13C02+1, ax
-		jmp	short $+2
-		mov	si, _collmap_bottomright.x
-		mov	di, 5Bh	; '['
-		nop
-
-loc_13BD8:
-		mov	ax, si
-		shr	ax, 5
-		mov	cx, ax
-		and	cx, 7
-		shr	ax, 3
-		mov	ah, COLLMAP_H
-		mul	ah
-
-loc_13BE9:
-		mov	bx, 1234h
-		add	bx, ax
-
-loc_13BEE:
-		mov	ax, 1234h
-		ror	ax, cl
-		or	[bx], al
-		or	ah, ah
-		jz	short loc_13BFF
-		add	bx, COLLMAP_H
-		or	[bx], ah
-
-loc_13BFF:
-		dec	di
-		jz	short loc_13C1A
-
-loc_13C02:
-		mov	ax, 1234h
-		imul	di
-		mov	cx, 5Ch
-		idiv	cx
-		mov	si, _collmap_topleft.x
-		add	si, ax
-		sub	word ptr cs:loc_13BE9+1, 2
-		jmp	short loc_13BD8
-; ---------------------------------------------------------------------------
-
-loc_13C1A:
-		pop	di
-		pop	si
-		retf
-sub_13B9A	endp
-
-; ---------------------------------------------------------------------------
-		nop
+main_04__TEXT	segment	byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -25980,7 +25914,7 @@ loc_183B9:
 		retf
 sub_1837C	endp
 
-main_04_TEXT	ends
+main_04__TEXT	ends
 
 ; ===========================================================================
 
@@ -27625,7 +27559,7 @@ loc_192DB:
 		add	si, 20h	; ' '
 		mov	ax, [si+2]
 		mov	_collmap_bottomright.x, ax
-		call	sub_13B9A
+		call	_collmap_set_slope_striped
 		jmp	short loc_1930C
 ; ---------------------------------------------------------------------------
 
