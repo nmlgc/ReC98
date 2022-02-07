@@ -17080,61 +17080,10 @@ loc_13B2C:
 locret_13B41:
 		retf
 sub_13A6E	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_13B42	proc far
-		mov	ax, _collmap_topleft.x
-		mov	dx, _collmap_topleft.y
-		or	ax, ax
-		js	short locret_13B98
-		cmp	ax, (PLAYFIELD_W shl 4)
-		jge	short locret_13B98
-		or	dx, dx
-		js	short locret_13B98
-		cmp	dx, (PLAYFIELD_H shl 4)
-		jge	short locret_13B98
-		xor	bx, bx
-		cmp	_collmap_pid, 0
-		jz	short loc_13B68
-		mov	bx, COLLMAP_SIZE
-
-loc_13B68:
-		add	bx, offset _collmap
-		sar	ax, 5
-		sar	dx, 5
-		mov	cx, ax
-		sar	ax, 3
-		and	cx, 7
-		add	bx, dx
-		mov	ah, COLLMAP_H
-		mul	ah
-		add	bx, ax
-		mov	ax, COLLMAP_H
-		sub	ax, dx
-		mov	dx, ax
-		mov	ah, 80h
-		shr	ah, cl
-		mov	cx, _collmap_tile_h
-		nop
-
-loc_13B92:
-		or	[bx], ah
-		inc	bx
-		dec	dx
-		loopne	loc_13B92
-
-locret_13B98:
-		retf
-sub_13B42	endp
-
-; ---------------------------------------------------------------------------
-		nop
 main_04_TEXT	ends
 
 COLLMAP_TEXT	segment byte public 'CODE' use16
+	extern _collmap_set_vline:proc
 	extern _collmap_set_slope_striped:proc
 COLLMAP_TEXT	ends
 
@@ -24959,7 +24908,7 @@ loc_17BA9:
 		mov	_collmap_topleft.y, ax
 		mov	al, [si+10h]
 		mov	_collmap_pid, al
-		call	sub_13B42
+		call	_collmap_set_vline
 
 loc_17BCA:
 		jmp	loc_17A3D

@@ -10,6 +10,7 @@ include th03/main/collmap.inc
 
 extrn _collmap_topleft:Point
 extrn _collmap_stripe_tile_w:word
+extrn _collmap_tile_h:word
 extrn _collmap_bottomright:Point
 extrn _collmap_pid:byte
 extrn _collmap:byte:(PLAYER_COUNT * COLLMAP_SIZE)
@@ -30,6 +31,65 @@ MAIN_04 group COLLMAP_TEXT
 
 	.code
 	assume cs:MAIN_04
+
+public _collmap_set_vline
+_collmap_set_vline proc far
+	@@pattern         	equ <ah>
+	@@first_bit       	equ <cl>
+	@@first_bit_wide  	equ <cx>	; Just remove this
+	@@rows_from_bottom	equ <dx>	; Ensures clipping at the bottom edge
+	@@collmap_p       	equ <bx>
+
+	mov	ax, _collmap_topleft.x
+	mov	dx, _collmap_topleft.y
+
+	; Clip
+	or	ax, ax
+	js	short @@ret
+	cmp	ax, (PLAYFIELD_W shl 4)
+	jge	short @@ret
+	or	dx, dx
+	js	short @@ret
+	cmp	dx, (PLAYFIELD_H shl 4)
+	jge	short @@ret
+
+	xor	@@collmap_p, @@collmap_p
+	cmp	_collmap_pid, 0
+	jz	short @@set_collmap_p
+	mov	@@collmap_p, COLLMAP_SIZE
+
+@@set_collmap_p:
+	add	@@collmap_p, offset _collmap
+
+	sar	ax, (SUBPIXEL_BITS + COLLMAP_TILE_W_BITS)
+	sar	dx, (SUBPIXEL_BITS + COLLMAP_TILE_H_BITS)
+
+	mov     	@@first_bit_wide, ax     	; first_bit = AX;
+	sar     	ax, 3                    	; AX /= 8; (bits per byte)
+	and     	@@first_bit_wide, (8 - 1)	; first_bit &= (8 - 1);
+	add     	@@collmap_p, dx          	; collmap_p += (
+	offset_x	ax, al                   	; 	DX + (AX * COLLMAP_H)
+	add     	@@collmap_p, ax          	; );
+
+	mov	ax, COLLMAP_H
+	sub	ax, dx
+	mov	@@rows_from_bottom, ax
+	mov	@@pattern, 80h
+	shr	@@pattern, @@first_bit
+	mov	cx, _collmap_tile_h
+	even
+
+@@row_loop:
+	or	[@@collmap_p], @@pattern
+	inc	@@collmap_p
+	dec	@@rows_from_bottom
+	loopne	@@row_loop
+
+@@ret:
+	ret
+_collmap_set_vline endp
+	even
+
 
 public _collmap_set_slope_striped
 _collmap_set_slope_striped proc c far

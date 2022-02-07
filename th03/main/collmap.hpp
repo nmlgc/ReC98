@@ -41,6 +41,13 @@ extern unsigned char collmap_pid;
 extern uint8_t collmap[PLAYER_COUNT][COLLMAP_MEMORY_W][COLLMAP_H];
 // -------------------
 
+// Sets all bits on a straight 1-tile wide vertical line, clipped to the
+// height of the collision bitmap. Takes the following parameters:
+// • [collmap_topleft] (X and Y)
+// • [collmap_tile_h] (height of the line)
+// • [collmap_pid]
+void collmap_set_vline();
+
 // Sets all bits on every [COLLMAP_SLOPE_VSTRIPE_DISTANCE]th row of a
 // potentially sloped vertical line across one whole playfield.
 // Takes the following parameters:
