@@ -20,6 +20,7 @@ static const size_t COLLMAP_MEMORY_W = ((PLAYFIELD_W / COLLMAP_TILE_W) / 8);
 static const size_t COLLMAP_H = (PLAYFIELD_H / COLLMAP_TILE_H);
 static const size_t COLLMAP_SIZE = (COLLMAP_MEMORY_W * COLLMAP_H);
 
+static const collmap_tile_amount_t COLLMAP_RECT_VSTRIPE_DISTANCE = 4;
 static const collmap_tile_amount_t COLLMAP_SLOPE_VSTRIPE_DISTANCE = 2;
 // ---------
 
@@ -40,6 +41,15 @@ extern unsigned char collmap_pid;
 // Stored as columns from left to right, not rows from top to bottom.
 extern uint8_t collmap[PLAYER_COUNT][COLLMAP_MEMORY_W][COLLMAP_H];
 // -------------------
+
+// Sets all bits on every [COLLMAP_RECT_VSTRIPE_DISTANCE]th row of a
+// rectangle, clipped at all sides of the collision bitmap.
+// Takes the following parameters:
+// • [collmap_center] (X and Y)
+// • [collmap_stripe_tile_w] (width of the rectangle)
+// • [collmap_tile_h] (height of the rectangle)
+// • [collmap_pid]
+void collmap_set_rect_striped();
 
 // Sets all bits on a straight 1-tile wide vertical line, clipped to the
 // height of the collision bitmap. Takes the following parameters:

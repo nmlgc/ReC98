@@ -9742,7 +9742,7 @@ loc_F8F5:
 		mov	_collmap_tile_h, (56 / COLLMAP_TILE_H)
 		mov	al, [bp+@@pid_other]
 		mov	_collmap_pid, al
-		call	sub_13A6E
+		call	_collmap_set_rect_striped
 		mov	byte_20E2C, 1
 		mov	word_20E32, 200h
 		mov	word_20E34, 200h
@@ -10475,7 +10475,7 @@ loc_FFA2:
 		mov	_collmap_tile_h, (56 / COLLMAP_TILE_H)
 		mov	al, [bp+@@pid_other]
 		mov	_collmap_pid, al
-		call	sub_13A6E
+		call	_collmap_set_rect_striped
 		mov	byte_20E2C, 1
 		mov	word_20E32, 200h
 		mov	word_20E34, 200h
@@ -11380,7 +11380,7 @@ loc_1081A:
 		mov	_collmap_tile_h, (56 / COLLMAP_TILE_H)
 		mov	al, [bp+@@pid_other]
 		mov	_collmap_pid, al
-		call	sub_13A6E
+		call	_collmap_set_rect_striped
 		mov	byte_20E2C, 1
 		mov	word_20E32, 200h
 		mov	word_20E34, 200h
@@ -12334,7 +12334,7 @@ loc_110FB:
 		mov	_collmap_tile_h, (56 / COLLMAP_TILE_H)
 		mov	al, [bp+@@pid_other]
 		mov	_collmap_pid, al
-		call	sub_13A6E
+		call	_collmap_set_rect_striped
 		mov	byte_20E2C, 1
 		mov	word_20E32, 200h
 		mov	word_20E34, 200h
@@ -13080,7 +13080,7 @@ loc_11763:
 		mov	_collmap_tile_h, (48 / COLLMAP_TILE_H)
 		mov	al, [bp+@@pid_other]
 		mov	_collmap_pid, al
-		call	sub_13A6E
+		call	_collmap_set_rect_striped
 		mov	byte_20E2C, 1
 		mov	word_20E32, 180h
 		mov	word_20E34, 180h
@@ -13968,7 +13968,7 @@ loc_11F34:
 		mov	_collmap_tile_h, (48 / COLLMAP_TILE_H)
 		mov	al, [bp+@@pid_other]
 		mov	_collmap_pid, al
-		call	sub_13A6E
+		call	_collmap_set_rect_striped
 		mov	byte_20E2C, 1
 		mov	word_20E32, 200h
 		mov	word_20E34, 200h
@@ -15005,7 +15005,7 @@ loc_128AD:
 		mov	_collmap_tile_h, (48 / COLLMAP_TILE_H)
 		mov	al, [bp+@@pid_other]
 		mov	_collmap_pid, al
-		call	sub_13A6E
+		call	_collmap_set_rect_striped
 		mov	byte_20E2C, 1
 		mov	word_20E32, 200h
 		mov	word_20E34, 200h
@@ -15930,7 +15930,7 @@ loc_130C0:
 		mov	_collmap_tile_h, (48 / COLLMAP_TILE_H)
 		mov	al, [bp+@@pid_other]
 		mov	_collmap_pid, al
-		call	sub_13A6E
+		call	_collmap_set_rect_striped
 		mov	byte_20E2C, 1
 		mov	word_20E32, 200h
 		mov	word_20E34, 200h
@@ -16673,7 +16673,7 @@ loc_13717:
 		mov	_collmap_tile_h, (48 / COLLMAP_TILE_H)
 		mov	al, [bp+@@pid_other]
 		mov	_collmap_pid, al
-		call	sub_13A6E
+		call	_collmap_set_rect_striped
 		mov	byte_20E2C, 1
 		mov	word_20E32, 200h
 		mov	word_20E34, 200h
@@ -16970,119 +16970,10 @@ main_04_TEXT	segment	byte public 'CODE' use16
 
 RANDRING_NEXT_DEF 2, near
 RANDRING_NEXT_DEF _far, far
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_13A6E	proc far
-		mov	dx, _collmap_center.y
-		or	dx, dx
-		js	locret_13B41
-		cmp	dx, (PLAYFIELD_H shl 4)
-		jge	locret_13B41
-		xor	ax, ax
-		cmp	_collmap_pid, 0
-		jz	short loc_13A8C
-		mov	ax, COLLMAP_SIZE
-
-loc_13A8C:
-		add	ax, offset _collmap
-		mov	word ptr cs:loc_13AFC+2, ax
-		sar	dx, 5
-		mov	cx, _collmap_tile_h
-		mov	ax, cx
-		shr	ax, 1
-		sub	dx, ax
-		add	cx, dx
-		or	dx, dx
-		jns	short loc_13AA8
-		xor	dx, dx
-
-loc_13AA8:
-		cmp	cx, COLLMAP_H
-		jb	short loc_13AB1
-		mov	cx, (COLLMAP_H - 1)
-
-loc_13AB1:
-		add	word ptr cs:loc_13AFC+2, dx
-		sub	cx, dx
-		mov	word ptr cs:loc_13B18+1, cx
-		mov	ax, COLLMAP_H
-		sub	ax, cx
-		mov	word ptr cs:loc_13B2C+2, ax
-		mov	ax, _collmap_center.x
-		sar	ax, 5
-		mov	dx, _collmap_stripe_tile_w
-		mov	bx, dx
-		shr	bx, 1
-		sub	ax, bx
-		or	ax, ax
-		jns	short loc_13AE3
-		add	dx, ax
-		cmp	dx, 0
-		jle	short locret_13B41
-		xor	ax, ax
-
-loc_13AE3:
-		mov	cx, ax
-		shr	ax, 3
-		and cx, 7
-		mov	byte ptr cs:loc_13B04+2, cl
-		add	dx, cx
-		jmp	short $+2
-		mov	cx, ax
-		mov	ah, COLLMAP_H
-		mul	ah
-		mov	bx, ax
-
-loc_13AFC:
-		add	bx, 1234h
-		mov	ax, cx
-		mov	ah, 11111111b
-
-loc_13B04:
-		shr	ah, 4
-		cmp	dl, 8
-		jge	short loc_13B14
-		mov	ch, 11111111b
-		mov	cl, dl
-		shr	ch, cl
-		xor	ah, ch
-
-loc_13B14:
-		cmp	al, COLLMAP_MEMORY_W
-		jnb	short locret_13B41
-
-loc_13B18:
-		mov	cx, 1234h
-
-loc_13B1B:
-		or	[bx], ah
-		add	bx, 4
-		sub	cx, 4
-		jg	short loc_13B1B
-		sub	dl, 8
-		jle	short locret_13B41
-		inc	al
-
-loc_13B2C:
-		add	cx, 1234h
-		add	bx, cx
-		mov	ah, 11111111b
-		cmp	dl, 8
-		jge	short loc_13B14
-		mov	cl, dl
-		shr	ah, cl
-		not	ah
-		jmp	short loc_13B14
-; ---------------------------------------------------------------------------
-
-locret_13B41:
-		retf
-sub_13A6E	endp
 main_04_TEXT	ends
 
 COLLMAP_TEXT	segment byte public 'CODE' use16
+	extern _collmap_set_rect_striped:proc
 	extern _collmap_set_vline:proc
 	extern _collmap_set_slope_striped:proc
 COLLMAP_TEXT	ends
@@ -21607,7 +21498,7 @@ loc_160D1:
 		mov	_collmap_tile_h, di
 		mov	al, [bx+8]
 		mov	_collmap_pid, al
-		nopcall	sub_13A6E
+		nopcall	_collmap_set_rect_striped
 
 loc_16123:
 		inc	si
@@ -25534,7 +25425,7 @@ loc_180C5:
 		mov	_collmap_center.y, ax
 		mov	al, [bx+8]
 		mov	_collmap_pid, al
-		nopcall	sub_13A6E
+		nopcall	_collmap_set_rect_striped
 		jmp	short loc_1815C
 ; ---------------------------------------------------------------------------
 
@@ -28092,7 +27983,7 @@ loc_19740:
 		mov	_collmap_center.x, ax
 		mov	ax, [di+10h]
 		mov	_collmap_center.y, ax
-		call	sub_13A6E
+		call	_collmap_set_rect_striped
 		jmp	short loc_197DC
 ; ---------------------------------------------------------------------------
 
@@ -28872,7 +28763,7 @@ loc_19C9B:
 		mov	al, 1
 		sub	al, _pid_current
 		mov	_collmap_pid, al
-		call	sub_13A6E
+		call	_collmap_set_rect_striped
 		jmp	short loc_19D1C
 ; ---------------------------------------------------------------------------
 
@@ -29433,7 +29324,7 @@ loc_1A0DA:
 		mov	_collmap_center.x, ax
 		mov	ax, [si+4]
 		mov	_collmap_center.y, ax
-		call	sub_13A6E
+		call	_collmap_set_rect_striped
 		jmp	short loc_1A13A
 ; ---------------------------------------------------------------------------
 
@@ -29999,13 +29890,13 @@ arg_2		= word ptr  6
 		mov	al, 1
 		sub	al, _pid_current
 		mov	_collmap_pid, al
-		call	sub_13A6E
+		call	_collmap_set_rect_striped
 		sub	_collmap_center.x, (12 shl 4)
 		mov	_collmap_stripe_tile_w, (8 / COLLMAP_TILE_W)
 		mov	_collmap_tile_h, (16 / COLLMAP_TILE_H)
-		call	sub_13A6E
+		call	_collmap_set_rect_striped
 		add	_collmap_center.x, (24 shl 4)
-		call	sub_13A6E
+		call	_collmap_set_rect_striped
 		pop	bp
 		retn	4
 sub_1A491	endp
@@ -30486,7 +30377,7 @@ loc_1A868:
 		mov	_collmap_center.x, di
 		mov	ax, [bp+var_4]
 		mov	_collmap_center.y, ax
-		call	sub_13A6E
+		call	_collmap_set_rect_striped
 		jmp	short loc_1A8BE
 ; ---------------------------------------------------------------------------
 
@@ -31294,7 +31185,7 @@ loc_1AE9D:
 		mov	_collmap_center.x, ax
 		mov	ax, [si+4]
 		mov	_collmap_center.y, ax
-		call	sub_13A6E
+		call	_collmap_set_rect_striped
 		mov	ax, [si+14h]
 		shl	ax, 2
 		add	ax, [si+4]
@@ -31306,7 +31197,7 @@ loc_1AE9D:
 		idiv	bx
 		add	ax, [si+14h]
 		mov	_collmap_tile_h, ax
-		call	sub_13A6E
+		call	_collmap_set_rect_striped
 		jmp	short loc_1AF60
 ; ---------------------------------------------------------------------------
 
