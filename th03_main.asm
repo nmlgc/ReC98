@@ -6931,7 +6931,7 @@ public HYPER_STANDBY
 hyper_standby	proc near
 		push	bp
 		mov	bp, sp
-		mov	bx, player_23AE8
+		mov	bx, _player_cur
 		mov	[bx+player_t.shot_mode], SM_1_PAIR
 		cmp	[bx+player_t.hyper_active], 0
 		jz	short loc_D807
@@ -6951,7 +6951,7 @@ public HYPER_REIMU
 hyper_reimu	proc near
 		push	bp
 		mov	bp, sp
-		mov	bx, player_23AE8
+		mov	bx, _player_cur
 		cmp	[bx+player_t.hyper_active], 0
 		jnz	short loc_D81D
 		mov	[bx+player_t.hyper], offset hyper_standby
@@ -6960,7 +6960,7 @@ hyper_reimu	proc near
 ; ---------------------------------------------------------------------------
 
 loc_D81D:
-		mov	bx, player_23AE8
+		mov	bx, _player_cur
 		mov	[bx+player_t.shot_mode], SM_REIMU_HYPER
 		mov	al, byte_23AE2
 		add	al, 20h	; ' '
@@ -6986,7 +6986,7 @@ public HYPER_MIMA
 hyper_mima	proc near
 		push	bp
 		mov	bp, sp
-		mov	bx, player_23AE8
+		mov	bx, _player_cur
 		cmp	[bx+player_t.hyper_active], 0
 		jnz	short loc_D85B
 		mov	[bx+player_t.hyper], offset hyper_standby
@@ -6995,7 +6995,7 @@ hyper_mima	proc near
 ; ---------------------------------------------------------------------------
 
 loc_D85B:
-		mov	bx, player_23AE8
+		mov	bx, _player_cur
 		mov	[bx+player_t.shot_mode], SM_2_PAIRS
 		mov	[bx+player_t.shot_active], SA_BLOCKED_FOR_THIS_FRAME
 		mov	al, byte_23AE2
@@ -7022,7 +7022,7 @@ public HYPER_MARISA
 hyper_marisa	proc near
 		push	bp
 		mov	bp, sp
-		mov	bx, player_23AE8
+		mov	bx, _player_cur
 		cmp	[bx+player_t.hyper_active], 0
 		jnz	short loc_D89D
 		mov	[bx+player_t.hyper], offset hyper_standby
@@ -7031,7 +7031,7 @@ hyper_marisa	proc near
 ; ---------------------------------------------------------------------------
 
 loc_D89D:
-		mov	bx, player_23AE8
+		mov	bx, _player_cur
 		mov	[bx+player_t.shot_mode], SA_DISABLED
 		call	sub_14340
 		mov	al, byte_23AE2
@@ -7058,7 +7058,7 @@ public HYPER_ELLEN
 hyper_ellen	proc near
 		push	bp
 		mov	bp, sp
-		mov	bx, player_23AE8
+		mov	bx, _player_cur
 		cmp	[bx+player_t.hyper_active], 0
 		jnz	short loc_D8E0
 		mov	[bx+player_t.hyper], offset hyper_standby
@@ -7067,7 +7067,7 @@ hyper_ellen	proc near
 ; ---------------------------------------------------------------------------
 
 loc_D8E0:
-		mov	bx, player_23AE8
+		mov	bx, _player_cur
 		mov	[bx+player_t.shot_mode], SM_1_PAIR
 		test	byte ptr _round_frame, 3
 		jnz	short loc_D8F9
@@ -7088,7 +7088,7 @@ public HYPER_KOTOHIME
 hyper_kotohime	proc near
 		push	bp
 		mov	bp, sp
-		mov	bx, player_23AE8
+		mov	bx, _player_cur
 		cmp	[bx+player_t.hyper_active], 0
 		jnz	short loc_D90F
 		mov	[bx+player_t.hyper], offset hyper_standby
@@ -7097,7 +7097,7 @@ hyper_kotohime	proc near
 ; ---------------------------------------------------------------------------
 
 loc_D90F:
-		mov	bx, player_23AE8
+		mov	bx, _player_cur
 		mov	[bx+player_t.shot_mode], SM_4_PAIRS
 		mov	al, byte_23AE2
 		add	al, 20h	; ' '
@@ -7123,7 +7123,7 @@ public HYPER_CHIYURI
 hyper_chiyuri	proc near
 		push	bp
 		mov	bp, sp
-		mov	bx, player_23AE8
+		mov	bx, _player_cur
 		cmp	[bx+player_t.hyper_active], 0
 		jnz	short loc_D94D
 		mov	[bx+player_t.hyper], offset hyper_standby
@@ -7132,7 +7132,7 @@ hyper_chiyuri	proc near
 ; ---------------------------------------------------------------------------
 
 loc_D94D:
-		mov	bx, player_23AE8
+		mov	bx, _player_cur
 		mov	[bx+player_t.shot_mode], SM_4_PAIRS
 		mov	al, byte_23AE2
 		add	al, 20h	; ' '
@@ -7158,7 +7158,7 @@ public HYPER_YUMEMI
 hyper_yumemi	proc near
 		push	bp
 		mov	bp, sp
-		mov	bx, player_23AE8
+		mov	bx, _player_cur
 		cmp	[bx+player_t.hyper_active], 0
 		jnz	short loc_D98B
 		mov	[bx+player_t.hyper], offset hyper_standby
@@ -7167,7 +7167,7 @@ hyper_yumemi	proc near
 ; ---------------------------------------------------------------------------
 
 loc_D98B:
-		mov	bx, player_23AE8
+		mov	bx, _player_cur
 		mov	[bx+player_t.shot_mode], SM_4_PAIRS
 		mov	al, byte_23AE2
 		add	al, 20h	; ' '
@@ -7193,7 +7193,7 @@ public HYPER_KANA
 hyper_kana	proc near
 		push	bp
 		mov	bp, sp
-		mov	bx, player_23AE8
+		mov	bx, _player_cur
 		cmp	[bx+player_t.hyper_active], 0
 		jnz	short loc_D9C9
 		mov	[bx+player_t.hyper], offset hyper_standby
@@ -7202,7 +7202,7 @@ hyper_kana	proc near
 ; ---------------------------------------------------------------------------
 
 loc_D9C9:
-		mov	bx, player_23AE8
+		mov	bx, _player_cur
 		mov	[bx+player_t.shot_mode], SM_4_PAIRS
 		mov	al, byte_23AE2
 		add	al, 20h	; ' '
@@ -7228,7 +7228,7 @@ public HYPER_RIKAKO
 hyper_rikako	proc near
 		push	bp
 		mov	bp, sp
-		mov	bx, player_23AE8
+		mov	bx, _player_cur
 		cmp	[bx+player_t.hyper_active], 0
 		jnz	short loc_DA0C
 		mov	[bx+player_t.hyper], offset hyper_standby
@@ -7238,7 +7238,7 @@ hyper_rikako	proc near
 ; ---------------------------------------------------------------------------
 
 loc_DA0C:
-		mov	bx, player_23AE8
+		mov	bx, _player_cur
 		cmp	[bx+player_t.gauge_avail], (250 shl 4)
 		jbe	short loc_DA21
 		call	rikako_1C497 pascal, word ptr [bx], word ptr [bx+2]
@@ -7285,7 +7285,7 @@ arg_2		= word ptr  6
 		mov	ah, 0
 		shl	ax, 7
 		add	ax, offset _players
-		mov	player_23AE8, ax
+		mov	_player_cur, ax
 		cmp	byte ptr [si+6], 0
 		jz	short loc_DA68
 		dec	byte ptr [si+6]
@@ -8091,7 +8091,7 @@ arg_0		= word ptr  4
 		sub	sp, 4
 		push	si
 		push	di
-		mov	si, player_23AE8
+		mov	si, _player_cur
 		cmp	[si+player_t.invincibility_time], 0
 		jnz	short loc_E10F
 		cmp	[si+player_t.hyper_active], 0
@@ -36047,8 +36047,8 @@ byte_23AE4	db ?
 byte_23AE5	db ?
 byte_23AE6	db ?
 byte_23AE7	db ?
-player_23AE8	dw ?
-public _cpu_hit_damage_additional, _damage_all_enemies_on
+public _player_cur, _cpu_hit_damage_additional, _damage_all_enemies_on
+_player_cur	dw ?
 _cpu_hit_damage_additional	db ?
 _damage_all_enemies_on	db PLAYFIELD_COUNT dup(?)
 		db ?

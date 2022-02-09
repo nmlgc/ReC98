@@ -92,3 +92,6 @@ typedef struct {
 
 extern unsigned char pid_current;
 extern unsigned char pid_other;
+
+// Currently updated instance.
+extern player_t near *player_cur;
