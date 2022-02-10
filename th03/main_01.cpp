@@ -34,7 +34,7 @@ void pascal near shots_render(void)
 
 	for(int i = 0; i < SHOTPAIR_COUNT; i++, shotpair++) {
 		if(shotpair->flag) {
-			int so = shotpair->so_anim + shotpair->so_pid;
+			sprite16_offset_t so = (shotpair->so_anim + shotpair->so_pid);
 			screen_x_t left = playfield_fg_x_to_screen(
 				shotpair->topleft.x, shotpair->pid
 			);

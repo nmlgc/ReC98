@@ -26,7 +26,7 @@ struct shotpair_t {
 	char unused_1;
 	PlayfieldPoint topleft;
 	Subpixel velocity_y;
-	unsigned int so_pid;
+	sprite16_offset_t so_pid;
 	unsigned char so_anim;
 	char unused_2;
 	unsigned char pid;
