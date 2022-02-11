@@ -93,5 +93,12 @@ typedef struct {
 extern unsigned char pid_current;
 extern unsigned char pid_other;
 
+// Doubly redundant: The player ID is already covered by [pid_current], while
+// [so_attack] can be easily calculated from that ID. MODDERS: Delete.
+extern union {
+	unsigned char current;
+	unsigned char so_attack; // sprite16_offset_t
+} pid;
+
 // Currently updated instance.
 extern player_t near *player_cur;

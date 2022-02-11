@@ -22,6 +22,7 @@ include th03/th03.inc
 include th03/main/playfld.inc
 include th03/main/collmap.inc
 include th03/main/player/bomb.inc
+include th03/sprites/main_s16.inc
 include th03/sprite16.inc
 include libs/sprite16/sprite16.inc
 
@@ -225,22 +226,22 @@ loc_977E:
 		call	_collmap_reset
 		call	sub_1797F
 		mov	_pid_current, 0
-		mov	byte ptr word_23AF0, 0
+		mov	_pid_PID_so_attack, SO_ATTACK_P1
 		call	p1_1FE70
 		call	p1_1F32E
 		call	p1_205CE
 		mov	_pid_current, 1
-		mov	byte ptr word_23AF0, 28h ; '('
+		mov	_pid_PID_so_attack, SO_ATTACK_P2
 		call	p2_1FE7C
 		call	p2_1F332
 		call	p2_205D2
 		call	sub_B7E5
 		call	shots_update
 		mov	_pid_current, 0
-		mov	byte ptr word_23AF0, 0
+		mov	_pid_PID_so_attack, SO_ATTACK_P1
 		call	_chargeshot_update_p1
 		mov	_pid_current, 1
-		mov	byte ptr word_23AF0, 28h ; '('
+		mov	_pid_PID_so_attack, SO_ATTACK_P2
 		call	_chargeshot_update_p2
 		call	sub_BB12
 		call	sub_13CC7
@@ -248,20 +249,20 @@ loc_977E:
 		call	sub_1609E
 		call	sub_18059
 		mov	_pid_current, 0
-		mov	byte ptr word_23AF0, 0
+		mov	_pid_PID_so_attack, SO_ATTACK_P1
 		call	p1_202A4
 		call	p1_202AC
 		mov	_pid_current, 1
-		mov	byte ptr word_23AF0, 28h ; '('
+		mov	_pid_PID_so_attack, SO_ATTACK_P2
 		call	p2_202A8
 		call	p2_202B0
 		nopcall	sub_CEB2
 		call	_input_mode
-		mov	byte ptr word_23AF0, 0
+		mov	_pid_PID_current, 0
 		push	_input_mp_p1
 		push	offset _p1
 		call	sub_DA43
-		mov	byte ptr word_23AF0, 1
+		mov	_pid_PID_current, 1
 		push	_input_mp_p2
 		push	offset _p2
 		call	sub_DA43
@@ -285,40 +286,40 @@ loc_9845:
 loc_986C:
 		call	egc_on
 		mov	_pid_current, 0
-		mov	byte ptr word_23AF0, 0
+		mov	_pid_PID_so_attack, SO_ATTACK_P1
 		call	bomb_p1
 		mov	_pid_current, 1
-		mov	byte ptr word_23AF0, 28h ; '('
+		mov	_pid_PID_so_attack, SO_ATTACK_P2
 		call	bomb_p2
 		mov	_pid_current, 0
-		mov	byte ptr word_23AF0, 0
+		mov	_pid_PID_so_attack, SO_ATTACK_P1
 		call	p1_1F336
 		mov	_pid_current, 1
-		mov	byte ptr word_23AF0, 28h ; '('
+		mov	_pid_PID_so_attack, SO_ATTACK_P2
 		call	p2_1F33A
 		call	shots_render
 		call	sub_164DA
 		call	sub_1837C
 		call	sub_B80B
 		mov	_pid_current, 0
-		mov	byte ptr word_23AF0, 0
+		mov	_pid_PID_so_attack, SO_ATTACK_P1
 		call	p1_1FE74
 		call	_chargeshot_render_p1
 		mov	_pid_current, 1
-		mov	byte ptr word_23AF0, 28h ; '('
+		mov	_pid_PID_so_attack, SO_ATTACK_P2
 		call	p2_1FE80
 		call	_chargeshot_render_p2
-		mov	byte ptr word_23AF0, 0
+		mov	_pid_PID_current, 0
 		push	offset _p1
 		call	_player_render
-		mov	byte ptr word_23AF0, 1
+		mov	_pid_PID_current, 1
 		push	offset _p2
 		call	_player_render
 		call	egc_off
-		mov	byte ptr word_23AF0, 0
+		mov	_pid_PID_current, 0
 		push	offset _p1
 		call	sub_DF18
-		mov	byte ptr word_23AF0, 1
+		mov	_pid_PID_current, 1
 		push	offset _p2
 		call	sub_DF18
 		nopcall	sub_CEE0
@@ -2912,13 +2913,13 @@ sub_B92F	proc far
 
 var_4		= word ptr -4
 @@halfhearts		= word ptr -2
-arg_0		= byte ptr  6
+@@pid		= byte ptr  6
 
 		enter	4, 0
 		push	si
 		push	di
 		xor	di, di
-		cmp	[bp+arg_0], 0
+		cmp	[bp+@@pid], 0
 		jnz	short loc_B942
 		mov	si, 0Fh
 		jmp	short loc_B945
@@ -2929,7 +2930,7 @@ loc_B942:
 
 loc_B945:
 		mov	[bp+var_4], 1
-		mov	al, [bp+arg_0]
+		mov	al, [bp+@@pid]
 		mov	ah, 0
 		shl	ax, 7
 		mov	bx, ax
@@ -2991,13 +2992,13 @@ sub_B9AB	proc far
 var_6		= word ptr -6
 var_4		= word ptr -4
 @@bombs		= word ptr -2
-arg_0		= byte ptr  6
+@@pid		= byte ptr  6
 
 		enter	6, 0
 		push	si
 		push	di
 		xor	di, di
-		cmp	[bp+arg_0], 0
+		cmp	[bp+@@pid], 0
 		jnz	short loc_B9C3
 		mov	si, 24h	; '$'
 		mov	[bp+var_6], 0FFFEh
@@ -3010,7 +3011,7 @@ loc_B9C3:
 
 loc_B9CB:
 		mov	[bp+var_4], 17h
-		mov	al, [bp+arg_0]
+		mov	al, [bp+@@pid]
 		mov	ah, 0
 		shl	ax, 7
 		mov	bx, ax
@@ -3874,7 +3875,7 @@ arg_0		= word ptr  4
 		cmp	byte ptr [si+1Fh], 30h ; '0'
 		jnz	short loc_C127
 		push	word ptr [si]
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		push	ax
 		nopcall	playfield_fg_x_to_screen
@@ -3886,7 +3887,7 @@ arg_0		= word ptr  4
 		mov	word_20E40, ax
 		mov	byte_20E3C, 1
 		call	snd_se_play pascal, 14
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, 1
 		sub	bx, ax
@@ -3904,7 +3905,7 @@ loc_C12C:
 		and	ax, 3
 		cmp	ax, 2
 		jge	short loc_C14A
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -3913,7 +3914,7 @@ loc_C12C:
 ; ---------------------------------------------------------------------------
 
 loc_C14A:
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -3927,7 +3928,7 @@ loc_C159:
 		mov	word_20E3E, 0
 		mov	word_20E40, 0
 		mov	word_20E42, 0
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -3936,7 +3937,7 @@ loc_C159:
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		mov	byte_20E3C, 2
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, 1
 		sub	bx, ax
@@ -3945,11 +3946,11 @@ loc_C159:
 		les	bx, _resident
 		assume es:nothing
 		mov	al, 1
-		sub	al, byte ptr word_23AF0
+		sub	al, _pid_PID_current
 		mov	es:[bx+resident_t.pid_winner], al
 		mov	word_23AF6, 0
 		mov	al, 1
-		sub	al, byte ptr word_23AF0
+		sub	al, _pid_PID_current
 		push	ax
 		call	sub_BA12
 		jmp	short loc_C1E1
@@ -3987,7 +3988,7 @@ arg_2		= byte ptr  6
 		add	ax, ax
 		mov	bx, ax
 		call	_vector1_at c, word_20E3E, word_20E42, _CosTable8[bx]
-		mov	dl, byte ptr word_23AF0
+		mov	dl, _pid_PID_current
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
@@ -4016,7 +4017,7 @@ var_1		= byte ptr -1
 		enter	2, 0
 		push	si
 		push	di
-		cmp	byte ptr word_23AF0, 0
+		cmp	_pid_PID_current, 0
 		jnz	short loc_C263
 		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
 		mov	_sprite16_clip_right, PLAYFIELD1_CLIP_RIGHT
@@ -4299,7 +4300,7 @@ arg_0		= word ptr  4
 		mov	ax, [si+2]
 		mov	[bp+var_4], ax
 		xor	di, di
-		push	word_23AF0
+		push	word ptr _pid_PID_current
 		call	sub_16983
 		mov	ax, word_2142E
 		add	ax, 100h
@@ -4538,7 +4539,7 @@ loc_C5AA:
 		cmp	byte ptr [si+4], 0
 		jnz	loc_C658
 		xor	di, di
-		push	word_23AF0
+		push	word ptr _pid_PID_current
 		call	sub_16983
 		mov	ax, word_2142E
 		add	ax, 100h
@@ -7281,7 +7282,7 @@ arg_2		= word ptr  6
 		push	di
 		mov	di, [bp+arg_2]
 		mov	si, [bp+arg_0]
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		shl	ax, 7
 		add	ax, offset _players
@@ -7291,12 +7292,12 @@ arg_2		= word ptr  6
 		dec	byte ptr [si+6]
 
 loc_DA68:
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
 		cmp	_damage_all_enemies_on[bx], 0
 		jz	short loc_DA81
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
 		dec	_damage_all_enemies_on[bx]
@@ -7392,7 +7393,7 @@ loc_DB3C:
 		div	bx
 		or	dx, dx
 		jnz	short loc_DB5D
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
 		mov	byte ptr [bx+4B9Ch], 4
@@ -7423,7 +7424,7 @@ loc_DB77:
 		jnz	short loc_DBDF
 
 loc_DB94:
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
 		mov	byte ptr [bx+4B9Ch], 0
@@ -7431,7 +7432,7 @@ loc_DB94:
 		mov	ax, [si+18h]
 		cmp	ax, [si+1Ah]
 		jb	short loc_DBDF
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
 		mov	byte ptr [bx+4B9Ch], 4
@@ -7445,7 +7446,7 @@ loc_DB94:
 
 loc_DBC8:
 		mov	byte ptr [si+4], 0
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
 		mov	byte ptr [bx+4B9Ch], 4
@@ -7469,7 +7470,7 @@ loc_DBDF:
 ; ---------------------------------------------------------------------------
 
 loc_DBFE:
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
 		cmp	byte ptr [bx+4B9Ch], 2
@@ -7504,7 +7505,7 @@ loc_DC47:
 ; ---------------------------------------------------------------------------
 
 loc_DC54:
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
 		cmp	byte ptr [bx+4B9Ch], 4
@@ -7520,16 +7521,16 @@ loc_DC64:
 		call	dword ptr [si+68h]
 		cmp	[bp+var_2], 800h
 		jl	loc_DD2B
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
 		mov	byte ptr [bx+798h], 1
 		cmp	[bp+var_2], 0FF0h
 		jl	short loc_DCD3
 		mov	al, byte_1DB9E
-		cmp	al, byte ptr word_23AF0
+		cmp	al, _pid_PID_current
 		jz	short loc_DCDA
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
 		mov	byte ptr [bx+393Ch], 5
@@ -7557,12 +7558,12 @@ loc_DCD3:
 
 loc_DCDA:
 		inc	byte ptr [si+76h]
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
 		mov	byte ptr [bx+393Ch], 3
 		sub	word ptr [si+1Ah], 800h
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
 		cmp	byte ptr [bx+2D56h], 10h
@@ -7572,19 +7573,19 @@ loc_DCDA:
 
 loc_DCFE:
 		inc	byte ptr [si+76h]
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
 		mov	byte ptr [bx+393Ch], 1
 		sub	word ptr [si+1Ah], 400h
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
 		cmp	byte ptr [bx+2D56h], 10h
 		jnb	short loc_DD2B
 
 loc_DD20:
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
 		inc	byte ptr [bx+2D56h]
@@ -7614,13 +7615,13 @@ loc_DD44:
 		jnz	short loc_DD7B
 
 loc_DD5C:
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
 		cmp	byte ptr [bx+4B9Ch], 2
 		jbe	short loc_DD7B
 		call	sub_E737
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
 		mov	byte ptr [bx+4B9Ch], 0
@@ -7630,12 +7631,12 @@ loc_DD5C:
 loc_DD7B:
 		test	di, 20h
 		jnz	short loc_DD9A
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
 		cmp	byte ptr [bx+4B9Ch], 8
 		jnb	short loc_DD9A
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
 		inc	byte ptr [bx+4B9Ch]
@@ -7679,7 +7680,7 @@ loc_DDCE:
 		jz	short loc_DE3F
 		push	word ptr [si]
 		push	word ptr [si+2]
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		push	ax
 		nopcall	sub_B7B3
@@ -7698,7 +7699,7 @@ loc_DE14:
 		cmp	byte ptr [si+7], 0
 		jnz	short loc_DE26
 		mov	byte ptr [si+1Fh], 30h ; '0'
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	byte_20E3D, al
 		jmp	short loc_DE36
 ; ---------------------------------------------------------------------------
@@ -7710,7 +7711,7 @@ loc_DE26:
 		mov	byte ptr [si+11h], 40h
 
 loc_DE36:
-		push	word_23AF0
+		push	word ptr _pid_PID_current
 		nopcall	sub_B92F
 
 loc_DE3F:
@@ -7799,7 +7800,7 @@ loc_DEB2:
 		mov	_sprite16_put_w, (32 / 16)
 		mov	_sprite16_put_h, 32
 		push	[si+player_t.center.x]
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		push	ax
 		nopcall	playfield_fg_x_to_screen
@@ -7814,7 +7815,7 @@ loc_DEB2:
 		shl	ax, 2
 		add	ax, 2844h
 		mov	di, ax
-		cmp	byte ptr word_23AF0, 0
+		cmp	_pid_PID_current, 0
 		jz	short loc_DF06
 		add	di, 0A00h
 
@@ -7850,7 +7851,7 @@ arg_0		= word ptr  4
 		cmp	byte ptr [si+0Fh], 0
 		jz	short loc_DF7D
 		push	word ptr [si]
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		push	ax
 		nopcall	playfield_fg_x_to_screen
@@ -7863,7 +7864,7 @@ arg_0		= word ptr  4
 		mov	al, [si+0Fh]
 		mov	ah, 0
 		mov	di, ax
-		cmp	byte ptr word_23AF0, 0
+		cmp	_pid_PID_current, 0
 		jz	short loc_DF61
 		add	di, 9
 
@@ -7905,7 +7906,7 @@ loc_DFA8:
 
 loc_DFAB:
 		push	word ptr [si]
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		push	ax
 		nopcall	playfield_fg_x_to_screen
@@ -8029,7 +8030,7 @@ player_bomb	proc near
 		mov	bp, sp
 		push	si
 		mov	si, [bp+@@player]
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
 		cmp	_bomb_state[bx], BOMB_INACTIVE
@@ -8038,13 +8039,13 @@ player_bomb	proc near
 		jnz	short @@ret
 		cmp	[si+player_t.bombs], 0
 		jz	short loc_E0BF
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
 		mov	_bomb_state[bx], BOMB_PREPARING
 		dec	[si+player_t.bombs]
 		mov	[si+player_t.invincibility_time], BOMB_FRAMES
-		push	word_23AF0
+		push	word ptr _pid_PID_current
 		nopcall	sub_B9AB
 		jmp	short loc_E0EF
 ; ---------------------------------------------------------------------------
@@ -8052,7 +8053,7 @@ player_bomb	proc near
 loc_E0BF:
 		cmp	[si+player_t.gauge_avail], GAUGE_MAX
 		jb	short @@ret
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
 		mov	_damage_all_enemies_on[bx], 1
@@ -8061,7 +8062,7 @@ loc_E0BF:
 		mov	[si+player_t.hyper_active], al
 		push	[si+player_t.center.x]
 		push	[si+player_t.center.y]
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		push	ax
 		nopcall	sub_CDBD
@@ -8151,7 +8152,7 @@ loc_E163:
 		mul	bl
 		mov	bx, offset _collmap
 		add	bx, ax
-		cmp	byte ptr word_23AF0, 1
+		cmp	_pid_PID_current, 1
 		jnz	short loc_E179
 		add	bx, COLLMAP_SIZE
 
@@ -8229,7 +8230,7 @@ arg_0		= word ptr  4
 		push	si
 		mov	si, [bp+arg_0]
 		mov	al, 1
-		sub	al, byte ptr word_23AF0
+		sub	al, _pid_PID_current
 		mov	[bp+var_2], al
 		cmp	byte ptr [si+15h], 0
 		jnz	short loc_E1F3
@@ -8290,7 +8291,7 @@ sub_E1D5	endp
 sub_E24B	proc near
 		push	bp
 		mov	bp, sp
-		cmp	byte ptr word_23AF0, 0
+		cmp	_pid_PID_current, 0
 		jnz	short loc_E264
 		les	bx, _resident
 		cmp	es:[bx+resident_t.skill], 0
@@ -8741,7 +8742,7 @@ var_8		= word ptr -8
 		enter	8, 0
 		push	si
 		push	di
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		shl	ax, 7
 		add	ax, offset _players
@@ -8819,7 +8820,7 @@ loc_E7E2:
 		mov	ax, [bp+@@top]
 		mov	[di+shotpair_t.topleft.y], ax
 		mov	[di+shotpair_t.velocity_y], SHOT_VELOCITY
-		cmp	byte ptr word_23AF0, 0
+		cmp	_pid_PID_current, 0
 		jnz	short loc_E80A
 		xor	ax, ax
 		jmp	short loc_E80D
@@ -8831,7 +8832,7 @@ loc_E80A:
 loc_E80D:
 		mov	[di+shotpair_t.so_pid],	ax
 		mov	[di+shotpair_t.so_anim], 0
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	[di+shotpair_t.pid], al
 		inc	[bp+var_8]
 		cmp	[bp+var_8], 4
@@ -12535,7 +12536,7 @@ loc_112E5:
 		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_112F1:
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_so_attack
 		mov	ah, 0
 		add	ax, 280h
 		mov	si, ax
@@ -13305,7 +13306,7 @@ loc_11942:
 loc_11956:
 		mov	_sprite16_put_w, (32 / 16)
 		mov	_sprite16_put_h, 16
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_so_attack
 		mov	ah, 0
 		add	ax, 28Ch
 		mov	[bp+@@sprite_offset], ax
@@ -14034,7 +14035,7 @@ arg_0		= word ptr  4
 		push	di
 		mov	ax, word_1F356
 		mov	[bp+var_6], ax
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_so_attack
 		mov	ah, 0
 		add	ax, 502h
 		mov	[bp+@@sprite_offset], ax
@@ -16093,7 +16094,7 @@ var_6		= word ptr -6
 		jnz	loc_132FA
 
 loc_13254:
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_so_attack
 		mov	ah, 0
 		add	ax, 284h
 		mov	[bp+@@sprite_offset], ax
@@ -16799,7 +16800,7 @@ loc_1388B:
 loc_1388E:
 		push	[bp+var_6]
 		push	[bp+var_8]
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_so_attack
 		mov	ah, 0
 		add	ax, si
 		push	ax
@@ -16847,7 +16848,7 @@ var_6		= word ptr -6
 		jnz	loc_13987
 
 loc_138E4:
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_so_attack
 		mov	ah, 0
 		add	ax, 780h
 		mov	[bp+@@sprite_offset], ax
@@ -17903,7 +17904,7 @@ chargeshot_add_marisa	proc far
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		imul	ax, 32h
 		add	ax, 288Ah
@@ -17911,7 +17912,7 @@ chargeshot_add_marisa	proc far
 		mov	bx, word_1FE4E
 		mov	byte ptr [bx], 1
 		mov	byte ptr [bx+1], 0
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		shl	ax, 7
 		mov	bx, ax
@@ -17952,7 +17953,7 @@ sub_14340	proc far
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		imul	ax, 32h
 		add	ax, 288Ah
@@ -17966,7 +17967,7 @@ sub_14340	proc far
 ; ---------------------------------------------------------------------------
 
 loc_14362:
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		shl	ax, 7
 		mov	bx, ax
@@ -17975,7 +17976,7 @@ loc_14362:
 		add	bx, bx
 		add	bx, word_1FE4E
 		mov	[bx+2],	ax
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		shl	ax, 7
 		mov	bx, ax
@@ -17995,7 +17996,7 @@ loc_14398:
 loc_143A4:
 		mov	bx, word_1FE4E
 		mov	byte ptr [bx+1], 10h
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		shl	ax, 7
 		mov	bx, ax
@@ -18771,7 +18772,7 @@ loc_14A1C:
 		mov	_sprite16_put_h, 24
 		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
 		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_so_attack
 		mov	ah, 0
 		add	ax, 0F16h
 		mov	di, ax
@@ -18837,7 +18838,7 @@ var_1		= byte ptr -1
 @@center_x	= word ptr  8
 
 		enter	2, 0
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		imul	ax, 180h
 		add	ax, 2D6Ah
@@ -18900,7 +18901,7 @@ arg_2		= word ptr  8
 
 		push	bp
 		mov	bp, sp
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		imul	ax, 180h
 		add	ax, 2D6Ah
@@ -19108,7 +19109,7 @@ arg_4		= word ptr  8
 		and	si, 3
 		mov	ax, si
 		imul	ax, 6
-		mov	dl, byte ptr word_23AF0
+		mov	dl, _pid_PID_so_attack
 		mov	dh, 0
 		add	ax, dx
 		add	ax, 1180h
@@ -19675,7 +19676,7 @@ sub_1515D	proc near
 		mov	_sprite16_put_h, 8
 		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
 		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_so_attack
 		mov	ah, 0
 		add	ax, 18h
 		mov	[bp+@@sprite_offset], ax
@@ -19950,16 +19951,16 @@ chargeshot_add_mima	proc far
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		imul	ax, 96h
 		add	ax, 3796h
 		mov	word_20E22, ax
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
 		mov	byte ptr [bx+38C4h], 1
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
 		mov	byte ptr [bx+38C6h], 0
@@ -20290,7 +20291,7 @@ loc_15689:
 		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_15695:
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_so_attack
 		mov	ah, 0
 		add	ax, 10h
 		mov	[bp+var_2], ax
@@ -22460,13 +22461,13 @@ sub_1670D	endp
 
 sub_16983	proc far
 
-arg_0		= byte ptr  6
+@@pid		= byte ptr  6
 
 		push	bp
 		mov	bp, sp
 		push	si
 		mov	dl, -1
-		mov	al, [bp+arg_0]
+		mov	al, [bp+@@pid]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -22490,7 +22491,7 @@ loc_169B4:
 		cmp	byte ptr [si], 1
 		jnz	short loc_169EB
 		mov	al, [si+8]
-		cmp	al, [bp+arg_0]
+		cmp	al, [bp+@@pid]
 		jnz	short loc_169EB
 		cmp	word ptr [si+2], 0
 		jl	short loc_169EB
@@ -22579,7 +22580,7 @@ chargeshot_add_yumemi	proc far
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		imul	ax, 6
 		add	ax, 4B80h
@@ -22851,7 +22852,7 @@ loc_16C9F:
 		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_16CAB:
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_so_attack
 		mov	ah, 0
 		add	ax, 0C80h
 		mov	si, ax
@@ -23409,7 +23410,7 @@ loc_170A5:
 		cwd
 		idiv	bx
 		add	ax, ax
-		mov	dl, byte ptr word_23AF0
+		mov	dl, _pid_PID_so_attack
 		mov	dh, 0
 		add	ax, dx
 		add	ax, 1Ch
@@ -24252,7 +24253,7 @@ loc_1778A:
 		mov	[bp+var_C], 1
 
 loc_1778E:
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_so_attack
 		mov	ah, 0
 		add	ax, 8
 		mov	word_23E4C, ax
@@ -26119,7 +26120,7 @@ loc_186F6:
 		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 
 loc_18702:
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_so_attack
 		mov	ah, 0
 		add	ax, 29Ch
 		mov	[bp+@@sprite_offset], ax
@@ -27772,7 +27773,7 @@ loc_1956B:
 		jnz	short loc_195EF
 		mov	_sprite16_put_w, (32 / 16)
 		mov	_sprite16_put_h, 16
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_so_attack
 		mov	ah, 0
 		add	ax, 28Ch
 		mov	di, ax
@@ -28256,7 +28257,7 @@ loc_1992A:
 		jnz	short loc_19976
 		mov	_sprite16_put_w, (32 / 16)
 		mov	_sprite16_put_h, 16
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_so_attack
 		mov	ah, 0
 		add	ax, 284h
 		mov	di, ax
@@ -28365,7 +28366,7 @@ loc_199C6:
 		mov	angle_23E43, 40h
 		mov	byte_23E45, 0
 		mov	byte_23E46, 80h
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_so_attack
 		mov	ah, 0
 		add	ax, 1680h
 		mov	word_23E4C, ax
@@ -28610,7 +28611,7 @@ loc_19B97:
 		jnz	short loc_19C14
 		mov	_sprite16_put_w, (16 / 16)
 		mov	_sprite16_put_h, 8
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_so_attack
 		mov	ah, 0
 		add	ax, 1Ah
 		mov	di, ax
@@ -28996,7 +28997,7 @@ var_5		= word ptr -5
 		mov	byte ptr [bp+var_5], al
 		cmp	byte ptr [si], 1
 		jnz	short loc_19ED6
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_so_attack
 		mov	ah, 0
 		add	ax, 280h
 		mov	di, ax
@@ -29806,7 +29807,7 @@ loc_1A40B:
 loc_1A417:
 		cmp	byte ptr [si], 1
 		jnz	short loc_1A46F
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_so_attack
 		mov	ah, 0
 		add	ax, 280h
 		mov	di, ax
@@ -30178,7 +30179,7 @@ loc_1A6D7:
 		mov	byte ptr [bp+var_5], al
 		cmp	byte ptr [si], 1
 		jnz	short loc_1A723
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_so_attack
 		mov	ah, 0
 		add	ax, 280h
 		mov	di, ax
@@ -30949,7 +30950,7 @@ loc_1ACCF:
 		sub	di, 16
 		mov	_sprite16_put_w, (32 / 16)
 		mov	_sprite16_put_h, 8
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_so_attack
 		mov	ah, 0
 		add	ax, 280h
 		mov	[bp+var_2], ax
@@ -31438,7 +31439,7 @@ loc_1B0AD:
 		mov	byte ptr [bp+var_5], al
 		cmp	byte ptr [si], 1
 		jnz	short loc_1B0E2
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_so_attack
 		mov	ah, 0
 		add	ax, 780h
 		mov	di, ax
@@ -31710,7 +31711,7 @@ chargeshot_add_chiyuri	proc far
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		imul	ax, 30h
 		add	ax, 1F5Ah
@@ -31720,7 +31721,7 @@ chargeshot_add_chiyuri	proc far
 		mov	[si+2],	ax
 		mov	ax, [bp+@@center_y]
 		mov	[si+4],	ax
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		shl	ax, 7
 		mov	bx, ax
@@ -31842,7 +31843,7 @@ sub_1B35F	proc near
 
 		enter	4, 0
 		push	si
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_so_attack
 		mov	ah, 0
 		add	ax, 280h
 		mov	si, ax
@@ -32251,7 +32252,7 @@ var_2		= word ptr -2
 @@center_x	= word ptr  8
 
 		enter	2, 0
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		imul	ax, 180h
 		add	ax, 2008h
@@ -32296,7 +32297,7 @@ arg_2		= word ptr  8
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		imul	ax, 180h
 		add	ax, 2008h
@@ -32527,7 +32528,7 @@ arg_2		= word ptr  6
 		push	di
 		mov	si, [bp+arg_2]
 		mov	di, [bp+arg_0]
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_so_attack
 		mov	ah, 0
 		add	ax, 10h
 		mov	[bp+@@sprite_offset], ax
@@ -32972,15 +32973,15 @@ chargeshot_add_kana	proc far
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
 		mov	byte ptr [bx+282Eh], 1
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
 		mov	byte ptr [bx+2830h], 0
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		imul	ax, 0D8h
 		add	ax, 267Ch
@@ -33189,7 +33190,7 @@ sub_1BDF8	proc near
 		enter	4, 0
 		push	si
 		push	di
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_so_attack
 		mov	ah, 0
 		add	ax, 1180h
 		mov	di, ax
@@ -33647,7 +33648,7 @@ chargeshot_add_kotohime	proc far
 
 		push	bp
 		mov	bp, sp
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		shl	ax, 3
 		add	ax, 28FAh
@@ -33717,7 +33718,7 @@ sub_1C1E9	proc near
 @@left		= word ptr -2
 
 		enter	6, 0
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_so_attack
 		mov	ah, 0
 		add	ax, 1188h
 		mov	[bp+@@sprite_offset], ax
@@ -34021,20 +34022,20 @@ chargeshot_add_rikako	proc far
 		push	si
 		push	di
 		mov	di, [bp+@@center_x]
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
 		mov	byte ptr [bx+3928h], 1
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
 		mov	byte ptr [bx+392Ah], 0
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	word ptr [bx+392Ch], 80h
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		imul	ax, 18h
 		add	ax, 38F6h
@@ -34057,12 +34058,12 @@ loc_1C459:
 loc_1C46F:
 		cmp	cx, 4
 		jl	short loc_1C459
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		mov	[bx+3930h], di
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		add	ax, ax
 		mov	dx, [bp+@@center_y]
@@ -34087,7 +34088,7 @@ rikako_1C497	proc far
 		push	bp
 		mov	bp, sp
 		call	chargeshot_add_rikako pascal, [bp+@@center_x], [bp+@@center_y]
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
 		mov	byte ptr [bx+3928h], 2
@@ -34103,7 +34104,7 @@ rikako_1C497	endp
 sub_1C4B4	proc far
 		push	bp
 		mov	bp, sp
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_current
 		mov	ah, 0
 		mov	bx, ax
 		mov	byte ptr [bx+3928h], 0
@@ -34293,7 +34294,7 @@ sub_1C62A	proc near
 @@left		= word ptr -2
 
 		enter	6, 0
-		mov	al, byte ptr word_23AF0
+		mov	al, _pid_PID_so_attack
 		mov	ah, 0
 		add	ax, 280h
 		mov	[bp+@@sprite_offset], ax
@@ -36053,7 +36054,11 @@ _cpu_hit_damage_additional	db ?
 _damage_all_enemies_on	db PLAYFIELD_COUNT dup(?)
 		db ?
 include th02/hardware/pages[bss].asm
-word_23AF0	dw ?
+public _pid
+_pid_PID_current  	label byte
+_pid_PID_so_attack	label byte
+_pid	db ?
+	evendata
 public _round_frame
 _round_frame	dd ?
 word_23AF6	dw ?
