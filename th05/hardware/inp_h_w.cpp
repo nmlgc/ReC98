@@ -21,7 +21,7 @@ int16_t input_reset_sense_held()
 	 * once the segmentation allows us to, if ever */
 	_asm { push cs; call near ptr input_reset_sense; }
 	_CX = 1024; // * 0.6 µs
-	delay_loop: _asm {
+	delay_loop: asm {
 		out 	0x5F, al;
 		loop	delay_loop;
 	}

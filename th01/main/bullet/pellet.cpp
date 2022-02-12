@@ -409,7 +409,7 @@ void CPellets::motion_type_apply_for_cur(void)
 
 void pellet_put(screen_x_t left, vram_y_t top, int cel)
 {
-	// Some `_asm` statements here look like they could be expressed using
+	// Some `asm` statements here look like they could be expressed using
 	// register pseudovariables. However, TCC would then use a different
 	// instruction than the one in ZUN's original binary.
 	_ES = SEG_PLANE_B;
@@ -417,27 +417,27 @@ void pellet_put(screen_x_t left, vram_y_t top, int cel)
 	_AX = (left >> 3);
 	_DX = top;
 	_DX <<= 6;
-	_asm { add	ax, dx; }
+	asm { add	ax, dx; }
 	_DX >>= 2;
-	_asm { add	ax, dx; }
-	_asm { mov	di, ax; }
+	asm { add	ax, dx; }
+	asm { mov	di, ax; }
 
 	_AX = (left & 7) << 4;
 	_BX = cel;
 	_BX <<= 7;
-	_asm { add	ax, bx; }
+	asm { add	ax, bx; }
 	_AX += reinterpret_cast<uint16_t>(sPELLET);
 
-	_asm { mov	si, ax; }
+	asm { mov	si, ax; }
 	_CX = PELLET_H;
 	put_loop: {
-		_asm { movsw; }
+		asm { movsw; }
 		_DI += (ROW_SIZE - sizeof(dots16_t));
 		if(static_cast<int16_t>(_DI) >= PLANE_SIZE) {
 			return;
 		}
 	}
-	_asm { loop	put_loop; }
+	asm { loop	put_loop; }
 }
 
 void pellet_render(screen_x_t left, screen_y_t top, int cel)

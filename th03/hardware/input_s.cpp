@@ -136,7 +136,7 @@ void input_reset_sense_key_held(void)
 			break;
 		}
 		_CX = 1024; // * 0.6 µs
-		delay_loop: _asm {
+		delay_loop: asm {
 			out 	0x5F, al;
 			loop	delay_loop;
 		}

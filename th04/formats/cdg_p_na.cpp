@@ -24,11 +24,11 @@ void pascal cdg_put_noalpha_8(screen_x_t left, vram_y_t top, int slot)
 	_AX = cdg_dst_segment(_AX, top, _BX);
 	_ES = _AX;
 	_AX += (SEG_PLANE_E - SEG_PLANE_B); // AX == SEG_PLANE_E
-	_asm { push	ax; }
+	asm { push	ax; }
 	_AX -= SEG_PLANE_DIST_E; // AX == SEG_PLANE_E
-	_asm { push	ax; }
+	asm { push	ax; }
 	_AX -= SEG_PLANE_DIST_BRG; // AX == SEG_PLANE_R
-	_asm { push	ax; }
+	asm { push	ax; }
 
 	cdg = cdg_slot_offset(slot);
 	dst_offset = cdg_dst_offset(dst_offset, cdg, left);

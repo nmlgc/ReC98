@@ -10,7 +10,7 @@ inline void imul_di(int8_t factor) {
 	_SI = slot; \
 	_DI = _SI; \
 	_SI <<= 2;	/* *= sizeof(void far *) */  \
-	_asm { les	si, pi_buffers[si]; } \
+	asm { les	si, pi_buffers[si]; } \
 	imul_di(sizeof(PiHeader)); \
 	rowloop_func
 
@@ -33,7 +33,7 @@ inline void imul_di(int8_t factor) {
 		buffer_offset_sgm = ((PI_QUARTER_H / 2) * (PI_W / 16)); \
 	} \
 	_SI <<= 2;	/* *= sizeof(void far *) */ \
-	_asm { les	si, pi_buffers[si]; } \
+	asm { les	si, pi_buffers[si]; } \
 	_SI += buffer_offset_off; \
 	_ES += buffer_offset_sgm; \
 	rowloop_func

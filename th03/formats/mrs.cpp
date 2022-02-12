@@ -15,7 +15,7 @@ extern "C" {
 #undef grcg_off
 #define grcg_off() { \
 	_AL ^= _AL; \
-	_asm { out 0x7C, al; } \
+	asm { out 0x7C, al; } \
 }
 
 static const vram_byte_amount_t MRS_BYTE_W = (MRS_W / BYTE_DOTS);
@@ -45,7 +45,7 @@ extern mrs_t far *mrs_images[MRS_SLOT_COUNT];
 // given [slot].
 #define mrs_slot_assign(reg_sgm, reg_off, slot) { \
 	mrs_slot_offset_to(_BX, slot); \
-	_asm { l##reg_sgm reg_off, mrs_images[bx]; } \
+	asm { l##reg_sgm reg_off, mrs_images[bx]; } \
 }
 
 // Single iteration across [row_dword_w] 32-dot units of a .MRS image, from
@@ -176,7 +176,7 @@ void pascal mrs_put_8(screen_x_t left, uscreen_y_t top, int slot)
 		}
 		reinterpret_cast<uint16_t>(_SI) += sizeof(dots32_t);
 		_DI += sizeof(dots32_t);
-		_asm { loop	put; }
+		asm { loop	put; }
 	});
 
 	_asm { pop	ds; }
@@ -213,7 +213,7 @@ void pascal mrs_put_noalpha_8(
 			poked(_FS, _DI, (~_SI->dots_from_alpha() | _SI->dots_from_B()));
 			poked(_GS, _DI, _SI->dots_from_R());
 			MOVSD;
-			_asm { loop put_altered; }
+			asm { loop put_altered; }
 		});
 		// SI is now at the beginning of the E plane. Blit it in its own loop
 		_DI = at_bottom_left;
@@ -224,7 +224,7 @@ void pascal mrs_put_noalpha_8(
 			poked(_FS, _DI, _SI->dots_from_B());
 			poked(_GS, _DI, _SI->dots_from_R());
 			MOVSD;
-			_asm { loop put_regular; }
+			asm { loop put_regular; }
 		});
 		// SI is now at the beginning of the E plane. Blit it in its own loop
 		_DI = at_bottom_left;
@@ -245,7 +245,7 @@ void pascal mrs_hflip(int slot)
 	mrs_slot_assign(es, di, slot);
 	reinterpret_cast<dots8_t near *>(_BX) = hflip_lut;
 
-	flip_dots_within_bytes: _asm {
+	flip_dots_within_bytes: asm {
 		mov 	al, es:[di];
 		xlat;
 		mov 	es:[di], al;
@@ -263,7 +263,7 @@ void pascal mrs_hflip(int slot)
 		/* vram_byte_amount_t offset_left  */ _DI = 0;
 		/* vram_byte_amount_t offset_right */ _SI = (MRS_BYTE_W - 1);
 		do {
-			_asm {
+			asm {
 				mov al, es:[bx+di]
 				mov dl, es:[bx+si]
 				mov es:[bx+si], al
@@ -273,7 +273,7 @@ void pascal mrs_hflip(int slot)
 			_DI++;
 		} while(_DI <= ((MRS_BYTE_W / 2) - 1));
 		_BX += MRS_BYTE_W;
-		_asm { loop flip_bytes; }
+		asm { loop flip_bytes; }
 	}
 }
 

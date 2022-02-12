@@ -121,7 +121,7 @@ void CMissiles::unput_update_render(void)
 				push 	ptn_id;
 			}
 			_AX = cur_top[i].to_pixel();
-			_asm {
+			asm {
 				push	ax;
 			}
 			_AX = ((Subpixel *)(
@@ -129,7 +129,7 @@ void CMissiles::unput_update_render(void)
 				(uint8_t __near *)(_BX) +
 				(uint16_t)&(((CMissiles __near *)0)->cur_left)
 			))->to_pixel();
-			_asm {
+			asm {
 				push	ax;
 				call	far ptr ptn_put_quarter
 				add 	sp, 22

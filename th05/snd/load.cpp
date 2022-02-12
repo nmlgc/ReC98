@@ -18,7 +18,7 @@ void pascal snd_load(const char fn[SND_FN_LEN], snd_load_func_t func)
 	#define func_local	_BP
 	#define ext	_EAX
 
-	_asm { mov	dx, ds; }
+	asm { mov	dx, ds; }
 
 	// memcpy(snd_load_fn, fn, sizeof(SND_LOAD_FN));
 	_ES = _DX;
@@ -27,14 +27,14 @@ void pascal snd_load(const char fn[SND_FN_LEN], snd_load_func_t func)
 	_SI = FP_OFF(fn);
 	func_local = func;
 	_CX = sizeof(snd_load_fn);
-	_asm { rep movsb; }
+	asm { rep movsb; }
 
 	// _DI = strchr(str, '\0');
 	_DS = _DX;
 	_DI = snd_load_fn;
 	_CX--;	// = -1
 	_AX = '\0';
-	_asm { repne scasb; }
+	asm { repne scasb; }
 
 	_DI--;
 	*(_DI) = '.';
@@ -63,7 +63,7 @@ void pascal snd_load(const char fn[SND_FN_LEN], snd_load_func_t func)
 		* 	_BX = (snd_bgm_mode << 2);
 		* Since snd_kaja_interrupt() is undecompilable, this can never work
 		* with the original translation unit structure. */
-		_asm {
+		asm {
 			push	(KAJA_SONG_STOP shl 8);
 			push	cs;
 			call	near ptr snd_kaja_interrupt;

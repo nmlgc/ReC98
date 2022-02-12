@@ -41,7 +41,7 @@ void near pi_mask_setup_egc_and_advance(void)
 	mask_ptr = reinterpret_cast<uint16_t>(pi_mask_ptr);
 	_AX = (pi_mask_y & (PI_MASK_H - 1));
 	// Turbo C++ is too smart to emit this instruction with pseudo-registers!
-	_asm { shl	ax, 1; }
+	asm { shl	ax, 1; }
 	mask_ptr += _AX;
 	outport(EGC_MASKREG, *reinterpret_cast<dots16_t near *>(mask_ptr));
 	pi_mask_y++;
@@ -57,7 +57,7 @@ int DEFCONV pi_load(int slot, const char *fn)
 	/* TODO: Replace with the decompiled call
 	 * 	pi_free(slot);
 	 * once the segmentation allows us to, if ever */
-	_asm { push di; push cs; call near ptr pi_free; }
+	asm { push di; push cs; call near ptr pi_free; }
 
 	/* Actually, also replace this garbage with simply
 	 * 	return graph_pi_load_pack(fn, &pi_headers[slot], &pi_buffers[slot]);

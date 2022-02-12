@@ -18,10 +18,10 @@ void snd_load(const char fn[SND_FN_LEN], snd_load_func_t func)
 	fn_copy: {
 		snd_load_fn[i] = fn[i];
 		i++;
-		_asm { loop	fn_copy; }
+		asm { loop	fn_copy; }
 	}
 
-	_asm { mov	ax, func; }
+	asm { mov	ax, func; }
 	if((_AX == SND_LOAD_SONG) && snd_midi_active) {
 		_BX = 0;
 		do {
@@ -39,7 +39,7 @@ void snd_load(const char fn[SND_FN_LEN], snd_load_func_t func)
 	_BX = _AX;
 	// ZUN bug: No error handling
 
-	_asm { mov	ax, func; }
+	asm { mov	ax, func; }
 	if((_AX == SND_LOAD_SONG) && snd_midi_active) {
 		geninterrupt(MMD);
 	} else {

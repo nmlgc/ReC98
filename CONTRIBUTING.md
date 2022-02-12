@@ -60,9 +60,9 @@ These cases should gradually be removed as development goes along, though.
     it's also easier to see when an editor didn't recognize the encoding,
     which keeps the annoyance from accidentally destroyed files to a minimum.
 
-* Use `_asm` as the keyword for inline assembly. This variation has the biggest
-  compiler support, which will ease potential future ports to other x86
-  systems:
+* Use `_asm` as the keyword for decently sane or temporary inline assembly.
+  This variation has the biggest compiler support, which will ease potential
+  future ports to other x86 systems:
 
    | Compiler support                  | `asm` |  `_asm` | `__asm` |
    |-----------------------------------|-------|---------|---------|
@@ -73,6 +73,25 @@ These cases should gradually be removed as development goes along, though.
    | Visual Studio 2022                |       |    ✔    |    ✔    |
    | Clang 13 (default)                |       |         |         |
    | Clang 13 (with `-fms-extensions)` |   ✔   |    ✔    |    ✔    |
+
+  * Conversely, use `asm` as the keyword for the particularly dumb small
+    pieces of inline assembly that refer to or depend on register
+    pseudovariables from surrounding code, and are just needed to ensure
+    correct code generation. These *should* break on other compilers.
+
+    Example:
+
+    ```cpp
+    _CX = loop_count;
+    loop_label: {
+        // …
+
+        // `asm`, with no underscore, because the x86 LOOP instruction
+        // branches depending on the value in CX, which was set using a
+        // pseudovariable access above.
+        asm { loop	loop_label; }
+    }
+    ```
 
 ## Build system
 
