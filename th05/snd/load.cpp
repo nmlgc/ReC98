@@ -23,7 +23,8 @@ void pascal snd_load(const char fn[SND_FN_LEN], snd_load_func_t func)
 	// memcpy(snd_load_fn, fn, sizeof(SND_LOAD_FN));
 	_ES = _DX;
 	_DI = snd_load_fn;
-	__asm { lds si, fn; }
+	_DS = FP_SEG(fn);
+	_SI = FP_OFF(fn);
 	func_local = func;
 	_CX = sizeof(snd_load_fn);
 	__asm { rep movsb; }

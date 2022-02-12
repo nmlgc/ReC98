@@ -212,23 +212,20 @@ void logo_render_and_update(void)
 void main(void)
 {
 	int keygroup, quit;
+
 	// Do some setup if we are running on a PC-9821
-	__asm {
-		xor  ax, ax
-		mov  es, ax
-		test byte ptr es:0x45C, 0x40
-		jz   hw_setup_done
-	}
-		graph_mode_change(true); __asm {
-			mov  al, 0x20
-			out  0x6a, al
-		}
+
+	// Generates a different instruction encoding compared to pseudoregisters.
+	__asm { xor	ax, ax; }
+	_ES = _AX;
+	if(peekb(_ES, 0x45C) & 0x40) {
+		graph_mode_change(true);
+		outportb2(0x6A, 0x20); // Disable 256-color mode
 		graph_mode_change(false);
 
 		// Activate all graphics hardware in 16-color mode
-		__asm { and  byte ptr es:0x54d, 0x7f }
-
-hw_setup_done:
+		*reinterpret_cast<uint8_t far *>(MK_FP(_ES, 0x54D)) &= 0x7F;
+	}
 	zunsoft_init();
 	objects_setup();
 	while(1) {
@@ -248,14 +245,13 @@ hw_setup_done:
 		logo_render_and_update();
 		wait();
 		wait();
-		__asm {
-			mov al, page_write
-			mov page_show, al
-			out 0xa4, al
-			xor page_write, 1
-			mov al, page_write
-			out 0xa6, al
-		}
+
+		_AL = page_write;
+		page_show = _AL;
+		__asm { out	0xA4, al; } // graph_showpage
+		page_write ^= 1;
+		outportb2(0xA6, page_write); // graph_accesspage
+
 		quit = 0;
 		for(keygroup = 0; keygroup < 8; keygroup++) {
 			quit |= key_sense(keygroup);
