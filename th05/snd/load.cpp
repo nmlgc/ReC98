@@ -18,7 +18,7 @@ void pascal snd_load(const char fn[SND_FN_LEN], snd_load_func_t func)
 	#define func_local	_BP
 	#define ext	_EAX
 
-	__asm { mov dx, ds; }
+	_asm { mov dx, ds; }
 
 	// memcpy(snd_load_fn, fn, sizeof(SND_LOAD_FN));
 	_ES = _DX;
@@ -27,14 +27,14 @@ void pascal snd_load(const char fn[SND_FN_LEN], snd_load_func_t func)
 	_SI = FP_OFF(fn);
 	func_local = func;
 	_CX = sizeof(snd_load_fn);
-	__asm { rep movsb; }
+	_asm { rep movsb; }
 
 	// _DI = strchr(str, '\0');
 	_DS = _DX;
 	_DI = snd_load_fn;
 	_CX--;	// = -1
 	_AX = '\0';
-	__asm { repne scasb; }
+	_asm { repne scasb; }
 
 	_DI--;
 	*(_DI) = '.';
@@ -42,7 +42,7 @@ void pascal snd_load(const char fn[SND_FN_LEN], snd_load_func_t func)
 	if(func_local == SND_LOAD_SE) {
 		// Only not decompilable because the jump distance happens to exactly
 		// be 127 bytes, for which Turbo C++ doesn't emit short jumps anymore.
-		__asm {
+		_asm {
 			cmp	snd_se_mode, SND_SE_OFF;
 			jz 	short ret;
 		}
@@ -63,7 +63,7 @@ void pascal snd_load(const char fn[SND_FN_LEN], snd_load_func_t func)
 		* 	_BX = (snd_bgm_mode << 2);
 		* Since snd_kaja_interrupt() is undecompilable, this can never work
 		* with the original translation unit structure. */
-		__asm {
+		_asm {
 			push	(KAJA_SONG_STOP shl 8);
 			push	cs;
 			call	near ptr snd_kaja_interrupt;
@@ -109,8 +109,8 @@ void pascal snd_load(const char fn[SND_FN_LEN], snd_load_func_t func)
 	_AH = 0x3E;
 	geninterrupt(0x21);
 
-	__asm { push	es; }
-	__asm { pop 	ds; }
+	_asm { push	es; }
+	_asm { pop 	ds; }
 
 ret:
 	#undef func_local

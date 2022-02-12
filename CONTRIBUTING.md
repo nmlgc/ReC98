@@ -60,8 +60,19 @@ These cases should gradually be removed as development goes along, though.
     it's also easier to see when an editor didn't recognize the encoding,
     which keeps the annoyance from accidentally destroyed files to a minimum.
 
-* Use `__asm` as the keyword for inline assembly. This form works in Borland
-C++, Open Watcom, and Visual C++, which will ease future third-party ports.
+* Use `_asm` as the keyword for inline assembly. This variation has the biggest
+  compiler support, which will ease potential future ports to other x86
+  systems:
+
+   | Compiler support                  | `asm` |  `_asm` | `__asm` |
+   |-----------------------------------|-------|---------|---------|
+   | Microsoft QuickC 2.51             |       |    ✔    |         |
+   | Turbo C++ 4.0                     |   ✔   |    ✔    |    ✔    |
+   | Borland C++ 5.5.1                 |   ✔   |    ✔    |    ✔    |
+   | Open Watcom 2.0                   |       |    ✔    |    ✔    |
+   | Visual Studio 2022                |       |    ✔    |    ✔    |
+   | Clang 13 (default)                |       |         |         |
+   | Clang 13 (with `-fms-extensions)` |   ✔   |    ✔    |    ✔    |
 
 ## Build system
 

@@ -7,7 +7,7 @@ extern "C" {
 void pascal frame_delay(int frames)
 {
 	_BX = _SP;
-	__asm { mov bx, ss:[bx+4]; } /* = */ (frames);
+	_asm { mov bx, ss:[bx+4]; } /* = */ (frames);
 	vsync_reset1();
 	while(vsync_Count1 < _BX) {}
 }

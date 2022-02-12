@@ -19,7 +19,7 @@ inline void memcpy_movsd(
 	REP MOVSD;
 }
 
-#define bgimage_push() __asm { \
+#define bgimage_push() _asm { \
 	push	SEG_PLANE_E; \
 	push	word ptr [bgimage.E]; \
 	push	SEG_PLANE_G; \
@@ -40,29 +40,29 @@ void bgimage_snap(void)
 	}
 
 	_DL = PLANE_COUNT;
-	__asm {	push	ds; }
+	_asm {	push	ds; }
 	bgimage_push();
 	do {
-		__asm { pop 	es; }
-		__asm { pop 	ds; }
+		_asm { pop 	es; }
+		_asm { pop 	ds; }
 		memcpy_movsd(_ES, 0, _DS, 0, PLANE_SIZE);
 		_DL--;
 	} while(!FLAGS_ZERO);
-	__asm { pop 	ds; }
+	_asm { pop 	ds; }
 }
 
 void bgimage_put(void)
 {
 	_DL = PLANE_COUNT;
-	__asm {	push	ds; }
+	_asm {	push	ds; }
 	bgimage_push();
 	do {
-		__asm { pop 	ds; }
-		__asm { pop 	es; }
+		_asm { pop 	ds; }
+		_asm { pop 	es; }
 		memcpy_movsd(_ES, 0, _DS, 0, PLANE_SIZE);
 		_DL--;
 	} while(!FLAGS_ZERO);
-	__asm { pop 	ds; }
+	_asm { pop 	ds; }
 }
 #pragma codestring "\x90"
 

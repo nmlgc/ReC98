@@ -71,12 +71,12 @@ extern piano_notes_t piano_notes_prev;
 #undef grcg_setmode
 #undef grcg_off
 
-#define grcg_setmode(mode) __asm { \
+#define grcg_setmode(mode) _asm { \
 	mov	al, mode; \
 	out	0x7C, al; \
 }
 
-#define grcg_off() __asm { \
+#define grcg_off() _asm { \
 	db 	0x32, 0xC0; /* XOR AL, AL (alternate encoding) */ \
 	out	0x7C, al; \
 }
@@ -103,7 +103,7 @@ void __fastcall near piano_fm_part_put_raw(
 );
 #define piano_fm_part_put(part_id, qq) \
 	_DI = vram_offset_shift(0, part_top(part_id)); \
-	__asm { mov si, part_id; } \
+	_asm { mov si, part_id; } \
 	piano_fm_part_put_raw(_AX, _DX, qq);
 
 // Returns the currently played note from [qq] as a KAJA onkai value, or
@@ -168,11 +168,11 @@ void piano_setup_and_put_initial(void)
 	piano_label_puts(5, S, S, G);
 	grcg_off();
 
-	__asm { push	ds; }
+	_asm { push	ds; }
 	_AH = PMD_GET_WORKAREA_ADDRESS;
 	geninterrupt(PMD);
 	_AX = _DS;
-	__asm { pop 	ds; }
+	_asm { pop 	ds; }
 
 	// pmd_workadr = reinterpret_cast<OPEN_WORK far *>(MK_FP(_DX, _AX));
 	pmd_workadr[0] = _DX;
@@ -181,8 +181,8 @@ void piano_setup_and_put_initial(void)
 
 void piano_render(void)
 {
-	__asm { push	ds; }
-	__asm { push	ds; }
+	_asm { push	ds; }
+	_asm { push	ds; }
 	__emit__(0x0F, 0xA1); // POP FS
 
 	grcg_setmode(GC_RMW);
@@ -190,7 +190,7 @@ void piano_render(void)
 
 	piano_part_keys_put(5);
 
-	__asm { lds	bx, dword ptr pmd_workadr; }	// BX = FMPart[0]
+	_asm { lds	bx, dword ptr pmd_workadr; }	// BX = FMPart[0]
 
 	#define _BX	reinterpret_cast<QQ near *near *>(_BX)
 
@@ -211,7 +211,7 @@ void piano_render(void)
 
 	grcg_off();
 
-	__asm { pop 	ds; }
+	_asm { pop 	ds; }
 }
 
 }

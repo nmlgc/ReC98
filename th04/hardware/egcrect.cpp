@@ -14,7 +14,7 @@ extern "C" {
 
 #define graph_accesspage_0()  \
 	_AX ^= _AX; \
-	__asm	out 0xA6, al;
+	_asm	out 0xA6, al;
 
 extern vram_word_amount_t egcrect_w;
 
@@ -33,19 +33,19 @@ void DEFCONV egc_copy_rect_1_to_0_16(
 
 	#if (GAME == 4)
 		// TH04 wants to blit using a forward STOSW (DF = 0)
-		__asm { cld; }
+		_asm { cld; }
 	#endif
 	egc_start_copy();
 	egc_setrop(EGC_COMPAREREAD | EGC_WS_ROP | EGC_RL_MEMREAD | 0xF0);
 
 	// Using inline assembly rather than register pseudovariables to prevent
 	// parameters from being moved to the SI register
-	__asm	mov	ax, left;
-	__asm	mov	dx, top;
+	_asm	mov	ax, left;
+	_asm	mov	dx, top;
 
 	vo_tmp = _AX;
 	static_cast<vram_offset_t>(vo_tmp) >>= 4;
-	__asm	shl	bx, 1;
+	_asm	shl	bx, 1;
 	_DX <<= 6;
 	vo_tmp += _DX;
 	_DX >>= 2;
@@ -63,7 +63,7 @@ void DEFCONV egc_copy_rect_1_to_0_16(
 
 	_CX = (ROW_SIZE / 2);
 	_CX -= w_tmp;
-	__asm	shl	cx, 1;
+	_asm	shl	cx, 1;
 	rows_remaining = h;
 	stride = _CX;
 	_ES = SEG_PLANE_B;
@@ -80,9 +80,9 @@ void DEFCONV egc_copy_rect_1_to_0_16(
 				_DI += 2;
 			#else
 				graph_accesspage_1();  	dots = peek(_ES, _DI);
-				graph_accesspage_0();	_AX = dots; __asm { stosw; }
+				graph_accesspage_0();	_AX = dots; _asm { stosw; }
 			#endif
-			__asm { loop put_loop; }
+			_asm { loop put_loop; }
 		}
 		_DI += stride;
 		rows_remaining--;
@@ -95,7 +95,7 @@ void DEFCONV egc_copy_rect_1_to_0_16(
 
 static void near egc_start_copy(void)
 {
-	__asm {
+	_asm {
 		push 	es
 		push 	0
 		pop  	es

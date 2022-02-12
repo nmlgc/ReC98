@@ -187,7 +187,7 @@ void bullets_update(void)
 						/* TODO: Replace with the decompiled call
 						 * 	sparks_add_random(bullet->pos.cur.x, bullet->pos.cur.y, to_sp(2.0f), 2);
 						 * once that function is part of this translation unit */
-						__asm {
+						_asm {
 							db  	0xFF, 0x74, 0x02;
 							db  	0xFF, 0x74, 0x04;
 							db  	0x66, 0x68, 2, 0x00, (2 * 16), 0x00;

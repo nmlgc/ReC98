@@ -144,7 +144,7 @@ void input_sense(bool16 reset_repeat)
 			/* TODO: Replace with the decompiled call
 			 * 	test_mem();
 			 * once that function is part of this translation unit */
-			__asm { nop; push cs; call near ptr test_mem; }
+			_asm { nop; push cs; call near ptr test_mem; }
 		} else {
 			input_mem_enter = false;
 		});
@@ -158,7 +158,7 @@ void input_sense(bool16 reset_repeat)
 			/* TODO: Replace with the decompiled call
 			 * 	test_show_game();
 			 * once that function is part of this translation unit */
-			__asm { nop; push cs; call near ptr test_show_game; }
+			_asm { nop; push cs; call near ptr test_show_game; }
 		} else {
 			input_mem_leave = false;
 		});
@@ -245,7 +245,7 @@ void load_and_init_stuff_used_in_all_stages(void)
 	/* TODO: Replace with the decompiled call
 	 * 	bomb_kuji_load();
 	 * once that function is part of this translation unit */
-	__asm {
+	_asm {
 		nop; push cs; call near ptr bomb_kuji_load;
 	}
 	shootout_lasers_init(i);
@@ -276,7 +276,7 @@ void stage_entrance(int stage_id, const char* bg_fn, bool16 clear_vram_page_0)
 		/* TODO: Replace with the decompiled call
 		 * 	stage_palette_set(z_Palettes);
 		 * once that function is part of this translation unit */
-		__asm {
+		_asm {
 			push	ds;
 			push	offset z_Palettes;
 			nop;

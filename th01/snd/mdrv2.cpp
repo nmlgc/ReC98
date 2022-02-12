@@ -70,7 +70,7 @@ void near pascal mdrv2_load(const char *fn, char func)
 		sgm = FP_SEG(block);
 		ofs = FP_OFF(block);
 
-		__asm {
+		_asm {
 			push	ds
 			mov	ax, 0x3F00
 			mov	bx, handle
@@ -79,17 +79,17 @@ void near pascal mdrv2_load(const char *fn, char func)
 			mov	dx, ofs
 		}
 		geninterrupt(0x21);
-		__asm { pop	ds; }
+		_asm { pop	ds; }
 
 		close(handle);
-		__asm {
+		_asm {
 			push	ds
 			mov	ah, func
 			mov	ds, sgm
 			mov	si, ofs
 		}
 		geninterrupt(MDRV2);
-		__asm { pop	ds; }
+		_asm { pop	ds; }
 
 		farfree(block);
 	}
@@ -150,7 +150,7 @@ void mdrv2_se_play(int se)
 {
 	if(se && mdrv2_have_board) {
 		se += (MDRV2_EPLAY << 8);
-		__asm { mov	ax, se; } // Prevent [se] from being put into a register
+		_asm { mov	ax, se; } // Prevent [se] from being put into a register
 		geninterrupt(MDRV2);
 	}
 }

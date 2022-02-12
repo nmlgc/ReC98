@@ -153,7 +153,7 @@ void pascal near stage5_setup(void)
 	 * 	yumeko_interval_phase4 = select_for_rank(20, 10,  6,  6);
 	 *	yumeko_interval_phase7 = select_for_rank(48, 32, 24, 24);
 	 * once that function is part of this translation unit */
-	#define SELECT_FOR_RANK(easy, normal, hard, lunatic) __asm { \
+	#define SELECT_FOR_RANK(easy, normal, hard, lunatic) _asm { \
 		db	0x66, 0x68,  normal, 0x00, easy, 0x00; \
 		db	0x66, 0x68, lunatic, 0x00, hard, 0x00; \
 		nop; push cs; call near ptr select_for_rank; \

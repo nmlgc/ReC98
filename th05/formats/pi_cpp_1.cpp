@@ -23,7 +23,7 @@ void pascal pi_put_masked_8(
 	screen_x_t left, vram_y_t top, int slot, int mask_id
 )
 {
-	#define rowloop_func __asm { \
+	#define rowloop_func _asm { \
 		push	left;	/* left */ \
 		push	top; 	/* top */ \
 		mov 	ax, word ptr pi_headers[di].xsize; \
@@ -42,7 +42,7 @@ void pascal pi_put_quarter_masked_8(
 	screen_x_t left, vram_y_t top, int slot, int quarter, int mask_id
 )
 {
-	#define rowloop_func __asm { \
+	#define rowloop_func _asm { \
 		mov 	di, PI_QUARTER_H; \
 		push	left; \
 		push	top; \

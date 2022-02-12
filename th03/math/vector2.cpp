@@ -17,7 +17,7 @@ extern "C" {
 	_DH = 0; \
 	_DX += _DX; /* *= sizeof(short) */ \
 	_BX = _DX; \
-	__asm { \
+	_asm { \
 		db 0x66, 0x0F, 0xBF, 0x97;	/* MOVSX EDX,                */ \
 		dw offset CosTable8;      	/*            CosTable8[bx]; */ \
 		db 0x66, 0x0F, 0xBF, 0x8F;	/* MOVSX ECX,                */ \

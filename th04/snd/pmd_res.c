@@ -14,7 +14,7 @@ bool16 snd_pmd_resident(void)
 	snd_se_mode = _AX; // SND_SE_OFF
 
 	_ES = _AX;
-	__asm { les bx, dword ptr es:[PMD * 4]; }
+	_asm { les bx, dword ptr es:[PMD * 4]; }
 	if(kaja_isr_magic_matches(MK_FP(_ES, _BX), 'P', 'M', 'D')) {
 		_AX++;
 	}

@@ -14,9 +14,9 @@ inline double gravity_for(const double& force)
 // afterwards.
 #define GRAVITY_FOR(force) \
 	_AX = orb_force_frame / 5; \
-	__asm mov 	[bp-2], ax; \
-	__asm fild	word ptr [bp-2]; \
-	__asm fadd	force;
+	_asm mov 	[bp-2], ax; \
+	_asm fild	word ptr [bp-2]; \
+	_asm fadd	force;
 
 // Neither WAIT nor FWAIT emit the emulated WAIT we want...
 #define FWAIT db 0xCD, 0x3D;
@@ -40,7 +40,7 @@ int orb_velocity_y_update(void)
 	 * which is not what we want here.
 	*/
 	GRAVITY_FOR(orb_force);
-	__asm {
+	_asm {
 		fstp 	orb_velocity_y;
 		fld  	orb_velocity_y;
 		fcomp	ORB_VELOCITY_Y_MAX;
@@ -53,7 +53,7 @@ int orb_velocity_y_update(void)
 	}
 	goto set_velocity;
 min_velocity_check:
-	if(orb_velocity_y < ORB_VELOCITY_Y_MIN) __asm {
+	if(orb_velocity_y < ORB_VELOCITY_Y_MIN) _asm {
 		fld 	ORB_VELOCITY_Y_MIN;
 set_velocity:
 		fstp	orb_velocity_y;
@@ -94,7 +94,7 @@ void orb_force_new(double immediate, orb_force_t force)
 		 * the float first, before emitting the corresponding FPU instruction
 		 * with the double, which is not what we want here.
 		*/
-		__asm {
+		_asm {
 			fld 	orb_velocity_y;
 			fdiv	ORB_FORCE_2_0;
 			fadd	ORB_FORCE_SHOT_BASE;

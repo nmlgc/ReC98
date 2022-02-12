@@ -19,16 +19,16 @@ int16_t input_reset_sense_held()
 	/* TODO: Replace with the decompiled call
 	 * 	input_reset_sense();
 	 * once the segmentation allows us to, if ever */
-	__asm { push cs; call near ptr input_reset_sense; }
+	_asm { push cs; call near ptr input_reset_sense; }
 	_CX = 1024; // * 0.6 µs
-	delay_loop: __asm {
+	delay_loop: _asm {
 		out 	0x5F, al;
 		loop	delay_loop;
 	}
 	/* TODO: Replace with the decompiled call
 	 * 	return input_sense();
 	 * once the segmentation allows us to, if ever */
-	__asm { push cs; call near ptr input_sense; }
+	_asm { push cs; call near ptr input_sense; }
 	return _AX;
 }
 

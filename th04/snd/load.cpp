@@ -48,7 +48,7 @@ void pascal snd_load(const char fn[SND_FN_LEN], snd_load_func_t func)
 		snd_load_fn[i + 2] = SND_LOAD_EXT[snd_bgm_mode][2];
 	}
 
-	__asm { push ds; }
+	_asm { push ds; }
 
 	// DOS file open
 	reinterpret_cast<char near *>(_DX) = snd_load_fn;
@@ -59,7 +59,7 @@ void pascal snd_load(const char fn[SND_FN_LEN], snd_load_func_t func)
 
 	// Using inline assembly rather than _AX to prevent parameters from being
 	// moved to the DI register
-	__asm { mov ax, func; }
+	_asm { mov ax, func; }
 	if((_AH == KAJA_GET_SONG_ADDRESS) && (snd_bgm_mode == SND_BGM_MIDI)) {
 		geninterrupt(MMD);
 	} else {
@@ -71,7 +71,7 @@ void pascal snd_load(const char fn[SND_FN_LEN], snd_load_func_t func)
 	_CX = snd_load_size();
 	geninterrupt(0x21);
 
-	__asm { pop ds; }
+	_asm { pop ds; }
 
 	// DOS file close
 	_AH = 0x3E;

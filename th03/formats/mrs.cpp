@@ -15,7 +15,7 @@ extern "C" {
 #undef grcg_off
 #define grcg_off() { \
 	_AL ^= _AL; \
-	__asm	out 0x7C, al; \
+	_asm	out 0x7C, al; \
 }
 
 static const vram_byte_amount_t MRS_BYTE_W = (MRS_W / BYTE_DOTS);
@@ -45,7 +45,7 @@ extern mrs_t far *mrs_images[MRS_SLOT_COUNT];
 // given [slot].
 #define mrs_slot_assign(reg_sgm, reg_off, slot) { \
 	mrs_slot_offset_to(_BX, slot); \
-	__asm { l##reg_sgm reg_off, mrs_images[bx]; } \
+	_asm { l##reg_sgm reg_off, mrs_images[bx]; } \
 }
 
 // Single iteration across [row_dword_w] 32-dot units of a .MRS image, from
@@ -149,11 +149,11 @@ void pascal mrs_put_8(screen_x_t left, uscreen_y_t top, int slot)
 	_FS = (_AX += SEG_PLANE_DIST_BRG);	// = R
 	_GS = (_AX += SEG_PLANE_DIST_BRG);	// = G
 
-	__asm { push ds; }
+	_asm { push ds; }
 	mrs_slot_assign(ds, si, slot);
 
 	_DX = MRS_DWORD_W;
-	__asm { nop; }
+	_asm { nop; }
 	mrs_put_rows(_DX, REP MOVSD);
 	grcg_off();
 
@@ -176,10 +176,10 @@ void pascal mrs_put_8(screen_x_t left, uscreen_y_t top, int slot)
 		}
 		reinterpret_cast<uint16_t>(_SI) += sizeof(dots32_t);
 		_DI += sizeof(dots32_t);
-		__asm { loop put; }
+		_asm { loop put; }
 	});
 
-	__asm { pop	ds; }
+	_asm { pop	ds; }
 
 	#undef _SI
 }
@@ -193,7 +193,7 @@ void pascal mrs_put_noalpha_8(
 	#define _SI	reinterpret_cast<mrs_at_G_t near *>(_SI)
 	#define at_bottom_left	_DX // *Not* rooted at (0, 0)!
 
-	__asm { push ds; }
+	_asm { push ds; }
 	_DI = to_bottom_left_8(left);
 	_AX = to_segment(top);
 	mrs_slot_assign(ds, si, slot);
@@ -213,7 +213,7 @@ void pascal mrs_put_noalpha_8(
 			poked(_FS, _DI, (~_SI->dots_from_alpha() | _SI->dots_from_B()));
 			poked(_GS, _DI, _SI->dots_from_R());
 			MOVSD;
-			__asm { loop put_altered; }
+			_asm { loop put_altered; }
 		});
 		// SI is now at the beginning of the E plane. Blit it in its own loop
 		_DI = at_bottom_left;
@@ -231,7 +231,7 @@ void pascal mrs_put_noalpha_8(
 		_ES = _BX;
 		mrs_put_rows(MRS_DWORD_W, REP MOVSD);
 	}
-	__asm { pop	ds; }
+	_asm { pop	ds; }
 
 	#undef at_bottom_left
 	#undef _SI
@@ -245,7 +245,7 @@ void pascal mrs_hflip(int slot)
 	mrs_slot_assign(es, di, slot);
 	reinterpret_cast<dots8_t near *>(_BX) = hflip_lut;
 
-	flip_dots_within_bytes: __asm {
+	flip_dots_within_bytes: _asm {
 		mov 	al, es:[di];
 		xlat;
 		mov 	es:[di], al;
@@ -263,7 +263,7 @@ void pascal mrs_hflip(int slot)
 		/* vram_byte_amount_t offset_left  */ _DI = 0;
 		/* vram_byte_amount_t offset_right */ _SI = (MRS_BYTE_W - 1);
 		do {
-			__asm {
+			_asm {
 				mov al, es:[bx+di]
 				mov dl, es:[bx+si]
 				mov es:[bx+si], al
@@ -273,7 +273,7 @@ void pascal mrs_hflip(int slot)
 			_DI++;
 		} while(_DI <= ((MRS_BYTE_W / 2) - 1));
 		_BX += MRS_BYTE_W;
-		__asm { loop flip_bytes; }
+		_asm { loop flip_bytes; }
 	}
 }
 

@@ -12,7 +12,7 @@ void input_reset_sense_key_held(void)
 {
 	js_stat[0] = input_sp = input_mp_p2 = input_mp_p1 = INPUT_NONE;
 	_DX = _DX;	// This moves [loops] to BL. Just remove this line.
-	__asm { jmp sense; } sense: // And this one.
+	_asm { jmp sense; } sense: // And this one.
 
 	// The key state is checked twice, 614.4 µs apart, to ignore the momentary
 	// "key released" events sent by PC-98 keyboards at the typematic rate if
@@ -136,7 +136,7 @@ void input_reset_sense_key_held(void)
 			break;
 		}
 		_CX = 1024; // * 0.6 µs
-		delay_loop: __asm {
+		delay_loop: _asm {
 			out 	0x5F, al;
 			loop	delay_loop;
 		}

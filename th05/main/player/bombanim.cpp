@@ -172,7 +172,7 @@ void pascal near reimu_stars_update_and_render(void)
 			 * 		(head->topleft.screen_y + PLAYFIELD_TOP)
 			 * 	);
 			 * once that function is part of this translation unit */
-			__asm {
+			_asm {
 				db	0xFF, 0x34;
 				db	0x8B, 0x44, 0x02;
 				add 	ax, (PLAYFIELD_TOP * 16);

@@ -15,13 +15,13 @@
 // ----------------
 
 // Alternate version that doesn't spill the port number to DX
-#define outportb2(port, val) __asm { \
+#define outportb2(port, val) _asm { \
 	mov al, val; \
 	out port, al; \
 }
 
 // Alternate version that sets the value first
-#define outport2(port, val) __asm { \
+#define outport2(port, val) _asm { \
 	mov ax, val; \
 	mov dx, port; \
 	out dx, ax; \

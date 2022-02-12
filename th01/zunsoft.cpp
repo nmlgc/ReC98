@@ -164,11 +164,11 @@ void stars_render_and_update(void)
 
 void wait(void)
 {
-	do __asm {
+	do _asm {
 		out 0x5F, al;
 		in  al, 0xA0;
 	} while((_AL & 0x20) != 0);
-	do __asm {
+	do _asm {
 		out 0x5F, al;
 		in  al, 0xA0;
 	} while((_AL & 0x20) == 0);
@@ -216,7 +216,7 @@ void main(void)
 	// Do some setup if we are running on a PC-9821
 
 	// Generates a different instruction encoding compared to pseudoregisters.
-	__asm { xor	ax, ax; }
+	_asm { xor	ax, ax; }
 	_ES = _AX;
 	if(peekb(_ES, 0x45C) & 0x40) {
 		graph_mode_change(true);
@@ -248,7 +248,7 @@ void main(void)
 
 		_AL = page_write;
 		page_show = _AL;
-		__asm { out	0xA4, al; } // graph_showpage
+		_asm { out	0xA4, al; } // graph_showpage
 		page_write ^= 1;
 		outportb2(0xA6, page_write); // graph_accesspage
 
