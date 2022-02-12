@@ -11,11 +11,8 @@
 #include <string.h>
 #include "platform.h"
 #include "x86real.h"
-
-#define	MDRV2 0xf2
-#define MDRV2_CALL(func) __asm { \
-	mov	ah, func; \
-	int	MDRV2; \
+extern "C" {
+#include "th01/snd/mdrv2.h"
 }
 
 typedef enum {
@@ -30,11 +27,19 @@ typedef enum {
 	MDRV2_MFADE_IN = 0x0F,
 } mdrv2_func_t;
 
+static const uint8_t MDRV2 = 0xF2;
+
+inline uint16_t mdrv2_call(mdrv2_func_t func) {
+	_AH = func;
+	geninterrupt(MDRV2);
+	return _AX;
+}
+
 extern char mdrv2_have_board;
 struct hack { char x[12]; }; // XXX
 extern const struct hack mdrv2_magic;
 
-int far mdrv2_resident(void)
+bool16 mdrv2_resident(void)
 {
 	char s1[sizeof(mdrv2_magic)];
 	const struct hack s2 = mdrv2_magic;
@@ -47,15 +52,15 @@ int far mdrv2_resident(void)
 		s1[i] = magicp[i];
 	}
 	if(strcmp(s1, s2.x) != 0) {
-		return 0;
+		return false;
 	}
-	return 1;
+	return true;
 }
 
-static void near pascal mdrv2_load(const char *fn, char func)
+void near pascal mdrv2_load(const char *fn, char func)
 {
 	if(mdrv2_have_board) {
-		int handle = open(fn, O_BINARY | O_RDONLY);
+		int handle = open(fn, (O_BINARY | O_RDONLY));	// opens a DOS handle
 		int length = filelength(handle);
 		seg_t sgm;
 		int ofs;
@@ -72,18 +77,20 @@ static void near pascal mdrv2_load(const char *fn, char func)
 			mov	cx, length
 			mov	ds, sgm
 			mov	dx, ofs
-			int	0x21
-			pop	ds
 		}
+		geninterrupt(0x21);
+		__asm { pop	ds; }
+
 		close(handle);
 		__asm {
 			push	ds
 			mov	ah, func
 			mov	ds, sgm
 			mov	si, ofs
-			int	MDRV2
-			pop	ds
 		}
+		geninterrupt(MDRV2);
+		__asm { pop	ds; }
+
 		farfree(block);
 	}
 }
@@ -101,52 +108,49 @@ void mdrv2_se_load(const char *fn)
 void mdrv2_bgm_play(void)
 {
 	if(mdrv2_have_board) {
-		MDRV2_CALL(MDRV2_MPLAY);
+		mdrv2_call(MDRV2_MPLAY);
 	}
 }
 
 void mdrv2_bgm_stop(void)
 {
 	if(mdrv2_have_board) {
-		MDRV2_CALL(MDRV2_MSTOP);
+		mdrv2_call(MDRV2_MSTOP);
 	}
 }
 
 void mdrv2_bgm_fade_out_nonblock(void)
 {
 	if(mdrv2_have_board) {
-		MDRV2_CALL(MDRV2_MFADE_OUT_NONBLOCK);
+		mdrv2_call(MDRV2_MFADE_OUT_NONBLOCK);
 	}
 }
 
 void mdrv2_bgm_fade_out_block(void)
 {
 	if(mdrv2_have_board) {
-		MDRV2_CALL(MDRV2_MFADE_OUT_BLOCK);
+		mdrv2_call(MDRV2_MFADE_OUT_BLOCK);
 	}
 }
 
 void mdrv2_bgm_fade_in(void)
 {
 	if(mdrv2_have_board) {
-		MDRV2_CALL(MDRV2_MFADE_IN);
+		mdrv2_call(MDRV2_MFADE_IN);
 	}
 }
 
 int mdrv2_check_board(void)
 {
-	MDRV2_CALL(MDRV2_CHECK_BOARD);
-	__asm { mov	mdrv2_have_board, al }
+	mdrv2_have_board = mdrv2_call(MDRV2_CHECK_BOARD);
 	return mdrv2_have_board;
 }
 
 void mdrv2_se_play(int se)
 {
 	if(se && mdrv2_have_board) {
-		se += MDRV2_EPLAY << 8;
-		__asm {
-			mov	ax, se
-			int	MDRV2
-		}
+		se += (MDRV2_EPLAY << 8);
+		__asm { mov	ax, se; } // Prevent [se] from being put into a register
+		geninterrupt(MDRV2);
 	}
 }
