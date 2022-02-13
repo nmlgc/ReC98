@@ -18,7 +18,7 @@ void pascal snd_load(const char fn[SND_FN_LEN], snd_load_func_t func)
 	#define func_local	_BP
 	#define ext	_EAX
 
-	_asm { mov dx, ds; }
+	_asm { mov	dx, ds; }
 
 	// memcpy(snd_load_fn, fn, sizeof(SND_LOAD_FN));
 	_ES = _DX;

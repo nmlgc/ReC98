@@ -15,7 +15,7 @@ extern "C" {
 #undef grcg_off
 #define grcg_off() { \
 	_AL ^= _AL; \
-	_asm	out 0x7C, al; \
+	_asm { out 0x7C, al; } \
 }
 
 static const vram_byte_amount_t MRS_BYTE_W = (MRS_W / BYTE_DOTS);
@@ -149,7 +149,7 @@ void pascal mrs_put_8(screen_x_t left, uscreen_y_t top, int slot)
 	_FS = (_AX += SEG_PLANE_DIST_BRG);	// = R
 	_GS = (_AX += SEG_PLANE_DIST_BRG);	// = G
 
-	_asm { push ds; }
+	_asm { push	ds; }
 	mrs_slot_assign(ds, si, slot);
 
 	_DX = MRS_DWORD_W;
@@ -176,7 +176,7 @@ void pascal mrs_put_8(screen_x_t left, uscreen_y_t top, int slot)
 		}
 		reinterpret_cast<uint16_t>(_SI) += sizeof(dots32_t);
 		_DI += sizeof(dots32_t);
-		_asm { loop put; }
+		_asm { loop	put; }
 	});
 
 	_asm { pop	ds; }

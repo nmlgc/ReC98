@@ -40,7 +40,7 @@ These cases should gradually be removed as development goes along, though.
 * Don't indent `extern "C"` blocks that span the entire file.
 
 * Always use `{ brackets }`, even around single-statement conditional
-  branches.
+  branches and single-instruction inline assembly.
 * Add spaces around binary operators. `for(i = 0; i < 12; i++)`
 
 * Variables should be *signed* in the absence of any ASM instruction

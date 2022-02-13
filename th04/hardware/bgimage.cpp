@@ -40,7 +40,7 @@ void bgimage_snap(void)
 	}
 
 	_DL = PLANE_COUNT;
-	_asm {	push	ds; }
+	_asm { push	ds; }
 	bgimage_push();
 	do {
 		_asm { pop 	es; }
@@ -54,7 +54,7 @@ void bgimage_snap(void)
 void bgimage_put(void)
 {
 	_DL = PLANE_COUNT;
-	_asm {	push	ds; }
+	_asm { push	ds; }
 	bgimage_push();
 	do {
 		_asm { pop 	ds; }

@@ -14,7 +14,7 @@ extern "C" {
 
 #define graph_accesspage_0()  \
 	_AX ^= _AX; \
-	_asm	out 0xA6, al;
+	_asm { out 0xA6, al; }
 
 extern vram_word_amount_t egcrect_w;
 
@@ -40,12 +40,12 @@ void DEFCONV egc_copy_rect_1_to_0_16(
 
 	// Using inline assembly rather than register pseudovariables to prevent
 	// parameters from being moved to the SI register
-	_asm	mov	ax, left;
-	_asm	mov	dx, top;
+	_asm { mov	ax, left; }
+	_asm { mov	dx, top; }
 
 	vo_tmp = _AX;
 	static_cast<vram_offset_t>(vo_tmp) >>= 4;
-	_asm	shl	bx, 1;
+	_asm { shl	bx, 1; }
 	_DX <<= 6;
 	vo_tmp += _DX;
 	_DX >>= 2;
@@ -63,7 +63,7 @@ void DEFCONV egc_copy_rect_1_to_0_16(
 
 	_CX = (ROW_SIZE / 2);
 	_CX -= w_tmp;
-	_asm	shl	cx, 1;
+	_asm { shl	cx, 1; }
 	rows_remaining = h;
 	stride = _CX;
 	_ES = SEG_PLANE_B;

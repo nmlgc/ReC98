@@ -17,11 +17,11 @@ void pascal near pellet_render(screen_x_t left, vram_y_t top)
 	_SI = reinterpret_cast<uint16_t>(sPELLET[0][left & (BYTE_DOTS - 1)]);
 	_CX = 8;
 	put_loop: {
-		_asm movsw
+		_asm { movsw; }
 		_DI += (ROW_SIZE - sizeof(dots16_t));
 		if(static_cast<int16_t>(_DI) >= PLANE_SIZE) {
 			_DI -= PLANE_SIZE;
 		}
 	}
-	_asm loop put_loop;
+	_asm { loop put_loop; }
 }

@@ -14,9 +14,9 @@ inline double gravity_for(const double& force)
 // afterwards.
 #define GRAVITY_FOR(force) \
 	_AX = orb_force_frame / 5; \
-	_asm mov 	[bp-2], ax; \
-	_asm fild	word ptr [bp-2]; \
-	_asm fadd	force;
+	_asm { mov 	[bp-2], ax; } \
+	_asm { fild	word ptr [bp-2]; } \
+	_asm { fadd	force; } \
 
 // Neither WAIT nor FWAIT emit the emulated WAIT we want...
 #define FWAIT db 0xCD, 0x3D;

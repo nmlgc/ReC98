@@ -29,10 +29,10 @@ void pascal cdg_put_nocolors_8(screen_x_t left, vram_y_t top, int slot)
 
 	tmp = cdg_dst_segment(tmp, top, _CX);
 	_ES = tmp;
-	_asm { push ds };
+	_asm { push	ds };
 	reinterpret_cast<dots8_t __seg *>(_DS) = cdg->seg_alpha();
 	cdg_put_plane_raw(_ES, _DI, _DS, 0, cdg_dword_w);
-	_asm { pop ds };
+	_asm { pop 	ds };
 
 	#undef cdg_dword_w
 	#undef tmp

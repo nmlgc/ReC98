@@ -18,7 +18,7 @@ bool16 snd_mmd_resident(void)
 		// Enforced by the -WX code generation. Just replace these two lines
 		// with `return true`.
 		_AX = true;
-		_asm	retf;
+		_asm { retf; }
 	}
 	#if (GAME <= 3)
 		snd_midi_possible = false;

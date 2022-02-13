@@ -14,8 +14,8 @@ void snd_delay_until_volume(uint8_t volume)
 		} else {
 			geninterrupt(MMD);
 		}
-		_asm	cmp al, volume;
-		_asm	jz end;
+		_asm { cmp	al, volume; }
+		_asm { jz 	end; }
 	}
 end:
 }

@@ -19,7 +19,7 @@ void pascal cdg_put_noalpha_8(screen_x_t left, vram_y_t top, int slot)
 	#define planes_left	static_cast<char>(_AL)
 	register vram_byte_amount_t stride;
 
-	_asm { push ds };
+	_asm { push	ds };
 
 	_AX = cdg_dst_segment(_AX, top, _BX);
 	_ES = _AX;
@@ -55,7 +55,7 @@ void pascal cdg_put_noalpha_8(screen_x_t left, vram_y_t top, int slot)
 		_asm { pop	es; }
 	} while(1);
 
-	_asm { pop ds };
+	_asm { pop	ds };
 
 	#undef planes_left
 	#undef dst_offset

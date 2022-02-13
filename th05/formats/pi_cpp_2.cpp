@@ -41,7 +41,7 @@ void near pi_mask_setup_egc_and_advance(void)
 	mask_ptr = reinterpret_cast<uint16_t>(pi_mask_ptr);
 	_AX = (pi_mask_y & (PI_MASK_H - 1));
 	// Turbo C++ is too smart to emit this instruction with pseudo-registers!
-	_asm { shl ax, 1; }
+	_asm { shl	ax, 1; }
 	mask_ptr += _AX;
 	outport(EGC_MASKREG, *reinterpret_cast<dots16_t near *>(mask_ptr));
 	pi_mask_y++;
