@@ -28,7 +28,7 @@ include libs/sprite16/sprite16.inc
 
 	extern _execl:proc
 
-main_01 group main_0_TEXT, CFG_LRES_TEXT, main_01_TEXT
+main_01 group main_0_TEXT, CFG_LRES_TEXT, main_010_TEXT, main_011_TEXT
 main_04 group main_04_TEXT, COLLMAP_TEXT, main_04__TEXT
 
 ; ===========================================================================
@@ -1413,7 +1413,7 @@ CFG_LRES_TEXT	segment	byte public 'CODE' use16
 	_cfg_load_resident_ptr procdesc near
 CFG_LRES_TEXT	ends
 
-main_01_TEXT	segment	word public 'CODE' use16
+main_010_TEXT	segment	word public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4418,8 +4418,7 @@ loc_C4E8:
 		call	sub_D6D4
 
 loc_C505:
-		push	4
-		call	sub_E0F7
+		call	@player_hittest$qi pascal, (8 / 2)
 		cmp	byte ptr [si+4], 0
 		jz	short loc_C52F
 		mov	byte ptr [si+4], 0
@@ -4514,7 +4513,7 @@ arg_0		= word ptr  4
 		mov	[bp+var_8], ax
 		test	byte ptr word_23AF6, 3
 		jnz	short loc_C5AA
-		mov	[bp+var_B], 20h	; ' '
+		mov	[bp+var_B], (64 / 2)
 		jmp	short loc_C5A1
 ; ---------------------------------------------------------------------------
 
@@ -4522,17 +4521,17 @@ loc_C58B:
 		mov	al, [bp+var_B]
 		cbw
 		push	ax
-		call	sub_E0F7
+		call	@player_hittest$qi
 		cmp	byte ptr [si+4], 0
 		jnz	short loc_C5AA
 		mov	al, [bp+var_B]
-		add	al, 10h
+		add	al, (32 / 2)
 		mov	[bp+var_B], al
 
 loc_C5A1:
 		mov	al, [bp+var_B]
 		cbw
-		cmp	ax, 50h	; 'P'
+		cmp	ax, (160 / 2)
 		jle	short loc_C58B
 
 loc_C5AA:
@@ -4645,10 +4644,10 @@ loc_C653:
 ; ---------------------------------------------------------------------------
 
 loc_C658:
-		mov	ax, word_20E44
+		mov	ax, _player_hittest_collision_top.x
 		sub	ax, [bp+var_6]
 		mov	[bp+var_2], ax
-		mov	ax, word_20E46
+		mov	ax, _player_hittest_collision_top.y
 		sub	ax, [bp+var_8]
 		mov	[bp+var_4], ax
 		mov	byte ptr [si+4], 0
@@ -4706,15 +4705,15 @@ loc_C6C7:
 loc_C6D3:
 		cmp	[bp+var_B], 0
 		jnz	short loc_C6DD
-		push	14h
+		push	(40 / 2)
 		jmp	short loc_C6DF
 ; ---------------------------------------------------------------------------
 
 loc_C6DD:
-		push	4
+		push	(8 / 2)
 
 loc_C6DF:
-		call	sub_E0F7
+		call	@player_hittest$qi
 		cmp	byte ptr [si+4], 0
 		jz	loc_C78B
 		mov	byte ptr [si+4], 0
@@ -4725,14 +4724,14 @@ loc_C6DF:
 		inc	[bp+var_9]
 		cmp	[bp+var_9], 9
 		jnb	short loc_C735
-		cmp	word_20E44, 500h
+		cmp	_player_hittest_collision_top.x, (80 shl 4)
 		jge	short loc_C70E
 		mov	al, 0
 		jmp	short loc_C71C
 ; ---------------------------------------------------------------------------
 
 loc_C70E:
-		cmp	word_20E44, 0B00h
+		cmp	_player_hittest_collision_top.x, (176 shl 4)
 		jge	short loc_C71A
 		mov	al, 1
 		jmp	short loc_C71C
@@ -7672,8 +7671,7 @@ loc_DDCE:
 		jnz	short loc_DE4F
 		cmp	[bp+var_5], 0
 		jnz	short loc_DE4F
-		push	4
-		call	sub_E0F7
+		call	@player_hittest$qi pascal, (8 / 2)
 		cmp	byte ptr [si+4], 0
 		jz	short loc_DE4F
 		cmp	byte ptr [si+7], 0
@@ -8076,143 +8074,11 @@ loc_E0EF:
 		retn	2
 player_bomb	endp
 
+	@PLAYER_HITTEST$QI procdesc pascal near \
+		hitbox_size:word
+main_010_TEXT	ends
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E0F7	proc near
-
-var_3		= byte ptr -3
-var_2		= word ptr -2
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 4
-		push	si
-		push	di
-		mov	si, _player_cur
-		cmp	[si+player_t.invincibility_time], 0
-		jnz	short loc_E10F
-		cmp	[si+player_t.hyper_active], 0
-		jz	short loc_E112
-
-loc_E10F:
-		jmp	loc_E1CF
-; ---------------------------------------------------------------------------
-
-loc_E112:
-		mov	ax, [bp+arg_0]
-		mov	bx, ax
-		sar	ax, 1
-		mov	dx, [si+player_t.center.x]
-		sar	dx, 5
-		sub	dx, ax
-		mov	cx, [si+player_t.center.y]
-		sar	cx, 5
-		sub	cx, ax
-		add	bx, cx
-		cmp	cx, 0
-		jge	short loc_E133
-		xor	cx, cx
-		jmp	short loc_E13C
-; ---------------------------------------------------------------------------
-
-loc_E133:
-		cmp	bx, COLLMAP_H
-		jl	short loc_E13C
-		mov	bx, (COLLMAP_H - 1)
-
-loc_E13C:
-		mov	[bp+var_3], bl
-		mov	[bp+var_2], cx
-		mov	cx, dx
-		; Hack (and cx, 7)
-		db 081h
-		db 0e1h
-		db 007h
-		db 000h
-		sar	dx, 3
-		mov	di, [bp+arg_0]
-		add	di, cx
-		mov	ch, 11111111b
-		shr	ch, cl
-		mov	bx, di
-		cmp	bx, 8
-		jg	short loc_E163
-		mov	bh, 11111111b
-		mov	cl, bl
-		shr	bh, cl
-		xor	ch, bh
-
-loc_E163:
-		mov	al, dl
-		mov	bl, COLLMAP_H
-		mul	bl
-		mov	bx, offset _collmap
-		add	bx, ax
-		cmp	_pid_PID_current, 1
-		jnz	short loc_E179
-		add	bx, COLLMAP_SIZE
-
-loc_E179:
-		add	bx, [bp+var_2]
-		mov	dh, [bp+var_3]
-		mov	ax, [bp+var_2]
-
-loc_E182:
-		cmp	dl, COLLMAP_MEMORY_W
-		jge	short loc_E1CF
-		or	dl, dl
-		jl	short loc_E1B3
-		mov	ah, al
-		mov	cl, COLLMAP_H
-
-loc_E18F:
-		test	[bx], ch
-		jz	short loc_E1AA
-		xor	dh, dh
-		shl	dx, 8
-		mov	word_20E44, dx
-		mov	ah, 0
-		shl	ax, 5
-		mov	word_20E46, ax
-		mov	[si+player_t.is_hit], 1
-		jmp	short loc_E1CF
-; ---------------------------------------------------------------------------
-
-loc_E1AA:
-		inc	bx
-		dec	cl
-		inc	ah
-		cmp	ah, dh
-		jb	short loc_E18F
-
-loc_E1B3:
-		inc	dl
-		mov	ch, 0
-		add	bx, cx
-		sub	di, 8
-		mov	ch, 11111111b
-		cmp	di, 8
-		jnb	short loc_E1CB
-		mov	cx, di
-		mov	ch, 11111111b
-		shr	ch, cl
-		not	ch
-
-loc_E1CB:
-		or	di, di
-		jg	short loc_E182
-
-loc_E1CF:
-		pop	di
-		pop	si
-		leave
-		retn	2
-sub_E0F7	endp
-
+main_011_TEXT	segment	byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -8858,7 +8724,7 @@ sub_E737	endp
 
 	SHOTS_UPDATE procdesc pascal near
 	SHOTS_RENDER procdesc pascal near
-main_01_TEXT	ends
+main_011_TEXT	ends
 
 ; ===========================================================================
 
@@ -35967,8 +35833,8 @@ byte_20E3D	db ?
 word_20E3E	dw ?
 word_20E40	dw ?
 word_20E42	dw ?
-word_20E44	dw ?
-word_20E46	dw ?
+public _player_hittest_collision_top
+_player_hittest_collision_top	Point <?>
 byte_20E48	db ?
 		db ?
 word_20E4A	dw ?

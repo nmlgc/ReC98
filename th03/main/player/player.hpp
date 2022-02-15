@@ -102,3 +102,15 @@ extern union {
 
 // Currently updated instance.
 extern player_t near *player_cur;
+
+// Point of the last detected collision, on the top edge of the player's
+// hitbox. Pretends to be at subpixel resolution, but is only ever set to
+// coordinates on a 16×2-pixel grid. (Yes, 8 times worse than the tile
+// resolution of the collision bitmap!)
+extern PlayfieldPoint player_hittest_collision_top;
+
+// Detects any collision of [player_cur] in a ([hitbox_size]×[hitbox_size])
+// square of collision map tiles around the player's center position. Sets
+// [player_cur->is_hit] and [player_hittest_collision_top] if such a collision
+// was found. Uses [pid.curent].
+void near pascal player_hittest(collmap_tile_amount_t hitbox_size);

@@ -20,7 +20,11 @@ static const size_t COLLMAP_MEMORY_W = ((PLAYFIELD_W / COLLMAP_TILE_W) / 8);
 static const size_t COLLMAP_H = (PLAYFIELD_H / COLLMAP_TILE_H);
 static const size_t COLLMAP_SIZE = (COLLMAP_MEMORY_W * COLLMAP_H);
 
+// Matches the size of the player hitbox. Increasing this distance beyond that
+// size turns these stripes from an optimization into something that actually
+// affects game difficulty.
 static const collmap_tile_amount_t COLLMAP_RECT_VSTRIPE_DISTANCE = 4;
+
 static const collmap_tile_amount_t COLLMAP_SLOPE_VSTRIPE_DISTANCE = 2;
 // ---------
 

@@ -1,6 +1,6 @@
 /* ReC98
  * -----
- * Code segment #1 of TH03's MAIN.EXE
+ * 2nd part of code segment #1 of TH03's MAIN.EXE
  */
 
 extern "C" {
