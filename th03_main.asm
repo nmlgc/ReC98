@@ -30,6 +30,7 @@ include libs/sprite16/sprite16.inc
 
 main_01 group main_0_TEXT, CFG_LRES_TEXT, main_010_TEXT, main_011_TEXT
 main_04 group main_04_TEXT, COLLMAP_TEXT, main_04__TEXT
+DGROUP group REAL_HITBOX_TEXT
 
 ; ===========================================================================
 
@@ -254,7 +255,7 @@ loc_977E:
 		mov	_pid_PID_so_attack, SO_ATTACK_P2
 		call	p2_202A8
 		call	p2_202B0
-		nopcall	sub_CEB2
+		call	sub_CEB2
 		call	_input_mode
 		mov	_pid_PID_current, 0
 		push	_input_mp_p1
@@ -312,8 +313,9 @@ loc_986C:
 		mov	_pid_PID_current, 1
 		push	offset _p2
 		call	sub_DF18
-		nopcall	sub_CEE0
+		call	sub_CEE0
 		call	sub_17BD1
+		call	_collmap_render
 		call	egc_on
 		call	shots_render
 		call	sub_B80B
@@ -349,8 +351,7 @@ loc_994E:
 		cmp	byte_1FBC3, 0
 		jz	short loc_99B1
 		les	bx, _resident
-		mov	al, es:[bx+resident_t.pid_winner]
-		mov	ah, 0
+		movzx	ax, es:[bx+resident_t.pid_winner]
 		push	ax
 		call	sub_A289
 		mov	al, 2
@@ -394,9 +395,9 @@ loc_99B1:
 		call	sub_C8C4
 		call	sub_D52E
 		push	0
-		nopcall	sub_C9FE
+		call	sub_C9FE
 		push	1
-		nopcall	sub_C9FE
+		call	sub_C9FE
 		call	sub_BE5D
 		call	_combo_update_and_render
 		call	fp_1FBC0
@@ -35979,5 +35980,114 @@ byte_26356	db ?
 byte_26357	db ?
 byte_26358	db ?
 		db    ?	;
+
+REAL_HITBOX_TEXT	segment byte public 'BSS' use16
+	assume cs:REAL_HITBOX_TEXT
+
+PLAYER_VRAM_H = 32
+PLAYER_SPRITE_LEFT = (544 / BYTE_DOTS)
+PLAYER_SPRITE_TOP = (328 * ROW_SIZE)
+
+collmap_render_pass proc pascal near
+	arg @@lut:word
+	local @@rows_remaining:word, @@vram_offset_top:word
+	local @@columns_remaining:word
+
+	@@collmap_p	equ <si>
+
+	mov	@@collmap_p, offset _collmap
+	mov	@@vram_offset_top, (((PLAYFIELD_TOP / 2) * ROW_SIZE) + (PLAYFIELD_LEFT / BYTE_DOTS))
+	mov	bx, @@lut
+	mov	ax, SEG_PLANE_B
+	mov	es, ax
+
+@@playfield_loop:
+	mov	@@columns_remaining, COLLMAP_MEMORY_W
+
+@@column_loop:
+	mov	@@rows_remaining, COLLMAP_H
+	mov	di, @@vram_offset_top
+
+@@row_loop:
+	mov	al, [@@collmap_p]
+	mov	ah, al
+
+	shr	al, 4
+	xlat
+	mov	es:[di+0], al
+
+	mov	al, ah
+	and	al, 1111b
+	xlat
+	mov	es:[di+1], al
+
+	inc	@@collmap_p
+	add	di, ROW_SIZE
+	dec	@@rows_remaining
+	jnz	@@row_loop
+
+@@column_next:
+	add	@@vram_offset_top, ((COLLMAP_TILE_W * 8) / BYTE_DOTS)
+	dec	@@columns_remaining
+	jnz	@@column_loop
+
+	cmp	@@collmap_p, (offset _collmap + size _collmap)
+	jnb	@@done
+	add	@@vram_offset_top, ((PLAYFIELD_BORDER * 2) / BYTE_DOTS)
+	jmp	@@playfield_loop
+
+@@done:
+	ret
+collmap_render_pass endp
+
+_collmap_render proc far
+	pushad
+	call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
+	call	collmap_render_pass pascal, offset collmap_to_vram_lut_inverted
+	call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
+	call	collmap_render_pass pascal, offset collmap_to_vram_lut
+	call	grcg_off
+	popad
+	retf
+_collmap_render endp
+
+; Overwrites any playfield pixels that *are* set in the collision bitmap.
+collmap_to_vram_lut label byte
+	db 00000000b
+	db 00000011b
+	db 00001100b
+	db 00001111b
+	db 00110000b
+	db 00110011b
+	db 00111100b
+	db 00111111b
+	db 11000000b
+	db 11000011b
+	db 11001100b
+	db 11001111b
+	db 11110000b
+	db 11110011b
+	db 11111100b
+	db 11111111b
+
+; Overwrites any playfield pixels that *are not* set in the collision bitmap.
+collmap_to_vram_lut_inverted label byte
+	db 11111111b
+	db 11111100b
+	db 11110011b
+	db 11110000b
+	db 11001111b
+	db 11001100b
+	db 11000011b
+	db 11000000b
+	db 00111111b
+	db 00111100b
+	db 00110011b
+	db 00110000b
+	db 00001111b
+	db 00001100b
+	db 00000011b
+	db 00000000b
+REAL_HITBOX_TEXT	ends
 
 		end
