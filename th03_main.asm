@@ -36042,6 +36042,7 @@ collmap_render_pass endp
 
 _collmap_render proc far
 	pushad
+	call	limit_player_sprites_to_hitbox
 	call	grcg_setcolor pascal, (GC_RMW shl 16) + 1
 	call	collmap_render_pass pascal, offset collmap_to_vram_lut_inverted
 	call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
@@ -36088,6 +36089,50 @@ collmap_to_vram_lut_inverted label byte
 	db 00001100b
 	db 00000011b
 	db 00000000b
+
+grcg_put_rect_32 macro pattern:req, h:req
+	local @@row_loop
+
+	mov	cx, h
+	mov	eax, pattern
+@@row_loop:
+	rept 3
+		mov 	es:[di+(32 * ROW_SIZE)], eax
+		stosd
+	endm
+	add 	di, PLAYER_SPRITE_LEFT
+	loop	@@row_loop
+endm
+
+limit_player_sprites_to_hitbox proc far
+	cmp	player_sprites_limited_to_hitbox, 0
+	jnz	@@ret
+
+	pushad
+	mov 	ax, SEG_PLANE_B
+	mov 	es, ax
+	mov 	di, (PLAYER_SPRITE_LEFT + (328 * ROW_SIZE))
+
+	graph_accesspage 0
+	call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
+
+	; Top
+	grcg_put_rect_32 0FFFFFFFFh, <(PLAYER_VRAM_H / 2) - (PLAYER_VRAM_H / 16)>
+	; Middle
+	grcg_put_rect_32 0FF0FF0FFh, <PLAYER_VRAM_H / 8>
+	; Bottom
+	grcg_put_rect_32 0FFFFFFFFh, <(PLAYER_VRAM_H / 2) - (PLAYER_VRAM_H / 16)>
+	call 	grcg_off
+
+	mov 	player_sprites_limited_to_hitbox, 1
+	call	sprite16_sprites_commit
+
+	popad
+@@ret:
+	retf
+limit_player_sprites_to_hitbox endp
+
+player_sprites_limited_to_hitbox	db 0
 REAL_HITBOX_TEXT	ends
 
 		end
