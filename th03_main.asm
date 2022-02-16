@@ -308,10 +308,10 @@ loc_986C:
 		call	_chargeshot_render_p2
 		mov	byte ptr word_23AF0, 0
 		push	offset _p1
-		call	sub_DE95
+		call	_player_render
 		mov	byte ptr word_23AF0, 1
 		push	offset _p2
-		call	sub_DE95
+		call	_player_render
 		call	egc_off
 		mov	byte ptr word_23AF0, 0
 		push	offset _p1
@@ -7785,21 +7785,21 @@ sub_DA43	endp
 
 ; Attributes: bp-based frame
 
-sub_DE95	proc near
+_player_render	proc near
 
 @@top		= word ptr -4
 @@left		= word ptr -2
-arg_0		= word ptr  4
+@@player		= word ptr  4
 
 		push	bp
 		mov	bp, sp
 		sub	sp, 4
 		push	si
 		push	di
-		mov	si, [bp+arg_0]
-		cmp	byte ptr [si+1Fh], 0
+		mov	si, [bp+@@player]
+		cmp	[si+player_t.lose_anim_time], 0
 		jz	short loc_DEB2
-		cmp	byte ptr [si+1Fh], -1
+		cmp	[si+player_t.lose_anim_time], -1
 		jz	short loc_DF12
 		push	si
 		call	sub_C248
@@ -7807,24 +7807,24 @@ arg_0		= word ptr  4
 ; ---------------------------------------------------------------------------
 
 loc_DEB2:
-		cmp	byte ptr [si+0Fh], 0
+		cmp	[si+player_t.patnum_glow], 0
 		jnz	short loc_DF12
 		mov	_sprite16_clip_left, PLAYFIELD1_CLIP_LEFT
 		mov	_sprite16_clip_right, PLAYFIELD2_CLIP_RIGHT
 		mov	_sprite16_put_w, (32 / 16)
 		mov	_sprite16_put_h, 32
-		push	word ptr [si]
+		push	[si+player_t.center.x]
 		mov	al, byte ptr word_23AF0
 		mov	ah, 0
 		push	ax
 		nopcall	playfield_fg_x_to_screen
 		add	ax, -16
 		mov	[bp+@@left], ax
-		mov	ax, [si+2]
+		mov	ax, [si+player_t.center.y]
 		sar	ax, 4
 		add	ax, -16
 		mov	[bp+@@top], ax
-		mov	al, [si+0Eh]
+		mov	al, [si+player_t.patnum_movement]
 		mov	ah, 0
 		shl	ax, 2
 		add	ax, 2844h
@@ -7841,7 +7841,7 @@ loc_DF12:
 		pop	si
 		leave
 		retn	2
-sub_DE95	endp
+_player_render	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
