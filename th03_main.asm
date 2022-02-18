@@ -217,8 +217,6 @@ _main		endp
 ; Attributes: bp-based frame
 
 sub_9778	proc near
-		push	bp
-		mov	bp, sp
 		jmp	loc_9AC9
 ; ---------------------------------------------------------------------------
 
@@ -272,11 +270,11 @@ loc_977E:
 		call	sub_C7A5
 
 loc_9845:
-		nopcall	sub_CA3C
+		call	sub_CA3C
 		push	0
-		nopcall	sub_CB81
+		call	sub_CB81
 		push	1
-		nopcall	sub_CB81
+		call	sub_CB81
 		call	farfp_20F24
 		cmp	byte_23AFA, 0
 		jz	short loc_986C
@@ -297,10 +295,8 @@ loc_986C:
 		mov	_pid_current, 1
 		mov	_pid_PID_so_attack, SO_ATTACK_P2
 		call	p2_1F33A
-		call	shots_render
 		call	sub_164DA
 		call	sub_1837C
-		call	sub_B80B
 		mov	_pid_current, 0
 		mov	_pid_PID_so_attack, SO_ATTACK_P1
 		call	p1_1FE74
@@ -309,12 +305,6 @@ loc_986C:
 		mov	_pid_PID_so_attack, SO_ATTACK_P2
 		call	p2_1FE80
 		call	_chargeshot_render_p2
-		mov	_pid_PID_current, 0
-		push	offset _p1
-		call	_player_render
-		mov	_pid_PID_current, 1
-		push	offset _p2
-		call	_player_render
 		call	egc_off
 		mov	_pid_PID_current, 0
 		push	offset _p1
@@ -324,6 +314,16 @@ loc_986C:
 		call	sub_DF18
 		nopcall	sub_CEE0
 		call	sub_17BD1
+		call	egc_on
+		call	shots_render
+		call	sub_B80B
+		mov	_pid_PID_current, 0
+		push	offset _p1
+		call	_player_render
+		mov	_pid_PID_current, 1
+		push	offset _p2
+		call	_player_render
+		call	egc_off
 		cmp	byte_20E3C, 2
 		jnz	loc_99B1
 		call	sub_C2F9
@@ -354,7 +354,6 @@ loc_994E:
 		push	ax
 		call	sub_A289
 		mov	al, 2
-		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
 
@@ -380,7 +379,6 @@ loc_998E:
 
 loc_99A4:
 		mov	al, 1
-		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
 
@@ -388,7 +386,6 @@ loc_99A8:
 		push	0
 		call	sub_A289
 		mov	al, 2
-		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
 
@@ -489,7 +486,6 @@ loc_9AC9:
 		cmp	byte_23B00, 0
 		jz	loc_977E
 		mov	al, 0
-		pop	bp
 		retn
 sub_9778	endp
 
