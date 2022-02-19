@@ -10,7 +10,7 @@ static const unsigned char PELLET_SPIN_DELTA_ANGLE = +0x04;
 
 enum pellet_motion_t {
 	// No velocity change during regular pellet updates.
-	PM_NORMAL = 0,
+	PM_REGULAR = 0,
 
 	// Accelerates the Y velocity of the pellet by its [speed] every frame.
 	PM_GRAVITY = 1,
@@ -32,7 +32,7 @@ enum pellet_motion_t {
 
 	// Lets the pellet bounce off the top of the playfield once, zeroing its
 	// X velocity, and setting its Y velocity to [speed]. The pellet then
-	// switches to PM_NORMAL.
+	// switches to PM_REGULAR.
 	PM_FALL_STRAIGHT_FROM_TOP_THEN_NORMAL = 4,
 
 	// Spins the pellet on a circle around a [spin_center] point, which moves
@@ -203,7 +203,7 @@ public:
 	// Spawns a number of bullets according to the given [group], with their
 	// corresponding velocities, at (left, top). [speed_base] is tuned
 	// according to the currently played difficulty and the resident
-	// [pellet_speed]. The [motion_type] for the new pellets is PM_NORMAL.
+	// [pellet_speed]. The [motion_type] for the new pellets is PM_REGULAR.
 	void add_group(
 		screen_x_t left,
 		screen_y_t top,
@@ -222,7 +222,7 @@ public:
 		screen_y_t top,
 		unsigned char angle,
 		subpixel_t speed_base,
-		pellet_motion_t motion_type = PM_NORMAL,
+		pellet_motion_t motion_type = PM_REGULAR,
 		subpixel_t speed_for_motion_fixed = to_sp(0.0f),
 		screen_x_t spin_center_x = 0,
 		screen_y_t spin_center_y = 0

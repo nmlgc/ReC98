@@ -366,7 +366,7 @@ void CPellets::motion_type_apply_for_cur(void)
 		if(p->cur_top.to_pixel() <= PELLET_BOUNCE_TOP_MIN) {
 			p->velocity.x.set(0.0f);
 			p->velocity.y.v = p->speed.v;
-			p->motion_type = PM_NORMAL;
+			p->motion_type = PM_REGULAR;
 			if(p->cur_top.to_pixel() <= PLAYFIELD_TOP) {
 				p->cur_top.set(PLAYFIELD_TOP + 1.0f);
 			}
@@ -541,7 +541,7 @@ bool16 CPellets::visible_after_hittests_for_cur(
 		}
 		vector2(p->velocity.x.v, p->velocity.y.v, to_sp(8.0f), deflect_angle);
 		if(!p->from_group) {
-			p->motion_type = PM_NORMAL;
+			p->motion_type = PM_REGULAR;
 		}
 		// Yes, deflected pellets aren't rendered on the frames they're
 		// deflected on!

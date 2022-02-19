@@ -6866,7 +6866,7 @@ loc_1C55B:
 		or	dx, dx
 		jnz	short loc_1C5BA
 		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
+		pushd	PM_REGULAR or (0 shl 16)
 		push	(4 shl 4)
 		mov	al, 80h
 		sub	al, angle_39E16
@@ -6881,7 +6881,7 @@ loc_1C55B:
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
+		pushd	PM_REGULAR or (0 shl 16)
 		push	(4 shl 4)
 		push	word ptr angle_39E16
 		mov	ax, eye_east.BE_cur_top
@@ -8870,7 +8870,7 @@ loc_1DB5B:
 		call	iatan2
 		mov	angle_39E16, al
 		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
+		pushd	PM_REGULAR or (0 shl 16)
 		push	(3 shl 4)
 		push	word ptr angle_39E16
 		mov	bx, si
@@ -9724,7 +9724,7 @@ loc_1E9C6:
 		call	iatan2
 		mov	[bp+@@angle], al
 		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
+		pushd	PM_REGULAR or (0 shl 16)
 		push	speed_39E18
 		push	word ptr [bp+@@angle]
 		mov	bx, si
@@ -9775,7 +9775,7 @@ loc_1EA31:
 		call	iatan2
 		mov	[bp+@@angle], al
 		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
+		pushd	PM_REGULAR or (0 shl 16)
 		mov	ax, speed_39E18
 		cwd
 		sub	ax, dx
@@ -10192,7 +10192,7 @@ loc_1EDD9:
 		call	iatan2
 		mov	[bp+@@angle], al
 		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
+		pushd	PM_REGULAR or (0 shl 16)
 		push	speed_39E18
 		push	word ptr [bp+@@angle]
 		mov	bx, si
@@ -10225,7 +10225,7 @@ loc_1EDD9:
 		call	iatan2
 		mov	[bp+@@angle], al
 		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
+		pushd	PM_REGULAR or (0 shl 16)
 		push	speed_39E18
 		push	word ptr [bp+@@angle]
 		mov	bx, si
@@ -11281,7 +11281,7 @@ loc_1F83D:
 
 loc_1F844:
 		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
+		pushd	PM_REGULAR or (0 shl 16)
 		push	speed_39E18
 		push	word ptr angle_39E5E
 		mov	bx, si
@@ -13783,7 +13783,7 @@ loc_22A37:
 		or	dx, dx
 		jnz	short loc_22AA5
 		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
+		pushd	PM_REGULAR or (0 shl 16)
 		push	(3 shl 4) + 2
 		push	word ptr angle_3A387
 		mov	ax, singyoku_sphere.BE_cur_top
@@ -14124,7 +14124,7 @@ sub_22D63	proc far
 		push	ax	; ret (offset)
 		call	@singyoku_select_for_rank$qmiiiii
 		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
+		pushd	PM_REGULAR or (0 shl 16)
 		push	[bp+@@speed]
 		push	30h
 		mov	ax, singyoku_sphere.BE_cur_top
@@ -14138,7 +14138,7 @@ sub_22D63	proc far
 		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 20h
 		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
+		pushd	PM_REGULAR or (0 shl 16)
 		push	[bp+@@speed]
 		push	50h
 		mov	ax, singyoku_sphere.BE_cur_top
@@ -14242,7 +14242,7 @@ loc_22E62:
 		and	al, 7Fh
 		mov	[bp+@@angle], al
 		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
+		pushd	PM_REGULAR or (0 shl 16)
 		push	speed_3A385
 		push	word ptr [bp+@@angle]
 		mov	ax, singyoku_sphere.BE_cur_top
@@ -15776,7 +15776,7 @@ loc_23D63:
 		add	ax, 180
 		mov	di, ax
 		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
+		pushd	PM_REGULAR or (0 shl 16)
 		push	(3 shl 4) + 2
 		mov	al, angle_3A6B9
 		add	al, angle_3A6BA
@@ -15811,7 +15811,7 @@ loc_23D63:
 		add	ax, 180
 		mov	di, ax
 		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
+		pushd	PM_REGULAR or (0 shl 16)
 		push	(3 shl 4) + 2
 		mov	al, angle_3A6B9
 		add	al, angle_3A6BA
@@ -16252,9 +16252,9 @@ loc_2422C:
 		sar	eax, 8
 		add	ax, 180
 		mov	[bp+@@top], ax
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, di, ax, word ptr angle_3A6BD, (2 shl 4) + 4, large PM_NORMAL or (0 shl 16), large 0 or (0 shl 16)
+		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, di, ax, word ptr angle_3A6BD, (2 shl 4) + 4, large PM_REGULAR or (0 shl 16), large 0 or (0 shl 16)
 		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
+		pushd	PM_REGULAR or (0 shl 16)
 		push	(2 shl 4) + 4
 		mov	al, angle_3A6BD
 		add	al, 40h
@@ -16266,7 +16266,7 @@ loc_2422C:
 		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		add	sp, 28h
 		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
+		pushd	PM_REGULAR or (0 shl 16)
 		push	(2 shl 4) + 4
 		mov	al, angle_3A6BD
 		add	al, 80h
@@ -16277,7 +16277,7 @@ loc_2422C:
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
+		pushd	PM_REGULAR or (0 shl 16)
 		push	(2 shl 4) + 4
 		mov	al, angle_3A6BD
 		add	al, -40h
@@ -18720,7 +18720,7 @@ loc_26194:
 
 loc_261B6:
 		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
+		pushd	PM_REGULAR or (0 shl 16)
 		push	(3 shl 4)
 		mov	ax, 256
 		cwd
@@ -18754,7 +18754,7 @@ loc_261ED:
 
 loc_261F8:
 		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
+		pushd	PM_REGULAR or (0 shl 16)
 		push	(3 shl 4) + 6
 		mov	ax, 256
 		cwd
@@ -18789,7 +18789,7 @@ loc_26231:
 
 loc_2623C:
 		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
+		pushd	PM_REGULAR or (0 shl 16)
 		push	(4 shl 4)
 		mov	ax, 256
 		cwd
@@ -18824,7 +18824,7 @@ loc_26275:
 
 loc_26280:
 		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
+		pushd	PM_REGULAR or (0 shl 16)
 		push	(4 shl 4) + 8
 		mov	ax, 256
 		cwd
@@ -18859,7 +18859,7 @@ loc_262B8:
 
 loc_262C3:
 		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
+		pushd	PM_REGULAR or (0 shl 16)
 		push	(5 shl 4)
 		mov	ax, 256
 		cwd
@@ -19133,7 +19133,7 @@ loc_26568:
 		and	ax, 3Fh
 		mov	[bp+@@speed], ax
 		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
+		pushd	PM_REGULAR or (0 shl 16)
 		push	ax
 		push	word ptr [bp+@@angle]
 		mov	ax, _boss_phase_frame
@@ -19335,7 +19335,7 @@ loc_26774:
 
 loc_26791:
 		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
+		pushd	PM_REGULAR or (0 shl 16)
 		push	(6 shl 4)
 		push	word ptr [bp+@@angle]
 		mov	bx, si
@@ -20285,7 +20285,7 @@ loc_27008:
 
 loc_2702A:
 		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
+		pushd	PM_REGULAR or (0 shl 16)
 		mov	ax, si
 		add	ax, word_3A6CC
 		shl	ax, 4
@@ -20301,7 +20301,7 @@ loc_2702A:
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
+		pushd	PM_REGULAR or (0 shl 16)
 		mov	ax, si
 		add	ax, word_3A6CC
 		shl	ax, 4
@@ -20334,7 +20334,7 @@ loc_27088:
 
 loc_27093:
 		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
+		pushd	PM_REGULAR or (0 shl 16)
 		mov	ax, si
 		add	ax, word_3A6CC
 		shl	ax, 4
@@ -20350,7 +20350,7 @@ loc_27093:
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
+		pushd	PM_REGULAR or (0 shl 16)
 		mov	ax, si
 		add	ax, word_3A6CC
 		shl	ax, 4
@@ -20383,7 +20383,7 @@ loc_270F1:
 
 loc_270FC:
 		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
+		pushd	PM_REGULAR or (0 shl 16)
 		mov	ax, si
 		add	ax, word_3A6CC
 		shl	ax, 4
@@ -20399,7 +20399,7 @@ loc_270FC:
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
+		pushd	PM_REGULAR or (0 shl 16)
 		mov	ax, si
 		add	ax, word_3A6CC
 		shl	ax, 4
@@ -20433,7 +20433,7 @@ loc_27159:
 
 loc_27168:
 		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
+		pushd	PM_REGULAR or (0 shl 16)
 		mov	ax, word_3A6CC
 		add	ax, 2
 		shl	ax, 4
@@ -20451,7 +20451,7 @@ loc_27168:
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		pushd	0 or (0 shl 16)
-		pushd	PM_NORMAL or (0 shl 16)
+		pushd	PM_REGULAR or (0 shl 16)
 		mov	ax, word_3A6CC
 		add	ax, 2
 		shl	ax, 4
