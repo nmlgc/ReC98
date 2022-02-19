@@ -12574,7 +12574,7 @@ loc_13FCC:
 		mov	_bullet_template.BT_angle, al
 		mov	_bullet_template.speed, (2 shl 4)
 		mov	_bullet_template.BT_group, BG_SINGLE
-		mov	_bullet_template.BT_special_motion, -1
+		mov	_bullet_template.BT_special_motion, BSM_NONE
 		call	_bullet_template_tune
 		call	_bullets_add_special
 		mov	al, 80h
@@ -13356,7 +13356,7 @@ sub_147DB	proc near
 		cmp	_stage_frame_mod16, 0
 		jnz	short loc_14826
 		mov	_bullet_template.spawn_type, BST_BULLET16
-		mov	_bullet_template.BT_special_motion, 87h
+		mov	_bullet_template.BT_special_motion, BSM_BOUNCE_LEFT_RIGHT_TOP
 		mov	_bullet_template.BT_group, BG_SPREAD
 		mov	_bullet_template.count, 5
 		mov	_bullet_template.BT_delta.spread_angle, 0Ch
@@ -13864,7 +13864,7 @@ loc_14C6B:
 		mov	_bullet_template.BT_angle, al
 		mov	_bullet_template.patnum, PAT_BULLET16_D_BLUE
 		mov	_bullet_template.BT_group, BG_SINGLE
-		mov	_bullet_template.BT_special_motion, -1
+		mov	_bullet_template.BT_special_motion, BSM_NONE
 
 loc_14CCC:
 		mov	ax, si
@@ -16117,7 +16117,7 @@ loc_160F4:
 		mov	_bullet_template.patnum, PAT_BULLET16_N_CROSS_YELLOW
 		mov	_bullet_template.BT_angle, 80h
 		mov	_bullet_template.speed, (1 shl 4)
-		mov	_bullet_template.BT_special_motion, 82h
+		mov	_bullet_template.BT_special_motion, BSM_SPEEDUP
 		mov	_bullet_special_motion_speed_delta, 1
 		mov	_bullet_template.count, 32
 		call	_bullet_template_tune
@@ -16166,7 +16166,7 @@ loc_16187:
 		mov	_bullet_template.patnum, PAT_BULLET16_N_CROSS_YELLOW
 		mov	_bullet_template.BT_angle, 0
 		mov	_bullet_template.speed, (1 shl 4)
-		mov	_bullet_template.BT_special_motion, 82h
+		mov	_bullet_template.BT_special_motion, BSM_SPEEDUP
 		mov	_bullet_special_motion_speed_delta, 1
 		mov	_bullet_template.count, 32
 		call	_bullet_template_tune
@@ -16239,7 +16239,7 @@ loc_16228:
 		mov	_circles_color, 0Fh
 		mov	_bullet_template.spawn_type, BST_BULLET16
 		mov	_bullet_template.speed, (1 shl 4)
-		mov	_bullet_template.BT_special_motion, 87h
+		mov	_bullet_template.BT_special_motion, BSM_BOUNCE_LEFT_RIGHT_TOP
 		mov	_bullet_template.BT_group, BG_SPREAD
 		mov	_bullet_template.count, 7
 		mov	_bullet_template.BT_delta.spread_angle, 8
@@ -16290,7 +16290,7 @@ sub_162A3	proc near
 		mov	_bullet_template.BT_group, BG_RING_AIMED
 		mov	_bullet_template.BT_delta.spread_angle, 6
 		mov	_bullet_template.speed, (1 shl 4)
-		mov	_bullet_template.BT_special_motion, 82h
+		mov	_bullet_template.BT_special_motion, BSM_SPEEDUP
 		mov	_bullet_template.count, 8
 		mov	_bullet_special_motion_speed_delta, 1
 		jmp	short loc_162EA
@@ -16556,7 +16556,7 @@ sub_1653D	proc near
 		mov	_circles_color, 0Fh
 		mov	_boss_angle, 16
 		mov	byte_2D02D, 10h
-		mov	_bullet_template.BT_special_motion, -1
+		mov	_bullet_template.BT_special_motion, BSM_NONE
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -18260,7 +18260,7 @@ loc_173D3:
 		mov	_bullet_template.spawn_type, BST_BULLET16_CLOUD_FORWARDS
 		mov	_bullet_template.patnum, PAT_BULLET16_N_BALL_RED
 		mov	_bullet_template.BT_group, BG_SINGLE_AIMED
-		mov	_bullet_template.BT_special_motion, -1
+		mov	_bullet_template.BT_special_motion, BSM_NONE
 		call	_bullet_template_tune
 		xor	si, si
 		jmp	short loc_1746F
@@ -18345,7 +18345,7 @@ var_1		= byte ptr -1
 		mov	_bullet_template.patnum, PAT_BULLET16_N_STAR
 		mov	_bullet_template.speed, (5 shl 4) + 12
 		mov	_bullet_template.BT_group, BG_SINGLE
-		mov	_bullet_template.BT_special_motion, 83h
+		mov	_bullet_template.BT_special_motion, BSM_SLOWDOWN_TO_ANGLE
 		call	_bullet_template_tune
 		mov	fp_25676, offset sub_17061
 		mov	byte_2D02D, 0
@@ -18564,7 +18564,7 @@ var_1		= byte ptr -1
 		mov	_bullet_template.spawn_type, BST_BULLET16
 		mov	_bullet_template.patnum, PAT_BULLET16_N_STAR
 		mov	_bullet_template.BT_group, BG_SINGLE
-		mov	_bullet_template.BT_special_motion, -1
+		mov	_bullet_template.BT_special_motion, BSM_NONE
 		mov	_bullet_template.BT_angle, -40h
 		mov	_bullet_template.speed, (6 shl 4)
 		mov	fp_25676, offset sub_17061
@@ -20115,7 +20115,7 @@ loc_183A7:
 		mov	_bullet_template.BT_angle, 0
 		mov	_bullet_template.BT_group, BG_RING
 		mov	_bullet_template.count, 32
-		mov	_bullet_template.BT_special_motion, 81h
+		mov	_bullet_template.BT_special_motion, BSM_SLOWDOWN_THEN_TURN
 		mov	_bullet_template.speed, (2 shl 4) + 8
 		mov	_bullet_special_motion_turns_max, 2
 		mov	_bullet_template_special_angle.BSA_turn_by, -20h
@@ -20232,7 +20232,7 @@ sub_184AC	proc near
 ; ---------------------------------------------------------------------------
 
 loc_184C8:
-		mov	_bullet_template.BT_special_motion, 81h
+		mov	_bullet_template.BT_special_motion, BSM_SLOWDOWN_THEN_TURN
 		mov	_bullet_template.BT_group, BG_SINGLE
 		mov	_bullet_special_motion_turns_max, 1
 		pop	bp
@@ -20882,7 +20882,7 @@ loc_18AC4:
 		mov	ax, [si+4]
 		sub	ax, [si+0Ch]
 		mov	_bullet_template.BT_origin.y, ax
-		mov	_bullet_template.BT_special_motion, 82h
+		mov	_bullet_template.BT_special_motion, BSM_SPEEDUP
 		mov	_bullet_special_motion_speed_delta, 1
 		mov	[bp+var_4], 0
 		mov	_bullet_template.speed, (2 shl 4)
@@ -21248,7 +21248,7 @@ loc_18DCF:
 		mov	_bullet_template.BT_origin, eax
 		mov	_bullet_template.BT_group, BG_RING_AIMED
 		mov	_bullet_template.count, 16
-		mov	_bullet_template.BT_special_motion, 81h
+		mov	_bullet_template.BT_special_motion, BSM_SLOWDOWN_THEN_TURN
 		mov	_bullet_template.speed, (3 shl 4)
 		call	randring2_next16
 		mov	_bullet_template.BT_angle, al
@@ -21623,7 +21623,7 @@ loc_190DE:
 		call	randring2_next16_and pascal, 0Fh
 		add	al, (2 shl 4)
 		mov	_bullet_template.speed, al
-		mov	_bullet_template.BT_special_motion, -1
+		mov	_bullet_template.BT_special_motion, BSM_NONE
 		call	_bullet_template_tune
 		call	_bullets_add_special
 
@@ -22307,7 +22307,7 @@ loc_19751:
 		mov	_bullet_template.BT_group, BG_SPREAD
 		mov	_bullet_template.count, 3
 		mov	_bullet_template.BT_delta.spread_angle, 0Ch
-		mov	_bullet_template.BT_special_motion, -1
+		mov	_bullet_template.BT_special_motion, BSM_NONE
 		mov	al, _boss_angle
 		add	al, -20h
 		mov	_bullet_template.BT_angle, al
@@ -24201,7 +24201,7 @@ loc_1AB86:
 		mov	_bullet_template.BT_origin.y, ax
 		mov	_bullet_template.BT_angle, 0
 		mov	_bullet_template.BT_group, BG_RING
-		mov	_bullet_template.BT_special_motion, 81h
+		mov	_bullet_template.BT_special_motion, BSM_SLOWDOWN_THEN_TURN
 		mov	_bullet_template.count, 20
 		mov	_bullet_template_special_angle.BSA_turn_by, -40h
 		call	_bullet_template_tune
@@ -24351,7 +24351,7 @@ loc_1ACD9:
 		mov	_bullet_template.BT_origin.y, ax
 		mov	_bullet_template.BT_group, BG_RANDOM_ANGLE_AND_SPEED
 		mov	_bullet_template.count, 4
-		mov	_bullet_template.BT_special_motion, 88h
+		mov	_bullet_template.BT_special_motion, BSM_GRAVITY
 		call	randring2_next16_mod pascal, (1 shl 4) + 8
 		add	al, 8
 		mov	_bullet_template.speed, al
@@ -27183,7 +27183,7 @@ bullet_update_special	proc near
 		mov	si, [bp+@@bullet]
 		mov	al, [si+bullet_t.special_motion]
 		mov	ah, 0
-		sub	ax, 80h
+		sub	ax, BSM_SLOWDOWN_THEN_TURN_AIMED
 		mov	bx, ax
 		cmp	bx, 8
 		ja	loc_1C8B1
@@ -29788,7 +29788,7 @@ var_1		= byte ptr -1
 		mov	_bullet_template.patnum, PAT_BULLET16_N_BALL_BLUE
 		mov	_bullet_template.speed, (5 shl 4) + 5
 		mov	_bullet_template.BT_angle, 0
-		mov	_bullet_template.BT_special_motion, 80h
+		mov	_bullet_template.BT_special_motion, BSM_SLOWDOWN_THEN_TURN_AIMED
 		mov	al, byte_2D020
 		mov	_bullet_special_motion_turns_max, al
 		mov	_bullet_template.BT_group, BG_SPREAD_AIMED
@@ -29885,7 +29885,7 @@ var_1		= byte ptr -1
 		mov	_bullet_template.patnum, PAT_BULLET16_N_BALL_BLUE
 		mov	_bullet_template.speed, (1 shl 4)
 		mov	_bullet_template.BT_angle, 0
-		mov	_bullet_template.BT_special_motion, 82h
+		mov	_bullet_template.BT_special_motion, BSM_SPEEDUP
 		mov	_bullet_special_motion_speed_delta, 1
 		mov	_bullet_template.BT_group, BG_RING
 		mov	_bullet_template.count, 16
@@ -30078,7 +30078,7 @@ loc_1F0B0:
 		call	randring2_next16
 		mov	_bullet_template.BT_angle, al
 		mov	_bullet_template.speed, (3 shl 4)
-		mov	_bullet_template.BT_special_motion, 82h
+		mov	_bullet_template.BT_special_motion, BSM_SPEEDUP
 		mov	_bullet_special_motion_speed_delta, 1
 		call	_bullet_template_tune
 		call	_bullets_add_special
@@ -30165,7 +30165,7 @@ sub_1F17C	proc near
 		mov	_bullet_template.spawn_type, BST_BULLET16_CLOUD_FORWARDS
 		mov	_bullet_template.patnum, PAT_BULLET16_N_BALL_BLUE
 		mov	_bullet_template.BT_angle, -40h
-		mov	_bullet_template.BT_special_motion, -1
+		mov	_bullet_template.BT_special_motion, BSM_NONE
 		mov	_bullet_template.BT_delta.stack_speed, 8
 
 loc_1F1AA:
@@ -30235,7 +30235,7 @@ var_1		= byte ptr -1
 		mov	_bullet_template.spawn_type, BST_BULLET16_CLOUD_FORWARDS
 		mov	_bullet_template.patnum, PAT_BULLET16_N_BALL_BLUE
 		mov	_bullet_template.BT_angle, -40h
-		mov	_bullet_template.BT_special_motion, -1
+		mov	_bullet_template.BT_special_motion, BSM_NONE
 		mov	_bullet_template.BT_delta.spread_angle, 8
 		cmp	byte_237F6, 78h	; 'x'
 		jz	short loc_1F25E
@@ -30317,7 +30317,7 @@ var_1		= byte ptr -1
 		mov	al, byte_2D024
 		mov	_bullet_template.count, al
 		mov	_bullet_template.BT_delta.stack_speed, 12
-		mov	_bullet_template.BT_special_motion, -1
+		mov	_bullet_template.BT_special_motion, BSM_NONE
 		mov	_bullet_template.BT_angle, 0
 		mov	_bullet_template.patnum, PAT_BULLET16_N_BALL_BLUE
 
@@ -31379,7 +31379,7 @@ sub_1FB86	proc near
 ; ---------------------------------------------------------------------------
 
 loc_1FBA1:
-		mov	_bullet_template.BT_special_motion, 86h
+		mov	_bullet_template.BT_special_motion, BSM_BOUNCE_LEFT_RIGHT_TOP_BOTTOM
 		mov	_bullet_special_motion_turns_max, 4
 		pop	bp
 		retn
@@ -31461,7 +31461,7 @@ loc_1FC61:
 loc_1FC68:
 		cmp	_stage_frame_mod2, 0
 		jz	short loc_1FCE0
-		mov	_bullet_template.BT_special_motion, 81h
+		mov	_bullet_template.BT_special_motion, BSM_SLOWDOWN_THEN_TURN
 		mov	_bullet_template.BT_group, BG_SINGLE
 		mov	_bullet_template.spawn_type, BST_BULLET16
 		mov	_bullet_template.patnum, PAT_BULLET16_N_SMALL_BALL_YELLOW
@@ -31540,7 +31540,7 @@ sub_1FD30	proc near
 loc_1FD49:
 		mov	_bullet_template.patnum, PAT_BULLET16_N_HEART_BALL_RED
 		mov	_bullet_template.BT_group, BG_SPREAD_AIMED
-		mov	_bullet_template.BT_special_motion, -1
+		mov	_bullet_template.BT_special_motion, BSM_NONE
 		mov	_bullet_template.BT_delta.spread_angle, 10h
 		mov	_bullet_template.BT_angle, 0
 		mov	_bullet_template.count, 2

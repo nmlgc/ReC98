@@ -67,6 +67,49 @@ enum bullet_move_state_t {
 };
 
 enum bullet_special_motion_t {
+	// This is so dumb.
+	_bullet_special_motion_t_offset = static_cast<int8_t>((GAME - 5) * 0x81),
+
+	// Slows down the bullet from its initial speed to 0, then aims to the
+	// player and resets to its initial speed.
+	// Affected by [bullet_special_motion.turns_max].
+	BSM_SLOWDOWN_THEN_TURN_AIMED,
+
+	// Slows down the bullet from its initial speed to 0, then increases its
+	// angle by [angle.turn_by] and resets to its initial speed.
+	// Affected by [bullet_special_motion.turns_max].
+	BSM_SLOWDOWN_THEN_TURN,
+
+	// Accelerates the speed of the bullet by
+	// [bullet_special_motion.speed_delta] every frame.
+	BSM_SPEEDUP,
+
+	// Slows down the bullet from its initial speed to 0 while turning it
+	// towards [angle.target]. Upon reaching a speed of 0, the bullet
+	// continues flying at that exact angle and resets to its initial speed.
+	BSM_SLOWDOWN_TO_ANGLE,
+
+	// Bounces the bullet into the opposite direction if it reaches the
+	// respective edge of the playfield.
+	// Affected by [bullet_special_motion.turns_max].
+	BSM_BOUNCE_LEFT_RIGHT,
+	BSM_BOUNCE_TOP_BOTTOM,
+	BSM_BOUNCE_LEFT_RIGHT_TOP_BOTTOM,
+	BSM_BOUNCE_LEFT_RIGHT_TOP,
+
+	// Accelerates the Y velocity of the bullet by
+	// [bullet_special_motion.speed_delta] every two frames.
+	BSM_GRAVITY,
+
+	#if (GAME == 5)
+		// Exact linear movement along a line; recalculates the bullet position
+		// based on the origin, angle, and distance every frame. Useful if
+		// regular incremental subpixel movement would introduce too much
+		// quantization noise.
+		BSM_EXACT_LINEAR,
+	#endif
+
+	BSM_NONE = 0xFF,
 };
 
 union bullet_special_angle_t {
@@ -101,9 +144,9 @@ struct bullet_t {
 	int patnum;
 
 #if GAME == 5
-	// Coordinates for BSM_STRAIGHT
+	// Coordinates for BSM_EXACT_LINEAR
 	SPPoint origin;
-	int distance;
+	Subpixel distance;
 #endif
 };
 
