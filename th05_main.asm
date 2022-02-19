@@ -11625,7 +11625,7 @@ loc_17A4E:
 ; ---------------------------------------------------------------------------
 
 loc_17A56:
-		inc	[si+bullet_t.turn_count]
+		inc	[si+bullet_t.turns_done]
 		mov	ax, _player_pos.cur.y
 		sub	ax, [si+4]
 		push	ax
@@ -11637,8 +11637,8 @@ loc_17A56:
 		call	bullet_update_patnum pascal, si
 		mov	al, [si+bullet_t.speed_final]
 		mov	[si+bullet_t.speed_cur], al
-		mov	al, [si+bullet_t.turn_count]
-		cmp	al, _bullet_turn_count_max
+		mov	al, [si+bullet_t.turns_done]
+		cmp	al, _bullet_special_motion_turns_max
 		jb	loc_17B32
 		jmp	loc_17B2E
 ; ---------------------------------------------------------------------------
@@ -11660,14 +11660,14 @@ loc_17A8D:
 ; ---------------------------------------------------------------------------
 
 loc_17AA3:
-		inc	[si+bullet_t.turn_count]
-		mov	al, [si+bullet_t.turn_angle]
+		inc	[si+bullet_t.turns_done]
+		mov	al, [si+bullet_t.BULLET_SPECIAL_angle.BSA_turn_by]
 		add	[si+bullet_t.BULLET_angle], al
 		call	bullet_update_patnum pascal, si
 		mov	al, [si+bullet_t.speed_final]
 		mov	[si+bullet_t.speed_cur], al
-		mov	al, [si+bullet_t.turn_count]
-		cmp	al, _bullet_turn_count_max
+		mov	al, [si+bullet_t.turns_done]
+		cmp	al, _bullet_special_motion_turns_max
 		jb	short loc_17B32
 		jmp	short loc_17B2E
 ; ---------------------------------------------------------------------------
@@ -11680,7 +11680,7 @@ loc_17AC1:
 		mov	ah, 0
 		push	ax
 		call	vector2_near
-		mov	al, _bullet_turn_count_max
+		mov	al, _bullet_special_motion_speed_delta
 		add	[si+bullet_t.speed_cur], al
 		jmp	loc_17BEB
 ; ---------------------------------------------------------------------------
@@ -11709,7 +11709,7 @@ loc_17B00:
 loc_17B04:
 		cmp	[si+bullet_t.speed_cur], (2 shl 4)
 		jnb	loc_17BEB
-		mov	al, [si+bullet_t.turn_angle]
+		mov	al, [si+bullet_t.BULLET_SPECIAL_angle.BSA_target]
 		sub	al, [si+bullet_t.BULLET_angle]
 		cbw
 		mov	bx, 4
@@ -11721,7 +11721,7 @@ loc_17B04:
 ; ---------------------------------------------------------------------------
 
 loc_17B22:
-		mov	al, [si+bullet_t.turn_angle]
+		mov	al, [si+bullet_t.BULLET_SPECIAL_angle.BSA_target]
 		mov	[si+bullet_t.BULLET_angle], al
 		mov	al, [si+bullet_t.speed_final]
 		mov	[si+bullet_t.speed_cur], al
@@ -11797,7 +11797,7 @@ loc_17BA3:
 loc_17BA9:
 		cmp	_stage_frame_mod2, 0
 		jz	short loc_17BEB
-		mov	al, _bullet_turn_count_max
+		mov	al, _bullet_special_motion_speed_delta
 		mov	ah, 0
 		add	[si+bullet_t.pos.velocity.y], ax
 		jmp	short loc_17BEB
@@ -13558,17 +13558,17 @@ loc_18F93:
 		mov	dword ptr _bullet_template.spread, (9 shl 24) or (5 shl 16) or (8 shl 8) or 24
 		mov	_bullet_template.BT_angle, 0
 		mov	_bullet_template.BT_special_motion, 2
-		mov	_bullet_turn_count_max, 1
+		mov	_bullet_special_motion_turns_max, 1
 		push	1
 		call	randring2_next16_and
 		or	ax, ax
 		jz	short loc_18FBB
-		mov	_bullet_template_turn_angle, 20h
+		mov	_bullet_template_special_angle.BSA_turn_by, 20h
 		jmp	short loc_18FC0
 ; ---------------------------------------------------------------------------
 
 loc_18FBB:
-		mov	_bullet_template_turn_angle, -20h
+		mov	_bullet_template_special_angle.BSA_turn_by, -20h
 
 loc_18FC0:
 		call	_bullet_template_tune
@@ -17989,7 +17989,7 @@ sub_1B973	proc near
 		mov	_bullet_template.spawn_type, BST_NO_SLOWDOWN
 		mov	_bullet_template.BT_group, BG_RANDOM_ANGLE
 		mov	_bullet_template.BT_special_motion, 3
-		mov	_bullet_turn_count_max, 1
+		mov	_bullet_special_motion_speed_delta, 1
 		mov	_bullet_template.patnum, PAT_BULLET16_V_RED
 		mov	al, _rank
 		add	al, al
@@ -18439,7 +18439,7 @@ sub_1BDD0	proc near
 		jnz	short loc_1BE12
 		mov	_bullet_template.spawn_type, BST_NO_SLOWDOWN
 		mov	_bullet_template.BT_group, BG_STACK
-		mov	_bullet_turn_count_max, 1
+		mov	_bullet_special_motion_turns_max, 1
 		mov	_bullet_template.BT_special_motion, 2
 		mov	_bullet_template.patnum, PAT_BULLET16_V_BLUE
 		mov	al, _rank
@@ -18469,7 +18469,7 @@ loc_1BE12:
 		jnz	short loc_1BE40
 		mov	al, angle_2D085
 		mov	_bullet_template.BT_angle, al
-		mov	_bullet_template_turn_angle, -40h
+		mov	_bullet_template_special_angle.BSA_turn_by, -40h
 		jmp	short loc_1BE4E
 ; ---------------------------------------------------------------------------
 
@@ -18477,7 +18477,7 @@ loc_1BE40:
 		mov	al, 80h
 		sub	al, angle_2D085
 		mov	_bullet_template.BT_angle, al
-		mov	_bullet_template_turn_angle, 40h
+		mov	_bullet_template_special_angle.BSA_turn_by, 40h
 
 loc_1BE4E:
 		call	_bullets_add_special_fixedspeed
@@ -18779,13 +18779,13 @@ sub_1C0E4	proc near
 		jnz	short loc_1C121
 		mov	_bullet_template.spawn_type, BST_NO_SLOWDOWN
 		mov	_bullet_template.BT_group, BG_SPREAD_STACK
-		mov	_bullet_turn_count_max, 1
+		mov	_bullet_special_motion_turns_max, 1
 		mov	_bullet_template.BT_special_motion, 2
 		mov	_bullet_template.patnum, PAT_BULLET16_V_BLUE
 		mov	dword ptr _bullet_template.spread, (8 shl 24) or (2 shl 16) or (8 shl 8) or 2
 		mov	_bullet_template.speed, (3 shl 4)
 		mov	_boss_sprite, 192
-		mov	_bullet_template_turn_angle, -4Ah
+		mov	_bullet_template_special_angle.BSA_turn_by, -4Ah
 		jmp	short loc_1C190
 ; ---------------------------------------------------------------------------
 
@@ -18800,15 +18800,15 @@ loc_1C121:
 		jnz	short loc_1C15E
 		mov	_bullet_template.BT_angle, 80h
 		call	_bullets_add_special_fixedspeed
-		mov	al, _bullet_template_turn_angle
+		mov	al, _bullet_template_special_angle.BSA_turn_by
 		neg	al
-		mov	_bullet_template_turn_angle, al
+		mov	_bullet_template_special_angle.BSA_turn_by, al
 		mov	_bullet_template.BT_angle, 0
 		call	_bullets_add_special_fixedspeed
-		mov	al, _bullet_template_turn_angle
+		mov	al, _bullet_template_special_angle.BSA_turn_by
 		neg	al
 		add	al, 8
-		mov	_bullet_template_turn_angle, al
+		mov	_bullet_template_special_angle.BSA_turn_by, al
 		call	snd_se_play pascal, 3
 
 loc_1C15E:
@@ -18969,7 +18969,7 @@ loc_1C2AB:
 		mov	word ptr _bullet_template.BT_stack, (6 shl 8) or 8
 		mov	_bullet_template.speed, (1 shl 4) + 8
 		mov	_bullet_template.BT_special_motion, 8
-		mov	_bullet_turn_count_max, 1
+		mov	_bullet_special_motion_turns_max, 1
 		mov	al, byte_2D083
 		mov	_bullet_template.BT_angle, al
 		call	_bullets_add_special
@@ -20303,7 +20303,7 @@ sub_1D1C6	proc near
 		call	_bullet_template_tune
 		call	snd_se_play pascal, 8
 		mov	angle_2D085, 0
-		mov	_bullet_turn_count_max, 2
+		mov	_bullet_special_motion_turns_max, 2
 		mov	angle_2D084, 0
 		pop	bp
 		retn
@@ -20320,7 +20320,7 @@ loc_1D228:
 		mov	_bullet_template.BT_angle, al
 		test	angle_2D085, 1
 		jz	short loc_1D252
-		mov	_bullet_template_turn_angle, 40h
+		mov	_bullet_template_special_angle.BSA_turn_by, 40h
 		mov	al, 80h
 		sub	al, _bullet_template.BT_angle
 		mov	_bullet_template.BT_angle, al
@@ -20328,7 +20328,7 @@ loc_1D228:
 ; ---------------------------------------------------------------------------
 
 loc_1D252:
-		mov	_bullet_template_turn_angle, -40h
+		mov	_bullet_template_special_angle.BSA_turn_by, -40h
 
 loc_1D257:
 		call	_bullets_add_special_fixedspeed
@@ -22255,7 +22255,7 @@ loc_1E62A:
 		cmp	_midboss_phase_frame, 114
 		jg	short loc_1E65F
 		mov	_bullet_template.spawn_type, BST_NO_SLOWDOWN
-		mov	_bullet_turn_count_max, 2
+		mov	_bullet_special_motion_speed_delta, 2
 		mov	_bullet_template.BT_special_motion, 3
 		mov	word ptr _bullet_template.spread, (16 shl 8) or 18
 		mov	_bullet_template.BT_group, BG_RING
@@ -22325,17 +22325,17 @@ sub_1E6A6	proc near
 		or	dx, dx
 		jnz	short loc_1E6FE
 		mov	_bullet_template.spawn_type, BST_CLOUD_BACKWARDS or BST_NO_SLOWDOWN
-		mov	_bullet_turn_count_max, 1
+		mov	_bullet_special_motion_turns_max, 1
 		mov	_bullet_template.BT_special_motion, 2
 		mov	_bullet_template.BT_group, BG_SPREAD_STACK
 		mov	dword ptr _bullet_template.spread, (16 shl 24) or (4 shl 16) or (8 shl 8) or 5
 		mov	_bullet_template.speed, (1 shl 4) + 8
 		mov	_bullet_template.patnum, PAT_BULLET16_N_CROSS_BLUE
 		mov	_bullet_template.BT_angle, 80h
-		mov	_bullet_template_turn_angle, -38h
+		mov	_bullet_template_special_angle.BSA_turn_by, -38h
 		call	_bullets_add_special
 		mov	_bullet_template.BT_angle, 0
-		mov	_bullet_template_turn_angle, 38h
+		mov	_bullet_template_special_angle.BSA_turn_by, 38h
 		call	_bullets_add_special
 		call	snd_se_play pascal, 3
 
@@ -22601,7 +22601,7 @@ loc_1E9B5:
 		mov	_bullet_template.BT_angle, al
 		mov	_bullet_template.BT_group, BG_RING
 		mov	_bullet_template.BT_special_motion, 1
-		mov	_bullet_turn_count_max, 1
+		mov	_bullet_special_motion_turns_max, 1
 		mov	word ptr _bullet_template.spread, (10 shl 8) or 12
 		mov	_bullet_template.patnum, PAT_BULLET16_N_RED
 		mov	ax, _boss_phase_frame
@@ -22792,7 +22792,7 @@ sub_1EB52	proc near
 		mov	_bullet_template.BT_angle, al
 		mov	_bullet_template.BT_group, BG_SPREAD
 		mov	_bullet_template.BT_special_motion, 9
-		mov	_bullet_turn_count_max, 1
+		mov	_bullet_special_motion_speed_delta, 1
 		mov	_bullet_template.patnum, PAT_BULLET16_N_SMALL_BALL_BLUE
 		mov	word ptr _bullet_template.spread, (12 shl 8) or 3
 		call	_bullets_add_special
@@ -22926,7 +22926,7 @@ loc_1EC7B:
 		inc	_bullet_template.spread
 
 loc_1ECB9:
-		mov	_bullet_turn_count_max, 1
+		mov	_bullet_special_motion_turns_max, 1
 		mov	al, _bullet_template.BT_angle
 		add	al, 2
 		mov	_bullet_template.BT_angle, al
@@ -23058,7 +23058,7 @@ sub_1EDC1	proc near
 		mov	_bullet_template.spawn_type, BST_CLOUD_FORWARDS or BST_NO_SLOWDOWN
 		mov	_bullet_template.BT_group, BG_SPREAD_AIMED
 		mov	_bullet_template.BT_special_motion, 3
-		mov	_bullet_turn_count_max, 2
+		mov	_bullet_special_motion_speed_delta, 2
 		mov	_bullet_template.speed, (4 shl 4)
 		mov	word ptr _bullet_template.spread, (9 shl 8) or 7
 		mov	_bullet_template.patnum, PAT_BULLET16_D_GREEN

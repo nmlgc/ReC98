@@ -585,8 +585,8 @@ void pascal near bullets_add_special_raw(void)
 			bullet->flag = 1;
 			bullet->move_state = BMS_SPECIAL;
 			bullet->special_motion = bullet_template.special_motion;
-			bullet->ax.turn_count = 0;
-			bullet->dx.turn_angle = bullet_template_turn_angle;
+			bullet->ax.turns_done = 0;
+			bullet->dx.angle.v = bullet_template_special_angle.v;
 			bullet_init_from_template(bullet, group_done, group_i, spawn_state);
 			if(group_done) {
 				break;

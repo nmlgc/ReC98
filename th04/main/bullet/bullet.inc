@@ -23,6 +23,12 @@ BMS_SPECIAL = 1
 BMS_REGULAR = 2
 BMS_DECAY = 4
 BMS_DECAY_END = (BMS_DECAY + BMS_DECAY_FRAMES)
+
+bullet_special_angle_t union
+	BSA_turn_by	db ?
+	BSA_target	db ?
+	BSA_v	db ?
+bullet_special_angle_t ends
 ; ----------------
 
 bullet_t struc
@@ -39,12 +45,12 @@ bullet_t struc
 	speed_final	db ?
 
 	slowdown_time	label byte
-	turn_count	label byte
-		db ?
+	turns_done	label byte
+	BULLET_ax	db ?
 
 	slowdown_speed_delta	label byte
-	turn_angle	label byte
-		db ?
+	BULLET_SPECIAL_angle	label bullet_special_angle_t
+	BULLET_dx	db ?
 
 	BULLET_patnum	dw ?
 

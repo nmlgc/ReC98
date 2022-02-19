@@ -9,7 +9,7 @@ include th05/main/bullet/types.inc
 include th05/sprites/main_pat.inc
 
 extrn _bullet_template:bullet_template_t
-extrn _bullet_template_turn_angle:byte
+extrn _bullet_template_special_angle:bullet_special_angle_t
 extrn _bullet_clear_time:byte
 extrn _pellets:bullet_t:PELLET_COUNT
 extrn _bullets16:bullet_t:PELLET_COUNT
@@ -158,9 +158,9 @@ _bullets_add_raw proc near
 	mov	dword ptr [si+bullet_t.BULLET_origin], eax
 	mov	[si+bullet_t.move_state], BMS_SPECIAL
 	mov	[si+bullet_t.distance], 0
-	mov	[si+bullet_t.turn_count], 0
-	mov	al, _bullet_template_turn_angle
-	mov	[si+bullet_t.turn_angle], al
+	mov	[si+bullet_t.BULLET_ax], 0
+	mov	al, _bullet_template_special_angle
+	mov	[si+bullet_t.BULLET_dx], al
 	mov	al, _bullet_template.BT_special_motion
 	mov	[si+bullet_t.special_motion], al
 

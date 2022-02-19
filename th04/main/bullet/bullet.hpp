@@ -68,6 +68,12 @@ enum bullet_move_state_t {
 
 enum bullet_special_motion_t {
 };
+
+union bullet_special_angle_t {
+	unsigned char turn_by;
+	char target;
+	int8_t v;
+};
 /// ----------------
 
 struct bullet_t {
@@ -84,13 +90,13 @@ struct bullet_t {
 	SubpixelLength8 speed_final;
 	union {
 		unsigned char slowdown_time;	// with BMS_SLOWDOWN
-		unsigned char turn_count;	// with BMS_SPECIAL
+		unsigned char turns_done;   	// with BMS_SPECIAL
 	} ax;
 	union {
 		// Difference between [speed_final] and the BMS_SLOWDOWN_BASE_SPEED.
 		// Always positive for BMS_SLOWDOWN bullets.
 		unsigned char slowdown_speed_delta;	// with BMS_SLOWDOWN
-		unsigned char turn_angle;	// with BMS_SPECIAL
+		bullet_special_angle_t angle;      	// with BMS_SPECIAL
 	} dx;
 	int patnum;
 
@@ -138,10 +144,15 @@ extern bullet_t bullets[BULLET_COUNT];
 #define pellets (&bullets[0])
 #define bullets16 (&bullets[PELLET_COUNT])
 
-// Number of times a bouncing bullet can change its direction before it
-// automatically turns into a BMS_REGULAR bullet. Global state, not set
-// per-bullet!
-extern unsigned char bullet_turn_count_max;
+// Global parameters for special motion types.
+extern union {
+	// Number of times a bullet can change its direction during various special
+	// motion types, before it changes back into a BMS_REGULAR bullet. A value
+	// of 0 will still allow a single direction change.
+	unsigned char turns_max;
+
+	SubpixelLength8 speed_delta;
+} bullet_special_motion;
 
 // Set to `true` to clear all on-screen bullets, giving out a semi-exponential
 // bonus for all bullets that were alive on the first frame of activity.
@@ -221,7 +232,7 @@ struct bullet_template_t {
 
 extern bullet_template_t bullet_template;
 // Separate from the template, for some reason?
-extern unsigned char bullet_template_turn_angle;
+extern bullet_special_angle_t bullet_template_special_angle;
 
 // Modifies [bullet_template] based on [playperf] and the respective
 // difficulty. These don't modify the base [speed]; that is done by the spawn

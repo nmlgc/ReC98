@@ -7,12 +7,12 @@ bullet_turn_x proc near
 	mov	bp, sp
 	push	si
 	mov	si, [bp+@@bullet]
-	inc	[si+bullet_t.turn_count]
+	inc	[si+bullet_t.turns_done]
 	mov	al, 80h
 	sub	al, [si+bullet_t.BULLET_angle]
 	mov	[si+bullet_t.BULLET_angle], al
-	mov	al, [si+bullet_t.turn_count]
-	cmp	al, _bullet_turn_count_max
+	mov	al, [si+bullet_t.turns_done]
+	cmp	al, _bullet_special_motion_turns_max
 	jb	short @@still_allowed_to_turn
 	mov	[si+bullet_t.move_state], BMS_REGULAR
 
@@ -42,12 +42,12 @@ bullet_turn_y proc near
 	mov	bp, sp
 	push	si
 	mov	si, [bp+@@bullet]
-	inc	[si+bullet_t.turn_count]
+	inc	[si+bullet_t.turns_done]
 	mov	al, [si+bullet_t.BULLET_angle]
 	neg	al
 	mov	[si+bullet_t.BULLET_angle], al
-	mov	al, [si+bullet_t.turn_count]
-	cmp	al, _bullet_turn_count_max
+	mov	al, [si+bullet_t.turns_done]
+	cmp	al, _bullet_special_motion_turns_max
 	jb	short @@still_allowed_to_turn
 	mov	[si+bullet_t.move_state], BMS_REGULAR
 
