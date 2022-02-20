@@ -27166,8 +27166,6 @@ off_1C6C4	dw offset loc_1C301
 		dw offset loc_1C3D4
 		dw offset loc_1C445
 		dw offset loc_1C61F
-
-include th04/main/bullet/update.asm
 main_032_TEXT	ends
 
 main_033_TEXT	segment	byte public 'CODE' use16

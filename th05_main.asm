@@ -11595,7 +11595,6 @@ curvebullets_update	endp
 
 include th04/main/item/splashes_update.asm
 include th05/main/bullet/update_patnum.asm
-include th04/main/bullet/update.asm
 	extern _bullets_update:proc
 main_033_TEXT	ends
 
