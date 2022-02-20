@@ -164,11 +164,14 @@ static const subpixel_t BULLET_KILLBOX_H = TO_SP(8);
 # define PELLET_COUNT 180
 # define BULLET16_COUNT 220
 
-// Returns the patnum for the directional or vector bullet sprite starting at
-// [patnum_base] that shows the given [angle].
-int pascal near bullet_patnum_for_angle(int patnum_base, unsigned char angle);
-// Updates [bullet]'s patnum based on its current angle.
-void pascal near bullet_update_patnum(bullet_t near &bullet);
+// Returns the sprite ID of a directional or vector bullet sprite that
+// represents the given [angle], relative to [patnum_base]. While the function
+// is technically not restricted to `main_patnum_t` in TH05 and can also be
+// used for a general (angle / BULLET_D_CELS) division, it still assumes
+// [patnum_base] to be that type in order to distinguish vector bullets.
+unsigned char pascal near bullet_patnum_for_angle(
+	int patnum_base, unsigned char angle
+);
 
 // Turns every 4th bullet into a point item when zapping bullets.
 extern bool bullet_zap_drop_point_items;

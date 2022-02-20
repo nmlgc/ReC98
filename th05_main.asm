@@ -11594,7 +11594,6 @@ loc_178A5:
 curvebullets_update	endp
 
 include th04/main/item/splashes_update.asm
-include th05/main/bullet/update_patnum.asm
 	extern _bullets_update:proc
 main_033_TEXT	ends
 

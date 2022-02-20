@@ -30,6 +30,26 @@ extern "C" {
 	#include "th05/sprites/main_pat.h"
 
 	static const int SLOWDOWN_BULLET_THRESHOLD_UNUSED = 32;
+
+	// Updates [bullet]'s patnum based on its current angle.
+	void pascal near bullet_update_patnum(bullet_t near &bullet)
+	{
+		unsigned char patnum_base; // main_patnum_t, obviously
+
+		if(bullet.patnum < PAT_BULLET16_D) {
+			return;
+		}
+		if(bullet.patnum < (PAT_BULLET16_D_BLUE_last + 1)) {
+			patnum_base = PAT_BULLET16_D_BLUE;
+		} else if(bullet.patnum < (PAT_BULLET16_D_GREEN_last + 1)) {
+			patnum_base = PAT_BULLET16_D_GREEN;
+		} else if(bullet.patnum < (PAT_BULLET16_V_RED_last + 1)) {
+			patnum_base = PAT_BULLET16_V_RED;
+		} else {
+			patnum_base = PAT_BULLET16_V_BLUE;
+		}
+		bullet.patnum = bullet_patnum_for_angle(patnum_base, bullet.angle);
+	}
 #else
 	#include "th04/sprites/main_pat.h"
 
