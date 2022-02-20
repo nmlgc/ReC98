@@ -39,7 +39,7 @@ include th05/main/enemy/enemy.inc
 
 main_01 group SLOWDOWN_TEXT, ma_TEXT, EMS_TEXT, mai_TEXT, CFG_LRES_TEXT, main_TEXT, main__TEXT, main_0_TEXT, DIALOG_TEXT, PLAYER_P_TEXT, main_01_TEXT
 g_SHARED group SHARED, SHARED_
-main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, BULLET_A_TEXT, main_032_TEXT, main_033_TEXT, BULLET_U_TEXT, main_034_TEXT, main_035_TEXT, main_036_TEXT
+main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, BULLET_A_TEXT, main_032_TEXT, main_033_TEXT, IT_SPL_U_TEXT, BULLET_U_TEXT, main_034_TEXT, main_035_TEXT, main_036_TEXT
 
 ; ===========================================================================
 
@@ -10628,7 +10628,7 @@ sub_16D67	proc far
 		call	IRand
 		and	al, 0Fh
 		mov	byte_2C98A, al
-		call	item_splashes_init
+		call	@item_splashes_init$qv
 		mov	_items_pull_to_player, 0
 		mov	word_2C986, 0
 		pop	bp
@@ -10702,7 +10702,7 @@ loc_16DD1:
 		mov	bx, ax
 		mov	ax, _ITEM_TYPE_PATNUM[bx]
 		mov	[si+item_t.ITEM_patnum], ax
-		call	item_splashes_add pascal, [bp+@@x], [bp+@@y]
+		call	@item_splashes_add$q20%SubpixelBase$ti$ti%t1 pascal, [bp+@@x], [bp+@@y]
 		mov	word ptr [si+12h], 0
 		inc	_items_spawned
 		jmp	short loc_16E23
@@ -11179,7 +11179,7 @@ loc_172E8:
 loc_172EC:
 		cmp	di, ITEM_COUNT
 		jl	loc_1721C
-		call	item_splashes_update
+		call	@item_splashes_update$qv
 		mov	byte_21762, 0
 		pop	di
 		pop	si
@@ -11595,9 +11595,14 @@ loc_178A5:
 		leave
 		retn
 curvebullets_update	endp
-
-include th04/main/item/splashes_update.asm
 main_033_TEXT	ends
+
+IT_SPL_U_TEXT	segment	byte public 'CODE' use16
+	@item_splashes_init$qv procdesc pascal near
+	@ITEM_SPLASHES_ADD$Q20%SUBPIXELBASE$TI$TI%T1 procdesc pascal near \
+		center_x:word, center_y:word
+	@item_splashes_update$qv procdesc pascal near
+IT_SPL_U_TEXT	ends
 
 BULLET_U_TEXT	segment	byte public 'CODE' use16
 	extern _bullets_update:proc
