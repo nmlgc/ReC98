@@ -39,7 +39,7 @@ include th05/main/enemy/enemy.inc
 
 main_01 group SLOWDOWN_TEXT, ma_TEXT, EMS_TEXT, mai_TEXT, CFG_LRES_TEXT, main_TEXT, main__TEXT, main_0_TEXT, DIALOG_TEXT, PLAYER_P_TEXT, main_01_TEXT
 g_SHARED group SHARED, SHARED_
-main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, BULLET_A_TEXT, main_032_TEXT, main_033_TEXT, IT_SPL_U_TEXT, BULLET_U_TEXT, main_034_TEXT, main_035_TEXT, main_036_TEXT
+main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, BULLET_A_TEXT, main_032_TEXT, main_033_TEXT, CURVEB_U_TEXT, IT_SPL_U_TEXT, BULLET_U_TEXT, main_034_TEXT, main_035_TEXT, main_036_TEXT
 
 ; ===========================================================================
 
@@ -11393,209 +11393,11 @@ sub_17486	endp
 
 include th05/main/lasers_control.asm
 include th05/main/bullet/curvebullets_add.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public CURVEBULLETS_UPDATE
-curvebullets_update	proc near
-
-var_6		= byte ptr -6
-var_5		= byte ptr -5
-@@node_i		= word ptr -4
-@@bullet_i		= word ptr -2
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 6
-		push	si
-		push	di
-		mov	si, offset curvebullet_heads
-		mov	di, offset _curvebullet_trails
-		mov	[bp+@@bullet_i], 1
-		jmp	@@bullets_more?
-; ---------------------------------------------------------------------------
-
-loc_1773C:
-		cmp	[di+curvebullet_trail_t.flag], 0
-		jz	@@bullets_next
-		inc	[si+curvebullet_head_t.CBH_age]
-		mov	[bp+@@node_i], (CURVEBULLET_TRAIL_NODE_COUNT - 1)
-		jmp	short @@nodes_more?
-; ---------------------------------------------------------------------------
-
-@@node_loop:
-		mov	bx, [bp+@@node_i]
-		shl	bx, 2
-		mov	eax, dword ptr [di+curvebullet_trail_t.node_pos+(bx - size Point)]
-		mov	bx, [bp+@@node_i]
-		shl	bx, 2
-		mov	dword ptr [di+curvebullet_trail_t.node_pos+bx], eax
-		mov	bx, [bp+@@node_i]
-		shl	bx, 2
-		mov	ax, [bx+di+curvebullet_trail_t.node_pos.x]
-		sub	ax, _player_pos.cur.x
-		add	ax, 6 * 16
-		cmp	ax, 12 * 16
-		ja	short @@node_next
-		mov	bx, [bp+@@node_i]
-		shl	bx, 2
-		mov	ax, [bx+di+curvebullet_trail_t.node_pos.y]
-		sub	ax, _player_pos.cur.y
-		add	ax, 6 * 16
-		cmp	ax, 12 * 16
-		ja	short @@node_next
-		mov	_player_is_hit, 1
-
-@@node_next:
-		mov	bx, [bp+@@node_i]
-		mov	al, [di+curvebullet_trail_t.node_sprite+(bx - byte)]
-		mov	[di+curvebullet_trail_t.node_sprite+bx], al
-		dec	[bp+@@node_i]
-
-@@nodes_more?:
-		cmp	[bp+@@node_i], 0
-		jg	short @@node_loop
-		mov	eax, dword ptr [si+curvebullet_head_t.pos.cur]
-		mov	dword ptr [di+curvebullet_trail_t.node_pos][0], eax
-		mov	al, byte ptr [si+curvebullet_head_t.CBH_sprite]
-		mov	[di+curvebullet_trail_t.node_sprite][0], al
-		cmp	[di+curvebullet_trail_t.node_pos][(CURVEBULLET_TRAIL_NODE_COUNT - 1) * size Point].x, (-(CURVEBULLET_W / 2) shl 4)
-		jle	short loc_177CC
-		cmp	[di+curvebullet_trail_t.node_pos][(CURVEBULLET_TRAIL_NODE_COUNT - 1) * size Point].x, ((PLAYFIELD_W + (CURVEBULLET_W / 2)) shl 4)
-		jge	short loc_177CC
-		cmp	[di+curvebullet_trail_t.node_pos][(CURVEBULLET_TRAIL_NODE_COUNT - 1) * size Point].y, (-(CURVEBULLET_H / 2) shl 4)
-		jle	short loc_177CC
-		cmp	[di+curvebullet_trail_t.node_pos][(CURVEBULLET_TRAIL_NODE_COUNT - 1) * size Point].y, ((PLAYFIELD_H + (CURVEBULLET_H / 2)) shl 4)
-		jl	short loc_177D5
-
-loc_177CC:
-		mov	[di+curvebullet_trail_t.flag], 0
-		mov	[si+curvebullet_head_t.flag], 0
-		jmp	@@bullets_next
-; ---------------------------------------------------------------------------
-
-loc_177D5:
-		lea	ax, [si+curvebullet_head_t.pos]
-		call	@PlayfieldMotion@update_seg3$qv pascal, ax
-		sub	ax, _player_pos.cur.x
-		sub	dx, _player_pos.cur.y
-		add	ax, 8 * 16
-		cmp	ax, 16 * 16
-		ja	short loc_177FB
-		add	dx, 8 * 16
-		cmp	dx, 16 * 16
-		ja	short loc_177FB
-		mov	_player_is_hit, 1
-
-loc_177FB:
-		cmp	[di+curvebullet_trail_t.flag], 1
-		jnz	short loc_17811
-		dec	[si+curvebullet_head_t.CBH_speed]
-		cmp	[si+curvebullet_head_t.CBH_speed], 4
-		ja	short loc_1780B
-		inc	[di+curvebullet_trail_t.flag]
-
-loc_1780B:
-		mov	[bp+var_6], 10h
-		jmp	short loc_17825
-; ---------------------------------------------------------------------------
-
-loc_17811:
-		mov	al, [si++curvebullet_head_t.CBH_speed]
-		add	al, _stage_frame_mod2
-		inc	al
-		mov	[si++curvebullet_head_t.CBH_speed], al
-		mov	al, [si++curvebullet_head_t.CBH_speed]
-		add	al, 20h	; ' '
-		mov	[bp+var_6], al
-
-loc_17825:
-		call	player_angle_from pascal, [si+curvebullet_head_t.pos.cur.x], [si+curvebullet_head_t.pos.cur.y], 0
-		mov	dl, [si+curvebullet_head_t.CBH_angle]
-		sub	dl, al
-		mov	[bp+var_5], dl
-		cmp	[bp+var_5], 80h
-		jb	short loc_1786E
-		cmp	[bp+var_5], -2
-		jnb	short loc_17874
-		mov	al, [bp+var_5]
-		mov	ah, 0
-		push	ax
-		mov	ax, 256
-		pop	dx
-		sub	ax, dx
-		mov	dl, [bp+var_6]
-		mov	dh, 0
-		push	dx
-		cwd
-		pop	bx
-		idiv	bx
-		mov	[bp+var_5], al
-		cmp	al, [bp+var_6]
-		jnb	short loc_17866
-		mov	[bp+var_5], 1
-
-loc_17866:
-		mov	al, [bp+var_5]
-		add	[si+curvebullet_head_t.CBH_angle], al
-		jmp	short loc_178A5
-; ---------------------------------------------------------------------------
-
-loc_1786E:
-		cmp	[bp+var_5], 2
-		ja	short loc_17884
-
-loc_17874:
-		call	player_angle_from pascal, [si+curvebullet_head_t.pos.cur.x], [si+curvebullet_head_t.pos.cur.y], 0
-		mov	[si+curvebullet_head_t.CBH_angle], al
-		jmp	short loc_178A5
-; ---------------------------------------------------------------------------
-
-loc_17884:
-		mov	al, [bp+var_5]
-		mov	ah, 0
-		mov	dl, [bp+var_6]
-		mov	dh, 0
-		push	dx
-		cwd
-		pop	bx
-		idiv	bx
-		mov	[bp+var_5], al
-		cmp	al, [bp+var_6]
-		jnb	short loc_1789F
-		mov	[bp+var_5], 1
-
-loc_1789F:
-		mov	al, [bp+var_5]
-		sub	[si+curvebullet_head_t.CBH_angle], al
-
-loc_178A5:
-		lea	ax, [si+curvebullet_head_t.pos.velocity]
-		push	ax
-		push	word ptr [si+curvebullet_head_t.CBH_angle]
-		mov	al, [si+curvebullet_head_t.CBH_speed]
-		mov	ah, 0
-		push	ax
-		call	vector2_near
-		call	bullet_patnum_for_angle pascal, 0, word ptr [si+curvebullet_head_t.CBH_angle]
-		mov	ah, 0
-		mov	[si+curvebullet_head_t.CBH_sprite], ax
-
-@@bullets_next:
-		inc	[bp+@@bullet_i]
-		add	si, size curvebullet_head_t
-		add	di, size curvebullet_trail_t
-
-@@bullets_more?:
-		cmp	[bp+@@bullet_i], 1 + CURVEBULLET_COUNT
-		jl	loc_1773C
-		pop	di
-		pop	si
-		leave
-		retn
-curvebullets_update	endp
 main_033_TEXT	ends
+
+CURVEB_U_TEXT	segment	byte public 'CODE' use16
+	@curvebullets_update$qv procdesc pascal near
+CURVEB_U_TEXT	ends
 
 IT_SPL_U_TEXT	segment	byte public 'CODE' use16
 	@item_splashes_init$qv procdesc pascal near
@@ -16716,7 +16518,7 @@ loc_1AF85:
 		mov	_boss_hp, 7900
 
 loc_1AFA7:
-		call	curvebullets_update	; default
+		call	@curvebullets_update$qv	; default
 		mov	ax, _boss_hp
 		add	ax, _yuki_hp
 		call	hud_hp_update_and_render pascal, ax, 9000
@@ -21842,7 +21644,7 @@ loc_1E522:
 
 loc_1E527:
 		call	b6balls_update
-		call	curvebullets_update
+		call	@curvebullets_update$qv
 		call	hud_hp_update_and_render pascal, _boss_hp, 22800
 		pop	di
 		pop	si
@@ -23668,7 +23470,7 @@ loc_1F660:
 		call	boss_death_sequence_function pascal, 200
 
 loc_1F666:
-		call	curvebullets_update
+		call	@curvebullets_update$qv
 		call	firewaves_update
 		call	hud_hp_update_and_render pascal, _boss_hp, 26500
 		pop	si

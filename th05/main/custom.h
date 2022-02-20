@@ -18,7 +18,7 @@ typedef struct {
 	int8_t padding;	// Unused across all custom entities in ZUN's code
 } custom_t;
 
-custom_t custom_entities[CUSTOM_COUNT];
+extern custom_t custom_entities[CUSTOM_COUNT];
 
 #define CUSTOM_VERIFY(derived_type, derived_count) \
 	((void)sizeof(char[1 - 2*!!( \

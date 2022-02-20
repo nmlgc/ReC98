@@ -65,7 +65,7 @@ curvebullet_head_t struc
 	flag	db ?
 	CBH_angle	db ?
 	pos	motion_t <?>
-	CBH_age	dw ?
+		dw ?
 		dw ?
 	CBH_sprite	dw ?
 		dd ?

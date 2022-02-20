@@ -3,9 +3,17 @@
 #define CURVEBULLET_TRAIL_NODE_COUNT 16
 #define CURVEBULLET_COUNT 7
 
+enum curvebullet_flag_t {
+	CBF_FREE = 0,
+	CBF_SLOWDOWN = 1,
+	CBF_SPEEDUP = 2,
+
+	_curvebullet_flag_t_FORCE_UINT8 = 0xFF
+};
+
 // Defines the [col] instead of the (automatically calculated) [sprite].
 typedef struct {
-	unsigned char flag;
+	curvebullet_flag_t flag;
 	unsigned char angle;
 	PlayfieldMotion pos;
 	unsigned int age;
@@ -17,7 +25,7 @@ typedef struct {
 } curvebullet_template_t;
 
 typedef struct {
-	unsigned char flag;
+	curvebullet_flag_t flag;
 	unsigned char angle;
 	PlayfieldMotion pos;
 	unsigned int age;
@@ -29,9 +37,9 @@ typedef struct {
 } curvebullet_head_t;
 
 typedef struct {
-	char flag;
+	curvebullet_flag_t flag;
 	char col;
-	SPPoint node_pos[CURVEBULLET_TRAIL_NODE_COUNT];
+	PlayfieldPoint node_pos[CURVEBULLET_TRAIL_NODE_COUNT];
 	unsigned char node_sprite[CURVEBULLET_TRAIL_NODE_COUNT];
 } curvebullet_trail_t;
 
@@ -53,5 +61,5 @@ void __fastcall near curvebullet_put(
 );
 
 void pascal near curvebullets_add();
-void pascal near curvebullets_update();
+void near curvebullets_update();
 void pascal near curvebullets_render();
