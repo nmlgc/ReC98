@@ -45,7 +45,7 @@ include th04/main/enemy/enemy.inc
 
 main_01 group SLOWDOWN_TEXT, mai_TEXT, EMS_TEXT, main_TEXT, DIALOG_TEXT, main__TEXT, PLAYER_P_TEXT, main_0_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT
 g_SHARED group SHARED, SHARED_
-main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, BULLET_U_TEXT, BULLET_A_TEXT, main_033_TEXT
+main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, main_033_TEXT, BULLET_U_TEXT, BULLET_A_TEXT, main_034_TEXT
 
 ; ===========================================================================
 
@@ -12545,6 +12545,9 @@ include th04/main/sparks_add.asm
 GRCG_SETCOLOR_DIRECT_DEF 3
 GRCG_SETMODE_RMW_DEF 3
 include th04/main/item/splashes_update.asm
+main_032_TEXT	ends
+
+main_033_TEXT	segment	word public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -27166,7 +27169,7 @@ off_1C6C4	dw offset loc_1C301
 		dw offset loc_1C3D4
 		dw offset loc_1C445
 		dw offset loc_1C61F
-main_032_TEXT	ends
+main_033_TEXT	ends
 
 BULLET_U_TEXT	segment	byte public 'CODE' use16
 	extern _bullets_update:proc
@@ -27187,7 +27190,7 @@ BULLET_A_TEXT	segment	byte public 'CODE' use16
 	_bullets_add_special_fixedspeed procdesc near
 BULLET_A_TEXT	ends
 
-main_033_TEXT	segment	byte public 'CODE' use16
+main_034_TEXT	segment	byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -32391,7 +32394,7 @@ off_206D8	dw offset loc_202B0
 		dw offset loc_205D4
 		dw offset loc_20609
 		dw offset loc_2065F
-main_033_TEXT	ends
+main_034_TEXT	ends
 
 ; ---------------------------------------------------------------------------
 ; ===========================================================================
