@@ -11392,10 +11392,10 @@ loc_174C5:
 sub_17486	endp
 
 include th05/main/lasers_control.asm
-include th05/main/bullet/curvebullets_add.asm
 main_033_TEXT	ends
 
 CURVEB_U_TEXT	segment	byte public 'CODE' use16
+	@curvebullets_add$qv procdesc pascal near
 	@curvebullets_update$qv procdesc pascal near
 CURVEB_U_TEXT	ends
 
@@ -16082,7 +16082,7 @@ loc_1AB53:
 loc_1AB57:
 		call	player_angle_from pascal, curvebullet_template.pos.cur.x, curvebullet_template.pos.cur.y, word ptr [bp+@@angle]
 		mov	curvebullet_template.CBTMPL_angle, al
-		call	curvebullets_add
+		call	@curvebullets_add$qv
 		call	snd_se_play pascal, 15
 
 loc_1AB72:
@@ -16124,7 +16124,7 @@ loc_1ABAA:
 loc_1ABAE:
 		call	player_angle_from pascal, curvebullet_template.pos.cur.x, curvebullet_template.pos.cur.y, word ptr [bp+@@angle]
 		mov	curvebullet_template.CBTMPL_angle, al
-		call	curvebullets_add
+		call	@curvebullets_add$qv
 		call	snd_se_play pascal, 15
 
 loc_1ABC9:
@@ -20704,7 +20704,7 @@ loc_1DB10:
 		call	randring2_next16_mod pascal, 3
 		shl	al, 6
 		mov	curvebullet_template.CBTMPL_angle, al
-		call	curvebullets_add
+		call	@curvebullets_add$qv
 		call	snd_se_play pascal, 3
 
 loc_1DB78:
@@ -22781,7 +22781,7 @@ loc_1EF54:
 loc_1EF5F:
 		call	player_angle_from
 		mov	curvebullet_template.CBTMPL_angle, al
-		call	curvebullets_add
+		call	@curvebullets_add$qv
 		call	snd_se_play pascal, 15
 
 loc_1EF6F:
@@ -22835,7 +22835,7 @@ loc_1EFB4:
 loc_1EFBF:
 		call	player_angle_from
 		mov	curvebullet_template.CBTMPL_angle, al
-		call	curvebullets_add
+		call	@curvebullets_add$qv
 		call	snd_se_play pascal, 15
 
 loc_1EFCF:

@@ -23,6 +23,37 @@ static const subpixel_t HEAD_KILLBOX_H = TO_SP(16);
 
 static const int TRAIL_NODE_LAST = (CURVEBULLET_TRAIL_NODE_COUNT - 1);
 
+void near curvebullets_add(void)
+{
+	curvebullet_head_t near *head_p;
+	int b_i;
+	int node_i;
+	curvebullet_trail_t near *trail_p;
+
+	for(
+		(head_p = curvebullet_heads, trail_p = curvebullet_trails, b_i = 1);
+		(b_i < (1 + CURVEBULLET_COUNT));
+		(b_i++, head_p++, trail_p++)
+	 ) {
+		if((head_p->flag != CBF_FREE) || (trail_p->flag != CBF_FREE)) {
+			continue;
+		}
+		trail_p->flag = CBF_SLOWDOWN;
+		head_p->angle = curvebullet_template.angle;
+		head_p->speed = curvebullet_template.speed;
+		vector2_near(head_p->pos.velocity, head_p->angle, head_p->speed);
+		trail_p->col = curvebullet_template.col;
+		head_p->sprite = bullet_patnum_for_angle(0, head_p->angle);
+		head_p->pos.cur = curvebullet_template.pos.cur;
+
+		for(node_i = 0; node_i < CURVEBULLET_TRAIL_NODE_COUNT; node_i++) {
+			trail_p->node_pos[node_i] = curvebullet_template.pos.cur;
+			trail_p->node_sprite[node_i] = head_p->sprite;
+		}
+		return;
+	 }
+}
+
 void near curvebullets_update(void)
 {
 	curvebullet_head_t near *head_p;

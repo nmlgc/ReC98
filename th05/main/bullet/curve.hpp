@@ -16,7 +16,7 @@ typedef struct {
 	curvebullet_flag_t flag;
 	unsigned char angle;
 	PlayfieldMotion pos;
-	unsigned int age;
+	unsigned int age; // unused and broken, because it's never reset
 	int16_t unused_2;
 	int col;
 	int32_t unused_3;
@@ -25,7 +25,7 @@ typedef struct {
 } curvebullet_template_t;
 
 typedef struct {
-	curvebullet_flag_t flag;
+	curvebullet_flag_t flag; // unused here
 	unsigned char angle;
 	PlayfieldMotion pos;
 	unsigned int age;
@@ -60,6 +60,6 @@ void __fastcall near curvebullet_put(
 	uscreen_x_t left, uscreen_y_t top, int sprite
 );
 
-void pascal near curvebullets_add();
+void near curvebullets_add();
 void near curvebullets_update();
 void pascal near curvebullets_render();
