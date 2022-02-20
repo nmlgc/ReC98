@@ -1,4 +1,4 @@
-#pragma option -zCmain_031_TEXT -zPmain_03 -k-
+#pragma option -zCBULLET_A_TEXT -zPmain_03 -k-
 
 extern "C" {
 #include "platform.h"

@@ -31,11 +31,11 @@ extrn _group_i_absolute_angle:byte
 extrn _group_i_speed:byte
 extrn _group_i_velocity:Point
 
-MAIN_03 group MAIN_031_TEXT
+MAIN_03 group BULLET_A_TEXT
 
 ; ----------------------------------------------------------------------------
 
-MAIN_031_TEXT	segment	word public 'CODE' use16
+BULLET_A_TEXT	segment	word public 'CODE' use16
 	assume cs:MAIN_03
 
 ; Identical to TH04's decompiled version, except for:
@@ -401,6 +401,6 @@ TUNE_FOR_LUNATIC	label near
 	dw offset @@lunatic_ring_stack
 	dw offset @@lunatic_random
 tune	endp
-MAIN_031_TEXT	ends
+BULLET_A_TEXT	ends
 
 	end

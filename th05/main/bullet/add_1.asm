@@ -27,11 +27,11 @@ VECTOR2_NEAR procdesc pascal near \
 	ret:word, angle:byte, length:word
 _bullets_add_raw procdesc near
 
-MAIN_03 group MAIN_031_TEXT
+MAIN_03 group BULLET_A_TEXT
 
 ; ----------------------------------------------------------------------------
 
-MAIN_031_TEXT	segment	word public 'CODE' use16
+BULLET_A_TEXT	segment	word public 'CODE' use16
 	assume cs:MAIN_03
 
 ; The main algorithm is identical to the TH04 version...
@@ -390,6 +390,6 @@ _bullet_velocity_and_angle_set proc pascal near
 	dw offset @@case_single
 	dw offset @@case_single_aimed
 _bullet_velocity_and_angle_set endp
-MAIN_031_TEXT	ends
+BULLET_A_TEXT	ends
 
 	end

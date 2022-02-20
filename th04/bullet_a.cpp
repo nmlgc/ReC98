@@ -1,9 +1,4 @@
-/* ReC98
- * -----
- * 2nd part of code segment #3 of TH04's MAIN.EXE
- */
-
-#pragma option -zCmain_032_TEXT -zPmain_03
+#pragma option -zPmain_03
 
 extern "C" {
 #include "platform.h"

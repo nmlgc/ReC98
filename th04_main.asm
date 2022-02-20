@@ -45,7 +45,7 @@ include th04/main/enemy/enemy.inc
 
 main_01 group SLOWDOWN_TEXT, mai_TEXT, EMS_TEXT, main_TEXT, DIALOG_TEXT, main__TEXT, PLAYER_P_TEXT, main_0_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT
 g_SHARED group SHARED, SHARED_
-main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, main_033_TEXT
+main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, BULLET_U_TEXT, BULLET_A_TEXT, main_033_TEXT
 
 ; ===========================================================================
 
@@ -27168,8 +27168,11 @@ off_1C6C4	dw offset loc_1C301
 		dw offset loc_1C61F
 main_032_TEXT	ends
 
-main_033_TEXT	segment	byte public 'CODE' use16
+BULLET_U_TEXT	segment	byte public 'CODE' use16
 	extern _bullets_update:proc
+BULLET_U_TEXT	ends
+
+BULLET_A_TEXT	segment	byte public 'CODE' use16
 	BULLET_TEMPLATE_TUNE_EASY procdesc near
 	BULLET_TEMPLATE_TUNE_NORMAL procdesc near
 	BULLET_TEMPLATE_TUNE_HARD procdesc near
@@ -27182,6 +27185,9 @@ main_033_TEXT	segment	byte public 'CODE' use16
 	BULLETS_ADD_SPECIAL_HARD_LUNATIC procdesc pascal near
 	_bullets_add_regular_fixedspeed procdesc near
 	_bullets_add_special_fixedspeed procdesc near
+BULLET_A_TEXT	ends
+
+main_033_TEXT	segment	byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 

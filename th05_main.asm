@@ -39,7 +39,7 @@ include th05/main/enemy/enemy.inc
 
 main_01 group SLOWDOWN_TEXT, ma_TEXT, EMS_TEXT, mai_TEXT, CFG_LRES_TEXT, main_TEXT, main__TEXT, main_0_TEXT, DIALOG_TEXT, PLAYER_P_TEXT, main_01_TEXT
 g_SHARED group SHARED, SHARED_
-main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, main_032_TEXT, main_033_TEXT, main_034_TEXT, main_035_TEXT, main_036_TEXT
+main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, BULLET_A_TEXT, main_032_TEXT, main_033_TEXT, BULLET_U_TEXT, main_034_TEXT, main_035_TEXT, main_036_TEXT
 
 ; ===========================================================================
 
@@ -9571,7 +9571,7 @@ GRCG_SETCOLOR_DIRECT_DEF 3
 GRCG_SETMODE_RMW_DEF 3
 main_031_TEXT	ends
 
-main_032_TEXT	segment	byte public 'CODE' use16
+BULLET_A_TEXT	segment	byte public 'CODE' use16
 	PLAYER_ANGLE_FROM procdesc pascal near \
 		x:word, y:word, plus_angle:byte
 	@playperf_speedtune procdesc near
@@ -9584,6 +9584,9 @@ main_032_TEXT	segment	byte public 'CODE' use16
 	BULLET_TEMPLATE_TUNE_NORMAL procdesc near
 	BULLET_TEMPLATE_TUNE_HARD procdesc near
 	BULLET_TEMPLATE_TUNE_LUNATIC procdesc near
+BULLET_A_TEXT	ends
+
+main_032_TEXT	segment	byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -11594,8 +11597,11 @@ loc_178A5:
 curvebullets_update	endp
 
 include th04/main/item/splashes_update.asm
-	extern _bullets_update:proc
 main_033_TEXT	ends
+
+BULLET_U_TEXT	segment	byte public 'CODE' use16
+	extern _bullets_update:proc
+BULLET_U_TEXT	ends
 
 main_034_TEXT	segment	byte public 'CODE' use16
 
