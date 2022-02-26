@@ -3632,7 +3632,7 @@ _playfield_fillm_0_0_384_240_col_	proc near
 		retn
 _playfield_fillm_0_0_384_240_col_	endp
 
-include th05/main/laser_render_hittest.asm
+include th05/main/bullet/laser_render_hittest.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4944,7 +4944,7 @@ loc_FBF7:
 		retn
 sub_FAA3	endp
 
-include th05/main/lasers_update_render.asm
+include th05/main/bullet/lasers_update_render.asm
 include th05/main/bullet/curvebullets_render.asm
 include th04/main/item/splashes_render.asm
 
@@ -11391,7 +11391,7 @@ loc_174C5:
 		retn
 sub_17486	endp
 
-include th05/main/lasers_control.asm
+include th05/main/bullet/lasers_control.asm
 main_033_TEXT	ends
 
 CURVEB_U_TEXT	segment	byte public 'CODE' use16
@@ -24682,7 +24682,7 @@ public _slowdown_caused_by_bullets
 _slowdown_caused_by_bullets	db ?
 	evendata
 include th04/main/bullet/template[bss].asm
-include th05/main/lasers[bss].asm
+include th05/main/bullet/lasers[bss].asm
 include th04/main/midboss/vars[bss].asm
 include th04/main/boss/vars[bss].asm
 include th05/main/boss/vars2[bss].asm
@@ -24725,7 +24725,7 @@ byte_2C98A	db ?
 include th04/main/midboss/funcs[bss].asm
 byte_2C99C	db ?
 		db ?
-include th05/main/lasers_render[bss].asm
+include th05/main/bullet/lasers_render[bss].asm
 include th05/main/bullet/curve[bss].asm
 include th04/main/item/splashes[bss].asm
 include th05/main/bullet/pellet_r[bss].asm
