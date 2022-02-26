@@ -1,6 +1,5 @@
-; void pascal near lasers_update(void);
-public LASERS_UPDATE
-lasers_update	proc near
+public @lasers_update$qv
+@lasers_update$qv proc near
 	push	bp
 	mov	bp, sp
 	push	si
@@ -10,7 +9,7 @@ lasers_update	proc near
 	jmp	@@more?
 
 @@loop:
-	cmp	[si+laser_t.mode], LM_NONE
+	cmp	[si+laser_t.flag], LF_FREE
 	jz	@@next
 	cmp	_bullet_clear_time, 0
 	jnz	short @@shootout
@@ -18,9 +17,9 @@ lasers_update	proc near
 	jz	short @@switch
 
 @@shootout:
-	cmp	[si+laser_t.mode], LM_SHOOTOUT
+	cmp	[si+laser_t.flag], LF_SHOOTOUT
 	jnz	short @@switch
-	mov	[si+laser_t.mode], LM_DECAY
+	mov	[si+laser_t.flag], LF_DECAY
 	mov	ax, [si+laser_t.shootout_speed]
 	cwd
 	sub	ax, dx
@@ -28,7 +27,7 @@ lasers_update	proc near
 	mov	[si+laser_t.shootout_speed], ax
 
 @@switch:
-	mov	al, [si+laser_t.mode]
+	mov	al, [si+laser_t.flag]
 	mov	ah, 0
 	dec	ax
 	mov	bx, ax
@@ -51,7 +50,7 @@ loc_FC52:
 	add	[si+laser_t.coords.starts_at_distance], ax
 
 loc_FC60:
-	call	laser_hittest pascal, si
+	call	@laser_hittest$qr7laser_t pascal, si
 	jmp	@@age_inc
 ; ---------------------------------------------------------------------------
 
@@ -61,7 +60,7 @@ laser_update_fixed_wait_to_grow:
 	mov	ax, [si+laser_t.LASER_age]
 	cmp	ax, [si+laser_t.grow_at_age]
 	jl	@@age_inc
-	inc	[si+laser_t.mode]
+	inc	[si+laser_t.flag]
 	call	snd_se_play pascal, 6
 	jmp	@@age_inc
 ; ---------------------------------------------------------------------------
@@ -81,7 +80,7 @@ laser_update_fixed_grow:
 ; ---------------------------------------------------------------------------
 
 laser_update_fixed_active:
-	call	laser_hittest pascal, si
+	call	@laser_hittest$qr7laser_t pascal, si
 	cmp	[si+laser_t.shrink_at_age], 0
 	jle	short @@age_inc
 	mov	ax, [si+laser_t.LASER_age]
@@ -89,7 +88,7 @@ laser_update_fixed_active:
 	jl	short @@age_inc
 
 @@next_mode:
-	inc	[si+laser_t.mode]
+	inc	[si+laser_t.flag]
 	jmp	short @@age_inc
 ; ---------------------------------------------------------------------------
 
@@ -116,7 +115,7 @@ laser_update_fixed_shrink_and_wait_to_grow:
 @@shrink_and_wait_to_grow_step:
 	cmp	[si+laser_t.coords.LASER_width], 1
 	jg	short @@age_inc
-	mov	[si+laser_t.mode], LM_FIXED_WAIT_TO_GROW
+	mov	[si+laser_t.flag], LF_FIXED_WAIT_TO_GROW
 	mov	[si+laser_t.LASER_age], 0
 	jmp	short @@age_inc
 ; ---------------------------------------------------------------------------
@@ -142,7 +141,7 @@ loc_FD02:
 	jb	short @@age_inc
 
 @@delete:
-	mov	[si+laser_t.mode], LM_NONE
+	mov	[si+laser_t.flag], LF_FREE
 
 @@age_inc:
 	inc	[si+laser_t.LASER_age]
@@ -158,7 +157,7 @@ loc_FD02:
 	pop	si
 	pop	bp
 	retn
-lasers_update	endp
+@lasers_update$qv endp
 
 ; ---------------------------------------------------------------------------
 lasers_update_switch	label word
@@ -171,9 +170,8 @@ lasers_update_switch	label word
 	dw offset laser_update_decay
 ; ---------------------------------------------------------------------------
 
-; void pascal near lasers_render(void);
-public LASERS_RENDER
-lasers_render	proc near
+public @lasers_render$qv
+@lasers_render$qv	proc near
 
 @@radius	= byte ptr -0Ah
 @@width_orig	= byte ptr -9
@@ -193,7 +191,7 @@ lasers_render	proc near
 ; ---------------------------------------------------------------------------
 
 @@laser_loop:
-	cmp	[si+laser_t.mode], LM_NONE
+	cmp	[si+laser_t.flag], LF_FREE
 	jz	@@next_laser
 	mov	al, [si+laser_t.coords.LASER_width]
 	mov	[bp+@@width_orig], al
@@ -214,7 +212,7 @@ lasers_render	proc near
 	sar	ax, 4
 	add	ax, 16
 	mov	[bp+@@draw_y], ax
-	cmp	[si+laser_t.mode], LM_DECAY
+	cmp	[si+laser_t.flag], LF_DECAY
 	jz	@@decay
 	cmp	[bp+@@radius], 2
 	jnb	short @@draw_outer_circle?
@@ -244,7 +242,7 @@ lasers_render	proc near
 	mov	[bp+@@end_distance_orig], ax
 	sub	[si+laser_t.coords.ends_at_distance], (2 shl 4)
 	lea	ax, [si+laser_t.coords]
-	call	laser_render_ray pascal, ax
+	call	@laser_render_ray$qp14laser_coords_t pascal, ax
 	mov	ax, [bp+@@end_distance_orig]
 	mov	[si+laser_t.coords.ends_at_distance], ax
 
@@ -320,10 +318,10 @@ lasers_render	proc near
 
 @@draw_inner_ray:
 	lea	ax, [si+laser_t.coords]
-	call	laser_render_ray pascal, ax
+	call	@laser_render_ray$qp14laser_coords_t pascal, ax
 	or	ax, ax
 	jz	@@width_reset
-	mov	[si+laser_t.mode], LM_NONE
+	mov	[si+laser_t.flag], LF_FREE
 	jmp	@@width_reset
 ; ---------------------------------------------------------------------------
 
@@ -416,4 +414,4 @@ lasers_render	proc near
 	pop	si
 	leave
 	retn
-lasers_render	endp
+@lasers_render$qv	endp

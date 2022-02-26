@@ -1,7 +1,4 @@
-; Adds a new shoot-out laser based on the [laser_template].
-
-; void near lasers_add_shoutout(void);
-lasers_add_shoutout	proc near
+@lasers_shootout_add$qv proc near
 @@speed		= word ptr -2
 
 	push	bp
@@ -18,9 +15,9 @@ lasers_add_shoutout	proc near
 	jmp	short @@more?
 
 @@loop:
-	cmp	[si+laser_t.mode], LM_NONE
+	cmp	[si+laser_t.flag], LF_FREE
 	jnz	short @@next
-	mov	[si+laser_t.mode], LM_SHOOTOUT
+	mov	[si+laser_t.flag], LF_SHOOTOUT
 	mov	[si+laser_t.coords.starts_at_distance], (16 shl 4)
 	mov	[si+laser_t.coords.ends_at_distance], (16 shl 4)
 	mov	[si+laser_t.LASER_age], 0
@@ -59,14 +56,10 @@ lasers_add_shoutout	proc near
 	pop	si
 	leave
 	ret
-lasers_add_shoutout	endp
+@lasers_shootout_add$qv endp
 
 
-; Creates a new fixed laser based on the [laser_template] in the given [slot]
-; if that one is currently empty.
-
-; void pascal near lasers_new_fixed_in_slot(unsigned int slot);
-lasers_new_fixed_in_slot	proc near
+@laser_fixed_spawn$qi proc near
 @@slot		= word ptr  4
 
 	push	bp
@@ -76,9 +69,9 @@ lasers_new_fixed_in_slot	proc near
 	imul	ax, size laser_t
 	add	ax, offset _lasers
 	mov	si, ax
-	cmp	[si+laser_t.mode], LM_NONE
+	cmp	[si+laser_t.flag], LF_FREE
 	jnz	short @@ret
-	mov	[si+laser_t.mode], LM_FIXED_WAIT_TO_GROW
+	mov	[si+laser_t.flag], LF_FIXED_WAIT_TO_GROW
 	mov	eax, _laser_template.coords.origin
 	mov	dword ptr [si+laser_t.coords.origin], eax
 	mov	[si+laser_t.coords.starts_at_distance], (16 shl 4)
@@ -101,14 +94,10 @@ lasers_new_fixed_in_slot	proc near
 	pop	si
 	pop	bp
 	ret	2
-lasers_new_fixed_in_slot	endp
+@laser_fixed_spawn$qi	endp
 
 
-; Creates a new fixed, manually controlled laser based on the [laser_template]
-; in the given [slot] if that one is currently empty.
-
-; void pascal near lasers_new_fixed_and_manual_in_slot(unsigned int slot);
-lasers_new_fixed_and_manual_in_slot	proc near
+@laser_manual_fixed_spawn$qi proc near
 @@slot		= word ptr  4
 
 	push	bp
@@ -118,9 +107,9 @@ lasers_new_fixed_and_manual_in_slot	proc near
 	imul	ax, size laser_t
 	add	ax, offset _lasers
 	mov	si, ax
-	cmp	[si+laser_t.mode], LM_NONE
+	cmp	[si+laser_t.flag], LF_FREE
 	jnz	short @@ret
-	mov	[si+laser_t.mode], LM_FIXED_WAIT_TO_GROW
+	mov	[si+laser_t.flag], LF_FIXED_WAIT_TO_GROW
 	mov	eax, _laser_template.coords.origin
 	mov	dword ptr [si+laser_t.coords.origin], eax
 	mov	[si+laser_t.coords.starts_at_distance], (16 shl 4)
@@ -141,13 +130,10 @@ lasers_new_fixed_and_manual_in_slot	proc near
 	pop	si
 	pop	bp
 	ret	2
-lasers_new_fixed_and_manual_in_slot	endp
+@laser_manual_fixed_spawn$qi endp
 
 
-; Starts the growing phase of the manually controlled fixed laser at [slot].
-
-; void pascal near lasers_grow_manual_in_slot(unsigned int slot);
-lasers_grow_manual_in_slot	proc near
+@laser_manual_grow$qi	proc near
 @@slot		= word ptr  4
 
 	push	bp
@@ -156,25 +142,21 @@ lasers_grow_manual_in_slot	proc near
 	mov	si, [bp+@@slot]
 	mov	bx, si
 	imul	bx, size laser_t
-	cmp	_lasers[bx].mode, LM_FIXED_WAIT_TO_GROW
+	cmp	_lasers[bx].flag, LF_FIXED_WAIT_TO_GROW
 	jnz	short @@ret
 	mov	bx, si
 	imul	bx, size laser_t
-	mov	_lasers[bx].mode, LM_FIXED_GROW
+	mov	_lasers[bx].flag, LF_FIXED_GROW
 	call	snd_se_play pascal, 6
 
 @@ret:
 	pop	si
 	pop	bp
 	ret	2
-lasers_grow_manual_in_slot	endp
+@laser_manual_grow$qi endp
 
 
-; Transitions the laser at [slot] to a stopping phase appropriate for its
-; current one.
-
-; void pascal lasers_stop_in_slot(unsigned int slot);
-lasers_stop_in_slot	proc near
+@laser_stop$qi	proc near
 @@slot		= word ptr  4
 
 	push	bp
@@ -182,39 +164,39 @@ lasers_stop_in_slot	proc near
 	mov	ax, [bp+@@slot]
 	mov	bx, ax
 	imul	bx, size laser_t
-	cmp	_lasers[bx].mode, LM_FIXED_ACTIVE
+	cmp	_lasers[bx].flag, LF_FIXED_ACTIVE
 	jnz	short @@shootout?
 	mov	bx, ax
 	imul	bx, size laser_t
-	mov	_lasers[bx].mode, LM_FIXED_SHRINK
+	mov	_lasers[bx].flag, LF_FIXED_SHRINK
 	pop	bp
 	ret	2
 
 @@shootout?:
 	mov	bx, ax
 	imul	bx, size laser_t
-	cmp	_lasers[bx].mode, LM_SHOOTOUT
+	cmp	_lasers[bx].flag, LF_SHOOTOUT
 	jnz	short @@fixed_shrink?
 	mov	bx, ax
 	imul	bx, size laser_t
-	mov	_lasers[bx].mode, LM_DECAY
+	mov	_lasers[bx].flag, LF_DECAY
 	pop	bp
 	ret	2
 
 @@fixed_shrink?:
 	mov	bx, ax
 	imul	bx, size laser_t
-	cmp	_lasers[bx].mode, LM_FIXED_SHRINK
+	cmp	_lasers[bx].flag, LF_FIXED_SHRINK
 	jz	short @@ret
 	mov	bx, ax
 	imul	bx, size laser_t
-	cmp	_lasers[bx].mode, LM_DECAY
+	cmp	_lasers[bx].flag, LF_DECAY
 	jz	short @@ret
 	mov	bx, ax
 	imul	bx, size laser_t
-	mov	_lasers[bx].mode, LM_NONE
+	mov	_lasers[bx].flag, LF_FREE
 
 @@ret:
 	pop	bp
 	ret	2
-lasers_stop_in_slot	endp
+@laser_stop$qi endp

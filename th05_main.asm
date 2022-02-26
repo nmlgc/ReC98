@@ -415,7 +415,7 @@ loc_AED7:
 		call	_sparks_update
 		call	sub_1214A
 		call	sub_1240B
-		call	lasers_update
+		call	@lasers_update$qv
 		call	_bullets_update
 		call	enemies_update
 		call	_midboss_update
@@ -435,7 +435,7 @@ loc_AF2D:
 		call	player_render
 		call	_grcg_setmode_rmw_seg1
 		call	_boss_custombullets_render
-		call	lasers_render
+		call	@lasers_render$qv
 		call	_gather_render
 		call	_sparks_render
 		call	items_render
@@ -12059,9 +12059,9 @@ loc_1859F:
 		mov	_laser_template.coords.angle, -32
 		mov	_laser_template.LASER_color, 8
 		mov	_laser_template.coords.LASER_width, 8
-		call	lasers_new_fixed_and_manual_in_slot pascal, 0
+		call	@laser_manual_fixed_spawn$qi pascal, 0
 		mov	_laser_template.coords.angle, -96
-		call	lasers_new_fixed_and_manual_in_slot pascal, 1
+		call	@laser_manual_fixed_spawn$qi pascal, 1
 		mov	angle_2D085, 0
 		mov	angle_2D084, 1
 		mov	byte_2D083, 1
@@ -12074,8 +12074,8 @@ loc_185DD:
 		jle	loc_186B4
 		cmp	_boss_phase_frame, 64
 		jnz	short loc_185F7
-		call	lasers_grow_manual_in_slot pascal, 0
-		call	lasers_grow_manual_in_slot pascal, 1
+		call	@laser_manual_grow$qi pascal, 0
+		call	@laser_manual_grow$qi pascal, 1
 
 loc_185F7:
 		mov	al, byte_2D083
@@ -12363,8 +12363,8 @@ loc_188C6:
 		mov	_boss_mode_change, 1
 
 loc_188D2:
-		call	lasers_stop_in_slot pascal, 0
-		call	lasers_stop_in_slot pascal, 1
+		call	@laser_stop$qi pascal, 0
+		call	@laser_stop$qi pascal, 1
 		mov	_boss_phase_frame, 0
 		mov	_boss_phase, PHASE_BOSS_EXPLODE_SMALL
 		jmp	short loc_188EE
@@ -13060,7 +13060,7 @@ loc_18F12:
 		jnz	short loc_18F5A
 		cmp	angle_2D085, 0
 		jz	short loc_18F2B
-		call	lasers_add_shoutout
+		call	@lasers_shootout_add$qv
 		jmp	short loc_18F40
 ; ---------------------------------------------------------------------------
 
@@ -13068,7 +13068,7 @@ loc_18F2B:
 		mov	al, 128
 		sub	al, _laser_template.coords.angle
 		mov	_laser_template.coords.angle, al
-		call	lasers_add_shoutout
+		call	@lasers_shootout_add$qv
 		mov	al, 128
 		sub	al, _laser_template.coords.angle
 		mov	_laser_template.coords.angle, al
@@ -14802,15 +14802,15 @@ loc_19E43:
 		push	ax
 		call	iatan2
 		mov	_laser_template.coords.angle, al
-		call	lasers_add_shoutout
+		call	@lasers_shootout_add$qv
 		mov	al, _laser_template.coords.angle
 		add	al, 16
 		mov	_laser_template.coords.angle, al
-		call	lasers_add_shoutout
+		call	@lasers_shootout_add$qv
 		mov	al, _laser_template.coords.angle
 		add	al, -32
 		mov	_laser_template.coords.angle, al
-		call	lasers_add_shoutout
+		call	@lasers_shootout_add$qv
 		mov	_bullet_template.spawn_type, BST_CLOUD_FORWARDS or BST_NO_SLOWDOWN
 		mov	_bullet_template.BT_group, BG_RANDOM_ANGLE_AND_SPEED
 		mov	_bullet_template.patnum, PAT_BULLET16_N_BLUE
@@ -15641,12 +15641,12 @@ var_1		= byte ptr -1
 		mov	_laser_template.coords.angle, al
 		mov	_laser_template.LASER_color, 8
 		mov	_laser_template.coords.LASER_width, 8
-		call	lasers_new_fixed_and_manual_in_slot pascal, 0
+		call	@laser_manual_fixed_spawn$qi pascal, 0
 
 loc_1A7AF:
 		cmp	_boss_phase_frame, 80
 		jnz	short loc_1A7BB
-		call	lasers_grow_manual_in_slot pascal, 0
+		call	@laser_manual_grow$qi pascal, 0
 
 loc_1A7BB:
 		mov	ax, _boss_phase_frame
@@ -15697,7 +15697,7 @@ loc_1A817:
 loc_1A81A:
 		cmp	_boss_phase_frame, 160
 		jnz	short loc_1A82B
-		call	lasers_stop_in_slot pascal, 0
+		call	@laser_stop$qi pascal, 0
 		mov	al, 1
 		leave
 		retn
@@ -16383,9 +16383,9 @@ loc_1AE2C:
 		mov	_boss2_mode_change, al
 		mov	_boss_phase, PHASE_BOSS_EXPLODE_SMALL
 		mov	_boss_phase_frame, 0
-		cmp	_lasers[0 * size laser_t].mode, LM_NONE
+		cmp	_lasers[0 * size laser_t].flag, LF_FREE
 		jz	loc_1AFA7	; default
-		call	lasers_stop_in_slot pascal, 0
+		call	@laser_stop$qi pascal, 0
 		jmp	short loc_1AE69
 ; ---------------------------------------------------------------------------
 
@@ -18502,19 +18502,19 @@ var_2		= word ptr -2
 		sub	dl, byte ptr [bp+var_2]
 		sub	dl, al
 		mov	_laser_template.coords.angle, dl
-		call	lasers_new_fixed_in_slot pascal, 0
+		call	@laser_fixed_spawn$qi pascal, 0
 		mov	al, _laser_template.coords.angle
 		add	al, byte ptr [bp+var_2]
 		mov	_laser_template.coords.angle, al
-		call	lasers_new_fixed_in_slot pascal, 1
+		call	@laser_fixed_spawn$qi pascal, 1
 		mov	al, _laser_template.coords.angle
 		add	al, byte ptr [bp+var_2]
 		mov	_laser_template.coords.angle, al
-		call	lasers_new_fixed_in_slot pascal, 2
+		call	@laser_fixed_spawn$qi pascal, 2
 		mov	al, _laser_template.coords.angle
 		add	al, byte ptr [bp+var_2]
 		mov	_laser_template.coords.angle, al
-		call	lasers_new_fixed_in_slot pascal, 3
+		call	@laser_fixed_spawn$qi pascal, 3
 		mov	byte_2D083, -8
 		jmp	loc_1C347
 ; ---------------------------------------------------------------------------
@@ -18609,7 +18609,7 @@ loc_1C376:
 		idiv	word_2CE3C
 		add	al, byte ptr [bp+var_2]
 		mov	_laser_template.coords.angle, al
-		call	lasers_new_fixed_and_manual_in_slot pascal, si
+		call	@laser_manual_fixed_spawn$qi pascal, si
 		inc	si
 
 loc_1C38B:
@@ -18653,7 +18653,7 @@ loc_1C3DB:
 ; ---------------------------------------------------------------------------
 
 loc_1C3EC:
-		call	lasers_grow_manual_in_slot pascal, si
+		call	@laser_manual_grow$qi pascal, si
 		inc	si
 
 loc_1C3F1:
@@ -18672,7 +18672,7 @@ loc_1C3F9:
 loc_1C404:
 		mov	bx, si
 		imul	bx, size laser_t
-		mov	_lasers[bx].mode, LM_FIXED_SHRINK_AND_WAIT_TO_GROW
+		mov	_lasers[bx].flag, LF_FIXED_SHRINK_AND_WAIT_TO_GROW
 		inc	si
 
 loc_1C40F:
@@ -18945,7 +18945,7 @@ loc_1C6CB:
 ; ---------------------------------------------------------------------------
 
 loc_1C6CF:
-		call	lasers_stop_in_slot pascal, si
+		call	@laser_stop$qi pascal, si
 		inc	si
 
 loc_1C6D4:
@@ -19683,7 +19683,7 @@ loc_1CFC3:
 		mov	_laser_template.coords.origin.x, ax
 		call	player_angle_from pascal, ax, _laser_template.coords.origin.y, 0
 		mov	_laser_template.coords.angle, al
-		call	lasers_add_shoutout
+		call	@lasers_shootout_add$qv
 		xor	si, si
 		jmp	short loc_1D02B
 ; ---------------------------------------------------------------------------
@@ -20448,17 +20448,17 @@ sub_1D89A	proc near
 		cmp	_boss_phase_frame, 16
 		jnz	short loc_1D8F7
 		mov	_laser_template.coords.angle, 80
-		call	lasers_new_fixed_and_manual_in_slot pascal, 0
+		call	@laser_manual_fixed_spawn$qi pascal, 0
 		mov	_laser_template.coords.angle, 72
-		call	lasers_new_fixed_and_manual_in_slot pascal, 1
+		call	@laser_manual_fixed_spawn$qi pascal, 1
 		mov	_laser_template.coords.angle, 64
-		call	lasers_new_fixed_and_manual_in_slot pascal, 2
+		call	@laser_manual_fixed_spawn$qi pascal, 2
 		mov	_laser_template.coords.angle, 64
-		call	lasers_new_fixed_and_manual_in_slot pascal, 3
+		call	@laser_manual_fixed_spawn$qi pascal, 3
 		mov	_laser_template.coords.angle, 56
-		call	lasers_new_fixed_and_manual_in_slot pascal, 4
+		call	@laser_manual_fixed_spawn$qi pascal, 4
 		mov	_laser_template.coords.angle, 48
-		call	lasers_new_fixed_and_manual_in_slot pascal, 5
+		call	@laser_manual_fixed_spawn$qi pascal, 5
 		call	snd_se_play pascal, 8
 		mov	_boss_sprite, 181
 		mov	angle_2D085, 0
@@ -20536,7 +20536,7 @@ loc_1D9AE:
 ; ---------------------------------------------------------------------------
 
 loc_1D9BC:
-		call	lasers_grow_manual_in_slot pascal, si
+		call	@laser_manual_grow$qi pascal, si
 		inc	si
 
 loc_1D9C1:
@@ -20568,7 +20568,7 @@ loc_1D9EA:
 ; ---------------------------------------------------------------------------
 
 loc_1DA05:
-		call	lasers_stop_in_slot pascal, si
+		call	@laser_stop$qi pascal, si
 		inc	si
 
 loc_1DA0A:
@@ -20909,13 +20909,13 @@ loc_1DD27:
 		mov	_laser_template.coords.angle, 64
 		mov	_laser_template.LASER_color, 14
 		add	_laser_template.coords.origin.x, (96 shl 4)
-		call	lasers_new_fixed_and_manual_in_slot pascal, 0
+		call	@laser_manual_fixed_spawn$qi pascal, 0
 		sub	_laser_template.coords.origin.x, (64 shl 4)
-		call	lasers_new_fixed_and_manual_in_slot pascal, 1
+		call	@laser_manual_fixed_spawn$qi pascal, 1
 		sub	_laser_template.coords.origin.x, (64 shl 4)
-		call	lasers_new_fixed_and_manual_in_slot pascal, 2
+		call	@laser_manual_fixed_spawn$qi pascal, 2
 		sub	_laser_template.coords.origin.x, (64 shl 4)
-		call	lasers_new_fixed_and_manual_in_slot pascal, 3
+		call	@laser_manual_fixed_spawn$qi pascal, 3
 		inc	word_22852
 		call	boss_explode_small pascal, 0
 
@@ -21077,10 +21077,10 @@ loc_1DF48:
 		jl	short loc_1DF73
 		cmp	word_22852, 40h
 		jnz	short loc_1DF79
-		call	lasers_grow_manual_in_slot pascal, 0
-		call	lasers_grow_manual_in_slot pascal, 1
-		call	lasers_grow_manual_in_slot pascal, 2
-		call	lasers_grow_manual_in_slot pascal, 3
+		call	@laser_manual_grow$qi pascal, 0
+		call	@laser_manual_grow$qi pascal, 1
+		call	@laser_manual_grow$qi pascal, 2
+		call	@laser_manual_grow$qi pascal, 3
 
 loc_1DF73:
 		inc	word_22852
@@ -21588,10 +21588,10 @@ loc_1E481:
 loc_1E488:
 		call	boss_phase_end pascal, (ET_HORIZONTAL shl 16) or 0
 		mov	word_2CE06, 10h
-		call	lasers_stop_in_slot pascal, 0
-		call	lasers_stop_in_slot pascal, 1
-		call	lasers_stop_in_slot pascal, 2
-		call	lasers_stop_in_slot pascal, 3
+		call	@laser_stop$qi pascal, 0
+		call	@laser_stop$qi pascal, 1
+		call	@laser_stop$qi pascal, 2
+		call	@laser_stop$qi pascal, 3
 		jmp	short loc_1E527
 ; ---------------------------------------------------------------------------
 
@@ -22533,7 +22533,7 @@ sub_1ECD4	proc near
 		mov	_laser_template.coords.angle, al
 		mov	ax, word_22870
 		inc	word_22870
-		call	lasers_new_fixed_in_slot pascal, ax
+		call	@laser_fixed_spawn$qi pascal, ax
 		mov	_bullet_template.spawn_type, BST_NO_SLOWDOWN
 		mov	_bullet_template.patnum, PAT_BULLET16_D_GREEN
 		mov	_bullet_template.BT_group, BG_RING
@@ -22552,7 +22552,7 @@ loc_1ED46:
 		mov	_laser_template.coords.angle, al
 		mov	ax, word_22870
 		inc	word_22870
-		call	lasers_new_fixed_in_slot pascal, ax
+		call	@laser_fixed_spawn$qi pascal, ax
 
 loc_1ED67:
 		and	word_22870, 0Fh
@@ -22563,7 +22563,7 @@ loc_1ED67:
 loc_1ED70:
 		mov	bx, si
 		imul	bx, size laser_t
-		cmp	_lasers[bx].mode, LM_FIXED_WAIT_TO_GROW
+		cmp	_lasers[bx].flag, LF_FIXED_WAIT_TO_GROW
 		jnz	short loc_1EDA3
 		test	si, 1
 		jz	short loc_1ED8F
@@ -22701,7 +22701,7 @@ loc_1EE83:
 		mov	angle_2D085, 0
 
 loc_1EE9E:
-		call	lasers_add_shoutout
+		call	@lasers_shootout_add$qv
 
 loc_1EEA1:
 		cmp	_boss_phase_frame, 256

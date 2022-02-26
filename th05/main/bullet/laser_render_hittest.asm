@@ -49,11 +49,8 @@ build_line_in_pixels	proc near
 build_line_in_pixels	endp
 
 
-; Returns 1 if the laser is entirely off-screen.
-
-; int pascal near laser_render_ray(laser_coords_t near *coords)
-public LASER_RENDER_RAY
-laser_render_ray	proc near
+public @LASER_RENDER_RAY$QP14LASER_COORDS_T
+@laser_render_ray$qp14laser_coords_t proc near
 point0  	= Point ptr -20h
 point1  	= Point ptr -1Ch
 point2  	= Point ptr -18h
@@ -124,12 +121,11 @@ point7  	= Point ptr -4
 	pop	si
 	leave
 	retn	2
-laser_render_ray	endp
+@laser_render_ray$qp14laser_coords_t endp
 
 
-; void pascal near laser_hittest(laser_t near *laser);
-public LASER_HITTEST
-laser_hittest	proc near
+public @LASER_HITTEST$QR7LASER_T
+@laser_hittest$qr7laser_t proc near
 testrect_center		= byte ptr -4
 laser		= word ptr  4
 
@@ -171,4 +167,4 @@ laser		= word ptr  4
 	pop	di
 	leave
 	ret	2
-laser_hittest	endp
+@laser_hittest$qr7laser_t endp
