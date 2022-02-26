@@ -1,8 +1,6 @@
 typedef union {
 	unsigned char spread_angle;
-	// In subpixels, obviously, but pre-C++11 doesn't let us use any of the
-	// Subpixel classes with their custom assignment operators in a union...
-	unsigned char stack_speed;
+	SubpixelLength8 stack_speed;
 } bullet_template_delta_t;
 
 // All _AIMED groups define the 0° [angle] as the current player position,

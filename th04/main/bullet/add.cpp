@@ -21,7 +21,7 @@ void near tune_for_easy(void)
 	switch(tmpl.group) {
 	case BG_STACK:
 	case BG_STACK_AIMED:
-		tmpl.delta.stack_speed -= (tmpl.delta.stack_speed / 4);
+		tmpl.delta.stack_speed.v -= (tmpl.delta.stack_speed.v / 4);
 		if(tmpl.count >= 2) {
 			tmpl.count--;
 		}
@@ -48,17 +48,17 @@ void near tune_for_hard(void)
 	case BG_SINGLE_AIMED:
 		tmpl.group = BG_STACK_AIMED;
 		tmpl.count = 2;
-		tmpl.delta.stack_speed = to_sp(0.375f);
+		tmpl.delta.stack_speed.set(0.375f);
 		break;
 	case BG_SINGLE:
 		tmpl.group = BG_STACK;
 		tmpl.count = 2;
-		tmpl.delta.stack_speed = to_sp(0.375f);
+		tmpl.delta.stack_speed.set(0.375f);
 		break;
 
 	case BG_STACK:
 	case BG_STACK_AIMED:
-		tmpl.delta.stack_speed += (tmpl.delta.stack_speed / 2);
+		tmpl.delta.stack_speed.v += (tmpl.delta.stack_speed.v / 2);
 		break;
 
 	case BG_SPREAD:
@@ -98,7 +98,7 @@ void near tune_for_lunatic(void)
 
 	case BG_STACK:
 	case BG_STACK_AIMED:
-		tmpl.delta.stack_speed += (tmpl.delta.stack_speed / 2);
+		tmpl.delta.stack_speed.v += (tmpl.delta.stack_speed.v / 2);
 		tmpl.count++;
 		break;
 
@@ -188,7 +188,7 @@ void pascal near bullet_template_tune_lunatic(void)
 
 void pascal near bullets_add_regular_easy(void)
 {
-	unsigned char speed;
+	subpixel_length_8_t speed;
 	unsigned char count;
 
 	if(bullet_zap.active) {
@@ -202,7 +202,7 @@ void pascal near bullets_add_regular_easy(void)
 }
 
 inline void keep_speed_from_being_mutated_when_calling(nearfunc_t_near func) {
-	unsigned char speed = bullet_template.speed.v;
+	subpixel_length_8_t speed = bullet_template.speed.v;
 	func();
 	bullet_template.speed.v = speed;
 }
@@ -274,7 +274,7 @@ void near bullets_add_special_fixedspeed(void)
 bool16 pascal near bullet_velocity_and_angle_set(int group_i)
 {
 	int angle = 0x00;
-	unsigned char speed;
+	subpixel_length_8_t speed;
 	bool done;
 
 	// Due to this default, invalid group values lead to the spawn functions
@@ -550,7 +550,7 @@ void pascal near bullets_add_regular_raw(void)
 			bullet->flag = 1;
 			bullet->move_state = static_cast<bullet_move_state_t>(move_state);
 			bullet->ax.slowdown_time = BMS_SLOWDOWN_FRAMES;
-			bullet->dx.slowdown_speed_delta = (
+			bullet->dx.slowdown_speed_delta.v = (
 				to_sp8(BMS_SLOWDOWN_BASE_SPEED) - bullet_template.speed
 			);
 			bullet_init_from_template(bullet, group_done, group_i, spawn_state);

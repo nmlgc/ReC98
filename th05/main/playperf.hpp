@@ -1,4 +1,6 @@
 #include "th04/main/playperf.hpp"
 
 // Returns [speed] tuned based on [playperf].
-SubpixelLength8 __fastcall near playperf_speedtune(unsigned char speed);
+subpixel_length_8_t __fastcall near playperf_speedtune(
+	subpixel_length_8_t speed
+);

@@ -5,6 +5,7 @@
 
 #define PIXEL_NONE (-999)
 
+typedef uint8_t subpixel_length_8_t;
 typedef int subpixel_t;
 
 static const subpixel_t SUBPIXEL_FACTOR = 16;
@@ -24,8 +25,8 @@ inline subpixel_t to_sp(float pixel_v) {
 	return static_cast<subpixel_t>(pixel_v * SUBPIXEL_FACTOR);
 }
 
-inline unsigned char to_sp8(float pixel_v) {
-	return static_cast<unsigned char>(to_sp(pixel_v));
+inline subpixel_length_8_t to_sp8(float pixel_v) {
+	return static_cast<subpixel_length_8_t>(to_sp(pixel_v));
 }
 
 template <class SubpixelType, class PixelType> class SubpixelBase {
@@ -100,6 +101,6 @@ struct SPPoint : public SPPointBase<Subpixel> {
 };
 
 // 8-bit (Q4.4)
-typedef SubpixelBase<unsigned char, unsigned char> SubpixelLength8;
+typedef SubpixelBase<subpixel_length_8_t, subpixel_length_8_t> SubpixelLength8;
 typedef SubpixelBase<char, char> Subpixel8;
 typedef SPPointBase<Subpixel8> SPPoint8;

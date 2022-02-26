@@ -138,8 +138,8 @@ struct bullet_t {
 	union {
 		// Difference between [speed_final] and the BMS_SLOWDOWN_BASE_SPEED.
 		// Always positive for BMS_SLOWDOWN bullets.
-		unsigned char slowdown_speed_delta;	// with BMS_SLOWDOWN
-		bullet_special_angle_t angle;      	// with BMS_SPECIAL
+		SubpixelLength8 slowdown_speed_delta;	// with BMS_SLOWDOWN
+		bullet_special_angle_t angle;        	// with BMS_SPECIAL
 	} dx;
 	int patnum;
 

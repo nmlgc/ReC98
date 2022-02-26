@@ -50,7 +50,7 @@ clipped:
 	}
 
 	if(!group_fixedspeed) {
-		bullet_template.speed = playperf_speedtune(bullet_template.speed);
+		bullet_template.speed.v = playperf_speedtune(bullet_template.speed.v);
 	}
 	return false;
 }

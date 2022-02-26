@@ -309,7 +309,7 @@ void bullets_update(void)
 			} else if(bullet->move_state == BMS_SLOWDOWN) {
 				bullet->ax.slowdown_time--;
 				bullet->speed_cur.v = (bullet->speed_final.v + ((
-					bullet->ax.slowdown_time * bullet->dx.slowdown_speed_delta
+					bullet->ax.slowdown_time * bullet->dx.slowdown_speed_delta.v
 				) / BMS_SLOWDOWN_FRAMES));
 				if(bullet->ax.slowdown_time == 0) {
 					bullet->speed_cur = bullet->speed_final;
