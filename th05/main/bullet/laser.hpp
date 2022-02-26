@@ -1,3 +1,6 @@
+#define LASER_DISTANCE_MIN 16.0f
+#define LASER_DISTANCE_MAX 550.0f /* Far away enough? */
+
 enum laser_flag_t {
 	LF_FREE = 0,
 	LF_SHOOTOUT = 1,
@@ -29,7 +32,11 @@ struct laser_t {
 	laser_flag_t flag;
 	uint4_t col;
 	laser_coords_t coords;
+
+	// Truncated to 8 bits by the spawn function! Should have therefore rather
+	// been a SubpixelLength8.
 	Subpixel shootout_speed;
+
 	int age;
 	union {
 		// [age] at which a fixed laser should transition from
@@ -47,6 +54,14 @@ struct laser_t {
 	// LF_FIXED_GROW to LF_FIXED_ACTIVE.
 	uint8_t grow_to_width;
 	uint8_t padding[3];
+
+	void fixed_init(const PlayfieldPoint &origin) {
+		flag = LF_FIXED_WAIT_TO_GROW;
+		coords.origin = origin;
+		coords.starts_at_distance.set(LASER_DISTANCE_MIN);
+		coords.ends_at_distance.set(LASER_DISTANCE_MAX);
+		age = 0;
+	}
 };
 
 #define LASER_COUNT 32
