@@ -43,7 +43,7 @@ include th04/main/enemy/enemy.inc
 	extern _tolower:proc
 	extern __ctype:byte
 
-main_01 group SLOWDOWN_TEXT, ma_TEXT, EMS_TEXT, mai_TEXT, main_TEXT, DIALOG_TEXT, main__TEXT, PLAYER_P_TEXT, main_0_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT
+main_01 group SLOWDOWN_TEXT, ma_TEXT, EMS_TEXT, mai_TEXT, PLAYFLD_TEXT, main_TEXT, DIALOG_TEXT, main__TEXT, PLAYER_P_TEXT, main_0_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT
 g_SHARED group SHARED, SHARED_
 main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, IT_SPL_U_TEXT, main_033_TEXT, BULLET_U_TEXT, BULLET_A_TEXT, main_034_TEXT
 
@@ -398,7 +398,7 @@ loc_ABBA:
 		GRCG_OFF_CLOBBERING dx
 		call	_overlay_text
 		call	_popup
-		call	main_01:sub_CD36
+		call	_playfield_shake_update_and_rende
 		call	main_01:far ptr	_input_reset_sense
 		mov	ax, vsync_Count1
 		cmp	ax, _slowdown_factor
@@ -918,8 +918,8 @@ sub_B1D0	proc near
 		mov	_scroll_subpixel_line, 0
 		mov	byte_25104, 0
 		mov	byte_250FE, 0
-		mov	word_255BE, 0
-		mov	word_255C0, 0
+		mov	_playfield_shake_x, 0
+		mov	_playfield_shake_y, 0
 		mov	_player_pos.cur.x, 192 * 16
 		mov	_player_pos.cur.y, 320 * 16
 		mov	_player_pos.prev.x, 192 * 16
@@ -2144,100 +2144,11 @@ loc_CD31:
 		pop	bp
 		retn
 sub_CCD6	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CD36	proc near
-		push	bp
-		mov	bp, sp
-		cmp	word_255C2, 0
-		jz	short loc_CD68
-		cmp	_stage_frame_mod2, 0
-		jnz	short loc_CD4C
-		mov	ax, 0FFFEh
-		jmp	short loc_CD4F
-; ---------------------------------------------------------------------------
-
-loc_CD4C:
-		mov	ax, 2
-
-loc_CD4F:
-		mov	word_255BE, ax
-		cmp	_stage_frame_mod4, 1
-		ja	short loc_CD5E
-		mov	ax, 0FFFEh
-		jmp	short loc_CD61
-; ---------------------------------------------------------------------------
-
-loc_CD5E:
-		mov	ax, 2
-
-loc_CD61:
-		mov	word_255C0, ax
-		dec	word_255C2
-
-loc_CD68:
-		cmp	word_255BE, 0
-		jge	short loc_CD88
-		push	(PLAYFIELD_LEFT shl 16) or 0
-		push	((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
-		mov	ax, word_255BE
-		neg	ax
-		push	ax
-		call	egc_shift_left
-		jmp	short loc_CDA4
-; ---------------------------------------------------------------------------
-
-loc_CD88:
-		cmp	word_255BE, 0
-		jle	short loc_CDA9
-		push	(PLAYFIELD_LEFT shl 16) or 0
-		push	((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
-		push	word_255BE
-		call	egc_shift_right
-
-loc_CDA4:
-		mov	byte_22B9C, 2
-
-loc_CDA9:
-		cmp	word_255C0, 0
-		jge	short loc_CDC9
-		push	(PLAYFIELD_LEFT shl 16) or 0
-		push	((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
-		mov	ax, word_255C0
-		neg	ax
-		push	ax
-		call	egc_shift_up
-		jmp	short loc_CDE5
-; ---------------------------------------------------------------------------
-
-loc_CDC9:
-		cmp	word_255C0, 0
-		jle	short loc_CDEA
-		push	(PLAYFIELD_LEFT shl 16) or 0
-		push	((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
-		push	word_255C0
-		call	egc_shift_down
-
-loc_CDE5:
-		mov	byte_22B9C, 2
-
-loc_CDEA:
-		cmp	byte_22B9C, 0	; value	table for switch statement
-		jz	short loc_CE04
-		dec	byte_22B9C
-		call	main_01:tiles_invalidate_all
-		mov	word_255BE, 0
-		mov	word_255C0, 0	; jump table for switch	statement
-
-loc_CE04:
-		pop	bp
-		retn
-sub_CD36	endp
 mai_TEXT	ends
+
+PLAYFLD_TEXT	segment	byte public 'CODE' use16
+	_playfield_shake_update_and_rende procdesc pascal near
+PLAYFLD_TEXT	ends
 
 main_TEXT	segment	byte public 'CODE' use16
 
@@ -14085,7 +13996,7 @@ loc_14EB5:
 		push	dx
 		call	sub_19F6E
 		call	items_add pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, IT_BOMB
-		mov	word_255C2, 0Ch
+		mov	_playfield_shake_anim_time, 12
 
 loc_14EE0:
 		mov	_midboss_phase, 2
@@ -14668,7 +14579,7 @@ loc_15414:
 		sub	dx, ax
 		push	dx
 		call	sub_19F6E
-		mov	word_255C2, 0Ch
+		mov	_playfield_shake_anim_time, 12
 		mov	_midboss_phase, PHASE_EXPLODE_BIG
 		mov	_midboss_sprite, 4
 		mov	_midboss_phase_frame, 0
@@ -23241,7 +23152,7 @@ sub_1A047	proc near
 		jnz	short loc_1A081
 		cmp	_midboss_phase_frame, 0
 		jnz	short loc_1A05E
-		mov	word_255C2, 0Ch
+		mov	_playfield_shake_anim_time, 12
 
 loc_1A05E:
 		inc	_midboss_phase_frame
@@ -28812,7 +28723,7 @@ sub_1E743	proc near
 		jge	short loc_1E778
 		cmp	_stage_frame_mod2, 0
 		jnz	short loc_1E760
-		mov	ax, 0FFFCh
+		mov	ax, -4
 		jmp	short loc_1E763
 ; ---------------------------------------------------------------------------
 
@@ -28820,10 +28731,10 @@ loc_1E760:
 		mov	ax, 4
 
 loc_1E763:
-		mov	word_255BE, ax
+		mov	_playfield_shake_x, ax
 		cmp	_stage_frame_mod4, 1
 		ja	short loc_1E772
-		mov	ax, 0FFFCh
+		mov	ax, -4
 		jmp	short loc_1E775
 ; ---------------------------------------------------------------------------
 
@@ -28831,7 +28742,7 @@ loc_1E772:
 		mov	ax, 4
 
 loc_1E775:
-		mov	word_255C0, ax
+		mov	_playfield_shake_y, ax
 
 loc_1E778:
 		mov	_bg_render_bombing_func, offset tiles_render_all
@@ -32532,8 +32443,7 @@ include th04/main/player/shot_velocity[data].asm
 		db  60h
 include th02/sprites/pellet.asp
 include th04/sprites/pelletbt.asp
-byte_22B9C	db 0
-		db 0
+include th04/main/playfld[data].asm
 byte_22B9E	db 1
 		db 0
 include th04/main/frames[data].asm
@@ -33158,11 +33068,7 @@ byte_255B2	db ?
 byte_255B3	db ?
 byte_255B4	db ?
 		db ?
-include th04/main/scroll[bss].asm
-word_255BE	dw ?
-word_255C0	dw ?
-word_255C2	dw ?
-		db 2 dup(?)
+include th04/main/playfld[bss].asm
 byte_255C6	db ?
 byte_255C7	db ?
 byte_255C8	db ?

@@ -37,7 +37,7 @@ include th05/main/enemy/enemy.inc
 	extern _execl:proc
 	extern _strlen:proc
 
-main_01 group SLOWDOWN_TEXT, m_TEXT, EMS_TEXT, ma_TEXT, CFG_LRES_TEXT, mai_TEXT, main_TEXT, main__TEXT, main_0_TEXT, DIALOG_TEXT, PLAYER_P_TEXT, main_01_TEXT
+main_01 group SLOWDOWN_TEXT, m_TEXT, EMS_TEXT, ma_TEXT, CFG_LRES_TEXT, mai_TEXT, main_TEXT, main__TEXT, PLAYFLD_TEXT, main_0_TEXT, DIALOG_TEXT, PLAYER_P_TEXT, main_01_TEXT
 g_SHARED group SHARED, SHARED_
 main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, BULLET_A_TEXT, main_032_TEXT, main_033_TEXT, LASER_SC_TEXT, CURVEB_U_TEXT, IT_SPL_U_TEXT, BULLET_U_TEXT, main_034_TEXT, main_035_TEXT, main_036_TEXT
 
@@ -445,7 +445,7 @@ loc_AF2D:
 		GRCG_OFF_CLOBBERING dx
 		call	_overlay_text
 		call	_popup
-		call	sub_10287
+		call	_playfield_shake_update_and_rende
 		call	far ptr	_input_reset_sense
 		mov	al, _slowdown_caused_by_bullets
 		mov	ah, 0
@@ -1057,8 +1057,8 @@ sub_B55A	proc near
 		mov	_scroll_subpixel_line, 0
 		mov	byte_23EFC, 0
 		mov	byte_23F04, 0
-		mov	word_2CE02, 0
-		mov	word_2CE04, 0
+		mov	_playfield_shake_x, 0
+		mov	_playfield_shake_y, 0
 		mov	_player_pos.cur.x, 192 * 16
 		mov	_player_pos.cur.y, 320 * 16
 		mov	_player_pos.prev.x, 192 * 16
@@ -5159,126 +5159,11 @@ loc_10282:
 		pop	bp
 		retn
 sub_10214	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_10287	proc near
-		push	bp
-		mov	bp, sp
-		cmp	word_2CE06, 0
-		jz	short loc_102B9
-		cmp	_stage_frame_mod2, 0
-		jnz	short loc_1029D
-		mov	ax, -2
-		jmp	short loc_102A0
-; ---------------------------------------------------------------------------
-
-loc_1029D:
-		mov	ax, 2
-
-loc_102A0:
-		mov	word_2CE02, ax
-		cmp	_stage_frame_mod4, 1
-		ja	short loc_102AF
-		mov	ax, -2
-		jmp	short loc_102B2
-; ---------------------------------------------------------------------------
-
-loc_102AF:
-		mov	ax, 2
-
-loc_102B2:
-		mov	word_2CE04, ax
-		dec	word_2CE06
-
-loc_102B9:
-		cmp	word_2CE02, 0
-		jge	short loc_102F0
-		push	(PLAYFIELD_LEFT shl 16) or 0
-		push	((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
-		mov	ax, word_2CE02
-		neg	ax
-		push	ax
-		call	egc_shift_left
-		push	(PLAYFIELD_LEFT shl 16) or 0
-		push	((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
-		mov	ax, word_2CE02
-		neg	ax
-		push	ax
-		call	egc_shift_left
-		jmp	short loc_1030C
-; ---------------------------------------------------------------------------
-
-loc_102F0:
-		cmp	word_2CE02, 0
-		jle	short loc_10311
-		push	(PLAYFIELD_LEFT shl 16) or 0
-		push	((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
-		push	word_2CE02
-		call	egc_shift_right
-
-loc_1030C:
-		mov	byte_226C2, 2
-
-loc_10311:
-		cmp	word_2CE04, 0
-		jge	short loc_10346
-		cmp	_scroll_line, 0
-		jnz	short loc_1032D
-		push	(PLAYFIELD_LEFT shl 16) or PLAYFIELD_TOP
-		push	((PLAYFIELD_RIGHT - 1) shl 16) or (PLAYFIELD_BOTTOM - 1)
-		jmp	short loc_10339
-; ---------------------------------------------------------------------------
-
-loc_1032D:
-		push	(PLAYFIELD_LEFT shl 16) or 0
-		push	((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
-
-loc_10339:
-		mov	ax, word_2CE04
-		neg	ax
-		push	ax
-		call	egc_shift_up
-		jmp	short loc_10377
-; ---------------------------------------------------------------------------
-
-loc_10346:
-		cmp	word_2CE04, 0
-		jle	short loc_1037C
-		cmp	_scroll_line, 0
-		jnz	short loc_10362
-		push	(PLAYFIELD_LEFT shl 16) or PLAYFIELD_TOP
-		push	((PLAYFIELD_RIGHT - 1) shl 16) or (PLAYFIELD_BOTTOM - 1)
-		jmp	short loc_1036E
-; ---------------------------------------------------------------------------
-
-loc_10362:
-		push	(PLAYFIELD_LEFT shl 16) or 0
-		push	((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
-
-loc_1036E:
-		push	word_2CE04
-		call	egc_shift_down
-
-loc_10377:
-		mov	byte_226C2, 2
-
-loc_1037C:
-		cmp	byte_226C2, 0
-		jz	short loc_10396
-		dec	byte_226C2
-		call	tiles_invalidate_all
-		mov	word_2CE02, 0
-		mov	word_2CE04, 0
-
-loc_10396:
-		pop	bp
-		retn
-sub_10287	endp
 main__TEXT	ends
+
+PLAYFLD_TEXT	segment	byte public 'CODE' use16
+	_playfield_shake_update_and_rende procdesc pascal near
+PLAYFLD_TEXT	ends
 
 main_0_TEXT	segment	byte public 'CODE' use16
 
@@ -11367,7 +11252,7 @@ sub_17486	proc near
 		jnz	short loc_174C1
 		cmp	_midboss_phase_frame, 1
 		jnz	short loc_174A2
-		mov	word_2CE06, 0Ah
+		mov	_playfield_shake_anim_time, 10
 		mov	_midboss_active, 0
 
 loc_174A2:
@@ -16458,10 +16343,10 @@ loc_1AECA:
 		mov	ax, 4
 
 loc_1AECD:
-		mov	word_2CE02, ax
+		mov	_playfield_shake_x, ax
 		cmp	_stage_frame_mod4, 1
 		ja	short loc_1AEDC
-		mov	ax, 0FFFCh
+		mov	ax, -4
 		jmp	short loc_1AEDF
 ; ---------------------------------------------------------------------------
 
@@ -16469,7 +16354,7 @@ loc_1AEDC:
 		mov	ax, 4
 
 loc_1AEDF:
-		mov	word_2CE04, ax
+		mov	_playfield_shake_y, ax
 
 loc_1AEE2:
 		mov	_bg_render_bombing_func, offset tiles_render_all
@@ -20557,7 +20442,7 @@ loc_1D9C1:
 		cmp	si, 6
 		jl	short loc_1D9BC
 		call	snd_se_play pascal, 15
-		mov	word_2CE06, 8
+		mov	_playfield_shake_anim_time, 8
 		jmp	short loc_1DA13
 ; ---------------------------------------------------------------------------
 
@@ -20795,7 +20680,7 @@ loc_1DC06:
 		jl	short loc_1DBCA
 		mov	_boss_sprite, 192
 		call	snd_se_play pascal, 15
-		mov	word_2CE06, 8
+		mov	_playfield_shake_anim_time, 8
 
 loc_1DC1D:
 		cmp	_boss_phase_frame, 200
@@ -21601,7 +21486,7 @@ loc_1E481:
 
 loc_1E488:
 		call	boss_phase_end pascal, (ET_HORIZONTAL shl 16) or 0
-		mov	word_2CE06, 10h
+		mov	_playfield_shake_anim_time, 16
 		call	@laser_stop$qi pascal, 0
 		call	@laser_stop$qi pascal, 1
 		call	@laser_stop$qi pascal, 2
@@ -24023,7 +23908,7 @@ loc_1FC23:
 		jge	short loc_1FC55
 		cmp	_stage_frame_mod2, 0
 		jnz	short loc_1FC3D
-		mov	ax, 0FFFCh
+		mov	ax, -4
 		jmp	short loc_1FC40
 ; ---------------------------------------------------------------------------
 
@@ -24031,10 +23916,10 @@ loc_1FC3D:
 		mov	ax, 4
 
 loc_1FC40:
-		mov	word_2CE02, ax
+		mov	_playfield_shake_x, ax
 		cmp	_stage_frame_mod4, 1
 		ja	short loc_1FC4F
-		mov	ax, 0FFFCh
+		mov	ax, -4
 		jmp	short loc_1FC52
 ; ---------------------------------------------------------------------------
 
@@ -24042,7 +23927,7 @@ loc_1FC4F:
 		mov	ax, 4
 
 loc_1FC52:
-		mov	word_2CE04, ax
+		mov	_playfield_shake_y, ax
 
 loc_1FC55:
 		mov	_bg_render_bombing_func, offset tiles_render_all
@@ -24415,8 +24300,7 @@ aMaine_1	db 'maine',0
 public _bullet_zap_drop_point_items
 _bullet_zap_drop_point_items	db 0
 		db 0
-byte_226C2	db 0
-		db 0
+include th04/main/playfld[data].asm
 include th04/score[data].asm
 include th04/gaiji/hud[data].asm
 gsRUIKEI	db 0EDh, 0EEh, 0, 0, 0
@@ -24743,11 +24627,7 @@ include th05/main/bullet/lasers_render[bss].asm
 include th05/main/bullet/curve[bss].asm
 include th04/main/item/splashes[bss].asm
 include th05/main/bullet/pellet_r[bss].asm
-include th04/main/scroll[bss].asm
-word_2CE02	dw ?
-word_2CE04	dw ?
-word_2CE06	dw ?
-		db 2 dup(?)
+include th04/main/playfld[bss].asm
 include th04/main/score[bss].asm
 		db 2 dup(?)
 fp_2CE24	dw ?

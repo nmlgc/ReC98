@@ -21,3 +21,22 @@ void near playfield_tram_black(void);
 
 #define playfield_bg_put(left, top, cdg_slot) \
 	cdg_put_noalpha_8((PLAYFIELD_LEFT + left), (PLAYFIELD_TOP + top), cdg_slot)
+
+/// Shaking
+/// -------
+
+// Shake amount for the current frame; resets to 0 after calling
+// playfield_shake_update_and_render(). Can also be manually controlled while
+// [playfield_shake_anim_time] is 0.
+extern pixel_t playfield_shake_x;
+extern pixel_t playfield_shake_y;
+
+// Frames left in the 4-direction shake animation.
+extern int playfield_shake_anim_time;
+
+// Shifts the playfield on the current VRAM page by [playfield_shake], or runs
+// the 4-direction shake animation if it's active. After the playfield was
+// shifted, all tiles are invalidated for the next two frames, forcing a
+// redraw of the unshifted playfield on both VRAM pages.
+void near playfield_shake_update_and_render(void);
+/// -------
