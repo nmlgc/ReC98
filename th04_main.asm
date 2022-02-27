@@ -43,7 +43,7 @@ include th04/main/enemy/enemy.inc
 	extern _tolower:proc
 	extern __ctype:byte
 
-main_01 group SLOWDOWN_TEXT, mai_TEXT, EMS_TEXT, main_TEXT, DIALOG_TEXT, main__TEXT, PLAYER_P_TEXT, main_0_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT
+main_01 group SLOWDOWN_TEXT, ma_TEXT, EMS_TEXT, mai_TEXT, main_TEXT, DIALOG_TEXT, main__TEXT, PLAYER_P_TEXT, main_0_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT
 g_SHARED group SHARED, SHARED_
 main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, IT_SPL_U_TEXT, main_033_TEXT, BULLET_U_TEXT, BULLET_A_TEXT, main_034_TEXT
 
@@ -270,7 +270,7 @@ SLOWDOWN_TEXT segment word public 'CODE' use16
 SLOWDOWN_TEXT ends
 
 ; Segment type:	Pure code
-mai_TEXT	segment	word public 'CODE' use16
+ma_TEXT	segment	word public 'CODE' use16
 		assume cs:main_01
 		;org 1
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
@@ -1049,7 +1049,7 @@ DemoPlay	proc near
 		pop	bp
 		retn
 DemoPlay	endp
-mai_TEXT	ends
+ma_TEXT	ends
 
 EMS_TEXT	segment	byte public 'CODE' use16
 	@ems_allocate_and_preload_eyecatc$qv procdesc near
@@ -1057,7 +1057,7 @@ EMS_TEXT	segment	byte public 'CODE' use16
 	@eyecatch_animate$qv procdesc near
 EMS_TEXT	ends
 
-main_TEXT	segment	word public 'CODE' use16
+mai_TEXT	segment	word public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2237,7 +2237,9 @@ loc_CE04:
 		pop	bp
 		retn
 sub_CD36	endp
+mai_TEXT	ends
 
+main_TEXT	segment	byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 

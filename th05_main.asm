@@ -37,7 +37,7 @@ include th05/main/enemy/enemy.inc
 	extern _execl:proc
 	extern _strlen:proc
 
-main_01 group SLOWDOWN_TEXT, ma_TEXT, EMS_TEXT, mai_TEXT, CFG_LRES_TEXT, main_TEXT, main__TEXT, main_0_TEXT, DIALOG_TEXT, PLAYER_P_TEXT, main_01_TEXT
+main_01 group SLOWDOWN_TEXT, m_TEXT, EMS_TEXT, ma_TEXT, CFG_LRES_TEXT, mai_TEXT, main_TEXT, main__TEXT, main_0_TEXT, DIALOG_TEXT, PLAYER_P_TEXT, main_01_TEXT
 g_SHARED group SHARED, SHARED_
 main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, BULLET_A_TEXT, main_032_TEXT, main_033_TEXT, LASER_SC_TEXT, CURVEB_U_TEXT, IT_SPL_U_TEXT, BULLET_U_TEXT, main_034_TEXT, main_035_TEXT, main_036_TEXT
 
@@ -316,7 +316,7 @@ SLOWDOWN_TEXT segment word public 'CODE' use16
 SLOWDOWN_TEXT ends
 
 ; Segment type:	Pure code
-ma_TEXT	segment	word public 'CODE' use16
+m_TEXT	segment	word public 'CODE' use16
 		assume cs:main_01
 		;org 0Dh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
@@ -1213,7 +1213,7 @@ locret_B825:
 		leave
 		retn
 DemoPlay	endp
-ma_TEXT	ends
+m_TEXT	ends
 
 EMS_TEXT	segment	byte public 'CODE' use16
 	@ems_allocate_and_preload_eyecatc$qv procdesc near
@@ -1227,7 +1227,7 @@ CFG_LRES_TEXT	segment	byte public 'CODE' use16
 	_cfg_load_resident_ptr procdesc near
 CFG_LRES_TEXT	ends
 
-mai_TEXT	segment	word public 'CODE' use16
+ma_TEXT	segment	word public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1755,9 +1755,9 @@ loc_C565:
 		pop	bp
 		retn
 sub_C52D	endp
-mai_TEXT	ends
+ma_TEXT	ends
 
-main_TEXT	segment	byte public 'CODE' use16
+mai_TEXT	segment	byte public 'CODE' use16
 	REIMU_STARS_UPDATE_AND_RENDER procdesc pascal near
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -3167,9 +3167,9 @@ yumeko_bg_render	endp
 
 	SHINKI_BG_RENDER procdesc pascal near
 	EXALICE_BG_RENDER procdesc pascal near
-main_TEXT	ends
+mai_TEXT	ends
 
-main__TEXT	segment	word public 'CODE' use16
+main_TEXT	segment	word public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4313,7 +4313,7 @@ loc_F333:
 		pop	bp
 		retf
 sub_F2B4	endp
-main__TEXT	ends
+main_TEXT	ends
 
 DIALOG_TEXT	segment	byte public 'CODE' use16
 	@DIALOG_FACE_LOAD_UNPUT_PUT_FREE_$QIII procdesc pascal near \
@@ -4321,7 +4321,7 @@ DIALOG_TEXT	segment	byte public 'CODE' use16
 	@dialog_exit$qv	procdesc near
 DIALOG_TEXT	ends
 
-main_0_TEXT	segment	byte public 'CODE' use16
+main__TEXT	segment	byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5278,7 +5278,9 @@ loc_10396:
 		pop	bp
 		retn
 sub_10287	endp
+main__TEXT	ends
 
+main_0_TEXT	segment	byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
