@@ -129,6 +129,21 @@ void MASTER_RET egc_start(void);
 // TODO: Document and add helpful macros for the EGC raster ops
 #define egc_setrop(mode_rop) \
 	outport(EGC_MODE_ROP_REG, mode_rop)
+
+#ifdef PC98_H
+	void MASTER_RET egc_shift_down(
+		screen_x_t x1, vram_y_t y1, screen_x_t x2, vram_y_t y2, pixel_t dots
+	);
+	void MASTER_RET egc_shift_left(
+		screen_x_t x1, vram_y_t y1, screen_x_t x2, vram_y_t y2, pixel_t dots
+	);
+	void MASTER_RET egc_shift_right(
+		screen_x_t x1, vram_y_t y1, screen_x_t x2, vram_y_t y2, pixel_t dots
+	);
+	void MASTER_RET egc_shift_up(
+		screen_x_t x1, vram_y_t y1, screen_x_t x2, vram_y_t y2, pixel_t dots
+	);
+#endif
 // ---
 
 // EMS
