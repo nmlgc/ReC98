@@ -39,7 +39,7 @@ include th05/main/enemy/enemy.inc
 
 main_01 group SLOWDOWN_TEXT, m_TEXT, EMS_TEXT, ma_TEXT, CFG_LRES_TEXT, mai_TEXT, main_TEXT, main__TEXT, PLAYFLD_TEXT, main_0_TEXT, DIALOG_TEXT, PLAYER_P_TEXT, main_01_TEXT
 g_SHARED group SHARED, SHARED_
-main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, BULLET_A_TEXT, main_032_TEXT, main_033_TEXT, LASER_SC_TEXT, CURVEB_U_TEXT, IT_SPL_U_TEXT, BULLET_U_TEXT, main_034_TEXT, main_035_TEXT, main_036_TEXT
+main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, BULLET_A_TEXT, main_032_TEXT, main_033_TEXT, MB_DFT_TEXT, LASER_SC_TEXT, CURVEB_U_TEXT, IT_SPL_U_TEXT, BULLET_U_TEXT, main_034_TEXT, main_035_TEXT, main_036_TEXT
 
 ; ===========================================================================
 
@@ -797,7 +797,7 @@ loc_B2DD:
 		call	sub_B55A
 		nopcall	hud_put
 		call	@eyecatch_animate$qv
-		call	sub_172FF
+		call	@midboss_reset$qv
 		cmp	word_20A84, 0
 		jz	loc_B3CA
 		call	bb_curvebullet_load
@@ -11078,8 +11078,8 @@ items_update	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_172FF	proc far
+public @midboss_reset$qv
+@midboss_reset$qv	proc far
 		push	bp
 		mov	bp, sp
 		mov	_midboss_invalidate?, offset nullfunc_near
@@ -11088,7 +11088,7 @@ sub_172FF	proc far
 		mov	_midboss_hp, 0
 		pop	bp
 		retf
-sub_172FF	endp
+@midboss_reset$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -11239,45 +11239,11 @@ loc_17476:
 		leave
 		retn	2
 sub_17416	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_17486	proc near
-		push	bp
-		mov	bp, sp
-		cmp	_midboss_phase, PHASE_EXPLODE_BIG
-		jnz	short loc_174C1
-		cmp	_midboss_phase_frame, 1
-		jnz	short loc_174A2
-		mov	_playfield_shake_anim_time, 10
-		mov	_midboss_active, 0
-
-loc_174A2:
-		mov	ax, _midboss_phase_frame
-		mov	bx, 16
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_174C5
-		inc	_midboss_sprite
-		cmp	_midboss_sprite, 12
-		jb	short loc_174C5
-		mov	_midboss_phase, PHASE_NONE
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_174C1:
-		call	sub_172FF
-
-loc_174C5:
-		pop	bp
-		retn
-sub_17486	endp
 main_033_TEXT	ends
+
+MB_DFT_TEXT	segment	byte public 'CODE' use16
+	@midboss_defeat_update$qv procdesc pascal near
+MB_DFT_TEXT	ends
 
 LASER_SC_TEXT	segment	byte public 'CODE' use16
 	@lasers_shootout_add$qv procdesc pascal near
@@ -11486,7 +11452,7 @@ loc_1818B:
 ; ---------------------------------------------------------------------------
 
 loc_181B5:
-		call	sub_17486
+		call	@midboss_defeat_update$qv
 		call	hud_hp_update_and_render pascal, _midboss_hp, 1000
 		pop	bp
 		retf
@@ -12512,7 +12478,7 @@ loc_18B67:
 ; ---------------------------------------------------------------------------
 
 loc_18B91:
-		call	sub_17486
+		call	@midboss_defeat_update$qv
 		call	hud_hp_update_and_render pascal, _midboss_hp, 1400
 		pop	bp
 		retf
@@ -13722,7 +13688,7 @@ loc_195DA:
 ; ---------------------------------------------------------------------------
 
 loc_19604:
-		call	sub_17486
+		call	@midboss_defeat_update$qv
 		call	hud_hp_update_and_render pascal, _midboss_hp, 1400
 		pop	bp
 		retf
@@ -16846,7 +16812,7 @@ loc_1B368:
 ; ---------------------------------------------------------------------------
 
 loc_1B392:
-		call	sub_17486
+		call	@midboss_defeat_update$qv
 		call	hud_hp_update_and_render pascal, _midboss_hp, 1100
 		pop	bp
 		retf
@@ -21929,7 +21895,7 @@ loc_1E82B:
 ; ---------------------------------------------------------------------------
 
 loc_1E855:
-		call	sub_17486
+		call	@midboss_defeat_update$qv
 		call	hud_hp_update_and_render pascal, _midboss_hp, 3000
 		pop	bp
 		retf
@@ -23725,7 +23691,7 @@ loc_1F968:
 ; ---------------------------------------------------------------------------
 
 loc_1F992:
-		call	sub_17486
+		call	@midboss_defeat_update$qv
 		call	hud_hp_update_and_render pascal, _midboss_hp, 1550
 		pop	bp
 		retf

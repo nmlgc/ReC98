@@ -12,9 +12,19 @@ typedef struct {
 
 extern midboss_stuff_t midboss;
 
+// Prevents stage enemies from being spawned if `true`.
+extern bool midboss_active;
+
 // Callbacks
 extern  farfunc_t_near midboss_update_func;
 extern nearfunc_t_near midboss_render_func;
+
+void midboss_reset(void);
+
+// Updates the defeat animation during PHASE_EXPLODE_BIG, and resets the boss
+// during any other phase. TH04's version also takes ownership of
+// [midboss.phase_frame], incrementing it every frame.
+void near midboss_defeat_update(void);
 
 #define MIDBOSS_DEC(stage) \
 	void pascal  far midboss##stage##_update(void); \

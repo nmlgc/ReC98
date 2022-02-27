@@ -45,7 +45,7 @@ include th04/main/enemy/enemy.inc
 
 main_01 group SLOWDOWN_TEXT, ma_TEXT, EMS_TEXT, mai_TEXT, PLAYFLD_TEXT, main_TEXT, DIALOG_TEXT, main__TEXT, PLAYER_P_TEXT, main_0_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT
 g_SHARED group SHARED, SHARED_
-main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, IT_SPL_U_TEXT, main_033_TEXT, BULLET_U_TEXT, BULLET_A_TEXT, main_034_TEXT
+main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, IT_SPL_U_TEXT, main_033_TEXT, MB_DFT_TEXT, main_034_TEXT, BULLET_U_TEXT, BULLET_A_TEXT, main_035_TEXT
 
 ; ===========================================================================
 
@@ -710,7 +710,7 @@ loc_AF4A:
 		call	main_01:sub_B1D0
 		nopcall	main_01:hud_put
 		call	@eyecatch_animate$qv
-		call	sub_19EBC
+		call	@midboss_reset$qv
 		cmp	word_213DE, 0
 		jz	short loc_AFD5
 		call	@bomb_bg_load__ems_preload_playch$qv
@@ -12743,7 +12743,7 @@ loc_142AC:
 ; ---------------------------------------------------------------------------
 
 loc_142E1:
-		call	sub_1A047
+		call	@midboss_defeat_update$qv
 
 loc_142E4:
 		call	hud_hp_update_and_render pascal, _midboss_hp, 620
@@ -13109,7 +13109,7 @@ loc_14629:
 ; ---------------------------------------------------------------------------
 
 loc_1468A:
-		call	sub_1A047
+		call	@midboss_defeat_update$qv
 
 loc_1468D:
 		call	hud_hp_update_and_render pascal, _midboss_hp, 850
@@ -13562,7 +13562,7 @@ loc_14A6B:
 		jl	short loc_14A87
 
 loc_14A82:
-		nopcall	sub_19EBC
+		nopcall	@midboss_reset$qv
 
 loc_14A87:
 		pop	bp
@@ -14031,7 +14031,7 @@ loc_14F38:
 ; ---------------------------------------------------------------------------
 
 loc_14F52:
-		nopcall	sub_19EBC
+		nopcall	@midboss_reset$qv
 
 loc_14F57:
 		call	hud_hp_update_and_render pascal, _midboss_hp, 750
@@ -14627,7 +14627,7 @@ loc_15490:
 ; ---------------------------------------------------------------------------
 
 loc_154D1:
-		nopcall	sub_19EBC
+		nopcall	@midboss_reset$qv
 		cmp	_midboss_frames_until, 2800
 		jnz	short loc_1552D
 		mov	_midboss_frames_until, 5600
@@ -22976,8 +22976,8 @@ off_19EB0	dw offset loc_19AC8
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_19EBC	proc far
+public @midboss_reset$qv
+@midboss_reset$qv	proc far
 		push	bp
 		mov	bp, sp
 		mov	_midboss_invalidate?, offset nullfunc_near
@@ -22987,7 +22987,7 @@ sub_19EBC	proc far
 		mov	_midboss_hp, 0
 		pop	bp
 		retf
-sub_19EBC	endp
+@midboss_reset$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -23139,45 +23139,13 @@ loc_1A037:
 		leave
 		retn	2
 sub_19FD8	endp
+main_033_TEXT	ends
 
+MB_DFT_TEXT	segment	byte public 'CODE' use16
+	@midboss_defeat_update$qv procdesc pascal near
+MB_DFT_TEXT	ends
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1A047	proc near
-		push	bp
-		mov	bp, sp
-		cmp	_midboss_phase, PHASE_EXPLODE_BIG
-		jnz	short loc_1A081
-		cmp	_midboss_phase_frame, 0
-		jnz	short loc_1A05E
-		mov	_playfield_shake_anim_time, 12
-
-loc_1A05E:
-		inc	_midboss_phase_frame
-		mov	ax, _midboss_phase_frame
-		mov	bx, 16
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_1A085
-		inc	_midboss_sprite
-		cmp	_midboss_sprite, 12
-		jb	short loc_1A085
-		mov	_midboss_phase, PHASE_NONE
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_1A081:
-		call	sub_19EBC
-
-loc_1A085:
-		pop	bp
-		retn
-sub_1A047	endp
-
+main_034_TEXT	segment	byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -27088,7 +27056,7 @@ off_1C6C4	dw offset loc_1C301
 		dw offset loc_1C3D4
 		dw offset loc_1C445
 		dw offset loc_1C61F
-main_033_TEXT	ends
+main_034_TEXT	ends
 
 BULLET_U_TEXT	segment	byte public 'CODE' use16
 	extern _bullets_update:proc
@@ -27109,7 +27077,7 @@ BULLET_A_TEXT	segment	byte public 'CODE' use16
 	_bullets_add_special_fixedspeed procdesc near
 BULLET_A_TEXT	ends
 
-main_034_TEXT	segment	byte public 'CODE' use16
+main_035_TEXT	segment	byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -32313,7 +32281,7 @@ off_206D8	dw offset loc_202B0
 		dw offset loc_205D4
 		dw offset loc_20609
 		dw offset loc_2065F
-main_034_TEXT	ends
+main_035_TEXT	ends
 
 ; ---------------------------------------------------------------------------
 ; ===========================================================================

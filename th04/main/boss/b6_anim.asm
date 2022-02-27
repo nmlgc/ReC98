@@ -130,7 +130,7 @@ _yuuka6_anim_parasol_back_open	proc near
 	leave
 	retn
 ; ---------------------------------------------------------------------------
-	evendata
+	db 0
 @@switch_table	dw	1, 7, 13, 19, 25	; value	table for switch statement
 	dw offset @@cel_0	; jump table for switch	statement
 	dw offset @@cel_1
@@ -356,7 +356,7 @@ _yuuka6_anim_parasol_left_spin_back	proc near
 	pop	bp
 	retn
 ; ---------------------------------------------------------------------------
-	evendata
+	db 0
 @@switch_table	dw offset @@cel_0
 	dw offset @@still_animating
 	dw offset @@still_animating
