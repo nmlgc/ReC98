@@ -168,7 +168,7 @@ static const subpixel_t BULLET_KILLBOX_H = TO_SP(8);
 // [patnum_base] that shows the given [angle].
 int pascal near bullet_patnum_for_angle(int patnum_base, unsigned char angle);
 // Updates [bullet]'s patnum based on its current angle.
-void pascal near bullet_update_patnum(bullet_t near *bullet);
+void pascal near bullet_update_patnum(bullet_t near &bullet);
 
 // Turns every 4th bullet into a point item when zapping bullets.
 extern bool bullet_zap_drop_point_items;
