@@ -22,7 +22,7 @@ extern "C" {
 #include "th04/main/player/player.hpp"
 }
 #include "th04/main/hud/hud.h"
-#include "th04/main/hud/popup.hpp"
+#include "th04/main/hud/overlay.hpp"
 #include "th04/main/pointnum/pointnum.hpp"
 #include "th04/main/gather.hpp"
 
@@ -448,7 +448,7 @@ void bullets_update(void)
 			}
 		#endif
 
-		popup_bonus = 0;
+		overlay_popup_bonus = 0;
 		for(i = 0; i < BULLET_COUNT; i++, bullet--) {
 			if(bullet->flag != 1) {
 				continue;
@@ -464,7 +464,7 @@ void bullets_update(void)
 				#endif
 				continue;
 			}
-			popup_bonus += score_per_bullet;
+			overlay_popup_bonus += score_per_bullet;
 			score_delta += score_per_bullet;
 			pointnums_add_white(
 				bullet->pos.cur.x, bullet->pos.cur.y, score_per_bullet
@@ -487,8 +487,8 @@ void bullets_update(void)
 		// Note that this would show only one popup even *if* bullets could
 		// spawn during the zap frames: Popups can be changed at least every
 		// 64 frames, and BULLET_ZAP_FRAMES is smaller.
-		if(popup_bonus) {
-			popup_show(POPUP_ID_BONUS);
+		if(overlay_popup_bonus) {
+			overlay_popup_show(POPUP_ID_BONUS);
 		}
 		bullet_zap.frames++;
 

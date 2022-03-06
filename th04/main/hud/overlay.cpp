@@ -16,7 +16,7 @@ extern "C" {
 #include "th04/main/scroll.hpp"
 }
 #include "th04/main/hud/hud.h"
-#include "th04/main/hud/popup.hpp"
+#include "th04/main/hud/overlay.hpp"
 #include "th04/main/stage/stage.hpp"
 
 #if (GAME == 4)
@@ -27,6 +27,9 @@ extern "C" {
 extern "C" void pascal near tiles_invalidate_around(
 	subpixel_t center_y, subpixel_t center_x
 );
+
+#define gaiji_putsa(left, y, str, atrb) \
+	gaiji_putsa(left, y, reinterpret_cast<const char *>(str), atrb);
 
 // MODDERS: Keep this up-to-date!
 static const unsigned int POPUP_STRING_MAX_LEN = 8;
@@ -111,7 +114,7 @@ void pascal near dissolve_put(tram_x_t tram_left, subpixel_t top, int ank_len)
 	}
 }
 
-void pascal near popup_titles_invalidate(void)
+void near overlay_titles_invalidate(void)
 {
 	unsigned char frames = (titles_frame + boss_bgm_frame);
 	if(frames == 0) {
@@ -167,7 +170,7 @@ inline void titles_dissolve_put(const int& bgm_len)
 }
 
 #define titles_strings_put(bgm_str, bgm_len) \
-	gStage_1[6] = (gb_1_ + stage_id); \
+	gStage_1[6] = static_cast<gaiji_th04_t>(gb_1_ + stage_id); \
 	if(stage_id == 5) { \
 		gaiji_putsa( \
 			STAGE_NUM_FE_TRAM_LEFT, \
@@ -228,7 +231,7 @@ static inline void boss_bgm_dissolve_put(const int& bgm_len)
 		} \
 	}
 
-void pascal near popup_titles_update_and_render(void)
+void pascal near overlay_titles_update_and_render(void)
 {
 	#define frames titles_frame
 	if(frames >= POPUP_FRAMES_UNTIL_OUT_DISSOLVE) {
@@ -269,7 +272,7 @@ void pascal near popup_titles_update_and_render(void)
 	#undef frames
 }
 
-void pascal near popup_boss_bgm_update_and_render(void)
+void pascal near overlay_boss_bgm_update_and_render(void)
 {
 	#define frames boss_bgm_frame
 	if(frames >= POPUP_FRAMES_UNTIL_OUT_DISSOLVE) {
@@ -301,14 +304,14 @@ void pascal near popup_boss_bgm_update_and_render(void)
 }
 /// --------------------
 
+// Popup messages for common gameplay events, shown at the top of the playfield
+// ----------------------------------------------------------------------------
+
 const unsigned char POPUP_DURATION = 128;
 
 inline void line_wipe(tram_y_t y) {
 	text_putsa(PLAYFIELD_TRAM_LEFT, y, PLAYFIELD_BLANK_ROW, TX_WHITE);
 }
-
-#define popup_put(left, y, str) \
-	gaiji_putsa(left, y, reinterpret_cast<const char *>(str), TX_WHITE);
 
 inline void near popup_put_points(const unsigned long &points) {
 	#if (GAME == 5)
@@ -319,7 +322,7 @@ inline void near popup_put_points(const unsigned long &points) {
 	#endif
 }
 
-void pascal near popup_update_and_render(void)
+void pascal near overlay_popup_update_and_render(void)
 {
 	#define frame	popup_frame
 	#define gaiji_len	popup_gaiji_len
@@ -354,13 +357,13 @@ void pascal near popup_update_and_render(void)
 	// Also note how the lack of a POPUP_NONE constant is the only reason why
 	// this function has to be conditionally executed via the [popup] function
 	// pointer...
-	if((popup_id_new != id_cur) && (frame >= (POPUP_DURATION / 2))) {
+	if((overlay_popup_id_new != id_cur) && (frame >= (POPUP_DURATION / 2))) {
 		line_wipe(POPUP_TRAM_Y);
 		line_wipe(BGM_TRAM_Y); // Why though?
 		frame = 0; // Re-initialize
 	}
 	if(frame == 0) {
-		id_cur = popup_id_new;
+		id_cur = overlay_popup_id_new;
 		for(i = 0; i < (sizeof(shiftbuf) - 1); i++) {
 			shiftbuf[i] = g_EMPTY;
 		}
@@ -369,7 +372,7 @@ void pascal near popup_update_and_render(void)
 		);
 		shiftbuf[gaiji_len] = g_NULL;
 		cur_tram_left = (PLAYFIELD_TRAM_RIGHT - (gaiji_len * GAIJI_TRAM_W));
-		if(popup_id_new != POPUP_ID_BONUS) {
+		if(overlay_popup_id_new != POPUP_ID_BONUS) {
 			// Technically * (GAIJI_TRAM_W / 2), since the popup is centered.
 			dest_tram_left = (PLAYFIELD_TRAM_CENTER_X - gaiji_len);
 		} else {
@@ -382,7 +385,7 @@ void pascal near popup_update_and_render(void)
 	if(frame >= POPUP_DURATION) {
 		line_wipe(POPUP_TRAM_Y);
 		frame = 0;
-		popup = nullfunc_near;
+		overlay_popup = nullfunc_near;
 		return;
 	}
 
@@ -392,10 +395,12 @@ void pascal near popup_update_and_render(void)
 			shiftbuf[i] = shiftbuf[i + 1];
 		}
 		shiftbuf[gaiji_len - 1] = POPUP_STRINGS[id_cur][frame];
-		popup_put(cur_tram_left, POPUP_TRAM_Y, shiftbuf);
+		gaiji_putsa(cur_tram_left, POPUP_TRAM_Y, shiftbuf, TX_WHITE);
 	} else if(cur_tram_left > dest_tram_left) {
 		// (Should really be !=, but whatever.) Use the full, unshifted string
-		popup_put(cur_tram_left, POPUP_TRAM_Y, POPUP_STRINGS[id_cur]);
+		gaiji_putsa(
+			cur_tram_left, POPUP_TRAM_Y, POPUP_STRINGS[id_cur], TX_WHITE
+		);
 		if(cur_tram_right() <= (PLAYFIELD_TRAM_RIGHT - GAIJI_TRAM_W)) {
 			text_putca(cur_tram_right(), POPUP_TRAM_Y, '  ', TX_WHITE);
 		}
@@ -408,9 +413,11 @@ void pascal near popup_update_and_render(void)
 			dest_reached = true;
 			line_wipe(POPUP_TRAM_Y);
 		}
-		popup_put(dest_tram_left, POPUP_TRAM_Y, POPUP_STRINGS[id_cur]);
+		gaiji_putsa(
+			dest_tram_left, POPUP_TRAM_Y, POPUP_STRINGS[id_cur], TX_WHITE
+		);
 		if(id_cur == POPUP_ID_BONUS) {
-			popup_put_points(popup_bonus);
+			popup_put_points(overlay_popup_bonus);
 		}
 	}
 	frame++;
@@ -453,6 +460,7 @@ void pascal near popup_update_and_render(void)
 		buf[SCORE_DIGITS - 1] = gb_0_;  // ("continues used" digit)
 		buf[SCORE_DIGITS - 0] = g_NULL; // (null terminator)
 
-		popup_put(PLAYFIELD_TRAM_CENTER_X, POPUP_TRAM_Y, buf);
+		gaiji_putsa(PLAYFIELD_TRAM_CENTER_X, POPUP_TRAM_Y, buf, TX_WHITE);
 	}
 #endif
+// ----------------------------------------------------------------------------

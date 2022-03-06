@@ -3,7 +3,7 @@
 
 include libs/master.lib/master.inc
 include th02/main/hud/hud.inc
-include th04/main/hud/popup.inc
+include th04/main/hud/overlay.inc
 include th02/score.inc
 include th02/gaiji/boldfont.inc
 
@@ -27,9 +27,9 @@ endif
 
 	extrn _hud_gaiji_row:byte:SCORE_DIGITS
 
-	extrn _popup_id_new:byte
-	extrn _popup:word
-	@POPUP_UPDATE_AND_RENDER$QV procdesc near
+	extrn _overlay_popup_id_new:byte
+	extrn _overlay_popup:word
+	@OVERLAY_POPUP_UPDATE_AND_RENDER$QV procdesc near
 
 if GAME eq 4
 	extrn _score_unused:byte
@@ -155,8 +155,8 @@ endif
 	or	al, al
 	jz	short @@subtract_frame_delta_and_render
 	mov	_hiscore_popup_shown, 1
-	mov	_popup_id_new, POPUP_ID_HISCORE_ENTRY
-	mov	_popup, offset @popup_update_and_render$qv
+	mov	_overlay_popup_id_new, POPUP_ID_HISCORE_ENTRY
+	mov	_overlay_popup, offset @overlay_popup_update_and_render$qv
 
 @@subtract_frame_delta_and_render:
 	mov	eax, _score_delta_frame

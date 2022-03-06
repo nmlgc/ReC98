@@ -43,7 +43,7 @@ include th04/main/enemy/enemy.inc
 	extern _tolower:proc
 	extern __ctype:byte
 
-main_01 group SLOWDOWN_TEXT, ma_TEXT, EMS_TEXT, mai_TEXT, PLAYFLD_TEXT, main_TEXT, DIALOG_TEXT, main__TEXT, PLAYER_P_TEXT, main_0_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT
+main_01 group SLOWDOWN_TEXT, ma_TEXT, EMS_TEXT, mai_TEXT, PLAYFLD_TEXT, main_TEXT, DIALOG_TEXT, main__TEXT, PLAYER_P_TEXT, main_0_TEXT, HUD_OVRL_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT
 g_SHARED group SHARED, SHARED_
 main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, IT_SPL_U_TEXT, main_033_TEXT, MB_DFT_TEXT, main_034_TEXT, BULLET_U_TEXT, BULLET_A_TEXT, main_035_TEXT
 
@@ -397,7 +397,7 @@ loc_ABBA:
 		call	main_01:circles_render
 		GRCG_OFF_CLOBBERING dx
 		call	_overlay_text
-		call	_popup
+		call	_overlay_popup
 		call	_playfield_shake_update_and_rende
 		call	main_01:far ptr	_input_reset_sense
 		mov	ax, vsync_Count1
@@ -886,7 +886,7 @@ loc_B156:
 loc_B1AE:
 		nopcall	main_01:sub_CB99
 		mov	_overlay_text, offset sub_10DA3
-		mov	_popup, offset nullfunc_near
+		mov	_overlay_popup, offset nullfunc_near
 		pop	si
 		pop	bp
 		retn
@@ -1955,7 +1955,7 @@ public TILES_RENDER
 tiles_render	proc near
 		push	bp
 		mov	bp, sp
-		call	@popup_titles_invalidate$qv
+		call	@overlay_titles_invalidate$qv
 		call	main_01:player_invalidate
 		call	main_01:sub_10444
 		call	main_01:enemies_invalidate
@@ -2362,7 +2362,7 @@ loc_CF70:
 		mov	_bgm_title_id, 10h
 
 loc_CFAC:
-		mov	_overlay_text, offset @popup_boss_bgm_update_and_render$qv
+		mov	_overlay_text, offset @overlay_boss_bgm_update_and_rend$qv
 		mov	al, 1
 		pop	bp
 		retn
@@ -5856,8 +5856,8 @@ loc_EE60:
 
 loc_EE8C:
 		nopcall	main_01:sub_EEE8
-		mov	_popup_id_new, POPUP_ID_EXTEND
-		mov	_popup, offset @popup_update_and_render$qv
+		mov	_overlay_popup_id_new, POPUP_ID_EXTEND
+		mov	_overlay_popup, offset @overlay_popup_update_and_render$qv
 		call	snd_se_play pascal, 7
 
 locret_EEA3:
@@ -9118,7 +9118,7 @@ var_1		= byte ptr -1
 		les	bx, _resident
 		cmp	es:[bx+resident_t.demo_num], 0
 		jnz	short loc_10DC6
-		mov	_overlay_text, offset @popup_titles_update_and_render$qv
+		mov	_overlay_text, offset @overlay_titles_update_and_render$qv
 		jmp	short loc_10DDE
 ; ---------------------------------------------------------------------------
 
@@ -9259,10 +9259,12 @@ loc_10EA1:
 sub_10E39	endp
 main_0_TEXT	ends
 
-	@POPUP_TITLES_INVALIDATE$QV procdesc near
-	@POPUP_TITLES_UPDATE_AND_RENDER$QV procdesc near
-	@POPUP_BOSS_BGM_UPDATE_AND_RENDER$QV procdesc near
-	@POPUP_UPDATE_AND_RENDER$QV procdesc near
+HUD_OVRL_TEXT	segment	byte public 'CODE' use16
+	@overlay_titles_invalidate$qv procdesc near
+	@OVERLAY_TITLES_UPDATE_AND_RENDER$QV procdesc near
+	@OVERLAY_BOSS_BGM_UPDATE_AND_REND$QV procdesc near
+	@OVERLAY_POPUP_UPDATE_AND_RENDER$QV procdesc near
+HUD_OVRL_TEXT	ends
 
 main_01_TEXT	segment	byte public 'CODE' use16
 include th04/formats/bb_txt_load.asm
@@ -27643,8 +27645,8 @@ loc_1DBD0:
 		jnb	short loc_1DC04
 		cmp	_power, 127
 		jnz	short loc_1DBF5
-		mov	_popup_id_new, POPUP_ID_FULL_POWERUP
-		mov	_popup, offset @popup_update_and_render$qv
+		mov	_overlay_popup_id_new, POPUP_ID_FULL_POWERUP
+		mov	_overlay_popup, offset @overlay_popup_update_and_render$qv
 		cmp	_bullet_clear_time, 20
 		jnb	short loc_1DBF5
 		mov	_bullet_clear_time, 20
@@ -27747,8 +27749,8 @@ loc_1DCCC:
 		cmp	_power, 128
 		jb	short loc_1DCFE
 		mov	_power, 128
-		mov	_popup_id_new, POPUP_ID_FULL_POWERUP
-		mov	_popup, offset @popup_update_and_render$qv
+		mov	_overlay_popup_id_new, POPUP_ID_FULL_POWERUP
+		mov	_overlay_popup, offset @overlay_popup_update_and_render$qv
 		cmp	_bullet_clear_time, 20
 		jnb	short loc_1DCFE
 		mov	_bullet_clear_time, 20
@@ -27790,8 +27792,8 @@ loc_1DD47:
 		inc	es:[bx+resident_t.rem_lives]
 		call	sub_EEE8
 		call	snd_se_play pascal, 7
-		mov	_popup_id_new, POPUP_ID_EXTEND
-		mov	_popup, offset @popup_update_and_render$qv
+		mov	_overlay_popup_id_new, POPUP_ID_EXTEND
+		mov	_overlay_popup, offset @overlay_popup_update_and_render$qv
 		jmp	short loc_1DD90	; jumptable 0001CCD9 case 696
 ; ---------------------------------------------------------------------------
 
@@ -27801,8 +27803,8 @@ loc_1DD6F:
 		mov	_bullet_clear_time, 20
 
 loc_1DD7B:
-		mov	_popup_id_new, POPUP_ID_FULL_POWERUP
-		mov	_popup, offset @popup_update_and_render$qv
+		mov	_overlay_popup_id_new, POPUP_ID_FULL_POWERUP
+		mov	_overlay_popup, offset @overlay_popup_update_and_render$qv
 		mov	_power, 128
 		call	sub_11DE6
 
@@ -28628,7 +28630,7 @@ loc_1E801:
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (48 shl 4)
 		mov	_bgm_title_id, 0Fh
-		mov	_overlay_text, offset @popup_boss_bgm_update_and_render$qv
+		mov	_overlay_text, offset @overlay_boss_bgm_update_and_rend$qv
 		call	cdg_free pascal, CDG_BG_BOSS
 		call	@bb_stage_free$qv
 		call	cdg_load_single_noalpha pascal, CDG_BG_BOSS, ds, offset aSt06bk2_cdg, 0
@@ -32650,7 +32652,7 @@ byte_22E9C	db 0
 _enemies_gone	dw 0
 _enemies_killed	dw 0
 byte_22EA2	db 0
-include th04/main/hud/popup[data].asm
+include th04/main/hud/overlay[data].asm
 public _STAGE_TITLES, _BGM_TITLES
 _STAGE_TITLES	label dword
 		dd aMCB@bPhantomLa	; "å∂ñÏÅ@Å` Phantom Land "
@@ -32977,7 +32979,7 @@ public _miss_explosion_angle, _miss_explosion_radius
 _miss_explosion_angle	db ?
 _miss_explosion_radius	dw ?
 		db 4 dup(?)
-include th04/main/hud/popup[bss].asm
+include th04/main/hud/overlay[bss].asm
 byte_259E6	db ?
 		db ?
 fp_259E8	dw ?
