@@ -2343,7 +2343,7 @@ loc_CF63:
 		call	main_01:map_free
 
 loc_CF70:
-		nopcall	main_01:sub_D6EB
+		nopcall	@dialog_animate$qv
 		mov	fp_255CA, offset sub_CF3D
 		mov	ax, _boss_bg_render_func
 		mov	_bg_render_not_bombing, ax
@@ -3149,8 +3149,8 @@ sub_D56C	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_D6EB	proc far
+public @dialog_animate$qv
+@dialog_animate$qv	proc far
 		push	bp
 		mov	bp, sp
 		call	@dialog_init$qv
@@ -3169,7 +3169,7 @@ sub_D6EB	proc far
 		call	frame_delay
 		pop	bp
 		retf
-sub_D6EB	endp
+@dialog_animate$qv	endp
 main_TEXT	ends
 
 DIALOG_TEXT	segment	byte public 'CODE' use16
@@ -28751,14 +28751,14 @@ loc_1E7B5:
 
 loc_1E7F2:
 		call	sub_CF01
-		call	sub_D6EB
+		call	@dialog_animate$qv
 		call	@end_game_bad$qv
 
 loc_1E801:
 		cmp	_stage_id, 6
 		jnz	loc_1E8A4
 		call	super_clean pascal, (128 shl 16) or 256
-		call	sub_D6EB
+		call	@dialog_animate$qv
 		cmp	byte_2D01E, 0
 		jnz	short loc_1E89B
 		mov	byte_2D01E, 1
@@ -28792,7 +28792,7 @@ loc_1E89B:
 ; ---------------------------------------------------------------------------
 
 loc_1E8A4:
-		call	sub_D6EB
+		call	@dialog_animate$qv
 		call	sub_1D6C1
 		jmp	short loc_1E905
 ; ---------------------------------------------------------------------------

@@ -3831,7 +3831,7 @@ sub_EE58	proc near
 		jnz	short loc_EE92
 		cmp	_page_back, 1
 		jnz	short loc_EE92
-		nopcall	sub_F2B4
+		nopcall	@dialog_animate$qv
 		mov	fp_2C92E, offset sub_EE51
 		mov	ax, _boss_bg_render_func
 		mov	_bg_render_not_bombing, ax
@@ -4260,8 +4260,8 @@ sub_F1A6	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_F2B4	proc far
+public @dialog_animate$qv
+@dialog_animate$qv	proc far
 		push	bp
 		mov	bp, sp
 		les	bx, _resident
@@ -4312,7 +4312,7 @@ loc_F333:
 		call	frame_delay
 		pop	bp
 		retf
-sub_F2B4	endp
+@dialog_animate$qv	endp
 main_TEXT	ends
 
 DIALOG_TEXT	segment	byte public 'CODE' use16
@@ -16375,7 +16375,7 @@ loc_1AF66:
 		setfarfp	_boss_update, sub_1C518
 
 loc_1AF85:
-		call	sub_F2B4
+		call	@dialog_animate$qv
 		mov	_overlay_text, offset @popup_boss_bgm_update_and_render$qv
 		mov	_boss_phase, 0
 		mov	_boss_phase_frame, 0
@@ -23925,7 +23925,7 @@ loc_1FC95:
 		add	es:[bx+resident_t.graze], ax
 		cmp	_stage_id, 5
 		jz	short loc_1FCD1
-		call	sub_F2B4
+		call	@dialog_animate$qv
 		cmp	_stage_id, 6
 		jz	short loc_1FCCB
 		call	sub_16510

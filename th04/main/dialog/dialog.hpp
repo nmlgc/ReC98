@@ -30,6 +30,13 @@ extern dialog_side_t dialog_side;
 // currently active VRAM page with the same pixels from the other VRAM page.
 void pascal near dialog_face_unput_8(uscreen_x_t left, uvram_y_t top);
 
+// Runs the next dialog scene in a blocking way.
+// During the TH05 Extra Stage Clear replay, this function
+// • skips the dialog for the call before the fight, while replicating the
+//   sprite loading and BGM change side effects from the original script,
+// • and directly switches back to OP.EXE for the call after the fight.
+void dialog_animate(void);
+
 #if (GAME == 4)
 	// Dialog-related image functions with optional EMS support
 	// --------------------------------------------------------
