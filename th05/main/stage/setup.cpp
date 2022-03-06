@@ -4,6 +4,7 @@
  */
 
 #include "th04/sprites/main_cdg.h"
+extern "C" {
 #include "th04/main/midboss/midboss.hpp"
 #include "th05/main/stage/stages.hpp"
 #include "th05/main/boss/bosses.hpp"
@@ -214,4 +215,6 @@ void pascal near stagex_setup(void)
 
 	stage_render = nullfunc_near;
 	stage_invalidate = nullfunc_near;
+}
+
 }

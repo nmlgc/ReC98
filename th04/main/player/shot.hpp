@@ -76,9 +76,9 @@ extern shot_alive_t shots_alive[SHOT_COUNT];
 
 // Searches and returns the next free shot slot, or NULL if there are no more
 // free ones.
-shot_t near* pascal near shots_add(void);
+shot_t near* near shots_add(void);
 // Also renders hitshots in TH05.
-void pascal near shots_render(void);
+void near shots_render(void);
 
 // Option laser
 // ------------

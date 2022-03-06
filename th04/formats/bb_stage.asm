@@ -1,6 +1,5 @@
-; void pascal near bb_stage_load(const char far* fn);
-public BB_STAGE_LOAD
-bb_stage_load	proc near
+public @BB_STAGE_LOAD$QNXC
+@bb_stage_load$qnxc proc near
 
 @@fn	= dword	ptr  4
 
@@ -18,15 +17,14 @@ else
 endif
 	pop	bp
 	retn	4
-bb_stage_load	endp
+@bb_stage_load$qnxc endp
 
 
-; void pascal bb_stage_free(void);
-public BB_STAGE_FREE
+public @bb_stage_free$qv
 if GAME eq 5
-bb_stage_free	proc near
+	@bb_stage_free$qv	proc near
 else
-bb_stage_free	proc far
+	@bb_stage_free$qv	proc far
 endif
 	push	bp
 	mov	bp, sp
@@ -38,4 +36,4 @@ endif
 @@ret:
 	pop	bp
 	ret
-bb_stage_free	endp
+@bb_stage_free$qv endp

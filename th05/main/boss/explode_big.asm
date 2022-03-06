@@ -1,5 +1,5 @@
-public _boss_explode_big_circle
-_boss_explode_big_circle proc near
+public @boss_explode_big_circle$qv
+@boss_explode_big_circle$qv proc near
 	push	bp
 	mov	bp, sp
 	push	si
@@ -19,4 +19,4 @@ _boss_explode_big_circle proc near
 	pop	si
 	pop	bp
 	retn
-_boss_explode_big_circle endp
+@boss_explode_big_circle$qv endp

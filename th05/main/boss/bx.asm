@@ -10,12 +10,12 @@ exalice_phase_end	proc near
 	mov	si, [bp+@@explosion_type]
 	cmp	si, ET_NONE
 	jz	short @@set
-	call	boss_explode_small pascal, si
+	call	@boss_explode_small$q16explosion_type_t pascal, si
 	cmp	_boss_phase_timed_out, 0
 	jnz	short @@set
 	mov	_bullet_zap_drop_point_items, 1
 	mov	_bullet_zap_active, 1
-	call	_boss_items_drop
+	call	@boss_items_drop$qv
 
 @@set:
 	mov	_boss_phase_timed_out, 1

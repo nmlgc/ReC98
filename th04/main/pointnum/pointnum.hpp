@@ -55,10 +55,10 @@ extern unsigned char pointnum_white_p;
 #endif
 
 void pascal near pointnums_add_white(
-	Subpixel center_x, Subpixel center_y, uint16_t points
+	subpixel_t center_x, subpixel_t center_y, uint16_t points
 );
 void pascal near pointnums_add_yellow(
-	Subpixel center_x, Subpixel center_y, uint16_t points
+	subpixel_t center_x, subpixel_t center_y, uint16_t points
 );
 
 void pascal near pointnums_init(void);

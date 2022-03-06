@@ -14,6 +14,7 @@ extern "C" {
 #include "th04/math/motion.hpp"
 #include "th04/math/randring.h"
 #include "th04/main/playfld.hpp"
-#include "th05/main/boss/boss.hpp"
-#include "th05/main/boss/move.cpp"
 }
+#include "th05/main/boss/boss.hpp"
+
+#include "th05/main/boss/move.cpp"

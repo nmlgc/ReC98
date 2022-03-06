@@ -6,6 +6,7 @@
 #include "th04/score.h"
 #include "th01/math/subpixel.hpp"
 #include "th04/gaiji/gaiji.h"
+extern "C" {
 #include "th04/formats/bb.h"
 #include "th04/hardware/grcg.h"
 #include "th04/math/motion.hpp"
@@ -13,17 +14,17 @@
 #include "th04/main/playfld.hpp"
 #include "th04/main/tile/tile.hpp"
 #include "th04/main/scroll.hpp"
+}
 #include "th04/main/hud/hud.h"
 #include "th04/main/hud/popup.hpp"
 #include "th04/main/stage/stage.hpp"
-#include "th04/main/item/item.hpp"
 
 #if (GAME == 4)
 	#include "th04/playchar.h"
 #endif
 
 // See tile.hpp for the reason this declaration is necessary
-void pascal near tiles_invalidate_around(
+extern "C" void pascal near tiles_invalidate_around(
 	subpixel_t center_y, subpixel_t center_x
 );
 

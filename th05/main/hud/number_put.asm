@@ -24,8 +24,8 @@ hud_int_put	endp
 	nop
 
 
-public HUD_POINTS_PUT
-hud_points_put	proc far
+public @HUD_POINTS_PUT$QUIUIUL
+@hud_points_put$quiuiul proc far
 
 @@points	= dword	ptr  6
 @@y     	= word ptr  0Ah
@@ -74,4 +74,4 @@ hud_digits_put:
 	pop	di
 	pop	bp
 	retf	8
-hud_points_put	endp
+@hud_points_put$quiuiul endp

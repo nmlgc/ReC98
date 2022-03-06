@@ -37,7 +37,7 @@ extern item_t items[ITEM_COUNT];
 
 extern const int ITEM_TYPE_PATNUM[IT_COUNT];
 
-void pascal near items_add(Subpixel x, Subpixel y, item_type_t type);
+void pascal near items_add(subpixel_t x, subpixel_t y, item_type_t type);
 
 // Increments or decrements [playperf] when reaching certain values.
 extern unsigned char item_playperf_raise;

@@ -25,5 +25,5 @@ void pascal hud_hp_put(int bar_value);
 void pascal hud_hp_update_and_render(int hp_cur, int hp_max);
 
 // Displays [stage_graze] in the graze row.
-void pascal hud_graze_put();
+void hud_graze_put();
 // ----------

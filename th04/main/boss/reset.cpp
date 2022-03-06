@@ -1,6 +1,6 @@
 char boss_phase_timed_out = 0;
 
-void pascal near boss_reset(void)
+void near boss_reset(void)
 {
 	boss_update = nullfunc_far;
 	boss_fg_render = nullfunc_near;

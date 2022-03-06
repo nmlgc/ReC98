@@ -5,13 +5,14 @@
 
 #pragma option -zCmain_01_TEXT -zPmain_01
 
-extern "C" {
 #include "th05/i_shot.hpp"
+extern "C" {
 #include "th02/snd/snd.h"
+}
 
 #pragma option -a2
 
-char pascal near shot_cycle_init(void)
+char near shot_cycle_init(void)
 {
 	char cycle_flag = 0;
 	switch(shot_time) {
@@ -67,4 +68,3 @@ void pascal near shot_l1(void)
 	}
 }
 
-}

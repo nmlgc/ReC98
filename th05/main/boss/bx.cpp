@@ -19,7 +19,7 @@ void pascal near firewaves_add(pixel_t amp, bool is_right)
 	}
 }
 
-void pascal near firewaves_update(void)
+void near firewaves_update(void)
 {
 	firewave_t near *firewave = firewaves;
 	for(int i = 0; i < FIREWAVE_COUNT; i++, firewave++) {

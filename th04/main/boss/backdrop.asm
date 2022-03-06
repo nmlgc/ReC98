@@ -1,5 +1,5 @@
-public BOSS_BACKDROP_RENDER
-boss_backdrop_render	proc near
+public @BOSS_BACKDROP_RENDER$QIIC
+@boss_backdrop_render$qiic proc near
 
 @@color	= byte ptr  4
 @@y    	= word ptr  6
@@ -15,4 +15,4 @@ boss_backdrop_render	proc near
 	GRCG_OFF_CLOBBERING dx
 	pop	bp
 	retn	6
-boss_backdrop_render	endp
+@boss_backdrop_render$qiic endp

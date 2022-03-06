@@ -5,9 +5,10 @@
 
 #pragma option -zCmain_01_TEXT -zPmain_01
 
-extern "C" {
 #include "th05/i_shot.hpp"
 #define cycle _AL
+
+extern "C" {
 
 #pragma option -a2
 

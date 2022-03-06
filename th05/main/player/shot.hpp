@@ -17,7 +17,7 @@
 
 // Returns the current shot cycle, and prepares everything for more shots
 // being added.
-char pascal near shot_cycle_init(void);
+char near shot_cycle_init(void);
 
 // Common per-iteration data for shot type control functions.
 // (Yeah, code generation mandated additions to [i] to be wrapped into

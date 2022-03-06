@@ -11,7 +11,7 @@ yuuka6_phase_end	proc near
 	mov	_bullet_clear_time, 20
 
 @@already_clearing:
-	call	boss_explode_small pascal, [bp+@@explosion_type]
+	call	@boss_explode_small$q16explosion_type_t pascal, [bp+@@explosion_type]
 	inc	_boss_phase
 	mov	_boss_phase_frame, 0
 	mov	_boss_mode_change, 0

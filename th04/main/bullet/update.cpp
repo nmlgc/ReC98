@@ -1,6 +1,5 @@
 #pragma option -G
 
-extern "C" {
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
@@ -8,6 +7,7 @@ extern "C" {
 #include "th01/math/overlap.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th04/math/motion.hpp"
+extern "C" {
 #include "th04/math/vector.hpp"
 #include "th04/main/frames.h"
 #include "th04/main/scroll.hpp"
@@ -19,9 +19,10 @@ extern "C" {
 #include "th04/main/slowdown.hpp"
 #include "th04/main/spark.hpp"
 #include "th04/main/bullet/bullet.hpp"
+#include "th04/main/player/player.hpp"
+}
 #include "th04/main/hud/hud.h"
 #include "th04/main/hud/popup.hpp"
-#include "th04/main/player/player.hpp"
 #include "th04/main/pointnum/pointnum.hpp"
 #include "th04/main/gather.hpp"
 
@@ -499,6 +500,4 @@ void bullets_update(void)
 	if(bullet_clear_time) {
 		bullet_clear_time--;
 	}
-}
-
 }

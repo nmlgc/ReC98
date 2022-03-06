@@ -1,5 +1,5 @@
-public _explosions_small_update_and_render
-_explosions_small_update_and_render	proc near
+public @explosions_small_update_and_rend$qv
+@explosions_small_update_and_rend$qv proc near
 
 @@angle		= byte ptr -7
 @@i     	= word ptr -6
@@ -92,4 +92,4 @@ _explosions_small_update_and_render	proc near
 	pop	si
 	leave
 	retn
-_explosions_small_update_and_render	endp
+@explosions_small_update_and_rend$qv endp

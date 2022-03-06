@@ -375,7 +375,7 @@ loc_ABBA:
 		call	_sparks_update
 		call	main_01:sub_10ABF
 		call	main_01:sub_104B6
-		call	_bullets_update
+		call	@bullets_update$qv
 		call	enemies_update
 		call	_midboss_update
 		call	_boss_update
@@ -386,7 +386,7 @@ loc_ABBA:
 		call	_boss_fg_render
 		call	_midboss_render
 		call	main_01:enemies_render
-		call	main_01:shots_render
+		call	@shots_render$qv
 		call	main_01:player_render
 		call	_grcg_setmode_rmw_seg1
 		call	_gather_render
@@ -961,7 +961,7 @@ sub_B29E	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		call	bb_stage_free
+		call	@bb_stage_free$qv
 		call	main_01:sub_CF1E
 		call	main_01:std_free
 		call	main_01:map_free
@@ -1110,8 +1110,8 @@ include th04/formats/std.asm
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public END_GAME_GOOD
-end_game_good	proc far
+public @end_game_good$qv
+@end_game_good$qv	proc far
 		push	bp
 		mov	bp, sp
 		les	bx, _resident
@@ -1125,14 +1125,14 @@ end_game_good	proc far
 		nopcall	main_01:GameCore
 		pop	bp
 		retf
-end_game_good	endp
+@end_game_good$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public END_GAME_BAD
-end_game_bad	proc far
+public @end_game_bad$qv
+@end_game_bad$qv	proc far
 		push	bp
 		mov	bp, sp
 		les	bx, _resident
@@ -1146,14 +1146,14 @@ end_game_bad	proc far
 		nopcall	main_01:GameCore
 		pop	bp
 		retf
-end_game_bad	endp
+@end_game_bad$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public END_EXTRA
-end_extra	proc far
+public @end_extra$qv
+@end_extra$qv	proc far
 		push	bp
 		mov	bp, sp
 		les	bx, _resident
@@ -1166,7 +1166,7 @@ end_extra	proc far
 		nopcall	main_01:GameCore
 		pop	bp
 		retf
-end_extra	endp
+@end_extra$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -1955,7 +1955,7 @@ public TILES_RENDER
 tiles_render	proc near
 		push	bp
 		mov	bp, sp
-		call	main_01:popup_titles_invalidate
+		call	@popup_titles_invalidate$qv
 		call	main_01:player_invalidate
 		call	main_01:sub_10444
 		call	main_01:enemies_invalidate
@@ -2362,7 +2362,7 @@ loc_CF70:
 		mov	_bgm_title_id, 10h
 
 loc_CFAC:
-		mov	_overlay_text, offset popup_boss_bgm_update_and_render
+		mov	_overlay_text, offset @popup_boss_bgm_update_and_render$qv
 		mov	al, 1
 		pop	bp
 		retn
@@ -3189,7 +3189,7 @@ shot_marisa_l0	proc near
 		push	si
 		mov	_shot_ptr, offset _shots
 		mov	_shot_last_id, 0
-		call	main_01:shots_add
+		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jz	short loc_DA70
@@ -3210,7 +3210,7 @@ shot_marisa_l1	proc near
 		push	si
 		mov	_shot_ptr, offset _shots
 		mov	_shot_last_id, 0
-		call	main_01:shots_add
+		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jz	short loc_DAA3
@@ -3220,7 +3220,7 @@ shot_marisa_l1	proc near
 		call	main_01:randring1_next16_and
 		add	al, 0BCh
 		push	ax
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	word ptr [si+0Eh], 22h ; '"'
 		mov	byte ptr [si+10h], 0Ah
 
@@ -3267,7 +3267,7 @@ loc_DADA:
 		ja	short loc_DB39
 		mov	_shot_ptr, offset _shots
 		mov	_shot_last_id, 0
-		call	main_01:shots_add
+		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jz	short loc_DB17
@@ -3279,7 +3279,7 @@ loc_DADA:
 		mov	[si+2],	ax
 
 loc_DB17:
-		call	main_01:shots_add
+		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jz	short loc_DB45
@@ -3324,14 +3324,14 @@ loc_DB62:
 		call	main_01:randring1_next16_and
 		add	al, 0BCh
 		push	ax
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	word ptr [si+0Eh], 22h ; '"'
 		mov	byte ptr [si+10h], 9
 		jmp	short loc_DB85
 ; ---------------------------------------------------------------------------
 
 loc_DB7C:
-		call	main_01:shots_add
+		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DB62
@@ -3375,7 +3375,7 @@ loc_DBB5:
 		jle	short loc_DBCA
 
 loc_DBC1:
-		call	main_01:shots_add
+		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DBA4
@@ -3420,7 +3420,7 @@ loc_DBFB:
 		jle	short loc_DC10
 
 loc_DC07:
-		call	main_01:shots_add
+		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DBEA
@@ -3452,7 +3452,7 @@ loc_DC35:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-1]
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	word ptr [si+0Eh], 22h ; '"'
 		mov	byte ptr [si+10h], 8
 		mov	al, [bp-1]
@@ -3462,7 +3462,7 @@ loc_DC35:
 		jle	short loc_DC5C
 
 loc_DC53:
-		call	main_01:shots_add
+		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DC35
@@ -3494,7 +3494,7 @@ loc_DC82:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-1]
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	word ptr [si+0Eh], 22h ; '"'
 		mov	byte ptr [si+10h], 8
 		mov	al, [bp-1]
@@ -3504,7 +3504,7 @@ loc_DC82:
 		jle	short loc_DCA9
 
 loc_DCA0:
-		call	main_01:shots_add
+		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DC82
@@ -3536,7 +3536,7 @@ loc_DCCF:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-1]
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	word ptr [si+0Eh], 22h ; '"'
 		mov	byte ptr [si+10h], 8
 		mov	al, [bp-1]
@@ -3546,7 +3546,7 @@ loc_DCCF:
 		jle	short loc_DCF6
 
 loc_DCED:
-		call	main_01:shots_add
+		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DCCF
@@ -3578,7 +3578,7 @@ loc_DD1C:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-1]
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	word ptr [si+0Eh], 22h ; '"'
 		mov	byte ptr [si+10h], 7
 		mov	al, [bp-1]
@@ -3588,7 +3588,7 @@ loc_DD1C:
 		jle	short loc_DD43
 
 loc_DD3A:
-		call	main_01:shots_add
+		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DD1C
@@ -3620,7 +3620,7 @@ loc_DD69:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-1]
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	word ptr [si+0Eh], 22h ; '"'
 		mov	byte ptr [si+10h], 7
 		mov	al, [bp-1]
@@ -3630,7 +3630,7 @@ loc_DD69:
 		jle	short loc_DD90
 
 loc_DD87:
-		call	main_01:shots_add
+		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DD69
@@ -3665,7 +3665,7 @@ loc_DDA9:
 		call	main_01:randring1_next16_and
 		add	al, 0BCh
 		push	ax
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	byte ptr [si+10h], 0Ah
 		jmp	short loc_DDE7
 ; ---------------------------------------------------------------------------
@@ -3690,7 +3690,7 @@ loc_DDE7:
 		jle	short loc_DDF3
 
 loc_DDEA:
-		call	main_01:shots_add
+		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DDA9
@@ -3753,7 +3753,7 @@ loc_DE4C:
 		jle	short loc_DE58
 
 loc_DE4F:
-		call	main_01:shots_add
+		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DE0C
@@ -3826,7 +3826,7 @@ loc_DEC6:
 		jle	short loc_DED2
 
 loc_DEC9:
-		call	main_01:shots_add
+		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DE71
@@ -3858,7 +3858,7 @@ loc_DEF0:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-1]
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	byte ptr [si+10h], 9
 		mov	al, [bp-1]
 		add	al, 8
@@ -3896,7 +3896,7 @@ loc_DF46:
 		jle	short loc_DF52
 
 loc_DF49:
-		call	main_01:shots_add
+		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DEF0
@@ -3928,7 +3928,7 @@ loc_DF70:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-3]
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	byte ptr [si+10h], 9
 		mov	al, [bp-3]
 		add	al, 8
@@ -3974,7 +3974,7 @@ loc_DFD1:
 		jle	short loc_DFDD
 
 loc_DFD4:
-		call	main_01:shots_add
+		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_DF70
@@ -4018,7 +4018,7 @@ loc_E004:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_3]
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	byte ptr [si+10h], 8
 		mov	al, byte ptr [bp+var_3]
 		add	al, 0Ah
@@ -4064,7 +4064,7 @@ loc_E065:
 		jle	short loc_E071
 
 loc_E068:
-		call	main_01:shots_add
+		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_E004
@@ -4120,7 +4120,7 @@ loc_E0B4:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_3]
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	byte ptr [si+10h], 8
 		cmp	di, 3
 		jz	short loc_E115
@@ -4168,7 +4168,7 @@ loc_E115:
 		jle	short loc_E123
 
 loc_E118:
-		call	main_01:shots_add
+		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_E099
@@ -4224,7 +4224,7 @@ loc_E166:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_3]
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	byte ptr [si+10h], 8
 		cmp	di, 3
 		jz	short loc_E1D5
@@ -4282,7 +4282,7 @@ loc_E1D5:
 		jle	short loc_E1E3
 
 loc_E1D8:
-		call	main_01:shots_add
+		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_E14B
@@ -4772,7 +4772,7 @@ var_2		= word ptr -2
 		enter	2, 0
 		cmp	_stage_id, 5
 		jnz	short loc_E551
-		nopcall	main_01:end_game_bad
+		nopcall	@end_game_bad$qv
 
 loc_E551:
 		mov	byte_25660, 20h	; ' '
@@ -5091,7 +5091,7 @@ loc_E813:
 		mov	es:[bx+resident_t.frames], eax
 		call	main_01:bb_txt_free
 		call	cdg_free_all
-		call	bb_stage_free
+		call	@bb_stage_free$qv
 		call	main_01:sub_CF1E
 		call	main_01:bb_playchar_free
 		call	main_01:std_free
@@ -5284,8 +5284,8 @@ loc_EA55:
 		GRCG_OFF_CLOBBERING dx
 
 loc_EA5B:
-		call	_explosions_small_update_and_render
-		call	_explosions_big_update_and_render
+		call	@explosions_small_update_and_rend$qv
+		call	@explosions_big_update_and_render$qv
 		cmp	_boss_phase, PHASE_NONE
 		jnb	short loc_EA6B
 		call	main_01:sub_E2C3
@@ -5753,8 +5753,8 @@ loc_EDC3:
 		call	super_large_put
 
 loc_EDD7:
-		call	_explosions_small_update_and_render
-		call	_explosions_big_update_and_render
+		call	@explosions_small_update_and_rend$qv
+		call	@explosions_big_update_and_render$qv
 		pop	di
 		pop	si
 		pop	bp
@@ -5857,7 +5857,7 @@ loc_EE60:
 loc_EE8C:
 		nopcall	main_01:sub_EEE8
 		mov	_popup_id_new, POPUP_ID_EXTEND
-		mov	_popup, offset popup_update_and_render
+		mov	_popup, offset @popup_update_and_render$qv
 		call	snd_se_play pascal, 7
 
 locret_EEA3:
@@ -6110,8 +6110,8 @@ hud_dream_put	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public HUD_GRAZE_PUT
-hud_graze_put	proc far
+public @hud_graze_put$qv
+@hud_graze_put$qv	proc far
 		push	bp
 		mov	bp, sp
 		push	3E0013h
@@ -6119,7 +6119,7 @@ hud_graze_put	proc far
 		call	sub_1D519
 		pop	bp
 		retf
-hud_graze_put	endp
+@hud_graze_put$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -6214,7 +6214,7 @@ loc_F280:
 		call	gaiji_putca pascal, (58 shl 16) + 17, (gs_YUME shl 16) + TX_YELLOW
 		call	main_01:hud_dream_put
 		call	gaiji_putca pascal, (58 shl 16) + 19, (gs_TAMA shl 16) + TX_YELLOW
-		call	main_01:hud_graze_put
+		call	@hud_graze_put$qv
 		les	bx, _resident
 		cmp	es:[bx+resident_t.playchar_ascii], '0' + PLAYCHAR_REIMU
 		jnz	short loc_F2DE
@@ -6297,7 +6297,7 @@ arg_2		= word ptr  6
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+arg_0]
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		pop	si
 		pop	bp
 		retn	4
@@ -6311,7 +6311,7 @@ shot_reimu_l0	proc near
 		push	si
 		mov	_shot_ptr, offset _shots
 		mov	_shot_last_id, 0
-		call	main_01:shots_add
+		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jz	short loc_F38D
@@ -6332,7 +6332,7 @@ shot_reimu_l1	proc near
 		push	si
 		mov	_shot_ptr, offset _shots
 		mov	_shot_last_id, 0
-		call	main_01:shots_add
+		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jz	short loc_F3C0
@@ -6342,7 +6342,7 @@ shot_reimu_l1	proc near
 		call	main_01:randring1_next16_and
 		add	al, 0BCh
 		push	ax
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 0Ah
 
@@ -6390,7 +6390,7 @@ loc_F3FA:
 		call	main_01:randring1_next16_and
 		add	al, 0B8h
 		push	ax
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	word ptr [si+0Eh], 1Ch
 		jmp	short loc_F43F
 ; ---------------------------------------------------------------------------
@@ -6424,7 +6424,7 @@ loc_F43F:
 		jle	short loc_F44F
 
 loc_F446:
-		call	main_01:shots_add
+		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_F3FA
@@ -6512,7 +6512,7 @@ loc_F4D9:
 		jle	short loc_F4E5
 
 loc_F4DC:
-		call	main_01:shots_add
+		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_F48A
@@ -6559,7 +6559,7 @@ loc_F525:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-1]
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 8
 		mov	al, [bp-1]
@@ -6597,7 +6597,7 @@ loc_F575:
 		jle	short loc_F581
 
 loc_F578:
-		call	main_01:shots_add
+		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_F525
@@ -6644,7 +6644,7 @@ loc_F5C1:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-1]
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 8
 		mov	al, [bp-1]
@@ -6682,7 +6682,7 @@ loc_F611:
 		jle	short loc_F61D
 
 loc_F614:
-		call	main_01:shots_add
+		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_F5C1
@@ -6729,7 +6729,7 @@ loc_F65D:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-1]
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 7
 		mov	al, [bp-1]
@@ -6767,7 +6767,7 @@ loc_F6AD:
 		jle	short loc_F6B9
 
 loc_F6B0:
-		call	main_01:shots_add
+		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_F65D
@@ -6819,7 +6819,7 @@ loc_F6FA:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_2+1]
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 4
 		mov	byte ptr [si+10h], 7
@@ -6847,7 +6847,7 @@ loc_F73E:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_2]
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	word ptr [si+0Eh], 1Ch
 		jmp	short loc_F779
 ; ---------------------------------------------------------------------------
@@ -6883,7 +6883,7 @@ loc_F77D:
 		jle	short loc_F78B
 
 loc_F780:
-		call	main_01:shots_add
+		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_F6FA
@@ -6922,7 +6922,7 @@ loc_F7B1:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_2+1]
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 7
 		mov	al, byte ptr [bp+var_2+1]
@@ -6949,7 +6949,7 @@ loc_F7F1:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_2]
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	word ptr [si+0Eh], 1Ch
 		jmp	short loc_F82C
 ; ---------------------------------------------------------------------------
@@ -6985,7 +6985,7 @@ loc_F830:
 		jle	short loc_F83E
 
 loc_F833:
-		call	main_01:shots_add
+		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_F7B1
@@ -7039,7 +7039,7 @@ loc_F882:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-1]
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 6
 		mov	al, [bp-1]
@@ -7066,7 +7066,7 @@ loc_F8C3:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	[bp+var_2]
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	word ptr [si+0Eh], 1Ch
 		jmp	short loc_F941
 ; ---------------------------------------------------------------------------
@@ -7101,7 +7101,7 @@ loc_F908:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-2]
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 
 loc_F912:
 		mov	word ptr [si+0Eh], 1Eh
@@ -7137,7 +7137,7 @@ loc_F945:
 		jle	short loc_F953
 
 loc_F948:
-		call	main_01:shots_add
+		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_F882
@@ -7192,7 +7192,7 @@ loc_F98F:
 		call	main_01:randring1_next16_and
 		add	al, 0B8h
 		push	ax
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	word ptr [si+0Eh], 1Ch
 		jmp	short loc_F9D2
 ; ---------------------------------------------------------------------------
@@ -7213,7 +7213,7 @@ loc_F9C3:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp+var_1]
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	word ptr [si+0Eh], 20h ; ' '
 
 loc_F9D2:
@@ -7222,7 +7222,7 @@ loc_F9D2:
 		jle	short loc_F9E2
 
 loc_F9D9:
-		call	main_01:shots_add
+		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_F98F
@@ -7295,7 +7295,7 @@ loc_FA54:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-3]
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	word ptr [si+0Eh], 20h ; ' '
 
 loc_FA63:
@@ -7306,7 +7306,7 @@ loc_FA63:
 		jle	short loc_FA79
 
 loc_FA70:
-		call	main_01:shots_add
+		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_FA1E
@@ -7354,7 +7354,7 @@ loc_FAB9:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-3]
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 9
 		mov	al, [bp-3]
@@ -7379,7 +7379,7 @@ loc_FAF9:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-4]
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	word ptr [si+0Eh], 20h ; ' '
 		mov	byte ptr [si+10h], 9
 
@@ -7390,7 +7390,7 @@ loc_FB0C:
 		jle	short loc_FB1E
 
 loc_FB15:
-		call	main_01:shots_add
+		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jnz	short loc_FAB9
@@ -7438,7 +7438,7 @@ loc_FB5E:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-3]
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 8
 		mov	al, [bp-3]
@@ -7487,7 +7487,7 @@ loc_FBBD:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-4]
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	word ptr [si+0Eh], 20h ; ' '
 		mov	byte ptr [si+10h], 9
 
@@ -7498,7 +7498,7 @@ loc_FBD0:
 		jle	short loc_FBE4
 
 loc_FBD9:
-		call	main_01:shots_add
+		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_FB5E
@@ -7551,7 +7551,7 @@ loc_FC2C:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-3]
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 8
 		mov	al, [bp-3]
@@ -7600,7 +7600,7 @@ loc_FC8B:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-4]
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	word ptr [si+0Eh], 20h ; ' '
 		mov	byte ptr [si+10h], 9
 
@@ -7611,7 +7611,7 @@ loc_FC9E:
 		jle	short loc_FCB2
 
 loc_FCA7:
-		call	main_01:shots_add
+		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_FC2C
@@ -7664,7 +7664,7 @@ loc_FCFA:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-3]
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 8
 		mov	al, [bp-3]
@@ -7713,7 +7713,7 @@ loc_FD59:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-4]
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	word ptr [si+0Eh], 20h ; ' '
 		mov	byte ptr [si+10h], 9
 
@@ -7724,7 +7724,7 @@ loc_FD6C:
 		jle	short loc_FD80
 
 loc_FD75:
-		call	main_01:shots_add
+		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_FCFA
@@ -7777,7 +7777,7 @@ loc_FDC8:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-3]
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 8
 		mov	al, [bp-3]
@@ -7826,7 +7826,7 @@ loc_FE27:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-4]
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	word ptr [si+0Eh], 20h ; ' '
 		mov	byte ptr [si+10h], 9
 
@@ -7837,7 +7837,7 @@ loc_FE3A:
 		jle	short loc_FE4E
 
 loc_FE43:
-		call	main_01:shots_add
+		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_FDC8
@@ -7890,7 +7890,7 @@ loc_FE97:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-3]
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	word ptr [si+0Eh], 1Ch
 		mov	byte ptr [si+10h], 8
 		mov	al, [bp-3]
@@ -7944,7 +7944,7 @@ loc_FEFD:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	word ptr [bp-4]
-		call	main_01:shot_velocity_set
+		call	@shot_velocity_set$qp7sppointuc
 		mov	word ptr [si+0Eh], 20h ; ' '
 		mov	byte ptr [si+10h], 9
 
@@ -7955,7 +7955,7 @@ loc_FF10:
 		jle	short loc_FF24
 
 loc_FF19:
-		call	main_01:shots_add
+		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jnz	loc_FE97
@@ -8644,8 +8644,8 @@ sub_104B6	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public SHOTS_RENDER
-shots_render	proc near
+public @SHOTS_RENDER$QV
+@shots_render$qv	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -8699,7 +8699,7 @@ loc_105AA:
 		pop	si
 		pop	bp
 		retn
-shots_render	endp
+@shots_render$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -9118,7 +9118,7 @@ var_1		= byte ptr -1
 		les	bx, _resident
 		cmp	es:[bx+resident_t.demo_num], 0
 		jnz	short loc_10DC6
-		mov	_overlay_text, offset popup_titles_update_and_render
+		mov	_overlay_text, offset @popup_titles_update_and_render$qv
 		jmp	short loc_10DDE
 ; ---------------------------------------------------------------------------
 
@@ -9259,10 +9259,10 @@ loc_10EA1:
 sub_10E39	endp
 main_0_TEXT	ends
 
-	POPUP_TITLES_INVALIDATE procdesc near
-	POPUP_TITLES_UPDATE_AND_RENDER procdesc near
-	POPUP_BOSS_BGM_UPDATE_AND_RENDER procdesc near
-	POPUP_UPDATE_AND_RENDER procdesc near
+	@POPUP_TITLES_INVALIDATE$QV procdesc near
+	@POPUP_TITLES_UPDATE_AND_RENDER$QV procdesc near
+	@POPUP_BOSS_BGM_UPDATE_AND_RENDER$QV procdesc near
+	@POPUP_UPDATE_AND_RENDER$QV procdesc near
 
 main_01_TEXT	segment	byte public 'CODE' use16
 include th04/formats/bb_txt_load.asm
@@ -9337,8 +9337,8 @@ loc_11629:
 		call	super_large_put
 
 loc_1163D:
-		call	_explosions_small_update_and_render
-		call	_explosions_big_update_and_render
+		call	@explosions_small_update_and_rend$qv
+		call	@explosions_big_update_and_render$qv
 		pop	di
 		pop	si
 		pop	bp
@@ -9581,8 +9581,8 @@ loc_1193A:
 		call	super_large_put
 
 loc_11961:
-		call	_explosions_small_update_and_render
-		call	_explosions_big_update_and_render
+		call	@explosions_small_update_and_rend$qv
+		call	@explosions_big_update_and_render$qv
 		pop	di
 		pop	si
 		leave
@@ -9707,8 +9707,8 @@ loc_11A69:
 		call	super_large_put
 
 loc_11A90:
-		call	_explosions_small_update_and_render
-		call	_explosions_big_update_and_render
+		call	@explosions_small_update_and_rend$qv
+		call	@explosions_big_update_and_render$qv
 		pop	di
 		pop	si
 		leave
@@ -10074,8 +10074,8 @@ loc_11D7A:
 		mov	byte_25A1E, 0
 
 loc_11D86:
-		call	_explosions_small_update_and_render
-		call	_explosions_big_update_and_render
+		call	@explosions_small_update_and_rend$qv
+		call	@explosions_big_update_and_render$qv
 		call	main_01:sub_E2C3
 		call	main_01:sub_11B44
 
@@ -10196,8 +10196,8 @@ loc_11E71:
 		call	super_put pascal, si, di, ax
 
 loc_11EC1:
-		call	_explosions_small_update_and_render
-		call	_explosions_big_update_and_render
+		call	@explosions_small_update_and_rend$qv
+		call	@explosions_big_update_and_render$qv
 		pop	di
 		pop	si
 		leave
@@ -10467,7 +10467,7 @@ orange_bg_render	proc near
 loc_12199:
 		cmp	_boss_phase, 1
 		jnz	short loc_121BF
-		call	main_01:boss_backdrop_render pascal, (32 shl 16) or 136, 1
+		call	@boss_backdrop_render$qiic pascal, (32 shl 16) or 136, 1
 		mov	ax, _bb_stage_seg
 		mov	_tiles_bb_seg, ax
 		mov	ax, _boss_phase_frame
@@ -10482,7 +10482,7 @@ loc_12199:
 loc_121BF:
 		cmp	_boss_phase, PHASE_EXPLODE_BIG
 		jnb	short loc_121D3
-		call	main_01:boss_backdrop_render pascal, (32 shl 16) or 136, 1
+		call	@boss_backdrop_render$qiic pascal, (32 shl 16) or 136, 1
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -10517,7 +10517,7 @@ kurumi_bg_render	proc near
 		jz	short loc_1223D
 		cmp	_boss_phase, 1
 		jnz	short loc_1221B
-		call	main_01:boss_backdrop_render pascal, (32 shl 16) or 96, 0
+		call	@boss_backdrop_render$qiic pascal, (32 shl 16) or 96, 0
 		mov	ax, _bb_stage_seg
 		mov	_tiles_bb_seg, ax
 		mov	ax, _boss_phase_frame
@@ -10532,7 +10532,7 @@ kurumi_bg_render	proc near
 loc_1221B:
 		cmp	_boss_phase, PHASE_EXPLODE_BIG
 		jnb	short loc_1222F
-		call	main_01:boss_backdrop_render pascal, (32 shl 16) or 96, 0
+		call	@boss_backdrop_render$qiic pascal, (32 shl 16) or 96, 0
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -10594,7 +10594,7 @@ elly_bg_render	proc near
 loc_12285:
 		cmp	_boss_phase, 2
 		jnz	short loc_122AB
-		call	main_01:boss_backdrop_render pascal, (32 shl 16) or 16, 0
+		call	@boss_backdrop_render$qiic pascal, (32 shl 16) or 16, 0
 		mov	ax, _bb_stage_seg
 		mov	_tiles_bb_seg, ax
 		mov	ax, _boss_phase_frame
@@ -10609,7 +10609,7 @@ loc_12285:
 loc_122AB:
 		cmp	_boss_phase, PHASE_EXPLODE_BIG
 		jnb	short loc_122BF
-		call	main_01:boss_backdrop_render pascal, (32 shl 16) or 16, 0
+		call	@boss_backdrop_render$qiic pascal, (32 shl 16) or 16, 0
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -10684,7 +10684,7 @@ loc_12327:
 loc_12338:
 		cmp	_boss_phase, PHASE_EXPLODE_BIG
 		jnb	short loc_1234C
-		call	main_01:boss_backdrop_render pascal, (96 shl 16) or 72, 1
+		call	@boss_backdrop_render$qiic pascal, (96 shl 16) or 72, 1
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -10759,7 +10759,7 @@ loc_123B4:
 loc_123C5:
 		cmp	_boss_phase, PHASE_EXPLODE_BIG
 		jnb	short loc_123D9
-		call	main_01:boss_backdrop_render pascal, (128 shl 16) or 128, 0
+		call	@boss_backdrop_render$qiic pascal, (128 shl 16) or 128, 0
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -11546,7 +11546,7 @@ loc_129D2:
 loc_129E3:
 		cmp	_boss_phase, PHASE_EXPLODE_BIG
 		jnb	short loc_129F7
-		call	main_01:boss_backdrop_render pascal, (32 shl 16) or 16, 1
+		call	@boss_backdrop_render$qiic pascal, (32 shl 16) or 16, 1
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -12102,8 +12102,8 @@ loc_12F2E:
 		call	super_large_put
 
 loc_12F55:
-		call	_explosions_small_update_and_render
-		call	_explosions_big_update_and_render
+		call	@explosions_small_update_and_rend$qv
+		call	@explosions_big_update_and_render$qv
 		pop	di
 		pop	si
 		leave
@@ -12251,8 +12251,8 @@ loc_1306D:
 		call	super_zoom
 
 loc_13083:
-		call	_explosions_small_update_and_render
-		call	_explosions_big_update_and_render
+		call	@explosions_small_update_and_rend$qv
+		call	@explosions_big_update_and_render$qv
 		call	main_01:sub_E2C3
 		cmp	_boss_phase, 5
 		jnz	short loc_130E9
@@ -13104,7 +13104,7 @@ loc_14629:
 		mov	_midboss_pos.velocity.x, 0
 		call	sparks_add_circle pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((6 shl 4) shl 16) or 48)
 		call	snd_se_play pascal, 12
-		call	items_add pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, IT_1UP
+		call	@items_add$qii11item_type_t pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, IT_1UP
 		jmp	short loc_1468D
 ; ---------------------------------------------------------------------------
 
@@ -13393,7 +13393,7 @@ loc_148E1:
 		push	IT_1UP
 
 loc_148F2:
-		call	items_add
+		call	@items_add$qii11item_type_t
 
 locret_148F5:
 		leave			; default
@@ -13995,7 +13995,7 @@ loc_14EB5:
 		sub	dx, ax
 		push	dx
 		call	sub_19F6E
-		call	items_add pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, IT_BOMB
+		call	@items_add$qii11item_type_t pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, IT_BOMB
 		mov	_playfield_shake_anim_time, 12
 
 loc_14EE0:
@@ -14600,7 +14600,7 @@ loc_15480:
 		push	IT_1UP
 
 loc_1548A:
-		call	items_add
+		call	@items_add$qii11item_type_t
 		jmp	loc_1552D
 ; ---------------------------------------------------------------------------
 
@@ -16654,7 +16654,7 @@ loc_16723:
 		jz	loc_169B8
 		push	0Fh
 		call	sub_19FD8
-		call	_boss_items_drop
+		call	@boss_items_drop$qv
 
 loc_16742:
 		cmp	_bullet_clear_time, 20
@@ -16662,7 +16662,7 @@ loc_16742:
 		mov	_bullet_clear_time, 20
 
 loc_1674E:
-		call	boss_explode_small pascal, ET_CIRCLE
+		call	@boss_explode_small$q16explosion_type_t pascal, ET_CIRCLE
 		inc	_boss_phase
 		mov	ax, _boss_phase_end_hp
 		mov	_boss_hp, ax
@@ -16697,7 +16697,7 @@ loc_16793:
 		jz	loc_169B8
 		push	0Fh
 		call	sub_19FD8
-		call	_boss_items_drop
+		call	@boss_items_drop$qv
 
 loc_167AF:
 		cmp	_bullet_clear_time, 20
@@ -16705,7 +16705,7 @@ loc_167AF:
 		mov	_bullet_clear_time, 20
 
 loc_167BB:
-		call	boss_explode_small pascal, ET_NW_SE
+		call	@boss_explode_small$q16explosion_type_t pascal, ET_NW_SE
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
 		mov	_boss_mode_change, 0
@@ -16778,7 +16778,7 @@ loc_1683E:
 		jz	loc_169B8
 		push	0Fh
 		call	sub_19FD8
-		call	_boss_items_drop
+		call	@boss_items_drop$qv
 
 loc_1685D:
 		cmp	_bullet_clear_time, 20
@@ -16786,7 +16786,7 @@ loc_1685D:
 		mov	_bullet_clear_time, 20
 
 loc_16869:
-		call	boss_explode_small pascal, ET_CIRCLE
+		call	@boss_explode_small$q16explosion_type_t pascal, ET_CIRCLE
 		inc	_boss_phase
 		mov	ax, _boss_phase_end_hp
 		mov	_boss_hp, ax
@@ -16816,7 +16816,7 @@ loc_168A8:
 		call	sub_1E67C
 		cmp	_boss_phase_frame, 288
 		jl	loc_169B8
-		call	boss_explode_small pascal, ET_VERTICAL
+		call	@boss_explode_small$q16explosion_type_t pascal, ET_VERTICAL
 		cmp	_bullet_clear_time, 20
 		jnb	short loc_168C9
 		mov	_bullet_clear_time, 20
@@ -16858,7 +16858,7 @@ loc_1691A:
 		jl	loc_169B8
 
 loc_1692E:
-		call	boss_explode_small pascal, ET_NW_SE
+		call	@boss_explode_small$q16explosion_type_t pascal, ET_NW_SE
 		inc	_boss_phase
 		cmp	_boss_phase_frame, 1000
 		jge	short loc_16946
@@ -16878,12 +16878,12 @@ loc_16953:
 		inc	_boss_phase_frame
 		cmp	_boss_phase_frame, 16
 		jnz	short loc_16963
-		call	boss_explode_small pascal, ET_VERTICAL
+		call	@boss_explode_small$q16explosion_type_t pascal, ET_VERTICAL
 
 loc_16963:
 		cmp	_boss_phase_frame, 32
 		jnz	short loc_169B8
-		call	boss_explode_big pascal, ET_SW_NE
+		call	@boss_explode_big$qui pascal, ET_SW_NE
 		mov	_boss_phase, PHASE_EXPLODE_BIG
 		mov	al, _boss_mode_change
 		mov	_bullet_zap_active, al
@@ -19011,7 +19011,7 @@ loc_17B98:
 		mov	_boss_mode_change, 1
 
 loc_17BA4:
-		call	boss_explode_small pascal, ET_HORIZONTAL
+		call	@boss_explode_small$q16explosion_type_t pascal, ET_HORIZONTAL
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
 
@@ -19059,7 +19059,7 @@ loc_17C0E:
 		jnz	loc_17CA4
 
 loc_17C21:
-		call	_boss_items_drop
+		call	@boss_items_drop$qv
 		cmp	_bullet_clear_time, 20
 		jnb	short loc_17C30
 		mov	_bullet_clear_time, 20
@@ -19069,7 +19069,7 @@ loc_17C30:
 		call	sub_19FD8
 		mov	al, byte_25674
 		mov	ah, 0
-		call	boss_explode_small pascal, ax
+		call	@boss_explode_small$q16explosion_type_t pascal, ax
 		inc	byte_25674
 		jmp	short loc_17CA4
 ; ---------------------------------------------------------------------------
@@ -19078,12 +19078,12 @@ loc_17C44:
 		inc	_boss_phase_frame
 		cmp	_boss_phase_frame, 16
 		jnz	short loc_17C54
-		call	boss_explode_small pascal, ET_VERTICAL
+		call	@boss_explode_small$q16explosion_type_t pascal, ET_VERTICAL
 
 loc_17C54:
 		cmp	_boss_phase_frame, 32
 		jnz	short loc_17CA4
-		call	boss_explode_big pascal, ET_SW_NE
+		call	@boss_explode_big$qui pascal, ET_SW_NE
 		mov	_boss_phase, PHASE_EXPLODE_BIG
 		mov	al, _boss_mode_change
 		mov	_bullet_zap_active, al
@@ -19422,7 +19422,7 @@ loc_17F3C:
 		mov	[si+enemy_t.E_kills_player_on_collision], 0
 		mov	[si+enemy_t.pos.velocity.x], 0
 		mov	[si+enemy_t.pos.velocity.y], 0
-		call	items_add pascal, [si+enemy_t.pos.cur.x], [si+enemy_t.pos.cur.y], word ptr [si+enemy_t.E_item]
+		call	@items_add$qii11item_type_t pascal, [si+enemy_t.pos.cur.x], [si+enemy_t.pos.cur.y], word ptr [si+enemy_t.E_item]
 		call	snd_se_play pascal, 3
 		movzx	eax, [si+enemy_t.E_score]
 		add	_score_delta, eax
@@ -20577,7 +20577,7 @@ loc_188BD:
 		call	sub_18556
 		cmp	_boss_phase_frame, 0
 		jnz	loc_189A1
-		call	boss_explode_small pascal, ET_HORIZONTAL
+		call	@boss_explode_small$q16explosion_type_t pascal, ET_HORIZONTAL
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
 		mov	_boss_sprite, 129
@@ -20606,7 +20606,7 @@ loc_18904:
 		jl	loc_189A1
 
 loc_18915:
-		call	boss_explode_small pascal, ET_NW_SE
+		call	@boss_explode_small$q16explosion_type_t pascal, ET_NW_SE
 		inc	_boss_phase
 		cmp	_boss_phase_frame, 4000
 		jge	short loc_1892D
@@ -20629,12 +20629,12 @@ loc_1894A:
 		inc	_boss_phase_frame
 		cmp	_boss_phase_frame, 16
 		jnz	short loc_1895A
-		call	boss_explode_small pascal, ET_VERTICAL
+		call	@boss_explode_small$q16explosion_type_t pascal, ET_VERTICAL
 
 loc_1895A:
 		cmp	_boss_phase_frame, 32
 		jnz	short loc_189A1
-		call	boss_explode_big pascal, ET_SW_NE
+		call	@boss_explode_big$qui pascal, ET_SW_NE
 		mov	_boss_phase, PHASE_EXPLODE_BIG
 		mov	al, _boss_mode_change
 		mov	_bullet_zap_active, al
@@ -21646,7 +21646,7 @@ loc_1923B:
 		call	sub_1E67C
 		cmp	_boss_phase_frame, 32
 		jl	loc_195A9
-		call	boss_phase_end pascal, (ET_NONE shl 16) or 3300
+		call	@boss_phase_end$q16explosion_type_ti pascal, (ET_NONE shl 16) or 3300
 		mov	_boss_mode, 3
 		mov	_boss_angle, 192
 		call	snd_se_play pascal, 6
@@ -21735,7 +21735,7 @@ loc_19309:
 		call	sub_19FD8
 
 loc_19317:
-		call	boss_phase_end pascal, (ET_NW_SE shl 16) or 2050
+		call	@boss_phase_end$q16explosion_type_ti pascal, (ET_NW_SE shl 16) or 2050
 		mov	_bullet_template_special_angle.BSA_turn_by, 40h
 		jmp	loc_195A9
 ; ---------------------------------------------------------------------------
@@ -21861,7 +21861,7 @@ loc_19425:
 		push	(ET_HORIZONTAL shl 16) or 0
 
 loc_1942B:
-		call	boss_phase_end
+		call	@boss_phase_end$q16explosion_type_ti
 		jmp	loc_195A9
 ; ---------------------------------------------------------------------------
 
@@ -21935,7 +21935,7 @@ loc_194C1:
 loc_194D2:
 		inc	_boss_phase
 		call	sparks_add_circle pascal, _boss_pos.cur.x, _boss_pos.cur.y, large (((8 shl 4) shl 16) or 48)
-		call	boss_explode_small pascal, ET_VERTICAL
+		call	@boss_explode_small$q16explosion_type_t pascal, ET_VERTICAL
 		cmp	_boss_phase_frame, 600
 		jge	short loc_194FB
 		mov	_boss_mode_change, 1
@@ -21981,12 +21981,12 @@ loc_19548:
 		inc	_boss_phase_frame
 		cmp	_boss_phase_frame, 16
 		jnz	short loc_1955E
-		call	boss_explode_small pascal, ET_VERTICAL
+		call	@boss_explode_small$q16explosion_type_t pascal, ET_VERTICAL
 
 loc_1955E:
 		cmp	_boss_phase_frame, 32
 		jnz	short loc_195A9
-		call	boss_explode_big pascal, ET_CIRCLE
+		call	@boss_explode_big$qui pascal, ET_CIRCLE
 		mov	_boss_phase, PHASE_EXPLODE_BIG
 		mov	al, _boss_mode_change
 		mov	_bullet_zap_active, al
@@ -22742,7 +22742,7 @@ loc_19C61:
 		call	sub_19FD8
 
 loc_19C6F:
-		call	boss_phase_end pascal, (ET_NW_SE shl 16) or 450
+		call	@boss_phase_end$q16explosion_type_ti pascal, (ET_NW_SE shl 16) or 450
 		mov	Palettes[0 * size rgb_t].r, 112
 		mov	Palettes[0 * size rgb_t].b, 112
 		mov	_palette_changed, 1
@@ -22780,7 +22780,7 @@ loc_19CB2:
 		call	sub_19FD8
 
 loc_19CC8:
-		call	boss_phase_end pascal, (ET_NW_SE shl 16) or 0
+		call	@boss_phase_end$q16explosion_type_ti pascal, (ET_NW_SE shl 16) or 0
 		mov	al, _boss_sprite
 		add	al, 4
 		mov	_boss_sprite, al
@@ -22879,7 +22879,7 @@ loc_19DBE:
 		mov	_boss_mode_change, 0
 
 loc_19DC3:
-		call	boss_explode_small pascal, ET_HORIZONTAL
+		call	@boss_explode_small$q16explosion_type_t pascal, ET_HORIZONTAL
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
 		mov	_boss_mode, 0
@@ -22917,12 +22917,12 @@ loc_19E27:
 		inc	_boss_phase_frame
 		cmp	_boss_phase_frame, 16
 		jnz	short loc_19E3D
-		call	boss_explode_small pascal, ET_VERTICAL
+		call	@boss_explode_small$q16explosion_type_t pascal, ET_VERTICAL
 
 loc_19E3D:
 		cmp	_boss_phase_frame, 32
 		jnz	short loc_19E8D
-		call	boss_explode_big pascal, ET_CIRCLE
+		call	@boss_explode_big$qui pascal, ET_CIRCLE
 		mov	_boss_phase, PHASE_EXPLODE_BIG
 		mov	al, _boss_mode_change
 		mov	_bullet_zap_active, al
@@ -23065,7 +23065,7 @@ loc_19FBB:
 		add	ax, [bp+@@x]
 		push	ax
 		push	1280
-		call	pointnums_add_yellow
+		call	@pointnums_add_yellow$qiiui
 		inc	di
 
 loc_19FCD:
@@ -23127,7 +23127,7 @@ loc_1A025:
 		add	ax, [bp+@@y]
 		push	ax
 		push	1280
-		call	pointnums_add_yellow
+		call	@pointnums_add_yellow$qiiui
 		inc	di
 
 loc_1A037:
@@ -23338,7 +23338,7 @@ loc_1A1EE:
 		push	word ptr [si+4]
 		push	large (((4 shl 4) shl 16) or 8)
 		nopcall	sparks_add_random
-		call	items_add pascal, word ptr [si+2], word ptr [si+4], IT_BIGPOWER
+		call	@items_add$qii11item_type_t pascal, word ptr [si+2], word ptr [si+4], IT_BIGPOWER
 
 loc_1A22E:
 		inc	word ptr [si+0Eh]
@@ -25132,7 +25132,7 @@ loc_1B580:
 		jz	loc_1B8EA
 		push	14h
 		call	sub_19FD8
-		call	_boss_items_drop
+		call	@boss_items_drop$qv
 
 loc_1B59A:
 		call	yuuka6_phase_end pascal, large (0 shl 16) or 7600
@@ -25189,7 +25189,7 @@ loc_1B600:
 		jz	loc_1B8EA
 		push	14h
 		call	sub_19FD8
-		call	_boss_items_drop
+		call	@boss_items_drop$qv
 
 loc_1B623:
 		call	yuuka6_phase_end pascal, large (0 shl 16) or 5400
@@ -25219,7 +25219,7 @@ loc_1B652:
 		jl	loc_1B8EA
 		cmp	_boss_pos.cur.y, (80 shl 4)
 		jnz	loc_1B8EA
-		call	boss_explode_small pascal, ET_SW_NE
+		call	@boss_explode_small$q16explosion_type_t pascal, ET_SW_NE
 		cmp	_bullet_clear_time, 20
 		jnb	short loc_1B681
 		mov	_bullet_clear_time, 20
@@ -25322,7 +25322,7 @@ loc_1B748:
 		jg	loc_1B8EA
 		push	14h
 		call	sub_19FD8
-		call	_boss_items_drop
+		call	@boss_items_drop$qv
 
 loc_1B75B:
 		cmp	_boss_phase, 8
@@ -25416,7 +25416,7 @@ loc_1B80B:
 		jz	loc_1B8EA
 		push	14h
 		call	sub_19FD8
-		call	_boss_items_drop
+		call	@boss_items_drop$qv
 
 loc_1B81C:
 		call	yuuka6_phase_end pascal, (ET_HORIZONTAL shl 16) or 0
@@ -25443,7 +25443,7 @@ loc_1B84B:
 		jl	loc_1B8EA
 
 loc_1B85F:
-		call	boss_explode_small pascal, ET_NW_SE
+		call	@boss_explode_small$q16explosion_type_t pascal, ET_NW_SE
 		inc	_boss_phase
 		cmp	_boss_phase_frame, 2500
 		jge	short loc_1B877
@@ -25466,12 +25466,12 @@ loc_1B894:
 		inc	_boss_phase_frame
 		cmp	_boss_phase_frame, 16
 		jnz	short loc_1B8A4
-		call	boss_explode_small pascal, ET_VERTICAL
+		call	@boss_explode_small$q16explosion_type_t pascal, ET_VERTICAL
 
 loc_1B8A4:
 		cmp	_boss_phase_frame, 32
 		jnz	short loc_1B8EA
-		call	boss_explode_big pascal, ET_SW_NE
+		call	@boss_explode_big$qui pascal, ET_SW_NE
 		mov	_boss_phase, PHASE_EXPLODE_BIG
 		mov	al, _boss_mode_change
 		mov	_bullet_zap_active, al
@@ -26755,7 +26755,7 @@ loc_1C400:
 		mov	_boss_pos.cur.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (96 shl 4)
 		mov	_boss_pos.prev.x, 0
-		call	boss_phase_end pascal, (ET_NONE shl 16) or 0
+		call	@boss_phase_end$q16explosion_type_ti pascal, (ET_NONE shl 16) or 0
 		mov	byte_25A24, 0
 		jmp	loc_1C67A
 ; ---------------------------------------------------------------------------
@@ -26860,7 +26860,7 @@ loc_1C4D3:
 loc_1C4EB:
 		mov	al, byte_25A24
 		mov	ah, 0
-		call	boss_explode_small pascal, ax
+		call	@boss_explode_small$q16explosion_type_t pascal, ax
 		mov	_boss_mode, -1
 		inc	byte_25A24
 		mov	al, byte_25A24
@@ -26936,7 +26936,7 @@ loc_1C585:
 loc_1C591:
 		inc	_boss_phase
 		call	sparks_add_circle pascal, _boss_pos.cur.x, _boss_pos.cur.y, large (((8 shl 4) shl 16) or 48)
-		call	boss_explode_small pascal, ET_VERTICAL
+		call	@boss_explode_small$q16explosion_type_t pascal, ET_VERTICAL
 		mov	_boss_phase_frame, 0
 
 loc_1C5B1:
@@ -26964,7 +26964,7 @@ loc_1C5DE:
 		jg	loc_1C67A
 
 loc_1C5F1:
-		call	_boss_items_drop
+		call	@boss_items_drop$qv
 		cmp	_bullet_clear_time, 20
 		jnb	short loc_1C600
 		mov	_bullet_clear_time, 20
@@ -26974,7 +26974,7 @@ loc_1C600:
 		call	sub_19FD8
 		mov	al, byte_25A24
 		mov	ah, 0
-		call	boss_explode_small pascal, ax
+		call	@boss_explode_small$q16explosion_type_t pascal, ax
 		mov	_boss_mode, -1
 		mov	_boss_phase_frame, 0
 		inc	byte_25A24
@@ -26985,12 +26985,12 @@ loc_1C61F:
 		inc	_boss_phase_frame
 		cmp	_boss_phase_frame, 16
 		jnz	short loc_1C62F
-		call	boss_explode_small pascal, ET_VERTICAL
+		call	@boss_explode_small$q16explosion_type_t pascal, ET_VERTICAL
 
 loc_1C62F:
 		cmp	_boss_phase_frame, 32
 		jnz	short loc_1C67A
-		call	boss_explode_big pascal, ET_HORIZONTAL
+		call	@boss_explode_big$qui pascal, ET_HORIZONTAL
 		mov	_boss_phase, PHASE_EXPLODE_BIG
 		mov	al, _boss_mode_change
 		mov	_bullet_zap_active, al
@@ -27059,7 +27059,7 @@ off_1C6C4	dw offset loc_1C301
 main_034_TEXT	ends
 
 BULLET_U_TEXT	segment	byte public 'CODE' use16
-	extern _bullets_update:proc
+	extern @bullets_update$qv:proc
 BULLET_U_TEXT	ends
 
 BULLET_A_TEXT	segment	byte public 'CODE' use16
@@ -27682,8 +27682,8 @@ sub_1DA1B	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public ITEMS_ADD
-items_add	proc near
+public @ITEMS_ADD$QII11ITEM_TYPE_T
+@items_add$qii11item_type_t	proc near
 
 @@type		= byte ptr  4
 @@y		= word ptr  6
@@ -27758,7 +27758,7 @@ loc_1DAC8:
 		pop	si
 		pop	bp
 		retn	6
-items_add	endp
+@items_add$qii11item_type_t	endp
 
 include th04/main/item/miss_add.asm
 
@@ -27790,7 +27790,7 @@ loc_1DBD0:
 		cmp	_power, 127
 		jnz	short loc_1DBF5
 		mov	_popup_id_new, POPUP_ID_FULL_POWERUP
-		mov	_popup, offset popup_update_and_render
+		mov	_popup, offset @popup_update_and_render$qv
 		cmp	_bullet_clear_time, 20
 		jnb	short loc_1DBF5
 		mov	_bullet_clear_time, 20
@@ -27894,7 +27894,7 @@ loc_1DCCC:
 		jb	short loc_1DCFE
 		mov	_power, 128
 		mov	_popup_id_new, POPUP_ID_FULL_POWERUP
-		mov	_popup, offset popup_update_and_render
+		mov	_popup, offset @popup_update_and_render$qv
 		cmp	_bullet_clear_time, 20
 		jnb	short loc_1DCFE
 		mov	_bullet_clear_time, 20
@@ -27937,7 +27937,7 @@ loc_1DD47:
 		call	sub_EEE8
 		call	snd_se_play pascal, 7
 		mov	_popup_id_new, POPUP_ID_EXTEND
-		mov	_popup, offset popup_update_and_render
+		mov	_popup, offset @popup_update_and_render$qv
 		jmp	short loc_1DD90	; jumptable 0001CCD9 case 696
 ; ---------------------------------------------------------------------------
 
@@ -27948,7 +27948,7 @@ loc_1DD6F:
 
 loc_1DD7B:
 		mov	_popup_id_new, POPUP_ID_FULL_POWERUP
-		mov	_popup, offset popup_update_and_render
+		mov	_popup, offset @popup_update_and_render$qv
 		mov	_power, 128
 		call	sub_11DE6
 
@@ -27971,12 +27971,12 @@ loc_1DDA8:
 		add	_score_delta, eax
 		cmp	[bp+@@yellow], 0
 		jnz	short loc_1DDBF
-		call	pointnums_add_white pascal, word ptr [di+2], word ptr [di+4], si
+		call	@pointnums_add_white$qiiui pascal, word ptr [di+2], word ptr [di+4], si
 		jmp	short loc_1DDC9
 ; ---------------------------------------------------------------------------
 
 loc_1DDBF:
-		call	pointnums_add_yellow pascal, word ptr [di+2], word ptr [di+4], si
+		call	@pointnums_add_yellow$qiiui pascal, word ptr [di+2], word ptr [di+4], si
 
 loc_1DDC9:
 		cmp	_item_playperf_raise, 32
@@ -28208,7 +28208,7 @@ items_update	endp
 
 ; Attributes: bp-based frame
 
-boss_reset	proc near
+@boss_reset$qv	proc near
 		push	bp
 		mov	bp, sp
 		setfarfp	_boss_update, nullfunc_far
@@ -28220,11 +28220,11 @@ boss_reset	proc near
 		mov	_boss_pos.velocity.x, 0
 		mov	_boss_pos.velocity.y, 0
 		mov	_boss_damage_this_frame, 0
-		nopcall	_explosions_small_reset
+		nopcall	@explosions_small_reset$qv
 		mov	_boss_phase_timed_out, 1
 		pop	bp
 		retn
-boss_reset	endp
+@boss_reset$qv	endp
 
 include th04/formats/bb_stage.asm
 
@@ -28245,7 +28245,7 @@ stage1_setup	proc far
 		mov	_midboss_pos.velocity.x, 0
 		mov	_midboss_pos.velocity.y, (1 shl 4)
 		mov	_midboss_hp, 800
-		call	boss_reset
+		call	@boss_reset$qv
 		mov	_boss_pos.cur.x, (192 shl 4)
 		mov	_boss_pos.prev.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (40 shl 4)
@@ -28259,7 +28259,7 @@ stage1_setup	proc far
 		mov	_boss_backdrop_colorfill, offset playfield_fillm_0_120_384_128
 		call	super_entry_bfnt pascal, ds, offset aSt00_bmt ; "st00.bmt"
 		call	cdg_load_single_noalpha pascal, CDG_BG_BOSS, ds, offset aSt00bk_cdg, 0
-		call	bb_stage_load pascal, ds, offset aSt00_bb
+		call	@bb_stage_load$qnxc pascal, ds, offset aSt00_bb
 		mov	Palettes[0 * size rgb_t].r, 255
 		mov	Palettes[0 * size rgb_t].g, 255
 		mov	_stage_render, offset nullfunc_near
@@ -28287,7 +28287,7 @@ stage2_setup	proc far
 		mov	_midboss_pos.velocity.y, (1 shl 4)
 		mov	_midboss_hp, 750
 		mov	_midboss_sprite, 0
-		call	boss_reset
+		call	@boss_reset$qv
 		mov	_boss_pos.cur.x, (192 shl 4)
 		mov	_boss_pos.prev.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (81 shl 4)
@@ -28301,7 +28301,7 @@ stage2_setup	proc far
 		mov	_boss_backdrop_colorfill, offset playfield_fillm_0_80_384_112
 		call	super_entry_bfnt pascal, ds, offset aSt01_bmt ; "st01.bmt"
 		call	cdg_load_single_noalpha pascal, CDG_BG_BOSS, ds, offset aSt01bk_cdg, 0
-		call	bb_stage_load pascal, ds, offset aSt01_bb
+		call	@bb_stage_load$qnxc pascal, ds, offset aSt01_bb
 		push	(255 shl 16) or 128
 		push	( 32 shl 16) or   8
 		call	select_for_rank
@@ -28331,7 +28331,7 @@ stage3_setup	proc far
 		mov	_midboss_pos.velocity.y, (4 shl 4)
 		mov	_midboss_hp, 850
 		mov	_midboss_sprite, 0
-		call	boss_reset
+		call	@boss_reset$qv
 		mov	_boss_pos.cur.x, (192 shl 4)
 		mov	_boss_pos.prev.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (64 shl 4)
@@ -28345,7 +28345,7 @@ stage3_setup	proc far
 		mov	_boss_backdrop_colorfill, offset playfield_fillm_0_0_384_112
 		call	super_entry_bfnt pascal, ds, offset aSt02_bmt ; "st02.bmt"
 		call	cdg_load_single_noalpha pascal, CDG_BG_BOSS, ds, offset aSt02bk_cdg, 0
-		call	bb_stage_load pascal, ds, offset aSt02_bb
+		call	@bb_stage_load$qnxc pascal, ds, offset aSt02_bb
 		mov	_stage_render, offset nullfunc_near
 		mov	_stage_invalidate, offset nullfunc_near
 		pop	bp
@@ -28371,7 +28371,7 @@ stage4_setup	proc far
 		mov	_midboss_pos.velocity.y, (2 shl 4)
 		mov	_midboss_hp, 1200
 		mov	_midboss_sprite, 0
-		call	boss_reset
+		call	@boss_reset$qv
 		mov	_boss_pos.cur.x, (192 shl 4)
 		mov	_boss_pos.prev.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (64 shl 4)
@@ -28439,7 +28439,7 @@ loc_1E3A0:
 loc_1E3A6:
 		push	0
 		call	cdg_load_single_noalpha
-		call	bb_stage_load pascal, ds, offset aSt03_bb
+		call	@bb_stage_load$qnxc pascal, ds, offset aSt03_bb
 		mov	_stage_render, offset nullfunc_near
 		mov	_stage_invalidate, offset nullfunc_near
 		pop	bp
@@ -28457,7 +28457,7 @@ stage5_setup	proc far
 		setfarfp	_midboss_update_func, nullfunc_far
 		mov	_midboss_render_func, offset nullfunc_near
 		mov	_midboss_frames_until, 60000
-		call	boss_reset
+		call	@boss_reset$qv
 		mov	_boss_pos.cur.x, (192 shl 4)
 		mov	_boss_pos.prev.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (64 shl 4)
@@ -28470,7 +28470,7 @@ stage5_setup	proc far
 		mov	_boss_hitbox_radius.y, (26 shl 4)
 		mov	_boss_backdrop_colorfill, offset playfield_fillm_96_112_288_256
 		call	cdg_load_single_noalpha pascal, CDG_BG_BOSS, ds, offset aSt04bk_cdg, 0
-		call	bb_stage_load pascal, ds, offset aSt04_bb
+		call	@bb_stage_load$qnxc pascal, ds, offset aSt04_bb
 		call	cdg_load_single_noalpha pascal, CDG_BG_2, ds, offset aSt04_cdg, 0
 		mov	word_2D034, 1400h
 		mov	word_2D036, 280h
@@ -28496,7 +28496,7 @@ stage6_setup	proc far
 		setfarfp	_midboss_update_func, nullfunc_far
 		mov	_midboss_render_func, offset nullfunc_near
 		mov	_midboss_frames_until, 60000
-		call	boss_reset
+		call	@boss_reset$qv
 		mov	_boss_pos.cur.x, (192 shl 4)
 		mov	_boss_pos.prev.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (80 shl 4)
@@ -28507,7 +28507,7 @@ stage6_setup	proc far
 		mov	_boss_sprite, 128
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (48 shl 4)
-		call	bb_stage_load pascal, ds, offset aSt05_bb
+		call	@bb_stage_load$qnxc pascal, ds, offset aSt05_bb
 		mov	_stage_render, offset nullfunc_near
 		mov	_stage_invalidate, offset nullfunc_near
 		push	(48 shl 16) or 64
@@ -28542,7 +28542,7 @@ stagex_setup	proc far
 		mov	_midboss_hp, 4096
 		mov	_midboss_sprite, 0
 		mov	_midboss_angle, 96
-		call	boss_reset
+		call	@boss_reset$qv
 		mov	_boss_pos.cur.x, (192 shl 4)
 		mov	_boss_pos.prev.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (80 shl 4)
@@ -28556,7 +28556,7 @@ stagex_setup	proc far
 		mov	_boss_backdrop_colorfill, offset playfield_fillm_0_0_384_192
 		mov	byte_2D01E, 0
 		call	cdg_load_single_noalpha pascal, CDG_BG_BOSS, ds, offset aSt06bk_cdg, 0
-		call	bb_stage_load pascal, ds, offset aSt06_bb
+		call	@bb_stage_load$qnxc pascal, ds, offset aSt06_bb
 		mov	_stage_render, offset nullfunc_near
 		mov	_stage_invalidate, offset nullfunc_near
 		pop	bp
@@ -28752,7 +28752,7 @@ loc_1E7B5:
 loc_1E7F2:
 		call	sub_CF01
 		call	sub_D6EB
-		call	end_game_bad
+		call	@end_game_bad$qv
 
 loc_1E801:
 		cmp	_stage_id, 6
@@ -28762,7 +28762,7 @@ loc_1E801:
 		cmp	byte_2D01E, 0
 		jnz	short loc_1E89B
 		mov	byte_2D01E, 1
-		call	boss_reset
+		call	@boss_reset$qv
 		mov	_boss_pos.cur.x, (192 shl 4)
 		mov	_boss_pos.prev.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (96 shl 4)
@@ -28774,11 +28774,11 @@ loc_1E801:
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (48 shl 4)
 		mov	_bgm_title_id, 0Fh
-		mov	_overlay_text, offset popup_boss_bgm_update_and_render
+		mov	_overlay_text, offset @popup_boss_bgm_update_and_render$qv
 		call	cdg_free pascal, CDG_BG_BOSS
-		call	bb_stage_free
+		call	@bb_stage_free$qv
 		call	cdg_load_single_noalpha pascal, CDG_BG_BOSS, ds, offset aSt06bk2_cdg, 0
-		call	bb_stage_load pascal, ds, offset aSt06b_bb
+		call	@bb_stage_load$qnxc pascal, ds, offset aSt06b_bb
 		mov	_bombing_disabled, 0
 		pop	bp
 		retn
@@ -28807,14 +28807,14 @@ loc_1E8B3:
 		jnz	short loc_1E8E5
 		cmp	_stage_id, 5
 		jnz	short loc_1E8C9
-		call	end_game_good
+		call	@end_game_good$qv
 		jmp	short loc_1E8D5
 ; ---------------------------------------------------------------------------
 
 loc_1E8C9:
 		cmp	_stage_id, 6
 		jnz	short loc_1E8D5
-		call	end_extra
+		call	@end_extra$qv
 
 loc_1E8D5:
 		mov	_overlay_text, offset sub_10E39
@@ -30117,7 +30117,7 @@ loc_1F421:
 		jl	loc_1F8A5
 		mov	_boss_pos.velocity.x, 0
 		mov	_boss_phase_end_hp, 9100
-		call	boss_phase_end pascal, (ET_NONE shl 16) or 7900
+		call	@boss_phase_end$q16explosion_type_ti pascal, (ET_NONE shl 16) or 7900
 		jmp	loc_1F8A5
 ; ---------------------------------------------------------------------------
 
@@ -30279,7 +30279,7 @@ loc_1F579:
 		call	sub_19FD8
 
 loc_1F591:
-		call	boss_phase_end pascal, (ET_NW_SE shl 16) or 4500
+		call	@boss_phase_end$q16explosion_type_ti pascal, (ET_NW_SE shl 16) or 4500
 		mov	_boss_pos.velocity.x, 0
 		jmp	loc_1F8A5
 ; ---------------------------------------------------------------------------
@@ -30350,7 +30350,7 @@ loc_1F61B:
 		push	(ET_SW_NE shl 16) or 2700
 
 loc_1F621:
-		call	boss_phase_end
+		call	@boss_phase_end$q16explosion_type_ti
 		mov	_boss_sprite, 129
 		mov	byte_2D03C, 0
 		jmp	loc_1F8A5
@@ -30449,7 +30449,7 @@ loc_1F6E9:
 		call	sub_19FD8
 
 loc_1F701:
-		call	boss_phase_end pascal, (ET_HORIZONTAL shl 16) or 900
+		call	@boss_phase_end$q16explosion_type_ti pascal, (ET_HORIZONTAL shl 16) or 900
 		mov	_boss_pos.velocity.x, 0
 		mov	byte_2D057, 3
 		jmp	loc_1F8A5
@@ -30491,7 +30491,7 @@ loc_1F73A:
 		call	sub_19FD8
 
 loc_1F752:
-		call	boss_phase_end pascal, (ET_VERTICAL shl 16) or 0
+		call	@boss_phase_end$q16explosion_type_ti pascal, (ET_VERTICAL shl 16) or 0
 		mov	_boss_pos.velocity.x, 0
 		mov	byte_2D057, 3
 		mov	Palettes[0 * size rgb_t].r, 60
@@ -30571,7 +30571,7 @@ loc_1F802:
 		jl	loc_1F8A5
 
 loc_1F822:
-		call	boss_explode_small pascal, ET_HORIZONTAL
+		call	@boss_explode_small$q16explosion_type_t pascal, ET_HORIZONTAL
 		inc	_boss_phase
 		mov	_boss_mode_change, 0
 		cmp	_boss_phase_frame, 1000
@@ -30587,12 +30587,12 @@ loc_1F845:
 		inc	_boss_phase_frame
 		cmp	_boss_phase_frame, 16
 		jnz	short loc_1F855
-		call	boss_explode_small pascal, ET_VERTICAL
+		call	@boss_explode_small$q16explosion_type_t pascal, ET_VERTICAL
 
 loc_1F855:
 		cmp	_boss_phase_frame, 32
 		jnz	short loc_1F8A5
-		call	boss_explode_big pascal, ET_SW_NE
+		call	@boss_explode_big$qui pascal, ET_SW_NE
 		mov	_boss_phase, PHASE_EXPLODE_BIG
 		mov	al, _boss_mode_change
 		mov	_bullet_zap_active, al
@@ -32151,7 +32151,7 @@ loc_205A4:
 		push	(ET_HORIZONTAL shl 16) or 3000
 
 loc_205AA:
-		call	boss_phase_end
+		call	@boss_phase_end$q16explosion_type_ti
 		mov	_boss_mode, -1
 		mov	word_2D05A, 0C00h
 		jmp	loc_206B6
@@ -32178,7 +32178,7 @@ loc_205D4:
 		call	sub_19FD8
 
 loc_205ED:
-		call	boss_phase_end pascal, (ET_VERTICAL shl 16) or 0
+		call	@boss_phase_end$q16explosion_type_ti pascal, (ET_VERTICAL shl 16) or 0
 		mov	_boss_mode, -1
 		mov	word_2D05A, 0C00h
 		mov	byte_2D02D, 10h
@@ -32203,7 +32203,7 @@ loc_20619:
 		jl	loc_206B6
 
 loc_2062A:
-		call	boss_explode_small pascal, ET_NW_SE
+		call	@boss_explode_small$q16explosion_type_t pascal, ET_NW_SE
 		inc	_boss_phase
 		cmp	_boss_phase_frame, 5000
 		jge	short loc_20642
@@ -32226,12 +32226,12 @@ loc_2065F:
 		inc	_boss_phase_frame
 		cmp	_boss_phase_frame, 16
 		jnz	short loc_2066F
-		call	boss_explode_small pascal, ET_VERTICAL
+		call	@boss_explode_small$q16explosion_type_t pascal, ET_VERTICAL
 
 loc_2066F:
 		cmp	_boss_phase_frame, 32
 		jnz	short loc_206B6
-		call	boss_explode_big pascal, ET_HORIZONTAL
+		call	@boss_explode_big$qui pascal, ET_HORIZONTAL
 		mov	_boss_phase, PHASE_EXPLODE_BIG
 		mov	al, _boss_mode_change
 		mov	_bullet_zap_active, al

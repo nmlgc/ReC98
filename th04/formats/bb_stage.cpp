@@ -10,10 +10,10 @@ void pascal near bb_stage_load(const char *fn)
 #endif
 }
 
-#if GAME == 5
-void pascal near bb_stage_free(void)
+#if (GAME == 5)
+	void near bb_stage_free(void)
 #else
-void pascal far bb_stage_free(void)
+	void far bb_stage_free(void)
 #endif
 {
 	if(bb_stage_seg) {

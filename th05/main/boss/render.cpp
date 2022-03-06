@@ -7,6 +7,7 @@
 #include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
+extern "C" {
 #include "decomp.hpp"
 #include "master.hpp"
 #include "th01/math/area.hpp"
@@ -26,7 +27,9 @@
 #include "th04/sprites/main_cdg.h"
 #include "th05/sprites/main_pat.h"
 #include "th05/formats/super.h"
+}
 #include "th05/main/boss/boss.hpp"
+extern "C" {
 
 /// Structures
 /// ----------
@@ -676,3 +679,5 @@ void pascal near exalice_bg_render(void)
 	}
 }
 /// ----------------------
+
+}

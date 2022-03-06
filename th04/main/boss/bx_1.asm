@@ -6,8 +6,8 @@ mugetsu_phase2_end	proc near
 
 	push	bp
 	mov	bp, sp
-	call	_boss_items_drop
-	call	boss_explode_small pascal, [bp+@@explosion_type]
+	call	@boss_items_drop$qv
+	call	@boss_explode_small$q16explosion_type_t pascal, [bp+@@explosion_type]
 	inc	_boss_phase
 	mov	_boss_phase_frame, 0
 	mov	_boss_mode, 0

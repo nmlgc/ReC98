@@ -45,7 +45,7 @@ void pascal near tiles_invalidate_all(void);
 // • Passing separate X and Y coordinates (including hardcoded constants
 //   combined to form a single 32-bit immediate via the -3 compiler option):
 //
-//   void pascal near tiles_invalidate_around(
+//   extern "C" void pascal near tiles_invalidate_around(
 //   	subpixel_t center_y, subpixel_t center_x
 //   );
 //
@@ -55,7 +55,7 @@ void pascal near tiles_invalidate_all(void);
 //
 // • Passing SPPoint instances:
 //
-//   void pascal near tiles_invalidate_around(const SPPoint center);
+//   extern "C" void pascal near tiles_invalidate_around(const SPPoint center);
 
 #define tiles_invalidate_around_xy(center_x, center_y) \
 	tiles_invalidate_around(center_y, center_x)

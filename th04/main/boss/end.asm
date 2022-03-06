@@ -1,5 +1,5 @@
-public _boss_items_drop
-_boss_items_drop	proc near
+public @boss_items_drop$qv
+@boss_items_drop$qv proc near
 
 @@top		= word ptr -4
 @@left		= word ptr -2
@@ -59,7 +59,7 @@ _boss_items_drop	proc near
 	imul	bx, @@DROP_COUNT
 	mov	al, _BOSS_ITEM_DROPS[bx+si]
 	push	ax
-	call	items_add
+	call	@items_add$qii11item_type_t
 	inc	si
 
 @@items_more?:
@@ -69,11 +69,11 @@ _boss_items_drop	proc near
 	pop	si
 	leave
 	retn
-_boss_items_drop	endp
+@boss_items_drop$qv endp
 
 
-public BOSS_PHASE_END
-boss_phase_end	proc near
+public @BOSS_PHASE_END$Q16EXPLOSION_TYPE_TI
+@boss_phase_end$q16explosion_type_ti proc near
 
 @@next_phase_end_hp		= word ptr  4
 @@explosion_type		= word ptr  6
@@ -84,7 +84,7 @@ boss_phase_end	proc near
 	mov	si, [bp+@@explosion_type]
 	cmp	si, ET_NONE
 	jz	short @@set
-	call	boss_explode_small pascal, si
+	call	@boss_explode_small$q16explosion_type_t pascal, si
 	cmp	_boss_phase_timed_out, 0
 	jnz	short @@set
 	cmp	_bullet_clear_time, 20
@@ -92,7 +92,7 @@ boss_phase_end	proc near
 	mov	_bullet_clear_time, 20
 
 @@already_clearing:
-	call	_boss_items_drop
+	call	@boss_items_drop$qv
 
 @@set:
 	mov	_boss_phase_timed_out, 1
@@ -107,4 +107,4 @@ boss_phase_end	proc near
 	pop	si
 	pop	bp
 	retn	4
-boss_phase_end	endp
+@boss_phase_end$q16explosion_type_ti endp

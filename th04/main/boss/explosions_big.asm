@@ -1,5 +1,5 @@
-public _explosions_big_update_and_render
-_explosions_big_update_and_render proc near
+public @explosions_big_update_and_render$qv
+@explosions_big_update_and_render$qv proc near
 
 @@angle 	= byte ptr -5
 @@draw_y	= word ptr -4
@@ -109,4 +109,4 @@ _explosions_big_update_and_render proc near
 	pop	si
 	leave
 	retn
-_explosions_big_update_and_render endp
+@explosions_big_update_and_render$qv endp
