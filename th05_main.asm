@@ -7547,7 +7547,7 @@ loc_1193E:
 		call	gaiji_putsa pascal, (18 shl 16) + 12, ds, offset gDEMO_PLAY, TX_YELLOW + TX_BLINK
 
 loc_11956:
-		mov	_popup_titles_frame, 0
+		mov	_titles_frame, 0
 		jmp	short loc_119AD
 ; ---------------------------------------------------------------------------
 

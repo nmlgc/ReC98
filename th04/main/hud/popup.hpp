@@ -29,8 +29,6 @@ extern unsigned long popup_bonus;
 
 /// Stage and BGM titles
 /// --------------------
-extern unsigned char popup_boss_bgm_frame;
-extern unsigned char popup_titles_frame;
 
 void pascal near popup_titles_invalidate(void);
 void pascal near popup_titles_update_and_render(void);

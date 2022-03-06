@@ -1,11 +1,11 @@
-public _popup_frame, _popup_boss_bgm_frame
+public _popup_frame, _boss_bgm_frame
 public _bb_txt_seg
 public _gStage_1, _gFINAL_STAGE, _gEXTRA_STAGE
 public _POPUP_STRINGS
-public _popup_dissolve_sprite
+public _dissolve_sprite
 public _PLAYFIELD_BLANK_ROW
 
-_popup_boss_bgm_frame	db 0
+_boss_bgm_frame	db 0
 _popup_frame	db 0
 	evendata
 _bb_txt_seg	dw 0
@@ -31,6 +31,6 @@ if GAME eq 5
 	dd gpDREAMBONUS_MAX
 endif
 
-_popup_dissolve_sprite	db 0
+_dissolve_sprite	db 0
 	evendata
 _PLAYFIELD_BLANK_ROW	dd aPLAYFIELD_BLANK_ROW
