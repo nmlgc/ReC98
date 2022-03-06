@@ -396,8 +396,8 @@ loc_ABBA:
 		call	main_01:bullets_render
 		call	main_01:circles_render
 		GRCG_OFF_CLOBBERING dx
-		call	_overlay_text
-		call	_overlay_popup
+		call	_overlay1
+		call	_overlay2
 		call	_playfield_shake_update_and_rende
 		call	main_01:far ptr	_input_reset_sense
 		mov	ax, vsync_Count1
@@ -706,7 +706,7 @@ loc_AF4A:
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		call	main_01:sub_12024
-		call	main_01:_playfield_tram_wipe
+		call	@overlay_wipe$qv
 		call	main_01:sub_B1D0
 		nopcall	main_01:hud_put
 		call	@eyecatch_animate$qv
@@ -870,7 +870,7 @@ loc_B156:
 		call	palette_black_out
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
-		call	main_01:_playfield_tram_black
+		call	@overlay_black$qv
 		call	main_01:tiles_render_all
 		mov	_page_back, 1
 		mov	_page_front, 0
@@ -885,8 +885,8 @@ loc_B156:
 
 loc_B1AE:
 		nopcall	main_01:sub_CB99
-		mov	_overlay_text, offset sub_10DA3
-		mov	_overlay_popup, offset nullfunc_near
+		mov	_overlay1, offset sub_10DA3
+		mov	_overlay2, offset nullfunc_near
 		pop	si
 		pop	bp
 		retn
@@ -2362,7 +2362,7 @@ loc_CF70:
 		mov	_bgm_title_id, 10h
 
 loc_CFAC:
-		mov	_overlay_text, offset @overlay_boss_bgm_update_and_rend$qv
+		mov	_overlay1, offset @overlay_boss_bgm_update_and_rend$qv
 		mov	al, 1
 		pop	bp
 		retn
@@ -3138,7 +3138,7 @@ loc_D6DC:
 ; ---------------------------------------------------------------------------
 
 loc_D6E4:
-		call	main_01:_playfield_tram_wipe
+		call	@overlay_wipe$qv
 		pop	di
 		pop	si
 		leave
@@ -3154,7 +3154,7 @@ public @dialog_animate$qv
 		push	bp
 		mov	bp, sp
 		call	@dialog_init$qv
-		call	main_01:_playfield_tram_wipe
+		call	@overlay_wipe$qv
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		graph_accesspage _page_front
@@ -4622,8 +4622,8 @@ var_1		= byte ptr -1
 		push	di
 		cmp	byte_25660, 24h	; '$'
 		jb	short loc_E47B
-		call	main_01:_playfield_tram_wipe
-		mov	_overlay_text, offset nullfunc_near
+		call	@overlay_wipe$qv
+		mov	_overlay1, offset nullfunc_near
 		mov	al, 1
 		jmp	short loc_E4CD
 ; ---------------------------------------------------------------------------
@@ -4698,8 +4698,8 @@ var_1		= byte ptr -1
 		push	di
 		cmp	byte_25660, 0
 		jnz	short loc_E4EB
-		call	main_01:_playfield_tram_black
-		mov	_overlay_text, offset nullfunc_near
+		call	@overlay_black$qv
+		mov	_overlay1, offset nullfunc_near
 		mov	al, 1
 		jmp	short loc_E53D
 ; ---------------------------------------------------------------------------
@@ -4830,7 +4830,7 @@ loc_E5EF:
 		jl	short loc_E5C2
 		call	gaiji_putsa pascal, (20 shl 16) + 12, ds, offset gGAMEOVER, TX_WHITE
 		call	input_wait_for_change pascal, 0
-		call	main_01:_playfield_tram_wipe
+		call	@overlay_wipe$qv
 		call	main_01:sub_E67A
 		mov	ah, 0
 		mov	[bp+var_2], ax
@@ -4861,7 +4861,7 @@ loc_E63F:
 ; ---------------------------------------------------------------------------
 
 loc_E64F:
-		call	main_01:_playfield_tram_wipe
+		call	@overlay_wipe$qv
 		jmp	short loc_E675
 ; ---------------------------------------------------------------------------
 
@@ -5857,7 +5857,7 @@ loc_EE60:
 loc_EE8C:
 		nopcall	main_01:sub_EEE8
 		mov	_overlay_popup_id_new, POPUP_ID_EXTEND
-		mov	_overlay_popup, offset @overlay_popup_update_and_render$qv
+		mov	_overlay2, offset @overlay_popup_update_and_render$qv
 		call	snd_se_play pascal, 7
 
 locret_EEA3:
@@ -9098,8 +9098,8 @@ loc_10BFA:
 sub_10ABF	endp
 
 include th04/main/player/render.asm
-playfield_tram_loop_func	_playfield_tram_wipe, near, <TX_WHITE>
-playfield_tram_loop_func	_playfield_tram_black, near, <TX_BLACK + TX_REVERSE>
+overlay_loop_func	@overlay_wipe$qv, near, <TX_WHITE>
+overlay_loop_func	@overlay_black$qv, near, <TX_BLACK + TX_REVERSE>
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9114,16 +9114,16 @@ var_1		= byte ptr -1
 		push	di
 		cmp	byte_22EA2, 48h	; 'H'
 		jb	short loc_10DE5
-		call	main_01:_playfield_tram_wipe
+		call	@overlay_wipe$qv
 		les	bx, _resident
 		cmp	es:[bx+resident_t.demo_num], 0
 		jnz	short loc_10DC6
-		mov	_overlay_text, offset @overlay_titles_update_and_render$qv
+		mov	_overlay1, offset @overlay_titles_update_and_render$qv
 		jmp	short loc_10DDE
 ; ---------------------------------------------------------------------------
 
 loc_10DC6:
-		mov	_overlay_text, offset nullfunc_near
+		mov	_overlay1, offset nullfunc_near
 		call	gaiji_putsa pascal, (18 shl 16) + 12, ds, offset gDEMO_PLAY, TX_YELLOW + TX_BLINK
 
 loc_10DDE:
@@ -9200,8 +9200,8 @@ var_1		= byte ptr -1
 		push	di
 		cmp	byte_22EA2, 0
 		jnz	short loc_10E51
-		call	main_01:_playfield_tram_black
-		mov	_overlay_text, offset nullfunc_near
+		call	@overlay_black$qv
+		mov	_overlay1, offset nullfunc_near
 		jmp	short loc_10EA1
 ; ---------------------------------------------------------------------------
 
@@ -27646,7 +27646,7 @@ loc_1DBD0:
 		cmp	_power, 127
 		jnz	short loc_1DBF5
 		mov	_overlay_popup_id_new, POPUP_ID_FULL_POWERUP
-		mov	_overlay_popup, offset @overlay_popup_update_and_render$qv
+		mov	_overlay2, offset @overlay_popup_update_and_render$qv
 		cmp	_bullet_clear_time, 20
 		jnb	short loc_1DBF5
 		mov	_bullet_clear_time, 20
@@ -27750,7 +27750,7 @@ loc_1DCCC:
 		jb	short loc_1DCFE
 		mov	_power, 128
 		mov	_overlay_popup_id_new, POPUP_ID_FULL_POWERUP
-		mov	_overlay_popup, offset @overlay_popup_update_and_render$qv
+		mov	_overlay2, offset @overlay_popup_update_and_render$qv
 		cmp	_bullet_clear_time, 20
 		jnb	short loc_1DCFE
 		mov	_bullet_clear_time, 20
@@ -27793,7 +27793,7 @@ loc_1DD47:
 		call	sub_EEE8
 		call	snd_se_play pascal, 7
 		mov	_overlay_popup_id_new, POPUP_ID_EXTEND
-		mov	_overlay_popup, offset @overlay_popup_update_and_render$qv
+		mov	_overlay2, offset @overlay_popup_update_and_render$qv
 		jmp	short loc_1DD90	; jumptable 0001CCD9 case 696
 ; ---------------------------------------------------------------------------
 
@@ -27804,7 +27804,7 @@ loc_1DD6F:
 
 loc_1DD7B:
 		mov	_overlay_popup_id_new, POPUP_ID_FULL_POWERUP
-		mov	_overlay_popup, offset @overlay_popup_update_and_render$qv
+		mov	_overlay2, offset @overlay_popup_update_and_render$qv
 		mov	_power, 128
 		call	sub_11DE6
 
@@ -28630,7 +28630,7 @@ loc_1E801:
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (48 shl 4)
 		mov	_bgm_title_id, 0Fh
-		mov	_overlay_text, offset @overlay_boss_bgm_update_and_rend$qv
+		mov	_overlay1, offset @overlay_boss_bgm_update_and_rend$qv
 		call	cdg_free pascal, CDG_BG_BOSS
 		call	@bb_stage_free$qv
 		call	cdg_load_single_noalpha pascal, CDG_BG_BOSS, ds, offset aSt06bk2_cdg, 0
@@ -28673,7 +28673,7 @@ loc_1E8C9:
 		call	@end_extra$qv
 
 loc_1E8D5:
-		mov	_overlay_text, offset sub_10E39
+		mov	_overlay1, offset sub_10E39
 		kajacall	KAJA_SONG_FADE, 10
 		jmp	short loc_1E905
 ; ---------------------------------------------------------------------------

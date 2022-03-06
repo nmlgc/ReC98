@@ -2123,7 +2123,7 @@ var_C		= byte ptr -0Ch
 		call	graph_clear
 		graph_showpage 0
 		call	hud_put
-		call	_playfield_tram_wipe
+		call	@overlay_wipe$qv
 		call	_pi_palette_apply stdcall, 0
 		call	_pi_palette_apply stdcall, 0
 		call	_pi_put_8 stdcall, 96, large 144
@@ -3378,9 +3378,9 @@ loc_C3FB:
 loc_C400:
 		cmp	_key_det, 0
 		jz	short loc_C3FB
-		call	_playfield_tram_wipe
+		call	@overlay_wipe$qv
 		call	sub_1C9FE
-		call	_playfield_tram_wipe
+		call	@overlay_wipe$qv
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.continues_used], 3
 		jnb	loc_C4F5
@@ -3485,7 +3485,7 @@ loc_C516:
 		mov	power_overflow_level, 10
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
-		call	_playfield_tram_wipe
+		call	@overlay_wipe$qv
 		mov	ax, di
 		pop	di
 		pop	si
@@ -8184,7 +8184,7 @@ loc_EB5D:
 		inc	byte_21A55
 		cmp	byte_21A55, 12h
 		jb	short loc_EB7C
-		call	_playfield_tram_wipe
+		call	@overlay_wipe$qv
 		mov	_bomb_frame, 132
 
 loc_EB7C:
@@ -9409,7 +9409,7 @@ loc_FBDF:
 		retn	0Ah
 sub_FB42	endp
 
-playfield_tram_loop_func	_playfield_tram_wipe, far, <TX_WHITE>
+overlay_loop_func	@overlay_wipe$qv, far, <TX_WHITE>
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9470,7 +9470,7 @@ var_4		= dword	ptr -4
 		push	offset gBONUS
 		mov	cx, 6
 		call	SCOPY@
-		call	_playfield_tram_wipe
+		call	@overlay_wipe$qv
 		mov	PaletteTone, 62
 		call	far ptr	palette_show
 		push	(24 shl 16) + 4
@@ -9632,7 +9632,7 @@ var_4		= dword	ptr -4
 		push	offset gBONUS_0
 		mov	cx, 6
 		call	SCOPY@
-		call	_playfield_tram_wipe
+		call	@overlay_wipe$qv
 		mov	PaletteTone, 62
 		call	far ptr	palette_show
 		push	(24 shl 16) + 4
@@ -15490,13 +15490,13 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		mov	di, 32
-		nopcall	_playfield_tram_wipe
+		nopcall	@overlay_wipe$qv
 		call	sub_DE4E
 		call	graph_scrollup pascal, _scroll_line
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		graph_accesspage _page_front
-		nopcall	_playfield_tram_wipe
+		nopcall	@overlay_wipe$qv
 		mov	si, 320
 		add	si, _scroll_line
 		cmp	si, RES_Y
@@ -15565,7 +15565,7 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		mov	di, 20h	; ' '
-		nopcall	_playfield_tram_wipe
+		nopcall	@overlay_wipe$qv
 		mov	si, 320
 		add	si, _scroll_line
 		cmp	si, RES_Y
@@ -16367,7 +16367,7 @@ sub_13414	endp
 sub_13439	proc near
 		push	bp
 		mov	bp, sp
-		nopcall	_playfield_tram_wipe
+		nopcall	@overlay_wipe$qv
 		kajacall	KAJA_SONG_STOP
 		pop	cx
 		push	69h ; 'i'

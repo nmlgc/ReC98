@@ -223,7 +223,7 @@ static inline void boss_bgm_dissolve_put(const int& bgm_len)
 
 #define dissolve_out_update(frame) \
 	if(frame == POPUP_FRAMES_UNTIL_OUT_DISSOLVE) { \
-		playfield_tram_wipe(); \
+		overlay_wipe(); \
 		dissolve_sprite = BB_TXT_OUT_SPRITE; \
 	} else { \
 		if((frame & 1) == 0) { \
@@ -238,7 +238,7 @@ void pascal near overlay_titles_update_and_render(void)
 		dissolve_out_update(frames);
 		if(dissolve_sprite >= (BB_TXT_OUT_SPRITE + BB_TXT_OUT_CELS)) {
 			if(frames & 1) {
-				overlay_text = nullfunc_near;
+				overlay1 = nullfunc_near;
 				frames = 0;
 				dissolve_sprite = 0;
 				return;
@@ -279,7 +279,7 @@ void pascal near overlay_boss_bgm_update_and_render(void)
 		dissolve_out_update(frames);
 		if(dissolve_sprite >= (BB_TXT_OUT_SPRITE + BB_TXT_OUT_CELS)) {
 			if(frames & 1) {
-				overlay_text = nullfunc_near;
+				overlay1 = nullfunc_near;
 				frames = 0;
 				return;
 			}
@@ -385,7 +385,7 @@ void pascal near overlay_popup_update_and_render(void)
 	if(frame >= POPUP_DURATION) {
 		line_wipe(POPUP_TRAM_Y);
 		frame = 0;
-		overlay_popup = nullfunc_near;
+		overlay2 = nullfunc_near;
 		return;
 	}
 

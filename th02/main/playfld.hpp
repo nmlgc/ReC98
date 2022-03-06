@@ -18,12 +18,6 @@
 #define PLAYFIELD_TRAM_RIGHT (PLAYFIELD_RIGHT / 8)
 #define PLAYFIELD_TRAM_BOTTOM (PLAYFIELD_BOTTOM / 16)
 
-#if (GAME == 2)
-	// Fills the playfield's area on the text RAM with transparency.
-	// (Future games use a near function.)
-	void far playfield_tram_wipe(void);
-#endif
-
 #define playfield_encloses_yx_lt_ge(center_x, center_y, w, h) ( \
 	/* Casting the center coordinate allows this macro to easily be used */ \
 	/* with the _AX and _DX pseudoregisters after motion_update(). */ \

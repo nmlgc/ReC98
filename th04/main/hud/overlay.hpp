@@ -1,8 +1,15 @@
 /// TRAM text overlaid on top of the playfield
 /// -------------------------------------------
 
-extern nearfunc_t_near overlay_text; // Rendered first
-extern nearfunc_t_near overlay_popup; // Rendered second
+extern nearfunc_t_near overlay1; // Rendered first
+extern nearfunc_t_near overlay2; // Rendered second
+
+// Fills the playfield area on the text RAM with transparent spaces.
+void near overlay_wipe(void);
+
+// Fills the playfield area on the text RAM with black, effectively hiding the
+// playfield in the process.
+void near overlay_black(void);
 
 // Popup messages for common gameplay events, shown at the top of the playfield
 // ----------------------------------------------------------------------------
@@ -31,7 +38,7 @@ extern unsigned long overlay_popup_bonus;
 	void pascal far overlay_popup_update_and_render(void); \
 	\
 	overlay_popup_id_new = popup_new; \
-	overlay_popup = reinterpret_cast<nearfunc_t_near>( \
+	overlay2 = reinterpret_cast<nearfunc_t_near>( \
 		overlay_popup_update_and_render \
 	);
 // ----------------------------------------------------------------------------

@@ -17,11 +17,11 @@ PLAYFIELD_TRAM_RIGHT = PLAYFIELD_RIGHT / 8
 PLAYFIELD_TRAM_BOTTOM = PLAYFIELD_BOTTOM / 16
 
 if GAME eq 5
-	playfield_tram_x_loop	macro @@atrb:req
+	overlay_x_loop macro @@atrb:req
 		call	text_putsa pascal, PLAYFIELD_TRAM_LEFT, si, _PLAYFIELD_BLANK_ROW, @@atrb
 	endm
 else
-	playfield_tram_x_loop	macro @@atrb:req
+	overlay_x_loop	macro @@atrb:req
 	local @@x_loop, @@x_more?
 		mov	di, PLAYFIELD_TRAM_LEFT
 		jmp	short @@x_more?
@@ -37,13 +37,13 @@ else
 	endm
 endif
 
-playfield_tram_loop	macro @@atrb:req
+overlay_loop macro @@atrb:req
 	mov	si, PLAYFIELD_TRAM_TOP
 	jmp	short @@y_more?
 ; ---------------------------------------------------------------------------
 
 @@y_loop:
-	playfield_tram_x_loop	<@@atrb>
+	overlay_x_loop	<@@atrb>
 	inc	si
 
 @@y_more?:
@@ -51,23 +51,23 @@ playfield_tram_loop	macro @@atrb:req
 	jl	short @@y_loop
 endm
 
-playfield_tram_loop_func	macro @@funcname:req, @@dist:req, @@atrb:req
+overlay_loop_func macro @@funcname:req, @@dist:req, @@atrb:req
 	public @@funcname
-	@@funcname	proc @@dist
+	@@funcname proc @@dist
 		push	bp
 		mov	bp, sp
 		push	si
 		if GAME ne 5
 			push	di
-			playfield_tram_loop	<@@atrb>
+			overlay_loop	<@@atrb>
 			pop	di
 		else
-			playfield_tram_loop	<@@atrb>
+			overlay_loop	<@@atrb>
 		endif
 		pop	si
 		pop	bp
 		ret
-	@@funcname	endp
+	@@funcname endp
 endm
 
 TILE_W = 16
