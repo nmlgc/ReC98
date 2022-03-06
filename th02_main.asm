@@ -9453,8 +9453,8 @@ sub_FC15	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_FC53	proc near
+public @stage_clear_bonus_animate$qv
+@stage_clear_bonus_animate$qv	proc near
 
 var_C		= byte ptr -0Ch
 var_6		= word ptr -6
@@ -9609,7 +9609,7 @@ loc_FD5A:
 		pop	si
 		leave
 		retn
-sub_FC53	endp
+@stage_clear_bonus_animate$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -14627,7 +14627,7 @@ stones_end	proc far
 		call	sub_12DE0
 		push	1
 		call	sub_1310B
-		call	sub_FC53
+		call	@stage_clear_bonus_animate$qv
 		call	sub_E162
 		inc	_stage_id
 		pop	bp
@@ -17184,7 +17184,7 @@ rika_end	proc far
 		call	sub_12DE0
 		push	1
 		call	sub_1310B
-		call	sub_FC53
+		call	@stage_clear_bonus_animate$qv
 		call	_key_delay
 		call	sub_E162
 		inc	_stage_id
@@ -19793,7 +19793,7 @@ meira_end	proc far
 		call	sub_12DE0
 		push	1
 		call	sub_1310B
-		call	sub_FC53
+		call	@stage_clear_bonus_animate$qv
 		call	_key_delay
 		call	sub_E162
 		inc	_stage_id
@@ -32046,7 +32046,7 @@ marisa_end	proc far
 		mov	bp, sp
 		call	sub_12DE0
 		call	sub_131D9
-		call	sub_FC53
+		call	@stage_clear_bonus_animate$qv
 
 loc_1C27C:
 		call	sub_E162

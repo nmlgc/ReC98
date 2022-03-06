@@ -10082,8 +10082,8 @@ off_16508	dw offset loc_164D7
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_16510	proc near
+public @stage_clear_bonus$qv
+@stage_clear_bonus$qv	proc near
 
 var_6		= byte ptr -6
 var_5		= byte ptr -5
@@ -10251,14 +10251,14 @@ loc_1671B:
 		pop	si
 		leave
 		retn
-sub_16510	endp
+@stage_clear_bonus$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_1673E	proc near
+public @stage_allclear_bonus$qv
+@stage_allclear_bonus$qv	proc near
 
 var_A		= byte ptr -0Ah
 var_9		= byte ptr -9
@@ -10400,7 +10400,7 @@ loc_16939:
 		pop	si
 		leave
 		retn
-sub_1673E	endp
+@stage_allclear_bonus$qv	endp
 
 include th04/main/gather_add.asm
 
@@ -23928,17 +23928,17 @@ loc_1FC95:
 		call	@dialog_animate$qv
 		cmp	_stage_id, 6
 		jz	short loc_1FCCB
-		call	sub_16510
+		call	@stage_clear_bonus$qv
 		jmp	loc_1FD51
 ; ---------------------------------------------------------------------------
 
 loc_1FCCB:
-		call	sub_1673E
+		call	@stage_allclear_bonus$qv
 		jmp	loc_1FD51
 ; ---------------------------------------------------------------------------
 
 loc_1FCD1:
-		call	sub_1673E
+		call	@stage_allclear_bonus$qv
 		jmp	short loc_1FD51
 ; ---------------------------------------------------------------------------
 

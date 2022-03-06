@@ -27410,8 +27410,8 @@ off_1D6B9	dw offset loc_1D688
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_1D6C1	proc near
+public @stage_clear_bonus$qv
+@stage_clear_bonus$qv	proc near
 
 var_8		= dword	ptr -8
 var_4		= dword	ptr -4
@@ -27545,14 +27545,14 @@ loc_1D893:
 		pop	si
 		leave
 		retn
-sub_1D6C1	endp
+@stage_clear_bonus$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_1D896	proc near
+public @stage_allclear_bonus$qv
+@stage_allclear_bonus$qv	proc near
 
 var_4		= dword	ptr -4
 
@@ -27658,7 +27658,7 @@ loc_1D9CE:
 		pop	si
 		leave
 		retn
-sub_1D896	endp
+@stage_allclear_bonus$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -28785,7 +28785,7 @@ loc_1E801:
 ; ---------------------------------------------------------------------------
 
 loc_1E89B:
-		call	sub_1D896
+		call	@stage_allclear_bonus$qv
 		inc	_boss_phase_frame
 		pop	bp
 		retn
@@ -28793,12 +28793,12 @@ loc_1E89B:
 
 loc_1E8A4:
 		call	@dialog_animate$qv
-		call	sub_1D6C1
+		call	@stage_clear_bonus$qv
 		jmp	short loc_1E905
 ; ---------------------------------------------------------------------------
 
 loc_1E8AE:
-		call	sub_1D896
+		call	@stage_allclear_bonus$qv
 		jmp	short loc_1E905
 ; ---------------------------------------------------------------------------
 
