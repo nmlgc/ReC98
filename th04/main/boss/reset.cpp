@@ -1,4 +1,4 @@
-char boss_phase_timed_out = 0;
+bool boss_phase_timed_out = false;
 
 void near boss_reset(void)
 {
@@ -14,5 +14,5 @@ void near boss_reset(void)
 	boss.pos.velocity.set(0, 0);
 	boss.damage_this_frame = 0;
 	explosions_small_reset();
-	boss_phase_timed_out = 1;
+	boss_phase_timed_out = true;
 }

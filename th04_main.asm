@@ -12728,8 +12728,7 @@ loc_1422D:
 
 loc_142A2:
 		mov	_bullet_zap_active, 1
-		push	5
-		call	sub_19F6E
+		call	@midboss_score_bonus$qui pascal, 5
 
 loc_142AC:
 		mov	_midboss_phase, PHASE_EXPLODE_BIG
@@ -13094,10 +13093,9 @@ loc_14629:
 		mov	_bullet_zap_active, 1
 		mov	al, byte_2559A
 		mov	ah, 0
-		mov	dx, 14h
+		mov	dx, 20
 		sub	dx, ax
-		push	dx
-		call	sub_19F6E
+		call	@midboss_score_bonus$qui pascal, dx
 		mov	_midboss_phase, PHASE_EXPLODE_BIG
 		mov	_midboss_sprite, 4
 		mov	_midboss_phase_frame, 0
@@ -13991,10 +13989,9 @@ loc_14EB5:
 		mov	_bullet_zap_active, 1
 		mov	al, byte_255B4
 		mov	ah, 0
-		mov	dx, 12h
+		mov	dx, 18
 		sub	dx, ax
-		push	dx
-		call	sub_19F6E
+		call	@midboss_score_bonus$qui pascal, dx
 		call	@items_add$qii11item_type_t pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, IT_BOMB
 		mov	_playfield_shake_anim_time, 12
 
@@ -14575,10 +14572,9 @@ loc_15414:
 		mov	_bullet_zap_active, 1
 		mov	al, byte_255C7
 		mov	ah, 0
-		mov	dx, 1Eh
+		mov	dx, 30
 		sub	dx, ax
-		push	dx
-		call	sub_19F6E
+		call	@midboss_score_bonus$qui pascal, dx
 		mov	_playfield_shake_anim_time, 12
 		mov	_midboss_phase, PHASE_EXPLODE_BIG
 		mov	_midboss_sprite, 4
@@ -16652,8 +16648,7 @@ loc_16723:
 		call	sub_1E64E
 		or	al, al
 		jz	loc_169B8
-		push	0Fh
-		call	sub_19FD8
+		call	@boss_score_bonus$qui pascal, 15
 		call	@boss_items_drop$qv
 
 loc_16742:
@@ -16695,8 +16690,7 @@ loc_16793:
 		call	sub_1E64E
 		or	al, al
 		jz	loc_169B8
-		push	0Fh
-		call	sub_19FD8
+		call	@boss_score_bonus$qui pascal, 15
 		call	@boss_items_drop$qv
 
 loc_167AF:
@@ -16776,8 +16770,7 @@ loc_1683E:
 		call	sub_1E64E
 		or	al, al
 		jz	loc_169B8
-		push	0Fh
-		call	sub_19FD8
+		call	@boss_score_bonus$qui pascal, 15
 		call	@boss_items_drop$qv
 
 loc_1685D:
@@ -16889,8 +16882,7 @@ loc_16963:
 		mov	_bullet_zap_active, al
 		cmp	_boss_mode_change, 0
 		jz	short loc_16986
-		push	3Ch ; '<'
-		call	sub_19FD8
+		call	@boss_score_bonus$qui pascal, 60
 
 loc_16986:
 		mov	_boss_sprite, 4
@@ -19065,8 +19057,7 @@ loc_17C21:
 		mov	_bullet_clear_time, 20
 
 loc_17C30:
-		push	0Ah
-		call	sub_19FD8
+		call	@boss_score_bonus$qui pascal, 10
 		mov	al, byte_25674
 		mov	ah, 0
 		call	@boss_explode_small$q16explosion_type_t pascal, ax
@@ -19089,8 +19080,7 @@ loc_17C54:
 		mov	_bullet_zap_active, al
 		cmp	_boss_mode_change, 0
 		jz	short loc_17C77
-		push	28h ; '('
-		call	sub_19FD8
+		call	@boss_score_bonus$qui pascal, 40
 
 loc_17C77:
 		mov	_boss_sprite, 4
@@ -20546,8 +20536,7 @@ loc_1886E:
 		call	sub_186B9
 		or	al, al
 		jz	loc_189A1
-		push	64h ; 'd'
-		call	sub_19FD8
+		call	@boss_score_bonus$qui pascal, 100
 
 loc_18883:
 		cmp	_bullet_clear_time, 20
@@ -20640,8 +20629,7 @@ loc_1895A:
 		mov	_bullet_zap_active, al
 		cmp	_boss_mode_change, 0
 		jz	short loc_1897E
-		push	0C8h
-		call	sub_19FD8
+		call	@boss_score_bonus$qui pascal, 200
 
 loc_1897E:
 		mov	_boss_sprite, 4
@@ -21731,8 +21719,7 @@ loc_19309:
 		call	sub_1E64E
 		or	al, al
 		jz	loc_195A9
-		push	0Ah
-		call	sub_19FD8
+		call	@boss_score_bonus$qui pascal, 10
 
 loc_19317:
 		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_NW_SE shl 16) or 2050
@@ -21768,8 +21755,7 @@ loc_19353:
 		call	sub_1E64E
 		or	al, al
 		jz	loc_195A9
-		push	0Ah
-		call	sub_19FD8
+		call	@boss_score_bonus$qui pascal, 10
 
 loc_19369:
 		push	(ET_SW_NE shl 16) or 550
@@ -21854,8 +21840,7 @@ loc_19417:
 		call	sub_1E64E
 		or	al, al
 		jz	loc_195A9
-		push	0Ah
-		call	sub_19FD8
+		call	@boss_score_bonus$qui pascal, 10
 
 loc_19425:
 		push	(ET_HORIZONTAL shl 16) or 0
@@ -21992,8 +21977,7 @@ loc_1955E:
 		mov	_bullet_zap_active, al
 		cmp	_boss_mode_change, 0
 		jz	short loc_19581
-		push	14h
-		call	sub_19FD8
+		call	@boss_score_bonus$qui pascal, 20
 
 loc_19581:
 		mov	_boss_sprite, 4
@@ -22738,8 +22722,7 @@ loc_19C61:
 		call	sub_1E64E
 		or	al, al
 		jz	loc_19E8D
-		push	5
-		call	sub_19FD8
+		call	@boss_score_bonus$qui pascal, 5
 
 loc_19C6F:
 		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_NW_SE shl 16) or 450
@@ -22776,8 +22759,7 @@ loc_19CB2:
 		call	sub_1E64E
 		or	al, al
 		jz	loc_19E8D
-		push	5
-		call	sub_19FD8
+		call	@boss_score_bonus$qui pascal, 5
 
 loc_19CC8:
 		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_NW_SE shl 16) or 0
@@ -22928,8 +22910,7 @@ loc_19E3D:
 		mov	_bullet_zap_active, al
 		cmp	_boss_mode_change, 0
 		jz	short loc_19E60
-		push	0Ah
-		call	sub_19FD8
+		call	@boss_score_bonus$qui pascal, 10
 
 loc_19E60:
 		mov	_boss_sprite, 4
@@ -23015,133 +22996,13 @@ loc_19F14:
 sub_19EE4	endp
 
 include th04/main/hud/hud.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_19F6E	proc near
-
-@@x		= word ptr -4
-@@y		= word ptr -2
-arg_0		= word ptr  4
-
-		enter	4, 0
-		push	si
-		push	di
-		mov	ax, [bp+arg_0]
-		imul	ax, 1280
-		movzx	eax, ax
-		add	_score_delta, eax
-		mov	_pointnum_times_2, 0
-		mov	ax, _midboss_pos.cur.x
-		add	ax, (-64 shl 4)
-		mov	[bp+@@y], ax
-		mov	ax, _midboss_pos.cur.y
-		add	ax, (-64 shl 4)
-		mov	[bp+@@x], ax
-		xor	di, di
-		jmp	short loc_19FCD
-; ---------------------------------------------------------------------------
-
-loc_19F9F:
-		call	randring2_next16_mod pascal, (128 shl 4)
-		add	ax, [bp+@@y]
-		mov	si, ax
-		or	si, si
-		jge	short loc_19FB2
-		xor	si, si
-		jmp	short loc_19FBB
-; ---------------------------------------------------------------------------
-
-loc_19FB2:
-		cmp	si, (PLAYFIELD_W shl 4)
-		jle	short loc_19FBB
-		mov	si, (PLAYFIELD_W shl 4)
-
-loc_19FBB:
-		push	si
-		call	randring2_next16_mod pascal, (128 shl 4)
-		add	ax, [bp+@@x]
-		push	ax
-		push	1280
-		call	@pointnums_add_yellow$qiiui
-		inc	di
-
-loc_19FCD:
-		cmp	di, [bp+arg_0]
-		jb	short loc_19F9F
-		pop	di
-		pop	si
-		leave
-		retn	2
-sub_19F6E	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_19FD8	proc near
-
-@@y		= word ptr -4
-@@x		= word ptr -2
-arg_0		= word ptr  4
-
-		enter	4, 0
-		push	si
-		push	di
-		mov	ax, [bp+arg_0]
-		imul	ax, 1280
-		movzx	eax, ax
-		add	_score_delta, eax
-		mov	_pointnum_times_2, 0
-		mov	ax, _boss_pos.cur.x
-		add	ax, (-64 shl 4)
-		mov	[bp+@@x], ax
-		mov	ax, _boss_pos.cur.y
-		add	ax, (-64 shl 4)
-		mov	[bp+@@y], ax
-		xor	di, di
-		jmp	short loc_1A037
-; ---------------------------------------------------------------------------
-
-loc_1A009:
-		call	randring2_next16_mod pascal, (128 shl 4)
-		add	ax, [bp+@@x]
-		mov	si, ax
-		or	si, si
-		jge	short loc_1A01C
-		xor	si, si
-		jmp	short loc_1A025
-; ---------------------------------------------------------------------------
-
-loc_1A01C:
-		cmp	si, (PLAYFIELD_W shl 4)
-		jle	short loc_1A025
-		mov	si, (PLAYFIELD_W shl 4)
-
-loc_1A025:
-		push	si
-		call	randring2_next16_mod pascal, (128 shl 4)
-		add	ax, [bp+@@y]
-		push	ax
-		push	1280
-		call	@pointnums_add_yellow$qiiui
-		inc	di
-
-loc_1A037:
-		cmp	di, [bp+arg_0]
-		jb	short loc_1A009
-		mov	_boss_phase_timed_out, 0
-		pop	di
-		pop	si
-		leave
-		retn	2
-sub_19FD8	endp
 main_033_TEXT	ends
 
 MB_DFT_TEXT	segment	byte public 'CODE' use16
+	@MIDBOSS_SCORE_BONUS$QUI procdesc pascal near \
+		units:word
+	@BOSS_SCORE_BONUS$QUI procdesc pascal near \
+		units:word
 	@midboss_defeat_update$qv procdesc pascal near
 MB_DFT_TEXT	ends
 
@@ -25130,8 +24991,7 @@ loc_1B580:
 		call	sub_1E64E
 		or	al, al
 		jz	loc_1B8EA
-		push	14h
-		call	sub_19FD8
+		call	@boss_score_bonus$qui pascal, 20
 		call	@boss_items_drop$qv
 
 loc_1B59A:
@@ -25187,8 +25047,7 @@ loc_1B600:
 		call	sub_1E64E
 		or	al, al
 		jz	loc_1B8EA
-		push	14h
-		call	sub_19FD8
+		call	@boss_score_bonus$qui pascal, 20
 		call	@boss_items_drop$qv
 
 loc_1B623:
@@ -25320,8 +25179,7 @@ loc_1B748:
 		mov	ax, _boss_hp
 		cmp	ax, _boss_phase_end_hp
 		jg	loc_1B8EA
-		push	14h
-		call	sub_19FD8
+		call	@boss_score_bonus$qui pascal, 20
 		call	@boss_items_drop$qv
 
 loc_1B75B:
@@ -25414,8 +25272,7 @@ loc_1B80B:
 		call	sub_1E64E	; default
 		or	al, al
 		jz	loc_1B8EA
-		push	14h
-		call	sub_19FD8
+		call	@boss_score_bonus$qui pascal, 20
 		call	@boss_items_drop$qv
 
 loc_1B81C:
@@ -25477,8 +25334,7 @@ loc_1B8A4:
 		mov	_bullet_zap_active, al
 		cmp	_boss_mode_change, 0
 		jz	short loc_1B8C7
-		push	46h ; 'F'
-		call	sub_19FD8
+		call	@boss_score_bonus$qui pascal, 70
 
 loc_1B8C7:
 		mov	_boss_sprite, 4
@@ -26970,8 +26826,7 @@ loc_1C5F1:
 		mov	_bullet_clear_time, 20
 
 loc_1C600:
-		push	0Ah
-		call	sub_19FD8
+		call	@boss_score_bonus$qui pascal, 10
 		mov	al, byte_25A24
 		mov	ah, 0
 		call	@boss_explode_small$q16explosion_type_t pascal, ax
@@ -26996,8 +26851,7 @@ loc_1C62F:
 		mov	_bullet_zap_active, al
 		cmp	_boss_mode_change, 0
 		jz	short loc_1C652
-		push	28h ; '('
-		call	sub_19FD8
+		call	@boss_score_bonus$qui pascal, 40
 
 loc_1C652:
 		mov	_boss_sprite, 4
@@ -30153,8 +30007,7 @@ loc_1F46F:
 		call	sub_1E64E
 		or	al, al
 		jz	loc_1F8A5
-		push	0Ah
-		call	sub_19FD8
+		call	@boss_score_bonus$qui pascal, 10
 
 loc_1F487:
 		pushd	(0 shl 16) or 6300
@@ -30275,8 +30128,7 @@ loc_1F579:
 		call	sub_1E64E
 		or	al, al
 		jz	loc_1F8A5
-		push	0Ah
-		call	sub_19FD8
+		call	@boss_score_bonus$qui pascal, 10
 
 loc_1F591:
 		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_NW_SE shl 16) or 4500
@@ -30343,8 +30195,7 @@ loc_1F603:
 		call	sub_1E64E
 		or	al, al
 		jz	loc_1F8A5
-		push	0Ah
-		call	sub_19FD8
+		call	@boss_score_bonus$qui pascal, 10
 
 loc_1F61B:
 		push	(ET_SW_NE shl 16) or 2700
@@ -30445,8 +30296,7 @@ loc_1F6E9:
 		call	sub_1E64E
 		or	al, al
 		jz	loc_1F8A5
-		push	0Ah
-		call	sub_19FD8
+		call	@boss_score_bonus$qui pascal, 10
 
 loc_1F701:
 		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_HORIZONTAL shl 16) or 900
@@ -30487,8 +30337,7 @@ loc_1F73A:
 		call	sub_1E64E
 		or	al, al
 		jz	loc_1F8A5
-		push	0Ah
-		call	sub_19FD8
+		call	@boss_score_bonus$qui pascal, 10
 
 loc_1F752:
 		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_VERTICAL shl 16) or 0
@@ -30598,8 +30447,7 @@ loc_1F855:
 		mov	_bullet_zap_active, al
 		cmp	_boss_mode_change, 0
 		jz	short loc_1F878
-		push	28h ; '('
-		call	sub_19FD8
+		call	@boss_score_bonus$qui pascal, 40
 
 loc_1F878:
 		mov	_boss_sprite, 4
@@ -31907,8 +31755,7 @@ loc_2039A:
 		call	sub_20202
 		or	al, al
 		jz	loc_206B6
-		push	64h ; 'd'
-		call	sub_19FD8
+		call	@boss_score_bonus$qui pascal, 100
 
 loc_203AF:
 		pushd	(0 shl 16) or 12700
@@ -31986,8 +31833,7 @@ loc_20441:
 		call	sub_20202
 		or	al, al
 		jz	loc_206B6
-		push	64h ; 'd'
-		call	sub_19FD8
+		call	@boss_score_bonus$qui pascal, 100
 
 loc_20456:
 		push	(ET_HORIZONTAL shl 16) or 8900
@@ -32065,8 +31911,7 @@ loc_204E8:
 		call	sub_20202
 		or	al, al
 		jz	loc_206B6
-		push	64h ; 'd'
-		call	sub_19FD8
+		call	@boss_score_bonus$qui pascal, 100
 
 loc_204FD:
 		push	(ET_HORIZONTAL shl 16) or 5500
@@ -32144,8 +31989,7 @@ loc_2058F:
 		call	sub_20202
 		or	al, al
 		jz	loc_206B6
-		push	64h ; 'd'
-		call	sub_19FD8
+		call	@boss_score_bonus$qui pascal, 100
 
 loc_205A4:
 		push	(ET_HORIZONTAL shl 16) or 3000
@@ -32174,8 +32018,7 @@ loc_205D4:
 		call	sub_20202
 		or	al, al
 		jz	loc_206B6
-		push	64h ; 'd'
-		call	sub_19FD8
+		call	@boss_score_bonus$qui pascal, 100
 
 loc_205ED:
 		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_VERTICAL shl 16) or 0
@@ -32237,8 +32080,7 @@ loc_2066F:
 		mov	_bullet_zap_active, al
 		cmp	_boss_mode_change, 0
 		jz	short loc_20693
-		push	0C8h
-		call	sub_19FD8
+		call	@boss_score_bonus$qui pascal, 200
 
 loc_20693:
 		mov	_boss_sprite, 4

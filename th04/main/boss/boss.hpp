@@ -2,6 +2,11 @@
 // ------
 static const pixel_t BOSS_W = 64;
 static const pixel_t BOSS_H = 64;
+#if (GAME == 5)
+	static const unsigned long BOSS_BONUS_UNIT_VALUE = 1000;
+#else
+	static const unsigned int BOSS_BONUS_UNIT_VALUE = 1280;
+#endif
 
 typedef struct {
 	PlayfieldMotion pos;
@@ -19,6 +24,11 @@ typedef struct {
 
 extern boss_stuff_t boss;
 extern SPPoint boss_hitbox_radius;
+extern bool boss_phase_timed_out;
+
+// Grants a score bonus of [units * BOSS_BONUS_UNIT_VALUE], rendered as one new
+// point number popup per unit around the boss sprite.
+void pascal near boss_score_bonus(unsigned int units);
 
 // Callbacks
 extern  farfunc_t_near boss_update;

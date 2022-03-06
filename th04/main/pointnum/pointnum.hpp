@@ -40,15 +40,16 @@ extern pointnum_t pointnums[POINTNUM_COUNT];
 extern unsigned char pointnum_yellow_p;
 extern unsigned char pointnum_white_p;
 
+// [times_2] is set to this value for all newly added point numbers.
+// Unused in TH05.
+extern bool pointnum_times_2;
+
 #if GAME == 5
 	// Returns the on-screen width of [number] in pixels.
 	upixel_t pascal near pointnum_digits_set(
 		unsigned char near *last_digit, uint16_t points
 	);
 #else
-	// [times_2] is set to this value for for all newly added point numbers.
-	extern bool pointnum_times_2;
-
 	void pascal near pointnum_digits_set(
 		unsigned char near *last_digit, uint16_t points
 	);

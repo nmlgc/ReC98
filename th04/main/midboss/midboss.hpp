@@ -1,3 +1,5 @@
+static const unsigned int MIDBOSS_BONUS_UNIT_VALUE = 1280;
+
 typedef struct {
 	PlayfieldMotion pos;
 	unsigned int frames_until;
@@ -14,6 +16,10 @@ extern midboss_stuff_t midboss;
 
 // Prevents stage enemies from being spawned if `true`.
 extern bool midboss_active;
+
+// Grants a score bonus of [units * MIDBOSS_BONUS_UNIT_VALUE], rendered as one
+// new point number popup per unit around the midboss sprite.
+void pascal near midboss_score_bonus(unsigned int units);
 
 // Callbacks
 extern  farfunc_t_near midboss_update_func;

@@ -10986,7 +10986,7 @@ loc_1721C:
 loc_1722E:
 		cmp	_items_pull_to_player, 0
 		jz	short loc_17264
-		mov	byte_21762, 1
+		mov	_pointnum_times_2, 1
 		mov	[si+item_t.pulled_to_player], 1
 		mov	ax, _player_pos.cur.y
 		sub	ax, [si+item_t.pos.cur.y]
@@ -11067,7 +11067,7 @@ loc_172EC:
 		cmp	di, ITEM_COUNT
 		jl	loc_1721C
 		call	@item_splashes_update$qv
-		mov	byte_21762, 0
+		mov	_pointnum_times_2, 0
 		pop	di
 		pop	si
 		leave
@@ -11116,132 +11116,13 @@ loc_17352:
 sub_17322	endp
 
 include th04/main/hud/hud.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_173AC	proc near
-
-@@y		= word ptr -4
-@@x		= word ptr -2
-arg_0		= word ptr  4
-
-		enter	4, 0
-		push	si
-		push	di
-		mov	ax, [bp+arg_0]
-		imul	ax, 1280
-		movzx	eax, ax
-		add	_score_delta, eax
-		mov	byte_21762, 0
-		mov	ax, _midboss_pos.cur.x
-		add	ax, (-64 shl 4)
-		mov	[bp+@@x], ax
-		mov	ax, _midboss_pos.cur.y
-		add	ax, (-64 shl 4)
-		mov	[bp+@@y], ax
-		xor	di, di
-		jmp	short loc_1740B
-; ---------------------------------------------------------------------------
-
-loc_173DD:
-		call	randring2_next16_mod pascal, (128 shl 4)
-		add	ax, [bp+@@x]
-		mov	si, ax
-		or	si, si
-		jge	short loc_173F0
-		xor	si, si
-		jmp	short loc_173F9
-; ---------------------------------------------------------------------------
-
-loc_173F0:
-		cmp	si, (PLAYFIELD_W shl 4)
-		jle	short loc_173F9
-		mov	si, (PLAYFIELD_W shl 4)
-
-loc_173F9:
-		push	si
-		call	randring2_next16_mod pascal, (128 shl 4)
-		add	ax, [bp+@@y]
-		push	ax
-		push	1280
-		call	@pointnums_add_yellow$qiiui
-		inc	di
-
-loc_1740B:
-		cmp	di, [bp+arg_0]
-		jb	short loc_173DD
-		pop	di
-		pop	si
-		leave
-		retn	2
-sub_173AC	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_17416	proc near
-
-@@y		= word ptr -4
-@@x		= word ptr -2
-arg_0		= word ptr  4
-
-		enter	4, 0
-		push	si
-		push	di
-		movzx	eax, [bp+arg_0]
-		imul	eax, 1000
-		add	_score_delta, eax
-		mov	byte_21762, 0
-		mov	ax, _boss_pos.cur.x
-		add	ax, (-64 shl 4)
-		mov	[bp+@@x], ax
-		mov	ax, _boss_pos.cur.y
-		add	ax, (-64 shl 4)
-		mov	[bp+@@y], ax
-		xor	di, di
-		jmp	short loc_17476
-; ---------------------------------------------------------------------------
-
-loc_17448:
-		call	randring2_next16_mod pascal, (128 shl 4)
-		add	ax, [bp+@@x]
-		mov	si, ax
-		or	si, si
-		jge	short loc_1745B
-		xor	si, si
-		jmp	short loc_17464
-; ---------------------------------------------------------------------------
-
-loc_1745B:
-		cmp	si, (PLAYFIELD_W shl 4)
-		jle	short loc_17464
-		mov	si, (PLAYFIELD_W shl 4)
-
-loc_17464:
-		push	si
-		call	randring2_next16_mod pascal, (128 shl 4)
-		add	ax, [bp+@@y]
-		push	ax
-		push	1000
-		call	@pointnums_add_yellow$qiiui
-		inc	di
-
-loc_17476:
-		cmp	di, [bp+arg_0]
-		jb	short loc_17448
-		mov	_boss_phase_timed_out, 0
-		pop	di
-		pop	si
-		leave
-		retn	2
-sub_17416	endp
 main_033_TEXT	ends
 
 MB_DFT_TEXT	segment	byte public 'CODE' use16
+	@MIDBOSS_SCORE_BONUS$QUI procdesc pascal near \
+		units:word
+	@BOSS_SCORE_BONUS$QUI procdesc pascal near \
+		units:word
 	@midboss_defeat_update$qv procdesc pascal near
 MB_DFT_TEXT	ends
 
@@ -11438,8 +11319,7 @@ loc_1812B:
 		cmp	_midboss_hp, 0
 		jg	short loc_181C4
 		mov	_bullet_zap_active, 1
-		push	5
-		call	sub_173AC
+		call	@midboss_score_bonus$qui pascal, 5
 		call	@items_add$qii11item_type_t pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, IT_BIGPOWER
 
 loc_1818B:
@@ -12149,7 +12029,7 @@ loc_18819:
 		call	sub_1FADD
 		or	al, al
 		jz	loc_188EE
-		call	sub_17416 pascal, 5
+		call	@boss_score_bonus$qui pascal, 5
 
 loc_18827:
 		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_NW_SE shl 16) or 450
@@ -12206,7 +12086,7 @@ loc_1889D:
 		call	sub_1FADD
 		or	al, al
 		jz	short loc_188EE
-		call	sub_17416 pascal, 5
+		call	@boss_score_bonus$qui pascal, 5
 
 loc_188A9:
 		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_SW_NE shl 16) or 0
@@ -12435,8 +12315,7 @@ loc_18A9F:
 		jge	short loc_18ADC
 		cmp	_midboss_hp, 400
 		jg	loc_18BA0
-		push	5
-		call	sub_173AC
+		call	@midboss_score_bonus$qui pascal, 5
 		cmp	_bullet_clear_time, 20
 		jnb	short loc_18ADC
 		mov	_bullet_clear_time, 20
@@ -12464,8 +12343,7 @@ loc_18B24:
 		cmp	_midboss_hp, 0
 		jg	short loc_18BA0
 		mov	_bullet_zap_active, 1
-		push	0Fh
-		call	sub_173AC
+		call	@midboss_score_bonus$qui pascal, 15
 		call	@items_add$qii11item_type_t pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, IT_BOMB
 
 loc_18B67:
@@ -13160,7 +13038,7 @@ loc_19132:
 		call	sub_1FADD
 		or	al, al
 		jz	loc_19263
-		call	sub_17416 pascal, 10
+		call	@boss_score_bonus$qui pascal, 10
 
 loc_19140:
 		push	(ET_NW_SE shl 16) or 1900
@@ -13189,7 +13067,7 @@ loc_19179:
 		call	sub_1FADD
 		or	al, al
 		jz	loc_19263
-		call	sub_17416 pascal, 10
+		call	@boss_score_bonus$qui pascal, 10
 
 loc_19187:
 		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_SW_NE shl 16) or 500
@@ -13240,7 +13118,7 @@ loc_191EB:
 		call	sub_1FADD
 		or	al, al
 		jz	short loc_19263
-		call	sub_17416 pascal, 10
+		call	@boss_score_bonus$qui pascal, 10
 
 loc_191F7:
 		push	(ET_NW_SE shl 16) or 0
@@ -13674,8 +13552,7 @@ loc_195BC:
 		cmp	_midboss_hp, 0
 		jg	short loc_19613
 		mov	_bullet_zap_active, 1
-		push	0Fh
-		call	sub_173AC
+		call	@midboss_score_bonus$qui pascal, 15
 		call	@items_add$qii11item_type_t pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, IT_1UP
 
 loc_195DA:
@@ -14987,7 +14864,7 @@ loc_1A1E7:
 		call	sub_1FADD
 		or	al, al
 		jz	loc_1A3B2
-		call	sub_17416 pascal, 7
+		call	@boss_score_bonus$qui pascal, 7
 		call	@boss_items_drop$qv
 
 loc_1A1F8:
@@ -15049,7 +14926,7 @@ loc_1A284:
 		call	sub_1FADD
 		cmp	_boss_phase_frame, 600
 		jl	loc_1A3B2
-		call	sub_17416 pascal, 5
+		call	@boss_score_bonus$qui pascal, 5
 		call	@boss_explode_small$q16explosion_type_t pascal, ET_NW_SE
 		cmp	_bullet_clear_time, 20
 		jnb	short loc_1A2D7
@@ -16798,8 +16675,7 @@ loc_1B34A:
 		cmp	_midboss_hp, 0
 		jg	short loc_1B3A1
 		mov	_bullet_zap_active, 1
-		push	0Fh
-		call	sub_173AC
+		call	@midboss_score_bonus$qui pascal, 15
 		call	@items_add$qii11item_type_t pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, IT_BOMB
 
 loc_1B368:
@@ -17596,7 +17472,7 @@ loc_1BB6D:
 		call	sub_1FADD
 		or	al, al
 		jz	loc_1BD09
-		call	sub_17416 pascal, 10
+		call	@boss_score_bonus$qui pascal, 10
 
 loc_1BB7B:
 		push	(ET_NW_SE shl 16) or 3200
@@ -17652,7 +17528,7 @@ loc_1BBFA:
 		call	sub_1FADD
 		or	al, al
 		jz	loc_1BD09
-		call	sub_17416 pascal, 10
+		call	@boss_score_bonus$qui pascal, 10
 
 loc_1BC08:
 		push	(ET_SW_NE shl 16) or 1200
@@ -17677,7 +17553,7 @@ loc_1BC2F:
 		call	sub_1FADD
 		or	al, al
 		jz	loc_1BD09
-		call	sub_17416 pascal, 10
+		call	@boss_score_bonus$qui pascal, 10
 
 loc_1BC48:
 		push	(ET_HORIZONTAL shl 16) or 0
@@ -18777,7 +18653,7 @@ loc_1C67C:
 		call	sub_1FADD
 		or	al, al
 		jz	loc_1C805
-		call	sub_17416 pascal, 10
+		call	@boss_score_bonus$qui pascal, 10
 
 loc_1C68A:
 		push	(ET_NW_SE shl 16) or 2800
@@ -18802,7 +18678,7 @@ loc_1C6B2:
 		call	sub_1FADD
 		or	al, al
 		jz	loc_1C805
-		call	sub_17416 pascal, 10
+		call	@boss_score_bonus$qui pascal, 10
 
 loc_1C6CB:
 		xor	si, si
@@ -18867,7 +18743,7 @@ loc_1C741:
 		call	sub_1FADD
 		or	al, al
 		jz	loc_1C805
-		call	sub_17416 pascal, 10
+		call	@boss_score_bonus$qui pascal, 10
 
 loc_1C74F:
 		push	(ET_NW_SE shl 16) or 0
@@ -19921,7 +19797,7 @@ loc_1D3F3:
 		call	sub_1FADD
 		or	al, al
 		jz	loc_1D513
-		call	sub_17416 pascal, 10
+		call	@boss_score_bonus$qui pascal, 10
 
 loc_1D40A:
 		cmp	_boss_phase, 2
@@ -19961,7 +19837,7 @@ loc_1D458:
 		call	sub_1FADD
 		or	al, al
 		jz	loc_1D513
-		call	sub_17416 pascal, 10
+		call	@boss_score_bonus$qui pascal, 10
 
 loc_1D472:
 		cmp	_boss_phase, 4
@@ -19986,7 +19862,7 @@ loc_1D49A:
 		call	sub_1FADD
 		or	al, al
 		jz	short loc_1D513
-		call	sub_17416 pascal, 10
+		call	@boss_score_bonus$qui pascal, 10
 
 loc_1D4B1:
 		push	(ET_NW_SE shl 16) or 0
@@ -21295,7 +21171,7 @@ loc_1E2DC:
 		call	sub_1FADD
 		or	al, al
 		jz	loc_1E527
-		call	sub_17416 pascal, 10
+		call	@boss_score_bonus$qui pascal, 10
 
 loc_1E2EA:
 		cmp	byte_2D080, 0
@@ -21360,7 +21236,7 @@ loc_1E38E:
 		call	sub_1FADD
 		or	al, al
 		jz	loc_1E527
-		call	sub_17416 pascal, 25
+		call	@boss_score_bonus$qui pascal, 25
 
 loc_1E3AB:
 		cmp	byte_2D080, 0
@@ -21434,7 +21310,7 @@ loc_1E431:
 loc_1E45A:
 		or	di, di
 		jz	loc_1E527
-		call	sub_17416 pascal, 25
+		call	@boss_score_bonus$qui pascal, 25
 
 loc_1E465:
 		cmp	byte_2D080, 0
@@ -21835,8 +21711,7 @@ loc_1E776:
 		jnz	short loc_1E7AF
 		cmp	_midboss_hp, 1000
 		jge	short loc_1E7AF
-		push	0Ah
-		call	sub_173AC
+		call	@midboss_score_bonus$qui pascal, 10
 		cmp	_bullet_clear_time, 20
 		jnb	short loc_1E7A4
 		mov	_bullet_clear_time, 20
@@ -21881,8 +21756,7 @@ loc_1E7F2:
 		cmp	_midboss_hp, 0
 		jg	short loc_1E864
 		mov	_bullet_zap_active, 1
-		push	1Eh
-		call	sub_173AC
+		call	@midboss_score_bonus$qui pascal, 30
 		call	@items_add$qii11item_type_t pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, IT_1UP
 
 loc_1E82B:
@@ -23098,7 +22972,7 @@ loc_1F403:
 		call	sub_1F21A
 		or	ax, ax
 		jz	loc_1F666
-		call	sub_17416 pascal, 20
+		call	@boss_score_bonus$qui pascal, 20
 
 loc_1F412:
 		mov	al, byte_2D07F
@@ -23172,7 +23046,7 @@ loc_1F4C5:
 		call	sub_1F21A
 		or	ax, ax
 		jz	loc_1F666
-		call	sub_17416 pascal, 20
+		call	@boss_score_bonus$qui pascal, 20
 
 loc_1F4D4:
 		mov	al, byte_2D07F
@@ -23677,8 +23551,7 @@ loc_1F936:
 		cmp	_midboss_hp, 0
 		jg	short loc_1F9A1
 		mov	_bullet_zap_active, 1
-		push	1Eh
-		call	sub_173AC
+		call	@midboss_score_bonus$qui pascal, 30
 		call	@items_add$qii11item_type_t pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, IT_1UP
 
 loc_1F968:
@@ -23831,7 +23704,7 @@ include th04/main/boss/end.asm
 
 boss_death_sequence_function	proc near
 
-n1000		= word ptr  4
+@@units		= word ptr  4
 
 		push	bp
 		mov	bp, sp
@@ -23858,7 +23731,7 @@ loc_1FBED:
 		mov	_bullet_zap_active, al
 		cmp	_boss_mode_change, 0;m_bSuccessDefeat
 		jz	short loc_1FC10
-		call	sub_17416 pascal, [bp+n1000]
+		call	@boss_score_bonus$qui pascal, [bp+@@units]
 
 loc_1FC10:
 		mov	_boss_sprite, 4
@@ -24140,8 +24013,7 @@ off_2129C	dw offset _bullets_add_regular
 include th02/sprites/pellet.asp
 include th04/sprites/pelletbt.asp
 include th02/sprites/sparks.asp
-byte_21762	db 0
-		db    0
+include th04/main/pointnum/pointnum[data].asm
 include th04/sprites/pointnum.asp
 include th05/formats/bb_playchar[data].asm
 public _shinki_bg_linesets_zoomed_out, _shinki_bg_type_a_particles_alive
