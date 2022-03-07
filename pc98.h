@@ -22,6 +22,7 @@ typedef int uvram_word_amount_t;
 typedef int uvram_dword_amount_t;
 
 // TRAM widths and object-space coordinates
+typedef int tram_ank_amount_t;
 typedef int tram_kanji_amount_t;
 typedef unsigned int utram_kanji_amount_t;
 /// ------

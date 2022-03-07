@@ -77,27 +77,37 @@ extern unsigned char titles_frame;
 #endif
 // --------------------------
 
+// Coordinates
+// -----------
+
+const subpixel_t STAGE_NUM_CENTER_Y = TO_SP((PLAYFIELD_H / 2) - GLYPH_H);
+const subpixel_t STAGE_TITLE_CENTER_Y = TO_SP((PLAYFIELD_H / 2) + GLYPH_H);
+const subpixel_t BGM_CENTER_Y = TO_SP(PLAYFIELD_H - (GLYPH_H / 2));
+const tram_y_t POPUP_TRAM_Y = (PLAYFIELD_TRAM_TOP + 1);
+
+const int POPUP_FRAMES_UNTIL_OUT_DISSOLVE = 192;
+
+#define vram_y_to_tram(y) (PLAYFIELD_TRAM_TOP + (TO_PIXEL(y) / GLYPH_H))
+
+const tram_ank_amount_t STAGE_NUM_W = ((sizeof(gStage_1) - 1) * GAIJI_TRAM_W);
+const tram_ank_amount_t STAGE_NUM_FE_W = (
+	(sizeof(gFINAL_STAGE) - 1) * GAIJI_TRAM_W
+);
+const tram_x_t STAGE_NUM_TRAM_LEFT = (
+	PLAYFIELD_TRAM_CENTER_X - (STAGE_NUM_W / 2)
+);
+const tram_x_t STAGE_NUM_FE_TRAM_LEFT = (
+	PLAYFIELD_TRAM_CENTER_X - (STAGE_NUM_FE_W / 2)
+);
+
+const tram_y_t STAGE_NUM_TRAM_CENTER_Y = vram_y_to_tram(STAGE_NUM_CENTER_Y);
+const tram_y_t STAGE_TITLE_TRAM_CENTER_Y = vram_y_to_tram(STAGE_TITLE_CENTER_Y);
+const tram_y_t BGM_TRAM_Y = vram_y_to_tram(BGM_CENTER_Y);
+const tram_x_t BGM_TRAM_RIGHT = (PLAYFIELD_TRAM_RIGHT - 1);
+// -----------
+
 // Stage and BGM titles
 // --------------------
-
-#define STAGE_NUM_CENTER_Y 168
-#define STAGE_TITLE_CENTER_Y 200
-#define BGM_CENTER_Y 360
-static const tram_y_t POPUP_TRAM_Y = (PLAYFIELD_TRAM_TOP + 1);
-
-#define POPUP_FRAMES_UNTIL_OUT_DISSOLVE 192
-
-#define vram_y_to_tram(y) (PLAYFIELD_TRAM_TOP + (y / GLYPH_H))
-
-#define STAGE_NUM_W ((sizeof(gStage_1) - 1) * GAIJI_TRAM_W)
-#define STAGE_NUM_FE_W ((sizeof(gFINAL_STAGE) - 1) * GAIJI_TRAM_W)
-#define STAGE_NUM_TRAM_LEFT (PLAYFIELD_TRAM_CENTER_X - (STAGE_NUM_W / 2))
-#define STAGE_NUM_FE_TRAM_LEFT (PLAYFIELD_TRAM_CENTER_X - (STAGE_NUM_FE_W / 2))
-
-#define STAGE_NUM_TRAM_CENTER_Y (vram_y_to_tram(STAGE_NUM_CENTER_Y))
-#define STAGE_TITLE_TRAM_CENTER_Y (vram_y_to_tram(STAGE_TITLE_CENTER_Y))
-#define BGM_TRAM_Y (vram_y_to_tram(BGM_CENTER_Y))
-#define BGM_TRAM_RIGHT (PLAYFIELD_TRAM_RIGHT - 1)
 
 inline tram_x_t bgm_note_tram_left(int title_len) {
 	return ((BGM_TRAM_RIGHT - (GAIJI_TRAM_W + 1)) - title_len);
@@ -110,7 +120,9 @@ inline tram_x_t bgm_title_tram_left(int title_len) {
 // with the given halfwidth length, starting at the given text RAM X column
 // and playfield-space Y position.
 // Assumes that the GRCG is active, and set to the intended color.
-void pascal near dissolve_put(tram_x_t tram_left, subpixel_t top, int ank_len)
+void pascal near dissolve_put(
+	tram_x_t tram_left, subpixel_t top, tram_ank_amount_t ank_len
+)
 {
 	vram_x_t vram_left = tram_left;
 	vram_x_t vram_right = ank_len;
@@ -138,18 +150,19 @@ void near overlay_titles_invalidate(void)
 	if(frames >= POPUP_FRAMES_UNTIL_OUT_DISSOLVE || frames <= 34) {
 		tile_invalidate_box.x = PLAYFIELD_W;
 		tile_invalidate_box.y = BB_TXT_H;
-		tiles_invalidate_around_vram_xy(PLAYFIELD_W / 2, STAGE_NUM_CENTER_Y);
-		tiles_invalidate_around_vram_xy(PLAYFIELD_W / 2, STAGE_TITLE_CENTER_Y);
-		tiles_invalidate_around_vram_xy(PLAYFIELD_W / 2, BGM_CENTER_Y);
+		tiles_invalidate_around_xy(to_sp(PLAYFIELD_W / 2), STAGE_NUM_CENTER_Y);
+		tiles_invalidate_around_xy(
+			to_sp(PLAYFIELD_W / 2), STAGE_TITLE_CENTER_Y
+		);
+		tiles_invalidate_around_xy(to_sp(PLAYFIELD_W / 2), BGM_CENTER_Y);
 	}
 }
 
 inline void bgm_note_dissolve_put(const int& len) {
-	dissolve_put(bgm_note_tram_left(len), to_sp(BGM_CENTER_Y), GAIJI_TRAM_W);
+	dissolve_put(bgm_note_tram_left(len), BGM_CENTER_Y, GAIJI_TRAM_W);
 }
-
 inline void bgm_title_dissolve_put(const int& len) {
-	dissolve_put(bgm_title_tram_left(len), to_sp(BGM_CENTER_Y), len);
+	dissolve_put(bgm_title_tram_left(len), BGM_CENTER_Y, len);
 }
 
 #define bgm_string_put(str, len) \
@@ -161,12 +174,10 @@ inline void titles_dissolve_put(const int& bgm_len) {
 
 	grcg_setcolor_direct_seg1(11); // Yellow
 	if(stage_id < 5) {
-		dissolve_put(
-			STAGE_NUM_TRAM_LEFT, to_sp(STAGE_NUM_CENTER_Y), STAGE_NUM_W
-		);
+		dissolve_put(STAGE_NUM_TRAM_LEFT, STAGE_NUM_CENTER_Y, STAGE_NUM_W);
 	} else {
 		dissolve_put(
-			STAGE_NUM_FE_TRAM_LEFT, to_sp(STAGE_NUM_CENTER_Y), STAGE_NUM_FE_W
+			STAGE_NUM_FE_TRAM_LEFT, STAGE_NUM_CENTER_Y, STAGE_NUM_FE_W
 		);
 	}
 	bgm_note_dissolve_put(bgm_len);
@@ -175,7 +186,7 @@ inline void titles_dissolve_put(const int& bgm_len) {
 	bgm_title_dissolve_put(bgm_len);
 	dissolve_put(
 		(PLAYFIELD_TRAM_CENTER_X - (stage_title_len / 2)),
-		to_sp(STAGE_TITLE_CENTER_Y),
+		STAGE_TITLE_CENTER_Y,
 		stage_title_len
 	);
 	grcg_off();
