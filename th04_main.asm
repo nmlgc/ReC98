@@ -9124,7 +9124,7 @@ var_1		= byte ptr -1
 
 loc_10DC6:
 		mov	_overlay1, offset nullfunc_near
-		call	gaiji_putsa pascal, (18 shl 16) + 12, ds, offset gDEMO_PLAY, TX_YELLOW + TX_BLINK
+		call	gaiji_putsa pascal, (18 shl 16) + 12, ds, offset _gDEMO_PLAY, TX_YELLOW + TX_BLINK
 
 loc_10DDE:
 		mov	_titles_frame, 0
@@ -32653,36 +32653,6 @@ _enemies_gone	dw 0
 _enemies_killed	dw 0
 byte_22EA2	db 0
 include th04/main/hud/overlay[data].asm
-public _STAGE_TITLES, _BGM_TITLES
-_STAGE_TITLES	label dword
-		dd aMCB@bPhantomLa	; "Œ¶–ì@` Phantom Land "
-		dd aMCsb@bPhantomN	; "Œ¶–é@` Phantom Night"
-		dd aMKib@bLakeOfBl	; "ŒÍŠ‰@` Lake of Blood"
-		dd aCChb@bDarkness	; "–»—H@` Darkness "
-		dd aCMB@bDreamOfFr	; "–²Œ¶@` Dream of Frail Girl"
-		dd aMSzb@bPhantasm	; "Œ¶‘z@` Phantasmagoria "
-		dd aTMvb@bRaspberr	; "’ÇŒ‚@` Raspberry Trap "
-		dd aVVVcvVvmnvRViv	; "‚·‚Î‚ç‚µ‚¢ŒN‚ÉÃ‚©‚È÷‚è‚ğ@` Puckish "...
-_BGM_TITLES		label dword
-		dd aWitchingDream	; "Witching Dream"
-		dd aSeleneSLight	; "Selene's light"
-		dd aSxp			; "‘•üí@` Decoration Battle"
-		dd aBreakTheSabbat	; "Break the Sabbath"
-		dd aNglLB@bScarlet	; "g‹¿‹È@` Scarlet Phoneme"
-		dd aBadApple		; "BAD Apple!!"
-		dd aCRab@bPerditio	; "—ìí@` Perdition crisis "
-		dd aGagkgxgGggxgeg	; "ƒAƒŠƒXƒ}ƒGƒXƒeƒ‰"
-		dd aRpvKab@bCasket	; "¯‚ÌŠí@` Casket of	Star "
-		dd aLotusLove		; "Lotus Love"
-		dd aCVVslXB@bSleep	; "–°‚ê‚é‹°•|@` Sleeping Terror"
-		dd aDreamLand		; "Dream Land"
-		dd aChcB@bInanimat	; "—H–²@` Inanimate Dream "
-		dd aLVVVsv		; "‹Ö‚¶‚´‚é‚ğ‚¦‚È‚¢—V‹Y	"
-		dd aGbgcghmSzb@bIc	; "ƒƒCƒhŒ¶‘z@` Icemilk Magic	"
-		dd aVivavvvvilcvb@	; "‚©‚í‚¢‚¢ˆ«–‚@` Innocence"
-		dd aPnpcuyszlB@bCa	; "­—ãY‘z‹È@` Capriccio "
-include th04/gaiji/demoplay[data].asm
-aPLAYFIELD_BLANK_ROW	db '                                                ',0
 aMCB@bPhantomLa	db 'Œ¶–ì@` Phantom Land ',0
 aMCsb@bPhantomN	db 'Œ¶–é@` Phantom Night',0
 aMKib@bLakeOfBl	db 'ŒÍŠ‰@` Lake of Blood',0

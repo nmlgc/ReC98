@@ -31,3 +31,10 @@ _overlay2	dw ?
 _titles_frame	db ?
 	evendata
 _overlay_popup_bonus	dd ?
+
+if (GAME eq 5)
+	public _stage_title, _stage_bgm_title, _boss_bgm_title
+	_stage_title    	dd ?
+	_stage_bgm_title	dd ?
+	_boss_bgm_title 	dd ?
+endif

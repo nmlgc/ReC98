@@ -7544,7 +7544,7 @@ loc_11936:
 
 loc_1193E:
 		mov	_overlay1, offset nullfunc_near
-		call	gaiji_putsa pascal, (18 shl 16) + 12, ds, offset gDEMO_PLAY, TX_YELLOW + TX_BLINK
+		call	gaiji_putsa pascal, (18 shl 16) + 12, ds, offset _gDEMO_PLAY, TX_YELLOW + TX_BLINK
 
 loc_11956:
 		mov	_titles_frame, 0
@@ -24276,8 +24276,6 @@ off_22884	dw offset sub_1F776
 		dw offset sub_1F823
 byte_2288A	db 0
 include th04/main/hud/overlay[data].asm
-include th04/gaiji/demoplay[data].asm
-aPLAYFIELD_BLANK_ROW	db '                                                ',0
 	evendata
 _SHOT_FUNCS label word
 	; Reimu
@@ -24500,11 +24498,6 @@ patnum_2CE64	dw ?
 fp_2CE66	dw ?
 fp_2CE68	dw ?
 include th04/main/hud/overlay[bss].asm
-
-public _stage_title, _stage_bgm_title, _boss_bgm_title
-_stage_title    	dd ?
-_stage_bgm_title	dd ?
-_boss_bgm_title 	dd ?
 word_2CE9E	dw ?
 include th04/main/player/pos[bss].asm
 include th05/main/player/speed[bss].asm

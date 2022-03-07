@@ -31,37 +31,54 @@ extern "C" void pascal near tiles_invalidate_around(
 #define gaiji_putsa(left, y, str, atrb) \
 	gaiji_putsa(left, y, reinterpret_cast<const char *>(str), atrb);
 
-// MODDERS: Keep this up-to-date!
-static const unsigned int POPUP_STRING_MAX_LEN = 8;
+// String constants and state
+// --------------------------
 
+extern unsigned char boss_bgm_frame; // = 0
+extern unsigned char popup_frame; // = 0
+
+extern gaiji_th04_t gStage_1[8];
+extern const gaiji_th04_t gFINAL_STAGE[12];
+extern const gaiji_th04_t gEXTRA_STAGE[12];
+extern const gaiji_th04_t gpHISCORE_ENTRY[];
+extern const gaiji_th04_t gpEXTEND[];
+extern const gaiji_th04_t gpBONUS[];
+extern const gaiji_th04_t gpFULL_POWERUP[];
+#if (GAME == 5)
+	extern const gaiji_th04_t gpDREAMBONUS_MAX[];
+#endif
+
+// MODDERS: Keep this up-to-date!
+static const utram_kanji_amount_t POPUP_STRING_MAX_LEN = 8;
 extern const gaiji_th04_t* POPUP_STRINGS[];
 
+extern unsigned char dissolve_sprite; // = 0
 extern const char* PLAYFIELD_BLANK_ROW;
 
-/// Stage and BGM titles
-/// --------------------
-
-extern unsigned char boss_bgm_frame;
-extern unsigned char titles_frame;
-extern unsigned char dissolve_sprite;
 extern int stage_title_len;
 extern int stage_bgm_title_len;
-extern int boss_bgm_title_len;
+#if (GAME == 4)
+	extern unsigned char stage_title_id;
+#endif
+
+// Pre-declarations, since we want some of the data to be function-static, but
+// still need to preserve the original order
+extern unsigned char titles_frame;
 #if (GAME == 5)
 	extern char *stage_title;
 	extern char *stage_bgm_title;
 	extern char *boss_bgm_title;
 #else
-	extern unsigned char stage_title_id;
 	extern const char* BGM_TITLES[];
 	extern const char* STAGE_TITLES[];
 	#define stage_title (STAGE_TITLES[stage_title_id])
 	#define stage_bgm_title (BGM_TITLES[bgm_title_id])
 	#define boss_bgm_title stage_bgm_title
 #endif
-extern char gStage_1[8];
-extern const char gFINAL_STAGE[12];
-extern const char gEXTRA_STAGE[12];
+// --------------------------
+
+// Stage and BGM titles
+// --------------------
 
 #define STAGE_NUM_CENTER_Y 168
 #define STAGE_TITLE_CENTER_Y 200
@@ -82,12 +99,10 @@ static const tram_y_t POPUP_TRAM_Y = (PLAYFIELD_TRAM_TOP + 1);
 #define BGM_TRAM_Y (vram_y_to_tram(BGM_CENTER_Y))
 #define BGM_TRAM_RIGHT (PLAYFIELD_TRAM_RIGHT - 1)
 
-inline tram_x_t bgm_note_tram_left(int title_len)
-{
+inline tram_x_t bgm_note_tram_left(int title_len) {
 	return ((BGM_TRAM_RIGHT - (GAIJI_TRAM_W + 1)) - title_len);
 }
-inline tram_x_t bgm_title_tram_left(int title_len)
-{
+inline tram_x_t bgm_title_tram_left(int title_len) {
 	return (BGM_TRAM_RIGHT - title_len);
 }
 
@@ -129,13 +144,11 @@ void near overlay_titles_invalidate(void)
 	}
 }
 
-inline void bgm_note_dissolve_put(const int& len)
-{
+inline void bgm_note_dissolve_put(const int& len) {
 	dissolve_put(bgm_note_tram_left(len), to_sp(BGM_CENTER_Y), GAIJI_TRAM_W);
 }
 
-inline void bgm_title_dissolve_put(const int& len)
-{
+inline void bgm_title_dissolve_put(const int& len) {
 	dissolve_put(bgm_title_tram_left(len), to_sp(BGM_CENTER_Y), len);
 }
 
@@ -143,8 +156,7 @@ inline void bgm_title_dissolve_put(const int& len)
 	gaiji_putca(bgm_note_tram_left(len), BGM_TRAM_Y, 3, TX_YELLOW); \
 	text_putsa(bgm_title_tram_left(len), BGM_TRAM_Y, str, TX_WHITE);
 
-inline void titles_dissolve_put(const int& bgm_len)
-{
+inline void titles_dissolve_put(const int& bgm_len) {
 	grcg_setmode_rmw_seg1();
 
 	grcg_setcolor_direct_seg1(11); // Yellow
@@ -198,8 +210,7 @@ inline void titles_dissolve_put(const int& bgm_len)
 	); \
 	bgm_string_put(bgm_str, bgm_len);
 
-static inline void boss_bgm_dissolve_put(const int& bgm_len)
-{
+inline void boss_bgm_dissolve_put(const int& bgm_len) {
 	grcg_setmode_rmw_seg1();
 
 	grcg_setcolor_direct_seg1(11);	// Yellow
@@ -274,6 +285,8 @@ void pascal near overlay_titles_update_and_render(void)
 
 void pascal near overlay_boss_bgm_update_and_render(void)
 {
+	extern int boss_bgm_title_len;
+
 	#define frames boss_bgm_frame
 	if(frames >= POPUP_FRAMES_UNTIL_OUT_DISSOLVE) {
 		dissolve_out_update(frames);
@@ -302,7 +315,7 @@ void pascal near overlay_boss_bgm_update_and_render(void)
 	frames++;
 	#undef frames
 }
-/// --------------------
+// --------------------
 
 // Popup messages for common gameplay events, shown at the top of the playfield
 // ----------------------------------------------------------------------------
@@ -324,7 +337,6 @@ inline void near popup_put_points(const unsigned long &points) {
 
 void pascal near overlay_popup_update_and_render(void)
 {
-	#define frame	popup_frame
 	#define gaiji_len	popup_gaiji_len
 	#define id_cur	popup_id_cur
 	#define dest_reached	popup_dest_reached
@@ -335,7 +347,6 @@ void pascal near overlay_popup_update_and_render(void)
 	#define cur_tram_right() \
 		(cur_tram_left + (gaiji_len * GAIJI_TRAM_W))
 
-	extern unsigned char frame;
 	extern int gaiji_len;
 	extern popup_id_t id_cur;
 	extern bool dest_reached;
@@ -357,12 +368,15 @@ void pascal near overlay_popup_update_and_render(void)
 	// Also note how the lack of a POPUP_NONE constant is the only reason why
 	// this function has to be conditionally executed via the [popup] function
 	// pointer...
-	if((overlay_popup_id_new != id_cur) && (frame >= (POPUP_DURATION / 2))) {
+	if(
+		(overlay_popup_id_new != id_cur) &&
+		(popup_frame >= (POPUP_DURATION / 2))
+	) {
 		line_wipe(POPUP_TRAM_Y);
 		line_wipe(BGM_TRAM_Y); // Why though?
-		frame = 0; // Re-initialize
+		popup_frame = 0; // Re-initialize
 	}
-	if(frame == 0) {
+	if(popup_frame == 0) {
 		id_cur = overlay_popup_id_new;
 		for(i = 0; i < (sizeof(shiftbuf) - 1); i++) {
 			shiftbuf[i] = g_EMPTY;
@@ -382,19 +396,19 @@ void pascal near overlay_popup_update_and_render(void)
 		dest_reached = false;
 	}
 
-	if(frame >= POPUP_DURATION) {
+	if(popup_frame >= POPUP_DURATION) {
 		line_wipe(POPUP_TRAM_Y);
-		frame = 0;
+		popup_frame = 0;
 		overlay2 = nullfunc_near;
 		return;
 	}
 
-	if(frame < (gaiji_len - 1)) {
+	if(popup_frame < (gaiji_len - 1)) {
 		// Shift in a new gaiji
 		for(i = 0; i < (gaiji_len - 1); i++) {
 			shiftbuf[i] = shiftbuf[i + 1];
 		}
-		shiftbuf[gaiji_len - 1] = POPUP_STRINGS[id_cur][frame];
+		shiftbuf[gaiji_len - 1] = POPUP_STRINGS[id_cur][popup_frame];
 		gaiji_putsa(cur_tram_left, POPUP_TRAM_Y, shiftbuf, TX_WHITE);
 	} else if(cur_tram_left > dest_tram_left) {
 		// (Should really be !=, but whatever.) Use the full, unshifted string
@@ -407,7 +421,7 @@ void pascal near overlay_popup_update_and_render(void)
 		// "If I'd move at 1 TRAM column per frame, I'd have to clip the
 		// overhanging second half of the last gaiji. Nah, let's just go twice
 		// the speed :zunpet:"
-		popup_cur_tram_left -= 2;
+		cur_tram_left -= GAIJI_TRAM_W;
 	} else {
 		if(!dest_reached) {
 			dest_reached = true;
@@ -420,7 +434,7 @@ void pascal near overlay_popup_update_and_render(void)
 			popup_put_points(overlay_popup_bonus);
 		}
 	}
-	frame++;
+	popup_frame++;
 
 	#undef cur_tram_right
 	#undef dest_tram_left
@@ -429,7 +443,6 @@ void pascal near overlay_popup_update_and_render(void)
 	#undef dest_reached
 	#undef id_cur
 	#undef gaiji_len
-	#undef frame
 }
 
 #if (GAME == 4)
@@ -464,3 +477,16 @@ void pascal near overlay_popup_update_and_render(void)
 	}
 #endif
 // ----------------------------------------------------------------------------
+
+// TODO: These need to be turned into definitions once we can.
+extern unsigned char bgm_title_id;
+extern popup_id_t overlay_popup_id_new;
+extern nearfunc_t_near overlay1;
+extern nearfunc_t_near overlay2;
+extern unsigned char titles_frame;
+extern unsigned long overlay_popup_bonus;
+#if (GAME == 5)
+	extern char *stage_title;
+	extern char *stage_bgm_title;
+	extern char *boss_bgm_title;
+#endif

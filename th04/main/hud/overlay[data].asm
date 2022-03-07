@@ -1,4 +1,4 @@
-public _popup_frame, _boss_bgm_frame
+public _boss_bgm_frame, _popup_frame
 public _bb_txt_seg
 public _gStage_1, _gFINAL_STAGE, _gEXTRA_STAGE
 public _POPUP_STRINGS
@@ -34,3 +34,37 @@ endif
 _dissolve_sprite	db 0
 	evendata
 _PLAYFIELD_BLANK_ROW	dd aPLAYFIELD_BLANK_ROW
+
+if (GAME eq 4)
+	public _STAGE_TITLES, _BGM_TITLES
+	_STAGE_TITLES label dword
+		dd aMCB@bPhantomLa
+		dd aMCsb@bPhantomN
+		dd aMKib@bLakeOfBl
+		dd aCChb@bDarkness
+		dd aCMB@bDreamOfFr
+		dd aMSzb@bPhantasm
+		dd aTMvb@bRaspberr
+		dd aVVVcvVvmnvRViv
+	_BGM_TITLES label dword
+		dd aWitchingDream
+		dd aSeleneSLight
+		dd aSxp
+		dd aBreakTheSabbat
+		dd aNglLB@bScarlet
+		dd aBadApple
+		dd aCRab@bPerditio
+		dd aGagkgxgGggxgeg
+		dd aRpvKab@bCasket
+		dd aLotusLove
+		dd aCVVslXB@bSleep
+		dd aDreamLand
+		dd aChcB@bInanimat
+		dd aLVVVsv
+		dd aGbgcghmSzb@bIc
+		dd aVivavvvvilcvb@
+	dd aPnpcuyszlB@bCa
+endif
+public _gDEMO_PLAY
+_gDEMO_PLAY	db 0ADh, 0AEh, 0B6h, 0B8h, 2, 0B9h, 0B5h, 0AAh,	0C2h, 0
+aPLAYFIELD_BLANK_ROW	db '                                                ',0
