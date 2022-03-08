@@ -1,10 +1,11 @@
-public _boss_bgm_frame, _popup_frame
+public _overlay_fade, _boss_bgm_frame, _popup_frame
 public _bb_txt_seg
 public _gStage_1, _gFINAL_STAGE, _gEXTRA_STAGE
 public _POPUP_STRINGS
 public _dissolve_sprite
 public _PLAYFIELD_BLANK_ROW
 
+_overlay_fade	db 0
 _boss_bgm_frame	db 0
 _popup_frame	db 0
 	evendata

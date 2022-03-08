@@ -1,6 +1,17 @@
 /// TRAM text overlaid on top of the playfield
 /// -------------------------------------------
 
+/// Quite an awkward micro-optimization: The two overlay function pointers are
+/// `near`, despite the fact that we also have to set them from outside the
+/// group where the target functions are defined in. The only known way of
+/// achieving this in Turbo C++ 4.0J involves lying to the compiler about the
+/// true distance of the function. That's also why we can't correctly declare
+/// some of the target functions at global scope.
+#define set_nearfunc_ptr_to_farfunc(ptr, func) { \
+	void pascal far func(void); \
+	ptr = reinterpret_cast<nearfunc_t_near>(func); \
+}
+
 extern nearfunc_t_near overlay1; // Rendered first
 extern nearfunc_t_near overlay2; // Rendered second
 
@@ -10,6 +21,27 @@ void near overlay_wipe(void);
 // Fills the playfield area on the text RAM with black, effectively hiding the
 // playfield in the process.
 void near overlay_black(void);
+
+// Stage transitions
+// -----------------
+
+#ifdef OVERLAY_FADE_CELS
+	static const int OVERLAY_FADE_INTERVAL = 8;
+	static const int OVERLAY_FADE_DURATION = (
+		(OVERLAY_FADE_CELS + 1) * OVERLAY_FADE_INTERVAL
+	);
+#endif
+
+// Shows the fade-in effect, followed by either the stage or BGM title or the
+// blinking DEMO PLAY text.
+#define overlay_stage_enter() \
+	set_nearfunc_ptr_to_farfunc(overlay1, overlay_stage_enter_update_and_render)
+
+// Shows the fade-out effect. Must be called after a corresponding
+// overlay_stage_enter() transition!
+#define overlay_stage_leave() \
+	set_nearfunc_ptr_to_farfunc(overlay1, overlay_stage_leave_update_and_render)
+// -----------------
 
 // Popup messages for common gameplay events, shown at the top of the playfield
 // ----------------------------------------------------------------------------
@@ -29,18 +61,10 @@ enum popup_id_t {
 extern popup_id_t overlay_popup_id_new;
 extern unsigned long overlay_popup_bonus;
 
-#define overlay_popup_show(popup_new) \
-	/* Yup, the only known way of assigning a `near` function to a `near` */ \
-	/* function pointer from a group outside the one where the `near` */ \
-	/* function was declared in involves lying to the compiler about the */ \
-	/* true distance of the function. That's also why we can't correctly */ \
-	/* declare this function at global scope. */ \
-	void pascal far overlay_popup_update_and_render(void); \
-	\
+#define overlay_popup_show(popup_new)  {\
 	overlay_popup_id_new = popup_new; \
-	overlay2 = reinterpret_cast<nearfunc_t_near>( \
-		overlay_popup_update_and_render \
-	);
+	set_nearfunc_ptr_to_farfunc(overlay2, overlay_popup_update_and_render); \
+}
 // ----------------------------------------------------------------------------
 
 // Stage and BGM titles

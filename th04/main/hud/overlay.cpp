@@ -1,8 +1,11 @@
+#pragma option -zPmain_01
+
 #include <string.h>
 #include "platform.h"
 #include "x86real.h"
 #include "pc98.h"
 #include "master.hpp"
+#include "th04/common.h"
 #include "th04/score.h"
 #include "th01/math/subpixel.hpp"
 #include "th04/gaiji/gaiji.h"
@@ -19,8 +22,11 @@ extern "C" {
 #include "th04/main/hud/overlay.hpp"
 #include "th04/main/stage/stage.hpp"
 
-#if (GAME == 4)
+#if (GAME == 5)
+	#include "th05/resident.hpp"
+#else
 	#include "th04/playchar.h"
+	#include "th04/resident.hpp"
 #endif
 
 // See tile.hpp for the reason this declaration is necessary
@@ -34,6 +40,10 @@ extern "C" void pascal near tiles_invalidate_around(
 // String constants and state
 // --------------------------
 
+extern union {
+	unsigned char in_frames;
+	unsigned char out_time;
+} overlay_fade; // = 0
 extern unsigned char boss_bgm_frame; // = 0
 extern unsigned char popup_frame; // = 0
 
@@ -105,6 +115,67 @@ const tram_y_t STAGE_TITLE_TRAM_CENTER_Y = vram_y_to_tram(STAGE_TITLE_CENTER_Y);
 const tram_y_t BGM_TRAM_Y = vram_y_to_tram(BGM_CENTER_Y);
 const tram_x_t BGM_TRAM_RIGHT = (PLAYFIELD_TRAM_RIGHT - 1);
 // -----------
+
+// Stage transitions
+// -----------------
+
+#define overlay_fade_put(frames) { \
+	if((frames % OVERLAY_FADE_INTERVAL) == 0) { \
+		unsigned char cel_num = (frames / OVERLAY_FADE_INTERVAL); \
+		if(cel_num != 0) { \
+			tram_y_t y = PLAYFIELD_TRAM_TOP; \
+			while(y < PLAYFIELD_TRAM_BOTTOM) { \
+				tram_y_t x = PLAYFIELD_TRAM_LEFT; \
+				while(x < PLAYFIELD_TRAM_RIGHT) { \
+					gaiji_putca( \
+						x, y, ((g_OVERLAY_FADE_last + 1) - cel_num), TX_BLACK \
+					); \
+					x += GAIJI_TRAM_W; \
+				} \
+				y++; \
+			} \
+		} \
+	} \
+}
+
+void pascal near overlay_stage_enter_update_and_render(void)
+{
+	if(overlay_fade.in_frames >= OVERLAY_FADE_DURATION) {
+		overlay_wipe();
+		if(
+			(resident->demo_num == 0) ||
+			((GAME == 5) && (resident->demo_num == 5))
+		) {
+			overlay1 = overlay_titles_update_and_render;
+		} else {
+			extern const gaiji_th04_t gDEMO_PLAY[10];
+			overlay1 = nullfunc_near;
+			gaiji_putsa(
+				// Off-center...
+				((PLAYFIELD_TRAM_CENTER_X - 1) - (sizeof(gDEMO_PLAY) - 1)),
+				PLAYFIELD_TRAM_CENTER_Y,
+				gDEMO_PLAY,
+				(TX_YELLOW | TX_BLINK)
+			);
+		}
+		titles_frame = 0;
+		return;
+	}
+	overlay_fade_put(overlay_fade.in_frames);
+	overlay_fade.in_frames++;
+}
+
+void pascal near overlay_stage_leave_update_and_render(void)
+{
+	if(overlay_fade.out_time == 0) {
+		overlay_black();
+		overlay1 = nullfunc_near;
+		return;
+	}
+	overlay_fade.out_time--;
+	overlay_fade_put(overlay_fade.out_time);
+}
+// -----------------
 
 // Stage and BGM titles
 // --------------------

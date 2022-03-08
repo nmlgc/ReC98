@@ -1015,7 +1015,7 @@ loc_B506:
 		kajacall	KAJA_SONG_PLAY
 
 loc_B52C:
-		mov	_overlay1, offset sub_11914
+		mov	_overlay1, offset @overlay_stage_enter_update_and_r$qv
 		mov	_overlay2, offset nullfunc_near
 		pop	si
 		pop	bp
@@ -7515,173 +7515,12 @@ midboss5_render	endp
 
 overlay_loop_func	@overlay_wipe$qv, near, <TX_WHITE>
 overlay_loop_func	@overlay_black$qv, near, <TX_BLACK + TX_REVERSE>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_11914	proc near
-
-var_1		= byte ptr -1
-
-		enter	2, 0
-		push	si
-		push	di
-		cmp	byte_2288A, 48h	; 'H'
-		jb	short loc_1195D
-		call	@overlay_wipe$qv
-		les	bx, _resident
-		assume es:nothing
-		cmp	es:[bx+resident_t.demo_num], 0
-		jz	short loc_11936
-		cmp	es:[bx+resident_t.demo_num], 5
-		jnz	short loc_1193E
-
-loc_11936:
-		mov	_overlay1, offset @overlay_titles_update_and_render$qv
-		jmp	short loc_11956
-; ---------------------------------------------------------------------------
-
-loc_1193E:
-		mov	_overlay1, offset nullfunc_near
-		call	gaiji_putsa pascal, (18 shl 16) + 12, ds, offset _gDEMO_PLAY, TX_YELLOW + TX_BLINK
-
-loc_11956:
-		mov	_titles_frame, 0
-		jmp	short loc_119AD
-; ---------------------------------------------------------------------------
-
-loc_1195D:
-		mov	al, byte_2288A
-		mov	ah, 0
-		mov	bx, 8
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_119A9
-		mov	al, byte_2288A
-		mov	ah, 0
-		cwd
-		idiv	bx
-		mov	[bp+var_1], al
-		cmp	[bp+var_1], 0
-		jz	short loc_119A9
-		mov	si, 1
-		jmp	short loc_119A4
-; ---------------------------------------------------------------------------
-
-loc_11982:
-		mov	di, 4
-		jmp	short loc_1199E
-; ---------------------------------------------------------------------------
-
-loc_11987:
-		push	di
-		push	si
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		mov	dx, 40h
-		sub	dx, ax
-		push	dx
-		push	TX_BLACK
-		call	gaiji_putca
-		add	di, 2
-
-loc_1199E:
-		cmp	di, 52
-		jl	short loc_11987
-		inc	si
-
-loc_119A4:
-		cmp	si, 24
-		jl	short loc_11982
-
-loc_119A9:
-		inc	byte_2288A
-
-loc_119AD:
-		pop	di
-		pop	si
-		leave
-		retn
-sub_11914	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_119B1	proc near
-
-var_1		= byte ptr -1
-
-		enter	2, 0
-		push	si
-		push	di
-		cmp	byte_2288A, 0
-		jnz	short loc_119C9
-		call	@overlay_black$qv
-		mov	_overlay1, offset nullfunc_near
-		jmp	short loc_11A19
-; ---------------------------------------------------------------------------
-
-loc_119C9:
-		dec	byte_2288A
-		mov	al, byte_2288A
-		mov	ah, 0
-		mov	bx, 8
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_11A19
-		mov	al, byte_2288A
-		mov	ah, 0
-		cwd
-		idiv	bx
-		mov	[bp+var_1], al
-		cmp	[bp+var_1], 0
-		jz	short loc_11A19
-		mov	si, 1
-		jmp	short loc_11A14
-; ---------------------------------------------------------------------------
-
-loc_119F2:
-		mov	di, 4
-		jmp	short loc_11A0E
-; ---------------------------------------------------------------------------
-
-loc_119F7:
-		push	di
-		push	si
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		mov	dx, 40h
-		sub	dx, ax
-		push	dx
-		push	TX_BLACK
-		call	gaiji_putca
-		add	di, 2
-
-loc_11A0E:
-		cmp	di, 52
-		jl	short loc_119F7
-		inc	si
-
-loc_11A14:
-		cmp	si, 24
-		jl	short loc_119F2
-
-loc_11A19:
-		pop	di
-		pop	si
-		leave
-		retn
-sub_119B1	endp
 main_0_TEXT	ends
 
 HUD_OVRL_TEXT	segment	byte public 'CODE' use16
+	@OVERLAY_STAGE_ENTER_UPDATE_AND_R$QV procdesc near
+	@OVERLAY_STAGE_LEAVE_UPDATE_AND_R$QV procdesc near
 	@overlay_titles_invalidate$qv procdesc near
-	@OVERLAY_TITLES_UPDATE_AND_RENDER$QV procdesc near
 	@OVERLAY_BOSS_BGM_UPDATE_AND_REND$QV procdesc near
 	@OVERLAY_POPUP_UPDATE_AND_RENDER$QV procdesc near
 HUD_OVRL_TEXT	ends
@@ -23854,7 +23693,7 @@ loc_1FD19:
 		call	@end_extra$qv
 
 loc_1FD25:
-		mov	_overlay1, offset sub_119B1
+		mov	_overlay1, offset @overlay_stage_leave_update_and_r$qv
 		kajacall	KAJA_SONG_FADE, 10
 		jmp	short loc_1FD51
 ; ---------------------------------------------------------------------------
@@ -24274,7 +24113,6 @@ off_22874	dw offset sub_1E922
 off_22884	dw offset sub_1F776
 		dw offset sub_1F7BA
 		dw offset sub_1F823
-byte_2288A	db 0
 include th04/main/hud/overlay[data].asm
 	evendata
 _SHOT_FUNCS label word

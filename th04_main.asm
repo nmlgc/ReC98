@@ -885,7 +885,7 @@ loc_B156:
 
 loc_B1AE:
 		nopcall	main_01:sub_CB99
-		mov	_overlay1, offset sub_10DA3
+		mov	_overlay1, offset @overlay_stage_enter_update_and_r$qv
 		mov	_overlay2, offset nullfunc_near
 		pop	si
 		pop	bp
@@ -9100,168 +9100,12 @@ sub_10ABF	endp
 include th04/main/player/render.asm
 overlay_loop_func	@overlay_wipe$qv, near, <TX_WHITE>
 overlay_loop_func	@overlay_black$qv, near, <TX_BLACK + TX_REVERSE>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_10DA3	proc near
-
-var_1		= byte ptr -1
-
-		enter	2, 0
-		push	si
-		push	di
-		cmp	byte_22EA2, 48h	; 'H'
-		jb	short loc_10DE5
-		call	@overlay_wipe$qv
-		les	bx, _resident
-		cmp	es:[bx+resident_t.demo_num], 0
-		jnz	short loc_10DC6
-		mov	_overlay1, offset @overlay_titles_update_and_render$qv
-		jmp	short loc_10DDE
-; ---------------------------------------------------------------------------
-
-loc_10DC6:
-		mov	_overlay1, offset nullfunc_near
-		call	gaiji_putsa pascal, (18 shl 16) + 12, ds, offset _gDEMO_PLAY, TX_YELLOW + TX_BLINK
-
-loc_10DDE:
-		mov	_titles_frame, 0
-		jmp	short loc_10E35
-; ---------------------------------------------------------------------------
-
-loc_10DE5:
-		mov	al, byte_22EA2
-		mov	ah, 0
-		mov	bx, 8
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_10E31
-		mov	al, byte_22EA2
-		mov	ah, 0
-		cwd
-		idiv	bx
-		mov	[bp+var_1], al
-		cmp	[bp+var_1], 0
-		jz	short loc_10E31
-		mov	si, 1
-		jmp	short loc_10E2C
-; ---------------------------------------------------------------------------
-
-loc_10E0A:
-		mov	di, 4
-		jmp	short loc_10E26
-; ---------------------------------------------------------------------------
-
-loc_10E0F:
-		push	di
-		push	si
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		mov	dx, 40h
-		sub	dx, ax
-		push	dx
-		push	TX_BLACK
-		call	gaiji_putca
-		add	di, 2
-
-loc_10E26:
-		cmp	di, 52
-		jl	short loc_10E0F
-		inc	si
-
-loc_10E2C:
-		cmp	si, 24
-		jl	short loc_10E0A
-
-loc_10E31:
-		inc	byte_22EA2
-
-loc_10E35:
-		pop	di
-		pop	si
-		leave
-		retn
-sub_10DA3	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_10E39	proc near
-
-var_1		= byte ptr -1
-
-		enter	2, 0
-		push	si
-		push	di
-		cmp	byte_22EA2, 0
-		jnz	short loc_10E51
-		call	@overlay_black$qv
-		mov	_overlay1, offset nullfunc_near
-		jmp	short loc_10EA1
-; ---------------------------------------------------------------------------
-
-loc_10E51:
-		dec	byte_22EA2
-		mov	al, byte_22EA2
-		mov	ah, 0
-		mov	bx, 8
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_10EA1
-		mov	al, byte_22EA2
-		mov	ah, 0
-		cwd
-		idiv	bx
-		mov	[bp+var_1], al
-		cmp	[bp+var_1], 0
-		jz	short loc_10EA1
-		mov	si, 1
-		jmp	short loc_10E9C
-; ---------------------------------------------------------------------------
-
-loc_10E7A:
-		mov	di, 4
-		jmp	short loc_10E96
-; ---------------------------------------------------------------------------
-
-loc_10E7F:
-		push	di
-		push	si
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		mov	dx, 40h
-		sub	dx, ax
-		push	dx
-		push	TX_BLACK
-		call	gaiji_putca
-		add	di, 2
-
-loc_10E96:
-		cmp	di, 52
-		jl	short loc_10E7F
-		inc	si
-
-loc_10E9C:
-		cmp	si, 24
-		jl	short loc_10E7A
-
-loc_10EA1:
-		pop	di
-		pop	si
-		leave
-		retn
-sub_10E39	endp
 main_0_TEXT	ends
 
 HUD_OVRL_TEXT	segment	byte public 'CODE' use16
+	@OVERLAY_STAGE_ENTER_UPDATE_AND_R$QV procdesc near
+	@OVERLAY_STAGE_LEAVE_UPDATE_AND_R$QV procdesc near
 	@overlay_titles_invalidate$qv procdesc near
-	@OVERLAY_TITLES_UPDATE_AND_RENDER$QV procdesc near
 	@OVERLAY_BOSS_BGM_UPDATE_AND_REND$QV procdesc near
 	@OVERLAY_POPUP_UPDATE_AND_RENDER$QV procdesc near
 HUD_OVRL_TEXT	ends
@@ -28673,7 +28517,7 @@ loc_1E8C9:
 		call	@end_extra$qv
 
 loc_1E8D5:
-		mov	_overlay1, offset sub_10E39
+		mov	_overlay1, offset @overlay_stage_leave_update_and_r$qv
 		kajacall	KAJA_SONG_FADE, 10
 		jmp	short loc_1E905
 ; ---------------------------------------------------------------------------
@@ -32651,7 +32495,6 @@ byte_22E9C	db 0
 		db    0
 _enemies_gone	dw 0
 _enemies_killed	dw 0
-byte_22EA2	db 0
 include th04/main/hud/overlay[data].asm
 aMCB@bPhantomLa	db 'å∂ñÏÅ@Å` Phantom Land ',0
 aMCsb@bPhantomN	db 'å∂ñÈÅ@Å` Phantom Night',0

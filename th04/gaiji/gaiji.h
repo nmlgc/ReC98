@@ -5,11 +5,15 @@
 #include "th02/gaiji/from_2.h"
 #include "th04/gaiji/bar.h"
 
+#define OVERLAY_FADE_CELS 8
+
 typedef enum {
 	g_NULL = '\0',
 	g_EMPTY = 0x02,
 	gaiji_bar(0x20),
 	gaiji_bar_max(0x30),
+	g_OVERLAY_FADE,
+	g_OVERLAY_FADE_last = (g_OVERLAY_FADE + OVERLAY_FADE_CELS - 1),
 	gaiji_boldfont(0xA0),
 	gs_DOT = 0xC4,
 	gaiji_symbols_th02(0xC9),
