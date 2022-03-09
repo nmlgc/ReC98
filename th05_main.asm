@@ -39,7 +39,7 @@ include th05/main/enemy/enemy.inc
 
 main_01 group SLOWDOWN_TEXT, m_TEXT, EMS_TEXT, ma_TEXT, CFG_LRES_TEXT, mai_TEXT, main_TEXT, main__TEXT, PLAYFLD_TEXT, main_0_TEXT, HUD_OVRL_TEXT, DIALOG_TEXT, PLAYER_P_TEXT, main_01_TEXT
 g_SHARED group SHARED, SHARED_
-main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, BULLET_A_TEXT, main_032_TEXT, main_033_TEXT, MB_DFT_TEXT, LASER_SC_TEXT, CURVEB_U_TEXT, IT_SPL_U_TEXT, BULLET_U_TEXT, main_034_TEXT, main_035_TEXT, main_036_TEXT
+main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, BULLET_A_TEXT, main_032_TEXT, main_033_TEXT, MB_DFT_TEXT, LASER_SC_TEXT, CURVEB_U_TEXT, IT_SPL_U_TEXT, BULLET_U_TEXT, main_034_TEXT, main_035_TEXT, main_036_TEXT, BOSS_TEXT
 
 ; ===========================================================================
 
@@ -23454,7 +23454,7 @@ sub_1FA5E	proc near
 
 loc_1FA8E:
 		mov	byte_2297E, 0
-		call	sub_1FD62
+		call	@boss_hittest_player$qv
 		mov	ax, si
 		pop	si
 		pop	bp
@@ -23716,33 +23716,11 @@ loc_1FD5D:
 		pop	bp
 		retn	2
 boss_death_sequence_function	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1FD62	proc near
-		push	bp
-		mov	bp, sp
-		mov	ax, _boss_pos.cur.x
-		mov	dx, _boss_pos.cur.y
-		sub	ax, _player_pos.cur.x
-		sub	dx, _player_pos.cur.y
-		add	dx, 16 * 16
-		cmp	dx, 32 * 16
-		ja	short loc_1FD8B
-		add	ax, 16 * 16
-		cmp	ax, 32 * 16
-		ja	short loc_1FD8B
-		mov	_player_is_hit, 1
-
-loc_1FD8B:
-		pop	bp
-		retn
-sub_1FD62	endp
-
 main_036_TEXT	ends
+
+BOSS_TEXT	segment	byte public 'CODE' use16
+	@boss_hittest_player$qv procdesc near
+BOSS_TEXT	ends
 
 	.data
 
