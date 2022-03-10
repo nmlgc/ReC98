@@ -586,7 +586,7 @@ loc_9B7F:
 		les	bx, _resident
 		add	bx, si
 		mov	al, es:[bx+resident_t.score_last]
-		mov	_score_lebcd_p1[si], al
+		mov	_score_p1[si], al
 		inc	si
 
 loc_9B8E:
@@ -627,11 +627,11 @@ loc_9BC5:
 		mov	al, es:[bx+resident_t.story_stage]
 		inc	al
 		mov	byte_202B7, al
-		mov	al, _score_lebcd_p1[6]
+		mov	al, _score_p1[6]
 		mov	byte_220DC, al
 		cmp	byte_220DC, 2
 		jnb	short loc_9BEF
-		cmp	_score_lebcd_p1[7], 0
+		cmp	_score_p1[7], 0
 		jz	short loc_9BF4
 
 loc_9BEF:
@@ -1315,7 +1315,7 @@ loc_A294:
 		mov	bx, si
 		shl	bx, 3
 		add	bx, cx
-		mov	al, _score_lebcd_p1[bx]
+		mov	al, _score_p1[bx]
 		mov	dx, si
 		shl	dx, 3
 		les	bx, _resident
@@ -6531,7 +6531,7 @@ sub_D52E	proc near
 		mov	es, ax
 		assume es:nothing
 		mov	cx, 220h
-		mov	bx, offset _score_lebcd
+		mov	bx, offset _score
 		add	bx, (PLAYER_COUNT * SCORE_DIGITS) - 1
 		mov	dh, (PLAYER_COUNT * SCORE_DIGITS)
 
@@ -6561,7 +6561,7 @@ loc_D56B:
 		mov	al, 80h
 		call	sub_D50E
 		call	grcg_off
-		mov	al, _score_lebcd_p1[6]
+		mov	al, _score_p1[6]
 		cmp	byte_220DC, al
 		jnb	short locret_D5A0
 		call	snd_se_play pascal, 8

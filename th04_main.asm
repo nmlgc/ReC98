@@ -509,7 +509,7 @@ loc_AD2E:
 ; ---------------------------------------------------------------------------
 
 loc_AD35:
-		mov	_score_lebcd[si], 0
+		mov	_score[si], 0
 		inc	si
 
 loc_AD3B:
@@ -4947,7 +4947,7 @@ sub_E7DE	proc near
 ; ---------------------------------------------------------------------------
 
 loc_E7E6:
-		mov	al, _score_lebcd[si]
+		mov	al, _score[si]
 		les	bx, _resident
 		add	bx, si
 		mov	es:[bx+resident_t.score_last], al
@@ -5716,35 +5716,35 @@ var_1		= byte ptr -1
 		jmp	cs:off_EEA6[bx]
 
 loc_EE23:
-		cmp	_score_lebcd[6], 3
+		cmp	_score[6], 3
 		jb	short loc_EE60
 		jmp	short loc_EE5C
 ; ---------------------------------------------------------------------------
 
 loc_EE2C:
-		cmp	_score_lebcd[6], 8
+		cmp	_score[6], 8
 		jb	short loc_EE60
 		jmp	short loc_EE5C
 ; ---------------------------------------------------------------------------
 
 loc_EE35:
-		cmp	_score_lebcd[7], 1
+		cmp	_score[7], 1
 		jb	short loc_EE60
-		cmp	_score_lebcd[6], 5
+		cmp	_score[6], 5
 		jb	short loc_EE60
 		jmp	short loc_EE5C
 ; ---------------------------------------------------------------------------
 
 loc_EE45:
-		cmp	_score_lebcd[7], 2
+		cmp	_score[7], 2
 		jb	short loc_EE60
-		cmp	_score_lebcd[6], 2
+		cmp	_score[6], 2
 		jb	short loc_EE60
 		jmp	short loc_EE5C
 ; ---------------------------------------------------------------------------
 
 loc_EE55:
-		cmp	_score_lebcd[7], 3
+		cmp	_score[7], 3
 		jb	short loc_EE60
 
 loc_EE5C:
@@ -5797,7 +5797,7 @@ sub_EEB0	proc near
 ; ---------------------------------------------------------------------------
 
 loc_EEB9:
-		mov	_score_lebcd[si], 0
+		mov	_score[si], 0
 		inc	si
 
 loc_EEBF:
@@ -11380,7 +11380,7 @@ loc_12B8E:
 ; ---------------------------------------------------------------------------
 
 loc_12B93:
-		mov	al, _score_lebcd[si]
+		mov	al, _score[si]
 		mov	ah, 0
 		mov	bx, [bp+var_2]
 		shl	bx, 3
@@ -11389,7 +11389,7 @@ loc_12B93:
 		add	dx, -gb_0_
 		cmp	ax, dx
 		jg	short loc_12BCC
-		mov	al, _score_lebcd[si]
+		mov	al, _score[si]
 		mov	ah, 0
 		mov	bx, [bp+var_2]
 		shl	bx, 3
@@ -11495,7 +11495,7 @@ loc_12C65:
 ; ---------------------------------------------------------------------------
 
 loc_12C6E:
-		mov	al, _score_lebcd[si]
+		mov	al, _score[si]
 		add	al, gb_0_
 		mov	dl, byte_2CFF2
 		mov	dh, 0
@@ -11568,7 +11568,7 @@ sub_12CC7	proc near
 loc_12CD2:
 		mov	al, _hi.score.g_score[si]
 		add	al, -gb_0_
-		mov	_hiscore_lebcd[si], al
+		mov	_hiscore[si], al
 		inc	si
 
 loc_12CDD:

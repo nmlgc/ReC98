@@ -1,5 +1,8 @@
 #include "th04/score.h"
 
+extern score_lebcd_t score;
+extern score_lebcd_t hiscore;
+
 static const unsigned int STAGE_GRAZE_CAP = 999;
 
 extern unsigned int graze_score;	// Set per difficulty.

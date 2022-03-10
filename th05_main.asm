@@ -572,7 +572,7 @@ sub_B063	proc near
 ; ---------------------------------------------------------------------------
 
 loc_B099:
-		mov	_score_lebcd[si], 0
+		mov	_score[si], 0
 		inc	si
 
 loc_B09F:
@@ -3457,7 +3457,7 @@ loc_E84F:
 		mov	si, dx
 		shl	si, 3
 		add	si, offset _hi.score.g_score[SCORE_DIGITS - 1]
-		mov	bx, offset _score_lebcd[SCORE_DIGITS - 1]
+		mov	bx, offset _score[SCORE_DIGITS - 1]
 		mov	cx, SCORE_DIGITS
 
 loc_E85E:
@@ -3514,7 +3514,7 @@ loc_E8AD:
 		mov	di, dx
 		shl	di, 3
 		add	di, offset _hi.score.g_score
-		mov	si, offset _score_lebcd
+		mov	si, offset _score
 		movsd
 		movsd
 		sub	di, SCORE_DIGITS
@@ -3568,7 +3568,7 @@ sub_E8FE	proc near
 loc_E906:
 		mov	al, _hi.score.g_score[bx]
 		sub	al, gb_0_
-		mov	_hiscore_lebcd[bx], al
+		mov	_hiscore[bx], al
 		inc	bx
 		loop	loc_E906
 		retn
@@ -4279,7 +4279,7 @@ sub_F6E4	proc near
 ; ---------------------------------------------------------------------------
 
 loc_F6EC:
-		mov	al, _score_lebcd[si]
+		mov	al, _score[si]
 		les	bx, _resident
 		assume es:nothing
 		add	bx, si
@@ -5090,7 +5090,7 @@ loc_103A4:
 		assume es:nothing
 		add	bx, si
 		mov	al, es:[bx+resident_t.score_highest]
-		cmp	al, _score_lebcd[si]
+		cmp	al, _score[si]
 		jnb	short loc_103BE
 		mov	dx, 2
 		jmp	short loc_103D0
@@ -5100,20 +5100,20 @@ loc_103BE:
 		les	bx, _resident
 		add	bx, si
 		mov	al, es:[bx+resident_t.score_highest]
-		cmp	al, _score_lebcd[si]
+		cmp	al, _score[si]
 		jbe	short loc_103D0
 		xor	dx, dx
 
 loc_103D0:
 		cmp	dx, 2
 		jnz	short loc_103E3
-		mov	al, _score_lebcd[si]
+		mov	al, _score[si]
 		les	bx, _resident
 		add	bx, si
 		mov	es:[bx+resident_t.score_highest], al
 
 loc_103E3:
-		mov	_score_lebcd[si], 0
+		mov	_score[si], 0
 		dec	si
 
 loc_103E9:
@@ -23566,7 +23566,7 @@ loc_1FCD6:
 ; ---------------------------------------------------------------------------
 
 loc_1FCEE:
-		mov	al, _score_lebcd[si]
+		mov	al, _score[si]
 		mov	dl, _stage_id
 		mov	dh, 0
 		shl	dx, 3

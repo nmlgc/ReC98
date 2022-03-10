@@ -33,7 +33,7 @@ score_add	proc far
 	cmp	word ptr [@@po10_p], 1
 	ja	short @@score_to_bcd
 	mov	[@@bcd_p], cl
-	mov	@@score_p, offset _score_lebcd
+	mov	@@score_p, offset _score
 	mov	ch, [bp+@@pid]
 	or	ch, ch
 	jz	short @@p1
