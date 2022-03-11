@@ -138,9 +138,7 @@ void alphabet_put_initial()
 	int16_t col_and_fx = (COL_REGULAR | FX_WEIGHT_BOLD);
 	uint16_t kanji;
 	int i;
-#if (BINARY == 'M')
-	char kanji_str[3];
-#endif
+	graph_putkanji_fx_declare();
 
 	kanji = kanji_swap('‚‚');
 	for(i = 1; i < A_TO_Z_COUNT; i++) {
@@ -360,9 +358,7 @@ void alphabet_put_at(screen_x_t left, screen_y_t top, bool16 is_selected)
 		{ graph_printf_fx(left, top, col_and_fx, ALPHABET_ENTER_0); }
 	);
 	if(kanji != '\0') {
-		#if (BINARY == 'M')
-			char kanji_str[3];
-		#endif
+		graph_putkanji_fx_declare();
 		graph_putkanji_fx(left, top, col_and_fx, 4, kanji);
 	}
 }

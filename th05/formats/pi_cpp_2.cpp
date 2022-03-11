@@ -86,7 +86,7 @@ void DEFCONV pi_put_8(screen_x_t left, vram_y_t top, int slot)
 		mov 	di, word ptr pi_headers[di].ysize; \
 		call	near ptr pi_put_8_rowloop; \
 	}
-	pi_put_impl(left, top, slot, rowloop_func);
+	pi_put_impl(slot, rowloop_func);
 	#undef rowloop_func
 }
 
@@ -104,7 +104,7 @@ void pascal pi_put_quarter_8(
 		mov 	di, PI_QUARTER_H; \
 		call	near ptr pi_put_8_rowloop; \
 	}
-	pi_put_quarter_impl(left, top, slot, quarter, rowloop_func);
+	pi_put_quarter_impl(slot, quarter, rowloop_func);
 	#undef rowloop_func
 }
 

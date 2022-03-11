@@ -163,7 +163,7 @@ void stageobj_put_8(screen_x_t left, vram_y_t top, int ptn_id, int bg_slot)
 		}
 	} else {
 		for(y = 0; y < PTN_H; y++) {
-			vram_put_ptn_planar(vo, bg);
+			vram_put_ptn_planar(vo, bg, y);
 			vo += ROW_SIZE;
 		}
 	}
@@ -178,7 +178,7 @@ void stageobj_bgs_snap_from_1_8(screen_x_t left, vram_y_t top, int slot)
 
 	graph_accesspage_func(1);
 	for(pixel_t y = 0; y < PTN_H; y++) {
-		vram_snap_ptn_planar(bg, vo);
+		vram_snap_ptn_planar(bg, y, vo);
 		vo += ROW_SIZE;
 	}
 	graph_accesspage_func(0);

@@ -173,8 +173,8 @@ static inline vram_offset_t vram_offset_divshift_wtf(screen_x_t x, vram_y_t y)
 	vram_or_emptyopt(G, offset, src.G, bit_count); \
 	vram_or_emptyopt(E, offset, src.E, bit_count);
 
-#define PLANE_DWORD_BLIT(dst, src) \
-	for(p = 0; p < PLANE_SIZE; p += (int)sizeof(dots32_t)) { \
+#define plane_dword_blit(dst, src) \
+	for(int p = 0; p < PLANE_SIZE; p += (int)sizeof(dots32_t)) { \
 		*(dots32_t*)((dst) + p) = *(dots32_t*)((src) + p); \
 	}
 

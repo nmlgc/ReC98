@@ -91,7 +91,7 @@ void pascal near scores_put(int place_to_highlight)
 		ALPHABET_PUTCA(0, 0, TX_GREEN | TX_REVERSE);
 	}
 	for(i = 0; i < SCOREDAT_PLACES; i++) {
-		ATRB_SET(i);
+		score_atrb_set(atrb, i, place_to_highlight);
 		gaiji_putsa(10, 6+i, (const char*)hi.score.g_name[i], atrb);
 		score_put(6+i, hi.score.score[i], atrb);
 		if(hi.score.stage[i] != STAGE_ALL) {
@@ -101,7 +101,7 @@ void pascal near scores_put(int place_to_highlight)
 		}
 	}
 	for(i = 0; i < SCOREDAT_PLACES; i++) {
-		ATRB_SET(i);
+		score_atrb_set(atrb, i, place_to_highlight);
 		if(i != 9) {
 			gaiji_putca(6, 6+i, gb_1_ + i, atrb);
 		} else {
@@ -183,23 +183,23 @@ void pascal score_enter(void)
 	input_locked = 1;
 	input_delay = 0;
 
-	#define ALPHABET_CURSOR_MOVE(coord, max, direction) \
+	#define alphabet_cursor_move(coord, max, direction, col, row) \
 		alphabet_putca(col, row, TX_WHITE); \
 		RING_##direction(coord, ALPHABET_##max - 1); \
 		alphabet_putca(col, row, TX_GREEN | TX_REVERSE);
 
 	// Otherwise, this leads to more levels of indentation than I would like.
 	#define INPUTS if(key_det & INPUT_UP) { \
-		ALPHABET_CURSOR_MOVE(row, ROWS, DEC); \
+		alphabet_cursor_move(row, ROWS, DEC, col, row); \
 	} \
 	if(key_det & INPUT_DOWN) { \
-		ALPHABET_CURSOR_MOVE(row, ROWS, INC); \
+		alphabet_cursor_move(row, ROWS, INC, col, row); \
 	} \
 	if(key_det & INPUT_LEFT) { \
-		ALPHABET_CURSOR_MOVE(col, COLS, DEC); \
+		alphabet_cursor_move(col, COLS, DEC, col, row); \
 	} \
 	if(key_det & INPUT_RIGHT) { \
-		ALPHABET_CURSOR_MOVE(col, COLS, INC); \
+		alphabet_cursor_move(col, COLS, INC, col, row); \
 	} \
 	if(key_det & INPUT_SHOT || key_det & INPUT_OK) { \
 		/* Yeah, it sucks that ZUN checks against the indices into the

@@ -6,7 +6,7 @@ inline void imul_di(int8_t factor) {
 	__emit__(0x6B, 0xFF, factor);
 }
 
-#define pi_put_impl(left, top, slot, rowloop_func) \
+#define pi_put_impl(slot, rowloop_func) \
 	_SI = slot; \
 	_DI = _SI; \
 	_SI <<= 2;	/* *= sizeof(void far *) */  \
@@ -18,7 +18,7 @@ inline void imul_di(int8_t factor) {
 #define buffer_offset_sgm	_DX
 #define quarter_local    	_CL
 
-#define pi_put_quarter_impl(left, top, slot, quarter, rowloop_func) \
+#define pi_put_quarter_impl(slot, quarter, rowloop_func) \
 	buffer_offset_off = 0; \
 	buffer_offset_sgm = 0; \
 	_SI = slot; \

@@ -94,9 +94,8 @@ void pascal near draw_tracks(unsigned char sel)
 
 void pascal near screen_back_B_snap(void)
 {
-	int p;
 	screen_back_B = HMem<dots8_t>::allocbyte(PLANE_SIZE);
-	PLANE_DWORD_BLIT(screen_back_B, VRAM_PLANE_B);
+	plane_dword_blit(screen_back_B, VRAM_PLANE_B);
 }
 
 void pascal near screen_back_B_free(void)
@@ -106,8 +105,7 @@ void pascal near screen_back_B_free(void)
 
 void pascal near screen_back_B_put(void)
 {
-	int p;
-	PLANE_DWORD_BLIT(VRAM_PLANE_B, screen_back_B);
+	plane_dword_blit(VRAM_PLANE_B, screen_back_B);
 }
 
 void pascal near polygon_build(
@@ -188,42 +186,40 @@ void pascal near music_flip(void)
 	frame_delay(1);
 }
 
-#define CMT_BACK_BLIT(dst, dp, src, sp) \
-	ps = 0; \
+#define cmt_bg_put_planar(cmt_bg_p, vo, x, dst, dst_p, src, src_p) \
+	size_t cmt_bg_p = 0; \
+	screen_y_t y; \
 	for(y = 64; y < 80; y++) { \
 		for(x = 160; x < 480; x += (4 * BYTE_DOTS)) { \
-			pd = vram_offset_shift(x, y); \
-			*(long*)(dst[PL_B] + (dp)) = *(long*)(src[PL_B] + (sp)); \
-			*(long*)(dst[PL_R] + (dp)) = *(long*)(src[PL_R] + (sp)); \
-			*(long*)(dst[PL_G] + (dp)) = *(long*)(src[PL_G] + (sp)); \
-			*(long*)(dst[PL_E] + (dp)) = *(long*)(src[PL_E] + (sp)); \
-			ps += 4; \
+			vo = vram_offset_shift(x, y); \
+			*(long*)(dst[PL_B] + dst_p) = *(long*)(src[PL_B] + src_p); \
+			*(long*)(dst[PL_R] + dst_p) = *(long*)(src[PL_R] + src_p); \
+			*(long*)(dst[PL_G] + dst_p) = *(long*)(src[PL_G] + src_p); \
+			*(long*)(dst[PL_E] + dst_p) = *(long*)(src[PL_E] + src_p); \
+			cmt_bg_p += 4; \
 		} \
 	} \
 	for(y = 80; y < 384; y++) { \
 		for(x = 304; x < 624; x += (4 * BYTE_DOTS)) { \
-			pd = vram_offset_shift(x, y); \
-			*(long*)(dst[PL_B] + (dp)) = *(long*)(src[PL_B] + (sp)); \
-			*(long*)(dst[PL_R] + (dp)) = *(long*)(src[PL_R] + (sp)); \
-			*(long*)(dst[PL_G] + (dp)) = *(long*)(src[PL_G] + (sp)); \
-			*(long*)(dst[PL_E] + (dp)) = *(long*)(src[PL_E] + (sp)); \
-			ps += 4; \
+			vo = vram_offset_shift(x, y); \
+			*(long*)(dst[PL_B] + dst_p) = *(long*)(src[PL_B] + src_p); \
+			*(long*)(dst[PL_R] + dst_p) = *(long*)(src[PL_R] + src_p); \
+			*(long*)(dst[PL_G] + dst_p) = *(long*)(src[PL_G] + src_p); \
+			*(long*)(dst[PL_E] + dst_p) = *(long*)(src[PL_E] + src_p); \
+			cmt_bg_p += 4; \
 		} \
 	}
 
 void pascal near cmt_back_snap(void)
 {
-	vram_offset_t ps;
 	screen_x_t x;
-	vram_offset_t pd;
-	screen_y_t y;
-	int i;
-	for(i = 0; i < PLANE_COUNT; i++) {
+	vram_offset_t vo;
+	for(int i = 0; i < PLANE_COUNT; i++) {
 		cmt_back[i] = HMem<dots8_t>::allocbyte(
 			(304 * (320 / BYTE_DOTS)) + (16 * (320 / BYTE_DOTS))
 		);
 	}
-	CMT_BACK_BLIT(cmt_back, ps, VRAM_PLANE, pd);
+	cmt_bg_put_planar(cmt_bg_p, vo, x, cmt_back, cmt_bg_p, VRAM_PLANE, vo);
 }
 
 #include "th02/music/cmt_load.c"
@@ -238,17 +234,14 @@ void pascal near cmt_back_free(void)
 
 void pascal near cmt_back_put(void)
 {
-	vram_offset_t ps;
 	screen_x_t x;
-	vram_offset_t pd;
-	screen_y_t y;
-	CMT_BACK_BLIT(VRAM_PLANE, pd, cmt_back, ps);
+	vram_offset_t vo;
+	cmt_bg_put_planar(cmt_bg_p, vo, x, VRAM_PLANE, vo, cmt_back, cmt_bg_p);
 }
 
 void pascal near draw_cmt(int track)
 {
 	int line;
-	int p;
 	music_cmt_load(track);
 	screen_back_B_put();
 	cmt_back_put();
@@ -259,7 +252,7 @@ void pascal near draw_cmt(int track)
 			304, ((line + 4) * GLYPH_H), (13 | FX_WEIGHT_HEAVY), music_cmt[line]
 		);
 	}
-	PLANE_DWORD_BLIT(screen_back_B, VRAM_PLANE_B);
+	plane_dword_blit(screen_back_B, VRAM_PLANE_B);
 }
 
 void pascal musicroom(void)

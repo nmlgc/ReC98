@@ -52,11 +52,11 @@ extern page_t page_accessed;
 
 /// Clipping
 /// --------
-#define fix_order(low, high) \
+#define fix_order(tmp, low, high) \
 	if(low > high) { \
-		order_tmp = low; \
+		tmp = low; \
 		low = high; \
-		high = order_tmp; \
+		high = tmp; \
 	}
 
 #define clip_min(low, high, minimum) \
@@ -411,7 +411,7 @@ void graph_r_hline(screen_x_t left, screen_x_t right, vram_y_t y, int col)
 	dots8_t right_pixels;
 	dots8_t *vram_row;
 
-	fix_order(left, right);
+	fix_order(order_tmp, left, right);
 	clip_x(left, right);
 
 	graph_r_last_line_end.x = right;
@@ -450,7 +450,7 @@ void graph_r_vline(screen_x_t x, vram_y_t top, vram_y_t bottom, int col)
 	dots16_t pattern;
 	vram_offset_t vram_row_offset;
 
-	fix_order(top, bottom);
+	fix_order(order_tmp, top, bottom);
 	clip_y(top, bottom);
 
 	graph_r_last_line_end.x = x;
@@ -517,8 +517,6 @@ void graph_r_line(
 	vram_y_t y_vram;
 	dots16_t pixels;
 
-	Planar<dots32_t> page1;
-
 #define slope_x ((bottom - top) / (right - left))
 #define slope_y ((right - left) / (bottom - top))
 #define lerp(m, x) static_cast<int>(m * static_cast<float>(x))
@@ -540,9 +538,11 @@ void graph_r_line(
 		high = maximum; \
 	}
 
-#define restore_at(bit_count) \
+#define unput32_at(vram_offset) { \
+	Planar<dots32_t> page1; \
 	graph_accesspage_func(1);	VRAM_SNAP_PLANAR(page1, vram_offset, 32); \
-	graph_accesspage_func(0);	VRAM_PUT_PLANAR(vram_offset, page1, 32);
+	graph_accesspage_func(0);	VRAM_PUT_PLANAR(vram_offset, page1, 32); \
+}
 
 #define plot_loop(\
 	step_var, step_len, step_increment, \
@@ -558,7 +558,7 @@ void graph_r_line(
 				pixels = 0; \
 			} else { \
 				vram_offset--; \
-				restore_at(vram_offset); \
+				unput32_at(vram_offset); \
 			} \
 			y_vram = y_cur; \
 			x_vram = (x_cur >> 3); \
@@ -627,14 +627,14 @@ void graph_r_line(
 	}
 restore_last:
 	vram_offset = vram_offset_shift(x_cur, y_cur) - 1;
-	restore_at(vram_offset);
+	unput32_at(vram_offset);
 end:
 	if(!graph_r_unput) {
 		grcg_off_func();
 	}
 
 #undef plot_loop
-#undef restore_at
+#undef unput32_at
 #undef clip_lerp_min
 #undef clip_lerp_max
 #undef slope
@@ -657,8 +657,8 @@ void z_grcg_boxfill(
 	dots8_t right_pixels;
 	dots8_t *vram_row;
 
-	fix_order(left, right);
-	fix_order(top, bottom);
+	fix_order(order_tmp, left, right);
+	fix_order(order_tmp, top, bottom);
 	clip_x(left, right);
 	clip_y(top, bottom);
 

@@ -76,13 +76,13 @@ extern bool ptn_unput_before_alpha_put;
 
 // 32×32 access
 // ------------
-#define vram_put_ptn_planar(vo, ptn) \
+#define vram_put_ptn_planar(vo, ptn, y) \
 	VRAM_PUT(B, vo, ptn->planes.B[y], PTN_W); \
 	VRAM_PUT(R, vo, ptn->planes.R[y], PTN_W); \
 	VRAM_PUT(G, vo, ptn->planes.G[y], PTN_W); \
 	VRAM_PUT(E, vo, ptn->planes.E[y], PTN_W);
 
-#define vram_snap_ptn_planar(ptn, vo) \
+#define vram_snap_ptn_planar(ptn, y, vo) \
 	VRAM_SNAP(ptn->planes.B[y], B, vo, PTN_W); \
 	VRAM_SNAP(ptn->planes.R[y], R, vo, PTN_W); \
 	VRAM_SNAP(ptn->planes.G[y], G, vo, PTN_W); \

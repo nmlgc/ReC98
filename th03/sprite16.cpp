@@ -46,12 +46,12 @@ void pascal sprite16_sprites_commit(void)
 
 #define CALL_PUT(left, top, put_w_words, sprite_offset) \
 	_AH = SPRITE16_PUT; \
-	_DX = putpos_left; \
+	_DX = left; \
 	_BX = top; \
 	static_cast<int>(_BX) >>= 1; \
 	_AL = put_w_words; \
 	_CX = sprite16_put_h; \
-	_DI = sprite_offset_local; \
+	_DI = sprite_offset; \
 	geninterrupt(SPRITE16); \
 
 #define CLIP_LEFT_PART \

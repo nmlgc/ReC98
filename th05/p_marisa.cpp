@@ -14,17 +14,17 @@ extern "C" {
 #define STAR_DISTANCE      (16)
 #define STAR_OFFSET(count) (8 - ((count / 2) * STAR_DISTANCE))
 
-#define MARISA_STARS(dmg) \
+#define marisa_stars(shot, dmg) \
 	shot->pos.cur.x.v += star_distance; \
 	shot->damage = dmg; \
-	VELOCITY_Y(-12.0f); \
+	shot->pos.velocity.y.set(-12.0f); \
 	star_distance += to_sp(STAR_DISTANCE);
 
 void pascal near shot_marisa_l2(void)
 {
 #undef STAR_COUNT
 #define STAR_COUNT 1
-	SHOT_FUNC_INIT(STAR_COUNT, SC_3X, SC_1X, i += 2);
+	shot_func_init(shot, sai, cycle, STAR_COUNT, SC_3X, SC_1X, i += 2);
 	while(( shot = shots_add() ) != NULL) {
 		if(sai.i == STAR_COUNT) {
 			shot->set_random_angle_forwards();
@@ -45,7 +45,7 @@ void pascal near shot_marisa_l3(void)
 {
 #undef STAR_COUNT
 #define STAR_COUNT 2
-	SHOT_FUNC_INIT(STAR_COUNT, SC_3X, SC_1X, i += 4);
+	shot_func_init(shot, sai, cycle, STAR_COUNT, SC_3X, SC_1X, i += 4);
 	while(( shot = shots_add() ) != NULL) {
 		if(sai.i <= STAR_COUNT) {
 			if(sai.i == STAR_COUNT) { shot->pos.cur.x -= STAR_OFFSET(0); }
@@ -70,7 +70,7 @@ void pascal near shot_marisa_l4(void)
 {
 #undef STAR_COUNT
 #define STAR_COUNT 3
-	SHOT_FUNC_INIT(STAR_COUNT, SC_3X, SC_1X, i += 6);
+	shot_func_init(shot, sai, cycle, STAR_COUNT, SC_3X, SC_1X, i += 6);
 	while(( shot = shots_add() ) != NULL) {
 		if(sai.i <= STAR_COUNT) {
 			if(sai.i == STAR_COUNT) {
@@ -100,7 +100,7 @@ void pascal near shot_marisa_l5(void)
 {
 #undef STAR_COUNT
 #define STAR_COUNT 3
-	SHOT_FUNC_INIT(STAR_COUNT, SC_3X, SC_1X, i += 6);
+	shot_func_init(shot, sai, cycle, STAR_COUNT, SC_3X, SC_1X, i += 6);
 	while(( shot = shots_add() ) != NULL) {
 		if(sai.i <= STAR_COUNT) {
 			shot->damage = 6;
@@ -130,11 +130,11 @@ void pascal near shot_marisa_l6(void)
 {
 #undef STAR_COUNT
 #define STAR_COUNT 4
-	SHOT_FUNC_INIT(STAR_COUNT, SC_3X, SC_1X, i += 8);
+	shot_func_init(shot, sai, cycle, STAR_COUNT, SC_3X, SC_1X, i += 8);
 	subpixel_t star_distance = to_sp(STAR_OFFSET(STAR_COUNT));
 	while(( shot = shots_add() ) != NULL) {
 		if(sai.i <= STAR_COUNT) {
-			MARISA_STARS(5);
+			marisa_stars(shot, 5);
 		} else {
 			switch(sai.i - 5u) {
 			case 0:	OPT_L;	MISSILE_L;	VELOCITY_XY(-1.375f, 2.25f);	break;
@@ -155,11 +155,13 @@ void pascal near shot_marisa_l6(void)
 }
 
 #define MARISA_L7(star_count, star_damage, missile_count, missile_damage) \
-	SHOT_FUNC_INIT(star_count, SC_3X, SC_1X, i += missile_count); \
+	shot_func_init( \
+		shot, sai, cycle, star_count, SC_3X, SC_1X, i += missile_count \
+	); \
 	subpixel_t star_distance = to_sp(STAR_OFFSET(star_count)); \
 	while(( shot = shots_add() ) != NULL) { \
 		if(sai.i <= star_count) { \
-			MARISA_STARS(star_damage); \
+			marisa_stars(shot, star_damage); \
 		} else { \
 			switch(sai.i - 5u) { \
 			case 0:	OPT_L;	MISSILE_L;	VELOCITY_XY(-1.75f, 2.25f);	break; \
@@ -195,11 +197,11 @@ void pascal near shot_marisa_l9(void)
 #undef STAR_COUNT
 #define STAR_COUNT 6
 
-	SHOT_FUNC_INIT(STAR_COUNT, SC_3X, SC_1X, i += 12);
+	shot_func_init(shot, sai, cycle, STAR_COUNT, SC_3X, SC_1X, i += 12);
 	subpixel_t star_distance = to_sp(STAR_OFFSET(STAR_COUNT));
 	while(( shot = shots_add() ) != NULL) {
 		if(sai.i <= STAR_COUNT) {
-			MARISA_STARS(4);
+			marisa_stars(shot, 4);
 		} else {
 			switch(sai.i - 7u) {
 			case  0:	OPT_L;	MISSILE_L;	VELOCITY_XY(-2.0f, 2.25f);	break;

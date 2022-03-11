@@ -85,7 +85,7 @@ void CPlayerAnim::unput_8(screen_x_t left, vram_y_t top, int image) const
 	graph_accesspage_func(0);
 }
 
-#define put_row(bos_byte_x, vram_offset, bos_p, image) \
+#define put_row(bos_byte_x, vram_offset, intended_y, bos_p, image) \
 	for(bos_byte_x = 0; vram_w > bos_byte_x; bos_byte_x++) { \
 		if( \
 			((vram_offset / ROW_SIZE) == intended_y) && \
@@ -120,7 +120,7 @@ void CPlayerAnim::put_0_8(screen_x_t left, vram_y_t top, int image) const
 	for(bos_y = 0; h > bos_y; bos_y++) {
 		vram_offset = vram_offset_row;
 		vram_y_t intended_y = vram_intended_y_for(vram_offset_row, left);
-		put_row(bos_byte_x, vram_offset, bos_p, image);
+		put_row(bos_byte_x, vram_offset, intended_y, bos_p, image);
 		vram_offset_row += ROW_SIZE;
 		if(vram_offset_row >= PLANE_SIZE) { // Clip at the bottom edge
 			break;
@@ -200,7 +200,7 @@ void CPlayerAnim::unput_and_put_overlapped_8(
 				0, (unput_top + bos_y), (unput_mask + 1), (vram_w - 1)
 			);
 		}
-		put_row(bos_byte_x, vram_offset, bos_p, put_image);
+		put_row(bos_byte_x, vram_offset, intended_y, bos_p, put_image);
 
 		vram_offset_row += ROW_SIZE;
 		if(vram_offset_row >= PLANE_SIZE) { // Clip at the bottom edge

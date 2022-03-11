@@ -368,7 +368,7 @@ void near pascal shottype_title_put(int shottype_sel)
 
 	rank = (resident->stage == STAGE_EXTRA) ? RANK_EXTRA : resident->rank;
 
-	#define put(top, clearflag, rank, col) \
+	#define put(left, top, clearflag, rank, col) \
 		if(cleared_with[playchar_menu_sel][rank] & clearflag) { \
 			graph_putsa_fx_func = FX_WEIGHT_NORMAL; \
 			graph_putsa_fx( \
@@ -389,12 +389,12 @@ void near pascal shottype_title_put(int shottype_sel)
 	// Selected shot type
 	shottype_title_top_and_clearflag_for(top, clearflag, shottype);
 	left = SHOTTYPE_TITLE_LEFT;
-	put(top, clearflag, rank, COL_SELECTED);
+	put(left, top, clearflag, rank, COL_SELECTED);
 
 	// Other shot type
 	shottype = (SHOTTYPE_B - shottype);
 	shottype_title_top_and_clearflag_for(top, clearflag, shottype);
-	put(top, clearflag, rank, COL_NOT_SELECTED);
+	put(left, top, clearflag, rank, COL_NOT_SELECTED);
 
 	#undef put
 }

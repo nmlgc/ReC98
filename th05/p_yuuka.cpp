@@ -32,7 +32,7 @@ extern "C" {
 
 void pascal near shot_yuuka_l2(void)
 {
-	SHOT_FUNC_INIT(1, SC_3X, SC_1X, i += 2);
+	shot_func_init(shot, sai, cycle, 1, SC_3X, SC_1X, i += 2);
 	while(( shot = shots_add() ) != NULL) {
 		if(sai.i == 1) {
 			sai.set_random_angle(0x0F, -0x48);
@@ -51,7 +51,7 @@ void pascal near shot_yuuka_l2(void)
 
 void pascal near shot_yuuka_l3(void)
 {
-	SHOT_FUNC_INIT(2, SC_3X, SC_2X, add_secondary(2));
+	shot_func_init(shot, sai, cycle, 2, SC_3X, SC_2X, add_secondary(2));
 	char option_only = cycle & SC_3X;
 
 	while(( shot = shots_add() ) != NULL) {
@@ -81,7 +81,7 @@ void pascal near shot_yuuka_l3(void)
 
 void pascal near shot_yuuka_l4(void)
 {
-	SHOT_FUNC_INIT(3, SC_3X, SC_2X, add_secondary(2));
+	shot_func_init(shot, sai, cycle, 3, SC_3X, SC_2X, add_secondary(2));
 	char option_only = cycle & SC_3X;
 
 	while(( shot = shots_add() ) != NULL) {
@@ -114,7 +114,7 @@ void pascal near shot_yuuka_l4(void)
 
 void pascal near shot_yuuka_l5(void)
 {
-	SHOT_FUNC_INIT(3, SC_3X, SC_2X, add_secondary(4));
+	shot_func_init(shot, sai, cycle, 3, SC_3X, SC_2X, add_secondary(4));
 	char option_only = cycle & SC_3X;
 
 	while(( shot = shots_add() ) != NULL) {
@@ -146,7 +146,7 @@ void pascal near shot_yuuka_l5(void)
 
 void pascal near shot_yuuka_l6(void)
 {
-	SHOT_FUNC_INIT(4, SC_3X, SC_2X, add_secondary(4));
+	shot_func_init(shot, sai, cycle, 4, SC_3X, SC_2X, add_secondary(4));
 	char option_only = cycle & SC_3X;
 
 	while(( shot = shots_add() ) != NULL) {
@@ -174,7 +174,7 @@ void pascal near shot_yuuka_l6(void)
 
 void pascal near shot_yuuka_l7(void)
 {
-	SHOT_FUNC_INIT(4, SC_3X, SC_2X, add_secondary(6));
+	shot_func_init(shot, sai, cycle, 4, SC_3X, SC_2X, add_secondary(6));
 	char option_only = cycle & SC_3X;
 
 	while(( shot = shots_add() ) != NULL) {
@@ -204,7 +204,7 @@ void pascal near shot_yuuka_l7(void)
 
 void pascal near shot_yuuka_l8(void)
 {
-	SHOT_FUNC_INIT(5, SC_3X, SC_2X, add_secondary(6));
+	shot_func_init(shot, sai, cycle, 5, SC_3X, SC_2X, add_secondary(6));
 	char option_only = cycle & SC_3X;
 
 	while(( shot = shots_add() ) != NULL) {
@@ -234,7 +234,7 @@ void pascal near shot_yuuka_l8(void)
 
 void pascal near shot_yuuka_l9(void)
 {
-	SHOT_FUNC_INIT(5, SC_3X, SC_2X, add_secondary(8));
+	shot_func_init(shot, sai, cycle, 5, SC_3X, SC_2X, add_secondary(8));
 	char option_only = cycle & SC_3X;
 
 	while(( shot = shots_add() ) != NULL) {

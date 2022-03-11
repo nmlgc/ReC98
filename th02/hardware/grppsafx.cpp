@@ -42,7 +42,7 @@ void DEFCONV graph_putsa_fx(
 
 		for(line = 0; line < GLYPH_H; line++) {
 			apply_weight(glyph_row, glyph[line], glyph_row_tmp, weight);
-			put_row_and_advance(vram, row, first_bit);
+			put_row_and_advance(vram, glyph_row, first_bit);
 		}
 		advance_left(left, fullwidth, spacing);
 	}

@@ -108,7 +108,7 @@ void pascal near scores_put(int place_to_highlight)
 		TX_GREEN
 	);
 	for(i = 0; i < SCOREDAT_PLACES; i++) {
-		ATRB_SET(i);
+		score_atrb_set(atrb, i, place_to_highlight);
 		gaiji_putsa(12, 7+i, hi.score.g_name[i], atrb);
 		score_put(7+i, hi.score.score[i], atrb);
 		if(hi.score.stage[i] != STAGE_ALL) {
@@ -120,7 +120,7 @@ void pascal near scores_put(int place_to_highlight)
 		scoredat_date_put(7+i, i, atrb);
 	}
 	for(i = 0; i < SCOREDAT_PLACES; i++) {
-		ATRB_SET(i);
+		score_atrb_set(atrb, i, place_to_highlight);
 		if(i != 9) {
 			gaiji_putca(9, 7+i, gb_1_ + i, atrb);
 		} else {
@@ -133,16 +133,14 @@ void pascal near scores_put(int place_to_highlight)
 void pascal near logo_render(void)
 {
 	int i;
-	screen_x_t x;
-	screen_y_t y;
 	grcg_setcolor(GC_RMW, 10);
 	grcg_fill();
 	grcg_off();
 	logo_step++;
-	#define RENDER(offset) for(i = 0; i < 4; i++) { \
-		x = logo_step + (160 * i) + offset; \
+	#define render(i, offset) for(i = 0; i < 4; i++) { \
+		screen_x_t x = logo_step + (160 * i) + offset; \
 		x %= 640; \
-		y = (i * 100) - logo_step; \
+		screen_y_t y = (i * 100) - logo_step; \
 		while(1) { \
 			if(y < 0) { \
 				y += 400; \
@@ -153,8 +151,9 @@ void pascal near logo_render(void)
 		super_put_rect(x, y, 0); \
 		super_put_rect(x + 64, y, 1); \
 	}
-	RENDER(0);
-	RENDER(320);
+	render(i, 0);
+	render(i, 320);
+	#undef render
 }
 
 void pascal score_menu(void)

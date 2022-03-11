@@ -62,7 +62,7 @@
 		row_out &= ~(row_tmp << 1); \
 	}
 
-#define put_row_and_advance(vram, row, first_bit) \
+#define put_row_and_advance(vram, glyph_row, first_bit) \
 	if(first_bit) { \
 		vram[0] = glyph_row >> (first_bit + BYTE_DOTS); \
 		vram[1] = glyph_row >> (first_bit +         0); \

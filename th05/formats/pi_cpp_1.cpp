@@ -34,7 +34,7 @@ void pascal pi_put_masked_8(
 		mov 	ax, mask_id; \
 		call	near ptr pi_put_masked_8_rowloop; \
 	}
-	pi_put_impl(left, top, slot, rowloop_func);
+	pi_put_impl(slot, rowloop_func);
 	#undef rowloop_func
 }
 
@@ -51,7 +51,7 @@ void pascal pi_put_quarter_masked_8(
 		mov 	ax, mask_id; \
 		call	near ptr pi_put_masked_8_rowloop; \
 	}
-	pi_put_quarter_impl(left, top, slot, quarter, rowloop_func);
+	pi_put_quarter_impl(slot, quarter, rowloop_func);
 	#undef rowloop_func
 }
 

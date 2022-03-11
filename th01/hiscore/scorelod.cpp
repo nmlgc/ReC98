@@ -37,9 +37,7 @@ void scoredat_recreate()
 	int16_t stage;
 	const char *route;
 	int32_t score;
-#if (BINARY == 'E')
-	FILE *fp;
-#endif
+	scoredat_declare();
 	// Will be name-encoded, and therefore modified in the .data section!
 	char *name;
 	const char *magic;
@@ -88,9 +86,7 @@ int scoredat_load()
 		char space[50];
 	} buf;
 	char fn[16];
-#if (BINARY == 'E')
-	FILE *fp;
-#endif
+	scoredat_declare();
 
 	scoredat_fn(fn, 1);
 	if(!scoredat_exist(fn)) {

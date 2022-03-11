@@ -185,7 +185,7 @@ inline subpixel_t base_speed_for_rank(void)
 		speed = to_sp(1.0f); \
 	}
 
-#define pellet_init(pellet, left, top, group) \
+#define pellet_init(pellet, left, top, group, spawn_with_cloud) \
 	pellet->decay_frame = 0; \
 	pellet->cur_left.v = TO_SP(left); \
 	pellet->cur_top.v = TO_SP(top); \
@@ -230,7 +230,7 @@ void CPellets::add_group(
 		if(p->cloud_frame) {
 			continue;
 		}
-		pellet_init(p, left, top, group);
+		pellet_init(p, left, top, group, spawn_with_cloud);
 		p->prev_left.v = -1;
 		p->age = 0;
 		alive_count++;
@@ -274,7 +274,7 @@ void CPellets::add_single(
 		if(p->cloud_frame) {
 			continue;
 		}
-		pellet_init(p, left, top, PG_NONE);
+		pellet_init(p, left, top, PG_NONE, spawn_with_cloud);
 		p->motion_type = motion_type;
 		p->prev_left.v = -1;
 		p->age = 0;

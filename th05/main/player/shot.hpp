@@ -44,9 +44,15 @@ struct ShotAddIterator {
 	}
 };
 
-// Requires [cycle] to be defined in some way. (It's _AL in the original game,
-// and I didn't want to pollute the namespace)
-#define SHOT_FUNC_INIT(count, primary_cycle, secondary_cycle, secondary_offset_expr) \
+#define shot_func_init( \
+	shot, \
+	sai, \
+	cycle, \
+	count, \
+	primary_cycle, \
+	secondary_cycle, \
+	secondary_offset_expr \
+) \
 	shot_t near *shot; \
 	ShotAddIterator sai(count); \
 	\

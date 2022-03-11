@@ -112,7 +112,7 @@ void ptn_put_noalpha_8(screen_x_t left, vram_y_t top, int ptn_id)
 	vram_offset_t vram_offset = vram_offset_shift(left, top);
 	ptn_t *ptn = ptn_with_id(ptn_id);
 	for(pixel_t y = 0; y < PTN_H; y++) {
-		vram_put_ptn_planar(vram_offset, ptn);
+		vram_put_ptn_planar(vram_offset, ptn, y);
 		vram_offset += ROW_SIZE;
 	}
 }

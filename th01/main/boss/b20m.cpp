@@ -2402,9 +2402,11 @@ void pascal near pattern_swaying_leaves(int &frame, int spawn_interval_or_reset)
 
 	#define leaf_put(tmp_vo, tmp_first_bit, i, sprite) { \
 		if(leaf_on_screen(i)) { \
-			vo = vram_offset_divmul(left[i].to_pixel(), top[i].to_pixel()); \
+			tmp_vo = vram_offset_divmul( \
+				left[i].to_pixel(), top[i].to_pixel() \
+			); \
 			tmp_first_bit = (left[i].to_pixel() % BYTE_DOTS); \
-			grcg_put_8x8_mono(vo, tmp_first_bit, sprite[0], V_WHITE); \
+			grcg_put_8x8_mono(tmp_vo, tmp_first_bit, sprite[0], V_WHITE); \
 		} \
 	}
 

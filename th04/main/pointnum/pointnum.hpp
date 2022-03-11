@@ -80,7 +80,7 @@ extern pointnum_t near *pointnum_first_yellow_alive;
 // Returns _DX (= left) advanced by the width of the numeral.
 #define pointnum_put(left, top, numeral) \
 	_CX = numeral; \
-	pointnum_put_raw(patnum);
+	pointnum_put_raw(top, left);
 void __fastcall near pointnum_put_raw(vram_y_t top, screen_x_t left);
 
 void pascal near pointnums_render(void);

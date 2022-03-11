@@ -25,6 +25,7 @@ extern "C" {
 
 extern char rank;
 
+#define scoredat_declare()
 #define scoredat_cli()
 #define scoredat_sti()
 #define scoredat_error(str)
@@ -55,6 +56,7 @@ void pascal near str_from_kanji(char str[3], uint16_t kanji)
 	str[2] = '\0';
 }
 
+#define graph_putkanji_fx_declare() char kanji_str[3];
 #define graph_putkanji_fx(left, top, col_and_fx, fmt_instance, kanji) \
 	str_from_kanji(kanji_str, kanji); \
 	graph_putsa_fx(left, top, col_and_fx, kanji_str);

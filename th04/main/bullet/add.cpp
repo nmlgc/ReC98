@@ -261,7 +261,7 @@ void near bullets_add_special_fixedspeed(void)
 	group_fixedspeed = false;
 }
 
-#define last_bullet_in_group(group_ii) \
+#define last_bullet_in_group(group_i) \
 	(group_i >= (bullet_template.count - 1))
 
 // Necessary to compile the switch statement in bullet_velocity_and_angle_set()

@@ -70,6 +70,7 @@ extern const char SCOREDAT_ERROR_INVALID[];
 extern const char FOPEN_RB[];
 extern const char FOPEN_WB[];
 
+#define scoredat_declare() FILE *fp;
 #define scoredat_cli() disable()
 #define scoredat_sti() enable()
 #define scoredat_error(str) printf(str)
@@ -83,6 +84,7 @@ extern const char FOPEN_WB[];
 
 #include "th01/hiscore/score_nm.cpp"
 
+#define graph_putkanji_fx_declare()
 #define graph_putkanji_fx(left, top, fx, fmt_instance, kanji) \
 	extern const char ALPHABET_KANJI_FMT_##fmt_instance[]; \
 	graph_printf_fx( \
