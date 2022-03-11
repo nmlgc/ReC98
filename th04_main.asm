@@ -316,7 +316,7 @@ _envp		= dword	ptr  0Ch
 loc_AB6B:
 		call	main_01:sub_AED0
 		call	main_01:sub_AB88
-		cmp	byte_266D2, 2
+		cmp	_quit, Q_NEXT_STAGE
 		jnz	short loc_AB7D
 		call	main_01:sub_B29E
 		jmp	short loc_AB6B
@@ -354,7 +354,7 @@ loc_AB9E:
 		call	main_01:_pause
 		or	ax, ax
 		jz	short loc_ABBA
-		mov	byte_266D2, 1
+		mov	_quit, Q_QUIT_TO_OP
 
 loc_ABBA:
 		call	fp_255CA
@@ -472,7 +472,7 @@ loc_ACDE:
 
 loc_ACF4:
 		call	main_01:score_update_and_render
-		cmp	byte_266D2, 0
+		cmp	_quit, Q_KEEP_RUNNING
 		jz	loc_AB9E
 		pop	si
 		pop	bp
@@ -5008,11 +5008,13 @@ loc_E796:
 		inc	_continues_used
 		call	sub_EEB0
 		call	hud_score_put
-		mov	al, 0
+		mov	al, Q_KEEP_RUNNING
 		jmp	short loc_E7DA
 ; ---------------------------------------------------------------------------
 
 loc_E7D8:
+		; *Not* Q_QUIT_TO_OP; the calling function checks for this value and
+		; launches MAINE.EXE with the score tally instead.
 		mov	al, 1
 
 loc_E7DA:
@@ -8954,7 +8956,7 @@ loc_10A60:
 
 loc_10AB7:
 		call	main_01:sub_E541
-		mov	byte_266D2, al
+		mov	_quit, al
 
 locret_10ABD:
 		leave
@@ -10065,7 +10067,7 @@ sub_11ECB	proc near
 		mov	_stage_frame_mod8, 0
 		mov	_stage_frame_mod16, 0
 		mov	_slowdown_factor, 1
-		mov	byte_266D2, 0
+		mov	_quit, Q_KEEP_RUNNING
 		mov	_palette_changed, 0
 		mov	_bullet_zap_active, 0
 		mov	_stage_graze, 0
@@ -28528,7 +28530,7 @@ loc_1E8E5:
 		les	bx, _resident
 		inc	es:[bx+resident_t.stage]
 		inc	es:[bx+resident_t.stage_ascii]
-		mov	byte_266D2, 2
+		mov	_quit, Q_NEXT_STAGE
 		push	1
 		call	frame_delay
 
@@ -32835,7 +32837,7 @@ include th02/hardware/pages[bss].asm
 map_seg	dw ?
 include th04/main/tile/tiles[bss].asm
 include th04/main/frames[bss].asm
-byte_266D2	db ?
+include th04/main/quit[bss].asm
 include th03/hardware/palette_changed[bss].asm
 include th04/main/play[bss].asm
 include th04/main/drawpoint[bss].asm
