@@ -4,9 +4,11 @@
  */
 
 extern "C" {
+#include <stddef.h>
 #include <process.h>
-#include "ReC98.h"
+#include "platform.h"
 #include "x86real.h"
+#include "pc98.h"
 #include "th02/resident.hpp"
 #include "master.hpp"
 #include "libs/kaja/kaja.h"

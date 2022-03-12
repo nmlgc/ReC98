@@ -3,7 +3,9 @@ extern "C" {
 #include <mem.h>
 #include <mbctype.h>
 #include <mbstring.h>
-#include "ReC98.h"
+#include "platform.h"
+#include "pc98.h"
+#include "planar.h"
 #include "master.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/math/clamp.hpp"

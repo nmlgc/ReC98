@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdarg.h>
-#include "ReC98.h"
+#include "platform.h"
+#include "pc98.h"
+#include "planar.h"
 #include "th01/hardware/graph.h"
 
 void graph_printf_fx(

@@ -4,8 +4,10 @@
  */
 
 extern "C" {
-#include "ReC98.h"
+#include "platform.h"
 #include "x86real.h"
+#include "pc98.h"
+#include "planar.h"
 #include "master.hpp"
 #include "th01/math/clamp.hpp"
 #include "th01/hardware/grppsafx.h"

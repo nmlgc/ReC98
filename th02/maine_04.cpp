@@ -5,7 +5,8 @@
 
 extern "C" {
 #include <dos.h>
-#include "ReC98.h"
+#include "platform.h"
+#include "pc98.h"
 #include "master.hpp"
 #include "th01/math/clamp.hpp"
 #include "th02/common.h"

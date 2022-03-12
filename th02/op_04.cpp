@@ -7,7 +7,8 @@ extern "C" {
 #include <dos.h>
 #include <mbctype.h>
 #include <mbstring.h>
-#include "ReC98.h"
+#include "platform.h"
+#include "pc98.h"
 #include "master.hpp"
 #include "th01/rank.h"
 #include "th02/common.h"

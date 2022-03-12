@@ -6,8 +6,10 @@
 extern "C" {
 #include <mem.h>
 #include <stdio.h>
-#include "ReC98.h"
+#include "platform.h"
 #include "x86real.h"
+#include "pc98.h"
+#include "planar.h"
 #include "pc98kbd.h"
 #include "master.hpp"
 #include "th01/rank.h"

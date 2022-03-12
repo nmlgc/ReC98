@@ -6,8 +6,9 @@
 #pragma codestring "\x00"
 
 extern "C" {
-#include "ReC98.h"
+#include "platform.h"
 #include "x86real.h"
+#include "pc98.h"
 #include "master.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/formats/pi.h"

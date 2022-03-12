@@ -6,7 +6,9 @@
 #pragma option -1 -Z-
 
 extern "C" {
-#include "ReC98.h"
+#include "platform.h"
+#include "pc98.h"
+#include "planar.h"
 #include "master.hpp"
 #include "th01/formats/grp.h"
 #include "th01/hardware/graph.h"

@@ -7,7 +7,7 @@
 
 #include <dos.h>
 #include <stddef.h>
-#include "ReC98.h"
+#include "platform.h"
 #include "master.hpp"
 #include "th01/rank.h"
 #include "th02/formats/scoredat.h"

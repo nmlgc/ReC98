@@ -4,7 +4,10 @@
  */
 
 extern "C" {
-#include "ReC98.h"
+#include <stddef.h>
+#include "platform.h"
+#include "pc98.h"
+#include "planar.h"
 #include "master.hpp"
 
 #include "th01/main/player/move.cpp"
