@@ -19,7 +19,7 @@ extern "C" {
 #include "th04/common.h"
 #include "th05/playchar.h"
 #include "th05/resident.hpp"
-#include "th05/op/op.h"
+#include "th05/op/op.hpp"
 #include "th05/sprites/op_cdg.h"
 #include "th05/snd/snd.h"
 #include "th05/hardware/input.h"
@@ -59,8 +59,6 @@ bool selectable_with[PLAYCHAR_COUNT];
 void pascal near pic_darken(unsigned char playchar)
 {
 	vram_offset_t vram_offset;
-	vram_byte_amount_t x;
-	pixel_t y;
 
 	switch(playchar) {
 	case PLAYCHAR_REIMU:
@@ -76,7 +74,7 @@ void pascal near pic_darken(unsigned char playchar)
 		vram_offset = vram_offset_shift(YUUKA_LEFT, YUUKA_TOP);
 		break;
 	}
-	darken(vram_offset, x, y, PIC_W, PIC_H, 1);
+	darken(vram_offset, PIC_W, PIC_H, 1);
 }
 
 void pascal near pic_put(bool16 darkened)
@@ -86,17 +84,17 @@ void pascal near pic_put(bool16 darkened)
 	screen_x_t cleared_left;
 	vram_y_t cleared_top;
 
-	#define set_coords_for(playchar) \
-		pic_left = playchar##_LEFT; \
-		pic_top = playchar##_TOP; \
-		cleared_left = (playchar##_LEFT + (PIC_W - CLEARED_W)); \
-		cleared_top = (playchar##_TOP + (PIC_H - CLEARED_H));
+	#define set_coords(left, top) \
+		pic_left = left; \
+		pic_top = top; \
+		cleared_left = (left + (PIC_W - CLEARED_W)); \
+		cleared_top = (top + (PIC_H - CLEARED_H));
 
 	switch(playchar_menu_sel) {
-	case PLAYCHAR_REIMU: 	set_coords_for(REIMU); 	break;
-	case PLAYCHAR_MARISA:	set_coords_for(MARISA);	break;
-	case PLAYCHAR_MIMA:  	set_coords_for(MIMA);  	break;
-	case PLAYCHAR_YUUKA: 	set_coords_for(YUUKA); 	break;
+	case PLAYCHAR_REIMU: 	set_coords(REIMU_LEFT, REIMU_TOP);  	break;
+	case PLAYCHAR_MARISA:	set_coords(MARISA_LEFT, MARISA_TOP);	break;
+	case PLAYCHAR_MIMA:  	set_coords(MIMA_LEFT, MIMA_TOP);    	break;
+	case PLAYCHAR_YUUKA: 	set_coords(YUUKA_LEFT, YUUKA_TOP);  	break;
 	}
 
 	#define pic_raised_left (pic_left - RAISE_W)
@@ -156,7 +154,7 @@ void pascal near pic_put(bool16 darkened)
 		pic_darken(playchar_menu_sel);
 	}
 
-	#undef set_coords_for
+	#undef set_coords
 	#undef pic_raised_top
 	#undef pic_raised_left
 }

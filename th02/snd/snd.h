@@ -50,7 +50,6 @@ bool16 snd_determine_mode(void);
 // Calls the interrupt handler of the installed sound driver with AX = [ax],
 // if any. If BGM is disabled, the return value is undefined.
 int16_t DEFCONV snd_kaja_interrupt(int16_t ax);
-#define snd_kaja_func(func, param) snd_kaja_interrupt((func) << 8 | (param))
 
 // Blocks until the active sound driver reports the given [volume] via
 // KAJA_GET_VOLUME. The behavior is undefined if no sound driver is active.
@@ -61,6 +60,11 @@ void snd_delay_until_volume(uint8_t volume);
 #endif
 
 #if defined(PMD) /* requires kaja.h */
+	#if defined(__cplusplus)
+		inline int16_t snd_kaja_func(kaja_func_t func, int8_t param) {
+			return snd_kaja_interrupt((func) << 8 | (param));
+		}
+		#endif
 	#if defined(__cplusplus) && (GAME <= 4)
 		static inline uint16_t snd_load_size() {
 			// ZUN bug: Should rather retrieve the maximum data size for song
@@ -95,8 +99,11 @@ void snd_se_reset(void);
 void DEFCONV snd_se_play(int new_se);
 void snd_se_update(void);
 
-// Cancels any currently playing sound effect to play the given one.
-#define snd_se_play_force(new_se) \
-	snd_se_reset(); \
-	snd_se_play(new_se); \
-	snd_se_update();
+#ifdef __cplusplus
+	// Cancels any currently playing sound effect to play the given one.
+	inline void snd_se_play_force(int new_se) {
+		snd_se_reset();
+		snd_se_play(new_se);
+		snd_se_update();
+	}
+#endif

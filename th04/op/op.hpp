@@ -25,14 +25,17 @@ void near cleardata_and_regist_view_sprites_load(void);
 // return to the main menu (true).
 bool16 near playchar_menu(void);
 
-// Synchronizes both VRAM pages within a 2-frame delay.
-#define sync_pages_and_delay() \
-	vsync_reset1(); \
-	frame_delay(1); \
-	\
-	graph_showpage(1); \
-	graph_copy_page(0); \
-	vsync_reset1(); \
-	frame_delay(1); \
-	\
-	graph_showpage(0);
+#ifdef X86REAL_H
+	// Synchronizes both VRAM pages within a 2-frame delay.
+	inline void sync_pages_and_delay() {
+		vsync_reset1();
+		frame_delay(1);
+
+		graph_showpage(1);
+		graph_copy_page(0);
+		vsync_reset1();
+		frame_delay(1);
+
+		graph_showpage(0);
+	}
+#endif

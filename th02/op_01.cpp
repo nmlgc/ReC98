@@ -537,21 +537,21 @@ void option_update_and_render(void)
 	static bool input_allowed = false;
 	static bool initialized = false;
 
-	#define OPTION_CHANGE(direction) \
+	#define option_change(ring_direction) \
 		option_put(menu_sel, TX_YELLOW); \
 		switch(menu_sel) { \
 		case 0: \
-			RING_##direction##(rank, option_rank_max()); \
+			ring_direction(rank, option_rank_max()); \
 			break; \
 		case 1: \
-			RING_##direction##((char)snd_bgm_mode, option_bgm_max()); \
+			ring_direction((char)snd_bgm_mode, option_bgm_max()); \
 			snd_bgm_restart(); \
 			break; \
 		case 2: \
-			RING_##direction##(lives, option_lives_max()); \
+			ring_direction(lives, option_lives_max()); \
 			break; \
 		case 3: \
-			RING_##direction##(bombs, option_bombs_max()); \
+			ring_direction(bombs, option_bombs_max()); \
 			break; \
 		case 4: \
 			resident->perf = 1 - resident->perf; \
@@ -584,10 +584,10 @@ void option_update_and_render(void)
 			menu_sel_move(6, 1);
 		}
 		if(key_det & INPUT_RIGHT) {
-			OPTION_CHANGE(INC);
+			option_change(RING_INC);
 		}
 		if(key_det & INPUT_LEFT) {
-			OPTION_CHANGE(DEC);
+			option_change(RING_DEC);
 		}
 		if(key_det & INPUT_SHOT || key_det & INPUT_OK) {
 			switch(menu_sel) {

@@ -915,6 +915,7 @@ struct mcb_t {
 	uint8_t m_fill[3];
 	uint8_t m_name[8];
 };
+static const uint16_t MCB_PARAS = (sizeof(mcb_t) / 16);
 
 respal_t __seg* z_respal_exist(void)
 {
@@ -925,7 +926,6 @@ respal_t __seg* z_respal_exist(void)
 	int i;
 
 #define MCB reinterpret_cast<mcb_t __seg *>(mcb)	/* For easy derefencing */
-#define MCB_PARAS (sizeof(mcb_t) / 16)	/* For segment pointer arithmetic */
 
 	// "Get list of lists"
 	segread(&sregs);
@@ -950,7 +950,6 @@ respal_t __seg* z_respal_exist(void)
 		mcb += MCB_PARAS + MCB->m_size;
 	};
 
-#undef MCB_PARAS
 #undef MCB
 }
 

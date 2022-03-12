@@ -13,7 +13,7 @@ extern "C" {
 #include "th04/formats/scoredat.h"
 #include "th05/playchar.h"
 #include "th05/resident.hpp"
-#include "th05/op/op.h"
+#include "th05/op/op.hpp"
 
 scoredat_section_t hi;
 scoredat_section_t hi2;

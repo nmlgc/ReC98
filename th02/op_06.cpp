@@ -128,35 +128,38 @@ void pascal near polygon_build(
 	pts[i].y = pts[0].y;
 }
 
+#define polygon_init(i, y_, velocity_x) { \
+	pos[i].x = (rand() % RES_X); \
+	pos[i].y = y_; \
+	move_speed[i].x = velocity_x; \
+	if(move_speed[i].x == 0) { \
+		move_speed[i].x = 1; \
+	} \
+	move_speed[i].y = (((rand() & 3) << 4) + 32); \
+	angle[i] = rand(); \
+	rot_speed[i] = 0x04 - (rand() & 0x07); \
+	if(rot_speed[i] == 0x00) { \
+		rot_speed[i] = 0x04; \
+	} \
+}
+
+inline int polygon_vertex_count(int i) {
+	return ((i / 4) + 3);
+}
+
 void pascal near polygons_update_and_render(void)
 {
-	#define VERTICES(i) (i / 4) + 3
-
-	#define POLYGON_INIT_PART2 \
-		if(move_speed[i].x == 0) { \
-			move_speed[i].x = 1; \
-		} \
-		move_speed[i].y = ((rand() & 3) << 4) + 32; \
-		angle[i] = rand(); \
-		rot_speed[i] = 0x04 - (rand() & 0x07); \
-		if(rot_speed[i] == 0) { \
-			rot_speed[i] = 0x04; \
-		}
-
 	int i;
 	if(!initialized) {
 		for(i = 0; i < MUSIC_POLYGONS; i++) {
-			pos[i].x = rand() % 640;
-			pos[i].y = rand() % (400 * 16);
-			move_speed[i].x = 4 - (rand() & 7);
-			POLYGON_INIT_PART2;
+			polygon_init(i, (rand() % (RES_Y * 16)), (4 - (rand() & 7)));
 		}
 		initialized = 1;
 	}
 	for(i = 0; i < MUSIC_POLYGONS; i++) {
 		polygon_build(
 			points, pos[i].x, pos[i].y,
-			((i & 3) << 4) + 64, VERTICES(i), angle[i]
+			(((i & 3) << 4) + 64), polygon_vertex_count(i), angle[i]
 		);
 		pos[i].x += move_speed[i].x;
 		pos[i].y += move_speed[i].y;
@@ -164,13 +167,12 @@ void pascal near polygons_update_and_render(void)
 		if(pos[i].x <= 0 || pos[i].x >= 639) {
 			move_speed[i].x *= -1;
 		}
-		if(pos[i].y >= (400 * 20)) {
-			pos[i].x = rand() % 640;
-			pos[i].y = -1600;
-			move_speed[i].x = 8 - (rand() & 15);
-			POLYGON_INIT_PART2;
+		if(pos[i].y >= (RES_Y * 20)) {
+			polygon_init(i, -(RES_Y * 4), (8 - (rand() & 15)));
 		}
-		grcg_polygon_c(reinterpret_cast<Point *>(points), VERTICES(i));
+		grcg_polygon_c(
+			reinterpret_cast<Point *>(points), polygon_vertex_count(i)
+		);
 	}
 }
 

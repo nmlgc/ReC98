@@ -14,6 +14,10 @@
 static const unsigned int PELLET_DESTROY_SCORE = 10;
 static const int PELLET_DECAY_FRAMES = 20;
 static const int PELLET_DECAY_CELS = 2;
+
+inline int decay_frames_for_cel(int cel) {
+	return ((PELLET_DECAY_FRAMES / PELLET_DECAY_CELS) * cel);
+}
 /// ---------
 
 /// Globals
@@ -630,8 +634,6 @@ void CPellets::unput_update_render(void)
 					p->not_rendered = false;
 				}
 				#define render pellet_render
-				#define decay_frames_for_cel(cel) \
-					((PELLET_DECAY_FRAMES / PELLET_DECAY_CELS) * cel)
 				if(p->decay_frame == 0) {
 					render(p->cur_left.to_pixel(), p->cur_top.to_pixel(), 0);
 				} else if(p->decay_frame <= decay_frames_for_cel(1)) {
@@ -639,7 +641,6 @@ void CPellets::unput_update_render(void)
 				}  else if(p->decay_frame < decay_frames_for_cel(2)) {
 					render(p->cur_left.to_pixel(), p->cur_top.to_pixel(), 2);
 				}
-				#undef decay_frames_for_cel
 				#undef render
 			} else {
 				p->not_rendered = true;

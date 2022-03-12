@@ -16,7 +16,7 @@ extern "C" {
 #include "th04/score.h"
 #include "th04/end/end.h"
 #include "th05/playchar.h"
-#include "th05/op/op.h"
+#include "th05/op/op.hpp"
 #include "th05/snd/snd.h"
 #include "th05/resident.hpp"
 #include "th05/hardware/input.h"

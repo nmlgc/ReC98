@@ -28,6 +28,7 @@ void pascal sprite16_sprites_commit(void)
 #define sprite_offset_local (_DI)
 #define putpos_left static_cast<int>(_DX)
 #define putpos_right static_cast<int>(_BX)
+#define putpos_right_high (_BH)
 #define clip_left static_cast<int>(_SI)
 #define clip_right static_cast<int>(_CX)
 #define put_w_words (_AL)
@@ -37,7 +38,7 @@ void pascal sprite16_sprites_commit(void)
 	sprite_offset_local = sprite_offset; \
 	putpos_left = left; \
 	put_w_words = sprite16_put_w.v; \
-	_BH ^= _BH; /* upper 8 bits of putpos_right */ \
+	putpos_right_high ^= putpos_right_high; \
 	static_cast<char>(putpos_right) = put_w_words; \
 	putpos_right <<= 4; \
 	putpos_right += putpos_left; \
@@ -148,7 +149,7 @@ void pascal sprite16_put_noclip(
 	// assignment, which actually makes it incorrect...
 	sprite_offset_local = sprite_offset;
 	putpos_left = left;
-	_BH ^= _BH; /* upper 8 bits of putpos_right */
+	putpos_right_high ^= putpos_right_high;
 	static_cast<char>(putpos_right) = put_w_words;
 	putpos_right <<= 4;
 	putpos_right += putpos_left;

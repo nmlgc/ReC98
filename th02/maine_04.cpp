@@ -183,62 +183,59 @@ void pascal score_enter(void)
 	input_locked = 1;
 	input_delay = 0;
 
-	#define alphabet_cursor_move(coord, max, direction, col, row) \
+	#define alphabet_cursor_move(coord, coord_max, ring_direction, col, row) \
 		alphabet_putca(col, row, TX_WHITE); \
-		RING_##direction(coord, ALPHABET_##max - 1); \
+		ring_direction(coord, coord_max - 1); \
 		alphabet_putca(col, row, TX_GREEN | TX_REVERSE);
-
-	// Otherwise, this leads to more levels of indentation than I would like.
-	#define INPUTS if(key_det & INPUT_UP) { \
-		alphabet_cursor_move(row, ROWS, DEC, col, row); \
-	} \
-	if(key_det & INPUT_DOWN) { \
-		alphabet_cursor_move(row, ROWS, INC, col, row); \
-	} \
-	if(key_det & INPUT_LEFT) { \
-		alphabet_cursor_move(col, COLS, DEC, col, row); \
-	} \
-	if(key_det & INPUT_RIGHT) { \
-		alphabet_cursor_move(col, COLS, INC, col, row); \
-	} \
-	if(key_det & INPUT_SHOT || key_det & INPUT_OK) { \
-		/* Yeah, it sucks that ZUN checks against the indices into the
-		 * alphabet structure rather than against the gaiji values. */ \
-		if(row != 2 || col < 13) { \
-			hi.score.g_name[place][name_pos] = gALPHABET[row][col]; \
-			if(name_pos == 5) { \
-				alphabet_putca(col, row, TX_WHITE); \
-				col = ALPHABET_ENTER_COL; \
-				row = ALPHABET_ENTER_ROW; \
-				alphabet_putca(col, row, TX_GREEN | TX_REVERSE); \
-			} \
-			clamp_inc(name_pos, 5); \
-		} else if(col == 13) { \
-			hi.score.g_name[place][name_pos] = gb_SP; \
-			clamp_inc(name_pos, 5); \
-		} else if(col == 14) { \
-			clamp_dec(name_pos, 0); \
-			hi.score.g_name[place][name_pos] = gb_SP; \
-		} else if(col == 15) { \
-			clamp_inc(name_pos, 5); \
-		} else if(col == 16) { \
-			break; \
-		} \
-		scoredat_name_puts(place, name_pos); \
-	} \
-	if(key_det & INPUT_BOMB) { \
-		hi.score.g_name[place][name_pos] = gb_SP; \
-		clamp_dec(name_pos, 0); \
-		scoredat_name_puts(place, name_pos); \
-	} \
-	if(key_det & INPUT_CANCEL) { \
-		break; \
-	}
 
 	do {
 		input_sense();
 		if(!input_locked) {
-			INPUTS;
+			if(key_det & INPUT_UP) {
+				alphabet_cursor_move(row, ALPHABET_ROWS, RING_DEC, col, row);
+			}
+			if(key_det & INPUT_DOWN) {
+				alphabet_cursor_move(row, ALPHABET_ROWS, RING_INC, col, row);
+			}
+			if(key_det & INPUT_LEFT) {
+				alphabet_cursor_move(col, ALPHABET_COLS, RING_DEC, col, row);
+			}
+			if(key_det & INPUT_RIGHT) {
+				alphabet_cursor_move(col, ALPHABET_COLS, RING_INC, col, row);
+			}
+			if(key_det & INPUT_SHOT || key_det & INPUT_OK) {
+				/* Yeah, it sucks that ZUN checks against the indices into the
+				* alphabet structure rather than against the gaiji values. */
+				if(row != 2 || col < 13) {
+					hi.score.g_name[place][name_pos] = gALPHABET[row][col];
+					if(name_pos == 5) {
+						alphabet_putca(col, row, TX_WHITE);
+						col = ALPHABET_ENTER_COL;
+						row = ALPHABET_ENTER_ROW;
+						alphabet_putca(col, row, TX_GREEN | TX_REVERSE);
+					}
+					clamp_inc(name_pos, 5);
+				} else if(col == 13) {
+					hi.score.g_name[place][name_pos] = gb_SP;
+					clamp_inc(name_pos, 5);
+				} else if(col == 14) {
+					clamp_dec(name_pos, 0);
+					hi.score.g_name[place][name_pos] = gb_SP;
+				} else if(col == 15) {
+					clamp_inc(name_pos, 5);
+				} else if(col == 16) {
+					break;
+				}
+				scoredat_name_puts(place, name_pos);
+			}
+			if(key_det & INPUT_BOMB) {
+				hi.score.g_name[place][name_pos] = gb_SP;
+				clamp_dec(name_pos, 0);
+				scoredat_name_puts(place, name_pos);
+			}
+			if(key_det & INPUT_CANCEL) {
+				break;
+			}
 		}
 		frame_delay(1);
 		input_locked = key_det;

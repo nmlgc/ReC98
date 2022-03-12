@@ -8,6 +8,10 @@
 # define INITIALIZED "それでは、よろしくお願いします"
 #endif
 
+#define arg_is(arg, capital, small) \
+	((arg[0] == '-'    ) || (arg[0] == '/'  )) && \
+	((arg[1] == capital) || (arg[1] == small))
+
 int main(int argc, const unsigned char **argv)
 {
 	resident_t __seg *sgm;
@@ -29,10 +33,7 @@ int main(int argc, const unsigned char **argv)
 	RES_INIT_TOP;
 #endif
 	if(argc == 2) {
-		#define arg1_is(capital, small) \
-			(argv[1][0] == '-' || argv[1][0] == '/') \
-			&& (argv[1][1] == (capital) || argv[1][1] == (small))
-		if(arg1_is('R', 'r')) {
+		if(arg_is(argv[1], 'R', 'r')) {
 			if(!sgm) {
 				dos_puts2(ERROR_NOT_RESIDENT "\n\n");
 				return 1;
@@ -40,7 +41,7 @@ int main(int argc, const unsigned char **argv)
 			dos_free(sgm);
 			dos_puts2(REMOVED "\n\n");
 			return 0;
-		} else if(arg1_is('D', 'd')) {
+		} else if(arg_is(argv[1], 'D', 'd')) {
 			debug = 1;
 		} else {
 			dos_puts2("そんなオプション付けられても、困るんですけど\n\n");

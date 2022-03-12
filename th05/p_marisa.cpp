@@ -11,14 +11,16 @@ extern "C" {
 
 #pragma option -a2
 
-#define STAR_DISTANCE      (16)
-#define STAR_OFFSET(count) (8 - ((count / 2) * STAR_DISTANCE))
+static const subpixel_t STAR_DISTANCE = TO_SP(16);
+inline subpixel_t star_offset(int count) {
+	return (to_sp(8.0f) - ((count / 2) * STAR_DISTANCE));
+}
 
 #define marisa_stars(shot, dmg) \
 	shot->pos.cur.x.v += star_distance; \
 	shot->damage = dmg; \
 	shot->pos.velocity.y.set(-12.0f); \
-	star_distance += to_sp(STAR_DISTANCE);
+	star_distance += STAR_DISTANCE;
 
 void pascal near shot_marisa_l2(void)
 {
@@ -48,8 +50,8 @@ void pascal near shot_marisa_l3(void)
 	shot_func_init(shot, sai, cycle, STAR_COUNT, SC_3X, SC_1X, i += 4);
 	while(( shot = shots_add() ) != NULL) {
 		if(sai.i <= STAR_COUNT) {
-			if(sai.i == STAR_COUNT) { shot->pos.cur.x -= STAR_OFFSET(0); }
-			else /* sai_i == 1 */   { shot->pos.cur.x += STAR_OFFSET(0); }
+			if(sai.i == STAR_COUNT) { shot->pos.cur.x.v -= star_offset(0); }
+			else /* sai_i == 1 */   { shot->pos.cur.x.v += star_offset(0); }
 			shot->damage = 7;
 		} else {
 			switch(sai.i - 3u) {
@@ -131,7 +133,7 @@ void pascal near shot_marisa_l6(void)
 #undef STAR_COUNT
 #define STAR_COUNT 4
 	shot_func_init(shot, sai, cycle, STAR_COUNT, SC_3X, SC_1X, i += 8);
-	subpixel_t star_distance = to_sp(STAR_OFFSET(STAR_COUNT));
+	subpixel_t star_distance = star_offset(STAR_COUNT);
 	while(( shot = shots_add() ) != NULL) {
 		if(sai.i <= STAR_COUNT) {
 			marisa_stars(shot, 5);
@@ -158,7 +160,7 @@ void pascal near shot_marisa_l6(void)
 	shot_func_init( \
 		shot, sai, cycle, star_count, SC_3X, SC_1X, i += missile_count \
 	); \
-	subpixel_t star_distance = to_sp(STAR_OFFSET(star_count)); \
+	subpixel_t star_distance = star_offset(star_count); \
 	while(( shot = shots_add() ) != NULL) { \
 		if(sai.i <= star_count) { \
 			marisa_stars(shot, star_damage); \
@@ -198,7 +200,7 @@ void pascal near shot_marisa_l9(void)
 #define STAR_COUNT 6
 
 	shot_func_init(shot, sai, cycle, STAR_COUNT, SC_3X, SC_1X, i += 12);
-	subpixel_t star_distance = to_sp(STAR_OFFSET(STAR_COUNT));
+	subpixel_t star_distance = star_offset(STAR_COUNT);
 	while(( shot = shots_add() ) != NULL) {
 		if(sai.i <= STAR_COUNT) {
 			marisa_stars(shot, 4);

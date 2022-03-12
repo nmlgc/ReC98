@@ -24,7 +24,7 @@ extern "C" {
 #include "th04/formats/cdg.h"
 #include "th04/snd/snd.h"
 #include "th04/sprites/op_cdg.h"
-#include "th04/op/op.h"
+#include "th04/op/op.hpp"
 
 #include "th04/shiftjis/m_char.cpp"
 
@@ -249,15 +249,13 @@ void near raise_bg_free(void)
 void near pascal pic_darken(playchar_t playchar)
 {
 	vram_offset_t vo;
-	vram_byte_amount_t x;
-	pixel_t y;
 
 	if(playchar == PLAYCHAR_REIMU) {
 		vo = vram_offset_shift(REIMU_LEFT, REIMU_TOP);
 	} else {
 		vo = vram_offset_shift(MARISA_LEFT, MARISA_TOP);
 	}
-	darken(vo, x, y, PIC_W, PIC_H, 1);
+	darken(vo, PIC_W, PIC_H, 1);
 }
 
 #define playchar_title_left_for(left, playchar) \
@@ -486,7 +484,7 @@ bool16 near playchar_menu(void)
 				for(rank = RANK_NORMAL; rank < RANK_EXTRA; rank++) { \
 					extra_unlocked |= cleared_with[playchar][rank] & flag; \
 				} \
-				selectable_with[playchar][shottype] = (extra_unlocked) != false;
+				selectable_with[playchar][shottype] = (extra_unlocked != false);
 
 			set_selectable_with(playchar, SHOTTYPE_A, SCOREDAT_CLEARED_A);
 			set_selectable_with(playchar, SHOTTYPE_B, SCOREDAT_CLEARED_B);

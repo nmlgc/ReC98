@@ -290,10 +290,8 @@ void regist_put_initial(
 			table_stage_left(3),
 			top,
 			col_and_fx_text,
-			(i == entered_place)
-				? entered_route[0] : scoredat_routes[i * SCOREDAT_ROUTE_LEN],
-			(i == entered_place)
-				? entered_route[1] : scoredat_route_byte(i, 1)
+			(i == entered_place) ? entered_route[0] : scoredat_route_byte(i, 0),
+			(i == entered_place) ? entered_route[1] : scoredat_route_byte(i, 1)
 		);
 		if(entered_place == i) {
 			entered_name_left = table_name_left(0);

@@ -126,14 +126,14 @@ void pascal draw_header(void)
 
 void pascal shottype_menu_init(void)
 {
-	#define DRAW_CLEARED_FOR(mode) \
-		if(cleared_##mode##_with[0]) { \
+	#define draw_cleared_for(cleared_mode_with) \
+		if(cleared_mode_with[0]) { \
 			graph_putsa_fx(16, 112, (15 | FX_WEIGHT_BOLD), CLEARED); \
 		} \
-		if(cleared_##mode##_with[1]) { \
+		if(cleared_mode_with[1]) { \
 			graph_putsa_fx(224, 112, (15 | FX_WEIGHT_BOLD), CLEARED); \
 		} \
-		if(cleared_##mode##_with[2]) { \
+		if(cleared_mode_with[2]) { \
 			graph_putsa_fx(432, 112, (15 | FX_WEIGHT_BOLD), CLEARED); \
 		}
 
@@ -143,9 +143,9 @@ void pascal shottype_menu_init(void)
 	graph_copy_page(1);
 	graph_accesspage(0);
 	if(resident->stage != 5) {
-		DRAW_CLEARED_FOR(game);
+		draw_cleared_for(cleared_game_with);
 	} else {
-		DRAW_CLEARED_FOR(extra);
+		draw_cleared_for(cleared_extra_with);
 	}
 	pi_put_8( 24, 136, 0);
 	pi_put_8(224, 224, 1);
@@ -162,6 +162,12 @@ void pascal shottype_menu_init(void)
 	palette_black_in(2);
 }
 
+inline void draw_new_sel(const screen_x_t pic_x[3], const screen_y_t pic_y[3]) {
+	frame_delay(1);	copy_pic_back(sel, 1);
+	frame_delay(1); draw_shottype_desc(sel, 12);
+	frame_delay(1); pi_put_8(pic_x[sel], pic_y[sel], sel);
+}
+
 void pascal shottype_menu(void)
 {
 	int input_locked = 0;
@@ -169,11 +175,6 @@ void pascal shottype_menu(void)
 	screen_y_t pic_y[] = {128, 224, 128};
 	unsigned int input_delay = 0;
 	shottype_menu_init();
-
-	#define DRAW_NEW_SEL() \
-		frame_delay(1);	copy_pic_back(sel, 1); \
-		frame_delay(1); draw_shottype_desc(sel, 12); \
-		frame_delay(1); pi_put_8(pic_x[sel], pic_y[sel], sel);
 
 	do {
 		input_sense();
@@ -188,7 +189,7 @@ void pascal shottype_menu(void)
 				darken_pic_at(pic_x[sel] + 8, pic_y[sel] + 8);
 
 				RING_DEC(sel, sel_ring_end());
-				DRAW_NEW_SEL();
+				draw_new_sel(pic_x, pic_y);
 			}
 			if(key_det & INPUT_RIGHT) {
 				copy_pic_back(sel, 0);
@@ -200,7 +201,7 @@ void pascal shottype_menu(void)
 				darken_pic_at(pic_x[sel] + 8, pic_y[sel] + 8);
 
 				RING_INC(sel, sel_ring_end());
-				DRAW_NEW_SEL();
+				draw_new_sel(pic_x, pic_y);
 			}
 			if(key_det & INPUT_SHOT || key_det & INPUT_OK) {
 				resident->shottype = sel;

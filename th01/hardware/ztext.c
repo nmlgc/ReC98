@@ -119,7 +119,6 @@ void z_text_putsa(tram_x_t x, tram_y_t y, int z_atrb, const char *str)
 	int hw_atrb = 1;
 
 	#define tx_chars(byte) ((char*)MK_FP(0xA000, p + byte))
-	#define tx_chars(byte) ((char*)MK_FP(0xA000, p + byte))
 	#define tx_atrbs(byte) ((int16_t*)MK_FP(0xA200, p + byte))
 
 	if(z_atrb & 1) {
