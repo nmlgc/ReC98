@@ -18,3 +18,25 @@
 	if((v) < (min)) { \
 		(v) = (min); \
 	}
+
+#ifdef __cplusplus
+	// This is, in fact, the only way to circumvent 16-bit promotion inside
+	// comparisons between two 8-bit values in C++. I kid you not.
+	static inline char ring_min() {
+		return 0;
+	}
+#else
+	#define ring_min() 0
+#endif
+
+#define ring_inc(val, ring_end) \
+	(val)++; \
+	if((val) > (ring_end)) { \
+		(val) = 0; \
+	}
+
+#define ring_dec(val, ring_end) \
+	(val)--; \
+	if(val < ring_min()) { \
+		(val) = ring_end; \
+	}

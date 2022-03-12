@@ -10,6 +10,7 @@ extern "C" {
 #include "th02/resident.hpp"
 #include "master.hpp"
 #include "libs/kaja/kaja.h"
+#include "th01/math/clamp.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/grp_rect.h"
 #include "th02/hardware/input.hpp"
@@ -585,10 +586,10 @@ void option_update_and_render(void)
 			menu_sel_move(6, 1);
 		}
 		if(key_det & INPUT_RIGHT) {
-			option_change(RING_INC);
+			option_change(ring_inc);
 		}
 		if(key_det & INPUT_LEFT) {
-			option_change(RING_DEC);
+			option_change(ring_dec);
 		}
 		if(key_det & INPUT_SHOT || key_det & INPUT_OK) {
 			switch(menu_sel) {

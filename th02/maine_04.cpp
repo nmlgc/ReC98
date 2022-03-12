@@ -193,16 +193,16 @@ void pascal score_enter(void)
 		input_sense();
 		if(!input_locked) {
 			if(key_det & INPUT_UP) {
-				alphabet_cursor_move(row, ALPHABET_ROWS, RING_DEC, col, row);
+				alphabet_cursor_move(row, ALPHABET_ROWS, ring_dec, col, row);
 			}
 			if(key_det & INPUT_DOWN) {
-				alphabet_cursor_move(row, ALPHABET_ROWS, RING_INC, col, row);
+				alphabet_cursor_move(row, ALPHABET_ROWS, ring_inc, col, row);
 			}
 			if(key_det & INPUT_LEFT) {
-				alphabet_cursor_move(col, ALPHABET_COLS, RING_DEC, col, row);
+				alphabet_cursor_move(col, ALPHABET_COLS, ring_dec, col, row);
 			}
 			if(key_det & INPUT_RIGHT) {
-				alphabet_cursor_move(col, ALPHABET_COLS, RING_INC, col, row);
+				alphabet_cursor_move(col, ALPHABET_COLS, ring_inc, col, row);
 			}
 			if(key_det & INPUT_SHOT || key_det & INPUT_OK) {
 				/* Yeah, it sucks that ZUN checks against the indices into the

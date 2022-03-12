@@ -7,6 +7,7 @@ extern "C" {
 #include "th02/th02.h"
 #include "x86real.h"
 #include "master.hpp"
+#include "th01/math/clamp.hpp"
 #include "th02/resident.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/grp_rect.h"
@@ -188,7 +189,7 @@ void pascal shottype_menu(void)
 				frame_delay(1);
 				darken_pic_at(pic_x[sel] + 8, pic_y[sel] + 8);
 
-				RING_DEC(sel, sel_ring_end());
+				ring_dec(sel, sel_ring_end());
 				draw_new_sel(pic_x, pic_y);
 			}
 			if(key_det & INPUT_RIGHT) {
@@ -200,7 +201,7 @@ void pascal shottype_menu(void)
 				frame_delay(1);
 				darken_pic_at(pic_x[sel] + 8, pic_y[sel] + 8);
 
-				RING_INC(sel, sel_ring_end());
+				ring_inc(sel, sel_ring_end());
 				draw_new_sel(pic_x, pic_y);
 			}
 			if(key_det & INPUT_SHOT || key_det & INPUT_OK) {
