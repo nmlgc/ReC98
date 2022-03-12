@@ -4,16 +4,21 @@
  */
 
 extern "C" {
-#include "th02/th02.h"
+#include "ReC98.h"
 #include "x86real.h"
 #include "master.hpp"
 #include "libs/kaja/kaja.h"
 #include "th01/math/polar.hpp"
+#include "th01/hardware/grppsafx.h"
 #include "th02/math/vector.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/input.hpp"
 #include "th02/formats/pi.h"
 #include "th02/snd/snd.h"
+#include "th02/shiftjis/fns.hpp"
+
+static const int MUSIC_CMT_LINE_LEN = 42;
+static const int MUSIC_CMT_LINE_COUNT = 20;
 
 #define TRACK_COUNT sizeof(MUSIC_FILES) / sizeof(MUSIC_FILES[0])
 #define SEL_QUIT TRACK_COUNT + 1

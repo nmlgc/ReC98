@@ -5,9 +5,10 @@
 
 extern "C" {
 #include <dos.h>
-#include "th02/th02.h"
+#include "ReC98.h"
 #include "master.hpp"
 #include "th01/math/clamp.hpp"
+#include "th02/common.h"
 #include "th02/resident.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/input.hpp"

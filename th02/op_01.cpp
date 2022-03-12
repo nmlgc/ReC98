@@ -5,12 +5,15 @@
 
 extern "C" {
 #include <process.h>
-#include "th02/th02.h"
+#include "ReC98.h"
 #include "x86real.h"
 #include "th02/resident.hpp"
 #include "master.hpp"
 #include "libs/kaja/kaja.h"
+#include "th01/rank.h"
 #include "th01/math/clamp.hpp"
+#include "th01/hardware/grppsafx.h"
+#include "th02/common.h"
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/grp_rect.h"
 #include "th02/hardware/input.hpp"
@@ -40,10 +43,9 @@ unsigned char demo_num;
 resident_t __seg *resident_sgm;
 putfunc_t near *putfunc;
 
-// No, we don't want to put these two into th02.h. Apparently, declaring
-// variables with extern before definining them for real within the same
-// compilation unit causes Turbo C++ to emit *everything* in a different
-// order... really, I couldn't make this up.
+// Apparently, declaring variables with `extern` before definining them for
+// real within the same compilation unit causes Turbo C++ to emit *everything*
+// in a different order... really, I couldn't make this up.
 extern char extra_unlocked;
 extern unsigned int score_duration;
 

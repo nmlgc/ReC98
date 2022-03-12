@@ -4,7 +4,7 @@
  */
 
 extern "C" {
-#include "th02/th02.h"
+#include "ReC98.h"
 #include "x86real.h"
 #include "master.hpp"
 #include "th01/math/polar.hpp"

@@ -4,7 +4,7 @@
  */
 
 #include <dos.h>
-#include "th02/th02.h"
+#include "ReC98.h"
 #include "master.hpp"
 #include "th02/formats/scoredat.h"
 #include "th02/gaiji/gaiji.h"
