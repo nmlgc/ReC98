@@ -18,9 +18,4 @@
 #define MUSIC_CMT_LINE_LEN 42
 #define MUSIC_CMT_LINE_COUNT 20
 
-extern char unused_op_2_3; // Maybe debug mode?
-extern char rank;
-extern char lives;
-extern char bombs;
-
 #define SHOTTYPE_COUNT 3

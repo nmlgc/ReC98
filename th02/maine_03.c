@@ -6,22 +6,9 @@
 #include <stddef.h>
 #include "platform.h"
 #include "master.hpp"
-#include "th01/rank.h"
 #include "th02/resident.hpp"
+#include "th02/core/globals.hpp"
 #include "th02/formats/cfg.h"
-
-char rank = RANK_NORMAL;
-char unused_1 = 0;
-
-resident_t *resident;
-char unused_2;
-char rem_lives;
-char rem_bombs;
-char unused_3;
-char unused_4;
-char unused_5;
-long score;
-int unused_6;
 
 int pascal cfg_load(void)
 {
@@ -35,8 +22,8 @@ int pascal cfg_load(void)
 		return 0;
 	}
 	resident = resident_sgm;
-	rem_lives = resident->rem_lives;
-	rem_bombs = resident->rem_bombs;
+	lives = resident->rem_lives;
+	bombs = resident->rem_bombs;
 	rank = resident->rank;
 	score = resident->score;
 	return 1;
