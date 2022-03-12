@@ -19,7 +19,7 @@
 include ReC98.inc
 include th03/th03.inc
 include th01/hardware/grppsafx.inc
-include th02/music/music.inc
+include th02/op/music.inc
 include th03/sprites/regi.inc
 include th03/formats/scoredat.inc
 
@@ -1481,11 +1481,11 @@ loc_A5AD:
 		retn	2
 draw_tracks	endp
 
-include th02/music/music.asm
-include th03/music/cmt_back_snap.asm
-include th02/music/music_cmt_load.asm
-include th03/music/cmt_back_free_put.asm
-include th03/music/draw_cmt.asm
+include th02/op/music.asm
+include th03/op/cmt_back_snap.asm
+include th02/op/music_cmt_load.asm
+include th03/op/cmt_back_free_put.asm
+include th03/op/draw_cmt.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3468,7 +3468,7 @@ _MUSIC_FILES	label dword
 		dd aDemo5_m		; "demo5.m"
 		dd aEd_m		; "ed.m"
 		dd aScore_m		; "score.m"
-include th02/music/polygons[data].asm
+include th02/op/polygons[data].asm
 music_track_playing	db 0
 aNo_1B@cVOul	db 'NO.1     Å@ñ≤ÇÕéûãÛÇâzÇ¶Çƒ     ',0
 aNo_2B@B@Select	db 'NO.2    Å@ Å@ Selection         ',0
@@ -3510,7 +3510,7 @@ aDemo4_m	db 'demo4.m',0
 aDemo5_m	db 'demo5.m',0
 aEd_m		db 'ed.m',0
 aScore_m	db 'score.m',0
-include th02/music/music_cmt_load[data].asm
+include th02/op/music_cmt_load[data].asm
 aOp3_pi		db 'op3.pi',0
 aOpwin_bft	db 'opwin.bft',0
 aOp_m		db 'op.m',0
@@ -3601,9 +3601,9 @@ include th03/hardware/input[bss].asm
 include th03/formats/cdg[bss].asm
 include th02/formats/pi_slots[bss].asm
 include th03/formats/hfliplut[bss].asm
-include th02/music/music[bss].asm
-include th03/music/cmt_back[bss].asm
-include th02/music/music_cmt[bss].asm
+include th02/op/music[bss].asm
+include th03/op/cmt_back[bss].asm
+include th02/op/music_cmt[bss].asm
 public _hi
 _hi	scoredat_section_t <?>
 word_FC52	dw ?

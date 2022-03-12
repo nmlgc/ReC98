@@ -21,8 +21,8 @@ BINARY = 'O'
 include ReC98.inc
 include th05/th05.inc
 include th04/hardware/grppsafx.inc
-include th05/music/music.inc
-include th05/music/piano.inc
+include th05/op/music.inc
+include th05/op/piano.inc
 
 	extern SCOPY@:proc
 	extern _getch:proc
@@ -1738,8 +1738,8 @@ loc_BF6B:
 		retn	2
 draw_tracks	endp
 
-include th02/music/music.asm
-include th05/music/music_cmt_load.asm
+include th02/op/music.asm
+include th05/op/music_cmt_load.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2655,7 +2655,7 @@ include th04/hardware/grppsafx[data].asm
 include th03/snd/se_state[data].asm
 include th04/hardware/bgimage[data].asm
 include th05/mem[data].asm
-include th05/music/piano[data].asm
+include th05/op/piano[data].asm
 include th05/sprites/piano_l.asp
 include th05/snd/load[data].asm
 include th04/snd/snd[data].asm
@@ -3002,7 +3002,7 @@ _MUSIC_FILES	label dword
 		dd    0
 music_game	dw 4
 MUSICROOM_TRACKCOUNTS dw 14,18,24,28,23
-include th02/music/polygons[data].asm
+include th02/op/polygons[data].asm
 aMUSICROOM_UP		db '             ------ Å£ ------       ',0
 aMUSICROOM_DOWN		db '             ------ Å• ------       ',0
 asc_104D5	db '             ----------------       ',0
@@ -3209,7 +3209,7 @@ aEd00		db 'ed00',0
 aEd01		db 'ed01',0
 aEd02		db 'ed02',0
 aExed		db 'exed',0
-include th05/music/music_cmt_load[data].asm
+include th05/op/music_cmt_load[data].asm
 aMusic_pi	db 'music.pi',0
 aMusic_dat	db 'music.dat',0
 aKaikidan1_dat1	db 'âˆ„Yík1.dat',0
@@ -3241,7 +3241,7 @@ include libs/master.lib/super_put_rect[bss].asm
 include th03/formats/hfliplut[bss].asm
 include th04/snd/interrupt[bss].asm
 include libs/master.lib/bgm[bss].asm
-include th05/music/piano[bss].asm
+include th05/op/piano[bss].asm
 include th02/snd/load[bss].asm
 include th05/formats/pi_put_masked[bss].asm
 include th05/formats/pi_headers[bss].asm
@@ -3252,11 +3252,11 @@ include th04/hardware/egcrect[bss].asm
 include th04/setup[bss].asm
 include th04/zunsoft[bss].asm
 		db 104 dup(?)
-include th02/music/music[bss].asm
+include th02/op/music[bss].asm
 byte_13E96	db ?
 		db ?
-include th03/music/cmt_back[bss].asm
-include th02/music/music_cmt[bss].asm
+include th03/op/cmt_back[bss].asm
+include th02/op/music_cmt[bss].asm
 word_1403A	dw ?
 word_1403C	dw ?
 musicroom_trackcount	dw ?

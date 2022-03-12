@@ -21,7 +21,7 @@ BINARY = 'O'
 include ReC98.inc
 include th04/th04.inc
 include th04/hardware/grppsafx.inc
-include th04/music/music.inc
+include th04/op/music.inc
 
 	extern SCOPY@:proc
 	extern _execl:proc
@@ -1652,8 +1652,8 @@ loc_BF5E:
 		retn	2
 draw_tracks	endp
 
-include th02/music/music.asm
-include th02/music/music_cmt_load.asm
+include th02/op/music.asm
+include th02/op/music_cmt_load.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2833,7 +2833,7 @@ _MUSIC_FILES	label dword
 		dd aEnd2		; "end2"
 		dd aStaff		; "staff"
 		dd aName_0		; "name"
-include th02/music/polygons[data].asm
+include th02/op/polygons[data].asm
 music_track_playing	db 0
 aNo_1MSzlBLotus	db 'No.1   å∂ëzãΩ  Å` Lotus Land Story',0
 aNo_2WitchingDr	db 'No.2         Witching Dream       ',0
@@ -2881,7 +2881,7 @@ aEnd1		db 'end1',0
 aEnd2		db 'end2',0
 aStaff		db 'staff',0
 aName_0		db 'name',0
-include th04/music/music_cmt_load[data].asm
+include th04/op/music_cmt_load[data].asm
 aMusic_pi	db 'music.pi',0
 aGensou_scr	db 'GENSOU.SCR',0
 aName		db 'name',0
@@ -2936,11 +2936,11 @@ include th04/formats/cdg[bss].asm
 include th04/setup[bss].asm
 include th04/zunsoft[bss].asm
 		db 56 dup(?)
-include th02/music/music[bss].asm
+include th02/op/music[bss].asm
 byte_12DBE	db ?
 		db    ?	;
-include th03/music/cmt_back[bss].asm
-include th02/music/music_cmt[bss].asm
+include th03/op/cmt_back[bss].asm
+include th02/op/music_cmt[bss].asm
 include th04/formats/scoredat_op[bss].asm
 _rank	db ?
 public _cleared_with

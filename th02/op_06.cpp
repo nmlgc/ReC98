@@ -224,7 +224,7 @@ void pascal near cmt_back_snap(void)
 	cmt_bg_put_planar(cmt_bg_p, vo, x, cmt_back, cmt_bg_p, VRAM_PLANE, vo);
 }
 
-#include "th02/music/cmt_load.c"
+#include "th02/op/cmt_load.c"
 
 void pascal near cmt_back_free(void)
 {

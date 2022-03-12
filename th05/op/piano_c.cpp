@@ -8,7 +8,7 @@ extern "C" {
 #include "decomp.hpp"
 #include "master.hpp"
 #include "libs/kaja/kaja.h"
-#include "th05/music/piano.h"
+#include "th05/op/piano.h"
 #include "th05/sprites/piano_l.hpp"
 
 /// Coordinates

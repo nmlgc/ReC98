@@ -5,7 +5,7 @@ include pc98.inc
 include libs/master.lib/macros.inc
 include libs/kaja/kaja.inc
 include th04/hardware/grcg.inc
-include th05/music/piano.inc
+include th05/op/piano.inc
 
 PIANO_LEFT = 384
 PIANO_H = 15
