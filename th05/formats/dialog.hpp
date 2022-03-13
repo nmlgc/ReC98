@@ -9,7 +9,9 @@ struct tx2_header_t {
 
 const uint8_t FACE_NONE = 0xFF;
 
-// Script buffer pointer
+// Script buffer pointer. The segment part also doubles as the base pointer to
+// the allocated dialog buffer for later dialog_free() calls, and therefore
+// must not be changed while running the script – hence the explicit `far`.
 extern unsigned char far *dialog_p;
 
 // Loading and freeing
@@ -22,5 +24,8 @@ void pascal dialog_load(const char *fn);
 
 // Loads the dialog script for the current player character and stage.
 void near dialog_load(void);
+
+// Frees any previously loaded dialog script.
+void near dialog_free(void);
 // -------------------
 /// ---------------------------------

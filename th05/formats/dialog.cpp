@@ -16,6 +16,8 @@ void pascal dialog_load(const char *fn)
 	tx2_header_t header;
 
 	if(dialog_p) {
+		// PORTERS: See the note in dialog_free() – and maybe just call that
+		// function instead, then.
 		hmem_free(reinterpret_cast<void __seg *>(dialog_p));
 	}
 	file_ropen(fn);
@@ -38,4 +40,16 @@ void near dialog_load(void)
 	fn[4] = ('0' + stage_id);
 	dialog_load(fn);
 	#undef fn
+}
+
+void near dialog_free(void)
+{
+	if(dialog_p) {
+		// PORTERS: Relies on `far` pointer semantics, specifically on the
+		// segment part still being identical to what hmem_allocbyte()
+		// returned. You'll need to introduce a separate "dialog buffer base
+		// pointer" when porting to flat memory models.
+		hmem_free(reinterpret_cast<void __seg *>(dialog_p));
+		dialog_p = NULL;
+	}
 }

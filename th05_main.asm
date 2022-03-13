@@ -1095,7 +1095,7 @@ sub_B609	proc near
 		mov	bp, sp
 		push	si
 		call	@bb_stage_free$qv
-		call	sub_EE32
+		call	@dialog_free$qv
 		call	std_free
 		call	map_free
 		call	super_clean pascal, (180 shl 16) or 256
@@ -3708,25 +3708,7 @@ main_TEXT	ends
 DIALOG_TEXT	segment	byte public 'CODE' use16
 	extern @DIALOG_LOAD$QNXC:proc
 	@dialog_load$qv procdesc near
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EE32	proc near
-		push	bp
-		mov	bp, sp
-		cmp	_dialog_p, 0
-		jz	short loc_EE4F
-		push	word ptr _dialog_p+2
-		call	hmem_free
-		mov	_dialog_p, 0
-
-loc_EE4F:
-		pop	bp
-		retn
-sub_EE32	endp
-
+	@dialog_free$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4355,7 +4337,7 @@ loc_F71C:
 		call	bb_txt_free
 		call	cdg_free_all
 		call	@bb_stage_free$qv
-		call	sub_EE32
+		call	@dialog_free$qv
 		call	bb_playchar_free
 		call	std_free
 		call	map_free
