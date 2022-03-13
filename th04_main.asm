@@ -859,7 +859,7 @@ loc_B141:
 loc_B144:
 		call	main_01:map_load
 		call	main_01:std_load
-		call	main_01:sub_CED4
+		call	@dialog_load$qv
 		call	tiles_fill_initial
 		graph_accesspage 0
 
@@ -2212,82 +2212,11 @@ loc_CE8F:
 		leave
 		retn
 midboss4_render	endp
+main_TEXT	ends
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CE93	proc near
-
-arg_0		= dword	ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	word ptr _dialog_p+2
-		call	hmem_free
-		pushd	[bp+arg_0]
-		call	file_ropen
-		call	file_size
-		mov	si, ax
-		push	ax
-		call	hmem_allocbyte
-		mov	word ptr _dialog_p+2, ax
-		mov	word ptr _dialog_p, 0
-		push	ax
-		push	word ptr _dialog_p
-		push	si
-		call	file_read
-		call	file_close
-		pop	si
-		pop	bp
-		retn	4
-sub_CE93	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CED4	proc near
-		push	bp
-		mov	bp, sp
-		les	bx, _resident
-		assume es:nothing
-		mov	al, es:[bx+resident_t.playchar_ascii]
-		les	bx, off_22BAA
-		mov	es:[bx+3], al
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.stage_ascii]
-		les	bx, off_22BAA
-		mov	es:[bx+4], al
-		push	word ptr off_22BAA+2
-		push	bx
-		call	main_01:sub_CE93
-		pop	bp
-		retn
-sub_CED4	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CF01	proc far
-		push	bp
-		mov	bp, sp
-		les	bx, _resident
-		mov	al, es:[bx+resident_t.playchar_ascii]
-		les	bx, off_22BAE
-		mov	es:[bx+3], al
-		push	word ptr off_22BAE+2
-		push	bx
-		call	main_01:sub_CE93
-		pop	bp
-		retf
-sub_CF01	endp
-
+DIALOG_TEXT	segment	byte public 'CODE' use16
+	@dialog_load$qv procdesc near
+	extern @dialog_load_yuuka5_defeat_bad$qv:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3170,9 +3099,7 @@ public @dialog_animate$qv
 		pop	bp
 		retf
 @dialog_animate$qv	endp
-main_TEXT	ends
 
-DIALOG_TEXT	segment	byte public 'CODE' use16
 	@dialog_init$qv procdesc near
 	@dialog_exit$qv procdesc near
 DIALOG_TEXT	ends
@@ -28452,7 +28379,7 @@ loc_1E7B5:
 		jnz	short loc_1E801
 
 loc_1E7F2:
-		call	sub_CF01
+		call	@dialog_load_yuuka5_defeat_bad$qv
 		call	@dialog_animate$qv
 		call	@end_game_bad$qv
 
@@ -32105,10 +32032,9 @@ include th04/main/playfld[data].asm
 byte_22B9E	db 1
 		db 0
 include th04/main/frames[data].asm
-off_22BAA	dd a_dm00_txt
-					; "_DM00.TXT"
-off_22BAE	dd a_dm04b_txt
-					; "_DM04B.txt"
+public _dialog_fn, _dialog_fn_yuuka5_defeat_bad
+_dialog_fn	dd a_dm00_txt
+_dialog_fn_yuuka5_defeat_bad	dd a_dm04b_txt
 include th04/main/dialog/dialog[data].asm
 public _number_of_calls_to_this_function
 _number_of_calls_to_this_function	db 0

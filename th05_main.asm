@@ -978,7 +978,7 @@ loc_B4A6:
 loc_B4A9:
 		call	map_load
 		call	std_load
-		call	sub_EE17
+		call	@dialog_load$qv
 		call	tiles_fill_initial
 		graph_accesspage 0
 
@@ -3703,90 +3703,11 @@ sub_EACE	endp
 
 include th04/main/enemy/render.asm
 include th04/main/circle.asm
+main_TEXT	ends
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_ED87	proc far
-
-var_A		= byte ptr -0Ah
-var_8		= byte ptr -8
-arg_0		= dword	ptr  6
-
-		enter	0Ah, 0
-		push	si
-		cmp	_dialog_p, 0
-		jz	short loc_ED9D
-		push	word ptr _dialog_p+2
-		call	hmem_free
-
-loc_ED9D:
-		pushd	[bp+arg_0]
-		call	file_ropen
-		push	ss
-		lea	ax, [bp+var_A]
-		push	ax
-		push	0Ah
-		call	file_read
-		mov	al, _playchar
-		mov	ah, 0
-		add	ax, ax
-		lea	dx, [bp+var_8]
-		add	ax, dx
-		mov	bx, ax
-		mov	ax, ss:[bx]
-		mov	dl, _playchar
-		mov	dh, 0
-		add	dx, dx
-		lea	bx, [bp+var_A]
-		add	dx, bx
-		mov	bx, dx
-		sub	ax, ss:[bx]
-		mov	si, ax
-		push	ax
-		call	hmem_allocbyte
-		mov	word ptr _dialog_p+2, ax
-		mov	word ptr _dialog_p, 0
-		mov	al, _playchar
-		mov	ah, 0
-		add	ax, ax
-		lea	dx, [bp+var_A]
-		add	ax, dx
-		mov	bx, ax
-		movzx	eax, word ptr ss:[bx]
-		push	eax
-		push	0
-		call	file_seek
-		pushd	[_dialog_p]
-		push	si
-		call	file_read
-		call	file_close
-		pop	si
-		leave
-		retf	4
-sub_ED87	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EE17	proc near
-		push	bp
-		mov	bp, sp
-		les	bx, off_221D0
-		assume es:nothing
-		mov	al, _stage_id
-		add	al, 30h	; '0'
-		mov	es:[bx+4], al
-		push	word ptr off_221D0+2
-		push	bx
-		call	sub_ED87
-		pop	bp
-		retn
-sub_EE17	endp
-
+DIALOG_TEXT	segment	byte public 'CODE' use16
+	extern @DIALOG_LOAD$QNXC:proc
+	@dialog_load$qv procdesc near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4313,9 +4234,7 @@ loc_F333:
 		pop	bp
 		retf
 @dialog_animate$qv	endp
-main_TEXT	ends
 
-DIALOG_TEXT	segment	byte public 'CODE' use16
 	@DIALOG_FACE_LOAD_UNPUT_PUT_FREE_$QIII procdesc pascal near \
 		left:word, top:word, cel:word
 	@dialog_exit$qv	procdesc near
@@ -16075,9 +15994,7 @@ loc_1AF24:
 		jnz	short loc_1AFA7	; default
 		cmp	_boss2_mode_change, 0
 		jnz	short loc_1AF66
-		push	ds
-		push	offset a_dm09_tx2 ; "_DM09.TX2"
-		call	sub_ED87
+		call	@dialog_load$qnxc pascal, ds, offset a_dm09_tx2 ; "_DM09.TX2"
 		mov	word ptr _boss_bgm_title+2, ds
 		mov	word ptr _boss_bgm_title, offset aTH05_10
 		mov	eax, _yuki_pos.cur
@@ -16087,9 +16004,7 @@ loc_1AF24:
 ; ---------------------------------------------------------------------------
 
 loc_1AF66:
-		push	ds
-		push	offset a_dm08_tx2 ; "_DM08.TX2"
-		call	sub_ED87
+		call	@dialog_load$qnxc pascal, ds, offset a_dm08_tx2 ; "_DM08.TX2"
 		mov	word ptr _boss_bgm_title+2, ds
 		mov	word ptr _boss_bgm_title, offset aTH05_11
 		setfarfp	_boss_update, sub_1C518
@@ -23869,8 +23784,8 @@ _group_is_special	db 0
 _enemies_gone	dw 0
 _enemies_killed	dw 0
 include th04/main/frames[data].asm
-off_221D0	dd a_dm00_tx2
-					; "_DM00.TX2"
+public _dialog_fn
+_dialog_fn	dd a_dm00_tx2
 include th04/main/dialog/dialog[data].asm
 byte_221EC	db 0
 a_dm00_tx2	db '_DM00.TX2',0
