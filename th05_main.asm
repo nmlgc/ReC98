@@ -3716,9 +3716,9 @@ arg_0		= dword	ptr  6
 
 		enter	0Ah, 0
 		push	si
-		cmp	dword_2C930, 0
+		cmp	_dialog_p, 0
 		jz	short loc_ED9D
-		push	word ptr dword_2C930+2
+		push	word ptr _dialog_p+2
 		call	hmem_free
 
 loc_ED9D:
@@ -3746,8 +3746,8 @@ loc_ED9D:
 		mov	si, ax
 		push	ax
 		call	hmem_allocbyte
-		mov	word ptr dword_2C930+2,	ax
-		mov	word ptr dword_2C930, 0
+		mov	word ptr _dialog_p+2, ax
+		mov	word ptr _dialog_p, 0
 		mov	al, _playchar
 		mov	ah, 0
 		add	ax, ax
@@ -3758,7 +3758,7 @@ loc_ED9D:
 		push	eax
 		push	0
 		call	file_seek
-		pushd	[dword_2C930]
+		pushd	[_dialog_p]
 		push	si
 		call	file_read
 		call	file_close
@@ -3795,11 +3795,11 @@ sub_EE17	endp
 sub_EE32	proc near
 		push	bp
 		mov	bp, sp
-		cmp	dword_2C930, 0
+		cmp	_dialog_p, 0
 		jz	short loc_EE4F
-		push	word ptr dword_2C930+2
+		push	word ptr _dialog_p+2
 		call	hmem_free
-		mov	dword_2C930, 0
+		mov	_dialog_p, 0
 
 loc_EE4F:
 		pop	bp
@@ -3974,10 +3974,10 @@ loc_F00C:
 ; ---------------------------------------------------------------------------
 
 loc_F021:
-		les	bx, dword_2C930
+		les	bx, _dialog_p
 		mov	al, es:[bx]
 		mov	[bp+arg_0], al
-		inc	word ptr dword_2C930
+		inc	word ptr _dialog_p
 		push	1
 		call	frame_delay
 		cmp	_dialog_side, DIALOG_SIDE_PLAYCHAR
@@ -3998,7 +3998,7 @@ loc_F04B:
 ; ---------------------------------------------------------------------------
 
 loc_F057:
-		mov	eax, dword_2C930
+		mov	eax, _dialog_p
 		mov	[bp+s],	eax
 		call	super_entry_bfnt pascal, [bp+s]
 
@@ -4007,7 +4007,7 @@ loc_F068:
 		call	_strlen
 		add	sp, 4
 		inc	ax
-		add	word ptr dword_2C930, ax
+		add	word ptr _dialog_p, ax
 		jmp	loc_F181
 ; ---------------------------------------------------------------------------
 
@@ -4024,7 +4024,7 @@ loc_F091:
 ; ---------------------------------------------------------------------------
 
 loc_F097:
-		mov	eax, dword_2C930
+		mov	eax, _dialog_p
 		mov	[bp+s],	eax
 		les	bx, [bp+s]
 		cmp	byte ptr es:[bx], 24h ;	'$'
@@ -4043,14 +4043,14 @@ loc_F0BB:
 ; ---------------------------------------------------------------------------
 
 loc_F0C2:
-		les	bx, dword_2C930
+		les	bx, _dialog_p
 		mov	ax, es:[bx]
 		mov	[bp+var_2], ax
 		mov	ax, es:[bx+2]
 		mov	[bp+var_4], ax
 		mov	al, es:[bx+4]
 		mov	[bp+arg_0], al
-		add	word ptr dword_2C930, 5
+		add	word ptr _dialog_p, 5
 		push	[bp+var_2]
 		push	[bp+var_4]
 		mov	ah, 0
@@ -4066,10 +4066,10 @@ loc_F0F0:
 		call	sub_EF74
 		push	(20 shl 16) or 20
 		call	sub_EF74
-		les	bx, dword_2C930
+		les	bx, _dialog_p
 		mov	al, es:[bx]
 		mov	[bp+arg_0], al
-		inc	word ptr dword_2C930
+		inc	word ptr _dialog_p
 		mov	ah, 0
 		push	ax
 		call	palette_white_out
@@ -4079,10 +4079,10 @@ loc_F118:
 ; ---------------------------------------------------------------------------
 
 loc_F11A:
-		les	bx, dword_2C930
+		les	bx, _dialog_p
 		mov	al, es:[bx]
 		mov	[bp+arg_0], al
-		inc	word ptr dword_2C930
+		inc	word ptr _dialog_p
 		mov	ah, 0
 		push	ax
 		call	palette_white_in
@@ -4106,10 +4106,10 @@ loc_F145:
 ; ---------------------------------------------------------------------------
 
 loc_F14A:
-		les	bx, dword_2C930
+		les	bx, _dialog_p
 		mov	al, es:[bx]
 		mov	[bp+arg_0], al
-		inc	word ptr dword_2C930
+		inc	word ptr _dialog_p
 		push	word_2C934
 		push	word_2C936
 		mov	ah, 0
@@ -4169,10 +4169,10 @@ var_2		= byte ptr -2
 		mov	word ptr [bp+var_6], offset _dialog_kanji_buf
 
 loc_F1B3:
-		les	bx, dword_2C930
+		les	bx, _dialog_p
 		mov	al, es:[bx]
 		mov	[bp+@@c], al
-		inc	word ptr dword_2C930
+		inc	word ptr _dialog_p
 		cmp	[bp+@@c], -1
 		jz	loc_F2AE
 		cmp	[bp+@@c], 0Dh
@@ -4198,10 +4198,10 @@ loc_F1F2:
 
 loc_F227:
 		call	far ptr	_input_reset_sense
-		les	bx, dword_2C930
+		les	bx, _dialog_p
 		mov	al, es:[bx]
 		mov	[bp+@@c], al
-		inc	word ptr dword_2C930
+		inc	word ptr _dialog_p
 		cmp	[bp+@@c], -1
 		jnz	short loc_F249
 		call	input_wait_for_change pascal, 0
@@ -4217,11 +4217,11 @@ loc_F249:
 		mov	al, [bp+@@c]
 		mov	es:[bx], al
 		push	es
-		les	si, dword_2C930
+		les	si, _dialog_p
 		mov	al, es:[si]
 		pop	es
 		mov	es:[bx+1], al
-		inc	word ptr dword_2C930
+		inc	word ptr _dialog_p
 		call	text_putsa pascal, word_2C934, word_2C936, word ptr [bp+var_6+2], bx, TX_WHITE
 		add	word_2C934, 2
 		call	_input_sense
@@ -24257,7 +24257,7 @@ _stage_vm	dd ?
 _enemy_cur	dw ?
 include th04/main/circles_color[bss].asm
 fp_2C92E	dw ?
-dword_2C930	dd ?
+include th04/main/dialog/dialog[bss].asm
 word_2C934	dw ?
 word_2C936	dw ?
 public _dialog_side

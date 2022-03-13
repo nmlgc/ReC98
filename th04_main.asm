@@ -2225,7 +2225,7 @@ arg_0		= dword	ptr  4
 		push	bp
 		mov	bp, sp
 		push	si
-		push	word ptr dword_255CC+2
+		push	word ptr _dialog_p+2
 		call	hmem_free
 		pushd	[bp+arg_0]
 		call	file_ropen
@@ -2233,10 +2233,10 @@ arg_0		= dword	ptr  4
 		mov	si, ax
 		push	ax
 		call	hmem_allocbyte
-		mov	word ptr dword_255CC+2,	ax
-		mov	word ptr dword_255CC, 0
+		mov	word ptr _dialog_p+2, ax
+		mov	word ptr _dialog_p, 0
 		push	ax
-		push	word ptr dword_255CC
+		push	word ptr _dialog_p
 		push	si
 		call	file_read
 		call	file_close
@@ -2296,11 +2296,11 @@ sub_CF01	endp
 sub_CF1E	proc near
 		push	bp
 		mov	bp, sp
-		cmp	dword_255CC, 0
+		cmp	_dialog_p, 0
 		jz	short loc_CF3B
-		push	word ptr dword_255CC+2
+		push	word ptr _dialog_p+2
 		call	hmem_free
-		mov	dword_255CC, 0
+		mov	_dialog_p, 0
 
 loc_CF3B:
 		pop	bp
@@ -2428,17 +2428,17 @@ var_1		= byte ptr -1
 arg_0		= dword	ptr  4
 
 		enter	2, 0
-		les	bx, dword_255CC
+		les	bx, _dialog_p
 		mov	cl, es:[bx]
-		inc	word ptr dword_255CC
-		les	bx, dword_255CC
+		inc	word ptr _dialog_p
+		les	bx, _dialog_p
 		mov	al, es:[bx]
 		mov	[bp+var_1], al
-		inc	word ptr dword_255CC
-		les	bx, dword_255CC
+		inc	word ptr _dialog_p
+		les	bx, _dialog_p
 		mov	al, es:[bx]
 		mov	[bp+var_2], al
-		inc	word ptr dword_255CC
+		inc	word ptr _dialog_p
 		mov	al, cl
 		mov	ah, 0
 		mov	bx, ax
@@ -2447,7 +2447,7 @@ arg_0		= dword	ptr  4
 		les	bx, [bp+arg_0]
 		mov	ax, word_255D6
 		mov	es:[bx], ax
-		sub	word ptr dword_255CC, 3
+		sub	word ptr _dialog_p, 3
 		leave
 		retn	4
 ; ---------------------------------------------------------------------------
@@ -2463,7 +2463,7 @@ loc_D114:
 		add	ax, 0FFD0h
 		les	bx, [bp+arg_0]
 		mov	es:[bx], ax
-		sub	word ptr dword_255CC, 2
+		sub	word ptr _dialog_p, 2
 		leave
 		retn	4
 ; ---------------------------------------------------------------------------
@@ -2484,7 +2484,7 @@ loc_D138:
 		add	ax, 0FFD0h
 		les	bx, [bp+arg_0]
 		mov	es:[bx], ax
-		dec	word ptr dword_255CC
+		dec	word ptr _dialog_p
 		leave
 		retn	4
 ; ---------------------------------------------------------------------------
@@ -2520,10 +2520,10 @@ arg_0		= dword	ptr  4
 
 		push	bp
 		mov	bp, sp
-		les	bx, dword_255CC
+		les	bx, _dialog_p
 		cmp	byte ptr es:[bx], 2Ch ;	','
 		jnz	short loc_D1AF
-		inc	word ptr dword_255CC
+		inc	word ptr _dialog_p
 		pushd	[bp+arg_0]
 		call	main_01:sub_D0CA
 		pop	bp
@@ -2609,7 +2609,7 @@ loc_D20A:
 ; ---------------------------------------------------------------------------
 
 loc_D22D:
-		les	bx, dword_255CC	; jumptable 0000D1EC case 102
+		les	bx, _dialog_p	; jumptable 0000D1EC case 102
 		mov	al, es:[bx]
 		mov	[bp+arg_0], al
 		cmp	[bp+arg_0], 69h	; 'i'
@@ -2618,7 +2618,7 @@ loc_D22D:
 		jnz	loc_D528	; default
 
 loc_D245:
-		inc	word ptr dword_255CC
+		inc	word ptr _dialog_p
 		mov	word_255D6, 1
 		push	ss
 		lea	ax, [bp+var_2]
@@ -2638,7 +2638,7 @@ loc_D268:
 ; ---------------------------------------------------------------------------
 
 loc_D273:
-		les	bx, dword_255CC	; jumptable 0000D1EC case 119
+		les	bx, _dialog_p	; jumptable 0000D1EC case 119
 		mov	al, es:[bx]
 		mov	[bp+arg_0], al
 		cmp	[bp+arg_0], 69h	; 'i'
@@ -2647,7 +2647,7 @@ loc_D273:
 		jnz	loc_D528	; default
 
 loc_D28B:
-		inc	word ptr dword_255CC
+		inc	word ptr _dialog_p
 		mov	word_255D6, 1
 		push	ss
 		lea	ax, [bp+var_2]
@@ -2667,7 +2667,7 @@ loc_D2AE:
 ; ---------------------------------------------------------------------------
 
 loc_D2B9:
-		les	bx, dword_255CC	; jumptable 0000D1EC case 103
+		les	bx, _dialog_p	; jumptable 0000D1EC case 103
 		cmp	byte ptr es:[bx], 61h ;	'a'
 		jz	short loc_D2FE
 		mov	word_255D6, 8
@@ -2703,7 +2703,7 @@ loc_D2EF:
 ; ---------------------------------------------------------------------------
 
 loc_D2FE:
-		inc	word ptr dword_255CC
+		inc	word ptr _dialog_p
 		mov	word_255D6, 0
 		push	ss
 		lea	ax, [bp+var_2]
@@ -2790,12 +2790,12 @@ loc_D3E3:
 ; ---------------------------------------------------------------------------
 
 loc_D3E6:
-		les	bx, dword_255CC	; jumptable 0000D1EC case 109
+		les	bx, _dialog_p	; jumptable 0000D1EC case 109
 		mov	al, es:[bx]
 		mov	[bp+arg_0], al
 		cmp	[bp+arg_0], 24h	; '$'
 		jnz	short loc_D3FF
-		inc	word ptr dword_255CC
+		inc	word ptr _dialog_p
 		push	(KAJA_SONG_STOP shl 8)
 		jmp	short loc_D40B
 ; ---------------------------------------------------------------------------
@@ -2803,7 +2803,7 @@ loc_D3E6:
 loc_D3FF:
 		cmp	[bp+arg_0], 2Ah	; '*'
 		jnz	short loc_D413
-		inc	word ptr dword_255CC
+		inc	word ptr _dialog_p
 		push	(KAJA_SONG_PLAY shl 8)
 
 loc_D40B:
@@ -2814,16 +2814,16 @@ loc_D40B:
 loc_D413:
 		cmp	[bp+arg_0], 2Ch	; ','
 		jnz	loc_D528	; default
-		inc	word ptr dword_255CC
+		inc	word ptr _dialog_p
 		mov	[bp+var_2], 0
 		jmp	short loc_D454
 ; ---------------------------------------------------------------------------
 
 loc_D426:
-		les	bx, dword_255CC
+		les	bx, _dialog_p
 		mov	al, es:[bx]
 		mov	[bp+arg_0], al
-		inc	word ptr dword_255CC
+		inc	word ptr _dialog_p
 		mov	ah, 0
 		mov	bx, ax
 		test	(__ctype + 1)[bx], _IS_CTL
@@ -2872,21 +2872,21 @@ loc_D498:
 ; ---------------------------------------------------------------------------
 
 loc_D4A5:
-		les	bx, dword_255CC	; jumptable 0000D1EC case 108
+		les	bx, _dialog_p	; jumptable 0000D1EC case 108
 		mov	al, es:[bx]
 		mov	[bp+arg_0], al
 		cmp	[bp+arg_0], 2Ch	; ','
 		jnz	short loc_D528	; default
-		inc	word ptr dword_255CC
+		inc	word ptr _dialog_p
 		mov	[bp+var_2], 0
 		jmp	short loc_D4EE
 ; ---------------------------------------------------------------------------
 
 loc_D4C0:
-		les	bx, dword_255CC
+		les	bx, _dialog_p
 		mov	al, es:[bx]
 		mov	[bp+arg_0], al
-		inc	word ptr dword_255CC
+		inc	word ptr _dialog_p
 		mov	ah, 0
 		mov	bx, ax
 		test	(__ctype + 1)[bx], _IS_CTL
@@ -2987,10 +2987,10 @@ var_1		= byte ptr -1
 		mov	word ptr [bp+var_6], offset _dialog_kanji_buf
 
 loc_D57A:
-		les	bx, dword_255CC
+		les	bx, _dialog_p
 		mov	al, es:[bx]
 		mov	[bp+var_1], al
-		inc	word ptr dword_255CC
+		inc	word ptr _dialog_p
 		mov	ah, 0
 		mov	bx, ax
 		test	(__ctype + 1)[bx], _IS_CTL
@@ -2999,10 +2999,10 @@ loc_D57A:
 		jz	short loc_D57A
 		cmp	[bp+var_1], 5Ch
 		jnz	short loc_D5BA
-		les	bx, dword_255CC
+		les	bx, _dialog_p
 		mov	al, es:[bx]
 		mov	[bp+var_1], al
-		inc	word ptr dword_255CC
+		inc	word ptr _dialog_p
 		push	word ptr [bp+var_1]
 		call	main_01:sub_D1BC
 		cmp	al, -1
@@ -3074,10 +3074,10 @@ loc_D62B:
 
 loc_D63F:
 		call	main_01:far ptr	_input_reset_sense
-		les	bx, dword_255CC
+		les	bx, _dialog_p
 		mov	al, es:[bx]
 		mov	[bp+var_1], al
-		inc	word ptr dword_255CC
+		inc	word ptr _dialog_p
 		mov	ah, 0
 		mov	bx, ax
 		test	(__ctype + 1)[bx], _IS_CTL
@@ -3086,10 +3086,10 @@ loc_D63F:
 		jz	short loc_D63F
 		cmp	[bp+var_1], 5Ch
 		jnz	short loc_D684
-		les	bx, dword_255CC
+		les	bx, _dialog_p
 		mov	al, es:[bx]
 		mov	[bp+var_1], al
-		inc	word ptr dword_255CC
+		inc	word ptr _dialog_p
 		push	word ptr [bp+var_1]
 		call	main_01:sub_D1BC
 		cmp	al, -1
@@ -3101,12 +3101,12 @@ loc_D684:
 		les	bx, [bp+var_6]
 		mov	al, [bp+var_1]
 		mov	es:[bx], al
-		les	bx, dword_255CC
+		les	bx, _dialog_p
 		mov	al, es:[bx]
 		mov	[bp+var_1], al
 		les	bx, [bp+var_6]
 		mov	es:[bx+1], al
-		inc	word ptr dword_255CC
+		inc	word ptr _dialog_p
 		mov	ax, word_255D0
 		mov	bx, 8
 		cwd
@@ -32701,7 +32701,7 @@ byte_255C7	db ?
 byte_255C8	db ?
 		db ?
 fp_255CA	dw ?
-dword_255CC	dd ?
+include th04/main/dialog/dialog[bss].asm
 word_255D0	dw ?
 word_255D2	dw ?
 public _dialog_side
