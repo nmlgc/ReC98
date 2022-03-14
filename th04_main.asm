@@ -11891,19 +11891,19 @@ var_2		= word ptr -2
 		mov	si, ax
 		cmp	_boss_phase, PHASE_EXPLODE_BIG
 		jnb	loc_1306D
-		cmp	amp_237F8, 0
+		cmp	_gengetsu_wave_amp, 0
 		jz	short loc_12FE7
 		push	di
 		push	ax
 		mov	al, _boss_sprite
 		mov	ah, 0
 		push	ax
-		mov	al, amp_237F8
+		mov	al, _gengetsu_wave_amp
 		mov	ah, 0
 		mov	dx, 80
 		sub	dx, ax
 		push	dx
-		push	word ptr amp_237F8
+		push	word ptr _gengetsu_wave_amp
 		mov	al, _boss_angle
 		mov	ah, 0
 		push	ax
@@ -11915,12 +11915,12 @@ var_2		= word ptr -2
 		mov	ah, 0
 		inc	ax
 		push	ax
-		mov	al, amp_237F8
+		mov	al, _gengetsu_wave_amp
 		mov	ah, 0
 		mov	dx, 80
 		sub	dx, ax
 		push	dx
-		push	word ptr amp_237F8
+		push	word ptr _gengetsu_wave_amp
 		mov	al, _boss_angle
 		mov	ah, 0
 		push	ax
@@ -20092,7 +20092,7 @@ loc_18682:
 		retn
 mugetsu_18655	endp
 
-include th04/main/boss/bx_1.asm
+include th04/main/boss/bx1.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -30367,20 +30367,20 @@ loc_1F994:
 		add	_boss_pos.cur.x, ax
 		cmp	_boss_phase_frame, 32
 		jg	short loc_1F9A9
-		mov	al, amp_237F8
+		mov	al, _gengetsu_wave_amp
 		add	al, 2
 		jmp	short loc_1F9AE
 ; ---------------------------------------------------------------------------
 
 loc_1F9A9:
-		mov	al, amp_237F8
+		mov	al, _gengetsu_wave_amp
 		add	al, -2
 
 loc_1F9AE:
-		mov	amp_237F8, al
+		mov	_gengetsu_wave_amp, al
 		cmp	_boss_phase_frame, 64
 		jnz	short loc_1F9C1
-		mov	amp_237F8, 0
+		mov	_gengetsu_wave_amp, 0
 		mov	al, 1
 		pop	bp
 		retn
@@ -30433,18 +30433,18 @@ loc_1FA00:
 loc_1FA07:
 		cmp	_boss_phase_frame, 64
 		jg	short loc_1FA14
-		inc	amp_237F8
+		inc	_gengetsu_wave_amp
 		jmp	short loc_1FA18
 ; ---------------------------------------------------------------------------
 
 loc_1FA14:
-		dec	amp_237F8
+		dec	_gengetsu_wave_amp
 
 loc_1FA18:
 		cmp	_boss_phase_frame, 128
 		jnz	short loc_1FA2F
 		mov	_boss_pos.cur.x, (192 shl 4)
-		mov	amp_237F8, 0
+		mov	_gengetsu_wave_amp, 0
 		mov	al, 1
 		pop	bp
 		retn
@@ -31335,7 +31335,7 @@ gengetsu_20202	proc near
 		mov	bp, sp
 		cmp	byte_259EF, 0
 		jz	short loc_20220
-		cmp	amp_237F8, 0
+		cmp	_gengetsu_wave_amp, 0
 		jnz	short loc_20220
 		call	sub_1E5D8 pascal, (48 shl 4) or ((48 shl 4) shl 16), 10
 		jmp	short loc_20233
@@ -31344,7 +31344,7 @@ gengetsu_20202	proc near
 loc_20220:
 		cmp	_boss_sprite, 0
 		jz	short loc_20233
-		cmp	amp_237F8, 0
+		cmp	_gengetsu_wave_amp, 0
 		jnz	short loc_20233
 		call	sub_1E64E
 		pop	bp
@@ -31855,7 +31855,7 @@ loc_206B1:
 ; ---------------------------------------------------------------------------
 
 loc_206B6:
-		cmp	amp_237F8, 0
+		cmp	_gengetsu_wave_amp, 0
 		jnz	short loc_206C9
 		mov	ax, _boss_pos.cur.x
 		mov	_homing_target.x, ax
@@ -32536,8 +32536,7 @@ aSt06bk2_cdg	db 'st06bk2.cdg',0
 aSt06b_bb	db 'st06b.bb',0
 byte_237F6	db 0
 byte_237F7	db 0
-amp_237F8	db 0
-	even
+	extern _gengetsu_wave_amp:byte
 
 	.data?
 
