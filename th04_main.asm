@@ -29523,17 +29523,17 @@ var_1		= byte ptr -1
 		mov	_bullet_template.BT_angle, -40h
 		mov	_bullet_template.BT_special_motion, BSM_NONE
 		mov	_bullet_template.BT_delta.spread_angle, 8
-		cmp	byte_237F6, 78h	; 'x'
+		cmp	_reimu_pattern8_angle, 78h
 		jz	short loc_1F25E
-		mov	al, 78h	; 'x'
+		mov	al, 78h
 		jmp	short loc_1F260
 ; ---------------------------------------------------------------------------
 
 loc_1F25E:
-		mov	al, 88h
+		mov	al, -78h
 
 loc_1F260:
-		mov	byte_237F6, al
+		mov	_reimu_pattern8_angle, al
 
 loc_1F263:
 		cmp	[bp+var_1], 1
@@ -29562,7 +29562,7 @@ loc_1F263:
 		add	dx, (-32 shl 4)
 		add	ax, dx
 		mov	_bullet_template.BT_origin.y, ax
-		mov	al, byte_237F6
+		mov	al, _reimu_pattern8_angle
 		add	_bullet_template.BT_angle, al
 		call	_bullets_add_special
 		mov	al, _bullet_template.BT_angle
@@ -29654,12 +29654,12 @@ reimu_1F2F3	endp
 reimu_1F378	proc near
 		push	bp
 		mov	bp, sp
-		cmp	byte_237F7, 0
+		cmp	_reimu_bg_pulse_direction, 0
 		jnz	short loc_1F394
 		inc	Palettes[0 * size rgb_t].r
 		cmp	Palettes[0 * size rgb_t].r, 240
 		jb	short loc_1F3A4
-		mov	byte_237F7, 1
+		mov	_reimu_bg_pulse_direction, 1
 		jmp	short loc_1F3A4
 ; ---------------------------------------------------------------------------
 
@@ -29667,7 +29667,7 @@ loc_1F394:
 		dec	Palettes[0 * size rgb_t].r
 		cmp	Palettes[0 * size rgb_t].r, 64
 		ja	short loc_1F3A4
-		mov	byte_237F7, 0
+		mov	_reimu_bg_pulse_direction, 0
 
 loc_1F3A4:
 		mov	_palette_changed, 1
@@ -32534,8 +32534,8 @@ aSt06bk_cdg	db 'st06bk.cdg',0
 aSt06_bb	db 'st06.bb',0
 aSt06bk2_cdg	db 'st06bk2.cdg',0
 aSt06b_bb	db 'st06b.bb',0
-byte_237F6	db 0
-byte_237F7	db 0
+	extern _reimu_pattern8_angle:byte
+	extern _reimu_bg_pulse_direction:byte
 	extern _gengetsu_wave_amp:byte
 
 	.data?
