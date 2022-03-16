@@ -15552,7 +15552,7 @@ sub_15DE8	endp
 
 ; Attributes: bp-based frame
 
-sub_15ECE	proc near
+yuuka5_15ECE	proc near
 
 arg_0		= word ptr  4
 
@@ -15638,14 +15638,14 @@ loc_15F91:
 		pop	si
 		pop	bp
 		retn	2
-sub_15ECE	endp
+yuuka5_15ECE	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_15F97	proc near
+yuuka5_15F97	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_boss_phase_frame, 1
@@ -15749,14 +15749,14 @@ loc_1607E:
 loc_160A3:
 		pop	bp
 		retn
-sub_15F97	endp
+yuuka5_15F97	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_160A5	proc near
+yuuka5_160A5	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_boss_phase_frame, 1
@@ -15860,14 +15860,14 @@ loc_161C2:
 loc_161D5:
 		pop	bp
 		retn
-sub_160A5	endp
+yuuka5_160A5	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_161D7	proc near
+yuuka5_161D7	proc near
 
 var_2		= word ptr -2
 
@@ -15940,7 +15940,7 @@ loc_1626B:
 locret_16290:
 		leave
 		retn
-sub_161D7	endp
+yuuka5_161D7	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -15955,7 +15955,7 @@ word_16293	dw	1,     3,     5,   11h
 
 ; Attributes: bp-based frame
 
-sub_162A3	proc near
+yuuka5_162A3	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_boss_phase_frame, 1
@@ -15993,14 +15993,14 @@ loc_162EA:
 loc_1630B:
 		pop	bp
 		retn
-sub_162A3	endp
+yuuka5_162A3	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1630D	proc near
+yuuka5_1630D	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_boss_phase_frame, 1
@@ -16047,14 +16047,14 @@ loc_16366:
 loc_16387:
 		pop	bp
 		retn
-sub_1630D	endp
+yuuka5_1630D	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_16389	proc near
+yuuka5_16389	proc near
 
 var_2		= word ptr -2
 
@@ -16189,7 +16189,7 @@ loc_164BB:
 locret_164EB:
 		leave
 		retn
-sub_16389	endp
+yuuka5_16389	endp
 
 ; ---------------------------------------------------------------------------
 word_164ED	dw    10h,   28h,   2Ah,   2Ch
@@ -16222,7 +16222,7 @@ word_164ED	dw    10h,   28h,   2Ah,   2Ch
 
 ; Attributes: bp-based frame
 
-sub_1653D	proc near
+yuuka5_1653D	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_boss_phase_frame, 48
@@ -16284,7 +16284,7 @@ loc_1656A:
 loc_1660E:
 		pop	bp
 		retn
-sub_1653D	endp
+yuuka5_1653D	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -16372,12 +16372,12 @@ loc_166F5:
 		jmp	word ptr cs:[bx+8] ; switch jump
 
 loc_166F9:
-		call	sub_15F97	; jumptable 000166F5 case 0
+		call	yuuka5_15F97	; jumptable 000166F5 case 0
 		jmp	short loc_16723	; default
 ; ---------------------------------------------------------------------------
 
 loc_166FE:
-		call	sub_160A5	; jumptable 000166F5 case 1
+		call	yuuka5_160A5	; jumptable 000166F5 case 1
 		jmp	short loc_16723	; default
 ; ---------------------------------------------------------------------------
 
@@ -16395,7 +16395,7 @@ loc_16703:
 
 loc_1671E:
 		push	0		; jumptable 000166F5 case 255
-		call	sub_15ECE
+		call	yuuka5_15ECE
 
 loc_16723:
 		cmp	byte_25667, 0	; default
@@ -16430,7 +16430,7 @@ loc_16766:
 loc_1676D:
 		inc	_boss_phase_frame
 		push	1
-		call	sub_15ECE
+		call	yuuka5_15ECE
 		or	al, al
 		jz	loc_169B8
 		inc	_boss_phase
@@ -16441,7 +16441,7 @@ loc_1676D:
 ; ---------------------------------------------------------------------------
 
 loc_16793:
-		call	sub_161D7
+		call	yuuka5_161D7
 		cmp	_boss_phase_frame, 500
 		jge	short loc_167AF
 		call	sub_1E64E
@@ -16494,12 +16494,12 @@ loc_16810:
 		jmp	word ptr cs:[bx+8] ; switch jump
 
 loc_16814:
-		call	sub_162A3	; jumptable 00016810 case 0
+		call	yuuka5_162A3	; jumptable 00016810 case 0
 		jmp	short loc_1683E	; default
 ; ---------------------------------------------------------------------------
 
 loc_16819:
-		call	sub_1630D	; jumptable 00016810 case 1
+		call	yuuka5_1630D	; jumptable 00016810 case 1
 		jmp	short loc_1683E	; default
 ; ---------------------------------------------------------------------------
 
@@ -16517,7 +16517,7 @@ loc_1681E:
 
 loc_16839:
 		push	0		; jumptable 00016810 case 255
-		call	sub_15ECE
+		call	yuuka5_15ECE
 
 loc_1683E:
 		cmp	byte_25667, 0	; default
@@ -16551,7 +16551,7 @@ loc_1687B:
 loc_16882:
 		inc	_boss_phase_frame
 		push	1
-		call	sub_15ECE
+		call	yuuka5_15ECE
 		or	al, al
 		jz	loc_169B8
 		inc	_boss_phase
@@ -16562,7 +16562,7 @@ loc_16882:
 ; ---------------------------------------------------------------------------
 
 loc_168A8:
-		call	sub_16389
+		call	yuuka5_16389
 		call	sub_1E67C
 		cmp	_boss_phase_frame, 288
 		jl	loc_169B8
@@ -16600,7 +16600,7 @@ loc_16907:
 ; ---------------------------------------------------------------------------
 
 loc_1691A:
-		call	sub_1653D
+		call	yuuka5_1653D
 		call	sub_1E64E
 		or	al, al
 		jnz	short loc_1692E
@@ -16708,7 +16708,7 @@ off_169F4	dw offset loc_16638
 
 ; Attributes: bp-based frame
 
-sub_16A1A	proc near
+marisa_16A1A	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_boss_mode, 1
@@ -16803,14 +16803,14 @@ loc_16AE5:
 		mov	al, 1
 		pop	bp
 		retn
-sub_16A1A	endp
+marisa_16A1A	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_16AE9	proc near
+marisa_16AE9	proc near
 
 var_1		= byte ptr -1
 
@@ -16898,14 +16898,14 @@ loc_16B7D:
 		call	@PlayfieldMotion@update_seg3$qv
 		leave
 		retn
-sub_16AE9	endp
+marisa_16AE9	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_16B85	proc near
+marisa_16B85	proc near
 
 arg_0		= word ptr  4
 
@@ -16976,14 +16976,14 @@ loc_16C00:
 		pop	si
 		pop	bp
 		retn	2
-sub_16B85	endp
+marisa_16B85	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_16C05	proc near
+marisa_16C05	proc near
 
 var_A		= byte ptr -0Ah
 var_1		= byte ptr -1
@@ -17033,14 +17033,14 @@ loc_16C61:
 		pop	si
 		leave
 		retn
-sub_16C05	endp
+marisa_16C05	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_16C6A	proc near
+marisa_16C6A	proc near
 
 var_4		= word ptr -4
 var_2		= word ptr -2
@@ -17187,14 +17187,14 @@ loc_16DCB:
 		pop	si
 		leave
 		retn
-sub_16C6A	endp
+marisa_16C6A	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_16DD7	proc near
+marisa_16DD7	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -17223,19 +17223,19 @@ loc_16DF6:
 		pop	si
 		pop	bp
 		retn
-sub_16DD7	endp
+marisa_16DD7	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_16DFF	proc near
+marisa_16DFF	proc near
 
 var_1		= byte ptr -1
 
 		enter	2, 0
-		call	sub_16A1A
+		call	marisa_16A1A
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 2
 		jnz	short loc_16E2E
@@ -17288,19 +17288,19 @@ loc_16E84:
 locret_16E9B:
 		leave
 		retn
-sub_16DFF	endp
+marisa_16DFF	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_16E9D	proc near
+marisa_16E9D	proc near
 
 var_2		= word ptr -2
 
 		enter	2, 0
-		call	sub_16A1A
+		call	marisa_16A1A
 		mov	ax, _boss_phase_frame
 		mov	[bp+var_2], ax
 		mov	cx, 5		; switch 5 cases
@@ -17340,7 +17340,7 @@ loc_16EEA:
 ; ---------------------------------------------------------------------------
 
 loc_16EF1:
-		call	sub_16C05	; jumptable 00016EBF case 64
+		call	marisa_16C05	; jumptable 00016EBF case 64
 		mov	al, byte_25671
 		neg	al
 		mov	byte_25671, al
@@ -17356,7 +17356,7 @@ loc_16EFE:
 locret_16F0E:
 		leave			; default
 		retn
-sub_16E9D	endp
+marisa_16E9D	endp
 
 ; ---------------------------------------------------------------------------
 word_16F10	dw    20h,   22h,   24h,   40h
@@ -17371,7 +17371,7 @@ word_16F10	dw    20h,   22h,   24h,   40h
 
 ; Attributes: bp-based frame
 
-sub_16F24	proc near
+marisa_16F24	proc near
 
 @@angle		= byte ptr -1
 arg_0		= word ptr  4
@@ -17404,21 +17404,21 @@ loc_16F44:
 		pop	si
 		leave
 		retn	2
-sub_16F24	endp
+marisa_16F24	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_16F61	proc near
+marisa_16F61	proc near
 
 var_1		= byte ptr -1
 
 		enter	2, 0
 		push	si
 		push	di
-		call	sub_16A1A
+		call	marisa_16A1A
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 2
 		jnz	short loc_16F9F
@@ -17428,7 +17428,7 @@ var_1		= byte ptr -1
 		mov	_bullet_template.count, 3
 		mov	_bullet_template.BT_delta.spread_angle, 8
 		call	_bullet_template_tune
-		mov	fp_25676, offset sub_16F24
+		mov	fp_25676, offset marisa_16F24
 		mov	al, byte ptr _boss_phase_frame
 		mov	byte_2D02D, al
 		jmp	loc_1705D
@@ -17445,7 +17445,7 @@ loc_16F9F:
 		jnz	short loc_1702D
 		cmp	byte_25672, 0
 		jz	short loc_16FC6
-		call	sub_16DD7
+		call	marisa_16DD7
 		mov	al, byte ptr _boss_phase_frame
 		mov	byte_2D02D, al
 		jmp	short loc_17026
@@ -17457,7 +17457,7 @@ loc_16FC6:
 		mov	dx, 0A0h
 		sub	dx, ax
 		push	dx
-		call	sub_16B85
+		call	marisa_16B85
 		mov	_bullet_template.spawn_type, BST_BULLET16
 		mov	_bullet_template.patnum, PAT_BULLET16_D_BLUE
 		mov	_bullet_template.speed, (3 shl 4) + 4
@@ -17512,14 +17512,14 @@ loc_1705D:
 		pop	si
 		leave
 		retn
-sub_16F61	endp
+marisa_16F61	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_17061	proc near
+marisa_17061	proc near
 
 arg_0		= word ptr  4
 
@@ -17533,21 +17533,21 @@ arg_0		= word ptr  4
 		pop	si
 		pop	bp
 		retn	2
-sub_17061	endp
+marisa_17061	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_17079	proc near
+marisa_17079	proc near
 
 var_1		= byte ptr -1
 
 		enter	2, 0
 		push	si
 		push	di
-		call	sub_16A1A
+		call	marisa_16A1A
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 2
 		jnz	short loc_170C3
@@ -17555,7 +17555,7 @@ var_1		= byte ptr -1
 		mov	_bullet_template.speed, (1 shl 4)
 		mov	_bullet_template.BT_group, BG_SINGLE
 		call	_bullet_template_tune
-		mov	fp_25676, offset sub_17061
+		mov	fp_25676, offset marisa_17061
 		mov	si, 0B204h
 		xor	di, di
 		jmp	short loc_170B5
@@ -17594,7 +17594,7 @@ loc_170C3:
 		mov	_bullet_template.BT_angle, al
 		cmp	byte_25672, 0
 		jz	short loc_17102
-		call	sub_16DD7
+		call	marisa_16DD7
 		mov	al, byte ptr _boss_phase_frame
 		mov	byte_2D02D, al
 		jmp	short loc_17136
@@ -17606,7 +17606,7 @@ loc_17102:
 		mov	dx, 0A0h
 		sub	dx, ax
 		push	dx
-		call	sub_16B85
+		call	marisa_16B85
 		mov	_bullet_template.spawn_type, BST_BULLET16
 		mov	_bullet_template.patnum, PAT_BULLET16_N_STAR
 		mov	_bullet_template.BT_group, BG_SPREAD_AIMED
@@ -17652,26 +17652,26 @@ loc_17179:
 		pop	si
 		leave
 		retn
-sub_17079	endp
+marisa_17079	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1717D	proc near
+marisa_1717D	proc near
 
 var_1		= byte ptr -1
 
 		enter	2, 0
 		push	si
 		push	di
-		call	sub_16A1A
+		call	marisa_16A1A
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 2
 		jnz	short loc_171A2
 		mov	_bullet_template.spawn_type, BST_PELLET
-		mov	fp_25676, offset sub_16F24
+		mov	fp_25676, offset marisa_16F24
 		mov	byte_2D02D, 0
 		jmp	loc_17331
 ; ---------------------------------------------------------------------------
@@ -17727,7 +17727,7 @@ loc_1720D:
 		call	_bullet_template_tune
 		mov	_bullet_template.speed, (4 shl 4)
 		call	snd_se_play pascal, 9
-		call	sub_16DD7
+		call	marisa_16DD7
 		jmp	loc_17331
 ; ---------------------------------------------------------------------------
 
@@ -17771,7 +17771,7 @@ loc_17266:
 
 loc_1726E:
 		push	60h
-		call	sub_16B85
+		call	marisa_16B85
 		cmp	byte_2D02D, 0
 		jnz	short loc_1729F
 		mov	byte_2D02D, 1
@@ -17843,14 +17843,14 @@ loc_17331:
 		pop	si
 		leave
 		retn
-sub_1717D	endp
+marisa_1717D	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_17335	proc near
+marisa_17335	proc near
 
 var_3		= byte ptr -3
 @@speed		= word ptr -2
@@ -17858,7 +17858,7 @@ var_3		= byte ptr -3
 		enter	4, 0
 		push	si
 		push	di
-		call	sub_16A1A
+		call	marisa_16A1A
 		mov	[bp+var_3], al
 		cmp	[bp+var_3], 2
 		jnz	short loc_1736D
@@ -17868,7 +17868,7 @@ var_3		= byte ptr -3
 		mov	_bullet_template.BT_group, BG_RING_AIMED
 		mov	_bullet_template.BT_angle, 0
 		call	_bullet_template_tune
-		mov	fp_25676, offset sub_17061
+		mov	fp_25676, offset marisa_17061
 		jmp	loc_1748D
 ; ---------------------------------------------------------------------------
 
@@ -17893,7 +17893,7 @@ loc_1736D:
 		mov	_bullet_template.count, 28
 
 loc_173A2:
-		call	sub_16DD7
+		call	marisa_16DD7
 		call	snd_se_play pascal, 9
 
 loc_173AC:
@@ -17919,7 +17919,7 @@ loc_173CB:
 
 loc_173D3:
 		push	40h
-		call	sub_16B85
+		call	marisa_16B85
 		or	al, al
 		jnz	loc_1747D
 		mov	ax, _boss_phase_frame
@@ -17995,20 +17995,20 @@ loc_1748D:
 		pop	si
 		leave
 		retn
-sub_17335	endp
+marisa_17335	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_17491	proc near
+marisa_17491	proc near
 
 var_1		= byte ptr -1
 
 		enter	2, 0
 		push	si
-		call	sub_16A1A
+		call	marisa_16A1A
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 2
 		jnz	short loc_174CD
@@ -18018,7 +18018,7 @@ var_1		= byte ptr -1
 		mov	_bullet_template.BT_group, BG_SINGLE
 		mov	_bullet_template.BT_special_motion, BSM_SLOWDOWN_TO_ANGLE
 		call	_bullet_template_tune
-		mov	fp_25676, offset sub_17061
+		mov	fp_25676, offset marisa_17061
 		mov	byte_2D02D, 0
 		jmp	loc_1769B
 ; ---------------------------------------------------------------------------
@@ -18168,7 +18168,7 @@ loc_1760D:
 
 loc_17615:
 		push	80h
-		call	sub_16B85
+		call	marisa_16B85
 		cmp	byte_2D02D, 0
 		jnz	short loc_17634
 		call	randring2_next16_and pascal, 1Fh
@@ -18216,19 +18216,19 @@ loc_1769B:
 		pop	si
 		leave
 		retn
-sub_17491	endp
+marisa_17491	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1769E	proc near
+marisa_1769E	proc near
 
 var_1		= byte ptr -1
 
 		enter	2, 0
-		call	sub_16A1A
+		call	marisa_16A1A
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 2
 		jnz	short loc_176D9
@@ -18238,7 +18238,7 @@ var_1		= byte ptr -1
 		mov	_bullet_template.BT_special_motion, BSM_NONE
 		mov	_bullet_template.BT_angle, -40h
 		mov	_bullet_template.speed, (6 shl 4)
-		mov	fp_25676, offset sub_17061
+		mov	fp_25676, offset marisa_17061
 		mov	byte_2D02D, 0
 		leave
 		retn
@@ -18253,7 +18253,7 @@ loc_176D9:
 		jg	short loc_17707
 		cmp	_stage_frame_mod4, 0
 		jnz	locret_17811
-		call	sub_16DD7
+		call	marisa_16DD7
 		call	snd_se_play pascal, 9
 		leave
 		retn
@@ -18307,7 +18307,7 @@ loc_17794:
 
 loc_1779E:
 		push	0A0h
-		call	sub_16B85
+		call	marisa_16B85
 		cmp	byte_2D02D, 0
 		jnz	short loc_177B8
 		call	randring2_next16_and pascal, 1Fh
@@ -18346,19 +18346,19 @@ loc_17801:
 locret_17811:
 		leave
 		retn
-sub_1769E	endp
+marisa_1769E	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_17813	proc near
+marisa_17813	proc near
 
 var_1		= byte ptr -1
 
 		enter	2, 0
-		call	sub_16A1A
+		call	marisa_16A1A
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 2
 		jnz	short loc_1784F
@@ -18408,21 +18408,21 @@ loc_17874:
 locret_1788C:
 		leave
 		retn
-sub_17813	endp
+marisa_17813	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1788E	proc far
+marisa_1788E	proc far
 
 var_1		= byte ptr -1
 
 		enter	2, 0
 		push	si
 		push	di
-		call	sub_16A1A
+		call	marisa_16A1A
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 2
 		jnz	short loc_178AD
@@ -18432,7 +18432,7 @@ var_1		= byte ptr -1
 		mov	byte_2D02D, al
 
 loc_178AD:
-		call	sub_16A1A
+		call	marisa_16A1A
 		cmp	al, 1
 		jnz	loc_179B8
 		cmp	byte_25672, 0
@@ -18443,7 +18443,7 @@ loc_178AD:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1793D
-		mov	fp_25676, offset sub_17061
+		mov	fp_25676, offset marisa_17061
 		mov	_bullet_template.spawn_type, BST_PELLET
 		mov	_bullet_template.speed, (2 shl 4)
 		mov	_bullet_template.BT_group, BG_SINGLE
@@ -18457,14 +18457,14 @@ loc_178AD:
 
 loc_178F6:
 		call	_bullet_template_tune
-		call	sub_16DD7
+		call	marisa_16DD7
 		mov	ax, _boss_phase_frame
 		mov	bx, 8
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_17936
-		mov	fp_25676, offset sub_16F24
+		mov	fp_25676, offset marisa_16F24
 		mov	_bullet_template.spawn_type, BST_BULLET16_CLOUD_FORWARDS
 		mov	_bullet_template.patnum, PAT_BULLET16_N_BALL_BLUE
 		mov	al, byte_2D02C
@@ -18474,7 +18474,7 @@ loc_178F6:
 		mov	_bullet_template.BT_group, BG_SINGLE
 		mov	_bullet_template.BT_angle, 0
 		call	_bullet_template_tune
-		call	sub_16DD7
+		call	marisa_16DD7
 
 loc_17936:
 		call	snd_se_play pascal, 9
@@ -18502,7 +18502,7 @@ loc_17958:
 
 loc_1795F:
 		push	48h ; 'H'
-		call	sub_16B85
+		call	marisa_16B85
 		or	al, al
 		jnz	short loc_179A8
 		mov	ax, _boss_phase_frame
@@ -18533,13 +18533,13 @@ loc_179B8:
 		pop	si
 		leave
 		retn
-sub_1788E	endp
+marisa_1788E	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_179BC	proc near
+marisa_179BC	proc near
 		push	bp
 		mov	bp, sp
 		inc	_boss_phase_frame
@@ -18566,7 +18566,7 @@ loc_179F0:
 		mov	al, 0
 		pop	bp
 		retn
-sub_179BC	endp
+marisa_179BC	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -18655,57 +18655,57 @@ loc_17ADF:
 		jmp	word ptr cs:[bx+16h] ; switch jump
 
 loc_17AE3:
-		call	sub_16E9D	; jumptable 00017ADF case 0
+		call	marisa_16E9D	; jumptable 00017ADF case 0
 		jmp	loc_17B98	; default
 ; ---------------------------------------------------------------------------
 
 loc_17AE9:
-		call	sub_16F61	; jumptable 00017ADF case 1
+		call	marisa_16F61	; jumptable 00017ADF case 1
 		jmp	loc_17B98	; default
 ; ---------------------------------------------------------------------------
 
 loc_17AEF:
-		call	sub_17079	; jumptable 00017ADF case 2
+		call	marisa_17079	; jumptable 00017ADF case 2
 		jmp	loc_17B98	; default
 ; ---------------------------------------------------------------------------
 
 loc_17AF5:
-		call	sub_1717D	; jumptable 00017ADF case 3
+		call	marisa_1717D	; jumptable 00017ADF case 3
 		jmp	loc_17B98	; default
 ; ---------------------------------------------------------------------------
 
 loc_17AFB:
-		call	sub_17335	; jumptable 00017ADF case 4
+		call	marisa_17335	; jumptable 00017ADF case 4
 		jmp	loc_17B98	; default
 ; ---------------------------------------------------------------------------
 
 loc_17B01:
-		call	sub_17491	; jumptable 00017ADF case 5
+		call	marisa_17491	; jumptable 00017ADF case 5
 		jmp	loc_17B98	; default
 ; ---------------------------------------------------------------------------
 
 loc_17B07:
-		call	sub_1769E	; jumptable 00017ADF case 6
+		call	marisa_1769E	; jumptable 00017ADF case 6
 		jmp	loc_17B98	; default
 ; ---------------------------------------------------------------------------
 
 loc_17B0D:
-		call	near ptr sub_1788E ; jumptable 00017ADF	case 7
+		call	near ptr marisa_1788E ; jumptable 00017ADF	case 7
 		jmp	loc_17B98	; default
 ; ---------------------------------------------------------------------------
 
 loc_17B13:
-		call	sub_16DFF	; jumptable 00017ADF case 10
+		call	marisa_16DFF	; jumptable 00017ADF case 10
 		jmp	loc_17B98	; default
 ; ---------------------------------------------------------------------------
 
 loc_17B19:
-		call	sub_17813	; jumptable 00017ADF case 11
+		call	marisa_17813	; jumptable 00017ADF case 11
 		jmp	short loc_17B98	; default
 ; ---------------------------------------------------------------------------
 
 loc_17B1E:
-		call	sub_16AE9	; jumptable 00017ADF case 255
+		call	marisa_16AE9	; jumptable 00017ADF case 255
 		cmp	_boss_phase_frame, 64
 		jl	short loc_17B98	; default
 		inc	_boss_mode_change
@@ -18754,7 +18754,7 @@ loc_17B84:
 ; ---------------------------------------------------------------------------
 
 loc_17B98:
-		call	sub_179BC	; default
+		call	marisa_179BC	; default
 		or	al, al
 		jz	short loc_17BB3
 		mov	_boss_mode_change, 1
@@ -18861,7 +18861,7 @@ loc_17CA4:
 		mov	_homing_target.x, ax
 		mov	ax, _boss_pos.cur.y
 		mov	_homing_target.y, ax
-		call	sub_16C6A
+		call	marisa_16C6A
 		call	hud_hp_update_and_render pascal, _boss_hp, 6000
 		leave
 		retf
@@ -19262,7 +19262,7 @@ enemies_update	endp
 
 ; Attributes: bp-based frame
 
-sub_1802F	proc near
+mugetsu_1802F	proc near
 		push	bp
 		mov	bp, sp
 		mov	_gather_template.GT_angle_delta, -2
@@ -19271,14 +19271,14 @@ sub_1802F	proc near
 		call	_gather_add_only
 		pop	bp
 		retn
-sub_1802F	endp
+mugetsu_1802F	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_18044	proc near
+mugetsu_18044	proc near
 
 var_2		= word ptr -2
 
@@ -19312,7 +19312,7 @@ loc_1806B:
 		mov	_gather_template.GT_col, 14
 
 loc_1808B:
-		call	sub_1802F	; jumptable 00018067 case 36
+		call	mugetsu_1802F	; jumptable 00018067 case 36
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -19331,7 +19331,7 @@ loc_18097:
 locret_180A9:
 		leave			; default
 		retn
-sub_18044	endp
+mugetsu_18044	endp
 
 ; ---------------------------------------------------------------------------
 word_180AB	dw    20h,   22h,   24h,   30h
@@ -19345,11 +19345,11 @@ word_180AB	dw    20h,   22h,   24h,   30h
 
 ; Attributes: bp-based frame
 
-sub_180BB	proc near
+mugetsu_180BB	proc near
 		push	bp
 		mov	bp, sp
 		mov	word_231F2, 10h
-		call	sub_18044
+		call	mugetsu_18044
 		cmp	_boss_phase_frame, 16
 		jl	short loc_18126
 		cmp	_boss_phase_frame, 16
@@ -19401,18 +19401,18 @@ loc_18126:
 		mov	al, 0
 		pop	bp
 		retn
-sub_180BB	endp
+mugetsu_180BB	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1812A	proc near
+mugetsu_1812A	proc near
 		push	bp
 		mov	bp, sp
 		mov	word_231F2, 0
-		call	sub_18044
+		call	mugetsu_18044
 		mov	bx, _boss_phase_frame
 		sub	bx, 16
 		cmp	bx, 32
@@ -19509,7 +19509,7 @@ loc_181D7:
 		mov	al, 0
 		pop	bp
 		retn
-sub_1812A	endp
+mugetsu_1812A	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -19551,11 +19551,11 @@ off_181DC	dw offset loc_1817F
 
 ; Attributes: bp-based frame
 
-sub_1821E	proc near
+mugetsu_1821E	proc near
 		push	bp
 		mov	bp, sp
 		mov	word_231F2, 0FFB0h
-		call	sub_18044
+		call	mugetsu_18044
 		mov	bx, _boss_phase_frame
 		sub	bx, 16
 		cmp	bx, 32
@@ -19652,7 +19652,7 @@ loc_182CD:
 		mov	al, 0
 		pop	bp
 		retn
-sub_1821E	endp
+mugetsu_1821E	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -19694,7 +19694,7 @@ off_182D2	dw offset loc_18273
 
 ; Attributes: bp-based frame
 
-sub_18314	proc near
+mugetsu_18314	proc near
 		push	bp
 		mov	bp, sp
 		call	fp_259E8
@@ -19753,14 +19753,14 @@ loc_1837D:
 loc_18388:
 		pop	bp
 		retn
-sub_18314	endp
+mugetsu_18314	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1838A	proc near
+mugetsu_1838A	proc near
 
 var_2		= word ptr -2
 
@@ -19839,14 +19839,14 @@ loc_18451:
 locret_1845C:
 		leave
 		retn
-sub_1838A	endp
+mugetsu_1838A	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1845E	proc near
+mugetsu_1845E	proc near
 		push	bp
 		mov	bp, sp
 		call	fp_259E8
@@ -19878,14 +19878,14 @@ loc_1849F:
 		mov	_boss_mode, -1
 		pop	bp
 		retn
-sub_1845E	endp
+mugetsu_1845E	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_184AC	proc near
+mugetsu_184AC	proc near
 		push	bp
 		mov	bp, sp
 		call	fp_259E8
@@ -19947,14 +19947,14 @@ loc_18549:
 loc_18554:
 		pop	bp
 		retn
-sub_184AC	endp
+mugetsu_184AC	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_18556	proc near
+mugetsu_18556	proc near
 		push	bp
 		mov	bp, sp
 		call	fp_259E8
@@ -20011,14 +20011,14 @@ loc_185D7:
 loc_185E2:
 		pop	bp
 		retn
-sub_18556	endp
+mugetsu_18556	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_185E4	proc near
+mugetsu_185E4	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_stage_frame_mod8, 0
@@ -20066,14 +20066,14 @@ loc_18650:
 loc_18653:
 		pop	bp
 		retn
-sub_185E4	endp
+mugetsu_185E4	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_18655	proc near
+mugetsu_18655	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_stage_frame_mod8, 0
@@ -20090,7 +20090,7 @@ sub_18655	proc near
 loc_18682:
 		pop	bp
 		retn
-sub_18655	endp
+mugetsu_18655	endp
 
 include th04/main/boss/bx_1.asm
 
@@ -20098,7 +20098,7 @@ include th04/main/boss/bx_1.asm
 
 ; Attributes: bp-based frame
 
-sub_186B9	proc near
+mugetsu_186B9	proc near
 		push	bp
 		mov	bp, sp
 		cmp	byte_259EF, 0
@@ -20122,7 +20122,7 @@ loc_186E3:
 		mov	al, 0
 		pop	bp
 		retn
-sub_186B9	endp
+mugetsu_186B9	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -20164,7 +20164,7 @@ loc_1872F:
 		jnz	short loc_1876B
 		setfarfp	_stage_vm, nullfunc_far
 		mov	_midboss_frames_until, 0
-		mov	fp_259E8, offset sub_180BB
+		mov	fp_259E8, offset mugetsu_180BB
 		mov	byte_259EF, 0
 		mov	_boss_hp, 9400
 		mov	_boss_phase_end_hp, 3700
@@ -20174,7 +20174,7 @@ loc_1872F:
 		mov	point_259EA.y, ax
 
 loc_1876B:
-		call	sub_186B9
+		call	mugetsu_186B9
 		cmp	_boss_phase_frame, 128
 		jle	loc_189A1
 		inc	_boss_phase
@@ -20186,7 +20186,7 @@ loc_1876B:
 ; ---------------------------------------------------------------------------
 
 loc_18797:
-		call	sub_186B9
+		call	mugetsu_186B9
 		cmp	_boss_phase_frame, 64
 		jl	loc_189A1
 		inc	_boss_phase
@@ -20221,22 +20221,22 @@ loc_187E2:
 ; ---------------------------------------------------------------------------
 
 loc_187E8:
-		call	sub_184AC	; jumptable 000187E2 case 3
+		call	mugetsu_184AC	; jumptable 000187E2 case 3
 		jmp	short loc_18856	; default
 ; ---------------------------------------------------------------------------
 
 loc_187ED:
-		call	sub_1845E	; jumptable 000187E2 cases 1,4,5
+		call	mugetsu_1845E	; jumptable 000187E2 cases 1,4,5
 		jmp	short loc_18856	; default
 ; ---------------------------------------------------------------------------
 
 loc_187F2:
-		call	sub_18314	; jumptable 000187E2 cases 0,6
+		call	mugetsu_18314	; jumptable 000187E2 cases 0,6
 		jmp	short loc_18856	; default
 ; ---------------------------------------------------------------------------
 
 loc_187F7:
-		call	sub_1838A	; jumptable 000187E2 cases 2,7
+		call	mugetsu_1838A	; jumptable 000187E2 cases 2,7
 		jmp	short loc_18856	; default
 ; ---------------------------------------------------------------------------
 
@@ -20247,12 +20247,12 @@ loc_187FC:
 		call	randring2_next16_and
 		or	ax, ax
 		jnz	short loc_18814
-		mov	fp_259E8, offset sub_180BB
+		mov	fp_259E8, offset mugetsu_180BB
 		jmp	short loc_18844
 ; ---------------------------------------------------------------------------
 
 loc_18814:
-		mov	fp_259E8, offset sub_1812A
+		mov	fp_259E8, offset mugetsu_1812A
 
 loc_1881A:
 		push	5
@@ -20285,12 +20285,12 @@ loc_18856:
 		jz	short loc_1886E
 		cmp	_boss_phase_frame, 24
 		jle	short loc_1886E
-		call	sub_18655
+		call	mugetsu_18655
 
 loc_1886E:
 		cmp	_mugetsu_phase2_mode, 36
 		jnb	short loc_18883
-		call	sub_186B9
+		call	mugetsu_186B9
 		or	al, al
 		jz	loc_189A1
 		call	@boss_score_bonus$qui pascal, 100
@@ -20307,11 +20307,11 @@ loc_1888F:
 ; ---------------------------------------------------------------------------
 
 loc_1889E:
-		call	sub_186B9
+		call	mugetsu_186B9
 		cmp	_boss_phase_frame, 64
 		jl	loc_189A1
 		inc	_boss_phase
-		mov	fp_259E8, offset sub_1821E
+		mov	fp_259E8, offset mugetsu_1821E
 
 loc_188B4:
 		mov	_boss_phase_frame, 0
@@ -20319,8 +20319,8 @@ loc_188B4:
 ; ---------------------------------------------------------------------------
 
 loc_188BD:
-		call	sub_186B9
-		call	sub_18556
+		call	mugetsu_186B9
+		call	mugetsu_18556
 		cmp	_boss_phase_frame, 0
 		jnz	loc_189A1
 		call	@boss_explode_small$q16explosion_type_t pascal, ET_HORIZONTAL
@@ -20331,7 +20331,7 @@ loc_188BD:
 ; ---------------------------------------------------------------------------
 
 loc_188E3:
-		call	sub_186B9
+		call	mugetsu_186B9
 		cmp	_boss_phase_frame, 128
 		jl	loc_189A1
 		inc	_boss_phase
@@ -20339,13 +20339,13 @@ loc_188E3:
 ; ---------------------------------------------------------------------------
 
 loc_188F6:
-		call	sub_185E4
+		call	mugetsu_185E4
 		cmp	_boss_phase_frame, 3000
 		jl	short loc_18904
-		call	sub_18655
+		call	mugetsu_18655
 
 loc_18904:
-		call	sub_186B9
+		call	mugetsu_186B9
 		or	al, al
 		jnz	short loc_18915
 		cmp	_boss_phase_frame, 4000
@@ -20442,7 +20442,7 @@ include th04/main/pointnum/digits.asm
 
 ; Attributes: bp-based frame
 
-sub_18A14	proc near
+kurumi_18A14	proc near
 
 @@angle		= word ptr  4
 arg_2		= word ptr  6
@@ -20498,14 +20498,14 @@ loc_18A73:
 		pop	si
 		pop	bp
 		retn	4
-sub_18A14	endp
+kurumi_18A14	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_18A79	proc near
+kurumi_18A79	proc near
 
 var_4		= word ptr -4
 var_2		= word ptr -2
@@ -20615,14 +20615,14 @@ loc_18B64:
 		pop	si
 		leave
 		retn
-sub_18A79	endp
+kurumi_18A79	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_18B68	proc near
+kurumi_18B68	proc near
 		push	bp
 		mov	bp, sp
 		push	((192 shl 4) shl 16) or (64 shl 4)
@@ -20644,14 +20644,14 @@ sub_18B68	proc near
 		inc	_boss_angle
 		pop	bp
 		retn
-sub_18B68	endp
+kurumi_18B68	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_18BA7	proc near
+kurumi_18BA7	proc near
 		push	bp
 		mov	bp, sp
 		push	((192 shl 4) shl 16) or (64 shl 4)
@@ -20673,14 +20673,14 @@ sub_18BA7	proc near
 		dec	_boss_angle
 		pop	bp
 		retn
-sub_18BA7	endp
+kurumi_18BA7	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_18BE6	proc near
+kurumi_18BE6	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_boss_phase_frame, 16
@@ -20715,7 +20715,7 @@ loc_18C1F:
 		mov	dl, 18h
 		sub	dl, al
 		push	dx
-		call	sub_18A14
+		call	kurumi_18A14
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -20729,7 +20729,7 @@ loc_18C3E:
 		mov	_bullet_template.BT_group, BG_RING_AIMED
 		mov	_bullet_template.count, 16
 		call	_bullet_template_tune
-		call	sub_18A79
+		call	kurumi_18A79
 		or	al, al
 		jz	short loc_18C74
 		mov	_boss_phase_frame, 0
@@ -20738,14 +20738,14 @@ loc_18C3E:
 loc_18C74:
 		pop	bp
 		retn
-sub_18BE6	endp
+kurumi_18BE6	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_18C76	proc near
+kurumi_18C76	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_boss_phase_frame, 16
@@ -20779,7 +20779,7 @@ loc_18CAF:
 		call	randring2_next16_and
 		add	al, 68h	; 'h'
 		push	ax
-		call	sub_18A14
+		call	kurumi_18A14
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -20793,7 +20793,7 @@ loc_18CCC:
 		mov	_bullet_template.BT_group, BG_RING_AIMED
 		mov	_bullet_template.count, 16
 		call	_bullet_template_tune
-		call	sub_18A79
+		call	kurumi_18A79
 		or	al, al
 		jz	short loc_18D02
 		mov	_boss_phase_frame, 0
@@ -20802,14 +20802,14 @@ loc_18CCC:
 loc_18D02:
 		pop	bp
 		retn
-sub_18C76	endp
+kurumi_18C76	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_18D04	proc near
+kurumi_18D04	proc near
 
 var_1		= byte ptr -1
 
@@ -20854,12 +20854,12 @@ loc_18D51:
 		mov	[bp+var_1], al
 		push	0C0h
 		push	word ptr [bp+var_1]
-		call	sub_18A14
+		call	kurumi_18A14
 		push	0FF40h
 		mov	al, 80h
 		sub	al, [bp+var_1]
 		push	ax
-		call	sub_18A14
+		call	kurumi_18A14
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -20873,7 +20873,7 @@ loc_18D7E:
 		mov	_bullet_template.BT_group, BG_RING_AIMED
 		mov	_bullet_template.count, 8
 		call	_bullet_template_tune
-		call	sub_18A79
+		call	kurumi_18A79
 		or	al, al
 		jz	short locret_18DB4
 		mov	_boss_phase_frame, 0
@@ -20882,17 +20882,17 @@ loc_18D7E:
 locret_18DB4:
 		leave
 		retn
-sub_18D04	endp
+kurumi_18D04	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_18DB6	proc near
+kurumi_18DB6	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_18BA7
+		call	kurumi_18BA7
 		cmp	_boss_angle, 128
 		jbe	short loc_18DCA
 		mov	_boss_sprite, 4
@@ -20945,14 +20945,14 @@ loc_18E1B:
 loc_18E41:
 		pop	bp
 		retn
-sub_18DB6	endp
+kurumi_18DB6	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_18E43	proc near
+kurumi_18E43	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_boss_phase_frame, 16
@@ -20984,7 +20984,7 @@ loc_18E7C:
 		mov	_boss_sprite, 0
 		push	0FF40h
 		push	18h
-		call	sub_18A14
+		call	kurumi_18A14
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -21006,7 +21006,7 @@ loc_18EA7:
 		push	8
 
 loc_18EB3:
-		call	sub_18A14
+		call	kurumi_18A14
 
 loc_18EB6:
 		mov	_bullet_template.spawn_type, BST_BULLET16
@@ -21015,7 +21015,7 @@ loc_18EB6:
 		mov	_bullet_template.BT_group, BG_RING_AIMED
 		mov	_bullet_template.count, 12
 		call	_bullet_template_tune
-		call	sub_18A79
+		call	kurumi_18A79
 		or	al, al
 		jz	short loc_18EE5
 		mov	_boss_phase_frame, 0
@@ -21024,13 +21024,13 @@ loc_18EB6:
 loc_18EE5:
 		pop	bp
 		retn
-sub_18E43	endp
+kurumi_18E43	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_18EE7	proc near
+kurumi_18EE7	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_boss_phase_frame, 16
@@ -21062,7 +21062,7 @@ loc_18F20:
 		mov	_boss_sprite, 0
 		push	0C0h
 		push	68h ; 'h'
-		call	sub_18A14
+		call	kurumi_18A14
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -21084,7 +21084,7 @@ loc_18F4B:
 		push	78h ; 'x'
 
 loc_18F57:
-		call	sub_18A14
+		call	kurumi_18A14
 
 loc_18F5A:
 		mov	_bullet_template.spawn_type, BST_BULLET16
@@ -21093,7 +21093,7 @@ loc_18F5A:
 		mov	_bullet_template.BT_group, BG_RING_AIMED
 		mov	_bullet_template.count, 12
 		call	_bullet_template_tune
-		call	sub_18A79
+		call	kurumi_18A79
 		or	al, al
 		jz	short loc_18F89
 		mov	_boss_phase_frame, 0
@@ -21102,14 +21102,14 @@ loc_18F5A:
 loc_18F89:
 		pop	bp
 		retn
-sub_18EE7	endp
+kurumi_18EE7	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_18F8B	proc near
+kurumi_18F8B	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_boss_phase_frame, 16
@@ -21148,10 +21148,10 @@ loc_18FD7:
 		mov	_boss_sprite, 0
 		push	0FF40h
 		push	18h
-		call	sub_18A14
+		call	kurumi_18A14
 		push	0C0h
 		push	68h ; 'h'
-		call	sub_18A14
+		call	kurumi_18A14
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -21163,7 +21163,7 @@ loc_18FF5:
 		jnz	short loc_19012
 		push	0FF40h
 		push	10h
-		call	sub_18A14
+		call	kurumi_18A14
 		push	0C0h
 		push	70h ; 'p'
 		jmp	short loc_19026
@@ -21174,12 +21174,12 @@ loc_19012:
 		jnz	short loc_19029
 		push	0FF40h
 		push	8
-		call	sub_18A14
+		call	kurumi_18A14
 		push	0C0h
 		push	78h ; 'x'
 
 loc_19026:
-		call	sub_18A14
+		call	kurumi_18A14
 
 loc_19029:
 		mov	_bullet_template.spawn_type, BST_BULLET16
@@ -21188,7 +21188,7 @@ loc_19029:
 		mov	_bullet_template.BT_group, BG_RING_AIMED
 		mov	_bullet_template.count, 6
 		call	_bullet_template_tune
-		call	sub_18A79
+		call	kurumi_18A79
 		or	al, al
 		jz	short loc_19058
 		mov	_boss_phase_frame, 0
@@ -21197,14 +21197,14 @@ loc_19029:
 loc_19058:
 		pop	bp
 		retn
-sub_18F8B	endp
+kurumi_18F8B	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1905A	proc near
+kurumi_1905A	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_boss_phase_frame, 16
@@ -21297,7 +21297,7 @@ loc_190DE:
 loc_1915B:
 		pop	bp
 		retn
-sub_1905A	endp
+kurumi_1905A	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -21408,7 +21408,7 @@ loc_19264:
 		jmp	cs:off_195CC[bx]
 
 loc_19279:
-		call	sub_18B68
+		call	kurumi_18B68
 		cmp	_boss_phase_frame, 96
 		jl	loc_19309
 		mov	_boss_phase_frame, 0
@@ -21460,17 +21460,17 @@ loc_192F6:
 ; ---------------------------------------------------------------------------
 
 loc_192FC:
-		call	sub_18BE6
+		call	kurumi_18BE6
 		jmp	short loc_19309
 ; ---------------------------------------------------------------------------
 
 loc_19301:
-		call	sub_18C76
+		call	kurumi_18C76
 		jmp	short loc_19309
 ; ---------------------------------------------------------------------------
 
 loc_19306:
-		call	sub_18D04
+		call	kurumi_18D04
 
 loc_19309:
 		call	sub_1E64E
@@ -21485,7 +21485,7 @@ loc_19317:
 ; ---------------------------------------------------------------------------
 
 loc_19328:
-		call	sub_18A79
+		call	kurumi_18A79
 		mov	al, _boss_mode
 		mov	ah, 0
 		or	ax, ax
@@ -21504,7 +21504,7 @@ loc_1933B:
 ; ---------------------------------------------------------------------------
 
 loc_19350:
-		call	sub_18DB6
+		call	kurumi_18DB6
 
 loc_19353:
 		cmp	_boss_phase_frame, 2000
@@ -21529,7 +21529,7 @@ loc_19372:
 		jmp	cs:off_195C4[bx]
 
 loc_19387:
-		call	sub_18B68
+		call	kurumi_18B68
 		cmp	_boss_phase_frame, 96
 		jl	loc_19417
 		mov	_boss_phase_frame, 0
@@ -21581,17 +21581,17 @@ loc_19404:
 ; ---------------------------------------------------------------------------
 
 loc_1940A:
-		call	sub_18E43
+		call	kurumi_18E43
 		jmp	short loc_19417
 ; ---------------------------------------------------------------------------
 
 loc_1940F:
-		call	sub_18EE7
+		call	kurumi_18EE7
 		jmp	short loc_19417
 ; ---------------------------------------------------------------------------
 
 loc_19414:
-		call	sub_18F8B
+		call	kurumi_18F8B
 
 loc_19417:
 		call	sub_1E64E
@@ -21608,7 +21608,7 @@ loc_1942B:
 ; ---------------------------------------------------------------------------
 
 loc_19431:
-		call	sub_18A79
+		call	kurumi_18A79
 		mov	al, _boss_mode
 		mov	ah, 0
 		or	ax, ax
@@ -21665,7 +21665,7 @@ loc_194B6:
 ; ---------------------------------------------------------------------------
 
 loc_194BE:
-		call	sub_1905A
+		call	kurumi_1905A
 
 loc_194C1:
 		call	sub_1E64E
@@ -21693,7 +21693,7 @@ loc_19500:
 ; ---------------------------------------------------------------------------
 
 loc_19509:
-		call	sub_18A79
+		call	kurumi_18A79
 		cmp	_boss_pos.cur.x, (191 shl 4)
 		jge	short loc_1951C
 		mov	_boss_pos.velocity.x, 24
@@ -21788,7 +21788,7 @@ off_195D6	dw offset loc_19178
 
 ; Attributes: bp-based frame
 
-sub_195E4	proc near
+orange_195E4	proc near
 
 var_4		= word ptr -4
 var_2		= word ptr -2
@@ -21861,17 +21861,17 @@ loc_19682:
 		xor	ax, ax
 		leave
 		retn
-sub_195E4	endp
+orange_195E4	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_19686	proc near
+orange_19686	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_195E4
+		call	orange_195E4
 		cmp	ax, 2
 		jnz	loc_1971E
 		cmp	_boss_phase_frame, 86
@@ -21933,17 +21933,17 @@ loc_19712:
 loc_1971E:
 		pop	bp
 		retn
-sub_19686	endp
+orange_19686	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_19720	proc near
+orange_19720	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_195E4
+		call	orange_195E4
 		cmp	ax, 2
 		jnz	loc_197B9
 		cmp	_boss_phase_frame, 86
@@ -21993,17 +21993,17 @@ loc_197AD:
 loc_197B9:
 		pop	bp
 		retn
-sub_19720	endp
+orange_19720	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_197BB	proc near
+orange_197BB	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_195E4
+		call	orange_195E4
 		cmp	ax, 2
 		jnz	short loc_19812
 		cmp	_stage_frame_mod8, 0
@@ -22030,17 +22030,17 @@ loc_19806:
 loc_19812:
 		pop	bp
 		retn
-sub_197BB	endp
+orange_197BB	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_19814	proc near
+orange_19814	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_195E4
+		call	orange_195E4
 		cmp	ax, 2
 		jnz	short loc_19876
 		cmp	_stage_frame_mod8, 0
@@ -22071,14 +22071,14 @@ loc_1986A:
 loc_19876:
 		pop	bp
 		retn
-sub_19814	endp
+orange_19814	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_19878	proc near
+orange_19878	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_boss_phase_frame, 1
@@ -22196,14 +22196,14 @@ loc_1997C:
 loc_19989:
 		pop	bp
 		retn
-sub_19878	endp
+orange_19878	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1998B	proc near
+orange_1998B	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_boss_phase_frame, 96
@@ -22306,7 +22306,7 @@ loc_19A9B:
 loc_19AA1:
 		pop	bp
 		retn
-sub_1998B	endp
+orange_1998B	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -22458,22 +22458,22 @@ loc_19C29:
 ; ---------------------------------------------------------------------------
 
 loc_19C4F:
-		call	sub_19686
+		call	orange_19686
 		jmp	short loc_19C61
 ; ---------------------------------------------------------------------------
 
 loc_19C54:
-		call	sub_19720
+		call	orange_19720
 		jmp	short loc_19C61
 ; ---------------------------------------------------------------------------
 
 loc_19C59:
-		call	sub_197BB
+		call	orange_197BB
 		jmp	short loc_19C61
 ; ---------------------------------------------------------------------------
 
 loc_19C5E:
-		call	sub_19814
+		call	orange_19814
 
 loc_19C61:
 		call	sub_1E64E
@@ -22508,7 +22508,7 @@ loc_19C9A:
 ; ---------------------------------------------------------------------------
 
 loc_19CAF:
-		call	sub_19878
+		call	orange_19878
 
 loc_19CB2:
 		cmp	_boss_phase_frame, 1500
@@ -22598,7 +22598,7 @@ loc_19D93:
 ; ---------------------------------------------------------------------------
 
 loc_19D9B:
-		call	sub_1998B
+		call	orange_1998B
 
 loc_19D9E:
 		cmp	_boss_phase_frame, 600
@@ -22769,7 +22769,7 @@ main_034_TEXT	segment	byte public 'CODE' use16
 
 ; Attributes: bp-based frame
 
-sub_1A087	proc near
+yuuka6_1A087	proc near
 
 arg_0		= byte ptr  4
 arg_2		= byte ptr  6
@@ -22812,14 +22812,14 @@ loc_1A0CC:
 		pop	si
 		pop	bp
 		retn	4
-sub_1A087	endp
+yuuka6_1A087	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1A0D1	proc near
+yuuka6_1A0D1	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -22841,14 +22841,14 @@ sub_1A0D1	proc near
 		pop	si
 		pop	bp
 		retn
-sub_1A0D1	endp
+yuuka6_1A0D1	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1A110	proc near
+yuuka6_1A110	proc near
 
 var_6		= byte ptr -6
 @@angle		= byte ptr -5
@@ -23134,14 +23134,14 @@ loc_1A3BF:
 		pop	si
 		leave
 		retn
-sub_1A110	endp
+yuuka6_1A110	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1A3C3	proc near
+yuuka6_1A3C3	proc near
 		push	bp
 		mov	bp, sp
 		mov	al, _boss_mode_change
@@ -23200,17 +23200,17 @@ loc_1A41C:
 
 loc_1A42E:
 		push	0C000500h
-		call	sub_1A439
+		call	yuuka6_1A439
 		pop	bp
 		retn
-sub_1A3C3	endp
+yuuka6_1A3C3	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1A439	proc near
+yuuka6_1A439	proc near
 
 arg_0		= word ptr  4
 arg_2		= word ptr  6
@@ -23271,14 +23271,14 @@ loc_1A4A2:
 		pop	si
 		pop	bp
 		retn	4
-sub_1A439	endp
+yuuka6_1A439	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1A4A8	proc near
+yuuka6_1A4A8	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_boss_phase_frame, 1
@@ -23313,14 +23313,14 @@ loc_1A4DE:
 		mov	_boss_angle, al
 		pop	bp
 		retn
-sub_1A4A8	endp
+yuuka6_1A4A8	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1A503	proc near
+yuuka6_1A503	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_yuuka6_sprite_state, Y6SS_VANISHED
@@ -23354,7 +23354,7 @@ loc_1A539:
 		mov	al, 0
 		pop	bp
 		retn
-sub_1A503	endp
+yuuka6_1A503	endp
 
 include th04/main/boss/b6_anim.asm
 
@@ -23362,7 +23362,7 @@ include th04/main/boss/b6_anim.asm
 
 ; Attributes: bp-based frame
 
-sub_1A907	proc near
+yuuka6_1A907	proc near
 
 var_2		= word ptr -2
 
@@ -23430,7 +23430,7 @@ loc_1A981:
 locret_1A9A3:
 		leave			; default
 		retn
-sub_1A907	endp
+yuuka6_1A907	endp
 
 ; ---------------------------------------------------------------------------
 word_1A9A5	dw    10h,   12h,   14h,   20h
@@ -23444,7 +23444,7 @@ word_1A9A5	dw    10h,   12h,   14h,   20h
 
 ; Attributes: bp-based frame
 
-sub_1A9B5	proc near
+yuuka6_1A9B5	proc near
 		push	bp
 		mov	bp, sp
 		mov	_gather_template.GT_angle_delta, -2
@@ -23453,14 +23453,14 @@ sub_1A9B5	proc near
 		call	_gather_add_only
 		pop	bp
 		retn
-sub_1A9B5	endp
+yuuka6_1A9B5	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1A9CA	proc near
+yuuka6_1A9CA	proc near
 
 var_2		= word ptr -2
 
@@ -23494,7 +23494,7 @@ loc_1A9ED:
 		mov	_gather_template.GT_col, 9
 
 loc_1AA14:
-		call	sub_1A9B5	; jumptable 0001A9E9 case 52
+		call	yuuka6_1A9B5	; jumptable 0001A9E9 case 52
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -23513,7 +23513,7 @@ loc_1AA20:
 locret_1AA32:
 		leave			; default
 		retn
-sub_1A9CA	endp
+yuuka6_1A9CA	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -23528,7 +23528,7 @@ word_1AA35	dw    30h,   32h,   34h,   40h
 
 ; Attributes: bp-based frame
 
-sub_1AA45	proc near
+yuuka6_1AA45	proc near
 
 var_2		= word ptr -2
 
@@ -23562,13 +23562,13 @@ loc_1AA80:
 		mov	_gather_template.GT_center.y, ax
 		mov	ax, _boss_pos.cur.x
 		mov	_gather_template.GT_center.x, ax
-		call	sub_1A9B5
+		call	yuuka6_1A9B5
 		mov	ax, point_25A0C.y
 		add	ax, (32 shl 4)
 		mov	_gather_template.GT_center.y, ax
 		mov	ax, point_25A0C.x
 		mov	_gather_template.GT_center.x, ax
-		call	sub_1A9B5
+		call	yuuka6_1A9B5
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -23594,7 +23594,7 @@ loc_1AAAD:
 locret_1AAD2:
 		leave			; default
 		retn
-sub_1AA45	endp
+yuuka6_1AA45	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -23609,7 +23609,7 @@ word_1AAD5	dw    20h,   22h,   24h,   30h
 
 ; Attributes: bp-based frame
 
-sub_1AAE5	proc near
+yuuka6_1AAE5	proc near
 
 var_2		= word ptr -2
 
@@ -23642,7 +23642,7 @@ loc_1AB08:
 		mov	_gather_template.GT_col, 7
 
 loc_1AB2C:
-		call	sub_1A9B5	; jumptable 0001AB04 case 20
+		call	yuuka6_1A9B5	; jumptable 0001AB04 case 20
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -23661,7 +23661,7 @@ loc_1AB38:
 locret_1AB4A:
 		leave			; default
 		retn
-sub_1AAE5	endp
+yuuka6_1AAE5	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -23676,7 +23676,7 @@ word_1AB4D	dw    10h,   12h,   14h,   20h
 
 ; Attributes: bp-based frame
 
-sub_1AB5D	proc near
+yuuka6_1AB5D	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_OPEN
@@ -23684,7 +23684,7 @@ sub_1AB5D	proc near
 		call	_yuuka6_anim_parasol_back_close
 
 loc_1AB6A:
-		call	sub_1A907
+		call	yuuka6_1A907
 		mov	ax, _boss_phase_frame
 		cmp	ax, 48
 		jz	short loc_1AB81
@@ -23729,14 +23729,14 @@ loc_1ABD8:
 		mov	_boss_mode, -1
 		pop	bp
 		retn
-sub_1AB5D	endp
+yuuka6_1AB5D	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1ABE5	proc near
+yuuka6_1ABE5	proc near
 
 var_1		= byte ptr -1
 
@@ -23825,14 +23825,14 @@ loc_1ACBF:
 		mov	_boss_mode, -1
 		leave
 		retn
-sub_1ABE5	endp
+yuuka6_1ABE5	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1ACCC	proc near
+yuuka6_1ACCC	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_CLOSED
@@ -23886,17 +23886,17 @@ loc_1AD58:
 		mov	_boss_mode, -1
 
 loc_1AD6A:
-		call	sub_1A907
+		call	yuuka6_1A907
 		pop	bp
 		retn
-sub_1ACCC	endp
+yuuka6_1ACCC	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1AD6F	proc near
+yuuka6_1AD6F	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_boss_phase_frame, 64
@@ -23940,22 +23940,22 @@ loc_1ADBA:
 		mov	_boss_mode, -1
 
 loc_1ADCC:
-		call	sub_1A9CA
+		call	yuuka6_1A9CA
 		cmp	_boss_phase_frame, 64
 		jnz	short loc_1ADD9
-		call	sub_1A0D1
+		call	yuuka6_1A0D1
 
 loc_1ADD9:
 		pop	bp
 		retn
-sub_1AD6F	endp
+yuuka6_1AD6F	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1ADDB	proc near
+yuuka6_1ADDB	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_stage_frame_mod16, 0
@@ -24010,14 +24010,14 @@ loc_1AE85:
 loc_1AE8D:
 		pop	bp
 		retn
-sub_1ADDB	endp
+yuuka6_1ADDB	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1AE8F	proc near
+yuuka6_1AE8F	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_boss_phase_frame, 64
@@ -24089,7 +24089,7 @@ loc_1AF47:
 		mov	_boss_mode, -1
 
 loc_1AF59:
-		call	sub_1AA45
+		call	yuuka6_1AA45
 		cmp	_boss_phase_frame, 64
 		jnz	short loc_1AFA6
 		mov	al, byte_2D01E
@@ -24115,14 +24115,14 @@ loc_1AF59:
 loc_1AFA6:
 		pop	bp
 		retn
-sub_1AE8F	endp
+yuuka6_1AE8F	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1AFA8	proc near
+yuuka6_1AFA8	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_boss_phase_frame, 64
@@ -24208,17 +24208,17 @@ loc_1B082:
 		mov	_boss_mode, -1
 
 loc_1B094:
-		call	sub_1AA45
+		call	yuuka6_1AA45
 		pop	bp
 		retn
-sub_1AFA8	endp
+yuuka6_1AFA8	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1B099	proc near
+yuuka6_1B099	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_boss_phase_frame, 48
@@ -24279,7 +24279,7 @@ loc_1B120:
 		mov	_boss_sprite, 146
 
 loc_1B125:
-		call	sub_1AAE5
+		call	yuuka6_1AAE5
 		mov	ax, _boss_phase_frame
 		cmp	ax, 48
 		jz	short loc_1B13C
@@ -24345,14 +24345,14 @@ loc_1B1A4:
 loc_1B1AF:
 		pop	bp
 		retn
-sub_1B099	endp
+yuuka6_1B099	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1B1B1	proc near
+yuuka6_1B1B1	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_boss_phase_frame, 48
@@ -24390,7 +24390,7 @@ loc_1B20E:
 		mov	_boss_sprite, 146
 
 loc_1B213:
-		call	sub_1AAE5
+		call	yuuka6_1AAE5
 		cmp	_boss_phase_frame, 144
 		jnz	short loc_1B229
 		mov	_boss_phase_frame, 0
@@ -24399,14 +24399,14 @@ loc_1B213:
 loc_1B229:
 		pop	bp
 		retn
-sub_1B1B1	endp
+yuuka6_1B1B1	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1B22B	proc near
+yuuka6_1B22B	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_boss_phase_frame, 48
@@ -24424,11 +24424,11 @@ sub_1B22B	proc near
 		call	randring2_next16
 		push	ax
 		push	20h ; ' '
-		call	sub_1A087
+		call	yuuka6_1A087
 		call	randring2_next16
 		push	ax
 		push	20h ; ' '
-		call	sub_1A087
+		call	yuuka6_1A087
 		call	snd_se_play pascal, 3
 		jmp	short loc_1B26D
 ; ---------------------------------------------------------------------------
@@ -24445,14 +24445,14 @@ loc_1B26D:
 loc_1B280:
 		pop	bp
 		retn
-sub_1B22B	endp
+yuuka6_1B22B	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1B282	proc near
+yuuka6_1B282	proc near
 
 var_1		= byte ptr -1
 
@@ -24509,14 +24509,14 @@ loc_1B2ED:
 locret_1B311:
 		leave
 		retn
-sub_1B282	endp
+yuuka6_1B282	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1B313	proc near
+yuuka6_1B313	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_boss_phase_frame, 64
@@ -24590,17 +24590,17 @@ loc_1B3CB:
 		mov	_boss_mode, -1
 
 loc_1B3DD:
-		call	sub_1AA45
+		call	yuuka6_1AA45
 		pop	bp
 		retn
-sub_1B313	endp
+yuuka6_1B313	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1B3E2	proc near
+yuuka6_1B3E2	proc near
 		push	bp
 		mov	bp, sp
 		cmp	byte_25A1B, 2
@@ -24632,7 +24632,7 @@ loc_1B42B:
 		mov	al, 0
 		pop	bp
 		retn
-sub_1B3E2	endp
+yuuka6_1B3E2	endp
 
 include th04/main/boss/b6.asm
 
@@ -24715,22 +24715,22 @@ loc_1B550:
 		jmp	word ptr cs:[bx+8] ; switch jump
 
 loc_1B554:
-		call	sub_1AB5D	; jumptable 0001B550 case 0
+		call	yuuka6_1AB5D	; jumptable 0001B550 case 0
 		jmp	short loc_1B580	; default
 ; ---------------------------------------------------------------------------
 
 loc_1B559:
-		call	sub_1ABE5	; jumptable 0001B550 case 1
+		call	yuuka6_1ABE5	; jumptable 0001B550 case 1
 		jmp	short loc_1B580	; default
 ; ---------------------------------------------------------------------------
 
 loc_1B55E:
-		call	sub_1ACCC	; jumptable 0001B550 case 2
+		call	yuuka6_1ACCC	; jumptable 0001B550 case 2
 		jmp	short loc_1B580	; default
 ; ---------------------------------------------------------------------------
 
 loc_1B563:
-		call	sub_1A3C3	; jumptable 0001B550 case 255
+		call	yuuka6_1A3C3	; jumptable 0001B550 case 255
 		or	al, al
 		jz	short loc_1B580	; default
 		mov	al, _boss_mode_change
@@ -24759,7 +24759,7 @@ loc_1B59A:
 loc_1B5A6:
 		inc	_boss_phase_frame
 		push	0C000500h
-		call	sub_1A439
+		call	yuuka6_1A439
 		or	al, al
 		jz	loc_1B8EA
 		inc	_boss_phase
@@ -24779,7 +24779,7 @@ loc_1B5CB:
 ; ---------------------------------------------------------------------------
 
 loc_1B5DB:
-		call	sub_1AD6F
+		call	yuuka6_1AD6F
 		jmp	short loc_1B600
 ; ---------------------------------------------------------------------------
 
@@ -24789,7 +24789,7 @@ loc_1B5E0:
 		add	ax, 300h
 		push	ax
 		push	500h
-		call	sub_1A439
+		call	yuuka6_1A439
 		or	al, al
 		jz	short loc_1B600
 		mov	_boss_mode, 0
@@ -24828,9 +24828,9 @@ loc_1B645:
 ; ---------------------------------------------------------------------------
 
 loc_1B652:
-		call	sub_1ADDB
+		call	yuuka6_1ADDB
 		inc	_boss_phase_frame
-		call	sub_1A4A8
+		call	yuuka6_1A4A8
 		cmp	_boss_phase_frame, 320
 		jl	loc_1B8EA
 		cmp	_boss_pos.cur.y, (80 shl 4)
@@ -24849,7 +24849,7 @@ loc_1B681:
 
 loc_1B694:
 		call	sub_1E64E
-		call	sub_1A503
+		call	yuuka6_1A503
 		or	al, al
 		jz	loc_1B8EA
 		inc	_boss_phase
@@ -24883,17 +24883,17 @@ loc_1B6E9:
 		jmp	word ptr cs:[bx+8] ; switch jump
 
 loc_1B6ED:
-		call	sub_1AE8F	; jumptable 0001B6E9 case 0
+		call	yuuka6_1AE8F	; jumptable 0001B6E9 case 0
 		jmp	short loc_1B72E	; default
 ; ---------------------------------------------------------------------------
 
 loc_1B6F2:
-		call	sub_1AFA8	; jumptable 0001B6E9 case 1
+		call	yuuka6_1AFA8	; jumptable 0001B6E9 case 1
 		jmp	short loc_1B72E	; default
 ; ---------------------------------------------------------------------------
 
 loc_1B6F7:
-		call	sub_1B313	; jumptable 0001B6E9 case 2
+		call	yuuka6_1B313	; jumptable 0001B6E9 case 2
 		jmp	short loc_1B72E	; default
 ; ---------------------------------------------------------------------------
 
@@ -24903,7 +24903,7 @@ loc_1B6FC:
 		add	ax, 300h
 		push	ax
 		push	500h
-		call	sub_1A439
+		call	yuuka6_1A439
 		or	al, al
 		jz	short loc_1B72E	; default
 
@@ -24925,7 +24925,7 @@ loc_1B72E:
 		cmp	_boss_mode, 2
 		ja	short loc_1B744
 		call	sub_1E64E
-		call	sub_1B3E2
+		call	yuuka6_1B3E2
 		jmp	short loc_1B748
 ; ---------------------------------------------------------------------------
 
@@ -24967,7 +24967,7 @@ loc_1B787:
 
 loc_1B78E:
 		call	sub_1E67C
-		call	sub_1A503
+		call	yuuka6_1A503
 		or	al, al
 		jz	loc_1B8EA
 		inc	_boss_phase
@@ -25000,17 +25000,17 @@ loc_1B7DE:
 		jmp	word ptr cs:[bx+8] ; switch jump
 
 loc_1B7E2:
-		call	sub_1B099	; jumptable 0001B7DE case 0
+		call	yuuka6_1B099	; jumptable 0001B7DE case 0
 		jmp	short loc_1B80B	; default
 ; ---------------------------------------------------------------------------
 
 loc_1B7E7:
-		call	sub_1B1B1	; jumptable 0001B7DE case 1
+		call	yuuka6_1B1B1	; jumptable 0001B7DE case 1
 		jmp	short loc_1B80B	; default
 ; ---------------------------------------------------------------------------
 
 loc_1B7EC:
-		call	sub_1B22B	; jumptable 0001B7DE case 2
+		call	yuuka6_1B22B	; jumptable 0001B7DE case 2
 		jmp	short loc_1B80B	; default
 ; ---------------------------------------------------------------------------
 
@@ -25049,7 +25049,7 @@ loc_1B82D:
 ; ---------------------------------------------------------------------------
 
 loc_1B84B:
-		call	sub_1B282
+		call	yuuka6_1B282
 		call	sub_1E64E
 		or	al, al
 		jnz	short loc_1B85F
@@ -25114,7 +25114,7 @@ loc_1B8EA:
 		mov	ax, _boss_pos.cur.y
 		mov	_homing_target.y, ax
 		call	sub_15DE8
-		call	sub_1A110
+		call	yuuka6_1A110
 		call	hud_hp_update_and_render pascal, _boss_hp, 13300
 		leave
 		retf
@@ -25159,7 +25159,7 @@ off_1B938	dw offset loc_1B497
 
 ; Attributes: bp-based frame
 
-sub_1B95C	proc near
+elly_1B95C	proc near
 
 var_1		= byte ptr -1
 
@@ -25449,7 +25449,7 @@ loc_1BBA8:
 locret_1BC2A:
 		leave
 		retn
-sub_1B95C	endp
+elly_1B95C	endp
 
 ; ---------------------------------------------------------------------------
 off_1BC2C	dw offset loc_1B982
@@ -25465,7 +25465,7 @@ off_1BC2C	dw offset loc_1B982
 
 ; Attributes: bp-based frame
 
-sub_1BC3C	proc near
+elly_1BC3C	proc near
 		push	bp
 		mov	bp, sp
 		mov	byte_25A37, 8
@@ -25483,14 +25483,14 @@ sub_1BC3C	proc near
 		mov	byte_25A38, 0
 		pop	bp
 		retn
-sub_1BC3C	endp
+elly_1BC3C	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1BC73	proc near
+elly_1BC73	proc near
 		push	bp
 		mov	bp, sp
 		cmp	word_25A3A, 80h
@@ -25561,19 +25561,19 @@ loc_1BCE9:
 		mov	_boss_pos.cur.y, ax
 		pop	bp
 		retn
-sub_1BC73	endp
+elly_1BC73	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1BD23	proc near
+elly_1BD23	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_boss_phase_frame, 32
 		jnz	short loc_1BD30
-		call	sub_1BC3C
+		call	elly_1BC3C
 
 loc_1BD30:
 		cmp	_boss_phase_frame, 32
@@ -25586,21 +25586,21 @@ loc_1BD30:
 loc_1BD49:
 		pop	bp
 		retn
-sub_1BD23	endp
+elly_1BD23	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1BD4B	proc near
+elly_1BD4B	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_1BC73
+		call	elly_1BC73
 		inc	word_25A3A
 		cmp	_boss_phase_frame, 16
 		jnz	short loc_1BD64
-		call	sub_1BC3C
+		call	elly_1BC3C
 		mov	_bullet_template.BT_angle, -40h
 
 loc_1BD64:
@@ -25629,14 +25629,14 @@ loc_1BDA0:
 loc_1BDB2:
 		pop	bp
 		retn
-sub_1BD4B	endp
+elly_1BD4B	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1BDB4	proc near
+elly_1BDB4	proc near
 
 var_2		= word ptr -2
 
@@ -25705,7 +25705,7 @@ loc_1BE2E:
 		mov	al, 1		; default
 		leave
 		retn
-sub_1BDB4	endp
+elly_1BDB4	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -25722,7 +25722,7 @@ word_1BE33	dw 1
 
 ; Attributes: bp-based frame
 
-sub_1BE43	proc near
+elly_1BE43	proc near
 		push	bp
 		mov	bp, sp
 		mov	_boss_mode, -1
@@ -25737,17 +25737,17 @@ sub_1BE43	proc near
 		call	_bullets_add_regular_fixedspeed
 		pop	bp
 		retn
-sub_1BE43	endp
+elly_1BE43	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1BE78	proc near
+elly_1BE78	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_1BDB4
+		call	elly_1BDB4
 		mov	ah, 0
 		or	ax, ax
 		jz	short loc_1BEA5
@@ -25830,26 +25830,26 @@ loc_1BF40:
 loc_1BF45:
 		cmp	_boss_phase_frame, 144
 		jl	short loc_1BF50
-		call	sub_1BE43
+		call	elly_1BE43
 
 loc_1BF50:
 		pop	bp
 		retn
-sub_1BE78	endp
+elly_1BE78	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1BF52	proc near
+elly_1BF52	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_1BC73
+		call	elly_1BC73
 		inc	word_25A3A
 		cmp	_boss_phase_frame, 16
 		jnz	short loc_1BF66
-		call	sub_1BC3C
+		call	elly_1BC3C
 
 loc_1BF66:
 		cmp	_boss_phase_frame, 16
@@ -25876,17 +25876,17 @@ loc_1BF97:
 loc_1BFA9:
 		pop	bp
 		retn
-sub_1BF52	endp
+elly_1BF52	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1BFAB	proc near
+elly_1BFAB	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_1BDB4
+		call	elly_1BDB4
 		mov	ah, 0
 		or	ax, ax
 		jz	short loc_1BFD7
@@ -25946,28 +25946,28 @@ loc_1C033:
 loc_1C038:
 		cmp	_boss_phase_frame, 80
 		jl	short loc_1C042
-		call	sub_1BE43
+		call	elly_1BE43
 
 loc_1C042:
 		pop	bp
 		retn
-sub_1BFAB	endp
+elly_1BFAB	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1C044	proc near
+elly_1C044	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_1BC73
+		call	elly_1BC73
 		inc	word_25A3A
-		call	sub_1BC73
+		call	elly_1BC73
 		inc	word_25A3A
 		cmp	_boss_phase_frame, 16
 		jnz	short loc_1C07C
-		call	sub_1BC3C
+		call	elly_1BC3C
 		mov	_bullet_template.BT_angle, 40h
 		mov	_bullet_template.spawn_type, BST_BULLET16_CLOUD_FORWARDS
 		mov	_bullet_template.speed, (4 shl 4)
@@ -26000,17 +26000,17 @@ loc_1C0AB:
 loc_1C0BD:
 		pop	bp
 		retn
-sub_1C044	endp
+elly_1C044	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1C0BF	proc near
+elly_1C0BF	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_1BDB4
+		call	elly_1BDB4
 		mov	ah, 0
 		or	ax, ax
 		jz	short loc_1C0EB
@@ -26079,28 +26079,28 @@ loc_1C14C:
 loc_1C158:
 		cmp	_boss_phase_frame, 80
 		jl	short loc_1C162
-		call	sub_1BE43
+		call	elly_1BE43
 
 loc_1C162:
 		pop	bp
 		retn
-sub_1C0BF	endp
+elly_1C0BF	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1C164	proc near
+elly_1C164	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_1BC73
+		call	elly_1BC73
 		inc	word_25A3A
-		call	sub_1BC73
+		call	elly_1BC73
 		inc	word_25A3A
 		cmp	_boss_phase_frame, 16
 		jnz	short loc_1C19C
-		call	sub_1BC3C
+		call	elly_1BC3C
 		mov	_bullet_template.BT_angle, 0
 		mov	_bullet_template.spawn_type, BST_PELLET
 		mov	_bullet_template.speed, (2 shl 4)
@@ -26129,18 +26129,18 @@ loc_1C1BB:
 loc_1C1CD:
 		pop	bp
 		retn
-sub_1C164	endp
+elly_1C164	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1C1CF	proc near
+elly_1C1CF	proc near
 
 		push	bp
 		mov	bp, sp
-		call	sub_1BDB4
+		call	elly_1BDB4
 		mov	ah, 0
 		or	ax, ax
 		jz	short loc_1C245
@@ -26175,27 +26175,27 @@ loc_1C21B:
 loc_1C245:
 		cmp	_boss_phase_frame, 80
 		jl	short loc_1C24F
-		call	sub_1BE43
+		call	elly_1BE43
 
 loc_1C24F:
 		pop	bp
 		retn
-sub_1C1CF	endp
+elly_1C1CF	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1C251	proc near
+elly_1C251	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_1BC73
+		call	elly_1BC73
 		inc	word_25A3A
-		call	sub_1BC73
+		call	elly_1BC73
 		inc	word_25A3A
 		cmp	_boss_phase_frame, 16
 		jnz	short loc_1C26C
-		call	sub_1BC3C
+		call	elly_1BC3C
 
 loc_1C26C:
 		cmp	_boss_phase_frame, 16
@@ -26235,7 +26235,7 @@ loc_1C2D1:
 loc_1C2E3:
 		pop	bp
 		retn
-sub_1C251	endp
+elly_1C251	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -26247,7 +26247,7 @@ elly_update	proc far
 var_2		= word ptr -2
 
 		enter	2, 0
-		call	sub_1B95C
+		call	elly_1B95C
 		mov	al, _boss_phase
 		mov	ah, 0
 		mov	bx, ax
@@ -26281,7 +26281,7 @@ loc_1C32D:
 ; ---------------------------------------------------------------------------
 
 loc_1C343:
-		call	sub_1BD23
+		call	elly_1BD23
 		jmp	short loc_1C39E
 ; ---------------------------------------------------------------------------
 
@@ -26398,54 +26398,54 @@ loc_1C46F:
 ; ---------------------------------------------------------------------------
 
 loc_1C473:
-		call	sub_1BD4B
+		call	elly_1BD4B
 		jmp	loc_1C585	; default
 ; ---------------------------------------------------------------------------
 
 loc_1C479:
-		call	sub_1BE78
+		call	elly_1BE78
 		jmp	loc_1C585	; default
 ; ---------------------------------------------------------------------------
 
 loc_1C47F:
-		call	sub_1BF52
+		call	elly_1BF52
 		jmp	loc_1C585	; default
 ; ---------------------------------------------------------------------------
 
 loc_1C485:
-		call	sub_1BFAB
+		call	elly_1BFAB
 		jmp	loc_1C585	; default
 ; ---------------------------------------------------------------------------
 
 loc_1C48B:
-		call	sub_1C044
+		call	elly_1C044
 		jmp	loc_1C585	; default
 ; ---------------------------------------------------------------------------
 
 loc_1C491:
-		call	sub_1C0BF
+		call	elly_1C0BF
 		jmp	loc_1C585	; default
 ; ---------------------------------------------------------------------------
 
 loc_1C497:
-		call	sub_1C164
+		call	elly_1C164
 		jmp	loc_1C585	; default
 ; ---------------------------------------------------------------------------
 
 loc_1C49D:
-		call	sub_1C1CF
+		call	elly_1C1CF
 		jmp	loc_1C585	; default
 ; ---------------------------------------------------------------------------
 
 loc_1C4A3:
-		call	sub_1C251
+		call	elly_1C251
 		jmp	loc_1C585	; default
 ; ---------------------------------------------------------------------------
 
 loc_1C4A9:
 		cmp	_boss_phase_frame, 32
 		jge	short loc_1C4BA
-		call	sub_1BC73
+		call	elly_1BC73
 		inc	word_25A3A
 		jmp	loc_1C585	; default
 ; ---------------------------------------------------------------------------
@@ -28458,7 +28458,7 @@ sub_1E743	endp
 
 ; Attributes: bp-based frame
 
-sub_1E917	proc near
+reimu_1E917	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -28524,14 +28524,14 @@ loc_1E9AE:
 		pop	si
 		pop	bp
 		retn
-sub_1E917	endp
+reimu_1E917	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1E9B1	proc near
+reimu_1E9B1	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -28597,14 +28597,14 @@ loc_1EA48:
 		pop	si
 		pop	bp
 		retn
-sub_1E9B1	endp
+reimu_1E9B1	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1EA4B	proc near
+reimu_1EA4B	proc near
 
 var_2		= word ptr -2
 
@@ -28705,7 +28705,7 @@ loc_1EB04:
 		mov	al, 1
 		leave
 		retn
-sub_1EA4B	endp
+reimu_1EA4B	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -28734,7 +28734,7 @@ word_1EB09	dw 0Eh
 
 ; Attributes: bp-based frame
 
-sub_1EB31	proc near
+reimu_1EB31	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -28782,14 +28782,14 @@ loc_1EB88:
 		pop	si
 		pop	bp
 		retn
-sub_1EB31	endp
+reimu_1EB31	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1EB8C	proc near
+reimu_1EB8C	proc near
 
 arg_0		= word ptr  4
 arg_2		= byte ptr  6
@@ -28844,14 +28844,14 @@ loc_1EBED:
 		pop	si
 		pop	bp
 		retn	4
-sub_1EB8C	endp
+reimu_1EB8C	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1EBF3	proc near
+reimu_1EBF3	proc near
 
 var_4		= word ptr -4
 var_2		= word ptr -2
@@ -28982,19 +28982,19 @@ loc_1ED0A:
 		pop	si
 		leave
 		retn
-sub_1EBF3	endp
+reimu_1EBF3	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1ED15	proc near
+reimu_1ED15	proc near
 
 var_1		= byte ptr -1
 
 		enter	2, 0
-		call	sub_1EA4B
+		call	reimu_1EA4B
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 2
 		jnz	short loc_1ED71
@@ -29054,19 +29054,19 @@ loc_1EDA3:
 locret_1EDBA:
 		leave
 		retn
-sub_1ED15	endp
+reimu_1ED15	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1EDBC	proc near
+reimu_1EDBC	proc near
 
 var_1		= byte ptr -1
 
 		enter	2, 0
-		call	sub_1EA4B
+		call	reimu_1EA4B
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 2
 		jnz	short loc_1EE01
@@ -29095,14 +29095,14 @@ loc_1EE01:
 locret_1EE1F:
 		leave
 		retn
-sub_1EDBC	endp
+reimu_1EDBC	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1EE21	proc near
+reimu_1EE21	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_boss_phase_frame, 32
@@ -29117,7 +29117,7 @@ sub_1EE21	proc near
 		mov	al, byte_2D01E
 		mov	ah, 0
 		push	ax
-		call	sub_1EB8C
+		call	reimu_1EB8C
 		call	snd_se_play pascal, 8
 
 loc_1EE57:
@@ -29132,20 +29132,20 @@ loc_1EE57:
 loc_1EE71:
 		pop	bp
 		retn
-sub_1EE21	endp
+reimu_1EE21	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1EE73	proc near
+reimu_1EE73	proc near
 
 var_1		= byte ptr -1
 
 		enter	2, 0
 		push	si
-		call	sub_1EA4B
+		call	reimu_1EA4B
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 1
 		jnz	loc_1EF84
@@ -29232,18 +29232,18 @@ loc_1EF84:
 		pop	si
 		leave
 		retn
-sub_1EE73	endp
+reimu_1EE73	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1EF87	proc near
+reimu_1EF87	proc near
 
 var_1		= byte ptr -1
 
 		enter	2, 0
-		call	sub_1EA4B
+		call	reimu_1EA4B
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 1
 		jnz	locret_1F04C
@@ -29302,19 +29302,19 @@ loc_1F034:
 locret_1F04C:
 		leave
 		retn
-sub_1EF87	endp
+reimu_1EF87	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1F04E	proc near
+reimu_1F04E	proc near
 
 var_1		= byte ptr -1
 
 		enter	2, 0
-		call	sub_1EA4B
+		call	reimu_1EA4B
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 2
 		jnz	short loc_1F08E
@@ -29384,14 +29384,14 @@ loc_1F0FF:
 locret_1F10F:
 		leave
 		retn
-sub_1F04E	endp
+reimu_1F04E	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1F111	proc near
+reimu_1F111	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_boss_phase_frame, 32
@@ -29419,7 +29419,7 @@ loc_1F13D:
 		jnz	short loc_1F15F
 		mov	al, byte_2D057
 		sub	angle_2D03F, al
-		call	sub_1EB31
+		call	reimu_1EB31
 
 loc_1F15F:
 		cmp	_boss_phase_frame, 180
@@ -29433,14 +29433,14 @@ loc_1F15F:
 loc_1F17A:
 		pop	bp
 		retn
-sub_1F111	endp
+reimu_1F111	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1F17C	proc near
+reimu_1F17C	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -29502,19 +29502,19 @@ loc_1F227:
 		pop	si
 		pop	bp
 		retn
-sub_1F17C	endp
+reimu_1F17C	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1F22A	proc near
+reimu_1F22A	proc near
 
 var_1		= byte ptr -1
 
 		enter	2, 0
-		call	sub_1EA4B
+		call	reimu_1EA4B
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 2
 		jnz	short loc_1F263
@@ -29581,20 +29581,20 @@ loc_1F2D9:
 locret_1F2F1:
 		leave
 		retn
-sub_1F22A	endp
+reimu_1F22A	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1F2F3	proc near
+reimu_1F2F3	proc near
 
 var_1		= byte ptr -1
 
 		enter	2, 0
 		push	si
-		call	sub_1EA4B
+		call	reimu_1EA4B
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 2
 		jnz	short loc_1F328
@@ -29644,14 +29644,14 @@ loc_1F375:
 		pop	si
 		leave
 		retn
-sub_1F2F3	endp
+reimu_1F2F3	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1F378	proc near
+reimu_1F378	proc near
 		push	bp
 		mov	bp, sp
 		cmp	byte_237F7, 0
@@ -29673,7 +29673,7 @@ loc_1F3A4:
 		mov	_palette_changed, 1
 		pop	bp
 		retn
-sub_1F378	endp
+reimu_1F378	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -29721,7 +29721,7 @@ loc_1F3E2:
 ; ---------------------------------------------------------------------------
 
 loc_1F421:
-		call	sub_1F378
+		call	reimu_1F378
 		inc	_boss_phase_frame
 		call	sub_1E67C
 		cmp	_boss_phase_frame, 128
@@ -29745,20 +29745,20 @@ loc_1F44D:
 ; ---------------------------------------------------------------------------
 
 loc_1F462:
-		call	sub_1ED15
+		call	reimu_1ED15
 		jmp	short loc_1F46F
 ; ---------------------------------------------------------------------------
 
 loc_1F467:
-		call	sub_1EDBC
+		call	reimu_1EDBC
 		jmp	short loc_1F46F
 ; ---------------------------------------------------------------------------
 
 loc_1F46C:
-		call	sub_1E917
+		call	reimu_1E917
 
 loc_1F46F:
-		call	sub_1F378
+		call	reimu_1F378
 		cmp	_boss_mode_change, 9
 		jnb	short loc_1F487
 		call	sub_1E64E
@@ -29808,7 +29808,7 @@ loc_1F4D6:
 loc_1F4DC:
 		push	offset _boss_pos
 		call	@PlayfieldMotion@update_seg3$qv
-		call	sub_1F378
+		call	reimu_1F378
 		call	sub_1E64E
 		cmp	_boss_phase_frame, 64
 		jl	loc_1F8A5
@@ -29844,12 +29844,12 @@ loc_1F539:
 ; ---------------------------------------------------------------------------
 
 loc_1F53D:
-		call	sub_1EE21
+		call	reimu_1EE21
 		jmp	short loc_1F579	; default
 ; ---------------------------------------------------------------------------
 
 loc_1F542:
-		call	sub_1EE73
+		call	reimu_1EE73
 		jmp	short loc_1F579	; default
 ; ---------------------------------------------------------------------------
 
@@ -29879,7 +29879,7 @@ loc_1F56D:
 		mov	_boss_phase_frame, 0
 
 loc_1F579:
-		call	sub_1F378	; default
+		call	reimu_1F378	; default
 		cmp	_boss_mode_change, 18
 		jnb	short loc_1F591
 		call	sub_1E64E
@@ -29913,7 +29913,7 @@ loc_1F5C3:
 loc_1F5C9:
 		push	offset _boss_pos
 		call	@PlayfieldMotion@update_seg3$qv
-		call	sub_1F378
+		call	reimu_1F378
 		call	sub_1E64E
 		cmp	_boss_phase_frame, 64
 		jl	loc_1F8A5
@@ -29933,20 +29933,20 @@ loc_1F5E1:
 ; ---------------------------------------------------------------------------
 
 loc_1F5F6:
-		call	sub_1EF87
+		call	reimu_1EF87
 		jmp	short loc_1F603
 ; ---------------------------------------------------------------------------
 
 loc_1F5FB:
-		call	sub_1F04E
+		call	reimu_1F04E
 		jmp	short loc_1F603
 ; ---------------------------------------------------------------------------
 
 loc_1F600:
-		call	sub_1E9B1
+		call	reimu_1E9B1
 
 loc_1F603:
-		call	sub_1F378
+		call	reimu_1F378
 		cmp	_boss_mode_change, 11
 		jnb	short loc_1F61B
 		call	sub_1E64E
@@ -30003,7 +30003,7 @@ loc_1F67D:
 
 loc_1F680:
 		call	@PlayfieldMotion@update_seg3$qv
-		call	sub_1F378
+		call	reimu_1F378
 		call	sub_1E64E
 		cmp	_boss_phase_frame, 64
 		jl	loc_1F8A5
@@ -30030,12 +30030,12 @@ loc_1F6B8:
 ; ---------------------------------------------------------------------------
 
 loc_1F6CD:
-		call	sub_1F111
+		call	reimu_1F111
 		jmp	short loc_1F6E9
 ; ---------------------------------------------------------------------------
 
 loc_1F6D2:
-		call	sub_1F22A
+		call	reimu_1F22A
 		jmp	short loc_1F6E9
 ; ---------------------------------------------------------------------------
 
@@ -30047,7 +30047,7 @@ loc_1F6D7:
 		mov	_boss_phase_frame, 0
 
 loc_1F6E9:
-		call	sub_1F378
+		call	reimu_1F378
 		cmp	_boss_mode_change, 10
 		jnb	short loc_1F701
 		call	sub_1E64E
@@ -30075,20 +30075,20 @@ loc_1F718:
 ; ---------------------------------------------------------------------------
 
 loc_1F72D:
-		call	sub_1EF87
+		call	reimu_1EF87
 		jmp	short loc_1F73A
 ; ---------------------------------------------------------------------------
 
 loc_1F732:
-		call	sub_1F2F3
+		call	reimu_1F2F3
 		jmp	short loc_1F73A
 ; ---------------------------------------------------------------------------
 
 loc_1F737:
-		call	sub_1E917
+		call	reimu_1E917
 
 loc_1F73A:
-		call	sub_1F378
+		call	reimu_1F378
 		cmp	_boss_mode_change, 12
 		jnb	short loc_1F752
 		call	sub_1E64E
@@ -30169,7 +30169,7 @@ loc_1F802:
 		mov	_bullet_template.BT_origin.x, ax
 		mov	ax, _boss_pos.cur.y
 		mov	_bullet_template.BT_origin.y, ax
-		call	sub_1F17C
+		call	reimu_1F17C
 		call	sub_1E64E
 		or	al, al
 		jnz	short loc_1F822
@@ -30228,7 +30228,7 @@ loc_1F8A5:
 		mov	_homing_target.x, ax
 		mov	ax, _boss_pos.cur.y
 		mov	_homing_target.y, ax
-		call	sub_1EBF3
+		call	reimu_1EBF3
 		call	hud_hp_update_and_render pascal, _boss_hp, 9100
 		leave
 		retf
@@ -30263,7 +30263,7 @@ off_1F8D4	dw offset loc_1F3D6
 
 ; Attributes: bp-based frame
 
-sub_1F8EE	proc near
+gengetsu_1F8EE	proc near
 		push	bp
 		mov	bp, sp
 		mov	_gather_template.GT_angle_delta, -2
@@ -30272,14 +30272,14 @@ sub_1F8EE	proc near
 		call	_gather_add_only
 		pop	bp
 		retn
-sub_1F8EE	endp
+gengetsu_1F8EE	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1F903	proc near
+gengetsu_1F903	proc near
 
 var_2		= word ptr -2
 
@@ -30314,7 +30314,7 @@ loc_1F926:
 		mov	_gather_template.GT_col, 15
 
 loc_1F949:
-		call	sub_1F8EE
+		call	gengetsu_1F8EE
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -30333,7 +30333,7 @@ loc_1F955:
 locret_1F967:
 		leave			; default
 		retn
-sub_1F903	endp
+gengetsu_1F903	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -30350,7 +30350,7 @@ word_1F96A	dw 30h
 
 ; Attributes: bp-based frame
 
-sub_1F97A	proc near
+gengetsu_1F97A	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_boss_phase_frame, 1
@@ -30390,14 +30390,14 @@ loc_1F9C1:
 		mov	al, 0
 		pop	bp
 		retn
-sub_1F97A	endp
+gengetsu_1F97A	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1F9C5	proc near
+gengetsu_1F9C5	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_boss_phase_frame, 1
@@ -30454,17 +30454,17 @@ loc_1FA2F:
 		mov	al, 0
 		pop	bp
 		retn
-sub_1F9C5	endp
+gengetsu_1F9C5	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1FA33	proc near
+gengetsu_1FA33	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_1F903
+		call	gengetsu_1F903
 		cmp	_boss_phase_frame, 8
 		jl	short loc_1FA55
 		cmp	_boss_phase_frame, 8
@@ -30528,17 +30528,17 @@ loc_1FAA1:
 		mov	al, 4
 		pop	bp
 		retn
-sub_1FA33	endp
+gengetsu_1FA33	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1FAAA	proc near
+gengetsu_1FAAA	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_1FA33
+		call	gengetsu_1FA33
 		mov	ah, 0
 		cmp	ax, 2
 		jz	short loc_1FABE
@@ -30567,17 +30567,17 @@ loc_1FAEA:
 		mov	_boss_mode, -1
 		pop	bp
 		retn
-sub_1FAAA	endp
+gengetsu_1FAAA	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1FAF7	proc near
+gengetsu_1FAF7	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_1FA33
+		call	gengetsu_1FA33
 		mov	ah, 0
 		cmp	ax, 2
 		jz	short loc_1FB10
@@ -30636,17 +30636,17 @@ loc_1FB79:
 loc_1FB84:
 		pop	bp
 		retn
-sub_1FAF7	endp
+gengetsu_1FAF7	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1FB86	proc near
+gengetsu_1FB86	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_1FA33
+		call	gengetsu_1FA33
 		mov	ah, 0
 		cmp	ax, 2
 		jz	short loc_1FBA1
@@ -30710,17 +30710,17 @@ loc_1FC39:
 loc_1FC44:
 		pop	bp
 		retn
-sub_1FB86	endp
+gengetsu_1FB86	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1FC46	proc near
+gengetsu_1FC46	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_1FA33
+		call	gengetsu_1FA33
 		mov	ah, 0
 		cmp	ax, 2
 		jz	short loc_1FC61
@@ -30798,18 +30798,18 @@ loc_1FD23:
 loc_1FD2E:
 		pop	bp
 		retn
-sub_1FC46	endp
+gengetsu_1FC46	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1FD30	proc near
+gengetsu_1FD30	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		call	sub_1FA33
+		call	gengetsu_1FA33
 		mov	ah, 0
 		mov	bx, ax
 		cmp	bx, 4
@@ -30885,7 +30885,7 @@ loc_1FDF1:
 		pop	si
 		pop	bp
 		retn
-sub_1FD30	endp
+gengetsu_1FD30	endp
 
 ; ---------------------------------------------------------------------------
 off_1FDF4	dw offset loc_1FD49
@@ -30898,10 +30898,10 @@ off_1FDF4	dw offset loc_1FD49
 
 ; Attributes: bp-based frame
 
-sub_1FDFE	proc near
+gengetsu_1FDFE	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_1FA33
+		call	gengetsu_1FA33
 		mov	ah, 0
 		cmp	ax, 2
 		jz	short loc_1FE17
@@ -30947,17 +30947,17 @@ loc_1FE5D:
 loc_1FE68:
 		pop	bp
 		retn
-sub_1FDFE	endp
+gengetsu_1FDFE	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1FE6A	proc near
+gengetsu_1FE6A	proc near
 		push	bp
 		mov	bp, sp
-		call	sub_1FA33
+		call	gengetsu_1FA33
 		mov	ah, 0
 		cmp	ax, 2
 		jz	short loc_1FE83
@@ -31004,14 +31004,14 @@ loc_1FED2:
 loc_1FEDD:
 		pop	bp
 		retn
-sub_1FE6A	endp
+gengetsu_1FE6A	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_1FEDF	proc near
+gengetsu_1FEDF	proc near
 
 var_1		= byte ptr -1
 
@@ -31056,7 +31056,7 @@ loc_1FF29:
 		jl	short loc_1FEFB
 
 loc_1FF2E:
-		call	sub_1FA33
+		call	gengetsu_1FA33
 		mov	ah, 0
 		dec	ax
 		mov	bx, ax
@@ -31153,7 +31153,7 @@ loc_20044:
 		pop	si
 		leave
 		retn
-sub_1FEDF	endp
+gengetsu_1FEDF	endp
 
 ; ---------------------------------------------------------------------------
 off_20048	dw offset loc_1FF44
@@ -31165,7 +31165,7 @@ off_20048	dw offset loc_1FF44
 
 ; Attributes: bp-based frame
 
-sub_20050	proc near
+gengetsu_20050	proc near
 		push	bp
 		mov	bp, sp
 		mov	_boss_sprite, 128
@@ -31196,14 +31196,14 @@ sub_20050	proc near
 loc_200B4:
 		pop	bp
 		retn
-sub_20050	endp
+gengetsu_20050	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_200B6	proc near
+gengetsu_200B6	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_stage_frame_mod4, 0
@@ -31278,14 +31278,14 @@ loc_2018E:
 		mov	_boss_sprite, 130
 		pop	bp
 		retn
-sub_200B6	endp
+gengetsu_200B6	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_20195	proc near
+gengetsu_20195	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_stage_frame_mod2, 0
@@ -31323,14 +31323,14 @@ loc_201AB:
 loc_20200:
 		pop	bp
 		retn
-sub_20195	endp
+gengetsu_20195	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_20202	proc near
+gengetsu_20202	proc near
 		push	bp
 		mov	bp, sp
 		cmp	byte_259EF, 0
@@ -31356,14 +31356,14 @@ loc_20233:
 		mov	al, 0
 		pop	bp
 		retn
-sub_20202	endp
+gengetsu_20202	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_2023B	proc near
+gengetsu_2023B	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_stage_frame_mod8, 0
@@ -31380,7 +31380,7 @@ sub_2023B	proc near
 loc_20268:
 		pop	bp
 		retn
-sub_2023B	endp
+gengetsu_2023B	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -31416,7 +31416,7 @@ loc_20284:
 		jmp	cs:off_206D8[bx]
 
 loc_202B0:
-		call	sub_20202
+		call	gengetsu_20202
 		mov	_boss_hp, 18700
 		cmp	_boss_phase_frame, 128
 		jle	loc_206B6
@@ -31430,7 +31430,7 @@ loc_202B0:
 ; ---------------------------------------------------------------------------
 
 loc_202E8:
-		call	sub_20202
+		call	gengetsu_20202
 		cmp	_boss_phase_frame, 64
 		jl	loc_206B6
 		inc	_boss_phase
@@ -31454,12 +31454,12 @@ loc_20311:
 ; ---------------------------------------------------------------------------
 
 loc_20326:
-		call	sub_1FAAA
+		call	gengetsu_1FAAA
 		jmp	short loc_20389
 ; ---------------------------------------------------------------------------
 
 loc_2032B:
-		call	sub_1FAF7
+		call	gengetsu_1FAF7
 		jmp	short loc_20389
 ; ---------------------------------------------------------------------------
 
@@ -31490,7 +31490,7 @@ loc_20364:
 		mov	word_2D05A, ax
 
 loc_20370:
-		call	sub_1F97A
+		call	gengetsu_1F97A
 		or	al, al
 		jz	short loc_20389
 		inc	_boss_mode_change
@@ -31504,12 +31504,12 @@ loc_20389:
 		jb	short loc_2039A
 		cmp	_boss_mode, -1
 		jz	short loc_2039A
-		call	sub_2023B
+		call	gengetsu_2023B
 
 loc_2039A:
 		cmp	_boss_mode_change, 22
 		jnb	short loc_203AF
-		call	sub_20202
+		call	gengetsu_20202
 		or	al, al
 		jz	loc_206B6
 		call	@boss_score_bonus$qui pascal, 100
@@ -31532,12 +31532,12 @@ loc_203B8:
 ; ---------------------------------------------------------------------------
 
 loc_203CD:
-		call	sub_1FB86
+		call	gengetsu_1FB86
 		jmp	short loc_20430
 ; ---------------------------------------------------------------------------
 
 loc_203D2:
-		call	sub_1FC46
+		call	gengetsu_1FC46
 		jmp	short loc_20430
 ; ---------------------------------------------------------------------------
 
@@ -31568,7 +31568,7 @@ loc_2040B:
 		mov	word_2D05A, ax
 
 loc_20417:
-		call	sub_1F97A
+		call	gengetsu_1F97A
 		or	al, al
 		jz	short loc_20430
 		mov	al, _boss_mode_change
@@ -31582,12 +31582,12 @@ loc_20430:
 		jb	short loc_20441
 		cmp	_boss_mode, -1
 		jz	short loc_20441
-		call	sub_2023B
+		call	gengetsu_2023B
 
 loc_20441:
 		cmp	_boss_mode_change, 22
 		jnb	short loc_20456
-		call	sub_20202
+		call	gengetsu_20202
 		or	al, al
 		jz	loc_206B6
 		call	@boss_score_bonus$qui pascal, 100
@@ -31610,12 +31610,12 @@ loc_2045F:
 ; ---------------------------------------------------------------------------
 
 loc_20474:
-		call	sub_1FD30
+		call	gengetsu_1FD30
 		jmp	short loc_204D7
 ; ---------------------------------------------------------------------------
 
 loc_20479:
-		call	sub_1FDFE
+		call	gengetsu_1FDFE
 		jmp	short loc_204D7
 ; ---------------------------------------------------------------------------
 
@@ -31646,7 +31646,7 @@ loc_204B2:
 		mov	word_2D05A, ax
 
 loc_204BE:
-		call	sub_1F97A
+		call	gengetsu_1F97A
 		or	al, al
 		jz	short loc_204D7
 		mov	al, _boss_mode_change
@@ -31660,12 +31660,12 @@ loc_204D7:
 		jb	short loc_204E8
 		cmp	_boss_mode, -1
 		jz	short loc_204E8
-		call	sub_2023B
+		call	gengetsu_2023B
 
 loc_204E8:
 		cmp	_boss_mode_change, 22
 		jnb	short loc_204FD
-		call	sub_20202
+		call	gengetsu_20202
 		or	al, al
 		jz	loc_206B6
 		call	@boss_score_bonus$qui pascal, 100
@@ -31688,12 +31688,12 @@ loc_20506:
 ; ---------------------------------------------------------------------------
 
 loc_2051B:
-		call	sub_1FE6A
+		call	gengetsu_1FE6A
 		jmp	short loc_2057E
 ; ---------------------------------------------------------------------------
 
 loc_20520:
-		call	sub_1FEDF
+		call	gengetsu_1FEDF
 		jmp	short loc_2057E
 ; ---------------------------------------------------------------------------
 
@@ -31724,7 +31724,7 @@ loc_20559:
 		mov	word_2D05A, ax
 
 loc_20565:
-		call	sub_1F97A
+		call	gengetsu_1F97A
 		or	al, al
 		jz	short loc_2057E
 		mov	al, _boss_mode_change
@@ -31738,12 +31738,12 @@ loc_2057E:
 		jb	short loc_2058F
 		cmp	_boss_mode, -1
 		jz	short loc_2058F
-		call	sub_2023B
+		call	gengetsu_2023B
 
 loc_2058F:
 		cmp	_boss_mode_change, 22
 		jnb	short loc_205A4
-		call	sub_20202
+		call	gengetsu_20202
 		or	al, al
 		jz	loc_206B6
 		call	@boss_score_bonus$qui pascal, 100
@@ -31759,8 +31759,8 @@ loc_205AA:
 ; ---------------------------------------------------------------------------
 
 loc_205BB:
-		call	sub_20202
-		call	sub_1F9C5
+		call	gengetsu_20202
+		call	gengetsu_1F9C5
 		or	al, al
 		jz	loc_206B6
 		inc	_boss_phase
@@ -31769,10 +31769,10 @@ loc_205BB:
 ; ---------------------------------------------------------------------------
 
 loc_205D4:
-		call	sub_20050
+		call	gengetsu_20050
 		cmp	_boss_phase_frame, 1500
 		jge	short loc_205ED
-		call	sub_20202
+		call	gengetsu_20202
 		or	al, al
 		jz	loc_206B6
 		call	@boss_score_bonus$qui pascal, 100
@@ -31788,15 +31788,15 @@ loc_205ED:
 loc_20609:
 		cmp	_boss_phase_frame, 3000
 		jg	short loc_20616
-		call	sub_200B6
+		call	gengetsu_200B6
 		jmp	short loc_20619
 ; ---------------------------------------------------------------------------
 
 loc_20616:
-		call	sub_20195
+		call	gengetsu_20195
 
 loc_20619:
-		call	sub_20202
+		call	gengetsu_20202
 		or	al, al
 		jnz	short loc_2062A
 		cmp	_boss_phase_frame, 5000
