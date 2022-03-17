@@ -16117,7 +16117,7 @@ loc_16409:
 		mov	point_2561A.x, ax
 		mov	ax, _bullet_template.BT_origin.y
 		mov	point_2561A.y, ax
-		mov	al, byte_2D01E
+		mov	al, _boss_statebyte[0].BSB_thicklaser_radius
 		mov	ah, 0
 		mov	word_2562A, ax
 		mov	word_2562E, 6
@@ -16230,7 +16230,7 @@ yuuka5_1653D	proc near
 		call	circles_add_shrinking pascal, _bullet_template.BT_origin.x, _bullet_template.BT_origin.y
 		mov	_circles_color, 0Fh
 		mov	_boss_angle, 16
-		mov	byte_2D02D, 10h
+		mov	_boss_statebyte[15].BSB_spread_angle, 10h
 		mov	_bullet_template.BT_special_motion, BSM_NONE
 		pop	bp
 		retn
@@ -16268,17 +16268,17 @@ loc_1656A:
 		mov	_bullet_template.count, 3
 		mov	_bullet_template.speed, (1 shl 4) + 8
 		call	_bullet_template_tune
-		mov	al, byte_2D02D
+		mov	al, _boss_statebyte[15].BSB_spread_angle
 		mov	_bullet_template.BT_angle, al
 		call	_bullets_add_special
 		add	_bullet_template.BT_origin.x, (64 shl 4)
 		mov	al, 80h
-		sub	al, byte_2D02D
+		sub	al, _boss_statebyte[15].BSB_spread_angle
 		mov	_bullet_template.BT_angle, al
 		call	_bullets_add_special
-		mov	al, byte_2D02D
-		add	al, 9
-		mov	byte_2D02D, al
+		mov	al, _boss_statebyte[15].BSB_spread_angle
+		add	al, 09h
+		mov	_boss_statebyte[15].BSB_spread_angle, al
 		call	snd_se_play pascal, 3
 
 loc_1660E:
@@ -16913,7 +16913,7 @@ arg_0		= word ptr  4
 		mov	bp, sp
 		push	si
 		mov	si, [bp+arg_0]
-		cmp	byte_2D02B, 0
+		cmp	_boss_statebyte[13].BSB_motion_lerp_frames, 0
 		jnz	short loc_16BC5
 		mov	ax, si
 		cwd
@@ -16941,8 +16941,8 @@ arg_0		= word ptr  4
 		mov	_boss_pos.velocity.y, ax
 
 loc_16BC5:
-		inc	byte_2D02B
-		mov	al, byte_2D02B
+		inc	_boss_statebyte[13].BSB_motion_lerp_frames
+		mov	al, _boss_statebyte[13].BSB_motion_lerp_frames
 		mov	ah, 0
 		lea	dx, [si-0Ch]
 		cmp	ax, dx
@@ -16959,7 +16959,7 @@ loc_16BC5:
 		mov	_boss_pos.velocity.y, ax
 
 loc_16BEB:
-		mov	al, byte_2D02B
+		mov	al, _boss_statebyte[13].BSB_motion_lerp_frames
 		mov	ah, 0
 		cmp	ax, si
 		jl	short loc_16BF8
@@ -17430,7 +17430,7 @@ var_1		= byte ptr -1
 		call	_bullet_template_tune
 		mov	fp_25676, offset marisa_16F24
 		mov	al, byte ptr _boss_phase_frame
-		mov	byte_2D02D, al
+		mov	_boss_statebyte[15].BSB_phase_frame, al
 		jmp	loc_1705D
 ; ---------------------------------------------------------------------------
 
@@ -17447,14 +17447,14 @@ loc_16F9F:
 		jz	short loc_16FC6
 		call	marisa_16DD7
 		mov	al, byte ptr _boss_phase_frame
-		mov	byte_2D02D, al
+		mov	_boss_statebyte[15].BSB_phase_frame, al
 		jmp	short loc_17026
 ; ---------------------------------------------------------------------------
 
 loc_16FC6:
-		mov	al, byte_2D02D
+		mov	al, _boss_statebyte[15].BSB_phase_frame
 		mov	ah, 0
-		mov	dx, 0A0h
+		mov	dx, 160
 		sub	dx, ax
 		push	dx
 		call	marisa_16B85
@@ -17571,7 +17571,7 @@ loc_170B5:
 		cmp	di, 4
 		jl	short loc_170AB
 		mov	al, byte ptr _boss_phase_frame
-		mov	byte_2D02D, al
+		mov	_boss_statebyte[15].BSB_phase_frame, al
 		jmp	loc_17179
 ; ---------------------------------------------------------------------------
 
@@ -17596,14 +17596,14 @@ loc_170C3:
 		jz	short loc_17102
 		call	marisa_16DD7
 		mov	al, byte ptr _boss_phase_frame
-		mov	byte_2D02D, al
+		mov	_boss_statebyte[15].BSB_phase_frame, al
 		jmp	short loc_17136
 ; ---------------------------------------------------------------------------
 
 loc_17102:
-		mov	al, byte_2D02D
+		mov	al, _boss_statebyte[15].BSB_phase_frame
 		mov	ah, 0
-		mov	dx, 0A0h
+		mov	dx, 160
 		sub	dx, ax
 		push	dx
 		call	marisa_16B85
@@ -17672,7 +17672,7 @@ var_1		= byte ptr -1
 		jnz	short loc_171A2
 		mov	_bullet_template.spawn_type, BST_PELLET
 		mov	fp_25676, offset marisa_16F24
-		mov	byte_2D02D, 0
+		mov	_boss_statebyte[15].BSB_subpattern_num, 0
 		jmp	loc_17331
 ; ---------------------------------------------------------------------------
 
@@ -17772,9 +17772,9 @@ loc_17266:
 loc_1726E:
 		push	60h
 		call	marisa_16B85
-		cmp	byte_2D02D, 0
+		cmp	_boss_statebyte[15].BSB_subpattern_num, 0
 		jnz	short loc_1729F
-		mov	byte_2D02D, 1
+		mov	_boss_statebyte[15].BSB_subpattern_num, 1
 		mov	_bullet_template.spawn_type, BST_BULLET16_CLOUD_FORWARDS
 		mov	_bullet_template.patnum, PAT_BULLET16_N_BALL_BLUE
 		mov	_bullet_template.BT_group, BG_SPREAD
@@ -17795,7 +17795,7 @@ loc_1729F:
 		call	randring2_next16_and pascal, 1Fh
 		add	al, (1 shl 4)
 		mov	_bullet_template.speed, al
-		test	byte_2D02D, 1
+		test	_boss_statebyte[15].BSB_subpattern_num, 1
 		jz	short loc_172D0
 		mov	al, _bullet_template.BT_angle
 		add	al, -8
@@ -17824,8 +17824,8 @@ loc_172D5:
 		jb	short loc_17331
 
 loc_1730D:
-		inc	byte_2D02D
-		cmp	byte_2D02D, 4
+		inc	_boss_statebyte[15].BSB_subpattern_num
+		cmp	_boss_statebyte[15].BSB_subpattern_num, 4
 		jb	short loc_1732A
 
 loc_17318:
@@ -18019,7 +18019,7 @@ var_1		= byte ptr -1
 		mov	_bullet_template.BT_special_motion, BSM_SLOWDOWN_TO_ANGLE
 		call	_bullet_template_tune
 		mov	fp_25676, offset marisa_17061
-		mov	byte_2D02D, 0
+		mov	_boss_statebyte[15].BSB_bitless_pattern_started, 0
 		jmp	loc_1769B
 ; ---------------------------------------------------------------------------
 
@@ -18169,13 +18169,13 @@ loc_1760D:
 loc_17615:
 		push	80h
 		call	marisa_16B85
-		cmp	byte_2D02D, 0
+		cmp	_boss_statebyte[15].BSB_bitless_pattern_started, 0
 		jnz	short loc_17634
 		call	randring2_next16_and pascal, 1Fh
 		mov	dl, 80h
 		sub	dl, al
 		mov	_bullet_template.BT_angle, dl
-		mov	byte_2D02D, 1
+		mov	_boss_statebyte[15].BSB_bitless_pattern_started, 1
 
 loc_17634:
 		mov	ax, _boss_phase_frame
@@ -18239,7 +18239,7 @@ var_1		= byte ptr -1
 		mov	_bullet_template.BT_angle, -40h
 		mov	_bullet_template.speed, (6 shl 4)
 		mov	fp_25676, offset marisa_17061
-		mov	byte_2D02D, 0
+		mov	_boss_statebyte[15].BSB_bitless_pattern_started, 0
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -18308,11 +18308,11 @@ loc_17794:
 loc_1779E:
 		push	0A0h
 		call	marisa_16B85
-		cmp	byte_2D02D, 0
+		cmp	_boss_statebyte[15].BSB_bitless_pattern_started, 0
 		jnz	short loc_177B8
 		call	randring2_next16_and pascal, 1Fh
 		mov	_bullet_template.BT_angle, al
-		mov	byte_2D02D, 1
+		mov	_boss_statebyte[15].BSB_bitless_pattern_started, 1
 
 loc_177B8:
 		mov	ax, _boss_phase_frame
@@ -18379,7 +18379,7 @@ loc_17848:
 		mov	al, -1
 
 loc_1784A:
-		mov	byte_2D02D, al
+		mov	_boss_statebyte[15].BSB_delta_angle_between_rings, al
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -18394,7 +18394,7 @@ loc_1784F:
 		or	dx, dx
 		jnz	short loc_17874
 		call	_bullets_add_regular
-		mov	al, byte_2D02D
+		mov	al, _boss_statebyte[15].BSB_delta_angle_between_rings
 		add	_bullet_template.BT_angle, al
 		call	snd_se_play pascal, 9
 
@@ -18426,10 +18426,10 @@ var_1		= byte ptr -1
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 2
 		jnz	short loc_178AD
-		mov	byte_2D02C, 20h	; ' '
+		mov	_boss_statebyte[14].BSB_spread_speed, (2 shl 4)
 		push	1
 		call	randring2_next16_and
-		mov	byte_2D02D, al
+		mov	_boss_statebyte[15].BSB_angle_mirror_y, al
 
 loc_178AD:
 		call	marisa_16A1A
@@ -18450,7 +18450,7 @@ loc_178AD:
 		mov	al, byte ptr _stage_frame
 		shl	al, 3
 		mov	_bullet_template.BT_angle, al
-		cmp	byte_2D02D, 0
+		cmp	_boss_statebyte[15].BSB_angle_mirror_y, 0
 		jz	short loc_178F6
 		neg	al
 		mov	_bullet_template.BT_angle, al
@@ -18467,10 +18467,10 @@ loc_178F6:
 		mov	fp_25676, offset marisa_16F24
 		mov	_bullet_template.spawn_type, BST_BULLET16_CLOUD_FORWARDS
 		mov	_bullet_template.patnum, PAT_BULLET16_N_BALL_BLUE
-		mov	al, byte_2D02C
+		mov	al, _boss_statebyte[14].BSB_spread_speed
 		mov	_bullet_template.speed, al
 		add	al, 2
-		mov	byte_2D02C, al
+		mov	_boss_statebyte[14].BSB_spread_speed, al
 		mov	_bullet_template.BT_group, BG_SINGLE
 		mov	_bullet_template.BT_angle, 0
 		call	_bullet_template_tune
@@ -18631,7 +18631,7 @@ loc_17A75:
 		mov	byte_25674, 0
 		mov	byte_2566E, 0Ah
 		mov	byte_2566F, 0
-		mov	byte_2D02B, 0
+		mov	_boss_statebyte[13].BSB_motion_lerp_frames, 0
 		jmp	loc_17CA4
 ; ---------------------------------------------------------------------------
 
@@ -18709,7 +18709,7 @@ loc_17B1E:
 		cmp	_boss_phase_frame, 64
 		jl	short loc_17B98	; default
 		inc	_boss_mode_change
-		mov	byte_2D02B, 0
+		mov	_boss_statebyte[13].BSB_motion_lerp_frames, 0
 		cmp	byte_2566F, 0
 		jnz	short loc_17B62
 		cmp	byte_25672, 0
@@ -19717,7 +19717,7 @@ loc_1832E:
 		mov	_bullet_template.BT_angle, al
 		push	1
 		call	randring2_next16_and
-		mov	byte_2D02D, al
+		mov	_boss_statebyte[15].BSB_direction, al
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -19729,7 +19729,7 @@ loc_1834D:
 		mov	al, _bullet_template.speed
 		add	al, 3
 		mov	_bullet_template.speed, al
-		cmp	byte_2D02D, 0
+		cmp	_boss_statebyte[15].BSB_direction, 0
 		jz	short loc_1836B
 		mov	al, 4
 		jmp	short loc_1836D
@@ -21213,14 +21213,14 @@ kurumi_1905A	proc near
 		jnz	short loc_1908E
 		push	0Fh
 		call	randring2_next16_and
-		mov	dl, 0E0h
+		mov	dl, -20h
 		sub	dl, al
-		mov	byte_2D02D, dl
+		mov	_boss_statebyte[15].BSB_stack_right_angle, dl
 		push	0Fh
 		call	randring2_next16_and
-		add	al, 0A0h
-		mov	byte_2D02C, al
-		mov	byte_2D02B, 0
+		add	al, -60h
+		mov	_boss_statebyte[14].BSB_stack_left_angle, al
+		mov	_boss_statebyte[13].BSB_stacks_fired, 0
 		mov	_bullet_template.patnum, PAT_BULLET16_D_BLUE
 
 loc_1908E:
@@ -21231,25 +21231,25 @@ loc_1908E:
 		or	dx, dx
 		jnz	short loc_190DE
 		mov	_bullet_template.speed, (1 shl 4)
-		mov	al, byte_2D02D
+		mov	al, _boss_statebyte[15].BSB_stack_right_angle
 		add	al, 10h
-		mov	byte_2D02D, al
-		mov	al, byte_2D02C
-		add	al, 0F0h
-		mov	byte_2D02C, al
-		inc	byte_2D02B
-		cmp	byte_2D02B, 0Ah
+		mov	_boss_statebyte[15].BSB_stack_right_angle, al
+		mov	al, _boss_statebyte[14].BSB_stack_left_angle
+		add	al, -10h
+		mov	_boss_statebyte[14].BSB_stack_left_angle, al
+		inc	_boss_statebyte[13].BSB_stacks_fired
+		cmp	_boss_statebyte[13].BSB_stacks_fired, 10
 		jbe	short loc_190D7
 		push	0Fh
 		call	randring2_next16_and
-		mov	dl, 0E0h
+		mov	dl, -20h
 		sub	dl, al
-		mov	byte_2D02D, dl
+		mov	_boss_statebyte[15].BSB_stack_right_angle, dl
 		push	0Fh
 		call	randring2_next16_and
-		add	al, 0A0h
-		mov	byte_2D02C, al
-		mov	byte_2D02B, 0
+		add	al, -60h
+		mov	_boss_statebyte[14].BSB_stack_left_angle, al
+		mov	_boss_statebyte[13].BSB_stacks_fired, 0
 
 loc_190D7:
 		call	snd_se_play pascal, 15
@@ -21263,17 +21263,17 @@ loc_190DE:
 		mov	ax, _boss_pos.cur.x
 		add	ax, (12 shl 4)
 		mov	_bullet_template.BT_origin.x, ax
-		mov	al, byte_2D02D
+		mov	al, _boss_statebyte[15].BSB_stack_right_angle
 		mov	_bullet_template.BT_angle, al
 		call	_bullets_add_regular_fixedspeed
 		sub	_bullet_template.BT_origin.x, (24 shl 4)
-		mov	al, byte_2D02C
+		mov	al, _boss_statebyte[14].BSB_stack_left_angle
 		mov	_bullet_template.BT_angle, al
 		call	_bullets_add_regular_fixedspeed
 		mov	al, _bullet_template.speed
 		add	al, 10
 		mov	_bullet_template.speed, al
-		mov	al, byte_2D01E
+		mov	al, _boss_statebyte[0].BSB_spread_interval
 		mov	ah, 0
 		push	ax
 		mov	ax, _boss_phase_frame
@@ -22378,8 +22378,8 @@ loc_19B56:
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
-		mov	byte_2D02D, 0
-		mov	byte_2D02C, -1
+		mov	_boss_statebyte[15].BSB_patterns_done, 0
+		mov	_boss_statebyte[14].BSB_pattern_num_prev, -1
 		mov	_bg_render_bombing_func, offset orange_bg_render
 		mov	_tiles_bb_col, 0
 		jmp	short loc_19C02
@@ -22446,13 +22446,13 @@ loc_19C29:
 		call	randring2_next16_and
 		inc	al
 		mov	_boss_mode, al
-		mov	al, byte_2D02C
+		mov	al, _boss_statebyte[14].BSB_pattern_num_prev
 		cmp	al, _boss_mode
 		jz	short loc_19C29
 		mov	al, _boss_mode
-		mov	byte_2D02C, al
-		inc	byte_2D02D
-		cmp	byte_2D02D, 10h
+		mov	_boss_statebyte[14].BSB_pattern_num_prev, al
+		inc	_boss_statebyte[15].BSB_patterns_done
+		cmp	_boss_statebyte[15].BSB_patterns_done, 16
 		jb	short loc_19C61
 		jmp	short loc_19C6F
 ; ---------------------------------------------------------------------------
@@ -23757,7 +23757,7 @@ loc_1ABFF:
 		jg	loc_1AC96
 		mov	_bullet_template.spawn_type, BST_PELLET
 		mov	_bullet_template.BT_group, BG_RING
-		mov	al, byte_2D01F
+		mov	al, _boss_statebyte[1].BSB_spin_ring
 		mov	_bullet_template.count, al
 		mov	al, byte ptr _boss_phase_frame
 		shl	al, 3
@@ -24092,7 +24092,7 @@ loc_1AF59:
 		call	yuuka6_1AA45
 		cmp	_boss_phase_frame, 64
 		jnz	short loc_1AFA6
-		mov	al, byte_2D01E
+		mov	al, _boss_statebyte[0].BSB_thicklaser_radius
 		mov	ah, 0
 		mov	word_2562A, ax
 		mov	word_2562E, 4
@@ -24139,7 +24139,7 @@ loc_1AFBE:
 		call	_yuuka6_anim_parasol_back_pull_forward
 
 loc_1AFC8:
-		mov	byte_2D02D, 2
+		mov	_boss_statebyte[15].BSB_spread_angle_range, 2
 		jmp	loc_1B094
 ; ---------------------------------------------------------------------------
 
@@ -24162,32 +24162,32 @@ loc_1AFD0:
 		add	al, 12
 		mov	_bullet_template.speed, al
 		mov	_bullet_template.BT_delta.spread_angle, 10h
-		mov	al, byte_2D02D
+		mov	al, _boss_statebyte[15].BSB_spread_angle_range
 		mov	ah, 0
 		add	ax, ax
 		call	randring2_next16_mod pascal, ax
 		mov	dl, 40h
-		sub	dl, byte_2D02D
+		sub	dl, _boss_statebyte[15].BSB_spread_angle_range
 		add	al, dl
 		mov	_bullet_template.BT_angle, al
 		mov	ax, _boss_pos.cur.x
 		mov	_bullet_template.BT_origin.x, ax
 		call	_bullets_add_regular
-		mov	al, byte_2D02D
+		mov	al, _boss_statebyte[15].BSB_spread_angle_range
 		mov	ah, 0
 		add	ax, ax
 		call	randring2_next16_mod pascal, ax
 		mov	dl, 40h
-		sub	dl, byte_2D02D
+		sub	dl, _boss_statebyte[15].BSB_spread_angle_range
 		add	al, dl
 		mov	_bullet_template.BT_angle, al
 		mov	ax, point_25A0C.x
 		mov	_bullet_template.BT_origin.x, ax
 		call	_bullets_add_regular
 		call	snd_se_play pascal, 9
-		mov	al, byte_2D02D
+		mov	al, _boss_statebyte[15].BSB_spread_angle_range
 		add	al, 6
-		mov	byte_2D02D, al
+		mov	_boss_statebyte[15].BSB_spread_angle_range, al
 		jmp	short loc_1B094
 ; ---------------------------------------------------------------------------
 
@@ -27916,7 +27916,7 @@ stage2_setup	proc far
 		push	(255 shl 16) or 128
 		push	( 32 shl 16) or   8
 		call	select_for_rank
-		mov	byte_2D01E, al
+		mov	_boss_statebyte[0].BSB_spread_interval, al
 		mov	_stage_render, offset nullfunc_near
 		mov	_stage_invalidate, offset nullfunc_near
 		pop	bp
@@ -27995,31 +27995,31 @@ stage4_setup	proc far
 		push	( 4 shl 16) or  6
 		push	( 8 shl 16) or 12
 		call	select_for_rank
-		mov	byte_2D01E, al
+		mov	_boss_statebyte[0].BSB_orb_count, al
 		push	(16 shl 16) or 12
 		push	( 8 shl 16) or  6
 		call	select_for_rank
-		mov	byte_2D01F, al
+		mov	_boss_statebyte[1].BSB_orb_interval, al
 		push	( 1 shl 16) or  2
 		push	( 3 shl 16) or  4
 		call	select_for_rank
-		mov	byte_2D020, al
+		mov	_boss_statebyte[2].BSB_spread_turns_max, al
 		push	(23 shl 16) or 23
 		push	(24 shl 16) or 24
 		call	select_for_rank
-		mov	byte_2D021, al
+		mov	_boss_statebyte[3].BSB_spread, al
 		push	( 8 shl 16) or  9
 		push	( 9 shl 16) or 10
 		call	select_for_rank
-		mov	byte_2D022, al
+		mov	_boss_statebyte[4].BSB_spread_delta_angle, al
 		push	(18 shl 16) or 16
 		push	(14 shl 16) or 10
 		call	select_for_rank
-		mov	byte_2D023, al
+		mov	_boss_statebyte[5].BSB_spread_delta_angle, al
 		push	( 6 shl 16) or  8
 		push	( 9 shl 16) or 10
 		call	select_for_rank
-		mov	byte_2D024, al
+		mov	_boss_statebyte[6].BSB_stack, al
 		jmp	short loc_1E371
 ; ---------------------------------------------------------------------------
 
@@ -28091,7 +28091,7 @@ stage5_setup	proc far
 		push	(144 shl 16) or 160
 		push	(168 shl 16) or 180
 		call	select_for_rank
-		mov	byte_2D01E, al
+		mov	_boss_statebyte[0].BSB_thicklaser_radius, al
 		pop	bp
 		retf
 stage5_setup	endp
@@ -28124,11 +28124,11 @@ stage6_setup	proc far
 		push	(48 shl 16) or 64
 		push	(80 shl 16) or 96
 		call	select_for_rank
-		mov	byte_2D01E, al
+		mov	_boss_statebyte[0].BSB_thicklaser_radius, al
 		push	( 1 shl 16) or  1
 		push	( 2 shl 16) or  4
 		call	select_for_rank
-		mov	byte_2D01F, al
+		mov	_boss_statebyte[1].BSB_spin_ring, al
 		pop	bp
 		retf
 stage6_setup	endp
@@ -28165,7 +28165,7 @@ stagex_setup	proc far
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (48 shl 4)
 		mov	_boss_backdrop_colorfill, offset playfield_fillm_0_0_384_192
-		mov	byte_2D01E, 0
+		mov	_boss_statebyte[0].BSB_gengetsu_started, 0
 		call	cdg_load_single_noalpha pascal, CDG_BG_BOSS, ds, offset aSt06bk_cdg, 0
 		call	@bb_stage_load$qnxc pascal, ds, offset aSt06_bb
 		mov	_stage_render, offset nullfunc_near
@@ -28370,9 +28370,9 @@ loc_1E801:
 		jnz	loc_1E8A4
 		call	super_clean pascal, (128 shl 16) or 256
 		call	@dialog_animate$qv
-		cmp	byte_2D01E, 0
+		cmp	_boss_statebyte[0].BSB_gengetsu_started, 0
 		jnz	short loc_1E89B
-		mov	byte_2D01E, 1
+		mov	_boss_statebyte[0].BSB_gengetsu_started, 1
 		call	@boss_reset$qv
 		mov	_boss_pos.cur.x, (192 shl 4)
 		mov	_boss_pos.prev.x, (192 shl 4)
@@ -29011,7 +29011,7 @@ var_1		= byte ptr -1
 		mov	_boss_angle, al
 		mov	_bullet_template.BT_group, BG_SPREAD
 		mov	_bullet_template.count, 6
-		mov	al, byte_2D023
+		mov	al, _boss_statebyte[5].BSB_spread_delta_angle
 		mov	_bullet_template.BT_delta.spread_angle, al
 		call	_bullet_template_tune
 		cmp	_player_pos.cur.x, 192 * 16
@@ -29075,7 +29075,7 @@ var_1		= byte ptr -1
 		mov	_bullet_template.speed, (5 shl 4) + 5
 		mov	_bullet_template.BT_angle, 0
 		mov	_bullet_template.BT_special_motion, BSM_SLOWDOWN_THEN_TURN_AIMED
-		mov	al, byte_2D020
+		mov	al, _boss_statebyte[2].BSB_spread_turns_max
 		mov	_bullet_special_motion_turns_max, al
 		mov	_bullet_template.BT_group, BG_SPREAD_AIMED
 		mov	_bullet_template.count, 9
@@ -29114,7 +29114,7 @@ reimu_1EE21	proc near
 		mov	dword_2D044, eax
 		call	randring2_next16
 		push	ax
-		mov	al, byte_2D01E
+		mov	al, _boss_statebyte[0].BSB_orb_count
 		mov	ah, 0
 		push	ax
 		call	reimu_1EB8C
@@ -29259,9 +29259,9 @@ var_1		= byte ptr -1
 		add	al, -44h
 		mov	_bullet_template.BT_angle, al
 		mov	_bullet_template.BT_group, BG_SPREAD
-		mov	al, byte_2D021
+		mov	al, _boss_statebyte[3].BSB_spread
 		mov	_bullet_template.count, al
-		mov	al, byte_2D022
+		mov	al, _boss_statebyte[4].BSB_spread_delta_angle
 		mov	_bullet_template.BT_delta.spread_angle, al
 		call	_bullets_add_regular_fixedspeed
 		mov	ax, _boss_phase_frame
@@ -29408,7 +29408,7 @@ reimu_1F111	proc near
 loc_1F13D:
 		cmp	_boss_phase_frame, 32
 		jl	short loc_1F15F
-		mov	al, byte_2D01F
+		mov	al, _boss_statebyte[1].BSB_orb_interval
 		mov	ah, 0
 		push	ax
 		mov	ax, _boss_phase_frame
@@ -29600,7 +29600,7 @@ var_1		= byte ptr -1
 		jnz	short loc_1F328
 		mov	_bullet_template.spawn_type, BST_BULLET16_CLOUD_FORWARDS
 		mov	_bullet_template.BT_group, BG_STACK_AIMED
-		mov	al, byte_2D024
+		mov	al, _boss_statebyte[6].BSB_stack
 		mov	_bullet_template.count, al
 		mov	_bullet_template.BT_delta.stack_speed, 12
 		mov	_bullet_template.BT_special_motion, BSM_NONE
@@ -29819,7 +29819,7 @@ loc_1F4DC:
 		mov	_boss_sprite, 129
 		mov	byte_2D057, 4
 		mov	byte_2D03B, 8Ch
-		mov	byte_2D028, 0
+		mov	_boss_statebyte[10].BSB_subpattern_id, 0
 		jmp	loc_1F8A5
 ; ---------------------------------------------------------------------------
 
@@ -29855,26 +29855,26 @@ loc_1F542:
 
 loc_1F547:
 		inc	_boss_mode_change
-		cmp	byte_2D028, 2
+		cmp	_boss_statebyte[10].BSB_subpattern_id, 2
 		ja	short loc_1F568
 		push	1
 		call	randring2_next16_and
 		or	ax, ax
 		jz	short loc_1F561
-		inc	byte_2D028
+		inc	_boss_statebyte[10].BSB_subpattern_id
 		jmp	short loc_1F56D
 ; ---------------------------------------------------------------------------
 
 loc_1F561:
-		mov	byte_2D028, 3
+		mov	_boss_statebyte[10].BSB_subpattern_id, 3
 		jmp	short loc_1F56D
 ; ---------------------------------------------------------------------------
 
 loc_1F568:
-		mov	byte_2D028, 0
+		mov	_boss_statebyte[10].BSB_subpattern_id, 0
 
 loc_1F56D:
-		mov	al, byte_2D028
+		mov	al, _boss_statebyte[10].BSB_subpattern_id
 		mov	_boss_mode, al
 		mov	_boss_phase_frame, 0
 
@@ -30599,8 +30599,8 @@ loc_1FB10:
 		sub	ax, _bullet_template.BT_origin.x
 		push	ax
 		call	iatan2
-		add	al, 0C0h
-		mov	byte_2D02D, al
+		add	al, -40h
+		mov	_boss_statebyte[15].BSB_spread_angle, al
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -30614,16 +30614,16 @@ loc_1FB36:
 		call	randring2_next16_and pascal, 3
 		add	al, 5
 		mov	_bullet_template.count, al
-		mov	al, byte_2D02D
+		mov	al, _boss_statebyte[15].BSB_spread_angle
 		mov	_bullet_template.BT_angle, al
 		call	_bullets_add_regular
 		mov	al, 80h
-		sub	al, byte_2D02D
+		sub	al, _boss_statebyte[15].BSB_spread_angle
 		mov	_bullet_template.BT_angle, al
 		call	_bullets_add_regular
-		mov	al, byte_2D02D
+		mov	al, _boss_statebyte[15].BSB_spread_angle
 		add	al, 7
-		mov	byte_2D02D, al
+		mov	_boss_statebyte[15].BSB_spread_angle, al
 		call	snd_se_play pascal, 9
 		pop	bp
 		retn
@@ -31083,8 +31083,8 @@ loc_1FF44:
 		sub	ax, _bullet_template.BT_origin.x
 		push	ax
 		call	iatan2
-		add	al, 0D0h
-		mov	byte_2D02D, al
+		add	al, -30h
+		mov	_boss_statebyte[15].BSB_pellet_stack_angle, al
 		jmp	loc_20044
 ; ---------------------------------------------------------------------------
 
@@ -31108,14 +31108,14 @@ loc_1FFC2:
 		cmp	_stage_frame_mod8, 0
 		jnz	short loc_1FFF8
 		mov	_bullet_template.spawn_type, BST_PELLET
-		mov	al, byte_2D02D
+		mov	al, _boss_statebyte[15].BSB_pellet_stack_angle
 		mov	_bullet_template.BT_angle, al
 		mov	_bullet_template.BT_group, BG_STACK
 		mov	_bullet_template.count, 12
 		mov	_bullet_template.speed, (2 shl 4)
 		mov	_bullet_template.BT_delta.stack_speed, 8
 		add	al, 0Ch
-		mov	byte_2D02D, al
+		mov	_boss_statebyte[15].BSB_pellet_stack_angle, al
 		call	_bullets_add_regular
 
 loc_1FFF8:
@@ -31240,35 +31240,35 @@ loc_200F6:
 		add	dx, (-26 shl 4)
 		add	ax, dx
 		mov	_bullet_template.BT_origin.y, ax
-		mov	al, byte_2D02D
+		mov	al, _boss_statebyte[15].BSB_origin_offset_x
 		mov	ah, 0
 		shl	ax, 4
 		add	ax, _boss_pos.cur.x
 		mov	_bullet_template.BT_origin.x, ax
-		mov	al, byte_2D02C
+		mov	al, _boss_statebyte[14].BSB_cluster_angle
 		mov	_bullet_template.BT_angle, al
 		call	_bullets_add_regular
-		mov	al, byte_2D02D
+		mov	al, _boss_statebyte[15].BSB_origin_offset_x
 		mov	ah, 0
 		shl	ax, 4
 		mov	dx, _boss_pos.cur.x
 		sub	dx, ax
 		mov	_bullet_template.BT_origin.x, dx
-		mov	al, byte_2D02C
+		mov	al, _boss_statebyte[14].BSB_cluster_angle
 		neg	al
 		mov	_bullet_template.BT_angle, al
 		call	_bullets_add_regular
-		mov	al, byte_2D02D
-		add	al, 10h
-		mov	byte_2D02D, al
-		cmp	byte_2D02D, 0B0h ; '°'
+		mov	al, _boss_statebyte[15].BSB_origin_offset_x
+		add	al, 16
+		mov	_boss_statebyte[15].BSB_origin_offset_x, al
+		cmp	_boss_statebyte[15].BSB_origin_offset_x, 176
 		jbe	short loc_2017D
-		mov	byte_2D02D, 10h
+		mov	_boss_statebyte[15].BSB_origin_offset_x, 16
 
 loc_2017D:
-		mov	al, byte_2D02C
+		mov	al, _boss_statebyte[14].BSB_cluster_angle
 		add	al, 0Bh
-		mov	byte_2D02C, al
+		mov	_boss_statebyte[14].BSB_cluster_angle, al
 		call	snd_se_play pascal, 3
 		pop	bp
 		retn
@@ -31781,7 +31781,7 @@ loc_205ED:
 		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_VERTICAL shl 16) or 0
 		mov	_boss_mode, -1
 		mov	word_2D05A, 0C00h
-		mov	byte_2D02D, 10h
+		mov	_boss_statebyte[15].BSB_origin_offset_x, 16
 		jmp	loc_206B6
 ; ---------------------------------------------------------------------------
 
@@ -32795,19 +32795,42 @@ _dream_score	dw ?
 byte_2D00E	db ?
 		db ?
 include th04/main/boss/funcs[bss].asm
-byte_2D01E	db ?
-byte_2D01F	db ?
-byte_2D020	db ?
-byte_2D021	db ?
-byte_2D022	db ?
-byte_2D023	db ?
-byte_2D024	db ?
-		db 3 dup(?)
-byte_2D028	db ?
-		db 2 dup(?)
-byte_2D02B	db ?
-byte_2D02C	db ?
-byte_2D02D	db ?
+
+boss_statebyte_t union
+	BSB_angle_mirror_y           	db ?
+	BSB_bitless_pattern_started  	db ?
+	BSB_cluster_angle            	db ?
+	BSB_delta_angle_between_rings	db ?
+	BSB_direction                	db ?
+	BSB_gengetsu_started         	db ?
+	BSB_motion_lerp_frames         	db ?
+	BSB_orb_count                	db ?
+	BSB_orb_interval             	db ?
+	BSB_origin_offset_x          	db ? ; pixel_t
+	BSB_phase_frame              	db ?
+	BSB_pattern_num_prev         	db ?
+	BSB_patterns_done            	db ?
+	BSB_pellet_stack_angle       	db ?
+	BSB_thicklaser_radius        	db ?
+	BSB_spread                   	db ?
+	BSB_spread_angle             	db ?
+	BSB_spread_angle_range       	db ?
+	BSB_spread_delta_angle       	db ?
+	BSB_spread_interval          	db ?
+	BSB_spread_speed             	db ?
+	BSB_spread_turns_max         	db ?
+	BSB_spin_ring                	db ?
+	BSB_stack                    	db ?
+	BSB_stack_left_angle         	db ?
+	BSB_stack_right_angle        	db ?
+	BSB_stacks_fired             	db ?
+	BSB_subpattern_id            	db ?
+	BSB_subpattern_num           	db ?
+boss_statebyte_t ends
+
+public _boss_statebyte
+_boss_statebyte	boss_statebyte_t 16 dup (<?>)
+
 include th04/formats/bb_stage[bss].asm
 include th04/main/boss/hitbox[bss].asm
 word_2D034	dw ?
