@@ -1,5 +1,5 @@
-public BOSS2_EXPLODE_BIG
-boss2_explode_big	proc near
+public _boss2_explode_big_circle
+_boss2_explode_big_circle proc near
 
 @@y	= word ptr -4
 @@x	= word ptr -2
@@ -11,11 +11,11 @@ boss2_explode_big	proc near
 	mov	[bp+@@y], ax
 	mov	eax, _boss2_pos.cur
 	mov	_boss_pos.cur, eax
-	call	boss_explode_big
+	call	_boss_explode_big_circle
 	mov	ax, [bp+@@x]
 	mov	_boss_pos.cur.x, ax
 	mov	ax, [bp+@@y]
 	mov	_boss_pos.cur.y, ax
 	leave
 	retn
-boss2_explode_big	endp
+_boss2_explode_big_circle endp

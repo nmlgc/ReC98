@@ -2,7 +2,7 @@ public YUUKA6_PHASE_END
 yuuka6_phase_end	proc near
 
 @@next_phase_end_hp		= word ptr  4
-@@explode_type		= word ptr  6
+@@explosion_type		= word ptr  6
 
 	push	bp
 	mov	bp, sp
@@ -11,7 +11,7 @@ yuuka6_phase_end	proc near
 	mov	_bullet_clear_time, 20
 
 @@already_clearing:
-	call	boss_explode_small pascal, [bp+@@explode_type]
+	call	boss_explode_small pascal, [bp+@@explosion_type]
 	inc	_boss_phase
 	mov	_boss_phase_frame, 0
 	mov	_boss_mode_change, 0

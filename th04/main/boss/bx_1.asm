@@ -2,12 +2,12 @@ public MUGETSU_PHASE2_END
 mugetsu_phase2_end	proc near
 
 @@next_phase_end_hp		= word ptr  4
-@@explode_type		= word ptr  6
+@@explosion_type		= word ptr  6
 
 	push	bp
 	mov	bp, sp
 	call	_boss_items_drop
-	call	boss_explode_small pascal, [bp+@@explode_type]
+	call	boss_explode_small pascal, [bp+@@explosion_type]
 	inc	_boss_phase
 	mov	_boss_phase_frame, 0
 	mov	_boss_mode, 0

@@ -33,5 +33,5 @@ bool near yuuka6_anim_parasol_shield(void)
 ;
 
 void pascal near yuuka6_phase_end(
-	explode_type_t explode_type, int next_phase_end_hp
+	explosion_type_t explosion_type, int next_phase_end_hp
 );

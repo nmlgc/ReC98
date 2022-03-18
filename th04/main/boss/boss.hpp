@@ -61,29 +61,39 @@ struct explosion_t {
 	unsigned char angle_offset;
 };
 
-enum explode_type_t {
+enum explosion_type_t {
 	ET_NONE = -1,
+	ET_CIRCLE = 0,
 	ET_NW_SE = 1,
 	ET_SW_NE = 2,
 	ET_HORIZONTAL = 3,
 	ET_VERTICAL = 4,
+
+	_explosion_type_t_FORCE_INT16 = 0x7FFF
 };
 
 extern explosion_t explosions_small[EXPLOSION_SMALL_COUNT];
 extern explosion_t explosions_big;
 
-void pascal near boss_explode_small(unsigned int type);
-#if GAME == 4
-	void pascal near boss_explode_big(unsigned int type);
+void pascal near boss_explode_small(explosion_type_t type);
+#if (GAME == 5)
+	void near boss_explode_big_circle(void);
+
+	// Wrapper for easy compatibility with TH04 code.
+	inline void boss_explode_big(explosion_type_t type) {
+		boss_explode_big_circle();
+	}
+#else
+	void pascal near boss_explode_big(explosion_type_t type);
 #endif
 
-void pascal near explosions_small_update_and_render(void);
-void pascal near explosions_big_update_and_render(void);
+void near explosions_small_update_and_render(void);
+void near explosions_big_update_and_render(void);
 
-void pascal explosions_small_reset(void);
+void explosions_small_reset(void);
 /// ----------
 
 void near boss_items_drop();
 void pascal near boss_phase_end(
-	explode_type_t explode_type, int next_phase_end_hp
+	explosion_type_t explosion_type, int next_phase_end_hp
 );

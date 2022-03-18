@@ -5775,8 +5775,8 @@ loc_10989:
 		call	super_put_1plane pascal, di, [bp+@@y], si, large PLANE_PUT or GC_BRGI
 
 loc_10999:
-		call	explosions_small_update_and_render
-		call	explosions_big_update_and_render
+		call	_explosions_small_update_and_render
+		call	_explosions_big_update_and_render
 		pop	di
 		pop	si
 		leave
@@ -5908,8 +5908,8 @@ loc_10A84:
 		call	super_put_1plane pascal, si, di, [bp+@@y], large PLANE_PUT or GC_BRGI
 
 loc_10A94:
-		call	explosions_small_update_and_render
-		call	explosions_big_update_and_render
+		call	_explosions_small_update_and_render
+		call	_explosions_big_update_and_render
 		pop	di
 		pop	si
 		leave
@@ -6210,8 +6210,8 @@ loc_10D19:
 		call	puppets_render
 
 loc_10D1C:
-		call	explosions_small_update_and_render
-		call	explosions_big_update_and_render
+		call	_explosions_small_update_and_render
+		call	_explosions_big_update_and_render
 		pop	di
 		pop	si
 		leave
@@ -6361,8 +6361,8 @@ loc_10E19:
 		call	sub_10D26
 
 loc_10E1F:
-		call	explosions_small_update_and_render
-		call	explosions_big_update_and_render
+		call	_explosions_small_update_and_render
+		call	_explosions_big_update_and_render
 		mov	_boss_damage_this_frame, 0
 		mov	_yuki_damage_this_frame, 0
 		pop	di
@@ -6494,8 +6494,8 @@ loc_10F76:
 		call	super_put_1plane pascal, di, [bp+@@y], si, large PLANE_PUT or GC_BRGI
 
 loc_10F86:
-		call	explosions_small_update_and_render
-		call	explosions_big_update_and_render
+		call	_explosions_small_update_and_render
+		call	_explosions_big_update_and_render
 		pop	di
 		pop	si
 		leave
@@ -6574,8 +6574,8 @@ loc_11064:
 		mov	_boss_damage_this_frame, 0
 
 loc_11069:
-		call	explosions_small_update_and_render
-		call	explosions_big_update_and_render
+		call	_explosions_small_update_and_render
+		call	_explosions_big_update_and_render
 		pop	di
 		pop	si
 		leave
@@ -6658,8 +6658,8 @@ loc_11175:
 		mov	_boss_damage_this_frame, 0
 
 loc_1117A:
-		call	explosions_small_update_and_render
-		call	explosions_big_update_and_render
+		call	_explosions_small_update_and_render
+		call	_explosions_big_update_and_render
 		pop	di
 		pop	si
 		leave
@@ -7448,8 +7448,8 @@ loc_1183A:
 		call	super_put pascal, di, [bp+@@y], ax
 
 loc_11862:
-		call	explosions_small_update_and_render
-		call	explosions_big_update_and_render
+		call	_explosions_small_update_and_render
+		call	_explosions_big_update_and_render
 		pop	di
 		pop	si
 		leave
@@ -16275,14 +16275,14 @@ loc_1AE6C:
 		jnz	loc_1AFA7	; default
 		cmp	_boss2_mode_change, 0
 		jnz	short loc_1AE8B
-		call	boss_explode_big
+		call	_boss_explode_big_circle
 		mov	_boss_sprite, 4
 		mov	_yuki_sprite, 180
 		jmp	short loc_1AE98
 ; ---------------------------------------------------------------------------
 
 loc_1AE8B:
-		call	boss2_explode_big
+		call	_boss2_explode_big_circle
 		mov	_yuki_sprite, 4
 		mov	_boss_sprite, 180
 
@@ -19266,7 +19266,7 @@ loc_1CC7F:
 		push	(52 shl 16) or 52
 		call	select_for_rank
 		mov	byte_2D082, al
-		call	boss_explode_small pascal, 0
+		call	boss_explode_small pascal, ET_CIRCLE
 		cmp	_bullet_clear_time, 20
 		jnb	short loc_1CCD0
 		mov	_bullet_clear_time, 20
@@ -19588,7 +19588,7 @@ loc_1D030:
 		push	(52 shl 16) or 48
 		call	select_for_rank
 		mov	byte_2D082, al
-		call	boss_explode_small pascal, 0
+		call	boss_explode_small pascal, ET_CIRCLE
 		cmp	_bullet_clear_time, 20
 		jnb	short loc_1D081
 		mov	_bullet_clear_time, 20
@@ -20782,7 +20782,7 @@ loc_1DD27:
 		sub	_laser_template.coords.origin.x, (64 shl 4)
 		call	@laser_manual_fixed_spawn$qi pascal, 3
 		inc	word_22852
-		call	boss_explode_small pascal, 0
+		call	boss_explode_small pascal, ET_CIRCLE
 
 loc_1DD72:
 		mov	ax, _boss_phase_frame
@@ -21012,7 +21012,7 @@ loc_1DFFB:
 		push	(16 shl 16) or 12
 		call	select_for_rank
 		mov	byte_2D083, al
-		call	boss_explode_small pascal, 0
+		call	boss_explode_small pascal, ET_CIRCLE
 
 locret_1E020:
 		leave
@@ -23841,7 +23841,7 @@ n1000		= word ptr  4
 		cmp	_boss_phase_frame, 1
 		jnz	short loc_1FBE1
 		mov	_boss_damage_this_frame, 0;m_bHitThisFrame?
-		call	boss_explode_small pascal, 0
+		call	boss_explode_small pascal, ET_CIRCLE
 		call	snd_se_play pascal, 13
 
 loc_1FBE1:
@@ -23852,7 +23852,7 @@ loc_1FBE1:
 loc_1FBED:
 		cmp	_boss_phase_frame, 32
 		jnz	loc_1FD51
-		call	boss_explode_big
+		call	_boss_explode_big_circle
 		inc	_boss_phase
 		mov	al, _boss_mode_change
 		mov	_bullet_zap_active, al

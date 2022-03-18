@@ -104,9 +104,7 @@ bool pascal near boss_flystep_towards(subpixel_t target_x, subpixel_t target_y);
 
 /// Explosions
 /// ----------
-// No longer using a type parameter in TH05.
-void pascal near boss_explode_big(void);
 
 void pascal near boss2_explode_small(unsigned int type);
-void pascal near boss2_explode_big(void);
+void near boss2_explode_big_circle(void);
 /// ----------

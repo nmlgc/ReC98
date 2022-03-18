@@ -5284,8 +5284,8 @@ loc_EA55:
 		GRCG_OFF_CLOBBERING dx
 
 loc_EA5B:
-		call	explosions_small_update_and_render
-		call	explosions_big_update_and_render
+		call	_explosions_small_update_and_render
+		call	_explosions_big_update_and_render
 		cmp	_boss_phase, PHASE_NONE
 		jnb	short loc_EA6B
 		call	main_01:sub_E2C3
@@ -5753,8 +5753,8 @@ loc_EDC3:
 		call	super_large_put
 
 loc_EDD7:
-		call	explosions_small_update_and_render
-		call	explosions_big_update_and_render
+		call	_explosions_small_update_and_render
+		call	_explosions_big_update_and_render
 		pop	di
 		pop	si
 		pop	bp
@@ -9337,8 +9337,8 @@ loc_11629:
 		call	super_large_put
 
 loc_1163D:
-		call	explosions_small_update_and_render
-		call	explosions_big_update_and_render
+		call	_explosions_small_update_and_render
+		call	_explosions_big_update_and_render
 		pop	di
 		pop	si
 		pop	bp
@@ -9581,8 +9581,8 @@ loc_1193A:
 		call	super_large_put
 
 loc_11961:
-		call	explosions_small_update_and_render
-		call	explosions_big_update_and_render
+		call	_explosions_small_update_and_render
+		call	_explosions_big_update_and_render
 		pop	di
 		pop	si
 		leave
@@ -9707,8 +9707,8 @@ loc_11A69:
 		call	super_large_put
 
 loc_11A90:
-		call	explosions_small_update_and_render
-		call	explosions_big_update_and_render
+		call	_explosions_small_update_and_render
+		call	_explosions_big_update_and_render
 		pop	di
 		pop	si
 		leave
@@ -10074,8 +10074,8 @@ loc_11D7A:
 		mov	byte_25A1E, 0
 
 loc_11D86:
-		call	explosions_small_update_and_render
-		call	explosions_big_update_and_render
+		call	_explosions_small_update_and_render
+		call	_explosions_big_update_and_render
 		call	main_01:sub_E2C3
 		call	main_01:sub_11B44
 
@@ -10196,8 +10196,8 @@ loc_11E71:
 		call	super_put pascal, si, di, ax
 
 loc_11EC1:
-		call	explosions_small_update_and_render
-		call	explosions_big_update_and_render
+		call	_explosions_small_update_and_render
+		call	_explosions_big_update_and_render
 		pop	di
 		pop	si
 		leave
@@ -12102,8 +12102,8 @@ loc_12F2E:
 		call	super_large_put
 
 loc_12F55:
-		call	explosions_small_update_and_render
-		call	explosions_big_update_and_render
+		call	_explosions_small_update_and_render
+		call	_explosions_big_update_and_render
 		pop	di
 		pop	si
 		leave
@@ -12251,8 +12251,8 @@ loc_1306D:
 		call	super_zoom
 
 loc_13083:
-		call	explosions_small_update_and_render
-		call	explosions_big_update_and_render
+		call	_explosions_small_update_and_render
+		call	_explosions_big_update_and_render
 		call	main_01:sub_E2C3
 		cmp	_boss_phase, 5
 		jnz	short loc_130E9
@@ -16662,7 +16662,7 @@ loc_16742:
 		mov	_bullet_clear_time, 20
 
 loc_1674E:
-		call	boss_explode_small pascal, 0
+		call	boss_explode_small pascal, ET_CIRCLE
 		inc	_boss_phase
 		mov	ax, _boss_phase_end_hp
 		mov	_boss_hp, ax
@@ -16786,7 +16786,7 @@ loc_1685D:
 		mov	_bullet_clear_time, 20
 
 loc_16869:
-		call	boss_explode_small pascal, 0
+		call	boss_explode_small pascal, ET_CIRCLE
 		inc	_boss_phase
 		mov	ax, _boss_phase_end_hp
 		mov	_boss_hp, ax
@@ -16883,7 +16883,7 @@ loc_16953:
 loc_16963:
 		cmp	_boss_phase_frame, 32
 		jnz	short loc_169B8
-		call	boss_explode_big pascal, 2
+		call	boss_explode_big pascal, ET_SW_NE
 		mov	_boss_phase, PHASE_EXPLODE_BIG
 		mov	al, _boss_mode_change
 		mov	_bullet_zap_active, al
@@ -19083,7 +19083,7 @@ loc_17C44:
 loc_17C54:
 		cmp	_boss_phase_frame, 32
 		jnz	short loc_17CA4
-		call	boss_explode_big pascal, 2
+		call	boss_explode_big pascal, ET_SW_NE
 		mov	_boss_phase, PHASE_EXPLODE_BIG
 		mov	al, _boss_mode_change
 		mov	_bullet_zap_active, al
@@ -20634,7 +20634,7 @@ loc_1894A:
 loc_1895A:
 		cmp	_boss_phase_frame, 32
 		jnz	short loc_189A1
-		call	boss_explode_big pascal, 2
+		call	boss_explode_big pascal, ET_SW_NE
 		mov	_boss_phase, PHASE_EXPLODE_BIG
 		mov	al, _boss_mode_change
 		mov	_bullet_zap_active, al
@@ -21986,7 +21986,7 @@ loc_19548:
 loc_1955E:
 		cmp	_boss_phase_frame, 32
 		jnz	short loc_195A9
-		call	boss_explode_big pascal, 0
+		call	boss_explode_big pascal, ET_CIRCLE
 		mov	_boss_phase, PHASE_EXPLODE_BIG
 		mov	al, _boss_mode_change
 		mov	_bullet_zap_active, al
@@ -22922,7 +22922,7 @@ loc_19E27:
 loc_19E3D:
 		cmp	_boss_phase_frame, 32
 		jnz	short loc_19E8D
-		call	boss_explode_big pascal, 0
+		call	boss_explode_big pascal, ET_CIRCLE
 		mov	_boss_phase, PHASE_EXPLODE_BIG
 		mov	al, _boss_mode_change
 		mov	_bullet_zap_active, al
@@ -25471,7 +25471,7 @@ loc_1B894:
 loc_1B8A4:
 		cmp	_boss_phase_frame, 32
 		jnz	short loc_1B8EA
-		call	boss_explode_big pascal, 2
+		call	boss_explode_big pascal, ET_SW_NE
 		mov	_boss_phase, PHASE_EXPLODE_BIG
 		mov	al, _boss_mode_change
 		mov	_bullet_zap_active, al
@@ -26990,7 +26990,7 @@ loc_1C61F:
 loc_1C62F:
 		cmp	_boss_phase_frame, 32
 		jnz	short loc_1C67A
-		call	boss_explode_big pascal, 3
+		call	boss_explode_big pascal, ET_HORIZONTAL
 		mov	_boss_phase, PHASE_EXPLODE_BIG
 		mov	al, _boss_mode_change
 		mov	_bullet_zap_active, al
@@ -28220,7 +28220,7 @@ boss_reset	proc near
 		mov	_boss_pos.velocity.x, 0
 		mov	_boss_pos.velocity.y, 0
 		mov	_boss_damage_this_frame, 0
-		nopcall	explosions_small_reset
+		nopcall	_explosions_small_reset
 		mov	_boss_phase_timed_out, 1
 		pop	bp
 		retn
@@ -30592,7 +30592,7 @@ loc_1F845:
 loc_1F855:
 		cmp	_boss_phase_frame, 32
 		jnz	short loc_1F8A5
-		call	boss_explode_big pascal, 2
+		call	boss_explode_big pascal, ET_SW_NE
 		mov	_boss_phase, PHASE_EXPLODE_BIG
 		mov	al, _boss_mode_change
 		mov	_bullet_zap_active, al
@@ -32231,7 +32231,7 @@ loc_2065F:
 loc_2066F:
 		cmp	_boss_phase_frame, 32
 		jnz	short loc_206B6
-		call	boss_explode_big pascal, 3
+		call	boss_explode_big pascal, ET_HORIZONTAL
 		mov	_boss_phase, PHASE_EXPLODE_BIG
 		mov	al, _boss_mode_change
 		mov	_bullet_zap_active, al

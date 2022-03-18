@@ -76,12 +76,12 @@ public BOSS_PHASE_END
 boss_phase_end	proc near
 
 @@next_phase_end_hp		= word ptr  4
-@@explode_type		= word ptr  6
+@@explosion_type		= word ptr  6
 
 	push	bp
 	mov	bp, sp
 	push	si
-	mov	si, [bp+@@explode_type]
+	mov	si, [bp+@@explosion_type]
 	cmp	si, ET_NONE
 	jz	short @@set
 	call	boss_explode_small pascal, si
