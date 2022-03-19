@@ -539,7 +539,7 @@ void pascal near shinki_bg_render(void)
 			playfield_fill_col_0();
 		}
 		tiles_bb_col = 15;
-		tiles_bb_put(bb_stage_seg, entrance_cel);
+		tiles_bb_put(bb_boss_seg, entrance_cel);
 	} else if(boss.phase < 4) {
 		playfield_fill_col_0();
 		shinki_bg_type_a_update_and_render();
@@ -668,7 +668,7 @@ void pascal near exalice_bg_render(void)
 		unsigned char entrance_cel = (boss.phase_frame / 4);
 		playfield_fill_col_0();
 		tiles_bb_col = 15;
-		tiles_bb_put(bb_stage_seg, entrance_cel);
+		tiles_bb_put(bb_boss_seg, entrance_cel);
 	} else if(boss.phase < PHASE_BOSS_EXPLODE_BIG) {
 		playfield_fill_col_0();
 		exalice_hexagrams_update_and_render();

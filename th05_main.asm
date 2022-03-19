@@ -1094,7 +1094,7 @@ sub_B609	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		call	@bb_stage_free$qv
+		call	@bb_boss_free$qv
 		call	@dialog_free$qv
 		call	std_free
 		call	map_free
@@ -2830,7 +2830,7 @@ loc_D09F:
 		cmp	_boss_phase, 1
 		jnz	short loc_D0C8
 		call	@boss_backdrop_render$qiic pascal, (64 shl 16) or 16, 0
-		mov	ax, _bb_stage_seg
+		mov	ax, _bb_boss_seg
 		mov	_tiles_bb_seg, ax
 		mov	ax, _boss_phase_frame
 		cwd
@@ -2910,7 +2910,7 @@ loc_D124:
 
 loc_D142:
 		mov	_tiles_bb_col, 0
-		mov	ax, _bb_stage_seg
+		mov	ax, _bb_boss_seg
 		mov	_tiles_bb_seg, ax
 		call	tiles_bb_put_raw pascal, si
 		jmp	short loc_D17D
@@ -2984,7 +2984,7 @@ loc_D1B0:
 
 loc_D1CE:
 		mov	_tiles_bb_col, 15
-		mov	ax, _bb_stage_seg
+		mov	ax, _bb_boss_seg
 		mov	_tiles_bb_seg, ax
 		call	tiles_bb_put_raw pascal, si
 		jmp	short loc_D209
@@ -3059,7 +3059,7 @@ loc_D23E:
 
 loc_D25C:
 		mov	_tiles_bb_col, 9
-		mov	ax, _bb_stage_seg
+		mov	ax, _bb_boss_seg
 		mov	_tiles_bb_seg, ax
 		mov	al, [bp+@@entrance_cel]
 		mov	ah, 0
@@ -3130,7 +3130,7 @@ loc_D2C7:
 
 loc_D2E5:
 		mov	_tiles_bb_col, 15
-		mov	ax, _bb_stage_seg
+		mov	ax, _bb_boss_seg
 		mov	_tiles_bb_seg, ax
 		mov	al, [bp+@@entrance_cel]
 		mov	ah, 0
@@ -3244,7 +3244,7 @@ arg_0		= word ptr  4
 		enter	6, 0
 		push	di
 		mov	_tile_invalidate_box, (2 shl 16) or 2
-		mov	ax, _bb_stage_seg
+		mov	ax, _bb_boss_seg
 		mov	fs, ax
 		mov	di, [bp+arg_0]
 		shl	di, 7
@@ -4336,7 +4336,7 @@ loc_F71C:
 		mov	es:[bx+resident_t.frames], eax
 		call	bb_txt_free
 		call	cdg_free_all
-		call	@bb_stage_free$qv
+		call	@bb_boss_free$qv
 		call	@dialog_free$qv
 		call	bb_playchar_free
 		call	std_free
@@ -8361,7 +8361,7 @@ sub_12842	endp
 	HUD_BAR_PUT procdesc near
 	HUD_SCORE_PUT procdesc near
 	SCORE_UPDATE_AND_RENDER procdesc near
-	@bb_stage_free$qv procdesc near
+	@bb_boss_free$qv procdesc near
 	STAGE1_SETUP procdesc near
 	STAGE2_SETUP procdesc near
 	STAGE3_SETUP procdesc near
@@ -24253,7 +24253,7 @@ byte_2D082	db ?
 byte_2D083	db ?
 angle_2D084	db ?
 angle_2D085	db ?
-include th04/formats/bb_stage[bss].asm
+include th04/formats/bb_boss[bss].asm
 include th04/main/boss/hitbox[bss].asm
 
 		end

@@ -27,7 +27,7 @@ extern "C" {
 
 #include "th04/main/boss/end.cpp"
 #include "th04/main/boss/reset.cpp"
-#include "th04/formats/bb_stage.cpp"
+#include "th04/formats/bb_boss.cpp"
 #include "th05/main/stage/setup.cpp"
 
 void pascal score_delta_commit(void)

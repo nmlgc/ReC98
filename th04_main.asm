@@ -961,7 +961,7 @@ sub_B29E	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		call	@bb_stage_free$qv
+		call	@bb_boss_free$qv
 		call	@dialog_free$qv
 		call	main_01:std_free
 		call	main_01:map_free
@@ -1508,7 +1508,7 @@ arg_0		= word ptr  4
 		enter	6, 0
 		push	di
 		mov	_tile_invalidate_box, (2 shl 16) or 2
-		mov	ax, _bb_stage_seg
+		mov	ax, _bb_boss_seg
 		mov	fs, ax
 		mov	di, [bp+arg_0]
 		shl	di, 7
@@ -5002,7 +5002,7 @@ loc_E813:
 		mov	es:[bx+resident_t.frames], eax
 		call	main_01:bb_txt_free
 		call	cdg_free_all
-		call	@bb_stage_free$qv
+		call	@bb_boss_free$qv
 		call	@dialog_free$qv
 		call	main_01:bb_playchar_free
 		call	main_01:std_free
@@ -10225,7 +10225,7 @@ loc_12199:
 		cmp	_boss_phase, 1
 		jnz	short loc_121BF
 		call	@boss_backdrop_render$qiic pascal, (32 shl 16) or 136, 1
-		mov	ax, _bb_stage_seg
+		mov	ax, _bb_boss_seg
 		mov	_tiles_bb_seg, ax
 		mov	ax, _boss_phase_frame
 		sar	ax, 1
@@ -10275,7 +10275,7 @@ kurumi_bg_render	proc near
 		cmp	_boss_phase, 1
 		jnz	short loc_1221B
 		call	@boss_backdrop_render$qiic pascal, (32 shl 16) or 96, 0
-		mov	ax, _bb_stage_seg
+		mov	ax, _bb_boss_seg
 		mov	_tiles_bb_seg, ax
 		mov	ax, _boss_phase_frame
 		sar	ax, 1
@@ -10352,7 +10352,7 @@ loc_12285:
 		cmp	_boss_phase, 2
 		jnz	short loc_122AB
 		call	@boss_backdrop_render$qiic pascal, (32 shl 16) or 16, 0
-		mov	ax, _bb_stage_seg
+		mov	ax, _bb_boss_seg
 		mov	_tiles_bb_seg, ax
 		mov	ax, _boss_phase_frame
 		sar	ax, 1
@@ -10429,7 +10429,7 @@ loc_12309:
 		call	cdg_put_noalpha_8 pascal, large (96 shl 16) or 72, 16
 
 loc_12327:
-		mov	ax, _bb_stage_seg
+		mov	ax, _bb_boss_seg
 		mov	_tiles_bb_seg, ax
 		mov	al, [bp+@@entrance_cel]
 		mov	ah, 0
@@ -10504,7 +10504,7 @@ loc_12396:
 		call	cdg_put_noalpha_8 pascal, large (128 shl 16) or 128, 16
 
 loc_123B4:
-		mov	ax, _bb_stage_seg
+		mov	ax, _bb_boss_seg
 		mov	_tiles_bb_seg, ax
 		mov	al, [bp+@@entrance_cel]
 		mov	ah, 0
@@ -11215,7 +11215,7 @@ loc_12944:
 		call	main_01:sub_12076
 
 loc_12947:
-		mov	ax, _bb_stage_seg
+		mov	ax, _bb_boss_seg
 		mov	_tiles_bb_seg, ax
 		mov	al, [bp+@@entrance_cel]
 		mov	ah, 0
@@ -11291,7 +11291,7 @@ loc_129B4:
 		call	cdg_put_noalpha_8 pascal, large (32 shl 16) or 16, 16
 
 loc_129D2:
-		mov	ax, _bb_stage_seg
+		mov	ax, _bb_boss_seg
 		mov	_tiles_bb_seg, ax
 		mov	al, [bp+@@entrance_cel]
 		mov	ah, 0
@@ -27837,7 +27837,7 @@ items_update	endp
 		retn
 @boss_reset$qv	endp
 
-include th04/formats/bb_stage.asm
+include th04/formats/bb_boss.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -27870,7 +27870,7 @@ stage1_setup	proc far
 		mov	_boss_backdrop_colorfill, offset playfield_fillm_0_120_384_128
 		call	super_entry_bfnt pascal, ds, offset aSt00_bmt ; "st00.bmt"
 		call	cdg_load_single_noalpha pascal, CDG_BG_BOSS, ds, offset aSt00bk_cdg, 0
-		call	@bb_stage_load$qnxc pascal, ds, offset aSt00_bb
+		call	@bb_boss_load$qnxc pascal, ds, offset aSt00_bb
 		mov	Palettes[0 * size rgb_t].r, 255
 		mov	Palettes[0 * size rgb_t].g, 255
 		mov	_stage_render, offset nullfunc_near
@@ -27912,7 +27912,7 @@ stage2_setup	proc far
 		mov	_boss_backdrop_colorfill, offset playfield_fillm_0_80_384_112
 		call	super_entry_bfnt pascal, ds, offset aSt01_bmt ; "st01.bmt"
 		call	cdg_load_single_noalpha pascal, CDG_BG_BOSS, ds, offset aSt01bk_cdg, 0
-		call	@bb_stage_load$qnxc pascal, ds, offset aSt01_bb
+		call	@bb_boss_load$qnxc pascal, ds, offset aSt01_bb
 		push	(255 shl 16) or 128
 		push	( 32 shl 16) or   8
 		call	select_for_rank
@@ -27956,7 +27956,7 @@ stage3_setup	proc far
 		mov	_boss_backdrop_colorfill, offset playfield_fillm_0_0_384_112
 		call	super_entry_bfnt pascal, ds, offset aSt02_bmt ; "st02.bmt"
 		call	cdg_load_single_noalpha pascal, CDG_BG_BOSS, ds, offset aSt02bk_cdg, 0
-		call	@bb_stage_load$qnxc pascal, ds, offset aSt02_bb
+		call	@bb_boss_load$qnxc pascal, ds, offset aSt02_bb
 		mov	_stage_render, offset nullfunc_near
 		mov	_stage_invalidate, offset nullfunc_near
 		pop	bp
@@ -28050,7 +28050,7 @@ loc_1E3A0:
 loc_1E3A6:
 		push	0
 		call	cdg_load_single_noalpha
-		call	@bb_stage_load$qnxc pascal, ds, offset aSt03_bb
+		call	@bb_boss_load$qnxc pascal, ds, offset aSt03_bb
 		mov	_stage_render, offset nullfunc_near
 		mov	_stage_invalidate, offset nullfunc_near
 		pop	bp
@@ -28081,7 +28081,7 @@ stage5_setup	proc far
 		mov	_boss_hitbox_radius.y, (26 shl 4)
 		mov	_boss_backdrop_colorfill, offset playfield_fillm_96_112_288_256
 		call	cdg_load_single_noalpha pascal, CDG_BG_BOSS, ds, offset aSt04bk_cdg, 0
-		call	@bb_stage_load$qnxc pascal, ds, offset aSt04_bb
+		call	@bb_boss_load$qnxc pascal, ds, offset aSt04_bb
 		call	cdg_load_single_noalpha pascal, CDG_BG_2, ds, offset aSt04_cdg, 0
 		mov	word_2D034, 1400h
 		mov	word_2D036, 280h
@@ -28118,7 +28118,7 @@ stage6_setup	proc far
 		mov	_boss_sprite, 128
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (48 shl 4)
-		call	@bb_stage_load$qnxc pascal, ds, offset aSt05_bb
+		call	@bb_boss_load$qnxc pascal, ds, offset aSt05_bb
 		mov	_stage_render, offset nullfunc_near
 		mov	_stage_invalidate, offset nullfunc_near
 		push	(48 shl 16) or 64
@@ -28167,7 +28167,7 @@ stagex_setup	proc far
 		mov	_boss_backdrop_colorfill, offset playfield_fillm_0_0_384_192
 		mov	_boss_statebyte[0].BSB_gengetsu_started, 0
 		call	cdg_load_single_noalpha pascal, CDG_BG_BOSS, ds, offset aSt06bk_cdg, 0
-		call	@bb_stage_load$qnxc pascal, ds, offset aSt06_bb
+		call	@bb_boss_load$qnxc pascal, ds, offset aSt06_bb
 		mov	_stage_render, offset nullfunc_near
 		mov	_stage_invalidate, offset nullfunc_near
 		pop	bp
@@ -28387,9 +28387,9 @@ loc_1E801:
 		mov	_bgm_title_id, 0Fh
 		mov	_overlay1, offset @overlay_boss_bgm_update_and_rend$qv
 		call	cdg_free pascal, CDG_BG_BOSS
-		call	@bb_stage_free$qv
+		call	@bb_boss_free$qv
 		call	cdg_load_single_noalpha pascal, CDG_BG_BOSS, ds, offset aSt06bk2_cdg, 0
-		call	@bb_stage_load$qnxc pascal, ds, offset aSt06b_bb
+		call	@bb_boss_load$qnxc pascal, ds, offset aSt06b_bb
 		mov	_bombing_disabled, 0
 		pop	bp
 		retn
@@ -32831,7 +32831,7 @@ boss_statebyte_t ends
 public _boss_statebyte
 _boss_statebyte	boss_statebyte_t 16 dup (<?>)
 
-include th04/formats/bb_stage[bss].asm
+include th04/formats/bb_boss[bss].asm
 include th04/main/boss/hitbox[bss].asm
 word_2D034	dw ?
 word_2D036	dw ?

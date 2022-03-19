@@ -34,7 +34,7 @@ void pascal near stage1_setup(void)
 
 	super_entry_bfnt("st00.bmt");
 	cdg_load_all_noalpha(CDG_BG_BOSS, "st00bk.cdg");
-	bb_stage_load("st00.bb");
+	bb_boss_load("st00.bb");
 
 	stage_render = nullfunc_near;
 	stage_invalidate = nullfunc_near;
@@ -61,7 +61,7 @@ void pascal near stage2_setup(void)
 
 	super_entry_bfnt("st01.bmt");
 	cdg_load_all_noalpha(CDG_BG_BOSS, "st01bk.cdg");
-	bb_stage_load("st01.bb");
+	bb_boss_load("st01.bb");
 
 	stage_render = stage2_update;
 	stage_invalidate = stage2_invalidate;
@@ -91,7 +91,7 @@ void pascal near stage3_setup(void)
 
 	super_entry_bfnt("st02.bmt");
 	cdg_load_all_noalpha(CDG_BG_BOSS, "st02bk.cdg");
-	bb_stage_load("st02.bb");
+	bb_boss_load("st02.bb");
 
 	stage_render = nullfunc_near;
 	stage_invalidate = nullfunc_near;
@@ -120,7 +120,7 @@ void pascal near stage4_setup(void)
 
 	super_entry_bfnt("st03.bmt");
 	cdg_load_all_noalpha(CDG_BG_BOSS, "st03bk.cdg");
-	bb_stage_load("st03.bb");
+	bb_boss_load("st03.bb");
 
 	stage_render = nullfunc_near;
 	stage_invalidate = nullfunc_near;
@@ -148,7 +148,7 @@ void pascal near stage5_setup(void)
 
 	super_entry_bfnt("st04.bmt");
 	cdg_load_all_noalpha(CDG_BG_BOSS, "st04bk.cdg");
-	bb_stage_load("st04.bb");
+	bb_boss_load("st04.bb");
 
 	/* TODO: Replace with the decompiled calls
 	 * 	yumeko_interval_phase4 = select_for_rank(20, 10,  6,  6);
@@ -185,7 +185,7 @@ void pascal near stage6_setup(void)
 
 	cdg_load_all_noalpha(CDG_BG_BOSS, "st05bk.cdg");
 	cdg_load_all_noalpha(CDG_BG_2, "st05bk2.cdg");
-	bb_stage_load("st05.bb");
+	bb_boss_load("st05.bb");
 
 	stage_render = nullfunc_near;
 	stage_invalidate = nullfunc_near;
@@ -211,7 +211,7 @@ void pascal near stagex_setup(void)
 	boss_backdrop_colorfill = playfield_fillm_0_104_384_192;
 
 	super_entry_bfnt("st06.bmt");
-	bb_stage_load("st03.bb");
+	bb_boss_load("st03.bb");
 
 	stage_render = nullfunc_near;
 	stage_invalidate = nullfunc_near;

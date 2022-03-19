@@ -3,9 +3,23 @@
 // Bitmap format, storing 1-bit values for 8 tiles in one byte.
 typedef uint8_t bb_tiles8_t;
 
-void pascal near bb_stage_load(const char far* fn);
+// Blocky boss entrance animations
+// -------------------------------
 
-extern bb_tiles8_t __seg *bb_stage_seg;
+extern bb_tiles8_t __seg *bb_boss_seg;
+
+// Loads the .BB file with the given name into memory, and sets [bb_boss_seg]
+// to the newly allocated segment. Does not attempt to free [bb_boss_seg], and
+// will leak memory if it is non-NULL.
+void pascal near bb_boss_load(const char far *fn);
+
+// Frees [bb_boss_seg] if it is non-NULL.
+#if (GAME == 5)
+	void near bb_boss_free(void);
+#else
+	void far bb_boss_free(void);
+#endif
+// -------------------------------
 
 /// Text dissolve circles
 /// ---------------------
