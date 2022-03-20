@@ -23445,6 +23445,8 @@ include th04/main/boss/end.asm
 main_036_TEXT	ends
 
 BOSS_TEXT	segment	byte public 'CODE' use16
+	@BOSS_PHASE_NEXT$Q16EXPLOSION_TYPE_TI procdesc pascal near \
+		explosion_type_and_next_end_hp:dword
 	@BOSS_DEFEAT_UPDATE$QUI procdesc pascal near \
 		bonus_units:word
 	@boss_hittest_player$qv procdesc near

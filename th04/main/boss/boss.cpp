@@ -68,6 +68,26 @@ inline void optimization_barrier(void) {}
 	}
 #endif
 
+void pascal near boss_phase_next(
+	explosion_type_t explosion_type, int next_end_hp
+)
+{
+	if(explosion_type != ET_NONE) {
+		boss_explode_small(explosion_type);
+		if(!boss_phase_timed_out) {
+			bullets_clear();
+			boss_items_drop();
+		}
+	}
+	boss_phase_timed_out = true;
+	boss.phase++;
+	boss.phase_frame = 0;
+	boss.mode = 0;
+	boss.mode_change = 0;
+	boss.hp = boss.phase_end_hp;
+	boss.phase_end_hp = next_end_hp;
+}
+
 #if (GAME == 5)
 	void pascal near boss_defeat_update(unsigned int bonus_units)
 #else

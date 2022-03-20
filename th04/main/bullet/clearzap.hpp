@@ -18,3 +18,9 @@ static const int BULLET_ZAP_FRAMES_PER_CEL = 4;
 // # of frames left during which all on-screen bullets should decay.
 // Gives a constant point bonus for every bullet decayed during that time.
 extern unsigned char bullet_clear_time;
+
+#define bullets_clear() { \
+	if(bullet_clear_time < 20) { \
+		bullet_clear_time = 20; \
+	} \
+}
