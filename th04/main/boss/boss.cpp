@@ -13,6 +13,7 @@ extern "C" {
 #include "th04/gaiji/gaiji.h"
 #include "th04/math/motion.hpp"
 extern "C" {
+#include "th04/math/randring.h"
 #include "th04/snd/snd.h"
 }
 #include "th04/sprites/main_pat.h"
@@ -36,6 +37,7 @@ extern "C" {
 }
 #include "th04/main/dialog/dialog.hpp"
 #include "th04/main/bullet/clearzap.hpp"
+#include "th04/main/item/item.hpp"
 #include "th04/main/player/player.hpp"
 #include "th04/main/player/bomb.hpp"
 #if (GAME == 5)
@@ -67,6 +69,68 @@ inline void optimization_barrier(void) {}
 	inline void boss_hittest_player(void) {
 	}
 #endif
+
+void near boss_items_drop(void)
+{
+	enum {
+		DROP_COUNT = 5,
+		DROP_AREA_W = TO_SP(BOSS_W * 2),
+		DROP_AREA_H = TO_SP(BOSS_H * 2),
+	};
+	enum drop_set_t {
+		DS_POWER,
+		#if (GAME == 4)
+			DS_SMALLPOWER,
+		#endif
+		DS_POINT,
+		DS_COUNT,
+
+		_drop_set_t_FORCE_INT16 = 0x7FFF
+	};
+
+	#if (GAME == 5)
+	static const item_type_t BOSS_ITEM_DROPS[DS_COUNT][DROP_COUNT] = {
+		// DS_POWER
+		{ IT_POWER, IT_POWER, IT_BIGPOWER, IT_POWER, IT_POWER },
+		#if (GAME == 4)
+		 // DS_SMALLPOWER
+		{ IT_POWER, IT_POWER, IT_POWER,    IT_POWER, IT_POWER },
+		#endif
+		// DS_POINT
+		{ IT_POINT, IT_POINT,    IT_POINT, IT_POINT, IT_POINT },
+	};
+	#else
+	extern item_type_t BOSS_ITEM_DROPS[DS_COUNT][DROP_COUNT];
+	#endif
+
+	int i;
+	drop_set_t set;
+	#if (GAME == 5)
+		if(power < POWER_MAX) {
+			set = DS_POWER;
+		} else {
+			set = DS_POINT;
+		}
+	#elif (GAME == 4)
+		if(power <= (POWER_MAX - 5)) {
+			set = DS_POWER;
+		} else if(power < POWER_MAX) {
+			set = DS_SMALLPOWER;
+		} else {
+			set = DS_POINT;
+		}
+	#endif
+	subpixel_t left = (boss.pos.cur.x - (DROP_AREA_W / 2));
+	subpixel_t top  = (boss.pos.cur.y - (DROP_AREA_H / 2));
+
+	for(i = 0; i < DROP_COUNT; i++) {
+		items_add(
+			(left + randring2_next16_mod(DROP_AREA_W)),
+			(top  + randring2_next16_mod(DROP_AREA_H)),
+			BOSS_ITEM_DROPS[set][i]
+		);
+	}
+}
 
 void pascal near boss_phase_next(
 	explosion_type_t explosion_type, int next_end_hp

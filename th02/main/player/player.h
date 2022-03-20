@@ -12,3 +12,11 @@ extern unsigned char player_invincibility_time;
 	// [player_invincibility_time].
 	extern bool player_invincible_via_bomb;
 #endif
+
+// Shot power
+// ----------
+
+#define POWER_MAX 128
+
+extern uint8_t power;
+// ----------

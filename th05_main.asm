@@ -23440,11 +23440,10 @@ sub_1FB07	proc near
 		pop	bp
 		retn
 sub_1FB07	endp
-
-include th04/main/boss/end.asm
 main_036_TEXT	ends
 
 BOSS_TEXT	segment	byte public 'CODE' use16
+	@boss_items_drop$qv procdesc near
 	@BOSS_PHASE_NEXT$Q16EXPLOSION_TYPE_TI procdesc pascal near \
 		explosion_type_and_next_end_hp:dword
 	@BOSS_DEFEAT_UPDATE$QUI procdesc pascal near \
