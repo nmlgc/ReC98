@@ -12152,7 +12152,7 @@ loc_18819:
 		call	sub_17416 pascal, 5
 
 loc_18827:
-		call	@boss_phase_end$q16explosion_type_ti pascal, (ET_NW_SE shl 16) or 450
+		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_NW_SE shl 16) or 450
 		mov	byte_2D07F, 50h	; 'P'
 		jmp	loc_188EE
 ; ---------------------------------------------------------------------------
@@ -12209,7 +12209,7 @@ loc_1889D:
 		call	sub_17416 pascal, 5
 
 loc_188A9:
-		call	@boss_phase_end$q16explosion_type_ti pascal, (ET_SW_NE shl 16) or 0
+		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_SW_NE shl 16) or 0
 		jmp	short loc_188EE
 ; ---------------------------------------------------------------------------
 
@@ -13192,7 +13192,7 @@ loc_19179:
 		call	sub_17416 pascal, 10
 
 loc_19187:
-		call	@boss_phase_end$q16explosion_type_ti pascal, (ET_SW_NE shl 16) or 500
+		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_SW_NE shl 16) or 500
 		mov	angle_2D084, 0
 		mov	byte_2D080, 14h
 		jmp	loc_19263
@@ -13246,7 +13246,7 @@ loc_191F7:
 		push	(ET_NW_SE shl 16) or 0
 
 loc_191FD:
-		call	@boss_phase_end$q16explosion_type_ti
+		call	@boss_phase_next$q16explosion_type_ti
 		jmp	short loc_19263
 ; ---------------------------------------------------------------------------
 
@@ -17683,7 +17683,7 @@ loc_1BC48:
 		push	(ET_HORIZONTAL shl 16) or 0
 
 loc_1BC4E:
-		call	@boss_phase_end$q16explosion_type_ti
+		call	@boss_phase_next$q16explosion_type_ti
 		jmp	loc_1BD09
 ; ---------------------------------------------------------------------------
 
@@ -18873,7 +18873,7 @@ loc_1C74F:
 		push	(ET_NW_SE shl 16) or 0
 
 loc_1C755:
-		call	@boss_phase_end$q16explosion_type_ti
+		call	@boss_phase_next$q16explosion_type_ti
 		jmp	loc_1C805
 ; ---------------------------------------------------------------------------
 
@@ -19966,13 +19966,13 @@ loc_1D458:
 loc_1D472:
 		cmp	_boss_phase, 4
 		jnz	short loc_1D48A
-		call	@boss_phase_end$q16explosion_type_ti pascal, (ET_NW_SE shl 16) or 4500
+		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_NW_SE shl 16) or 4500
 		mov	fp_2CE46, offset sub_1CCD3
 		jmp	short loc_1D493
 ; ---------------------------------------------------------------------------
 
 loc_1D48A:
-		call	@boss_phase_end$q16explosion_type_ti pascal, (ET_NW_SE shl 16) or 1200
+		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_NW_SE shl 16) or 1200
 
 loc_1D493:
 		mov	_boss_mode, 1
@@ -19992,7 +19992,7 @@ loc_1D4B1:
 		push	(ET_NW_SE shl 16) or 0
 
 loc_1D4B7:
-		call	@boss_phase_end$q16explosion_type_ti
+		call	@boss_phase_next$q16explosion_type_ti
 		jmp	short loc_1D513
 ; ---------------------------------------------------------------------------
 
@@ -21300,14 +21300,14 @@ loc_1E2DC:
 loc_1E2EA:
 		cmp	byte_2D080, 0
 		jnz	short loc_1E308
-		call	@boss_phase_end$q16explosion_type_ti pascal, (ET_NW_SE shl 16) or 18400
+		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_NW_SE shl 16) or 18400
 		mov	_boss_mode, 1
 		mov	fp_2CE48, offset sub_1D7DC
 		jmp	loc_1E481
 ; ---------------------------------------------------------------------------
 
 loc_1E308:
-		call	@boss_phase_end$q16explosion_type_ti pascal, (ET_NW_SE shl 16) or 14600
+		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_NW_SE shl 16) or 14600
 		jmp	loc_1E481
 ; ---------------------------------------------------------------------------
 
@@ -21365,13 +21365,13 @@ loc_1E38E:
 loc_1E3AB:
 		cmp	byte_2D080, 0
 		jnz	short loc_1E3C4
-		call	@boss_phase_end$q16explosion_type_ti pascal, (ET_SW_NE shl 16) or 11600
+		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_SW_NE shl 16) or 11600
 		mov	fp_2CE4A, offset sub_1DAD2
 		jmp	loc_1E47B
 ; ---------------------------------------------------------------------------
 
 loc_1E3C4:
-		call	@boss_phase_end$q16explosion_type_ti pascal, (ET_HORIZONTAL shl 16) or 8600
+		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_HORIZONTAL shl 16) or 8600
 		jmp	loc_1E527
 ; ---------------------------------------------------------------------------
 
@@ -21439,7 +21439,7 @@ loc_1E45A:
 loc_1E465:
 		cmp	byte_2D080, 0
 		jnz	short loc_1E488
-		call	@boss_phase_end$q16explosion_type_ti pascal, (ET_SW_NE shl 16) or 2800
+		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_SW_NE shl 16) or 2800
 		mov	fp_2CE4A, offset sub_1DD00
 
 loc_1E47B:
@@ -21451,7 +21451,7 @@ loc_1E481:
 ; ---------------------------------------------------------------------------
 
 loc_1E488:
-		call	@boss_phase_end$q16explosion_type_ti pascal, (ET_HORIZONTAL shl 16) or 0
+		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_HORIZONTAL shl 16) or 0
 		mov	_playfield_shake_anim_time, 16
 		call	@laser_stop$qi pascal, 0
 		call	@laser_stop$qi pascal, 1
@@ -23110,25 +23110,25 @@ loc_1F412:
 		jmp	cs:off_1F681[bx]
 
 loc_1F427:
-		call	exalice_phase_end pascal, large (0 shl 16) or 21000
+		call	exalice_phase_next pascal, large (0 shl 16) or 21000
 		mov	fp_2CE66, offset sub_1EA14
 		jmp	loc_1F666
 ; ---------------------------------------------------------------------------
 
 loc_1F439:
-		call	exalice_phase_end pascal, (ET_NW_SE shl 16) or 15100
+		call	exalice_phase_next pascal, (ET_NW_SE shl 16) or 15100
 		mov	fp_2CE66, offset sub_1EC6C
 		jmp	loc_1F666
 ; ---------------------------------------------------------------------------
 
 loc_1F44B:
-		call	exalice_phase_end pascal, (ET_SW_NE shl 16) or 9600
+		call	exalice_phase_next pascal, (ET_SW_NE shl 16) or 9600
 		mov	fp_2CE66, offset sub_1EE2F
 		jmp	loc_1F666
 ; ---------------------------------------------------------------------------
 
 loc_1F45D:
-		call	exalice_phase_end pascal, (ET_HORIZONTAL shl 16) or 3400
+		call	exalice_phase_next pascal, (ET_HORIZONTAL shl 16) or 3400
 		mov	fp_2CE66, offset sub_1EFED
 		jmp	loc_1F666
 ; ---------------------------------------------------------------------------
@@ -23184,25 +23184,25 @@ loc_1F4D4:
 		jmp	cs:off_1F679[bx]
 
 loc_1F4E7:
-		call	exalice_phase_end pascal, (ET_NW_SE shl 16) or 18100
+		call	exalice_phase_next pascal, (ET_NW_SE shl 16) or 18100
 		mov	fp_2CE66, offset sub_1EB52
 		jmp	short loc_1F523
 ; ---------------------------------------------------------------------------
 
 loc_1F4F8:
-		call	exalice_phase_end pascal, (ET_SW_NE shl 16) or 12600
+		call	exalice_phase_next pascal, (ET_SW_NE shl 16) or 12600
 		mov	fp_2CE66, offset sub_1ECD4
 		jmp	short loc_1F523
 ; ---------------------------------------------------------------------------
 
 loc_1F509:
-		call	exalice_phase_end pascal, (ET_HORIZONTAL shl 16) or 6800
+		call	exalice_phase_next pascal, (ET_HORIZONTAL shl 16) or 6800
 		mov	fp_2CE66, offset sub_1EEF1
 		jmp	short loc_1F523
 ; ---------------------------------------------------------------------------
 
 loc_1F51A:
-		call	exalice_phase_end pascal, (ET_VERTICAL shl 16) or 0
+		call	exalice_phase_next pascal, (ET_VERTICAL shl 16) or 0
 
 loc_1F523:
 		mov	_pellet_bottom_col, GC_RG

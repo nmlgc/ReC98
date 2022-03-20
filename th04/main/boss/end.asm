@@ -72,10 +72,10 @@ public @boss_items_drop$qv
 @boss_items_drop$qv endp
 
 
-public @BOSS_PHASE_END$Q16EXPLOSION_TYPE_TI
-@boss_phase_end$q16explosion_type_ti proc near
+public @BOSS_PHASE_NEXT$Q16EXPLOSION_TYPE_TI
+@boss_phase_next$q16explosion_type_ti proc near
 
-@@next_phase_end_hp		= word ptr  4
+@@next_end_hp		= word ptr  4
 @@explosion_type		= word ptr  6
 
 	push	bp
@@ -102,9 +102,9 @@ public @BOSS_PHASE_END$Q16EXPLOSION_TYPE_TI
 	mov	_boss_mode_change, 0
 	mov	ax, _boss_phase_end_hp
 	mov	_boss_hp, ax
-	mov	ax, [bp+@@next_phase_end_hp]
+	mov	ax, [bp+@@next_end_hp]
 	mov	_boss_phase_end_hp, ax
 	pop	si
 	pop	bp
 	retn	4
-@boss_phase_end$q16explosion_type_ti endp
+@boss_phase_next$q16explosion_type_ti endp

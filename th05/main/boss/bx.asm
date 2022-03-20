@@ -1,7 +1,7 @@
-public EXALICE_PHASE_END
-exalice_phase_end	proc near
+public EXALICE_PHASE_NEXT
+exalice_phase_next proc near
 
-@@next_phase_end_hp		= word ptr  4
+@@next_end_hp		= word ptr  4
 @@explosion_type		= word ptr  6
 
 	push	bp
@@ -25,9 +25,9 @@ exalice_phase_end	proc near
 	mov	_boss_mode_change, 0
 	mov	ax, _boss_phase_end_hp
 	mov	_boss_hp, ax
-	mov	ax, [bp+@@next_phase_end_hp]
+	mov	ax, [bp+@@next_end_hp]
 	mov	_boss_phase_end_hp, ax
 	pop	si
 	pop	bp
 	retn	4
-exalice_phase_end	endp
+exalice_phase_next endp

@@ -1,7 +1,7 @@
-public MUGETSU_PHASE2_END
-mugetsu_phase2_end	proc near
+public MUGETSU_PHASE2_NEXT
+mugetsu_phase2_next	proc near
 
-@@next_phase_end_hp		= word ptr  4
+@@next_end_hp		= word ptr  4
 @@explosion_type		= word ptr  6
 
 	push	bp
@@ -14,9 +14,9 @@ mugetsu_phase2_end	proc near
 	mov	_boss_mode_change, 0
 	mov	ax, _boss_phase_end_hp
 	mov	_boss_hp, ax
-	mov	ax, [bp+@@next_phase_end_hp]
+	mov	ax, [bp+@@next_end_hp]
 	mov	_boss_phase_end_hp, ax
 	mov	_mugetsu_phase2_mode, 0
 	pop	bp
 	retn	4
-mugetsu_phase2_end	endp
+mugetsu_phase2_next endp

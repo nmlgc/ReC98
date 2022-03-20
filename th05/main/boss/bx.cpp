@@ -32,6 +32,6 @@ void near firewaves_update(void)
 	}
 }
 
-void pascal near exalice_phase_end(
-	explosion_type_t explosion_type, int next_phase_end_hp
+void pascal near exalice_phase_next(
+	explosion_type_t explosion_type, int next_end_hp
 );

@@ -94,6 +94,10 @@ void explosions_small_reset(void);
 /// ----------
 
 void near boss_items_drop();
-void pascal near boss_phase_end(
-	explosion_type_t explosion_type, int next_phase_end_hp
+
+// Shows a small explosion with the given type, clears any bullets if the
+// current phase wasn't timed out, and starts the next one, which will end upon
+// reaching the given amount of HP.
+void pascal near boss_phase_next(
+	explosion_type_t explosion_type, int next_end_hp
 );

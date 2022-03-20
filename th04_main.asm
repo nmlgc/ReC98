@@ -20555,7 +20555,7 @@ loc_18883:
 		mov	_bullet_clear_time, 20
 
 loc_1888F:
-		call	mugetsu_phase2_end pascal, large (0 shl 16) or 0
+		call	mugetsu_phase2_next pascal, large (0 shl 16) or 0
 		mov	point_259EA.x, (192 shl 4)
 		jmp	loc_189A1
 ; ---------------------------------------------------------------------------
@@ -21646,7 +21646,7 @@ loc_1923B:
 		call	sub_1E67C
 		cmp	_boss_phase_frame, 32
 		jl	loc_195A9
-		call	@boss_phase_end$q16explosion_type_ti pascal, (ET_NONE shl 16) or 3300
+		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_NONE shl 16) or 3300
 		mov	_boss_mode, 3
 		mov	_boss_angle, 192
 		call	snd_se_play pascal, 6
@@ -21735,7 +21735,7 @@ loc_19309:
 		call	sub_19FD8
 
 loc_19317:
-		call	@boss_phase_end$q16explosion_type_ti pascal, (ET_NW_SE shl 16) or 2050
+		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_NW_SE shl 16) or 2050
 		mov	_bullet_template_special_angle.BSA_turn_by, 40h
 		jmp	loc_195A9
 ; ---------------------------------------------------------------------------
@@ -21861,7 +21861,7 @@ loc_19425:
 		push	(ET_HORIZONTAL shl 16) or 0
 
 loc_1942B:
-		call	@boss_phase_end$q16explosion_type_ti
+		call	@boss_phase_next$q16explosion_type_ti
 		jmp	loc_195A9
 ; ---------------------------------------------------------------------------
 
@@ -22742,7 +22742,7 @@ loc_19C61:
 		call	sub_19FD8
 
 loc_19C6F:
-		call	@boss_phase_end$q16explosion_type_ti pascal, (ET_NW_SE shl 16) or 450
+		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_NW_SE shl 16) or 450
 		mov	Palettes[0 * size rgb_t].r, 112
 		mov	Palettes[0 * size rgb_t].b, 112
 		mov	_palette_changed, 1
@@ -22780,7 +22780,7 @@ loc_19CB2:
 		call	sub_19FD8
 
 loc_19CC8:
-		call	@boss_phase_end$q16explosion_type_ti pascal, (ET_NW_SE shl 16) or 0
+		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_NW_SE shl 16) or 0
 		mov	al, _boss_sprite
 		add	al, 4
 		mov	_boss_sprite, al
@@ -25135,7 +25135,7 @@ loc_1B580:
 		call	@boss_items_drop$qv
 
 loc_1B59A:
-		call	yuuka6_phase_end pascal, large (0 shl 16) or 7600
+		call	yuuka6_phase_next pascal, large (0 shl 16) or 7600
 		jmp	loc_1B8EA
 ; ---------------------------------------------------------------------------
 
@@ -25192,7 +25192,7 @@ loc_1B600:
 		call	@boss_items_drop$qv
 
 loc_1B623:
-		call	yuuka6_phase_end pascal, large (0 shl 16) or 5400
+		call	yuuka6_phase_next pascal, large (0 shl 16) or 5400
 		mov	byte_25A08, 1
 		jmp	loc_1B8EA
 ; ---------------------------------------------------------------------------
@@ -25335,7 +25335,7 @@ loc_1B76A:
 		pushd	(0 shl 16) or 1200
 
 loc_1B770:
-		call	yuuka6_phase_end
+		call	yuuka6_phase_next
 		cmp	_boss_phase, 9
 		jnz	short loc_1B77F
 		mov	byte_25A08, 1
@@ -25419,7 +25419,7 @@ loc_1B80B:
 		call	@boss_items_drop$qv
 
 loc_1B81C:
-		call	yuuka6_phase_end pascal, (ET_HORIZONTAL shl 16) or 0
+		call	yuuka6_phase_next pascal, (ET_HORIZONTAL shl 16) or 0
 		mov	_boss_sprite, 146
 		jmp	loc_1B8EA
 ; ---------------------------------------------------------------------------
@@ -26755,7 +26755,7 @@ loc_1C400:
 		mov	_boss_pos.cur.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (96 shl 4)
 		mov	_boss_pos.prev.x, 0
-		call	@boss_phase_end$q16explosion_type_ti pascal, (ET_NONE shl 16) or 0
+		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_NONE shl 16) or 0
 		mov	byte_25A24, 0
 		jmp	loc_1C67A
 ; ---------------------------------------------------------------------------
@@ -30117,7 +30117,7 @@ loc_1F421:
 		jl	loc_1F8A5
 		mov	_boss_pos.velocity.x, 0
 		mov	_boss_phase_end_hp, 9100
-		call	@boss_phase_end$q16explosion_type_ti pascal, (ET_NONE shl 16) or 7900
+		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_NONE shl 16) or 7900
 		jmp	loc_1F8A5
 ; ---------------------------------------------------------------------------
 
@@ -30279,7 +30279,7 @@ loc_1F579:
 		call	sub_19FD8
 
 loc_1F591:
-		call	@boss_phase_end$q16explosion_type_ti pascal, (ET_NW_SE shl 16) or 4500
+		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_NW_SE shl 16) or 4500
 		mov	_boss_pos.velocity.x, 0
 		jmp	loc_1F8A5
 ; ---------------------------------------------------------------------------
@@ -30350,7 +30350,7 @@ loc_1F61B:
 		push	(ET_SW_NE shl 16) or 2700
 
 loc_1F621:
-		call	@boss_phase_end$q16explosion_type_ti
+		call	@boss_phase_next$q16explosion_type_ti
 		mov	_boss_sprite, 129
 		mov	byte_2D03C, 0
 		jmp	loc_1F8A5
@@ -30449,7 +30449,7 @@ loc_1F6E9:
 		call	sub_19FD8
 
 loc_1F701:
-		call	@boss_phase_end$q16explosion_type_ti pascal, (ET_HORIZONTAL shl 16) or 900
+		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_HORIZONTAL shl 16) or 900
 		mov	_boss_pos.velocity.x, 0
 		mov	byte_2D057, 3
 		jmp	loc_1F8A5
@@ -30491,7 +30491,7 @@ loc_1F73A:
 		call	sub_19FD8
 
 loc_1F752:
-		call	@boss_phase_end$q16explosion_type_ti pascal, (ET_VERTICAL shl 16) or 0
+		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_VERTICAL shl 16) or 0
 		mov	_boss_pos.velocity.x, 0
 		mov	byte_2D057, 3
 		mov	Palettes[0 * size rgb_t].r, 60
@@ -32151,7 +32151,7 @@ loc_205A4:
 		push	(ET_HORIZONTAL shl 16) or 3000
 
 loc_205AA:
-		call	@boss_phase_end$q16explosion_type_ti
+		call	@boss_phase_next$q16explosion_type_ti
 		mov	_boss_mode, -1
 		mov	word_2D05A, 0C00h
 		jmp	loc_206B6
@@ -32178,7 +32178,7 @@ loc_205D4:
 		call	sub_19FD8
 
 loc_205ED:
-		call	@boss_phase_end$q16explosion_type_ti pascal, (ET_VERTICAL shl 16) or 0
+		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_VERTICAL shl 16) or 0
 		mov	_boss_mode, -1
 		mov	word_2D05A, 0C00h
 		mov	byte_2D02D, 10h
