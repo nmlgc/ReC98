@@ -8702,7 +8702,7 @@ var_6		= word ptr -6
 		add	di, 5
 
 loc_1067E:
-		cmp	byte_22E9C, 0
+		cmp	_shots_hittest_against_boss, 0
 		jz	short loc_1068C
 		mov	ax, di
 		shr	ax, 2
@@ -28188,7 +28188,7 @@ sub_1E5D8	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	byte_22E9C, 1
+		mov	_shots_hittest_against_boss, 1
 		mov	ax, [bp+@@radius_x]
 		mov	_shot_hitbox_radius.x, ax
 		mov	ax, [bp+@@radius_y]
@@ -28204,7 +28204,7 @@ sub_1E5D8	proc near
 		call	snd_se_play pascal, [bp+@@se]
 
 loc_1E60C:
-		mov	byte_22E9C, 0
+		mov	_shots_hittest_against_boss, 0
 		mov	ax, si
 		pop	si
 		pop	bp
@@ -32244,8 +32244,7 @@ SHOT_FUNCS_MARISA_B label word
 	dw shot_marisa_b_l7
 	dw shot_marisa_b_l8
 	dw shot_marisa_b_l9
-byte_22E9C	db 0
-		db    0
+include th04/main/player/shots_hittest[data].asm
 _enemies_gone	dw 0
 _enemies_killed	dw 0
 include th04/main/hud/overlay[data].asm

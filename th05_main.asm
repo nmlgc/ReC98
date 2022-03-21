@@ -8113,7 +8113,7 @@ loc_1273B:
 		jb	short @@shot_loop
 		cmp	_bombing, 0
 		jz	short loc_127BD
-		cmp	byte_2297E, 0
+		cmp	_shots_hittest_against_boss, 0
 		jz	short loc_12769
 		mov	ax, si
 		shr	ax, 2
@@ -8151,7 +8151,7 @@ loc_12783:
 		add	si, 22
 
 loc_127BD:
-		cmp	byte_2297E, 0
+		cmp	_shots_hittest_against_boss, 0
 		jz	short loc_127FA
 		cmp	_playchar, PLAYCHAR_REIMU
 		jbe	short loc_127D2
@@ -14788,7 +14788,7 @@ mai_yuki_1A3EF	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	byte_2297E, 1
+		mov	_shots_hittest_against_boss, 1
 		mov	ax, [bp+@@radius_x]
 		mov	_shot_hitbox_radius.x, ax
 		mov	ax, [bp+@@radius_y]
@@ -14802,7 +14802,7 @@ mai_yuki_1A3EF	proc near
 		call	snd_se_play pascal, [bp+@@se]
 
 loc_1A41F:
-		mov	byte_2297E, 0
+		mov	_shots_hittest_against_boss, 0
 		mov	ax, si
 		pop	si
 		pop	bp
@@ -23343,7 +23343,7 @@ sub_1FA5E	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	byte_2297E, 1
+		mov	_shots_hittest_against_boss, 1
 		mov	ax, [bp+@@radius_x]
 		mov	_shot_hitbox_radius.x, ax
 		mov	ax, [bp+@@radius_y]
@@ -23357,7 +23357,7 @@ sub_1FA5E	proc near
 		call	snd_se_play pascal, [bp+@@se]
 
 loc_1FA8E:
-		mov	byte_2297E, 0
+		mov	_shots_hittest_against_boss, 0
 		call	@boss_hittest_player$qv
 		mov	ax, si
 		pop	si
@@ -23379,7 +23379,7 @@ sub_1FA9D	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	byte_2297E, 1
+		mov	_shots_hittest_against_boss, 1
 		mov	ax, [bp+@@radius_x]
 		mov	_shot_hitbox_radius.x, ax
 		mov	ax, [bp+@@radius_y]
@@ -23395,7 +23395,7 @@ sub_1FA9D	proc near
 		call	snd_se_play pascal, [bp+@@se]
 
 loc_1FAD1:
-		mov	byte_2297E, 0
+		mov	_shots_hittest_against_boss, 0
 		mov	ax, si
 		pop	si
 		pop	bp
@@ -23867,8 +23867,7 @@ _SHOT_FUNCS label word
 	dw shot_yuuka_l7
 	dw shot_yuuka_l8
 	dw shot_yuuka_l9
-byte_2297E	db 0
-		db 0
+include th04/main/player/shots_hittest[data].asm
 include th02/main/hud/score_put[data].asm
 include th03/main/5_powers_of_10[data].asm
 include th04/main/hud/gaiji_row[data].asm

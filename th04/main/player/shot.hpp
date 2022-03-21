@@ -63,6 +63,10 @@ extern char shot_last_id;
 extern SPPoint shot_hitbox_center;
 extern SPPoint shot_hitbox_radius;
 
+// If `true`, shot damage is divided by 4 during bombs. In TH05, `true` also
+// slightly increases damage output for Reimu's and Yuuka's shots.
+extern bool shots_hittest_against_boss;
+
 // Only used for hit detection in TH04. TH05 also uses it in shots_render().
 struct shot_alive_t {
 	// For TH05, [x] == Subpixel::None() indicates that this shot has been
