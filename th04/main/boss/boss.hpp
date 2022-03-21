@@ -59,6 +59,32 @@ extern nearfunc_t_near boss_fg_render_func;
 void pascal near boss_backdrop_render(
 	screen_x_t left, vram_y_t top, uint4_t col
 );
+
+// Collision detection
+// -------------------
+
+// Processes any collision of player shots (and, in TH05, the player itself)
+// within a box with the given radius around the current position of the boss.
+// Returns the total amount of damage dealt to it this frame, and plays the
+// given sound effect if that amount is nonzero.
+int pascal near boss_hittest_shots_damage(
+	subpixel_t radius_x, subpixel_t radius_y, int se_on_hit
+);
+
+// Calls boss_hittest_shots_damage() with the boss hitbox radius and regular
+// hit sound effect, and subtracts the result from the current boss HP.
+// Returns `true` if that subtraction ended the current boss phase.
+//
+// TH04's version also takes ownership of [boss.phase_frame], incrementing it
+// on every call.
+bool near boss_hittest_shots(void);
+
+// Calls boss_hittest_shots_damage() with the boss hitbox radius and
+// invincibility sound effect, and does nothing with the returned damage.
+//
+// TH04's version also takes ownership of [boss.phase_frame], incrementing it
+// on every call.
+void near boss_hittest_shots_invincible(void);
 // ------
 
 /// Explosions
@@ -162,9 +188,9 @@ void pascal near boss_phase_next(
 	boss.phase_frame = 0; \
 }
 
-// Runs the boss defeat sequence. TH04's version also:
-// • initializes Gengetsu at the end of the last phase during the first time it
-//   was shown on the Extra stage,
+// Runs a frame of the boss defeat sequence. TH04's version also:
+// • initializes Gengetsu at the end of the last defeat phase during the first
+//   time it's shown on the Extra stage,
 // • and takes ownership of [boss.phase_frame], incrementing it on every call.
 #if (GAME == 5)
 	void pascal near boss_defeat_update(unsigned int bonus_units);

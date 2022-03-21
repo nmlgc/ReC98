@@ -30,14 +30,16 @@ struct shot_t {
 		this->pos.cur.x += PLAYER_OPTION_DISTANCE + offset;
 	}
 
-	void set_option_sprite() {
-		this->patnum_base = PAT_SHOT_SUB;
-	}
+	#if (GAME == 5)
+		void set_option_sprite() {
+			this->patnum_base = PAT_SHOT_SUB;
+		}
 
-	void set_option_sprite_and_damage(char damage) {
-		set_option_sprite();
-		this->damage = damage;
-	}
+		void set_option_sprite_and_damage(char damage) {
+			set_option_sprite();
+			this->damage = damage;
+		}
+	#endif
 
 	void set_random_angle_forwards(char range = 0x0F, char offset = -0x48) {
 		shot_velocity_set(
@@ -47,8 +49,10 @@ struct shot_t {
 	}
 };
 
-#if (GAME == 4)
-# define SHOT_COUNT 68
+#if (GAME == 5)
+	#define SHOT_COUNT 64
+#else
+	#define SHOT_COUNT 68
 #endif
 
 extern unsigned char shot_time;
@@ -64,7 +68,8 @@ extern SPPoint shot_hitbox_center;
 extern SPPoint shot_hitbox_radius;
 
 // If `true`, shot damage is divided by 4 during bombs. In TH05, `true` also
-// slightly increases damage output for Reimu's and Yuuka's shots.
+// slightly increases damage output for Reimu's and Yuuka's shots, and is also
+// used against midbosses.
 extern bool shots_hittest_against_boss;
 
 // Only used for hit detection in TH04. TH05 also uses it in shots_render().
@@ -81,6 +86,27 @@ extern shot_alive_t shots_alive[SHOT_COUNT];
 // Searches and returns the next free shot slot, or NULL if there are no more
 // free ones.
 shot_t near* near shots_add(void);
+
+// Processes collisions of all shots against the shot_hitbox, decays any
+// colliding shots, and returns the total amount of damage dealt.
+int shots_hittest(void);
+
+inline int shots_hittest(
+	const PlayfieldPoint &center,
+	const subpixel_t &radius_x,
+	const subpixel_t &radius_y
+) {
+	shot_hitbox_radius.x.v = radius_x;
+	shot_hitbox_radius.y.v = radius_y;
+	if(GAME == 5) {
+		shot_hitbox_center = center;
+	} else {
+		shot_hitbox_center.x.v = center.x.v;
+		shot_hitbox_center.y.v = center.y.v;
+	}
+	return shots_hittest();
+}
+
 // Also renders hitshots in TH05.
 void near shots_render(void);
 

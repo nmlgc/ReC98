@@ -1,5 +1,3 @@
-#define SHOT_COUNT 64
-
 #include "th04/main/player/shot.hpp"
 
 // Shot types

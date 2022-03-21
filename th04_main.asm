@@ -8616,8 +8616,8 @@ loc_105AA:
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_105B9	proc far
+public @shots_hittest$qv
+@shots_hittest$qv	proc far
 
 var_F		= byte ptr -0Fh
 @@laser_x		= word ptr -0Eh
@@ -8748,7 +8748,7 @@ loc_10704:
 		pop	si
 		leave
 		retf
-sub_105B9	endp
+@shots_hittest$qv	endp
 
 include th04/main/enemy/render.asm
 include th04/main/player/invalidate.asm
@@ -12396,7 +12396,7 @@ loc_1419A:
 		mov	_shot_hitbox_center.x, ax
 		mov	ax, _midboss_pos.cur.y
 		mov	_shot_hitbox_center.y, ax
-		call	sub_105B9
+		call	@shots_hittest$qv
 		or	ax, ax
 		jz	loc_142E4
 		jmp	short loc_14228
@@ -12437,7 +12437,7 @@ loc_14205:
 		mov	_shot_hitbox_center.x, ax
 		mov	ax, _midboss_pos.cur.y
 		mov	_shot_hitbox_center.y, ax
-		call	sub_105B9
+		call	@shots_hittest$qv
 		or	ax, ax
 		jz	loc_142E4
 
@@ -12464,7 +12464,7 @@ loc_1422D:
 		mov	_shot_hitbox_center.x, ax
 		mov	ax, _midboss_pos.cur.y
 		mov	_shot_hitbox_center.y, ax
-		call	sub_105B9
+		call	@shots_hittest$qv
 		mov	si, ax
 		mov	_bullet_template.spawn_type, BST_PELLET
 		mov	ax, _midboss_pos.cur.x
@@ -12699,7 +12699,7 @@ var_4		= word ptr -4
 		push	offset _midboss_pos
 		call	@PlayfieldMotion@update_seg3$qv
 		inc	_midboss_phase_frame
-		call	sub_1E618 pascal, (24 shl 4) or ((24 shl 4) shl 16), 10
+		call	@midboss_hittest_shots_damage$qiii pascal, (24 shl 4) or ((24 shl 4) shl 16), 10
 		mov	si, ax
 		cmp	_midboss_phase_frame, 20
 		jl	loc_1468D
@@ -12830,7 +12830,7 @@ loc_14601:
 		mov	_midboss_phase, 3
 
 loc_14606:
-		call	sub_1E618 pascal, (24 shl 4) or ((24 shl 4) shl 16), 4
+		call	@midboss_hittest_shots_damage$qiii pascal, (24 shl 4) or ((24 shl 4) shl 16), 4
 		mov	si, ax
 		or	si, si
 		jz	short loc_1468D
@@ -13588,7 +13588,7 @@ var_2		= word ptr -2
 		push	offset _midboss_pos
 		call	@PlayfieldMotion@update_seg3$qv
 		inc	_midboss_phase_frame
-		call	sub_1E618 pascal, (24 shl 4) or ((24 shl 4) shl 16), 10
+		call	@midboss_hittest_shots_damage$qiii pascal, (24 shl 4) or ((24 shl 4) shl 16), 10
 		mov	si, ax
 		cmp	_midboss_phase_frame, 96
 		jl	loc_14F57
@@ -13729,7 +13729,7 @@ loc_14E77:
 		mov	_midboss_sprite, 1
 
 loc_14E8E:	; default
-		call	sub_1E618 pascal, (24 shl 4) or ((24 shl 4) shl 16), 10
+		call	@midboss_hittest_shots_damage$qiii pascal, (24 shl 4) or ((24 shl 4) shl 16), 10
 		mov	si, ax
 		or	si, si
 		jz	loc_14F57
@@ -14187,7 +14187,7 @@ var_2		= word ptr -2
 		push	offset _midboss_pos
 		call	@PlayfieldMotion@update_seg3$qv
 		inc	_midboss_phase_frame
-		call	sub_1E618 pascal, (24 shl 4) or ((24 shl 4) shl 16), 10
+		call	@midboss_hittest_shots_damage$qiii pascal, (24 shl 4) or ((24 shl 4) shl 16), 10
 		mov	si, ax
 		cmp	_midboss_phase_frame, 48
 		jl	loc_1552D
@@ -14309,7 +14309,7 @@ loc_153E9:
 		mov	_midboss_phase, PHASE_NONE
 
 loc_153EE:
-		call	sub_1E618 pascal, (24 shl 4) or ((24 shl 4) shl 16), 4
+		call	@midboss_hittest_shots_damage$qiii pascal, (24 shl 4) or ((24 shl 4) shl 16), 4
 		mov	si, ax
 		or	si, si
 		jz	loc_1552D
@@ -16317,7 +16317,7 @@ loc_16638:
 		mov	_midboss_frames_until, 0
 
 loc_16651:
-		call	sub_1E67C
+		call	@boss_hittest_shots_invincible$qv
 		cmp	_boss_phase_frame, 128
 		jle	loc_169B8
 		inc	_boss_phase
@@ -16330,7 +16330,7 @@ loc_16651:
 ; ---------------------------------------------------------------------------
 
 loc_16682:
-		call	sub_1E67C
+		call	@boss_hittest_shots_invincible$qv
 		cmp	_boss_phase_frame, 32
 		jnz	short loc_166A0
 		mov	Palettes[0 * size rgb_t].r, 64
@@ -16402,7 +16402,7 @@ loc_16723:
 		jnz	short loc_16766
 		cmp	_boss_mode_change, 4
 		jnb	short loc_16742
-		call	sub_1E64E
+		call	@boss_hittest_shots$qv
 		or	al, al
 		jz	loc_169B8
 		call	@boss_score_bonus$qui pascal, 15
@@ -16444,7 +16444,7 @@ loc_16793:
 		call	yuuka5_161D7
 		cmp	_boss_phase_frame, 500
 		jge	short loc_167AF
-		call	sub_1E64E
+		call	@boss_hittest_shots$qv
 		or	al, al
 		jz	loc_169B8
 		call	@boss_score_bonus$qui pascal, 15
@@ -16524,7 +16524,7 @@ loc_1683E:
 		jnz	short loc_1687B
 		cmp	_boss_mode_change, 4
 		jnb	short loc_1685D
-		call	sub_1E64E
+		call	@boss_hittest_shots$qv
 		or	al, al
 		jz	loc_169B8
 		call	@boss_score_bonus$qui pascal, 15
@@ -16563,7 +16563,7 @@ loc_16882:
 
 loc_168A8:
 		call	yuuka5_16389
-		call	sub_1E67C
+		call	@boss_hittest_shots_invincible$qv
 		cmp	_boss_phase_frame, 288
 		jl	loc_169B8
 		call	@boss_explode_small$q16explosion_type_t pascal, ET_VERTICAL
@@ -16601,7 +16601,7 @@ loc_16907:
 
 loc_1691A:
 		call	yuuka5_1653D
-		call	sub_1E64E
+		call	@boss_hittest_shots$qv
 		or	al, al
 		jnz	short loc_1692E
 		cmp	_boss_phase_frame, 1000
@@ -17114,7 +17114,7 @@ loc_16CFC:
 		mov	_shot_hitbox_center.x, ax
 		mov	ax, [si+4]
 		mov	_shot_hitbox_center.y, ax
-		call	sub_105B9
+		call	@shots_hittest$qv
 		mov	[si+16h], ax
 		mov	ax, [si+16h]
 		sub	[si+14h], ax
@@ -18543,7 +18543,7 @@ marisa_179BC	proc near
 		push	bp
 		mov	bp, sp
 		inc	_boss_phase_frame
-		call	sub_1E5D8 pascal, (24 shl 4) or ((24 shl 4) shl 16), 4
+		call	@boss_hittest_shots_damage$qiii pascal, (24 shl 4) or ((24 shl 4) shl 16), 4
 		mov	_boss_damage_this_frame, al
 		mov	ah, 0
 		mov	dl, byte_25672
@@ -18600,7 +18600,7 @@ loc_17A1F:
 		mov	byte_25671, 2
 
 loc_17A31:
-		call	sub_1E67C
+		call	@boss_hittest_shots_invincible$qv
 		cmp	_boss_phase_frame, 96
 		jle	loc_17CA4
 		inc	_boss_phase
@@ -18618,7 +18618,7 @@ loc_17A31:
 
 loc_17A75:
 		inc	_boss_phase_frame
-		call	sub_1E67C
+		call	@boss_hittest_shots_invincible$qv
 		cmp	_boss_phase_frame, 128
 		jl	loc_17CA4
 		inc	_boss_phase
@@ -19147,7 +19147,7 @@ loc_17ECA:
 loc_17F0F:
 		mov	eax, dword ptr [si+enemy_t.pos.cur]
 		mov	dword ptr _shot_hitbox_center, eax
-		call	sub_105B9
+		call	@shots_hittest$qv
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 0
 		jz	short @@autofire?
@@ -20103,7 +20103,7 @@ mugetsu_186B9	proc near
 		mov	bp, sp
 		cmp	byte_259EF, 0
 		jz	short loc_186D0
-		call	sub_1E5D8 pascal, (48 shl 4) or ((48 shl 4) shl 16), 10
+		call	@boss_hittest_shots_damage$qiii pascal, (48 shl 4) or ((48 shl 4) shl 16), 10
 		jmp	short loc_186E3
 ; ---------------------------------------------------------------------------
 
@@ -20112,7 +20112,7 @@ loc_186D0:
 		ja	short loc_186E3
 		cmp	_boss_sprite, 0
 		jz	short loc_186E3
-		call	sub_1E64E
+		call	@boss_hittest_shots$qv
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -21383,12 +21383,12 @@ loc_19226:
 		call	snd_se_play pascal, 8
 
 loc_19235:
-		call	sub_1E67C
+		call	@boss_hittest_shots_invincible$qv
 		jmp	loc_195A9
 ; ---------------------------------------------------------------------------
 
 loc_1923B:
-		call	sub_1E67C
+		call	@boss_hittest_shots_invincible$qv
 		cmp	_boss_phase_frame, 32
 		jl	loc_195A9
 		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_NONE shl 16) or 3300
@@ -21473,7 +21473,7 @@ loc_19306:
 		call	kurumi_18D04
 
 loc_19309:
-		call	sub_1E64E
+		call	@boss_hittest_shots$qv
 		or	al, al
 		jz	loc_195A9
 		call	@boss_score_bonus$qui pascal, 10
@@ -21509,7 +21509,7 @@ loc_19350:
 loc_19353:
 		cmp	_boss_phase_frame, 2000
 		jg	short loc_19369
-		call	sub_1E64E
+		call	@boss_hittest_shots$qv
 		or	al, al
 		jz	loc_195A9
 		call	@boss_score_bonus$qui pascal, 10
@@ -21594,7 +21594,7 @@ loc_19414:
 		call	kurumi_18F8B
 
 loc_19417:
-		call	sub_1E64E
+		call	@boss_hittest_shots$qv
 		or	al, al
 		jz	loc_195A9
 		call	@boss_score_bonus$qui pascal, 10
@@ -21668,7 +21668,7 @@ loc_194BE:
 		call	kurumi_1905A
 
 loc_194C1:
-		call	sub_1E64E
+		call	@boss_hittest_shots$qv
 		or	al, al
 		jnz	short loc_194D2
 		cmp	_boss_phase_frame, 700
@@ -22425,7 +22425,7 @@ loc_19BF6:
 		call	snd_se_play pascal, 6
 
 loc_19C02:
-		call	sub_1E5D8 pascal, (16 shl 4) or ((16 shl 4) shl 16), 10
+		call	@boss_hittest_shots_damage$qiii pascal, (16 shl 4) or ((16 shl 4) shl 16), 10
 		jmp	loc_19E8D
 ; ---------------------------------------------------------------------------
 
@@ -22476,7 +22476,7 @@ loc_19C5E:
 		call	orange_19814
 
 loc_19C61:
-		call	sub_1E64E
+		call	@boss_hittest_shots$qv
 		or	al, al
 		jz	loc_19E8D
 		call	@boss_score_bonus$qui pascal, 5
@@ -22513,7 +22513,7 @@ loc_19CAF:
 loc_19CB2:
 		cmp	_boss_phase_frame, 1500
 		jg	short loc_19CC8
-		call	sub_1E64E
+		call	@boss_hittest_shots$qv
 		or	al, al
 		jz	loc_19E8D
 		call	@boss_score_bonus$qui pascal, 5
@@ -22603,7 +22603,7 @@ loc_19D9B:
 loc_19D9E:
 		cmp	_boss_phase_frame, 600
 		jg	short loc_19DAF
-		call	sub_1E64E
+		call	@boss_hittest_shots$qv
 		or	al, al
 		jz	loc_19E8D
 
@@ -22937,7 +22937,7 @@ loc_1A1CF:
 		mov	_shot_hitbox_center.x, ax
 		mov	ax, [si+4]
 		mov	_shot_hitbox_center.y, ax
-		call	sub_105B9
+		call	@shots_hittest$qv
 		mov	[si+16h], ax
 		or	ax, ax
 		jz	short loc_1A1EE
@@ -24611,7 +24611,7 @@ yuuka6_1B3E2	proc near
 		mov	_shot_hitbox_center.x, ax
 		mov	ax, point_25A0C.y
 		mov	_shot_hitbox_center.y, ax
-		call	sub_105B9
+		call	@shots_hittest$qv
 		mov	byte_25A1E, al
 		or	al, al
 		jz	short loc_1B417
@@ -24664,7 +24664,7 @@ loc_1B497:
 		mov	byte_25A1B, 0
 
 loc_1B4BA:
-		call	sub_1E67C
+		call	@boss_hittest_shots_invincible$qv
 		cmp	_boss_phase_frame, 128
 		jle	loc_1B8EA
 		inc	_boss_phase
@@ -24677,7 +24677,7 @@ loc_1B4BA:
 ; ---------------------------------------------------------------------------
 
 loc_1B4EB:
-		call	sub_1E67C
+		call	@boss_hittest_shots_invincible$qv
 		cmp	_boss_phase_frame, 64
 		jl	loc_1B8EA
 		inc	_boss_phase
@@ -24745,7 +24745,7 @@ loc_1B563:
 loc_1B580:
 		cmp	_boss_sprite, 0	; default
 		jz	loc_1B787
-		call	sub_1E64E
+		call	@boss_hittest_shots$qv
 		or	al, al
 		jz	loc_1B8EA
 		call	@boss_score_bonus$qui pascal, 20
@@ -24801,7 +24801,7 @@ loc_1B600:
 		jz	loc_1B787
 		cmp	_boss_mode, -1
 		jz	loc_1B787
-		call	sub_1E64E
+		call	@boss_hittest_shots$qv
 		or	al, al
 		jz	loc_1B8EA
 		call	@boss_score_bonus$qui pascal, 20
@@ -24848,7 +24848,7 @@ loc_1B681:
 ; ---------------------------------------------------------------------------
 
 loc_1B694:
-		call	sub_1E64E
+		call	@boss_hittest_shots$qv
 		call	yuuka6_1A503
 		or	al, al
 		jz	loc_1B8EA
@@ -24924,7 +24924,7 @@ loc_1B72E:
 		jz	short loc_1B787
 		cmp	_boss_mode, 2
 		ja	short loc_1B744
-		call	sub_1E64E
+		call	@boss_hittest_shots$qv
 		call	yuuka6_1B3E2
 		jmp	short loc_1B748
 ; ---------------------------------------------------------------------------
@@ -24966,7 +24966,7 @@ loc_1B787:
 ; ---------------------------------------------------------------------------
 
 loc_1B78E:
-		call	sub_1E67C
+		call	@boss_hittest_shots_invincible$qv
 		call	yuuka6_1A503
 		or	al, al
 		jz	loc_1B8EA
@@ -25026,7 +25026,7 @@ loc_1B7F1:
 		jnb	short loc_1B81C
 
 loc_1B80B:
-		call	sub_1E64E	; default
+		call	@boss_hittest_shots$qv	; default
 		or	al, al
 		jz	loc_1B8EA
 		call	@boss_score_bonus$qui pascal, 20
@@ -25039,7 +25039,7 @@ loc_1B81C:
 ; ---------------------------------------------------------------------------
 
 loc_1B82D:
-		call	sub_1E64E
+		call	@boss_hittest_shots$qv
 		cmp	_boss_phase_frame, 128
 		jl	loc_1B8EA
 		inc	_boss_phase
@@ -25050,7 +25050,7 @@ loc_1B82D:
 
 loc_1B84B:
 		call	yuuka6_1B282
-		call	sub_1E64E
+		call	@boss_hittest_shots$qv
 		or	al, al
 		jnz	short loc_1B85F
 		cmp	_boss_phase_frame, 2500
@@ -25422,7 +25422,7 @@ loc_1BBA8:
 		mov	_shot_hitbox_center.x, ax
 		mov	ax, motion_25A28.cur.y
 		mov	_shot_hitbox_center.y, ax
-		call	sub_105B9
+		call	@shots_hittest$qv
 		shr	ax, 1
 		mov	dx, motion_25A28.velocity.y
 		sub	dx, ax
@@ -26326,7 +26326,7 @@ loc_1C38D:
 
 loc_1C39E:
 		inc	_boss_phase_frame
-		call	sub_1E67C
+		call	@boss_hittest_shots_invincible$qv
 		cmp	_stage_frame, 9240
 		jb	loc_1C67A
 		inc	_boss_phase
@@ -26358,7 +26358,7 @@ loc_1C3FA:
 		mov	_boss_pos.velocity.x, 0
 
 loc_1C400:
-		call	sub_1E67C
+		call	@boss_hittest_shots_invincible$qv
 		cmp	_boss_phase_frame, 32
 		jl	loc_1C67A
 		mov	_boss_pos.velocity.x, 0
@@ -26541,7 +26541,7 @@ loc_1C57F:
 		mov	_boss_phase_frame, 0
 
 loc_1C585:
-		call	sub_1E64E	; default
+		call	@boss_hittest_shots$qv	; default
 		or	al, al
 		jz	short loc_1C5B1
 		mov	_boss_mode_change, 1
@@ -28173,122 +28173,15 @@ stagex_setup	proc far
 		pop	bp
 		retf
 stagex_setup	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1E5D8	proc near
-
-@@se		= word ptr  4
-@@radius_y		= word ptr  6
-@@radius_x		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	_shots_hittest_against_boss, 1
-		mov	ax, [bp+@@radius_x]
-		mov	_shot_hitbox_radius.x, ax
-		mov	ax, [bp+@@radius_y]
-		mov	_shot_hitbox_radius.y, ax
-		mov	ax, _boss_pos.cur.x
-		mov	_shot_hitbox_center.x, ax
-		mov	ax, _boss_pos.cur.y
-		mov	_shot_hitbox_center.y, ax
-		call	sub_105B9
-		mov	si, ax
-		or	si, si
-		jz	short loc_1E60C
-		call	snd_se_play pascal, [bp+@@se]
-
-loc_1E60C:
-		mov	_shots_hittest_against_boss, 0
-		mov	ax, si
-		pop	si
-		pop	bp
-		retn	6
-sub_1E5D8	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1E618	proc near
-
-@@se		= word ptr  4
-@@radius_y		= word ptr  6
-@@radius_x		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	ax, [bp+@@radius_x]
-		mov	_shot_hitbox_radius.x, ax
-		mov	ax, [bp+@@radius_y]
-		mov	_shot_hitbox_radius.y, ax
-		mov	ax, _midboss_pos.cur.x
-		mov	_shot_hitbox_center.x, ax
-		mov	ax, _midboss_pos.cur.y
-		mov	_shot_hitbox_center.y, ax
-		call	sub_105B9
-		mov	si, ax
-		or	si, si
-		jz	short loc_1E647
-		call	snd_se_play pascal, [bp+@@se]
-
-loc_1E647:
-		mov	ax, si
-		pop	si
-		pop	bp
-		retn	6
-sub_1E618	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1E64E	proc near
-		push	bp
-		mov	bp, sp
-		inc	_boss_phase_frame
-		call	sub_1E5D8 pascal, _boss_hitbox_radius.x, _boss_hitbox_radius.y, 4
-		mov	_boss_damage_this_frame, al
-		mov	ah, 0
-		sub	_boss_hp, ax
-		mov	ax, _boss_hp
-		cmp	ax, _boss_phase_end_hp
-		jg	short loc_1E678
-		mov	al, 1
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_1E678:
-		mov	al, 0
-		pop	bp
-		retn
-sub_1E64E	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1E67C	proc near
-		push	bp
-		mov	bp, sp
-		inc	_boss_phase_frame
-		call	sub_1E5D8 pascal, _boss_hitbox_radius.x, _boss_hitbox_radius.y, 10
-		pop	bp
-		retn
-sub_1E67C	endp
 main_035_TEXT	ends
 
 BOSS_TEXT	segment	byte public 'CODE' use16
+	@BOSS_HITTEST_SHOTS_DAMAGE$QIII procdesc pascal near \
+		radius:Point, se_on_hit:word
+	@MIDBOSS_HITTEST_SHOTS_DAMAGE$QIII procdesc pascal near \
+		radius:Point, se_on_hit:word
+	@boss_hittest_shots$qv procdesc pascal near
+	@boss_hittest_shots_invincible$qv procdesc pascal near
 	@boss_items_drop$qv procdesc near
 	@BOSS_PHASE_NEXT$Q16EXPLOSION_TYPE_TI procdesc pascal near \
 		explosion_type_and_next_end_hp:dword
@@ -28797,7 +28690,7 @@ loc_1ECBC:
 		mov	_shot_hitbox_center.x, ax
 		mov	ax, [si+4]
 		mov	_shot_hitbox_center.y, ax
-		call	sub_105B9
+		call	@shots_hittest$qv
 		mov	ax, [si+2]
 		add	ax, 0FF40h
 		mov	[bp+var_2], ax
@@ -29548,7 +29441,7 @@ loc_1F3D6:
 		mov	byte_2D03C, 0
 
 loc_1F3E2:
-		call	sub_1E67C
+		call	@boss_hittest_shots_invincible$qv
 		cmp	_boss_phase_frame, 96
 		jle	loc_1F8A5
 		inc	_boss_phase
@@ -29566,7 +29459,7 @@ loc_1F3E2:
 loc_1F421:
 		call	reimu_1F378
 		inc	_boss_phase_frame
-		call	sub_1E67C
+		call	@boss_hittest_shots_invincible$qv
 		cmp	_boss_phase_frame, 128
 		jl	loc_1F8A5
 		mov	_boss_pos.velocity.x, 0
@@ -29604,7 +29497,7 @@ loc_1F46F:
 		call	reimu_1F378
 		cmp	_boss_mode_change, 9
 		jnb	short loc_1F487
-		call	sub_1E64E
+		call	@boss_hittest_shots$qv
 		or	al, al
 		jz	loc_1F8A5
 		call	@boss_score_bonus$qui pascal, 10
@@ -29652,7 +29545,7 @@ loc_1F4DC:
 		push	offset _boss_pos
 		call	@PlayfieldMotion@update_seg3$qv
 		call	reimu_1F378
-		call	sub_1E64E
+		call	@boss_hittest_shots$qv
 		cmp	_boss_phase_frame, 64
 		jl	loc_1F8A5
 		inc	_boss_phase
@@ -29725,7 +29618,7 @@ loc_1F579:
 		call	reimu_1F378	; default
 		cmp	_boss_mode_change, 18
 		jnb	short loc_1F591
-		call	sub_1E64E
+		call	@boss_hittest_shots$qv
 		or	al, al
 		jz	loc_1F8A5
 		call	@boss_score_bonus$qui pascal, 10
@@ -29757,7 +29650,7 @@ loc_1F5C9:
 		push	offset _boss_pos
 		call	@PlayfieldMotion@update_seg3$qv
 		call	reimu_1F378
-		call	sub_1E64E
+		call	@boss_hittest_shots$qv
 		cmp	_boss_phase_frame, 64
 		jl	loc_1F8A5
 		jmp	loc_1F7E1
@@ -29792,7 +29685,7 @@ loc_1F603:
 		call	reimu_1F378
 		cmp	_boss_mode_change, 11
 		jnb	short loc_1F61B
-		call	sub_1E64E
+		call	@boss_hittest_shots$qv
 		or	al, al
 		jz	loc_1F8A5
 		call	@boss_score_bonus$qui pascal, 10
@@ -29847,7 +29740,7 @@ loc_1F67D:
 loc_1F680:
 		call	@PlayfieldMotion@update_seg3$qv
 		call	reimu_1F378
-		call	sub_1E64E
+		call	@boss_hittest_shots$qv
 		cmp	_boss_phase_frame, 64
 		jl	loc_1F8A5
 		inc	_boss_phase
@@ -29893,7 +29786,7 @@ loc_1F6E9:
 		call	reimu_1F378
 		cmp	_boss_mode_change, 10
 		jnb	short loc_1F701
-		call	sub_1E64E
+		call	@boss_hittest_shots$qv
 		or	al, al
 		jz	loc_1F8A5
 		call	@boss_score_bonus$qui pascal, 10
@@ -29934,7 +29827,7 @@ loc_1F73A:
 		call	reimu_1F378
 		cmp	_boss_mode_change, 12
 		jnb	short loc_1F752
-		call	sub_1E64E
+		call	@boss_hittest_shots$qv
 		or	al, al
 		jz	loc_1F8A5
 		call	@boss_score_bonus$qui pascal, 10
@@ -29993,7 +29886,7 @@ loc_1F7BA:
 		add	al, -2
 		mov	Palettes[0 * size rgb_t].b, al
 		mov	_palette_changed, 1
-		call	sub_1E64E
+		call	@boss_hittest_shots$qv
 		cmp	_boss_phase_frame, 64
 		jl	loc_1F8A5
 
@@ -30013,7 +29906,7 @@ loc_1F802:
 		mov	ax, _boss_pos.cur.y
 		mov	_bullet_template.BT_origin.y, ax
 		call	reimu_1F17C
-		call	sub_1E64E
+		call	@boss_hittest_shots$qv
 		or	al, al
 		jnz	short loc_1F822
 		cmp	_boss_phase_frame, 1000
@@ -31180,7 +31073,7 @@ gengetsu_20202	proc near
 		jz	short loc_20220
 		cmp	_gengetsu_wave_amp, 0
 		jnz	short loc_20220
-		call	sub_1E5D8 pascal, (48 shl 4) or ((48 shl 4) shl 16), 10
+		call	@boss_hittest_shots_damage$qiii pascal, (48 shl 4) or ((48 shl 4) shl 16), 10
 		jmp	short loc_20233
 ; ---------------------------------------------------------------------------
 
@@ -31189,7 +31082,7 @@ loc_20220:
 		jz	short loc_20233
 		cmp	_gengetsu_wave_amp, 0
 		jnz	short loc_20233
-		call	sub_1E64E
+		call	@boss_hittest_shots$qv
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------

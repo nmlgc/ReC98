@@ -16,7 +16,11 @@ extern "C" {
 #include "th04/math/randring.h"
 #include "th04/snd/snd.h"
 }
-#include "th04/sprites/main_pat.h"
+#if (GAME == 5)
+	#include "th05/sprites/main_pat.h"
+#else
+	#include "th04/sprites/main_pat.h"
+#endif
 #include "th04/main/bg.hpp"
 #include "th04/main/end.hpp"
 #include "th04/main/frames.h"
@@ -40,6 +44,8 @@ extern "C" {
 #include "th04/main/item/item.hpp"
 #include "th04/main/player/player.hpp"
 #include "th04/main/player/bomb.hpp"
+#include "th04/main/player/shot.hpp"
+#include "th04/main/midboss/midboss.hpp"
 #if (GAME == 5)
 	#include "th01/math/area.hpp"
 	#include "th05/resident.hpp"
@@ -69,6 +75,67 @@ inline void optimization_barrier(void) {}
 	inline void boss_hittest_player(void) {
 	}
 #endif
+
+int pascal near boss_hittest_shots_damage(
+	subpixel_t radius_x, subpixel_t radius_y, int se_on_hit
+)
+{
+	shots_hittest_against_boss = true;
+	int ret = shots_hittest(boss.pos.cur, radius_x, radius_y);
+	if(ret) {
+		snd_se_play(se_on_hit);
+	}
+	shots_hittest_against_boss = false;
+	boss_hittest_player();
+	return ret;
+}
+
+// Probably only here because the code is largely identical to the boss
+// version.
+int pascal near midboss_hittest_shots_damage(
+	subpixel_t radius_x, subpixel_t radius_y, int se_on_hit
+)
+{
+	#if (GAME == 5)
+		shots_hittest_against_boss = true;
+	#endif
+	// MODDERS: Just call the inline function.
+	shot_hitbox_radius.x.v = radius_x;
+	shot_hitbox_radius.y.v = radius_y;
+	shot_hitbox_center.x.v = midboss.pos.cur.x.v;
+	shot_hitbox_center.y.v = midboss.pos.cur.y.v;
+	int ret = shots_hittest();
+	if(ret) {
+		snd_se_play(se_on_hit);
+	}
+	#if (GAME == 5)
+		shots_hittest_against_boss = false;
+	#endif
+	return ret;
+}
+
+bool near boss_hittest_shots(void)
+{
+	#if (GAME == 4)
+		boss.phase_frame++;
+	#endif
+	boss.damage_this_frame = boss_hittest_shots_damage(
+		boss_hitbox_radius.x, boss_hitbox_radius.y, 4
+	);
+	boss.hp -= boss.damage_this_frame;
+	if(boss.hp <= boss.phase_end_hp) {
+		return true;
+	}
+	return false;
+}
+
+void near boss_hittest_shots_invincible(void)
+{
+	#if (GAME == 4)
+		boss.phase_frame++;
+	#endif
+	boss_hittest_shots_damage(boss_hitbox_radius.x, boss_hitbox_radius.y, 10);
+}
 
 void near boss_items_drop(void)
 {

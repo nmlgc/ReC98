@@ -27,6 +27,14 @@ extern nearfunc_t_near midboss_render_func;
 
 void midboss_reset(void);
 
+// Processes any collision of player shots within a box with the given radius
+// around the current position of the midboss. Returns the total amount of
+// damage dealt to it this frame, and plays the given sound effect if that
+// amount is nonzero.
+int pascal near midboss_hittest_shots_damage(
+	subpixel_t radius_x, subpixel_t radius_y, int se_on_hit
+);
+
 // Updates the defeat animation during PHASE_EXPLODE_BIG, and resets the boss
 // during any other phase. TH04's version also takes ownership of
 // [midboss.phase_frame], incrementing it on every call.
