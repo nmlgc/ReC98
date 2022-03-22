@@ -39,7 +39,7 @@ include th05/main/enemy/enemy.inc
 
 main_01 group SLOWDOWN_TEXT, m_TEXT, EMS_TEXT, ma_TEXT, CFG_LRES_TEXT, mai_TEXT, main_TEXT, main__TEXT, PLAYFLD_TEXT, main_0_TEXT, HUD_OVRL_TEXT, DIALOG_TEXT, PLAYER_P_TEXT, main_01_TEXT
 g_SHARED group SHARED, SHARED_
-main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, BULLET_A_TEXT, main_032_TEXT, main_033_TEXT, MB_DFT_TEXT, LASER_SC_TEXT, CURVEB_U_TEXT, IT_SPL_U_TEXT, BULLET_U_TEXT, main_034_TEXT, main_035_TEXT, main_036_TEXT, BOSS_TEXT
+main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, BULLET_A_TEXT, main_032_TEXT, main_033_TEXT, MB_DFT_TEXT, LASER_SC_TEXT, CURVEB_U_TEXT, IT_SPL_U_TEXT, BULLET_U_TEXT, main_034_TEXT, main_035_TEXT, BOSS_6, BOSS_X_TEXT, main_036_TEXT, BOSS_TEXT
 
 ; ===========================================================================
 
@@ -19669,7 +19669,12 @@ off_1D524	dw offset loc_1D29C
 		dw offset loc_1D49A
 		dw offset loc_1D4BC
 		dw offset loc_1D4DD
+main_035_TEXT	ends
 
+BOSS_6	segment	byte public 'CODE' use16
+BOSS_6	ends
+
+BOSS_X_TEXT	segment	byte public 'CODE' use16
 include th05/main/bullet/b6balls_add_update.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -21528,7 +21533,7 @@ midbossx_update	endp
 	@FIREWAVES_ADD$QIUC procdesc pascal near \
 		amp:word, is_right:byte
 	@firewaves_update$qv procdesc pascal near
-main_035_TEXT	ends
+BOSS_X_TEXT	ends
 
 main_036_TEXT	segment	byte public 'CODE' use16
 

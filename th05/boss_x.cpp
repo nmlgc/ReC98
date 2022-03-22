@@ -1,10 +1,3 @@
-/* ReC98
- * -----
- * 5th part of code segment #3 of TH05's MAIN.EXE
- */
-
-#pragma option -zCmain_035_TEXT
-
 #include "platform.h"
 #include "pc98.h"
 #include "th01/math/subpixel.hpp"
