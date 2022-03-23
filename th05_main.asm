@@ -39,7 +39,7 @@ include th05/main/enemy/enemy.inc
 
 main_01 group SLOWDOWN_TEXT, m_TEXT, EMS_TEXT, ma_TEXT, CFG_LRES_TEXT, mai_TEXT, main_TEXT, main__TEXT, PLAYFLD_TEXT, main_0_TEXT, HUD_OVRL_TEXT, DIALOG_TEXT, PLAYER_P_TEXT, main_01_TEXT
 g_SHARED group SHARED, SHARED_
-main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, BULLET_A_TEXT, main_032_TEXT, main_033_TEXT, MB_DFT_TEXT, LASER_SC_TEXT, CURVEB_U_TEXT, IT_SPL_U_TEXT, BULLET_U_TEXT, main_034_TEXT, main_035_TEXT, BOSS_6, BOSS_X_TEXT, main_036_TEXT, BOSS_TEXT
+main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, BULLET_A_TEXT, main_032_TEXT, main_033_TEXT, MB_DFT_TEXT, LASER_SC_TEXT, CURVEB_U_TEXT, IT_SPL_U_TEXT, BULLET_U_TEXT, main_034_TEXT, main_035_TEXT, BOSS_6_TEXT, BOSS_X_TEXT, main_036_TEXT, BOSS_TEXT
 
 ; ===========================================================================
 
@@ -19671,8 +19671,9 @@ off_1D524	dw offset loc_1D29C
 		dw offset loc_1D4DD
 main_035_TEXT	ends
 
-BOSS_6	segment	byte public 'CODE' use16
-BOSS_6	ends
+BOSS_6_TEXT	segment	byte public 'CODE' use16
+	@b6balls_add$qv procdesc near
+BOSS_6_TEXT	ends
 
 BOSS_X_TEXT	segment	byte public 'CODE' use16
 include th05/main/bullet/b6balls_add_update.asm
@@ -20102,7 +20103,7 @@ sub_1DA1C	proc near
 		add	al, (3 shl 4)
 		mov	b6ball_template.B6B_speed, al
 		mov	b6ball_template.B6B_patnum_tiny, PAT_B6BALL_BLUE_1
-		call	b6balls_add
+		call	@b6balls_add$qv
 		call	snd_se_play pascal, 3
 
 loc_1DA6A:
@@ -20259,7 +20260,7 @@ loc_1DBCA:
 		call	randring2_next16_and pascal, 3Fh
 		add	al, (2 shl 4)
 		mov	b6ball_template.B6B_speed, al
-		call	b6balls_add
+		call	@b6balls_add$qv
 		inc	si
 
 loc_1DC06:
@@ -20322,7 +20323,7 @@ loc_1DC59:
 		mov	b6ball_template.B6B_angle, al
 		mov	b6ball_template.B6B_speed, (4 shl 4)
 		mov	b6ball_template.B6B_patnum_tiny, PAT_B6BALL_PURPLE
-		call	b6balls_add
+		call	@b6balls_add$qv
 
 loc_1DC93:
 		mov	ax, _boss_phase_frame
@@ -20551,7 +20552,7 @@ loc_1DEEA:
 		mov	b6ball_template.B6B_angle, al
 		mov	b6ball_template.B6B_speed, (3 shl 4) + 12
 		mov	b6ball_template.B6B_patnum_tiny, PAT_B6BALL_PURPLE
-		call	b6balls_add
+		call	@b6balls_add$qv
 
 loc_1DF41:
 		call	snd_se_play pascal, 3
@@ -20673,7 +20674,7 @@ loc_1E047:
 		mov	ah, 0
 		push	ax
 		call	vector2_at
-		call	b6balls_add
+		call	@b6balls_add$qv
 		mov	al, b6ball_template.B6B_angle
 		add	al, 80h
 		mov	b6ball_template.B6B_angle, al
@@ -20684,7 +20685,7 @@ loc_1E047:
 		mov	ah, 0
 		push	ax
 		call	vector2_at
-		call	b6balls_add
+		call	@b6balls_add$qv
 		mov	al, b6ball_template.B6B_angle
 		add	al, -78h
 		mov	b6ball_template.B6B_angle, al
