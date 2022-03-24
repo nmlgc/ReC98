@@ -19673,10 +19673,10 @@ main_035_TEXT	ends
 
 BOSS_6_TEXT	segment	byte public 'CODE' use16
 	@b6balls_add$qv procdesc near
+	@b6balls_update$qv procdesc near
 BOSS_6_TEXT	ends
 
 BOSS_X_TEXT	segment	byte public 'CODE' use16
-include th05/main/bullet/b6balls_add_update.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -21130,7 +21130,7 @@ loc_1E522:
 		call	@boss_defeat_update$qui pascal, 65
 
 loc_1E527:
-		call	b6balls_update
+		call	@b6balls_update$qv
 		call	@curvebullets_update$qv
 		call	hud_hp_update_and_render pascal, _boss_hp, 22800
 		pop	di

@@ -18,7 +18,7 @@ typedef struct {
 	b6ball_flag_t flag;
 	unsigned char angle; // unused
 	PlayfieldMotion pos;
-	unsigned int age;
+	unsigned int age; // unused and broken, because it's never reset
 	Subpixel cloud_radius;
 	int patnum_tiny;
 	int decay_frames;
@@ -33,5 +33,5 @@ typedef struct {
 // Spawns a new ball bullet according to the [b6ball_template].
 void near b6balls_add();
 
-void pascal near b6balls_update();
+void near b6balls_update();
 void pascal near b6balls_render();
