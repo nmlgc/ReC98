@@ -29,7 +29,7 @@ void midboss_reset(void);
 
 // Updates the defeat animation during PHASE_EXPLODE_BIG, and resets the boss
 // during any other phase. TH04's version also takes ownership of
-// [midboss.phase_frame], incrementing it every frame.
+// [midboss.phase_frame], incrementing it on every call.
 void near midboss_defeat_update(void);
 
 #define MIDBOSS_DEC(stage) \

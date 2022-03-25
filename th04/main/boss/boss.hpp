@@ -2,6 +2,7 @@
 // ------
 static const pixel_t BOSS_W = 64;
 static const pixel_t BOSS_H = 64;
+static const int BOSS_DEFEAT_INVINCIBILITY_FRAMES = 255;
 #if (GAME == 5)
 	static const unsigned long BOSS_BONUS_UNIT_VALUE = 1000;
 #else
@@ -29,6 +30,8 @@ typedef struct {
 extern boss_stuff_t boss;
 extern SPPoint boss_hitbox_radius;
 extern bool boss_phase_timed_out;
+
+void near boss_reset(void);
 
 // Grants a score bonus of [units * BOSS_BONUS_UNIT_VALUE], rendered as one new
 // point number popup per unit around the boss sprite.
@@ -115,3 +118,57 @@ void near boss_items_drop();
 void pascal near boss_phase_next(
 	explosion_type_t explosion_type, int next_end_hp
 );
+
+// Defeat sequence
+// ---------------
+
+#ifdef OVERLAY_FADE_CELS
+	enum boss_defeat_frames_t {
+		// Small explosion phase
+		BDF_SMALL_1 = 1,
+		BDF_SMALL_2 = 16,
+		BDF_BIG = 32,
+
+		// Big explosion phase. And yes, the (hardcoded) amount of frames to
+		// spend in this one dependes on the (hardcoded) length of the overlay
+		// fade animation, which in turn depends on its (hardcoded) amount of
+		// gaiji cels.
+		BDF_DIALOG = (GAME == 5),
+		BDF_FADEOUT = 416,
+		BDF_NEXT_STAGE = (BDF_FADEOUT + OVERLAY_FADE_DURATION),
+	};
+#endif
+
+// A dumb helper function…
+#if (GAME == 5)
+	inline void boss_phase_explode_big() {
+		boss.phase++; // = PHASE_BOSS_EXPLODE_BIG
+	}
+#else
+	inline void boss_phase_explode_big() {
+		boss.phase = PHASE_EXPLODE_BIG;
+	}
+#endif
+
+// …to abstract away the TH04/TH05 difference in *this* dumb helper function.
+#define boss_defeat_explode_big(type, bonus_units) { \
+	boss_explode_big(type); \
+	boss_phase_explode_big(); \
+	bullet_zap.active = boss.mode_change; \
+	if(boss.mode_change) { \
+		boss_score_bonus(bonus_units); \
+	} \
+	boss.sprite = PAT_ENEMY_KILL; \
+	boss.phase_frame = 0; \
+}
+
+// Runs the boss defeat sequence. TH04's version also:
+// • initializes Gengetsu at the end of the last phase during the first time it
+//   was shown on the Extra stage,
+// • and takes ownership of [boss.phase_frame], incrementing it on every call.
+#if (GAME == 5)
+	void pascal near boss_defeat_update(unsigned int bonus_units);
+#else
+	void near boss_defeat_update(void);
+#endif
+// ---------------

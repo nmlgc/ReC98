@@ -50,6 +50,8 @@ typedef enum {
 	PAT_DECAY_BULLET16_last = (PAT_DECAY_BULLET16 + BULLET_DECAY_CELS - 1),
 	/// =================
 
+	PAT_STAGE = 128,
+
 	/// Stage 6
 	/// =======
 	// st05.bb1
@@ -101,6 +103,16 @@ typedef enum {
 	PAT_YUUKA6_VANISH_3 = 180,
 	// --------
 	/// =======
+
+	/// Extra Boss 2 – Gengetsu
+	/// =======================
+	// st06.bb2
+	// --------
+	PAT_GENGETSU_TIPPING = PAT_STAGE,
+	// --------
+	/// =======================
+
+	PAT_STAGE_last = 255,
 
 	_main_patnum_t_FORCE_INT16 = 0x7FFF,
 } main_patnum_t;

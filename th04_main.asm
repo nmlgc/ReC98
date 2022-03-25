@@ -45,7 +45,7 @@ include th04/main/enemy/enemy.inc
 
 main_01 group SLOWDOWN_TEXT, ma_TEXT, EMS_TEXT, mai_TEXT, PLAYFLD_TEXT, main_TEXT, DIALOG_TEXT, main__TEXT, PLAYER_P_TEXT, main_0_TEXT, HUD_OVRL_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT
 g_SHARED group SHARED, SHARED_
-main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, IT_SPL_U_TEXT, main_033_TEXT, MB_DFT_TEXT, main_034_TEXT, BULLET_U_TEXT, BULLET_A_TEXT, main_035_TEXT
+main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, IT_SPL_U_TEXT, main_033_TEXT, MB_DFT_TEXT, main_034_TEXT, BULLET_U_TEXT, BULLET_A_TEXT, main_035_TEXT, BOSS_TEXT, main_036_TEXT
 
 ; ===========================================================================
 
@@ -11250,7 +11250,7 @@ yuuka6_bg_render	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
+public MUGETSU_GENGETSU_BG_RENDER
 mugetsu_gengetsu_bg_render	proc near
 
 @@entrance_cel		= byte ptr -1
@@ -11871,7 +11871,7 @@ reimu_fg_render	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
+public GENGETSU_FG_RENDER
 gengetsu_fg_render	proc near
 
 var_2		= word ptr -2
@@ -16654,7 +16654,7 @@ loc_16986:
 ; ---------------------------------------------------------------------------
 
 loc_169B3:
-		call	sub_1E743
+		call	@boss_defeat_update$qv
 		leave
 		retf
 ; ---------------------------------------------------------------------------
@@ -18851,7 +18851,7 @@ loc_17C77:
 ; ---------------------------------------------------------------------------
 
 loc_17C9F:
-		call	sub_1E743
+		call	@boss_defeat_update$qv
 		leave
 		retf
 ; ---------------------------------------------------------------------------
@@ -20398,7 +20398,7 @@ loc_1897E:
 ; ---------------------------------------------------------------------------
 
 loc_1899C:
-		call	sub_1E743
+		call	@boss_defeat_update$qv
 		leave
 		retf
 ; ---------------------------------------------------------------------------
@@ -21747,7 +21747,7 @@ loc_19581:
 ; ---------------------------------------------------------------------------
 
 loc_195A4:
-		call	sub_1E743
+		call	@boss_defeat_update$qv
 		jmp	short loc_195BF
 ; ---------------------------------------------------------------------------
 
@@ -22681,7 +22681,7 @@ loc_19E60:
 ; ---------------------------------------------------------------------------
 
 loc_19E88:
-		call	sub_1E743
+		call	@boss_defeat_update$qv
 		jmp	short loc_19EA3
 ; ---------------------------------------------------------------------------
 
@@ -25103,7 +25103,7 @@ loc_1B8C7:
 ; ---------------------------------------------------------------------------
 
 loc_1B8E5:
-		call	sub_1E743
+		call	@boss_defeat_update$qv
 		leave
 		retf
 ; ---------------------------------------------------------------------------
@@ -26621,7 +26621,7 @@ loc_1C652:
 ; ---------------------------------------------------------------------------
 
 loc_1C675:
-		call	sub_1E743
+		call	@boss_defeat_update$qv
 		leave
 		retf
 ; ---------------------------------------------------------------------------
@@ -27818,7 +27818,7 @@ items_update	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
+public @boss_reset$qv
 @boss_reset$qv	proc near
 		push	bp
 		mov	bp, sp
@@ -28166,8 +28166,8 @@ stagex_setup	proc far
 		mov	_boss_hitbox_radius.y, (48 shl 4)
 		mov	_boss_backdrop_colorfill, offset playfield_fillm_0_0_384_192
 		mov	_boss_statebyte[0].BSB_gengetsu_started, 0
-		call	cdg_load_single_noalpha pascal, CDG_BG_BOSS, ds, offset aSt06bk_cdg, 0
-		call	@bb_boss_load$qnxc pascal, ds, offset aSt06_bb
+		call	cdg_load_single_noalpha pascal, CDG_BG_BOSS, ds, offset _st06bk_cdg, 0
+		call	@bb_boss_load$qnxc pascal, ds, offset _st06_bb
 		mov	_stage_render, offset nullfunc_near
 		mov	_stage_invalidate, offset nullfunc_near
 		pop	bp
@@ -28288,171 +28288,13 @@ sub_1E67C	proc near
 sub_1E67C	endp
 
 include th04/main/boss/end.asm
+main_035_TEXT	ends
 
-; =============== S U B	R O U T	I N E =======================================
+BOSS_TEXT	segment	byte public 'CODE' use16
+	@boss_defeat_update$qv procdesc near
+BOSS_TEXT	ends
 
-; Attributes: bp-based frame
-
-sub_1E743	proc near
-		push	bp
-		mov	bp, sp
-		cmp	_boss_phase, PHASE_EXPLODE_BIG
-		jnz	short loc_1E7B5
-		cmp	_boss_phase_frame, 12
-		jge	short loc_1E778
-		cmp	_stage_frame_mod2, 0
-		jnz	short loc_1E760
-		mov	ax, -4
-		jmp	short loc_1E763
-; ---------------------------------------------------------------------------
-
-loc_1E760:
-		mov	ax, 4
-
-loc_1E763:
-		mov	_playfield_shake_x, ax
-		cmp	_stage_frame_mod4, 1
-		ja	short loc_1E772
-		mov	ax, -4
-		jmp	short loc_1E775
-; ---------------------------------------------------------------------------
-
-loc_1E772:
-		mov	ax, 4
-
-loc_1E775:
-		mov	_playfield_shake_y, ax
-
-loc_1E778:
-		mov	_bg_render_bombing_func, offset tiles_render_all
-		mov	_slowdown_factor, 2
-		inc	_boss_phase_frame
-		mov	ax, _boss_phase_frame
-		mov	bx, 8
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	loc_1E915
-		inc	_boss_sprite
-		cmp	_boss_sprite, 12
-		jb	loc_1E915
-		inc	_boss_phase
-		mov	_boss_phase_frame, 0
-		mov	_bombing_disabled, 1
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_1E7B5:
-		mov	PaletteTone, 60
-		mov	_palette_changed, 1
-		cmp	_boss_phase_frame, 0
-		jnz	loc_1E8B3
-		les	bx, _resident
-		mov	ax, _stage_graze
-		add	es:[bx+resident_t.graze], ax
-		cmp	_stage_id, 5
-		jz	loc_1E8AE
-		cmp	_stage_id, 4
-		jnz	short loc_1E801
-		cmp	_continues_used, 0
-		jnz	short loc_1E7F2
-		cmp	_rank, RANK_EASY
-		jnz	short loc_1E801
-
-loc_1E7F2:
-		call	@dialog_load_yuuka5_defeat_bad$qv
-		call	@dialog_animate$qv
-		call	@end_game_bad$qv
-
-loc_1E801:
-		cmp	_stage_id, 6
-		jnz	loc_1E8A4
-		call	super_clean pascal, (128 shl 16) or 256
-		call	@dialog_animate$qv
-		cmp	_boss_statebyte[0].BSB_gengetsu_started, 0
-		jnz	short loc_1E89B
-		mov	_boss_statebyte[0].BSB_gengetsu_started, 1
-		call	@boss_reset$qv
-		mov	_boss_pos.cur.x, (192 shl 4)
-		mov	_boss_pos.prev.x, (192 shl 4)
-		mov	_boss_pos.cur.y, (96 shl 4)
-		mov	_boss_pos.prev.y, (96 shl 4)
-		mov	_bg_render_not_bombing, offset mugetsu_gengetsu_bg_render
-		setfarfp	_boss_update, gengetsu_update
-		mov	_boss_fg_render, offset gengetsu_fg_render
-		mov	_boss_sprite, 128
-		mov	_boss_hitbox_radius.x, (24 shl 4)
-		mov	_boss_hitbox_radius.y, (48 shl 4)
-		mov	_bgm_title_id, 0Fh
-		mov	_overlay1, offset @overlay_boss_bgm_update_and_rend$qv
-		call	cdg_free pascal, CDG_BG_BOSS
-		call	@bb_boss_free$qv
-		call	cdg_load_single_noalpha pascal, CDG_BG_BOSS, ds, offset aSt06bk2_cdg, 0
-		call	@bb_boss_load$qnxc pascal, ds, offset aSt06b_bb
-		mov	_bombing_disabled, 0
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_1E89B:
-		call	@stage_allclear_bonus$qv
-		inc	_boss_phase_frame
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_1E8A4:
-		call	@dialog_animate$qv
-		call	@stage_clear_bonus$qv
-		jmp	short loc_1E905
-; ---------------------------------------------------------------------------
-
-loc_1E8AE:
-		call	@stage_allclear_bonus$qv
-		jmp	short loc_1E905
-; ---------------------------------------------------------------------------
-
-loc_1E8B3:
-		cmp	_boss_phase_frame, 416
-		jnz	short loc_1E8E5
-		cmp	_stage_id, 5
-		jnz	short loc_1E8C9
-		call	@end_game_good$qv
-		jmp	short loc_1E8D5
-; ---------------------------------------------------------------------------
-
-loc_1E8C9:
-		cmp	_stage_id, 6
-		jnz	short loc_1E8D5
-		call	@end_extra$qv
-
-loc_1E8D5:
-		mov	_overlay1, offset @overlay_stage_leave_update_and_r$qv
-		kajacall	KAJA_SONG_FADE, 10
-		jmp	short loc_1E905
-; ---------------------------------------------------------------------------
-
-loc_1E8E5:
-		cmp	_boss_phase_frame, 488
-		jnz	short loc_1E905
-		les	bx, _resident
-		inc	es:[bx+resident_t.stage]
-		inc	es:[bx+resident_t.stage_ascii]
-		mov	_quit, Q_NEXT_STAGE
-		push	1
-		call	frame_delay
-
-loc_1E905:
-		inc	_boss_phase_frame
-		mov	_homing_target.x, SUBPIXEL_NONE
-		mov	_homing_target.y, SUBPIXEL_NONE
-
-loc_1E915:
-		pop	bp
-		retn
-sub_1E743	endp
-
+main_036_TEXT	segment	byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -30218,7 +30060,7 @@ loc_1F878:
 ; ---------------------------------------------------------------------------
 
 loc_1F8A0:
-		call	sub_1E743
+		call	@boss_defeat_update$qv
 		leave
 		retf
 ; ---------------------------------------------------------------------------
@@ -31386,7 +31228,7 @@ gengetsu_2023B	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
+public GENGETSU_UPDATE
 gengetsu_update	proc far
 		push	bp
 		mov	bp, sp
@@ -31849,7 +31691,7 @@ loc_20693:
 ; ---------------------------------------------------------------------------
 
 loc_206B1:
-		call	sub_1E743
+		call	@boss_defeat_update$qv
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -31880,7 +31722,7 @@ off_206D8	dw offset loc_202B0
 		dw offset loc_205D4
 		dw offset loc_20609
 		dw offset loc_2065F
-main_035_TEXT	ends
+main_036_TEXT	ends
 
 ; ---------------------------------------------------------------------------
 ; ===========================================================================
@@ -32530,10 +32372,8 @@ aSt04bk_cdg	db 'st04bk.cdg',0
 aSt04_bb	db 'st04.bb',0
 aSt04_cdg	db 'st04.cdg',0
 aSt05_bb	db 'st05.bb',0
-aSt06bk_cdg	db 'st06bk.cdg',0
-aSt06_bb	db 'st06.bb',0
-aSt06bk2_cdg	db 'st06bk2.cdg',0
-aSt06b_bb	db 'st06b.bb',0
+	extern _st06bk_cdg:byte
+	extern _st06_bb:byte
 	extern _reimu_pattern8_angle:byte
 	extern _reimu_bg_pulse_direction:byte
 	extern _gengetsu_wave_amp:byte

@@ -11860,7 +11860,7 @@ loc_188D2:
 ; ---------------------------------------------------------------------------
 
 loc_188E9:
-		call	boss_death_sequence_function pascal, 10
+		call	@boss_defeat_update$qui pascal, 10
 
 loc_188EE:
 		call	hud_hp_update_and_render pascal, _boss_hp, 4650
@@ -12911,7 +12911,7 @@ loc_19251:
 ; ---------------------------------------------------------------------------
 
 loc_1925E:
-		call	boss_death_sequence_function pascal, 10
+		call	@boss_defeat_update$qui pascal, 10
 
 loc_19263:
 		call	hud_hp_update_and_render pascal, _boss_hp, 4400
@@ -14741,7 +14741,7 @@ loc_1A396:
 ; ---------------------------------------------------------------------------
 
 loc_1A3AD:
-		call	boss_death_sequence_function pascal, 10
+		call	@boss_defeat_update$qui pascal, 10
 
 loc_1A3B2:
 		call	hud_hp_update_and_render pascal, _boss_hp, 9600
@@ -17373,7 +17373,7 @@ loc_1BCE7:
 ; ---------------------------------------------------------------------------
 
 loc_1BD02:
-		call	boss_death_sequence_function pascal, 50
+		call	@boss_defeat_update$qui pascal, 50
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -18563,7 +18563,7 @@ loc_1C7E3:
 ; ---------------------------------------------------------------------------
 
 loc_1C7FE:
-		call	boss_death_sequence_function pascal, 70
+		call	@boss_defeat_update$qui pascal, 70
 		jmp	short loc_1C812
 ; ---------------------------------------------------------------------------
 
@@ -19642,7 +19642,7 @@ loc_1D4F4:
 ; ---------------------------------------------------------------------------
 
 loc_1D50C:
-		call	boss_death_sequence_function pascal, 65
+		call	@boss_defeat_update$qui pascal, 65
 		jmp	short loc_1D520
 ; ---------------------------------------------------------------------------
 
@@ -21126,7 +21126,7 @@ loc_1E510:
 ; ---------------------------------------------------------------------------
 
 loc_1E522:
-		call	boss_death_sequence_function pascal, 65
+		call	@boss_defeat_update$qui pascal, 65
 
 loc_1E527:
 		call	b6balls_update
@@ -22951,7 +22951,7 @@ loc_1F643:
 ; ---------------------------------------------------------------------------
 
 loc_1F660:
-		call	boss_death_sequence_function pascal, 200
+		call	@boss_defeat_update$qui pascal, 200
 
 loc_1F666:
 		call	@curvebullets_update$qv
@@ -23442,187 +23442,11 @@ sub_1FB07	proc near
 sub_1FB07	endp
 
 include th04/main/boss/end.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-boss_death_sequence_function	proc near
-
-@@units		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		cmp	_boss_phase, PHASE_BOSS_EXPLODE_SMALL
-		jnz	short loc_1FC23
-		cmp	_boss_phase_frame, 1
-		jnz	short loc_1FBE1
-		mov	_boss_damage_this_frame, 0;m_bHitThisFrame?
-		call	@boss_explode_small$q16explosion_type_t pascal, ET_CIRCLE
-		call	snd_se_play pascal, 13
-
-loc_1FBE1:
-		cmp	_boss_phase_frame, 16
-		jnz	short loc_1FBED
-		call	@boss_explode_small$q16explosion_type_t pascal, ET_VERTICAL
-
-loc_1FBED:
-		cmp	_boss_phase_frame, 32
-		jnz	loc_1FD51
-		call	@boss_explode_big_circle$qv
-		inc	_boss_phase
-		mov	al, _boss_mode_change
-		mov	_bullet_zap_active, al
-		cmp	_boss_mode_change, 0;m_bSuccessDefeat
-		jz	short loc_1FC10
-		call	@boss_score_bonus$qui pascal, [bp+@@units]
-
-loc_1FC10:
-		mov	_boss_sprite, 4
-		mov	_boss_phase_frame, 0
-		mov	_player_invincibility_time, BOSS_DEFEAT_INVINCIBILITY_FRAMES
-		jmp	loc_1FD51
-; ---------------------------------------------------------------------------
-
-loc_1FC23:
-		cmp	_boss_phase, PHASE_BOSS_EXPLODE_BIG
-		jnz	short loc_1FC95
-		cmp	_boss_phase_frame, 12
-		jge	short loc_1FC55
-		cmp	_stage_frame_mod2, 0
-		jnz	short loc_1FC3D
-		mov	ax, -4
-		jmp	short loc_1FC40
-; ---------------------------------------------------------------------------
-
-loc_1FC3D:
-		mov	ax, 4
-
-loc_1FC40:
-		mov	_playfield_shake_x, ax
-		cmp	_stage_frame_mod4, 1
-		ja	short loc_1FC4F
-		mov	ax, -4
-		jmp	short loc_1FC52
-; ---------------------------------------------------------------------------
-
-loc_1FC4F:
-		mov	ax, 4
-
-loc_1FC52:
-		mov	_playfield_shake_y, ax
-
-loc_1FC55:
-		mov	_bg_render_bombing_func, offset tiles_render_all
-		mov	_slowdown_factor, 2
-		mov	ax, _boss_phase_frame
-		mov	bx, 8
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	loc_1FD5D
-		inc	_boss_sprite
-		cmp	_boss_sprite, 12
-		jb	loc_1FD5D
-		inc	_boss_phase
-		mov	_boss_phase_frame, 0
-		mov	_bombing_disabled, 1
-		mov	_boss_fg_render, offset nullfunc_near
-		jmp	loc_1FD5D
-; ---------------------------------------------------------------------------
-
-loc_1FC95:
-		mov	PaletteTone, 60
-		mov	_palette_changed, 1
-		cmp	_boss_phase_frame, 1
-		jnz	short loc_1FCD6
-		les	bx, _resident
-		assume es:nothing
-		mov	ax, _stage_graze
-		add	es:[bx+resident_t.graze], ax
-		cmp	_stage_id, 5
-		jz	short loc_1FCD1
-		call	@dialog_animate$qv
-		cmp	_stage_id, 6
-		jz	short loc_1FCCB
-		call	@stage_clear_bonus$qv
-		jmp	loc_1FD51
-; ---------------------------------------------------------------------------
-
-loc_1FCCB:
-		call	@stage_allclear_bonus$qv
-		jmp	loc_1FD51
-; ---------------------------------------------------------------------------
-
-loc_1FCD1:
-		call	@stage_allclear_bonus$qv
-		jmp	short loc_1FD51
-; ---------------------------------------------------------------------------
-
-loc_1FCD6:
-		cmp	_boss_phase_frame, 416;stuck at frame 416 until all score has been added
-		jnz	short loc_1FD35
-		call	score_delta_commit
-		cmp	_stage_id, 6
-		jnb	short loc_1FD0B
-		xor	si, si
-		jmp	short loc_1FD06
-; ---------------------------------------------------------------------------
-
-loc_1FCEE:
-		mov	al, _score[si]
-		mov	dl, _stage_id
-		mov	dh, 0
-		shl	dx, 3
-		les	bx, _resident
-		add	bx, dx
-		mov	es:[bx+si+resident_t.stage_score], al
-		inc	si
-
-loc_1FD06:
-		cmp	si, SCORE_DIGITS
-		jl	short loc_1FCEE
-
-loc_1FD0B:
-		cmp	_stage_id, 5
-		jnz	short loc_1FD19
-		call	@end_game$qv
-		jmp	short loc_1FD25
-; ---------------------------------------------------------------------------
-
-loc_1FD19:
-		cmp	_stage_id, 6
-		jnz	short loc_1FD25
-		call	@end_extra$qv
-
-loc_1FD25:
-		mov	_overlay1, offset @overlay_stage_leave_update_and_r$qv
-		kajacall	KAJA_SONG_FADE, 10
-		jmp	short loc_1FD51
-; ---------------------------------------------------------------------------
-
-loc_1FD35:
-		cmp	_boss_phase_frame, 488
-		jnz	short loc_1FD51
-		les	bx, _resident
-		inc	es:[bx+resident_t.stage]
-		mov	_quit, Q_NEXT_STAGE
-		push	1
-		call	frame_delay
-
-loc_1FD51:
-		mov	_homing_target.x, SUBPIXEL_NONE
-		mov	_homing_target.y, SUBPIXEL_NONE
-
-loc_1FD5D:
-		pop	si
-		pop	bp
-		retn	2
-boss_death_sequence_function	endp
 main_036_TEXT	ends
 
 BOSS_TEXT	segment	byte public 'CODE' use16
+	@BOSS_DEFEAT_UPDATE$QUI procdesc pascal near \
+		bonus_units:word
 	@boss_hittest_player$qv procdesc near
 BOSS_TEXT	ends
 
