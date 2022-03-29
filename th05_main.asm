@@ -19176,72 +19176,10 @@ main_035_TEXT	ends
 BOSS_6_TEXT	segment	byte public 'CODE' use16
 	@b6balls_add$qv procdesc near
 	@b6balls_update$qv procdesc near
+	@pattern_curved_rings$qv procdesc near
 BOSS_6_TEXT	ends
 
 BOSS_X_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1D667	proc near
-		push	bp
-		mov	bp, sp
-		cmp	_boss_phase_frame, 32
-		jnz	short loc_1D6B2
-		mov	_bullet_template.spawn_type, BST_CLOUD_FORWARDS or BST_NO_SLOWDOWN
-		mov	_bullet_template.patnum, PAT_BULLET16_N_OUTLINED_BALL_BLUE
-		mov	_bullet_template.speed, (2 shl 4)
-		mov	_bullet_template.BT_group, BG_RING
-		mov	_bullet_template.BT_special_motion, BSM_EXACT_LINEAR
-		call	randring2_next16
-		mov	_bullet_template.BT_angle, al
-		mov	_bullet_template.spread, 16
-		push	1
-		call	randring2_next16_and
-		or	ax, ax
-		jz	short loc_1D6A2
-		mov	al, 2
-		jmp	short loc_1D6A4
-; ---------------------------------------------------------------------------
-
-loc_1D6A2:
-		mov	al, -2
-
-loc_1D6A4:
-		mov	_boss_statebyte[15], al
-		call	_bullet_template_tune
-		call	snd_se_play pascal, 15
-
-loc_1D6B2:
-		mov	ax, _boss_phase_frame
-		mov	bx, 4
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_1D6D1
-		call	_bullets_add_special
-		mov	al, _bullet_template.speed
-		add	al, 8
-		mov	_bullet_template.speed, al
-		mov	al, _boss_statebyte[15]
-		add	_bullet_template.BT_angle, al
-
-loc_1D6D1:
-		cmp	_boss_phase_frame, 60
-		jnz	short loc_1D6DD
-		mov	ax, 1
-		jmp	short loc_1D6DF
-; ---------------------------------------------------------------------------
-
-loc_1D6DD:
-		xor	ax, ax
-
-loc_1D6DF:
-		pop	bp
-		retn
-sub_1D667	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -20373,7 +20311,7 @@ loc_1E265:
 		inc	_boss_phase
 		mov	_boss_mode, 1
 		mov	_boss_phase_frame, 0
-		mov	fp_2CE48, offset sub_1D667
+		mov	fp_2CE48, offset @pattern_curved_rings$qv
 		jmp	loc_1E36F
 ; ---------------------------------------------------------------------------
 
@@ -23180,7 +23118,7 @@ off_22832	dw offset sub_1CCD3
 		dw 0
 		dw 0
 		dw 0
-off_2284A	dw offset sub_1D667
+off_2284A	dw offset @pattern_curved_rings$qv
 		dw offset sub_1D6E1
 		dw offset sub_1D7DC
 		dw offset sub_1D83A
