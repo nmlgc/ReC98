@@ -19177,74 +19177,10 @@ BOSS_6_TEXT	segment	byte public 'CODE' use16
 	@b6balls_add$qv procdesc near
 	@b6balls_update$qv procdesc near
 	@pattern_curved_rings$qv procdesc near
+	@pattern_dualspeed_rings$qv procdesc near
 BOSS_6_TEXT	ends
 
 BOSS_X_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1D6E1	proc near
-		push	bp
-		mov	bp, sp
-		cmp	_boss_phase_frame, 32
-		jnz	short loc_1D719
-		mov	_bullet_template.spawn_type, BST_CLOUD_FORWARDS or BST_NO_SLOWDOWN
-		mov	_bullet_template.patnum, PAT_BULLET16_N_BLUE
-		mov	_bullet_template.BT_group, BG_RING
-		call	randring2_next16
-		mov	_bullet_template.BT_angle, al
-		mov	_bullet_template.spread, 16
-		push	(10h shl 16) or 0Ch
-		push	( 8h shl 16) or  4h
-		call	select_for_rank
-		mov	_boss_statebyte[15], al
-
-loc_1D719:
-		mov	al, _boss_statebyte[15]
-		mov	ah, 0
-		push	ax
-		mov	ax, _boss_phase_frame
-		cwd
-		pop	bx
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_1D766
-		push	offset _bullet_template.BT_origin
-		push	_boss_pos.cur.x
-		push	_boss_pos.cur.y
-		push	(32 shl 4)
-		call	randring2_next16_mod
-		push	ax
-		mov	al, _bullet_template.BT_angle
-		mov	ah, 0
-		push	ax
-		call	vector2_at
-		mov	_bullet_template.speed, (2 shl 4)
-		call	_bullets_add_regular
-		mov	_bullet_template.speed, (4 shl 4)
-		mov	al, _bullet_template.BT_angle
-		add	al, 8
-		mov	_bullet_template.BT_angle, al
-		call	_bullets_add_regular
-		call	snd_se_play pascal, 3
-
-loc_1D766:
-		cmp	_boss_phase_frame, 96
-		jnz	short loc_1D772
-		mov	ax, 1
-		jmp	short loc_1D774
-; ---------------------------------------------------------------------------
-
-loc_1D772:
-		xor	ax, ax
-
-loc_1D774:
-		pop	bp
-		retn
-sub_1D6E1	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -23119,7 +23055,7 @@ off_22832	dw offset sub_1CCD3
 		dw 0
 		dw 0
 off_2284A	dw offset @pattern_curved_rings$qv
-		dw offset sub_1D6E1
+		dw offset @pattern_dualspeed_rings$qv
 		dw offset sub_1D7DC
 		dw offset sub_1D83A
 word_22852	dw 0

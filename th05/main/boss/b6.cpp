@@ -9,7 +9,9 @@
 #include "th04/math/motion.hpp"
 extern "C" {
 #include "th04/math/randring.hpp"
+#include "th04/math/vector.hpp"
 #include "th04/snd/snd.h"
+#include "th04/main/rank.hpp"
 #include "th04/main/playfld.hpp"
 #include "th04/main/bullet/bullet.hpp"
 }
@@ -46,4 +48,38 @@ bool near pattern_curved_rings(void)
 	return (boss.phase_frame == (PHASE_2_3_PATTERN_START_FRAME + 28));
 
 	#undef delta_angle
+}
+
+bool near pattern_dualspeed_rings(void)
+{
+	#define interval boss_statebyte[15]
+
+	if(boss.phase_frame == PHASE_2_3_PATTERN_START_FRAME) {
+		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_SLOWDOWN);
+		bullet_template.patnum = PAT_BULLET16_N_BLUE;
+		bullet_template.group = BG_RING;
+		bullet_template.angle = randring2_next16();
+		bullet_template.spread = 16;
+		interval = select_for_rank(16, 12, 8, 4);
+	}
+	if((boss.phase_frame % interval) == 0) {
+		vector2_at(
+			bullet_template.origin,
+			boss.pos.cur.x,
+			boss.pos.cur.y,
+			randring2_next16_mod(to_sp(32.0f)),
+			bullet_template.angle
+		);
+		bullet_template.speed.set(2.0f);
+		bullets_add_regular();
+
+		bullet_template.speed.set(4.0f);
+		bullet_template.angle += 0x08;
+		bullets_add_regular();
+
+		snd_se_play(3);
+	}
+	return (boss.phase_frame == (PHASE_2_3_PATTERN_START_FRAME + 64));
+
+	#undef interval
 }
