@@ -20,6 +20,9 @@ typedef enum {
 	BG_RANDOM_CONSTRAINED_ANGLE_AIMED = 0x1D,
 
 	// Ring out of [count] bullets, ignoring [delta].
+	// ZUN bug: Must be ≥1 going into the bullets_add_*() functions to prevent
+	// divisions by zero ("Divide error"). This is exactly what causes the
+	// crash during Kurumi when playing on Easy and with minimum rank.
 	BG_RING = 0x26,
 	BG_RING_AIMED = 0x2C,
 
