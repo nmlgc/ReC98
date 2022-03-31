@@ -410,16 +410,20 @@ no_aim:
 
 void near bullet_template_speedtune_for_playperf(void)
 {
-	bullet_template.speed.v /= 2;
-	subpixel_t speed_from_playperf = bullet_template.speed.v;
-	speed_from_playperf *= playperf;
-	speed_from_playperf /= 16;
-
-	bullet_template.speed.v += speed_from_playperf;
-	if(bullet_template.speed > to_sp8(8.0f)) {
-		bullet_template.speed.set(8.0f);
-	} else if(bullet_template.speed < to_sp8(0.5f)) {
-		bullet_template.speed.set(0.5f);
+	// Mod: Size-optimized compared to the original version. (And probably
+	// faster, too.)
+	subpixel_length_8_t speed = bullet_template.speed;
+	speed >>= 1;
+	speed += ((static_cast<subpixel_t>(speed) * playperf) >> 4);
+	if(speed > to_sp8(8.0f)) {
+		speed = to_sp8(8.0f);
+	} else if(speed < to_sp8(0.5f)) {
+		speed = to_sp8(0.5f);
+	}
+	bullet_template.speed.v = speed;
+	_asm {
+		nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; nop;
+		nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; nop;
 	}
 }
 
