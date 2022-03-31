@@ -3,8 +3,11 @@
 
 #include "platform.h"
 #include "pc98.h"
+#include "master.hpp"
 #include "th01/math/area.hpp"
 #include "th01/math/subpixel.hpp"
+#include "th03/hardware/palette.hpp"
+#include "th04/main/frames.h"
 #include "th04/main/pattern.hpp"
 #include "th04/math/motion.hpp"
 extern "C" {
@@ -16,6 +19,7 @@ extern "C" {
 #include "th04/main/bullet/bullet.hpp"
 #include "th04/main/gather.hpp"
 }
+#include "th05/main/bullet/laser.hpp"
 #include "th05/main/boss/boss.hpp"
 #include "th05/sprites/main_pat.h"
 
@@ -24,6 +28,27 @@ extern "C" {
 
 static const int PHASE_2_3_PATTERN_START_FRAME = 32;
 // ---------
+
+// Coordinates
+// -----------
+
+inline subpixel_t shinki_wing_random_x(void) {
+	return (
+		randring2_next16_mod(to_sp(SHINKI_WING_W)) +
+		boss.pos.cur.x.v -
+		to_sp(SHINKI_WING_W / 2)
+	);
+}
+
+// Limited to the top 3/2rds of the wing area.
+inline subpixel_t shinki_wing_random_y(void) {
+	return (
+		boss.pos.cur.y.v -
+		randring2_next16_mod((to_sp(SHINKI_WING_H) / 3) * 2) +
+		to_sp((SHINKI_WING_H - BOSS_H) / 2)
+	);
+}
+// -----------
 
 // State
 // -----
@@ -164,4 +189,88 @@ bool near pattern_dense_blue_stacks(void)
 	return boss_flystep_random(
 		boss.phase_frame - PHASE_2_3_PATTERN_START_FRAME - 32
 	);
+}
+
+bool near pattern_wing_preparation(void)
+{
+	enum {
+		LASERS_USED = 6,
+	};
+	#define tone       	boss_statebyte[14]
+	#define wing_frames	boss_statebyte[15]
+
+	int i;
+
+	if(boss.phase_frame == 16) {
+		// Still assumed to be set to this value by Yumeko. Original gameplay
+		// relies on this value to be < 8 to ensure that the lasers will kill
+		// the player if they move to the side of the wings. (Lasers only kill
+		// if they finished growing, they grow by 2 pixels every 2 frames, and
+		// the ones in this pattern are kept alive for 8 frames.)
+		// MODDERS: Uncomment to clearly define the original behavior.
+		// laser_template.coords.width = 6;
+		laser_template.coords.angle = 0x50;	laser_manual_fixed_spawn(0);
+		laser_template.coords.angle = 0x48;	laser_manual_fixed_spawn(1);
+		laser_template.coords.angle = 0x40;	laser_manual_fixed_spawn(2);
+		laser_template.coords.angle = 0x40;	laser_manual_fixed_spawn(3);
+		laser_template.coords.angle = 0x38;	laser_manual_fixed_spawn(4);
+		laser_template.coords.angle = 0x30;	laser_manual_fixed_spawn(5);
+		snd_se_play(8);
+		boss.sprite = PAT_SHINKI_CAST;
+		wing_frames = 0;
+		tone = 100;
+	}
+	if(boss.phase_frame <= 16) {
+		return false;
+	}
+	if(lasers[2].coords.angle < 0x80) {
+		if(stage_frame_mod2) {
+			lasers[0].coords.angle += 0x01;
+			lasers[1].coords.angle += 0x01;
+			lasers[2].coords.angle += 0x01;
+			lasers[3].coords.angle -= 0x01;
+			lasers[4].coords.angle -= 0x01;
+			lasers[5].coords.angle -= 0x01;
+			palette_settone_deferred(tone);
+			tone++;
+		}
+		return false;
+	}
+	if(wing_frames == 0) {
+		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_SLOWDOWN);
+		bullet_template.patnum = PAT_BULLET16_N_BLUE;
+		bullet_template.group = BG_SINGLE;
+		bullet_template_tune();
+		for(i = 0; i < 50; i++) {
+			bullet_template.origin.x.v = shinki_wing_random_x();
+			bullet_template.origin.y.v = shinki_wing_random_y();
+			bullet_template.angle = randring2_next8_ge_lt(0x10, 0x70);
+			bullet_template.speed.v = randring2_next8_and_ge_lt_sp(1.5f, 5.5f);
+			bullets_add_regular();
+		}
+		boss.sprite = PAT_SHINKI_WINGS_WHITE;
+		for(i = 0; i < LASERS_USED; i++) {
+			laser_manual_grow(i);
+		}
+		snd_se_play(15);
+		playfield_shake_anim_time = 8;
+	} else {
+		if(stage_frame_mod2) {
+			palette_settone_deferred(150);
+		} else {
+			palette_settone_deferred(100);
+		}
+		if(wing_frames >= 8) {
+			palette_settone_deferred(100);
+			for(i = 0; i < LASERS_USED; i++) {
+				laser_stop(i);
+			}
+			return true;
+		}
+	}
+	wing_frames++;
+	return false;
+
+	#undef wing_frames
+	#undef tone
 }

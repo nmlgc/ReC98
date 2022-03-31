@@ -1,3 +1,4 @@
+#include "th02/formats/bfnt.h"
 #include "th04/sprites/cels.h"
 
 #define PARTICLE_W 16
@@ -6,6 +7,15 @@
 #define PARTICLE_CELS 4
 #define B4BALL_CELS 4
 #define B4_CELS 16
+
+/// Sprite sizes
+/// ------------
+// st05.bb*
+// --------
+static const pixel_t SHINKI_WING_W = 256;
+static const pixel_t SHINKI_WING_H = 96;
+// --------
+/// ------------
 
 /// Pattern numbers for the super_*() functions.
 /// Since super_entry_bfnt() doesn't take a "start patnum" parameter, the
@@ -128,6 +138,17 @@ typedef enum {
 	// --------
 	PAT_SHINKI_STILL = 180,
 	PAT_SHINKI_CAST,
+	// --------
+	// st05.bb2
+	// --------
+	PAT_SHINKI_WINGS_WHITE = 184,
+	PAT_SHINKI_WINGS_WHITE_last = (
+		PAT_SHINKI_WINGS_WHITE + bfnt_parts_x(SHINKI_WING_W) - 1
+	),
+	PAT_SHINKI_WINGS_WHITE_HIT,
+	PAT_SHINKI_WINGS_WHITE_HIT_last = (
+		PAT_SHINKI_WINGS_WHITE_HIT + bfnt_parts_x(SHINKI_WING_W) - 1
+	),
 	// --------
 	// st05.bb4
 	// --------

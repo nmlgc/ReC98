@@ -19181,163 +19181,10 @@ BOSS_6_TEXT	segment	byte public 'CODE' use16
 	@gather_then_phase_2_3_pattern$qv procdesc near
 	@pattern_random_directional_and_k$qv procdesc near
 	@pattern_dense_blue_stacks$qv procdesc near
+	@pattern_wing_preparation$qv procdesc near
 BOSS_6_TEXT	ends
 
 BOSS_X_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1D89A	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		cmp	_boss_phase_frame, 16
-		jnz	short loc_1D8F7
-		mov	_laser_template.coords.angle, 80
-		call	@laser_manual_fixed_spawn$qi pascal, 0
-		mov	_laser_template.coords.angle, 72
-		call	@laser_manual_fixed_spawn$qi pascal, 1
-		mov	_laser_template.coords.angle, 64
-		call	@laser_manual_fixed_spawn$qi pascal, 2
-		mov	_laser_template.coords.angle, 64
-		call	@laser_manual_fixed_spawn$qi pascal, 3
-		mov	_laser_template.coords.angle, 56
-		call	@laser_manual_fixed_spawn$qi pascal, 4
-		mov	_laser_template.coords.angle, 48
-		call	@laser_manual_fixed_spawn$qi pascal, 5
-		call	snd_se_play pascal, 8
-		mov	_boss_sprite, 181
-		mov	_boss_statebyte[15], 0
-		mov	_boss_statebyte[14], 64h
-
-loc_1D8F7:
-		cmp	_boss_phase_frame, 16
-		jle	loc_1DA17
-		cmp	_lasers[2 * size laser_t].coords.angle, 128
-		jnb	short loc_1D954
-		cmp	_stage_frame_mod2, 0
-		jz	loc_1DA17
-		mov	al, _lasers[0 * size laser_t].coords.angle
-		inc	al
-		mov	_lasers[0 * size laser_t].coords.angle, al
-		mov	al, _lasers[1 * size laser_t].coords.angle
-		inc	al
-		mov	_lasers[1 * size laser_t].coords.angle, al
-		mov	al, _lasers[2 * size laser_t].coords.angle
-		inc	al
-		mov	_lasers[2 * size laser_t].coords.angle, al
-		mov	al, _lasers[3 * size laser_t].coords.angle
-		add	al, -1
-		mov	_lasers[3 * size laser_t].coords.angle, al
-		mov	al, _lasers[4 * size laser_t].coords.angle
-		add	al, -1
-		mov	_lasers[4 * size laser_t].coords.angle, al
-		mov	al, _lasers[5 * size laser_t].coords.angle
-		add	al, -1
-		mov	_lasers[5 * size laser_t].coords.angle, al
-		mov	al, _boss_statebyte[14]
-		mov	ah, 0
-		mov	PaletteTone, ax
-		mov	_palette_changed, 1
-		inc	_boss_statebyte[14]
-		jmp	loc_1DA17
-; ---------------------------------------------------------------------------
-
-loc_1D954:
-		cmp	_boss_statebyte[15], 0
-		jnz	short loc_1D9D5
-		mov	_bullet_template.spawn_type, BST_CLOUD_FORWARDS or BST_NO_SLOWDOWN
-		mov	_bullet_template.patnum, PAT_BULLET16_N_BLUE
-		mov	_bullet_template.BT_group, BG_SINGLE
-		call	_bullet_template_tune
-		xor	si, si
-		jmp	short loc_1D9AE
-; ---------------------------------------------------------------------------
-
-loc_1D972:
-		call	randring2_next16_mod pascal, (256 shl 4)
-		add	ax, _boss_pos.cur.x
-		sub	ax, (128 shl 4)
-		mov	_bullet_template.BT_origin.x, ax
-		call	randring2_next16_mod pascal, (64 shl 4)
-		mov	dx, _boss_pos.cur.y
-		sub	dx, ax
-		add	dx, (16 shl 4)
-		mov	_bullet_template.BT_origin.y, dx
-		call	randring2_next16_mod pascal, 96
-		add	al, 16
-		mov	_bullet_template.BT_angle, al
-		call	randring2_next16_and pascal, 3Fh
-		add	al, (1 shl 4) + 8
-		mov	_bullet_template.speed, al
-		call	_bullets_add_regular
-		inc	si
-
-loc_1D9AE:
-		cmp	si, 32h	; '2'
-		jl	short loc_1D972
-		mov	_boss_sprite, 184
-		xor	si, si
-		jmp	short loc_1D9C1
-; ---------------------------------------------------------------------------
-
-loc_1D9BC:
-		call	@laser_manual_grow$qi pascal, si
-		inc	si
-
-loc_1D9C1:
-		cmp	si, 6
-		jl	short loc_1D9BC
-		call	snd_se_play pascal, 15
-		mov	_playfield_shake_anim_time, 8
-		jmp	short loc_1DA13
-; ---------------------------------------------------------------------------
-
-loc_1D9D5:
-		cmp	_stage_frame_mod2, 0
-		jz	short loc_1D9E4
-		mov	PaletteTone, 150
-		jmp	short loc_1D9EA
-; ---------------------------------------------------------------------------
-
-loc_1D9E4:
-		mov	PaletteTone, 100
-
-loc_1D9EA:
-		mov	_palette_changed, 1
-		cmp	_boss_statebyte[15], 8
-		jb	short loc_1DA13
-		mov	PaletteTone, 100
-		mov	_palette_changed, 1
-		xor	si, si
-		jmp	short loc_1DA0A
-; ---------------------------------------------------------------------------
-
-loc_1DA05:
-		call	@laser_stop$qi pascal, si
-		inc	si
-
-loc_1DA0A:
-		cmp	si, 6
-		jl	short loc_1DA05
-		mov	al, 1
-		jmp	short loc_1DA19
-; ---------------------------------------------------------------------------
-
-loc_1DA13:
-		inc	_boss_statebyte[15]
-
-loc_1DA17:
-		mov	al, 0
-
-loc_1DA19:
-		pop	si
-		pop	bp
-		retn
-sub_1D89A	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -20207,7 +20054,7 @@ loc_1E314:
 
 loc_1E333:
 		call	@boss_hittest_shots$qv
-		call	sub_1D89A
+		call	@pattern_wing_preparation$qv
 		or	al, al
 		jz	loc_1E527
 		inc	_boss_phase
