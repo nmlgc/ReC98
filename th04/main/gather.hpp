@@ -72,7 +72,7 @@ void near gather_add_only(void);
 // [frame] 0, 2, and 4, respectively, using the given colors. Will do nothing
 // for any other value of [frame].
 void pascal near gather_add_only_3stack(
-	int frame, uint4_t col_for_0, uint4_t col_for_2_and_4
+	int frame, int col_for_0, int col_for_2_and_4
 );
 
 // Blits the gather point sprite to ([left], [top]). Assumptions:

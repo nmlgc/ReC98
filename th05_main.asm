@@ -19178,49 +19178,10 @@ BOSS_6_TEXT	segment	byte public 'CODE' use16
 	@b6balls_update$qv procdesc near
 	@pattern_curved_rings$qv procdesc near
 	@pattern_dualspeed_rings$qv procdesc near
+	@gather_then_phase_2_3_pattern$qv procdesc near
 BOSS_6_TEXT	ends
 
 BOSS_X_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1D776	proc near
-		push	bp
-		mov	bp, sp
-		cmp	_boss_phase_frame, 32
-		jge	short loc_1D7C2
-		mov	ax, _boss_phase_frame
-		add	ax, -16
-		call	gather_add_only_3stack pascal, ax, large (7 shl 16) or 6
-		cmp	_boss_phase_frame, 2
-		jnz	short loc_1D7DA
-		mov	_boss_sprite, 181
-		mov	_bullet_template.spawn_type, BST_CLOUD_BACKWARDS or BST_NO_SLOWDOWN
-		mov	_bullet_template.patnum, PAT_BULLET16_N_RED
-		mov	_bullet_template.BT_group, BG_RING
-		mov	_bullet_template.speed, (3 shl 4) + 12
-		mov	_bullet_template.spread, 16
-		call	_bullet_template_tune
-		call	snd_se_play pascal, 8
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_1D7C2:
-		call	fp_2CE48
-		or	al, al
-		jz	short loc_1D7DA
-		mov	_boss_sprite, 180
-		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0
-
-loc_1D7DA:
-		pop	bp
-		retn
-sub_1D776	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -20247,7 +20208,7 @@ loc_1E265:
 		inc	_boss_phase
 		mov	_boss_mode, 1
 		mov	_boss_phase_frame, 0
-		mov	fp_2CE48, offset @pattern_curved_rings$qv
+		mov	_shinki_phase_2_3_pattern, offset @pattern_curved_rings$qv
 		jmp	loc_1E36F
 ; ---------------------------------------------------------------------------
 
@@ -20280,14 +20241,14 @@ loc_1E296:
 		add	ax, dx
 		mov	bx, ax
 		mov	ax, off_2284A[bx]
-		mov	fp_2CE48, ax
+		mov	_shinki_phase_2_3_pattern, ax
 		cmp	_boss_mode_change, 16
 		jb	short loc_1E2DC
 		jmp	short loc_1E2EA
 ; ---------------------------------------------------------------------------
 
 loc_1E2D9:
-		call	sub_1D776
+		call	@gather_then_phase_2_3_pattern$qv
 
 loc_1E2DC:
 		call	@boss_hittest_shots$qv
@@ -20300,7 +20261,7 @@ loc_1E2EA:
 		jnz	short loc_1E308
 		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_NW_SE shl 16) or 18400
 		mov	_boss_mode, 1
-		mov	fp_2CE48, offset sub_1D7DC
+		mov	_shinki_phase_2_3_pattern, offset sub_1D7DC
 		jmp	loc_1E481
 ; ---------------------------------------------------------------------------
 
@@ -23301,7 +23262,8 @@ word_2CE40	dw ?
 fp_2CE42	dw ?
 fp_2CE44	dw ?
 fp_2CE46	dw ?
-fp_2CE48	dw ?
+public _shinki_phase_2_3_pattern
+_shinki_phase_2_3_pattern	dw ?
 fp_2CE4A	dw ?
 byte_2CE4C	db ?
 		db ?

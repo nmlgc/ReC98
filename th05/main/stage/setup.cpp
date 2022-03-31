@@ -9,6 +9,7 @@ extern "C" {
 #include "th05/main/stage/stages.hpp"
 }
 #include "th05/main/boss/bosses.hpp"
+#include "th05/sprites/main_pat.h"
 
 void pascal near stage1_setup(void)
 {
@@ -180,7 +181,7 @@ void pascal near stage6_setup(void)
 	boss_bg_render_func = shinki_bg_render;
 	boss_update_func = shinki_update;
 	boss_fg_render_func = shinki_fg_render;
-	boss.sprite = 180;
+	boss.sprite = PAT_SHINKI_STILL;
 	boss_hitbox_radius.set(24, 24);
 	boss_backdrop_colorfill = shinki_stage_backdrop_colorfill;
 

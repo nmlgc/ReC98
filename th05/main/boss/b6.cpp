@@ -14,6 +14,7 @@ extern "C" {
 #include "th04/main/rank.hpp"
 #include "th04/main/playfld.hpp"
 #include "th04/main/bullet/bullet.hpp"
+#include "th04/main/gather.hpp"
 }
 #include "th05/main/boss/boss.hpp"
 #include "th05/sprites/main_pat.h"
@@ -23,6 +24,13 @@ extern "C" {
 
 static const int PHASE_2_3_PATTERN_START_FRAME = 32;
 // ---------
+
+// State
+// -----
+
+#define phase_2_3_pattern shinki_phase_2_3_pattern
+extern pattern_oneshot_func_t phase_2_3_pattern;
+// -----
 
 bool near pattern_curved_rings(void)
 {
@@ -82,4 +90,31 @@ bool near pattern_dualspeed_rings(void)
 	return (boss.phase_frame == (PHASE_2_3_PATTERN_START_FRAME + 64));
 
 	#undef interval
+}
+
+void near gather_then_phase_2_3_pattern(void)
+{
+	if(boss.phase_frame < PHASE_2_3_PATTERN_START_FRAME) {
+		gather_add_only_3stack((boss.phase_frame - 16), 7, 6);
+		if(boss.phase_frame == 2) {
+			boss.sprite = PAT_SHINKI_CAST;
+
+			// What's this, part of an unused pattern? Actually, it's just
+			// copy-pasted from a similar function in Yumeko's fight, which
+			// does fire bullets based on that template.
+			bullet_template.spawn_type = (
+				BST_CLOUD_BACKWARDS | BST_NO_SLOWDOWN
+			);
+			bullet_template.patnum = PAT_BULLET16_N_RED;
+			bullet_template.group = BG_RING;
+			bullet_template.speed.set(3.75f);
+			bullet_template.spread = 16;
+			bullet_template_tune();
+			snd_se_play(8);
+		}
+	} else if(phase_2_3_pattern()) {
+		boss.sprite = PAT_SHINKI_STILL;
+		boss.phase_frame = 0;
+		boss.mode = 0;
+	}
 }

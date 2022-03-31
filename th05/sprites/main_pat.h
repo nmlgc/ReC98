@@ -124,6 +124,11 @@ typedef enum {
 
 	/// Stage 6
 	/// =======
+	// st05.bb1
+	// --------
+	PAT_SHINKI_STILL = 180,
+	PAT_SHINKI_CAST,
+	// --------
 	// st05.bb4
 	// --------
 	PAT_B6BALL_BLUE_1 = 200,
