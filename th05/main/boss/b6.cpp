@@ -142,3 +142,26 @@ bool near pattern_random_directional_and_kunai(void)
 		boss.phase_frame - PHASE_2_3_PATTERN_START_FRAME - 32
 	);
 }
+
+bool near pattern_dense_blue_stacks(void)
+{
+	if(boss.phase_frame == PHASE_2_3_PATTERN_START_FRAME) {
+		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_SLOWDOWN);
+		bullet_template.patnum = PAT_BULLET16_N_BLUE;
+		bullet_template.group = BG_SPREAD_STACK_AIMED;
+		bullet_template.angle = 0x00;
+		bullet_template.set_spread(2, 0x04);
+		bullet_template.set_stack_for_rank(
+			12, 12, 13, 13,
+			to_sp8(0.3125f), to_sp8(0.375f), to_sp8(0.375f), to_sp8(0.4375f)
+		);
+		bullet_template.speed.set(2.0f);
+	}
+	if((boss.phase_frame % 4) == 0) {
+		bullets_add_regular();
+		snd_se_play(15);
+	}
+	return boss_flystep_random(
+		boss.phase_frame - PHASE_2_3_PATTERN_START_FRAME - 32
+	);
+}

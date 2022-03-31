@@ -215,6 +215,34 @@ struct bullet_template_t {
 	SubpixelLength8 stack_speed_delta;
 	unsigned char angle;
 	SubpixelLength8 speed;
+
+	void set_spread(unsigned char count, unsigned char angle_delta) {
+		// MODDERS: Just assign the values regularly, and don't rely on the
+		// physical layout of the structure.
+		reinterpret_cast<uint16_t &>(spread) = ((angle_delta << 8) | count);
+	}
+
+	#ifdef RANK_H
+		void set_stack_for_rank(
+			unsigned char count_for_easy,
+			unsigned char count_for_normal,
+			unsigned char count_for_hard,
+			unsigned char count_for_lunatic,
+			subpixel_length_8_t speed_delta_for_easy,
+			subpixel_length_8_t speed_delta_for_normal,
+			subpixel_length_8_t speed_delta_for_hard,
+			subpixel_length_8_t speed_delta_for_lunatic
+		) {
+			// MODDERS: Just assign the values regularly, and don't rely on the
+			// physical layout of the structure.
+			reinterpret_cast<uint16_t &>(stack) = select_for_rank(
+				((count_for_easy << 8) | speed_delta_for_easy),
+				((count_for_normal << 8) | speed_delta_for_normal),
+				((count_for_hard << 8) | speed_delta_for_hard),
+				((count_for_lunatic << 8) | speed_delta_for_lunatic)
+			);
+		}
+	#endif
 #else
 	PlayfieldPoint velocity;
 	bullet_group_t group;

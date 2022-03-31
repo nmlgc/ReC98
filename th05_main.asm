@@ -19180,48 +19180,10 @@ BOSS_6_TEXT	segment	byte public 'CODE' use16
 	@pattern_dualspeed_rings$qv procdesc near
 	@gather_then_phase_2_3_pattern$qv procdesc near
 	@pattern_random_directional_and_k$qv procdesc near
+	@pattern_dense_blue_stacks$qv procdesc near
 BOSS_6_TEXT	ends
 
 BOSS_X_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1D83A	proc near
-		push	bp
-		mov	bp, sp
-		cmp	_boss_phase_frame, 32
-		jnz	short loc_1D877
-		mov	_bullet_template.spawn_type, BST_CLOUD_FORWARDS or BST_NO_SLOWDOWN
-		mov	_bullet_template.patnum, PAT_BULLET16_N_BLUE
-		mov	_bullet_template.BT_group, BG_SPREAD_STACK_AIMED
-		mov	_bullet_template.BT_angle, 0
-		mov	word ptr _bullet_template.spread, (4 shl 8) or 2
-		push	(((12 shl 8) or 5) shl 16) or ((12 shl 8) or 6)
-		push	(((13 shl 8) or 6) shl 16) or ((13 shl 8) or 7)
-		call	select_for_rank
-		mov	word ptr _bullet_template.BT_stack, ax
-		mov	_bullet_template.speed, (2 shl 4)
-
-loc_1D877:
-		mov	ax, _boss_phase_frame
-		mov	bx, 4
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_1D88E
-		call	_bullets_add_regular
-		call	snd_se_play pascal, 15
-
-loc_1D88E:
-		mov	ax, _boss_phase_frame
-		add	ax, -64
-		call	@boss_flystep_random$qi pascal, ax
-		pop	bp
-		retn
-sub_1D83A	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -22980,7 +22942,7 @@ off_22832	dw offset sub_1CCD3
 off_2284A	dw offset @pattern_curved_rings$qv
 		dw offset @pattern_dualspeed_rings$qv
 		dw offset @pattern_random_directional_and_k$qv
-		dw offset sub_1D83A
+		dw offset @pattern_dense_blue_stacks$qv
 word_22852	dw 0
 byte_22854	db 0
 		db 0
