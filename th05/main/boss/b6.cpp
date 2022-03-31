@@ -118,3 +118,27 @@ void near gather_then_phase_2_3_pattern(void)
 		boss.mode = 0;
 	}
 }
+
+bool near pattern_random_directional_and_kunai(void)
+{
+	if(boss.phase_frame == PHASE_2_3_PATTERN_START_FRAME) {
+		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_SLOWDOWN);
+		bullet_template.speed.set(1.75f);
+		bullet_template.group = BG_RANDOM_ANGLE_AND_SPEED;
+		bullet_template.spread = 3;
+		bullet_template_tune();
+		snd_se_play(15);
+	}
+	if((boss.phase_frame % 2) == 0) {
+		bullet_template.patnum = PAT_BULLET16_D_BLUE;
+		bullet_template.origin.x -= (BOSS_W / 4.0f);
+		bullets_add_regular();
+
+		bullet_template.patnum = PAT_BULLET16_V_BLUE;
+		bullet_template.origin.x += ((BOSS_W / 4.0f) * 2.0f);
+		bullets_add_regular();
+	}
+	return boss_flystep_random(
+		boss.phase_frame - PHASE_2_3_PATTERN_START_FRAME - 32
+	);
+}

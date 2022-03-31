@@ -19179,48 +19179,10 @@ BOSS_6_TEXT	segment	byte public 'CODE' use16
 	@pattern_curved_rings$qv procdesc near
 	@pattern_dualspeed_rings$qv procdesc near
 	@gather_then_phase_2_3_pattern$qv procdesc near
+	@pattern_random_directional_and_k$qv procdesc near
 BOSS_6_TEXT	ends
 
 BOSS_X_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1D7DC	proc near
-		push	bp
-		mov	bp, sp
-		cmp	_boss_phase_frame, 32
-		jnz	short loc_1D805
-		mov	_bullet_template.spawn_type, BST_CLOUD_FORWARDS or BST_NO_SLOWDOWN
-		mov	_bullet_template.speed, (1 shl 4) + 12
-		mov	_bullet_template.BT_group, BG_RANDOM_ANGLE_AND_SPEED
-		mov	_bullet_template.spread, 3
-		call	_bullet_template_tune
-		call	snd_se_play pascal, 15
-
-loc_1D805:
-		mov	ax, _boss_phase_frame
-		mov	bx, 2
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_1D82E
-		mov	_bullet_template.patnum, PAT_BULLET16_D_BLUE
-		sub	_bullet_template.BT_origin.x, (16 shl 4)
-		call	_bullets_add_regular
-		mov	_bullet_template.patnum, PAT_BULLET16_V_BLUE
-		add	_bullet_template.BT_origin.x, (32 shl 4)
-		call	_bullets_add_regular
-
-loc_1D82E:
-		mov	ax, _boss_phase_frame
-		add	ax, -64
-		call	@boss_flystep_random$qi pascal, ax
-		pop	bp
-		retn
-sub_1D7DC	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -20261,7 +20223,7 @@ loc_1E2EA:
 		jnz	short loc_1E308
 		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_NW_SE shl 16) or 18400
 		mov	_boss_mode, 1
-		mov	_shinki_phase_2_3_pattern, offset sub_1D7DC
+		mov	_shinki_phase_2_3_pattern, offset @pattern_random_directional_and_k$qv
 		jmp	loc_1E481
 ; ---------------------------------------------------------------------------
 
@@ -23017,7 +22979,7 @@ off_22832	dw offset sub_1CCD3
 		dw 0
 off_2284A	dw offset @pattern_curved_rings$qv
 		dw offset @pattern_dualspeed_rings$qv
-		dw offset sub_1D7DC
+		dw offset @pattern_random_directional_and_k$qv
 		dw offset sub_1D83A
 word_22852	dw 0
 byte_22854	db 0
