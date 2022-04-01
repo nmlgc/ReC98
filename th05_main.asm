@@ -39,7 +39,7 @@ include th05/main/enemy/enemy.inc
 
 main_01 group SLOWDOWN_TEXT, m_TEXT, EMS_TEXT, ma_TEXT, CFG_LRES_TEXT, mai_TEXT, main_TEXT, main__TEXT, PLAYFLD_TEXT, main_0_TEXT, HUD_OVRL_TEXT, DIALOG_TEXT, PLAYER_P_TEXT, main_01_TEXT
 g_SHARED group SHARED, SHARED_
-main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, BULLET_A_TEXT, main_032_TEXT, main_033_TEXT, MB_DFT_TEXT, LASER_SC_TEXT, CURVEB_U_TEXT, IT_SPL_U_TEXT, BULLET_U_TEXT, main_034_TEXT, main_035_TEXT, BOSS_6_TEXT, BOSS_X_TEXT, main_036_TEXT, BOSS_TEXT
+main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, BULLET_A_TEXT, main_032_TEXT, main_033_TEXT, MB_DFT_TEXT, LASER_SC_TEXT, CHEETO_U_TEXT, IT_SPL_U_TEXT, BULLET_U_TEXT, main_034_TEXT, main_035_TEXT, BOSS_6_TEXT, BOSS_X_TEXT, main_036_TEXT, BOSS_TEXT
 
 ; ===========================================================================
 
@@ -800,7 +800,7 @@ loc_B2DD:
 		call	@midboss_reset$qv
 		cmp	word_20A84, 0
 		jz	loc_B3CA
-		call	bb_curvebullet_load
+		call	bb_cheeto_load
 		call	@bomb_bg_load__ems_preload_playch$qv
 		call	bb_playchar_load
 		mov	al, _playchar
@@ -2853,7 +2853,7 @@ loc_DD61:
 		nop
 
 include th04/main/player/shot_laser.asm
-include th05/formats/bb_curvebullet.asm
+include th05/formats/bb_cheeto.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4443,7 +4443,7 @@ loc_FBF7:
 sub_FAA3	endp
 
 include th05/main/bullet/lasers_update_render.asm
-include th05/main/bullet/curvebullets_render.asm
+include th05/main/bullet/cheetos_render.asm
 include th04/main/item/splashes_render.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -6080,7 +6080,7 @@ loc_11069:
 		retn
 @yumeko_fg_render$qv	endp
 
-include th05/main/bullet/b6balls_render.asm
+include th05/main/bullet/b6_custombullets_render.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6869,7 +6869,7 @@ loc_117B4:
 loc_117BA:
 		cmp	[bp+@@i], 2
 		jl	loc_116A6
-		call	curvebullets_render
+		call	cheetos_render
 		pop	di
 		pop	si
 		leave
@@ -10387,10 +10387,10 @@ LASER_SC_TEXT	segment	byte public 'CODE' use16
 		slot:word
 LASER_SC_TEXT	ends
 
-CURVEB_U_TEXT	segment	byte public 'CODE' use16
-	@curvebullets_add$qv procdesc pascal near
-	@curvebullets_update$qv procdesc pascal near
-CURVEB_U_TEXT	ends
+CHEETO_U_TEXT	segment	byte public 'CODE' use16
+	@cheetos_add$qv procdesc pascal near
+	@cheetos_update$qv procdesc pascal near
+CHEETO_U_TEXT	ends
 
 IT_SPL_U_TEXT	segment	byte public 'CODE' use16
 	@item_splashes_init$qv procdesc pascal near
@@ -15055,9 +15055,9 @@ mai_yuki_1AB1F	proc near
 
 loc_1AB31:
 		mov	eax, _yuki_pos.cur
-		mov	curvebullet_template.pos.cur, eax
-		mov	curvebullet_template.CBTMPL_col, 11
-		mov	curvebullet_template.CBTMPL_speed, (2 shl 4)
+		mov	cheeto_template.pos.cur, eax
+		mov	cheeto_template.CBTMPL_col, 11
+		mov	cheeto_template.CBTMPL_speed, (2 shl 4)
 		mov	ax, _boss_pos.cur.x
 		cmp	ax, _yuki_pos.cur.x
 		jl	short loc_1AB53
@@ -15069,9 +15069,9 @@ loc_1AB53:
 		mov	[bp+@@angle], -40h
 
 loc_1AB57:
-		call	player_angle_from pascal, curvebullet_template.pos.cur.x, curvebullet_template.pos.cur.y, word ptr [bp+@@angle]
-		mov	curvebullet_template.CBTMPL_angle, al
-		call	@curvebullets_add$qv
+		call	player_angle_from pascal, cheeto_template.pos.cur.x, cheeto_template.pos.cur.y, word ptr [bp+@@angle]
+		mov	cheeto_template.CBTMPL_angle, al
+		call	@cheetos_add$qv
 		call	snd_se_play pascal, 15
 
 loc_1AB72:
@@ -15097,9 +15097,9 @@ mai_yuki_1AB76	proc near
 
 loc_1AB88:
 		mov	eax, _boss_pos.cur
-		mov	curvebullet_template.pos.cur, eax
-		mov	curvebullet_template.CBTMPL_col, 9
-		mov	curvebullet_template.CBTMPL_speed, (2 shl 4)
+		mov	cheeto_template.pos.cur, eax
+		mov	cheeto_template.CBTMPL_col, 9
+		mov	cheeto_template.CBTMPL_speed, (2 shl 4)
 		mov	ax, _boss_pos.cur.x
 		cmp	ax, _yuki_pos.cur.x
 		jge	short loc_1ABAA
@@ -15111,9 +15111,9 @@ loc_1ABAA:
 		mov	[bp+@@angle], -40h
 
 loc_1ABAE:
-		call	player_angle_from pascal, curvebullet_template.pos.cur.x, curvebullet_template.pos.cur.y, word ptr [bp+@@angle]
-		mov	curvebullet_template.CBTMPL_angle, al
-		call	@curvebullets_add$qv
+		call	player_angle_from pascal, cheeto_template.pos.cur.x, cheeto_template.pos.cur.y, word ptr [bp+@@angle]
+		mov	cheeto_template.CBTMPL_angle, al
+		call	@cheetos_add$qv
 		call	snd_se_play pascal, 15
 
 loc_1ABC9:
@@ -15222,7 +15222,7 @@ loc_1ACAB:
 		mov	_boss_mode_change, 0
 		mov	fp_2CE36, offset sub_1A5EB
 		mov	fp_2CE38, offset mai_yuki_1A8C9
-		mov	_boss_custombullets_render, offset curvebullets_render
+		mov	_boss_custombullets_render, offset cheetos_render
 		jmp	loc_1AFA7	; default
 ; ---------------------------------------------------------------------------
 
@@ -15503,7 +15503,7 @@ loc_1AF85:
 		mov	_boss_hp, 7900
 
 loc_1AFA7:
-		call	@curvebullets_update$qv	; default
+		call	@cheetos_update$qv	; default
 		mov	ax, _boss_hp
 		add	ax, _yuki_hp
 		call	hud_hp_update_and_render pascal, ax, 9000
@@ -19689,12 +19689,12 @@ loc_1DB10:
 		call	_bullets_add_regular
 		or	si, si
 		jnz	short loc_1DB78
-		mov	curvebullet_template.CBTMPL_col, 11
-		mov	curvebullet_template.CBTMPL_speed, (4 shl 4)
+		mov	cheeto_template.CBTMPL_col, 11
+		mov	cheeto_template.CBTMPL_speed, (4 shl 4)
 		call	randring2_next16_mod pascal, 3
 		shl	al, 6
-		mov	curvebullet_template.CBTMPL_angle, al
-		call	@curvebullets_add$qv
+		mov	cheeto_template.CBTMPL_angle, al
+		call	@cheetos_add$qv
 		call	snd_se_play pascal, 3
 
 loc_1DB78:
@@ -20455,7 +20455,7 @@ loc_1E333:
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
 		mov	_boss_pos.velocity.y, 0
-		mov	_boss_custombullets_render, offset b6balls_render
+		mov	_boss_custombullets_render, offset @shinki_custombullets_render$qv
 		push	((50 shl 4) shl 16) or (35 shl 4)
 		push	((45 shl 4) shl 16) or (50 shl 4)
 		call	select_for_playchar
@@ -20634,7 +20634,7 @@ loc_1E522:
 
 loc_1E527:
 		call	@b6balls_update$qv
-		call	@curvebullets_update$qv
+		call	@cheetos_update$qv
 		call	hud_hp_update_and_render pascal, _boss_hp, 22800
 		pop	di
 		pop	si
@@ -21747,29 +21747,29 @@ sub_1EEF1	proc near
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1EF6F
-		mov	curvebullet_template.CBTMPL_col, 11
-		mov	curvebullet_template.CBTMPL_speed, (3 shl 4)
+		mov	cheeto_template.CBTMPL_col, 11
+		mov	cheeto_template.CBTMPL_speed, (3 shl 4)
 		mov	ax, _boss_phase_frame
 		mov	bx, 128
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1EF54
-		push	curvebullet_template.pos.cur.x
-		push	curvebullet_template.pos.cur.y
+		push	cheeto_template.pos.cur.x
+		push	cheeto_template.pos.cur.y
 		push	20h
 		jmp	short loc_1EF5F
 ; ---------------------------------------------------------------------------
 
 loc_1EF54:
-		push	curvebullet_template.pos.cur.x
-		push	curvebullet_template.pos.cur.y
+		push	cheeto_template.pos.cur.x
+		push	cheeto_template.pos.cur.y
 		push	(-20h and 255)
 
 loc_1EF5F:
 		call	player_angle_from
-		mov	curvebullet_template.CBTMPL_angle, al
-		call	@curvebullets_add$qv
+		mov	cheeto_template.CBTMPL_angle, al
+		call	@cheetos_add$qv
 		call	snd_se_play pascal, 15
 
 loc_1EF6F:
@@ -21801,29 +21801,29 @@ sub_1EF80	proc near
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1EFCF
-		mov	curvebullet_template.CBTMPL_col, 11
-		mov	curvebullet_template.CBTMPL_speed, (4 shl 4)
+		mov	cheeto_template.CBTMPL_col, 11
+		mov	cheeto_template.CBTMPL_speed, (4 shl 4)
 		mov	ax, _boss_phase_frame
 		mov	bx, 16
 		cwd
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1EFB4
-		push	curvebullet_template.pos.cur.x
-		push	curvebullet_template.pos.cur.y
+		push	cheeto_template.pos.cur.x
+		push	cheeto_template.pos.cur.y
 		push	40h
 		jmp	short loc_1EFBF
 ; ---------------------------------------------------------------------------
 
 loc_1EFB4:
-		push	curvebullet_template.pos.cur.x
-		push	curvebullet_template.pos.cur.y
+		push	cheeto_template.pos.cur.x
+		push	cheeto_template.pos.cur.y
 		push	(-40h and 255)
 
 loc_1EFBF:
 		call	player_angle_from
-		mov	curvebullet_template.CBTMPL_angle, al
-		call	@curvebullets_add$qv
+		mov	cheeto_template.CBTMPL_angle, al
+		call	@cheetos_add$qv
 		call	snd_se_play pascal, 15
 
 loc_1EFCF:
@@ -21860,9 +21860,9 @@ sub_1EFED	proc near
 		mov	_gather_template.GT_center.x, ax
 		cmp	_boss_phase_frame, 64
 		jnz	short loc_1F045
-		mov	curvebullet_template.CBH_angle, -3Ch
+		mov	cheeto_template.CBH_angle, -3Ch
 		mov	_bullet_template.BT_angle, 20h
-		mov	curvebullet_template.CBH_speed, (5 shl 4)
+		mov	cheeto_template.CBH_speed, (5 shl 4)
 		mov	_bullet_template.speed, (3 shl 4)
 		mov	_bullet_template.spawn_type, BST_CLOUD_FORWARDS or BST_NO_SLOWDOWN
 		mov	_bullet_template.BT_group, BG_SPREAD
@@ -22109,7 +22109,7 @@ loc_1F298:
 		mov	_bullet_template.BT_origin, eax
 		mov	_gather_template.GT_center, eax
 		mov	_laser_template.coords.origin, eax
-		mov	curvebullet_template.pos.cur, eax
+		mov	cheeto_template.pos.cur, eax
 		inc	_boss_phase_frame
 		mov	al, _boss_phase
 		mov	ah, 0
@@ -22458,7 +22458,7 @@ loc_1F660:
 		call	@boss_defeat_update$qui pascal, 200
 
 loc_1F666:
-		call	@curvebullets_update$qv
+		call	@cheetos_update$qv
 		call	@firewaves_update$qv
 		call	hud_hp_update_and_render pascal, _boss_hp, 26500
 		pop	si
@@ -22979,7 +22979,7 @@ public _exalice_hexagrams_state
 _exalice_hexagrams_state	db 0
 		db 0
 include th04/main/player/shot_laser[data].asm
-include th05/formats/bb_curvebullet[data].asm
+include th05/formats/bb_cheeto[data].asm
 ; char aMaine[]
 aMaine		db 'maine',0
 ; char aMaine_0[]
@@ -23326,7 +23326,7 @@ _tri_point_2	Point <?>
 include th04/main/boss/bg[bss].asm
 	dw ?
 include th05/main/boss/render[bss].asm
-include th05/formats/bb_curvebullet[bss].asm
+include th05/formats/bb_cheeto[bss].asm
 include th05/formats/bb_load[bss].asm
 _invalidate_left_x_tile	dw ?
 include th04/main/sparks_add[bss].asm
@@ -23405,7 +23405,7 @@ include th04/main/midboss/funcs[bss].asm
 byte_2C99C	db ?
 		db ?
 include th05/main/bullet/lasers_render[bss].asm
-include th05/main/bullet/curve[bss].asm
+include th05/main/bullet/cheeto[bss].asm
 include th04/main/item/splashes[bss].asm
 include th05/main/bullet/pellet_r[bss].asm
 include th04/main/playfld[bss].asm

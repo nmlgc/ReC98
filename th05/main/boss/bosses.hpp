@@ -71,4 +71,6 @@ extern unsigned char yumeko_interval_phase4;
 extern unsigned char yumeko_interval_phase7;
 
 BOSS_DEC(shinki);
+void pascal near shinki_custombullets_render();
+
 BOSS_DEC(exalice);

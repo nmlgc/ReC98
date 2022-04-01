@@ -34,4 +34,3 @@ typedef struct {
 void near b6balls_add();
 
 void near b6balls_update();
-void pascal near b6balls_render();

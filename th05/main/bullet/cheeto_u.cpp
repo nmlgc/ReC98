@@ -14,61 +14,61 @@ extern "C" {
 #include "th05/main/player/player.hpp"
 }
 #include "th05/main/custom.h"
-#include "th05/main/bullet/curve.hpp"
+#include "th05/main/bullet/cheeto.hpp"
 
 static const subpixel_t TRAIL_KILLBOX_W = TO_SP(12);
 static const subpixel_t TRAIL_KILLBOX_H = TO_SP(12);
 static const subpixel_t HEAD_KILLBOX_W = TO_SP(16);
 static const subpixel_t HEAD_KILLBOX_H = TO_SP(16);
 
-static const int TRAIL_NODE_LAST = (CURVEBULLET_TRAIL_NODE_COUNT - 1);
+static const int TRAIL_NODE_LAST = (CHEETO_TRAIL_NODE_COUNT - 1);
 
-void near curvebullets_add(void)
+void near cheetos_add(void)
 {
-	curvebullet_head_t near *head_p;
+	cheeto_head_t near *head_p;
 	int b_i;
 	int node_i;
-	curvebullet_trail_t near *trail_p;
+	cheeto_trail_t near *trail_p;
 
 	for(
-		(head_p = curvebullet_heads, trail_p = curvebullet_trails, b_i = 1);
-		(b_i < (1 + CURVEBULLET_COUNT));
+		(head_p = cheeto_heads, trail_p = cheeto_trails, b_i = 1);
+		(b_i < (1 + CHEETO_COUNT));
 		(b_i++, head_p++, trail_p++)
 	 ) {
-		if((head_p->flag != CBF_FREE) || (trail_p->flag != CBF_FREE)) {
+		if((head_p->flag != CF_FREE) || (trail_p->flag != CF_FREE)) {
 			continue;
 		}
-		trail_p->flag = CBF_SLOWDOWN;
-		head_p->angle = curvebullet_template.angle;
-		head_p->speed = curvebullet_template.speed;
+		trail_p->flag = CF_SLOWDOWN;
+		head_p->angle = cheeto_template.angle;
+		head_p->speed = cheeto_template.speed;
 		vector2_near(head_p->pos.velocity, head_p->angle, head_p->speed);
-		trail_p->col = curvebullet_template.col;
+		trail_p->col = cheeto_template.col;
 		head_p->sprite = bullet_patnum_for_angle(0, head_p->angle);
-		head_p->pos.cur = curvebullet_template.pos.cur;
+		head_p->pos.cur = cheeto_template.pos.cur;
 
-		for(node_i = 0; node_i < CURVEBULLET_TRAIL_NODE_COUNT; node_i++) {
-			trail_p->node_pos[node_i] = curvebullet_template.pos.cur;
+		for(node_i = 0; node_i < CHEETO_TRAIL_NODE_COUNT; node_i++) {
+			trail_p->node_pos[node_i] = cheeto_template.pos.cur;
 			trail_p->node_sprite[node_i] = head_p->sprite;
 		}
 		return;
 	 }
 }
 
-void near curvebullets_update(void)
+void near cheetos_update(void)
 {
-	curvebullet_head_t near *head_p;
-	curvebullet_trail_t near *trail_p;
+	cheeto_head_t near *head_p;
+	cheeto_trail_t near *trail_p;
 	int b_i;
 	int node_i;
 	unsigned char angle_delta;
 	unsigned char unused_friction_factor;
 
 	for(
-		(head_p = curvebullet_heads, trail_p = curvebullet_trails, b_i = 1);
-		(b_i < (1 + CURVEBULLET_COUNT));
+		(head_p = cheeto_heads, trail_p = cheeto_trails, b_i = 1);
+		(b_i < (1 + CHEETO_COUNT));
 		(b_i++, head_p++, trail_p++)
 	 ) {
-		if(trail_p->flag == CBF_FREE) {
+		if(trail_p->flag == CF_FREE) {
 			continue;
 		}
 		head_p->age++;
@@ -90,10 +90,10 @@ void near curvebullets_update(void)
 		trail_p->node_pos[0] = head_p->pos.cur;
 		trail_p->node_sprite[0] = head_p->sprite;
 		if(!playfield_encloses_point(
-			trail_p->node_pos[TRAIL_NODE_LAST], CURVEBULLET_W, CURVEBULLET_H
+			trail_p->node_pos[TRAIL_NODE_LAST], CHEETO_W, CHEETO_H
 		)) {
-			trail_p->flag = CBF_FREE;
-			head_p->flag = CBF_FREE;
+			trail_p->flag = CF_FREE;
+			head_p->flag = CF_FREE;
 			continue;
 		}
 
@@ -104,13 +104,13 @@ void near curvebullets_update(void)
 			player_is_hit = true;
 		}
 
-		if(trail_p->flag == CBF_SLOWDOWN) {
+		if(trail_p->flag == CF_SLOWDOWN) {
 			head_p->speed.v--; // -= to_sp(1 / 16.0f)
 			if(head_p->speed.v <= to_sp8(0.25f)) {
 				static_cast<unsigned char>(trail_p->flag)++;
 			}
 			unused_friction_factor = 0x10;
-		} else /* if(trail_p->flag == CBF_SPEEDUP) */ {
+		} else /* if(trail_p->flag == CF_SPEEDUP) */ {
 			head_p->speed.v += (stage_frame_mod2 + to_sp(0.0625f));
 			unused_friction_factor = (head_p->speed.v + 0x20);
 		}

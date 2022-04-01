@@ -1,5 +1,5 @@
-public B6BALLS_RENDER
-b6balls_render	proc near
+public @SHINKI_CUSTOMBULLETS_RENDER$QV
+@shinki_custombullets_render$qv proc near
 	push	bp
 	mov	bp, sp
 	push	si
@@ -53,9 +53,9 @@ b6balls_render	proc near
 @@more?:
 	cmp	di, 1 + B6BALL_COUNT
 	jl	short @@loop
-	call	curvebullets_render
+	call	cheetos_render
 	pop	di
 	pop	si
 	pop	bp
 	retn
-b6balls_render	endp
+@shinki_custombullets_render$qv endp

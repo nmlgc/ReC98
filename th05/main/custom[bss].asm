@@ -47,9 +47,9 @@ puppet0	equ <puppets[0 * size puppet_t]>
 puppet1	equ <puppets[1 * size puppet_t]>
 ; ---------------
 
-; Curve bullets
-; -------------
-curvebullet_template_t struc
+; Cheeto bullets
+; --------------
+cheeto_template_t struc
 		db ?
 	CBTMPL_angle	db ?
 	pos	motion_t <?>
@@ -59,9 +59,9 @@ curvebullet_template_t struc
 		dd ?
 	CBTMPL_speed	db ?
 		db ?
-curvebullet_template_t ends
+cheeto_template_t ends
 
-curvebullet_head_t struc
+cheeto_head_t struc
 	flag	db ?
 	CBH_angle	db ?
 	pos	motion_t <?>
@@ -71,11 +71,11 @@ curvebullet_head_t struc
 		dd ?
 	CBH_speed	db ?
 		db ?
-curvebullet_head_t ends
+cheeto_head_t ends
 
-curvebullet_template	equ <_custom_entities>
-curvebullet_heads	equ <_custom_entities[1 * size curvebullet_head_t]>
-; -------------
+cheeto_template	equ <_custom_entities>
+cheeto_heads	equ <_custom_entities[1 * size cheeto_head_t]>
+; --------------
 
 ; Mai's and Yuki's 32×32 balls
 ; ----------------------------

@@ -1,6 +1,6 @@
-; void pascal near bb_curvebullet_load(void);
-public BB_CURVEBULLET_LOAD
-bb_curvebullet_load	proc near
+; void pascal near bb_cheeto_load(void);
+public bb_cheeto_load
+bb_cheeto_load proc near
 	mov	ax, 3D00h
 	mov	dx, offset aLs00_bb
 	int	21h		; DOS -	2+ - OPEN DISK FILE WITH HANDLE
@@ -9,7 +9,7 @@ bb_curvebullet_load	proc near
 				; 0 - read
 	mov	bx, ax
 	mov	ah, 3Fh
-	mov	dx, offset _bb_curvebullet
+	mov	dx, offset _bb_cheeto
 	mov	cx, BB_SIZE
 	int	21h		; DOS -	2+ - READ FROM FILE WITH HANDLE
 				; BX = file handle, CX = number	of bytes to read
@@ -18,13 +18,13 @@ bb_curvebullet_load	proc near
 	int	21h		; DOS -	2+ - CLOSE A FILE WITH HANDLE
 				; BX = file handle
 	retn
-bb_curvebullet_load	endp
+bb_cheeto_load endp
 	nop
 
 
 ; Adapted from z_super_roll_put_tiny_32x32().
-public @curvebullet_put
-@curvebullet_put	proc near
+public @cheeto_put
+@cheeto_put proc near
 
 ; Parameters
 @@left equ ax
@@ -32,7 +32,7 @@ public @curvebullet_put
 @@sprite equ bx
 
 ; Locals
-@@PATTERN_HEIGHT = CURVEBULLET_H
+@@PATTERN_HEIGHT = CHEETO_H
 @@first_mask equ dl
 @@first_bit equ cl
 @@rows_left equ ch
@@ -41,7 +41,7 @@ public @curvebullet_put
 	push	di
 	shl	@@sprite, 7
 	mov	si, @@sprite
-	add	si, offset _bb_curvebullet
+	add	si, offset _bb_cheeto
 	mov	di, @@top
 	shl	di, 2
 	add	di, @@top
@@ -156,4 +156,4 @@ public @curvebullet_put
 	add	di, (ROW_SIZE - (dword + 1))
 	dec	@@rows_left
 	retn
-@curvebullet_put	endp
+@cheeto_put endp
