@@ -17215,7 +17215,7 @@ var_1		= byte ptr -1
 		call	_bullet_template_tune
 		mov	fp_25676, offset marisa_16F24
 		mov	al, byte ptr _boss_phase_frame
-		mov	_boss_statebyte[15].BSB_phase_frame, al
+		mov	_boss_statebyte[15].BSB_last_frame_with_bits_alive, al
 		jmp	loc_1705D
 ; ---------------------------------------------------------------------------
 
@@ -17232,12 +17232,12 @@ loc_16F9F:
 		jz	short loc_16FC6
 		call	marisa_16DD7
 		mov	al, byte ptr _boss_phase_frame
-		mov	_boss_statebyte[15].BSB_phase_frame, al
+		mov	_boss_statebyte[15].BSB_last_frame_with_bits_alive, al
 		jmp	short loc_17026
 ; ---------------------------------------------------------------------------
 
 loc_16FC6:
-		mov	al, _boss_statebyte[15].BSB_phase_frame
+		mov	al, _boss_statebyte[15].BSB_last_frame_with_bits_alive
 		mov	ah, 0
 		mov	dx, 160
 		sub	dx, ax
@@ -17355,7 +17355,7 @@ loc_170B5:
 		cmp	di, 4
 		jl	short loc_170AB
 		mov	al, byte ptr _boss_phase_frame
-		mov	_boss_statebyte[15].BSB_phase_frame, al
+		mov	_boss_statebyte[15].BSB_last_frame_with_bits_alive, al
 		jmp	loc_17179
 ; ---------------------------------------------------------------------------
 
@@ -17380,12 +17380,12 @@ loc_170C3:
 		jz	short loc_17102
 		call	marisa_16DD7
 		mov	al, byte ptr _boss_phase_frame
-		mov	_boss_statebyte[15].BSB_phase_frame, al
+		mov	_boss_statebyte[15].BSB_last_frame_with_bits_alive, al
 		jmp	short loc_17136
 ; ---------------------------------------------------------------------------
 
 loc_17102:
-		mov	al, _boss_statebyte[15].BSB_phase_frame
+		mov	al, _boss_statebyte[15].BSB_last_frame_with_bits_alive
 		mov	ah, 0
 		mov	dx, 160
 		sub	dx, ax
@@ -32318,7 +32318,7 @@ boss_statebyte_t union
 	BSB_orb_count                   	db ?
 	BSB_orb_interval                	db ?
 	BSB_origin_offset_x             	db ? ; pixel_t
-	BSB_phase_frame                 	db ?
+	BSB_last_frame_with_bits_alive  	db ?
 	BSB_pattern_num_prev            	db ?
 	BSB_patterns_done               	db ?
 	BSB_pellet_stack_angle          	db ?
