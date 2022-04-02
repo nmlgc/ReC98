@@ -19,7 +19,7 @@ extern "C" {
 #include "th04/formats/bb.h"
 #include "th04/formats/cdg.h"
 #include "th04/main/frames.h"
-#include "th04/main/phase.h"
+#include "th04/main/phase.hpp"
 #include "th05/main/playfld.hpp"
 #include "th04/main/drawp.hpp"
 #include "th04/main/tile/bb.hpp"

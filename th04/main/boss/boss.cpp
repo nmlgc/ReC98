@@ -27,7 +27,7 @@ extern "C" {
 #include "th04/main/homing.hpp"
 extern "C" {
 #include "th04/main/null.hpp"
-#include "th04/main/phase.h"
+#include "th04/main/phase.hpp"
 #include "th04/main/playfld.hpp"
 #include "th04/main/rank.hpp"
 #include "th04/main/quit.hpp"

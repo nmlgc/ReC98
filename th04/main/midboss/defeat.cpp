@@ -6,7 +6,7 @@ extern "C" {
 }
 #include "th04/math/motion.hpp"
 #include "th04/sprites/main_pat.h"
-#include "th04/main/phase.h"
+#include "th04/main/phase.hpp"
 #include "th04/main/score.hpp"
 extern "C" {
 #include "th04/main/playfld.hpp"
