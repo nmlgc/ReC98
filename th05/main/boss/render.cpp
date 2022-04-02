@@ -524,9 +524,9 @@ void near shinki_bg_type_d_update(void)
 
 void pascal near shinki_bg_render(void)
 {
-	if(boss.phase == 0) {
+	if(boss.phase == PHASE_BOSS_HP_FILL) {
 		boss_backdrop_render(PLAYFIELD_LEFT, SHINKI_STAGE_BACKDROP_TOP, 1);
-	} else if(boss.phase == 1) {
+	} else if(boss.phase == PHASE_BOSS_ENTRANCE_BB) {
 		unsigned char entrance_cel = (boss.phase_frame / 4);
 		if(entrance_cel < TILES_BB_CELS) {
 			boss_backdrop_render(PLAYFIELD_LEFT, SHINKI_STAGE_BACKDROP_TOP, 1);
@@ -657,9 +657,9 @@ void near exalice_hexagrams_update_and_render(void)
 
 void pascal near exalice_bg_render(void)
 {
-	if(boss.phase == 0) {
+	if(boss.phase == PHASE_BOSS_HP_FILL) {
 		tiles_render_after_custom_bg(boss.phase_frame);
-	} else if(boss.phase == 1) {
+	} else if(boss.phase == PHASE_BOSS_ENTRANCE_BB) {
 		unsigned char entrance_cel = (boss.phase_frame / 4);
 		boss_bg_fill_col_0();
 		tiles_bb_col = 15;

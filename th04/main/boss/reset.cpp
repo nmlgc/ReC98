@@ -7,7 +7,7 @@ void near boss_reset(void)
 #if GAME == 5
 	boss_custombullets_render = nullfunc_near;
 #endif
-	boss.phase = 0;
+	boss.phase = PHASE_BOSS_HP_FILL;
 	boss.mode = 0;
 	boss.mode_change = 0;
 	boss.phase_frame = 0;

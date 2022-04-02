@@ -1733,7 +1733,7 @@ sub_C52D	proc near
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_C565
-		cmp	_boss_phase, 0
+		cmp	_boss_phase, PHASE_BOSS_HP_FILL
 		jz	short loc_C555
 		mov	al, _bomb_frame
 		mov	ah, 0
@@ -2819,7 +2819,7 @@ public @SARA_BG_RENDER$QV
 @sara_bg_render$qv	proc near
 		push	bp
 		mov	bp, sp
-		cmp	_boss_phase, 0
+		cmp	_boss_phase, PHASE_BOSS_HP_FILL
 		jnz	short loc_D09F
 		cmp	_boss_phase_frame, 2
 		jg	short loc_D0EF
@@ -2827,7 +2827,7 @@ public @SARA_BG_RENDER$QV
 ; ---------------------------------------------------------------------------
 
 loc_D09F:
-		cmp	_boss_phase, 1
+		cmp	_boss_phase, PHASE_BOSS_ENTRANCE_BB
 		jnz	short loc_D0C8
 		call	@boss_backdrop_render$qiic pascal, (64 shl 16) or 16, 0
 		mov	ax, _bb_boss_seg
@@ -2879,7 +2879,7 @@ public @LOUISE_BG_RENDER$QV
 		push	bp
 		mov	bp, sp
 		push	si
-		cmp	_boss_phase, 0
+		cmp	_boss_phase, PHASE_BOSS_HP_FILL
 		jnz	short loc_D108
 		cmp	_boss_phase_frame, 2
 		jg	short loc_D17A
@@ -2887,7 +2887,7 @@ public @LOUISE_BG_RENDER$QV
 ; ---------------------------------------------------------------------------
 
 loc_D108:
-		cmp	_boss_phase, 1
+		cmp	_boss_phase, PHASE_BOSS_ENTRANCE_BB
 		jnz	short loc_D153
 		mov	ax, _boss_phase_frame
 		mov	bx, 4
@@ -2953,7 +2953,7 @@ public @ALICE_BG_RENDER$QV
 		push	bp
 		mov	bp, sp
 		push	si
-		cmp	_boss_phase, 0
+		cmp	_boss_phase, PHASE_BOSS_HP_FILL
 		jnz	short loc_D194
 		cmp	_boss_phase_frame, 2
 		jg	short loc_D206
@@ -2961,7 +2961,7 @@ public @ALICE_BG_RENDER$QV
 ; ---------------------------------------------------------------------------
 
 loc_D194:
-		cmp	_boss_phase, 1
+		cmp	_boss_phase, PHASE_BOSS_ENTRANCE_BB
 		jnz	short loc_D1DF
 		mov	ax, _boss_phase_frame
 		mov	bx, 4
@@ -3028,7 +3028,7 @@ public @MAI_YUKI_BG_RENDER$QV
 @@entrance_cel		= byte ptr -1
 
 		enter	2, 0
-		cmp	_boss_phase, 0
+		cmp	_boss_phase, PHASE_BOSS_HP_FILL
 		jnz	short loc_D220
 		cmp	_boss_phase_frame, 2
 		jg	short loc_D299
@@ -3036,7 +3036,7 @@ public @MAI_YUKI_BG_RENDER$QV
 ; ---------------------------------------------------------------------------
 
 loc_D220:
-		cmp	_boss_phase, 1
+		cmp	_boss_phase, PHASE_BOSS_ENTRANCE_BB
 		jnz	short loc_D272
 		mov	ax, _boss_phase_frame
 		mov	bx, 4
@@ -3105,9 +3105,9 @@ public @YUMEKO_BG_RENDER$QV
 @@entrance_cel		= byte ptr -1
 
 		enter	2, 0
-		cmp	_boss_phase, 0
+		cmp	_boss_phase, PHASE_BOSS_HP_FILL
 		jz	short loc_D31D
-		cmp	_boss_phase, 1
+		cmp	_boss_phase, PHASE_BOSS_ENTRANCE_BB
 		jnz	short loc_D2FB
 		mov	ax, _boss_phase_frame
 		mov	bx, 4
@@ -6440,7 +6440,7 @@ var_6		= word ptr -6
 ; ---------------------------------------------------------------------------
 
 loc_11001:
-		cmp	_boss_phase, 0
+		cmp	_boss_phase, PHASE_BOSS_HP_FILL
 		jnz	short loc_11029
 		mov	ax, _boss2_pos.x
 		sar	ax, 4
@@ -6798,13 +6798,13 @@ var_2		= word ptr -2
 		enter	4, 0
 		push	si
 		push	di
-		cmp	_boss_phase, 1
+		cmp	_boss_phase, PHASE_BOSS_ENTRANCE_BB
 		jbe	short loc_113B9
 		cmp	_boss_phase, PHASE_BOSS_EXPLODE_BIG
 		jb	loc_1162C
 
 loc_113B9:
-		cmp	_boss_phase, 1
+		cmp	_boss_phase, PHASE_BOSS_ENTRANCE_BB
 		jnz	short loc_113C9
 		cmp	_boss_phase_frame, 32
 		jge	loc_1162C
@@ -7481,7 +7481,7 @@ loc_12083:
 loc_12092:
 		cmp	_dream, 2
 		jbe	short loc_120B1
-		cmp	_boss_phase, 0
+		cmp	_boss_phase, PHASE_BOSS_HP_FILL
 		jz	short loc_120A7
 		cmp	_stage_frame_mod2, 0
 		jz	short loc_120B6
@@ -15994,7 +15994,7 @@ loc_1AF66:
 loc_1AF85:
 		call	@dialog_animate$qv
 		mov	_overlay1, offset @overlay_boss_bgm_update_and_rend$qv
-		mov	_boss_phase, 0
+		mov	_boss_phase, PHASE_BOSS_HP_FILL
 		mov	_boss_phase_frame, 0
 		mov	_boss_fg_render, offset sub_10F12
 		mov	_boss_hp, 7900

@@ -5054,7 +5054,7 @@ var_2		= word ptr -2
 ; ---------------------------------------------------------------------------
 
 loc_E8D8:
-		cmp	_boss_phase, 1
+		cmp	_boss_phase, PHASE_BOSS_ENTRANCE_BB
 		ja	short loc_E91D
 		mov	ax, _boss_pos.cur.x
 		sar	ax, 4
@@ -5426,7 +5426,7 @@ stage5_render	proc near
 
 		enter	2, 0
 		push	si
-		cmp	_boss_phase, 1
+		cmp	_boss_phase, PHASE_BOSS_ENTRANCE_BB
 		jb	short loc_EC01
 		cmp	_boss_phase, PHASE_EXPLODE_BIG
 		jb	short loc_EC56
@@ -9184,7 +9184,7 @@ var_2		= word ptr -2
 		add	dx, 146
 		mov	[bp+var_2], dx
 		call	super_put pascal, si, di, dx
-		cmp	_boss_phase, 0
+		cmp	_boss_phase, PHASE_BOSS_HP_FILL
 		jnz	loc_11961
 		cmp	_boss_phase_frame, 128
 		jle	loc_11961
@@ -9381,7 +9381,7 @@ var_2		= word ptr -2
 		add	dx, ax
 		mov	[bp+var_2], dx
 		call	super_put pascal, si, di, dx
-		cmp	_boss_phase, 0
+		cmp	_boss_phase, PHASE_BOSS_HP_FILL
 		jnz	loc_11A90
 		cmp	_boss_phase_frame, 192
 		jl	loc_11A90
@@ -10212,7 +10212,7 @@ include th04/main/boss/backdrop.asm
 @orange_bg_render$qv	proc near
 		push	bp
 		mov	bp, sp
-		cmp	_boss_phase, 0
+		cmp	_boss_phase, PHASE_BOSS_HP_FILL
 		jnz	short loc_12199
 		cmp	_boss_phase_frame, 192
 		jge	short loc_121E1
@@ -10222,7 +10222,7 @@ include th04/main/boss/backdrop.asm
 ; ---------------------------------------------------------------------------
 
 loc_12199:
-		cmp	_boss_phase, 1
+		cmp	_boss_phase, PHASE_BOSS_ENTRANCE_BB
 		jnz	short loc_121BF
 		call	@boss_backdrop_render$qiic pascal, (32 shl 16) or 136, 1
 		mov	ax, _bb_boss_seg
@@ -10270,9 +10270,9 @@ loc_121E6:
 @kurumi_bg_render$qv	proc near
 		push	bp
 		mov	bp, sp
-		cmp	_boss_phase, 0
+		cmp	_boss_phase, PHASE_BOSS_HP_FILL
 		jz	short loc_1223D
-		cmp	_boss_phase, 1
+		cmp	_boss_phase, PHASE_BOSS_ENTRANCE_BB
 		jnz	short loc_1221B
 		call	@boss_backdrop_render$qiic pascal, (32 shl 16) or 96, 0
 		mov	ax, _bb_boss_seg
@@ -10340,7 +10340,7 @@ sub_12247	endp
 @elly_bg_render$qv	proc near
 		push	bp
 		mov	bp, sp
-		cmp	_boss_phase, 1
+		cmp	_boss_phase, PHASE_BOSS_ENTRANCE_BB
 		ja	short loc_12285
 		cmp	_boss_phase_frame, 2
 		jle	short loc_122CD
@@ -10399,7 +10399,7 @@ loc_122D2:
 @@entrance_cel		= byte ptr -1
 
 		enter	2, 0
-		cmp	_boss_phase, 0
+		cmp	_boss_phase, PHASE_BOSS_HP_FILL
 		jnz	short loc_122EB
 		cmp	_boss_phase_frame, 2
 		jg	short loc_1235F
@@ -10407,7 +10407,7 @@ loc_122D2:
 ; ---------------------------------------------------------------------------
 
 loc_122EB:
-		cmp	_boss_phase, 1
+		cmp	_boss_phase, PHASE_BOSS_ENTRANCE_BB
 		jnz	short loc_12338
 		mov	ax, _boss_phase_frame
 		mov	bx, 8
@@ -10474,7 +10474,7 @@ loc_1235F:
 @@entrance_cel		= byte ptr -1
 
 		enter	2, 0
-		cmp	_boss_phase, 0
+		cmp	_boss_phase, PHASE_BOSS_HP_FILL
 		jnz	short loc_12378
 		cmp	_boss_phase_frame, 2
 		jg	short loc_123EC
@@ -10482,7 +10482,7 @@ loc_1235F:
 ; ---------------------------------------------------------------------------
 
 loc_12378:
-		cmp	_boss_phase, 1
+		cmp	_boss_phase, PHASE_BOSS_ENTRANCE_BB
 		jnz	short loc_123C5
 		mov	ax, _boss_phase_frame
 		mov	bx, 4
@@ -11160,7 +11160,7 @@ table_1289F	dw loc_12484
 		push	si
 		push	di
 		call	_grcg_setmode_tdw
-		cmp	_boss_phase, 0
+		cmp	_boss_phase, PHASE_BOSS_HP_FILL
 		jnz	short loc_12921
 		mov	ah, GC_RGI
 		call	_grcg_setcolor_direct_seg1_raw
@@ -11196,7 +11196,7 @@ loc_12904:
 ; ---------------------------------------------------------------------------
 
 loc_12921:
-		cmp	_boss_phase, 1
+		cmp	_boss_phase, PHASE_BOSS_ENTRANCE_BB
 		jnz	short loc_12958
 		mov	ax, _boss_phase_frame
 		mov	bx, 4
@@ -11256,7 +11256,7 @@ public @MUGETSU_GENGETSU_BG_RENDER$QV
 @@entrance_cel		= byte ptr -1
 
 		enter	2, 0
-		cmp	_boss_phase, 0
+		cmp	_boss_phase, PHASE_BOSS_HP_FILL
 		jnz	short loc_12996
 		cmp	_boss_phase_frame, 2
 		jg	short loc_12A05
@@ -11269,7 +11269,7 @@ loc_12991:
 ; ---------------------------------------------------------------------------
 
 loc_12996:
-		cmp	_boss_phase, 1
+		cmp	_boss_phase, PHASE_BOSS_ENTRANCE_BB
 		jnz	short loc_129E3
 		mov	ax, _boss_phase_frame
 		mov	bx, 4
@@ -27824,7 +27824,7 @@ public @boss_reset$qv
 		mov	bp, sp
 		setfarfp	_boss_update, nullfunc_far
 		mov	_boss_fg_render, offset nullfunc_near
-		mov	_boss_phase, 0
+		mov	_boss_phase, PHASE_BOSS_HP_FILL
 		mov	_boss_mode, 0
 		mov	_boss_mode_change, 0
 		mov	_boss_phase_frame, 0
