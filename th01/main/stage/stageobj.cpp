@@ -1,4 +1,3 @@
-extern "C" {
 #include <stddef.h>
 #include <malloc.h>
 #include "platform.h"
@@ -7,6 +6,7 @@ extern "C" {
 #include "planar.h"
 #include "master.hpp"
 #include "th01/common.h"
+extern "C" {
 #include "th01/main/playfld.hpp"
 #include "th01/formats/ptn.hpp"
 #include "th01/formats/pf.hpp"

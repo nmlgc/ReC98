@@ -1,11 +1,11 @@
 #pragma option -zCSHARED -3
 
-extern "C" {
 #include <mem.h>
 #include "platform.h"
 #include "x86real.h"
 #include "pc98.h"
 #include "master.hpp"
+extern "C" {
 #include "th02/formats/pi.h"
 
 void DEFCONV pi_palette_apply(int slot)

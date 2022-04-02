@@ -3,7 +3,6 @@
  * 1st part of code segment #1 of TH01's REIIDEN.EXE
  */
 
-extern "C" {
 #include <stddef.h>
 #include <stdio.h>
 #include <string.h>
@@ -15,6 +14,7 @@ extern "C" {
 #include "master.hpp"
 #include "pc98kbd.h"
 #include "twobyte.h"
+extern "C" {
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/input.hpp"

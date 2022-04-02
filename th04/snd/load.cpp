@@ -1,10 +1,10 @@
 #pragma option -zCSHARED -3 -Z-
 
-extern "C" {
 #include "platform.h"
 #include "x86real.h"
 #include "master.hpp"
 #include "libs/kaja/kaja.h"
+extern "C" {
 #include "th04/snd/snd.h"
 
 extern char snd_load_fn[SND_FN_LEN];

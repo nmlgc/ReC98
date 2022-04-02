@@ -1,9 +1,9 @@
-extern "C" {
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
 #include "th01/math/subpixel.hpp"
 #include "th04/math/motion.hpp"
+extern "C" {
 #include "th04/math/vector.hpp"
 #include "th04/hardware/grcg.h"
 #include "th04/main/scroll.hpp"

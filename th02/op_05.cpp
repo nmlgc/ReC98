@@ -3,13 +3,13 @@
  * Code segment #5 of TH02's OP.EXE
  */
 
-extern "C" {
 #include "platform.h"
 #include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
 #include "th01/math/clamp.hpp"
+extern "C" {
 #include "th01/hardware/grppsafx.h"
 #include "th02/common.h"
 #include "th02/resident.hpp"

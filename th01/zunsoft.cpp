@@ -3,7 +3,6 @@
  * ZUN Soft logo used in TH01, TH02 and TH03
  */
 
-extern "C" {
 #include "platform.h"
 #include "x86real.h"
 #include "pc98.h"
@@ -11,8 +10,6 @@ extern "C" {
 #include "master.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/math/polar.hpp"
-#include "th01/math/vector.hpp"
-}
 
 #define CIRCLE_COUNT 4
 #define STAR_COUNT 50

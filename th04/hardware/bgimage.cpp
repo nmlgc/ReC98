@@ -1,6 +1,5 @@
 #pragma option -zCSHARED_ -k-
 
-extern "C" {
 #include <mem.h>
 #include <stddef.h>
 #include "platform.h"
@@ -8,6 +7,7 @@ extern "C" {
 #include "planar.h"
 #include "decomp.hpp"
 #include "master.hpp"
+extern "C" {
 #include "th04/hardware/bgimage.hpp"
 
 inline void memcpy_movsd(

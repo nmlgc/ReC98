@@ -1,6 +1,5 @@
 #pragma option -zCSHARED -3
 
-extern "C" {
 #include <mbctype.h>
 #include <mbstring.h>
 #include "platform.h"
@@ -8,6 +7,7 @@ extern "C" {
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
+extern "C" {
 #include "th01/hardware/grppsafx.h"
 
 #include "th01/hardware/grppsafx.cpp"

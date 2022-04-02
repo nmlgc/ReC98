@@ -5,7 +5,6 @@
 
 #pragma option -zCop_01_TEXT
 
-extern "C" {
 #include <stddef.h>
 #include "platform.h"
 #include "x86real.h"
@@ -13,6 +12,7 @@ extern "C" {
 #include "planar.h"
 #include "master.hpp"
 #include "th01/rank.h"
+extern "C" {
 #include "th02/hardware/frmdelay.h"
 #include "th03/formats/pi.hpp"
 #include "th04/common.h"

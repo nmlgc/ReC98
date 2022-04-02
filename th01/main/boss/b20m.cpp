@@ -1,7 +1,6 @@
 /// Makai Stage 20 Boss - Sariel
 /// ----------------------------
 
-extern "C" {
 #include <stddef.h>
 #include <stdlib.h>
 #include <dos.h>
@@ -17,6 +16,7 @@ extern "C" {
 #include "th01/math/overlap.hpp"
 #include "th01/math/polar.hpp"
 #include "th01/math/subpixel.hpp"
+extern "C" {
 #include "th01/math/vector.hpp"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"

@@ -4,6 +4,7 @@
 #include "th01/common.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
+extern "C" {
 #include "th01/hardware/graph.h"
 #include "th01/main/vars.hpp"
 #include "th01/formats/ptn.hpp"
@@ -502,5 +503,3 @@ void hud_bg_snap_and_put(void)
 	hud_score_and_cardcombo_render();
 	fwnum_force_rerender = false;
 }
-
-extern "C" {

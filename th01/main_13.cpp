@@ -5,13 +5,13 @@
 
 #pragma option -2 -Z-
 
-extern "C" {
 #include <dos.h>
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
 #include "decomp.hpp"
 #include "master.hpp"
+extern "C" {
 #include "th01/hardware/egc.h"
 #include "th01/hardware/graph.h"
 

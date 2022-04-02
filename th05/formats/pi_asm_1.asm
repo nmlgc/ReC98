@@ -22,10 +22,10 @@ SHARED	ends
 SHARED_	segment word public 'CODE' use16
 	assume cs:g_SHARED
 
-	_pi_mask_setup_egc_and_advance procdesc near
+	@pi_mask_setup_egc_and_advance$qv procdesc near
 
-public PI_PUT_MASKED_8_ROWLOOP
-pi_put_masked_8_rowloop proc near
+public @PI_PUT_MASKED_8_ROWLOOP$QIIIUI
+@pi_put_masked_8_rowloop$qiiiui proc near
 ; Can't use ARG, because the function doesn't `PUSH BP`!
 @@stride_packed	= word ptr [bp+2]
 @@w            	= word ptr [bp+4]
@@ -65,7 +65,7 @@ TEMP_ROW = RES_Y
 	sub	_pi_put_masked_vram_offset, PLANE_SIZE
 
 @@next_row:
-	call	_pi_mask_setup_egc_and_advance
+	call	@pi_mask_setup_egc_and_advance$qv
 	mov	ax, SEG_PLANE_B
 	mov	es, ax
 	assume es:nothing
@@ -93,7 +93,7 @@ TEMP_ROW = RES_Y
 	dec	@@h
 	jnz	short @@put_row
 	retn	8
-pi_put_masked_8_rowloop endp
+@pi_put_masked_8_rowloop$qiiiui endp
 
 SHARED_	ends
 

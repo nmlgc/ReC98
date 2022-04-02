@@ -1,9 +1,9 @@
 #pragma option -WX -zCSHARED -k-
 
-extern "C" {
 #include "platform.h"
 #include "x86real.h"
 #include "pc98kbd.h"
+extern "C" {
 #include "th02/hardware/input.hpp"
 
 inline uint8_t keygroup_sense(uint8_t group) {

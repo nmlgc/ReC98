@@ -5,7 +5,6 @@
 
 #pragma option -zCmaine_01_TEXT
 
-extern "C" {
 #include "th04/end/box.cpp"
 
 /// String-to-color map
@@ -29,4 +28,3 @@ extern unsigned char colmap_count;
 /// -------------------
 
 extern unsigned char text_col;
-}

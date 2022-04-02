@@ -604,7 +604,7 @@ loc_98DB:
 loc_98DE:
 		mov	si, ax
 		mov	di, 1F54h
-		call	egc_start_copy
+		call	@egc_start_copy$qv
 		mov	[bp+var_2], 0
 		jmp	short loc_9930
 ; ---------------------------------------------------------------------------
@@ -698,7 +698,7 @@ loc_996B:
 		shl	dx, 4
 		add	ax, dx
 		mov	di, ax
-		call	egc_start_copy
+		call	@egc_start_copy$qv
 		mov	[bp+var_2], 0
 		jmp	short loc_99D2
 ; ---------------------------------------------------------------------------
@@ -787,7 +787,7 @@ loc_9A0D:
 		mov	ax, [bp+arg_2]
 		imul	ax, 50h
 		add	si, ax
-		call	egc_start_copy
+		call	@egc_start_copy$qv
 		mov	ax, [bp+arg_2]
 		mov	[bp+var_2], ax
 		jmp	short loc_9A68
@@ -2234,7 +2234,7 @@ arg_4		= word ptr  8
 		mov	bp, sp
 		push	[bp+arg_4]
 		push	[bp+arg_0]
-		call	rotrect_animate
+		call	@rotrect_animate$qcc
 		push	200064h
 		push	[bp+arg_2]
 		call	sub_9942
@@ -2957,8 +2957,8 @@ maine_04_TEXT	ends
 ; ===========================================================================
 
 maine_05_TEXT	segment	byte public 'CODE' use16
-	extern EGC_START_COPY:proc
-	extern ROTRECT_ANIMATE:proc
+	extern @egc_start_copy$qv:proc
+	extern @ROTRECT_ANIMATE$QCC:proc
 maine_05_TEXT	ends
 
 	.data

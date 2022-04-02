@@ -3,10 +3,10 @@
  * Code segment #23 of TH01's REIIDEN.EXE
  */
 
-extern "C" {
 #include "platform.h"
 #include "x86real.h"
 #include "master.hpp"
+extern "C" {
 #include "th01/formats/grc.cpp"
 #include "th01/hardware/grcg8x8m.cpp"
 #include "th01/hardware/egc.h"

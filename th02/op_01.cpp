@@ -3,7 +3,6 @@
  * Code segment #1 of TH02's OP.EXE
  */
 
-extern "C" {
 #include <stddef.h>
 #include <process.h>
 #include "platform.h"
@@ -14,6 +13,7 @@ extern "C" {
 #include "libs/kaja/kaja.h"
 #include "th01/rank.h"
 #include "th01/math/clamp.hpp"
+extern "C" {
 #include "th01/hardware/grppsafx.h"
 #include "th02/common.h"
 #include "th02/hardware/frmdelay.h"

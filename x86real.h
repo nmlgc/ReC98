@@ -79,14 +79,17 @@ void segread(struct SREGS *__segp);
 /// ----------
 
 #ifdef __cplusplus
-    void interrupt (__far * getvect(int __interruptno))(...);
-    void setvect(int __interruptno, void interrupt (__far *__isr)(...));
+	extern "C" {
+		void interrupt (__far * getvect(int __interruptno))(...);
+		void setvect(int __interruptno, void interrupt (__far *__isr)(...));
+		int int86(int __intno, union REGS *__inregs, union REGS *__outregs);
+	}
 #else
-    void interrupt (__far * getvect(int __interruptno))();
-    void setvect(int __interruptno, void interrupt(__far *__isr)());
+	void interrupt (__far * getvect(int __interruptno))();
+	void setvect(int __interruptno, void interrupt(__far *__isr)());
+	int int86(int __intno, union REGS *__inregs, union REGS *__outregs);
 #endif
 
-int int86(int __intno, union REGS *__inregs, union REGS *__outregs);
 /// ----------
 
 /// Segmented memory

@@ -1,11 +1,11 @@
 #pragma option -zCSHARED -3 -Z
 
-extern "C" {
 #include "platform.h"
 #include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
+extern "C" {
 #include "th03/formats/pi.hpp"
 
 void pascal pi_put_interlace_8(screen_x_t left, vram_y_t top, int slot)

@@ -1,12 +1,12 @@
 #pragma option -k-
 
-extern "C" {
 #include "platform.h"
 #include "x86real.h"
 #include "master.hpp"
 #include "th04/common.h"
 #include "th04/score.h"
 #include "th05/resident.hpp"
+extern "C" {
 #include "th04/formats/cfg.hpp"
 
 resident_t __seg* near cfg_load_resident_ptr(void)

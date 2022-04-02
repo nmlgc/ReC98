@@ -1,12 +1,12 @@
 #pragma option -zCSHARED_ -3
 
-extern "C" {
 #include <errno.h>
 #include "platform.h"
 #include "x86real.h"
 #include "decomp.hpp"
 #include "master.hpp"
 #include "libs/kaja/kaja.h"
+extern "C" {
 #include "th05/snd/snd.h"
 
 extern char snd_load_fn[SND_FN_LEN];

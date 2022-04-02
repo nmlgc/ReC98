@@ -1,6 +1,6 @@
-extern "C" {
 #include "master.hpp"
 #include "x86real.h"
+extern "C" {
 #include "th01/math/overlap.hpp"
 #include "th01/hardware/egc.h"
 }

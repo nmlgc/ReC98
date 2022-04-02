@@ -2,13 +2,14 @@
 
 #pragma option -zCSHARED_
 
-extern "C" {
 #include <stddef.h>
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
+extern "C" {
 #include "th05/formats/pi.hpp"
+}
 #include "th05/formats/pi_impl.hpp"
 
 // Additionally takes:
@@ -56,5 +57,3 @@ void pascal pi_put_quarter_masked_8(
 }
 
 #pragma codestring "\x90"
-
-}

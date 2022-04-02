@@ -1,6 +1,5 @@
 #pragma option -zCPTN_GRP_GRZ
 
-extern "C" {
 #include <mem.h>
 #include <stddef.h>
 #include "platform.h"
@@ -8,6 +7,7 @@ extern "C" {
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
+extern "C" {
 #include "th01/hardware/graph.h"
 #include "th01/formats/grz.h"
 

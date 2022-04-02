@@ -1,6 +1,5 @@
 #pragma option -zCSHARED -3
 
-extern "C" {
 #include <stddef.h>
 #include "platform.h"
 #include "pc98.h"
@@ -8,8 +7,6 @@ extern "C" {
 #include "decomp.hpp"
 #include "master.hpp"
 #include "th03/formats/hfliplut.h"
-}
-
 #include "th03/formats/mrs.hpp"
 
 #undef grcg_off

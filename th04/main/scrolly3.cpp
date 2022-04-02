@@ -1,10 +1,10 @@
 #pragma option -k- -G
 
-extern "C" {
 #include "platform.h"
 #include "x86real.h"
 #include "pc98.h"
 #include "th01/math/subpixel.hpp"
+extern "C" {
 #include "th04/main/scroll.hpp"
 
 #define roll(y) \

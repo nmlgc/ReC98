@@ -932,7 +932,7 @@ sub_A73B	endp
 maine_01_TEXT	ends
 
 maine_01__TEXT	segment	byte public 'CODE' use16
-	BOX_1_TO_0_MASKED procdesc pascal near \
+	@BOX_1_TO_0_MASKED$Q10BOX_MASK_T procdesc pascal near \
 		mask:word
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -951,7 +951,7 @@ sub_A815	proc near
 ; ---------------------------------------------------------------------------
 
 loc_A827:
-		call	box_1_to_0_masked pascal, si
+		call	@box_1_to_0_masked$q10box_mask_t pascal, si
 		push	word_124C0
 		call	frame_delay
 		inc	si
@@ -961,7 +961,7 @@ loc_A835:
 		jl	short loc_A827
 
 loc_A83A:
-		call	box_1_to_0_masked pascal, 4
+		call	@box_1_to_0_masked$q10box_mask_t pascal, 4
 		call	egc_off
 		pop	si
 		pop	bp

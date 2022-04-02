@@ -1,9 +1,9 @@
 #pragma option -zCSHARED_
 
-extern "C" {
 #include "platform.h"
 #include "decomp.hpp"
 #include "master.hpp"
+extern "C" {
 #include "th05/hardware/input.h"
 }
 

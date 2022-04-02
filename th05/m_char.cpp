@@ -5,13 +5,13 @@
 
 #pragma option -zCop_01_TEXT
 
-extern "C" {
 #include "platform.h"
 #include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
 #include "th01/rank.h"
+extern "C" {
 #include "th02/hardware/frmdelay.h"
 #include "th04/formats/cdg.h"
 #include "th04/hardware/bgimage.hpp"

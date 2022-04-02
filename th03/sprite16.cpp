@@ -5,7 +5,6 @@
 
 #pragma option -zCSHARED -k-
 
-extern "C" {
 #include "platform.h"
 #include "x86real.h"
 #include "pc98.h"
@@ -13,6 +12,7 @@ extern "C" {
 #include "decomp.hpp"
 #include "master.hpp"
 #include "libs/sprite16/sprite16.h"
+extern "C" {
 #include "th03/sprite16.hpp"
 
 void pascal sprite16_sprites_commit(void)

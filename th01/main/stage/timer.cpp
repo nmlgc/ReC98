@@ -1,4 +1,3 @@
-extern "C" {
 #include <stddef.h>
 #include "platform.h"
 #include "x86real.h"
@@ -9,6 +8,7 @@ extern "C" {
 #include "th01/common.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
+extern "C" {
 #include "th01/hardware/egc.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/frmdelay.h"

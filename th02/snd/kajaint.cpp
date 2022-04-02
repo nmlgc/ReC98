@@ -4,10 +4,10 @@
 #pragma option -zCSHARED
 #endif
 
-extern "C" {
 #include "platform.h"
 #include "x86real.h"
 #include "libs/kaja/kaja.h"
+extern "C" {
 #if (GAME >= 4)
 	#include "th04/snd/snd.h"
 #else

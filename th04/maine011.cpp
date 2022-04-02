@@ -5,6 +5,4 @@
 
 #pragma option -zCmaine_01_TEXT
 
-extern "C" {
 #include "th04/end/box.cpp"
-}

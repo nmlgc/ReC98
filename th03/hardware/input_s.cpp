@@ -1,11 +1,11 @@
 #pragma option -WX -zCSHARED -k-
 
-extern "C" {
 #include "platform.h"
 #include "x86real.h"
 #include "decomp.hpp"
 #include "pc98kbd.h"
 #include "master.hpp"
+extern "C" {
 #include "th03/hardware/input.h"
 
 void input_reset_sense_key_held(void)

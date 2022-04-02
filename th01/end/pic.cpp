@@ -1,11 +1,13 @@
 #pragma option -O-
 
+extern "C" {
 #include "th01/end/pic.hpp"
 
 void pascal end_pics_load_palette_show(const char *fn)
 {
 	graph_accesspage_func(1);
 	grp_put_palette_show(fn);
+}
 }
 
 // Avoid symbol duplication...
@@ -19,6 +21,7 @@ static const screen_y_t PIC_TOP  = ((RES_Y / 2) - (PIC_H / 2));
 
 static const pixel_t PIC_VRAM_W = (PIC_W / BYTE_DOTS);
 
+extern "C" {
 void end_pic_show(int quarter)
 {
 	egc_start_copy();
@@ -44,6 +47,7 @@ void end_pic_show(int quarter)
 		vram_offset_dst += (ROW_SIZE - PIC_VRAM_W);
 	}
 	egc_off();
+}
 }
 
 #pragma option -O.

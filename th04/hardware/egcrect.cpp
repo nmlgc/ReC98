@@ -1,12 +1,12 @@
 #pragma option -zCSHARED_
 
-extern "C" {
 #include "platform.h"
 #include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
 #include "decomp.hpp"
 #include "master.hpp"
+extern "C" {
 #include "th01/hardware/egc.h"
 
 #define graph_accesspage_1() \

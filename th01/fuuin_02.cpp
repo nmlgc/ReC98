@@ -5,7 +5,6 @@
 
 #pragma option -O- -1 -Z-
 
-extern "C" {
 #include <io.h>
 #include <stdio.h>
 #include <string.h>
@@ -18,6 +17,7 @@ extern "C" {
 #include "twobyte.h"
 #include "master.hpp"
 #include "th01/rank.h"
+extern "C" {
 #include "th01/hardware/graph.h"
 #include "th01/hardware/input.hpp"
 #include "th01/hiscore/scoredat.hpp"

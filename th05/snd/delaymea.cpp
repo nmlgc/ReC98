@@ -1,13 +1,13 @@
 #pragma option -zCSHARED_
 
-extern "C" {
 #include "platform.h"
 #include "x86real.h"
 #include "libs/kaja/kaja.h"
+extern "C" {
 #include "th02/hardware/frmdelay.h"
 #include "th05/snd/snd.h"
-#include "th02/snd/measure.hpp"
 }
+#include "th02/snd/measure.hpp"
 
 int snd_bgm_measure(void)
 {

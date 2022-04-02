@@ -3,7 +3,6 @@
  * Code segment #6 of TH02's OP.EXE
  */
 
-extern "C" {
 #include <stddef.h>
 #include "platform.h"
 #include "x86real.h"
@@ -12,6 +11,7 @@ extern "C" {
 #include "master.hpp"
 #include "libs/kaja/kaja.h"
 #include "th01/math/polar.hpp"
+extern "C" {
 #include "th01/hardware/grppsafx.h"
 #include "th02/math/vector.hpp"
 #include "th02/hardware/frmdelay.h"

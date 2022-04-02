@@ -1,10 +1,10 @@
 #pragma option -k-
 
-extern "C" {
 #include "platform.h"
 #include "x86real.h"
 #include "libs/kaja/kaja.h"
 #include "th02/snd/se_impl.hpp"
+extern "C" {
 #if (GAME >= 4)
 	#include "master.hpp"
 	#include "th04/snd/snd.h"

@@ -7,11 +7,11 @@
 #include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
-extern "C" {
 #include "decomp.hpp"
 #include "master.hpp"
 #include "th01/math/area.hpp"
 #include "th01/math/subpixel.hpp"
+extern "C" {
 #include "th04/hardware/grcg.h"
 #include "th04/math/vector.hpp"
 #include "th04/math/motion.hpp"

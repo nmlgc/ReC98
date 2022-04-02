@@ -2,14 +2,15 @@
 
 #pragma option -zCSHARED_
 
-extern "C" {
 #include <stddef.h>
 #include "platform.h"
 #include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
+extern "C" {
 #include "th05/formats/pi.hpp"
+}
 #include "th05/formats/pi_impl.hpp"
 
 extern dots16_t near *pi_mask_ptr;
@@ -106,6 +107,4 @@ void pascal pi_put_quarter_8(
 	}
 	pi_put_quarter_impl(slot, quarter, rowloop_func);
 	#undef rowloop_func
-}
-
 }

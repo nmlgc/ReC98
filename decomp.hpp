@@ -27,8 +27,6 @@
 	out dx, ax; \
 }
 
-} // extern "C" was a mistake
-
 // Should just be unwrapped wherever it appears. Code that directly uses T
 // would be much cleaner.
 template <class T> union StupidBytewiseWrapperAround {
@@ -138,8 +136,6 @@ inline void poked_eax(Decomp_GS *sgm, Decomp_DI *off, uint8_t op) {
 	#define inhibit_Z3(type, x) x
 #endif
 // ------------------------------------
-
-extern "C" {
 
 // 32-bit ASM instructions not supported by Turbo C++ 4.0J's built-in
 // assembler. Makes no sense to compile with `#pragma inline` (and thus,

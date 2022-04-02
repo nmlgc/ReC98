@@ -1,10 +1,10 @@
 #pragma option -3
 
-extern "C" {
 #include <stddef.h>
 #include "platform.h"
 #include "x86real.h"
 #include "master.hpp"
+extern "C" {
 #include "th01/hardware/vplanset.h"
 #include "th03/core/initexit.h"
 

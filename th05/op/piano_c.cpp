@@ -1,6 +1,5 @@
 #pragma option -zCSHARED_ -k-
 
-extern "C" {
 #include "platform.h"
 #include "x86real.h"
 #include "pc98.h"
@@ -8,6 +7,7 @@ extern "C" {
 #include "decomp.hpp"
 #include "master.hpp"
 #include "libs/kaja/kaja.h"
+extern "C" {
 #include "th05/op/piano.h"
 #include "th05/sprites/piano_l.hpp"
 

@@ -3,7 +3,6 @@
  * Code segment #1 of TH01's OP.EXE
  */
 
-extern "C" {
 #include <mem.h>
 #include <stdio.h>
 #include "platform.h"
@@ -13,6 +12,7 @@ extern "C" {
 #include "pc98kbd.h"
 #include "master.hpp"
 #include "th01/rank.h"
+extern "C" {
 #include "th01/hardware/egc.h"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"

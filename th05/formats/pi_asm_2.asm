@@ -16,8 +16,8 @@ include th03/arg_bx.inc
 SHARED_	segment word public 'CODE' use16
 	assume cs:SHARED_
 
-public PI_PUT_8_ROWLOOP
-pi_put_8_rowloop proc pascal near
+public @PI_PUT_8_ROWLOOP$QIIIUI
+@pi_put_8_rowloop$qiiiui proc pascal near
 ; Can't use ARG, because the function doesn't `PUSH BP`!
 @@stride_packed	= word ptr [bp+2]
 @@w	= word ptr [bp+4]
@@ -50,7 +50,7 @@ pi_put_8_rowloop proc pascal near
 	dec	@@h
 	jnz	short @@put_row
 	retn	8
-pi_put_8_rowloop endp
+@pi_put_8_rowloop$qiiiui endp
 
 
 public PI_PALETTE_APPLY

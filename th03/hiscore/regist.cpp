@@ -1,12 +1,12 @@
 #pragma option -zPgroup_01
 
-extern "C" {
 #include "platform.h"
 #include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
 #include "th01/rank.h"
+extern "C" {
 #include "th01/hardware/grppsafx.h"
 #include "th02/hardware/frmdelay.h"
 #include "th03/common.h"

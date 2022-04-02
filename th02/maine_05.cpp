@@ -3,7 +3,6 @@
  * Code segment #5 of TH02's MAINE.EXE
  */
 
-extern "C" {
 #include "platform.h"
 #include "x86real.h"
 #include "pc98.h"
@@ -11,7 +10,9 @@ extern "C" {
 #include "master.hpp"
 #include "th01/math/polar.hpp"
 #include "th02/math/vector.hpp"
+extern "C" {
 #include "th02/hardware/frmdelay.h"
+}
 
 void pascal near rotrect_draw(int rad, unsigned char angle)
 {
@@ -74,6 +75,4 @@ void pascal rotrect_animate(char rot_speed, char start_angle)
 	grcg_line( 28,  96, 356,  96);
 	grcg_off();
 	palette_white();
-}
-
 }

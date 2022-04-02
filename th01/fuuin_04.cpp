@@ -5,16 +5,17 @@
 
 #pragma option -1 -Z-
 
-extern "C" {
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
+extern "C" {
 #include "th01/formats/grp.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/palette.h"
 #include "th01/hardware/vsync.h"
 #include "th01/end/type.h"
+}
 
 #define TYPE_DELAY 3
 #define TYPE_FX (15 | FX_WEIGHT_NORMAL)
@@ -24,6 +25,8 @@ extern "C" {
 #include "th01/end/pic.cpp"
 
 inline void optimization_barrier() {}
+
+extern "C" {
 
 // Special FUUIN.EXE version of frame_delay() that resets [vsync_frame] first.
 void frame_delay(unsigned int frames)

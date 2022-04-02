@@ -1,10 +1,10 @@
 #pragma option -zCSHARED
 
-extern "C" {
 #include "platform.h"
 #include "x86real.h"
 #include "master.hpp"
 #include "libs/kaja/kaja.h"
+extern "C" {
 #include "th03/hardware/input.h"
 #include "th03/snd/snd.h"
 #include "th02/snd/measure.hpp"
