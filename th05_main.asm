@@ -2901,7 +2901,7 @@ loc_D108:
 ; ---------------------------------------------------------------------------
 
 loc_D124:
-		call	grcg_setmode_tdw
+		call	_grcg_setmode_tdw
 		mov	ah, GC_RGI
 		call	_grcg_setcolor_direct_seg1_raw
 		call	playfield_fillm_0_0_384_192__1
@@ -2975,7 +2975,7 @@ loc_D194:
 ; ---------------------------------------------------------------------------
 
 loc_D1B0:
-		call	grcg_setmode_tdw
+		call	_grcg_setmode_tdw
 		mov	ah, GC_RGI
 		call	_grcg_setcolor_direct_seg1_raw
 		call	playfield_fillm_0_205_384_163
@@ -3050,7 +3050,7 @@ loc_D220:
 ; ---------------------------------------------------------------------------
 
 loc_D23E:
-		call	grcg_setmode_tdw
+		call	_grcg_setmode_tdw
 		mov	ah, GC_RGI
 		call	_grcg_setcolor_direct_seg1_raw
 		call	playfield_fillm_64_56_256_256
@@ -3121,7 +3121,7 @@ public @YUMEKO_BG_RENDER$QV
 ; ---------------------------------------------------------------------------
 
 loc_D2C7:
-		call	grcg_setmode_tdw
+		call	_grcg_setmode_tdw
 		mov	ah, GC_RGI
 		call	_grcg_setcolor_direct_seg1_raw
 		call	playfield_fillm_0_0_384_192__2

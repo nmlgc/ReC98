@@ -8,7 +8,7 @@ public @BOSS_BACKDROP_RENDER$QIIC
 	push	bp
 	mov	bp, sp
 	call	cdg_put_noalpha_8 pascal, [bp+@@x], [bp+@@y], CDG_BG_BOSS
-	call	grcg_setmode_tdw
+	call	_grcg_setmode_tdw
 	mov	ah, [bp+@@color]
 	call	_grcg_setcolor_direct_seg1_raw
 	call	_boss_backdrop_colorfill

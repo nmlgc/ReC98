@@ -7955,7 +7955,7 @@ bomb_reimu	proc near
 var_1		= byte ptr -1
 
 		enter	2, 0
-		call	main_01:grcg_setmode_tdw
+		call	_grcg_setmode_tdw
 		mov	ah, 0Fh
 		call	_grcg_setcolor_direct_seg1_raw
 		call	main_01:playfield_fillm_0_40_384_274
@@ -8027,7 +8027,7 @@ var_2		= word ptr -2
 
 		enter	2, 0
 		push	si
-		call	main_01:grcg_setmode_tdw
+		call	_grcg_setmode_tdw
 		mov	ah, GC_RGI
 		call	_grcg_setcolor_direct_seg1_raw
 		call	main_01:playfield_fillm_0_40_384_274
@@ -10421,7 +10421,7 @@ loc_122EB:
 ; ---------------------------------------------------------------------------
 
 loc_12309:
-		call	main_01:grcg_setmode_tdw
+		call	_grcg_setmode_tdw
 		mov	ah, GC_RGI
 		call	_grcg_setcolor_direct_seg1_raw
 		call	main_01:playfield_fillm_64_56_256_256
@@ -10496,7 +10496,7 @@ loc_12378:
 ; ---------------------------------------------------------------------------
 
 loc_12396:
-		call	main_01:grcg_setmode_tdw
+		call	_grcg_setmode_tdw
 		mov	ah, GC_BRGI
 		call	_grcg_setcolor_direct_seg1_raw
 		call	main_01:playfield_fillm_96_112_288_256
@@ -11159,7 +11159,7 @@ table_1289F	dw loc_12484
 		enter	2, 0
 		push	si
 		push	di
-		call	main_01:grcg_setmode_tdw
+		call	_grcg_setmode_tdw
 		cmp	_boss_phase, 0
 		jnz	short loc_12921
 		mov	ah, GC_RGI
@@ -11283,7 +11283,7 @@ loc_12996:
 ; ---------------------------------------------------------------------------
 
 loc_129B4:
-		call	main_01:grcg_setmode_tdw
+		call	_grcg_setmode_tdw
 		mov	ah, GC_RGI
 		call	_grcg_setcolor_direct_seg1_raw
 		call	main_01:playfield_fillm_0_0_384_192
