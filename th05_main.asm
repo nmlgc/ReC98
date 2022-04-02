@@ -2904,7 +2904,7 @@ loc_D124:
 		call	_grcg_setmode_tdw
 		mov	ah, GC_RGI
 		call	_grcg_setcolor_direct_seg1_raw
-		call	playfield_fillm_0_0_384_192__1
+		call	@louise_backdrop_colorfill$qv
 		GRCG_OFF_CLOBBERING dx
 		call	cdg_put_noalpha_8 pascal, large (32 shl 16) or 16, 16
 
@@ -2978,7 +2978,7 @@ loc_D1B0:
 		call	_grcg_setmode_tdw
 		mov	ah, GC_RGI
 		call	_grcg_setcolor_direct_seg1_raw
-		call	playfield_fillm_0_205_384_163
+		call	@alice_backdrop_colorfill$qv
 		GRCG_OFF_CLOBBERING dx
 		call	cdg_put_noalpha_8 pascal, large (32 shl 16) or 221, 16
 
@@ -3053,7 +3053,7 @@ loc_D23E:
 		call	_grcg_setmode_tdw
 		mov	ah, GC_RGI
 		call	_grcg_setcolor_direct_seg1_raw
-		call	playfield_fillm_64_56_256_256
+		call	@mai_yuki_backdrop_colorfill$qv
 		GRCG_OFF_CLOBBERING dx
 		call	cdg_put_noalpha_8 pascal, large (96 shl 16) or 72, 16
 
@@ -3124,7 +3124,7 @@ loc_D2C7:
 		call	_grcg_setmode_tdw
 		mov	ah, GC_RGI
 		call	_grcg_setcolor_direct_seg1_raw
-		call	playfield_fillm_0_0_384_192__2
+		call	@yumeko_backdrop_colorfill$qv
 		GRCG_OFF_CLOBBERING dx
 		call	cdg_put_noalpha_8 pascal, large (32 shl 16) or 16, 16
 
@@ -3173,8 +3173,8 @@ main_TEXT	segment	word public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
-public PLAYFIELD_FILLM_32_0_320_192
-playfield_fillm_32_0_320_192	proc near
+public @SARA_BACKDROP_COLORFILL$QV
+@sara_backdrop_colorfill$qv	proc near
 		push	di
 		cli
 		mov	dx, 126	; Port 007Eh: GRCG tile register
@@ -3197,7 +3197,7 @@ loc_DD61:
 		jge	short loc_DD61
 		pop	di
 		retn
-playfield_fillm_32_0_320_192	endp
+@sara_backdrop_colorfill$qv	endp
 
 ; ---------------------------------------------------------------------------
 		nop
@@ -3207,24 +3207,24 @@ include th05/formats/bb_curvebullet.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
-public PLAYFIELD_FILLM_0_0_384_192__1
-playfield_fillm_0_0_384_192__1	proc near
+public @LOUISE_BACKDROP_COLORFILL$QV
+@louise_backdrop_colorfill$qv	proc near
 		push	di
 		GRCG_FILL_PLAYFIELD_ROWS	192, 176
 		pop	di
 		retn
-playfield_fillm_0_0_384_192__1	endp
+@louise_backdrop_colorfill$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
-public PLAYFIELD_FILLM_0_205_384_163
-playfield_fillm_0_205_384_163	proc near
+public @ALICE_BACKDROP_COLORFILL$QV
+@alice_backdrop_colorfill$qv	proc near
 		push	di
 		GRCG_FILL_PLAYFIELD_ROWS	  0, 205
 		pop	di
 		retn
-playfield_fillm_0_205_384_163	endp
+@alice_backdrop_colorfill$qv	endp
 
 include th04/hardware/fillm64-56_256-256.asm
 include th05/formats/bb_load.asm
@@ -3287,13 +3287,13 @@ sub_DFBA	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
-public PLAYFIELD_FILLM_0_0_384_192__2
-playfield_fillm_0_0_384_192__2	proc near
+public @YUMEKO_BACKDROP_COLORFILL$QV
+@yumeko_backdrop_colorfill$qv	proc near
 		push	di
 		GRCG_FILL_PLAYFIELD_ROWS	192, 176
 		pop	di
 		retn
-playfield_fillm_0_0_384_192__2	endp
+@yumeko_backdrop_colorfill$qv	endp
 
 include th04/formats/z_super_roll_put_tiny.asm
 include th04/main/tile/inv.asm
@@ -3577,22 +3577,22 @@ sub_E8FE	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
-public PLAYFIELD_FILLM_0_104_384_192
-playfield_fillm_0_104_384_192	proc near
+public @SHINKI_STAGE_BACKDROP_COLORFILL$QV
+@shinki_stage_backdrop_colorfill$qv	proc near
 		push	di
 		GRCG_FILL_PLAYFIELD_ROWS	  0, 104
 		GRCG_FILL_PLAYFIELD_ROWS	296,  72
 		pop	di
 		retn
-playfield_fillm_0_104_384_192	endp
+@shinki_stage_backdrop_colorfill$qv	endp
 
 ; ---------------------------------------------------------------------------
 		nop
 
 ; =============== S U B	R O U T	I N E =======================================
 
-public _playfield_fill_col_0
-_playfield_fill_col_0	proc near
+public @boss_bg_fill_col_0$qv
+@boss_bg_fill_col_0$qv	proc near
 		pushf
 		cli
 		GRCG_SETMODE_VIA_MOV al, GC_TDW
@@ -3608,13 +3608,13 @@ _playfield_fill_col_0	proc near
 		GRCG_OFF_VIA_XOR al
 		pop	di
 		retn
-_playfield_fill_col_0	endp
+@boss_bg_fill_col_0$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
-public _playfield_fillm_0_0_384_240_col_
-_playfield_fillm_0_0_384_240_col_	proc near
+public @shinki_bg_type_d_colorfill$qv
+@shinki_bg_type_d_colorfill$qv	proc near
 		pushf
 		cli
 		GRCG_SETMODE_VIA_MOV al, GC_TDW
@@ -3630,7 +3630,7 @@ _playfield_fillm_0_0_384_240_col_	proc near
 		GRCG_OFF_VIA_XOR al
 		pop	di
 		retn
-_playfield_fillm_0_0_384_240_col_	endp
+@shinki_bg_type_d_colorfill$qv	endp
 
 include th05/main/bullet/laser_render_hittest.asm
 

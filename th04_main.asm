@@ -1483,13 +1483,13 @@ include th04/main/player/shot_laser.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
-
-playfield_fillm_0_0_384_112	proc near
+public @ELLY_BACKDROP_COLORFILL$QV
+@elly_backdrop_colorfill$qv	proc near
 		push	di
 		GRCG_FILL_PLAYFIELD_ROWS	112, 256
 		pop	di
 		retn
-playfield_fillm_0_0_384_112	endp
+@elly_backdrop_colorfill$qv	endp
 
 include th04/hardware/fillm64-56_256-256.asm
 include th04/main/tile/bb_put_a.asm
@@ -1551,8 +1551,8 @@ sub_BF94	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
-
-playfield_fillm_96_112_288_256	proc near
+public @YUUKA5_BACKDROP_COLORFILL$QV
+@yuuka5_backdrop_colorfill$qv	proc near
 		push	di
 		mov	ax, GRAM_400 + ((112 + PLAYFIELD_TOP) * ROW_SIZE) shr 4
 		mov	es, ax
@@ -1569,7 +1569,7 @@ playfield_fillm_96_112_288_256	proc near
 		GRCG_FILL_PLAYFIELD_ROWS	0, 112
 		pop	di
 		retn
-playfield_fillm_96_112_288_256	endp
+@yuuka5_backdrop_colorfill$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -1653,13 +1653,13 @@ include th04/main/item/invalidate.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
-
-playfield_fillm_0_0_384_192	proc near
+public @MUGETSU_GENGETSU_BACKDROP_COLORFILL$QV
+@mugetsu_gengetsu_backdrop_colorfill$qv	proc near
 		push	di
 		GRCG_FILL_PLAYFIELD_ROWS	192, 176
 		pop	di
 		retn
-playfield_fillm_0_0_384_192	endp
+@mugetsu_gengetsu_backdrop_colorfill$qv	endp
 
 include th04/hardware/grcg_modecol.asm
 include th04/main/item/splashes_render.asm
@@ -5213,14 +5213,14 @@ loc_EA6B:
 
 ; =============== S U B	R O U T	I N E =======================================
 
-
-playfield_fillm_0_80_384_112	proc near
+public @KURUMI_BACKDROP_COLORFILL$QV
+@kurumi_backdrop_colorfill$qv	proc near
 		push	di
 		GRCG_FILL_PLAYFIELD_ROWS	192, 192
 		GRCG_FILL_PLAYFIELD_ROWS	  0,  80
 		pop	di
 		retn
-playfield_fillm_0_80_384_112	endp
+@kurumi_backdrop_colorfill$qv	endp
 
 ; ---------------------------------------------------------------------------
 		nop
@@ -5677,8 +5677,8 @@ loc_EDD7:
 
 ; =============== S U B	R O U T	I N E =======================================
 
-
-playfield_fillm_0_120_384_128	proc near
+public @ORANGE_BACKDROP_COLORFILL$QV
+@orange_backdrop_colorfill$qv	proc near
 		push	di
 		GRCG_FILL_PLAYFIELD_ROWS	  0, 120, dx
 		cli
@@ -5692,7 +5692,7 @@ playfield_fillm_0_120_384_128	proc near
 		GRCG_FILL_PLAYFIELD_ROWS	248, 120
 		pop	di
 		retn
-playfield_fillm_0_120_384_128	endp
+@orange_backdrop_colorfill$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -10424,7 +10424,7 @@ loc_12309:
 		call	_grcg_setmode_tdw
 		mov	ah, GC_RGI
 		call	_grcg_setcolor_direct_seg1_raw
-		call	main_01:playfield_fillm_64_56_256_256
+		call	@reimu_marisa_backdrop_colorfill$qv
 		GRCG_OFF_CLOBBERING dx
 		call	cdg_put_noalpha_8 pascal, large (96 shl 16) or 72, 16
 
@@ -10499,7 +10499,7 @@ loc_12396:
 		call	_grcg_setmode_tdw
 		mov	ah, GC_BRGI
 		call	_grcg_setcolor_direct_seg1_raw
-		call	main_01:playfield_fillm_96_112_288_256
+		call	@yuuka5_backdrop_colorfill$qv
 		GRCG_OFF_CLOBBERING dx
 		call	cdg_put_noalpha_8 pascal, large (128 shl 16) or 128, 16
 
@@ -11286,7 +11286,7 @@ loc_129B4:
 		call	_grcg_setmode_tdw
 		mov	ah, GC_RGI
 		call	_grcg_setcolor_direct_seg1_raw
-		call	main_01:playfield_fillm_0_0_384_192
+		call	@mugetsu_gengetsu_backdrop_colorfill$qv
 		GRCG_OFF_CLOBBERING dx
 		call	cdg_put_noalpha_8 pascal, large (32 shl 16) or 16, 16
 
@@ -27867,7 +27867,7 @@ stage1_setup	proc far
 		mov	_boss_sprite, 128
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (16 shl 4)
-		mov	_boss_backdrop_colorfill, offset playfield_fillm_0_120_384_128
+		mov	_boss_backdrop_colorfill, offset @orange_backdrop_colorfill$qv
 		call	super_entry_bfnt pascal, ds, offset aSt00_bmt ; "st00.bmt"
 		call	cdg_load_single_noalpha pascal, CDG_BG_BOSS, ds, offset aSt00bk_cdg, 0
 		call	@bb_boss_load$qnxc pascal, ds, offset aSt00_bb
@@ -27909,7 +27909,7 @@ stage2_setup	proc far
 		mov	_boss_sprite, 0
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (24 shl 4)
-		mov	_boss_backdrop_colorfill, offset playfield_fillm_0_80_384_112
+		mov	_boss_backdrop_colorfill, offset @kurumi_backdrop_colorfill$qv
 		call	super_entry_bfnt pascal, ds, offset aSt01_bmt ; "st01.bmt"
 		call	cdg_load_single_noalpha pascal, CDG_BG_BOSS, ds, offset aSt01bk_cdg, 0
 		call	@bb_boss_load$qnxc pascal, ds, offset aSt01_bb
@@ -27953,7 +27953,7 @@ stage3_setup	proc far
 		mov	_boss_sprite, 134
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (24 shl 4)
-		mov	_boss_backdrop_colorfill, offset playfield_fillm_0_0_384_112
+		mov	_boss_backdrop_colorfill, offset @elly_backdrop_colorfill$qv
 		call	super_entry_bfnt pascal, ds, offset aSt02_bmt ; "st02.bmt"
 		call	cdg_load_single_noalpha pascal, CDG_BG_BOSS, ds, offset aSt02bk_cdg, 0
 		call	@bb_boss_load$qnxc pascal, ds, offset aSt02_bb
@@ -28032,7 +28032,7 @@ loc_1E371:
 		mov	_boss_sprite, 128
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (24 shl 4)
-		mov	_boss_backdrop_colorfill, offset playfield_fillm_64_56_256_256
+		mov	_boss_backdrop_colorfill, offset @reimu_marisa_backdrop_colorfill$qv
 		call	super_entry_bfnt pascal, ds, offset aSt03_bmt ; "st03.bmt"
 		cmp	_playchar, PLAYCHAR_REIMU
 		jz	short loc_1E3A0
@@ -28079,7 +28079,7 @@ stage5_setup	proc far
 		mov	_boss_sprite, 128
 		mov	_boss_hitbox_radius.x, (26 shl 4)
 		mov	_boss_hitbox_radius.y, (26 shl 4)
-		mov	_boss_backdrop_colorfill, offset playfield_fillm_96_112_288_256
+		mov	_boss_backdrop_colorfill, offset @yuuka5_backdrop_colorfill$qv
 		call	cdg_load_single_noalpha pascal, CDG_BG_BOSS, ds, offset aSt04bk_cdg, 0
 		call	@bb_boss_load$qnxc pascal, ds, offset aSt04_bb
 		call	cdg_load_single_noalpha pascal, CDG_BG_2, ds, offset aSt04_cdg, 0
@@ -28164,7 +28164,7 @@ stagex_setup	proc far
 		mov	_boss_sprite, 128
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (48 shl 4)
-		mov	_boss_backdrop_colorfill, offset playfield_fillm_0_0_384_192
+		mov	_boss_backdrop_colorfill, offset @mugetsu_gengetsu_backdrop_colorfill$qv
 		mov	_boss_statebyte[0].BSB_gengetsu_started, 0
 		call	cdg_load_single_noalpha pascal, CDG_BG_BOSS, ds, offset _st06bk_cdg, 0
 		call	@bb_boss_load$qnxc pascal, ds, offset _st06_bb

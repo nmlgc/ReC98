@@ -1,5 +1,22 @@
 // TH05-specific boss declarations.
 
+/// Backdrops
+/// ---------
+
+// Boss-specific [boss_backdrop_colorfill] functions, called with the GRCG in
+// TDW mode and the tile register set to the intended color.
+void pascal near sara_backdrop_colorfill(void);
+void pascal near louise_backdrop_colorfill(void);
+void pascal near alice_backdrop_colorfill(void);
+void pascal near mai_yuki_backdrop_colorfill(void);
+void pascal near yumeko_backdrop_colorfill(void);
+void pascal near shinki_stage_backdrop_colorfill(void);
+
+// These enable and disable the GRCG themselves.
+void near boss_bg_fill_col_0(void);
+void near shinki_bg_type_d_colorfill(void);
+/// ---------
+
 BOSS_DEC(sara);
 BOSS_DEC(louise);
 BOSS_DEC(alice);

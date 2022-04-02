@@ -19,8 +19,8 @@ extern "C" {
 #include "th04/formats/bb.h"
 #include "th04/formats/cdg.h"
 #include "th04/main/frames.h"
+#include "th04/main/playfld.hpp"
 #include "th04/main/phase.hpp"
-#include "th05/main/playfld.hpp"
 #include "th04/main/drawp.hpp"
 #include "th04/main/tile/bb.hpp"
 #include "th04/main/tile/tile.hpp"
@@ -29,6 +29,7 @@ extern "C" {
 #include "th05/formats/super.h"
 }
 #include "th05/main/boss/boss.hpp"
+#include "th05/main/boss/bosses.hpp"
 
 /// Structures
 /// ----------
@@ -535,22 +536,22 @@ void pascal near shinki_bg_render(void)
 		if(entrance_cel < TILES_BB_CELS) {
 			boss_backdrop_render(PLAYFIELD_LEFT, SHINKI_STAGE_BG_TOP, 1);
 		} else {
-			playfield_fill_col_0();
+			boss_bg_fill_col_0();
 		}
 		tiles_bb_col = 15;
 		tiles_bb_put(bb_boss_seg, entrance_cel);
 	} else if(boss.phase < 4) {
-		playfield_fill_col_0();
+		boss_bg_fill_col_0();
 		shinki_bg_type_a_update_and_render();
 	} else if(boss.phase < 8) {
-		playfield_fill_col_0();
+		boss_bg_fill_col_0();
 		shinki_bg_type_b_update_and_render();
 	} else if(boss.phase < 12) {
-		playfield_fill_col_0();
+		boss_bg_fill_col_0();
 		shinki_bg_type_c_update_and_render();
 	} else {
 		playfield_bg_put(0, SHINKI_TYPE_D_BG_TOP, CDG_BG_2);
-		playfield_fillm_0_0_384_240_col_0();
+		shinki_bg_type_d_colorfill();
 		shinki_bg_type_d_update();
 
 		grcg_setcolor(GC_RMW, 6);
@@ -665,11 +666,11 @@ void pascal near exalice_bg_render(void)
 		tiles_render_after_custom_bg(boss.phase_frame);
 	} else if(boss.phase == 1) {
 		unsigned char entrance_cel = (boss.phase_frame / 4);
-		playfield_fill_col_0();
+		boss_bg_fill_col_0();
 		tiles_bb_col = 15;
 		tiles_bb_put(bb_boss_seg, entrance_cel);
 	} else if(boss.phase < PHASE_BOSS_EXPLODE_BIG) {
-		playfield_fill_col_0();
+		boss_bg_fill_col_0();
 		exalice_hexagrams_update_and_render();
 	} else if(boss.phase == PHASE_BOSS_EXPLODE_BIG) {
 		tiles_render_all();

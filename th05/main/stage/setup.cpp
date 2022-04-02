@@ -31,7 +31,7 @@ void pascal near stage1_setup(void)
 	boss_sprite_left = 186;
 	boss_sprite_right = 184;
 	boss_sprite_stay = 180;
-	boss_backdrop_colorfill = playfield_fillm_32_0_320_192;
+	boss_backdrop_colorfill = sara_backdrop_colorfill;
 
 	super_entry_bfnt("st00.bmt");
 	cdg_load_all_noalpha(CDG_BG_BOSS, "st00bk.cdg");
@@ -58,7 +58,7 @@ void pascal near stage2_setup(void)
 	boss_fg_render_func = louise_fg_render;
 	boss.sprite = 180;
 	boss_hitbox_radius.set(24, 24);
-	boss_backdrop_colorfill = playfield_fillm_0_0_384_192__1;
+	boss_backdrop_colorfill = louise_backdrop_colorfill;
 
 	super_entry_bfnt("st01.bmt");
 	cdg_load_all_noalpha(CDG_BG_BOSS, "st01bk.cdg");
@@ -85,7 +85,7 @@ void pascal near stage3_setup(void)
 	boss_fg_render_func = alice_fg_render;
 	boss.sprite = 180;
 	boss_hitbox_radius.set(24, 24);
-	boss_backdrop_colorfill = playfield_fillm_0_205_384_163;
+	boss_backdrop_colorfill = alice_backdrop_colorfill;
 	boss_sprite_left = 188;
 	boss_sprite_right = 186;
 	boss_sprite_stay = 180;
@@ -117,7 +117,7 @@ void pascal near stage4_setup(void)
 	boss.sprite = 180;
 	yuki.sprite = 180;
 	boss_hitbox_radius.set(24, 24);
-	boss_backdrop_colorfill = playfield_fillm_64_56_256_256;
+	boss_backdrop_colorfill = mai_yuki_backdrop_colorfill;
 
 	super_entry_bfnt("st03.bmt");
 	cdg_load_all_noalpha(CDG_BG_BOSS, "st03bk.cdg");
@@ -145,7 +145,7 @@ void pascal near stage5_setup(void)
 	boss_fg_render_func = yumeko_fg_render;
 	boss.sprite = 180;
 	boss_hitbox_radius.set(24, 24);
-	boss_backdrop_colorfill = playfield_fillm_0_0_384_192__2;
+	boss_backdrop_colorfill = yumeko_backdrop_colorfill;
 
 	super_entry_bfnt("st04.bmt");
 	cdg_load_all_noalpha(CDG_BG_BOSS, "st04bk.cdg");
@@ -182,7 +182,7 @@ void pascal near stage6_setup(void)
 	boss_fg_render_func = shinki_fg_render;
 	boss.sprite = 180;
 	boss_hitbox_radius.set(24, 24);
-	boss_backdrop_colorfill = playfield_fillm_0_104_384_192;
+	boss_backdrop_colorfill = shinki_stage_backdrop_colorfill;
 
 	cdg_load_all_noalpha(CDG_BG_BOSS, "st05bk.cdg");
 	cdg_load_all_noalpha(CDG_BG_2, "st05bk2.cdg");
@@ -209,7 +209,8 @@ void pascal near stagex_setup(void)
 	boss_fg_render_func = exalice_fg_render;
 	boss.sprite = 180;
 	boss_hitbox_radius.set(24, 24);
-	boss_backdrop_colorfill = playfield_fillm_0_104_384_192;
+	// Yup, inconsistent, but also unused.
+	boss_backdrop_colorfill = shinki_stage_backdrop_colorfill;
 
 	super_entry_bfnt("st06.bmt");
 	bb_boss_load("st03.bb");
