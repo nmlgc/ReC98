@@ -22,6 +22,7 @@ extern "C" {
 #include "th04/main/playfld.hpp"
 #include "th04/main/phase.hpp"
 #include "th04/main/drawp.hpp"
+#include "th04/main/boss/impl.hpp"
 #include "th04/main/tile/tile.hpp"
 #include "th04/main/tile/bb.hpp"
 #include "th04/sprites/main_cdg.h"
@@ -64,6 +65,62 @@ struct lineset_t {
 extern boss_particle_t boss_particles[BOSS_PARTICLE_COUNT];
 extern lineset_t linesets[LINESET_COUNT];
 /// ----------
+
+void pascal near louise_bg_render(void)
+{
+	boss_bg_render_entrance_bb_opaque_and_backdrop(
+		tiles_render_after_custom(boss.phase_frame),
+		int,
+		4,
+		LOUISE_BACKDROP_LEFT,
+		LOUISE_BACKDROP_TOP,
+		1,
+		louise_backdrop_colorfill,
+		0
+	);
+}
+
+void pascal near alice_bg_render(void)
+{
+	boss_bg_render_entrance_bb_opaque_and_backdrop(
+		tiles_render_after_custom(boss.phase_frame),
+		int,
+		4,
+		ALICE_BACKDROP_LEFT,
+		ALICE_BACKDROP_TOP,
+		1,
+		alice_backdrop_colorfill,
+		15
+	);
+}
+
+void pascal near mai_yuki_bg_render(void)
+{
+	boss_bg_render_entrance_bb_opaque_and_backdrop(
+		tiles_render_after_custom(boss.phase_frame),
+		unsigned char,
+		4,
+		MAI_YUKI_BACKDROP_LEFT,
+		MAI_YUKI_BACKDROP_TOP,
+		1,
+		mai_yuki_backdrop_colorfill,
+		9
+	);
+}
+
+void pascal near yumeko_bg_render(void)
+{
+	boss_bg_render_entrance_bb_opaque_and_backdrop(
+		tiles_render_all(),
+		unsigned char,
+		4,
+		YUMEKO_BACKDROP_LEFT,
+		YUMEKO_BACKDROP_TOP,
+		1,
+		yumeko_backdrop_colorfill,
+		15
+	);
+}
 
 /// Stage 6 - Shinki
 /// ----------------

@@ -20,11 +20,11 @@ void __fastcall near grcg_tile_bb_put_8(screen_x_t left, vram_y_t top);
 
 // Renders the given animation [cel] in [seg] to the playfield area in VRAM.
 // All tiles with a corresponding 1 bit are filled with the [tiles_bb_col].
-inline void tiles_bb_put(bb_tiles8_t __seg *&seg, unsigned char &cel) {
-	void pascal near tiles_bb_put_raw(int cel);
-
-	tiles_bb_seg = seg;
-	tiles_bb_put_raw(cel);
+#define tiles_bb_put(seg, cel) { \
+	void pascal near tiles_bb_put_raw(int); \
+	\
+	tiles_bb_seg = seg; \
+	tiles_bb_put_raw(cel); \
 }
 
 // Interprets the given animation [cel] in [seg] as a mask, and marks all stage

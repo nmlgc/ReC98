@@ -6,6 +6,27 @@
 // Image coordinates
 // -----------------
 
+static const screen_x_t LOUISE_BACKDROP_LEFT = PLAYFIELD_LEFT;
+static const screen_y_t LOUISE_BACKDROP_TOP = PLAYFIELD_TOP;
+
+static const pixel_t ALICE_BACKDROP_H = 163;
+static const screen_x_t ALICE_BACKDROP_LEFT = PLAYFIELD_LEFT;
+static const screen_y_t ALICE_BACKDROP_TOP = (
+	PLAYFIELD_BOTTOM - ALICE_BACKDROP_H
+);
+
+static const pixel_t MAI_YUKI_BACKDROP_W = 256;
+static const pixel_t MAI_YUKI_BACKDROP_H = 256;
+static const screen_x_t MAI_YUKI_BACKDROP_LEFT = (
+	PLAYFIELD_LEFT + (PLAYFIELD_W / 2) - (MAI_YUKI_BACKDROP_W / 2)
+);
+static const screen_y_t MAI_YUKI_BACKDROP_TOP = (
+	PLAYFIELD_TOP + (PLAYFIELD_H / 2) - (MAI_YUKI_BACKDROP_H / 2)
+);
+
+static const screen_x_t YUMEKO_BACKDROP_LEFT = PLAYFIELD_LEFT;
+static const screen_y_t YUMEKO_BACKDROP_TOP = PLAYFIELD_TOP;
+
 static const screen_x_t SHINKI_BACKDROP_LEFT = PLAYFIELD_LEFT;
 static const screen_y_t SHINKI_STAGE_BACKDROP_TOP = (
 	PLAYFIELD_TOP + (PLAYFIELD_H / 2) - 80
