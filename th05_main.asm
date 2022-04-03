@@ -2810,64 +2810,7 @@ loc_D060:
 sub_D032	endp
 
 include th04/main/boss/backdrop.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-public @SARA_BG_RENDER$QV
-@sara_bg_render$qv	proc near
-		push	bp
-		mov	bp, sp
-		cmp	_boss_phase, PHASE_BOSS_HP_FILL
-		jnz	short loc_D09F
-		cmp	_boss_phase_frame, 2
-		jg	short loc_D0EF
-		jmp	short loc_D0EA
-; ---------------------------------------------------------------------------
-
-loc_D09F:
-		cmp	_boss_phase, PHASE_BOSS_ENTRANCE_BB
-		jnz	short loc_D0C8
-		call	@boss_backdrop_render$qiic pascal, (64 shl 16) or 16, 0
-		mov	ax, _bb_boss_seg
-		mov	_tiles_bb_seg, ax
-		mov	ax, _boss_phase_frame
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		call	@tiles_bb_invalidate_raw$qi pascal, ax
-		call	tiles_redraw_invalidated
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_D0C8:
-		cmp	_boss_phase, PHASE_BOSS_EXPLODE_BIG
-		jnb	short loc_D0DC
-		call	@boss_backdrop_render$qiic pascal, (64 shl 16) or 16, 0
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_D0DC:
-		cmp	_boss_phase, PHASE_BOSS_EXPLODE_BIG
-		jz	short loc_D0EA
-		cmp	_boss_phase_frame, 2
-		jg	short loc_D0EF
-
-loc_D0EA:
-		call	tiles_render_all
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_D0EF:
-		call	tiles_render
-		pop	bp
-		retn
-@sara_bg_render$qv	endp
-
+	@SARA_BG_RENDER$QV procdesc pascal near
 	@LOUISE_BG_RENDER$QV procdesc pascal near
 	@ALICE_BG_RENDER$QV procdesc pascal near
 	@MAI_YUKI_BG_RENDER$QV procdesc pascal near

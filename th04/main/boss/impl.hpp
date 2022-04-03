@@ -44,3 +44,24 @@
 		tiles_render_after_custom(boss.phase_frame); \
 	}  \
 }
+
+// Like boss_bg_render_entrance_bb_opaque_and_backdrop(), but rendering 3) as
+// a transition between stage tiles (where the entrance .BB bit is 0) and the
+// backdrop image (where the entrance .BB bit is 1).
+#define boss_bg_render_entrance_bb_transition_and_backdrop( \
+	on_hp_fill, backdrop_left, backdrop_top, backdrop_col \
+) { \
+	if(boss.phase == PHASE_BOSS_HP_FILL) { \
+		on_hp_fill; \
+	} else if(boss.phase == PHASE_BOSS_ENTRANCE_BB) { \
+		boss_backdrop_render(backdrop_left, backdrop_top, backdrop_col); \
+		tiles_bb_invalidate(bb_boss_seg, (boss.phase_frame / 2)); \
+		tiles_redraw_invalidated(); \
+	} else if(boss.phase < PHASE_BOSS_EXPLODE_BIG) { \
+		boss_backdrop_render(backdrop_left, backdrop_top, backdrop_col); \
+	} else if(boss.phase == PHASE_BOSS_EXPLODE_BIG) { \
+		tiles_render_all(); \
+	} else /* if(boss.phase == PHASE_NONE) */ { \
+		tiles_render_after_custom(boss.phase_frame); \
+	} \
+}

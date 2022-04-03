@@ -66,6 +66,16 @@ extern boss_particle_t boss_particles[BOSS_PARTICLE_COUNT];
 extern lineset_t linesets[LINESET_COUNT];
 /// ----------
 
+void pascal near sara_bg_render(void)
+{
+	boss_bg_render_entrance_bb_transition_and_backdrop(
+		tiles_render_after_custom(boss.phase_frame),
+		SARA_BACKDROP_LEFT,
+		SARA_BACKDROP_TOP,
+		0
+	);
+}
+
 void pascal near louise_bg_render(void)
 {
 	boss_bg_render_entrance_bb_opaque_and_backdrop(

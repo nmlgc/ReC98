@@ -6,6 +6,12 @@
 // Image coordinates
 // -----------------
 
+static const pixel_t SARA_BACKDROP_W = 320;
+static const screen_x_t SARA_BACKDROP_LEFT = (
+	PLAYFIELD_LEFT + (PLAYFIELD_W / 2) - (SARA_BACKDROP_W / 2)
+);
+static const screen_y_t SARA_BACKDROP_TOP = PLAYFIELD_TOP;
+
 static const screen_x_t LOUISE_BACKDROP_LEFT = PLAYFIELD_LEFT;
 static const screen_y_t LOUISE_BACKDROP_TOP = PLAYFIELD_TOP;
 
