@@ -73,9 +73,12 @@ void pascal near tiles_redraw_invalidated(void);
 // Invalidates all entity types, then redraws the invalidated tiles.
 void pascal near tiles_render(void);
 
-// Used for switching back to a tiled background after drawing a custom one.
-inline void tiles_render_after_custom_bg(const int& phase_frame) {
-	if(phase_frame <= 2) {
+// Used for switching back to a tiled background after rendering anything else,
+// like in-game dialog, or a custom background. Makes sure to first render all
+// tiles to both VRAM pages, then performs regular redrawing of only the
+// invalidated tiles.
+inline void tiles_render_after_custom(const int& frame) {
+	if(frame <= 2) {
 		tiles_render_all();
 	} else {
 		tiles_render();

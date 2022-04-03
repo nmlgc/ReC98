@@ -22,8 +22,8 @@ extern "C" {
 #include "th04/main/playfld.hpp"
 #include "th04/main/phase.hpp"
 #include "th04/main/drawp.hpp"
-#include "th04/main/tile/bb.hpp"
 #include "th04/main/tile/tile.hpp"
+#include "th04/main/tile/bb.hpp"
 #include "th04/sprites/main_cdg.h"
 #include "th05/sprites/main_pat.h"
 #include "th05/formats/super.h"
@@ -501,7 +501,9 @@ void near shinki_bg_type_d_update(void)
 		particle = boss_particles;
 		i = 0;
 		while(i < BOSS_PARTICLE_COUNT) {
-			particle->origin.y.v = to_sp(SHINKI_TYPE_D_BACKDROP_TOP);
+			particle->origin.y.v = to_sp(
+				SHINKI_TYPE_D_BACKDROP_TOP - PLAYFIELD_TOP
+			);
 			particle->velocity.y.set(-1.0f);
 			i++;
 			particle++;
@@ -525,11 +527,15 @@ void near shinki_bg_type_d_update(void)
 void pascal near shinki_bg_render(void)
 {
 	if(boss.phase == PHASE_BOSS_HP_FILL) {
-		boss_backdrop_render(PLAYFIELD_LEFT, SHINKI_STAGE_BACKDROP_TOP, 1);
+		boss_backdrop_render(
+			SHINKI_BACKDROP_LEFT, SHINKI_STAGE_BACKDROP_TOP, 1
+		);
 	} else if(boss.phase == PHASE_BOSS_ENTRANCE_BB) {
 		unsigned char entrance_cel = (boss.phase_frame / 4);
-		if(entrance_cel < TILES_BB_CELS) {
-			boss_backdrop_render(PLAYFIELD_LEFT, SHINKI_STAGE_BACKDROP_TOP, 1);
+		if(entrance_cel < (TILES_BB_CELS / 2)) {
+			boss_backdrop_render(
+				SHINKI_BACKDROP_LEFT, SHINKI_STAGE_BACKDROP_TOP, 1
+			);
 		} else {
 			boss_bg_fill_col_0();
 		}
@@ -544,8 +550,10 @@ void pascal near shinki_bg_render(void)
 	} else if(boss.phase < 12) {
 		boss_bg_fill_col_0();
 		shinki_bg_type_c_update_and_render();
-	} else {
-		playfield_bg_put(0, SHINKI_TYPE_D_BACKDROP_TOP, CDG_BG_2);
+	} else /* if(boss.phase == PHASE_NONE) */ { \
+		cdg_put_noalpha_8(
+			SHINKI_BACKDROP_LEFT, SHINKI_TYPE_D_BACKDROP_TOP, CDG_BG_2
+		);
 		shinki_bg_type_d_colorfill();
 		shinki_bg_type_d_update();
 
@@ -658,7 +666,7 @@ void near exalice_hexagrams_update_and_render(void)
 void pascal near exalice_bg_render(void)
 {
 	if(boss.phase == PHASE_BOSS_HP_FILL) {
-		tiles_render_after_custom_bg(boss.phase_frame);
+		tiles_render_after_custom(boss.phase_frame);
 	} else if(boss.phase == PHASE_BOSS_ENTRANCE_BB) {
 		unsigned char entrance_cel = (boss.phase_frame / 4);
 		boss_bg_fill_col_0();
@@ -669,8 +677,8 @@ void pascal near exalice_bg_render(void)
 		exalice_hexagrams_update_and_render();
 	} else if(boss.phase == PHASE_BOSS_EXPLODE_BIG) {
 		tiles_render_all();
-	} else {
-		tiles_render_after_custom_bg(boss.phase_frame);
+	} else /* if(boss.phase == PHASE_NONE) */ { \
+		tiles_render_after_custom(boss.phase_frame);
 	}
 }
 /// ----------------------
