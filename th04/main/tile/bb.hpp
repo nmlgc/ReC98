@@ -21,3 +21,12 @@ inline void tiles_bb_put(bb_tiles8_t __seg *&seg, unsigned char &cel) {
 	tiles_bb_seg = seg;
 	tiles_bb_put_raw(cel);
 }
+
+// Interprets the given animation [cel] in [seg] as a mask, and marks all stage
+// background tiles with a corresponding 1 bit for redrawing.
+#define tiles_bb_invalidate(seg, cel) { \
+	void pascal near tiles_bb_invalidate_raw(int); \
+	\
+	tiles_bb_seg = seg; \
+	tiles_bb_invalidate_raw(cel); \
+}

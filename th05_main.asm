@@ -2836,8 +2836,7 @@ loc_D09F:
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		push	ax
-		call	sub_DFBA
+		call	@tiles_bb_invalidate_raw$qi pascal, ax
 		call	tiles_redraw_invalidated
 		pop	bp
 		retn
@@ -3229,61 +3228,6 @@ public @ALICE_BACKDROP_COLORFILL$QV
 include th04/hardware/fillm64-56_256-256.asm
 include th05/formats/bb_load.asm
 include th04/main/tile/bb_put_a.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_DFBA	proc near
-
-var_6		= dword	ptr -6
-var_2		= byte ptr -2
-var_1		= byte ptr -1
-arg_0		= word ptr  4
-
-		enter	6, 0
-		push	di
-		mov	_tile_invalidate_box, (2 shl 16) or 2
-		mov	ax, _bb_boss_seg
-		mov	fs, ax
-		mov	di, [bp+arg_0]
-		shl	di, 7
-		mov	word ptr [bp+var_6+2], (8 shl 4)
-
-loc_DFD8:
-		mov	word ptr [bp+var_6], (8 shl 4)
-		mov	[bp+var_2], 18h
-
-loc_DFE1:
-		mov	al, fs:[di]
-		mov	[bp+var_1], al
-
-loc_DFE7:
-		test	[bp+var_1], 80h
-		jnz	short loc_DFF4
-		call	tiles_invalidate_around pascal, large [bp+var_6]
-
-loc_DFF4:
-		shl	[bp+var_1], 1
-		add	word ptr [bp+var_6], (16 shl 4)
-		dec	[bp+var_2]
-		jz	short loc_E00A
-		test	[bp+var_2], 7
-		jnz	short loc_DFE7
-		inc	di
-		jmp	short loc_DFE1
-; ---------------------------------------------------------------------------
-
-loc_E00A:
-		add	di, 2
-		add	word ptr [bp+var_6+2], (16 shl 4)
-		cmp	word ptr [bp+var_6+2], (PLAYFIELD_H shl 4)
-		jb	short loc_DFD8
-		pop	di
-		leave
-		retn	2
-sub_DFBA	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 

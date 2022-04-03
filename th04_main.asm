@@ -1496,61 +1496,6 @@ include th04/main/tile/bb_put_a.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
-; Attributes: bp-based frame
-
-sub_BF94	proc near
-
-var_6		= dword	ptr -6
-var_2		= byte ptr -2
-var_1		= byte ptr -1
-arg_0		= word ptr  4
-
-		enter	6, 0
-		push	di
-		mov	_tile_invalidate_box, (2 shl 16) or 2
-		mov	ax, _bb_boss_seg
-		mov	fs, ax
-		mov	di, [bp+arg_0]
-		shl	di, 7
-		mov	word ptr [bp+var_6+2], (8 shl 4)
-
-loc_BFB2:
-		mov	word ptr [bp+var_6], (8 shl 4)
-		mov	[bp+var_2], 18h
-
-loc_BFBB:
-		mov	al, fs:[di]
-		mov	[bp+var_1], al
-
-loc_BFC1:
-		test	[bp+var_1], 80h
-		jnz	short loc_BFCE
-		call	main_01:tiles_invalidate_around pascal, large [bp+var_6]
-
-loc_BFCE:
-		shl	[bp+var_1], 1
-		add	word ptr [bp+var_6], (16 shl 4)
-		dec	[bp+var_2]
-		jz	short loc_BFE4
-		test	[bp+var_2], 7
-		jnz	short loc_BFC1
-		inc	di
-		jmp	short loc_BFBB
-; ---------------------------------------------------------------------------
-
-loc_BFE4:
-		add	di, 2
-		add	word ptr [bp+var_6+2], (16 shl 4)
-		cmp	word ptr [bp+var_6+2], (PLAYFIELD_H shl 4)
-		jb	short loc_BFB2
-		pop	di
-		leave
-		retn	2
-sub_BF94	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
 public @YUUKA5_BACKDROP_COLORFILL$QV
 @yuuka5_backdrop_colorfill$qv	proc near
 		push	di
@@ -10229,8 +10174,7 @@ loc_12199:
 		mov	_tiles_bb_seg, ax
 		mov	ax, _boss_phase_frame
 		sar	ax, 1
-		push	ax
-		call	main_01:sub_BF94
+		call	@tiles_bb_invalidate_raw$qi pascal, ax
 		call	main_01:tiles_redraw_invalidated
 		pop	bp
 		retn
@@ -10279,8 +10223,7 @@ loc_121E6:
 		mov	_tiles_bb_seg, ax
 		mov	ax, _boss_phase_frame
 		sar	ax, 1
-		push	ax
-		call	main_01:sub_BF94
+		call	@tiles_bb_invalidate_raw$qi pascal, ax
 		call	main_01:tiles_redraw_invalidated
 		pop	bp
 		retn
@@ -10356,8 +10299,7 @@ loc_12285:
 		mov	_tiles_bb_seg, ax
 		mov	ax, _boss_phase_frame
 		sar	ax, 1
-		push	ax
-		call	main_01:sub_BF94
+		call	@tiles_bb_invalidate_raw$qi pascal, ax
 		call	main_01:tiles_redraw_invalidated
 		pop	bp
 		retn
