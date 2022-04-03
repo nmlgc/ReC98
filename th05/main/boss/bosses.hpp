@@ -3,6 +3,18 @@
 /// Backdrops
 /// ---------
 
+// Image coordinates
+// -----------------
+
+static const screen_y_t SHINKI_STAGE_BACKDROP_TOP = (
+	PLAYFIELD_TOP + (PLAYFIELD_H / 2) - 80
+);
+static const pixel_t SHINKI_TYPE_D_BACKDROP_H = 128;
+static const pixel_t SHINKI_TYPE_D_BACKDROP_TOP = (
+	PLAYFIELD_H - SHINKI_TYPE_D_BACKDROP_H
+);
+// -----------------
+
 // Boss-specific [boss_backdrop_colorfill] functions, called with the GRCG in
 // TDW mode and the tile register set to the intended color.
 void pascal near sara_backdrop_colorfill(void);

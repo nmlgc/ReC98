@@ -72,11 +72,6 @@ extern lineset_t linesets[LINESET_COUNT];
 #define SHINKI_SPINLINE_MOVE_SPEED to_sp(0.25f)
 #define SHINKI_SPINLINE_TOP to_sp(80.0f)
 #define SHINKI_SPINLINE_BOTTOM to_sp(PLAYFIELD_H - 64)
-
-#define SHINKI_STAGE_BG_TOP (PLAYFIELD_TOP + (PLAYFIELD_H / 2) - 80)
-#define SHINKI_TYPE_D_BG_H 128
-#define SHINKI_TYPE_D_BG_TOP (PLAYFIELD_H - SHINKI_TYPE_D_BG_H)
-
 #define SHINKI_SPINLINE_MOVE_DURATION \
 	(SHINKI_SPINLINE_MOVE_W * SHINKI_SPINLINE_MOVE_SPEED)
 
@@ -506,7 +501,7 @@ void near shinki_bg_type_d_update(void)
 		particle = boss_particles;
 		i = 0;
 		while(i < BOSS_PARTICLE_COUNT) {
-			particle->origin.y.v = to_sp(SHINKI_TYPE_D_BG_TOP);
+			particle->origin.y.v = to_sp(SHINKI_TYPE_D_BACKDROP_TOP);
 			particle->velocity.y.set(-1.0f);
 			i++;
 			particle++;
@@ -530,11 +525,11 @@ void near shinki_bg_type_d_update(void)
 void pascal near shinki_bg_render(void)
 {
 	if(boss.phase == 0) {
-		boss_backdrop_render(PLAYFIELD_LEFT, SHINKI_STAGE_BG_TOP, 1);
+		boss_backdrop_render(PLAYFIELD_LEFT, SHINKI_STAGE_BACKDROP_TOP, 1);
 	} else if(boss.phase == 1) {
 		unsigned char entrance_cel = (boss.phase_frame / 4);
 		if(entrance_cel < TILES_BB_CELS) {
-			boss_backdrop_render(PLAYFIELD_LEFT, SHINKI_STAGE_BG_TOP, 1);
+			boss_backdrop_render(PLAYFIELD_LEFT, SHINKI_STAGE_BACKDROP_TOP, 1);
 		} else {
 			boss_bg_fill_col_0();
 		}
@@ -550,7 +545,7 @@ void pascal near shinki_bg_render(void)
 		boss_bg_fill_col_0();
 		shinki_bg_type_c_update_and_render();
 	} else {
-		playfield_bg_put(0, SHINKI_TYPE_D_BG_TOP, CDG_BG_2);
+		playfield_bg_put(0, SHINKI_TYPE_D_BACKDROP_TOP, CDG_BG_2);
 		shinki_bg_type_d_colorfill();
 		shinki_bg_type_d_update();
 
