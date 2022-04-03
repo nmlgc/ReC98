@@ -13,6 +13,7 @@
 #include "th05/sprites/main_pat.h"
 #include "th04/main/playfld.hpp"
 #include "th05/main/boss/boss.hpp"
+#include "th05/main/boss/impl.hpp"
 
 #define mai boss
 #define yuki boss2
