@@ -913,7 +913,7 @@ loc_B3CA:
 loc_B3EA:
 		call	@ems_preload_boss_faceset$qnxc pascal, ds, offset aBss0_cd2 ; "BSS0.CD2"
 		call	super_entry_bfnt pascal, ds, offset aSt00_bft ; "st00.bft"
-		call	stage1_setup
+		call	@stage1_setup$qv
 		push	ds
 		push	offset aSt00_mpn ; "st00.mpn"
 		jmp	loc_B4A6
@@ -922,7 +922,7 @@ loc_B3EA:
 loc_B404:
 		call	@ems_preload_boss_faceset$qnxc pascal, ds, offset aBss1_cd2 ; "BSS1.CD2"
 		call	super_entry_bfnt pascal, ds, offset aSt01_bft ; "st01.bft"
-		call	stage2_setup
+		call	@stage2_setup$qv
 		push	ds
 		push	offset aSt01_mpn ; "st01.mpn"
 		jmp	loc_B4A6
@@ -931,7 +931,7 @@ loc_B404:
 loc_B41E:
 		call	@ems_preload_boss_faceset$qnxc pascal, ds, offset aBss2_cd2 ; "BSS2.CD2"
 		call	super_entry_bfnt pascal, ds, offset aSt02_bft ; "st02.bft"
-		call	stage3_setup
+		call	@stage3_setup$qv
 		push	ds
 		push	offset aSt02_mpn ; "st02.mpn"
 		jmp	short loc_B4A6
@@ -940,7 +940,7 @@ loc_B41E:
 loc_B437:
 		call	@ems_preload_boss_faceset$qnxc pascal, ds, offset aBss3_cd2 ; "BSS3.CD2"
 		call	super_entry_bfnt pascal, ds, offset aSt03_bft ; "st03.bft"
-		call	stage4_setup
+		call	@stage4_setup$qv
 		push	ds
 		push	offset aSt03_mpn ; "st03.mpn"
 		jmp	short loc_B4A6
@@ -949,7 +949,7 @@ loc_B437:
 loc_B450:
 		call	@ems_preload_boss_faceset$qnxc pascal, ds, offset aBss4_cd2 ; "BSS4.CD2"
 		call	super_entry_bfnt pascal, ds, offset aSt04_bft ; "st04.bft"
-		call	stage5_setup
+		call	@stage5_setup$qv
 		push	ds
 		push	offset aSt04_mpn ; "st04.mpn"
 		jmp	short loc_B4A6
@@ -958,9 +958,9 @@ loc_B450:
 loc_B469:
 		call	@ems_preload_boss_faceset$qnxc pascal, ds, offset aBss4_cd2_0 ; "BSS4.CD2"
 		call	super_entry_bfnt pascal, ds, offset aSt04_bft_0 ; "st04.bft"
-		call	stage6_setup
-		mov	_bg_render_not_bombing, offset shinki_bg_render
-		mov	_bg_render_bombing_func, offset shinki_bg_render
+		call	@stage6_setup$qv
+		mov	_bg_render_not_bombing, offset @shinki_bg_render$qv
+		mov	_bg_render_bombing_func, offset @shinki_bg_render$qv
 		jmp	short loc_B4A9
 ; ---------------------------------------------------------------------------
 
@@ -968,7 +968,7 @@ loc_B48A:
 		nopcall	sub_E4FC
 		call	@ems_preload_boss_faceset$qnxc pascal, ds, offset aBss6_cd2 ; "BSS6.CD2"
 		call	super_entry_bfnt pascal, ds, offset aSt06_bft ; "st06.bft"
-		call	stagex_setup
+		call	@stagex_setup$qv
 		push	ds
 		push	offset aSt06_mpn ; "st06.mpn"
 
@@ -2815,8 +2815,8 @@ include th04/main/boss/backdrop.asm
 
 ; Attributes: bp-based frame
 
-public SARA_BG_RENDER
-sara_bg_render	proc near
+public @SARA_BG_RENDER$QV
+@sara_bg_render$qv	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_boss_phase, 0
@@ -2867,15 +2867,15 @@ loc_D0EF:
 		call	tiles_render
 		pop	bp
 		retn
-sara_bg_render	endp
+@sara_bg_render$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-public LOUISE_BG_RENDER
-louise_bg_render	proc near
+public @LOUISE_BG_RENDER$QV
+@louise_bg_render$qv	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -2912,7 +2912,7 @@ loc_D142:
 		mov	_tiles_bb_col, 0
 		mov	ax, _bb_boss_seg
 		mov	_tiles_bb_seg, ax
-		call	tiles_bb_put_raw pascal, si
+		call	@tiles_bb_put_raw$qi pascal, si
 		jmp	short loc_D17D
 ; ---------------------------------------------------------------------------
 
@@ -2941,15 +2941,15 @@ loc_D17D:
 		pop	si
 		pop	bp
 		retn
-louise_bg_render	endp
+@louise_bg_render$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-public ALICE_BG_RENDER
-alice_bg_render	proc near
+public @ALICE_BG_RENDER$QV
+@alice_bg_render$qv	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -2986,7 +2986,7 @@ loc_D1CE:
 		mov	_tiles_bb_col, 15
 		mov	ax, _bb_boss_seg
 		mov	_tiles_bb_seg, ax
-		call	tiles_bb_put_raw pascal, si
+		call	@tiles_bb_put_raw$qi pascal, si
 		jmp	short loc_D209
 ; ---------------------------------------------------------------------------
 
@@ -3015,15 +3015,15 @@ loc_D209:
 		pop	si
 		pop	bp
 		retn
-alice_bg_render	endp
+@alice_bg_render$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-public MAI_YUKI_BG_RENDER
-mai_yuki_bg_render	proc near
+public @MAI_YUKI_BG_RENDER$QV
+@mai_yuki_bg_render$qv	proc near
 
 @@entrance_cel		= byte ptr -1
 
@@ -3063,7 +3063,7 @@ loc_D25C:
 		mov	_tiles_bb_seg, ax
 		mov	al, [bp+@@entrance_cel]
 		mov	ah, 0
-		call	tiles_bb_put_raw pascal, ax
+		call	@tiles_bb_put_raw$qi pascal, ax
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -3092,15 +3092,15 @@ loc_D299:
 		call	tiles_render
 		leave
 		retn
-mai_yuki_bg_render	endp
+@mai_yuki_bg_render$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-public YUMEKO_BG_RENDER
-yumeko_bg_render	proc near
+public @YUMEKO_BG_RENDER$QV
+@yumeko_bg_render$qv	proc near
 
 @@entrance_cel		= byte ptr -1
 
@@ -3134,7 +3134,7 @@ loc_D2E5:
 		mov	_tiles_bb_seg, ax
 		mov	al, [bp+@@entrance_cel]
 		mov	ah, 0
-		call	tiles_bb_put_raw pascal, ax
+		call	@tiles_bb_put_raw$qi pascal, ax
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -3163,10 +3163,10 @@ loc_D322:
 		call	tiles_render
 		leave
 		retn
-yumeko_bg_render	endp
+@yumeko_bg_render$qv	endp
 
-	SHINKI_BG_RENDER procdesc pascal near
-	EXALICE_BG_RENDER procdesc pascal near
+	@SHINKI_BG_RENDER$QV procdesc pascal near
+	@EXALICE_BG_RENDER$QV procdesc pascal near
 mai_TEXT	ends
 
 main_TEXT	segment	word public 'CODE' use16
@@ -5601,8 +5601,8 @@ midboss1_render	endp
 
 ; Attributes: bp-based frame
 
-public SARA_FG_RENDER
-sara_fg_render	proc near
+public @SARA_FG_RENDER$QV
+@sara_fg_render$qv	proc near
 
 @@y		= word ptr -2
 
@@ -5684,7 +5684,7 @@ loc_10999:
 		pop	si
 		leave
 		retn
-sara_fg_render	endp
+@sara_fg_render$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -5760,8 +5760,8 @@ midboss2_render	endp
 
 ; Attributes: bp-based frame
 
-public LOUISE_FG_RENDER
-louise_fg_render	proc near
+public @LOUISE_FG_RENDER$QV
+@louise_fg_render$qv	proc near
 
 @@y		= word ptr -2
 
@@ -5817,7 +5817,7 @@ loc_10A94:
 		pop	si
 		leave
 		retn
-louise_fg_render	endp
+@louise_fg_render$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -6045,8 +6045,8 @@ puppets_render	endp
 
 ; Attributes: bp-based frame
 
-public ALICE_FG_RENDER
-alice_fg_render	proc near
+public @ALICE_FG_RENDER$QV
+@alice_fg_render$qv	proc near
 
 @@y		= word ptr -2
 
@@ -6119,7 +6119,7 @@ loc_10D1C:
 		pop	si
 		leave
 		retn
-alice_fg_render	endp
+@alice_fg_render$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -6174,8 +6174,8 @@ sub_10D26	endp
 
 ; Attributes: bp-based frame
 
-public MAI_YUKI_FG_RENDER
-mai_yuki_fg_render	proc near
+public @MAI_YUKI_FG_RENDER$QV
+@mai_yuki_fg_render$qv	proc near
 
 @@y		= word ptr -4
 @@x		= word ptr -2
@@ -6272,7 +6272,7 @@ loc_10E1F:
 		pop	si
 		leave
 		retn
-mai_yuki_fg_render	endp
+@mai_yuki_fg_render$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -6411,8 +6411,8 @@ include th05/main/bullet/swords_render.asm
 
 ; Attributes: bp-based frame
 
-public YUMEKO_FG_RENDER
-yumeko_fg_render	proc near
+public @YUMEKO_FG_RENDER$QV
+@yumeko_fg_render$qv	proc near
 
 var_6		= word ptr -6
 @@x		= word ptr -4
@@ -6483,7 +6483,7 @@ loc_11069:
 		pop	si
 		leave
 		retn
-yumeko_fg_render	endp
+@yumeko_fg_render$qv	endp
 
 include th05/main/bullet/b6balls_render.asm
 
@@ -6491,8 +6491,8 @@ include th05/main/bullet/b6balls_render.asm
 
 ; Attributes: bp-based frame
 
-public SHINKI_FG_RENDER
-shinki_fg_render	proc near
+public @SHINKI_FG_RENDER$QV
+@shinki_fg_render$qv	proc near
 
 var_4		= word ptr -4
 @@y		= word ptr -2
@@ -6567,7 +6567,7 @@ loc_1117A:
 		pop	si
 		leave
 		retn
-shinki_fg_render	endp
+@shinki_fg_render$qv	endp
 
 include th05/main/stage/s2part.asm
 
@@ -7286,8 +7286,8 @@ exalice_custombullets_render	endp
 
 ; Attributes: bp-based frame
 
-public EXALICE_FG_RENDER
-exalice_fg_render	proc near
+public @EXALICE_FG_RENDER$QV
+@exalice_fg_render$qv	proc near
 
 @@y		= word ptr -2
 
@@ -7357,7 +7357,7 @@ loc_11862:
 		pop	si
 		leave
 		retn
-exalice_fg_render	endp
+@exalice_fg_render$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -8362,13 +8362,13 @@ sub_12842	endp
 	HUD_SCORE_PUT procdesc near
 	SCORE_UPDATE_AND_RENDER procdesc near
 	@bb_boss_free$qv procdesc near
-	STAGE1_SETUP procdesc near
-	STAGE2_SETUP procdesc near
-	STAGE3_SETUP procdesc near
-	STAGE4_SETUP procdesc near
-	STAGE5_SETUP procdesc near
-	STAGE6_SETUP procdesc near
-	STAGEX_SETUP procdesc near
+	@STAGE1_SETUP$QV procdesc near
+	@STAGE2_SETUP$QV procdesc near
+	@STAGE3_SETUP$QV procdesc near
+	@STAGE4_SETUP$QV procdesc near
+	@STAGE5_SETUP$QV procdesc near
+	@STAGE6_SETUP$QV procdesc near
+	@STAGEX_SETUP$QV procdesc near
 	extern SCORE_DELTA_COMMIT:proc
 main_01_TEXT	ends
 
@@ -11642,8 +11642,8 @@ sub_18590	endp
 
 ; Attributes: bp-based frame
 
-public SARA_UPDATE
-sara_update	proc far
+public @SARA_UPDATE$QV
+@sara_update$qv	proc far
 		push	bp
 		mov	bp, sp
 		mov	ax, _boss_pos.cur.x
@@ -11705,7 +11705,7 @@ loc_1874E:
 		call	snd_se_play pascal, 13
 
 loc_1877A:
-		mov	_bg_render_bombing_func, offset sara_bg_render
+		mov	_bg_render_bombing_func, offset @sara_bg_render$qv
 		jmp	loc_188EE
 ; ---------------------------------------------------------------------------
 
@@ -11866,7 +11866,7 @@ loc_188EE:
 		call	hud_hp_update_and_render pascal, _boss_hp, 4650
 		pop	bp
 		retf
-sara_update	endp
+@sara_update$qv	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -12688,8 +12688,8 @@ sub_18FE2	endp
 
 ; Attributes: bp-based frame
 
-public LOUISE_UPDATE
-louise_update	proc far
+public @LOUISE_UPDATE$QV
+@louise_update$qv	proc far
 		push	bp
 		mov	bp, sp
 		mov	ax, _boss_pos.cur.x
@@ -12725,7 +12725,7 @@ loc_19097:
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
-		mov	_bg_render_bombing_func, offset louise_bg_render
+		mov	_bg_render_bombing_func, offset @louise_bg_render$qv
 		jmp	loc_19263
 ; ---------------------------------------------------------------------------
 
@@ -12917,7 +12917,7 @@ loc_19263:
 		call	hud_hp_update_and_render pascal, _boss_hp, 4400
 		pop	bp
 		retf
-louise_update	endp
+@louise_update$qv	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -14469,8 +14469,8 @@ sub_1A005	endp
 
 ; Attributes: bp-based frame
 
-public ALICE_UPDATE
-alice_update	proc far
+public @ALICE_UPDATE$QV
+@alice_update$qv	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -14511,7 +14511,7 @@ loc_1A0AD:
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
-		mov	_bg_render_bombing_func, offset alice_bg_render
+		mov	_bg_render_bombing_func, offset @alice_bg_render$qv
 		jmp	loc_1A3B2
 ; ---------------------------------------------------------------------------
 
@@ -14755,7 +14755,7 @@ loc_1A3CD:
 		pop	si
 		pop	bp
 		retf
-alice_update	endp
+@alice_update$qv	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -15633,8 +15633,8 @@ mai_yuki_1AB76	endp
 
 ; Attributes: bp-based frame
 
-public MAI_YUKI_UPDATE
-mai_yuki_update	proc far
+public @MAI_YUKI_UPDATE$QV
+@mai_yuki_update$qv	proc far
 
 var_4		= word ptr -4
 var_2		= word ptr -2
@@ -15702,7 +15702,7 @@ loc_1AC5E:
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
-		mov	_bg_render_bombing_func, offset mai_yuki_bg_render
+		mov	_bg_render_bombing_func, offset @mai_yuki_bg_render$qv
 		jmp	loc_1AFA7	; default
 ; ---------------------------------------------------------------------------
 
@@ -16007,7 +16007,7 @@ loc_1AFA7:
 		pop	si
 		leave
 		retf
-mai_yuki_update	endp
+@mai_yuki_update$qv	endp
 ; ---------------------------------------------------------------------------
 		db 0
 word_1AFBC	dw	0,     1,     2,  0FDh
@@ -17131,7 +17131,7 @@ loc_1BA63:
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
-		mov	_bg_render_bombing_func, offset mai_yuki_bg_render
+		mov	_bg_render_bombing_func, offset @mai_yuki_bg_render$qv
 		jmp	loc_1BD09
 ; ---------------------------------------------------------------------------
 
@@ -18318,7 +18318,7 @@ loc_1C58E:
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
-		mov	_bg_render_bombing_func, offset mai_yuki_bg_render
+		mov	_bg_render_bombing_func, offset @mai_yuki_bg_render$qv
 		jmp	loc_1C805
 ; ---------------------------------------------------------------------------
 
@@ -19394,8 +19394,8 @@ sub_1D1C6	endp
 
 ; Attributes: bp-based frame
 
-public YUMEKO_UPDATE
-yumeko_update	proc far
+public @YUMEKO_UPDATE$QV
+@yumeko_update$qv	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -19467,7 +19467,7 @@ loc_1D32D:
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
-		mov	_bg_render_bombing_func, offset yumeko_bg_render
+		mov	_bg_render_bombing_func, offset @yumeko_bg_render$qv
 		jmp	loc_1D513
 ; ---------------------------------------------------------------------------
 
@@ -19654,7 +19654,7 @@ loc_1D520:
 		pop	si
 		pop	bp
 		retf
-yumeko_update	endp
+@yumeko_update$qv	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -20799,8 +20799,8 @@ sub_1E15D	endp
 
 ; Attributes: bp-based frame
 
-public SHINKI_UPDATE
-shinki_update	proc far
+public @SHINKI_UPDATE$QV
+@shinki_update$qv	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -20852,7 +20852,7 @@ loc_1E220:
 		mov	_boss_phase_frame, 0
 		inc	_boss_phase
 		call	snd_se_play pascal, 13
-		mov	_bg_render_bombing_func, offset shinki_bg_render
+		mov	_bg_render_bombing_func, offset @shinki_bg_render$qv
 		jmp	loc_1E527
 ; ---------------------------------------------------------------------------
 
@@ -21137,7 +21137,7 @@ loc_1E527:
 		pop	si
 		pop	bp
 		retf
-shinki_update	endp
+@shinki_update$qv	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -22591,8 +22591,8 @@ include th05/main/boss/bx.asm
 
 ; Attributes: bp-based frame
 
-public EXALICE_UPDATE
-exalice_update	proc far
+public @EXALICE_UPDATE$QV
+@exalice_update$qv	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -22657,7 +22657,7 @@ loc_1F333:
 		mov	Palettes[0 * size rgb_t].b, 0
 		mov	_palette_changed, 1
 		mov	patnum_2CE64, 196
-		mov	_bg_render_bombing_func, offset exalice_bg_render
+		mov	_bg_render_bombing_func, offset @exalice_bg_render$qv
 		jmp	loc_1F666
 ; ---------------------------------------------------------------------------
 
@@ -22961,7 +22961,7 @@ loc_1F666:
 		pop	si
 		pop	bp
 		retf
-exalice_update	endp
+@exalice_update$qv	endp
 
 ; ---------------------------------------------------------------------------
 off_1F679	dw offset loc_1F4E7

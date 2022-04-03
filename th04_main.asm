@@ -5026,7 +5026,7 @@ GameCore	endp
 
 ; Attributes: bp-based frame
 
-yuuka5_fg_render	proc near
+@yuuka5_fg_render$qv	proc near
 
 var_2		= word ptr -2
 
@@ -5206,7 +5206,7 @@ loc_EA6B:
 		pop	si
 		leave
 		retn
-yuuka5_fg_render	endp
+@yuuka5_fg_render$qv	endp
 
 ; ---------------------------------------------------------------------------
 		db    0
@@ -5613,7 +5613,7 @@ sub_EC8E	endp
 
 ; Attributes: bp-based frame
 
-marisa_fg_render	proc near
+@marisa_fg_render$qv	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -5670,7 +5670,7 @@ loc_EDD7:
 		pop	si
 		pop	bp
 		retn
-marisa_fg_render	endp
+@marisa_fg_render$qv	endp
 
 ; ---------------------------------------------------------------------------
 		db    0
@@ -9028,7 +9028,7 @@ include th04/formats/bb_txt_load.asm
 
 ; Attributes: bp-based frame
 
-mugetsu_fg_render	proc near
+@mugetsu_fg_render$qv	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -9100,7 +9100,7 @@ loc_1163D:
 		pop	si
 		pop	bp
 		retn
-mugetsu_fg_render	endp
+@mugetsu_fg_render$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -9150,7 +9150,7 @@ main_012_TEXT	segment	byte public 'CODE' use16
 
 ; Attributes: bp-based frame
 
-kurumi_fg_render	proc near
+@kurumi_fg_render$qv	proc near
 
 var_A		= word ptr -0Ah
 var_8		= word ptr -8
@@ -9344,14 +9344,14 @@ loc_11961:
 		pop	si
 		leave
 		retn
-kurumi_fg_render	endp
+@kurumi_fg_render$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-orange_fg_render	proc near
+@orange_fg_render$qv	proc near
 
 var_2		= word ptr -2
 
@@ -9470,7 +9470,7 @@ loc_11A90:
 		pop	si
 		leave
 		retn
-orange_fg_render	endp
+@orange_fg_render$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -9663,7 +9663,7 @@ sub_11B44	endp
 
 ; Attributes: bp-based frame
 
-yuuka6_fg_render	proc near
+@yuuka6_fg_render$qv	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -9841,7 +9841,7 @@ loc_11D92:
 		pop	si
 		pop	bp
 		retn
-yuuka6_fg_render	endp
+@yuuka6_fg_render$qv	endp
 
 include th04/main/player/shots_add.asm
 include th04/main/player/shot_velocity.asm
@@ -9877,7 +9877,7 @@ sub_11DE6	endp
 
 ; Attributes: bp-based frame
 
-elly_fg_render	proc near
+@elly_fg_render$qv	proc near
 
 @@patnum	= word ptr -2
 
@@ -9959,7 +9959,7 @@ loc_11EC1:
 		pop	si
 		leave
 		retn
-elly_fg_render	endp
+@elly_fg_render$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -10209,7 +10209,7 @@ include th04/main/boss/backdrop.asm
 
 ; Attributes: bp-based frame
 
-orange_bg_render	proc near
+@orange_bg_render$qv	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_boss_phase, 0
@@ -10260,14 +10260,14 @@ loc_121E6:
 		call	tiles_render
 		pop	bp
 		retn
-orange_bg_render	endp
+@orange_bg_render$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-kurumi_bg_render	proc near
+@kurumi_bg_render$qv	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_boss_phase, 0
@@ -10310,7 +10310,7 @@ loc_12242:
 		call	tiles_render
 		pop	bp
 		retn
-kurumi_bg_render	endp
+@kurumi_bg_render$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -10337,7 +10337,7 @@ sub_12247	endp
 
 ; Attributes: bp-based frame
 
-elly_bg_render	proc near
+@elly_bg_render$qv	proc near
 		push	bp
 		mov	bp, sp
 		cmp	_boss_phase, 1
@@ -10387,14 +10387,14 @@ loc_122D2:
 		call	tiles_render
 		pop	bp
 		retn
-elly_bg_render	endp
+@elly_bg_render$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-reimu_marisa_bg_render	proc near
+@reimu_marisa_bg_render$qv	proc near
 
 @@entrance_cel		= byte ptr -1
 
@@ -10433,7 +10433,7 @@ loc_12327:
 		mov	_tiles_bb_seg, ax
 		mov	al, [bp+@@entrance_cel]
 		mov	ah, 0
-		call	tiles_bb_put_raw pascal, ax
+		call	@tiles_bb_put_raw$qi pascal, ax
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -10462,14 +10462,14 @@ loc_1235F:
 		call	tiles_render
 		leave
 		retn
-reimu_marisa_bg_render	endp
+@reimu_marisa_bg_render$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-yuuka5_bg_render	proc near
+@yuuka5_bg_render$qv	proc near
 
 @@entrance_cel		= byte ptr -1
 
@@ -10508,7 +10508,7 @@ loc_123B4:
 		mov	_tiles_bb_seg, ax
 		mov	al, [bp+@@entrance_cel]
 		mov	ah, 0
-		call	tiles_bb_put_raw pascal, ax
+		call	@tiles_bb_put_raw$qi pascal, ax
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -10537,7 +10537,7 @@ loc_123EC:
 		call	tiles_render
 		leave
 		retn
-yuuka5_bg_render	endp
+@yuuka5_bg_render$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -11152,7 +11152,7 @@ table_1289F	dw loc_12484
 
 ; Attributes: bp-based frame
 
-yuuka6_bg_render	proc near
+@yuuka6_bg_render$qv	proc near
 
 @@entrance_cel		= byte ptr -1
 
@@ -11219,7 +11219,7 @@ loc_12947:
 		mov	_tiles_bb_seg, ax
 		mov	al, [bp+@@entrance_cel]
 		mov	ah, 0
-		call	tiles_bb_put_raw pascal, ax
+		call	@tiles_bb_put_raw$qi pascal, ax
 		jmp	short loc_12975
 ; ---------------------------------------------------------------------------
 
@@ -11244,14 +11244,14 @@ loc_12975:
 		pop	si
 		leave
 		retn
-yuuka6_bg_render	endp
+@yuuka6_bg_render$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public MUGETSU_GENGETSU_BG_RENDER
-mugetsu_gengetsu_bg_render	proc near
+public @MUGETSU_GENGETSU_BG_RENDER$QV
+@mugetsu_gengetsu_bg_render$qv	proc near
 
 @@entrance_cel		= byte ptr -1
 
@@ -11295,7 +11295,7 @@ loc_129D2:
 		mov	_tiles_bb_seg, ax
 		mov	al, [bp+@@entrance_cel]
 		mov	ah, 0
-		call	tiles_bb_put_raw pascal, ax
+		call	@tiles_bb_put_raw$qi pascal, ax
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -11318,7 +11318,7 @@ loc_12A05:
 		call	tiles_render
 		leave
 		retn
-mugetsu_gengetsu_bg_render	endp
+@mugetsu_gengetsu_bg_render$qv	endp
 
 include th04/formats/scoredat_recreate.asm
 include th04/formats/scoredat_main.asm
@@ -11775,7 +11775,7 @@ sub_12E37	endp
 
 ; Attributes: bp-based frame
 
-reimu_fg_render	proc near
+@reimu_fg_render$qv	proc near
 
 @@patnum	= word ptr -2
 
@@ -11865,14 +11865,14 @@ loc_12F55:
 		pop	si
 		leave
 		retn
-reimu_fg_render	endp
+@reimu_fg_render$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public GENGETSU_FG_RENDER
-gengetsu_fg_render	proc near
+public @GENGETSU_FG_RENDER$QV
+@gengetsu_fg_render$qv	proc near
 
 var_2		= word ptr -2
 
@@ -12057,7 +12057,7 @@ loc_130E9:
 		pop	si
 		leave
 		retn
-gengetsu_fg_render	endp
+@gengetsu_fg_render$qv	endp
 main_013_TEXT	ends
 
 ; ===========================================================================
@@ -16291,7 +16291,7 @@ yuuka5_1653D	endp
 
 ; Attributes: bp-based frame
 
-yuuka5_update	proc far
+@yuuka5_update$qv	proc far
 
 var_4		= word ptr -4
 var_2		= word ptr -2
@@ -16325,7 +16325,7 @@ loc_16651:
 		call	snd_se_play pascal, 13
 		mov	byte_25667, 0
 		mov	_tiles_bb_col, 15
-		mov	_bg_render_bombing_func, offset yuuka5_bg_render
+		mov	_bg_render_bombing_func, offset @yuuka5_bg_render$qv
 		jmp	loc_169B8
 ; ---------------------------------------------------------------------------
 
@@ -16668,7 +16668,7 @@ loc_169B8:
 		call	hud_hp_update_and_render pascal, _boss_hp, 9000
 		leave
 		retf
-yuuka5_update	endp
+@yuuka5_update$qv	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -18573,7 +18573,7 @@ marisa_179BC	endp
 
 ; Attributes: bp-based frame
 
-marisa_update	proc far
+@marisa_update$qv	proc far
 
 var_4		= word ptr -4
 var_2		= word ptr -2
@@ -18610,7 +18610,7 @@ loc_17A31:
 		mov	_palette_changed, 1
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
-		mov	_bg_render_bombing_func, offset reimu_marisa_bg_render
+		mov	_bg_render_bombing_func, offset @reimu_marisa_bg_render$qv
 		mov	_tiles_bb_col, 15
 		mov	byte_25670, 0
 		jmp	loc_17CA4
@@ -18865,7 +18865,7 @@ loc_17CA4:
 		call	hud_hp_update_and_render pascal, _boss_hp, 6000
 		leave
 		retf
-marisa_update	endp
+@marisa_update$qv	endp
 
 ; ---------------------------------------------------------------------------
 word_17CBF	dw	0,     1,     2,     3
@@ -20129,7 +20129,7 @@ mugetsu_186B9	endp
 
 ; Attributes: bp-based frame
 
-mugetsu_update	proc far
+@mugetsu_update$qv	proc far
 
 var_4		= word ptr -4
 var_1		= byte ptr -1
@@ -20181,7 +20181,7 @@ loc_1876B:
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
 		mov	_tiles_bb_col, 15
-		mov	_bg_render_bombing_func, offset mugetsu_gengetsu_bg_render
+		mov	_bg_render_bombing_func, offset @mugetsu_gengetsu_bg_render$qv
 		jmp	loc_189A1
 ; ---------------------------------------------------------------------------
 
@@ -20411,7 +20411,7 @@ loc_189A1:
 		call	hud_hp_update_and_render pascal, _boss_hp, 9400
 		leave
 		retf
-mugetsu_update	endp
+@mugetsu_update$qv	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -21304,7 +21304,7 @@ kurumi_1905A	endp
 
 ; Attributes: bp-based frame
 
-kurumi_update	proc far
+@kurumi_update$qv	proc far
 
 var_2		= word ptr -2
 
@@ -21372,7 +21372,7 @@ loc_191FB:
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
 		mov	byte_259F1, 0
-		mov	_bg_render_bombing_func, offset kurumi_bg_render
+		mov	_bg_render_bombing_func, offset @kurumi_bg_render$qv
 		mov	_tiles_bb_col, 0
 		jmp	short loc_19235
 ; ---------------------------------------------------------------------------
@@ -21763,7 +21763,7 @@ loc_195BF:
 		pop	si
 		leave
 		retf
-kurumi_update	endp
+@kurumi_update$qv	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -22313,7 +22313,7 @@ orange_1998B	endp
 
 ; Attributes: bp-based frame
 
-orange_update	proc far
+@orange_update$qv	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -22380,7 +22380,7 @@ loc_19B56:
 		call	snd_se_play pascal, 13
 		mov	_boss_statebyte[15].BSB_patterns_done, 0
 		mov	_boss_statebyte[14].BSB_pattern_num_prev, -1
-		mov	_bg_render_bombing_func, offset orange_bg_render
+		mov	_bg_render_bombing_func, offset @orange_bg_render$qv
 		mov	_tiles_bb_col, 0
 		jmp	short loc_19C02
 ; ---------------------------------------------------------------------------
@@ -22696,7 +22696,7 @@ loc_19EA3:
 		pop	si
 		pop	bp
 		retf
-orange_update	endp
+@orange_update$qv	endp
 
 ; ---------------------------------------------------------------------------
 off_19EA6	dw offset loc_19C23
@@ -24640,7 +24640,7 @@ include th04/main/boss/b6.asm
 
 ; Attributes: bp-based frame
 
-yuuka6_update	proc far
+@yuuka6_update$qv	proc far
 
 var_6		= word ptr -6
 var_4		= word ptr -4
@@ -24671,7 +24671,7 @@ loc_1B4BA:
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
 		mov	byte_25A02, 0
-		mov	_bg_render_bombing_func, offset yuuka6_bg_render
+		mov	_bg_render_bombing_func, offset @yuuka6_bg_render$qv
 		mov	_tiles_bb_col, 15
 		jmp	loc_1B8EA
 ; ---------------------------------------------------------------------------
@@ -25118,7 +25118,7 @@ loc_1B8EA:
 		call	hud_hp_update_and_render pascal, _boss_hp, 13300
 		leave
 		retf
-yuuka6_update	endp
+@yuuka6_update$qv	endp
 
 ; ---------------------------------------------------------------------------
 word_1B908		dw	0,     1,     2,  0FFh ; value table for switch	statement
@@ -26242,7 +26242,7 @@ elly_1C251	endp
 
 ; Attributes: bp-based frame
 
-elly_update	proc far
+@elly_update$qv	proc far
 
 var_2		= word ptr -2
 
@@ -26333,7 +26333,7 @@ loc_1C39E:
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
 		mov	_boss_pos.velocity.y, 8
-		mov	_bg_render_bombing_func, offset elly_bg_render
+		mov	_bg_render_bombing_func, offset @elly_bg_render$qv
 		mov	_tiles_bb_col, 0
 		jmp	loc_1C67A
 ; ---------------------------------------------------------------------------
@@ -26634,7 +26634,7 @@ loc_1C67A:
 		call	hud_hp_update_and_render pascal, _boss_hp, 6000
 		leave
 		retf
-elly_update	endp
+@elly_update$qv	endp
 ; ---------------------------------------------------------------------------
 
 off_1C692	dw offset loc_1C4D3
@@ -27861,9 +27861,9 @@ stage1_setup	proc far
 		mov	_boss_pos.prev.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (40 shl 4)
 		mov	_boss_pos.prev.y, (40 shl 4)
-		mov	_boss_bg_render_func, offset orange_bg_render
-		setfarfp	_boss_update_func, orange_update
-		mov	_boss_fg_render_func, offset orange_fg_render
+		mov	_boss_bg_render_func, offset @orange_bg_render$qv
+		setfarfp	_boss_update_func, @orange_update$qv
+		mov	_boss_fg_render_func, offset @orange_fg_render$qv
 		mov	_boss_sprite, 128
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (16 shl 4)
@@ -27903,9 +27903,9 @@ stage2_setup	proc far
 		mov	_boss_pos.prev.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (81 shl 4)
 		mov	_boss_pos.prev.y, (81 shl 4)
-		mov	_boss_bg_render_func, offset kurumi_bg_render
-		setfarfp	_boss_update_func, kurumi_update
-		mov	_boss_fg_render_func, offset kurumi_fg_render
+		mov	_boss_bg_render_func, offset @kurumi_bg_render$qv
+		setfarfp	_boss_update_func, @kurumi_update$qv
+		mov	_boss_fg_render_func, offset @kurumi_fg_render$qv
 		mov	_boss_sprite, 0
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (24 shl 4)
@@ -27947,9 +27947,9 @@ stage3_setup	proc far
 		mov	_boss_pos.prev.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (64 shl 4)
 		mov	_boss_pos.prev.y, (64 shl 4)
-		mov	_boss_bg_render_func, offset elly_bg_render
-		setfarfp	_boss_update_func, elly_update
-		mov	_boss_fg_render_func, offset elly_fg_render
+		mov	_boss_bg_render_func, offset @elly_bg_render$qv
+		setfarfp	_boss_update_func, @elly_update$qv
+		mov	_boss_fg_render_func, offset @elly_fg_render$qv
 		mov	_boss_sprite, 134
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (24 shl 4)
@@ -27987,11 +27987,11 @@ stage4_setup	proc far
 		mov	_boss_pos.prev.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (64 shl 4)
 		mov	_boss_pos.prev.y, (64 shl 4)
-		mov	_boss_bg_render_func, offset reimu_marisa_bg_render
+		mov	_boss_bg_render_func, offset @reimu_marisa_bg_render$qv
 		cmp	_playchar, PLAYCHAR_MARISA
 		jnz	@@playing_as_reimu
-		setfarfp	_boss_update_func, reimu_update
-		mov	_boss_fg_render_func, offset reimu_fg_render
+		setfarfp	_boss_update_func, @reimu_update$qv
+		mov	_boss_fg_render_func, offset @reimu_fg_render$qv
 		push	( 4 shl 16) or  6
 		push	( 8 shl 16) or 12
 		call	select_for_rank
@@ -28024,8 +28024,8 @@ stage4_setup	proc far
 ; ---------------------------------------------------------------------------
 
 @@playing_as_reimu:
-		setfarfp	_boss_update_func, marisa_update
-		mov	_boss_fg_render_func, offset marisa_fg_render
+		setfarfp	_boss_update_func, @marisa_update$qv
+		mov	_boss_fg_render_func, offset @marisa_fg_render$qv
 		mov	_boss_hp, 6000
 
 loc_1E371:
@@ -28073,9 +28073,9 @@ stage5_setup	proc far
 		mov	_boss_pos.prev.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (64 shl 4)
 		mov	_boss_pos.prev.y, (64 shl 4)
-		mov	_boss_bg_render_func, offset yuuka5_bg_render
-		setfarfp	_boss_update_func, yuuka5_update
-		mov	_boss_fg_render_func, offset yuuka5_fg_render
+		mov	_boss_bg_render_func, offset @yuuka5_bg_render$qv
+		setfarfp	_boss_update_func, @yuuka5_update$qv
+		mov	_boss_fg_render_func, offset @yuuka5_fg_render$qv
 		mov	_boss_sprite, 128
 		mov	_boss_hitbox_radius.x, (26 shl 4)
 		mov	_boss_hitbox_radius.y, (26 shl 4)
@@ -28112,9 +28112,9 @@ stage6_setup	proc far
 		mov	_boss_pos.prev.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (80 shl 4)
 		mov	_boss_pos.prev.y, (80 shl 4)
-		mov	_boss_bg_render_func, offset yuuka6_bg_render
-		setfarfp	_boss_update_func, yuuka6_update
-		mov	_boss_fg_render_func, offset yuuka6_fg_render
+		mov	_boss_bg_render_func, offset @yuuka6_bg_render$qv
+		setfarfp	_boss_update_func, @yuuka6_update$qv
+		mov	_boss_fg_render_func, offset @yuuka6_fg_render$qv
 		mov	_boss_sprite, 128
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (48 shl 4)
@@ -28158,9 +28158,9 @@ stagex_setup	proc far
 		mov	_boss_pos.prev.x, (192 shl 4)
 		mov	_boss_pos.cur.y, (80 shl 4)
 		mov	_boss_pos.prev.y, (80 shl 4)
-		mov	_boss_bg_render_func, offset mugetsu_gengetsu_bg_render
-		setfarfp	_boss_update_func, mugetsu_update
-		mov	_boss_fg_render_func, offset mugetsu_fg_render
+		mov	_boss_bg_render_func, offset @mugetsu_gengetsu_bg_render$qv
+		setfarfp	_boss_update_func, @mugetsu_update$qv
+		mov	_boss_fg_render_func, offset @mugetsu_fg_render$qv
 		mov	_boss_sprite, 128
 		mov	_boss_hitbox_radius.x, (24 shl 4)
 		mov	_boss_hitbox_radius.y, (48 shl 4)
@@ -29416,7 +29416,7 @@ reimu_1F378	endp
 
 ; Attributes: bp-based frame
 
-reimu_update	proc far
+@reimu_update$qv	proc far
 
 var_2		= word ptr -2
 
@@ -29451,7 +29451,7 @@ loc_1F3E2:
 		mov	_palette_changed, 1
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
-		mov	_bg_render_bombing_func, offset reimu_marisa_bg_render
+		mov	_bg_render_bombing_func, offset @reimu_marisa_bg_render$qv
 		mov	_tiles_bb_col, 15
 		jmp	loc_1F8A5
 ; ---------------------------------------------------------------------------
@@ -29968,7 +29968,7 @@ loc_1F8A5:
 		call	hud_hp_update_and_render pascal, _boss_hp, 9100
 		leave
 		retf
-reimu_update	endp
+@reimu_update$qv	endp
 
 ; ---------------------------------------------------------------------------
 word_1F8C0	dw 0
@@ -31122,8 +31122,8 @@ gengetsu_2023B	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public GENGETSU_UPDATE
-gengetsu_update	proc far
+public @GENGETSU_UPDATE$QV
+@gengetsu_update$qv	proc far
 		push	bp
 		mov	bp, sp
 		cmp	_bombing, 0
@@ -31161,7 +31161,7 @@ loc_202B0:
 		mov	_boss_phase_frame, 0
 		call	snd_se_play pascal, 13
 		mov	_tiles_bb_col, 15
-		mov	_bg_render_bombing_func, offset mugetsu_gengetsu_bg_render
+		mov	_bg_render_bombing_func, offset @mugetsu_gengetsu_bg_render$qv
 		jmp	loc_206B6
 ; ---------------------------------------------------------------------------
 
@@ -31603,7 +31603,7 @@ loc_206C9:
 		call	hud_hp_update_and_render pascal, _boss_hp, 18700
 		pop	bp
 		retf
-gengetsu_update	endp
+@gengetsu_update$qv	endp
 
 ; ---------------------------------------------------------------------------
 off_206D8	dw offset loc_202B0

@@ -29,7 +29,6 @@ extern "C" {
 #include "th05/formats/super.h"
 }
 #include "th05/main/boss/boss.hpp"
-extern "C" {
 
 /// Structures
 /// ----------
@@ -679,5 +678,3 @@ void pascal near exalice_bg_render(void)
 	}
 }
 /// ----------------------
-
-}

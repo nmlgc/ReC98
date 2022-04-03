@@ -1,5 +1,5 @@
-public TILES_BB_PUT_RAW
-tiles_bb_put_raw	proc near
+public @TILES_BB_PUT_RAW$QI
+@tiles_bb_put_raw$qi proc near
 
 @@top           	= word ptr -6
 @@left          	= word ptr -4
@@ -69,5 +69,5 @@ tiles_bb_put_raw	proc near
 	pop	di
 	leave
 	retn	2
-tiles_bb_put_raw endp
+@tiles_bb_put_raw$qi endp
 	even

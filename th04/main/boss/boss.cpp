@@ -59,9 +59,7 @@ extern "C" {
 	#include "th04/formats/dialog.hpp"
 	#include "th04/sprites/main_cdg.h"
 	#include "th04/main/boss/boss.hpp"
-	extern "C" {
 	#include "th04/main/boss/bosses.hpp"
-	}
 	#include "th04/shiftjis/fns.hpp"
 #endif
 

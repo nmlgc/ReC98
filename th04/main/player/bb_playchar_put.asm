@@ -21,7 +21,7 @@ bb_playchar_put	proc near
 
 	mov	ax, _bb_playchar_seg
 	mov	_tiles_bb_seg, ax
-	call	tiles_bb_put_raw pascal, [bp+@@cel]
+	call	@tiles_bb_put_raw$qi pascal, [bp+@@cel]
 	pop	bp
 	retn	2
 bb_playchar_put endp
