@@ -1,4 +1,8 @@
+#include <stddef.h>
+#include <mem.h>
 #include "platform.h"
+#include "x86real.h"
+#include "decomp.hpp"
 #include "pc98.h"
 #include "planar.h"
 #include "th01/math/subpixel.hpp"
@@ -11,6 +15,55 @@ extern "C" {
 #include "th04/main/drawp.hpp"
 #include "th04/main/bullet/bullet.hpp"
 #include "th04/main/gather.hpp"
+
+inline void far* bullet_template_as_ptr(void) {
+	return &bullet_template;
+}
+
+void pascal near set_bullet_template_to_gather_template(gather_t near &gather)
+{
+	// MODDERS: bullet_template = gather.bullet_template;
+	copy_near_struct_member(bullet_template, gather, gather_t, bullet_template);
+}
+
+void gather_update(void)
+{
+	gather_t near *gather;
+	int i;
+	for((gather = gather_circles, i = 0); i < GATHER_CAP; (i++, gather++)) {
+		if(gather->flag == GF_FREE) {
+			continue;
+		} else if(gather->flag >= GF_DONE) {
+			gather->flag = GF_FREE;
+			continue;
+		}
+		gather->center.update_seg3();
+		gather->radius_prev = gather->radius_cur;
+		gather->radius_cur.v -= gather->radius_delta.v;
+		gather->angle_cur += gather->angle_delta;
+		if(gather->radius_cur.v < GATHER_RADIUS_END) {
+			gather->flag = GF_DONE;
+			if(gather->bullet_template.spawn_type != BST_GATHER_ONLY) {
+				set_bullet_template_to_gather_template(*gather);
+				bullet_template.origin.x = gather->center.cur.x;
+				bullet_template.origin.y = gather->center.cur.y;
+				#if (GAME == 5)
+					if(
+						bullet_template.spawn_type <
+						BST_GATHER_NORMAL_SPECIAL_MOVE
+					) {
+						bullets_add_regular();
+					} else {
+						bullet_template.spawn_type = BST_NORMAL;
+						bullets_add_special();
+					}
+				#else
+					bullets_add_regular();
+				#endif
+			}
+		}
+	}
+}
 
 bool near gather_point_on_playfield()
 {
@@ -30,7 +83,7 @@ void gather_render(void)
 	gather = gather_circles;
 
 	for(circle_i = 0; circle_i < GATHER_CAP; circle_i++, gather++) {
-		if(gather->flag != 1) {
+		if(gather->flag != GF_ALIVE) {
 			continue;
 		}
 		if(gather->col != col_cur) {

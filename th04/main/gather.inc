@@ -30,7 +30,6 @@ gather_template_t ends
 
 GATHER_FRAMES = 32
 GATHER_RADIUS_START = (64 shl 4)
-GATHER_RADIUS_END = (2 shl 4)
 
 GATHER_COUNT = 16
 if GAME eq 5

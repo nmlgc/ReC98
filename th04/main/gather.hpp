@@ -1,11 +1,19 @@
 /// Everything here needs to be kept in sync with the ASM versions in
 /// gather.inc!
 
+enum gather_flag_t {
+	GF_FREE = 0,
+	GF_ALIVE = 1,
+	GF_DONE = 2,
+
+	_gather_flag_t_FORCE_UINT8 = 0xFF
+};
+
 // Shrinking gather circles. Can fire bullets according to the included
 // template once their radius reaches GATHER_RADIUS_END, unless
 // [bullet_template.spawn_type] is set to BST_GATHER_ONLY.
 struct gather_t {
-	unsigned char flag;
+	gather_flag_t flag;
 	uint4_t col;
 	PlayfieldMotion center;
 	Subpixel radius_cur;
@@ -38,7 +46,7 @@ struct gather_template_t {
 #define GATHER_POINT_H 8
 #define GATHER_FRAMES 32
 #define GATHER_RADIUS_START 64.0f
-#define GATHER_RADIUS_END 2.0f
+#define GATHER_RADIUS_END to_sp(2.0f)
 
 #define GATHER_COUNT 16
 #if GAME == 5
@@ -72,5 +80,5 @@ void pascal near gather_add_only_3stack(
 // • The GRCG is active, and set to the intended color
 void __fastcall near gather_point_render(screen_x_t left, vram_y_t top);
 
-void pascal gather_update(void);
+void gather_update(void);
 void gather_render(void);

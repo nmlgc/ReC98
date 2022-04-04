@@ -421,7 +421,7 @@ loc_AED7:
 		call	_midboss_update
 		call	_boss_update
 		call	items_update
-		call	gather_update
+		call	_gather_update
 		call	_stage_render
 		cmp	_bombing, 0
 		jz	short loc_AF2D
@@ -9742,99 +9742,7 @@ loc_16939:
 @stage_allclear_bonus$qv	endp
 
 include th04/main/gather_add.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public GATHER_BULLET_TEMPLATE_PUSH
-gather_bullet_template_push	proc near
-
-@@gather		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	cx, size _bullet_template / 2
-		push	ds
-		pop	es
-		mov	di, offset _bullet_template
-		mov	si, [bp+@@gather]
-		add	si, gather_t.G_bullet_template
-		rep movsw
-		pop	di
-		pop	si
-		pop	bp
-		retn	2
-gather_bullet_template_push	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public GATHER_UPDATE
-gather_update	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, offset _gather_circles
-		xor	di, di
-		jmp	short @@more?
-; ---------------------------------------------------------------------------
-
-@@loop:
-		cmp	[si+gather_t.G_flag], 0
-		jz	short @@next
-		cmp	[si+gather_t.G_flag], 2
-		jb	short @@alive
-		mov	[si+gather_t.G_flag], 0
-		jmp	short @@next
-; ---------------------------------------------------------------------------
-
-@@alive:
-		lea	ax, [si+gather_t.G_center]
-		call	@PlayfieldMotion@update_seg3$qv pascal, ax
-		mov	ax, [si+gather_t.G_radius_cur]
-		mov	[si+gather_t.G_radius_prev], ax
-		mov	ax, [si+gather_t.G_radius_delta]
-		sub	[si+gather_t.G_radius_cur], ax
-		mov	al, [si+gather_t.G_angle_delta]
-		add	[si+gather_t.G_angle_cur], al
-		cmp	[si+gather_t.G_radius_cur], GATHER_RADIUS_END
-		jge	short @@next
-		mov	[si+gather_t.G_flag], 2
-		cmp	[si+gather_t.G_bullet_template.spawn_type], BST_GATHER_ONLY
-		jz	short @@next
-		push	si
-		call	gather_bullet_template_push
-		mov	ax, [si+gather_t.G_center.x]
-		mov	_bullet_template.BT_origin.x, ax
-		mov	ax, [si+gather_t.G_center.y]
-		mov	_bullet_template.BT_origin.y, ax
-		cmp	_bullet_template.spawn_type, BST_GATHER_NORMAL_SPECIAL_MOVE
-		jnb	short loc_16B0F
-		call	_bullets_add_regular
-		jmp	short @@next
-; ---------------------------------------------------------------------------
-
-loc_16B0F:
-		mov	_bullet_template.spawn_type, BST_NORMAL
-		call	_bullets_add_special
-
-@@next:
-		inc	di
-		add	si, size gather_t
-
-@@more?:
-		cmp	di, GATHER_CAP
-		jl	short @@loop
-		pop	di
-		pop	si
-		pop	bp
-		retf
-gather_update	endp
-
+	extern _gather_update:proc
 	extern _gather_render:proc
 main_032_TEXT	ends
 

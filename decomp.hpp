@@ -35,6 +35,26 @@ template <class T> union StupidBytewiseWrapperAround {
 	uint8_t ubyte[sizeof(T)];
 };
 
+// Does exactly the same as Turbo C++'s __memcpy__() intrinsic, just with
+// stupidly reordered instructions. Can be replaced with regular copy
+// assignment wherever it appears.
+#if (GAME == 5)
+	#define copy_near_struct_member(dst, src, src_type, member) { \
+		_CX = (sizeof(dst) / sizeof(uint16_t)); \
+		asm { push ds; pop es; } \
+		_DI = FP_OFF(&dst); \
+		_SI = FP_OFF(&src); \
+		_SI += offsetof(src_type, member); \
+		asm { rep movsw; } \
+	}
+#else
+	#define copy_near_struct_member(dst, src, src_type, member) { \
+		asm { push ds; pop es; } \
+		_DI = FP_OFF(&dst); \
+		__memcpy__(MK_FP(_ES, _DI), &src.member, sizeof(dst)); \
+	}
+#endif
+
 // poke() versions that actually inline with pseudoregisters
 // ---------------------------------------------------------
 #define pokew(sgm, off, val) { *(uint16_t far *)(MK_FP(sgm, off)) = val; }
