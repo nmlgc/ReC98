@@ -45,7 +45,7 @@ include th04/main/enemy/enemy.inc
 
 main_01 group SLOWDOWN_TEXT, ma_TEXT, EMS_TEXT, mai_TEXT, PLAYFLD_TEXT, main_TEXT, DIALOG_TEXT, main__TEXT, PLAYER_P_TEXT, main_0_TEXT, HUD_OVRL_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT
 g_SHARED group SHARED, SHARED_
-main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, IT_SPL_U_TEXT, main_033_TEXT, MB_DFT_TEXT, main_034_TEXT, BULLET_U_TEXT, BULLET_A_TEXT, main_035_TEXT, BOSS_TEXT, main_036_TEXT
+main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, IT_SPL_U_TEXT, BOSS_4M_TEXT, main_033_TEXT, MB_DFT_TEXT, main_034_TEXT, BULLET_U_TEXT, BULLET_A_TEXT, main_035_TEXT, BOSS_TEXT, main_036_TEXT
 
 ; ===========================================================================
 
@@ -12081,7 +12081,7 @@ IT_SPL_U_TEXT	segment	word public 'CODE' use16
 	@item_splashes_update$qv procdesc pascal near
 IT_SPL_U_TEXT	ends
 
-main_033_TEXT	segment	word public 'CODE' use16
+BOSS_4M_TEXT	segment	word public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -16758,84 +16758,11 @@ loc_16B7D:
 		retn
 marisa_16AE9	endp
 
+	@MARISA_FLYSTEP_POINTREFLECTED$QI procdesc pascal near \
+		duration:word
+BOSS_4M_TEXT	ends
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-marisa_16B85	proc near
-
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+arg_0]
-		cmp	_boss_statebyte[13].BSB_motion_lerp_frames, 0
-		jnz	short loc_16BC5
-		mov	ax, si
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		add	ax, -6
-		push	ax
-		mov	ax, (192 shl 4)
-		sub	ax, _boss_pos.cur.x
-		cwd
-		pop	bx
-		idiv	bx
-		mov	_boss_pos.velocity.x, ax
-		mov	ax, si
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		add	ax, -6
-		push	ax
-		mov	ax, (112 shl 4)
-		sub	ax, _boss_pos.cur.y
-		cwd
-		pop	bx
-		idiv	bx
-		mov	_boss_pos.velocity.y, ax
-
-loc_16BC5:
-		inc	_boss_statebyte[13].BSB_motion_lerp_frames
-		mov	al, _boss_statebyte[13].BSB_motion_lerp_frames
-		mov	ah, 0
-		lea	dx, [si-0Ch]
-		cmp	ax, dx
-		jl	short loc_16BEB
-		mov	ax, _boss_pos.velocity.x
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	_boss_pos.velocity.x, ax
-		mov	ax, _boss_pos.velocity.y
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	_boss_pos.velocity.y, ax
-
-loc_16BEB:
-		mov	al, _boss_statebyte[13].BSB_motion_lerp_frames
-		mov	ah, 0
-		cmp	ax, si
-		jl	short loc_16BF8
-		mov	al, 1
-		jmp	short loc_16C00
-; ---------------------------------------------------------------------------
-
-loc_16BF8:
-		push	offset _boss_pos
-		call	@PlayfieldMotion@update_seg3$qv
-		mov	al, 0
-
-loc_16C00:
-		pop	si
-		pop	bp
-		retn	2
-marisa_16B85	endp
-
+main_033_TEXT	segment	byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -17314,8 +17241,7 @@ loc_16FC6:
 		mov	ah, 0
 		mov	dx, 160
 		sub	dx, ax
-		push	dx
-		call	marisa_16B85
+		call	@marisa_flystep_pointreflected$qi pascal, dx
 		mov	_bullet_template.spawn_type, BST_BULLET16
 		mov	_bullet_template.patnum, PAT_BULLET16_D_BLUE
 		mov	_bullet_template.speed, (3 shl 4) + 4
@@ -17463,8 +17389,7 @@ loc_17102:
 		mov	ah, 0
 		mov	dx, 160
 		sub	dx, ax
-		push	dx
-		call	marisa_16B85
+		call	@marisa_flystep_pointreflected$qi pascal, dx
 		mov	_bullet_template.spawn_type, BST_BULLET16
 		mov	_bullet_template.patnum, PAT_BULLET16_N_STAR
 		mov	_bullet_template.BT_group, BG_SPREAD_AIMED
@@ -17628,8 +17553,7 @@ loc_17266:
 ; ---------------------------------------------------------------------------
 
 loc_1726E:
-		push	60h
-		call	marisa_16B85
+		call	@marisa_flystep_pointreflected$qi pascal, 96
 		cmp	_boss_statebyte[15].BSB_subpattern_num, 0
 		jnz	short loc_1729F
 		mov	_boss_statebyte[15].BSB_subpattern_num, 1
@@ -17776,8 +17700,7 @@ loc_173CB:
 ; ---------------------------------------------------------------------------
 
 loc_173D3:
-		push	40h
-		call	marisa_16B85
+		call	@marisa_flystep_pointreflected$qi pascal, 64
 		or	al, al
 		jnz	loc_1747D
 		mov	ax, _boss_phase_frame
@@ -18025,8 +17948,7 @@ loc_1760D:
 ; ---------------------------------------------------------------------------
 
 loc_17615:
-		push	80h
-		call	marisa_16B85
+		call	@marisa_flystep_pointreflected$qi pascal, 128
 		cmp	_boss_statebyte[15].BSB_bitless_pattern_started, 0
 		jnz	short loc_17634
 		call	randring2_next16_and pascal, 1Fh
@@ -18164,8 +18086,7 @@ loc_17794:
 ; ---------------------------------------------------------------------------
 
 loc_1779E:
-		push	0A0h
-		call	marisa_16B85
+		call	@marisa_flystep_pointreflected$qi pascal, 160
 		cmp	_boss_statebyte[15].BSB_bitless_pattern_started, 0
 		jnz	short loc_177B8
 		call	randring2_next16_and pascal, 1Fh
@@ -18359,8 +18280,7 @@ loc_17958:
 ; ---------------------------------------------------------------------------
 
 loc_1795F:
-		push	48h ; 'H'
-		call	marisa_16B85
+		call	@marisa_flystep_pointreflected$qi pascal, 72
 		or	al, al
 		jnz	short loc_179A8
 		mov	ax, _boss_phase_frame
@@ -18489,7 +18409,7 @@ loc_17A75:
 		mov	byte_25674, 0
 		mov	byte_2566E, 0Ah
 		mov	byte_2566F, 0
-		mov	_boss_statebyte[13].BSB_motion_lerp_frames, 0
+		mov	_boss_statebyte[13].BSB_flystep_pointreflected_frame, 0
 		jmp	loc_17CA4
 ; ---------------------------------------------------------------------------
 
@@ -18567,7 +18487,7 @@ loc_17B1E:
 		cmp	_boss_phase_frame, 64
 		jl	short loc_17B98	; default
 		inc	_boss_mode_change
-		mov	_boss_statebyte[13].BSB_motion_lerp_frames, 0
+		mov	_boss_statebyte[13].BSB_flystep_pointreflected_frame, 0
 		cmp	byte_2566F, 0
 		jnz	short loc_17B62
 		cmp	byte_25672, 0
@@ -32388,35 +32308,35 @@ byte_2D00E	db ?
 include th04/main/boss/funcs[bss].asm
 
 boss_statebyte_t union
-	BSB_angle_mirror_y           	db ?
-	BSB_bitless_pattern_started  	db ?
-	BSB_cluster_angle            	db ?
-	BSB_delta_angle_between_rings	db ?
-	BSB_direction                	db ?
-	BSB_gengetsu_started         	db ?
-	BSB_motion_lerp_frames         	db ?
-	BSB_orb_count                	db ?
-	BSB_orb_interval             	db ?
-	BSB_origin_offset_x          	db ? ; pixel_t
-	BSB_phase_frame              	db ?
-	BSB_pattern_num_prev         	db ?
-	BSB_patterns_done            	db ?
-	BSB_pellet_stack_angle       	db ?
-	BSB_thicklaser_radius        	db ?
-	BSB_spread                   	db ?
-	BSB_spread_angle             	db ?
-	BSB_spread_angle_range       	db ?
-	BSB_spread_delta_angle       	db ?
-	BSB_spread_interval          	db ?
-	BSB_spread_speed             	db ?
-	BSB_spread_turns_max         	db ?
-	BSB_spin_ring                	db ?
-	BSB_stack                    	db ?
-	BSB_stack_left_angle         	db ?
-	BSB_stack_right_angle        	db ?
-	BSB_stacks_fired             	db ?
-	BSB_subpattern_id            	db ?
-	BSB_subpattern_num           	db ?
+	BSB_angle_mirror_y              	db ?
+	BSB_bitless_pattern_started     	db ?
+	BSB_cluster_angle               	db ?
+	BSB_delta_angle_between_rings   	db ?
+	BSB_direction                   	db ?
+	BSB_gengetsu_started            	db ?
+	BSB_flystep_pointreflected_frame	db ?
+	BSB_orb_count                   	db ?
+	BSB_orb_interval                	db ?
+	BSB_origin_offset_x             	db ? ; pixel_t
+	BSB_phase_frame                 	db ?
+	BSB_pattern_num_prev            	db ?
+	BSB_patterns_done               	db ?
+	BSB_pellet_stack_angle          	db ?
+	BSB_thicklaser_radius           	db ?
+	BSB_spread                      	db ?
+	BSB_spread_angle                	db ?
+	BSB_spread_angle_range          	db ?
+	BSB_spread_delta_angle          	db ?
+	BSB_spread_interval             	db ?
+	BSB_spread_speed                	db ?
+	BSB_spread_turns_max            	db ?
+	BSB_spin_ring                   	db ?
+	BSB_stack                       	db ?
+	BSB_stack_left_angle            	db ?
+	BSB_stack_right_angle           	db ?
+	BSB_stacks_fired                	db ?
+	BSB_subpattern_id               	db ?
+	BSB_subpattern_num              	db ?
 boss_statebyte_t ends
 
 public _boss_statebyte
