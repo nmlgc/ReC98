@@ -63,6 +63,8 @@ And while this project has made decent progress so far, completing the decompila
 
 Crossed-out files are identical to their version in the previous game. ONGCHK.COM is part of the PMD sound driver by KAJA, and therefore doesn't need to be disassembled either; we only need to keep the binary to allow bit-perfect rebuilds of ZUN.COM.
 
+**This project does not include any asset data from the original PC-98 releases. Running the compiled executables will still require an existing copy of the original games.**
+
 ## Building
 
 ### Required tools
@@ -143,7 +145,7 @@ The most performant OS for building ReC98 is therefore a 32-bit Windows ≥Vista
 
 All batch files will abort with an error if any of the necessary tools can't be found in the `PATH`.
 
-The final executables will be put into `bin\th0?`, using the same names as the originals.
+The final executables will be put into `bin\th0?`, using the same names as the originals. Running them requires each game's original assets in the same directory.
 
 ### Troubleshooting
 
