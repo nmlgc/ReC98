@@ -39,12 +39,18 @@ bool pascal near marisa_flystep_pointreflected(int duration)
 		BRAKE_DURATION = 12,
 	};
 	if(flystep_pointreflected_frame == 0) {
-		// Mod: Optimized compared to the original version.
+		// Mod: Prevent the division by zero, and move Marisa to the target
+		// point at the maximum possible initial positive speed instead. This
+		// causes the braking phase to already start on the initial frame as
+		// well.
 		int frames_to_point = ((duration / 2) - (BRAKE_DURATION / 2));
+		if(frames_to_point == 0) {
+			frames_to_point++;
+		}
 		boss.pos.velocity.x.v = ((POINT_X - boss.pos.cur.x) / frames_to_point);
 		boss.pos.velocity.y.v = ((POINT_Y - boss.pos.cur.y) / frames_to_point);
-		// The bytes we saved above
-		_asm { nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; }
+		// The bytes we saved above, compared to the original binary
+		_asm { nop; nop; nop; nop; nop; nop; nop; }
 	}
 	flystep_pointreflected_frame++;
 	if(flystep_pointreflected_frame >= (duration - BRAKE_DURATION)) {
