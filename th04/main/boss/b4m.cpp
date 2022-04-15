@@ -17,6 +17,14 @@ extern "C" {
 #define flystep_pointreflected_frame boss_statebyte[13]
 /// -----
 
+// Keep the jump target identical by moving this function below.
+void pascal near divide_velocity_by_raw();
+
+#define divide_velocity_by(divisor) { \
+	_BX = divisor; \
+	divide_velocity_by_raw(); \
+}
+
 // On [flystep_pointreflected_frame] 0, this function sets up [boss] movement
 // towards the point reflection of Marisa's position across a fixed position
 // near the top of the sealed moon in the background. The velocity is
@@ -26,11 +34,6 @@ extern "C" {
 // [boss].
 // [duration] values <12 will move Marisa into the opposite direction instead.
 // Returns `true` if the function was called for [duration] frames.
-//
-// ZUN bug: Not defined for [duration] values of 12 or 13, which will crash the
-// game with a division by zero ("Divide Error"). The two patterns that pass a
-// variable [duration] to this function also only happen to call this function
-// every 4 frames rather than every frame, introducing additional jerkiness.
 bool pascal near marisa_flystep_pointreflected(int duration)
 {
 	enum {
@@ -38,26 +41,51 @@ bool pascal near marisa_flystep_pointreflected(int duration)
 		POINT_Y = TO_SP((PLAYFIELD_H * 7) / 23),
 		BRAKE_DURATION = 12,
 	};
-	if(flystep_pointreflected_frame == 0) {
-		// Mod: Prevent the division by zero by not moving Marisa at all in
-		// that case.
-		int frames_to_point = ((duration / 2) - (BRAKE_DURATION / 2));
+
+	#define frame _CX
+	_CL = flystep_pointreflected_frame;
+	_CH = 0;
+	if(frame == 0) {
+		// Mod: Prevent the original function's division by zero by warping
+		// Marisa directly to the target point.
+		int frames_to_point = duration;
+		frames_to_point >>= 1;
+		frames_to_point -= (BRAKE_DURATION / 2);
+		boss.pos.velocity.x.v = (POINT_X - boss.pos.cur.x);
+		boss.pos.velocity.y.v = (POINT_Y - boss.pos.cur.y);
 		if(frames_to_point == 0) {
-			return true;
+			boss.pos.velocity.x.v <<= 1;
+			boss.pos.velocity.y.v <<= 1;
+			flystep_pointreflected_frame = BRAKE_DURATION;
+
+			// Ensures that (duration - BRAKE_DURATION) always underflows and
+			// is never larger than [frame].
+			duration--;
+
+			frames_to_point++;
 		}
-		boss.pos.velocity.x.v = ((POINT_X - boss.pos.cur.x) / frames_to_point);
-		boss.pos.velocity.y.v = ((POINT_Y - boss.pos.cur.y) / frames_to_point);
-		// The bytes we saved above, compared to the original binary
-		_asm { nop; nop; nop; nop; nop; nop; nop; nop; }
+		divide_velocity_by(frames_to_point);
 	}
+	frame++;
 	flystep_pointreflected_frame++;
-	if(flystep_pointreflected_frame >= (duration - BRAKE_DURATION)) {
-		boss.pos.velocity.x.v /= 2;
-		boss.pos.velocity.y.v /= 2;
+	if(frame >= (duration - BRAKE_DURATION)) {
+		divide_velocity_by(2);
 	}
-	if(flystep_pointreflected_frame >= duration) {
+	if(frame >= duration) {
 		return true;
 	}
 	boss.pos.update_seg3();
 	return false;
+
+	#undef frame
 }
+
+#pragma option -k-
+
+void pascal near divide_velocity_by_raw()
+{
+	boss.pos.velocity.x.v /= static_cast<int16_t>(_BX);
+	boss.pos.velocity.y.v /= static_cast<int16_t>(_BX);
+}
+
+#pragma option -k.
