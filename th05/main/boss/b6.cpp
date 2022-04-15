@@ -19,6 +19,8 @@ extern "C" {
 #include "th04/main/bullet/bullet.hpp"
 #include "th04/main/gather.hpp"
 }
+#include "th05/main/custom.h"
+#include "th05/main/bullet/b6ball.hpp"
 #include "th05/main/bullet/laser.hpp"
 #include "th05/main/boss/boss.hpp"
 #include "th05/sprites/main_pat.h"
@@ -273,4 +275,39 @@ bool near pattern_wing_preparation(void)
 
 	#undef wing_frames
 	#undef tone
+}
+
+void near pattern_random_rain_and_spreads_from_wings(void)
+{
+	if(boss.phase_frame <= 128) {
+		return;
+	}
+	if((boss.phase_frame % 8) == 0) {
+		b6ball_template.origin.x.v = randring2_next16_mod(to_sp(PLAYFIELD_W));
+		b6ball_template.origin.y.v = randring2_next16_ge_lt_sp(
+			((2 / 23.0f) * PLAYFIELD_H), ((6 / 23.0f) * PLAYFIELD_H)
+		);
+		b6ball_template.angle = 0x40;
+		b6ball_template.speed.v = randring2_next8_and_ge_lt_sp(3.0f, 5.0f);
+		b6ball_template.patnum_tiny = PAT_B6BALL_BLUE_1;
+		b6balls_add();
+		snd_se_play(3);
+	}
+	if((boss.phase_frame % 24) == 0) {
+		bullet_template.origin.x.v = shinki_wing_random_x();
+		bullet_template.origin.y.v = (
+			boss.pos.cur.y.v - randring2_next16_mod(to_sp(BOSS_H))
+		);
+		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_SLOWDOWN);
+		bullet_template.patnum = PAT_BULLET16_N_BLUE;
+		bullet_template.group = BG_SPREAD_AIMED;
+		bullet_template.spread = 5;
+		bullet_template.spread_angle_delta = select_for_rank(
+			0x10, 0x0C, 0x0A, 0x08
+		);
+		bullet_template.angle = 0x00;
+		bullet_template.speed.set(3.0f);
+		bullet_template_tune();
+		bullets_add_regular();
+	}
 }

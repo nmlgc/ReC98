@@ -19182,72 +19182,10 @@ BOSS_6_TEXT	segment	byte public 'CODE' use16
 	@pattern_random_directional_and_k$qv procdesc near
 	@pattern_dense_blue_stacks$qv procdesc near
 	@pattern_wing_preparation$qv procdesc near
+	@pattern_random_rain_and_spreads_$qv procdesc near
 BOSS_6_TEXT	ends
 
 BOSS_X_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1DA1C	proc near
-		push	bp
-		mov	bp, sp
-		cmp	_boss_phase_frame, 128
-		jle	loc_1DAD0
-		mov	ax, _boss_phase_frame
-		mov	bx, 8
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_1DA6A
-		call	randring2_next16_mod pascal, (PLAYFIELD_W shl 4)
-		mov	b6ball_template.pos.cur.x, ax
-		call	randring2_next16_mod pascal, (64 shl 4)
-		add	ax, (32 shl 4)
-		mov	b6ball_template.pos.cur.y, ax
-		mov	b6ball_template.B6B_angle, 40h
-		call	randring2_next16_and pascal, 1Fh
-		add	al, (3 shl 4)
-		mov	b6ball_template.B6B_speed, al
-		mov	b6ball_template.B6B_patnum_tiny, PAT_B6BALL_BLUE_1
-		call	@b6balls_add$qv
-		call	snd_se_play pascal, 3
-
-loc_1DA6A:
-		mov	ax, _boss_phase_frame
-		mov	bx, 24
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_1DAD0
-		call	randring2_next16_mod pascal, (256 shl 4)
-		add	ax, _boss_pos.cur.x
-		sub	ax, (128 shl 4)
-		mov	_bullet_template.BT_origin.x, ax
-		push	(64 shl 4)
-		call	randring2_next16_mod
-		mov	dx, _boss_pos.cur.y
-		sub	dx, ax
-		mov	_bullet_template.BT_origin.y, dx
-		mov	_bullet_template.spawn_type, BST_CLOUD_FORWARDS or BST_NO_SLOWDOWN
-		mov	_bullet_template.patnum, PAT_BULLET16_N_BLUE
-		mov	_bullet_template.BT_group, BG_SPREAD_AIMED
-		mov	_bullet_template.spread, 5
-		push	(16 shl 16) or 12
-		push	(10 shl 16) or  8
-		call	select_for_rank
-		mov	_bullet_template.spread_angle_delta, al
-		mov	_bullet_template.BT_angle, 0
-		mov	_bullet_template.speed, (3 shl 4)
-		call	_bullet_template_tune
-		call	_bullets_add_regular
-
-loc_1DAD0:
-		pop	bp
-		retn
-sub_1DA1C	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -20065,7 +20003,7 @@ loc_1E333:
 		push	((45 shl 4) shl 16) or (50 shl 4)
 		call	@select_for_playchar$qiiii
 		mov	_boss_hitbox_radius.x, ax
-		mov	fp_2CE4A, offset sub_1DA1C
+		mov	fp_2CE4A, offset @pattern_random_rain_and_spreads_$qv
 
 loc_1E36F:
 		mov	_boss_statebyte[10], 0
