@@ -8,7 +8,7 @@
 #include "th01/math/overlap.hpp"
 #include "th04/math/motion.hpp"
 extern "C" {
-#include "th04/math/randring.h"
+#include "th04/math/randring.hpp"
 #include "th04/math/vector.hpp"
 #include "th04/sprites/main_pat.h"
 #include "th04/main/playfld.hpp"

@@ -33,8 +33,10 @@ struct ShotAddIterator {
 		i += n;
 	}
 
-	void set_random_angle(char range = 0x0F, char offset = -0x48) {
-		angle = randring_angle(range, offset);
+	void set_random_angle(
+		unsigned char min = -0x48, unsigned char max = -0x38
+	) {
+		angle = randring1_next8_and_ge_lt(min, max);
 	}
 
 	unsigned char next(void) {

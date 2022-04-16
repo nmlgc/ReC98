@@ -24,10 +24,10 @@ extern "C" {
 #define reimu_sub_spread_random(shot, sai, i_left) \
 	if(sai.i == i_left) { \
 		shot->from_option_l(); \
-		sai.set_random_angle(3, -0x4A); \
+		sai.set_random_angle(-0x4A, -0x46); \
 	} else /* i == i_right */ { \
 		shot->from_option_r(); \
-		sai.set_random_angle(3, -0x3A); \
+		sai.set_random_angle(-0x3A, -0x36); \
 		if(option_only == 0) { \
 			sai.i = 1; \
 		} \
@@ -156,8 +156,11 @@ void pascal near shot_reimu_l8(void)
 		if(sai.i <= 5) {
 			reimu_forward(shot, sai, 9, 5, -0x4F, +0x05);
 		} else {
-			if(sai.i == 7) { shot->from_option_l(); sai.set_random_angle(3, -0x4A); }
-			else/*i == 6*/ { shot->from_option_r(); sai.set_random_angle(3, -0x3A); }
+			if(sai.i == 7) {
+				shot->from_option_l(); sai.set_random_angle(-0x4A, -0x46);
+			} else/*i == 6*/ {
+				shot->from_option_r(); sai.set_random_angle(-0x3A, -0x36);
+			}
 			set_homing(shot, 3);
 		}
 		shot_velocity_set(&shot->pos.velocity, sai.angle);

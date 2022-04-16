@@ -16,9 +16,9 @@
 ) { \
 	if(frame == 0) { \
 		if(boss.pos.cur.x.v < BOSS_FLYSTEP_RANDOM_FIELD_LEFT) { \
-			boss.angle = (randring2_next16_mod(0x60) - 0x30); \
+			boss.angle = randring2_next8_ge_lt(-0x30, +0x30); \
 		} else if(boss.pos.cur.x.v > BOSS_FLYSTEP_RANDOM_FIELD_RIGHT) { \
-			boss.angle = (randring2_next16_and(0x60) + 0x30); \
+			boss.angle = randring2_next8_and_ge_lt(+0x30, +0x91); \
 		} else { \
 			boss.angle = randring2_next16(); \
 		} \

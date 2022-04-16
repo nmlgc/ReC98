@@ -15,7 +15,7 @@ extern "C" {
 #include "th04/hardware/grcg.h"
 #include "th04/math/vector.hpp"
 #include "th04/math/motion.hpp"
-#include "th04/math/randring.h"
+#include "th04/math/randring.hpp"
 #include "th04/formats/bb.h"
 #include "th04/formats/cdg.h"
 #include "th04/main/frames.h"
@@ -289,7 +289,7 @@ void near shinki_bg_type_a_update_part1(void)
 			vector2_at(
 				particle->velocity,
 				0.0f, 0.0f,
-				(randring1_next16_and(to_sp(4.0f) - 1) + to_sp(2.0f)),
+				randring1_next16_and_ge_lt_sp(2.0f, 6.0f),
 				particle->angle
 			);
 			shinki_bg_type_a_particles_alive++;
@@ -420,8 +420,8 @@ void near shinki_bg_type_b_update_part1(void)
 			particle->origin.x = particle->pos.x;
 			particle->origin.y.set(-1.0f);
 			particle->velocity.set(0.0f, 0.0f);
-			particle->patnum = (
-				PAT_PARTICLE + randring1_next16_and(PARTICLE_CELS - 1)
+			particle->patnum = randring1_next8_and_ge_lt(
+				PAT_PARTICLE, (PAT_PARTICLE_last + 1)
 			);
 			i++;
 			particle++;
