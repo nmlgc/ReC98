@@ -19184,95 +19184,10 @@ BOSS_6_TEXT	segment	byte public 'CODE' use16
 	@pattern_wing_preparation$qv procdesc near
 	@pattern_random_rain_and_spreads_$qv procdesc near
 	@pattern_cheetos_within_spread_wa$qv procdesc near
+	@pattern_wings_to_purple$qv	procdesc near
 BOSS_6_TEXT	ends
 
 BOSS_X_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1DB7B	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		cmp	_boss_phase_frame, 160
-		jge	short loc_1DB8C
-		mov	al, 0
-		jmp	loc_1DC2C
-; ---------------------------------------------------------------------------
-
-loc_1DB8C:
-		cmp	_boss_phase_frame, 192
-		jge	short loc_1DBB8
-		cmp	_boss_phase_frame, 128
-		jnz	short loc_1DBA3
-		call	snd_se_play pascal, 8
-
-loc_1DBA3:
-		test	byte ptr _boss_phase_frame, 1
-		jz	short loc_1DBB1
-		add	_boss_pos.cur.y, (2 shl 4)
-		jmp	short loc_1DC1D
-; ---------------------------------------------------------------------------
-
-loc_1DBB1:
-		sub	_boss_pos.cur.y, (2 shl 4)
-		jmp	short loc_1DC1D
-; ---------------------------------------------------------------------------
-
-loc_1DBB8:
-		cmp	_boss_phase_frame, 192
-		jnz	short loc_1DC1D
-		mov	b6ball_template.B6B_patnum_tiny, PAT_B6BALL_PURPLE
-		xor	si, si
-		jmp	short loc_1DC06
-; ---------------------------------------------------------------------------
-
-loc_1DBCA:
-		push	(256 shl 4)
-		call	randring2_next16_mod
-		add	ax, _boss_pos.cur.x
-		sub	ax, (128 shl 4)
-		mov	b6ball_template.pos.cur.x, ax
-		push	(64 shl 4)
-		call	randring2_next16_mod
-		mov	dx, _boss_pos.cur.y
-		sub	dx, ax
-		add	dx, (16 shl 4)
-		mov	b6ball_template.pos.cur.y, dx
-		call	randring2_next16_mod pascal, 40h
-		add	al, 20h
-		mov	b6ball_template.B6B_angle, al
-		call	randring2_next16_and pascal, 3Fh
-		add	al, (2 shl 4)
-		mov	b6ball_template.B6B_speed, al
-		call	@b6balls_add$qv
-		inc	si
-
-loc_1DC06:
-		cmp	si, 10h
-		jl	short loc_1DBCA
-		mov	_boss_sprite, 192
-		call	snd_se_play pascal, 15
-		mov	_playfield_shake_anim_time, 8
-
-loc_1DC1D:
-		cmp	_boss_phase_frame, 200
-		jnz	short loc_1DC2A
-		mov	ax, 1
-		jmp	short loc_1DC2C
-; ---------------------------------------------------------------------------
-
-loc_1DC2A:
-		xor	ax, ax
-
-loc_1DC2C:
-		pop	si
-		pop	bp
-		retn
-sub_1DB7B	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -19996,7 +19911,7 @@ loc_1E3E2:
 
 loc_1E3E7:
 		call	@boss_hittest_shots$qv
-		call	sub_1DB7B
+		call	@pattern_wings_to_purple$qv
 		or	al, al
 		jz	loc_1E527
 		inc	_boss_phase

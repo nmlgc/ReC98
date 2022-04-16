@@ -150,9 +150,20 @@ typedef enum {
 		PAT_SHINKI_WINGS_WHITE_HIT + bfnt_parts_x(SHINKI_WING_W) - 1
 	),
 	// --------
+	// st05.bb3
+	// --------
+	PAT_SHINKI_WINGS_PURPLE,
+	PAT_SHINKI_WINGS_PURPLE_last = (
+		PAT_SHINKI_WINGS_PURPLE + bfnt_parts_x(SHINKI_WING_W) - 1
+	),
+	PAT_SHINKI_WINGS_PURPLE_HIT,
+	PAT_SHINKI_WINGS_PURPLE_HIT_last = (
+		PAT_SHINKI_WINGS_PURPLE_HIT + bfnt_parts_x(SHINKI_WING_W) - 1
+	),
+	// --------
 	// st05.bb4
 	// --------
-	PAT_B6BALL_BLUE_1 = 200,
+	PAT_B6BALL_BLUE_1,
 	PAT_B6BALL_PURPLE,
 	PAT_B6BALL_BLUE_2,
 	PAT_B6BALL_BLUE_3,

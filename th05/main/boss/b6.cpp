@@ -352,3 +352,32 @@ void near pattern_cheetos_within_spread_walls(void)
 	#undef unused
 	#undef interval
 }
+
+bool near pattern_wings_to_purple(void)
+{
+	if(boss.phase_frame < 160) {
+		return false;
+	} else if(boss.phase_frame < 192) {
+		if(boss.phase_frame == 128) {
+			snd_se_play(8);
+		}
+		if(boss.phase_frame & 1) {
+			boss.pos.cur.y += 2.0f;
+		} else {
+			boss.pos.cur.y -= 2.0f;
+		}
+	} else if(boss.phase_frame == 192) {
+		b6ball_template.patnum_tiny = PAT_B6BALL_PURPLE;
+		for(int i = 0; i < 16; i++) {
+			b6ball_template.origin.x.v = shinki_wing_random_x();
+			b6ball_template.origin.y.v = shinki_wing_random_y();
+			b6ball_template.angle = randring2_next8_ge_lt(0x20, 0x60);
+			b6ball_template.speed.v = randring2_next8_and_ge_lt_sp(2.0f, 6.0f);
+			b6balls_add();
+		}
+		boss.sprite = PAT_SHINKI_WINGS_PURPLE;
+		snd_se_play(15);
+		playfield_shake_anim_time = 8;
+	}
+	return (boss.phase_frame == 200);
+}
