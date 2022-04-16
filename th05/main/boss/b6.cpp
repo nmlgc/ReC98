@@ -21,6 +21,7 @@ extern "C" {
 }
 #include "th05/main/custom.h"
 #include "th05/main/bullet/b6ball.hpp"
+#include "th05/main/bullet/cheeto.hpp"
 #include "th05/main/bullet/laser.hpp"
 #include "th05/main/boss/boss.hpp"
 #include "th05/sprites/main_pat.h"
@@ -310,4 +311,44 @@ void near pattern_random_rain_and_spreads_from_wings(void)
 		bullet_template_tune();
 		bullets_add_regular();
 	}
+}
+
+void near pattern_cheetos_within_spread_walls(void)
+{
+	#define interval	boss_statebyte[14]
+	#define unused  	boss_statebyte[15]
+
+	if(boss.phase_frame < 128) {
+		return;
+	}
+	if(boss.phase_frame == 128) {
+		// Expected to be a multiple of 8.
+		interval = select_for_rank(128, 48, 32, 24);
+
+		unused = select_for_rank(32, 40, 48, 56);
+	}
+	int frame_in_cycle = (boss.phase_frame % interval);
+	if((frame_in_cycle & 7) == 0) {
+		bullet_template.patnum = PAT_BULLET16_N_OUTLINED_BALL_BLUE;
+		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_SLOWDOWN);
+		bullet_template.group = BG_SPREAD;
+		bullet_template.speed.v = randring2_next8_and_ge_lt_sp(3.0f, 5.0f);
+		bullet_template.set_spread(6, 0x08);
+		bullet_template.angle = 0x68;
+		bullets_add_regular();
+
+		bullet_template.angle = 0x18;
+		bullets_add_regular();
+		if(frame_in_cycle == 0) {
+			cheeto_template.col = 11;
+			cheeto_template.speed.set(4.0f);
+			// Firing either right, down, or left.
+			cheeto_template.angle = (randring2_next16_mod(3) * 0x40);
+			cheetos_add();
+			snd_se_play(3);
+		}
+	}
+
+	#undef unused
+	#undef interval
 }

@@ -19183,69 +19183,10 @@ BOSS_6_TEXT	segment	byte public 'CODE' use16
 	@pattern_dense_blue_stacks$qv procdesc near
 	@pattern_wing_preparation$qv procdesc near
 	@pattern_random_rain_and_spreads_$qv procdesc near
+	@pattern_cheetos_within_spread_wa$qv procdesc near
 BOSS_6_TEXT	ends
 
 BOSS_X_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1DAD2	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		cmp	_boss_phase_frame, 128
-		jl	loc_1DB78
-		cmp	_boss_phase_frame, 128
-		jnz	short loc_1DB10
-		push	(80h shl 16) or 30h
-		push	(20h shl 16) or 18h
-		call	select_for_rank
-		mov	_boss_statebyte[14], al
-		push	(20h shl 16) or 28h
-		push	(30h shl 16) or 38h
-		call	select_for_rank
-		mov	_boss_statebyte[15], al
-
-loc_1DB10:
-		mov	al, _boss_statebyte[14]
-		mov	ah, 0
-		push	ax
-		mov	ax, _boss_phase_frame
-		cwd
-		pop	bx
-		idiv	bx
-		mov	si, dx
-		test	si, 7
-		jnz	short loc_1DB78
-		mov	_bullet_template.patnum, PAT_BULLET16_N_OUTLINED_BALL_BLUE
-		mov	_bullet_template.spawn_type, BST_CLOUD_FORWARDS or BST_NO_SLOWDOWN
-		mov	_bullet_template.BT_group, BG_SPREAD
-		call	randring2_next16_and pascal, 1Fh
-		add	al, (3 shl 4)
-		mov	_bullet_template.speed, al
-		mov	word ptr _bullet_template.spread, (8 shl 8) or 6
-		mov	_bullet_template.BT_angle, 68h
-		call	_bullets_add_regular
-		mov	_bullet_template.BT_angle, 18h
-		call	_bullets_add_regular
-		or	si, si
-		jnz	short loc_1DB78
-		mov	cheeto_template.CBTMPL_col, 11
-		mov	cheeto_template.CBTMPL_speed, (4 shl 4)
-		call	randring2_next16_mod pascal, 3
-		shl	al, 6
-		mov	cheeto_template.CBTMPL_angle, al
-		call	@cheetos_add$qv
-		call	snd_se_play pascal, 3
-
-loc_1DB78:
-		pop	si
-		pop	bp
-		retn
-sub_1DAD2	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -20034,7 +19975,7 @@ loc_1E3AB:
 		cmp	_boss_statebyte[10], 0
 		jnz	short loc_1E3C4
 		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_SW_NE shl 16) or 11600
-		mov	fp_2CE4A, offset sub_1DAD2
+		mov	fp_2CE4A, offset @pattern_cheetos_within_spread_wa$qv
 		jmp	loc_1E47B
 ; ---------------------------------------------------------------------------
 
