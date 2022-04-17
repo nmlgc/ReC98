@@ -42,42 +42,49 @@ bool pascal near marisa_flystep_pointreflected(int duration)
 		BRAKE_DURATION = 12,
 	};
 
-	#define frame _CX
-	_CL = flystep_pointreflected_frame;
-	_CH = 0;
-	if(frame == 0) {
+	if(flystep_pointreflected_frame == 0) {
 		// Mod: Prevent the original function's division by zero by warping
-		// Marisa directly to the target point.
-		int frames_to_point = duration;
+		// Marisa directly to the target point on the first frame, and to the
+		// reflected point on the second frame.
+
+		// Size optimization; directly using the correct register for IDIV,
+		// and performing all arithmetic directly on the register instead of
+		// through AX.
+		#define frames_to_point _BX
+
+		frames_to_point = duration;
 		frames_to_point >>= 1;
 		frames_to_point -= (BRAKE_DURATION / 2);
 		boss.pos.velocity.x.v = (POINT_X - boss.pos.cur.x);
 		boss.pos.velocity.y.v = (POINT_Y - boss.pos.cur.y);
-		if(frames_to_point == 0) {
-			boss.pos.velocity.x.v <<= 1;
-			boss.pos.velocity.y.v <<= 1;
-			flystep_pointreflected_frame = BRAKE_DURATION;
-
-			// Ensures that (duration - BRAKE_DURATION) always underflows and
-			// is never larger than [frame].
-			duration--;
-
-			frames_to_point++;
+		if(frames_to_point != 0) {
+			divide_velocity_by(frames_to_point);
+		} else {
+			// 2 frames of movement, followed by one frame of returning `true`
+			// and no movement.
+			flystep_pointreflected_frame = (BRAKE_DURATION - 3);
 		}
-		divide_velocity_by(frames_to_point);
+
+		#undef frames_to_point
 	}
-	frame++;
 	flystep_pointreflected_frame++;
-	if(frame >= (duration - BRAKE_DURATION)) {
+
+	// No braking if we're in workaround mode.
+	const int duration_without_braking = (duration - BRAKE_DURATION);
+	if(
+		(flystep_pointreflected_frame >= duration_without_braking) &&
+		(duration_without_braking != 0)
+	) {
 		divide_velocity_by(2);
 	}
-	if(frame >= duration) {
+
+	// Size optimization; `flystep_pointreflected_frame` is `unsigned char`
+	// anyway.
+	if(flystep_pointreflected_frame >= static_cast<unsigned char>(duration)) {
 		return true;
 	}
 	boss.pos.update_seg3();
 	return false;
-
-	#undef frame
 }
 
 #pragma option -k-
