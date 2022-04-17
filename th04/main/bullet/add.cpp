@@ -421,10 +421,6 @@ void near bullet_template_speedtune_for_playperf(void)
 		speed = to_sp8(0.5f);
 	}
 	bullet_template.speed.v = speed;
-	_asm {
-		nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; nop;
-		nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; nop;
-	}
 }
 
 static const unsigned char ANGLE_PER_SPRITE = (0x80 / BULLET_D_CELS);
@@ -436,22 +432,41 @@ unsigned char pascal near bullet_patnum_for_angle(unsigned char angle)
 	);
 }
 
+// Necessary for the mod code below.
+#include "th04/score.h"
+#include "th04/resident.hpp"
+#pragma option -k-
+
 bool near bullet_template_clip(void)
 {
+	// Mod: Replace the possible division by 0 for these group types with a
+	// Game Over. This works around the crash during Kurumi when playing on
+	// Easy and with minimum rank.
+	if(bullet_template.count == 0) {
+		_AL = bullet_template.group;
+		if((_AL == BG_RING) || (_AL == BG_RING_AIMED)) {
+			extern unsigned char miss_time;
+			resident->rem_lives = 0;
+			miss_time = 1;
+			return true;
+		}
+	}
+
+	_AL = bullet_clear_time;
 	if(
-		(bullet_clear_time > 0) &&
+		(_AL > 0) &&
 		// If a newly spawned bullet wouldn't fully decay during the remaining
 		// time, let's simply not spawn it at all? This way, they don't award
 		// score points either.
-		(bullet_clear_time <= (BMS_DECAY_FRAMES + 1)) // differs from TH05!
+		(_AL <= (BMS_DECAY_FRAMES + 1)) // differs from TH05!
 	) {
 		return true;
 	}
 	// Also applies to 8×8 pellets, because why wouldn't you combine both
 	// cases. #goodcode
-	if(!playfield_encloses_point(
-		bullet_template.origin, BULLET16_W, BULLET16_H
-	)) {
+	_AX = bullet_template.origin.x;
+	_DX = bullet_template.origin.y;
+	if(!playfield_encloses(_AX, _DX, BULLET16_W, BULLET16_H)) {
 		return true;
 	}
 	if(overlap_points_wh_fast(
@@ -468,6 +483,8 @@ bool near bullet_template_clip(void)
 	}
 	return false;
 }
+
+#pragma option -k.
 
 #define bullet_set_spawn_vars(ptr, available, spawn_state, spawn_type) \
 	spawn_state = BSS_GRAZEABLE; \
