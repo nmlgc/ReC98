@@ -39,12 +39,16 @@ bool pascal near marisa_flystep_pointreflected(int duration)
 		BRAKE_DURATION = 12,
 	};
 	if(flystep_pointreflected_frame == 0) {
-		boss.pos.velocity.x.v = (
-			(POINT_X - boss.pos.cur.x) / ((duration / 2) - (BRAKE_DURATION / 2))
-		);
-		boss.pos.velocity.y.v = (
-			(POINT_Y - boss.pos.cur.y) / ((duration / 2) - (BRAKE_DURATION / 2))
-		);
+		// Mod: Prevent the division by zero by not moving Marisa at all in
+		// that case.
+		int frames_to_point = ((duration / 2) - (BRAKE_DURATION / 2));
+		if(frames_to_point == 0) {
+			return true;
+		}
+		boss.pos.velocity.x.v = ((POINT_X - boss.pos.cur.x) / frames_to_point);
+		boss.pos.velocity.y.v = ((POINT_Y - boss.pos.cur.y) / frames_to_point);
+		// The bytes we saved above, compared to the original binary
+		_asm { nop; nop; nop; nop; nop; nop; nop; nop; }
 	}
 	flystep_pointreflected_frame++;
 	if(flystep_pointreflected_frame >= (duration - BRAKE_DURATION)) {
