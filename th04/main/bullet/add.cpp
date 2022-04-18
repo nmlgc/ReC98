@@ -410,17 +410,17 @@ no_aim:
 
 void near bullet_template_speedtune_for_playperf(void)
 {
-	bullet_template.speed.v /= 2;
-	subpixel_t speed_from_playperf = bullet_template.speed.v;
-	speed_from_playperf *= playperf;
-	speed_from_playperf /= 16;
-
-	bullet_template.speed.v += speed_from_playperf;
-	if(bullet_template.speed > to_sp8(8.0f)) {
-		bullet_template.speed.set(8.0f);
-	} else if(bullet_template.speed < to_sp8(0.5f)) {
-		bullet_template.speed.set(0.5f);
+	// Mod: Size-optimized compared to the original version. (And probably
+	// faster, too.)
+	subpixel_length_8_t speed = bullet_template.speed;
+	speed >>= 1;
+	speed += ((static_cast<subpixel_t>(speed) * playperf) >> 4);
+	if(speed > to_sp8(8.0f)) {
+		speed = to_sp8(8.0f);
+	} else if(speed < to_sp8(0.5f)) {
+		speed = to_sp8(0.5f);
 	}
+	bullet_template.speed.v = speed;
 }
 
 static const unsigned char ANGLE_PER_SPRITE = (0x80 / BULLET_D_CELS);
@@ -434,6 +434,17 @@ unsigned char pascal near bullet_patnum_for_angle(unsigned char angle)
 
 bool near bullet_template_clip(void)
 {
+	// Mod: Guard against the possible division by 0 for these group types by
+	// turning 0-way rings into "1-rings", i.e., single bullets. This works
+	// around the crash during Kurumi when playing on Easy and with minimum
+	// rank.
+	if((bullet_template.count == 0) && (
+		(bullet_template.group == BG_RING) ||
+		(bullet_template.group == BG_RING_AIMED)
+	)) {
+		bullet_template.count++;
+	}
+
 	if(
 		(bullet_clear_time > 0) &&
 		// If a newly spawned bullet wouldn't fully decay during the remaining
