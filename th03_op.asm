@@ -1283,7 +1283,7 @@ _envp		= dword	ptr  0Ch
 		call	text_clear
 		call	respal_create
 		cmp	graph_VramZoom, 0
-		jz	short loc_A452
+		jmp	short loc_A452
 		push	ds
 		push	offset aVfvcvbgngngbgn
 		call	dos_puts2
