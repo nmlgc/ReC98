@@ -1,5 +1,5 @@
-public hud_hp_update_and_render
-hud_hp_update_and_render	proc near
+public @HUD_HP_UPDATE_AND_RENDER$QII
+@hud_hp_update_and_render$qii proc near
 
 @@hp_cur	= word ptr  4
 @@hp_max	= word ptr  6
@@ -44,9 +44,9 @@ hud_hp_update_and_render	proc near
 	mov	_hud_hp_bar_value_prev, si
 
 @@put_and_ret:
-	call	hud_hp_put pascal, _hud_hp_bar_value_prev
+	call	@hud_hp_put$qi pascal, _hud_hp_bar_value_prev
 	pop	di
 	pop	si
 	pop	bp
 	retn	4
-hud_hp_update_and_render endp
+@hud_hp_update_and_render$qii endp

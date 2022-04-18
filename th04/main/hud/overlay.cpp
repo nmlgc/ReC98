@@ -18,7 +18,7 @@ extern "C" {
 #include "th04/main/tile/tile.hpp"
 #include "th04/main/scroll.hpp"
 }
-#include "th04/main/hud/hud.h"
+#include "th04/main/hud/hud.hpp"
 #include "th04/main/hud/overlay.hpp"
 #include "th04/main/stage/stage.hpp"
 

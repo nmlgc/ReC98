@@ -22,7 +22,7 @@ extern "C" {
 #include "th04/main/bullet/clearzap.hpp"
 #include "th04/main/player/player.hpp"
 }
-#include "th04/main/hud/hud.h"
+#include "th04/main/hud/hud.hpp"
 #include "th04/main/hud/overlay.hpp"
 #include "th04/main/pointnum/pointnum.hpp"
 #include "th04/main/gather.hpp"

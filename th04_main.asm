@@ -1641,8 +1641,8 @@ include th04/main/enemy/inv.asm
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-midboss1_render	proc near
+public @MIDBOSS1_RENDER$QV
+@midboss1_render$qv	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -1759,14 +1759,14 @@ loc_C881:
 		pop	si
 		pop	bp
 		retn
-midboss1_render	endp
+@midboss1_render$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-midboss3_render	proc near
+public @MIDBOSS3_RENDER$QV
+@midboss3_render$qv	proc near
 
 @@y		= word ptr -2
 
@@ -1847,14 +1847,14 @@ loc_C946:
 		pop	si
 		leave
 		retn
-midboss3_render	endp
+@midboss3_render$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-midbossx_render	proc near
+public @MIDBOSSX_RENDER$QV
+@midbossx_render$qv	proc near
 
 @@patnum		= word ptr -6
 @@y		= word ptr -4
@@ -1885,7 +1885,7 @@ midbossx_render	proc near
 locret_C999:
 		leave
 		retn
-midbossx_render	endp
+@midbossx_render$qv	endp
 
 ; ---------------------------------------------------------------------------
 		db    0
@@ -1972,8 +1972,8 @@ include th04/main/tile/render_a.asm
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-midboss2_render	proc near
+public @MIDBOSS2_RENDER$QV
+@midboss2_render$qv	proc near
 
 @@y		= word ptr -2
 
@@ -2043,7 +2043,7 @@ loc_CCD2:
 		pop	si
 		leave
 		retn
-midboss2_render	endp
+@midboss2_render$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -2100,8 +2100,8 @@ main_TEXT	segment	byte public 'CODE' use16
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-midboss4_render	proc near
+public @MIDBOSS4_RENDER$QV
+@midboss4_render$qv	proc near
 
 @@y		= word ptr -2
 
@@ -2156,7 +2156,7 @@ loc_CE8F:
 		pop	si
 		leave
 		retn
-midboss4_render	endp
+@midboss4_render$qv	endp
 main_TEXT	ends
 
 DIALOG_TEXT	segment	byte public 'CODE' use16
@@ -6122,7 +6122,7 @@ loc_F32B:
 loc_F32E:
 		push	ax
 		call	gaiji_putsa
-		call	hud_hp_put pascal, 0
+		call	@hud_hp_put$qi pascal, 0
 		pop	bp
 		retf
 hud_put	endp
@@ -12132,8 +12132,8 @@ sub_13FB2	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-midboss1_update	proc far
+public @MIDBOSS1_UPDATE$QV
+@midboss1_update$qv	proc far
 		push	bp
 		mov	bp, sp
 		push	si
@@ -12360,11 +12360,11 @@ loc_142E1:
 		call	@midboss_defeat_update$qv
 
 loc_142E4:
-		call	hud_hp_update_and_render pascal, _midboss_hp, 620
+		call	@hud_hp_update_and_render$qii pascal, _midboss_hp, 620
 		pop	si
 		pop	bp
 		retf
-midboss1_update	endp
+@midboss1_update$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -12540,8 +12540,8 @@ sub_14425	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-midboss3_update	proc far
+public @MIDBOSS3_UPDATE$QV
+@midboss3_update$qv	proc far
 
 var_4		= word ptr -4
 @@angle		= byte ptr -1
@@ -12725,11 +12725,11 @@ loc_1468A:
 		call	@midboss_defeat_update$qv
 
 loc_1468D:
-		call	hud_hp_update_and_render pascal, _midboss_hp, 850
+		call	@hud_hp_update_and_render$qii pascal, _midboss_hp, 850
 		pop	si
 		leave
 		retf
-midboss3_update	endp
+@midboss3_update$qv	endp
 
 ; ---------------------------------------------------------------------------
 		db    0
@@ -13046,8 +13046,8 @@ word_148F8	dw   0FAh,  102h,  10Ah,  112h
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-midbossx_update	proc far
+public @MIDBOSSX_UPDATE$QV
+@midbossx_update$qv	proc far
 		push	bp
 		mov	bp, sp
 		mov	ax, _midboss_pos.cur.x
@@ -13180,7 +13180,7 @@ loc_14A82:
 loc_14A87:
 		pop	bp
 		retf
-midbossx_update	endp
+@midbossx_update$qv	endp
 
 ; ---------------------------------------------------------------------------
 		db    0
@@ -13430,8 +13430,8 @@ sub_14C45	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-midboss2_update	proc far
+public @MIDBOSS2_UPDATE$QV
+@midboss2_update$qv	proc far
 
 var_2		= word ptr -2
 
@@ -13646,11 +13646,11 @@ loc_14F52:
 		nopcall	@midboss_reset$qv
 
 loc_14F57:
-		call	hud_hp_update_and_render pascal, _midboss_hp, 750
+		call	@hud_hp_update_and_render$qii pascal, _midboss_hp, 750
 		pop	si
 		leave
 		retf
-midboss2_update	endp
+@midboss2_update$qv	endp
 
 ; ---------------------------------------------------------------------------
 word_14F64	dw	0,     1,     2,     3
@@ -14029,8 +14029,8 @@ sub_15202	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-midboss4_update	proc far
+public @MIDBOSS4_UPDATE$QV
+@midboss4_update$qv	proc far
 
 var_2		= word ptr -2
 
@@ -14242,8 +14242,8 @@ loc_154D1:
 		cmp	_midboss_frames_until, 2800
 		jnz	short loc_1552D
 		mov	_midboss_frames_until, 5600
-		setfarfp	_midboss_update_func, midboss4_update
-		mov	_midboss_render_func, offset midboss4_render
+		setfarfp	_midboss_update_func, @midboss4_update$qv
+		mov	_midboss_render_func, offset @midboss4_render$qv
 		mov	_midboss_pos.cur.x, (240 shl 4)
 		mov	_midboss_pos.cur.y, (-32 shl 4)
 		mov	_midboss_pos.prev.x, (240 shl 4)
@@ -14257,13 +14257,13 @@ loc_154D1:
 ; ---------------------------------------------------------------------------
 
 loc_1552D:
-		call	hud_hp_update_and_render pascal, _midboss_hp, 1200
+		call	@hud_hp_update_and_render$qii pascal, _midboss_hp, 1200
 
 loc_15537:
 		pop	si
 		leave
 		retf
-midboss4_update	endp
+@midboss4_update$qv	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -16523,7 +16523,7 @@ loc_169B8:
 		mov	ax, _boss_pos.cur.y
 		mov	_homing_target.y, ax
 		call	sub_15DE8
-		call	hud_hp_update_and_render pascal, _boss_hp, 9000
+		call	@hud_hp_update_and_render$qii pascal, _boss_hp, 9000
 		leave
 		retf
 @yuuka5_update$qv	endp
@@ -18640,7 +18640,7 @@ loc_17CA4:
 		mov	ax, _boss_pos.cur.y
 		mov	_homing_target.y, ax
 		call	marisa_16C6A
-		call	hud_hp_update_and_render pascal, _boss_hp, 6000
+		call	@hud_hp_update_and_render$qii pascal, _boss_hp, 6000
 		leave
 		retf
 @marisa_update$qv	endp
@@ -20186,7 +20186,7 @@ loc_189A1:
 		mov	_homing_target.x, ax
 		mov	ax, _boss_pos.cur.y
 		mov	_homing_target.y, ax
-		call	hud_hp_update_and_render pascal, _boss_hp, 9400
+		call	@hud_hp_update_and_render$qii pascal, _boss_hp, 9400
 		leave
 		retf
 @mugetsu_update$qv	endp
@@ -21534,7 +21534,7 @@ loc_195A9:
 		mov	_homing_target.x, ax
 		mov	ax, _boss_pos.cur.y
 		mov	_homing_target.y, ax
-		call	hud_hp_update_and_render pascal, _boss_hp, 4800
+		call	@hud_hp_update_and_render$qii pascal, _boss_hp, 4800
 
 loc_195BF:
 		pop	di
@@ -22468,7 +22468,7 @@ loc_19E8D:
 		mov	_homing_target.x, ax
 		mov	ax, _boss_pos.cur.y
 		mov	_homing_target.y, ax
-		call	hud_hp_update_and_render pascal, _boss_hp, 3050
+		call	@hud_hp_update_and_render$qii pascal, _boss_hp, 3050
 
 loc_19EA3:
 		pop	si
@@ -24893,7 +24893,7 @@ loc_1B8EA:
 		mov	_homing_target.y, ax
 		call	sub_15DE8
 		call	yuuka6_1A110
-		call	hud_hp_update_and_render pascal, _boss_hp, 13300
+		call	@hud_hp_update_and_render$qii pascal, _boss_hp, 13300
 		leave
 		retf
 @yuuka6_update$qv	endp
@@ -26409,7 +26409,7 @@ loc_1C67A:
 		mov	_homing_target.x, ax
 		mov	ax, _boss_pos.cur.y
 		mov	_homing_target.y, ax
-		call	hud_hp_update_and_render pascal, _boss_hp, 6000
+		call	@hud_hp_update_and_render$qii pascal, _boss_hp, 6000
 		leave
 		retf
 @elly_update$qv	endp
@@ -27624,8 +27624,8 @@ include th04/formats/bb_boss.asm
 stage1_setup	proc far
 		push	bp
 		mov	bp, sp
-		setfarfp	_midboss_update_func, midboss1_update
-		mov	_midboss_render_func, offset midboss1_render
+		setfarfp	_midboss_update_func, @midboss1_update$qv
+		mov	_midboss_render_func, offset @midboss1_render$qv
 		mov	_midboss_frames_until, 3100
 		mov	_midboss_pos.cur.x, (192 shl 4)
 		mov	_midboss_pos.cur.y, (368 shl 4)
@@ -27665,8 +27665,8 @@ stage1_setup	endp
 stage2_setup	proc far
 		push	bp
 		mov	bp, sp
-		setfarfp	_midboss_update_func, midboss2_update
-		mov	_midboss_render_func, offset midboss2_render
+		setfarfp	_midboss_update_func, @midboss2_update$qv
+		mov	_midboss_render_func, offset @midboss2_render$qv
 		mov	_midboss_frames_until, 2600
 		mov	_midboss_pos.cur.x, (192 shl 4)
 		mov	_midboss_pos.cur.y, (-32 shl 4)
@@ -27709,8 +27709,8 @@ stage2_setup	endp
 stage3_setup	proc far
 		push	bp
 		mov	bp, sp
-		setfarfp	_midboss_update_func, midboss3_update
-		mov	_midboss_render_func, offset midboss3_render
+		setfarfp	_midboss_update_func, @midboss3_update$qv
+		mov	_midboss_render_func, offset @midboss3_render$qv
 		mov	_midboss_frames_until, 1600
 		mov	_midboss_pos.cur.x, (192 shl 4)
 		mov	_midboss_pos.cur.y, (-32 shl 4)
@@ -27749,8 +27749,8 @@ stage3_setup	endp
 stage4_setup	proc far
 		push	bp
 		mov	bp, sp
-		setfarfp	_midboss_update_func, midboss4_update
-		mov	_midboss_render_func, offset midboss4_render
+		setfarfp	_midboss_update_func, @midboss4_update$qv
+		mov	_midboss_render_func, offset @midboss4_render$qv
 		mov	_midboss_frames_until, 2800
 		mov	_midboss_pos.cur.x, (144 shl 4)
 		mov	_midboss_pos.cur.y, (-32 shl 4)
@@ -27919,8 +27919,8 @@ stage6_setup	endp
 stagex_setup	proc far
 		push	bp
 		mov	bp, sp
-		setfarfp	_midboss_update_func, midbossx_update
-		mov	_midboss_render_func, offset midbossx_render
+		setfarfp	_midboss_update_func, @midbossx_update$qv
+		mov	_midboss_render_func, offset @midbossx_render$qv
 		mov	_midboss_frames_until, 5400
 		mov	_midboss_pos.cur.x, (-16 shl 4)
 		mov	_midboss_pos.cur.y, (256 shl 4)
@@ -29743,7 +29743,7 @@ loc_1F8A5:
 		mov	ax, _boss_pos.cur.y
 		mov	_homing_target.y, ax
 		call	reimu_1EBF3
-		call	hud_hp_update_and_render pascal, _boss_hp, 9100
+		call	@hud_hp_update_and_render$qii pascal, _boss_hp, 9100
 		leave
 		retf
 @reimu_update$qv	endp
@@ -31378,7 +31378,7 @@ loc_206B6:
 
 loc_206C9:
 		call	sub_15DE8
-		call	hud_hp_update_and_render pascal, _boss_hp, 18700
+		call	@hud_hp_update_and_render$qii pascal, _boss_hp, 18700
 		pop	bp
 		retf
 @gengetsu_update$qv	endp

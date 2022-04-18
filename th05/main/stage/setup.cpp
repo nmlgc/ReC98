@@ -4,8 +4,8 @@
  */
 
 #include "th04/sprites/main_cdg.h"
-extern "C" {
 #include "th04/main/midboss/midboss.hpp"
+extern "C" {
 #include "th05/main/stage/stages.hpp"
 }
 #include "th05/main/boss/bosses.hpp"

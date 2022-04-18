@@ -1696,11 +1696,11 @@ loc_C4BC:
 		mov	_bomb_frame, 0
 		push	(192 shl 16) or 160
 		push	(144 shl 16) or 224
-		nopcall	select_for_playchar
+		nopcall	@select_for_playchar$qiiii
 		mov	_player_invincibility_time, al
 		push	(192 shl 16) or 128
 		push	( 96 shl 16) or 192
-		nopcall	select_for_playchar
+		nopcall	@select_for_playchar$qiiii
 		mov	_bullet_clear_time, al
 		mov	ax, _bg_render_bombing_func
 		mov	_bg_render_bombing, ax
@@ -5093,8 +5093,7 @@ loc_1082A:
 loc_1082D:
 		push	ax
 		call	gaiji_putsa
-		push	0
-		call	hud_hp_put
+		call	@hud_hp_put$qi pascal, 0
 		pop	bp
 		retf
 
@@ -5111,8 +5110,8 @@ hud_put	endp
 
 ; Attributes: bp-based frame
 
-public MIDBOSS1_RENDER
-midboss1_render	proc near
+public @MIDBOSS1_RENDER$QV
+@midboss1_render$qv	proc near
 
 @@y		= word ptr -2
 
@@ -5189,7 +5188,7 @@ loc_10900:
 		pop	si
 		leave
 		retn
-midboss1_render	endp
+@midboss1_render$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -5286,8 +5285,8 @@ loc_10999:
 
 ; Attributes: bp-based frame
 
-public MIDBOSS2_RENDER
-midboss2_render	proc near
+public @MIDBOSS2_RENDER$QV
+@midboss2_render$qv	proc near
 
 @@y		= word ptr -2
 
@@ -5348,7 +5347,7 @@ loc_10A26:
 		pop	si
 		leave
 		retn
-midboss2_render	endp
+@midboss2_render$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -5419,8 +5418,8 @@ loc_10A94:
 
 ; Attributes: bp-based frame
 
-public MIDBOSS3_RENDER
-midboss3_render	proc near
+public @MIDBOSS3_RENDER$QV
+@midboss3_render$qv	proc near
 
 @@y		= word ptr -2
 
@@ -5477,7 +5476,7 @@ loc_10B19:
 		pop	si
 		leave
 		retn
-midboss3_render	endp
+@midboss3_render$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -5874,8 +5873,8 @@ loc_10E1F:
 
 ; Attributes: bp-based frame
 
-public MIDBOSS4_RENDER
-midboss4_render	proc near
+public @MIDBOSS4_RENDER$QV
+@midboss4_render$qv	proc near
 
 @@patnum		= word ptr -2
 
@@ -5929,7 +5928,7 @@ loc_10EAE:
 		pop	si
 		leave
 		retn
-midboss4_render	endp
+@midboss4_render$qv	endp
 
 include th05/main/bullet/b4balls_render.asm
 
@@ -6664,8 +6663,8 @@ stage2_update	endp
 
 ; Attributes: bp-based frame
 
-public MIDBOSSX_RENDER
-midbossx_render	proc near
+public @MIDBOSSX_RENDER$QV
+@midbossx_render$qv	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -6714,7 +6713,7 @@ loc_11691:
 		pop	si
 		pop	bp
 		retn
-midbossx_render	endp
+@midbossx_render$qv	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6959,8 +6958,8 @@ loc_11862:
 
 ; Attributes: bp-based frame
 
-public MIDBOSS5_RENDER
-midboss5_render	proc near
+public @MIDBOSS5_RENDER$QV
+@midboss5_render$qv	proc near
 		push	bp
 		mov	bp, sp
 		push	si
@@ -7009,7 +7008,7 @@ loc_118CD:
 		pop	si
 		pop	bp
 		retn
-midboss5_render	endp
+@midboss5_render$qv	endp
 
 overlay_loop_func	@overlay_wipe$qv, near, <TX_WHITE>
 overlay_loop_func	@overlay_black$qv, near, <TX_BLACK + TX_REVERSE>
@@ -7719,7 +7718,7 @@ loc_12769:
 		jnz	short loc_12783
 		push	( 3 shl 16) or  4
 		push	(15 shl 16) or  3
-		nopcall	select_for_playchar
+		nopcall	@select_for_playchar$qiiii
 		add	si, ax
 
 loc_12783:
@@ -8069,7 +8068,7 @@ enemy_velocity_set	endp
 
 sub_15330	proc near
 		push	es
-		call	player_angle_from pascal, [si+enemy_t.pos.cur.x], [si+enemy_t.pos.cur.y], word ptr [si+enemy_t.E_angle]
+		call	@player_angle_from$q20%SubpixelBase$ti$ti%t1uc pascal, [si+enemy_t.pos.cur.x], [si+enemy_t.pos.cur.y], word ptr [si+enemy_t.E_angle]
 		mov	[si+enemy_t.E_angle], al
 		pop	es
 		call	enemy_velocity_set
@@ -8511,7 +8510,7 @@ loc_15616:
 		add	ax, [si+enemy_t.E_bullet_template.BT_origin.y]
 		push	ax
 		push	word ptr es:[di+1]
-		call	player_angle_from
+		call	@player_angle_from$q20%SubpixelBase$ti$ti%t1uc
 		mov	[si+enemy_t.E_bullet_template.BT_angle], al
 		pop	es
 
@@ -8798,7 +8797,7 @@ GRCG_SETMODE_RMW_DEF 3
 main_031_TEXT	ends
 
 BULLET_A_TEXT	segment	byte public 'CODE' use16
-	PLAYER_ANGLE_FROM procdesc pascal near \
+	@PLAYER_ANGLE_FROM$Q20%SUBPIXELBASE$TI$TI%T1UC procdesc pascal near \
 		x:word, y:word, plus_angle:byte
 	@playperf_speedtune procdesc near
 	_bullets_add_regular procdesc near
@@ -10510,8 +10509,8 @@ sub_18017	endp
 
 ; Attributes: bp-based frame
 
-public MIDBOSS1_UPDATE
-midboss1_update	proc far
+public @MIDBOSS1_UPDATE$QV
+@midboss1_update$qv	proc far
 		push	bp
 		mov	bp, sp
 		mov	eax, _midboss_pos.cur
@@ -10580,20 +10579,20 @@ loc_1818B:
 
 loc_181B5:
 		call	@midboss_defeat_update$qv
-		call	hud_hp_update_and_render pascal, _midboss_hp, 1000
+		call	@hud_hp_update_and_render$qii pascal, _midboss_hp, 1000
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 
 loc_181C4:
-		call	hud_hp_update_and_render pascal, _midboss_hp, 1000
+		call	@hud_hp_update_and_render$qii pascal, _midboss_hp, 1000
 		mov	ax, _midboss_pos.cur.x
 		mov	_homing_target.x, ax
 		mov	ax, _midboss_pos.cur.y
 		mov	_homing_target.y, ax
 		pop	bp
 		retf
-midboss1_update	endp
+@midboss1_update$qv	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -11366,7 +11365,7 @@ loc_188E9:
 		call	@boss_defeat_update$qui pascal, 10
 
 loc_188EE:
-		call	hud_hp_update_and_render pascal, _boss_hp, 4650
+		call	@hud_hp_update_and_render$qii pascal, _boss_hp, 4650
 		pop	bp
 		retf
 @sara_update$qv	endp
@@ -11515,8 +11514,8 @@ sub_189FC	endp
 
 ; Attributes: bp-based frame
 
-public MIDBOSS2_UPDATE
-midboss2_update	proc far
+public @MIDBOSS2_UPDATE$QV
+@midboss2_update$qv	proc far
 		push	bp
 		mov	bp, sp
 		mov	eax, _midboss_pos.cur
@@ -11604,20 +11603,20 @@ loc_18B67:
 
 loc_18B91:
 		call	@midboss_defeat_update$qv
-		call	hud_hp_update_and_render pascal, _midboss_hp, 1400
+		call	@hud_hp_update_and_render$qii pascal, _midboss_hp, 1400
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 
 loc_18BA0:
-		call	hud_hp_update_and_render pascal, _midboss_hp, 1400
+		call	@hud_hp_update_and_render$qii pascal, _midboss_hp, 1400
 		mov	ax, _midboss_pos.cur.x
 		mov	_homing_target.x, ax
 		mov	ax, _midboss_pos.cur.y
 		mov	_homing_target.y, ax
 		pop	bp
 		retf
-midboss2_update	endp
+@midboss2_update$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -12417,7 +12416,7 @@ loc_1925E:
 		call	@boss_defeat_update$qui pascal, 10
 
 loc_19263:
-		call	hud_hp_update_and_render pascal, _boss_hp, 4400
+		call	@hud_hp_update_and_render$qii pascal, _boss_hp, 4400
 		pop	bp
 		retf
 @louise_update$qv	endp
@@ -12713,8 +12712,8 @@ sub_1945D	endp
 
 ; Attributes: bp-based frame
 
-public MIDBOSS3_UPDATE
-midboss3_update	proc far
+public @MIDBOSS3_UPDATE$QV
+@midboss3_update$qv	proc far
 		push	bp
 		mov	bp, sp
 		mov	eax, _midboss_pos.cur
@@ -12813,20 +12812,20 @@ loc_195DA:
 
 loc_19604:
 		call	@midboss_defeat_update$qv
-		call	hud_hp_update_and_render pascal, _midboss_hp, 1400
+		call	@hud_hp_update_and_render$qii pascal, _midboss_hp, 1400
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 
 loc_19613:
-		call	hud_hp_update_and_render pascal, _midboss_hp, 1400
+		call	@hud_hp_update_and_render$qii pascal, _midboss_hp, 1400
 		mov	ax, _midboss_pos.cur.x
 		mov	_homing_target.x, ax
 		mov	ax, _midboss_pos.cur.y
 		mov	_homing_target.y, ax
 		pop	bp
 		retf
-midboss3_update	endp
+@midboss3_update$qv	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -14247,7 +14246,7 @@ loc_1A3AD:
 		call	@boss_defeat_update$qui pascal, 10
 
 loc_1A3B2:
-		call	hud_hp_update_and_render pascal, _boss_hp, 9600
+		call	@hud_hp_update_and_render$qii pascal, _boss_hp, 9600
 		cmp	_boss_phase, 3
 		jb	short loc_1A3CD
 		cmp	_boss_phase, PHASE_BOSS_EXPLODE_BIG
@@ -15069,7 +15068,7 @@ loc_1AB53:
 		mov	[bp+@@angle], -40h
 
 loc_1AB57:
-		call	player_angle_from pascal, cheeto_template.pos.cur.x, cheeto_template.pos.cur.y, word ptr [bp+@@angle]
+		call	@player_angle_from$q20%SubpixelBase$ti$ti%t1uc pascal, cheeto_template.pos.cur.x, cheeto_template.pos.cur.y, word ptr [bp+@@angle]
 		mov	cheeto_template.CBTMPL_angle, al
 		call	@cheetos_add$qv
 		call	snd_se_play pascal, 15
@@ -15111,7 +15110,7 @@ loc_1ABAA:
 		mov	[bp+@@angle], -40h
 
 loc_1ABAE:
-		call	player_angle_from pascal, cheeto_template.pos.cur.x, cheeto_template.pos.cur.y, word ptr [bp+@@angle]
+		call	@player_angle_from$q20%SubpixelBase$ti$ti%t1uc pascal, cheeto_template.pos.cur.x, cheeto_template.pos.cur.y, word ptr [bp+@@angle]
 		mov	cheeto_template.CBTMPL_angle, al
 		call	@cheetos_add$qv
 		call	snd_se_play pascal, 15
@@ -15506,7 +15505,7 @@ loc_1AFA7:
 		call	@cheetos_update$qv	; default
 		mov	ax, _boss_hp
 		add	ax, _yuki_hp
-		call	hud_hp_update_and_render pascal, ax, 9000
+		call	@hud_hp_update_and_render$qii pascal, ax, 9000
 		pop	si
 		leave
 		retf
@@ -15827,8 +15826,8 @@ sub_1B1E5	endp
 
 ; Attributes: bp-based frame
 
-public MIDBOSS4_UPDATE
-midboss4_update	proc far
+public @MIDBOSS4_UPDATE$QV
+@midboss4_update$qv	proc far
 		push	bp
 		mov	bp, sp
 		mov	eax, _midboss_pos.cur
@@ -15932,20 +15931,20 @@ loc_1B368:
 
 loc_1B392:
 		call	@midboss_defeat_update$qv
-		call	hud_hp_update_and_render pascal, _midboss_hp, 1100
+		call	@hud_hp_update_and_render$qii pascal, _midboss_hp, 1100
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 
 loc_1B3A1:
-		call	hud_hp_update_and_render pascal, _midboss_hp, 1100
+		call	@hud_hp_update_and_render$qii pascal, _midboss_hp, 1100
 		mov	ax, _midboss_pos.cur.x
 		mov	_homing_target.x, ax
 		mov	ax, _midboss_pos.cur.y
 		mov	_homing_target.y, ax
 		pop	bp
 		retf
-midboss4_update	endp
+@midboss4_update$qv	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
@@ -16334,7 +16333,7 @@ loc_1B799:
 		add	al, (1 shl 4)
 		mov	_bullet_template.speed, al
 		call	_bullets_add_regular
-		call	player_angle_from pascal, b4ball_template.pos.cur.x, b4ball_template.pos.cur.y, 0
+		call	@player_angle_from$q20%SubpixelBase$ti$ti%t1uc pascal, b4ball_template.pos.cur.x, b4ball_template.pos.cur.y, 0
 		mov	b4ball_template.B4B_angle, al
 		call	b4balls_add
 		mov	al, b4ball_template.B4B_angle
@@ -16883,7 +16882,7 @@ loc_1BD02:
 
 loc_1BD09:
 		call	b4balls_update
-		call	hud_hp_update_and_render pascal, _boss_hp, 7900
+		call	@hud_hp_update_and_render$qii pascal, _boss_hp, 7900
 		pop	bp
 		retf
 yuki_update	endp
@@ -17277,7 +17276,7 @@ loc_1C057:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1C0AD
-		call	player_angle_from pascal, b4ball_template.pos.cur.x, b4ball_template.pos.cur.y, 20h
+		call	@player_angle_from$q20%SubpixelBase$ti$ti%t1uc pascal, b4ball_template.pos.cur.x, b4ball_template.pos.cur.y, 20h
 		mov	b4ball_template.B4B_angle, al
 		call	b4balls_add
 		mov	al, b4ball_template.B4B_angle
@@ -18072,7 +18071,7 @@ loc_1C7FE:
 
 loc_1C805:
 		call	b4balls_update
-		call	hud_hp_update_and_render pascal, _boss_hp, 7800
+		call	@hud_hp_update_and_render$qii pascal, _boss_hp, 7800
 
 loc_1C812:
 		pop	si
@@ -18329,11 +18328,11 @@ loc_1CBD2:
 		sub	_bullet_template.BT_origin.y, (16 shl 4)
 		or	si, si
 		jnz	short loc_1CC1F
-		call	player_angle_from pascal, _bullet_template.BT_origin.x, _bullet_template.BT_origin.y, 0
+		call	@player_angle_from$q20%SubpixelBase$ti$ti%t1uc pascal, _bullet_template.BT_origin.x, _bullet_template.BT_origin.y, 0
 		mov	angle_2D085, al
 		mov	ax, _bullet_template.BT_origin.x
 		add	ax, (64 shl 4)
-		call	player_angle_from pascal, ax, _bullet_template.BT_origin.y, 0
+		call	@player_angle_from$q20%SubpixelBase$ti$ti%t1uc pascal, ax, _bullet_template.BT_origin.y, 0
 		mov	angle_2D084, al
 
 loc_1CC1F:
@@ -18365,7 +18364,7 @@ loc_1CC3E:
 		call	randring2_next16_mod pascal, (352 shl 4)
 		add	ax, (16 shl 4)
 		mov	sword_template.pos.cur.x, ax
-		call	player_angle_from pascal, ax, sword_template.pos.cur.y, word ptr [bp+@@angle]
+		call	@player_angle_from$q20%SubpixelBase$ti$ti%t1uc pascal, ax, sword_template.pos.cur.y, word ptr [bp+@@angle]
 		mov	sword_template.SWORD_angle, al
 		call	swords_add
 
@@ -18633,11 +18632,11 @@ loc_1CF57:
 		sub	_bullet_template.BT_origin.y, (16 shl 4)
 		or	di, di
 		jnz	short loc_1CFA4
-		call	player_angle_from pascal, _bullet_template.BT_origin.x, _bullet_template.BT_origin.y, 0
+		call	@player_angle_from$q20%SubpixelBase$ti$ti%t1uc pascal, _bullet_template.BT_origin.x, _bullet_template.BT_origin.y, 0
 		mov	angle_2D085, al
 		mov	ax, _bullet_template.BT_origin.x
 		add	ax, (64 shl 4)
-		call	player_angle_from pascal, ax, _bullet_template.BT_origin.y, 0
+		call	@player_angle_from$q20%SubpixelBase$ti$ti%t1uc pascal, ax, _bullet_template.BT_origin.y, 0
 		mov	angle_2D084, al
 
 loc_1CFA4:
@@ -18665,7 +18664,7 @@ loc_1CFC3:
 		call	randring2_next16_mod
 		add	ax, (64 shl 4)
 		mov	_laser_template.coords.origin.x, ax
-		call	player_angle_from pascal, ax, _laser_template.coords.origin.y, 0
+		call	@player_angle_from$q20%SubpixelBase$ti$ti%t1uc pascal, ax, _laser_template.coords.origin.y, 0
 		mov	_laser_template.coords.angle, al
 		call	@lasers_shootout_add$qv
 		xor	si, si
@@ -18682,7 +18681,7 @@ loc_1CFFA:
 		call	randring2_next16_mod pascal, (352 shl 4)
 		add	ax, (16 shl 4)
 		mov	sword_template.pos.cur.x, ax
-		call	player_angle_from pascal, ax, sword_template.pos.cur.y, word ptr [bp+@@angle]
+		call	@player_angle_from$q20%SubpixelBase$ti$ti%t1uc pascal, ax, sword_template.pos.cur.y, word ptr [bp+@@angle]
 		mov	sword_template.SWORD_angle, al
 		call	swords_add
 		inc	si
@@ -18815,7 +18814,7 @@ loc_1D17C:
 		inc	byte_2D083
 		cmp	byte_2D083, 5
 		ja	loc_1D110
-		call	player_angle_from pascal, _bullet_template.BT_origin.x, _bullet_template.BT_origin.y, 0
+		call	@player_angle_from$q20%SubpixelBase$ti$ti%t1uc pascal, _bullet_template.BT_origin.x, _bullet_template.BT_origin.y, 0
 		mov	_bullet_template.BT_angle, al
 
 loc_1D1B9:
@@ -19151,7 +19150,7 @@ loc_1D50C:
 
 loc_1D513:
 		call	swords_update
-		call	hud_hp_update_and_render pascal, _boss_hp, 8300
+		call	@hud_hp_update_and_render$qii pascal, _boss_hp, 8300
 
 loc_1D520:
 		pop	si
@@ -19822,7 +19821,7 @@ loc_1DC59:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1DC93
-		call	player_angle_from pascal, b6ball_template.pos.cur.x, b6ball_template.pos.cur.y, 0
+		call	@player_angle_from$q20%SubpixelBase$ti$ti%t1uc pascal, b6ball_template.pos.cur.x, b6ball_template.pos.cur.y, 0
 		mov	b6ball_template.B6B_angle, al
 		mov	b6ball_template.B6B_speed, (4 shl 4)
 		mov	b6ball_template.B6B_patnum_tiny, PAT_B6BALL_PURPLE
@@ -20051,7 +20050,7 @@ loc_1DEEA:
 		sub	dx, ax
 		add	dx, (16 shl 4)
 		mov	b6ball_template.pos.cur.y, dx
-		call	player_angle_from pascal, b6ball_template.pos.cur.x, dx, 0
+		call	@player_angle_from$q20%SubpixelBase$ti$ti%t1uc pascal, b6ball_template.pos.cur.x, dx, 0
 		mov	b6ball_template.B6B_angle, al
 		mov	b6ball_template.B6B_speed, (3 shl 4) + 12
 		mov	b6ball_template.B6B_patnum_tiny, PAT_B6BALL_PURPLE
@@ -20458,7 +20457,7 @@ loc_1E333:
 		mov	_boss_custombullets_render, offset @shinki_custombullets_render$qv
 		push	((50 shl 4) shl 16) or (35 shl 4)
 		push	((45 shl 4) shl 16) or (50 shl 4)
-		call	select_for_playchar
+		call	@select_for_playchar$qiiii
 		mov	_boss_hitbox_radius.x, ax
 		mov	fp_2CE4A, offset sub_1DA1C
 
@@ -20635,7 +20634,7 @@ loc_1E522:
 loc_1E527:
 		call	@b6balls_update$qv
 		call	@cheetos_update$qv
-		call	hud_hp_update_and_render pascal, _boss_hp, 22800
+		call	@hud_hp_update_and_render$qii pascal, _boss_hp, 22800
 		pop	di
 		pop	si
 		pop	bp
@@ -20915,8 +20914,8 @@ sub_1E6A6	endp
 
 ; Attributes: bp-based frame
 
-public MIDBOSSX_UPDATE
-midbossx_update	proc far
+public @MIDBOSSX_UPDATE$QV
+@midbossx_update$qv	proc far
 		push	bp
 		mov	bp, sp
 		mov	eax, _midboss_pos.cur
@@ -21019,20 +21018,20 @@ loc_1E82B:
 
 loc_1E855:
 		call	@midboss_defeat_update$qv
-		call	hud_hp_update_and_render pascal, _midboss_hp, 3000
+		call	@hud_hp_update_and_render$qii pascal, _midboss_hp, 3000
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 
 loc_1E864:
-		call	hud_hp_update_and_render pascal, _midboss_hp, 3000
+		call	@hud_hp_update_and_render$qii pascal, _midboss_hp, 3000
 		mov	ax, _midboss_pos.cur.x
 		mov	_homing_target.x, ax
 		mov	ax, _midboss_pos.cur.y
 		mov	_homing_target.y, ax
 		pop	bp
 		retf
-midbossx_update	endp
+@midbossx_update$qv	endp
 
 	@FIREWAVES_ADD$QIUC procdesc pascal near \
 		amp:word, is_right:byte
@@ -21268,7 +21267,7 @@ loc_1EAA9:
 		add	ax, _bullet_template.BT_origin.y
 		sub	ax, (32 shl 4)
 		mov	point_2CE52.y, ax
-		call	player_angle_from pascal, point_2CE52.x, ax, 0
+		call	@player_angle_from$q20%SubpixelBase$ti$ti%t1uc pascal, point_2CE52.x, ax, 0
 		mov	angle_2D085, al
 
 loc_1EAE3:
@@ -21517,7 +21516,7 @@ sub_1ECD4	proc near
 		jge	short loc_1ED67
 		or	di, di
 		jnz	short loc_1ED46
-		call	player_angle_from pascal, _laser_template.coords.origin.x, _laser_template.coords.origin.y, 30h
+		call	@player_angle_from$q20%SubpixelBase$ti$ti%t1uc pascal, _laser_template.coords.origin.x, _laser_template.coords.origin.y, 30h
 		mov	_laser_template.coords.angle, al
 		mov	ax, word_22870
 		inc	word_22870
@@ -21536,7 +21535,7 @@ sub_1ECD4	proc near
 loc_1ED46:
 		cmp	di, 8
 		jnz	short loc_1ED67
-		call	player_angle_from pascal, _laser_template.coords.origin.x, _laser_template.coords.origin.y, (-30h and 255)
+		call	@player_angle_from$q20%SubpixelBase$ti$ti%t1uc pascal, _laser_template.coords.origin.x, _laser_template.coords.origin.y, (-30h and 255)
 		mov	_laser_template.coords.angle, al
 		mov	ax, word_22870
 		inc	word_22870
@@ -21767,7 +21766,7 @@ loc_1EF54:
 		push	(-20h and 255)
 
 loc_1EF5F:
-		call	player_angle_from
+		call	@player_angle_from$q20%SubpixelBase$ti$ti%t1uc
 		mov	cheeto_template.CBTMPL_angle, al
 		call	@cheetos_add$qv
 		call	snd_se_play pascal, 15
@@ -21821,7 +21820,7 @@ loc_1EFB4:
 		push	(-40h and 255)
 
 loc_1EFBF:
-		call	player_angle_from
+		call	@player_angle_from$q20%SubpixelBase$ti$ti%t1uc
 		mov	cheeto_template.CBTMPL_angle, al
 		call	@cheetos_add$qv
 		call	snd_se_play pascal, 15
@@ -22460,7 +22459,7 @@ loc_1F660:
 loc_1F666:
 		call	@cheetos_update$qv
 		call	@firewaves_update$qv
-		call	hud_hp_update_and_render pascal, _boss_hp, 26500
+		call	@hud_hp_update_and_render$qii pascal, _boss_hp, 26500
 		pop	si
 		pop	bp
 		retf
@@ -22565,7 +22564,7 @@ loc_1F72E:
 		inc	_midboss_sprite
 
 loc_1F732:
-		call	player_angle_from pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, 0
+		call	@player_angle_from$q20%SubpixelBase$ti$ti%t1uc pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, 0
 		mov	_bullet_template.BT_angle, al
 		pop	bp
 		retn
@@ -22722,8 +22721,8 @@ sub_1F823	endp
 
 ; Attributes: bp-based frame
 
-public MIDBOSS5_UPDATE
-midboss5_update	proc far
+public @MIDBOSS5_UPDATE$QV
+@midboss5_update$qv	proc far
 		push	bp
 		mov	bp, sp
 		mov	eax, _midboss_pos.cur
@@ -22814,20 +22813,20 @@ loc_1F968:
 
 loc_1F992:
 		call	@midboss_defeat_update$qv
-		call	hud_hp_update_and_render pascal, _midboss_hp, 1550
+		call	@hud_hp_update_and_render$qii pascal, _midboss_hp, 1550
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 
 loc_1F9A1:
-		call	hud_hp_update_and_render pascal, _midboss_hp, 1550
+		call	@hud_hp_update_and_render$qii pascal, _midboss_hp, 1550
 		mov	ax, _midboss_pos.cur.x
 		mov	_homing_target.x, ax
 		mov	ax, _midboss_pos.cur.y
 		mov	_homing_target.y, ax
 		pop	bp
 		retf
-midboss5_update	endp
+@midboss5_update$qv	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
