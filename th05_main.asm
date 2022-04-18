@@ -19185,92 +19185,10 @@ BOSS_6_TEXT	segment	byte public 'CODE' use16
 	@pattern_random_rain_and_spreads_$qv procdesc near
 	@pattern_cheetos_within_spread_wa$qv procdesc near
 	@pattern_wings_to_purple$qv	procdesc near
+	@pattern_aimed_b6balls_and_symmet$qv procdesc near
 BOSS_6_TEXT	ends
 
 BOSS_X_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1DC2F	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		cmp	_boss_phase_frame, 128
-		jle	loc_1DCFD
-		cmp	_boss_phase_frame, 129
-		jnz	short loc_1DC59
-		push	(60h shl 16) or 20h
-		push	(1Ch shl 16) or 18h
-		call	select_for_rank
-		mov	_boss_statebyte[15], al
-
-loc_1DC59:
-		mov	ax, _boss_phase_frame
-		mov	bx, 128
-		cwd
-		idiv	bx
-		mov	si, dx
-		mov	al, _boss_statebyte[15]
-		mov	ah, 0
-		push	ax
-		mov	ax, _boss_phase_frame
-		cwd
-		pop	bx
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_1DC93
-		call	@player_angle_from$q20%SubpixelBase$ti$ti%t1uc pascal, b6ball_template.pos.cur.x, b6ball_template.pos.cur.y, 0
-		mov	b6ball_template.B6B_angle, al
-		mov	b6ball_template.B6B_speed, (4 shl 4)
-		mov	b6ball_template.B6B_patnum_tiny, PAT_B6BALL_PURPLE
-		call	@b6balls_add$qv
-
-loc_1DC93:
-		mov	ax, _boss_phase_frame
-		mov	bx, 4
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_1DCFD
-		sub	_bullet_template.BT_origin.x, (128 shl 4)
-		mov	_bullet_template.BT_group, BG_SPREAD
-		mov	_bullet_template.BT_special_motion, BSM_EXACT_LINEAR
-		mov	word ptr _bullet_template.spread, (2 shl 8) or 3
-		mov	_bullet_template.spawn_type, BST_CLOUD_FORWARDS or BST_NO_SLOWDOWN
-		mov	_bullet_template.speed, (2 shl 4) + 8
-		mov	_bullet_template.patnum, PAT_BULLET16_V_RED
-		cmp	si, 64
-		jge	short loc_1DCD4
-		mov	ax, si
-		imul	ax, 3
-		mov	_bullet_template.BT_angle, al
-		jmp	short loc_1DCE1
-; ---------------------------------------------------------------------------
-
-loc_1DCD4:
-		mov	ax, si
-		imul	ax, 3
-		mov	dl, 64
-		sub	dl, al
-		mov	_bullet_template.BT_angle, dl
-
-loc_1DCE1:
-		call	_bullets_add_special
-		mov	al, 80h
-		sub	al, _bullet_template.BT_angle
-		mov	_bullet_template.BT_angle, al
-		add	_bullet_template.BT_origin.x, (256 shl 4)
-		call	_bullets_add_special
-		call	snd_se_play pascal, 15
-
-loc_1DCFD:
-		pop	si
-		pop	bp
-		retn
-sub_1DC2F	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -19916,7 +19834,7 @@ loc_1E3E7:
 		jz	loc_1E527
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
-		mov	fp_2CE4A, offset sub_1DC2F
+		mov	fp_2CE4A, offset @pattern_aimed_b6balls_and_symmet$qv
 		jmp	loc_1E36F
 ; ---------------------------------------------------------------------------
 

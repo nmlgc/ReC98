@@ -24,6 +24,7 @@ extern "C" {
 #include "th05/main/bullet/cheeto.hpp"
 #include "th05/main/bullet/laser.hpp"
 #include "th05/main/boss/boss.hpp"
+#include "th05/main/player/player.hpp"
 #include "th05/sprites/main_pat.h"
 
 // Constants
@@ -380,4 +381,48 @@ bool near pattern_wings_to_purple(void)
 		playfield_shake_anim_time = 8;
 	}
 	return (boss.phase_frame == 200);
+}
+
+void near pattern_aimed_b6balls_and_symmetric_spreads(void)
+{
+	#define b6ball_interval boss_statebyte[15]
+
+	if(boss.phase_frame <= 128) {
+		return;
+	}
+	if(boss.phase_frame == 129) {
+		b6ball_interval = select_for_rank(96, 32, 28, 24);
+	}
+
+	int spread_cycle = (boss.phase_frame % (0x40 * 2));
+
+	if((boss.phase_frame % b6ball_interval) == 0) {
+		b6ball_template.angle = player_angle_from(b6ball_template.origin);
+		b6ball_template.speed.set(4.0f);
+		b6ball_template.patnum_tiny = PAT_B6BALL_PURPLE;
+		b6balls_add();
+	}
+	if((boss.phase_frame % 4) == 0) {
+		bullet_template.origin.x -= (SHINKI_WING_W / 2);
+		bullet_template.group = BG_SPREAD;
+		bullet_template.special_motion = BSM_EXACT_LINEAR;
+		bullet_template.set_spread(3, 0x02);
+		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_SLOWDOWN);
+		bullet_template.speed.set(2.5f);
+		bullet_template.patnum = PAT_BULLET16_V_RED;
+		if(spread_cycle < 0x40) {
+			bullet_template.angle = (spread_cycle * 3);
+		} else {
+			bullet_template.angle = (0x40 - (spread_cycle * 3));
+		}
+		bullets_add_special();
+
+		bullet_template.angle = (0x80 - bullet_template.angle);
+		bullet_template.origin.x += SHINKI_WING_W;
+		bullets_add_special();
+
+		snd_se_play(15);
+	}
+
+	#undef b6ball_interval
 }
