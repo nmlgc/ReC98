@@ -138,7 +138,7 @@ b6ball_t struc
 	B6B_patnum_tiny	dw ?
 		dw ?
 		dw ?
-	B6B_speed	db ?
+		db ?
 		db ?
 b6ball_t ends
 
