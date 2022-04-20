@@ -634,3 +634,83 @@ void near pattern_devil(void)
 	#undef laser_angle_inner
 	#undef laser_direction
 }
+
+void near pattern_circles_and_alternating_spirals(void)
+{
+	#define pellet_angle	 boss_statebyte[14]
+	#define red_angle   	 boss_statebyte[15]
+
+	int frame_in_cycle;
+
+	if(boss.phase_frame < 128) {
+		return;
+	}
+	if(boss.phase_frame == 128) {
+		b6ball_template.angle = 0x00;
+		red_angle = 0x00;
+		pellet_angle = 0x00;
+	}
+	if((boss.phase_frame % 8) == 0) {
+		// Still assumed to be set to this value from pattern_devil().
+		// MODDERS: Uncomment.
+		// b6ball_template.speed.set(3.75f);
+		b6ball_template.patnum_tiny = PAT_B6BALL_BLUE_1;
+		vector2_at(
+			b6ball_template.origin,
+			boss.pos.cur.x,
+			boss.pos.cur.y,
+			to_sp(BOSS_W),
+			b6ball_template.angle
+		);
+		b6balls_add();
+
+		b6ball_template.angle += 0x80;
+		vector2_at(
+			b6ball_template.origin,
+			boss.pos.cur.x,
+			boss.pos.cur.y,
+			to_sp(BOSS_W),
+			b6ball_template.angle
+		);
+		b6balls_add();
+
+		b6ball_template.angle -= 0x78;
+		snd_se_play(3);
+	}
+	if(boss.phase_frame >= 256) {
+		frame_in_cycle = (boss.phase_frame % 256);
+		if(((boss.phase_frame % 8) == 0) && (frame_in_cycle < 128)) {
+			bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_SLOWDOWN);
+			bullet_template.group = BG_RING;
+			bullet_template.angle = red_angle;
+			bullet_template.patnum = PAT_BULLET16_V_RED;
+			bullet_template.speed.set(2.0f);
+			bullet_template.spread = 12;
+			bullets_add_regular();
+
+			red_angle -= 0x02;
+		}
+		if(boss.phase_frame >= 512) {
+			if(((boss.phase_frame % 8) == 0) && (frame_in_cycle >= 128)) {
+				bullet_template.spawn_type = (
+					BST_CLOUD_FORWARDS | BST_NO_SLOWDOWN
+				);
+				bullet_template.group = BG_RING;
+				bullet_template.angle = pellet_angle;
+				bullet_template.patnum = 0;
+				bullet_template.speed.set(2.0f);
+				bullet_template.spread = 12;
+				bullets_add_regular();
+
+				pellet_angle += 0x04;
+			}
+		}
+	}
+	if(boss.phase_frame >= 720) {
+		frame_in_cycle = ((boss.phase_frame - 720) % 128);
+		boss_flystep_random(frame_in_cycle - 96);
+	}
+
+	#undef red_angle
+	#undef pellet_angle
+}

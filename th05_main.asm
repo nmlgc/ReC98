@@ -19174,7 +19174,6 @@ off_1D524	dw offset loc_1D29C
 main_035_TEXT	ends
 
 BOSS_6_TEXT	segment	byte public 'CODE' use16
-	@b6balls_add$qv procdesc near
 	@b6balls_update$qv procdesc near
 	@pattern_curved_rings$qv procdesc near
 	@pattern_dualspeed_rings$qv procdesc near
@@ -19187,128 +19186,10 @@ BOSS_6_TEXT	segment	byte public 'CODE' use16
 	@pattern_wings_to_purple$qv	procdesc near
 	@pattern_aimed_b6balls_and_symmet$qv procdesc near
 	@pattern_devil$qv procdesc near
+	@pattern_circles_and_alternating_$qv procdesc near
 BOSS_6_TEXT	ends
 
 BOSS_X_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1E022	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		cmp	_boss_phase_frame, 128
-		jl	loc_1E15A
-		cmp	_boss_phase_frame, 128
-		jnz	short loc_1E047
-		mov	b6ball_template.B6B_angle, 0
-		mov	_boss_statebyte[15], 0
-		mov	_boss_statebyte[14], 0
-
-loc_1E047:
-		mov	ax, _boss_phase_frame
-		mov	bx, 8
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_1E0A6
-		mov	b6ball_template.B6B_patnum_tiny, PAT_B6BALL_BLUE_1
-		push	offset b6ball_template.pos.cur
-		push	_boss_pos.cur.x
-		push	_boss_pos.cur.y
-		push	(64 shl 4)
-		mov	al, b6ball_template.B6B_angle
-		mov	ah, 0
-		push	ax
-		call	vector2_at
-		call	@b6balls_add$qv
-		mov	al, b6ball_template.B6B_angle
-		add	al, 80h
-		mov	b6ball_template.B6B_angle, al
-		push	offset b6ball_template.pos.cur
-		push	_boss_pos.cur.x
-		push	_boss_pos.cur.y
-		push	(64 shl 4)
-		mov	ah, 0
-		push	ax
-		call	vector2_at
-		call	@b6balls_add$qv
-		mov	al, b6ball_template.B6B_angle
-		add	al, -78h
-		mov	b6ball_template.B6B_angle, al
-		call	snd_se_play pascal, 3
-
-loc_1E0A6:
-		cmp	_boss_phase_frame, 256
-		jl	loc_1E13D
-		mov	ax, _boss_phase_frame
-		mov	bx, 256
-		cwd
-		idiv	bx
-		mov	si, dx
-		mov	ax, _boss_phase_frame
-		mov	bx, 8
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_1E0F8
-		cmp	si, 80h
-		jge	short loc_1E0F8
-		mov	_bullet_template.spawn_type, BST_CLOUD_FORWARDS or BST_NO_SLOWDOWN
-		mov	_bullet_template.BT_group, BG_RING
-		mov	al, _boss_statebyte[15]
-		mov	_bullet_template.BT_angle, al
-		mov	_bullet_template.patnum, PAT_BULLET16_V_RED
-		mov	_bullet_template.speed, (2 shl 4)
-		mov	_bullet_template.spread, 12
-		call	_bullets_add_regular
-		mov	al, _boss_statebyte[15]
-		add	al, -2
-		mov	_boss_statebyte[15], al
-
-loc_1E0F8:
-		cmp	_boss_phase_frame, 512
-		jl	short loc_1E13D
-		mov	ax, _boss_phase_frame
-		mov	bx, 8
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_1E13D
-		cmp	si, 80h
-		jl	short loc_1E13D
-		mov	_bullet_template.spawn_type, BST_CLOUD_FORWARDS or BST_NO_SLOWDOWN
-		mov	_bullet_template.BT_group, BG_RING
-		mov	al, _boss_statebyte[14]
-		mov	_bullet_template.BT_angle, al
-		mov	_bullet_template.patnum, 0
-		mov	_bullet_template.speed, (2 shl 4)
-		mov	_bullet_template.spread, 12
-		call	_bullets_add_regular
-		mov	al, _boss_statebyte[14]
-		add	al, 4
-		mov	_boss_statebyte[14], al
-
-loc_1E13D:
-		cmp	_boss_phase_frame, 720
-		jl	short loc_1E15A
-		mov	ax, _boss_phase_frame
-		add	ax, -720
-		mov	bx, 128
-		cwd
-		idiv	bx
-		mov	si, dx
-		lea	ax, [si-96]
-		call	@boss_flystep_random$qi pascal, ax
-
-loc_1E15A:
-		pop	si
-		pop	bp
-		retn
-sub_1E022	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -19660,7 +19541,7 @@ loc_1E4CB:
 ; ---------------------------------------------------------------------------
 
 loc_1E4F9:
-		call	sub_1E022
+		call	@pattern_circles_and_alternating_$qv
 		cmp	_boss_phase_frame, 3000
 		jge	short loc_1E510
 		call	@boss_hittest_shots$qv

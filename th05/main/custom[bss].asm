@@ -131,7 +131,7 @@ B6BALL_H = 32
 
 b6ball_t struc
 	flag	db ?
-	B6B_angle	db ?
+		db ?
 	pos	motion_t <?>
 		dw ?
 	cloud_radius	dw ?
