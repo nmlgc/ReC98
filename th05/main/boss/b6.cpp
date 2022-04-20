@@ -714,3 +714,27 @@ void near pattern_circles_and_alternating_spirals(void)
 	#undef red_angle
 	#undef pellet_angle
 }
+
+void near shinki_move_float(void)
+{
+	#define float_direction shinki_float_direction
+	extern bool float_direction;
+
+	if(stage_frame_mod4 != 0) {
+		return;
+	}
+	if(float_direction == 0) {
+		boss.pos.velocity.y += 0.0625f;
+		if(boss.pos.velocity.y.v >= to_sp(1.0f)) {
+			float_direction++;
+		}
+	} else {
+		boss.pos.velocity.y -= 0.0625f;
+		if(boss.pos.velocity.y.v <= to_sp(-1.0f)) {
+			float_direction--;
+		}
+	}
+	boss.pos.cur.y.v += boss.pos.velocity.y.v;
+
+	#undef float_direction
+}

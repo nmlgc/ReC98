@@ -19187,43 +19187,10 @@ BOSS_6_TEXT	segment	byte public 'CODE' use16
 	@pattern_aimed_b6balls_and_symmet$qv procdesc near
 	@pattern_devil$qv procdesc near
 	@pattern_circles_and_alternating_$qv procdesc near
+	@shinki_move_float$qv procdesc near
 BOSS_6_TEXT	ends
 
 BOSS_X_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1E15D	proc near
-		push	bp
-		mov	bp, sp
-		cmp	_stage_frame_mod4, 0
-		jnz	short loc_1E195
-		cmp	byte_22854, 0
-		jnz	short loc_1E17F
-		inc	_boss_pos.velocity.y
-		cmp	_boss_pos.velocity.y, (1 shl 4)
-		jl	short loc_1E18E
-		inc	byte_22854
-		jmp	short loc_1E18E
-; ---------------------------------------------------------------------------
-
-loc_1E17F:
-		dec	_boss_pos.velocity.y
-		cmp	_boss_pos.velocity.y, (-1 shl 4)
-		jg	short loc_1E18E
-		dec	byte_22854
-
-loc_1E18E:
-		mov	ax, _boss_pos.velocity.y
-		add	_boss_pos.cur.y, ax
-
-loc_1E195:
-		pop	bp
-		retn
-sub_1E15D	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -19405,7 +19372,7 @@ loc_1E389:
 		mov	_palette_changed, 1
 
 loc_1E38E:
-		call	sub_1E15D
+		call	@shinki_move_float$qv
 		call	fp_2CE4A
 		cmp	_boss_phase_frame, 3000
 		jge	short loc_1E3AB
@@ -19468,7 +19435,7 @@ loc_1E42C:
 		mov	_palette_changed, 1
 
 loc_1E431:
-		call	sub_1E15D
+		call	@shinki_move_float$qv
 		call	fp_2CE4A
 		cmp	_boss_phase_frame, 3000
 		jge	short loc_1E465
@@ -22112,10 +22079,10 @@ off_2284A	dw offset @pattern_curved_rings$qv
 		dw offset @pattern_dualspeed_rings$qv
 		dw offset @pattern_random_directional_and_k$qv
 		dw offset @pattern_dense_blue_stacks$qv
-public _shinki_devil_laser_grow_delay
+public _shinki_devil_laser_grow_delay, _shinki_float_direction
 _shinki_devil_laser_grow_delay	dw 0
-byte_22854	db 0
-		db 0
+_shinki_float_direction	db 0
+	evendata
 word_22856	dw 0
 byte_22858	db 0
 byte_22859	db 0
