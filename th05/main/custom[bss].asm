@@ -53,7 +53,7 @@ cheeto_template_t struc
 		db ?
 	CBTMPL_angle	db ?
 	pos	motion_t <?>
-	CBTMPL_age	dw ?
+		dw ?
 		dw ?
 	CBTMPL_col	dw ?
 		dd ?
@@ -133,10 +133,10 @@ b6ball_t struc
 	flag	db ?
 	B6B_angle	db ?
 	pos	motion_t <?>
-	B6B_age	dw ?
+		dw ?
 	cloud_radius	dw ?
 	B6B_patnum_tiny	dw ?
-	B6B_decay_frames	dw ?
+		dw ?
 		dw ?
 	B6B_speed	db ?
 		db ?

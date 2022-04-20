@@ -13,15 +13,13 @@ enum cheeto_flag_t {
 
 // Defines the [col] instead of the (automatically calculated) [sprite].
 typedef struct {
-	cheeto_flag_t flag;
+	/* -------------------- */ int8_t _unused_1;
 	unsigned char angle;
-	PlayfieldMotion pos;
-	unsigned int age; // unused and broken, because it's never reset
-	int16_t unused_2;
+	PlayfieldPoint origin;
+	/* -------------------- */ int16_t _unused_2[6];
 	int col;
-	int32_t unused_3;
+	/* -------------------- */ int32_t _unused_3;
 	SubpixelLength8 speed;
-	int8_t padding;
 } cheeto_template_t;
 
 typedef struct {
@@ -58,6 +56,9 @@ extern cheeto_trail_t cheeto_trails[CHEETO_COUNT + 1];
 // coordinate! [top] must therefore be between 0 and (RES_Y - 1).
 void __fastcall near cheeto_put(uscreen_x_t left, uscreen_y_t top, int sprite);
 
-void near cheetos_add();
+// Spawns a new cheeto bullet according to the [cheeto_template]. Reads all
+// non-unused fields of the cheeto_template_t structure.
+void near cheetos_add(void);
+
 void near cheetos_update();
 void pascal near cheetos_render();

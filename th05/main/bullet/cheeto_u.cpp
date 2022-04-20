@@ -43,10 +43,10 @@ void near cheetos_add(void)
 		vector2_near(head_p->pos.velocity, head_p->angle, head_p->speed);
 		trail_p->col = cheeto_template.col;
 		head_p->sprite = bullet_patnum_for_angle(0, head_p->angle);
-		head_p->pos.cur = cheeto_template.pos.cur;
+		head_p->pos.cur = cheeto_template.origin;
 
 		for(node_i = 0; node_i < CHEETO_TRAIL_NODE_COUNT; node_i++) {
-			trail_p->node_pos[node_i] = cheeto_template.pos.cur;
+			trail_p->node_pos[node_i] = cheeto_template.origin;
 			trail_p->node_sprite[node_i] = head_p->sprite;
 		}
 		return;

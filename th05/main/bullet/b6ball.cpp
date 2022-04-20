@@ -28,7 +28,7 @@ void near b6balls_add(void)
 			continue;
 		}
 		p->flag = B6BF_CLOUD;
-		p->pos.cur = b6ball_template.pos.cur;
+		p->pos.cur = b6ball_template.origin;
 		vector2_near(p->pos.velocity, b6ball_template.angle, speed);
 		p->patnum_tiny = b6ball_template.patnum_tiny;
 		p->cloud_radius.set(48.0f);
