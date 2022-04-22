@@ -212,7 +212,7 @@ void pascal near boss_phase_next(
 	boss.phase++;
 	boss.phase_frame = 0;
 	boss.mode = 0;
-	boss.mode_change = 0;
+	boss.phase_state.patterns_seen = 0;
 	boss.hp = boss.phase_end_hp;
 	boss.phase_end_hp = next_end_hp;
 }

@@ -23,7 +23,13 @@ typedef struct {
 	unsigned char mode;
 	// Used for both movement and bullet angles.
 	unsigned char angle;
-	unsigned char mode_change;
+	union {
+		// Most common interpretation during regular phases.
+		unsigned char patterns_seen;
+
+		// Hardcoded interpretation during the defeat phases.
+		bool defeat_bonus;
+	} phase_state;
 	int phase_end_hp;
 } boss_stuff_t;
 
@@ -140,8 +146,9 @@ void explosions_small_reset(void);
 void near boss_items_drop();
 
 // Shows a small explosion with the given type, clears any bullets if the
-// current phase wasn't timed out, and starts the next one, which will end upon
-// reaching the given amount of HP.
+// current phase wasn't timed out, and starts the next regular non-defeat
+// phase, which will end upon reaching the given amount of HP. Does *not* reset
+// [boss.phase_frame]!
 void pascal near boss_phase_next(
 	explosion_type_t explosion_type, int next_end_hp
 );
@@ -181,18 +188,24 @@ void pascal near boss_phase_next(
 #define boss_defeat_explode_big(type, bonus_units) { \
 	boss_explode_big(type); \
 	boss_phase_explode_big(); \
-	bullet_zap.active = boss.mode_change; \
-	if(boss.mode_change) { \
+	bullet_zap.active = boss.phase_state.defeat_bonus; \
+	if(boss.phase_state.defeat_bonus) { \
 		boss_score_bonus(bonus_units); \
 	} \
 	boss.sprite = PAT_ENEMY_KILL; \
 	boss.phase_frame = 0; \
 }
 
-// Runs a frame of the boss defeat sequence. TH04's version also:
-// • initializes Gengetsu at the end of the last defeat phase during the first
+// Runs a frame of the boss defeat sequence.
+//
+// TH04 specialties:
+// • Initializes Gengetsu at the end of the last defeat phase during the first
 //   time it's shown on the Extra stage,
-// • and takes ownership of [boss.phase_frame], incrementing it on every call.
+// • Takes ownership of [boss.phase_frame], incrementing it on every call.
+//
+// TH05 specialties:
+// • Grants the given amount of score [bonus_units] during BDF_BIG if
+//   [boss.phase_state.defeat_bonus] is `true`.
 #if (GAME == 5)
 	void pascal near boss_defeat_update(unsigned int bonus_units);
 #else

@@ -16201,7 +16201,7 @@ loc_166A0:
 		jl	loc_169B8
 		inc	_boss_phase
 		mov	_boss_pos.velocity.x, 0
-		mov	_boss_mode_change, 0
+		mov	_boss_phase_state, 0
 		mov	_boss_mode, 0
 		mov	_boss_hp, 9000
 		mov	_boss_phase_end_hp, 7900
@@ -16241,8 +16241,8 @@ loc_166FE:
 
 loc_16703:
 		mov	_boss_phase_frame, 0	; jumptable 000166F5 case 254
-		inc	_boss_mode_change
-		mov	al, _boss_mode_change
+		inc	_boss_phase_state
+		mov	al, _boss_phase_state
 		mov	ah, 0
 		mov	bx, 2
 		cwd
@@ -16258,7 +16258,7 @@ loc_1671E:
 loc_16723:
 		cmp	byte_25667, 0	; default
 		jnz	short loc_16766
-		cmp	_boss_mode_change, 4
+		cmp	_boss_phase_state, 4
 		jnb	short loc_16742
 		call	@boss_hittest_shots$qv
 		or	al, al
@@ -16293,7 +16293,7 @@ loc_1676D:
 		jz	loc_169B8
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode_change, 0
+		mov	_boss_phase_state, 0
 		mov	_boss_mode, 0
 		jmp	loc_169B8
 ; ---------------------------------------------------------------------------
@@ -16317,7 +16317,7 @@ loc_167BB:
 		call	@boss_explode_small$q16explosion_type_t pascal, ET_NW_SE
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode_change, 0
+		mov	_boss_phase_state, 0
 		mov	_boss_mode, 0
 		mov	ax, _boss_phase_end_hp
 		mov	_boss_hp, ax
@@ -16363,8 +16363,8 @@ loc_16819:
 
 loc_1681E:
 		mov	_boss_phase_frame, 0	; jumptable 00016810 case 254
-		inc	_boss_mode_change
-		mov	al, _boss_mode_change
+		inc	_boss_phase_state
+		mov	al, _boss_phase_state
 		mov	ah, 0
 		mov	bx, 2
 		cwd
@@ -16380,7 +16380,7 @@ loc_16839:
 loc_1683E:
 		cmp	byte_25667, 0	; default
 		jnz	short loc_1687B
-		cmp	_boss_mode_change, 4
+		cmp	_boss_phase_state, 4
 		jnb	short loc_1685D
 		call	@boss_hittest_shots$qv
 		or	al, al
@@ -16414,7 +16414,7 @@ loc_16882:
 		jz	loc_169B8
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode_change, 0
+		mov	_boss_phase_state, 0
 		mov	_boss_mode, 0
 		jmp	loc_169B8
 ; ---------------------------------------------------------------------------
@@ -16448,7 +16448,7 @@ loc_168F6:
 
 loc_168FC:
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode_change, 0
+		mov	_boss_phase_state, 0
 
 loc_16907:
 		mov	_boss_mode, 0
@@ -16470,12 +16470,12 @@ loc_1692E:
 		inc	_boss_phase
 		cmp	_boss_phase_frame, 1000
 		jge	short loc_16946
-		mov	_boss_mode_change, 1
+		mov	_boss_phase_state, 1
 		jmp	short loc_1694B
 ; ---------------------------------------------------------------------------
 
 loc_16946:
-		mov	_boss_mode_change, 0
+		mov	_boss_phase_state, 0
 
 loc_1694B:
 		mov	_boss_phase_frame, 0
@@ -16493,9 +16493,9 @@ loc_16963:
 		jnz	short loc_169B8
 		call	@boss_explode_big$qui pascal, ET_SW_NE
 		mov	_boss_phase, PHASE_EXPLODE_BIG
-		mov	al, _boss_mode_change
+		mov	al, _boss_phase_state
 		mov	_bullet_zap_active, al
-		cmp	_boss_mode_change, 0
+		cmp	_boss_phase_state, 0
 		jz	short loc_16986
 		call	@boss_score_bonus$qui pascal, 60
 
@@ -18401,7 +18401,7 @@ loc_17A75:
 		jl	loc_17CA4
 		inc	_boss_phase
 		mov	_boss_pos.velocity.x, 0
-		mov	_boss_mode_change, 0
+		mov	_boss_phase_state, 0
 		mov	_boss_mode, 0Ah
 		mov	_boss_phase_frame, 0
 		mov	_boss_sprite, 129
@@ -18486,7 +18486,7 @@ loc_17B1E:
 		call	marisa_16AE9	; jumptable 00017ADF case 255
 		cmp	_boss_phase_frame, 64
 		jl	short loc_17B98	; default
-		inc	_boss_mode_change
+		inc	_boss_phase_state
 		mov	_boss_statebyte[13].BSB_flystep_pointreflected_frame, 0
 		cmp	byte_2566F, 0
 		jnz	short loc_17B62
@@ -18525,9 +18525,9 @@ loc_17B62:
 
 loc_17B84:
 		mov	_boss_phase_frame, 0
-		cmp	_boss_mode_change, 52
+		cmp	_boss_phase_state, 52
 		jb	short loc_17B98	; default
-		mov	_boss_mode_change, 0
+		mov	_boss_phase_state, 0
 		jmp	short loc_17BA4
 ; ---------------------------------------------------------------------------
 
@@ -18535,7 +18535,7 @@ loc_17B98:
 		call	marisa_179BC	; default
 		or	al, al
 		jz	short loc_17BB3
-		mov	_boss_mode_change, 1
+		mov	_boss_phase_state, 1
 
 loc_17BA4:
 		call	@boss_explode_small$q16explosion_type_t pascal, ET_HORIZONTAL
@@ -18611,9 +18611,9 @@ loc_17C54:
 		jnz	short loc_17CA4
 		call	@boss_explode_big$qui pascal, ET_SW_NE
 		mov	_boss_phase, PHASE_EXPLODE_BIG
-		mov	al, _boss_mode_change
+		mov	al, _boss_phase_state
 		mov	_bullet_zap_active, al
-		cmp	_boss_mode_change, 0
+		cmp	_boss_phase_state, 0
 		jz	short loc_17C77
 		call	@boss_score_bonus$qui pascal, 40
 
@@ -19969,7 +19969,7 @@ loc_18797:
 		jl	loc_189A1
 		inc	_boss_phase
 		mov	_boss_mode, 0
-		mov	_boss_mode_change, 2
+		mov	_boss_phase_state, 2
 		mov	_boss_phase_frame, 0
 		mov	_boss_pos.velocity.x, 0
 		mov	_mugetsu_phase2_mode, 0
@@ -20036,11 +20036,11 @@ loc_1881A:
 		push	5
 		call	randring2_next16_mod
 		mov	[bp+var_1], al
-		mov	al, _boss_mode_change
+		mov	al, _boss_phase_state
 		cmp	al, [bp+var_1]
 		jz	short loc_1881A
 		mov	al, [bp+var_1]
-		mov	_boss_mode_change, al
+		mov	_boss_phase_state, al
 		mov	ah, 0
 		shl	ax, 6
 		shl	ax, 4
@@ -20134,12 +20134,12 @@ loc_18915:
 		inc	_boss_phase
 		cmp	_boss_phase_frame, 4000
 		jge	short loc_1892D
-		mov	_boss_mode_change, 1
+		mov	_boss_phase_state, 1
 		jmp	short loc_18932
 ; ---------------------------------------------------------------------------
 
 loc_1892D:
-		mov	_boss_mode_change, 0
+		mov	_boss_phase_state, 0
 
 loc_18932:
 		mov	_boss_phase_frame, 0
@@ -20160,9 +20160,9 @@ loc_1895A:
 		jnz	short loc_189A1
 		call	@boss_explode_big$qui pascal, ET_SW_NE
 		mov	_boss_phase, PHASE_EXPLODE_BIG
-		mov	al, _boss_mode_change
+		mov	al, _boss_phase_state
 		mov	_bullet_zap_active, al
-		cmp	_boss_mode_change, 0
+		cmp	_boss_phase_state, 0
 		jz	short loc_1897E
 		call	@boss_score_bonus$qui pascal, 200
 
@@ -21194,8 +21194,8 @@ loc_19279:
 		call	randring2_next16_and
 		inc	al
 		mov	_boss_mode, al
-		inc	_boss_mode_change
-		cmp	_boss_mode_change, 10
+		inc	_boss_phase_state
+		cmp	_boss_phase_state, 10
 		ja	short loc_19317
 		mov	_bullet_template.spawn_type, BST_PELLET
 		mov	ax, _boss_pos.cur.x
@@ -21209,7 +21209,7 @@ loc_19279:
 		mov	_bullet_template.BT_angle, al
 		call	_bullet_template_tune
 		mov	_bullet_template.speed, (1 shl 4)
-		mov	al, _boss_mode_change
+		mov	al, _boss_phase_state
 		mov	ah, 0
 		mov	di, ax
 		cmp	di, 5
@@ -21315,8 +21315,8 @@ loc_19387:
 		call	randring2_next16_mod
 		inc	al
 		mov	_boss_mode, al
-		inc	_boss_mode_change
-		cmp	_boss_mode_change, 10
+		inc	_boss_phase_state
+		cmp	_boss_phase_state, 10
 		ja	short loc_19425
 		mov	_bullet_template.spawn_type, BST_PELLET
 		mov	ax, _boss_pos.cur.x
@@ -21330,7 +21330,7 @@ loc_19387:
 		mov	_bullet_template.BT_angle, al
 		call	_bullet_template_tune
 		mov	_bullet_template.speed, (1 shl 4)
-		mov	al, _boss_mode_change
+		mov	al, _boss_phase_state
 		mov	ah, 0
 		mov	di, ax
 		cmp	di, 5
@@ -21458,12 +21458,12 @@ loc_194D2:
 		call	@boss_explode_small$q16explosion_type_t pascal, ET_VERTICAL
 		cmp	_boss_phase_frame, 600
 		jge	short loc_194FB
-		mov	_boss_mode_change, 1
+		mov	_boss_phase_state, 1
 		jmp	short loc_19500
 ; ---------------------------------------------------------------------------
 
 loc_194FB:
-		mov	_boss_mode_change, 0
+		mov	_boss_phase_state, 0
 
 loc_19500:
 		mov	_boss_phase_frame, 0
@@ -21508,9 +21508,9 @@ loc_1955E:
 		jnz	short loc_195A9
 		call	@boss_explode_big$qui pascal, ET_CIRCLE
 		mov	_boss_phase, PHASE_EXPLODE_BIG
-		mov	al, _boss_mode_change
+		mov	al, _boss_phase_state
 		mov	_bullet_zap_active, al
-		cmp	_boss_mode_change, 0
+		cmp	_boss_phase_state, 0
 		jz	short loc_19581
 		call	@boss_score_bonus$qui pascal, 20
 
@@ -21656,8 +21656,8 @@ orange_19686	proc near
 		jnz	short loc_196C2
 		push	1
 		call	randring2_next16_and
-		mov	_boss_mode_change, al
-		cmp	_boss_mode_change, 0
+		mov	_boss_phase_state, al
+		cmp	_boss_phase_state, 0
 		jnz	short loc_196AD
 		mov	al, 0
 		jmp	short loc_196AF
@@ -21668,7 +21668,7 @@ loc_196AD:
 
 loc_196AF:
 		mov	_boss_angle, al
-		cmp	_boss_mode_change, 0
+		cmp	_boss_phase_state, 0
 		jnz	short loc_196BD
 		mov	al, 0Bh
 		jmp	short loc_196BF
@@ -21678,7 +21678,7 @@ loc_196BD:
 		mov	al, 0F5h
 
 loc_196BF:
-		mov	_boss_mode_change, al
+		mov	_boss_phase_state, al
 
 loc_196C2:
 		cmp	_stage_frame_mod2, 0
@@ -21699,7 +21699,7 @@ loc_196C2:
 		mov	_bullet_template.BT_angle, al
 		mov	_bullet_template.speed, (1 shl 4) + 4
 		call	_bullets_add_regular
-		mov	al, _boss_mode_change
+		mov	al, _boss_phase_state
 		add	_boss_angle, al
 		call	snd_se_play pascal, 9
 
@@ -22388,12 +22388,12 @@ loc_19D9E:
 loc_19DAF:
 		cmp	_boss_phase_frame, 600
 		jg	short loc_19DBE
-		mov	_boss_mode_change, 1
+		mov	_boss_phase_state, 1
 		jmp	short loc_19DC3
 ; ---------------------------------------------------------------------------
 
 loc_19DBE:
-		mov	_boss_mode_change, 0
+		mov	_boss_phase_state, 0
 
 loc_19DC3:
 		call	@boss_explode_small$q16explosion_type_t pascal, ET_HORIZONTAL
@@ -22441,9 +22441,9 @@ loc_19E3D:
 		jnz	short loc_19E8D
 		call	@boss_explode_big$qui pascal, ET_CIRCLE
 		mov	_boss_phase, PHASE_EXPLODE_BIG
-		mov	al, _boss_mode_change
+		mov	al, _boss_phase_state
 		mov	_bullet_zap_active, al
-		cmp	_boss_mode_change, 0
+		cmp	_boss_phase_state, 0
 		jz	short loc_19E60
 		call	@boss_score_bonus$qui pascal, 10
 
@@ -22922,7 +22922,7 @@ yuuka6_1A110	endp
 yuuka6_1A3C3	proc near
 		push	bp
 		mov	bp, sp
-		mov	al, _boss_mode_change
+		mov	al, _boss_phase_state
 		mov	ah, 0
 		mov	bx, 6
 		cwd
@@ -22942,7 +22942,7 @@ loc_1A3E5:
 		mov	al, byte_25A07
 		mov	ah, 0
 		imul	ax, 5
-		mov	dl, _boss_mode_change
+		mov	dl, _boss_phase_state
 		mov	dh, 0
 		mov	bx, 6
 		push	ax
@@ -22960,7 +22960,7 @@ loc_1A3E5:
 
 loc_1A40E:
 		mov	_boss_phase_frame, 0
-		inc	_boss_mode_change
+		inc	_boss_phase_state
 		mov	al, 1
 		pop	bp
 		retn
@@ -23036,7 +23036,7 @@ loc_1A470:
 
 loc_1A492:
 		mov	_boss_phase_frame, 0
-		inc	_boss_mode_change
+		inc	_boss_phase_state
 		mov	al, 1
 		jmp	short loc_1A4A2
 ; ---------------------------------------------------------------------------
@@ -24460,7 +24460,7 @@ loc_1B4EB:
 		jl	loc_1B8EA
 		inc	_boss_phase
 		mov	_boss_pos.velocity.x, 0
-		mov	_boss_mode_change, 0
+		mov	_boss_phase_state, 0
 		mov	_boss_mode, 0
 		mov	_boss_hp, 13300
 		mov	_boss_phase_end_hp, 10600
@@ -24511,13 +24511,13 @@ loc_1B563:
 		call	yuuka6_1A3C3	; jumptable 0001B550 case 255
 		or	al, al
 		jz	short loc_1B580	; default
-		mov	al, _boss_mode_change
+		mov	al, _boss_phase_state
 		mov	ah, 0
 		mov	bx, 3
 		cwd
 		idiv	bx
 		mov	_boss_mode, dl
-		cmp	_boss_mode_change, 10
+		cmp	_boss_phase_state, 10
 		jnb	short loc_1B59A
 
 loc_1B580:
@@ -24542,7 +24542,7 @@ loc_1B5A6:
 		jz	loc_1B8EA
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode_change, 0
+		mov	_boss_phase_state, 0
 		jmp	loc_1B8EA
 ; ---------------------------------------------------------------------------
 
@@ -24571,7 +24571,7 @@ loc_1B5E0:
 		or	al, al
 		jz	short loc_1B600
 		mov	_boss_mode, 0
-		cmp	_boss_mode_change, 10
+		cmp	_boss_phase_state, 10
 		jnb	short loc_1B623
 
 loc_1B600:
@@ -24631,7 +24631,7 @@ loc_1B694:
 		or	al, al
 		jz	loc_1B8EA
 		inc	_boss_phase
-		mov	_boss_mode_change, 0
+		mov	_boss_phase_state, 0
 		mov	_boss_mode, -1
 		mov	_boss_phase_frame, 0
 		mov	_yuuka6_anim_frame, 0
@@ -24694,7 +24694,7 @@ loc_1B710:
 		jz	short loc_1B710
 		mov	al, _boss_mode
 		mov	byte_25A02, al
-		cmp	_boss_mode_change, 10
+		cmp	_boss_phase_state, 10
 		jnb	short loc_1B75B
 
 loc_1B72E:
@@ -24749,7 +24749,7 @@ loc_1B78E:
 		or	al, al
 		jz	loc_1B8EA
 		inc	_boss_phase
-		mov	_boss_mode_change, 0
+		mov	_boss_phase_state, 0
 		mov	_boss_mode, 0
 		mov	_boss_phase_frame, 0
 		mov	_yuuka6_anim_frame, 0
@@ -24793,14 +24793,14 @@ loc_1B7EC:
 ; ---------------------------------------------------------------------------
 
 loc_1B7F1:
-		inc	_boss_mode_change	; jumptable 0001B7DE case 255
-		mov	al, _boss_mode_change
+		inc	_boss_phase_state	; jumptable 0001B7DE case 255
+		mov	al, _boss_phase_state
 		mov	ah, 0
 		mov	bx, 3
 		cwd
 		idiv	bx
 		mov	_boss_mode, dl
-		cmp	_boss_mode_change, 18
+		cmp	_boss_phase_state, 18
 		jnb	short loc_1B81C
 
 loc_1B80B:
@@ -24839,12 +24839,12 @@ loc_1B85F:
 		inc	_boss_phase
 		cmp	_boss_phase_frame, 2500
 		jge	short loc_1B877
-		mov	_boss_mode_change, 1
+		mov	_boss_phase_state, 1
 		jmp	short loc_1B87C
 ; ---------------------------------------------------------------------------
 
 loc_1B877:
-		mov	_boss_mode_change, 0
+		mov	_boss_phase_state, 0
 
 loc_1B87C:
 		mov	_boss_phase_frame, 0
@@ -24865,9 +24865,9 @@ loc_1B8A4:
 		jnz	short loc_1B8EA
 		call	@boss_explode_big$qui pascal, ET_SW_NE
 		mov	_boss_phase, PHASE_EXPLODE_BIG
-		mov	al, _boss_mode_change
+		mov	al, _boss_phase_state
 		mov	_bullet_zap_active, al
-		cmp	_boss_mode_change, 0
+		cmp	_boss_phase_state, 0
 		jz	short loc_1B8C7
 		call	@boss_score_bonus$qui pascal, 70
 
@@ -26066,9 +26066,9 @@ loc_1C343:
 loc_1C348:
 		cmp	_boss_phase_frame, 64
 		jg	short loc_1C37B
-		cmp	_boss_mode_change, 0
+		cmp	_boss_phase_state, 0
 		jz	short loc_1C35D
-		cmp	_boss_mode_change, 3
+		cmp	_boss_phase_state, 3
 		jnz	short loc_1C365
 
 loc_1C35D:
@@ -26077,9 +26077,9 @@ loc_1C35D:
 ; ---------------------------------------------------------------------------
 
 loc_1C365:
-		cmp	_boss_mode_change, 1
+		cmp	_boss_phase_state, 1
 		jz	short loc_1C373
-		cmp	_boss_mode_change, 2
+		cmp	_boss_phase_state, 2
 		jnz	short loc_1C39E
 
 loc_1C373:
@@ -26088,14 +26088,14 @@ loc_1C373:
 ; ---------------------------------------------------------------------------
 
 loc_1C37B:
-		cmp	_boss_mode_change, 3
+		cmp	_boss_phase_state, 3
 		jnb	short loc_1C388
-		inc	_boss_mode_change
+		inc	_boss_phase_state
 		jmp	short loc_1C38D
 ; ---------------------------------------------------------------------------
 
 loc_1C388:
-		mov	_boss_mode_change, 0
+		mov	_boss_phase_state, 0
 
 loc_1C38D:
 		mov	_boss_mode, 0
@@ -26229,7 +26229,7 @@ loc_1C4A9:
 ; ---------------------------------------------------------------------------
 
 loc_1C4BA:
-		inc	_boss_mode_change
+		inc	_boss_phase_state
 		mov	al, byte_25A24
 		mov	ah, 0
 		mov	bx, ax
@@ -26239,13 +26239,13 @@ loc_1C4BA:
 		jmp	cs:off_1C692[bx]
 
 loc_1C4D3:
-		mov	al, _boss_mode_change
+		mov	al, _boss_phase_state
 		mov	ah, 0
 		mov	bx, 2
 		cwd
 		idiv	bx
 		mov	_boss_mode, dl
-		cmp	_boss_mode_change, 8
+		cmp	_boss_phase_state, 8
 		jb	loc_1C57F
 
 loc_1C4EB:
@@ -26264,54 +26264,54 @@ loc_1C4EB:
 ; ---------------------------------------------------------------------------
 
 loc_1C511:
-		mov	al, _boss_mode_change
+		mov	al, _boss_phase_state
 		mov	ah, 0
 		mov	bx, 4
 		cwd
 		idiv	bx
 		mov	_boss_mode, dl
-		cmp	_boss_mode_change, 16
+		cmp	_boss_phase_state, 16
 		jb	short loc_1C57F
 		jmp	short loc_1C4EB
 ; ---------------------------------------------------------------------------
 
 loc_1C529:
-		mov	al, _boss_mode_change
+		mov	al, _boss_phase_state
 		mov	ah, 0
 		mov	bx, 4
 		cwd
 		idiv	bx
 		add	dl, 2
 		mov	_boss_mode, dl
-		cmp	_boss_mode_change, 24
+		cmp	_boss_phase_state, 24
 		jb	short loc_1C57F
 		jmp	short loc_1C4EB
 ; ---------------------------------------------------------------------------
 
 loc_1C544:
-		mov	al, _boss_mode_change
+		mov	al, _boss_phase_state
 		mov	ah, 0
 		mov	bx, 4
 		cwd
 		idiv	bx
 		add	dl, 4
 		mov	_boss_mode, dl
-		cmp	_boss_mode_change, 32
+		cmp	_boss_phase_state, 32
 		jb	short loc_1C57F
 		jmp	short loc_1C4EB
 ; ---------------------------------------------------------------------------
 
 loc_1C55F:
-		mov	al, _boss_mode_change
+		mov	al, _boss_phase_state
 		mov	ah, 0
 		mov	bx, 4
 		cwd
 		idiv	bx
 		add	dl, 5
 		mov	_boss_mode, dl
-		cmp	_boss_mode_change, 40
+		cmp	_boss_phase_state, 40
 		jb	short loc_1C57F
-		mov	_boss_mode_change, 0
+		mov	_boss_phase_state, 0
 		jmp	short loc_1C591
 ; ---------------------------------------------------------------------------
 
@@ -26322,7 +26322,7 @@ loc_1C585:
 		call	@boss_hittest_shots$qv	; default
 		or	al, al
 		jz	short loc_1C5B1
-		mov	_boss_mode_change, 1
+		mov	_boss_phase_state, 1
 
 loc_1C591:
 		inc	_boss_phase
@@ -26382,9 +26382,9 @@ loc_1C62F:
 		jnz	short loc_1C67A
 		call	@boss_explode_big$qui pascal, ET_HORIZONTAL
 		mov	_boss_phase, PHASE_EXPLODE_BIG
-		mov	al, _boss_mode_change
+		mov	al, _boss_phase_state
 		mov	_bullet_zap_active, al
-		cmp	_boss_mode_change, 0
+		cmp	_boss_phase_state, 0
 		jz	short loc_1C652
 		call	@boss_score_bonus$qui pascal, 40
 
@@ -26678,7 +26678,7 @@ arg_0		= dword	ptr  4
 
 		push	bp
 		mov	bp, sp
-		cmp	_boss_mode_change, 0
+		cmp	_boss_phase_state, 0
 		jnz	short loc_1D5FE
 		push	140000h
 		push	0
@@ -27604,7 +27604,7 @@ public @boss_reset$qv
 		mov	_boss_fg_render, offset nullfunc_near
 		mov	_boss_phase, PHASE_BOSS_HP_FILL
 		mov	_boss_mode, 0
-		mov	_boss_mode_change, 0
+		mov	_boss_phase_state, 0
 		mov	_boss_phase_frame, 0
 		mov	_boss_pos.velocity.x, 0
 		mov	_boss_pos.velocity.y, 0
@@ -27979,7 +27979,7 @@ reimu_1E917	proc near
 		cmp	_boss_phase_frame, 1
 		jnz	short loc_1E96E
 		mov	byte_2D03C, 1
-		mov	al, _boss_mode_change
+		mov	al, _boss_phase_state
 		mov	ah, 0
 		mov	bx, 3
 		cwd
@@ -27992,7 +27992,7 @@ reimu_1E917	proc near
 ; ---------------------------------------------------------------------------
 
 loc_1E944:
-		mov	al, _boss_mode_change
+		mov	al, _boss_phase_state
 		mov	ah, 0
 		mov	bx, 3
 		cwd
@@ -28012,7 +28012,7 @@ loc_1E96E:
 		push	offset _boss_pos
 		call	@PlayfieldMotion@update_seg3$qv
 		mov	si, 20h	; ' '
-		mov	al, _boss_mode_change
+		mov	al, _boss_phase_state
 		mov	ah, 0
 		mov	bx, 3
 		cwd
@@ -28024,8 +28024,8 @@ loc_1E96E:
 loc_1E98A:
 		cmp	_boss_phase_frame, si
 		jnz	short loc_1E9AE
-		inc	_boss_mode_change
-		mov	al, _boss_mode_change
+		inc	_boss_phase_state
+		mov	al, _boss_phase_state
 		mov	ah, 0
 		mov	bx, 2
 		cwd
@@ -28052,7 +28052,7 @@ reimu_1E9B1	proc near
 		cmp	_boss_phase_frame, 1
 		jnz	short loc_1EA08
 		mov	byte_2D03C, 1
-		mov	al, _boss_mode_change
+		mov	al, _boss_phase_state
 		mov	ah, 0
 		mov	bx, 3
 		cwd
@@ -28065,7 +28065,7 @@ reimu_1E9B1	proc near
 ; ---------------------------------------------------------------------------
 
 loc_1E9DE:
-		mov	al, _boss_mode_change
+		mov	al, _boss_phase_state
 		mov	ah, 0
 		mov	bx, 3
 		cwd
@@ -28085,7 +28085,7 @@ loc_1EA08:
 		push	offset _boss_pos
 		call	@PlayfieldMotion@update_seg3$qv
 		mov	si, 20h	; ' '
-		mov	al, _boss_mode_change
+		mov	al, _boss_phase_state
 		mov	ah, 0
 		mov	bx, 3
 		cwd
@@ -28097,8 +28097,8 @@ loc_1EA08:
 loc_1EA24:
 		cmp	_boss_phase_frame, si
 		jnz	short loc_1EA48
-		inc	_boss_mode_change
-		mov	al, _boss_mode_change
+		inc	_boss_phase_state
+		mov	al, _boss_phase_state
 		mov	ah, 0
 		mov	bx, 2
 		cwd
@@ -29273,7 +29273,7 @@ loc_1F46C:
 
 loc_1F46F:
 		call	reimu_1F378
-		cmp	_boss_mode_change, 9
+		cmp	_boss_phase_state, 9
 		jnb	short loc_1F487
 		call	@boss_hittest_shots$qv
 		or	al, al
@@ -29328,7 +29328,7 @@ loc_1F4DC:
 		jl	loc_1F8A5
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode_change, 0
+		mov	_boss_phase_state, 0
 		mov	_boss_mode, 0
 		mov	_boss_sprite, 129
 		mov	byte_2D057, 4
@@ -29368,7 +29368,7 @@ loc_1F542:
 ; ---------------------------------------------------------------------------
 
 loc_1F547:
-		inc	_boss_mode_change
+		inc	_boss_phase_state
 		cmp	_boss_statebyte[10].BSB_subpattern_id, 2
 		ja	short loc_1F568
 		push	1
@@ -29394,7 +29394,7 @@ loc_1F56D:
 
 loc_1F579:
 		call	reimu_1F378	; default
-		cmp	_boss_mode_change, 18
+		cmp	_boss_phase_state, 18
 		jnb	short loc_1F591
 		call	@boss_hittest_shots$qv
 		or	al, al
@@ -29461,7 +29461,7 @@ loc_1F600:
 
 loc_1F603:
 		call	reimu_1F378
-		cmp	_boss_mode_change, 11
+		cmp	_boss_phase_state, 11
 		jnb	short loc_1F61B
 		call	@boss_hittest_shots$qv
 		or	al, al
@@ -29523,7 +29523,7 @@ loc_1F680:
 		jl	loc_1F8A5
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode_change, 0
+		mov	_boss_phase_state, 0
 		mov	_boss_mode, 0
 		mov	_boss_sprite, 129
 		mov	byte_2D057, 12h
@@ -29554,15 +29554,15 @@ loc_1F6D2:
 ; ---------------------------------------------------------------------------
 
 loc_1F6D7:
-		inc	_boss_mode_change
-		mov	al, _boss_mode_change
+		inc	_boss_phase_state
+		mov	al, _boss_phase_state
 		and	al, 1
 		mov	_boss_mode, al
 		mov	_boss_phase_frame, 0
 
 loc_1F6E9:
 		call	reimu_1F378
-		cmp	_boss_mode_change, 10
+		cmp	_boss_phase_state, 10
 		jnb	short loc_1F701
 		call	@boss_hittest_shots$qv
 		or	al, al
@@ -29603,7 +29603,7 @@ loc_1F737:
 
 loc_1F73A:
 		call	reimu_1F378
-		cmp	_boss_mode_change, 12
+		cmp	_boss_phase_state, 12
 		jnb	short loc_1F752
 		call	@boss_hittest_shots$qv
 		or	al, al
@@ -29671,7 +29671,7 @@ loc_1F7BA:
 loc_1F7E1:
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
-		mov	_boss_mode_change, 0
+		mov	_boss_phase_state, 0
 		mov	_boss_mode, 0
 		mov	_boss_sprite, 129
 		mov	byte_2D057, 4
@@ -29693,10 +29693,10 @@ loc_1F802:
 loc_1F822:
 		call	@boss_explode_small$q16explosion_type_t pascal, ET_HORIZONTAL
 		inc	_boss_phase
-		mov	_boss_mode_change, 0
+		mov	_boss_phase_state, 0
 		cmp	_boss_phase_frame, 1000
 		jge	short loc_1F83D
-		mov	_boss_mode_change, 1
+		mov	_boss_phase_state, 1
 
 loc_1F83D:
 		mov	_boss_phase_frame, 0
@@ -29714,9 +29714,9 @@ loc_1F855:
 		jnz	short loc_1F8A5
 		call	@boss_explode_big$qui pascal, ET_SW_NE
 		mov	_boss_phase, PHASE_EXPLODE_BIG
-		mov	al, _boss_mode_change
+		mov	al, _boss_phase_state
 		mov	_bullet_zap_active, al
-		cmp	_boss_mode_change, 0
+		cmp	_boss_phase_state, 0
 		jz	short loc_1F878
 		call	@boss_score_bonus$qui pascal, 40
 
@@ -30949,7 +30949,7 @@ loc_202E8:
 		jl	loc_206B6
 		inc	_boss_phase
 		mov	_boss_mode, 0
-		mov	_boss_mode_change, 0
+		mov	_boss_phase_state, 0
 		mov	_boss_phase_frame, 0
 		mov	_boss_pos.velocity.x, 0
 		jmp	loc_206B6
@@ -30980,7 +30980,7 @@ loc_2032B:
 loc_20330:
 		cmp	_boss_phase_frame, 1
 		jnz	short loc_20370
-		test	_boss_mode_change, 1
+		test	_boss_phase_state, 1
 		jz	short loc_20364
 		mov	ax, _player_pos.cur.x
 		mov	word_2D05A, ax
@@ -31007,21 +31007,21 @@ loc_20370:
 		call	gengetsu_1F97A
 		or	al, al
 		jz	short loc_20389
-		inc	_boss_mode_change
-		mov	al, _boss_mode_change
+		inc	_boss_phase_state
+		mov	al, _boss_phase_state
 		and	al, 1
 		mov	_boss_mode, al
 		mov	_boss_phase_frame, 0
 
 loc_20389:
-		cmp	_boss_mode_change, 18
+		cmp	_boss_phase_state, 18
 		jb	short loc_2039A
 		cmp	_boss_mode, -1
 		jz	short loc_2039A
 		call	gengetsu_2023B
 
 loc_2039A:
-		cmp	_boss_mode_change, 22
+		cmp	_boss_phase_state, 22
 		jnb	short loc_203AF
 		call	gengetsu_20202
 		or	al, al
@@ -31058,7 +31058,7 @@ loc_203D2:
 loc_203D7:
 		cmp	_boss_phase_frame, 1
 		jnz	short loc_20417
-		test	_boss_mode_change, 1
+		test	_boss_phase_state, 1
 		jz	short loc_2040B
 		mov	ax, _player_pos.cur.x
 		mov	word_2D05A, ax
@@ -31085,21 +31085,21 @@ loc_20417:
 		call	gengetsu_1F97A
 		or	al, al
 		jz	short loc_20430
-		mov	al, _boss_mode_change
+		mov	al, _boss_phase_state
 		and	al, 1
 		mov	_boss_mode, al
-		inc	_boss_mode_change
+		inc	_boss_phase_state
 		mov	_boss_phase_frame, 0
 
 loc_20430:
-		cmp	_boss_mode_change, 18
+		cmp	_boss_phase_state, 18
 		jb	short loc_20441
 		cmp	_boss_mode, -1
 		jz	short loc_20441
 		call	gengetsu_2023B
 
 loc_20441:
-		cmp	_boss_mode_change, 22
+		cmp	_boss_phase_state, 22
 		jnb	short loc_20456
 		call	gengetsu_20202
 		or	al, al
@@ -31136,7 +31136,7 @@ loc_20479:
 loc_2047E:
 		cmp	_boss_phase_frame, 1
 		jnz	short loc_204BE
-		test	_boss_mode_change, 1
+		test	_boss_phase_state, 1
 		jz	short loc_204B2
 		mov	ax, _player_pos.cur.x
 		mov	word_2D05A, ax
@@ -31163,21 +31163,21 @@ loc_204BE:
 		call	gengetsu_1F97A
 		or	al, al
 		jz	short loc_204D7
-		mov	al, _boss_mode_change
+		mov	al, _boss_phase_state
 		and	al, 1
 		mov	_boss_mode, al
-		inc	_boss_mode_change
+		inc	_boss_phase_state
 		mov	_boss_phase_frame, 0
 
 loc_204D7:
-		cmp	_boss_mode_change, 18
+		cmp	_boss_phase_state, 18
 		jb	short loc_204E8
 		cmp	_boss_mode, -1
 		jz	short loc_204E8
 		call	gengetsu_2023B
 
 loc_204E8:
-		cmp	_boss_mode_change, 22
+		cmp	_boss_phase_state, 22
 		jnb	short loc_204FD
 		call	gengetsu_20202
 		or	al, al
@@ -31214,7 +31214,7 @@ loc_20520:
 loc_20525:
 		cmp	_boss_phase_frame, 1
 		jnz	short loc_20565
-		test	_boss_mode_change, 1
+		test	_boss_phase_state, 1
 		jz	short loc_20559
 		mov	ax, _player_pos.cur.x
 		mov	word_2D05A, ax
@@ -31241,21 +31241,21 @@ loc_20565:
 		call	gengetsu_1F97A
 		or	al, al
 		jz	short loc_2057E
-		mov	al, _boss_mode_change
+		mov	al, _boss_phase_state
 		and	al, 1
 		mov	_boss_mode, al
-		inc	_boss_mode_change
+		inc	_boss_phase_state
 		mov	_boss_phase_frame, 0
 
 loc_2057E:
-		cmp	_boss_mode_change, 18
+		cmp	_boss_phase_state, 18
 		jb	short loc_2058F
 		cmp	_boss_mode, -1
 		jz	short loc_2058F
 		call	gengetsu_2023B
 
 loc_2058F:
-		cmp	_boss_mode_change, 22
+		cmp	_boss_phase_state, 22
 		jnb	short loc_205A4
 		call	gengetsu_20202
 		or	al, al
@@ -31321,12 +31321,12 @@ loc_2062A:
 		inc	_boss_phase
 		cmp	_boss_phase_frame, 5000
 		jge	short loc_20642
-		mov	_boss_mode_change, 1
+		mov	_boss_phase_state, 1
 		jmp	short loc_20647
 ; ---------------------------------------------------------------------------
 
 loc_20642:
-		mov	_boss_mode_change, 0
+		mov	_boss_phase_state, 0
 
 loc_20647:
 		mov	_boss_phase_frame, 0
@@ -31347,9 +31347,9 @@ loc_2066F:
 		jnz	short loc_206B6
 		call	@boss_explode_big$qui pascal, ET_HORIZONTAL
 		mov	_boss_phase, PHASE_EXPLODE_BIG
-		mov	al, _boss_mode_change
+		mov	al, _boss_phase_state
 		mov	_bullet_zap_active, al
-		cmp	_boss_mode_change, 0
+		cmp	_boss_phase_state, 0
 		jz	short loc_20693
 		call	@boss_score_bonus$qui pascal, 200
 
