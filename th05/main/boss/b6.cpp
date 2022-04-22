@@ -19,8 +19,6 @@ extern "C" {
 #include "th04/main/bullet/bullet.hpp"
 #include "th04/main/gather.hpp"
 }
-#include "th05/main/custom.h"
-#include "th05/main/bullet/b6ball.hpp"
 #include "th05/main/bullet/cheeto.hpp"
 #include "th05/main/bullet/laser.hpp"
 #include "th05/main/boss/boss.hpp"
@@ -60,6 +58,8 @@ inline subpixel_t shinki_wing_random_y(void) {
 #define phase_2_3_pattern shinki_phase_2_3_pattern
 extern pattern_oneshot_func_t phase_2_3_pattern;
 // -----
+
+#include "th05/main/bullet/b6ball.cpp"
 
 bool near pattern_curved_rings(void)
 {

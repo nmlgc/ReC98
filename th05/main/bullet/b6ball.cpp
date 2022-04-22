@@ -1,16 +1,8 @@
-#pragma option -zCBOSS_6_TEXT
+// (#included from th05/main/boss/b6.cpp, due to alignment reasons.)
 
-#include "platform.h"
-#include "pc98.h"
 #include "th01/math/overlap.hpp"
-#include "th01/math/subpixel.hpp"
-#include "th04/math/motion.hpp"
-extern "C" {
-#include "th04/math/vector.hpp"
-#include "th04/main/playfld.hpp"
-#include "th04/main/player/player.hpp"
 #include "th04/main/bullet/clearzap.hpp"
-#include "th05/sprites/main_pat.h"
+extern "C" {
 #include "th05/main/playperf.hpp"
 }
 #include "th05/main/custom.h"
@@ -92,6 +84,5 @@ void near b6balls_update(void)
 				}
 			}
 		}
-	loop_end:
 	}
 }
