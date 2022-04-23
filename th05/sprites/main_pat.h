@@ -96,6 +96,15 @@ typedef enum {
 	// ---------------------
 	/// =================
 
+	/// Stage 1
+	/// =======
+	// st01.bft
+	// --------
+	PAT_MIDBOSS1 = 204,
+	PAT_MIDBOSS1_last = (PAT_MIDBOSS1 + ENEMY_CELS - 1),
+	// --------
+	/// =======
+
 	/// Stage 4
 	/// =======
 	// st03.bb1 / st03.bb2
@@ -104,7 +113,7 @@ typedef enum {
 	// They are only differentiated inside the rendering function, by adding
 	// B4_CELS onto the patnum for Yuki. Thus, both files are assumed to have
 	// the same number of sprites.
-	PAT_MAI,
+	PAT_MAI = 180,
 	PAT_B4_STILL = PAT_MAI,
 	PAT_B4_RIGHT,
 	PAT_B4_LEFT,

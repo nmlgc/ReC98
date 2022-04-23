@@ -35,6 +35,22 @@ int pascal near midboss_hittest_shots_damage(
 	subpixel_t radius_x, subpixel_t radius_y, int se_on_hit
 );
 
+// Directly subtracts the dealt damage from [midboss.hp], like
+// boss_hittest_shots().
+inline void midboss_hittest_shots(subpixel_t radius_x, subpixel_t radius_y) {
+	midboss.damage_this_frame = midboss_hittest_shots_damage(
+		radius_x, radius_y, 4
+	);
+	midboss.hp -= midboss.damage_this_frame;
+}
+
+// Readability wrapper, consistent with boss_hittest_shots_invincible().
+inline int midboss_hittest_shots_invincible(
+	subpixel_t radius_x, subpixel_t radius_y
+) {
+	return midboss_hittest_shots_damage(radius_x, radius_y, 10);
+}
+
 // Updates the defeat animation during PHASE_EXPLODE_BIG, and resets the boss
 // during any other phase. TH04's version also takes ownership of
 // [midboss.phase_frame], incrementing it on every call.

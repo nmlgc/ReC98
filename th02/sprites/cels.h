@@ -1,1 +1,2 @@
+#define ENEMY_CELS 4
 #define ENEMY_KILL_CELS 8

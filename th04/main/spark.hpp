@@ -7,7 +7,7 @@ void pascal sparks_add_random(
 // Adds [count] new spark sprites along a circle with the given [distance] away
 // from ([center_x], [center_y]). Obviously ignores the random angle set in
 // sparks_init().
-void pascal sparks_add_circle(
+void pascal near sparks_add_circle(
 	Subpixel center_x, Subpixel center_y, subpixel_t distance, int count
 );
 

@@ -16,7 +16,7 @@
 	backdrop_colorfill, /* MODDERS: Remove, and call boss_backdrop_render() */ \
 	bb_col \
 ) { \
-	if(boss.phase == PHASE_BOSS_HP_FILL) { \
+	if(boss.phase == PHASE_HP_FILL) { \
 		on_hp_fill; \
 	} else if(boss.phase == PHASE_BOSS_ENTRANCE_BB) { \
 		entrance_bb_cel_type entrance_cel = ( \
@@ -51,7 +51,7 @@
 #define boss_bg_render_entrance_bb_transition_and_backdrop( \
 	on_hp_fill, backdrop_left, backdrop_top, backdrop_col \
 ) { \
-	if(boss.phase == PHASE_BOSS_HP_FILL) { \
+	if(boss.phase == PHASE_HP_FILL) { \
 		on_hp_fill; \
 	} else if(boss.phase == PHASE_BOSS_ENTRANCE_BB) { \
 		boss_backdrop_render(backdrop_left, backdrop_top, backdrop_col); \

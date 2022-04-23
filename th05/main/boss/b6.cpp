@@ -801,7 +801,7 @@ void pascal shinki_update(void)
 	boss.phase_frame++;
 
 	switch(boss.phase) {
-	case PHASE_BOSS_HP_FILL:
+	case PHASE_HP_FILL:
 		if(boss.phase_frame == 1) {
 			boss.hp = HP_TOTAL;
 			boss.phase_end_hp = PHASE_2_END_HP;

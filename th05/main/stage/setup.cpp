@@ -16,8 +16,8 @@ void pascal near stage1_setup(void)
 	midboss_update_func = midboss1_update;
 	midboss_render_func = midboss1_render;
 	midboss.frames_until = 2500;
-	midboss.pos. cur.set(192, 96);
-	midboss.pos.prev.set(192, 96);
+	midboss.pos. cur.set((PLAYFIELD_W / 2), ((PLAYFIELD_H * 6) / 23));
+	midboss.pos.prev.set((PLAYFIELD_W / 2), ((PLAYFIELD_H * 6) / 23));
 	midboss.pos.velocity.set(0, 0);
 	midboss.hp = 1000;
 	midboss.sprite = 200;
