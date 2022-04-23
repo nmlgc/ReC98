@@ -37,7 +37,8 @@ void near boss_reset(void);
 // point number popup per unit around the boss sprite.
 void pascal near boss_score_bonus(unsigned int units);
 
-// Callbacks
+// Callbacks. *_func() functions are "activated" by setting the regular
+// function once the boss battle starts.
 extern  farfunc_t_near boss_update;
 extern nearfunc_t_near boss_fg_render;
 

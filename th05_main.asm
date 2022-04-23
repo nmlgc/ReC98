@@ -23468,9 +23468,6 @@ word_2D05E	dw ?
 byte_2D060	db ?
 		db ?
 include th04/main/player/shots_add[bss].asm
-include th04/main/boss/funcs[bss].asm
 include th04/main/boss/boss[bss].asm
-include th04/formats/bb_boss[bss].asm
-include th04/main/boss/hitbox[bss].asm
 
 		end

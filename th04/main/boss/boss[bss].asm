@@ -1,3 +1,7 @@
+public _boss_update, _boss_update_func
+public _boss_bg_render_func, _boss_fg_render, _boss_fg_render_func
+public _boss_statebyte, _bb_boss_seg, _boss_hitbox_radius
+
 boss_statebyte_t union
 	if (GAME eq 5)
 		BSB_yumeko_interval_phase4	db ?
@@ -35,5 +39,15 @@ boss_statebyte_t union
 	endif
 boss_statebyte_t ends
 
-public _boss_statebyte
-_boss_statebyte	db 16 dup (?)
+_boss_update	dd ?
+_boss_fg_render	dw ?
+if GAME eq 5
+	public _boss_custombullets_render
+	_boss_custombullets_render	dw ?
+endif
+_boss_bg_render_func	dw ?
+_boss_update_func   	dd ?
+_boss_fg_render_func	dw ?
+_boss_statebyte     	db 16 dup (?)
+_bb_boss_seg        	dw ?
+_boss_hitbox_radius 	Point <?>

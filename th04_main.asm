@@ -32305,10 +32305,7 @@ public _dream_score
 _dream_score	dw ?
 byte_2D00E	db ?
 		db ?
-include th04/main/boss/funcs[bss].asm
 include th04/main/boss/boss[bss].asm
-include th04/formats/bb_boss[bss].asm
-include th04/main/boss/hitbox[bss].asm
 word_2D034	dw ?
 word_2D036	dw ?
 word_2D038	dw ?
