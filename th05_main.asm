@@ -39,7 +39,7 @@ include th05/main/enemy/enemy.inc
 
 main_01 group SLOWDOWN_TEXT, m_TEXT, EMS_TEXT, ma_TEXT, CFG_LRES_TEXT, mai_TEXT, main_TEXT, main__TEXT, PLAYFLD_TEXT, main_0_TEXT, HUD_OVRL_TEXT, DIALOG_TEXT, PLAYER_P_TEXT, main_01_TEXT
 g_SHARED group SHARED, SHARED_
-main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, BULLET_A_TEXT, main_032_TEXT, main_033_TEXT, MB_DFT_TEXT, LASER_SC_TEXT, CHEETO_U_TEXT, IT_SPL_U_TEXT, BULLET_U_TEXT, main_034_TEXT, main_035_TEXT, BOSS_6_TEXT, BOSS_X_TEXT, main_036_TEXT, BOSS_TEXT
+main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, BULLET_A_TEXT, main_032_TEXT, main_033_TEXT, MB_DFT_TEXT, LASER_SC_TEXT, CHEETO_U_TEXT, IT_SPL_U_TEXT, BULLET_U_TEXT, MIDBOSS1_TEXT, main_034_TEXT, main_035_TEXT, BOSS_6_TEXT, BOSS_X_TEXT, main_036_TEXT, BOSS_TEXT
 
 ; ===========================================================================
 
@@ -10402,44 +10402,11 @@ BULLET_U_TEXT	segment	byte public 'CODE' use16
 	extern @bullets_update$qv:proc
 BULLET_U_TEXT	ends
 
+MIDBOSS1_TEXT	segment	byte public 'CODE' use16
+	@midboss1_move$qv procdesc near
+MIDBOSS1_TEXT	ends
+
 main_034_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_17FC6	proc near
-		push	bp
-		mov	bp, sp
-		mov	ax, _midboss_pos.cur.x
-		mov	_midboss_pos.prev.x, ax
-		mov	ax, _midboss_pos.cur.y
-		mov	_midboss_pos.prev.y, ax
-		push	(192 shl 4)
-		push	_midboss_pos.velocity.x
-		mov	al, _midboss_angle
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		push	_CosTable8[bx]
-		call	vector1_at
-		mov	_midboss_pos.cur.x, ax
-		push	(96 shl 4)
-		push	_midboss_pos.velocity.x
-		mov	al, _midboss_angle
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		push	_SinTable8[bx]
-		call	vector1_at
-		mov	_midboss_pos.cur.y, ax
-		mov	al, _midboss_angle
-		add	al, -2
-		mov	_midboss_angle, al
-		pop	bp
-		retn
-sub_17FC6	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -10559,7 +10526,7 @@ loc_1812B:
 		xor	edx, edx
 		div	ebx
 		mov	_midboss_pos.velocity.x, ax
-		call	sub_17FC6
+		call	@midboss1_move$qv
 		cmp	_midboss_phase_frame, 1500
 		jge	short loc_1818B
 		cmp	_midboss_hp, 0
