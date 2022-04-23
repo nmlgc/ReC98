@@ -10404,73 +10404,10 @@ BULLET_U_TEXT	ends
 
 MIDBOSS1_TEXT	segment	byte public 'CODE' use16
 	@midboss1_move$qv procdesc near
+	@midboss1_pattern$qv procdesc near
 MIDBOSS1_TEXT	ends
 
 main_034_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_18017	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, 10h
-		cmp	_midboss_hp, 200
-		jg	short loc_18029
-		mov	si, 12
-
-loc_18029:
-		mov	ax, _midboss_phase_frame
-		cwd
-		idiv	si
-		or	dx, dx
-		jnz	loc_180BC
-		mov	_bullet_template.spawn_type, BST_NORMAL
-		mov	_bullet_template.patnum, 0
-		mov	_bullet_template.speed, (2 shl 4)
-		mov	_bullet_template.BT_group, BG_SPREAD
-		mov	_bullet_template.BT_special_motion, BSM_EXACT_LINEAR
-		mov	word ptr _bullet_template.spread, (2 shl 8) or 4
-		mov	al, _boss_angle
-		mov	_bullet_template.BT_angle, al
-		add	al, 14h
-		mov	_boss_angle, al
-		call	_bullet_template_tune
-		call	_bullets_add_special
-		mov	_bullet_template.BT_group, BG_SINGLE
-		mov	_bullet_template.spawn_type, BST_CLOUD_FORWARDS
-		mov	_bullet_template.speed, (1 shl 4) + 8
-		mov	_bullet_template.patnum, PAT_BULLET16_N_BLUE
-		call	_bullet_template_tune
-		call	randring2_next16
-		mov	_bullet_template.BT_angle, al
-		push	_midboss_pos.cur.x
-		push	(32 shl 4)
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		push	_CosTable8[bx]
-		call	vector1_at
-		mov	_bullet_template.BT_origin.x, ax
-		push	_midboss_pos.cur.y
-		push	(32 shl 4)
-		mov	al, _bullet_template.BT_angle
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		push	_SinTable8[bx]
-		call	vector1_at
-		mov	_bullet_template.BT_origin.y, ax
-		call	_bullets_add_regular
-
-loc_180BC:
-		pop	si
-		pop	bp
-		retn
-sub_18017	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -10512,7 +10449,7 @@ loc_180FF:
 ; ---------------------------------------------------------------------------
 
 loc_1812B:
-		call	sub_18017
+		call	@midboss1_pattern$qv
 		call	@midboss_hittest_shots_damage$qiii pascal, (24 shl 4) or ((24 shl 4) shl 16), 4
 		mov	_midboss_damage_this_frame, al
 		mov	ah, 0
