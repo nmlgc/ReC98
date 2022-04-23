@@ -172,17 +172,21 @@ void pascal near stage5_setup(void)
 
 void pascal near stage6_setup(void)
 {
+	// TODO: Can't be declared publicly due to the
+	// set_nearfunc_ptr_to_farfunc() workarounds in shinki_update().
+	BOSS_DEC(shinki);
+
 	midboss_update_func = nullfunc_far;
 	midboss_render_func = nullfunc_near;
 	midboss.frames_until = 30000;
 
 	boss_reset();
-	boss.pos.init(192, 64);
+	boss.pos.init((PLAYFIELD_W / 2), ((PLAYFIELD_H * 4) / 23));
 	boss_bg_render_func = shinki_bg_render;
 	boss_update_func = shinki_update;
 	boss_fg_render_func = shinki_fg_render;
 	boss.sprite = PAT_SHINKI_STILL;
-	boss_hitbox_radius.set(24, 24);
+	boss_hitbox_radius.set(BOSS_HITBOX_DEFAULT_W, BOSS_HITBOX_DEFAULT_H);
 	boss_backdrop_colorfill = shinki_stage_backdrop_colorfill;
 
 	cdg_load_all_noalpha(CDG_BG_BOSS, "st05bk.cdg");

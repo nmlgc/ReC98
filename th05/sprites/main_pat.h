@@ -20,6 +20,10 @@ static const pixel_t SHINKI_WING_H = 96;
 /// Pattern numbers for the super_*() functions.
 /// Since super_entry_bfnt() doesn't take a "start patnum" parameter, the
 /// order in which the files are loaded has to match the order here.
+///
+/// Ranges between TINY_[ID]_START and TINY_[ID]_END are converted to
+/// master.lib's "tiny" format on load time, and must be blitted using the
+/// *_tiny*() functions.
 typedef enum {
 	/// Stage-independent
 	/// =================
@@ -138,10 +142,12 @@ typedef enum {
 	// --------
 	PAT_SHINKI_STILL = 180,
 	PAT_SHINKI_CAST,
+	PAT_SHINKI_RIGHT,
+	PAT_SHINKI_LEFT,
 	// --------
 	// st05.bb2
 	// --------
-	PAT_SHINKI_WINGS_WHITE = 184,
+	PAT_SHINKI_WINGS_WHITE,
 	PAT_SHINKI_WINGS_WHITE_last = (
 		PAT_SHINKI_WINGS_WHITE + bfnt_parts_x(SHINKI_WING_W) - 1
 	),
@@ -163,12 +169,14 @@ typedef enum {
 	// --------
 	// st05.bb4
 	// --------
-	PAT_B6BALL_BLUE_1,
+	TINY_B6BALL_START,
+	PAT_B6BALL_BLUE_1 = TINY_B6BALL_START,
 	PAT_B6BALL_PURPLE,
 	PAT_B6BALL_BLUE_2,
 	PAT_B6BALL_BLUE_3,
 	PAT_DECAY_B6BALL,
 	PAT_DECAY_B6BALL_last = (PAT_DECAY_B6BALL + BULLET_DECAY_CELS - 1),
+	TINY_B6BALL_END,
 	/// -------
 	/// =======
 

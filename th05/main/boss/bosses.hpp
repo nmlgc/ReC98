@@ -57,6 +57,9 @@ void near boss_bg_fill_col_0(void);
 void near shinki_bg_type_d_colorfill(void);
 /// ---------
 
+// Same for all bosses in this game.
+static const int ENTRANCE_BB_FRAMES_PER_CEL = 4;
+
 BOSS_DEC(sara);
 BOSS_DEC(louise);
 BOSS_DEC(alice);
@@ -71,7 +74,9 @@ BOSS_DEC(yumeko);
 #define yumeko_interval_phase4 boss_statebyte[0]
 #define yumeko_interval_phase7 boss_statebyte[1]
 
-BOSS_DEC(shinki);
-void pascal near shinki_custombullets_render();
+// TODO: Can't be declared here due to the set_nearfunc_ptr_to_farfunc()
+// workarounds in shinki_update().
+// BOSS_DEC(shinki);
+// void pascal near shinki_custombullets_render();
 
 BOSS_DEC(exalice);

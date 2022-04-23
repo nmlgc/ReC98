@@ -81,7 +81,7 @@ void pascal near louise_bg_render(void)
 	boss_bg_render_entrance_bb_opaque_and_backdrop(
 		tiles_render_after_custom(boss.phase_frame),
 		int,
-		4,
+		ENTRANCE_BB_FRAMES_PER_CEL,
 		LOUISE_BACKDROP_LEFT,
 		LOUISE_BACKDROP_TOP,
 		1,
@@ -95,7 +95,7 @@ void pascal near alice_bg_render(void)
 	boss_bg_render_entrance_bb_opaque_and_backdrop(
 		tiles_render_after_custom(boss.phase_frame),
 		int,
-		4,
+		ENTRANCE_BB_FRAMES_PER_CEL,
 		ALICE_BACKDROP_LEFT,
 		ALICE_BACKDROP_TOP,
 		1,
@@ -109,7 +109,7 @@ void pascal near mai_yuki_bg_render(void)
 	boss_bg_render_entrance_bb_opaque_and_backdrop(
 		tiles_render_after_custom(boss.phase_frame),
 		unsigned char,
-		4,
+		ENTRANCE_BB_FRAMES_PER_CEL,
 		MAI_YUKI_BACKDROP_LEFT,
 		MAI_YUKI_BACKDROP_TOP,
 		1,
@@ -123,7 +123,7 @@ void pascal near yumeko_bg_render(void)
 	boss_bg_render_entrance_bb_opaque_and_backdrop(
 		tiles_render_all(),
 		unsigned char,
-		4,
+		ENTRANCE_BB_FRAMES_PER_CEL,
 		YUMEKO_BACKDROP_LEFT,
 		YUMEKO_BACKDROP_TOP,
 		1,
@@ -598,7 +598,9 @@ void pascal near shinki_bg_render(void)
 			SHINKI_BACKDROP_LEFT, SHINKI_STAGE_BACKDROP_TOP, 1
 		);
 	} else if(boss.phase == PHASE_BOSS_ENTRANCE_BB) {
-		unsigned char entrance_cel = (boss.phase_frame / 4);
+		unsigned char entrance_cel = (
+			boss.phase_frame / ENTRANCE_BB_FRAMES_PER_CEL
+		);
 		if(entrance_cel < (TILES_BB_CELS / 2)) {
 			boss_backdrop_render(
 				SHINKI_BACKDROP_LEFT, SHINKI_STAGE_BACKDROP_TOP, 1

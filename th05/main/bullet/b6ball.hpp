@@ -35,6 +35,16 @@ struct b6ball_template_t {
 	SubpixelLength8 speed;
 };
 
+// Supplements the actual load call from _DM05.TX2. It's understandable why
+// you'd want to load these sprites as part of the dialog script (that's the
+// best place to hide load times, after all), but tiny-format conversion should
+// have really been part of the script commands as well, then.
+#define b6balls_load() { \
+	for(int i = TINY_B6BALL_START; i < TINY_B6BALL_END; i++) { \
+		super_convert_tiny(i); \
+	} \
+}
+
 #define b6ball_template ( \
 	reinterpret_cast<b6ball_template_t &>(custom_entities[0]) \
 )

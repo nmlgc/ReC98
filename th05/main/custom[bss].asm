@@ -142,7 +142,6 @@ b6ball_t struc
 		db ?
 b6ball_t ends
 
-b6ball_template	equ <_custom_entities>
 b6balls	equ <_custom_entities[1 * size b6ball_t]>
 ; --------------------
 

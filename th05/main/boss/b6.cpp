@@ -1,12 +1,18 @@
+#pragma option -zPmain_03
+
 /// Stage 6 Boss - Shinki
 /// ---------------------
 
 #include "platform.h"
+#include "decomp.hpp"
 #include "pc98.h"
 #include "master.hpp"
 #include "th01/math/area.hpp"
 #include "th01/math/subpixel.hpp"
+#include "th02/main/tile/tile.hpp"
+#include "th02/main/player/bomb.hpp"
 #include "th03/hardware/palette.hpp"
+#include "th04/formats/bb.h"
 #include "th04/main/frames.h"
 #include "th04/main/pattern.hpp"
 #include "th04/math/motion.hpp"
@@ -14,14 +20,21 @@ extern "C" {
 #include "th04/math/randring.hpp"
 #include "th04/math/vector.hpp"
 #include "th04/snd/snd.h"
+#include "th04/main/bg.hpp"
+#include "th04/main/homing.hpp"
 #include "th04/main/rank.hpp"
 #include "th04/main/playfld.hpp"
 #include "th04/main/bullet/bullet.hpp"
 #include "th04/main/gather.hpp"
 }
+#include "th04/main/phase.hpp"
+#include "th04/main/hud/hud.hpp"
+#include "th04/main/tile/bb.hpp"
+#include "th05/playchar.h"
 #include "th05/main/bullet/cheeto.hpp"
 #include "th05/main/bullet/laser.hpp"
 #include "th05/main/boss/boss.hpp"
+#include "th05/main/boss/bosses.hpp"
 #include "th05/main/player/player.hpp"
 #include "th05/sprites/main_pat.h"
 
@@ -29,6 +42,20 @@ extern "C" {
 // ---------
 
 static const int PHASE_2_3_PATTERN_START_FRAME = 32;
+
+// Always denotes the last phase that ends with that amount of HP.
+enum shinki_hp_t {
+	HP_TOTAL = 22800,
+	PHASE_2_END_HP = 20600,
+	PHASE_3_END_HP = 18400,
+	PHASE_6_END_HP = 14600,
+	PHASE_7_END_HP = 11600,
+	PHASE_9_END_HP = 8600,
+	PHASE_10_DEVIL_LASER_HP = 5600,
+	PHASE_10_DEVIL_FAST_HP = 3800,
+	PHASE_10_END_HP = 2800,
+	PHASE_12_END_HP = 0,
+};
 // ---------
 
 // Coordinates
@@ -56,7 +83,9 @@ inline subpixel_t shinki_wing_random_y(void) {
 // -----
 
 #define phase_2_3_pattern shinki_phase_2_3_pattern
+#define wing_pattern shinki_wing_pattern
 extern pattern_oneshot_func_t phase_2_3_pattern;
+extern pattern_loop_func_t wing_pattern;
 // -----
 
 #include "th05/main/bullet/b6ball.cpp"
@@ -445,7 +474,13 @@ void near pattern_devil(void)
 	#define laser_direction  	boss_statebyte[7]
 	#define laser_angle_inner	boss_statebyte[8]
 	#define laser_angle_outer	boss_statebyte[9]
+
+	// Careful, collides with [phase_relative] in shinki_update()! *Must* be
+	// set to 1 before ending the pattern to ensure that the remaining phases
+	// run in their expected order. Guaranteed in the original code by setting
+	// PHASE_10_DEVIL_LASER_HP a much higher value than PHASE_10_END_HP.
 	#define lasers_active    	static_cast<bool>(boss_statebyte[10])
+
 	#define bullet_direction 	boss_statebyte[11]
 	#define bullet_intro_done	static_cast<bool>(boss_statebyte[12])
 	#define b6ball_interval  	boss_statebyte[13]
@@ -462,7 +497,7 @@ void near pattern_devil(void)
 	int phase_frame_minus_startup_delay = (boss.phase_frame - 192);
 
 	// Laser activation
-	if((boss.hp <= 5600) || (boss.phase_frame >= 1800)) {
+	if((boss.hp <= PHASE_10_DEVIL_LASER_HP) || (boss.phase_frame >= 1800)) {
 		if(laser_grow_delay == 0) {
 			laser_template.coords.width = 6;
 			laser_template.coords.angle = 0x40;
@@ -595,6 +630,7 @@ void near pattern_devil(void)
 		laser_grow_delay++;
 	} else if(!lasers_active) {
 		if(bullet_angle_outer == 0x30) {
+			// Pattern can now be safely ended
 			lasers_active++;
 		}
 	} else if((boss.phase_frame % 8) == 0) {
@@ -615,7 +651,7 @@ void near pattern_devil(void)
 				laser_direction--; // = CLOCKWISE;
 			}
 		}
-		if((boss.hp <= 3800) || (boss.phase_frame >= 2500)) {
+		if((boss.hp <= PHASE_10_DEVIL_FAST_HP) || (boss.phase_frame >= 2500)) {
 			if((laser_grow_delay++) == 65) {
 				b6ball_interval = select_for_rank(52, 20, 16, 12);
 				boss_explode_small(ET_CIRCLE);
@@ -737,4 +773,306 @@ void near shinki_move_float(void)
 	boss.pos.cur.y.v += boss.pos.velocity.y.v;
 
 	#undef float_direction
+}
+
+#pragma option -a2
+
+void pascal shinki_update(void)
+{
+	// A completely unnecessary variable to differentiate between multiple
+	// phases that share the same `switch` body, because [boss.phase] itself
+	// is not good enough?
+	// Careful, collides with [lasers_active] in pattern_devil()!
+	// MODDERS: Just use [boss.phase].
+	#define phase_relative boss_statebyte[10]
+
+	enum {
+		PHASE_11_FRAMES = 16,
+	};
+
+	bool16 phase_done;
+
+	homing_target = boss.pos.cur;
+	bullet_template.origin = boss.pos.cur;
+	gather_template.center = boss.pos.cur;
+	laser_template.coords.origin = boss.pos.cur;
+	b6ball_template.origin = boss.pos.cur;
+
+	boss.phase_frame++;
+
+	switch(boss.phase) {
+	case PHASE_BOSS_HP_FILL:
+		if(boss.phase_frame == 1) {
+			boss.hp = HP_TOTAL;
+			boss.phase_end_hp = PHASE_2_END_HP;
+			gather_template_init();
+			boss.sprite = PAT_SHINKI_STILL;
+
+			// Redundant here, only needs to be part of the phase 5→6
+			// transition for completeness.
+			boss.pos.velocity.y.set(0.0f);
+
+			boss_sprite_left = PAT_SHINKI_LEFT;
+			boss_sprite_right = PAT_SHINKI_RIGHT;
+			boss_sprite_stay = PAT_SHINKI_STILL;
+			b6balls_load();
+		}
+		boss_hittest_shots_invincible();
+
+		// Timeout condition
+		if(boss.phase_frame >= (HUD_HP_FILL_FRAMES + 64)) {
+			// Next phase
+			boss.phase_frame = 0;
+			boss.phase++;
+			snd_se_play(13);
+			set_nearfunc_ptr_to_farfunc(
+				bg_render_bombing_func, shinki_bg_render
+			);
+		}
+		break;
+
+	case PHASE_BOSS_ENTRANCE_BB:
+		boss_hittest_shots_invincible();
+		if(boss.phase_frame == (
+			ENTRANCE_BB_FRAMES_PER_CEL * (TILES_BB_CELS / 2)
+		)) {
+			Palettes[0].set(0x0, 0x0, 0x0);
+			palette_changed = true;
+		}
+
+		// Timeout condition
+		if(boss.phase_frame >= (ENTRANCE_BB_FRAMES_PER_CEL * TILES_BB_CELS)) {
+			// Next phase
+			boss.phase++;
+			boss.mode = 1;
+			boss.phase_frame = 0;
+			phase_2_3_pattern = pattern_curved_rings;
+			phase_relative = 0;
+		}
+		break;
+
+	case 2:
+	case 3:
+		switch(boss.mode) {
+		case 0:
+			if(boss_flystep_random(
+				boss.phase_frame - PHASE_2_3_PATTERN_START_FRAME
+			)) {
+				#define patterns shinki_patterns_phase_2_3
+				extern pattern_oneshot_func_t patterns[2][2];
+
+				boss.phase_frame = 0;
+				boss.phase_state.patterns_seen++;
+				boss.mode++;
+				phase_2_3_pattern = patterns[phase_relative][
+					boss.phase_state.patterns_seen & 1
+				];
+
+				// Timeout condition
+				if(boss.phase_state.patterns_seen >= 16) {
+					goto phase_2_3_timed_out;
+				}
+
+				#undef patterns
+			}
+			break;
+		case 1:
+			gather_then_phase_2_3_pattern();
+			break;
+		}
+		if(!boss_hittest_shots()) {
+			break;
+		}
+		boss_score_bonus(10);
+
+	phase_2_3_timed_out:
+		// Next phase
+		if(phase_relative == 0) {
+			boss_phase_next(ET_NW_SE, PHASE_3_END_HP);
+			boss.mode = 1;
+			phase_2_3_pattern = pattern_random_directional_and_kunai;
+		} else {
+			boss_phase_next(ET_NW_SE, PHASE_6_END_HP);
+		}
+		phase_relative++;
+		break;
+
+	case 4:
+		boss_hittest_shots();
+
+		// Timeout condition
+		if(boss_flystep_towards(
+			to_sp(PLAYFIELD_W / 2), to_sp(playfield_fraction_y(5 / 23.0f))
+		)) {
+			// Next phase
+			boss.phase++;
+			boss.phase_frame = 0;
+		}
+		break;
+
+	case 5:
+		boss_hittest_shots();
+
+		// Timeout condition
+		if(pattern_wing_preparation()) {
+			// Next phase
+			boss.phase++;
+			boss.phase_frame = 0;
+			boss.pos.velocity.y.set(0.0f);
+			set_nearfunc_ptr_to_farfunc(
+				boss_custombullets_render, shinki_custombullets_render
+			);
+			// How generous for Yuuka players!
+			boss_hitbox_radius.x.v = select_for_playchar(
+				to_sp(50.0f), to_sp(35.0f), to_sp(45.0f), to_sp(50.0f)
+			);
+			wing_pattern = pattern_random_rain_and_spreads_from_wings;
+			phase_relative = 0;
+		}
+		break;
+
+	case 6:
+	case 7:
+		if(Palettes[0].c.b < 0x80) {
+			if(stage_frame_mod16 == 0) {
+				Palettes[0].c.b++;
+			}
+			palette_changed = true;
+		}
+		shinki_move_float();
+		wing_pattern();
+
+		// Timeout condition
+		if(boss.phase_frame < 3000) {
+			if(boss_hittest_shots()) {
+				boss_score_bonus(25);
+			} else {
+				break;
+			}
+		}
+
+		// Next phase
+		if(phase_relative == 0) {
+			boss_phase_next(ET_SW_NE, PHASE_7_END_HP);
+			wing_pattern = pattern_cheetos_within_spread_walls;
+			boss.phase_frame = 0; // redundant
+			phase_relative++;
+		} else {
+			boss_phase_next(ET_HORIZONTAL, PHASE_9_END_HP);
+		}
+		break;
+
+	case 8:
+		if(Palettes[0].c.b > 0x00) {
+			if(stage_frame_mod8 == 0) {
+				Palettes[0].c.b--;
+			}
+			palette_changed = true;
+		}
+		boss_hittest_shots();
+
+		// Timeout condition
+		if(pattern_wings_to_purple()) {
+			// Next phase
+			boss.phase++;
+			boss.phase_frame = 0;
+			shinki_wing_pattern = pattern_aimed_b6balls_and_symmetric_spreads;
+			phase_relative = 0;
+		}
+		break;
+
+	case 9:
+	case 10:
+		if(Palettes[0].c.b > 0x00) {
+			if(stage_frame_mod8 == 0) {
+				Palettes[0].c.b--;
+			}
+			palette_changed = true;
+		} else if(Palettes[0].c.r < 0x80) {
+			if(stage_frame_mod16 == 0) {
+				Palettes[0].c.r++;
+			}
+			palette_changed = true;
+		}
+		shinki_move_float();
+		wing_pattern();
+
+		// Timeout condition
+		if(boss.phase_frame < 3000) {
+			phase_done = boss_hittest_shots();
+			// Reduce per-frame damage to 1 HP during bombs
+			if(bombing) {
+				boss.hp += (boss.damage_this_frame - 1);
+				phase_done = false;
+			}
+			if(!phase_done) {
+				break;
+			}
+			boss_score_bonus(25);
+		}
+
+		// Next phase
+		if(phase_relative == 0) {
+			boss_phase_next(ET_SW_NE, PHASE_10_END_HP);
+			shinki_wing_pattern = pattern_devil;
+			boss.phase_frame = 0; // redundant
+			phase_relative++;
+		} else {
+			boss_phase_next(ET_HORIZONTAL, PHASE_12_END_HP);
+			playfield_shake_anim_time = PHASE_11_FRAMES;
+			// The pattern_devil() lasers. Should ideally be stopped inside the
+			// pattern, but since it's a looping one without a clear end,
+			// there's no easy way with the original architecture.
+			laser_stop(0);
+			laser_stop(1);
+			laser_stop(2);
+			laser_stop(3);
+		}
+		break;
+
+	case 11:
+		boss_hittest_shots();
+		if((boss.phase_frame % 2) == 0) {
+			palette_settone_deferred(150);
+		} else {
+			palette_settone_deferred(100);
+		}
+
+		// Timeout condition
+		if(boss.phase_frame > PHASE_11_FRAMES) {
+			// Next phase
+			boss.phase++;
+			boss.sprite = PAT_SHINKI_STILL;
+			boss_hitbox_radius.x.v = to_sp(BOSS_HITBOX_DEFAULT_W);
+			Palettes[0].c.r = 0x60;
+			Palettes[0].c.b = 0x00;
+			snd_se_play(13);
+		}
+		break;
+
+	case 12:
+		pattern_circles_and_alternating_spirals();
+		// Timeout condition
+		if(boss.phase_frame < 3000) {
+			// Boss defeated?
+			if(!boss_hittest_shots()) {
+				break;
+			}
+			boss.phase_state.defeat_bonus = true;
+		}
+		// Boss defeated
+		boss_explode_small(ET_VERTICAL);
+		boss.phase_frame = 0;
+		boss.phase = PHASE_BOSS_EXPLODE_SMALL;
+		break;
+
+	default:
+		boss_defeat_update(65);
+		break;
+	}
+	b6balls_update();
+	cheetos_update();
+	hud_hp_update_and_render(boss.hp, HP_TOTAL);
+
+	#undef phase_relative
 }
