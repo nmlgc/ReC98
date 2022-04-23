@@ -7,11 +7,11 @@ static const int BOSS_DEFEAT_INVINCIBILITY_FRAMES = 255;
 	static const unsigned long BOSS_BONUS_UNIT_VALUE = 1000;
 #else
 	static const unsigned int BOSS_BONUS_UNIT_VALUE = 1280;
-
-	// 16 bytes of globally additional state that bosses can use freely?
-	// Architecturally, that's a step back even compared to TH01.
-	extern unsigned char boss_statebyte[16];
 #endif
+
+// 16 bytes of globally additional state that bosses can use freely?
+// Architecturally, that's a step back even compared to TH01.
+extern unsigned char boss_statebyte[16];
 
 typedef struct {
 	PlayfieldMotion pos;

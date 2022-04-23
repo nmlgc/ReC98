@@ -67,8 +67,9 @@ BOSS_DEC(mai_yuki);
 extern boss_stuff_t yuki;
 
 BOSS_DEC(yumeko);
-extern unsigned char yumeko_interval_phase4;
-extern unsigned char yumeko_interval_phase7;
+// Frame intervals between shooting out swords and lasers.
+#define yumeko_interval_phase4 boss_statebyte[0]
+#define yumeko_interval_phase7 boss_statebyte[1]
 
 BOSS_DEC(shinki);
 void pascal near shinki_custombullets_render();
