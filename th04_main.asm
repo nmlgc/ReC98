@@ -45,7 +45,7 @@ include th04/main/enemy/enemy.inc
 
 main_01 group SLOWDOWN_TEXT, ma_TEXT, EMS_TEXT, mai_TEXT, PLAYFLD_TEXT, main_TEXT, DIALOG_TEXT, main__TEXT, PLAYER_P_TEXT, main_0_TEXT, HUD_OVRL_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT
 g_SHARED group SHARED, SHARED_
-main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, IT_SPL_U_TEXT, BOSS_4M_TEXT, main_033_TEXT, MB_DFT_TEXT, main_034_TEXT, BULLET_U_TEXT, BULLET_A_TEXT, main_035_TEXT, BOSS_TEXT, main_036_TEXT
+main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, IT_SPL_U_TEXT, BOSS_4M_TEXT, main_033_TEXT, HUD_HP_TEXT, MB_DFT_TEXT, main_034_TEXT, BULLET_U_TEXT, BULLET_A_TEXT, main_035_TEXT, BOSS_TEXT, main_036_TEXT
 
 ; ===========================================================================
 
@@ -22529,9 +22529,12 @@ loc_19F14:
 		pop	bp
 		retf
 sub_19EE4	endp
-
-include th04/main/hud/hud.asm
 main_033_TEXT	ends
+
+HUD_HP_TEXT	segment	byte public 'CODE' use16
+	@HUD_HP_UPDATE_AND_RENDER$QII procdesc pascal near \
+		hp_cur:word, hp_max:word
+HUD_HP_TEXT ends
 
 MB_DFT_TEXT	segment	byte public 'CODE' use16
 	@MIDBOSS_SCORE_BONUS$QUI procdesc pascal near \
