@@ -433,7 +433,7 @@ loc_AF2D:
 		call	enemies_render
 		call	@shots_render$qv
 		call	player_render
-		call	_grcg_setmode_rmw_seg1
+		call	@grcg_setmode_rmw$qv
 		call	_boss_custombullets_render
 		call	@lasers_render$qv
 		call	_gather_render
@@ -1953,7 +1953,7 @@ loc_C8CE:
 
 loc_C8D4:
 		call	far ptr	palette_show
-		call	_grcg_setmode_rmw_seg1
+		call	@grcg_setmode_rmw$qv
 		mov	si, offset _bomb_anim
 		xor	di, di
 		jmp	loc_C98D
@@ -1974,7 +1974,7 @@ loc_C8E4:
 		add	ax, PLAYFIELD_TOP
 		mov	[bp+@@y], ax
 		mov	ah, GC_BRG
-		call	_grcg_setcolor_direct_seg1_raw
+		call	@grcg_setcolor_direct_raw$qv
 		mov	ax, [si+marisa_laser_t.BA_radius]
 		cwd
 		sub	ax, dx
@@ -1990,7 +1990,7 @@ loc_C8E4:
 		push	[bp+@@y]
 		call	grcg_boxfill
 		mov	ah, GC_RG
-		call	_grcg_setcolor_direct_seg1_raw
+		call	@grcg_setcolor_direct_raw$qv
 		dec	[bp+var_6]
 		mov	ax, [bp+@@x]
 		sub	ax, [bp+var_6]
@@ -2002,7 +2002,7 @@ loc_C8E4:
 		push	[bp+@@y]
 		call	grcg_boxfill
 		mov	ah, 0Fh
-		call	_grcg_setcolor_direct_seg1_raw
+		call	@grcg_setcolor_direct_raw$qv
 		dec	[bp+var_6]
 		mov	ax, [bp+@@x]
 		sub	ax, [bp+var_6]
@@ -2247,13 +2247,13 @@ sub_CB30	proc near
 		call	grcg_vline pascal, (238 shl 16) or PLAYFIELD_TOP, PLAYFIELD_TOP + 47
 		call	grcg_vline pascal, (238 shl 16) or 336, PLAYFIELD_BOTTOM - 1
 		mov	ah, GC_BI
-		call	_grcg_setcolor_direct_seg1_raw
+		call	@grcg_setcolor_direct_raw$qv
 		call	grcg_vline pascal, (208 shl 16) or PLAYFIELD_TOP, PLAYFIELD_TOP + 47
 		call	grcg_vline pascal, (208 shl 16) or 336, PLAYFIELD_BOTTOM - 1
 		call	grcg_vline pascal, (239 shl 16) or PLAYFIELD_TOP, PLAYFIELD_TOP + 47
 		call	grcg_vline pascal, (239 shl 16) or 336, PLAYFIELD_BOTTOM - 1
 		mov	ah, 15
-		call	_grcg_setcolor_direct_seg1_raw
+		call	@grcg_setcolor_direct_raw$qv
 		call	mima_circles_update_and_render
 		mov	al, _bomb_frame
 		mov	ah, 0
@@ -4548,10 +4548,10 @@ loc_101BD:
 		or	ax, ax
 		jnz	short loc_1018A
 		mov	ah, 0Fh
-		call	_grcg_setcolor_direct_seg1_raw
+		call	@grcg_setcolor_direct_raw$qv
 		call	_pellets_render_top
 		mov	ah, byte ptr _pellet_bottom_col
-		call	_grcg_setcolor_direct_seg1_raw
+		call	@grcg_setcolor_direct_raw$qv
 		call	_pellets_render_bottom
 		jmp	short @@ret
 ; ---------------------------------------------------------------------------
@@ -7538,7 +7538,7 @@ public @SHOTS_RENDER$QV
 		mov	ax, GRAM_400
 		mov	es, ax
 		assume es:nothing
-		call	_grcg_setmode_rmw_seg1
+		call	@grcg_setmode_rmw$qv
 		mov	di, offset _shots_alive
 		mov	[bp+@@i], 0
 		jmp	short @@shots_more?

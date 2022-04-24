@@ -136,7 +136,7 @@ circles_render	proc near
 	push	si
 	push	di
 	mov	ah, _circles_color
-	call	_grcg_setcolor_direct_seg1_raw
+	call	@grcg_setcolor_direct_raw$qv
 	mov	si, offset _circles
 	xor	di, di
 	jmp	short @@more?

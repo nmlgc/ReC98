@@ -5,8 +5,8 @@
 #include "master.hpp"
 extern "C" {
 #include "th03/formats/cdg.h"
-#include "th04/hardware/grcg.hpp"
 }
+#include "th04/hardware/grcg.hpp"
 #include "th04/main/boss/backdrop.hpp"
 #include "th04/sprites/main_cdg.h"
 
@@ -16,7 +16,7 @@ void pascal near boss_backdrop_render(
 {
 	cdg_put_noalpha_8(left, top, CDG_BG_BOSS);
 	grcg_setmode_tdw();
-	grcg_setcolor_direct_seg1(col);
+	grcg_setcolor_direct(col);
 	boss_backdrop_colorfill();
 	grcg_off();
 }

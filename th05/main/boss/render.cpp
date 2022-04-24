@@ -11,8 +11,8 @@
 #include "master.hpp"
 #include "th01/math/area.hpp"
 #include "th01/math/subpixel.hpp"
-extern "C" {
 #include "th04/hardware/grcg.hpp"
+extern "C" {
 #include "th04/math/vector.hpp"
 #include "th04/math/motion.hpp"
 #include "th04/math/randring.hpp"
@@ -337,20 +337,20 @@ void pascal near shinki_lineset_forward_copy(lineset_t near &set)
 
 inline void shinki_bg_render_blue_particles_and_lines(void)
 {
-	grcg_setmode_rmw_seg1();
+	grcg_setmode_rmw();
 
-	grcg_setcolor_direct_seg1(8);
+	grcg_setcolor_direct(8);
 	shinki_bg_particles_render();
 	grcg_lineset_line_put(linesets[0], SHINKI_LINE_4);
 	grcg_lineset_line_put(linesets[0], SHINKI_LINE_3);
 	grcg_lineset_line_put(linesets[1], SHINKI_LINE_4);
 	grcg_lineset_line_put(linesets[1], SHINKI_LINE_3);
 
-	grcg_setcolor_direct_seg1(9);
+	grcg_setcolor_direct(9);
 	grcg_lineset_line_put(linesets[0], SHINKI_LINE_2);
 	grcg_lineset_line_put(linesets[1], SHINKI_LINE_2);
 
-	grcg_setcolor_direct_seg1(15);
+	grcg_setcolor_direct(15);
 	grcg_lineset_line_put(linesets[0], SHINKI_LINE_MAIN);
 	grcg_lineset_line_put(linesets[1], SHINKI_LINE_MAIN);
 

@@ -1,6 +1,6 @@
-GRCG_SETCOLOR_DIRECT_DEF macro sgm
-	public _grcg_setcolor_direct_seg&sgm&_raw
-	_grcg_setcolor_direct_seg&sgm&_raw	proc near
+GRCG_SETCOLOR_DIRECT_DEF macro
+	public @grcg_setcolor_direct_raw$qv
+	@grcg_setcolor_direct_raw$qv proc near
 		cli
 		mov	dx, 7Eh
 		rept 4
@@ -10,7 +10,7 @@ GRCG_SETCOLOR_DIRECT_DEF macro sgm
 		endm
 		sti
 		ret
-	_grcg_setcolor_direct_seg&sgm&_raw	endp
+	@grcg_setcolor_direct_raw$qv endp
 endm
 
 ; Convenience macro to prepare ES:DI.

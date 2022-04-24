@@ -8,10 +8,10 @@
 #include "th04/common.h"
 #include "th04/score.h"
 #include "th01/math/subpixel.hpp"
+#include "th04/hardware/grcg.hpp"
 #include "th04/gaiji/gaiji.h"
 extern "C" {
 #include "th04/formats/bb.h"
-#include "th04/hardware/grcg.hpp"
 #include "th04/math/motion.hpp"
 #include "th04/main/null.hpp"
 #include "th04/main/playfld.hpp"
@@ -241,9 +241,9 @@ inline void bgm_title_dissolve_put(const int& len) {
 	text_putsa(bgm_title_tram_left(len), BGM_TRAM_Y, str, TX_WHITE);
 
 inline void titles_dissolve_put(const int& bgm_len) {
-	grcg_setmode_rmw_seg1();
+	grcg_setmode_rmw();
 
-	grcg_setcolor_direct_seg1(11); // Yellow
+	grcg_setcolor_direct(11); // Yellow
 	if(stage_id < 5) {
 		dissolve_put(STAGE_NUM_TRAM_LEFT, STAGE_NUM_CENTER_Y, STAGE_NUM_W);
 	} else {
@@ -253,7 +253,7 @@ inline void titles_dissolve_put(const int& bgm_len) {
 	}
 	bgm_note_dissolve_put(bgm_len);
 
-	grcg_setcolor_direct_seg1(15); // White
+	grcg_setcolor_direct(15); // White
 	bgm_title_dissolve_put(bgm_len);
 	dissolve_put(
 		(PLAYFIELD_TRAM_CENTER_X - (stage_title_len / 2)),
@@ -293,12 +293,12 @@ inline void titles_dissolve_put(const int& bgm_len) {
 	bgm_string_put(bgm_str, bgm_len);
 
 inline void boss_bgm_dissolve_put(const int& bgm_len) {
-	grcg_setmode_rmw_seg1();
+	grcg_setmode_rmw();
 
-	grcg_setcolor_direct_seg1(11);	// Yellow
+	grcg_setcolor_direct(11);	// Yellow
 	bgm_note_dissolve_put(bgm_len);
 
-	grcg_setcolor_direct_seg1(15);	// White
+	grcg_setcolor_direct(15);	// White
 	bgm_title_dissolve_put(bgm_len);
 
 	grcg_off();

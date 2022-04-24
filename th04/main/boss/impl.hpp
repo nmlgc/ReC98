@@ -27,7 +27,7 @@
 		} else { \
 			/* A copy of boss_backdrop_render()… */ \
 			grcg_setmode_tdw(); \
-			grcg_setcolor_direct_seg1(backdrop_col); \
+			grcg_setcolor_direct(backdrop_col); \
 			/* … that probably predated [boss_backdrop_colorfill]? */ \
 			backdrop_colorfill(); \
 			grcg_off(); \

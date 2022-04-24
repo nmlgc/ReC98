@@ -12,7 +12,7 @@ public @explosions_small_update_and_rend$qv
 	mov	ax, GRAM_400
 	mov	es, ax
 	assume es:nothing
-	call	_grcg_setmode_rmw_seg1
+	call	@grcg_setmode_rmw$qv
 	mov	si, offset _explosions_small
 	mov	[bp+@@i], 0
 	jmp	@@more_explosions?

@@ -49,7 +49,7 @@ _sparks_render proc near
 	push	si
 	push	di
 	mov	ah, GC_BR
-	call	_grcg_setcolor_direct_seg1_raw
+	call	@grcg_setcolor_direct_raw$qv
 	mov	ax, GRAM_400
 	mov	es, ax
 	assume es:nothing

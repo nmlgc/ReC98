@@ -222,7 +222,7 @@ public @lasers_render$qv
 	cmp	[si+laser_t.coords.LASER_width], 3
 	jb	short @@draw_inner_circle?
 	mov	ah, [si+laser_t.LASER_color]
-	call	_grcg_setcolor_direct_seg1_raw
+	call	@grcg_setcolor_direct_raw$qv
 	cmp	[si+laser_t.coords.starts_at_distance], (16 shl 4)
 	jg	short @@draw_outer_ray?
 	push	[bp+@@draw_x]
@@ -263,7 +263,7 @@ public @lasers_render$qv
 
 @@draw_inner_circle?:
 	mov	ah, 15
-	call	_grcg_setcolor_direct_seg1_raw
+	call	@grcg_setcolor_direct_raw$qv
 	cmp	[si+laser_t.coords.starts_at_distance], (16 shl 4)
 	jg	short @@draw_inner_ray_or_line?
 	push	[bp+@@draw_x]
@@ -327,7 +327,7 @@ public @lasers_render$qv
 
 @@decay:
 	mov	ah, 15
-	call	_grcg_setcolor_direct_seg1_raw
+	call	@grcg_setcolor_direct_raw$qv
 	shl	[bp+@@radius], 3
 	push	offset _drawpoint
 	push	[si+laser_t.coords.origin.x]

@@ -50,7 +50,7 @@ endm
 	cmp	[di+cheeto_trail_t.flag], 0
 	jz	@@bullet_next
 	mov	ah, [di+cheeto_trail_t.CBT_col]
-	call	_grcg_setcolor_direct_seg1_raw
+	call	@grcg_setcolor_direct_raw$qv
 	mov	si, (CHEETO_TRAIL_NODE_COUNT - 1)
 	jmp	short @@nodes_more?
 ; ---------------------------------------------------------------------------
