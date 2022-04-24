@@ -29,6 +29,7 @@ extern "C" {
 #include "th05/sprites/main_pat.h"
 #include "th05/formats/super.h"
 }
+#include "th04/main/boss/backdrop.hpp"
 #include "th05/main/boss/boss.hpp"
 #include "th05/main/boss/bosses.hpp"
 

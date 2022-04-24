@@ -2811,7 +2811,6 @@ sub_D032	endp
 mai_TEXT	ends
 
 BOSS_BD_TEXT	segment	byte public 'CODE' use16
-include th04/main/boss/backdrop.asm
 BOSS_BD_TEXT	ends
 
 BOSS_BG_TEXT	segment	byte public 'CODE' use16
