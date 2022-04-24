@@ -3,7 +3,6 @@
 extern "C" {
 #include "platform.h"
 #include "pc98.h"
-#include "planar.h"
 #include "th01/math/overlap.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th04/math/motion.hpp"
