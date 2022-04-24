@@ -160,6 +160,10 @@ struct bullet_t {
 static const subpixel_t BULLET_KILLBOX_W = TO_SP(8);
 static const subpixel_t BULLET_KILLBOX_H = TO_SP(8);
 
+#ifdef BULLET_D_CELS
+	static const unsigned char ANGLE_PER_SPRITE = (0x80 / BULLET_D_CELS);
+#endif
+
 #if GAME == 5
 # define PELLET_COUNT 180
 # define BULLET16_COUNT 220
@@ -169,8 +173,8 @@ static const subpixel_t BULLET_KILLBOX_H = TO_SP(8);
 // is technically not restricted to `main_patnum_t` in TH05 and can also be
 // used for a general (angle / BULLET_D_CELS) division, it still assumes
 // [patnum_base] to be that type in order to distinguish vector bullets.
-unsigned char pascal near bullet_patnum_for_angle(
-	int patnum_base, unsigned char angle
+extern "C++" unsigned char pascal near bullet_patnum_for_angle(
+	unsigned int patnum_base, unsigned char angle
 );
 
 // Turns every 4th bullet into a point item when zapping bullets.

@@ -423,8 +423,6 @@ void near bullet_template_speedtune_for_playperf(void)
 	}
 }
 
-static const unsigned char ANGLE_PER_SPRITE = (0x80 / BULLET_D_CELS);
-
 unsigned char pascal near bullet_patnum_for_angle(unsigned char angle)
 {
 	return (

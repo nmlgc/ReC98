@@ -15,7 +15,7 @@ extrn _pellets:bullet_t:PELLET_COUNT
 extrn _bullets16:bullet_t:PELLET_COUNT
 extrn _gather_template:gather_template_t
 
-BULLET_PATNUM_FOR_ANGLE procdesc pascal near \
+@BULLET_PATNUM_FOR_ANGLE$QUIUC procdesc pascal near \
 	patnum_base:word, angle:byte
 _bullets_add_regular procdesc near
 _bullet_velocity_and_angle_set procdesc near
@@ -174,7 +174,7 @@ _bullets_add_raw proc near
 	mov	ah, 0
 	cmp	al, PAT_BULLET16_D
 	jb	short @@is_nondirectional
-	call	bullet_patnum_for_angle pascal, ax, word ptr _group_i_absolute_angle
+	call	@bullet_patnum_for_angle$quiuc pascal, ax, word ptr _group_i_absolute_angle
 
 @@is_nondirectional:
 	mov	[si+bullet_t.BULLET_patnum], ax

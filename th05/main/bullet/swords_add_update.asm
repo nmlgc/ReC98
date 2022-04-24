@@ -27,7 +27,7 @@ swords_add proc near
 	call	vector2_near pascal, ax, word ptr sword_template.SWORD_angle, [bp+@@speed]
 	mov	al, sword_template.SWORD_angle
 	mov	[si+sword_t.SWORD_angle], al
-	call	bullet_patnum_for_angle pascal, PAT_SWORD, word ptr sword_template.SWORD_angle
+	call	@bullet_patnum_for_angle$quiuc pascal, PAT_SWORD, word ptr sword_template.SWORD_angle
 	mov	ah, 0
 	mov	[si+sword_t.SWORD_patnum_tiny], ax
 	mov	al, byte ptr [bp+@@speed]
@@ -80,7 +80,7 @@ swords_update proc near
 	dec	[si+sword_t.twirl_time]
 	cmp	[si+sword_t.twirl_time], 0
 	jnz	short @@twirl
-	call	bullet_patnum_for_angle pascal, PAT_SWORD, word ptr [si+sword_t.SWORD_angle]
+	call	@bullet_patnum_for_angle$quiuc pascal, PAT_SWORD, word ptr [si+sword_t.SWORD_angle]
 	mov	ah, 0
 	mov	[si+sword_t.SWORD_patnum_tiny], ax
 	call	snd_se_play pascal, 3
