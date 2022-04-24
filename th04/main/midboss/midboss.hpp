@@ -26,11 +26,16 @@ void pascal near midboss_score_bonus(unsigned int units);
 // Callbacks. *_func() functions are "activated" by setting the regular
 // function once the midboss battle starts.
 extern nearfunc_t_near midboss_invalidate;
+extern  farfunc_t_near midboss_update;
+extern nearfunc_t_near midboss_render;
 extern  farfunc_t_near midboss_update_func;
 extern nearfunc_t_near midboss_render_func;
 
 void midboss_reset(void);
 void pascal near midboss_invalidate_func(void);
+
+// Activates the midboss battle if [stage_frame] == [midboss.frames_until].
+void midboss_activate_if_stage_frame_is_midboss_start_frame(void);
 
 // Processes any collision of player shots within a box with the given radius
 // around the current position of the midboss. Returns the total amount of

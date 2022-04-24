@@ -45,7 +45,7 @@ include th04/main/enemy/enemy.inc
 
 main_01 group SLOWDOWN_TEXT, ma_TEXT, EMS_TEXT, mai_TEXT, PLAYFLD_TEXT, main_TEXT, DIALOG_TEXT, main__TEXT, PLAYER_P_TEXT, main_0_TEXT, HUD_OVRL_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT
 g_SHARED group SHARED, SHARED_
-main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, IT_SPL_U_TEXT, BOSS_4M_TEXT, main_033_TEXT, HUD_HP_TEXT, MB_DFT_TEXT, main_034_TEXT, BULLET_U_TEXT, BULLET_A_TEXT, main_035_TEXT, BOSS_TEXT, main_036_TEXT
+main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, IT_SPL_U_TEXT, BOSS_4M_TEXT, main_033_TEXT, MIDBOSS_TEXT, HUD_HP_TEXT, MB_DFT_TEXT, main_034_TEXT, BULLET_U_TEXT, BULLET_A_TEXT, main_035_TEXT, BOSS_TEXT, main_036_TEXT
 
 ; ===========================================================================
 
@@ -358,7 +358,7 @@ loc_AB9E:
 
 loc_ABBA:
 		call	fp_255CA
-		call	sub_19EE4
+		call	@midboss_activate_if_stage_frame_$qv
 		call	_stage_vm
 		cmp	_bombing, 0
 		jnz	short @@bombing
@@ -22471,48 +22471,12 @@ off_19EB0	dw offset loc_19AC8
 		dw offset loc_19C8A
 		dw offset loc_19CF0
 		dw offset loc_19DEB
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public @midboss_reset$qv
-@midboss_reset$qv	proc far
-		push	bp
-		mov	bp, sp
-		mov	_midboss_invalidate, offset nullfunc_near
-		mov	_midboss_render, offset nullfunc_near
-		setfarfp	_midboss_update, nullfunc_far
-		mov	_midboss_active, 0
-		mov	_midboss_hp, 0
-		pop	bp
-		retf
-@midboss_reset$qv	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_19EE4	proc far
-		push	bp
-		mov	bp, sp
-		mov	ax, _midboss_frames_until
-		cmp	ax, _stage_frame
-		jnz	short loc_19F14
-		mov	_midboss_invalidate, offset @midboss_invalidate_func$qv
-		mov	ax, _midboss_render_func
-		mov	_midboss_render, ax
-		mov	eax, _midboss_update_func
-		mov	_midboss_update, eax
-		mov	_midboss_phase, 0
-		mov	_midboss_phase_frame, 0
-		mov	_midboss_active, 1
-
-loc_19F14:
-		pop	bp
-		retf
-sub_19EE4	endp
 main_033_TEXT	ends
+
+MIDBOSS_TEXT	segment	byte public 'CODE' use16
+	extern @midboss_reset$qv:proc
+	extern @midboss_activate_if_stage_frame_$qv:proc
+MIDBOSS_TEXT ends
 
 HUD_HP_TEXT	segment	byte public 'CODE' use16
 	@HUD_HP_UPDATE_AND_RENDER$QII procdesc pascal near \
