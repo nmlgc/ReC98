@@ -1,5 +1,3 @@
-#pragma option -zCmain_031_TEXT -zPmain_03
-
 #include "platform.h"
 #include "pc98.h"
 #include "master.hpp"

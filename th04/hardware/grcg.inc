@@ -1,12 +1,3 @@
-GRCG_SETMODE_RMW_DEF macro sgm
-	public _grcg_setmode_rmw_seg&sgm
-	_grcg_setmode_rmw_seg&sgm	proc near
-		GRCG_SETMODE_VIA_MOV al, GC_RMW
-		ret
-	_grcg_setmode_rmw_seg&sgm	endp
-		nop
-endm
-
 GRCG_SETCOLOR_DIRECT_DEF macro sgm
 	public _grcg_setcolor_direct_seg&sgm&_raw
 	_grcg_setcolor_direct_seg&sgm&_raw	proc near
