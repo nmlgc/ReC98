@@ -43,7 +43,7 @@ include th04/main/enemy/enemy.inc
 	extern _tolower:proc
 	extern __ctype:byte
 
-main_01 group SLOWDOWN_TEXT, ma_TEXT, EMS_TEXT, mai_TEXT, PLAYFLD_TEXT, main_TEXT, DIALOG_TEXT, main__TEXT, PLAYER_P_TEXT, main_0_TEXT, HUD_OVRL_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT
+main_01 group SLOWDOWN_TEXT, ma_TEXT, EMS_TEXT, mai_TEXT, PLAYFLD_TEXT, main_TEXT, DIALOG_TEXT, main__TEXT, PLAYER_P_TEXT, main_0_TEXT, HUD_OVRL_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT, BOSS_BD_TEXT, main_014_TEXT
 g_SHARED group SHARED, SHARED_
 main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, IT_SPL_U_TEXT, BOSS_4M_TEXT, main_033_TEXT, HUD_HP_TEXT, MB_DFT_TEXT, main_034_TEXT, BULLET_U_TEXT, BULLET_A_TEXT, main_035_TEXT, BOSS_TEXT, main_036_TEXT
 
@@ -10147,8 +10147,13 @@ loc_12152:
 		pop	bp
 		retn
 sub_12124	endp
+main_013_TEXT	ends
 
+BOSS_BD_TEXT	segment	byte public 'CODE' use16
 include th04/main/boss/backdrop.asm
+BOSS_BD_TEXT	ends
+
+main_014_TEXT	segment	word public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -12000,7 +12005,7 @@ loc_130E9:
 		leave
 		retn
 @gengetsu_fg_render$qv	endp
-main_013_TEXT	ends
+main_014_TEXT	ends
 
 ; ===========================================================================
 

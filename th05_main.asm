@@ -37,7 +37,7 @@ include th05/main/enemy/enemy.inc
 	extern _execl:proc
 	extern _strlen:proc
 
-main_01 group SLOWDOWN_TEXT, m_TEXT, EMS_TEXT, ma_TEXT, CFG_LRES_TEXT, mai_TEXT, main_TEXT, main__TEXT, PLAYFLD_TEXT, main_0_TEXT, HUD_OVRL_TEXT, DIALOG_TEXT, PLAYER_P_TEXT, main_01_TEXT
+main_01 group SLOWDOWN_TEXT, m_TEXT, EMS_TEXT, ma_TEXT, CFG_LRES_TEXT, mai_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT, main_TEXT, main__TEXT, PLAYFLD_TEXT, main_0_TEXT, HUD_OVRL_TEXT, DIALOG_TEXT, PLAYER_P_TEXT, main_01_TEXT
 g_SHARED group SHARED, SHARED_
 main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, BULLET_A_TEXT, main_032_TEXT, main_033_TEXT, HUD_HP_TEXT, MB_DFT_TEXT, LASER_SC_TEXT, CHEETO_U_TEXT, IT_SPL_U_TEXT, BULLET_U_TEXT, MIDBOSS1_TEXT, main_034_TEXT, main_035_TEXT, BOSS_6_TEXT, BOSS_X_TEXT, main_036_TEXT, BOSS_TEXT
 
@@ -2808,8 +2808,13 @@ loc_D060:
 		pop	bp
 		retn
 sub_D032	endp
+mai_TEXT	ends
 
+BOSS_BD_TEXT	segment	byte public 'CODE' use16
 include th04/main/boss/backdrop.asm
+BOSS_BD_TEXT	ends
+
+BOSS_BG_TEXT	segment	byte public 'CODE' use16
 	@SARA_BG_RENDER$QV procdesc pascal near
 	@LOUISE_BG_RENDER$QV procdesc pascal near
 	@ALICE_BG_RENDER$QV procdesc pascal near
@@ -2817,7 +2822,7 @@ include th04/main/boss/backdrop.asm
 	@YUMEKO_BG_RENDER$QV procdesc pascal near
 	@SHINKI_BG_RENDER$QV procdesc pascal near
 	@EXALICE_BG_RENDER$QV procdesc pascal near
-mai_TEXT	ends
+BOSS_BG_TEXT	ends
 
 main_TEXT	segment	word public 'CODE' use16
 
