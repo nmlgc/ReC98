@@ -37,7 +37,7 @@ include th05/main/enemy/enemy.inc
 	extern _execl:proc
 	extern _strlen:proc
 
-main_01 group SLOWDOWN_TEXT, m_TEXT, EMS_TEXT, ma_TEXT, CFG_LRES_TEXT, mai_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT, main_TEXT, main__TEXT, PLAYFLD_TEXT, main_0_TEXT, HUD_OVRL_TEXT, DIALOG_TEXT, PLAYER_P_TEXT, main_01_TEXT
+main_01 group SLOWDOWN_TEXT, m_TEXT, EMS_TEXT, ma_TEXT, CFG_LRES_TEXT, mai_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT, main_TEXT, main__TEXT, PLAYFLD_TEXT, main_0_TEXT, HUD_OVRL_TEXT, DIALOG_TEXT, PLAYER_P_TEXT, main_01_TEXT
 g_SHARED group SHARED, SHARED_
 main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, BULLET_A_TEXT, main_032_TEXT, main_033_TEXT, HUD_HP_TEXT, MB_DFT_TEXT, LASER_SC_TEXT, CHEETO_U_TEXT, IT_SPL_U_TEXT, BULLET_U_TEXT, MIDBOSS1_TEXT, main_034_TEXT, main_035_TEXT, BOSS_6_TEXT, BOSS_X_TEXT, main_036_TEXT, BOSS_TEXT
 
@@ -1542,7 +1542,7 @@ tiles_render	proc near
 		call	items_invalidate
 		call	_sparks_invalidate
 		call	pointnums_invalidate
-		call	_midboss_invalidate?
+		call	_midboss_invalidate
 		call	_stage_invalidate
 		call	tiles_redraw_invalidated
 		pop	bp
@@ -2782,33 +2782,11 @@ sub_CFEE	proc near
 sub_CFEE	endp
 
 include th04/hardware/grcg_fill_rows.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D032	proc near
-		push	bp
-		mov	bp, sp
-		cmp	_midboss_phase, PHASE_EXPLODE_BIG
-		jnb	short loc_D04F
-		mov	_tile_invalidate_box.x, 64
-		mov	_tile_invalidate_box.y, 64
-		pushd	[_midboss_pos.prev]
-		jmp	short loc_D060
-; ---------------------------------------------------------------------------
-
-loc_D04F:
-		mov	_tile_invalidate_box.x, 128
-		mov	_tile_invalidate_box.y, 128
-		pushd	[_midboss_pos.cur]
-
-loc_D060:
-		call	tiles_invalidate_around
-		pop	bp
-		retn
-sub_D032	endp
 mai_TEXT	ends
+
+MB_INV_TEXT	segment	byte public 'CODE' use16
+	@MIDBOSS_INVALIDATE_FUNC$QV procdesc near
+MB_INV_TEXT	ends
 
 BOSS_BD_TEXT	segment	byte public 'CODE' use16
 BOSS_BD_TEXT	ends
@@ -10332,7 +10310,7 @@ public @midboss_reset$qv
 @midboss_reset$qv	proc far
 		push	bp
 		mov	bp, sp
-		mov	_midboss_invalidate?, offset nullfunc_near
+		mov	_midboss_invalidate, offset nullfunc_near
 		mov	_midboss_render, offset nullfunc_near
 		setfarfp	_midboss_update, nullfunc_far
 		mov	_midboss_hp, 0
@@ -10351,7 +10329,7 @@ sub_17322	proc far
 		mov	ax, _midboss_frames_until
 		cmp	ax, _stage_frame
 		jnz	short loc_17352
-		mov	_midboss_invalidate?, offset sub_D032
+		mov	_midboss_invalidate, offset @midboss_invalidate_func$qv
 		mov	ax, _midboss_render_func
 		mov	_midboss_render, ax
 		mov	eax, _midboss_update_func
