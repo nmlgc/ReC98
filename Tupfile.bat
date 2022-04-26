@@ -48,6 +48,7 @@ tasm32 /m /mx /kh32768 /t /dGAME=4 th04\input_s.asm bin\th04\input_s.obj
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04\cdg_load.asm bin\th04\cdg_load.obj
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04\bgimager.asm bin\th04\bgimager.obj
 tasm32 /m /mx /kh32768 /t /dGAME=4 th04\motion_3.asm bin\th04\motion_3.obj
+tasm32 /m /mx /kh32768 /t /dGAME=4 th04\spark_a.asm bin\th04\spark_a.obj
 tasm32 /m /mx /kh32768 /t th04_op.asm bin\th04\op.obj
 tasm32 /m /mx /kh32768 /t th04_main.asm bin\th04\main.obj
 tasm32 /m /mx /kh32768 /t th04_maine.asm bin\th04\maine.obj
@@ -65,6 +66,7 @@ tasm32 /m /mx /kh32768 /t /dGAME=5 th05\musicp_a.asm bin\th05\musicp_a.obj
 tasm32 /m /mx /kh32768 /t /dGAME=5 th05\bgimager.asm bin\th05\bgimager.obj
 tasm32 /m /mx /kh32768 /t /dGAME=5 th05\pi_asm_1.asm bin\th05\pi_asm_1.obj
 tasm32 /m /mx /kh32768 /t /dGAME=5 th05\pi_asm_2.asm bin\th05\pi_asm_2.obj
+tasm32 /m /mx /kh32768 /t /dGAME=5 th05\spark_a.asm bin\th05\spark_a.obj
 tasm32 /m /mx /kh32768 /t th05_op.asm bin\th05\op.obj
 tasm32 /m /mx /kh32768 /t th05_main.asm bin\th05\main.obj
 tasm32 /m /mx /kh32768 /t th05_maine.asm bin\th05\maine.obj

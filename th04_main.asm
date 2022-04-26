@@ -45,7 +45,7 @@ include th04/main/enemy/enemy.inc
 
 main_01 group SLOWDOWN_TEXT, ma_TEXT, EMS_TEXT, mai_TEXT, PLAYFLD_TEXT, main_TEXT, DIALOG_TEXT, main__TEXT, PLAYER_P_TEXT, main_0_TEXT, HUD_OVRL_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT
 g_SHARED group SHARED, SHARED_
-main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, GRCG_3_TEXT, IT_SPL_U_TEXT, BOSS_4M_TEXT, main_033_TEXT, MIDBOSS_TEXT, HUD_HP_TEXT, MB_DFT_TEXT, main_034_TEXT, BULLET_U_TEXT, BULLET_A_TEXT, main_035_TEXT, BOSS_TEXT, main_036_TEXT
+main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, SPARK_A_TEXT, GRCG_3_TEXT, IT_SPL_U_TEXT, BOSS_4M_TEXT, main_033_TEXT, MIDBOSS_TEXT, HUD_HP_TEXT, MB_DFT_TEXT, main_034_TEXT, BULLET_U_TEXT, BULLET_A_TEXT, main_035_TEXT, BOSS_TEXT, main_036_TEXT
 
 ; ===========================================================================
 
@@ -8630,7 +8630,7 @@ var_6		= word ptr -6
 		inc	byte_25980
 		test	byte_25980, 1
 		jz	short @@shot_next
-		call	sparks_add_random pascal, [si+shot_t.pos.cur.x], [si+shot_t.pos.cur.y], large (((8 shl 4) shl 16) or 1)
+		call	@sparks_add_random$q20%SubpixelBase$ti$ti%t1ii pascal, [si+shot_t.pos.cur.x], [si+shot_t.pos.cur.y], large (((8 shl 4) shl 16) or 1)
 
 @@shot_next:
 		inc	[bp+@@i]
@@ -8671,7 +8671,7 @@ loc_1068C:
 		inc	byte_25980
 		test	byte_25980, 3
 		jnz	short loc_106D4
-		call	sparks_add_random pascal, [bp+@@laser_x], _shot_hitbox_center.y, large (((8 shl 4) shl 16) or 1)
+		call	@sparks_add_random$q20%SubpixelBase$ti$ti%t1ii pascal, [bp+@@laser_x], _shot_hitbox_center.y, large (((8 shl 4) shl 16) or 1)
 
 loc_106D4:
 		add	[bp+@@laser_x], ((PLAYER_OPTION_DISTANCE * 2) shl 4)
@@ -8683,7 +8683,7 @@ loc_106D4:
 		inc	byte_25980
 		test	byte_25980, 3
 		jnz	short loc_10704
-		call	sparks_add_random pascal, [bp+@@laser_x], _shot_hitbox_center.y, large (((8 shl 4) shl 16) or 1)
+		call	@sparks_add_random$q20%SubpixelBase$ti$ti%t1ii pascal, [bp+@@laser_x], _shot_hitbox_center.y, large (((8 shl 4) shl 16) or 1)
 
 loc_10704:
 		movzx	eax, di
@@ -12052,8 +12052,13 @@ RANDRING_NEXT_DEF 2
 include th04/main/pointnum/add.asm
 include th04/math/vector2_near.asm
 		nop
-include th04/main/sparks_add.asm
 main_032_TEXT	ends
+
+SPARK_A_TEXT	segment	byte public 'CODE' use16
+	@SPARKS_ADD_CIRCLE$Q20%SUBPIXELBASE$TI$TI%T1II procdesc pascal near \
+		center_x:word, center_y: word, distance_and_count:dword
+	extern @SPARKS_ADD_RANDOM$Q20%SUBPIXELBASE$TI$TI%T1II:proc
+SPARK_A_TEXT	ends
 
 GRCG_3_TEXT	segment	byte public 'CODE' use16
 GRCG_3_TEXT	ends
@@ -12187,7 +12192,7 @@ public @MIDBOSS1_UPDATE$QV
 		add	_midboss_pos.cur.y, ax
 		call	scroll_subpixel_y_to_vram_seg3 pascal, _midboss_pos.cur.y
 		mov	word_25596, ax
-		call	sparks_add_circle pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((3 shl 4) shl 16) or 32)
+		call	@sparks_add_circle$q20%SubpixelBase$ti$ti%t1ii pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((3 shl 4) shl 16) or 32)
 		push	9
 
 loc_14117:
@@ -12228,7 +12233,7 @@ loc_14158:
 		add	ax, (-16 shl 4)
 		call	scroll_subpixel_y_to_vram_seg3 pascal, ax
 		mov	word_25596, ax
-		call	sparks_add_circle pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((3 shl 4) shl 16) or 32)
+		call	@sparks_add_circle$q20%SubpixelBase$ti$ti%t1ii pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((3 shl 4) shl 16) or 32)
 		call	snd_se_play pascal, 9
 
 loc_1419A:
@@ -12334,7 +12339,7 @@ loc_142AC:
 		mov	_midboss_sprite, 4
 		mov	_midboss_phase_frame, 0
 		mov	_midboss_pos.velocity.y, 0
-		call	sparks_add_circle pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((8 shl 4) shl 16) or 48)
+		call	@sparks_add_circle$q20%SubpixelBase$ti$ti%t1ii pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((8 shl 4) shl 16) or 48)
 		call	snd_se_play pascal, 12
 		mov	_scroll_speed, 4
 		jmp	short loc_142E4
@@ -12699,7 +12704,7 @@ loc_14629:
 		mov	_midboss_sprite, 4
 		mov	_midboss_phase_frame, 0
 		mov	_midboss_pos.velocity.x, 0
-		call	sparks_add_circle pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((6 shl 4) shl 16) or 48)
+		call	@sparks_add_circle$q20%SubpixelBase$ti$ti%t1ii pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((6 shl 4) shl 16) or 48)
 		call	snd_se_play pascal, 12
 		call	@items_add$qii11item_type_t pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, IT_1UP
 		jmp	short loc_1468D
@@ -13600,7 +13605,7 @@ loc_14EE0:
 		mov	_midboss_phase_frame, 0
 		mov	_midboss_pos.velocity.x, 0
 		mov	_midboss_pos.velocity.y, (-1 shl 4)
-		call	sparks_add_circle pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((8 shl 4) shl 16) or 48)
+		call	@sparks_add_circle$q20%SubpixelBase$ti$ti%t1ii pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((8 shl 4) shl 16) or 48)
 		push	12
 
 loc_14F0F:
@@ -13622,7 +13627,7 @@ loc_14F16:
 loc_14F38:
 		cmp	_stage_frame_mod16, 0
 		jnz	short loc_14F57
-		call	sparks_add_circle pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((8 shl 4) shl 16) or 16)
+		call	@sparks_add_circle$q20%SubpixelBase$ti$ti%t1ii pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((8 shl 4) shl 16) or 16)
 		jmp	short loc_14F57
 ; ---------------------------------------------------------------------------
 
@@ -14179,7 +14184,7 @@ loc_15414:
 		mov	_midboss_sprite, 4
 		mov	_midboss_phase_frame, 0
 		mov	_midboss_pos.velocity.x, 0
-		call	sparks_add_circle pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((6 shl 4) shl 16) or 48)
+		call	@sparks_add_circle$q20%SubpixelBase$ti$ti%t1ii pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((6 shl 4) shl 16) or 48)
 		call	snd_se_play pascal, 12
 		cmp	_midboss_frames_until, 2800
 		jnz	short loc_15480
@@ -16896,7 +16901,8 @@ loc_16CFC:
 		push	word ptr [si+2]
 		push	word ptr [si+4]
 		push	large (((4 shl 4) shl 16) or 8)
-		nopcall	sparks_add_random
+		nop
+		call	@sparks_add_random$q20%SubpixelBase$ti$ti%t1ii
 		jmp	short loc_16DC5
 ; ---------------------------------------------------------------------------
 
@@ -18938,7 +18944,8 @@ loc_17F3C:
 		push	[si+enemy_t.pos.cur.x]
 		push	[si+enemy_t.pos.cur.y]
 		push	large (((4 shl 4) shl 16) or 8)
-		nopcall	sparks_add_random
+		nop
+		call	@sparks_add_random$q20%SubpixelBase$ti$ti%t1ii
 		inc	_enemies_gone
 		inc	_enemies_killed
 		jmp	@@next
@@ -21438,7 +21445,7 @@ loc_194C1:
 
 loc_194D2:
 		inc	_boss_phase
-		call	sparks_add_circle pascal, _boss_pos.cur.x, _boss_pos.cur.y, large (((8 shl 4) shl 16) or 48)
+		call	@sparks_add_circle$q20%SubpixelBase$ti$ti%t1ii pascal, _boss_pos.cur.x, _boss_pos.cur.y, large (((8 shl 4) shl 16) or 48)
 		call	@boss_explode_small$q16explosion_type_t pascal, ET_VERTICAL
 		cmp	_boss_phase_frame, 600
 		jge	short loc_194FB
@@ -22384,7 +22391,7 @@ loc_19DC3:
 		inc	_boss_phase
 		mov	_boss_phase_frame, 0
 		mov	_boss_mode, 0
-		call	sparks_add_circle pascal, _boss_pos.cur.x, _boss_pos.cur.y, large (((8 shl 4) shl 16) or 48)
+		call	@sparks_add_circle$q20%SubpixelBase$ti$ti%t1ii pascal, _boss_pos.cur.x, _boss_pos.cur.y, large (((8 shl 4) shl 16) or 48)
 		jmp	loc_19E8D
 ; ---------------------------------------------------------------------------
 
@@ -22684,7 +22691,8 @@ loc_1A1EE:
 		push	word ptr [si+2]
 		push	word ptr [si+4]
 		push	large (((4 shl 4) shl 16) or 8)
-		nopcall	sparks_add_random
+		nop
+		call	@sparks_add_random$q20%SubpixelBase$ti$ti%t1ii
 		call	@items_add$qii11item_type_t pascal, word ptr [si+2], word ptr [si+4], IT_BIGPOWER
 
 loc_1A22E:
@@ -26277,7 +26285,7 @@ loc_1C585:
 
 loc_1C591:
 		inc	_boss_phase
-		call	sparks_add_circle pascal, _boss_pos.cur.x, _boss_pos.cur.y, large (((8 shl 4) shl 16) or 48)
+		call	@sparks_add_circle$q20%SubpixelBase$ti$ti%t1ii pascal, _boss_pos.cur.x, _boss_pos.cur.y, large (((8 shl 4) shl 16) or 48)
 		call	@boss_explode_small$q16explosion_type_t pascal, ET_VERTICAL
 		mov	_boss_phase_frame, 0
 

@@ -39,7 +39,7 @@ include th05/main/enemy/enemy.inc
 
 main_01 group SLOWDOWN_TEXT, m_TEXT, EMS_TEXT, ma_TEXT, CFG_LRES_TEXT, mai_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT, main_TEXT, main__TEXT, PLAYFLD_TEXT, main_0_TEXT, HUD_OVRL_TEXT, DIALOG_TEXT, PLAYER_P_TEXT, main_01_TEXT
 g_SHARED group SHARED, SHARED_
-main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, BULLET_P_TEXT, GRCG_3_TEXT, PLAYER_A_TEXT, BULLET_A_TEXT, main_032_TEXT, main_033_TEXT, MIDBOSS_TEXT, HUD_HP_TEXT, MB_DFT_TEXT, LASER_SC_TEXT, CHEETO_U_TEXT, IT_SPL_U_TEXT, BULLET_U_TEXT, MIDBOSS1_TEXT, main_034_TEXT, main_035_TEXT, BOSS_6_TEXT, BOSS_X_TEXT, main_036_TEXT, BOSS_TEXT
+main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, SPARK_A_TEXT, BULLET_P_TEXT, GRCG_3_TEXT, PLAYER_A_TEXT, BULLET_A_TEXT, main_032_TEXT, main_033_TEXT, MIDBOSS_TEXT, HUD_HP_TEXT, MB_DFT_TEXT, LASER_SC_TEXT, CHEETO_U_TEXT, IT_SPL_U_TEXT, BULLET_U_TEXT, MIDBOSS1_TEXT, main_034_TEXT, main_035_TEXT, BOSS_6_TEXT, BOSS_X_TEXT, main_036_TEXT, BOSS_TEXT
 
 ; ===========================================================================
 
@@ -7673,7 +7673,7 @@ loc_1271E:
 		inc	byte_2D060
 		test	byte_2D060, 1
 		jz	short loc_1273B
-		call	sparks_add_random pascal, [di+shot_alive_t.SA_pos.x], [di+shot_alive_t.SA_pos.y], large (((8 shl 4) shl 16) or 1)
+		call	@sparks_add_random$q20%SubpixelBase$ti$ti%t1ii pascal, [di+shot_alive_t.SA_pos.x], [di+shot_alive_t.SA_pos.y], large (((8 shl 4) shl 16) or 1)
 
 loc_1273B:
 		call	hitshot_from pascal, [di+shot_alive_t.SA_shot]
@@ -7861,7 +7861,7 @@ loc_128AD:
 		inc	byte_2D060
 		test	byte_2D060, 1
 		jz	short loc_128CA
-		call	sparks_add_random pascal, [si+shot_alive_t.SA_pos.x], [si+shot_alive_t.SA_pos.y], large (((8 shl 4) shl 16) or 1)
+		call	@sparks_add_random$q20%SubpixelBase$ti$ti%t1ii pascal, [si+shot_alive_t.SA_pos.x], [si+shot_alive_t.SA_pos.y], large (((8 shl 4) shl 16) or 1)
 
 loc_128CA:
 		cmp	_rank, RANK_EASY
@@ -8764,15 +8764,20 @@ include th04/main/pointnum/add.asm
 sub_158CC	proc far
 		push	bp
 		mov	bp, sp
-		call	sparks_add_circle pascal, _player_pos.cur.x, _player_pos.cur.y, large (((12 shl 4) shl 16) or 24)
+		call	@sparks_add_circle$q20%SubpixelBase$ti$ti%t1ii pascal, _player_pos.cur.x, _player_pos.cur.y, large (((12 shl 4) shl 16) or 24)
 		pop	bp
 		retf
 sub_158CC	endp
 
 include th04/math/vector2_near.asm
 		nop
-include th04/main/sparks_add.asm
 main_031_TEXT	ends
+
+SPARK_A_TEXT	segment	byte public 'CODE' use16
+	@SPARKS_ADD_CIRCLE$Q20%SUBPIXELBASE$TI$TI%T1II procdesc pascal near \
+		center_x:word, center_y: word, distance_and_count:dword
+	extern @SPARKS_ADD_RANDOM$Q20%SUBPIXELBASE$TI$TI%T1II:proc
+SPARK_A_TEXT	ends
 
 BULLET_P_TEXT	segment	byte public 'CODE' use16
 	@BULLET_PATNUM_FOR_ANGLE$QUIUC procdesc pascal near \
@@ -9092,7 +9097,8 @@ loc_1618C:
 		push	[si+enemy_t.pos.cur.x]
 		push	[si+enemy_t.pos.cur.y]
 		push	large (((4 shl 4) shl 16) or 7)
-		nopcall	sparks_add_random
+		nop
+		call	@sparks_add_random$q20%SubpixelBase$ti$ti%t1ii
 		inc	_enemies_gone
 		inc	_enemies_killed
 		jmp	@@next
@@ -11330,7 +11336,7 @@ loc_18ADC:
 		inc	_midboss_phase
 		mov	_midboss_sprite, 206
 		mov	_midboss_phase_frame, 0
-		call	sparks_add_circle pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((4 shl 4) shl 16) or 32)
+		call	@sparks_add_circle$q20%SubpixelBase$ti$ti%t1ii pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((4 shl 4) shl 16) or 32)
 		call	snd_se_play pascal, 15
 		call	vector2_between_plus pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, ((192 shl 4) shl 16) or (64 shl 4), 0, ds, offset _midboss_pos.velocity.x, ds, offset _midboss_pos.velocity.y, 1
 		jmp	short loc_18BA0
@@ -11356,7 +11362,7 @@ loc_18B67:
 		mov	_midboss_phase, PHASE_EXPLODE_BIG
 		mov	_midboss_sprite, 4
 		mov	_midboss_phase_frame, 0
-		call	sparks_add_circle pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((8 shl 4) shl 16) or 48)
+		call	@sparks_add_circle$q20%SubpixelBase$ti$ti%t1ii pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((8 shl 4) shl 16) or 48)
 		call	snd_se_play pascal, 12
 		jmp	short loc_18BA0
 ; ---------------------------------------------------------------------------
@@ -12565,7 +12571,7 @@ loc_195DA:
 		mov	_midboss_phase, PHASE_EXPLODE_BIG
 		mov	_midboss_sprite, 4
 		mov	_midboss_phase_frame, 0
-		call	sparks_add_circle pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((8 shl 4) shl 16) or 48)
+		call	@sparks_add_circle$q20%SubpixelBase$ti$ti%t1ii pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((8 shl 4) shl 16) or 48)
 		call	snd_se_play pascal, 12
 		jmp	short loc_19613
 ; ---------------------------------------------------------------------------
@@ -15684,7 +15690,7 @@ loc_1B368:
 		mov	_midboss_phase, PHASE_EXPLODE_BIG
 		mov	_midboss_sprite, 4
 		mov	_midboss_phase_frame, 0
-		call	sparks_add_circle pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((8 shl 4) shl 16) or 48)
+		call	@sparks_add_circle$q20%SubpixelBase$ti$ti%t1ii pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((8 shl 4) shl 16) or 48)
 		call	snd_se_play pascal, 12
 		jmp	short loc_1B3A1
 ; ---------------------------------------------------------------------------
@@ -19296,7 +19302,7 @@ loc_1E82B:
 		mov	_midboss_phase, PHASE_EXPLODE_BIG
 		mov	_midboss_sprite, 4
 		mov	_midboss_phase_frame, 0
-		call	sparks_add_circle pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((8 shl 4) shl 16) or 48)
+		call	@sparks_add_circle$q20%SubpixelBase$ti$ti%t1ii pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((8 shl 4) shl 16) or 48)
 		call	snd_se_play pascal, 12
 		jmp	short loc_1E864
 ; ---------------------------------------------------------------------------
@@ -21091,7 +21097,7 @@ loc_1F968:
 		mov	_midboss_phase, PHASE_EXPLODE_BIG
 		mov	_midboss_sprite, 4
 		mov	_midboss_phase_frame, 0
-		call	sparks_add_circle pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((8 shl 4) shl 16) or 48)
+		call	@sparks_add_circle$q20%SubpixelBase$ti$ti%t1ii pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, large (((8 shl 4) shl 16) or 48)
 		call	snd_se_play pascal, 12
 		jmp	short loc_1F9A1
 ; ---------------------------------------------------------------------------

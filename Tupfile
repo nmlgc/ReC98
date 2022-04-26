@@ -98,6 +98,7 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 : th04\\cdg_load.asm |> !as4 |>
 : th04\\bgimager.asm |> !as4 |>
 : th04\\motion_3.asm |> !as4 |>
+: th04\\spark_a.asm |> !as4 |>
 : th04_op.asm |> !as |> bin\\th04\\op.obj
 : th04_main.asm | \
 	th02/sprites/pellet.asp \
@@ -123,6 +124,7 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 : th05\\bgimager.asm |> !as5 |>
 : th05\\pi_asm_1.asm |> !as5 |>
 : th05\\pi_asm_2.asm |> !as5 |>
+: th05\\spark_a.asm |> !as5 |>
 : th05_op.asm | \
 	th05/sprites/piano_l.asp \
 	|> !as |> bin\\th05\\op.obj

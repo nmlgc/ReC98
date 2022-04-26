@@ -17,12 +17,12 @@ extern "C" {
 #include "th04/main/rank.hpp"
 #include "th04/main/score.hpp"
 #include "th04/main/slowdown.hpp"
-#include "th04/main/spark.hpp"
 #include "th04/main/bullet/bullet.hpp"
 #include "th04/main/bullet/pellet_r.hpp"
 #include "th04/main/bullet/clearzap.hpp"
 #include "th04/main/player/player.hpp"
 }
+#include "th04/main/spark.hpp"
 #include "th04/main/hud/hud.hpp"
 #include "th04/main/hud/overlay.hpp"
 #include "th04/main/pointnum/pointnum.hpp"
@@ -352,7 +352,7 @@ void bullets_update(void)
 					)) {
 						/* TODO: Replace with the decompiled call
 						 * 	sparks_add_random(bullet->pos.cur.x, bullet->pos.cur.y, to_sp(2.0f), 2);
-						 * once that function is part of this translation unit */
+						 * once that function is part of the same segment */
 						_asm {
 							db  	0xFF, 0x74, 0x02;
 							db  	0xFF, 0x74, 0x04;

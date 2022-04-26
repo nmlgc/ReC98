@@ -116,7 +116,7 @@ _sparks_init proc near
 	add	si, size spark_t
 	dec	di
 	jnz	short @@loop
-	mov	byte ptr _spark_next_free_offset, 0
+	mov	byte ptr _spark_ring_offset, 0
 	pop	di
 	pop	si
 	retn
