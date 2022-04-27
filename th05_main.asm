@@ -39,7 +39,7 @@ include th05/main/enemy/enemy.inc
 
 main_01 group SLOWDOWN_TEXT, m_TEXT, EMS_TEXT, ma_TEXT, CFG_LRES_TEXT, mai_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT, main_TEXT, main__TEXT, PLAYFLD_TEXT, main_0_TEXT, HUD_OVRL_TEXT, DIALOG_TEXT, PLAYER_P_TEXT, main_01_TEXT
 g_SHARED group SHARED, SHARED_
-main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, SPARK_A_TEXT, BULLET_P_TEXT, GRCG_3_TEXT, PLAYER_A_TEXT, BULLET_A_TEXT, main_032_TEXT, main_033_TEXT, MIDBOSS_TEXT, HUD_HP_TEXT, MB_DFT_TEXT, LASER_SC_TEXT, CHEETO_U_TEXT, IT_SPL_U_TEXT, BULLET_U_TEXT, MIDBOSS1_TEXT, main_034_TEXT, main_035_TEXT, BOSS_6_TEXT, BOSS_X_TEXT, main_036_TEXT, BOSS_TEXT
+main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, VECTOR2N_TEXT, SPARK_A_TEXT, BULLET_P_TEXT, GRCG_3_TEXT, PLAYER_A_TEXT, BULLET_A_TEXT, main_032_TEXT, main_033_TEXT, MIDBOSS_TEXT, HUD_HP_TEXT, MB_DFT_TEXT, LASER_SC_TEXT, CHEETO_U_TEXT, IT_SPL_U_TEXT, BULLET_U_TEXT, MIDBOSS1_TEXT, main_034_TEXT, main_035_TEXT, BOSS_6_TEXT, BOSS_X_TEXT, main_036_TEXT, BOSS_TEXT
 
 ; ===========================================================================
 
@@ -8768,10 +8768,12 @@ sub_158CC	proc far
 		pop	bp
 		retf
 sub_158CC	endp
-
-include th04/math/vector2_near.asm
-		nop
 main_031_TEXT	ends
+
+VECTOR2N_TEXT	segment byte public 'CODE' use16
+	VECTOR2_NEAR procdesc pascal near \
+		ret:word, angle:byte, length:word
+VECTOR2N_TEXT	ends
 
 SPARK_A_TEXT	segment	byte public 'CODE' use16
 	@SPARKS_ADD_CIRCLE$Q20%SUBPIXELBASE$TI$TI%T1II procdesc pascal near \

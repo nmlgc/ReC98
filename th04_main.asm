@@ -45,7 +45,7 @@ include th04/main/enemy/enemy.inc
 
 main_01 group SLOWDOWN_TEXT, ma_TEXT, EMS_TEXT, mai_TEXT, PLAYFLD_TEXT, main_TEXT, DIALOG_TEXT, main__TEXT, PLAYER_P_TEXT, main_0_TEXT, HUD_OVRL_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT
 g_SHARED group SHARED, SHARED_
-main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, SPARK_A_TEXT, GRCG_3_TEXT, IT_SPL_U_TEXT, BOSS_4M_TEXT, main_033_TEXT, MIDBOSS_TEXT, HUD_HP_TEXT, MB_DFT_TEXT, main_034_TEXT, BULLET_U_TEXT, BULLET_A_TEXT, main_035_TEXT, BOSS_TEXT, main_036_TEXT
+main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, VECTOR2N_TEXT, SPARK_A_TEXT, GRCG_3_TEXT, IT_SPL_U_TEXT, BOSS_4M_TEXT, main_033_TEXT, MIDBOSS_TEXT, HUD_HP_TEXT, MB_DFT_TEXT, main_034_TEXT, BULLET_U_TEXT, BULLET_A_TEXT, main_035_TEXT, BOSS_TEXT, main_036_TEXT
 
 ; ===========================================================================
 
@@ -12050,9 +12050,12 @@ main_032_TEXT	segment	word public 'CODE' use16
 RANDRING_NEXT_DEF 2
 		db    0
 include th04/main/pointnum/add.asm
-include th04/math/vector2_near.asm
-		nop
 main_032_TEXT	ends
+
+VECTOR2N_TEXT	segment byte public 'CODE' use16
+	VECTOR2_NEAR procdesc pascal near \
+		ret:word, angle:byte, length:word
+VECTOR2N_TEXT	ends
 
 SPARK_A_TEXT	segment	byte public 'CODE' use16
 	@SPARKS_ADD_CIRCLE$Q20%SUBPIXELBASE$TI$TI%T1II procdesc pascal near \
