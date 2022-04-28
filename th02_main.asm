@@ -1959,7 +1959,7 @@ loc_B290:
 		call	far ptr	palette_show
 		push	ds
 		push	offset arg0	; "op"
-		nopcall	sub_C566
+		nopcall	@GameExecl$qnxc
 		add	sp, 4
 		xor	ax, ax
 		pop	bp
@@ -3498,10 +3498,10 @@ sub_C31F	endp
 
 ; Attributes: bp-based frame
 
-; int __cdecl __far sub_C566(char *arg0)
-sub_C566	proc far
+public @GameExecl$qnxc
+@GameExecl$qnxc	proc far
 
-_arg0		= dword	ptr  6
+@@binary_fn		= dword	ptr  6
 
 		push	bp
 		mov	bp, sp
@@ -3514,14 +3514,10 @@ _arg0		= dword	ptr  6
 		call	text_clear
 		call	gaiji_free
 		call	_game_exit
-		pushd	0
-		pushd	[bp+_arg0]	; arg0
-		pushd	[bp+_arg0]	; path
-		call	_execl
-		add	sp, 0Ch
+		call	_execl c, large [bp+@@binary_fn], large [bp+@@binary_fn], large 0
 		pop	bp
 		retf
-sub_C566	endp
+@GameExecl$qnxc	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -22479,10 +22475,7 @@ evileye_end	proc far
 		add	eax, edx
 		mov	es:[bx+mikoconfig_t.score], eax
 		call	sub_1CDD6
-		push	ds
-		push	offset aMaine	; "maine"
-		call	sub_C566
-		add	sp, 4
+		call	@GameExecl$qnxc c, offset aMaine, ds	; "maine"
 		pop	bp
 		retf
 evileye_end	endp
@@ -27934,10 +27927,7 @@ loc_19C4A:
 		mov	al, bombs
 		mov	es:[bx+mikoconfig_t.rem_bombs], al
 		call	sub_19949
-		push	ds
-		push	offset aMaine_0	; "maine"
-		call	sub_C566
-		add	sp, 4
+		call	@GameExecl$qnxc c, offset aMaine_0, ds	; "maine"
 		pop	bp
 		retn
 sub_19C1D	endp

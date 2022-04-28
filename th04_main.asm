@@ -325,7 +325,7 @@ loc_AB6B:
 loc_AB7D:
 		push	ds
 		push	offset arg0	; "op"
-		nopcall	main_01:GameCore
+		nopcall	@GameExecl$qnxc
 
 loc_AB86:
 		pop	bp
@@ -1043,7 +1043,7 @@ DemoPlay	proc near
 		call	palette_black_out
 		push	ds
 		push	offset aOp_0	; "op"
-		nopcall	main_01:GameCore
+		nopcall	@GameExecl$qnxc
 
 @@demo_not_end:
 		pop	bp
@@ -1122,7 +1122,7 @@ public @end_game_good$qv
 		call	palette_black_out
 		push	ds
 		push	offset aMaine	; "maine"
-		nopcall	main_01:GameCore
+		nopcall	@GameExecl$qnxc
 		pop	bp
 		retf
 @end_game_good$qv	endp
@@ -1143,7 +1143,7 @@ public @end_game_bad$qv
 		call	palette_black_out
 		push	ds
 		push	offset aMaine_0	; "maine"
-		nopcall	main_01:GameCore
+		nopcall	@GameExecl$qnxc
 		pop	bp
 		retf
 @end_game_bad$qv	endp
@@ -1163,7 +1163,7 @@ public @end_extra$qv
 		call	palette_black_out
 		push	ds
 		push	offset aMaine_1	; "maine"
-		nopcall	main_01:GameCore
+		nopcall	@GameExecl$qnxc
 		pop	bp
 		retf
 @end_extra$qv	endp
@@ -4728,7 +4728,7 @@ loc_E654:
 		call	palette_black_out
 		push	ds
 		push	offset aMaine_2	; "maine"
-		nopcall	main_01:GameCore
+		nopcall	@GameExecl$qnxc
 
 loc_E675:
 		mov	al, byte ptr [bp+var_2]
@@ -4911,11 +4911,10 @@ sub_E7DE	endp
 
 ; Attributes: bp-based frame
 
-; int pascal far GameCore(char *arg0);
-public GAMECORE
-GameCore	proc far ; ZUN symbol [MAGNet2010]
+public @GAMEEXECL$QNXC
+@GameExecl$qnxc proc far ; ZUN symbol [MAGNet2010]
 
-_arg0		= dword	ptr  6
+@@binary_fn		= dword	ptr  6
 
 		push	bp
 		mov	bp, sp
@@ -4957,14 +4956,10 @@ loc_E813:
 		call	text_clear
 		call	gaiji_restore
 		call	_game_exit
-		pushd	0
-		pushd	[bp+_arg0]	; arg0
-		pushd	[bp+_arg0]	; path
-		call	_execl
-		add	sp, 0Ch
+		call	_execl c, large [bp+@@binary_fn], large [bp+@@binary_fn], large 0
 		pop	bp
 		retf	4
-GameCore	endp
+@GameExecl$qnxc endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
