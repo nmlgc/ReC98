@@ -43,7 +43,7 @@ include th04/main/enemy/enemy.inc
 	extern _tolower:proc
 	extern __ctype:byte
 
-main_01 group SLOWDOWN_TEXT, ma_TEXT, EMS_TEXT, mai_TEXT, PLAYFLD_TEXT, main_TEXT, DIALOG_TEXT, main__TEXT, PLAYER_P_TEXT, main_0_TEXT, HUD_OVRL_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT
+main_01 group SLOWDOWN_TEXT, ma_TEXT, DEMO_TEXT, EMS_TEXT, mai_TEXT, PLAYFLD_TEXT, main_TEXT, DIALOG_TEXT, main__TEXT, PLAYER_P_TEXT, main_0_TEXT, HUD_OVRL_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT
 g_SHARED group SHARED, SHARED_
 main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, VECTOR2N_TEXT, SPARK_A_TEXT, GRCG_3_TEXT, IT_SPL_U_TEXT, BOSS_4M_TEXT, main_033_TEXT, MIDBOSS_TEXT, HUD_HP_TEXT, MB_DFT_TEXT, main_034_TEXT, BULLET_U_TEXT, BULLET_A_TEXT, main_035_TEXT, BOSS_TEXT, main_036_TEXT
 
@@ -692,7 +692,7 @@ loc_AEF9:
 		mov	_power, 128
 		add	al, '0'
 		mov	es:[bx+resident_t.stage_ascii], al
-		mov	fp_23D90, offset DemoPlay
+		mov	fp_23D90, offset @DemoPlay$qv
 		mov	random_seed, 318
 
 loc_AF4A:
@@ -1011,45 +1011,11 @@ var_4		= dword	ptr -4
 		leave
 		retn
 demo_load	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public DEMOPLAY
-DemoPlay	proc near
-		push	bp
-		mov	bp, sp
-		cmp	_key_det, INPUT_NONE
-		jnz	short @@demo_end
-		les	bx, _DemoBuf
-		add	bx, _stage_frame
-		mov	al, es:[bx]
-		mov	ah, 0
-		mov	_key_det, ax
-		mov	ax, _stage_frame
-		add	ax, DEMO_N
-		mov	bx, word ptr _DemoBuf
-		add	bx, ax
-		mov	al, es:[bx]
-		mov	_shiftkey, al
-		cmp	_stage_frame, DEMO_N - 4
-		jb	short @@demo_not_end
-
-@@demo_end:
-		push	word ptr _DemoBuf+2
-		call	hmem_free
-		push	10
-		call	palette_black_out
-		push	ds
-		push	offset aOp_0	; "op"
-		nopcall	@GameExecl$qnxc
-
-@@demo_not_end:
-		pop	bp
-		retn
-DemoPlay	endp
 ma_TEXT	ends
+
+DEMO_TEXT	segment	byte public 'CODE' use16
+	@DemoPlay$qv procdesc near
+DEMO_TEXT	ends
 
 EMS_TEXT	segment	byte public 'CODE' use16
 	@ems_allocate_and_preload_eyecatc$qv procdesc near
@@ -31404,7 +31370,7 @@ aBss6_cd2	db 'BSS6.CD2',0
 aSt06_mpn	db 'st06.mpn',0
 include th04/main/pause[data].asm
 aDemo0_rec	db 'DEMO0.REC',0
-aOp_0		db 'op',0
+include th04/main/demo[data].asm
 public _EMS_NAME
 _EMS_NAME	db 'GENSOEMS',0
 aBb0_cdg_0	db 'BB0.CDG',0

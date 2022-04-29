@@ -37,7 +37,7 @@ include th05/main/enemy/enemy.inc
 	extern _execl:proc
 	extern _strlen:proc
 
-main_01 group SLOWDOWN_TEXT, m_TEXT, EMS_TEXT, ma_TEXT, CFG_LRES_TEXT, mai_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT, main_TEXT, main__TEXT, PLAYFLD_TEXT, main_0_TEXT, HUD_OVRL_TEXT, DIALOG_TEXT, PLAYER_P_TEXT, main_01_TEXT
+main_01 group SLOWDOWN_TEXT, m_TEXT, DEMO_TEXT, EMS_TEXT, ma_TEXT, CFG_LRES_TEXT, mai_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT, main_TEXT, main__TEXT, PLAYFLD_TEXT, main_0_TEXT, HUD_OVRL_TEXT, DIALOG_TEXT, PLAYER_P_TEXT, main_01_TEXT
 g_SHARED group SHARED, SHARED_
 main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, VECTOR2N_TEXT, SPARK_A_TEXT, BULLET_P_TEXT, GRCG_3_TEXT, PLAYER_A_TEXT, BULLET_A_TEXT, main_032_TEXT, main_033_TEXT, MIDBOSS_TEXT, HUD_HP_TEXT, MB_DFT_TEXT, LASER_SC_TEXT, CHEETO_U_TEXT, IT_SPL_U_TEXT, BULLET_U_TEXT, MIDBOSS1_TEXT, main_034_TEXT, main_035_TEXT, BOSS_6_TEXT, BOSS_X_TEXT, main_036_TEXT, BOSS_TEXT
 
@@ -779,7 +779,7 @@ loc_B2A5:
 		mov	_power, 128
 
 loc_B2CE:
-		mov	fp_2300E, offset DemoPlay
+		mov	fp_2300E, offset @DemoPlay$qv
 		mov	random_seed, 318
 
 loc_B2DD:
@@ -1158,62 +1158,11 @@ loc_B76F:
 		leave
 		retn
 demo_load	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public DEMOPLAY
-DemoPlay	proc near ; ZUN symbol [MAGNet2010]
-
-var_2		= word ptr -2
-
-		enter	2, 0
-		les	bx, _resident
-		cmp	es:[bx+resident_t.demo_num], 4
-		ja	short @@demo_extra
-		mov	ax, DEMO_N
-		jmp	short loc_B7CC
-; ---------------------------------------------------------------------------
-
-@@demo_extra:
-		mov	ax, DEMO_N * 4
-
-loc_B7CC:
-		mov	[bp+var_2], ax
-		test	_key_det, INPUT_REPLAY_END
-		jnz	short loc_B80C
-		les	bx, _DemoBuf
-		add	bx, _stage_frame
-		mov	al, es:[bx]
-		mov	ah, 0
-		mov	_key_det, ax
-		mov	ax, _stage_frame
-		add	ax, [bp+var_2]
-		mov	bx, word ptr _DemoBuf
-		add	bx, ax
-		mov	al, es:[bx]
-		mov	_shiftkey, al
-		les	bx, _resident
-		cmp	es:[bx+resident_t.demo_num], 4
-		ja	short locret_B825
-		cmp	_stage_frame, DEMO_N - 4
-		jb	short locret_B825
-
-loc_B80C:
-		push	word ptr _DemoBuf+2
-		call	hmem_free
-		push	8
-		call	palette_black_out
-		push	ds
-		push	offset aOp_1	; "op"
-		nopcall	@GameExecl$qnxc
-
-locret_B825:
-		leave
-		retn
-DemoPlay	endp
 m_TEXT	ends
+
+DEMO_TEXT	segment byte public 'CODE' use16
+	@DemoPlay$qv procdesc near
+DEMO_TEXT	ends
 
 EMS_TEXT	segment	byte public 'CODE' use16
 	@ems_allocate_and_preload_eyecatc$qv procdesc near
@@ -21193,7 +21142,7 @@ aSt06_bft	db 'st06.bft',0
 aSt06_mpn	db 'st06.mpn',0
 include th04/main/pause[data].asm
 aDemo0_rec	db 'DEMO0.REC',0
-aOp_1		db 'op',0
+include th04/main/demo[data].asm
 public _EMS_NAME
 _EMS_NAME	db 'KAIKIEMS',0
 aBb0_cdg_0	db 'BB0.CDG',0
