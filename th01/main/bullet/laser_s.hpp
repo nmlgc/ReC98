@@ -126,6 +126,10 @@ extern CShootoutLaser shootout_lasers[SHOOTOUT_LASER_COUNT];
 	} \
 }
 
+// Quite a roundabout way of preventing buffer overflows, but fine.
+#define shootout_laser_safe(i) \
+	shootout_lasers[(i) % SHOOTOUT_LASER_COUNT]
+
 #define shootout_lasers_unput_and_reset_broken(i) { \
 	for(i = 0; i < SHOOTOUT_LASER_COUNT; i++) { \
 		shootout_lasers[i].unput_and_reset(); \

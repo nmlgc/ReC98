@@ -1355,10 +1355,7 @@ void pattern_lasers_and_3_spread(void)
 		}
 		target_y = PLAYFIELD_BOTTOM;
 
-		// Quite a roundabout way of preventing a buffer overflow, but fine.
-		shootout_lasers[
-			(boss_phase_frame / INTERVAL) % SHOOTOUT_LASER_COUNT
-		].spawn(
+		shootout_laser_safe(boss_phase_frame / INTERVAL).spawn(
 			SWORD_CENTER_X, SWORD_CENTER_Y,
 			target_left, target_y,
 			(to_sp(8.5f) / 2), V_WHITE, 30, 5

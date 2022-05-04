@@ -1846,9 +1846,7 @@ void near pattern_radial_stacks_and_lasers(void)
 			target_y = polar_y(CENTER_Y, 600, angle);
 			mdrv2_se_play(7);
 			if((boss_phase_frame % 15) == 0) {
-				shootout_lasers[
-					((boss_phase_frame - 215) / 15) % SHOOTOUT_LASER_COUNT
-				].spawn(
+				shootout_laser_safe((boss_phase_frame - 215) / 15).spawn(
 					CENTER_X, CENTER_Y, target_x, target_y,
 					pattern_state.speed_multiplied_by_8, V_WHITE, 20, 4
 				);
