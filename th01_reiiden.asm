@@ -17442,7 +17442,7 @@ var_8		= qword	ptr -8
 		mov	elis_still_or_wave.BE_bos_image, 1
 		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
 		add	sp, 1Eh
-		call	@elis_select_for_rank$qmiiiii stdcall, offset word_3A6CC, ds, large 50 or (55 shl 16), large 60 or (65 shl 16)
+		call	@elis_select_for_rank$qmiiiii stdcall, offset _elis_pattern_state, ds, large 50 or (55 shl 16), large 60 or (65 shl 16)
 		jmp	loc_255B1
 ; ---------------------------------------------------------------------------
 
@@ -17603,7 +17603,7 @@ loc_255FB:
 		push	25 or (4 shl 16)	; (moveout_at_age) or (w shl 16)
 		push	7	; col
 		fwait
-		push	word_3A6CC	; speed_multiplied_by_8
+		push	_elis_pattern_state	; speed_multiplied_by_8
 		fld	[bp+var_10]
 		call	ftol@
 		push	ax	; target_y
@@ -17698,7 +17698,7 @@ var_2		= word ptr -2
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		mov	elis_still_or_wave.BE_bos_image, 1
 		call	@CBossEntity@move_lock_and_put_8$qiiii c, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
-		call	@elis_select_for_rank$qmiiiii c, offset word_3A6CC, ds, large 15 or (21 shl 16), large 25 or (29 shl 16)
+		call	@elis_select_for_rank$qmiiiii c, offset _elis_pattern_state, ds, large 15 or (21 shl 16), large 25 or (29 shl 16)
 
 loc_25726:
 		cmp	_boss_phase_frame, 60
@@ -17716,8 +17716,8 @@ loc_25726:
 		mov	si, dx
 		call	IRand
 		cwd
-		idiv	word_3A6CC
-		mov	ax, word_3A6CC
+		idiv	_elis_pattern_state
+		mov	ax, _elis_pattern_state
 		dec	ax
 		push	dx
 		cwd
@@ -17906,7 +17906,7 @@ loc_258D4:
 		mov	elis_still_or_wave.BE_bos_image, 1
 		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
 		mov	angle_3A6FB, 0
-		call	@elis_select_for_rank$qmiiiii stdcall, offset word_3A6CC, ds, large 12 or (29 shl 16), large 23 or (28 shl 16)
+		call	@elis_select_for_rank$qmiiiii stdcall, offset _elis_pattern_state, ds, large 12 or (29 shl 16), large 23 or (28 shl 16)
 		add	sp, 2Ah
 
 loc_25947:
@@ -18151,7 +18151,7 @@ loc_25BCE:
 		add	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 48
 		mov	[bp+@@top], ax
-		call	@CPellets@add_group$qii14pellet_group_ti c, offset _Pellets, ds, [bp+@@left], ax, word_3A6CC, 4
+		call	@CPellets@add_group$qii14pellet_group_ti c, offset _Pellets, ds, [bp+@@left], ax, _elis_pattern_state, 4
 		mov	al, angle_3A6FB
 		add	al, 8
 		mov	angle_3A6FB, al
@@ -18712,7 +18712,7 @@ loc_2617F:
 loc_26194:
 		cmp	_boss_phase_frame, 10
 		jnz	short loc_261ED
-		call	@elis_select_for_rank$qmiiiii c, offset word_3A6CC, ds, large 14 or (16 shl 16), large 18 or (20 shl 16)
+		call	@elis_select_for_rank$qmiiiii c, offset _elis_pattern_state, ds, large 14 or (16 shl 16), large 18 or (20 shl 16)
 		xor	si, si
 		jmp	short loc_261E4
 ; ---------------------------------------------------------------------------
@@ -18723,7 +18723,7 @@ loc_261B6:
 		push	(3 shl 4)
 		mov	ax, 256
 		cwd
-		idiv	word_3A6CC
+		idiv	_elis_pattern_state
 		imul	si
 		push	ax
 		mov	ax, elis_still_or_wave.BE_cur_top
@@ -18739,7 +18739,7 @@ loc_261B6:
 		inc	si
 
 loc_261E4:
-		cmp	si, word_3A6CC
+		cmp	si, _elis_pattern_state
 		jl	short loc_261B6
 		jmp	loc_2631C
 ; ---------------------------------------------------------------------------
@@ -18757,7 +18757,7 @@ loc_261F8:
 		push	(3 shl 4) + 6
 		mov	ax, 256
 		cwd
-		idiv	word_3A6CC
+		idiv	_elis_pattern_state
 		imul	si
 		add	al, 2
 		push	ax
@@ -18774,7 +18774,7 @@ loc_261F8:
 		inc	si
 
 loc_26228:
-		cmp	si, word_3A6CC
+		cmp	si, _elis_pattern_state
 		jl	short loc_261F8
 		jmp	loc_2631C
 ; ---------------------------------------------------------------------------
@@ -18792,7 +18792,7 @@ loc_2623C:
 		push	(4 shl 4)
 		mov	ax, 256
 		cwd
-		idiv	word_3A6CC
+		idiv	_elis_pattern_state
 		imul	si
 		add	al, 4
 		push	ax
@@ -18809,7 +18809,7 @@ loc_2623C:
 		inc	si
 
 loc_2626C:
-		cmp	si, word_3A6CC
+		cmp	si, _elis_pattern_state
 		jl	short loc_2623C
 		jmp	loc_2631C
 ; ---------------------------------------------------------------------------
@@ -18827,7 +18827,7 @@ loc_26280:
 		push	(4 shl 4) + 8
 		mov	ax, 256
 		cwd
-		idiv	word_3A6CC
+		idiv	_elis_pattern_state
 		imul	si
 		add	al, 6
 		push	ax
@@ -18844,7 +18844,7 @@ loc_26280:
 		inc	si
 
 loc_262B0:
-		cmp	si, word_3A6CC
+		cmp	si, _elis_pattern_state
 		jl	short loc_26280
 		jmp	short loc_2631C
 ; ---------------------------------------------------------------------------
@@ -18862,7 +18862,7 @@ loc_262C3:
 		push	(5 shl 4)
 		mov	ax, 256
 		cwd
-		idiv	word_3A6CC
+		idiv	_elis_pattern_state
 		imul	si
 		add	al, 8
 		push	ax
@@ -18879,7 +18879,7 @@ loc_262C3:
 		inc	si
 
 loc_262F3:
-		cmp	si, word_3A6CC
+		cmp	si, _elis_pattern_state
 		jl	short loc_262C3
 		jmp	short loc_2631C
 ; ---------------------------------------------------------------------------
@@ -19118,7 +19118,7 @@ loc_26527:
 loc_26548:
 		cmp	si, 0Ah
 		jl	short loc_26527
-		call	@elis_select_for_rank$qmiiiii c, offset word_3A6CC, ds, large 5 or (7 shl 16), large 9 or (13 shl 16)
+		call	@elis_select_for_rank$qmiiiii c, offset _elis_pattern_state, ds, large 5 or (7 shl 16), large 9 or (13 shl 16)
 		xor	si, si
 		jmp	short loc_265BF
 ; ---------------------------------------------------------------------------
@@ -19158,7 +19158,7 @@ loc_26568:
 		inc	si
 
 loc_265BF:
-		cmp	si, word_3A6CC
+		cmp	si, _elis_pattern_state
 		jl	short loc_26568
 
 loc_265C5:
@@ -19261,14 +19261,14 @@ loc_266C1:
 loc_266D6:
 		cmp	_boss_phase_frame, 30
 		jnz	short loc_266F4
-		call	@elis_select_for_rank$qmiiiii c, offset word_3A6CC, ds, large 6 or (3 shl 16), large 2 or (2 shl 16)
+		call	@elis_select_for_rank$qmiiiii c, offset _elis_pattern_state, ds, large 6 or (3 shl 16), large 2 or (2 shl 16)
 
 loc_266F4:
 		cmp	_boss_phase_frame, 60
 		jle	short loc_2672E
 		mov	ax, _boss_phase_frame
 		cwd
-		idiv	word_3A6CC
+		idiv	_elis_pattern_state
 		or	dx, dx
 		jnz	short loc_2672E
 		cmp	_boss_phase_frame, 120
@@ -20277,7 +20277,7 @@ loc_26FF3:
 loc_27008:
 		cmp	_boss_phase_frame, 50
 		jnz	short loc_27088
-		call	@elis_select_for_rank$qmiiiii c, offset word_3A6CC, ds, large 2 or (3 shl 16), large 3 or (4 shl 16)
+		call	@elis_select_for_rank$qmiiiii c, offset _elis_pattern_state, ds, large 2 or (3 shl 16), large 3 or (4 shl 16)
 		xor	si, si
 		jmp	short loc_27080
 ; ---------------------------------------------------------------------------
@@ -20286,7 +20286,7 @@ loc_2702A:
 		pushd	0 or (0 shl 16)
 		pushd	PM_REGULAR or (0 shl 16)
 		mov	ax, si
-		add	ax, word_3A6CC
+		add	ax, _elis_pattern_state
 		shl	ax, 4
 		push	ax
 		push	40h
@@ -20302,7 +20302,7 @@ loc_2702A:
 		pushd	0 or (0 shl 16)
 		pushd	PM_REGULAR or (0 shl 16)
 		mov	ax, si
-		add	ax, word_3A6CC
+		add	ax, _elis_pattern_state
 		shl	ax, 4
 		push	ax
 		push	40h
@@ -20335,7 +20335,7 @@ loc_27093:
 		pushd	0 or (0 shl 16)
 		pushd	PM_REGULAR or (0 shl 16)
 		mov	ax, si
-		add	ax, word_3A6CC
+		add	ax, _elis_pattern_state
 		shl	ax, 4
 		push	ax
 		push	50h
@@ -20351,7 +20351,7 @@ loc_27093:
 		pushd	0 or (0 shl 16)
 		pushd	PM_REGULAR or (0 shl 16)
 		mov	ax, si
-		add	ax, word_3A6CC
+		add	ax, _elis_pattern_state
 		shl	ax, 4
 		push	ax
 		push	30h
@@ -20384,7 +20384,7 @@ loc_270FC:
 		pushd	0 or (0 shl 16)
 		pushd	PM_REGULAR or (0 shl 16)
 		mov	ax, si
-		add	ax, word_3A6CC
+		add	ax, _elis_pattern_state
 		shl	ax, 4
 		push	ax
 		push	68h
@@ -20400,7 +20400,7 @@ loc_270FC:
 		pushd	0 or (0 shl 16)
 		pushd	PM_REGULAR or (0 shl 16)
 		mov	ax, si
-		add	ax, word_3A6CC
+		add	ax, _elis_pattern_state
 		shl	ax, 4
 		push	ax
 		push	18h
@@ -20433,7 +20433,7 @@ loc_27159:
 loc_27168:
 		pushd	0 or (0 shl 16)
 		pushd	PM_REGULAR or (0 shl 16)
-		mov	ax, word_3A6CC
+		mov	ax, _elis_pattern_state
 		add	ax, 2
 		shl	ax, 4
 		push	ax
@@ -20451,7 +20451,7 @@ loc_27168:
 		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		pushd	0 or (0 shl 16)
 		pushd	PM_REGULAR or (0 shl 16)
-		mov	ax, word_3A6CC
+		mov	ax, _elis_pattern_state
 		add	ax, 2
 		shl	ax, 4
 		push	ax
@@ -20559,7 +20559,7 @@ loc_272B5:
 		jl	loc_275EF
 		cmp	_boss_phase_frame, 60
 		jnz	short loc_272E1
-		call	@elis_select_for_rank$qmiiiii c, offset word_3A6CC, ds, large 4 or (2 shl 16), large 2 or (2 shl 16)
+		call	@elis_select_for_rank$qmiiiii c, offset _elis_pattern_state, ds, large 4 or (2 shl 16), large 2 or (2 shl 16)
 		mov	angle_3A76F, 0
 
 loc_272E1:
@@ -20735,7 +20735,7 @@ loc_274F2:
 loc_274FF:
 		mov	ax, _boss_phase_frame
 		cwd
-		idiv	word_3A6CC
+		idiv	_elis_pattern_state
 		or	dx, dx
 		jnz	short loc_27539
 		push	(4 shl 4) + 8
@@ -20909,7 +20909,7 @@ loc_276AD:
 		mov	elis_still_or_wave.BE_bos_image, 1
 		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
 		mov	angle_3A770, 0
-		call	@elis_select_for_rank$qmiiiii stdcall, offset word_3A6CC, ds, large 40 or (30 shl 16), large 20 or (15 shl 16)
+		call	@elis_select_for_rank$qmiiiii stdcall, offset _elis_pattern_state, ds, large 40 or (30 shl 16), large 20 or (15 shl 16)
 		add	sp, 2Ah
 
 loc_27729:
@@ -21168,7 +21168,7 @@ loc_27A06:
 loc_27A1C:
 		mov	ax, _boss_phase_frame
 		cwd
-		idiv	word_3A6CC
+		idiv	_elis_pattern_state
 		or	dx, dx
 		jnz	short loc_27A65
 		push	PG_5_SPREAD_WIDE_AIMED or ((4 shl 4) shl 16)
@@ -21194,7 +21194,7 @@ loc_27A1C:
 		add	sp, 18h
 
 loc_27A65:
-		mov	ax, word_3A6CC
+		mov	ax, _elis_pattern_state
 		add	ax, ax
 		push	ax
 		mov	ax, _boss_phase_frame
@@ -23320,10 +23320,10 @@ _kikuri_invincibility_frame	dw ?
 _kikuri_entrance_ring_radius_base	dw ?
 _kikuri_initial_hp_rendered	db ?
 		db ?
-public _boss_hp, _boss_phase_frame, _boss_phase
+public _boss_hp, _boss_phase_frame, _elis_pattern_state, _boss_phase
 _boss_hp	dw ?
 _boss_phase_frame	dw ?
-word_3A6CC	dw ?
+_elis_pattern_state	dw ?
 _boss_phase	db ?
 
 CEntities _elis_stars, 5

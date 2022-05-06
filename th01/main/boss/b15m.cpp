@@ -47,6 +47,7 @@ static const pixel_t BASE_TOP = (
 );
 // -----------
 
+#define pattern_state	elis_pattern_state
 #define stars	elis_stars
 #define flash_colors	elis_flash_colors
 #define invincibility_frame	elis_invincibility_frame
@@ -66,6 +67,10 @@ extern const char boss5_2_bos[];
 extern const char boss5_3_bos[];
 extern const char boss5_gr_grc[];
 // ----------
+
+extern union {
+	int unknown;
+} pattern_state;
 
 // Entities
 // --------
