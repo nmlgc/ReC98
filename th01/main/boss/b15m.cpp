@@ -22,8 +22,9 @@ extern "C" {
 }
 #include "th01/shiftjis/fns.hpp"
 #undef MISSILE_FN
-#define MISSILE_FN boss3_m_ptn_1
-extern const char MISSILE_FN[];
+// Stuffing float constants at the end of a string to work around alignment
+// limitations… how disgusting.
+#define MISSILE_FN "boss3_m.ptn\x00\x00\x00\xC8\x43\x00\x00\x20\x44\x9A\x99\x99\x99\x99\x99\xA9\x3F"
 #include "th01/sprites/pellet.h"
 #include "th01/main/shape.hpp"
 #include "th01/main/particle.hpp"
@@ -59,15 +60,6 @@ extern bool16 invincible;
 extern bool16 wave_teleport_done;
 extern bool initial_hp_rendered;
 
-// File names
-// ----------
-
-extern const char boss5_bos[];
-extern const char boss5_2_bos[];
-extern const char boss5_3_bos[];
-extern const char boss5_gr_grc[];
-// ----------
-
 extern union {
 	int unknown;
 } pattern_state;
@@ -90,9 +82,9 @@ enum still_or_wave_cel_t {
 #define ent_bat          	boss_entities[2]
 
 inline void elis_ent_load(void) {
-	ent_still_or_wave.load(boss5_bos, 0);
-	ent_attack.load(boss5_2_bos, 1);
-	ent_bat.load(boss5_3_bos, 2);
+	ent_still_or_wave.load("boss5.bos", 0);
+	ent_attack.load("boss5_2.bos", 1);
+	ent_bat.load("boss5_3.bos", 2);
 }
 
 inline void elis_ent_free(void) {
@@ -161,7 +153,7 @@ void elis_load(void)
 	pellet_interlace = true;
 	Pellets.unknown_seven = 7;
 	elis_ent_load();
-	grc_load(GRC_SLOT_BOSS_1, boss5_gr_grc);
+	grc_load(GRC_SLOT_BOSS_1, "boss5_gr.grc");
 	ptn_new(PTN_SLOT_BG_ENT, ((GIRL_W / PTN_W) * (GIRL_H / PTN_H)));
 	Missiles.load(PTN_SLOT_MISSILE);
 	boss_palette_snap();

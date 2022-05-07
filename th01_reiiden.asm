@@ -17598,7 +17598,7 @@ loc_255FB:
 		fild	[bp+var_12]
 		fstp	[bp+var_8]
 		fwait
-		fld	flt_35D8D
+		fld	dword ptr ds:[13EDh]
 		fstp	[bp+var_10]
 		push	25 or (4 shl 16)	; (moveout_at_age) or (w shl 16)
 		push	7	; col
@@ -17633,7 +17633,7 @@ loc_255FB:
 		cmp	word_3A6E5, 0
 		jnz	short loc_2567E
 		fld	[bp+var_8]
-		fcomp	flt_35D91
+		fcomp	dword ptr ds:[13F1h]
 		fstsw	[bp+var_12]
 		fwait
 		mov	ax, [bp+var_12]
@@ -17931,7 +17931,7 @@ loc_25977:
 		mov	ah, 0
 		mov	[bp+var_6], ax
 		fild	[bp+var_6]
-		fadd	qword ptr dbl_35D95
+		fadd	qword ptr ds:[13F5h]
 		call	ftol@
 		push	ax	; angle_end
 		push	word ptr angle_3A6FB	; angle_start
@@ -22997,17 +22997,6 @@ word_35D4A	dw 0
 word_35D4C	dw 0
 public _elis_invincibility_flash_colors
 _elis_invincibility_flash_colors	db 3, 6, 8, 2
-public _boss5_bos, _boss5_2_bos, _boss5_3_bos, _boss5_gr_grc, _boss3_m_ptn_1
-_boss5_bos	db 'boss5.bos',0
-_boss5_2_bos	db 'boss5_2.bos',0
-_boss5_3_bos	db 'boss5_3.bos',0
-_boss5_gr_grc	db 'boss5_gr.grc',0
-_boss3_m_ptn_1	db 'boss3_m.ptn',0
-flt_35D8D	dd 400.0
-flt_35D91	dd 640.0
-		; Hack. Let's better use bytes for accuracy here.
-dbl_35D95	db 09ah, 099h, 099h, 099h, 099h, 099h, 0a9h, 03fh
-		db 0
 	extern _game_cleared:byte
 	extern _unused_boss_stage_flag:word
 	extern _pellet_interlace:byte
