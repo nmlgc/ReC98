@@ -5743,7 +5743,7 @@ arg_2		= word ptr  6
 		push	ax		; int
 		push	ds
 		push	offset _Missiles ; this
-		call	sub_21C0D
+		call	@CMissiles@add$qiiddc
 		add	sp, 1Ah
 		push	[bp+arg_0]
 		push	8
@@ -5776,7 +5776,7 @@ arg_2		= word ptr  6
 		push	ax		; int
 		push	ds
 		push	offset _Missiles ; this
-		call	sub_21C0D
+		call	@CMissiles@add$qiiddc
 		add	sp, 1Ah
 		leave
 		retn	4
@@ -9997,7 +9997,7 @@ loc_1EC0B:
 		push	word ptr ss:[bx] ; int
 		push	ds
 		push	offset _Missiles ; this
-		call	sub_21C0D
+		call	@CMissiles@add$qiiddc
 		add	sp, 1Ah
 		inc	[bp+var_12]
 
@@ -11104,7 +11104,7 @@ loc_1F682:
 		push	word ptr ss:[bx] ; int
 		push	ds
 		push	offset _Missiles ; this
-		call	sub_21C0D
+		call	@CMissiles@add$qiiddc
 		add	sp, 1Ah
 		inc	si
 
@@ -12998,16 +12998,15 @@ MF_MOVING = 1
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public @CMissiles@add$qiiddc
+@CMissiles@add$qiiddc	proc far
 
-; int __cdecl __far sub_21C0D(__int32, int, int, double, double, char)
-sub_21C0D	proc far
-
-@@this		= dword	ptr  6
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= qword	ptr  0Eh
-arg_10		= qword	ptr  16h
-arg_18		= byte ptr  1Eh
+@@this      	= dword	ptr  6
+@@left      	= word ptr  0Ah
+@@top       	= word ptr  0Ch
+@@velocity_x	= qword	ptr  0Eh
+@@velocity_y	= qword	ptr  16h
+@@unknown   	= byte ptr  1Eh
 
 		push	bp
 		mov	bp, sp
@@ -13021,18 +13020,18 @@ loc_21C16:
 		add	bx, si
 		cmp	es:[bx+CMissiles.MISSILE_flag], MF_FREE
 		jnz	short loc_21C98
-		mov	ax, [bp+arg_4]
+		mov	ax, [bp+@@left]
 		shl	ax, 4
 		mov	dx, si
 		add	dx, dx
 		les	bx, [bp+@@this]
 		add	bx, dx
 		mov	es:[bx+CMissiles.MISSILE_cur_left], ax
-		mov	ax, [bp+arg_6]
+		mov	ax, [bp+@@top]
 		shl	ax, 4
 		mov	es:[bx+CMissiles.MISSILE_cur_top], ax
 		mov	es:[bx+CMissiles.MISSILE_prev_left], MISSILE_NEW
-		fld	[bp+arg_8]
+		fld	[bp+@@velocity_x]
 		fmul	flt_35C9E
 		call	ftol@
 		mov	dx, si
@@ -13040,7 +13039,7 @@ loc_21C16:
 		les	bx, [bp+@@this]
 		add	bx, dx
 		mov	es:[bx+CMissiles.MISSILE_velocity_x], ax
-		fld	[bp+arg_10]
+		fld	[bp+@@velocity_y]
 		fmul	flt_35C9E
 		call	ftol@
 		mov	dx, si
@@ -13050,7 +13049,7 @@ loc_21C16:
 		mov	es:[bx+CMissiles.MISSILE_velocity_y], ax
 		mov	bx, word ptr [bp+@@this]
 		add	bx, si
-		mov	al, [bp+arg_18]
+		mov	al, [bp+@@unknown]
 		mov	es:[bx+CMissiles.MISSILE_unknown], al
 		mov	bx, word ptr [bp+@@this]
 		add	bx, si
@@ -13069,7 +13068,7 @@ loc_21CA0:
 		pop	si
 		pop	bp
 		retf
-sub_21C0D	endp
+@CMissiles@add$qiiddc	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -17759,7 +17758,7 @@ loc_25726:
 		push	word ptr [bx+5D47h] ; int
 		push	ds
 		push	offset _Missiles ; this
-		call	sub_21C0D
+		call	@CMissiles@add$qiiddc
 		add	sp, 1Ah
 
 loc_257C3:
