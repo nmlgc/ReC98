@@ -169,11 +169,6 @@ inline void sariel_grc_free(void) {
 	grc_free(GRC_SLOT_LEAFSPLASH);
 }
 
-// For some reason, all of this code assumes .GRC entities to be 48×32, rather
-// than 32×32. Why?!
-#define sloppy_unput_32x32(left, top) \
-	egc_copy_rect_1_to_0_16(left, top, 48, 32);
-
 // Vortex and debris sprites (BOSS6GR1.GRC)
 // ----------------------------------------
 
@@ -484,7 +479,7 @@ template <
 		//
 		// for both the left and right sprite coordinates to have diverged
 		// enough for these wraparounds to stop.
-		sloppy_unput_32x32(
+		grc_sloppy_unput(
 			debris_left(ray_id, (velocity_x * 2)), (target_y - DEBRIS_H)
 		);
 
@@ -682,7 +677,7 @@ void pascal near birds_reset_fire_spawn_unput_update_render(
 				// ZUN bug: Shouldn't these be unblitted unconditionally?
 				// Because they aren't, each cel of the hatch animation is
 				// blitted on top of the previous one...
-				sloppy_unput_32x32(birds.left[i], birds.top[i]);
+				grc_sloppy_unput(birds.left[i], birds.top[i]);
 			}
 		}
 		for(i = 0; i < BIRD_COUNT; i++) {
@@ -694,7 +689,7 @@ void pascal near birds_reset_fire_spawn_unput_update_render(
 			if(!overlap_xy_lrtb_le_ge(
 				birds.left[i], birds.top[i], 0, 0, (RES_X - 1), (RES_Y - 1)
 			)) {
-				sloppy_unput_32x32(birds.left[i], birds.top[i]);
+				grc_sloppy_unput(birds.left[i], birds.top[i]);
 				birds_alive[i] = false;
 				continue;
 			}
@@ -852,7 +847,7 @@ void near pattern_vortices(void)
 	static bool16 dir_second; // x_direction_t
 
 	#define vortex_unput_and_put_8(i) { \
-		sloppy_unput_32x32(prev_left[i], prev_top[i]); \
+		grc_sloppy_unput(prev_left[i], prev_top[i]); \
 		vortex_or_debris_put_8( \
 			cur_left[i], \
 			cur_top[i], \
@@ -959,7 +954,7 @@ void near pattern_vortices(void)
 		}
 	} else if(boss_phase_frame > 300) {
 		for(int i = 0; i < VORTEX_COUNT; i++) {
-			sloppy_unput_32x32(cur_left[i], cur_top[i]);
+			grc_sloppy_unput(cur_left[i], cur_top[i]);
 		}
 		wand_lower_both();
 		boss_phase_frame = 0;
@@ -1079,7 +1074,7 @@ void near pattern_birds_on_ellipse_arc(void)
 		} else {
 			spawner_velocity_y.v -= to_sp(0.0625f);
 		}
-		sloppy_unput_32x32(spawner_left.to_pixel(), spawner_top.to_pixel());
+		grc_sloppy_unput(spawner_left.to_pixel(), spawner_top.to_pixel());
 		for(int i = (eggs_alive - 1); i >= 0; i--) {
 			bird_put_8(egg_left[i], egg_top[i], C_EGG);
 		}
@@ -1133,7 +1128,7 @@ void near pattern_birds_on_ellipse_arc(void)
 			to_sp(-SPAWNCROSS_W), to_sp(-SPAWNCROSS_H),
 			to_sp(RES_X), to_sp(RES_Y)
 		)) {
-			sloppy_unput_32x32(spawner_left.to_pixel(), spawner_top.to_pixel());
+			grc_sloppy_unput(spawner_left.to_pixel(), spawner_top.to_pixel());
 			spawner_left.v += spawner_velocity_x.v;
 			spawner_top.v += spawner_velocity_y.v;
 
@@ -2467,7 +2462,7 @@ void pascal near pattern_swaying_leaves(int &frame, int spawn_interval_or_reset)
 			}
 		} else if(flag[i] <= LF_SPLASH_DONE) {
 			if(leaf_on_screen(i)) {
-				sloppy_unput_32x32(left[i].to_pixel(), top[i].to_pixel());
+				grc_sloppy_unput(left[i].to_pixel(), top[i].to_pixel());
 			}
 			if(flag[i] == LF_SPLASH_DONE) {
 				flag[i] = LF_LEAF;

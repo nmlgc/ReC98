@@ -37,4 +37,9 @@ void grc_free(main_grc_slot_t slot);
 void grc_put_8(
 	screen_x_t left, vram_y_t top, main_grc_slot_t slot, int image, int col
 );
+
+// For some reason, all code assumes .GRC entities to be 48×32, rather than
+// 32×32. Why?!
+#define grc_sloppy_unput(left, top) \
+	egc_copy_rect_1_to_0_16(left, top, 48, 32);
 /// ------------------------------------------
