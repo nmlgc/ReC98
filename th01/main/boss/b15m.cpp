@@ -67,6 +67,14 @@ extern union {
 // Entities
 // --------
 
+enum elis_entity_t {
+	// "Girl" sprites
+	ENT_STILL_OR_WAVE = 0,
+	ENT_ATTACK = 1,
+
+	ENT_BAT = 2,
+};
+
 enum still_or_wave_cel_t {
 	C_STILL = 0,
 	C_WAVE_1 = 2,
@@ -75,11 +83,9 @@ enum still_or_wave_cel_t {
 	C_WAVE_4 = 5,
 };
 
-// "Girl" sprites
-#define ent_still_or_wave	boss_entities[0]
-#define ent_attack       	boss_entities[1]
-
-#define ent_bat          	boss_entities[2]
+#define ent_still_or_wave	boss_entities[ENT_STILL_OR_WAVE]
+#define ent_attack       	boss_entities[ENT_ATTACK]
+#define ent_bat          	boss_entities[ENT_BAT]
 
 inline void elis_ent_load(void) {
 	ent_still_or_wave.load("boss5.bos", 0);
@@ -93,9 +99,9 @@ inline void elis_ent_free(void) {
 	bos_entity_free(2);
 }
 
-inline void ent_attack_sync_with_still_or_wave(void) {
-	ent_attack.pos_cur_set(
-		ent_still_or_wave.cur_left, ent_still_or_wave.cur_top
+inline void ent_sync(elis_entity_t dst, elis_entity_t src) {
+	boss_entities[dst].pos_cur_set(
+		boss_entities[src].cur_left, boss_entities[src].cur_top
 	);
 }
 // --------
@@ -108,11 +114,11 @@ static const main_ptn_slot_t PTN_SLOT_MISSILE = PTN_SLOT_BOSS_2;
 // ----
 
 #define bg_func_init(left, top, entity_src) { \
-	ent_attack_sync_with_still_or_wave(); \
-	if(entity_src == 1) { \
+	ent_sync(ENT_ATTACK, ENT_STILL_OR_WAVE); \
+	if(entity_src == (ENT_STILL_OR_WAVE + 1)) { \
 		left = ent_still_or_wave.cur_left; \
 		top = ent_still_or_wave.cur_top; \
-	} else if(entity_src == 2) { \
+	} else if(entity_src == (ENT_ATTACK + 1)) { \
 		left = ent_attack.cur_left; \
 		top = ent_attack.cur_top; \
 	} \
@@ -211,7 +217,7 @@ void elis_free(void)
 
 bool16 wave_teleport(screen_x_t target_left, screen_y_t target_top)
 {
-	ent_attack_sync_with_still_or_wave();
+	ent_sync(ENT_ATTACK, ENT_STILL_OR_WAVE);
 
 	// Wave sprite
 	if(boss_phase_frame == 20) {
