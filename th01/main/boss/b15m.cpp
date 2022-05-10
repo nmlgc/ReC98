@@ -106,6 +106,28 @@ inline void ent_sync(elis_entity_t dst, elis_entity_t src) {
 }
 // --------
 
+// Surround area
+// -------------
+// Common bullet spawn area around Elis.
+
+static const pixel_t SURROUND_AREA_W = ((PLAYFIELD_W * 3) / 10);
+static const pixel_t SURROUND_AREA_H = ((PLAYFIELD_H * 8) / 21);
+
+inline screen_x_t surround_random_left(elis_entity_t relative_to) {
+	return (
+		(boss_entities[relative_to].cur_left + (rand() % SURROUND_AREA_W)) -
+		((SURROUND_AREA_W - GIRL_W) / 2)
+	);
+}
+
+inline screen_y_t surround_random_top(elis_entity_t relative_to) {
+	return (
+		(boss_entities[relative_to].cur_top + (rand() % SURROUND_AREA_H)) -
+		(SURROUND_AREA_H - GIRL_H)
+	);
+}
+// -------------
+
 // .PTN
 // ----
 
@@ -272,35 +294,21 @@ bool16 wave_teleport(screen_x_t target_left, screen_y_t target_top)
 		return false;
 	}
 
-	enum {
-		STAR_OFFSET_X = (GIRL_W / 4),
-		STAR_OFFSET_Y = (GIRL_H / 3),
-		STAR_AREA_W = (STAR_OFFSET_X + GIRL_W + STAR_OFFSET_X),
-		STAR_AREA_H = (STAR_OFFSET_Y + GIRL_H),
-	};
-	struct CStars : public CEntities<5> {
-		static screen_x_t random_left(void) {
-			return (ent_still_or_wave.cur_left + (rand() % STAR_AREA_W));
-		}
-		static screen_y_t random_top(void) {
-			return (ent_still_or_wave.cur_top + (rand() % STAR_AREA_H));
-		}
-	};
-	extern CStars stars;
+	extern CEntities<5> stars;
 
 	for(int i = 0; i < stars.count(); i++) {
 		if(boss_phase_frame > 4) {
 			egc_copy_rect_1_to_0_16_word_w(stars.left[i], stars.top[i], 8, 8);
 		}
 		if((boss_phase_frame < 40) || (boss_phase_frame > 52)) {
-			stars.left[i] = (stars.random_left() - STAR_OFFSET_X);
-			stars.top[i] = (stars.random_top() - STAR_OFFSET_Y);
+			stars.left[i] = surround_random_left(ENT_STILL_OR_WAVE);
+			stars.top[i] = surround_random_top(ENT_STILL_OR_WAVE);
 		} else {
 			stars.left[i] = (stars.left[i] + (
-				(stars.random_left() - STAR_OFFSET_X - stars.left[i]) / 3
+				(surround_random_left(ENT_STILL_OR_WAVE) - stars.left[i]) / 3
 			));
 			stars.top[i] = (stars.top[i] + (
-				(stars.random_top() - STAR_OFFSET_Y - stars.top[i]) / 3
+				(surround_random_top(ENT_STILL_OR_WAVE) - stars.top[i]) / 3
 			));
 		}
 		if(boss_phase_frame < 68) {
