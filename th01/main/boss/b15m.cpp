@@ -1,21 +1,24 @@
 /// Makai Stage 15 Boss - Elis
 /// --------------------------
 
-extern "C" {
 #include <stddef.h>
 #include "platform.h"
+#include "decomp.hpp"
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/math/area.hpp"
+#include "th01/math/dir.hpp"
 #include "th01/math/subpixel.hpp"
+extern "C" {
 #include "th01/hardware/egc.h"
 #include "th01/hardware/graph.h"
 #include "th01/formats/pf.hpp"
 #include "th01/formats/grc.hpp"
 #include "th01/formats/ptn.hpp"
 #include "th01/main/entity.hpp"
+#include "th01/snd/mdrv2.h"
 #include "th01/main/playfld.hpp"
 #include "th01/main/vars.hpp"
 #include "th01/main/boss/entity_a.hpp"
@@ -30,6 +33,7 @@ extern "C" {
 #include "th01/main/particle.hpp"
 #include "th01/main/boss/boss.hpp"
 #include "th01/main/boss/palette.hpp"
+#include "th01/main/bullet/laser_s.hpp"
 #include "th01/main/bullet/missile.hpp"
 #include "th01/main/bullet/pellet.hpp"
 #include "th01/main/hud/hp.hpp"
@@ -48,6 +52,13 @@ static const pixel_t BASE_TOP = (
 );
 // -----------
 
+enum elis_colors_t {
+	COL_FX = 4,
+};
+
+// State
+// -----
+
 #define pattern_state	elis_pattern_state
 #define stars	elis_stars
 #define flash_colors	elis_flash_colors
@@ -59,13 +70,26 @@ extern int invincibility_frame;
 extern bool16 invincible;
 extern bool16 wave_teleport_done;
 extern bool initial_hp_rendered;
+// -----
+
+// Patterns
+// --------
+static const int CHOOSE_NEW = 0;
 
 extern union {
-	int unknown;
+	int speed_multiplied_by_8;
 } pattern_state;
+// --------
 
 // Entities
 // --------
+
+enum elis_form_t {
+	F_GIRL = 0,
+	F_BAT = 1,
+
+	_elis_form_t_FORCE_INT16 = 0x7FFF,
+};
 
 enum elis_entity_t {
 	// "Girl" sprites
@@ -75,8 +99,10 @@ enum elis_entity_t {
 	ENT_BAT = 2,
 };
 
-enum still_or_wave_cel_t {
+enum elis_entity_cel_t {
+	// ENT_STILL_OR_WAVE
 	C_STILL = 0,
+	C_HAND = 1,
 	C_WAVE_1 = 2,
 	C_WAVE_2 = 3,
 	C_WAVE_3 = 4,
@@ -104,7 +130,33 @@ inline void ent_sync(elis_entity_t dst, elis_entity_t src) {
 		boss_entities[src].cur_left, boss_entities[src].cur_top
 	);
 }
+
+inline void ent_unput_and_put_both(elis_entity_t ent, elis_entity_cel_t cel) {
+	void girl_bg_put(int unncessary_parameter_that_still_needs_to_be_1_or_2);
+
+	graph_accesspage_func(1);
+	girl_bg_put(ent + 1);
+	boss_entities[ent].move_lock_and_put_image_8(cel);
+	graph_accesspage_func(0);
+	ent_still_or_wave.move_lock_and_put_image_8(cel);
+}
 // --------
+
+// Form-relative coordinates
+// -------------------------
+
+inline screen_x_t form_center_x(elis_form_t form) {
+	return (ent_still_or_wave.cur_left + (GIRL_W / 2));
+}
+
+inline screen_x_t girl_lefteye_x(void) {
+	return (ent_still_or_wave.cur_left + 60);
+}
+
+inline screen_y_t girl_lefteye_y(void) {
+	return (ent_still_or_wave.cur_top + 28);
+}
+// -------------------------
 
 // Surround area
 // -------------
@@ -320,3 +372,129 @@ bool16 wave_teleport(screen_x_t target_left, screen_y_t target_top)
 
 #define select_for_rank elis_select_for_rank
 #include "th01/main/select_r.cpp"
+
+int pattern_11_lasers_across(void)
+{
+	enum {
+		INTERVAL = 10,
+	};
+
+	#define circle_center_x	form_center_x(F_GIRL)
+	#define circle_center_y	(ent_still_or_wave.cur_top + (GIRL_H / 3))
+
+	#define circle_radius	pattern0_circle_radius
+	#define direction    	pattern0_direction
+
+	extern pixel_t circle_radius;
+	extern bool16 direction; // ACTUAL TYPE: x_direction_t
+	double target_left;
+	double target_y;
+
+	if(boss_phase_frame == 50) {
+		direction = (rand() % 2);
+		ent_unput_and_put_both(ENT_STILL_OR_WAVE, C_HAND);
+		select_for_rank(pattern_state.speed_multiplied_by_8,
+			(to_sp(6.25f) / 2),
+			(to_sp(6.875f) / 2),
+			(to_sp(7.5f) / 2),
+			(to_sp(8.125f) / 2)
+		);
+	} else if(boss_phase_frame == 60) {
+		shape_circle_put(
+			circle_center_x, circle_center_y, (GIRL_W / 4), COL_FX, 0x02
+		);
+		circle_radius = (GIRL_W / 4);
+	} else if(
+		(boss_phase_frame < 120) &&
+		(boss_phase_frame > 60) &&
+		((boss_phase_frame % 2) == 0)
+	) {
+		shape_circle_sloppy_unput(
+			circle_center_x, circle_center_y, circle_radius, 0x02
+		);
+		circle_radius += 8;
+		shape_circle_put(
+			circle_center_x, circle_center_y, circle_radius, COL_FX, (
+				(boss_phase_frame < 100) ? 0x02 :
+				(boss_phase_frame < 110) ? 0x08 :
+				0x20
+			)
+		);
+	} else if(boss_phase_frame == 120) {
+		shape_circle_sloppy_unput(
+			circle_center_x, circle_center_y, circle_radius, 0x20
+		);
+	} else if(boss_phase_frame == 150) {
+		ent_unput_and_put_both(ENT_STILL_OR_WAVE, C_STILL);
+	}
+
+	if((boss_phase_frame >= 70) && ((boss_phase_frame % INTERVAL) == 0)) {
+		#undef RES_Y
+		#define RES_Y *reinterpret_cast<float near*>(0x13ED)
+
+		if(direction == X_RIGHT) {
+			target_left = (PLAYFIELD_LEFT +
+				(((boss_phase_frame - 70) / INTERVAL) * (PLAYFIELD_W / 10))
+			);
+		} else {
+			target_left = (PLAYFIELD_RIGHT -
+				(((boss_phase_frame - 70) / INTERVAL) * (PLAYFIELD_W / 10))
+			);
+		}
+		target_y = RES_Y;
+		shootout_laser_safe(boss_phase_frame / INTERVAL).spawn(
+			girl_lefteye_x(),
+			girl_lefteye_y(),
+			target_left,
+			target_y,
+			pattern_state.speed_multiplied_by_8,
+			V_WHITE,
+			25,
+			4
+		);
+		mdrv2_se_play(6);
+
+		// <= instead of < is why this pattern actually fires 11 lasers rather
+		// than the 10 you might guess from looking at the target calculation
+		// above.
+
+		/* TODO: Proper decompilation, once data can be emitted here:
+		* ----------------------------------------------------------
+		if(
+			((direction == X_RIGHT) && (target_left >= PLAYFIELD_RIGHT)) ||
+			((direction == X_LEFT) && (target_left <= PLAYFIELD_LEFT))
+		)
+		* ----------------------------------------------------------
+		* Performing arithmetic or comparisons between a double (target_left)
+		* and a float (PLAYFIELD_RIGHT) variable always FLDs the float first,
+		* before emitting the corresponding FPU instruction with the double,
+		* which is not what we want here.
+		*/
+		if(direction != X_RIGHT) {
+			goto firing_left;
+		}
+		asm {
+			fld  	qword ptr [bp-8];
+			fcomp	dword ptr [0x13F1];
+			fstsw	word ptr [bp-18];
+			FWAIT_EMU;
+			mov  	ax, word ptr [bp-18];
+			sahf;
+		}
+		if(!FLAGS_CARRY) {
+			goto done;
+		}
+firing_left:
+		if((direction == X_LEFT) && (target_left <= PLAYFIELD_LEFT)) {
+done:
+			boss_phase_frame = 0;
+			return CHOOSE_NEW;
+		}
+	}
+	return 1;
+
+	#undef direction
+	#undef circle_radius
+	#undef circle_center_y
+	#undef circle_center_x
+}

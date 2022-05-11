@@ -17408,263 +17408,10 @@ ELIS_BASE_TOP = (PLAYFIELD_TOP + ((PLAYFIELD_H / 21) * 5) - (ELIS_GIRL_H / 2))
 	extern @elis_free$qv:proc
 	extern @wave_teleport$qii:proc
 	extern @elis_select_for_rank$qmiiiii:proc
+	extern @pattern_11_lasers_across$qv:proc
 main_35_TEXT	ends
 
 main_35__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_253E7	proc far
-
-var_12		= word ptr -12h
-var_10		= qword	ptr -10h
-var_8		= qword	ptr -8
-
-		enter	12h, 0
-		cmp	_boss_phase_frame, 50
-		jnz	short loc_2546B
-		call	IRand
-		mov	bx, 2
-		cwd
-		idiv	bx
-		mov	word_3A6E5, dx
-		push	1
-		call	_graph_accesspage_func
-		call	@girl_bg_put$qi stdcall, 1
-		mov	elis_still_or_wave.BE_move_lock_frame, 0
-		mov	elis_still_or_wave.BE_bos_image, 1
-		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
-		push	0
-		call	_graph_accesspage_func
-		mov	elis_still_or_wave.BE_move_lock_frame, 0
-		mov	elis_still_or_wave.BE_bos_image, 1
-		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
-		add	sp, 1Eh
-		call	@elis_select_for_rank$qmiiiii stdcall, offset _elis_pattern_state, ds, large 50 or (55 shl 16), large 60 or (65 shl 16)
-		jmp	loc_255B1
-; ---------------------------------------------------------------------------
-
-loc_2546B:
-		cmp	_boss_phase_frame, 60
-		jnz	short loc_254A0
-		push	255	; angle_end
-		push	0	; angle_start
-		push	2	; angle_step
-		push	32 or (4 shl 16)	; (radius_y) or (col shl 16)
-		push	32	; radius_x
-		mov	ax, elis_still_or_wave.BE_cur_top
-		add	ax, 32
-		push	ax	; center_y
-		mov	ax, elis_still_or_wave.BE_cur_left
-		add	ax, 64
-		push	ax	; center_x
-		call	@shape_ellipse_arc_put$qiiiiiucucuc
-		add	sp, 10h
-		mov	radius_3A6E3, 32
-		jmp	loc_255B4
-; ---------------------------------------------------------------------------
-
-loc_254A0:
-		cmp	_boss_phase_frame, 120
-		jge	loc_25528
-		cmp	_boss_phase_frame, 60
-		jle	short loc_25528
-		mov	ax, _boss_phase_frame
-		mov	bx, 2
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_25528
-		push	255	; angle_end
-		push	0	; angle_start
-		push	2	; angle_step
-		push	radius_3A6E3	; radius_y
-		push	radius_3A6E3	; radius_x
-		mov	ax, elis_still_or_wave.BE_cur_top
-		add	ax, 32
-		push	ax	; center_y
-		mov	ax, elis_still_or_wave.BE_cur_left
-		add	ax, 64
-		push	ax	; center_x
-		call	@shape_ellipse_arc_sloppy_unput$qiiiiucucuc
-		add	sp, 0Eh
-		add	radius_3A6E3, 8
-		push	255	; angle_end
-		push	0	; angle_start
-		cmp	_boss_phase_frame, 100
-		jge	short loc_254F7
-		mov	al, 2
-		jmp	short loc_25504
-; ---------------------------------------------------------------------------
-
-loc_254F7:
-		cmp	_boss_phase_frame, 110
-		jge	short loc_25502
-		mov	al, 8
-		jmp	short loc_25504
-; ---------------------------------------------------------------------------
-
-loc_25502:
-		mov	al, 20h
-
-loc_25504:
-		push	ax	; angle_step
-		push	4	; col
-		push	radius_3A6E3	; radius_y
-		push	radius_3A6E3	; radius_x
-		mov	ax, elis_still_or_wave.BE_cur_top
-		add	ax, 32
-		push	ax	; center_y
-		mov	ax, elis_still_or_wave.BE_cur_left
-		add	ax, 64
-		push	ax	; center_x
-		call	@shape_ellipse_arc_put$qiiiiiucucuc
-		add	sp, 10h
-		jmp	loc_255B4
-; ---------------------------------------------------------------------------
-
-loc_25528:
-		cmp	_boss_phase_frame, 120
-		jnz	short loc_25556
-		push	255	; angle_end
-		push	0	; angle_start
-		push	20h	; angle_step
-		push	radius_3A6E3	; radius_y
-		push	radius_3A6E3	; radius_x
-		mov	ax, elis_still_or_wave.BE_cur_top
-		add	ax, 32
-		push	ax	; center_y
-		mov	ax, elis_still_or_wave.BE_cur_left
-		add	ax, 64
-		push	ax	; center_x
-		call	@shape_ellipse_arc_sloppy_unput$qiiiiucucuc
-		add	sp, 0Eh
-		jmp	short loc_255B4
-; ---------------------------------------------------------------------------
-
-loc_25556:
-		cmp	_boss_phase_frame, 150
-		jnz	short loc_255B4
-		push	1
-		call	_graph_accesspage_func
-		call	@girl_bg_put$qi stdcall, 1
-		mov	elis_still_or_wave.BE_move_lock_frame, 0
-		mov	elis_still_or_wave.BE_bos_image, 0
-		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
-		push	0
-		call	_graph_accesspage_func
-		add	sp, 12h
-		mov	elis_still_or_wave.BE_move_lock_frame, 0
-		mov	elis_still_or_wave.BE_bos_image, 0
-		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
-
-loc_255B1:
-		add	sp, 0Ch
-
-loc_255B4:
-		cmp	_boss_phase_frame, 70
-		jl	loc_256A5
-		mov	ax, _boss_phase_frame
-		mov	bx, 10
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	loc_256A5
-		cmp	word_3A6E5, 0
-		jnz	short loc_255E4
-		mov	ax, _boss_phase_frame
-		add	ax, -70
-		cwd
-		idiv	bx
-		shl	ax, 6
-		mov	[bp+var_12], ax
-		jmp	short loc_255FB
-; ---------------------------------------------------------------------------
-
-loc_255E4:
-		mov	ax, _boss_phase_frame
-		add	ax, -70
-		mov	bx, 10
-		cwd
-		idiv	bx
-		shl	ax, 6
-		mov	dx, 280h
-		sub	dx, ax
-		mov	[bp+var_12], dx
-
-loc_255FB:
-		fild	[bp+var_12]
-		fstp	[bp+var_8]
-		fwait
-		fld	dword ptr ds:[13EDh]
-		fstp	[bp+var_10]
-		push	25 or (4 shl 16)	; (moveout_at_age) or (w shl 16)
-		push	7	; col
-		fwait
-		push	_elis_pattern_state	; speed_multiplied_by_8
-		fld	[bp+var_10]
-		call	ftol@
-		push	ax	; target_y
-		fld	[bp+var_8]
-		call	ftol@
-		push	ax	; target_left
-		mov	ax, elis_still_or_wave.BE_cur_top
-		add	ax, 28
-		push	ax	; origin_y
-		mov	ax, elis_still_or_wave.BE_cur_left
-		add	ax, 60
-		push	ax	; origin_left
-		mov	ax, _boss_phase_frame
-		mov	bx, 10
-		cwd
-		idiv	bx
-		cwd
-		idiv	bx
-		imul	dx, size CShootoutLaser
-		add	dx, offset _shootout_lasers
-		push	ds	; this (segment)
-		push	dx	; this (offset)
-		call	@CShootoutLaser@spawn$qiiiiiiii
-		push	6
-		call	_mdrv2_se_play
-		add	sp, 16h
-		cmp	word_3A6E5, 0
-		jnz	short loc_2567E
-		fld	[bp+var_8]
-		fcomp	dword ptr ds:[13F1h]
-		fstsw	[bp+var_12]
-		fwait
-		mov	ax, [bp+var_12]
-		sahf
-		jnb	short loc_2569B
-
-loc_2567E:
-		cmp	word_3A6E5, 1
-		jnz	short loc_256A5
-		fld	[bp+var_8]
-		fldz
-		fcompp
-		fstsw	[bp+var_12]
-		fwait
-		mov	ax, [bp+var_12]
-		sahf
-		jb	short loc_256A5
-
-loc_2569B:
-		mov	_boss_phase_frame, 0
-		xor	ax, ax
-		leave
-		retf
-; ---------------------------------------------------------------------------
-
-loc_256A5:
-		mov	ax, 1
-		leave
-		retf
-sub_253E7	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -18338,7 +18085,7 @@ loc_25DB9:
 ; ---------------------------------------------------------------------------
 
 loc_25DC8:
-		call	sub_253E7
+		call	@pattern_11_lasers_across$qv
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -23317,8 +23064,10 @@ _boss_phase	db ?
 
 CEntities _elis_stars, 5
 
-radius_3A6E3	dw ?
-word_3A6E5	dw ?
+public _pattern0_circle_radius, _pattern0_direction
+_pattern0_circle_radius	dw ?
+_pattern0_direction	dw ?
+
 		db 20 dup(?)
 angle_3A6FB	db ?
 word_3A6FC	dw ?
