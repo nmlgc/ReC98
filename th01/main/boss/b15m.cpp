@@ -12,6 +12,7 @@
 #include "th01/math/dir.hpp"
 #include "th01/math/subpixel.hpp"
 extern "C" {
+#include "th01/math/vector.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/graph.h"
 #include "th01/formats/pf.hpp"
@@ -77,6 +78,7 @@ extern bool initial_hp_rendered;
 static const int CHOOSE_NEW = 0;
 
 extern union {
+	int angle_range; // ACTUAL TYPE: unsigned char
 	int speed_multiplied_by_8;
 } pattern_state;
 // --------
@@ -177,6 +179,56 @@ inline screen_y_t surround_random_top(elis_entity_t relative_to) {
 		(boss_entities[relative_to].cur_top + (rand() % SURROUND_AREA_H)) -
 		(SURROUND_AREA_H - GIRL_H)
 	);
+}
+// -------------
+
+// .GRC entities
+// -------------
+
+enum elis_grc_cel_t {
+	RIFT_CELS = 2,
+
+	C_RIFT = 4,
+	C_RIFT_last = (C_RIFT + RIFT_CELS - 1),
+};
+
+#define elis_grc_sloppy_unput(entities, i) { \
+	grc_sloppy_unput(entities.left[i], entities.top[i]); \
+}
+
+#define elis_grc_put(entities, i, cel, col) { \
+	grc_put_8(entities.left[i], entities.top[i], GRC_SLOT_BOSS_1, cel, col); \
+}
+
+#define rifts_update_and_render(rifts, start_frame, end_frame, tmp_cel) { \
+	if( \
+		(boss_phase_frame >= start_frame) && \
+		(boss_phase_frame <= end_frame) && \
+		((boss_phase_frame % 4) == 0) \
+	) { \
+		for(int i = 0; i < rifts.count(); i++) { \
+			/* Unblit */ \
+			if(boss_phase_frame > start_frame) { \
+				elis_grc_sloppy_unput(rifts, i); \
+			} \
+			\
+			/* Initialize */ \
+			if( \
+				((boss_phase_frame % 16) == ((i * 4) % 16)) || \
+				(boss_phase_frame == start_frame) \
+			) { \
+				rifts.left[i] = surround_random_left(ENT_STILL_OR_WAVE); \
+				rifts.top[i] = surround_random_top(ENT_STILL_OR_WAVE); \
+			} \
+			\
+			/* Render */ \
+			if(boss_phase_frame < end_frame) { \
+				tmp_cel = (rand() % RIFT_CELS); \
+				elis_grc_put(rifts, i, (C_RIFT + cel), COL_FX); \
+			} \
+		} \
+		mdrv2_se_play(7); \
+	} \
 }
 // -------------
 
@@ -497,4 +549,42 @@ done:
 	#undef circle_radius
 	#undef circle_center_y
 	#undef circle_center_x
+}
+
+int pattern_random_downwards_missiles(void)
+{
+	#define rifts pattern1_rifts
+
+	extern CEntities<5> rifts;
+	int cel; // ACTUAL TYPE: elis_grc_cel_t
+	pixel_t velocity_x;
+	pixel_t velocity_y;
+	unsigned char angle;
+
+	if(boss_phase_frame == 50) {
+		ent_unput_and_put_both(ENT_STILL_OR_WAVE, C_HAND);
+		select_for_rank(pattern_state.angle_range, 0x0F, 0x15, 0x19, 0x1D);
+	}
+
+	// That's quite the brave placement for this branch...
+	if((boss_phase_frame > 60) && ((boss_phase_frame % 3) == 0)) {
+		int i = (rand() % rifts.count());
+		angle = (
+			(rand() % pattern_state.angle_range) -
+			((pattern_state.angle_range - 0x01) / 2) +
+			0x40
+		);
+		vector2(velocity_x, velocity_y, 7, angle);
+		Missiles.add(rifts.left[i], rifts.top[i], velocity_x, velocity_y);
+	}
+
+	rifts_update_and_render(rifts, 60, 160, cel);
+
+	if(boss_phase_frame > 170) {
+		boss_phase_frame = 0;
+		return CHOOSE_NEW;
+	}
+	return 2;
+
+	#undef rifts
 }

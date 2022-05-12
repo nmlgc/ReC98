@@ -17409,218 +17409,10 @@ ELIS_BASE_TOP = (PLAYFIELD_TOP + ((PLAYFIELD_H / 21) * 5) - (ELIS_GIRL_H / 2))
 	extern @wave_teleport$qii:proc
 	extern @elis_select_for_rank$qmiiiii:proc
 	extern @pattern_11_lasers_across$qv:proc
+	extern @pattern_random_downwards_missile$qv:proc
 main_35_TEXT	ends
 
 main_35__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_256AA	proc far
-
-var_1E		= qword	ptr -1Eh
-var_16		= qword	ptr -16h
-var_A		= word ptr -0Ah
-@@angle		= byte ptr -7
-@@vector_y		= word ptr -6
-@@vector_x		= word ptr -4
-var_2		= word ptr -2
-
-		enter	0Ah, 0
-		push	si
-		cmp	_boss_phase_frame, 50
-		jnz	short loc_25726
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		call	@girl_bg_put$qi stdcall, 1
-		pop	cx
-		mov	elis_still_or_wave.BE_move_lock_frame, 0
-		mov	elis_still_or_wave.BE_bos_image, 1
-		call	@CBossEntity@move_lock_and_put_8$qiiii c, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		mov	elis_still_or_wave.BE_move_lock_frame, 0
-		mov	elis_still_or_wave.BE_bos_image, 1
-		call	@CBossEntity@move_lock_and_put_8$qiiii c, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
-		call	@elis_select_for_rank$qmiiiii c, offset _elis_pattern_state, ds, large 15 or (21 shl 16), large 25 or (29 shl 16)
-
-loc_25726:
-		cmp	_boss_phase_frame, 60
-		jle	loc_257C3
-		mov	ax, _boss_phase_frame
-		mov	bx, 3
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	loc_257C3
-		call	IRand
-		mov	bx, 5
-		cwd
-		idiv	bx
-		mov	si, dx
-		call	IRand
-		cwd
-		idiv	_elis_pattern_state
-		mov	ax, _elis_pattern_state
-		dec	ax
-		push	dx
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		pop	dx
-		sub	dl, al
-		add	dl, 40h
-		mov	[bp+@@angle], dl
-		push	word ptr [bp+@@angle]
-		push	7
-		push	ss
-		lea	ax, [bp+@@vector_y]
-		push	ax
-		push	ss
-		lea	ax, [bp+@@vector_x]
-		push	ax
-		call	_vector2
-		add	sp, 0Ch
-		push	0		; char
-		mov	ax, [bp+@@vector_y]
-		mov	[bp+var_A], ax
-		fild	[bp+var_A]
-		sub	sp, 8
-		fstp	[bp+var_16]
-		fwait
-		mov	ax, [bp+var_4]
-		mov	[bp+var_A], ax
-		fild	[bp+var_A]
-		sub	sp, 8
-		fstp	[bp+var_1E]
-		mov	bx, si
-		add	bx, bx
-		fwait
-		push	word ptr [bx+5D51h] ; int
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+5D47h] ; int
-		push	ds
-		push	offset _Missiles ; this
-		call	@CMissiles@add$qiiddc
-		add	sp, 1Ah
-
-loc_257C3:
-		cmp	_boss_phase_frame, 60
-		jl	loc_258AA
-		cmp	_boss_phase_frame, 160
-		jg	loc_258AA
-		mov	ax, _boss_phase_frame
-		mov	bx, 4
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	loc_258AA
-		xor	si, si
-		jmp	loc_2589B
-; ---------------------------------------------------------------------------
-
-loc_257EA:
-		cmp	_boss_phase_frame, 60
-		jle	short loc_2580F
-		push	(32 shl 16) or 48
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+5D51h]
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+5D47h]
-		call	_egc_copy_rect_1_to_0_16
-		add	sp, 8
-
-loc_2580F:
-		mov	ax, _boss_phase_frame
-		mov	bx, 16
-		cwd
-		idiv	bx
-		mov	ax, si
-		shl	ax, 2
-		push	dx
-		cwd
-		idiv	bx
-		pop	ax
-		cmp	ax, dx
-		jz	short loc_2582D
-		cmp	_boss_phase_frame, 60
-		jnz	short loc_25861
-
-loc_2582D:
-		call	IRand
-		mov	bx, 192
-		cwd
-		idiv	bx
-		add	dx, elis_still_or_wave.BE_cur_left
-		add	dx, -32
-		mov	bx, si
-		add	bx, bx
-		mov	[bx+5D47h], dx
-		call	IRand
-		mov	bx, 128
-		cwd
-		idiv	bx
-		add	dx, elis_still_or_wave.BE_cur_top
-		add	dx, -32
-		mov	bx, si
-		add	bx, bx
-		mov	[bx+5D51h], dx
-
-loc_25861:
-		cmp	_boss_phase_frame, 160
-		jge	short loc_2589A
-		call	IRand
-		mov	bx, 2
-		cwd
-		idiv	bx
-		mov	[bp+var_2], dx
-		push	4	; col
-		mov	ax, [bp+var_2]
-		add	ax, 4
-		push	ax	; image
-		push	GRC_SLOT_BOSS_1	; slot
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+5D51h]	; top
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+5D47h]	; left
-		call	_grc_put_8
-		add	sp, 0Ah
-
-loc_2589A:
-		inc	si
-
-loc_2589B:
-		cmp	si, 5
-		jl	loc_257EA
-		push	7
-		call	_mdrv2_se_play
-		pop	cx
-
-loc_258AA:
-		cmp	_boss_phase_frame, 170
-		jle	short loc_258BC
-		mov	_boss_phase_frame, 0
-		xor	ax, ax
-		jmp	short loc_258BF
-; ---------------------------------------------------------------------------
-
-loc_258BC:
-		mov	ax, 2
-
-loc_258BF:
-		pop	si
-		leave
-		retf
-sub_256AA	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -18091,7 +17883,7 @@ loc_25DC8:
 ; ---------------------------------------------------------------------------
 
 loc_25DCE:
-		call	sub_256AA
+		call	@pattern_random_downwards_missile$qv
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -23056,6 +22848,7 @@ _kikuri_invincibility_frame	dw ?
 _kikuri_entrance_ring_radius_base	dw ?
 _kikuri_initial_hp_rendered	db ?
 		db ?
+
 public _boss_hp, _boss_phase_frame, _elis_pattern_state, _boss_phase
 _boss_hp	dw ?
 _boss_phase_frame	dw ?
@@ -23068,7 +22861,8 @@ public _pattern0_circle_radius, _pattern0_direction
 _pattern0_circle_radius	dw ?
 _pattern0_direction	dw ?
 
-		db 20 dup(?)
+CEntities _pattern1_rifts, 5
+
 angle_3A6FB	db ?
 word_3A6FC	dw ?
 angle_3A6FE	db ?
