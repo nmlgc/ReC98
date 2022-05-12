@@ -3,13 +3,13 @@
 
 #include <stddef.h>
 #include "platform.h"
-#include "decomp.hpp"
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/math/area.hpp"
 #include "th01/math/dir.hpp"
+#include "th01/math/polar.hpp"
 #include "th01/math/subpixel.hpp"
 extern "C" {
 #include "th01/math/vector.hpp"
@@ -25,10 +25,6 @@ extern "C" {
 #include "th01/main/boss/entity_a.hpp"
 }
 #include "th01/shiftjis/fns.hpp"
-#undef MISSILE_FN
-// Stuffing float constants at the end of a string to work around alignment
-// limitations… how disgusting.
-#define MISSILE_FN "boss3_m.ptn\x00\x00\x00\xC8\x43\x00\x00\x20\x44\x9A\x99\x99\x99\x99\x99\xA9\x3F"
 #include "th01/sprites/pellet.h"
 #include "th01/main/shape.hpp"
 #include "th01/main/particle.hpp"
@@ -79,6 +75,7 @@ static const int CHOOSE_NEW = 0;
 
 extern union {
 	int angle_range; // ACTUAL TYPE: unsigned char
+	pellet_group_t group;
 	int speed_multiplied_by_8;
 } pattern_state;
 // --------
@@ -133,14 +130,23 @@ inline void ent_sync(elis_entity_t dst, elis_entity_t src) {
 	);
 }
 
-inline void ent_unput_and_put_both(elis_entity_t ent, elis_entity_cel_t cel) {
+// [unput_0] should theoretically always be `true`. Making sure that both VRAM
+// pages are identical avoids visual glitches from blitting cels with different
+// transparent areas on top of each other (see: Mima's third arm)… but you can
+// always just *assume* rather than ensure, right? :zunpet:
+inline void ent_unput_and_put_both(
+	elis_entity_t ent, elis_entity_cel_t cel, bool unput_0 = true
+) {
 	void girl_bg_put(int unncessary_parameter_that_still_needs_to_be_1_or_2);
 
 	graph_accesspage_func(1);
 	girl_bg_put(ent + 1);
 	boss_entities[ent].move_lock_and_put_image_8(cel);
 	graph_accesspage_func(0);
-	ent_still_or_wave.move_lock_and_put_image_8(cel);
+	if(unput_0) {
+		girl_bg_put(ent + 1);
+	}
+	boss_entities[ent].move_lock_and_put_image_8(cel);
 }
 // --------
 
@@ -149,6 +155,10 @@ inline void ent_unput_and_put_both(elis_entity_t ent, elis_entity_cel_t cel) {
 
 inline screen_x_t form_center_x(elis_form_t form) {
 	return (ent_still_or_wave.cur_left + (GIRL_W / 2));
+}
+
+inline screen_y_t form_center_y(elis_form_t form) {
+	return (ent_still_or_wave.cur_top + (GIRL_H / 2));
 }
 
 inline screen_x_t girl_lefteye_x(void) {
@@ -231,6 +241,112 @@ enum elis_grc_cel_t {
 	} \
 }
 // -------------
+
+// Shared big circle
+// -----------------
+// Concrete circle structures must look like this: {
+// 	unsigned char angle;
+// 	int frame;
+//
+// 	screen_x_t center_x(void) { return …; };
+// 	screen_y_t center_y(void) { return …; };
+// };
+
+static const pixel_t BIGCIRCLE_RADIUS = ((GIRL_W * 2) / 2);
+
+#define bigcircle_sloppy_unput(bigcircle) { \
+	shape_circle_sloppy_unput( \
+		bigcircle.center_x(), bigcircle.center_y(), BIGCIRCLE_RADIUS, 0x01 \
+	); \
+}
+
+#define bigcircle_put_arc(bigcircle, angle_start, angle_end, col) { \
+	shape_ellipse_arc_put( \
+		bigcircle.center_x(), \
+		bigcircle.center_y(), \
+		BIGCIRCLE_RADIUS, \
+		BIGCIRCLE_RADIUS, \
+		col, \
+		0x01, \
+		angle_start, \
+		angle_end \
+	); \
+}
+
+#define bigcircle_put(bigcircle, col) { \
+	bigcircle_put_arc(bigcircle, 0x00, 0xFF, col); \
+}
+
+#define bigcircle_put_dot(bigcircle, offset_start, offset_end, col) { \
+	bigcircle_put_arc( \
+		bigcircle, \
+		(bigcircle.angle + offset_start), \
+		(bigcircle.angle + offset_end), \
+		col \
+	); \
+}
+
+#define bigcircle_is_summon_frame(start_frame) ( \
+	(boss_phase_frame >= start_frame) && ((boss_phase_frame % 2) == 0) \
+)
+
+#define bigcircle_summon_done(bigcircle) \
+	(bigcircle.angle >= (0x100 / 4))
+
+#define bigcircle_summon_update_and_render(bigcircle, q4_offset_end) { \
+	bigcircle_put_dot(bigcircle, 0x00, q4_offset_end, V_WHITE); \
+	bigcircle_put_dot(bigcircle, 0x40, 0x42, V_WHITE); \
+	bigcircle_put_dot(bigcircle, 0x80, 0x82, V_WHITE); \
+	bigcircle_put_dot(bigcircle, 0xC0, 0xC2, V_WHITE); \
+	\
+	bigcircle.angle += 0x02; \
+}
+
+// All of the summon animation macros below are forced to be used inside an
+// `if` statement, returning a non-zero value when the flash animation is done.
+// MODDERS: Just turn them into regular functions.
+
+// Renders a frame of the summon animation.
+#define bigcircle_summon(bigcircle, start_frame, q4_offset_end) \
+	boss_phase_frame == start_frame) { \
+		mdrv2_se_play(8); \
+	} \
+	bigcircle_summon_update_and_render(bigcircle, q4_offset_end); \
+	if(bigcircle_summon_done(bigcircle) /* return value */
+
+// Renders a frame of the summon and flash animation.
+#define bigcircle_summon_and_flash(bigcircle, start_frame, q4_offset_end) \
+	bigcircle_is_summon_frame(start_frame) && (bigcircle.frames == 0)) { \
+		if(bigcircle_summon(bigcircle, start_frame, q4_offset_end)) { \
+			bigcircle_sloppy_unput(bigcircle);	/* (redundant) */ \
+			\
+			/* Also looks redundant, but we might have unblitted parts of */ \
+			/* the circle during the summon animation… */ \
+			bigcircle_put(bigcircle, V_WHITE); \
+			\
+			bigcircle.frames = 1; \
+			ent_unput_and_put_both(ENT_STILL_OR_WAVE, C_STILL); \
+		} \
+	} else if((bigcircle.frames != 0) && (bigcircle.frames < 40)) { \
+		bigcircle.frames++; \
+		if((bigcircle.frames % 8) == 0) { \
+			bigcircle_sloppy_unput(bigcircle);	/* (redundant) */ \
+			bigcircle_put(bigcircle, COL_FX); \
+		} else if((bigcircle.frames % 8) == 4) { \
+			bigcircle_sloppy_unput(bigcircle);	/* (redundant) */ \
+			bigcircle_put(bigcircle, V_WHITE); \
+		} \
+	} else if(bigcircle.frames != 0 /* return value */
+
+// Circle around the Star of David
+struct starcircle_t {
+	unsigned char angle;
+	int frames;
+
+	screen_x_t center_x(void) { return form_center_x(F_GIRL); }
+	screen_y_t center_y(void) { return form_center_y(F_GIRL); }
+};
+// -----------------
 
 // .PTN
 // ----
@@ -444,7 +560,7 @@ int pattern_11_lasers_across(void)
 
 	if(boss_phase_frame == 50) {
 		direction = (rand() % 2);
-		ent_unput_and_put_both(ENT_STILL_OR_WAVE, C_HAND);
+		ent_unput_and_put_both(ENT_STILL_OR_WAVE, C_HAND, false);
 		select_for_rank(pattern_state.speed_multiplied_by_8,
 			(to_sp(6.25f) / 2),
 			(to_sp(6.875f) / 2),
@@ -477,13 +593,10 @@ int pattern_11_lasers_across(void)
 			circle_center_x, circle_center_y, circle_radius, 0x20
 		);
 	} else if(boss_phase_frame == 150) {
-		ent_unput_and_put_both(ENT_STILL_OR_WAVE, C_STILL);
+		ent_unput_and_put_both(ENT_STILL_OR_WAVE, C_STILL, false);
 	}
 
 	if((boss_phase_frame >= 70) && ((boss_phase_frame % INTERVAL) == 0)) {
-		#undef RES_Y
-		#define RES_Y *reinterpret_cast<float near*>(0x13ED)
-
 		if(direction == X_RIGHT) {
 			target_left = (PLAYFIELD_LEFT +
 				(((boss_phase_frame - 70) / INTERVAL) * (PLAYFIELD_W / 10))
@@ -509,36 +622,10 @@ int pattern_11_lasers_across(void)
 		// <= instead of < is why this pattern actually fires 11 lasers rather
 		// than the 10 you might guess from looking at the target calculation
 		// above.
-
-		/* TODO: Proper decompilation, once data can be emitted here:
-		* ----------------------------------------------------------
 		if(
 			((direction == X_RIGHT) && (target_left >= PLAYFIELD_RIGHT)) ||
 			((direction == X_LEFT) && (target_left <= PLAYFIELD_LEFT))
-		)
-		* ----------------------------------------------------------
-		* Performing arithmetic or comparisons between a double (target_left)
-		* and a float (PLAYFIELD_RIGHT) variable always FLDs the float first,
-		* before emitting the corresponding FPU instruction with the double,
-		* which is not what we want here.
-		*/
-		if(direction != X_RIGHT) {
-			goto firing_left;
-		}
-		asm {
-			fld  	qword ptr [bp-8];
-			fcomp	dword ptr [0x13F1];
-			fstsw	word ptr [bp-18];
-			FWAIT_EMU;
-			mov  	ax, word ptr [bp-18];
-			sahf;
-		}
-		if(!FLAGS_CARRY) {
-			goto done;
-		}
-firing_left:
-		if((direction == X_LEFT) && (target_left <= PLAYFIELD_LEFT)) {
-done:
+		) {
 			boss_phase_frame = 0;
 			return CHOOSE_NEW;
 		}
@@ -562,7 +649,7 @@ int pattern_random_downwards_missiles(void)
 	unsigned char angle;
 
 	if(boss_phase_frame == 50) {
-		ent_unput_and_put_both(ENT_STILL_OR_WAVE, C_HAND);
+		ent_unput_and_put_both(ENT_STILL_OR_WAVE, C_HAND, false);
 		select_for_rank(pattern_state.angle_range, 0x0F, 0x15, 0x19, 0x1D);
 	}
 
@@ -587,4 +674,56 @@ int pattern_random_downwards_missiles(void)
 	return 2;
 
 	#undef rifts
+}
+
+int pattern_pellets_along_circle(void)
+{
+	#define circle	pattern2_circle
+
+	extern starcircle_t circle;
+	screen_x_t left;
+	screen_y_t top;
+
+	if(boss_phase_frame < 10) {
+		circle.frames = 0;
+	}
+	if(boss_phase_frame == 50) {
+		ent_unput_and_put_both(ENT_STILL_OR_WAVE, C_HAND, false);
+		circle.angle = 0x00;
+		select_for_rank(reinterpret_cast<int &>(pattern_state.group),
+			PG_1_AIMED,
+			PG_1_RANDOM_NARROW_AIMED,
+			PG_3_SPREAD_WIDE_AIMED,
+			// This will spawn (32 * 5) = 160 pellets, which is 60 more than
+			// the original PELLET_COUNT. As a result, Elis will only ever fire
+			// up to 20 of these spreads on Lunatic, rather than the coded 32.
+			PG_5_SPREAD_NARROW_AIMED
+		);
+	}
+
+	// Adding a `double` value < 1.0 to an integer is still a NOP. That leads
+	// to the start and end angle for quadrant IV being identical, and nothing
+	// being drawn there as a result. Hard to call it a ZUN bug though, since
+	// this is the only function where this happens. But if it this was
+	// intended after all, why not just remove the call for quadrant IV?!
+	if(bigcircle_summon_and_flash(circle, 60, 0.05)) {
+		bigcircle_sloppy_unput(circle);
+		circle.angle = 0x00;
+		for(int i = 0; i < 32; i++) {
+			// lefteye?!
+			left = polar_x(girl_lefteye_x(), BIGCIRCLE_RADIUS, circle.angle);
+
+			top = polar_y(
+				form_center_y(F_GIRL), BIGCIRCLE_RADIUS, circle.angle
+			);
+			Pellets.add_group(left, top, pattern_state.group, to_sp(0.25f));
+			circle.angle += (0x100 / 32);
+		}
+		boss_phase_frame = 0;
+		circle.frames = 0;
+		return CHOOSE_NEW;
+	}
+	return 3;
+
+	#undef circle
 }

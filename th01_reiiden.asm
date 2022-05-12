@@ -17410,310 +17410,10 @@ ELIS_BASE_TOP = (PLAYFIELD_TOP + ((PLAYFIELD_H / 21) * 5) - (ELIS_GIRL_H / 2))
 	extern @elis_select_for_rank$qmiiiii:proc
 	extern @pattern_11_lasers_across$qv:proc
 	extern @pattern_random_downwards_missile$qv:proc
+	extern @pattern_pellets_along_circle$qv:proc
 main_35_TEXT	ends
 
 main_35__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_258C2	proc far
-
-var_6		= word ptr -6
-@@top		= word ptr -4
-@@left		= word ptr -2
-
-		enter	6, 0
-		push	si
-		cmp	_boss_phase_frame, 10
-		jge	short loc_258D4
-		mov	word_3A6FC, 0
-
-loc_258D4:
-		cmp	_boss_phase_frame, 50
-		jnz	short loc_25947
-		push	1
-		call	_graph_accesspage_func
-		call	@girl_bg_put$qi stdcall, 1
-		mov	elis_still_or_wave.BE_move_lock_frame, 0
-		mov	elis_still_or_wave.BE_bos_image, 1
-		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
-		push	0
-		call	_graph_accesspage_func
-		mov	elis_still_or_wave.BE_move_lock_frame, 0
-		mov	elis_still_or_wave.BE_bos_image, 1
-		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
-		mov	angle_3A6FB, 0
-		call	@elis_select_for_rank$qmiiiii stdcall, offset _elis_pattern_state, ds, large 12 or (29 shl 16), large 23 or (28 shl 16)
-		add	sp, 2Ah
-
-loc_25947:
-		cmp	_boss_phase_frame, 60
-		jl	loc_25AED
-		mov	ax, _boss_phase_frame
-		mov	bx, 2
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	loc_25AED
-		cmp	word_3A6FC, 0
-		jnz	loc_25AED
-		cmp	_boss_phase_frame, 60
-		jnz	short loc_25977
-		push	8
-		call	_mdrv2_se_play
-		pop	cx
-
-loc_25977:
-		mov	al, angle_3A6FB
-		mov	ah, 0
-		mov	[bp+var_6], ax
-		fild	[bp+var_6]
-		fadd	qword ptr ds:[13F5h]
-		call	ftol@
-		push	ax	; angle_end
-		push	word ptr angle_3A6FB	; angle_start
-		push	1	; angle_step
-		push	128 or (7 shl 16)	; (radius_y) or (col shl 16)
-		push	128	; radius_x
-		mov	ax, elis_still_or_wave.BE_cur_top
-		add	ax, 48
-		push	ax	; center_y
-		mov	ax, elis_still_or_wave.BE_cur_left
-		add	ax, 64
-		push	ax	; center_x
-		call	@shape_ellipse_arc_put$qiiiiiucucuc
-		mov	al, angle_3A6FB
-		add	al, 42h
-		push	ax	; angle_end
-		mov	al, angle_3A6FB
-		add	al, 40h
-		push	ax	; angle_start
-		push	1	; angle_step
-		push	128 or (7 shl 16)	; (radius_y) or (col shl 16)
-		push	128	; radius_x
-		mov	ax, elis_still_or_wave.BE_cur_top
-		add	ax, 48
-		push	ax	; center_y
-		mov	ax, elis_still_or_wave.BE_cur_left
-		add	ax, 64
-		push	ax	; center_x
-		call	@shape_ellipse_arc_put$qiiiiiucucuc
-		mov	al, angle_3A6FB
-		add	al, -7Eh
-		push	ax	; angle_end
-		mov	al, angle_3A6FB
-		add	al, 80h
-		push	ax	; angle_start
-		push	1	; angle_step
-		push	128 or (7 shl 16)	; (radius_y) or (col shl 16)
-		push	128	; radius_x
-		mov	ax, elis_still_or_wave.BE_cur_top
-		add	ax, 48
-		push	ax	; center_y
-		mov	ax, elis_still_or_wave.BE_cur_left
-		add	ax, 64
-		push	ax	; center_x
-		call	@shape_ellipse_arc_put$qiiiiiucucuc
-		add	sp, 30h
-		mov	al, angle_3A6FB
-		add	al, -3Eh
-		push	ax	; angle_end
-		mov	al, angle_3A6FB
-		add	al, -40h
-		push	ax	; angle_start
-		push	1	; angle_step
-		push	128 or (7 shl 16)	; (radius_y) or (col shl 16)
-		push	128	; radius_x
-		mov	ax, elis_still_or_wave.BE_cur_top
-		add	ax, 48
-		push	ax	; center_y
-		mov	ax, elis_still_or_wave.BE_cur_left
-		add	ax, 64
-		push	ax	; center_x
-		call	@shape_ellipse_arc_put$qiiiiiucucuc
-		add	sp, 10h
-		mov	al, angle_3A6FB
-		add	al, 2
-		mov	angle_3A6FB, al
-		cmp	angle_3A6FB, 40h
-		jb	loc_25C4A
-		push	255	; angle_end
-		push	0	; angle_start
-		push	1	; angle_step
-		push	128 or (128 shl 16)	; (radius_x) or (radius_y shl 16)
-		mov	ax, elis_still_or_wave.BE_cur_top
-		add	ax, 48
-		push	ax	; center_y
-		mov	ax, elis_still_or_wave.BE_cur_left
-		add	ax, 64
-		push	ax	; center_x
-		call	@shape_ellipse_arc_sloppy_unput$qiiiiucucuc
-		push	255	; angle_end
-		push	0	; angle_start
-		push	1	; angle_step
-		push	128 or (7 shl 16)	; (radius_y) or (col shl 16)
-		push	128	; radius_x
-		mov	ax, elis_still_or_wave.BE_cur_top
-		add	ax, 48
-		push	ax	; center_y
-		mov	ax, elis_still_or_wave.BE_cur_left
-		add	ax, 64
-		push	ax	; center_x
-		call	@shape_ellipse_arc_put$qiiiiiucucuc
-		mov	word_3A6FC, 1
-		push	1
-		call	_graph_accesspage_func
-		call	@girl_bg_put$qi stdcall, 1
-		mov	elis_still_or_wave.BE_move_lock_frame, 0
-		mov	elis_still_or_wave.BE_bos_image, 0
-		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
-		push	0
-		call	_graph_accesspage_func
-		call	@girl_bg_put$qi stdcall, 1
-		add	sp, 32h
-		mov	elis_still_or_wave.BE_move_lock_frame, 0
-		mov	elis_still_or_wave.BE_bos_image, 0
-		call	@CBossEntity@move_lock_and_put_8$qiiii c, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)
-		jmp	loc_25C4A
-; ---------------------------------------------------------------------------
-
-loc_25AED:
-		cmp	word_3A6FC, 0
-		jz	loc_25B99
-		cmp	word_3A6FC, 28h
-		jge	loc_25B99
-		inc	word_3A6FC
-		mov	ax, word_3A6FC
-		mov	bx, 8
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_25B3E
-		push	255	; angle_end
-		push	0	; angle_start
-		push	1	; angle_step
-		push	128 or (128 shl 16)	; (radius_x) or (radius_y shl 16)
-		mov	ax, elis_still_or_wave.BE_cur_top
-		add	ax, 48
-		push	ax	; center_y
-		mov	ax, elis_still_or_wave.BE_cur_left
-		add	ax, 64
-		push	ax	; center_x
-		call	@shape_ellipse_arc_sloppy_unput$qiiiiucucuc
-		add	sp, 0Eh
-		push	255	; angle_end
-		push	0	; angle_start
-		push	1	; angle_step
-		push	4	; col
-		jmp	short loc_25B7A
-; ---------------------------------------------------------------------------
-
-loc_25B3E:
-		mov	ax, word_3A6FC
-		mov	bx, 8
-		cwd
-		idiv	bx
-		cmp	dx, 4
-		jnz	loc_25C4A
-		push	255	; angle_end
-		push	0	; angle_start
-		push	1	; angle_step
-		push	128 or (128 shl 16)	; (radius_x) or (radius_y shl 16)
-		mov	ax, elis_still_or_wave.BE_cur_top
-		add	ax, 48
-		push	ax	; center_y
-		mov	ax, elis_still_or_wave.BE_cur_left
-		add	ax, 64
-		push	ax	; center_x
-		call	@shape_ellipse_arc_sloppy_unput$qiiiiucucuc
-		add	sp, 0Eh
-		push	255	; angle_end
-		push	0	; angle_start
-		push	1	; angle_step
-		push	7	; col
-
-loc_25B7A:
-		push	128 or (128 shl 16)	; (radius_x) or (radius_y shl 16)
-		mov	ax, elis_still_or_wave.BE_cur_top
-		add	ax, 48
-		push	ax	; center_y
-		mov	ax, elis_still_or_wave.BE_cur_left
-		add	ax, 64
-		push	ax	; center_x
-		call	@shape_ellipse_arc_put$qiiiiiucucuc
-		add	sp, 10h
-		jmp	loc_25C4A
-; ---------------------------------------------------------------------------
-
-loc_25B99:
-		cmp	word_3A6FC, 0
-		jz	loc_25C4A
-		push	255	; angle_end
-		push	0	; angle_start
-		push	1	; angle_step
-		push	128 or (128 shl 16)	; (radius_x) or (radius_y shl 16)
-		mov	ax, elis_still_or_wave.BE_cur_top
-		add	ax, 48
-		push	ax	; center_y
-		mov	ax, elis_still_or_wave.BE_cur_left
-		add	ax, 64
-		push	ax	; center_x
-		call	@shape_ellipse_arc_sloppy_unput$qiiiiucucuc
-		add	sp, 0Eh
-		mov	angle_3A6FB, 0
-		xor	si, si
-		jmp	short loc_25C35
-; ---------------------------------------------------------------------------
-
-loc_25BCE:
-		mov	al, angle_3A6FB
-		mov	ah, 0
-		and	ax, 255
-		add	ax, ax
-		mov	bx, ax
-		movsx	eax, _CosTable8[bx]
-		shl	eax, 7
-		sar	eax, 8
-		add	ax, elis_still_or_wave.BE_cur_left
-		add	ax, 60
-		mov	[bp+@@left], ax
-		mov	al, angle_3A6FB
-		mov	ah, 0
-		and	ax, 255
-		add	ax, ax
-		mov	bx, ax
-		movsx	eax, _SinTable8[bx]
-		shl	eax, 7
-		sar	eax, 8
-		add	ax, elis_still_or_wave.BE_cur_top
-		add	ax, 48
-		mov	[bp+@@top], ax
-		call	@CPellets@add_group$qii14pellet_group_ti c, offset _Pellets, ds, [bp+@@left], ax, _elis_pattern_state, 4
-		mov	al, angle_3A6FB
-		add	al, 8
-		mov	angle_3A6FB, al
-		inc	si
-
-loc_25C35:
-		cmp	si, 20h	; ' '
-		jl	short loc_25BCE
-		mov	_boss_phase_frame, 0
-		mov	word_3A6FC, 0
-		xor	ax, ax
-		jmp	short loc_25C4D
-; ---------------------------------------------------------------------------
-
-loc_25C4A:
-		mov	ax, 3
-
-loc_25C4D:
-		pop	si
-		leave
-		retf
-sub_258C2	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -17889,7 +17589,7 @@ loc_25DCE:
 ; ---------------------------------------------------------------------------
 
 loc_25DD4:
-		call	sub_258C2
+		call	@pattern_pellets_along_circle$qv
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -22849,6 +22549,11 @@ _kikuri_entrance_ring_radius_base	dw ?
 _kikuri_initial_hp_rendered	db ?
 		db ?
 
+bigcircle_t struc
+	BIGCIRCLE_angle       	db ?
+	BIGCIRCLE_flash_frames	dw ?
+bigcircle_t ends
+
 public _boss_hp, _boss_phase_frame, _elis_pattern_state, _boss_phase
 _boss_hp	dw ?
 _boss_phase_frame	dw ?
@@ -22863,8 +22568,9 @@ _pattern0_direction	dw ?
 
 CEntities _pattern1_rifts, 5
 
-angle_3A6FB	db ?
-word_3A6FC	dw ?
+public _pattern2_circle
+_pattern2_circle	bigcircle_t <?>
+
 angle_3A6FE	db ?
 word_3A6FF	dw ?
 		db 100 dup(?)

@@ -13,6 +13,9 @@ void shape8x8_invincibility_put(screen_x_t left, vram_y_t top, int cel);
 #define shape8x8_sloppy_unput(left, top) \
 	egc_copy_rect_1_to_0_16_word_w(left, top, 8, 8);
 
+// Draws the outline dots of an ellipse arc at the given X and Y radius away
+// from the center point, defined by a start and end angle. The original
+// version draws nothing if [angle_start] == [angle_end].
 void shape_ellipse_arc_put(
 	screen_x_t center_x,
 	vram_y_t center_y,
