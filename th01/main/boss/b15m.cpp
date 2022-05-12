@@ -750,3 +750,15 @@ void pascal near starcircle_line_unput(
 	screen_y_t p2_y = polar_y(form_center_y(F_GIRL), BIGCIRCLE_RADIUS, angle_2);
 	graph_r_line_unput(p1_x, p1_y, p2_x, p2_y);
 }
+
+int phase_1(int id)
+{
+	switch(id) {
+	case CHOOSE_NEW:
+		return (rand() % 4);
+	case 1: return pattern_11_lasers_across();
+	case 2: return pattern_random_downwards_missiles();
+	case 3: return pattern_pellets_along_circle();
+	}
+	return CHOOSE_NEW;
+}

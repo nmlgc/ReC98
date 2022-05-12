@@ -17408,72 +17408,14 @@ ELIS_BASE_TOP = (PLAYFIELD_TOP + ((PLAYFIELD_H / 21) * 5) - (ELIS_GIRL_H / 2))
 	extern @elis_free$qv:proc
 	extern @wave_teleport$qii:proc
 	extern @elis_select_for_rank$qmiiiii:proc
-	extern @pattern_11_lasers_across$qv:proc
-	extern @pattern_random_downwards_missile$qv:proc
-	extern @pattern_pellets_along_circle$qv:proc
 	@STARCIRCLE_LINE_PUT$QUCUCI procdesc pascal near \
 		col:word, angle_1:byte, angle_2:byte
 	@STARCIRCLE_LINE_UNPUT$QUCUC procdesc pascal near \
 		angle_1:byte, angle_2:byte
+	extern @phase_1$qi:proc
 main_35_TEXT	ends
 
 main_35__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_25DA7	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	bx, [bp+arg_0]
-		cmp	bx, 3
-		ja	short loc_25DDA
-		add	bx, bx
-		jmp	cs:off_25DDE[bx]
-
-loc_25DB9:
-		call	IRand
-		mov	bx, 4
-		cwd
-		idiv	bx
-		mov	ax, dx
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_25DC8:
-		call	@pattern_11_lasers_across$qv
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_25DCE:
-		call	@pattern_random_downwards_missile$qv
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_25DD4:
-		call	@pattern_pellets_along_circle$qv
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_25DDA:
-		xor	ax, ax
-		pop	bp
-		retf
-sub_25DA7	endp
-
-; ---------------------------------------------------------------------------
-off_25DDE	dw offset loc_25DB9
-		dw offset loc_25DC8
-		dw offset loc_25DCE
-		dw offset loc_25DD4
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -21054,8 +20996,7 @@ loc_281F4:
 		inc	_elis_invincibility_frame
 		cmp	word_3A777, 0
 		jz	short loc_28211
-		push	word_3A777
-		call	sub_25DA7
+		call	@phase_1$qi stdcall, word_3A777
 		pop	cx
 		mov	word_3A777, ax
 		jmp	short loc_28258
@@ -21084,8 +21025,7 @@ loc_28211:
 loc_2823F:
 		cmp	_elis_wave_teleport_done, 1
 		jnz	short loc_28258
-		push	word_3A777
-		call	sub_25DA7
+		call	@phase_1$qi stdcall, word_3A777
 		pop	cx
 		mov	word_3A777, ax
 		mov	_elis_wave_teleport_done, 0
