@@ -83,6 +83,7 @@ enum elis_starpattern_ret_t {
 extern union {
 	int angle_range; // ACTUAL TYPE: unsigned char
 	pellet_group_t group;
+	int ring;
 	int speed_multiplied_by_8;
 } pattern_state;
 // --------
@@ -116,6 +117,8 @@ enum elis_entity_cel_t {
 
 	// ENT_ATTACK
 	C_PREPARE = 0,
+	C_ATTACK_1 = 1,
+	C_ATTACK_2 = 2,
 };
 
 #define ent_still_or_wave	boss_entities[ENT_STILL_OR_WAVE]
@@ -140,6 +143,9 @@ inline void ent_sync(elis_entity_t dst, elis_entity_t src) {
 	);
 }
 
+// It's needed in the functions below...
+void girl_bg_put(int unncessary_parameter_that_still_needs_to_be_1_or_2);
+
 // [unput_0] should theoretically always be `true`. Making sure that both VRAM
 // pages are identical avoids visual glitches from blitting cels with different
 // transparent areas on top of each other (see: Mima's third arm)… but you can
@@ -147,8 +153,6 @@ inline void ent_sync(elis_entity_t dst, elis_entity_t src) {
 inline void ent_unput_and_put_both(
 	elis_entity_t ent, elis_entity_cel_t cel, bool unput_0 = true
 ) {
-	void girl_bg_put(int unncessary_parameter_that_still_needs_to_be_1_or_2);
-
 	graph_accesspage_func(1);
 	girl_bg_put(ent + 1);
 	boss_entities[ent].move_lock_and_put_image_8(cel);
@@ -157,6 +161,19 @@ inline void ent_unput_and_put_both(
 		girl_bg_put(ent + 1);
 	}
 	boss_entities[ent].move_lock_and_put_image_8(cel);
+}
+
+inline void ent_put_both(elis_entity_t ent, elis_entity_cel_t cel) {
+	graph_accesspage_func(1); boss_entities[ent].move_lock_and_put_image_8(cel);
+	graph_accesspage_func(0); boss_entities[ent].move_lock_and_put_image_8(cel);
+}
+
+#define ent_attack_render() { \
+	if((boss_phase_frame % 8) == 0) { \
+		ent_unput_and_put_both(ENT_ATTACK, C_ATTACK_1); \
+	} else if((boss_phase_frame % 8) == 4) { \
+		ent_put_both(ENT_ATTACK, C_ATTACK_2); \
+	} \
 }
 // --------
 
@@ -843,4 +860,48 @@ elis_starpattern_ret_t near star_of_david(void)
 	return SP_STAR_OF_DAVID;
 
 	#undef circle
+}
+
+int pattern_curved_5_stack_rings(void)
+{
+	#define fire_ring(i, angle_offset, speed) { \
+		for(int i = 0; i < pattern_state.ring; i++) { \
+			Pellets.add_single( \
+				(form_center_x(F_GIRL) - (PELLET_W / 2)), \
+				(form_center_y(F_GIRL) - (PELLET_H / 2)), \
+				(((0x100 / pattern_state.ring) * i) + angle_offset), \
+				to_sp(speed) \
+			); \
+		} \
+	}
+
+	ent_attack_render();
+	if(boss_phase_frame == 10) {
+		select_for_rank(pattern_state.ring, 14, 16, 18, 20);
+		fire_ring(i, 0x00, 3.0f);
+	} else if(boss_phase_frame == 16) {
+		fire_ring(i, 0x02, 3.375f);
+	} else if(boss_phase_frame == 24) {
+		fire_ring(i, 0x04, 4.0f);
+	} else if(boss_phase_frame == 32) {
+		fire_ring(i, 0x06, 4.5f);
+	} else if(boss_phase_frame == 40) {
+		fire_ring(i, 0x08, 5.0f);
+	} else if(boss_phase_frame > 60) {
+		boss_phase_frame = 0;
+
+		// ZUN bug: A completely unnecessary unblitting call that doesn't even
+		// switch back to VRAM page 0. At first, this might look like it has no
+		// effect since Elis runs a wave_teleport() animation afterwards. But
+		// if any player shot, bomb, or Orb sprites overlap Elis between the
+		// end of this pattern and the start of the teleport animation, their
+		// corresponding unblitting calls will rip holes into the Elis sprite.
+		graph_accesspage_func(1);
+		girl_bg_put(2);
+
+		return CHOOSE_NEW;
+	}
+	return 1;
+
+	#undef fire_ring
 }
