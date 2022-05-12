@@ -17411,144 +17411,13 @@ ELIS_BASE_TOP = (PLAYFIELD_TOP + ((PLAYFIELD_H / 21) * 5) - (ELIS_GIRL_H / 2))
 	extern @pattern_11_lasers_across$qv:proc
 	extern @pattern_random_downwards_missile$qv:proc
 	extern @pattern_pellets_along_circle$qv:proc
+	@STARCIRCLE_LINE_PUT$QUCUCI procdesc pascal near \
+		col:word, angle_1:byte, angle_2:byte
+	@STARCIRCLE_LINE_UNPUT$QUCUC procdesc pascal near \
+		angle_1:byte, angle_2:byte
 main_35_TEXT	ends
 
 main_35__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_25C50	proc near
-
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= byte ptr  6
-arg_4		= byte ptr  8
-
-		enter	8, 0
-		mov	al, [bp+arg_4]
-		mov	ah, 0
-		and	ax, 255
-		add	ax, ax
-		mov	bx, ax
-		movsx	eax, _CosTable8[bx]
-		shl	eax, 7
-		sar	eax, 8
-		add	ax, elis_still_or_wave.BE_cur_left
-		add	ax, 64
-		mov	[bp+var_2], ax
-		mov	al, [bp+arg_4]
-		mov	ah, 0
-		and	ax, 255
-		add	ax, ax
-		mov	bx, ax
-		movsx	eax, _SinTable8[bx]
-		shl	eax, 7
-		sar	eax, 8
-		add	ax, elis_still_or_wave.BE_cur_top
-		add	ax, 48
-		mov	[bp+var_4], ax
-		mov	al, [bp+arg_2]
-		mov	ah, 0
-		and	ax, 255
-		add	ax, ax
-		mov	bx, ax
-		movsx	eax, _CosTable8[bx]
-		shl	eax, 7
-		sar	eax, 8
-		add	ax, elis_still_or_wave.BE_cur_left
-		add	ax, 64
-		mov	[bp+var_6], ax
-		mov	al, [bp+arg_2]
-		mov	ah, 0
-		and	ax, 255
-		add	ax, ax
-		mov	bx, ax
-		movsx	eax, _SinTable8[bx]
-		shl	eax, 7
-		sar	eax, 8
-		add	ax, elis_still_or_wave.BE_cur_top
-		add	ax, 48
-		mov	[bp+var_8], ax
-		push	[bp+arg_0]
-		push	ax
-		push	[bp+var_6]
-		push	[bp+var_4]
-		push	[bp+var_2]
-		call	_graph_r_line
-		add	sp, 0Ah
-		leave
-		retn	6
-sub_25C50	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_25CFD	proc near
-
-@@bottom		= word ptr -8
-@@right		= word ptr -6
-@@top		= word ptr -4
-@@left		= word ptr -2
-arg_0		= byte ptr  4
-arg_2		= byte ptr  6
-
-		enter	8, 0
-		mov	al, [bp+arg_2]
-		mov	ah, 0
-		and	ax, 255
-		add	ax, ax
-		mov	bx, ax
-		movsx	eax, _CosTable8[bx]
-		shl	eax, 7
-		sar	eax, 8
-		add	ax, elis_still_or_wave.BE_cur_left
-		add	ax, 64
-		mov	[bp+@@left], ax
-		mov	al, [bp+arg_2]
-		mov	ah, 0
-		and	ax, 255
-		add	ax, ax
-		mov	bx, ax
-		movsx	eax, _SinTable8[bx]
-		shl	eax, 7
-		sar	eax, 8
-		add	ax, elis_still_or_wave.BE_cur_top
-		add	ax, 48
-		mov	[bp+@@top], ax
-		mov	al, [bp+arg_0]
-		mov	ah, 0
-		and	ax, 255
-		add	ax, ax
-		mov	bx, ax
-		movsx	eax, _CosTable8[bx]
-		shl	eax, 7
-		sar	eax, 8
-		add	ax, elis_still_or_wave.BE_cur_left
-		add	ax, 64
-		mov	[bp+@@right], ax
-		mov	al, [bp+arg_0]
-		mov	ah, 0
-		and	ax, 255
-		add	ax, ax
-		mov	bx, ax
-		movsx	eax, _SinTable8[bx]
-		shl	eax, 7
-		sar	eax, 8
-		add	ax, elis_still_or_wave.BE_cur_top
-		add	ax, 48
-		mov	[bp+@@bottom], ax
-		call	_graph_r_line_unput c, [bp+@@left], [bp+@@top], [bp+@@right], ax
-		leave
-		retn	4
-sub_25CFD	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -17612,36 +17481,18 @@ off_25DDE	dw offset loc_25DB9
 
 sub_25DE6	proc near
 
-arg_0		= word ptr  4
+@@col		= word ptr  4
 
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, [bp+arg_0]
-		push	0C0h ; '?'
-		push	16h
-		push	si
-		call	sub_25C50
-		push	0C0h ; '?'
-		push	6Ah ; 'j'
-		push	si
-		call	sub_25C50
-		push	16h
-		push	6Ah ; 'j'
-		push	si
-		call	sub_25C50
-		push	40h
-		push	96h
-		push	si
-		call	sub_25C50
-		push	40h
-		push	0EAh
-		push	si
-		call	sub_25C50
-		push	96h
-		push	0EAh
-		push	si
-		call	sub_25C50
+		mov	si, [bp+@@col]
+		call	@starcircle_line_put$qucuci pascal, 0C0h, 016h, si
+		call	@starcircle_line_put$qucuci pascal, 0C0h, 06Ah, si
+		call	@starcircle_line_put$qucuci pascal, 016h, 06Ah, si
+		call	@starcircle_line_put$qucuci pascal, 040h, 096h, si
+		call	@starcircle_line_put$qucuci pascal, 040h, 0EAh, si
+		call	@starcircle_line_put$qucuci pascal, 096h, 0EAh, si
 		pop	si
 		pop	bp
 		retn	2
@@ -17802,8 +17653,7 @@ loc_25FED:
 		inc	word_3A6FF
 		cmp	word_3A6FF, 0Ah
 		jnz	short loc_26006
-		push	7
-		call	sub_25DE6
+		call	sub_25DE6 pascal, 7
 
 loc_26006:
 		cmp	word_3A6FF, 14h
@@ -17814,8 +17664,7 @@ loc_26006:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_26029
-		push	bx
-		call	sub_25DE6
+		call	sub_25DE6 pascal, bx
 		push	255	; angle_end
 		push	0	; angle_start
 		push	1	; angle_step
@@ -17832,8 +17681,7 @@ loc_26029:
 		idiv	bx
 		cmp	dx, 2
 		jnz	short loc_26068
-		push	7
-		call	sub_25DE6
+		call	sub_25DE6 pascal, 7
 		push	255	; angle_end
 		push	0	; angle_start
 		push	1	; angle_step
@@ -17853,24 +17701,12 @@ loc_2604C:
 loc_26068:
 		cmp	word_3A6FF, 3Ch ; '<'
 		jle	short loc_260D8
-		push	0C0h ; '?'
-		push	16h
-		call	sub_25CFD
-		push	0C0h ; '?'
-		push	6Ah ; 'j'
-		call	sub_25CFD
-		push	16h
-		push	6Ah ; 'j'
-		call	sub_25CFD
-		push	40h
-		push	96h
-		call	sub_25CFD
-		push	40h
-		push	0EAh
-		call	sub_25CFD
-		push	96h
-		push	0EAh
-		call	sub_25CFD
+		call	@starcircle_line_unput$qucuc pascal, 0C0h, 016h
+		call	@starcircle_line_unput$qucuc pascal, 0C0h, 06Ah
+		call	@starcircle_line_unput$qucuc pascal, 016h, 06Ah
+		call	@starcircle_line_unput$qucuc pascal, 040h, 096h
+		call	@starcircle_line_unput$qucuc pascal, 040h, 0EAh
+		call	@starcircle_line_unput$qucuc pascal, 096h, 0EAh
 		push	255	; angle_end
 		push	0	; angle_start
 		push	1	; angle_step
