@@ -17408,273 +17408,11 @@ ELIS_BASE_TOP = (PLAYFIELD_TOP + ((PLAYFIELD_H / 21) * 5) - (ELIS_GIRL_H / 2))
 	extern @elis_free$qv:proc
 	extern @wave_teleport$qii:proc
 	extern @elis_select_for_rank$qmiiiii:proc
-	@STARCIRCLE_LINE_PUT$QUCUCI procdesc pascal near \
-		col:word, angle_1:byte, angle_2:byte
-	@STARCIRCLE_LINE_UNPUT$QUCUC procdesc pascal near \
-		angle_1:byte, angle_2:byte
 	extern @phase_1$qi:proc
+	@star_of_david$qv procdesc near
 main_35_TEXT	ends
 
 main_35__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_25DE6	proc near
-
-@@col		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+@@col]
-		call	@starcircle_line_put$qucuci pascal, 0C0h, 016h, si
-		call	@starcircle_line_put$qucuci pascal, 0C0h, 06Ah, si
-		call	@starcircle_line_put$qucuci pascal, 016h, 06Ah, si
-		call	@starcircle_line_put$qucuci pascal, 040h, 096h, si
-		call	@starcircle_line_put$qucuci pascal, 040h, 0EAh, si
-		call	@starcircle_line_put$qucuci pascal, 096h, 0EAh, si
-		pop	si
-		pop	bp
-		retn	2
-sub_25DE6	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_25E28	proc near
-		push	bp
-		mov	bp, sp
-		cmp	_boss_phase_frame, 5
-		jge	short loc_25E3D
-		mov	word_3A6FF, 0
-		mov	angle_3A6FE, 0
-
-loc_25E3D:
-		cmp	_boss_phase_frame, 10
-		jl	loc_260D8
-		cmp	_boss_phase_frame, 10
-		jnz	short loc_25EB1
-		push	1
-		call	_graph_accesspage_func
-		call	@girl_bg_put$qi stdcall, 2
-		mov	elis_attack.BE_move_lock_frame, 0
-		mov	elis_attack.BE_bos_image, 0
-		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
-		push	0
-		call	_graph_accesspage_func
-		call	@girl_bg_put$qi stdcall, 2
-		mov	elis_attack.BE_move_lock_frame, 0
-		mov	elis_attack.BE_bos_image, 0
-		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
-		add	sp, 20h
-		mov	angle_3A6FE, 0
-		mov	word_3A6FF, 0
-
-loc_25EB1:
-		cmp	_boss_phase_frame, 10
-		jl	loc_25FED
-		mov	ax, _boss_phase_frame
-		mov	bx, 2
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	loc_25FED
-		cmp	word_3A6FF, 0
-		jnz	loc_25FED
-		cmp	_boss_phase_frame, 10
-		jnz	short loc_25EE1
-		push	8
-		call	_mdrv2_se_play
-		pop	cx
-
-loc_25EE1:
-		mov	al, angle_3A6FE
-		add	al, 2
-		push	ax	; angle_end
-		push	word ptr angle_3A6FE	; angle_start
-		push	1	; angle_step
-		push	128 or (7 shl 16)	; (radius_y) or (col shl 16)
-		push	128	; radius_x
-		mov	ax, elis_still_or_wave.BE_cur_top
-		add	ax, 48
-		push	ax	; center_y
-		mov	ax, elis_still_or_wave.BE_cur_left
-		add	ax, 64
-		push	ax	; center_x
-		call	@shape_ellipse_arc_put$qiiiiiucucuc
-		mov	al, angle_3A6FE
-		add	al, 42h
-		push	ax	; angle_end
-		mov	al, angle_3A6FE
-		add	al, 40h
-		push	ax	; angle_start
-		push	1	; angle_step
-		push	128 or (7 shl 16)	; (radius_y) or (col shl 16)
-		push	128	; radius_x
-		mov	ax, elis_still_or_wave.BE_cur_top
-		add	ax, 48
-		push	ax	; center_y
-		mov	ax, elis_still_or_wave.BE_cur_left
-		add	ax, 64
-		push	ax	; center_x
-		call	@shape_ellipse_arc_put$qiiiiiucucuc
-		mov	al, angle_3A6FE
-		add	al, -7Eh
-		push	ax	; angle_end
-		mov	al, angle_3A6FE
-		add	al, 80h
-		push	ax	; angle_start
-		push	1	; angle_step
-		push	128 or (7 shl 16)	; (radius_y) or (col shl 16)
-		push	128	; radius_x
-		mov	ax, elis_still_or_wave.BE_cur_top
-		add	ax, 48
-		push	ax	; center_y
-		mov	ax, elis_still_or_wave.BE_cur_left
-		add	ax, 64
-		push	ax	; center_x
-		call	@shape_ellipse_arc_put$qiiiiiucucuc
-		add	sp, 30h
-		mov	al, angle_3A6FE
-		add	al, 194
-		push	ax	; angle_end
-		mov	al, angle_3A6FE
-		add	al, -40h
-		push	ax	; angle_start
-		push	1	; angle_step
-		push	128 or (7 shl 16)	; (radius_y) or (col shl 16)
-		push	128	; radius_x
-		mov	ax, elis_still_or_wave.BE_cur_top
-		add	ax, 48
-		push	ax	; center_y
-		mov	ax, elis_still_or_wave.BE_cur_left
-		add	ax, 64
-		push	ax	; center_x
-		call	@shape_ellipse_arc_put$qiiiiiucucuc
-		add	sp, 10h
-		mov	al, angle_3A6FE
-		add	al, 2
-		mov	angle_3A6FE, al
-		cmp	angle_3A6FE, 40h
-		jb	loc_260D8
-		mov	word_3A6FF, 1
-		push	255	; angle_end
-		push	0	; angle_start
-		push	1	; angle_step
-		push	128 or (128 shl 16)	; (radius_x) or (radius_y shl 16)
-		mov	ax, elis_still_or_wave.BE_cur_top
-		add	ax, 48
-		push	ax	; center_y
-		mov	ax, elis_still_or_wave.BE_cur_left
-		add	ax, 64
-		push	ax	; center_x
-		call	@shape_ellipse_arc_sloppy_unput$qiiiiucucuc
-		push	255	; angle_end
-		push	0	; angle_start
-		push	1	; angle_step
-		push	128 or (7 shl 16)	; (radius_y) or (col shl 16)
-		push	128	; radius_x
-		mov	ax, elis_still_or_wave.BE_cur_top
-		add	ax, 48
-		push	ax	; center_y
-		mov	ax, elis_still_or_wave.BE_cur_left
-		add	ax, 64
-		push	ax	; center_x
-		call	@shape_ellipse_arc_put$qiiiiiucucuc
-		add	sp, 1Eh
-		jmp	loc_260D8
-; ---------------------------------------------------------------------------
-
-loc_25FED:
-		cmp	angle_3A6FE, 40h
-		jb	loc_260D8
-		inc	word_3A6FF
-		cmp	word_3A6FF, 0Ah
-		jnz	short loc_26006
-		call	sub_25DE6 pascal, 7
-
-loc_26006:
-		cmp	word_3A6FF, 14h
-		jle	short loc_26029
-		mov	ax, word_3A6FF
-		mov	bx, 4
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_26029
-		call	sub_25DE6 pascal, bx
-		push	255	; angle_end
-		push	0	; angle_start
-		push	1	; angle_step
-		push	4	; col
-		jmp	short loc_2604C
-; ---------------------------------------------------------------------------
-
-loc_26029:
-		cmp	word_3A6FF, 14h
-		jle	short loc_26068
-		mov	ax, word_3A6FF
-		mov	bx, 4
-		cwd
-		idiv	bx
-		cmp	dx, 2
-		jnz	short loc_26068
-		call	sub_25DE6 pascal, 7
-		push	255	; angle_end
-		push	0	; angle_start
-		push	1	; angle_step
-		push	7	; col
-
-loc_2604C:
-		push	128 or (128 shl 16)	; (radius_x) or (radius_y shl 16)
-		mov	ax, elis_still_or_wave.BE_cur_top
-		add	ax, 48
-		push	ax	; center_y
-		mov	ax, elis_still_or_wave.BE_cur_left
-		add	ax, 64
-		push	ax	; center_x
-		call	@shape_ellipse_arc_put$qiiiiiucucuc
-		add	sp, 10h
-
-loc_26068:
-		cmp	word_3A6FF, 3Ch ; '<'
-		jle	short loc_260D8
-		call	@starcircle_line_unput$qucuc pascal, 0C0h, 016h
-		call	@starcircle_line_unput$qucuc pascal, 0C0h, 06Ah
-		call	@starcircle_line_unput$qucuc pascal, 016h, 06Ah
-		call	@starcircle_line_unput$qucuc pascal, 040h, 096h
-		call	@starcircle_line_unput$qucuc pascal, 040h, 0EAh
-		call	@starcircle_line_unput$qucuc pascal, 096h, 0EAh
-		push	255	; angle_end
-		push	0	; angle_start
-		push	1	; angle_step
-		push	128 or (128 shl 16)	; (radius_x) or (radius_y shl 16)
-		mov	ax, elis_still_or_wave.BE_cur_top
-		add	ax, 48
-		push	ax	; center_y
-		mov	ax, elis_still_or_wave.BE_cur_left
-		add	ax, 64
-		push	ax	; center_x
-		call	@shape_ellipse_arc_sloppy_unput$qiiiiucucuc
-		add	sp, 0Eh
-		mov	_boss_phase_frame, 0
-		mov	angle_3A6FE, 0
-		mov	word_3A6FF, 0
-		mov	ax, 1
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_260D8:
-		xor	ax, ax
-		pop	bp
-		retn
-sub_25E28	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -18516,7 +18254,7 @@ loc_268D9:
 loc_268E8:
 		cmp	word_35D42, 0
 		jnz	short loc_268FA
-		call	sub_25E28
+		call	@star_of_david$qv
 		mov	word_35D42, ax
 		mov	ax, 1
 		jmp	short loc_26935
@@ -18530,7 +18268,7 @@ loc_268FA:
 loc_26900:
 		cmp	word_35D42, 0
 		jnz	short loc_26912
-		call	sub_25E28
+		call	@star_of_david$qv
 		mov	word_35D42, ax
 		mov	ax, 2
 		jmp	short loc_26935
@@ -18544,7 +18282,7 @@ loc_26912:
 loc_26918:
 		cmp	word_35D42, 0
 		jnz	short loc_2692A
-		call	sub_25E28
+		call	@star_of_david$qv
 		mov	word_35D42, ax
 		mov	ax, 3
 		jmp	short loc_26935
@@ -20322,7 +20060,7 @@ loc_27B2D:
 		jnz	short loc_27B3C
 
 loc_27B34:
-		call	sub_25E28
+		call	@star_of_david$qv
 		mov	word_35D46, ax
 		jmp	short loc_27B5B
 ; ---------------------------------------------------------------------------
@@ -22347,8 +22085,9 @@ CEntities _pattern1_rifts, 5
 public _pattern2_circle
 _pattern2_circle	bigcircle_t <?>
 
-angle_3A6FE	db ?
-word_3A6FF	dw ?
+public _star_of_david_circle
+_star_of_david_circle	bigcircle_t <?>
+
 		db 100 dup(?)
 x_3A765	dw ?
 y_3A767	dw ?

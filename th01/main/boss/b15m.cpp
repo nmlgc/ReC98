@@ -73,6 +73,13 @@ extern bool initial_hp_rendered;
 // --------
 static const int CHOOSE_NEW = 0;
 
+enum elis_starpattern_ret_t {
+	SP_STAR_OF_DAVID = false,
+	SP_PATTERN = true,
+
+	_elis_starpattern_ret_t_FORCE_INT16 = 0x7FFF,
+};
+
 extern union {
 	int angle_range; // ACTUAL TYPE: unsigned char
 	pellet_group_t group;
@@ -106,6 +113,9 @@ enum elis_entity_cel_t {
 	C_WAVE_2 = 3,
 	C_WAVE_3 = 4,
 	C_WAVE_4 = 5,
+
+	// ENT_ATTACK
+	C_PREPARE = 0,
 };
 
 #define ent_still_or_wave	boss_entities[ENT_STILL_OR_WAVE]
@@ -761,4 +771,76 @@ int phase_1(int id)
 	case 3: return pattern_pellets_along_circle();
 	}
 	return CHOOSE_NEW;
+}
+
+void pascal near star_of_david_put(int col)
+{
+	starcircle_line_put(-0x40, +0x16, col);
+	starcircle_line_put(-0x40, +0x6A, col);
+	starcircle_line_put(+0x16, +0x6A, col);
+	starcircle_line_put(+0x40, -0x6A, col);
+	starcircle_line_put(+0x40, -0x16, col);
+	starcircle_line_put(-0x6A, -0x16, col);
+}
+
+inline void star_of_david_unput(void) {
+	starcircle_line_unput(-0x40, +0x16);
+	starcircle_line_unput(-0x40, +0x6A);
+	starcircle_line_unput(+0x16, +0x6A);
+	starcircle_line_unput(+0x40, -0x6A);
+	starcircle_line_unput(+0x40, -0x16);
+	starcircle_line_unput(-0x6A, -0x16);
+}
+
+// Renders a frame of the Star of David summon/flash animation in front of a
+// danmaku pattern.
+elis_starpattern_ret_t near star_of_david(void)
+{
+	#define circle	star_of_david_circle
+
+	extern starcircle_t circle;
+
+	if(boss_phase_frame < 5) {
+		circle.frames = 0;
+		circle.angle = 0x00;
+	}
+
+	if(boss_phase_frame < 10) {
+		return SP_STAR_OF_DAVID;
+	}
+	if(boss_phase_frame == 10) {
+		ent_unput_and_put_both(ENT_ATTACK, C_PREPARE);
+		circle.angle = 0x00;
+		circle.frames = 0;
+	}
+	if(bigcircle_is_summon_frame(10) && (circle.frames == 0)) {
+		if(bigcircle_summon(circle, 10, 0x02)) {
+			circle.frames = 1;
+			bigcircle_sloppy_unput(circle);	// (redundant, position unchanged)
+			bigcircle_put(circle, V_WHITE);
+		}
+	} else if(bigcircle_summon_done(circle)) {
+		circle.frames++;
+		if(circle.frames == 10) {
+			star_of_david_put(V_WHITE);
+		}
+		if((circle.frames > 20) && ((circle.frames % 4) == 0)) {
+			star_of_david_put(COL_FX);
+			bigcircle_put(circle, COL_FX);
+		} else if((circle.frames > 20) && ((circle.frames % 4) == 2)) {
+			star_of_david_put(V_WHITE);
+			bigcircle_put(circle, V_WHITE);
+		}
+		if(circle.frames > 60) {
+			star_of_david_unput();
+			bigcircle_sloppy_unput(circle);
+			boss_phase_frame = 0;
+			circle.angle = 0x00;
+			circle.frames = 0;
+			return SP_PATTERN;
+		}
+	}
+	return SP_STAR_OF_DAVID;
+
+	#undef circle
 }
