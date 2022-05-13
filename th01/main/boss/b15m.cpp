@@ -80,6 +80,10 @@ enum elis_starpattern_ret_t {
 	_elis_starpattern_ret_t_FORCE_INT16 = 0x7FFF,
 };
 
+// Returns `CHOOSE_NEW` if done, or the pattern ID within the phase if still
+// ongoing.
+typedef int (*elis_phase_1_3_pattern_func_t)(void);
+
 extern union {
 	int angle_range; // ACTUAL TYPE: unsigned char
 	int count;
@@ -1084,4 +1088,41 @@ int pattern_random_from_rifts(void)
 	return 3;
 
 	#undef rifts
+}
+
+int phase_3(int id)
+{
+	#define star_of_david_then(pattern_cur, id, func) { \
+		if(pattern_cur == 0) { \
+			pattern_cur = star_of_david() /* != SP_STAR_OF_DAVID */; \
+			return id; \
+		} \
+		return (pattern_cur = func()); \
+	}
+
+	#define pattern_cur phase_3_pattern_cur
+
+	extern int pattern_cur;
+
+	if(id == 99) {
+		pattern_cur = CHOOSE_NEW;
+		return CHOOSE_NEW;
+	}
+	switch(id) {
+	case CHOOSE_NEW:
+		return (rand() % 4);
+	case 1: /* return */ star_of_david_then(pattern_cur, 1,
+		pattern_curved_5_stack_rings
+	);
+	case 2: /* return */ star_of_david_then(pattern_cur, 2,
+		pattern_clusters_from_spheres
+	);
+	case 3: /* return */ star_of_david_then(pattern_cur, 3,
+		pattern_random_from_rifts
+	);
+	}
+	return CHOOSE_NEW;
+
+	#undef pattern_cur
+	#undef star_of_david_then
 }

@@ -17410,106 +17410,10 @@ ELIS_BASE_TOP = (PLAYFIELD_TOP + ((PLAYFIELD_H / 21) * 5) - (ELIS_GIRL_H / 2))
 	extern @elis_select_for_rank$qmiiiii:proc
 	extern @phase_1$qi:proc
 	@star_of_david$qv procdesc near
-	extern @pattern_curved_5_stack_rings$qv:proc
-	extern @pattern_clusters_from_spheres$qv:proc
-	extern @pattern_random_from_rifts$qv:proc
+	extern @phase_3$qi:proc
 main_35_TEXT	ends
 
 main_35__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_268B7	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+arg_0]
-		cmp	si, 63h	; 'c'
-		jnz	short loc_268CB
-		mov	word_35D42, 0
-		jmp	short loc_26933
-; ---------------------------------------------------------------------------
-
-loc_268CB:
-		mov	bx, si
-		cmp	bx, 3
-		ja	short loc_26933
-		add	bx, bx
-		jmp	cs:off_26938[bx]
-
-loc_268D9:
-		call	IRand
-		mov	bx, 4
-		cwd
-		idiv	bx
-		mov	ax, dx
-		jmp	short loc_26935
-; ---------------------------------------------------------------------------
-
-loc_268E8:
-		cmp	word_35D42, 0
-		jnz	short loc_268FA
-		call	@star_of_david$qv
-		mov	word_35D42, ax
-		mov	ax, 1
-		jmp	short loc_26935
-; ---------------------------------------------------------------------------
-
-loc_268FA:
-		call	@pattern_curved_5_stack_rings$qv
-		jmp	short loc_2692E
-; ---------------------------------------------------------------------------
-
-loc_26900:
-		cmp	word_35D42, 0
-		jnz	short loc_26912
-		call	@star_of_david$qv
-		mov	word_35D42, ax
-		mov	ax, 2
-		jmp	short loc_26935
-; ---------------------------------------------------------------------------
-
-loc_26912:
-		call	@pattern_clusters_from_spheres$qv
-		jmp	short loc_2692E
-; ---------------------------------------------------------------------------
-
-loc_26918:
-		cmp	word_35D42, 0
-		jnz	short loc_2692A
-		call	@star_of_david$qv
-		mov	word_35D42, ax
-		mov	ax, 3
-		jmp	short loc_26935
-; ---------------------------------------------------------------------------
-
-loc_2692A:
-		call	@pattern_random_from_rifts$qv
-
-loc_2692E:
-		mov	word_35D42, ax
-		jmp	short loc_26935
-; ---------------------------------------------------------------------------
-
-loc_26933:
-		xor	ax, ax
-
-loc_26935:
-		pop	si
-		pop	bp
-		retf
-sub_268B7	endp
-
-; ---------------------------------------------------------------------------
-off_26938	dw offset loc_268D9
-		dw offset loc_268E8
-		dw offset loc_26900
-		dw offset loc_26918
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -20029,8 +19933,7 @@ loc_282DE:
 		mov	_elis_wave_teleport_done, ax
 		cmp	_elis_wave_teleport_done, 1
 		jnz	loc_28655
-		push	63h ; 'c'
-		call	sub_268B7
+		call	@phase_3$qi stdcall, 99
 		pop	cx
 		mov	_boss_phase, 3
 		mov	_boss_phase_frame, 0
@@ -20058,8 +19961,7 @@ loc_2832B:
 		mov	elis_attack.BE_cur_top, ax
 		cmp	word_3A777, 0
 		jz	short loc_28368
-		push	word_3A777
-		call	sub_268B7
+		call	@phase_3$qi stdcall, word_3A777
 		pop	cx
 		mov	word_3A777, ax
 		jmp	short loc_283AF
@@ -20088,8 +19990,7 @@ loc_28368:
 loc_28396:
 		cmp	_elis_wave_teleport_done, 1
 		jnz	short loc_283AF
-		push	word_3A777
-		call	sub_268B7
+		call	@phase_3$qi stdcall, word_3A777
 		pop	cx
 		mov	word_3A777, ax
 		mov	_elis_wave_teleport_done, 0
@@ -20942,7 +20843,10 @@ aTamasii_bos	db 'tamasii.bos',0
 aTamasii2_bos	db 'tamasii2.bos',0
 aTamayen_ptn	db 'tamayen.ptn',0
 		db 0
-word_35D42	dw 0
+
+public _phase_3_pattern_cur
+_phase_3_pattern_cur	dw 0
+
 word_35D44	dw 0
 word_35D46	dw 0
 word_35D48	dw 0
