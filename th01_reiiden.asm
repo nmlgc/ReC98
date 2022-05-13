@@ -17412,267 +17412,10 @@ ELIS_BASE_TOP = (PLAYFIELD_TOP + ((PLAYFIELD_H / 21) * 5) - (ELIS_GIRL_H / 2))
 	@star_of_david$qv procdesc near
 	extern @pattern_curved_5_stack_rings$qv:proc
 	extern @pattern_clusters_from_spheres$qv:proc
+	extern @pattern_random_from_rifts$qv:proc
 main_35_TEXT	ends
 
 main_35__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2661D	proc far
-
-var_4		= byte ptr -4
-@@angle		= byte ptr -3
-var_2		= word ptr -2
-
-		enter	4, 0
-		push	si
-		mov	ax, _boss_phase_frame
-		mov	bx, 8
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_26678
-		push	1
-		call	_graph_accesspage_func
-		call	@girl_bg_put$qi stdcall, 2
-		mov	elis_attack.BE_move_lock_frame, 0
-		mov	elis_attack.BE_bos_image, 1
-		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
-		push	0
-		call	_graph_accesspage_func
-		call	@girl_bg_put$qi stdcall, 2
-		add	sp, 14h
-		mov	elis_attack.BE_move_lock_frame, 0
-		mov	elis_attack.BE_bos_image, 1
-		jmp	short loc_266C1
-; ---------------------------------------------------------------------------
-
-loc_26678:
-		mov	ax, _boss_phase_frame
-		mov	bx, 8
-		cwd
-		idiv	bx
-		cmp	dx, 4
-		jnz	short loc_266D6
-		push	1
-		call	_graph_accesspage_func
-		mov	elis_attack.BE_move_lock_frame, 0
-		mov	elis_attack.BE_bos_image, 2
-		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
-		push	0
-		call	_graph_accesspage_func
-		add	sp, 10h
-		mov	elis_attack.BE_move_lock_frame, 0
-		mov	elis_attack.BE_bos_image, 2
-
-loc_266C1:
-		call	@CBossEntity@move_lock_and_put_8$qiiii c, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
-
-loc_266D6:
-		cmp	_boss_phase_frame, 30
-		jnz	short loc_266F4
-		call	@elis_select_for_rank$qmiiiii c, offset _elis_pattern_state, ds, large 6 or (3 shl 16), large 2 or (2 shl 16)
-
-loc_266F4:
-		cmp	_boss_phase_frame, 60
-		jle	short loc_2672E
-		mov	ax, _boss_phase_frame
-		cwd
-		idiv	_elis_pattern_state
-		or	dx, dx
-		jnz	short loc_2672E
-		cmp	_boss_phase_frame, 120
-		jge	short loc_2672E
-		call	IRand
-		mov	bx, 5
-		cwd
-		idiv	bx
-		mov	si, dx
-		call	IRand
-		mov	bx, 15h
-		cwd
-		idiv	bx
-		add	dl, 36h
-		mov	[bp+@@angle], dl
-		jmp	short loc_26791
-; ---------------------------------------------------------------------------
-
-loc_2672E:
-		cmp	_boss_phase_frame, 120
-		jl	loc_267B8
-		cmp	_boss_phase_frame, 200
-		jge	short loc_267B8
-		call	IRand
-		mov	bx, 5
-		cwd
-		idiv	bx
-		mov	si, dx
-		call	IRand
-		mov	bx, 15h
-		cwd
-		idiv	bx
-		add	dl, 36h
-		mov	[bp+@@angle], dl
-		call	IRand
-		test	al, 1
-		jz	short loc_2676D
-		mov	al, byte ptr _boss_phase_frame
-		add	al, -78h
-		jmp	short loc_26774
-; ---------------------------------------------------------------------------
-
-loc_2676D:
-		mov	al, byte ptr _boss_phase_frame
-		add	al, -78h
-		neg	al
-
-loc_26774:
-		mov	[bp+var_4], al
-		mov	al, [bp+@@angle]
-		mov	ah, 0
-		mov	dl, [bp+var_4]
-		mov	dh, 0
-		push	ax
-		mov	ax, dx
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	dx, ax
-		pop	ax
-		imul	dx
-		mov	[bp+@@angle], al
-
-loc_26791:
-		pushd	0 or (0 shl 16)
-		pushd	PM_REGULAR or (0 shl 16)
-		push	(6 shl 4)
-		push	word ptr [bp+@@angle]
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+5D93h]
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+5D89h]
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		add	sp, 14h
-
-loc_267B8:
-		cmp	_boss_phase_frame, 60
-		jl	loc_2689F
-		cmp	_boss_phase_frame, 200
-		jg	loc_2689F
-		mov	ax, _boss_phase_frame
-		mov	bx, 4
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	loc_2689F
-		xor	si, si
-		jmp	loc_26890
-; ---------------------------------------------------------------------------
-
-loc_267DF:
-		cmp	_boss_phase_frame, 60
-		jle	short loc_26804
-		push	(32 shl 16) or 48
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+5D93h]
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+5D89h]
-		call	_egc_copy_rect_1_to_0_16
-		add	sp, 8
-
-loc_26804:
-		mov	ax, _boss_phase_frame
-		mov	bx, 16
-		cwd
-		idiv	bx
-		mov	ax, si
-		shl	ax, 2
-		push	dx
-		cwd
-		idiv	bx
-		pop	ax
-		cmp	ax, dx
-		jz	short loc_26822
-		cmp	_boss_phase_frame, 60
-		jnz	short loc_26856
-
-loc_26822:
-		call	IRand
-		mov	bx, 192
-		cwd
-		idiv	bx
-		add	dx, elis_still_or_wave.BE_cur_left
-		add	dx, -32
-		mov	bx, si
-		add	bx, bx
-		mov	[bx+5D89h], dx
-		call	IRand
-		mov	bx, 128
-		cwd
-		idiv	bx
-		add	dx, elis_still_or_wave.BE_cur_top
-		add	dx, -32
-		mov	bx, si
-		add	bx, bx
-		mov	[bx+5D93h], dx
-
-loc_26856:
-		cmp	_boss_phase_frame, 200
-		jge	short loc_2688F
-		call	IRand
-		mov	bx, 2
-		cwd
-		idiv	bx
-		mov	[bp+var_2], dx
-		push	4	; col
-		mov	ax, [bp+var_2]
-		add	ax, 4
-		push	ax	; image
-		push	GRC_SLOT_BOSS_1	; slot
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+5D93h]	; top
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+5D89h]	; left
-		call	_grc_put_8
-		add	sp, 0Ah
-
-loc_2688F:
-		inc	si
-
-loc_26890:
-		cmp	si, 5
-		jl	loc_267DF
-		push	7
-		call	_mdrv2_se_play
-		pop	cx
-
-loc_2689F:
-		cmp	_boss_phase_frame, 220
-		jle	short loc_268B1
-		mov	_boss_phase_frame, 0
-		xor	ax, ax
-		jmp	short loc_268B4
-; ---------------------------------------------------------------------------
-
-loc_268B1:
-		mov	ax, 3
-
-loc_268B4:
-		pop	si
-		leave
-		retf
-sub_2661D	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -17746,7 +17489,7 @@ loc_26918:
 ; ---------------------------------------------------------------------------
 
 loc_2692A:
-		call	sub_2661D
+		call	@pattern_random_from_rifts$qv
 
 loc_2692E:
 		mov	word_35D42, ax
@@ -21546,8 +21289,9 @@ public _star_of_david_circle
 _star_of_david_circle	bigcircle_t <?>
 
 CEntities _pattern4_spheres, 10
+CEntities _pattern5_rifts, 5
 
-		db 60 dup(?)
+		db 40 dup(?)
 x_3A765	dw ?
 y_3A767	dw ?
 word_3A769	dw ?
