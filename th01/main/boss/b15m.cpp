@@ -15,6 +15,9 @@ extern "C" {
 #include "th01/math/vector.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/graph.h"
+}
+#include "th01/hardware/scrollup.hpp"
+extern "C" {
 #include "th01/formats/pf.hpp"
 #include "th01/formats/grc.hpp"
 #include "th01/formats/ptn.hpp"
@@ -112,6 +115,8 @@ enum elis_entity_t {
 	ENT_BAT = 2,
 };
 
+static const int BAT_CELS = 3;
+
 enum elis_entity_cel_t {
 	// ENT_STILL_OR_WAVE
 	C_STILL = 0,
@@ -125,6 +130,10 @@ enum elis_entity_cel_t {
 	C_PREPARE = 0,
 	C_ATTACK_1 = 1,
 	C_ATTACK_2 = 2,
+
+	// ENT_BAT
+	C_BAT = 0,
+	C_BAT_last = (C_BAT + BAT_CELS - 1),
 };
 
 #define ent_still_or_wave	boss_entities[ENT_STILL_OR_WAVE]
@@ -144,9 +153,16 @@ inline void elis_ent_free(void) {
 }
 
 inline void ent_sync(elis_entity_t dst, elis_entity_t src) {
-	boss_entities[dst].pos_cur_set(
-		boss_entities[src].cur_left, boss_entities[src].cur_top
-	);
+	if(dst == ENT_BAT) {
+		boss_entities[dst].pos_cur_set(
+			(boss_entities[src].cur_left + ((GIRL_W - BAT_W) / 2)),
+			(boss_entities[src].cur_top  + ((GIRL_H - BAT_H) / 2))
+		);
+	} else {
+		boss_entities[dst].pos_cur_set(
+			boss_entities[src].cur_left, boss_entities[src].cur_top
+		);
+	}
 }
 
 // It's needed in the functions below...
@@ -247,7 +263,7 @@ enum elis_grc_cel_t {
 	grc_put_8(entities.left[i], entities.top[i], GRC_SLOT_BOSS_1, cel, col); \
 }
 
-#define rifts_update_and_render(rifts, start_frame, end_frame, tmp_cel) { \
+#define rifts_update_and_render(rifts, start_frame, end_frame, col, tmp_cel) { \
 	if( \
 		(boss_phase_frame >= start_frame) && \
 		(boss_phase_frame <= end_frame) && \
@@ -271,7 +287,7 @@ enum elis_grc_cel_t {
 			/* Render */ \
 			if(boss_phase_frame < end_frame) { \
 				tmp_cel = (rand() % RIFT_CELS); \
-				elis_grc_put(rifts, i, (C_RIFT + cel), COL_FX); \
+				elis_grc_put(rifts, i, (C_RIFT + cel), col); \
 			} \
 		} \
 		mdrv2_se_play(7); \
@@ -702,7 +718,7 @@ int pattern_random_downwards_missiles(void)
 		Missiles.add(rifts.left[i], rifts.top[i], velocity_x, velocity_y);
 	}
 
-	rifts_update_and_render(rifts, 60, 160, cel);
+	rifts_update_and_render(rifts, 60, 160, COL_FX, cel);
 
 	if(boss_phase_frame > 170) {
 		boss_phase_frame = 0;
@@ -1079,7 +1095,7 @@ int pattern_random_from_rifts(void)
 		Pellets.add_single(rifts.left[i], rifts.top[i], angle, to_sp(6.0f));
 	}
 
-	rifts_update_and_render(rifts, KEYFRAME_0, KEYFRAME_2, cel);
+	rifts_update_and_render(rifts, KEYFRAME_0, KEYFRAME_2, COL_FX, cel);
 
 	if(boss_phase_frame > KEYFRAME_3) {
 		boss_phase_frame = 0;
@@ -1125,4 +1141,54 @@ int phase_3(int id)
 
 	#undef pattern_cur
 	#undef star_of_david_then
+}
+
+enum {
+	TRANSFORM_START_FRAME = 20,
+	TRANSFORM_END_FRAME = 100,
+};
+
+#define transform_shake(start_frame) { \
+	if((boss_phase_frame >= start_frame) && ((boss_phase_frame % 2) == 0) ) { \
+		z_vsync_wait_and_scrollup(RES_Y - ((boss_phase_frame % 4) * 2)); \
+	} \
+}
+
+elis_form_t transform_girl_to_bat(void)
+{
+	#define rifts girl_to_bat_rifts
+
+	extern CEntities<5> rifts;
+	int cel;  // ACTUAL TYPE: elis_grc_cel_t
+
+	if(boss_phase_frame == TRANSFORM_START_FRAME) {
+		ent_unput_and_put_both(ENT_ATTACK, C_PREPARE);
+	}
+
+	rifts_update_and_render(
+		rifts,
+		TRANSFORM_START_FRAME,
+		TRANSFORM_END_FRAME,
+		(rand() % COLOR_COUNT),
+		cel
+	);
+	transform_shake(TRANSFORM_START_FRAME);
+
+	if(boss_phase_frame > TRANSFORM_END_FRAME) {
+		ent_sync(ENT_BAT, ENT_STILL_OR_WAVE);
+
+		// ZUN bug: No bat sprite rendered this frame? Wouldn't have happened
+		// if the original code consistently used the ent_unput_and_put_both()
+		// helper function we've added. :P
+		ent_bat.bos_image = C_BAT;
+		graph_accesspage_func(1);	girl_bg_put(2);
+		graph_accesspage_func(0);	girl_bg_put(2);
+
+		z_vsync_wait_and_scrollup(RES_Y);
+		boss_phase_frame = 0;
+		return F_BAT;
+	}
+	return F_GIRL;
+
+	#undef rifts
 }

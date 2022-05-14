@@ -17411,192 +17411,10 @@ ELIS_BASE_TOP = (PLAYFIELD_TOP + ((PLAYFIELD_H / 21) * 5) - (ELIS_GIRL_H / 2))
 	extern @phase_1$qi:proc
 	@star_of_david$qv procdesc near
 	extern @phase_3$qi:proc
+	extern @transform_girl_to_bat$qv:proc
 main_35_TEXT	ends
 
 main_35__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_26940	proc far
-
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-
-		enter	6, 0
-		push	si
-		cmp	_boss_phase_frame, 20
-		jnz	short loc_269A5
-		push	1
-		call	_graph_accesspage_func
-		call	@girl_bg_put$qi stdcall, 2
-		mov	elis_attack.BE_move_lock_frame, 0
-		mov	elis_attack.BE_bos_image, 0
-		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
-		push	0
-		call	_graph_accesspage_func
-		call	@girl_bg_put$qi stdcall, 2
-		mov	elis_attack.BE_move_lock_frame, 0
-		mov	elis_attack.BE_bos_image, 0
-		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
-		add	sp, 20h
-
-loc_269A5:
-		cmp	_boss_phase_frame, 20
-		jl	loc_26A94
-		cmp	_boss_phase_frame, 100
-		jg	loc_26A94
-		mov	ax, _boss_phase_frame
-		mov	bx, 4
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	loc_26A94
-		xor	si, si
-		jmp	loc_26A85
-; ---------------------------------------------------------------------------
-
-loc_269CB:
-		cmp	_boss_phase_frame, 20
-		jle	short loc_269F0
-		push	(32 shl 16) or 48
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+5DA7h]
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+5D9Dh]
-		call	_egc_copy_rect_1_to_0_16
-		add	sp, 8
-
-loc_269F0:
-		mov	ax, _boss_phase_frame
-		mov	bx, 16
-		cwd
-		idiv	bx
-		mov	ax, si
-		shl	ax, 2
-		push	dx
-		cwd
-		idiv	bx
-		pop	ax
-		cmp	ax, dx
-		jz	short loc_26A0E
-		cmp	_boss_phase_frame, 20
-		jnz	short loc_26A42
-
-loc_26A0E:
-		call	IRand
-		mov	bx, 192
-		cwd
-		idiv	bx
-		add	dx, elis_still_or_wave.BE_cur_left
-		add	dx, -32
-		mov	bx, si
-		add	bx, bx
-		mov	[bx+5D9Dh], dx
-		call	IRand
-		mov	bx, 128
-		cwd
-		idiv	bx
-		add	dx, elis_still_or_wave.BE_cur_top
-		add	dx, -32
-		mov	bx, si
-		add	bx, bx
-		mov	[bx+5DA7h], dx
-
-loc_26A42:
-		cmp	_boss_phase_frame, 100
-		jge	short loc_26A84
-		call	IRand
-		mov	bx, 2
-		cwd
-		idiv	bx
-		mov	[bp+var_2], dx
-		call	IRand
-		mov	bx, 16
-		cwd
-		idiv	bx
-		push	dx	; col
-		mov	ax, [bp+var_2]
-		add	ax, 4
-		push	ax	; image
-		push	GRC_SLOT_BOSS_1	; slot
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+5DA7h]	; top
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+5D9Dh]	; left
-		call	_grc_put_8
-		add	sp, 0Ah
-
-loc_26A84:
-		inc	si
-
-loc_26A85:
-		cmp	si, 5
-		jl	loc_269CB
-		push	7
-		call	_mdrv2_se_play
-		pop	cx
-
-loc_26A94:
-		cmp	_boss_phase_frame, 20
-		jl	short loc_26ABF
-		mov	ax, _boss_phase_frame
-		mov	bx, 2
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_26ABF
-		mov	ax, _boss_phase_frame
-		mov	bx, 4
-		cwd
-		idiv	bx
-		add	dx, dx
-		mov	ax, RES_Y
-		sub	ax, dx
-		call	@z_vsync_wait_and_scrollup$qi stdcall, ax
-		pop	cx
-
-loc_26ABF:
-		cmp	_boss_phase_frame, 100
-		jle	short loc_26B17
-		mov	ax, elis_still_or_wave.BE_cur_top
-		add	ax, 32
-		mov	[bp+var_4], ax
-		mov	ax, elis_still_or_wave.BE_cur_left
-		add	ax, 40
-		mov	[bp+var_6], ax
-		mov	elis_bat.BE_cur_left, ax
-		mov	ax, [bp+var_4]
-		mov	elis_bat.BE_cur_top, ax
-		mov	elis_bat.BE_bos_image, 0
-		push	1
-		call	_graph_accesspage_func
-		call	@girl_bg_put$qi stdcall, 2
-		push	0
-		call	_graph_accesspage_func
-		call	@girl_bg_put$qi stdcall, 2
-		call	@z_vsync_wait_and_scrollup$qi stdcall, RES_Y
-		add	sp, 0Ah
-		mov	_boss_phase_frame, 0
-		mov	ax, 1
-		jmp	short loc_26B19
-; ---------------------------------------------------------------------------
-
-loc_26B17:
-		xor	ax, ax
-
-loc_26B19:
-		pop	si
-		leave
-		retf
-sub_26940	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -19295,7 +19113,7 @@ loc_27C06:
 ; ---------------------------------------------------------------------------
 
 loc_27C19:
-		call	sub_26940
+		call	@transform_girl_to_bat$qv
 		les	bx, [bp+arg_0]
 		mov	es:[bx], ax
 		cmp	word ptr es:[bx], 1
@@ -20062,7 +19880,7 @@ loc_28442:
 ; ---------------------------------------------------------------------------
 
 loc_28468:
-		call	sub_26940
+		call	@transform_girl_to_bat$qv
 		mov	word_3A777, ax
 
 loc_2846F:
@@ -21194,8 +21012,9 @@ _star_of_david_circle	bigcircle_t <?>
 
 CEntities _pattern4_spheres, 10
 CEntities _pattern5_rifts, 5
+CEntities _girl_to_bat_rifts, 5
 
-		db 40 dup(?)
+		db 20 dup(?)
 x_3A765	dw ?
 y_3A767	dw ?
 word_3A769	dw ?
