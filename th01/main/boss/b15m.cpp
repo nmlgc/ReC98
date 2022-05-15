@@ -2,6 +2,7 @@
 /// --------------------------
 
 #include <stddef.h>
+#include <stdlib.h>
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
@@ -83,6 +84,13 @@ enum elis_starpattern_ret_t {
 	_elis_starpattern_ret_t_FORCE_INT16 = 0x7FFF,
 };
 
+enum elis_phase_5_subphase_t {
+	P5_PATTERN = false,
+	P5_TRANSFORM = true,
+
+	_elis_phase_5_subphase_t_FORCE_INT16 = 0x7FFF,
+};
+
 // Returns `CHOOSE_NEW` if done, or the pattern ID within the phase if still
 // ongoing.
 typedef int (*elis_phase_1_3_pattern_func_t)(void);
@@ -116,6 +124,7 @@ enum elis_entity_t {
 };
 
 static const int BAT_CELS = 3;
+static const int BAT_SPEED_DIVISOR = 3;
 
 enum elis_entity_cel_t {
 	// ENT_STILL_OR_WAVE
@@ -242,6 +251,18 @@ inline screen_y_t surround_random_top(elis_entity_t relative_to) {
 	));
 }
 // -------------
+
+// Random teleport and bat movement coordinates
+// --------------------------------------------
+
+inline screen_x_t elis_playfield_random_left(void) {
+	return (PLAYFIELD_LEFT + (rand() % (PLAYFIELD_W - GIRL_W)));
+}
+
+inline screen_y_t elis_playfield_random_top(void) {
+	return (PLAYFIELD_TOP + playfield_rand_y(17 / 42.0f));
+}
+// --------------------------------------------
 
 // .GRC entities
 // -------------
@@ -1249,4 +1270,63 @@ elis_form_t transform_bat_to_girl(void)
 	return F_BAT;
 
 	#undef rifts
+}
+
+// Like the flystep functions in later games, just without the "step" part, and
+// with explicit pattern/transformation semantics.
+elis_phase_5_subphase_t bat_fly_random(pixel_t &velocity_x, pixel_t &velocity_y)
+{
+	enum {
+		SPEED = 2,
+	};
+
+	#define target_left        	bat_target_left
+	#define target_top         	bat_target_top
+	#define frames_until_target	bat_frames_until_target
+
+	extern screen_x_t target_left; // should be local
+	extern screen_y_t target_top; // should be local
+	extern int frames_until_target;
+
+	if(boss_phase_frame < BAT_SPEED_DIVISOR) {
+		velocity_x = 0;
+		velocity_y = 0;
+		return P5_PATTERN;
+	}
+	if(boss_phase_frame == BAT_SPEED_DIVISOR) {
+		do {
+			target_left = elis_playfield_random_left();
+			target_top = (elis_playfield_random_top() + ((GIRL_H - BAT_H) / 2));
+		} while(
+			(abs(ent_bat.cur_left - target_left) < (PLAYFIELD_W / 5)) &&
+			(abs(ent_bat.cur_top - target_top) < ((PLAYFIELD_H * 4) / 21))
+		);
+		vector2_between(
+			ent_bat.cur_left,
+			ent_bat.cur_top,
+			target_left,
+			target_top,
+			velocity_x,
+			velocity_y,
+			SPEED
+		);
+		frames_until_target = (abs(target_left - ent_bat.cur_left) / SPEED);
+	}
+
+	// What is something like "gravity" doing in a bat movement function?
+	// Quite the interesting interpretation as well, even if it wasn't always
+	// zero. MODDERS: Remove.
+	velocity_y += (((rand() % 5) - 2) / 10);
+
+	if((boss_phase_frame / BAT_SPEED_DIVISOR) >= frames_until_target) {
+		velocity_x = 0;
+		velocity_y = 0;
+		boss_phase_frame = 0;
+		return P5_TRANSFORM;
+	}
+	return P5_PATTERN;
+
+	#undef frames_until_target
+	#undef target_top
+	#undef target_left
 }

@@ -17413,112 +17413,10 @@ ELIS_BASE_TOP = (PLAYFIELD_TOP + ((PLAYFIELD_H / 21) * 5) - (ELIS_GIRL_H / 2))
 	extern @phase_3$qi:proc
 	extern @transform_girl_to_bat$qv:proc
 	extern @transform_bat_to_girl$qv:proc
+	extern @bat_fly_random$qmit1:proc
 main_35_TEXT	ends
 
 main_35__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_26D12	proc far
-
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= dword	ptr  6
-arg_4		= dword	ptr  0Ah
-
-		enter	6, 0
-		cmp	_boss_phase_frame, 3
-		jge	short loc_26D30
-		les	bx, [bp+arg_0]
-		mov	word ptr es:[bx], 0
-		les	bx, [bp+arg_4]
-		mov	word ptr es:[bx], 0
-		jmp	loc_26DFE
-; ---------------------------------------------------------------------------
-
-loc_26D30:
-		cmp	_boss_phase_frame, 3
-		jnz	loc_26DB8
-
-loc_26D39:
-		call	IRand
-		mov	bx, 200h
-		cwd
-		idiv	bx
-		mov	x_3A765, dx
-		call	IRand
-		mov	bx, 88h
-		cwd
-		idiv	bx
-		add	dx, 96
-		mov	y_3A767, dx
-		mov	ax, elis_bat.BE_cur_left
-		sub	ax, x_3A765
-		mov	[bp+var_2], ax
-		cwd
-		xor	ax, dx
-		sub	ax, dx
-		cmp	ax, 80h	; '?'
-		jge	short loc_26D82
-		mov	ax, elis_bat.BE_cur_top
-		sub	ax, y_3A767
-		mov	[bp+var_4], ax
-		cwd
-		xor	ax, dx
-		sub	ax, dx
-		cmp	ax, 40h
-		jl	short loc_26D39
-
-loc_26D82:
-		call	_vector2_between c, large [dword ptr elis_bat.BE_cur_left], x_3A765, y_3A767, large [bp+arg_0], large [bp+arg_4], 2
-		mov	ax, x_3A765
-		sub	ax, elis_bat.BE_cur_left
-		mov	[bp+var_6], ax
-		cwd
-		xor	ax, dx
-		sub	ax, dx
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	word_3A769, ax
-
-loc_26DB8:
-		call	IRand
-		mov	bx, 5
-		cwd
-		idiv	bx
-		add	dx, 0FFFEh
-		mov	bx, 0Ah
-		mov	ax, dx
-		cwd
-		idiv	bx
-		les	bx, [bp+arg_4]
-		add	es:[bx], ax
-		mov	ax, _boss_phase_frame
-		mov	bx, 3
-		cwd
-		idiv	bx
-		cmp	ax, word_3A769
-		jl	short loc_26DFE
-		les	bx, [bp+arg_0]
-		mov	word ptr es:[bx], 0
-		les	bx, [bp+arg_4]
-		mov	word ptr es:[bx], 0
-		mov	_boss_phase_frame, 0
-		mov	ax, 1
-		leave
-		retf
-; ---------------------------------------------------------------------------
-
-loc_26DFE:
-		xor	ax, ax
-		leave
-		retf
-sub_26D12	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -18847,10 +18745,7 @@ loc_27B85:
 		jnz	short loc_27C06
 		cmp	word_35D48, 0
 		jnz	short loc_27BE7
-		pushd	[bp+arg_8]
-		pushd	[bp+arg_4]
-		call	sub_26D12
-		add	sp, 8
+		call	@bat_fly_random$qmit1 c, large [bp+arg_4], [bp+arg_8]
 		mov	word_35D48, ax
 		cmp	word_35D4A, 0
 		jnz	short loc_27BBE
@@ -20819,9 +20714,11 @@ CEntities _pattern5_rifts, 5
 CEntities _girl_to_bat_rifts, 5
 CEntities _bat_to_girl_rifts, 5
 
-x_3A765	dw ?
-y_3A767	dw ?
-word_3A769	dw ?
+public _bat_target_left, _bat_target_top, _bat_frames_until_target
+_bat_target_left        	dw ?
+_bat_target_top         	dw ?
+_bat_frames_until_target	dw ?
+
 word_3A76B	dw ?
 word_3A76D	dw ?
 angle_3A76F	db ?
