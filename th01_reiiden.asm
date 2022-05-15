@@ -17417,44 +17417,10 @@ ELIS_BASE_TOP = (PLAYFIELD_TOP + ((PLAYFIELD_H / 21) * 5) - (ELIS_GIRL_H / 2))
 	extern @pattern_bat_slow_spreads$qv:proc
 	extern @pattern_bat_alternating_narrow_a$qv:proc
 	extern @pattern_bat_alternating_2_and_3_$qv:proc
+	extern @pattern_bat_random_rain$qv:proc
 main_35_TEXT	ends
 
 main_35__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_26F12	proc far
-		push	bp
-		mov	bp, sp
-		mov	ax, _boss_phase_frame
-		mov	bx, 4
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_26F4D
-		pushd	0 or (0 shl 16)
-		push	PM_GRAVITY or (1 shl 16)
-		push	2
-		call	IRand
-		push	ax
-		mov	ax, elis_bat.BE_cur_top
-		add	ax, 12
-		push	ax
-		mov	ax, elis_bat.BE_cur_left
-		add	ax, 20
-		push	ax
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		add	sp, 14h
-
-loc_26F4D:
-		pop	bp
-		retf
-sub_26F12	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -18632,7 +18598,7 @@ loc_27BD5:
 ; ---------------------------------------------------------------------------
 
 loc_27BDB:
-		call	sub_26F12
+		call	@pattern_bat_random_rain$qv
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------

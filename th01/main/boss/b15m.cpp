@@ -1385,3 +1385,15 @@ void pattern_bat_alternating_2_and_3_spreads(void)
 		form_fire_group(F_BAT, PG_3_SPREAD_NARROW_AIMED, 5.3125f);
 	}
 }
+
+void pattern_bat_random_rain(void)
+{
+	if((boss_phase_frame % 4) == 0) {
+		pellets_add_single_rain(
+			(form_center_x(F_BAT) - (PELLET_W / 2)),
+			(form_center_y(F_BAT) - (PELLET_H / 2)),
+			rand(),
+			0.125f
+		);
+	}
+}
