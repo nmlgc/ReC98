@@ -640,13 +640,11 @@ void pascal near birds_reset_fire_spawn_unput_update_render(
 			if(!birds_alive[i] || birds.hatch_time[i]) {
 				continue;
 			}
-			Pellets.add_single(
+			pellets_add_single_rain(
 				birds.pellet_left(i),
 				birds.pellet_top(i),
 				((rand() & 0x7F) + 0x80),
-				to_sp(4.0f),
-				PM_GRAVITY,
-				to_sp(0.1f)
+				4.0f
 			);
 		}
 	} else if(func_or_left != BF_UNPUT_UPDATE_RENDER) {
@@ -2308,13 +2306,11 @@ void pascal near pattern_rain_from_seal_center(int &frame)
 	rays.unput_broken(VELOCITY_Y);
 
 	for(int i = 0; i < pattern_state.pellet_count; i++) {
-		Pellets.add_single(
+		pellets_add_single_rain(
 			(PLAYFIELD_LEFT + ((PLAYFIELD_W / pattern_state.pellet_count) * i)),
 			SEAL_CENTER_Y,
 			rand(),
-			to_sp(1.0f),
-			PM_GRAVITY,
-			to_sp(0.1f)
+			1.0f
 		);
 	}
 	frame = 0;

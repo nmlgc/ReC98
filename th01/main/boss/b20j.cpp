@@ -101,8 +101,6 @@ static const pixel_t SLASH_DISTANCE_5_TO_6_X = (
 static const pixel_t SLASH_DISTANCE_5_TO_6_Y = (
 	SLASH_5_CORNER_Y - SWORD_CENTER_Y
 );
-
-#define RAIN_G to_sp(0.0625f) /* Rain gravity */
 // ----------------
 
 static union {
@@ -1113,12 +1111,8 @@ void pattern_rain_from_edges(void)
 		mdrv2_se_play(6);
 	}
 	if((boss_phase_frame % pattern_state.interval) == 0) {
-		Pellets.add_single(
-			end_x, end_y, (rand() & 0x7F), to_sp(2.0f), PM_GRAVITY, RAIN_G
-		);
-		Pellets.add_single(
-			end_x, end_y, (rand() & 0x7F), to_sp(2.0f), PM_GRAVITY, RAIN_G
-		);
+		pellets_add_single_rain(end_x, end_y, (rand() & 0x7F), 2.0f);
+		pellets_add_single_rain(end_x, end_y, (rand() & 0x7F), 2.0f);
 	}
 }
 
@@ -1186,11 +1180,9 @@ void slash_animate(void)
 	left -= (SLASH_DISTANCE_5_TO_6_X / (SLASH_FRAMES_FROM_4_5_TO_6 / steps)); \
 	top  -= (SLASH_DISTANCE_5_TO_6_Y / (SLASH_FRAMES_FROM_4_5_TO_6 / steps));
 
-inline void slash_rain_fire(
-	const screen_x_t& left, const screen_y_t& top, subpixel_t speed
-) {
-	Pellets.add_single(left, top, (rand() % 0x7F), speed, PM_GRAVITY, RAIN_G);
-	Pellets.add_single(left, top, (rand() % 0x7F), speed, PM_GRAVITY, RAIN_G);
+inline void slash_rain_fire(const screen_x_t& left, const screen_y_t& top) {
+	pellets_add_single_rain(left, top, (rand() % 0x7F), 0.0f);
+	pellets_add_single_rain(left, top, (rand() % 0x7F), 0.0f);
 }
 
 void pattern_slash_rain(void)
@@ -1216,7 +1208,7 @@ void pattern_slash_rain(void)
 		(boss_phase_frame < SLASH_4_FRAME) &&
 		((boss_phase_frame % pattern_state.interval) == 0)
 	) {
-		slash_rain_fire(spawner_left, spawner_top, to_sp(0.0f));
+		slash_rain_fire(spawner_left, spawner_top);
 		slash_spawner_step_from_2_to_4(
 			spawner_left, spawner_top, pattern_state.interval
 		);
@@ -1232,7 +1224,7 @@ void pattern_slash_rain(void)
 		return;
 	}
 	if(boss_phase_frame < SLASH_4_5_FRAME) {
-		slash_rain_fire(spawner_left, spawner_top, to_sp(0.0f));
+		slash_rain_fire(spawner_left, spawner_top);
 		slash_spawner_step_from_4_to_4_5(spawner_left, spawner_top, 1);
 	}
 
@@ -1248,7 +1240,7 @@ void pattern_slash_rain(void)
 		(boss_phase_frame < SLASH_6_FRAME) &&
 		((boss_phase_frame % pattern_state.interval) == 0)
 	) {
-		slash_rain_fire(spawner_left, spawner_top, to_sp(0.0f));
+		slash_rain_fire(spawner_left, spawner_top);
 		slash_spawner_step_from_4_5_to_6(
 			spawner_left, spawner_top, pattern_state.interval
 		);
@@ -1447,9 +1439,8 @@ void pattern_semicircle_rain_from_sleeve(void)
 	}
 	if((boss_phase_frame % 20) == 0) {
 		for(i = 0, angle = 0x00; i < SPREAD; i++, angle -= (0x80 / SPREAD)) {
-			Pellets.add_single(
-				LEFT_SLEEVE_LEFT, LEFT_SLEEVE_TOP, angle, to_sp(2.0f),
-				PM_GRAVITY, RAIN_G
+			pellets_add_single_rain(
+				LEFT_SLEEVE_LEFT, LEFT_SLEEVE_TOP, angle, 2.0f
 			);
 		}
 		mdrv2_se_play(7);

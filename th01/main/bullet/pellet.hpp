@@ -13,6 +13,7 @@ enum pellet_motion_t {
 	PM_REGULAR = 0,
 
 	// Accelerates the Y velocity of the pellet by its [speed] every frame.
+	// Exclusively used with the pellets_add_single_rain() helper function.
 	PM_GRAVITY = 1,
 
 	// Slings the pellet in a (counter-)clockwise motion around its spawn
@@ -242,6 +243,13 @@ public:
 /// Globals
 /// -------
 extern CPellets Pellets;
+
+// Helper function for rain pellets.
+#define pellets_add_single_rain(left, top, angle, speed_base) { \
+	Pellets.add_single( \
+		left, top, angle, to_sp(speed_base), PM_GRAVITY, to_sp(0.0625f) \
+	); \
+}
 
 // If true, CPellets::unput_update_render() performs
 // • rendering,
