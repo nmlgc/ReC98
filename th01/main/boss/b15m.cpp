@@ -229,15 +229,17 @@ static const pixel_t SURROUND_AREA_H = ((PLAYFIELD_H * 8) / 21);
 inline screen_x_t surround_random_left(elis_entity_t relative_to) {
 	return (
 		(boss_entities[relative_to].cur_left + (rand() % SURROUND_AREA_W)) -
-		((SURROUND_AREA_W - GIRL_W) / 2)
+		((SURROUND_AREA_W - ((relative_to == ENT_BAT) ? BAT_W : GIRL_W)) / 2)
 	);
 }
 
 inline screen_y_t surround_random_top(elis_entity_t relative_to) {
 	return (
 		(boss_entities[relative_to].cur_top + (rand() % SURROUND_AREA_H)) -
-		(SURROUND_AREA_H - GIRL_H)
-	);
+		((relative_to == ENT_BAT)
+			? ((SURROUND_AREA_H - BAT_H) / 2)
+			: (SURROUND_AREA_H - GIRL_H) // not centered
+	));
 }
 // -------------
 
@@ -263,7 +265,9 @@ enum elis_grc_cel_t {
 	grc_put_8(entities.left[i], entities.top[i], GRC_SLOT_BOSS_1, cel, col); \
 }
 
-#define rifts_update_and_render(rifts, start_frame, end_frame, col, tmp_cel) { \
+#define rifts_update_and_render( \
+	rifts, ent, start_frame, end_frame, col, tmp_cel \
+) { \
 	if( \
 		(boss_phase_frame >= start_frame) && \
 		(boss_phase_frame <= end_frame) && \
@@ -280,8 +284,8 @@ enum elis_grc_cel_t {
 				((boss_phase_frame % 16) == ((i * 4) % 16)) || \
 				(boss_phase_frame == start_frame) \
 			) { \
-				rifts.left[i] = surround_random_left(ENT_STILL_OR_WAVE); \
-				rifts.top[i] = surround_random_top(ENT_STILL_OR_WAVE); \
+				rifts.left[i] = surround_random_left(ent); \
+				rifts.top[i] = surround_random_top(ent); \
 			} \
 			\
 			/* Render */ \
@@ -718,7 +722,7 @@ int pattern_random_downwards_missiles(void)
 		Missiles.add(rifts.left[i], rifts.top[i], velocity_x, velocity_y);
 	}
 
-	rifts_update_and_render(rifts, 60, 160, COL_FX, cel);
+	rifts_update_and_render(rifts, ENT_STILL_OR_WAVE, 60, 160, COL_FX, cel);
 
 	if(boss_phase_frame > 170) {
 		boss_phase_frame = 0;
@@ -1095,7 +1099,9 @@ int pattern_random_from_rifts(void)
 		Pellets.add_single(rifts.left[i], rifts.top[i], angle, to_sp(6.0f));
 	}
 
-	rifts_update_and_render(rifts, KEYFRAME_0, KEYFRAME_2, COL_FX, cel);
+	rifts_update_and_render(
+		rifts, ENT_STILL_OR_WAVE, KEYFRAME_0, KEYFRAME_2, COL_FX, cel
+	);
 
 	if(boss_phase_frame > KEYFRAME_3) {
 		boss_phase_frame = 0;
@@ -1167,6 +1173,7 @@ elis_form_t transform_girl_to_bat(void)
 
 	rifts_update_and_render(
 		rifts,
+		ENT_STILL_OR_WAVE,
 		TRANSFORM_START_FRAME,
 		TRANSFORM_END_FRAME,
 		(rand() % COLOR_COUNT),
@@ -1189,6 +1196,57 @@ elis_form_t transform_girl_to_bat(void)
 		return F_BAT;
 	}
 	return F_GIRL;
+
+	#undef rifts
+}
+
+elis_form_t transform_bat_to_girl(void)
+{
+	#define rifts bat_to_girl_rifts
+
+	extern CEntities<5> rifts;
+	int cel;  // ACTUAL TYPE: elis_grc_cel_t
+	screen_x_t left;
+	screen_y_t top;
+
+	rifts_update_and_render(
+		rifts,
+		ENT_BAT,
+		TRANSFORM_START_FRAME,
+		TRANSFORM_END_FRAME,
+		(rand() % COLOR_COUNT),
+		cel
+	);
+	transform_shake(TRANSFORM_START_FRAME);
+
+	if(boss_phase_frame > TRANSFORM_END_FRAME) {
+		// Doubly sloppy! CBossEntity has a function for that!
+		egc_copy_rect_1_to_0_16(
+			ent_bat.cur_left, ent_bat.cur_top, BAT_W, BAT_H
+		);
+
+		// Should ideally be a branch in ent_sync(), but that would make the
+		// function too complex to perfectly inline. It's only used here,
+		// anyway.
+		left = (ent_bat.cur_left + ((BAT_W - GIRL_W) / 2));
+		top  = (ent_bat.cur_top  + ((BAT_H - GIRL_H) / 2));
+		if(left < PLAYFIELD_LEFT) {
+			left = PLAYFIELD_LEFT;
+		} else if(left > (PLAYFIELD_RIGHT - GIRL_W)) {
+			left = (PLAYFIELD_RIGHT - GIRL_W);
+		}
+		if(top < PLAYFIELD_TOP) {
+			top = PLAYFIELD_TOP;
+		}
+		ent_still_or_wave.pos_cur_set(left, top);
+
+		girl_bg_snap(1);
+		ent_unput_and_put_both(ENT_ATTACK, C_ATTACK_1);
+		z_vsync_wait_and_scrollup(RES_Y);
+		boss_phase_frame = 0;
+		return F_GIRL;
+	}
+	return F_BAT;
 
 	#undef rifts
 }
