@@ -17414,49 +17414,10 @@ ELIS_BASE_TOP = (PLAYFIELD_TOP + ((PLAYFIELD_H / 21) * 5) - (ELIS_GIRL_H / 2))
 	extern @transform_girl_to_bat$qv:proc
 	extern @transform_bat_to_girl$qv:proc
 	extern @bat_fly_random$qmit1:proc
+	extern @pattern_bat_slow_spreads$qv:proc
 main_35_TEXT	ends
 
 main_35__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_26E02	proc far
-
-@@group		= word ptr -2
-
-		enter	2, 0
-		mov	ax, _boss_phase_frame
-		mov	bx, 16
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short locret_26E47
-		push	PG_5_SPREAD_NARROW_AIMED or (PG_5_SPREAD_NARROW shl 16)	; (for_hard) or (for_lunatic)
-		push	PG_3_SPREAD_WIDE_AIMED or (PG_5_SPREAD_WIDE_AIMED shl 16)	; (for_easy) or (for_normal)
-		push	ss	; ret (segment)
-		lea	ax, [bp+@@group]
-		push	ax	; ret (offset)
-		call	@elis_select_for_rank$qmiiiii
-		push	(3 shl 4) + 8
-		push	[bp+@@group]
-		mov	ax, elis_bat.BE_cur_top
-		add	ax, 12
-		push	ax
-		mov	ax, elis_bat.BE_cur_left
-		add	ax, 14h
-		push	ax
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_group$qii14pellet_group_ti
-		add	sp, 18h
-
-locret_26E47:
-		leave
-		retf
-sub_26E02	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -18765,7 +18726,7 @@ loc_27BBE:
 		jmp	cs:off_27C31[bx]
 
 loc_27BCF:
-		call	sub_26E02
+		call	@pattern_bat_slow_spreads$qv
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------

@@ -212,11 +212,15 @@ inline void ent_put_both(elis_entity_t ent, elis_entity_cel_t cel) {
 // -------------------------
 
 inline screen_x_t form_center_x(elis_form_t form) {
-	return (ent_still_or_wave.cur_left + (GIRL_W / 2));
+	return (form == F_GIRL)
+		? (ent_still_or_wave.cur_left + (GIRL_W / 2))
+		: (ent_bat.cur_left + (BAT_W / 2));
 }
 
 inline screen_y_t form_center_y(elis_form_t form) {
-	return (ent_still_or_wave.cur_top + (GIRL_H / 2));
+	return (form == F_GIRL)
+		? (ent_still_or_wave.cur_top + (GIRL_H / 2))
+		: (ent_bat.cur_top + (BAT_H / 2));
 }
 
 inline screen_x_t girl_lefteye_x(void) {
@@ -225,6 +229,15 @@ inline screen_x_t girl_lefteye_x(void) {
 
 inline screen_y_t girl_lefteye_y(void) {
 	return (ent_still_or_wave.cur_top + 28);
+}
+
+#define form_fire_group(form, group, speed) { \
+	Pellets.add_group( \
+		(form_center_x(form) - (PELLET_W / 2)), \
+		(form_center_y(form) - (PELLET_H / 2)), \
+		group, \
+		to_sp(speed) \
+	); \
 }
 // -------------------------
 
@@ -1329,4 +1342,21 @@ elis_phase_5_subphase_t bat_fly_random(pixel_t &velocity_x, pixel_t &velocity_y)
 	#undef frames_until_target
 	#undef target_top
 	#undef target_left
+}
+
+void pattern_bat_slow_spreads(void)
+{
+	if((boss_phase_frame % 16) == 0) {
+		pellet_group_t group;
+		select_for_rank(reinterpret_cast<int &>(group),
+			PG_3_SPREAD_WIDE_AIMED,
+			PG_5_SPREAD_WIDE_AIMED,
+			PG_5_SPREAD_NARROW_AIMED,
+
+			// Not aimed on Lunatic? Probably the easiest version then, since
+			// pellets are always fired down in this case.
+			PG_5_SPREAD_NARROW
+		);
+		form_fire_group(F_BAT, group, 3.5f);
+	}
 }
