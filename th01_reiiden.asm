@@ -17416,76 +17416,10 @@ ELIS_BASE_TOP = (PLAYFIELD_TOP + ((PLAYFIELD_H / 21) * 5) - (ELIS_GIRL_H / 2))
 	extern @bat_fly_random$qmit1:proc
 	extern @pattern_bat_slow_spreads$qv:proc
 	extern @pattern_bat_alternating_narrow_a$qv:proc
+	extern @pattern_bat_alternating_2_and_3_$qv:proc
 main_35_TEXT	ends
 
 main_35__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_26E8C	proc far
-		push	bp
-		mov	bp, sp
-		mov	ax, _boss_phase_frame
-		mov	bx, 50
-		cwd
-		idiv	bx
-		cmp	dx, 10
-		jge	short loc_26ECA
-		mov	ax, _boss_phase_frame
-		mov	bx, 4
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_26ECA
-		push	PG_2_SPREAD_NARROW_AIMED or (((5 shl 4) + 5) shl 16)
-		mov	ax, elis_bat.BE_cur_top
-		add	ax, 12
-		push	ax
-		mov	ax, elis_bat.BE_cur_left
-		add	ax, 20
-		push	ax
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_group$qii14pellet_group_ti
-		add	sp, 0Ch
-
-loc_26ECA:
-		mov	ax, _boss_phase_frame
-		mov	bx, 50
-		cwd
-		idiv	bx
-		cmp	dx, 25
-		jl	short loc_26F10
-		mov	ax, _boss_phase_frame
-		cwd
-		idiv	bx
-		cmp	dx, 35
-		jge	short loc_26F10
-		mov	ax, _boss_phase_frame
-		mov	bx, 4
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_26F10
-		push	PG_3_SPREAD_NARROW_AIMED or (((5 shl 4) + 5) shl 16)
-		mov	ax, elis_bat.BE_cur_top
-		add	ax, 12
-		push	ax
-		mov	ax, elis_bat.BE_cur_left
-		add	ax, 20
-		push	ax
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_group$qii14pellet_group_ti
-		add	sp, 0Ch
-
-loc_26F10:
-		pop	bp
-		retf
-sub_26E8C	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -18704,7 +18638,7 @@ loc_27BDB:
 ; ---------------------------------------------------------------------------
 
 loc_27BE1:
-		call	sub_26E8C
+		call	@pattern_bat_alternating_2_and_3_$qv
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------

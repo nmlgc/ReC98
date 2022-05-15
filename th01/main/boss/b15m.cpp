@@ -1371,3 +1371,17 @@ void pattern_bat_alternating_narrow_and_wide_2_spreads(void)
 		}
 	}
 }
+
+void pattern_bat_alternating_2_and_3_spreads(void)
+{
+	if(((boss_phase_frame % 50) < 10) && ((boss_phase_frame % 4) == 0)) {
+		form_fire_group(F_BAT, PG_2_SPREAD_NARROW_AIMED, 5.3125f);
+	}
+	if(
+		((boss_phase_frame % 50) >= 25) &&
+		((boss_phase_frame % 50) < 35) &&
+		((boss_phase_frame % 4) == 0)
+	) {
+		form_fire_group(F_BAT, PG_3_SPREAD_NARROW_AIMED, 5.3125f);
+	}
+}
