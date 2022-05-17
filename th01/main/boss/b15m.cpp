@@ -1,6 +1,7 @@
 /// Makai Stage 15 Boss - Elis
 /// --------------------------
 
+#include <dos.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include "platform.h"
@@ -16,6 +17,7 @@ extern "C" {
 #include "th01/math/vector.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/graph.h"
+#include "th01/hardware/input.hpp"
 }
 #include "th01/hardware/scrollup.hpp"
 extern "C" {
@@ -38,6 +40,7 @@ extern "C" {
 #include "th01/main/bullet/missile.hpp"
 #include "th01/main/bullet/pellet.hpp"
 #include "th01/main/hud/hp.hpp"
+#include "th01/main/player/player.hpp"
 
 // Coordinates
 // -----------
@@ -1449,4 +1452,124 @@ elis_starpattern_ret_t pattern_three_symmetric_4_stacks_then_symmetric_arc(void)
 	return SP_PATTERN;
 
 	#undef fire_symmetric
+}
+
+elis_starpattern_ret_t pattern_safety_circle_and_rain_from_top(void)
+{
+	enum {
+		CIRCLE_DURATION = 200,
+
+		// A bit unfair, since the kill zone already starts in the transparent
+		// parts of the non-moving player sprite.
+		SAFETY_OFFSET_LEFT = BIGCIRCLE_RADIUS,
+
+		// Slightly less unfair.
+		SAFETY_OFFSET_RIGHT = (
+			BIGCIRCLE_RADIUS - (PLAYER_W / 2) - (PLAYER_W / 4)
+		),
+	};
+
+	#define circle	pattern11_circle
+
+	extern struct {
+		int frames;
+		screen_x_t target_left;
+		unsigned char angle;
+
+		screen_x_t center_x(void) { return (target_left + (PLAYER_W / 2)); };
+		screen_y_t center_y(void) { return player_center_y(); };
+	} circle;
+
+	if(boss_phase_frame < 10) {
+		circle.frames = 0;
+	}
+
+	ent_attack_render();
+
+	if(boss_phase_frame < 60) {
+		return SP_PATTERN;
+	}
+	if(boss_phase_frame == 60) {
+		select_for_rank(pattern_state.interval, 4, 2, 2, 2);
+		circle.angle = 0x00;
+	}
+	if(bigcircle_is_summon_frame(60) && (circle.frames == 0)) {
+		if(boss_phase_frame == 60) {
+			mdrv2_se_play(8);
+			circle.target_left = player_left;
+		}
+		bigcircle_summon_update_and_render(circle, 0x02);
+		if(bigcircle_summon_done(circle)) {
+			bigcircle_sloppy_unput(circle);	// (redundant, position unchanged)
+			bigcircle_put(circle, V_WHITE);
+
+			circle.frames = 1;
+			ent_unput_and_put_both(ENT_STILL_OR_WAVE, C_STILL);
+		}
+	} else if((circle.frames != 0) && (circle.frames < CIRCLE_DURATION)) {
+		circle.frames++;
+
+		// We only blit the circle to VRAM page 0, so any unblitting call for
+		// any overlapping sprite will "cut a hole" into the circle. So, um...
+		// let's just re-blit it every 4 frames? :zunpet:
+		if((circle.frames % 4) == 0) {
+			bigcircle_sloppy_unput(circle); // (redundant, position unchanged)
+			bigcircle_put(circle, V_WHITE);
+		}
+		if(!player_invincible) {
+			if(
+				((circle.target_left + SAFETY_OFFSET_RIGHT) <= player_left) ||
+				((circle.target_left - SAFETY_OFFSET_LEFT) >= player_left)
+			) {
+				delay(100);
+				done = true;
+			}
+		}
+		if(done == true) {
+			circle.frames = CIRCLE_DURATION;
+		}
+		if((boss_phase_frame % pattern_state.interval) == 0) {
+			Pellets.add_group(
+				(PLAYFIELD_LEFT + (rand() % (PLAYFIELD_W - PELLET_W))),
+				(PLAYFIELD_TOP),
+				(rank == RANK_LUNATIC) ? PG_1_RANDOM_WIDE : PG_1,
+				to_sp(4.5f)
+			);
+		}
+		if(
+			(circle.frames > (CIRCLE_DURATION - 20)) &&
+			((circle.frames % 4) == 0)
+		) {
+			form_fire_group(F_GIRL, PG_1_AIMED, 4.5f);
+		}
+	} else if(circle.frames < CIRCLE_DURATION) {
+		return SP_PATTERN;
+	} else {
+		if(circle.frames == CIRCLE_DURATION) {
+			bigcircle_sloppy_unput(circle);
+		}
+		circle.frames++;
+		if((circle.frames % 8) == 0) {
+			// ZUN bug: Spawning pellets relative to the top-left corner of the
+			// bat sprite rather than the girl one. Since this pattern only
+			// ever runs after a bat transformation, the position isn't
+			// *completely* random at least, just calculated a lot lower than
+			// you would expect.
+			Pellets.add_group(
+				(ent_bat.cur_left + (GIRL_W / 2) - (PELLET_W / 2)),
+				(ent_bat.cur_top  + (GIRL_H / 2) - (PELLET_H / 2)),
+				PG_1_AIMED,
+				to_sp(4.5f)
+			);
+		}
+		if(circle.frames > (CIRCLE_DURATION + 60)) {
+			boss_phase_frame = 0;
+			circle.frames = 0; // (redundant, gets reset at the beginning)
+			circle.angle = 0x00; // (redundant, gets reset at the beginning)
+			return SP_STAR_OF_DAVID;
+		}
+	}
+	return SP_PATTERN;
+
+	#undef circle
 }
