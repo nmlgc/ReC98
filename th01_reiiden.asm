@@ -17408,7 +17408,6 @@ ELIS_BASE_TOP = (PLAYFIELD_TOP + ((PLAYFIELD_H / 21) * 5) - (ELIS_GIRL_H / 2))
 	extern @elis_free$qv:proc
 	extern @wave_teleport$qii:proc
 	extern @phase_1$qi:proc
-	@star_of_david$qv procdesc near
 	extern @phase_3$qi:proc
 	extern @transform_girl_to_bat$qv:proc
 	extern @transform_bat_to_girl$qv:proc
@@ -17417,110 +17416,10 @@ ELIS_BASE_TOP = (PLAYFIELD_TOP + ((PLAYFIELD_H / 21) * 5) - (ELIS_GIRL_H / 2))
 	extern @pattern_bat_alternating_narrow_a$qv:proc
 	extern @pattern_bat_alternating_2_and_3_$qv:proc
 	extern @pattern_bat_random_rain$qv:proc
-	extern @pattern_three_symmetric_4_stacks$qv:proc
-	extern @pattern_safety_circle_and_rain_f$qv:proc
-	extern @pattern_aimed_5_spreads_and_lase$qv:proc
+	extern @phase_5_girl$qi:proc
 main_35_TEXT	ends
 
 main_35__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_27AC1	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		cmp	[bp+arg_0], 1
-		jnz	short loc_27AD9
-		mov	word_35D44, 0
-		mov	word_35D46, 0
-		jmp	loc_27B5B
-; ---------------------------------------------------------------------------
-
-loc_27AD9:
-		mov	bx, word_35D44
-		cmp	bx, 3
-		ja	short loc_27B5B
-		add	bx, bx
-		jmp	cs:off_27B5F[bx]
-
-loc_27AE9:
-		call	IRand
-		mov	bx, 3
-		cwd
-		idiv	bx
-		inc	dx
-		mov	word_35D44, dx
-		jmp	short loc_27B5B
-; ---------------------------------------------------------------------------
-
-loc_27AFB:
-		cmp	word_35D46, 0
-		jnz	short loc_27B04
-		jmp	short loc_27B34
-; ---------------------------------------------------------------------------
-
-loc_27B04:
-		call	@pattern_three_symmetric_4_stacks$qv
-		mov	word_35D46, ax
-		cmp	word_35D46, 0
-		jnz	short loc_27B5B
-		jmp	short loc_27B4A
-; ---------------------------------------------------------------------------
-
-loc_27B14:
-		cmp	word_35D46, 0
-		jnz	short loc_27B1D
-		jmp	short loc_27B34
-; ---------------------------------------------------------------------------
-
-loc_27B1D:
-		call	@pattern_safety_circle_and_rain_f$qv
-		mov	word_35D46, ax
-		cmp	word_35D46, 0
-		jnz	short loc_27B5B
-		jmp	short loc_27B4A
-; ---------------------------------------------------------------------------
-
-loc_27B2D:
-		cmp	word_35D46, 0
-		jnz	short loc_27B3C
-
-loc_27B34:
-		call	@star_of_david$qv
-		mov	word_35D46, ax
-		jmp	short loc_27B5B
-; ---------------------------------------------------------------------------
-
-loc_27B3C:
-		call	@pattern_aimed_5_spreads_and_lase$qv
-		mov	word_35D46, ax
-		cmp	word_35D46, 0
-		jnz	short loc_27B5B
-
-loc_27B4A:
-		mov	word_35D46, 0
-		mov	word_35D44, 0
-		mov	ax, 1
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_27B5B:
-		xor	ax, ax
-		pop	bp
-		retf
-sub_27AC1	endp
-
-; ---------------------------------------------------------------------------
-off_27B5F	dw offset loc_27AE9
-		dw offset loc_27AFB
-		dw offset loc_27B14
-		dw offset loc_27B2D
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -17539,8 +17438,7 @@ arg_C		= word ptr  12h
 		jnz	short loc_27B85
 		mov	word_35D48, 0
 		mov	word_35D4A, 0
-		push	1
-		call	sub_27AC1
+		call	@phase_5_girl$qi stdcall, 1
 		pop	cx
 		pop	bp
 		retf
@@ -17610,8 +17508,7 @@ loc_27BE7:
 loc_27C06:
 		cmp	word_35D48, 0
 		jnz	short loc_27C19
-		push	0
-		call	sub_27AC1
+		call	@phase_5_girl$qi stdcall, 0
 		pop	cx
 		mov	word_35D48, ax
 		pop	bp
@@ -19171,8 +19068,10 @@ aTamayen_ptn	db 'tamayen.ptn',0
 public _phase_3_pattern_cur
 _phase_3_pattern_cur	dw 0
 
-word_35D44	dw 0
-word_35D46	dw 0
+public _phase_5_girl_pattern_cur, _phase_5_girl_subphase
+_phase_5_girl_pattern_cur     	dw 0
+_phase_5_girl_subphase	dw 0
+
 word_35D48	dw 0
 word_35D4A	dw 0
 word_35D4C	dw 0

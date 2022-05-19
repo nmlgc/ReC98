@@ -1659,3 +1659,52 @@ elis_starpattern_ret_t pattern_aimed_5_spreads_and_lasers_followed_by_ring(void)
 
 	#undef circle
 }
+
+elis_phase_5_subphase_t phase_5_girl(bool16 reset = false)
+{
+	#define star_of_david_then(in, pattern_cur, func) { \
+		if(subphase == SP_STAR_OF_DAVID) { \
+			subphase = star_of_david(); \
+			return P5_PATTERN; \
+		} \
+		/* subphase == SP_PATTERN */ \
+		subphase = func(); \
+		if(subphase == SP_STAR_OF_DAVID) { \
+			subphase = SP_STAR_OF_DAVID; \
+			pattern_cur = CHOOSE_NEW; \
+			return P5_TRANSFORM; \
+		} \
+		return P5_PATTERN; \
+	}
+
+	#define pattern_cur	phase_5_girl_pattern_cur
+	#define subphase   	phase_5_girl_subphase
+
+	extern int pattern_cur;
+	extern elis_starpattern_ret_t subphase;
+
+	if(reset == true) {
+		pattern_cur = CHOOSE_NEW;
+		subphase = SP_STAR_OF_DAVID;
+		return P5_PATTERN;
+	}
+	switch(pattern_cur) {
+	case CHOOSE_NEW:
+		pattern_cur = ((rand() % 3) + 1);
+		break;
+	case 1: /* return */ star_of_david_then(subphase, pattern_cur,
+		pattern_three_symmetric_4_stacks_then_symmetric_arc
+	);
+	case 2: /* return */ star_of_david_then(subphase, pattern_cur,
+		pattern_safety_circle_and_rain_from_top
+	);
+	case 3: /* return */ star_of_david_then(subphase, pattern_cur,
+		pattern_aimed_5_spreads_and_lasers_followed_by_ring
+	);
+	}
+	return P5_PATTERN;
+
+	#undef subphase
+	#undef pattern_cur
+	#undef star_of_david_then
+}
