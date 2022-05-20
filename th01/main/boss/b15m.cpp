@@ -1708,3 +1708,64 @@ elis_phase_5_subphase_t phase_5_girl(bool16 reset = false)
 	#undef pattern_cur
 	#undef star_of_david_then
 }
+
+void phase_5(
+	elis_form_t& form,
+	pixel_t& bat_velocity_x,
+	pixel_t& bat_velocity_y,
+	bool16 reset
+)
+{
+	#define subphase       	phase_5_subphase
+	#define pattern_bat_cur	phase_5_pattern_bat_cur
+
+	extern elis_phase_5_subphase_t subphase;
+	extern int pattern_bat_cur;
+
+	if(reset == true) {
+		subphase = P5_PATTERN;
+		pattern_bat_cur = CHOOSE_NEW;
+		phase_5_girl(true);
+		return;
+	}
+	if(form == F_BAT) {
+		if(subphase == P5_PATTERN) {
+			subphase = bat_fly_random(bat_velocity_x, bat_velocity_y);
+			if(pattern_bat_cur == CHOOSE_NEW) {
+				pattern_bat_cur = ((rand() % 4) + 1);
+			}
+			switch(pattern_bat_cur) {
+			case 1:
+				pattern_bat_slow_spreads();
+				break;
+			case 2:
+				pattern_bat_alternating_narrow_and_wide_2_spreads();
+				break;
+			case 3:
+				pattern_bat_random_rain();
+				break;
+			case 4:
+				pattern_bat_alternating_2_and_3_spreads();
+				break;
+			}
+		} else if(subphase == P5_TRANSFORM) { // Thanks for making it explicit!
+			form = transform_bat_to_girl();
+			if(form == F_GIRL) {
+				pattern_bat_cur = CHOOSE_NEW;
+				subphase = P5_PATTERN;
+			}
+		}
+	} else /* if(form == F_GIRL) */ {
+		if(subphase == P5_PATTERN) {
+			subphase = phase_5_girl();
+		} else /* if(subphase == P5_TRANSFORM) */ {
+			form = transform_girl_to_bat();
+			if(form == F_BAT) {
+				subphase = P5_PATTERN;
+			}
+		}
+	}
+
+	#undef pattern_bat_cur
+	#undef subphase
+}

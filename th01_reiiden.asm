@@ -17410,131 +17410,10 @@ ELIS_BASE_TOP = (PLAYFIELD_TOP + ((PLAYFIELD_H / 21) * 5) - (ELIS_GIRL_H / 2))
 	extern @phase_1$qi:proc
 	extern @phase_3$qi:proc
 	extern @transform_girl_to_bat$qv:proc
-	extern @transform_bat_to_girl$qv:proc
-	extern @bat_fly_random$qmit1:proc
-	extern @pattern_bat_slow_spreads$qv:proc
-	extern @pattern_bat_alternating_narrow_a$qv:proc
-	extern @pattern_bat_alternating_2_and_3_$qv:proc
-	extern @pattern_bat_random_rain$qv:proc
-	extern @phase_5_girl$qi:proc
+	extern @phase_5$qm11elis_form_tmit2i:proc
 main_35_TEXT	ends
 
 main_35__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_27B67	proc far
-
-arg_0		= dword	ptr  6
-arg_4		= dword	ptr  0Ah
-arg_8		= dword	ptr  0Eh
-arg_C		= word ptr  12h
-
-		push	bp
-		mov	bp, sp
-		cmp	[bp+arg_C], 1
-		jnz	short loc_27B85
-		mov	word_35D48, 0
-		mov	word_35D4A, 0
-		call	@phase_5_girl$qi stdcall, 1
-		pop	cx
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_27B85:
-		les	bx, [bp+arg_0]
-		cmp	word ptr es:[bx], 1
-		jnz	short loc_27C06
-		cmp	word_35D48, 0
-		jnz	short loc_27BE7
-		call	@bat_fly_random$qmit1 c, large [bp+arg_4], [bp+arg_8]
-		mov	word_35D48, ax
-		cmp	word_35D4A, 0
-		jnz	short loc_27BBE
-		call	IRand
-		mov	bx, 4
-		cwd
-		idiv	bx
-		inc	dx
-		mov	word_35D4A, dx
-
-loc_27BBE:
-		mov	bx, word_35D4A
-		dec	bx
-		cmp	bx, 3
-		ja	short loc_27C2F
-		add	bx, bx
-		jmp	cs:off_27C31[bx]
-
-loc_27BCF:
-		call	@pattern_bat_slow_spreads$qv
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_27BD5:
-		call	@pattern_bat_alternating_narrow_a$qv
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_27BDB:
-		call	@pattern_bat_random_rain$qv
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_27BE1:
-		call	@pattern_bat_alternating_2_and_3_$qv
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_27BE7:
-		cmp	word_35D48, 1
-		jnz	short loc_27C2F
-		call	@transform_bat_to_girl$qv
-		les	bx, [bp+arg_0]
-		mov	es:[bx], ax
-		cmp	word ptr es:[bx], 0
-		jnz	short loc_27C2F
-		mov	word_35D4A, 0
-		jmp	short loc_27C29
-; ---------------------------------------------------------------------------
-
-loc_27C06:
-		cmp	word_35D48, 0
-		jnz	short loc_27C19
-		call	@phase_5_girl$qi stdcall, 0
-		pop	cx
-		mov	word_35D48, ax
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_27C19:
-		call	@transform_girl_to_bat$qv
-		les	bx, [bp+arg_0]
-		mov	es:[bx], ax
-		cmp	word ptr es:[bx], 1
-		jnz	short loc_27C2F
-
-loc_27C29:
-		mov	word_35D48, 0
-
-loc_27C2F:
-		pop	bp
-		retf
-sub_27B67	endp
-
-; ---------------------------------------------------------------------------
-off_27C31	dw offset loc_27BCF
-		dw offset loc_27BD5
-		dw offset loc_27BDB
-		dw offset loc_27BE1
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -18101,7 +17980,7 @@ loc_28258:
 		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 32
 		push	ax	; hitbox_left
-		cmp	word_35D4C, 0
+		cmp	_elis_form, 0
 		jnz	short loc_28279
 		push	ds
 		push	offset elis_still_or_wave
@@ -18224,7 +18103,7 @@ loc_283AF:
 		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 32
 		push	ax	; hitbox_left
-		cmp	word_35D4C, 0
+		cmp	_elis_form, 0
 		jnz	short loc_283D0
 		push	ds
 		push	offset elis_still_or_wave
@@ -18265,7 +18144,7 @@ loc_283D4:
 		mov	_elis_invincibility_frame, 0
 		mov	word_3A777, 0
 		mov	_elis_wave_teleport_done, 0
-		mov	word_35D4C, 0
+		mov	_elis_form, 0
 		jmp	loc_28655
 ; ---------------------------------------------------------------------------
 
@@ -18294,16 +18173,8 @@ loc_2846F:
 		mov	_elis_invincibility_frame, 0
 		mov	word_3A777, 0
 		mov	_elis_wave_teleport_done, 0
-		mov	word_35D4C, 1
-		push	1
-		push	ds
-		push	offset elis_bat_move_delta_y
-		push	ds
-		push	offset elis_bat_move_delta_x
-		push	ds
-		push	offset word_35D4C
-		call	sub_27B67
-		add	sp, 0Eh
+		mov	_elis_form, 1
+		call	@phase_5$qm11elis_form_tmit2i c, offset _elis_form, ds, offset elis_bat_move_delta_x, ds, offset elis_bat_move_delta_y, ds, 1
 		jmp	loc_28655
 ; ---------------------------------------------------------------------------
 
@@ -18321,7 +18192,7 @@ loc_284B3:
 		mov	elis_attack.BE_cur_left, ax
 		mov	ax, [bp+var_10]
 		mov	elis_attack.BE_cur_top, ax
-		cmp	word_35D4C, 0
+		cmp	_elis_form, 0
 		jz	short loc_28539
 		push	2	; lock_frames
 		push	elis_bat_move_delta_y	; delta_y
@@ -18362,16 +18233,8 @@ loc_28525:
 		mov	elis_bat.BE_bos_image, 2
 
 loc_28539:
-		push	0
-		push	ds
-		push	offset elis_bat_move_delta_y
-		push	ds
-		push	offset elis_bat_move_delta_x
-		push	ds
-		push	offset word_35D4C
-		call	sub_27B67
-		add	sp, 0Eh
-		cmp	word_35D4C, 0
+		call	@phase_5$qm11elis_form_tmit2i c, offset _elis_form, ds, offset elis_bat_move_delta_x, ds, offset elis_bat_move_delta_y, ds, 0
+		cmp	_elis_form, 0
 		jnz	short loc_2855A
 		mov	ax, 48
 		jmp	short loc_2855D
@@ -18382,7 +18245,7 @@ loc_2855A:
 
 loc_2855D:
 		push	ax	;  hitbox_h
-		cmp	word_35D4C, 0
+		cmp	_elis_form, 0
 		jnz	short loc_2856A
 		mov	ax, 64
 		jmp	short loc_2856D
@@ -18393,7 +18256,7 @@ loc_2856A:
 
 loc_2856D:
 		push	ax	; hitbox_w
-		cmp	word_35D4C, 0
+		cmp	_elis_form, 0
 		jnz	short loc_2857D
 		mov	ax, elis_still_or_wave.BE_cur_top
 		add	ax, 32
@@ -18405,7 +18268,7 @@ loc_2857D:
 
 loc_28580:
 		push	ax	; hitbox_top
-		cmp	word_35D4C, 0
+		cmp	_elis_form, 0
 		jnz	short loc_28590
 		mov	ax, elis_still_or_wave.BE_cur_left
 		add	ax, 32
@@ -18417,7 +18280,7 @@ loc_28590:
 
 loc_28593:
 		push	ax	; hitbox_left
-		cmp	word_35D4C, 0
+		cmp	_elis_form, 0
 		jnz	short loc_285A1
 		push	ds
 		push	offset elis_still_or_wave
@@ -19072,10 +18935,12 @@ public _phase_5_girl_pattern_cur, _phase_5_girl_subphase
 _phase_5_girl_pattern_cur     	dw 0
 _phase_5_girl_subphase	dw 0
 
-word_35D48	dw 0
-word_35D4A	dw 0
-word_35D4C	dw 0
-public _elis_invincibility_flash_colors
+public _phase_5_subphase, _phase_5_pattern_bat_cur
+_phase_5_subphase       	dw 0
+_phase_5_pattern_bat_cur	dw 0
+
+public _elis_form, _elis_invincibility_flash_colors
+_elis_form	dw 0
 _elis_invincibility_flash_colors	db 3, 6, 8, 2
 	extern _game_cleared:byte
 	extern _unused_boss_stage_flag:word
