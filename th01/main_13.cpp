@@ -14,8 +14,8 @@
 extern "C" {
 #include "th01/hardware/egc.h"
 #include "th01/hardware/graph.h"
+}
 
 #include "th01/hardware/scrollup.cpp"
 #include "th01/hardware/egcrows.cpp"
 #include "th01/hardware/ptrans_d.cpp"
-}

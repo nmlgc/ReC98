@@ -1,6 +1,8 @@
 #include "th01/math/clamp.hpp"
+extern "C" {
 #include "th01/hardware/egc.h"
 #include "th01/hardware/frmdelay.h"
+}
 #include "th01/hardware/grp2xscs.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/score.h"

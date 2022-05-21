@@ -20,6 +20,7 @@
 extern "C" {
 #include "th01/hardware/graph.h"
 #include "th01/hardware/input.hpp"
+}
 #include "th01/hiscore/scoredat.hpp"
 
 #include "th01/hardware/grppfnfx.cpp"
@@ -115,5 +116,3 @@ inline void regist_bg_put(const int16_t stage)
 }
 
 #include "th01/hiscore/regist.cpp"
-
-}

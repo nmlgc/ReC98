@@ -1,5 +1,7 @@
 #include "th01/sprites/ileave_m.hpp"
+extern "C" {
 #include "th01/hardware/palette.h"
+}
 #include "th01/hardware/ptrans.hpp"
 
 // Combines the pixels from both VRAM pages in the 8×8 square starting at

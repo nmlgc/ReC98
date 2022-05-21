@@ -23,8 +23,11 @@ extern "C" {
 #include "th01/hardware/grcg8x8m.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/palette.h"
+}
+#include "th01/hardware/grpinv32.hpp"
 #include "th01/hardware/ptrans.hpp"
 #include "th01/hardware/scrollup.hpp"
+extern "C" {
 #include "th01/hardware/input.hpp"
 #include "th01/snd/mdrv2.h"
 #include "th01/main/playfld.hpp"
@@ -41,7 +44,6 @@ extern "C" {
 #include "th01/main/player/player.hpp"
 #include "th01/main/stage/palette.hpp"
 }
-#include "th01/hardware/grpinv32.hpp"
 #include "th01/main/shape.hpp"
 #include "th01/main/stage/stageobj.hpp"
 #include "th01/main/player/bomb.hpp"

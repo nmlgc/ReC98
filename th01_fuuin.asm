@@ -147,7 +147,7 @@ fuuin_01__TEXT	ends
 fuuin_02_TEXT	segment	byte public 'CODE' use16
 	extern _input_sense:proc
 	extern _input_reset_sense:proc
-	extern _regist:proc
+	extern @regist$qlixnxc:proc
 fuuin_02_TEXT	ends
 
 ; ===========================================================================
@@ -1509,7 +1509,7 @@ loc_C71C:
 loc_C722:
 		push	word ptr _score+2
 		push	word ptr _score
-		call	_regist
+		call	@regist$qlixnxc
 		add	sp, 0Ah
 		call	_end_resident_clear
 		pop	si

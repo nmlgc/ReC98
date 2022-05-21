@@ -531,7 +531,7 @@ loc_C211:
 		push	RES_Y
 
 loc_C214:
-		call	_z_vsync_wait_and_scrollup
+		call	@z_vsync_wait_and_scrollup$qi
 		pop	cx
 		jmp	short loc_C235
 ; ---------------------------------------------------------------------------
@@ -704,7 +704,7 @@ loc_C3E7:
 loc_C3EE:
 		cmp	[bp+@@frame], 140
 		jnz	short loc_C42E
-		call	_z_vsync_wait_and_scrollup stdcall, 0
+		call	@z_vsync_wait_and_scrollup$qi stdcall, 0
 		pop	cx
 		push	1
 		call	_graph_accesspage_func
@@ -1112,9 +1112,9 @@ sub_CC0F	proc far
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
-		call	_graph_2xscale_byterect_1_to_0_sl c, large ( 64 shl 16) or 160, large ( 0 shl 16) or 0, large (16 shl 16) or 144
-		call	_graph_2xscale_byterect_1_to_0_sl c, large (200 shl 16) or 288, large (16 shl 16) or 0, large (16 shl 16) or  48
-		call	_graph_2xscale_byterect_1_to_0_sl c, large (232 shl 16) or 288, large (64 shl 16) or 0, large (16 shl 16) or  48
+		call	@graph_2xscale_byterect_1_to_0_sl$qiiiiii c, large ( 64 shl 16) or 160, large ( 0 shl 16) or 0, large (16 shl 16) or 144
+		call	@graph_2xscale_byterect_1_to_0_sl$qiiiiii c, large (200 shl 16) or 288, large (16 shl 16) or 0, large (16 shl 16) or  48
+		call	@graph_2xscale_byterect_1_to_0_sl$qiiiiii c, large (232 shl 16) or 288, large (64 shl 16) or 0, large (16 shl 16) or  48
 		mov	si, 1
 		mov	_input_ok, 0
 		mov	_paused, 0
@@ -1201,15 +1201,15 @@ loc_CDD8:
 		cmp	_input_up, 1
 		jnz	short loc_CE16
 		mov	si, 1
-		call	_graph_2xscale_byterect_1_to_0_sl c, large (200 shl 16) or 288, large (16 shl 16) or 0, large (16 shl 16) or 48
-		call	_graph_2xscale_byterect_1_to_0_sl c, large (232 shl 16) or 288, large (64 shl 16) or 0, large (16 shl 16) or 48
+		call	@graph_2xscale_byterect_1_to_0_sl$qiiiiii c, large (200 shl 16) or 288, large (16 shl 16) or 0, large (16 shl 16) or 48
+		call	@graph_2xscale_byterect_1_to_0_sl$qiiiiii c, large (232 shl 16) or 288, large (64 shl 16) or 0, large (16 shl 16) or 48
 
 loc_CE16:
 		cmp	_input_down, 1
 		jnz	loc_CD52
 		xor	si, si
-		call	_graph_2xscale_byterect_1_to_0_sl c, large (200 shl 16) or 288, large (48 shl 16) or 0, large (16 shl 16) or 48
-		call	_graph_2xscale_byterect_1_to_0_sl c, large (232 shl 16) or 288, large (32 shl 16) or 0, large (16 shl 16) or 48
+		call	@graph_2xscale_byterect_1_to_0_sl$qiiiiii c, large (200 shl 16) or 288, large (48 shl 16) or 0, large (16 shl 16) or 48
+		call	@graph_2xscale_byterect_1_to_0_sl$qiiiiii c, large (232 shl 16) or 288, large (32 shl 16) or 0, large (16 shl 16) or 48
 		jmp	loc_CD52
 ; ---------------------------------------------------------------------------
 
@@ -1300,7 +1300,7 @@ loc_CEE9:
 		shl	dx, 3
 		mov	ax, RES_Y
 		sub	ax, dx
-		call	_z_vsync_wait_and_scrollup stdcall, ax
+		call	@z_vsync_wait_and_scrollup$qi stdcall, ax
 		pop	cx
 		xor	si, si
 		jmp	short loc_CF31
@@ -1432,7 +1432,7 @@ loc_CFF8:
 loc_D00D:
 		cmp	di, 10h
 		jl	loc_CEE9
-		call	_z_vsync_wait_and_scrollup stdcall, 0
+		call	@z_vsync_wait_and_scrollup$qi stdcall, 0
 		pop	cx
 		mov	al, _credit_bombs
 		mov	_bombs, al
@@ -2959,7 +2959,7 @@ loc_DE72:
 		cmp	_done, 0
 		jz	loc_DC64
 		mov	_timer_initialized, 0
-		call	_z_vsync_wait_and_scrollup stdcall, 0
+		call	@z_vsync_wait_and_scrollup$qi stdcall, 0
 		pop	cx
 		les	bx, _resident
 		mov	eax, _frame_rand
@@ -3251,7 +3251,7 @@ loc_E2A8:
 		inc	ax
 		push	ax
 		pushd	[_score]
-		call	_regist
+		call	@regist$qlixnxc
 		add	sp, 0Ah
 		les	bx, _resident
 		mov	ax, [bp+@@stage]
@@ -3521,9 +3521,9 @@ resstuff_TEXT	ends
 
 ; Segment type:	Pure code
 main_13_TEXT	segment	byte public 'CODE' use16
-	extern _z_vsync_wait_and_scrollup:proc
-	extern _graph_2xscale_byterect_1_to_0_sl:proc
-	extern _egc_wave_unput:proc
+	extern @z_vsync_wait_and_scrollup$qi:proc
+	extern @graph_2xscale_byterect_1_to_0_sl$qiiiiii:proc
+	extern @egc_wave_unput$qiiiiiii:proc
 main_13_TEXT	ends
 
 ; ===========================================================================
@@ -5019,14 +5019,14 @@ main_18_TEXT	ends
 
 ; Segment type:	Pure code
 main_19_TEXT	segment	byte public 'CODE' use16
-	extern _scoredat_load:proc
-	extern _scoredat_hiscore_get:proc
+	extern @scoredat_load$qv:proc
+	extern @scoredat_hiscore_get$qv:proc
 main_19_TEXT	ends
 
 main_19__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_19
-	extern _scoredat_free:proc
-	extern _regist:proc
+	extern @scoredat_free$qv:proc
+	extern @regist$qlixnxc:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5035,15 +5035,15 @@ public _scoredat_load_hiscore
 _scoredat_load_hiscore	proc far
 		push	bp
 		mov	bp, sp
-		call	main_19:_scoredat_load
-		call	main_19:_scoredat_hiscore_get
+		call	@scoredat_load$qv
+		call	@scoredat_hiscore_get$qv
 		push	dx
 		push	ax
 		pop	eax
 		les	bx, _resident
 		assume es:nothing
 		mov	es:[bx+reiidenconfig_t.hiscore], eax
-		call	_scoredat_free
+		call	@scoredat_free$qv
 		pop	bp
 		retf
 _scoredat_load_hiscore	endp
@@ -19701,7 +19701,7 @@ loc_26A94:
 		add	dx, dx
 		mov	ax, RES_Y
 		sub	ax, dx
-		call	_z_vsync_wait_and_scrollup stdcall, ax
+		call	@z_vsync_wait_and_scrollup$qi stdcall, ax
 		pop	cx
 
 loc_26ABF:
@@ -19723,7 +19723,7 @@ loc_26ABF:
 		push	0
 		call	_graph_accesspage_func
 		call	@girl_bg_put$qi stdcall, 2
-		call	_z_vsync_wait_and_scrollup stdcall, RES_Y
+		call	@z_vsync_wait_and_scrollup$qi stdcall, RES_Y
 		add	sp, 0Ah
 		mov	_boss_phase_frame, 0
 		mov	ax, 1
@@ -19869,7 +19869,7 @@ loc_26C11:
 		add	dx, dx
 		mov	ax, RES_Y
 		sub	ax, dx
-		call	_z_vsync_wait_and_scrollup stdcall, ax
+		call	@z_vsync_wait_and_scrollup$qi stdcall, ax
 		pop	cx
 
 loc_26C3C:
@@ -19919,7 +19919,7 @@ loc_26C85:
 		mov	elis_attack.BE_move_lock_frame, 0
 		mov	elis_attack.BE_bos_image, 1
 		call	@CBossEntity@move_lock_and_put_8$qiiii stdcall, offset elis_attack, ds, large 0, large 0 or (3 shl 16)
-		call	_z_vsync_wait_and_scrollup stdcall, RES_Y
+		call	@z_vsync_wait_and_scrollup$qi stdcall, RES_Y
 		add	sp, 24h
 		mov	_boss_phase_frame, 0
 		xor	ax, ax
@@ -21864,7 +21864,7 @@ loc_2802A:
 		add	ax, -2
 		push	ax
 		pushd	[dword ptr elis_still_or_wave.BE_cur_left]
-		call	_egc_wave_unput
+		call	@egc_wave_unput$qiiiiiii
 		add	sp, 0Eh
 
 loc_28082:
@@ -21904,7 +21904,7 @@ loc_280AE:
 
 loc_280D6:
 		pushd	[dword ptr elis_still_or_wave.BE_cur_left]
-		call	_egc_wave_unput
+		call	@egc_wave_unput$qiiiiiii
 		mov	elis_still_or_wave.BE_move_lock_frame, 0
 		mov	elis_still_or_wave.BE_bos_image, 0
 		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset elis_still_or_wave, ds, large 0, large 0 or (3 shl 16)

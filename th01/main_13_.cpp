@@ -15,6 +15,7 @@ extern "C" {
 #include "th01/hardware/egc.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/planar.h"
+}
 
 #include "th01/hardware/grp2xscs.cpp"
 
@@ -57,6 +58,4 @@ void graph_hline_unput_masked_8(
 			VRAM_PLANE_E[p] |= px8.E;
 		}
 	}
-}
-
 }

@@ -1,7 +1,6 @@
 /// Jigoku Stage 20 Boss - Konngara
 /// -------------------------------
 
-extern "C" {
 #include <stddef.h>
 #include <stdio.h>
 #include "platform.h"
@@ -13,14 +12,17 @@ extern "C" {
 #include "th01/math/area.hpp"
 #include "th01/math/overlap.hpp"
 #include "th01/math/subpixel.hpp"
+extern "C" {
 #include "th01/math/vector.hpp"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/palette.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/egc.h"
+}
 #include "th01/hardware/scrollup.hpp"
 #include "th01/hardware/input.hpp"
 #include "th01/hardware/text.h"
+extern "C" {
 #include "th01/snd/mdrv2.h"
 #include "th01/main/playfld.hpp"
 #include "th01/formats/grp.h"
