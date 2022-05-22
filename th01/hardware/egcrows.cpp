@@ -1,3 +1,16 @@
+#pragma option -zCGRAPH_EX_TEXT -2 -Z-
+
+#include "platform.h"
+#include "decomp.hpp"
+#include "pc98.h"
+#include "planar.h"
+#include "master.hpp"
+extern "C" {
+#include "th01/hardware/graph.h"
+}
+#include "th01/hardware/egc.h"
+#include "th01/hardware/egcrows.hpp"
+
 void egc_copy_rows_1_to_0(vram_y_t top, pixel_t h)
 {
 	vram_offset_t vram_offset = vram_offset_muldiv(0, top);

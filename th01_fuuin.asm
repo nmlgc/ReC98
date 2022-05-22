@@ -1586,8 +1586,8 @@ SHARED	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-fuuin_12_TEXT	segment	byte public 'CODE' use16
-fuuin_12_TEXT	ends
+GRAPH_EX_TEXT	segment	byte public 'CODE' use16
+GRAPH_EX_TEXT	ends
 
 ; ===========================================================================
 

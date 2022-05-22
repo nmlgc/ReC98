@@ -24,8 +24,9 @@ extern "C" {
 #include "th01/hardware/egc.h"
 #include "th01/hardware/palette.h"
 }
+#include "th01/hardware/egcrows.hpp"
 #include "th01/hardware/grpinv32.hpp"
-#include "th01/hardware/ptrans.hpp"
+#include "th01/hardware/pgtrans.hpp"
 #include "th01/hardware/scrollup.hpp"
 extern "C" {
 #include "th01/hardware/input.hpp"

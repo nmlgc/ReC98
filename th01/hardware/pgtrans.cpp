@@ -1,8 +1,15 @@
+#pragma option -zCGRAPH_EX_TEXT -2 -Z-
+
+#include <dos.h>
+#include "platform.h"
+#include "pc98.h"
+#include "planar.h"
 #include "th01/sprites/ileave_m.hpp"
 extern "C" {
+#include "th01/hardware/graph.h"
 #include "th01/hardware/palette.h"
 }
-#include "th01/hardware/ptrans.hpp"
+#include "th01/hardware/pgtrans.hpp"
 
 // Combines the pixels from both VRAM pages in the 8×8 square starting at
 // (⌊left/8⌋*8, top), using one of the interlace masks. The resulting square

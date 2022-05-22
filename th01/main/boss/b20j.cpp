@@ -38,6 +38,7 @@ extern "C" {
 #include "th01/main/boss/entity_a.hpp"
 #include "th01/main/stage/palette.hpp"
 }
+#include "th01/hardware/egcrows.hpp"
 #include "th01/main/stage/stageobj.hpp"
 #include "th01/main/shape.hpp"
 #include "th01/main/player/player.hpp"

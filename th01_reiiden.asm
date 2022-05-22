@@ -3520,11 +3520,11 @@ resstuff_TEXT	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-main_13_TEXT	segment	byte public 'CODE' use16
+GRAPH_EX_TEXT	segment	byte public 'CODE' use16
 	extern @z_vsync_wait_and_scrollup$qi:proc
 	extern @graph_2xscale_byterect_1_to_0_sl$qiiiiii:proc
 	extern @egc_wave_unput$qiiiiiii:proc
-main_13_TEXT	ends
+GRAPH_EX_TEXT	ends
 
 ; ===========================================================================
 

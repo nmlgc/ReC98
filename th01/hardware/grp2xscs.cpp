@@ -1,3 +1,14 @@
+#pragma option -zCGRAPH_EX_TEXT
+
+#include <stdlib.h>
+#include "platform.h"
+#include "pc98.h"
+#include "planar.h"
+extern "C" {
+#include "th01/hardware/graph.h"
+}
+#include "th01/hardware/grp2xscs.hpp"
+
 void scale_2x(dots32_t &dst32, sdots16_t src16)
 {
 	dots32_t mask = 1;
