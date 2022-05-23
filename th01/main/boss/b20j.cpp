@@ -24,6 +24,7 @@ extern "C" {
 #include "th01/hardware/text.h"
 extern "C" {
 #include "th01/snd/mdrv2.h"
+#include "th01/main/entity.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/formats/grp.h"
 #include "th01/formats/grz.h"
@@ -544,27 +545,23 @@ void slash_put(int image)
 
 void pattern_diamond_cross_to_edges_followed_by_rain(void)
 {
-	#define DIAMOND_COUNT 4
 	#define DIAMOND_ORIGIN_X (PLAYFIELD_CENTER_X - (DIAMOND_W / 2))
 	#define DIAMOND_ORIGIN_Y (PLAYFIELD_CENTER_Y + (DIAMOND_H / 2))
 
 	int i;
 
-	static struct {
-		pixel_t velocity_bottomleft_x, velocity_topleft_x;
-		pixel_t velocity_bottomleft_y, velocity_topleft_y;
-		screen_x_t left[DIAMOND_COUNT];
-		screen_y_t top[DIAMOND_COUNT];
-	} diamonds;
+	static pixel_t velocity_bottomleft_x, velocity_topleft_x;
+	static pixel_t velocity_bottomleft_y, velocity_topleft_y;
+	static CEntities<4> diamonds;
 	static int frames_with_diamonds_at_edges;
 
 	#define diamonds_unput(i) \
-		for(i = 0; i < DIAMOND_COUNT; i++) { \
+		for(i = 0; i < diamonds.count(); i++) { \
 			shape8x8_sloppy_unput(diamonds.left[i], diamonds.top[i]); \
 		}
 
 	#define diamonds_put(i) \
-		for(i = 0; i < DIAMOND_COUNT; i++) { \
+		for(i = 0; i < diamonds.count(); i++) { \
 			shape8x8_diamond_put(diamonds.left[i], diamonds.top[i], 9); \
 		}
 
@@ -585,17 +582,17 @@ void pattern_diamond_cross_to_edges_followed_by_rain(void)
 		vector2_between(
 			DIAMOND_ORIGIN_X, DIAMOND_ORIGIN_Y,
 			PLAYFIELD_LEFT, player_center_y(),
-			diamonds.velocity_bottomleft_x, diamonds.velocity_bottomleft_y,
+			velocity_bottomleft_x, velocity_bottomleft_y,
 			7
 		);
 		vector2_between(
 			DIAMOND_ORIGIN_X, DIAMOND_ORIGIN_Y,
 			PLAYFIELD_LEFT, PLAYFIELD_TOP,
-			diamonds.velocity_topleft_x, diamonds.velocity_topleft_y,
+			velocity_topleft_x, velocity_topleft_y,
 			7
 		);
 
-		for(i = 0; i < DIAMOND_COUNT; i++) {
+		for(i = 0; i < diamonds.count(); i++) {
 			diamonds.left[i] = DIAMOND_ORIGIN_X;
 			diamonds.top[i] = DIAMOND_ORIGIN_Y;
 		}
@@ -609,14 +606,14 @@ void pattern_diamond_cross_to_edges_followed_by_rain(void)
 		mdrv2_se_play(12);
 	} else if(diamonds.left[0] > PLAYFIELD_LEFT) {
 		diamonds_unput(i);
-		diamonds.left[0] += diamonds.velocity_bottomleft_x;
-		diamonds.top[0]  += diamonds.velocity_bottomleft_y;
-		diamonds.left[1] -= diamonds.velocity_bottomleft_x;
-		diamonds.top[1]  += diamonds.velocity_bottomleft_y;
-		diamonds.left[2] += diamonds.velocity_topleft_x;
-		diamonds.top[2]  += diamonds.velocity_topleft_y;
-		diamonds.left[3] -= diamonds.velocity_topleft_x;
-		diamonds.top[3]  += diamonds.velocity_topleft_y;
+		diamonds.left[0] += velocity_bottomleft_x;
+		diamonds.top[0]  += velocity_bottomleft_y;
+		diamonds.left[1] -= velocity_bottomleft_x;
+		diamonds.top[1]  += velocity_bottomleft_y;
+		diamonds.left[2] += velocity_topleft_x;
+		diamonds.top[2]  += velocity_topleft_y;
+		diamonds.left[3] -= velocity_topleft_x;
+		diamonds.top[3]  += velocity_topleft_y;
 		if(diamonds.left[0] <= PLAYFIELD_LEFT) {
 			diamonds.left[0] = PLAYFIELD_LEFT;
 			diamonds.left[2] = PLAYFIELD_LEFT;
@@ -697,7 +694,6 @@ void pattern_diamond_cross_to_edges_followed_by_rain(void)
 	#undef diamonds
 	#undef DIAMOND_ORIGIN_Y
 	#undef DIAMOND_ORIGIN_X
-	#undef DIAMOND_COUNT
 }
 
 void pattern_symmetrical_from_cup_fire(unsigned char angle)

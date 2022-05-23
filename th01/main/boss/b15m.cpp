@@ -15,6 +15,7 @@ extern "C" {
 #include "th01/formats/pf.hpp"
 #include "th01/formats/grc.hpp"
 #include "th01/formats/ptn.hpp"
+#include "th01/main/entity.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/vars.hpp"
 #include "th01/main/boss/entity_a.hpp"
@@ -269,25 +270,22 @@ bool16 wave_teleport(screen_x_t target_left, screen_y_t target_top)
 	}
 
 	enum {
-		STAR_COUNT = 5,
 		STAR_OFFSET_X = (GIRL_W / 4),
 		STAR_OFFSET_Y = (GIRL_H / 3),
 		STAR_AREA_W = (STAR_OFFSET_X + GIRL_W + STAR_OFFSET_X),
 		STAR_AREA_H = (STAR_OFFSET_Y + GIRL_H),
 	};
-	extern struct {
-		screen_x_t left[STAR_COUNT];
-		screen_y_t top[STAR_COUNT];
-
+	struct CStars : public CEntities<5> {
 		static screen_x_t random_left(void) {
 			return (ent_still_or_wave.cur_left + (rand() % STAR_AREA_W));
 		}
 		static screen_y_t random_top(void) {
 			return (ent_still_or_wave.cur_top + (rand() % STAR_AREA_H));
 		}
-	} stars;
+	};
+	extern CStars stars;
 
-	for(int i = 0; i < STAR_COUNT; i++) {
+	for(int i = 0; i < stars.count(); i++) {
 		if(boss_phase_frame > 4) {
 			egc_copy_rect_1_to_0_16_word_w(stars.left[i], stars.top[i], 8, 8);
 		}

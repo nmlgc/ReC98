@@ -23033,6 +23033,13 @@ _INIT_	ends
 
 	.data?
 
+CEntities macro name:req, count:req
+	public name
+	name label byte
+	dw count dup(?) ; left
+	dw count dup(?) ; top
+endm
+
 public _credit_bombs, _player_swing_deflection_frames
 _credit_bombs	db ?
 _player_swing_deflection_frames	db ?
@@ -23319,10 +23326,9 @@ _boss_hp	dw ?
 _boss_phase_frame	dw ?
 word_3A6CC	dw ?
 _boss_phase	db ?
-public _elis_stars
-_elis_stars label word
-_elis_stars_left	dw 5 dup (?)
-_elis_stars_top	dw 5 dup (?)
+
+CEntities _elis_stars, 5
+
 radius_3A6E3	dw ?
 word_3A6E5	dw ?
 		db 20 dup(?)
