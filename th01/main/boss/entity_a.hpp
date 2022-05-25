@@ -58,6 +58,10 @@ public:
 		bos_image = image;
 	}
 
+	pixel_t w_aligned(void) const {
+		return ((vram_w * BYTE_DOTS) + 16);
+	}
+
 	/// Blitting
 	/// --------
 	// All functions with an [image] parameter use that image from [bos_slot],
@@ -231,6 +235,12 @@ public:
 		move_lock_frame = 0;
 		bos_image = image;
 		move_lock_and_put_8(0, 0, 0, 3);
+	}
+
+	void move_lock_unput_and_put_image_8(int image) {
+		move_lock_frame = 0;
+		bos_image = image;
+		move_lock_unput_and_put_8(0, 0, 0, 3);
 	}
 	/// --------
 

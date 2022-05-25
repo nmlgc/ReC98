@@ -16,8 +16,10 @@
 extern "C" {
 #include "th01/math/vector.hpp"
 #include "th01/hardware/egc.h"
+#include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
 }
+#include "th01/hardware/egcwave.hpp"
 #include "th01/hardware/input.hpp"
 #include "th01/hardware/scrollup.hpp"
 extern "C" {
@@ -27,6 +29,7 @@ extern "C" {
 #include "th01/main/entity.hpp"
 #include "th01/snd/mdrv2.h"
 #include "th01/main/playfld.hpp"
+#include "th01/formats/stagedat.hpp"
 #include "th01/main/vars.hpp"
 #include "th01/main/boss/entity_a.hpp"
 }
@@ -35,12 +38,14 @@ extern "C" {
 #include "th01/main/shape.hpp"
 #include "th01/main/particle.hpp"
 #include "th01/main/boss/boss.hpp"
+#include "th01/main/boss/defeat.hpp"
 #include "th01/main/boss/palette.hpp"
 #include "th01/main/bullet/laser_s.hpp"
 #include "th01/main/bullet/missile.hpp"
 #include "th01/main/bullet/pellet.hpp"
 #include "th01/main/hud/hp.hpp"
 #include "th01/main/player/player.hpp"
+#include "th01/main/stage/stageobj.hpp"
 
 // Coordinates
 // -----------
@@ -50,14 +55,34 @@ static const pixel_t GIRL_H = 96;
 static const pixel_t BAT_W = 48;
 static const pixel_t BAT_H = 32;
 
-static const pixel_t BASE_LEFT = (PLAYFIELD_CENTER_X - (GIRL_W / 2));
-static const pixel_t BASE_TOP = (
-	PLAYFIELD_TOP + ((PLAYFIELD_H / 21) * 5) - (GIRL_H / 2)
-);
+static const pixel_t GIRL_HITBOX_LEFT = (GIRL_W / 4);
+static const pixel_t GIRL_HITBOX_TOP = (GIRL_H / 3);
+static const pixel_t GIRL_HITBOX_W = (GIRL_W / 2);
+static const pixel_t GIRL_HITBOX_H = (GIRL_H / 2);
+
+static const pixel_t BAT_HITBOX_LEFT = 0;
+static const pixel_t BAT_HITBOX_TOP = 0;
+static const pixel_t BAT_HITBOX_W = ((BAT_W / 3) * 2);
+static const pixel_t BAT_HITBOX_H = BAT_H;
+
+static const pixel_t BASE_CENTER_X = PLAYFIELD_CENTER_X;
+static const pixel_t BASE_CENTER_Y = (PLAYFIELD_TOP + ((PLAYFIELD_H / 21) * 5));
+
+static const pixel_t BASE_LEFT = (BASE_CENTER_X - (GIRL_W / 2));
+static const pixel_t BASE_TOP = (BASE_CENTER_Y - (GIRL_H / 2));
 // -----------
 
 enum elis_colors_t {
 	COL_FX = 4,
+	COL_ENTRANCE_SPHERE = 8,
+};
+
+// Always denotes the last phase that ends with that amount of HP.
+enum elis_hp_t {
+	HP_TOTAL = 14,
+	PHASE_1_END_HP = 10,
+	PHASE_3_END_HP = 6,
+	PHASE_5_END_HP = 0,
 };
 
 // State
@@ -65,15 +90,6 @@ enum elis_colors_t {
 
 #define pattern_state	elis_pattern_state
 #define stars	elis_stars
-#define flash_colors	elis_flash_colors
-#define invincibility_frame	elis_invincibility_frame
-#define invincible	elis_invincible
-#define wave_teleport_done	elis_wave_teleport_done
-#define initial_hp_rendered	elis_initial_hp_rendered
-extern int invincibility_frame;
-extern bool16 invincible;
-extern bool16 wave_teleport_done;
-extern bool initial_hp_rendered;
 // -----
 
 // Patterns
@@ -93,6 +109,8 @@ enum elis_phase_5_subphase_t {
 
 	_elis_phase_5_subphase_t_FORCE_INT16 = 0x7FFF,
 };
+
+typedef int (*elis_phase_func_t)(int id);
 
 // Returns `CHOOSE_NEW` if done, or the pattern ID within the phase if still
 // ongoing.
@@ -131,6 +149,8 @@ enum elis_entity_t {
 };
 
 static const int BAT_CELS = 3;
+static const int BAT_FRAMES_PER_CEL = 3;
+static const int BAT_CYCLE_FRAMES = (BAT_CELS * BAT_FRAMES_PER_CEL);
 static const int BAT_SPEED_DIVISOR = 3;
 
 enum elis_entity_cel_t {
@@ -140,7 +160,7 @@ enum elis_entity_cel_t {
 	C_WAVE_1 = 2,
 	C_WAVE_2 = 3,
 	C_WAVE_3 = 4,
-	C_WAVE_4 = 5,
+	C_WAVE_4 = 5, // (unused)
 
 	// ENT_ATTACK
 	C_PREPARE = 0,
@@ -206,6 +226,16 @@ inline void ent_put_both(elis_entity_t ent, elis_entity_cel_t cel) {
 	graph_accesspage_func(0); boss_entities[ent].move_lock_and_put_image_8(cel);
 }
 
+#define ent_wave_put(ent, cel, len, amp, phase) { \
+	ent.wave_put(ent.cur_left, ent.cur_top, cel, len, amp, phase); \
+}
+
+#define ent_wave_sloppy_unput(ent, len, amp, phase) { \
+	egc_wave_unput( \
+		ent.cur_left, ent.cur_top, len, amp, phase, ent.w_aligned(), ent.h \
+	); \
+}
+
 #define ent_attack_render() { \
 	if((boss_phase_frame % 8) == 0) { \
 		ent_unput_and_put_both(ENT_ATTACK, C_ATTACK_1); \
@@ -228,6 +258,18 @@ inline screen_y_t form_center_y(elis_form_t form) {
 	return (form == F_GIRL)
 		? (ent_still_or_wave.cur_top + (GIRL_H / 2))
 		: (ent_bat.cur_top + (BAT_H / 2));
+}
+
+inline screen_x_t form_shot_hitbox_left(elis_form_t form) {
+	return (form == F_GIRL)
+		? (ent_still_or_wave.cur_left + GIRL_HITBOX_LEFT)
+		: (ent_bat.cur_left + BAT_HITBOX_LEFT);
+}
+
+inline screen_y_t form_shot_hitbox_top(elis_form_t form) {
+	return (form == F_GIRL)
+		? (ent_still_or_wave.cur_top + GIRL_HITBOX_TOP)
+		: (ent_bat.cur_left + BAT_HITBOX_TOP); // ZUN bug: Should be cur_top
 }
 
 inline screen_x_t girl_lefteye_x(void) {
@@ -305,7 +347,10 @@ static const pixel_t SPHERE_H = 32;
 enum elis_grc_cel_t {
 	RIFT_CELS = 2,
 
-	C_SPHERE_LARGE = 3,
+	C_EMPTY = 0,
+	C_SPHERE_SMALL,
+	C_SPHERE_MEDIUM,
+	C_SPHERE_LARGE,
 	C_RIFT,
 	C_RIFT_last = (C_RIFT + RIFT_CELS - 1),
 };
@@ -316,6 +361,14 @@ enum elis_grc_cel_t {
 
 #define elis_grc_put(entities, i, cel, col) { \
 	grc_put_8(entities.left[i], entities.top[i], GRC_SLOT_BOSS_1, cel, col); \
+}
+
+#define sphere_put(left, top, cel) { \
+	grc_put_8(left, top, GRC_SLOT_BOSS_1, cel, COL_ENTRANCE_SPHERE); \
+}
+
+#define sphere_unput(left, top) { \
+	grc_sloppy_unput(left, top) \
 }
 
 #define rifts_update_and_render( \
@@ -530,6 +583,9 @@ void elis_setup(void)
 		PLAYFIELD_LEFT, (PLAYFIELD_RIGHT + ((GIRL_W / 4) * 3)),
 		PLAYFIELD_TOP, (PLAYFIELD_BOTTOM - GIRL_H)
 	);
+
+	// These two are redundant, as they're synced with [ent_still_or_wave]
+	// before first use anyway.
 	ent_attack.pos_set(
 		BASE_LEFT, BASE_TOP, 48,
 		PLAYFIELD_LEFT, (PLAYFIELD_RIGHT + ((GIRL_W / 4) * 3)),
@@ -540,9 +596,10 @@ void elis_setup(void)
 		PLAYFIELD_LEFT, (PLAYFIELD_RIGHT + (BAT_W * 2)),
 		PLAYFIELD_TOP, (PLAYFIELD_BOTTOM - (BAT_H * 3))
 	);
+
 	ent_still_or_wave.hitbox_set(
-		((GIRL_W / 4) * 1), ((GIRL_H / 8) * 1),
-		((GIRL_W / 4) * 3), ((GIRL_H / 3) * 2)
+		GIRL_HITBOX_LEFT, ((GIRL_H / 8) * 1),
+		(GIRL_HITBOX_LEFT + GIRL_HITBOX_W), ((GIRL_H / 3) * 2)
 	);
 	// Note that [ent_attack] doesn't receive a hitbox!
 	ent_bat.hitbox_set(
@@ -552,9 +609,9 @@ void elis_setup(void)
 
 	boss_phase = 0;
 	boss_phase_frame = 0;
-	boss_hp = 14;
-	hud_hp_first_white = 10;
-	hud_hp_first_redwhite = 6;
+	boss_hp = HP_TOTAL;
+	hud_hp_first_white = PHASE_1_END_HP;
+	hud_hp_first_redwhite = PHASE_3_END_HP;
 	random_seed = frame_rand;
 	palette_set_grayscale(boss_post_defeat_palette, 0x0, col, comp);
 }
@@ -865,6 +922,9 @@ int phase_1(int id)
 {
 	switch(id) {
 	case CHOOSE_NEW:
+		// Note that this includes `CHOOSE_NEW`. Due to how phase_frame_common()
+		// switches between patterns and teleporting, this adds a 25% chance of
+		// Elis skipping an attack cycle and teleporting again.
 		return (rand() % 4);
 	case 1: return pattern_11_lasers_across();
 	case 2: return pattern_random_downwards_missiles();
@@ -1179,12 +1239,17 @@ int phase_3(int id)
 
 	extern int pattern_cur;
 
+	// (redundant, the branch is only taken on the first call to this function)
 	if(id == 99) {
 		pattern_cur = CHOOSE_NEW;
 		return CHOOSE_NEW;
 	}
+
 	switch(id) {
 	case CHOOSE_NEW:
+		// Note that this includes `CHOOSE_NEW`. Due to how phase_frame_common()
+		// switches between patterns and teleporting, this adds a 25% chance of
+		// Elis skipping an attack cycle and teleporting again.
 		return (rand() % 4);
 	case 1: /* return */ star_of_david_then(pattern_cur, 1,
 		pattern_curved_5_stack_rings
@@ -1683,13 +1748,16 @@ elis_phase_5_subphase_t phase_5_girl(bool16 reset = false)
 	extern int pattern_cur;
 	extern elis_starpattern_ret_t subphase;
 
+	// (redundant, the branch is only taken on the first call to this function)
 	if(reset == true) {
 		pattern_cur = CHOOSE_NEW;
 		subphase = SP_STAR_OF_DAVID;
 		return P5_PATTERN;
 	}
+
 	switch(pattern_cur) {
 	case CHOOSE_NEW:
+		// In contrast to phases 1 and 3, no pattern cycle is skipped here.
 		pattern_cur = ((rand() % 3) + 1);
 		break;
 	case 1: /* return */ star_of_david_then(subphase, pattern_cur,
@@ -1713,7 +1781,7 @@ void phase_5(
 	elis_form_t& form,
 	pixel_t& bat_velocity_x,
 	pixel_t& bat_velocity_y,
-	bool16 reset
+	bool16 reset = false
 )
 {
 	#define subphase       	phase_5_subphase
@@ -1722,6 +1790,7 @@ void phase_5(
 	extern elis_phase_5_subphase_t subphase;
 	extern int pattern_bat_cur;
 
+	// (redundant, the branch is only taken on the first call to this function)
 	if(reset == true) {
 		subphase = P5_PATTERN;
 		pattern_bat_cur = CHOOSE_NEW;
@@ -1732,6 +1801,8 @@ void phase_5(
 		if(subphase == P5_PATTERN) {
 			subphase = bat_fly_random(bat_velocity_x, bat_velocity_y);
 			if(pattern_bat_cur == CHOOSE_NEW) {
+				// In contrast to phases 1 and 3, no pattern cycle is skipped
+				// here.
 				pattern_bat_cur = ((rand() % 4) + 1);
 			}
 			switch(pattern_bat_cur) {
@@ -1768,4 +1839,388 @@ void phase_5(
 
 	#undef pattern_bat_cur
 	#undef subphase
+}
+
+void elis_main(void)
+{
+	#define form               	elis_form
+	#define hit                	elis_hit
+	#define phase              	elis_phase
+	#define bat_velocity_y     	elis_bat_velocity_y
+	#define bat_velocity_x     	elis_bat_velocity_x
+	#define initial_hp_rendered	elis_initial_hp_rendered
+
+	struct hack { unsigned char col[4]; }; // XXX
+
+	extern elis_form_t form;
+	extern struct {
+		int invincibility_frame;
+		bool16 invincible;
+
+		#define hit_update_and_render(form_inlined, flash_colors) { \
+			boss_hit_update_and_render( \
+				hit.invincibility_frame, \
+				hit.invincible, \
+				boss_hp, \
+				flash_colors.col, \
+				sizeof(flash_colors), \
+				7000, \
+				boss_nop, \
+				(form == F_GIRL) \
+					? ent_still_or_wave.hittest_orb() \
+					: ent_bat.hittest_orb(), \
+				form_shot_hitbox_left(form_inlined), \
+				form_shot_hitbox_top(form_inlined), \
+				(form_inlined == F_GIRL) ? GIRL_HITBOX_W : BAT_HITBOX_W, \
+				(form_inlined == F_GIRL) ? GIRL_HITBOX_H : BAT_HITBOX_H \
+			); \
+		}
+	} hit;
+	extern struct {
+		union {
+			int pattern;
+
+			// (redundant, the static one would have been fine)
+			elis_form_t form;
+		} cur;
+		bool16 teleport_done;
+
+		void frame_common(int8_t phase_id) {
+			boss_phase_frame++;
+			hit.invincibility_frame++;
+
+			// Redundant – already done as part of ent_unput_and_put_both(),
+			// which is the only function that reads from [ent_attack].
+			if(phase_id != 1) {
+				ent_sync(ENT_ATTACK, ENT_STILL_OR_WAVE);
+			}
+		}
+
+		#define phase_frame_common(phase_id, phase_func, flash_colors) { \
+			phase.frame_common(phase_id); \
+			\
+			if(phase.cur.pattern != CHOOSE_NEW) { \
+				phase.cur.pattern = phase_func(phase.cur.pattern); \
+			} else if(phase.teleport_done == false) { \
+				phase.teleport_done = wave_teleport( \
+					elis_playfield_random_left(), elis_playfield_random_top() \
+				); \
+			} else if(phase.teleport_done == true) { \
+				phase.cur.pattern = phase_func(phase.cur.pattern); \
+				phase.teleport_done = false; \
+			} \
+			hit_update_and_render(F_GIRL, flash_colors); \
+		}
+
+		#define phase_done(end_hp) ( \
+			(boss_hp <= end_hp) && (phase.teleport_done == true) \
+		)
+
+		void next(int8_t phase_new, int pattern_new) {
+			boss_phase = phase_new;
+			boss_phase_frame = 0;
+			hit.invincibility_frame = 0;
+			cur.pattern = pattern_new;
+			teleport_done = false;
+		}
+	} phase;
+	extern pixel_t bat_velocity_y;
+	extern pixel_t bat_velocity_x;
+	extern bool initial_hp_rendered;
+	extern struct hack elis_invincibility_flash_colors;
+
+	screen_x_t head_left;
+	screen_x_t head_top;
+	bool16 trails_offscreen;
+	struct hack flash_colors = elis_invincibility_flash_colors;
+	unsigned char angle;
+
+	Missiles.unput_update_render();
+
+	// Entrance animation
+	if(boss_phase == 0) {
+		#define entrance_frame hit.invincibility_frame
+
+		enum {
+			SPHERE_COUNT = 2,
+			TRAIL_COUNT = 3,
+		};
+
+		// Trail (i + 1) = position of trail (i) in the previous frame. The
+		// head coordinates are stored separately, and trail (TRAIL_COUNT - 1)
+		// is never rendered.
+		struct {
+			screen_y_t top[SPHERE_COUNT][TRAIL_COUNT];
+			screen_x_t left[SPHERE_COUNT][TRAIL_COUNT];
+		} trails;
+
+		#define sphere_unput_and_put_head(sphere_i, head_left, head_top) { \
+			sphere_unput(trails.left[sphere_i][0], trails.top[sphere_i][0]); \
+			sphere_put(head_left, head_top, C_SPHERE_LARGE); \
+		}
+
+		#define sphere_unput_and_put_trail(sphere_i, trail_i) { \
+			sphere_unput( \
+				trails.left[sphere_i][trail_i + 1], \
+				trails.top[sphere_i][trail_i + 1] \
+			); \
+			sphere_put( \
+				trails.left[sphere_i][trail_i], \
+				trails.top[sphere_i][trail_i], \
+				(trail_i == 0) ? C_SPHERE_MEDIUM : C_SPHERE_SMALL \
+			); \
+		}
+
+		#define sphere_trails_forward_copy(sphere_i, head_left, head_top) { \
+			trails.left[sphere_i][2] = trails.left[sphere_i][1]; \
+			trails.top[sphere_i][2] = trails.top[sphere_i][1]; \
+			trails.left[sphere_i][1] = trails.left[sphere_i][0]; \
+			trails.top[sphere_i][1] = trails.top[sphere_i][0]; \
+			trails.left[sphere_i][0] = head_left; \
+			trails.top[sphere_i][0] = head_top; \
+		}
+
+		boss_palette_snap();
+		girl_bg_snap(1);
+
+		// Trailing rotation
+		// -----------------
+
+		angle = 0x00;
+		entrance_frame = 0;
+		while(1) {
+			entrance_frame++;
+			for(int i = 0; i < SPHERE_COUNT; i++) {
+				head_left = polar_x(
+					(BASE_CENTER_X - (SPHERE_W / 2)),
+					((GIRL_H * 2) / 2),
+					(angle + (i * (0x100 / SPHERE_COUNT))
+				));
+				head_top = polar_y(
+					// Yup, slightly off-center.
+					((BASE_CENTER_Y - (SPHERE_H / 2)) - 14),
+					((GIRL_H * 2) / 2),
+					(angle + (i * (0x100 / SPHERE_COUNT)))
+				);
+
+				// ZUN bug: Reads uninitialized stack memory in frame 0.
+				sphere_unput_and_put_head(i, head_left, head_top);
+
+				// ZUN bug: Both of these calls read uninitialized stack memory
+				// during frames 2 and 3, respectively.
+				if(entrance_frame > 1) {
+					sphere_unput_and_put_trail(i, 0);
+					if(entrance_frame > 2) {
+						sphere_unput_and_put_trail(i, 1);
+					}
+				}
+				sphere_trails_forward_copy(i, head_left, head_top);
+			}
+			if(entrance_frame >= 120) {
+				break;
+			}
+			angle += (0x300 / 32);
+
+			// [entrance_frame] doesn't directly correspond to frames here,
+			// therefore.
+			frame_delay(((120 - entrance_frame) / 12) + 1);
+		};
+		// -----------------
+
+		// Spheres move offscreen / wave-in effect
+		// ---------------------------------------
+
+		enum {
+			MOVE_INTERVAL = 4,
+			MOVE_VELOCITY = (PLAYFIELD_W / 40),
+
+			WAVE_INTERVAL = 4,
+			KEYFRAME_WAVE = 20,
+			KEYFRAME_WAVE_DONE = 100,
+			KEYFRAME_SLIGHT_RIPPLE = 128,
+			KEYFRAME_SLIGHT_RIPPLE_DONE = 130,
+			KEYFRAME_ENTRANCE_DONE = 140,
+		};
+
+		entrance_frame = 0;
+		trails_offscreen = false;
+		while(1) {
+			entrance_frame++;
+			if(!trails_offscreen && ((entrance_frame % MOVE_INTERVAL) == 0)) {
+				for(int i = 0; i < SPHERE_COUNT; i++) {
+					head_left = (
+						(trails.left[i][0] + (MOVE_VELOCITY * MOVE_INTERVAL)) -
+						(i * (MOVE_VELOCITY * MOVE_INTERVAL * 2))
+					);
+					head_top = trails.top[i][0];
+
+					sphere_unput_and_put_head(i, head_left, head_top);
+					sphere_unput_and_put_trail(i, 0);
+					sphere_unput_and_put_trail(i, 1);
+
+					if(
+						(trails.left[0][2] > RES_X) &&
+						(trails.left[1][2] < (0 - SPHERE_W))
+					) {
+						trails_offscreen = true;
+					}
+
+					sphere_trails_forward_copy(i, head_left, head_top);
+				}
+			}
+			if(
+				(entrance_frame > KEYFRAME_WAVE) &&
+				(entrance_frame < KEYFRAME_WAVE_DONE)
+			) {
+				if((entrance_frame % WAVE_INTERVAL) == 0) {
+					if(entrance_frame != (KEYFRAME_WAVE + WAVE_INTERVAL)) {
+						// Amplitude should technically be
+						//
+						// 	((KEYFRAME_WAVE_DONE - WAVE_INTERVAL) - frame)
+						//
+						// here (not +), matching the blitting function below.
+						// Good that this function is so sloppy with all its
+						// word alignment that it actually makes no difference.
+						ent_wave_sloppy_unput(
+							ent_still_or_wave,
+							((entrance_frame - WAVE_INTERVAL) + 2),
+							(
+								(KEYFRAME_WAVE_DONE + WAVE_INTERVAL) -
+								entrance_frame
+							),
+							((entrance_frame - WAVE_INTERVAL) * 6)
+						);
+					}
+					ent_wave_put(
+						ent_still_or_wave,
+						C_STILL,
+						(entrance_frame + 2),
+						(KEYFRAME_WAVE_DONE - entrance_frame),
+						(entrance_frame * 6)
+					);
+				}
+			} else if(entrance_frame == KEYFRAME_WAVE_DONE) {
+				// Phase should technically be (entrance_frame * 6), but...
+				// yeah, see above. No difference here either.
+				ent_wave_sloppy_unput(
+					ent_still_or_wave,
+					(entrance_frame + 2),
+					(KEYFRAME_WAVE_DONE - entrance_frame),
+					entrance_frame
+				);
+				// Unnecessary unblitting...
+				ent_still_or_wave.move_lock_unput_and_put_image_8(C_STILL);
+			} else if(entrance_frame == KEYFRAME_SLIGHT_RIPPLE) {
+				girl_bg_put(1);
+				ent_wave_put(ent_still_or_wave, C_STILL, 3, 8, 64);
+			} else if(entrance_frame == KEYFRAME_SLIGHT_RIPPLE_DONE) {
+				ent_wave_sloppy_unput(ent_still_or_wave, 3, 8, 64);
+				// Unnecessary unblitting...
+				ent_still_or_wave.move_lock_unput_and_put_image_8(C_STILL);
+			} else if(entrance_frame > KEYFRAME_ENTRANCE_DONE) {
+				break;
+			}
+			frame_delay(1);
+		}
+
+		#undef sphere_trails_forward_copy
+		#undef sphere_unput_and_put_trail
+		#undef sphere_unput_and_put_head
+		#undef entrance_frame
+		// ---------------------------------------
+
+		boss_phase_frame = 0;
+		hit.invincibility_frame = 0;
+		boss_phase = 1;
+		ent_still_or_wave.hitbox_orb_inactive = false;
+
+		// Necessary, since the entire entrance animation was only played on
+		// VRAM page 0...
+		graph_accesspage_func(1); ent_still_or_wave.move_lock_and_put_8();
+
+		// ... which makes this blitting call redundant, though.
+		graph_accesspage_func(0); ent_still_or_wave.move_lock_and_put_8();
+
+		phase.teleport_done = false;
+		phase.cur.pattern = 1;
+		initial_hp_rendered = false;
+	} else if(boss_phase == 1) {
+		if(!initial_hp_rendered) {
+			initial_hp_rendered = hud_hp_increment(boss_hp, boss_phase_frame);
+		}
+		phase_frame_common(1, phase_1, flash_colors);
+		if(!hit.invincible && phase_done(PHASE_1_END_HP)) {
+			phase.next(2, CHOOSE_NEW);
+		}
+	} else if(boss_phase == 2) {
+		boss_phase_frame++;
+		phase.teleport_done = wave_teleport(BASE_LEFT, BASE_TOP);
+		if(phase.teleport_done == true) {
+			// (redundant, function initializes itself)
+			phase_3(99);
+
+			phase.next(3, 1);
+		}
+	} else if(boss_phase == 3) {
+		phase_frame_common(3, phase_3, flash_colors);
+		if(!hit.invincible && phase_done(PHASE_3_END_HP)) {
+			phase.next(4, CHOOSE_NEW);
+			form = F_GIRL;
+		}
+	} else if(boss_phase == 4) {
+		boss_phase_frame++;
+		if(!phase.teleport_done) {
+			phase.teleport_done = wave_teleport(BASE_LEFT, BASE_TOP);
+		} else {
+			phase.cur.form = transform_girl_to_bat();
+		}
+		if(phase.cur.form == F_BAT) {
+			phase.next(5, CHOOSE_NEW);
+			form = F_BAT;
+
+			// (redundant, function initializes itself)
+			phase_5(form, bat_velocity_x, bat_velocity_y, true);
+		}
+	} else if(boss_phase == 5) {
+		phase.frame_common(5);
+		if(form != F_GIRL) {
+			ent_bat.move_lock_unput_and_put_8(
+				0, bat_velocity_x, bat_velocity_y, (BAT_SPEED_DIVISOR - 1)
+			);
+
+			#define bat_cycle_frame (boss_phase_frame % BAT_CYCLE_FRAMES)
+			if(bat_cycle_frame == (BAT_FRAMES_PER_CEL * 0)) {
+				ent_bat.set_image(C_BAT + 0);
+			} else if(bat_cycle_frame == (BAT_FRAMES_PER_CEL * 1)) {
+				ent_bat.set_image(C_BAT + 1);
+			} else if(bat_cycle_frame == (BAT_FRAMES_PER_CEL * 2)) {
+				ent_bat.set_image(C_BAT + 2);
+			}
+			#undef bat_cycle_frame
+		}
+		phase_5(form, bat_velocity_x, bat_velocity_y);
+		hit_update_and_render(form, flash_colors);
+		if(boss_hp <= PHASE_5_END_HP) {
+			int i;
+
+			mdrv2_bgm_fade_out_nonblock();
+			Pellets.unput_and_reset();
+			girl_bg_put(1);
+			Missiles.reset();
+			shootout_lasers_unput_and_reset_broken(i);
+			boss_defeat_animate();
+			scene_init_and_load(5);
+		}
+	}
+
+	#undef form
+	#undef hit
+	#undef phase
+	#undef bat_velocity_y
+	#undef bat_velocity_x
+	#undef initial_hp_rendered
+
+	#undef hit_update_and_render
+	#undef phase_frame_common
+	#undef phase_done
 }

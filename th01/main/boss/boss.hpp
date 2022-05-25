@@ -58,6 +58,7 @@ static const pixel_t SINGYOKU_H = 96;
 
 // Makai
 void elis_load(void);
+void elis_main(void);
 void elis_free(void);
 
 void sariel_entrance(int8_t unused);
