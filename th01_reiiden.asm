@@ -17967,22 +17967,6 @@ _kikuri_invincibility_flash_colors	db 6, 11, 8, 2
 aTamasii_bos	db 'tamasii.bos',0
 aTamasii2_bos	db 'tamasii2.bos',0
 aTamayen_ptn	db 'tamayen.ptn',0
-		db 0
-
-public _phase_3_pattern_cur
-_phase_3_pattern_cur	dw 0
-
-public _phase_5_girl_pattern_cur, _phase_5_girl_subphase
-_phase_5_girl_pattern_cur     	dw 0
-_phase_5_girl_subphase	dw 0
-
-public _phase_5_subphase, _phase_5_pattern_bat_cur
-_phase_5_subphase       	dw 0
-_phase_5_pattern_bat_cur	dw 0
-
-public _elis_form, _elis_invincibility_flash_colors
-_elis_form	dw 0
-_elis_invincibility_flash_colors	db 3, 6, 8, 2
 	extern _game_cleared:byte
 	extern _unused_boss_stage_flag:word
 	extern _pellet_interlace:byte
@@ -18294,62 +18278,8 @@ _kikuri_invincible	dw ?
 _kikuri_invincibility_frame	dw ?
 _kikuri_entrance_ring_radius_base	dw ?
 _kikuri_initial_hp_rendered	db ?
-		db ?
-
-bigcircle_t struc
-	BIGCIRCLE_angle       	db ?
-	BIGCIRCLE_flash_frames	dw ?
-bigcircle_t ends
-
-public _boss_hp, _boss_phase_frame, _elis_pattern_state, _boss_phase
-_boss_hp	dw ?
-_boss_phase_frame	dw ?
-_elis_pattern_state	dw ?
-_boss_phase	db ?
-
-CEntities _elis_stars, 5
-
-public _pattern0_circle_radius, _pattern0_direction
-_pattern0_circle_radius	dw ?
-_pattern0_direction	dw ?
-
-CEntities _pattern1_rifts, 5
-
-public _pattern2_circle
-_pattern2_circle	bigcircle_t <?>
-
-public _star_of_david_circle
-_star_of_david_circle	bigcircle_t <?>
-
-CEntities _pattern4_spheres, 10
-CEntities _pattern5_rifts, 5
-CEntities _girl_to_bat_rifts, 5
-CEntities _bat_to_girl_rifts, 5
-
-public _bat_target_left, _bat_target_top, _bat_frames_until_target
-_bat_target_left        	dw ?
-_bat_target_top         	dw ?
-_bat_frames_until_target	dw ?
-
-public _pattern11_circle
-_pattern11_circle label byte
-	dw ?	; frames
-	dw ?	; target_left
-	db ?	; angle
-
-public _pattern12_circle
-_pattern12_circle	bigcircle_t <?>
-
-public _elis_hit, _elis_phase, _elis_bat_velocity_y, _elis_bat_velocity_x
-_elis_hit label byte
-	dw ?	; invincibility_frame
-	dw ?	; invincible
-_elis_phase label byte
-	dw ?	; cur
-	dw ?	; teleport_done
-_elis_bat_velocity_y	dw ?
-_elis_bat_velocity_x	dw ?
-public _elis_initial_hp_rendered
-_elis_initial_hp_rendered	db ?
+	extern _boss_hp:word
+	extern _boss_phase_frame:word
+	extern _boss_phase:byte
 
 		end

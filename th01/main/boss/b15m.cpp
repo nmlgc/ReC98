@@ -85,12 +85,12 @@ enum elis_hp_t {
 	PHASE_5_END_HP = 0,
 };
 
-// State
-// -----
+// Global boss state that is defined here for some reason, part 1
+// --------------------------------------------------------------
 
-#define pattern_state	elis_pattern_state
-#define stars	elis_stars
-// -----
+int boss_hp;
+int boss_phase_frame;
+// --------------------------------------------------------------
 
 // Patterns
 // --------
@@ -119,7 +119,7 @@ typedef int (*elis_phase_1_3_pattern_func_t)(void);
 // Returns `SP_STAR_OF_DAVID` if done, or `SP_PATTERN` if still ongoing.
 typedef elis_starpattern_ret_t (*elis_starpattern_func_t)(void);
 
-extern union {
+static union {
 	int angle_range; // ACTUAL TYPE: unsigned char
 	int count;
 	pellet_group_t group;
@@ -129,6 +129,12 @@ extern union {
 	pixel_t speed;
 } pattern_state;
 // --------
+
+// Global boss state that is defined here for some reason, part 2
+// --------------------------------------------------------------
+
+int8_t boss_phase;
+// --------------------------------------------------------------
 
 // Entities
 // --------
@@ -681,7 +687,7 @@ bool16 wave_teleport(screen_x_t target_left, screen_y_t target_top)
 		return false;
 	}
 
-	extern CEntities<5> stars;
+	static CEntities<5> stars;
 
 	for(int i = 0; i < stars.count(); i++) {
 		if(boss_phase_frame > 4) {
@@ -717,11 +723,8 @@ int pattern_11_lasers_across(void)
 	#define circle_center_x	form_center_x(F_GIRL)
 	#define circle_center_y	(ent_still_or_wave.cur_top + (GIRL_H / 3))
 
-	#define circle_radius	pattern0_circle_radius
-	#define direction    	pattern0_direction
-
-	extern pixel_t circle_radius;
-	extern bool16 direction; // ACTUAL TYPE: x_direction_t
+	static pixel_t circle_radius;
+	static bool16 direction; // ACTUAL TYPE: x_direction_t
 	double target_left;
 	double target_y;
 
@@ -799,17 +802,13 @@ int pattern_11_lasers_across(void)
 	}
 	return 1;
 
-	#undef direction
-	#undef circle_radius
 	#undef circle_center_y
 	#undef circle_center_x
 }
 
 int pattern_random_downwards_missiles(void)
 {
-	#define rifts pattern1_rifts
-
-	extern CEntities<5> rifts;
+	static CEntities<5> rifts;
 	int cel; // ACTUAL TYPE: elis_grc_cel_t
 	pixel_t velocity_x;
 	pixel_t velocity_y;
@@ -839,15 +838,11 @@ int pattern_random_downwards_missiles(void)
 		return CHOOSE_NEW;
 	}
 	return 2;
-
-	#undef rifts
 }
 
 int pattern_pellets_along_circle(void)
 {
-	#define circle	pattern2_circle
-
-	extern starcircle_t circle;
+	static starcircle_t circle;
 	screen_x_t left;
 	screen_y_t top;
 
@@ -891,8 +886,6 @@ int pattern_pellets_along_circle(void)
 		return CHOOSE_NEW;
 	}
 	return 3;
-
-	#undef circle
 }
 
 // Draws a line from [angle_1] to [angle_2] on the star circle around Elis.
@@ -956,9 +949,7 @@ inline void star_of_david_unput(void) {
 // danmaku pattern.
 elis_starpattern_ret_t near star_of_david(void)
 {
-	#define circle	star_of_david_circle
-
-	extern starcircle_t circle;
+	static starcircle_t circle;
 
 	if(boss_phase_frame < 5) {
 		circle.frames = 0;
@@ -1001,8 +992,6 @@ elis_starpattern_ret_t near star_of_david(void)
 		}
 	}
 	return SP_STAR_OF_DAVID;
-
-	#undef circle
 }
 
 int pattern_curved_5_stack_rings(void)
@@ -1071,8 +1060,6 @@ int pattern_clusters_from_spheres(void)
 		KEYFRAME_DONE = (KEYFRAME_REMOVE_DONE + 20),
 	};
 
-	#define spheres pattern4_spheres
-
 	struct Spheres : public CEntities<SPHERE_COUNT> {
 		static pixel_t column_w(screen_x_t edge) {
 			return ((edge - ent_still_or_wave.cur_left) / count());
@@ -1085,7 +1072,7 @@ int pattern_clusters_from_spheres(void)
 		}
 	};
 
-	extern Spheres spheres;
+	static Spheres spheres;
 	int i;
 
 	ent_attack_render();
@@ -1166,8 +1153,6 @@ int pattern_clusters_from_spheres(void)
 		return CHOOSE_NEW;
 	}
 	return 2;
-
-	#undef spheres
 }
 
 int pattern_random_from_rifts(void)
@@ -1179,9 +1164,7 @@ int pattern_random_from_rifts(void)
 		KEYFRAME_3 = 220,	// Pattern done
 	};
 
-	#define rifts pattern5_rifts
-
-	extern CEntities<5> rifts;
+	static CEntities<5> rifts;
 	int cel; // ACTUAL TYPE: elis_grc_cel_t
 	unsigned char angle;
 
@@ -1221,8 +1204,6 @@ int pattern_random_from_rifts(void)
 		return CHOOSE_NEW;
 	}
 	return 3;
-
-	#undef rifts
 }
 
 int phase_3(int id)
@@ -1235,9 +1216,7 @@ int phase_3(int id)
 		return (pattern_cur = func()); \
 	}
 
-	#define pattern_cur phase_3_pattern_cur
-
-	extern int pattern_cur;
+	static int pattern_cur = CHOOSE_NEW;
 
 	// (redundant, the branch is only taken on the first call to this function)
 	if(id == 99) {
@@ -1263,7 +1242,6 @@ int phase_3(int id)
 	}
 	return CHOOSE_NEW;
 
-	#undef pattern_cur
 	#undef star_of_david_then
 }
 
@@ -1280,9 +1258,7 @@ enum {
 
 elis_form_t transform_girl_to_bat(void)
 {
-	#define rifts girl_to_bat_rifts
-
-	extern CEntities<5> rifts;
+	static CEntities<5> rifts;
 	int cel;  // ACTUAL TYPE: elis_grc_cel_t
 
 	if(boss_phase_frame == TRANSFORM_START_FRAME) {
@@ -1314,15 +1290,11 @@ elis_form_t transform_girl_to_bat(void)
 		return F_BAT;
 	}
 	return F_GIRL;
-
-	#undef rifts
 }
 
 elis_form_t transform_bat_to_girl(void)
 {
-	#define rifts bat_to_girl_rifts
-
-	extern CEntities<5> rifts;
+	static CEntities<5> rifts;
 	int cel;  // ACTUAL TYPE: elis_grc_cel_t
 	screen_x_t left;
 	screen_y_t top;
@@ -1365,8 +1337,6 @@ elis_form_t transform_bat_to_girl(void)
 		return F_GIRL;
 	}
 	return F_BAT;
-
-	#undef rifts
 }
 
 // Like the flystep functions in later games, just without the "step" part, and
@@ -1377,13 +1347,9 @@ elis_phase_5_subphase_t bat_fly_random(pixel_t &velocity_x, pixel_t &velocity_y)
 		SPEED = 2,
 	};
 
-	#define target_left        	bat_target_left
-	#define target_top         	bat_target_top
-	#define frames_until_target	bat_frames_until_target
-
-	extern screen_x_t target_left; // should be local
-	extern screen_y_t target_top; // should be local
-	extern int frames_until_target;
+	static screen_x_t target_left; // should be local
+	static screen_y_t target_top; // should be local
+	static int frames_until_target;
 
 	if(boss_phase_frame < BAT_SPEED_DIVISOR) {
 		velocity_x = 0;
@@ -1422,10 +1388,6 @@ elis_phase_5_subphase_t bat_fly_random(pixel_t &velocity_x, pixel_t &velocity_y)
 		return P5_TRANSFORM;
 	}
 	return P5_PATTERN;
-
-	#undef frames_until_target
-	#undef target_top
-	#undef target_left
 }
 
 void pattern_bat_slow_spreads(void)
@@ -1546,9 +1508,7 @@ elis_starpattern_ret_t pattern_safety_circle_and_rain_from_top(void)
 		),
 	};
 
-	#define circle	pattern11_circle
-
-	extern struct {
+	static struct {
 		int frames;
 		screen_x_t target_left;
 		unsigned char angle;
@@ -1647,8 +1607,6 @@ elis_starpattern_ret_t pattern_safety_circle_and_rain_from_top(void)
 		}
 	}
 	return SP_PATTERN;
-
-	#undef circle
 }
 
 elis_starpattern_ret_t pattern_aimed_5_spreads_and_lasers_followed_by_ring(void)
@@ -1658,9 +1616,7 @@ elis_starpattern_ret_t pattern_aimed_5_spreads_and_lasers_followed_by_ring(void)
 		KEYFRAME_START = 60,
 	};
 
-	#define circle	pattern12_circle
-
-	extern starcircle_t circle;
+	static starcircle_t circle;
 	screen_x_t left;
 	screen_x_t top;
 
@@ -1721,8 +1677,6 @@ elis_starpattern_ret_t pattern_aimed_5_spreads_and_lasers_followed_by_ring(void)
 		mdrv2_se_play(6);
 	}
 	return SP_PATTERN;
-
-	#undef circle
 }
 
 elis_phase_5_subphase_t phase_5_girl(bool16 reset = false)
@@ -1742,11 +1696,8 @@ elis_phase_5_subphase_t phase_5_girl(bool16 reset = false)
 		return P5_PATTERN; \
 	}
 
-	#define pattern_cur	phase_5_girl_pattern_cur
-	#define subphase   	phase_5_girl_subphase
-
-	extern int pattern_cur;
-	extern elis_starpattern_ret_t subphase;
+	static int pattern_cur = CHOOSE_NEW;
+	static elis_starpattern_ret_t subphase = SP_STAR_OF_DAVID;
 
 	// (redundant, the branch is only taken on the first call to this function)
 	if(reset == true) {
@@ -1772,8 +1723,6 @@ elis_phase_5_subphase_t phase_5_girl(bool16 reset = false)
 	}
 	return P5_PATTERN;
 
-	#undef subphase
-	#undef pattern_cur
 	#undef star_of_david_then
 }
 
@@ -1784,11 +1733,8 @@ void phase_5(
 	bool16 reset = false
 )
 {
-	#define subphase       	phase_5_subphase
-	#define pattern_bat_cur	phase_5_pattern_bat_cur
-
-	extern elis_phase_5_subphase_t subphase;
-	extern int pattern_bat_cur;
+	static elis_phase_5_subphase_t subphase = P5_PATTERN;
+	static int pattern_bat_cur = CHOOSE_NEW;
 
 	// (redundant, the branch is only taken on the first call to this function)
 	if(reset == true) {
@@ -1836,24 +1782,12 @@ void phase_5(
 			}
 		}
 	}
-
-	#undef pattern_bat_cur
-	#undef subphase
 }
 
 void elis_main(void)
 {
-	#define form               	elis_form
-	#define hit                	elis_hit
-	#define phase              	elis_phase
-	#define bat_velocity_y     	elis_bat_velocity_y
-	#define bat_velocity_x     	elis_bat_velocity_x
-	#define initial_hp_rendered	elis_initial_hp_rendered
-
-	struct hack { unsigned char col[4]; }; // XXX
-
-	extern elis_form_t form;
-	extern struct {
+	static elis_form_t form = F_GIRL;
+	static struct {
 		int invincibility_frame;
 		bool16 invincible;
 
@@ -1862,7 +1796,7 @@ void elis_main(void)
 				hit.invincibility_frame, \
 				hit.invincible, \
 				boss_hp, \
-				flash_colors.col, \
+				flash_colors, \
 				sizeof(flash_colors), \
 				7000, \
 				boss_nop, \
@@ -1876,7 +1810,7 @@ void elis_main(void)
 			); \
 		}
 	} hit;
-	extern struct {
+	static struct {
 		union {
 			int pattern;
 
@@ -1924,15 +1858,14 @@ void elis_main(void)
 			teleport_done = false;
 		}
 	} phase;
-	extern pixel_t bat_velocity_y;
-	extern pixel_t bat_velocity_x;
-	extern bool initial_hp_rendered;
-	extern struct hack elis_invincibility_flash_colors;
+	static pixel_t bat_velocity_y;
+	static pixel_t bat_velocity_x;
+	static bool initial_hp_rendered;
 
 	screen_x_t head_left;
 	screen_x_t head_top;
 	bool16 trails_offscreen;
-	struct hack flash_colors = elis_invincibility_flash_colors;
+	const unsigned char flash_colors[] = { 3, 6, 8, 2 };
 	unsigned char angle;
 
 	Missiles.unput_update_render();
@@ -2212,13 +2145,6 @@ void elis_main(void)
 			scene_init_and_load(5);
 		}
 	}
-
-	#undef form
-	#undef hit
-	#undef phase
-	#undef bat_velocity_y
-	#undef bat_velocity_x
-	#undef initial_hp_rendered
 
 	#undef hit_update_and_render
 	#undef phase_frame_common
