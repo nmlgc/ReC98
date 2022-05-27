@@ -6,9 +6,7 @@ extern "C" {
 #include "th01/hardware/grp2xscs.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/score.h"
-
-#define COL_SELECTED 3
-#define COL_REGULAR V_WHITE
+#include "th01/hiscore/regist.hpp"
 
 #define TITLE_LEFT 48
 #define TITLE_TOP 0
@@ -137,7 +135,7 @@ inline unsigned char kanji_lo(int16_t kanji)
 
 void alphabet_put_initial()
 {
-	int16_t col_and_fx = (COL_REGULAR | FX_WEIGHT_BOLD);
+	int16_t col_and_fx = (COL_REGIST_REGULAR | FX_WEIGHT_BOLD);
 	uint16_t kanji;
 	int i;
 	graph_putkanji_fx_declare();
@@ -151,7 +149,7 @@ void alphabet_put_initial()
 	graph_putsa_fx(
 		MARGIN_W,
 		LOWER_TOP,
-		(COL_SELECTED | FX_WEIGHT_BOLD | FX_REVERSE),
+		(COL_REGIST_SELECTED | FX_WEIGHT_BOLD | FX_REVERSE),
 		ALPHABET_A
 	);
 
@@ -177,9 +175,10 @@ void alphabet_put_initial()
 	alphabet_putsa_fx(NUM_TOP, i, col_and_fx, ALPHABET_ENTER);	i++;
 }
 
-inline void header_cell_put(screen_x_t left, const char str[])
-{
-	graph_putsa_fx(left, TABLE_TOP, (COL_SELECTED | FX_WEIGHT_BLACK), str);
+inline void header_cell_put(screen_x_t left, const char str[]) {
+	graph_putsa_fx(
+		left, TABLE_TOP, (COL_REGIST_SELECTED | FX_WEIGHT_BLACK), str
+	);
 }
 
 #define place_cell_put(top, col_and_fx, str) \
@@ -232,10 +231,15 @@ void regist_put_initial(
 		#define col_and_fx_text (place_col | FX_WEIGHT_BOLD)
 
 		#if (BINARY == 'E')
-		# define place_col ((i == entered_place) ? COL_SELECTED : COL_REGULAR)
-		# define top table_row_top(i)
+			#define place_col ((i == entered_place) \
+				? COL_REGIST_SELECTED \
+				: COL_REGIST_REGULAR \
+			)
+			#define top table_row_top(i)
 		#else
-			int place_col = (i == entered_place) ? COL_SELECTED : COL_REGULAR;
+			int place_col = (
+				(i == entered_place) ? COL_REGIST_SELECTED : COL_REGIST_REGULAR
+			);
 			vram_y_t top = table_row_top(i);
 		#endif
 
@@ -348,7 +352,7 @@ void alphabet_put_at(screen_x_t left, screen_y_t top, bool16 is_selected)
 	egc_copy_rect_1_to_0_16(left, top, KANJI_PADDED_W, GLYPH_H);
 
 	int16_t col_and_fx = (FX_WEIGHT_BOLD | (
-		!is_selected ? COL_REGULAR : (FX_REVERSE | COL_SELECTED)
+		!is_selected ? COL_REGIST_REGULAR : (FX_REVERSE | COL_REGIST_SELECTED)
 	));
 
 	alphabet_if(kanji, left, top,
@@ -413,14 +417,18 @@ int regist_on_shot(
 	graph_printf_s_fx(
 		entered_name_left,
 		entered_name_top,
-		(COL_SELECTED | FX_WEIGHT_BOLD),
+		(COL_REGIST_SELECTED | FX_WEIGHT_BOLD),
 		0,
 		entered_name.byte
 	);
 
 	set_kanji_at(cursor_str, entered_name_cursor, kanji_swap('ÅQ'));
 	graph_printf_s_fx(
-		entered_name_left, entered_name_top, COL_SELECTED, 1, cursor_str.byte
+		entered_name_left,
+		entered_name_top,
+		COL_REGIST_SELECTED,
+		1,
+		cursor_str.byte
 	);
 	return 0;
 }
@@ -657,7 +665,7 @@ void regist(
 		TITLE_BACK_LEFT,
 		stage,
 		RANKS.r,
-		(COL_REGULAR | FX_WEIGHT_BOLD | FX_CLEAR_BG)
+		(COL_REGIST_REGULAR | FX_WEIGHT_BOLD | FX_CLEAR_BG)
 	);
 	// On page 1, the title should now at (TITLE_BACK_LEFT, TITLE_BACK_TOP) if
 	// not cleared, or at (TITLE_BACK_LEFT, TITLE_TOP) if cleared.
