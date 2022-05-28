@@ -6,7 +6,13 @@ typedef enum {
 	RANK_NORMAL,
 	RANK_HARD,
 	RANK_LUNATIC,
-	RANK_EXTRA,
+
+	// Hi Asprey, there is no unused Extra rank in TH01.
+	// (https://www.youtube.com/watch?v=RcjhM4tfPq4&t=169s)
+	#if ((GAME != 1) && (GAME != 3))
+		RANK_EXTRA,
+	#endif
+
 	RANK_COUNT,
 	RANK_DEFAULT = -1,
 
