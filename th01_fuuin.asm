@@ -67,7 +67,6 @@ fuuin_01__TEXT	segment	byte public 'CODE' use16
 		assume cs:fuuin_01
 
 	extern _end_init:proc
-	extern _end_resident_clear:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -143,11 +142,7 @@ fuuin_01__TEXT	ends
 
 ; ===========================================================================
 
-; Segment type:	Pure code
 fuuin_02_TEXT	segment	byte public 'CODE' use16
-	extern _input_sense:proc
-	extern _input_reset_sense:proc
-	extern @regist$qlixnxc:proc
 fuuin_02_TEXT	ends
 
 ; ===========================================================================
@@ -394,7 +389,7 @@ loc_BBC7:
 		call	_mdrv2_bgm_play
 
 loc_BBF1:
-		nopcall	sub_C446
+		nopcall	@verdict_animate_and_regist$qv
 		pop	si
 		pop	bp
 		retf
@@ -930,8 +925,8 @@ sub_C03D	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_C1A8	proc far
+public @verdict_title_calculate_and_rend$qv
+@verdict_title_calculate_and_rend$qv proc far
 
 var_2		= word ptr -2
 
@@ -1301,222 +1296,9 @@ loc_C419:
 		pop	si
 		leave
 		retf
-sub_C1A8	endp
+@verdict_title_calculate_and_rend$qv endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C446	proc far
-
-var_10		= byte ptr -10h
-
-		enter	10h, 0
-		push	si
-		lea	ax, [bp+var_10]
-		push	ss
-		push	ax
-		push	ds
-		push	offset off_12EC0
-		mov	cx, 10h
-		call	SCOPY@
-		call	grp_palette_black_out pascal, 10
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		call	_grp_put_palette_show c, offset aEndm_a_grp, ds	; "endm_a.grp"
-		call	_graph_copy_accessed_page_to_othe
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		call	grp_palette_black_in pascal, 8
-		call	@graph_type_kanji_n$qiiinxc pascal, 400, 32, 5, ds, offset aUmx_1	; "東方靈異伝"
-		call	@graph_type_ank_n$qiiinxc pascal, 496, 32, 3, ds, offset aVer	; "ver"
-		call	@graph_type_ank_n$qiiinxc pascal, 528, 32, 4, ds, offset a1_10	; "1.10"
-		call	_frame_delay stdcall, 30
-		pop	cx
-		mov	al, _rank
-		mov	ah, 0
-		shl	ax, 2
-		lea	dx, [bp+var_10]
-		add	ax, dx
-		mov	bx, ax
-		call	_graph_printf_fx c, 296, 64, 0Fh, offset aUqiUxb@b@b@b@b, ds, word ptr ss:[bx], word ptr ss:[bx+2]	; "難易度　　　　　　　　　　  %s"
-		call	_frame_delay stdcall, 30
-		pop	cx
-		call	_graph_printf_fx c, 296, 96, 0Fh, offset aNbi, ds, word ptr _score_highest, word ptr _score_highest+2	; "今回の最高得点　　　　　　  %7lu"
-		call	_frame_delay stdcall, 30
-		pop	cx
-		call	_graph_printf_fx c, 296, 128, 0Fh, offset aNPiuU_b@b@b@b@, ds, word ptr _score, word ptr _score+2	; "最終得点　　　　　　　　　  %7lu"
-		call	_frame_delay stdcall, 30
-		pop	cx
-		call	_graph_printf_fx c, 296, 160, 0Fh, offset aGrgugegbgjgebI, ds	; "コンティニュー回数"
-		call	_frame_delay stdcall, 30
-		pop	cx
-		call	_graph_printf_fx c, 296, 192, 0Fh, offset aB@r_oB@b@b@b@b, ds, word ptr _continues_per_scene[0 * dword], word ptr _continues_per_scene[0 * dword] + 2	; "　神社　　　　（１面～５面） 　 %3lu"
-		call	_frame_delay stdcall, 30
-		pop	cx
-		cmp	_end_flag, 1
-		jnz	short loc_C590
-		push	word ptr _continues_per_scene[1 * dword] + 2
-		push	word ptr _continues_per_scene[1 * dword]
-		push	ds
-		push	offset aB@gqbGgb@b@b@b ; "　ゲート　　　（６面～１０面）  %3lu"
-		jmp	short loc_C59C
-; ---------------------------------------------------------------------------
-
-loc_C590:
-		push	word ptr _continues_per_scene[1 * dword] + 2
-		push	word ptr _continues_per_scene[1 * dword]
-		push	ds
-		push	offset aB@tkb@b@b@b@b@ ; "　祠　　　　　（６面～１０面）  %3lu"
-
-loc_C59C:
-		push	0Fh
-		push	224
-		push	296
-		call	_graph_printf_fx
-		add	sp, 0Eh
-		call	_frame_delay stdcall, 30
-		pop	cx
-		cmp	_end_flag, 1
-		jnz	short loc_C5C9
-		push	word ptr _continues_per_scene[2 * dword] + 2
-		push	word ptr _continues_per_scene[2 * dword]
-		push	ds
-		push	offset aGfgbgivFpBivpv ; "  ヴィナの廃墟（１１面～１５面）%3lu"
-		jmp	short loc_C5D5
-; ---------------------------------------------------------------------------
-
-loc_C5C9:
-		push	word ptr _continues_per_scene[2 * dword] + 2
-		push	word ptr _continues_per_scene[2 * dword]
-		push	ds
-		push	offset aB@ikvXekeb@b@b ; "　炎の腐界　　（１１面～１５面）%3lu"
-
-loc_C5D5:
-		push	0Fh
-		push	256
-		push	296
-		call	_graph_printf_fx
-		add	sp, 0Eh
-		call	_frame_delay stdcall, 30
-		pop	cx
-		cmp	_end_flag, 1
-		jnz	short loc_C602
-		push	word ptr _continues_per_scene[3 * dword] + 2
-		push	word ptr _continues_per_scene[3 * dword]
-		push	ds
-		push	offset aSVVVsr_uabivpv ; "  堕ちたる神殿（１５面～２０面）%3lu"
-		jmp	short loc_C60E
-; ---------------------------------------------------------------------------
-
-loc_C602:
-		push	word ptr _continues_per_scene[3 * dword] + 2
-		push	word ptr _continues_per_scene[3 * dword]
-		push	ds
-		push	offset aB@rVivVsr_uabi ; "　静かなる神殿（１５面～２０面）%3lu"
-
-loc_C60E:
-		push	0Fh
-		push	288
-		push	296
-		call	_graph_printf_fx
-		add	sp, 0Eh
-		call	_frame_delay stdcall, 30
-		pop	cx
-		cmp	_end_flag, 1
-		jnz	short loc_C63B
-		push	word ptr _continues_total+2
-		push	word ptr _continues_total
-		push	ds
-		push	offset aCvkeglbGgsnnzb ; "  魔界ルート総合　　　　　　	%5lu"
-		jmp	short loc_C647
-; ---------------------------------------------------------------------------
-
-loc_C63B:
-		push	word ptr _continues_total+2
-		push	word ptr _continues_total	; arglist
-		push	ds
-		push	offset aB@tnncglbGgsnn ; "　地獄ルート総合　　　　　　　%5lu"
-
-loc_C647:
-		push	0Fh
-		push	320
-		push	296
-		call	_graph_printf_fx
-		add	sp, 0Eh
-		call	_frame_delay stdcall, 30
-		pop	cx
-		call	@graph_type_ank_n$qiiinxc pascal, 296, 352, 29, ds, offset aThankYouForPla ; "    Thank you for Playing !! "
-		call	_graph_printf_fx c, 264, 384, 12h, offset aBBBVavVVPNjbBB, ds	; "★★★あなたの称号★★★"
-		call	_frame_delay stdcall, 50
-		pop	cx
-		call	sub_C1A8
-		xor	si, si
-		call	_frame_delay stdcall, 100
-		pop	cx
-		call	_input_reset_sense
-		jmp	short loc_C6B1
-; ---------------------------------------------------------------------------
-
-loc_C6A1:
-		call	_input_sense stdcall, 0
-		pop	cx
-		call	_frame_delay stdcall, 1
-		pop	cx
-
-loc_C6B1:
-		mov	ax, si
-		inc	si
-		cmp	ax, 2000
-		jge	short loc_C6C7
-		cmp	_input_ok, 0
-		jnz	short loc_C6C7
-		cmp	_input_shot, 0
-		jz	short loc_C6A1
-
-loc_C6C7:
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		call	_graph_copy_accessed_page_to_othe
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		call	grp_palette_settone pascal, 50
-		mov	_z_Palettes[3 * 3].r, 07h
-		mov	_z_Palettes[3 * 3].g, 0Fh
-		mov	_z_Palettes[3 * 3].b, 07h
-		mov	_z_Palettes[7 * 3].r, 0Fh
-		mov	_z_Palettes[7 * 3].g, 0Fh
-		mov	_z_Palettes[7 * 3].b, 0Fh
-		call	_z_palette_set_all_show c, offset _z_Palettes, ds
-		cmp	_end_flag, 1
-		jnz	short loc_C71C
-		push	ds
-		push	offset aKo	; "完"
-		push	SCOREDAT_CLEARED_MAKAI
-		jmp	short loc_C722
-; ---------------------------------------------------------------------------
-
-loc_C71C:
-		push	ds
-		push	offset aKo_0	; "完"
-		push	SCOREDAT_CLEARED_JIGOKU
-
-loc_C722:
-		push	word ptr _score+2
-		push	word ptr _score
-		call	@regist$qlixnxc
-		add	sp, 0Ah
-		call	_end_resident_clear
-		pop	si
-		leave
-		retf
-sub_C446	endp
-
+	extern @verdict_animate_and_regist$qv:proc
 fuuin_03_TEXT	ends
 
 ; ===========================================================================
@@ -1532,7 +1314,6 @@ fuuin_04_TEXT	segment	byte public 'CODE' use16
 	extern GRP_PALETTE_WHITE_OUT:proc
 	extern GRP_PALETTE_WHITE_IN:proc
 	extern @GRAPH_TYPE_ANK_N$QIIINXC:proc
-	extern @GRAPH_TYPE_KANJI_N$QIIINXC:proc
 fuuin_04_TEXT	ends
 
 ; ===========================================================================
@@ -1559,9 +1340,7 @@ initexit_TEXT	ends
 ; Segment type:	Pure code
 graph_TEXT	segment	byte public 'CODE' use16
 	extern _graph_accesspage_func:proc
-	extern _z_palette_set_all_show:proc
 	extern _z_graph_clear:proc
-	extern _graph_copy_accessed_page_to_othe:proc
 graph_TEXT	ends
 
 ; ===========================================================================
@@ -1573,9 +1352,7 @@ grppffx_TEXT	ends
 
 ; ===========================================================================
 
-; Segment type:	Pure code
 PTN_GRP_GRZ	segment	byte public 'CODE' use16
-	extern _grp_put_palette_show:proc
 PTN_GRP_GRZ	ends
 
 ; ===========================================================================
@@ -1643,7 +1420,8 @@ _VERDICT_TITLES label dword
 		dd aRvkeo		; "世界樹の葉"
 		dd aIitsluucr_tomo	; "黄帝九鼎神丹経"
 		dd aB@gagagkg		; "　アムリタ"
-off_12EC0	dd aEasy
+public _ranks
+_ranks	dd aEasy
 					; " EASY "
 		dd aNormal		; "NORMAL"
 		dd aHard		; " HARD "
@@ -1714,37 +1492,6 @@ aEasy		db ' EASY ',0
 aNormal		db 'NORMAL',0
 aHard		db ' HARD ',0
 aLunatic	db 'LUNATIC',0
-aEndm_a_grp	db 'endm_a.grp',0
-aUmx_1		db '東方靈異伝',0
-aVer		db 'ver',0
-a1_10		db '1.10',0
-; char aUqiUxb[]
-aUqiUxb@b@b@b@b	db '難易度　　　　　　　　　　  %s',0
-; char aNbi[3]
-aNbi		db '今回の最高得点　　　　　　  %7lu',0
-; char aNPiuU_b[]
-aNPiuU_b@b@b@b@	db '最終得点　　　　　　　　　  %7lu',0
-; char aGrgugegbgjgebI[15]
-aGrgugegbgjgebI	db 'コンティニュー回数',0
-; char aB[]
-aB@r_oB@b@b@b@b	db '　神社　　　　（１面～５面） 　 %3lu',0
-aB@gqbGgb@b@b@b	db '　ゲート　　　（６面～１０面）  %3lu',0
-; char aB[]
-aB@tkb@b@b@b@b@	db '　祠　　　　　（６面～１０面）  %3lu',0
-aGfgbgivFpBivpv	db '  ヴィナの廃墟（１１面～１５面）%3lu',0
-; char aB[]
-aB@ikvXekeb@b@b	db '　炎の腐界　　（１１面～１５面）%3lu',0
-aSVVVsr_uabivpv	db '  堕ちたる神殿（１５面～２０面）%3lu',0
-; char aB[]
-aB@rVivVsr_uabi	db '　静かなる神殿（１５面～２０面）%3lu',0
-aCvkeglbGgsnnzb	db '  魔界ルート総合　　　　　　  %5lu',0
-; char aB[]
-aB@tnncglbGgsnn	db '　地獄ルート総合　　　　　　　%5lu',0
-aThankYouForPla	db '    Thank you for Playing !! ',0
-; char aBBBVavVVPNjbBB[]
-aBBBVavVVPNjbBB	db '★★★あなたの称号★★★',0
-aKo		db '完',0
-aKo_0		db '完',0
 
 	; th01/hardware/palette[data].asm
 	extern _z_Palettes:rgb_t:COLOR_COUNT

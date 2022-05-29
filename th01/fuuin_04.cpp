@@ -18,7 +18,7 @@ extern "C" {
 #include "th01/end/type.hpp"
 
 #define TYPE_DELAY 3
-#define TYPE_FX (15 | FX_WEIGHT_NORMAL)
+static const int TYPE_FX = (COL_TYPE | FX_WEIGHT_NORMAL);
 
 #define TONE_STEP_PER_FRAME 5
 

@@ -8,6 +8,11 @@ extern "C" {
 #include "th01/score.h"
 #include "th01/hiscore/regist.hpp"
 
+// Null-terminated version of scoredat_name_t, used internally.
+typedef StupidBytewiseWrapperAround<struct {
+	int16_t codepoint[SCOREDAT_NAME_KANJI + 1];
+}> scoredat_name_z_t;
+
 #define TITLE_LEFT 48
 #define TITLE_TOP 0
 static const screen_x_t TITLE_BACK_LEFT = 0;
