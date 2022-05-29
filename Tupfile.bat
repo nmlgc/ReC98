@@ -25,6 +25,7 @@ tasm32 /m /mx /kh32768 /t zuncom\cstmstub.asm bin\zuncom\cstmstub.obj
 tasm32 /m /mx /kh32768 /t th01_op.asm bin\th01\op.obj
 tasm32 /m /mx /kh32768 /t th01_reiiden.asm bin\th01\reiiden.obj
 tasm32 /m /mx /kh32768 /t th01_fuuin.asm bin\th01\fuuin.obj
+tasm32 /m /mx /kh32768 /t th01_fuuin_data.asm bin\th01\fuuin_2.obj
 tasm32 /m /mx /kh32768 /t th02_zuninit.asm bin\th02\zuninit.obj
 tasm32 /m /mx /kh32768 /t th02_op.asm bin\th02\op.obj
 tasm32 /m /mx /kh32768 /t th02_main.asm bin\th02\main.obj

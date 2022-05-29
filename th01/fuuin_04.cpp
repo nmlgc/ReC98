@@ -108,11 +108,9 @@ void pascal graph_type_ank(
 	screen_x_t left, vram_y_t top, int len, const char *str
 )
 {
-	extern const char graph_type_ank_fmt[];
 	for(int i = 0; i < len; i++) {
 		graph_printf_fx(
-			left + (i * GLYPH_HALF_W), top, TYPE_FX,
-			graph_type_ank_fmt, str[i]
+			left + (i * GLYPH_HALF_W), top, TYPE_FX, "%c", str[i]
 		);
 		frame_delay(TYPE_DELAY);
 	}
@@ -122,11 +120,10 @@ void pascal graph_type_kanji(
 	screen_x_t left, vram_y_t top, int len, const char *str
 )
 {
-	extern const char graph_type_kanji_fmt[];
 	for(int i = 0; i < len; i++) {
 		graph_printf_fx(
 			left + (i * GLYPH_FULL_W), top, TYPE_FX,
-			graph_type_kanji_fmt, str[(2 * i) + 0], str[(2 * i) + 1]
+			"%c%c", str[(2 * i) + 0], str[(2 * i) + 1]
 		);
 		frame_delay(TYPE_DELAY);
 	}
