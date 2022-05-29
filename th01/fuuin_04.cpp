@@ -14,8 +14,8 @@ extern "C" {
 #include "th01/hardware/graph.h"
 #include "th01/hardware/palette.h"
 #include "th01/hardware/vsync.h"
-#include "th01/end/type.h"
 }
+#include "th01/end/type.hpp"
 
 #define TYPE_DELAY 3
 #define TYPE_FX (15 | FX_WEIGHT_NORMAL)
@@ -102,9 +102,11 @@ void pascal grp_palette_white_in(unsigned int frames)
 }
 /// ------------------
 
+}
+
 #pragma option -O-
 
-void pascal graph_type_ank(
+void pascal graph_type_ank_n(
 	screen_x_t left, vram_y_t top, int len, const char *str
 )
 {
@@ -116,7 +118,7 @@ void pascal graph_type_ank(
 	}
 }
 
-void pascal graph_type_kanji(
+void pascal graph_type_kanji_n(
 	screen_x_t left, vram_y_t top, int len, const char *str
 )
 {
@@ -127,6 +129,4 @@ void pascal graph_type_kanji(
 		);
 		frame_delay(TYPE_DELAY);
 	}
-}
-
 }

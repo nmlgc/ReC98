@@ -522,7 +522,7 @@ sub_BC7C	proc near
 		pop	cx
 		call	_frame_delay stdcall, 100
 		pop	cx
-		call	graph_type_ank pascal, 232, 316, 22, ds, offset aTryToNoContinu ; "Try to 'No continue'!!"
+		call	@graph_type_ank_n$qiiinxc pascal, 232, 316, 22, ds, offset aTryToNoContinu ; "Try to 'No continue'!!"
 		push	232
 		push	348
 		push	22
@@ -582,7 +582,7 @@ loc_BD62:
 		pop	cx
 		call	_frame_delay stdcall, 100
 		pop	cx
-		call	graph_type_ank pascal, 232, 316, 22, ds, offset aTryToNoConti_0 ; "Try to 'No continue'!!"
+		call	@graph_type_ank_n$qiiinxc pascal, 232, 316, 22, ds, offset aTryToNoConti_0 ; "Try to 'No continue'!!"
 		push	232
 		push	348
 		push	22
@@ -590,7 +590,7 @@ loc_BD62:
 		push	offset aBadEnding1 ; "	    Bad	Ending1	    "
 
 loc_BDAC:
-		call	graph_type_ank
+		call	@graph_type_ank_n$qiiinxc
 		call	_frame_delay stdcall, 300
 		pop	cx
 		pop	si
@@ -713,8 +713,8 @@ sub_BE83	proc near
 		pop	cx
 		call	_frame_delay stdcall, 150
 		pop	cx
-		call	graph_type_ank pascal, 256, 316, 16, ds, offset aCongratulation ; "Congratulations!"
-		call	graph_type_ank pascal, 232, 348, 22, ds, offset aGoodEnding2 ; "     Good Ending2     "
+		call	@graph_type_ank_n$qiiinxc pascal, 256, 316, 16, ds, offset aCongratulation ; "Congratulations!"
+		call	@graph_type_ank_n$qiiinxc pascal, 232, 348, 22, ds, offset aGoodEnding2 ; "     Good Ending2     "
 		call	_frame_delay stdcall, 300
 		pop	cx
 		pop	bp
@@ -784,8 +784,8 @@ loc_BF51:
 		pop	cx
 		call	_frame_delay stdcall, 150
 		pop	cx
-		call	graph_type_ank pascal, 256, 316, 16, ds, offset aCongratulati_0 ; "Congratulations!"
-		call	graph_type_ank pascal, 232, 348, 22, ds, offset aGoodEnding1 ; "     Good Ending1     "
+		call	@graph_type_ank_n$qiiinxc pascal, 256, 316, 16, ds, offset aCongratulati_0 ; "Congratulations!"
+		call	@graph_type_ank_n$qiiinxc pascal, 232, 348, 22, ds, offset aGoodEnding1 ; "     Good Ending1     "
 		call	_frame_delay stdcall, 300
 		pop	cx
 		pop	si
@@ -852,12 +852,12 @@ loc_C078:
 		call	grp_palette_settone pascal, 100
 		call	_frame_delay stdcall, 50
 		pop	cx
-		call	graph_type_ank pascal, 272, 316, 13, ds, offset aStage5Boss ; "STAGE 5 BOSS"
-		call	graph_type_ank pascal, 232, 348, 22, ds, offset aGatekeeperSing ; "Gatekeeper 'SinGyoku'"
+		call	@graph_type_ank_n$qiiinxc pascal, 272, 316, 13, ds, offset aStage5Boss ; "STAGE 5 BOSS"
+		call	@graph_type_ank_n$qiiinxc pascal, 232, 348, 22, ds, offset aGatekeeperSing ; "Gatekeeper 'SinGyoku'"
 		call	sub_C009 pascal, 1
 		cmp	_end_flag, 1
 		jnz	short loc_C0E1
-		call	graph_type_ank pascal, 272, 316, 13, ds, offset aStage10Boss ; "STAGE 10 BOSS"
+		call	@graph_type_ank_n$qiiinxc pascal, 272, 316, 13, ds, offset aStage10Boss ; "STAGE 10 BOSS"
 		push	232
 		push	348
 		push	22
@@ -867,7 +867,7 @@ loc_C078:
 ; ---------------------------------------------------------------------------
 
 loc_C0E1:
-		call	graph_type_ank pascal, 272, 316, 13, ds, offset aStage10Boss_0 ;	"STAGE 10 BOSS"
+		call	@graph_type_ank_n$qiiinxc pascal, 272, 316, 13, ds, offset aStage10Boss_0 ;	"STAGE 10 BOSS"
 		push	232
 		push	348
 		push	23
@@ -875,11 +875,11 @@ loc_C0E1:
 		push	offset aRevengefulGhos ; "Revengeful Ghost 'Mima'"
 
 loc_C0FE:
-		call	graph_type_ank
+		call	@graph_type_ank_n$qiiinxc
 		call	sub_C009 pascal, 2
 		cmp	_end_flag, 1
 		jnz	short loc_C12E
-		call	graph_type_ank pascal, 272, 316, 13, ds, offset aStage15Boss ; "STAGE 15 BOSS"
+		call	@graph_type_ank_n$qiiinxc pascal, 272, 316, 13, ds, offset aStage15Boss ; "STAGE 15 BOSS"
 		push	232
 		push	348
 		push	22
@@ -889,7 +889,7 @@ loc_C0FE:
 ; ---------------------------------------------------------------------------
 
 loc_C12E:
-		call	graph_type_ank pascal, 272, 316, 13, ds, offset aStage15Boss_0 ;	"STAGE 15 BOSS"
+		call	@graph_type_ank_n$qiiinxc pascal, 272, 316, 13, ds, offset aStage15Boss_0 ;	"STAGE 15 BOSS"
 		push	256
 		push	348
 		push	17
@@ -897,11 +897,11 @@ loc_C12E:
 		push	offset aHellmoonKikuri ; "HellMoon 'Kikuri'"
 
 loc_C14B:
-		call	graph_type_ank
+		call	@graph_type_ank_n$qiiinxc
 		call	sub_C009 pascal, 3
 		cmp	_end_flag, 1
 		jnz	short loc_C17B
-		call	graph_type_ank pascal, 272, 316, 13, ds, offset aStage20Boss ; "STAGE 20 BOSS"
+		call	@graph_type_ank_n$qiiinxc pascal, 272, 316, 13, ds, offset aStage20Boss ; "STAGE 20 BOSS"
 		push	232
 		push	348
 		push	22
@@ -911,7 +911,7 @@ loc_C14B:
 ; ---------------------------------------------------------------------------
 
 loc_C17B:
-		call	graph_type_ank pascal, 272, 316, 13, ds, offset aStage20Boss_0 ;	"STAGE 20 BOSS"
+		call	@graph_type_ank_n$qiiinxc pascal, 272, 316, 13, ds, offset aStage20Boss_0 ;	"STAGE 20 BOSS"
 		push	224
 		push	348
 		push	24
@@ -919,7 +919,7 @@ loc_C17B:
 		push	offset aAstralKnightKo ; "Astral Knight	'Konngara'"
 
 loc_C198:
-		call	graph_type_ank
+		call	@graph_type_ank_n$qiiinxc
 		call	_frame_delay stdcall, 150
 		pop	cx
 		pop	bp
@@ -1331,9 +1331,9 @@ var_10		= byte ptr -10h
 		call	_graph_accesspage_func
 		pop	cx
 		call	grp_palette_black_in pascal, 8
-		call	graph_type_kanji pascal, 400, 32, 5, ds, offset aUmx_1	; "ìåï˚ËÀàŸì`"
-		call	graph_type_ank pascal, 496, 32, 3, ds, offset aVer	; "ver"
-		call	graph_type_ank pascal, 528, 32, 4, ds, offset a1_10	; "1.10"
+		call	@graph_type_kanji_n$qiiinxc pascal, 400, 32, 5, ds, offset aUmx_1	; "ìåï˚ËÀàŸì`"
+		call	@graph_type_ank_n$qiiinxc pascal, 496, 32, 3, ds, offset aVer	; "ver"
+		call	@graph_type_ank_n$qiiinxc pascal, 528, 32, 4, ds, offset a1_10	; "1.10"
 		call	_frame_delay stdcall, 30
 		pop	cx
 		mov	al, _rank
@@ -1449,7 +1449,7 @@ loc_C647:
 		add	sp, 0Eh
 		call	_frame_delay stdcall, 30
 		pop	cx
-		call	graph_type_ank pascal, 296, 352, 29, ds, offset aThankYouForPla ; "    Thank you for Playing !! "
+		call	@graph_type_ank_n$qiiinxc pascal, 296, 352, 29, ds, offset aThankYouForPla ; "    Thank you for Playing !! "
 		call	_graph_printf_fx c, 264, 384, 12h, offset aBBBVavVVPNjbBB, ds	; "ÅöÅöÅöÇ†Ç»ÇΩÇÃèÃçÜÅöÅöÅö"
 		call	_frame_delay stdcall, 50
 		pop	cx
@@ -1531,8 +1531,8 @@ fuuin_04_TEXT	segment	byte public 'CODE' use16
 	extern GRP_PALETTE_BLACK_IN:proc
 	extern GRP_PALETTE_WHITE_OUT:proc
 	extern GRP_PALETTE_WHITE_IN:proc
-	extern GRAPH_TYPE_ANK:proc
-	extern GRAPH_TYPE_KANJI:proc
+	extern @GRAPH_TYPE_ANK_N$QIIINXC:proc
+	extern @GRAPH_TYPE_KANJI_N$QIIINXC:proc
 fuuin_04_TEXT	ends
 
 ; ===========================================================================
