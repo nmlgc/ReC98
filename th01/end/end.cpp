@@ -4,6 +4,7 @@
 #include "pc98.h"
 #include "planar.h"
 #include "twobyte.h"
+#include "master.hpp"
 #include "th01/common.h"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
@@ -63,7 +64,74 @@ inline screen_y_t verdict_line_top(int i) {
 }
 
 void verdict_title_calculate_and_render(void)
-;
+{
+	int skill = 0;
+	int level;
+
+	// skill += ((min(max(score, 0), 2500000) / 500000) * 2);
+	/**/ if(score >= 2500000) { skill += 10; }
+	else if(score >= 2000000) { skill +=  8; }
+	else if(score >= 1500000) { skill +=  6; }
+	else if(score >= 1000000) { skill +=  4; }
+	else if(score >=  500000) { skill +=  2; }
+
+	// skill += (
+	// 	((min(max(score_highest, 0), 3000000) - 1000000) / 400000) * 2
+	// );
+	/**/ if(score_highest >= 3000000) { skill += 10; }
+	else if(score_highest >= 2600000) { skill +=  8; }
+	else if(score_highest >= 2200000) { skill +=  6; }
+	else if(score_highest >= 1800000) { skill +=  4; }
+	else if(score_highest >= 1400000) { skill +=  2; }
+
+	// skill += ((continues_total == 0) * 18 + (
+	// 	(12 - min(max(continues_total, 0), 22)) / 2) * 2)
+	// ));
+	/**/ if(continues_total ==  0u) { skill += 30; }
+	else if(continues_total <=  2u) { skill += 10; }
+	else if(continues_total <=  4u) { skill +=  8; }
+	else if(continues_total <=  6u) { skill +=  6; }
+	else if(continues_total <=  8u) { skill +=  4; }
+	else if(continues_total <= 10u) { skill +=  2; }
+	else if(continues_total <= 12u) {}
+	else if(continues_total <= 14u) { skill -=  2; }
+	else if(continues_total <= 16u) { skill -=  4; }
+	else if(continues_total <= 18u) { skill -=  6; }
+	else if(continues_total <= 20u) { skill -=  8; }
+	else /*                      */ { skill -= 10; }
+
+	/**/ if(rank == RANK_LUNATIC) { skill += 50; }
+	else if(rank ==    RANK_HARD) { skill += 30; }
+	else if(rank ==  RANK_NORMAL) { skill += 10; }
+	else if(rank ==    RANK_EASY) { skill -= 10; }
+
+	/**/ if(end_flag == ES_JIGOKU) { skill += 5; }
+
+	// skill += ((-5 * min(max(start_lives_extra, 0), 4)) + 10);
+	/**/ if(start_lives_extra == 4) { skill -= 10; }
+	else if(start_lives_extra == 3) { skill -=  5; }
+	else if(start_lives_extra == 1) { skill +=  5; }
+	else if(start_lives_extra == 0) { skill += 10; }
+
+	int group = (rand() % VERDICT_GROUPS);
+
+	// level = max((min(x, 80) + 20) / 20), 0);
+	/**/ if(skill >= 80) { level = 5; }
+	else if(skill >= 60) { level = 4; }
+	else if(skill >= 40) { level = 3; }
+	else if(skill >= 20) { level = 2; }
+	else if(skill >=  0) { level = 1; }
+	else /*          */ { level = 0; }
+
+	extern const char VERDICT_TITLE_FMT[];
+	graph_printf_fx(
+		(VERDICT_LEFT - VERDICT_TITLE_LEFT_OFFSET + VERDICT_TITLE_PADDED_W),
+		verdict_line_top(12),
+		FX_TITLE,
+		VERDICT_TITLE_FMT,
+		VERDICT_TITLES[group][level]
+	);
+}
 
 void verdict_animate_and_regist(void)
 {
@@ -133,10 +201,7 @@ void verdict_animate_and_regist(void)
 	);
 	frame_delay(50);
 
-	/* TODO: Replace with the decompiled call
-	 * 	verdict_title_calculate_and_render();
-	 * once that function is part of this translation unit */
-	_asm { push cs; call near ptr verdict_title_calculate_and_render; }
+	verdict_title_calculate_and_render();
 
 	int timeout = 0;
 	frame_delay(100);

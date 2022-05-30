@@ -921,383 +921,6 @@ loc_C198:
 		retn
 sub_C03D	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public @verdict_title_calculate_and_rend$qv
-@verdict_title_calculate_and_rend$qv proc far
-
-var_2		= word ptr -2
-
-		enter	2, 0
-		push	si
-		push	di
-		xor	si, si
-		cmp	word ptr _score+2, 26h	; '&'
-		jl	short loc_C1C6
-		jnz	short loc_C1C1
-		cmp	word ptr _score, 25A0h
-		jb	short loc_C1C6
-
-loc_C1C1:
-		add	si, 0Ah
-		jmp	short loc_C21C
-; ---------------------------------------------------------------------------
-
-loc_C1C6:
-		cmp	word ptr _score+2, 1Eh
-		jl	short loc_C1DC
-		jnz	short loc_C1D7
-		cmp	word ptr _score, 8480h
-		jb	short loc_C1DC
-
-loc_C1D7:
-		add	si, 8
-		jmp	short loc_C21C
-; ---------------------------------------------------------------------------
-
-loc_C1DC:
-		cmp	word ptr _score+2, 16h
-		jl	short loc_C1F2
-		jnz	short loc_C1ED
-		cmp	word ptr _score, 0E360h
-		jb	short loc_C1F2
-
-loc_C1ED:
-		add	si, 6
-		jmp	short loc_C21C
-; ---------------------------------------------------------------------------
-
-loc_C1F2:
-		cmp	word ptr _score+2, 0Fh
-		jl	short loc_C208
-		jnz	short loc_C203
-		cmp	word ptr _score, 4240h
-		jb	short loc_C208
-
-loc_C203:
-		add	si, 4
-		jmp	short loc_C21C
-; ---------------------------------------------------------------------------
-
-loc_C208:
-		cmp	word ptr _score+2, 7
-		jl	short loc_C21C
-		jnz	short loc_C219
-		cmp	word ptr _score, 0A120h
-		jb	short loc_C21C
-
-loc_C219:
-		add	si, 2
-
-loc_C21C:
-		cmp	word ptr _score_highest+2, 2Dh	; '-'
-		jl	short loc_C232
-		jnz	short loc_C22D
-		cmp	word ptr _score_highest, 0C6C0h
-		jb	short loc_C232
-
-loc_C22D:
-		add	si, 0Ah
-		jmp	short loc_C288
-; ---------------------------------------------------------------------------
-
-loc_C232:
-		cmp	word ptr _score_highest+2, 27h	; '''
-		jl	short loc_C248
-		jnz	short loc_C243
-		cmp	word ptr _score_highest, 0AC40h
-		jb	short loc_C248
-
-loc_C243:
-		add	si, 8
-		jmp	short loc_C288
-; ---------------------------------------------------------------------------
-
-loc_C248:
-		cmp	word ptr _score_highest+2, 21h	; '!'
-		jl	short loc_C25E
-		jnz	short loc_C259
-		cmp	word ptr _score_highest, 91C0h
-		jb	short loc_C25E
-
-loc_C259:
-		add	si, 6
-		jmp	short loc_C288
-; ---------------------------------------------------------------------------
-
-loc_C25E:
-		cmp	word ptr _score_highest+2, 1Bh
-		jl	short loc_C274
-		jnz	short loc_C26F
-		cmp	word ptr _score_highest, 7740h
-		jb	short loc_C274
-
-loc_C26F:
-		add	si, 4
-		jmp	short loc_C288
-; ---------------------------------------------------------------------------
-
-loc_C274:
-		cmp	word ptr _score_highest+2, 15h
-		jl	short loc_C288
-		jnz	short loc_C285
-		cmp	word ptr _score_highest, 5CC0h
-		jb	short loc_C288
-
-loc_C285:
-		add	si, 2
-
-loc_C288:
-		mov	ax, word ptr _continues_total
-		or	ax, word ptr _continues_total+2
-		jnz	short loc_C297
-		add	si, 1Eh
-		jmp	loc_C36C
-; ---------------------------------------------------------------------------
-
-loc_C297:
-		cmp	word ptr _continues_total+2, 0
-		jg	short loc_C2AD
-		jnz	short loc_C2A7
-		cmp	word ptr _continues_total, 2
-		ja	short loc_C2AD
-
-loc_C2A7:
-		add	si, 0Ah
-		jmp	loc_C36C
-; ---------------------------------------------------------------------------
-
-loc_C2AD:
-		cmp	word ptr _continues_total+2, 0
-		jg	short loc_C2C3
-		jnz	short loc_C2BD
-		cmp	word ptr _continues_total, 4
-		ja	short loc_C2C3
-
-loc_C2BD:
-		add	si, 8
-		jmp	loc_C36C
-; ---------------------------------------------------------------------------
-
-loc_C2C3:
-		cmp	word ptr _continues_total+2, 0
-		jg	short loc_C2D9
-		jnz	short loc_C2D3
-		cmp	word ptr _continues_total, 6
-		ja	short loc_C2D9
-
-loc_C2D3:
-		add	si, 6
-		jmp	loc_C36C
-; ---------------------------------------------------------------------------
-
-loc_C2D9:
-		cmp	word ptr _continues_total+2, 0
-		jg	short loc_C2EE
-		jnz	short loc_C2E9
-		cmp	word ptr _continues_total, 8
-		ja	short loc_C2EE
-
-loc_C2E9:
-		add	si, 4
-		jmp	short loc_C36C
-; ---------------------------------------------------------------------------
-
-loc_C2EE:
-		cmp	word ptr _continues_total+2, 0
-		jg	short loc_C303
-		jnz	short loc_C2FE
-		cmp	word ptr _continues_total, 0Ah
-		ja	short loc_C303
-
-loc_C2FE:
-		add	si, 2
-		jmp	short loc_C36C
-; ---------------------------------------------------------------------------
-
-loc_C303:
-		cmp	word ptr _continues_total+2, 0
-		jg	short loc_C315
-		jnz	short loc_C313
-		cmp	word ptr _continues_total, 0Ch
-		ja	short loc_C315
-
-loc_C313:
-		jmp	short loc_C36C
-; ---------------------------------------------------------------------------
-
-loc_C315:
-		cmp	word ptr _continues_total+2, 0
-		jg	short loc_C32A
-		jnz	short loc_C325
-		cmp	word ptr _continues_total, 0Eh
-		ja	short loc_C32A
-
-loc_C325:
-		sub	si, 2
-		jmp	short loc_C36C
-; ---------------------------------------------------------------------------
-
-loc_C32A:
-		cmp	word ptr _continues_total+2, 0
-		jg	short loc_C33F
-		jnz	short loc_C33A
-		cmp	word ptr _continues_total, 10h
-		ja	short loc_C33F
-
-loc_C33A:
-		sub	si, 4
-		jmp	short loc_C36C
-; ---------------------------------------------------------------------------
-
-loc_C33F:
-		cmp	word ptr _continues_total+2, 0
-		jg	short loc_C354
-		jnz	short loc_C34F
-		cmp	word ptr _continues_total, 12h
-		ja	short loc_C354
-
-loc_C34F:
-		sub	si, 6
-		jmp	short loc_C36C
-; ---------------------------------------------------------------------------
-
-loc_C354:
-		cmp	word ptr _continues_total+2, 0
-		jg	short loc_C369
-		jnz	short loc_C364
-		cmp	word ptr _continues_total, 14h
-		ja	short loc_C369
-
-loc_C364:
-		sub	si, 8
-		jmp	short loc_C36C
-; ---------------------------------------------------------------------------
-
-loc_C369:
-		sub	si, 0Ah
-
-loc_C36C:
-		cmp	_rank, RANK_LUNATIC
-		jnz	short loc_C378
-		add	si, 32h	; '2'
-		jmp	short loc_C39A
-; ---------------------------------------------------------------------------
-
-loc_C378:
-		cmp	_rank, RANK_HARD
-		jnz	short loc_C384
-		add	si, 1Eh
-		jmp	short loc_C39A
-; ---------------------------------------------------------------------------
-
-loc_C384:
-		cmp	_rank, RANK_NORMAL
-		jnz	short loc_C390
-		add	si, 0Ah
-		jmp	short loc_C39A
-; ---------------------------------------------------------------------------
-
-loc_C390:
-		cmp	_rank, RANK_EASY
-		jnz	short loc_C39A
-		sub	si, 0Ah
-
-loc_C39A:
-		cmp	_end_flag, 2
-		jnz	short loc_C3A4
-		add	si, 5
-
-loc_C3A4:
-		mov	al, _start_lives_extra
-		cbw
-		cmp	ax, 4
-		jnz	short loc_C3B2
-		sub	si, 0Ah
-		jmp	short loc_C3D8
-; ---------------------------------------------------------------------------
-
-loc_C3B2:
-		mov	al, _start_lives_extra
-		cbw
-		cmp	ax, 3
-		jnz	short loc_C3C0
-		sub	si, 5
-		jmp	short loc_C3D8
-; ---------------------------------------------------------------------------
-
-loc_C3C0:
-		mov	al, _start_lives_extra
-		cbw
-		cmp	ax, 1
-		jnz	short loc_C3CE
-		add	si, 5
-		jmp	short loc_C3D8
-; ---------------------------------------------------------------------------
-
-loc_C3CE:
-		cmp	_start_lives_extra, 0
-		jnz	short loc_C3D8
-		add	si, 0Ah
-
-loc_C3D8:
-		call	IRand
-		mov	bx, 3
-		cwd
-		idiv	bx
-		mov	[bp+var_2], dx
-		cmp	si, 50h	; 'P'
-		jl	short loc_C3F0
-		mov	di, 5
-		jmp	short loc_C419
-; ---------------------------------------------------------------------------
-
-loc_C3F0:
-		cmp	si, 3Ch	; '<'
-		jl	short loc_C3FA
-		mov	di, 4
-		jmp	short loc_C419
-; ---------------------------------------------------------------------------
-
-loc_C3FA:
-		cmp	si, 28h	; '('
-		jl	short loc_C404
-		mov	di, 3
-		jmp	short loc_C419
-; ---------------------------------------------------------------------------
-
-loc_C404:
-		cmp	si, 14h
-		jl	short loc_C40E
-		mov	di, 2
-		jmp	short loc_C419
-; ---------------------------------------------------------------------------
-
-loc_C40E:
-		or	si, si
-		jl	short loc_C417
-		mov	di, 1
-		jmp	short loc_C419
-; ---------------------------------------------------------------------------
-
-loc_C417:
-		xor	di, di
-
-loc_C419:
-		mov	bx, [bp+var_2]
-		imul	bx, 18h
-		mov	ax, di
-		shl	ax, 2
-		add	bx, ax
-		call	_graph_printf_fx c, 488, 384, 12h, offset aS_1, ds, word ptr _VERDICT_TITLES[bx], word ptr _VERDICT_TITLES[bx]+2 ; "%s"
-		pop	di
-		pop	si
-		leave
-		retf
-@verdict_title_calculate_and_rend$qv endp
-
 	extern @verdict_animate_and_regist$qv:proc
 fuuin_03_TEXT	ends
 
@@ -1401,6 +1024,7 @@ include th01/hiscore/regist_name[data].asm
 include th01/hardware/grppfnfx[data].asm
 include th01/hiscore/scorelod[data].asm
 include th01/hiscore/regist[data].asm
+public _VERDICT_TITLES
 _VERDICT_TITLES label dword
 		dd aB@gvguglbB@		; "　モンキー　"
 		dd aB@cRlio		; "　類人猿"
@@ -1426,24 +1050,29 @@ _ranks	dd aEasy
 		dd aNormal		; "NORMAL"
 		dd aHard		; " HARD "
 		dd aLunatic		; "LUNATIC"
+
+; Group 0
 aB@gvguglbB@	db '　モンキー　',0
 aB@cRlio	db '　類人猿',0
 aGzgvgtgsgggugx	db 'ホモサピエンス',0
 aB@tRl		db '　超人',0
 aB@sR_b@	db '　靈神　',0
 aB@r_v		db '　神を超越',0
+; Group 1
 aVioqclgqbGB	db 'お子様ゲーマー',0
 aOcf		db '似非スコアラー',0
 aGGhglgxgrgagib	db 'ミドルスコアラー',0
 aGngcgxgrgagib	db 'ハイスコアラー',0
 aGxbGpbGqbGB	db 'スーパーゲーマー',0
 aGqbGBV		db 'ゲーマーを超越',0
+; Group 2
 aXevVVViv	db '腐ったみかん',0
 aGugbgnbGavO	db 'ザックームの実',0
 aLTfvCMc	db '禁断の林檎',0
 aRvkeo		db '世界樹の葉',0
 aIitsluucr_tomo	db '黄帝九鼎神丹経',0
 aB@gagagkg	db '　アムリタ',0
+
 ; char aIris_mdt[]
 aIris_mdt	db 'iris.mdt',0
 aEd1a_grp	db 'ED1A.grp',0
@@ -1486,8 +1115,8 @@ aStage20Boss	db 'STAGE 20 BOSS',0
 aAngelOfDeathSa	db 'Angel of Death',27h,'Sariel',27h,0
 aStage20Boss_0	db 'STAGE 20 BOSS',0
 aAstralKnightKo	db 'Astral Knight ',27h,'Konngara',27h,0
-; char aS_1[]
-aS_1		db '%s',0
+public _VERDICT_TITLE_FMT
+_VERDICT_TITLE_FMT	db '%s',0
 aEasy		db ' EASY ',0
 aNormal		db 'NORMAL',0
 aHard		db ' HARD ',0

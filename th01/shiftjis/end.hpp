@@ -23,4 +23,8 @@
 static const pixel_t VERDICT_W = shiftjis_w(VERDICT_RANK "LUNATIC");
 static const pixel_t VERDICT_TITLE_LEFT_OFFSET = shiftjis_w("    ");
 static const pixel_t VERDICT_TITLE_PADDED_W = shiftjis_w(VERDICT_TITLE "    ");
+
+static const int VERDICT_GROUPS = 3;
+static const int VERDICT_LEVELS = 6;
+extern const unsigned char *VERDICT_TITLES[VERDICT_GROUPS][VERDICT_LEVELS];
 // --------------
