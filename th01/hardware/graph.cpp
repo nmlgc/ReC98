@@ -519,24 +519,22 @@ void graph_r_line(
 	vram_y_t y_vram;
 	dots16_t pixels;
 
-#define slope_x ((bottom - top) / (right - left))
-#define slope_y ((right - left) / (bottom - top))
 #define lerp(m, x) static_cast<int>(m * static_cast<float>(x))
 
-#define clip_lerp_min(low, high, lerp_point, slope, minimum) \
+#define clip_lerp_min(low, high, lerp_point, slope_dividend, minimum) \
 	if(low < minimum) { \
 		if(high < minimum) { \
 			return; \
 		} \
-		lerp_point += lerp(slope, (minimum - low)); \
+		lerp_point += lerp((slope_dividend / (high - low)), (minimum - low)); \
 		low = minimum; \
 	}
-#define clip_lerp_max(low, high, lerp_point, slope, maximum) \
+#define clip_lerp_max(low, high, lerp_point, slope_dividend, maximum) \
 	if(high > maximum) { \
 		if(low > maximum) { \
 			return; \
 		} \
-		lerp_point -= lerp(slope, (high - maximum)); \
+		lerp_point -= lerp((slope_dividend / (high - low)), (high - maximum)); \
 		high = maximum; \
 	}
 
@@ -596,10 +594,14 @@ void graph_r_line(
 		bottom = order_tmp;
 	}
 
-	clip_lerp_min(left, right, top, slope_x, 0);
-	clip_lerp_max(left, right, bottom, slope_x, (RES_X - 1));
-	clip_lerp_min(top, bottom, left, slope_y, 0);
-	clip_lerp_max(top, bottom, right, slope_y, (RES_Y - 1));
+	clip_lerp_min(left, right, top, (bottom - top), 0);
+	clip_lerp_max(left, right, bottom, (bottom - top), (RES_X - 1));
+	clip_lerp_min(top, bottom, left, (right - left), 0);
+	clip_lerp_max(top, bottom, right, (right - left), (RES_Y - 1));
+
+	// This division is safe at this point.
+	#define slope_y ((right - left) / (bottom - top))
+
 	if(bottom < 0) {
 		right += lerp(slope_y, 0 - bottom);
 		bottom = 0;
@@ -639,7 +641,7 @@ end:
 #undef unput32_at
 #undef clip_lerp_min
 #undef clip_lerp_max
-#undef slope
+#undef slope_x
 }
 /// -----------------------
 
