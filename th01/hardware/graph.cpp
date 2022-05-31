@@ -557,6 +557,14 @@ void graph_r_line(
 				grcg_put(vram_offset, pixels, 16); \
 				pixels = 0; \
 			} else { \
+				/* ZUN bug: Getting here with a [vram_offset] of 0x0000 will
+				 * cause a 4-byte write starting at 0xFFFF. On the 80286 and
+				 * later CPUs, offset overflows within an instruction are
+				 * illegal even in Real Mode, and will raise a General
+				 * Protection Fault.
+				 * As of May 2022, Anex86 is the only PC-98 emulator to
+				 * correctly replicate this behavior of real hardware,
+				 * though. */ \
 				vram_offset--; \
 				unput32_at(vram_offset); \
 			} \
@@ -630,6 +638,16 @@ void graph_r_line(
 		plot_loop(y_cur, h, y_direction, x_cur, w, 1);
 	}
 restore_last:
+	// ZUN bug: Off-by-one error, as [x_cur] and [y_cur] are one past the
+	// intended right / bottom coordinates after the plot_loop. Should have
+	// calculated [vram_offset] from [x_vram] and [y_vram] just like the
+	// plot_loop, since those values are directly updated for the next VRAM
+	// byte after a blit, and would thus be correct here as well.
+	//
+	// This way, the offset could potentially end up at [right = 640] or
+	// [bottom = -1]. Both together are not only the same as (0, 0) and thus
+	// wrap from the right edge of VRAM back to the left one, but also trigger
+	// the same General Protection Fault seen in the plot_loop itself.
 	vram_offset = vram_offset_shift(x_cur, y_cur) - 1;
 	unput32_at(vram_offset);
 end:
