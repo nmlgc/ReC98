@@ -2078,9 +2078,15 @@ void elis_main(void)
 		phase.cur.pattern = 1;
 		initial_hp_rendered = false;
 	} else if(boss_phase == 1) {
-		if(!initial_hp_rendered) {
-			initial_hp_rendered = hud_hp_increment(boss_hp, boss_phase_frame);
-		}
+		// ZUN bug: Since the fight only ends in Phase 5 at the earliest, HP
+		// subtraction in debug mode can lead to this function being called
+		// with [boss_phase_frame] being larger than the initial HP value,
+		// causing the heap corruption bug mentioned in the comment of this
+		// function. Elis starts with an even number of total HP, so this will
+		// even happen for the easiest possible case of holding ↵ Return for
+		// the first 8 frames of phase 1.
+		hud_hp_increment_render(initial_hp_rendered, boss_hp, boss_phase_frame);
+
 		phase_frame_common(1, phase_1, flash_colors);
 		if(!hit.invincible && phase_done(PHASE_1_END_HP)) {
 			phase.next(2, CHOOSE_NEW);

@@ -7,8 +7,6 @@
 
 }
 
-#include "th01/sprites/main_ptn.h"
-
 // Color #15 (1111) is always the transparent one, meaning that transparent
 // dots are 1 in all 4 bitplanes. The alpha mask therefore simply is the
 // negation of ANDing all bitplanes together. Nifty!
@@ -21,6 +19,8 @@ extern "C" {
 
 #define PTN_W 32
 #define PTN_H 32
+
+#include "th01/sprites/main_ptn.h"
 
 typedef dot_rect_t(PTN_W, PTN_H) ptn_plane_t;
 

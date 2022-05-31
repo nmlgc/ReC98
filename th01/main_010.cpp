@@ -241,7 +241,7 @@ void load_and_init_stuff_used_in_all_stages(void)
 	player_48x32.load(miko_ac2_bos);
 	ptn_load(PTN_SLOT_STG, PTN_STG_CARDFLIP_FN);
 	ptn_load(PTN_SLOT_MIKO, miko_ptn);
-	ptn_new(PTN_SLOT_BG_HUD, (PTN_BG_last - PTN_BG_first));
+	ptn_new(PTN_SLOT_BG_HUD, ((PTN_BG_last - PTN_BG_first) + 1));
 	/* TODO: Replace with the decompiled call
 	 * 	bomb_kuji_load();
 	 * once that function is part of this translation unit */

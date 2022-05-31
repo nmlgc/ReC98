@@ -5,8 +5,6 @@
 
 static const screen_x_t HP_LEFT = 128;
 static const vram_y_t HP_TOP = 48;
-#define HP_POINT_W 8
-#define HP_H 15
 /// ---------
 
 /// Foreground
@@ -80,8 +78,8 @@ static const pixel_t HP_2POINT_W = PTN_QUARTER_W;
 	(((point_divided_by_2) * HP_2POINT_W) + HP_LEFT)
 
 // As a result, this one ends up always being called twice as much (i.e., for
-// each hit point) as it needs to be (i.e., once for every 2 HP). Not *really*
-// a ZUN "bug", just slightly sloppy.
+// each hit point) as it needs to be (i.e., once for every 2 HP).
+// ZUN bug: This further limits HP_MAX to half of its value.
 #define hp_bg_snap_nth_doublepoint(point_divided_by_2) \
 	ptn_snap_quarter_8(\
 		hp_bg_left(point_divided_by_2), \
@@ -119,8 +117,13 @@ bool16 hud_hp_render(int hp_total, int func)
 	} else { // Increment
 		#define hp_cur func
 
+		// ZUN bug: [hp_cur] should be limited to (HP_MAX / 2) here to prevent
+		// heap corruption.
 		hp_bg_snap_nth_doublepoint(hp_cur);
 		hp_put(hp_cur, hp_cur);
+
+		// ZUN bug: Should be <= to ensure that the incrementing process always
+		// completes.
 		if((hp_total - 1) == hp_cur) {
 			return true;
 		}

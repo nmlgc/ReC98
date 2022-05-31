@@ -2683,9 +2683,7 @@ void sariel_main(void)
 			}
 		}
 	} else if(boss_phase == 1) {
-		if(!initial_hp_rendered) {
-			initial_hp_rendered = hud_hp_increment(boss_hp, boss_phase_frame);
-		}
+		hud_hp_increment_render(initial_hp_rendered, boss_hp, boss_phase_frame);
 		phase.frame_common(false);
 		birds_unput_update_render();
 
@@ -2887,9 +2885,7 @@ void sariel_main(void)
 			}
 		}
 	} else if(boss_phase == PHASE_FORM2) {
-		if(!initial_hp_rendered) {
-			initial_hp_rendered = hud_hp_increment(boss_hp, boss_phase_frame);
-		}
+		hud_hp_increment_render(initial_hp_rendered, boss_hp, boss_phase_frame);
 		phase.frame_common(true);
 		particles2x2_horizontal_unput_update_render(boss_phase_frame);
 
