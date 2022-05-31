@@ -71,6 +71,9 @@ Crossed-out files are identical to their version in the previous game. ONGCHK.CO
 * [`BossRush`]
 * [`th03_no_gdc_frequency_check`]: Allows TH03 to be run with the GDC clock set to 5&nbsp;MHz. The original game enforces 2.5&nbsp;MHz, but doesn't functionally require it, even on real hardware.
 * [`xJeePx`]: Code changes for xJeePx's 2014 English translation patch.
+* [`th01_critical_fixes`]: Fixes [two critical bugs in TH01]:
+  * Potential heap corruptions in the game's debug mode when decrementing boss HP by holding ↵ Return while the HP bar is still filling up.
+  * General Protection Faults when defeating bosses with diagonally moving shootout lasers on screen. These are most commonly reported for Elis or Mima, and when playing on real hardware or Anex86.
 * [`th01_orb_debug`]: Adds another line to TH01's in-game debug output, displaying the current values of the Yin-Yang Orb's physics variables.
 * [`th01_sariel_fixes`]: Fixes three sprite glitches in the [TH01 Sariel fight] that result from clear logic errors in the original code.
 * [`th03_real_hitbox`]: Renders [TH03's collision bitmap] onto both playfields. Highly unplayable.
@@ -91,6 +94,7 @@ Crossed-out files are identical to their version in the previous game. ONGCHK.CO
   * [`th04_marisa4_crash_warp`]
 
 * [`community_choice_fixes`]: Combination branch of all "obvious" bugfixes that don't affect gameplay or visuals:
+  * [`th01_critical_fixes`]
   * [`th03_no_gdc_frequency_check`]
   * [`th04_noems_crash_fix`]
 
@@ -219,11 +223,13 @@ The final executables will be put into `bin\th0?`, using the same names as the o
 [TH03's collision bitmap]: https://rec98.nmlgc.net/blog/2022-02-18
 [TH04 Kurumi Divide Error crash]: https://rec98.nmlgc.net/blog/2022-04-18
 [TH04 Stage 4 Marisa Divide Error crash]: https://rec98.nmlgc.net/blog/2022-04-18
+[two critical bugs in TH01]: https://rec98.nmlgc.net/blog/2022-05-31
 
 [`master`]: https://github.com/nmlgc/ReC98/tree/master
 [`BossRush`]: https://github.com/nmlgc/ReC98/tree/BossRush
 [`community_choice_fixes`]: https://github.com/nmlgc/ReC98/tree/community_choice_fixes
 [`mem_assign_all`]: https://github.com/nmlgc/ReC98/tree/mem_assign_all
+[`th01_critical_fixes`]: https://github.com/nmlgc/ReC98/tree/th01_critical_fixes
 [`th01_orb_debug`]: https://github.com/nmlgc/ReC98/tree/th01_orb_debug
 [`th01_sariel_fixes`]: https://github.com/nmlgc/ReC98/tree/th01_sariel_fixes
 [`th03_no_gdc_frequency_check`]: https://github.com/nmlgc/ReC98/tree/th03_no_gdc_frequency_check

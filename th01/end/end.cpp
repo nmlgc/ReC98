@@ -115,7 +115,7 @@ void verdict_title_calculate_and_render(void)
 
 	int group = (rand() % VERDICT_GROUPS);
 
-	// level = max((min(x, 80) + 20) / 20), 0);
+	// level = max((min(skill, 80) + 20) / 20), 0);
 	/**/ if(skill >= 80) { level = 5; }
 	else if(skill >= 60) { level = 4; }
 	else if(skill >= 40) { level = 3; }
