@@ -89,8 +89,7 @@ public:
 	// Directly sets [done] if the laser collides with the player.
 	void update_hittest_and_render(void);
 
-	// Tries to unblit the entire laser, but fails hilariously and potentially
-	// even crashes the game.
+	// Tries to unblit the entire laser, but fails hilariously.
 	void unput_and_reset(void) {
 		if(alive) {
 			// Two ZUN bugs here:
@@ -107,12 +106,8 @@ public:
 			//    attempt to find a line segment between those garbage
 			//    coordinates that actually falls within the boundaries of
 			//    VRAM. At best, this search fails, and the function simply
-			//    does nothing. At worst, the resulting line triggers the ZUN
-			//    bugs in graph_r_line_unput(), raising a General Protection
-			//    Fault.
-			//    The latter is exactly the cause behind potential crashes when
-			//    defeating bosses while there are diagonally moving lasers on
-			//    screen, which are most commonly reported for Elis and Mima.
+			//    does nothing. The crashes in the worst case were modded away
+			//    on this branch.
 			//
 			// So yeah, not doing anything would have been the much better
 			// choice.

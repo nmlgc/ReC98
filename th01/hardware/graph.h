@@ -77,10 +77,10 @@ void graph_r_line_patterned(
 // Recovers horizontal 32-pixel chunks along on the given arbitrary-angled line
 // from page 1. The [right] and [bottom] points are included in the line.
 //
-// ZUN bug: Will raise a General Protection Fault if it ever writes to the
-// topmost byte of VRAM, corresponding to the pixel coordinates from (0, 0) to
-// (0, 7) inclusive. Thanks to an off-by-one error, this also happens for any
-// lines ending at ((RES_X - 1), 0).
+// This branch fixes the General Protection Fault present in the original game
+// if it ever wrote to the topmost byte of VRAM, corresponding to the pixel
+// coordinates from (0, 0) to (0, 7) inclusive. The original off-by-one error
+// for any lines ending at ((RES_X - 1), 0) is preserved.
 void graph_r_line_unput(
 	screen_x_t left, vram_y_t top, screen_x_t right, vram_y_t bottom
 );

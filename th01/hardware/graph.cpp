@@ -543,7 +543,19 @@ void graph_r_line(
 
 #define unput32_at(vram_offset) { \
 	Planar<dots32_t> page1; \
-	/* Micro-optimized graph_accesspage(). */ \
+	/* Mod: Prevent 4-byte writes whose offset would overflow within the \
+	 * blitting instructions below, fixing the General Protection Fault that \
+	 * would otherwise be raised. \
+	 * Yes, it's a rather lazy fix; the *correct* one would involve a separate \
+	 * branch for blitting 3 pixels rather than 4, but that would take a lot \
+	 * of code. The 8 pixels between (24, 0) and (31, 0) inclusive are part of \
+	 * the HUD, and remain unchanged during not only the frames where the \
+	 * original faults would have occured, but during all regular gameplay. */ \
+	if(static_cast<uint16_t>(vram_offset) >= 0xFFFD) { \
+		vram_offset = 0x0000; \
+	}; \
+	/* Micro-optimized graph_accesspage(), saving enough bytes to fit the \
+	 * modded check above. */ \
 	outportb2(0xA6, 1);	VRAM_SNAP_PLANAR(page1, vram_offset, 32); \
 	outportb2(0xA6, 0);	VRAM_PUT_PLANAR(vram_offset, page1, 32); \
 }
@@ -561,14 +573,6 @@ void graph_r_line(
 				grcg_put(vram_offset, pixels, 16); \
 				pixels = 0; \
 			} else { \
-				/* ZUN bug: Getting here with a [vram_offset] of 0x0000 will
-				 * cause a 4-byte write starting at 0xFFFF. On the 80286 and
-				 * later CPUs, offset overflows within an instruction are
-				 * illegal even in Real Mode, and will raise a General
-				 * Protection Fault.
-				 * As of May 2022, Anex86 is the only PC-98 emulator to
-				 * correctly replicate this behavior of real hardware,
-				 * though. */ \
 				vram_offset--; \
 				unput32_at(vram_offset); \
 			} \
@@ -645,11 +649,6 @@ restore_last:
 	// calculated [vram_offset] from [x_vram] and [y_vram] just like the
 	// plot_loop, since those values are directly updated for the next VRAM
 	// byte after a blit, and would thus be correct here as well.
-	//
-	// This way, the offset could potentially end up at [right = 640] or
-	// [bottom = -1]. Both together are not only the same as (0, 0) and thus
-	// wrap from the right edge of VRAM back to the left one, but also trigger
-	// the same General Protection Fault seen in the plot_loop itself.
 	vram_offset = vram_offset_shift(x_cur, y_cur) - 1;
 	unput32_at(vram_offset);
 end:
@@ -660,9 +659,7 @@ end:
 		page_accessed = 0;
 
 		// The bytes we saved in total
-		_asm { nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; }
-		_asm { nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; }
-		_asm { nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; }
+		_asm { nop; nop; nop; nop; nop; nop; nop; }
 	}
 
 #undef plot_loop
