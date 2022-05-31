@@ -9,6 +9,9 @@ extern "C" {
 #include "master.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/math/clamp.hpp"
+}
+#include "decomp.hpp"
+extern "C" {
 #include "th01/hardware/egc.h"
 #include "th01/hardware/vsync.h"
 #include "th01/hardware/graph.h"
@@ -540,8 +543,9 @@ void graph_r_line(
 
 #define unput32_at(vram_offset) { \
 	Planar<dots32_t> page1; \
-	graph_accesspage_func(1);	VRAM_SNAP_PLANAR(page1, vram_offset, 32); \
-	graph_accesspage_func(0);	VRAM_PUT_PLANAR(vram_offset, page1, 32); \
+	/* Micro-optimized graph_accesspage(). */ \
+	outportb2(0xA6, 1);	VRAM_SNAP_PLANAR(page1, vram_offset, 32); \
+	outportb2(0xA6, 0);	VRAM_PUT_PLANAR(vram_offset, page1, 32); \
 }
 
 #define plot_loop(\
@@ -618,8 +622,6 @@ void graph_r_line(
 		left -= lerp(slope_y, top - (RES_Y - 1));
 		top = (RES_Y - 1);
 	}
-	graph_r_last_line_end.x = right;
-	graph_r_last_line_end.y = bottom;
 	x_cur = left;
 	y_cur = top;
 	y_direction = (top < bottom) ? 1 : -1;
@@ -653,6 +655,14 @@ restore_last:
 end:
 	if(!graph_r_unput) {
 		grcg_off_func();
+		// Mod: Preserve the side effect from graph_accesspage_func(), which we
+		// optimized out above.
+		page_accessed = 0;
+
+		// The bytes we saved in total
+		_asm { nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; }
+		_asm { nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; }
+		_asm { nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; }
 	}
 
 #undef plot_loop
