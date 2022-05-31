@@ -122,9 +122,17 @@ bool16 hud_hp_render(int hp_total, int func)
 		hp_bg_snap_nth_doublepoint(hp_cur);
 		hp_put(hp_cur, hp_cur);
 
-		// ZUN bug: Should be <= to ensure that the incrementing process always
-		// completes.
-		if((hp_total - 1) == hp_cur) {
+		// Mod: Changed == to <= to prevent the potential of the incremeting
+		// process never being done if [hp_total] runs below [hp_cur] without
+		// ever meeting it. In the context of the hud_hp_increment_render()
+		// wrapper function used in boss battles, this prevents any further
+		// calls with ([hp_cur] > (HP_MAX / 2)) and the subsequent heap
+		// corruption from trying to access unallocated .PTN slots.
+		//
+		// Sure, a complete fix would also address the ZUN bug above, but this
+		// just introduces a one-byte difference, making it appropriate for
+		// being a part of this critical bugfix branch.
+		if((hp_total - 1) <= hp_cur) {
 			return true;
 		}
 

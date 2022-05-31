@@ -1592,13 +1592,6 @@ void konngara_main(void)
 		boss_palette_snap();
 		random_seed = frame_rand;
 	} else if(boss_phase == 1) {
-		// ZUN bug: Since the fight only ends in Phase 7 at the earliest, HP
-		// subtraction in debug mode can lead to this function being called
-		// with [boss_phase_frame] being larger than the initial HP value,
-		// causing the heap corruption bug mentioned in the comment of this
-		// function. Konngara starts with an even number of total HP, so this
-		// will even happen for the easiest possible case of holding ↵ Return
-		// for the first 10 frames of phase 1.
 		hud_hp_increment_render(initial_hp_rendered, boss_hp, boss_phase_frame);
 
 		phase.frame_common(fd_track);
