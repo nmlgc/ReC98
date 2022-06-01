@@ -26,6 +26,15 @@ bool16 hud_hp_render(int hp_total, int func);
 
 // Initializes the background used for unblitting the hit point at [hp_cur]
 // (0-based), then renders this one point. Returns true if this was the last
-// hit point (([hp_total] - 1) == hp_cur), false otherwise.
+// hit point (([hp_total] - 1) <= hp_cur), false otherwise.
+//
+// ZUN bug: Will lead to heap corruption if ([hp_cur] > (HP_MAX / 2)].
 #define hud_hp_increment(hp_total, hp_cur) \
 	hud_hp_render(hp_total, hp_cur)
+
+// Renders the HP bar increment animation until [done].
+#define hud_hp_increment_render(done, hp_total, frame) { \
+	if(!done) { \
+		done = hud_hp_increment(hp_total, frame); \
+	} \
+}

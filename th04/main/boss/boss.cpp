@@ -13,7 +13,7 @@ extern "C" {
 #include "th04/gaiji/gaiji.h"
 #include "th04/math/motion.hpp"
 extern "C" {
-#include "th04/math/randring.h"
+#include "th04/math/randring.hpp"
 #include "th04/snd/snd.h"
 }
 #if (GAME == 5)
@@ -212,7 +212,7 @@ void pascal near boss_phase_next(
 	boss.phase++;
 	boss.phase_frame = 0;
 	boss.mode = 0;
-	boss.mode_change = 0;
+	boss.phase_state.patterns_seen = 0;
 	boss.hp = boss.phase_end_hp;
 	boss.phase_end_hp = next_end_hp;
 }

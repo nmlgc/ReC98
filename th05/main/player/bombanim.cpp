@@ -3,7 +3,7 @@
 #include "master.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th04/math/vector.hpp"
-#include "th04/math/randring.h"
+#include "th04/math/randring.hpp"
 #include "th04/main/playfld.hpp"
 #include "th04/main/frames.h"
 #include "th04/main/circle.hpp"
@@ -94,11 +94,11 @@ void pascal near reimu_stars_update_and_render(void)
 		while(i < REIMU_STAR_TRAILS) {
 			//  head == [0 |  8 | 16 | 24 | 30 | 36]
 			// trail == [7 | 11 | 15 | 19 | 23 | 27]
-			head->topleft.screen_x.v = (
-				randring1_next16_mod(to_sp(320.0f)) + to_sp(PLAYFIELD_LEFT)
+			head->topleft.screen_x.v = randring1_next16_mod_ge_lt_sp(
+				PLAYFIELD_LEFT, (PLAYFIELD_LEFT + 320.0f)
 			);
-			head->topleft.screen_y.v = (
-				randring1_next16_mod(to_sp(RES_Y - (REIMU_STAR_H / 2)))
+			head->topleft.screen_y.v = randring1_next16_mod_ge_lt_sp(
+				0.0f, (RES_Y - (REIMU_STAR_H / 2))
 			);
 
 			// MODDERS: REIMU_STAR_NODE_COUNT times
@@ -111,8 +111,8 @@ void pascal near reimu_stars_update_and_render(void)
 			trail--;	trail->topleft = head->topleft;
 			trail += 10; // ZUN bug
 
-			speed.v = (randring1_next16_and(to_sp(8.0f) - 1) + to_sp(10.0f));
-			angle = ((randring1_next16_mod(0x30) - 0x18) + 0x40);
+			speed.v = randring1_next16_and_ge_lt_sp(10.0f, 18.0f);
+			angle = (0x40 + randring1_next8_mod_ge_lt(-0x18, +0x18));
 
 			vector2(head->velocity.x.v, head->velocity.y.v, angle, speed);
 

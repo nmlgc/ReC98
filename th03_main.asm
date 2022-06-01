@@ -203,7 +203,7 @@ loc_9764:
 		push	offset arg0	; "mainl"
 
 loc_9770:
-		nopcall	sub_B454
+		nopcall	@GameExecl$qnxc
 
 @@ret:
 		pop	si
@@ -2371,11 +2371,10 @@ sub_B3F6	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public @GameExecl$qnxc
+@GameExecl$qnxc	proc far
 
-; int __stdcall	__far sub_B454(char *arg0)
-sub_B454	proc far
-
-_arg0		= dword	ptr  6
+@@binary_fn		= dword	ptr  6
 
 		push	bp
 		mov	bp, sp
@@ -2387,14 +2386,10 @@ _arg0		= dword	ptr  6
 		call	@mrs_free$qi pascal, 0
 		call	@mrs_free$qi pascal, 1
 		call	_game_exit
-		pushd	0
-		pushd	[bp+_arg0]	; arg0
-		pushd	[bp+_arg0]	; path
-		call	_execl
-		add	sp, 0Ch
+		call	_execl c, large [bp+@@binary_fn], large [bp+@@binary_fn], large 0
 		pop	bp
 		retf	4
-sub_B454	endp
+@GameExecl$qnxc	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================

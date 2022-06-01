@@ -4,6 +4,12 @@ typedef enum {
 	ROUTE_COUNT,
 } route_t;
 
+enum end_sequence_t {
+	ES_NONE,
+	ES_MAKAI,
+	ES_JIGOKU,
+};
+
 enum debug_mode_t {
 	DM_OFF = 0,
 	DM_TEST = 1,
@@ -28,7 +34,7 @@ typedef struct {
 	char bgm_mode; // 0 = off, 1 = FM
 	char bombs;
 	char start_lives_extra; // Add 2 for the actual number of lives
-	char end_flag; /* ZUN symbol [Strings] */
+	end_sequence_t end_flag; /* ZUN symbol [Strings] */
 	char unused_1;
 	char route;
 	char rem_lives;

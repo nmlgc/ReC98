@@ -8,7 +8,7 @@ item_splashes_render	proc near
 	push	si
 	push	di
 	mov	ah, 15
-	call	_grcg_setcolor_direct_seg1_raw
+	call	@grcg_setcolor_direct_raw$qv
 	mov	si, offset _item_splashes
 	mov	[bp+@@i], 0
 	jmp	short @@more?

@@ -1,6 +1,3 @@
-#define ENEMY_W 32
-#define ENEMY_H 32
-
 enum enemy_flag_t {
 	EF_FREE = 0,
 	EF_ALIVE = 1,

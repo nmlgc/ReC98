@@ -4,12 +4,11 @@
 #include "x86real.h"
 #include "decomp.hpp"
 #include "pc98.h"
-#include "planar.h"
 #include "th01/math/subpixel.hpp"
+#include "th04/hardware/grcg.hpp"
 #include "th04/math/motion.hpp"
 extern "C" {
 #include "th04/math/vector.hpp"
-#include "th04/hardware/grcg.h"
 #include "th04/main/scroll.hpp"
 #include "th04/main/playfld.hpp"
 #include "th04/main/drawp.hpp"
@@ -88,7 +87,10 @@ void gather_render(void)
 		}
 		if(gather->col != col_cur) {
 			col_cur = gather->col;
-			grcg_setcolor_direct_seg3(col_cur);
+			_AH = col_cur;
+			// MODDERS: Replace with grcg_setcolor_direct_inlined(), and remove
+			// the translation unit that defines this function.
+			grcg_setcolor_direct_seg3_raw();
 		}
 		for(int point_i = 0; gather->ring_points > point_i; point_i++) {
 			angle = (

@@ -74,7 +74,13 @@ void graph_r_line_patterned(
 	dots16_t pattern
 );
 
-// Recovers the pixels on the given arbitrary-angle line from page 1.
+// Recovers horizontal 32-pixel chunks along on the given arbitrary-angled line
+// from page 1. The [right] and [bottom] points are included in the line.
+//
+// This branch fixes the General Protection Fault present in the original game
+// if it ever wrote to the topmost byte of VRAM, corresponding to the pixel
+// coordinates from (0, 0) to (0, 7) inclusive. The original off-by-one error
+// for any lines ending at ((RES_X - 1), 0) is preserved.
 void graph_r_line_unput(
 	screen_x_t left, vram_y_t top, screen_x_t right, vram_y_t bottom
 );
@@ -141,11 +147,5 @@ void graph_move_byterect_interpage(
 	screen_x_t dst_left,
 	vram_y_t dst_top,
 	int src, int dst
-);
-
-// Recovers the dots set in the given [mask] from (⌊left/8⌋*8, top) to
-// (⌊(left/8) + w⌋*8, top) from VRAM page 1.
-void graph_hline_unput_masked_8(
-	screen_x_t left, vram_y_t top, dots8_t *mask, vram_byte_amount_t vram_w
 );
 /// --------

@@ -41,8 +41,13 @@ void shape_ellipse_arc_put(
 	dots8_t cache_dots = 0;
 	vram_offset_t cache_vram_offset = -1;
 
+	// ZUN bug: Leaves the GRCG activated if the return condition below is
+	// `true`. Should be done after that branch instead.
 	grcg_setcolor_rmw(col);
 
+	// Note that due to the cache, this function doesn't end up drawing
+	// anything if [angle_start] == [angle_end] either. (This actually happens
+	// in Elis' pattern_pellets_along_circle().)
 	if(angle_start > angle_end) {
 		return;
 	}

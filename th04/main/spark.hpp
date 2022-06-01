@@ -1,13 +1,52 @@
-// Adds [count] new spark sprites with the given [distance] in random
-// directions away from ([center_x], [center_y]).
+/// Spark sprites, as seen when killing enemies or grazing
+/// ------------------------------------------------------
+/// Everything here needs to be kept in sync with the ASM versions in
+/// spark.inc!
+
+enum spark_flag_t {
+	SF_FREE = 0,
+	SF_ALIVE = 1,
+};
+
+struct spark_t {
+	spark_flag_t flag;
+	unsigned char age;
+	PlayfieldMotion center;
+	// Set during sparks_init() and never again, and only involved in
+	// determining the initial velocity in sparks_add_*(). Also has no reason
+	// to be 16-bit.
+	unsigned int angle;
+};
+
+#if (GAME == 5)
+	#define SPARK_COUNT 64
+#else
+	#define SPARK_COUNT 96
+#endif
+// sparks_invalidate() and sparks_init() accidentally still this value in TH05.
+#define SPARK_COUNT_BUG 96
+
+extern spark_t sparks[SPARK_COUNT];
+
+// Byte offset of the next spark_t instance to be looked at when adding a new
+// spark. Relative to the beginning of [sparks].
+extern uint16_t spark_ring_offset;
+
+// Adds spark sprites at random distances between [radius_min] and
+// ([radius_min] + 2.0f) away from ([center_x], [center_y]), using the random
+// angles set in sparks_init(). Looks at the next [count] instances of [sparks]
+// beginning at [spark_ring_offset], and only adds new sparks in slots that
+// are currently free.
 void pascal sparks_add_random(
-	Subpixel center_x, Subpixel center_y, subpixel_t distance, int count
+	Subpixel center_x, Subpixel center_y, subpixel_t radius_min, int count
 );
 
-// Adds [count] new spark sprites along a circle with the given [distance] away
+// Adds spark sprites along a [count]-point circle at the given [radius] away
 // from ([center_x], [center_y]). Obviously ignores the random angle set in
-// sparks_init().
-void pascal sparks_add_circle(
+// sparks_init(). Looks at the next [count] instances of [sparks] beginning at
+// [spark_ring_offset], and only adds new sparks in slots that are currently
+// free.
+void pascal near sparks_add_circle(
 	Subpixel center_x, Subpixel center_y, subpixel_t distance, int count
 );
 

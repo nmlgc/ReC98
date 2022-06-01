@@ -65,6 +65,42 @@ Crossed-out files are identical to their version in the previous game. ONGCHK.CO
 
 **This project does not include any asset data from the original PC-98 releases. Running the compiled executables will still require an existing copy of the original games.**
 
+## Branches
+
+* **[`master`]: ZUN's original code, without mods or bugfixes**
+* [`BossRush`]
+* [`th03_no_gdc_frequency_check`]: Allows TH03 to be run with the GDC clock set to 5&nbsp;MHz. The original game enforces 2.5&nbsp;MHz, but doesn't functionally require it, even on real hardware.
+* [`xJeePx`]: Code changes for xJeePx's 2014 English translation patch.
+* [`th01_orb_debug`]: Adds another line to TH01's in-game debug output, displaying the current values of the Yin-Yang Orb's physics variables.
+* [`th01_sariel_fixes`]: Fixes three sprite glitches in the [TH01 Sariel fight] that result from clear logic errors in the original code.
+* [`th03_real_hitbox`]: Renders [TH03's collision bitmap] onto both playfields. Highly unplayable.
+
+* Fixes for the [TH04 Stage 5 Yuuka No-EMS crash]:
+  * [`th04_noems_crash_fix`]: Increases the self-imposed memory limit of TH04's `MAIN.EXE` by just the right amount to fix that one crash.
+  * [`mem_assign_all`]: Removes the self-imposed memory limits in all TH02-TH05 executables, additionally fixing other potential out-of-memory crashes that may occur during modding.
+
+* Workarounds for the [TH04 Kurumi Divide Error crash]:
+  * [`th04_0_ring_ignore`]
+  * [`th04_0_ring_as_single_bullet`]
+  * [`th04_0_ring_as_cap_bullets`]
+  * [`th04_0_ring_as_gameover`]
+
+* Workarounds for the [TH04 Stage 4 Marisa Divide Error crash]:
+  * [`th04_marisa4_crash_still`]
+  * [`th04_marisa4_crash_move`]
+  * [`th04_marisa4_crash_warp`]
+
+* [`community_choice_fixes`]: Combination branch of all "obvious" bugfixes that don't affect gameplay or visuals:
+  * [`th03_no_gdc_frequency_check`]
+  * [`th04_noems_crash_fix`]
+
+  Plus the following workarounds for TH04's `Divide Error` bugs, chosen by community vote:
+
+  * [`th04_0_ring_as_single_bullet`] ([poll results](https://twitter.com/ReC98Project/status/1512941767162798090))
+  * [`th04_marisa4_crash_still`] ([poll results](https://twitter.com/ReC98Project/status/1515018996885688325))
+
+----
+
 ## Building
 
 ### Required tools
@@ -174,5 +210,30 @@ The final executables will be put into `bin\th0?`, using the same names as the o
 
 [indistinguishable]: https://github.com/nmlgc/mzdiff
 [can't be decompiled]: Research/Borland%20C++%20decompilation.md#limits-of-decompilability
+[conventional memory]: https://en.wikipedia.org/wiki/Conventional_memory
 [converter for hardcoded sprites]: https://github.com/nmlgc/ReC98/issues/8
 [Borland/Embarcadero's own C++ 7.30]: https://www.embarcadero.com/de/free-tools/ccompiler/free-download
+
+[TH04 Stage 5 Yuuka No-EMS crash]: https://rec98.nmlgc.net/blog/2021-11-29
+[TH01 Sariel fight]: https://rec98.nmlgc.net/blog/2022-01-31
+[TH03's collision bitmap]: https://rec98.nmlgc.net/blog/2022-02-18
+[TH04 Kurumi Divide Error crash]: https://rec98.nmlgc.net/blog/2022-04-18
+[TH04 Stage 4 Marisa Divide Error crash]: https://rec98.nmlgc.net/blog/2022-04-18
+
+[`master`]: https://github.com/nmlgc/ReC98/tree/master
+[`BossRush`]: https://github.com/nmlgc/ReC98/tree/BossRush
+[`community_choice_fixes`]: https://github.com/nmlgc/ReC98/tree/community_choice_fixes
+[`mem_assign_all`]: https://github.com/nmlgc/ReC98/tree/mem_assign_all
+[`th01_orb_debug`]: https://github.com/nmlgc/ReC98/tree/th01_orb_debug
+[`th01_sariel_fixes`]: https://github.com/nmlgc/ReC98/tree/th01_sariel_fixes
+[`th03_no_gdc_frequency_check`]: https://github.com/nmlgc/ReC98/tree/th03_no_gdc_frequency_check
+[`th03_real_hitbox`]: https://github.com/nmlgc/ReC98/tree/real_hitbox
+[`th04_0_ring_as_cap_bullets`]: https://github.com/nmlgc/ReC98/tree/th04_0_ring_as_cap_bullets
+[`th04_0_ring_as_gameover`]: https://github.com/nmlgc/ReC98/tree/th04_0_ring_as_gameover
+[`th04_0_ring_as_single_bullet`]: https://github.com/nmlgc/ReC98/tree/th04_0_ring_as_single_bullet
+[`th04_0_ring_ignore`]: https://github.com/nmlgc/ReC98/tree/th04_0_ring_ignore
+[`th04_marisa4_crash_move`]: https://github.com/nmlgc/ReC98/tree/th04_marisa4_crash_move
+[`th04_marisa4_crash_still`]: https://github.com/nmlgc/ReC98/tree/th04_marisa4_crash_still
+[`th04_marisa4_crash_warp`]: https://github.com/nmlgc/ReC98/tree/th04_marisa4_crash_warp
+[`th04_noems_crash_fix`]: https://github.com/nmlgc/ReC98/tree/th04_noems_crash_fix
+[`xJeePx`]: https://github.com/nmlgc/ReC98/tree/xJeePx

@@ -160,6 +160,10 @@ struct bullet_t {
 static const subpixel_t BULLET_KILLBOX_W = TO_SP(8);
 static const subpixel_t BULLET_KILLBOX_H = TO_SP(8);
 
+#ifdef BULLET_D_CELS
+	static const unsigned char ANGLE_PER_SPRITE = (0x80 / BULLET_D_CELS);
+#endif
+
 #if GAME == 5
 # define PELLET_COUNT 180
 # define BULLET16_COUNT 220
@@ -169,8 +173,8 @@ static const subpixel_t BULLET_KILLBOX_H = TO_SP(8);
 // is technically not restricted to `main_patnum_t` in TH05 and can also be
 // used for a general (angle / BULLET_D_CELS) division, it still assumes
 // [patnum_base] to be that type in order to distinguish vector bullets.
-unsigned char pascal near bullet_patnum_for_angle(
-	int patnum_base, unsigned char angle
+extern "C++" unsigned char pascal near bullet_patnum_for_angle(
+	unsigned int patnum_base, unsigned char angle
 );
 
 // Turns every 4th bullet into a point item when zapping bullets.
@@ -200,37 +204,6 @@ extern union {
 	SubpixelLength8 speed_delta;
 } bullet_special_motion;
 
-/// Rendering
-/// ---------
-union pellet_render_t {
-	struct {
-		screen_x_t left;
-		vram_y_t top;
-	} top;
-	struct {
-		vram_offset_t vram_offset;
-		uint16_t sprite_offset;
-	} bottom;
-};
-
-#if (GAME == 5)
-	// Separate render list for pellets during their delay cloud stage.
-	extern int pellet_clouds_render_count;
-	extern bullet_t near *pellet_clouds_render[PELLET_COUNT];
-#endif
-
-extern int pellets_render_count;
-extern pellet_render_t pellets_render[PELLET_COUNT];
-
-// Renders the top and bottom part of all pellets, as per [pellets_render] and
-// [pellets_render_count]. Assumptions:
-// • ES is already be set to the beginning of a VRAM segment
-// • The GRCG is active, and set to the intended color
-// • pellets_render_top() is called before pellets_render_bottom()
-void near pellets_render_top();
-void near pellets_render_bottom();
-/// ---------
-
 /// Template
 /// --------
 struct bullet_template_t {
@@ -246,6 +219,34 @@ struct bullet_template_t {
 	SubpixelLength8 stack_speed_delta;
 	unsigned char angle;
 	SubpixelLength8 speed;
+
+	void set_spread(unsigned char count, unsigned char angle_delta) {
+		// MODDERS: Just assign the values regularly, and don't rely on the
+		// physical layout of the structure.
+		reinterpret_cast<uint16_t &>(spread) = ((angle_delta << 8) | count);
+	}
+
+	#ifdef RANK_H
+		void set_stack_for_rank(
+			unsigned char count_for_easy,
+			unsigned char count_for_normal,
+			unsigned char count_for_hard,
+			unsigned char count_for_lunatic,
+			subpixel_length_8_t speed_delta_for_easy,
+			subpixel_length_8_t speed_delta_for_normal,
+			subpixel_length_8_t speed_delta_for_hard,
+			subpixel_length_8_t speed_delta_for_lunatic
+		) {
+			// MODDERS: Just assign the values regularly, and don't rely on the
+			// physical layout of the structure.
+			reinterpret_cast<uint16_t &>(stack) = select_for_rank(
+				((count_for_easy << 8) | speed_delta_for_easy),
+				((count_for_normal << 8) | speed_delta_for_normal),
+				((count_for_hard << 8) | speed_delta_for_hard),
+				((count_for_lunatic << 8) | speed_delta_for_lunatic)
+			);
+		}
+	#endif
 #else
 	PlayfieldPoint velocity;
 	bullet_group_t group;

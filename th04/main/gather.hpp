@@ -58,6 +58,12 @@ struct gather_template_t {
 extern gather_t gather_circles[GATHER_COUNT];
 extern gather_template_t gather_template;
 
+inline void gather_template_init(void) {
+	gather_template.radius.set(GATHER_RADIUS_START);
+	gather_template.angle_delta = 0x02;
+	gather_template.ring_points = 8;
+}
+
 // Adds a gather circle based on the current global [gather_template], with a
 // copy of the current global [bullet_template]. These bullets will be fired
 // once the new circle's radius reaches GATHER_RADIUS_END.
@@ -72,7 +78,7 @@ void near gather_add_only(void);
 // [frame] 0, 2, and 4, respectively, using the given colors. Will do nothing
 // for any other value of [frame].
 void pascal near gather_add_only_3stack(
-	int frame, uint4_t col_for_0, uint4_t col_for_2_and_4
+	int frame, int col_for_0, int col_for_2_and_4
 );
 
 // Blits the gather point sprite to ([left], [top]). Assumptions:

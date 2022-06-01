@@ -20,6 +20,13 @@ static const int TIMER_DIGITS = 4;
 static const int MISS_EFFECT_CELS = 2;
 static const int DASH_CELS = 2;
 
+#define HP_POINT_W 8
+#define HP_H 15
+
+// ZUN bug: The actual limit is half of this number, due to another ZUN bug in
+// hud_hp_render().
+static const int HP_MAX = 96;
+
 typedef enum {
 	PTN_SLOT_STG = 0, // stg(_b).ptn
 	PTN_SLOT_MIKO = 1, // miko.ptn
@@ -118,6 +125,10 @@ typedef enum {
 	PTN_BG_TIMER_last = last_for_quarters(PTN_BG_TIMER, (TIMER_DIGITS / 2)),
 
 	PTN_BG_HP,
-	PTN_BG_last = PTN_ID(PTN_SLOT_BG_HUD, 26)
+	PTN_BG_HP_last = (PTN_BG_HP + (
+		(HP_MAX / ((PTN_W * PTN_H) / (HP_POINT_W * HP_H)))
+	) - 1),
+
+	PTN_BG_last = PTN_BG_HP_last,
 	// -------------------------
 } main_ptn_id_t;

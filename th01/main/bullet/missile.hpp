@@ -48,6 +48,13 @@ public:
 		ptn_id_base = PTN_ID(slot, 0);
 	}
 
+	// Spawns a new missile if there is a free slot left. [velocity_x] and
+	// [velocity_y] are limited to Subpixel resolution.
+	void add(
+		screen_x_t left, screen_x_t top, double velocity_x, double velocity_y,
+		int8_t unknown = 0
+	);
+
 	void reset(void);
 	void unput_update_render(void);
 };

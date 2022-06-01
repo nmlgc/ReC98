@@ -1,17 +1,6 @@
 /// TRAM text overlaid on top of the playfield
 /// -------------------------------------------
 
-/// Quite an awkward micro-optimization: The two overlay function pointers are
-/// `near`, despite the fact that we also have to set them from outside the
-/// group where the target functions are defined in. The only known way of
-/// achieving this in Turbo C++ 4.0J involves lying to the compiler about the
-/// true distance of the function. That's also why we can't correctly declare
-/// some of the target functions at global scope.
-#define set_nearfunc_ptr_to_farfunc(ptr, func) { \
-	void pascal far func(void); \
-	ptr = reinterpret_cast<nearfunc_t_near>(func); \
-}
-
 extern nearfunc_t_near overlay1; // Rendered first
 extern nearfunc_t_near overlay2; // Rendered second
 
@@ -31,6 +20,8 @@ void near overlay_black(void);
 		(OVERLAY_FADE_CELS + 1) * OVERLAY_FADE_INTERVAL
 	);
 #endif
+
+#include "decomp.hpp"
 
 // Shows the fade-in effect, followed by either the stage or BGM title or the
 // blinking DEMO PLAY text.

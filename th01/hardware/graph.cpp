@@ -9,6 +9,9 @@ extern "C" {
 #include "master.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/math/clamp.hpp"
+}
+#include "decomp.hpp"
+extern "C" {
 #include "th01/hardware/egc.h"
 #include "th01/hardware/vsync.h"
 #include "th01/hardware/graph.h"
@@ -519,31 +522,42 @@ void graph_r_line(
 	vram_y_t y_vram;
 	dots16_t pixels;
 
-#define slope_x ((bottom - top) / (right - left))
-#define slope_y ((right - left) / (bottom - top))
 #define lerp(m, x) static_cast<int>(m * static_cast<float>(x))
 
-#define clip_lerp_min(low, high, lerp_point, slope, minimum) \
+#define clip_lerp_min(low, high, lerp_point, slope_dividend, minimum) \
 	if(low < minimum) { \
 		if(high < minimum) { \
 			return; \
 		} \
-		lerp_point += lerp(slope, (minimum - low)); \
+		lerp_point += lerp((slope_dividend / (high - low)), (minimum - low)); \
 		low = minimum; \
 	}
-#define clip_lerp_max(low, high, lerp_point, slope, maximum) \
+#define clip_lerp_max(low, high, lerp_point, slope_dividend, maximum) \
 	if(high > maximum) { \
 		if(low > maximum) { \
 			return; \
 		} \
-		lerp_point -= lerp(slope, (high - maximum)); \
+		lerp_point -= lerp((slope_dividend / (high - low)), (high - maximum)); \
 		high = maximum; \
 	}
 
 #define unput32_at(vram_offset) { \
 	Planar<dots32_t> page1; \
-	graph_accesspage_func(1);	VRAM_SNAP_PLANAR(page1, vram_offset, 32); \
-	graph_accesspage_func(0);	VRAM_PUT_PLANAR(vram_offset, page1, 32); \
+	/* Mod: Prevent 4-byte writes whose offset would overflow within the \
+	 * blitting instructions below, fixing the General Protection Fault that \
+	 * would otherwise be raised. \
+	 * Yes, it's a rather lazy fix; the *correct* one would involve a separate \
+	 * branch for blitting 3 pixels rather than 4, but that would take a lot \
+	 * of code. The 8 pixels between (24, 0) and (31, 0) inclusive are part of \
+	 * the HUD, and remain unchanged during not only the frames where the \
+	 * original faults would have occured, but during all regular gameplay. */ \
+	if(static_cast<uint16_t>(vram_offset) >= 0xFFFD) { \
+		vram_offset = 0x0000; \
+	}; \
+	/* Micro-optimized graph_accesspage(), saving enough bytes to fit the \
+	 * modded check above. */ \
+	outportb2(0xA6, 1);	VRAM_SNAP_PLANAR(page1, vram_offset, 32); \
+	outportb2(0xA6, 0);	VRAM_PUT_PLANAR(vram_offset, page1, 32); \
 }
 
 #define plot_loop(\
@@ -596,10 +610,14 @@ void graph_r_line(
 		bottom = order_tmp;
 	}
 
-	clip_lerp_min(left, right, top, slope_x, 0);
-	clip_lerp_max(left, right, bottom, slope_x, (RES_X - 1));
-	clip_lerp_min(top, bottom, left, slope_y, 0);
-	clip_lerp_max(top, bottom, right, slope_y, (RES_Y - 1));
+	clip_lerp_min(left, right, top, (bottom - top), 0);
+	clip_lerp_max(left, right, bottom, (bottom - top), (RES_X - 1));
+	clip_lerp_min(top, bottom, left, (right - left), 0);
+	clip_lerp_max(top, bottom, right, (right - left), (RES_Y - 1));
+
+	// This division is safe at this point.
+	#define slope_y ((right - left) / (bottom - top))
+
 	if(bottom < 0) {
 		right += lerp(slope_y, 0 - bottom);
 		bottom = 0;
@@ -608,8 +626,6 @@ void graph_r_line(
 		left -= lerp(slope_y, top - (RES_Y - 1));
 		top = (RES_Y - 1);
 	}
-	graph_r_last_line_end.x = right;
-	graph_r_last_line_end.y = bottom;
 	x_cur = left;
 	y_cur = top;
 	y_direction = (top < bottom) ? 1 : -1;
@@ -628,18 +644,29 @@ void graph_r_line(
 		plot_loop(y_cur, h, y_direction, x_cur, w, 1);
 	}
 restore_last:
+	// ZUN bug: Off-by-one error, as [x_cur] and [y_cur] are one past the
+	// intended right / bottom coordinates after the plot_loop. Should have
+	// calculated [vram_offset] from [x_vram] and [y_vram] just like the
+	// plot_loop, since those values are directly updated for the next VRAM
+	// byte after a blit, and would thus be correct here as well.
 	vram_offset = vram_offset_shift(x_cur, y_cur) - 1;
 	unput32_at(vram_offset);
 end:
 	if(!graph_r_unput) {
 		grcg_off_func();
+		// Mod: Preserve the side effect from graph_accesspage_func(), which we
+		// optimized out above.
+		page_accessed = 0;
+
+		// The bytes we saved in total
+		_asm { nop; nop; nop; nop; nop; nop; nop; }
 	}
 
 #undef plot_loop
 #undef unput32_at
 #undef clip_lerp_min
 #undef clip_lerp_max
-#undef slope
+#undef slope_x
 }
 /// -----------------------
 

@@ -362,13 +362,13 @@ bool16 pascal near bullet_velocity_and_angle_set(int group_i)
 		goto no_aim;
 	case BG_RANDOM_ANGLE_AND_SPEED:
 		angle = randring2_next16();
-		speed += randring2_next16_and(to_sp(2.0f) - 1);
+		speed += randring2_next8_and_ge_lt_sp(0.0f, 2.0f);
 		if(last_bullet_in_group(group_i)) {
 			done = true;
 		}
 		goto no_aim;
 	case BG_RANDOM_CONSTRAINED_ANGLE_AIMED:
-		angle = randring2_next16_and(0x1F);
+		angle = randring2_next16_and_ge_lt(0x00, 0x20);
 		angle -= 0x10;
 		if(last_bullet_in_group(group_i)) {
 			done = true;
@@ -422,8 +422,6 @@ void near bullet_template_speedtune_for_playperf(void)
 	}
 	bullet_template.speed.v = speed;
 }
-
-static const unsigned char ANGLE_PER_SPRITE = (0x80 / BULLET_D_CELS);
 
 unsigned char pascal near bullet_patnum_for_angle(unsigned char angle)
 {

@@ -14,11 +14,11 @@ extern "C" {
 #include "th01/hardware/graph.h"
 #include "th01/hardware/palette.h"
 #include "th01/hardware/vsync.h"
-#include "th01/end/type.h"
 }
+#include "th01/end/type.hpp"
 
 #define TYPE_DELAY 3
-#define TYPE_FX (15 | FX_WEIGHT_NORMAL)
+static const int TYPE_FX = (COL_TYPE | FX_WEIGHT_NORMAL);
 
 #define TONE_STEP_PER_FRAME 5
 
@@ -102,34 +102,31 @@ void pascal grp_palette_white_in(unsigned int frames)
 }
 /// ------------------
 
+}
+
 #pragma option -O-
 
-void pascal graph_type_ank(
+void pascal graph_type_ank_n(
 	screen_x_t left, vram_y_t top, int len, const char *str
 )
 {
-	extern const char graph_type_ank_fmt[];
 	for(int i = 0; i < len; i++) {
 		graph_printf_fx(
-			left + (i * GLYPH_HALF_W), top, TYPE_FX,
-			graph_type_ank_fmt, str[i]
+			left + (i * GLYPH_HALF_W), top, TYPE_FX, "%c", str[i]
 		);
 		frame_delay(TYPE_DELAY);
 	}
 }
 
-void pascal graph_type_kanji(
+void pascal graph_type_kanji_n(
 	screen_x_t left, vram_y_t top, int len, const char *str
 )
 {
-	extern const char graph_type_kanji_fmt[];
 	for(int i = 0; i < len; i++) {
 		graph_printf_fx(
 			left + (i * GLYPH_FULL_W), top, TYPE_FX,
-			graph_type_kanji_fmt, str[(2 * i) + 0], str[(2 * i) + 1]
+			"%c%c", str[(2 * i) + 0], str[(2 * i) + 1]
 		);
 		frame_delay(TYPE_DELAY);
 	}
-}
-
 }

@@ -1,3 +1,4 @@
+#include "th02/formats/bfnt.h"
 #include "th04/sprites/cels.h"
 
 #define PARTICLE_W 16
@@ -7,9 +8,22 @@
 #define B4BALL_CELS 4
 #define B4_CELS 16
 
+/// Sprite sizes
+/// ------------
+// st05.bb*
+// --------
+static const pixel_t SHINKI_WING_W = 256;
+static const pixel_t SHINKI_WING_H = 96;
+// --------
+/// ------------
+
 /// Pattern numbers for the super_*() functions.
 /// Since super_entry_bfnt() doesn't take a "start patnum" parameter, the
 /// order in which the files are loaded has to match the order here.
+///
+/// Ranges between TINY_[ID]_START and TINY_[ID]_END are converted to
+/// master.lib's "tiny" format on load time, and must be blitted using the
+/// *_tiny*() functions.
 typedef enum {
 	/// Stage-independent
 	/// =================
@@ -82,6 +96,15 @@ typedef enum {
 	// ---------------------
 	/// =================
 
+	/// Stage 1
+	/// =======
+	// st01.bft
+	// --------
+	PAT_MIDBOSS1 = 204,
+	PAT_MIDBOSS1_last = (PAT_MIDBOSS1 + ENEMY_CELS - 1),
+	// --------
+	/// =======
+
 	/// Stage 4
 	/// =======
 	// st03.bb1 / st03.bb2
@@ -90,7 +113,7 @@ typedef enum {
 	// They are only differentiated inside the rendering function, by adding
 	// B4_CELS onto the patnum for Yuki. Thus, both files are assumed to have
 	// the same number of sprites.
-	PAT_MAI,
+	PAT_MAI = 180,
 	PAT_B4_STILL = PAT_MAI,
 	PAT_B4_RIGHT,
 	PAT_B4_LEFT,
@@ -124,14 +147,45 @@ typedef enum {
 
 	/// Stage 6
 	/// =======
+	// st05.bb1
+	// --------
+	PAT_SHINKI_STILL = 180,
+	PAT_SHINKI_CAST,
+	PAT_SHINKI_RIGHT,
+	PAT_SHINKI_LEFT,
+	// --------
+	// st05.bb2
+	// --------
+	PAT_SHINKI_WINGS_WHITE,
+	PAT_SHINKI_WINGS_WHITE_last = (
+		PAT_SHINKI_WINGS_WHITE + bfnt_parts_x(SHINKI_WING_W) - 1
+	),
+	PAT_SHINKI_WINGS_WHITE_HIT,
+	PAT_SHINKI_WINGS_WHITE_HIT_last = (
+		PAT_SHINKI_WINGS_WHITE_HIT + bfnt_parts_x(SHINKI_WING_W) - 1
+	),
+	// --------
+	// st05.bb3
+	// --------
+	PAT_SHINKI_WINGS_PURPLE,
+	PAT_SHINKI_WINGS_PURPLE_last = (
+		PAT_SHINKI_WINGS_PURPLE + bfnt_parts_x(SHINKI_WING_W) - 1
+	),
+	PAT_SHINKI_WINGS_PURPLE_HIT,
+	PAT_SHINKI_WINGS_PURPLE_HIT_last = (
+		PAT_SHINKI_WINGS_PURPLE_HIT + bfnt_parts_x(SHINKI_WING_W) - 1
+	),
+	// --------
 	// st05.bb4
 	// --------
-	PAT_B6BALL_BLUE_1 = 200,
+	TINY_B6BALL_START,
+	PAT_B6BALL_BLUE_1 = TINY_B6BALL_START,
 	PAT_B6BALL_PURPLE,
 	PAT_B6BALL_BLUE_2,
 	PAT_B6BALL_BLUE_3,
 	PAT_DECAY_B6BALL,
 	PAT_DECAY_B6BALL_last = (PAT_DECAY_B6BALL + BULLET_DECAY_CELS - 1),
+	TINY_B6BALL_END,
 	/// -------
 	/// =======
 

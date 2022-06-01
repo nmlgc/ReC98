@@ -17,9 +17,6 @@ inline double gravity_for(const double& force)
 	asm { mov 	[bp-2], ax; } \
 	asm { fild	word ptr [bp-2]; } \
 	asm { fadd	force; } \
-
-// Neither WAIT nor FWAIT emit the emulated WAIT we want...
-#define FWAIT db 0xCD, 0x3D;
 /// ----------------------------------
 
 int orb_velocity_y_update(void)
@@ -45,7 +42,7 @@ int orb_velocity_y_update(void)
 		fld  	orb_velocity_y;
 		fcomp	ORB_VELOCITY_Y_MAX;
 		fstsw	[bp-2];
-		FWAIT;
+		FWAIT_EMU;
 		mov  	ax, [bp-2];
 		sahf;
 		jbe  	min_velocity_check;
@@ -57,7 +54,7 @@ min_velocity_check:
 		fld 	ORB_VELOCITY_Y_MIN;
 set_velocity:
 		fstp	orb_velocity_y;
-		FWAIT;
+		FWAIT_EMU;
 	}
 	return gravity_for(orb_force);
 }
@@ -99,7 +96,7 @@ void orb_force_new(double immediate, orb_force_t force)
 			fdiv	ORB_FORCE_2_0;
 			fadd	ORB_FORCE_SHOT_BASE;
 			fstp	orb_force;
-			FWAIT;
+			FWAIT_EMU;
 		}
 	}
 	if(force == OF_IMMEDIATE) {

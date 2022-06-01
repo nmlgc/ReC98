@@ -5,7 +5,6 @@
 
 #pragma option -O- -1 -Z-
 
-extern "C" {
 #include <stdio.h>
 #include "platform.h"
 #include "master.hpp"
@@ -15,7 +14,7 @@ extern "C" {
 
 #undef RES_ID
 
-bool16 end_init(void)
+extern "C" bool16 end_init(void)
 {
 	int i;
 	#define RES_ID RES_ID_0
@@ -66,7 +65,7 @@ bool16 end_resident_clear(void)
 		resident_t* resident = sgm;
 		resident->score = 0;
 		resident->continues_total = 0;
-		resident->end_flag = 0;
+		resident->end_flag = ES_NONE;
 		resident->score_highest = 0;
 		for(i = 0; i < SCENE_COUNT; i++) {
 			resident->continues_per_scene[i] = 0;
@@ -74,6 +73,4 @@ bool16 end_resident_clear(void)
 		resident->stage = 0;
 	}
 	return true;
-}
-
 }

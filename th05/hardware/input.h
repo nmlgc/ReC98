@@ -1,7 +1,5 @@
 #include "th04/hardware/inputvar.h"
 
-#define INPUT_REPLAY_END (~INPUT_MOVEMENT)
-
 // Resets, updates, and returns [key_det].
 int16_t input_reset_sense();
 

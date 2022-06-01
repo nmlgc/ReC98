@@ -1,7 +1,6 @@
 /// Jigoku Stage 20 Boss - Konngara
 /// -------------------------------
 
-extern "C" {
 #include <stddef.h>
 #include <stdio.h>
 #include "platform.h"
@@ -13,15 +12,19 @@ extern "C" {
 #include "th01/math/area.hpp"
 #include "th01/math/overlap.hpp"
 #include "th01/math/subpixel.hpp"
+extern "C" {
 #include "th01/math/vector.hpp"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/palette.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/egc.h"
+}
 #include "th01/hardware/scrollup.hpp"
 #include "th01/hardware/input.hpp"
 #include "th01/hardware/text.h"
+extern "C" {
 #include "th01/snd/mdrv2.h"
+#include "th01/main/entity.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/formats/grp.h"
 #include "th01/formats/grz.h"
@@ -35,6 +38,7 @@ extern "C" {
 #include "th01/main/boss/entity_a.hpp"
 #include "th01/main/stage/palette.hpp"
 }
+#include "th01/hardware/egcrows.hpp"
 #include "th01/main/stage/stageobj.hpp"
 #include "th01/main/shape.hpp"
 #include "th01/main/player/player.hpp"
@@ -101,8 +105,6 @@ static const pixel_t SLASH_DISTANCE_5_TO_6_X = (
 static const pixel_t SLASH_DISTANCE_5_TO_6_Y = (
 	SLASH_5_CORNER_Y - SWORD_CENTER_Y
 );
-
-#define RAIN_G to_sp(0.0625f) /* Rain gravity */
 // ----------------
 
 static union {
@@ -544,27 +546,23 @@ void slash_put(int image)
 
 void pattern_diamond_cross_to_edges_followed_by_rain(void)
 {
-	#define DIAMOND_COUNT 4
 	#define DIAMOND_ORIGIN_X (PLAYFIELD_CENTER_X - (DIAMOND_W / 2))
 	#define DIAMOND_ORIGIN_Y (PLAYFIELD_CENTER_Y + (DIAMOND_H / 2))
 
 	int i;
 
-	static struct {
-		pixel_t velocity_bottomleft_x, velocity_topleft_x;
-		pixel_t velocity_bottomleft_y, velocity_topleft_y;
-		screen_x_t left[DIAMOND_COUNT];
-		screen_y_t top[DIAMOND_COUNT];
-	} diamonds;
+	static pixel_t velocity_bottomleft_x, velocity_topleft_x;
+	static pixel_t velocity_bottomleft_y, velocity_topleft_y;
+	static CEntities<4> diamonds;
 	static int frames_with_diamonds_at_edges;
 
 	#define diamonds_unput(i) \
-		for(i = 0; i < DIAMOND_COUNT; i++) { \
+		for(i = 0; i < diamonds.count(); i++) { \
 			shape8x8_sloppy_unput(diamonds.left[i], diamonds.top[i]); \
 		}
 
 	#define diamonds_put(i) \
-		for(i = 0; i < DIAMOND_COUNT; i++) { \
+		for(i = 0; i < diamonds.count(); i++) { \
 			shape8x8_diamond_put(diamonds.left[i], diamonds.top[i], 9); \
 		}
 
@@ -585,17 +583,17 @@ void pattern_diamond_cross_to_edges_followed_by_rain(void)
 		vector2_between(
 			DIAMOND_ORIGIN_X, DIAMOND_ORIGIN_Y,
 			PLAYFIELD_LEFT, player_center_y(),
-			diamonds.velocity_bottomleft_x, diamonds.velocity_bottomleft_y,
+			velocity_bottomleft_x, velocity_bottomleft_y,
 			7
 		);
 		vector2_between(
 			DIAMOND_ORIGIN_X, DIAMOND_ORIGIN_Y,
 			PLAYFIELD_LEFT, PLAYFIELD_TOP,
-			diamonds.velocity_topleft_x, diamonds.velocity_topleft_y,
+			velocity_topleft_x, velocity_topleft_y,
 			7
 		);
 
-		for(i = 0; i < DIAMOND_COUNT; i++) {
+		for(i = 0; i < diamonds.count(); i++) {
 			diamonds.left[i] = DIAMOND_ORIGIN_X;
 			diamonds.top[i] = DIAMOND_ORIGIN_Y;
 		}
@@ -609,14 +607,14 @@ void pattern_diamond_cross_to_edges_followed_by_rain(void)
 		mdrv2_se_play(12);
 	} else if(diamonds.left[0] > PLAYFIELD_LEFT) {
 		diamonds_unput(i);
-		diamonds.left[0] += diamonds.velocity_bottomleft_x;
-		diamonds.top[0]  += diamonds.velocity_bottomleft_y;
-		diamonds.left[1] -= diamonds.velocity_bottomleft_x;
-		diamonds.top[1]  += diamonds.velocity_bottomleft_y;
-		diamonds.left[2] += diamonds.velocity_topleft_x;
-		diamonds.top[2]  += diamonds.velocity_topleft_y;
-		diamonds.left[3] -= diamonds.velocity_topleft_x;
-		diamonds.top[3]  += diamonds.velocity_topleft_y;
+		diamonds.left[0] += velocity_bottomleft_x;
+		diamonds.top[0]  += velocity_bottomleft_y;
+		diamonds.left[1] -= velocity_bottomleft_x;
+		diamonds.top[1]  += velocity_bottomleft_y;
+		diamonds.left[2] += velocity_topleft_x;
+		diamonds.top[2]  += velocity_topleft_y;
+		diamonds.left[3] -= velocity_topleft_x;
+		diamonds.top[3]  += velocity_topleft_y;
 		if(diamonds.left[0] <= PLAYFIELD_LEFT) {
 			diamonds.left[0] = PLAYFIELD_LEFT;
 			diamonds.left[2] = PLAYFIELD_LEFT;
@@ -697,7 +695,6 @@ void pattern_diamond_cross_to_edges_followed_by_rain(void)
 	#undef diamonds
 	#undef DIAMOND_ORIGIN_Y
 	#undef DIAMOND_ORIGIN_X
-	#undef DIAMOND_COUNT
 }
 
 void pattern_symmetrical_from_cup_fire(unsigned char angle)
@@ -1113,12 +1110,8 @@ void pattern_rain_from_edges(void)
 		mdrv2_se_play(6);
 	}
 	if((boss_phase_frame % pattern_state.interval) == 0) {
-		Pellets.add_single(
-			end_x, end_y, (rand() & 0x7F), to_sp(2.0f), PM_GRAVITY, RAIN_G
-		);
-		Pellets.add_single(
-			end_x, end_y, (rand() & 0x7F), to_sp(2.0f), PM_GRAVITY, RAIN_G
-		);
+		pellets_add_single_rain(end_x, end_y, (rand() & 0x7F), 2.0f);
+		pellets_add_single_rain(end_x, end_y, (rand() & 0x7F), 2.0f);
 	}
 }
 
@@ -1186,11 +1179,9 @@ void slash_animate(void)
 	left -= (SLASH_DISTANCE_5_TO_6_X / (SLASH_FRAMES_FROM_4_5_TO_6 / steps)); \
 	top  -= (SLASH_DISTANCE_5_TO_6_Y / (SLASH_FRAMES_FROM_4_5_TO_6 / steps));
 
-inline void slash_rain_fire(
-	const screen_x_t& left, const screen_y_t& top, subpixel_t speed
-) {
-	Pellets.add_single(left, top, (rand() % 0x7F), speed, PM_GRAVITY, RAIN_G);
-	Pellets.add_single(left, top, (rand() % 0x7F), speed, PM_GRAVITY, RAIN_G);
+inline void slash_rain_fire(const screen_x_t& left, const screen_y_t& top) {
+	pellets_add_single_rain(left, top, (rand() % 0x7F), 0.0f);
+	pellets_add_single_rain(left, top, (rand() % 0x7F), 0.0f);
 }
 
 void pattern_slash_rain(void)
@@ -1216,7 +1207,7 @@ void pattern_slash_rain(void)
 		(boss_phase_frame < SLASH_4_FRAME) &&
 		((boss_phase_frame % pattern_state.interval) == 0)
 	) {
-		slash_rain_fire(spawner_left, spawner_top, to_sp(0.0f));
+		slash_rain_fire(spawner_left, spawner_top);
 		slash_spawner_step_from_2_to_4(
 			spawner_left, spawner_top, pattern_state.interval
 		);
@@ -1232,7 +1223,7 @@ void pattern_slash_rain(void)
 		return;
 	}
 	if(boss_phase_frame < SLASH_4_5_FRAME) {
-		slash_rain_fire(spawner_left, spawner_top, to_sp(0.0f));
+		slash_rain_fire(spawner_left, spawner_top);
 		slash_spawner_step_from_4_to_4_5(spawner_left, spawner_top, 1);
 	}
 
@@ -1248,7 +1239,7 @@ void pattern_slash_rain(void)
 		(boss_phase_frame < SLASH_6_FRAME) &&
 		((boss_phase_frame % pattern_state.interval) == 0)
 	) {
-		slash_rain_fire(spawner_left, spawner_top, to_sp(0.0f));
+		slash_rain_fire(spawner_left, spawner_top);
 		slash_spawner_step_from_4_5_to_6(
 			spawner_left, spawner_top, pattern_state.interval
 		);
@@ -1355,10 +1346,7 @@ void pattern_lasers_and_3_spread(void)
 		}
 		target_y = PLAYFIELD_BOTTOM;
 
-		// Quite a roundabout way of preventing a buffer overflow, but fine.
-		shootout_lasers[
-			(boss_phase_frame / INTERVAL) % SHOOTOUT_LASER_COUNT
-		].spawn(
+		shootout_laser_safe(boss_phase_frame / INTERVAL).spawn(
 			SWORD_CENTER_X, SWORD_CENTER_Y,
 			target_left, target_y,
 			(to_sp(8.5f) / 2), V_WHITE, 30, 5
@@ -1450,9 +1438,8 @@ void pattern_semicircle_rain_from_sleeve(void)
 	}
 	if((boss_phase_frame % 20) == 0) {
 		for(i = 0, angle = 0x00; i < SPREAD; i++, angle -= (0x80 / SPREAD)) {
-			Pellets.add_single(
-				LEFT_SLEEVE_LEFT, LEFT_SLEEVE_TOP, angle, to_sp(2.0f),
-				PM_GRAVITY, RAIN_G
+			pellets_add_single_rain(
+				LEFT_SLEEVE_LEFT, LEFT_SLEEVE_TOP, angle, 2.0f
 			);
 		}
 		mdrv2_se_play(7);
@@ -1605,9 +1592,8 @@ void konngara_main(void)
 		boss_palette_snap();
 		random_seed = frame_rand;
 	} else if(boss_phase == 1) {
-		if(!initial_hp_rendered) {
-			initial_hp_rendered = hud_hp_increment(boss_hp, boss_phase_frame);
-		}
+		hud_hp_increment_render(initial_hp_rendered, boss_hp, boss_phase_frame);
+
 		phase.frame_common(fd_track);
 
 		if(phase.pattern_cur == 0) {

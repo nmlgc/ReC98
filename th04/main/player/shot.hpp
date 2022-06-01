@@ -41,10 +41,12 @@ struct shot_t {
 		}
 	#endif
 
-	void set_random_angle_forwards(char range = 0x0F, char offset = -0x48) {
+	void set_random_angle_forwards(
+		unsigned char min = -0x48, unsigned char max = -0x38
+	) {
 		shot_velocity_set(
 			(SPPoint near*)&this->pos.velocity,
-			randring_angle(range, offset)
+			randring1_next8_and_ge_lt(min, max)
 		);
 	}
 };

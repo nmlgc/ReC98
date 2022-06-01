@@ -21,6 +21,7 @@ extern "C" {
 #include "th01/hardware/palette.h"
 #include "th01/hardware/input.hpp"
 #include "th01/hardware/graph.h"
+}
 #include "th01/hiscore/scoredat.hpp"
 
 extern char rank;
@@ -116,5 +117,3 @@ void pascal near str_from_kanji(char str[3], uint16_t kanji)
 }
 
 #include "th01/hiscore/regist.cpp"
-
-}

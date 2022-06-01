@@ -23,8 +23,12 @@ extern "C" {
 #include "th01/hardware/grcg8x8m.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/palette.h"
-#include "th01/hardware/ptrans.hpp"
+}
+#include "th01/hardware/egcrows.hpp"
+#include "th01/hardware/grpinv32.hpp"
+#include "th01/hardware/pgtrans.hpp"
 #include "th01/hardware/scrollup.hpp"
+extern "C" {
 #include "th01/hardware/input.hpp"
 #include "th01/snd/mdrv2.h"
 #include "th01/main/playfld.hpp"
@@ -35,13 +39,13 @@ extern "C" {
 #include "th01/formats/stagedat.hpp"
 #include "th01/sprites/leaf.hpp"
 #include "th01/sprites/shape8x8.hpp"
+#include "th01/main/entity.hpp"
 #include "th01/main/spawnray.hpp"
 #include "th01/main/vars.hpp"
 #include "th01/main/boss/entity_a.hpp"
 #include "th01/main/player/player.hpp"
 #include "th01/main/stage/palette.hpp"
 }
-#include "th01/hardware/grpinv32.hpp"
 #include "th01/main/shape.hpp"
 #include "th01/main/stage/stageobj.hpp"
 #include "th01/main/player/bomb.hpp"
@@ -168,11 +172,6 @@ inline void sariel_grc_free(void) {
 	grc_free(GRC_SLOT_SPAWNCROSS);
 	grc_free(GRC_SLOT_LEAFSPLASH);
 }
-
-// For some reason, all of this code assumes .GRC entities to be 48×32, rather
-// than 32×32. Why?!
-#define sloppy_unput_32x32(left, top) \
-	egc_copy_rect_1_to_0_16(left, top, 48, 32);
 
 // Vortex and debris sprites (BOSS6GR1.GRC)
 // ----------------------------------------
@@ -484,7 +483,7 @@ template <
 		//
 		// for both the left and right sprite coordinates to have diverged
 		// enough for these wraparounds to stop.
-		sloppy_unput_32x32(
+		grc_sloppy_unput(
 			debris_left(ray_id, (velocity_x * 2)), (target_y - DEBRIS_H)
 		);
 
@@ -640,13 +639,11 @@ void pascal near birds_reset_fire_spawn_unput_update_render(
 			if(!birds_alive[i] || birds.hatch_time[i]) {
 				continue;
 			}
-			Pellets.add_single(
+			pellets_add_single_rain(
 				birds.pellet_left(i),
 				birds.pellet_top(i),
 				((rand() & 0x7F) + 0x80),
-				to_sp(4.0f),
-				PM_GRAVITY,
-				to_sp(0.1f)
+				4.0f
 			);
 		}
 	} else if(func_or_left != BF_UNPUT_UPDATE_RENDER) {
@@ -684,7 +681,7 @@ void pascal near birds_reset_fire_spawn_unput_update_render(
 				// ZUN bug: Shouldn't these be unblitted unconditionally?
 				// Because they aren't, each cel of the hatch animation is
 				// blitted on top of the previous one...
-				sloppy_unput_32x32(birds.left[i], birds.top[i]);
+				grc_sloppy_unput(birds.left[i], birds.top[i]);
 			}
 		}
 		for(i = 0; i < BIRD_COUNT; i++) {
@@ -696,7 +693,7 @@ void pascal near birds_reset_fire_spawn_unput_update_render(
 			if(!overlap_xy_lrtb_le_ge(
 				birds.left[i], birds.top[i], 0, 0, (RES_X - 1), (RES_Y - 1)
 			)) {
-				sloppy_unput_32x32(birds.left[i], birds.top[i]);
+				grc_sloppy_unput(birds.left[i], birds.top[i]);
 				birds_alive[i] = false;
 				continue;
 			}
@@ -846,26 +843,24 @@ void pascal near vortex_fire_3_spread(
 void near pattern_vortices(void)
 {
 	static bool16 wand_raise_animation_done = false;
-	static screen_x_t cur_left[VORTEX_COUNT];
-	static vram_y_t cur_top[VORTEX_COUNT];
-	static screen_x_t prev_left[VORTEX_COUNT];
-	static vram_y_t prev_top[VORTEX_COUNT];
+	static CEntities<VORTEX_COUNT> cur;
+	static CEntities<VORTEX_COUNT> prev;
 	static bool16 dir_first; // x_direction_t
 	static bool16 dir_second; // x_direction_t
 
 	#define vortex_unput_and_put_8(i) { \
-		sloppy_unput_32x32(prev_left[i], prev_top[i]); \
+		grc_sloppy_unput(prev.left[i], prev.top[i]); \
 		vortex_or_debris_put_8( \
-			cur_left[i], \
-			cur_top[i], \
+			cur.left[i], \
+			cur.top[i], \
 			(C_VORTEX + (boss_phase_frame % VORTEX_CELS)) \
 		); \
 	}
 
 	#define vortex_fire_down(i) { \
 		Pellets.add_group( \
-			vortex_pellet_left(cur_left[i]), \
-			vortex_pellet_top(cur_top[i]), \
+			vortex_pellet_left(cur.left[i]), \
+			vortex_pellet_top(cur.top[i]), \
 			PG_1, \
 			VORTEX_PELLET_SPEED \
 		); \
@@ -874,7 +869,7 @@ void near pattern_vortices(void)
 	#define vortex_unput_put_3_spread(i) { \
 		vortex_unput_and_put_8(i); \
 		if((boss_phase_frame % 4) == 0) { \
-			vortex_fire_3_spread(cur_left, cur_top, i, angle); \
+			vortex_fire_3_spread(cur.left, cur.top, i, angle); \
 		} \
 	}
 
@@ -891,39 +886,39 @@ void near pattern_vortices(void)
 	}
 	if(boss_phase_frame < 100) {
 		for(int i = 0; i < VORTEX_COUNT; i++) {
-			cur_left[i] = (i * (PLAYFIELD_RIGHT - VORTEX_W));
-			cur_top[i] = (PLAYFIELD_TOP + playfield_fraction_y(17 / 42.0f));
+			cur.left[i] = (i * (PLAYFIELD_RIGHT - VORTEX_W));
+			cur.top[i] = (PLAYFIELD_TOP + playfield_fraction_y(17 / 42.0f));
 
 			vortex_unput_and_put_8(i);
 			if((boss_phase_frame % 4) == 0) {
 				vortex_fire_down(i);
 			}
-			prev_left[i] = cur_left[i];
-			prev_top[i] = cur_top[i];
+			prev.left[i] = cur.left[i];
+			prev.top[i] = cur.top[i];
 		}
 	} else if(boss_phase_frame < pattern_state.frame) {
 		for(int i = 0; i < VORTEX_COUNT; i++) {
-			cur_left[i] += (i == 0) ? 5 : -5;
-			cur_top[i] -= 2;
+			cur.left[i] += (i == 0) ? 5 : -5;
+			cur.top[i] -= 2;
 
 			vortex_unput_and_put_8(i);
 			if((boss_phase_frame % 4) == 0) {
 				vortex_fire_down(i);
 				angle = iatan2(
-					vortex_pellet_top(PLAYFIELD_BOTTOM - cur_top[i]),
-					vortex_pellet_left(cur_left[i] +
+					vortex_pellet_top(PLAYFIELD_BOTTOM - cur.top[i]),
+					vortex_pellet_left(cur.left[i] +
 						(i * ((PLAYFIELD_W / 8) * 2)) - (PLAYFIELD_W / 8) -
-					cur_left[i])
+					cur.left[i])
 				);
 				Pellets.add_single(
-					vortex_pellet_left(cur_left[i]),
-					vortex_pellet_top(cur_top[i]),
+					vortex_pellet_left(cur.left[i]),
+					vortex_pellet_top(cur.top[i]),
 					angle,
 					VORTEX_PELLET_SPEED
 				);
 			}
-			prev_left[i] = cur_left[i];
-			prev_top[i] = cur_top[i];
+			prev.left[i] = cur.left[i];
+			prev.top[i] = cur.top[i];
 		}
 	} else if(boss_phase_frame < 200) {
 		for(int i = 0; i < VORTEX_COUNT; i++) {
@@ -937,9 +932,9 @@ void near pattern_vortices(void)
 			}
 		}
 		for(int i = 0; i < VORTEX_COUNT; i++) {
-			cur_left[i] += (2 - (dir_first * 4));
+			cur.left[i] += (2 - (dir_first * 4));
 			vortex_unput_put_3_spread(i);
-			prev_left[i] = cur_left[i];
+			prev.left[i] = cur.left[i];
 		}
 	} else if(boss_phase_frame < 320) {
 		if(boss_phase_frame == 240) {
@@ -952,16 +947,16 @@ void near pattern_vortices(void)
 		}
 		for(int i = 0; i < VORTEX_COUNT; i++) {
 			if(dir_second != dir_first) {
-				cur_left[i] -= (2 - (dir_second * 4));
+				cur.left[i] -= (2 - (dir_second * 4));
 			} else {
-				cur_left[i] -= (4 - (dir_second * 8));
+				cur.left[i] -= (4 - (dir_second * 8));
 			}
 			vortex_unput_put_3_spread(i);
-			prev_left[i] = cur_left[i];
+			prev.left[i] = cur.left[i];
 		}
 	} else if(boss_phase_frame > 300) {
 		for(int i = 0; i < VORTEX_COUNT; i++) {
-			sloppy_unput_32x32(cur_left[i], cur_top[i]);
+			grc_sloppy_unput(cur.left[i], cur.top[i]);
 		}
 		wand_lower_both();
 		boss_phase_frame = 0;
@@ -1044,8 +1039,7 @@ void near pattern_birds_on_ellipse_arc(void)
 	static bool wand_raise_animation_done = false;
 	static bird_pellet_group_t pellet_group = BPG_AIMED;
 	static int eggs_alive = 0;
-	static screen_x_t egg_left[BIRD_COUNT];
-	static vram_y_t egg_top[BIRD_COUNT];
+	static CEntities<BIRD_COUNT> egg;
 	static Subpixel spawner_left;
 	static Subpixel spawner_top;
 	static Subpixel spawner_velocity_y;
@@ -1081,9 +1075,9 @@ void near pattern_birds_on_ellipse_arc(void)
 		} else {
 			spawner_velocity_y.v -= to_sp(0.0625f);
 		}
-		sloppy_unput_32x32(spawner_left.to_pixel(), spawner_top.to_pixel());
+		grc_sloppy_unput(spawner_left.to_pixel(), spawner_top.to_pixel());
 		for(int i = (eggs_alive - 1); i >= 0; i--) {
-			bird_put_8(egg_left[i], egg_top[i], C_EGG);
+			bird_put_8(egg.left[i], egg.top[i], C_EGG);
 		}
 		spawner_left.v += spawner_velocity_x.v;
 		spawner_top.v += spawner_velocity_y.v;
@@ -1093,8 +1087,8 @@ void near pattern_birds_on_ellipse_arc(void)
 				to_sp(0.0), to_sp(0.0f),
 				to_sp(RES_X - SPAWNCROSS_W), to_sp(RES_Y - SPAWNCROSS_H)
 			)) {
-				egg_left[eggs_alive] = spawner_left.to_pixel();
-				egg_top[eggs_alive] = spawner_top.to_pixel();
+				egg.left[eggs_alive] = spawner_left.to_pixel();
+				egg.top[eggs_alive] = spawner_top.to_pixel();
 				bird_put_8(
 					spawner_left.to_pixel(), spawner_top.to_pixel(), C_EGG
 				);
@@ -1122,7 +1116,7 @@ void near pattern_birds_on_ellipse_arc(void)
 			}
 			for(int i = (eggs_alive - 1); i >= 0; i--) {
 				vector2(velocity.x, velocity.y, 3, ((rand() & 0x7F) + 0x80));
-				birds_spawn(egg_left[i], egg_top[i], velocity.x, velocity.y);
+				birds_spawn(egg.left[i], egg.top[i], velocity.x, velocity.y);
 			}
 			wand_lower_both();
 			pellet_group = static_cast<bird_pellet_group_t>(
@@ -1135,7 +1129,7 @@ void near pattern_birds_on_ellipse_arc(void)
 			to_sp(-SPAWNCROSS_W), to_sp(-SPAWNCROSS_H),
 			to_sp(RES_X), to_sp(RES_Y)
 		)) {
-			sloppy_unput_32x32(spawner_left.to_pixel(), spawner_top.to_pixel());
+			grc_sloppy_unput(spawner_left.to_pixel(), spawner_top.to_pixel());
 			spawner_left.v += spawner_velocity_x.v;
 			spawner_top.v += spawner_velocity_y.v;
 
@@ -1846,9 +1840,7 @@ void near pattern_radial_stacks_and_lasers(void)
 			target_y = polar_y(CENTER_Y, 600, angle);
 			mdrv2_se_play(7);
 			if((boss_phase_frame % 15) == 0) {
-				shootout_lasers[
-					((boss_phase_frame - 215) / 15) % SHOOTOUT_LASER_COUNT
-				].spawn(
+				shootout_laser_safe((boss_phase_frame - 215) / 15).spawn(
 					CENTER_X, CENTER_Y, target_x, target_y,
 					pattern_state.speed_multiplied_by_8, V_WHITE, 20, 4
 				);
@@ -2310,13 +2302,11 @@ void pascal near pattern_rain_from_seal_center(int &frame)
 	rays.unput_broken(VELOCITY_Y);
 
 	for(int i = 0; i < pattern_state.pellet_count; i++) {
-		Pellets.add_single(
+		pellets_add_single_rain(
 			(PLAYFIELD_LEFT + ((PLAYFIELD_W / pattern_state.pellet_count) * i)),
 			SEAL_CENTER_Y,
 			rand(),
-			to_sp(1.0f),
-			PM_GRAVITY,
-			to_sp(0.1f)
+			1.0f
 		);
 	}
 	frame = 0;
@@ -2473,7 +2463,7 @@ void pascal near pattern_swaying_leaves(int &frame, int spawn_interval_or_reset)
 			}
 		} else if(flag[i] <= LF_SPLASH_DONE) {
 			if(leaf_on_screen(i)) {
-				sloppy_unput_32x32(left[i].to_pixel(), top[i].to_pixel());
+				grc_sloppy_unput(left[i].to_pixel(), top[i].to_pixel());
 			}
 			if(flag[i] == LF_SPLASH_DONE) {
 				flag[i] = LF_LEAF;
@@ -2693,9 +2683,7 @@ void sariel_main(void)
 			}
 		}
 	} else if(boss_phase == 1) {
-		if(!initial_hp_rendered) {
-			initial_hp_rendered = hud_hp_increment(boss_hp, boss_phase_frame);
-		}
+		hud_hp_increment_render(initial_hp_rendered, boss_hp, boss_phase_frame);
 		phase.frame_common(false);
 		birds_unput_update_render();
 
@@ -2897,9 +2885,7 @@ void sariel_main(void)
 			}
 		}
 	} else if(boss_phase == PHASE_FORM2) {
-		if(!initial_hp_rendered) {
-			initial_hp_rendered = hud_hp_increment(boss_hp, boss_phase_frame);
-		}
+		hud_hp_increment_render(initial_hp_rendered, boss_hp, boss_phase_frame);
 		phase.frame_common(true);
 		particles2x2_horizontal_unput_update_render(boss_phase_frame);
 

@@ -46,11 +46,6 @@ inline int8_t& scoredat_route_byte(int place, int byte)
 	return scoredat_routes[(place * SCOREDAT_ROUTE_LEN) + byte];
 }
 
-// Null-terminated version of scoredat_name_t, used internally.
-typedef StupidBytewiseWrapperAround<struct {
-	int16_t codepoint[SCOREDAT_NAME_KANJI + 1];
-}> scoredat_name_z_t;
-
 // Loads the score file for the current [rank], recreating it if necessary.
 // Returns 0 on success, 1 on failure.
 int scoredat_load();

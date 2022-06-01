@@ -5,11 +5,12 @@
 
 #pragma option -zPmain_01
 
-extern "C" {
 #include "platform.h"
+#include "decomp.hpp"
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
+extern "C" {
 #include "th01/hardware/egc.h"
 #include "th01/main/playfld.hpp"
 #include "th01/main/player/player.hpp"
