@@ -69,6 +69,7 @@ void mima_load(void);
 void mima_free(void);
 
 void kikuri_load(void);
+void kikuri_free(void);
 
 void konngara_load_and_entrance(int8_t unused);
 void konngara_init(void);

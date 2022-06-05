@@ -80,6 +80,11 @@ extern CBossEntity tears[10];
 		tears[i].metadata_assign(tears[0]); \
 	} \
 }
+
+inline void kikuri_ent_free() {
+	bos_entity_free(0);
+	bos_entity_free(1);
+}
 // --------
 
 #define flash_colors	kikuri_flash_colors
@@ -97,6 +102,10 @@ static const main_ptn_slot_t PTN_SLOT_RIPPLE = PTN_SLOT_BOSS_1;
 
 inline void kikuri_ptn_load(void) {
 	ptn_load(PTN_SLOT_RIPPLE, "tamayen.ptn");
+}
+
+inline void kikuri_ptn_free(void) {
+	ptn_free(PTN_SLOT_RIPPLE);
 }
 // ----
 
@@ -153,4 +162,10 @@ void kikuri_setup(void)
 	);
 
 	palette_set_grayscale(boss_post_defeat_palette, 0x0, col, comp);
+}
+
+void kikuri_free(void)
+{
+	kikuri_ent_free();
+	kikuri_ptn_free();
 }

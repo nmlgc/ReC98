@@ -2041,7 +2041,7 @@ loc_D501:
 ; ---------------------------------------------------------------------------
 
 loc_D508:
-		call	_kikuri_free
+		call	@kikuri_free$qv
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -14704,31 +14704,13 @@ main_34_TEXT	segment	byte public 'CODE' use16
 	extern @boss_palette_show$qv:proc
 	extern @kikuri_select_for_rank$qmiiiii:proc
 	extern @kikuri_load$qv:proc
-
-PTN_SLOT_WAVE = PTN_SLOT_BOSS_1
-
+	extern @kikuri_free$qv:proc
 main_34_TEXT	ends
 
 main_34__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_34
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public _kikuri_free
-_kikuri_free	proc far
-		push	bp
-		mov	bp, sp
-		call	@bos_entity_free$qi stdcall, 0
-		call	@bos_entity_free$qi stdcall, 1
-		call	_ptn_free stdcall, PTN_SLOT_WAVE
-		add	sp, 6
-		pop	bp
-		retf
-_kikuri_free	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
