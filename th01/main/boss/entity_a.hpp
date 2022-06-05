@@ -33,6 +33,39 @@ public:
 	char zero_3;
 	unsigned char bos_slot;
 
+	// Even Turbo C++ 4.0J implements copy constructors for trivially
+	// constructible types via an equivalent of memcpy() by default. This
+	// constructor downgrades that to dumb single-member assignment, and is
+	// undeniably worse. MODDERS: Delete.
+	CBossEntity(const CBossEntity near &other) {
+		cur_left = other.cur_left;
+		cur_top = other.cur_top;
+		prev_left = other.prev_left;
+		prev_top = other.prev_top;
+		vram_w = other.vram_w;
+		h = other.h;
+		move_clamp.left = other.move_clamp.left;
+		move_clamp.right = other.move_clamp.right;
+		move_clamp.top = other.move_clamp.top;
+		move_clamp.bottom = other.move_clamp.bottom;
+		hitbox_orb.left = other.hitbox_orb.left;
+		hitbox_orb.right = other.hitbox_orb.right;
+		hitbox_orb.top = other.hitbox_orb.top;
+		hitbox_orb.bottom = other.hitbox_orb.bottom;
+		prev_delta_y = other.prev_delta_y;
+		prev_delta_x = other.prev_delta_x;
+		bos_image_count = other.bos_image_count;
+		zero_1 = other.zero_1;
+		bos_image = other.bos_image;
+		unknown = other.unknown;
+		hitbox_orb_inactive = other.hitbox_orb_inactive;
+		loading = other.loading;
+		move_lock_frame = other.move_lock_frame;
+		zero_2 = other.zero_2;
+		zero_3 = other.zero_3;
+		bos_slot = other.bos_slot;
+	}
+
 	// Loads all images from the .BOS file with the given [fn] inside the
 	// currently active packfile into the given CBossEntity .BOS [slot], and
 	// keeps the .BOS metadata in this CBossEntity instance. Always returns 0.
@@ -46,13 +79,21 @@ public:
 
 	// Copies the .BOS header data of this instance to the given variables. In
 	// practice, only used to copy these values from one CBossEntity to
-	// another.
+	// another, via metadata_assign().
 	void metadata_get(
 		int &image_count,
 		unsigned char &slot,
 		vram_byte_amount_t &vram_w,
 		pixel_t &h
 	) const;
+
+	// Copies the .BOS header data of [src] to this instance.
+	void metadata_assign(const CBossEntity near &src) {
+		// MODDERS: Delete this unnecessary and wasteful temporary copy.
+		CBossEntity tmp(src);
+
+		tmp.metadata_get(bos_image_count, bos_slot, vram_w, h);
+	}
 
 	void set_image(int image) {
 		bos_image = image;

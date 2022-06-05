@@ -145,7 +145,7 @@ typedef int8_t uint4_t;
 
 	#define palette_copy(dst, src, tmp_col, tmp_comp) \
 		palette_foreach(tmp_col, tmp_comp, { \
-			dst[col].v[comp] = src[col].v[comp]; \
+			dst[tmp_col].v[tmp_comp] = src[tmp_col].v[tmp_comp]; \
 		})
 #endif
 /// --------

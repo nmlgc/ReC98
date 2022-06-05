@@ -615,9 +615,12 @@ void elis_setup(void)
 
 	boss_phase = 0;
 	boss_phase_frame = 0;
+
+	// Same HP and phase settings as Kikuri.
 	boss_hp = HP_TOTAL;
 	hud_hp_first_white = PHASE_1_END_HP;
 	hud_hp_first_redwhite = PHASE_3_END_HP;
+
 	random_seed = frame_rand;
 	palette_set_grayscale(boss_post_defeat_palette, 0x0, col, comp);
 }

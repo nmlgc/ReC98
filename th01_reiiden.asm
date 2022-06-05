@@ -2494,7 +2494,7 @@ loc_D901:
 		pushd	[bp+s1]	; dest
 		call	_strcpy
 		add	sp, 8
-		call	_kikuri_load
+		call	@kikuri_load$qv
 
 loc_D941:
 		mov	di, 1
@@ -14703,6 +14703,7 @@ main_34_TEXT	segment	byte public 'CODE' use16
 	extern @boss_palette_snap$qv:proc
 	extern @boss_palette_show$qv:proc
 	extern @kikuri_select_for_rank$qmiiiii:proc
+	extern @kikuri_load$qv:proc
 
 PTN_SLOT_WAVE = PTN_SLOT_BOSS_1
 
@@ -14712,162 +14713,6 @@ main_34__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_34
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public _kikuri_load
-_kikuri_load	proc c
-	local	@@template_soul:CBossEntity, @@template_tear:CBossEntity
-
-		push	si
-		push	di
-		mov	_pellet_interlace, 1
-		mov	_Pellets.PELLET_unknown_seven, 7
-		xor	si, si
-		jmp	short loc_2335B
-; ---------------------------------------------------------------------------
-
-loc_2333E:
-		xor	di, di
-		jmp	short loc_23355
-; ---------------------------------------------------------------------------
-
-loc_23342:
-		mov	bx, si
-		imul	bx, size rgb_t
-		mov	al, _z_Palettes[bx+di]
-		mov	bx, si
-		imul	bx, size rgb_t
-		mov	byte ptr _boss_palette[bx+di], al
-		inc	di
-
-loc_23355:
-		cmp	di, size rgb_t
-		jl	short loc_23342
-		inc	si
-
-loc_2335B:
-		cmp	si, COLOR_COUNT
-		jl	short loc_2333E
-		xor	si, si
-		jmp	short loc_2336A
-; ---------------------------------------------------------------------------
-
-loc_23364:
-		mov	_kikuri_tear_anim_frame[si], 0
-		inc	si
-
-loc_2336A:
-		cmp	si, KIKURI_TEAR_COUNT
-		jl	short loc_23364
-		CBossEntity__load	kikuri_soul_0, 0, aTamasii_bos
-		CBossEntity__copy	@@template_soul, kikuri_soul_0
-		push	ds
-		push	offset kikuri_soul_1.BE_h
-		push	ds
-		push	offset kikuri_soul_1.BE_vram_w
-		push	ds
-		push	offset kikuri_soul_1.BE_bos_slot
-		push	ds
-		push	offset kikuri_soul_1.BE_bos_image_count
-		push	ss
-		lea	ax, @@template_soul
-		push	ax
-		call	@CBossEntity@metadata_get$xqmimuct1t1
-		CBossEntity__load	kikuri_tear_0, 1, aTamasii2_bos
-		call	_ptn_load stdcall, PTN_SLOT_WAVE, offset aTamayen_ptn, ds ; "tamayen.ptn"
-		add	sp, 2Eh
-		mov	si, 1
-		jmp	loc_23541
-; ---------------------------------------------------------------------------
-
-loc_2346F:
-		CBossEntity__copy	@@template_tear, _kikuri_tears
-		mov	ax, si
-		imul	ax, size CBossEntity
-		add	ax, offset _kikuri_tears.BE_h
-		push	ds
-		push	ax
-		mov	ax, si
-		imul	ax, size CBossEntity
-		add	ax, offset _kikuri_tears.BE_vram_w
-		push	ds
-		push	ax
-		mov	ax, si
-		imul	ax, size CBossEntity
-		add	ax, offset _kikuri_tears.BE_bos_slot
-		push	ds
-		push	ax
-		mov	ax, si
-		imul	ax, size CBossEntity
-		add	ax, offset _kikuri_tears.BE_bos_image_count
-		push	ds
-		push	ax
-		push	ss
-		lea	ax, @@template_tear
-		push	ax
-		call	@CBossEntity@metadata_get$xqmimuct1t1
-		add	sp, 14h
-		inc	si
-
-loc_23541:
-		cmp	si, KIKURI_TEAR_COUNT
-		jl	loc_2346F
-		nopcall	sub_2355F
-		call	@particles_unput_update_render$q17particle_origin_ti c, large PO_INITIALIZE or (V_WHITE shl 16)
-		pop	di
-		pop	si
-		ret
-_kikuri_load	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2355F	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	byte_3A3BE, 0
-		mov	_boss_phase_frame, 0
-		mov	_boss_hp, 14
-		mov	_hud_hp_first_white, 10
-		mov	_hud_hp_first_redwhite, 6
-		call	@CBossEntity@pos_set$qiiiiiii stdcall, offset kikuri_soul_0, ds, 0, large 0 or (50 shl 16), large 32 or (576 shl 16), large 64 or (400 shl 16)
-		call	@CBossEntity@pos_set$qiiiiiii stdcall, offset kikuri_soul_1, ds, 0, large 0 or (50 shl 16), large 32 or (576 shl 16), large 64 or (400 shl 16)
-		add	sp, 24h
-		xor	si, si
-		jmp	short loc_235D7
-; ---------------------------------------------------------------------------
-
-loc_235C2:
-		xor	di, di
-		jmp	short loc_235D1
-; ---------------------------------------------------------------------------
-
-loc_235C6:
-		mov	bx, si
-		imul	bx, size rgb_t
-		mov	byte ptr _boss_post_defeat_palette[bx+di], 0
-		inc	di
-
-loc_235D1:
-		cmp	di, size rgb_t
-		jl	short loc_235C6
-		inc	si
-
-loc_235D7:
-		cmp	si, COLOR_COUNT
-		jl	short loc_235C2
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_2355F	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -16728,7 +16573,7 @@ sub_24722	proc far
 		push	di
 		mov	eax, dword ptr _kikuri_invincibility_flash_colors
 		mov	[bp+@@invincibility_flash_colors], eax
-		cmp	byte_3A3BE, 0
+		cmp	_kikuri_phase, 0
 		jnz	loc_24B19
 		mov	_boss_phase_frame, 0
 		mov	_kikuri_invincibility_frame, 0
@@ -17019,7 +16864,7 @@ loc_24A66:
 		jl	loc_249EA
 		cmp	di, (4 * 32)
 		jl	short loc_24A9D
-		mov	byte_3A3BE, 2
+		mov	_kikuri_phase, 2
 		mov	word_35D16, 0
 		mov	_boss_phase_frame, 0
 		call	@boss_palette_show$qv
@@ -17087,7 +16932,7 @@ loc_24AFF:
 ; ---------------------------------------------------------------------------
 
 loc_24B19:
-		mov	al, byte_3A3BE
+		mov	al, _kikuri_phase
 		cbw
 		cmp	ax, 2
 		jnz	loc_24BA3
@@ -17132,12 +16977,12 @@ loc_24B82:
 		jl	loc_24DFB
 
 loc_24B9B:
-		mov	byte_3A3BE, 3
+		mov	_kikuri_phase, 3
 		jmp	loc_24CE5
 ; ---------------------------------------------------------------------------
 
 loc_24BA3:
-		mov	al, byte_3A3BE
+		mov	al, _kikuri_phase
 		cbw
 		cmp	ax, 3
 		jnz	short loc_24C07
@@ -17157,7 +17002,7 @@ loc_24BA3:
 loc_24BDA:
 		cmp	_boss_phase_frame, 100
 		jl	loc_24DFB
-		mov	byte_3A3BE, 4
+		mov	_kikuri_phase, 4
 		mov	_boss_phase_frame, 0
 		mov	word_35D14, 0
 		call	_z_palette_set_all_show c, offset _stage_palette, ds
@@ -17166,7 +17011,7 @@ loc_24BDA:
 ; ---------------------------------------------------------------------------
 
 loc_24C07:
-		mov	al, byte_3A3BE
+		mov	al, _kikuri_phase
 		cbw
 		cmp	ax, 4
 		jnz	short loc_24C81
@@ -17207,14 +17052,14 @@ loc_24C2A:
 		jnz	loc_24DFB
 		cmp	word_35D14, 2
 		jnz	loc_24DFB
-		mov	byte_3A3BE, 5
+		mov	_kikuri_phase, 5
 		mov	word_35D14, 0
 		mov	_boss_phase_frame, 0
 		jmp	loc_24DFB
 ; ---------------------------------------------------------------------------
 
 loc_24C81:
-		mov	al, byte_3A3BE
+		mov	al, _kikuri_phase
 		cbw
 		cmp	ax, 5
 		jnz	short loc_24CFA
@@ -17249,7 +17094,7 @@ loc_24C81:
 		jle	loc_24DFB
 
 loc_24CE0:
-		mov	byte_3A3BE, 6
+		mov	_kikuri_phase, 6
 
 loc_24CE5:
 		mov	_boss_phase_frame, 0
@@ -17259,7 +17104,7 @@ loc_24CE5:
 ; ---------------------------------------------------------------------------
 
 loc_24CFA:
-		mov	al, byte_3A3BE
+		mov	al, _kikuri_phase
 		cbw
 		cmp	ax, 6
 		jnz	loc_24DFB
@@ -17964,12 +17809,8 @@ word_35D14	dw 0
 word_35D16	dw 0
 public _kikuri_invincibility_flash_colors
 _kikuri_invincibility_flash_colors	db 6, 11, 8, 2
-aTamasii_bos	db 'tamasii.bos',0
-aTamasii2_bos	db 'tamasii2.bos',0
-aTamayen_ptn	db 'tamayen.ptn',0
 	extern _game_cleared:byte
 	extern _unused_boss_stage_flag:word
-	extern _pellet_interlace:byte
 	extern _pellet_destroy_score_delta:word
 _INIT_	segment word public 'INITDATA' use16
 		db    1
@@ -18261,15 +18102,14 @@ angle_3A387	db ?
 byte_3A388	db ?
 point_3A389	Point <?>
 		db ?
-public _boss_palette
+public _boss_palette, _kikuri_phase
 _boss_palette	palette_t <?>
-byte_3A3BE	db ?
+_kikuri_phase	db ?
 
 KIKURI_TEAR_COUNT = 10
 
 kikuri_soul_0	equ <_kikuri_souls[0 * size CBossEntity]>
 kikuri_soul_1	equ <_kikuri_souls[1 * size CBossEntity]>
-kikuri_tear_0	equ <_kikuri_tears[0 * size CBossEntity]>
 
 public _kikuri_tear_anim_frame, _kikuri_souls, _kikuri_tears
 _kikuri_tear_anim_frame	db KIKURI_TEAR_COUNT dup(?)

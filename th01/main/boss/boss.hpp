@@ -68,6 +68,8 @@ void sariel_load_and_init(void);
 void mima_load(void);
 void mima_free(void);
 
+void kikuri_load(void);
+
 void konngara_load_and_entrance(int8_t unused);
 void konngara_init(void);
 void konngara_main(void);

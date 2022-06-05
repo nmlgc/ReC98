@@ -33,7 +33,7 @@ typedef enum {
 
 	// .PTN slots that can be freely used by bosses. Randomly assigned to the
 	// backgrounds behind animated boss entities, as well as the missile
-	// sprites from boss3_m.ptn and Kikuri's wave sprites from tamayen.ptn.
+	// sprites from boss3_m.ptn and Kikuri's ripple sprites from tamayen.ptn.
 	PTN_SLOT_BOSS_1 = 2,
 	PTN_SLOT_BOSS_2 = 3,
 

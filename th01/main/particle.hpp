@@ -7,7 +7,7 @@ enum particle_origin_t {
 	PO_BOTTOM_LEFT = 5,
 	PO_LEFT = 6,
 	PO_TOP_LEFT = 7,
-	PO_INITIALIZE = 255,
+	PO_INITIALIZE = 255, // (renders nothing)
 
 	_particle_origin_t_FORCE_INT16 = 0x7FFF
 };
