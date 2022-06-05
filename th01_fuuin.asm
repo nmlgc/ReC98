@@ -167,8 +167,8 @@ sub_B945	proc far
 		add	sp, 4
 		call	_mdrv2_bgm_play
 		call	grp_palette_settone pascal, 0
-		call	end_pics_load_palette_show pascal, ds, offset aEd1a_grp ; "ED1A.grp"
-		call	_end_pic_show stdcall, 0
+		call	@end_pics_load_palette_show$qnxc pascal, ds, offset aEd1a_grp ; "ED1A.grp"
+		call	@end_pic_show$qi stdcall, 0
 		pop	cx
 		call	grp_palette_black_in pascal, 6
 		call	_frame_delay stdcall, 100
@@ -176,29 +176,29 @@ sub_B945	proc far
 		call	grp_palette_white_out pascal, 5
 		call	_frame_delay stdcall, 100
 		pop	cx
-		call	_end_pic_show stdcall, 1
+		call	@end_pic_show$qi stdcall, 1
 		pop	cx
 		call	grp_palette_settone pascal, 100
 		call	_frame_delay stdcall, 13
 		pop	cx
-		call	_end_pic_show stdcall, 2
+		call	@end_pic_show$qi stdcall, 2
 		pop	cx
 		call	_frame_delay stdcall, 13
 		pop	cx
-		call	_end_pic_show stdcall, 3
+		call	@end_pic_show$qi stdcall, 3
 		pop	cx
 		call	_frame_delay stdcall, 50
 		pop	cx
-		call	end_pics_load_palette_show pascal, ds, offset aEd1b_grp ; "ED1B.grp"
-		call	_end_pic_show stdcall, 0
+		call	@end_pics_load_palette_show$qnxc pascal, ds, offset aEd1b_grp ; "ED1B.grp"
+		call	@end_pic_show$qi stdcall, 0
 		pop	cx
 		call	_frame_delay stdcall, 10
 		pop	cx
-		call	_end_pic_show stdcall, 1
+		call	@end_pic_show$qi stdcall, 1
 		pop	cx
 		call	_frame_delay stdcall, 10
 		pop	cx
-		call	_end_pic_show stdcall, 2
+		call	@end_pic_show$qi stdcall, 2
 		pop	cx
 		call	_frame_delay stdcall, 100
 		pop	cx
@@ -208,17 +208,17 @@ sub_B945	proc far
 		pop	cx
 		call	_z_graph_clear
 		call	grp_palette_settone pascal, 100
-		call	end_pics_load_palette_show pascal, ds, offset aEd1c_grp ; "ED1C.GRP"
+		call	@end_pics_load_palette_show$qnxc pascal, ds, offset aEd1c_grp ; "ED1C.GRP"
 		xor	si, si
 		jmp	short loc_BA49
 ; ---------------------------------------------------------------------------
 
 loc_BA28:
-		call	_end_pic_show stdcall, 0
+		call	@end_pic_show$qi stdcall, 0
 		pop	cx
 		call	_frame_delay stdcall, 20
 		pop	cx
-		call	_end_pic_show stdcall, 1
+		call	@end_pic_show$qi stdcall, 1
 		pop	cx
 		call	_frame_delay stdcall, 20
 		pop	cx
@@ -227,16 +227,16 @@ loc_BA28:
 loc_BA49:
 		cmp	si, 6
 		jl	short loc_BA28
-		call	_end_pic_show stdcall, 0
+		call	@end_pic_show$qi stdcall, 0
 		pop	cx
 		call	_frame_delay stdcall, 40
 		pop	cx
-		call	_end_pic_show stdcall, 2
+		call	@end_pic_show$qi stdcall, 2
 		pop	cx
 		call	_frame_delay stdcall, 40
 		pop	cx
-		call	end_pics_load_palette_show pascal, ds, offset aEd1d_grp ; "ED1D.GRP"
-		call	_end_pic_show stdcall, 3
+		call	@end_pics_load_palette_show$qnxc pascal, ds, offset aEd1d_grp ; "ED1D.GRP"
+		call	@end_pic_show$qi stdcall, 3
 		pop	cx
 		call	_frame_delay stdcall, 70
 		pop	cx
@@ -247,61 +247,61 @@ loc_BA49:
 loc_BA8C:
 		or	si, si
 		jnz	short loc_BA98
-		call	_end_pic_show stdcall, 0
+		call	@end_pic_show$qi stdcall, 0
 		pop	cx
 
 loc_BA98:
 		cmp	si, 14h
 		jnz	short loc_BAA5
-		call	_end_pic_show stdcall, 1
+		call	@end_pic_show$qi stdcall, 1
 		pop	cx
 
 loc_BAA5:
 		cmp	si, 18h
 		jnz	short loc_BAB2
-		call	_end_pic_show stdcall, 2
+		call	@end_pic_show$qi stdcall, 2
 		pop	cx
 
 loc_BAB2:
 		cmp	si, 1Ch
 		jnz	short loc_BABF
-		call	_end_pic_show stdcall, 0
+		call	@end_pic_show$qi stdcall, 0
 		pop	cx
 
 loc_BABF:
 		cmp	si, 32h	; '2'
 		jnz	short loc_BACC
-		call	_end_pic_show stdcall, 1
+		call	@end_pic_show$qi stdcall, 1
 		pop	cx
 
 loc_BACC:
 		cmp	si, 36h	; '6'
 		jnz	short loc_BAD9
-		call	_end_pic_show stdcall, 2
+		call	@end_pic_show$qi stdcall, 2
 		pop	cx
 
 loc_BAD9:
 		cmp	si, 3Ah	; ':'
 		jnz	short loc_BAE6
-		call	_end_pic_show stdcall, 0
+		call	@end_pic_show$qi stdcall, 0
 		pop	cx
 
 loc_BAE6:
 		cmp	si, 5Ah	; 'Z'
 		jnz	short loc_BAF3
-		call	_end_pic_show stdcall, 1
+		call	@end_pic_show$qi stdcall, 1
 		pop	cx
 
 loc_BAF3:
 		cmp	si, 5Eh	; '^'
 		jnz	short loc_BB00
-		call	_end_pic_show stdcall, 2
+		call	@end_pic_show$qi stdcall, 2
 		pop	cx
 
 loc_BB00:
 		cmp	si, 62h	; 'b'
 		jnz	short loc_BB0D
-		call	_end_pic_show stdcall, 0
+		call	@end_pic_show$qi stdcall, 0
 		pop	cx
 
 loc_BB0D:
@@ -316,19 +316,19 @@ loc_BB16:
 ; ---------------------------------------------------------------------------
 
 loc_BB1E:
-		call	_end_pic_show stdcall, 3
+		call	@end_pic_show$qi stdcall, 3
 		pop	cx
 		call	_frame_delay stdcall, 60
 		pop	cx
-		call	_end_pic_show stdcall, 0
+		call	@end_pic_show$qi stdcall, 0
 		pop	cx
 		call	_frame_delay stdcall, 20
 		pop	cx
-		call	_end_pic_show stdcall, 3
+		call	@end_pic_show$qi stdcall, 3
 		pop	cx
 		call	grp_palette_settone pascal, 105
-		call	end_pics_load_palette_show pascal, ds, offset aEd1e_grp ; "ED1E.GRP"
-		call	_end_pic_show stdcall, 0
+		call	@end_pics_load_palette_show$qnxc pascal, ds, offset aEd1e_grp ; "ED1E.GRP"
+		call	@end_pic_show$qi stdcall, 0
 		pop	cx
 		xor	si, si
 		jmp	short loc_BB79
@@ -351,11 +351,11 @@ loc_BB79:
 ; ---------------------------------------------------------------------------
 
 loc_BB82:
-		call	_end_pic_show stdcall, 1
+		call	@end_pic_show$qi stdcall, 1
 		pop	cx
 		call	_frame_delay stdcall, 8
 		pop	cx
-		call	_end_pic_show stdcall, 2
+		call	@end_pic_show$qi stdcall, 2
 		pop	cx
 		call	_frame_delay stdcall, 8
 		pop	cx
@@ -424,7 +424,7 @@ loc_BC0B:
 
 loc_BC0D:
 		call	graph_scrollup
-		call	_end_pic_show stdcall, 1
+		call	@end_pic_show$qi stdcall, 1
 		pop	cx
 		call	_frame_delay stdcall, 1
 		pop	cx
@@ -460,7 +460,7 @@ loc_BC48:
 
 loc_BC4A:
 		call	graph_scrollup
-		call	_end_pic_show stdcall, 1
+		call	@end_pic_show$qi stdcall, 1
 		pop	cx
 		call	_frame_delay stdcall, 2
 		pop	cx
@@ -474,7 +474,7 @@ loc_BC69:
 		push	1
 
 loc_BC6B:
-		call	_end_pic_show
+		call	@end_pic_show$qi
 		pop	cx
 		inc	si
 
@@ -495,9 +495,9 @@ sub_BC7C	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		call	end_pics_load_palette_show pascal, ds, offset aEd2a_grp ; "ed2a.grp"
+		call	@end_pics_load_palette_show$qnxc pascal, ds, offset aEd2a_grp ; "ed2a.grp"
 		call	grp_palette_settone pascal, 200
-		call	_end_pic_show stdcall, 0
+		call	@end_pic_show$qi stdcall, 0
 		pop	cx
 		call	grp_palette_white_in pascal, 5
 		call	_frame_delay stdcall, 120
@@ -513,7 +513,7 @@ sub_BC7C	proc near
 		call	graph_scrollup pascal, 0
 		call	_frame_delay stdcall, 50
 		pop	cx
-		call	_end_pic_show stdcall, 3
+		call	@end_pic_show$qi stdcall, 3
 		pop	cx
 		call	_frame_delay stdcall, 100
 		pop	cx
@@ -527,17 +527,17 @@ sub_BC7C	proc near
 ; ---------------------------------------------------------------------------
 
 loc_BCFC:
-		call	end_pics_load_palette_show pascal, ds, offset aEd4a_grp ; "ed4a.grp"
+		call	@end_pics_load_palette_show$qnxc pascal, ds, offset aEd4a_grp ; "ed4a.grp"
 		xor	si, si
 		jmp	short loc_BD2A
 ; ---------------------------------------------------------------------------
 
 loc_BD09:
-		call	_end_pic_show stdcall, 0
+		call	@end_pic_show$qi stdcall, 0
 		pop	cx
 		call	_frame_delay stdcall, 3
 		pop	cx
-		call	_end_pic_show stdcall, 1
+		call	@end_pic_show$qi stdcall, 1
 		pop	cx
 		call	_frame_delay stdcall, 3
 		pop	cx
@@ -551,11 +551,11 @@ loc_BD2A:
 ; ---------------------------------------------------------------------------
 
 loc_BD33:
-		call	_end_pic_show stdcall, 0
+		call	@end_pic_show$qi stdcall, 0
 		pop	cx
 		call	_frame_delay stdcall, 3
 		pop	cx
-		call	_end_pic_show stdcall, 1
+		call	@end_pic_show$qi stdcall, 1
 		pop	cx
 		call	_frame_delay stdcall, 3
 		pop	cx
@@ -568,12 +568,12 @@ loc_BD33:
 loc_BD62:
 		cmp	si, 14h
 		jl	short loc_BD33
-		call	_end_pic_show stdcall, 2
+		call	@end_pic_show$qi stdcall, 2
 		pop	cx
 		call	grp_palette_white_in pascal, 5
 		call	_frame_delay stdcall, 200
 		pop	cx
-		call	_end_pic_show stdcall, 3
+		call	@end_pic_show$qi stdcall, 3
 		pop	cx
 		call	_frame_delay stdcall, 100
 		pop	cx
@@ -602,18 +602,18 @@ sub_BDBD	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		call	end_pics_load_palette_show pascal, ds, offset aEd3a_grp ; "ed3a.grp"
+		call	@end_pics_load_palette_show$qnxc pascal, ds, offset aEd3a_grp ; "ed3a.grp"
 		call	grp_palette_settone pascal, 200
 		xor	si, si
 		jmp	short loc_BE07
 ; ---------------------------------------------------------------------------
 
 loc_BDD6:
-		call	_end_pic_show stdcall, 0
+		call	@end_pic_show$qi stdcall, 0
 		pop	cx
 		call	_frame_delay stdcall, 8
 		pop	cx
-		call	_end_pic_show stdcall, 1
+		call	@end_pic_show$qi stdcall, 1
 		pop	cx
 		call	_frame_delay stdcall, 8
 		pop	cx
@@ -633,11 +633,11 @@ loc_BE07:
 ; ---------------------------------------------------------------------------
 
 loc_BE17:
-		call	_end_pic_show stdcall, 0
+		call	@end_pic_show$qi stdcall, 0
 		pop	cx
 		call	_frame_delay stdcall, 8
 		pop	cx
-		call	_end_pic_show stdcall, 1
+		call	@end_pic_show$qi stdcall, 1
 		pop	cx
 		call	_frame_delay stdcall, 8
 		pop	cx
@@ -653,7 +653,7 @@ loc_BE38:
 loc_BE41:
 		mov	ax, si
 		and	ax, 1
-		call	_end_pic_show stdcall, ax
+		call	@end_pic_show$qi stdcall, ax
 		pop	cx
 		call	_frame_delay stdcall, 8
 		pop	cx
@@ -690,21 +690,21 @@ sub_BDBD	endp
 sub_BE83	proc near
 		push	bp
 		mov	bp, sp
-		call	end_pics_load_palette_show pascal, ds, offset aEd3b_grp ; "ed3b.grp"
-		call	_end_pic_show stdcall, 0
+		call	@end_pics_load_palette_show$qnxc pascal, ds, offset aEd3b_grp ; "ed3b.grp"
+		call	@end_pic_show$qi stdcall, 0
 		pop	cx
 		call	grp_palette_white_in pascal, 4
 		call	_frame_delay stdcall, 250
 		pop	cx
-		call	_end_pic_show stdcall, 1
+		call	@end_pic_show$qi stdcall, 1
 		pop	cx
 		call	_frame_delay stdcall, 200
 		pop	cx
-		call	_end_pic_show stdcall, 2
+		call	@end_pic_show$qi stdcall, 2
 		pop	cx
 		call	_frame_delay stdcall, 150
 		pop	cx
-		call	_end_pic_show stdcall, 3
+		call	@end_pic_show$qi stdcall, 3
 		pop	cx
 		call	_frame_delay stdcall, 150
 		pop	cx
@@ -725,8 +725,8 @@ sub_BF07	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		call	end_pics_load_palette_show pascal, ds, offset aEd5a_grp ; "ed5a.grp"
-		call	_end_pic_show stdcall, 0
+		call	@end_pics_load_palette_show$qnxc pascal, ds, offset aEd5a_grp ; "ed5a.grp"
+		call	@end_pic_show$qi stdcall, 0
 		pop	cx
 		call	grp_palette_white_in pascal, 4
 		call	_frame_delay stdcall, 300
@@ -736,11 +736,11 @@ sub_BF07	proc near
 ; ---------------------------------------------------------------------------
 
 loc_BF30:
-		call	_end_pic_show stdcall, 1
+		call	@end_pic_show$qi stdcall, 1
 		pop	cx
 		call	_frame_delay stdcall, 8
 		pop	cx
-		call	_end_pic_show stdcall, 2
+		call	@end_pic_show$qi stdcall, 2
 		pop	cx
 		call	_frame_delay stdcall, 8
 		pop	cx
@@ -749,33 +749,33 @@ loc_BF30:
 loc_BF51:
 		cmp	si, 0Fh
 		jl	short loc_BF30
-		call	end_pics_load_palette_show pascal, ds, offset aEd5b_grp ; "ed5b.grp"
-		call	_end_pic_show stdcall, 0
+		call	@end_pics_load_palette_show$qnxc pascal, ds, offset aEd5b_grp ; "ed5b.grp"
+		call	@end_pic_show$qi stdcall, 0
 		pop	cx
 		call	_frame_delay stdcall, 150
 		pop	cx
-		call	_end_pic_show stdcall, 1
+		call	@end_pic_show$qi stdcall, 1
 		pop	cx
 		call	_frame_delay stdcall, 100
 		pop	cx
-		call	_end_pic_show stdcall, 2
+		call	@end_pic_show$qi stdcall, 2
 		pop	cx
 		call	_frame_delay stdcall, 100
 		pop	cx
-		call	_end_pic_show stdcall, 3
+		call	@end_pic_show$qi stdcall, 3
 		pop	cx
 		call	_frame_delay stdcall, 100
 		pop	cx
-		call	end_pics_load_palette_show pascal, ds, offset aEd5c_grp ; "ed5c.grp"
-		call	_end_pic_show stdcall, 0
+		call	@end_pics_load_palette_show$qnxc pascal, ds, offset aEd5c_grp ; "ed5c.grp"
+		call	@end_pic_show$qi stdcall, 0
 		pop	cx
 		call	_frame_delay stdcall, 100
 		pop	cx
-		call	_end_pic_show stdcall, 1
+		call	@end_pic_show$qi stdcall, 1
 		pop	cx
 		call	_frame_delay stdcall, 150
 		pop	cx
-		call	_end_pic_show stdcall, 2
+		call	@end_pic_show$qi stdcall, 2
 		pop	cx
 		call	_frame_delay stdcall, 150
 		pop	cx
@@ -803,7 +803,7 @@ sub_C009	proc near
 		pop	cx
 		call	grp_palette_black_out pascal, 5
 		call	_z_graph_clear
-		call	_end_pic_show stdcall, [bp+@@quarter]
+		call	@end_pic_show$qi stdcall, [bp+@@quarter]
 		pop	cx
 		call	grp_palette_black_in pascal, 5
 		call	_frame_delay stdcall, 50
@@ -841,8 +841,8 @@ loc_C074:
 		push	offset aEndb_b_grp ; "endb_b.grp"
 
 loc_C078:
-		call	end_pics_load_palette_show
-		call	_end_pic_show stdcall, 0
+		call	@end_pics_load_palette_show$qnxc
+		call	@end_pic_show$qi stdcall, 0
 		pop	cx
 		call	grp_palette_settone pascal, 100
 		call	_frame_delay stdcall, 50
@@ -928,8 +928,8 @@ fuuin_03_TEXT	ends
 
 ; Segment type:	Pure code
 fuuin_04_TEXT	segment	byte public 'CODE' use16
-	extern END_PICS_LOAD_PALETTE_SHOW:proc
-	extern _end_pic_show:proc
+	extern @END_PICS_LOAD_PALETTE_SHOW$QNXC:proc
+	extern @end_pic_show$qi:proc
 	extern _frame_delay:proc
 	extern GRP_PALETTE_SETTONE:proc
 	extern GRP_PALETTE_BLACK_OUT:proc

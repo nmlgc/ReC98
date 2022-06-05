@@ -36,6 +36,7 @@ extern "C" {
 #include "th01/formats/grc.hpp"
 #include "th01/formats/grp.h"
 #include "th01/formats/ptn.hpp"
+}
 #include "th01/formats/stagedat.hpp"
 #include "th01/sprites/leaf.hpp"
 #include "th01/sprites/shape8x8.hpp"
@@ -45,7 +46,6 @@ extern "C" {
 #include "th01/main/boss/entity_a.hpp"
 #include "th01/main/player/player.hpp"
 #include "th01/main/stage/palette.hpp"
-}
 #include "th01/main/shape.hpp"
 #include "th01/main/stage/stageobj.hpp"
 #include "th01/main/player/bomb.hpp"

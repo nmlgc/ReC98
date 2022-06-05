@@ -730,8 +730,8 @@ _bomb_update_and_render	endp
 main_011_TEXT	ends
 
 main_012_TEXT	segment	byte public 'CODE' use16
-	extern _stage_palette_set:proc
-	extern _invincibility_sprites_update_and:proc
+	extern @stage_palette_set$qmx27%Palette$t14%RGB$tc$ii$16%%:proc
+	extern @invincibility_sprites_update_and$qi:proc
 	extern @orb_velocity_y_update$qv:proc
 	extern @orb_force_new$qd11orb_force_t:proc
 	extern @orb_move_x$q16orb_velocity_x_t:proc
@@ -1725,7 +1725,7 @@ loc_D28B:
 ; ---------------------------------------------------------------------------
 
 loc_D296:
-		call	_bos_entity_free stdcall, si
+		call	@bos_entity_free$qi stdcall, si
 		pop	cx
 		inc	si
 
@@ -1959,7 +1959,7 @@ loc_D495:
 		pop	cx
 		cmp	si, 4
 		jge	short loc_D4A8
-		call	_bos_entity_free stdcall, si
+		call	@bos_entity_free$qi stdcall, si
 		pop	cx
 
 loc_D4A8:
@@ -2689,7 +2689,7 @@ loc_DB0A:
 		mov	_cardcombo_cur, 0
 
 loc_DB3E:
-		call	_player_unput_update_render stdcall, 0
+		call	@player_unput_update_render$qi stdcall, 0
 		pop	cx
 		call	_ptn_put_8 c, _player_left, large (PTN_MIKO_L shl 16) or _player_top
 		call	_ptn_put_8 c, _orb_cur_left, _orb_cur_top, 3
@@ -2767,7 +2767,7 @@ loc_DC0E:
 loc_DC17:
 		call	_input_sense stdcall, 0
 		pop	cx
-		call	_player_unput_update_render stdcall, 1
+		call	@player_unput_update_render$qi stdcall, 1
 		pop	cx
 		push	1
 		call	_frame_delay
@@ -2827,7 +2827,7 @@ loc_DCB7:
 		mov	_player_invincibility_time, 0
 
 loc_DCCA:
-		call	_player_unput_update_render stdcall, 1
+		call	@player_unput_update_render$qi stdcall, 1
 		pop	cx
 		call	@items_bomb_unput_update_render$qv
 		call	@items_point_unput_update_render$qv
@@ -2853,7 +2853,7 @@ loc_DD0E:
 		mov	_lives, 0
 
 loc_DD20:
-		call	_invincibility_sprites_update_and stdcall, _player_invincible
+		call	@invincibility_sprites_update_and$qi stdcall, _player_invincible
 		pop	cx
 		mov	al, byte_34ADF
 		cbw
@@ -2975,7 +2975,7 @@ loc_DE72:
 		les	bx, _resident
 		dec	es:[bx+reiidenconfig_t.rem_lives]
 		dec	_lives
-		call	_player_miss_animate_and_update
+		call	@player_miss_animate_and_update$qv
 		mov	_done, 0
 		inc	si
 		mov	_player_invincibility_time, MISS_INVINCIBILITY_FRAMES
@@ -5065,7 +5065,7 @@ main_21_TEXT	segment	byte public 'CODE' use16
 	extern @CBossEntity@pos_set$qiiiiiii:proc
 	extern @CBossEntity@move_lock_unput_and_put_8$qiiii:proc
 	extern @CBossEntity@hittest_orb$xqv:proc
-	extern _bos_entity_free:proc
+	extern @bos_entity_free$qi:proc
 main_21_TEXT	ends
 
 main_21__TEXT	segment	byte public 'CODE' use16
@@ -5194,10 +5194,10 @@ main_27_TEXT	segment	byte public 'CODE' use16
 	extern _ptn_unput_8:proc
 	extern _ptn_put_8:proc
 	extern _ptn_put_quarter_8:proc
-	extern _player_unput_update_render:proc
+	extern @player_unput_update_render$qi:proc
 OR_NONE = 0
 	extern @orb_player_hittest$qi:proc
-	extern _player_miss_animate_and_update:proc
+	extern @player_miss_animate_and_update$qv:proc
 main_27_TEXT	ends
 
 ; ===========================================================================
@@ -5407,7 +5407,7 @@ public _yuugenmagan_free
 _yuugenmagan_free	proc far
 		push	bp
 		mov	bp, sp
-		call	_bos_entity_free stdcall, 0
+		call	@bos_entity_free$qi stdcall, 0
 		call	_ptn_free stdcall, PTN_SLOT_MISSILE
 		add	sp, 4
 		pop	bp
@@ -11568,7 +11568,7 @@ loc_1FAF6:
 		mov	_boss_phase, 1
 		mov	word_39E78, 0
 		mov	_mima_initial_hp_rendered, 0
-		call	_stage_palette_set c, offset _z_Palettes, ds
+		call	@stage_palette_set$qmx27%Palette$t14%RGB$tc$ii$16%% c, offset _z_Palettes, ds
 		call	@boss_palette_snap$qv
 		push	0
 		call	sub_1EF85
@@ -13410,7 +13410,7 @@ loc_22711:
 loc_22717:
 		cmp	si, COLOR_COUNT
 		jl	short loc_226FA
-		call	_stage_palette_set c, offset _boss_post_defeat_palette, ds
+		call	@stage_palette_set$qmx27%Palette$t14%RGB$tc$ii$16%% c, offset _boss_post_defeat_palette, ds
 		nopcall	sub_22731
 		pop	di
 		pop	si
@@ -13450,9 +13450,9 @@ public _singyoku_free
 _singyoku_free	proc far
 		push	bp
 		mov	bp, sp
-		call	_bos_entity_free stdcall, 0
-		call	_bos_entity_free stdcall, 1
-		call	_bos_entity_free stdcall, 2
+		call	@bos_entity_free$qi stdcall, 0
+		call	@bos_entity_free$qi stdcall, 1
+		call	@bos_entity_free$qi stdcall, 2
 		add	sp, 6
 		pop	bp
 		retf
@@ -14456,7 +14456,7 @@ loc_2302C:
 		mov	_singyoku_phase_frame, 0
 		mov	_singyoku_initial_hp_rendered, 0
 		call	@boss_palette_show$qv
-		call	_stage_palette_set c, offset _z_Palettes, ds
+		call	@stage_palette_set$qmx27%Palette$t14%RGB$tc$ii$16%% c, offset _z_Palettes, ds
 		call	@boss_palette_snap$qv
 		mov	singyoku_sphere.BE_hitbox_orb_inactive, 0
 		mov	_singyoku_invincibility_frame, 0
@@ -14876,8 +14876,8 @@ public _kikuri_free
 _kikuri_free	proc far
 		push	bp
 		mov	bp, sp
-		call	_bos_entity_free stdcall, 0
-		call	_bos_entity_free stdcall, 1
+		call	@bos_entity_free$qi stdcall, 0
+		call	@bos_entity_free$qi stdcall, 1
 		call	_ptn_free stdcall, PTN_SLOT_WAVE
 		add	sp, 6
 		pop	bp
@@ -17024,7 +17024,7 @@ loc_24A66:
 		mov	_boss_phase_frame, 0
 		call	@boss_palette_show$qv
 		mov	_kikuri_initial_hp_rendered, 0
-		call	_stage_palette_set c, offset _z_Palettes, ds
+		call	@stage_palette_set$qmx27%Palette$t14%RGB$tc$ii$16%% c, offset _z_Palettes, ds
 		jmp	loc_24DFB
 ; ---------------------------------------------------------------------------
 

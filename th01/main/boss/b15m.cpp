@@ -29,10 +29,10 @@ extern "C" {
 #include "th01/main/entity.hpp"
 #include "th01/snd/mdrv2.h"
 #include "th01/main/playfld.hpp"
+}
 #include "th01/formats/stagedat.hpp"
 #include "th01/main/vars.hpp"
 #include "th01/main/boss/entity_a.hpp"
-}
 #include "th01/shiftjis/fns.hpp"
 #include "th01/sprites/pellet.h"
 #include "th01/main/shape.hpp"

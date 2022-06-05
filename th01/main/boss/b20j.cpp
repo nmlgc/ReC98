@@ -30,6 +30,7 @@ extern "C" {
 #include "th01/formats/grz.h"
 #include "th01/formats/pf.hpp"
 #include "th01/formats/ptn.hpp"
+}
 #include "th01/formats/stagedat.hpp"
 #include "th01/sprites/pellet.h"
 #include "th01/sprites/shape8x8.hpp"
@@ -37,7 +38,6 @@ extern "C" {
 #include "th01/main/vars.hpp"
 #include "th01/main/boss/entity_a.hpp"
 #include "th01/main/stage/palette.hpp"
-}
 #include "th01/hardware/egcrows.hpp"
 #include "th01/main/stage/stageobj.hpp"
 #include "th01/main/shape.hpp"

@@ -1,7 +1,6 @@
 /// Jigoku Stage 10 Boss - Mima
 /// ---------------------------
 
-extern "C" {
 #include <stddef.h>
 #include "platform.h"
 #include "pc98.h"
@@ -9,6 +8,7 @@ extern "C" {
 #include "th01/v_colors.hpp"
 #include "th01/math/area.hpp"
 #include "th01/math/subpixel.hpp"
+extern "C" {
 #include "th01/hardware/egc.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/palette.h"
@@ -17,8 +17,8 @@ extern "C" {
 #include "th01/formats/ptn.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/vars.hpp"
-#include "th01/main/boss/entity_a.hpp"
 }
+#include "th01/main/boss/entity_a.hpp"
 #include "th01/shiftjis/fns.hpp"
 #undef MISSILE_FN
 #define MISSILE_FN boss3_m_ptn_0

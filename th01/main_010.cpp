@@ -32,10 +32,10 @@ extern "C" {
 #include "th01/formats/stagedat.hpp"
 #include "th01/main/player/anim.hpp"
 #include "th01/main/player/bomb.hpp"
+}
 #include "th01/main/player/player.hpp"
 #include "th01/main/bullet/laser_s.hpp"
 #include "th01/main/stage/palette.hpp"
-}
 #include "th01/main/stage/item.hpp"
 #include "th01/main/stage/stages.hpp"
 #include "th01/main/stage/stageobj.hpp"
