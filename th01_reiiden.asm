@@ -14755,7 +14755,7 @@ loc_2335B:
 ; ---------------------------------------------------------------------------
 
 loc_23364:
-		mov	byte ptr [si+5A1Fh], 0
+		mov	_kikuri_tear_anim_frame[si], 0
 		inc	si
 
 loc_2336A:
@@ -14987,7 +14987,7 @@ sub_2368E	proc near
 ; ---------------------------------------------------------------------------
 
 loc_23696:
-		cmp	byte ptr [si+5A1Fh], 0
+		cmp	_kikuri_tear_anim_frame[si], 0
 		jnz	short loc_236D5
 		push	64 or (400 shl 16)	; (move_clamp_top) or (move_clamp_bottom)
 		push	32 or (576 shl 16)	; (move_clamp_left) or (move_clamp_right)
@@ -15004,7 +15004,7 @@ loc_23696:
 		mov	bx, si
 		imul	bx, size CBossEntity
 		mov	_kikuri_tears[bx].BE_bos_image, 0
-		mov	byte ptr [si+5A1Fh], 1
+		mov	_kikuri_tear_anim_frame[si], 1
 		jmp	short loc_236DB
 ; ---------------------------------------------------------------------------
 
@@ -15070,7 +15070,7 @@ sub_23715	proc near
 ; ---------------------------------------------------------------------------
 
 loc_2371D:
-		cmp	byte ptr [si+5A1Fh], 0
+		cmp	_kikuri_tear_anim_frame[si], 0
 		jz	short loc_23764
 		mov	bx, si
 		imul	bx, size CBossEntity
@@ -15095,8 +15095,8 @@ loc_2374E:
 		push	384
 		push	ds
 		mov	ax, si
-		add	ax, 5A1Fh
-		push	ax
+		add	ax, offset _kikuri_tear_anim_frame
+		push	ax	; frame
 		call	sub_2379B
 
 loc_23764:
@@ -15147,7 +15147,7 @@ sub_2376D	endp
 
 sub_2379B	proc near
 
-arg_0		= dword	ptr  4
+@@frame		= dword	ptr  4
 arg_4		= word ptr  8
 arg_6		= word ptr  0Ah
 
@@ -15157,7 +15157,7 @@ arg_6		= word ptr  0Ah
 		push	di
 		mov	si, [bp+arg_6]
 		mov	di, [bp+arg_4]
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@frame]
 		inc	byte ptr es:[bx]
 		mov	_ptn_unput_before_alpha_put, 1
 		mov	al, es:[bx]
@@ -15175,10 +15175,10 @@ arg_6		= word ptr  0Ah
 ; ---------------------------------------------------------------------------
 
 loc_237DA:
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@frame]
 		mov	al, es:[bx]
 		cbw
-		cmp	ax, 0Ah
+		cmp	ax, 10
 		jge	short loc_237FF
 		call	_ptn_put_quarter_8 c, si, di, large 80h or (1 shl 16)
 		push	si
@@ -15188,10 +15188,10 @@ loc_237DA:
 ; ---------------------------------------------------------------------------
 
 loc_237FF:
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@frame]
 		mov	al, es:[bx]
 		cbw
-		cmp	ax, 0Fh
+		cmp	ax, 15
 		jge	short loc_2383B
 		lea	ax, [si-16]
 		push	ax
@@ -15213,10 +15213,10 @@ loc_237FF:
 ; ---------------------------------------------------------------------------
 
 loc_2383B:
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@frame]
 		mov	al, es:[bx]
 		cbw
-		cmp	ax, 14h
+		cmp	ax, 20
 		jge	short loc_23881
 		lea	ax, [si-16]
 		push	ax
@@ -15244,10 +15244,10 @@ loc_23875:
 ; ---------------------------------------------------------------------------
 
 loc_23881:
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@frame]
 		mov	al, es:[bx]
 		cbw
-		cmp	ax, 19h
+		cmp	ax, 25
 		jge	short loc_238E7
 		lea	ax, [si-20h]
 		push	ax
@@ -15284,10 +15284,10 @@ loc_238CF:
 ; ---------------------------------------------------------------------------
 
 loc_238E7:
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@frame]
 		mov	al, es:[bx]
 		cbw
-		cmp	ax, 1Eh
+		cmp	ax, 30
 		jge	short loc_2394A
 		lea	ax, [si-20h]
 		push	ax
@@ -15321,10 +15321,10 @@ loc_238E7:
 ; ---------------------------------------------------------------------------
 
 loc_2394A:
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@frame]
 		mov	al, es:[bx]
 		cbw
-		cmp	ax, 23h	; '#'
+		cmp	ax, 35
 		jge	short loc_239B8
 		lea	ax, [si-20h]
 		push	ax
@@ -15364,10 +15364,10 @@ loc_239AD:
 ; ---------------------------------------------------------------------------
 
 loc_239B8:
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@frame]
 		mov	al, es:[bx]
 		cbw
-		cmp	ax, 28h	; '('
+		cmp	ax, 40
 		jge	short loc_23A25
 		lea	ax, [si-20h]
 		push	ax
@@ -15407,10 +15407,10 @@ loc_23A1B:
 ; ---------------------------------------------------------------------------
 
 loc_23A25:
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@frame]
 		mov	al, es:[bx]
 		cbw
-		cmp	ax, 2Dh	; '-'
+		cmp	ax, 45
 		jge	short loc_23AA2
 		lea	ax, [si-20h]
 		push	ax
@@ -15462,10 +15462,10 @@ loc_23A96:
 ; ---------------------------------------------------------------------------
 
 loc_23AA2:
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@frame]
 		mov	al, es:[bx]
 		cbw
-		cmp	ax, 32h	; '2'
+		cmp	ax, 50
 		jge	short loc_23B0D
 		lea	ax, [si-20h]
 		push	ax
@@ -15501,10 +15501,10 @@ loc_23AA2:
 ; ---------------------------------------------------------------------------
 
 loc_23B0D:
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@frame]
 		mov	al, es:[bx]
 		cbw
-		cmp	ax, 37h	; '7'
+		cmp	ax, 55
 		jge	short loc_23B70
 		lea	ax, [si-20h]
 		push	ax
@@ -15535,10 +15535,10 @@ loc_23B0D:
 ; ---------------------------------------------------------------------------
 
 loc_23B70:
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@frame]
 		mov	al, es:[bx]
 		cbw
-		cmp	ax, 3Ch	; '<'
+		cmp	ax, 60
 		jge	short loc_23BC0
 		lea	ax, [si-20h]
 		push	ax
@@ -15566,10 +15566,10 @@ loc_23B70:
 ; ---------------------------------------------------------------------------
 
 loc_23BC0:
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@frame]
 		mov	al, es:[bx]
 		cbw
-		cmp	ax, 41h	; 'A'
+		cmp	ax, 65
 		jge	short loc_23C07
 		push	80h or (3 shl 16)
 		push	di
@@ -15593,15 +15593,15 @@ loc_23BC0:
 ; ---------------------------------------------------------------------------
 
 loc_23C07:
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@frame]
 		mov	al, es:[bx]
 		cbw
-		cmp	ax, 46h	; 'F'
+		cmp	ax, 70
 		jl	loc_238CF
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@frame]
 		mov	al, es:[bx]
 		cbw
-		cmp	ax, 4Bh	; 'K'
+		cmp	ax, 75
 		jge	short loc_23C3D
 		push	80h or (3 shl 16)
 		push	di
@@ -15618,7 +15618,7 @@ loc_23C36:
 ; ---------------------------------------------------------------------------
 
 loc_23C3D:
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@frame]
 		mov	byte ptr es:[bx], 0
 
 loc_23C44:
@@ -18264,8 +18264,17 @@ point_3A389	Point <?>
 public _boss_palette
 _boss_palette	palette_t <?>
 byte_3A3BE	db ?
-		db 10 dup(?)
-include th01/main/boss/b15j[bss].asm
+
+KIKURI_TEAR_COUNT = 10
+
+kikuri_soul_0	equ <_kikuri_souls[0 * size CBossEntity]>
+kikuri_soul_1	equ <_kikuri_souls[1 * size CBossEntity]>
+kikuri_tear_0	equ <_kikuri_tears[0 * size CBossEntity]>
+
+public _kikuri_tear_anim_frame, _kikuri_souls, _kikuri_tears
+_kikuri_tear_anim_frame	db KIKURI_TEAR_COUNT dup(?)
+_kikuri_souls          	CBossEntity 5 dup (<?>)
+_kikuri_tears          	CBossEntity 10 dup (<?>)
 
 public _kikuri_pattern_state
 _kikuri_pattern_state	dw ?

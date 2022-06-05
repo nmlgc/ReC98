@@ -9,6 +9,16 @@ extern "C" {
 }
 #include "th01/main/vars.hpp"
 
+// Entities
+// --------
+
+static const int TEAR_COUNT = 10;
+
+#define tear_anim_frame	kikuri_tear_anim_frame
+// Nonzero values are also used to indicate whether a given tear is alive.
+extern int8_t tear_anim_frame[TEAR_COUNT];
+// --------
+
 #define flash_colors	kikuri_flash_colors
 #define invincible	kikuri_invincible
 #define invincibility_frame	kikuri_invincibility_frame
