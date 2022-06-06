@@ -8,6 +8,7 @@
 #include "th01/v_colors.hpp"
 extern "C" {
 #include "th01/hardware/egc.h"
+#include "th01/hardware/input.hpp"
 #include "th01/formats/ptn.hpp"
 }
 #include "th01/formats/pf.hpp"
@@ -25,6 +26,7 @@ extern "C" {
 #include "th01/main/boss/boss.hpp"
 #include "th01/main/boss/entity_a.hpp"
 #include "th01/main/player/orb.hpp"
+#include "th01/main/player/player.hpp"
 
 // Coordinates
 // -----------
@@ -49,6 +51,8 @@ static const screen_y_t HITBOX_BOTTOM = DISC_CENTER_Y;
 
 static const pixel_t SOUL_W = 32;
 static const pixel_t SOUL_H = 32;
+static const pixel_t RIPPLE_W = 16;
+static const pixel_t RIPPLE_H = 16;
 
 static const screen_x_t SOUL_AREA_LEFT = (PLAYFIELD_LEFT + (PLAYFIELD_W / 20));
 static const screen_y_t SOUL_AREA_TOP = PLAYFIELD_TOP;
@@ -229,4 +233,20 @@ void pascal near tears_add(screen_x_t left, screen_y_t top)
 			return;
 		}
 	}
+}
+
+bool16 pascal near tear_ripple_hittest(screen_x_t left, pixel_t extra_w)
+{
+	if(player_invincible != true) {
+		// Translation: 8 pixels in Reimu's center vs. 10 pixels in the ripple
+		// sprite's center.
+		if(
+			(player_left >= (left - ((PLAYER_W / 4) + (RIPPLE_W / 2)))) &&
+			(player_left <= (left + extra_w))
+		) {
+			done = true;
+			return true;
+		}
+	}
+	return false;
 }

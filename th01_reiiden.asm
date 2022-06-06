@@ -14710,47 +14710,14 @@ main_34_TEXT	segment	byte public 'CODE' use16
 		soul:word, delta_x:word, delta_y:word
 	@TEARS_ADD$QII procdesc pascal near \
 		left:word, top:word
+	@TEAR_RIPPLE_HITTEST$QII procdesc pascal near \
+		left:word, hitbox_w:word
 main_34_TEXT	ends
 
 main_34__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_34
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_236E0	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		mov	dx, [bp+arg_2]
-		cmp	_player_invincible, 1
-		jz	short loc_2370F
-		mov	ax, dx
-		add	ax, -16
-		cmp	ax, _player_left
-		jg	short loc_2370F
-		mov	ax, dx
-		add	ax, [bp+arg_0]
-		cmp	ax, _player_left
-		jl	short loc_2370F
-		mov	_done, 1
-		mov	ax, 1
-		pop	bp
-		retn	4
-; ---------------------------------------------------------------------------
-
-loc_2370F:
-		xor	ax, ax
-		pop	bp
-		retn	4
-sub_236E0	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14860,9 +14827,7 @@ arg_6		= word ptr  0Ah
 		cmp	ax, 5
 		jge	short loc_237DA
 		call	_ptn_put_quarter_8 stdcall, si, di, large 80h or (0 shl 16)
-		push	si
-		push	0
-		call	sub_236E0
+		call	@tear_ripple_hittest$qii pascal, si, 0
 		push	7
 		call	_mdrv2_se_play
 		add	sp, 0Ah
@@ -14876,9 +14841,7 @@ loc_237DA:
 		cmp	ax, 10
 		jge	short loc_237FF
 		call	_ptn_put_quarter_8 c, si, di, large 80h or (1 shl 16)
-		push	si
-		push	0
-		call	sub_236E0
+		call	@tear_ripple_hittest$qii pascal, si, 0
 		jmp	loc_23C44
 ; ---------------------------------------------------------------------------
 
@@ -14889,9 +14852,7 @@ loc_237FF:
 		cmp	ax, 15
 		jge	short loc_2383B
 		lea	ax, [si-16]
-		push	ax
-		push	20h ; ' '
-		call	sub_236E0
+		call	@tear_ripple_hittest$qii pascal, ax, 32
 		push	80h or (1 shl 16)
 		lea	ax, [di-8]
 		push	ax
@@ -14914,9 +14875,7 @@ loc_2383B:
 		cmp	ax, 20
 		jge	short loc_23881
 		lea	ax, [si-16]
-		push	ax
-		push	20h ; ' '
-		call	sub_236E0
+		call	@tear_ripple_hittest$qii pascal, ax, 32
 		push	80h or (1 shl 16)
 		lea	ax, [di-16]
 		push	ax
@@ -14945,9 +14904,7 @@ loc_23881:
 		cmp	ax, 25
 		jge	short loc_238E7
 		lea	ax, [si-20h]
-		push	ax
-		push	40h
-		call	sub_236E0
+		call	@tear_ripple_hittest$qii pascal, ax, 64
 		push	80h or (1 shl 16)
 		lea	ax, [di-24]
 		push	ax
@@ -14985,9 +14942,7 @@ loc_238E7:
 		cmp	ax, 30
 		jge	short loc_2394A
 		lea	ax, [si-20h]
-		push	ax
-		push	40h
-		call	sub_236E0
+		call	@tear_ripple_hittest$qii pascal, ax, 64
 		pushd	80h or (0 shl 16)
 		lea	ax, [di-32]
 		push	ax
@@ -15022,9 +14977,7 @@ loc_2394A:
 		cmp	ax, 35
 		jge	short loc_239B8
 		lea	ax, [si-20h]
-		push	ax
-		push	40h
-		call	sub_236E0
+		call	@tear_ripple_hittest$qii pascal, ax, 64
 		pushd	80h or (0 shl 16)
 		lea	ax, [di-24]
 		push	ax
@@ -15065,9 +15018,7 @@ loc_239B8:
 		cmp	ax, 40
 		jge	short loc_23A25
 		lea	ax, [si-20h]
-		push	ax
-		push	40h
-		call	sub_236E0
+		call	@tear_ripple_hittest$qii pascal, ax, 64
 		pushd	80h or (0 shl 16)
 		lea	ax, [di-16]
 		push	ax
@@ -15108,9 +15059,7 @@ loc_23A25:
 		cmp	ax, 45
 		jge	short loc_23AA2
 		lea	ax, [si-20h]
-		push	ax
-		push	40h
-		call	sub_236E0
+		call	@tear_ripple_hittest$qii pascal, ax, 64
 		pushd	80h or (0 shl 16)
 		lea	ax, [di-8]
 		push	ax
@@ -15163,9 +15112,7 @@ loc_23AA2:
 		cmp	ax, 50
 		jge	short loc_23B0D
 		lea	ax, [si-20h]
-		push	ax
-		push	40h
-		call	sub_236E0
+		call	@tear_ripple_hittest$qii pascal, ax, 64
 		pushd	80h or (0 shl 16)
 		push	di
 		push	si
@@ -15202,9 +15149,7 @@ loc_23B0D:
 		cmp	ax, 55
 		jge	short loc_23B70
 		lea	ax, [si-20h]
-		push	ax
-		push	40h
-		call	sub_236E0
+		call	@tear_ripple_hittest$qii pascal, ax, 64
 		call	_ptn_put_quarter_8 stdcall, si, di, 80h or (3 shl 16)
 		pushd	80h ; '?'
 		lea	ax, [di-8]
@@ -15236,9 +15181,7 @@ loc_23B70:
 		cmp	ax, 60
 		jge	short loc_23BC0
 		lea	ax, [si-20h]
-		push	ax
-		push	40h
-		call	sub_236E0
+		call	@tear_ripple_hittest$qii pascal, ax, 64
 		pushd	80h or (0 shl 16)
 		push	di
 		lea	ax, [si-16]
