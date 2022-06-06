@@ -77,6 +77,7 @@ extern int8_t boss_phase;
 // --------
 
 static const int SOUL_COUNT = 2;
+static const int SOUL_CELS = 3;
 
 static const int TEAR_COUNT = 10;
 
@@ -201,4 +202,16 @@ bool16 near kikuri_hittest_orb(void)
 		return true;
 	}
 	return false;
+}
+
+void pascal near soul_move_and_render(int i, pixel_t delta_x, pixel_t delta_y)
+{
+	souls[i].move_lock_unput_and_put_8(0, delta_x, delta_y, 1);
+	if((boss_phase_frame % 12) == 0) {
+		if(souls[i].bos_image >= (SOUL_CELS - 1)) {
+			souls[i].bos_image = 0;
+		} else {
+			souls[i].set_image(souls[i].bos_image + 1);
+		}
+	}
 }

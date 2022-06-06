@@ -14706,70 +14706,14 @@ main_34_TEXT	segment	byte public 'CODE' use16
 	extern @kikuri_load$qv:proc
 	extern @kikuri_free$qv:proc
 	@kikuri_hittest_orb$qv procdesc near
+	@SOUL_MOVE_AND_RENDER$QIII procdesc pascal near \
+		soul:word, delta_x:word, delta_y:word
 main_34_TEXT	ends
 
 main_34__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_34
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-_kikuri_soul_move_and_render	proc near
-
-@@image_new		= word ptr -2
-@@delta_y		= word ptr  4
-@@delta_x		= word ptr  6
-@@soul		= word ptr  8
-
-		enter	2, 0
-		push	si
-		mov	si, [bp+@@soul]
-		push	1	; lock_frames
-		push	[bp+@@delta_y]	; delta_y
-		push	[bp+@@delta_x]	; delta_x
-		push	0	; unused
-		mov	ax, si
-		imul	ax, size CBossEntity
-		add	ax, offset _kikuri_souls
-		push	ds	; this (segment)
-		push	ax	; this (offset)
-		call	@CBossEntity@move_lock_unput_and_put_8$qiiii
-		add	sp, 0Ch
-		mov	ax, _boss_phase_frame
-		mov	bx, 12
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_23689
-		mov	bx, si
-		imul	bx, size CBossEntity
-		cmp	_kikuri_souls[bx].BE_bos_image, 2
-		jl	short loc_23673
-		mov	bx, si
-		imul	bx, size CBossEntity
-		mov	_kikuri_souls[bx].BE_bos_image, 0
-		jmp	short loc_23689
-; ---------------------------------------------------------------------------
-
-loc_23673:
-		mov	bx, si
-		imul	bx, size CBossEntity
-		mov	ax, _kikuri_souls[bx].BE_bos_image
-		inc	ax
-		mov	[bp+@@image_new], ax
-		mov	bx, si
-		imul	bx, size CBossEntity
-		mov	_kikuri_souls[bx].BE_bos_image, ax
-
-loc_23689:
-		pop	si
-		leave
-		retn	6
-_kikuri_soul_move_and_render	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15729,8 +15673,12 @@ loc_23F62:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_23F99
-		call	_kikuri_soul_move_and_render stdcall, -3, large (-4 and 0FFFFh) or (0 shl 16)
-		call	_kikuri_soul_move_and_render stdcall, -3, large ( 4 and 0FFFFh) or (1 shl 16)
+		push	large (0 shl 16) or (-4 and 0FFFFh)
+		push	-3
+		call	@soul_move_and_render$qiii
+		push	large (1 shl 16) or (+4 and 0FFFFh)
+		push	-3
+		call	@soul_move_and_render$qiii
 		cmp	kikuri_soul_0.BE_cur_top, 96
 		jge	short loc_23F99
 		mov	ax, 1
@@ -15758,8 +15706,12 @@ var_6		= byte ptr -6
 
 		enter	8, 0
 		push	si
-		call	_kikuri_soul_move_and_render stdcall, 0, large 0 or (0 shl 16)
-		call	_kikuri_soul_move_and_render stdcall, 0, large 0 or (1 shl 16)
+		push	large (0 shl 16) or 0
+		push	0
+		call	@soul_move_and_render$qiii
+		push	large (1 shl 16) or 0
+		push	0
+		call	@soul_move_and_render$qiii
 		push	70 or (60 shl 16)	; (for_hard) or (for_lunatic)
 		push	100 or (80 shl 16)	; (for_easy) or (for_normal)
 		push	ss	; ret (segment)
@@ -15869,13 +15821,16 @@ loc_24092:
 		sar	eax, 8
 		mov	di, ax
 		call	sub_23715
-		call	_kikuri_soul_move_and_render stdcall, di, si, 0
+		push	0
+		push	si
+		push	di
+		call	@soul_move_and_render$qiii
 		push	1
 		mov	ax, si
 		neg	ax
 		push	ax
 		push	di
-		call	_kikuri_soul_move_and_render
+		call	@soul_move_and_render$qiii
 		pop	di
 		pop	si
 		pop	bp
@@ -15981,13 +15936,16 @@ loc_2419B:
 		sar	eax, 8
 		mov	di, ax
 		call	sub_23715
-		call	_kikuri_soul_move_and_render stdcall, di, si, 0
+		push	0
+		push	si
+		push	di
+		call	@soul_move_and_render$qiii
 		push	1
 		mov	ax, si
 		neg	ax
 		push	ax
 		push	di
-		call	_kikuri_soul_move_and_render
+		call	@soul_move_and_render$qiii
 		pop	di
 		pop	si
 		pop	bp
