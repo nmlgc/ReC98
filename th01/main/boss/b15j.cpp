@@ -215,3 +215,18 @@ void pascal near soul_move_and_render(int i, pixel_t delta_x, pixel_t delta_y)
 		}
 	}
 }
+
+void pascal near tears_add(screen_x_t left, screen_y_t top)
+{
+	for(int i = 0; i < TEAR_COUNT; i++) {
+		if(tear_anim_frame[i] == 0) {
+			tears[i].pos_set(
+				left, top, 50,
+				SOUL_AREA_LEFT, SOUL_AREA_RIGHT, SOUL_AREA_TOP, SOUL_AREA_BOTTOM
+			);
+			tears[i].bos_image = 0;
+			tear_anim_frame[i] = 1;
+			return;
+		}
+	}
+}

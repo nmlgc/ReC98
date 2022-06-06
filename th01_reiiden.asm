@@ -14708,64 +14708,14 @@ main_34_TEXT	segment	byte public 'CODE' use16
 	@kikuri_hittest_orb$qv procdesc near
 	@SOUL_MOVE_AND_RENDER$QIII procdesc pascal near \
 		soul:word, delta_x:word, delta_y:word
+	@TEARS_ADD$QII procdesc pascal near \
+		left:word, top:word
 main_34_TEXT	ends
 
 main_34__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_34
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2368E	proc near
-
-@@top		= word ptr  4
-@@left		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_236D6
-; ---------------------------------------------------------------------------
-
-loc_23696:
-		cmp	_kikuri_tear_anim_frame[si], 0
-		jnz	short loc_236D5
-		push	64 or (400 shl 16)	; (move_clamp_top) or (move_clamp_bottom)
-		push	32 or (576 shl 16)	; (move_clamp_left) or (move_clamp_right)
-		push	50	; unknown
-		push	[bp+@@top]
-		push	[bp+@@left]
-		mov	ax, si
-		imul	ax, size CBossEntity
-		add	ax, offset _kikuri_tears
-		push	ds	; this (segment)
-		push	ax	; this (offset)
-		call	@CBossEntity@pos_set$qiiiiiii
-		add	sp, 12h
-		mov	bx, si
-		imul	bx, size CBossEntity
-		mov	_kikuri_tears[bx].BE_bos_image, 0
-		mov	_kikuri_tear_anim_frame[si], 1
-		jmp	short loc_236DB
-; ---------------------------------------------------------------------------
-
-loc_236D5:
-		inc	si
-
-loc_236D6:
-		cmp	si, KIKURI_TEAR_COUNT
-		jl	short loc_23696
-
-loc_236DB:
-		pop	si
-		pop	bp
-		retn	4
-sub_2368E	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15796,14 +15746,14 @@ loc_24064:
 		mov	ax, kikuri_soul_0.BE_cur_top
 		add	ax, 8
 		push	ax
-		call	sub_2368E
+		call	@tears_add$qii
 		mov	ax, kikuri_soul_1.BE_cur_left
 		add	ax, 12
 		push	ax
 		mov	ax, kikuri_soul_1.BE_cur_top
 		add	ax, 8
 		push	ax
-		call	sub_2368E
+		call	@tears_add$qii
 
 loc_24092:
 		mov	bx, _boss_phase_frame
