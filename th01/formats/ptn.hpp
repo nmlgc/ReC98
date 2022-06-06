@@ -72,7 +72,12 @@ void ptn_free(main_ptn_slot_t slot);
 // If true, the affected 32×32 or 16×16 area is restored from VRAM page 1
 // before a byte-aligned alpha put operation.
 // (Because calling egc_copy_rect_1_to_0_16() yourself is way too much to ask?)
-extern bool ptn_unput_before_alpha_put;
+//
+// ZUN bug: egc_copy_rect_1_to_0_16() is word-aligned rather than byte-aligned.
+// Blitting to a non-word-aligned X position will cause an additional 8 pixels
+// to the left and/or right side of the sprite to be unblitted as well.
+// Really, this hack should never be used.
+extern bool ptn_sloppy_unput_before_alpha_put;
 
 // 32×32 access
 // ------------

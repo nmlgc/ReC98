@@ -60,7 +60,7 @@ void ptn_put_8(screen_x_t left, vram_y_t top, int ptn_id)
 	uvram_offset_t vram_offset = vram_offset_shift(left, top);
 	ptn_t *ptn = ptn_with_id_shift(ptn_id);
 
-	if(ptn_unput_before_alpha_put) {
+	if(ptn_sloppy_unput_before_alpha_put) {
 		ptn_sloppy_unput_16(left, top);
 	}
 	for(y = 0; y < PTN_H; y++) {
@@ -117,7 +117,7 @@ void ptn_put_quarter_8(screen_x_t left, vram_y_t top, int ptn_id, int quarter)
 	ptn_t *ptn = ptn_with_id_shift(ptn_id);
 
 	q.init(quarter);
-	if(ptn_unput_before_alpha_put) {
+	if(ptn_sloppy_unput_before_alpha_put) {
 		ptn_sloppy_unput_quarter_16(left, top);
 	}
 	for(y = q.y; y < (q.y + PTN_QUARTER_H); y++) {
