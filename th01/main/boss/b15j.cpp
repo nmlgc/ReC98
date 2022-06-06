@@ -12,6 +12,7 @@ extern "C" {
 }
 #include "th01/formats/pf.hpp"
 #include "th01/math/area.hpp"
+#include "th01/math/overlap.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th01/sprites/pellet.h"
 #include "th01/main/particle.hpp"
@@ -23,9 +24,28 @@ extern "C" {
 #include "th01/main/bullet/pellet.hpp"
 #include "th01/main/boss/boss.hpp"
 #include "th01/main/boss/entity_a.hpp"
+#include "th01/main/player/orb.hpp"
 
 // Coordinates
 // -----------
+
+static const screen_x_t DISC_CENTER_X = 320;
+static const screen_y_t DISC_CENTER_Y = 180;
+
+static const pixel_t HITBOX_W = 96;
+static const pixel_t HITBOX_H = 48;
+
+static const screen_x_t HITBOX_LEFT = (
+	DISC_CENTER_X - (HITBOX_W / 2) - (ORB_W / 2)
+);
+static const screen_x_t HITBOX_RIGHT = (
+	DISC_CENTER_X + (HITBOX_W / 2) - (ORB_W / 2)
+);
+
+// Not the actual Y coordinates of the original hitbox, due to a sign confusion
+// bug in kikuri_hittest_orb()!
+static const screen_y_t HITBOX_TOP = (DISC_CENTER_Y - HITBOX_H);
+static const screen_y_t HITBOX_BOTTOM = DISC_CENTER_Y;
 
 static const pixel_t SOUL_W = 32;
 static const pixel_t SOUL_H = 32;
@@ -168,4 +188,17 @@ void kikuri_free(void)
 {
 	kikuri_ent_free();
 	kikuri_ptn_free();
+}
+
+bool16 near kikuri_hittest_orb(void)
+{
+	// Did you mean: > HITBOX_TOP? Using < describes a hitbox from the top of
+	// the playfield *until* that point instead...
+	if(
+		(orb_cur_left > HITBOX_LEFT) && (orb_cur_left < HITBOX_RIGHT) &&
+		(orb_cur_top < HITBOX_TOP) && (orb_cur_top < HITBOX_BOTTOM)
+	) {
+		return true;
+	}
+	return false;
 }

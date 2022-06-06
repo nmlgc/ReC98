@@ -14705,39 +14705,13 @@ main_34_TEXT	segment	byte public 'CODE' use16
 	extern @kikuri_select_for_rank$qmiiiii:proc
 	extern @kikuri_load$qv:proc
 	extern @kikuri_free$qv:proc
+	@kikuri_hittest_orb$qv procdesc near
 main_34_TEXT	ends
 
 main_34__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_34
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_235FD	proc near
-		push	bp
-		mov	bp, sp
-		cmp	_orb_cur_left, 256
-		jle	short loc_23625
-		cmp	_orb_cur_left, 352
-		jge	short loc_23625
-		cmp	_orb_cur_top, 132
-		jge	short loc_23625
-		cmp	_orb_cur_top, 180
-		jge	short loc_23625
-		mov	ax, 1
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_23625:
-		xor	ax, ax
-		pop	bp
-		retn
-sub_235FD	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -16929,7 +16903,7 @@ loc_24B3E:
 		call	sub_23D19
 		pushd	0 or (0 shl 16)	; (hitbox_w) or (hitbox_h)
 		pushd	0 or (0 shl 16)	; (hitbox_left) or (hitbox_top)
-		call	sub_235FD
+		call	@kikuri_hittest_orb$qv
 		push	ax	; colliding_with_orb
 		push	seg main_32_TEXT	; hit_callback (segment)
 		push	offset @boss_nop$qv	; hit_callback (offset)
@@ -17013,7 +16987,7 @@ loc_24C2A:
 		mov	word_35D14, ax
 		pushd	0 or (0 shl 16)	; (hitbox_w) or (hitbox_h)
 		pushd	0 or (0 shl 16)	; (hitbox_left) or (hitbox_top)
-		call	sub_235FD
+		call	@kikuri_hittest_orb$qv
 		push	ax	; colliding_with_orb
 		push	seg main_32_TEXT	; hit_callback (segment)
 		push	offset @boss_nop$qv	; hit_callback (offset)
@@ -17051,7 +17025,7 @@ loc_24C81:
 		call	sub_240DE
 		pushd	0 or (0 shl 16)
 		pushd	0 or (0 shl 16)	; (hitbox_left) or (hitbox_top)
-		call	sub_235FD
+		call	@kikuri_hittest_orb$qv
 		push	ax	; colliding_with_orb
 		push	seg main_32_TEXT	; hit_callback (segment)
 		push	offset @boss_nop$qv	; hit_callback (offset)
@@ -17134,7 +17108,7 @@ loc_24D4C:
 loc_24D59:
 		pushd	0 or (0 shl 16)	; (hitbox_w) or (hitbox_h)
 		pushd	0 or (0 shl 16)	; (hitbox_left) or (hitbox_top)
-		call	sub_235FD
+		call	@kikuri_hittest_orb$qv
 		push	ax	; colliding_with_orb
 		push	seg main_32_TEXT	; hit_callback (segment)
 		push	offset @boss_nop$qv	; hit_callback (offset)
