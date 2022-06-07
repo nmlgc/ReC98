@@ -14711,105 +14711,14 @@ main_34_TEXT	segment	byte public 'CODE' use16
 	@TEARS_ADD$QII procdesc pascal near \
 		left:word, top:word
 	@tears_update_and_render$qv procdesc near
+	@GRAPH_COPY_LINE_1_TO_0_MASKED$QIUI procdesc pascal near \
+		y:word, mask:word
 main_34_TEXT	ends
 
 main_34__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_34
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_23C4F	proc near
-
-var_2		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	ax, [bp+arg_2]
-		imul	ax, 50h
-		mov	si, ax
-		cmp	[bp+arg_2], 0
-		jl	loc_23D13
-		cmp	[bp+arg_2], 18Fh
-		jg	loc_23D13
-		mov	[bp+var_2], 0
-		jmp	loc_23D0B
-; ---------------------------------------------------------------------------
-
-loc_23C76:
-		push	1
-		call	_graph_accesspage_func
-		mov	ax, 0A800h
-		mov	es, ax
-		assume es:nothing
-		mov	ax, es:[si]
-		and	ax, [bp+arg_0]
-		mov	di, ax
-		push	0
-		call	_graph_accesspage_func
-		mov	ax, 0A800h
-		mov	es, ax
-		mov	es:[si], di
-		push	1
-		call	_graph_accesspage_func
-		mov	ax, 0B000h
-		mov	es, ax
-		assume es:nothing
-		mov	ax, es:[si]
-		and	ax, [bp+arg_0]
-		mov	di, ax
-		push	0
-		call	_graph_accesspage_func
-		mov	ax, 0B000h
-		mov	es, ax
-		mov	es:[si], di
-		push	1
-		call	_graph_accesspage_func
-		mov	ax, 0B800h
-		mov	es, ax
-		assume es:nothing
-		mov	ax, es:[si]
-		and	ax, [bp+arg_0]
-		mov	di, ax
-		push	0
-		call	_graph_accesspage_func
-		mov	ax, 0B800h
-		mov	es, ax
-		mov	es:[si], di
-		push	1
-		call	_graph_accesspage_func
-		mov	ax, 0E000h
-		mov	es, ax
-		assume es:nothing
-		mov	ax, es:[si]
-		and	ax, [bp+arg_0]
-		mov	di, ax
-		push	0
-		call	_graph_accesspage_func
-		add	sp, 10h
-		mov	ax, 0E000h
-		mov	es, ax
-		mov	es:[si], di
-		add	si, 2
-		inc	[bp+var_2]
-
-loc_23D0B:
-		cmp	[bp+var_2], 28h	; '('
-		jl	loc_23C76
-
-loc_23D13:
-		pop	di
-		pop	si
-		leave
-		retn	4
-sub_23C4F	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15860,14 +15769,10 @@ loc_24796:
 		jnz	loc_24871
 		cmp	_kikuri_invincibility_frame, 200
 		jge	short loc_247C9
-		push	_kikuri_invincibility_frame
-		push	2222h
-		call	sub_23C4F
+		call	@graph_copy_line_1_to_0_masked$qiui pascal, _kikuri_invincibility_frame, 2222h
 		mov	ax, 399
 		sub	ax, _kikuri_invincibility_frame
-		push	ax
-		push	2222h
-		call	sub_23C4F
+		call	@graph_copy_line_1_to_0_masked$qiui pascal, ax, 2222h
 
 loc_247C9:
 		mov	ax, _boss_phase_frame
@@ -15878,15 +15783,11 @@ loc_247C9:
 		jge	short loc_247F9
 		mov	ax, _kikuri_invincibility_frame
 		add	ax, -8
-		push	ax
-		push	0AAAAh
-		call	sub_23C4F
+		call	@graph_copy_line_1_to_0_masked$qiui pascal, ax, 0AAAAh
 		mov	ax, 399
 		sub	ax, _kikuri_invincibility_frame
 		add	ax, 8
-		push	ax
-		push	0AAAAh
-		call	sub_23C4F
+		call	@graph_copy_line_1_to_0_masked$qiui pascal, ax, 0AAAAh
 
 loc_247F9:
 		mov	ax, _boss_phase_frame
@@ -15897,15 +15798,11 @@ loc_247F9:
 		jge	short loc_24829
 		mov	ax, _kikuri_invincibility_frame
 		add	ax, -16
-		push	ax
-		push	0EEEEh
-		call	sub_23C4F
+		call	@graph_copy_line_1_to_0_masked$qiui pascal, ax, 0EEEEh
 		mov	ax, 18Fh
 		sub	ax, _kikuri_invincibility_frame
 		add	ax, 16
-		push	ax
-		push	0EEEEh
-		call	sub_23C4F
+		call	@graph_copy_line_1_to_0_masked$qiui pascal, ax, 0EEEEh
 
 loc_24829:
 		mov	ax, _boss_phase_frame
@@ -15916,15 +15813,11 @@ loc_24829:
 		jg	short loc_24857
 		mov	ax, _kikuri_invincibility_frame
 		add	ax, -24
-		push	ax
-		push	0FFFFh
-		call	sub_23C4F
+		call	@graph_copy_line_1_to_0_masked$qiui pascal, ax, 0FFFFh
 		mov	ax, 399
 		sub	ax, _kikuri_invincibility_frame
 		add	ax, 18h
-		push	ax
-		push	0FFFFh
-		call	sub_23C4F
+		call	@graph_copy_line_1_to_0_masked$qiui pascal, ax, 0FFFFh
 
 loc_24857:
 		inc	_kikuri_invincibility_frame

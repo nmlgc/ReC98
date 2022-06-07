@@ -4,10 +4,12 @@
 #include <stddef.h>
 #include "th01/main/boss/palette.cpp"
 
+#include "x86real.h"
 #include "planar.h"
 #include "th01/v_colors.hpp"
 extern "C" {
 #include "th01/hardware/egc.h"
+#include "th01/hardware/graph.h"
 #include "th01/hardware/input.hpp"
 #include "th01/snd/mdrv2.h"
 #include "th01/formats/ptn.hpp"
@@ -436,4 +438,26 @@ void pascal near ripple_update_and_render(
 	#undef unput_and_put_inner
 	#undef unput_and_put_center
 	#undef unput_and_put
+}
+
+// What's a EGC?
+void pascal near graph_copy_line_1_to_0_masked(vram_y_t y, dots16_t mask)
+{
+	vram_offset_t vo = vram_offset_muldiv(0, y);
+	dots16_t p1;
+
+	if((y < 0) || (y > (RES_Y - 1))) {
+		return;
+	}
+	for(vram_word_amount_t word_x = 0; word_x < (ROW_SIZE / 2); word_x++) {
+		graph_accesspage_func(1);	p1 = (peek(SEG_PLANE_B, vo) & mask);
+		graph_accesspage_func(0);	poke2(SEG_PLANE_B, vo, p1);
+		graph_accesspage_func(1);	p1 = (peek(SEG_PLANE_R, vo) & mask);
+		graph_accesspage_func(0);	poke2(SEG_PLANE_R, vo, p1);
+		graph_accesspage_func(1);	p1 = (peek(SEG_PLANE_G, vo) & mask);
+		graph_accesspage_func(0);	poke2(SEG_PLANE_G, vo, p1);
+		graph_accesspage_func(1);	p1 = (peek(SEG_PLANE_E, vo) & mask);
+		graph_accesspage_func(0);	poke2(SEG_PLANE_E, vo, p1);
+		vo += 2;
+	}
 }

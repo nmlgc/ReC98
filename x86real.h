@@ -112,12 +112,13 @@ void segread(struct SREGS *__segp);
 	void inline pokeb(uint16_t __segment, uint16_t __offset, int8_t __value) {
 		(*((int8_t __far *)MK_FP(__segment, __offset)) = __value);
 	}
-#else
-	#define peek(a,b)    (*((int16_t __far * )MK_FP((a),(b))))
-	#define peekb(a,b)   (*(( int8_t __far * )MK_FP((a),(b))))
-	#define poke(a,b,c)  (*((int16_t __far * )MK_FP((a),(b))) = (int16_t)(c))
-	#define pokeb(a,b,c) (*(( int8_t __far * )MK_FP((a),(b))) = ( int8_t)(c))
 #endif
+
+// The macro forms are also required in C++ code from time to time.
+#define peek2(a,b)    (*((int16_t __far * )MK_FP((a),(b))))
+#define peekb2(a,b)   (*(( int8_t __far * )MK_FP((a),(b))))
+#define poke2(a,b,c)  (*((int16_t __far * )MK_FP((a),(b))) = (int16_t)(c))
+#define pokeb2(a,b,c) (*(( int8_t __far * )MK_FP((a),(b))) = ( int8_t)(c))
 /// ----------------
 
 #endif
