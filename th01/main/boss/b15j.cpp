@@ -6,6 +6,7 @@
 
 #include "x86real.h"
 #include "planar.h"
+#include "master.hpp"
 #include "th01/v_colors.hpp"
 extern "C" {
 #include "th01/hardware/egc.h"
@@ -17,6 +18,7 @@ extern "C" {
 #include "th01/formats/pf.hpp"
 #include "th01/math/area.hpp"
 #include "th01/math/overlap.hpp"
+#include "th01/math/polar.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th01/sprites/pellet.h"
 #include "th01/main/particle.hpp"
@@ -36,6 +38,7 @@ extern "C" {
 
 static const screen_x_t DISC_CENTER_X = 320;
 static const screen_y_t DISC_CENTER_Y = 180;
+static const pixel_t DISC_RADIUS = 90;
 
 static const pixel_t HITBOX_W = 96;
 static const pixel_t HITBOX_H = 48;
@@ -460,4 +463,48 @@ void pascal near graph_copy_line_1_to_0_masked(vram_y_t y, dots16_t mask)
 		graph_accesspage_func(0);	poke2(SEG_PLANE_E, vo, p1);
 		vo += 2;
 	}
+}
+
+void near pattern_symmetric_spiral_from_disc(void)
+{
+	#define angle   	pattern0_angle
+	#define drift   	pattern0_drift
+	#define distance	pattern0_distance
+
+	extern unsigned char angle;
+	extern unsigned char drift;
+	extern pixel_t distance;
+	screen_x_t left;
+	screen_y_t top;
+
+	if(boss_phase_frame < 100) {
+		return;
+	}
+	if(boss_phase_frame == 100) {
+		angle = 0x00;
+		drift = 0x00;
+		select_for_rank(pattern_state.interval, 4, 3, 2, 1);
+		select_for_rank(distance,
+			DISC_RADIUS, DISC_RADIUS, DISC_RADIUS, ((DISC_RADIUS / 2) + 5)
+		);
+	}
+	if((boss_phase_frame % pattern_state.interval) == 0) {
+		left = polar_x(DISC_CENTER_X, distance, (angle + 0x00));
+		top = polar_y(DISC_CENTER_Y, distance, (angle + 0x00));
+		Pellets.add_single(left, top, (angle + 0x00 + drift), to_sp(3.125f));
+
+		left = polar_x(DISC_CENTER_X, distance, (angle + 0x80));
+		top = polar_y(DISC_CENTER_Y, distance, (angle + 0x80));
+		Pellets.add_single(left, top, (angle + 0x80 + drift), to_sp(3.125f));
+
+		if(boss_phase_frame >= 900) {
+			boss_phase_frame = 0;
+		}
+		angle -= 0x08;
+		drift++;
+	}
+
+	#undef distance
+	#undef drift
+	#undef angle
 }

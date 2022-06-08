@@ -14713,125 +14713,13 @@ main_34_TEXT	segment	byte public 'CODE' use16
 	@tears_update_and_render$qv procdesc near
 	@GRAPH_COPY_LINE_1_TO_0_MASKED$QIUI procdesc pascal near \
 		y:word, mask:word
+	@pattern_symmetric_spiral_from_di$qv procdesc near
 main_34_TEXT	ends
 
 main_34__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_34
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_23D19	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		cmp	_boss_phase_frame, 100
-		jl	loc_23E6A
-		cmp	_boss_phase_frame, 100
-		jnz	short loc_23D63
-		mov	angle_3A6B9, 0
-		mov	angle_3A6BA, 0
-		call	@kikuri_select_for_rank$qmiiiii stdcall, offset _kikuri_pattern_state, ds, large 04h or (03h shl 16), large 02h or (01h shl 16)
-		call	@kikuri_select_for_rank$qmiiiii stdcall, offset word_3A6BB, ds, large 90 or (90 shl 16), large 90 or (50 shl 16)
-		add	sp, 18h
-
-loc_23D63:
-		mov	ax, _boss_phase_frame
-		cwd
-		idiv	_kikuri_pattern_state
-		or	dx, dx
-		jnz	loc_23E6A
-		movsx	eax, word_3A6BB
-		mov	dl, angle_3A6B9
-		mov	dh, 0
-		and	dx, 255
-		add	dx, dx
-		mov	bx, dx
-		movsx	edx, _CosTable8[bx]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, 320
-		mov	si, ax
-		movsx	eax, word_3A6BB
-		mov	dl, angle_3A6B9
-		mov	dh, 0
-		and	dx, 255
-		add	dx, dx
-		mov	bx, dx
-		movsx	edx, _SinTable8[bx]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, 180
-		mov	di, ax
-		pushd	0 or (0 shl 16)
-		pushd	PM_REGULAR or (0 shl 16)
-		push	(3 shl 4) + 2
-		mov	al, angle_3A6B9
-		add	al, angle_3A6BA
-		push	ax
-		push	di
-		push	si
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		movsx	eax, word_3A6BB
-		mov	dl, angle_3A6B9
-		mov	dh, 0
-		add	dx, 80h
-		and	dx, 255
-		add	dx, dx
-		mov	bx, dx
-		movsx	edx, _CosTable8[bx]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, 320
-		mov	si, ax
-		movsx	eax, word_3A6BB
-		mov	dl, angle_3A6B9
-		mov	dh, 0
-		add	dx, 80h
-		and	dx, 255
-		add	dx, dx
-		mov	bx, dx
-		movsx	edx, _SinTable8[bx]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, 180
-		mov	di, ax
-		pushd	0 or (0 shl 16)
-		pushd	PM_REGULAR or (0 shl 16)
-		push	(3 shl 4) + 2
-		mov	al, angle_3A6B9
-		add	al, angle_3A6BA
-		add	al, 80h
-		push	ax
-		push	di
-		push	si
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		add	sp, 28h
-		cmp	_boss_phase_frame, 900
-		jl	short loc_23E5E
-		mov	_boss_phase_frame, 0
-
-loc_23E5E:
-		mov	al, angle_3A6B9
-		add	al, -8
-		mov	angle_3A6B9, al
-		inc	angle_3A6BA
-
-loc_23E6A:
-		pop	di
-		pop	si
-		pop	bp
-		retn
-sub_23D19	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -16094,7 +15982,7 @@ loc_24B19:
 loc_24B3E:
 		inc	_boss_phase_frame
 		inc	_kikuri_invincibility_frame
-		call	sub_23D19
+		call	@pattern_symmetric_spiral_from_di$qv
 		pushd	0 or (0 shl 16)	; (hitbox_w) or (hitbox_h)
 		pushd	0 or (0 shl 16)	; (hitbox_left) or (hitbox_top)
 		call	@kikuri_hittest_orb$qv
@@ -17269,9 +17157,11 @@ _kikuri_tears          	CBossEntity 10 dup (<?>)
 public _kikuri_pattern_state
 _kikuri_pattern_state	dw ?
 
-angle_3A6B9	db ?
-angle_3A6BA	db ?
-word_3A6BB	dw ?
+public _pattern0_angle, _pattern0_drift, _pattern0_distance
+_pattern0_angle   	db ?
+_pattern0_drift   	db ?
+_pattern0_distance	dw ?
+
 angle_3A6BD	db ?
 word_3A6BE	dw ?
 public _kikuri_invincible, _kikuri_invincibility_frame
