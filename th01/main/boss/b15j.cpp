@@ -23,5 +23,15 @@ extern bool initial_hp_rendered;
 static const main_ptn_slot_t PTN_SLOT_WAVE = PTN_SLOT_BOSS_1;
 // ----
 
+// Patterns
+// --------
+
+#define pattern_state	kikuri_pattern_state
+extern union {
+	int interval;
+	int speed_multiplied_by_8;
+} pattern_state;
+// --------
+
 #define select_for_rank kikuri_select_for_rank
 #include "th01/main/select_r.cpp"

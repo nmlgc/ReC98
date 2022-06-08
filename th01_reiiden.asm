@@ -15738,14 +15738,14 @@ sub_23D19	proc near
 		jnz	short loc_23D63
 		mov	angle_3A6B9, 0
 		mov	angle_3A6BA, 0
-		call	@kikuri_select_for_rank$qmiiiii stdcall, offset speed_3A6B7, ds, large 04h or (03h shl 16), large 02h or (01h shl 16)
+		call	@kikuri_select_for_rank$qmiiiii stdcall, offset _kikuri_pattern_state, ds, large 04h or (03h shl 16), large 02h or (01h shl 16)
 		call	@kikuri_select_for_rank$qmiiiii stdcall, offset word_3A6BB, ds, large 90 or (90 shl 16), large 90 or (50 shl 16)
 		add	sp, 18h
 
 loc_23D63:
 		mov	ax, _boss_phase_frame
 		cwd
-		idiv	speed_3A6B7
+		idiv	_kikuri_pattern_state
 		or	dx, dx
 		jnz	loc_23E6A
 		movsx	eax, word_3A6BB
@@ -16029,12 +16029,12 @@ sub_24041	proc near
 		push	di
 		cmp	_boss_phase_frame, 10
 		jge	short loc_24064
-		call	@kikuri_select_for_rank$qmiiiii c, offset speed_3A6B7, ds, large 0C8h or (0A0h shl 16), large 8Ch or (78h shl 16)
+		call	@kikuri_select_for_rank$qmiiiii c, offset _kikuri_pattern_state, ds, large 0C8h or (0A0h shl 16), large 8Ch or (78h shl 16)
 
 loc_24064:
 		mov	ax, _boss_phase_frame
 		cwd
-		idiv	speed_3A6B7
+		idiv	_kikuri_pattern_state
 		or	dx, dx
 		jnz	short loc_24092
 		mov	ax, kikuri_soul_0.BE_cur_left
@@ -16210,12 +16210,12 @@ sub_241E7	proc near
 		cmp	_boss_phase_frame, 100
 		jnz	short loc_24219
 		mov	angle_3A6BD, 20h
-		call	@kikuri_select_for_rank$qmiiiii c, offset speed_3A6B7, ds, large 0Eh or (08h shl 16), large 06h or (04h shl 16)
+		call	@kikuri_select_for_rank$qmiiiii c, offset _kikuri_pattern_state, ds, large 0Eh or (08h shl 16), large 06h or (04h shl 16)
 
 loc_24219:
 		mov	ax, _boss_phase_frame
 		cwd
-		idiv	speed_3A6B7
+		idiv	_kikuri_pattern_state
 		or	dx, dx
 		jnz	loc_24310
 		xor	si, si
@@ -16324,13 +16324,13 @@ sub_24316	proc near
 		jle	loc_244C9
 		cmp	_boss_phase_frame, 250
 		jnz	short loc_24378
-		call	@kikuri_select_for_rank$qmiiiii stdcall, offset speed_3A6B7, ds, large 34h or (38h shl 16), large 3Ch or (40h shl 16)
+		call	@kikuri_select_for_rank$qmiiiii stdcall, offset _kikuri_pattern_state, ds, large 34h or (38h shl 16), large 3Ch or (40h shl 16)
 		push	6
 		call	_mdrv2_se_play
 		add	sp, 0Eh
 		push	20 or (4 shl 16)	; (moveout_at_age) or (w shl 16)
 		push	10	; col
-		push	speed_3A6B7	; speed_multiplied_by_8
+		push	_kikuri_pattern_state	; speed_multiplied_by_8
 		push	PLAYFIELD_BOTTOM	; target_y
 		call	IRand
 		mov	bx, 120
@@ -16353,7 +16353,7 @@ loc_24378:
 		pop	cx
 		push	20 or (4 shl 16)	; (moveout_at_age) or (w shl 16)
 		push	10	; col
-		push	speed_3A6B7	; speed_multiplied_by_8
+		push	_kikuri_pattern_state	; speed_multiplied_by_8
 		push	PLAYFIELD_BOTTOM	; target_y
 		call	IRand
 		mov	bx, 120
@@ -16376,7 +16376,7 @@ loc_243B7:
 		pop	cx
 		push	20 or (4 shl 16)	; (moveout_at_age) or (w shl 16)
 		push	10	; col
-		push	speed_3A6B7	; speed_multiplied_by_8
+		push	_kikuri_pattern_state	; speed_multiplied_by_8
 		push	PLAYFIELD_BOTTOM	; target_y
 		call	IRand
 		mov	bx, 120
@@ -16399,7 +16399,7 @@ loc_243F6:
 		pop	cx
 		push	20 or (4 shl 16)	; (moveout_at_age) or (w shl 16)
 		push	10	; col
-		push	speed_3A6B7	; speed_multiplied_by_8
+		push	_kikuri_pattern_state	; speed_multiplied_by_8
 		push	PLAYFIELD_BOTTOM	; target_y
 		call	IRand
 		mov	bx, 120
@@ -16422,7 +16422,7 @@ loc_24434:
 		pop	cx
 		push	20 or (4 shl 16)	; (moveout_at_age) or (w shl 16)
 		push	10	; col
-		push	speed_3A6B7	; speed_multiplied_by_8
+		push	_kikuri_pattern_state	; speed_multiplied_by_8
 		push	PLAYFIELD_BOTTOM	; target_y
 		call	IRand
 		mov	bx, 120
@@ -16445,7 +16445,7 @@ loc_24472:
 		pop	cx
 		push	20 or (4 shl 16)	; (moveout_at_age) or (w shl 16)
 		push	10	; col
-		push	speed_3A6B7	; speed_multiplied_by_8
+		push	_kikuri_pattern_state	; speed_multiplied_by_8
 		push	PLAYFIELD_BOTTOM	; target_y
 		call	IRand
 		mov	bx, 120
@@ -16490,12 +16490,12 @@ sub_244CE	proc near
 		jle	loc_24647
 		cmp	_boss_phase_frame, 100
 		jnz	short loc_244F9
-		call	@kikuri_select_for_rank$qmiiiii c, offset speed_3A6B7, ds, large 23h or (19h shl 16), large 17h or (16h shl 16)
+		call	@kikuri_select_for_rank$qmiiiii c, offset _kikuri_pattern_state, ds, large 23h or (19h shl 16), large 17h or (16h shl 16)
 
 loc_244F9:
 		mov	ax, _boss_phase_frame
 		cwd
-		idiv	speed_3A6B7
+		idiv	_kikuri_pattern_state
 		or	dx, dx
 		jnz	loc_24647
 		xor	si, si
@@ -16647,7 +16647,7 @@ sub_24660	proc near
 		jl	loc_2471B
 		cmp	_boss_phase_frame, 100
 		jnz	short loc_246A0
-		call	@kikuri_select_for_rank$qmiiiii stdcall, offset speed_3A6B7, ds, large 3Ch or (40h shl 16), large 44h or (48h shl 16)
+		call	@kikuri_select_for_rank$qmiiiii stdcall, offset _kikuri_pattern_state, ds, large 3Ch or (40h shl 16), large 44h or (48h shl 16)
 		call	@kikuri_select_for_rank$qmiiiii stdcall, offset word_3A6BE, ds, large 0 or (10 shl 16), large 16 or (20 shl 16)
 		add	sp, 18h
 
@@ -16675,7 +16675,7 @@ loc_246A0:
 		mov	di, dx
 		push	20 or (8 shl 16)	; (moveout_at_age) or (w shl 16)
 		push	10	; col
-		push	speed_3A6B7	; speed_multiplied_by_8
+		push	_kikuri_pattern_state	; speed_multiplied_by_8
 		push	PLAYFIELD_BOTTOM	; target_y
 		mov	ax, si
 		shl	ax, 6
@@ -18266,7 +18266,10 @@ _boss_palette	palette_t <?>
 byte_3A3BE	db ?
 		db 10 dup(?)
 include th01/main/boss/b15j[bss].asm
-speed_3A6B7	dw ?
+
+public _kikuri_pattern_state
+_kikuri_pattern_state	dw ?
+
 angle_3A6B9	db ?
 angle_3A6BA	db ?
 word_3A6BB	dw ?
