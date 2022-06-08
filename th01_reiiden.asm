@@ -14714,80 +14714,13 @@ main_34_TEXT	segment	byte public 'CODE' use16
 	@GRAPH_COPY_LINE_1_TO_0_MASKED$QIUI procdesc pascal near \
 		y:word, mask:word
 	@pattern_symmetric_spiral_from_di$qv procdesc near
+	@pattern_spinning_aimed_rings$qv procdesc near
 main_34_TEXT	ends
 
 main_34__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_34
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_23E6E	proc near
-
-@@angle		= byte ptr -7
-var_6		= word ptr -6
-@@top		= word ptr -4
-@@left		= word ptr -2
-
-		enter	8, 0
-		push	si
-		push	55 or (50 shl 16)	; (for_hard) or (for_lunatic)
-		push	80 or (60 shl 16)	; (for_easy) or (for_normal)
-		push	ss	; ret (segment)
-		lea	ax, [bp+var_6]
-		push	ax	; ret (offset)
-		call	@kikuri_select_for_rank$qmiiiii
-		add	sp, 0Ch
-		mov	ax, _boss_phase_frame
-		cwd
-		idiv	[bp+var_6]
-		or	dx, dx
-		jnz	short loc_23F13
-		xor	si, si
-		jmp	short loc_23F0E
-; ---------------------------------------------------------------------------
-
-loc_23E9A:
-		mov	bx, si
-		shl	bx, 5
-		and	bx, 255
-		add	bx, bx
-		movsx	eax, _CosTable8[bx]
-		shl	eax, 4
-		sar	eax, 8
-		add	ax, 316
-		mov	[bp+@@left], ax
-		mov	bx, si
-		shl	bx, 5
-		and	bx, 255
-		add	bx, bx
-		movsx	eax, _SinTable8[bx]
-		shl	eax, 4
-		sar	eax, 8
-		add	ax, 224
-		mov	[bp+@@top], ax
-		push	164
-		mov	ax, _player_left
-		add	ax, -300
-		push	ax
-		call	iatan2
-		mov	[bp+@@angle], al
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii c, offset _Pellets, ds, [bp+@@left], [bp+@@top], word ptr [bp+@@angle], (3 shl 4), large PM_SPIN or ((2 shl 4) shl 16), large 312 or (224 shl 16)
-		inc	si
-
-loc_23F0E:
-		cmp	si, 8
-		jl	short loc_23E9A
-
-loc_23F13:
-		pop	si
-		leave
-		retn
-sub_23E6E	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -16055,7 +15988,7 @@ loc_24C07:
 		jnz	short loc_24C81
 		inc	_boss_phase_frame
 		inc	_kikuri_invincibility_frame
-		call	sub_23E6E
+		call	@pattern_spinning_aimed_rings$qv
 		cmp	word_35D14, 0
 		jnz	short loc_24C27
 		call	sub_23F16

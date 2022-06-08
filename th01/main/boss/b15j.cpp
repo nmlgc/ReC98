@@ -40,6 +40,10 @@ static const screen_x_t DISC_CENTER_X = 320;
 static const screen_y_t DISC_CENTER_Y = 180;
 static const pixel_t DISC_RADIUS = 90;
 
+// That's… not quite where the light ball is?
+static const screen_x_t LIGHTBALL_CENTER_X = 320;
+static const screen_y_t LIGHTBALL_CENTER_Y = 224;
+
 static const pixel_t HITBOX_W = 96;
 static const pixel_t HITBOX_H = 48;
 
@@ -507,4 +511,41 @@ void near pattern_symmetric_spiral_from_disc(void)
 	#undef distance
 	#undef drift
 	#undef angle
+}
+
+void near pattern_spinning_aimed_rings(void)
+{
+	enum {
+		RING = 8,
+	};
+
+	screen_x_t left;
+	screen_y_t top;
+	int interval;
+
+	select_for_rank(interval, 80, 60, 55, 50);
+
+	if((boss_phase_frame % interval) != 0) {
+		return;
+	}
+	for(int i = 0; i < RING; i++) {
+		left = polar_x(
+			(LIGHTBALL_CENTER_X - (PELLET_W / 2)), 16, (i * (0x100 / RING))
+		);
+		top = polar_y(LIGHTBALL_CENTER_Y, 16, (i * (0x100 / RING)));
+		unsigned char angle = iatan2(
+			((player_center_y() + (PELLET_H / 2)) - LIGHTBALL_CENTER_Y),
+			((player_center_x() + (PELLET_W / 2)) - LIGHTBALL_CENTER_X)
+		);
+		Pellets.add_single(
+			left,
+			top,
+			angle,
+			to_sp(3.0f),
+			PM_SPIN,
+			to_sp(2.0f),
+			(LIGHTBALL_CENTER_X - PELLET_W),
+			LIGHTBALL_CENTER_Y
+		);
+	}
 }
