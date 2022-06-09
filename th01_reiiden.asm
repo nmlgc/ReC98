@@ -14708,8 +14708,6 @@ main_34_TEXT	segment	byte public 'CODE' use16
 	@kikuri_hittest_orb$qv procdesc near
 	@SOUL_MOVE_AND_RENDER$QIII procdesc pascal near \
 		soul:word, delta_x:word, delta_y:word
-	@TEARS_ADD$QII procdesc pascal near \
-		left:word, top:word
 	@tears_update_and_render$qv procdesc near
 	@GRAPH_COPY_LINE_1_TO_0_MASKED$QIUI procdesc pascal near \
 		y:word, mask:word
@@ -14717,79 +14715,13 @@ main_34_TEXT	segment	byte public 'CODE' use16
 	@pattern_spinning_aimed_rings$qv procdesc near
 	@phase_4_souls_activate$qv procdesc near
 	@pattern_souls_spreads$qv procdesc near
+	@pattern_souls_drop_tears_and_mov$qv procdesc near
 main_34_TEXT	ends
 
 main_34__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_34
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_24041	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		cmp	_boss_phase_frame, 10
-		jge	short loc_24064
-		call	@kikuri_select_for_rank$qmiiiii c, offset _kikuri_pattern_state, ds, large 0C8h or (0A0h shl 16), large 8Ch or (78h shl 16)
-
-loc_24064:
-		mov	ax, _boss_phase_frame
-		cwd
-		idiv	_kikuri_pattern_state
-		or	dx, dx
-		jnz	short loc_24092
-		mov	ax, kikuri_soul_0.BE_cur_left
-		add	ax, 12
-		push	ax
-		mov	ax, kikuri_soul_0.BE_cur_top
-		add	ax, 8
-		push	ax
-		call	@tears_add$qii
-		mov	ax, kikuri_soul_1.BE_cur_left
-		add	ax, 12
-		push	ax
-		mov	ax, kikuri_soul_1.BE_cur_top
-		add	ax, 8
-		push	ax
-		call	@tears_add$qii
-
-loc_24092:
-		mov	bx, _boss_phase_frame
-		and	bx, 255
-		add	bx, bx
-		movsx	eax, _CosTable8[bx]
-		imul	eax, 6
-		sar	eax, 8
-		mov	si, ax
-		mov	bx, _boss_phase_frame
-		and	bx, 255
-		add	bx, bx
-		movsx	eax, _CosTable8[bx]
-		shl	eax, 1
-		sar	eax, 8
-		mov	di, ax
-		call	@tears_update_and_render$qv
-		push	0
-		push	si
-		push	di
-		call	@soul_move_and_render$qiii
-		push	1
-		mov	ax, si
-		neg	ax
-		push	ax
-		push	di
-		call	@soul_move_and_render$qiii
-		pop	di
-		pop	si
-		pop	bp
-		retn
-sub_24041	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15916,7 +15848,7 @@ loc_24C81:
 		jnz	short loc_24CFA
 		inc	_boss_phase_frame
 		inc	_kikuri_invincibility_frame
-		call	sub_24041
+		call	@pattern_souls_drop_tears_and_mov$qv
 		call	sub_240DE
 		pushd	0 or (0 shl 16)
 		pushd	0 or (0 shl 16)	; (hitbox_left) or (hitbox_top)

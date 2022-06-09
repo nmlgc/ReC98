@@ -457,6 +457,23 @@ void pascal near ripple_update_and_render(
 	#undef unput_and_put
 }
 
+// Must be called for the rest of the fight after the first call in order to
+// not leave inactive soul, tear, and ripple sprites in VRAM. (Thankfully, the
+// original game does that.)
+inline void souls_move_diagonally_and_render__tears_update_and_render(
+	pixel_t velocity_base_x, pixel_t velocity_base_y
+) {
+	pixel_t velocity_x = polar_x(0, velocity_base_x, boss_phase_frame);
+
+	// Using polar_x() rather than polar_y() is what makes this movement
+	// diagonal instead of elliptic.
+	pixel_t velocity_y = polar_x(0, velocity_base_y, boss_phase_frame);
+
+	tears_update_and_render();
+	soul_move_and_render(0, +velocity_x, velocity_y);
+	soul_move_and_render(1, -velocity_x, velocity_y);
+}
+
 // What's a EGC?
 void pascal near graph_copy_line_1_to_0_masked(vram_y_t y, dots16_t mask)
 {
@@ -618,4 +635,22 @@ kikuri_phase_4_subphase_t near pattern_souls_spreads(void)
 		return P4_DONE;
 	}
 	return P4_PATTERN;
+}
+
+void near pattern_souls_drop_tears_and_move_diagonally(void)
+{
+	if(boss_phase_frame < 10) {
+		select_for_rank(pattern_state.interval, 200, 160, 140, 120);
+	}
+	if((boss_phase_frame % pattern_state.interval) == 0) {
+		tears_add(
+			(souls[0].cur_center_x() - (TEAR_W / 4)), // Not half?!
+			(souls[0].cur_center_y() - (TEAR_H / 2))
+		);
+		tears_add(
+			(souls[1].cur_center_x() - (TEAR_W / 4)), // Not half?!
+			(souls[1].cur_center_y() - (TEAR_H / 2))
+		);
+	}
+	souls_move_diagonally_and_render__tears_update_and_render(6, 2);
 }
