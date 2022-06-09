@@ -835,3 +835,43 @@ int near pattern_single_lasers_from_left_eye(void)
 	}
 	return 1;
 }
+
+int near pattern_souls_symmetric_rain_lines(void)
+{
+	if(boss_phase_frame > 100) {
+		// Yes, this condition can never be true here. This pattern always runs
+		// after pattern_single_lasers_from_left_eye(), so it reuses the
+		// [pattern_state] of that one (a laser speed), and reinterprets it as
+		// an interval. Therefore, the actual values are (52, 56, 60, 64).
+		if(boss_phase_frame == 100) {
+			select_for_rank(pattern_state.interval, 35, 25, 23, 22);
+		}
+		if((boss_phase_frame % pattern_state.interval) == 0) {
+			for(int i = 0; i < SOUL_COUNT; i++) {
+				#define fire(i, angle, speed_base) { \
+					pellets_add_single_rain( \
+						(souls[i].cur_center_x() - (PELLET_W / 2)), \
+						(souls[i].cur_center_y() - (PELLET_H / 2)), \
+						angle, \
+						speed_base \
+					); \
+				}
+
+				fire(i, 0x00, 3.0f);
+				fire(i, 0x00, 2.0f);
+				fire(i, 0x00, 1.0f);
+				fire(i, 0x80, 1.0f);
+				fire(i, 0x80, 2.0f);
+				fire(i, 0x80, 3.0f);
+				mdrv2_se_play(7);
+
+				#undef fire
+			}
+		}
+	}
+	if(boss_phase_frame > 250) {
+		boss_phase_frame = 0;
+		return 3;
+	}
+	return 2;
+}

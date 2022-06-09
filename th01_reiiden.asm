@@ -14717,168 +14717,13 @@ main_34_TEXT	segment	byte public 'CODE' use16
 	@pattern_souls_single_aimed_pelle$qv procdesc near
 	@pattern_4_spiral_along_disc$qv procdesc near
 	@pattern_single_lasers_from_left_$qv procdesc near
+	@pattern_souls_symmetric_rain_lin$qv procdesc near
 main_34_TEXT	ends
 
 main_34__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_34
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_244CE	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		cmp	_boss_phase_frame, 100
-		jle	loc_24647
-		cmp	_boss_phase_frame, 100
-		jnz	short loc_244F9
-		call	@kikuri_select_for_rank$qmiiiii c, offset _kikuri_pattern_state, ds, large 23h or (19h shl 16), large 17h or (16h shl 16)
-
-loc_244F9:
-		mov	ax, _boss_phase_frame
-		cwd
-		idiv	_kikuri_pattern_state
-		or	dx, dx
-		jnz	loc_24647
-		xor	si, si
-		jmp	loc_24640
-; ---------------------------------------------------------------------------
-
-loc_2450C:
-		pushd	0 or (0 shl 16)
-		push	PM_GRAVITY or (1 shl 16)
-		push	(3 shl 4)
-		push	0
-		mov	bx, si
-		imul	bx, size CBossEntity
-		mov	ax, _kikuri_souls[bx].BE_cur_top
-		add	ax, 12
-		push	ax
-		mov	bx, si
-		imul	bx, size CBossEntity
-		mov	ax, _kikuri_souls[bx].BE_cur_left
-		add	ax, 12
-		push	ax
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		pushd	0 or (0 shl 16)
-		push	PM_GRAVITY or (1 shl 16)
-		push	(2 shl 4)
-		push	0
-		mov	bx, si
-		imul	bx, size CBossEntity
-		mov	ax, _kikuri_souls[bx].BE_cur_top
-		add	ax, 12
-		push	ax
-		mov	bx, si
-		imul	bx, size CBossEntity
-		mov	ax, _kikuri_souls[bx].BE_cur_left
-		add	ax, 12
-		push	ax
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		add	sp, 28h
-		pushd	0 or (0 shl 16)
-		push	PM_GRAVITY or (1 shl 16)
-		push	(1 shl 4)
-		push	0
-		mov	bx, si
-		imul	bx, size CBossEntity
-		mov	ax, _kikuri_souls[bx].BE_cur_top
-		add	ax, 12
-		push	ax
-		mov	bx, si
-		imul	bx, size CBossEntity
-		mov	ax, _kikuri_souls[bx].BE_cur_left
-		add	ax, 12
-		push	ax
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		pushd	0 or (0 shl 16)
-		push	PM_GRAVITY or (1 shl 16)
-		push	(1 shl 4)
-		push	80h
-		mov	bx, si
-		imul	bx, size CBossEntity
-		mov	ax, _kikuri_souls[bx].BE_cur_top
-		add	ax, 12
-		push	ax
-		mov	bx, si
-		imul	bx, size CBossEntity
-		mov	ax, _kikuri_souls[bx].BE_cur_left
-		add	ax, 12
-		push	ax
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		add	sp, 28h
-		pushd	0 or (0 shl 16)
-		push	PM_GRAVITY or (1 shl 16)
-		push	(2 shl 4)
-		push	80h
-		mov	bx, si
-		imul	bx, size CBossEntity
-		mov	ax, _kikuri_souls[bx].BE_cur_top
-		add	ax, 12
-		push	ax
-		mov	bx, si
-		imul	bx, size CBossEntity
-		mov	ax, _kikuri_souls[bx].BE_cur_left
-		add	ax, 12
-		push	ax
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		pushd	0 or (0 shl 16)
-		push	PM_GRAVITY or (1 shl 16)
-		push	(3 shl 4)
-		push	80h
-		mov	bx, si
-		imul	bx, size CBossEntity
-		mov	ax, _kikuri_souls[bx].BE_cur_top
-		add	ax, 12
-		push	ax
-		mov	bx, si
-		imul	bx, size CBossEntity
-		mov	ax, _kikuri_souls[bx].BE_cur_left
-		add	ax, 12
-		push	ax
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		push	7
-		call	_mdrv2_se_play
-		add	sp, 2Ah
-		inc	si
-
-loc_24640:
-		cmp	si, 2
-		jl	loc_2450C
-
-loc_24647:
-		cmp	_boss_phase_frame, 250
-		jle	short loc_2465A
-		mov	_boss_phase_frame, 0
-		mov	ax, 3
-		jmp	short loc_2465D
-; ---------------------------------------------------------------------------
-
-loc_2465A:
-		mov	ax, 2
-
-loc_2465D:
-		pop	si
-		pop	bp
-		retn
-sub_244CE	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15512,7 +15357,7 @@ loc_24D1C:
 loc_24D28:
 		cmp	word_35D14, 2
 		jnz	short loc_24D34
-		call	sub_244CE
+		call	@pattern_souls_symmetric_rain_lin$qv
 		jmp	short loc_24D3E
 ; ---------------------------------------------------------------------------
 
