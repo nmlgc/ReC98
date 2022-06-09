@@ -696,3 +696,22 @@ void near pattern_two_crossed_eye_lasers(void)
 		mdrv2_se_play(6);
 	}
 }
+
+void near pattern_souls_single_aimed_pellet_and_move_diagonally(void)
+{
+	if((boss_phase_frame % 200) == 0) {
+		Pellets.add_group(
+			(souls[0].cur_center_x() - (PELLET_W / 2)),
+			(souls[0].cur_center_y() - (PELLET_H / 2)),
+			PG_1_AIMED,
+			to_sp(2.5f)
+		);
+		Pellets.add_group(
+			(souls[1].cur_center_x() - (PELLET_W / 2)),
+			(souls[1].cur_center_y() - (PELLET_H / 2)),
+			PG_1_AIMED,
+			to_sp(2.5f)
+		);
+	}
+	souls_move_diagonally_and_render__tears_update_and_render(4, 2);
+}

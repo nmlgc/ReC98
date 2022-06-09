@@ -14717,82 +14717,13 @@ main_34_TEXT	segment	byte public 'CODE' use16
 	@pattern_souls_spreads$qv procdesc near
 	@pattern_souls_drop_tears_and_mov$qv procdesc near
 	@pattern_two_crossed_eye_lasers$qv procdesc near
+	@pattern_souls_single_aimed_pelle$qv procdesc near
 main_34_TEXT	ends
 
 main_34__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_34
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2414C	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, _boss_phase_frame
-		mov	bx, 200
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_2419B
-		push	PG_1_AIMED or (((2 shl 4) + 8) shl 16)
-		mov	ax, kikuri_soul_0.BE_cur_top
-		add	ax, 12
-		push	ax
-		mov	ax, kikuri_soul_0.BE_cur_left
-		add	ax, 12
-		push	ax
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_group$qii14pellet_group_ti
-		push	PG_1_AIMED or (((2 shl 4) + 8) shl 16)
-		mov	ax, kikuri_soul_1.BE_cur_top
-		add	ax, 12
-		push	ax
-		mov	ax, kikuri_soul_1.BE_cur_left
-		add	ax, 12
-		push	ax
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_group$qii14pellet_group_ti
-		add	sp, 18h
-
-loc_2419B:
-		mov	bx, _boss_phase_frame
-		and	bx, 255
-		add	bx, bx
-		movsx	eax, _CosTable8[bx]
-		shl	eax, 2
-		sar	eax, 8
-		mov	si, ax
-		mov	bx, _boss_phase_frame
-		and	bx, 255
-		add	bx, bx
-		movsx	eax, _CosTable8[bx]
-		shl	eax, 1
-		sar	eax, 8
-		mov	di, ax
-		call	@tears_update_and_render$qv
-		push	0
-		push	si
-		push	di
-		call	@soul_move_and_render$qiii
-		push	1
-		mov	ax, si
-		neg	ax
-		push	ax
-		push	di
-		call	@soul_move_and_render$qiii
-		pop	di
-		pop	si
-		pop	bp
-		retn
-sub_2414C	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15849,7 +15780,7 @@ loc_24CFA:
 		jnz	loc_24DFB
 		inc	_boss_phase_frame
 		inc	_kikuri_invincibility_frame
-		call	sub_2414C
+		call	@pattern_souls_single_aimed_pelle$qv
 		cmp	word_35D14, 0
 		jnz	short loc_24D1C
 		call	sub_241E7
@@ -16846,9 +16777,6 @@ _boss_palette	palette_t <?>
 _kikuri_phase	db ?
 
 KIKURI_TEAR_COUNT = 10
-
-kikuri_soul_0	equ <_kikuri_souls[0 * size CBossEntity]>
-kikuri_soul_1	equ <_kikuri_souls[1 * size CBossEntity]>
 
 public _kikuri_tear_anim_frame, _kikuri_souls, _kikuri_tears
 _kikuri_tear_anim_frame	db KIKURI_TEAR_COUNT dup(?)
