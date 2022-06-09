@@ -159,6 +159,13 @@ inline void kikuri_ptn_free(void) {
 // Patterns
 // --------
 
+enum kikuri_phase_4_subphase_t {
+	P4_SOUL_ACTIVATION = 0,
+	P4_PATTERN = 1,
+
+	_kikuri_phase_4_subphase_t_FORCE_INT16 = 0x7FFF
+};
+
 #define pattern_state	kikuri_pattern_state
 extern union {
 	int interval;
@@ -201,6 +208,8 @@ void kikuri_setup(void)
 	hud_hp_first_white = PHASE_2_END_HP;
 	hud_hp_first_redwhite = PHASE_5_END_HP;
 
+	// Redundant – already called before the sprites are first rendered, and
+	// (0, 0) isn't used to indicate "soul is not alive".
 	souls[0].pos_set(0, 0, 50,
 		SOUL_AREA_LEFT, SOUL_AREA_RIGHT, SOUL_AREA_TOP, SOUL_AREA_BOTTOM
 	);
@@ -548,4 +557,29 @@ void near pattern_spinning_aimed_rings(void)
 			LIGHTBALL_CENTER_Y
 		);
 	}
+}
+
+kikuri_phase_4_subphase_t near phase_4_souls_activate(void)
+{
+	if(boss_phase_frame == 200) {
+		souls[0].pos_set(
+			(LIGHTBALL_CENTER_X - (SOUL_W / 2)),
+			(LIGHTBALL_CENTER_Y - (SOUL_H / 2)), 50,
+			SOUL_AREA_LEFT, SOUL_AREA_RIGHT, SOUL_AREA_TOP, SOUL_AREA_BOTTOM
+		);
+		souls[1].pos_set(
+			(LIGHTBALL_CENTER_X - (SOUL_W / 2)),
+			(LIGHTBALL_CENTER_Y - (SOUL_H / 2)), 50,
+			SOUL_AREA_LEFT, SOUL_AREA_RIGHT, SOUL_AREA_TOP, SOUL_AREA_BOTTOM
+		);
+	} else if((boss_phase_frame > 200) && ((boss_phase_frame % 2) == 0)) {
+		soul_move_and_render(0, -4, -3);
+		soul_move_and_render(1, +4, -3);
+		if(souls[0].cur_top < (
+			SOUL_AREA_TOP + playfield_fraction_y(2 / 21.0f)
+		)) {
+			return P4_PATTERN;
+		}
+	}
+	return P4_SOUL_ACTIVATION;
 }

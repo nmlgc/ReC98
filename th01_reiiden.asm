@@ -14715,56 +14715,13 @@ main_34_TEXT	segment	byte public 'CODE' use16
 		y:word, mask:word
 	@pattern_symmetric_spiral_from_di$qv procdesc near
 	@pattern_spinning_aimed_rings$qv procdesc near
+	@phase_4_souls_activate$qv procdesc near
 main_34_TEXT	ends
 
 main_34__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_34
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_23F16	proc near
-		push	bp
-		mov	bp, sp
-		cmp	_boss_phase_frame, 200
-		jnz	short loc_23F62
-		call	@CBossEntity@pos_set$qiiiiiii stdcall, offset kikuri_soul_0, ds, 304, large 208 or (50 shl 16), large 32 or (576 shl 16), large 64 or (400 shl 16)
-		call	@CBossEntity@pos_set$qiiiiiii stdcall, offset kikuri_soul_1, ds, 304, large 208 or (50 shl 16), large 32 or (576 shl 16), large 64 or (400 shl 16)
-		add	sp, 24h
-		jmp	short loc_23F99
-; ---------------------------------------------------------------------------
-
-loc_23F62:
-		cmp	_boss_phase_frame, 200
-		jle	short loc_23F99
-		mov	ax, _boss_phase_frame
-		mov	bx, 2
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_23F99
-		push	large (0 shl 16) or (-4 and 0FFFFh)
-		push	-3
-		call	@soul_move_and_render$qiii
-		push	large (1 shl 16) or (+4 and 0FFFFh)
-		push	-3
-		call	@soul_move_and_render$qiii
-		cmp	kikuri_soul_0.BE_cur_top, 96
-		jge	short loc_23F99
-		mov	ax, 1
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_23F99:
-		xor	ax, ax
-		pop	bp
-		retn
-sub_23F16	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15991,7 +15948,7 @@ loc_24C07:
 		call	@pattern_spinning_aimed_rings$qv
 		cmp	word_35D14, 0
 		jnz	short loc_24C27
-		call	sub_23F16
+		call	@phase_4_souls_activate$qv
 		jmp	short loc_24C2A
 ; ---------------------------------------------------------------------------
 
