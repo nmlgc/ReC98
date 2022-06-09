@@ -14716,90 +14716,13 @@ main_34_TEXT	segment	byte public 'CODE' use16
 	@pattern_symmetric_spiral_from_di$qv procdesc near
 	@pattern_spinning_aimed_rings$qv procdesc near
 	@phase_4_souls_activate$qv procdesc near
+	@pattern_souls_spreads$qv procdesc near
 main_34_TEXT	ends
 
 main_34__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_34
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_23F9D	proc near
-
-@@group		= word ptr -8
-var_6		= byte ptr -6
-@@top		= word ptr -4
-@@left		= word ptr -2
-
-		enter	8, 0
-		push	si
-		push	large (0 shl 16) or 0
-		push	0
-		call	@soul_move_and_render$qiii
-		push	large (1 shl 16) or 0
-		push	0
-		call	@soul_move_and_render$qiii
-		push	70 or (60 shl 16)	; (for_hard) or (for_lunatic)
-		push	100 or (80 shl 16)	; (for_easy) or (for_normal)
-		push	ss	; ret (segment)
-		lea	ax, [bp+var_6]
-		push	ax	; ret (offset)
-		call	@kikuri_select_for_rank$qmiiiii
-		add	sp, 0Ch
-		mov	ax, _boss_phase_frame
-		mov	bx, 80
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_2402E
-		xor	si, si
-		jmp	short loc_24029
-; ---------------------------------------------------------------------------
-
-loc_23FDE:
-		mov	bx, si
-		imul	bx, size CBossEntity
-		mov	ax, _kikuri_souls[bx].BE_cur_left
-		add	ax, 12
-		mov	[bp+@@left], ax
-		mov	bx, si
-		imul	bx, size CBossEntity
-		mov	ax, _kikuri_souls[bx].BE_cur_top
-		add	ax, 8
-		mov	[bp+@@top], ax
-		push	PG_5_SPREAD_WIDE_AIMED or (PG_5_SPREAD_WIDE shl 16)	; (for_hard) or (for_lunatic)
-		push	PG_2_SPREAD_WIDE_AIMED or (PG_3_SPREAD_WIDE_AIMED shl 16)	; (for_easy) or (for_normal)
-		push	ss	; ret (segment)
-		lea	ax, [bp+@@group]
-		push	ax	; ret (offset)
-		call	@kikuri_select_for_rank$qmiiiii
-		call	@CPellets@add_group$qii14pellet_group_ti stdcall, offset _Pellets, ds, [bp+@@left], [bp+@@top], [bp+@@group], (3 shl 4) + 7
-		add	sp, 18h
-		inc	si
-
-loc_24029:
-		cmp	si, 2
-		jl	short loc_23FDE
-
-loc_2402E:
-		cmp	_boss_phase_frame, 600
-		jle	short loc_2403B
-		mov	ax, 2
-		jmp	short loc_2403E
-; ---------------------------------------------------------------------------
-
-loc_2403B:
-		mov	ax, 1
-
-loc_2403E:
-		pop	si
-		leave
-		retn
-sub_23F9D	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15953,7 +15876,7 @@ loc_24C07:
 ; ---------------------------------------------------------------------------
 
 loc_24C27:
-		call	sub_23F9D
+		call	@pattern_souls_spreads$qv
 
 loc_24C2A:
 		mov	word_35D14, ax

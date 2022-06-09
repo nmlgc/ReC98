@@ -1404,6 +1404,7 @@ void pattern_bat_slow_spreads(void)
 
 			// Not aimed on Lunatic? Probably the easiest version then, since
 			// pellets are always fired down in this case.
+			// (Compare pattern_souls_spreads() in the Kikuri fight.)
 			PG_5_SPREAD_NARROW
 		);
 		form_fire_group(F_BAT, group, 3.5f);

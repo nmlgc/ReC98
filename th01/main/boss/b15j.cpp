@@ -162,6 +162,7 @@ inline void kikuri_ptn_free(void) {
 enum kikuri_phase_4_subphase_t {
 	P4_SOUL_ACTIVATION = 0,
 	P4_PATTERN = 1,
+	P4_DONE = 2,
 
 	_kikuri_phase_4_subphase_t_FORCE_INT16 = 0x7FFF
 };
@@ -582,4 +583,39 @@ kikuri_phase_4_subphase_t near phase_4_souls_activate(void)
 		}
 	}
 	return P4_SOUL_ACTIVATION;
+}
+
+kikuri_phase_4_subphase_t near pattern_souls_spreads(void)
+{
+	screen_x_t left;
+	screen_y_t top;
+	int unused;
+	pellet_group_t group;
+
+	soul_move_and_render(0, 0, 0);
+	soul_move_and_render(1, 0, 0);
+
+	select_for_rank(unused, 100, 80, 70, 60);
+
+	if((boss_phase_frame % 80) == 0) {
+		for(int i = 0; i < SOUL_COUNT; i++) {
+			left = (souls[i].cur_center_x() - (PELLET_W / 2));
+			top  = (souls[i].cur_center_y() - (PELLET_H / 1));
+			select_for_rank(reinterpret_cast<int &>(group),
+				PG_2_SPREAD_WIDE_AIMED,
+				PG_3_SPREAD_WIDE_AIMED,
+				PG_5_SPREAD_WIDE_AIMED,
+
+				// Not aimed on Lunatic?
+				// (Compare pattern_bat_slow_spreads() in the Elis fight.)
+				PG_5_SPREAD_WIDE
+			);
+			Pellets.add_group(left, top, group, to_sp(3.4375f));
+		}
+	}
+	// Note how [boss_phase_frame] carries over from phase_4_souls_activate().
+	if(boss_phase_frame > 600) {
+		return P4_DONE;
+	}
+	return P4_PATTERN;
 }
