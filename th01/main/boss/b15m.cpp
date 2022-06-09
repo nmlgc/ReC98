@@ -2150,7 +2150,7 @@ void elis_main(void)
 			Pellets.unput_and_reset();
 			girl_bg_put(1);
 			Missiles.reset();
-			shootout_lasers_unput_and_reset_broken(i); // MODDERS: Remove
+			shootout_lasers_unput_and_reset_broken(i, SHOOTOUT_LASER_COUNT);
 			boss_defeat_animate();
 			scene_init_and_load(5);
 		}

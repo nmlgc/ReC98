@@ -12,9 +12,9 @@ bool16 graph_invert_32x32_8(screen_x_t left, vram_y_t top, dots8_t far *plane);
 static const int ENTRANCE_RING_STACK = 4;
 static const int ENTRANCE_RING_SQUARES = 32;
 
-inline long entrance_ring_radius(pixel_t base, unsigned int square_i) {
-	return (base * static_cast<long>(square_i / ENTRANCE_RING_SQUARES));
-}
+#define entrance_ring_radius(base, square_i) ( \
+	base * static_cast<long>(square_i / ENTRANCE_RING_SQUARES) \
+)
 
 #define entrance_ring_invert(square_i, radius_base) \
 	graph_invert_32x32_8( \

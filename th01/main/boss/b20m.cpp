@@ -2794,7 +2794,7 @@ entrance_rings_still_active:
 
 		Shots.unput_and_reset();
 		Pellets.unput_and_reset();
-		shootout_lasers_unput_and_reset_broken(i);
+		shootout_lasers_unput_and_reset_broken(i, SHOOTOUT_LASER_COUNT);
 
 		// MODDERS: Move this to a common player reset function.
 		orb_cur_left = ORB_LEFT_START;

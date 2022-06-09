@@ -10,11 +10,13 @@
 #include "th01/v_colors.hpp"
 extern "C" {
 #include "th01/hardware/egc.h"
+#include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/input.hpp"
 #include "th01/snd/mdrv2.h"
 #include "th01/formats/ptn.hpp"
 }
+#include "th01/hardware/grpinv32.hpp"
 #include "th01/formats/pf.hpp"
 #include "th01/math/area.hpp"
 #include "th01/math/overlap.hpp"
@@ -25,14 +27,18 @@ extern "C" {
 extern "C" {
 #include "th01/main/playfld.hpp"
 }
+#include "th01/formats/stagedat.hpp"
 #include "th01/main/vars.hpp"
 #include "th01/main/hud/hp.hpp"
 #include "th01/main/bullet/laser_s.hpp"
 #include "th01/main/bullet/pellet.hpp"
 #include "th01/main/boss/boss.hpp"
+#include "th01/main/boss/defeat.hpp"
 #include "th01/main/boss/entity_a.hpp"
 #include "th01/main/player/orb.hpp"
 #include "th01/main/player/player.hpp"
+#include "th01/main/stage/palette.hpp"
+#include "th01/main/stage/stageobj.hpp"
 
 // Coordinates
 // -----------
@@ -82,6 +88,7 @@ static const screen_y_t TEAR_TOP_MAX = (PLAYFIELD_BOTTOM - TEAR_H);
 // -----------
 
 enum kikuri_colors_t {
+	COL_LIGHTBALL = 5,
 	COL_LASER = 10,
 };
 
@@ -134,14 +141,6 @@ inline void kikuri_ent_free() {
 	bos_entity_free(1);
 }
 // --------
-
-#define flash_colors	kikuri_flash_colors
-#define invincible	kikuri_invincible
-#define invincibility_frame	kikuri_invincibility_frame
-#define initial_hp_rendered	kikuri_initial_hp_rendered
-extern bool16 invincible;
-extern int invincibility_frame;
-extern bool initial_hp_rendered;
 
 // .PTN
 // ----
@@ -503,6 +502,13 @@ void pascal near graph_copy_line_1_to_0_masked(vram_y_t y, dots16_t mask)
 		graph_accesspage_func(0);	poke2(SEG_PLANE_E, vo, p1);
 		vo += 2;
 	}
+}
+
+inline void entrance_symmetric_line_1_to_0(
+	const vram_y_t &y, pixel_t offset, dots16_t mask
+) {
+	graph_copy_line_1_to_0_masked((              y - offset), mask);
+	graph_copy_line_1_to_0_masked(((RES_Y - 1) - y + offset), mask);
 }
 
 void near pattern_symmetric_spiral_from_disc(void)
@@ -931,4 +937,259 @@ int near pattern_vertical_lasers_from_top(void)
 	return 3;
 
 	#undef random_range_x_half
+}
+
+void kikuri_main(void)
+{
+	#define hit                      	kikuri_hit
+	#define entrance_ring_radius_base	kikuri_entrance_ring_radius_base
+	#define initial_hp_rendered      	kikuri_initial_hp_rendered
+
+	struct hack { unsigned char col[4]; }; // XXX
+
+	extern struct {
+		bool16 invincible;
+		int invincibility_frame;
+
+		void update_and_render(const struct hack &flash_colors) {
+			boss_hit_update_and_render(
+				invincibility_frame,
+				invincible,
+				boss_hp,
+				flash_colors.col,
+				sizeof(flash_colors),
+				7000,
+				boss_nop,
+				kikuri_hittest_orb()
+			);
+		}
+	} hit;
+	extern pixel_t entrance_ring_radius_base;
+	extern bool initial_hp_rendered;
+	extern struct {
+		union {
+			kikuri_phase_4_subphase_t subphase_4;
+			int phase_6_pattern;
+		} ax;
+		int patterns_done;
+
+		void frame_common(void) const {
+			boss_phase_frame++;
+			hit.invincibility_frame++;
+		}
+	} phase;
+	extern struct hack kikuri_invincibility_flash_colors;
+
+	int i;
+	struct hack flash_colors = kikuri_invincibility_flash_colors;
+
+	// Entrance animation
+	if(boss_phase == 0) {
+		// Barn door transition
+		// --------------------
+
+		enum {
+			Y_END = (RES_Y / 2),
+		};
+		#define y hit.invincibility_frame
+
+		boss_phase_frame = 0;
+		y = 0;
+		hit.invincible = false;
+
+		boss_palette_snap();
+
+		// MODDERS: Loop over [flash_colors] instead.
+		z_palette_set_show( 2, RGB4::max(), RGB4::max(), RGB4::max());
+		z_palette_set_show( 6, RGB4::max(), RGB4::max(), RGB4::max());
+		z_palette_set_show( 8, RGB4::max(), RGB4::max(), RGB4::max());
+		z_palette_set_show(11, RGB4::max(), RGB4::max(), RGB4::max());
+
+		while(1) {
+			boss_phase_frame++;
+			if((boss_phase_frame % 3) == 0) {
+				if(y < Y_END) {
+					entrance_symmetric_line_1_to_0(y,  0, 0x2222); // (  * )
+				}
+				if(((boss_phase_frame * 2) >  8) && (y < (Y_END +  8))) {
+					entrance_symmetric_line_1_to_0(y,  8, 0xAAAA); // (* * )
+				}
+				if(((boss_phase_frame * 2) > 16) && (y < (Y_END + 16))) {
+					entrance_symmetric_line_1_to_0(y, 16, 0xEEEE); // (*** )
+				}
+				if(((boss_phase_frame * 2) > 24) && (y <= (Y_END + 24))) {
+					entrance_symmetric_line_1_to_0(y, 24, 0xFFFF); // (****)
+				}
+				y++;
+				if(y > (Y_END + 24)) {
+					hit.invincibility_frame = 0;
+					boss_phase_frame = 0;
+					break;
+				}
+			}
+
+			// Well, if we're blocking and overwriting VRAM page 0...
+			// Not much point in restricting these to the rows that actually
+			// overwrote those sprites.
+			ptn_put_8(player_left, player_top, PTN_MIKO_L);
+			ptn_put_8(orb_cur_left, orb_cur_top, PTN_ORB);
+
+			frame_delay(1);
+		}
+
+		#undef y
+		// --------------------
+
+		// Entrance rings
+		// --------------
+
+		while(1) {
+			#define frame_half	boss_phase_frame
+
+			int tmp;
+
+			frame_half++;
+			if(entrance_rings_update_and_render(
+				entrance_ring_radius_base, i, tmp, frame_half, 0, 70
+			)) {
+				boss_phase = 2;
+				phase.patterns_done = 0;
+				boss_phase_frame = 0;
+				boss_palette_show();
+				initial_hp_rendered = false;
+				stage_palette_set(z_Palettes);
+				break;
+			}
+entrance_rings_still_active:
+			// Huh? On 29 out of 30 frames? (And also useless: At a speed of 1
+			// intensity value per frame, any 4-bit source color will have been
+			// ramped to any 4-bit target color by the end of frame 86.)
+			if((frame_half > 71) && ((frame_half % 30) != 0)) {
+				for(i = 0; i < COMPONENT_COUNT; i++) {
+					// MODDERS: Loop over [flash_colors] instead.
+					if(boss_palette[ 2].v[i] < z_Palettes[ 2].v[i]) {
+						z_Palettes[ 2].v[i]--;
+					}
+					if(boss_palette[ 6].v[i] < z_Palettes[ 6].v[i]) {
+						z_Palettes[ 6].v[i]--;
+					}
+					if(boss_palette[ 8].v[i] < z_Palettes[ 8].v[i]) {
+						z_Palettes[ 8].v[i]--;
+					}
+					if(boss_palette[11].v[i] < z_Palettes[11].v[i]) {
+						z_Palettes[11].v[i]--;
+					}
+				}
+				z_palette_set_all_show(z_Palettes);
+			}
+			if(frame_half % 2) {  // That's why we've renamed the variable
+				frame_delay(1);
+			}
+			#undef frame_half
+		}
+		// --------------
+	} else if(boss_phase == 2) {
+		hud_hp_increment_render(initial_hp_rendered, boss_hp, boss_phase_frame);
+		phase.frame_common();
+		pattern_symmetric_spiral_from_disc();
+		hit.update_and_render(flash_colors);
+		if(boss_phase_frame == 0) {
+			phase.patterns_done++;
+		}
+		if(!hit.invincible && (
+			(boss_hp <= PHASE_2_END_HP) || (phase.patterns_done >= 6)
+		)) {
+			boss_phase = 3;
+			boss_phase_frame = 0;
+			hit.invincibility_frame = 0;
+			phase.patterns_done = 0;
+		}
+	} else if(boss_phase == 3) {
+		boss_phase_frame++;
+
+		// Original color: (0xB, 0xB, 0xF)
+		//   Target color: (0xF, 0xB, 0xA)
+		enum {
+			FADE_INTERVAL = 20,
+			FADE_STEPS = (0xF - 0xA),
+		};
+
+		if((boss_phase_frame % FADE_INTERVAL) == (FADE_INTERVAL - 1)) {
+			z_Palettes[COL_LIGHTBALL].c.r++;
+			z_Palettes[COL_LIGHTBALL].c.b--;
+			stage_palette[COL_LIGHTBALL].c.r++;
+			stage_palette[COL_LIGHTBALL].c.b--;
+			z_palette_set_all_show(stage_palette);
+		}
+		if(boss_phase_frame >= (FADE_INTERVAL * FADE_STEPS)) {
+			boss_phase = 4;
+			boss_phase_frame = 0;
+			phase.ax.subphase_4 = P4_SOUL_ACTIVATION;
+			z_palette_set_all_show(stage_palette); // (redundant)
+			boss_palette_snap();
+		}
+	} else if(boss_phase == 4) {
+		phase.frame_common();
+		pattern_spinning_aimed_rings();
+
+		if(phase.ax.subphase_4 == P4_SOUL_ACTIVATION) {
+			phase.ax.subphase_4 = phase_4_souls_activate();
+		} else {
+			phase.ax.subphase_4 = pattern_souls_spreads();
+		}
+
+		hit.update_and_render(flash_colors);
+		if(!hit.invincible && (phase.ax.subphase_4 == P4_DONE)) {
+			boss_phase = 5;
+
+			// Should be done during phase 6 initialization for clarity.
+			phase.ax.phase_6_pattern = 0;
+
+			boss_phase_frame = 0;
+		}
+	} else if(boss_phase == 5) {
+		phase.frame_common();
+		pattern_souls_drop_tears_and_move_diagonally();
+		pattern_two_crossed_eye_lasers();
+		hit.update_and_render(flash_colors);
+		if(!hit.invincible && (
+			(boss_hp <= PHASE_5_END_HP) || (boss_phase_frame > 1600)
+		)) {
+			boss_phase = 6;
+			boss_phase_frame = 0;
+			hit.invincibility_frame = 0;
+			phase.patterns_done = 0;
+		}
+	} else if(boss_phase == 6) {
+		phase.frame_common();
+		pattern_souls_single_aimed_pellet_and_move_diagonally();
+
+		if(phase.ax.phase_6_pattern == 0) {
+			phase.ax.phase_6_pattern = pattern_4_spiral_along_disc();
+		} else if(phase.ax.phase_6_pattern == 1) {
+			phase.ax.phase_6_pattern = pattern_single_lasers_from_left_eye();
+		} else if(phase.ax.phase_6_pattern == 2) {
+			phase.ax.phase_6_pattern = pattern_souls_symmetric_rain_lines();
+		} else if(phase.ax.phase_6_pattern == 3) {
+			phase.ax.phase_6_pattern = pattern_vertical_lasers_from_top();
+		}
+		if(boss_phase_frame == 0) {
+			phase.patterns_done++;
+		}
+
+		// That's a well-hidden timeout condition! Especially since there is no
+		// corresponding HP rendering call to reflect this change in the HUD.
+		if(phase.patterns_done > 29) {
+			boss_hp = 1;
+		}
+
+		hit.update_and_render(flash_colors);
+		if(boss_hp <= 0) {
+			mdrv2_bgm_fade_out_nonblock();
+			Pellets.unput_and_reset();
+			shootout_lasers_unput_and_reset_broken(i, 4); // 4? Doubly broken...
+			boss_defeat_animate();
+			scene_init_and_load(6);
+		}
+	}
 }

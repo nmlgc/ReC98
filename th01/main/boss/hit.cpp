@@ -14,10 +14,10 @@ void boss_hit_update_and_render(
 	int hit_score,
 	farfunc_t_far hit_callback,
 	bool colliding_with_orb,
-	screen_x_t hitbox_left,
-	screen_y_t hitbox_top,
-	pixel_t hitbox_w,
-	pixel_t hitbox_h
+	screen_x_t shot_hitbox_left,
+	screen_y_t shot_hitbox_top,
+	pixel_t shot_hitbox_w,
+	pixel_t shot_hitbox_h
 )
 {
 	int i;
@@ -30,7 +30,9 @@ void boss_hit_update_and_render(
 
 	// Sure, why not? This function didn't have enough parameters already,
 	// after all!
-	Shots.hittest_boss(hitbox_left, hitbox_top, hitbox_w, hitbox_h);
+	Shots.hittest_boss(
+		shot_hitbox_left, shot_hitbox_top, shot_hitbox_w, shot_hitbox_h
+	);
 
 	/* TODO: Replace with the decompiled expression
 	 * 	if(
