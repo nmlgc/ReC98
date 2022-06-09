@@ -715,3 +715,49 @@ void near pattern_souls_single_aimed_pellet_and_move_diagonally(void)
 	}
 	souls_move_diagonally_and_render__tears_update_and_render(4, 2);
 }
+
+int near pattern_4_spiral_along_disc(void)
+{
+	#define angle	pattern6_angle
+
+	extern unsigned char angle;
+
+	if(boss_phase_frame < 100) {
+		return 0;
+	}
+	if(boss_phase_frame == 100) {
+		angle = 0x20;
+		select_for_rank(pattern_state.interval, 14, 8, 6, 4);
+	}
+	if((boss_phase_frame % pattern_state.interval) == 0) {
+		enum {
+			RING = 2,
+		};
+
+		for(int i = 0; i < (RING * 2); i += 2) {
+			screen_x_t left = polar_x(
+				DISC_CENTER_X,
+				DISC_RADIUS,
+				((boss_phase_frame * 4) + ((0x100 / RING) * i))
+			);
+			screen_y_t top = polar_y(
+				DISC_CENTER_Y,
+				DISC_RADIUS,
+				((boss_phase_frame * 4) + ((0x100 / RING) * i))
+			);
+			Pellets.add_single(left, top, (angle + 0x00), to_sp(2.25f));
+			Pellets.add_single(left, top, (angle + 0x40), to_sp(2.25f));
+			Pellets.add_single(left, top, (angle + 0x80), to_sp(2.25f));
+			Pellets.add_single(left, top, (angle + 0xC0), to_sp(2.25f));
+		}
+		if(boss_phase_frame <= 600) {
+			angle -= 0x05;
+		} else {
+			boss_phase_frame = 0;
+			return 1;
+		}
+	}
+	return 0;
+
+	#undef angle
+}

@@ -14706,9 +14706,6 @@ main_34_TEXT	segment	byte public 'CODE' use16
 	extern @kikuri_load$qv:proc
 	extern @kikuri_free$qv:proc
 	@kikuri_hittest_orb$qv procdesc near
-	@SOUL_MOVE_AND_RENDER$QIII procdesc pascal near \
-		soul:word, delta_x:word, delta_y:word
-	@tears_update_and_render$qv procdesc near
 	@GRAPH_COPY_LINE_1_TO_0_MASKED$QIUI procdesc pascal near \
 		y:word, mask:word
 	@pattern_symmetric_spiral_from_di$qv procdesc near
@@ -14718,131 +14715,13 @@ main_34_TEXT	segment	byte public 'CODE' use16
 	@pattern_souls_drop_tears_and_mov$qv procdesc near
 	@pattern_two_crossed_eye_lasers$qv procdesc near
 	@pattern_souls_single_aimed_pelle$qv procdesc near
+	@pattern_4_spiral_along_disc$qv procdesc near
 main_34_TEXT	ends
 
 main_34__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_34
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_241E7	proc near
-
-@@top		= word ptr -2
-
-		enter	2, 0
-		push	si
-		push	di
-		cmp	_boss_phase_frame, 100
-		jl	loc_24310
-		cmp	_boss_phase_frame, 100
-		jnz	short loc_24219
-		mov	angle_3A6BD, 20h
-		call	@kikuri_select_for_rank$qmiiiii c, offset _kikuri_pattern_state, ds, large 0Eh or (08h shl 16), large 06h or (04h shl 16)
-
-loc_24219:
-		mov	ax, _boss_phase_frame
-		cwd
-		idiv	_kikuri_pattern_state
-		or	dx, dx
-		jnz	loc_24310
-		xor	si, si
-		jmp	loc_242EC
-; ---------------------------------------------------------------------------
-
-loc_2422C:
-		mov	bx, _boss_phase_frame
-		shl	bx, 2
-		mov	ax, si
-		shl	ax, 7
-		add	bx, ax
-		and	bx, 255
-		add	bx, bx
-		movsx	eax, _CosTable8[bx]
-		imul	eax, 90
-		sar	eax, 8
-		add	ax, 320
-		mov	di, ax
-		mov	bx, _boss_phase_frame
-		shl	bx, 2
-		mov	ax, si
-		shl	ax, 7
-		add	bx, ax
-		and	bx, 255
-		add	bx, bx
-		movsx	eax, _SinTable8[bx]
-		imul	eax, 90
-		sar	eax, 8
-		add	ax, 180
-		mov	[bp+@@top], ax
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii stdcall, offset _Pellets, ds, di, ax, word ptr angle_3A6BD, (2 shl 4) + 4, large PM_REGULAR or (0 shl 16), large 0 or (0 shl 16)
-		pushd	0 or (0 shl 16)
-		pushd	PM_REGULAR or (0 shl 16)
-		push	(2 shl 4) + 4
-		mov	al, angle_3A6BD
-		add	al, 40h
-		push	ax
-		push	[bp+@@top]
-		push	di
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		add	sp, 28h
-		pushd	0 or (0 shl 16)
-		pushd	PM_REGULAR or (0 shl 16)
-		push	(2 shl 4) + 4
-		mov	al, angle_3A6BD
-		add	al, 80h
-		push	ax
-		push	[bp+@@top]
-		push	di
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		pushd	0 or (0 shl 16)
-		pushd	PM_REGULAR or (0 shl 16)
-		push	(2 shl 4) + 4
-		mov	al, angle_3A6BD
-		add	al, -40h
-		push	ax
-		push	[bp+@@top]
-		push	di
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		add	sp, 28h
-		add	si, 2
-
-loc_242EC:
-		cmp	si, 4
-		jl	loc_2422C
-		cmp	_boss_phase_frame, 600
-		jg	short loc_24305
-		mov	al, angle_3A6BD
-		add	al, -5
-		mov	angle_3A6BD, al
-		jmp	short loc_24310
-; ---------------------------------------------------------------------------
-
-loc_24305:
-		mov	_boss_phase_frame, 0
-		mov	ax, 1
-		jmp	short loc_24312
-; ---------------------------------------------------------------------------
-
-loc_24310:
-		xor	ax, ax
-
-loc_24312:
-		pop	di
-		pop	si
-		leave
-		retn
-sub_241E7	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15783,7 +15662,7 @@ loc_24CFA:
 		call	@pattern_souls_single_aimed_pelle$qv
 		cmp	word_35D14, 0
 		jnz	short loc_24D1C
-		call	sub_241E7
+		call	@pattern_4_spiral_along_disc$qv
 		jmp	short loc_24D3E
 ; ---------------------------------------------------------------------------
 
@@ -16791,7 +16670,9 @@ _pattern0_angle   	db ?
 _pattern0_drift   	db ?
 _pattern0_distance	dw ?
 
-angle_3A6BD	db ?
+public _pattern6_angle
+_pattern6_angle	db ?
+
 word_3A6BE	dw ?
 public _kikuri_invincible, _kikuri_invincibility_frame
 public _kikuri_entrance_ring_radius_base, _kikuri_initial_hp_rendered
