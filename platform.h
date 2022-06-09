@@ -31,6 +31,11 @@ typedef void ( far pascal * far   farfunc_t_far)(void);
 #endif
 /// ----------
 
+// Message-less static_assert() wasn't available until C++17
+#if (__cplusplus < 201703L)
+	#define static_assert(condition) ((void)sizeof(char[1 - 2*!(condition)]))
+#endif
+
 // Both Turbo C++ and master.lib use uint16_t for segment values throughout
 // their APIs instead of the more sensible void __seg*. Maybe, integer
 // arithmetic on segment values was widely considered more important than

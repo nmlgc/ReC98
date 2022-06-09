@@ -30,7 +30,7 @@ void near b6balls_add(void)
 
 void near b6balls_update(void)
 {
-	CUSTOM_VERIFY(b6ball_t, B6BALL_COUNT);
+	custom_assert_count(b6ball_t, B6BALL_COUNT);
 
 	b6ball_t near *p;
 	int i;

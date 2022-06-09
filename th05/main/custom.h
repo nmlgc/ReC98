@@ -20,8 +20,8 @@ typedef struct {
 
 extern custom_t custom_entities[CUSTOM_COUNT];
 
-#define CUSTOM_VERIFY(derived_type, derived_count) \
-	((void)sizeof(char[1 - 2*!!( \
-		(sizeof(derived_type) * derived_count) \
-		> (sizeof(custom_t) * CUSTOM_COUNT) \
-	)]))
+#define custom_assert_count(derived_type, derived_count) \
+	static_assert( \
+		(sizeof(derived_type) * derived_count) <= \
+		(sizeof(custom_t) * CUSTOM_COUNT) \
+	)
