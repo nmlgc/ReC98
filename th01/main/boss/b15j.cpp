@@ -27,6 +27,7 @@ extern "C" {
 }
 #include "th01/main/vars.hpp"
 #include "th01/main/hud/hp.hpp"
+#include "th01/main/bullet/laser_s.hpp"
 #include "th01/main/bullet/pellet.hpp"
 #include "th01/main/boss/boss.hpp"
 #include "th01/main/boss/entity_a.hpp"
@@ -39,6 +40,10 @@ extern "C" {
 static const screen_x_t DISC_CENTER_X = 320;
 static const screen_y_t DISC_CENTER_Y = 180;
 static const pixel_t DISC_RADIUS = 90;
+
+static const screen_x_t EYE_LEFT_CENTER_X = 307;
+static const screen_x_t EYE_RIGHT_CENTER_X = 336;
+static const screen_y_t EYE_BOTTOM = 147;
 
 // That's… not quite where the light ball is?
 static const screen_x_t LIGHTBALL_CENTER_X = 320;
@@ -75,6 +80,10 @@ static const screen_y_t SOUL_AREA_BOTTOM = PLAYFIELD_BOTTOM;
 
 static const screen_y_t TEAR_TOP_MAX = (PLAYFIELD_BOTTOM - TEAR_H);
 // -----------
+
+enum kikuri_colors_t {
+	COL_LASER = 10,
+};
 
 // Always denotes the last phase that ends with that amount of HP.
 enum kikuri_hp_t {
@@ -653,4 +662,37 @@ void near pattern_souls_drop_tears_and_move_diagonally(void)
 		);
 	}
 	souls_move_diagonally_and_render__tears_update_and_render(6, 2);
+}
+
+#define fire_aimed_eye_laser( \
+	i, origin_left, aim_offset_x, speed_multiplied_by_8, w \
+) { \
+	shootout_lasers[i].spawn( \
+		origin_left, \
+		EYE_BOTTOM, \
+		(player_left + aim_offset_x), \
+		PLAYFIELD_BOTTOM, \
+		speed_multiplied_by_8, \
+		COL_LASER, \
+		20, \
+		w \
+	); \
+}
+
+void near pattern_two_crossed_eye_lasers(void)
+{
+	// Yup, first firing on [boss_phase_frame] 400.
+	if((boss_phase_frame > 200) && ((boss_phase_frame % 200) == 0)) {
+		enum {
+			LASER_W = 8,
+			OFFSET_X = ((PLAYFIELD_W / 10) - (LASER_W / 2)),
+		};
+		fire_aimed_eye_laser(
+			0, EYE_LEFT_CENTER_X, +OFFSET_X, (to_sp(6.25f) / 2), LASER_W
+		);
+		fire_aimed_eye_laser(
+			1, EYE_RIGHT_CENTER_X, -OFFSET_X, (to_sp(6.25f) / 2), LASER_W
+		);
+		mdrv2_se_play(6);
+	}
 }

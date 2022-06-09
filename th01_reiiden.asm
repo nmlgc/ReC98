@@ -14716,57 +14716,13 @@ main_34_TEXT	segment	byte public 'CODE' use16
 	@phase_4_souls_activate$qv procdesc near
 	@pattern_souls_spreads$qv procdesc near
 	@pattern_souls_drop_tears_and_mov$qv procdesc near
+	@pattern_two_crossed_eye_lasers$qv procdesc near
 main_34_TEXT	ends
 
 main_34__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_34
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_240DE	proc near
-		push	bp
-		mov	bp, sp
-		cmp	_boss_phase_frame, 200
-		jle	short loc_2414A
-		mov	ax, _boss_phase_frame
-		mov	bx, 200
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_2414A
-		push	20 or (8 shl 16)	; (moveout_at_age) or (w shl 16)
-		push	((6 * 8) + 2) or (10 shl 16)	; (speed_multiplied_by_8) or (col shl 16)
-		push	PLAYFIELD_BOTTOM	; target_y
-		mov	ax, _player_left
-		add	ax, 60
-		push	ax	; target_left
-		push	307 or (147 shl 16)	; (origin_left) or (origin_y shl 16)
-		push	ds	; this (segment)
-		push	offset shootout_laser_0	; this (offset)
-		call	@CShootoutLaser@spawn$qiiiiiiii
-		push	20 or (8 shl 16)	; (moveout_at_age) or (w shl 16)
-		push	((6 * 8) + 2) or (10 shl 16)	; (speed_multiplied_by_8) or (col shl 16)
-		push	PLAYFIELD_BOTTOM	; target_y
-		mov	ax, _player_left
-		add	ax, -60
-		push	ax	; target_left
-		push	336 or (147 shl 16)	; (origin_left) or (origin_y shl 16)
-		push	ds	; this (segment)
-		push	offset shootout_laser_1	; this (offset)
-		call	@CShootoutLaser@spawn$qiiiiiiii
-		push	6
-		call	_mdrv2_se_play
-		add	sp, 2Ah
-
-loc_2414A:
-		pop	bp
-		retn
-sub_240DE	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15849,7 +15805,7 @@ loc_24C81:
 		inc	_boss_phase_frame
 		inc	_kikuri_invincibility_frame
 		call	@pattern_souls_drop_tears_and_mov$qv
-		call	sub_240DE
+		call	@pattern_two_crossed_eye_lasers$qv
 		pushd	0 or (0 shl 16)
 		pushd	0 or (0 shl 16)	; (hitbox_left) or (hitbox_top)
 		call	@kikuri_hittest_orb$qv
