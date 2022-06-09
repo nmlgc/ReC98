@@ -253,6 +253,22 @@ public:
 	/// -------------------
 };
 
+// Despite CBossEntity's own width and height fields, ZUN still likes to
+// statically hardcode the intended sprite sizes when calculating offsets
+// within a .BOS sprite. Since bosses either declare their own instances or
+// #define more readable names for each instance of [boss_entities], we might
+// as well use the opportunity to lift up these static sizes into the type
+// system, and avoid the need for per-boss boilerplate coordinate functions.
+template <pixel_t W, pixel_t H> struct CBossEntitySized : public CBossEntity {
+	screen_x_t cur_center_x(void) const {
+		return (cur_left + (W / 2));
+	}
+
+	screen_x_t cur_center_y(void) const {
+		return (cur_top + (H / 2));
+	}
+}
+
 // Frees all images in the given [slot].
 void bos_entity_free(int slot);
 
