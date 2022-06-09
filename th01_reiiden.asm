@@ -14716,177 +14716,13 @@ main_34_TEXT	segment	byte public 'CODE' use16
 	@pattern_two_crossed_eye_lasers$qv procdesc near
 	@pattern_souls_single_aimed_pelle$qv procdesc near
 	@pattern_4_spiral_along_disc$qv procdesc near
+	@pattern_single_lasers_from_left_$qv procdesc near
 main_34_TEXT	ends
 
 main_34__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_34
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_24316	proc near
-		push	bp
-		mov	bp, sp
-		cmp	_boss_phase_frame, 200
-		jle	loc_244C9
-		cmp	_boss_phase_frame, 250
-		jnz	short loc_24378
-		call	@kikuri_select_for_rank$qmiiiii stdcall, offset _kikuri_pattern_state, ds, large 34h or (38h shl 16), large 3Ch or (40h shl 16)
-		push	6
-		call	_mdrv2_se_play
-		add	sp, 0Eh
-		push	20 or (4 shl 16)	; (moveout_at_age) or (w shl 16)
-		push	10	; col
-		push	_kikuri_pattern_state	; speed_multiplied_by_8
-		push	PLAYFIELD_BOTTOM	; target_y
-		call	IRand
-		mov	bx, 120
-		cwd
-		idiv	bx
-		add	dx, _player_left
-		add	dx, -60
-		push	dx	; target_left
-		push	307 or (147 shl 16)	; (origin_left) or (origin_y shl 16)
-		push	ds	; this (segment)
-		push	offset shootout_laser_0	; this (offset)
-		jmp	loc_244AE
-; ---------------------------------------------------------------------------
-
-loc_24378:
-		cmp	_boss_phase_frame, 280
-		jnz	short loc_243B7
-		push	6
-		call	_mdrv2_se_play
-		pop	cx
-		push	20 or (4 shl 16)	; (moveout_at_age) or (w shl 16)
-		push	10	; col
-		push	_kikuri_pattern_state	; speed_multiplied_by_8
-		push	PLAYFIELD_BOTTOM	; target_y
-		call	IRand
-		mov	bx, 120
-		cwd
-		idiv	bx
-		add	dx, _player_left
-		add	dx, -60
-		push	dx	; target_left
-		push	307 or (147 shl 16)	; (origin_left) or (origin_y shl 16)
-		push	ds	; this (segment)
-		push	offset shootout_laser_1	; this (offset)
-		jmp	loc_244AE
-; ---------------------------------------------------------------------------
-
-loc_243B7:
-		cmp	_boss_phase_frame, 310
-		jnz	short loc_243F6
-		push	6
-		call	_mdrv2_se_play
-		pop	cx
-		push	20 or (4 shl 16)	; (moveout_at_age) or (w shl 16)
-		push	10	; col
-		push	_kikuri_pattern_state	; speed_multiplied_by_8
-		push	PLAYFIELD_BOTTOM	; target_y
-		call	IRand
-		mov	bx, 120
-		cwd
-		idiv	bx
-		add	dx, _player_left
-		add	dx, -60
-		push	dx	; target_left
-		push	307 or (147 shl 16)	; (origin_left) or (origin_y shl 16)
-		push	ds	; this (segment)
-		push	offset shootout_laser_2	; this (offset)
-		jmp	loc_244AE
-; ---------------------------------------------------------------------------
-
-loc_243F6:
-		cmp	_boss_phase_frame, 340
-		jnz	short loc_24434
-		push	6
-		call	_mdrv2_se_play
-		pop	cx
-		push	20 or (4 shl 16)	; (moveout_at_age) or (w shl 16)
-		push	10	; col
-		push	_kikuri_pattern_state	; speed_multiplied_by_8
-		push	PLAYFIELD_BOTTOM	; target_y
-		call	IRand
-		mov	bx, 120
-		cwd
-		idiv	bx
-		add	dx, _player_left
-		add	dx, -60
-		push	dx	; target_left
-		push	307 or (147 shl 16)	; (origin_left) or (origin_y shl 16)
-		push	ds	; this (segment)
-		push	offset shootout_laser_3	; this (offset)
-		jmp	short loc_244AE
-; ---------------------------------------------------------------------------
-
-loc_24434:
-		cmp	_boss_phase_frame, 370
-		jnz	short loc_24472
-		push	6
-		call	_mdrv2_se_play
-		pop	cx
-		push	20 or (4 shl 16)	; (moveout_at_age) or (w shl 16)
-		push	10	; col
-		push	_kikuri_pattern_state	; speed_multiplied_by_8
-		push	PLAYFIELD_BOTTOM	; target_y
-		call	IRand
-		mov	bx, 120
-		cwd
-		idiv	bx
-		add	dx, _player_left
-		add	dx, -60
-		push	dx	; target_left
-		push	307 or (147 shl 16)	; (origin_left) or (origin_y shl 16)
-		push	ds	; this (segment)
-		push	offset shootout_laser_4	; this (offset)
-		jmp	short loc_244AE
-; ---------------------------------------------------------------------------
-
-loc_24472:
-		cmp	_boss_phase_frame, 400
-		jnz	short loc_244B6
-		push	6
-		call	_mdrv2_se_play
-		pop	cx
-		push	20 or (4 shl 16)	; (moveout_at_age) or (w shl 16)
-		push	10	; col
-		push	_kikuri_pattern_state	; speed_multiplied_by_8
-		push	PLAYFIELD_BOTTOM	; target_y
-		call	IRand
-		mov	bx, 120
-		cwd
-		idiv	bx
-		add	dx, _player_left
-		add	dx, -60
-		push	dx	; target_left
-		push	307 or (147 shl 16)	; (origin_left) or (origin_y shl 16)
-		push	ds	; this (segment)
-		push	offset shootout_laser_5	; this (offset)
-
-loc_244AE:
-		call	@CShootoutLaser@spawn$qiiiiiiii
-		add	sp, 14h
-
-loc_244B6:
-		cmp	_boss_phase_frame, 500
-		jle	short loc_244C9
-		mov	_boss_phase_frame, 0
-		mov	ax, 2
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_244C9:
-		mov	ax, 1
-		pop	bp
-		retn
-sub_24316	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15669,7 +15505,7 @@ loc_24CFA:
 loc_24D1C:
 		cmp	word_35D14, 1
 		jnz	short loc_24D28
-		call	sub_24316
+		call	@pattern_single_lasers_from_left_$qv
 		jmp	short loc_24D3E
 ; ---------------------------------------------------------------------------
 

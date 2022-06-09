@@ -679,6 +679,22 @@ void near pattern_souls_drop_tears_and_move_diagonally(void)
 	); \
 }
 
+inline void fire_random_aimed_eye_laser(
+	int i,
+	screen_x_t origin_left,
+	pixel_t aim_range_x,
+	const int &speed_multiplied_by_8,
+	pixel_t w
+) {
+	fire_aimed_eye_laser(
+		i,
+		origin_left,
+		((rand() % (aim_range_x * 2)) - aim_range_x),
+		speed_multiplied_by_8,
+		w
+	);
+}
+
 void near pattern_two_crossed_eye_lasers(void)
 {
 	// Yup, first firing on [boss_phase_frame] 400.
@@ -760,4 +776,62 @@ int near pattern_4_spiral_along_disc(void)
 	return 0;
 
 	#undef angle
+}
+
+int near pattern_single_lasers_from_left_eye(void)
+{
+	enum {
+		ORIGIN_X = EYE_LEFT_CENTER_X,
+		LASER_W = 4,
+
+		// Should *technically* subtract (LASER_W / 2), as seen in
+		// pattern_two_crossed_eye_lasers().
+		RANGE_X = ((PLAYFIELD_W / 10) - LASER_W),
+	};
+
+	if(boss_phase_frame <= 200) { // (redundant)
+		return 1;
+	}
+	if(boss_phase_frame == 250) {
+		select_for_rank(pattern_state.speed_multiplied_by_8,
+			(to_sp(6.5f) / 2),
+			(to_sp(7.0f) / 2),
+			(to_sp(7.5f) / 2),
+			(to_sp(8.0f) / 2)
+		);
+		mdrv2_se_play(6);
+		fire_random_aimed_eye_laser(
+			0, ORIGIN_X, RANGE_X, pattern_state.speed_multiplied_by_8, LASER_W
+		);
+	} else if(boss_phase_frame == 280) {
+		mdrv2_se_play(6);
+		fire_random_aimed_eye_laser(
+			1, ORIGIN_X, RANGE_X, pattern_state.speed_multiplied_by_8, LASER_W
+		);
+	} else if(boss_phase_frame == 310) {
+		mdrv2_se_play(6);
+		fire_random_aimed_eye_laser(
+			2, ORIGIN_X, RANGE_X, pattern_state.speed_multiplied_by_8, LASER_W
+		);
+	} else if(boss_phase_frame == 340) {
+		mdrv2_se_play(6);
+		fire_random_aimed_eye_laser(
+			3, ORIGIN_X, RANGE_X, pattern_state.speed_multiplied_by_8, LASER_W
+		);
+	} else if(boss_phase_frame == 370) {
+		mdrv2_se_play(6);
+		fire_random_aimed_eye_laser(
+			4, ORIGIN_X, RANGE_X, pattern_state.speed_multiplied_by_8, LASER_W
+		);
+	} else if(boss_phase_frame == 400) {
+		mdrv2_se_play(6);
+		fire_random_aimed_eye_laser(
+			5, ORIGIN_X, RANGE_X, pattern_state.speed_multiplied_by_8, LASER_W
+		);
+	}
+	if(boss_phase_frame > 500) {
+		boss_phase_frame = 0;
+		return 2;
+	}
+	return 1;
 }
