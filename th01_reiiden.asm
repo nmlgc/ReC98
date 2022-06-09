@@ -14702,7 +14702,6 @@ main_33__TEXT	ends
 main_34_TEXT	segment	byte public 'CODE' use16
 	extern @boss_palette_snap$qv:proc
 	extern @boss_palette_show$qv:proc
-	extern @kikuri_select_for_rank$qmiiiii:proc
 	extern @kikuri_load$qv:proc
 	extern @kikuri_free$qv:proc
 	@kikuri_hittest_orb$qv procdesc near
@@ -14718,93 +14717,13 @@ main_34_TEXT	segment	byte public 'CODE' use16
 	@pattern_4_spiral_along_disc$qv procdesc near
 	@pattern_single_lasers_from_left_$qv procdesc near
 	@pattern_souls_symmetric_rain_lin$qv procdesc near
+	@pattern_vertical_lasers_from_top$qv procdesc near
 main_34_TEXT	ends
 
 main_34__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_34
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_24660	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		cmp	_boss_phase_frame, 100
-		jl	loc_2471B
-		cmp	_boss_phase_frame, 100
-		jnz	short loc_246A0
-		call	@kikuri_select_for_rank$qmiiiii stdcall, offset _kikuri_pattern_state, ds, large 3Ch or (40h shl 16), large 44h or (48h shl 16)
-		call	@kikuri_select_for_rank$qmiiiii stdcall, offset word_3A6BE, ds, large 0 or (10 shl 16), large 16 or (20 shl 16)
-		add	sp, 18h
-
-loc_246A0:
-		mov	ax, _boss_phase_frame
-		mov	bx, 10
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_24709
-		mov	ax, _boss_phase_frame
-		add	ax, -100
-		cwd
-		idiv	bx
-		mov	si, ax
-		call	IRand
-		mov	dx, word_3A6BE
-		add	dx, dx
-		inc	dx
-		push	dx
-		cwd
-		pop	bx
-		idiv	bx
-		sub	dx, word_3A6BE
-		mov	di, dx
-		push	20 or (8 shl 16)	; (moveout_at_age) or (w shl 16)
-		push	10	; col
-		push	_kikuri_pattern_state	; speed_multiplied_by_8
-		push	PLAYFIELD_BOTTOM	; target_y
-		mov	ax, si
-		shl	ax, 6
-		add	ax, di
-		push	ax	; target_left
-		push	64	; origin_y
-		mov	ax, si
-		shl	ax, 6
-		add	ax, di
-		push	ax	; origin_left
-		mov	ax, si
-		imul	ax, size CShootoutLaser
-		add	ax, offset _shootout_lasers
-		push	ds	; this (segment)
-		push	ax	; this (offset)
-		call	@CShootoutLaser@spawn$qiiiiiiii
-		push	6
-		call	_mdrv2_se_play
-		add	sp, 16h
-
-loc_24709:
-		cmp	_boss_phase_frame, 190
-		jl	short loc_2471B
-		mov	_boss_phase_frame, 0
-		xor	ax, ax
-		jmp	short loc_2471E
-; ---------------------------------------------------------------------------
-
-loc_2471B:
-		mov	ax, 3
-
-loc_2471E:
-		pop	di
-		pop	si
-		pop	bp
-		retn
-sub_24660	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -15364,7 +15283,7 @@ loc_24D28:
 loc_24D34:
 		cmp	word_35D14, 3
 		jnz	short loc_24D41
-		call	sub_24660
+		call	@pattern_vertical_lasers_from_top$qv
 
 loc_24D3E:
 		mov	word_35D14, ax
@@ -16354,7 +16273,9 @@ _pattern0_distance	dw ?
 public _pattern6_angle
 _pattern6_angle	db ?
 
-word_3A6BE	dw ?
+public _pattern9_random_range_x_half
+_pattern9_random_range_x_half	dw ?
+
 public _kikuri_invincible, _kikuri_invincibility_frame
 public _kikuri_entrance_ring_radius_base, _kikuri_initial_hp_rendered
 _kikuri_invincible	dw ?

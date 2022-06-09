@@ -875,3 +875,60 @@ int near pattern_souls_symmetric_rain_lines(void)
 	}
 	return 2;
 }
+
+int near pattern_vertical_lasers_from_top(void)
+{
+	enum {
+		LASER_COUNT = 10,
+		INTERVAL = 10,
+		DISTANCE_X = (PLAYFIELD_W / LASER_COUNT),
+
+		KEYFRAME_START = 100,
+		KEYFRAME_END = (KEYFRAME_START + ((LASER_COUNT - 1) * INTERVAL)),
+	};
+	// [shootout_lasers] would be indexed out of bounds otherwise.
+	static_assert(LASER_COUNT <= SHOOTOUT_LASER_COUNT);
+
+	#define random_range_x_half	pattern9_random_range_x_half
+
+	extern pixel_t random_range_x_half;
+
+	if(boss_phase_frame < KEYFRAME_START) {
+		return 3;
+	}
+	if(boss_phase_frame == KEYFRAME_START) {
+		select_for_rank(pattern_state.speed_multiplied_by_8,
+			(to_sp(7.5f) / 2),
+			(to_sp(8.0f) / 2),
+			(to_sp(8.5f) / 2),
+			(to_sp(9.0f) / 2)
+		);
+		select_for_rank(random_range_x_half,
+			0, (PLAYFIELD_W / 64), (PLAYFIELD_W / 40), (PLAYFIELD_W / 32)
+		);
+	}
+	if((boss_phase_frame % INTERVAL) == 0) {
+		int i = ((boss_phase_frame - KEYFRAME_START) / INTERVAL);
+		pixel_t random_offset_x = (
+			(rand() % ((random_range_x_half * 2) + 1)) - random_range_x_half
+		);
+		shootout_lasers[i].spawn(
+			(PLAYFIELD_LEFT + (i * DISTANCE_X + random_offset_x)),
+			PLAYFIELD_TOP,
+			(PLAYFIELD_LEFT + (i * DISTANCE_X + random_offset_x)),
+			PLAYFIELD_BOTTOM,
+			pattern_state.speed_multiplied_by_8,
+			COL_LASER,
+			20,
+			8
+		);
+		mdrv2_se_play(6);
+	}
+	if(boss_phase_frame >= KEYFRAME_END) {
+		boss_phase_frame = 0;
+		return 0;
+	}
+	return 3;
+
+	#undef random_range_x_half
+}
