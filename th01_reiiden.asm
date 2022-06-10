@@ -67,7 +67,6 @@ main_29 group main_29_TEXT, main_29__TEXT
 main_31 group main_31_TEXT, main_31__TEXT
 main_32 group main_32_TEXT, main_32__TEXT
 main_33 group main_33_TEXT, main_33__TEXT
-main_34 group main_34_TEXT, main_34__TEXT
 
 ; ===========================================================================
 
@@ -5086,7 +5085,7 @@ sub_17041	proc far
 		CBossEntity__ctor	boss_entity_3
 		CBossEntity__ctor	boss_entity_4
 		push	seg main_21
-		push	offset sub_17096
+		push	offset @CBossEntity@$bctr$qv
 		push	5
 		pushd	5
 		push	size CBossEntity
@@ -5102,8 +5101,8 @@ sub_17041	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_17096	proc far
+public @CBossEntity@$bctr$qv
+@CBossEntity@$bctr$qv	proc far
 
 arg_0		= dword	ptr  6
 
@@ -5131,7 +5130,7 @@ loc_170C3:
 		mov	ax, word ptr [bp+arg_0]
 		pop	bp
 		retf
-sub_17096	endp
+@CBossEntity@$bctr$qv	endp
 
 main_21__TEXT	ends
 
@@ -14707,41 +14706,6 @@ main_34_TEXT	segment	byte public 'CODE' use16
 	extern @kikuri_main$qv:proc
 main_34_TEXT	ends
 
-main_34__TEXT	segment	byte public 'CODE' use16
-		assume cs:main_34
-		;org 4
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_24DFF	proc far
-		push	bp
-		mov	bp, sp
-		push	seg main_21
-		push	offset sub_17096
-		push	5
-		pushd	5
-		push	size CBossEntity
-		push	ds
-		push	offset _kikuri_souls
-		call	@_vector_new_$qnvuiuluie ; _vector_new_(void *,uint,ulong,uint,...)
-		push	seg main_21
-		push	offset sub_17096
-		push	5
-		pushd	KIKURI_TEAR_COUNT
-		push	size CBossEntity
-		push	ds
-		push	offset _kikuri_tears
-		call	@_vector_new_$qnvuiuluie ; _vector_new_(void *,uint,ulong,uint,...)
-		add	sp, 20h
-		pop	bp
-		retf
-sub_24DFF	endp
-
-main_34__TEXT	ends
-
 ; ===========================================================================
 
 ; Segment type:	Pure code
@@ -15321,12 +15285,6 @@ aBoss1_bos	db 'boss1.bos',0
 aBoss1_2_bos	db 'boss1_2.bos',0
 aBoss1_3_bos	db 'boss1_3.bos',0
 aBoss1_grp_0	db 'boss1.grp',0
-public _phase
-_phase	label word
-	dw 0	; ax
-	dw 0	; phase_6_pattern
-public _kikuri_invincibility_flash_color
-_kikuri_invincibility_flash_color	db 6, 11, 8, 2
 	extern _game_cleared:byte
 	extern _unused_boss_stage_flag:word
 	extern _pellet_destroy_score_delta:word
@@ -15343,9 +15301,6 @@ _INIT_	segment word public 'INITDATA' use16
 		db    1
 		db  20h
 		dd sub_21819
-		db    1
-		db  20h
-		dd sub_24DFF
 _INIT_	ends
 
 	.data?
@@ -15619,39 +15574,6 @@ speed_3A385	dw ?
 angle_3A387	db ?
 byte_3A388	db ?
 point_3A389	Point <?>
-		db ?
-public _boss_palette, _kikuri_phase
-_boss_palette	palette_t <?>
-_kikuri_phase	db ?
-
-KIKURI_TEAR_COUNT = 10
-
-public _kikuri_tear_anim_frame, _kikuri_souls, _kikuri_tears
-_kikuri_tear_anim_frame	db KIKURI_TEAR_COUNT dup(?)
-_kikuri_souls          	CBossEntity 5 dup (<?>)
-_kikuri_tears          	CBossEntity 10 dup (<?>)
-
-public _kikuri_pattern_state
-_kikuri_pattern_state	dw ?
-
-public _pattern0_angle, _pattern0_drift, _pattern0_distance
-_pattern0_angle   	db ?
-_pattern0_drift   	db ?
-_pattern0_distance	dw ?
-
-public _pattern6_angle
-_pattern6_angle	db ?
-
-public _pattern9_random_range_x_half
-_pattern9_random_range_x_half	dw ?
-
-public _kikuri_hit
-public _kikuri_entrance_ring_radius_base, _kikuri_initial_hp_rendered
-_kikuri_hit label byte
-	dw ?	; invincible
-	dw ?	; invincibility_frame
-_kikuri_entrance_ring_radius_base	dw ?
-_kikuri_initial_hp_rendered	db ?
 	extern _boss_hp:word
 	extern _boss_phase_frame:word
 	extern _boss_phase:byte

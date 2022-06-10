@@ -33,6 +33,8 @@ public:
 	char zero_3;
 	unsigned char bos_slot;
 
+	CBossEntity();
+
 	// Even Turbo C++ 4.0J implements copy constructors for trivially
 	// constructible types via an equivalent of memcpy() by default. This
 	// constructor downgrades that to dumb single-member assignment, and is
@@ -296,10 +298,14 @@ public:
 
 // Despite CBossEntity's own width and height fields, ZUN still likes to
 // statically hardcode the intended sprite sizes when calculating offsets
-// within a .BOS sprite. Since bosses either declare their own instances or
-// #define more readable names for each instance of [boss_entities], we might
-// as well use the opportunity to lift up these static sizes into the type
-// system, and avoid the need for per-boss boilerplate coordinate functions.
+// within a .BOS sprite. Since bosses #define more readable names for each
+// instance of [boss_entities], we might as well use the opportunity to lift up
+// these static sizes into the type system, and avoid the need for per-boss
+// boilerplate coordinate functions.
+//
+// (Due to CBossEntity unfortunately having a non-inlined default constructor,
+// we can't ever directly declare instance of this template without emitting
+// another constructor for this class.)
 template <pixel_t W, pixel_t H> struct CBossEntitySized : public CBossEntity {
 	screen_x_t cur_center_x(void) const {
 		return (cur_left + (W / 2));

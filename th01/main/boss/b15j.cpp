@@ -100,11 +100,17 @@ enum kikuri_hp_t {
 	PHASE_6_END_HP = 0,
 };
 
+// Global boss state that is defined here for some reason
+// ------------------------------------------------------
+
+Palette4 boss_palette;
+// ------------------------------------------------------
+
 // State that's suddenly no longer shared with other bosses
 // --------------------------------------------------------
 
 #define boss_phase kikuri_phase
-extern int8_t boss_phase;
+int8_t boss_phase;
 // --------------------------------------------------------
 
 // Entities
@@ -115,14 +121,13 @@ static const int SOUL_CELS = 3;
 
 static const int TEAR_COUNT = 10;
 
-#define tear_anim_frame	kikuri_tear_anim_frame
-#define souls          	kikuri_souls
-#define tears          	kikuri_tears
 // Nonzero values are also used to indicate whether a given tear is alive.
-extern int8_t tear_anim_frame[TEAR_COUNT];
+int8_t tear_anim_frame[TEAR_COUNT];
 
-extern CBossEntitySized<SOUL_W, SOUL_H> souls[SOUL_COUNT + 3];
-extern CBossEntity tears[10];
+CBossEntity souls_raw[SOUL_COUNT + 3];
+CBossEntity tears[10];
+
+#define souls reinterpret_cast<CBossEntitySized<SOUL_W, SOUL_H> *>(souls_raw)
 
 #define kikuri_ent_load(tmp_i) { \
 	souls[0].load("tamasii.bos", 0); \
@@ -175,8 +180,7 @@ enum kikuri_phase_4_subphase_t {
 	_kikuri_phase_4_subphase_t_FORCE_INT16 = 0x7FFF
 };
 
-#define pattern_state	kikuri_pattern_state
-extern union {
+union {
 	int interval;
 	int speed_multiplied_by_8;
 } pattern_state;
@@ -513,13 +517,9 @@ inline void entrance_symmetric_line_1_to_0(
 
 void near pattern_symmetric_spiral_from_disc(void)
 {
-	#define angle   	pattern0_angle
-	#define drift   	pattern0_drift
-	#define distance	pattern0_distance
-
-	extern unsigned char angle;
-	extern unsigned char drift;
-	extern pixel_t distance;
+	static unsigned char angle;
+	static unsigned char drift;
+	static pixel_t distance;
 	screen_x_t left;
 	screen_y_t top;
 
@@ -549,10 +549,6 @@ void near pattern_symmetric_spiral_from_disc(void)
 		angle -= 0x08;
 		drift++;
 	}
-
-	#undef distance
-	#undef drift
-	#undef angle
 }
 
 void near pattern_spinning_aimed_rings(void)
@@ -740,9 +736,7 @@ void near pattern_souls_single_aimed_pellet_and_move_diagonally(void)
 
 int near pattern_4_spiral_along_disc(void)
 {
-	#define angle	pattern6_angle
-
-	extern unsigned char angle;
+	static unsigned char angle;
 
 	if(boss_phase_frame < 100) {
 		return 0;
@@ -780,8 +774,6 @@ int near pattern_4_spiral_along_disc(void)
 		}
 	}
 	return 0;
-
-	#undef angle
 }
 
 int near pattern_single_lasers_from_left_eye(void)
@@ -895,9 +887,7 @@ int near pattern_vertical_lasers_from_top(void)
 	// [shootout_lasers] would be indexed out of bounds otherwise.
 	static_assert(LASER_COUNT <= SHOOTOUT_LASER_COUNT);
 
-	#define random_range_x_half	pattern9_random_range_x_half
-
-	extern pixel_t random_range_x_half;
+	static pixel_t random_range_x_half;
 
 	if(boss_phase_frame < KEYFRAME_START) {
 		return 3;
@@ -935,28 +925,20 @@ int near pattern_vertical_lasers_from_top(void)
 		return 0;
 	}
 	return 3;
-
-	#undef random_range_x_half
 }
 
 void kikuri_main(void)
 {
-	#define hit                      	kikuri_hit
-	#define entrance_ring_radius_base	kikuri_entrance_ring_radius_base
-	#define initial_hp_rendered      	kikuri_initial_hp_rendered
-
-	struct hack { unsigned char col[4]; }; // XXX
-
-	extern struct {
+	static struct {
 		bool16 invincible;
 		int invincibility_frame;
 
-		void update_and_render(const struct hack &flash_colors) {
+		void update_and_render(const unsigned char (&flash_colors)[4]) {
 			boss_hit_update_and_render(
 				invincibility_frame,
 				invincible,
 				boss_hp,
-				flash_colors.col,
+				flash_colors,
 				sizeof(flash_colors),
 				7000,
 				boss_nop,
@@ -964,9 +946,9 @@ void kikuri_main(void)
 			);
 		}
 	} hit;
-	extern pixel_t entrance_ring_radius_base;
-	extern bool initial_hp_rendered;
-	extern struct {
+	static pixel_t entrance_ring_radius_base;
+	static bool initial_hp_rendered;
+	static struct {
 		union {
 			kikuri_phase_4_subphase_t subphase_4;
 			int phase_6_pattern;
@@ -977,11 +959,10 @@ void kikuri_main(void)
 			boss_phase_frame++;
 			hit.invincibility_frame++;
 		}
-	} phase;
-	extern struct hack kikuri_invincibility_flash_colors;
+	} phase = { P4_SOUL_ACTIVATION, 0 };
 
 	int i;
-	struct hack flash_colors = kikuri_invincibility_flash_colors;
+	const unsigned char flash_colors[] = { 6, 11, 8, 2 };
 
 	// Entrance animation
 	if(boss_phase == 0) {
