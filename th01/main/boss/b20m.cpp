@@ -2648,39 +2648,32 @@ void sariel_main(void)
 		random_seed = frame_rand;
 
 		while(1) {
-			boss_phase_frame++;
-			if(boss_phase_frame == 1) {
-				entrance_ring_radius_base = 16;
-			} else if(boss_phase_frame == 2) {
-				entrance_rings_invert(i, {}, entrance_ring_radius_base);
-			} else if((boss_phase_frame > 2) && ((boss_phase_frame % 4) == 0)) {
-				// "Un-invert" the previous frame
-				entrance_rings_invert(i, {}, entrance_ring_radius_base);
+			#define frame_half	boss_phase_frame
 
-				entrance_ring_radius_base += 16;
-				unsigned int squares_offscreen = 0;
+			unsigned int tmp;
 
-				entrance_rings_invert(
-					i, squares_offscreen +=, entrance_ring_radius_base
-				);
-				if(entrance_rings_done(squares_offscreen)) {
-					boss_phase = 1;
-					phase.pattern_cur = 0;
-					phase.ax.patterns_done = 0;
-					phase.patterns_until_next = ((rand() % 6) + 1);
-					boss_phase_frame = 0;
-					initial_hp_rendered = 0;
-					boss_palette_show(); // Unnecessary.
-					ent_shield.pos_cur_set(SHIELD_LEFT, SHIELD_TOP);
-					wand_lowered_snap();
-					wand_render_raise_both(true);
-					birds_reset();
-					return;
-				}
+			frame_half++;
+			if(entrance_rings_update_and_render(
+				entrance_ring_radius_base, i, tmp, frame_half, 16, 1
+			)) {
+				boss_phase = 1;
+				phase.pattern_cur = 0;
+				phase.ax.patterns_done = 0;
+				phase.patterns_until_next = ((rand() % 6) + 1);
+				boss_phase_frame = 0;
+				initial_hp_rendered = 0;
+				boss_palette_show(); // Unnecessary.
+				ent_shield.pos_cur_set(SHIELD_LEFT, SHIELD_TOP);
+				wand_lowered_snap();
+				wand_render_raise_both(true);
+				birds_reset();
+				break;
 			}
-			if(boss_phase_frame % 2) {
+entrance_rings_still_active:
+			if(frame_half % 2) { // That's why we've renamed the variable
 				frame_delay(1);
 			}
+			#undef frame_half
 		}
 	} else if(boss_phase == 1) {
 		hud_hp_increment_render(initial_hp_rendered, boss_hp, boss_phase_frame);
