@@ -1,5 +1,6 @@
 #pragma option -O- -1 -Z-
 
+#include <stddef.h>
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
@@ -15,16 +16,105 @@ extern "C" {
 #include "th01/hardware/graph.h"
 #include "th01/hardware/grppsafx.h"
 #include "th01/hardware/palette.h"
+#include "th01/snd/mdrv2.h"
 #include "th01/formats/grp.h"
 #include "th01/hiscore/scoredat.hpp"
 }
 #include "th01/hiscore/regist.hpp"
 #include "th01/end/end.hpp"
+#include "th01/end/pic.hpp"
 #include "th01/end/type.hpp"
 #include "th01/end/vars.hpp"
 #include "th01/shiftjis/end.hpp"
 #include "th01/shiftjis/regist.hpp"
 #include "th01/shiftjis/title.hpp"
+
+char temporary_padding = '\0';
+
+// > rendering text to VRAM, where it wouldn't be limited to the byte grid
+// > still aligning it to the byte grid
+inline void pic_caption_type_n(int line, size_t len, const char str[]) {
+	graph_type_ank_n(
+		(((RES_X / 2) - ((len * GLYPH_HALF_W) / 2) + BYTE_MASK) & ~BYTE_MASK),
+		(PIC_BOTTOM + (((line * 2) + 1) * GLYPH_H)),
+		len,
+		str
+	);
+}
+
+// MODDERS: Remove the [incorrect_extra_w] parameter.
+#define pic_caption_type_2(line_1, line_2, incorrect_extra_w) { \
+	/* ZUN bug: This accesses one extra byte for the "STAGE 5 BOSS" string. \
+	 * Which, luckily, happens to be the null terminator, and doesn't have \
+	 * any visible effect. */ \
+	pic_caption_type_n(0, (sizeof(line_1) - 1 + incorrect_extra_w), line_1); \
+	\
+	pic_caption_type_n(1, (sizeof(line_2) - 1 + incorrect_extra_w), line_2); \
+}
+
+/// Boss slideshow
+/// --------------
+
+static const int BOSS_SLIDE_DELAY = 150;
+static const int BOSS_TEXT_DELAY = 50;
+
+void near pascal boss_slide_next(int quarter)
+{
+	frame_delay(BOSS_SLIDE_DELAY);
+	grp_palette_black_out(5);
+	z_graph_clear();
+	end_pic_show(quarter);
+	grp_palette_black_in(5);
+	frame_delay(BOSS_TEXT_DELAY);
+}
+
+void near boss_slides_animate(void)
+{
+	mdrv2_bgm_fade_out_nonblock();
+	grp_palette_black_out(10);
+
+	z_graph_clear();
+	mdrv2_bgm_stop();
+	mdrv2_bgm_load("st1.mdt");
+	mdrv2_bgm_play();
+
+	if(end_flag == ES_MAKAI) {
+		end_pics_load_palette_show("endb_a.grp");
+	} else {
+		end_pics_load_palette_show("endb_b.grp");
+	}
+	end_pic_show(0);
+	grp_palette_settone(100);
+	frame_delay(BOSS_TEXT_DELAY);
+
+	// ZUN calculated with one extra character? Was this character originally
+	// called "ShinGyoku" after all?!
+	pic_caption_type_2(SLIDES_TITLE_5, SLIDES_BOSS_5, 1);
+
+	boss_slide_next(1);
+	if(end_flag == ES_MAKAI) {
+		pic_caption_type_2(SLIDES_TITLE_10, SLIDES_BOSS_10_MAKAI, 0);
+	} else {
+		pic_caption_type_2(SLIDES_TITLE_10, SLIDES_BOSS_10_JIGOKU, 0);
+	}
+
+	boss_slide_next(2);
+	if(end_flag == ES_MAKAI) {
+		pic_caption_type_2(SLIDES_TITLE_15, SLIDES_BOSS_15_MAKAI, 0);
+	} else {
+		pic_caption_type_2(SLIDES_TITLE_15, SLIDES_BOSS_15_JIGOKU, 0);
+	}
+
+	boss_slide_next(3);
+	if(end_flag == ES_MAKAI) {
+		pic_caption_type_2(SLIDES_TITLE_20, SLIDES_BOSS_20_MAKAI, 0);
+	} else {
+		pic_caption_type_2(SLIDES_TITLE_20, SLIDES_BOSS_20_JIGOKU, 0);
+	}
+
+	frame_delay(BOSS_SLIDE_DELAY);
+}
+/// --------------
 
 /// Verdict screen
 /// --------------
@@ -123,12 +213,11 @@ void verdict_title_calculate_and_render(void)
 	else if(skill >=  0) { level = 1; }
 	else /*          */ { level = 0; }
 
-	extern const char VERDICT_TITLE_FMT[];
 	graph_printf_fx(
 		(VERDICT_LEFT - VERDICT_TITLE_LEFT_OFFSET + VERDICT_TITLE_PADDED_W),
 		verdict_line_top(12),
 		FX_TITLE,
-		VERDICT_TITLE_FMT,
+		"%s\0 EASY \0NORMAL\0 HARD \0LUNATIC",
 		VERDICT_TITLES[group][level]
 	);
 }

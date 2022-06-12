@@ -372,7 +372,7 @@ loc_BBB1:
 		or	ax, word ptr _continues_total+2
 		jnz	short loc_BBC7
 		call	sub_BDBD
-		call	sub_C03D
+		call	@boss_slides_animate$qv
 		jmp	short loc_BBF1
 ; ---------------------------------------------------------------------------
 
@@ -788,139 +788,7 @@ loc_BF51:
 		retn
 sub_BF07	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C009	proc near
-
-@@quarter		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		call	_frame_delay stdcall, 150
-		pop	cx
-		call	grp_palette_black_out pascal, 5
-		call	_z_graph_clear
-		call	@end_pic_show$qi stdcall, [bp+@@quarter]
-		pop	cx
-		call	grp_palette_black_in pascal, 5
-		call	_frame_delay stdcall, 50
-		pop	cx
-		pop	bp
-		retn	2
-sub_C009	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C03D	proc near
-		push	bp
-		mov	bp, sp
-		call	_mdrv2_bgm_fade_out_nonblock
-		call	grp_palette_black_out pascal, 10
-		call	_z_graph_clear
-		call	_mdrv2_bgm_stop
-		push	ds
-		push	offset aSt1_mdt_0 ; "st1.mdt"
-		call	_mdrv2_bgm_load
-		add	sp, 4
-		call	_mdrv2_bgm_play
-		cmp	_end_flag, 1
-		jnz	short loc_C074
-		push	ds
-		push	offset aEndb_a_grp ; "endb_a.grp"
-		jmp	short loc_C078
-; ---------------------------------------------------------------------------
-
-loc_C074:
-		push	ds
-		push	offset aEndb_b_grp ; "endb_b.grp"
-
-loc_C078:
-		call	@end_pics_load_palette_show$qnxc
-		call	@end_pic_show$qi stdcall, 0
-		pop	cx
-		call	grp_palette_settone pascal, 100
-		call	_frame_delay stdcall, 50
-		pop	cx
-		call	@graph_type_ank_n$qiiinxc pascal, 272, 316, 13, ds, offset aStage5Boss ; "STAGE 5 BOSS"
-		call	@graph_type_ank_n$qiiinxc pascal, 232, 348, 22, ds, offset aGatekeeperSing ; "Gatekeeper 'SinGyoku'"
-		call	sub_C009 pascal, 1
-		cmp	_end_flag, 1
-		jnz	short loc_C0E1
-		call	@graph_type_ank_n$qiiinxc pascal, 272, 316, 13, ds, offset aStage10Boss ; "STAGE 10 BOSS"
-		push	232
-		push	348
-		push	22
-		push	ds
-		push	offset aEvileyesYuugen ; "EvilEyes 'YuugenMagan'"
-		jmp	short loc_C0FE
-; ---------------------------------------------------------------------------
-
-loc_C0E1:
-		call	@graph_type_ank_n$qiiinxc pascal, 272, 316, 13, ds, offset aStage10Boss_0 ;	"STAGE 10 BOSS"
-		push	232
-		push	348
-		push	23
-		push	ds
-		push	offset aRevengefulGhos ; "Revengeful Ghost 'Mima'"
-
-loc_C0FE:
-		call	@graph_type_ank_n$qiiinxc
-		call	sub_C009 pascal, 2
-		cmp	_end_flag, 1
-		jnz	short loc_C12E
-		call	@graph_type_ank_n$qiiinxc pascal, 272, 316, 13, ds, offset aStage15Boss ; "STAGE 15 BOSS"
-		push	232
-		push	348
-		push	22
-		push	ds
-		push	offset aInnocenceDevil ; "Innocence Devil 'Elis'"
-		jmp	short loc_C14B
-; ---------------------------------------------------------------------------
-
-loc_C12E:
-		call	@graph_type_ank_n$qiiinxc pascal, 272, 316, 13, ds, offset aStage15Boss_0 ;	"STAGE 15 BOSS"
-		push	256
-		push	348
-		push	17
-		push	ds
-		push	offset aHellmoonKikuri ; "HellMoon 'Kikuri'"
-
-loc_C14B:
-		call	@graph_type_ank_n$qiiinxc
-		call	sub_C009 pascal, 3
-		cmp	_end_flag, 1
-		jnz	short loc_C17B
-		call	@graph_type_ank_n$qiiinxc pascal, 272, 316, 13, ds, offset aStage20Boss ; "STAGE 20 BOSS"
-		push	232
-		push	348
-		push	22
-		push	ds
-		push	offset aAngelOfDeathSa ; "Angel	of Death'Sariel'"
-		jmp	short loc_C198
-; ---------------------------------------------------------------------------
-
-loc_C17B:
-		call	@graph_type_ank_n$qiiinxc pascal, 272, 316, 13, ds, offset aStage20Boss_0 ;	"STAGE 20 BOSS"
-		push	224
-		push	348
-		push	24
-		push	ds
-		push	offset aAstralKnightKo ; "Astral Knight	'Konngara'"
-
-loc_C198:
-		call	@graph_type_ank_n$qiiinxc
-		call	_frame_delay stdcall, 150
-		pop	cx
-		pop	bp
-		retn
-sub_C03D	endp
-
+	@boss_slides_animate$qv procdesc near
 	extern @verdict_animate_and_regist$qv:proc
 fuuin_03_TEXT	ends
 
@@ -1045,11 +913,11 @@ _VERDICT_TITLES label dword
 		dd aIitsluucr_tomo	; "黄帝九鼎神丹経"
 		dd aB@gagagkg		; "　アムリタ"
 public _ranks
-_ranks	dd aEasy
-					; " EASY "
-		dd aNormal		; "NORMAL"
-		dd aHard		; " HARD "
-		dd aLunatic		; "LUNATIC"
+_ranks	label dword
+	dd DGROUP:0763h
+	dd DGROUP:076Ah
+	dd DGROUP:0771h
+	dd DGROUP:0778h
 
 ; Group 0
 aB@gvguglbB@	db '　モンキー　',0
@@ -1096,31 +964,7 @@ aEd5a_grp	db 'ed5a.grp',0
 aEd5b_grp	db 'ed5b.grp',0
 aEd5c_grp	db 'ed5c.grp',0
 aCongratulati_0	db 'Congratulations!',0
-aGoodEnding1	db '     Good Ending1     ',0
-; char aSt1_mdt_0[]
-aSt1_mdt_0	db 'st1.mdt',0
-aEndb_a_grp	db 'endb_a.grp',0
-aEndb_b_grp	db 'endb_b.grp',0
-aStage5Boss	db 'STAGE 5 BOSS',0
-aGatekeeperSing	db 'Gatekeeper ',27h,'SinGyoku',27h,0
-aStage10Boss	db 'STAGE 10 BOSS',0
-aEvileyesYuugen	db 'EvilEyes ',27h,'YuugenMagan',27h,0
-aStage10Boss_0	db 'STAGE 10 BOSS',0
-aRevengefulGhos	db 'Revengeful Ghost ',27h,'Mima',27h,0
-aStage15Boss	db 'STAGE 15 BOSS',0
-aInnocenceDevil	db 'Innocence Devil ',27h,'Elis',27h,0
-aStage15Boss_0	db 'STAGE 15 BOSS',0
-aHellmoonKikuri	db 'HellMoon ',27h,'Kikuri',27h,0
-aStage20Boss	db 'STAGE 20 BOSS',0
-aAngelOfDeathSa	db 'Angel of Death',27h,'Sariel',27h,0
-aStage20Boss_0	db 'STAGE 20 BOSS',0
-aAstralKnightKo	db 'Astral Knight ',27h,'Konngara',27h,0
-public _VERDICT_TITLE_FMT
-_VERDICT_TITLE_FMT	db '%s',0
-aEasy		db ' EASY ',0
-aNormal		db 'NORMAL',0
-aHard		db ' HARD ',0
-aLunatic	db 'LUNATIC',0
+aGoodEnding1	db '     Good Ending1     '
 
 	; th01/hardware/palette[data].asm
 	extern _z_Palettes:rgb_t:COLOR_COUNT

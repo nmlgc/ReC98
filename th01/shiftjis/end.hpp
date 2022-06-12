@@ -1,3 +1,18 @@
+// Boss slideshow
+// --------------
+
+#define SLIDES_TITLE_5       	"STAGE 5 BOSS"
+#define SLIDES_TITLE_10      	"STAGE 10 BOSS"
+#define SLIDES_TITLE_15      	"STAGE 15 BOSS"
+#define SLIDES_TITLE_20      	"STAGE 20 BOSS"
+#define SLIDES_BOSS_5        	"Gatekeeper 'SinGyoku'"
+#define SLIDES_BOSS_10_MAKAI 	"EvilEyes 'YuugenMagan'"
+#define SLIDES_BOSS_10_JIGOKU	"Revengeful Ghost 'Mima'"
+#define SLIDES_BOSS_15_MAKAI 	"Innocence Devil 'Elis'"
+#define SLIDES_BOSS_15_JIGOKU	"HellMoon 'Kikuri'"
+#define SLIDES_BOSS_20_MAKAI 	"Angel of Death'Sariel'"
+#define SLIDES_BOSS_20_JIGOKU	"Astral Knight 'Konngara'"
+// --------------
 
 // Verdict screen
 // --------------
