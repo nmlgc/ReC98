@@ -29,8 +29,6 @@ extern "C" {
 #include "th01/shiftjis/regist.hpp"
 #include "th01/shiftjis/title.hpp"
 
-char temporary_padding = '\0';
-
 // > rendering text to VRAM, where it wouldn't be limited to the byte grid
 // > still aligning it to the byte grid
 inline void pic_caption_type_n(int line, size_t len, const char str[]) {
@@ -51,6 +49,102 @@ inline void pic_caption_type_n(int line, size_t len, const char str[]) {
 	\
 	pic_caption_type_n(1, (sizeof(line_2) - 1 + incorrect_extra_w), line_2); \
 }
+
+/// Endings
+/// -------
+
+static const int FINAL_DELAY_FRAMES = 300;
+
+// Function ordering fails
+// -----------------------
+
+void near end_good_makai(void);
+void near end_good_jigoku(void);
+// -----------------------
+
+#define end_pic_show_and_delay(quarter, delay_frames) { \
+	end_pic_show(quarter); \
+	frame_delay(delay_frames); \
+}
+
+#define end_pic_white_in_and_delay(quarter, white_in_speed, delay_frames) { \
+	end_pic_show(quarter); \
+	grp_palette_white_in(white_in_speed); \
+	frame_delay(delay_frames); \
+}
+
+void near end_good(void)
+{
+	enum {
+		WHITE_IN_STEP = 5,
+		WHITE_OUT_STEP = 10,
+	};
+
+	int i;
+
+	end_pics_load_palette_show("ed3a.grp");
+
+	grp_palette_settone(200);
+	for(i = 0; i < ((200 - 100) / WHITE_IN_STEP); i++) {
+		end_pic_show_and_delay(0, 8);
+		end_pic_show_and_delay(1, 8);
+		grp_palette_settone(200 - (i * WHITE_IN_STEP));
+	}
+	grp_palette_settone(100);
+
+	for(i = 0; i < 10; i++) {
+		end_pic_show_and_delay(0, 8);
+		end_pic_show_and_delay(1, 8);
+	}
+
+	for(i = 0; i < ((200 - 100) / WHITE_OUT_STEP); i++) {
+		end_pic_show_and_delay((i & 1), 8);
+		grp_palette_settone(100 + (i * WHITE_OUT_STEP));
+	}
+	grp_palette_settone(200);
+
+	if(end_flag == ES_MAKAI) {
+		end_good_makai();
+	} else {
+		end_good_jigoku();
+	}
+}
+
+void near end_good_jigoku(void)
+{
+	end_pics_load_palette_show("ed3b.grp");
+	end_pic_white_in_and_delay(0, 4, 250);
+	end_pic_show_and_delay(1, 200);
+	end_pic_show_and_delay(2, 150);
+	end_pic_show_and_delay(3, 150);
+	pic_caption_type_2(END_GOOD_LINE_1, END_GOOD_LINE_2_JIGOKU, 0);
+	frame_delay(FINAL_DELAY_FRAMES);
+}
+
+void near end_good_makai(void)
+{
+	end_pics_load_palette_show("ed5a.grp");
+	end_pic_white_in_and_delay(0, 4, 300);
+
+	for(int i = 0; i < 15; i++) {
+		end_pic_show_and_delay(1, 8);
+		end_pic_show_and_delay(2, 8);
+	}
+
+	end_pics_load_palette_show("ed5b.grp");
+	end_pic_show_and_delay(0, 150);
+	end_pic_show_and_delay(1, 100);
+	end_pic_show_and_delay(2, 100);
+	end_pic_show_and_delay(3, 100);
+
+	end_pics_load_palette_show("ed5c.grp");
+	end_pic_show_and_delay(0, 100);
+	end_pic_show_and_delay(1, 150);
+	end_pic_show_and_delay(2, 150);
+	pic_caption_type_2(END_GOOD_LINE_1, END_GOOD_LINE_2_MAKAI, 0);
+	frame_delay(FINAL_DELAY_FRAMES);
+}
+/// -------
 
 /// Boss slideshow
 /// --------------

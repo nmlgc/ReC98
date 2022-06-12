@@ -371,7 +371,7 @@ loc_BBB1:
 		mov	ax, word ptr _continues_total
 		or	ax, word ptr _continues_total+2
 		jnz	short loc_BBC7
-		call	sub_BDBD
+		call	@end_good$qv
 		call	@boss_slides_animate$qv
 		jmp	short loc_BBF1
 ; ---------------------------------------------------------------------------
@@ -593,201 +593,7 @@ loc_BDAC:
 		retn
 sub_BC7C	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BDBD	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		call	@end_pics_load_palette_show$qnxc pascal, ds, offset aEd3a_grp ; "ed3a.grp"
-		call	grp_palette_settone pascal, 200
-		xor	si, si
-		jmp	short loc_BE07
-; ---------------------------------------------------------------------------
-
-loc_BDD6:
-		call	@end_pic_show$qi stdcall, 0
-		pop	cx
-		call	_frame_delay stdcall, 8
-		pop	cx
-		call	@end_pic_show$qi stdcall, 1
-		pop	cx
-		call	_frame_delay stdcall, 8
-		pop	cx
-		mov	ax, si
-		imul	ax, 5
-		mov	dx, 200
-		sub	dx, ax
-		call	grp_palette_settone pascal, dx
-		inc	si
-
-loc_BE07:
-		cmp	si, 14h
-		jl	short loc_BDD6
-		call	grp_palette_settone pascal, 100
-		xor	si, si
-		jmp	short loc_BE38
-; ---------------------------------------------------------------------------
-
-loc_BE17:
-		call	@end_pic_show$qi stdcall, 0
-		pop	cx
-		call	_frame_delay stdcall, 8
-		pop	cx
-		call	@end_pic_show$qi stdcall, 1
-		pop	cx
-		call	_frame_delay stdcall, 8
-		pop	cx
-		inc	si
-
-loc_BE38:
-		cmp	si, 0Ah
-		jl	short loc_BE17
-		xor	si, si
-		jmp	short loc_BE64
-; ---------------------------------------------------------------------------
-
-loc_BE41:
-		mov	ax, si
-		and	ax, 1
-		call	@end_pic_show$qi stdcall, ax
-		pop	cx
-		call	_frame_delay stdcall, 8
-		pop	cx
-		mov	ax, si
-		imul	ax, 10
-		add	ax, 100
-		call	grp_palette_settone pascal, ax
-		inc	si
-
-loc_BE64:
-		cmp	si, 0Ah
-		jl	short loc_BE41
-		call	grp_palette_settone pascal, 200
-		cmp	_end_flag, 1
-		jnz	short loc_BE7D
-		call	sub_BF07
-		jmp	short loc_BE80
-; ---------------------------------------------------------------------------
-
-loc_BE7D:
-		call	sub_BE83
-
-loc_BE80:
-		pop	si
-		pop	bp
-		retn
-sub_BDBD	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BE83	proc near
-		push	bp
-		mov	bp, sp
-		call	@end_pics_load_palette_show$qnxc pascal, ds, offset aEd3b_grp ; "ed3b.grp"
-		call	@end_pic_show$qi stdcall, 0
-		pop	cx
-		call	grp_palette_white_in pascal, 4
-		call	_frame_delay stdcall, 250
-		pop	cx
-		call	@end_pic_show$qi stdcall, 1
-		pop	cx
-		call	_frame_delay stdcall, 200
-		pop	cx
-		call	@end_pic_show$qi stdcall, 2
-		pop	cx
-		call	_frame_delay stdcall, 150
-		pop	cx
-		call	@end_pic_show$qi stdcall, 3
-		pop	cx
-		call	_frame_delay stdcall, 150
-		pop	cx
-		call	@graph_type_ank_n$qiiinxc pascal, 256, 316, 16, ds, offset aCongratulation ; "Congratulations!"
-		call	@graph_type_ank_n$qiiinxc pascal, 232, 348, 22, ds, offset aGoodEnding2 ; "     Good Ending2     "
-		call	_frame_delay stdcall, 300
-		pop	cx
-		pop	bp
-		retn
-sub_BE83	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BF07	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		call	@end_pics_load_palette_show$qnxc pascal, ds, offset aEd5a_grp ; "ed5a.grp"
-		call	@end_pic_show$qi stdcall, 0
-		pop	cx
-		call	grp_palette_white_in pascal, 4
-		call	_frame_delay stdcall, 300
-		pop	cx
-		xor	si, si
-		jmp	short loc_BF51
-; ---------------------------------------------------------------------------
-
-loc_BF30:
-		call	@end_pic_show$qi stdcall, 1
-		pop	cx
-		call	_frame_delay stdcall, 8
-		pop	cx
-		call	@end_pic_show$qi stdcall, 2
-		pop	cx
-		call	_frame_delay stdcall, 8
-		pop	cx
-		inc	si
-
-loc_BF51:
-		cmp	si, 0Fh
-		jl	short loc_BF30
-		call	@end_pics_load_palette_show$qnxc pascal, ds, offset aEd5b_grp ; "ed5b.grp"
-		call	@end_pic_show$qi stdcall, 0
-		pop	cx
-		call	_frame_delay stdcall, 150
-		pop	cx
-		call	@end_pic_show$qi stdcall, 1
-		pop	cx
-		call	_frame_delay stdcall, 100
-		pop	cx
-		call	@end_pic_show$qi stdcall, 2
-		pop	cx
-		call	_frame_delay stdcall, 100
-		pop	cx
-		call	@end_pic_show$qi stdcall, 3
-		pop	cx
-		call	_frame_delay stdcall, 100
-		pop	cx
-		call	@end_pics_load_palette_show$qnxc pascal, ds, offset aEd5c_grp ; "ed5c.grp"
-		call	@end_pic_show$qi stdcall, 0
-		pop	cx
-		call	_frame_delay stdcall, 100
-		pop	cx
-		call	@end_pic_show$qi stdcall, 1
-		pop	cx
-		call	_frame_delay stdcall, 150
-		pop	cx
-		call	@end_pic_show$qi stdcall, 2
-		pop	cx
-		call	_frame_delay stdcall, 150
-		pop	cx
-		call	@graph_type_ank_n$qiiinxc pascal, 256, 316, 16, ds, offset aCongratulati_0 ; "Congratulations!"
-		call	@graph_type_ank_n$qiiinxc pascal, 232, 348, 22, ds, offset aGoodEnding1 ; "     Good Ending1     "
-		call	_frame_delay stdcall, 300
-		pop	cx
-		pop	si
-		pop	bp
-		retn
-sub_BF07	endp
-
+	@end_good$qv procdesc near
 	@boss_slides_animate$qv procdesc near
 	extern @verdict_animate_and_regist$qv:proc
 fuuin_03_TEXT	ends
@@ -956,15 +762,6 @@ aBadEnding2	db '      Bad Ending2     ',0
 aEd4a_grp	db 'ed4a.grp',0
 aTryToNoConti_0	db 'Try to ',27h,'No continue',27h,'!!',0
 aBadEnding1	db '      Bad Ending1     ',0
-aEd3a_grp	db 'ed3a.grp',0
-aEd3b_grp	db 'ed3b.grp',0
-aCongratulation	db 'Congratulations!',0
-aGoodEnding2	db '     Good Ending2     ',0
-aEd5a_grp	db 'ed5a.grp',0
-aEd5b_grp	db 'ed5b.grp',0
-aEd5c_grp	db 'ed5c.grp',0
-aCongratulati_0	db 'Congratulations!',0
-aGoodEnding1	db '     Good Ending1     '
 
 	; th01/hardware/palette[data].asm
 	extern _z_Palettes:rgb_t:COLOR_COUNT

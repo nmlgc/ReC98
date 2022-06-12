@@ -1,3 +1,11 @@
+// Endings
+// -------
+
+#define END_GOOD_LINE_1       	"Congratulations!"
+#define END_GOOD_LINE_2_MAKAI 	"     Good Ending1     "
+#define END_GOOD_LINE_2_JIGOKU	"     Good Ending2     "
+// -------
+
 // Boss slideshow
 // --------------
 
