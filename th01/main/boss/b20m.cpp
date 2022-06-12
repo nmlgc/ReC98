@@ -1625,7 +1625,7 @@ void near particles2x2_wavy_unput_update_render()
 
 		wave_left = polar_y(left[i], 16, age[i]);
 		vo = vram_offset_shift(wave_left, top[i]);
-		first_bit = (wave_left & (BYTE_DOTS - 1));
+		first_bit = (wave_left & BYTE_MASK);
 
 		// Unblit
 		graph_accesspage_func(1);	particle2x2_snap(dots, vo, first_bit);
@@ -1639,7 +1639,7 @@ void near particles2x2_wavy_unput_update_render()
 		// Recalculate VRAM offset and clip
 		wave_left = polar_y(left[i], 16, age[i]);
 		vo = vram_offset_shift(wave_left, top[i]);
-		first_bit = (wave_left & (BYTE_DOTS - 1));
+		first_bit = (wave_left & BYTE_MASK);
 		if(age[i] >= 100) {
 			col[i] = 0;
 			continue;

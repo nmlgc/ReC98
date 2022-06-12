@@ -367,7 +367,7 @@ void z_palette_show(void)
 void z_grcg_pset(screen_x_t x, vram_y_t y, int col)
 {
 	grcg_setcolor_rmw(col);
-	VRAM_SBYTE(B, vram_offset_mulshift(x, y)) = (0x80 >> (x & (BYTE_DOTS - 1)));
+	VRAM_SBYTE(B, vram_offset_mulshift(x, y)) = (0x80 >> (x & BYTE_MASK));
 	grcg_off_func();
 }
 
@@ -375,7 +375,7 @@ int z_graph_readdot(screen_x_t x, vram_y_t y)
 {
 	int ret;
 	vram_offset_t vram_offset = vram_offset_mulshift(x, y);
-	sdots16_t mask = (0x80 >> (x & (BYTE_DOTS - 1)));
+	sdots16_t mask = (0x80 >> (x & BYTE_MASK));
 
 #define test(plane, vram_offset, mask, bit) \
 	if(VRAM_SBYTE(plane, vram_offset) & mask) { \
@@ -421,8 +421,8 @@ void graph_r_hline(screen_x_t left, screen_x_t right, vram_y_t y, int col)
 
 	vram_row = (dots8_t *)(MK_FP(SEG_PLANE_B, vram_offset_muldiv(left, y)));
 	full_bytes_to_put = (right / BYTE_DOTS) - (left / BYTE_DOTS);
-	left_pixels = 0xFF >> (left & (BYTE_DOTS - 1));
-	right_pixels = 0xFF << ((BYTE_DOTS - 1) - (right & (BYTE_DOTS - 1)));
+	left_pixels = 0xFF >> (left & BYTE_MASK);
+	right_pixels = 0xFF << (BYTE_MASK - (right & BYTE_MASK));
 
 	if(!graph_r_unput) {
 		grcg_setcolor_rmw(col);
@@ -465,8 +465,8 @@ void graph_r_vline(screen_x_t x, vram_y_t top, vram_y_t bottom, int col)
 		return;
 	}
 	vram_row_offset = vram_offset_shift(x, top);
-	pattern = graph_r_pattern >> (x & (BYTE_DOTS - 1));
-	pattern |= graph_r_pattern << (16 - (x & (BYTE_DOTS - 1)));
+	pattern = graph_r_pattern >> (x & BYTE_MASK);
+	pattern |= graph_r_pattern << (16 - (x & BYTE_MASK));
 
 	grcg_setcolor_rmw(col);
 	for(y = top; y <= bottom; y++) {
@@ -571,8 +571,8 @@ void graph_r_line(
 			y_vram = y_cur; \
 			x_vram = (x_cur >> 3); \
 		} \
-		pixels |= (graph_r_pattern >> (x_cur & (BYTE_DOTS - 1))); \
-		pixels |= (graph_r_pattern << (16 - (x_cur & (BYTE_DOTS - 1)))); \
+		pixels |= (graph_r_pattern >> (x_cur & BYTE_MASK)); \
+		pixels |= (graph_r_pattern << (16 - (x_cur & BYTE_MASK))); \
 		error -= plotted_len; \
 		step_var += step_increment; \
 		if(error < 0) { \
@@ -688,8 +688,8 @@ void z_grcg_boxfill(
 	vram_row = (dots8_t *)(MK_FP(SEG_PLANE_B, vram_offset_mulshift(left, top)));
 	for(y = top; y <= bottom; y++) {
 		full_bytes_to_put = (right >> 3) - (left >> 3);
-		left_pixels = 0xFF >> (left & (BYTE_DOTS - 1));
-		right_pixels = 0xFF << ((BYTE_DOTS - 1) - (right & (BYTE_DOTS - 1)));
+		left_pixels = 0xFF >> (left & BYTE_MASK);
+		right_pixels = 0xFF << (BYTE_MASK - (right & BYTE_MASK));
 
 		if(full_bytes_to_put == 0) {
 			vram_row[0] = (left_pixels & right_pixels);

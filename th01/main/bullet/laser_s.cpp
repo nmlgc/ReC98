@@ -107,7 +107,7 @@ void CShootoutLaser::hittest_and_render(void)
 		// 	sSHOOTOUT_LASER[preshift][(ray_i_left.to_pixel()...)].
 		// (Or actually, how about throwing away that sprite altogether?)
 		dots |= sSHOOTOUT_LASER[0][
-			preshift + (ray_i_left.to_pixel() & (BYTE_DOTS - 1))
+			preshift + (ray_i_left.to_pixel() & BYTE_MASK)
 		];
 
 		if(put_flag == SL_RAY_UNPUT) {

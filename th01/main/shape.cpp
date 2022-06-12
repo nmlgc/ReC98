@@ -65,10 +65,10 @@ void shape_ellipse_arc_put(
 			) {
 				grcg_put(cache_vram_offset, cache_dots, 8);
 			}
-			cache_dots = ((0x80) >> (cur_x & (BYTE_DOTS - 1)));
+			cache_dots = (0x80 >> (cur_x & BYTE_MASK));
 			cache_vram_offset = vram_offset;
 		} else {
-			cache_dots |= ((0x80) >> (cur_x & (BYTE_DOTS - 1)));
+			cache_dots |= (0x80 >> (cur_x & BYTE_MASK));
 		}
 	}
 	grcg_off();

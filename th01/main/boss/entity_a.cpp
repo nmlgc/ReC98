@@ -157,7 +157,7 @@ void CBossEntity::put_1line(
 	vram_word_amount_t bos_word_x;
 	size_t bos_p = 0;
 	vram_y_t intended_y;
-	char first_bit = (left & (BYTE_DOTS - 1));
+	char first_bit = (left & BYTE_MASK);
 	char other_shift = ((1 * BYTE_DOTS) - first_bit);
 
 	bos_image_t &bos = bos_entity_images[bos_slot].image[image];
@@ -276,7 +276,7 @@ void CBossEntity::unput_and_put_1line(
 	vram_word_amount_t bos_word_x;
 	size_t bos_p = 0;
 	vram_y_t intended_y;
-	char first_bit = (left & (BYTE_DOTS - 1));
+	char first_bit = (left & BYTE_MASK);
 	char other_shift = ((2 * BYTE_DOTS) - first_bit);
 	Planar<dots16_t> bg_masked;
 	dots16_t mask_unaligned;
