@@ -193,6 +193,7 @@ void MASTER_RET graph_show(void);
 void MASTER_RET graph_hide(void);
 void MASTER_RET graph_start(void);
 int MASTER_RET graph_copy_page(int to_page);
+void MASTER_RET graph_scrollup(unsigned line);
 
 #if defined(PC98_H) && defined(__cplusplus)
 	void MASTER_RET graph_gaiji_putc(int x, int y, int c, int color);

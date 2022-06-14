@@ -73,6 +73,76 @@ void near end_good_jigoku(void);
 	frame_delay(delay_frames); \
 }
 
+void pascal near shake_then_boom(int shake_duration, int boom_duration)
+{
+	int i;
+
+	// <= instead of <? Let's better not treat the parameters as "frames" then.
+	for(i = 0; i <= shake_duration; i++) {
+		if((i & 3) == 0) { graph_scrollup(8); }
+		/*       */ else { graph_scrollup(0); }
+
+		// Redundant, would have been enough to show it once outside the loop,
+		// and keep just the delay here.
+		end_pic_show_and_delay(1, 1);
+
+		if(i & 1) { grp_palette_settone(170); }
+		/**/ else { grp_palette_settone(100); }
+	}
+
+	for(i = 0; i <= boom_duration; i++) {
+		if((i & 3) == 0) { graph_scrollup(8); }
+		/*       */ else { graph_scrollup(0); }
+
+		end_pic_show_and_delay(1, 2);
+
+		if(i & 1) {
+			end_pic_show(2);
+		} else {
+			end_pic_show(1);
+		}
+	}
+}
+
+void near end_bad(void)
+{
+	end_pics_load_palette_show("ed2a.grp");
+	grp_palette_settone(200); // (redundant, we white in anyway)
+	end_pic_white_in_and_delay(0, 5, 120);
+
+	if(end_flag == ES_JIGOKU) {
+		shake_then_boom(64, 16);
+		shake_then_boom(32, 32);
+		graph_scrollup(0);
+		frame_delay(50);
+
+		end_pic_show_and_delay(3, 100);
+		pic_caption_type_2(END_BAD_LINE_1, END_BAD_LINE_2_JIGOKU, 0);
+	} else {
+		enum {
+			WHITE_OUT_STEP = 5,
+		};
+
+		int i;
+
+		end_pics_load_palette_show("ed4a.grp");
+
+		for(i = 0; i < 20; i++) {
+			end_pic_show_and_delay(0, 3);
+			end_pic_show_and_delay(1, 3);
+		}
+		for(i = 0; i < ((200 - 100) / WHITE_OUT_STEP); i++) {
+			end_pic_show_and_delay(0, 3);
+			end_pic_show_and_delay(1, 3);
+			grp_palette_settone(100 + (i * WHITE_OUT_STEP));
+		}
+		end_pic_white_in_and_delay(2, 5, 200);
+		end_pic_show_and_delay(3, 100);
+		pic_caption_type_2(END_BAD_LINE_1, END_BAD_LINE_2_MAKAI, 0);
+	}
+	frame_delay(FINAL_DELAY_FRAMES);
+}
+
 void near end_good(void)
 {
 	enum {

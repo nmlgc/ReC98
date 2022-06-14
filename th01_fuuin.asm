@@ -377,7 +377,7 @@ loc_BBB1:
 ; ---------------------------------------------------------------------------
 
 loc_BBC7:
-		call	sub_BC7C
+		call	@end_bad$qv
 		call	_mdrv2_bgm_fade_out_nonblock
 		call	grp_palette_black_out pascal, 10
 		call	_z_graph_clear
@@ -395,204 +395,7 @@ loc_BBF1:
 		retf
 sub_B945	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BBF9	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_BC35
-; ---------------------------------------------------------------------------
-
-loc_BC01:
-		test	si, 3
-		jnz	short loc_BC0B
-		push	8
-		jmp	short loc_BC0D
-; ---------------------------------------------------------------------------
-
-loc_BC0B:
-		push	0
-
-loc_BC0D:
-		call	graph_scrollup
-		call	@end_pic_show$qi stdcall, 1
-		pop	cx
-		call	_frame_delay stdcall, 1
-		pop	cx
-		test	si, 1
-		jz	short loc_BC2D
-		push	170
-		jmp	short loc_BC2F
-; ---------------------------------------------------------------------------
-
-loc_BC2D:
-		push	100
-
-loc_BC2F:
-		call	grp_palette_settone
-		inc	si
-
-loc_BC35:
-		cmp	si, [bp+arg_2]
-		jle	short loc_BC01
-		xor	si, si
-		jmp	short loc_BC72
-; ---------------------------------------------------------------------------
-
-loc_BC3E:
-		test	si, 3
-		jnz	short loc_BC48
-		push	8
-		jmp	short loc_BC4A
-; ---------------------------------------------------------------------------
-
-loc_BC48:
-		push	0
-
-loc_BC4A:
-		call	graph_scrollup
-		call	@end_pic_show$qi stdcall, 1
-		pop	cx
-		call	_frame_delay stdcall, 2
-		pop	cx
-		test	si, 1
-		jz	short loc_BC69
-		push	2
-		jmp	short loc_BC6B
-; ---------------------------------------------------------------------------
-
-loc_BC69:
-		push	1
-
-loc_BC6B:
-		call	@end_pic_show$qi
-		pop	cx
-		inc	si
-
-loc_BC72:
-		cmp	si, [bp+arg_0]
-		jle	short loc_BC3E
-		pop	si
-		pop	bp
-		retn	4
-sub_BBF9	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BC7C	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		call	@end_pics_load_palette_show$qnxc pascal, ds, offset aEd2a_grp ; "ed2a.grp"
-		call	grp_palette_settone pascal, 200
-		call	@end_pic_show$qi stdcall, 0
-		pop	cx
-		call	grp_palette_white_in pascal, 5
-		call	_frame_delay stdcall, 120
-		pop	cx
-		cmp	_end_flag, 2
-		jnz	short loc_BCFC
-		push	40h
-		push	10h
-		call	sub_BBF9
-		push	20h ; ' '
-		push	20h ; ' '
-		call	sub_BBF9
-		call	graph_scrollup pascal, 0
-		call	_frame_delay stdcall, 50
-		pop	cx
-		call	@end_pic_show$qi stdcall, 3
-		pop	cx
-		call	_frame_delay stdcall, 100
-		pop	cx
-		call	@graph_type_ank_n$qiiinxc pascal, 232, 316, 22, ds, offset aTryToNoContinu ; "Try to 'No continue'!!"
-		push	232
-		push	348
-		push	22
-		push	ds
-		push	offset aBadEnding2 ; "	    Bad	Ending2	    "
-		jmp	loc_BDAC
-; ---------------------------------------------------------------------------
-
-loc_BCFC:
-		call	@end_pics_load_palette_show$qnxc pascal, ds, offset aEd4a_grp ; "ed4a.grp"
-		xor	si, si
-		jmp	short loc_BD2A
-; ---------------------------------------------------------------------------
-
-loc_BD09:
-		call	@end_pic_show$qi stdcall, 0
-		pop	cx
-		call	_frame_delay stdcall, 3
-		pop	cx
-		call	@end_pic_show$qi stdcall, 1
-		pop	cx
-		call	_frame_delay stdcall, 3
-		pop	cx
-		inc	si
-
-loc_BD2A:
-		cmp	si, 14h
-		jl	short loc_BD09
-		xor	si, si
-		jmp	short loc_BD62
-; ---------------------------------------------------------------------------
-
-loc_BD33:
-		call	@end_pic_show$qi stdcall, 0
-		pop	cx
-		call	_frame_delay stdcall, 3
-		pop	cx
-		call	@end_pic_show$qi stdcall, 1
-		pop	cx
-		call	_frame_delay stdcall, 3
-		pop	cx
-		mov	ax, si
-		imul	ax, 5
-		add	ax, 100
-		call	grp_palette_settone pascal, ax
-		inc	si
-
-loc_BD62:
-		cmp	si, 14h
-		jl	short loc_BD33
-		call	@end_pic_show$qi stdcall, 2
-		pop	cx
-		call	grp_palette_white_in pascal, 5
-		call	_frame_delay stdcall, 200
-		pop	cx
-		call	@end_pic_show$qi stdcall, 3
-		pop	cx
-		call	_frame_delay stdcall, 100
-		pop	cx
-		call	@graph_type_ank_n$qiiinxc pascal, 232, 316, 22, ds, offset aTryToNoConti_0 ; "Try to 'No continue'!!"
-		push	232
-		push	348
-		push	22
-		push	ds
-		push	offset aBadEnding1 ; "	    Bad	Ending1	    "
-
-loc_BDAC:
-		call	@graph_type_ank_n$qiiinxc
-		call	_frame_delay stdcall, 300
-		pop	cx
-		pop	si
-		pop	bp
-		retn
-sub_BC7C	endp
-
+	@end_bad$qv procdesc near
 	@end_good$qv procdesc near
 	@boss_slides_animate$qv procdesc near
 	extern @verdict_animate_and_regist$qv:proc
@@ -610,7 +413,6 @@ fuuin_04_TEXT	segment	byte public 'CODE' use16
 	extern GRP_PALETTE_BLACK_IN:proc
 	extern GRP_PALETTE_WHITE_OUT:proc
 	extern GRP_PALETTE_WHITE_IN:proc
-	extern @GRAPH_TYPE_ANK_N$QIIINXC:proc
 fuuin_04_TEXT	ends
 
 ; ===========================================================================
@@ -642,9 +444,7 @@ graph_TEXT	ends
 
 ; ===========================================================================
 
-; Segment type:	Pure code
 grppffx_TEXT	segment	byte public 'CODE' use16
-	extern _graph_printf_fx:proc
 grppffx_TEXT	ends
 
 ; ===========================================================================
@@ -756,12 +556,6 @@ aEd1d_grp	db 'ED1D.GRP',0
 aEd1e_grp	db 'ED1E.GRP',0
 ; char aSt1_mdt[]
 aSt1_mdt	db 'st1.mdt',0
-aEd2a_grp	db 'ed2a.grp',0
-aTryToNoContinu	db 'Try to ',27h,'No continue',27h,'!!',0
-aBadEnding2	db '      Bad Ending2     ',0
-aEd4a_grp	db 'ed4a.grp',0
-aTryToNoConti_0	db 'Try to ',27h,'No continue',27h,'!!',0
-aBadEnding1	db '      Bad Ending1     ',0
 
 	; th01/hardware/palette[data].asm
 	extern _z_Palettes:rgb_t:COLOR_COUNT

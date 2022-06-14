@@ -1,6 +1,9 @@
 // Endings
 // -------
 
+#define END_BAD_LINE_1        	"Try to 'No continue'!!"
+#define END_BAD_LINE_2_MAKAI  	"      Bad Ending1     "
+#define END_BAD_LINE_2_JIGOKU 	"      Bad Ending2     "
 #define END_GOOD_LINE_1       	"Congratulations!"
 #define END_GOOD_LINE_2_MAKAI 	"     Good Ending1     "
 #define END_GOOD_LINE_2_JIGOKU	"     Good Ending2     "
