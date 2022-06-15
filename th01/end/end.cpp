@@ -97,8 +97,22 @@ void pascal near shake_then_boom(int shake_duration, int boom_duration)
 		end_pic_show_and_delay(1, 2);
 
 		if(i & 1) {
+			// ZUN bug: No delay after rendering this image. Unlike the
+			// z_vsync_wait_and_scrollup() function used in REIIDEN.EXE,
+			// master.lib's graph_scrollup() doesn't wait for VSync, causing
+			// this image to immediately be overwritten with pic #1 on the next
+			// iteration of the loop...
+			//
+			// ... or so you would think. Turns out that EGC inter-page copies,
+			// as used by end_pic_show(), are *really* slow. Combined with the
+			// usual slowness of PC-98 VRAM, you'll still end up seeing at
+			// least parts of the "boom"/"ドカーン" image even on faster PC-98
+			// systems before it's fully overwritten on the next iteration.
 			end_pic_show(2);
 		} else {
+			// And why are we re-showing the same pic here? Redundant,
+			// obviously – there are much better ways of intentionally burning
+			// CPU cycles.
 			end_pic_show(1);
 		}
 	}

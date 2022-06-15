@@ -16,4 +16,5 @@ void pascal end_pics_load_palette_show(const char *fn);
 // The quarters are numbered like this:
 // | 0 | 1 |
 // | 2 | 3 |
+// Implemented using EGC inter-page copies, and therefore really slow.
 void end_pic_show(int quarter);
