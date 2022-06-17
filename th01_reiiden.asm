@@ -13373,74 +13373,10 @@ singyoku_person	equ <boss_entity_2>
 	extern @singyoku_free$qv:proc
 	extern @sphere_rotate_and_render$qii:proc
 	extern @singyoku_select_for_rank$qmiiiii:proc
+	extern @sphere_accelerate_rotation_and_r$qi:proc
 main_33_TEXT	ends
 
 main_33__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2285F	proc far
-
-@@cel_delta		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		cmp	_singyoku_phase_frame, 50
-		jge	short loc_22895
-		mov	singyoku_sphere.BE_bos_image, 0
-		mov	ax, _singyoku_phase_frame
-		mov	bx, 4
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	loc_2290A
-		call	@CBossEntity@unput_and_put_8$xqiii c, offset singyoku_sphere, ds, large [dword ptr singyoku_sphere.BE_cur_left], singyoku_sphere.BE_bos_image
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_22895:
-		cmp	_singyoku_phase_frame, 50
-		jnz	short loc_228A4
-		push	8
-		call	_mdrv2_se_play
-		pop	cx
-
-loc_228A4:
-		cmp	_singyoku_phase_frame, 100
-		jge	short loc_2290A
-		mov	ax, _singyoku_phase_frame
-		mov	bx, 4
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_2290A
-		call	@CBossEntity@unput_and_put_8$xqiii c, offset singyoku_sphere, ds, large [dword ptr singyoku_sphere.BE_cur_left], singyoku_sphere.BE_bos_image
-		cmp	_singyoku_phase_frame, 50
-		jz	short loc_228FE
-		cmp	_singyoku_phase_frame, 60
-		jz	short loc_228FE
-		cmp	_singyoku_phase_frame, 68
-		jz	short loc_228FE
-		cmp	_singyoku_phase_frame, 74
-		jz	short loc_228FE
-		cmp	_singyoku_phase_frame, 78
-		jz	short loc_228FE
-		cmp	_singyoku_phase_frame, 82
-		jz	short loc_228FE
-		cmp	_singyoku_phase_frame, 82
-		jle	short loc_2290A
-
-loc_228FE:
-		call	@sphere_rotate_and_render$qii c, 1, [bp+@@cel_delta]
-
-loc_2290A:
-		pop	bp
-		retf
-sub_2285F	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -13592,7 +13528,7 @@ loc_229F4:
 		jge	short loc_22A07
 		mov	al, byte_3A388
 		cbw
-		call	sub_2285F stdcall, ax
+		call	@sphere_accelerate_rotation_and_r$qi stdcall, ax
 		pop	cx
 		pop	bp
 		retf
@@ -13679,7 +13615,7 @@ sub_22AA7	proc far
 		mov	bp, sp
 		cmp	_singyoku_phase_frame, 100
 		jge	short loc_22ABA
-		call	sub_2285F stdcall, 1
+		call	@sphere_accelerate_rotation_and_r$qi stdcall, 1
 		pop	cx
 		pop	bp
 		retf
@@ -13775,7 +13711,7 @@ arg_A		= dword	ptr  10h
 		mov	si, [bp+arg_0]
 		cmp	_singyoku_phase_frame, 100
 		jge	short loc_22BA1
-		call	sub_2285F stdcall, 1
+		call	@sphere_accelerate_rotation_and_r$qi stdcall, 1
 		pop	cx
 		jmp	loc_22CF3
 ; ---------------------------------------------------------------------------

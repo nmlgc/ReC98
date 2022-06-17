@@ -9,6 +9,7 @@
 #include "th01/math/subpixel.hpp"
 extern "C" {
 #include "th01/hardware/palette.h"
+#include "th01/snd/mdrv2.h"
 #include "th01/formats/grp.h"
 }
 #include "th01/formats/pf.hpp"
@@ -159,3 +160,36 @@ void sphere_rotate_and_render(int interval, int cel_delta)
 
 #define select_for_rank singyoku_select_for_rank
 #include "th01/main/select_r.cpp"
+
+// Renders a frame of the sphere rotation, starting from a rotational speed of
+// 0 and gradually speeding up.
+void sphere_accelerate_rotation_and_render(int cel_delta)
+{
+	if(boss_phase_frame < 50) {
+		ent_sphere.set_image(0);
+		if((boss_phase_frame % 4) == 0) {
+			ent_unput_and_put(ent_sphere, ent_sphere.image());
+		}
+		return;
+	}
+	if(boss_phase_frame == 50) {
+		mdrv2_se_play(8);
+	}
+	if((boss_phase_frame < 100) && ((boss_phase_frame % 4) == 0)) {
+		ent_unput_and_put(ent_sphere, ent_sphere.image());
+
+		// Only 60 and 68 are actually divisible by 4. The other conditions
+		// can never be true.
+		if(
+			(boss_phase_frame == 50) ||
+			(boss_phase_frame == 60) ||
+			(boss_phase_frame == 68) ||
+			(boss_phase_frame == 74) ||
+			(boss_phase_frame == 78) ||
+			(boss_phase_frame == 82) ||
+			(boss_phase_frame >  82)
+		) {
+			sphere_rotate_and_render(1, cel_delta);
+		}
+	}
+}
