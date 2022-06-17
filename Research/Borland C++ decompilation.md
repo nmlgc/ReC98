@@ -538,17 +538,6 @@ seriously. Might be required to decompile code that seems to contain both some
 of the jump optimizations from `-O` and the stack-clearing instructions after
 every function call from `-O-`.
 
-## Inlining
-
-Always worth a try to get rid of a potential macro. Some edge cases don't
-inline optimally though:
-
-* Assignments to a pointer in `SI` – that pointer is moved to `DI`,
-  [clobbering that register](#clobbering-di). Try a [class method](#C++)
-  instead.
-* Nested `if` statements – inlining will always generate a useless
-  `JMP SHORT $+2` at the end of the last branch.
-
 ## Initialization
 
 Any initialization of a variable with static storage duration (even a `const`
@@ -623,6 +612,27 @@ Note the distinction between *`struct`/`class` distance* and *method distance*:
 These can be freely combined, and one does not imply the other.
 
 #### Inlining
+
+Support for inlined functions is exclusive to C++ mode, with both top-level
+`inline` and class methods defined inside class declarations (obviously) not
+being supported in C mode. The compiler will inline every function defined in
+one of these ways, unless it contains one of these language constructs:
+
+* Loops (`do`, `for`, `while`, `break`, `continue`)
+* `goto`
+* `switch` and `case`
+* `throw`
+
+If it doesn't, inlining is always worth a try to get rid of a potential macro,
+especially if all parameters are compile-time constants. There are a few
+further constructs that typically don't inline optimally though:
+
+* Assigning lvalues to value parameters (spills the value into a new
+  compiler-generated local variable)
+* Assigning *either* rvalues *or* lvalues stored in registers to reference
+  parameters (same)
+* Nested `if` statements – inlining will always generate a useless
+  `JMP SHORT $+2` at the end of the last branch.
 
 Class methods inline to their ideal representation if all of these are true:
 
