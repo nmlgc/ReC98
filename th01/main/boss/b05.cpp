@@ -24,6 +24,12 @@ static const int SPHERE_CELS = 8;
 		boss_entities[0] \
 	)
 
+inline void singyoku_ent_free(void) {
+	bos_entity_free(0);
+	bos_entity_free(1);
+	bos_entity_free(2);
+}
+
 // And that's how you avoid the entity position synchronization code that
 // plagues Elis: By simply only using a single set of coordinates.
 #define ent ent_sphere
@@ -52,6 +58,11 @@ extern union {
 extern bool16 invincible;
 extern int invincibility_frame;
 extern bool16 initial_hp_rendered;
+
+void singyoku_free(void)
+{
+	singyoku_ent_free();
+}
 
 // Rotates the sphere by the given [cel_delta]. [interval] could be used to
 // restrict this function to certain [boss_phase_frame] intervals, but it's

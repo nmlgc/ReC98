@@ -56,6 +56,8 @@ static const pixel_t SINGYOKU_W = 96;
 // is part of the regular boss defeat translation unit.
 static const pixel_t SINGYOKU_H = 96;
 
+void singyoku_free(void);
+
 // Makai
 void elis_load(void);
 void elis_main(void);

@@ -2022,7 +2022,7 @@ sub_D4DD	proc far
 		jmp	cs:off_D524[bx]
 
 loc_D4F3:
-		call	_singyoku_free
+		call	@singyoku_free$qv
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -13441,22 +13441,7 @@ sub_22731	proc far
 		retf
 sub_22731	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public _singyoku_free
-_singyoku_free	proc far
-		push	bp
-		mov	bp, sp
-		call	@bos_entity_free$qi stdcall, 0
-		call	@bos_entity_free$qi stdcall, 1
-		call	@bos_entity_free$qi stdcall, 2
-		add	sp, 6
-		pop	bp
-		retf
-_singyoku_free	endp
-
+	extern @singyoku_free$qv:proc
 	extern @sphere_rotate_and_render$qii:proc
 	extern @singyoku_select_for_rank$qmiiiii:proc
 main_33_TEXT	ends
