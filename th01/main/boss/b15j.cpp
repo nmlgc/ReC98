@@ -203,6 +203,8 @@ void kikuri_load(void)
 	kikuri_ent_load(i);
 	void kikuri_setup(void);
 	kikuri_setup();
+
+	// (redundant, no particles are shown in this fight)
 	particles_unput_update_render(PO_INITIALIZE, V_WHITE);
 }
 

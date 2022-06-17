@@ -2424,7 +2424,7 @@ loc_D85F:
 		call	_strcpy
 		add	sp, 8
 		xor	di, di
-		call	_singyoku_load
+		call	@singyoku_load$qv
 
 loc_D892:
 		mov	_Pellets.PELLET_unknown_seven, 7
@@ -13369,78 +13369,7 @@ singyoku_sphere	equ <boss_entity_0>
 singyoku_flash 	equ <boss_entity_1>
 singyoku_person	equ <boss_entity_2>
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public _singyoku_load
-_singyoku_load	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		CBossEntity__load	singyoku_sphere, 0, aBoss1_bos
-		CBossEntity__load	singyoku_flash, 1, aBoss1_2_bos
-		CBossEntity__load	singyoku_person, 2, aBoss1_3_bos
-		call	_grp_palette_load_show_sane stdcall, offset aBoss1_grp_0, ds	; "boss1.grp"
-		add	sp, 22h
-		xor	si, si
-		jmp	short loc_22717
-; ---------------------------------------------------------------------------
-
-loc_226FA:
-		xor	di, di
-		jmp	short loc_22711
-; ---------------------------------------------------------------------------
-
-loc_226FE:
-		mov	bx, si
-		imul	bx, size rgb_t
-		mov	al, _z_Palettes[bx+di]
-		mov	bx, si
-		imul	bx, size rgb_t
-		mov	byte ptr _boss_post_defeat_palette[bx+di], al
-		inc	di
-
-loc_22711:
-		cmp	di, size rgb_t
-		jl	short loc_226FE
-		inc	si
-
-loc_22717:
-		cmp	si, COLOR_COUNT
-		jl	short loc_226FA
-		call	@stage_palette_set$qmx27%Palette$t14%RGB$tc$ii$16%% c, offset _boss_post_defeat_palette, ds
-		nopcall	sub_22731
-		pop	di
-		pop	si
-		pop	bp
-		retf
-_singyoku_load	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_22731	proc far
-		push	bp
-		mov	bp, sp
-		call	@boss_palette_snap$qv
-		call	_z_palette_set_all_show stdcall, offset _z_Palettes, ds
-		call	@CBossEntity@pos_set$qiiiiiii stdcall, offset singyoku_sphere, ds, 640, large 64 or (32 shl 16), large 0 or (736 shl 16), large 64 or (304 shl 16)
-		CBossEntity__hitbox_set	singyoku_sphere, 24, 24, 72, 72
-		mov	singyoku_sphere.BE_hitbox_orb_inactive, 0
-		mov	singyoku_sphere.BE_bos_image, 0
-		mov	_singyoku_hp, 8
-		mov	_hud_hp_first_white, 6
-		mov	_hud_hp_first_redwhite, 2
-		mov	byte_35CDE, 0
-		call	@particles_unput_update_render$q17particle_origin_ti stdcall, large PO_INITIALIZE or (V_WHITE shl 16)
-		add	sp, 1Ah
-		pop	bp
-		retf
-sub_22731	endp
-
+	extern @singyoku_load$qv:proc
 	extern @singyoku_free$qv:proc
 	extern @sphere_rotate_and_render$qii:proc
 	extern @singyoku_select_for_rank$qmiiiii:proc
@@ -14295,7 +14224,7 @@ sub_22F4A	proc far
 		push	di
 		mov	al, _singyoku_invincibility_flash_colors
 		mov	[bp+@@invincibility_flash_colors], al
-		cmp	byte_35CDE, 0
+		cmp	_singyoku_phase, 0
 		jnz	loc_230BA
 		mov	singyoku_sphere.BE_cur_left, 272
 		mov	singyoku_sphere.BE_cur_top, 96
@@ -14374,7 +14303,7 @@ loc_23024:
 loc_2302C:
 		cmp	_singyoku_phase_frame, 200
 		jl	loc_22F9D
-		mov	byte_35CDE, 1
+		mov	_singyoku_phase, 1
 		mov	word_35CE0, 0
 		mov	word_35CE2, 0
 		mov	_singyoku_invincible, 0
@@ -14427,7 +14356,7 @@ loc_230B4:
 ; ---------------------------------------------------------------------------
 
 loc_230BA:
-		mov	al, byte_35CDE
+		mov	al, _singyoku_phase
 		cbw
 		cmp	ax, 1
 		jnz	loc_23198
@@ -14497,7 +14426,7 @@ loc_23118:
 		jnz	loc_232A0
 		cmp	word_35CE0, 1
 		jz	loc_232A0
-		mov	byte_35CDE, 2
+		mov	_singyoku_phase, 2
 		mov	word_35CE2, 0
 		mov	word_35CE0, 0
 		mov	_singyoku_phase_frame, 0
@@ -14506,7 +14435,7 @@ loc_23118:
 ; ---------------------------------------------------------------------------
 
 loc_23198:
-		mov	al, byte_35CDE
+		mov	al, _singyoku_phase
 		cbw
 		cmp	ax, 2
 		jnz	loc_2326F
@@ -14590,7 +14519,7 @@ loc_2320E:
 		add	sp, 22h
 		cmp	_singyoku_hp, 0
 		jg	short loc_232A0
-		mov	byte_35CDE, 8
+		mov	_singyoku_phase, 8
 		push	5
 		call	_mdrv2_se_play
 		pop	cx
@@ -14599,7 +14528,7 @@ loc_2320E:
 ; ---------------------------------------------------------------------------
 
 loc_2326F:
-		mov	al, byte_35CDE
+		mov	al, _singyoku_phase
 		cbw
 		cmp	ax, 8
 		jnz	short loc_232A0
@@ -15199,7 +15128,8 @@ flt_35CCE	dd 176.0
 flt_35CD2	dd 208.0
 flt_35CD6	dd 224.0
 flt_35CDA	dd 240.0
-byte_35CDE	db 0
+public _singyoku_phase
+_singyoku_phase	db 0
 public _singyoku_invincibility_flash_colors, _singyoku_invincible
 _singyoku_invincibility_flash_colors	db 13
 word_35CE0	dw 0
@@ -15207,10 +15137,6 @@ word_35CE2	dw 0
 _singyoku_invincible	dw 0
 public _singyoku_initial_hp_rendered
 _singyoku_initial_hp_rendered	dw 0
-aBoss1_bos	db 'boss1.bos',0
-aBoss1_2_bos	db 'boss1_2.bos',0
-aBoss1_3_bos	db 'boss1_3.bos',0
-aBoss1_grp_0	db 'boss1.grp',0
 	extern _game_cleared:byte
 	extern _unused_boss_stage_flag:word
 	extern _pellet_destroy_score_delta:word
