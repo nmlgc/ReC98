@@ -23,9 +23,13 @@ public:
 	pixel_t prev_delta_x;
 
 	int bos_image_count;
+
+protected:
 	int zero_1;
 	int bos_image;
 	int unknown;
+
+public:
 	bool16 hitbox_orb_inactive;
 	bool16 loading;
 	int move_lock_frame;
@@ -95,6 +99,10 @@ public:
 		CBossEntity tmp(src);
 
 		tmp.metadata_get(bos_image_count, bos_slot, vram_w, h);
+	}
+
+	int image(void) const {
+		return bos_image;
 	}
 
 	void set_image(int image) {

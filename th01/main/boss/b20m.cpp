@@ -741,8 +741,9 @@ void near shield_render_both(void)
 	if((boss_phase_frame % FRAMES_PER_CEL) != 0) {
 		return;
 	}
-	int cel = ((boss_phase_frame % (FRAMES_PER_CEL * CELS)) / FRAMES_PER_CEL);
-	ent_shield.bos_image = cel;
+	ent_shield.set_image(
+		(boss_phase_frame % (FRAMES_PER_CEL * CELS)) / FRAMES_PER_CEL
+	);
 	graph_accesspage_func(1);	ent_shield.move_lock_and_put_8();
 	graph_accesspage_func(0);	ent_shield.move_lock_and_put_8();
 }

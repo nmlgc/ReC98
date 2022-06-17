@@ -125,11 +125,11 @@ inline void ent_anim_sync_with_still(void) {
 	);
 }
 
-#define ent_anim_sync_with_still_and_put_both(cel) { \
-	ent_anim_sync_with_still(); \
-	ent_anim.bos_image = cel; \
-	graph_accesspage_func(1);	ent_anim.put_8(cel); \
-	graph_accesspage_func(0);	ent_anim.put_8(cel); \
+inline void ent_anim_sync_with_still_and_put_both(int cel) {
+	ent_anim_sync_with_still();
+	ent_anim.set_image(cel);
+	graph_accesspage_func(1);	ent_anim.put_8(cel);
+	graph_accesspage_func(0);	ent_anim.put_8(cel);
 }
 
 void meteor_put(void)
@@ -254,12 +254,12 @@ void spreadin_unput_and_put(screen_x_t left, screen_y_t top)
 	}
 	for(row = 0; spreadin_bottom_cur() > row; row++) {
 		ent_still.unput_and_put_1line(
-			left, (top + line_on_top + row), ent_still.bos_image, row
+			left, (top + line_on_top + row), ent_still.image(), row
 		);
 		ent_still.unput_and_put_1line(
 			left,
 			((top + MIMA_H) - line_on_top - row),
-			ent_still.bos_image,
+			ent_still.image(),
 			((MIMA_H - 1) - row)
 		);
 	}
@@ -295,8 +295,8 @@ void mima_vertical_sprite_transition_broken(void)
 void mima_setup(void)
 {
 	boss_palette_snap();
-	ent_still.bos_image = 0;
-	ent_anim.bos_image = C_METEOR;
+	ent_still.set_image(0);
+	ent_anim.set_image(C_METEOR);
 	z_palette_white_in();
 	ent_still.pos_set(
 		(PLAYFIELD_CENTER_X - (MIMA_W / 2)), PLAYFIELD_TOP, 48,

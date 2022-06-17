@@ -256,10 +256,10 @@ void pascal near soul_move_and_render(int i, pixel_t delta_x, pixel_t delta_y)
 {
 	souls[i].move_lock_unput_and_put_8(0, delta_x, delta_y, 1);
 	if((boss_phase_frame % 12) == 0) {
-		if(souls[i].bos_image >= (SOUL_CELS - 1)) {
-			souls[i].bos_image = 0;
+		if(souls[i].image() >= (SOUL_CELS - 1)) {
+			souls[i].set_image(0);
 		} else {
-			souls[i].set_image(souls[i].bos_image + 1);
+			souls[i].set_image(souls[i].image() + 1);
 		}
 	}
 }
@@ -272,7 +272,7 @@ void pascal near tears_add(screen_x_t left, screen_y_t top)
 				left, top, 50,
 				SOUL_AREA_LEFT, SOUL_AREA_RIGHT, SOUL_AREA_TOP, SOUL_AREA_BOTTOM
 			);
-			tears[i].bos_image = 0;
+			tears[i].set_image(0);
 			tear_anim_frame[i] = 1;
 			return;
 		}

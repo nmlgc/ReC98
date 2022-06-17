@@ -1281,7 +1281,7 @@ elis_form_t transform_girl_to_bat(void)
 		// ZUN bug: No bat sprite rendered this frame? Wouldn't have happened
 		// if the original code consistently used the ent_unput_and_put_both()
 		// helper function we've added. :P
-		ent_bat.bos_image = C_BAT;
+		ent_bat.set_image(C_BAT);
 		graph_accesspage_func(1);	girl_bg_put(2);
 		graph_accesspage_func(0);	girl_bg_put(2);
 
