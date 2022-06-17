@@ -13457,55 +13457,7 @@ _singyoku_free	proc far
 		retf
 _singyoku_free	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_227C8	proc far
-
-var_4		= word ptr -4
-var_1		= byte ptr -1
-arg_0		= word ptr  6
-arg_2		= byte ptr  8
-
-		enter	4, 0
-		mov	ax, _singyoku_phase_frame
-		cwd
-		idiv	[bp+arg_0]
-		or	dx, dx
-		jnz	short locret_22818
-		mov	ax, singyoku_sphere.BE_bos_image
-		add	al, [bp+arg_2]
-		mov	[bp+var_1], al
-		cbw
-		cmp	ax, 7
-		jle	short loc_227EC
-		mov	[bp+var_1], 0
-		jmp	short loc_227F8
-; ---------------------------------------------------------------------------
-
-loc_227EC:
-		mov	al, [bp+var_1]
-		cbw
-		or	ax, ax
-		jge	short loc_227F8
-		mov	[bp+var_1], 7
-
-loc_227F8:
-		mov	al, [bp+var_1]
-		cbw
-		mov	[bp+var_4], ax
-		mov	singyoku_sphere.BE_bos_image, ax
-		mov	al, [bp+var_1]
-		cbw
-		call	@CBossEntity@unput_and_put_8$xqiii c, offset singyoku_sphere, ds, large [dword ptr singyoku_sphere.BE_cur_left], ax
-
-locret_22818:
-		leave
-		retf
-sub_227C8	endp
-
+	extern @sphere_rotate_and_render$qii:proc
 	extern @singyoku_select_for_rank$qmiiiii:proc
 main_33_TEXT	ends
 
@@ -13517,7 +13469,7 @@ main_33__TEXT	segment	byte public 'CODE' use16
 
 sub_2285F	proc far
 
-arg_0		= word ptr  6
+@@cel_delta		= word ptr  6
 
 		push	bp
 		mov	bp, sp
@@ -13568,10 +13520,7 @@ loc_228A4:
 		jle	short loc_2290A
 
 loc_228FE:
-		push	[bp+arg_0]
-		push	1
-		call	sub_227C8
-		add	sp, 4
+		call	@sphere_rotate_and_render$qii c, 1, [bp+@@cel_delta]
 
 loc_2290A:
 		pop	bp
@@ -13589,8 +13538,8 @@ var_4		= word ptr -4
 var_2		= word ptr -2
 arg_0		= word ptr  6
 arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
+@@interval		= word ptr  0Ah
+@@cel_delta		= word ptr  0Ch
 
 		enter	4, 0
 		push	si
@@ -13689,10 +13638,7 @@ loc_229A7:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_229CD
-		push	[bp+arg_6]
-		push	[bp+arg_4]
-		call	sub_227C8
-		add	sp, 4
+		call	@sphere_rotate_and_render$qii c, [bp+@@interval], [bp+@@cel_delta]
 
 loc_229CD:
 		pop	di
@@ -13732,8 +13678,7 @@ loc_229F4:
 		jge	short loc_22A07
 		mov	al, byte_3A388
 		cbw
-		push	ax
-		call	sub_2285F
+		call	sub_2285F stdcall, ax
 		pop	cx
 		pop	bp
 		retf
@@ -13764,7 +13709,7 @@ loc_22A37:
 		mov	al, byte_3A388
 		cbw
 		push	ax
-		call	sub_227C8
+		call	@sphere_rotate_and_render$qii
 		add	sp, 4
 		mov	ax, 3Ch	; '<'
 		cwd
@@ -13820,8 +13765,7 @@ sub_22AA7	proc far
 		mov	bp, sp
 		cmp	_singyoku_phase_frame, 100
 		jge	short loc_22ABA
-		push	1
-		call	sub_2285F
+		call	sub_2285F stdcall, 1
 		pop	cx
 		pop	bp
 		retf
@@ -13850,7 +13794,7 @@ loc_22ABA:
 loc_22AFE:
 		cmp	point_3A389.x, 999
 		jz	short loc_22B31
-		push	10001h
+		push	(1 shl 16) or 1
 		push	point_3A389.y
 		push	point_3A389.x
 		call	sub_2290C
@@ -13865,7 +13809,7 @@ loc_22AFE:
 loc_22B31:
 		cmp	point_3A389.y, -4
 		jnz	short loc_22B5A
-		push	10001h
+		push	(1 shl 16) or 1
 		push	point_3A389.y
 		push	0
 		call	sub_2290C
@@ -13917,8 +13861,7 @@ arg_A		= dword	ptr  10h
 		mov	si, [bp+arg_0]
 		cmp	_singyoku_phase_frame, 100
 		jge	short loc_22BA1
-		push	1
-		call	sub_2285F
+		call	sub_2285F stdcall, 1
 		pop	cx
 		jmp	loc_22CF3
 ; ---------------------------------------------------------------------------
@@ -14395,9 +14338,7 @@ loc_22F9D:
 		idiv	di
 		or	dx, dx
 		jnz	short loc_22FD7
-		push	10001h
-		call	sub_227C8
-		add	sp, 4
+		call	@sphere_rotate_and_render$qii c, large (1 shl 16) or 1
 		sub	di, 2
 		or	di, di
 		jg	short loc_22FD7
