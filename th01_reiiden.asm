@@ -5060,7 +5060,6 @@ main_21_TEXT	segment	byte public 'CODE' use16
 	extern @CBossEntity@load_inner$qxnxci:proc
 	extern @CBossEntity@metadata_get$xqmimuct1t1:proc
 	extern @CBossEntity@put_8$xqiii:proc
-	extern @CBossEntity@unput_and_put_8$xqiii:proc
 	extern @CBossEntity@pos_set$qiiiiiii:proc
 	extern @CBossEntity@move_lock_unput_and_put_8$qiiii:proc
 	extern @CBossEntity@hittest_orb$xqv:proc
@@ -13366,174 +13365,20 @@ main_33_TEXT	segment	byte public 'CODE' use16
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 singyoku_sphere	equ <boss_entity_0>
-singyoku_flash 	equ <boss_entity_1>
-singyoku_person	equ <boss_entity_2>
+
+F_WOMAN = 0
+F_MAN = 1
 
 	extern @singyoku_load$qv:proc
 	extern @singyoku_free$qv:proc
 	extern @sphere_rotate_and_render$qii:proc
 	extern @singyoku_select_for_rank$qmiiiii:proc
-	extern @sphere_accelerate_rotation_and_r$qi:proc
 	extern @pattern_halfcircle_spray_downwar$qv:proc
 	extern @pattern_slam_into_player_and_bac$qv:proc
+	extern @transform_to_person_and_back_to_$q15singyoku_form_tnqv$vt2t2:proc
 main_33_TEXT	ends
 
 main_33__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_22B88	proc far
-
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= dword	ptr  8
-arg_6		= dword	ptr  0Ch
-arg_A		= dword	ptr  10h
-
-		enter	6, 0
-		push	si
-		mov	si, [bp+arg_0]
-		cmp	_singyoku_phase_frame, 100
-		jge	short loc_22BA1
-		call	@sphere_accelerate_rotation_and_r$qi stdcall, 1
-		pop	cx
-		jmp	loc_22CF3
-; ---------------------------------------------------------------------------
-
-loc_22BA1:
-		cmp	_singyoku_phase_frame, 100
-		jz	loc_22C9C
-		cmp	_singyoku_phase_frame, 105
-		jz	loc_22C7D
-		cmp	_singyoku_phase_frame, 110
-		jz	loc_22C7D
-		cmp	_singyoku_phase_frame, 115
-		jnz	short loc_22BD5
-		mov	ax, si
-		imul	ax, 3
-		push	ax
-		pushd	[dword ptr singyoku_sphere.BE_cur_left]
-		push	ds
-		push	offset singyoku_person
-		jmp	loc_22C8A
-; ---------------------------------------------------------------------------
-
-loc_22BD5:
-		cmp	_singyoku_phase_frame, 135
-		jnz	short loc_22C07
-		mov	ax, si
-		imul	ax, 3
-		inc	ax
-		mov	[bp+var_2], ax
-		mov	singyoku_person.BE_bos_image, ax
-		mov	ax, si
-		imul	ax, 3
-		inc	ax
-		call	@CBossEntity@unput_and_put_8$xqiii c, offset singyoku_person, ds, large [dword ptr singyoku_sphere.BE_cur_left], ax
-		call	[bp+arg_2]
-		jmp	loc_22CC1
-; ---------------------------------------------------------------------------
-
-loc_22C07:
-		cmp	_singyoku_phase_frame, 160
-		jnz	short loc_22C3E
-		mov	ax, si
-		imul	ax, 3
-		add	ax, 2
-		mov	[bp+var_4], ax
-		mov	singyoku_person.BE_bos_image, ax
-		or	si, si
-		jnz	short loc_22C25
-		push	2
-		jmp	short loc_22C27
-; ---------------------------------------------------------------------------
-
-loc_22C25:
-		push	4
-
-loc_22C27:
-		pushd	[dword ptr singyoku_sphere.BE_cur_left]
-		push	ds
-		push	offset singyoku_person
-		call	@CBossEntity@unput_and_put_8$xqiii
-		add	sp, 0Ah
-		call	[bp+arg_6]
-		jmp	loc_22CC1
-; ---------------------------------------------------------------------------
-
-loc_22C3E:
-		cmp	_singyoku_phase_frame, 185
-		jnz	short loc_22C6D
-		mov	ax, si
-		imul	ax, 3
-		mov	[bp+var_6], ax
-		mov	singyoku_person.BE_bos_image, ax
-		mov	ax, si
-		imul	ax, 3
-		call	@CBossEntity@unput_and_put_8$xqiii c, offset singyoku_person, ds, large [dword ptr singyoku_sphere.BE_cur_left], ax
-		call	[bp+arg_A]
-		jmp	short loc_22CC1
-; ---------------------------------------------------------------------------
-
-loc_22C6D:
-		cmp	_singyoku_phase_frame, 240
-		jz	short loc_22C7D
-		cmp	_singyoku_phase_frame, 245
-		jnz	short loc_22C94
-
-loc_22C7D:
-		lea	ax, [si+1]
-		push	ax
-
-loc_22C81:
-		pushd	[dword ptr singyoku_sphere.BE_cur_left]
-		push	ds
-		push	offset singyoku_flash
-
-loc_22C8A:
-		call	@CBossEntity@unput_and_put_8$xqiii
-		add	sp, 0Ah
-		jmp	short loc_22CC1
-; ---------------------------------------------------------------------------
-
-loc_22C94:
-		cmp	_singyoku_phase_frame, 250
-		jnz	short loc_22CA0
-
-loc_22C9C:
-		push	0
-		jmp	short loc_22C81
-; ---------------------------------------------------------------------------
-
-loc_22CA0:
-		cmp	_singyoku_phase_frame, 260
-		jnz	short loc_22CC1
-		call	@CBossEntity@unput_and_put_8$xqiii c, offset singyoku_sphere, ds, large [dword ptr singyoku_sphere.BE_cur_left], 0
-		mov	_singyoku_phase_frame, 0
-
-loc_22CC1:
-		cmp	_singyoku_phase_frame, 135
-		jle	short loc_22CF3
-		cmp	_singyoku_phase_frame, 240
-		jge	short loc_22CF3
-		mov	ax, _singyoku_phase_frame
-		mov	bx, 4
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_22CF3
-		call	@CBossEntity@unput_and_put_8$xqiii c, offset singyoku_person, ds, large [dword ptr singyoku_sphere.BE_cur_left], singyoku_person.BE_bos_image
-
-loc_22CF3:
-		pop	si
-		leave
-		retf
-sub_22B88	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -13638,15 +13483,7 @@ sub_22D63	endp
 sub_22DC8	proc far
 		push	bp
 		mov	bp, sp
-		push	seg main_32_TEXT
-		push	offset @boss_nop$qv
-		push	seg main_32_TEXT
-		push	offset @boss_nop$qv
-		push	seg main_32_TEXT
-		push	offset @boss_nop$qv
-		push	0
-		call	sub_22B88
-		add	sp, 0Eh
+		call	@transform_to_person_and_back_to_$q15singyoku_form_tnqv$vt2t2 c, F_WOMAN, offset @boss_nop$qv, seg main_32_TEXT, offset @boss_nop$qv, seg main_32_TEXT, offset @boss_nop$qv, seg main_32_TEXT
 		cmp	_singyoku_phase_frame, 140
 		jle	short loc_22E07
 		mov	ax, _singyoku_phase_frame
@@ -13672,15 +13509,7 @@ sub_22DC8	endp
 sub_22E09	proc far
 		push	bp
 		mov	bp, sp
-		push	seg main_32_TEXT
-		push	offset @boss_nop$qv
-		push	seg main_32_TEXT
-		push	offset @boss_nop$qv
-		push	seg main_32_TEXT
-		push	offset @boss_nop$qv
-		push	0
-		call	sub_22B88
-		add	sp, 0Eh
+		call	@transform_to_person_and_back_to_$q15singyoku_form_tnqv$vt2t2 c, F_WOMAN, offset @boss_nop$qv, seg main_32_TEXT, offset @boss_nop$qv, seg main_32_TEXT, offset @boss_nop$qv, seg main_32_TEXT
 		cmp	_singyoku_phase_frame, 140
 		jle	short loc_22E40
 		mov	ax, _singyoku_phase_frame
@@ -13800,15 +13629,7 @@ sub_22E9C	endp
 sub_22F0A	proc far
 		push	bp
 		mov	bp, sp
-		push	seg main_33
-		push	offset sub_22E42
-		push	seg main_33
-		push	offset sub_22E42
-		push	seg main_33
-		push	offset sub_22E42
-		push	1
-		call	sub_22B88
-		add	sp, 0Eh
+		call	@transform_to_person_and_back_to_$q15singyoku_form_tnqv$vt2t2 c, F_MAN, offset sub_22E42, seg main_33, offset sub_22E42, seg main_33, offset sub_22E42, seg main_33
 		pop	bp
 		retf
 sub_22F0A	endp
@@ -13821,15 +13642,7 @@ sub_22F0A	endp
 sub_22F2A	proc far
 		push	bp
 		mov	bp, sp
-		push	seg main_33
-		push	offset sub_22E9C
-		push	seg main_33
-		push	offset sub_22E9C
-		push	seg main_33
-		push	offset sub_22E9C
-		push	1
-		call	sub_22B88
-		add	sp, 0Eh
+		call	@transform_to_person_and_back_to_$q15singyoku_form_tnqv$vt2t2 c, F_MAN, offset sub_22E9C, seg main_33, offset sub_22E9C, seg main_33, offset sub_22E9C, seg main_33
 		pop	bp
 		retf
 sub_22F2A	endp
@@ -14170,8 +13983,6 @@ loc_232A0:
 sub_22F4A	endp
 
 singyoku_sphere	equ <>
-singyoku_flash 	equ <>
-singyoku_person	equ <>
 main_33__TEXT	ends
 
 ; ===========================================================================

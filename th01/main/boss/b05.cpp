@@ -66,7 +66,39 @@ extern int boss_hp;
 // Entities
 // --------
 
+enum singyoku_form_t {
+	F_WOMAN = 0,
+	F_MAN = 1,
+
+	_singyoku_form_t_FORCE_INT16 = 0x7FFF,
+};
+
 static const int SPHERE_CELS = 8;
+
+enum singyoku_flash_cel_t {
+	C_SPHERE = 0,
+	C_WOMAN = 1,
+	C_MAN = 2,
+
+	// Used for adding a singyoku_form_t on top.
+	C_FLASH_FORM = C_WOMAN,
+};
+
+enum singyoku_person_cel_t {
+	C_WOMAN_STILL = 0,
+	C_WOMAN_ATTACK_1 = 1,
+	C_WOMAN_ATTACK_2 = 2,
+	C_MAN_STILL = 3,
+	C_MAN_ATTACK = 4,
+
+	// Used for multiplying with a singyoku_form_t.
+	C_PERSON_FORM = (C_MAN_STILL - C_WOMAN_STILL),
+
+	// Used for adding (C_PERSON_FORM * singyoku_form_t) on top.
+	C_STILL = C_WOMAN_STILL,
+	C_ATTACK_1 = C_WOMAN_ATTACK_1,
+	C_ATTACK_2 = C_WOMAN_ATTACK_2,
+};
 
 #define ent_sphere \
 	reinterpret_cast<CBossEntitySized<SINGYOKU_W, SINGYOKU_H> &>( \
@@ -385,4 +417,83 @@ void pattern_slam_into_player_and_back_up(void)
 	}
 
 	#undef velocity
+}
+
+enum singyoku_transform_keyframe_t {
+	TKF_START = 100,
+	TKF_TO_PERSON = 105,
+	TKF_TO_PERSON_RERENDER = 110,
+	TKF_TO_PERSON_DONE = 115,
+	TKF_PERSON_ATTACK_1 = 135,
+	TKF_PERSON_ATTACK_2 = 160,
+	TKF_PERSON_STILL = 185,
+	TKF_TO_SPHERE = 240,
+	TKF_TO_SPHERE_RERENDER = 245,
+	TKF_TO_SPHERE_DONE = 250,
+	TKF_DONE = 260,
+};
+
+// Ends its corresponding pattern at TKF_DONE.
+void transform_to_person_and_back_to_sphere(
+	singyoku_form_t form,
+	void pascal on_attack_1() = boss_nop,
+	void pascal on_attack_2() = boss_nop,
+	void pascal on_still() = boss_nop
+)
+{
+	#define person_cel_for_form (C_PERSON_FORM * form)
+
+	if(boss_phase_frame < TKF_START) {
+		sphere_accelerate_rotation_and_render(1);
+		return;
+	}
+	if(boss_phase_frame == TKF_START) {
+		ent_unput_and_put(ent_flash, C_SPHERE);
+	} else if(
+		(boss_phase_frame == TKF_TO_PERSON) ||
+		(boss_phase_frame == TKF_TO_PERSON_RERENDER)
+	) {
+		ent_unput_and_put(ent_flash, (C_FLASH_FORM + form));
+	} else if(boss_phase_frame == TKF_TO_PERSON_DONE) {
+		ent_unput_and_put(ent_person, (C_STILL + person_cel_for_form));
+	} else if(boss_phase_frame == TKF_PERSON_ATTACK_1) {
+		ent_person.set_image(C_ATTACK_1 + person_cel_for_form);
+		ent_unput_and_put(ent_person, (C_ATTACK_1 + person_cel_for_form));
+		on_attack_1();
+	} else if(boss_phase_frame == TKF_PERSON_ATTACK_2) {
+		// Suggests that there was a male version of C_ATTACK_2 during earlier
+		// stages of development?
+		ent_person.set_image(C_ATTACK_2 + person_cel_for_form);
+
+		if(form == F_WOMAN) {
+			ent_unput_and_put(ent_person, C_WOMAN_ATTACK_2);
+		} else {
+			ent_unput_and_put(ent_person, C_MAN_ATTACK);
+		}
+		on_attack_2();
+	} else if(boss_phase_frame == TKF_PERSON_STILL) {
+		ent_person.set_image(C_STILL + person_cel_for_form);
+		ent_unput_and_put(ent_person, (C_STILL + person_cel_for_form));
+		on_still();
+	} else if(
+		(boss_phase_frame == TKF_TO_SPHERE) ||
+		(boss_phase_frame == TKF_TO_SPHERE_RERENDER)
+	) {
+		ent_unput_and_put(ent_flash, (C_FLASH_FORM + form));
+	} else if(boss_phase_frame == TKF_TO_SPHERE_DONE) {
+		ent_unput_and_put(ent_flash, C_SPHERE);
+	} else if(boss_phase_frame == TKF_DONE) {
+		ent_unput_and_put(ent_sphere, 0);
+		boss_phase_frame = 0;
+	}
+
+	if(
+		(boss_phase_frame > TKF_PERSON_ATTACK_1) &&
+		(boss_phase_frame < TKF_TO_SPHERE) &&
+		((boss_phase_frame % 4) == 0)
+	) {
+		ent_unput_and_put(ent_person, ent_person.image());
+	}
+
+	#undef person_cel_for_form
 }
