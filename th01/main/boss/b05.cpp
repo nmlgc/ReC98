@@ -570,3 +570,21 @@ void pattern_crossing_pellets(void)
 		fire_crossing_pellets();
 	}
 }
+
+void pascal fire_random_downwards_pellets(void)
+{
+	// Could be a local variable.
+	select_subpixel_for_rank(pattern_state.speed_in_subpixels,
+		3.0f, 3.375f, 3.75f, 4.125f
+	);
+
+	for(int i = 0; i < 10; i++) {
+		unsigned char angle = (rand() & (0x80 - 1));
+		Pellets.add_single(
+			(ent.cur_center_x() - (PELLET_W / 2)),
+			(ent.cur_center_y() - (PELLET_H / 2)),
+			angle,
+			pattern_state.speed_in_subpixels
+		);
+	}
+}

@@ -13377,53 +13377,10 @@ F_MAN = 1
 	extern @transform_to_person_and_back_to_$q15singyoku_form_tnqv$vt2t2:proc
 	extern @pattern_chasing_pellets$qv:proc
 	extern @pattern_crossing_pellets$qv:proc
+	extern @FIRE_RANDOM_DOWNWARDS_PELLETS$QV:proc
 main_33_TEXT	ends
 
 main_33__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_22E42	proc far
-
-@@angle		= byte ptr -1
-
-		enter	2, 0
-		push	si
-		call	@singyoku_select_for_rank$qmiiiii c, offset _singyoku_pattern_state, ds, large 30h or (36h shl 16), large 3Ch or (42h shl 16)
-		xor	si, si
-		jmp	short loc_22E94
-; ---------------------------------------------------------------------------
-
-loc_22E62:
-		call	IRand
-		and	al, 7Fh
-		mov	[bp+@@angle], al
-		pushd	0 or (0 shl 16)
-		pushd	PM_REGULAR or (0 shl 16)
-		push	_singyoku_pattern_state
-		push	word ptr [bp+@@angle]
-		mov	ax, singyoku_sphere.BE_cur_top
-		add	ax, 44
-		push	ax
-		mov	ax, singyoku_sphere.BE_cur_left
-		add	ax, 44
-		push	ax
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		add	sp, 14h
-		inc	si
-
-loc_22E94:
-		cmp	si, 0Ah
-		jl	short loc_22E62
-		pop	si
-		leave
-		retf
-sub_22E42	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -13484,7 +13441,7 @@ sub_22E9C	endp
 sub_22F0A	proc far
 		push	bp
 		mov	bp, sp
-		call	@transform_to_person_and_back_to_$q15singyoku_form_tnqv$vt2t2 c, F_MAN, offset sub_22E42, seg main_33, offset sub_22E42, seg main_33, offset sub_22E42, seg main_33
+		call	@transform_to_person_and_back_to_$q15singyoku_form_tnqv$vt2t2 c, F_MAN, offset @fire_random_downwards_pellets$qv, seg main_33, offset @fire_random_downwards_pellets$qv, seg main_33, offset @fire_random_downwards_pellets$qv, seg main_33
 		pop	bp
 		retf
 sub_22F0A	endp
