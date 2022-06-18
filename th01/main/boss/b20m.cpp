@@ -1575,7 +1575,7 @@ void near pattern_aimed_sling_clusters(void)
 			playfield_fraction_y(5 / 42.0f),
 			angle
 		);
-		Pellets.add_single(left, top, 0x00, 0x00, PM_SLING_AIMED, to_sp(4.5f));
+		Pellets.add_single(left, top, 0x00, 0, PM_SLING_AIMED, to_sp(4.5f));
 	}
 	if(boss_phase_frame >= 299) {
 		boss_phase_frame = 0;

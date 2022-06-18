@@ -217,7 +217,7 @@ public:
 	// the resident [pellet_speed]; [speed_for_motion_fixed] is never tuned.
 	//
 	// [spin_center_x] and [spin_center_y] are only used with PM_SPIN,
-	// while [speed_base] is *ignored* for PM_SPIN.
+	// while [speed_base] is *ignored* for PM_SPIN and PM_SLING_AIMED.
 	void add_single(
 		screen_x_t left,
 		screen_y_t top,

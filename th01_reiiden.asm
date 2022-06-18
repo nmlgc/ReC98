@@ -13371,68 +13371,16 @@ F_MAN = 1
 	extern @singyoku_load$qv:proc
 	extern @singyoku_free$qv:proc
 	extern @sphere_rotate_and_render$qii:proc
-	extern @singyoku_select_for_rank$qmiiiii:proc
 	extern @pattern_halfcircle_spray_downwar$qv:proc
 	extern @pattern_slam_into_player_and_bac$qv:proc
 	extern @transform_to_person_and_back_to_$q15singyoku_form_tnqv$vt2t2:proc
 	extern @pattern_chasing_pellets$qv:proc
 	extern @pattern_crossing_pellets$qv:proc
 	extern @FIRE_RANDOM_DOWNWARDS_PELLETS$QV:proc
+	extern @FIRE_RANDOM_SLING_PELLETS$QV:proc
 main_33_TEXT	ends
 
 main_33__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_22E9C	proc far
-
-var_4		= word ptr -4
-var_2		= word ptr -2
-
-		enter	4, 0
-		push	si
-		call	@singyoku_select_for_rank$qmiiiii c, offset _singyoku_pattern_state, ds, large 30h or (40h shl 16), large 50h or (60h shl 16)
-		xor	si, si
-		jmp	short loc_22F02
-; ---------------------------------------------------------------------------
-
-loc_22EBC:
-		call	IRand
-		mov	bx, 60h
-		cwd
-		idiv	bx
-		mov	[bp+var_2], dx
-		call	IRand
-		mov	bx, 60h
-		cwd
-		idiv	bx
-		mov	[bp+var_4], dx
-		pushd	0 or (0 shl 16)
-		push	_singyoku_pattern_state
-		push	(0 shl 4) or (PM_SLING_AIMED shl 16)
-		push	0
-		mov	ax, singyoku_sphere.BE_cur_top
-		add	ax, [bp+var_4]
-		push	ax
-		mov	ax, singyoku_sphere.BE_cur_left
-		add	ax, [bp+var_2]
-		push	ax
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		add	sp, 14h
-		inc	si
-
-loc_22F02:
-		cmp	si, 0Ah
-		jl	short loc_22EBC
-		pop	si
-		leave
-		retf
-sub_22E9C	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -13454,7 +13402,7 @@ sub_22F0A	endp
 sub_22F2A	proc far
 		push	bp
 		mov	bp, sp
-		call	@transform_to_person_and_back_to_$q15singyoku_form_tnqv$vt2t2 c, F_MAN, offset sub_22E9C, seg main_33, offset sub_22E9C, seg main_33, offset sub_22E9C, seg main_33
+		call	@transform_to_person_and_back_to_$q15singyoku_form_tnqv$vt2t2 c, F_MAN, offset @fire_random_sling_pellets$qv, seg main_33, offset @fire_random_sling_pellets$qv, seg main_33, offset @fire_random_sling_pellets$qv, seg main_33
 		pop	bp
 		retf
 sub_22F2A	endp

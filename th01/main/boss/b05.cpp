@@ -588,3 +588,24 @@ void pascal fire_random_downwards_pellets(void)
 		);
 	}
 }
+
+void pascal fire_random_sling_pellets(void)
+{
+	// Could be a local variable.
+	select_subpixel_for_rank(pattern_state.speed_in_subpixels,
+		3.0f, 4.0f, 5.0f, 6.0f
+	);
+
+	for(int i = 0; i < 10; i++) {
+		pixel_t offset_x = (rand() % SINGYOKU_W);
+		pixel_t offset_y = (rand() % SINGYOKU_H);
+		Pellets.add_single(
+			(ent.cur_left + offset_x),
+			(ent.cur_top + offset_y),
+			0,
+			0x00,
+			PM_SLING_AIMED,
+			pattern_state.speed_in_subpixels
+		);
+	}
+}
