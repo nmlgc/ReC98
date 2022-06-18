@@ -4,6 +4,7 @@
 #include <stddef.h>
 #include "platform.h"
 #include "pc98.h"
+#include "master.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/math/area.hpp"
 #include "th01/math/clamp.hpp"
@@ -15,6 +16,7 @@ extern "C" {
 #include "th01/formats/grp.h"
 }
 #include "th01/formats/pf.hpp"
+#include "th01/sprites/pellet.h"
 #include "th01/main/particle.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/vars.hpp"
@@ -22,6 +24,7 @@ extern "C" {
 #include "th01/main/boss/boss.hpp"
 #include "th01/main/boss/entity_a.hpp"
 #include "th01/main/boss/palette.hpp"
+#include "th01/main/bullet/pellet.hpp"
 #include "th01/main/stage/palette.hpp"
 
 // Always denotes the last phase that ends with that amount of HP.
@@ -254,4 +257,53 @@ void sphere_move_rotate_and_render(
 	if((boss_phase_frame % 2) == 0) {
 		sphere_rotate_and_render(interval, cel_delta);
 	}
+}
+
+void pattern_halfcircle_spray_downwards(void)
+{
+	enum {
+		KEYFRAME_FIRE = 100,
+		KEYFRAME_FIRE_DONE = 160,
+
+		FIRE_FRAMES = (KEYFRAME_FIRE_DONE - KEYFRAME_FIRE),
+	};
+
+	#define angle    	pattern0_angle
+	#define direction	pattern0_direction
+
+	extern unsigned char angle;
+	extern int8_t direction;
+
+	if(boss_phase_frame == 10) {
+		direction = ((rand() % 2) == 1) ? 1 : -1;
+	}
+	if(boss_phase_frame < KEYFRAME_FIRE) {
+		sphere_accelerate_rotation_and_render(direction);
+		return;
+	}
+
+	if(boss_phase_frame == KEYFRAME_FIRE) {
+		select_for_rank(pattern_state.pellet_count, 10, 15, 20, 30);
+		angle = (direction == -1) ? 0x00 : 0x80;
+	}
+	if(boss_phase_frame < KEYFRAME_FIRE_DONE) {
+		sphere_rotate_and_render(direction, 1);
+
+		if(
+			(boss_phase_frame % (FIRE_FRAMES / pattern_state.pellet_count)) == 0
+		) {
+			Pellets.add_single(
+				(ent.cur_center_x() - (PELLET_W / 2)),
+				(ent.cur_center_y() - (PELLET_H / 2)),
+				angle,
+				to_sp(3.125f)
+			);
+			angle -= ((direction * 0x80) / pattern_state.pellet_count);
+		}
+	} else {
+		boss_phase_frame = 0;
+	}
+
+	#undef direction
+	#undef angle
 }

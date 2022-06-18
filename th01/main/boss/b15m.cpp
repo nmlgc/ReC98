@@ -178,9 +178,18 @@ enum elis_entity_cel_t {
 	C_BAT_last = (C_BAT + BAT_CELS - 1),
 };
 
-#define ent_still_or_wave	boss_entities[ENT_STILL_OR_WAVE]
-#define ent_attack       	boss_entities[ENT_ATTACK]
-#define ent_bat          	boss_entities[ENT_BAT]
+#define ent_still_or_wave \
+	reinterpret_cast<CBossEntitySized<GIRL_W, GIRL_H> &>(boss_entities[ \
+		ENT_STILL_OR_WAVE \
+	])
+
+#define ent_attack \
+	reinterpret_cast<CBossEntitySized<GIRL_W, GIRL_H> &>(boss_entities[ \
+		ENT_ATTACK \
+	])
+
+#define ent_bat \
+	reinterpret_cast<CBossEntitySized<BAT_W, BAT_H> &>(boss_entities[ENT_BAT])
 
 inline void elis_ent_load(void) {
 	ent_still_or_wave.load("boss5.bos", 0);
@@ -256,14 +265,14 @@ inline void ent_put_both(elis_entity_t ent, elis_entity_cel_t cel) {
 
 inline screen_x_t form_center_x(elis_form_t form) {
 	return (form == F_GIRL)
-		? (ent_still_or_wave.cur_left + (GIRL_W / 2))
-		: (ent_bat.cur_left + (BAT_W / 2));
+		? ent_still_or_wave.cur_center_x()
+		: ent_bat.cur_center_x();
 }
 
 inline screen_y_t form_center_y(elis_form_t form) {
 	return (form == F_GIRL)
-		? (ent_still_or_wave.cur_top + (GIRL_H / 2))
-		: (ent_bat.cur_top + (BAT_H / 2));
+		? ent_still_or_wave.cur_center_y()
+		: ent_bat.cur_center_y();
 }
 
 inline screen_x_t form_shot_hitbox_left(elis_form_t form) {
@@ -1308,8 +1317,8 @@ elis_form_t transform_bat_to_girl(void)
 		// Should ideally be a branch in ent_sync(), but that would make the
 		// function too complex to perfectly inline. It's only used here,
 		// anyway.
-		left = (ent_bat.cur_left + ((BAT_W - GIRL_W) / 2));
-		top  = (ent_bat.cur_top  + ((BAT_H - GIRL_H) / 2));
+		left = (ent_bat.cur_center_x() - (GIRL_W / 2));
+		top  = (ent_bat.cur_center_y() - (GIRL_H / 2));
 		if(left < PLAYFIELD_LEFT) {
 			left = PLAYFIELD_LEFT;
 		} else if(left > (PLAYFIELD_RIGHT - GIRL_W)) {

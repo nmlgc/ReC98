@@ -13375,117 +13375,10 @@ singyoku_person	equ <boss_entity_2>
 	extern @singyoku_select_for_rank$qmiiiii:proc
 	extern @sphere_accelerate_rotation_and_r$qi:proc
 	extern @sphere_move_rotate_and_render$qiiii:proc
+	extern @pattern_halfcircle_spray_downwar$qv:proc
 main_33_TEXT	ends
 
 main_33__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_229D1	proc far
-		push	bp
-		mov	bp, sp
-		cmp	_singyoku_phase_frame, 10
-		jnz	short loc_229F4
-		call	IRand
-		mov	bx, 2
-		cwd
-		idiv	bx
-		cmp	dx, 1
-		jnz	short loc_229EF
-		mov	al, 1
-		jmp	short loc_229F1
-; ---------------------------------------------------------------------------
-
-loc_229EF:
-		mov	al, -1
-
-loc_229F1:
-		mov	byte_3A388, al
-
-loc_229F4:
-		cmp	_singyoku_phase_frame, 100
-		jge	short loc_22A07
-		mov	al, byte_3A388
-		cbw
-		call	@sphere_accelerate_rotation_and_r$qi stdcall, ax
-		pop	cx
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_22A07:
-		cmp	_singyoku_phase_frame, 100
-		jnz	short loc_22A37
-		call	@singyoku_select_for_rank$qmiiiii c, offset _singyoku_pattern_state, ds, large 0Ah or (0Fh shl 16), large 14h or (1Eh shl 16)
-		mov	al, byte_3A388
-		cbw
-		cmp	ax, 0FFFFh
-		jnz	short loc_22A32
-		mov	al, 0
-		jmp	short loc_22A34
-; ---------------------------------------------------------------------------
-
-loc_22A32:
-		mov	al, 80h
-
-loc_22A34:
-		mov	angle_3A387, al
-
-loc_22A37:
-		cmp	_singyoku_phase_frame, 160
-		jge	short loc_22A9F
-		push	1
-		mov	al, byte_3A388
-		cbw
-		push	ax
-		call	@sphere_rotate_and_render$qii
-		add	sp, 4
-		mov	ax, 3Ch	; '<'
-		cwd
-		idiv	_singyoku_pattern_state
-		push	ax
-		mov	ax, _singyoku_phase_frame
-		cwd
-		pop	bx
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_22AA5
-		pushd	0 or (0 shl 16)
-		pushd	PM_REGULAR or (0 shl 16)
-		push	(3 shl 4) + 2
-		push	word ptr angle_3A387
-		mov	ax, singyoku_sphere.BE_cur_top
-		add	ax, 44
-		push	ax
-		mov	ax, singyoku_sphere.BE_cur_left
-		add	ax, 44
-		push	ax
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		add	sp, 14h
-		mov	al, byte_3A388
-		cbw
-		shl	ax, 7
-		cwd
-		idiv	_singyoku_pattern_state
-		mov	dl, angle_3A387
-		sub	dl, al
-		mov	angle_3A387, dl
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_22A9F:
-		mov	_singyoku_phase_frame, 0
-
-loc_22AA5:
-		pop	bp
-		retf
-sub_229D1	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14179,7 +14072,7 @@ loc_230DF:
 		inc	_singyoku_invincibility_frame
 		cmp	word_35CE0, 0
 		jnz	short loc_230F4
-		call	sub_229D1
+		call	@pattern_halfcircle_spray_downwar$qv
 		jmp	short loc_230FF
 ; ---------------------------------------------------------------------------
 
@@ -15233,8 +15126,11 @@ _singyoku_invincibility_frame	dw ?
 _singyoku_hp	dw ?
 public _singyoku_pattern_state
 _singyoku_pattern_state	dw ?
-angle_3A387	db ?
-byte_3A388	db ?
+
+public _pattern0_angle, _pattern0_direction
+_pattern0_angle    	db ?
+_pattern0_direction	db ?
+
 point_3A389	Point <?>
 	extern _boss_hp:word
 	extern _boss_phase_frame:word
