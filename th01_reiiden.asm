@@ -13742,7 +13742,7 @@ loc_229F4:
 loc_22A07:
 		cmp	_singyoku_phase_frame, 100
 		jnz	short loc_22A37
-		call	@singyoku_select_for_rank$qmiiiii c, offset speed_3A385, ds, large 0Ah or (0Fh shl 16), large 14h or (1Eh shl 16)
+		call	@singyoku_select_for_rank$qmiiiii c, offset _singyoku_pattern_state, ds, large 0Ah or (0Fh shl 16), large 14h or (1Eh shl 16)
 		mov	al, byte_3A388
 		cbw
 		cmp	ax, 0FFFFh
@@ -13768,7 +13768,7 @@ loc_22A37:
 		add	sp, 4
 		mov	ax, 3Ch	; '<'
 		cwd
-		idiv	speed_3A385
+		idiv	_singyoku_pattern_state
 		push	ax
 		mov	ax, _singyoku_phase_frame
 		cwd
@@ -13794,7 +13794,7 @@ loc_22A37:
 		cbw
 		shl	ax, 7
 		cwd
-		idiv	speed_3A385
+		idiv	_singyoku_pattern_state
 		mov	dl, angle_3A387
 		sub	dl, al
 		mov	angle_3A387, dl
@@ -13830,8 +13830,8 @@ sub_22AA7	proc far
 loc_22ABA:
 		cmp	_singyoku_phase_frame, 100
 		jnz	short loc_22AFE
-		call	@singyoku_select_for_rank$qmiiiii stdcall, offset speed_3A385, ds, large 04h or (04h shl 16), large 05h or (06h shl 16)
-		push	speed_3A385
+		call	@singyoku_select_for_rank$qmiiiii stdcall, offset _singyoku_pattern_state, ds, large 04h or (04h shl 16), large 05h or (06h shl 16)
+		push	_singyoku_pattern_state
 		push	ds
 		push	offset point_3A389.y
 		push	ds
@@ -14226,7 +14226,7 @@ sub_22E42	proc far
 
 		enter	2, 0
 		push	si
-		call	@singyoku_select_for_rank$qmiiiii c, offset speed_3A385, ds, large 30h or (36h shl 16), large 3Ch or (42h shl 16)
+		call	@singyoku_select_for_rank$qmiiiii c, offset _singyoku_pattern_state, ds, large 30h or (36h shl 16), large 3Ch or (42h shl 16)
 		xor	si, si
 		jmp	short loc_22E94
 ; ---------------------------------------------------------------------------
@@ -14237,7 +14237,7 @@ loc_22E62:
 		mov	[bp+@@angle], al
 		pushd	0 or (0 shl 16)
 		pushd	PM_REGULAR or (0 shl 16)
-		push	speed_3A385
+		push	_singyoku_pattern_state
 		push	word ptr [bp+@@angle]
 		mov	ax, singyoku_sphere.BE_cur_top
 		add	ax, 44
@@ -14271,7 +14271,7 @@ var_2		= word ptr -2
 
 		enter	4, 0
 		push	si
-		call	@singyoku_select_for_rank$qmiiiii c, offset speed_3A385, ds, large 30h or (40h shl 16), large 50h or (60h shl 16)
+		call	@singyoku_select_for_rank$qmiiiii c, offset _singyoku_pattern_state, ds, large 30h or (40h shl 16), large 50h or (60h shl 16)
 		xor	si, si
 		jmp	short loc_22F02
 ; ---------------------------------------------------------------------------
@@ -14288,7 +14288,7 @@ loc_22EBC:
 		idiv	bx
 		mov	[bp+var_4], dx
 		pushd	0 or (0 shl 16)
-		push	speed_3A385
+		push	_singyoku_pattern_state
 		push	(0 shl 4) or (PM_SLING_AIMED shl 16)
 		push	0
 		mov	ax, singyoku_sphere.BE_cur_top
@@ -14496,7 +14496,7 @@ loc_230B1:
 		mov	ax, (3 shl 4) + 2
 
 loc_230B4:
-		mov	speed_3A385, ax
+		mov	_singyoku_pattern_state, ax
 		jmp	loc_232A0
 ; ---------------------------------------------------------------------------
 
@@ -15570,7 +15570,8 @@ public _singyoku_phase_frame, _singyoku_hp, _singyoku_invincibility_frame
 _singyoku_phase_frame	dw ?
 _singyoku_invincibility_frame	dw ?
 _singyoku_hp	dw ?
-speed_3A385	dw ?
+public _singyoku_pattern_state
+_singyoku_pattern_state	dw ?
 angle_3A387	db ?
 byte_3A388	db ?
 point_3A389	Point <?>

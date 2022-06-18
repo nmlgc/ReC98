@@ -10,6 +10,18 @@
 #define boss_phase_frame	singyoku_phase_frame
 #include "th01/main/boss/boss.hpp"
 
+// Patterns
+// --------
+
+#define pattern_state	singyoku_pattern_state
+extern union {
+	int pellet_count;
+	pixel_t speed_in_pixels;
+	subpixel_t speed_in_subpixels;
+	int unknown;
+} pattern_state;
+// --------
+
 #define flash_colors	singyoku_flash_colors
 #define invincible	singyoku_invincible
 #define invincibility_frame	singyoku_invincibility_frame
