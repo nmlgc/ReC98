@@ -13366,7 +13366,6 @@ main_33_TEXT	segment	byte public 'CODE' use16
 
 singyoku_sphere	equ <boss_entity_0>
 
-F_WOMAN = 0
 F_MAN = 1
 
 	extern @singyoku_load$qv:proc
@@ -13376,61 +13375,11 @@ F_MAN = 1
 	extern @pattern_halfcircle_spray_downwar$qv:proc
 	extern @pattern_slam_into_player_and_bac$qv:proc
 	extern @transform_to_person_and_back_to_$q15singyoku_form_tnqv$vt2t2:proc
-	extern @FIRE_CHASING_PELLETS$QV:proc
-	extern @FIRE_CROSSING_PELLETS$QV:proc
+	extern @pattern_chasing_pellets$qv:proc
+	extern @pattern_crossing_pellets$qv:proc
 main_33_TEXT	ends
 
 main_33__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_22DC8	proc far
-		push	bp
-		mov	bp, sp
-		call	@transform_to_person_and_back_to_$q15singyoku_form_tnqv$vt2t2 c, F_WOMAN, offset @boss_nop$qv, seg main_32_TEXT, offset @boss_nop$qv, seg main_32_TEXT, offset @boss_nop$qv, seg main_32_TEXT
-		cmp	_singyoku_phase_frame, 140
-		jle	short loc_22E07
-		mov	ax, _singyoku_phase_frame
-		mov	bx, 8
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_22E07
-		cmp	_singyoku_phase_frame, 220
-		jg	short loc_22E07
-		call	@fire_chasing_pellets$qv
-
-loc_22E07:
-		pop	bp
-		retf
-sub_22DC8	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_22E09	proc far
-		push	bp
-		mov	bp, sp
-		call	@transform_to_person_and_back_to_$q15singyoku_form_tnqv$vt2t2 c, F_WOMAN, offset @boss_nop$qv, seg main_32_TEXT, offset @boss_nop$qv, seg main_32_TEXT, offset @boss_nop$qv, seg main_32_TEXT
-		cmp	_singyoku_phase_frame, 140
-		jle	short loc_22E40
-		mov	ax, _singyoku_phase_frame
-		mov	bx, 8
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_22E40
-		call	@fire_crossing_pellets$qv
-
-loc_22E40:
-		pop	bp
-		retf
-sub_22E09	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -13786,7 +13735,7 @@ loc_23198:
 		inc	_singyoku_invincibility_frame
 		cmp	word_35CE0, 0
 		jnz	short loc_231B8
-		call	sub_22DC8
+		call	@pattern_chasing_pellets$qv
 		jmp	short loc_231EA
 ; ---------------------------------------------------------------------------
 
@@ -13800,7 +13749,7 @@ loc_231B8:
 loc_231C5:
 		cmp	word_35CE0, 2
 		jnz	short loc_231D2
-		call	sub_22E09
+		call	@pattern_crossing_pellets$qv
 		jmp	short loc_231EA
 ; ---------------------------------------------------------------------------
 

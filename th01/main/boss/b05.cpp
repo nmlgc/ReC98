@@ -429,8 +429,10 @@ enum singyoku_transform_keyframe_t {
 	TKF_TO_PERSON_RERENDER = 110,
 	TKF_TO_PERSON_DONE = 115,
 	TKF_PERSON_ATTACK_1 = 135,
+	TKF_EXTERNAL_PATTERN_START = 140,
 	TKF_PERSON_ATTACK_2 = 160,
 	TKF_PERSON_STILL = 185,
+	TKF_EXTERNAL_PATTERN_DONE = 220,
 	TKF_TO_SPHERE = 240,
 	TKF_TO_SPHERE_RERENDER = 245,
 	TKF_TO_SPHERE_DONE = 250,
@@ -544,4 +546,27 @@ void pascal fire_crossing_pellets(void)
 		(0x40 + 0x10),
 		speed
 	);
+}
+
+void pattern_chasing_pellets(void)
+{
+	transform_to_person_and_back_to_sphere(F_WOMAN);
+	if(
+		(boss_phase_frame > TKF_EXTERNAL_PATTERN_START) &&
+		((boss_phase_frame % 8) == 0) &&
+		(boss_phase_frame <= TKF_EXTERNAL_PATTERN_DONE)
+	) {
+		fire_chasing_pellets();
+	}
+}
+
+void pattern_crossing_pellets(void)
+{
+	transform_to_person_and_back_to_sphere(F_WOMAN);
+	if(
+		(boss_phase_frame > TKF_EXTERNAL_PATTERN_START) &&
+		((boss_phase_frame % 8) == 0)
+	) {
+		fire_crossing_pellets();
+	}
 }
