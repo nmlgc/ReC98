@@ -329,6 +329,10 @@ template <pixel_t W, pixel_t H> struct CBossEntitySized : public CBossEntity {
 	screen_x_t cur_center_y(void) const {
 		return (cur_top + (H / 2));
 	}
+
+	screen_x_t cur_right(void) const {
+		return (cur_left + W);
+	}
 }
 
 // Frees all images in the given [slot].

@@ -13377,57 +13377,10 @@ F_MAN = 1
 	extern @pattern_slam_into_player_and_bac$qv:proc
 	extern @transform_to_person_and_back_to_$q15singyoku_form_tnqv$vt2t2:proc
 	extern @FIRE_CHASING_PELLETS$QV:proc
+	extern @FIRE_CROSSING_PELLETS$QV:proc
 main_33_TEXT	ends
 
 main_33__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_22D63	proc far
-
-@@speed		= word ptr -2
-
-		enter	2, 0
-		push	4Bh or (50h shl 16)	; (for_hard) or (for_lunatic)
-		push	3Ch or (46h shl 16)	; (for_easy) or (for_normal)
-		push	ss	; ret (segment)
-		lea	ax, [bp+@@speed]
-		push	ax	; ret (offset)
-		call	@singyoku_select_for_rank$qmiiiii
-		pushd	0 or (0 shl 16)
-		pushd	PM_REGULAR or (0 shl 16)
-		push	[bp+@@speed]
-		push	30h
-		mov	ax, singyoku_sphere.BE_cur_top
-		add	ax, 44
-		push	ax
-		mov	ax, singyoku_sphere.BE_cur_left
-		add	ax, 12
-		push	ax
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		add	sp, 20h
-		pushd	0 or (0 shl 16)
-		pushd	PM_REGULAR or (0 shl 16)
-		push	[bp+@@speed]
-		push	50h
-		mov	ax, singyoku_sphere.BE_cur_top
-		add	ax, 44
-		push	ax
-		mov	ax, singyoku_sphere.BE_cur_left
-		add	ax, 84
-		push	ax
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		add	sp, 14h
-		leave
-		retf
-sub_22D63	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -13471,7 +13424,7 @@ sub_22E09	proc far
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_22E40
-		call	sub_22D63
+		call	@fire_crossing_pellets$qv
 
 loc_22E40:
 		pop	bp

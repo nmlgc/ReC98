@@ -75,6 +75,10 @@ enum singyoku_form_t {
 
 static const int SPHERE_CELS = 8;
 
+// That's the position for the left hand, at least. The right hand would be a
+// bit further in, but the game doesn't care.
+static const pixel_t WOMAN_HAND_DISTANCE_FROM_EDGE = 16;
+
 enum singyoku_flash_cel_t {
 	C_SPHERE = 0,
 	C_WOMAN = 1,
@@ -521,3 +525,23 @@ void pascal fire_chasing_pellets(void)
 		chase_speed
 	);
 };
+
+void pascal fire_crossing_pellets(void)
+{
+	subpixel_t speed;
+
+	select_subpixel_for_rank(speed, 3.75f, 4.375f, 4.6875f, 5.0f);
+
+	Pellets.add_single(
+		(ent.cur_left    + WOMAN_HAND_DISTANCE_FROM_EDGE - (PELLET_W / 2)),
+		(ent.cur_center_y() - (PELLET_H / 2)),
+		(0x40 - 0x10),
+		speed
+	);
+	Pellets.add_single(
+		(ent.cur_right() - WOMAN_HAND_DISTANCE_FROM_EDGE + (PELLET_W / 2)),
+		(ent.cur_center_y() - (PELLET_H / 2)),
+		(0x40 + 0x10),
+		speed
+	);
+}
