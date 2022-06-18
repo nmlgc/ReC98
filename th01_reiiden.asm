@@ -13374,89 +13374,11 @@ singyoku_person	equ <boss_entity_2>
 	extern @sphere_rotate_and_render$qii:proc
 	extern @singyoku_select_for_rank$qmiiiii:proc
 	extern @sphere_accelerate_rotation_and_r$qi:proc
-	extern @sphere_move_rotate_and_render$qiiii:proc
 	extern @pattern_halfcircle_spray_downwar$qv:proc
+	extern @pattern_slam_into_player_and_bac$qv:proc
 main_33_TEXT	ends
 
 main_33__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_22AA7	proc far
-		push	bp
-		mov	bp, sp
-		cmp	_singyoku_phase_frame, 100
-		jge	short loc_22ABA
-		call	@sphere_accelerate_rotation_and_r$qi stdcall, 1
-		pop	cx
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_22ABA:
-		cmp	_singyoku_phase_frame, 100
-		jnz	short loc_22AFE
-		call	@singyoku_select_for_rank$qmiiiii stdcall, offset _singyoku_pattern_state, ds, large 04h or (04h shl 16), large 05h or (06h shl 16)
-		push	_singyoku_pattern_state
-		push	ds
-		push	offset point_3A389.y
-		push	ds
-		push	offset point_3A389.x
-		push	368
-		push	_player_left
-		mov	ax, singyoku_sphere.BE_cur_top
-		add	ax, 32
-		push	ax
-		mov	ax, singyoku_sphere.BE_cur_left
-		add	ax, 32
-		push	ax
-		call	@vector2_between$qiiiimit5i
-		add	sp, 1Eh
-
-loc_22AFE:
-		cmp	point_3A389.x, 999
-		jz	short loc_22B31
-		call	@sphere_move_rotate_and_render$qiiii c, point_3A389.x, point_3A389.y, (1 shl 16) or 1
-		cmp	singyoku_sphere.BE_cur_top, 304
-		jle	short loc_22B60
-		mov	point_3A389.x, 999
-		mov	point_3A389.y, -4
-		jmp	short loc_22B60
-; ---------------------------------------------------------------------------
-
-loc_22B31:
-		cmp	point_3A389.y, -4
-		jnz	short loc_22B5A
-		call	@sphere_move_rotate_and_render$qiiii c, 0, point_3A389.y, (1 shl 16) or 1
-		cmp	singyoku_sphere.BE_cur_top, 96
-		jge	short loc_22B60
-		mov	point_3A389.y, 0
-		jmp	short loc_22B60
-; ---------------------------------------------------------------------------
-
-loc_22B5A:
-		mov	_singyoku_phase_frame, 0
-
-loc_22B60:
-		cmp	_player_invincible, 0
-		jnz	short loc_22B86
-		mov	ax, singyoku_sphere.BE_cur_left
-		cmp	ax, _player_left
-		jg	short loc_22B86
-		add	ax, 64
-		cmp	ax, _player_left
-		jl	short loc_22B86
-		cmp	singyoku_sphere.BE_cur_top, 272
-		jl	short loc_22B86
-		mov	_done, 1
-
-loc_22B86:
-		pop	bp
-		retf
-sub_22AA7	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14079,7 +14001,7 @@ loc_230DF:
 loc_230F4:
 		cmp	word_35CE0, 1
 		jnz	short loc_230FF
-		call	sub_22AA7
+		call	@pattern_slam_into_player_and_bac$qv
 
 loc_230FF:
 		cmp	_singyoku_phase_frame, 0
@@ -14173,7 +14095,7 @@ loc_231D2:
 loc_231DF:
 		cmp	word_35CE0, 4
 		jnz	short loc_231EA
-		call	sub_22AA7
+		call	@pattern_slam_into_player_and_bac$qv
 
 loc_231EA:
 		cmp	_singyoku_phase_frame, 0
@@ -15131,7 +15053,8 @@ public _pattern0_angle, _pattern0_direction
 _pattern0_angle    	db ?
 _pattern0_direction	db ?
 
-point_3A389	Point <?>
+public _pattern1_velocity
+_pattern1_velocity	Point <?>
 	extern _boss_hp:word
 	extern _boss_phase_frame:word
 	extern _boss_phase:byte

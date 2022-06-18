@@ -3,13 +3,16 @@
 
 #include <stddef.h>
 #include "platform.h"
+#include "decomp.hpp"
 #include "pc98.h"
 #include "master.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/math/area.hpp"
 #include "th01/math/clamp.hpp"
 #include "th01/math/subpixel.hpp"
+#include "th01/math/vector.hpp"
 #include "th01/hardware/egc.h"
+#include "th01/hardware/input.hpp"
 extern "C" {
 #include "th01/hardware/palette.h"
 #include "th01/snd/mdrv2.h"
@@ -24,8 +27,23 @@ extern "C" {
 #include "th01/main/boss/boss.hpp"
 #include "th01/main/boss/entity_a.hpp"
 #include "th01/main/boss/palette.hpp"
+#include "th01/main/player/player.hpp"
 #include "th01/main/bullet/pellet.hpp"
 #include "th01/main/stage/palette.hpp"
+
+// Coordinates
+// -----------
+
+// SINGYOKU_W and SINGYOKU_H are defined in boss.hpp, as they are needed
+// globally, by singyoku_defeat_animate_and_select_route() and as dummy default
+// parameters for CBossEntity::pos_set().
+
+static const screen_y_t BASE_CENTER_Y = (
+	PLAYFIELD_TOP + ((PLAYFIELD_H / 21) * 5)
+);
+
+static const screen_y_t BASE_TOP = (BASE_CENTER_Y - (SINGYOKU_H / 2));
+// -----------
 
 // Always denotes the last phase that ends with that amount of HP.
 enum singyoku_hp_t {
@@ -306,4 +324,65 @@ void pattern_halfcircle_spray_downwards(void)
 
 	#undef direction
 	#undef angle
+}
+
+void pattern_slam_into_player_and_back_up(void)
+{
+	#define velocity	pattern1_velocity
+
+	extern point_t velocity;
+
+	if(boss_phase_frame < 100) {
+		sphere_accelerate_rotation_and_render(1);
+		return;
+	}
+	if(boss_phase_frame == 100) {
+		// Could be a local variable.
+		select_for_rank(pattern_state.speed_in_pixels, 4, 4, 5, 6);
+
+		vector2_between(
+			(ent.cur_center_x() - (PLAYER_W / 2)),
+			(ent.cur_center_y() - (PLAYER_H / 2)),
+			player_left,
+			player_top,
+			velocity.x,
+			velocity.y,
+			pattern_state.speed_in_pixels
+		);
+	}
+
+	// Leftover debug code?
+	if(velocity.x != -PIXEL_NONE) {
+		sphere_move_rotate_and_render(inhibit_Z3(velocity.x), velocity.y);
+		if(ent.cur_top > (PLAYFIELD_BOTTOM - SINGYOKU_H)) {
+			// Nope, it's in fact a way to differentiate the two subphases of
+			// this "pattern", and their completion conditions...
+			velocity.x = -PIXEL_NONE;
+
+			// ... except that this variable also fulfills that job.
+			velocity.y = -4;
+		}
+	} else if(velocity.y == -4) { // See?
+		sphere_move_rotate_and_render(0, velocity.y);
+		// < rather than <= and no clamping? That makes sure that SinGyoku will
+		// overshoot the base position.
+		if(ent.cur_top < BASE_TOP) {
+			velocity.y = 0;
+		}
+	} else {
+		boss_phase_frame = 0;
+	}
+
+	// A quadratic hitbox exactly covering all 96 pixels. Actually more lenient
+	// than a perfect circular one.
+	if(
+		!player_invincible &&
+		(ent.cur_left <= player_left) &&
+		((ent.cur_left + (SINGYOKU_W - PLAYER_W)) >= player_left) &&
+		(ent.cur_top >= (player_top - SINGYOKU_H))
+	) {
+		done = true;
+	}
+
+	#undef velocity
 }
