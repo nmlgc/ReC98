@@ -13374,129 +13374,10 @@ singyoku_person	equ <boss_entity_2>
 	extern @sphere_rotate_and_render$qii:proc
 	extern @singyoku_select_for_rank$qmiiiii:proc
 	extern @sphere_accelerate_rotation_and_r$qi:proc
+	extern @sphere_move_rotate_and_render$qiiii:proc
 main_33_TEXT	ends
 
 main_33__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_2290C	proc far
-
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-@@interval		= word ptr  0Ah
-@@cel_delta		= word ptr  0Ch
-
-		enter	4, 0
-		push	si
-		push	di
-		mov	di, [bp+arg_0]
-		mov	si, [bp+arg_2]
-		or	si, si
-		jge	short loc_2292E
-		mov	ax, si
-		neg	ax
-		push	ax
-		push	96
-		mov	ax, singyoku_sphere.BE_cur_top
-		add	ax, si
-		add	ax, 96
-		push	ax
-		jmp	short loc_22939
-; ---------------------------------------------------------------------------
-
-loc_2292E:
-		or	si, si
-		jle	short loc_22945
-		push	si
-		push	96
-		push	singyoku_sphere.BE_cur_top
-
-loc_22939:
-		push	singyoku_sphere.BE_cur_left
-		call	@egc_copy_rect_1_to_0_16$qiiii
-		add	sp, 8
-
-loc_22945:
-		or	di, di
-		jle	short loc_22956
-		push	(96 shl 16) or 8
-		pushd	[dword ptr singyoku_sphere.BE_cur_left]
-		jmp	short loc_2296D
-; ---------------------------------------------------------------------------
-
-loc_22956:
-		or	di, di
-		jge	short loc_22975
-		push	(96 shl 16) or 8
-		push	singyoku_sphere.BE_cur_top
-		mov	ax, singyoku_sphere.BE_cur_left
-		add	ax, 96
-		sub	ax, si
-		push	ax
-
-loc_2296D:
-		call	@egc_copy_rect_1_to_0_16$qiiii
-		add	sp, 8
-
-loc_22975:
-		mov	ax, singyoku_sphere.BE_cur_top
-		add	ax, si
-		mov	[bp+var_2], ax
-		mov	ax, singyoku_sphere.BE_cur_left
-		add	ax, di
-		jge	short loc_22988
-		xor	ax, ax
-		jmp	short loc_2298D
-; ---------------------------------------------------------------------------
-
-loc_22988:
-		mov	ax, singyoku_sphere.BE_cur_left
-		add	ax, di
-
-loc_2298D:
-		cmp	ax, 544
-		jle	short loc_22997
-		mov	ax, 544
-		jmp	short loc_229A7
-; ---------------------------------------------------------------------------
-
-loc_22997:
-		mov	ax, singyoku_sphere.BE_cur_left
-		add	ax, di
-		jge	short loc_229A2
-		xor	ax, ax
-		jmp	short loc_229A7
-; ---------------------------------------------------------------------------
-
-loc_229A2:
-		mov	ax, singyoku_sphere.BE_cur_left
-		add	ax, di
-
-loc_229A7:
-		mov	[bp+var_4], ax
-		mov	singyoku_sphere.BE_cur_left, ax
-		mov	ax, [bp+var_2]
-		mov	singyoku_sphere.BE_cur_top, ax
-		mov	ax, _singyoku_phase_frame
-		mov	bx, 2
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_229CD
-		call	@sphere_rotate_and_render$qii c, [bp+@@interval], [bp+@@cel_delta]
-
-loc_229CD:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_2290C	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -13644,11 +13525,7 @@ loc_22ABA:
 loc_22AFE:
 		cmp	point_3A389.x, 999
 		jz	short loc_22B31
-		push	(1 shl 16) or 1
-		push	point_3A389.y
-		push	point_3A389.x
-		call	sub_2290C
-		add	sp, 8
+		call	@sphere_move_rotate_and_render$qiiii c, point_3A389.x, point_3A389.y, (1 shl 16) or 1
 		cmp	singyoku_sphere.BE_cur_top, 304
 		jle	short loc_22B60
 		mov	point_3A389.x, 999
@@ -13659,11 +13536,7 @@ loc_22AFE:
 loc_22B31:
 		cmp	point_3A389.y, -4
 		jnz	short loc_22B5A
-		push	(1 shl 16) or 1
-		push	point_3A389.y
-		push	0
-		call	sub_2290C
-		add	sp, 8
+		call	@sphere_move_rotate_and_render$qiiii c, 0, point_3A389.y, (1 shl 16) or 1
 		cmp	singyoku_sphere.BE_cur_top, 96
 		jge	short loc_22B60
 		mov	point_3A389.y, 0

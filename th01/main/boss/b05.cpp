@@ -6,7 +6,9 @@
 #include "pc98.h"
 #include "th01/v_colors.hpp"
 #include "th01/math/area.hpp"
+#include "th01/math/clamp.hpp"
 #include "th01/math/subpixel.hpp"
+#include "th01/hardware/egc.h"
 extern "C" {
 #include "th01/hardware/palette.h"
 #include "th01/snd/mdrv2.h"
@@ -191,5 +193,65 @@ void sphere_accelerate_rotation_and_render(int cel_delta)
 		) {
 			sphere_rotate_and_render(1, cel_delta);
 		}
+	}
+}
+
+void sphere_move_rotate_and_render(
+	pixel_t delta_x, pixel_t delta_y, int interval = 1, int cel_delta = 1
+)
+{
+	if(delta_y < 0) {
+		egc_copy_rect_1_to_0_16(
+			ent.cur_left,
+			(ent.cur_top + delta_y + SINGYOKU_H),
+			SINGYOKU_W,
+			-delta_y
+		);
+	} else if(delta_y > 0) {
+		egc_copy_rect_1_to_0_16(ent.cur_left, ent.cur_top, SINGYOKU_W, delta_y);
+	}
+
+	// ZUN bug: Why implicitly limit [delta_x] to 8? (Which is actually at
+	// least 16, due to egc_copy_rect_1_to_0_16() rounding up to the next
+	// word.) The actual maximum value for [delta_x] that doesn't permanently
+	// leave sphere parts in VRAM is 23 – at 24, a byte-aligned sphere moves at
+	// a speed of 3 VRAM words every 2 frames, outrunning these unblitting
+	// calls which only span a single VRAM word every frame in that case.
+	if(delta_x > 0) {
+		egc_copy_rect_1_to_0_16(ent.cur_left, ent.cur_top, 8, SINGYOKU_H);
+	} else if(delta_x < 0) {
+		// ZUN bug: Should be (+ delta_x) instead of (- delta_y). While the
+		// latter is always positive whenever we get here, it can easily be
+		// smaller than [delta_x] if SinGyoku is moving over a large amount of
+		// horizontal space. In that case, [delta_y] is smaller, and word
+		// alignment doesn't just not consistently cancel out this bug, but
+		// in fact makes it worse: (ent.cur_left - delta_y) will then align to
+		// a different word than (ent.cur_left + delta_x) on at least a couple
+		// of frames during the animation, and the left edge of the unblitted
+		// area will be past the right edge of the sphere in the previous
+		// frame. As a result, not a single sphere pixel will be unblitted,
+		// and a small stripe of the sphere will be left in VRAM for one frame.
+		egc_copy_rect_1_to_0_16(
+			(ent.cur_left + SINGYOKU_W - delta_y), ent.cur_top, 8, SINGYOKU_H
+		);
+	}
+
+	// The calling site stops any positive Y movement as soon as SinGyoku's
+	// bottom coordinate has reached the bottom of the playfield, so we can get
+	// by without any clipping here.
+	screen_y_t new_top = (ent.cur_top + delta_y);
+
+	screen_x_t new_left = clamp_max_2(clamp_min_2(
+		(ent.cur_left + delta_x), 0), (PLAYFIELD_RIGHT - SINGYOKU_W)
+	);
+
+	ent.cur_left = new_left;
+	ent.cur_top = new_top;
+
+	// ZUN bug: We unblit the movement delta every frame, but only blit every
+	// second frame?! (Then again, this is what prevents sphere parts from
+	// remaining in VRAM at [delta_x] values between 17 and 23 inclusive.)
+	if((boss_phase_frame % 2) == 0) {
+		sphere_rotate_and_render(interval, cel_delta);
 	}
 }

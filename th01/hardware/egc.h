@@ -35,7 +35,7 @@
 // Blits the rectangle from
 // 	(⌊left/16⌋*16, top)
 // to
-// 	(⌈((left + w)/16)*16⌉, (top + h))
+// 	((⌈(left + w)/16⌉*16), (top + h))
 // from VRAM page 1 to the same position on VRAM page 0.
 // Does not clamp the X coordinate to the horizontal resolution; if
 // ([left] + [w]) exceeds it or is negative, the blit operation will wrap
