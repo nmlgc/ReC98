@@ -497,3 +497,27 @@ void transform_to_person_and_back_to_sphere(
 
 	#undef person_cel_for_form
 }
+
+void pascal fire_chasing_pellets(void)
+{
+	subpixel_t chase_speed;
+
+	select_subpixel_for_rank(chase_speed, 3.4375f, 3.625f, 3.875f, 4.0625f);
+
+	Pellets.add_single(
+		(ent.cur_center_x() - (PELLET_W / 2)),
+		(ent.cur_center_y() - (PELLET_H / 2)),
+		(0x00 - 0x10),
+		to_sp(1.0f),
+		PM_CHASE,
+		chase_speed
+	);
+	Pellets.add_single(
+		(ent.cur_center_x() - (PELLET_W / 2)),
+		(ent.cur_center_y() - (PELLET_H / 2)),
+		(0x80 + 0x10),
+		to_sp(1.0f),
+		PM_CHASE,
+		chase_speed
+	);
+};

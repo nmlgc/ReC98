@@ -13376,57 +13376,10 @@ F_MAN = 1
 	extern @pattern_halfcircle_spray_downwar$qv:proc
 	extern @pattern_slam_into_player_and_bac$qv:proc
 	extern @transform_to_person_and_back_to_$q15singyoku_form_tnqv$vt2t2:proc
+	extern @FIRE_CHASING_PELLETS$QV:proc
 main_33_TEXT	ends
 
 main_33__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_22CF6	proc far
-
-@@chase_speed		= word ptr -2
-
-		enter	2, 0
-		push	3Eh or (41h shl 16)	; (for_hard) or (for_lunatic)
-		push	37h or (3Ah shl 16)	; (for_easy) or (for_normal)
-		push	ss	; ret (segment)
-		lea	ax, [bp+@@chase_speed]
-		push	ax	; ret (offset)
-		call	@singyoku_select_for_rank$qmiiiii
-		pushd	0 or (0 shl 16)
-		push	[bp+@@chase_speed]
-		push	(1 shl 4) or (PM_CHASE shl 16)
-		push	(-10h and 255)
-		mov	ax, singyoku_sphere.BE_cur_top
-		add	ax, 44
-		push	ax
-		mov	ax, singyoku_sphere.BE_cur_left
-		add	ax, 44
-		push	ax
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		add	sp, 20h
-		pushd	0 or (0 shl 16)
-		push	[bp+@@chase_speed]
-		push	(1 shl 4) or (PM_CHASE shl 16)
-		push	(-70h and 255)
-		mov	ax, singyoku_sphere.BE_cur_top
-		add	ax, 44
-		push	ax
-		mov	ax, singyoku_sphere.BE_cur_left
-		add	ax, 44
-		push	ax
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		add	sp, 14h
-		leave
-		retf
-sub_22CF6	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -13494,7 +13447,7 @@ sub_22DC8	proc far
 		jnz	short loc_22E07
 		cmp	_singyoku_phase_frame, 220
 		jg	short loc_22E07
-		call	sub_22CF6
+		call	@fire_chasing_pellets$qv
 
 loc_22E07:
 		pop	bp
