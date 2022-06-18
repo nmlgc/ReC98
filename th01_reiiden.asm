@@ -13366,47 +13366,18 @@ main_33_TEXT	segment	byte public 'CODE' use16
 
 singyoku_sphere	equ <boss_entity_0>
 
-F_MAN = 1
-
 	extern @singyoku_load$qv:proc
 	extern @singyoku_free$qv:proc
 	extern @sphere_rotate_and_render$qii:proc
 	extern @pattern_halfcircle_spray_downwar$qv:proc
 	extern @pattern_slam_into_player_and_bac$qv:proc
-	extern @transform_to_person_and_back_to_$q15singyoku_form_tnqv$vt2t2:proc
 	extern @pattern_chasing_pellets$qv:proc
 	extern @pattern_crossing_pellets$qv:proc
-	extern @FIRE_RANDOM_DOWNWARDS_PELLETS$QV:proc
-	extern @FIRE_RANDOM_SLING_PELLETS$QV:proc
+	extern @pattern_random_downwards_pellets$qv:proc
+	extern @pattern_random_sling_pellets$qv:proc
 main_33_TEXT	ends
 
 main_33__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_22F0A	proc far
-		push	bp
-		mov	bp, sp
-		call	@transform_to_person_and_back_to_$q15singyoku_form_tnqv$vt2t2 c, F_MAN, offset @fire_random_downwards_pellets$qv, seg main_33, offset @fire_random_downwards_pellets$qv, seg main_33, offset @fire_random_downwards_pellets$qv, seg main_33
-		pop	bp
-		retf
-sub_22F0A	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_22F2A	proc far
-		push	bp
-		mov	bp, sp
-		call	@transform_to_person_and_back_to_$q15singyoku_form_tnqv$vt2t2 c, F_MAN, offset @fire_random_sling_pellets$qv, seg main_33, offset @fire_random_sling_pellets$qv, seg main_33, offset @fire_random_sling_pellets$qv, seg main_33
-		pop	bp
-		retf
-sub_22F2A	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -13647,7 +13618,7 @@ loc_23198:
 loc_231B8:
 		cmp	word_35CE0, 1
 		jnz	short loc_231C5
-		call	sub_22F0A
+		call	@pattern_random_downwards_pellets$qv
 		jmp	short loc_231EA
 ; ---------------------------------------------------------------------------
 
@@ -13661,7 +13632,7 @@ loc_231C5:
 loc_231D2:
 		cmp	word_35CE0, 3
 		jnz	short loc_231DF
-		call	sub_22F2A
+		call	@pattern_random_sling_pellets$qv
 		jmp	short loc_231EA
 ; ---------------------------------------------------------------------------
 

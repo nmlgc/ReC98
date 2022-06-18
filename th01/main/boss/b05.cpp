@@ -609,3 +609,23 @@ void pascal fire_random_sling_pellets(void)
 		);
 	}
 }
+
+void pattern_random_downwards_pellets(void)
+{
+	transform_to_person_and_back_to_sphere(
+		F_MAN,
+		fire_random_downwards_pellets,
+		fire_random_downwards_pellets,
+		fire_random_downwards_pellets
+	);
+}
+
+void pattern_random_sling_pellets(void)
+{
+	transform_to_person_and_back_to_sphere(
+		F_MAN,
+		fire_random_sling_pellets,
+		fire_random_sling_pellets,
+		fire_random_sling_pellets
+	);
+}
