@@ -734,11 +734,8 @@ int pattern_11_lasers_across(void)
 	if(boss_phase_frame == 50) {
 		direction = (rand() % 2);
 		ent_unput_and_put_both(ENT_STILL_OR_WAVE, C_HAND, false);
-		select_for_rank(pattern_state.speed_multiplied_by_8,
-			(to_sp(6.25f) / 2),
-			(to_sp(6.875f) / 2),
-			(to_sp(7.5f) / 2),
-			(to_sp(8.125f) / 2)
+		select_laser_speed_for_rank(pattern_state.speed_multiplied_by_8,
+			6.25f, 6.875f, 7.5f, 8.125f
 		);
 	} else if(boss_phase_frame == 60) {
 		shape_circle_put(

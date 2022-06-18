@@ -717,9 +717,7 @@ void pattern_symmetrical_from_cup(void)
 	if(boss_phase_frame == 100) {
 		angle = 0x40;
 		unused = -1;
-		select_for_rank(pattern_state.speed,
-			to_sp(5.0f), to_sp(5.0f), to_sp(6.0f), to_sp(7.0f)
-		);
+		select_subpixel_for_rank(pattern_state.speed, 5.0f, 5.0f, 6.0f, 7.0f);
 	}
 	if((boss_phase_frame < 140) && ((boss_phase_frame % 8) == 0)) {
 		pattern_symmetrical_from_cup_fire(0x40);
@@ -1264,10 +1262,7 @@ void pattern_slash_triangular(void)
 		face_direction_can_change = false;
 		spawner_left = SWORD_CENTER_X;
 		spawner_top = SWORD_CENTER_Y;
-		select_for_rank(
-			pattern_state.speed,
-			to_sp(2.0f), to_sp(3.0f), to_sp(4.0f), to_sp(4.5f)
-		);
+		select_subpixel_for_rank(pattern_state.speed, 2.0f, 3.0f, 4.0f, 4.5f);
 	}
 
 	slash_animate();
@@ -1383,9 +1378,7 @@ void pattern_slash_aimed(void)
 		face_direction_can_change = false;
 		spawner_left = SWORD_CENTER_X;
 		spawner_top = SWORD_CENTER_Y;
-		select_for_rank(pattern_state.speed,
-			to_sp(4.0f), to_sp(5.0f), to_sp(5.5f), to_sp(6.0f)
-		);
+		select_subpixel_for_rank(pattern_state.speed, 4.0f, 5.0f, 5.5f, 6.0f);
 	}
 
 	slash_animate();

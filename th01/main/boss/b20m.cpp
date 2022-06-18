@@ -986,11 +986,8 @@ void near pattern_random_purple_lasers(void)
 		return;
 	}
 	if(boss_phase_frame == KEYFRAME_0) {
-		select_for_rank(pattern_state.speed_multiplied_by_8,
-			(to_sp( 8.5f) / 2),
-			(to_sp( 9.0f) / 2),
-			(to_sp( 9.5f) / 2),
-			(to_sp(10.0f) / 2)
+		select_laser_speed_for_rank(pattern_state.speed_multiplied_by_8,
+			8.5f, 9.0f, 9.5f, 10.0f
 		);
 		for(int i = 0; i < LASER_COUNT; i++) {
 			spawner_x[i] = (PLAYFIELD_LEFT +
@@ -1710,11 +1707,8 @@ void near pattern_four_aimed_lasers(void)
 		);
 
 		target_first = player_left;
-		select_for_rank(pattern_state.speed_multiplied_by_8,
-			(to_sp(7.5f) / 2),
-			(to_sp(8.0f) / 2),
-			(to_sp(8.5f) / 2),
-			(to_sp(9.0f) / 2)
+		select_laser_speed_for_rank(pattern_state.speed_multiplied_by_8,
+			7.5f, 8.0f, 8.5f, 9.0f
 		);
 
 		fire(0,
@@ -1813,11 +1807,8 @@ void near pattern_radial_stacks_and_lasers(void)
 	} else if(boss_phase_frame == 150) {
 		angle = 0x00;
 		angle_velocity = 0x01;
-		select_for_rank(pattern_state.speed_multiplied_by_8,
-			(to_sp(7.5f  ) / 2),
-			(to_sp(8.125f) / 2),
-			(to_sp(8.75f ) / 2),
-			(to_sp(9.375f) / 2)
+		select_laser_speed_for_rank(pattern_state.speed_multiplied_by_8,
+			7.5f, 8.125f, 8.75f, 9.375f
 		);
 		mdrv2_se_play(6);
 	} else if(boss_phase_frame < 200) {

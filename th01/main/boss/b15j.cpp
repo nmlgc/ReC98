@@ -791,11 +791,8 @@ int near pattern_single_lasers_from_left_eye(void)
 		return 1;
 	}
 	if(boss_phase_frame == 250) {
-		select_for_rank(pattern_state.speed_multiplied_by_8,
-			(to_sp(6.5f) / 2),
-			(to_sp(7.0f) / 2),
-			(to_sp(7.5f) / 2),
-			(to_sp(8.0f) / 2)
+		select_laser_speed_for_rank(pattern_state.speed_multiplied_by_8,
+			6.5f, 7.0f, 7.5f, 8.0f
 		);
 		mdrv2_se_play(6);
 		fire_random_aimed_eye_laser(
@@ -893,11 +890,8 @@ int near pattern_vertical_lasers_from_top(void)
 		return 3;
 	}
 	if(boss_phase_frame == KEYFRAME_START) {
-		select_for_rank(pattern_state.speed_multiplied_by_8,
-			(to_sp(7.5f) / 2),
-			(to_sp(8.0f) / 2),
-			(to_sp(8.5f) / 2),
-			(to_sp(9.0f) / 2)
+		select_laser_speed_for_rank(pattern_state.speed_multiplied_by_8,
+			7.5f, 8.0f, 8.5f, 9.0f
 		);
 		select_for_rank(random_range_x_half,
 			0, (PLAYFIELD_W / 64), (PLAYFIELD_W / 40), (PLAYFIELD_W / 32)

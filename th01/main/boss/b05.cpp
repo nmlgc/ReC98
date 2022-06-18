@@ -1,11 +1,10 @@
 /// Stage 5 Boss - SinGyoku
 /// -----------------------
 
-extern "C" {
 #include "platform.h"
 #include "pc98.h"
+#include "th01/math/subpixel.hpp"
 #include "th01/main/vars.hpp"
-}
 
 #define boss_hp	singyoku_hp
 #define boss_phase_frame	singyoku_phase_frame
