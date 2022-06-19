@@ -12,22 +12,24 @@
 #include "th01/math/subpixel.hpp"
 #include "th01/math/vector.hpp"
 #include "th01/hardware/egc.h"
-#include "th01/hardware/input.hpp"
 extern "C" {
+#include "th01/hardware/frmdelay.h"
+#include "th01/hardware/input.hpp"
 #include "th01/hardware/palette.h"
 #include "th01/snd/mdrv2.h"
 #include "th01/formats/grp.h"
 }
 #include "th01/formats/pf.hpp"
-#include "th01/sprites/pellet.h"
 #include "th01/main/particle.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/vars.hpp"
 #include "th01/main/hud/hp.hpp"
 #include "th01/main/boss/boss.hpp"
+#include "th01/main/boss/defeat.hpp"
 #include "th01/main/boss/entity_a.hpp"
 #include "th01/main/boss/palette.hpp"
 #include "th01/main/player/player.hpp"
+#include "th01/main/player/shot.hpp"
 #include "th01/main/bullet/pellet.hpp"
 #include "th01/main/stage/palette.hpp"
 
@@ -38,11 +40,13 @@ extern "C" {
 // globally, by singyoku_defeat_animate_and_select_route() and as dummy default
 // parameters for CBossEntity::pos_set().
 
+static const screen_x_t BASE_CENTER_X = PLAYFIELD_CENTER_X;
 static const screen_y_t BASE_CENTER_Y = (
 	PLAYFIELD_TOP + ((PLAYFIELD_H / 21) * 5)
 );
 
-static const screen_y_t BASE_TOP = (BASE_CENTER_Y - (SINGYOKU_H / 2));
+static const screen_x_t BASE_LEFT = (BASE_CENTER_X - (SINGYOKU_W / 2));
+static const screen_y_t BASE_TOP  = (BASE_CENTER_Y - (SINGYOKU_H / 2));
 // -----------
 
 // Always denotes the last phase that ends with that amount of HP.
@@ -55,11 +59,13 @@ enum singyoku_hp_t {
 // State that's suddenly no longer shared with other bosses
 // --------------------------------------------------------
 
-#define boss_hp         	singyoku_hp
-#define boss_phase      	singyoku_phase
-#define boss_phase_frame	singyoku_phase_frame
+#define boss_hp            	singyoku_hp
+#define boss_phase         	singyoku_phase
+#define invincibility_frame	singyoku_invincibility_frame
+#define boss_phase_frame   	singyoku_phase_frame
 extern int8_t boss_phase;
 extern int boss_phase_frame;
+extern int invincibility_frame;
 extern int boss_hp;
 // --------------------------------------------------------
 
@@ -144,14 +150,6 @@ extern union {
 	int unknown;
 } pattern_state;
 // --------
-
-#define flash_colors	singyoku_flash_colors
-#define invincible	singyoku_invincible
-#define invincibility_frame	singyoku_invincibility_frame
-#define initial_hp_rendered	singyoku_initial_hp_rendered
-extern bool16 invincible;
-extern int invincibility_frame;
-extern bool16 initial_hp_rendered;
 
 void singyoku_load(void)
 {
@@ -628,4 +626,189 @@ void pattern_random_sling_pellets(void)
 		fire_random_sling_pellets,
 		fire_random_sling_pellets
 	);
+}
+
+void singyoku_main(void)
+{
+	#define hit                	singyoku_hit
+	#define initial_hp_rendered	singyoku_initial_hp_rendered
+
+	struct hack { unsigned char col[1]; }; // XXX
+	extern const struct hack singyoku_invincibility_flash_colors;
+	struct hack flash_colors = singyoku_invincibility_flash_colors;
+
+	extern struct {
+		int pattern_cur;
+		int16_t unused;
+
+		void frame_common(void) {
+			boss_phase_frame++;
+			invincibility_frame++;
+		}
+	} phase;
+	extern struct {
+		bool16 invincible;
+
+		void update_and_render(const struct hack &flash_colors) {
+			boss_hit_update_and_render(
+				invincibility_frame,
+				invincible,
+				boss_hp,
+				flash_colors.col,
+				sizeof(flash_colors),
+				3000,
+				boss_nop,
+				ent.hittest_orb(),
+
+				// A hitbox stretching the entire width of SinGyoku, but that's
+				// still shifted 16 pixels to the right?
+				(ent.cur_left + (SINGYOKU_W / 6)),
+				(ent.cur_top + (SINGYOKU_H / 3)),
+				SINGYOKU_W,
+				(SINGYOKU_H - (SINGYOKU_H / 3) - SHOT_H)
+			);
+		}
+	} hit;
+	extern bool16 initial_hp_rendered;
+
+	// Entrance animation
+	if(boss_phase == 0) {
+		ent.cur_left = BASE_LEFT;
+		ent.cur_top = BASE_TOP;
+
+		// MODDERS: Loop over a fade-in color array instead… and ideally, start
+		// directly with this palette *before* first blitting the background?
+		z_palette_set_show( 5, 0x0, 0x0, 0x0);
+		z_palette_set_show( 9, 0x0, 0x0, 0x0);
+		z_palette_set_show(15, 0x0, 0x0, 0x0);
+
+		int comp = 0;
+		int rotation_interval = 18;
+
+		boss_phase_frame = 0;
+		while(boss_phase_frame < 200) {
+			// Different function for a change? Move locking has no effect here.
+			ent_sphere.move_lock_unput_and_put_8(0, 0, 0, 3);
+
+			boss_phase_frame++;
+			if((boss_phase_frame % rotation_interval) == 0) {
+				sphere_rotate_and_render(1, 1);
+				rotation_interval -= 2;
+				if(rotation_interval <= 0) {
+					rotation_interval = 1;
+				}
+			}
+			if((boss_phase_frame % 20) == 0) {
+				for(comp = 0; comp < COMPONENT_COUNT; comp++) {
+					// MODDERS: Loop over a fade-in color array instead.
+					if(z_Palettes[ 5].v[comp] < stage_palette[ 5].v[comp]) {
+						z_Palettes[ 5].v[comp]++;
+					}
+					if(z_Palettes[ 9].v[comp] < stage_palette[ 9].v[comp]) {
+						z_Palettes[ 9].v[comp]++;
+					}
+					if(z_Palettes[15].v[comp] < stage_palette[15].v[comp]) {
+						z_Palettes[15].v[comp]++;
+					}
+				}
+				z_palette_set_all_show(z_Palettes);
+			}
+			frame_delay(1);
+		}
+		boss_phase = 1;
+		phase.pattern_cur = 0;
+		phase.unused = 0;
+		hit.invincible = false;
+		boss_phase_frame = 0;
+		initial_hp_rendered = false;
+		boss_palette_show();
+		stage_palette_set(z_Palettes);
+		boss_palette_snap();
+		ent.hitbox_orb_inactive = false;
+		invincibility_frame = 0; // (redundant)
+
+		// Huh?
+		pattern_state.unknown = (
+			(rank == RANK_EASY) ? 70 :
+			(rank == RANK_NORMAL) ? 50 :
+			(rank == RANK_HARD) ? 30 :
+			(rank == RANK_LUNATIC) ? 10 :
+			50
+		);
+	} else if(boss_phase == 1) {
+		// Using the invincibility frame? That's unique. Works though, as it's
+		// impossible in the original game to hit SinGyoku within the first 8
+		// frames.
+		hud_hp_increment_render(
+			initial_hp_rendered, boss_hp, invincibility_frame
+		);
+
+		phase.frame_common();
+		if(phase.pattern_cur == 0) {
+			pattern_halfcircle_spray_downwards();
+		} else if(phase.pattern_cur == 1) {
+			pattern_slam_into_player_and_back_up();
+		}
+
+		if(boss_phase_frame == 0) {
+			// (phase.pattern_cur = !phase.pattern_cur), anyone?
+			phase.pattern_cur = (
+				(phase.pattern_cur == 1) ? 0 : (phase.pattern_cur + 1)
+			);
+		}
+
+		hit.update_and_render(flash_colors);
+
+		if((boss_hp <= PHASE_1_END_HP) && !hit.invincible) {
+			// Good catch – we don't want to stop the slam movement in the
+			// middle of it, and leave SinGyoku somewhere below BASE_TOP.
+			// (Conditionally setting [phase.pattern_cur] to 4 would have made
+			// no difference anyway).
+			if(phase.pattern_cur != 1)  {
+				boss_phase = 2;
+				phase.unused = 0;
+				phase.pattern_cur = 0;
+				boss_phase_frame = 0;
+				invincibility_frame = 0; // (redundant)
+			}
+		}
+	} else if(boss_phase == 2) {
+		phase.frame_common();
+		if(phase.pattern_cur == 0) {
+			pattern_chasing_pellets();
+		} else if(phase.pattern_cur == 1) {
+			pattern_random_downwards_pellets();
+		} else if(phase.pattern_cur == 2) {
+			pattern_crossing_pellets();
+		} else if(phase.pattern_cur == 3) {
+			pattern_random_sling_pellets();
+		} else if(phase.pattern_cur == 4) {
+			pattern_slam_into_player_and_back_up();
+		}
+
+		if(boss_phase_frame == 0) {
+			// Cycle between pattern 4 and any non-4 pattern
+			phase.pattern_cur = (phase.pattern_cur == 4) ? (rand() % 4) : 4;
+		}
+
+		hit.update_and_render(flash_colors);
+		if(boss_hp <= PHASE_2_END_HP) {
+			boss_phase = 8;
+			mdrv2_se_play(5);
+			boss_phase_frame = 0; // (redundant)
+		}
+	} else if(boss_phase == 8) {
+		// This has no effect if SinGyoku was defeated in its sphere form, and
+		// will otherwise blit the sphere on top of the active person form...
+		// Oh well, maybe both entities *were* intended to be visible
+		// simultaneously in this case?
+		ent_sphere.put_8();
+
+		mdrv2_bgm_fade_out_nonblock();
+		Pellets.unput_and_reset();
+		singyoku_defeat_animate_and_select_route();
+	}
+
+	#undef initial_hp_rendered
+	#undef hit
 }

@@ -57,6 +57,7 @@ static const pixel_t SINGYOKU_W = 96;
 static const pixel_t SINGYOKU_H = 96;
 
 void singyoku_load(void);
+void singyoku_main(void);
 void singyoku_free(void);
 
 // Makai

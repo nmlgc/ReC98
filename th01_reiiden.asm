@@ -66,7 +66,6 @@ main_21 group main_21_TEXT, main_21__TEXT
 main_29 group main_29_TEXT, main_29__TEXT
 main_31 group main_31_TEXT, main_31__TEXT
 main_32 group main_32_TEXT, main_32__TEXT
-main_33 group main_33_TEXT, main_33__TEXT
 
 ; ===========================================================================
 
@@ -2743,7 +2742,7 @@ loc_DBDD:
 ; ---------------------------------------------------------------------------
 
 loc_DBF9:
-		call	sub_22F4A
+		call	@singyoku_main$qv
 		jmp	short loc_DC3A
 ; ---------------------------------------------------------------------------
 
@@ -2864,7 +2863,7 @@ loc_DD20:
 		jmp	cs:off_E2FB[bx]
 
 loc_DD3C:
-		call	sub_22F4A
+		call	@singyoku_main$qv
 		jmp	short loc_DD6B
 ; ---------------------------------------------------------------------------
 
@@ -13360,361 +13359,10 @@ main_32__TEXT	ends
 
 ; Segment type:	Pure code
 main_33_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_33
-		;org 4
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-singyoku_sphere	equ <boss_entity_0>
-
 	extern @singyoku_load$qv:proc
+	extern @singyoku_main$qv:proc
 	extern @singyoku_free$qv:proc
-	extern @sphere_rotate_and_render$qii:proc
-	extern @pattern_halfcircle_spray_downwar$qv:proc
-	extern @pattern_slam_into_player_and_bac$qv:proc
-	extern @pattern_chasing_pellets$qv:proc
-	extern @pattern_crossing_pellets$qv:proc
-	extern @pattern_random_downwards_pellets$qv:proc
-	extern @pattern_random_sling_pellets$qv:proc
 main_33_TEXT	ends
-
-main_33__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_22F4A	proc far
-
-@@invincibility_flash_colors		= byte ptr -2
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	al, _singyoku_invincibility_flash_colors
-		mov	[bp+@@invincibility_flash_colors], al
-		cmp	_singyoku_phase, 0
-		jnz	loc_230BA
-		mov	singyoku_sphere.BE_cur_left, 272
-		mov	singyoku_sphere.BE_cur_top, 96
-		pushd	(0 shl 16) or 0
-		pushd	(0 shl 16) or 5
-		call	_z_palette_set_show
-		pushd	(0 shl 16) or 0
-		pushd	(0 shl 16) or 9
-		call	_z_palette_set_show
-		pushd	(0 shl 16) or 0
-		pushd	(0 shl 16) or 0Fh
-		call	_z_palette_set_show
-		add	sp, 18h
-		xor	si, si
-		mov	di, 12h
-		mov	_singyoku_phase_frame, 0
-		jmp	loc_2302C
-; ---------------------------------------------------------------------------
-
-loc_22F9D:
-		call	@CBossEntity@move_lock_unput_and_put_8$qiiii c, offset singyoku_sphere, ds, large 0, large 0 or (3 shl 16)
-		inc	_singyoku_phase_frame
-		mov	ax, _singyoku_phase_frame
-		cwd
-		idiv	di
-		or	dx, dx
-		jnz	short loc_22FD7
-		call	@sphere_rotate_and_render$qii c, large (1 shl 16) or 1
-		sub	di, 2
-		or	di, di
-		jg	short loc_22FD7
-		mov	di, 1
-
-loc_22FD7:
-		mov	ax, _singyoku_phase_frame
-		mov	bx, 20
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_23024
-		xor	si, si
-		jmp	short loc_23013
-; ---------------------------------------------------------------------------
-
-loc_22FE8:
-		mov	al, _z_Palettes[5 * 3][si]
-		cmp	al, byte ptr _stage_palette[5 * size rgb_t][si]
-		jge	short loc_22FF6
-		inc	_z_Palettes[5 * 3][si]
-
-loc_22FF6:
-		mov	al, _z_Palettes[9 * 3][si]
-		cmp	al, byte ptr _stage_palette[9 * size rgb_t][si]
-		jge	short loc_23004
-		inc	_z_Palettes[9 * 3][si]
-
-loc_23004:
-		mov	al, _z_Palettes[15 * 3][si]
-		cmp	al, byte ptr _stage_palette[15 * size rgb_t][si]
-		jge	short loc_23012
-		inc	_z_Palettes[15 * 3][si]
-
-loc_23012:
-		inc	si
-
-loc_23013:
-		cmp	si, size rgb_t
-		jl	short loc_22FE8
-		call	_z_palette_set_all_show c, offset _z_Palettes, ds
-
-loc_23024:
-		push	1
-		call	_frame_delay
-		pop	cx
-
-loc_2302C:
-		cmp	_singyoku_phase_frame, 200
-		jl	loc_22F9D
-		mov	_singyoku_phase, 1
-		mov	word_35CE0, 0
-		mov	word_35CE2, 0
-		mov	_singyoku_invincible, 0
-		mov	_singyoku_phase_frame, 0
-		mov	_singyoku_initial_hp_rendered, 0
-		call	@boss_palette_show$qv
-		call	@stage_palette_set$qmx27%Palette$t14%RGB$tc$ii$16%% c, offset _z_Palettes, ds
-		call	@boss_palette_snap$qv
-		mov	singyoku_sphere.BE_hitbox_orb_inactive, 0
-		mov	_singyoku_invincibility_frame, 0
-		cmp	_rank, RANK_EASY
-		jnz	short loc_23087
-		mov	ax, 46h	; 'F'
-		jmp	short loc_230B4
-; ---------------------------------------------------------------------------
-
-loc_23087:
-		mov	al, _rank
-		cbw
-		cmp	ax, RANK_NORMAL
-		jnz	short loc_23095
-		mov	ax, 32h	; '2'
-		jmp	short loc_230B4
-; ---------------------------------------------------------------------------
-
-loc_23095:
-		mov	al, _rank
-		cbw
-		cmp	ax, RANK_HARD
-		jnz	short loc_230A3
-		mov	ax, 1Eh
-		jmp	short loc_230B4
-; ---------------------------------------------------------------------------
-
-loc_230A3:
-		mov	al, _rank
-		cbw
-		cmp	ax, RANK_LUNATIC
-		jnz	short loc_230B1
-		mov	ax, 10
-		jmp	short loc_230B4
-; ---------------------------------------------------------------------------
-
-loc_230B1:
-		mov	ax, (3 shl 4) + 2
-
-loc_230B4:
-		mov	_singyoku_pattern_state, ax
-		jmp	loc_232A0
-; ---------------------------------------------------------------------------
-
-loc_230BA:
-		mov	al, _singyoku_phase
-		cbw
-		cmp	ax, 1
-		jnz	loc_23198
-		cmp	_singyoku_initial_hp_rendered, 0
-		jnz	short loc_230DF
-		call	@hud_hp_render$qii c, _singyoku_hp, _singyoku_invincibility_frame
-		mov	_singyoku_initial_hp_rendered, ax
-
-loc_230DF:
-		inc	_singyoku_phase_frame
-		inc	_singyoku_invincibility_frame
-		cmp	word_35CE0, 0
-		jnz	short loc_230F4
-		call	@pattern_halfcircle_spray_downwar$qv
-		jmp	short loc_230FF
-; ---------------------------------------------------------------------------
-
-loc_230F4:
-		cmp	word_35CE0, 1
-		jnz	short loc_230FF
-		call	@pattern_slam_into_player_and_bac$qv
-
-loc_230FF:
-		cmp	_singyoku_phase_frame, 0
-		jnz	short loc_23118
-		cmp	word_35CE0, 1
-		jnz	short loc_23111
-		xor	ax, ax
-		jmp	short loc_23115
-; ---------------------------------------------------------------------------
-
-loc_23111:
-		mov	ax, word_35CE0
-		inc	ax
-
-loc_23115:
-		mov	word_35CE0, ax
-
-loc_23118:
-		push	(48 shl 16) or 96	; (hitbox_w) or (hitbox_h)
-		mov	ax, singyoku_sphere.BE_cur_top
-		add	ax, 32
-		push	ax	; hitbox_top
-		mov	ax, singyoku_sphere.BE_cur_left
-		add	ax, 16
-		push	ax	; hitbox_left
-		call	@CBossEntity@hittest_orb$xqv c, offset singyoku_sphere, ds
-		push	ax	; colliding_with_orb
-		push	seg main_32_TEXT	; hit_callback (segment)
-		push	offset @boss_nop$qv	; hit_callback (offset)
-		push	3000	; hit_score
-		push	1	; invincibility_flash_colors_count
-		push	ss	; invincibility_flash_colors (segment)
-		lea	ax, [bp+@@invincibility_flash_colors]
-		push	ax	; invincibility_flash_colors (offset)
-		push	ds	; hp (segment)
-		push	offset _singyoku_hp	; hp (offset)
-		push	ds	; is_invincible (segment)
-		push	offset _singyoku_invincible	; is_invincible (offset)
-		push	ds	; invincibility_frame (segment)
-		push	offset _singyoku_invincibility_frame	; invincibility_frame (offset)
-		call	@boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii
-		add	sp, 22h
-		cmp	_singyoku_hp, 6
-		jg	loc_232A0
-		cmp	_singyoku_invincible, 0
-		jnz	loc_232A0
-		cmp	word_35CE0, 1
-		jz	loc_232A0
-		mov	_singyoku_phase, 2
-		mov	word_35CE2, 0
-		mov	word_35CE0, 0
-		mov	_singyoku_phase_frame, 0
-		mov	_singyoku_invincibility_frame, 0
-		jmp	loc_232A0
-; ---------------------------------------------------------------------------
-
-loc_23198:
-		mov	al, _singyoku_phase
-		cbw
-		cmp	ax, 2
-		jnz	loc_2326F
-		inc	_singyoku_phase_frame
-		inc	_singyoku_invincibility_frame
-		cmp	word_35CE0, 0
-		jnz	short loc_231B8
-		call	@pattern_chasing_pellets$qv
-		jmp	short loc_231EA
-; ---------------------------------------------------------------------------
-
-loc_231B8:
-		cmp	word_35CE0, 1
-		jnz	short loc_231C5
-		call	@pattern_random_downwards_pellets$qv
-		jmp	short loc_231EA
-; ---------------------------------------------------------------------------
-
-loc_231C5:
-		cmp	word_35CE0, 2
-		jnz	short loc_231D2
-		call	@pattern_crossing_pellets$qv
-		jmp	short loc_231EA
-; ---------------------------------------------------------------------------
-
-loc_231D2:
-		cmp	word_35CE0, 3
-		jnz	short loc_231DF
-		call	@pattern_random_sling_pellets$qv
-		jmp	short loc_231EA
-; ---------------------------------------------------------------------------
-
-loc_231DF:
-		cmp	word_35CE0, 4
-		jnz	short loc_231EA
-		call	@pattern_slam_into_player_and_bac$qv
-
-loc_231EA:
-		cmp	_singyoku_phase_frame, 0
-		jnz	short loc_2320E
-		cmp	word_35CE0, 4
-		jnz	short loc_23205
-		call	IRand
-		mov	bx, 4
-		cwd
-		idiv	bx
-		jmp	short loc_2320A
-; ---------------------------------------------------------------------------
-
-loc_23205:
-		mov	ax, 4
-		mov	dx, ax
-
-loc_2320A:
-		mov	word_35CE0, dx
-
-loc_2320E:
-		push	(48 shl 16) or 96	; (hitbox_w) or (hitbox_h)
-		mov	ax, singyoku_sphere.BE_cur_top
-		add	ax, 32
-		push	ax	; hitbox_top
-		mov	ax, singyoku_sphere.BE_cur_left
-		add	ax, 16
-		push	ax	; hitbox_left
-		call	@CBossEntity@hittest_orb$xqv c, offset singyoku_sphere, ds
-		push	ax	; colliding_with_orb
-		push	seg main_32_TEXT	; hit_callback (segment)
-		push	offset @boss_nop$qv	; hit_callback (offset)
-		push	3000	; hit_score
-		push	1	; invincibility_flash_colors_count
-		push	ss	; invincibility_flash_colors (segment)
-		lea	ax, [bp+@@invincibility_flash_colors]
-		push	ax	; invincibility_flash_colors (offset)
-		push	ds	; hp (segment)
-		push	offset _singyoku_hp	; hp (offset)
-		push	ds	; is_invincible (segment)
-		push	offset _singyoku_invincible	; is_invincible (offset)
-		push	ds	; invincibility_frame (segment)
-		push	offset _singyoku_invincibility_frame	; invincibility_frame (offset)
-		call	@boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii
-		add	sp, 22h
-		cmp	_singyoku_hp, 0
-		jg	short loc_232A0
-		mov	_singyoku_phase, 8
-		push	5
-		call	_mdrv2_se_play
-		pop	cx
-		mov	_singyoku_phase_frame, 0
-		jmp	short loc_232A0
-; ---------------------------------------------------------------------------
-
-loc_2326F:
-		mov	al, _singyoku_phase
-		cbw
-		cmp	ax, 8
-		jnz	short loc_232A0
-		call	@CBossEntity@put_8$xqiii stdcall, offset singyoku_sphere, ds, large [dword ptr singyoku_sphere.BE_cur_left], singyoku_sphere.BE_bos_image
-		call	_mdrv2_bgm_fade_out_nonblock
-		call	@CPellets@unput_and_reset$qv stdcall, offset _Pellets, ds
-		add	sp, 0Eh
-		call	@singyoku_defeat_animate_and_sele$qv
-
-loc_232A0:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_22F4A	endp
-
-singyoku_sphere	equ <>
-main_33__TEXT	ends
 
 ; ===========================================================================
 
@@ -14294,14 +13942,14 @@ flt_35CCE	dd 176.0
 flt_35CD2	dd 208.0
 flt_35CD6	dd 224.0
 flt_35CDA	dd 240.0
-public _singyoku_phase
-_singyoku_phase	db 0
-public _singyoku_invincibility_flash_colors, _singyoku_invincible
-_singyoku_invincibility_flash_colors	db 13
-word_35CE0	dw 0
-word_35CE2	dw 0
-_singyoku_invincible	dw 0
+public _singyoku_phase, _singyoku_invincibility_flash_col, _phase, _singyoku_hit
 public _singyoku_initial_hp_rendered
+_singyoku_phase	db 0
+_singyoku_invincibility_flash_col	db 13
+_phase label word
+	dw 0	; pattern_cur
+	dw 0	; unused
+_singyoku_hit	dw 0
 _singyoku_initial_hp_rendered	dw 0
 	extern _game_cleared:byte
 	extern _unused_boss_stage_flag:word
@@ -14582,14 +14230,13 @@ _particles_alive            	db PARTICLE_COUNT dup(?)
 _particles_velocity_base    	db PARTICLE_COUNT dup(?)
 _particles_spawn_cycle      	db ?
 
-public _route
-_route	db ?
-public _singyoku_phase_frame, _singyoku_hp, _singyoku_invincibility_frame
-_singyoku_phase_frame	dw ?
+public _route, _singyoku_phase_frame, _singyoku_invincibility_frame
+public _singyoku_hp, _singyoku_pattern_state
+_route                       	db ?
+_singyoku_phase_frame        	dw ?
 _singyoku_invincibility_frame	dw ?
-_singyoku_hp	dw ?
-public _singyoku_pattern_state
-_singyoku_pattern_state	dw ?
+_singyoku_hp                 	dw ?
+_singyoku_pattern_state      	dw ?
 
 public _pattern0_angle, _pattern0_direction
 _pattern0_angle    	db ?
