@@ -6,6 +6,8 @@
 #include "decomp.hpp"
 #include "pc98.h"
 #include "master.hpp"
+#include "th01/common.h"
+#include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/math/area.hpp"
 #include "th01/math/clamp.hpp"
@@ -56,17 +58,19 @@ enum singyoku_hp_t {
 	PHASE_2_END_HP = 0,
 };
 
+// Global state that is defined here for some reason
+// -------------------------------------------------
+
+route_t route;
+// -------------------------------------------------
+
 // State that's suddenly no longer shared with other bosses
 // --------------------------------------------------------
 
-#define boss_hp            	singyoku_hp
-#define boss_phase         	singyoku_phase
-#define invincibility_frame	singyoku_invincibility_frame
-#define boss_phase_frame   	singyoku_phase_frame
-extern int8_t boss_phase;
-extern int boss_phase_frame;
-extern int invincibility_frame;
-extern int boss_hp;
+static int8_t boss_phase = 0;
+static int boss_phase_frame;
+static int invincibility_frame;
+static int boss_hp;
 // --------------------------------------------------------
 
 // Entities
@@ -142,8 +146,7 @@ inline void singyoku_ent_free(void) {
 // Patterns
 // --------
 
-#define pattern_state	singyoku_pattern_state
-extern union {
+static union {
 	int pellet_count;
 	pixel_t speed_in_pixels;
 	subpixel_t speed_in_subpixels;
@@ -320,11 +323,8 @@ void pattern_halfcircle_spray_downwards(void)
 		FIRE_FRAMES = (KEYFRAME_FIRE_DONE - KEYFRAME_FIRE),
 	};
 
-	#define angle    	pattern0_angle
-	#define direction	pattern0_direction
-
-	extern unsigned char angle;
-	extern int8_t direction;
+	static unsigned char angle;
+	static int8_t direction;
 
 	if(boss_phase_frame == 10) {
 		direction = ((rand() % 2) == 1) ? 1 : -1;
@@ -355,16 +355,11 @@ void pattern_halfcircle_spray_downwards(void)
 	} else {
 		boss_phase_frame = 0;
 	}
-
-	#undef direction
-	#undef angle
 }
 
 void pattern_slam_into_player_and_back_up(void)
 {
-	#define velocity	pattern1_velocity
-
-	extern point_t velocity;
+	static point_t velocity;
 
 	if(boss_phase_frame < 100) {
 		sphere_accelerate_rotation_and_render(1);
@@ -417,8 +412,6 @@ void pattern_slam_into_player_and_back_up(void)
 	) {
 		done = true;
 	}
-
-	#undef velocity
 }
 
 enum singyoku_transform_keyframe_t {
@@ -630,14 +623,9 @@ void pattern_random_sling_pellets(void)
 
 void singyoku_main(void)
 {
-	#define hit                	singyoku_hit
-	#define initial_hp_rendered	singyoku_initial_hp_rendered
+	const unsigned char flash_colors[1] = { 13 };
 
-	struct hack { unsigned char col[1]; }; // XXX
-	extern const struct hack singyoku_invincibility_flash_colors;
-	struct hack flash_colors = singyoku_invincibility_flash_colors;
-
-	extern struct {
+	static struct {
 		int pattern_cur;
 		int16_t unused;
 
@@ -645,16 +633,16 @@ void singyoku_main(void)
 			boss_phase_frame++;
 			invincibility_frame++;
 		}
-	} phase;
-	extern struct {
+	} phase = { 0, 0 };
+	static struct {
 		bool16 invincible;
 
-		void update_and_render(const struct hack &flash_colors) {
+		void update_and_render(const unsigned char (&flash_colors)[1]) {
 			boss_hit_update_and_render(
 				invincibility_frame,
 				invincible,
 				boss_hp,
-				flash_colors.col,
+				flash_colors,
 				sizeof(flash_colors),
 				3000,
 				boss_nop,
@@ -668,8 +656,8 @@ void singyoku_main(void)
 				(SINGYOKU_H - (SINGYOKU_H / 3) - SHOT_H)
 			);
 		}
-	} hit;
-	extern bool16 initial_hp_rendered;
+	} hit = { false };
+	static bool16 initial_hp_rendered = false;
 
 	// Entrance animation
 	if(boss_phase == 0) {
@@ -808,7 +796,4 @@ void singyoku_main(void)
 		Pellets.unput_and_reset();
 		singyoku_defeat_animate_and_select_route();
 	}
-
-	#undef initial_hp_rendered
-	#undef hit
 }

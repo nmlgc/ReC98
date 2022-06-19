@@ -13942,15 +13942,6 @@ flt_35CCE	dd 176.0
 flt_35CD2	dd 208.0
 flt_35CD6	dd 224.0
 flt_35CDA	dd 240.0
-public _singyoku_phase, _singyoku_invincibility_flash_col, _phase, _singyoku_hit
-public _singyoku_initial_hp_rendered
-_singyoku_phase	db 0
-_singyoku_invincibility_flash_col	db 13
-_phase label word
-	dw 0	; pattern_cur
-	dw 0	; unused
-_singyoku_hit	dw 0
-_singyoku_initial_hp_rendered	dw 0
 	extern _game_cleared:byte
 	extern _unused_boss_stage_flag:word
 	extern _pellet_destroy_score_delta:word
@@ -14229,21 +14220,7 @@ _particles_velocity_y       	dw PARTICLE_COUNT dup(?)
 _particles_alive            	db PARTICLE_COUNT dup(?)
 _particles_velocity_base    	db PARTICLE_COUNT dup(?)
 _particles_spawn_cycle      	db ?
-
-public _route, _singyoku_phase_frame, _singyoku_invincibility_frame
-public _singyoku_hp, _singyoku_pattern_state
-_route                       	db ?
-_singyoku_phase_frame        	dw ?
-_singyoku_invincibility_frame	dw ?
-_singyoku_hp                 	dw ?
-_singyoku_pattern_state      	dw ?
-
-public _pattern0_angle, _pattern0_direction
-_pattern0_angle    	db ?
-_pattern0_direction	db ?
-
-public _pattern1_velocity
-_pattern1_velocity	Point <?>
+	extern _route:byte
 	extern _boss_hp:word
 	extern _boss_phase_frame:word
 	extern _boss_phase:byte
