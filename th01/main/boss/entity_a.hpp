@@ -249,14 +249,21 @@ public:
 	}
 
 	// Sets [cur_left], [cur_top], [unknown], and the [move_clamp] area.
+	//
+	// Kikuri is the only boss who relies on move clamping. All others ignore
+	// the feature by just directly partying on [cur_left] and [cur_top], and
+	// can ignore the last 4 parameters. ZUN is very likely to just have
+	// copy-pasted their [move_clamp_right] and [move_clamp_bottom] values from
+	// SinGyoku, as they don't make a lot of sense in context of the entity
+	// widths of other bosses.
 	void pos_set(
 		screen_x_t left,
 		screen_y_t top,
-		int unknown,
-		screen_x_t move_clamp_left,
-		screen_x_t move_clamp_right,
-		screen_y_t move_clamp_top,
-		screen_y_t move_clamp_bottom
+		int unknown = 48,
+		screen_x_t move_clamp_left = PLAYFIELD_LEFT,
+		screen_x_t move_clamp_right = (PLAYFIELD_RIGHT + SINGYOKU_W),
+		screen_y_t move_clamp_top = PLAYFIELD_TOP,
+		screen_y_t move_clamp_bottom = (PLAYFIELD_BOTTOM - SINGYOKU_H)
 	);
 
 	// Sets [hitbox_orb] to the given coordinates, relative to the top-left

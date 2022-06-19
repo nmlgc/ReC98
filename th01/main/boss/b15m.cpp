@@ -32,12 +32,12 @@ extern "C" {
 }
 #include "th01/formats/stagedat.hpp"
 #include "th01/main/vars.hpp"
-#include "th01/main/boss/entity_a.hpp"
 #include "th01/shiftjis/fns.hpp"
 #include "th01/sprites/pellet.h"
 #include "th01/main/shape.hpp"
 #include "th01/main/particle.hpp"
 #include "th01/main/boss/boss.hpp"
+#include "th01/main/boss/entity_a.hpp"
 #include "th01/main/boss/defeat.hpp"
 #include "th01/main/boss/palette.hpp"
 #include "th01/main/bullet/laser_s.hpp"
@@ -584,24 +584,12 @@ void elis_setup(void)
 	int col;
 	int comp;
 
-	ent_still_or_wave.pos_set(
-		BASE_LEFT, BASE_TOP, 48,
-		PLAYFIELD_LEFT, (PLAYFIELD_RIGHT + ((GIRL_W / 4) * 3)),
-		PLAYFIELD_TOP, (PLAYFIELD_BOTTOM - GIRL_H)
-	);
+	ent_still_or_wave.pos_set(BASE_LEFT, BASE_TOP);
 
 	// These two are redundant, as they're synced with [ent_still_or_wave]
 	// before first use anyway.
-	ent_attack.pos_set(
-		BASE_LEFT, BASE_TOP, 48,
-		PLAYFIELD_LEFT, (PLAYFIELD_RIGHT + ((GIRL_W / 4) * 3)),
-		PLAYFIELD_TOP, (PLAYFIELD_BOTTOM - GIRL_H)
-	);
-	ent_bat.pos_set(
-		BASE_LEFT, BASE_TOP, 48,
-		PLAYFIELD_LEFT, (PLAYFIELD_RIGHT + (BAT_W * 2)),
-		PLAYFIELD_TOP, (PLAYFIELD_BOTTOM - (BAT_H * 3))
-	);
+	ent_attack.pos_set(BASE_LEFT, BASE_TOP);
+	ent_bat.pos_set(BASE_LEFT, BASE_TOP);
 
 	ent_still_or_wave.hitbox_set(
 		GIRL_HITBOX_LEFT, ((GIRL_H / 8) * 1),

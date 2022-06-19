@@ -16,6 +16,7 @@ extern "C" {
 #include "th01/main/playfld.hpp"
 }
 #include "th01/main/player/orb.hpp"
+#include "th01/main/boss/boss.hpp"
 #include "th01/main/boss/entity_a.hpp"
 
 // Slot structures

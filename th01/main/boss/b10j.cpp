@@ -18,13 +18,13 @@ extern "C" {
 #include "th01/main/playfld.hpp"
 #include "th01/main/vars.hpp"
 }
-#include "th01/main/boss/entity_a.hpp"
 #include "th01/shiftjis/fns.hpp"
 #undef MISSILE_FN
 #define MISSILE_FN boss3_m_ptn_0
 extern const char MISSILE_FN[];
 #include "th01/main/particle.hpp"
 #include "th01/main/boss/boss.hpp"
+#include "th01/main/boss/entity_a.hpp"
 #include "th01/main/boss/palette.hpp"
 #include "th01/main/bullet/missile.hpp"
 #include "th01/main/hud/hp.hpp"
@@ -298,11 +298,7 @@ void mima_setup(void)
 	ent_still.set_image(0);
 	ent_anim.set_image(C_METEOR);
 	z_palette_white_in();
-	ent_still.pos_set(
-		(PLAYFIELD_CENTER_X - (MIMA_W / 2)), PLAYFIELD_TOP, 48,
-		PLAYFIELD_LEFT, (PLAYFIELD_RIGHT + ((MIMA_W / 4) * 3)),
-		PLAYFIELD_TOP, (PLAYFIELD_BOTTOM - ((MIMA_H / 5) * 3))
-	);
+	ent_still.pos_set((PLAYFIELD_CENTER_X - (MIMA_W / 2)), PLAYFIELD_TOP);
 	ent_still.hitbox_set(
 		((MIMA_W / 4) * 1), ((MIMA_H / 5) * 1),
 		((MIMA_W / 4) * 3), ((MIMA_H / 5) * 4)
