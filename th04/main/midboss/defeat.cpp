@@ -8,9 +8,7 @@ extern "C" {
 #include "th04/sprites/main_pat.h"
 #include "th04/main/phase.hpp"
 #include "th04/main/score.hpp"
-extern "C" {
 #include "th04/main/playfld.hpp"
-}
 #include "th04/main/pointnum/pointnum.hpp"
 #include "th04/main/midboss/midboss.hpp"
 #include "th04/main/boss/boss.hpp"

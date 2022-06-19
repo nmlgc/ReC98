@@ -1,15 +1,15 @@
 #pragma option -zPmain_01
 
-extern "C" {
 #include <stddef.h>
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
+extern "C" {
 #include "th02/hardware/frmdelay.h"
 #include "th03/formats/cdg.h"
-#include "th04/main/playfld.hpp"
 }
+#include "th04/main/playfld.hpp"
 #include "th04/main/stage/stage.hpp"
 #include "th04/sprites/main_cdg.h"
 #include "th04/main/ems.hpp"

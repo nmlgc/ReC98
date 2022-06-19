@@ -10,10 +10,8 @@
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
-extern "C" {
 #include "th01/hardware/egc.h"
 #include "th01/main/playfld.hpp"
-}
 #include "th01/main/player/player.hpp"
 
 #include "th01/main/stage/palette.cpp"

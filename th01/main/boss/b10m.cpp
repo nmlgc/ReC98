@@ -1,13 +1,11 @@
 /// Makai Stage 10 Boss - YuugenMagan
 /// ---------------------------------
 
-extern "C" {
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
 #include "th01/main/vars.hpp"
 #include "th01/formats/ptn.hpp"
-}
 
 #define flash_colors	yuugenmagan_flash_colors
 #define invincible	yuugenmagan_invincible

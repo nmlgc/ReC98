@@ -1,12 +1,12 @@
 #pragma option -zCSHARED -3
 
-extern "C" {
 #include <mem.h>
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
 #include "th02/main/playfld.hpp"
+extern "C" {
 #include "th02/main/tile/tile.hpp"
 #include "th02/formats/mpn.hpp"
 

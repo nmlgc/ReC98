@@ -12,8 +12,8 @@
 #include "pc98kbd.h"
 #include "master.hpp"
 #include "th01/rank.h"
-extern "C" {
 #include "th01/hardware/egc.h"
+extern "C" {
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/input.hpp"

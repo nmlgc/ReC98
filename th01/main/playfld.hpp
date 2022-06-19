@@ -15,8 +15,8 @@
 		((PLAYFIELD_BOTTOM - PLAYFIELD_TOP) / 2) + PLAYFIELD_TOP
 	);
 #endif
-}
 
+extern "C++" {
 static inline pixel_t playfield_fraction_x(float fraction = 1.0f) {
 	return ((int)(PLAYFIELD_W * fraction));
 }
@@ -33,8 +33,8 @@ static inline pixel_t playfield_fraction_x(int numerator, int denumerator) {
 static inline pixel_t playfield_fraction_y(int numerator, int denumerator) {
 	return ((PLAYFIELD_H / denumerator) * numerator);
 }
+}
 
-extern "C" {
 #ifdef rand
 // Calculates a random X value that spans the given [fraction] of the
 // playfield.

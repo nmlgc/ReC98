@@ -8,16 +8,16 @@
 #include "th01/v_colors.hpp"
 #include "th01/math/area.hpp"
 #include "th01/math/subpixel.hpp"
-extern "C" {
 #include "th01/hardware/egc.h"
+extern "C" {
 #include "th01/hardware/graph.h"
 #include "th01/hardware/palette.h"
 #include "th01/formats/grp.h"
+}
 #include "th01/formats/pf.hpp"
 #include "th01/formats/ptn.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/vars.hpp"
-}
 #include "th01/shiftjis/fns.hpp"
 #undef MISSILE_FN
 #define MISSILE_FN boss3_m_ptn_0

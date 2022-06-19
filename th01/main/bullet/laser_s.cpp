@@ -1,16 +1,16 @@
-extern "C" {
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
 #include "th01/sprites/laser_s.h"
 #include "th01/hardware/egc.h"
+extern "C" {
 #include "th01/hardware/graph.h"
+}
 #include "th01/hardware/input.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/player/player.hpp"
 #include "th01/main/bullet/laser_s.hpp"
-}
 
 void CShootoutLaser::spawn(
 	screen_x_t _origin_left,

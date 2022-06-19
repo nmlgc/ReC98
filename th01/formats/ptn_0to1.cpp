@@ -1,10 +1,11 @@
 #pragma option -zCSHARED
 
-extern "C" {
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
+extern "C" {
 #include "th01/hardware/graph.h"
+}
 #include "th01/formats/ptn.hpp"
 
 void ptn_copy_8_0_to_1(screen_x_t left, vram_y_t top)
@@ -17,6 +18,4 @@ void ptn_copy_8_0_to_1(screen_x_t left, vram_y_t top)
 		vram_offset += ROW_SIZE;
 	}
 	graph_accesspage_func(0);
-}
-
 }

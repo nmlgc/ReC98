@@ -9,9 +9,8 @@
 extern "C" {
 #include "th01/formats/grc.cpp"
 #include "th01/hardware/grcg8x8m.cpp"
+}
 #include "th01/hardware/egc.h"
 #include "th01/math/polar.hpp"
-#include "th01/math/vector.hpp"
-}
 
 #include "th01/main/shape.cpp"

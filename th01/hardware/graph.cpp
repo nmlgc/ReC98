@@ -1,4 +1,3 @@
-extern "C" {
 #include <dos.h>
 #include <mem.h>
 #include <mbctype.h>
@@ -10,6 +9,7 @@ extern "C" {
 #include "th01/v_colors.hpp"
 #include "th01/math/clamp.hpp"
 #include "th01/hardware/egc.h"
+extern "C" {
 #include "th01/hardware/vsync.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/palette.h"

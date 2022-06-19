@@ -1,4 +1,3 @@
-extern "C" {
 #include "th01/formats/ptn.hpp"
 
 void ptn_snap_8(screen_x_t left, vram_y_t top, int ptn_id)
@@ -50,6 +49,4 @@ void ptn_snap_quarter_8(
 		#undef snap_quarter_plane
 		vram_offset += ROW_SIZE;
 	}
-}
-
 }

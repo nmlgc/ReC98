@@ -5,9 +5,7 @@
 #include "master.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th04/math/motion.hpp"
-extern "C" {
 #include "th04/main/playfld.hpp"
-}
 #include "th04/main/phase.hpp"
 #include "th04/main/enemy/size.hpp"
 #include "th04/main/midboss/midboss.hpp"

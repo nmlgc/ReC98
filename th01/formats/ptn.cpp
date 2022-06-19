@@ -1,14 +1,17 @@
 #pragma option -zCPTN_GRP_GRZ
 
-extern "C" {
 #include <stddef.h>
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
+extern "C" {
 #include "th01/hardware/palette.h"
+}
 #include "th01/formats/ptn.hpp"
+extern "C" {
 #include "th01/formats/pf.hpp"
+}
 
 extern int flag_palette_show;
 
@@ -137,6 +140,4 @@ void ptn_put_quarter_noalpha_8(
 		#undef put_quarter_noalpha
 		vram_offset += ROW_SIZE;
 	}
-}
-
 }

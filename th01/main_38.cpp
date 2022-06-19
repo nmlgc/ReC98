@@ -3,7 +3,6 @@
  * Code segment #38 of TH01's REIIDEN.EXE
  */
 
-extern "C" {
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
@@ -11,18 +10,19 @@ extern "C" {
 #include "th01/common.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
+extern "C" {
 #include "th01/snd/mdrv2.h"
-#include "th01/formats/ptn.hpp"
 #include "th01/hardware/graph.h"
+}
 #include "th01/hardware/egc.h"
 #include "th01/hardware/input.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th01/math/polar.hpp"
 #include "th01/math/vector.hpp"
+#include "th01/formats/ptn.hpp"
 #include "th01/main/vars.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/player/player.hpp"
-}
 #include "th01/main/player/shot.hpp"
 #include "th01/main/bullet/pellet.hpp"
 #include "th01/main/bullet/pellet_c.hpp"

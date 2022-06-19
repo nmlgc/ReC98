@@ -6,12 +6,12 @@
 #include "th01/v_colors.hpp"
 extern "C" {
 #include "th01/hardware/graph.h"
+}
 #include "th01/main/vars.hpp"
 #include "th01/formats/ptn.hpp"
 #include "th01/formats/grf.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/player/player.hpp"
-}
 #include "th01/core/str_val.hpp"
 #include "th01/main/hud/hud.hpp"
 #include "th01/main/stage/timer.hpp"

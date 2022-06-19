@@ -1,6 +1,4 @@
-extern "C" {
 #include "th01/main/playfld.hpp"
-}
 #include "th01/main/player/player.hpp"
 
 void player_move_and_clamp(pixel_t delta)

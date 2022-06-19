@@ -3,9 +3,7 @@
 #include "master.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th04/math/motion.hpp"
-extern "C" {
 #include "th04/main/playfld.hpp"
-}
 #include "th05/main/player/player.hpp"
 
 unsigned char pascal near player_angle_from(

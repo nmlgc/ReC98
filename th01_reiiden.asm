@@ -125,8 +125,8 @@ main_011_TEXT	segment	byte public 'CODE' use16
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public _bomb_kuji_load
-_bomb_kuji_load	proc far
+public @bomb_kuji_load$qv
+@bomb_kuji_load$qv	proc far
 		push	bp
 		mov	bp, sp
 		call	_grc_load stdcall, GRC_SLOT_BOMB_KUJI_1, offset aKuzi1_grc, ds
@@ -134,7 +134,7 @@ _bomb_kuji_load	proc far
 		add	sp, 0Ch
 		pop	bp
 		retf
-_bomb_kuji_load	endp
+@bomb_kuji_load$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -160,7 +160,7 @@ var_2		= word ptr -2
 		cmp	[bp+@@frame], 0
 		jnz	loc_BF82
 		call	@CPellets@decay$qv c, offset _Pellets, ds
-		call	_ptn_put_8 c, _player_left, (PTN_MIKO_L_CAST shl 16) or _player_top
+		call	@ptn_put_8$qiii c, _player_left, (PTN_MIKO_L_CAST shl 16) or _player_top
 		xor	si, si
 		jmp	short loc_BF75
 ; ---------------------------------------------------------------------------
@@ -311,7 +311,7 @@ loc_C014:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+3DCDh]
-		call	_egc_copy_rect_1_to_0_16
+		call	@egc_copy_rect_1_to_0_16$qiiii
 		add	sp, 8
 		mov	ax, [bp+var_2]
 		imul	ax, 0Ah
@@ -436,7 +436,7 @@ loc_C150:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+3DCDh]
-		call	_egc_copy_rect_1_to_0_16
+		call	@egc_copy_rect_1_to_0_16$qiiii
 		add	sp, 8
 		inc	si
 
@@ -838,7 +838,7 @@ loc_C855:
 		cwd
 		idiv	bx
 		add	ax, 3
-		call	_ptn_unput_8 c, _orb_prev_left, _orb_prev_top, ax
+		call	@ptn_unput_8$qiii c, _orb_prev_left, _orb_prev_top, ax
 
 loc_C879:
 		mov	ax, si
@@ -859,7 +859,7 @@ loc_C88B:
 		cwd
 		idiv	bx
 		add	ax, PTN_ORB
-		call	_ptn_put_8 c, _orb_cur_left, _orb_cur_top, ax
+		call	@ptn_put_8$qiii c, _orb_cur_left, _orb_cur_top, ax
 
 loc_C8B6:
 		mov	ax, _orb_cur_left
@@ -978,14 +978,14 @@ loc_C9A2:
 		jz	loc_CB91
 		cmp	_input_lr, INPUT_LEFT
 		jnz	short loc_C9E6
-		call	_egc_copy_rect_1_to_0_16 c, large (144 shl 16) or 320, large (16 shl 16) or 16
+		call	@egc_copy_rect_1_to_0_16$qiiii c, large (144 shl 16) or 320, large (16 shl 16) or 16
 		call	_graph_putsa_fx c, 256, large (7 shl 16) or 144, offset aB, ds	; "Åú"
 		mov	[bp+var_1], 0
 
 loc_C9E6:
 		cmp	_input_lr, INPUT_RIGHT
 		jnz	short loc_CA1A
-		call	_egc_copy_rect_1_to_0_16 c, large (144 shl 16) or 256, large (16 shl 16) or 16
+		call	@egc_copy_rect_1_to_0_16$qiiii c, large (144 shl 16) or 256, large (16 shl 16) or 16
 		call	_graph_putsa_fx c, 320, large (7 shl 16) or 144, offset aB, ds	; "Åú"
 		mov	[bp+var_1], 1
 
@@ -1003,8 +1003,8 @@ loc_CA30:
 		jnz	loc_C9A2
 
 loc_CA39:
-		call	_egc_copy_rect_1_to_0_16 c, large (128 shl 16) or 276, large (16 shl 16) or 80
-		call	_egc_copy_rect_1_to_0_16 c, large (144 shl 16) or 256, large (16 shl 16) or 112
+		call	@egc_copy_rect_1_to_0_16$qiiii c, large (128 shl 16) or 276, large (16 shl 16) or 80
+		call	@egc_copy_rect_1_to_0_16$qiiii c, large (144 shl 16) or 256, large (16 shl 16) or 112
 		push	14h
 		call	_frame_delay
 		pop	cx
@@ -1029,14 +1029,14 @@ loc_CACF:
 		jz	loc_CB91
 		cmp	_input_lr, INPUT_LEFT
 		jnz	short loc_CB13
-		call	_egc_copy_rect_1_to_0_16 c, large (144 shl 16) or 336, large (16 shl 16) or 16
+		call	@egc_copy_rect_1_to_0_16$qiiii c, large (144 shl 16) or 336, large (16 shl 16) or 16
 		call	_graph_putsa_fx c, 224, large (7 shl 16) or 144, offset aB, ds	; "Åú"
 		mov	[bp+var_1], 0
 
 loc_CB13:
 		cmp	_input_lr, INPUT_RIGHT
 		jnz	short loc_CB47
-		call	_egc_copy_rect_1_to_0_16 c, large (144 shl 16) or 224, large (16 shl 16) or 16
+		call	@egc_copy_rect_1_to_0_16$qiiii c, large (144 shl 16) or 224, large (16 shl 16) or 16
 		call	_graph_putsa_fx c, 336, large (7 shl 16) or 144, offset aB, ds	; "Åú"
 		mov	[bp+var_1], 1
 
@@ -1077,7 +1077,7 @@ loc_CB91:
 loc_CB96:
 		call	_z_palette_set_all_show c, offset _stage_palette, ds
 		call	_input_reset_sense
-		call	_egc_copy_rect_1_to_0_16 c, large (128 shl 16) or 232, large (32 shl 16) or 176
+		call	@egc_copy_rect_1_to_0_16$qiiii c, large (128 shl 16) or 232, large (32 shl 16) or 176
 		xor	ax, ax
 		leave
 		retf
@@ -1247,7 +1247,7 @@ var_2		= word ptr -2
 		call	SCOPY@
 		call	@items_bomb_reset$qv
 		call	@items_point_reset$qv
-		call	_ptn_put_8 c, _orb_cur_left, _orb_cur_top, 3
+		call	@ptn_put_8$qiii c, _orb_cur_left, _orb_cur_top, 3
 		call	IRand
 		mov	bx, 8
 		cwd
@@ -1263,7 +1263,7 @@ loc_CEA3:
 
 loc_CEA5:
 		add	ax, 56h
-		call	_ptn_put_8 c, _player_left, _player_top, ax
+		call	@ptn_put_8$qiii c, _player_left, _player_top, ax
 		xor	di, di
 		jmp	short loc_CEDA
 ; ---------------------------------------------------------------------------
@@ -1318,7 +1318,7 @@ loc_CF04:
 		lea	ax, [bp+var_A]
 		add	bx, ax
 		push	word ptr ss:[bx]
-		call	_egc_copy_rect_1_to_0_16
+		call	@egc_copy_rect_1_to_0_16$qiiii
 		add	sp, 8
 
 loc_CF30:
@@ -1409,7 +1409,7 @@ loc_CFBC:
 		lea	ax, [bp+var_A]
 		add	bx, ax
 		push	word ptr ss:[bx]
-		call	_ptn_put_8
+		call	@ptn_put_8$qiii
 		add	sp, 6
 
 loc_CFF7:
@@ -1954,7 +1954,7 @@ sub_D487	proc far
 ; ---------------------------------------------------------------------------
 
 loc_D495:
-		call	_ptn_free stdcall, si
+		call	@ptn_free$q15main_ptn_slot_t stdcall, si
 		pop	cx
 		cmp	si, 4
 		jge	short loc_D4A8
@@ -2569,9 +2569,9 @@ loc_D9CA:
 		call	@items_point_reset$qv
 		cmp	_ptn_slot_stg_has_reduced_sprites, 0
 		jnz	short loc_DA2A
-		call	_ptn_free stdcall, PTN_SLOT_STG
+		call	@ptn_free$q15main_ptn_slot_t stdcall, PTN_SLOT_STG
 		pop	cx
-		call	_ptn_load c, PTN_SLOT_STG, offset aStg_b_ptn, ds ; "stg_b.ptn"
+		call	@ptn_load$q15main_ptn_slot_tnxc c, PTN_SLOT_STG, offset aStg_b_ptn, ds ; "stg_b.ptn"
 		mov	_ptn_slot_stg_has_reduced_sprites, 1
 		jmp	short loc_DA2A
 ; ---------------------------------------------------------------------------
@@ -2579,9 +2579,9 @@ loc_D9CA:
 loc_DA06:
 		cmp	_ptn_slot_stg_has_reduced_sprites, 0
 		jz	short loc_DA2A
-		call	_ptn_free stdcall, PTN_SLOT_STG
+		call	@ptn_free$q15main_ptn_slot_t stdcall, PTN_SLOT_STG
 		pop	cx
-		call	_ptn_load c, PTN_SLOT_STG, offset _PTN_STG_CARDFLIP_FN, ds	; "stg.ptn"
+		call	@ptn_load$q15main_ptn_slot_tnxc c, PTN_SLOT_STG, offset _PTN_STG_CARDFLIP_FN, ds	; "stg.ptn"
 		mov	_ptn_slot_stg_has_reduced_sprites, 0
 		jmp	short $+2
 
@@ -2690,8 +2690,8 @@ loc_DB0A:
 loc_DB3E:
 		call	@player_unput_update_render$qi stdcall, 0
 		pop	cx
-		call	_ptn_put_8 c, _player_left, large (PTN_MIKO_L shl 16) or _player_top
-		call	_ptn_put_8 c, _orb_cur_left, _orb_cur_top, 3
+		call	@ptn_put_8$qiii c, _player_left, large (PTN_MIKO_L shl 16) or _player_top
+		call	@ptn_put_8$qiii c, _orb_cur_left, _orb_cur_top, 3
 		mov	word_34A74, 0
 		mov	_input_lr, 0
 		mov	_input_shot, 0
@@ -3370,15 +3370,15 @@ graph_TEXT	ends
 ; Segment type:	Pure code
 SHARED	segment	byte public 'CODE' use16
 	extern _vram_planes_set:proc
-	extern _egc_copy_rect_1_to_0_16:proc
+	extern @egc_copy_rect_1_to_0_16$qiiii:proc
 SHARED	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
 PTN_GRP_GRZ	segment	byte public 'CODE' use16
-	extern _ptn_load:proc
-	extern _ptn_free:proc
+	extern @ptn_load$q15main_ptn_slot_tnxc:proc
+	extern @ptn_free$q15main_ptn_slot_t:proc
 	extern _grp_palette_load_show_sane:proc
 	extern _grp_palette_load_show:proc
 	extern _grp_put:proc
@@ -3526,8 +3526,8 @@ GRAPH_EX_TEXT	ends
 ; ===========================================================================
 
 main_14_TEXT	segment	byte public 'CODE' use16
-	extern _vector2_between:proc
-	extern _vector2:proc
+	extern @vector2_between$qiiiimit5i:proc
+	extern @vector2$qmit1iuc:proc
 main_14_TEXT	ends
 
 ; ===========================================================================
@@ -3676,7 +3676,7 @@ loc_12BCE:
 		push	ax
 		push	[bp+@@top]
 		push	[bp+@@left]
-		call	_ptn_put_quarter_8
+		call	@ptn_put_quarter_8$qiiii
 		add	sp, 8
 		mov	ax, si
 		mov	bx, 10
@@ -3723,7 +3723,7 @@ loc_12C2C:
 		push	ax
 		push	[bp+@@top]
 		push	[bp+@@left]
-		call	_ptn_put_quarter_8
+		call	@ptn_put_quarter_8$qiiii
 		add	sp, 8
 		mov	_ptn_sloppy_unput_before_alpha_pu, 0
 		pop	di
@@ -4071,7 +4071,7 @@ sub_12F62	proc near
 		push	1
 		call	_graph_accesspage_func
 		call	_grp_put stdcall, offset aClear3_grp, ds ; "CLEAR3.grp"
-		call	_ptn_load stdcall, PTN_SLOT_NUMB, offset aNumb_ptn, ds ; "numb.ptn"
+		call	@ptn_load$q15main_ptn_slot_tnxc stdcall, PTN_SLOT_NUMB, offset aNumb_ptn, ds ; "numb.ptn"
 		push	0
 		call	_graph_accesspage_func
 		add	sp, 0Eh
@@ -4617,14 +4617,14 @@ arg_0		= word ptr  6
 		cwd
 		idiv	bx
 		add	ax, (7 * PTN_IMAGES_PER_SLOT)
-		call	_ptn_put_8 stdcall, (14 shl 16) or 224, ax
+		call	@ptn_put_8$qiii stdcall, (14 shl 16) or 224, ax
 		add	sp, 6
 		mov	ax, [bp+arg_0]
 		mov	bx, 10
 		cwd
 		idiv	bx
 		add	dx, (7 * PTN_IMAGES_PER_SLOT)
-		call	_ptn_put_8 stdcall, (14 shl 16) or 256, dx
+		call	@ptn_put_8$qiii stdcall, (14 shl 16) or 256, dx
 		add	sp, 6
 		push	1Eh
 		call	_frame_delay
@@ -5000,7 +5000,7 @@ loc_13933:
 
 loc_13941:
 		mov	score_34A5E, 0
-		call	_ptn_free stdcall, PTN_SLOT_NUMB
+		call	@ptn_free$q15main_ptn_slot_t stdcall, PTN_SLOT_NUMB
 		pop	cx
 		pop	di
 		pop	si
@@ -5190,9 +5190,9 @@ main_26_TEXT	ends
 
 ; Segment type:	Pure code
 main_27_TEXT	segment	byte public 'CODE' use16
-	extern _ptn_unput_8:proc
-	extern _ptn_put_8:proc
-	extern _ptn_put_quarter_8:proc
+	extern @ptn_unput_8$qiii:proc
+	extern @ptn_put_8$qiii:proc
+	extern @ptn_put_quarter_8$qiiii:proc
 	extern @player_unput_update_render$qi:proc
 OR_NONE = 0
 	extern @orb_player_hittest$qi:proc
@@ -5285,7 +5285,7 @@ _yuugenmagan_load	proc c
 		push	ax
 		call	@CBossEntity@metadata_get$xqmimuct1t1
 		nopcall	sub_1B383
-		call	_ptn_load stdcall, PTN_SLOT_MISSILE, offset aBoss3_m_ptn, ds ; "boss3_m.ptn"
+		call	@ptn_load$q15main_ptn_slot_tnxc stdcall, PTN_SLOT_MISSILE, offset aBoss3_m_ptn, ds ; "boss3_m.ptn"
 		mov	_Missiles.MISSILE_ptn_id_base, (PTN_SLOT_MISSILE * PTN_IMAGES_PER_SLOT)
 		call	@CMissiles@reset$qv stdcall, offset _Missiles, ds
 		add	sp, 32h
@@ -5407,7 +5407,7 @@ _yuugenmagan_free	proc far
 		push	bp
 		mov	bp, sp
 		call	@bos_entity_free$qi stdcall, 0
-		call	_ptn_free stdcall, PTN_SLOT_MISSILE
+		call	@ptn_free$q15main_ptn_slot_t stdcall, PTN_SLOT_MISSILE
 		add	sp, 4
 		pop	bp
 		retf
@@ -5715,7 +5715,7 @@ arg_2		= word ptr  6
 		push	ss
 		lea	ax, [bp+@@vector_x]
 		push	ax
-		call	_vector2
+		call	@vector2$qmit1iuc
 		add	sp, 0Ch
 		push	0		; char
 		mov	ax, [bp+@@vector_y]
@@ -5748,7 +5748,7 @@ arg_2		= word ptr  6
 		push	ss
 		lea	ax, [bp+@@vector_x]
 		push	ax
-		call	_vector2
+		call	@vector2$qmit1iuc
 		add	sp, 0Ch
 		push	0		; char
 		mov	ax, [bp+@@vector_y]
@@ -8970,7 +8970,7 @@ loc_1DC6D:
 		jnz	short loc_1DCD0
 		cmp	point_39DFC.y, 300
 		jge	short loc_1DCAB
-		call	_vector2_between c, point_39DFC.x, point_39DFC.y, _player_left, RES_Y, offset x_39E02, ds, offset y_39E00, ds, bx
+		call	@vector2_between$qiiiimit5i c, point_39DFC.x, point_39DFC.y, _player_left, RES_Y, offset x_39E02, ds, offset y_39E00, ds, bx
 
 loc_1DCAB:
 		mov	ax, _boss_phase_frame
@@ -9031,7 +9031,7 @@ loc_1DD9F:
 
 loc_1DDAD:
 		mov	_boss_phase_frame, 0
-		call	_vector2_between c, point_39DFC.x, point_39DFC.y, _player_left, RES_Y, offset x_39E02, ds, offset y_39E00, ds, 4
+		call	@vector2_between$qiiiimit5i c, point_39DFC.x, point_39DFC.y, _player_left, RES_Y, offset x_39E02, ds, offset y_39E00, ds, 4
 
 loc_1DDD4:
 		cmp	word_39E10, 9
@@ -9044,7 +9044,7 @@ loc_1DDD4:
 		jnz	short loc_1DE37
 		cmp	point_39DFC.y, 260
 		jge	short loc_1DE12
-		call	_vector2_between c, point_39DFC.x, point_39DFC.y, _player_left, RES_Y, offset x_39E02, ds, offset y_39E00, ds, bx
+		call	@vector2_between$qiiiimit5i c, point_39DFC.x, point_39DFC.y, _player_left, RES_Y, offset x_39E02, ds, offset y_39E00, ds, bx
 
 loc_1DE12:
 		mov	ax, y_39E00
@@ -9958,7 +9958,7 @@ loc_1EBD8:
 		push	ax
 		push	di
 		push	si
-		call	_vector2_between
+		call	@vector2_between$qiiiimit5i
 		add	sp, 12h
 		mov	[bp+var_12], 0
 		jmp	short loc_1EC62
@@ -10936,7 +10936,7 @@ loc_1F4F8:
 		mov	ax, [bx+5497h]
 		add	ax, -16
 		push	ax
-		call	_egc_copy_rect_1_to_0_16
+		call	@egc_copy_rect_1_to_0_16$qiiii
 		add	sp, 14h
 		mov	bx, si
 		add	bx, bx
@@ -11067,7 +11067,7 @@ loc_1F644:
 		push	ss
 		lea	ax, [bp+@@vector_x]
 		push	ax
-		call	_vector2
+		call	@vector2$qmit1iuc
 		add	sp, 0Ch
 		xor	si, si
 		jmp	short loc_1F6CF
@@ -12482,7 +12482,7 @@ loc_21364:
 		les	bx, _obstacles_left
 		add	bx, ax
 		push	word ptr es:[bx]
-		call	_ptn_put_8
+		call	@ptn_put_8$qiii
 		add	sp, 6
 		push	0
 		call	_graph_accesspage_func
@@ -12498,7 +12498,7 @@ loc_21364:
 		les	bx, _obstacles_left
 		add	bx, ax
 		push	word ptr es:[bx]
-		call	_ptn_put_8
+		call	@ptn_put_8$qiii
 		add	sp, 6
 		mov	ax, si
 		add	ax, ax
@@ -12612,7 +12612,7 @@ loc_21467:
 		les	bx, _obstacles_left
 		add	bx, ax
 		push	word ptr es:[bx]
-		call	_ptn_put_8
+		call	@ptn_put_8$qiii
 		add	sp, 6
 		mov	ax, si
 		add	ax, ax
@@ -12644,7 +12644,7 @@ loc_214D3:
 		les	bx, _obstacles_left
 		add	bx, ax
 		push	word ptr es:[bx]
-		call	_ptn_put_8
+		call	@ptn_put_8$qiii
 		add	sp, 6
 		push	0
 		call	_graph_accesspage_func
@@ -12660,7 +12660,7 @@ loc_214D3:
 		les	bx, _obstacles_left
 		add	bx, ax
 		push	word ptr es:[bx]
-		call	_ptn_put_8
+		call	@ptn_put_8$qiii
 		add	sp, 6
 		mov	ax, si
 		add	ax, ax
@@ -12715,7 +12715,7 @@ arg_2		= word ptr  8
 		mov	_portals_blocked, 0
 		cmp	_orb_in_portal, 0
 		jz	loc_21815
-		call	_ptn_put_8 c, _portal_dst_left, _portal_dst_top, PTN_PORTAL
+		call	@ptn_put_8$qiii c, _portal_dst_left, _portal_dst_top, PTN_PORTAL
 		jmp	loc_217F2
 ; ---------------------------------------------------------------------------
 
@@ -12745,7 +12745,7 @@ loc_215D2:
 		mov	word ptr es:[bx], 1
 		mov	word_39EB7, si
 		mov	_portals_blocked, 1
-		call	_egc_copy_rect_1_to_0_16 c, _orb_prev_left, _orb_prev_top, large ORB_W or (ORB_H shl 16)
+		call	@egc_copy_rect_1_to_0_16$qiiii c, _orb_prev_left, _orb_prev_top, large ORB_W or (ORB_H shl 16)
 		push	(PTN_PORTAL_ANIM + 0)
 
 loc_2160F:
@@ -12761,7 +12761,7 @@ loc_2160F:
 		push	word ptr es:[bx]
 
 loc_21629:
-		call	_ptn_put_8
+		call	@ptn_put_8$qiii
 		add	sp, 6
 		jmp	loc_21815
 ; ---------------------------------------------------------------------------
@@ -12784,7 +12784,7 @@ loc_21634:
 		les	bx, _obstacles_left
 		add	bx, ax
 		push	word ptr es:[bx]
-		call	_egc_copy_rect_1_to_0_16
+		call	@egc_copy_rect_1_to_0_16$qiiii
 		add	sp, 8
 		push	(PTN_PORTAL_ANIM + 1)
 		jmp	short loc_2160F
@@ -12808,7 +12808,7 @@ loc_21670:
 		les	bx, _obstacles_left
 		add	bx, ax
 		push	word ptr es:[bx]
-		call	_egc_copy_rect_1_to_0_16
+		call	@egc_copy_rect_1_to_0_16$qiiii
 		add	sp, 8
 		push	PTN_PORTAL
 		mov	ax, si
@@ -12821,7 +12821,7 @@ loc_21670:
 		les	bx, _obstacles_left
 		add	bx, ax
 		push	word ptr es:[bx]
-		call	_ptn_put_8
+		call	@ptn_put_8$qiii
 		add	sp, 6
 		xor	di, di
 		mov	[bp+var_2], 0
@@ -12870,7 +12870,7 @@ loc_2170D:
 		add	bx, ax
 		mov	ax, es:[bx]
 		mov	_portal_dst_top, ax
-		call	_egc_copy_rect_1_to_0_16 c, _portal_dst_left, ax, large (32 shl 16) or 32
+		call	@egc_copy_rect_1_to_0_16$qiiii c, _portal_dst_left, ax, large (32 shl 16) or 32
 		push	(PTN_PORTAL_ANIM + 1)
 
 loc_21742:
@@ -12886,7 +12886,7 @@ loc_2174D:
 		add	bx, ax
 		cmp	word ptr es:[bx], 30
 		jnz	short loc_21777
-		call	_egc_copy_rect_1_to_0_16 c, _portal_dst_left, _portal_dst_top, large (32 shl 16) or 32
+		call	@egc_copy_rect_1_to_0_16$qiiii c, _portal_dst_left, _portal_dst_top, large (32 shl 16) or 32
 		push	(PTN_PORTAL_ANIM + 0)
 		jmp	short loc_21742
 ; ---------------------------------------------------------------------------
@@ -12898,8 +12898,8 @@ loc_21777:
 		add	bx, ax
 		cmp	word ptr es:[bx], 40
 		jnz	short loc_217FA
-		call	_egc_copy_rect_1_to_0_16 c, _portal_dst_left, _portal_dst_top, large (32 shl 16) or 32
-		call	_ptn_put_8 c, _portal_dst_left, _portal_dst_top, PTN_PORTAL
+		call	@egc_copy_rect_1_to_0_16$qiiii c, _portal_dst_left, _portal_dst_top, large (32 shl 16) or 32
+		call	@ptn_put_8$qiii c, _portal_dst_left, _portal_dst_top, PTN_PORTAL
 		call	IRand
 		mov	bx, 5
 		cwd
@@ -13619,7 +13619,7 @@ loc_2292E:
 
 loc_22939:
 		push	singyoku_sphere.BE_cur_left
-		call	_egc_copy_rect_1_to_0_16
+		call	@egc_copy_rect_1_to_0_16$qiiii
 		add	sp, 8
 
 loc_22945:
@@ -13641,7 +13641,7 @@ loc_22956:
 		push	ax
 
 loc_2296D:
-		call	_egc_copy_rect_1_to_0_16
+		call	@egc_copy_rect_1_to_0_16$qiiii
 		add	sp, 8
 
 loc_22975:
@@ -13844,7 +13844,7 @@ loc_22ABA:
 		mov	ax, singyoku_sphere.BE_cur_left
 		add	ax, 32
 		push	ax
-		call	_vector2_between
+		call	@vector2_between$qiiiimit5i
 		add	sp, 1Eh
 
 loc_22AFE:

@@ -1,6 +1,5 @@
 #include "th01/hardware/egcstart.cpp"
 
-extern "C" {
 void egc_copy_rect_1_to_0_16(screen_x_t x, vram_y_t y, pixel_t w, pixel_t h)
 {
 	register screen_x_t x_end = x;
@@ -23,5 +22,4 @@ void egc_copy_rect_1_to_0_16(screen_x_t x, vram_y_t y, pixel_t w, pixel_t h)
 		row_p += ROW_SIZE;
 	}
 	egc_off();
-}
 }

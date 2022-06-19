@@ -5,13 +5,15 @@
 #include "th01/common.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
-extern "C" {
+#include "th01/math/area.hpp"
 #include "th01/main/playfld.hpp"
+extern "C" {
 #include "th01/formats/pf.hpp"
+}
 #include "th01/formats/ptn.hpp"
 #include "th01/formats/stagedat.hpp"
-#include "th01/math/area.hpp"
 #include "th01/hardware/egc.h"
+extern "C" {
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/input.hpp"

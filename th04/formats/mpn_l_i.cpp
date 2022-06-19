@@ -1,6 +1,5 @@
 #pragma option -zCSHARED -3
 
-extern "C" {
 #include <stddef.h>
 #include <mem.h>
 #include "platform.h"
@@ -8,6 +7,7 @@ extern "C" {
 #include "planar.h"
 #include "master.hpp"
 #include "th04/main/playfld.hpp"
+extern "C" {
 #include "th04/main/tile/tile.hpp"
 #include "th04/formats/mpn.hpp"
 

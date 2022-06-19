@@ -8,14 +8,14 @@
 #include "planar.h"
 #include "master.hpp"
 #include "th01/v_colors.hpp"
-extern "C" {
 #include "th01/hardware/egc.h"
+extern "C" {
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/input.hpp"
 #include "th01/snd/mdrv2.h"
-#include "th01/formats/ptn.hpp"
 }
+#include "th01/formats/ptn.hpp"
 #include "th01/hardware/grpinv32.hpp"
 #include "th01/formats/pf.hpp"
 #include "th01/math/area.hpp"
@@ -24,9 +24,7 @@ extern "C" {
 #include "th01/math/subpixel.hpp"
 #include "th01/sprites/pellet.h"
 #include "th01/main/particle.hpp"
-extern "C" {
 #include "th01/main/playfld.hpp"
-}
 #include "th01/formats/stagedat.hpp"
 #include "th01/main/vars.hpp"
 #include "th01/main/hud/hp.hpp"

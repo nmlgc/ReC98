@@ -1,6 +1,6 @@
 #include "th01/math/clamp.hpp"
-extern "C" {
 #include "th01/hardware/egc.h"
+extern "C" {
 #include "th01/hardware/frmdelay.h"
 }
 #include "th01/hardware/grp2xscs.hpp"

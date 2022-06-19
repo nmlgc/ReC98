@@ -445,7 +445,7 @@ loc_AF2D:
 		GRCG_OFF_CLOBBERING dx
 		call	_overlay1
 		call	_overlay2
-		call	_playfield_shake_update_and_rende
+		call	@playfield_shake_update_and_rende$qv
 		call	far ptr	_input_reset_sense
 		mov	al, _slowdown_caused_by_bullets
 		mov	ah, 0
@@ -4586,7 +4586,7 @@ sub_10214	endp
 main__TEXT	ends
 
 PLAYFLD_TEXT	segment	byte public 'CODE' use16
-	_playfield_shake_update_and_rende procdesc pascal near
+	@playfield_shake_update_and_rende$qv procdesc pascal near
 PLAYFLD_TEXT	ends
 
 main_0_TEXT	segment	byte public 'CODE' use16

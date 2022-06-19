@@ -24,15 +24,17 @@ extern "C" {
 #include "th01/snd/mdrv2.h"
 #include "th01/formats/grp.h"
 #include "th01/formats/pf.hpp"
+}
 #include "th01/formats/ptn.hpp"
+extern "C" {
 #include "th01/hiscore/scoredat.hpp"
 #include "th01/main/debug.hpp"
+}
 #include "th01/main/playfld.hpp"
 #include "th01/main/vars.hpp"
 #include "th01/formats/stagedat.hpp"
 #include "th01/main/player/anim.hpp"
 #include "th01/main/player/bomb.hpp"
-}
 #include "th01/main/player/player.hpp"
 #include "th01/main/bullet/laser_s.hpp"
 #include "th01/main/stage/palette.hpp"

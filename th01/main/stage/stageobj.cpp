@@ -6,16 +6,16 @@
 #include "planar.h"
 #include "master.hpp"
 #include "th01/common.h"
-extern "C" {
 #include "th01/main/playfld.hpp"
 #include "th01/formats/ptn.hpp"
+extern "C" {
 #include "th01/formats/pf.hpp"
 #include "th01/formats/stagedat.hpp"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
+}
 #include "th01/main/vars.hpp"
 #include "th01/main/stage/stages.hpp"
-}
 
 #include "th01/main/stage/stageobj.hpp"
 

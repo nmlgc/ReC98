@@ -5,8 +5,8 @@
 #include "th04/main/frames.h"
 extern "C" {
 #include "th04/main/null.hpp"
-#include "th04/main/playfld.hpp"
 }
+#include "th04/main/playfld.hpp"
 #include "th04/main/midboss/midboss.hpp"
 
 void midboss_reset(void)

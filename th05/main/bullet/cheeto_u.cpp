@@ -7,8 +7,8 @@
 #include "th04/math/motion.hpp"
 extern "C" {
 #include "th04/math/vector.hpp"
-#include "th04/main/playfld.hpp"
 }
+#include "th04/main/playfld.hpp"
 #include "th04/main/frames.h"
 #include "th04/main/bullet/bullet.hpp"
 #include "th05/main/player/player.hpp"
