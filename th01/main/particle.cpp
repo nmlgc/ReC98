@@ -1,4 +1,3 @@
-#include "master.hpp"
 #include "x86real.h"
 #include "th01/math/overlap.hpp"
 #include "th01/hardware/egc.h"

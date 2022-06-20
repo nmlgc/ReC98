@@ -15,10 +15,17 @@ static const screen_y_t MISSILE_TOP_MAX = (PLAYFIELD_BOTTOM - 1);
 // Indicates that this missile hasn't been rendered before. Should not exist,
 // because there's already Subpixel::None() for that.
 static const subpixel_t MISSILE_NEW = -1;
-
-static const int MISSILE_HIT_CELS = 2;
-static const int MISSILE_HIT_IMAGE = 4;
 /// ---------
+
+// Sprites
+// -------
+
+static const int MISSILE_CELS = 16;
+static const int MISSILE_PTNS = (MISSILE_CELS / 4);
+
+static const int MISSILE_HIT_IMAGE = (MISSILE_CELS / 4);
+static const int MISSILE_HIT_CELS = 2;
+// -------
 
 enum missile_flag_t {
 	MF_FREE = 0,
@@ -40,6 +47,11 @@ class CMissiles {
 	int8_t unknown[MISSILE_COUNT];
 	uint8_t ptn_id_base; // main_ptn_id_t. Very bold to limit this to 8 bits!
 	missile_flag_t flag[MISSILE_COUNT];
+
+protected:
+	// Calculates the current [ptn_id] and [quarter] for the missile at the
+	// given index.
+	void ptn_cel_for(int i, main_ptn_id_t& ptn_id, int& quarter) const;
 
 public:
 	// Loads the missile sprites into the given .PTN [slot].
