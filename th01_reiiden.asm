@@ -63,6 +63,7 @@ main_01 group main_010_TEXT, main_011_TEXT, main_012_TEXT, main_013_TEXT
 main_15 group main_15_TEXT, main_15__TEXT
 main_19 group main_19_TEXT, main_19__TEXT
 main_21 group main_21_TEXT, main_21__TEXT
+main_28 group main_28_TEXT, main_28__TEXT
 main_29 group main_29_TEXT, main_29__TEXT
 main_31 group main_31_TEXT, main_31__TEXT
 main_32 group main_32_TEXT, main_32__TEXT
@@ -2449,7 +2450,7 @@ loc_D89B:
 		pushd	[bp+s1]	; dest
 		call	_strcpy
 		add	sp, 8
-		call	_yuugenmagan_load
+		call	@yuugenmagan_load$qv
 		jmp	loc_D96D
 ; ---------------------------------------------------------------------------
 
@@ -5059,7 +5060,6 @@ main_21_TEXT	segment	byte public 'CODE' use16
 	extern @CBossEntity@load_inner$qxnxci:proc
 	extern @CBossEntity@metadata_get$xqmimuct1t1:proc
 	extern @CBossEntity@put_8$xqiii:proc
-	extern @CBossEntity@pos_set$qiiiiiii:proc
 	extern @CBossEntity@move_lock_unput_and_put_8$qiiii:proc
 	extern @CBossEntity@hittest_orb$xqv:proc
 	extern @bos_entity_free$qi:proc
@@ -5199,9 +5199,13 @@ main_27_TEXT	ends
 
 ; ===========================================================================
 
-; Segment type:	Pure code
 main_28_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_28_TEXT
+	extern @yuugenmagan_load$qv:proc
+main_28_TEXT	ends
+
+; Segment type:	Pure code
+main_28__TEXT	segment	byte public 'CODE' use16
+		assume cs:main_28
 		;org 0Fh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -5217,152 +5221,6 @@ eye_southeast	equ <boss_entity_3>
 eye_north	equ <boss_entity_4>
 
 PTN_SLOT_MISSILE = PTN_SLOT_BOSS_1
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public _yuugenmagan_load
-_yuugenmagan_load	proc c
-	local	@@template_east:CBossEntity
-	local	@@template_southwest:CBossEntity
-	local	@@template_southeast:CBossEntity
-	local	@@template_north:CBossEntity
-
-		CBossEntity__load	eye_west, 0, aBoss2_bos
-		CBossEntity__copy	@@template_east, eye_west
-		push	ds
-		push	offset eye_east.BE_h
-		push	ds
-		push	offset eye_east.BE_vram_w
-		push	ds
-		push	offset eye_east.BE_bos_slot
-		push	ds
-		push	offset eye_east.BE_bos_image_count
-		push	ss
-		lea	ax, @@template_east
-		push	ax
-		call	@CBossEntity@metadata_get$xqmimuct1t1
-		CBossEntity__copy	@@template_southwest, eye_west
-		push	ds
-		push	offset eye_southwest.BE_h
-		push	ds
-		push	offset eye_southwest.BE_vram_w
-		push	ds
-		push	offset eye_southwest.BE_bos_slot
-		push	ds
-		push	offset eye_southwest.BE_bos_image_count
-		push	ss
-		lea	ax, @@template_southwest
-		push	ax
-		call	@CBossEntity@metadata_get$xqmimuct1t1
-		add	sp, 32h
-		CBossEntity__copy	@@template_southeast, eye_west
-		push	ds
-		push	offset eye_southeast.BE_h
-		push	ds
-		push	offset eye_southeast.BE_vram_w
-		push	ds
-		push	offset eye_southeast.BE_bos_slot
-		push	ds
-		push	offset eye_southeast.BE_bos_image_count
-		push	ss
-		lea	ax, @@template_southeast
-		push	ax
-		call	@CBossEntity@metadata_get$xqmimuct1t1
-		CBossEntity__copy	@@template_north, eye_west
-		push	ds
-		push	offset eye_north.BE_h
-		push	ds
-		push	offset eye_north.BE_vram_w
-		push	ds
-		push	offset eye_north.BE_bos_slot
-		push	ds
-		push	offset eye_north.BE_bos_image_count
-		push	ss
-		lea	ax, @@template_north
-		push	ax
-		call	@CBossEntity@metadata_get$xqmimuct1t1
-		nopcall	sub_1B383
-		call	@ptn_load$q15main_ptn_slot_tnxc stdcall, PTN_SLOT_MISSILE, offset aBoss3_m_ptn, ds ; "boss3_m.ptn"
-		mov	_Missiles.MISSILE_ptn_id_base, (PTN_SLOT_MISSILE * PTN_IMAGES_PER_SLOT)
-		call	@CMissiles@reset$qv stdcall, offset _Missiles, ds
-		add	sp, 32h
-		ret
-_yuugenmagan_load	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1B383	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		call	_grp_palette_load_show c, offset aBoss2_grp_0, ds ; "boss2.grp"
-		call	@boss_palette_snap$qv
-		mov	eye_0.BE_bos_image, 0
-		mov	eye_1.BE_bos_image, 0
-		mov	eye_2.BE_bos_image, 0
-		mov	eye_3.BE_bos_image, 0
-		mov	eye_4.BE_bos_image, 0
-		xor	si, si
-		jmp	short loc_1B3D8
-; ---------------------------------------------------------------------------
-
-loc_1B3BB:
-		xor	di, di
-		jmp	short loc_1B3D2
-; ---------------------------------------------------------------------------
-
-loc_1B3BF:
-		mov	bx, si
-		imul	bx, size rgb_t
-		mov	al, _z_Palettes[bx+di]
-		mov	bx, si
-		imul	bx, size rgb_t
-		mov	byte ptr _boss_post_defeat_palette[bx+di], al
-		inc	di
-
-loc_1B3D2:
-		cmp	di, size rgb_t
-		jl	short loc_1B3BF
-		inc	si
-
-loc_1B3D8:
-		cmp	si, COLOR_COUNT
-		jl	short loc_1B3BB
-		call	@CBossEntity@pos_set$qiiiiiii stdcall, offset      eye_west, ds,  64, large 128 or (48 shl 16), large 0 or (736 shl 16), large 64 or (304 shl 16)
-		call	@CBossEntity@pos_set$qiiiiiii stdcall, offset      eye_east, ds, 512, large 128 or (48 shl 16), large 0 or (736 shl 16), large 64 or (304 shl 16)
-		add	sp, 24h
-		call	@CBossEntity@pos_set$qiiiiiii stdcall, offset eye_southwest, ds, 192, large 176 or (48 shl 16), large 0 or (736 shl 16), large 64 or (304 shl 16)
-		call	@CBossEntity@pos_set$qiiiiiii stdcall, offset eye_southeast, ds, 384, large 176 or (48 shl 16), large 0 or (736 shl 16), large 64 or (304 shl 16)
-		add	sp, 24h
-		call	@CBossEntity@pos_set$qiiiiiii stdcall, offset     eye_north, ds, 288, large  64 or (48 shl 16), large 0 or (736 shl 16), large 64 or (304 shl 16)
-		CBossEntity__hitbox_set	eye_0, 12, 12, 52, 32
-		CBossEntity__hitbox_set	eye_1, 12, 12, 52, 32
-		CBossEntity__hitbox_set	eye_2, 12, 12, 52, 32
-		CBossEntity__hitbox_set	eye_3, 12, 12, 52, 32
-		CBossEntity__hitbox_set	eye_4, 12, 12, 52, 32
-		mov	eye_0.BE_hitbox_orb_inactive, 1
-		mov	eye_1.BE_hitbox_orb_inactive, 1
-		mov	eye_2.BE_hitbox_orb_inactive, 1
-		mov	eye_3.BE_hitbox_orb_inactive, 1
-		mov	eye_4.BE_hitbox_orb_inactive, 1
-		mov	_boss_phase_frame, 0
-		mov	_boss_phase, 0
-		mov	_boss_hp, 16
-		mov	_hud_hp_first_white, 12
-		mov	_hud_hp_first_redwhite, 8
-		call	@particles_unput_update_render$q17particle_origin_ti stdcall, large PO_INITIALIZE or (V_WHITE shl 16)
-		add	sp, 16h
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_1B383	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9516,7 +9374,7 @@ eye_1	equ <>
 eye_2	equ <>
 eye_3	equ <>
 eye_4	equ <>
-main_28_TEXT	ends
+main_28__TEXT	ends
 
 ; ===========================================================================
 
@@ -13449,9 +13307,10 @@ _ORB_FORCE_REPEL_CONSTANT	dq -10.0
 public _yuugenmagan_invincibility_flash_colors, _yuugenmagan_invincible
 _yuugenmagan_invincibility_flash_colors	db 1, 11
 _yuugenmagan_invincible	dw 0
-aBoss2_bos	db 'boss2.bos',0
-aBoss3_m_ptn	db 'boss3_m.ptn',0
-aBoss2_grp_0	db 'boss2.grp',0
+public _boss2_bos, _boss3_m_ptn, _boss2_grp
+_boss2_bos  	db 'boss2.bos',0
+_boss3_m_ptn	db 'boss3_m.ptn',0
+_boss2_grp  	db 'boss2.grp',0
 flt_35B76	dd 2.0
 public _mima_meteor_active
 _mima_meteor_active	db 1
@@ -13820,7 +13679,6 @@ _hud_hp_first_redwhite	dw ?
 
 PARTICLE_COUNT = 40
 PO_TOP_RIGHT = 1
-PO_INITIALIZE = 255
 public _particles_spawn_interval, _particles_velocity_base_max, _particles_x
 public _particles_y, _particles_velocity_x, _particles_velocity_y
 public _particles_alive, _particles_velocity_base, _particles_spawn_cycle

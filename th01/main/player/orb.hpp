@@ -1,6 +1,14 @@
 static const pixel_t ORB_W = 32;
 static const pixel_t ORB_H = 32;
 
+static const pixel_t ORB_HITBOX_W = (ORB_W / 2);
+static const pixel_t ORB_HITBOX_H = (ORB_W / 2);
+
+static const pixel_t ORB_HITBOX_LEFT   = ((ORB_W / 2) - (ORB_HITBOX_W / 2));
+static const pixel_t ORB_HITBOX_TOP    = ((ORB_H / 2) - (ORB_HITBOX_H / 2));
+static const pixel_t ORB_HITBOX_RIGHT  = ((ORB_W / 2) + (ORB_HITBOX_W / 2));
+static const pixel_t ORB_HITBOX_BOTTOM = ((ORB_H / 2) + (ORB_HITBOX_H / 2));
+
 static const screen_x_t ORB_LEFT_MIN = (PLAYFIELD_LEFT);
 static const screen_x_t ORB_LEFT_MAX = (PLAYFIELD_RIGHT - ORB_W);
 static const screen_y_t ORB_TOP_MIN = (PLAYFIELD_TOP);

@@ -579,11 +579,6 @@ void CBossEntity::move_lock_and_put_8(
 	}
 }
 
-static const pixel_t ORB_HITBOX_LEFT   = ((ORB_W / 2) - (ORB_W / 4));
-static const pixel_t ORB_HITBOX_TOP    = ((ORB_H / 2) - (ORB_H / 4));
-static const pixel_t ORB_HITBOX_RIGHT  = ((ORB_W / 2) + (ORB_W / 4));
-static const pixel_t ORB_HITBOX_BOTTOM = ((ORB_H / 2) + (ORB_H / 4));
-
 bool16 CBossEntity::hittest_orb(void) const
 {
 	if(hitbox_orb_inactive == true) {
