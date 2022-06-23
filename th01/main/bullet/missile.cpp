@@ -10,6 +10,8 @@ extern "C" {
 #include "th01/main/vars.hpp"
 #include "th01/main/bullet/missile.hpp"
 
+CMissiles Missiles;
+
 void CMissiles::add(
 	screen_x_t left, screen_x_t top, double velocity_x, double velocity_y,
 	int8_t unknown

@@ -12831,6 +12831,9 @@ main_31__TEXT	ends
 
 ; Segment type:	Pure code
 main_32_TEXT	segment	byte public 'CODE' use16
+
+PO_TOP_RIGHT = 1
+
 	extern @BOSS_NOP$QV:proc
 	extern @hud_hp_render$qii:proc
 	extern @boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii:proc
@@ -13655,43 +13658,7 @@ word_39EB7	dw ?
 include th01/main/portals[bss].asm
 		db 5 dup(?)
 
-MISSILE_COUNT = 50
-
-CMissiles struc
-	MISSILE_cur_left   	dw MISSILE_COUNT dup(?)
-	MISSILE_cur_top    	dw MISSILE_COUNT dup(?)
-	MISSILE_prev_left  	dw MISSILE_COUNT dup(?)
-	MISSILE_prev_top   	dw MISSILE_COUNT dup(?)
-	MISSILE_velocity_x 	dw MISSILE_COUNT dup(?)
-	MISSILE_velocity_y 	dw MISSILE_COUNT dup(?)
-	MISSILE_unused     	dw MISSILE_COUNT dup(?)
-	MISSILE_unknown    	db MISSILE_COUNT dup(?)
-	MISSILE_ptn_id_base	db ?
-	MISSILE_flag       	db MISSILE_COUNT dup(?)
-CMissiles ends
-
-public _Missiles
-_Missiles	CMissiles <?>
-
-public _hud_hp_first_white, _hud_hp_first_redwhite
-_hud_hp_first_white	dw ?
-_hud_hp_first_redwhite	dw ?
-
-PARTICLE_COUNT = 40
-PO_TOP_RIGHT = 1
-public _particles_spawn_interval, _particles_velocity_base_max, _particles_x
-public _particles_y, _particles_velocity_x, _particles_velocity_y
-public _particles_alive, _particles_velocity_base, _particles_spawn_cycle
-
-_particles_spawn_interval   	dw ?
-_particles_velocity_base_max	dw ?
-_particles_x                	dw PARTICLE_COUNT dup(?)
-_particles_y                	dw PARTICLE_COUNT dup(?)
-_particles_velocity_x       	dw PARTICLE_COUNT dup(?)
-_particles_velocity_y       	dw PARTICLE_COUNT dup(?)
-_particles_alive            	db PARTICLE_COUNT dup(?)
-_particles_velocity_base    	db PARTICLE_COUNT dup(?)
-_particles_spawn_cycle      	db ?
+	extern _Missiles:byte
 	extern _route:byte
 	extern _boss_hp:word
 	extern _boss_phase_frame:word

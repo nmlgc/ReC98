@@ -9,27 +9,18 @@ void particles_unput_update_render(particle_origin_t origin, int col)
 		PARTICLE_COUNT = 40,
 	};
 
-	#define spawn_interval particles_spawn_interval
-	#define velocity_base_max particles_velocity_base_max
-	#define x particles_x
-	#define y particles_y
-	#define velocity_x particles_velocity_x
-	#define velocity_y particles_velocity_y
-	#define alive particles_alive
-	#define velocity_base particles_velocity_base
-	#define spawn_cycle particles_spawn_cycle
-	extern int spawn_interval;
-	extern pixel_t velocity_base_max;
-	extern Subpixel x[PARTICLE_COUNT];
-	extern Subpixel y[PARTICLE_COUNT];
-	extern Subpixel velocity_x[PARTICLE_COUNT];
-	extern Subpixel velocity_y[PARTICLE_COUNT];
-	extern bool alive[PARTICLE_COUNT];
+	static int spawn_interval;
+	static pixel_t velocity_base_max;
+	static Subpixel x[PARTICLE_COUNT];
+	static Subpixel y[PARTICLE_COUNT];
+	static Subpixel velocity_x[PARTICLE_COUNT];
+	static Subpixel velocity_y[PARTICLE_COUNT];
+	static bool alive[PARTICLE_COUNT];
 
 	// MODDERS: Should be local, and just a single variable, not an array.
-	extern unsigned char velocity_base[PARTICLE_COUNT];
+	static unsigned char velocity_base[PARTICLE_COUNT];
 
-	extern unsigned char spawn_cycle;
+	static unsigned char spawn_cycle;
 
 	unsigned char i;
 
