@@ -546,9 +546,7 @@ template <
 			((PLAYFIELD_LEFT + playfield_rand_x()) - target_l_x)
 		);
 		if(from_dir == X_LEFT) {
-			Pellets.add_single(
-				inhibit_Z3(screen_x_t, target_l_x), target_y, angle, speed
-			);
+			Pellets.add_single(inhibit_Z3(target_l_x), target_y, angle, speed);
 		} else {
 			Pellets.add_single(target_x(from_dir), target_y, angle, speed);
 		}

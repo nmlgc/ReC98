@@ -160,12 +160,12 @@ inline void poked_eax(Decomp_GS *sgm, Decomp_DI *off, uint8_t op) {
 	// (Interestingly, using a template function inlines either too well or
 	// too badly. Only this macro guarantees the intended 16-bit PUSH to be
 	// consistently emitted.)
-	#define inhibit_Z3(type, x) \
-		*reinterpret_cast<type near *>(reinterpret_cast<uint16_t>(&x))
+	#define inhibit_Z3(x) \
+		*reinterpret_cast<int16_t near *>(reinterpret_cast<uint16_t>(&x))
 
 #else
 	#define keep_0(x) x
-	#define inhibit_Z3(type, x) x
+	#define inhibit_Z3(x) x
 #endif
 // ------------------------------------
 
