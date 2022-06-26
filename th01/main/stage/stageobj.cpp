@@ -89,18 +89,13 @@ inline vram_y_t stageobj_top(int row) {
 void portal_enter_update_and_render_or_reset(int obstacle_i, bool16 reset);
 void turret_fire_update_and_render_or_reset(int obstacle_i, bool16 reset);
 
+// Only called for the entered portal, not the destination one. (The obstacle
+// slot of the latter is fact unavailable outside this function.)
 #define portal_enter_update_and_render(obstacle_i) { \
-	/* TODO: Replace with the decompiled call \
-	 * 	portal_enter_update_and_render_or_reset(obstacle_i, false); \
-	 * once that function is part of this translation unit */ \
-	_asm { \
-		push 0; \
-		db 0x56, 0x90, 0x0E; \
-		call near ptr portal_enter_update_and_render_or_reset; \
-		add sp, 4; \
-	} \
+	portal_enter_update_and_render_or_reset(obstacle_i, false); \
 }
 
+// Kicks the Orb out of any portal it might still be in.
 #define portals_reset() { \
 	/* MODDERS: Pass `0` and `true` instead. */ \
 	portal_enter_update_and_render_or_reset(i, reset); \
@@ -178,6 +173,10 @@ bool16 stageobj_bgs_free(void)
 
 #define stageobj_put_8(cards_or_obstacles, i, cel) { \
 	ptn_put_8(cards_or_obstacles.left[i], cards_or_obstacles.top[i], cel); \
+}
+
+#define stageobj_sloppy_unput_16(cards_or_obstacles, i) { \
+	ptn_sloppy_unput_16(cards_or_obstacles.left[i], cards_or_obstacles.top[i]);\
 }
 
 void stageobj_put_bg_and_obj_8(
@@ -871,5 +870,113 @@ void turret_fire_update_and_render_or_reset(int obstacle_slot, bool16 reset)
 			turret_state[obstacle_slot] = TS_READY;
 			obstacles.frames[obstacle_slot].fire_cycle = 0;
 		}
+	}
+}
+
+void portal_enter_update_and_render_or_reset(int obstacle_slot, bool16 reset)
+{
+	// Necessary to continue executing this function for the entered portal
+	// while all others are blocked.
+	extern int obstacle_slot_of_entered_portal;
+
+	extern screen_x_t dst_left;
+	extern screen_y_t dst_top;
+
+	// Additional flag on top of [orb_in_portal]. Left `true` for a few more
+	// frames after the orb has exited the destination portal, to prevent it
+	// from immediately re-entering into the same one.
+	extern bool16 portals_blocked;
+
+	int dst_slot;
+	int completed_loops_over_all_obstacles;
+
+	if(reset == true) {
+		obstacle_slot_of_entered_portal = 0; // (redundant)
+		portals_blocked = false;
+		if(orb_in_portal) {
+			// ZUN bug: Missing an unblitting call. This just blits the regular
+			// portal sprite on top of an animated one.
+			ptn_put_8(dst_left, dst_top, PTN_PORTAL);
+
+			orb_in_portal = false;
+		}
+		return;
+	}
+
+	if(
+		(portals_blocked == true) &&
+		(obstacle_slot_of_entered_portal != obstacle_slot)
+	) {
+		return;
+	}
+
+	if(obstacles.frames[obstacle_slot].since_collision != 0) {
+		obstacles.frames[obstacle_slot].since_collision++;
+	}
+	if(obstacles.frames[obstacle_slot].since_collision == 0) {
+		orb_in_portal = true;
+		obstacles.frames[obstacle_slot].since_collision = 1;
+		obstacle_slot_of_entered_portal = obstacle_slot;
+		portals_blocked = true;
+
+		ptn_sloppy_unput_16(orb_prev_left, orb_prev_top);
+
+		// MODDERS: This assumes that (PTN_PORTAL_ANIM + 0) only adds or changes
+		// pixels compared to PTN_PORTAL, and doesn't remove any. Unblit the
+		// previous portal sprite to ensure this.
+		stageobj_put_8(obstacles, obstacle_slot, (PTN_PORTAL_ANIM + 0));
+	} else if(obstacles.frames[obstacle_slot].since_collision == 10) {
+		stageobj_sloppy_unput_16(obstacles, obstacle_slot);
+		stageobj_put_8(obstacles, obstacle_slot, (PTN_PORTAL_ANIM + 1));
+	} else if(obstacles.frames[obstacle_slot].since_collision == 20) {
+		stageobj_sloppy_unput_16(obstacles, obstacle_slot);
+		stageobj_put_8(obstacles, obstacle_slot, PTN_PORTAL);
+
+		// So, rather than just remembering all obstacle IDs that belong to
+		// portals and pulling a new one directly from that pool, ZUN just
+		// repeatedly loops over all obstacles, rolls a die, and gives up if
+		// that roll didn't succeed for any non-entered portal after 16 loops.
+		// That's cute… but does result in a decent failure chance of
+		// 	(0.75 ^ (portal_count - 1)) ^ 16)
+		// which is 1% for two portals, and 0.01% for three.
+		dst_slot = 0;
+		completed_loops_over_all_obstacles = 0;
+		while(1) {
+			if(
+				(static_cast<int>(obstacles.type[dst_slot]) == OT_PORTAL) &&
+				((rand() % 4) == 0) &&
+				(dst_slot != obstacle_slot)
+			 ) {
+				break;
+			}
+			dst_slot++;
+			if(completed_loops_over_all_obstacles > 15) {
+				dst_slot = obstacle_slot;
+				break;
+			} else if(dst_slot >= obstacles.count) {
+				dst_slot = 0;
+				completed_loops_over_all_obstacles++;
+			}
+		}
+
+		dst_left = obstacles.left[dst_slot];
+		dst_top = obstacles.top[dst_slot];
+		ptn_sloppy_unput_16(dst_left, dst_top);
+		ptn_put_8(dst_left, dst_top, (PTN_PORTAL_ANIM + 1));
+	} else if(obstacles.frames[obstacle_slot].since_collision == 30) {
+		ptn_sloppy_unput_16(dst_left, dst_top);
+		ptn_put_8(dst_left, dst_top, (PTN_PORTAL_ANIM + 0));
+	} else if(obstacles.frames[obstacle_slot].since_collision == 40) {
+		ptn_sloppy_unput_16(dst_left, dst_top);
+		ptn_put_8(dst_left, dst_top, PTN_PORTAL);
+
+		orb_velocity_x = static_cast<orb_velocity_x_t>(rand() % OVX_COUNT);
+		orb_force_new(((rand() % 19) - 9), OF_IMMEDIATE);
+		orb_cur_left = dst_left;
+		orb_cur_top = dst_top;
+		orb_in_portal = false;
+	} else if(obstacles.frames[obstacle_slot].since_collision == 60) {
+		obstacles.frames[obstacle_slot].since_collision = 0;
+		portals_blocked = false;
 	}
 }

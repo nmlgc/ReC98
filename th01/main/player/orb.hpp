@@ -37,6 +37,7 @@ enum orb_velocity_x_t {
 	OVX_4_RIGHT = 2,
 	OVX_8_LEFT = 3,
 	OVX_8_RIGHT = 4,
+	OVX_COUNT,
 
 	_orb_velocity_x_t_FORCE_INT16 = 0x7FFF
 };
