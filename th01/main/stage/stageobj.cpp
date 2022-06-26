@@ -139,7 +139,9 @@ bool16 stageobj_bgs_free(void)
 	tmp = (~fg_mask & bg->planes.plane[y]); \
 	VRAM_PUT(plane, vo, ((fg->planes.plane[y] & fg_mask) | tmp), PTN_W);
 
-void stageobj_put_8(screen_x_t left, vram_y_t top, int ptn_id, int bg_slot)
+void stageobj_put_bg_and_obj_8(
+	screen_x_t left, vram_y_t top, int ptn_id, int bg_slot
+)
 {
 	upixel_t y;
 	dots_t(PTN_W) fg_mask = 0;

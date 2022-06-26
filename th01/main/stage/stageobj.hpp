@@ -155,11 +155,13 @@ void stageobj_bgs_put_all(void);
 
 // Blits both the stage object background with the given [bg_slot], and the
 // given [ptn_id] on top, to (⌊left/8⌋*8, top) in a single blitting operation.
-void stageobj_put_8(screen_x_t left, vram_y_t top, int ptn_id, int bg_slot);
+void stageobj_put_bg_and_obj_8(
+	screen_x_t left, vram_y_t top, int ptn_id, int bg_slot
+);
 
 // Blits the stage object background with the given [bg_slot] to
 // (⌊left/8⌋*8, top).
 #define stageobj_bgs_put_8(left, top, slot) \
-	stageobj_put_8(left, top, PTN_STAGEOBJ_NONE, slot)
+	stageobj_put_bg_and_obj_8(left, top, PTN_STAGEOBJ_NONE, slot)
 #define PTN_STAGEOBJ_NONE 9999
 // --------

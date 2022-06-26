@@ -74,7 +74,7 @@ void cards_score_render(void)
 }
 
 #define card_put_8(i) \
-	stageobj_put_8( \
+	stageobj_put_bg_and_obj_8( \
 		cards.left[i], \
 		cards.top[i], \
 		CARD_ANIM[cards.hp[i]][cards.flip_frames[i] / CARD_FRAMES_PER_CEL], \
