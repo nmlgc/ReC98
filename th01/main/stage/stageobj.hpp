@@ -83,10 +83,16 @@ void cards_update_and_render(void);
 // Combines bumpers, bumper bars, portals, and turrets.
 
 struct CObstacles {
+	union obstacle_type_frames_t {
+		int since_collision;
+		int fire_cycle;
+		int v;
+	};
+
 	screen_x_t *left;
 	vram_y_t *top;
 	obstacle_type_t *type;
-	int *type_frames;
+	obstacle_type_frames_t *frames;
 	int count;
 
 	void new_counted() {
@@ -94,7 +100,7 @@ struct CObstacles {
 			left = new screen_x_t[count];
 			top = new vram_y_t[count];
 			type = new obstacle_type_t[count];
-			type_frames = new int[count];
+			frames = new obstacle_type_frames_t[count];
 		}
 	}
 };

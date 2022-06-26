@@ -316,7 +316,7 @@ void stageobjs_init_and_render(int stage_id)
 	a_random_unused_card_id = (rand() % cards.count);
 
 	for(i = 0; i < obstacles.count; i++) {
-		obstacles.type_frames[i] = 0;
+		obstacles.frames[i].v = 0;
 	}
 	for(i = 0; i < cards.count; i++) {
 		cards.flip_frames[i] = 0;
@@ -407,7 +407,7 @@ void stageobjs_init_and_render(int stage_id)
 
 		actual_obstacle:
 			obstacles.type[obstacle_slot - 1] = obstacle_type_t(obstacle_type);
-			obstacles.type_frames[obstacle_slot - 1] = 0; // Again?!
+			obstacles.frames[obstacle_slot - 1].v = 0; // Again?!
 			break;
 		}
 		#undef obstacle_type
