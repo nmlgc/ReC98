@@ -65,7 +65,6 @@ main_19 group main_19_TEXT, main_19__TEXT
 main_21 group main_21_TEXT, main_21__TEXT
 main_28 group main_28_TEXT, main_28__TEXT
 main_29 group main_29_TEXT, main_29__TEXT
-main_31 group main_31_TEXT, main_31__TEXT
 main_32 group main_32_TEXT, main_32__TEXT
 
 ; ===========================================================================
@@ -1610,17 +1609,17 @@ loc_D118:
 		push	offset aCoreleft7luByt ; "    coreleft %7lu bytes free\n"
 		call	_printf
 		add	sp, 8
-		push	_obstacle_count
+		push	_obstacles.O_count
 		push	ds
 		push	offset aKabe_nD	; "    kabe_n =	%d\n"
 		call	_printf
 		add	sp, 6
-		push	_card_count
+		push	_cards.C_count
 		push	ds
 		push	offset aPnl_nD	; "    pnl_n  =	%d\n"
 		call	_printf
 		add	sp, 6
-		movsx	eax, _card_count
+		movsx	eax, _cards.C_count
 		imul	eax, 281h
 		push	eax
 		push	ds
@@ -3061,38 +3060,38 @@ loc_DF9A:
 
 loc_DFBC:
 		call	sub_D47D
-		cmp	_cards_left, 0
+		cmp	_cards.C_left, 0
 		jz	short loc_DFE0
-		call	@$bdla$qnv c, large [_cards_left]
-		mov	_cards_left, 0
+		call	@$bdla$qnv c, large [_cards.C_left]
+		mov	_cards.C_left, 0
 		jmp	short $+2
 
 loc_DFE0:
-		cmp	_cards_top, 0
+		cmp	_cards.C_top, 0
 		jz	short loc_E000
-		call	@$bdla$qnv c, large [_cards_top]
-		mov	_cards_top, 0
+		call	@$bdla$qnv c, large [_cards.C_top]
+		mov	_cards.C_top, 0
 		jmp	short $+2
 
 loc_E000:
-		cmp	_cards_flag, 0
+		cmp	_cards.C_flag, 0
 		jz	short loc_E020
-		call	@$bdla$qnv c, large [_cards_flag]
-		mov	_cards_flag, 0
+		call	@$bdla$qnv c, large [_cards.C_flag]
+		mov	_cards.C_flag, 0
 		jmp	short $+2
 
 loc_E020:
-		cmp	_cards_flip_frames, 0
+		cmp	_cards.C_flip_frames, 0
 		jz	short loc_E040
-		call	@$bdla$qnv c, large [_cards_flip_frames]
-		mov	_cards_flip_frames, 0
+		call	@$bdla$qnv c, large [_cards.C_flip_frames]
+		mov	_cards.C_flip_frames, 0
 		jmp	short $+2
 
 loc_E040:
-		cmp	_cards_hp, 0
+		cmp	_cards.C_hp, 0
 		jz	short loc_E060
-		call	@$bdla$qnv c, large [_cards_hp]
-		mov	_cards_hp, 0
+		call	@$bdla$qnv c, large [_cards.C_hp]
+		mov	_cards.C_hp, 0
 		jmp	short $+2
 
 loc_E060:
@@ -3103,31 +3102,31 @@ loc_E060:
 		jmp	short $+2
 
 loc_E080:
-		cmp	_obstacles_left, 0
+		cmp	_obstacles.O_left, 0
 		jz	short loc_E0A0
-		call	@$bdla$qnv c, large [_obstacles_left]
-		mov	_obstacles_left, 0
+		call	@$bdla$qnv c, large [_obstacles.O_left]
+		mov	_obstacles.O_left, 0
 		jmp	short $+2
 
 loc_E0A0:
-		cmp	_obstacles_top, 0
+		cmp	_obstacles.O_top, 0
 		jz	short loc_E0C0
-		call	@$bdla$qnv c, large [_obstacles_top]
-		mov	_obstacles_top, 0
+		call	@$bdla$qnv c, large [_obstacles.O_top]
+		mov	_obstacles.O_top, 0
 		jmp	short $+2
 
 loc_E0C0:
-		cmp	_obstacles_type, 0
+		cmp	_obstacles.O_type, 0
 		jz	short loc_E0E0
-		call	@$bdla$qnv c, large [_obstacles_type]
-		mov	_obstacles_type, 0
+		call	@$bdla$qnv c, large [_obstacles.O_type]
+		mov	_obstacles.O_type, 0
 		jmp	short $+2
 
 loc_E0E0:
-		cmp	_obstacles_type_frames, 0
+		cmp	_obstacles.O_frames, 0
 		jz	short loc_E101
-		call	@$bdla$qnv c, large [_obstacles_type_frames]
-		mov	_obstacles_type_frames, 0
+		call	@$bdla$qnv c, large [_obstacles.O_frames]
+		mov	_obstacles.O_frames, 0
 		jmp	loc_D7E4
 ; ---------------------------------------------------------------------------
 
@@ -3136,38 +3135,38 @@ loc_E101:
 ; ---------------------------------------------------------------------------
 
 loc_E104:
-		cmp	_cards_left, 0
+		cmp	_cards.C_left, 0
 		jz	short loc_E124
-		call	@$bdla$qnv c, large [_cards_left]
-		mov	_cards_left, 0
+		call	@$bdla$qnv c, large [_cards.C_left]
+		mov	_cards.C_left, 0
 		jmp	short $+2
 
 loc_E124:
-		cmp	_cards_top, 0
+		cmp	_cards.C_top, 0
 		jz	short loc_E144
-		call	@$bdla$qnv c, large [_cards_top]
-		mov	_cards_top, 0
+		call	@$bdla$qnv c, large [_cards.C_top]
+		mov	_cards.C_top, 0
 		jmp	short $+2
 
 loc_E144:
-		cmp	_cards_flag, 0
+		cmp	_cards.C_flag, 0
 		jz	short loc_E164
-		call	@$bdla$qnv c, large [_cards_flag]
-		mov	_cards_flag, 0
+		call	@$bdla$qnv c, large [_cards.C_flag]
+		mov	_cards.C_flag, 0
 		jmp	short $+2
 
 loc_E164:
-		cmp	_cards_flip_frames, 0
+		cmp	_cards.C_flip_frames, 0
 		jz	short loc_E184
-		call	@$bdla$qnv c, large [_cards_flip_frames]
-		mov	_cards_flip_frames, 0
+		call	@$bdla$qnv c, large [_cards.C_flip_frames]
+		mov	_cards.C_flip_frames, 0
 		jmp	short $+2
 
 loc_E184:
-		cmp	_cards_hp, 0
+		cmp	_cards.C_hp, 0
 		jz	short loc_E1A4
-		call	@$bdla$qnv c, large [_cards_hp]
-		mov	_cards_hp, 0
+		call	@$bdla$qnv c, large [_cards.C_hp]
+		mov	_cards.C_hp, 0
 		jmp	short $+2
 
 loc_E1A4:
@@ -3178,31 +3177,31 @@ loc_E1A4:
 		jmp	short $+2
 
 loc_E1C4:
-		cmp	_obstacles_left, 0
+		cmp	_obstacles.O_left, 0
 		jz	short loc_E1E4
-		call	@$bdla$qnv c, large [_obstacles_left]
-		mov	_obstacles_left, 0
+		call	@$bdla$qnv c, large [_obstacles.O_left]
+		mov	_obstacles.O_left, 0
 		jmp	short $+2
 
 loc_E1E4:
-		cmp	_obstacles_top, 0
+		cmp	_obstacles.O_top, 0
 		jz	short loc_E204
-		call	@$bdla$qnv c, large [_obstacles_top]
-		mov	_obstacles_top, 0
+		call	@$bdla$qnv c, large [_obstacles.O_top]
+		mov	_obstacles.O_top, 0
 		jmp	short $+2
 
 loc_E204:
-		cmp	_obstacles_type, 0
+		cmp	_obstacles.O_type, 0
 		jz	short loc_E224
-		call	@$bdla$qnv c, large [_obstacles_type]
-		mov	_obstacles_type, 0
+		call	@$bdla$qnv c, large [_obstacles.O_type]
+		mov	_obstacles.O_type, 0
 		jmp	short $+2
 
 loc_E224:
-		cmp	_obstacles_type_frames, 0
+		cmp	_obstacles.O_frames, 0
 		jz	short loc_E244
-		call	@$bdla$qnv c, large [_obstacles_type_frames]
-		mov	_obstacles_type_frames, 0
+		call	@$bdla$qnv c, large [_obstacles.O_frames]
+		mov	_obstacles.O_frames, 0
 		jmp	short $+2
 
 loc_E244:
@@ -11682,42 +11681,6 @@ main_31_TEXT	segment	byte public 'CODE' use16
 	extern @obstacles_update_and_render$qi:proc
 main_31_TEXT	ends
 
-main_31__TEXT	segment	byte public 'CODE' use16
-		assume cs:main_31
-		;org 9
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-OT_NONE = 0
-OT_ACTUALLY_A_CARD = 14
-OT_ACTUALLY_A_2FLIP_CARD = OT_ACTUALLY_A_CARD
-OT_ACTUALLY_A_3FLIP_CARD = 15
-OT_ACTUALLY_A_4FLIP_CARD = 16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_21819	proc far
-		push	bp
-		mov	bp, sp
-		mov	_card_count, 1
-		mov	_cards_left, 0
-		mov	_cards_top, 0
-		mov	_cards_flag, 0
-		mov	_cards_flip_frames, 0
-		mov	_cards_hp, 0
-		mov	_cards_score, 0
-		mov	_obstacle_count, 1
-		mov	_obstacles_left, 0
-		mov	_obstacles_top, 0
-		mov	_obstacles_type, 0
-		mov	_obstacles_type_frames, 0
-		pop	bp
-		retf
-sub_21819	endp
-
-main_31__TEXT	ends
-
 ; ===========================================================================
 
 ; Segment type:	Pure code
@@ -12282,32 +12245,10 @@ _boss3_1_bos	db 'boss3_1.bos',0
 _boss3_2_bos	db 'boss3_2.bos',0
 _boss3_grp_0	db 'boss3.grp',0
 _boss3_m_ptn_0	db 'boss3_m.ptn',0
-	evendata
-public _card_flip_cycle
-_card_flip_cycle	db 0
-	evendata
 
-STAGEOBJ_W = PTN_W
-STAGEOBJ_H = PTN_H
-STAGEOBJS_X = (PLAYFIELD_W / STAGEOBJ_W)
-STAGEOBJS_Y = (PLAYFIELD_H / STAGEOBJ_H)
-
-STAGEOBJS_COUNT = (STAGEOBJS_X * STAGEOBJS_Y)
-STAGEDAT_STAGE_SIZE = ((STAGEOBJS_COUNT) + (STAGEOBJS_COUNT / 4) + 5)
-
-public _default_grp_fn, _default_bgm_fn, _scene_fn_, _CARD_ANIM
-_default_grp_fn	db 'ST .GRP', 0, 0, 0, 0, 0, 0, 0, 0
-_default_bgm_fn	db 'ST .MDT', 0, 0, 0, 0, 0, 0, 0, 0
-
-_CARD_ANIM label byte
-	db  PTN_CARD_0HP, PTN_CARD_0HP_HALF, PTN_CARD_0HP_EDGE, PTN_CARD_REMOVED_HALF, PTN_CARD_REMOVED
-	db  PTN_CARD_1HP, PTN_CARD_1HP_HALF, PTN_CARD_1HP_EDGE, PTN_CARD_0HP_HALF, PTN_CARD_0HP
-	db  PTN_CARD_2HP, PTN_CARD_2HP_HALF, PTN_CARD_2HP_EDGE, PTN_CARD_1HP_HALF, PTN_CARD_1HP
-	db  PTN_CARD_3HP, PTN_CARD_3HP_HALF, PTN_CARD_3HP_EDGE, PTN_CARD_2HP_HALF, PTN_CARD_2HP
-	db  PTN_CARD_3HP, PTN_CARD_3HP_HALF, PTN_CARD_3HP_EDGE, PTN_CARD_3HP_HALF, PTN_CARD_3HP
-_scene_fn_	db 'stage .dat', 0, 0, 0, 0, 0
-public _stageobjs_init_anim_card_frames
-_stageobjs_init_anim_card_frames dw 50 dup (0)
+	extern _card_flip_cycle:byte
+	extern _default_grp_fn:byte
+	extern _default_bgm_fn:byte
 	extern _game_cleared:byte
 	extern _unused_boss_stage_flag:word
 	extern _pellet_destroy_score_delta:word
@@ -12321,9 +12262,6 @@ _INIT_	segment word public 'INITDATA' use16
 		db    1
 		db  20h
 		dd sub_17041
-		db    1
-		db  20h
-		dd sub_21819
 _INIT_	ends
 
 	.data?
@@ -12347,6 +12285,14 @@ _mode_debug	db ?
 dword_36C20	dd ?
 include th01/main/player/player[bss].asm
 include th01/main/player/orb[bss].asm
+
+STAGEOBJ_W = PTN_W
+STAGEOBJ_H = PTN_H
+STAGEOBJS_X = (PLAYFIELD_W / STAGEOBJ_W)
+STAGEOBJS_Y = (PLAYFIELD_H / STAGEOBJ_H)
+
+STAGEOBJS_COUNT = (STAGEOBJS_X * STAGEOBJS_Y)
+STAGEDAT_STAGE_SIZE = ((STAGEOBJS_COUNT) + (STAGEOBJS_COUNT / 4) + 5)
 
 public _scene_stage
 _scene_stage db (STAGEDAT_STAGE_SIZE * STAGES_PER_SCENE) dup(?)
@@ -12519,38 +12465,29 @@ _mima_invincible	dw ?
 word_39E78	dw ?
 public _mima_initial_hp_rendered
 _mima_initial_hp_rendered	db ?
-		db ?
-public _stageobj_bgs, _stageobj_bgs_size
-_stageobj_bgs	dd ?
-_stageobj_bgs_size	dd ?
 
-public _cards, _obstacles, _cards_score, _a_random_unused_card_id
-_cards	label
-_cards_left	dd ?
-_cards_top	dd ?
-_cards_flag	dd ?
-_card_count	dw ?
-_cards_flip_frames	dd ?
-_cards_hp	dd ?
+CCards struc
+	C_left       	dd ?
+	C_top        	dd ?
+	C_flag       	dd ?
+	C_count      	dw ?
+	C_flip_frames	dd ?
+	C_hp         	dd ?
+CCards ends
 
-_obstacles label
-_obstacles_left	dd ?
-_obstacles_top	dd ?
-_obstacles_type	dd ?
-_obstacles_type_frames	dd ?
-_obstacle_count	dw ?
-_cards_score	dd ?
-_a_random_unused_card_id	dw ?
-public _vertical_bars_blocked, _turret_state, _obstacle_slot_of_entered_portal
-public _dst_left, _dst_top, _portals_blocked
-_vertical_bars_blocked	db ?
-_turret_state	dd ?
-_obstacle_slot_of_entered_portal	dw ?
-_dst_left	dw ?
-_dst_top	dw ?
-_portals_blocked	dw ?
-		db 5 dup(?)
+CObstacles struc
+	O_left  	dd ?
+	O_top   	dd ?
+	O_type  	dd ?
+	O_frames	dd ?
+	O_count 	dw ?
+CObstacles ends
 
+	extern _stageobj_bgs:dword
+	extern _stageobj_bgs_size:dword
+	extern _cards:CCards
+	extern _obstacles:CObstacles
+	extern _cards_score:dword
 	extern _Missiles:byte
 	extern _route:byte
 	extern _boss_hp:word

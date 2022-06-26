@@ -1,7 +1,7 @@
+unsigned char card_flip_cycle = 0;
+
 void cards_hittest(int stage_num)
 {
-	extern unsigned char card_flip_cycle;
-
 	for(unsigned int i = 0; i < cards.count; i++) {
 		struct {
 			upixel_t y, x;

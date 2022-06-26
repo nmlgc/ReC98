@@ -34,6 +34,47 @@ struct stage_t {
 	int8_t padding[5];
 };
 extern stage_t scene_stage[STAGES_PER_SCENE];
+
+char default_grp_fn[15] = "ST .GRP";
+char default_bgm_fn[15] = "ST .MDT";
+
+uint8_t CARD_ANIM[CARD_HP_MAX][CARD_CELS] = { {
+	PTN_CARD_0HP,
+	PTN_CARD_0HP_HALF,
+	PTN_CARD_0HP_EDGE,
+	PTN_CARD_REMOVED_HALF,
+	PTN_CARD_REMOVED,
+}, {
+	PTN_CARD_1HP,
+	PTN_CARD_1HP_HALF,
+	PTN_CARD_1HP_EDGE,
+	PTN_CARD_0HP_HALF,
+	PTN_CARD_0HP,
+}, {
+	PTN_CARD_2HP,
+	PTN_CARD_2HP_HALF,
+	PTN_CARD_2HP_EDGE,
+	PTN_CARD_1HP_HALF,
+	PTN_CARD_1HP,
+}, {
+	PTN_CARD_3HP,
+	PTN_CARD_3HP_HALF,
+	PTN_CARD_3HP_EDGE,
+	PTN_CARD_2HP_HALF,
+	PTN_CARD_2HP,
+}, {
+	PTN_CARD_3HP,
+	PTN_CARD_3HP_HALF,
+	PTN_CARD_3HP_EDGE,
+	PTN_CARD_3HP_HALF,
+	PTN_CARD_3HP,
+} };
+
+ptn_t *stageobj_bgs;
+unsigned long stageobj_bgs_size;
+CCards cards;
+CObstacles obstacles;
+unsigned long *cards_score;
 // -------
 
 // Byte-wise iterators for STAGE?.DAT arrays
@@ -228,15 +269,12 @@ void stageobj_bgs_snap_from_1_8(screen_x_t left, vram_y_t top, int slot)
 
 void scene_init_and_load(unsigned char id)
 {
-	struct hack { char x[15]; }; // XXX
-	extern const hack scene_fn_;
-
 	stagedat_header_t header;
-	hack scene_fn = scene_fn_;
+	char scene_fn[15] = "stage .dat";
 
-	scene_fn.x[5] = (id + '0');
+	scene_fn[5] = (id + '0');
 
-	arc_file_load(scene_fn.x);
+	arc_file_load(scene_fn);
 	arc_file_get_near(header);
 
 	default_grp_fn[2] = (id + '0');
@@ -352,7 +390,7 @@ void stageobjs_init_and_render(int stage_id)
 	// No, not the ID of the one card that might remain unflipped after a bomb.
 	// That's down to a per-frame rand(), see cards_hittest() for the actual
 	// algorithm.
-	extern int a_random_unused_card_id;
+	static int a_random_unused_card_id;
 	a_random_unused_card_id = (rand() % cards.count);
 
 	for(i = 0; i < obstacles.count; i++) {
@@ -463,33 +501,30 @@ void stageobjs_init_and_render(int stage_id)
 
 	// ZUN bug: Should be STAGEOBJS_COUNT. This effectively limits stages to a
 	// maximum of 50 cards rather than the original 200, since...
-	struct hack { int x[50]; }; // XXX
-	extern hack stageobjs_init_anim_card_frames;
-
-	hack frames_for = stageobjs_init_anim_card_frames;
+	int frames_for[50] = { 0 };
 	// ... [total_frames] is the next variable on the stack. Therefore, ...
 	int total_frames = 0;
 	while(1) {
 		int cards_animated = 0;
 		for(i = 0; i < cards.count; i++) {
-			if(frames_for.x[i] == -1) {
+			if(frames_for[i] == -1) {
 				cards_animated++;
 			}
-			if(frames_for.x[i] < card_first_frame_of(CARD_CEL_EDGE)) {
+			if(frames_for[i] < card_first_frame_of(CARD_CEL_EDGE)) {
 				continue;
 			}
-			if((frames_for.x[i] % CARD_FRAMES_PER_CEL) == 0) {
+			if((frames_for[i] % CARD_FRAMES_PER_CEL) == 0) {
 				card_ptn_id = (
-					CARD_ANIM[cards.hp[i] + 1][card_cel_at(frames_for.x[i])]
+					CARD_ANIM[cards.hp[i] + 1][card_cel_at(frames_for[i])]
 				);
 				stageobj_put_8(cards, i, card_ptn_id);
 			}
-			frames_for.x[i]++;
+			frames_for[i]++;
 			// ... trying to access the 51st card here actually accesses
 			// [total_frames], periodically resetting it to -1. Which in turn
 			// means that...
-			if(frames_for.x[i] > card_first_frame_of(CARD_CEL_FLIPPED)) {
-				frames_for.x[i] = -1;
+			if(frames_for[i] > card_first_frame_of(CARD_CEL_FLIPPED)) {
+				frames_for[i] = -1;
 			}
 		}
 		if(cards_animated >= cards.count) {
@@ -498,7 +533,7 @@ void stageobjs_init_and_render(int stage_id)
 		// ... the first 24 cards are animated over and over in an infinite
 		// loop, as the termination condition above can never become true.
 		if(total_frames < cards.count) {
-			frames_for.x[total_frames] = card_first_frame_of(CARD_CEL_EDGE);
+			frames_for[total_frames] = card_first_frame_of(CARD_CEL_EDGE);
 		}
 		total_frames++;
 		frame_delay(1);
@@ -587,7 +622,7 @@ void obstacles_update_and_render(bool16 reset)
 	// Stage 17, and watch how this flag contributes to the Orb gradually
 	// rising up to the top of the playfield. Without it, the Orb would simply
 	// oscillate between a fixed set of bumper bars.)
-	extern bool vertical_bars_blocked;
+	static bool vertical_bars_blocked;
 
 	if(reset == true) {
 		vertical_bars_blocked = false;
@@ -778,7 +813,7 @@ enum turret_state_t {
 
 void turret_fire_update_and_render_or_reset(int obstacle_slot, bool16 reset)
 {
-	extern turret_state_t *turret_state;
+	static turret_state_t *turret_state;
 
 	if(reset == true) {
 		if(turret_state) {
@@ -877,15 +912,15 @@ void portal_enter_update_and_render_or_reset(int obstacle_slot, bool16 reset)
 {
 	// Necessary to continue executing this function for the entered portal
 	// while all others are blocked.
-	extern int obstacle_slot_of_entered_portal;
+	static int obstacle_slot_of_entered_portal;
 
-	extern screen_x_t dst_left;
-	extern screen_y_t dst_top;
+	static screen_x_t dst_left;
+	static screen_y_t dst_top;
 
 	// Additional flag on top of [orb_in_portal]. Left `true` for a few more
 	// frames after the orb has exited the destination portal, to prevent it
 	// from immediately re-entering into the same one.
-	extern bool16 portals_blocked;
+	static bool16 portals_blocked;
 
 	int dst_slot;
 	int completed_loops_over_all_obstacles;
@@ -980,3 +1015,5 @@ void portal_enter_update_and_render_or_reset(int obstacle_slot, bool16 reset)
 		portals_blocked = false;
 	}
 }
+
+static int8_t unused[4];
