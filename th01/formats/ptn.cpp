@@ -105,7 +105,7 @@ void ptn_free(main_ptn_slot_t slot)
 {
 	if(ptn_images[slot]) {
 		delete[] ptn_images[slot];
-		ptn_images[slot] = NULL;
+		ptn_images[slot] = nullptr;
 		ptn_image_count[slot] = 0;
 	}
 }

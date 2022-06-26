@@ -152,7 +152,7 @@ extern bool16 portals_blocked;
 extern ptn_t *stageobj_bgs;
 extern unsigned long stageobj_bgs_size;
 
-// Frees [stageobj_bgs], if non-NULL. Always returns 0.
+// Frees any previously allocated [stageobj_bgs]. Always returns 0.
 bool16 stageobj_bgs_free(void);
 
 // Blits the backgrounds for all cards and obstacles at their respective

@@ -79,8 +79,8 @@ inline vram_y_t stageobj_top(int row) {
 	stageobj_top((dat_offset - obstacles_begin()) / STAGEOBJS_X)
 // -------------------
 
-// Frees [stageobj_bgs] if non-NULL, then allocates new memory for the given
-// number of stage object backgrounds.
+// Frees [stageobj_bgs] if previously allocated, then allocates new memory for
+// the given number of stage object backgrounds.
 ptn_error_t stageobj_bgs_new(int image_count)
 {
 	if(image_count <= 0) {
@@ -130,7 +130,7 @@ bool16 stageobj_bgs_free(void)
 	if(stageobj_bgs) {
 		farfree(stageobj_bgs);
 		stageobj_bgs_size = 0;
-		stageobj_bgs = NULL;
+		stageobj_bgs = nullptr;
 	}
 	return 0;
 }

@@ -82,7 +82,7 @@ void near ems_allocate_and_preload_eyecatch(void)
 		eyename[3] = ('0' + rank);
 	#endif
 
-	Ems = NULL;
+	Ems = nullptr;
 	if(!ems_exist() || (ems_space() < EMSSIZE)) {
 		return;
 	}

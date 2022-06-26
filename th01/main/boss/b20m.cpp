@@ -1,7 +1,6 @@
 /// Makai Stage 20 Boss - Sariel
 /// ----------------------------
 
-#include <stddef.h>
 #include <stdlib.h>
 #include <dos.h>
 #include "platform.h"

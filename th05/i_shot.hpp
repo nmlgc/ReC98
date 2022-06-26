@@ -3,7 +3,6 @@
  * Shared #includes for the shot type control translation units
  */
 
-#include <stddef.h>
 #include "platform.h"
 #include "pc98.h"
 #include "th01/math/subpixel.hpp"

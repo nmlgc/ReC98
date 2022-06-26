@@ -2,7 +2,6 @@
 /// --------------------------
 
 #include <dos.h>
-#include <stddef.h>
 #include <stdlib.h>
 #include "platform.h"
 #include "pc98.h"

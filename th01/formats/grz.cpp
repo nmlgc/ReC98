@@ -127,7 +127,7 @@ void grx_put(unsigned int slot)
 	if(rle_streams[slot]) { \
 		grx_free(slot); \
 	} \
-	fail_if((rle_streams[slot] = new uint8_t[size]) == NULL);
+	fail_if((rle_streams[slot] = new uint8_t[size]) == nullptr);
 
 #define rle_stream_read(slot, size) \
 	file_read(rle_streams[slot], size);
@@ -137,7 +137,7 @@ void grx_put(unsigned int slot)
 		if(planar_streams[slot][i]) { \
 			grx_free(slot); \
 		} \
-		fail_if((planar_streams[slot][i] = new uint8_t[size]) == NULL); \
+		fail_if((planar_streams[slot][i] = new uint8_t[size]) == nullptr); \
 	}
 
 #define planar_streams_read(slot, stream_count, size) \
@@ -198,12 +198,12 @@ void grx_free(unsigned int slot)
 {
 	if(rle_streams[slot]) {
 		delete[] rle_streams[slot];
-		rle_streams[slot] = NULL;
+		rle_streams[slot] = nullptr;
 	}
 	for(int i = 0; i < PLANAR_STREAM_PER_GRX_COUNT; i++) {
 		if(planar_streams[slot][i]) {
 			delete[] planar_streams[slot][i];
-			planar_streams[slot][i] = NULL;
+			planar_streams[slot][i] = nullptr;
 		}
 	}
 }

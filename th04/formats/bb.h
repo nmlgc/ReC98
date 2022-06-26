@@ -10,10 +10,10 @@ extern bb_tiles8_t __seg *bb_boss_seg;
 
 // Loads the .BB file with the given name into memory, and sets [bb_boss_seg]
 // to the newly allocated segment. Does not attempt to free [bb_boss_seg], and
-// will leak memory if it is non-NULL.
+// will leak memory if it is not a nullptr.
 void pascal near bb_boss_load(const char far *fn);
 
-// Frees [bb_boss_seg] if it is non-NULL.
+// Frees any previously allocated [bb_boss_seg].
 #if (GAME == 5)
 	void near bb_boss_free(void);
 #else

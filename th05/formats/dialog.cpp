@@ -50,6 +50,6 @@ void near dialog_free(void)
 		// returned. You'll need to introduce a separate "dialog buffer base
 		// pointer" when porting to flat memory models.
 		hmem_free(reinterpret_cast<void __seg *>(dialog_p));
-		dialog_p = NULL;
+		dialog_p = nullptr;
 	}
 }

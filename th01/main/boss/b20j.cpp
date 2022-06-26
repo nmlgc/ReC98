@@ -1,7 +1,6 @@
 /// Jigoku Stage 20 Boss - Konngara
 /// -------------------------------
 
-#include <stddef.h>
 #include <stdio.h>
 #include "platform.h"
 #include "pc98.h"

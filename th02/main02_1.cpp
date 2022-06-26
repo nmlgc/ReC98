@@ -31,7 +31,7 @@ void mpn_free(void)
 	if(mpn_images) {
 		HMem<mpn_image_t>::free(mpn_images);
 	}
-	mpn_images = NULL;
+	mpn_images = nullptr;
 }
 
 }

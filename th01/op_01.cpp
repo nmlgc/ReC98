@@ -62,7 +62,7 @@ void cfg_load(void)
 	bool read_failure = false;
 	FILE* fp;
 
-	if(( fp = fopen(CFG_FN, FOPEN_RB) ) == NULL) {
+	if(( fp = fopen(CFG_FN, FOPEN_RB) ) == nullptr) {
 use_defaults:
 		read_failure = true;
 	}
@@ -90,7 +90,7 @@ void cfg_save(void)
 	bool write_failure = false;
 	FILE* fp;
 
-	if(( fp = fopen(CFG_FN, FOPEN_WB) ) == NULL) {
+	if(( fp = fopen(CFG_FN, FOPEN_WB) ) == nullptr) {
 		write_failure = true;
 	}
 	if(!write_failure) {

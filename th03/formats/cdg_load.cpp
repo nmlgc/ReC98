@@ -1,7 +1,6 @@
 #pragma option -zCSHARED -3
 
 extern "C" {
-#include <stddef.h>
 #include <io.h>
 #include "platform.h"
 #include "pc98.h"
@@ -53,7 +52,7 @@ void pascal cdg_load_single_noalpha(int slot, const char *fn, int n)
 
 	cdg_read_header_and_seek_to_image(cdg, n);
 	file_seek(cdg.bitplane_size, SEEK_CUR);
-	cdg.seg_alpha() = NULL;
+	cdg.seg_alpha() = nullptr;
 	cdg_allocate_and_read_colors(cdg);
 	file_close();
 }
@@ -85,7 +84,7 @@ void pascal cdg_load_all(int slot_first, const char *fn)
 		if(!cdg_noalpha) {
 			cdg_allocate_and_read_alpha(*cdg_p);
 		} else {
-			cdg_p->seg_alpha() = NULL;
+			cdg_p->seg_alpha() = nullptr;
 			file_seek(cdg_p->bitplane_size, SEEK_CUR);
 		}
 		cdg_allocate_and_read_colors(*cdg_p);
@@ -108,7 +107,7 @@ void pascal cdg_free(int slot)
 	for(int i = 0; i < (sizeof(cdg->seg) / sizeof(cdg->seg[0])); i++) {
 		if(cdg->seg[i]) {
 			hmem_free(cdg->seg[i]);
-			cdg->seg[i] = NULL;
+			cdg->seg[i] = nullptr;
 		}
 	}
 }

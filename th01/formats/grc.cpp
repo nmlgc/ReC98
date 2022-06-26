@@ -98,7 +98,7 @@ void grc_free(main_grc_slot_t slot)
 	for(int i = 0; grc_images[slot].image_count > i; i++) {
 		if(grc_images[slot].dots[i]) {
 			delete[] grc_images[slot].dots[i];
-			grc_images[slot].dots[i] = NULL;
+			grc_images[slot].dots[i] = nullptr;
 		}
 	}
 }

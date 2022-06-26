@@ -103,21 +103,21 @@ void pascal mrs_load(int slot, const char *fn)
 
 void pascal mrs_free(int slot)
 {
-	#define mrs_image_pointer_word(slot_offset, off_or_sgm) \
+	#define mrs_image_ptr_word(slot_offset, off_or_sgm) \
 		*(reinterpret_cast<uint16_t near *>( \
 			reinterpret_cast<uint16_t>(mrs_images) + slot_offset \
 		) + off_or_sgm)
 	mrs_slot_offset_to(_BX, slot);
-	_AX = mrs_image_pointer_word(_BX, 1);
+	_AX = mrs_image_ptr_word(_BX, 1);
 	// Yes, |=, not =, to an uninitialized register. The entire reason why we
 	// can't decompile this into one sane expression...
-	_DX |= mrs_image_pointer_word(_BX, 0);
+	_DX |= mrs_image_ptr_word(_BX, 0);
 	_DX |= _AX;
 	if(!FLAGS_ZERO) {
 		hmem_free(reinterpret_cast<void __seg *>(_AX));
-		mrs_image_pointer_word(_BX, 0) = mrs_image_pointer_word(_BX, 1) = NULL;
+		mrs_image_ptr_word(_BX, 0) = mrs_image_ptr_word(_BX, 1) = nullptr;
 	}
-	#undef mrs_image_pointer_word
+	#undef mrs_image_ptr_word
 }
 
 #pragma codestring "\x90"

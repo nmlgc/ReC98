@@ -472,7 +472,7 @@ void MASTER_RET palette_white_out(unsigned speed);
 
 #if defined(__cplusplus) && defined(PC98_H)
 	struct PiHeader {
-		char far *comment;	// graph_pi_load.*() sets this to NULL
+		char far *comment;	// graph_pi_load.*() sets this to a nullptr
 		uint16_t commentlen;	//
 		uint8_t mode;	//
 		uint8_t n;	// aspect

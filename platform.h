@@ -31,6 +31,10 @@ typedef void ( far pascal * far   farfunc_t_far)(void);
 #endif
 /// ----------
 
+#if (__cplusplus < 201103L)
+	#define nullptr 0
+#endif
+
 // Message-less static_assert() wasn't available until C++17
 #if (__cplusplus < 201703L)
 	#define static_assert(condition) ((void)sizeof(char[1 - 2*!(condition)]))

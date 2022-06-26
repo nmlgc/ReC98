@@ -1,6 +1,5 @@
 #pragma option -zCSHARED_
 
-#include <stddef.h>
 #include "platform.h"
 #include "x86real.h"
 #include "pc98.h"

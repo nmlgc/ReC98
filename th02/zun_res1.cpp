@@ -5,7 +5,6 @@
  */
 
 #include <dos.h>
-#include <stddef.h>
 #include "platform.h"
 #include "master.hpp"
 #include "th01/rank.h"

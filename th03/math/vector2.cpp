@@ -1,7 +1,6 @@
 #pragma option -zCSHARED -3
 
 extern "C" {
-#include <stddef.h>
 #include "platform.h"
 #include "pc98.h"
 #include "master.hpp"

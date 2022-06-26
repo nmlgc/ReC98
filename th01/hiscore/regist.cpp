@@ -583,7 +583,7 @@ void scoredat_save(void)
 	char fn[16];
 	scoredat_fn(fn, 2);
 
-	if( (fp = fopen(fn, SCOREDAT_FOPEN_WB)) == NULL) {
+	if( (fp = fopen(fn, SCOREDAT_FOPEN_WB)) == nullptr) {
 		return;
 	}
 	write(fileno(fp), magic.x, sizeof(SCOREDAT_MAGIC) - 1);

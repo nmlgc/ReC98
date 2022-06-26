@@ -85,8 +85,8 @@ struct shot_alive_t {
 extern unsigned int shots_alive_count;
 extern shot_alive_t shots_alive[SHOT_COUNT];
 
-// Searches and returns the next free shot slot, or NULL if there are no more
-// free ones.
+// Searches and returns the next free shot slot, or a nullptr if there are no
+// more free ones.
 shot_t near* near shots_add(void);
 
 // Processes collisions of all shots against the shot_hitbox, decays any

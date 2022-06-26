@@ -110,11 +110,11 @@ struct Decomp_DI { void __near* value() { return (void __near *)(_DI); } };
 // perfects the inlining.
 #define poked(sgm, off, val) \
 	_EAX = val; \
-	poked_eax((Decomp##sgm *)NULL, (Decomp##off *)NULL, (uint8_t)(0x89));
+	poked_eax((Decomp##sgm *)nullptr, (Decomp##off *)nullptr, (uint8_t)(0x89));
 
 #define poke_or_d(sgm, off, val) \
 	_EAX = val; \
-	poked_eax((Decomp##sgm *)NULL, (Decomp##off *)NULL, (uint8_t)(0x09));
+	poked_eax((Decomp##sgm *)nullptr, (Decomp##off *)nullptr, (uint8_t)(0x09));
 
 template <class Segment, class Offset> inline void poked_eax(
 	Segment *sgm, Offset *off, uint8_t op

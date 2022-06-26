@@ -42,12 +42,12 @@ struct bos_t {
 	image.planes.G = new dots16_t[plane_size / 2]; \
 	image.planes.E = new dots16_t[plane_size / 2];
 
-// Always setting the pointer to NULL, for a change...
+// Always assigning a nullptr to [ptr], for a change...
 #define bos_image_ptr_free(ptr) \
 	if(ptr) { \
 		delete[] ptr; \
 	} \
-	ptr = NULL;
+	ptr = nullptr;
 
 #define bos_free(slot_ptr) \
 	for(int image = 0; image < BOS_IMAGES_PER_SLOT; image++) { \
@@ -68,11 +68,11 @@ void bos_reset_all_broken(void)
 {
 	for(int slot = 0; slot < 10; slot++) { // should be BOS_ENTITY_SLOT_COUNT
 		for(int image = 0; image < BOS_IMAGES_PER_SLOT; image++) {
-			bos_entity_images[slot].image[image].alpha = NULL;
-			bos_entity_images[slot].image[image].planes.B = NULL;
-			bos_entity_images[slot].image[image].planes.R = NULL;
-			bos_entity_images[slot].image[image].planes.G = NULL;
-			bos_entity_images[slot].image[image].planes.E = NULL;
+			bos_entity_images[slot].image[image].alpha = nullptr;
+			bos_entity_images[slot].image[image].planes.B = nullptr;
+			bos_entity_images[slot].image[image].planes.R = nullptr;
+			bos_entity_images[slot].image[image].planes.G = nullptr;
+			bos_entity_images[slot].image[image].planes.E = nullptr;
 		}
 	}
 }
@@ -684,7 +684,7 @@ void bos_anim_free(int slot)
 		#undef bos_image_ptr_free
 		#define bos_image_ptr_free(ptr) \
 			delete[] ptr; \
-			ptr = NULL;
+			ptr = nullptr;
 
 		bos_image_ptr_free(bos_anim_images[slot].image[image].planes.B);
 		bos_image_ptr_free(bos_anim_images[slot].image[image].planes.R);
