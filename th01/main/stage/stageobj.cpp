@@ -7,17 +7,21 @@
 #include "planar.h"
 #include "master.hpp"
 #include "th01/common.h"
+#include "th01/math/subpixel.hpp"
 extern "C" {
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
 }
 #include "th01/main/playfld.hpp"
+#include "th01/hardware/egc.h"
 #include "th01/formats/ptn.hpp"
 extern "C" {
 #include "th01/formats/pf.hpp"
 #include "th01/formats/stagedat.hpp"
 }
+#include "th01/sprites/pellet.h"
 #include "th01/main/vars.hpp"
+#include "th01/main/bullet/pellet.hpp"
 #include "th01/main/player/orb.hpp"
 #include "th01/main/stage/stages.hpp"
 #include "th01/main/stage/stageobj.hpp"
@@ -103,15 +107,7 @@ void turret_fire_update_and_render_or_reset(int obstacle_i, bool16 reset);
 }
 
 #define turret_fire_update_and_render(obstacle_i) { \
-	/* TODO: Replace with the decompiled call \
-	 * 	turret_fire_update_and_render_or_reset(obstacle_i, false); \
-	 * once that function is part of this translation unit */ \
-	_asm { \
-		push 0; \
-		db 0x56, 0x90, 0x0E; \
-		call near ptr turret_fire_update_and_render_or_reset; \
-		add sp, 4; \
-	} \
+	turret_fire_update_and_render_or_reset(obstacle_i, false); \
 }
 
 #define turrets_reset() { \
@@ -179,6 +175,10 @@ bool16 stageobj_bgs_free(void)
 #define vram_put_ptn_bg_fg(plane, vo, bg, fg, y, fg_mask, tmp) \
 	tmp = (~fg_mask & bg->planes.plane[y]); \
 	VRAM_PUT(plane, vo, ((fg->planes.plane[y] & fg_mask) | tmp), PTN_W);
+
+#define stageobj_put_8(cards_or_obstacles, i, cel) { \
+	ptn_put_8(cards_or_obstacles.left[i], cards_or_obstacles.top[i], cel); \
+}
 
 void stageobj_put_bg_and_obj_8(
 	screen_x_t left, vram_y_t top, int ptn_id, int bg_slot
@@ -257,7 +257,7 @@ void obstacles_init_advance_slot(int dat_offset, int ptn_id, int &slot)
 	stageobj_bgs_snap_from_1_8(
 		obstacles.left[slot], obstacles.top[slot], (slot + cards.count)
 	);
-	ptn_put_8(obstacles.left[slot], obstacles.top[slot], ptn_id);
+	stageobj_put_8(obstacles, slot, ptn_id);
 	slot++;
 }
 
@@ -457,7 +457,7 @@ void stageobjs_init_and_render(int stage_id)
 	if(first_stage_in_scene == true) {
 		for(i = 0; i < cards.count; i++) {
 			card_ptn_id = CARD_ANIM[cards.hp[i]][0];
-			ptn_put_8(cards.left[i], cards.top[i], card_ptn_id);
+			stageobj_put_8(cards, i, card_ptn_id);
 		}
 		return;
 	}
@@ -483,7 +483,7 @@ void stageobjs_init_and_render(int stage_id)
 				card_ptn_id = (
 					CARD_ANIM[cards.hp[i] + 1][card_cel_at(frames_for.x[i])]
 				);
-				ptn_put_8(cards.left[i], cards.top[i], card_ptn_id);
+				stageobj_put_8(cards, i, card_ptn_id);
 			}
 			frames_for.x[i]++;
 			// ... trying to access the 51st card here actually accesses
@@ -761,6 +761,115 @@ void obstacles_update_and_render(bool16 reset)
 		}
 		if(reset == true) {
 			obstacles.frames[i].since_collision = 0;
+		}
+	}
+}
+
+static const int TURRET_COOLDOWN_FRAMES = 7;
+
+enum turret_state_t {
+	TS_READY = 0,
+	TS_WARMUP = 1,
+	TS_FIRE = 2,
+	TS_COOLDOWN = 3,
+	TS_DONE = (TS_COOLDOWN + TURRET_COOLDOWN_FRAMES),
+
+	_turret_state_t_FORCE_INT16 = 0x7FFF
+};
+
+void turret_fire_update_and_render_or_reset(int obstacle_slot, bool16 reset)
+{
+	extern turret_state_t *turret_state;
+
+	if(reset == true) {
+		if(turret_state) {
+			delete[] turret_state;
+			turret_state = nullptr;
+		}
+		if(obstacles.count != 0) {
+			turret_state = new turret_state_t[obstacles.count];
+		}
+		for(
+			obstacle_slot = 0;
+			obstacle_slot < obstacles.count;
+			obstacle_slot++
+		) {
+			turret_state[obstacle_slot] = TS_READY;
+		}
+		return;
+	}
+	if(turret_state[obstacle_slot] == TS_READY) {
+		// MODDERS: This assumes that PTN_TURRET_FIRING only adds or changes
+		// pixels compared to PTN_TURRET, and doesn't remove any. Unblit the
+		// previous portal sprite to ensure this.
+
+		graph_accesspage_func(1);
+		stageobj_put_8(obstacles, obstacle_slot, PTN_TURRET_FIRING);
+		graph_accesspage_func(0);
+		stageobj_put_8(obstacles, obstacle_slot, PTN_TURRET_FIRING);
+
+		turret_state[obstacle_slot] = TS_WARMUP;
+	} else if(turret_state[obstacle_slot] == TS_WARMUP) {
+		if((obstacles.frames[obstacle_slot].fire_cycle % 10) == 9) {
+			turret_state[obstacle_slot] = TS_FIRE;
+		}
+	} else if(turret_state[obstacle_slot] == TS_FIRE) {
+		uint8_t group; // ACTUAL TYPE: pellet_group_t
+		switch(obstacles.type[obstacle_slot]) {
+			case OT_TURRET_SLOW_1_AIMED:
+			case OT_TURRET_QUICK_1_AIMED:
+				group = PG_1_AIMED;
+				break;
+
+			case OT_TURRET_SLOW_1_RANDOM_NARROW_AIMED:
+			case OT_TURRET_QUICK_1_RANDOM_NARROW_AIMED:
+				group = PG_1_RANDOM_NARROW_AIMED;
+				break;
+
+			case OT_TURRET_SLOW_2_SPREAD_WIDE_AIMED:
+			case OT_TURRET_QUICK_2_SPREAD_WIDE_AIMED:
+				group = PG_2_SPREAD_WIDE_AIMED;
+				break;
+
+			case OT_TURRET_SLOW_3_SPREAD_WIDE_AIMED:
+			case OT_TURRET_QUICK_3_SPREAD_WIDE_AIMED:
+				group = PG_3_SPREAD_WIDE_AIMED;
+				break;
+
+			case OT_TURRET_SLOW_4_SPREAD_WIDE_AIMED:
+			case OT_TURRET_QUICK_4_SPREAD_WIDE_AIMED:
+				group = PG_4_SPREAD_WIDE_AIMED;
+				break;
+
+			case OT_TURRET_SLOW_5_SPREAD_WIDE_AIMED:
+			case OT_TURRET_QUICK_5_SPREAD_WIDE_AIMED:
+				group = PG_5_SPREAD_WIDE_AIMED;
+				break;
+		}
+		Pellets.add_group(
+			(obstacles.left[obstacle_slot] + (STAGEOBJ_W / 2) - (PELLET_W / 2)),
+			(obstacles.top[obstacle_slot]  + (STAGEOBJ_H / 2) - (PELLET_H / 2)),
+			static_cast<pellet_group_t>(group),
+			to_sp(3.5f)
+		);
+
+		// Redundant. Looks like a workaround for the possibility of the sprite
+		// having been unblitted with PTN_TURRET between TS_READY and now, but
+		// we've also blitted PTN_TURRET_FIRING to VRAM page 1 before.
+		// (Also, same lazy blitting issue as we've had the first time.)
+		stageobj_put_8(obstacles, obstacle_slot, PTN_TURRET_FIRING);
+
+		turret_state[obstacle_slot] = TS_COOLDOWN;
+	} else {
+		reinterpret_cast<int &>(turret_state[obstacle_slot])++;
+		if(turret_state[obstacle_slot] >= TS_DONE) {
+			graph_accesspage_func(1);
+			stageobj_put_8(obstacles, obstacle_slot, PTN_TURRET);
+			graph_accesspage_func(0);
+			stageobj_put_8(obstacles, obstacle_slot, PTN_TURRET);
+
+			turret_state[obstacle_slot] = TS_READY;
+			obstacles.frames[obstacle_slot].fire_cycle = 0;
 		}
 	}
 }
