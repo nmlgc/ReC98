@@ -1,5 +1,7 @@
 #include "th01/main/player/orb.hpp"
 
+extern double orb_velocity_y;
+
 extern const double ORB_VELOCITY_Y_MIN;
 extern const float ORB_VELOCITY_Y_MAX;
 extern const double ORB_COEFFICIENT_OF_RESTITUTION;
@@ -19,7 +21,7 @@ inline double gravity_for(const double& force)
 	asm { fadd	force; } \
 /// ----------------------------------
 
-int orb_velocity_y_update(void)
+pixel_t orb_velocity_y_update(void)
 {
 	/* TODO: Proper decompilation, once data can be emitted here:
 	 * ----------------------------------------------------------
