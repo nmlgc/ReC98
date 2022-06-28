@@ -143,6 +143,9 @@ case it's part of an arithmetic expression that was promoted to `int`.
 * The same `fpu_tmp` variable is also used as the destination for `FNSTSW`,
   used in comparisons.
 
+* On the stack, `fpu_tmp` is placed after all variables declared at the
+  beginning of the function.
+
 * Performing arithmetic or comparisons between `float` and `double` variables
   *always* `FLD`s the `float` first, before emitting the corresponding FPU
   instruction for the `double`, regardless of how the variables are placed in

@@ -1,4 +1,5 @@
 #include <stddef.h>
+#include <stdlib.h>
 #include <malloc.h>
 #include "platform.h"
 #include "pc98.h"
@@ -6,21 +7,20 @@
 #include "planar.h"
 #include "master.hpp"
 #include "th01/common.h"
+extern "C" {
+#include "th01/hardware/frmdelay.h"
+#include "th01/hardware/graph.h"
+}
 #include "th01/main/playfld.hpp"
 #include "th01/formats/ptn.hpp"
 extern "C" {
 #include "th01/formats/pf.hpp"
 #include "th01/formats/stagedat.hpp"
-#include "th01/hardware/frmdelay.h"
-#include "th01/hardware/graph.h"
 }
 #include "th01/main/vars.hpp"
+#include "th01/main/player/orb.hpp"
 #include "th01/main/stage/stages.hpp"
-
 #include "th01/main/stage/stageobj.hpp"
-
-static const int TURRET_QUICK_INTERVAL = 100;
-static const int TURRET_SLOW_INTERVAL = 200;
 
 // Globals
 // -------
@@ -78,6 +78,47 @@ inline vram_y_t stageobj_top(int row) {
 #define obstacle_top_from(dat_offset) \
 	stageobj_top((dat_offset - obstacles_begin()) / STAGEOBJS_X)
 // -------------------
+
+// Function ordering fails
+// -----------------------
+
+void portal_enter_update_and_render_or_reset(int obstacle_i, bool16 reset);
+void turret_fire_update_and_render_or_reset(int obstacle_i, bool16 reset);
+
+#define portal_enter_update_and_render(obstacle_i) { \
+	/* TODO: Replace with the decompiled call \
+	 * 	portal_enter_update_and_render_or_reset(obstacle_i, false); \
+	 * once that function is part of this translation unit */ \
+	_asm { \
+		push 0; \
+		db 0x56, 0x90, 0x0E; \
+		call near ptr portal_enter_update_and_render_or_reset; \
+		add sp, 4; \
+	} \
+}
+
+#define portals_reset() { \
+	/* MODDERS: Pass `0` and `true` instead. */ \
+	portal_enter_update_and_render_or_reset(i, reset); \
+}
+
+#define turret_fire_update_and_render(obstacle_i) { \
+	/* TODO: Replace with the decompiled call \
+	 * 	turret_fire_update_and_render_or_reset(obstacle_i, false); \
+	 * once that function is part of this translation unit */ \
+	_asm { \
+		push 0; \
+		db 0x56, 0x90, 0x0E; \
+		call near ptr turret_fire_update_and_render_or_reset; \
+		add sp, 4; \
+	} \
+}
+
+#define turrets_reset() { \
+	/* MODDERS: Pass `0` and `true` instead. */ \
+	turret_fire_update_and_render_or_reset(i, reset); \
+}
+// -----------------------
 
 // Frees [stageobj_bgs] if previously allocated, then allocates new memory for
 // the given number of stage object backgrounds.
@@ -466,4 +507,260 @@ void stageobjs_init_and_render(int stage_id)
 
 	#undef nth_bit
 	#undef offset
+}
+
+#define turret_update(obstacle_i, firing_interval, reset) \
+	if(rank != RANK_EASY) { \
+		obstacles.frames[obstacle_i].fire_cycle++; \
+	} \
+	if(obstacles.frames[obstacle_i].fire_cycle >= firing_interval) { \
+		turret_fire_update_and_render(obstacle_i); \
+	} \
+	if(reset == true) { \
+		obstacles.frames[obstacle_i].fire_cycle = 0; \
+		turrets_reset(); \
+	}
+
+// The collision detection macros below are forced to be used inside an `if`
+// statement, returning a non-zero value if a collision took place.
+
+#define bar_hittest_horizontal( \
+	i, condition_x, condition_above_top, condition_below_top \
+) \
+	condition_x && condition_above_top && condition_below_top) { \
+		if(obstacles.frames[i].since_collision == 0) { \
+			obstacles.frames[i].since_collision++; \
+			orb_velocity_reflect_y(); \
+		} \
+	} \
+	/* (redundant, checked after the loop) */ \
+	if(obstacles.frames[i].since_collision != 0
+
+#define bar_hittest_vertical( \
+	i, condition_y, condition_left_of_left, condition_right_of_left, blocked \
+) \
+	condition_y && condition_left_of_left && condition_right_of_left) { \
+		if((obstacles.frames[i].since_collision == 0) && !blocked) { \
+			obstacles.frames[i].since_collision++; \
+			blocked = true; \
+			if(orb_velocity_x == OVX_0) { \
+				orb_velocity_reflect_y(); \
+			} else { \
+				orb_velocity_reflect_x(); \
+			} \
+		} \
+	} \
+	/* (redundant, checked after the loop) */ \
+	if(obstacles.frames[i].since_collision != 0
+
+void obstacles_update_and_render(bool16 reset)
+{
+	enum {
+		// Actually 7, as [since_collision] is already set from 0 to 2 on the
+		// first frame of a collision. Since a new player shot can be fired
+		// every 4 frames when standing still, this number is exactly what
+		// allows the Orb to be button-mashed through a bumper bar.
+		BLOCK_FRAMES = 8,
+	};
+
+	// This function tests Orb collisions independently for every obstacle. If
+	// two bumper bars are placed right next to each other in any dimension,
+	// Orb collisions are therefore detected and handled for both bars within
+	// the same frame. For horizontal bars, this isn't a problem, as the Orb's
+	// Y velocity can only be changed from outside by replacing the single
+	// force acting on the Orb. In this function, the reflected force is
+	// exclusively derived from the (otherwise unmodified) Y velocity, which
+	// means that this can be done multiple times within the same frame without
+	// changing the result.
+	// Vertical bars, however, have to directly invert the Orb's X velocity. If
+	// they are arranged in a column, colliding with two of them simultaneously
+	// is very common due to their hitbox stretching over almost three tile
+	// columns. With their collision response only consisting of that velocity
+	// change though, the resulting double negation would completely cancel out
+	// their effect.
+	//
+	// This flag works around the issue by simply blocking collision with *any*
+	// vertical bumper bar for the next [BLOCK_FRAMES] after the first one.
+	// It's a decent hack, certainly avoids the need for involving the X
+	// velocity in the physics system, and any glitches that are still present
+	// with this hack either remain unchanged or are made more interesting.
+	// (Try shooting the Orb into the two adjacent bumper bar columns in Makai
+	// Stage 17, and watch how this flag contributes to the Orb gradually
+	// rising up to the top of the playfield. Without it, the Orb would simply
+	// oscillate between a fixed set of bumper bars.)
+	extern bool vertical_bars_blocked;
+
+	if(reset == true) {
+		vertical_bars_blocked = false;
+	}
+
+	for(unsigned int i = 0; i < obstacles.count; i++) {
+		upixel_t delta_abs_x;
+		upixel_t delta_abs_y;
+		pixel_t delta_x;
+		pixel_t delta_y;
+
+		delta_abs_x = abs(obstacles.left[i] - orb_cur_left);
+		delta_abs_y = abs(obstacles.top[i] - orb_cur_top);
+		delta_x = (orb_cur_left - obstacles.left[i]);
+		delta_y = (orb_cur_top - obstacles.top[i]);
+
+		switch(obstacles.type[i]) {
+		case OT_BUMPER:
+			if(
+				(delta_abs_x < STAGEOBJ_ORB_DISTANCE_X) &&
+				(delta_abs_y < STAGEOBJ_ORB_DISTANCE_Y) &&
+				(obstacles.frames[i].since_collision == 0)
+			) {
+				obstacles.frames[i].since_collision++;
+
+				// Yup, an immediate teleport to above or below the bumper, as
+				// if it couldn't ever be hit from the left or right side,
+				// completely bypassing the regular physics system. This
+				// assignment is what causes infinite loops between bumpers in
+				// the first place: If two bumpers are close enough and the
+				// Orb's Y velocity is small enough before the first collision,
+				// this assignment makes sure that the Orb can never escape the
+				// hitbox of either bumper.
+				// Nothing about this is necessary. Repeated collisions are
+				// already prevented by the [since_collision] frame counter,
+				// and the physics system could have never produced these
+				// loops. So we might as well conclude that ZUN deliberately
+				// wrote this code to make infinite bumper loops possible, or
+				// at least didn't remove it upon discovering what it did.
+				orb_cur_top = ((delta_y <= 0)
+					? (obstacles.top[i] - STAGEOBJ_ORB_DISTANCE_Y)
+					: (obstacles.top[i] + STAGEOBJ_ORB_DISTANCE_Y)
+				);
+
+				// Then again, with OVX_8_* not being handled here and those
+				// velocities therefore left unchanged, the above assignment is
+				// the only thing that prevents the Orb from flying into the
+				// bumper at such a speed.
+				// The delta comparisons at least ensure that an Orb moving at
+				// OVX_4_* isn't smashed *into* the bumper, only *away* from it.
+				if((orb_velocity_x == OVX_4_RIGHT) && (delta_x < 0)) {
+					orb_velocity_x = OVX_4_LEFT;
+				} else if((orb_velocity_x == OVX_4_LEFT) && (delta_x > 0)) {
+					orb_velocity_x = OVX_4_RIGHT;
+				}
+				orb_force_new(1.5, OF_BOUNCE_FROM_SURFACE);
+			}
+
+			if(obstacles.frames[i].since_collision != 0) {
+				obstacles.frames[i].since_collision++;
+				if(obstacles.frames[i].since_collision >= BLOCK_FRAMES) {
+					obstacles.frames[i].since_collision = 0;
+				}
+			}
+
+			// (redundant, done after the switch)
+			if(reset == true) {
+				obstacles.frames[i].since_collision = 0;
+			}
+			continue;
+
+		case OT_TURRET_SLOW_1_AIMED:
+		case OT_TURRET_SLOW_1_RANDOM_NARROW_AIMED:
+		case OT_TURRET_SLOW_2_SPREAD_WIDE_AIMED:
+		case OT_TURRET_SLOW_3_SPREAD_WIDE_AIMED:
+		case OT_TURRET_SLOW_4_SPREAD_WIDE_AIMED:
+		case OT_TURRET_SLOW_5_SPREAD_WIDE_AIMED:
+			turret_update(i, 200, reset);
+			continue;
+
+		case OT_TURRET_QUICK_1_AIMED:
+		case OT_TURRET_QUICK_1_RANDOM_NARROW_AIMED:
+		case OT_TURRET_QUICK_2_SPREAD_WIDE_AIMED:
+		case OT_TURRET_QUICK_3_SPREAD_WIDE_AIMED:
+		case OT_TURRET_QUICK_4_SPREAD_WIDE_AIMED:
+		case OT_TURRET_QUICK_5_SPREAD_WIDE_AIMED:
+			turret_update(i, 100, reset);
+			continue;
+
+		case OT_PORTAL:
+			if((
+				(delta_abs_x < STAGEOBJ_ORB_DISTANCE_X) &&
+				(delta_abs_y < STAGEOBJ_ORB_DISTANCE_Y)
+			) || (
+				obstacles.frames[i].since_collision != 0
+			)) {
+				portal_enter_update_and_render(i);
+			}
+			if(reset == true) {
+				// (redundant, done after the switch)
+				obstacles.frames[i].since_collision = 0;
+
+				portals_reset();
+			}
+			continue;
+
+		// The fact that the top and bottom bars use swapped extra heights, but
+		// differ in which boundary pixel they still include, means that bottom
+		// and top bars placed in adjacent stage object tiles would almost
+		// share a hitbox, since it only differs in that one boundary pixel.
+		case OT_BAR_BOTTOM:
+			if(bar_hittest_horizontal(
+				i,
+				(delta_abs_x < STAGEOBJ_W),
+				((orb_cur_top - obstacles.top[i]) <= STAGEOBJ_H),
+				((orb_cur_top - obstacles.top[i]) > 0)
+			)) {
+				break;
+			}
+			continue;
+
+		case OT_BAR_TOP:
+			if(bar_hittest_horizontal(
+				i,
+				(delta_abs_x < STAGEOBJ_W),
+				((orb_cur_top - obstacles.top[i]) <  0),
+				((orb_cur_top - obstacles.top[i]) >= -STAGEOBJ_H)
+			)) {
+				break;
+			}
+			continue;
+
+		// And since these share that boundary pixel, adjacent right and left
+		// bars do share the exact same hitbox. See Makai Stage 17 for an
+		// example.
+		case OT_BAR_LEFT:
+			if(bar_hittest_vertical(
+				i,
+				(delta_abs_y < STAGEOBJ_H),
+				((obstacles.left[i] - orb_cur_left) <= STAGEOBJ_W),
+				((obstacles.left[i] - orb_cur_left) >= 0),
+				vertical_bars_blocked
+			)) {
+				break;
+			}
+			continue;
+
+		case OT_BAR_RIGHT:
+			if(bar_hittest_vertical(
+				i,
+				(delta_abs_y < STAGEOBJ_H),
+				((obstacles.left[i] - orb_cur_left) <= 0),
+				((obstacles.left[i] - orb_cur_left) >= -STAGEOBJ_W),
+				vertical_bars_blocked
+			)) {
+				break;
+			}
+			continue;
+
+		default:
+			continue;
+		}
+		// Common to all bumper bars
+		if(obstacles.frames[i].since_collision != 0) {
+			obstacles.frames[i].since_collision++;
+			if(obstacles.frames[i].since_collision >= BLOCK_FRAMES) {
+				obstacles.frames[i].since_collision = 0;
+				vertical_bars_blocked = false;
+			}
+		}
+		if(reset == true) {
+			obstacles.frames[i].since_collision = 0;
+		}
+	}
 }

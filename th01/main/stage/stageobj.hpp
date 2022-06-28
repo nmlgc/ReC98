@@ -1,3 +1,18 @@
+// Coordinates
+// -----------
+// These are only really correct for bumper sprites, which have a visual width
+// of exactly 24×24, but are used for cards and portals as well.
+
+#ifdef ORB_HPP
+	static const pixel_t STAGEOBJ_ORB_DISTANCE_X = (
+		((STAGEOBJ_W * 3) / 8) + (ORB_VISUAL_W / 2)
+	);
+	static const pixel_t STAGEOBJ_ORB_DISTANCE_Y = (
+		((STAGEOBJ_W * 3) / 8) + (ORB_VISUAL_H / 2)
+	);
+#endif
+// -----------
+
 // Cards
 // -----
 
@@ -106,6 +121,11 @@ struct CObstacles {
 };
 
 extern CObstacles obstacles;
+
+// Processes collisions between the Orb and any bumpers, bumper bars, or
+// portals, and handles turret firing on difficulties above Easy. Note that any
+// resetting happens after the regular update and rendering code.
+void obstacles_update_and_render(bool16 reset);
 // -----------
 
 // Initialization

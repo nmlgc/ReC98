@@ -16,8 +16,8 @@ void cards_hittest(int stage_num)
 			: (cards.top[i] - orb_cur_top);
 
 		if((
-			(delta.x < (ORB_W - (ORB_W / 4))) &&
-			(delta.y < (ORB_H - (ORB_H / 4))) &&
+			(delta.x < STAGEOBJ_ORB_DISTANCE_X) &&
+			(delta.y < STAGEOBJ_ORB_DISTANCE_Y) &&
 			(cards.flag[i] == CARD_ALIVE)
 		) || (
 			(test_damage == true) && (cards.flag[i] == CARD_ALIVE)

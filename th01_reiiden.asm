@@ -785,7 +785,7 @@ loc_C7BC:
 loc_C7C9:
 		cmp	_orb_cur_top, ORB_TOP_MAX
 		jle	short loc_C7F4
-		push	OF_BOUNCE_FROM_GROUND
+		push	OF_BOUNCE_FROM_SURFACE
 		fld	_ORB_COEFFICIENT_OF_RESTITUTION
 		sub	sp, 8
 		fstp	[bp+var_C]
@@ -820,8 +820,7 @@ loc_C816:
 		jz	short loc_C846
 		call	@cards_hittest$qi pascal, si
 		pop	cx
-		push	0
-		call	sub_20E4C
+		call	@obstacles_update_and_render$qi stdcall, 0
 		pop	cx
 
 loc_C846:
@@ -2700,8 +2699,7 @@ loc_DB3E:
 		call	@hud_score_and_cardcombo_render$qv
 		mov	_bomb_doubletap_frames, (BOMB_DOUBLETAP_WINDOW * 3)
 		mov	word_34A70, 3Ch	; '<'
-		push	1
-		call	sub_20E4C
+		call	@obstacles_update_and_render$qi stdcall, 1
 		pop	cx
 		mov	al, byte_34ADF
 		cbw
@@ -11681,6 +11679,7 @@ main_31_TEXT	segment	byte public 'CODE' use16
 	extern @stageobj_bgs_put_all$qv:proc
 	extern @stageobj_bgs_free$qv:proc
 	extern @scene_init_and_load$quc:proc
+	extern @obstacles_update_and_render$qi:proc
 main_31_TEXT	ends
 
 main_31__TEXT	segment	byte public 'CODE' use16
@@ -11689,585 +11688,19 @@ main_31__TEXT	segment	byte public 'CODE' use16
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 OT_NONE = 0
-OT_BUMPER = 1
 OT_TURRET = 2
-OT_TURRET_SLOW_1_AIMED = OT_TURRET
-OT_TURRET_SLOW_1_RANDOM_NARROW_AIMED = 3
-OT_TURRET_SLOW_2_SPREAD_WIDE_AIMED = 4
-OT_TURRET_SLOW_3_SPREAD_WIDE_AIMED = 5
-OT_TURRET_SLOW_4_SPREAD_WIDE_AIMED = 6
-OT_TURRET_SLOW_5_SPREAD_WIDE_AIMED = 7
-OT_TURRET_QUICK_1_AIMED = 8
-OT_TURRET_QUICK_1_RANDOM_NARROW_AIMED = 9
-OT_TURRET_QUICK_2_SPREAD_WIDE_AIMED = 10
-OT_TURRET_QUICK_3_SPREAD_WIDE_AIMED = 11
-OT_TURRET_QUICK_4_SPREAD_WIDE_AIMED = 12
 OT_TURRET_QUICK_5_SPREAD_WIDE_AIMED = 13
 OT_ACTUALLY_A_CARD = 14
 OT_ACTUALLY_A_2FLIP_CARD = OT_ACTUALLY_A_CARD
 OT_ACTUALLY_A_3FLIP_CARD = 15
 OT_ACTUALLY_A_4FLIP_CARD = 16
 OT_PORTAL = 17
-OT_BAR_TOP = 18
-OT_BAR_BOTTOM = 19
-OT_BAR_LEFT = 20
-OT_BAR_RIGHT = 21
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_20E4C	proc far
-
-var_1A		= qword	ptr -1Ah
-var_C		= word ptr -0Ch
-var_A		= word ptr -0Ah
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  6
-
-		enter	0Ch, 0
-		push	si
-		push	di
-		mov	di, [bp+arg_0]
-		cmp	di, 1
-		jnz	short loc_20E5F
-		mov	byte_39EB2, 0
-
-loc_20E5F:
-		xor	si, si
-		jmp	loc_212CB
-; ---------------------------------------------------------------------------
-
-loc_20E64:
-		mov	ax, si
-		add	ax, ax
-		les	bx, _obstacles_left
-		add	bx, ax
-		mov	ax, es:[bx]
-		sub	ax, _orb_cur_left
-		mov	[bp+var_A], ax
-		cwd
-		xor	ax, dx
-		sub	ax, dx
-		mov	[bp+var_2], ax
-		mov	ax, si
-		add	ax, ax
-		les	bx, _obstacles_top
-		add	bx, ax
-		mov	ax, es:[bx]
-		sub	ax, _orb_cur_top
-		mov	[bp+var_C], ax
-		cwd
-		xor	ax, dx
-		sub	ax, dx
-		mov	[bp+var_4], ax
-		mov	ax, si
-		add	ax, ax
-		les	bx, _obstacles_left
-		add	bx, ax
-		mov	ax, _orb_cur_left
-		sub	ax, es:[bx]
-		mov	[bp+var_6], ax
-		mov	ax, si
-		add	ax, ax
-		les	bx, _obstacles_top
-		add	bx, ax
-		mov	ax, _orb_cur_top
-		sub	ax, es:[bx]
-		mov	[bp+var_8], ax
-		les	bx, _obstacles_type
-		mov	al, es:[bx+si]
-		cbw
-		dec	ax
-		mov	bx, ax
-		cmp	bx, (OT_BAR_RIGHT - 1)
-		ja	@@card
-		add	bx, bx
-		jmp	cs:off_212D7[bx]
-
-@@bumper:
-		cmp	[bp+var_2], 18h
-		jnb	loc_20F67
-		cmp	[bp+var_4], 18h
-		jnb	short loc_20F67
-		mov	ax, si
-		add	ax, ax
-		les	bx, _obstacles_type_frames
-		add	bx, ax
-		cmp	word ptr es:[bx], 0
-		jnz	short loc_20F67
-		inc	word ptr es:[bx]
-		cmp	[bp+var_8], 0
-		jg	short loc_20F14
-		mov	ax, si
-		add	ax, ax
-		les	bx, _obstacles_top
-		add	bx, ax
-		mov	ax, es:[bx]
-		add	ax, -24
-		jmp	short loc_20F24
-; ---------------------------------------------------------------------------
-
-loc_20F14:
-		mov	ax, si
-		add	ax, ax
-		les	bx, _obstacles_top
-		add	bx, ax
-		mov	ax, es:[bx]
-		add	ax, 24
-
-loc_20F24:
-		mov	_orb_cur_top, ax
-		cmp	_orb_velocity_x, OVX_4_RIGHT
-		jnz	short loc_20F3C
-		cmp	[bp+var_6], 0
-		jge	short loc_20F3C
-		mov	_orb_velocity_x, OVX_4_LEFT
-		jmp	short loc_20F4F
-; ---------------------------------------------------------------------------
-
-loc_20F3C:
-		cmp	_orb_velocity_x, OVX_4_LEFT
-		jnz	short loc_20F4F
-		cmp	[bp+var_6], 0
-		jle	short loc_20F4F
-		mov	_orb_velocity_x, OVX_4_RIGHT
-
-loc_20F4F:
-		push	OF_BOUNCE_FROM_GROUND
-		fld	flt_35C9A
-		sub	sp, 8
-		fstp	[bp+var_1A]
-		fwait
-		call	@orb_force_new$qd11orb_force_t
-		add	sp, 0Ah
-
-loc_20F67:
-		mov	ax, si
-		add	ax, ax
-		les	bx, _obstacles_type_frames
-		add	bx, ax
-		cmp	word ptr es:[bx], 0
-		jz	short loc_20F85
-		inc	word ptr es:[bx]
-		cmp	word ptr es:[bx], 8
-		jl	short loc_20F85
-		mov	word ptr es:[bx], 0
-
-loc_20F85:
-		cmp	di, 1
-		jnz	@@card
-		jmp	loc_212BB
-; ---------------------------------------------------------------------------
-
-@@turret_slow:
-		cmp	_rank, RANK_EASY
-		jz	short loc_20FA3
-		mov	ax, si
-		add	ax, ax
-		les	bx, _obstacles_type_frames
-		add	bx, ax
-		inc	word ptr es:[bx]
-
-loc_20FA3:
-		mov	ax, si
-		add	ax, ax
-		les	bx, _obstacles_type_frames
-		add	bx, ax
-		cmp	word ptr es:[bx], 200
-		jl	short loc_20FBF
-		push	0
-		push	si
-		nopcall	sub_21301
-		add	sp, 4
-
-loc_20FBF:
-		cmp	di, 1
-		jnz	@@card
-		jmp	short loc_20FFE
-; ---------------------------------------------------------------------------
-
-@@turret_quick:
-		cmp	_rank, RANK_EASY
-		jz	short loc_20FDC
-		mov	ax, si
-		add	ax, ax
-		les	bx, _obstacles_type_frames
-		add	bx, ax
-		inc	word ptr es:[bx]
-
-loc_20FDC:
-		mov	ax, si
-		add	ax, ax
-		les	bx, _obstacles_type_frames
-		add	bx, ax
-		cmp	word ptr es:[bx], 100
-		jl	short loc_20FF7
-		push	0
-		push	si
-		nopcall	sub_21301
-		add	sp, 4
-
-loc_20FF7:
-		cmp	di, 1
-		jnz	@@card
-
-loc_20FFE:
-		mov	ax, si
-		add	ax, ax
-		les	bx, _obstacles_type_frames
-		add	bx, ax
-		mov	word ptr es:[bx], 0
-		push	di
-		push	si
-		nopcall	sub_21301
-		jmp	short loc_2105A
-; ---------------------------------------------------------------------------
-
-@@portal:
-		cmp	[bp+var_2], 18h
-		jnb	short loc_21022
-		cmp	[bp+var_4], 18h
-		jb	short loc_21032
-
-loc_21022:
-		mov	ax, si
-		add	ax, ax
-		les	bx, _obstacles_type_frames
-		add	bx, ax
-		cmp	word ptr es:[bx], 0
-		jz	short loc_2103D
-
-loc_21032:
-		push	0
-		push	si
-		nopcall	sub_21577
-		add	sp, 4
-
-loc_2103D:
-		cmp	di, 1
-		jnz	@@card
-		mov	ax, si
-		add	ax, ax
-		les	bx, _obstacles_type_frames
-		add	bx, ax
-		mov	word ptr es:[bx], 0
-		push	di
-		push	si
-		nopcall	sub_21577
-
-loc_2105A:
-		add	sp, 4
-		jmp	@@card
-; ---------------------------------------------------------------------------
-
-@@bar_bottom:
-		cmp	[bp+var_2], 20h	; ' '
-		jnb	short loc_210B1
-		mov	ax, si
-		add	ax, ax
-		les	bx, _obstacles_top
-		add	bx, ax
-		mov	ax, _orb_cur_top
-		sub	ax, es:[bx]
-		cmp	ax, 32
-		jg	short loc_210B1
-		mov	ax, _orb_cur_top
-		sub	ax, es:[bx]
-		jle	short loc_210B1
-		mov	ax, si
-		add	ax, ax
-		les	bx, _obstacles_type_frames
-		add	bx, ax
-		cmp	word ptr es:[bx], 0
-		jnz	short loc_210B1
-		inc	word ptr es:[bx]
-		push	OF_IMMEDIATE
-		fld	_orb_velocity_y
-		fchs
-		sub	sp, 8
-		fstp	[bp+var_1A]
-		fwait
-		call	@orb_force_new$qd11orb_force_t
-		add	sp, 0Ah
-
-loc_210B1:
-		mov	ax, si
-		add	ax, ax
-		les	bx, _obstacles_type_frames
-		add	bx, ax
-		cmp	word ptr es:[bx], 0
-		jz	@@card
-		jmp	loc_21293
-; ---------------------------------------------------------------------------
-
-@@bar_top:
-		cmp	[bp+var_2], 20h	; ' '
-		jnb	short loc_21117
-		mov	ax, si
-		add	ax, ax
-		les	bx, _obstacles_top
-		add	bx, ax
-		mov	ax, _orb_cur_top
-		sub	ax, es:[bx]
-		jge	short loc_21117
-		mov	ax, _orb_cur_top
-		sub	ax, es:[bx]
-		cmp	ax, -32
-		jl	short loc_21117
-		mov	ax, si
-		add	ax, ax
-		les	bx, _obstacles_type_frames
-		add	bx, ax
-		cmp	word ptr es:[bx], 0
-		jnz	short loc_21117
-		inc	word ptr es:[bx]
-		push	OF_IMMEDIATE
-		fld	_orb_velocity_y
-		fchs
-		sub	sp, 8
-		fstp	[bp+var_1A]
-		fwait
-		call	@orb_force_new$qd11orb_force_t
-		add	sp, 0Ah
-
-loc_21117:
-		mov	ax, si
-		add	ax, ax
-		les	bx, _obstacles_type_frames
-		add	bx, ax
-		cmp	word ptr es:[bx], 0
-		jz	@@card
-		jmp	loc_21293
-; ---------------------------------------------------------------------------
-
-@@bar_left:
-		cmp	[bp+var_4], 20h	; ' '
-		jnb	loc_211CD
-		mov	ax, si
-		add	ax, ax
-		les	bx, _obstacles_left
-		add	bx, ax
-		mov	ax, es:[bx]
-		sub	ax, _orb_cur_left
-		cmp	ax, 32
-		jg	loc_211CD
-		mov	ax, es:[bx]
-		sub	ax, _orb_cur_left
-		jl	short loc_211CD
-		mov	ax, si
-		add	ax, ax
-		les	bx, _obstacles_type_frames
-		add	bx, ax
-		cmp	word ptr es:[bx], 0
-		jnz	short loc_211CD
-		cmp	byte_39EB2, 0
-		jnz	short loc_211CD
-		inc	word ptr es:[bx]
-		mov	byte_39EB2, 1
-		cmp	_orb_velocity_x, OVX_0
-		jnz	short loc_21198
-		push	OF_IMMEDIATE
-		fld	_orb_velocity_y
-		fchs
-		sub	sp, 8
-		fstp	[bp+var_1A]
-		fwait
-		call	@orb_force_new$qd11orb_force_t
-		add	sp, 0Ah
-		jmp	short loc_211CD
-; ---------------------------------------------------------------------------
-
-loc_21198:
-		cmp	_orb_velocity_x, OVX_4_LEFT
-		jnz	short loc_211A4
-		mov	ax, 2
-		jmp	short loc_211CA
-; ---------------------------------------------------------------------------
-
-loc_211A4:
-		cmp	_orb_velocity_x, OVX_4_RIGHT
-		jnz	short loc_211B0
-		mov	ax, 1
-		jmp	short loc_211CA
-; ---------------------------------------------------------------------------
-
-loc_211B0:
-		cmp	_orb_velocity_x, OVX_8_LEFT
-		jnz	short loc_211BC
-		mov	ax, 4
-		jmp	short loc_211CA
-; ---------------------------------------------------------------------------
-
-loc_211BC:
-		cmp	_orb_velocity_x, OVX_8_RIGHT
-		jnz	short loc_211C8
-		mov	ax, 3
-		jmp	short loc_211CA
-; ---------------------------------------------------------------------------
-
-loc_211C8:
-		xor	ax, ax
-
-loc_211CA:
-		mov	_orb_velocity_x, ax
-
-loc_211CD:
-		mov	ax, si
-		add	ax, ax
-		les	bx, _obstacles_type_frames
-		add	bx, ax
-		cmp	word ptr es:[bx], 0
-		jz	@@card
-		jmp	loc_21293
-; ---------------------------------------------------------------------------
-
-@@bar_right:
-		cmp	[bp+var_4], 20h	; ' '
-		jnb	loc_21283
-		mov	ax, si
-		add	ax, ax
-		les	bx, _obstacles_left
-		add	bx, ax
-		mov	ax, es:[bx]
-		sub	ax, _orb_cur_left
-		jg	loc_21283
-		mov	ax, es:[bx]
-		sub	ax, _orb_cur_left
-		cmp	ax, -32
-		jl	short loc_21283
-		mov	ax, si
-		add	ax, ax
-		les	bx, _obstacles_type_frames
-		add	bx, ax
-		cmp	word ptr es:[bx], 0
-		jnz	short loc_21283
-		cmp	byte_39EB2, 0
-		jnz	short loc_21283
-		inc	word ptr es:[bx]
-		mov	byte_39EB2, 1
-		cmp	_orb_velocity_x, OVX_0
-		jnz	short loc_2124E
-		push	OF_IMMEDIATE
-		fld	_orb_velocity_y
-		fchs
-		sub	sp, 8
-		fstp	[bp+var_1A]
-		fwait
-		call	@orb_force_new$qd11orb_force_t
-		add	sp, 0Ah
-		jmp	short loc_21283
-; ---------------------------------------------------------------------------
-
-loc_2124E:
-		cmp	_orb_velocity_x, OVX_4_LEFT
-		jnz	short loc_2125A
-		mov	ax, 2
-		jmp	short loc_21280
-; ---------------------------------------------------------------------------
-
-loc_2125A:
-		cmp	_orb_velocity_x, OVX_4_RIGHT
-		jnz	short loc_21266
-		mov	ax, 1
-		jmp	short loc_21280
-; ---------------------------------------------------------------------------
-
-loc_21266:
-		cmp	_orb_velocity_x, OVX_8_LEFT
-		jnz	short loc_21272
-		mov	ax, 4
-		jmp	short loc_21280
-; ---------------------------------------------------------------------------
-
-loc_21272:
-		cmp	_orb_velocity_x, OVX_8_RIGHT
-		jnz	short loc_2127E
-		mov	ax, 3
-		jmp	short loc_21280
-; ---------------------------------------------------------------------------
-
-loc_2127E:
-		xor	ax, ax
-
-loc_21280:
-		mov	_orb_velocity_x, ax
-
-loc_21283:
-		mov	ax, si
-		add	ax, ax
-		les	bx, _obstacles_type_frames
-		add	bx, ax
-		cmp	word ptr es:[bx], 0
-		jz	short @@card
-
-loc_21293:
-		mov	ax, si
-		add	ax, ax
-		les	bx, _obstacles_type_frames
-		add	bx, ax
-		cmp	word ptr es:[bx], 0
-		jz	short loc_212B6
-		inc	word ptr es:[bx]
-		cmp	word ptr es:[bx], 8
-		jl	short loc_212B6
-		mov	word ptr es:[bx], 0
-		mov	byte_39EB2, 0
-
-loc_212B6:
-		cmp	di, 1
-		jnz	short @@card
-
-loc_212BB:
-		mov	ax, si
-		add	ax, ax
-		les	bx, _obstacles_type_frames
-		add	bx, ax
-		mov	word ptr es:[bx], 0
-
-@@card:
-		inc	si
-
-loc_212CB:
-		cmp	si, _obstacle_count
-		jb	loc_20E64
-		pop	di
-		pop	si
-		leave
-		retf
-
-; ---------------------------------------------------------------------------
-off_212D7	dw offset @@bumper
-		dw offset @@turret_slow
-		dw offset @@turret_slow
-		dw offset @@turret_slow
-		dw offset @@turret_slow
-		dw offset @@turret_slow
-		dw offset @@turret_slow
-		dw offset @@turret_quick
-		dw offset @@turret_quick
-		dw offset @@turret_quick
-		dw offset @@turret_quick
-		dw offset @@turret_quick
-		dw offset @@turret_quick
-		dw offset @@card
-		dw offset @@card
-		dw offset @@card
-		dw offset @@portal
-		dw offset @@bar_top
-		dw offset @@bar_bottom
-		dw offset @@bar_left
-		dw offset @@bar_right
-sub_20E4C	endp
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_21301	proc far
+public @turret_fire_update_and_render_or$qii
+@turret_fire_update_and_render_or$qii	proc far
 
 @@group		= byte ptr -1
 arg_0		= word ptr  6
@@ -12545,13 +11978,13 @@ off_2155F	dw offset @@1_aimed
 		dw offset @@3_spread_wide_aimed
 		dw offset @@4_spread_wide_aimed
 		dw offset @@5_spread_wide_aimed
-sub_21301	endp
+@turret_fire_update_and_render_or$qii	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_21577	proc far
+public @portal_enter_update_and_render_o$qii
+@portal_enter_update_and_render_o$qii	proc far
 
 var_12		= qword	ptr -12h
 var_4		= word ptr -4
@@ -12797,7 +12230,7 @@ loc_21815:
 		pop	si
 		leave
 		retf
-sub_21577	endp
+@portal_enter_update_and_render_o$qii	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -13415,7 +12848,6 @@ _CARD_ANIM label byte
 _scene_fn_	db 'stage .dat', 0, 0, 0, 0, 0
 public _stageobjs_init_anim_card_frames
 _stageobjs_init_anim_card_frames dw 50 dup (0)
-flt_35C9A	dd 1.5
 	extern _game_cleared:byte
 	extern _unused_boss_stage_flag:word
 	extern _pellet_destroy_score_delta:word
@@ -13649,7 +13081,8 @@ _obstacles_type_frames	dd ?
 _obstacle_count	dw ?
 _cards_score	dd ?
 _a_random_unused_card_id	dw ?
-byte_39EB2	db ?
+public _vertical_bars_blocked
+_vertical_bars_blocked	db ?
 ; void (*off_39EB3)(void)
 off_39EB3	dd ?
 word_39EB7	dw ?

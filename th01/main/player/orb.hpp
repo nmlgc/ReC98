@@ -1,5 +1,10 @@
+#define ORB_HPP
+
 static const pixel_t ORB_W = 32;
 static const pixel_t ORB_H = 32;
+
+static const pixel_t ORB_VISUAL_W = 25;
+static const pixel_t ORB_VISUAL_H = 25;
 
 static const pixel_t ORB_HITBOX_W = (ORB_W / 2);
 static const pixel_t ORB_HITBOX_H = (ORB_W / 2);
@@ -37,7 +42,7 @@ enum orb_velocity_x_t {
 };
 
 enum orb_force_t {
-	OF_BOUNCE_FROM_GROUND = 0,
+	OF_BOUNCE_FROM_SURFACE = 0, // bottom of playfield, or bumper
 	OF_BOUNCE_FROM_TOP = 1,
 	OF_SHOT = 2,
 	OF_IMMEDIATE = 3, // new force passed directly in [immediate]
@@ -66,6 +71,23 @@ inline double orb_velocity_y_get(void) {
 // Updates the Orb's Y velocity with the currently active force, and returns
 // the orb's velocity for this frame, in pixels to be added to [orb_cur_top].
 pixel_t orb_velocity_y_update(void);
+
+// Directly inverts the Orb's X velocity. Not idempotent within the same frame.
+inline void orb_velocity_reflect_x(void) {
+	orb_velocity_x = (
+		(orb_velocity_x == OVX_4_LEFT ) ? OVX_4_RIGHT :
+		(orb_velocity_x == OVX_4_RIGHT) ? OVX_4_LEFT :
+		(orb_velocity_x == OVX_8_LEFT ) ? OVX_8_RIGHT :
+		(orb_velocity_x == OVX_8_RIGHT) ? OVX_8_LEFT :
+		/* (orb_velocity_x == OVX_0)   */ OVX_0
+	);
+}
+
+// Inverts the Orb's Y velocity by applying a new force in the opposite
+// direction. Idempotent within the same frame.
+inline void orb_velocity_reflect_y(void) {
+	orb_force_new(-orb_velocity_y_get(), OF_IMMEDIATE);
+}
 
 // Updates [orb_cur_left] depending on the passed [velocity_x], *as well as*
 // the global [orb_velocity_x] (!) to bounce the orb off the left or right

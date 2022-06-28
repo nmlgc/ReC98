@@ -73,7 +73,7 @@ void orb_force_new(double immediate, orb_force_t force)
 	extern const float ORB_FORCE_2_0;
 	extern const double ORB_FORCE_SHOT_BASE;
 
-	if(force == OF_BOUNCE_FROM_GROUND) {
+	if(force == OF_BOUNCE_FROM_SURFACE) {
 		orb_force = (-orb_velocity_y * ORB_COEFFICIENT_OF_RESTITUTION);
 		if(orb_velocity_x == OVX_0) {
 			random_velocity_change(0, OVX_4_LEFT);
