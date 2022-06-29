@@ -17,9 +17,9 @@ extern "C" {
 #include "th01/hardware/grppsafx.h"
 #include "th01/hardware/palette.h"
 #include "th01/snd/mdrv2.h"
+}
 #include "th01/formats/grp.h"
 #include "th01/hiscore/scoredat.hpp"
-}
 #include "th01/hiscore/regist.hpp"
 #include "th01/end/end.hpp"
 #include "th01/end/pic.hpp"

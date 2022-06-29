@@ -19,23 +19,23 @@
 extern "C" {
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
-#include "th01/hardware/grcg8x8m.hpp"
 }
+#include "th01/hardware/grcg8x8m.hpp"
 #include "th01/hardware/egc.h"
+#include "th01/hardware/egcrows.hpp"
+#include "th01/hardware/grpinv32.hpp"
 extern "C" {
 #include "th01/hardware/palette.h"
 }
-#include "th01/hardware/egcrows.hpp"
-#include "th01/hardware/grpinv32.hpp"
 #include "th01/hardware/pgtrans.hpp"
 #include "th01/hardware/scrollup.hpp"
 #include "th01/hardware/input.hpp"
 extern "C" {
 #include "th01/snd/mdrv2.h"
 #include "th01/formats/pf.hpp"
+}
 #include "th01/formats/grc.hpp"
 #include "th01/formats/grp.h"
-}
 #include "th01/formats/ptn.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/formats/stagedat.hpp"

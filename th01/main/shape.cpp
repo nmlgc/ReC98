@@ -1,4 +1,6 @@
 #include "th01/v_colors.hpp"
+#include "th01/math/polar.hpp"
+#include "th01/hardware/egc.h"
 #include "th01/sprites/shape8x8.hpp"
 #include "th01/main/shape.hpp"
 

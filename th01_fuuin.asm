@@ -166,19 +166,19 @@ sub_B945	proc far
 		call	_mdrv2_bgm_load
 		add	sp, 4
 		call	_mdrv2_bgm_play
-		call	grp_palette_settone pascal, 0
+		call	@grp_palette_settone$qi pascal, 0
 		call	@end_pics_load_palette_show$qnxc pascal, ds, offset aEd1a_grp ; "ED1A.grp"
 		call	@end_pic_show$qi stdcall, 0
 		pop	cx
-		call	grp_palette_black_in pascal, 6
+		call	@grp_palette_black_in$qui pascal, 6
 		call	_frame_delay stdcall, 100
 		pop	cx
-		call	grp_palette_white_out pascal, 5
+		call	@grp_palette_white_out$qui pascal, 5
 		call	_frame_delay stdcall, 100
 		pop	cx
 		call	@end_pic_show$qi stdcall, 1
 		pop	cx
-		call	grp_palette_settone pascal, 100
+		call	@grp_palette_settone$qi pascal, 100
 		call	_frame_delay stdcall, 13
 		pop	cx
 		call	@end_pic_show$qi stdcall, 2
@@ -202,12 +202,12 @@ sub_B945	proc far
 		pop	cx
 		call	_frame_delay stdcall, 100
 		pop	cx
-		call	grp_palette_black_out pascal, 6
+		call	@grp_palette_black_out$qui pascal, 6
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
 		call	_z_graph_clear
-		call	grp_palette_settone pascal, 100
+		call	@grp_palette_settone$qi pascal, 100
 		call	@end_pics_load_palette_show$qnxc pascal, ds, offset aEd1c_grp ; "ED1C.GRP"
 		xor	si, si
 		jmp	short loc_BA49
@@ -326,7 +326,7 @@ loc_BB1E:
 		pop	cx
 		call	@end_pic_show$qi stdcall, 3
 		pop	cx
-		call	grp_palette_settone pascal, 105
+		call	@grp_palette_settone$qi pascal, 105
 		call	@end_pics_load_palette_show$qnxc pascal, ds, offset aEd1e_grp ; "ED1E.GRP"
 		call	@end_pic_show$qi stdcall, 0
 		pop	cx
@@ -338,7 +338,7 @@ loc_BB62:
 		mov	ax, si
 		imul	ax, 5
 		add	ax, 110
-		call	grp_palette_settone pascal, ax
+		call	@grp_palette_settone$qi pascal, ax
 		call	_frame_delay stdcall, 16
 		pop	cx
 		inc	si
@@ -362,7 +362,7 @@ loc_BB82:
 		mov	ax, si
 		imul	ax, 5
 		add	ax, 130
-		call	grp_palette_settone pascal, ax
+		call	@grp_palette_settone$qi pascal, ax
 		inc	si
 
 loc_BBB1:
@@ -379,7 +379,7 @@ loc_BBB1:
 loc_BBC7:
 		call	@end_bad$qv
 		call	_mdrv2_bgm_fade_out_nonblock
-		call	grp_palette_black_out pascal, 10
+		call	@grp_palette_black_out$qui pascal, 10
 		call	_z_graph_clear
 		call	_mdrv2_bgm_stop
 		push	ds
@@ -408,11 +408,11 @@ fuuin_04_TEXT	segment	byte public 'CODE' use16
 	extern @END_PICS_LOAD_PALETTE_SHOW$QNXC:proc
 	extern @end_pic_show$qi:proc
 	extern _frame_delay:proc
-	extern GRP_PALETTE_SETTONE:proc
-	extern GRP_PALETTE_BLACK_OUT:proc
-	extern GRP_PALETTE_BLACK_IN:proc
-	extern GRP_PALETTE_WHITE_OUT:proc
-	extern GRP_PALETTE_WHITE_IN:proc
+	extern @GRP_PALETTE_SETTONE$QI:proc
+	extern @GRP_PALETTE_BLACK_OUT$QUI:proc
+	extern @GRP_PALETTE_BLACK_IN$QUI:proc
+	extern @GRP_PALETTE_WHITE_OUT$QUI:proc
+	extern @GRP_PALETTE_WHITE_IN$QUI:proc
 fuuin_04_TEXT	ends
 
 ; ===========================================================================

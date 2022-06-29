@@ -23,7 +23,9 @@ extern "C" {
 #include "th01/hardware/text.h"
 extern "C" {
 #include "th01/snd/mdrv2.h"
+}
 #include "th01/formats/grp.h"
+extern "C" {
 #include "th01/formats/grz.h"
 #include "th01/formats/pf.hpp"
 }

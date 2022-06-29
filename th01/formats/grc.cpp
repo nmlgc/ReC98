@@ -2,8 +2,10 @@
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
+extern "C" {
 #include "th01/hardware/graph.h"
 #include "th01/formats/pf.hpp"
+}
 #include "th01/formats/grc.hpp"
 
 int grc_load(main_grc_slot_t slot, const char fn[PF_FN_LEN])

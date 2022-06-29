@@ -129,8 +129,8 @@ public @bomb_kuji_load$qv
 @bomb_kuji_load$qv	proc far
 		push	bp
 		mov	bp, sp
-		call	_grc_load stdcall, GRC_SLOT_BOMB_KUJI_1, offset aKuzi1_grc, ds
-		call	_grc_load stdcall, GRC_SLOT_BOMB_KUJI_2, offset aKuzi2_grc, ds
+		call	@grc_load$q15main_grc_slot_txnxc stdcall, GRC_SLOT_BOMB_KUJI_1, offset aKuzi1_grc, ds
+		call	@grc_load$q15main_grc_slot_txnxc stdcall, GRC_SLOT_BOMB_KUJI_2, offset aKuzi2_grc, ds
 		add	sp, 0Ch
 		pop	bp
 		retf
@@ -378,7 +378,7 @@ loc_C0D2:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+3DCDh]	; left
-		call	_grc_put_8
+		call	@grc_put_8$qii15main_grc_slot_tii
 		add	sp, 0Ah
 		inc	si
 		mov	al, angle_387D9
@@ -3379,9 +3379,7 @@ SHARED	ends
 PTN_GRP_GRZ	segment	byte public 'CODE' use16
 	extern @ptn_load$q15main_ptn_slot_tnxc:proc
 	extern @ptn_free$q15main_ptn_slot_t:proc
-	extern _grp_palette_load_show_sane:proc
-	extern _grp_palette_load_show:proc
-	extern _grp_put:proc
+	extern @grp_put$qnxc:proc
 PTN_GRP_GRZ	ends
 
 ; ===========================================================================
@@ -4070,7 +4068,7 @@ sub_12F62	proc near
 		mov	bp, sp
 		push	1
 		call	_graph_accesspage_func
-		call	_grp_put stdcall, offset aClear3_grp, ds ; "CLEAR3.grp"
+		call	@grp_put$qnxc stdcall, offset aClear3_grp, ds ; "CLEAR3.grp"
 		call	@ptn_load$q15main_ptn_slot_tnxc stdcall, PTN_SLOT_NUMB, offset aNumb_ptn, ds ; "numb.ptn"
 		push	0
 		call	_graph_accesspage_func
@@ -5146,8 +5144,8 @@ main_22_TEXT	ends
 
 ; Segment type:	Pure code
 main_23_TEXT	segment	byte public 'CODE' use16
-	extern _grc_load:proc
-	extern _grc_put_8:proc
+	extern @grc_load$q15main_grc_slot_txnxc:proc
+	extern @grc_put_8$qii15main_grc_slot_tii:proc
 	extern @shape_ellipse_arc_put$qiiiiiucucuc:proc
 	extern @shape_ellipse_arc_sloppy_unput$qiiiiucucuc:proc
 	extern _graph_r_lineloop_put:proc

@@ -22,7 +22,9 @@ extern "C" {
 #include "th01/hardware/text.h"
 #include "th01/hardware/tram_x16.hpp"
 #include "th01/snd/mdrv2.h"
+}
 #include "th01/formats/grp.h"
+extern "C" {
 #include "th01/formats/pf.hpp"
 }
 #include "th01/formats/ptn.hpp"

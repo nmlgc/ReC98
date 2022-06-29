@@ -10,11 +10,11 @@
 #include "planar.h"
 #include "master.hpp"
 extern "C" {
-#include "th01/formats/grp.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/palette.h"
 #include "th01/hardware/vsync.h"
 }
+#include "th01/formats/grp.h"
 #include "th01/end/type.hpp"
 
 #define TYPE_DELAY 3
@@ -26,10 +26,8 @@ static const int TYPE_FX = (COL_TYPE | FX_WEIGHT_NORMAL);
 
 inline void optimization_barrier() {}
 
-extern "C" {
-
-// Special FUUIN.EXE version of frame_delay() that resets [vsync_frame] first.
-void frame_delay(unsigned int frames)
+ // Special FUUIN.EXE version of frame_delay() that resets [vsync_frame] first.
+extern "C" void frame_delay(unsigned int frames)
 {
 	vsync_frame = 0;
 	while(1) {
@@ -101,8 +99,6 @@ void pascal grp_palette_white_in(unsigned int frames)
 	fade_loop(200, -=, frames);
 }
 /// ------------------
-
-}
 
 #pragma option -O-
 

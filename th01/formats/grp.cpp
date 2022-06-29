@@ -1,12 +1,13 @@
 #pragma option -zCPTN_GRP_GRZ
 
-extern "C" {
 #include <stdio.h>
 #include "platform.h"
 #include "pc98.h"
 #include "master.hpp"
+extern "C" {
 #include "libs/piloadc/piloadc.h"
 #include "th01/hardware/palette.h"
+}
 #include "th01/formats/grp.h"
 
 // The same size that master.lib uses in graph_pi_load_pack(), with no
@@ -114,6 +115,4 @@ int grp_put_colorkey(const char *fn)
 	flag_palette_show = true;
 	flag_grp_colorkey = false;
 	return ret;
-}
-
 }

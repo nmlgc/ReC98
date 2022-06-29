@@ -14,9 +14,7 @@
 #define MISSILE_FN boss3_m_ptn
 extern const char MISSILE_FN[];
 #include "th01/main/vars.hpp"
-extern "C" {
 #include "th01/formats/grp.h"
-}
 #include "th01/formats/pf.hpp"
 #include "th01/formats/ptn.hpp"
 #include "th01/main/particle.hpp"

@@ -95,10 +95,10 @@ sub_A719	proc far
 		push	1
 		call	_graph_accesspage_func
 		pop	cx
-		call	_grp_put_palette_show c, offset aReiiden2_grp, ds ; "REIIDEN2.grp"
+		call	@grp_put_palette_show$qnxc c, offset aReiiden2_grp, ds ; "REIIDEN2.grp"
 		call	_z_palette_black
 		call	_graph_copy_accessed_page_to_othe
-		call	_grp_put c, offset aReiiden3_grp, ds ; "REIIDEN3.grp"
+		call	@grp_put$qnxc c, offset aReiiden3_grp, ds ; "REIIDEN3.grp"
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
@@ -126,7 +126,7 @@ sub_A772	proc far
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
-		call	_grp_put_colorkey c, offset aOp_win_grp, ds ; "op_win.grp"
+		call	@grp_put_colorkey$qnxc c, offset aOp_win_grp, ds ; "op_win.grp"
 		call	_graph_copy_accessed_page_to_othe
 		pop	bp
 		retf
@@ -1394,9 +1394,9 @@ grppffx_TEXT	ends
 
 ; Segment type:	Pure code
 PTN_GRP_GRZ	segment	byte public 'CODE' use16
-	extern _grp_put_palette_show:proc
-	extern _grp_put:proc
-	extern _grp_put_colorkey:proc
+	extern @grp_put_palette_show$qnxc:proc
+	extern @grp_put$qnxc:proc
+	extern @grp_put_colorkey$qnxc:proc
 PTN_GRP_GRZ	ends
 
 ; ===========================================================================
