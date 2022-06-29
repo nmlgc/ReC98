@@ -28,6 +28,7 @@ extern "C" {
 #include "th01/main/hud/hud.hpp"
 #include "th01/main/stage/item.hpp"
 #include "th01/main/stage/stageobj.hpp"
+#include "th01/main/stage/stages.hpp"
 
 #include "th01/main/stage/card_hit.cpp"
 #include "th01/core/str_val.cpp"

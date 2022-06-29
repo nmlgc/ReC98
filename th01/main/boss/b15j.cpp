@@ -25,7 +25,6 @@ extern "C" {
 #include "th01/sprites/pellet.h"
 #include "th01/main/particle.hpp"
 #include "th01/main/playfld.hpp"
-#include "th01/formats/stagedat.hpp"
 #include "th01/main/vars.hpp"
 #include "th01/main/hud/hp.hpp"
 #include "th01/main/bullet/laser_s.hpp"
@@ -36,7 +35,7 @@ extern "C" {
 #include "th01/main/player/orb.hpp"
 #include "th01/main/player/player.hpp"
 #include "th01/main/stage/palette.hpp"
-#include "th01/main/stage/stageobj.hpp"
+#include "th01/main/stage/stages.hpp"
 
 // Coordinates
 // -----------

@@ -29,7 +29,6 @@ extern "C" {
 #include "th01/formats/ptn.hpp"
 #include "th01/main/entity.hpp"
 #include "th01/main/playfld.hpp"
-#include "th01/formats/stagedat.hpp"
 #include "th01/main/vars.hpp"
 #include "th01/shiftjis/fns.hpp"
 #include "th01/sprites/pellet.h"
@@ -44,7 +43,7 @@ extern "C" {
 #include "th01/main/bullet/pellet.hpp"
 #include "th01/main/hud/hp.hpp"
 #include "th01/main/player/player.hpp"
-#include "th01/main/stage/stageobj.hpp"
+#include "th01/main/stage/stages.hpp"
 
 // Coordinates
 // -----------

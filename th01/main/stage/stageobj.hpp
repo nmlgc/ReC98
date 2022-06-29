@@ -68,8 +68,6 @@ struct CCards {
 
 extern CCards cards;
 
-extern bool16 stage_cleared;
-
 // Processes any collision between a card and the Orb, together with any
 // immediate effects of such collisions. Score points for collisions are
 // granted in relation to the [stage_num].
@@ -106,10 +104,6 @@ extern CObstacles obstacles;
 
 // Initialization
 // --------------
-
-// Loads the contents of STAGE[id].DAT, and sets [default_grp_fn] and
-// [default_bgm_fn] accordingly. [id] must be ≥0 and ≤9.
-void scene_init_and_load(unsigned char id);
 
 // Copies all stage objects from VRAM page 0 to VRAM page 1.
 void stageobjs_copy_0_to_1(int stage_id);
