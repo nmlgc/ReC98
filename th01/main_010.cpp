@@ -246,12 +246,7 @@ void load_and_init_stuff_used_in_all_stages(void)
 	ptn_load(PTN_SLOT_STG, PTN_STG_CARDFLIP_FN);
 	ptn_load(PTN_SLOT_MIKO, miko_ptn);
 	ptn_new(PTN_SLOT_BG_HUD, ((PTN_BG_last - PTN_BG_first) + 1));
-	/* TODO: Replace with the decompiled call
-	 * 	bomb_kuji_load();
-	 * once that function is part of this translation unit */
-	_asm {
-		nop; push cs; call near ptr bomb_kuji_load;
-	}
+	bomb_kuji_load();
 	shootout_lasers_init(i);
 	ptn_slot_stg_has_reduced_sprites = false;
 }
@@ -323,3 +318,5 @@ void stage_entrance(int stage_id, const char* bg_fn, bool16 clear_vram_page_0)
 	}
 	stage_num_animate(stage_num);
 }
+
+#include "th01/main/player/bomb.cpp"

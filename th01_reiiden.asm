@@ -120,611 +120,6 @@ main_011_TEXT	segment	byte public 'CODE' use16
 	extern _input_reset_sense:proc
 	extern _load_and_init_stuff_used_in_all_:proc
 	extern @stage_entrance$qinxci:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public @bomb_kuji_load$qv
-@bomb_kuji_load$qv	proc far
-		push	bp
-		mov	bp, sp
-		call	@grc_load$q15main_grc_slot_txnxc stdcall, GRC_SLOT_BOMB_KUJI_1, offset aKuzi1_grc, ds
-		call	@grc_load$q15main_grc_slot_txnxc stdcall, GRC_SLOT_BOMB_KUJI_2, offset aKuzi2_grc, ds
-		add	sp, 0Ch
-		pop	bp
-		retf
-@bomb_kuji_load$qv	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public _bomb_update_and_render
-_bomb_update_and_render	proc far
-
-@@palette		= byte ptr -32h
-var_2		= word ptr -2
-@@frame		= word ptr  6
-
-		enter	32h, 0
-		push	si
-		lea	ax, [bp+@@palette]
-		push	ss
-		push	ax
-		push	ds
-		push	offset unk_34AA5
-		mov	cx, 30h	; '0'
-		call	SCOPY@
-		mov	_player_invincible, 1
-		cmp	[bp+@@frame], 0
-		jnz	loc_BF82
-		call	@CPellets@decay$qv c, offset _Pellets, ds
-		call	@ptn_put_8$qiii c, _player_left, (PTN_MIKO_L_CAST shl 16) or _player_top
-		xor	si, si
-		jmp	short loc_BF75
-; ---------------------------------------------------------------------------
-
-loc_BF15:
-		mov	[bp+var_2], 0
-		jmp	short loc_BF6E
-; ---------------------------------------------------------------------------
-
-loc_BF1C:
-		mov	bx, si
-		imul	bx, 3
-		add	bx, [bp+var_2]
-		mov	al, _z_Palettes[bx]
-		mov	bx, si
-		imul	bx, 3
-		add	bx, [bp+var_2]
-		mov	[bx+3D6Ch], al
-		mov	bx, si
-		imul	bx, 3
-		add	bx, [bp+var_2]
-		cbw
-		cmp	ax, 0Ah
-		jle	short loc_BF50
-		cmp	[bp+var_2], 2
-		jnz	short loc_BF4C
-		mov	al, 0Fh
-		jmp	short loc_BF4E
-; ---------------------------------------------------------------------------
-
-loc_BF4C:
-		mov	al, 0Dh
-
-loc_BF4E:
-		jmp	short loc_BF5F
-; ---------------------------------------------------------------------------
-
-loc_BF50:
-		mov	bx, si
-		imul	bx, 3
-		add	bx, [bp+var_2]
-		mov	al, _z_Palettes[bx]
-		add	al, byte ptr [bp+var_2]
-
-loc_BF5F:
-		mov	bx, si
-		imul	bx, size rgb_t
-		add	bx, [bp+var_2]
-		mov	byte ptr palette_3873C[bx], al
-		inc	[bp+var_2]
-
-loc_BF6E:
-		cmp	[bp+var_2], size rgb_t
-		jl	short loc_BF1C
-		inc	si
-
-loc_BF75:
-		cmp	si, COLOR_COUNT
-		jl	short loc_BF15
-		mov	byte_3876C, -1
-		jmp	loc_C42E
-; ---------------------------------------------------------------------------
-
-loc_BF82:
-		cmp	[bp+@@frame], 50
-		jge	loc_C146
-		mov	ax, [bp+@@frame]
-		mov	bx, 2
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_BFC0
-		mov	al, byte_38723
-		cbw
-		push	ax
-		mov	al, byte_38722
-		cbw
-		push	ax
-		mov	al, byte_3876C
-		cbw
-		pop	dx
-		add	dx, ax
-		push	dx
-		mov	al, byte_38721
-		cbw
-		push	ax
-		mov	al, byte_3876C
-		cbw
-		pop	dx
-		add	dx, ax
-		push	dx
-		push	7
-		call	_z_palette_set_show
-		add	sp, 8
-
-loc_BFC0:
-		mov	ax, [bp+@@frame]
-		mov	bx, 4
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_BFF1
-		mov	ax, [bp+@@frame]
-		mov	bx, 80
-		cwd
-		idiv	bx
-		mov	bx, 40
-		mov	ax, dx
-		cwd
-		idiv	bx
-		or	ax, ax
-		jnz	short loc_BFE9
-		mov	al, byte_3876C
-		dec	al
-		jmp	short loc_BFEE
-; ---------------------------------------------------------------------------
-
-loc_BFE9:
-		mov	al, byte_3876C
-		inc	al
-
-loc_BFEE:
-		mov	byte_3876C, al
-
-loc_BFF1:
-		mov	ax, [bp+@@frame]
-		mov	bx, 2
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	loc_C113
-		mov	al, byte ptr [bp+@@frame]
-		mov	angle_387D9, al
-		mov	[bp+var_2], 0
-		jmp	loc_C10B
-; ---------------------------------------------------------------------------
-
-loc_C00E:
-		mov	si, [bp+var_2]
-		jmp	loc_C0F3
-; ---------------------------------------------------------------------------
-
-loc_C014:
-		push	(32 shl 16) or 48
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+3E03h]
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+3DCDh]
-		call	@egc_copy_rect_1_to_0_16$qiiii
-		add	sp, 8
-		mov	ax, [bp+var_2]
-		imul	ax, 0Ah
-		mov	dx, 1F4h
-		sub	dx, ax
-		mov	ax, [bp+@@frame]
-		add	ax, 60
-		shl	ax, 2
-		sub	dx, ax
-		movsx	eax, dx
-		mov	dl, angle_387D9
-		mov	dh, 0
-		and	dx, 255
-		add	dx, dx
-		mov	bx, dx
-		movsx	edx, _CosTable8[bx]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, 130h
-		mov	bx, si
-		add	bx, bx
-		mov	[bx+3DCDh], ax
-		mov	ax, [bp+var_2]
-		imul	ax, 0Ah
-		mov	dx, 1F4h
-		sub	dx, ax
-		mov	ax, [bp+@@frame]
-		add	ax, 60
-		shl	ax, 2
-		sub	dx, ax
-		movsx	eax, dx
-		mov	dl, angle_387D9
-		mov	dh, 0
-		and	dx, 255
-		add	dx, dx
-		mov	bx, dx
-		movsx	edx, _SinTable8[bx]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, 0B8h ; '¸'
-		mov	bx, si
-		add	bx, bx
-		mov	[bx+3E03h], ax
-		mov	ax, [bp+var_2]
-		add	ax, 8
-		cmp	ax, si
-		jz	short loc_C0CA
-		push	7
-		mov	ax, si
-		sub	ax, [bp+var_2]
-		push	ax
-		push	GRC_SLOT_BOMB_KUJI_1
-		jmp	short loc_C0D2
-; ---------------------------------------------------------------------------
-
-loc_C0CA:
-		push	0 or (7 shl 16) ; (image) or (col)
-		push	GRC_SLOT_BOMB_KUJI_2 ; slot
-
-loc_C0D2:
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+3E03h]	; top
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+3DCDh]	; left
-		call	@grc_put_8$qii15main_grc_slot_tii
-		add	sp, 0Ah
-		inc	si
-		mov	al, angle_387D9
-		add	al, 1Ch
-		mov	angle_387D9, al
-
-loc_C0F3:
-		mov	ax, [bp+var_2]
-		add	ax, 9
-		cmp	ax, si
-		jg	loc_C014
-		mov	al, byte ptr [bp+@@frame]
-		neg	al
-		mov	angle_387D9, al
-		add	[bp+var_2], 9
-
-loc_C10B:
-		cmp	[bp+var_2], 9
-		jle	loc_C00E
-
-loc_C113:
-		mov	ax, [bp+@@frame]
-		mov	bx, 30
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_C128
-		push	8
-		call	_mdrv2_se_play
-		pop	cx
-
-loc_C128:
-		mov	ax, [bp+@@frame]
-		mov	bx, 10
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	loc_C42E
-		call	@CPellets@decay$qv c, offset _Pellets, ds
-		jmp	loc_C42E
-; ---------------------------------------------------------------------------
-
-loc_C146:
-		cmp	[bp+@@frame], 50
-		jnz	short loc_C17C
-		xor	si, si
-		jmp	short loc_C16F
-; ---------------------------------------------------------------------------
-
-loc_C150:
-		push	(32 shl 16) or 48
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+3E03h]
-		mov	bx, si
-		add	bx, bx
-		push	word ptr [bx+3DCDh]
-		call	@egc_copy_rect_1_to_0_16$qiiii
-		add	sp, 8
-		inc	si
-
-loc_C16F:
-		cmp	si, 12h
-		jl	short loc_C150
-		mov	_bomb_damaging, 1
-		jmp	loc_C42E
-; ---------------------------------------------------------------------------
-
-loc_C17C:
-		cmp	[bp+@@frame], 50
-		jle	loc_C3EE
-		cmp	[bp+@@frame], 140
-		jge	loc_C3EE
-		mov	ax, [bp+@@frame]
-		mov	bx, 10
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_C1A2
-		push	9
-		call	_mdrv2_se_play
-		pop	cx
-
-loc_C1A2:
-		mov	ax, [bp+@@frame]
-		mov	bx, 4
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_C1B6
-		push	ss
-		lea	ax, [bp+@@palette]
-		push	ax
-		jmp	short loc_C1C8
-; ---------------------------------------------------------------------------
-
-loc_C1B6:
-		mov	ax, [bp+@@frame]
-		mov	bx, 4
-		cwd
-		idiv	bx
-		cmp	dx, 2
-		jnz	short loc_C1D0
-		push	ds
-		push	offset palette_3873C
-
-loc_C1C8:
-		call	_z_palette_set_all_show
-		add	sp, 4
-
-loc_C1D0:
-		mov	ax, [bp+@@frame]
-		mov	bx, 16
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_C1E2
-		push	(RES_Y - 8)
-		jmp	short loc_C214
-; ---------------------------------------------------------------------------
-
-loc_C1E2:
-		mov	ax, [bp+@@frame]
-		mov	bx, 16
-		cwd
-		idiv	bx
-		cmp	dx, 4
-		jz	short loc_C211
-		mov	ax, [bp+@@frame]
-		mov	bx, 16
-		cwd
-		idiv	bx
-		cmp	dx, 8
-		jnz	short loc_C203
-		push	(RES_Y - 16)
-		jmp	short loc_C214
-; ---------------------------------------------------------------------------
-
-loc_C203:
-		mov	ax, [bp+@@frame]
-		mov	bx, 16
-		cwd
-		idiv	bx
-		cmp	dx, 0Ch
-		jnz	short loc_C21C
-
-loc_C211:
-		push	RES_Y
-
-loc_C214:
-		call	@z_vsync_wait_and_scrollup$qi
-		pop	cx
-		jmp	short loc_C235
-; ---------------------------------------------------------------------------
-
-loc_C21C:
-		mov	ax, [bp+@@frame]
-		mov	bx, 8
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_C235
-		call	@CPellets@decay$qv c, offset _Pellets, ds
-
-loc_C235:
-		xor	si, si
-		mov	angle_387D9, 0
-		jmp	loc_C38C
-; ---------------------------------------------------------------------------
-
-loc_C23F:				; ...
-		mov	ax, [bp+@@frame]
-		add	ax, -50
-		imul	ax, 6
-		cwde
-		mov	dl, angle_387D9
-		mov	dh, 0
-		and	dx, 255
-		add	dx, dx
-		mov	bx, dx
-		movsx	edx, _CosTable8[bx]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, 304
-		mov	_square_left, ax
-		mov	ax, [bp+@@frame]
-		add	ax, -50
-		imul	ax, 6
-		cwde
-		mov	dl, angle_387D9
-		mov	dh, 0
-		and	dx, 255
-		add	dx, dx
-		mov	bx, dx
-		movsx	edx, _SinTable8[bx]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, 184
-		mov	_square_top, ax
-		call	@graph_invert_32x32_8$qiinuc c, _square_left, ax, large [_VRAM_PLANE_B]
-		mov	ax, [bp+@@frame]
-		add	ax, -50
-		imul	ax, 7
-		cwde
-		mov	dl, angle_387D9
-		mov	dh, 0
-		and	dx, 255
-		add	dx, dx
-		mov	bx, dx
-		movsx	edx, _CosTable8[bx]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, 304
-		mov	_square_left, ax
-		mov	ax, [bp+@@frame]
-		add	ax, -50
-		imul	ax, 7
-		cwde
-		mov	dl, angle_387D9
-		mov	dh, 0
-		and	dx, 255
-		add	dx, dx
-		mov	bx, dx
-		movsx	edx, _SinTable8[bx]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, 184
-		mov	_square_top, ax
-		call	@graph_invert_32x32_8$qiinuc c, _square_left, ax, large [_VRAM_PLANE_B]
-		mov	ax, [bp+@@frame]
-		add	ax, -50
-		shl	ax, 3
-		cwde
-		mov	dl, angle_387D9
-		mov	dh, 0
-		and	dx, 255
-		add	dx, dx
-		mov	bx, dx
-		movsx	edx, _CosTable8[bx]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, 304
-		mov	_square_left, ax
-		mov	ax, [bp+@@frame]
-		add	ax, -50
-		shl	ax, 3
-		cwde
-		mov	dl, angle_387D9
-		mov	dh, 0
-		and	dx, 255
-		add	dx, dx
-		mov	bx, dx
-		movsx	edx, _SinTable8[bx]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, 184
-		mov	_square_top, ax
-		call	@graph_invert_32x32_8$qiinuc c, _square_left, ax, large [_VRAM_PLANE_B]
-		inc	si
-		mov	al, angle_387D9
-		add	al, 10h
-		mov	angle_387D9, al
-
-loc_C38C:
-		cmp	si, 10h
-		jl	loc_C23F
-		mov	ax, [bp+@@frame]
-		mov	bx, 20
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	loc_C42E
-		xor	si, si
-		jmp	short loc_C3E7
-; ---------------------------------------------------------------------------
-
-loc_C3A6:
-		mov	[bp+var_2], 0
-		jmp	short loc_C3E0
-; ---------------------------------------------------------------------------
-
-loc_C3AD:
-		mov	bx, si
-		imul	bx, size rgb_t
-		add	bx, [bp+var_2]
-		mov	al, byte ptr palette_3873C[bx]
-		push	ax
-		mov	bx, si
-		imul	bx, size rgb_t
-		add	bx, [bp+var_2]
-		cbw
-		cmp	ax, 0Fh
-		jge	short loc_C3CC
-		mov	al, 1
-		jmp	short loc_C3CE
-; ---------------------------------------------------------------------------
-
-loc_C3CC:
-		mov	al, 0
-
-loc_C3CE:
-		pop	dx
-		add	dl, al
-		mov	bx, si
-		imul	bx, size rgb_t
-		add	bx, [bp+var_2]
-		mov	byte ptr palette_3873C[bx], dl
-		inc	[bp+var_2]
-
-loc_C3E0:
-		cmp	[bp+var_2], size rgb_t
-		jl	short loc_C3AD
-		inc	si
-
-loc_C3E7:
-		cmp	si, COLOR_COUNT
-		jl	short loc_C3A6
-		jmp	short loc_C42E
-; ---------------------------------------------------------------------------
-
-loc_C3EE:
-		cmp	[bp+@@frame], 140
-		jnz	short loc_C42E
-		call	@z_vsync_wait_and_scrollup$qi stdcall, 0
-		pop	cx
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		call	_graph_copy_accessed_page_to_othe
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		call	_z_palette_set_all_show c, offset _stage_palette, ds
-		mov	_player_invincibility_time, BOMB_INVINCIBILITY_FRAMES_AFTER
-		mov	_bomb_damaging, 0
-		mov	ax, 1
-		jmp	short loc_C430
-; ---------------------------------------------------------------------------
-
-loc_C42E:
-		xor	ax, ax
-
-loc_C430:
-		pop	si
-		leave
-		retf
-_bomb_update_and_render	endp
 main_011_TEXT	ends
 
 main_012_TEXT	segment	byte public 'CODE' use16
@@ -1240,7 +635,7 @@ var_2		= word ptr -2
 		push	ss
 		push	ax
 		push	ds
-		push	(offset	word_34AD4+1)
+		push	offset byte_34AD5
 		mov	cx, 0Ah
 		call	SCOPY@
 		call	@items_bomb_reset$qv
@@ -3498,9 +2893,7 @@ main_10_TEXT	ends
 
 ; ===========================================================================
 
-; Segment type:	Pure code
 main_11_TEXT	segment	byte public 'CODE' use16
-	extern @graph_invert_32x32_8$qiinuc:proc
 main_11_TEXT	ends
 
 ; ===========================================================================
@@ -5141,8 +4534,6 @@ main_22_TEXT	ends
 
 ; Segment type:	Pure code
 main_23_TEXT	segment	byte public 'CODE' use16
-	extern @grc_load$q15main_grc_slot_txnxc:proc
-	extern @grc_put_8$qii15main_grc_slot_tii:proc
 	extern @shape_ellipse_arc_put$qiiiiiucucuc:proc
 	extern @shape_ellipse_arc_sloppy_unput$qiiiiucucuc:proc
 	extern _graph_r_lineloop_put:proc
@@ -11759,7 +11150,6 @@ main_38_TEXT	segment	byte public 'CODE' use16
 	extern @CPellets@add_single$qiiuci15pellet_motion_tiii:proc
 	extern @CPellets@unput_update_render$qv:proc
 	extern @CPellets@unput_and_reset$qv:proc
-	extern @CPellets@decay$qv:proc
 main_38_TEXT	ends
 
 	.data
@@ -11826,54 +11216,26 @@ _orb_prev_left	dw ORB_LEFT_START
 _orb_prev_top 	dw  ORB_TOP_START
 word_34A92	dw 0
 include th01/main/player/orb[data].asm
-public _ptn_slot_stg_has_reduced_sprites
+public _ptn_slot_stg_has_reduced_sprites, _bomb_palette_flash_peak_
 _ptn_slot_stg_has_reduced_sprites	db 0
-unk_34AA5	db  0Fh
-		db  0Fh
-		db  0Fh
-		db  0Dh
-		db  0Dh
-		db  0Fh
-		db  0Dh
-		db  0Dh
-		db  0Fh
-		db  0Dh
-		db  0Dh
-		db  0Fh
-		db  0Dh
-		db  0Dh
-		db  0Fh
-		db  0Dh
-		db  0Dh
-		db  0Fh
-		db  0Dh
-		db  0Dh
-		db  0Fh
-		db  0Fh
-		db  0Fh
-		db  0Fh
-		db  0Dh
-		db  0Dh
-		db  0Fh
-		db  0Dh
-		db  0Dh
-		db  0Fh
-		db  0Dh
-		db  0Dh
-		db  0Fh
-		db  0Dh
-		db  0Dh
-		db  0Fh
-		db  0Dh
-		db  0Dh
-		db  0Fh
-		db  0Dh
-		db  0Dh
-		db  0Fh
-		db  0Dh
-word_34AD0	dw 0F0Dh
-word_34AD2	dw 606h
-word_34AD4	dw 0Fh
+label _bomb_palette_flash_peak_ byte
+	db 0Fh, 0Fh, 0Fh
+	db 0Dh, 0Dh, 0Fh
+	db 0Dh, 0Dh, 0Fh
+	db 0Dh, 0Dh, 0Fh
+	db 0Dh, 0Dh, 0Fh
+	db 0Dh, 0Dh, 0Fh
+	db 0Dh, 0Dh, 0Fh
+	db 0Fh, 0Fh, 0Fh
+	db 0Dh, 0Dh, 0Fh
+	db 0Dh, 0Dh, 0Fh
+	db 0Dh, 0Dh, 0Fh
+	db 0Dh, 0Dh, 0Fh
+	db 0Dh, 0Dh, 0Fh
+	db 0Dh, 0Dh, 0Fh
+	db 0Dh, 0Dh, 0Fh
+	db 06h, 06h, 0Fh
+byte_34AD5	db 0
 word_34AD6	dw 0
 byte_34AD8	db 0
 word_34AD9	dw 0
@@ -11894,14 +11256,14 @@ _miko_ac2_bos	db 'miko_ac2.bos',0
 _PTN_STG_CARDFLIP_FN	db 'stg.ptn',0
 _miko_ptn	db 'miko.ptn',0
 public _esc_color_bg_black_fg_black, _esc_cursor_to_x0_y0, _space
-public _esc_color_reset, _empty_grf
+public _esc_color_reset, _empty_grf, _kuzi1_grc, _kuzi2_grc
 _esc_color_bg_black_fg_black		db 1Bh,'[16;40m',0
 _esc_cursor_to_x0_y0		db 1Bh,'[0;0H',0
 _space	db ' ',0
 _esc_color_reset		db 1Bh,'[0m',0
 _empty_grf		db 'empty.grf',0
-aKuzi1_grc	db 'kuzi1.grc',0
-aKuzi2_grc	db 'kuzi2.grc',0
+_kuzi1_grc	db 'kuzi1.grc',0
+_kuzi2_grc	db 'kuzi2.grc',0
 public _ORB_VELOCITY_Y_MAX, _ORB_VELOCITY_Y_MIN
 public _ORB_COEFFICIENT_OF_RESTITUTION, _ORB_FORCE_2_0, _ORB_FORCE_SHOT_BASE
 _ORB_VELOCITY_Y_MAX	dd 16.0
@@ -12301,21 +11663,23 @@ include th01/main/player/anim[bss].asm
 include th01/main/bullet/pellets[bss].asm
 include th01/main/player/shot[bss].asm
 		db 4 dup(?)
-public _input_prev
+public _input_prev, _palette_white, _bomb_palette_flash_bright
+public _bomb_white_to_blue_speed
 _input_prev	db 16 dup (?)
-		db 21 dup(?)
-byte_38721	db ?
-byte_38722	db ?
-byte_38723	db ?
-		db 24 dup(?)
-palette_3873C	palette_t <?>
-byte_3876C	db ?
-public _square_left, _square_top
-_square_left	dw ?
-		db 52 dup(?)
-_square_top 	dw ?
-		db 52 dup(?)
-angle_387D9	db ?
+
+_palette_white	          	palette_t <?>
+_bomb_palette_flash_bright	palette_t <?>
+_bomb_white_to_blue_speed 	db ?
+
+KUJI_COUNT = 9
+KUJI_RINGS = 2
+
+public _bomb_entity
+_bomb_entity label byte
+	dw ((KUJI_COUNT * KUJI_RINGS) + 9) dup (?)	; left
+	dw ((KUJI_COUNT * KUJI_RINGS) + 9) dup (?)	; top
+	db ?                                      	; angle
+
 include th01/main/player/inv_spr[bss].asm
 dword_3880A	dd ?
 word_3880E	dw ?
