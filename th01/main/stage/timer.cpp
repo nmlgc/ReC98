@@ -8,6 +8,7 @@
 #include "th01/common.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
+#include "th01/math/str_val.hpp"
 #include "th01/hardware/egc.h"
 extern "C" {
 #include "th01/hardware/graph.h"
@@ -23,7 +24,6 @@ extern "C" {
 #include "th01/main/vars.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/bullet/pellet.hpp"
-#include "th01/core/str_val.hpp"
 #include "th01/main/bullet/pellet_s.hpp"
 #include "th01/main/stage/stages.hpp"
 #include "th01/main/stage/timer.hpp"

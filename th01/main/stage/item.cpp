@@ -7,6 +7,7 @@
 #include "th01/v_colors.hpp"
 #include "th01/math/clamp.hpp"
 #include "th01/math/digit.hpp"
+#include "th01/math/str_val.hpp"
 #include "th01/hardware/egc.h"
 extern "C" {
 #include "th01/hardware/graph.h"
@@ -20,7 +21,6 @@ extern "C" {
 #include "th01/main/vars.hpp"
 #include "th01/main/stage/stageobj.hpp"
 #include "th01/main/player/player.hpp"
-#include "th01/core/str_val.hpp"
 #include "th01/main/hud/hud.hpp"
 #include "th01/main/shape.hpp"
 #include "th01/main/stage/item.hpp"

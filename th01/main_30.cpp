@@ -31,5 +31,5 @@ extern "C" {
 #include "th01/main/stage/stages.hpp"
 
 #include "th01/main/stage/card_hit.cpp"
-#include "th01/core/str_val.cpp"
+#include "th01/math/str_val.cpp"
 #include "th01/main/stage/card_r.cpp"

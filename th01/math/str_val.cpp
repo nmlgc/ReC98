@@ -1,4 +1,4 @@
-#include "th01/core/str_val.hpp"
+#include "th01/math/str_val.hpp"
 
 void pascal str_right_aligned_from_uint16(
 	char *str, uint16_t val, uint16_t width
