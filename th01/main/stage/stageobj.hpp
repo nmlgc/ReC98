@@ -55,7 +55,6 @@ static const int CARD_SCORE_CAP = 25600;
 // Stored outside the class for some reason... Only valid during the card flip
 // animation, and reset to 0 afterwards.
 extern unsigned long *cards_score;
-extern unsigned char card_flip_cycle;
 
 struct CCards {
 	screen_x_t *left;

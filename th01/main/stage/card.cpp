@@ -1,7 +1,96 @@
-#include "th01/hardware/input.hpp"
-#include "th01/sprites/pellet.h"
+#include <stddef.h>
+#include "platform.h"
+#include "pc98.h"
+#include "planar.h"
+#include "master.hpp"
+#include "th01/v_colors.hpp"
+#include "th01/formats/ptn.hpp"
+#include "th01/math/digit.hpp"
 #include "th01/math/subpixel.hpp"
+#include "th01/hardware/egc.h"
+#include "th01/hardware/input.hpp"
+extern "C" {
+#include "th01/hardware/graph.h"
+#include "th01/snd/mdrv2.h"
+}
+#include "th01/sprites/pellet.h"
+#include "th01/main/playfld.hpp"
+#include "th01/formats/stagedat.hpp"
+#include "th01/main/debug.hpp"
+#include "th01/main/vars.hpp"
+#include "th01/main/hud/hud.hpp"
 #include "th01/main/bullet/pellet.hpp"
+#include "th01/main/player/player.hpp"
+#include "th01/main/player/orb.hpp"
+#include "th01/main/player/bomb.hpp"
+#include "th01/main/stage/item.hpp"
+#include "th01/main/stage/card.hpp"
+#include "th01/main/stage/stageobj.hpp"
+#include "th01/main/stage/stages.hpp"
+
+unsigned char card_flip_cycle = 0;
+
+void cards_hittest(int stage_num)
+{
+	for(unsigned int i = 0; i < cards.count; i++) {
+		struct {
+			upixel_t y, x;
+		} delta;
+
+		delta.x = ((cards.left[i] - orb_cur_left) < 0)
+			? ((cards.left[i] - orb_cur_left) * -1)
+			: (cards.left[i] - orb_cur_left);
+
+		delta.y = ((cards.top[i] - orb_cur_top) < 0)
+			? ((cards.top[i] - orb_cur_top) * -1)
+			: (cards.top[i] - orb_cur_top);
+
+		if((
+			(delta.x < STAGEOBJ_ORB_DISTANCE_X) &&
+			(delta.y < STAGEOBJ_ORB_DISTANCE_Y) &&
+			(cards.flag[i] == CARD_ALIVE)
+		) || (
+			(test_damage == true) && (cards.flag[i] == CARD_ALIVE)
+		) || (
+			(bomb_damaging == true) &&
+			((bomb_frames % cards.count) == i) &&
+			((rand() % 4) != 0) &&
+			(cards.flag[i] == CARD_ALIVE)
+		)) {
+			cards.flag[i] = CARD_FLIPPING;
+			cards_score[i] = ((((stage_num / 5) * 100) + 100) + (
+				static_cast<unsigned long>(cardcombo_cur * cardcombo_cur) *
+				(((rank == RANK_LUNATIC) * 15) + 20)
+			));
+			if(cards_score[i] > CARD_SCORE_CAP) {
+				cards_score[i] = CARD_SCORE_CAP;
+			}
+			score += cards_score[i];
+			cardcombo_cur++;
+			if(cardcombo_max < cardcombo_cur) {
+				cardcombo_max = cardcombo_cur;
+			}
+			hud_score_and_cardcombo_render();
+
+			if(((card_flip_cycle++) % 10) == 0) {
+				if(card_flip_cycle >= 140) {
+					card_flip_cycle = 1;
+					if(bomb_damaging) {
+add_point_item:
+						items_point_add(i);
+					} else {
+						items_bomb_add(i);
+					}
+				} else {
+					goto add_point_item;
+				}
+			}
+			mdrv2_se_play(2);
+		}
+	}
+}
+
+#include "th01/math/str_val.cpp"
 
 static const unsigned int CARD_SCORE_CAP_DIGITS = digit_count(CARD_SCORE_CAP);
 static const pixel_t CARD_SCORE_W = (CARD_SCORE_CAP_DIGITS * GLYPH_HALF_W);
@@ -114,7 +203,7 @@ void cards_update_and_render(void)
 					if(cards.flip_frames[i] == FRAME_ANIM_DONE) {
 						Pellets.add_group(
 							(cards.left[i] + (STAGEOBJ_W / 2) - (PELLET_W / 2)),
-							(cards.top[i] + (STAGEOBJ_H / 2) - (PELLET_H / 2)),
+							(cards.top[i]  + (STAGEOBJ_H / 2) - (PELLET_H / 2)),
 							group,
 							to_sp(3.5f)
 						);

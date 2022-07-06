@@ -4544,12 +4544,8 @@ main_23_TEXT	ends
 
 ; Segment type:	Pure code
 main_24_TEXT	segment	byte public 'CODE' use16
-	extern @items_bomb_add$qi:proc
-	extern @items_bomb_render$qv:proc
 	extern @items_bomb_reset$qv:proc
 	extern @items_bomb_unput_update_render$qv:proc
-	extern @items_point_add$qi:proc
-	extern @items_point_render$qv:proc
 	extern @items_point_reset$qv:proc
 	extern @items_point_unput_update_render$qv:proc
 main_24_TEXT	ends
