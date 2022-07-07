@@ -171,8 +171,7 @@ bool16 group_velocity_set(
 	return done;
 }
 
-inline subpixel_t base_speed_for_rank(void)
-{
+inline subpixel_t base_speed_for_rank(void) {
 	return
 		(rank == RANK_EASY) ? to_sp(0.0f) :
 		(rank == RANK_NORMAL) ? to_sp(0.375f) :
@@ -453,16 +452,14 @@ void pellet_render(screen_x_t left, screen_y_t top, int cel)
 
 inline bool16 overlaps_shot(
 	screen_x_t pellet_left, screen_y_t pellet_top, int i
-)
-{
+) {
 	return overlap_xywh_xywh_lt_gt(
 		pellet_left, pellet_top, PELLET_W, PELLET_H,
 		Shots.left[i], Shots.top[i], SHOT_W, SHOT_H
 	);
 }
 
-inline bool16 overlaps_orb(screen_x_t pellet_left, screen_y_t pellet_top)
-{
+inline bool16 overlaps_orb(screen_x_t pellet_left, screen_y_t pellet_top) {
 	return overlap_xywh_xywh_lt_gt(
 		pellet_left, pellet_top, PELLET_W, PELLET_H,
 		orb_cur_left, orb_cur_top, ORB_W, ORB_H

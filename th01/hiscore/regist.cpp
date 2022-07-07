@@ -76,18 +76,15 @@ extern screen_y_t entered_name_top;
 #define relative_top(row) \
 	((row) * KANJI_PADDED_H)
 
-inline pixel_t relative_top_for(int kanji_id)
-{
+inline pixel_t relative_top_for(int kanji_id) {
 	return relative_top(kanji_id / KANJI_PER_ROW);
 }
 
-inline int row_ceil(int count)
-{
+inline int row_ceil(int count) {
 	return ((count + (KANJI_PER_ROW - 1)) / KANJI_PER_ROW);
 }
 
-inline pixel_t left_for(int kanji_id)
-{
+inline pixel_t left_for(int kanji_id) {
 	return (((kanji_id % KANJI_PER_ROW) * KANJI_PADDED_W) + MARGIN_W);
 }
 
@@ -122,18 +119,15 @@ extern const uint16_t ALPHABET_SYMS[];
 #define RIGHT_LEFT left_for(LEFT_COLUMN + 1)
 #define ENTER_LEFT left_for(LEFT_COLUMN + 2)
 
-inline uint16_t kanji_swap(uint16_t kanji)
-{
+inline uint16_t kanji_swap(uint16_t kanji) {
 	return (kanji << 8) | (kanji >> 8);
 }
 
-inline unsigned char kanji_hi(int16_t kanji)
-{
+inline unsigned char kanji_hi(int16_t kanji) {
 	return (kanji >> 8);
 }
 
-inline unsigned char kanji_lo(int16_t kanji)
-{
+inline unsigned char kanji_lo(int16_t kanji) {
 	return (kanji & 0xFF);
 }
 /// --------
@@ -553,11 +547,11 @@ regist_input_ret_t regist_on_input(
 }
 
 #if (BINARY == 'E')
-	inline void scoredat_free(void)
+	inline void scoredat_free(void) {
 #else
 	void scoredat_free(void)
-#endif
 {
+#endif
 	delete[] scoredat_names;
 	delete[] scoredat_stages;
 	delete[] scoredat_routes;

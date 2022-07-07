@@ -86,38 +86,31 @@ typedef uint16_t uvram_offset_t;
 
 #ifdef __cplusplus
 // MODDERS: Replace with a single function
-static inline vram_offset_t vram_offset_shift(screen_x_t x, vram_y_t y)
-{
+static inline vram_offset_t vram_offset_shift(screen_x_t x, vram_y_t y) {
 	return VRAM_OFFSET_SHIFT(x, y);
 }
 
-static inline vram_offset_t vram_offset_muldiv(screen_x_t x, vram_y_t y)
-{
+static inline vram_offset_t vram_offset_muldiv(screen_x_t x, vram_y_t y) {
 	return (y * ROW_SIZE) + (x / BYTE_DOTS);
 }
 
-static inline vram_offset_t vram_offset_divmul(screen_x_t x, vram_y_t y)
-{
+static inline vram_offset_t vram_offset_divmul(screen_x_t x, vram_y_t y) {
 	return (x / BYTE_DOTS) + (y * ROW_SIZE);
 }
 
-static inline vram_offset_t vram_offset_divmul_double(double x, double y)
-{
+static inline vram_offset_t vram_offset_divmul_double(double x, double y) {
 	return (x / BYTE_DOTS) + (y * ROW_SIZE);
 }
 
-static inline vram_offset_t vram_offset_divmul_wtf(screen_x_t x, vram_y_t y)
-{
+static inline vram_offset_t vram_offset_divmul_wtf(screen_x_t x, vram_y_t y) {
 	return ((((x + RES_X) / BYTE_DOTS) + (y * ROW_SIZE)) - ROW_SIZE);
 }
 
-static inline vram_offset_t vram_offset_mulshift(screen_x_t x, vram_y_t y)
-{
+static inline vram_offset_t vram_offset_mulshift(screen_x_t x, vram_y_t y) {
 	return (y * ROW_SIZE) + (x >> 3);
 }
 
-static inline vram_offset_t vram_offset_divshift_wtf(screen_x_t x, vram_y_t y)
-{
+static inline vram_offset_t vram_offset_divshift_wtf(screen_x_t x, vram_y_t y) {
 	return ((((x + RES_X) / BYTE_DOTS) + (y << 6) + (y << 4)) - ROW_SIZE);
 }
 #endif

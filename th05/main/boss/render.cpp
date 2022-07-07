@@ -335,8 +335,7 @@ void pascal near shinki_lineset_forward_copy(lineset_t near &set)
 	}
 }
 
-inline void shinki_bg_render_blue_particles_and_lines(void)
-{
+inline void shinki_bg_render_blue_particles_and_lines(void) {
 	grcg_setmode_rmw();
 
 	grcg_setcolor_direct(8);

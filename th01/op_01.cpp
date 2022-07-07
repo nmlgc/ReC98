@@ -140,15 +140,13 @@ extern bool input_cancel;
 extern bool input_right;
 extern unsigned char option_rows;
 
-inline void keygroup_sense(REGS& out, REGS& in, char group_id)
-{
+inline void keygroup_sense(REGS& out, REGS& in, char group_id) {
 	in.h.ah = 0x04;
 	in.h.al = group_id;
 	int86(0x18, &in, &out);
 }
 
-inline void ok_shot_cancel_sense(REGS& out, REGS& in)
-{
+inline void ok_shot_cancel_sense(REGS& out, REGS& in) {
 	keygroup_sense(out, in, 3);
 	input_update_bool(input_ok, (out.h.ah & K3_RETURN));
 

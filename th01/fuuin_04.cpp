@@ -24,7 +24,8 @@ static const int TYPE_FX = (COL_TYPE | FX_WEIGHT_NORMAL);
 
 #include "th01/end/pic.cpp"
 
-inline void optimization_barrier() {}
+inline void optimization_barrier() {
+}
 
  // Special FUUIN.EXE version of frame_delay() that resets [vsync_frame] first.
 extern "C" void frame_delay(unsigned int frames)

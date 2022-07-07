@@ -10,8 +10,7 @@ void ptn_snap_8(screen_x_t left, vram_y_t top, int ptn_id)
 	}
 }
 
-static inline ptn_plane_t::row_dots_t dot_mask(pixel_t x, pixel_t w)
-{
+static inline ptn_plane_t::row_dots_t dot_mask(pixel_t x, pixel_t w) {
 	return static_cast<ptn_plane_t::row_dots_t>((1u << w) - 1u) << (w - x);
 }
 

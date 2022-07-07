@@ -104,6 +104,7 @@ recreate:
 	} \
 }
 
-inline void optimization_barrier_3() {}
+inline void optimization_barrier_3() {
+}
 
 #include "th02/res_init.cpp"

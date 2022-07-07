@@ -5,8 +5,7 @@ extern "C" {
 #include "th01/hardware/planar.h"
 #include "th01/formats/ptn.hpp"
 
-static inline ptn_t* ptn_with_id_shift(int id)
-{
+static inline ptn_t* ptn_with_id_shift(int id) {
 	// Before we bother with doing compile-time integer logarithms...
 	// (MODDERS: This function shouldn't exist. Just use the regular
 	// ptn_with_id().)

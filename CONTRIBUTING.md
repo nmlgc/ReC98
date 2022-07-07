@@ -41,6 +41,11 @@ These cases should gradually be removed as development goes along, though.
 
 * Always use `{ brackets }`, even around single-statement conditional
   branches and single-instruction inline assembly.
+
+* The opening `{ ` bracket of a function goes into
+  * the next line if the function is non-inlined (Linux style), and
+  * the end of the line with the closing `)` if the function is inlined.
+
 * Add spaces around binary operators. `for(i = 0; i < 12; i++)`
 
 * Variables should be *signed* in the absence of any ASM instruction

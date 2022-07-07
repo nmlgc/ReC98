@@ -106,8 +106,7 @@ extern const char FOPEN_WB[];
 #define regist_input_timeout_inc()
 #define regist_input_timeout_if_reached(then)
 
-inline void regist_bg_put(const int16_t stage)
-{
+inline void regist_bg_put(const int16_t stage) {
 }
 
 #define regist_title_put(left, stage, ranks, fx) { \

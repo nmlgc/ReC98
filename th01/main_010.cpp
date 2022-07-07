@@ -50,8 +50,7 @@ extern "C" {
 
 extern const char esc_cls[];
 
-inline void bomb_doubletap_update(uint8_t& pressed, uint8_t& other)
-{
+inline void bomb_doubletap_update(uint8_t& pressed, uint8_t& other) {
 	if(bomb_doubletap_frames < BOMB_DOUBLETAP_WINDOW) {
 		pressed++;
 	} else {

@@ -88,20 +88,17 @@ extern page_t page_accessed;
 
 /// BIOS
 /// ----
-inline void graph_access_and_show_0()
-{
+inline void graph_access_and_show_0() {
 	graph_accesspage_func(0);
 	graph_showpage_func(0);
 }
 
-inline void cgrom_code_and_grcg_off()
-{
+inline void cgrom_code_and_grcg_off() {
 	outportb(0x68, 0xA); // CG ROM code access
 	grcg_off();
 }
 
-inline void z_graph_400line()
-{
+inline void z_graph_400line() {
 	REGS regs;
 
 	z_graph_hide();
@@ -115,8 +112,7 @@ inline void z_graph_400line()
 	outportb(0x6A, 1);
 }
 
-inline void z_graph_access_and_show_0()
-{
+inline void z_graph_access_and_show_0() {
 	graph_access_and_show_0();
 	cgrom_code_and_grcg_off();
 	z_graph_show();

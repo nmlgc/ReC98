@@ -38,8 +38,7 @@ extern int32_t* scoredat_score;
 extern int8_t* scoredat_routes; // Yeah, technically a twobyte_t.
 
 // Byte-wise access to [scoredat_routes].
-inline int8_t& scoredat_route_byte(int place, int byte)
-{
+inline int8_t& scoredat_route_byte(int place, int byte) {
 	if(byte == 0) {
 		return scoredat_routes[place * SCOREDAT_ROUTE_LEN];
 	}

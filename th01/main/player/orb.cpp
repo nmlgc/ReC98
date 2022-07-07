@@ -6,8 +6,7 @@ extern const double ORB_VELOCITY_Y_MIN;
 extern const float ORB_VELOCITY_Y_MAX;
 extern const double ORB_COEFFICIENT_OF_RESTITUTION;
 
-inline double gravity_for(const double& force)
-{
+inline double gravity_for(const double& force) {
 	return ((orb_force_frame / 5) + orb_force);
 }
 /// Temporary data segment workarounds

@@ -8,8 +8,7 @@
 // Color #15 (1111) is always the transparent one, meaning that transparent
 // dots are 1 in all 4 bitplanes. The alpha mask therefore simply is the
 // negation of ANDing all bitplanes together. Nifty!
-template <class T> inline T ptn_alpha_from(T B, T R, T G, T E)
-{
+template <class T> inline T ptn_alpha_from(T B, T R, T G, T E) {
 	return ~((B) & (R) & (G) & (E));
 }
 
