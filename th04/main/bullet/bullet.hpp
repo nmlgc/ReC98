@@ -6,9 +6,9 @@
 /// Game-specific group and spawn types
 /// -----------------------------------
 #if GAME == 5
-# include "th05/main/bullet/types.h"
+	#include "th05/main/bullet/types.h"
 #else
-# include "th04/main/bullet/types.h"
+	#include "th04/main/bullet/types.h"
 #endif
 /// -----------------------------------
 
@@ -165,8 +165,8 @@ static const subpixel_t BULLET_KILLBOX_H = TO_SP(8);
 #endif
 
 #if GAME == 5
-# define PELLET_COUNT 180
-# define BULLET16_COUNT 220
+	#define PELLET_COUNT 180
+	#define BULLET16_COUNT 220
 
 // Returns the sprite ID of a directional or vector bullet sprite that
 // represents the given [angle], relative to [patnum_base]. While the function
@@ -180,8 +180,8 @@ extern "C++" unsigned char pascal near bullet_patnum_for_angle(
 // Turns every 4th bullet into a point item when zapping bullets.
 extern bool bullet_zap_drop_point_items;
 #else
-# define PELLET_COUNT 240
-# define BULLET16_COUNT 200
+	#define PELLET_COUNT 240
+	#define BULLET16_COUNT 200
 
 // Returns the offset for a directional bullet sprite that shows the given
 // [angle].

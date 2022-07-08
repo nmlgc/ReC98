@@ -50,9 +50,9 @@ struct gather_template_t {
 
 #define GATHER_COUNT 16
 #if GAME == 5
-# define GATHER_CAP 8
+	#define GATHER_CAP 8
 #else
-# define GATHER_CAP GATHER_COUNT
+	#define GATHER_CAP GATHER_COUNT
 #endif
 
 extern gather_t gather_circles[GATHER_COUNT];

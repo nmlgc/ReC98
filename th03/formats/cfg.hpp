@@ -1,5 +1,5 @@
 #if GAME == 3
-# define CFG_FN "yume.cfg"
+	#define CFG_FN "yume.cfg"
 	typedef struct {
 		uint8_t bgm_mode;
 		uint8_t key_mode;

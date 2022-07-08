@@ -1,7 +1,7 @@
 #pragma option -k-
 
 #ifndef RANDRING_INSTANCE
-# error Define RANDRING_INSTANCE before including randring.cpp.
+	#error Define RANDRING_INSTANCE before including randring.cpp.
 #endif
 
 #define randring_func_(instance, name) randring##instance##_##name

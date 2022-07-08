@@ -1,9 +1,9 @@
 #include "defconv.h"
 
 #if GAME == 5
-# define PI_SLOT_COUNT 8
+	#define PI_SLOT_COUNT 8
 #else
-# define PI_SLOT_COUNT 6
+	#define PI_SLOT_COUNT 6
 #endif
 
 #define PI_W RES_X

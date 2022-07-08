@@ -28,9 +28,9 @@ struct item_t {
 #define ITEM_PULL_SPEED 10
 
 #if GAME == 5
-# define ITEM_COUNT 40
+	#define ITEM_COUNT 40
 #else
-# define ITEM_COUNT 32
+	#define ITEM_COUNT 32
 #endif
 
 extern item_t items[ITEM_COUNT];

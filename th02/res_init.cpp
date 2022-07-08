@@ -1,11 +1,11 @@
 #ifndef ERROR_NOT_RESIDENT
-# define ERROR_NOT_RESIDENT "わたし、まだいませんよぉ"
+	#define ERROR_NOT_RESIDENT "わたし、まだいませんよぉ"
 #endif
 #ifndef REMOVED
-# define REMOVED "さよなら、また会えたらいいな"
+	#define REMOVED "さよなら、また会えたらいいな"
 #endif
 #ifndef INITIALIZED
-# define INITIALIZED "それでは、よろしくお願いします"
+	#define INITIALIZED "それでは、よろしくお願いします"
 #endif
 
 #define arg_is(arg, capital, small) \

@@ -8,26 +8,26 @@
 // __TURBOC__ is #define'd on both "Borland" and "Turbo" editions, unlike
 // __BORLANDC__, which is only #define'd on the former.
 #if defined(__TURBOC__) && defined(__MSDOS__)
-typedef unsigned char bool;
-typedef int bool16;
-# define false 0
-# define  true 1
-typedef char int8_t;
-typedef int int16_t;
-typedef long int32_t;
-typedef unsigned char uint8_t;
-typedef unsigned int uint16_t;
-typedef unsigned long uint32_t;
+	typedef unsigned char bool;
+	typedef int bool16;
+	#define false 0
+	#define  true 1
+	typedef char int8_t;
+	typedef int int16_t;
+	typedef long int32_t;
+	typedef unsigned char uint8_t;
+	typedef unsigned int uint16_t;
+	typedef unsigned long uint32_t;
 
-// Generic callback function types. Note the difference between function
-// distance (nearfunc / farfunc) and pointer variable distance
-// (t_near / t_far).
-typedef void (near pascal *near nearfunc_t_near)(void);
-typedef void ( far pascal *near  farfunc_t_near)(void);
-typedef void (near pascal * far  nearfunc_t_far)(void);
-typedef void ( far pascal * far   farfunc_t_far)(void);
+	// Generic callback function types. Note the difference between function
+	// distance (nearfunc / farfunc) and pointer variable distance
+	// (t_near / t_far).
+	typedef void (near pascal *near nearfunc_t_near)(void);
+	typedef void ( far pascal *near  farfunc_t_near)(void);
+	typedef void (near pascal * far  nearfunc_t_far)(void);
+	typedef void ( far pascal * far   farfunc_t_far)(void);
 #else
-# error This code can currently only be compiled on Borland's 16-bit DOS compilers. Ideally, you'd only have to declare <stdint.h> types for your compiler here though?
+	#error This code can currently only be compiled on Borland's 16-bit DOS compilers. Ideally, you'd only have to declare <stdint.h> types for your compiler here though?
 #endif
 /// ----------
 
