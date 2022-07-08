@@ -11,6 +11,7 @@
 extern "C" {
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
+#include "th01/hardware/ztext.h"
 }
 #include "th01/main/playfld.hpp"
 #include "th01/hardware/egc.h"
@@ -20,6 +21,7 @@ extern "C" {
 #include "th01/formats/stagedat.hpp"
 }
 #include "th01/sprites/pellet.h"
+#include "th01/main/debug.hpp"
 #include "th01/main/vars.hpp"
 #include "th01/main/bullet/pellet.hpp"
 #include "th01/main/player/orb.hpp"
@@ -647,6 +649,15 @@ void obstacles_update_and_render(bool16 reset)
 	}
 
 	for(unsigned int i = 0; i < obstacles.count; i++) {
+		if(mode_debug) {
+			z_text_vputsa(
+				(obstacles.left[i] / GLYPH_HALF_W),
+				(obstacles.top[i] / GLYPH_H),
+				2,
+				" "
+			);
+		}
+
 		upixel_t delta_abs_x;
 		upixel_t delta_abs_y;
 		pixel_t delta_x;
@@ -805,6 +816,15 @@ void obstacles_update_and_render(bool16 reset)
 		}
 		// Common to all bumper bars
 		if(obstacles.frames[i].since_collision != 0) {
+			if(mode_debug) {
+				z_text_vputsa(
+					(obstacles.left[i] / GLYPH_HALF_W),
+					(obstacles.top[i] / GLYPH_H),
+					2,
+					"%d",
+					obstacles.frames[i].since_collision
+				);
+			}
 			obstacles.frames[i].since_collision++;
 			if(obstacles.frames[i].since_collision >= BLOCK_FRAMES) {
 				obstacles.frames[i].since_collision = 0;
