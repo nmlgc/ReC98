@@ -6,6 +6,7 @@
 
 #include <stddef.h>
 #include "platform.h"
+#include "decomp.hpp"
 #include "master.hpp"
 #include "th01/rank.h"
 #include "th04/score.h"
@@ -102,9 +103,6 @@ recreate:
 	if(debug) { \
 		resident->debug = true; \
 	} \
-}
-
-inline void optimization_barrier_3() {
 }
 
 #include "th02/res_init.cpp"

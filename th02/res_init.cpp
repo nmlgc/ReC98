@@ -57,7 +57,7 @@ int main(int argc, const unsigned char **argv)
 	sgm = ResData<resident_t>::create_with_id_from_pointer(res_id);
 	if(!sgm) {
 		dos_puts2("ì‚ê‚Ü‚¹‚ñA‚í‚½‚µ‚Ì‹êŠ‚ª‚È‚¢‚ÌI\n\n");
-		optimization_barrier_3();
+		optimization_barrier();
 		return 1;
 	}
 	resident_bytes = reinterpret_cast<uint8_t far *>(sgm);

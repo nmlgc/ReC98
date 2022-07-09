@@ -63,9 +63,6 @@ extern "C" {
 	#include "th04/shiftjis/fns.hpp"
 #endif
 
-inline void optimization_barrier(void) {
-}
-
 #if (GAME == 5)
 	// Processes any collision between the player and boss sprites.
 	void near boss_hittest_player(void);

@@ -8,9 +8,6 @@ extern "C" {
 #include "th05/main/custom.h"
 #include "th05/main/bullet/b6ball.hpp"
 
-inline void optimization_barrier(void) {
-}
-
 void near b6balls_add(void)
 {
 	subpixel_t speed = playperf_speedtune(b6ball_template.speed);

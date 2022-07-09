@@ -30,7 +30,7 @@ const cfg_options_t OPTS_DEFAULT = {
 		return 1; \
 	}
 
-#define optimization_barrier_3()
+#define optimization_barrier()
 
 #define RES_INIT_BOTTOM \
 	cfg_init(sgm);

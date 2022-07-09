@@ -55,7 +55,7 @@ recreate:
 #define LOGO \
 	"東方幻想郷用　 常駐プログラム　RES_HUMA.com Version1.00       (c)zun 1998"
 
-#define optimization_barrier_3()
+#define optimization_barrier()
 
 #define RES_INIT_BOTTOM { \
 	cfg_init(sgm); \

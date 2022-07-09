@@ -163,9 +163,14 @@ inline void poked_eax(Decomp_GS *sgm, Decomp_DI *off, uint8_t op) {
 	#define inhibit_Z3(x) \
 		*reinterpret_cast<int16_t near *>(reinterpret_cast<uint16_t>(&x))
 
+	// Calling an empty inlined function prevents certain jump optimizations.
+	inline void optimization_barrier(void) {
+	}
+
 #else
 	#define keep_0(x) x
 	#define inhibit_Z3(x) x
+	#define optimization_barrier()
 #endif
 // ------------------------------------
 
