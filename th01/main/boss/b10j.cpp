@@ -5,8 +5,10 @@
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
+#include "master.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/math/area.hpp"
+#include "th01/math/polar.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th01/hardware/egc.h"
 extern "C" {
@@ -330,3 +332,29 @@ void mima_free(void)
 
 #define select_for_rank mima_select_for_rank
 #include "th01/main/select_r.cpp"
+
+// Rotating square
+// ---------------
+
+void pascal near regular_polygon(
+	screen_x_t *corners_x,
+	screen_y_t *corners_y,
+	screen_x_t center_x,
+	screen_y_t center_y,
+	pixel_t radius,
+	unsigned char angle,
+	int points
+)
+{
+	for(int i = 0; i < points; i++) {
+		corners_x[i] = polar_x(center_x, radius, angle);
+		corners_y[i] = polar_y(center_y, radius, angle);
+		angle += (0x100 / points);
+	}
+}
+
+struct SquareState {
+	unsigned char angle;
+	pixel_t radius;
+};
+// ---------------

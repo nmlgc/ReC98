@@ -8779,6 +8779,8 @@ mima_still	equ <boss_entity_0>
 	extern @mima_setup$qv:proc
 	extern @mima_free$qv:proc
 	extern @mima_select_for_rank$qmiiiii:proc
+	@REGULAR_POLYGON$QNIT1IIIUCI procdesc pascal near \
+		corners_x:dword, corners_y:dword, center_x:word, center_y:word, radius:word, angle:byte, points:word
 main_29_TEXT	ends
 
 main_29__TEXT	segment	byte public 'CODE' use16
@@ -8787,84 +8789,12 @@ main_29__TEXT	segment	byte public 'CODE' use16
 
 ; Attributes: bp-based frame
 
-sub_1E886	proc near
-
-arg_0		= word ptr  4
-@@angle		= byte ptr  6
-arg_4		= word ptr  8
-arg_6		= word ptr  0Ah
-arg_8		= word ptr  0Ch
-arg_A		= dword	ptr  0Eh
-arg_E		= dword	ptr  12h
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+arg_4]
-		mov	di, [bp+arg_0]
-		xor	cx, cx
-		jmp	short loc_1E8FE
-; ---------------------------------------------------------------------------
-
-loc_1E895:
-		movsx	eax, si
-		mov	dl, [bp+@@angle]
-		mov	dh, 0
-		and	dx, 255
-		add	dx, dx
-		mov	bx, dx
-		movsx	edx, _CosTable8[bx]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, [bp+arg_8]
-		mov	dx, cx
-		add	dx, dx
-		les	bx, [bp+arg_E]
-		add	bx, dx
-		mov	es:[bx], ax
-		movsx	eax, si
-		mov	dl, [bp+@@angle]
-		mov	dh, 0
-		and	dx, 255
-		add	dx, dx
-		mov	bx, dx
-		movsx	edx, _SinTable8[bx]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, [bp+arg_6]
-		mov	dx, cx
-		add	dx, dx
-		les	bx, [bp+arg_A]
-		add	bx, dx
-		mov	es:[bx], ax
-		mov	ax, 256
-		cwd
-		idiv	di
-		add	al, [bp+@@angle]
-		mov	[bp+@@angle], al
-		inc	cx
-
-loc_1E8FE:
-		cmp	cx, di
-		jl	short loc_1E895
-		pop	di
-		pop	si
-		pop	bp
-		retn	12h
-sub_1E886	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
 sub_1E908	proc far
 
 @@angle		= byte ptr -13h
-var_12		= word ptr -12h
-@@y		= byte ptr -10h
-@@x		= byte ptr -8
+@@sq_center_y		= word ptr -12h
+@@corners_y		= byte ptr -10h
+@@corners_x		= byte ptr -8
 
 		enter	14h, 0
 		push	si
@@ -8873,8 +8803,8 @@ var_12		= word ptr -12h
 		jl	loc_1EB20
 		cmp	_boss_phase_frame, 100
 		jnz	short loc_1E947
-		mov	word_39E1A+1, 20h ; ' '
-		mov	byte ptr word_39E1A, 0
+		mov	_pattern0_sq.S_radius, 32
+		mov	_pattern0_sq.S_angle, 0
 		call	@mima_select_for_rank$qmiiiii stdcall, offset _mima_pattern_state, ds, large 40h or (48h shl 16), large 50h or (58h shl 16)
 		push	8
 		call	_mdrv2_se_play
@@ -8892,25 +8822,25 @@ loc_1E947:
 		mov	di, ax
 		mov	ax, mima_still.BE_cur_top
 		add	ax, 80
-		mov	[bp+var_12], ax
-		push	ss
-		lea	ax, [bp+@@x]
-		push	ax
-		push	ss
-		lea	ax, [bp+@@y]
-		push	ax
-		push	di
-		push	[bp+var_12]
-		push	word_39E1A+1
-		push	word_39E1A
-		push	4
-		call	sub_1E886
+		mov	[bp+@@sq_center_y], ax
+		push	ss	; corners_x (segment)
+		lea	ax, [bp+@@corners_x]
+		push	ax	; corners_x (offset)
+		push	ss	; corners_y (segment)
+		lea	ax, [bp+@@corners_y]
+		push	ax	; corners_y (offset)
+		push	di	; center_x
+		push	[bp+@@sq_center_y]	; center_y
+		push	_pattern0_sq.S_radius	; radius
+		push	word ptr _pattern0_sq.S_angle	; angle
+		push	4	; points
+		call	@regular_polygon$qnit1iiiuci
 		push	4	; point_count
 		push	ss
-		lea	ax, [bp+@@y]
+		lea	ax, [bp+@@corners_y]
 		push	ax
 		push	ss
-		lea	ax, [bp+@@x]
+		lea	ax, [bp+@@corners_x]
 		push	ax
 		call	_graph_r_lineloop_unput
 		add	sp, 0Ah
@@ -8921,14 +8851,14 @@ loc_1E947:
 ; ---------------------------------------------------------------------------
 
 loc_1E9A2:
-		mov	al, 0F4h
+		mov	al, -0Ch
 
 loc_1E9A4:
-		add	al, byte ptr word_39E1A
-		mov	byte ptr word_39E1A, al
-		cmp	word_39E1A+1, 70h ; 'p'
+		add	al, _pattern0_sq.S_angle
+		mov	_pattern0_sq.S_angle, al
+		cmp	_pattern0_sq.S_radius, 112
 		jge	short loc_1E9BA
-		add	word_39E1A+1, 8
+		add	_pattern0_sq.S_radius, 8
 		jmp	loc_1EA9F
 ; ---------------------------------------------------------------------------
 
@@ -8942,14 +8872,14 @@ loc_1E9BA:
 loc_1E9C6:
 		mov	bx, si
 		add	bx, bx
-		lea	ax, [bp+@@y]
+		lea	ax, [bp+@@corners_y]
 		add	bx, ax
 		mov	ax, ss:[bx]
-		sub	ax, [bp+var_12]
+		sub	ax, [bp+@@sq_center_y]
 		push	ax
 		mov	bx, si
 		add	bx, bx
-		lea	ax, [bp+@@x]
+		lea	ax, [bp+@@corners_x]
 		add	bx, ax
 		mov	ax, ss:[bx]
 		sub	ax, di
@@ -8962,12 +8892,12 @@ loc_1E9C6:
 		push	word ptr [bp+@@angle]
 		mov	bx, si
 		add	bx, bx
-		lea	ax, [bp+@@y]
+		lea	ax, [bp+@@corners_y]
 		add	bx, ax
 		push	word ptr ss:[bx]
 		mov	bx, si
 		add	bx, bx
-		lea	ax, [bp+@@x]
+		lea	ax, [bp+@@corners_x]
 		add	bx, ax
 		push	word ptr ss:[bx]
 		push	ds
@@ -8992,14 +8922,14 @@ loc_1EA2D:
 loc_1EA31:
 		mov	bx, si
 		add	bx, bx
-		lea	ax, [bp+@@y]
+		lea	ax, [bp+@@corners_y]
 		add	bx, ax
 		mov	ax, 384
 		sub	ax, ss:[bx]
 		push	ax
 		mov	bx, si
 		add	bx, bx
-		lea	ax, [bp+@@x]
+		lea	ax, [bp+@@corners_x]
 		add	bx, ax
 		mov	ax, _player_left
 		add	ax, 12
@@ -9017,12 +8947,12 @@ loc_1EA31:
 		push	word ptr [bp+@@angle]
 		mov	bx, si
 		add	bx, bx
-		lea	ax, [bp+@@y]
+		lea	ax, [bp+@@corners_y]
 		add	bx, ax
 		push	word ptr ss:[bx]
 		mov	bx, si
 		add	bx, bx
-		lea	ax, [bp+@@x]
+		lea	ax, [bp+@@corners_x]
 		add	bx, ax
 		push	word ptr ss:[bx]
 		push	ds
@@ -9038,24 +8968,24 @@ loc_1EA9A:
 		jl	short loc_1EA31
 
 loc_1EA9F:
-		push	ss
-		lea	ax, [bp+@@x]
-		push	ax
-		push	ss
-		lea	ax, [bp+@@y]
-		push	ax
-		push	di
-		push	[bp+var_12]
-		push	word_39E1A+1
-		push	word_39E1A
-		push	4
-		call	sub_1E886
+		push	ss	; corners_x (segment)
+		lea	ax, [bp+@@corners_x]
+		push	ax	; corners_x (offset)
+		push	ss	; corners_y (segment)
+		lea	ax, [bp+@@corners_y]
+		push	ax	; corners_y (offset)
+		push	di	; center_x
+		push	[bp+@@sq_center_y]	; center_y
+		push	_pattern0_sq.S_radius	; radius
+		push	word ptr _pattern0_sq.S_angle	; angle
+		push	4	; points
+		call	@regular_polygon$qnit1iiiuci
 		push	4 or (7 shl 16)	; (point_count) or (col shl 16)
 		push	ss
-		lea	ax, [bp+@@y]
+		lea	ax, [bp+@@corners_y]
 		push	ax
 		push	ss
-		lea	ax, [bp+@@x]
+		lea	ax, [bp+@@corners_x]
 		push	ax
 		call	_graph_r_lineloop_put
 		add	sp, 0Ch
@@ -9068,25 +8998,25 @@ loc_1EAD2:
 		mov	di, ax
 		mov	ax, mima_still.BE_cur_top
 		add	ax, 80
-		mov	[bp+var_12], ax
-		push	ss
-		lea	ax, [bp+@@x]
-		push	ax
-		push	ss
-		lea	ax, [bp+@@y]
-		push	ax
-		push	di
-		push	[bp+var_12]
-		push	word_39E1A+1
-		push	word_39E1A
-		push	4
-		call	sub_1E886
+		mov	[bp+@@sq_center_y], ax
+		push	ss	; corners_x (segment)
+		lea	ax, [bp+@@corners_x]
+		push	ax	; corners_x (offset)
+		push	ss	; corners_y (segment)
+		lea	ax, [bp+@@corners_y]
+		push	ax	; corners_y (offset)
+		push	di	; center_x
+		push	[bp+@@sq_center_y]	; center_y
+		push	_pattern0_sq.S_radius	; radius
+		push	word ptr _pattern0_sq.S_angle	; angle
+		push	4	; points
+		call	@regular_polygon$qnit1iiiuci
 		push	4	; point_count
 		push	ss
-		lea	ax, [bp+@@y]
+		lea	ax, [bp+@@corners_y]
 		push	ax
 		push	ss
-		lea	ax, [bp+@@x]
+		lea	ax, [bp+@@corners_x]
 		push	ax
 		call	_graph_r_lineloop_unput
 		add	sp, 0Ah
@@ -9112,8 +9042,8 @@ var_18		= word ptr -18h
 @@vector_y		= word ptr -16h
 @@vector_x		= word ptr -14h
 var_12		= word ptr -12h
-@@y		= byte ptr -10h
-@@x		= byte ptr -8
+@@corners_y		= byte ptr -10h
+@@corners_x		= byte ptr -8
 
 		enter	18h, 0
 		push	si
@@ -9122,8 +9052,8 @@ var_12		= word ptr -12h
 		jl	loc_1ECEC
 		cmp	_boss_phase_frame, 100
 		jnz	short loc_1EB64
-		mov	word_39E1D+1, 20h ; ' '
-		mov	byte ptr word_39E1D, 0
+		mov	_pattern1_sq.S_radius, 32
+		mov	_pattern1_sq.S_angle, 0
 		call	@mima_select_for_rank$qmiiiii c, offset _mima_pattern_state, ds, large 60h or (68h shl 16), large 70h or (76h shl 16)
 		push	8
 		call	_mdrv2_se_play
@@ -9142,33 +9072,33 @@ loc_1EB64:
 		mov	ax, mima_still.BE_cur_top
 		add	ax, 80
 		mov	di, ax
-		push	ss
-		lea	ax, [bp+@@x]
-		push	ax
-		push	ss
-		lea	ax, [bp+@@y]
-		push	ax
-		push	si
-		push	di
-		push	word_39E1D+1
-		push	word_39E1D
-		push	4
-		call	sub_1E886
+		push	ss	; corners_x (segment)
+		lea	ax, [bp+@@corners_x]
+		push	ax	; corners_x (offset)
+		push	ss	; corners_y (segment)
+		lea	ax, [bp+@@corners_y]
+		push	ax	; corners_y (offset)
+		push	si	; center_x
+		push	di	; center_y
+		push	_pattern1_sq.S_radius	; radius
+		push	word ptr _pattern1_sq.S_angle	; angle
+		push	4	; points
+		call	@regular_polygon$qnit1iiiuci
 		push	4	; point_count
 		push	ss
-		lea	ax, [bp+@@y]
+		lea	ax, [bp+@@corners_y]
 		push	ax
 		push	ss
-		lea	ax, [bp+@@x]
+		lea	ax, [bp+@@corners_x]
 		push	ax
 		call	_graph_r_lineloop_unput
 		add	sp, 0Ah
-		mov	al, byte ptr word_39E1D
-		add	al, 0F4h
-		mov	byte ptr word_39E1D, al
-		cmp	word_39E1D+1, 50h ; 'P'
+		mov	al, _pattern1_sq.S_angle
+		add	al, -0Ch
+		mov	_pattern1_sq.S_angle, al
+		cmp	_pattern1_sq.S_radius, 80
 		jge	short loc_1EBC7
-		add	word_39E1D+1, 8
+		add	_pattern1_sq.S_radius, 8
 		jmp	loc_1EC70
 ; ---------------------------------------------------------------------------
 
@@ -9220,12 +9150,12 @@ loc_1EC0B:
 		fwait
 		mov	bx, [bp+var_12]
 		add	bx, bx
-		lea	ax, [bp+@@y]
+		lea	ax, [bp+@@corners_y]
 		add	bx, ax
 		push	word ptr ss:[bx] ; int
 		mov	bx, [bp+var_12]
 		add	bx, bx
-		lea	ax, [bp+@@x]
+		lea	ax, [bp+@@corners_x]
 		add	bx, ax
 		push	word ptr ss:[bx] ; int
 		push	ds
@@ -9242,24 +9172,24 @@ loc_1EC62:
 		pop	cx
 
 loc_1EC70:
-		push	ss
-		lea	ax, [bp+@@x]
-		push	ax
-		push	ss
-		lea	ax, [bp+@@y]
-		push	ax
-		push	si
-		push	di
-		push	word_39E1D+1
-		push	word_39E1D
-		push	4
-		call	sub_1E886
+		push	ss	; corners_x (segment)
+		lea	ax, [bp+@@corners_x]
+		push	ax	; corners_x (offset)
+		push	ss	; corners_y (segment)
+		lea	ax, [bp+@@corners_y]
+		push	ax	; corners_y (offset)
+		push	si	; center_x
+		push	di	; center_y
+		push	_pattern1_sq.S_radius	; radius
+		push	word ptr _pattern1_sq.S_angle	; angle
+		push	4	; points
+		call	@regular_polygon$qnit1iiiuci
 		push	4 or (7 shl 16)	; (point_count) or (col shl 16)
 		push	ss
-		lea	ax, [bp+@@y]
+		lea	ax, [bp+@@corners_y]
 		push	ax
 		push	ss
-		lea	ax, [bp+@@x]
+		lea	ax, [bp+@@corners_x]
 		push	ax
 		call	_graph_r_lineloop_put
 		add	sp, 0Ch
@@ -9273,24 +9203,24 @@ loc_1ECA1:
 		mov	ax, mima_still.BE_cur_top
 		add	ax, 80
 		mov	di, ax
-		push	ss
-		lea	ax, [bp+@@x]
-		push	ax
-		push	ss
-		lea	ax, [bp+@@y]
-		push	ax
-		push	si
-		push	di
-		push	word_39E1D+1
-		push	word_39E1D
-		push	4
-		call	sub_1E886
+		push	ss	; corners_x (segment)
+		lea	ax, [bp+@@corners_x]
+		push	ax	; corners_x (offset)
+		push	ss	; corners_y (segment)
+		lea	ax, [bp+@@corners_y]
+		push	ax	; corners_y (offset)
+		push	si	; center_x
+		push	di	; center_y
+		push	_pattern1_sq.S_radius	; radius
+		push	word ptr _pattern1_sq.S_angle	; angle
+		push	4	; points
+		call	@regular_polygon$qnit1iiiuci
 		push	4	; point_count
 		push	ss
-		lea	ax, [bp+@@y]
+		lea	ax, [bp+@@corners_y]
 		push	ax
 		push	ss
-		lea	ax, [bp+@@x]
+		lea	ax, [bp+@@corners_x]
 		push	ax
 		call	_graph_r_lineloop_unput
 		add	sp, 0Ah
@@ -9311,11 +9241,11 @@ sub_1EB24	endp
 sub_1ECF0	proc far
 
 @@angle		= byte ptr -23h
-var_22		= word ptr -22h
-var_20		= byte ptr -20h
-var_18		= byte ptr -18h
-var_10		= byte ptr -10h
-var_8		= byte ptr -8
+@@sq_center_y		= word ptr -22h
+@@corners_y_2		= byte ptr -20h
+@@corners_x_2		= byte ptr -18h
+@@corners_y_1		= byte ptr -10h
+@@corners_x_1		= byte ptr -8
 
 		enter	24h, 0
 		push	si
@@ -9329,8 +9259,8 @@ loc_1ED01:
 		jl	loc_1EF81
 		cmp	_boss_phase_frame, 100
 		jnz	short loc_1ED3A
-		mov	word_39E22+1, 20h ; ' '
-		mov	byte ptr word_39E22, 0
+		mov	_pattern2_sq.S_radius, 32
+		mov	_pattern2_sq.S_angle, 0
 		call	@mima_select_for_rank$qmiiiii stdcall, offset _mima_pattern_state, ds, large 40h or (48h shl 16), large 50h or (58h shl 16)
 		push	8
 		call	_mdrv2_se_play
@@ -9348,57 +9278,57 @@ loc_1ED3A:
 		mov	di, ax
 		mov	ax, mima_still.BE_cur_top
 		add	ax, 80
-		mov	[bp+var_22], ax
-		push	ss
-		lea	ax, [bp+var_8]
-		push	ax
-		push	ss
-		lea	ax, [bp+var_10]
-		push	ax
-		push	di
-		push	[bp+var_22]
-		push	word_39E22+1
-		push	word_39E22
-		push	4
-		call	sub_1E886
-		push	ss
-		lea	ax, [bp+var_18]
-		push	ax
-		push	ss
-		lea	ax, [bp+var_20]
-		push	ax
-		push	di
-		push	[bp+var_22]
-		push	word_39E22+1
+		mov	[bp+@@sq_center_y], ax
+		push	ss	; corners_x (segment)
+		lea	ax, [bp+@@corners_x_1]
+		push	ax	; corners_x (offset)
+		push	ss	; corners_y (segment)
+		lea	ax, [bp+@@corners_y_1]
+		push	ax	; corners_y (offset)
+		push	di	; center_x
+		push	[bp+@@sq_center_y]	; center_y
+		push	_pattern2_sq.S_radius	; radius
+		push	word ptr _pattern2_sq.S_angle	; angle
+		push	4	; points
+		call	@regular_polygon$qnit1iiiuci
+		push	ss	; corners_x (segment)
+		lea	ax, [bp+@@corners_x_2]
+		push	ax	; corners_x (offset)
+		push	ss	; corners_y (segment)
+		lea	ax, [bp+@@corners_y_2]
+		push	ax	; corners_y (offset)
+		push	di	; center_x
+		push	[bp+@@sq_center_y]	; center_y
+		push	_pattern2_sq.S_radius	; radius
 		mov	al, 0
-		sub	al, byte ptr word_39E22
-		push	ax
-		push	4
-		call	sub_1E886
+		sub	al, _pattern2_sq.S_angle	; angle
+		push	ax	; angle
+		push	4	; points
+		call	@regular_polygon$qnit1iiiuci
 		push	4	; point_count
 		push	ss
-		lea	ax, [bp+var_10]
+		lea	ax, [bp+@@corners_y_1]
 		push	ax
 		push	ss
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@corners_x_1]
 		push	ax
 		call	_graph_r_lineloop_unput
 		push	4	; point_count
 		push	ss
-		lea	ax, [bp+var_20]
+		lea	ax, [bp+@@corners_y_2]
 		push	ax
 		push	ss
-		lea	ax, [bp+var_18]
+		lea	ax, [bp+@@corners_x_2]
 		push	ax
 		call	_graph_r_lineloop_unput
 		add	sp, 14h
-		mov	al, byte ptr word_39E22
-		add	al, 0FAh
-		mov	byte ptr word_39E22, al
+		mov	al, _pattern2_sq.S_angle
+		add	al, -06h
+		mov	_pattern2_sq.S_angle, al
 		mov	_Pellets.PELLET_spawn_with_cloud, 1
-		cmp	word_39E22+1, 70h ; 'p'
+		cmp	_pattern2_sq.S_radius, 112
 		jge	short loc_1EDD4
-		add	word_39E22+1, 8
+		add	_pattern2_sq.S_radius, 8
 		jmp	loc_1EE95
 ; ---------------------------------------------------------------------------
 
@@ -9410,14 +9340,14 @@ loc_1EDD4:
 loc_1EDD9:
 		mov	bx, si
 		add	bx, bx
-		lea	ax, [bp+var_10]
+		lea	ax, [bp+@@corners_y_1]
 		add	bx, ax
 		mov	ax, ss:[bx]
-		sub	ax, [bp+var_22]
+		sub	ax, [bp+@@sq_center_y]
 		push	ax
 		mov	bx, si
 		add	bx, bx
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@corners_x_1]
 		add	bx, ax
 		mov	ax, ss:[bx]
 		sub	ax, di
@@ -9430,12 +9360,12 @@ loc_1EDD9:
 		push	word ptr [bp+@@angle]
 		mov	bx, si
 		add	bx, bx
-		lea	ax, [bp+var_10]
+		lea	ax, [bp+@@corners_y_1]
 		add	bx, ax
 		push	word ptr ss:[bx]
 		mov	bx, si
 		add	bx, bx
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@corners_x_1]
 		add	bx, ax
 		push	word ptr ss:[bx]
 		push	ds
@@ -9443,14 +9373,14 @@ loc_1EDD9:
 		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		mov	bx, si
 		add	bx, bx
-		lea	ax, [bp+var_20]
+		lea	ax, [bp+@@corners_y_2]
 		add	bx, ax
 		mov	ax, ss:[bx]
-		sub	ax, [bp+var_22]
+		sub	ax, [bp+@@sq_center_y]
 		push	ax
 		mov	bx, si
 		add	bx, bx
-		lea	ax, [bp+var_18]
+		lea	ax, [bp+@@corners_x_2]
 		add	bx, ax
 		mov	ax, ss:[bx]
 		sub	ax, di
@@ -9463,12 +9393,12 @@ loc_1EDD9:
 		push	word ptr [bp+@@angle]
 		mov	bx, si
 		add	bx, bx
-		lea	ax, [bp+var_20]
+		lea	ax, [bp+@@corners_y_2]
 		add	bx, ax
 		push	word ptr ss:[bx]
 		mov	bx, si
 		add	bx, bx
-		lea	ax, [bp+var_18]
+		lea	ax, [bp+@@corners_x_2]
 		add	bx, ax
 		push	word ptr ss:[bx]
 		push	ds
@@ -9484,46 +9414,46 @@ loc_1EE8E:
 		jl	loc_1EDD9
 
 loc_1EE95:
-		push	ss
-		lea	ax, [bp+var_8]
-		push	ax
-		push	ss
-		lea	ax, [bp+var_10]
-		push	ax
-		push	di
-		push	[bp+var_22]
-		push	word_39E22+1
-		push	word_39E22
-		push	4
-		call	sub_1E886
-		push	ss
-		lea	ax, [bp+var_18]
-		push	ax
-		push	ss
-		lea	ax, [bp+var_20]
-		push	ax
-		push	di
-		push	[bp+var_22]
-		push	word_39E22+1
+		push	ss	; corners_x (segment)
+		lea	ax, [bp+@@corners_x_1]
+		push	ax	; corners_x (offset)
+		push	ss	; corners_y (segment)
+		lea	ax, [bp+@@corners_y_1]
+		push	ax	; corners_y (offset)
+		push	di	; center_x
+		push	[bp+@@sq_center_y]	; center_y
+		push	_pattern2_sq.S_radius	; radius
+		push	word ptr _pattern2_sq.S_angle	; angle
+		push	4	; points
+		call	@regular_polygon$qnit1iiiuci
+		push	ss	; corners_x (segment)
+		lea	ax, [bp+@@corners_x_2]
+		push	ax	; corners_x (offset)
+		push	ss	; corners_y (segment)
+		lea	ax, [bp+@@corners_y_2]
+		push	ax	; corners_y (offset)
+		push	di	; center_x
+		push	[bp+@@sq_center_y]	; center_y
+		push	_pattern2_sq.S_radius	; radius
 		mov	al, 0
-		sub	al, byte ptr word_39E22
-		push	ax
-		push	4
-		call	sub_1E886
+		sub	al, _pattern2_sq.S_angle	; angle
+		push	ax	; angle
+		push	4	; points
+		call	@regular_polygon$qnit1iiiuci
 		push	4 or (7 shl 16)	; (point_count) or (col shl 16)
 		push	ss
-		lea	ax, [bp+var_10]
+		lea	ax, [bp+@@corners_y_1]
 		push	ax
 		push	ss
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@corners_x_1]
 		push	ax
 		call	_graph_r_lineloop_put
 		push	4 or (7 shl 16)	; (point_count) or (col shl 16)
 		push	ss
-		lea	ax, [bp+var_20]
+		lea	ax, [bp+@@corners_y_2]
 		push	ax
 		push	ss
-		lea	ax, [bp+var_18]
+		lea	ax, [bp+@@corners_x_2]
 		push	ax
 		call	_graph_r_lineloop_put
 		add	sp, 18h
@@ -9537,47 +9467,47 @@ loc_1EF00:
 		mov	di, ax
 		mov	ax, mima_still.BE_cur_top
 		add	ax, 80
-		mov	[bp+var_22], ax
-		push	ss
-		lea	ax, [bp+var_8]
-		push	ax
-		push	ss
-		lea	ax, [bp+var_10]
-		push	ax
-		push	di
-		push	[bp+var_22]
-		push	word_39E22+1
-		push	word_39E22
-		push	4
-		call	sub_1E886
-		push	ss
-		lea	ax, [bp+var_18]
-		push	ax
-		push	ss
-		lea	ax, [bp+var_20]
-		push	ax
-		push	di
-		push	[bp+var_22]
-		push	word_39E22+1
+		mov	[bp+@@sq_center_y], ax
+		push	ss	; corners_x (segment)
+		lea	ax, [bp+@@corners_x_1]
+		push	ax	; corners_x (offset)
+		push	ss	; corners_y (segment)
+		lea	ax, [bp+@@corners_y_1]
+		push	ax	; corners_y (offset)
+		push	di	; center_x
+		push	[bp+@@sq_center_y]	; center_y
+		push	_pattern2_sq.S_radius	; radius
+		push	word ptr _pattern2_sq.S_angle	; angle
+		push	4	; points
+		call	@regular_polygon$qnit1iiiuci
+		push	ss	; corners_x (segment)
+		lea	ax, [bp+@@corners_x_2]
+		push	ax	; corners_x (offset)
+		push	ss	; corners_y (segment)
+		lea	ax, [bp+@@corners_y_2]
+		push	ax	; corners_y (offset)
+		push	di	; center_x
+		push	[bp+@@sq_center_y]	; center_y
+		push	_pattern2_sq.S_radius	; radius
 		mov	al, 0
-		sub	al, byte ptr word_39E22
-		push	ax
-		push	4
-		call	sub_1E886
+		sub	al, _pattern2_sq.S_angle	; angle
+		push	ax	; angle
+		push	4	; points
+		call	@regular_polygon$qnit1iiiuci
 		push	4	; point_count
 		push	ss
-		lea	ax, [bp+var_10]
+		lea	ax, [bp+@@corners_y_1]
 		push	ax
 		push	ss
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@corners_x_1]
 		push	ax
 		call	_graph_r_lineloop_unput
 		push	4	; point_count
 		push	ss
-		lea	ax, [bp+var_20]
+		lea	ax, [bp+@@corners_y_2]
 		push	ax
 		push	ss
-		lea	ax, [bp+var_18]
+		lea	ax, [bp+@@corners_x_2]
 		push	ax
 		call	_graph_r_lineloop_unput
 		add	sp, 14h
@@ -10222,9 +10152,9 @@ var_26		= qword	ptr -26h
 var_18		= word ptr -18h
 @@vector_y		= word ptr -16h
 @@vector_x		= word ptr -14h
-var_12		= word ptr -12h
-var_10		= byte ptr -10h
-var_8		= byte ptr -8
+@@sq_center_y		= word ptr -12h
+@@corners_y		= byte ptr -10h
+@@corners_x		= byte ptr -8
 
 		enter	18h, 0
 		push	si
@@ -10233,9 +10163,9 @@ var_8		= byte ptr -8
 		jl	loc_1F765
 		cmp	_boss_phase_frame, 100
 		jnz	short loc_1F5DE
-		mov	word_39E57+1, 20h ; ' '
-		mov	byte ptr word_39E57, 0
-		mov	byte ptr word_39E5A, 0
+		mov	_pattern5_sq.S_radius, 32
+		mov	_pattern5_sq.S_angle, 0
+		mov	angle_39E5A, 0
 		call	@mima_select_for_rank$qmiiiii c, offset _mima_pattern_state, ds, large 28h or (2Dh shl 16), large 32h or (37h shl 16)
 		push	8
 		call	_mdrv2_se_play
@@ -10253,34 +10183,34 @@ loc_1F5DE:
 		mov	di, ax
 		mov	ax, mima_still.BE_cur_top
 		add	ax, 80
-		mov	[bp+var_12], ax
-		push	ss
-		lea	ax, [bp+var_8]
-		push	ax
-		push	ss
-		lea	ax, [bp+var_10]
-		push	ax
-		push	di
-		push	[bp+var_12]
-		push	word_39E57+1
-		push	word_39E57
-		push	4
-		call	sub_1E886
+		mov	[bp+@@sq_center_y], ax
+		push	ss	; corners_x (segment)
+		lea	ax, [bp+@@corners_x]
+		push	ax	; corners_x (offset)
+		push	ss	; corners_y (segment)
+		lea	ax, [bp+@@corners_y]
+		push	ax	; corners_y (offset)
+		push	di	; center_x
+		push	[bp+@@sq_center_y]	; center_y
+		push	_pattern5_sq.S_radius	; radius
+		push	word ptr _pattern5_sq.S_angle	; angle
+		push	4	; points
+		call	@regular_polygon$qnit1iiiuci
 		push	4	; point_count
 		push	ss
-		lea	ax, [bp+var_10]
+		lea	ax, [bp+@@corners_y]
 		push	ax
 		push	ss
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@corners_x]
 		push	ax
 		call	_graph_r_lineloop_unput
 		add	sp, 0Ah
-		mov	al, byte ptr word_39E57
-		add	al, 0F4h
-		mov	byte ptr word_39E57, al
-		cmp	word_39E57+1, 50h ; 'P'
+		mov	al, _pattern5_sq.S_angle
+		add	al, -0Ch
+		mov	_pattern5_sq.S_angle, al
+		cmp	_pattern5_sq.S_radius, 80
 		jge	short loc_1F644
-		add	word_39E57+1, 8
+		add	_pattern5_sq.S_radius, 8
 		jmp	loc_1F6E4
 ; ---------------------------------------------------------------------------
 
@@ -10293,7 +10223,7 @@ loc_1F644:
 		idiv	bx
 		cmp	dx, 8
 		jnz	loc_1F6E4
-		push	word_39E5A
+		push	word ptr angle_39E5A
 		mov	ax, _mima_pattern_state
 		mov	bx, 10
 		cwd
@@ -10327,12 +10257,12 @@ loc_1F682:
 		mov	bx, si
 		add	bx, bx
 		fwait
-		lea	ax, [bp+var_10]
+		lea	ax, [bp+@@corners_y]
 		add	bx, ax
 		push	word ptr ss:[bx] ; int
 		mov	bx, si
 		add	bx, bx
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@corners_x]
 		add	bx, ax
 		push	word ptr ss:[bx] ; int
 		push	ds
@@ -10347,29 +10277,29 @@ loc_1F6CF:
 		push	6
 		call	_mdrv2_se_play
 		pop	cx
-		mov	al, byte ptr word_39E5A
+		mov	al, angle_39E5A
 		add	al, 0Dh
-		mov	byte ptr word_39E5A, al
+		mov	angle_39E5A, al
 
 loc_1F6E4:
-		push	ss
-		lea	ax, [bp+var_8]
-		push	ax
-		push	ss
-		lea	ax, [bp+var_10]
-		push	ax
-		push	di
-		push	[bp+var_12]
-		push	word_39E57+1
-		push	word_39E57
-		push	4
-		call	sub_1E886
+		push	ss	; corners_x (segment)
+		lea	ax, [bp+@@corners_x]
+		push	ax	; corners_x (offset)
+		push	ss	; corners_y (segment)
+		lea	ax, [bp+@@corners_y]
+		push	ax	; corners_y (offset)
+		push	di	; center_x
+		push	[bp+@@sq_center_y]	; center_y
+		push	_pattern5_sq.S_radius	; radius
+		push	word ptr _pattern5_sq.S_angle	; angle
+		push	4	; points
+		call	@regular_polygon$qnit1iiiuci
 		push	4 or (7 shl 16)	; (point_count) or (col shl 16)
 		push	ss
-		lea	ax, [bp+var_10]
+		lea	ax, [bp+@@corners_y]
 		push	ax
 		push	ss
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@corners_x]
 		push	ax
 		call	_graph_r_lineloop_put
 		add	sp, 0Ch
@@ -10382,25 +10312,25 @@ loc_1F717:
 		mov	di, ax
 		mov	ax, mima_still.BE_cur_top
 		add	ax, 80
-		mov	[bp+var_12], ax
-		push	ss
-		lea	ax, [bp+var_8]
-		push	ax
-		push	ss
-		lea	ax, [bp+var_10]
-		push	ax
-		push	di
-		push	[bp+var_12]
-		push	word_39E57+1
-		push	word_39E57
-		push	4
-		call	sub_1E886
+		mov	[bp+@@sq_center_y], ax
+		push	ss	; corners_x (segment)
+		lea	ax, [bp+@@corners_x]
+		push	ax	; corners_x (offset)
+		push	ss	; corners_y (segment)
+		lea	ax, [bp+@@corners_y]
+		push	ax	; corners_y (offset)
+		push	di	; center_x
+		push	[bp+@@sq_center_y]	; center_y
+		push	_pattern5_sq.S_radius	; radius
+		push	word ptr _pattern5_sq.S_angle	; angle
+		push	4	; points
+		call	@regular_polygon$qnit1iiiuci
 		push	4	; point_count
 		push	ss
-		lea	ax, [bp+var_10]
+		lea	ax, [bp+@@corners_y]
 		push	ax
 		push	ss
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@corners_x]
 		push	ax
 		call	_graph_r_lineloop_unput
 		add	sp, 0Ah
@@ -10420,9 +10350,9 @@ sub_1F599	endp
 
 sub_1F769	proc far
 
-var_12		= word ptr -12h
-var_10		= byte ptr -10h
-var_8		= byte ptr -8
+@@sq_center_y		= word ptr -12h
+@@corners_y		= byte ptr -10h
+@@corners_x		= byte ptr -8
 
 		enter	12h, 0
 		push	si
@@ -10431,8 +10361,8 @@ var_8		= byte ptr -8
 		jl	loc_1F905
 		cmp	_boss_phase_frame, 100
 		jnz	short loc_1F7AD
-		mov	word_39E5C, 20h	; ' '
-		mov	byte ptr word_39E5A+1, 0
+		mov	_pattern6_sq.S_radius, 32
+		mov	_pattern6_sq.S_angle, 0
 		mov	angle_39E5E, 80h
 		call	@mima_select_for_rank$qmiiiii stdcall, offset _mima_pattern_state, ds, large 20h or (28h shl 16), large 30h or (38h shl 16)
 		push	8
@@ -10451,44 +10381,44 @@ loc_1F7AD:
 		mov	di, ax
 		mov	ax, mima_still.BE_cur_top
 		add	ax, 80
-		mov	[bp+var_12], ax
-		push	ss
-		lea	ax, [bp+var_8]
-		push	ax
-		push	ss
-		lea	ax, [bp+var_10]
-		push	ax
-		push	di
-		push	[bp+var_12]
-		push	word_39E5C
-		push	word_39E5A+1
-		push	4
-		call	sub_1E886
+		mov	[bp+@@sq_center_y], ax
+		push	ss	; corners_x (segment)
+		lea	ax, [bp+@@corners_x]
+		push	ax	; corners_x (offset)
+		push	ss	; corners_y (segment)
+		lea	ax, [bp+@@corners_y]
+		push	ax	; corners_y (offset)
+		push	di	; center_x
+		push	[bp+@@sq_center_y]	; center_y
+		push	_pattern6_sq.S_radius	; radius
+		push	word ptr _pattern6_sq.S_angle	; angle
+		push	4	; points
+		call	@regular_polygon$qnit1iiiuci
 		push	4	; point_count
 		push	ss
-		lea	ax, [bp+var_10]
+		lea	ax, [bp+@@corners_y]
 		push	ax
 		push	ss
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@corners_x]
 		push	ax
 		call	_graph_r_lineloop_unput
 		add	sp, 0Ah
 		cmp	_boss_phase_frame, 270
 		jle	short loc_1F80B
-		mov	al, byte ptr word_39E5A+1
+		mov	al, _pattern6_sq.S_angle
 		add	al, 0Ch
 		jmp	short loc_1F810
 ; ---------------------------------------------------------------------------
 
 loc_1F80B:
-		mov	al, byte ptr word_39E5A+1
-		add	al, 0F4h
+		mov	al, _pattern6_sq.S_angle
+		add	al, -0Ch
 
 loc_1F810:
-		mov	byte ptr word_39E5A+1, al
-		cmp	word_39E5C, 50h	; 'P'
+		mov	_pattern6_sq.S_angle, al
+		cmp	_pattern6_sq.S_radius, 80
 		jge	short loc_1F821
-		add	word_39E5C, 8
+		add	_pattern6_sq.S_radius, 8
 		jmp	short loc_1F884
 ; ---------------------------------------------------------------------------
 
@@ -10519,12 +10449,12 @@ loc_1F844:
 		push	word ptr angle_39E5E
 		mov	bx, si
 		add	bx, bx
-		lea	ax, [bp+var_10]
+		lea	ax, [bp+@@corners_y]
 		add	bx, ax
 		push	word ptr ss:[bx]
 		mov	bx, si
 		add	bx, bx
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@corners_x]
 		add	bx, ax
 		push	word ptr ss:[bx]
 		push	ds
@@ -10541,24 +10471,24 @@ loc_1F877:
 		pop	cx
 
 loc_1F884:
-		push	ss
-		lea	ax, [bp+var_8]
-		push	ax
-		push	ss
-		lea	ax, [bp+var_10]
-		push	ax
-		push	di
-		push	[bp+var_12]
-		push	word_39E5C
-		push	word_39E5A+1
-		push	4
-		call	sub_1E886
+		push	ss	; corners_x (segment)
+		lea	ax, [bp+@@corners_x]
+		push	ax	; corners_x (offset)
+		push	ss	; corners_y (segment)
+		lea	ax, [bp+@@corners_y]
+		push	ax	; corners_y (offset)
+		push	di	; center_x
+		push	[bp+@@sq_center_y]	; center_y
+		push	_pattern6_sq.S_radius	; radius
+		push	word ptr _pattern6_sq.S_angle	; angle
+		push	4	; points
+		call	@regular_polygon$qnit1iiiuci
 		push	4 or (7 shl 16)	; (point_count) or (col shl 16)
 		push	ss
-		lea	ax, [bp+var_10]
+		lea	ax, [bp+@@corners_y]
 		push	ax
 		push	ss
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@corners_x]
 		push	ax
 		call	_graph_r_lineloop_put
 		add	sp, 0Ch
@@ -10571,25 +10501,25 @@ loc_1F8B7:
 		mov	di, ax
 		mov	ax, mima_still.BE_cur_top
 		add	ax, 80
-		mov	[bp+var_12], ax
-		push	ss
-		lea	ax, [bp+var_8]
-		push	ax
-		push	ss
-		lea	ax, [bp+var_10]
-		push	ax
-		push	di
-		push	[bp+var_12]
-		push	word_39E5C
-		push	word_39E5A+1
-		push	4
-		call	sub_1E886
+		mov	[bp+@@sq_center_y], ax
+		push	ss	; corners_x (segment)
+		lea	ax, [bp+@@corners_x]
+		push	ax	; corners_x (offset)
+		push	ss	; corners_y (segment)
+		lea	ax, [bp+@@corners_y]
+		push	ax	; corners_y (offset)
+		push	di	; center_x
+		push	[bp+@@sq_center_y]	; center_y
+		push	_pattern6_sq.S_radius	; radius
+		push	word ptr _pattern6_sq.S_angle	; angle
+		push	4	; points
+		call	@regular_polygon$qnit1iiiuci
 		push	4	; point_count
 		push	ss
-		lea	ax, [bp+var_10]
+		lea	ax, [bp+@@corners_y]
 		push	ax
 		push	ss
-		lea	ax, [bp+var_8]
+		lea	ax, [bp+@@corners_x]
 		push	ax
 		call	_graph_r_lineloop_unput
 		add	sp, 0Ah
@@ -10623,8 +10553,8 @@ loc_1F91A:
 		jl	loc_1FA77
 		cmp	_boss_phase_frame, 100
 		jnz	short loc_1F953
-		mov	word_39E60, 20h	; ' '
-		mov	byte_39E5F, 0
+		mov	_pattern7_sq.S_radius, 32
+		mov	_pattern7_sq.S_angle, 0
 		call	@mima_select_for_rank$qmiiiii stdcall, offset _mima_pattern_state, ds, large 32h or (36h shl 16), large 3Ah or (3Eh shl 16)
 		push	8
 		call	_mdrv2_se_play
@@ -10643,46 +10573,46 @@ loc_1F953:
 		mov	ax, mima_still.BE_cur_top
 		add	ax, 80
 		mov	di, ax
-		push	ds
-		push	offset left_39E64
-		push	ds
-		push	offset top_39E6C
-		push	si
-		push	ax
-		push	word_39E60
-		push	word ptr byte_39E5F
-		push	4
-		call	sub_1E886
+		push	ds	; corners_x (segment)
+		push	offset _pattern7_sq_corners_x	; corners_x (offset)
+		push	ds	; corners_y (segment)
+		push	offset _pattern7_sq_corners_y	; corners_y (offset)
+		push	si	; center_x
+		push	ax	; center_y
+		push	_pattern7_sq.S_radius	; radius
+		push	word ptr _pattern7_sq.S_angle	; angle
+		push	4	; points
+		call	@regular_polygon$qnit1iiiuci
 		push	4	; point_count
 		push	ds
-		push	offset top_39E6C
+		push	offset _pattern7_sq_corners_y
 		push	ds
-		push	offset left_39E64
+		push	offset _pattern7_sq_corners_x
 		call	_graph_r_lineloop_unput
 		add	sp, 0Ah
-		mov	al, byte_39E5F
-		add	al, 3
-		mov	byte_39E5F, al
-		cmp	word_39E60, 50h	; 'P'
+		mov	al, _pattern7_sq.S_angle
+		add	al, 03h
+		mov	_pattern7_sq.S_angle, al
+		cmp	_pattern7_sq.S_radius, 80
 		jge	short loc_1F9AD
-		add	word_39E60, 8
+		add	_pattern7_sq.S_radius, 8
 
 loc_1F9AD:
-		push	ds
-		push	offset left_39E64
-		push	ds
-		push	offset top_39E6C
-		push	si
-		push	di
-		push	word_39E60
-		push	word ptr byte_39E5F
-		push	4
-		call	sub_1E886
+		push	ds	; corners_x (segment)
+		push	offset _pattern7_sq_corners_x	; corners_x (offset)
+		push	ds	; corners_y (segment)
+		push	offset _pattern7_sq_corners_y	; corners_y (offset)
+		push	si	; center_x
+		push	di	; center_y
+		push	_pattern7_sq.S_radius	; radius
+		push	word ptr _pattern7_sq.S_angle	; angle
+		push	4	; points
+		call	@regular_polygon$qnit1iiiuci
 		push	4 or (7 shl 16)	; (point_count) or (col shl 16)
 		push	ds
-		push	offset top_39E6C
+		push	offset _pattern7_sq_corners_y
 		push	ds
-		push	offset left_39E64
+		push	offset _pattern7_sq_corners_x
 		call	_graph_r_lineloop_put
 		add	sp, 0Ch
 
@@ -10705,10 +10635,10 @@ loc_1F9DA:
 		push	ax		; target_left
 		mov	bx, [bp+@@laser_i]
 		add	bx, bx
-		push	top_39E6C[bx]	; origin_y
+		push	_pattern7_sq_corners_y[bx]	; origin_y
 		mov	bx, [bp+@@laser_i]
 		add	bx, bx
-		push	left_39E64[bx]	; origin_left
+		push	_pattern7_sq_corners_x[bx]	; origin_left
 		mov	ax, [bp+@@laser_i]
 		imul	ax, size CShootoutLaser
 		add	ax, offset _shootout_lasers
@@ -10726,21 +10656,21 @@ loc_1FA30:
 		mov	ax, mima_still.BE_cur_top
 		add	ax, 80
 		mov	di, ax
-		push	ds
-		push	offset left_39E64
-		push	ds
-		push	offset top_39E6C
-		push	si
-		push	ax
-		push	word_39E60
-		push	word ptr byte_39E5F
-		push	4
-		call	sub_1E886
+		push	ds	; corners_x (segment)
+		push	offset _pattern7_sq_corners_x	; corners_x (offset)
+		push	ds	; corners_y (segment)
+		push	offset _pattern7_sq_corners_y	; corners_y (offset)
+		push	si	; center_x
+		push	ax	; center_y
+		push	_pattern7_sq.S_radius	; radius
+		push	word ptr _pattern7_sq.S_angle	; angle
+		push	4	; points
+		call	@regular_polygon$qnit1iiiuci
 		push	4	; point_count
 		push	ds
-		push	offset top_39E6C
+		push	offset _pattern7_sq_corners_y
 		push	ds
-		push	offset left_39E64
+		push	offset _pattern7_sq_corners_x
 		call	_graph_r_lineloop_unput
 		add	sp, 0Ah
 		mov	_boss_phase_frame, 0
@@ -11780,19 +11710,28 @@ word_39E12	dw ?
 byte_39E14	db ?
 public _yuugenmagan_initial_hp_rendered
 _yuugenmagan_initial_hp_rendered	db ?
+
 angle_39E16	db ?
 angle_39E17	db ?
 
 public _mima_pattern_state
 _mima_pattern_state	dw ?
 
-word_39E1A	dw ?
-		db    ?	;
-word_39E1D	dw ?
-		db ?
+SquareState struc
+	S_angle 	db ?
+	S_radius	dw ?
+SquareState ends
+
+public _pattern0_sq
+_pattern0_sq	SquareState <?>
+
+public _pattern1_sq
+_pattern1_sq	SquareState <?>
 x_39E20	dw ?
-word_39E22	dw ?
-		db    ?	;
+
+public _pattern2_sq
+_pattern2_sq	SquareState <?>
+
 byte_39E25	db ?
 byte_39E26	db ?
 word_39E27	dw ?
@@ -11812,16 +11751,21 @@ word_39E41	dw ?
 word_39E43	dw ?
 word_39E45	dw ?
 		db 16 dup(?)
-word_39E57	dw ?
-		db ?
-word_39E5A	dw ?
-word_39E5C	dw ?
+
+public _pattern5_sq
+_pattern5_sq	SquareState <?>
+angle_39E5A	db ?
+
+public _pattern6_sq
+_pattern6_sq	SquareState <?>
 angle_39E5E	db ?
-byte_39E5F	db ?
-word_39E60	dw ?
+
+public _pattern7_sq
+_pattern7_sq	SquareState <?>
 		dw ?
-left_39E64	dw 4 dup (?)
-top_39E6C 	dw 4 dup (?)
+_pattern7_sq_corners_x	dw 4 dup (?)
+_pattern7_sq_corners_y 	dw 4 dup (?)
+
 public _mima_invincibility_frame, _mima_invincible
 _mima_invincibility_frame	dw ?
 _mima_invincible	dw ?
