@@ -1307,22 +1307,19 @@ loc_D414:
 		push	ds
 		push	offset aKbhitDDirDSpDS ; " kbhit:%d,dir:%d, sp:%d, sh:%d, exit:%d"...
 		call	_printf
-		pushd	[dword_36C20]
-		push	_bomb_doubletap_frames
-		pushd	[_frame_rand]
-		pushd	[_bomb_frames]
-		push	ds
-		push	offset aMain7luRand7lu ; " main:%7lu, rand:%7lu, bomb:%d, timer:%"...
-		call	_printf
+		rept 24
+			nop
+		endm
+		push	_orb_cur_top
+		push	_orb_cur_left
 		pushd	dword ptr [_orb_velocity_y+4]
 		pushd	dword ptr [_orb_velocity_y+0]
-		push	_orb_velocity_x
 		pushd	dword ptr [_orb_force+4]
 		pushd	dword ptr [_orb_force+0]
 		push	ds
 		push	offset ORB_DEBUG_FMT
 		call	_printf
-		add	sp, 48h
+		add	sp, 38h
 		pop	bp
 		retf
 sub_D340	endp
@@ -11345,9 +11342,7 @@ aGx3d		db 'gx = %3d',0
 _esc_cursor_to_x0_y3		db 1Bh,'[4;0H',0
 ; char aKbhitDDirDSpDS[]
 aKbhitDDirDSpDS	db 'kbhit:%d,dir:%d, sp:%d, sh:%d, exit:%d, end:%d',0Ah,0
-; char aMain7luRand7lu[]
-aMain7luRand7lu	db 'main:%7lu, rand:%7lu, bomb:%d, timer:%7lu',0Ah,0
-ORB_DEBUG_FMT   db 'force:%7.3f, vel_x:%d, vel_y:%7.3f',0Ah,0
+ORB_DEBUG_FMT   db 0Ah,0Ah,0Ah,0Ah,0Ah,0Ah,0Ah,0Ah,0Ah,0Ah,0Ah,0Ah,0Ah,0Ah,0Ah,0Ah,0Ah,0Ah,0Ah,0Ah,'                force:%7.3f, vel_y:%7.3f, left:%3d, top:%3d',0
 ; char aGogbgGtg[]
 aGogbgGtg@gcglv	db 'Run OP first',0
 ; char aCGzgmgngg[]
