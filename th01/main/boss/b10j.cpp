@@ -14,10 +14,12 @@
 extern "C" {
 #include "th01/hardware/graph.h"
 #include "th01/hardware/palette.h"
+#include "th01/snd/mdrv2.h"
 }
 #include "th01/formats/grp.h"
 #include "th01/formats/pf.hpp"
 #include "th01/formats/ptn.hpp"
+#include "th01/sprites/pellet.h"
 #include "th01/main/playfld.hpp"
 #include "th01/main/vars.hpp"
 #include "th01/shiftjis/fns.hpp"
@@ -30,7 +32,9 @@ extern const char MISSILE_FN[];
 #include "th01/main/boss/entity_a.hpp"
 #include "th01/main/boss/palette.hpp"
 #include "th01/main/bullet/missile.hpp"
+#include "th01/main/bullet/pellet.hpp"
 #include "th01/main/hud/hp.hpp"
+#include "th01/main/player/player.hpp"
 
 // Coordinates
 // -----------
@@ -40,6 +44,15 @@ static const pixel_t MIMA_H = 160;
 
 static const pixel_t MIMA_ANIM_TOP = 48; // relative to the sprite's top edge
 static const pixel_t MIMA_ANIM_H = 64;
+
+// Not quite matching the image, but close enough.
+static const pixel_t SEAL_RADIUS = 80;
+
+// The radius of the circumscribed square around a circle with radius 𝓇 is
+// 𝓇 * √2; see https://www.desmos.com/calculator/u8mtn9y9wo.
+static const pixel_t SEAL_CIRCUMSQUARE_RADIUS = static_cast<pixel_t>(
+	SEAL_RADIUS * 1.41f
+);
 // -----------
 
 #define meteor_active	mima_meteor_active
@@ -80,7 +93,9 @@ enum anim_cel_t {
 	C_METEOR_last = (C_METEOR + METEOR_CELS - 1),
 };
 
-#define ent_still	boss_entities[0]
+#define ent_still \
+	reinterpret_cast<CBossEntitySized<MIMA_W, MIMA_H> &>(boss_entities[0])
+
 #define ent_anim 	boss_entities[1]
 
 inline void mima_ent_load(void) {
@@ -109,6 +124,7 @@ static const int BG_ENT_OFFSET = 3;
 
 #define pattern_state mima_pattern_state
 extern union {
+	subpixel_t speed;
 } pattern_state;
 // --------
 
@@ -336,6 +352,13 @@ void mima_free(void)
 // Rotating square
 // ---------------
 
+static const int SQUARE_POINTS = 4;
+static const int SQUARE_INTERVAL = 8;
+static const pixel_t SQUARE_RADIUS_PER_FRAME = 1;
+static const pixel_t SQUARE_RADIUS_STEP = (
+	SQUARE_INTERVAL * SQUARE_RADIUS_PER_FRAME
+);
+
 void pascal near regular_polygon(
 	screen_x_t *corners_x,
 	screen_y_t *corners_y,
@@ -356,5 +379,126 @@ void pascal near regular_polygon(
 struct SquareState {
 	unsigned char angle;
 	pixel_t radius;
+
+	void init(void) {
+		radius = static_cast<pixel_t>(SEAL_RADIUS * 0.4f);
+		angle = 0x00;
+	}
 };
+
+// Pseudo-structure for all local square data, since the original set of data
+// unfortunately is both partly stored in registers, and located on the stack
+// in a way that prevents even parts of it to be turned into a structure.
+// MODDERS: Turn into a proper template class, with all the macros below as
+// methods.
+#define SquareLocal(name) \
+	screen_x_t name##_corners_x[SQUARE_POINTS]; \
+	screen_y_t name##_corners_y[SQUARE_POINTS]; \
+	screen_x_t name##_center_x; \
+	screen_y_t name##_center_y;
+
+#define square_center_set(sql) { \
+	sql##_center_x = ent_still.cur_center_x(); \
+	sql##_center_y = ent_still.cur_center_y(); \
+}
+
+#define square_corners_set(sql, corners, radius, angle) { \
+	regular_polygon( \
+		corners##_x, \
+		corners##_y, \
+		sql##_center_x, \
+		sql##_center_y, \
+		radius, \
+		angle, \
+		SQUARE_POINTS \
+	); \
+}
+
+#define square_unput(corners) { \
+	graph_r_lineloop_unput(corners##_x, corners##_y, SQUARE_POINTS); \
+}
+
+#define square_put(corners) { \
+	graph_r_lineloop_put(corners##_x, corners##_y, SQUARE_POINTS, V_WHITE); \
+}
+
+#define square_set_coords_and_unput(sql, corners, radius, angle) { \
+	square_center_set(sql); \
+	square_corners_set(sql, corners, radius, angle); \
+	square_unput(corners); \
+}
+
+#define square_set_coords_and_put(sql, corners, radius, angle) { \
+	/* (always redundant in context) */ \
+	square_corners_set(sql, corners, radius, angle); \
+	\
+	square_put(corners); \
+}
 // ---------------
+
+#define fire_static_from_corner(angle, sql, corner_x, corner_y, speed) { \
+	angle = iatan2((corner_y - sql_center_y), (corner_x - sql_center_x)); \
+	Pellets.add_single(corner_x, corner_y, angle, speed); \
+}
+
+void pattern_aimed_then_static_pellets_from_square_corners(void)
+{
+	#define sq	pattern0_sq
+
+	extern SquareState sq;
+	SquareLocal(sql);
+
+	if(boss_phase_frame < 100) {
+		return;
+	}
+	if(boss_phase_frame == 100) {
+		sq.init();
+		select_subpixel_for_rank(pattern_state.speed, 4.0f, 4.5f, 5.0f, 5.5f);
+		mdrv2_se_play(8);
+	}
+	if((boss_phase_frame % SQUARE_INTERVAL) == 0) {
+		square_set_coords_and_unput(sql, sql_corners, sq.radius, sq.angle);
+		sq.angle += ((boss_phase_frame < 260) ? +0x0C : -0x0C);
+		if(sq.radius < SEAL_CIRCUMSQUARE_RADIUS) {
+			sq.radius += SQUARE_RADIUS_STEP;
+		} else if(boss_phase_frame > 280) {
+			// Recurring quirk with all of these patterns: They spawn their
+			// bullets at the *previous* corner positions, i.e., the ones
+			// calculated for the unblitting call, right before blitting the
+			// square at the new position.
+
+			for(int i = 0; i < SQUARE_POINTS; i++) {
+				unsigned char angle;
+				fire_static_from_corner(
+					angle,
+					sql,
+					sql_corners_x[i],
+					sql_corners_y[i],
+					pattern_state.speed
+				);
+				mdrv2_se_play(7);
+			}
+		} else {
+			for(int i = 0; i < SQUARE_POINTS; i++) {
+				unsigned char angle = iatan2(
+					(player_center_y() - sql_corners_y[i]),
+					((player_center_x() - (PELLET_W / 2) - sql_corners_x[i]))
+				);
+				Pellets.add_single(
+					sql_corners_x[i],
+					sql_corners_y[i],
+					angle,
+					(pattern_state.speed / 2)
+				);
+				mdrv2_se_play(7);
+			}
+		}
+		square_set_coords_and_put(sql, sql_corners, sq.radius, sq.angle);
+	}
+	if(boss_phase_frame > 360) {
+		square_set_coords_and_unput(sql, sql_corners, sq.radius, sq.angle);
+		boss_phase_frame = 0;
+	}
+
+	#undef sq
+}
