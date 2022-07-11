@@ -102,6 +102,14 @@ static const main_ptn_slot_t PTN_SLOT_MISSILE = PTN_SLOT_BOSS_2;
 static const int BG_ENT_OFFSET = 3;
 // ----
 
+// Patterns
+// --------
+
+#define pattern_state mima_pattern_state
+extern union {
+} pattern_state;
+// --------
+
 void mima_load(void)
 {
 	int col;

@@ -8875,7 +8875,7 @@ var_12		= word ptr -12h
 		jnz	short loc_1E947
 		mov	word_39E1A+1, 20h ; ' '
 		mov	byte ptr word_39E1A, 0
-		call	@mima_select_for_rank$qmiiiii stdcall, offset speed_39E18, ds, large 40h or (48h shl 16), large 50h or (58h shl 16)
+		call	@mima_select_for_rank$qmiiiii stdcall, offset _mima_pattern_state, ds, large 40h or (48h shl 16), large 50h or (58h shl 16)
 		push	8
 		call	_mdrv2_se_play
 		add	sp, 0Eh
@@ -8958,7 +8958,7 @@ loc_1E9C6:
 		mov	[bp+@@angle], al
 		pushd	0 or (0 shl 16)
 		pushd	PM_REGULAR or (0 shl 16)
-		push	speed_39E18
+		push	_mima_pattern_state
 		push	word ptr [bp+@@angle]
 		mov	bx, si
 		add	bx, bx
@@ -9009,7 +9009,7 @@ loc_1EA31:
 		mov	[bp+@@angle], al
 		pushd	0 or (0 shl 16)
 		pushd	PM_REGULAR or (0 shl 16)
-		mov	ax, speed_39E18
+		mov	ax, _mima_pattern_state
 		cwd
 		sub	ax, dx
 		sar	ax, 1
@@ -9124,7 +9124,7 @@ var_12		= word ptr -12h
 		jnz	short loc_1EB64
 		mov	word_39E1D+1, 20h ; ' '
 		mov	byte ptr word_39E1D, 0
-		call	@mima_select_for_rank$qmiiiii c, offset speed_39E18, ds, large 60h or (68h shl 16), large 70h or (76h shl 16)
+		call	@mima_select_for_rank$qmiiiii c, offset _mima_pattern_state, ds, large 60h or (68h shl 16), large 70h or (76h shl 16)
 		push	8
 		call	_mdrv2_se_play
 		pop	cx
@@ -9183,7 +9183,7 @@ loc_1EBC7:
 loc_1EBD8:
 		cmp	_boss_phase_frame, 240
 		jle	loc_1EC70
-		push	speed_39E18
+		push	_mima_pattern_state
 		push	ss
 		lea	ax, [bp+@@vector_y]
 		push	ax
@@ -9331,7 +9331,7 @@ loc_1ED01:
 		jnz	short loc_1ED3A
 		mov	word_39E22+1, 20h ; ' '
 		mov	byte ptr word_39E22, 0
-		call	@mima_select_for_rank$qmiiiii stdcall, offset speed_39E18, ds, large 40h or (48h shl 16), large 50h or (58h shl 16)
+		call	@mima_select_for_rank$qmiiiii stdcall, offset _mima_pattern_state, ds, large 40h or (48h shl 16), large 50h or (58h shl 16)
 		push	8
 		call	_mdrv2_se_play
 		add	sp, 0Eh
@@ -9426,7 +9426,7 @@ loc_1EDD9:
 		mov	[bp+@@angle], al
 		pushd	0 or (0 shl 16)
 		pushd	PM_REGULAR or (0 shl 16)
-		push	speed_39E18
+		push	_mima_pattern_state
 		push	word ptr [bp+@@angle]
 		mov	bx, si
 		add	bx, bx
@@ -9459,7 +9459,7 @@ loc_1EDD9:
 		mov	[bp+@@angle], al
 		pushd	0 or (0 shl 16)
 		pushd	PM_REGULAR or (0 shl 16)
-		push	speed_39E18
+		push	_mima_pattern_state
 		push	word ptr [bp+@@angle]
 		mov	bx, si
 		add	bx, bx
@@ -9696,7 +9696,7 @@ loc_1F051:
 		add	sp, 8
 
 loc_1F087:
-		call	@mima_select_for_rank$qmiiiii stdcall, offset speed_39E18, ds, large 1Eh or (23h shl 16), large 28h or (2Dh shl 16)
+		call	@mima_select_for_rank$qmiiiii stdcall, offset _mima_pattern_state, ds, large 1Eh or (23h shl 16), large 28h or (2Dh shl 16)
 		push	10 or (12 shl 16)	; (for_hard) or (for_lunatic)
 		push	5 or (8 shl 16)	; (for_easy) or (for_normal)
 		push	ss
@@ -9711,9 +9711,9 @@ loc_1F087:
 
 loc_1F0BB:
 		pushd	0 or (0 shl 16)
-		push	speed_39E18
+		push	_mima_pattern_state
 		push	PM_CHASE
-		push	speed_39E18
+		push	_mima_pattern_state
 		push	word ptr [bp+@@angle]
 		mov	ax, mima_still.BE_cur_top
 		add	ax, 80
@@ -9960,7 +9960,7 @@ loc_1F263:
 		idiv	bx
 		add	dx, 336
 		mov	word_39E45, dx
-		call	@mima_select_for_rank$qmiiiii stdcall, offset speed_39E18, ds, large 28h or (2Dh shl 16), large 32h or (37h shl 16)
+		call	@mima_select_for_rank$qmiiiii stdcall, offset _mima_pattern_state, ds, large 28h or (2Dh shl 16), large 32h or (37h shl 16)
 		push	8
 		call	_mdrv2_se_play
 		add	sp, 0Eh
@@ -10236,7 +10236,7 @@ var_8		= byte ptr -8
 		mov	word_39E57+1, 20h ; ' '
 		mov	byte ptr word_39E57, 0
 		mov	byte ptr word_39E5A, 0
-		call	@mima_select_for_rank$qmiiiii c, offset speed_39E18, ds, large 28h or (2Dh shl 16), large 32h or (37h shl 16)
+		call	@mima_select_for_rank$qmiiiii c, offset _mima_pattern_state, ds, large 28h or (2Dh shl 16), large 32h or (37h shl 16)
 		push	8
 		call	_mdrv2_se_play
 		pop	cx
@@ -10294,7 +10294,7 @@ loc_1F644:
 		cmp	dx, 8
 		jnz	loc_1F6E4
 		push	word_39E5A
-		mov	ax, speed_39E18
+		mov	ax, _mima_pattern_state
 		mov	bx, 10
 		cwd
 		idiv	bx
@@ -10434,7 +10434,7 @@ var_8		= byte ptr -8
 		mov	word_39E5C, 20h	; ' '
 		mov	byte ptr word_39E5A+1, 0
 		mov	angle_39E5E, 80h
-		call	@mima_select_for_rank$qmiiiii stdcall, offset speed_39E18, ds, large 20h or (28h shl 16), large 30h or (38h shl 16)
+		call	@mima_select_for_rank$qmiiiii stdcall, offset _mima_pattern_state, ds, large 20h or (28h shl 16), large 30h or (38h shl 16)
 		push	8
 		call	_mdrv2_se_play
 		add	sp, 0Eh
@@ -10515,7 +10515,7 @@ loc_1F83D:
 loc_1F844:
 		pushd	0 or (0 shl 16)
 		pushd	PM_REGULAR or (0 shl 16)
-		push	speed_39E18
+		push	_mima_pattern_state
 		push	word ptr angle_39E5E
 		mov	bx, si
 		add	bx, bx
@@ -10625,7 +10625,7 @@ loc_1F91A:
 		jnz	short loc_1F953
 		mov	word_39E60, 20h	; ' '
 		mov	byte_39E5F, 0
-		call	@mima_select_for_rank$qmiiiii stdcall, offset speed_39E18, ds, large 32h or (36h shl 16), large 3Ah or (3Eh shl 16)
+		call	@mima_select_for_rank$qmiiiii stdcall, offset _mima_pattern_state, ds, large 32h or (36h shl 16), large 3Ah or (3Eh shl 16)
 		push	8
 		call	_mdrv2_se_play
 		add	sp, 0Eh
@@ -10698,7 +10698,7 @@ loc_1F9DA:
 		mov	[bp+@@laser_i], dx
 		push	bx	; w
 		push	7 or (20 shl 16)	; (col) or (moveout_at_age shl 16)
-		push	speed_39E18	; speed_multiplied_by_8
+		push	_mima_pattern_state	; speed_multiplied_by_8
 		push	PLAYFIELD_BOTTOM	; target_y
 		mov	ax, _player_left
 		add	ax, 14
@@ -11782,7 +11782,10 @@ public _yuugenmagan_initial_hp_rendered
 _yuugenmagan_initial_hp_rendered	db ?
 angle_39E16	db ?
 angle_39E17	db ?
-speed_39E18	dw ?
+
+public _mima_pattern_state
+_mima_pattern_state	dw ?
+
 word_39E1A	dw ?
 		db    ?	;
 word_39E1D	dw ?
