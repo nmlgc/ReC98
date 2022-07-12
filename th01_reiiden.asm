@@ -8782,213 +8782,10 @@ mima_still	equ <boss_entity_0>
 	@REGULAR_POLYGON$QNIT1IIIUCI procdesc pascal near \
 		corners_x:dword, corners_y:dword, center_x:word, center_y:word, radius:word, angle:byte, points:word
 	extern @pattern_aimed_then_static_pellet$qv:proc
+	extern @pattern_aimed_missiles_from_squa$qv:proc
 main_29_TEXT	ends
 
 main_29__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1EB24	proc far
-
-var_2E		= qword	ptr -2Eh
-var_26		= qword	ptr -26h
-var_18		= word ptr -18h
-@@vector_y		= word ptr -16h
-@@vector_x		= word ptr -14h
-var_12		= word ptr -12h
-@@corners_y		= byte ptr -10h
-@@corners_x		= byte ptr -8
-
-		enter	18h, 0
-		push	si
-		push	di
-		cmp	_boss_phase_frame, 100
-		jl	loc_1ECEC
-		cmp	_boss_phase_frame, 100
-		jnz	short loc_1EB64
-		mov	_pattern1_sq.S_radius, 32
-		mov	_pattern1_sq.S_angle, 0
-		call	@mima_select_for_rank$qmiiiii c, offset _mima_pattern_state, ds, large 60h or (68h shl 16), large 70h or (76h shl 16)
-		push	8
-		call	_mdrv2_se_play
-		pop	cx
-
-loc_1EB64:
-		mov	ax, _boss_phase_frame
-		mov	bx, 8
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	loc_1ECA1
-		mov	ax, mima_still.BE_cur_left
-		add	ax, 64
-		mov	si, ax
-		mov	ax, mima_still.BE_cur_top
-		add	ax, 80
-		mov	di, ax
-		push	ss	; corners_x (segment)
-		lea	ax, [bp+@@corners_x]
-		push	ax	; corners_x (offset)
-		push	ss	; corners_y (segment)
-		lea	ax, [bp+@@corners_y]
-		push	ax	; corners_y (offset)
-		push	si	; center_x
-		push	di	; center_y
-		push	_pattern1_sq.S_radius	; radius
-		push	word ptr _pattern1_sq.S_angle	; angle
-		push	4	; points
-		call	@regular_polygon$qnit1iiiuci
-		push	4	; point_count
-		push	ss
-		lea	ax, [bp+@@corners_y]
-		push	ax
-		push	ss
-		lea	ax, [bp+@@corners_x]
-		push	ax
-		call	_graph_r_lineloop_unput
-		add	sp, 0Ah
-		mov	al, _pattern1_sq.S_angle
-		add	al, -0Ch
-		mov	_pattern1_sq.S_angle, al
-		cmp	_pattern1_sq.S_radius, 80
-		jge	short loc_1EBC7
-		add	_pattern1_sq.S_radius, 8
-		jmp	loc_1EC70
-; ---------------------------------------------------------------------------
-
-loc_1EBC7:
-		cmp	_boss_phase_frame, 224
-		jnz	short loc_1EBD8
-		mov	ax, _player_left
-		mov	x_39E20, ax
-		jmp	loc_1EC70
-; ---------------------------------------------------------------------------
-
-loc_1EBD8:
-		cmp	_boss_phase_frame, 240
-		jle	loc_1EC70
-		push	_mima_pattern_state
-		push	ss
-		lea	ax, [bp+@@vector_y]
-		push	ax
-		push	ss
-		lea	ax, [bp+@@vector_x]
-		push	ax
-		push	384
-		mov	ax, x_39E20
-		add	ax, 8
-		push	ax
-		push	di
-		push	si
-		call	@vector2_between$qiiiimit5i
-		add	sp, 12h
-		mov	[bp+var_12], 0
-		jmp	short loc_1EC62
-; ---------------------------------------------------------------------------
-
-loc_1EC0B:
-		push	0		; char
-		mov	ax, [bp+@@vector_y]
-		sar	ax, 4
-		mov	[bp+var_18], ax
-		fild	[bp+var_18]
-		sub	sp, 8
-		fstp	[bp+var_26]
-		fwait
-		mov	ax, [bp+@@vector_x]
-		sar	ax, 4
-		mov	[bp+var_18], ax
-		fild	[bp+var_18]
-		sub	sp, 8
-		fstp	[bp+var_2E]
-		fwait
-		mov	bx, [bp+var_12]
-		add	bx, bx
-		lea	ax, [bp+@@corners_y]
-		add	bx, ax
-		push	word ptr ss:[bx] ; int
-		mov	bx, [bp+var_12]
-		add	bx, bx
-		lea	ax, [bp+@@corners_x]
-		add	bx, ax
-		push	word ptr ss:[bx] ; int
-		push	ds
-		push	offset _Missiles ; this
-		call	@CMissiles@add$qiiddc
-		add	sp, 1Ah
-		inc	[bp+var_12]
-
-loc_1EC62:
-		cmp	[bp+var_12], 4
-		jl	short loc_1EC0B
-		push	6
-		call	_mdrv2_se_play
-		pop	cx
-
-loc_1EC70:
-		push	ss	; corners_x (segment)
-		lea	ax, [bp+@@corners_x]
-		push	ax	; corners_x (offset)
-		push	ss	; corners_y (segment)
-		lea	ax, [bp+@@corners_y]
-		push	ax	; corners_y (offset)
-		push	si	; center_x
-		push	di	; center_y
-		push	_pattern1_sq.S_radius	; radius
-		push	word ptr _pattern1_sq.S_angle	; angle
-		push	4	; points
-		call	@regular_polygon$qnit1iiiuci
-		push	4 or (7 shl 16)	; (point_count) or (col shl 16)
-		push	ss
-		lea	ax, [bp+@@corners_y]
-		push	ax
-		push	ss
-		lea	ax, [bp+@@corners_x]
-		push	ax
-		call	_graph_r_lineloop_put
-		add	sp, 0Ch
-
-loc_1ECA1:
-		cmp	_boss_phase_frame, 320
-		jle	short loc_1ECEC
-		mov	ax, mima_still.BE_cur_left
-		add	ax, 64
-		mov	si, ax
-		mov	ax, mima_still.BE_cur_top
-		add	ax, 80
-		mov	di, ax
-		push	ss	; corners_x (segment)
-		lea	ax, [bp+@@corners_x]
-		push	ax	; corners_x (offset)
-		push	ss	; corners_y (segment)
-		lea	ax, [bp+@@corners_y]
-		push	ax	; corners_y (offset)
-		push	si	; center_x
-		push	di	; center_y
-		push	_pattern1_sq.S_radius	; radius
-		push	word ptr _pattern1_sq.S_angle	; angle
-		push	4	; points
-		call	@regular_polygon$qnit1iiiuci
-		push	4	; point_count
-		push	ss
-		lea	ax, [bp+@@corners_y]
-		push	ax
-		push	ss
-		lea	ax, [bp+@@corners_x]
-		push	ax
-		call	_graph_r_lineloop_unput
-		add	sp, 0Ah
-		mov	_boss_phase_frame, 0
-
-loc_1ECEC:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_1EB24	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -10521,7 +10318,7 @@ loc_1FB45:
 loc_1FB5E:
 		cmp	word_39E78, 1
 		jnz	short loc_1FB6B
-		call	sub_1EB24
+		call	@pattern_aimed_missiles_from_squa$qv
 		jmp	short loc_1FB86
 ; ---------------------------------------------------------------------------
 
@@ -11481,9 +11278,9 @@ SquareState ends
 public _pattern0_sq
 _pattern0_sq	SquareState <?>
 
-public _pattern1_sq
-_pattern1_sq	SquareState <?>
-x_39E20	dw ?
+public _pattern1_sq, _pattern1_target_left
+_pattern1_sq         	SquareState <?>
+_pattern1_target_left	dw ?
 
 public _pattern2_sq
 _pattern2_sq	SquareState <?>

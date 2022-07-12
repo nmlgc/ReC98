@@ -10,6 +10,7 @@
 #include "th01/math/area.hpp"
 #include "th01/math/polar.hpp"
 #include "th01/math/subpixel.hpp"
+#include "th01/math/vector.hpp"
 #include "th01/hardware/egc.h"
 extern "C" {
 #include "th01/hardware/graph.h"
@@ -500,5 +501,65 @@ void pattern_aimed_then_static_pellets_from_square_corners(void)
 		boss_phase_frame = 0;
 	}
 
+	#undef sq
+}
+
+void pattern_aimed_missiles_from_square_corners(void)
+{
+	#define sq         	pattern1_sq
+	#define target_left	pattern1_target_left
+
+	extern SquareState sq;
+	SquareLocal(sql);
+	int i;
+	Subpixel velocity_x;
+	Subpixel velocity_y;
+	extern screen_x_t target_left;
+
+	if(boss_phase_frame < 100) {
+		return;
+	}
+	if(boss_phase_frame == 100) {
+		sq.init();
+		select_subpixel_for_rank(pattern_state.speed, 6.0f, 6.5f, 7.0f, 7.375f);
+		mdrv2_se_play(8);
+	}
+	if((boss_phase_frame % SQUARE_INTERVAL) == 0) {
+		square_set_coords_and_unput(sql, sql_corners, sq.radius, sq.angle);
+		sq.angle -= 0x0C;
+		if(sq.radius < SEAL_RADIUS) {
+			sq.radius += SQUARE_RADIUS_STEP;
+		} else if(boss_phase_frame == 224) {
+			target_left = player_left;
+		} else if(boss_phase_frame > 240) {
+			// Same corner coordinate quirk as seen in the first pattern.
+
+			vector2_between(
+				sql_center_x,
+				sql_center_y,
+				(target_left + (PLAYER_W / 2) - (MISSILE_W / 2)),
+				player_center_y(),
+				velocity_x.v,
+				velocity_y.v,
+				pattern_state.speed
+			);
+			for(i = 0; i < SQUARE_POINTS; i++) {
+				Missiles.add(
+					sql_corners_x[i],
+					sql_corners_y[i],
+					velocity_x.to_pixel(),
+					velocity_y.to_pixel()
+				);
+			}
+			mdrv2_se_play(6);
+		}
+		square_set_coords_and_put(sql, sql_corners, sq.radius, sq.angle);
+	}
+	if(boss_phase_frame > 320) {
+		square_set_coords_and_unput(sql, sql_corners, sq.radius, sq.angle);
+		boss_phase_frame = 0;
+	}
+
+	#undef target_left
 	#undef sq
 }
