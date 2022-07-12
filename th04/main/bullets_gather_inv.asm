@@ -9,7 +9,7 @@ bullets_gather_invalidate	proc near
 	else
 		mov	di, BULLET_COUNT
 	endif
-	cmp	_bullet_clear_trigger, 0
+	cmp	_bullet_zap_active, 0
 	jnz	short @@pellets_decaying
 	cmp	_bullet_clear_time, 0
 	jnz	short @@pellets_decaying

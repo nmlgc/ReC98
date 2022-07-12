@@ -2,14 +2,15 @@
 ; current GRCG tile.
 ; Assumes that the GRCG is set to TDW mode.
 
-; void pascal playfield_fillm_64_56_256_256();
-public PLAYFIELD_FILLM_64_56_256_256
-playfield_fillm_64_56_256_256	proc near
+public @REIMU_MARISA_BACKDROP_COLORFILL$QV
+public @MAI_YUKI_BACKDROP_COLORFILL$QV
+label @mai_yuki_backdrop_colorfill$qv near
+@reimu_marisa_backdrop_colorfill$qv proc near
 		push	di
-		mov	ax, GRAM_400 + (PLAYFIELD_Y * ROW_SIZE) shr 4
+		mov	ax, GRAM_400 + (PLAYFIELD_TOP * ROW_SIZE) shr 4
 		mov	es, ax
 		assume es:nothing
-		mov	di, (55 * ROW_SIZE) + PLAYFIELD_VRAM_X
+		mov	di, (55 * ROW_SIZE) + PLAYFIELD_VRAM_LEFT
 		nop
 
 @@rows_next:
@@ -21,10 +22,10 @@ playfield_fillm_64_56_256_256	proc near
 		loop	@@rows_top_and_bottom
 		sub	di, ROW_SIZE + PLAYFIELD_VRAM_W
 		jge	short @@rows_next
-		mov	ax, GRAM_400 + ((56 + PLAYFIELD_Y) * ROW_SIZE) shr 4
+		mov	ax, GRAM_400 + ((56 + PLAYFIELD_TOP) * ROW_SIZE) shr 4
 		mov	es, ax
 		assume es:nothing
-		mov	di, (255 * ROW_SIZE) + PLAYFIELD_VRAM_X
+		mov	di, (255 * ROW_SIZE) + PLAYFIELD_VRAM_LEFT
 		nop
 
 @@cols:
@@ -36,5 +37,5 @@ playfield_fillm_64_56_256_256	proc near
 		jge	short @@cols
 		pop	di
 		retn
-playfield_fillm_64_56_256_256	endp
+@reimu_marisa_backdrop_colorfill$qv endp
 	even

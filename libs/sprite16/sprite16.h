@@ -34,4 +34,8 @@ typedef enum {
 	OVERLAP_OR = 0
 } sprite16_overlap_t;
 
-#define SPRITE16_RES_Y 200
+static const vram_y_t SPRITE16_RES_Y = 200;
+static const vram_byte_amount_t SPRITE16_PLANE_SIZE = (
+	SPRITE16_RES_Y * ROW_SIZE
+);
+static const vram_offset_t SPRITE16_OFFSET = SPRITE16_PLANE_SIZE;

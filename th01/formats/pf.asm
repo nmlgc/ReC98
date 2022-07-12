@@ -81,7 +81,7 @@ loc_17160:
 		jl	short loc_1711D
 
 loc_17165:
-		mov	_arc_num_files, si
+		mov	_arc_pf_count, si
 		pop	di
 		pop	si
 		pop	bp
@@ -127,7 +127,7 @@ loc_17189:
 		push	ax
 		call	_toupper
 		pop	cx
-		mov	dx, _file_num
+		mov	dx, _cur_file_id
 		shl	dx, 5
 		les	bx, _arc_pfs
 		add	bx, dx
@@ -324,7 +324,7 @@ arg_0		= dword	ptr  6
 		push	offset aRLE_TYPE
 		mov	cx, 3
 		call	SCOPY@
-		mov	_file_num, 0
+		mov	_cur_file_id, 0
 		xor	si, si
 		jmp	short loc_17306
 ; ---------------------------------------------------------------------------
@@ -334,15 +334,15 @@ loc_172F6:
 		call	@at_pos_of$qnxc
 		or	ax, ax
 		jnz	short loc_1730C
-		inc	_file_num
+		inc	_cur_file_id
 		inc	si
 
 loc_17306:
-		cmp	si, _arc_num_files
+		cmp	si, _arc_pf_count
 		jl	short loc_172F6
 
 loc_1730C:
-		mov	ax, _file_num
+		mov	ax, _cur_file_id
 		shl	ax, 5
 		mov	dx, word ptr _arc_pfs+2
 		mov	bx, word ptr _arc_pfs

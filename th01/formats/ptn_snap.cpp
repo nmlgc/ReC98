@@ -1,32 +1,27 @@
-extern "C" {
+#include "th01/formats/ptn.hpp"
 
-void ptn_snap_8(int left, int top, int ptn_id)
+void ptn_snap_8(screen_x_t left, vram_y_t top, int ptn_id)
 {
-	unsigned int vram_offset = vram_offset_muldiv(left, top);
+	vram_offset_t vram_offset = vram_offset_muldiv(left, top);
 	ptn_t *ptn = ptn_with_id(ptn_id);
-	for(int y = 0; y < PTN_H; y++) {
-		#define snap(ptn, vram_offset, w) \
-			ptn->planes.B[y] = VRAM_CHUNK(B, vram_offset, w); \
-			ptn->planes.R[y] = VRAM_CHUNK(R, vram_offset, w); \
-			ptn->planes.G[y] = VRAM_CHUNK(G, vram_offset, w); \
-			ptn->planes.E[y] = VRAM_CHUNK(E, vram_offset, w);
-		snap(ptn, vram_offset, PTN_W);
-		#undef snap
+	for(pixel_t y = 0; y < PTN_H; y++) {
+		vram_snap_ptn_planar(ptn, y, vram_offset);
 		vram_offset += ROW_SIZE;
 	}
 }
 
-static inline ptn_dots_t dot_mask(int x, int w)
-{
-	return static_cast<ptn_dots_t>((1u << w) - 1u) << (w - x);
+static inline ptn_plane_t::row_dots_t dot_mask(pixel_t x, pixel_t w) {
+	return static_cast<ptn_plane_t::row_dots_t>((1u << w) - 1u) << (w - x);
 }
 
-void ptn_snap_quarter_8(int left, int top, int ptn_id, int quarter)
+void ptn_snap_quarter_8(
+	screen_x_t left, vram_y_t top, int ptn_id, int quarter
+)
 {
-	int y;
-	unsigned int vram_offset = vram_offset_muldiv(left, top);
-	int q_y;
-	ptn_dots_t q_mask;
+	pixel_t y;
+	vram_offset_t vram_offset = vram_offset_muldiv(left, top);
+	pixel_t q_y;
+	ptn_plane_t::row_dots_t q_mask;
 	long q_x;
 	ptn_t *ptn = ptn_with_id(ptn_id);
 
@@ -53,6 +48,4 @@ void ptn_snap_quarter_8(int left, int top, int ptn_id, int quarter)
 		#undef snap_quarter_plane
 		vram_offset += ROW_SIZE;
 	}
-}
-
 }

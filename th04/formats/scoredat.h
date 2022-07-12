@@ -1,22 +1,22 @@
 #include "th04/score.h"
 
 #if GAME == 5
-# define SCOREDAT_PLACES 5
-# define SCOREDAT_NOT_CLEARED 18
-# define SCOREDAT_CLEARED 0x80
+	#define SCOREDAT_PLACES 5
+	#define SCOREDAT_NOT_CLEARED 18
+	#define SCOREDAT_CLEARED 0x80
 #else
-# define SCOREDAT_PLACES 10
-# define SCOREDAT_NOT_CLEARED 25
-# define SCOREDAT_CLEARED_A 1
-# define SCOREDAT_CLEARED_B 2
-# define SCOREDAT_CLEARED_BOTH (SCOREDAT_CLEARED_A | SCOREDAT_CLEARED_B)
+	#define SCOREDAT_PLACES 10
+	#define SCOREDAT_NOT_CLEARED 25
+	#define SCOREDAT_CLEARED_A 1
+	#define SCOREDAT_CLEARED_B 2
+	#define SCOREDAT_CLEARED_BOTH (SCOREDAT_CLEARED_A | SCOREDAT_CLEARED_B)
 #endif
 
 #define SCOREDAT_NAME_LEN 8
 
 typedef struct {
 	unsigned char g_name[SCOREDAT_PLACES][SCOREDAT_NAME_LEN + 1];
-	score_lebcd_t g_points[SCOREDAT_PLACES];
+	score_lebcd_t g_score[SCOREDAT_PLACES];
 
 #if GAME == 5
 	unsigned char g_stage[SCOREDAT_PLACES];
@@ -53,27 +53,55 @@ extern scoredat_section_t hi2;
 	void pascal near scoredat_decode_both(void);
 	void pascal near scoredat_encode(void);
 
-#	define scoredat_decode_func scoredat_decode_both
+	#define scoredat_decode_func scoredat_decode_both
 #elif (BINARY == 'M') && (GAME == 4)
 	void pascal near scoredat_decode(scoredat_section_t near *hi);
 	void pascal near scoredat_encode(scoredat_section_t near *hi);
 
-#	define scoredat_decode_func() scoredat_decode(&hi)
-#	define scoredat_encode_func() scoredat_encode(&hi)
+	#define scoredat_decode_func() scoredat_decode(&hi)
+	#define scoredat_encode_func() scoredat_encode(&hi)
 #else
 	void pascal near scoredat_decode(void);
 	void pascal near scoredat_encode(void);
 
-#	define scoredat_decode_func scoredat_decode
-#	define scoredat_encode_func scoredat_encode
+	#define scoredat_decode_func scoredat_decode
+	#define scoredat_encode_func scoredat_encode
 #endif
 
 // Recreation
 #if (GAME == 4)
 	void pascal near scoredat_recreate(void);
+	#define scoredat_recreate_func scoredat_recreate
 #elif (GAME == 5) && (BINARY == 'O')
 	void pascal near scoredat_recreate_op(void);
+	#define scoredat_recreate_func scoredat_recreate_op
 #elif (GAME == 5) && (BINARY == 'E')
 	void pascal near scoredat_recreate_maine(void);
+	#define scoredat_recreate_func scoredat_recreate_maine
 #endif
+
+// Loading
+// -------
+// MODDERS: Take [rank] as a parameter instead.
+
+#if (BINARY != 'M')
+	#if (GAME == 4) && (BINARY == 'O')
+		// Loads the score data for both characters at the global [rank] into
+		// [hi] and [hi2]. Returns false if the data was loaded and decoded
+		// correctly, or true if the defaults were recreated.
+		bool near scoredat_load_both(void);
+	#endif
+
+	// Loads the score data for the given [playchar] at the global [rank] into
+	// [hi]. Returns false if the data was loaded and decoded correctly, or
+	// true if the defaults were recreated.
+	bool pascal near scoredat_load_for(int playchar);
+#else
+	// Loads the score data for the current global playchar at the global
+	// [rank] into [hi]. TH04 recreates the default file on a loading or
+	// decoding failure, TH05 doesn't.
+	void near scoredat_load_for_cur(void);
+#endif
+// -------
+
 /// ---------

@@ -1,4 +1,5 @@
 PELLET_TOP_H = 6
+PELLET_BOTTOM_H = 4
 PELLET_BOTTOM_Y = (PELLET_H - PELLET_BOTTOM_H)
 
 public _pellets_render_top

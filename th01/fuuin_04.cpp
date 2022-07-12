@@ -3,27 +3,29 @@
  * Code segment #4 of TH01's FUUIN.EXE
  */
 
-#pragma option -1
+#pragma option -1 -Z-
 
+#include "platform.h"
+#include "pc98.h"
+#include "planar.h"
+#include "master.hpp"
 extern "C" {
-#include "ReC98.h"
-#include "th01/formats/grp.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/palette.h"
 #include "th01/hardware/vsync.h"
-#include "th01/end/type.h"
+}
+#include "th01/formats/grp.h"
+#include "th01/end/type.hpp"
 
 #define TYPE_DELAY 3
-#define TYPE_FX FX(15, 0, 0)
+static const int TYPE_FX = (COL_TYPE | FX_WEIGHT_NORMAL);
 
 #define TONE_STEP_PER_FRAME 5
 
 #include "th01/end/pic.cpp"
 
-inline void optimization_barrier() {}
-
-// Special FUUIN.EXE version of frame_delay() that resets [vsync_frame] first.
-void frame_delay(unsigned int frames)
+ // Special FUUIN.EXE version of frame_delay() that resets [vsync_frame] first.
+extern "C" void frame_delay(unsigned int frames)
 {
 	vsync_frame = 0;
 	while(1) {
@@ -48,7 +50,7 @@ void pascal grp_palette_settone(int tone)
 		tone = 200;
 	}
 	for(col = 1; col < COLOR_COUNT; col++) {
-		for(comp = 0; comp < sizeof(RGB4); comp++) {
+		for(comp = 0; comp < COMPONENT_COUNT; comp++) {
 			if(tone > 100) {
 				blend = (RGB4::max() - grp_palette[col].v[comp]);
 				blend *= (tone - 100);
@@ -98,28 +100,27 @@ void pascal grp_palette_white_in(unsigned int frames)
 
 #pragma option -O-
 
-void pascal graph_type_ank(int left, int top, int len, const char *str)
+void pascal graph_type_ank_n(
+	screen_x_t left, vram_y_t top, int len, const char *str
+)
 {
-	extern const char graph_type_ank_fmt[];
 	for(int i = 0; i < len; i++) {
 		graph_printf_fx(
-			left + (i * GLYPH_HALF_W), top, TYPE_FX,
-			graph_type_ank_fmt, str[i]
+			left + (i * GLYPH_HALF_W), top, TYPE_FX, "%c", str[i]
 		);
 		frame_delay(TYPE_DELAY);
 	}
 }
 
-void pascal graph_type_kanji(int left, int top, int len, const char *str)
+void pascal graph_type_kanji_n(
+	screen_x_t left, vram_y_t top, int len, const char *str
+)
 {
-	extern const char graph_type_kanji_fmt[];
 	for(int i = 0; i < len; i++) {
 		graph_printf_fx(
 			left + (i * GLYPH_FULL_W), top, TYPE_FX,
-			graph_type_kanji_fmt, str[(2 * i) + 0], str[(2 * i) + 1]
+			"%c%c", str[(2 * i) + 0], str[(2 * i) + 1]
 		);
 		frame_delay(TYPE_DELAY);
 	}
-}
-
 }

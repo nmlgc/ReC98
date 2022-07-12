@@ -4,8 +4,12 @@
 ;	パターンの表示(16x16/32x32限定, 4色以内, 画面上下連続)
 ;
 ; Functions/Procedures:
-;	void z_super_roll_put_tiny_32x32( int left<ax>, int top<dx>, int num ) ;
-;	void z_super_roll_put_tiny_16x16( int left<ax>, int top<dx>, int num ) ;
+;	void z_super_roll_put_tiny_32x32(
+;		screen_x_t left<ax>, vram_y_t top<dx>, int num
+;	);
+;	void z_super_roll_put_tiny_16x16(
+;		screen_x_t left<ax>, vram_y_t top<dx>, int num
+;	);
 ;
 ; Parameters:
 ;	x,y	描画する座標
@@ -59,7 +63,7 @@ MRETURN macro
 	pop	DI
 	pop	SI
 	pop	DS
-	ret	2		; ZUN change, since only one parameter is passed via the stack
+	ret_bx	; ZUN change
 	EVEN
 	endm
 
@@ -69,7 +73,7 @@ public Z_SUPER_ROLL_PUT_TINY_32X32_RAW
 z_super_roll_put_tiny_32x32_raw	proc near
 
 ; Parameters
-@@patnum = word ptr ss:[bx+2]
+arg_bx near, @patnum:word
 @@left equ ax
 @@top equ dx
 
@@ -78,11 +82,10 @@ z_super_roll_put_tiny_32x32_raw	proc near
 @@first_mask equ dl
 @@rows_left equ ch
 
-	mov	bx, sp
 	push	ds
 	push	si
 	push	di
-	mov	bx, @@patnum
+	mov	bx, @patnum
 	shl	bx, 1
 	mov	ds, super_patdata[bx]
 	mov	bx, @@top

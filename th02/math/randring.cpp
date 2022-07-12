@@ -1,14 +1,13 @@
 #pragma option -k-
 
 #ifndef RANDRING_INSTANCE
-# error Define RANDRING_INSTANCE before including randring.cpp.
+	#error Define RANDRING_INSTANCE before including randring.cpp.
 #endif
 
 #define randring_func_(instance, name) randring##instance##_##name
 #define randring_func(instance, name) randring_func_(instance, name)
 
-inline size_t randring_index(void)
-{
+inline size_t randring_index(void) {
 	_BL = randring_p;
 	randring_p++;
 	_BH = 0;

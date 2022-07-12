@@ -8,3 +8,4 @@ aFW_6	db '‚U',0
 aFW_7	db '‚V',0
 aFW_8	db '‚W',0
 aFW_9	db '‚X',0
+	evendata

@@ -1,6 +1,6 @@
 #define RES_ID "KSOConfig"
 typedef struct {
-	char id[RES_ID_LEN];
+	char id[sizeof(RES_ID)];
 	bool zunsoft_shown;
 	int8_t unused_1;
 	char unknown;
@@ -13,7 +13,7 @@ typedef struct {
 	unsigned char stage;
 	unsigned char playchar;
 	unsigned char se_mode;
-	unsigned char turbo_mode;
+	bool turbo_mode;
 	bool debug;
 	unsigned char debug_stage;
 	unsigned char debug_power;
@@ -46,3 +46,5 @@ typedef struct {
 	score_lebcd_t stage_score[MAIN_STAGE_COUNT];
 	int32_t unused_3;
 } resident_t;
+
+extern resident_t far *resident;

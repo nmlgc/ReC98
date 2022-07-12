@@ -1,6 +1,6 @@
-; Prints [val] using the bold gaiji font, right-aligned at ([x+5], [y]), with
-; the given attribute.
-; void pascal far hud_int_put(unsigned int x, unsigned int y, unsigned int val, unsigned int atrb);
+; Prints [val] using the bold gaiji font, right-aligned at ([left+5], [y]),
+; with the given attribute.
+; void pascal far hud_int_put(utram_x_t left, utram_y_t y, unsigned int val, unsigned int atrb);
 public HUD_INT_PUT
 hud_int_put	proc far
 
@@ -24,17 +24,12 @@ hud_int_put	endp
 	nop
 
 
-; Prints [points] using the bold gaiji font, right-aligned at ([x+8], [y]),
-; in white, using up to 7 digits (8 if the "continue" digit is included).
-; Larger numbers will overflow the most significant digit into the A-Z range.
-
-; void pascal far hud_points_put(unsigned int x, unsigned int y, unsigned long points);
-public HUD_POINTS_PUT
-hud_points_put	proc far
+public @HUD_POINTS_PUT$QUIUIUL
+@hud_points_put$quiuiul proc far
 
 @@points	= dword	ptr  6
 @@y     	= word ptr  0Ah
-@@x     	= word ptr  0Ch
+@@left  	= word ptr  0Ch
 
 	push	bp
 	mov	bp, sp
@@ -47,7 +42,7 @@ hud_points_put	proc far
 	mov	cx, SCORE_DIGITS - 2
 
 hud_digits_put:
-	push	[bp+@@x]
+	push	[bp+@@left]
 	push	[bp+@@y]
 	push	ds
 	push	di
@@ -79,4 +74,4 @@ hud_digits_put:
 	pop	di
 	pop	bp
 	retf	8
-hud_points_put	endp
+@hud_points_put$quiuiul endp

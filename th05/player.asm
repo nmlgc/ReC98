@@ -2,6 +2,7 @@
 	locals
 
 include libs/master.lib/master.inc
+include th03/arg_bx.inc
 include th02/main/playfld.inc
 include th04/math/motion.inc
 include th04/hardware/input.inc
@@ -86,14 +87,13 @@ PLAYER_INVALIDATE	endp
 ; move_ret_t pascal near player_move(int input);
 public PLAYER_MOVE
 PLAYER_MOVE	proc near
-@@input	= word ptr ss:[bx+2]
+arg_bx	near, @input:word
 
 @@diagonal_x equ ax
 @@diagonal_y equ cx
 @@aligned equ dx
 
-	mov	bx, sp
-	mov	bx, @@input
+	mov	bx, @input
 	cmp	bl, INPUT_RIGHT or INPUT_DOWN
 	ja	short @@invalid
 	mov	@@diagonal_y, _playchar_speed_diagonal
@@ -159,7 +159,7 @@ PLAYER_MOVE	proc near
 	mov	al, MOVE_VALID
 
 @@ret:
-	retn	2
+	ret_bx
 
 ; ---------------------------------------------------------------------------
 @@switch_table	label word

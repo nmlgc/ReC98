@@ -1,5 +1,11 @@
+#pragma option -zCSHARED
+
+#include "platform.h"
+#include "x86real.h"
+#include "th02/core/zunerror.h"
+
 void pascal zun_error(zun_error_t err)
 {
-__asm	mov ax, err;
-__asm	int 0x59
+	_AX = err;
+	geninterrupt(0x59);
 }

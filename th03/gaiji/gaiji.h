@@ -2,6 +2,7 @@
 // -----
 // Gaiji available to TH03
 
+#include "th02/gaiji/from_2.h"
 #include "th03/gaiji/bar.h"
 
 typedef enum {
@@ -18,4 +19,5 @@ typedef enum {
 	gc_P2_BOTTOM_2 = 0x19,
 	gaiji_bar(0x20),
 	gaiji_boldfont(0xA0),
+	gaiji_symbols_th02(0xE0),
 } gaiji_th03_t;

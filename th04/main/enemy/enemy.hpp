@@ -1,6 +1,3 @@
-#define ENEMY_W 32
-#define ENEMY_H 32
-
 enum enemy_flag_t {
 	EF_FREE = 0,
 	EF_ALIVE = 1,
@@ -17,7 +14,7 @@ enum enemy_flag_t {
 struct enemy_t {
 	unsigned char flag;
 	unsigned char age;
-	motion_t pos;
+	PlayfieldMotion pos;
 	unsigned char patnum_base;
 	int8_t unused_1;
 	int hp;

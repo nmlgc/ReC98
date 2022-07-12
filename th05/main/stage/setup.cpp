@@ -3,13 +3,22 @@
  * TH05 stage initialization
  */
 
+#include "th04/sprites/main_cdg.h"
+#include "th04/main/midboss/midboss.hpp"
+#include "th04/main/boss/backdrop.hpp"
+extern "C" {
+#include "th05/main/stage/stages.hpp"
+}
+#include "th05/main/boss/bosses.hpp"
+#include "th05/sprites/main_pat.h"
+
 void pascal near stage1_setup(void)
 {
 	midboss_update_func = midboss1_update;
 	midboss_render_func = midboss1_render;
 	midboss.frames_until = 2500;
-	midboss.pos. cur.set(192, 96);
-	midboss.pos.prev.set(192, 96);
+	midboss.pos. cur.set((PLAYFIELD_W / 2), ((PLAYFIELD_H * 6) / 23));
+	midboss.pos.prev.set((PLAYFIELD_W / 2), ((PLAYFIELD_H * 6) / 23));
 	midboss.pos.velocity.set(0, 0);
 	midboss.hp = 1000;
 	midboss.sprite = 200;
@@ -24,11 +33,11 @@ void pascal near stage1_setup(void)
 	boss_sprite_left = 186;
 	boss_sprite_right = 184;
 	boss_sprite_stay = 180;
-	boss_backdrop_colorfill = playfield_fillm_32_0_320_192;
+	boss_backdrop_colorfill = sara_backdrop_colorfill;
 
 	super_entry_bfnt("st00.bmt");
-	cdg_load_all_noalpha(16, "st00bk.cdg");
-	bb_stage_load("st00.bb");
+	cdg_load_all_noalpha(CDG_BG_BOSS, "st00bk.cdg");
+	bb_boss_load("st00.bb");
 
 	stage_render = nullfunc_near;
 	stage_invalidate = nullfunc_near;
@@ -40,7 +49,7 @@ void pascal near stage2_setup(void)
 	midboss_render_func = midboss2_render;
 	midboss.frames_until = 2750;
 	midboss.pos.init(192, -32);
-	midboss.pos.velocity.set(0, 0.5f);
+	midboss.pos.velocity.set(0.0f, 0.5f);
 	midboss.hp = 1400;
 	midboss.sprite = 202;
 
@@ -51,11 +60,11 @@ void pascal near stage2_setup(void)
 	boss_fg_render_func = louise_fg_render;
 	boss.sprite = 180;
 	boss_hitbox_radius.set(24, 24);
-	boss_backdrop_colorfill = playfield_fillm_0_0_384_192__1;
+	boss_backdrop_colorfill = louise_backdrop_colorfill;
 
 	super_entry_bfnt("st01.bmt");
-	cdg_load_all_noalpha(16, "st01bk.cdg");
-	bb_stage_load("st01.bb");
+	cdg_load_all_noalpha(CDG_BG_BOSS, "st01bk.cdg");
+	bb_boss_load("st01.bb");
 
 	stage_render = stage2_update;
 	stage_invalidate = stage2_invalidate;
@@ -67,7 +76,7 @@ void pascal near stage3_setup(void)
 	midboss_render_func = midboss3_render;
 	midboss.frames_until = 5750;
 	midboss.pos.init(192, -32);
-	midboss.pos.velocity.set(0, 0.5f);
+	midboss.pos.velocity.set(0.0f, 0.5f);
 	midboss.hp = 1400;
 	midboss.sprite = 208;
 
@@ -78,14 +87,14 @@ void pascal near stage3_setup(void)
 	boss_fg_render_func = alice_fg_render;
 	boss.sprite = 180;
 	boss_hitbox_radius.set(24, 24);
-	boss_backdrop_colorfill = playfield_fillm_0_205_384_163;
+	boss_backdrop_colorfill = alice_backdrop_colorfill;
 	boss_sprite_left = 188;
 	boss_sprite_right = 186;
 	boss_sprite_stay = 180;
 
 	super_entry_bfnt("st02.bmt");
-	cdg_load_all_noalpha(16, "st02bk.cdg");
-	bb_stage_load("st02.bb");
+	cdg_load_all_noalpha(CDG_BG_BOSS, "st02bk.cdg");
+	bb_boss_load("st02.bb");
 
 	stage_render = nullfunc_near;
 	stage_invalidate = nullfunc_near;
@@ -97,7 +106,7 @@ void pascal near stage4_setup(void)
 	midboss_render_func = midboss4_render;
 	midboss.frames_until = 3900;
 	midboss.pos.init(192, -32);
-	midboss.pos.velocity.set(0, 0.5f);
+	midboss.pos.velocity.set(0.0f, 0.5f);
 	midboss.hp = 1100;
 	midboss.sprite = 208;
 
@@ -110,11 +119,11 @@ void pascal near stage4_setup(void)
 	boss.sprite = 180;
 	yuki.sprite = 180;
 	boss_hitbox_radius.set(24, 24);
-	boss_backdrop_colorfill = playfield_fillm_64_56_256_256;
+	boss_backdrop_colorfill = mai_yuki_backdrop_colorfill;
 
 	super_entry_bfnt("st03.bmt");
-	cdg_load_all_noalpha(16, "st03bk.cdg");
-	bb_stage_load("st03.bb");
+	cdg_load_all_noalpha(CDG_BG_BOSS, "st03bk.cdg");
+	bb_boss_load("st03.bb");
 
 	stage_render = nullfunc_near;
 	stage_invalidate = nullfunc_near;
@@ -126,7 +135,7 @@ void pascal near stage5_setup(void)
 	midboss_render_func = midboss5_render;
 	midboss.frames_until = 4800;
 	midboss.pos.init(192, -32);
-	midboss.pos.velocity.set(0, 0.5f);
+	midboss.pos.velocity.set(0.0f, 0.5f);
 	midboss.hp = 1550;
 	midboss.sprite = 212;
 
@@ -138,14 +147,25 @@ void pascal near stage5_setup(void)
 	boss_fg_render_func = yumeko_fg_render;
 	boss.sprite = 180;
 	boss_hitbox_radius.set(24, 24);
-	boss_backdrop_colorfill = playfield_fillm_0_0_384_192__2;
+	boss_backdrop_colorfill = yumeko_backdrop_colorfill;
 
 	super_entry_bfnt("st04.bmt");
-	cdg_load_all_noalpha(16, "st04bk.cdg");
-	bb_stage_load("st04.bb");
+	cdg_load_all_noalpha(CDG_BG_BOSS, "st04bk.cdg");
+	bb_boss_load("st04.bb");
 
-	yumeko_interval_phase4 = select_for_rank(20, 10,  6,  6);
-	yumeko_interval_phase7 = select_for_rank(48, 32, 24, 24);
+	/* TODO: Replace with the decompiled calls
+	 * 	yumeko_interval_phase4 = select_for_rank(20, 10,  6,  6);
+	 *	yumeko_interval_phase7 = select_for_rank(48, 32, 24, 24);
+	 * once that function is part of this translation unit */
+	#define SELECT_FOR_RANK(easy, normal, hard, lunatic) _asm { \
+		db	0x66, 0x68,  normal, 0x00, easy, 0x00; \
+		db	0x66, 0x68, lunatic, 0x00, hard, 0x00; \
+		nop; push cs; call near ptr select_for_rank; \
+	}
+	SELECT_FOR_RANK(20, 10,  6,  6);
+	yumeko_interval_phase4 = _AL;
+	SELECT_FOR_RANK(48, 32, 24, 24);
+	yumeko_interval_phase7 = _AL;
 
 	stage_render = nullfunc_near;
 	stage_invalidate = nullfunc_near;
@@ -153,22 +173,26 @@ void pascal near stage5_setup(void)
 
 void pascal near stage6_setup(void)
 {
+	// TODO: Can't be declared publicly due to the
+	// set_nearfunc_ptr_to_farfunc() workarounds in shinki_update().
+	BOSS_DEC(shinki);
+
 	midboss_update_func = nullfunc_far;
 	midboss_render_func = nullfunc_near;
 	midboss.frames_until = 30000;
 
 	boss_reset();
-	boss.pos.init(192, 64);
+	boss.pos.init((PLAYFIELD_W / 2), ((PLAYFIELD_H * 4) / 23));
 	boss_bg_render_func = shinki_bg_render;
 	boss_update_func = shinki_update;
 	boss_fg_render_func = shinki_fg_render;
-	boss.sprite = 180;
-	boss_hitbox_radius.set(24, 24);
-	boss_backdrop_colorfill = playfield_fillm_0_104_384_192;
+	boss.sprite = PAT_SHINKI_STILL;
+	boss_hitbox_radius.set(BOSS_HITBOX_DEFAULT_W, BOSS_HITBOX_DEFAULT_H);
+	boss_backdrop_colorfill = shinki_stage_backdrop_colorfill;
 
-	cdg_load_all_noalpha(16, "st05bk.cdg");
-	cdg_load_all_noalpha(17, "st05bk2.cdg");
-	bb_stage_load("st05.bb");
+	cdg_load_all_noalpha(CDG_BG_BOSS, "st05bk.cdg");
+	cdg_load_all_noalpha(CDG_BG_2, "st05bk2.cdg");
+	bb_boss_load("st05.bb");
 
 	stage_render = nullfunc_near;
 	stage_invalidate = nullfunc_near;
@@ -180,7 +204,7 @@ void pascal near stagex_setup(void)
 	midboss_render_func = midbossx_render;
 	midboss.frames_until = 5800;
 	midboss.pos.init(192, -16);
-	midboss.angle = 64;
+	midboss.angle = +0x40;
 	midboss.hp = 3000;
 	midboss.sprite = 220;
 
@@ -191,10 +215,11 @@ void pascal near stagex_setup(void)
 	boss_fg_render_func = exalice_fg_render;
 	boss.sprite = 180;
 	boss_hitbox_radius.set(24, 24);
-	boss_backdrop_colorfill = playfield_fillm_0_104_384_192;
+	// Yup, inconsistent, but also unused.
+	boss_backdrop_colorfill = shinki_stage_backdrop_colorfill;
 
 	super_entry_bfnt("st06.bmt");
-	bb_stage_load("st03.bb");
+	bb_boss_load("st03.bb");
 
 	stage_render = nullfunc_near;
 	stage_invalidate = nullfunc_near;

@@ -3,15 +3,16 @@
  * Generic shot control functions
  */
 
-#pragma codeseg main_01_TEXT main_01
+#pragma option -zCmain_01_TEXT -zPmain_01
 
-extern "C" {
 #include "th05/i_shot.hpp"
+extern "C" {
 #include "th02/snd/snd.h"
+}
 
 #pragma option -a2
 
-char pascal near shot_cycle_init(void)
+char near shot_cycle_init(void)
 {
 	char cycle_flag = 0;
 	switch(shot_time) {
@@ -50,7 +51,7 @@ void pascal near shot_l0(void)
 		return;
 	}
 	shot_t near *shot;
-	if(( shot = shots_add() ) != NULL) {
+	if(( shot = shots_add() ) != nullptr) {
 		shot->damage = 10;
 	}
 }
@@ -61,10 +62,11 @@ void pascal near shot_l1(void)
 		return;
 	}
 	shot_t near *shot;
-	if(( shot = shots_add() ) != NULL) {
-		shot_velocity_set(&shot->pos.velocity, randring_angle(7, 188));
+	if(( shot = shots_add() ) != nullptr) {
+		shot_velocity_set(
+			&shot->pos.velocity, randring1_next8_and_ge_lt(-0x44, -0x3C)
+		);
 		shot->damage = 10;
 	}
 }
 
-}

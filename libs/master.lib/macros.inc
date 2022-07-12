@@ -159,3 +159,24 @@ egc_setrop	macro mode_rop:rest
 	outw2	EGC_MODE_ROP_REG, mode_rop
 endm
 ; ---
+
+; .PI
+; ---
+
+PiHeader STRUC
+	comment_offset 	dw	?
+	comment_segment	dw	?
+	commentlen     	dw	?
+	PI_mode        	db	?
+	_n             	db	?
+	_m             	db	?
+	_plane         	db	?
+	_machine      	db	4 dup (?)
+	maexlen       	dw	?
+	maex_offset   	dw	?
+	maex_segment  	dw	?
+	_xsize        	dw	?
+	_ysize        	dw	?
+	_palette      	db	48 dup (?)
+PiHeader ENDS
+; ---

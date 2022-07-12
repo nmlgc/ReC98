@@ -29,6 +29,10 @@ REGS		ends
 
 SCENE_COUNT = 4
 
+DM_OFF = 0
+DM_TEST = 1
+DM_FULL = 3
+
 reiidenconfig_t struc ; (sizeof=0x4B)
 	id db 13 dup(?)	; = "ReiidenConfig"
 		db ?
@@ -42,7 +46,7 @@ reiidenconfig_t struc ; (sizeof=0x4B)
 	rem_lives db ?
 	snd_need_init db ?
 	unused_2 db ?
-	mode db ?	; 0 = regular, 1 = test, 3 = debug
+	debug_mode db ?
 	bullet_speed dw ?
 	rand  dd ?
 	score dd ?
@@ -67,7 +71,7 @@ FX_REVERSE  	= 800h
 MISS_INVINCIBILITY_FRAMES = 150
 ; ------
 
-; Bombs
-; -----
-BOMB_INVINCIBILITY_FRAMES_AFTER = 100
-; -----
+; VRAM colors
+; -----------
+V_WHITE = 7
+; -----------

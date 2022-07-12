@@ -1,7 +1,11 @@
-extern "C"
-{
-	#include <stdio.h>
-	#include "ReC98.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include "platform.h"
+#include "x86real.h"
+#include "pc98.h"
+#include "planar.h"
+#include "master.hpp"
+extern "C" {
 	#include "th01/formats/grz.h"
 
 	void grcg_setcolor_rmw(int col)

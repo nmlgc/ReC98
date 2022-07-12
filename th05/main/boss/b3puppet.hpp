@@ -6,7 +6,7 @@
 typedef struct {
 	unsigned char flag;
 	unsigned char angle;
-	motion_t pos;
+	PlayfieldMotion pos;
 	unsigned int phase_frame;
 	union {
 		subpixel_t motion;

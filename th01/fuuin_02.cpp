@@ -3,15 +3,24 @@
  * Code segment #2 of TH01's FUUIN.EXE
  */
 
-#pragma option -O- -1
+#pragma option -O- -1 -Z-
 
-extern "C" {
 #include <io.h>
 #include <stdio.h>
-#include "ReC98.h"
-#include "th01/ranks.h"
+#include <string.h>
+#include "platform.h"
+#include "x86real.h"
+#include "pc98.h"
+#include "planar.h"
+#include "decomp.hpp"
+#include "pc98kbd.h"
+#include "twobyte.h"
+#include "master.hpp"
+#include "th01/rank.h"
+extern "C" {
 #include "th01/hardware/graph.h"
 #include "th01/hardware/input.hpp"
+}
 #include "th01/hiscore/scoredat.hpp"
 
 #include "th01/hardware/grppfnfx.cpp"
@@ -62,6 +71,7 @@ extern const char SCOREDAT_ERROR_INVALID[];
 extern const char FOPEN_RB[];
 extern const char FOPEN_WB[];
 
+#define scoredat_declare() FILE *fp;
 #define scoredat_cli() disable()
 #define scoredat_sti() enable()
 #define scoredat_error(str) printf(str)
@@ -75,6 +85,7 @@ extern const char FOPEN_WB[];
 
 #include "th01/hiscore/score_nm.cpp"
 
+#define graph_putkanji_fx_declare()
 #define graph_putkanji_fx(left, top, fx, fmt_instance, kanji) \
 	extern const char ALPHABET_KANJI_FMT_##fmt_instance[]; \
 	graph_printf_fx( \
@@ -95,8 +106,7 @@ extern const char FOPEN_WB[];
 #define regist_input_timeout_inc()
 #define regist_input_timeout_if_reached(then)
 
-inline void regist_bg_put(const int16_t stage)
-{
+inline void regist_bg_put(const int16_t stage) {
 }
 
 #define regist_title_put(left, stage, ranks, fx) { \
@@ -105,5 +115,3 @@ inline void regist_bg_put(const int16_t stage)
 }
 
 #include "th01/hiscore/regist.cpp"
-
-}

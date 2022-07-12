@@ -1,12 +1,12 @@
-#include "th01/main/playfld.hpp"
 #include "th01/main/player/orb.hpp"
+
+extern double orb_velocity_y;
 
 extern const double ORB_VELOCITY_Y_MIN;
 extern const float ORB_VELOCITY_Y_MAX;
 extern const double ORB_COEFFICIENT_OF_RESTITUTION;
 
-inline double gravity_for(const double& force)
-{
+inline double gravity_for(const double& force) {
 	return ((orb_force_frame / 5) + orb_force);
 }
 /// Temporary data segment workarounds
@@ -15,15 +15,12 @@ inline double gravity_for(const double& force)
 // afterwards.
 #define GRAVITY_FOR(force) \
 	_AX = orb_force_frame / 5; \
-	asm mov	[bp-2], ax; \
-	asm fild	word ptr [bp-2]; \
-	asm fadd	force;
-
-// Neither WAIT nor FWAIT emit the emulated WAIT we want...
-#define FWAIT db 0xCD, 0x3D;
+	asm { mov 	[bp-2], ax; } \
+	asm { fild	word ptr [bp-2]; } \
+	asm { fadd	force; } \
 /// ----------------------------------
 
-int orb_velocity_y_update(void)
+pixel_t orb_velocity_y_update(void)
 {
 	/* TODO: Proper decompilation, once data can be emitted here:
 	 * ----------------------------------------------------------
@@ -46,7 +43,7 @@ int orb_velocity_y_update(void)
 		fld  	orb_velocity_y;
 		fcomp	ORB_VELOCITY_Y_MAX;
 		fstsw	[bp-2];
-		FWAIT;
+		FWAIT_EMU;
 		mov  	ax, [bp-2];
 		sahf;
 		jbe  	min_velocity_check;
@@ -54,11 +51,11 @@ int orb_velocity_y_update(void)
 	}
 	goto set_velocity;
 min_velocity_check:
-	if(orb_velocity_y < ORB_VELOCITY_Y_MIN) asm {
+	if(orb_velocity_y < ORB_VELOCITY_Y_MIN) _asm {
 		fld 	ORB_VELOCITY_Y_MIN;
 set_velocity:
 		fstp	orb_velocity_y;
-		FWAIT;
+		FWAIT_EMU;
 	}
 	return gravity_for(orb_force);
 }
@@ -75,7 +72,7 @@ void orb_force_new(double immediate, orb_force_t force)
 	extern const float ORB_FORCE_2_0;
 	extern const double ORB_FORCE_SHOT_BASE;
 
-	if(force == OF_BOUNCE_FROM_GROUND) {
+	if(force == OF_BOUNCE_FROM_SURFACE) {
 		orb_force = (-orb_velocity_y * ORB_COEFFICIENT_OF_RESTITUTION);
 		if(orb_velocity_x == OVX_0) {
 			random_velocity_change(0, OVX_4_LEFT);
@@ -95,12 +92,12 @@ void orb_force_new(double immediate, orb_force_t force)
 		 * the float first, before emitting the corresponding FPU instruction
 		 * with the double, which is not what we want here.
 		*/
-		asm {
+		_asm {
 			fld 	orb_velocity_y;
 			fdiv	ORB_FORCE_2_0;
 			fadd	ORB_FORCE_SHOT_BASE;
 			fstp	orb_force;
-			FWAIT;
+			FWAIT_EMU;
 		}
 	}
 	if(force == OF_IMMEDIATE) {

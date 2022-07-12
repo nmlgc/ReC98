@@ -13,12 +13,11 @@
 ; OS type	  :  MS	DOS
 ; Application type:  Executable	16bit
 
-		.286 ; Force the .model directive to create 16-bit default segments...
-		.model large maine_02_TEXT
-		.386 ; ... then switch to what we actually need.
-		; And yes, we can't move this to an include file for some reason.
+		.386
+		.model use16 large _TEXT
 
 include ReC98.inc
+include th01/hardware/grppsafx.inc
 include th02/th02.inc
 
 	extern SCOPY@:proc
@@ -212,17 +211,17 @@ sub_95CB	endp
 
 sub_9643	proc near
 
-var_50		= byte ptr -50h
+@@str		= byte ptr -50h
 arg_0		= word ptr  4
 arg_2		= dword	ptr  6
 arg_6		= word ptr  0Ah
-arg_8		= word ptr  0Ch
-arg_A		= word ptr  0Eh
+@@top		= word ptr  0Ch
+@@left		= word ptr  0Eh
 
 		enter	50h, 0
 		push	si
 		push	di
-		lea	ax, [bp+var_50]
+		lea	ax, [bp+@@str]
 		push	ss
 		push	ax
 		push	ds
@@ -239,22 +238,22 @@ loc_9660:
 		les	bx, [bp+arg_2]
 		add	bx, si
 		mov	al, es:[bx]
-		mov	[bp+si+var_50],	al
+		mov	[bp+si+@@str], al
 		inc	si
 		mov	bx, word ptr [bp+arg_2]
 		add	bx, si
 		mov	al, es:[bx]
-		mov	[bp+si+var_50],	al
+		mov	[bp+si+@@str], al
 		inc	si
-		mov	[bp+si+var_50],	0
+		mov	[bp+si+@@str], 0
 		push	ss
-		lea	ax, [bp+var_50]
+		lea	ax, [bp+@@str]
 		push	ax
-		mov	al, byte_F02A
+		mov	al, col_and_fx_F02A
 		cbw
 		push	ax
-		push	[bp+arg_8]
-		push	[bp+arg_A]
+		push	[bp+@@top]
+		push	[bp+@@left]
 		call	_graph_putsa_fx
 		add	sp, 0Ah
 		cmp	byte_F02B, 0
@@ -477,8 +476,7 @@ loc_9810:
 loc_9830:
 		cmp	si, [bp+arg_4]
 		jl	short loc_9810
-		push	0Ah
-		call	frame_delay
+		call	frame_delay pascal, 10
 		inc	di
 
 loc_983D:
@@ -499,14 +497,14 @@ sub_9846	proc near
 
 var_2		= byte ptr -2
 var_1		= byte ptr -1
-arg_0		= dword	ptr  4
+@@g_str		= dword	ptr  4
 arg_4		= word ptr  8
 
 		enter	2, 0
 		push	si
 		push	di
 		mov	di, [bp+arg_4]
-		mov	si, 64h	; 'd'
+		mov	si, 100
 		mov	[bp+var_2], 0
 		xor	cx, cx
 		jmp	short loc_98A1
@@ -528,18 +526,18 @@ loc_986B:
 		jnz	short loc_9885
 
 loc_9876:
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@g_str]
 		add	bx, cx
 		mov	al, [bp+var_1]
-		add	al, 0A0h
+		add	al, gb_0_
 		mov	es:[bx], al
 		jmp	short loc_988E
 ; ---------------------------------------------------------------------------
 
 loc_9885:
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@g_str]
 		add	bx, cx
-		mov	byte ptr es:[bx], 0CFh ; 'œ'
+		mov	byte ptr es:[bx], gb_SP
 
 loc_988E:
 		mov	al, [bp+var_1]
@@ -547,7 +545,7 @@ loc_988E:
 		imul	si
 		sub	di, ax
 		inc	cx
-		mov	bx, 0Ah
+		mov	bx, 10
 		mov	ax, si
 		cwd
 		idiv	bx
@@ -556,7 +554,7 @@ loc_988E:
 loc_98A1:
 		cmp	cx, 3
 		jl	short loc_985A
-		les	bx, [bp+arg_0]
+		les	bx, [bp+@@g_str]
 		add	bx, cx
 		mov	byte ptr es:[bx], 0
 		pop	di
@@ -606,7 +604,7 @@ loc_98DB:
 loc_98DE:
 		mov	si, ax
 		mov	di, 1F54h
-		call	egc_start_copy
+		call	@egc_start_copy$qv
 		mov	[bp+var_2], 0
 		jmp	short loc_9930
 ; ---------------------------------------------------------------------------
@@ -700,7 +698,7 @@ loc_996B:
 		shl	dx, 4
 		add	ax, dx
 		mov	di, ax
-		call	egc_start_copy
+		call	@egc_start_copy$qv
 		mov	[bp+var_2], 0
 		jmp	short loc_99D2
 ; ---------------------------------------------------------------------------
@@ -789,7 +787,7 @@ loc_9A0D:
 		mov	ax, [bp+arg_2]
 		imul	ax, 50h
 		add	si, ax
-		call	egc_start_copy
+		call	@egc_start_copy$qv
 		mov	ax, [bp+arg_2]
 		mov	[bp+var_2], ax
 		jmp	short loc_9A68
@@ -899,8 +897,7 @@ sub_9AD4	proc near
 		push	ds
 		push	offset aEnd3_txt ; "end3.txt"
 		call	sub_95A3
-		push	1Eh
-		call	frame_delay
+		call	frame_delay pascal, 30
 		push	1
 		call	palette_white_out
 		call	_snd_load c, offset aEnding_m, ds, SND_LOAD_SONG
@@ -909,8 +906,7 @@ sub_9AD4	proc near
 		call	sub_9A7E
 		push	4
 		call	palette_white_in
-		push	5
-		call	_snd_delay_until_measure
+		call	_snd_delay_until_measure stdcall, 5
 		pop	cx
 		mov	si, 0A0h
 		jmp	short loc_9B5C
@@ -932,8 +928,7 @@ loc_9B1B:
 		push	299
 		call	grcg_boxfill
 		call	grcg_off
-		push	1
-		call	frame_delay
+		call	frame_delay pascal, 1
 		sub	si, 4
 
 loc_9B5C:
@@ -962,18 +957,17 @@ sub_9B64	proc near
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		graph_accesspage 1
-		call	_pi_slot_load c, 0, offset aEd01_pi, ds
-		call	_pi_slot_palette_apply stdcall, 0
+		call	_pi_load c, 0, offset aEd01_pi, ds
+		call	_pi_palette_apply stdcall, 0
 		pop	cx
-		call	_pi_slot_put c, 0, large 0
+		call	_pi_put_8 c, 0, large 0
 		freePISlotLarge	0
 		push	2
 		call	palette_black_in
-		push	28h ; '('
-		call	frame_delay
+		call	frame_delay pascal, 40
 		push	0
 		call	sub_98B5
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		mov	byte_F02B, 1
 		push	90014Ch
 		push	2Ch ; ','
@@ -981,8 +975,7 @@ sub_9B64	proc near
 		push	offset end_buf
 		push	6
 		call	sub_9643
-		push	14h
-		call	frame_delay
+		call	frame_delay pascal, 20
 		push	1
 		call	palette_black_out
 		push	1
@@ -1029,14 +1022,14 @@ loc_9C3C:
 loc_9C54:
 		cmp	si, 5
 		jle	short loc_9C3C
-		mov	byte_F02A, 26h ; '&'
+		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 6)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		mov	si, 7
 		jmp	short loc_9C91
 ; ---------------------------------------------------------------------------
@@ -1056,22 +1049,21 @@ loc_9C79:
 loc_9C91:
 		cmp	si, 9
 		jle	short loc_9C79
-		mov	byte_F02A, 26h ; '&'
+		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 10)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 11)
 		push	6
 		call	sub_9643
-		push	14h
-		call	frame_delay
+		call	frame_delay pascal, 20
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
@@ -1093,8 +1085,7 @@ loc_9CDE:
 		push	dx
 		push	2
 		call	sub_99E4
-		push	1
-		call	frame_delay
+		call	frame_delay pascal, 1
 		inc	si
 
 loc_9D10:
@@ -1106,7 +1097,7 @@ loc_9D10:
 		push	offset end_buf + (END_LINE_LEN * 13)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 26h ; '&'
+		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
 		mov	si, 0Eh
 		jmp	short loc_9D48
 ; ---------------------------------------------------------------------------
@@ -1126,7 +1117,7 @@ loc_9D30:
 loc_9D48:
 		cmp	si, 0Fh
 		jle	short loc_9D30
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		mov	si, 10h
 		jmp	short loc_9D6F
 ; ---------------------------------------------------------------------------
@@ -1146,7 +1137,7 @@ loc_9D57:
 loc_9D6F:
 		cmp	si, 11h
 		jle	short loc_9D57
-		mov	byte_F02A, 26h ; '&'
+		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
 		mov	si, 12h
 		jmp	short loc_9D96
 ; ---------------------------------------------------------------------------
@@ -1166,21 +1157,21 @@ loc_9D7E:
 loc_9D96:
 		cmp	si, 14h
 		jle	short loc_9D7E
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 21)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 26h ; '&'
+		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 22)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
@@ -1188,10 +1179,10 @@ loc_9D96:
 		push	6
 		call	sub_9643
 		graph_accesspage 1
-		call	_pi_slot_load c, 0, offset aEd02_pi, ds
-		call	_pi_slot_palette_apply stdcall, 0
+		call	_pi_load c, 0, offset aEd02_pi, ds
+		call	_pi_palette_apply stdcall, 0
 		pop	cx
-		call	_pi_slot_put c, 0, large 0
+		call	_pi_put_8 c, 0, large 0
 		freePISlotLarge	0
 		push	2
 		call	palette_black_out
@@ -1217,14 +1208,14 @@ loc_9E3B:
 		call	sub_98B5
 		push	2
 		call	palette_black_in
-		mov	byte_F02A, 26h ; '&'
+		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 24)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		mov	si, 19h
 		jmp	short loc_9E7D
 ; ---------------------------------------------------------------------------
@@ -1244,7 +1235,7 @@ loc_9E65:
 loc_9E7D:
 		cmp	si, 1Ah
 		jle	short loc_9E65
-		mov	byte_F02A, 26h ; '&'
+		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.shottype], 0
 		jnz	loc_9F22
@@ -1267,7 +1258,7 @@ loc_9E99:
 loc_9EB1:
 		cmp	si, 1Ch
 		jle	short loc_9E99
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		mov	si, 1Dh
 		jmp	short loc_9ED8
 ; ---------------------------------------------------------------------------
@@ -1289,14 +1280,14 @@ loc_9ED8:
 		jle	short loc_9EC0
 		push	1
 		call	sub_98B5
-		mov	byte_F02A, 26h ; '&'
+		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 31)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
@@ -1321,21 +1312,21 @@ loc_9F22:
 		push	offset end_buf + (END_LINE_LEN * 34)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 35)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 26h ; '&'
+		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 36)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		mov	si, 25h	; '%'
 		jmp	short loc_9F8E
 ; ---------------------------------------------------------------------------
@@ -1355,14 +1346,14 @@ loc_9F76:
 loc_9F8E:
 		cmp	si, 26h	; '&'
 		jle	short loc_9F76
-		mov	byte_F02A, 26h ; '&'
+		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 39)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
@@ -1387,14 +1378,14 @@ loc_9FD3:
 		push	offset end_buf + (END_LINE_LEN * 42)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 43)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 26h ; '&'
+		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
 		mov	si, 2Ch	; ','
 		jmp	short loc_A029
 ; ---------------------------------------------------------------------------
@@ -1414,7 +1405,7 @@ loc_A011:
 loc_A029:
 		cmp	si, 2Dh	; '-'
 		jle	short loc_A011
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		mov	si, 2Eh	; '.'
 		jmp	short loc_A050
 ; ---------------------------------------------------------------------------
@@ -1434,14 +1425,14 @@ loc_A038:
 loc_A050:
 		cmp	si, 2Fh	; '/'
 		jle	short loc_A038
-		mov	byte_F02A, 26h ; '&'
+		mov	col_and_fx_F02A, (6 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 48)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
@@ -1483,18 +1474,17 @@ sub_A09D	proc near
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		graph_accesspage 1
-		call	_pi_slot_load c, 0, offset aEd01_pi, ds
-		call	_pi_slot_palette_apply stdcall, 0
+		call	_pi_load c, 0, offset aEd01_pi, ds
+		call	_pi_palette_apply stdcall, 0
 		pop	cx
-		call	_pi_slot_put c, 0, large 0
+		call	_pi_put_8 c, 0, large 0
 		freePISlotLarge	0
 		push	2
 		call	palette_black_in
-		push	28h ; '('
-		call	frame_delay
+		call	frame_delay pascal, 40
 		push	0
 		call	sub_98B5
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		mov	byte_F02B, 1
 		push	90014Ch
 		push	2Ch ; ','
@@ -1502,15 +1492,14 @@ sub_A09D	proc near
 		push	offset end_buf
 		push	6
 		call	sub_9643
-		push	14h
-		call	frame_delay
+		call	frame_delay pascal, 20
 		push	1
 		call	palette_black_out
 		graph_accesspage 1
-		call	_pi_slot_load c, 0, offset aEd03_pi, ds
-		call	_pi_slot_palette_apply stdcall, 0
+		call	_pi_load c, 0, offset aEd03_pi, ds
+		call	_pi_palette_apply stdcall, 0
 		pop	cx
-		call	_pi_slot_put c, 0, large 0
+		call	_pi_put_8 c, 0, large 0
 		freePISlotLarge	0
 		push	0
 		call	sub_98B5
@@ -1602,7 +1591,7 @@ loc_A212:
 		push	offset aEd03a_rgb ; "ed03a.rgb"
 		call	palette_entry_rgb
 		call	far ptr	palette_show
-		mov	byte_F02A, 29h ; ')'
+		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		mov	si, 0Eh
 		jmp	short loc_A247
 ; ---------------------------------------------------------------------------
@@ -1625,31 +1614,31 @@ loc_A247:
 		push	2
 		call	palette_black_out
 		graph_accesspage 1
-		call	_pi_slot_load c, 0, offset aEd04_pi, ds
-		call	_pi_slot_palette_apply stdcall, 0
+		call	_pi_load c, 0, offset aEd04_pi, ds
+		call	_pi_palette_apply stdcall, 0
 		pop	cx
-		call	_pi_slot_put c, 0, large 0
+		call	_pi_put_8 c, 0, large 0
 		freePISlotLarge	0
 		graph_accesspage 0
 		push	0
 		call	sub_98B5
 		push	2
 		call	palette_black_in
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 16)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 29h ; ')'
+		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 17)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		mov	si, 12h
 		jmp	short loc_A2EA
 ; ---------------------------------------------------------------------------
@@ -1671,7 +1660,7 @@ loc_A2EA:
 		jle	short loc_A2D2
 		push	1
 		call	sub_98B5
-		mov	byte_F02A, 29h ; ')'
+		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		mov	si, 14h
 		jmp	short loc_A316
 ; ---------------------------------------------------------------------------
@@ -1691,14 +1680,14 @@ loc_A2FE:
 loc_A316:
 		cmp	si, 15h
 		jle	short loc_A2FE
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 22)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 29h ; ')'
+		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		mov	si, 17h
 		jmp	short loc_A353
 ; ---------------------------------------------------------------------------
@@ -1718,22 +1707,21 @@ loc_A33B:
 loc_A353:
 		cmp	si, 18h
 		jle	short loc_A33B
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 25)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 29h ; ')'
+		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 26)
 		push	6
 		call	sub_9643
-		push	0Ah
-		call	frame_delay
+		call	frame_delay pascal, 10
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.shottype], 0
 		jnz	loc_A4EC
@@ -1743,11 +1731,10 @@ loc_A353:
 		push	offset end_buf + (END_LINE_LEN * 27)
 		push	6
 		call	sub_9643
-		push	1Eh
-		call	frame_delay
+		call	frame_delay pascal, 30
 		push	2
 		call	sub_98B5
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
@@ -1762,7 +1749,7 @@ loc_A353:
 		push	offset end_buf + (END_LINE_LEN * 29)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 29h ; ')'
+		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		mov	si, 1Eh
 		jmp	short loc_A403
 ; ---------------------------------------------------------------------------
@@ -1782,7 +1769,7 @@ loc_A3EB:
 loc_A403:
 		cmp	si, 1Fh
 		jle	short loc_A3EB
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		mov	si, 20h	; ' '
 		jmp	short loc_A42A
 ; ---------------------------------------------------------------------------
@@ -1802,7 +1789,7 @@ loc_A412:
 loc_A42A:
 		cmp	si, 24h	; '$'
 		jle	short loc_A412
-		mov	byte_F02A, 29h ; ')'
+		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		mov	si, 25h	; '%'
 		jmp	short loc_A451
 ; ---------------------------------------------------------------------------
@@ -1822,7 +1809,7 @@ loc_A439:
 loc_A451:
 		cmp	si, 26h	; '&'
 		jle	short loc_A439
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
@@ -1832,10 +1819,10 @@ loc_A451:
 		push	2
 		call	palette_black_out
 		graph_accesspage 1
-		call	_pi_slot_load c, 0, offset aEd05_pi, ds
-		call	_pi_slot_palette_apply stdcall, 0
+		call	_pi_load c, 0, offset aEd05_pi, ds
+		call	_pi_palette_apply stdcall, 0
 		pop	cx
-		call	_pi_slot_put c, 0, large 0
+		call	_pi_put_8 c, 0, large 0
 		freePISlotLarge	0
 		push	0
 		call	sub_98B5
@@ -1884,25 +1871,24 @@ loc_A4EC:
 		push	offset end_buf + (END_LINE_LEN * 49)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 50)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 29h ; ')'
+		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 51)
 		push	6
 		call	sub_9643
-		push	1Eh
-		call	frame_delay
+		call	frame_delay pascal, 30
 		push	2
 		call	sub_98B5
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
@@ -1917,35 +1903,35 @@ loc_A4EC:
 		push	offset end_buf + (END_LINE_LEN * 53)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 29h ; ')'
+		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 54)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 55)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 29h ; ')'
+		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 56)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 57)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 29h ; ')'
+		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		mov	si, 3Ah	; ':'
 		jmp	short loc_A5F9
 ; ---------------------------------------------------------------------------
@@ -1965,7 +1951,7 @@ loc_A5E1:
 loc_A5F9:
 		cmp	si, 3Dh	; '='
 		jle	short loc_A5E1
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		mov	si, 3Eh	; '>'
 		jmp	short loc_A620
 ; ---------------------------------------------------------------------------
@@ -1988,10 +1974,10 @@ loc_A620:
 		push	2
 		call	palette_black_out
 		graph_accesspage 1
-		call	_pi_slot_load c, 0, offset aEd05_pi, ds
-		call	_pi_slot_palette_apply stdcall, 0
+		call	_pi_load c, 0, offset aEd05_pi, ds
+		call	_pi_palette_apply stdcall, 0
 		pop	cx
-		call	_pi_slot_put c, 0, large 0
+		call	_pi_put_8 c, 0, large 0
 		freePISlotLarge	0
 		push	1
 		call	sub_98B5
@@ -2037,25 +2023,24 @@ loc_A6B6:
 		push	offset end_buf + (END_LINE_LEN * 71)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 72)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 29h ; ')'
+		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 73)
 		push	6
 		call	sub_9643
-		push	1Eh
-		call	frame_delay
+		call	frame_delay pascal, 30
 		push	2
 		call	sub_98B5
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
@@ -2070,56 +2055,56 @@ loc_A6B6:
 		push	offset end_buf + (END_LINE_LEN * 75)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 29h ; ')'
+		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 76)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 77)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 29h ; ')'
+		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 78)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 79)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 29h ; ')'
+		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 80)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 81)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 29h ; ')'
+		mov	col_and_fx_F02A, (9 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
 		push	offset end_buf + (END_LINE_LEN * 82)
 		push	6
 		call	sub_9643
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	90014Ch
 		push	2Ch ; ','
 		push	ds
@@ -2129,10 +2114,10 @@ loc_A6B6:
 		push	2
 		call	palette_black_out
 		graph_accesspage 1
-		call	_pi_slot_load c, 0, offset aEd05_pi, ds
-		call	_pi_slot_palette_apply stdcall, 0
+		call	_pi_load c, 0, offset aEd05_pi, ds
+		call	_pi_palette_apply stdcall, 0
 		pop	cx
-		call	_pi_slot_put c, 0, large 0
+		call	_pi_put_8 c, 0, large 0
 		freePISlotLarge	0
 		push	2
 		call	sub_98B5
@@ -2249,12 +2234,11 @@ arg_4		= word ptr  8
 		mov	bp, sp
 		push	[bp+arg_4]
 		push	[bp+arg_0]
-		call	rotrect_animate
+		call	@rotrect_animate$qcc
 		push	200064h
 		push	[bp+arg_2]
 		call	sub_9942
-		push	4
-		call	frame_delay
+		call	frame_delay pascal, 4
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		pop	bp
@@ -2273,8 +2257,7 @@ sub_A8FA	proc near
 		enter	4, 0
 		push	si
 		push	di
-		push	6
-		call	_snd_delay_until_measure
+		call	_snd_delay_until_measure stdcall, 6
 		pop	cx
 		xor	si, si
 		jmp	short loc_A920
@@ -2284,21 +2267,14 @@ loc_A90C:
 		push	1B000B8h
 		push	si
 		call	sub_A874
-		push	4
-		call	frame_delay
+		call	frame_delay pascal, 4
 		add	si, 5
 
 loc_A920:
 		cmp	si, 37h	; '7'
 		jl	short loc_A90C
-		push	ds
-		push	offset aVer1_00	; "ver 1.00"
-		push	2F00C0h
-		push	210h
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-		push	8
-		call	_snd_delay_until_measure
+		call	_graph_putsa_fx c, 528, ((15 or FX_WEIGHT_BOLD) shl 16) or 192, offset aVer1_00, ds	; "ver 1.00"
+		call	_snd_delay_until_measure stdcall, 8
 		pop	cx
 		mov	si, 0B8h
 		jmp	short loc_A992
@@ -2320,37 +2296,34 @@ loc_A947:
 		call	sub_A874
 		push	ds
 		push	offset aVer1_00	; "ver 1.00"
-		push	2Fh ; '/'
+		push	(15 or FX_WEIGHT_BOLD)
 		lea	ax, [si+8]
 		push	ax
-		push	210h
+		push	528
 		call	_graph_putsa_fx
 		add	sp, 0Ah
-		push	1
-		call	frame_delay
+		call	frame_delay pascal, 1
 		add	si, 4
 
 loc_A992:
 		cmp	si, 170h
 		jl	short loc_A947
-		push	9
-		call	_snd_delay_until_measure
+		call	_snd_delay_until_measure stdcall, 9
 		pop	cx
-		mov	byte_F02A, 2Fh ; '/'
+		mov	col_and_fx_F02A, (15 or FX_WEIGHT_BOLD)
 		push	1B000C0h
 		push	14h
 		push	ds
 		push	offset aXxcvsB@b@vrvsv ; "ïïñÇò^Å@Å@ÇrÇsÇ`ÇeÇe"
 		push	0Ch
 		call	sub_9643
-		push	0Dh
-		call	_snd_delay_until_measure
+		call	_snd_delay_until_measure stdcall, 13
 		pop	cx
 		graph_accesspage 1
-		call	_pi_slot_load c, 0, offset aEd06_pi, ds
-		call	_pi_slot_palette_apply stdcall, 0
+		call	_pi_load c, 0, offset aEd06_pi, ds
+		call	_pi_palette_apply stdcall, 0
 		pop	cx
-		call	_pi_slot_put c, 0, large 0
+		call	_pi_put_8 c, 0, large 0
 		freePISlotLarge	0
 		graph_accesspage 0
 		push	4
@@ -2358,14 +2331,8 @@ loc_A992:
 		push	29h ; ')'
 		call	rotrect
 		call	sub_A8A4
-		push	ds
-		push	offset aGvgngogigab@b@ ; "ÉvÉçÉOÉâÉÄÅ@Å@Å@ÇyÇtÇm"
-		push	2F00C0h
-		push	1A0h
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-		push	11h
-		call	_snd_delay_until_measure
+		call	_graph_putsa_fx c, 416, ((15 or FX_WEIGHT_BOLD) shl 16) or 192, offset aGvgngogigab@b@, ds	; "ÉvÉçÉOÉâÉÄÅ@Å@Å@ÇyÇtÇm"
+		call	_snd_delay_until_measure stdcall, 17
 		pop	cx
 		push	ds
 		push	offset aEd06b_rgb ; "ed06b.rgb"
@@ -2375,8 +2342,7 @@ loc_A992:
 		push	2
 		push	29h ; ')'
 		call	rotrect
-		push	15h
-		call	_snd_delay_until_measure
+		call	_snd_delay_until_measure stdcall, 21
 		pop	cx
 		push	200064h
 		push	3
@@ -2390,32 +2356,16 @@ loc_A992:
 		push	29h ; ')'
 		call	rotrect
 		graph_accesspage 1
-		call	_pi_slot_load c, 0, offset aEd07_pi, ds
-		call	_pi_slot_put c, 0, large 0
+		call	_pi_load c, 0, offset aEd07_pi, ds
+		call	_pi_put_8 c, 0, large 0
 		freePISlotLarge	0
 		graph_accesspage 0
-		push	19h
-		call	_snd_delay_until_measure
+		call	_snd_delay_until_measure stdcall, 25
 		pop	cx
 		call	sub_A8A4
-		push	ds
-		push	offset aGogigtgbgbgnb@ ; "ÉOÉâÉtÉBÉbÉNÅ@ÇyÇtÇm"
-		push	2F00C0h
-		push	1A0h
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-		push	ds
-		push	offset aB@b@b@b@b@b@b@ ; "Å@Å@Å@Å@Å@Å@Å@çÇïçì˙å¸"
-		push	2F00E0h
-		push	1A0h
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-		push	ds
-		push	offset aB@b@b@b@bigibG ; "Å@Å@Å@Å@ÅiÉIÅ[ÉãÉNÉäÉAâÊÅj"
-		push	2F00F0h
-		push	1A0h
-		call	_graph_putsa_fx
-		add	sp, 0Ah
+		call	_graph_putsa_fx c, 416, ((15 or FX_WEIGHT_BOLD) shl 16) or 192, offset aGogigtgbgbgnb@, ds	; "ÉOÉâÉtÉBÉbÉNÅ@ÇyÇtÇm"
+		call	_graph_putsa_fx c, 416, ((15 or FX_WEIGHT_BOLD) shl 16) or 224, offset aB@b@b@b@b@b@b@, ds	; "Å@Å@Å@Å@Å@Å@Å@çÇïçì˙å¸"
+		call	_graph_putsa_fx c, 416, ((15 or FX_WEIGHT_BOLD) shl 16) or 240, offset aB@b@b@b@bigibG, ds	; "Å@Å@Å@Å@ÅiÉIÅ[ÉãÉNÉäÉAâÊÅj"
 		push	ds
 		push	offset aEd07a_rgb ; "ed07a.rgb"
 		call	palette_entry_rgb
@@ -2424,8 +2374,7 @@ loc_A992:
 		push	0
 		push	29h ; ')'
 		call	rotrect
-		push	1Dh
-		call	_snd_delay_until_measure
+		call	_snd_delay_until_measure stdcall, 29
 		pop	cx
 		push	ds
 		push	offset aEd07b_rgb ; "ed07b.rgb"
@@ -2435,8 +2384,7 @@ loc_A992:
 		push	1
 		push	0E9h
 		call	rotrect
-		push	21h ; '!'
-		call	_snd_delay_until_measure
+		call	_snd_delay_until_measure stdcall, 33
 		pop	cx
 		push	200064h
 		push	2
@@ -2445,16 +2393,10 @@ loc_A992:
 		push	2
 		push	0E9h
 		call	rotrect
-		push	25h ; '%'
-		call	_snd_delay_until_measure
+		call	_snd_delay_until_measure stdcall, 37
 		pop	cx
 		call	sub_A8A4
-		push	ds
-		push	offset aVlvtvrvhvbb@b@ ; "ÇlÇtÇrÇhÇbÅ@Å@ÇyÇtÇm"
-		push	2F00C0h
-		push	1B0h
-		call	_graph_putsa_fx
-		add	sp, 0Ah
+		call	_graph_putsa_fx c, 432, ((15 or FX_WEIGHT_BOLD) shl 16) or 192, offset aVlvtvrvhvbb@b@, ds	; "ÇlÇtÇrÇhÇbÅ@Å@ÇyÇtÇm"
 		push	ds
 		push	offset aEd07b_rgb ; "ed07b.rgb"
 		call	palette_entry_rgb
@@ -2464,21 +2406,19 @@ loc_A992:
 		push	0E9h
 		call	rotrect
 		graph_accesspage 1
-		call	_pi_slot_load c, 0, offset aEd08_pi, ds
-		call	_pi_slot_put c, 0, large 0
+		call	_pi_load c, 0, offset aEd08_pi, ds
+		call	_pi_put_8 c, 0, large 0
 		graph_accesspage 0
-		push	29h ; ')'
-		call	_snd_delay_until_measure
+		call	_snd_delay_until_measure stdcall, 41
 		pop	cx
-		call	_pi_slot_palette_apply stdcall, 0
+		call	_pi_palette_apply stdcall, 0
 		pop	cx
 		freePISlotLarge	0
 		push	0F8h
 		push	0
 		push	0E9h
 		call	rotrect
-		push	2Dh ; '-'
-		call	_snd_delay_until_measure
+		call	_snd_delay_until_measure stdcall, 45
 		pop	cx
 		push	ds
 		push	offset aEd08a_rgb ; "ed08a.rgb"
@@ -2488,40 +2428,14 @@ loc_A992:
 		push	1
 		push	29h ; ')'
 		call	rotrect
-		push	31h ; '1'
-		call	_snd_delay_until_measure
+		call	_snd_delay_until_measure stdcall, 49
 		pop	cx
 		call	sub_A8A4
-		push	ds
-		push	offset aVsvdvrvsb@vovk ; "ÇsÇdÇrÇsÅ@ÇoÇkÇ`ÇxÇdÇq"
-		push	2F00C0h
-		push	1A0h
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-		push	ds
-		push	offset aB@b@b@b@vivivs ; "Å@Å@Å@Å@Ç©Ç®ÇÈ"
-		push	2F00E0h
-		push	1A0h
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-		push	ds
-		push	offset aB@b@b@b@vbbVv ;	"Å@Å@Å@Å@ÇbÅ|Çv"
-		push	2F00F8h
-		push	1A0h
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-		push	ds
-		push	offset aB@b@Orucb@mbiS ; "Å@Å@ éRìcÅ@åbàÍòY"
-		push	2F0110h
-		push	1A0h
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-		push	ds
-		push	offset aVVSSxrivVVVV ; " ÇªÇÃëºëÂê®ÇÃÇ›Ç»Ç≥ÇÒ"
-		push	2F0128h
-		push	1A0h
-		call	_graph_putsa_fx
-		add	sp, 0Ah
+		call	_graph_putsa_fx c, 416, ((15 or FX_WEIGHT_BOLD) shl 16) or 192, offset aVsvdvrvsb@vovk, ds	; "ÇsÇdÇrÇsÅ@ÇoÇkÇ`ÇxÇdÇq"
+		call	_graph_putsa_fx c, 416, ((15 or FX_WEIGHT_BOLD) shl 16) or 224, offset aB@b@b@b@vivivs, ds	; "Å@Å@Å@Å@Ç©Ç®ÇÈ"
+		call	_graph_putsa_fx c, 416, ((15 or FX_WEIGHT_BOLD) shl 16) or 248, offset aB@b@b@b@vbbVv, ds	;	"Å@Å@Å@Å@ÇbÅ|Çv"
+		call	_graph_putsa_fx c, 416, ((15 or FX_WEIGHT_BOLD) shl 16) or 272, offset aB@b@Orucb@mbiS, ds	; "Å@Å@ éRìcÅ@åbàÍòY"
+		call	_graph_putsa_fx c, 416, ((15 or FX_WEIGHT_BOLD) shl 16) or 296, offset aVVSSxrivVVVV, ds	; " ÇªÇÃëºëÂê®ÇÃÇ›Ç»Ç≥ÇÒ"
 		push	ds
 		push	offset aEd08b_rgb ; "ed08b.rgb"
 		call	palette_entry_rgb
@@ -2530,8 +2444,7 @@ loc_A992:
 		push	2
 		push	29h ; ')'
 		call	rotrect
-		push	35h ; '5'
-		call	_snd_delay_until_measure
+		call	_snd_delay_until_measure stdcall, 53
 		pop	cx
 		push	ds
 		push	offset aEd08c_rgb ; "ed08c.rgb"
@@ -2541,44 +2454,41 @@ loc_A992:
 		push	3
 		push	29h ; ')'
 		call	rotrect
-		push	39h ; '9'
-		call	_snd_delay_until_measure
+		call	_snd_delay_until_measure stdcall, 57
 		pop	cx
 		push	4
 		call	palette_black_out
 		graph_accesspage 1
-		call	_pi_slot_load c, 0, offset aEd09_pi, ds
-		call	_pi_slot_palette_apply stdcall, 0
+		call	_pi_load c, 0, offset aEd09_pi, ds
+		call	_pi_palette_apply stdcall, 0
 		pop	cx
-		call	_pi_slot_put c, 0, large 0
+		call	_pi_put_8 c, 0, large 0
 		freePISlotLarge	0
 		call	graph_copy_page pascal, 0
 		push	4
 		call	palette_black_in
-		push	64h ; 'd'
-		call	frame_delay
+		call	frame_delay pascal, 100
 		graph_accesspage 1
 		push	ds
 		push	offset aVsvivbvovlb@vs
-		mov	al, byte_F02A
+		mov	al, col_and_fx_F02A
 		cbw
 		push	ax
-		push	600018h
+		push	(96 shl 16) or 24
 		call	_graph_putsa_fx
 		add	sp, 0Ah
 		push	150060h
 		push	18h
 		call	sub_97F1
 		add	sp, 6
-		push	0C8h ; '»'
-		call	frame_delay
+		call	frame_delay pascal, 200
 		graph_accesspage 1
 		push	ds
 		push	offset aB@nPiuU_ ; "Å@ç≈èIìæì_"
-		mov	al, byte_F02A
+		mov	al, col_and_fx_F02A
 		cbw
 		push	ax
-		push	800040h
+		push	(128 shl 16) or 64
 		call	_graph_putsa_fx
 		add	sp, 0Ah
 		push	0C00080h
@@ -2588,15 +2498,14 @@ loc_A992:
 		push	40h
 		call	sub_97F1
 		add	sp, 6
-		push	64h ; 'd'
-		call	frame_delay
+		call	frame_delay pascal, 100
 		graph_accesspage 1
 		push	ds
 		push	offset aGrgugegbgjgeb ;	"ÉRÉìÉeÉBÉjÉÖÅ["
-		mov	al, byte_F02A
+		mov	al, col_and_fx_F02A
 		cbw
 		push	ax
-		push	0A00040h
+		push	(160 shl 16) or 64
 		call	_graph_putsa_fx
 		add	sp, 0Ah
 		push	(256 shl 16) or 160
@@ -2610,15 +2519,14 @@ loc_A992:
 		push	40h
 		call	sub_97F1
 		add	sp, 6
-		push	64h ; 'd'
-		call	frame_delay
+		call	frame_delay pascal, 100
 		graph_accesspage 1
 		push	ds
 		push	offset aB@Gigugn ; "Å@ ÉâÉìÉN"
-		mov	al, byte_F02A
+		mov	al, col_and_fx_F02A
 		cbw
 		push	ax
-		push	0C00040h
+		push	(192 shl 16) or 64
 		call	_graph_putsa_fx
 		add	sp, 0Ah
 		push	(208 shl 16) or 192
@@ -2627,7 +2535,7 @@ loc_A992:
 		mov	al, _rank
 		cbw
 		shl	ax, 3
-		add	ax, offset _RANKS_CENTER
+		add	ax, offset _gbcRANKS
 		push	ax
 		push	15
 		call	graph_gaiji_puts
@@ -2635,15 +2543,14 @@ loc_A992:
 		push	40h
 		call	sub_97F1
 		add	sp, 6
-		push	64h ; 'd'
-		call	frame_delay
+		call	frame_delay pascal, 100
 		graph_accesspage 1
 		push	ds
 		push	offset aGvgmgcgdbPik ; "ÉvÉåÉCÉÑÅ[èâä˙"
-		mov	al, byte_F02A
+		mov	al, col_and_fx_F02A
 		cbw
 		push	ax
-		push	0E00040h
+		push	(224 shl 16) or 64
 		call	_graph_putsa_fx
 		add	sp, 0Ah
 		push	(256 shl 16) or 224
@@ -2658,15 +2565,14 @@ loc_A992:
 		push	40h
 		call	sub_97F1
 		add	sp, 6
-		push	64h ; 'd'
-		call	frame_delay
+		call	frame_delay pascal, 100
 		graph_accesspage 1
 		push	ds
 		push	offset aCMvpik	; " óÏåÇèâä˙êî"
-		mov	al, byte_F02A
+		mov	al, col_and_fx_F02A
 		cbw
 		push	ax
-		push	1000040h
+		push	(256 shl 16) or 64
 		call	_graph_putsa_fx
 		add	sp, 0Ah
 		push	(256 shl 16) or 256
@@ -2681,8 +2587,7 @@ loc_A992:
 		push	40h
 		call	sub_97F1
 		add	sp, 6
-		push	96h
-		call	frame_delay
+		call	frame_delay pascal, 150
 		graph_accesspage 1
 		les	bx, _resident
 		mov	di, es:[bx+mikoconfig_t.skill]
@@ -2700,10 +2605,10 @@ loc_AEAC:
 loc_AEB2:
 		push	ds
 		push	offset aVavVVSrso ; "Ç†Ç»ÇΩÇÃòrëO"
-		mov	al, byte_F02A
+		mov	al, col_and_fx_F02A
 		cbw
 		push	ax
-		push	1200040h
+		push	(288 shl 16) or 64
 		call	_graph_putsa_fx
 		add	sp, 0Ah
 		push	di
@@ -2803,31 +2708,29 @@ loc_AF56:
 		add	ax, offset end_buf
 		push	ds
 		push	ax
-		mov	al, byte_F02A
+		mov	al, col_and_fx_F02A
 		cbw
 		push	ax
-		push	12000F0h
+		push	(288 shl 16) or 240
 		call	_graph_putsa_fx
 		add	sp, 0Ah
 		push	60120h
 		push	40h
 		call	sub_97F1
 		add	sp, 6
-		push	78h ; 'x'
-		call	frame_delay
+		call	frame_delay pascal, 120
 		push	180120h
 		push	0C0h
 		call	sub_97F1
 		add	sp, 6
-		push	0C8h ; '»'
-		call	frame_delay
+		call	frame_delay pascal, 200
 		graph_accesspage 1
 		push	ds
 		push	offset aVpvxvxvvb@vyvt ; "ÇPÇXÇXÇVÅ@ÇyÇtÇm  (Amusement Makers)"
-		mov	al, byte_F02A
+		mov	al, col_and_fx_F02A
 		cbw
 		push	ax
-		push	1600040h
+		push	(352 shl 16) or 64
 		call	_graph_putsa_fx
 		add	sp, 0Ah
 		push	120160h
@@ -2859,19 +2762,18 @@ sub_AFE7	proc far
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.continues_used], 0
 		jnz	short loc_B07D
-		call	_pi_slot_load c, 0, offset aAll_pi, ds
-		call	_pi_slot_palette_apply stdcall, 0
+		call	_pi_load c, 0, offset aAll_pi, ds
+		call	_pi_palette_apply stdcall, 0
 		pop	cx
-		call	_pi_slot_put c, 0, large 0
+		call	_pi_put_8 c, 0, large 0
 		freePISlotLarge	0
 		push	2
 		call	palette_black_in
-		push	96h
-		call	frame_delay
-		call	_pi_slot_load c, 0, offset aBut_pi, ds
-		call	_pi_slot_palette_apply stdcall, 0
+		call	frame_delay pascal, 150
+		call	_pi_load c, 0, offset aBut_pi, ds
+		call	_pi_palette_apply stdcall, 0
 		pop	cx
-		call	_pi_slot_put c, 0, large 0
+		call	_pi_put_8 c, 0, large 0
 		freePISlotLarge	0
 		call	_key_delay
 		push	5
@@ -2895,19 +2797,18 @@ sub_B07F	proc far
 		jz	loc_B115
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		call	_pi_slot_load c, 0, offset aAll_pi, ds
-		call	_pi_slot_palette_apply stdcall, 0
+		call	_pi_load c, 0, offset aAll_pi, ds
+		call	_pi_palette_apply stdcall, 0
 		pop	cx
-		call	_pi_slot_put c, 0, large 0
+		call	_pi_put_8 c, 0, large 0
 		freePISlotLarge	0
 		push	2
 		call	palette_black_in
-		push	96h
-		call	frame_delay
-		call	_pi_slot_load c, 0, offset aExtra_pi, ds
-		call	_pi_slot_palette_apply stdcall, 0
+		call	frame_delay pascal, 150
+		call	_pi_load c, 0, offset aExtra_pi, ds
+		call	_pi_palette_apply stdcall, 0
 		pop	cx
-		call	_pi_slot_put c, 0, large 0
+		call	_pi_put_8 c, 0, large 0
 		freePISlotLarge	0
 		call	_key_delay
 		push	5
@@ -2973,11 +2874,10 @@ loc_B184:
 
 loc_B189:
 		graph_accesspage 0
-		mov	dx, 0A4h
+		mov	dx, 164	; Port 00A4h: Page display register
 		out	dx, al
 		call	super_entry_bfnt pascal, ds, offset aEndft_bft ; "endft.bft"
-		push	64h ; 'd'
-		call	frame_delay
+		call	frame_delay pascal, 100
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.rank], 4
 		jz	short loc_B1C2
@@ -3023,11 +2923,10 @@ maine_01_TEXT	ends
 
 ; ===========================================================================
 
-maine_02_TEXT	segment	word public 'CODE' use16
+SHARED	segment	word public 'CODE' use16
 	extern _graph_putsa_fx:proc
 	extern _key_delay:proc
-	extern _vram_planes_set:proc
-	extern _pi_slot_load:proc
+	extern _pi_load:proc
 	extern FRAME_DELAY:proc
 	extern _input_sense:proc
 	extern _game_exit:proc
@@ -3036,15 +2935,15 @@ maine_02_TEXT	segment	word public 'CODE' use16
 	extern _snd_pmd_resident:proc
 	extern _snd_load:proc
 	extern _game_init_main:proc
-	extern _pi_slot_palette_apply:proc
-	extern _pi_slot_put:proc
+	extern _pi_palette_apply:proc
+	extern _pi_put_8:proc
 	extern _snd_kaja_interrupt:proc
 	extern _snd_delay_until_measure:proc
-maine_02_TEXT	ends
+SHARED	ends
 
 ; ===========================================================================
 
-maine_03_TEXT	segment	byte public 'CODE' use16
+maine_03_TEXT	segment	word public 'CODE' use16
 	extern CFG_LOAD:proc
 maine_03_TEXT	ends
 
@@ -3058,13 +2957,13 @@ maine_04_TEXT	ends
 ; ===========================================================================
 
 maine_05_TEXT	segment	byte public 'CODE' use16
-	extern EGC_START_COPY:proc
-	extern ROTRECT_ANIMATE:proc
+	extern @egc_start_copy$qv:proc
+	extern @ROTRECT_ANIMATE$QCC:proc
 maine_05_TEXT	ends
 
 	.data
 
-include th02/strings/ranks_center[data].asm
+	extern _gbcRANKS:byte
 unk_D030	db 50h dup(0)
 label byte_D080 byte
 	db 0AAh, 0AAh,  55h,  55h, 0AAh, 0AAh,  55h,  55h
@@ -3154,7 +3053,7 @@ extern _rank:byte
 	.data?
 
 end_buf	db 100 dup(END_LINE_LEN dup(?))
-byte_F02A	db ?
+col_and_fx_F02A	db ?
 byte_F02B	db ?
 include libs/master.lib/clip[bss].asm
 include libs/master.lib/fil[bss].asm

@@ -30,7 +30,7 @@ extern farfunc_t_near chargeshot_render[PLAYER_COUNT];
 // ------------
 
 typedef struct {
-	SPPoint center;
+	PlayfieldPoint center;
 	bool is_hit;
 	uint8_t unused_1;
 	unsigned char invincibility_time;
@@ -63,7 +63,8 @@ typedef struct {
 	unsigned char spell_ready_frames;
 
 	// A CPU player will charge up a gauge attack once ([gauge_avail] >> 4)
-	// has reached the (random) value at [cpu_charge_at_avail_ring_p].
+	// has reached the (random) value at [cpu_charge_at_avail_ring_p] of this
+	// array.
 	gauge_perbyte_t cpu_charge_at_avail_ring[CHARGE_AT_AVAIL_RING_SIZE];
 
 	nearfunc_t_near hyper;	// Either hyper_standby() or [hyper_func].
@@ -91,3 +92,25 @@ typedef struct {
 
 extern unsigned char pid_current;
 extern unsigned char pid_other;
+
+// Doubly redundant: The player ID is already covered by [pid_current], while
+// [so_attack] can be easily calculated from that ID. MODDERS: Delete.
+extern union {
+	unsigned char current;
+	unsigned char so_attack; // sprite16_offset_t
+} pid;
+
+// Currently updated instance.
+extern player_t near *player_cur;
+
+// Point of the last detected collision, on the top edge of the player's
+// hitbox. Pretends to be at subpixel resolution, but is only ever set to
+// coordinates on a 16×2-pixel grid. (Yes, 8 times worse than the tile
+// resolution of the collision bitmap!)
+extern PlayfieldPoint player_hittest_collision_top;
+
+// Detects any collision of [player_cur] in a ([hitbox_size]×[hitbox_size])
+// square of collision map tiles around the player's center position. Sets
+// [player_cur->is_hit] and [player_hittest_collision_top] if such a collision
+// was found. Uses [pid.curent].
+void near pascal player_hittest(collmap_tile_amount_t hitbox_size);

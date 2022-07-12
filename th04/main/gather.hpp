@@ -1,10 +1,21 @@
+/// Everything here needs to be kept in sync with the ASM versions in
+/// gather.inc!
+
+enum gather_flag_t {
+	GF_FREE = 0,
+	GF_ALIVE = 1,
+	GF_DONE = 2,
+
+	_gather_flag_t_FORCE_UINT8 = 0xFF
+};
+
 // Shrinking gather circles. Can fire bullets according to the included
 // template once their radius reaches GATHER_RADIUS_END, unless
 // [bullet_template.spawn_type] is set to BST_GATHER_ONLY.
 struct gather_t {
-	unsigned char flag;
+	gather_flag_t flag;
 	uint4_t col;
-	motion_t center;
+	PlayfieldMotion center;
 	Subpixel radius_cur;
 	int ring_points;
 	// Added to the automatically calculated angle of each ring point
@@ -34,17 +45,24 @@ struct gather_template_t {
 #define GATHER_POINT_W 8
 #define GATHER_POINT_H 8
 #define GATHER_FRAMES 32
-#define GATHER_RADIUS_END 2.0f
+#define GATHER_RADIUS_START 64.0f
+#define GATHER_RADIUS_END to_sp(2.0f)
 
 #define GATHER_COUNT 16
 #if GAME == 5
-# define GATHER_CAP 8
+	#define GATHER_CAP 8
 #else
-# define GATHER_CAP GATHER_COUNT
+	#define GATHER_CAP GATHER_COUNT
 #endif
 
 extern gather_t gather_circles[GATHER_COUNT];
 extern gather_template_t gather_template;
+
+inline void gather_template_init(void) {
+	gather_template.radius.set(GATHER_RADIUS_START);
+	gather_template.angle_delta = 0x02;
+	gather_template.ring_points = 8;
+}
 
 // Adds a gather circle based on the current global [gather_template], with a
 // copy of the current global [bullet_template]. These bullets will be fired
@@ -60,8 +78,13 @@ void near gather_add_only(void);
 // [frame] 0, 2, and 4, respectively, using the given colors. Will do nothing
 // for any other value of [frame].
 void pascal near gather_add_only_3stack(
-	int frame, uint4_t col_for_0, uint4_t col_for_2_and_4
-)
+	int frame, int col_for_0, int col_for_2_and_4
+);
 
-void pascal gather_update(void);
-void pascal gather_render(void);
+// Blits the gather point sprite to ([left], [top]). Assumptions:
+// • ES is already be set to the beginning of a VRAM segment
+// • The GRCG is active, and set to the intended color
+void __fastcall near gather_point_render(screen_x_t left, vram_y_t top);
+
+void gather_update(void);
+void gather_render(void);

@@ -13,47 +13,18 @@
 ; OS type	  :  MS	DOS
 ; Application type:  Executable	16bit
 
-		.286 ; Force the .model directive to create 16-bit default segments...
-		.model large
-		.386 ; ... then switch to what we actually need.
-		; And yes, we can't move this to an include file for some reason.
+		.386
+		.model use16 large _TEXT
 
 BINARY = 'E'
 
 include ReC98.inc
 include th01/th01.inc
 
-	option emulator
-
-	extern @$bdla$qnv:proc
-	extern @$bnwa$qui:proc
-	extern FTOL@:proc
-	extern F_LUDIV@:proc
-	extern LUMOD@:proc
-	extern LXMUL@:proc
 	extern SCOPY@:proc
-	extern __mbcjmstojis:proc
 	extern __setargv__:proc ; main() needs both to be set
 	extern __setenvp__:proc
-	extern _access:proc
-	extern _close:proc
 	extern _execl:proc
-	extern _exit:proc
-	extern _farfree:proc
-	extern _farmalloc:proc
-	extern _filelength:proc
-	extern _int86:proc
-	extern _intdosx:proc
-	extern _memcmp:proc
-	extern _open:proc
-	extern _printf:proc
-	extern _proc:proc
-	extern _puts:proc
-	extern _read:proc
-	extern _segread:proc
-	extern _strcmp:proc
-	extern _strcpy:proc
-	extern _vsprintf:proc
 
 fuuin_01 group fuuin_01_TEXT, fuuin_01__TEXT
 
@@ -96,7 +67,6 @@ fuuin_01__TEXT	segment	byte public 'CODE' use16
 		assume cs:fuuin_01
 
 	extern _end_init:proc
-	extern _end_resident_clear:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -172,11 +142,7 @@ fuuin_01__TEXT	ends
 
 ; ===========================================================================
 
-; Segment type:	Pure code
 fuuin_02_TEXT	segment	byte public 'CODE' use16
-	extern _input_sense:proc
-	extern _input_reset_sense:proc
-	extern _regist:proc
 fuuin_02_TEXT	ends
 
 ; ===========================================================================
@@ -200,59 +166,59 @@ sub_B945	proc far
 		call	_mdrv2_bgm_load
 		add	sp, 4
 		call	_mdrv2_bgm_play
-		call	grp_palette_settone pascal, 0
-		call	end_pics_load_palette_show pascal, ds, offset aEd1a_grp ; "ED1A.grp"
-		call	_end_pic_show stdcall, 0
+		call	@grp_palette_settone$qi pascal, 0
+		call	@end_pics_load_palette_show$qnxc pascal, ds, offset aEd1a_grp ; "ED1A.grp"
+		call	@end_pic_show$qi stdcall, 0
 		pop	cx
-		call	grp_palette_black_in pascal, 6
+		call	@grp_palette_black_in$qui pascal, 6
 		call	_frame_delay stdcall, 100
 		pop	cx
-		call	grp_palette_white_out pascal, 5
+		call	@grp_palette_white_out$qui pascal, 5
 		call	_frame_delay stdcall, 100
 		pop	cx
-		call	_end_pic_show stdcall, 1
+		call	@end_pic_show$qi stdcall, 1
 		pop	cx
-		call	grp_palette_settone pascal, 100
+		call	@grp_palette_settone$qi pascal, 100
 		call	_frame_delay stdcall, 13
 		pop	cx
-		call	_end_pic_show stdcall, 2
+		call	@end_pic_show$qi stdcall, 2
 		pop	cx
 		call	_frame_delay stdcall, 13
 		pop	cx
-		call	_end_pic_show stdcall, 3
+		call	@end_pic_show$qi stdcall, 3
 		pop	cx
 		call	_frame_delay stdcall, 50
 		pop	cx
-		call	end_pics_load_palette_show pascal, ds, offset aEd1b_grp ; "ED1B.grp"
-		call	_end_pic_show stdcall, 0
+		call	@end_pics_load_palette_show$qnxc pascal, ds, offset aEd1b_grp ; "ED1B.grp"
+		call	@end_pic_show$qi stdcall, 0
 		pop	cx
 		call	_frame_delay stdcall, 10
 		pop	cx
-		call	_end_pic_show stdcall, 1
+		call	@end_pic_show$qi stdcall, 1
 		pop	cx
 		call	_frame_delay stdcall, 10
 		pop	cx
-		call	_end_pic_show stdcall, 2
+		call	@end_pic_show$qi stdcall, 2
 		pop	cx
 		call	_frame_delay stdcall, 100
 		pop	cx
-		call	grp_palette_black_out pascal, 6
+		call	@grp_palette_black_out$qui pascal, 6
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
 		call	_z_graph_clear
-		call	grp_palette_settone pascal, 100
-		call	end_pics_load_palette_show pascal, ds, offset aEd1c_grp ; "ED1C.GRP"
+		call	@grp_palette_settone$qi pascal, 100
+		call	@end_pics_load_palette_show$qnxc pascal, ds, offset aEd1c_grp ; "ED1C.GRP"
 		xor	si, si
 		jmp	short loc_BA49
 ; ---------------------------------------------------------------------------
 
 loc_BA28:
-		call	_end_pic_show stdcall, 0
+		call	@end_pic_show$qi stdcall, 0
 		pop	cx
 		call	_frame_delay stdcall, 20
 		pop	cx
-		call	_end_pic_show stdcall, 1
+		call	@end_pic_show$qi stdcall, 1
 		pop	cx
 		call	_frame_delay stdcall, 20
 		pop	cx
@@ -261,16 +227,16 @@ loc_BA28:
 loc_BA49:
 		cmp	si, 6
 		jl	short loc_BA28
-		call	_end_pic_show stdcall, 0
+		call	@end_pic_show$qi stdcall, 0
 		pop	cx
 		call	_frame_delay stdcall, 40
 		pop	cx
-		call	_end_pic_show stdcall, 2
+		call	@end_pic_show$qi stdcall, 2
 		pop	cx
 		call	_frame_delay stdcall, 40
 		pop	cx
-		call	end_pics_load_palette_show pascal, ds, offset aEd1d_grp ; "ED1D.GRP"
-		call	_end_pic_show stdcall, 3
+		call	@end_pics_load_palette_show$qnxc pascal, ds, offset aEd1d_grp ; "ED1D.GRP"
+		call	@end_pic_show$qi stdcall, 3
 		pop	cx
 		call	_frame_delay stdcall, 70
 		pop	cx
@@ -281,61 +247,61 @@ loc_BA49:
 loc_BA8C:
 		or	si, si
 		jnz	short loc_BA98
-		call	_end_pic_show stdcall, 0
+		call	@end_pic_show$qi stdcall, 0
 		pop	cx
 
 loc_BA98:
 		cmp	si, 14h
 		jnz	short loc_BAA5
-		call	_end_pic_show stdcall, 1
+		call	@end_pic_show$qi stdcall, 1
 		pop	cx
 
 loc_BAA5:
 		cmp	si, 18h
 		jnz	short loc_BAB2
-		call	_end_pic_show stdcall, 2
+		call	@end_pic_show$qi stdcall, 2
 		pop	cx
 
 loc_BAB2:
 		cmp	si, 1Ch
 		jnz	short loc_BABF
-		call	_end_pic_show stdcall, 0
+		call	@end_pic_show$qi stdcall, 0
 		pop	cx
 
 loc_BABF:
 		cmp	si, 32h	; '2'
 		jnz	short loc_BACC
-		call	_end_pic_show stdcall, 1
+		call	@end_pic_show$qi stdcall, 1
 		pop	cx
 
 loc_BACC:
 		cmp	si, 36h	; '6'
 		jnz	short loc_BAD9
-		call	_end_pic_show stdcall, 2
+		call	@end_pic_show$qi stdcall, 2
 		pop	cx
 
 loc_BAD9:
 		cmp	si, 3Ah	; ':'
 		jnz	short loc_BAE6
-		call	_end_pic_show stdcall, 0
+		call	@end_pic_show$qi stdcall, 0
 		pop	cx
 
 loc_BAE6:
 		cmp	si, 5Ah	; 'Z'
 		jnz	short loc_BAF3
-		call	_end_pic_show stdcall, 1
+		call	@end_pic_show$qi stdcall, 1
 		pop	cx
 
 loc_BAF3:
 		cmp	si, 5Eh	; '^'
 		jnz	short loc_BB00
-		call	_end_pic_show stdcall, 2
+		call	@end_pic_show$qi stdcall, 2
 		pop	cx
 
 loc_BB00:
 		cmp	si, 62h	; 'b'
 		jnz	short loc_BB0D
-		call	_end_pic_show stdcall, 0
+		call	@end_pic_show$qi stdcall, 0
 		pop	cx
 
 loc_BB0D:
@@ -350,19 +316,19 @@ loc_BB16:
 ; ---------------------------------------------------------------------------
 
 loc_BB1E:
-		call	_end_pic_show stdcall, 3
+		call	@end_pic_show$qi stdcall, 3
 		pop	cx
 		call	_frame_delay stdcall, 60
 		pop	cx
-		call	_end_pic_show stdcall, 0
+		call	@end_pic_show$qi stdcall, 0
 		pop	cx
 		call	_frame_delay stdcall, 20
 		pop	cx
-		call	_end_pic_show stdcall, 3
+		call	@end_pic_show$qi stdcall, 3
 		pop	cx
-		call	grp_palette_settone pascal, 105
-		call	end_pics_load_palette_show pascal, ds, offset aEd1e_grp ; "ED1E.GRP"
-		call	_end_pic_show stdcall, 0
+		call	@grp_palette_settone$qi pascal, 105
+		call	@end_pics_load_palette_show$qnxc pascal, ds, offset aEd1e_grp ; "ED1E.GRP"
+		call	@end_pic_show$qi stdcall, 0
 		pop	cx
 		xor	si, si
 		jmp	short loc_BB79
@@ -372,7 +338,7 @@ loc_BB62:
 		mov	ax, si
 		imul	ax, 5
 		add	ax, 110
-		call	grp_palette_settone pascal, ax
+		call	@grp_palette_settone$qi pascal, ax
 		call	_frame_delay stdcall, 16
 		pop	cx
 		inc	si
@@ -385,18 +351,18 @@ loc_BB79:
 ; ---------------------------------------------------------------------------
 
 loc_BB82:
-		call	_end_pic_show stdcall, 1
+		call	@end_pic_show$qi stdcall, 1
 		pop	cx
 		call	_frame_delay stdcall, 8
 		pop	cx
-		call	_end_pic_show stdcall, 2
+		call	@end_pic_show$qi stdcall, 2
 		pop	cx
 		call	_frame_delay stdcall, 8
 		pop	cx
 		mov	ax, si
 		imul	ax, 5
 		add	ax, 130
-		call	grp_palette_settone pascal, ax
+		call	@grp_palette_settone$qi pascal, ax
 		inc	si
 
 loc_BBB1:
@@ -405,15 +371,15 @@ loc_BBB1:
 		mov	ax, word ptr _continues_total
 		or	ax, word ptr _continues_total+2
 		jnz	short loc_BBC7
-		call	sub_BDBD
-		call	sub_C03D
+		call	@end_good$qv
+		call	@boss_slides_animate$qv
 		jmp	short loc_BBF1
 ; ---------------------------------------------------------------------------
 
 loc_BBC7:
-		call	sub_BC7C
+		call	@end_bad$qv
 		call	_mdrv2_bgm_fade_out_nonblock
-		call	grp_palette_black_out pascal, 10
+		call	@grp_palette_black_out$qui pascal, 10
 		call	_z_graph_clear
 		call	_mdrv2_bgm_stop
 		push	ds
@@ -423,1233 +389,91 @@ loc_BBC7:
 		call	_mdrv2_bgm_play
 
 loc_BBF1:
-		nopcall	sub_C446
+		nopcall	@verdict_animate_and_regist$qv
 		pop	si
 		pop	bp
 		retf
 sub_B945	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BBF9	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_BC35
-; ---------------------------------------------------------------------------
-
-loc_BC01:
-		test	si, 3
-		jnz	short loc_BC0B
-		push	8
-		jmp	short loc_BC0D
-; ---------------------------------------------------------------------------
-
-loc_BC0B:
-		push	0
-
-loc_BC0D:
-		call	graph_scrollup
-		call	_end_pic_show stdcall, 1
-		pop	cx
-		call	_frame_delay stdcall, 1
-		pop	cx
-		test	si, 1
-		jz	short loc_BC2D
-		push	170
-		jmp	short loc_BC2F
-; ---------------------------------------------------------------------------
-
-loc_BC2D:
-		push	100
-
-loc_BC2F:
-		call	grp_palette_settone
-		inc	si
-
-loc_BC35:
-		cmp	si, [bp+arg_2]
-		jle	short loc_BC01
-		xor	si, si
-		jmp	short loc_BC72
-; ---------------------------------------------------------------------------
-
-loc_BC3E:
-		test	si, 3
-		jnz	short loc_BC48
-		push	8
-		jmp	short loc_BC4A
-; ---------------------------------------------------------------------------
-
-loc_BC48:
-		push	0
-
-loc_BC4A:
-		call	graph_scrollup
-		call	_end_pic_show stdcall, 1
-		pop	cx
-		call	_frame_delay stdcall, 2
-		pop	cx
-		test	si, 1
-		jz	short loc_BC69
-		push	2
-		jmp	short loc_BC6B
-; ---------------------------------------------------------------------------
-
-loc_BC69:
-		push	1
-
-loc_BC6B:
-		call	_end_pic_show
-		pop	cx
-		inc	si
-
-loc_BC72:
-		cmp	si, [bp+arg_0]
-		jle	short loc_BC3E
-		pop	si
-		pop	bp
-		retn	4
-sub_BBF9	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BC7C	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		call	end_pics_load_palette_show pascal, ds, offset aEd2a_grp ; "ed2a.grp"
-		call	grp_palette_settone pascal, 200
-		call	_end_pic_show stdcall, 0
-		pop	cx
-		call	grp_palette_white_in pascal, 5
-		call	_frame_delay stdcall, 120
-		pop	cx
-		cmp	_end_flag, 2
-		jnz	short loc_BCFC
-		push	40h
-		push	10h
-		call	sub_BBF9
-		push	20h ; ' '
-		push	20h ; ' '
-		call	sub_BBF9
-		call	graph_scrollup pascal, 0
-		call	_frame_delay stdcall, 50
-		pop	cx
-		call	_end_pic_show stdcall, 3
-		pop	cx
-		call	_frame_delay stdcall, 100
-		pop	cx
-		call	graph_type_ank pascal, 232, 316, 22, ds, offset aTryToNoContinu ; "Try to 'No continue'!!"
-		push	232
-		push	348
-		push	22
-		push	ds
-		push	offset aBadEnding2 ; "	    Bad	Ending2	    "
-		jmp	loc_BDAC
-; ---------------------------------------------------------------------------
-
-loc_BCFC:
-		call	end_pics_load_palette_show pascal, ds, offset aEd4a_grp ; "ed4a.grp"
-		xor	si, si
-		jmp	short loc_BD2A
-; ---------------------------------------------------------------------------
-
-loc_BD09:
-		call	_end_pic_show stdcall, 0
-		pop	cx
-		call	_frame_delay stdcall, 3
-		pop	cx
-		call	_end_pic_show stdcall, 1
-		pop	cx
-		call	_frame_delay stdcall, 3
-		pop	cx
-		inc	si
-
-loc_BD2A:
-		cmp	si, 14h
-		jl	short loc_BD09
-		xor	si, si
-		jmp	short loc_BD62
-; ---------------------------------------------------------------------------
-
-loc_BD33:
-		call	_end_pic_show stdcall, 0
-		pop	cx
-		call	_frame_delay stdcall, 3
-		pop	cx
-		call	_end_pic_show stdcall, 1
-		pop	cx
-		call	_frame_delay stdcall, 3
-		pop	cx
-		mov	ax, si
-		imul	ax, 5
-		add	ax, 100
-		call	grp_palette_settone pascal, ax
-		inc	si
-
-loc_BD62:
-		cmp	si, 14h
-		jl	short loc_BD33
-		call	_end_pic_show stdcall, 2
-		pop	cx
-		call	grp_palette_white_in pascal, 5
-		call	_frame_delay stdcall, 200
-		pop	cx
-		call	_end_pic_show stdcall, 3
-		pop	cx
-		call	_frame_delay stdcall, 100
-		pop	cx
-		call	graph_type_ank pascal, 232, 316, 22, ds, offset aTryToNoConti_0 ; "Try to 'No continue'!!"
-		push	232
-		push	348
-		push	22
-		push	ds
-		push	offset aBadEnding1 ; "	    Bad	Ending1	    "
-
-loc_BDAC:
-		call	graph_type_ank
-		call	_frame_delay stdcall, 300
-		pop	cx
-		pop	si
-		pop	bp
-		retn
-sub_BC7C	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BDBD	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		call	end_pics_load_palette_show pascal, ds, offset aEd3a_grp ; "ed3a.grp"
-		call	grp_palette_settone pascal, 200
-		xor	si, si
-		jmp	short loc_BE07
-; ---------------------------------------------------------------------------
-
-loc_BDD6:
-		call	_end_pic_show stdcall, 0
-		pop	cx
-		call	_frame_delay stdcall, 8
-		pop	cx
-		call	_end_pic_show stdcall, 1
-		pop	cx
-		call	_frame_delay stdcall, 8
-		pop	cx
-		mov	ax, si
-		imul	ax, 5
-		mov	dx, 200
-		sub	dx, ax
-		call	grp_palette_settone pascal, dx
-		inc	si
-
-loc_BE07:
-		cmp	si, 14h
-		jl	short loc_BDD6
-		call	grp_palette_settone pascal, 100
-		xor	si, si
-		jmp	short loc_BE38
-; ---------------------------------------------------------------------------
-
-loc_BE17:
-		call	_end_pic_show stdcall, 0
-		pop	cx
-		call	_frame_delay stdcall, 8
-		pop	cx
-		call	_end_pic_show stdcall, 1
-		pop	cx
-		call	_frame_delay stdcall, 8
-		pop	cx
-		inc	si
-
-loc_BE38:
-		cmp	si, 0Ah
-		jl	short loc_BE17
-		xor	si, si
-		jmp	short loc_BE64
-; ---------------------------------------------------------------------------
-
-loc_BE41:
-		mov	ax, si
-		and	ax, 1
-		call	_end_pic_show stdcall, ax
-		pop	cx
-		call	_frame_delay stdcall, 8
-		pop	cx
-		mov	ax, si
-		imul	ax, 10
-		add	ax, 100
-		call	grp_palette_settone pascal, ax
-		inc	si
-
-loc_BE64:
-		cmp	si, 0Ah
-		jl	short loc_BE41
-		call	grp_palette_settone pascal, 200
-		cmp	_end_flag, 1
-		jnz	short loc_BE7D
-		call	sub_BF07
-		jmp	short loc_BE80
-; ---------------------------------------------------------------------------
-
-loc_BE7D:
-		call	sub_BE83
-
-loc_BE80:
-		pop	si
-		pop	bp
-		retn
-sub_BDBD	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BE83	proc near
-		push	bp
-		mov	bp, sp
-		call	end_pics_load_palette_show pascal, ds, offset aEd3b_grp ; "ed3b.grp"
-		call	_end_pic_show stdcall, 0
-		pop	cx
-		call	grp_palette_white_in pascal, 4
-		call	_frame_delay stdcall, 250
-		pop	cx
-		call	_end_pic_show stdcall, 1
-		pop	cx
-		call	_frame_delay stdcall, 200
-		pop	cx
-		call	_end_pic_show stdcall, 2
-		pop	cx
-		call	_frame_delay stdcall, 150
-		pop	cx
-		call	_end_pic_show stdcall, 3
-		pop	cx
-		call	_frame_delay stdcall, 150
-		pop	cx
-		call	graph_type_ank pascal, 256, 316, 16, ds, offset aCongratulation ; "Congratulations!"
-		call	graph_type_ank pascal, 232, 348, 22, ds, offset aGoodEnding2 ; "     Good Ending2     "
-		call	_frame_delay stdcall, 300
-		pop	cx
-		pop	bp
-		retn
-sub_BE83	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_BF07	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		call	end_pics_load_palette_show pascal, ds, offset aEd5a_grp ; "ed5a.grp"
-		call	_end_pic_show stdcall, 0
-		pop	cx
-		call	grp_palette_white_in pascal, 4
-		call	_frame_delay stdcall, 300
-		pop	cx
-		xor	si, si
-		jmp	short loc_BF51
-; ---------------------------------------------------------------------------
-
-loc_BF30:
-		call	_end_pic_show stdcall, 1
-		pop	cx
-		call	_frame_delay stdcall, 8
-		pop	cx
-		call	_end_pic_show stdcall, 2
-		pop	cx
-		call	_frame_delay stdcall, 8
-		pop	cx
-		inc	si
-
-loc_BF51:
-		cmp	si, 0Fh
-		jl	short loc_BF30
-		call	end_pics_load_palette_show pascal, ds, offset aEd5b_grp ; "ed5b.grp"
-		call	_end_pic_show stdcall, 0
-		pop	cx
-		call	_frame_delay stdcall, 150
-		pop	cx
-		call	_end_pic_show stdcall, 1
-		pop	cx
-		call	_frame_delay stdcall, 100
-		pop	cx
-		call	_end_pic_show stdcall, 2
-		pop	cx
-		call	_frame_delay stdcall, 100
-		pop	cx
-		call	_end_pic_show stdcall, 3
-		pop	cx
-		call	_frame_delay stdcall, 100
-		pop	cx
-		call	end_pics_load_palette_show pascal, ds, offset aEd5c_grp ; "ed5c.grp"
-		call	_end_pic_show stdcall, 0
-		pop	cx
-		call	_frame_delay stdcall, 100
-		pop	cx
-		call	_end_pic_show stdcall, 1
-		pop	cx
-		call	_frame_delay stdcall, 150
-		pop	cx
-		call	_end_pic_show stdcall, 2
-		pop	cx
-		call	_frame_delay stdcall, 150
-		pop	cx
-		call	graph_type_ank pascal, 256, 316, 16, ds, offset aCongratulati_0 ; "Congratulations!"
-		call	graph_type_ank pascal, 232, 348, 22, ds, offset aGoodEnding1 ; "     Good Ending1     "
-		call	_frame_delay stdcall, 300
-		pop	cx
-		pop	si
-		pop	bp
-		retn
-sub_BF07	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C009	proc near
-
-@@quarter		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		call	_frame_delay stdcall, 150
-		pop	cx
-		call	grp_palette_black_out pascal, 5
-		call	_z_graph_clear
-		call	_end_pic_show stdcall, [bp+@@quarter]
-		pop	cx
-		call	grp_palette_black_in pascal, 5
-		call	_frame_delay stdcall, 50
-		pop	cx
-		pop	bp
-		retn	2
-sub_C009	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C03D	proc near
-		push	bp
-		mov	bp, sp
-		call	_mdrv2_bgm_fade_out_nonblock
-		call	grp_palette_black_out pascal, 10
-		call	_z_graph_clear
-		call	_mdrv2_bgm_stop
-		push	ds
-		push	offset aSt1_mdt_0 ; "st1.mdt"
-		call	_mdrv2_bgm_load
-		add	sp, 4
-		call	_mdrv2_bgm_play
-		cmp	_end_flag, 1
-		jnz	short loc_C074
-		push	ds
-		push	offset aEndb_a_grp ; "endb_a.grp"
-		jmp	short loc_C078
-; ---------------------------------------------------------------------------
-
-loc_C074:
-		push	ds
-		push	offset aEndb_b_grp ; "endb_b.grp"
-
-loc_C078:
-		call	end_pics_load_palette_show
-		call	_end_pic_show stdcall, 0
-		pop	cx
-		call	grp_palette_settone pascal, 100
-		call	_frame_delay stdcall, 50
-		pop	cx
-		call	graph_type_ank pascal, 272, 316, 13, ds, offset aStage5Boss ; "STAGE 5 BOSS"
-		call	graph_type_ank pascal, 232, 348, 22, ds, offset aGatekeeperSing ; "Gatekeeper 'SinGyoku'"
-		call	sub_C009 pascal, 1
-		cmp	_end_flag, 1
-		jnz	short loc_C0E1
-		call	graph_type_ank pascal, 272, 316, 13, ds, offset aStage10Boss ; "STAGE 10 BOSS"
-		push	232
-		push	348
-		push	22
-		push	ds
-		push	offset aEvileyesYuugen ; "EvilEyes 'YuugenMagan'"
-		jmp	short loc_C0FE
-; ---------------------------------------------------------------------------
-
-loc_C0E1:
-		call	graph_type_ank pascal, 272, 316, 13, ds, offset aStage10Boss_0 ;	"STAGE 10 BOSS"
-		push	232
-		push	348
-		push	23
-		push	ds
-		push	offset aRevengefulGhos ; "Revengeful Ghost 'Mima'"
-
-loc_C0FE:
-		call	graph_type_ank
-		call	sub_C009 pascal, 2
-		cmp	_end_flag, 1
-		jnz	short loc_C12E
-		call	graph_type_ank pascal, 272, 316, 13, ds, offset aStage15Boss ; "STAGE 15 BOSS"
-		push	232
-		push	348
-		push	22
-		push	ds
-		push	offset aInnocenceDevil ; "Innocence Devil 'Elis'"
-		jmp	short loc_C14B
-; ---------------------------------------------------------------------------
-
-loc_C12E:
-		call	graph_type_ank pascal, 272, 316, 13, ds, offset aStage15Boss_0 ;	"STAGE 15 BOSS"
-		push	256
-		push	348
-		push	17
-		push	ds
-		push	offset aHellmoonKikuri ; "HellMoon 'Kikuri'"
-
-loc_C14B:
-		call	graph_type_ank
-		call	sub_C009 pascal, 3
-		cmp	_end_flag, 1
-		jnz	short loc_C17B
-		call	graph_type_ank pascal, 272, 316, 13, ds, offset aStage20Boss ; "STAGE 20 BOSS"
-		push	232
-		push	348
-		push	22
-		push	ds
-		push	offset aAngelOfDeathSa ; "Angel	of Death'Sariel'"
-		jmp	short loc_C198
-; ---------------------------------------------------------------------------
-
-loc_C17B:
-		call	graph_type_ank pascal, 272, 316, 13, ds, offset aStage20Boss_0 ;	"STAGE 20 BOSS"
-		push	224
-		push	348
-		push	24
-		push	ds
-		push	offset aAstralKnightKo ; "Astral Knight	'Konngara'"
-
-loc_C198:
-		call	graph_type_ank
-		call	_frame_delay stdcall, 150
-		pop	cx
-		pop	bp
-		retn
-sub_C03D	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C1A8	proc far
-
-var_2		= word ptr -2
-
-		enter	2, 0
-		push	si
-		push	di
-		xor	si, si
-		cmp	word ptr _score+2, 26h	; '&'
-		jl	short loc_C1C6
-		jnz	short loc_C1C1
-		cmp	word ptr _score, 25A0h
-		jb	short loc_C1C6
-
-loc_C1C1:
-		add	si, 0Ah
-		jmp	short loc_C21C
-; ---------------------------------------------------------------------------
-
-loc_C1C6:
-		cmp	word ptr _score+2, 1Eh
-		jl	short loc_C1DC
-		jnz	short loc_C1D7
-		cmp	word ptr _score, 8480h
-		jb	short loc_C1DC
-
-loc_C1D7:
-		add	si, 8
-		jmp	short loc_C21C
-; ---------------------------------------------------------------------------
-
-loc_C1DC:
-		cmp	word ptr _score+2, 16h
-		jl	short loc_C1F2
-		jnz	short loc_C1ED
-		cmp	word ptr _score, 0E360h
-		jb	short loc_C1F2
-
-loc_C1ED:
-		add	si, 6
-		jmp	short loc_C21C
-; ---------------------------------------------------------------------------
-
-loc_C1F2:
-		cmp	word ptr _score+2, 0Fh
-		jl	short loc_C208
-		jnz	short loc_C203
-		cmp	word ptr _score, 4240h
-		jb	short loc_C208
-
-loc_C203:
-		add	si, 4
-		jmp	short loc_C21C
-; ---------------------------------------------------------------------------
-
-loc_C208:
-		cmp	word ptr _score+2, 7
-		jl	short loc_C21C
-		jnz	short loc_C219
-		cmp	word ptr _score, 0A120h
-		jb	short loc_C21C
-
-loc_C219:
-		add	si, 2
-
-loc_C21C:
-		cmp	word ptr _score_highest+2, 2Dh	; '-'
-		jl	short loc_C232
-		jnz	short loc_C22D
-		cmp	word ptr _score_highest, 0C6C0h
-		jb	short loc_C232
-
-loc_C22D:
-		add	si, 0Ah
-		jmp	short loc_C288
-; ---------------------------------------------------------------------------
-
-loc_C232:
-		cmp	word ptr _score_highest+2, 27h	; '''
-		jl	short loc_C248
-		jnz	short loc_C243
-		cmp	word ptr _score_highest, 0AC40h
-		jb	short loc_C248
-
-loc_C243:
-		add	si, 8
-		jmp	short loc_C288
-; ---------------------------------------------------------------------------
-
-loc_C248:
-		cmp	word ptr _score_highest+2, 21h	; '!'
-		jl	short loc_C25E
-		jnz	short loc_C259
-		cmp	word ptr _score_highest, 91C0h
-		jb	short loc_C25E
-
-loc_C259:
-		add	si, 6
-		jmp	short loc_C288
-; ---------------------------------------------------------------------------
-
-loc_C25E:
-		cmp	word ptr _score_highest+2, 1Bh
-		jl	short loc_C274
-		jnz	short loc_C26F
-		cmp	word ptr _score_highest, 7740h
-		jb	short loc_C274
-
-loc_C26F:
-		add	si, 4
-		jmp	short loc_C288
-; ---------------------------------------------------------------------------
-
-loc_C274:
-		cmp	word ptr _score_highest+2, 15h
-		jl	short loc_C288
-		jnz	short loc_C285
-		cmp	word ptr _score_highest, 5CC0h
-		jb	short loc_C288
-
-loc_C285:
-		add	si, 2
-
-loc_C288:
-		mov	ax, word ptr _continues_total
-		or	ax, word ptr _continues_total+2
-		jnz	short loc_C297
-		add	si, 1Eh
-		jmp	loc_C36C
-; ---------------------------------------------------------------------------
-
-loc_C297:
-		cmp	word ptr _continues_total+2, 0
-		jg	short loc_C2AD
-		jnz	short loc_C2A7
-		cmp	word ptr _continues_total, 2
-		ja	short loc_C2AD
-
-loc_C2A7:
-		add	si, 0Ah
-		jmp	loc_C36C
-; ---------------------------------------------------------------------------
-
-loc_C2AD:
-		cmp	word ptr _continues_total+2, 0
-		jg	short loc_C2C3
-		jnz	short loc_C2BD
-		cmp	word ptr _continues_total, 4
-		ja	short loc_C2C3
-
-loc_C2BD:
-		add	si, 8
-		jmp	loc_C36C
-; ---------------------------------------------------------------------------
-
-loc_C2C3:
-		cmp	word ptr _continues_total+2, 0
-		jg	short loc_C2D9
-		jnz	short loc_C2D3
-		cmp	word ptr _continues_total, 6
-		ja	short loc_C2D9
-
-loc_C2D3:
-		add	si, 6
-		jmp	loc_C36C
-; ---------------------------------------------------------------------------
-
-loc_C2D9:
-		cmp	word ptr _continues_total+2, 0
-		jg	short loc_C2EE
-		jnz	short loc_C2E9
-		cmp	word ptr _continues_total, 8
-		ja	short loc_C2EE
-
-loc_C2E9:
-		add	si, 4
-		jmp	short loc_C36C
-; ---------------------------------------------------------------------------
-
-loc_C2EE:
-		cmp	word ptr _continues_total+2, 0
-		jg	short loc_C303
-		jnz	short loc_C2FE
-		cmp	word ptr _continues_total, 0Ah
-		ja	short loc_C303
-
-loc_C2FE:
-		add	si, 2
-		jmp	short loc_C36C
-; ---------------------------------------------------------------------------
-
-loc_C303:
-		cmp	word ptr _continues_total+2, 0
-		jg	short loc_C315
-		jnz	short loc_C313
-		cmp	word ptr _continues_total, 0Ch
-		ja	short loc_C315
-
-loc_C313:
-		jmp	short loc_C36C
-; ---------------------------------------------------------------------------
-
-loc_C315:
-		cmp	word ptr _continues_total+2, 0
-		jg	short loc_C32A
-		jnz	short loc_C325
-		cmp	word ptr _continues_total, 0Eh
-		ja	short loc_C32A
-
-loc_C325:
-		sub	si, 2
-		jmp	short loc_C36C
-; ---------------------------------------------------------------------------
-
-loc_C32A:
-		cmp	word ptr _continues_total+2, 0
-		jg	short loc_C33F
-		jnz	short loc_C33A
-		cmp	word ptr _continues_total, 10h
-		ja	short loc_C33F
-
-loc_C33A:
-		sub	si, 4
-		jmp	short loc_C36C
-; ---------------------------------------------------------------------------
-
-loc_C33F:
-		cmp	word ptr _continues_total+2, 0
-		jg	short loc_C354
-		jnz	short loc_C34F
-		cmp	word ptr _continues_total, 12h
-		ja	short loc_C354
-
-loc_C34F:
-		sub	si, 6
-		jmp	short loc_C36C
-; ---------------------------------------------------------------------------
-
-loc_C354:
-		cmp	word ptr _continues_total+2, 0
-		jg	short loc_C369
-		jnz	short loc_C364
-		cmp	word ptr _continues_total, 14h
-		ja	short loc_C369
-
-loc_C364:
-		sub	si, 8
-		jmp	short loc_C36C
-; ---------------------------------------------------------------------------
-
-loc_C369:
-		sub	si, 0Ah
-
-loc_C36C:
-		cmp	_rank, RANK_LUNATIC
-		jnz	short loc_C378
-		add	si, 32h	; '2'
-		jmp	short loc_C39A
-; ---------------------------------------------------------------------------
-
-loc_C378:
-		cmp	_rank, RANK_HARD
-		jnz	short loc_C384
-		add	si, 1Eh
-		jmp	short loc_C39A
-; ---------------------------------------------------------------------------
-
-loc_C384:
-		cmp	_rank, RANK_NORMAL
-		jnz	short loc_C390
-		add	si, 0Ah
-		jmp	short loc_C39A
-; ---------------------------------------------------------------------------
-
-loc_C390:
-		cmp	_rank, RANK_EASY
-		jnz	short loc_C39A
-		sub	si, 0Ah
-
-loc_C39A:
-		cmp	_end_flag, 2
-		jnz	short loc_C3A4
-		add	si, 5
-
-loc_C3A4:
-		mov	al, _start_lives_extra
-		cbw
-		cmp	ax, 4
-		jnz	short loc_C3B2
-		sub	si, 0Ah
-		jmp	short loc_C3D8
-; ---------------------------------------------------------------------------
-
-loc_C3B2:
-		mov	al, _start_lives_extra
-		cbw
-		cmp	ax, 3
-		jnz	short loc_C3C0
-		sub	si, 5
-		jmp	short loc_C3D8
-; ---------------------------------------------------------------------------
-
-loc_C3C0:
-		mov	al, _start_lives_extra
-		cbw
-		cmp	ax, 1
-		jnz	short loc_C3CE
-		add	si, 5
-		jmp	short loc_C3D8
-; ---------------------------------------------------------------------------
-
-loc_C3CE:
-		cmp	_start_lives_extra, 0
-		jnz	short loc_C3D8
-		add	si, 0Ah
-
-loc_C3D8:
-		call	IRand
-		mov	bx, 3
-		cwd
-		idiv	bx
-		mov	[bp+var_2], dx
-		cmp	si, 50h	; 'P'
-		jl	short loc_C3F0
-		mov	di, 5
-		jmp	short loc_C419
-; ---------------------------------------------------------------------------
-
-loc_C3F0:
-		cmp	si, 3Ch	; '<'
-		jl	short loc_C3FA
-		mov	di, 4
-		jmp	short loc_C419
-; ---------------------------------------------------------------------------
-
-loc_C3FA:
-		cmp	si, 28h	; '('
-		jl	short loc_C404
-		mov	di, 3
-		jmp	short loc_C419
-; ---------------------------------------------------------------------------
-
-loc_C404:
-		cmp	si, 14h
-		jl	short loc_C40E
-		mov	di, 2
-		jmp	short loc_C419
-; ---------------------------------------------------------------------------
-
-loc_C40E:
-		or	si, si
-		jl	short loc_C417
-		mov	di, 1
-		jmp	short loc_C419
-; ---------------------------------------------------------------------------
-
-loc_C417:
-		xor	di, di
-
-loc_C419:
-		mov	bx, [bp+var_2]
-		imul	bx, 18h
-		mov	ax, di
-		shl	ax, 2
-		add	bx, ax
-		call	_graph_printf_fx c, 488, 384, 12h, offset aS_1, ds, word ptr _VERDICT_TITLES[bx], word ptr _VERDICT_TITLES[bx]+2 ; "%s"
-		pop	di
-		pop	si
-		leave
-		retf
-sub_C1A8	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C446	proc far
-
-var_10		= byte ptr -10h
-
-		enter	10h, 0
-		push	si
-		lea	ax, [bp+var_10]
-		push	ss
-		push	ax
-		push	ds
-		push	offset off_12EC0
-		mov	cx, 10h
-		call	SCOPY@
-		call	grp_palette_black_out pascal, 10
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		call	_grp_put_palette_show c, offset aEndm_a_grp, ds	; "endm_a.grp"
-		call	_graph_copy_page_back_to_front
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		call	grp_palette_black_in pascal, 8
-		call	graph_type_kanji pascal, 400, 32, 5, ds, offset aUmx_1	; "東方靈異伝"
-		call	graph_type_ank pascal, 496, 32, 3, ds, offset aVer	; "ver"
-		call	graph_type_ank pascal, 528, 32, 4, ds, offset a1_10	; "1.10"
-		call	_frame_delay stdcall, 30
-		pop	cx
-		mov	al, _rank
-		mov	ah, 0
-		shl	ax, 2
-		lea	dx, [bp+var_10]
-		add	ax, dx
-		mov	bx, ax
-		call	_graph_printf_fx c, 296, 64, 0Fh, offset aUqiUxb@b@b@b@b, ds, word ptr ss:[bx], word ptr ss:[bx+2]	; "難易度　　　　　　　　　　  %s"
-		call	_frame_delay stdcall, 30
-		pop	cx
-		call	_graph_printf_fx c, 296, 96, 0Fh, offset aNbi, ds, word ptr _score_highest, word ptr _score_highest+2	; "今回の最高得点　　　　　　  %7lu"
-		call	_frame_delay stdcall, 30
-		pop	cx
-		call	_graph_printf_fx c, 296, 128, 0Fh, offset aNPiuU_b@b@b@b@, ds, word ptr _score, word ptr _score+2	; "最終得点　　　　　　　　　  %7lu"
-		call	_frame_delay stdcall, 30
-		pop	cx
-		call	_graph_printf_fx c, 296, 160, 0Fh, offset aGrgugegbgjgebI, ds	; "コンティニュー回数"
-		call	_frame_delay stdcall, 30
-		pop	cx
-		call	_graph_printf_fx c, 296, 192, 0Fh, offset aB@r_oB@b@b@b@b, ds, word ptr _continues_per_scene[0 * dword], word ptr _continues_per_scene[0 * dword] + 2	; "　神社　　　　（１面～５面） 　 %3lu"
-		call	_frame_delay stdcall, 30
-		pop	cx
-		cmp	_end_flag, 1
-		jnz	short loc_C590
-		push	word ptr _continues_per_scene[1 * dword] + 2
-		push	word ptr _continues_per_scene[1 * dword]
-		push	ds
-		push	offset aB@gqbGgb@b@b@b ; "　ゲート　　　（６面～１０面）  %3lu"
-		jmp	short loc_C59C
-; ---------------------------------------------------------------------------
-
-loc_C590:
-		push	word ptr _continues_per_scene[1 * dword] + 2
-		push	word ptr _continues_per_scene[1 * dword]
-		push	ds
-		push	offset aB@tkb@b@b@b@b@ ; "　祠　　　　　（６面～１０面）  %3lu"
-
-loc_C59C:
-		push	0Fh
-		push	224
-		push	296
-		call	_graph_printf_fx
-		add	sp, 0Eh
-		call	_frame_delay stdcall, 30
-		pop	cx
-		cmp	_end_flag, 1
-		jnz	short loc_C5C9
-		push	word ptr _continues_per_scene[2 * dword] + 2
-		push	word ptr _continues_per_scene[2 * dword]
-		push	ds
-		push	offset aGfgbgivFpBivpv ; "  ヴィナの廃墟（１１面～１５面）%3lu"
-		jmp	short loc_C5D5
-; ---------------------------------------------------------------------------
-
-loc_C5C9:
-		push	word ptr _continues_per_scene[2 * dword] + 2
-		push	word ptr _continues_per_scene[2 * dword]
-		push	ds
-		push	offset aB@ikvXekeb@b@b ; "　炎の腐界　　（１１面～１５面）%3lu"
-
-loc_C5D5:
-		push	0Fh
-		push	256
-		push	296
-		call	_graph_printf_fx
-		add	sp, 0Eh
-		call	_frame_delay stdcall, 30
-		pop	cx
-		cmp	_end_flag, 1
-		jnz	short loc_C602
-		push	word ptr _continues_per_scene[3 * dword] + 2
-		push	word ptr _continues_per_scene[3 * dword]
-		push	ds
-		push	offset aSVVVsr_uabivpv ; "  堕ちたる神殿（１５面～２０面）%3lu"
-		jmp	short loc_C60E
-; ---------------------------------------------------------------------------
-
-loc_C602:
-		push	word ptr _continues_per_scene[3 * dword] + 2
-		push	word ptr _continues_per_scene[3 * dword]
-		push	ds
-		push	offset aB@rVivVsr_uabi ; "　静かなる神殿（１５面～２０面）%3lu"
-
-loc_C60E:
-		push	0Fh
-		push	288
-		push	296
-		call	_graph_printf_fx
-		add	sp, 0Eh
-		call	_frame_delay stdcall, 30
-		pop	cx
-		cmp	_end_flag, 1
-		jnz	short loc_C63B
-		push	word ptr _continues_total+2
-		push	word ptr _continues_total
-		push	ds
-		push	offset aCvkeglbGgsnnzb ; "  魔界ルート総合　　　　　　	%5lu"
-		jmp	short loc_C647
-; ---------------------------------------------------------------------------
-
-loc_C63B:
-		push	word ptr _continues_total+2
-		push	word ptr _continues_total	; arglist
-		push	ds
-		push	offset aB@tnncglbGgsnn ; "　地獄ルート総合　　　　　　　%5lu"
-
-loc_C647:
-		push	0Fh
-		push	320
-		push	296
-		call	_graph_printf_fx
-		add	sp, 0Eh
-		call	_frame_delay stdcall, 30
-		pop	cx
-		call	graph_type_ank pascal, 296, 352, 29, ds, offset aThankYouForPla ; "    Thank you for Playing !! "
-		call	_graph_printf_fx c, 264, 384, 12h, offset aBBBVavVVPNjbBB, ds	; "★★★あなたの称号★★★"
-		call	_frame_delay stdcall, 50
-		pop	cx
-		call	sub_C1A8
-		xor	si, si
-		call	_frame_delay stdcall, 100
-		pop	cx
-		call	_input_reset_sense
-		jmp	short loc_C6B1
-; ---------------------------------------------------------------------------
-
-loc_C6A1:
-		call	_input_sense stdcall, 0
-		pop	cx
-		call	_frame_delay stdcall, 1
-		pop	cx
-
-loc_C6B1:
-		mov	ax, si
-		inc	si
-		cmp	ax, 2000
-		jge	short loc_C6C7
-		cmp	_input_ok, 0
-		jnz	short loc_C6C7
-		cmp	_input_shot, 0
-		jz	short loc_C6A1
-
-loc_C6C7:
-		push	1
-		call	_graph_accesspage_func
-		pop	cx
-		call	_graph_copy_page_back_to_front
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		call	grp_palette_settone pascal, 50
-		mov	_z_Palettes[3 * 3].r, 07h
-		mov	_z_Palettes[3 * 3].g, 0Fh
-		mov	_z_Palettes[3 * 3].b, 07h
-		mov	_z_Palettes[7 * 3].r, 0Fh
-		mov	_z_Palettes[7 * 3].g, 0Fh
-		mov	_z_Palettes[7 * 3].b, 0Fh
-		call	_z_palette_set_all_show c, offset _z_Palettes, ds
-		cmp	_end_flag, 1
-		jnz	short loc_C71C
-		push	ds
-		push	offset aKo	; "完"
-		push	SCOREDAT_CLEARED_MAKAI
-		jmp	short loc_C722
-; ---------------------------------------------------------------------------
-
-loc_C71C:
-		push	ds
-		push	offset aKo_0	; "完"
-		push	SCOREDAT_CLEARED_JIGOKU
-
-loc_C722:
-		push	word ptr _score+2
-		push	word ptr _score
-		call	_regist
-		add	sp, 0Ah
-		call	_end_resident_clear
-		pop	si
-		leave
-		retf
-sub_C446	endp
-
+	@end_bad$qv procdesc near
+	@end_good$qv procdesc near
+	@boss_slides_animate$qv procdesc near
+	extern @verdict_animate_and_regist$qv:proc
 fuuin_03_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
 fuuin_04_TEXT	segment	byte public 'CODE' use16
-	extern END_PICS_LOAD_PALETTE_SHOW:proc
-	extern _end_pic_show:proc
+	extern @END_PICS_LOAD_PALETTE_SHOW$QNXC:proc
+	extern @end_pic_show$qi:proc
 	extern _frame_delay:proc
-	extern GRP_PALETTE_SETTONE:proc
-	extern GRP_PALETTE_BLACK_OUT:proc
-	extern GRP_PALETTE_BLACK_IN:proc
-	extern GRP_PALETTE_WHITE_OUT:proc
-	extern GRP_PALETTE_WHITE_IN:proc
-	extern GRAPH_TYPE_ANK:proc
-	extern GRAPH_TYPE_KANJI:proc
+	extern @GRP_PALETTE_SETTONE$QI:proc
+	extern @GRP_PALETTE_BLACK_OUT$QUI:proc
+	extern @GRP_PALETTE_BLACK_IN$QUI:proc
+	extern @GRP_PALETTE_WHITE_OUT$QUI:proc
+	extern @GRP_PALETTE_WHITE_IN$QUI:proc
 fuuin_04_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-fuuin_05_TEXT	segment	byte public 'CODE' use16
-	extern _vsync_init:proc
-	extern _vsync_exit:proc
-	extern _z_vsync_wait:proc
-fuuin_05_TEXT	ends
+vsync_TEXT	segment	byte public 'CODE' use16
+vsync_TEXT	ends
 
 ; ===========================================================================
 
-fuuin_06_TEXT	segment	byte public 'CODE' use16
-	extern _z_text_init:proc
-	extern _z_text_25line:proc
-	extern _z_text_setcursor:proc
-	extern _z_text_clear:proc
-	extern _z_text_show:proc
-	extern _z_text_print:proc
-fuuin_06_TEXT	ends
+ztext_TEXT	segment	byte public 'CODE' use16
+ztext_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-fuuin_07_TEXT	segment	byte public 'CODE' use16
+initexit_TEXT	segment	byte public 'CODE' use16
 	extern _game_init:proc
 	extern _game_switch_binary:proc
-fuuin_07_TEXT	ends
+initexit_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-fuuin_08_TEXT	segment	byte public 'CODE' use16
-	extern _z_graph_exit:proc
-	extern _graph_showpage_func:proc
+graph_TEXT	segment	byte public 'CODE' use16
 	extern _graph_accesspage_func:proc
-	extern _z_palette_set_all_show:proc
-	extern _z_palette_set_show:proc
 	extern _z_graph_clear:proc
-	extern _z_graph_clear_0:proc
-	extern _graph_copy_page_back_to_front:proc
-	extern _z_palette_black:proc
-	extern _z_palette_black_out:proc
-	extern _graph_putsa_fx:proc
-	extern _graph_move_byterect_interpage:proc
-	extern _z_respal_set:proc
-fuuin_08_TEXT	ends
+graph_TEXT	ends
+
+; ===========================================================================
+
+grppffx_TEXT	segment	byte public 'CODE' use16
+grppffx_TEXT	ends
+
+; ===========================================================================
+
+PTN_GRP_GRZ	segment	byte public 'CODE' use16
+PTN_GRP_GRZ	ends
+
+; ===========================================================================
+
+SHARED	segment	byte public 'CODE' use16
+SHARED	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-fuuin_09_TEXT	segment	byte public 'CODE' use16
-	extern _graph_printf_fx:proc
-fuuin_09_TEXT	ends
+GRAPH_EX_TEXT	segment	byte public 'CODE' use16
+GRAPH_EX_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-fuuin_10_TEXT	segment	byte public 'CODE' use16
-	extern _grp_put_palette_show:proc
-fuuin_10_TEXT	ends
-
-; ===========================================================================
-
-fuuin_11_TEXT	segment	byte public 'CODE' use16
-	extern VRAM_PLANES_SET:proc
-fuuin_11_TEXT	ends
-
-; ===========================================================================
-
-; Segment type:	Pure code
-fuuin_12_TEXT	segment	byte public 'CODE' use16
-fuuin_12_TEXT	ends
-
-; ===========================================================================
-
-; Segment type:	Pure code
-fuuin_13_TEXT	segment	byte public 'CODE' use16
+mdrv2_TEXT	segment	byte public 'CODE' use16
 	extern _mdrv2_resident:proc
 	extern _mdrv2_bgm_load:proc
-	extern _mdrv2_se_load:proc
 	extern _mdrv2_bgm_play:proc
 	extern _mdrv2_bgm_stop:proc
 	extern _mdrv2_bgm_fade_out_nonblock:proc
 	extern _mdrv2_check_board:proc
-	extern _mdrv2_se_play:proc
-fuuin_13_TEXT	ends
+mdrv2_TEXT	ends
 
 	.data
 
@@ -1674,6 +498,7 @@ include th01/hiscore/regist_name[data].asm
 include th01/hardware/grppfnfx[data].asm
 include th01/hiscore/scorelod[data].asm
 include th01/hiscore/regist[data].asm
+public _VERDICT_TITLES
 _VERDICT_TITLES label dword
 		dd aB@gvguglbB@		; "　モンキー　"
 		dd aB@cRlio		; "　類人猿"
@@ -1693,29 +518,35 @@ _VERDICT_TITLES label dword
 		dd aRvkeo		; "世界樹の葉"
 		dd aIitsluucr_tomo	; "黄帝九鼎神丹経"
 		dd aB@gagagkg		; "　アムリタ"
-off_12EC0	dd aEasy
-					; " EASY "
-		dd aNormal		; "NORMAL"
-		dd aHard		; " HARD "
-		dd aLunatic		; "LUNATIC"
+public _ranks
+_ranks	label dword
+	dd DGROUP:0763h
+	dd DGROUP:076Ah
+	dd DGROUP:0771h
+	dd DGROUP:0778h
+
+; Group 0
 aB@gvguglbB@	db '　モンキー　',0
 aB@cRlio	db '　類人猿',0
 aGzgvgtgsgggugx	db 'ホモサピエンス',0
 aB@tRl		db '　超人',0
 aB@sR_b@	db '　靈神　',0
 aB@r_v		db '　神を超越',0
+; Group 1
 aVioqclgqbGB	db 'お子様ゲーマー',0
 aOcf		db '似非スコアラー',0
 aGGhglgxgrgagib	db 'ミドルスコアラー',0
 aGngcgxgrgagib	db 'ハイスコアラー',0
 aGxbGpbGqbGB	db 'スーパーゲーマー',0
 aGqbGBV		db 'ゲーマーを超越',0
+; Group 2
 aXevVVViv	db '腐ったみかん',0
 aGugbgnbGavO	db 'ザックームの実',0
 aLTfvCMc	db '禁断の林檎',0
 aRvkeo		db '世界樹の葉',0
 aIitsluucr_tomo	db '黄帝九鼎神丹経',0
 aB@gagagkg	db '　アムリタ',0
+
 ; char aIris_mdt[]
 aIris_mdt	db 'iris.mdt',0
 aEd1a_grp	db 'ED1A.grp',0
@@ -1725,99 +556,48 @@ aEd1d_grp	db 'ED1D.GRP',0
 aEd1e_grp	db 'ED1E.GRP',0
 ; char aSt1_mdt[]
 aSt1_mdt	db 'st1.mdt',0
-aEd2a_grp	db 'ed2a.grp',0
-aTryToNoContinu	db 'Try to ',27h,'No continue',27h,'!!',0
-aBadEnding2	db '      Bad Ending2     ',0
-aEd4a_grp	db 'ed4a.grp',0
-aTryToNoConti_0	db 'Try to ',27h,'No continue',27h,'!!',0
-aBadEnding1	db '      Bad Ending1     ',0
-aEd3a_grp	db 'ed3a.grp',0
-aEd3b_grp	db 'ed3b.grp',0
-aCongratulation	db 'Congratulations!',0
-aGoodEnding2	db '     Good Ending2     ',0
-aEd5a_grp	db 'ed5a.grp',0
-aEd5b_grp	db 'ed5b.grp',0
-aEd5c_grp	db 'ed5c.grp',0
-aCongratulati_0	db 'Congratulations!',0
-aGoodEnding1	db '     Good Ending1     ',0
-; char aSt1_mdt_0[]
-aSt1_mdt_0	db 'st1.mdt',0
-aEndb_a_grp	db 'endb_a.grp',0
-aEndb_b_grp	db 'endb_b.grp',0
-aStage5Boss	db 'STAGE 5 BOSS',0
-aGatekeeperSing	db 'Gatekeeper ',27h,'SinGyoku',27h,0
-aStage10Boss	db 'STAGE 10 BOSS',0
-aEvileyesYuugen	db 'EvilEyes ',27h,'YuugenMagan',27h,0
-aStage10Boss_0	db 'STAGE 10 BOSS',0
-aRevengefulGhos	db 'Revengeful Ghost ',27h,'Mima',27h,0
-aStage15Boss	db 'STAGE 15 BOSS',0
-aInnocenceDevil	db 'Innocence Devil ',27h,'Elis',27h,0
-aStage15Boss_0	db 'STAGE 15 BOSS',0
-aHellmoonKikuri	db 'HellMoon ',27h,'Kikuri',27h,0
-aStage20Boss	db 'STAGE 20 BOSS',0
-aAngelOfDeathSa	db 'Angel of Death',27h,'Sariel',27h,0
-aStage20Boss_0	db 'STAGE 20 BOSS',0
-aAstralKnightKo	db 'Astral Knight ',27h,'Konngara',27h,0
-; char aS_1[]
-aS_1		db '%s',0
-aEasy		db ' EASY ',0
-aNormal		db 'NORMAL',0
-aHard		db ' HARD ',0
-aLunatic	db 'LUNATIC',0
-aEndm_a_grp	db 'endm_a.grp',0
-aUmx_1		db '東方靈異伝',0
-aVer		db 'ver',0
-a1_10		db '1.10',0
-; char aUqiUxb[]
-aUqiUxb@b@b@b@b	db '難易度　　　　　　　　　　  %s',0
-; char aNbi[3]
-aNbi		db '今回の最高得点　　　　　　  %7lu',0
-; char aNPiuU_b[]
-aNPiuU_b@b@b@b@	db '最終得点　　　　　　　　　  %7lu',0
-; char aGrgugegbgjgebI[15]
-aGrgugegbgjgebI	db 'コンティニュー回数',0
-; char aB[]
-aB@r_oB@b@b@b@b	db '　神社　　　　（１面～５面） 　 %3lu',0
-aB@gqbGgb@b@b@b	db '　ゲート　　　（６面～１０面）  %3lu',0
-; char aB[]
-aB@tkb@b@b@b@b@	db '　祠　　　　　（６面～１０面）  %3lu',0
-aGfgbgivFpBivpv	db '  ヴィナの廃墟（１１面～１５面）%3lu',0
-; char aB[]
-aB@ikvXekeb@b@b	db '　炎の腐界　　（１１面～１５面）%3lu',0
-aSVVVsr_uabivpv	db '  堕ちたる神殿（１５面～２０面）%3lu',0
-; char aB[]
-aB@rVivVsr_uabi	db '　静かなる神殿（１５面～２０面）%3lu',0
-aCvkeglbGgsnnzb	db '  魔界ルート総合　　　　　　  %5lu',0
-; char aB[]
-aB@tnncglbGgsnn	db '　地獄ルート総合　　　　　　　%5lu',0
-aThankYouForPla	db '    Thank you for Playing !! ',0
-; char aBBBVavVVPNjbBB[]
-aBBBVavVVPNjbBB	db '★★★あなたの称号★★★',0
-aKo		db '完',0
-aKo_0		db '完',0
-		db 0
-include th01/end/type[data].asm
-include th01/hardware/vsync[data].asm
-include th01/hardware/ztext[data].asm
-include th01/core/initexit[data].asm
-include th01/hardware/palette[data].asm
-include th01/hardware/graph_r[data].asm
-include th01/hardware/respal[data].asm
-include th01/formats/grp_ptn[data].asm
-include th01/snd/mdrv2[data].asm
-include libs/master.lib/version[data].asm
-include libs/master.lib/grp[data].asm
-include libs/master.lib/pal[data].asm
-include libs/master.lib/respal_exist[data].asm
-include libs/master.lib/resdata[data].asm
-include libs/master.lib/fil[data].asm
-include libs/master.lib/dos_ropen[data].asm
-include libs/master.lib/clip[data].asm
-include libs/master.lib/rand[data].asm
+
+	; th01/hardware/palette[data].asm
+	extern _z_Palettes:rgb_t:COLOR_COUNT
+
+	; libs/master.lib/grp[data].asm
+	extern graph_VramSeg:word
+	extern graph_VramWords:word
+	extern graph_VramLines:word
+	extern graph_VramZoom:word
+
+	; libs/master.lib/pal[data].asm
+	extern PaletteTone:word
+	extern PalettesInit:rgb_t:COLOR_COUNT
+	extern PaletteNote:word
+	extern ResPalSeg:word
+
+	; libs/master.lib/respal_exist[data].asm
+IDLEN EQU 10
+	extern ResPalID:byte:IDLEN
+
+	; libs/master.lib/fil[data].asm
+	extern file_BufferSize:word
+	extern file_Handle:word
+
+	; libs/master.lib/dos_ropen[data].asm
+	extern file_sharingmode:word
+
+	; libs/master.lib/clip[data].asm
+	extern ClipXL:word
+	extern ClipXW:word
+	extern ClipXR:word
+	extern ClipYT:word
+	extern ClipYH:word
+	extern ClipYB:word
+	extern ClipYT_seg:word
+	extern ClipYB_adr:word
+
+	; libs/master.lib/rand[data].asm
+	extern random_seed:dword
 
 	.data?
 
-; TODO: Missing clip[bss].asm (16 bytes) somewhere in there...
 public _continues_total, _continues_per_scene
 _continues_total	dd ?
 _continues_per_scene	dd SCENE_COUNT dup(?)
@@ -1843,6 +623,6 @@ include th01/formats/grp_buf[bss].asm
 include th01/hardware/vram_planes[bss].asm
 include libs/master.lib/pal[bss].asm
 include libs/master.lib/fil[bss].asm
-		db 16 dup (?)
+include libs/master.lib/clip[bss].asm
 
 		end

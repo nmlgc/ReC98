@@ -15,12 +15,11 @@
 ; OS type	  :  MS	DOS
 ; Application type:  Executable	16bit
 
-		.286 ; Force the .model directive to create 16-bit default segments...
-		.model tiny
-		.386 ; ... then switch to what we actually need.
-		; And yes, we can't move this to an include file for some reason.
+		.386
+		.model use16 tiny
 
 include libs/master.lib/macros.inc
+include th01/hardware/egc.inc
 
 ; ===========================================================================
 
@@ -1928,15 +1927,7 @@ sub_BD0		proc near
 		push	ax
 		push	dx
 		cli
-		mov	al, 7
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 5
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 6
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
+		graph_egc	1
 		GRCG_SETMODE_VIA_MOV al, GC_TDW
 		outw	EGC_ACTIVEPLANEREG, 0FFF0h
 		outw	EGC_READPLANEREG, 0FFh
@@ -1963,15 +1954,7 @@ sub_C10		proc near
 		outw	EGC_ACTIVEPLANEREG, 0FFF0h
 		outw	EGC_READPLANEREG, 0FFh
 		outw	EGC_MASKREG, 0FFFFh
-		mov	al, 7
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 4
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
-		mov	al, 6
-		out	6Ah, al		; PC-98	GDC (6a):
-					;
+		graph_egc	0
 		GRCG_OFF_VIA_XOR al
 		sti
 		pop	dx

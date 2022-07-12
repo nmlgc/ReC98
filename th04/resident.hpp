@@ -1,6 +1,6 @@
 #define RES_ID "HUMAConfig"
 typedef struct {
-	char id[RES_ID_LEN];
+	char id[sizeof(RES_ID)];
 	unsigned char rem_lives;
 	unsigned char credit_lives;
 	unsigned char rem_bombs;
@@ -51,6 +51,8 @@ typedef struct {
 	unsigned long slow_frames;
 	unsigned long frames;	// (including bosses, see th04/frames.h)
 	bool zunsoft_shown;
-	unsigned char turbo_mode;
+	bool turbo_mode;
 	int8_t unused_5[182];
 } resident_t;
+
+extern resident_t far *resident;

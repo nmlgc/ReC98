@@ -3,16 +3,20 @@
  * Code segment #1 of TH01's OP.EXE
  */
 
-#pragma option -Z
-
-extern "C" {
+#include <mem.h>
 #include <stdio.h>
-#include "ReC98.h"
-#include "th01/ranks.h"
+#include "platform.h"
+#include "x86real.h"
+#include "pc98.h"
+#include "planar.h"
+#include "pc98kbd.h"
+#include "master.hpp"
+#include "th01/rank.h"
 #include "th01/hardware/egc.h"
+extern "C" {
+#include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/input.hpp"
-#include "th01/hardware/vsync.h"
 #include "th01/formats/cfg.hpp"
 
 // Unused. The only thing on the main menu with this color is the "1996 ZUN"
@@ -20,14 +24,14 @@ extern "C" {
 void snap_col_4(void)
 {
 	extern dots8_t* columns[ROW_SIZE];
-	register int x;
-	register int y;
-	int vram_offset;
+	register vram_x_t x;
+	register screen_y_t y;
+	vram_offset_t vram_offset;
 
 	for(x = 0; x < ROW_SIZE; x++) {
 		columns[x] = new dots8_t[RES_Y];
 	}
-	grcg_setcolor_tdw(4);
+	grcg_setcolor_tcr(4);
 	graph_accesspage_func(1);
 
 	for(x = 0; x < ROW_SIZE; x++) {
@@ -58,7 +62,7 @@ void cfg_load(void)
 	bool read_failure = false;
 	FILE* fp;
 
-	if(( fp = fopen(CFG_FN, FOPEN_RB) ) == NULL) {
+	if(( fp = fopen(CFG_FN, FOPEN_RB) ) == nullptr) {
 use_defaults:
 		read_failure = true;
 	}
@@ -86,7 +90,7 @@ void cfg_save(void)
 	bool write_failure = false;
 	FILE* fp;
 
-	if(( fp = fopen(CFG_FN, FOPEN_WB) ) == NULL) {
+	if(( fp = fopen(CFG_FN, FOPEN_WB) ) == nullptr) {
 		write_failure = true;
 	}
 	if(!write_failure) {
@@ -136,15 +140,13 @@ extern bool input_cancel;
 extern bool input_right;
 extern unsigned char option_rows;
 
-inline void keygroup_sense(REGS& out, REGS& in, char group_id)
-{
+inline void keygroup_sense(REGS& out, REGS& in, char group_id) {
 	in.h.ah = 0x04;
 	in.h.al = group_id;
 	int86(0x18, &in, &out);
 }
 
-inline void ok_shot_cancel_sense(REGS& out, REGS& in)
-{
+inline void ok_shot_cancel_sense(REGS& out, REGS& in) {
 	keygroup_sense(out, in, 3);
 	input_update_bool(input_ok, (out.h.ah & K3_RETURN));
 
@@ -217,17 +219,17 @@ void option_input_sense(void)
 
 /// White line animation
 /// --------------------
-void whiteline_put(int y)
+void whiteline_put(screen_y_t y)
 {
-	size_t vram_offset = vram_offset_shift(0, y);
-	int x;
+	vram_offset_t vram_offset = vram_offset_shift(0, y);
+	vram_dword_amount_t x;
 
 	grcg_setcolor_rmw(15);
 	x = 0;
 	while(x < (ROW_SIZE / sizeof(dots32_t))) {
-		VRAM_CHUNK(B, vram_offset, 32) = 0xFFFFFFFF;
+		egc_put(vram_offset, 0xFFFFFFFF, 32);
 		x++;
-		vram_offset += sizeof(dots32_t);
+		vram_offset += static_cast<vram_offset_t>(sizeof(dots32_t));
 	}
 	grcg_off();
 }
@@ -240,12 +242,12 @@ void whitelines_animate(void)
 	extern const hack WHITELINES_DRAWN_AT;
 
 	unsigned int i = 0;
-	int y1 = 0;
-	int y2 = 0;
+	screen_y_t y1 = 0;
+	screen_y_t y2 = 0;
 	hack drawn_at = WHITELINES_DRAWN_AT;
 	while(i++ < (RES_Y / 4)) {
-		egc_copy_rect_1_to_0(0, y1, RES_X, 1);
-		egc_copy_rect_1_to_0(0, y2, RES_X, 1);
+		egc_copy_rect_1_to_0_16(0, y1, RES_X, 1);
+		egc_copy_rect_1_to_0_16(0, y2, RES_X, 1);
 
 		do {
 			y1 = (rand() % RES_Y);
@@ -262,7 +264,7 @@ void whitelines_animate(void)
 		frame_delay(1);
 	}
 	graph_accesspage_func(1);
-	graph_copy_page_back_to_front();
+	graph_copy_accessed_page_to_other();
 	graph_accesspage_func(0);
 }
 /// --------------------

@@ -1,9 +1,13 @@
-extern "C" {
+#pragma option -zCPTN_GRP_GRZ
 
+#include <mem.h>
 #include <stddef.h>
-#include <string.h>
-
-#include "ReC98.h"
+#include "platform.h"
+#include "x86real.h"
+#include "pc98.h"
+#include "planar.h"
+#include "master.hpp"
+extern "C" {
 #include "th01/hardware/graph.h"
 #include "th01/formats/grz.h"
 
@@ -13,7 +17,7 @@ extern const char HGRX_MAGIC[4];
 extern char planar_stream_id;
 extern char grx_col;
 extern uint8_t* rle_streams[GRX_COUNT];
-// Actually a planar8_t*, but used like a dots8_t* everywhere.
+// Actually a Planar<dots8_t*>, but used like a dots8_t* everywhere.
 extern dots8_t* planar_streams[GRX_COUNT][PLANAR_STREAM_PER_GRX_COUNT];
 extern unsigned char planar_stream_count[GRX_COUNT];
 
@@ -52,11 +56,6 @@ void grx_put_col(unsigned int slot, uint4_t col)
 	grx_col = 0;
 }
 
-inline void vram_put(seg_t segment, uint16_t offset, dots8_t dots)
-{
-	*reinterpret_cast<dots8_t far *>(MK_FP(segment, offset)) = dots;
-}
-
 void grx_put(unsigned int slot)
 {
 	uint8_t command;
@@ -66,18 +65,24 @@ void grx_put(unsigned int slot)
 
 #define put(vram_offset, vram_offset_last, planar) \
 	if(!grx_col) { \
-		vram_put(SEG_PLANE_B, vram_offset, *(planar++)); \
-		vram_put(SEG_PLANE_R, vram_offset, *(planar++)); \
-		vram_put(SEG_PLANE_G, vram_offset, *(planar++)); \
-		vram_put(SEG_PLANE_E, vram_offset_last, *(planar++)); \
+		pokeb(SEG_PLANE_B, vram_offset, *(planar++)); \
+		pokeb(SEG_PLANE_R, vram_offset, *(planar++)); \
+		pokeb(SEG_PLANE_G, vram_offset, *(planar++)); \
+		pokeb(SEG_PLANE_E, vram_offset_last, *(planar++)); \
 	} else { \
-		vram_put(SEG_PLANE_B, vram_offset_last, 0xFF); \
+		pokeb(SEG_PLANE_B, vram_offset_last, 0xFF); \
 	}
 
 	if(grx_col) {
 		grcg_setcolor_rmw(grx_col - 1);
 	}
-	for(uint16_t vram_offset = 0; vram_offset < PLANE_SIZE; vram_offset++) {
+	uvram_offset_t vram_offset;
+	for(vram_offset = 0; vram_offset < PLANE_SIZE; vram_offset++) {
+		// Effectively the same algorithm as used for .GRF files, except for
+		// • the fixed RLE run command byte, and
+		// • adding another wasteful byte to define whether a run should put
+		//   actually the next bytes from the planar stream, or just skip over
+		//   them.
 		command = *(rle++);
 		if(command == GC_RUN) {
 			runs = *(rle++);
@@ -122,7 +127,7 @@ void grx_put(unsigned int slot)
 	if(rle_streams[slot]) { \
 		grx_free(slot); \
 	} \
-	fail_if((rle_streams[slot] = new uint8_t[size]) == NULL);
+	fail_if((rle_streams[slot] = new uint8_t[size]) == nullptr);
 
 #define rle_stream_read(slot, size) \
 	file_read(rle_streams[slot], size);
@@ -132,7 +137,7 @@ void grx_put(unsigned int slot)
 		if(planar_streams[slot][i]) { \
 			grx_free(slot); \
 		} \
-		fail_if((planar_streams[slot][i] = new uint8_t[size]) == NULL); \
+		fail_if((planar_streams[slot][i] = new uint8_t[size]) == nullptr); \
 	}
 
 #define planar_streams_read(slot, stream_count, size) \
@@ -193,12 +198,12 @@ void grx_free(unsigned int slot)
 {
 	if(rle_streams[slot]) {
 		delete[] rle_streams[slot];
-		rle_streams[slot] = NULL;
+		rle_streams[slot] = nullptr;
 	}
 	for(int i = 0; i < PLANAR_STREAM_PER_GRX_COUNT; i++) {
 		if(planar_streams[slot][i]) {
 			delete[] planar_streams[slot][i];
-			planar_streams[slot][i] = NULL;
+			planar_streams[slot][i] = nullptr;
 		}
 	}
 }

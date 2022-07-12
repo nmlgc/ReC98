@@ -21,7 +21,7 @@ scoredat_recreate_op	proc near
 	mov	bx, si
 	shl	bx, 3
 	add	bx, [bp+@@i]
-	mov	_hi.score.g_points[bx], gb_0_
+	mov	_hi.score.g_score[bx], gb_0_
 	inc	[bp+@@i]
 
 @@digit_zero_more?:
@@ -31,7 +31,7 @@ scoredat_recreate_op	proc near
 	jnz	short @@not_first_place
 	mov	bx, si
 	shl	bx, 3
-	mov	_hi.score.g_points[bx][6], gb_1_
+	mov	_hi.score.g_score[bx][6], gb_1_
 	jmp	short @@set_name
 ; ---------------------------------------------------------------------------
 
@@ -39,7 +39,7 @@ scoredat_recreate_op	proc near
 	mov	bx, si
 	shl	bx, 3
 	mov	al, [bp+@@digit]
-	mov	_hi.score.g_points[bx][5], al
+	mov	_hi.score.g_score[bx][5], al
 	add	al, -2
 	mov	[bp+@@digit], al
 
@@ -66,7 +66,7 @@ scoredat_recreate_op	proc near
 @@places_more?:
 	cmp	si, SCOREDAT_PLACES
 	jl	short @@place_loop
-	call	file_create pascal, ds, offset aGensou_scr ; "GENSOU.SCR"
+	call	file_create pascal, ds, offset _SCOREDAT_FN ; "GENSOU.SCR"
 	xor	si, si
 	jmp	short @@sections_more?
 ; ---------------------------------------------------------------------------

@@ -1,10 +1,11 @@
 #include "th04/sprites/cels.h"
 
-/// Stage-independent pattern numbers for the super_*() functions
-/// -------------------------------------------------------------
+/// Pattern numbers for the super_*() functions.
 /// Since super_entry_bfnt() doesn't take a "start patnum" parameter, the
 /// order in which the files are loaded has to match the order here.
 typedef enum {
+	/// Stage-independent
+	/// =================
 	// miko32.bft
 	// ----------
 	PAT_ENEMY_KILL = 4,
@@ -35,25 +36,24 @@ typedef enum {
 
 	PAT_EXPLOSION_SMALL = 68,
 
-	PAT_BULLET_KILL = 72,
-	PAT_BULLET_KILL_last = (PAT_BULLET_KILL + BULLET_DECAY_CELS - 1),
+	PAT_BULLET_ZAP = 72,
+	PAT_BULLET_ZAP_last = (PAT_BULLET_ZAP + BULLET_ZAP_CELS - 1),
 	PAT_BULLET16_D,
 	PAT_BULLET16_D_BLUE = PAT_BULLET16_D,
 	PAT_BULLET16_D_BLUE_last = (PAT_BULLET16_D_BLUE + BULLET_D_CELS - 1),
-	PAT_BULLET16_D_YELLOW,	// Purple during the EX-Alice battle
+	PAT_BULLET16_D_YELLOW,
 	PAT_BULLET16_D_YELLOW_last = (PAT_BULLET16_D_YELLOW + BULLET_D_CELS - 1),
 
 	PAT_DECAY_PELLET,
 	PAT_DECAY_PELLET_last = (PAT_DECAY_PELLET + BULLET_DECAY_CELS - 1),
 	PAT_DECAY_BULLET16,
 	PAT_DECAY_BULLET16_last = (PAT_DECAY_BULLET16 + BULLET_DECAY_CELS - 1),
-	// ----------
-} main_patnum_t;
-/// -------------------------------------------------------------
+	/// =================
 
-/// Stage 6
-/// -------
-typedef enum {
+	PAT_STAGE = 128,
+
+	/// Stage 6
+	/// =======
 	// st05.bb1
 	// --------
 	PAT_YUUKA6_PARASOL_BACK_OPEN = 128,
@@ -102,5 +102,17 @@ typedef enum {
 	PAT_YUUKA6_VANISH_2 = 178,
 	PAT_YUUKA6_VANISH_3 = 180,
 	// --------
-} stage6_patnum_t;
-/// -------
+	/// =======
+
+	/// Extra Boss 2 – Gengetsu
+	/// =======================
+	// st06.bb2
+	// --------
+	PAT_GENGETSU_TIPPING = PAT_STAGE,
+	// --------
+	/// =======================
+
+	PAT_STAGE_last = 255,
+
+	_main_patnum_t_FORCE_INT16 = 0x7FFF,
+} main_patnum_t;

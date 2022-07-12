@@ -1,40 +1,61 @@
 @echo off
 echo Running the first, 32-bit part of the ReC98 build process.
 
-set ReC98_ASM=tasm32 /m /mx /kh32768 /t /ilibs\master.lib\
-
-del /S *.obj
-for /L %%i in (1,1,5) do mkdir bin\th0%%i 2>NUL
-
-%ReC98_ASM% 1>NUL 2>NUL
+: Windows 9x doesn't support stderr redirection, and always sets ERRORLEVEL to
+: 2 if you attempt to do that, regardless of `tasm32`'s existence. NT properly
+: returns 9009 if not found, or 0 otherwise.
+set STDERR_IGNORE=
+tasm32 >NUL 2>NUL
 if errorlevel 9009 goto no_tasm32
+if errorlevel    2 goto check_tasm32_win9x
 
-%ReC98_ASM% th01_op.asm bin\th01\op.obj
-%ReC98_ASM% th01_reiiden.asm bin\th01\reiiden.obj
-%ReC98_ASM% th01_fuuin.asm bin\th01\fuuin.obj
+: NT + TASM32 existing confirmed at this point
+setlocal
+set STDERR_IGNORE=2^>NUL
+goto check_bcc32
 
-%ReC98_ASM% th02_zuninit.asm bin\th02\zuninit.obj
-%ReC98_ASM% th02_op.asm bin\th02\op.obj
-%ReC98_ASM% th02_main.asm bin\th02\main.obj
-%ReC98_ASM% th02_maine.asm bin\th02\maine.obj
+: Re-run the actual TASM check for Windows 9x. Calling a nonexistent command
+: leaves ERRORLEVEL untouched, so we have to override it ourselves first.
+:check_tasm32_win9x
+call set_errorlevel_to_1.bat
+tasm32 >NUL %STDERR_IGNORE%
+if errorlevel 1 goto no_tasm32
 
-%ReC98_ASM% /DTHIEF libs\sprite16\sprite16.asm bin\th03\zunsp.obj
-%ReC98_ASM% th03_op.asm bin\th03\op.obj
-%ReC98_ASM% th03_main.asm bin\th03\main.obj
-%ReC98_ASM% th03_mainl.asm bin\th03\mainl.obj
+:check_bcc32
+call set_errorlevel_to_1.bat
+bcc32 >NUL %STDERR_IGNORE%
+if errorlevel 1 goto no_bcc32
 
-%ReC98_ASM% th04_op.asm bin\th04\op.obj
-%ReC98_ASM% th04_main.asm bin\th04\main.obj
-%ReC98_ASM% th04_maine.asm bin\th04\maine.obj
+: Neither BCC32 nor TASM32 automatically create nonexisting output
+: directories. Tup would, but not everybody can use it.
+mkdir bin\zuncom %STDERR_IGNORE%
+mkdir bin\Pipeline %STDERR_IGNORE%
+for %%i in (1 2 3 4 5) do mkdir bin\th0%%i %STDERR_IGNORE%
 
-%ReC98_ASM% th05_op.asm bin\th05\op.obj
-%ReC98_ASM% th05_main.asm bin\th05\main.obj
-%ReC98_ASM% th05_maine.asm bin\th05\maine.obj
+call set_errorlevel_to_1.bat
+tup version >NUL
+if     errorlevel 1 goto fallback
+: NT returns negative values for things like DLL import failures
+if not errorlevel 0 goto fallback
+
+tup
+goto eof
+
+:fallback
+echo [:(] Failed to run Tup (gittup.org/tup), falling back on a dumb full rebuild...
+if not errorlevel 0 echo (Delete `tup.exe` to avoid the error message boxes in the future)
+call Tupfile.bat
+
 goto eof
 
 :no_tasm32
 echo Could not find TASM32.
 echo Please make sure that the BIN directory of Turbo Assembler 5.0 is in your PATH.
+goto eof
+
+:no_bcc32
+echo Could not find BCC32.
+echo Please make sure that the BIN directory of Borland C++ 5.5 is in your PATH.
 goto eof
 
 :eof

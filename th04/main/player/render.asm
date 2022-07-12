@@ -17,10 +17,10 @@ player_render	proc near
 @@alive:
 	mov	ax, _player_pos.cur.x
 	sar	ax, 4
-	add	ax, PLAYFIELD_X - (PLAYER_W / 2)
+	add	ax, PLAYFIELD_LEFT - (PLAYER_W / 2)
 	mov	di, ax
 	mov	ax, _player_pos.cur.y
-	add	ax, ((PLAYFIELD_Y - (PLAYER_H / 2)) shl 4)
+	add	ax, ((PLAYFIELD_TOP - (PLAYER_H / 2)) shl 4)
 	call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 	mov	[bp+@@screen_y], ax
 	cmp	_player_pos.velocity.x, 0
@@ -53,13 +53,13 @@ player_render	proc near
 @@got_options?:
 	cmp	_shot_level, 2
 	jb	@@ret
-	call	_grcg_setmode_rmw_seg1
+	call	@grcg_setmode_rmw$qv
 	mov	ax, _player_option_pos_cur.x
 	sar	ax, 4
-	; Technically, DI = AX + PLAYFIELD_X - PLAYER_OPTION_DISTANCE - (PLAYER_OPTION_W / 2)
+	; Technically, DI = AX + PLAYFIELD_LEFT - PLAYER_OPTION_DISTANCE - (PLAYER_OPTION_W / 2)
 	mov	di, ax
 	mov	ax, _player_option_pos_cur.y
-	add	ax, ((PLAYFIELD_Y - (PLAYER_OPTION_H / 2)) shl 4)
+	add	ax, ((PLAYFIELD_TOP - (PLAYER_OPTION_H / 2)) shl 4)
 	call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 	mov	[bp+@@screen_y], ax
 	mov	ax, di
@@ -104,10 +104,10 @@ player_render	proc near
 	MISS_EXPLOSION_CLIP	@@next
 	mov	ax, _drawpoint.x
 	sar	ax, 4
-	add	ax, PLAYFIELD_X - (MISS_EXPLOSION_W / 2)
+	add	ax, PLAYFIELD_LEFT - (MISS_EXPLOSION_W / 2)
 	mov	di, ax
 	mov	ax, _drawpoint.y
-	add	ax, ((PLAYFIELD_Y - (MISS_EXPLOSION_H / 2)) shl 4)
+	add	ax, ((PLAYFIELD_TOP - (MISS_EXPLOSION_H / 2)) shl 4)
 	call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 	mov	[bp+@@screen_y], ax
 	call	super_roll_put pascal, di, ax, 3

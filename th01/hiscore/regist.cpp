@@ -1,24 +1,29 @@
+#include "th01/math/clamp.hpp"
 #include "th01/hardware/egc.h"
-#include "th01/hardware/grp2xscs.h"
-#include "th01/hardware/input.hpp"
-#include "th01/hardware/vsync.h"
+extern "C" {
+#include "th01/hardware/frmdelay.h"
+}
+#include "th01/hardware/grp2xscs.hpp"
+#include "th01/v_colors.hpp"
+#include "th01/score.h"
+#include "th01/hiscore/regist.hpp"
 
-#define COL_SELECTED 3
-#define COL_REGULAR 7
+// Null-terminated version of scoredat_name_t, used internally.
+typedef StupidBytewiseWrapperAround<struct {
+	int16_t codepoint[SCOREDAT_NAME_KANJI + 1];
+}> scoredat_name_z_t;
 
 #define TITLE_LEFT 48
 #define TITLE_TOP 0
-static const int TITLE_BACK_LEFT = 0;
-static const int TITLE_BACK_TOP = (RES_Y - GLYPH_H);
-static const int TITLE_BACK_W = 288;
-static const int TITLE_BACK_H = GLYPH_H;
-static const int TITLE_BACK_RIGHT = (TITLE_BACK_LEFT + TITLE_BACK_W);
-static const int TITLE_BACK_BOTTOM = (TITLE_BACK_TOP + TITLE_BACK_H);
+static const screen_x_t TITLE_BACK_LEFT = 0;
+static const screen_y_t TITLE_BACK_TOP = (RES_Y - GLYPH_H);
+static const pixel_t TITLE_BACK_W = 288;
+static const pixel_t TITLE_BACK_H = GLYPH_H;
+static const screen_x_t TITLE_BACK_RIGHT = (TITLE_BACK_LEFT + TITLE_BACK_W);
+static const screen_y_t TITLE_BACK_BOTTOM = (TITLE_BACK_TOP + TITLE_BACK_H);
 
 /// Table
 /// -----
-#define POINT_DIGITS 7
-
 #define TABLE_TOP 48
 #define TABLE_ROW_H GLYPH_H
 #define TABLE_BODY_TOP (TABLE_TOP + TABLE_ROW_H)
@@ -26,33 +31,33 @@ static const int TITLE_BACK_BOTTOM = (TITLE_BACK_TOP + TITLE_BACK_H);
 #define table_row_top(place) (TABLE_BODY_TOP + (place * TABLE_ROW_H))
 
 // Recursively defining column positions \o/
-inline int table_left(int x_kanji) {
+inline screen_x_t table_left(int x_kanji) {
 	return 32 + (x_kanji * GLYPH_FULL_W);
 }
 
-inline int table_place_left(int x_kanji) {
+inline screen_x_t table_place_left(int x_kanji) {
 	return table_left(x_kanji);
 }
 
-inline int table_name_left(int x_kanji) {
+inline screen_x_t table_name_left(int x_kanji) {
 	return table_place_left(7 + x_kanji);
 }
 
-inline int table_points_left(int x_kanji) {
+inline screen_x_t table_score_left(int x_kanji) {
 	return table_name_left(SCOREDAT_NAME_KANJI + 5 + x_kanji);
 }
 
-inline int table_stage_route_left(int x_kanji) {
-	return table_points_left(POINT_DIGITS + 3 + x_kanji);
+inline screen_x_t table_stage_route_left(int x_kanji) {
+	return table_score_left(SCORE_DIGITS + 3 + x_kanji);
 }
 
-inline int table_stage_left(int x_kanji) {
+inline screen_x_t table_stage_left(int x_kanji) {
 	return table_stage_route_left(1 + x_kanji);
 }
 
 // Code generation actually prohibits this from being a Point!
-extern int entered_name_left;
-extern int entered_name_top;
+extern screen_x_t entered_name_left;
+extern screen_y_t entered_name_top;
 /// -----
 
 /// Alphabet
@@ -71,18 +76,15 @@ extern int entered_name_top;
 #define relative_top(row) \
 	((row) * KANJI_PADDED_H)
 
-inline int relative_top_for(int kanji_id)
-{
+inline pixel_t relative_top_for(int kanji_id) {
 	return relative_top(kanji_id / KANJI_PER_ROW);
 }
 
-inline int row_ceil(int count)
-{
+inline int row_ceil(int count) {
 	return ((count + (KANJI_PER_ROW - 1)) / KANJI_PER_ROW);
 }
 
-inline int left_for(int kanji_id)
-{
+inline pixel_t left_for(int kanji_id) {
 	return (((kanji_id % KANJI_PER_ROW) * KANJI_PADDED_W) + MARGIN_W);
 }
 
@@ -117,74 +119,73 @@ extern const uint16_t ALPHABET_SYMS[];
 #define RIGHT_LEFT left_for(LEFT_COLUMN + 1)
 #define ENTER_LEFT left_for(LEFT_COLUMN + 2)
 
-inline uint16_t kanji_swap(uint16_t kanji)
-{
+inline uint16_t kanji_swap(uint16_t kanji) {
 	return (kanji << 8) | (kanji >> 8);
 }
 
-inline unsigned char kanji_hi(int16_t kanji)
-{
+inline unsigned char kanji_hi(int16_t kanji) {
 	return (kanji >> 8);
 }
 
-inline unsigned char kanji_lo(int16_t kanji)
-{
+inline unsigned char kanji_lo(int16_t kanji) {
 	return (kanji & 0xFF);
 }
 /// --------
 
 void alphabet_put_initial()
 {
-	int fx = FX(COL_REGULAR, 2, 0);
+	int16_t col_and_fx = (COL_REGIST_REGULAR | FX_WEIGHT_BOLD);
 	uint16_t kanji;
 	int i;
-#if (BINARY == 'M')
-	char kanji_str[3];
-#endif
+	graph_putkanji_fx_declare();
 
 	kanji = kanji_swap('‚‚');
 	for(i = 1; i < A_TO_Z_COUNT; i++) {
-		alphabet_putca_fx(LOWER_TOP, i, fx, 0, kanji);
+		alphabet_putca_fx(LOWER_TOP, i, col_and_fx, 0, kanji);
 		kanji++;
 	}
 	extern const char ALPHABET_A[];
 	graph_putsa_fx(
-		MARGIN_W, LOWER_TOP, FX_REVERSE | FX(COL_SELECTED, 2, 0), ALPHABET_A
+		MARGIN_W,
+		LOWER_TOP,
+		(COL_REGIST_SELECTED | FX_WEIGHT_BOLD | FX_REVERSE),
+		ALPHABET_A
 	);
 
 	kanji = kanji_swap('‚`');
 	for(i = 0; i < A_TO_Z_COUNT; i++) {
-		alphabet_putca_fx(UPPER_TOP, i, fx, 1, kanji);
+		alphabet_putca_fx(UPPER_TOP, i, col_and_fx, 1, kanji);
 		kanji++;
 	}
 
 	for(i = 0; i < SYM_COUNT; i++) {
 		kanji = ALPHABET_SYMS[i];
-		alphabet_putca_fx(SYM_TOP, i, fx, 2, kanji);
+		alphabet_putca_fx(SYM_TOP, i, col_and_fx, 2, kanji);
 	}
 
 	kanji = kanji_swap('‚O');
 	for(i = 0; i < NUM_COUNT; i++) {
-		alphabet_putca_fx(NUM_TOP, i, fx, 3, kanji);
+		alphabet_putca_fx(NUM_TOP, i, col_and_fx, 3, kanji);
 		kanji++;
 	}
-	alphabet_putsa_fx(NUM_TOP, i, fx, ALPHABET_SPACE);	i = LEFT_COLUMN;
-	alphabet_putsa_fx(NUM_TOP, i, fx, ALPHABET_LEFT); 	i++;
-	alphabet_putsa_fx(NUM_TOP, i, fx, ALPHABET_RIGHT);	i++;
-	alphabet_putsa_fx(NUM_TOP, i, fx, ALPHABET_ENTER);	i++;
+	alphabet_putsa_fx(NUM_TOP, i, col_and_fx, ALPHABET_SPACE);	i = LEFT_COLUMN;
+	alphabet_putsa_fx(NUM_TOP, i, col_and_fx, ALPHABET_LEFT); 	i++;
+	alphabet_putsa_fx(NUM_TOP, i, col_and_fx, ALPHABET_RIGHT);	i++;
+	alphabet_putsa_fx(NUM_TOP, i, col_and_fx, ALPHABET_ENTER);	i++;
 }
 
-inline void header_cell_put(int left, const char str[])
-{
-	graph_putsa_fx(left, TABLE_TOP, FX(COL_SELECTED, 3, 0), str);
+inline void header_cell_put(screen_x_t left, const char str[]) {
+	graph_putsa_fx(
+		left, TABLE_TOP, (COL_REGIST_SELECTED | FX_WEIGHT_BLACK), str
+	);
 }
 
-#define place_cell_put(top, fx, str) \
-	graph_putsa_fx(table_place_left(0), top, fx, str)
+#define place_cell_put(top, col_and_fx, str) \
+	graph_putsa_fx(table_place_left(0), top, col_and_fx, str)
 
 void regist_put_initial(
 	int entered_place,
-	long entered_points,
+	long entered_score,
 	int entered_stage,
 	const char entered_route[SCOREDAT_ROUTE_LEN + 1],
 	const scoredat_name_z_t names_z[SCOREDAT_PLACES]
@@ -196,7 +197,7 @@ void regist_put_initial(
 	extern const hack REGIST_NAME_BLANK;
 	extern const char REGIST_HEADER_PLACE[];
 	extern const char REGIST_HEADER_NAME[];
-	extern const char REGIST_HEADER_POINTS[];
+	extern const char REGIST_HEADER_SCORE[];
 	extern const char REGIST_HEADER_STAGE_ROUTE[];
 	extern const char REGIST_PLACE_0[];
 	extern const char REGIST_PLACE_1[];
@@ -218,7 +219,7 @@ void regist_put_initial(
 
 	header_cell_put(table_place_left(0), REGIST_HEADER_PLACE);
 	header_cell_put(table_name_left(0), REGIST_HEADER_NAME);
-	header_cell_put(table_points_left(0), REGIST_HEADER_POINTS);
+	header_cell_put(table_score_left(0), REGIST_HEADER_SCORE);
 	header_cell_put(table_stage_route_left(0), REGIST_HEADER_STAGE_ROUTE);
 
 	for(int i = 0; i < SCOREDAT_PLACES; i++) {
@@ -226,40 +227,45 @@ void regist_put_initial(
 			(i != entered_place && scoredat_stages[i] expr) || \
 			(i == entered_place && entered_stage expr)
 
-		#define fx_text FX(place_col, 2, 0)
+		#define col_and_fx_text (place_col | FX_WEIGHT_BOLD)
 
 		#if (BINARY == 'E')
-		# define place_col ((i == entered_place) ? COL_SELECTED : COL_REGULAR)
-		# define top table_row_top(i)
+			#define place_col ((i == entered_place) \
+				? COL_REGIST_SELECTED \
+				: COL_REGIST_REGULAR \
+			)
+			#define top table_row_top(i)
 		#else
-			int place_col = (i == entered_place) ? COL_SELECTED : COL_REGULAR;
-			int top = table_row_top(i);
+			int place_col = (
+				(i == entered_place) ? COL_REGIST_SELECTED : COL_REGIST_REGULAR
+			);
+			vram_y_t top = table_row_top(i);
 		#endif
 
 		switch(i) {
-		case 0:	place_cell_put(top, fx_text, REGIST_PLACE_0);	break;
-		case 1:	place_cell_put(top, fx_text, REGIST_PLACE_1);	break;
-		case 2:	place_cell_put(top, fx_text, REGIST_PLACE_2);	break;
-		case 3:	place_cell_put(top, fx_text, REGIST_PLACE_3);	break;
-		case 4:	place_cell_put(top, fx_text, REGIST_PLACE_4);	break;
-		case 5:	place_cell_put(top, fx_text, REGIST_PLACE_5);	break;
-		case 6:	place_cell_put(top, fx_text, REGIST_PLACE_6);	break;
-		case 7:	place_cell_put(top, fx_text, REGIST_PLACE_7);	break;
-		case 8:	place_cell_put(top, fx_text, REGIST_PLACE_8);	break;
-		case 9:	place_cell_put(top, fx_text, REGIST_PLACE_9);	break;
+		case 0:	place_cell_put(top, col_and_fx_text, REGIST_PLACE_0);	break;
+		case 1:	place_cell_put(top, col_and_fx_text, REGIST_PLACE_1);	break;
+		case 2:	place_cell_put(top, col_and_fx_text, REGIST_PLACE_2);	break;
+		case 3:	place_cell_put(top, col_and_fx_text, REGIST_PLACE_3);	break;
+		case 4:	place_cell_put(top, col_and_fx_text, REGIST_PLACE_4);	break;
+		case 5:	place_cell_put(top, col_and_fx_text, REGIST_PLACE_5);	break;
+		case 6:	place_cell_put(top, col_and_fx_text, REGIST_PLACE_6);	break;
+		case 7:	place_cell_put(top, col_and_fx_text, REGIST_PLACE_7);	break;
+		case 8:	place_cell_put(top, col_and_fx_text, REGIST_PLACE_8);	break;
+		case 9:	place_cell_put(top, col_and_fx_text, REGIST_PLACE_9);	break;
 		}
 		graph_putsa_fx(
 			table_name_left(0),
 			top,
-			fx_text,
+			col_and_fx_text,
 			(i == entered_place) ? name.byte : names_z[i].byte
 		);
 		graph_putfwnum_fx(
-			table_points_left(0),
+			table_score_left(0),
 			top,
-			FX(place_col, 3, 0),
-			POINT_DIGITS,
-			(entered_place == i) ? entered_points : scoredat_points[i],
+			(place_col | FX_WEIGHT_BLACK),
+			SCORE_DIGITS,
+			(entered_place == i) ? entered_score : scoredat_score[i],
 			0,
 			false
 		);
@@ -267,7 +273,7 @@ void regist_put_initial(
 			graph_putfwnum_fx(
 				table_stage_left(0),
 				top,
-				fx_text,
+				col_and_fx_text,
 				2,
 				(i == entered_place) ? entered_stage : scoredat_stages[i],
 				0,
@@ -275,24 +281,22 @@ void regist_put_initial(
 			);
 		} else if(stage_expr(i, entered_place, == SCOREDAT_CLEARED_MAKAI)) {
 			graph_putsa_fx(
-				table_stage_left(0), top, fx_text, REGIST_STAGE_MAKAI
+				table_stage_left(0), top, col_and_fx_text, REGIST_STAGE_MAKAI
 			);
 		} else if(stage_expr(i, entered_place, == SCOREDAT_CLEARED_JIGOKU)) {
 			graph_putsa_fx(
-				table_stage_left(0), top, fx_text, REGIST_STAGE_JIGOKU
+				table_stage_left(0), top, col_and_fx_text, REGIST_STAGE_JIGOKU
 			);
 		}
 		graph_putsa_fx(
-			table_stage_left(2), top, fx_text, REGIST_STAGE_ROUTE_DASH
+			table_stage_left(2), top, col_and_fx_text, REGIST_STAGE_ROUTE_DASH
 		);
 		regist_route_put(
 			table_stage_left(3),
 			top,
-			fx_text,
-			(i == entered_place)
-				? entered_route[0] : scoredat_routes[i * SCOREDAT_ROUTE_LEN],
-			(i == entered_place)
-				? entered_route[1] : scoredat_route_byte(i, 1)
+			col_and_fx_text,
+			(i == entered_place) ? entered_route[0] : scoredat_route_byte(i, 0),
+			(i == entered_place) ? entered_route[1] : scoredat_route_byte(i, 1)
 		);
 		if(entered_place == i) {
 			entered_name_left = table_name_left(0);
@@ -300,7 +304,7 @@ void regist_put_initial(
 		}
 		#undef top
 		#undef place_col
-		#undef fx_text
+		#undef col_and_fx_text
 		#undef stage_expr
 	}
 }
@@ -334,7 +338,7 @@ void regist_put_initial(
 		on_enter \
 	}
 
-void alphabet_put_at(int left, int top, bool16 is_selected)
+void alphabet_put_at(screen_x_t left, screen_y_t top, bool16 is_selected)
 {
 	// Placement matters with -O-!
 	extern const char ALPHABET_SPACE_0[];
@@ -344,23 +348,21 @@ void alphabet_put_at(int left, int top, bool16 is_selected)
 
 	int16_t kanji = '\0';
 
-	egc_copy_rect_1_to_0(left, top, KANJI_PADDED_W, GLYPH_H);
+	egc_copy_rect_1_to_0_16(left, top, KANJI_PADDED_W, GLYPH_H);
 
-	int fx = FX(
-		!is_selected ? (COL_REGULAR) : (FX_REVERSE | COL_SELECTED), 2, 0
-	);
+	int16_t col_and_fx = (FX_WEIGHT_BOLD | (
+		!is_selected ? COL_REGIST_REGULAR : (FX_REVERSE | COL_REGIST_SELECTED)
+	));
 
 	alphabet_if(kanji, left, top,
-		{ graph_printf_fx(left, top, fx, ALPHABET_SPACE_0); },
-		{ graph_printf_fx(left, top, fx, ALPHABET_LEFT_0); },
-		{ graph_printf_fx(left, top, fx, ALPHABET_RIGHT_0); },
-		{ graph_printf_fx(left, top, fx, ALPHABET_ENTER_0); }
+		{ graph_printf_fx(left, top, col_and_fx, ALPHABET_SPACE_0); },
+		{ graph_printf_fx(left, top, col_and_fx, ALPHABET_LEFT_0); },
+		{ graph_printf_fx(left, top, col_and_fx, ALPHABET_RIGHT_0); },
+		{ graph_printf_fx(left, top, col_and_fx, ALPHABET_ENTER_0); }
 	);
 	if(kanji != '\0') {
-		#if (BINARY == 'M')
-			char kanji_str[3];
-		#endif
-		graph_putkanji_fx(left, top, fx, 4, kanji);
+		graph_putkanji_fx_declare();
+		graph_putkanji_fx(left, top, col_and_fx, 4, kanji);
 	}
 }
 
@@ -373,8 +375,10 @@ void alphabet_put_at(int left, int top, bool16 is_selected)
 	name.byte[(pos * 2) + 1] = kanji_lo(kanji);
 
 int regist_on_shot(
-	int left, int top,
-	scoredat_name_z_t& entered_name, int& entered_name_cursor
+	screen_x_t left,
+	screen_y_t top,
+	scoredat_name_z_t &entered_name,
+	int &entered_name_cursor
 )
 {
 	int16_t kanji = '\0';
@@ -386,8 +390,8 @@ int regist_on_shot(
 
 	alphabet_if(kanji, left, top,
 		{ kanji = kanji_swap('@'); },
-		{ CLAMP_DEC(entered_name_cursor, 0); },
-		{ CLAMP_INC(entered_name_cursor, (SCOREDAT_NAME_KANJI - 1)); },
+		{ clamp_dec(entered_name_cursor, 0); },
+		{ clamp_inc(entered_name_cursor, (SCOREDAT_NAME_KANJI - 1)); },
 		{ return 1; }
 	);
 
@@ -403,7 +407,7 @@ int regist_on_shot(
 		}
 	}
 
-	egc_copy_rect_1_to_0(
+	egc_copy_rect_1_to_0_16(
 		entered_name_left,
 		entered_name_top,
 		(SCOREDAT_NAME_KANJI * GLYPH_FULL_W),
@@ -412,7 +416,7 @@ int regist_on_shot(
 	graph_printf_s_fx(
 		entered_name_left,
 		entered_name_top,
-		FX(COL_SELECTED, 2, 0),
+		(COL_REGIST_SELECTED | FX_WEIGHT_BOLD),
 		0,
 		entered_name.byte
 	);
@@ -421,23 +425,23 @@ int regist_on_shot(
 	graph_printf_s_fx(
 		entered_name_left,
 		entered_name_top,
-		FX(COL_SELECTED, 0, 0),
+		COL_REGIST_SELECTED,
 		1,
 		cursor_str.byte
 	);
 	return 0;
 }
 
-#pragma option -b
 enum regist_input_ret_t {
 	RI_REGULAR = 0,
 	RI_ENTER = 1,
-	RI_NONE = 2
+	RI_NONE = 2,
+
+	_regist_input_ret_t_FORCE_INT16 = 0x7FFF
 };
-#pragma option -b.
 
 regist_input_ret_t regist_on_input(
-	int& left, int& top,
+	screen_x_t &left, screen_y_t &top,
 	scoredat_name_z_t& entered_name, int& entered_name_cursor
 )
 {
@@ -543,15 +547,15 @@ regist_input_ret_t regist_on_input(
 }
 
 #if (BINARY == 'E')
-	inline void scoredat_free(void)
+	inline void scoredat_free(void) {
 #else
 	void scoredat_free(void)
-#endif
 {
+#endif
 	delete[] scoredat_names;
 	delete[] scoredat_stages;
 	delete[] scoredat_routes;
-	delete[] scoredat_points;
+	delete[] scoredat_score;
 }
 
 void scoredat_save(void)
@@ -573,7 +577,7 @@ void scoredat_save(void)
 	char fn[16];
 	scoredat_fn(fn, 2);
 
-	if( (fp = fopen(fn, SCOREDAT_FOPEN_WB)) == NULL) {
+	if( (fp = fopen(fn, SCOREDAT_FOPEN_WB)) == nullptr) {
 		return;
 	}
 	write(fileno(fp), magic.x, sizeof(SCOREDAT_MAGIC) - 1);
@@ -581,7 +585,7 @@ void scoredat_save(void)
 		scoredat_names[i] = scoredat_name_byte_encode(scoredat_names[i]);
 	}
 	write(fileno(fp), scoredat_names, SCOREDAT_NAMES_SIZE);
-	write(fileno(fp), scoredat_points, sizeof(uint32_t) * SCOREDAT_PLACES);
+	write(fileno(fp), scoredat_score, sizeof(uint32_t) * SCOREDAT_PLACES);
 	write(fileno(fp), scoredat_stages, sizeof(int16_t) * SCOREDAT_PLACES);
 	write(fileno(fp), scoredat_routes, sizeof(twobyte_t) * SCOREDAT_PLACES);
 	fclose(fp);
@@ -591,8 +595,8 @@ void regist_name_enter(int entered_place)
 {
 	scoredat_name_z_t entered_name;
 	regist_input_timeout_declare();
-	int left;
-	int top;
+	screen_x_t left;
+	screen_y_t top;
 	int entered_name_cursor;
 	int i;
 
@@ -640,7 +644,7 @@ static const int PLACE_NONE = (SCOREDAT_PLACES + 20);
 static const int SCOREDAT_NOT_CLEARED = (SCOREDAT_CLEARED - 10);
 
 void regist(
-	int32_t points, int16_t stage, const char route[SCOREDAT_ROUTE_LEN + 1]
+	int32_t score, int16_t stage, const char route[SCOREDAT_ROUTE_LEN + 1]
 )
 {
 	struct hack {
@@ -657,7 +661,10 @@ void regist(
 	graph_accesspage_func(1);
 
 	regist_title_put(
-		TITLE_BACK_LEFT, stage, RANKS.r, (FX_CLEAR_BG | FX(COL_REGULAR, 2, 0))
+		TITLE_BACK_LEFT,
+		stage,
+		RANKS.r,
+		(COL_REGIST_REGULAR | FX_WEIGHT_BOLD | FX_CLEAR_BG)
 	);
 	// On page 1, the title should now at (TITLE_BACK_LEFT, TITLE_BACK_TOP) if
 	// not cleared, or at (TITLE_BACK_LEFT, TITLE_TOP) if cleared.
@@ -688,7 +695,7 @@ void regist(
 		scoredat_name_get(place, names[place].byte);
 	}
 	for(place = 0; place < SCOREDAT_PLACES; place++) {
-		if(points >= scoredat_points[place]) {
+		if(score >= scoredat_score[place]) {
 			break;
 		}
 	}
@@ -698,7 +705,7 @@ void regist(
 	if(place < SCOREDAT_PLACES) {
 		for(long shift = (SCOREDAT_PLACES - 1); shift > place; shift--) {
 			strcpy(names[shift].byte, names[shift - 1].byte);
-			scoredat_points[shift] = scoredat_points[shift - 1];
+			scoredat_score[shift] = scoredat_score[shift - 1];
 			scoredat_stages[shift] = scoredat_stages[shift - 1];
 			scoredat_route_byte(shift, 0) = scoredat_route_byte(shift, -2);
 			scoredat_route_byte(shift, 1) = scoredat_route_byte(shift, -1);
@@ -708,10 +715,10 @@ void regist(
 			scoredat_names[p] = scoredat_names[p - SCOREDAT_NAME_BYTES];
 			p--;
 		}
-		regist_put_initial(place, points, stage, route, names);
+		regist_put_initial(place, score, stage, route, names);
 		alphabet_put_initial();
 
-		scoredat_points[place] = points;
+		scoredat_score[place] = score;
 		scoredat_stages[place] = stage;
 		scoredat_route_byte(place, 0) = route[0];
 		scoredat_route_byte(place, 1) = route[1];
@@ -723,7 +730,7 @@ void regist(
 		scoredat_free();
 		return;
 	}
-	regist_put_initial(PLACE_NONE, points, stage, route, names);
+	regist_put_initial(PLACE_NONE, score, stage, route, names);
 	input_ok = true;
 	input_shot = true;
 	while(1) {

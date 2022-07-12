@@ -1,11 +1,15 @@
-#pragma option -Z
-
-extern "C" {
 #include <dos.h>
+#include <mem.h>
 #include <mbctype.h>
 #include <mbstring.h>
-#include "ReC98.h"
+#include "platform.h"
+#include "pc98.h"
+#include "planar.h"
+#include "master.hpp"
+#include "th01/v_colors.hpp"
+#include "th01/math/clamp.hpp"
 #include "th01/hardware/egc.h"
+extern "C" {
 #include "th01/hardware/vsync.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/palette.h"
@@ -13,15 +17,15 @@ extern "C" {
 #undef grcg_off
 #define grcg_off() outportb(0x7C, 0);
 
-extern page_t page_back;
+extern page_t page_accessed;
 
 /// VRAM plane "structures"
 /// -----------------------
 #define Planes_declare(var) \
-	dots8_t *var##_B = reinterpret_cast<dots8_t *>(MK_FP(SEG_PLANE_B, 0)); \
-	dots8_t *var##_R = reinterpret_cast<dots8_t *>(MK_FP(SEG_PLANE_R, 0)); \
-	dots8_t *var##_G = reinterpret_cast<dots8_t *>(MK_FP(SEG_PLANE_G, 0)); \
-	dots8_t *var##_E = reinterpret_cast<dots8_t *>(MK_FP(SEG_PLANE_E, 0));
+	dots8_t far *var##_B = reinterpret_cast<dots8_t __seg *>(SEG_PLANE_B); \
+	dots8_t far *var##_R = reinterpret_cast<dots8_t __seg *>(SEG_PLANE_R); \
+	dots8_t far *var##_G = reinterpret_cast<dots8_t __seg *>(SEG_PLANE_G); \
+	dots8_t far *var##_E = reinterpret_cast<dots8_t __seg *>(SEG_PLANE_E);
 
 #define Planes_next_row(var) \
 	var##_B += ROW_SIZE; \
@@ -30,10 +34,10 @@ extern page_t page_back;
 	var##_E += ROW_SIZE;
 
 #define Planes_offset(var, x, y) \
-	var##_B += (x / 8) + (y * ROW_SIZE); \
-	var##_R += (x / 8) + (y * ROW_SIZE); \
-	var##_G += (x / 8) + (y * ROW_SIZE); \
-	var##_E += (x / 8) + (y * ROW_SIZE);
+	var##_B += vram_offset_divmul(x, y); \
+	var##_R += vram_offset_divmul(x, y); \
+	var##_G += vram_offset_divmul(x, y); \
+	var##_E += vram_offset_divmul(x, y);
 
 #define PlanarRow_declare(var) \
 	dots8_t var##_B[ROW_SIZE]; \
@@ -50,11 +54,11 @@ extern page_t page_back;
 
 /// Clipping
 /// --------
-#define fix_order(low, high) \
+#define fix_order(tmp, low, high) \
 	if(low > high) { \
-		order_tmp = low; \
+		tmp = low; \
 		low = high; \
-		high = order_tmp; \
+		high = tmp; \
 	}
 
 #define clip_min(low, high, minimum) \
@@ -84,20 +88,17 @@ extern page_t page_back;
 
 /// BIOS
 /// ----
-inline void graph_access_and_show_0()
-{
+inline void graph_access_and_show_0() {
 	graph_accesspage_func(0);
 	graph_showpage_func(0);
 }
 
-inline void cgrom_code_and_grcg_off()
-{
+inline void cgrom_code_and_grcg_off() {
 	outportb(0x68, 0xA); // CG ROM code access
 	grcg_off();
 }
 
-inline void z_graph_400line()
-{
+inline void z_graph_400line() {
 	REGS regs;
 
 	z_graph_hide();
@@ -111,8 +112,7 @@ inline void z_graph_400line()
 	outportb(0x6A, 1);
 }
 
-inline void z_graph_access_and_show_0()
-{
+inline void z_graph_access_and_show_0() {
 	graph_access_and_show_0();
 	cgrom_code_and_grcg_off();
 	z_graph_show();
@@ -167,7 +167,7 @@ void graph_showpage_func(page_t page)
 
 void graph_accesspage_func(int page)
 {
-	page_back = page;
+	page_accessed = page;
 	outportb(0xA6, page);
 }
 /// -------------
@@ -194,7 +194,7 @@ void grcg_setcolor_rmw(int col)
 	grcg_setcolor(0xC0, col);
 }
 
-void grcg_setcolor_tdw(int col)
+void grcg_setcolor_tcr(int col)
 {
 	grcg_setcolor(0x80, col);
 }
@@ -216,18 +216,14 @@ void z_palette_set_all_show(const Palette4& pal)
 
 void z_palette_set_show(int col, int r, int g, int b)
 {
-#define clamp_max(comp) ((comp) < RGB4::max() ? (comp) : RGB4::max())
-#define clamp_min(comp) ((comp) > 0 ? (comp) : 0)
-	r = clamp_min(clamp_max(r));
-	g = clamp_min(clamp_max(g));
-	b = clamp_min(clamp_max(b));
+	r = clamp_min(clamp_max(r, RGB4::max()), 0);
+	g = clamp_min(clamp_max(g, RGB4::max()), 0);
+	b = clamp_min(clamp_max(b, RGB4::max()), 0);
 
 	z_Palettes[col].c.r = r;
 	z_Palettes[col].c.g = g;
 	z_Palettes[col].c.b = b;
 	z_palette_show_single(col, r, g, b);
-#undef clamp_max
-#undef clamp_min
 }
 /// -------
 
@@ -235,7 +231,7 @@ void z_palette_set_show(int col, int r, int g, int b)
 /// --------------------
 void z_graph_clear()
 {
-	dots8_t *plane = reinterpret_cast<dots8_t *>(MK_FP(SEG_PLANE_B, 0));
+	dots8_t far *plane = reinterpret_cast<dots8_t __seg *>(SEG_PLANE_B);
 
 	grcg_setcolor_rmw(0);
 	memset(plane, 0xFF, PLANE_SIZE);
@@ -252,24 +248,24 @@ void z_graph_clear_0(void)
 
 void z_graph_clear_col(uint4_t col)
 {
-	dots8_t *plane = reinterpret_cast<dots8_t *>(MK_FP(SEG_PLANE_B, 0));
+	dots8_t far *plane = reinterpret_cast<dots8_t __seg *>(SEG_PLANE_B);
 
 	grcg_setcolor_rmw(col);
 	memset(plane, 0xFF, PLANE_SIZE);
 	grcg_off_func();
 }
 
-void graph_copy_page_back_to_front(void)
+void graph_copy_accessed_page_to_other(void)
 {
 	PlanarRow_declare(tmp);
 	Planes_declare(p);
-	page_t page_front = (page_back ^ 1);
+	page_t page_front = (page_accessed ^ 1);
 
-	for(int y = 0; y < RES_Y; y++) {
+	for(screen_y_t y = 0; y < RES_Y; y++) {
 		PlanarRow_blit(tmp, p, ROW_SIZE);
 		graph_accesspage(page_front);
 		PlanarRow_blit(p, tmp, ROW_SIZE);
-		graph_accesspage(page_back);
+		graph_accesspage(page_accessed);
 		Planes_next_row(p);
 	}
 }
@@ -282,7 +278,7 @@ void graph_copy_page_back_to_front(void)
 	for(int i = 0; i < pal.range(); i++) { \
 		z_vsync_wait(); \
 		for(int col = 0; col < COLOR_COUNT; col++) { \
-			for(int comp = 0; comp < sizeof(RGB4); comp++) { \
+			for(int comp = 0; comp < COMPONENT_COUNT; comp++) { \
 				per_comp; \
 			} \
 			z_palette_show_single_col(col, pal[col]); \
@@ -364,18 +360,18 @@ void z_palette_show(void)
 #define VRAM_SBYTE(plane, offset) \
 	*reinterpret_cast<sdots8_t *>(MK_FP(SEG_PLANE_##plane, offset))
 
-void z_grcg_pset(int x, int y, int col)
+void z_grcg_pset(screen_x_t x, vram_y_t y, int col)
 {
 	grcg_setcolor_rmw(col);
-	VRAM_SBYTE(B, ((y * ROW_SIZE) + (x >> 3))) = (0x80 >> (x & 7));
+	VRAM_SBYTE(B, vram_offset_mulshift(x, y)) = (0x80 >> (x & BYTE_MASK));
 	grcg_off_func();
 }
 
-int z_col_at(int x, int y)
+int z_graph_readdot(screen_x_t x, vram_y_t y)
 {
 	int ret;
-	int vram_offset = ((y * ROW_SIZE) + (x >> 3));
-	sdots16_t mask = (0x80 >> (x & 7));
+	vram_offset_t vram_offset = vram_offset_mulshift(x, y);
+	sdots16_t mask = (0x80 >> (x & BYTE_MASK));
 
 #define test(plane, vram_offset, mask, bit) \
 	if(VRAM_SBYTE(plane, vram_offset) & mask) { \
@@ -389,46 +385,46 @@ int z_col_at(int x, int y)
 	test(E, vram_offset, mask, 8);
 	return ret;
 
-#undef text
+#undef test
 }
 /// ------
 
 /// Restorable line drawing
 /// -----------------------
 // Never read from, so it's supposedly only there for debugging purposes?
-extern Point graph_r_last_line_end;
+extern screen_point_t graph_r_last_line_end;
 // `true` copies the pixels to be drawn from the same position on page 1, thus
 // restoring them with the background image. `false` (the default) draws them
-// regularly the given [col].
+// regularly in the given [col].
 extern bool graph_r_unput;
 // Not used for purely horizontal lines.
 extern dots16_t graph_r_pattern;
 
-void graph_r_hline(int left, int right, int y, int col)
+void graph_r_hline(screen_x_t left, screen_x_t right, vram_y_t y, int col)
 {
-	int x;
-	int full_bytes_to_put;
+	vram_byte_amount_t x;
+	vram_byte_amount_t full_bytes_to_put;
 	int order_tmp;
 	dots8_t left_pixels;
 	dots8_t right_pixels;
 	dots8_t *vram_row;
 
-	fix_order(left, right);
+	fix_order(order_tmp, left, right);
 	clip_x(left, right);
 
 	graph_r_last_line_end.x = right;
 	graph_r_last_line_end.y = y;
 
-	vram_row = (dots8_t *)(MK_FP(GRAM_400, (y * ROW_SIZE) + (left / 8)));
-	full_bytes_to_put = (right / 8) - (left / 8);
-	left_pixels = 0xFF >> (left & 7);
-	right_pixels = 0xFF << (7 - (right & 7));
+	vram_row = (dots8_t *)(MK_FP(SEG_PLANE_B, vram_offset_muldiv(left, y)));
+	full_bytes_to_put = (right / BYTE_DOTS) - (left / BYTE_DOTS);
+	left_pixels = 0xFF >> (left & BYTE_MASK);
+	right_pixels = 0xFF << (BYTE_MASK - (right & BYTE_MASK));
 
 	if(!graph_r_unput) {
 		grcg_setcolor_rmw(col);
 	}
 	if(graph_r_unput) {
-		egc_copy_rect_1_to_0(left, y, RES_X - left, 1);
+		egc_copy_rect_1_to_0_16(left, y, RES_X - left, 1);
 	} else {
 		if(full_bytes_to_put == 0) {
 			vram_row[0] = (left_pixels & right_pixels);
@@ -445,44 +441,53 @@ void graph_r_hline(int left, int right, int y, int col)
 	}
 }
 
-void graph_r_vline(int x, int top, int bottom, int col)
+void graph_r_vline(screen_x_t x, vram_y_t top, vram_y_t bottom, int col)
 {
-	int y;
+	vram_y_t y;
 	int order_tmp;
 	dots16_t pattern;
-	int vram_row_offset;
+	vram_offset_t vram_row_offset;
 
-	fix_order(top, bottom);
+	fix_order(order_tmp, top, bottom);
 	clip_y(top, bottom);
 
 	graph_r_last_line_end.x = x;
 	graph_r_last_line_end.y = bottom;
 
 	if(graph_r_unput) {
-		egc_copy_rect_1_to_0(x, top, sizeof(pattern) * 8, bottom - top);
+		egc_copy_rect_1_to_0_16(
+			x, top, (sizeof(pattern) * BYTE_DOTS), (bottom - top)
+		);
 		return;
 	}
 	vram_row_offset = vram_offset_shift(x, top);
-	pattern = graph_r_pattern >> (x & 7);
-	pattern |= graph_r_pattern << (16 - (x & 7));
+	pattern = graph_r_pattern >> (x & BYTE_MASK);
+	pattern |= graph_r_pattern << (16 - (x & BYTE_MASK));
 
 	grcg_setcolor_rmw(col);
 	for(y = top; y <= bottom; y++) {
-		VRAM_PUT(B, vram_row_offset, pattern, 16);
+		grcg_put(vram_row_offset, pattern, 16);
 		vram_row_offset += ROW_SIZE;
 	}
 	grcg_off_func();
 }
 
-void graph_r_line_unput(int left, int top, int right, int bottom)
+void graph_r_line_unput(
+	screen_x_t left, vram_y_t top, screen_x_t right, vram_y_t bottom
+)
 {
 	graph_r_unput = true;
-	graph_r_line(left, top, right, bottom, 7);
+	graph_r_line(left, top, right, bottom, V_WHITE);
 	graph_r_unput = false;
 }
 
 void graph_r_line_patterned(
-	int left, int top, int right, int bottom, int col, dots16_t pattern
+	screen_x_t left,
+	vram_y_t top,
+	screen_x_t right,
+	vram_y_t bottom,
+	int col,
+	dots16_t pattern
 )
 {
 	graph_r_pattern = pattern;
@@ -490,44 +495,50 @@ void graph_r_line_patterned(
 	graph_r_pattern = 0x80;
 }
 
-void graph_r_line(int left, int top, int right, int bottom, int col)
+void graph_r_line(
+	screen_x_t left,
+	vram_y_t top,
+	screen_x_t right,
+	vram_y_t bottom,
+	int col
+)
 {
-	register int vram_offset;
+	register vram_offset_t vram_offset;
 	int i;
-	int x_cur, y_cur;
-	int w, h;
+	screen_x_t x_cur;
+	vram_y_t y_cur;
+	pixel_t w, h;
 	int error;
 	int y_direction;
 	int order_tmp;
-	int x_vram, y_vram;
+	vram_x_t x_vram;
+	vram_y_t y_vram;
 	dots16_t pixels;
 
-	planar32_t page1;
-
-#define slope_x ((bottom - top) / (right - left))
-#define slope_y ((right - left) / (bottom - top))
 #define lerp(m, x) static_cast<int>(m * static_cast<float>(x))
 
-#define clip_lerp_min(low, high, lerp_point, slope, minimum) \
+#define clip_lerp_min(low, high, lerp_point, slope_dividend, minimum) \
 	if(low < minimum) { \
 		if(high < minimum) { \
 			return; \
 		} \
-		lerp_point += lerp(slope, (minimum - low)); \
+		lerp_point += lerp((slope_dividend / (high - low)), (minimum - low)); \
 		low = minimum; \
 	}
-#define clip_lerp_max(low, high, lerp_point, slope, maximum) \
+#define clip_lerp_max(low, high, lerp_point, slope_dividend, maximum) \
 	if(high > maximum) { \
 		if(low > maximum) { \
 			return; \
 		} \
-		lerp_point -= lerp(slope, (high - maximum)); \
+		lerp_point -= lerp((slope_dividend / (high - low)), (high - maximum)); \
 		high = maximum; \
 	}
 
-#define restore_at(bit_count) \
+#define unput32_at(vram_offset) { \
+	Planar<dots32_t> page1; \
 	graph_accesspage_func(1);	VRAM_SNAP_PLANAR(page1, vram_offset, 32); \
-	graph_accesspage_func(0);	VRAM_PUT_PLANAR(vram_offset, page1, 32);
+	graph_accesspage_func(0);	VRAM_PUT_PLANAR(vram_offset, page1, 32); \
+}
 
 #define plot_loop(\
 	step_var, step_len, step_increment, \
@@ -539,17 +550,25 @@ void graph_r_line(int left, int top, int right, int bottom, int col)
 		if((x_cur >> 3) != x_vram || (y_vram != y_cur)) { \
 			vram_offset = (y_vram * ROW_SIZE) + x_vram; \
 			if(!graph_r_unput) { \
-				VRAM_PUT(B, vram_offset, pixels, 16); \
+				grcg_put(vram_offset, pixels, 16); \
 				pixels = 0; \
 			} else { \
+				/* ZUN bug: Getting here with a [vram_offset] of 0x0000 will
+				 * cause a 4-byte write starting at 0xFFFF. On the 80286 and
+				 * later CPUs, offset overflows within an instruction are
+				 * illegal even in Real Mode, and will raise a General
+				 * Protection Fault.
+				 * As of May 2022, Anex86 is the only PC-98 emulator to
+				 * correctly replicate this behavior of real hardware,
+				 * though. */ \
 				vram_offset--; \
-				restore_at(vram_offset); \
+				unput32_at(vram_offset); \
 			} \
 			y_vram = y_cur; \
 			x_vram = (x_cur >> 3); \
 		} \
-		pixels |= (graph_r_pattern >> (x_cur & 7)); \
-		pixels |= (graph_r_pattern << (16 - (x_cur & 7))); \
+		pixels |= (graph_r_pattern >> (x_cur & BYTE_MASK)); \
+		pixels |= (graph_r_pattern << (16 - (x_cur & BYTE_MASK))); \
 		error -= plotted_len; \
 		step_var += step_increment; \
 		if(error < 0) { \
@@ -579,10 +598,14 @@ void graph_r_line(int left, int top, int right, int bottom, int col)
 		bottom = order_tmp;
 	}
 
-	clip_lerp_min(left, right, top, slope_x, 0);
-	clip_lerp_max(left, right, bottom, slope_x, (RES_X - 1));
-	clip_lerp_min(top, bottom, left, slope_y, 0);
-	clip_lerp_max(top, bottom, right, slope_y, (RES_Y - 1));
+	clip_lerp_min(left, right, top, (bottom - top), 0);
+	clip_lerp_max(left, right, bottom, (bottom - top), (RES_X - 1));
+	clip_lerp_min(top, bottom, left, (right - left), 0);
+	clip_lerp_max(top, bottom, right, (right - left), (RES_Y - 1));
+
+	// This division is safe at this point.
+	#define slope_y ((right - left) / (bottom - top))
+
 	if(bottom < 0) {
 		right += lerp(slope_y, 0 - bottom);
 		bottom = 0;
@@ -611,42 +634,58 @@ void graph_r_line(int left, int top, int right, int bottom, int col)
 		plot_loop(y_cur, h, y_direction, x_cur, w, 1);
 	}
 restore_last:
+	// ZUN bug: Off-by-one error, as [x_cur] and [y_cur] are one past the
+	// intended right / bottom coordinates after the plot_loop. Should have
+	// calculated [vram_offset] from [x_vram] and [y_vram] just like the
+	// plot_loop, since those values are directly updated for the next VRAM
+	// byte after a blit, and would thus be correct here as well.
+	//
+	// This way, the offset could potentially end up at [right = 640] or
+	// [bottom = -1]. Both together are not only the same as (0, 0) and thus
+	// wrap from the right edge of VRAM back to the left one, but also trigger
+	// the same General Protection Fault seen in the plot_loop itself.
 	vram_offset = vram_offset_shift(x_cur, y_cur) - 1;
-	restore_at(vram_offset);
+	unput32_at(vram_offset);
 end:
 	if(!graph_r_unput) {
 		grcg_off_func();
 	}
 
 #undef plot_loop
-#undef restore_at
+#undef unput32_at
 #undef clip_lerp_min
 #undef clip_lerp_max
-#undef slope
+#undef slope_x
 }
 /// -----------------------
 
-void z_grcg_boxfill(int left, int top, int right, int bottom, int col)
+void z_grcg_boxfill(
+	screen_x_t left,
+	vram_y_t top,
+	screen_x_t right,
+	vram_y_t bottom,
+	int col
+)
 {
-	int x;
-	int y;
-	int full_bytes_to_put;
+	vram_byte_amount_t x;
+	vram_y_t y;
+	vram_byte_amount_t full_bytes_to_put;
 	int order_tmp;
 	dots8_t left_pixels;
 	dots8_t right_pixels;
 	dots8_t *vram_row;
 
-	fix_order(left, right);
-	fix_order(top, bottom);
+	fix_order(order_tmp, left, right);
+	fix_order(order_tmp, top, bottom);
 	clip_x(left, right);
 	clip_y(top, bottom);
 
 	grcg_setcolor_rmw(col);
-	vram_row = (dots8_t *)(MK_FP(GRAM_400, (top * ROW_SIZE) + (left >> 3)));
+	vram_row = (dots8_t *)(MK_FP(SEG_PLANE_B, vram_offset_mulshift(left, top)));
 	for(y = top; y <= bottom; y++) {
 		full_bytes_to_put = (right >> 3) - (left >> 3);
-		left_pixels = 0xFF >> (left & 7);
-		right_pixels = 0xFF << (7 - (right & 7));
+		left_pixels = 0xFF >> (left & BYTE_MASK);
+		right_pixels = 0xFF << (BYTE_MASK - (right & BYTE_MASK));
 
 		if(full_bytes_to_put == 0) {
 			vram_row[0] = (left_pixels & right_pixels);
@@ -662,7 +701,13 @@ void z_grcg_boxfill(int left, int top, int right, int bottom, int col)
 	grcg_off_func();
 }
 
-void graph_r_box(int left, int top, int right, int bottom, int col)
+void graph_r_box(
+	screen_x_t left,
+	vram_y_t top,
+	screen_x_t right,
+	vram_y_t bottom,
+	int col
+)
 {
 	graph_r_hline(left, right, top, col);
 	graph_r_vline(left, top, bottom, col);
@@ -670,10 +715,18 @@ void graph_r_box(int left, int top, int right, int bottom, int col)
 	graph_r_hline(left, right, bottom, col);
 }
 
-int text_extent_fx(int fx, const unsigned char *str)
+inline int fx_weight_from(int col_and_fx) {
+	return ((col_and_fx / 0x10) % 4);
+}
+
+inline pixel_t fx_spacing_from(int col_and_fx) {
+	return ((col_and_fx / 0x40) % 8);
+}
+
+pixel_t text_extent_fx(int col_and_fx, const unsigned char *str)
 {
-	register int ret = 0;
-	register int spacing = (fx / 0x40) % 8;
+	register pixel_t ret = 0;
+	register pixel_t spacing = fx_spacing_from(col_and_fx);
 	while(*str) {
 		if(_ismbblead(str[0])) {
 			uint16_t codepoint = ((char)str[0] << 8) + str[0];
@@ -695,41 +748,43 @@ int text_extent_fx(int fx, const unsigned char *str)
 	return ret - spacing;
 }
 
-#include "th01/hardware/grppsafx.c"
+#include "th01/hardware/grppsafx.cpp"
 
-void graph_putsa_fx(int left, int top, int fx, const unsigned char *str)
+void graph_putsa_fx(
+	screen_x_t left, vram_y_t top, int16_t col_and_fx, const unsigned char *str
+)
 {
-	register int x = left;
+	register screen_x_t x = left;
 	uint16_t codepoint;
-	dots16_t glyph_row;
-	unsigned char far *vram;
+	dots_t(GLYPH_FULL_W) glyph_row;
+	dots8_t far *vram;
 	int fullwidth;
 	int first_bit;
-	int weight = (fx / 0x10) % 4;
-	int spacing = (fx / 0x40) % 8;
-	int clear_bg = (fx & FX_CLEAR_BG);
-	int underline = (fx & FX_UNDERLINE);
-	int reverse = (fx & FX_REVERSE);
-	int w;
-	int line;
-	dots16_t glyph[GLYPH_H];
-	register dots16_t glyph_row_tmp;
+	int weight = fx_weight_from(col_and_fx);
+	pixel_t spacing = fx_spacing_from(col_and_fx);
+	int clear_bg = (col_and_fx & FX_CLEAR_BG);
+	int underline = (col_and_fx & FX_UNDERLINE);
+	int reverse = (col_and_fx & FX_REVERSE);
+	pixel_t w;
+	pixel_t line;
+	dot_rect_t(GLYPH_FULL_W, GLYPH_H) glyph;
+	register dots_t(GLYPH_FULL_W) glyph_row_tmp;
 
 	if(clear_bg) {
-		w = text_extent_fx(fx, str);
+		w = text_extent_fx(col_and_fx, str);
 		if(underline) {
 			z_grcg_boxfill(x, top, (x + w - 1), (top + GLYPH_H + 1), 0);
-			graph_r_hline(x, (x + w - 1), (top + GLYPH_H + 1), 7);
+			graph_r_hline(x, (x + w - 1), (top + GLYPH_H + 1), V_WHITE);
 		} else {
 			z_grcg_boxfill(x, top, (x + w - 1), (top + GLYPH_H - 1), 0);
 		}
 	} else if(underline) {
-		w = text_extent_fx(fx, str);
-		graph_r_hline(x, (x + w - 1), (top + GLYPH_H + 1), 7);
+		w = text_extent_fx(col_and_fx, str);
+		graph_r_hline(x, (x + w - 1), (top + GLYPH_H + 1), V_WHITE);
 	}
 
-	grcg_setcolor_rmw(fx);
-	OUTB(0x68, 0xB); // CG ROM dot access
+	grcg_setcolor_rmw(col_and_fx);
+	outportb(0x68, 0xB); // CG ROM dot access
 
 	while(str[0]) {
 		set_vram_ptr(vram, first_bit, x, top);
@@ -749,19 +804,19 @@ void graph_putsa_fx(int left, int top, int fx, const unsigned char *str)
 		advance_left(x, fullwidth, spacing);
 	}
 
-	OUTB(0x68, 0xA); // CG ROM code access
+	outportb(0x68, 0xA); // CG ROM code access
 	grcg_off_func();
 }
 
-void graph_copy_byterect_back_to_front(
-	int left, int top, int right, int bottom
+void graph_copy_byterect_from_accessed_page_to_other(
+	screen_x_t left, vram_y_t top, screen_x_t right, vram_y_t bottom
 )
 {
-	int w = (right - left) / 8;
-	int h = (bottom - top);
+	pixel_t w = (right - left) / BYTE_DOTS;
+	pixel_t h = (bottom - top);
 	Planes_declare(p);
-	page_t page_front = page_back ^ 1;
-	int row;
+	page_t page_front = page_accessed ^ 1;
+	pixel_t row;
 	PlanarRow_declare(tmp);
 
 	Planes_offset(p, left, top);
@@ -769,22 +824,26 @@ void graph_copy_byterect_back_to_front(
 		PlanarRow_blit(tmp, p, w);
 		graph_accesspage(page_front);
 		PlanarRow_blit(p, tmp, w);
-		graph_accesspage(page_back);
+		graph_accesspage(page_accessed);
 		Planes_next_row(p);
 	}
 }
 
 void graph_move_byterect_interpage(
-	int src_left, int src_top, int src_right, int src_bottom,
-	int dst_left, int dst_top,
+	screen_x_t src_left,
+	vram_y_t src_top,
+	screen_x_t src_right,
+	vram_y_t src_bottom,
+	screen_x_t dst_left,
+	vram_y_t dst_top,
 	int src, int dst
 )
 {
-	int w = (src_right - src_left) / 8;
-	int h = (src_bottom - src_top);
+	pixel_t w = (src_right - src_left) / BYTE_DOTS;
+	pixel_t h = (src_bottom - src_top);
 	Planes_declare(src);
 	Planes_declare(dst);
-	int row;
+	pixel_t row;
 	PlanarRow_declare(tmp);
 
 	Planes_offset(src, src_left, src_top);
@@ -797,7 +856,7 @@ void graph_move_byterect_interpage(
 		Planes_next_row(src);
 		Planes_next_row(dst);
 	}
-	graph_accesspage(page_back);
+	graph_accesspage(page_accessed);
 }
 
 void z_palette_fade_from(
@@ -826,7 +885,7 @@ void z_palette_fade_from(
 	for(i = 0; i < fadepal.range(); i++) {
 		z_vsync_wait();
 		for(col = 0; col < COLOR_COUNT; col++) {
-			for(comp = 0; comp < sizeof(RGB4); comp++) {
+			for(comp = 0; comp < COMPONENT_COUNT; comp++) {
 				if(fadepal[col].v[comp] != z_Palettes[col].v[comp]) {
 					fadepal.colors[col].v[comp] +=
 						(fadepal[col].v[comp] < z_Palettes[col].v[comp])
@@ -874,6 +933,7 @@ struct mcb_t {
 	uint8_t m_fill[3];
 	uint8_t m_name[8];
 };
+static const uint16_t MCB_PARAS = (sizeof(mcb_t) / 16);
 
 respal_t __seg* z_respal_exist(void)
 {
@@ -884,7 +944,6 @@ respal_t __seg* z_respal_exist(void)
 	int i;
 
 #define MCB reinterpret_cast<mcb_t __seg *>(mcb)	/* For easy derefencing */
-#define MCB_PARAS (sizeof(mcb_t) / 16)	/* For segment pointer arithmetic */
 
 	// "Get list of lists"
 	segread(&sregs);
@@ -909,7 +968,6 @@ respal_t __seg* z_respal_exist(void)
 		mcb += MCB_PARAS + MCB->m_size;
 	};
 
-#undef MCB_PARAS
 #undef MCB
 }
 

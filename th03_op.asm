@@ -13,22 +13,20 @@
 ; OS type	  :  MS	DOS
 ; Application type:  Executable	16bit
 
-		.286 ; Force the .model directive to create 16-bit default segments...
-		.model large
-		.386 ; ... then switch to what we actually need.
-		; And yes, we can't move this to an include file for some reason.
+		.386
+		.model use16 large _TEXT
 
 include ReC98.inc
 include th03/th03.inc
-include th02/music/music.inc
+include th01/hardware/grppsafx.inc
+include th02/op/music.inc
+include th03/sprites/regi.inc
+include th03/formats/scoredat.inc
 
-	extern SCOPY@:proc
-	extern __mbcjmstojis:proc
-	extern __mbctype:byte
-	extern __ctype:byte
 	extern _execl:proc
 	extern _getch:proc
-	extern _memcpy:proc
+
+group_01 group op_01_TEXT, op_02_TEXT, SCOREDAT_TEXT, op_03_TEXT
 
 ; ===========================================================================
 
@@ -135,11 +133,13 @@ _TEXT		ends
 
 ; Segment type:	Pure code
 op_01_TEXT	segment	byte public 'CODE' use16
-		assume cs:op_01_TEXT
+		assume cs:group_01
 		;org 8
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-include th03/formats/cfg.asm
+	CFG_LOAD procdesc pascal near
+	CFG_SAVE procdesc pascal near
+	CFG_SAVE_EXIT procdesc pascal near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -289,7 +289,7 @@ loc_9B4E:
 		call	cfg_save
 		call	gaiji_restore
 		kajacall	KAJA_SONG_STOP
-		call	game_exit
+		call	_game_exit
 		pushd	0
 		push	ds
 		push	offset path	; "mainl"
@@ -501,7 +501,7 @@ loc_9D19:
 		call	cfg_save
 		call	gaiji_restore
 		kajacall	KAJA_SONG_STOP
-		call	game_exit
+		call	_game_exit
 		pushd	0
 		push	ds
 		push	offset path	; "mainl"
@@ -598,7 +598,7 @@ loc_9EA6:
 		call	gaiji_restore
 		kajacall	KAJA_SONG_STOP
 		call	super_free
-		call	game_exit
+		call	_game_exit
 		pushd	0
 		push	ds
 		push	offset path	; "mainl"
@@ -1122,7 +1122,7 @@ loc_A2AE:
 		jnz	short loc_A2DB
 		mov	es:[bx+resident_t.bgm_mode], SND_BGM_FM
 		kajacall	KAJA_SONG_STOP
-		call	snd_determine_mode
+		call	_snd_determine_mode
 		kajacall	KAJA_SONG_PLAY
 		jmp	short loc_A2F1
 ; ---------------------------------------------------------------------------
@@ -1192,7 +1192,7 @@ loc_A357:
 		jnz	short loc_A384
 		mov	es:[bx+resident_t.bgm_mode], SND_BGM_FM
 		kajacall	KAJA_SONG_STOP
-		call	snd_determine_mode
+		call	_snd_determine_mode
 		kajacall	KAJA_SONG_PLAY
 		jmp	short loc_A39A
 ; ---------------------------------------------------------------------------
@@ -1380,7 +1380,7 @@ loc_A4FE:
 		call	cfg_save_exit
 		call	gaiji_restore
 		call	text_clear
-		call	game_exit_to_dos
+		call	_game_exit_to_dos
 		call	respal_free
 		pop	bp
 		retf
@@ -1410,7 +1410,7 @@ var_1  	= byte ptr -1
 		push	ax
 		mov	al, [bp+@@color]
 		mov	ah, 0
-		or	ax, 20h
+		or	ax, FX_WEIGHT_BOLD
 		push	ax
 		mov	al, [bp+@@sel]
 		mov	ah, 0
@@ -1427,7 +1427,7 @@ var_1  	= byte ptr -1
 		push	ax
 		mov	al, [bp+@@color]
 		mov	ah, 0
-		or	ax, 20h
+		or	ax, FX_WEIGHT_BOLD
 		push	ax
 		mov	al, [bp+@@sel]
 		mov	ah, 0
@@ -1481,11 +1481,11 @@ loc_A5AD:
 		retn	2
 draw_tracks	endp
 
-include th02/music/music.asm
-include th03/music/cmt_back_snap.asm
-include th02/music/music_cmt_load.asm
-include th03/music/cmt_back_free_put.asm
-include th03/music/draw_cmt.asm
+include th02/op/music.asm
+include th03/op/cmt_back_snap.asm
+include th02/op/music_cmt_load.asm
+include th03/op/cmt_back_free_put.asm
+include th03/op/draw_cmt.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1515,9 +1515,9 @@ loc_AC15:
 		graph_accesspage al
 		call	graph_clear
 		graph_accesspage 1
-		call	pi_slot_load pascal, 0, ds, offset aOp3_pi
-		call	pi_slot_palette_apply pascal, 0
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_load pascal, 0, ds, offset aOp3_pi
+		call	pi_palette_apply pascal, 0
+		call	pi_put_8 pascal, large 0, 0
 		freePISlotLarge	0
 		mov	al, music_track_playing
 		mov	_music_sel, al
@@ -1605,7 +1605,7 @@ loc_AD52:
 		shl	ax, 2
 		mov	bx, ax
 		pushd	_MUSIC_FILES[bx]
-		call	snd_load
+		call	_snd_load
 		add	sp, 6
 		kajacall	KAJA_SONG_PLAY
 		mov	al, _music_sel
@@ -1664,26 +1664,26 @@ var_2		= word ptr -2
 		mov	[bp+@@page], 0
 		call	super_entry_bfnt pascal, ds, offset aOpwin_bft ; "opwin.bft"
 		kajacall	KAJA_SONG_STOP
-		call	snd_load c, offset aOp_m, ds, SND_LOAD_SONG
-		call	pi_slot_load pascal, 0, ds, offset aTl01_pi
+		call	_snd_load c, offset aOp_m, ds, SND_LOAD_SONG
+		call	pi_load pascal, 0, ds, offset aTl01_pi
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		graph_accesspage 1
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		graph_accesspage 0
-		call	pi_slot_palette_apply pascal, 0
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_palette_apply pascal, 0
+		call	pi_put_8 pascal, large 0, 0
 		call	egc_shift_left_all pascal, 2
-		mov	Palettes+45, 0
-		mov	Palettes+46, 0
-		mov	Palettes+47, 0
+		mov	Palettes[15 * size rgb_t].r, 0
+		mov	Palettes[15 * size rgb_t].g, 0
+		mov	Palettes[15 * size rgb_t].b, 0
 		call	far ptr	palette_show
-		mov	Palettes+33, 0
-		mov	Palettes+34, 0
-		mov	Palettes+35, 0
+		mov	Palettes[11 * size rgb_t].r, 0
+		mov	Palettes[11 * size rgb_t].g, 0
+		mov	Palettes[11 * size rgb_t].b, 0
 		call	far ptr	palette_show
 		freePISlotLarge	0
-		call	pi_slot_load pascal, 0, ds, offset aTl02_pi
+		call	pi_load pascal, 0, ds, offset aTl02_pi
 		graph_showpage 1
 		mov	si, 0A0h
 		jmp	short loc_AF02
@@ -1693,16 +1693,16 @@ loc_AEA0:
 		push	1
 		call	frame_delay
 		mov	al, byte ptr [bp+var_2]
-		mov	Palettes+45, al
-		mov	Palettes+46, al
-		mov	Palettes+47, al
+		mov	Palettes[15 * size rgb_t].r, al
+		mov	Palettes[15 * size rgb_t].g, al
+		mov	Palettes[15 * size rgb_t].b, al
 		call	far ptr	palette_show
-		cmp	[bp+var_2], 80h
+		cmp	[bp+var_2], 128
 		jg	short loc_AECB
 		mov	al, byte ptr [bp+var_2]
-		mov	Palettes+33, al
-		mov	Palettes+34, al
-		mov	Palettes+35, al
+		mov	Palettes[11 * size rgb_t].r, al
+		mov	Palettes[11 * size rgb_t].g, al
+		mov	Palettes[11 * size rgb_t].b, al
 
 loc_AECB:
 		call	far ptr	palette_show
@@ -1730,16 +1730,16 @@ loc_AF02:
 
 loc_AF09:
 		mov	al, byte ptr [bp+var_2]
-		mov	Palettes+45, al
-		mov	Palettes+46, al
-		mov	Palettes+47, al
+		mov	Palettes[15 * size rgb_t].r, al
+		mov	Palettes[15 * size rgb_t].g, al
+		mov	Palettes[15 * size rgb_t].b, al
 		call	far ptr	palette_show
 		add	[bp+var_2], 2
 		push	1
 		call	frame_delay
 
 loc_AF25:
-		cmp	[bp+var_2], 0FFh
+		cmp	[bp+var_2], 255
 		jl	short loc_AF09
 		mov	vsync_Count1, 0
 		call	sub_B3EF
@@ -1770,8 +1770,8 @@ loc_AF65:
 		kajacall	KAJA_SONG_PLAY
 		graph_showpage 0
 		graph_accesspage al
-		call	pi_slot_palette_apply pascal, 0
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_palette_apply pascal, 0
+		call	pi_put_8 pascal, large 0, 0
 		push	1
 		call	frame_delay
 		mov	PaletteTone, 100
@@ -1797,7 +1797,7 @@ loc_AFD9:
 		cmp	si, 8
 		jl	short loc_AFB4
 		graph_accesspage 1
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		graph_accesspage 0
 		freePISlotLarge	0
 		call	sub_B38D
@@ -1817,17 +1817,17 @@ sub_B008	proc near
 		push	si
 		call	super_entry_bfnt pascal, ds, offset aOpwin_bft ; "opwin.bft"
 		kajacall	KAJA_SONG_STOP
-		call	snd_load c, offset aOp_m, ds, SND_LOAD_SONG
+		call	_snd_load c, offset aOp_m, ds, SND_LOAD_SONG
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
-		call	pi_slot_load pascal, 0, ds, offset aTl02_pi
+		call	pi_load pascal, 0, ds, offset aTl02_pi
 		graph_showpage 0
 		call	sub_B3EF
 		graph_accesspage 1
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_put_8 pascal, large 0, 0
 		graph_accesspage 0
-		call	pi_slot_palette_apply pascal, 0
-		call	pi_slot_put pascal, large 0, 0
+		call	pi_palette_apply pascal, 0
+		call	pi_put_8 pascal, large 0, 0
 		graph_accesspage 0
 		freePISlotLarge	0
 		call	sub_B38D
@@ -1967,314 +1967,17 @@ loc_B11F:
 		pop	bp
 		retn	2
 sub_B10A	endp
+op_01_TEXT	ends
 
+op_02_TEXT segment byte public 'CODE' use16
+op_02_TEXT ends
 
-; =============== S U B	R O U T	I N E =======================================
+SCOREDAT_TEXT segment byte public 'CODE' use16
+SCOREDAT_TEXT ends
 
-; Attributes: bp-based frame
-
-sub_B168	proc near
-
-var_4		= word ptr -4
-var_1		= byte ptr -1
-arg_0		= word ptr  4
-
-		enter	4, 0
-		push	si
-		push	di
-		mov	[bp+var_4], 0
-		call	IRand
-		mov	byte_FC50, al
-		call	IRand
-		mov	byte_FC51, al
-		call	IRand
-		mov	byte_FBD7, al
-		mov	si, 2396h
-		xor	di, di
-		jmp	short loc_B19B
-; ---------------------------------------------------------------------------
-
-loc_B192:
-		mov	al, [si]
-		mov	ah, 0
-		add	[bp+var_4], ax
-		inc	di
-		inc	si
-
-loc_B19B:
-		cmp	di, 0CCh
-		jl	short loc_B192
-		mov	ax, [bp+var_4]
-		mov	word_FB84, ax
-		mov	si, 2460h
-		dec	si
-		mov	al, byte_FC51
-		mov	[bp+var_1], al
-		mov	di, 0CBh ; 'À'
-		jmp	short loc_B1D4
-; ---------------------------------------------------------------------------
-
-loc_B1B6:
-		mov	al, [si]
-		mov	dl, byte_FC50
-		add	dl, [bp+var_1]
-		sub	al, dl
-		mov	[si], al
-		mov	al, [si]
-		mov	[bp+var_1], al
-		mov	al, byte_FC51
-		ror	[bp+var_1], 3
-		xor	[bp+var_1], al
-		dec	di
-		dec	si
-
-loc_B1D4:
-		or	di, di
-		jge	short loc_B1B6
-		push	ds
-		push	word_E1F2
-		call	file_append
-		mov	ax, [bp+arg_0]
-		imul	ax, 0CEh
-		movzx	eax, ax
-		push	eax
-		push	0
-		call	file_seek
-		push	ds
-		push	offset word_FB84
-		push	0CEh
-		call	file_write
-		call	file_close
-		pop	di
-		pop	si
-		leave
-		retn	2
-sub_B168	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B20D	proc near
-
-var_1		= byte ptr -1
-
-		enter	2, 0
-		push	si
-		mov	si, 2394h
-		xor	dx, dx
-		jmp	short loc_B235
-; ---------------------------------------------------------------------------
-
-loc_B219:
-		mov	al, [si+1]
-		mov	[bp+var_1], al
-		mov	al, byte_FC51
-		ror	[bp+var_1], 3
-		xor	[bp+var_1], al
-		mov	al, byte_FC50
-		add	al, [bp+var_1]
-		add	al, [si]
-		mov	[si], al
-		inc	dx
-		inc	si
-
-loc_B235:
-		cmp	dx, 0CBh ; 'À'
-		jl	short loc_B219
-		mov	al, byte_FC50
-		add	al, byte_FC51
-		add	al, [si]
-		mov	[si], al
-		pop	si
-		leave
-		retn
-sub_B20D	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B249	proc near
-
-var_1		= byte ptr -1
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	[bp+var_1], 29h	; ')'
-		xor	si, si
-		jmp	short loc_B28A
-; ---------------------------------------------------------------------------
-
-loc_B257:
-		xor	di, di
-		jmp	short loc_B266
-; ---------------------------------------------------------------------------
-
-loc_B25B:
-		mov	bx, si
-		shl	bx, 3
-		mov	byte ptr [bx+di+2396h],	2Ah ; '*'
-		inc	di
-
-loc_B266:
-		cmp	di, 8
-		jl	short loc_B25B
-		xor	di, di
-		jmp	short loc_B27A
-; ---------------------------------------------------------------------------
-
-loc_B26F:
-		mov	bx, si
-		imul	bx, 0Ah
-		mov	byte ptr [bx+di+23E8h],	20h ; ' '
-		inc	di
-
-loc_B27A:
-		cmp	di, 0Ah
-		jl	short loc_B26F
-		mov	byte ptr [si+244Ch], 0
-		mov	byte ptr [si+2456h], 21h ; '!'
-		inc	si
-
-loc_B28A:
-		cmp	si, 0Ah
-		jl	short loc_B257
-		mov	byte_FBDC, 21h ; '!'
-		mov	di, 1
-		jmp	short loc_B2A9
-; ---------------------------------------------------------------------------
-
-loc_B299:
-		mov	bx, di
-		imul	bx, 0Ah
-		mov	al, [bp+var_1]
-		mov	[bx+23EBh], al
-		inc	di
-		dec	[bp+var_1]
-
-loc_B2A9:
-		cmp	di, 0Ah
-		jl	short loc_B299
-		mov	byte_FBD6, 12h
-		xor	si, si
-		jmp	short loc_B2BF
-; ---------------------------------------------------------------------------
-
-loc_B2B7:
-		push	si
-		call	sub_B168
-		call	sub_B20D
-		inc	si
-
-loc_B2BF:
-		cmp	si, 4
-		jl	short loc_B2B7
-		pop	di
-		pop	si
-		leave
-		retn
-sub_B249	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B2C8	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	cx, cx
-		mov	si, 2396h
-		xor	dx, dx
-		jmp	short loc_B2DD
-; ---------------------------------------------------------------------------
-
-loc_B2D5:
-		mov	al, [si]
-		mov	ah, 0
-		add	cx, ax
-		inc	dx
-		inc	si
-
-loc_B2DD:
-		cmp	dx, 0CCh
-		jl	short loc_B2D5
-		cmp	word_FB84, cx
-		jz	short loc_B2ED
-		mov	al, 1
-		jmp	short loc_B2EF
-; ---------------------------------------------------------------------------
-
-loc_B2ED:
-		mov	al, 0
-
-loc_B2EF:
-		pop	si
-		pop	bp
-		retn
-sub_B2C8	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B2F2	proc near
-
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	word_E1F2
-		call	file_exist
-		or	ax, ax
-		jnz	short loc_B314
-		push	ds
-		push	word_E1F2
-		call	file_create
-		call	file_close
-		jmp	short loc_B34D
-; ---------------------------------------------------------------------------
-
-loc_B314:
-		push	ds
-		push	word_E1F2
-		call	file_ropen
-		mov	ax, [bp+arg_0]
-		imul	ax, 0CEh
-		movzx	eax, ax
-		push	eax
-		push	0
-		call	file_seek
-		push	ds
-		push	offset word_FB84
-		push	0CEh
-		call	file_read
-		call	file_close
-		call	sub_B20D
-		call	sub_B2C8
-		or	al, al
-		jz	short loc_B357
-
-loc_B34D:
-		call	sub_B249
-		mov	ax, 1
-		pop	bp
-		retn	2
-; ---------------------------------------------------------------------------
-
-loc_B357:
-		xor	ax, ax
-		pop	bp
-		retn	2
-sub_B2F2	endp
-
+op_03_TEXT segment byte public 'CODE' use16
+	@SCOREDAT_LOAD_AND_DECODE$Q6RANK_T procdesc pascal near \
+		rank:word
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2292,8 +1995,7 @@ var_1		= byte ptr -1
 ; ---------------------------------------------------------------------------
 
 loc_B36A:
-		push	si
-		call	sub_B2F2
+		call	@scoredat_load_and_decode$q6rank_t pascal, si
 		or	ax, ax
 		jz	short loc_B376
 		mov	al, 7
@@ -2301,7 +2003,7 @@ loc_B36A:
 ; ---------------------------------------------------------------------------
 
 loc_B376:
-		cmp	byte_FBD6, 63h ; 'c'
+		cmp	_hi.SDS_score.SD_cleared, SCOREDAT_CLEARED
 		jnz	short loc_B381
 		mov	[bp+var_1], 9
 
@@ -2309,7 +2011,7 @@ loc_B381:
 		inc	si
 
 loc_B382:
-		cmp	si, 4
+		cmp	si, (RANK_LUNATIC + 1)
 		jl	short loc_B36A
 		mov	al, [bp+var_1]
 
@@ -2328,7 +2030,7 @@ sub_B38D	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		call	hflip_lut_generate
+		call	_hflip_lut_generate
 		xor	si, si
 		jmp	short loc_B3B0
 ; ---------------------------------------------------------------------------
@@ -2340,7 +2042,7 @@ loc_B39A:
 		shl	bx, 2
 		pushd	dword ptr [bx+0A0Eh]
 		push	0
-		call	cdg_load_single_forcealpha
+		call	cdg_load_single
 		inc	si
 
 loc_B3B0:
@@ -2360,7 +2062,7 @@ sub_B38D	endp
 sub_B3C3	proc near
 		push	bp
 		mov	bp, sp
-		call	cdg_load_single_forcealpha pascal, 1, ds, offset a99sl_cdg, 0
+		call	cdg_load_single pascal, 1, ds, offset a99sl_cdg, 0
 		call	cdg_load_single_noalpha pascal, 11, ds, offset aSlwin_cdg , 0
 		call	cdg_load_single_noalpha pascal, 12, ds, offset aSlex_cdg, 0
 		pop	bp
@@ -2376,7 +2078,7 @@ sub_B3EF	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		call	cdg_load_single_forcealpha pascal, 0, [off_E1FE], 0
+		call	cdg_load_single pascal, 0, [off_E1FE], 0
 		mov	si, 3
 		jmp	short loc_B41C
 ; ---------------------------------------------------------------------------
@@ -2388,7 +2090,7 @@ loc_B406:
 		shl	bx, 2
 		pushd	dword ptr [bx+0A0Eh]
 		push	0
-		call	cdg_load_single_forcealpha
+		call	cdg_load_single
 		inc	si
 
 loc_B41C:
@@ -2410,7 +2112,7 @@ sub_B424	proc near
 		push	si
 		mov	vsync_Count1, 0
 		kajacall	KAJA_SONG_STOP
-		call	snd_load c, offset aSelect_m, ds, SND_LOAD_SONG
+		call	_snd_load c, offset aSelect_m, ds, SND_LOAD_SONG
 		kajacall	KAJA_SONG_PLAY
 		mov	word_FC64, 0C8h	; '»'
 		les	bx, _resident
@@ -2441,7 +2143,7 @@ loc_B4A6:
 		shl	bx, 2
 		pushd	dword ptr [bx+0A0Eh]
 		push	0
-		call	cdg_load_single_forcealpha
+		call	cdg_load_single
 		inc	si
 
 loc_B4BC:
@@ -2507,7 +2209,7 @@ loc_B50C:
 
 loc_B50E:
 		push	ax
-		call	cdg_put
+		call	cdg_put_8
 		push	(416 shl 16) or 96
 		cmp	byte_FC5B, 0
 		jnz	short loc_B52A
@@ -2522,7 +2224,7 @@ loc_B52A:
 
 loc_B52D:
 		push	ax
-		call	cdg_put_hflip
+		call	cdg_put_hflip_8
 		pop	bp
 		retn
 sub_B4F3	endp
@@ -2549,10 +2251,8 @@ loc_B54E:
 
 loc_B550:
 		push	ax
-		call	cdg_put
-		push	(416 shl 16) or 96
-		push	1
-		call	cdg_put
+		call	cdg_put_8
+		call	cdg_put_8 pascal, large (416 shl 16) or 96, 1
 		pop	bp
 		retn
 sub_B535	endp
@@ -2570,15 +2270,11 @@ var_2		= word ptr -2
 		enter	4, 0
 		push	si
 		push	di
-		push	(32 shl 16) or 304
-		push	11
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8 pascal, large (32 shl 16) or 304, 11
 		les	bx, _resident
 		cmp	es:[bx+resident_t.game_mode], GM_STORY
 		jz	short loc_B590
-		push	(416 shl 16) or 304
-		push	11
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8 pascal, large (416 shl 16) or 304, 11
 
 loc_B590:
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 14
@@ -2711,27 +2407,23 @@ sub_B636	endp
 sub_B670	proc near
 		push	bp
 		mov	bp, sp
-		push	(160 shl 16) or 304
-		push	12
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8 pascal, large (160 shl 16) or 304, 12
 		push	(176 shl 16) or 316
 		mov	al, _playchars[0]
 		cbw
 		add	ax, 13
 		push	ax
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8
 		les	bx, _resident
 		cmp	es:[bx+resident_t.game_mode], GM_STORY
 		jz	short loc_B6BE
-		push	(544 shl 16) or 304
-		push	12
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8 pascal, large (544 shl 16) or 304, 12
 		push	(560 shl 16) or 316
 		mov	al, _playchars[1]
 		cbw
 		add	ax, 13
 		push	ax
-		call	cdg_put_noalpha
+		call	cdg_put_noalpha_8
 
 loc_B6BE:
 		pop	bp
@@ -2745,7 +2437,7 @@ sub_B670	endp
 
 sub_B6C0	proc near
 
-var_7		= byte ptr -7
+@@angle		= byte ptr -7
 var_6		= word ptr -6
 var_4		= word ptr -4
 var_2		= word ptr -2
@@ -2765,31 +2457,31 @@ arg_8		= byte ptr  0Ch
 loc_B6CF:
 		mov	al, byte ptr [bp+var_6]
 		add	al, [bp+arg_8]
-		mov	[bp+var_7], al
+		mov	[bp+@@angle], al
 		mov	ah, 0
 		imul	[bp+arg_2]
-		mov	bx, 100h
+		mov	bx, 256
 		cwd
 		idiv	bx
-		mov	[bp+var_7], al
+		mov	[bp+@@angle], al
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, (RES_X / 2), si, _CosTable8[bx]
+		call	_vector1_at c, (RES_X / 2), si, _CosTable8[bx]
 		mov	[bp+var_2], ax
 		mov	al, byte ptr [bp+var_6]
 		add	al, [bp+arg_6]
-		mov	[bp+var_7], al
+		mov	[bp+@@angle], al
 		mov	ah, 0
 		imul	[bp+arg_0]
-		mov	bx, 100h
+		mov	bx, 256
 		cwd
 		idiv	bx
-		mov	[bp+var_7], al
+		mov	[bp+@@angle], al
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	vector1_at c, (RES_Y / 2), si, _SinTable8[bx]
+		call	_vector1_at c, (RES_Y / 2), si, _SinTable8[bx]
 		mov	[bp+var_4], ax
 		push	[bp+var_2]
 		push	ax
@@ -3125,7 +2817,7 @@ loc_B9CC:
 		push	0
 
 loc_B9DA:
-		call	cdg_load_single_forcealpha
+		call	cdg_load_single
 		mov	bx, 1
 		sub	bx, si
 		cmp	byte ptr [bx+246Ah], 0
@@ -3180,7 +2872,7 @@ loc_BA53:
 		push	1
 
 loc_BA61:
-		call	cdg_load_single_forcealpha
+		call	cdg_load_single
 		mov	bx, 1
 		sub	bx, si
 		cmp	byte ptr [bx+246Ah], 0
@@ -3608,48 +3300,42 @@ loc_BEB0:
 sub_BD9A	endp
 		db 0
 
-op_01_TEXT	ends
+op_03_TEXT	ends
 
 ; ===========================================================================
 
-; Segment type:	Pure code
-op_02_TEXT	segment	word public 'CODE' use16
-		assume cs:op_02_TEXT
-		;org 8
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-include th02/exit_dos.asm
-include th01/hardware/vram_planes_set.asm
-include th02/snd/detmode.asm
-include th02/snd/pmd_res.asm
-include th02/snd/load.asm
-include th02/exit.asm
-include th03/math/vector1_at.asm
-		db 0
-include th03/formats/cdg_put.asm
-include th03/formats/cdg_put_hflip.asm
-include th02/hardware/frame_delay.asm
-		db 0
-include th03/hardware/input_sense.asm
-include th02/formats/pi_slot_palette_apply.asm
-include th02/formats/pi_slot_put.asm
-include th02/snd/kajaint.asm
-include th02/initop.asm
-include th03/formats/cdg_load.asm
-include th03/hardware/grppsafx.asm
-include th02/formats/pi_slot_load.asm
-include th03/hardware/input_modes.asm
-include th03/hardware/input_wait.asm
-		db 0
-include th03/formats/cdg_put_noalpha.asm
-include th03/formats/hfliplut.asm
+SHARED	segment	word public 'CODE' use16
+	extern _game_exit_to_dos:proc
+	extern _snd_determine_mode:proc
+	extern _snd_load:proc
+	extern _game_exit:proc
+	extern _vector1_at:proc
+	extern CDG_PUT_8:proc
+	extern CDG_PUT_HFLIP_8:proc
+	extern FRAME_DELAY:proc
+	extern _input_reset_sense_key_held:proc
+	extern PI_PALETTE_APPLY:proc
+	extern PI_PUT_8:proc
+	extern SND_KAJA_INTERRUPT:proc
+	extern _game_init_op:proc
+	extern CDG_LOAD_SINGLE:proc
+	extern CDG_LOAD_SINGLE_NOALPHA:proc
+	extern CDG_LOAD_ALL_NOALPHA:proc
+	extern CDG_FREE:proc
+	extern GRAPH_PUTSA_FX:proc
+	extern PI_LOAD:proc
+	extern INPUT_MODE_INTERFACE:proc
+	extern INPUT_MODE_KEY_VS_KEY:proc
+	extern INPUT_MODE_JOY_VS_KEY:proc
+	extern INPUT_MODE_KEY_VS_JOY:proc
+	extern CDG_PUT_NOALPHA_8:proc
+	extern _hflip_lut_generate:proc
 	extern FRAME_DELAY_2:proc
-op_02_TEXT	ends
+SHARED	ends
 
 	.data
 
-include th03/formats/cfg[data].asm
-		db    0
+	extern _snd_sel_disabled:byte
 		db    0
 		db    0
 		db    0
@@ -3697,6 +3383,8 @@ _quit	db 0
 byte_D953	db 1
 _main_menu_initialized	db 0
 _option_initialized	db 0
+public _CFG_FN
+label _CFG_FN
 aYume_cfg	db 'YUME.CFG',0
 ; char path[]
 path		db 'mainl',0
@@ -3729,6 +3417,7 @@ include libs/master.lib/wordmask[data].asm
 include libs/master.lib/mem[data].asm
 include libs/master.lib/super_entry_bfnt[data].asm
 include libs/master.lib/superpa[data].asm
+public _snd_active
 _snd_active	db 0
 		db 0
 include libs/master.lib/respal_exist[data].asm
@@ -3779,7 +3468,7 @@ _MUSIC_FILES	label dword
 		dd aDemo5_m		; "demo5.m"
 		dd aEd_m		; "ed.m"
 		dd aScore_m		; "score.m"
-include th02/music/polygons[data].asm
+include th02/op/polygons[data].asm
 music_track_playing	db 0
 aNo_1B@cVOul	db 'NO.1     Å@ñ≤ÇÕéûãÛÇâzÇ¶Çƒ     ',0
 aNo_2B@B@Select	db 'NO.2    Å@ Å@ Selection         ',0
@@ -3821,16 +3510,17 @@ aDemo4_m	db 'demo4.m',0
 aDemo5_m	db 'demo5.m',0
 aEd_m		db 'ed.m',0
 aScore_m	db 'score.m',0
-include th02/music/music_cmt_load[data].asm
+include th02/op/music_cmt_load[data].asm
 aOp3_pi		db 'op3.pi',0
 aOpwin_bft	db 'opwin.bft',0
 aOp_m		db 'op.m',0
 aTl01_pi	db 'TL01.PI',0
 aTl02_pi	db 'TL02.PI',0
 		db 0
-word_E1F2	dw 0A04h
+public _SCOREDAT_FN
+_SCOREDAT_FN	dw offset aYume_nem
 aYume_nem	db 'YUME.NEM',0
-		db 0
+	evendata
 off_E1FE	dd a00sl_cd2
 					; "00SL.CD2"
 		dd a02sl_cd2		; "02SL.CD2"
@@ -3868,7 +3558,7 @@ off_E1FE	dd a00sl_cd2
 		db    5
 		db    5
 		db    3
-include th03/strings/p_cursor[data].asm
+include th03/gaiji/p_cursor[data].asm
 		db    0
 		db    0
 a00sl_cd2	db '00SL.CD2',0
@@ -3911,18 +3601,11 @@ include th03/hardware/input[bss].asm
 include th03/formats/cdg[bss].asm
 include th02/formats/pi_slots[bss].asm
 include th03/formats/hfliplut[bss].asm
-include th02/music/music[bss].asm
-include th03/music/cmt_back[bss].asm
-include th02/music/music_cmt[bss].asm
-word_FB84	dw ?
-		db 80 dup(?)
-byte_FBD6	db ?
-byte_FBD7	db ?
-		db 4 dup(?)
-byte_FBDC	db ?
-		db 115 dup(?)
-byte_FC50	db ?
-byte_FC51	db ?
+include th02/op/music[bss].asm
+include th03/op/cmt_back[bss].asm
+include th02/op/music_cmt[bss].asm
+public _hi
+_hi	scoredat_section_t <?>
 word_FC52	dw ?
 public _resident
 _resident	dd ?

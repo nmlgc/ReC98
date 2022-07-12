@@ -1,0 +1,1 @@
+#define SCORE_DIGITS 7

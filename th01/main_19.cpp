@@ -3,20 +3,30 @@
  * Code segment #19 of TH01's REIIDEN.EXE
  */
 
-#pragma option -3 -Z -d
+#pragma option -d
 
-extern "C" {
 #include <io.h>
 #include <stdio.h>
-#include "ReC98.h"
-#include "th01/ranks.h"
+#include <string.h>
+#include "platform.h"
+#include "x86real.h"
+#include "pc98.h"
+#include "planar.h"
+#include "decomp.hpp"
+#include "twobyte.h"
+#include "master.hpp"
+#include "th01/rank.h"
 #include "th01/formats/grp.h"
+extern "C" {
 #include "th01/hardware/palette.h"
+#include "th01/hardware/input.hpp"
 #include "th01/hardware/graph.h"
+}
 #include "th01/hiscore/scoredat.hpp"
 
 extern char rank;
 
+#define scoredat_declare()
 #define scoredat_cli()
 #define scoredat_sti()
 #define scoredat_error(str)
@@ -28,9 +38,11 @@ extern char rank;
 #define scoredat_close() file_close()
 #include "th01/hiscore/scorelod.cpp"
 
+// Returns the high score for the difficulty previously loaded by
+// scoredat_load().
 uint32_t scoredat_hiscore_get()
 {
-	return scoredat_points[0];
+	return scoredat_score[0];
 }
 
 #include "th01/hiscore/score_nm.cpp"
@@ -45,20 +57,21 @@ void pascal near str_from_kanji(char str[3], uint16_t kanji)
 	str[2] = '\0';
 }
 
-#define graph_putkanji_fx(left, top, fx, fmt_instance, kanji) \
+#define graph_putkanji_fx_declare() char kanji_str[3];
+#define graph_putkanji_fx(left, top, col_and_fx, fmt_instance, kanji) \
 	str_from_kanji(kanji_str, kanji); \
-	graph_putsa_fx(left, top, fx, kanji_str);
+	graph_putsa_fx(left, top, col_and_fx, kanji_str);
 #define graph_printf_fx graph_putsa_fx
 
-#define graph_printf_s_fx(left, top, fx, fmt_instance, str) \
-	graph_putsa_fx(left, top, fx, str);
+#define graph_printf_s_fx(left, top, col_and_fx, fmt_instance, str) \
+	graph_putsa_fx(left, top, col_and_fx, str);
 
-#define regist_route_put(left, top, fx, char_1, char_2) \
+#define regist_route_put(left, top, col_and_fx, char_1, char_2) \
 	unsigned char route[sizeof(twobyte_t) + 1]; \
 	route[2] = '\0'; \
 	route[0] = char_1; \
 	route[1] = char_2; \
-	graph_putsa_fx(left, top, fx, route); \
+	graph_putsa_fx(left, top, col_and_fx, route); \
 
 #define ALPHABET_SPACE_0 ALPHABET_SPACE
 #define ALPHABET_LEFT_0  ALPHABET_LEFT
@@ -87,22 +100,20 @@ void pascal near str_from_kanji(char str[3], uint16_t kanji)
 	} else { \
 		grp_put(REGIST_BG_CLEARED); \
 	} \
-	graph_copy_page_back_to_front(); \
+	graph_copy_accessed_page_to_other(); \
 	z_palette_black_in(); \
 }
 
-#define regist_title_put(left, stage, ranks, fx) { \
+#define regist_title_put(left, stage, ranks, col_and_fx) { \
 	extern const char REGIST_TITLE_1[]; \
 	extern const char REGIST_TITLE_2[]; \
 	if(stage < SCOREDAT_NOT_CLEARED) { \
-		graph_putsa_fx(left +   0, TITLE_BACK_TOP, fx, REGIST_TITLE_1); \
-		graph_putsa_fx(left + 192, TITLE_BACK_TOP, fx, ranks[rank]); \
+		graph_putsa_fx(left +   0, TITLE_BACK_TOP, col_and_fx, REGIST_TITLE_1); \
+		graph_putsa_fx(left + 192, TITLE_BACK_TOP, col_and_fx, ranks[rank]); \
 	} else { \
-		graph_putsa_fx(left +   0, TITLE_TOP, fx, REGIST_TITLE_2); \
-		graph_putsa_fx(left + 192, TITLE_TOP, fx, ranks[rank]); \
+		graph_putsa_fx(left +   0, TITLE_TOP, col_and_fx, REGIST_TITLE_2); \
+		graph_putsa_fx(left + 192, TITLE_TOP, col_and_fx, ranks[rank]); \
 	} \
 }
 
 #include "th01/hiscore/regist.cpp"
-
-}

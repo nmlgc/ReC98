@@ -4,7 +4,10 @@
  */
 
 extern "C" {
-#include "ReC98.h"
+#include <stddef.h>
+#include "platform.h"
+#include "pc98.h"
+#include "planar.h"
 #include "th02/math/randring.h"
 
 #define RANDRING_INSTANCE 2

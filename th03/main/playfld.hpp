@@ -1,4 +1,4 @@
-#include "th03/math/subpixel.hpp"
+#include "th01/math/subpixel.hpp"
 
 #define PLAYFIELD_COUNT 2
 #define PLAYFIELD_W 288
@@ -6,8 +6,8 @@
 // For both playfields, in every direction. (CSS style!)
 // The clipped SPRITE16 display functions rely on this being at least 16!
 #define PLAYFIELD_BORDER 16
-#define PLAYFIELD_X PLAYFIELD_BORDER
-#define PLAYFIELD_Y PLAYFIELD_BORDER
+#define PLAYFIELD_LEFT PLAYFIELD_BORDER
+#define PLAYFIELD_TOP PLAYFIELD_BORDER
 
 #define PLAYFIELD_VRAM_H (PLAYFIELD_H / 2)
 
@@ -17,8 +17,12 @@
 #define PLAYFIELD2_CLIP_LEFT  (PLAYFIELD1_CLIP_RIGHT + 1)
 #define PLAYFIELD2_CLIP_RIGHT (PLAYFIELD2_CLIP_LEFT + PLAYFIELD_W_BORDERED - 1)
 
-#define PLAYFIELD_VRAM_W_BORDERED (PLAYFIELD_W_BORDERED / 8)
+#define PLAYFIELD_VRAM_W_BORDERED (PLAYFIELD_W_BORDERED / BYTE_DOTS)
 
-extern int playfield_fg_shift_x[PLAYFIELD_COUNT];
+// A subpixel point within one of the playfields. No conversion methods to
+// screen space here, since the instance doesn't know the playfield it is on.
+typedef SPPoint PlayfieldPoint;
 
-int pascal playfield_fg_x_to_screen(Subpixel x, unsigned int pid);
+extern screen_x_t playfield_fg_shift_x[PLAYFIELD_COUNT];
+
+screen_x_t pascal playfield_fg_x_to_screen(Subpixel x, unsigned int pid);

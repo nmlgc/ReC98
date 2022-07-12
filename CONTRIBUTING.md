@@ -40,13 +40,68 @@ These cases should gradually be removed as development goes along, though.
 * Don't indent `extern "C"` blocks that span the entire file.
 
 * Always use `{ brackets }`, even around single-statement conditional
-  branches.
+  branches and single-instruction inline assembly.
+
+* The opening `{ ` bracket of a function goes into
+  * the next line if the function is non-inlined (Linux style), and
+  * the end of the line with the closing `)` if the function is inlined.
+
 * Add spaces around binary operators. `for(i = 0; i < 12; i++)`
 
 * Variables should be *signed* in the absence of any ASM instruction
   (conditional jump, arithmetic, etc.) or further context (e.g. parameters
   with a common source) that defines their signedness. If a variable is used
   in both signed and unsigned contexts, declare it as the more common one.
+
+## Compatibility
+
+* Despite the games' native encoding being Shift-JIS, most files should be
+  encoded in UTF-8, as it's simply more comfortable to work with in modern
+  tools. The only (necessary) exceptions are
+
+  * the big .ASM dump files in the root directory,
+  * and any files in the per-game `shiftjis/` subdirectory. All hardcoded
+    Shift-JIS strings should be put there. With files full of Shift-JIS text,
+    it's also easier to see when an editor didn't recognize the encoding,
+    which keeps the annoyance from accidentally destroyed files to a minimum.
+
+* Use `_asm` as the keyword for decently sane or temporary inline assembly.
+  This variation has the biggest compiler support, which will ease potential
+  future ports to other x86 systems:
+
+   | Compiler support                  | `asm` |  `_asm` | `__asm` |
+   |-----------------------------------|-------|---------|---------|
+   | Microsoft QuickC 2.51             |       |    ✔    |         |
+   | Turbo C++ 4.0                     |   ✔   |    ✔    |    ✔    |
+   | Borland C++ 5.5.1                 |   ✔   |    ✔    |    ✔    |
+   | Open Watcom 2.0                   |       |    ✔    |    ✔    |
+   | Visual Studio 2022                |       |    ✔    |    ✔    |
+   | Clang 13 (default)                |       |         |         |
+   | Clang 13 (with `-fms-extensions)` |   ✔   |    ✔    |    ✔    |
+
+  * Conversely, use `asm` as the keyword for the particularly dumb small
+    pieces of inline assembly that refer to or depend on register
+    pseudovariables from surrounding code, and are just needed to ensure
+    correct code generation. These *should* break on other compilers.
+
+    Example:
+
+    ```cpp
+    _CX = loop_count;
+    loop_label: {
+        // …
+
+        // `asm`, with no underscore, because the x86 LOOP instruction
+        // branches depending on the value in CX, which was set using a
+        // pseudovariable access above.
+        asm { loop	loop_label; }
+    }
+    ```
+
+## Build system
+
+* Whenever you edit the `Tupfile`, run `tup generate Tupfile.bat` to update
+  the dumb batch fallback script, for systems that can't run Tup.
 
 ## Code organization
 
@@ -68,6 +123,21 @@ These cases should gradually be removed as development goes along, though.
 
 * Documenting function comments exclusively go into C/C++ header files, right
   above the corresponding function prototype, *not* into ASM slices.
+
+* If an ASM translation unit requires the `.MODEL` directive *and* uses 32-bit
+  80386 instructions via `.386`, make sure to specify the `USE16` model
+  modifier, as in
+
+  ```asm
+  .model use16 large
+  ```
+
+  Otherwise, some TASM versions might create 32-bit segments if `.386` is
+  specified before `.MODEL`, causing all sorts of issues and messing up
+  segment alignments. (TASM32 version 5.3 is known to do this, for example.)
+  Specifying `USE16` is a lot more understandable than switching back and
+  forth between CPUs, or relying on the order of the `.MODEL` and `.386`
+  directives to imply the default 16-bit behavior.
 
 * Newly named symbols in ASM land (functions, global variables, `struc`ts, and
   "sequence of numeric equate" enums) should immediately be reflected in C/C++
@@ -169,6 +239,38 @@ These cases should gradually be removed as development goes along, though.
         </tr>
     </table>
 
+* In ASM functions with ZUN's silly `MOV BX, SP` stack frame, use the `arg_bx`
+  and `ret_bx` macros from `th03/arg_bx.inc` to declare parameters and return
+  with the correct amount of bytes released from the stack. The parameter
+  names only get a single `@` as their prefix in this case:
+  <table>
+        <tr>
+            <td>
+                <code>foo proc near</code><br />
+                <code>arg_2 = byte ptr 2</code><br />
+                <code>arg_0 = word ptr 4</code><br />
+                <code></code><br />
+                <code>mov bx, sp</code><br />
+                <code>mov	al, ss:[bx+arg_2]</code><br />
+                <code>mov	bx, ss:[bx+arg_0]</code><br />
+                <code>ret 2</code><br />
+                <code>foo endp</code>
+            </td>
+            <td>→</td>
+            <td>
+                <code>foo	proc near</code><br />
+                <code>arg_bx  near, @arg_2:byte, @arg_0:word</code><br />
+                <code></code><br />
+                <code></code><br />
+                <code></code><br />
+                <code>mov	al, @arg_0</code><br />
+                <code>mov	bx, @arg_2</code><br />
+                <code>ret_bx</code><br />
+                <code>foo endp</code>
+            </td>
+        </tr>
+    </table>
+
 * Try moving repeated sections of code into a separate `inline` function
   before grabbing the `#define` hammer. Turbo C++ will generally inline
   everything declared as `inline` that doesn't contain `do`, `for`, `while`,
@@ -185,6 +287,18 @@ These cases should gradually be removed as development goes along, though.
   code, not to replace it with an overly nested, "enterprise-y" class
   hierarchy.
 
+* Use `#pragma option -zC` and `#pragma option -zP` to rename code segments
+  and their groups, not `#pragma codeseg`. Might look uglier, but has the
+  advantage of not generating an empty segment with the default name and the
+  default padding. This is particularly relevant [if the `-WX` option is used
+  to enforce word-aligned code segments][3]: That empty default segment would
+  otherwise also (unnecessarily) enforce word alignment for the segment that
+  ends up following the empty default one.
+
+  * These options can only be used "at the beginning" of a translation unit –
+    before the first non-preprocessor and non-comment C language token. Any
+    other `#pragma option` settings should also be put there.
+
 ## Decompilation
 
 * Don't try to decompile self-modifying code. Yes, it may be *possible* by
@@ -198,9 +312,33 @@ These cases should gradually be removed as development goes along, though.
   alignment. Instead, directly spell out the alignment by adding padding
   members to structures, and additional global variables. It's simply not
   worth requiring every structure to work around it. For functions with
-  `switch` tables that originally were word-alignment, put a single
-  `#pragma option -a2` at the top of the translation unit, after all header
-  inclusions.
+  `switch` tables that originally were word-aligned, put a single
+  `#pragma option -a2` *after* all header inclusions.
+
+## Portability
+
+* Use `__seg *` wherever it doesn't make the code all too ugly. Type
+  conversions into `far` pointers automatically set the offset to 0, so
+  `MK_FP` is not necessary in such a case:
+
+  ```c++
+  void resident_set(resident __seg *seg)
+  {
+    // Redundant, and requires the MK_FP() macro to be declared
+    resident_t far *resident = MK_FP(seg, 0);
+
+    // Does the same, without requiring a macro
+    resident_t far *resident = seg;
+  }
+  ```
+
+* All original `.EXE` binaries use the *large* memory model, meaning that both
+  function and data pointers are `far` by default. Therefore, pointers and
+  references should only explicitly be declared `far` if
+
+  1. they are actually constructed from a segment and an offset via the two
+     methods above, or
+  2. the code performs segment/offset arithmetic on them.
 
 ## Naming conventions
 
@@ -209,6 +347,10 @@ These cases should gradually be removed as development goes along, though.
 * Macros defining the number of distinct sprites in an animation: `*_CELS`
 * Frame variables counting from a frame count to 0: `*_time`
 * Frame variables and other counters starting from 0: `*_frames`
+* Functions that show multi-frame animations in a blocking way, using their own
+  `frame_delay()` calls: `*_animate`
+* Generic 0-based IDs: `*_id`
+* Generic 1-based IDs, with 0 indicating some sort of absence: `*_num`
 * Functionally identical reimplementations or micro-optimizations of
   master.lib functions: `z_<master.lib function name>`
 
@@ -216,9 +358,12 @@ These cases should gradually be removed as development goes along, though.
 
 On some occasions, ZUN leaked pieces of the actual PC-98 Touhou source code
 during interviews. From these, we can derive ZUN's original names for certain
-variables, functions, or macros. To indicate one of those and protect them
-from being renamed, put a `/* ZUN symbol [reference] */` comment next to the
-declaration of the identifier in question.
+variables, functions, or macros. To indicate one of those, put a
+`/* ZUN symbol [reference] */` comment next to the declaration and definition
+of the identifier in question. Preserving any aspect from leaked ZUN code just
+for the sake of it is not mandatory though, and in fact tends to make the
+resulting code harder to understand. If you can come up with a better (or less
+wrong) name, go for it.
 
 Currently, we know about the following [references]:
 
@@ -232,3 +377,4 @@ Currently, we know about the following [references]:
 [mzdiff]: https://github.com/nmlgc/mzdiff
 [1]: Research/Borland%20C++%20decompilation.md#c
 [2]: https://github.com/nmlgc/ReC98/invitations
+[3]: Research/Borland%20C++%20decompilation.md#padding-bytes-in-code-segments

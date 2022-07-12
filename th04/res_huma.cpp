@@ -4,12 +4,14 @@
  * required in order to run TH04.
  */
 
-#include <ReC98.h>
-#include "th01/ranks.h"
+#include <stddef.h>
+#include "platform.h"
+#include "master.hpp"
+#include "th01/rank.h"
 #include "th04/score.h"
 #include "th04/resident.hpp"
 #include "th04/snd/snd.h"
-#include "th04/formats/cfg.h"
+#include "th04/formats/cfg.hpp"
 
 char debug = 0;
 const cfg_options_t OPTS_DEFAULT = {
@@ -17,7 +19,7 @@ const cfg_options_t OPTS_DEFAULT = {
 	SND_BGM_FM26, SND_SE_FM, true
 };
 
-void cfg_init(seg_t resident_sgm)
+void cfg_init(resident_t __seg *resident_sgm)
 {
 	const char *fn = CFG_FN;
 	cfg_options_t opts = OPTS_DEFAULT;
@@ -53,7 +55,7 @@ recreate:
 #define LOGO \
 	"東方幻想郷用　 常駐プログラム　RES_HUMA.com Version1.00       (c)zun 1998"
 
-#define optimization_barrier_3()
+#define optimization_barrier()
 
 #define RES_INIT_BOTTOM { \
 	cfg_init(sgm); \
@@ -65,4 +67,4 @@ recreate:
 	} \
 }
 
-#include "th02/res_init.c"
+#include "th02/res_init.cpp"

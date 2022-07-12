@@ -4,15 +4,17 @@
  * unused anyway.
  */
 
-#include "th01/th01.h"
-#include "th01/hardware/ztext.h"
+#pragma option -1 -Z-
 
 #include <mbctype.h>
 #include <mbstring.h>
 #include <stdarg.h>
 #include <stdio.h>
-
-#pragma option -1
+#include "platform.h"
+#include "x86real.h"
+#include "pc98.h"
+#include "master.hpp"
+#include "th01/hardware/ztext.h"
 
 extern char txesc_25line[];
 extern char txesc_20line[];
@@ -83,21 +85,21 @@ void z_text_hide(void)
 
 void z_text_setcursor(z_text_cursor_t type)
 {
-	_BX = *(char*)MK_FP(0, 0x53B);
-	OUTB(0x62, 0x4B); // CSRFORM
-	OUTB(0x60, _BL | 0x80);
+	_BX = peekb2(0, 0x53B); // Text mode line height
+	outportb(0x62, 0x4B); // CSRFORM
+	outportb(0x60, _BL | 0x80);
 	switch(type) {
 		case CURSOR_HIDE:
-			OUTB(0x60, 0x9F);
+			outportb(0x60, 0x9F);
 			break;
 		case CURSOR_BLOCK:
-			OUTB(0x60, 0x80);
+			outportb(0x60, 0x80);
 			break;
 		case CURSOR_UNDERLINE:
-			OUTB(0x60, _BL + 0x7D);
+			outportb(0x60, _BL + 0x7D);
 			break;
 	}
-	OUTB(0x60, (_BL << 3) + 2);
+	outportb(0x60, (_BL << 3) + 2);
 }
 
 void z_text_locate(char x, char y)
@@ -110,13 +112,12 @@ void z_text_locate(char x, char y)
 	int86(0xDC, &regs, &regs);
 }
 
-void z_text_putsa(int x, int y, int z_atrb, const char *str)
+void z_text_putsa(tram_x_t x, tram_y_t y, int z_atrb, const char *str)
 {
 	uint16_t codepoint;
 	int p = ((y * text_width()) + x) * 2;
 	int hw_atrb = 1;
 
-	#define tx_chars(byte) ((char*)MK_FP(0xA000, p + byte))
 	#define tx_chars(byte) ((char*)MK_FP(0xA000, p + byte))
 	#define tx_atrbs(byte) ((int16_t*)MK_FP(0xA200, p + byte))
 
@@ -177,7 +178,7 @@ void z_text_putsa(int x, int y, int z_atrb, const char *str)
 	}
 }
 
-void z_text_vputsa(int x, int y, int z_atrb, const char *fmt, ...)
+void z_text_vputsa(tram_x_t x, tram_y_t y, int z_atrb, const char *fmt, ...)
 {
 	char str[256];
 	va_list ap;
@@ -196,5 +197,5 @@ void z_text_print(const char *str)
 		regs.h.dl = *(str++);
 		int86(0xDC, &regs, &regs);
 	}
-	OUTB(0x64, 0); // VSync interrupt trigger
+	outportb(0x64, 0); // VSync interrupt trigger
 }

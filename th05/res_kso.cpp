@@ -4,13 +4,16 @@
  * required in order to run TH05.
  */
 
-#include <ReC98.h>
-#include "th01/ranks.h"
+#include <stddef.h>
+#include "platform.h"
+#include "decomp.hpp"
+#include "master.hpp"
+#include "th01/rank.h"
 #include "th04/score.h"
 #include "th04/common.h"
 #include "th05/resident.hpp"
 #include "th04/snd/snd.h"
-#include "th04/formats/cfg.h"
+#include "th04/formats/cfg.hpp"
 
 char debug = 0;
 const cfg_options_t OPTS_DEFAULT = {
@@ -18,14 +21,12 @@ const cfg_options_t OPTS_DEFAULT = {
 	SND_BGM_FM26, SND_SE_FM, true
 };
 
-char cfg_init(seg_t resident_sgm)
+char cfg_init(resident_t __seg *resident_sgm)
 {
 	const char *fn = CFG_FN;
 	cfg_options_t opts = OPTS_DEFAULT;
 	cfg_t cfg_in;
-	resident_t far *resident = reinterpret_cast<resident_t far *>(
-		MK_FP(resident_sgm, 0)
-	);
+	resident_t far *resident = resident_sgm;
 
 	if(!file_ropen(fn)) {
 recreate:
@@ -104,6 +105,4 @@ recreate:
 	} \
 }
 
-inline void optimization_barrier_3() {}
-
-#include "th02/res_init.c"
+#include "th02/res_init.cpp"

@@ -1,16 +1,22 @@
-int snd_determine_mode(void)
+#pragma option -WX -zCSHARED -k-
+
+#include "platform.h"
+#include "x86real.h"
+#include "libs/kaja/kaja.h"
+#include "th02/snd/snd.h"
+
+bool16 snd_determine_mode(void)
 {
-__asm	mov ah, PMD_GET_DRIVER_VERSION;
-__asm	int PMD;
-	_BX = 0;
+	_AH = PMD_GET_DRIVER_TYPE_AND_VERSION;
+	geninterrupt(PMD);
+	_BX = false;
 	if(_AL != 0xFF) {
-__asm		inc bx;
-		snd_fm_possible = 1;
+		_BX++;
+		snd_fm_possible = true;
 	} else {
-__asm		mov bl, snd_midi_active;
+		_BL = snd_midi_active;
 	}
-__asm	mov snd_active, bl;
+	snd_active = _BL;
 	return _BX;
 }
-
 #pragma codestring "\x90"

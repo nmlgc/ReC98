@@ -1,21 +1,19 @@
-public SHOT_VELOCITY_SET
-shot_velocity_set	proc near
-@@velocity	= word ptr 4
-@@angle   	= byte ptr 2
+public @SHOT_VELOCITY_SET$QP7SPPOINTUC
+@shot_velocity_set$qp7sppointuc proc near
+arg_bx	near, @angle:byte, @velocity:word
 
-	mov	bx, sp
 	push	si
-	mov	si, ss:[bx+@@velocity]
+	mov	si, @velocity
 if GAME eq 5
-	movzx	bx, ss:[bx+@@angle]
+	movzx	bx, @angle
 	mov	byte ptr [si+shot_t.SHOT_angle - shot_t.pos.velocity], bl
 else
-	mov	bl, ss:[bx+@@angle]
+	mov	bl, @angle
 	xor	bh, bh
 endif
 	shl	bx, 2
 	mov	eax, _VELOCITY_192_AT_ANGLE[bx]
 	mov	[si], eax
 	pop	si
-	retn	4
-shot_velocity_set	endp
+	ret_bx
+@shot_velocity_set$qp7sppointuc endp

@@ -86,7 +86,7 @@ endif
 	mov	[si+item_t.ITEM_type], al
 	mov	bx, [bp+@@type]
 	add	bx, bx
-	mov	ax, ITEM_TYPE_PATNUM[bx]
+	mov	ax, _ITEM_TYPE_PATNUM[bx]
 	mov	[si+item_t.ITEM_patnum], ax
 	inc	di
 	inc	_items_spawned

@@ -5,6 +5,7 @@
 #define HITSHOT_CELS 4
 #define BULLET_CLOUD_CELS 4
 #define BULLET_DECAY_CELS 4
+#define BULLET_ZAP_CELS 4
 
 // Directional bullets with one axis of symmetry; sprites cover 180 degrees
 #define BULLET_D_CELS 16

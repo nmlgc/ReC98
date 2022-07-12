@@ -1,5 +1,5 @@
-public SHOTS_ADD
-shots_add	proc near
+public @shots_add$qv
+@shots_add$qv proc near
 	xor	ax, ax
 	mov	bx, _shot_ptr
 
@@ -20,5 +20,5 @@ shots_add	proc near
 
 @@ret:
 	retn
-shots_add	endp
+@shots_add$qv endp
 	even

@@ -13,43 +13,24 @@
 ; OS type	  :  MS	DOS
 ; Application type:  Executable	16bit
 
-		.286 ; Force the .model directive to create 16-bit default segments...
-		.model large
-		.386 ; ... then switch to what we actually need.
-		; And yes, we can't move this to an include file for some reason.
+		.386
+		.model use16 large
 
 BINARY = 'O'
 
 include ReC98.inc
 include th01/th01.inc
+include th01/hardware/grppsafx.inc
 include th01/formats/cfg.inc
 
-	option emulator
-
-	extern @$bdla$qnv:proc
-	extern @$bnwa$qui:proc
-	extern FTOL@:proc
 	extern SCOPY@:proc
-	extern __mbcjmstojis:proc
-	extern __mscjmstojis:proc
 	extern __setargv__:proc ; main() needs both to be set
 	extern __setenvp__:proc
 	extern _atol:proc
-	extern _close:proc
 	extern _execl:proc
-	extern _exit:proc
-	extern _farfree:proc
-	extern _farmalloc:proc
-	extern _filelength:proc
 	extern _int86:proc
-	extern _intdosx:proc
 	extern _memcmp:proc
-	extern _open:proc
 	extern _printf:proc
-	extern _segread:proc
-	extern _strcmp:proc
-	extern _toupper:proc
-	extern _vsprintf:proc
 
 op_01 group op_01_TEXT, op_01__TEXT
 
@@ -114,10 +95,10 @@ sub_A719	proc far
 		push	1
 		call	_graph_accesspage_func
 		pop	cx
-		call	_grp_put_palette_show c, offset aReiiden2_grp, ds ; "REIIDEN2.grp"
+		call	@grp_put_palette_show$qnxc c, offset aReiiden2_grp, ds ; "REIIDEN2.grp"
 		call	_z_palette_black
-		call	_graph_copy_page_back_to_front
-		call	_grp_put c, offset aReiiden3_grp, ds ; "REIIDEN3.grp"
+		call	_graph_copy_accessed_page_to_othe
+		call	@grp_put$qnxc c, offset aReiiden3_grp, ds ; "REIIDEN3.grp"
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
@@ -141,12 +122,12 @@ sub_A772	proc far
 		push	1
 		call	_graph_accesspage_func
 		pop	cx
-		call	_graph_copy_page_back_to_front
+		call	_graph_copy_accessed_page_to_othe
 		push	0
 		call	_graph_accesspage_func
 		pop	cx
-		call	_grp_put_colorkey c, offset aOp_win_grp, ds ; "op_win.grp"
-		call	_graph_copy_page_back_to_front
+		call	@grp_put_colorkey$qnxc c, offset aOp_win_grp, ds ; "op_win.grp"
+		call	_graph_copy_accessed_page_to_othe
 		pop	bp
 		retf
 sub_A772	endp
@@ -190,7 +171,7 @@ sub_A7B5	proc far
 		cmp	ax, 2
 		jnz	short loc_A7FC
 		les	bx, _resident
-		mov	es:[bx+reiidenconfig_t.mode], 1
+		mov	es:[bx+reiidenconfig_t.debug_mode], DM_TEST
 		jmp	short loc_A820
 ; ---------------------------------------------------------------------------
 
@@ -200,7 +181,7 @@ loc_A7FC:
 		cmp	ax, 3
 		jnz	short loc_A810
 		les	bx, _resident
-		mov	es:[bx+reiidenconfig_t.mode], 3
+		mov	es:[bx+reiidenconfig_t.debug_mode], DM_FULL
 		jmp	short loc_A820
 ; ---------------------------------------------------------------------------
 
@@ -208,7 +189,7 @@ loc_A810:
 		cmp	_mode, 0
 		jnz	short loc_A820
 		les	bx, _resident
-		mov	es:[bx+reiidenconfig_t.mode], 0
+		mov	es:[bx+reiidenconfig_t.debug_mode], DM_OFF
 
 loc_A820:
 		les	bx, _resident
@@ -280,7 +261,7 @@ loc_A8E1:
 		call	_game_switch_binary
 		les	bx, _resident
 		assume es:nothing
-		mov	es:[bx+reiidenconfig_t.mode], 0
+		mov	es:[bx+reiidenconfig_t.debug_mode], DM_OFF
 		mov	es:[bx+reiidenconfig_t.snd_need_init], 1
 		mov	al, _opts.O_lives_extra
 		add	al, 2
@@ -310,13 +291,13 @@ arg_0		= word ptr  6
 		idiv	bx
 		cmp	dx, 50
 		jge	short loc_A954
-		call	_graph_putsa_fx c, 244, (2Fh shl 16) or 306, offset aVgvhvsb@vjvdvx, ds ; " ÇgÇhÇsÅ@ÇjÇdÇx"
+		call	_graph_putsa_fx c, 244, ((15 or FX_WEIGHT_BOLD) shl 16) or 306, offset aVgvhvsb@vjvdvx, ds ; " ÇgÇhÇsÅ@ÇjÇdÇx"
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
 
 loc_A954:
-		call	_egc_copy_rect_1_to_0 c, large (306 shl 16) or 244, large (16 shl 16) or 128
+		call	@egc_copy_rect_1_to_0_16$qiiii c, large (306 shl 16) or 244, large (16 shl 16) or 128
 		pop	bp
 		retf
 sub_A92C	endp
@@ -355,7 +336,7 @@ arg_2		= word ptr  8
 		add	bx, ax
 		pushd	dword ptr ss:[bx]
 		mov	ax, [bp+arg_2]
-		or	ax, 30h
+		or	ax, FX_WEIGHT_BLACK
 		push	ax
 		push	[bp+@@y]
 		push	[bp+@@x]
@@ -418,7 +399,7 @@ arg_2		= word ptr  8
 		imul	ax, 20
 		add	ax, 266
 		mov	[bp+var_A], ax
-		call	_egc_copy_rect_1_to_0 c, di, ax, large (16 shl 16) or 176
+		call	@egc_copy_rect_1_to_0_16$qiiii c, di, ax, large (16 shl 16) or 176
 		or	si, si
 		jnz	short loc_AA34
 		mov	al, _opts.O_rank
@@ -532,7 +513,7 @@ arg_2		= word ptr  8
 		imul	ax, 40
 		add	ax, 286
 		mov	[bp+var_A], ax
-		call	_egc_copy_rect_1_to_0 c, di, ax, large (16 shl 16) or 176
+		call	@egc_copy_rect_1_to_0_16$qiiii c, di, ax, large (16 shl 16) or 176
 		or	si, si
 		jnz	short loc_AB69
 		push	(16 shl 16) or 192
@@ -540,7 +521,7 @@ arg_2		= word ptr  8
 		add	ax, 20
 		push	ax
 		push	di
-		call	_egc_copy_rect_1_to_0
+		call	@egc_copy_rect_1_to_0_16$qiiii
 		add	sp, 8
 		mov	al, byte_1251D
 		cbw
@@ -614,7 +595,7 @@ sub_AB97	proc far
 		mov	bp, sp
 		cmp	word_12564, 0
 		jnz	short loc_AC04
-		call	_egc_copy_rect_1_to_0 c, large (266 shl 16) or 220, large (100 shl 16) or 176
+		call	@egc_copy_rect_1_to_0_16$qiiii c, large (266 shl 16) or 220, large (100 shl 16) or 176
 		push	50000h
 		call	sub_A96A
 		add	sp, 4
@@ -720,7 +701,7 @@ sub_AC84	proc far
 		mov	word_12568, 0
 		mov	word_12566, 1
 		mov	_option_rows, 4
-		call	_egc_copy_rect_1_to_0 c, large (276 shl 16) or 220, large (80 shl 16) or 176
+		call	@egc_copy_rect_1_to_0_16$qiiii c, large (276 shl 16) or 220, large (80 shl 16) or 176
 		push	0F0000h
 		call	sub_A9B9
 		add	sp, 4
@@ -965,7 +946,7 @@ sub_AEA8	proc far
 		mov	_input_ok, 0
 		mov	_input_shot, 0
 		mov	_option_rows, 1
-		call	_egc_copy_rect_1_to_0 c, large (266 shl 16) or 220, large (100 shl 16) or 176
+		call	@egc_copy_rect_1_to_0_16$qiiii c, large (266 shl 16) or 220, large (100 shl 16) or 176
 		push	0F0000h
 		call	sub_AAB6
 		add	sp, 4
@@ -1357,105 +1338,86 @@ op_01__TEXT	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-op_02_TEXT	segment	byte public 'CODE' use16
+frmdelay_TEXT	segment	byte public 'CODE' use16
 	extern _frame_delay:proc
-op_02_TEXT	ends
+frmdelay_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-op_03_TEXT	segment	byte public 'CODE' use16
-	extern _vsync_init:proc
-	extern _vsync_exit:proc
-	extern _z_vsync_wait:proc
-op_03_TEXT	ends
+vsync_TEXT	segment	byte public 'CODE' use16
+vsync_TEXT	ends
 
 ; ===========================================================================
 
-op_04_TEXT	segment	byte public 'CODE' use16
-	extern _z_text_init:proc
-	extern _z_text_25line:proc
-	extern _z_text_setcursor:proc
-	extern _z_text_clear:proc
-	extern _z_text_show:proc
-	extern _z_text_print:proc
-op_04_TEXT	ends
+ztext_TEXT	segment	byte public 'CODE' use16
+ztext_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-op_05_TEXT	segment	byte public 'CODE' use16
+initexit_TEXT	segment	byte public 'CODE' use16
 	extern _game_init:proc
 	extern _game_exit:proc
 	extern _game_switch_binary:proc
-op_05_TEXT	ends
+initexit_TEXT	ends
 
 ; ---------------------------------------------------------------------------
 ; ===========================================================================
 
 ; Segment type:	Pure code
-op_06_TEXT	segment	byte public 'CODE' use16
-	extern _z_graph_exit:proc
-	extern _graph_showpage_func:proc
+graph_TEXT	segment	byte public 'CODE' use16
 	extern _graph_accesspage_func:proc
-	extern _grcg_setcolor_rmw:proc
-	extern _grcg_setcolor_tdw:proc
-	extern _grcg_off_func:proc
-	extern _z_palette_set_all_show:proc
-	extern _z_palette_set_show:proc
 	extern _z_graph_clear:proc
-	extern _z_graph_clear_0:proc
-	extern _graph_copy_page_back_to_front:proc
+	extern _graph_copy_accessed_page_to_othe:proc
 	extern _z_palette_black:proc
 	extern _z_palette_black_in:proc
-	extern _z_palette_black_out:proc
 	extern _graph_putsa_fx:proc
-	extern _z_respal_set:proc
-op_06_TEXT	ends
+graph_TEXT	ends
 
 ; ---------------------------------------------------------------------------
 ; ===========================================================================
 
 ; Segment type:	Pure code
-op_07_TEXT	segment	byte public 'CODE' use16
-	extern _egc_copy_rect_1_to_0:proc
-op_07_TEXT	ends
+SHARED	segment	byte public 'CODE' use16
+	extern @egc_copy_rect_1_to_0_16$qiiii:proc
+SHARED	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-op_08_TEXT	segment	byte public 'CODE' use16
+grppffx_TEXT	segment	byte public 'CODE' use16
 	extern _graph_printf_fx:proc
-op_08_TEXT	ends
+grppffx_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-op_09_TEXT	segment	byte public 'CODE' use16
-	extern _grp_put_palette_show:proc
-	extern _grp_put:proc
-	extern _grp_put_colorkey:proc
-op_09_TEXT	ends
+PTN_GRP_GRZ	segment	byte public 'CODE' use16
+	extern @grp_put_palette_show$qnxc:proc
+	extern @grp_put$qnxc:proc
+	extern @grp_put_colorkey$qnxc:proc
+PTN_GRP_GRZ	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-op_10_TEXT	segment	byte public 'CODE' use16
+resstuff_TEXT	segment	byte public 'CODE' use16
 	extern _resident_stuff_set:proc
 	extern _resident_free:proc
-op_10_TEXT	ends
+resstuff_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-op_11_TEXT	segment	byte public 'CODE' use16
+mdrv2_TEXT	segment	byte public 'CODE' use16
 	extern _mdrv2_resident:proc
 	extern _mdrv2_bgm_load:proc
 	extern _mdrv2_bgm_play:proc
 	extern _mdrv2_bgm_stop:proc
 	extern _mdrv2_bgm_fade_out_nonblock:proc
 	extern _mdrv2_check_board:proc
-op_11_TEXT	ends
+mdrv2_TEXT	ends
 
 ; ===========================================================================
 
@@ -1653,7 +1615,6 @@ _res_id	db 'ReiidenConfig',0
 include th01/snd/mdrv2[data].asm
 	.data?
 
-; TODO: Missing clip[bss].asm (16 bytes) somewhere in there...
 public _rand
 _rand	dd ?
 public _columns
@@ -1674,7 +1635,7 @@ include th01/formats/grp_buf[bss].asm
 include libs/master.lib/pal[bss].asm
 include libs/master.lib/fil[bss].asm
 include libs/master.lib/keystart[bss].asm
-		db 16 dup(?)
+include libs/master.lib/clip[bss].asm
 public _resident
 _resident	dd ?
 

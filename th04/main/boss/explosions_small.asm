@@ -1,5 +1,5 @@
-public EXPLOSIONS_SMALL_UPDATE_AND_RENDER
-explosions_small_update_and_render	proc near
+public @explosions_small_update_and_rend$qv
+@explosions_small_update_and_rend$qv proc near
 
 @@angle		= byte ptr -7
 @@i     	= word ptr -6
@@ -12,7 +12,7 @@ explosions_small_update_and_render	proc near
 	mov	ax, GRAM_400
 	mov	es, ax
 	assume es:nothing
-	call	_grcg_setmode_rmw_seg1
+	call	@grcg_setmode_rmw$qv
 	mov	si, offset _explosions_small
 	mov	[bp+@@i], 0
 	jmp	@@more_explosions?
@@ -47,18 +47,18 @@ explosions_small_update_and_render	proc near
 	call	vector1_at
 	mov	[bp+@@draw_y], ax
 	sar	ax, 4
-	add	ax, PLAYFIELD_Y - (EXPLOSION_SMALL_H / 2)
+	add	ax, PLAYFIELD_TOP - (EXPLOSION_SMALL_H / 2)
 	mov	dx, ax
 	mov	ax, [bp+@@draw_x]
 	sar	ax, 4
-	add	ax, PLAYFIELD_X - (EXPLOSION_SMALL_W / 2)
-	cmp	ax, PLAYFIELD_X - EXPLOSION_SMALL_W
+	add	ax, PLAYFIELD_LEFT - (EXPLOSION_SMALL_W / 2)
+	cmp	ax, PLAYFIELD_LEFT - EXPLOSION_SMALL_W
 	jbe	short @@next_sprite
-	cmp	ax, PLAYFIELD_X + PLAYFIELD_W
+	cmp	ax, PLAYFIELD_LEFT + PLAYFIELD_W
 	jnb	short @@next_sprite
 	or	dx, dx
 	jbe	short @@next_sprite
-	cmp	dx, PLAYFIELD_Y + PLAYFIELD_H
+	cmp	dx, PLAYFIELD_TOP + PLAYFIELD_H
 	jnb	short @@next_sprite
 	call	z_super_roll_put_tiny_16x16_raw pascal, PAT_EXPLOSION_SMALL
 
@@ -92,4 +92,4 @@ explosions_small_update_and_render	proc near
 	pop	si
 	leave
 	retn
-explosions_small_update_and_render	endp
+@explosions_small_update_and_rend$qv endp

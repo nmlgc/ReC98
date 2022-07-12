@@ -3,10 +3,13 @@
  * 2nd part of ZUN_RES.COM. Verifies HUUHI.DAT.
  */
 
-#include <stddef.h>
-#include "th02/th02.h"
-
 #pragma option -O- -k-
+
+#include <dos.h>
+#include "platform.h"
+#include "master.hpp"
+#include "th01/rank.h"
+#include "th02/formats/scoredat.h"
 
 extern char rank;
 scoredat_section_t hi;
@@ -18,8 +21,8 @@ const char *SCOREDAT_FN = "huuhi.dat";
 unsigned char g_name_first_sum = 0;
 unsigned char stage_sum = 0;
 unsigned char unused_2 = 0;
-long points_sum = 0;
 long score_sum = 0;
+long section_sum = 0;
 
 int pascal scoredat_verify(void)
 {
@@ -36,24 +39,24 @@ int pascal scoredat_verify(void)
 			stage_sum = _AL;
 			_AX = 0;
 			asm {
-				mov word ptr points_sum + 0, ax
-				mov word ptr points_sum + 2, ax
 				mov word ptr score_sum + 0, ax
 				mov word ptr score_sum + 2, ax
+				mov word ptr section_sum + 0, ax
+				mov word ptr section_sum + 2, ax
 			}
 			for(i = 0; i < sizeof(hi.score); i++) {
-				score_sum += *((unsigned char*)(&hi.score) + i);
+				section_sum += *((unsigned char*)(&hi.score) + i);
 			}
 			for(i = 0; i < SCOREDAT_PLACES; i++) {
-				points_sum += hi.score.points[i];
+				score_sum += hi.score.score[i];
 				g_name_first_sum += hi.score.g_name[i][0];
 				stage_sum += hi.score.stage[i];
 			}
 			if(
-				points_sum != hi.score.points_sum
+				score_sum != hi.score.score_sum
 				|| g_name_first_sum != hi.score.g_name_first_sum
 				|| stage_sum != hi.score.stage_sum
-				|| score_sum != hi.score_sum
+				|| section_sum != hi.section_sum
 			) {
 				goto delete;
 			}

@@ -14,7 +14,7 @@ SCOREDAT_NAME_LEN = 8
 
 scoredat_t struc
 	g_name  	db SCOREDAT_PLACES dup ((SCOREDAT_NAME_LEN + 1) dup (?))
-	g_points	db SCOREDAT_PLACES dup (SCORE_DIGITS dup (?))
+	g_score 	db SCOREDAT_PLACES dup (SCORE_DIGITS dup (?))
 
 if GAME eq 5
 	g_stage 	db SCOREDAT_PLACES dup (?)
@@ -43,5 +43,15 @@ ifdef BINARY
 	elseif (BINARY eq 'M') and (GAME eq 4)
 		scoredat_decode_func equ <scoredat_decode pascal, offset _hi>
 		scoredat_encode_func equ <scoredat_encode pascal, offset _hi>
+	endif
+
+	if GAME eq 5
+		if BINARY eq 'O'
+			scoredat_recreate_func equ <scoredat_recreate_op>
+		elseif BINARY eq 'E'
+			scoredat_recreate_func equ <scoredat_recreate_maine>
+		endif
+	else
+		scoredat_recreate_func equ <scoredat_recreate>
 	endif
 endif

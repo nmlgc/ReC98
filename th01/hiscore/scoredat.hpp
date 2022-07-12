@@ -13,13 +13,6 @@
 
 #define SCOREDAT_NAME_KEY 0x9C
 
-// Exclusively used to store full-width Shift-JIS code points.
-// Not null-terminated.
-union scoredat_name_t {
-	int16_t codepoint[SCOREDAT_NAME_KANJI];
-	int8_t byte[SCOREDAT_NAME_BYTES];
-};
-
 // Encodes or decodes a single name byte.
 int8_t scoredat_name_byte_encode(int8_t byte);
 int8_t scoredat_name_byte_decode(int8_t byte);
@@ -29,39 +22,36 @@ int8_t scoredat_name_byte_decode(int8_t byte);
 struct scoredat_t {
 	// Not null-terminated!
 	char magic[sizeof(SCOREDAT_MAGIC) - 1];
-	scoredat_name_t name[SCOREDAT_PLACES];
-	uint32_t points[SCOREDAT_PLACES];
+
+	// Exclusively used to store full-width Shift-JIS code points.
+	// Not null-terminated.
+	int16_t name[SCOREDAT_PLACES][SCOREDAT_NAME_KANJI];
+
+	uint32_t score[SCOREDAT_PLACES];
 	int16_t stage[SCOREDAT_PLACES];
 	twobyte_t route[SCOREDAT_PLACES];
 };
 
 extern int8_t* scoredat_names; // Yeah, technically a scoredat_name_t.
 extern int16_t* scoredat_stages;
-extern int32_t* scoredat_points;
+extern int32_t* scoredat_score;
 extern int8_t* scoredat_routes; // Yeah, technically a twobyte_t.
 
 // Byte-wise access to [scoredat_routes].
-inline int8_t& scoredat_route_byte(int place, int byte)
-{
+inline int8_t& scoredat_route_byte(int place, int byte) {
 	if(byte == 0) {
 		return scoredat_routes[place * SCOREDAT_ROUTE_LEN];
 	}
 	return scoredat_routes[(place * SCOREDAT_ROUTE_LEN) + byte];
 }
 
-// Null-terminated version of scoredat_name_t, used internally.
-union scoredat_name_z_t {
-	int16_t codepoint[SCOREDAT_NAME_KANJI + 1];
-	int8_t byte[SCOREDAT_NAME_BYTES + 1];
-};
-
 // Loads the score file for the current [rank], recreating it if necessary.
 // Returns 0 on success, 1 on failure.
 int scoredat_load();
 
-// Returns the high score for the difficulty previously loaded by
-// scoredat_load().
-uint32_t scoredat_hiscore_get();
+// Loads only the high score for the current [rank] into the resident
+// structure.
+void scoredat_load_hiscore();
 
 // Sets [str] to the null-terminated name at the given [place] for the
 // difficulty previously loaded by scoredat_load().

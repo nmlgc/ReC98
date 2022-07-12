@@ -5,7 +5,7 @@ typedef enum {
 	CURSOR_BLOCK,
 	CURSOR_UNDERLINE,
 
-	_z_text_cursor_t_FORCE_INT = 0xFFFF
+	_z_text_cursor_t_FORCE_UINT16 = 0xFFFF
 } z_text_cursor_t;
 
 void z_text_init(void);
@@ -18,4 +18,5 @@ void z_text_show(void);
 void z_text_hide(void);
 void z_text_setcursor(z_text_cursor_t type);
 void z_text_print(const char *cmd);
+void z_text_vputsa(tram_x_t x, tram_y_t y, int z_atrb, const char *fmt, ...);
 // ------------------------------------------

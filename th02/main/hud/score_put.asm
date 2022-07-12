@@ -1,8 +1,8 @@
-HUD_CONTINUES_X = HUD_X + ((SCORE_DIGITS - 1) * 2)
+HUD_CONTINUES_LEFT = HUD_LEFT + ((SCORE_DIGITS - 1) * 2)
 
 ; Only prints the seven score digits, in contrast to the TH04/TH05 version!
 
-; void pascal near hud_score_put(unsigned int y, long value);
+; void pascal near hud_score_put(utram_y_t y, long value);
 public HUD_SCORE_PUT
 hud_score_put	proc near
 @@result 	=  word ptr [bp-4]
@@ -16,7 +16,7 @@ hud_score_put	proc near
 	push	si
 	push	di
 	mov	si, offset _SEVEN_DIGIT_POWERS_OF_10
-	mov	di, HUD_X
+	mov	di, HUD_LEFT
 	jmp	short @@more_digits?
 
 @@put:
@@ -35,7 +35,7 @@ hud_score_put	proc near
 	add	di, 2
 
 @@more_digits?:
-	cmp	di, HUD_CONTINUES_X
+	cmp	di, HUD_CONTINUES_LEFT
 	jl	short @@put
 	pop	di
 	pop	si
@@ -44,7 +44,7 @@ hud_score_put	proc near
 hud_score_put	endp
 
 
-; void pascal near hud_continues_put(unsigned int y, int continues_used);
+; void pascal near hud_continues_put(utram_y_t y, int continues_used);
 public HUD_CONTINUES_PUT
 hud_continues_put	proc near
 
@@ -64,7 +64,7 @@ hud_continues_put	proc near
 @@put:
 	lea	ax, [si+GB_DIGITS]
 	mov	@@continues_displayed, ax
-	call	gaiji_putca pascal, HUD_CONTINUES_X, @@y, ax, TX_WHITE
+	call	gaiji_putca pascal, HUD_CONTINUES_LEFT, @@y, ax, TX_WHITE
 	pop	si
 	leave
 	retn	4

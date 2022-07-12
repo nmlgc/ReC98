@@ -5,4 +5,4 @@ typedef union {
 	unsigned char digits[SCORE_DIGITS];
 } score_lebcd_t;
 
-extern unsigned char extends_gained;
+extern score_lebcd_t score;

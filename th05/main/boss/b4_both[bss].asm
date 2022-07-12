@@ -1,0 +1,4 @@
+public _mai_flystep_random_next_y_direct
+public _yuki_flystep_random_next_y_direc
+_mai_flystep_random_next_y_direct	db ?
+_yuki_flystep_random_next_y_direc	db ?

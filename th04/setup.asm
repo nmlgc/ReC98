@@ -21,7 +21,7 @@ window_dropdown_row	proc near
 	shl	ax, 4
 	push	ax
 	push	WINDOW_TILE_H
-	call	egc_copy_rect_1_to_0
+	call	egc_copy_rect_1_to_0_16
 	call	super_put pascal, si, di, 2
 	push	si
 	lea	ax, [di+WINDOW_BORDER_H]
@@ -79,7 +79,7 @@ window_rollup_row	proc near
 	shl	ax, 4
 	push	ax
 	push	WINDOW_TILE_H
-	call	egc_copy_rect_1_to_0
+	call	egc_copy_rect_1_to_0_16
 	call	super_put pascal, si, di, 6
 	add	si, WINDOW_TILE_W
 	mov	[bp+@@tile_x], 1
@@ -176,7 +176,7 @@ window_singleline	proc near
 	shl	ax, 4
 	push	ax
 	push	WINDOW_BORDER_H + WINDOW_TILE_H + WINDOW_BORDER_H
-	call	egc_copy_rect_1_to_0
+	call	egc_copy_rect_1_to_0_16
 	call	super_put pascal, si, di, 5
 	push	si
 	lea	ax, [di+WINDOW_TILE_H]
@@ -255,10 +255,10 @@ window_rollup_animate	endp
 
 
 SETUP_LINE_H = 16
-SETUP_CHOICE_X = 48
-SETUP_CHOICE_Y = 136
-SETUP_HELP_X = 208
-SETUP_HELP_Y = 136
+SETUP_CHOICE_LEFT = 48
+SETUP_CHOICE_TOP = 136
+SETUP_HELP_LEFT = 208
+SETUP_HELP_TOP = 136
 
 public SETUP_BGM_CHOICE_PUT
 setup_bgm_choice_put	proc near
@@ -269,7 +269,7 @@ setup_bgm_choice_put	proc near
 
 	enter	4, 0
 	push	si
-	mov	si, SETUP_CHOICE_Y
+	mov	si, SETUP_CHOICE_TOP
 	mov	ax, [bp+@@mode]
 	or	ax, ax
 	jz	short @@none
@@ -295,7 +295,7 @@ setup_bgm_choice_put	proc near
 	add	si, SETUP_LINE_H * 2
 
 @@put:
-	call	graph_putsa_fx pascal, SETUP_CHOICE_X, si, [bp+@@col], large [bp+@@str]
+	call	graph_putsa_fx pascal, SETUP_CHOICE_LEFT, si, [bp+@@col], large [bp+@@str]
 	pop	si
 	leave
 	retn	4
@@ -311,7 +311,7 @@ setup_se_choice_put	proc near
 
 	enter	4, 0
 	push	si
-	mov	si, SETUP_CHOICE_Y
+	mov	si, SETUP_CHOICE_TOP
 	mov	ax, [bp+@@mode]
 	or	ax, ax
 	jz	short @@none
@@ -341,7 +341,7 @@ setup_se_choice_put	proc near
 	add	si, SETUP_LINE_H * 2
 
 @@put:
-	call	graph_putsa_fx pascal, SETUP_CHOICE_X, si, [bp+@@col], large [bp+@@str]
+	call	graph_putsa_fx pascal, SETUP_CHOICE_LEFT, si, [bp+@@col], large [bp+@@str]
 	pop	si
 	leave
 	retn	4
@@ -354,13 +354,13 @@ setup_bgm_help_put	proc near
 	mov	bp, sp
 	push	si
 	push	di
-	mov	di, SETUP_HELP_Y
+	mov	di, SETUP_HELP_TOP
 	xor	si, si
 	jmp	short @@more?
 ; ---------------------------------------------------------------------------
 
 @@put_line:
-	push	SETUP_HELP_X
+	push	SETUP_HELP_LEFT
 	push	di
 	push	15
 	mov	bx, si
@@ -386,13 +386,13 @@ setup_se_help_put	proc near
 	mov	bp, sp
 	push	si
 	push	di
-	mov	di, SETUP_HELP_Y
+	mov	di, SETUP_HELP_TOP
 	xor	si, si
 	jmp	short @@more?
 ; ---------------------------------------------------------------------------
 
 @@put_line:
-	push	SETUP_HELP_X
+	push	SETUP_HELP_LEFT
 	push	di
 	push	15
 	mov	bx, si

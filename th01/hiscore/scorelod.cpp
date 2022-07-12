@@ -36,10 +36,8 @@ void scoredat_recreate()
 	int i;
 	int16_t stage;
 	const char *route;
-	int32_t points;
-#if (BINARY == 'E')
-	FILE *fp;
-#endif
+	int32_t score;
+	scoredat_declare();
 	// Will be name-encoded, and therefore modified in the .data section!
 	char *name;
 	const char *magic;
@@ -58,7 +56,7 @@ void scoredat_recreate()
 	scoredat_write(magic, sizeof(SCOREDAT_MAGIC) - 1);
 
 	stage = SCOREDAT_PLACES;
-	points = (SCOREDAT_PLACES * 100);
+	score = (SCOREDAT_PLACES * 100);
 	for(i = 0; i < SCOREDAT_NAME_BYTES; i++) {
 		name[i] = scoredat_name_byte_encode(name[i]);
 	}
@@ -66,8 +64,8 @@ void scoredat_recreate()
 		scoredat_write(name, SCOREDAT_NAME_BYTES);
 	}
 	for(i = 0; i < SCOREDAT_PLACES; i++) {
-		scoredat_write(&points, sizeof(points));
-		points = points - 100;
+		scoredat_write(&score, sizeof(score));
+		score = score - 100;
 	}
 	for(i = 0; i < SCOREDAT_PLACES; i++) {
 		scoredat_write(&stage, sizeof(stage));
@@ -88,9 +86,7 @@ int scoredat_load()
 		char space[50];
 	} buf;
 	char fn[16];
-#if (BINARY == 'E')
-	FILE *fp;
-#endif
+	scoredat_declare();
 
 	scoredat_fn(fn, 1);
 	if(!scoredat_exist(fn)) {
@@ -115,10 +111,10 @@ int scoredat_load()
 	scoredat_names = new int8_t[SCOREDAT_NAMES_SIZE];
 	scoredat_stages = new int16_t[SCOREDAT_PLACES];
 	scoredat_routes = new int8_t[SCOREDAT_ROUTE_LEN * SCOREDAT_PLACES];
-	scoredat_points = new int32_t[SCOREDAT_PLACES];
+	scoredat_score = new int32_t[SCOREDAT_PLACES];
 
 	scoredat_read(scoredat_names, SCOREDAT_NAMES_SIZE);
-	scoredat_read(scoredat_points, sizeof(int32_t) * SCOREDAT_PLACES);
+	scoredat_read(scoredat_score, sizeof(int32_t) * SCOREDAT_PLACES);
 	scoredat_read(scoredat_stages, sizeof(int16_t) * SCOREDAT_PLACES);
 	scoredat_read(scoredat_routes, SCOREDAT_ROUTE_LEN * SCOREDAT_PLACES);
 	scoredat_close();

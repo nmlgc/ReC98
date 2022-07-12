@@ -1,8 +1,15 @@
+#pragma option -zCGRAPH_EX_TEXT -2 -Z-
+
+#include "platform.h"
+#include "x86real.h"
+#include "pc98.h"
+#include "th01/hardware/scrollup.hpp"
+
 static const int GDC_ROW_SIZE = (ROW_SIZE / 2);
 
 // Actually taken straight from the setgsta() example function from the
 // PC-9801 Programmers' Bible, p. 150.
-void z_vsync_wait_and_scrollup(int line_on_top)
+void z_vsync_wait_and_scrollup(vram_y_t line_on_top)
 {
 	line_on_top %= RES_Y;
 

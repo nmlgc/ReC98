@@ -3,7 +3,7 @@
 
 include libs/master.lib/master.inc
 include th02/main/hud/hud.inc
-include th04/main/hud/popup.inc
+include th04/main/hud/overlay.inc
 include th02/score.inc
 include th02/gaiji/boldfont.inc
 
@@ -17,8 +17,8 @@ endif
 ; Declaring everything here rather than inside a segment avoids fixup
 ; overflows… yup.
 
-	extrn _score_lebcd:byte:SCORE_DIGITS
-	extrn _hiscore_lebcd:byte:SCORE_DIGITS
+	extrn _score:byte:SCORE_DIGITS
+	extrn _hiscore:byte:SCORE_DIGITS
 	extrn _hiscore_popup_shown:byte
 	extrn _score_delta:dword
 	extrn _score_delta_frame:dword
@@ -27,9 +27,9 @@ endif
 
 	extrn _hud_gaiji_row:byte:SCORE_DIGITS
 
-	extrn _popup_id_new:byte
-	extrn _popup:word
-	POPUP_UPDATE_AND_RENDER procdesc near
+	extrn _overlay_popup_id_new:byte
+	extrn _overlay2:word
+	@OVERLAY_POPUP_UPDATE_AND_RENDER$QV procdesc near
 
 if GAME eq 4
 	extrn _score_unused:byte
@@ -65,7 +65,7 @@ HUD_SCORE_PUT	proc pascal near
 	push	si
 	push	di
 
-	mov	@@score_p, offset _hiscore_lebcd[SCORE_DIGIT_HIGHEST]
+	mov	@@score_p, offset _hiscore[SCORE_DIGIT_HIGHEST]
 	mov	@@y, 4
 
 @@lebcd_to_gaiji:
@@ -79,15 +79,14 @@ HUD_SCORE_PUT	proc pascal near
 	inc	@@gaiji_p
 	dec	@@score_p
 	loop	@@digit_loop
-	call	GAIJI_PUTSA pascal, HUD_X, @@y, ds, offset _hud_gaiji_row, TX_WHITE
+	call	GAIJI_PUTSA pascal, HUD_LEFT, @@y, ds, offset _hud_gaiji_row, TX_WHITE
 	add	@@y, 2
 
 	; Put exactly two lines, high score at (56, 4), and current score at
 	; (56, 6).
 	; You might notice that @@score_p is only assigned once. Yes, the code
-	; assumes that @@score_p now points at the end of _score_lebcd, which in
-	; turn assumes it's placed exactly before _hiscore_lebcd in memory, with
-	; no padding.
+	; assumes that @@score_p now points at the end of _score, which in turn
+	; assumes it's placed exactly before _hiscore in memory, with no padding.
 	cmp	@@y, 6
 	jz	@@lebcd_to_gaiji
 
@@ -155,8 +154,8 @@ endif
 	or	al, al
 	jz	short @@subtract_frame_delta_and_render
 	mov	_hiscore_popup_shown, 1
-	mov	_popup_id_new, POPUP_ID_HISCORE_ENTRY
-	mov	_popup, offset POPUP_UPDATE_AND_RENDER
+	mov	_overlay_popup_id_new, POPUP_ID_HISCORE_ENTRY
+	mov	_overlay2, offset @overlay_popup_update_and_render$qv
 
 @@subtract_frame_delta_and_render:
 	mov	eax, _score_delta_frame
@@ -227,7 +226,7 @@ endif
 	mov	[@@bcd_p], @@delta_remaining_char
 
 	; Obviously skipping the continues digit…
-	mov	si, offset _score_lebcd[1]
+	mov	si, offset _score[1]
 	; … and the last one seen from there doesn't need special BCD treatment
 	; either.
 	mov	cx, SCORE_DIGITS - 2
@@ -266,8 +265,8 @@ if GAME eq 4
 	pop	es
 ;	assume es:_DATA
 endif
-	mov	si, offset _score_lebcd[SCORE_DIGIT_HIGHEST]
-	mov	di, offset _hiscore_lebcd[SCORE_DIGIT_HIGHEST]
+	mov	si, offset _score[SCORE_DIGIT_HIGHEST]
+	mov	di, offset _hiscore[SCORE_DIGIT_HIGHEST]
 	xor	@@is_hiscore, @@is_hiscore
 	mov	cx, SCORE_DIGITS
 	cmp	_hiscore_popup_shown, 0

@@ -1,9 +1,8 @@
 public SCROLL_SUBPIXEL_Y_TO_VRAM_SEG1
-scroll_subpixel_y_to_vram_seg1	proc near
-@@sy	= word ptr 2
+scroll_subpixel_y_to_vram_seg1 proc near
+arg_bx	near, @sy:word
 
-	mov	bx, sp
-	mov	ax, ss:[bx+@@sy]
+	mov	ax, @sy
 	sar	ax, 4
 	cmp	_scroll_active, 0
 	jz	short @@lt0?
@@ -21,5 +20,5 @@ scroll_subpixel_y_to_vram_seg1	proc near
 	sub	ax, RES_Y
 
 @@ret:
-	ret	2
-scroll_subpixel_y_to_vram_seg1	endp
+	ret_bx
+scroll_subpixel_y_to_vram_seg1 endp

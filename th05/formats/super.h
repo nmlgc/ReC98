@@ -6,4 +6,4 @@
 	_AX = top; \
 	_CX = left; \
 	z_super_roll_put_16x16_mono_raw(patnum);
-void z_pascal near z_super_roll_put_16x16_mono_raw(int patnum);
+void pascal near z_super_roll_put_16x16_mono_raw(int patnum);

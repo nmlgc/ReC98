@@ -1,9 +1,17 @@
-extern "C" {
+#pragma option -zCPTN_GRP_GRZ
 
-#include "ReC98.h"
+#include <stddef.h>
+#include "platform.h"
+#include "pc98.h"
+#include "planar.h"
+#include "master.hpp"
+extern "C" {
 #include "th01/hardware/palette.h"
+}
 #include "th01/formats/ptn.hpp"
+extern "C" {
 #include "th01/formats/pf.hpp"
+}
 
 extern int flag_palette_show;
 
@@ -18,20 +26,20 @@ typedef struct {
 } ptn_header_t;
 // -----------------------------
 
-ptn_error_t ptn_load_palette_show(int slot, const char *fn)
+ptn_error_t ptn_load_palette_show(main_ptn_slot_t slot, const char *fn)
 {
 	union {
 		Palette4 pal;
 		ptn_header_t header;
 	} h;
 
-	int y;
+	pixel_t y;
 	int i;
 	int image_count;
 	ptn_t *ptn;
 
 	arc_file_load(fn);
-	arc_file_get(h.header);
+	arc_file_get_far(h.header);
 
 	image_count = h.header.image_count;
 	// MODDERS:
@@ -46,7 +54,7 @@ ptn_error_t ptn_load_palette_show(int slot, const char *fn)
 		return PE_OUT_OF_MEMORY;
 	}
 
-	arc_file_get(h.pal);
+	arc_file_get_far(h.pal);
 	if(flag_palette_show) {
 		z_palette_set_all_show(h.pal);
 	}
@@ -54,8 +62,8 @@ ptn_error_t ptn_load_palette_show(int slot, const char *fn)
 	ptn_image_count[slot] = image_count;
 	ptn = ptn_images[slot];
 	for(i = 0; i < image_count; i++, ptn++) {
-		arc_file_get(ptn->unused_zero);
-		arc_file_get(ptn->planes);
+		arc_file_get_far(ptn->unused_zero);
+		arc_file_get_far(ptn->planes);
 		for(y = 0; y < PTN_H; y++) {
 			ptn->alpha[y] = ptn_alpha_from(
 				ptn->planes.B[y],
@@ -69,7 +77,7 @@ ptn_error_t ptn_load_palette_show(int slot, const char *fn)
 	return PE_OK;
 }
 
-ptn_error_t ptn_new(int slot, int image_count)
+ptn_error_t ptn_new(main_ptn_slot_t slot, int image_count)
 {
 	if(image_count <= 0 || image_count > PTN_IMAGES_PER_SLOT) {
 		return PE_IMAGE_COUNT_INVALID;
@@ -85,7 +93,7 @@ ptn_error_t ptn_new(int slot, int image_count)
 	return PE_OK;
 }
 
-void ptn_load(int slot, const char *fn)
+void ptn_load(main_ptn_slot_t slot, const char *fn)
 {
 	flag_palette_show = false;
 	int ret = ptn_load_palette_show(slot, fn);
@@ -93,35 +101,31 @@ void ptn_load(int slot, const char *fn)
 	ret;
 }
 
-void ptn_free(int slot)
+void ptn_free(main_ptn_slot_t slot)
 {
 	if(ptn_images[slot]) {
 		delete[] ptn_images[slot];
-		ptn_images[slot] = NULL;
+		ptn_images[slot] = nullptr;
 		ptn_image_count[slot] = 0;
 	}
 }
 
-void ptn_put_noalpha_8(int left, int top, int ptn_id)
+void ptn_put_noalpha_8(screen_x_t left, vram_y_t top, int ptn_id)
 {
-	unsigned int vram_offset = vram_offset_shift(left, top);
+	vram_offset_t vram_offset = vram_offset_shift(left, top);
 	ptn_t *ptn = ptn_with_id(ptn_id);
-	for(int y = 0; y < PTN_H; y++) {
-		#define put_noalpha(vram_offset, w, ptn) \
-			VRAM_CHUNK(B, vram_offset, w) = (ptn->planes.B[y]); \
-			VRAM_CHUNK(R, vram_offset, w) = (ptn->planes.R[y]); \
-			VRAM_CHUNK(G, vram_offset, w) = (ptn->planes.G[y]); \
-			VRAM_CHUNK(E, vram_offset, w) = (ptn->planes.E[y]);
-		put_noalpha(vram_offset, PTN_W, ptn);
-		#undef put_noalpha
+	for(pixel_t y = 0; y < PTN_H; y++) {
+		vram_put_ptn_planar(vram_offset, ptn, y);
 		vram_offset += ROW_SIZE;
 	}
 }
 
-void ptn_put_quarter_noalpha_8(int left, int top, int ptn_id, int quarter)
+void ptn_put_quarter_noalpha_8(
+	screen_x_t left, vram_y_t top, int ptn_id, int quarter
+)
 {
-	int y;
-	unsigned int vram_offset = vram_offset_muldiv(left, top);
+	pixel_t y;
+	vram_offset_t vram_offset = vram_offset_muldiv(left, top);
 	PTNQuarter q;
 	ptn_t *ptn = ptn_with_id(ptn_id);
 
@@ -136,6 +140,4 @@ void ptn_put_quarter_noalpha_8(int left, int top, int ptn_id, int quarter)
 		#undef put_quarter_noalpha
 		vram_offset += ROW_SIZE;
 	}
-}
-
 }

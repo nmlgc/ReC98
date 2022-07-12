@@ -1,28 +1,28 @@
 // Changed from their TH02 values.
-typedef enum {
-	INPUT_NONE       = 0x0,
-	INPUT_UP         = 0x1,
-	INPUT_DOWN       = 0x2,
-	INPUT_LEFT       = 0x4,
-	INPUT_RIGHT      = 0x8,
-	INPUT_BOMB       = 0x10,
-	INPUT_SHOT       = 0x20,
-	INPUT_UP_LEFT    = 0x100,
-	INPUT_DOWN_LEFT  = 0x200,
-	INPUT_UP_RIGHT   = 0x400,
-	INPUT_DOWN_RIGHT = 0x800,
-	INPUT_CANCEL     = 0x1000,
-	INPUT_OK         = 0x2000,
-	INPUT_Q          = 0x4000,
-} input_t;
+typedef uint16_t input_t;
+
+static const input_t INPUT_NONE       = 0x0000;
+static const input_t INPUT_UP         = 0x0001;
+static const input_t INPUT_DOWN       = 0x0002;
+static const input_t INPUT_LEFT       = 0x0004;
+static const input_t INPUT_RIGHT      = 0x0008;
+static const input_t INPUT_BOMB       = 0x0010;
+static const input_t INPUT_SHOT       = 0x0020;
+static const input_t INPUT_UP_LEFT    = 0x0100;
+static const input_t INPUT_DOWN_LEFT  = 0x0200;
+static const input_t INPUT_UP_RIGHT   = 0x0400;
+static const input_t INPUT_DOWN_RIGHT = 0x0800;
+static const input_t INPUT_CANCEL     = 0x1000;
+static const input_t INPUT_OK         = 0x2000;
+static const input_t INPUT_Q          = 0x4000;
 
 /// Variables
 /// ---------
 // Multi-player P1/P2 controls
-extern twobyte_t input_mp_p1;
-extern twobyte_t input_mp_p2;
-// Single-player controls. Sometimes only accessed through the high byte.
-extern twobyte_t input_sp;
+extern input_t input_mp_p1;
+extern input_t input_mp_p2;
+// Single-player controls.
+extern input_t input_sp;
 /// ---------
 
 /// Modes
@@ -51,14 +51,14 @@ void pascal input_mode_attract();
 // keyboard keys.
 void input_reset_sense_key_held();
 
-// Waits the given number of [frames] for OK or SHOT to be pressed. Returns 1
-// if that happened, and 0 otherwise.
-int pascal input_wait_for_ok(unsigned int frames);
+// Waits the given number of [frames] for OK or SHOT to be pressed. Returns
+// `true` if that happened, and `false` otherwise.
+bool16 pascal input_wait_for_ok(unsigned int frames);
 
 // Waits until BGM playback reached the given [measure] for OK or SHOT to be
-// pressed. Returns 1 if that happened, and 0 otherwise. Falls back on
-// input_wait_for_ok() with the given number of [frames] if BGM is disabled.
-int pascal input_wait_for_ok_or_measure(int measure, unsigned int frames);
+// pressed. Returns `true` if that happened, and `false` otherwise. Falls back
+// on input_wait_for_ok() with the given number of [frames] if BGM is disabled.
+bool16 pascal input_wait_for_ok_or_measure(int measure, unsigned int frames);
 
 // Waits for all held inputs to be released, then waits the given number of
 // [frames] for an (interface) input to be pressed. Set [frames] to 0 or 9999

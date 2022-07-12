@@ -3,43 +3,44 @@
  * Yuuka's shot control functions
  */
 
-#pragma codeseg main_01_TEXT main_01
+#pragma option -zCmain_01_TEXT -zPmain_01
 
-extern "C" {
 #include "th05/i_shot.hpp"
 #define cycle _AL
+
+extern "C" {
 
 #pragma option -a2
 
 #define YUUKA_INNER_L4 \
 	switch(sai.i - 1) { \
-	case 0:	sai.angle = 186;	break; \
-	case 1:	sai.angle = 192;	shot->pos.cur.x -= 8;	break; \
-	case 2:	sai.angle = 192;	shot->pos.cur.x += 8;	break; \
-	case 3:	sai.angle = 198;	break; \
+	case 0:	sai.angle = -0x46;	break; \
+	case 1:	sai.angle = -0x40;	shot->pos.cur.x -= 8;	break; \
+	case 2:	sai.angle = -0x40;	shot->pos.cur.x += 8;	break; \
+	case 3:	sai.angle = -0x3A;	break; \
 	} \
 	shot->damage = 7;
 
 #define YUUKA_INNER_L5 \
 	switch(sai.i - 1) { \
-	case 0:	sai.angle = 180; break; \
-	case 1:	sai.angle = 186; break; \
-	case 2:	sai.angle = 192; break; \
-	case 3:	sai.angle = 198; break; \
-	case 4:	sai.angle = 204; break; \
+	case 0:	sai.angle = -0x4C; break; \
+	case 1:	sai.angle = -0x46; break; \
+	case 2:	sai.angle = -0x40; break; \
+	case 3:	sai.angle = -0x3A; break; \
+	case 4:	sai.angle = -0x34; break; \
 	} \
 	shot->damage = 7;
 
 void pascal near shot_yuuka_l2(void)
 {
-	SHOT_FUNC_INIT(1, SC_3X, SC_1X, i += 2);
-	while(( shot = shots_add() ) != NULL) {
+	shot_func_init(shot, sai, cycle, 1, SC_3X, SC_1X, i += 2);
+	while(( shot = shots_add() ) != nullptr) {
 		if(sai.i == 1) {
-			sai.set_random_angle(15, 184);
+			sai.set_random_angle(-0x48, -0x38);
 			shot->damage = 9;
 		} else {
-			if(sai.i == 3) { shot->from_option_l(); sai.angle = 184; }
-			else/*i == 2*/ { shot->from_option_r(); sai.angle = 200; }
+			if(sai.i == 3) { shot->from_option_l(); sai.angle = -0x48; }
+			else/*i == 2*/ { shot->from_option_r(); sai.angle = -0x38; }
 			shot->set_option_sprite_and_damage(6);
 		}
 		shot_velocity_set(&shot->pos.velocity, sai.angle);
@@ -51,21 +52,21 @@ void pascal near shot_yuuka_l2(void)
 
 void pascal near shot_yuuka_l3(void)
 {
-	SHOT_FUNC_INIT(2, SC_3X, SC_2X, add_secondary(2));
+	shot_func_init(shot, sai, cycle, 2, SC_3X, SC_2X, add_secondary(2));
 	char option_only = cycle & SC_3X;
 
-	while(( shot = shots_add() ) != NULL) {
+	while(( shot = shots_add() ) != nullptr) {
 		if(sai.i <= 2) {
-			if(sai.i == 2) { shot->pos.cur.x -= 8; }
-			else/*i == 1*/ { shot->pos.cur.x += 8; }
+			if(sai.i == 2) { shot->pos.cur.x -= 8.0f; }
+			else/*i == 1*/ { shot->pos.cur.x += 8.0f; }
 			shot->damage = 8;
 		} else {
 			if(sai.i == 4) {
 				shot->from_option_l();
-				sai.angle = 184;
+				sai.angle = -0x48;
 			} else {
 				shot->from_option_r();
-				sai.angle = 200;
+				sai.angle = -0x38;
 				if(option_only == 0) {
 					sai.i = 1;
 				}
@@ -81,28 +82,28 @@ void pascal near shot_yuuka_l3(void)
 
 void pascal near shot_yuuka_l4(void)
 {
-	SHOT_FUNC_INIT(3, SC_3X, SC_2X, add_secondary(2));
+	shot_func_init(shot, sai, cycle, 3, SC_3X, SC_2X, add_secondary(2));
 	char option_only = cycle & SC_3X;
 
-	while(( shot = shots_add() ) != NULL) {
+	while(( shot = shots_add() ) != nullptr) {
 		if(sai.i <= 3) {
 			if(sai.i == 3) {
-				sai.angle = 180;
+				sai.angle = -0x4C;
 			}
 			shot->damage = 7;
-			sai.angle += 6;
+			sai.angle += 0x06;
 		} else {
 			if(sai.i == 5) {
 				shot->from_option_l();
-				sai.set_random_angle(7, 180);
+				sai.set_random_angle(-0x4C, -0x44);
 			} else {
 				shot->from_option_r();
-				sai.set_random_angle(7, 196);
+				sai.set_random_angle(-0x3C, -0x34);
 				if(option_only == 0) {
 					sai.i = 1;
 				}
 			}
-			shot->pos.velocity.y = 2;
+			shot->pos.velocity.y.set(2.0f);
 			shot->set_option_sprite_and_damage(6);
 		}
 		shot_velocity_set(&shot->pos.velocity, sai.angle);
@@ -114,26 +115,26 @@ void pascal near shot_yuuka_l4(void)
 
 void pascal near shot_yuuka_l5(void)
 {
-	SHOT_FUNC_INIT(3, SC_3X, SC_2X, add_secondary(4));
+	shot_func_init(shot, sai, cycle, 3, SC_3X, SC_2X, add_secondary(4));
 	char option_only = cycle & SC_3X;
 
-	while(( shot = shots_add() ) != NULL) {
+	while(( shot = shots_add() ) != nullptr) {
 		if(sai.i <= 3) {
 			shot->damage = 7;
 			if(sai.i == 3) {
-				sai.angle = 180;
+				sai.angle = -0x4C;
 			}
-			sai.angle += 6;
+			sai.angle += 0x06;
 		} else {
 			switch(sai.i - 4u) {
 			case 0:
 				if(option_only == 0) {
 					sai.i = 1;
 				}
-			       	shot->from_option_l();	sai.angle = 178;	break;
-			case 1:	shot->from_option_r();	sai.angle = 206;	break;
-			case 2:	shot->from_option_l();	sai.angle = 186;	break;
-			case 3:	shot->from_option_r();	sai.angle = 198;	break;
+			/*  */	shot->from_option_l();	sai.angle = -0x4E;	break;
+			case 1:	shot->from_option_r();	sai.angle = -0x32;	break;
+			case 2:	shot->from_option_l();	sai.angle = -0x46;	break;
+			case 3:	shot->from_option_r();	sai.angle = -0x3A;	break;
 			}
 			shot->set_option_sprite_and_damage(6);
 		}
@@ -146,22 +147,22 @@ void pascal near shot_yuuka_l5(void)
 
 void pascal near shot_yuuka_l6(void)
 {
-	SHOT_FUNC_INIT(4, SC_3X, SC_2X, add_secondary(4));
+	shot_func_init(shot, sai, cycle, 4, SC_3X, SC_2X, add_secondary(4));
 	char option_only = cycle & SC_3X;
 
-	while(( shot = shots_add() ) != NULL) {
+	while(( shot = shots_add() ) != nullptr) {
 		if(sai.i <= 4) {
 			YUUKA_INNER_L4;
 		} else {
 			switch(sai.i - 5u) {
-			case 0:	shot->from_option_l();	sai.angle = 176;
+			case 0:	shot->from_option_l();	sai.angle = -0x50;
 				if(option_only == 0) {
 					sai.i = 1;
 				}
 				break;
-			case 1:	shot->from_option_r();	sai.angle = 208;	break;
-			case 2:	shot->from_option_l();	sai.angle = 184;	break;
-			case 3:	shot->from_option_r();	sai.angle = 200;	break;
+			case 1:	shot->from_option_r();	sai.angle = -0x30;	break;
+			case 2:	shot->from_option_l();	sai.angle = -0x48;	break;
+			case 3:	shot->from_option_r();	sai.angle = -0x38;	break;
 			}
 			shot->set_option_sprite_and_damage(6);
 		}
@@ -174,24 +175,24 @@ void pascal near shot_yuuka_l6(void)
 
 void pascal near shot_yuuka_l7(void)
 {
-	SHOT_FUNC_INIT(4, SC_3X, SC_2X, add_secondary(6));
+	shot_func_init(shot, sai, cycle, 4, SC_3X, SC_2X, add_secondary(6));
 	char option_only = cycle & SC_3X;
 
-	while(( shot = shots_add() ) != NULL) {
+	while(( shot = shots_add() ) != nullptr) {
 		if(sai.i <= 4) {
 			YUUKA_INNER_L4;
 		} else {
 			switch(sai.i - 5u) {
-			case 0:	shot->from_option_l();	sai.angle = 176;
+			case 0:	shot->from_option_l();	sai.angle = -0x50;
 				if(option_only == 0) {
 					sai.i = 1;
 				}
 				break;
-			case 1:	shot->from_option_r();	sai.angle = 208;	break;
-			case 2:	shot->from_option_l();	sai.angle = 183;	break;
-			case 3:	shot->from_option_r();	sai.angle = 201;	break;
-			case 4:	shot->from_option_l();	sai.angle = 190;	break;
-			case 5:	shot->from_option_r();	sai.angle = 194;	break;
+			case 1:	shot->from_option_r();	sai.angle = -0x30;	break;
+			case 2:	shot->from_option_l();	sai.angle = -0x49;	break;
+			case 3:	shot->from_option_r();	sai.angle = -0x37;	break;
+			case 4:	shot->from_option_l();	sai.angle = -0x42;	break;
+			case 5:	shot->from_option_r();	sai.angle = -0x3E;	break;
 			}
 			shot->set_option_sprite_and_damage(6);
 		}
@@ -204,24 +205,24 @@ void pascal near shot_yuuka_l7(void)
 
 void pascal near shot_yuuka_l8(void)
 {
-	SHOT_FUNC_INIT(5, SC_3X, SC_2X, add_secondary(6));
+	shot_func_init(shot, sai, cycle, 5, SC_3X, SC_2X, add_secondary(6));
 	char option_only = cycle & SC_3X;
 
-	while(( shot = shots_add() ) != NULL) {
+	while(( shot = shots_add() ) != nullptr) {
 		if(sai.i <= 5) {
 			YUUKA_INNER_L5;
 		} else {
 			switch(sai.i - 6u) {
-			case 0:	shot->from_option_l();	sai.angle = 176;
+			case 0:	shot->from_option_l();	sai.angle = -0x50;
 				if(option_only == 0) {
 					sai.i = 1;
 				}
 				break;
-			case 1:	shot->from_option_r();	sai.angle = 208;	break;
-			case 2:	shot->from_option_l();	sai.angle = 183;	break;
-			case 3:	shot->from_option_r();	sai.angle = 201;	break;
-			case 4:	shot->from_option_l();	sai.angle = 190;	break;
-			case 5:	shot->from_option_r();	sai.angle = 194;	break;
+			case 1:	shot->from_option_r();	sai.angle = -0x30;	break;
+			case 2:	shot->from_option_l();	sai.angle = -0x49;	break;
+			case 3:	shot->from_option_r();	sai.angle = -0x37;	break;
+			case 4:	shot->from_option_l();	sai.angle = -0x42;	break;
+			case 5:	shot->from_option_r();	sai.angle = -0x3E;	break;
 			}
 			shot->set_option_sprite_and_damage(6);
 		}
@@ -234,26 +235,26 @@ void pascal near shot_yuuka_l8(void)
 
 void pascal near shot_yuuka_l9(void)
 {
-	SHOT_FUNC_INIT(5, SC_3X, SC_2X, add_secondary(8));
+	shot_func_init(shot, sai, cycle, 5, SC_3X, SC_2X, add_secondary(8));
 	char option_only = cycle & SC_3X;
 
-	while(( shot = shots_add() ) != NULL) {
+	while(( shot = shots_add() ) != nullptr) {
 		if(sai.i <= 5) {
 			YUUKA_INNER_L5;
 		} else {
 			switch(sai.i - 6u) {
-			case 0:	shot->from_option_l();	sai.angle = 168;
+			case 0:	shot->from_option_l();	sai.angle = -0x58;
 				if(option_only == 0) {
 					sai.i = 1;
 				}
 				break;
-			case 1:	shot->from_option_r();	sai.angle = 216;	break;
-			case 2:	shot->from_option_l();	sai.angle = 176;	break;
-			case 3:	shot->from_option_r();	sai.angle = 208;	break;
-			case 4:	shot->from_option_l();	sai.angle = 184;	break;
-			case 5:	shot->from_option_r();	sai.angle = 200;	break;
-			case 6:	shot->from_option_l();	sai.angle = 193;	break;
-			case 7:	shot->from_option_r();	sai.angle = 191;	break;
+			case 1:	shot->from_option_r();	sai.angle = -0x28;	break;
+			case 2:	shot->from_option_l();	sai.angle = -0x50;	break;
+			case 3:	shot->from_option_r();	sai.angle = -0x30;	break;
+			case 4:	shot->from_option_l();	sai.angle = -0x48;	break;
+			case 5:	shot->from_option_r();	sai.angle = -0x38;	break;
+			case 6:	shot->from_option_l();	sai.angle = -0x3F;	break;
+			case 7:	shot->from_option_r();	sai.angle = -0x41;	break;
 			}
 			shot->set_option_sprite_and_damage(6);
 		}

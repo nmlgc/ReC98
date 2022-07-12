@@ -1,10 +1,11 @@
+// Always updated by any of the .GRP loading or blitting functions.
 extern Palette4 grp_palette;
 
 // Overwrites [grp_palette] with [pal].
 void grp_palette_set_all(const Palette4& pal);
 
-// Loads [grp_palette] from the .GRP file with the given [fn], and updates the
-// hardware palette with it. Returns garbage.
+// Just loads [grp_palette] from the .GRP file with the given [fn], and updates
+// the hardware palette with it. Returns garbage.
 int grp_palette_load_show(const char *fn);
 
 // Sane version of grp_palette_load_show(). Returns 0 on success, 1 on file

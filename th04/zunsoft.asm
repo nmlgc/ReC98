@@ -234,8 +234,8 @@ loc_B7F6:
 zunsoft_palette_update_and_show	endp
 
 
-public ZUNSOFT
-zunsoft	proc near
+public _zunsoft
+_zunsoft proc near
 
 @@frame		= word ptr -8
 @@i		= word ptr -6
@@ -253,17 +253,17 @@ zunsoft	proc near
 	mov	PaletteTone, 0
 	call	palette_show
 	graph_accesspage 1
-	call	pi_slot_load pascal, 0, ds, offset aZun00_pi
-	call	pi_slot_palette_apply pascal, 0
-	call	pi_slot_put pascal, large 0, 0
+	call	pi_load pascal, 0, ds, offset aZun00_pi
+	call	pi_palette_apply pascal, 0
+	call	pi_put_8 pascal, large 0, 0
 if GAME eq 5
-	call	pi_slot_free pascal, 0
+	call	pi_free pascal, 0
 else
 	freePISlotLarge	0
 endif
 	push	0
 	call	graph_copy_page
-	call	bgimage_snap
+	call	_bgimage_snap
 	graph_accesspage 1
 	call	graph_clear
 	graph_accesspage 0
@@ -321,8 +321,7 @@ endif
 @@more_pyros?:
 	cmp	si, ZUNSOFT_PYRO_COUNT
 	jl	short @@next_pyro
-	push	(2 shl 16)
-	call	snd_delay_until_measure
+	call	snd_delay_until_measure pascal, (2 shl 16)
 	mov	PaletteTone, 100
 	call	palette_show
 	call	super_entry_bfnt pascal, ds, offset aZun02_bft
@@ -421,7 +420,7 @@ frame_68:	; case 68
 	call	zunsoft_pyro_new
 
 @@no_new_pyro_this_frame:
-	call	bgimage_put	; default
+	call	_bgimage_put	; default
 	call	zunsoft_update_and_render
 if GAME eq 4
 	call	_input_reset_sense
@@ -466,7 +465,7 @@ endif
 	call	palette_show
 
 @@end_of_frame:
-	call	snd_se_update
+	call	_snd_se_update
 	inc	di
 
 @@more_frames?:
@@ -476,12 +475,12 @@ endif
 
 @@ret:
 	call	super_free
-	call	bgimage_free
+	call	_bgimage_free
 	pop	di
 	pop	si
 	leave
 	retn
-zunsoft	endp
+_zunsoft endp
 
 ; ---------------------------------------------------------------------------
 if GAME eq 4

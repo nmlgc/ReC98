@@ -1,10 +1,13 @@
-extern "C" {
+#pragma option -zCPTN_GRP_GRZ
 
 #include <stdio.h>
-
-#include "ReC98.h"
+#include "platform.h"
+#include "pc98.h"
+#include "master.hpp"
+extern "C" {
 #include "libs/piloadc/piloadc.h"
 #include "th01/hardware/palette.h"
+}
 #include "th01/formats/grp.h"
 
 // The same size that master.lib uses in graph_pi_load_pack(), with no
@@ -17,7 +20,7 @@ extern "C" {
 extern int8_t* grp_buf;
 extern int flag_palette_show; // = true
 extern int flag_grp_put; // = true
-extern unsigned char flag_grp_colorkey; // = false
+extern bool flag_grp_colorkey; // = false
 
 int grp_palette_load_show_sane(const char *fn)
 {
@@ -56,11 +59,9 @@ int getkanji(FILE *fp)
 
 void grp_palette_set_all(const Palette4& pal)
 {
-	for(int col = 0; col < COLOR_COUNT; col++) {
-		for(int comp = 0; comp < sizeof(RGB4); comp++) {
-			grp_palette[col].v[comp] = pal[col].v[comp];
-		}
-	}
+	int col;
+	int comp;
+	palette_copy(grp_palette, pal, col, comp);
 }
 
 int grp_put_palette_show(const char *fn)
@@ -114,6 +115,4 @@ int grp_put_colorkey(const char *fn)
 	flag_palette_show = true;
 	flag_grp_colorkey = false;
 	return ret;
-}
-
 }

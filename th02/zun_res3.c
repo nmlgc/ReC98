@@ -3,7 +3,10 @@
  * 3rd part of ZUN_RES.COM. Initializes the high score lists.
  */
 
-#include "th02/th02.h"
+#include <dos.h>
+#include "platform.h"
+#include "master.hpp"
+#include "th02/formats/scoredat.h"
 #include "th02/gaiji/gaiji.h"
 
 extern scoredat_section_t hi;
@@ -22,7 +25,7 @@ void pascal scoredat_defaults_set(void)
 
 place_set:
 	hi.score.cleared = 0;
-	hi.score.points[_SI] = _DI;
+	hi.score.score[_SI] = _DI;
 	_DI -= 1000;
 	hi.score.stage[_SI] = 5 - ((int)_SI >> 1);
 	_BX = _SI;

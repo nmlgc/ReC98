@@ -3,13 +3,13 @@
  * Shared high score code
  */
 
+#include "th02/hiscore/regist.h"
+
 const char *SCOREDAT_FN = "huuhi.dat";
 const unsigned char gbHI_SCORE[] = {
 	gb_H_, gb_I_, gb_SP, gb_S_, gb_C_, gb_O_, gb_R_, gb_E_, 0
 };
 
-#define ALPHABET_ROWS 3
-#define ALPHABET_COLS 17
 const unsigned char gALPHABET[ALPHABET_ROWS][ALPHABET_COLS] = {
 	gb_A_, gb_B_, gb_C_, gb_D_, gb_E_, gb_F_, gb_G_, gb_H_, gb_I_, gb_J_,
 	gb_K_, gb_L_, gb_M_, gb_N_, gb_O_, gb_P_, gb_Q_, gb_R_, gb_S_, gb_T_,
@@ -25,7 +25,7 @@ const unsigned char gbNAME[] = {gb_N_, gb_A_, gb_M_, gb_E_, 0};
 const unsigned char gbPOINT[] = {gb_P_, gb_O_, gb_I_, gb_N_, gb_T_, 0};
 const unsigned char gbST[] = {gb_S_, gb_T_, 0};
 
-#define ATRB_SET(place) \
+#define score_atrb_set(atrb, place, place_to_highlight) \
 	if((place) == place_to_highlight) { \
 		atrb = TX_GREEN; \
 	} else { \

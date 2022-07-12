@@ -3,27 +3,26 @@
  * Code segment #1 of TH01's FUUIN.EXE
  */
 
-#pragma option -O- -1
+#pragma option -O- -1 -Z-
 
-extern "C" {
 #include <stdio.h>
-#include "th01/th01.h"
-#include "th01/ranks.h"
+#include "platform.h"
+#include "master.hpp"
+#include "th01/common.h"
+#include "th01/resident.hpp"
 #include "th01/end/vars.hpp"
 
 #undef RES_ID
-#undef RES_ID_STRLEN
-#define RES_ID_STRLEN (sizeof("ReiidenConfig") - 1)
 
-bool16 end_init(void)
+extern "C" bool16 end_init(void)
 {
 	int i;
 	#define RES_ID RES_ID_0
 	extern const char RES_ID[];
-	seg_t sgm = resdata_exist(RES_ID, RES_ID_STRLEN, RES_PARASIZE);
+	resident_t __seg *sgm = ResData<resident_t>::exist(RES_ID);
 	#undef RES_ID
 	if(sgm) {
-		resident_t* resident = reinterpret_cast<resident_t*>(MK_FP(sgm, 0));
+		resident_t* resident = sgm;
 		if(resident->end_flag) {
 			score = resident->score;
 			continues_total = 0;
@@ -60,13 +59,13 @@ bool16 end_resident_clear(void)
 	int i;
 	#define RES_ID RES_ID_1
 	extern const char RES_ID[];
-	seg_t sgm = resdata_exist(RES_ID, RES_ID_STRLEN, RES_PARASIZE);
+	resident_t __seg *sgm = ResData<resident_t>::exist(RES_ID);
 	#undef RES_ID
 	if(sgm) {
-		resident_t* resident = reinterpret_cast<resident_t*>(MK_FP(sgm, 0));
+		resident_t* resident = sgm;
 		resident->score = 0;
 		resident->continues_total = 0;
-		resident->end_flag = 0;
+		resident->end_flag = ES_NONE;
 		resident->score_highest = 0;
 		for(i = 0; i < SCENE_COUNT; i++) {
 			resident->continues_per_scene[i] = 0;
@@ -74,6 +73,4 @@ bool16 end_resident_clear(void)
 		resident->stage = 0;
 	}
 	return true;
-}
-
 }

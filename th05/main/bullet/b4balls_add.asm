@@ -31,7 +31,7 @@ b4balls_add	proc near
 	push	si
 	push	di
 	mov	al, b4ball_template.B4B_speed
-	call	@playperf_adjust_speed
+	call	@playperf_speedtune
 	mov	ah, 0
 	mov	[bp+@@speed], ax
 	mov	si, offset b4balls

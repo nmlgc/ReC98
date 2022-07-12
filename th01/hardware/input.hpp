@@ -1,23 +1,29 @@
 /// Shared input macros
-extern unsigned char input_shot;
+extern bool input_shot;
 extern bool input_ok;
 
 #define input_func_bool(var) { var = true; } else { var = false; }
 
 // REIIDEN.EXE and FUUIN.EXE
 // -------------------------
-// [input_lr] flags… hey, at least two inputs merged into a single variable.
-// It's a start.
-#define INPUT_RIGHT 0x01
-#define INPUT_LEFT 0x02
+// Hey, at least two inputs merged into a single variable! It's a start.
+enum input_lr_t {
+	INPUT_NONE = 0,
+	INPUT_RIGHT = 1,
+	INPUT_LEFT = 2,
+	INPUT_RIGHT_LEFT = 3,
+	INPUT_LEFT_RIGHT = 3,
 
-extern unsigned char input_up;
-extern unsigned char input_down;
-extern unsigned char input_lr;
-extern unsigned char input_strike;
+	_input_lr_t_FORCE_INT16 = 0x7FFF
+};
+
+extern bool input_up;
+extern bool input_down;
+extern uint8_t input_lr; // input_lr_t
+extern bool input_strike;
 extern bool input_mem_enter;
 extern bool input_mem_leave;
-extern unsigned char paused;
+extern bool paused;
 extern bool done;
 extern bool input_bomb;
 

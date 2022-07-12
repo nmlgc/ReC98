@@ -1,5 +1,10 @@
 ; The only change in ZUN's fork: The format ID is 'NZ', rather than 'iP'. Lol.
 
+; For compatibility with later TASM versions, "segcs movsw" has also been
+; spelled out to what it's actually supposed to mean.
+; 	(movs word ptr es:[di], word ptr cs:[si])
+; ----------------------------------------------------------------------------
+
 ;//////////////////////////////////////////////////////////////////////////////
 ;
 ;        Ｐｉ １６色　グラフィック・ローダ	1990	やなぎさわ
@@ -489,7 +494,7 @@ nopalet:
 	mov	si,offset dftpal
 	mov	di,PaletteBuff
 	mov	cx,12
-rep	segcs	movsw
+rep	movs word ptr es:[di], word ptr cs:[si]
 palend:
 	test	option,1
 	jz	@@skip

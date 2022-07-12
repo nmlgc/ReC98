@@ -1,6 +1,5 @@
-; void pascal near sparks_update(void);
-public SPARKS_UPDATE
-sparks_update	proc near
+public _sparks_update
+_sparks_update proc near
 	push	si
 	push	di
 	mov	di, SPARK_COUNT
@@ -16,8 +15,7 @@ sparks_update	proc near
 
 @@update:
 	lea	ax, [si+spark_t.pos]
-	push	ax
-	call	_motion_update_1
+	call	@PlayfieldMotion@update_seg1$qv pascal, ax
 	add	ax, ((SPARK_W / 2) shl 4)
 	cmp	ax, ((PLAYFIELD_W + SPARK_W) shl 4)
 	jnb	short @@remove
@@ -43,16 +41,15 @@ sparks_update	proc near
 	pop	di
 	pop	si
 	retn
-sparks_update	endp
+_sparks_update endp
 
 
-; void pascal near sparks_render(void);
-public SPARKS_RENDER
-sparks_render	proc near
+public _sparks_render
+_sparks_render proc near
 	push	si
 	push	di
 	mov	ah, GC_BR
-	call	_grcg_setcolor_direct_seg1_raw
+	call	@grcg_setcolor_direct_raw$qv
 	mov	ax, GRAM_400
 	mov	es, ax
 	assume es:nothing
@@ -63,11 +60,11 @@ sparks_render	proc near
 	cmp	[si+spark_t.flag], 1
 	jnz	short @@more?
 	mov	ax, [si+spark_t.pos.cur.y]
-	add	ax, ((PLAYFIELD_Y - (SPARK_H / 2)) shl 4)
+	add	ax, ((PLAYFIELD_TOP - (SPARK_H / 2)) shl 4)
 	call	scroll_subpixel_y_to_vram_seg1 pascal, ax
 	mov	dx, ax
 	mov	ax, [si+spark_t.pos.cur.x]
-	add	ax, ((PLAYFIELD_X - (SPARK_W / 2)) shl 4)
+	add	ax, ((PLAYFIELD_LEFT - (SPARK_W / 2)) shl 4)
 	sar	ax, 4	; → actual pixels
 	mov	cl, [si+spark_t.age]
 	call	@spark_render
@@ -79,13 +76,12 @@ sparks_render	proc near
 	pop	di
 	pop	si
 	retn
-sparks_render	endp
+_sparks_render endp
 	even
 
 
-; void pascal near sparks_invalidate(void);
-public SPARKS_INVALIDATE
-sparks_invalidate	proc near
+public _sparks_invalidate
+_sparks_invalidate proc near
 	push	si
 	push	di
 	mov	_tile_invalidate_box, (SPARK_W shl 16) or SPARK_H
@@ -104,12 +100,11 @@ sparks_invalidate	proc near
 	pop	di
 	pop	si
 	retn
-sparks_invalidate	endp
+_sparks_invalidate endp
 
 
-; void pascal near sparks_init(void);
-public SPARKS_INIT
-sparks_init	proc near
+public _sparks_init
+_sparks_init proc near
 	push	si
 	push	di
 	mov	si, offset _sparks
@@ -121,8 +116,8 @@ sparks_init	proc near
 	add	si, size spark_t
 	dec	di
 	jnz	short @@loop
-	mov	byte ptr _spark_next_free_offset, 0
+	mov	byte ptr _spark_ring_offset, 0
 	pop	di
 	pop	si
 	retn
-sparks_init	endp
+_sparks_init endp

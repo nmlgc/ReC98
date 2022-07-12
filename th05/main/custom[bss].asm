@@ -7,8 +7,6 @@ custom_t ends
 ; Stage 2 star particles
 ; ----------------------
 S2PARTICLE_COUNT = 64
-S2PARTICLE_W = 16
-S2PARTICLE_H = 16
 
 s2particle_t struc
 	flag	db ?
@@ -49,35 +47,35 @@ puppet0	equ <puppets[0 * size puppet_t]>
 puppet1	equ <puppets[1 * size puppet_t]>
 ; ---------------
 
-; Curve bullets
-; -------------
-curvebullet_template_t struc
+; Cheeto bullets
+; --------------
+cheeto_template_t struc
 		db ?
 	CBTMPL_angle	db ?
 	pos	motion_t <?>
-	CBTMPL_age	dw ?
+		dw ?
 		dw ?
 	CBTMPL_col	dw ?
 		dd ?
 	CBTMPL_speed	db ?
 		db ?
-curvebullet_template_t ends
+cheeto_template_t ends
 
-curvebullet_head_t struc
+cheeto_head_t struc
 	flag	db ?
 	CBH_angle	db ?
 	pos	motion_t <?>
-	CBH_age	dw ?
+		dw ?
 		dw ?
 	CBH_sprite	dw ?
 		dd ?
 	CBH_speed	db ?
 		db ?
-curvebullet_head_t ends
+cheeto_head_t ends
 
-curvebullet_template	equ <_custom_entities>
-curvebullet_heads	equ <_custom_entities[1 * size curvebullet_head_t]>
-; -------------
+cheeto_template	equ <_custom_entities>
+cheeto_heads	equ <_custom_entities[1 * size cheeto_head_t]>
+; --------------
 
 ; Mai's and Yuki's 32×32 balls
 ; ----------------------------
@@ -102,27 +100,27 @@ b4ball_template	equ <_custom_entities>
 b4balls	equ <_custom_entities[1 * size b4ball_t]>
 ; ------------------------------
 
-; Yumeko's knives
+; Yumeko's swords
 ; ---------------
-KNIFE_COUNT = 63
-KNIFE_W = 32
-KNIFE_H = 32
+SWORD_COUNT = 63
+SWORD_W = 32
+SWORD_H = 32
 
-knife_t struc
+sword_t struc
 	flag	db ?
-	KNIFE_angle	db ?
+	SWORD_angle	db ?
 	pos	motion_t <?>
 	twirl_time	dw ?
 		dw ?
-	KNIFE_patnum_tiny	dw ?
-	KNIFE_decay_frames	dw ?
+	SWORD_patnum_tiny	dw ?
+	SWORD_decay_frames	dw ?
 		dw ?
-	KNIFE_speed	db ?
+	SWORD_speed	db ?
 		db ?
-knife_t ends
+sword_t ends
 
-knife_template	equ <_custom_entities>
-knives	equ <_custom_entities[1 * size knife_t]>
+sword_template	equ <_custom_entities>
+swords	equ <_custom_entities[1 * size sword_t]>
 ; ---------------
 
 ; Shinki's 32×32 balls
@@ -133,20 +131,20 @@ B6BALL_H = 32
 
 b6ball_t struc
 	flag	db ?
-	B6B_angle	db ?
+		db ?
 	pos	motion_t <?>
-	B6B_age	dw ?
+		dw ?
 	cloud_radius	dw ?
 	B6B_patnum_tiny	dw ?
-	B6B_decay_frames	dw ?
 		dw ?
-	B6B_speed	db ?
+		dw ?
+		db ?
 		db ?
 b6ball_t ends
 
-b6ball_template	equ <_custom_entities>
 b6balls	equ <_custom_entities[1 * size b6ball_t]>
 ; --------------------
 
 public _custom_entities
-_custom_entities	custom_t (CUSTOM_COUNT + 1) dup (<?>)
+_custom_entities	custom_t CUSTOM_COUNT dup (<?>)
+	custom_t <?> ; 1 additional unused one, for some reason?

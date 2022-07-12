@@ -58,7 +58,7 @@ start_demo	proc near
 	call	cfg_save
 	call	gaiji_restore
 	kajacall	KAJA_SONG_STOP
-	call	game_exit
+	call	_game_exit
 	call	_execl c, offset path, ds, offset path, ds, large 0
 	pop	si
 	pop	bp
