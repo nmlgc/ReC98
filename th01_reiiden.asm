@@ -8774,8 +8774,7 @@ mima_still	equ <boss_entity_0>
 	extern @meteor_activate$qv:proc
 	extern @mima_bg_snap$qv:proc
 	extern @mima_unput$qi:proc
-	extern @spreadin_unput_and_put$qii:proc
-	extern @mima_vertical_sprite_transition_$qv:proc
+	extern @phase_spreadin$qii:proc
 	extern @mima_setup$qv:proc
 	extern @mima_free$qv:proc
 	extern @mima_select_for_rank$qmiiiii:proc
@@ -8784,215 +8783,10 @@ mima_still	equ <boss_entity_0>
 	extern @pattern_aimed_then_static_pellet$qv:proc
 	extern @pattern_aimed_missiles_from_squa$qv:proc
 	extern @pattern_static_pellets_from_corn$qv:proc
+	extern @pattern_hop_and_fire_chase_pelle$qi:proc
 main_29_TEXT	ends
 
 main_29__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1EF85	proc far
-
-var_6		= word ptr -6
-@@angle		= byte ptr -3
-var_2		= word ptr -2
-arg_0		= word ptr  6
-
-		enter	6, 0
-		push	si
-		cmp	[bp+arg_0], 0
-		jnz	short loc_1EFB1
-		mov	byte_39E25, -1
-		mov	_mima_spreadin_interval, 4
-		call	IRand
-		mov	bx, 2
-		cwd
-		idiv	bx
-		mov	byte_39E26, dl
-		mov	_mima_spreadin_speed, 16
-		jmp	loc_1F19B
-; ---------------------------------------------------------------------------
-
-loc_1EFB1:
-		cmp	byte_39E25, -1
-		jnz	short loc_1EFE5
-		push	1
-		call	_graph_accesspage_func
-		call	@mima_unput$qi stdcall, 0
-		push	0
-		call	_graph_accesspage_func
-		call	@mima_unput$qi stdcall, 0
-		add	sp, 8
-		mov	_mima_meteor_active, 0
-		mov	byte_39E25, 0
-		mov	_boss_phase_frame, 1
-
-loc_1EFE5:
-		cmp	byte_39E25, 0
-		jnz	short loc_1EFF8
-		mov	mima_still.BE_hitbox_orb_inactive, 1
-		call	@mima_vertical_sprite_transition_$qv
-		jmp	short loc_1F051
-; ---------------------------------------------------------------------------
-
-loc_1EFF8:
-		cmp	_boss_phase_frame, 4
-		jnz	short loc_1F030
-		cmp	byte_39E26, 0
-		jnz	short loc_1F011
-		mov	al, byte_39E25
-		mov	ah, 0
-		dec	ax
-		shl	ax, 7
-		jmp	short loc_1F020
-; ---------------------------------------------------------------------------
-
-loc_1F011:
-		mov	al, byte_39E25
-		mov	ah, 0
-		shl	ax, 7
-		push	ax
-		mov	ax, 280h
-		pop	dx
-		sub	ax, dx
-
-loc_1F020:
-		mov	[bp+var_6], ax
-		mov	mima_still.BE_cur_left, ax
-		mov	mima_still.BE_cur_top, 96
-		call	@mima_bg_snap$qv
-
-loc_1F030:
-		cmp	_boss_phase_frame, 12
-		jge	short loc_1F03F
-		mov	mima_still.BE_hitbox_orb_inactive, 1
-		jmp	short loc_1F045
-; ---------------------------------------------------------------------------
-
-loc_1F03F:
-		mov	mima_still.BE_hitbox_orb_inactive, 0
-
-loc_1F045:
-		call	@spreadin_unput_and_put$qii c, large [dword ptr mima_still.BE_cur_left]
-
-loc_1F051:
-		cmp	_boss_phase_frame, 0
-		jnz	loc_1F19B
-		cmp	byte_39E25, 0
-		jz	loc_1F0F8
-		cmp	byte_39E25, 4
-		jz	short loc_1F087
-		push	1
-		call	_graph_accesspage_func
-		call	@mima_unput$qi stdcall, 0
-		push	0
-		call	_graph_accesspage_func
-		call	@mima_unput$qi stdcall, 0
-		add	sp, 8
-
-loc_1F087:
-		call	@mima_select_for_rank$qmiiiii stdcall, offset _mima_pattern_state, ds, large 1Eh or (23h shl 16), large 28h or (2Dh shl 16)
-		push	10 or (12 shl 16)	; (for_hard) or (for_lunatic)
-		push	5 or (8 shl 16)	; (for_easy) or (for_normal)
-		push	ss
-		lea	ax, [bp+var_2]
-		push	ax	; ret (offset)
-		call	@mima_select_for_rank$qmiiiii
-		add	sp, 18h
-		xor	si, si
-		mov	[bp+@@angle], 0
-		jmp	short loc_1F0F3
-; ---------------------------------------------------------------------------
-
-loc_1F0BB:
-		pushd	0 or (0 shl 16)
-		push	_mima_pattern_state
-		push	PM_CHASE
-		push	_mima_pattern_state
-		push	word ptr [bp+@@angle]
-		mov	ax, mima_still.BE_cur_top
-		add	ax, 80
-		push	ax
-		mov	ax, mima_still.BE_cur_left
-		add	ax, 64
-		push	ax
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
-		add	sp, 14h
-		inc	si
-		mov	ax, 256
-		cwd
-		idiv	[bp+var_2]
-		add	al, [bp+@@angle]
-		mov	[bp+@@angle], al
-
-loc_1F0F3:
-		cmp	si, [bp+var_2]
-		jl	short loc_1F0BB
-
-loc_1F0F8:
-		cmp	byte_39E25, 4
-		jb	short loc_1F154
-		push	1
-		call	_graph_accesspage_func
-		call	@CBossEntity@put_8$xqiii stdcall, offset mima_still, ds, large [dword ptr mima_still.BE_cur_left], 0
-		push	0
-		call	_graph_accesspage_func
-		call	@CBossEntity@put_8$xqiii stdcall, offset mima_still, ds, large [dword ptr mima_still.BE_cur_left], 0
-		call	_z_palette_set_all_show stdcall, offset _stage_palette, ds
-		add	sp, 1Ch
-		mov	byte_39E25, -1
-		mov	al, 1
-		sub	al, byte_39E26
-		mov	byte_39E26, al
-		mov	_mima_meteor_active, 1
-		mov	_boss_phase_frame, 0
-		jmp	short loc_1F19B
-; ---------------------------------------------------------------------------
-
-loc_1F154:
-		xor	si, si
-		jmp	short loc_1F18C
-; ---------------------------------------------------------------------------
-
-loc_1F158:
-		mov	bx, si
-		imul	bx, 3
-		mov	al, _z_Palettes[bx].b
-		cbw
-		add	ax, -4
-		push	ax
-		mov	bx, si
-		imul	bx, 3
-		mov	al, _z_Palettes[bx].g
-		cbw
-		add	ax, -4
-		push	ax
-		mov	bx, si
-		imul	bx, 3
-		mov	al, _z_Palettes[bx].r
-		cbw
-		add	ax, -4
-		push	ax
-		push	si
-		call	_z_palette_set_show
-		add	sp, 8
-		inc	si
-
-loc_1F18C:
-		cmp	si, COLOR_COUNT
-		jl	short loc_1F158
-		inc	byte_39E25
-		mov	_boss_phase_frame, 1
-
-loc_1F19B:
-		pop	si
-		leave
-		retf
-sub_1EF85	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9981,7 +9775,7 @@ loc_1FACA:
 		inc	_boss_phase_frame
 		or	di, di
 		jnz	short loc_1FADF
-		call	@spreadin_unput_and_put$qii c, 256 or (120 shl 16)
+		call	@phase_spreadin$qii c, 256 or (120 shl 16)
 
 loc_1FADF:
 		cmp	_boss_phase_frame, 0
@@ -10003,8 +9797,7 @@ loc_1FAF6:
 		mov	_mima_initial_hp_rendered, 0
 		call	@stage_palette_set$qmx27%Palette$t14%RGB$tc$ii$16%% c, offset _z_Palettes, ds
 		call	@boss_palette_snap$qv
-		push	0
-		call	sub_1EF85
+		call	@pattern_hop_and_fire_chase_pelle$qi stdcall, 0
 		jmp	loc_1FDCE
 ; ---------------------------------------------------------------------------
 
@@ -10045,8 +9838,7 @@ loc_1FB6B:
 loc_1FB78:
 		cmp	word_39E78, 3
 		jnz	short loc_1FB86
-		push	1
-		call	sub_1EF85
+		call	@pattern_hop_and_fire_chase_pelle$qi stdcall, 1
 		pop	cx
 
 loc_1FB86:
@@ -10123,7 +9915,7 @@ loc_1FC54:
 		jnz	short loc_1FC95
 		inc	_boss_phase_frame
 		inc	_mima_invincibility_frame
-		call	@spreadin_unput_and_put$qii c, 256 or (120 shl 16)
+		call	@phase_spreadin$qii c, 256 or (120 shl 16)
 		cmp	_boss_phase_frame, 0
 		jnz	loc_1FDCF
 		mov	_boss_phase, 3
@@ -10998,8 +10790,10 @@ _pattern1_target_left	dw ?
 public _pattern2_sq
 _pattern2_sq	SquareState <?>
 
-byte_39E25	db ?
-byte_39E26	db ?
+public _pattern3_hop, _pattern3_direction
+_pattern3_hop      	db ?
+_pattern3_direction	db ?
+
 word_39E27	dw ?
 word_39E29	dw ?
 word_39E2B	dw ?

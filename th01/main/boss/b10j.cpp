@@ -8,6 +8,7 @@
 #include "master.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/math/area.hpp"
+#include "th01/math/dir.hpp"
 #include "th01/math/polar.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th01/math/vector.hpp"
@@ -36,6 +37,7 @@ extern const char MISSILE_FN[];
 #include "th01/main/bullet/pellet.hpp"
 #include "th01/main/hud/hp.hpp"
 #include "th01/main/player/player.hpp"
+#include "th01/main/stage/palette.hpp"
 
 // Coordinates
 // -----------
@@ -45,6 +47,12 @@ static const pixel_t MIMA_H = 160;
 
 static const pixel_t MIMA_ANIM_TOP = 48; // relative to the sprite's top edge
 static const pixel_t MIMA_ANIM_H = 64;
+
+static const screen_y_t BASE_CENTER_Y = (
+	PLAYFIELD_TOP + ((PLAYFIELD_H / 42) * 17)
+);
+
+static const screen_y_t BASE_TOP = (BASE_CENTER_Y - (MIMA_H / 2));
 
 // Not quite matching the image, but close enough.
 static const pixel_t SEAL_RADIUS = 80;
@@ -261,21 +269,31 @@ void mima_unput(bool16 just_the_animated_part = false)
 	#undef bug_top
 }
 
+inline void mima_unput_both(void) {
+	graph_accesspage_func(1);	mima_unput();
+	graph_accesspage_func(0);	mima_unput();
+}
+
 inline pixel_t spreadin_bottom_cur(void) {
 	return ((spreadin_speed / spreadin_interval) * (boss_phase_frame - 10));
 }
 
-void spreadin_unput_and_put(screen_x_t left, screen_y_t top)
+static const int KEYFRAME_SPREADIN_START = 10;
+
+// Renders a frame of the spread-in animation that ultimately ends in a full
+// Mima at the given position. Sets [boss_phase_frame] to 0 to indicate that
+// the animation completed.
+void phase_spreadin(screen_x_t final_left, screen_y_t final_top)
 {
 	pixel_t row;
 	pixel_t line_on_top;
 
-	if(boss_phase_frame < 10) {
+	if(boss_phase_frame < KEYFRAME_SPREADIN_START) {
 		return;
-	} else if(boss_phase_frame == 10) {
-		ent_still.pos_cur_set(left, top);
+	} else if(boss_phase_frame == KEYFRAME_SPREADIN_START) {
+		ent_still.pos_cur_set(final_left, final_top);
 		mima_bg_snap();
-		line_on_top = (top + (MIMA_H / 2));
+		line_on_top = (final_top + (MIMA_H / 2));
 		return;
 	} else if((boss_phase_frame % spreadin_interval) != 0) {
 		return;
@@ -289,16 +307,15 @@ void spreadin_unput_and_put(screen_x_t left, screen_y_t top)
 	}
 	for(row = 0; spreadin_bottom_cur() > row; row++) {
 		ent_still.unput_and_put_1line(
-			left, (top + line_on_top + row), ent_still.image(), row
+			final_left, (final_top + line_on_top + row), ent_still.image(), row
 		);
 		ent_still.unput_and_put_1line(
-			left,
-			((top + MIMA_H) - line_on_top - row),
+			final_left,
+			((final_top + MIMA_H) - line_on_top - row),
 			ent_still.image(),
 			((MIMA_H - 1) - row)
 		);
 	}
-
 }
 
 // Only called while Mima isn't visible anyway. But even apart from that, it
@@ -648,4 +665,124 @@ void pattern_static_pellets_from_corners_of_two_squares(void)
 	}
 
 	#undef sq
+}
+
+void pattern_hop_and_fire_chase_pellets(bool16 do_not_initialize = true)
+{
+	enum {
+		HOP_DISTANCE = (PLAYFIELD_W / 5),
+		SPREADIN_INTERVAL = 4,
+		SPREADIN_FRAMES = 20,
+
+		KEYFRAME_HOP = 1,
+		KEYFRAME_TELEPORT = 4,
+		KEYFRAME_HITBOX_ACTIVE = 12,
+		KEYFRAME_SPREADIN_DONE = (KEYFRAME_SPREADIN_START + SPREADIN_FRAMES),
+	};
+
+	#define hop      	pattern3_hop
+	#define direction	pattern3_direction
+
+	extern uint8_t hop;
+	extern x_direction_t direction;
+	int i;
+	int pellet_count;
+	unsigned char angle;
+
+	// Most of this could have been statically initialized, and even the random
+	// direction wouldn't have required this separate parameter.
+	if(!do_not_initialize) {
+		hop = -1;
+		spreadin_interval = SPREADIN_INTERVAL;
+		direction = static_cast<x_direction_t>(rand() % 2);
+		spreadin_speed = ((MIMA_H / 2) / (SPREADIN_FRAMES / SPREADIN_INTERVAL));
+		return;
+	}
+
+	if(hop == static_cast<uint8_t>(-1)) {
+		mima_unput_both();
+		meteor_active = false;
+		hop = 0;
+		boss_phase_frame = KEYFRAME_HOP;
+	}
+	if(hop == 0) {
+		ent_still.hitbox_orb_inactive = true;
+		mima_vertical_sprite_transition_broken();
+	} else {
+		if(boss_phase_frame == 4) {
+			ent_still.pos_cur_set(
+				((direction == X_RIGHT)
+					? (PLAYFIELD_LEFT + ((hop - 1) * HOP_DISTANCE))
+					: (PLAYFIELD_RIGHT - (hop * HOP_DISTANCE))
+				),
+				(BASE_TOP - (PLAYFIELD_H / 14)) // Yup, not centered!
+			);
+			mima_bg_snap();
+		}
+		if(boss_phase_frame < KEYFRAME_HITBOX_ACTIVE) {
+			ent_still.hitbox_orb_inactive = true;
+		} else {
+			ent_still.hitbox_orb_inactive = false;
+		}
+		phase_spreadin(ent_still.cur_left, ent_still.cur_top);
+	}
+
+	// Spread-in animation done?
+	if(boss_phase_frame != 0) {
+		return;
+	}
+
+	if(hop != 0) {
+		if(hop != 4) {
+			mima_unput_both();
+		}
+
+		select_subpixel_for_rank(
+			pattern_state.speed, 1.875f, 2.1875f, 2.5f, 2.8125f
+		);
+		select_for_rank(pellet_count, 5, 8, 10, 12);
+
+		for(
+			(i = 0, angle = 0x00);
+			i < pellet_count;
+			(i++, angle += (0x100 / pellet_count))
+		) {
+			Pellets.add_single(
+				ent_still.cur_center_x(),
+				ent_still.cur_center_y(),
+				angle,
+				pattern_state.speed,
+				PM_CHASE,
+				pattern_state.speed
+			);
+		}
+	}
+	if(hop >= 4) {
+		// MODDERS: Same as mima_put_still_both().
+		graph_accesspage_func(1);	ent_still.put_8(0);
+		graph_accesspage_func(0);	ent_still.put_8(0);
+
+		z_palette_set_all_show(stage_palette);
+
+		// Prepare a potential next run of this pattern
+		hop = -1;
+		direction = static_cast<x_direction_t>(X_LEFT - direction);
+
+		meteor_active = true;
+		boss_phase_frame = 0;
+	} else {
+		for(i = 0; i < COLOR_COUNT; i++) {
+			z_palette_set_show(
+				i,
+				(z_Palettes[i].c.r - 0x4),
+				(z_Palettes[i].c.g - 0x4),
+				(z_Palettes[i].c.b - 0x4)
+			);
+		}
+		hop++;
+		boss_phase_frame = KEYFRAME_HOP;
+	}
+
+	#undef direction
+	#undef hop
 }
