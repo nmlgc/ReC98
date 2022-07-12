@@ -75,7 +75,9 @@ Crossed-out files are identical to their version in the previous game. ONGCHK.CO
   * Potential heap corruptions in the game's debug mode when decrementing boss HP by holding ↵ Return while the HP bar is still filling up.
   * General Protection Faults when defeating bosses with diagonally moving shootout lasers on screen. These are most commonly reported for Elis or Mima, and when playing on real hardware or Anex86.
 * [`th01_end_pic_optimize`]: Speeds up image blitting in TH01's cutscenes to 50% of the original runtime. Mainly serves as an example of how to get close to optimal EGC-powered blitting code out of Turbo C++ 4.0J without writing a single ASM instruction; the EGC is definitely not the best tool for this job.
-* [`th01_orb_debug`]: Adds another line to TH01's in-game debug output, displaying the current values of the Yin-Yang Orb's physics variables.
+* [`th01_orb_debug`]: Shows the following information in TH01's debug mode:
+  * Physics values for the Yin-Yang Orb at the bottom center of the playfield
+  * The frames since the last collision with every bumper bar in the top-left corner of the respective stage object tile
 * [`th01_sariel_fixes`]: Fixes three sprite glitches in the [TH01 Sariel fight] that result from clear logic errors in the original code.
 * [`th03_real_hitbox`]: Renders [TH03's collision bitmap] onto both playfields. Highly unplayable.
 
