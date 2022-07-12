@@ -564,6 +564,13 @@ void stageobjs_init_and_render(int stage_id)
 	condition_x && condition_above_top && condition_below_top) { \
 		if(obstacles.frames[i].since_collision == 0) { \
 			obstacles.frames[i].since_collision++; \
+			/* \
+			 * That's a very naive response to a collision, as it implies that \
+			 * the Orb is always coming in perpendicular to the bar. The size \
+			 * of a bar's hitbox makes it easily possible to hit it from a \
+			 * close-to-parallel angle though. A more "correct" response would \
+			 * branch depending on that angle between the Orb and the bar. \
+			 */ \
 			orb_velocity_reflect_y(); \
 		} \
 	} \
@@ -577,6 +584,15 @@ void stageobjs_init_and_render(int stage_id)
 		if((obstacles.frames[i].since_collision == 0) && !blocked) { \
 			obstacles.frames[i].since_collision++; \
 			blocked = true; \
+			\
+			/* \
+			 * Same here. This one does attempt to cover the parallel case,\
+			 * but only for OVX_0. This ignores all other close-to-parallel \
+			 * angles between the bar and the Orb that should be handled in an \
+			 * identical way, and that the Orb can end up in such an angle at \
+			 * any velocity. Any "correct" response would not even look at the \
+			 * Orb's velocity in its branch conditions. \
+			 */ \
 			if(orb_velocity_x == OVX_0) { \
 				orb_velocity_reflect_y(); \
 			} else { \
@@ -615,9 +631,11 @@ void obstacles_update_and_render(bool16 reset)
 	//
 	// This flag works around the issue by simply blocking collision with *any*
 	// vertical bumper bar for the next [BLOCK_FRAMES] after the first one.
-	// It's a decent hack, certainly avoids the need for involving the X
-	// velocity in the physics system, and any glitches that are still present
-	// with this hack either remain unchanged or are made more interesting.
+	// While it doesn't address the general inadequacy of the collision
+	// handling code for bumper bars at all, it's at least somewhat decent in
+	// how it avoids the need for involving the X velocity in the physics
+	// system. Any glitches that are still present with this hack either remain
+	// unchanged or are made more interesting.
 	// (Try shooting the Orb into the two adjacent bumper bar columns in Makai
 	// Stage 17, and watch how this flag contributes to the Orb gradually
 	// rising up to the top of the playfield. Without it, the Orb would simply
