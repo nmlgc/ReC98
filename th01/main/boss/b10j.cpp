@@ -67,10 +67,12 @@ extern int invincibility_frame;
 extern bool16 invincible;
 extern bool initial_hp_rendered;
 
+// Whether meteor_put() has any effect.
 extern bool meteor_active;
 
 // Amount of frames between the individual steps of the spread-in transition
 extern uint8_t spreadin_interval;
+
 // Sprite pixels to spread in per frame, in one half of Mima's sprite
 extern uint8_t spreadin_speed;
 
@@ -172,7 +174,12 @@ void meteor_put(void)
 
 void mima_put_cast_both(void)
 {
+	// ZUN bug: Does not unblit the meteor if `true`, and C_CAST does not
+	// completely overlap any C_METEOR cel. In that case, small parts of the
+	// meteor are guaranteed to be left in VRAM until they're unblitted as a
+	// result of another sprite flying over them.
 	meteor_active = false;
+
 	ent_anim_sync_with_still_and_put_both(C_CAST);
 }
 
@@ -398,6 +405,14 @@ struct SquareState {
 	screen_x_t name##_center_x; \
 	screen_y_t name##_center_y;
 
+#define SquareLocal2(name) \
+	screen_x_t name##_corners_ccw_x[SQUARE_POINTS]; \
+	screen_y_t name##_corners_ccw_y[SQUARE_POINTS]; \
+	screen_x_t name##_corners_cw_x[SQUARE_POINTS]; \
+	screen_y_t name##_corners_cw_y[SQUARE_POINTS]; \
+	screen_x_t name##_center_x; \
+	screen_y_t name##_center_y;
+
 #define square_center_set(sql) { \
 	sql##_center_x = ent_still.cur_center_x(); \
 	sql##_center_y = ent_still.cur_center_y(); \
@@ -561,5 +576,76 @@ void pattern_aimed_missiles_from_square_corners(void)
 	}
 
 	#undef target_left
+	#undef sq
+}
+
+void pattern_static_pellets_from_corners_of_two_squares(void)
+{
+	#define sq	pattern2_sq
+
+	extern SquareState sq;
+	SquareLocal2(sql);
+
+	if(boss_phase_frame == 50) {
+		mima_put_cast_both();
+	}
+	if(boss_phase_frame < 100) {
+		return;
+	}
+	if(boss_phase_frame == 100) {
+		sq.init();
+		select_subpixel_for_rank(pattern_state.speed, 4.0f, 4.5f, 5.0f, 5.5f);
+		mdrv2_se_play(8);
+	}
+	if((boss_phase_frame % SQUARE_INTERVAL) == 0) {
+		square_center_set(sql);
+		square_corners_set(sql, sql_corners_ccw, sq.radius, sq.angle);
+		square_corners_set(sql, sql_corners_cw, sq.radius, (0x00 - sq.angle));
+		square_unput(sql_corners_ccw);
+		square_unput(sql_corners_cw);
+
+		sq.angle -= 0x06;
+		Pellets.spawn_with_cloud = true;
+
+		if(sq.radius < SEAL_CIRCUMSQUARE_RADIUS) {
+			sq.radius += SQUARE_RADIUS_STEP;
+		} else {
+			// Same corner coordinate quirk as seen in the first pattern.
+
+			for(int i = 0; i < SQUARE_POINTS; i++) {
+				unsigned char angle;
+				fire_static_from_corner(
+					angle,
+					sql,
+					sql_corners_ccw_x[i],
+					sql_corners_ccw_y[i],
+					pattern_state.speed
+				);
+				fire_static_from_corner(
+					angle,
+					sql,
+					sql_corners_cw_x[i],
+					sql_corners_cw_y[i],
+					pattern_state.speed
+				);
+				mdrv2_se_play(7);
+			}
+		}
+		square_corners_set(sql, sql_corners_ccw, sq.radius, sq.angle);
+		square_corners_set(sql, sql_corners_cw, sq.radius, (0x00 - sq.angle));
+		square_put(sql_corners_ccw);
+		square_put(sql_corners_cw);
+		Pellets.spawn_with_cloud = false;
+	}
+	if(boss_phase_frame > 320) {
+		square_center_set(sql); // Not redundant!
+		square_corners_set(sql, sql_corners_ccw, sq.radius, sq.angle);
+		square_corners_set(sql, sql_corners_cw, sq.radius, (0x00 - sq.angle));
+		square_unput(sql_corners_ccw);
+		square_unput(sql_corners_cw);
+		boss_phase_frame = 0;
+		meteor_activate();
+	}
+
 	#undef sq
 }
