@@ -8784,88 +8784,10 @@ mima_still	equ <boss_entity_0>
 	extern @pattern_aimed_missiles_from_squa$qv:proc
 	extern @pattern_static_pellets_from_corn$qv:proc
 	extern @pattern_hop_and_fire_chase_pelle$qi:proc
+	extern @pillar_put_8$qiii:proc
 main_29_TEXT	ends
 
 main_29__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1F19E	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, [bp+arg_0]
-		sar	ax, 3
-		mov	dx, [bp+arg_2]
-		shl	dx, 6
-		add	ax, dx
-		mov	dx, [bp+arg_2]
-		shl	dx, 4
-		add	ax, dx
-		mov	di, ax
-		call	_grcg_setcolor_rmw stdcall, 10
-		pop	cx
-		xor	si, si
-		jmp	short loc_1F1EA
-; ---------------------------------------------------------------------------
-
-loc_1F1C7:
-		mov	ax, si
-		mov	bx, 8
-		cwd
-		idiv	bx
-		mov	bx, 7
-		sub	bx, dx
-		shl	bx, 2
-		mov	eax, [bx+11DDh]
-		les	bx, _VRAM_PLANE_B
-		add	bx, di
-		mov	es:[bx], eax
-		inc	si
-		sub	di, 50h	; 'P'
-
-loc_1F1EA:
-		mov	ax, [bp+arg_4]
-		add	ax, 0FFF8h
-		cmp	ax, si
-		jg	short loc_1F1C7
-		xor	si, si
-		jmp	short loc_1F21B
-; ---------------------------------------------------------------------------
-
-loc_1F1F8:
-		mov	ax, si
-		mov	bx, 8
-		cwd
-		idiv	bx
-		mov	bx, 7
-		sub	bx, dx
-		shl	bx, 2
-		mov	eax, [bx+11FDh]
-		les	bx, _VRAM_PLANE_B
-		add	bx, di
-		mov	es:[bx], eax
-		inc	si
-		sub	di, 50h	; 'P'
-
-loc_1F21B:
-		cmp	si, 8
-		jl	short loc_1F1F8
-		call	_grcg_off_func
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_1F19E	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9108,16 +9030,16 @@ loc_1F495:
 		mov	ax, 22h	; '"'
 		sub	ax, [bx+5487h]
 		shl	ax, 4
-		push	ax
+		push	ax	; h
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+54A7h]
+		push	word ptr [bx+54A7h]	; bottom
 		mov	bx, si
 		add	bx, bx
 		mov	ax, [bx+5497h]
-		add	ax, 0FFF0h
-		push	ax
-		call	sub_1F19E
+		add	ax, -16
+		push	ax	; left
+		call	@pillar_put_8$qiii
 		add	sp, 6
 		cmp	_player_invincible, 0
 		jnz	short loc_1F4ED
@@ -10520,70 +10442,7 @@ _mima_meteor_active	db 1
 public _mima_spreadin_interval, _mima_spreadin_speed
 _mima_spreadin_interval	db 4
 _mima_spreadin_speed   	db 8
-		db  8Fh
-		db 0FFh
-		db 0FFh
-		db 0E0h
-		db 0CFh	; Ï
-		db 0FFh
-		db 0FFh
-		db 0E0h
-		db  6Fh	; o
-		db 0FFh
-		db 0FFh
-		db 0F1h
-		db  3Fh	; ?
-		db 0FFh
-		db 0FFh
-		db 0F3h
-		db  1Fh
-		db 0FFh
-		db 0FFh
-		db 0F6h
-		db  0Fh
-		db 0FFh
-		db 0FFh
-		db 0FCh
-		db    7
-		db 0FFh
-		db 0FFh
-		db 0F8h
-		db    7
-		db 0FFh
-		db 0FFh
-		db 0F0h
-		db    0
-		db    2
-		db  40h
-		db 0E1h
-		db    8
-		db    6
-		db  62h	; b
-		db 0E0h
-		db    0
-		db  47h	; G
-		db 0E2h
-		db  20h
-		db    4
-		db 0F6h
-		db  6Fh	; o
-		db    0
-		db    6
-		db 0F7h
-		db 0EFh
-		db  20h
-		db    6
-		db 0FFh
-		db 0FFh
-		db  60h
-		db    7
-		db 0FFh
-		db 0FFh
-		db 0E0h
-		db    7
-		db 0FFh
-		db 0FFh
-		db 0E0h
+include th01/sprites/pillar.asp
 public _mima_invincibility_flash_colors
 _mima_invincibility_flash_colors	db 3, 9
 public _boss3_1_bos, _boss3_2_bos, _boss3_grp_0, _boss3_m_ptn_0

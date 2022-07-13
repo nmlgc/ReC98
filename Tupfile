@@ -35,6 +35,7 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 
 : th01/sprites/pellet.bmp |> !bmp2arr -sym sPELLET -of cpp -sw 8 -sh 8 -pshf inner |> th01/sprites/pellet.csp
 : th01/sprites/pellet_c.bmp |> !bmp2arr -sym _sPELLET_CLOUD -of asm -sw 16 -sh 16 |> th01/sprites/pellet_c.asp
+: th01/sprites/pillar.bmp |> !bmp2arr -sym _sPILLAR -of asm -sw 32 -sh 8 |> th01/sprites/pillar.asp
 : th01/sprites/shape8x8.bmp |> !bmp2arr -sym _sSHAPE8X8 -of asm -sw 8 -sh 8 |> th01/sprites/shape8x8.asp
 : th02/sprites/pellet.bmp |> !bmp2arr -sym _sPELLET -of asm -sw 8 -sh 8 -pshf outer |> th02/sprites/pellet.asp
 : th02/sprites/sparks.bmp |> !bmp2arr -sym _sSPARKS -of asm -sw 8 -sh 8 -pshf outer |> th02/sprites/sparks.asp
@@ -63,6 +64,7 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 	th01/sprites/ileave_m.asp \
 	th01/sprites/laser_s.asp \
 	th01/sprites/pellet_c.asp \
+	th01/sprites/pillar.asp \
 	th01/sprites/shape8x8.asp \
 	|> !as |> bin\\th01\\reiiden.obj
 : th01_fuuin.asm |> !as |> bin\\th01\\fuuin.obj

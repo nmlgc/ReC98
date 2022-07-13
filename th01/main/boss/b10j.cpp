@@ -22,6 +22,7 @@ extern "C" {
 #include "th01/formats/pf.hpp"
 #include "th01/formats/ptn.hpp"
 #include "th01/sprites/pellet.h"
+#include "th01/sprites/pillar.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/vars.hpp"
 #include "th01/shiftjis/fns.hpp"
@@ -63,6 +64,10 @@ static const pixel_t SEAL_CIRCUMSQUARE_RADIUS = static_cast<pixel_t>(
 	SEAL_RADIUS * 1.41f
 );
 // -----------
+
+enum mima_colors_t {
+	COL_PILLAR = V_RED,
+};
 
 #define meteor_active	mima_meteor_active
 #define spreadin_interval	mima_spreadin_interval
@@ -785,4 +790,38 @@ void pattern_hop_and_fire_chase_pellets(bool16 do_not_initialize = true)
 
 	#undef direction
 	#undef hop
+}
+
+extern const dot_rect_t(PILLAR_W, PILLAR_SEGMENT_H) sPILLAR[2];
+
+inline pixel_t pillar_sprite_row(pixel_t y) {
+	return ((PILLAR_SEGMENT_H - 1) - (y % PILLAR_SEGMENT_H));
+}
+
+// ZUN bug: Called with non-byte-aligned X positions, creating a discrepancy
+// between the on-screen sprite and the hitbox derived from the unaligned
+// internal position. (Same as Kikuri's tear ripple sprites.)
+void pillar_put_8(screen_x_t left, vram_y_t bottom, pixel_t h)
+{
+	pixel_t y;
+	vram_offset_t vo = vram_offset_shift(left, bottom);
+
+	grcg_setcolor_rmw(COL_PILLAR);
+
+	// Segments
+	y = 0;
+	while(y < (h - PILLAR_SEGMENT_H)) {
+		grcg_put(vo, sPILLAR[0][pillar_sprite_row(y)], PILLAR_W);
+		y++;
+		vo -= ROW_SIZE;
+	}
+
+	// Top part
+	y = 0;
+	while(y < PILLAR_SEGMENT_H) {
+		grcg_put(vo, sPILLAR[1][pillar_sprite_row(y)], PILLAR_W);
+		y++;
+		vo -= ROW_SIZE;
+	}
+	grcg_off();
 }
