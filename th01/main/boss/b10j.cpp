@@ -145,6 +145,7 @@ static const int BG_ENT_OFFSET = 3;
 #define pattern_state mima_pattern_state
 extern union {
 	subpixel_t speed;
+	DecimalSubpixel speed_decimal;
 	int unused;
 } pattern_state;
 // --------
@@ -1026,4 +1027,65 @@ void pattern_pillars_and_aimed_spreads(void)
 	#undef is_circle_frame_for
 
 	#undef ent
+}
+
+void pattern_halfcircle_missiles_downwards_from_corners(void)
+{
+	#define sq           	pattern5_sq
+	#define missile_angle	pattern5_missile_angle
+
+	extern SquareState sq;
+	SquareLocal(sql);
+	pixel_t velocity_x;
+	pixel_t velocity_y;
+	extern unsigned char missile_angle;
+
+	if(boss_phase_frame < 100) {
+		return;
+	}
+	if(boss_phase_frame == 100) {
+		sq.init();
+		missile_angle = 0x00;
+
+		// MODDERS: Just use regular subpixels. They perfectly support a
+		// fraction of .5… especially if ZUN chops off the fractional digits
+		// when reading this variable anyway. :(
+		// So, the actual speeds are (4, 4, 5, 5).
+		select_for_rank(pattern_state.speed_decimal.v,
+			to_dsp(4.0f), to_dsp(4.5f), to_dsp(5.0f), to_dsp(5.5f)
+		);
+		mdrv2_se_play(8);
+	}
+	if((boss_phase_frame % SQUARE_INTERVAL) == 0) {
+		square_set_coords_and_unput(sql, sql_corners, sq.radius, sq.angle);
+		sq.angle -= 0x0C;
+		if(sq.radius < SEAL_RADIUS) {
+			sq.radius += SQUARE_RADIUS_STEP;
+		} else if((boss_phase_frame > 180) && ((boss_phase_frame % 16) == 8)) {
+			// Same corner coordinate quirk as seen in the first pattern.
+
+			vector2(
+				velocity_x,
+				velocity_y,
+				pattern_state.speed_decimal.to_pixel(), // :(
+				missile_angle
+			);
+
+			for(int i = 0; i < SQUARE_POINTS; i++) {
+				Missiles.add(
+					sql_corners_x[i], sql_corners_y[i], velocity_x, velocity_y
+				);
+			}
+			mdrv2_se_play(6);
+			missile_angle += 0x0D;
+		}
+		square_set_coords_and_put(sql, sql_corners, sq.radius, sq.angle);
+	}
+	if(boss_phase_frame > 340) {
+		square_set_coords_and_unput(sql, sql_corners, sq.radius, sq.angle);
+		boss_phase_frame = 0;
+	}
+
+	#undef missile_angle
+	#undef sq
 }
