@@ -1089,3 +1089,64 @@ void pattern_halfcircle_missiles_downwards_from_corners(void)
 	#undef missile_angle
 	#undef sq
 }
+
+void pattern_slow_pellet_spray_from_corners(void)
+{
+	enum {
+		KEYFRAME_SQUARE = 100,
+		KEYFRAME_FIRE_LEFT_TO_RIGHT = 180,
+		KEYFRAME_FIRE_RIGHT_TO_LEFT = 270,
+		KEYFRAME_DONE = 370,
+	};
+
+	#define sq          	pattern6_sq
+	#define pellet_angle	pattern6_pellet_angle
+
+	extern SquareState sq;
+	SquareLocal(sql);
+	extern unsigned char pellet_angle;
+
+	if(boss_phase_frame < KEYFRAME_SQUARE) {
+		return;
+	}
+	if(boss_phase_frame == KEYFRAME_SQUARE) {
+		sq.init();
+		pellet_angle = 0x80;
+		select_subpixel_for_rank(pattern_state.speed, 2.0f, 2.5f, 3.0f, 3.5f);
+		mdrv2_se_play(8);
+	}
+	if((boss_phase_frame % SQUARE_INTERVAL) == 0) {
+		square_set_coords_and_unput(sql, sql_corners, sq.radius, sq.angle);
+		sq.angle = ((boss_phase_frame > KEYFRAME_FIRE_RIGHT_TO_LEFT)
+			? (sq.angle + 0x0C)
+			: (sq.angle - 0x0C)
+		);
+		if(sq.radius < SEAL_RADIUS) {
+			sq.radius += SQUARE_RADIUS_STEP;
+		} else if(boss_phase_frame > KEYFRAME_FIRE_LEFT_TO_RIGHT) {
+			// Same corner coordinate quirk as seen in the first pattern.
+
+			pellet_angle = ((boss_phase_frame > KEYFRAME_FIRE_RIGHT_TO_LEFT)
+				? (pellet_angle + 0x0C)
+				: (pellet_angle - 0x0C) // slightly overshooting the half circle
+			);
+			for(int i = 0; i < SQUARE_POINTS; i++) {
+				Pellets.add_single(
+					sql_corners_x[i],
+					sql_corners_y[i],
+					pellet_angle,
+					pattern_state.speed
+				);
+			}
+			mdrv2_se_play(6);
+		}
+		square_set_coords_and_put(sql, sql_corners, sq.radius, sq.angle);
+	}
+	if(boss_phase_frame > KEYFRAME_DONE) {
+		square_set_coords_and_unput(sql, sql_corners, sq.radius, sq.angle);
+		boss_phase_frame = 0;
+	}
+
+	#undef pellet_angle
+	#undef sq
+}
