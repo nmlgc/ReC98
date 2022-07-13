@@ -84,7 +84,7 @@ static const char* BMP2ARR_PARAMETERLESS_ERRORS[BMP2ARR_ERROR_COUNT] = {
     /* INVALID_OUTPUT_TYPE      */ "Invalid output type; must be (asm | bin | bmp | c)",
     /* INVALID_PRESHIFT         */ "Invalid preshift type, must be (outer | inner)",
     /* INVALID_PRESHIFT_WIDTH   */ "Pre-shifting is only supported for 8-pixel wide sprites",
-    /* INVALID_SPRITE_WIDTH     */ "Sprite width must be 8 or 16",
+    /* INVALID_SPRITE_WIDTH     */ "Sprite width must be 8, 16, or 32",
     /* INVALID_SPRITE_HEIGHT    */ "Sprite height must be between 1 and 32",
 
     /* INPUT_OPEN_ERROR         */ NULL,
@@ -567,7 +567,7 @@ enum bmp2arr_error rec98_bmp2arr_save_output(struct rec98_bmp2arr_task *t) {
     if (t->bmp == NULL)
         return bmp2arr_error_set(t, OUTPUT_NO_INPUT_LOADED);
 
-    if (t->sprite_width < 8)
+    if (t->sprite_width != 8 && t->sprite_width != 16 && t->sprite_width != 32)
         return bmp2arr_error_set(t, INVALID_SPRITE_WIDTH);
 
     if (t->sprite_height == 0)

@@ -88,8 +88,6 @@ static enum bmp2arr_error parse_argv(struct rec98_bmp2arr_task *tsk,int argc,cha
                     return bmp2arr_error_set_str(tsk, EXPECTED_ARGUMENT, "sw");
 
                 tsk->sprite_width = atoi(a);
-                if (!(tsk->sprite_width == 8 || tsk->sprite_width == 16))
-                    return bmp2arr_error_set(tsk, INVALID_SPRITE_WIDTH);
             }
             else if (!strcmp(a,"sh")) {
                 a = argv[i++];
