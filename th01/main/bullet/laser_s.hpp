@@ -72,9 +72,9 @@ protected:
 	void hittest_and_render(void);
 
 public:
-	// Does nothing if this laser is already [alive]. No idea why the speed
-	// has to be passed like that - the function simply divides it by 8,
-	// losing any extended precision. *shrug*
+	// Does nothing if this laser is already [alive], and patterns do rely on
+	// that behavior. No idea why the speed has to be passed like that - the
+	// function simply divides it by 8, losing any extended precision. *shrug*
 	void spawn(
 		screen_x_t origin_left,
 		vram_y_t origin_y,

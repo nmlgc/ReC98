@@ -36,6 +36,7 @@ extern const char MISSILE_FN[];
 #include "th01/main/boss/boss.hpp"
 #include "th01/main/boss/entity_a.hpp"
 #include "th01/main/boss/palette.hpp"
+#include "th01/main/bullet/laser_s.hpp"
 #include "th01/main/bullet/missile.hpp"
 #include "th01/main/bullet/pellet.hpp"
 #include "th01/main/hud/hp.hpp"
@@ -146,6 +147,7 @@ static const int BG_ENT_OFFSET = 3;
 extern union {
 	subpixel_t speed;
 	DecimalSubpixel speed_decimal;
+	int speed_multiplied_by_8;
 	int unused;
 } pattern_state;
 // --------
@@ -1148,5 +1150,73 @@ void pattern_slow_pellet_spray_from_corners(void)
 	}
 
 	#undef pellet_angle
+	#undef sq
+}
+
+void pattern_aimed_lasers_from_corners(void)
+{
+	enum {
+		LASER_W = 4,
+	};
+
+	#define sq           	pattern7_sq
+	#define sq_corners_x	pattern7_sq_corners_x
+	#define sq_corners_y	pattern7_sq_corners_y
+
+	extern SquareState sq;
+
+	// Could have been local just like in the other patterns, but eh, 16 bytes
+	// for the convenience of being easily able to fire lasers independent of
+	// square updates is still fine...
+	extern screen_x_t sq_corners_x[SQUARE_POINTS];
+	extern screen_y_t sq_corners_y[SQUARE_POINTS];
+
+	screen_x_t sql_center_x;
+	screen_y_t sql_center_y;
+
+	if(boss_phase_frame == 50) {
+		mima_put_cast_both();
+	}
+	if(boss_phase_frame < 100) {
+		return;
+	}
+	if(boss_phase_frame == 100) {
+		sq.init();
+		select_laser_speed_for_rank(pattern_state.speed_multiplied_by_8,
+			6.25f, 6.75f, 7.25f, 7.75f
+		);
+		mdrv2_se_play(8);
+	}
+	if((boss_phase_frame % SQUARE_INTERVAL) == 0) {
+		square_set_coords_and_unput(sql, sq_corners, sq.radius, sq.angle);
+		sq.angle += 0x03;
+		if(sq.radius < SEAL_RADIUS) {
+			sq.radius += SQUARE_RADIUS_STEP;
+		}
+
+		// ... especially when remembering the coordinates for future frames
+		// is exactly what fixes the corner coordinate quirk in this pattern.
+		square_set_coords_and_put(sql, sq_corners, sq.radius, sq.angle);
+	}
+	if((boss_phase_frame > 180) && (boss_phase_frame < 300)) {
+		int i = (boss_phase_frame % SQUARE_POINTS);
+		shootout_lasers[i].spawn(
+			sq_corners_x[i],
+			sq_corners_y[i],
+			(player_center_x() - (LASER_W / 2)),
+			player_bottom(),
+			pattern_state.speed_multiplied_by_8,
+			V_WHITE,
+			20,
+			LASER_W
+		);
+	}
+	if(boss_phase_frame > 300) {
+		square_set_coords_and_unput(sql, sq_corners, sq.radius, sq.angle);
+		boss_phase_frame = 0;
+	}
+
+	#undef sq_corners_y
+	#undef sq_corners_x
 	#undef sq
 }

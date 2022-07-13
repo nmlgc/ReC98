@@ -8770,15 +8770,11 @@ mima_still	equ <boss_entity_0>
 
 	extern @mima_load$qv:proc
 	extern @meteor_put$qv:proc
-	extern @mima_put_cast_both$qv:proc
 	extern @mima_bg_snap$qv:proc
 	extern @mima_unput$qi:proc
 	extern @phase_spreadin$qii:proc
 	extern @mima_setup$qv:proc
 	extern @mima_free$qv:proc
-	extern @mima_select_for_rank$qmiiiii:proc
-	@REGULAR_POLYGON$QNIT1IIIUCI procdesc pascal near \
-		corners_x:dword, corners_y:dword, center_x:word, center_y:word, radius:word, angle:byte, points:word
 	extern @pattern_aimed_then_static_pellet$qv:proc
 	extern @pattern_aimed_missiles_from_squa$qv:proc
 	extern @pattern_static_pellets_from_corn$qv:proc
@@ -8786,159 +8782,10 @@ mima_still	equ <boss_entity_0>
 	extern @pattern_pillars_and_aimed_spread$qv:proc
 	extern @pattern_halfcircle_missiles_down$qv:proc
 	extern @pattern_slow_pellet_spray_from_c$qv:proc
+	extern @pattern_aimed_lasers_from_corner$qv:proc
 main_29_TEXT	ends
 
 main_29__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1F909	proc far
-
-@@laser_i		= word ptr -2
-
-		enter	2, 0
-		push	si
-		push	di
-		cmp	_boss_phase_frame, 50
-		jnz	short loc_1F91A
-		call	@mima_put_cast_both$qv
-
-loc_1F91A:
-		cmp	_boss_phase_frame, 100
-		jl	loc_1FA77
-		cmp	_boss_phase_frame, 100
-		jnz	short loc_1F953
-		mov	_pattern7_sq.S_radius, 32
-		mov	_pattern7_sq.S_angle, 0
-		call	@mima_select_for_rank$qmiiiii stdcall, offset _mima_pattern_state, ds, large 32h or (36h shl 16), large 3Ah or (3Eh shl 16)
-		push	8
-		call	_mdrv2_se_play
-		add	sp, 0Eh
-
-loc_1F953:
-		mov	ax, _boss_phase_frame
-		mov	bx, 8
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_1F9DA
-		mov	ax, mima_still.BE_cur_left
-		add	ax, 64
-		mov	si, ax
-		mov	ax, mima_still.BE_cur_top
-		add	ax, 80
-		mov	di, ax
-		push	ds	; corners_x (segment)
-		push	offset _pattern7_sq_corners_x	; corners_x (offset)
-		push	ds	; corners_y (segment)
-		push	offset _pattern7_sq_corners_y	; corners_y (offset)
-		push	si	; center_x
-		push	ax	; center_y
-		push	_pattern7_sq.S_radius	; radius
-		push	word ptr _pattern7_sq.S_angle	; angle
-		push	4	; points
-		call	@regular_polygon$qnit1iiiuci
-		push	4	; point_count
-		push	ds
-		push	offset _pattern7_sq_corners_y
-		push	ds
-		push	offset _pattern7_sq_corners_x
-		call	_graph_r_lineloop_unput
-		add	sp, 0Ah
-		mov	al, _pattern7_sq.S_angle
-		add	al, 03h
-		mov	_pattern7_sq.S_angle, al
-		cmp	_pattern7_sq.S_radius, 80
-		jge	short loc_1F9AD
-		add	_pattern7_sq.S_radius, 8
-
-loc_1F9AD:
-		push	ds	; corners_x (segment)
-		push	offset _pattern7_sq_corners_x	; corners_x (offset)
-		push	ds	; corners_y (segment)
-		push	offset _pattern7_sq_corners_y	; corners_y (offset)
-		push	si	; center_x
-		push	di	; center_y
-		push	_pattern7_sq.S_radius	; radius
-		push	word ptr _pattern7_sq.S_angle	; angle
-		push	4	; points
-		call	@regular_polygon$qnit1iiiuci
-		push	4 or (7 shl 16)	; (point_count) or (col shl 16)
-		push	ds
-		push	offset _pattern7_sq_corners_y
-		push	ds
-		push	offset _pattern7_sq_corners_x
-		call	_graph_r_lineloop_put
-		add	sp, 0Ch
-
-loc_1F9DA:
-		cmp	_boss_phase_frame, 180
-		jle	short loc_1FA30
-		cmp	_boss_phase_frame, 300
-		jge	short loc_1FA30
-		mov	ax, _boss_phase_frame
-		mov	bx, 4
-		cwd
-		idiv	bx
-		mov	[bp+@@laser_i], dx
-		push	bx	; w
-		push	7 or (20 shl 16)	; (col) or (moveout_at_age shl 16)
-		push	_mima_pattern_state	; speed_multiplied_by_8
-		push	PLAYFIELD_BOTTOM	; target_y
-		mov	ax, _player_left
-		add	ax, 14
-		push	ax		; target_left
-		mov	bx, [bp+@@laser_i]
-		add	bx, bx
-		push	_pattern7_sq_corners_y[bx]	; origin_y
-		mov	bx, [bp+@@laser_i]
-		add	bx, bx
-		push	_pattern7_sq_corners_x[bx]	; origin_left
-		mov	ax, [bp+@@laser_i]
-		imul	ax, size CShootoutLaser
-		add	ax, offset _shootout_lasers
-		push	ds	; this (segment)
-		push	ax	; this (offset)
-		call	@CShootoutLaser@spawn$qiiiiiiii
-		add	sp, 14h
-
-loc_1FA30:
-		cmp	_boss_phase_frame, 300
-		jle	short loc_1FA77
-		mov	ax, mima_still.BE_cur_left
-		add	ax, 64
-		mov	si, ax
-		mov	ax, mima_still.BE_cur_top
-		add	ax, 80
-		mov	di, ax
-		push	ds	; corners_x (segment)
-		push	offset _pattern7_sq_corners_x	; corners_x (offset)
-		push	ds	; corners_y (segment)
-		push	offset _pattern7_sq_corners_y	; corners_y (offset)
-		push	si	; center_x
-		push	ax	; center_y
-		push	_pattern7_sq.S_radius	; radius
-		push	word ptr _pattern7_sq.S_angle	; angle
-		push	4	; points
-		call	@regular_polygon$qnit1iiiuci
-		push	4	; point_count
-		push	ds
-		push	offset _pattern7_sq_corners_y
-		push	ds
-		push	offset _pattern7_sq_corners_x
-		call	_graph_r_lineloop_unput
-		add	sp, 0Ah
-		mov	_boss_phase_frame, 0
-
-loc_1FA77:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_1F909	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -9153,7 +9000,7 @@ loc_1FCC6:
 loc_1FCD3:
 		cmp	word_39E78, 3
 		jnz	short loc_1FCDE
-		call	sub_1F909
+		call	@pattern_aimed_lasers_from_corner$qv
 
 loc_1FCDE:
 		cmp	_boss_phase_frame, 0
@@ -9943,11 +9790,11 @@ public _pattern6_sq, _pattern6_pellet_angle
 _pattern6_sq          	SquareState <?>
 _pattern6_pellet_angle	db ?
 
-public _pattern7_sq
-_pattern7_sq	SquareState <?>
+public _pattern7_sq, _pattern7_sq_corners_x, _pattern7_sq_corners_y
+_pattern7_sq          	SquareState <?>
 		dw ?
 _pattern7_sq_corners_x	dw 4 dup (?)
-_pattern7_sq_corners_y 	dw 4 dup (?)
+_pattern7_sq_corners_y	dw 4 dup (?)
 
 public _mima_invincibility_frame, _mima_invincible
 _mima_invincibility_frame	dw ?
