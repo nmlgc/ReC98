@@ -2330,22 +2330,6 @@ void pascal near pattern_curved_spray_leftright_twice(int &frame)
 	}
 }
 
-// Subpixels with one decimal digit of fractional resolution?! Sure, if you
-// absolutely want those precise multiples of 0.1 in your movement code...
-typedef int decimal_subpixel_t;
-
-struct DecimalSubpixel {
-	decimal_subpixel_t v;
-
-	pixel_t to_pixel() const {
-		return static_cast<pixel_t>(v / 10);
-	}
-};
-
-inline decimal_subpixel_t to_dsp(float pixel_v) {
-	return static_cast<decimal_subpixel_t>(pixel_v * 10);
-}
-
 void pascal near pattern_swaying_leaves(int &frame, int spawn_interval_or_reset)
 {
 	enum {
