@@ -290,7 +290,7 @@ bool16 pascal near tear_ripple_hittest(screen_x_t left, pixel_t extra_w)
 		// part of the fight, regularly is) anywhere within that byte. This
 		// ends up shifting this otherwise logical hitbox up to 7 pixels to the
 		// right, compared to where you would expect it based on how the
-		// sprites appear on screen.
+		// sprites appear on screen. (Same as Mima's flame pillars.)
 		//
 		// (The ideal fix would be to introduce unaligned rendering for these
 		// sprites, rather than byte-aligning the coordinates here. The latter
