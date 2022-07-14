@@ -24,8 +24,8 @@ extern "C" {
 #include "th01/main/playfld.hpp"
 #include "th01/main/player/player.hpp"
 #include "th01/main/player/shot.hpp"
-#include "th01/main/bullet/pellet.hpp"
 #include "th01/main/bullet/pellet_c.hpp"
 #include "th01/main/player/orb.hpp"
+
 #include "th01/main/player/shot.cpp"
 #include "th01/main/bullet/pellet.cpp"

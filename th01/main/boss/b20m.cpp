@@ -40,6 +40,7 @@ extern "C" {
 #include "th01/main/playfld.hpp"
 #include "th01/formats/stagedat.hpp"
 #include "th01/sprites/leaf.hpp"
+#include "th01/sprites/pellet.h"
 #include "th01/sprites/shape8x8.hpp"
 #include "th01/main/entity.hpp"
 #include "th01/main/spawnray.hpp"

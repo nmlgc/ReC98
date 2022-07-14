@@ -1,6 +1,3 @@
-#include "th01/sprites/pellet.h"
-#include "th01/math/overlap.hpp"
-
 static const int SHOT_COUNT = 8;
 static const pixel_t SHOT_W = 16;
 static const pixel_t SHOT_H = 16;

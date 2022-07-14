@@ -1,3 +1,5 @@
+#include "th01/main/bullet/pellet.hpp"
+
 /// Constants
 /// ---------
 // Can't declare these as `static const` variables, because that would break

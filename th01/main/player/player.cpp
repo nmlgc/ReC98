@@ -1,3 +1,4 @@
+#include "th01/resident.hpp"
 extern "C" {
 #include "th01/hardware/frmdelay.h"
 }
@@ -6,11 +7,11 @@ extern "C" {
 extern "C" {
 #include "th01/snd/mdrv2.h"
 }
+#include "th01/formats/pf.hpp"
+#include "th01/sprites/pellet.h"
 #include "th01/main/vars.hpp"
 #include "th01/main/player/bomb.hpp"
 #include "th01/math/dir.hpp"
-#include "th01/formats/pf.hpp"
-#include "th01/resident.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th01/main/hud/hud.hpp"
 #include "th01/main/player/anim.hpp"

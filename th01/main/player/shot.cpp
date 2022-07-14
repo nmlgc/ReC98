@@ -1,3 +1,6 @@
+#include "th01/math/overlap.hpp"
+#include "th01/sprites/pellet.h"
+
 bool16 unused_boss_stage_flag = false;
 
 static const pixel_t SHOT_SPRITE_MARGIN = 2;
