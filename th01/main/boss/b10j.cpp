@@ -14,6 +14,7 @@
 #include "th01/math/vector.hpp"
 #include "th01/hardware/egc.h"
 extern "C" {
+#include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/input.hpp"
 #include "th01/hardware/palette.h"
@@ -34,6 +35,7 @@ extern const char MISSILE_FN[];
 #include "th01/main/shape.hpp"
 #include "th01/main/player/orb.hpp"
 #include "th01/main/boss/boss.hpp"
+#include "th01/main/boss/defeat.hpp"
 #include "th01/main/boss/entity_a.hpp"
 #include "th01/main/boss/palette.hpp"
 #include "th01/main/bullet/laser_s.hpp"
@@ -41,13 +43,26 @@ extern const char MISSILE_FN[];
 #include "th01/main/bullet/pellet.hpp"
 #include "th01/main/hud/hp.hpp"
 #include "th01/main/player/player.hpp"
+#include "th01/main/player/shot.hpp"
 #include "th01/main/stage/palette.hpp"
+#include "th01/main/stage/stages.hpp"
 
 // Coordinates
 // -----------
 
 static const pixel_t MIMA_W = 128;
 static const pixel_t MIMA_H = 160;
+
+// Including the sprite:
+//
+// 	               [w]
+// 	    ┌───────────────────────┐
+// 	    │                       │
+// 	[h] │                       │
+// 	    │             sprite → ┌┤
+// 	    └──────────────────────┴┘
+static const pixel_t HITBOX_SHOT_W = (MIMA_W - (MIMA_W / 8));
+static const pixel_t HITBOX_SHOT_H = ((MIMA_H * 2) / 5);
 
 static const pixel_t MIMA_ANIM_TOP = 48; // relative to the sprite's top edge
 static const pixel_t MIMA_ANIM_H = 64;
@@ -57,6 +72,7 @@ static const screen_y_t BASE_CENTER_Y = (
 	PLAYFIELD_TOP + ((PLAYFIELD_H / 42) * 17)
 );
 
+static const screen_x_t BASE_LEFT = (BASE_CENTER_X - (MIMA_W / 2));
 static const screen_y_t BASE_TOP = (BASE_CENTER_Y - (MIMA_H / 2));
 
 // Not quite matching the image, but close enough.
@@ -64,9 +80,7 @@ static const pixel_t SEAL_RADIUS = 80;
 
 // The radius of the circumscribed square around a circle with radius 𝓇 is
 // 𝓇 * √2; see https://www.desmos.com/calculator/u8mtn9y9wo.
-static const pixel_t SEAL_CIRCUMSQUARE_RADIUS = static_cast<pixel_t>(
-	SEAL_RADIUS * 1.41f
-);
+static const pixel_t SEAL_CIRCUMSQUARE_RADIUS = (SEAL_RADIUS * 1.41f);
 // -----------
 
 enum mima_colors_t {
@@ -74,16 +88,16 @@ enum mima_colors_t {
 	COL_PILLAR = V_RED,
 };
 
+// Always denotes the last phase that ends with that amount of HP.
+enum mima_hp_t {
+	HP_TOTAL = 12,
+	PHASE_1_END_HP = 6,
+	PHASE_3_END_HP = 0,
+};
+
 #define meteor_active	mima_meteor_active
 #define spreadin_interval	mima_spreadin_interval
 #define spreadin_speed	mima_spreadin_speed
-#define flash_colors	mima_flash_colors
-#define invincibility_frame	mima_invincibility_frame
-#define invincible	mima_invincible
-#define initial_hp_rendered	mima_initial_hp_rendered
-extern int invincibility_frame;
-extern bool16 invincible;
-extern bool initial_hp_rendered;
 
 // Whether meteor_put() has any effect.
 extern bool meteor_active;
@@ -371,9 +385,9 @@ void mima_setup(void)
 	ent_still.hitbox_orb_inactive = false;
 	boss_phase_frame = 0;
 	boss_phase = 0;
-	boss_hp = 12;
-	hud_hp_first_white = 6;
-	hud_hp_first_redwhite = 2;
+	boss_hp = HP_TOTAL;
+	hud_hp_first_white = PHASE_1_END_HP;
+	hud_hp_first_redwhite = 2;  // fully arbitrary, doesn't indicate anything
 	particles_unput_update_render(PO_INITIALIZE, V_WHITE);
 }
 
@@ -1219,4 +1233,182 @@ void pattern_aimed_lasers_from_corners(void)
 	#undef sq_corners_y
 	#undef sq_corners_x
 	#undef sq
+}
+
+void mima_main(void)
+{
+	#define hit                	mima_hit
+	#define phase              	mima_phase
+	#define initial_hp_rendered	mima_initial_hp_rendered
+
+	struct hack { unsigned char col[2]; }; // XXX
+	extern const struct hack mima_invincibility_flash_colors;
+	struct hack flash_colors = mima_invincibility_flash_colors;
+	int i;
+
+	extern struct {
+		int invincibility_frame;
+		bool16 invincible;
+
+		void update_and_render(const struct hack &flash_colors) {
+			boss_hit_update_and_render(
+				invincibility_frame,
+				invincible,
+				boss_hp,
+				flash_colors.col,
+				sizeof(flash_colors),
+				5000,
+				boss_nop,
+				ent_still.hittest_orb(),
+				shot_hitbox_t(
+					(ent_still.cur_right() - HITBOX_SHOT_W),
+					(ent_still.cur_top + (MIMA_H / 2) - (HITBOX_SHOT_H / 2)),
+					HITBOX_SHOT_W,
+					HITBOX_SHOT_H
+				)
+			);
+		}
+	} hit;
+	extern struct {
+		int pattern_cur;
+
+		void frame_common(void) const {
+			boss_phase_frame++;
+			hit.invincibility_frame++;
+		}
+
+		void pattern_next(int total) {
+			pattern_cur = (pattern_cur == (total - 1)) ? 0 : (pattern_cur + 1);
+		}
+
+		void next(int phase_new) {
+			boss_phase = phase_new;
+			boss_phase_frame = 0;
+			hit.invincibility_frame = 0;
+			pattern_cur = 0;
+		}
+	} phase;
+	extern bool initial_hp_rendered;
+
+	Missiles.unput_update_render();
+	particles_unput_update_render(PO_TOP_RIGHT, V_WHITE);
+
+	// Entrance animation
+	if(boss_phase == 0) {
+		graph_accesspage_func(0);
+		boss_phase_frame = 0;
+		ent_still.hitbox_orb_inactive = false;
+		bool16 done = false; // (redundant)
+		spreadin_interval = 1;
+		spreadin_speed = 2;
+		meteor_active = true; // (redundant)
+		while(1) {
+			boss_phase_frame++;
+			if(!done) {
+				phase_spreadin(BASE_LEFT, BASE_TOP);
+			}
+			if(boss_phase_frame == 0) {
+				done++;
+			}
+			if(done == true) {
+				break;
+			}
+			frame_delay(2);
+		}
+		boss_phase = 1;
+		phase.pattern_cur = 0;
+		initial_hp_rendered = false;
+		stage_palette_set(z_Palettes);
+		boss_palette_snap();
+
+		// Doing some static initialization that wouldn't have been necessary
+		// if this function was coded properly...
+		pattern_hop_and_fire_chase_pellets(false);
+	} else if(boss_phase == 1) {
+		// ZUN bug: The fight only ends in Phase 3, which can in turn only ever
+		// be entered after Mima completed her current pattern. Thus, HP
+		// subtraction in debug mode can lead to this function being called
+		// with [boss_phase_frame] being larger than the initial HP value,
+		// causing the heap corruption bug mentioned in the comment of this
+		// function. Mima starts with an even number of total HP, so this will
+		// even happen for the easiest possible case of holding ↵ Return for
+		// the first 6 frames of phase 1.
+		hud_hp_increment_render(initial_hp_rendered, boss_hp, boss_phase_frame);
+
+		phase.frame_common();
+		meteor_put();
+		if(phase.pattern_cur == 0) {
+			pattern_aimed_then_static_pellets_from_square_corners();
+		} else if(phase.pattern_cur == 1) {
+			pattern_aimed_missiles_from_square_corners();
+		} else if(phase.pattern_cur == 2) {
+			pattern_static_pellets_from_corners_of_two_squares();
+		} else if(phase.pattern_cur == 3) {
+			pattern_hop_and_fire_chase_pellets();
+		}
+
+		// There might either be white squares on screen, or the hop pattern
+		// might have manipulated the hardware palette. Delay the end of the
+		// phase until the current pattern is done to make sure that everything
+		// is cleaned up.
+		if(boss_phase_frame == 0) {
+			phase.pattern_next(4);
+			if(boss_hp <= PHASE_1_END_HP) {
+				phase.pattern_cur = 99;
+			}
+		}
+
+		hit.update_and_render(flash_colors);
+		if((phase.pattern_cur == 99) && !hit.invincible) {
+			mima_unput_both();
+			spreadin_interval = 4;
+			spreadin_speed = 8;
+
+			// Redundant, already done by phase_spreadin() in phase 2.
+			ent_still.pos_cur_set(BASE_LEFT, BASE_TOP);
+			mima_bg_snap();
+
+			phase.next(2);
+		}
+	} else if(boss_phase == 2) {
+		phase.frame_common();
+		phase_spreadin(BASE_LEFT, BASE_TOP);
+		if(boss_phase_frame == 0) {
+			phase.next(3);
+		}
+	} else if(boss_phase == 3) {
+		phase.frame_common();
+		meteor_put();
+		if(phase.pattern_cur == 0) {
+			pattern_pillars_and_aimed_spreads();
+		} else if(phase.pattern_cur == 1) {
+			pattern_halfcircle_missiles_downwards_from_corners();
+		} else if(phase.pattern_cur == 2) {
+			pattern_slow_pellet_spray_from_corners();
+		} else if(phase.pattern_cur == 3) {
+			pattern_aimed_lasers_from_corners();
+		}
+
+		if(boss_phase_frame == 0) {
+			phase.pattern_next(4);
+		}
+
+		hit.update_and_render(flash_colors);
+		if(boss_hp <= PHASE_3_END_HP) {
+			graph_accesspage_func(1);
+			mima_unput();
+			graph_accesspage_func(0);
+
+			mdrv2_bgm_fade_out_nonblock();
+			Pellets.unput_and_reset();
+			Missiles.reset();
+			shootout_lasers_unput_and_reset_broken(i, 5); // 5? Doubly broken...
+			boss_defeat_animate();
+			scene_init_and_load(4);
+		}
+	}
+
+	#undef initial_hp_rendered
+	#undef phase
+	#undef hit
 }

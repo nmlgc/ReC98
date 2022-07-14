@@ -75,6 +75,7 @@ void sariel_load_and_init(void);
 
 // Jigoku
 void mima_load(void);
+void mima_main(void);
 void mima_free(void);
 
 void kikuri_load(void);

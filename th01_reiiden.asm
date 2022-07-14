@@ -64,7 +64,6 @@ main_15 group main_15_TEXT, main_15__TEXT
 main_19 group main_19_TEXT, main_19__TEXT
 main_21 group main_21_TEXT, main_21__TEXT
 main_28 group main_28_TEXT, main_28__TEXT
-main_29 group main_29_TEXT, main_29__TEXT
 main_32 group main_32_TEXT, main_32__TEXT
 
 ; ===========================================================================
@@ -123,7 +122,6 @@ main_011_TEXT	segment	byte public 'CODE' use16
 main_011_TEXT	ends
 
 main_012_TEXT	segment	byte public 'CODE' use16
-	extern @stage_palette_set$qmx27%Palette$t14%RGB$tc$ii$16%%:proc
 	extern @invincibility_sprites_update_and$qi:proc
 	extern @orb_velocity_y_update$qv:proc
 	extern @orb_force_new$qd11orb_force_t:proc
@@ -2140,7 +2138,7 @@ loc_DBF9:
 ; ---------------------------------------------------------------------------
 
 loc_DC00:
-		call	sub_1FA7B
+		call	@mima_main$qv
 		jmp	short loc_DC3A
 ; ---------------------------------------------------------------------------
 
@@ -2266,7 +2264,7 @@ loc_DD43:
 ; ---------------------------------------------------------------------------
 
 loc_DD4A:
-		call	sub_1FA7B
+		call	@mima_main$qv
 		jmp	short loc_DD6B
 ; ---------------------------------------------------------------------------
 
@@ -8762,325 +8760,10 @@ main_28__TEXT	ends
 
 ; Segment type:	Pure code
 main_29_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_29
-		;org 0Ah
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-mima_still	equ <boss_entity_0>
-
 	extern @mima_load$qv:proc
-	extern @meteor_put$qv:proc
-	extern @mima_bg_snap$qv:proc
-	extern @mima_unput$qi:proc
-	extern @phase_spreadin$qii:proc
-	extern @mima_setup$qv:proc
 	extern @mima_free$qv:proc
-	extern @pattern_aimed_then_static_pellet$qv:proc
-	extern @pattern_aimed_missiles_from_squa$qv:proc
-	extern @pattern_static_pellets_from_corn$qv:proc
-	extern @pattern_hop_and_fire_chase_pelle$qi:proc
-	extern @pattern_pillars_and_aimed_spread$qv:proc
-	extern @pattern_halfcircle_missiles_down$qv:proc
-	extern @pattern_slow_pellet_spray_from_c$qv:proc
-	extern @pattern_aimed_lasers_from_corner$qv:proc
+	extern @mima_main$qv:proc
 main_29_TEXT	ends
-
-main_29__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1FA7B	proc far
-
-@@invincibility_flash_colors		= word ptr -2
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	ax, word ptr _mima_invincibility_flash_colors
-		mov	[bp+@@invincibility_flash_colors], ax
-		call	@CMissiles@unput_update_render$qv stdcall, offset _Missiles, ds
-		call	@particles_unput_update_render$q17particle_origin_ti stdcall, large PO_TOP_RIGHT or (V_WHITE shl 16)
-		add	sp, 8
-		cmp	_boss_phase, 0
-		jnz	short loc_1FB20
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		mov	_boss_phase_frame, 0
-		mov	mima_still.BE_hitbox_orb_inactive, 0
-		xor	di, di
-		mov	_mima_spreadin_interval, 1
-		mov	_mima_spreadin_speed, 2
-		mov	_mima_meteor_active, 1
-
-loc_1FACA:
-		inc	_boss_phase_frame
-		or	di, di
-		jnz	short loc_1FADF
-		call	@phase_spreadin$qii c, 256 or (120 shl 16)
-
-loc_1FADF:
-		cmp	_boss_phase_frame, 0
-		jnz	short loc_1FAE7
-		inc	di
-
-loc_1FAE7:
-		cmp	di, 1
-		jz	short loc_1FAF6
-		push	2
-		call	_frame_delay
-		pop	cx
-		jmp	short loc_1FACA
-; ---------------------------------------------------------------------------
-
-loc_1FAF6:
-		mov	_boss_phase, 1
-		mov	word_39E78, 0
-		mov	_mima_initial_hp_rendered, 0
-		call	@stage_palette_set$qmx27%Palette$t14%RGB$tc$ii$16%% c, offset _z_Palettes, ds
-		call	@boss_palette_snap$qv
-		call	@pattern_hop_and_fire_chase_pelle$qi stdcall, 0
-		jmp	loc_1FDCE
-; ---------------------------------------------------------------------------
-
-loc_1FB20:
-		mov	al, _boss_phase
-		cbw
-		cmp	ax, 1
-		jnz	loc_1FC54
-		cmp	_mima_initial_hp_rendered, 0
-		jnz	short loc_1FB45
-		call	@hud_hp_render$qii c, _boss_hp, _boss_phase_frame
-		mov	_mima_initial_hp_rendered, al
-
-loc_1FB45:
-		inc	_boss_phase_frame
-		inc	_mima_invincibility_frame
-		call	@meteor_put$qv
-		cmp	word_39E78, 0
-		jnz	short loc_1FB5E
-		call	@pattern_aimed_then_static_pellet$qv
-		jmp	short loc_1FB86
-; ---------------------------------------------------------------------------
-
-loc_1FB5E:
-		cmp	word_39E78, 1
-		jnz	short loc_1FB6B
-		call	@pattern_aimed_missiles_from_squa$qv
-		jmp	short loc_1FB86
-; ---------------------------------------------------------------------------
-
-loc_1FB6B:
-		cmp	word_39E78, 2
-		jnz	short loc_1FB78
-		call	@pattern_static_pellets_from_corn$qv
-		jmp	short loc_1FB86
-; ---------------------------------------------------------------------------
-
-loc_1FB78:
-		cmp	word_39E78, 3
-		jnz	short loc_1FB86
-		call	@pattern_hop_and_fire_chase_pelle$qi stdcall, 1
-		pop	cx
-
-loc_1FB86:
-		cmp	_boss_phase_frame, 0
-		jnz	short loc_1FBAC
-		cmp	word_39E78, 3
-		jnz	short loc_1FB98
-		xor	ax, ax
-		jmp	short loc_1FB9C
-; ---------------------------------------------------------------------------
-
-loc_1FB98:
-		mov	ax, word_39E78
-		inc	ax
-
-loc_1FB9C:
-		mov	word_39E78, ax
-		cmp	_boss_hp, 6
-		jg	short loc_1FBAC
-		mov	word_39E78, 63h	; 'c'
-
-loc_1FBAC:
-		push	(48 shl 16) or 96	; (hitbox_w) or (hitbox_h)
-		mov	ax, mima_still.BE_cur_top
-		add	ax, 48
-		push	ax	; hitbox_top
-		mov	ax, mima_still.BE_cur_left
-		add	ax, 16
-		push	ax	; hitbox_left
-		call	@CBossEntity@hittest_orb$xqv c, offset mima_still, ds
-		push	ax	; colliding_with_orb
-		push	seg main_32_TEXT	; hit_callback (segment)
-		push	offset @boss_nop$qv	; hit_callback (offset)
-		push	5000	; hit_score
-		push	2	; invincibility_flash_colors_count
-		push	ss	; invincibility_flash_colors (segment)
-		lea	ax, [bp+@@invincibility_flash_colors]
-		push	ax	; invincibility_flash_colors (offset)
-		push	ds	; hp (segment)
-		push	offset _boss_hp	; hp (offset)
-		push	ds	; is_invincible (segment)
-		push	offset _mima_invincible	; is_invincible (offset)
-		push	ds	; invincibility_frame (segment)
-		push	offset _mima_invincibility_frame	; invincibility_frame (offset)
-		call	@boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii
-		add	sp, 22h
-		cmp	word_39E78, 63h	; 'c'
-		jnz	loc_1FDCF
-		cmp	_mima_invincible, 0
-		jnz	loc_1FDCF
-		push	1
-		call	_graph_accesspage_func
-		call	@mima_unput$qi stdcall, 0
-		push	0
-		call	_graph_accesspage_func
-		call	@mima_unput$qi stdcall, 0
-		add	sp, 8
-		mov	_mima_spreadin_interval, 4
-		mov	_mima_spreadin_speed, 8
-		mov	mima_still.BE_cur_left, 256
-		mov	mima_still.BE_cur_top, 120
-		call	@mima_bg_snap$qv
-		mov	_boss_phase, 2
-		mov	_boss_phase_frame, 0
-		mov	_mima_invincibility_frame, 0
-		mov	word_39E78, 0
-		jmp	loc_1FDCF
-; ---------------------------------------------------------------------------
-
-loc_1FC54:
-		mov	al, _boss_phase
-		cbw
-		cmp	ax, 2
-		jnz	short loc_1FC95
-		inc	_boss_phase_frame
-		inc	_mima_invincibility_frame
-		call	@phase_spreadin$qii c, 256 or (120 shl 16)
-		cmp	_boss_phase_frame, 0
-		jnz	loc_1FDCF
-		mov	_boss_phase, 3
-		mov	_boss_phase_frame, 0
-		mov	_mima_invincibility_frame, 0
-		mov	word_39E78, 0
-		jmp	loc_1FDCF
-; ---------------------------------------------------------------------------
-
-loc_1FC95:
-		mov	al, _boss_phase
-		cbw
-		cmp	ax, 3
-		jnz	loc_1FDCF
-		inc	_boss_phase_frame
-		inc	_mima_invincibility_frame
-		call	@meteor_put$qv
-		cmp	word_39E78, 0
-		jnz	short loc_1FCB9
-		call	@pattern_pillars_and_aimed_spread$qv
-		jmp	short loc_1FCDE
-; ---------------------------------------------------------------------------
-
-loc_1FCB9:
-		cmp	word_39E78, 1
-		jnz	short loc_1FCC6
-		call	@pattern_halfcircle_missiles_down$qv
-		jmp	short loc_1FCDE
-; ---------------------------------------------------------------------------
-
-loc_1FCC6:
-		cmp	word_39E78, 2
-		jnz	short loc_1FCD3
-		call	@pattern_slow_pellet_spray_from_c$qv
-		jmp	short loc_1FCDE
-; ---------------------------------------------------------------------------
-
-loc_1FCD3:
-		cmp	word_39E78, 3
-		jnz	short loc_1FCDE
-		call	@pattern_aimed_lasers_from_corner$qv
-
-loc_1FCDE:
-		cmp	_boss_phase_frame, 0
-		jnz	short loc_1FCF7
-		cmp	word_39E78, 3
-		jnz	short loc_1FCF0
-		xor	ax, ax
-		jmp	short loc_1FCF4
-; ---------------------------------------------------------------------------
-
-loc_1FCF0:
-		mov	ax, word_39E78
-		inc	ax
-
-loc_1FCF4:
-		mov	word_39E78, ax
-
-loc_1FCF7:
-		push	(48 shl 16) or 96	; (hitbox_w) or (hitbox_h)
-		mov	ax, mima_still.BE_cur_top
-		add	ax, 48
-		push	ax	; hitbox_top
-		mov	ax, mima_still.BE_cur_left
-		add	ax, 16
-		push	ax	; hitbox_left
-		call	@CBossEntity@hittest_orb$xqv c, offset mima_still, ds
-		push	ax	; colliding_with_orb
-		push	seg main_32_TEXT	; hit_callback (segment)
-		push	offset @boss_nop$qv	; hit_callback (offset)
-		push	5000	; hit_score
-		push	2	; invincibility_flash_colors_count
-		push	ss	; invincibility_flash_colors (segment)
-		lea	ax, [bp+@@invincibility_flash_colors]
-		push	ax	; invincibility_flash_colors (offset)
-		push	ds	; hp (segment)
-		push	offset _boss_hp	; hp (offset)
-		push	ds	; is_invincible (segment)
-		push	offset _mima_invincible	; is_invincible (offset)
-		push	ds	; invincibility_frame (segment)
-		push	offset _mima_invincibility_frame	; invincibility_frame (offset)
-		call	@boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii
-		add	sp, 22h
-		cmp	_boss_hp, 0
-		jg	loc_1FDCF
-		push	1
-		call	_graph_accesspage_func
-		call	@mima_unput$qi stdcall, 0
-		push	0
-		call	_graph_accesspage_func
-		call	_mdrv2_bgm_fade_out_nonblock
-		call	@CPellets@unput_and_reset$qv stdcall, offset _Pellets, ds
-		call	@CMissiles@reset$qv stdcall, offset _Missiles, ds
-		add	sp, 0Eh
-		xor	si, si
-		jmp	short loc_1FDBD
-; ---------------------------------------------------------------------------
-
-loc_1FD77:
-		shootout_laser_unput_and_reset_broken	si
-		inc	si
-
-loc_1FDBD:
-		cmp	si, 5
-		jl	short loc_1FD77
-		call	@boss_defeat_animate$qv
-		call	@scene_init_and_load$quc stdcall, 4
-
-loc_1FDCE:
-		pop	cx
-
-loc_1FDCF:
-		pop	di
-		pop	si
-		leave
-		retf
-sub_1FA7B	endp
-
-mima_still	equ <>
-mima_animated	equ <>
-main_29__TEXT	ends
 
 ; ===========================================================================
 
@@ -9104,9 +8787,6 @@ main_31_TEXT	ends
 
 ; Segment type:	Pure code
 main_32_TEXT	segment	byte public 'CODE' use16
-
-PO_TOP_RIGHT = 1
-
 	extern @BOSS_NOP$QV:proc
 	extern @hud_hp_render$qii:proc
 	extern @boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii:proc
@@ -9116,7 +8796,6 @@ main_32__TEXT	segment	byte public 'CODE' use16
 	extern @CMissiles@add$qiiddc:proc
 	extern @CMissiles@reset$qv:proc
 	extern @CMissiles@unput_update_render$qv:proc
-	extern @particles_unput_update_render$q17particle_origin_ti:proc
 main_32__TEXT	ends
 
 ; ===========================================================================
@@ -9796,11 +9475,11 @@ _pattern7_sq          	SquareState <?>
 _pattern7_sq_corners_x	dw 4 dup (?)
 _pattern7_sq_corners_y	dw 4 dup (?)
 
-public _mima_invincibility_frame, _mima_invincible
-_mima_invincibility_frame	dw ?
-_mima_invincible	dw ?
-word_39E78	dw ?
-public _mima_initial_hp_rendered
+public _mima_hit, _mima_phase, _mima_initial_hp_rendered
+_mima_hit label
+	dw ?	; invincibility_frame
+	dw ?	; invincible
+_mima_phase	dw ?
 _mima_initial_hp_rendered	db ?
 
 CCards struc
