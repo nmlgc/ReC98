@@ -492,10 +492,8 @@ static int saveout_write_sprite(struct rec98_bmp2arr_task *t,struct saveout_ctx 
 
         for (r=0;r < t->sprite_height;r++) {
             fprintf(sctx->fp,"\t");
-            for (c=0;c < sctx->bytesperrow;c++) {
-                fprintf(sctx->fp,"%c",(c != 0 || r != 0) ? ',' : ' ');
-                fprintf(sctx->fp,"0x%02x",*bmp++);
-            }
+            for (c=0;c < sctx->bytesperrow;c++)
+                fprintf(sctx->fp,"0x%02x,",*bmp++);
             fprintf(sctx->fp," /* row %u */",(t->flags & UPSIDEDOWN) ? (t->sprite_height - 1u - r) : r);
             fprintf(sctx->fp,"\n");
         }
