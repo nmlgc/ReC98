@@ -27,13 +27,13 @@ extern "C" {
 #include "th01/main/playfld.hpp"
 #include "th01/main/vars.hpp"
 #include "th01/main/hud/hp.hpp"
+#include "th01/main/player/orb.hpp"
+#include "th01/main/player/player.hpp"
 #include "th01/main/bullet/laser_s.hpp"
 #include "th01/main/bullet/pellet.hpp"
 #include "th01/main/boss/boss.hpp"
 #include "th01/main/boss/defeat.hpp"
 #include "th01/main/boss/entity_a.hpp"
-#include "th01/main/player/orb.hpp"
-#include "th01/main/player/player.hpp"
 #include "th01/main/stage/palette.hpp"
 #include "th01/main/stage/stages.hpp"
 
@@ -52,20 +52,20 @@ static const screen_y_t EYE_BOTTOM = 147;
 static const screen_x_t LIGHTBALL_CENTER_X = 320;
 static const screen_y_t LIGHTBALL_CENTER_Y = 224;
 
-static const pixel_t HITBOX_W = 96;
-static const pixel_t HITBOX_H = 48;
+static const pixel_t HITBOX_W = 128;
+static const pixel_t HITBOX_H = 80;
 
-static const screen_x_t HITBOX_LEFT = (
-	DISC_CENTER_X - (HITBOX_W / 2) - (ORB_W / 2)
-);
-static const screen_x_t HITBOX_RIGHT = (
-	DISC_CENTER_X + (HITBOX_W / 2) - (ORB_W / 2)
-);
+static const screen_x_t HITBOX_LEFT = (DISC_CENTER_X - (HITBOX_W / 2));
+static const screen_x_t HITBOX_RIGHT = (DISC_CENTER_X + (HITBOX_W / 2) - ORB_W);
+static const screen_y_t HITBOX_CENTER_Y = (DISC_CENTER_Y - 8);
 
 // Not the actual Y coordinates of the original hitbox, due to a sign confusion
 // bug in kikuri_hittest_orb()!
-static const screen_y_t HITBOX_TOP = (DISC_CENTER_Y - HITBOX_H);
-static const screen_y_t HITBOX_BOTTOM = DISC_CENTER_Y;
+static const screen_y_t HITBOX_TOP = (HITBOX_CENTER_Y - (HITBOX_H / 2));
+static const screen_y_t HITBOX_BOTTOM = (
+	HITBOX_CENTER_Y + (HITBOX_H / 2) - ORB_H
+);
+
 
 static const pixel_t SOUL_W = 32;
 static const pixel_t SOUL_H = 32;

@@ -34,6 +34,9 @@ extern "C" {
 #include "th01/sprites/pellet.h"
 #include "th01/main/shape.hpp"
 #include "th01/main/particle.hpp"
+#include "th01/main/hud/hp.hpp"
+#include "th01/main/player/player.hpp"
+#include "th01/main/player/orb.hpp"
 #include "th01/main/boss/boss.hpp"
 #include "th01/main/boss/entity_a.hpp"
 #include "th01/main/boss/defeat.hpp"
@@ -41,8 +44,6 @@ extern "C" {
 #include "th01/main/bullet/laser_s.hpp"
 #include "th01/main/bullet/missile.hpp"
 #include "th01/main/bullet/pellet.hpp"
-#include "th01/main/hud/hp.hpp"
-#include "th01/main/player/player.hpp"
 #include "th01/main/stage/stages.hpp"
 
 // Coordinates
@@ -53,13 +54,9 @@ static const pixel_t GIRL_H = 96;
 static const pixel_t BAT_W = 48;
 static const pixel_t BAT_H = 32;
 
-static const pixel_t GIRL_HITBOX_LEFT = (GIRL_W / 4);
-static const pixel_t GIRL_HITBOX_TOP = (GIRL_H / 3);
 static const pixel_t GIRL_HITBOX_W = (GIRL_W / 2);
 static const pixel_t GIRL_HITBOX_H = (GIRL_H / 2);
 
-static const pixel_t BAT_HITBOX_LEFT = 0;
-static const pixel_t BAT_HITBOX_TOP = 0;
 static const pixel_t BAT_HITBOX_W = ((BAT_W / 3) * 2);
 static const pixel_t BAT_HITBOX_H = BAT_H;
 
@@ -275,14 +272,14 @@ inline screen_y_t form_center_y(elis_form_t form) {
 
 inline screen_x_t form_shot_hitbox_left(elis_form_t form) {
 	return (form == F_GIRL)
-		? (ent_still_or_wave.cur_left + GIRL_HITBOX_LEFT)
-		: (ent_bat.cur_left + BAT_HITBOX_LEFT);
+		? (ent_still_or_wave.cur_left + (GIRL_W / 4))
+		: ent_bat.cur_left;
 }
 
 inline screen_y_t form_shot_hitbox_top(elis_form_t form) {
 	return (form == F_GIRL)
-		? (ent_still_or_wave.cur_top + GIRL_HITBOX_TOP)
-		: (ent_bat.cur_left + BAT_HITBOX_TOP); // ZUN bug: Should be cur_top
+		? (ent_still_or_wave.cur_top + (GIRL_H / 3))
+		: ent_bat.cur_left; // ZUN bug: Should be cur_top
 }
 
 inline screen_x_t girl_lefteye_x(void) {
@@ -601,14 +598,11 @@ void elis_setup(void)
 	ent_bat.pos_set(BASE_LEFT, BASE_TOP);
 
 	ent_still_or_wave.hitbox_orb_set(
-		GIRL_HITBOX_LEFT, ((GIRL_H / 8) * 1),
-		(GIRL_HITBOX_LEFT + GIRL_HITBOX_W), ((GIRL_H / 3) * 2)
+		((GIRL_W / 8) * 1), -4,
+		((GIRL_W / 8) * 7), ((GIRL_H / 6) * 5)
 	);
 	// Note that [ent_attack] doesn't receive a hitbox!
-	ent_bat.hitbox_orb_set(
-		((BAT_W / 6) * 1), ((BAT_H / 4) * 1),
-		((BAT_W / 6) * 5), ((BAT_H / 4) * 3)
-	);
+	ent_bat.hitbox_orb_set(-8, -8, (BAT_W + 8), (BAT_H + 8));
 
 	boss_phase = 0;
 	boss_phase_frame = 0;

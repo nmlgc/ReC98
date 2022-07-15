@@ -23,6 +23,7 @@ extern "C" {
 #define MISSILE_FN boss3_m_ptn_0
 extern const char MISSILE_FN[];
 #include "th01/main/particle.hpp"
+#include "th01/main/player/orb.hpp"
 #include "th01/main/boss/boss.hpp"
 #include "th01/main/boss/entity_a.hpp"
 #include "th01/main/boss/palette.hpp"
@@ -300,8 +301,8 @@ void mima_setup(void)
 	z_palette_white_in();
 	ent_still.pos_set((PLAYFIELD_CENTER_X - (MIMA_W / 2)), PLAYFIELD_TOP);
 	ent_still.hitbox_orb_set(
-		((MIMA_W / 4) * 1), ((MIMA_H / 5) * 1),
-		((MIMA_W / 4) * 3), ((MIMA_H / 5) * 4)
+		((MIMA_W / 8) * 1), ((MIMA_H / 10) * 1),
+		((MIMA_W / 8) * 7), ((MIMA_H / 10) * 9)
 	);
 	ent_still.hitbox_orb_inactive = false;
 	boss_phase_frame = 0;

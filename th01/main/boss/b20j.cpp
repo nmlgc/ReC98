@@ -68,8 +68,21 @@ static const screen_y_t EYE_BOTTOM = 140;
 
 static const screen_x_t HITBOX_LEFT = 288;
 static const screen_y_t HITBOX_TOP = 120;
-static const pixel_t HITBOX_W = 96;
-static const pixel_t HITBOX_H = 40;
+
+static const pixel_t HITBOX_SHOT_W = 96;
+static const pixel_t HITBOX_SHOT_H = 40;
+
+// Including the Orb sprite:
+//
+// 	               [w]
+// 	    ┌───────────────────────┐
+// 	    │                       │
+// 	[h] │                       │
+// 	    │             sprite → ┌┤
+// 	    └──────────────────────┴┘
+//
+static const pixel_t HITBOX_ORB_W = 96;
+static const pixel_t HITBOX_ORB_H = 72;
 
 // Slash pattern spawners are moved on a triangle along these points.
 static const screen_x_t SWORD_CENTER_X = 410;
@@ -1496,10 +1509,14 @@ void konngara_main(void)
 				10000,
 				boss_nop,
 				overlap_xy_xywh_le_ge_2(
-					orb_cur_left, orb_cur_top,
-					HITBOX_LEFT, HITBOX_TOP, (HITBOX_W - ORB_W), HITBOX_H // ???
+					orb_cur_left,
+					orb_cur_top,
+					HITBOX_LEFT,
+					HITBOX_TOP,
+					(HITBOX_ORB_W - ORB_W),
+					(HITBOX_ORB_H - ORB_H)
 				),
-				HITBOX_LEFT, HITBOX_TOP, HITBOX_W, HITBOX_H
+				HITBOX_LEFT, HITBOX_TOP, HITBOX_SHOT_W, HITBOX_SHOT_H
 			);
 		}
 	} hit;

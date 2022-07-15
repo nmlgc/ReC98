@@ -19,12 +19,12 @@ extern const char MISSILE_FN[];
 #include "th01/formats/ptn.hpp"
 #include "th01/main/particle.hpp"
 #include "th01/main/playfld.hpp"
+#include "th01/main/player/orb.hpp"
 #include "th01/main/boss/boss.hpp"
 #include "th01/main/boss/entity_a.hpp"
 #include "th01/main/boss/palette.hpp"
 #include "th01/main/bullet/missile.hpp"
 #include "th01/main/hud/hp.hpp"
-#include "th01/main/player/orb.hpp"
 
 #define flash_colors	yuugenmagan_flash_colors
 #define invincible	yuugenmagan_invincible
@@ -48,11 +48,6 @@ static const int EYE_COUNT = 5;
 
 static const pixel_t EYE_W = 64;
 static const pixel_t EYE_H = 48;
-
-static const pixel_t EYE_HITBOX_LEFT = (-4 + ORB_HITBOX_W);
-static const pixel_t EYE_HITBOX_TOP = (-4 + ORB_HITBOX_W);
-static const pixel_t EYE_HITBOX_RIGHT = (EYE_W + 4 - ORB_HITBOX_W);
-static const pixel_t EYE_HITBOX_BOTTOM = (EYE_H - ORB_HITBOX_H);
 
 enum yuugenmagan_cel_t {
 	C_HIDDEN = 0,
@@ -119,21 +114,11 @@ void yuugenmagan_setup(void)
 	eyes[    E_NORTH].pos_set(288,  64);
 
 	// MODDERS: Loop over all eyes instead.
-	eyes[0].hitbox_orb_set(
-		EYE_HITBOX_LEFT, EYE_HITBOX_TOP, EYE_HITBOX_RIGHT, EYE_HITBOX_BOTTOM
-	);
-	eyes[1].hitbox_orb_set(
-		EYE_HITBOX_LEFT, EYE_HITBOX_TOP, EYE_HITBOX_RIGHT, EYE_HITBOX_BOTTOM
-	);
-	eyes[2].hitbox_orb_set(
-		EYE_HITBOX_LEFT, EYE_HITBOX_TOP, EYE_HITBOX_RIGHT, EYE_HITBOX_BOTTOM
-	);
-	eyes[3].hitbox_orb_set(
-		EYE_HITBOX_LEFT, EYE_HITBOX_TOP, EYE_HITBOX_RIGHT, EYE_HITBOX_BOTTOM
-	);
-	eyes[4].hitbox_orb_set(
-		EYE_HITBOX_LEFT, EYE_HITBOX_TOP, EYE_HITBOX_RIGHT, EYE_HITBOX_BOTTOM
-	);
+	eyes[0].hitbox_orb_set(-4, -4, (EYE_W + 4), EYE_H);
+	eyes[1].hitbox_orb_set(-4, -4, (EYE_W + 4), EYE_H);
+	eyes[2].hitbox_orb_set(-4, -4, (EYE_W + 4), EYE_H);
+	eyes[3].hitbox_orb_set(-4, -4, (EYE_W + 4), EYE_H);
+	eyes[4].hitbox_orb_set(-4, -4, (EYE_W + 4), EYE_H);
 	eyes[0].hitbox_orb_inactive = true;
 	eyes[1].hitbox_orb_inactive = true;
 	eyes[2].hitbox_orb_inactive = true;

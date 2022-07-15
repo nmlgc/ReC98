@@ -267,14 +267,32 @@ public:
 	);
 
 	// Sets [hitbox_orb] to the given coordinates, relative to the top-left
-	// corner of the image.
+	// corner of the image. The area corresponds to the one that the Orb's
+	// centered hitbox has to fully overlap. Relative to the entity's sprite:
+	//
+	// 	                                [this->cur_top]
+	// 	                 ┌──────────────────────────────────────────┐
+	// 	                 │            Orb top                       │
+	// 	                 │          ┌─────────┐                     │
+	// 	                 │          │       [top]                   │
+	// 	                 │ Orb left │ ╔═══════════════╗             │
+	// 	                 │          │ ║               ║             │
+	// 	                 │          └─║               ║ [right]     │
+	// 	[this->cur_left] │            ║               ║             │
+	// 	                 │     [left] ║               ║─┐           │
+	// 	                 │            ║               ║ │           │
+	// 	                 │            ╚═══════════════╝ │ Orb right │
+	// 	                 │                 [bottom]     │           │
+	// 	                 │                    └─────────┘           │
+	// 	                 │                     Orb bottom           │
+	// 	                 └──────────────────────────────────────────┘
 	void hitbox_orb_set(
 		pixel_t left, pixel_t top, pixel_t right, pixel_t bottom
 	) {
-		hitbox_orb.left = left;
-		hitbox_orb.right = right;
-		hitbox_orb.top = top;
-		hitbox_orb.bottom = bottom;
+		hitbox_orb.left = (left + ORB_HITBOX_W);
+		hitbox_orb.right = (right - ORB_HITBOX_W);
+		hitbox_orb.top = (top + ORB_HITBOX_H);
+		hitbox_orb.bottom = (bottom - ORB_HITBOX_H);
 	}
 
 	// (Just read the actual function code, it's impossible to summarize these

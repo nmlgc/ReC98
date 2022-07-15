@@ -87,9 +87,9 @@ static const screen_y_t WAND_EMIT_TOP = 64;
 // That's… not quite where the face is?
 static const screen_x_t FACE_LEFT = 314;
 static const screen_y_t FACE_TOP = 104;
-static const pixel_t FACE_W = 32;
-static const pixel_t FACE_H = 32;
-static const screen_y_t FACE_CENTER_Y = (FACE_TOP + (FACE_H / 2));
+static const pixel_t FACE_W = 64;
+static const pixel_t FACE_H = 64;
+static const screen_y_t FACE_CENTER_Y = (FACE_TOP + (FACE_H / 4));
 
 // MODDERS: That's 32 more than BOSS6_2.BOS is wide? Reducing it to 96 works
 // fine as well.
@@ -366,7 +366,7 @@ void sariel_load_and_init(void)
 void sariel_setup(void)
 {
 	ent_shield.pos_set(SHIELD_LEFT, SHIELD_TOP, 48, 0, RES_X, 0, RES_Y);
-	ent_shield.hitbox_orb_set(0, 0, 48, 48);
+	ent_shield.hitbox_orb_set(-16, -16, 64, 64);
 	boss_hp = 18;
 	hud_hp_first_white = 8;
 	hud_hp_first_redwhite = 2;
@@ -2605,14 +2605,15 @@ void sariel_main(void)
 				colliding_with_orb,
 				FACE_LEFT,
 				FACE_TOP,
-				(FACE_W * 2),
-				FACE_H
+				FACE_W,
+				(FACE_H / 2)
 			);
 		}
 	} hit;
 
 	hit.colliding_with_orb = overlap_xy_xywh_le_ge(
-		orb_cur_left, orb_cur_top, FACE_LEFT, FACE_TOP, FACE_W, FACE_H
+		orb_cur_left, orb_cur_top,
+		FACE_LEFT, FACE_TOP, (FACE_W - ORB_W), (FACE_H - ORB_H)
 	) || ent_shield.hittest_orb();
 
 	if(boss_phase == 0) {

@@ -27,12 +27,13 @@ extern "C" {
 #include "th01/main/playfld.hpp"
 #include "th01/main/vars.hpp"
 #include "th01/main/hud/hp.hpp"
+#include "th01/main/player/player.hpp"
+#include "th01/main/player/orb.hpp"
+#include "th01/main/player/shot.hpp"
 #include "th01/main/boss/boss.hpp"
 #include "th01/main/boss/defeat.hpp"
 #include "th01/main/boss/entity_a.hpp"
 #include "th01/main/boss/palette.hpp"
-#include "th01/main/player/player.hpp"
-#include "th01/main/player/shot.hpp"
 #include "th01/main/bullet/pellet.hpp"
 #include "th01/main/stage/palette.hpp"
 
@@ -177,8 +178,8 @@ void singyoku_setup(void)
 
 	ent.pos_set(PLAYFIELD_RIGHT, PLAYFIELD_TOP, 32);
 	ent.hitbox_orb_set(
-		((SINGYOKU_W / 4) * 1), ((SINGYOKU_H / 4) * 1),
-		((SINGYOKU_W / 4) * 3), ((SINGYOKU_H / 4) * 3)
+		((SINGYOKU_W / 12) *  1), ((SINGYOKU_H / 12) *  1),
+		((SINGYOKU_W / 12) * 11), ((SINGYOKU_H / 12) * 11)
 	);
 	ent.hitbox_orb_inactive = false;
 	ent_sphere.set_image(0);
