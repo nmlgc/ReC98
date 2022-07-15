@@ -661,17 +661,15 @@ void pattern_diamond_cross_to_edges_followed_by_rain(void)
 			unsigned char angle;
 
 			from_left = PLAYFIELD_LEFT;
-			from_top = playfield_rand_y(25 / 42.0f);
-			to_left = (
-				playfield_rand_x(5 / 8.0f) + playfield_fraction_x(3 / 8.0f)
-			);
+			from_top = playfield_rand_y(0.0f, (25 / 42.0f));
+			to_left = playfield_rand_x(0.375f, 1.0f);
 			to_top = PLAYFIELD_BOTTOM;
 			angle = iatan2((to_top - from_top), (to_left - from_left));
 			Pellets.add_single(from_left, from_top, angle, speed);
 
 			from_left = (PLAYFIELD_RIGHT - PELLET_W);
-			from_top = playfield_rand_y(25 / 42.0f);
-			to_left  = playfield_rand_x( 5 /  8.0f);
+			from_top = playfield_rand_y(0.0f, (25 / 42.0f));
+			to_left  = playfield_rand_x(0.0f, 0.625f);
 			to_top = PLAYFIELD_BOTTOM;
 			angle = iatan2((to_top - from_top), (to_left - from_left));
 			Pellets.add_single(from_left, from_top, angle, speed);

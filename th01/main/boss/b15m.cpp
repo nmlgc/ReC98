@@ -354,7 +354,7 @@ inline screen_x_t elis_playfield_random_left(void) {
 }
 
 inline screen_y_t elis_playfield_random_top(void) {
-	return playfield_rand_y(17 / 42.0f);
+	return playfield_rand_y(0.0f, (17 / 42.0f));
 }
 // --------------------------------------------
 

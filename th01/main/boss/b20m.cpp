@@ -990,12 +990,8 @@ void near pattern_random_purple_lasers(void)
 			8.5f, 9.0f, 9.5f, 10.0f
 		);
 		for(int i = 0; i < LASER_COUNT; i++) {
-			spawner_x[i] = (
-				playfield_fraction_x(3 / 16.0f) + playfield_rand_x(10 / 16.0f)
-			);
-			spawner_y[i] = (
-				playfield_fraction_y(9 / 84.0f) + playfield_rand_y(25 / 84.0f)
-			);
+			spawner_x[i] = playfield_rand_x(0.1875f, 0.8125f);
+			spawner_y[i] = playfield_rand_y((9 / 84.0f), (34 / 84.0f));
 		}
 	}
 	if(boss_phase_frame < KEYFRAME_1) {
