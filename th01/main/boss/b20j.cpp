@@ -192,8 +192,9 @@ inline screen_x_t snake_target_offset_left(const screen_x_t &to_left) {
 	return (to_left + (PLAYER_W / 2) - (DIAMOND_W / 2));
 }
 
-#define SNAKE_HOMING_THRESHOLD \
-	(PLAYFIELD_TOP + playfield_fraction_y(5, 7) - (DIAMOND_H / 2))
+#define SNAKE_HOMING_THRESHOLD ( \
+	PLAYFIELD_TOP + playfield_fraction_y(5 / 7.0f) - (DIAMOND_H / 2) \
+)
 
 template <int SnakeCount> struct Snakes {
 	screen_x_t left[SnakeCount][SNAKE_TRAIL_COUNT];

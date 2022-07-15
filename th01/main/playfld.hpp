@@ -16,23 +16,14 @@
 	);
 #endif
 
-extern "C++" {
 static inline pixel_t playfield_fraction_x(float fraction = 1.0f) {
-	return ((int)(PLAYFIELD_W * fraction));
+	// Adding a small value helps with rounding inaccuracies.
+	return static_cast<pixel_t>(PLAYFIELD_W * fraction + 0.0001f);
 }
 
 static inline pixel_t playfield_fraction_y(float fraction = 1.0f) {
-	return ((int)(PLAYFIELD_H * fraction));
-}
-
-// Use these variants if expressing [fraction] as a float loses accuracy.
-static inline pixel_t playfield_fraction_x(int numerator, int denumerator) {
-	return ((PLAYFIELD_W / denumerator) * numerator);
-}
-
-static inline pixel_t playfield_fraction_y(int numerator, int denumerator) {
-	return ((PLAYFIELD_H / denumerator) * numerator);
-}
+	// Adding a small value helps with rounding inaccuracies.
+	return static_cast<pixel_t>(PLAYFIELD_H * fraction + 0.0001f);
 }
 
 #ifdef rand
