@@ -269,7 +269,10 @@ static int memcpy32to1(unsigned char *dst,unsigned char *src,unsigned int w) {
 }
 
 static void saveout_write_c_type(struct rec98_bmp2arr_task *t,struct saveout_ctx *sctx) {
-    fprintf(sctx->fp,"const unsigned char %s",t->output_symname != NULL ? t->output_symname : "untitled");
+    if (t->output_type == REC98_OUT_CPP)
+        fprintf(sctx->fp,"const dot_rect_t(%d, %d) %s",sctx->bytesperrow * 8,t->sprite_height,t->output_symname != NULL ? t->output_symname : "untitled");
+    else if (t->output_type == REC98_OUT_CPP)
+        fprintf(sctx->fp,"const unsigned char %s",t->output_symname != NULL ? t->output_symname : "untitled");
 
     if (t->flags & PRESHIFT_OUTER)
         fprintf(sctx->fp,"[8/*PRESHIFT*/]");
@@ -279,7 +282,8 @@ static void saveout_write_c_type(struct rec98_bmp2arr_task *t,struct saveout_ctx
     if (t->flags & PRESHIFT_INNER)
         fprintf(sctx->fp,"[8/*PRESHIFT*/]");
 
-    fprintf(sctx->fp,"[%d/*%d bytes x %d rows*/]",sctx->bytesperrow * t->sprite_height,sctx->bytesperrow,t->sprite_height);
+    if (t->output_type == REC98_OUT_C)
+	    fprintf(sctx->fp,"[%d/*%d bytes x %d rows*/]",sctx->bytesperrow * t->sprite_height,sctx->bytesperrow,t->sprite_height);
 }
 
 static int saveout_write_prologue(struct rec98_bmp2arr_task *t,struct saveout_ctx *sctx) {
@@ -492,8 +496,30 @@ static int saveout_write_sprite(struct rec98_bmp2arr_task *t,struct saveout_ctx 
 
         for (r=0;r < t->sprite_height;r++) {
             fprintf(sctx->fp,"\t");
-            for (c=0;c < sctx->bytesperrow;c++)
-                fprintf(sctx->fp,"0x%02x,",*bmp++);
+            if (t->output_type == REC98_OUT_C)
+                for (c=0;c < sctx->bytesperrow;c++)
+                    fprintf(sctx->fp,"0x%02x,",*bmp++);
+            else if (t->output_type == REC98_OUT_CPP) {
+                uint8_t byte[4];
+                switch (sctx->bytesperrow) {
+                    case 2:
+                        byte[0] = *bmp++;
+                        byte[1] = *bmp++;
+                        fprintf(sctx->fp,"0x%02x%02x,",byte[1],byte[0]);
+                        break;
+                    case 4:
+                        byte[0] = *bmp++;
+                        byte[1] = *bmp++;
+                        byte[2] = *bmp++;
+                        byte[3] = *bmp++;
+                        fprintf(sctx->fp,"0x%02x%02x%02x%02x,",byte[3],byte[2],byte[1],byte[0]);
+                        break;
+                    default:
+                        for (c=0;c < sctx->bytesperrow;c++)
+                            fprintf(sctx->fp,"0x%02x,",*bmp++);
+                        break;
+                }
+            }
             fprintf(sctx->fp," /* row %u */",(t->flags & UPSIDEDOWN) ? (t->sprite_height - 1u - r) : r);
             fprintf(sctx->fp,"\n");
         }

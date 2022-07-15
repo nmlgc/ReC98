@@ -2367,7 +2367,7 @@ void pascal near pattern_swaying_leaves(int &frame, int spawn_interval_or_reset)
 				left[i].to_pixel(), top[i].to_pixel() \
 			); \
 			tmp_first_bit = (left[i].to_pixel() % BYTE_DOTS); \
-			grcg_put_8x8_mono(tmp_vo, tmp_first_bit, sprite[0], V_WHITE); \
+			grcg_put_8x8_mono(tmp_vo, tmp_first_bit, sprite[0].row, V_WHITE); \
 		} \
 	}
 

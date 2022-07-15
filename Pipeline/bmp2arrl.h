@@ -8,7 +8,7 @@
 enum rec98_bmp2arr_output_type {
     REC98_OUT_NONE=0,
     REC98_OUT_C, /* creating a raw multi-dimensional `unsigned char` array */
-    REC98_OUT_CPP,
+    REC98_OUT_CPP, /* using the planar.h DotRect template */
     REC98_OUT_ASM,
     REC98_OUT_BIN,
     REC98_OUT_BMP,
