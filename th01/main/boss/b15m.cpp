@@ -600,12 +600,12 @@ void elis_setup(void)
 	ent_attack.pos_set(BASE_LEFT, BASE_TOP);
 	ent_bat.pos_set(BASE_LEFT, BASE_TOP);
 
-	ent_still_or_wave.hitbox_set(
+	ent_still_or_wave.hitbox_orb_set(
 		GIRL_HITBOX_LEFT, ((GIRL_H / 8) * 1),
 		(GIRL_HITBOX_LEFT + GIRL_HITBOX_W), ((GIRL_H / 3) * 2)
 	);
 	// Note that [ent_attack] doesn't receive a hitbox!
-	ent_bat.hitbox_set(
+	ent_bat.hitbox_orb_set(
 		((BAT_W / 6) * 1), ((BAT_H / 4) * 1),
 		((BAT_W / 6) * 5), ((BAT_H / 4) * 3)
 	);

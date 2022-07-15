@@ -268,7 +268,9 @@ public:
 
 	// Sets [hitbox_orb] to the given coordinates, relative to the top-left
 	// corner of the image.
-	void hitbox_set(pixel_t left, pixel_t top, pixel_t right, pixel_t bottom) {
+	void hitbox_orb_set(
+		pixel_t left, pixel_t top, pixel_t right, pixel_t bottom
+	) {
 		hitbox_orb.left = left;
 		hitbox_orb.right = right;
 		hitbox_orb.top = top;

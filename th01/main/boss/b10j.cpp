@@ -299,7 +299,7 @@ void mima_setup(void)
 	ent_anim.set_image(C_METEOR);
 	z_palette_white_in();
 	ent_still.pos_set((PLAYFIELD_CENTER_X - (MIMA_W / 2)), PLAYFIELD_TOP);
-	ent_still.hitbox_set(
+	ent_still.hitbox_orb_set(
 		((MIMA_W / 4) * 1), ((MIMA_H / 5) * 1),
 		((MIMA_W / 4) * 3), ((MIMA_H / 5) * 4)
 	);

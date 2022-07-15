@@ -366,7 +366,7 @@ void sariel_load_and_init(void)
 void sariel_setup(void)
 {
 	ent_shield.pos_set(SHIELD_LEFT, SHIELD_TOP, 48, 0, RES_X, 0, RES_Y);
-	ent_shield.hitbox_set(0, 0, 48, 48);
+	ent_shield.hitbox_orb_set(0, 0, 48, 48);
 	boss_hp = 18;
 	hud_hp_first_white = 8;
 	hud_hp_first_redwhite = 2;

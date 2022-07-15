@@ -176,7 +176,7 @@ void singyoku_setup(void)
 	z_palette_set_all_show(z_Palettes);
 
 	ent.pos_set(PLAYFIELD_RIGHT, PLAYFIELD_TOP, 32);
-	ent.hitbox_set(
+	ent.hitbox_orb_set(
 		((SINGYOKU_W / 4) * 1), ((SINGYOKU_H / 4) * 1),
 		((SINGYOKU_W / 4) * 3), ((SINGYOKU_H / 4) * 3)
 	);

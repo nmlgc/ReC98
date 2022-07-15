@@ -119,19 +119,19 @@ void yuugenmagan_setup(void)
 	eyes[    E_NORTH].pos_set(288,  64);
 
 	// MODDERS: Loop over all eyes instead.
-	eyes[0].hitbox_set(
+	eyes[0].hitbox_orb_set(
 		EYE_HITBOX_LEFT, EYE_HITBOX_TOP, EYE_HITBOX_RIGHT, EYE_HITBOX_BOTTOM
 	);
-	eyes[1].hitbox_set(
+	eyes[1].hitbox_orb_set(
 		EYE_HITBOX_LEFT, EYE_HITBOX_TOP, EYE_HITBOX_RIGHT, EYE_HITBOX_BOTTOM
 	);
-	eyes[2].hitbox_set(
+	eyes[2].hitbox_orb_set(
 		EYE_HITBOX_LEFT, EYE_HITBOX_TOP, EYE_HITBOX_RIGHT, EYE_HITBOX_BOTTOM
 	);
-	eyes[3].hitbox_set(
+	eyes[3].hitbox_orb_set(
 		EYE_HITBOX_LEFT, EYE_HITBOX_TOP, EYE_HITBOX_RIGHT, EYE_HITBOX_BOTTOM
 	);
-	eyes[4].hitbox_set(
+	eyes[4].hitbox_orb_set(
 		EYE_HITBOX_LEFT, EYE_HITBOX_TOP, EYE_HITBOX_RIGHT, EYE_HITBOX_BOTTOM
 	);
 	eyes[0].hitbox_orb_inactive = true;
