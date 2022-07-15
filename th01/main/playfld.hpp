@@ -36,15 +36,15 @@ static inline pixel_t playfield_fraction_y(int numerator, int denumerator) {
 }
 
 #ifdef rand
-// Calculates a random X value that spans the given [fraction] of the
+// Calculates a random X position that spans the given [fraction] of the
 // playfield.
-static inline pixel_t playfield_rand_x(float fraction = 1.0f) {
-	return (rand() % playfield_fraction_x(fraction));
+static inline screen_x_t playfield_rand_x(float fraction = 1.0f) {
+	return (PLAYFIELD_LEFT + (rand() % playfield_fraction_x(fraction)));
 }
 
-// Calculates a random Y value that spans the given [fraction] of the
+// Calculates a random Y position that spans the given [fraction] of the
 // playfield.
-static inline pixel_t playfield_rand_y(float fraction = 1.0f) {
-	return (rand() % playfield_fraction_y(fraction));
+static inline screen_y_t playfield_rand_y(float fraction = 1.0f) {
+	return (PLAYFIELD_TOP + (rand() % playfield_fraction_y(fraction)));
 }
 #endif

@@ -544,8 +544,7 @@ template <
 		unsigned char &angle, x_direction_t from_dir, subpixel_t speed
 	) const {
 		angle = iatan2(
-			(PLAYFIELD_BOTTOM - target_y),
-			((PLAYFIELD_LEFT + playfield_rand_x()) - target_l_x)
+			(PLAYFIELD_BOTTOM - target_y), (playfield_rand_x() - target_l_x)
 		);
 		if(from_dir == X_LEFT) {
 			Pellets.add_single(inhibit_Z3(target_l_x), target_y, angle, speed);
@@ -991,10 +990,10 @@ void near pattern_random_purple_lasers(void)
 			8.5f, 9.0f, 9.5f, 10.0f
 		);
 		for(int i = 0; i < LASER_COUNT; i++) {
-			spawner_x[i] = (PLAYFIELD_LEFT +
+			spawner_x[i] = (
 				playfield_fraction_x(3 / 16.0f) + playfield_rand_x(10 / 16.0f)
 			);
-			spawner_y[i] = (PLAYFIELD_TOP +
+			spawner_y[i] = (
 				playfield_fraction_y(9 / 84.0f) + playfield_rand_y(25 / 84.0f)
 			);
 		}
@@ -1778,7 +1777,7 @@ void near pattern_rain_from_top(void)
 	if((boss_phase_frame % 8) != 0) {
 		return;
 	}
-	screen_x_t left = (PLAYFIELD_LEFT + playfield_rand_x());
+	screen_x_t left = playfield_rand_x();
 	vram_y_t top = PLAYFIELD_TOP;
 	pellet_group_t group;
 
@@ -2406,7 +2405,7 @@ void pascal near pattern_swaying_leaves(int &frame, int spawn_interval_or_reset)
 			vector2_between(
 				left[i].to_pixel(),
 				top[i].to_pixel(),
-				(PLAYFIELD_LEFT + playfield_rand_x()),
+				playfield_rand_x(),
 				PLAYFIELD_TOP,
 				velocity_x[i].v,
 				velocity_y[i].v,
