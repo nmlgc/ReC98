@@ -79,6 +79,8 @@ static enum bmp2arr_error parse_argv(struct rec98_bmp2arr_task *tsk,int argc,cha
                     tsk->output_type = REC98_OUT_BMP;
                 else if (!strcmp(a,"c"))
                     tsk->output_type = REC98_OUT_C;
+                else if (!strcmp(a,"cpp"))
+                    tsk->output_type = REC98_OUT_CPP;
                 else
                     return bmp2arr_error_set(tsk, INVALID_OUTPUT_TYPE);
             }

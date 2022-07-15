@@ -23,9 +23,9 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 
 !bmp2arr = | $(BMP2ARR) |> $(BMP2ARR) -q -i %f -o %o |> %o
 
-: th01/sprites/leaf_s.bmp |> !bmp2arr -sym sSPARK -of c -sw 8 -sh 8 |> th01/sprites/leaf_s.csp
-: th01/sprites/leaf_l.bmp |> !bmp2arr -sym sLEAF_LEFT -of c -sw 8 -sh 8 |> th01/sprites/leaf_l.csp
-: th01/sprites/leaf_r.bmp |> !bmp2arr -sym sLEAF_RIGHT -of c -sw 8 -sh 8 |> th01/sprites/leaf_r.csp
+: th01/sprites/leaf_s.bmp |> !bmp2arr -sym sSPARK -of cpp -sw 8 -sh 8 |> th01/sprites/leaf_s.csp
+: th01/sprites/leaf_l.bmp |> !bmp2arr -sym sLEAF_LEFT -of cpp -sw 8 -sh 8 |> th01/sprites/leaf_l.csp
+: th01/sprites/leaf_r.bmp |> !bmp2arr -sym sLEAF_RIGHT -of cpp -sw 8 -sh 8 |> th01/sprites/leaf_r.csp
 : th01/sprites/ileave_m.bmp |> !bmp2arr -sym _sINTERLEAVE_MASKS -of asm -sw 8 -sh 8 |> th01/sprites/ileave_m.asp
 
 # ZUN bug: Supposed to be 8 preshifted sprites, with a height of 1 and a width
@@ -33,7 +33,7 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 # first pre-shifted sprite. So, we're forced to manually unroll them…
 : th01/sprites/laser_s.bmp |> !bmp2arr -sym _sSHOOTOUT_LASER -of asm -sw 16 -sh 8 |> th01/sprites/laser_s.asp
 
-: th01/sprites/pellet.bmp |> !bmp2arr -sym sPELLET -of c -sw 8 -sh 8 -pshf inner |> th01/sprites/pellet.csp
+: th01/sprites/pellet.bmp |> !bmp2arr -sym sPELLET -of cpp -sw 8 -sh 8 -pshf inner |> th01/sprites/pellet.csp
 : th01/sprites/pellet_c.bmp |> !bmp2arr -sym _sPELLET_CLOUD -of asm -sw 16 -sh 16 |> th01/sprites/pellet_c.asp
 : th01/sprites/shape8x8.bmp |> !bmp2arr -sym _sSHAPE8X8 -of asm -sw 8 -sh 8 |> th01/sprites/shape8x8.asp
 : th02/sprites/pellet.bmp |> !bmp2arr -sym _sPELLET -of asm -sw 8 -sh 8 -pshf outer |> th02/sprites/pellet.asp
