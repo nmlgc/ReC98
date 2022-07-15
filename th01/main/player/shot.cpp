@@ -140,8 +140,8 @@ bool16 CShots::hittest_pellet(screen_x_t pellet_left, screen_y_t pellet_top)
 bool16 CShots::hittest_boss(
 	screen_x_t hitbox_left,
 	screen_y_t hitbox_top,
-	pixel_t hitbox_w,
-	pixel_t hitbox_h
+	pixel_t hitbox_w_minus_shot_w,
+	pixel_t hitbox_h_minus_shot_h
 )
 {
 	for(int i = 0; i < SHOT_COUNT; i++) {
@@ -149,7 +149,12 @@ bool16 CShots::hittest_boss(
 			continue;
 		}
 		if(overlap_xy_xywh_le_ge(
-			left[i], top[i], hitbox_left, hitbox_top, hitbox_w, hitbox_h
+			left[i],
+			top[i],
+			hitbox_left,
+			hitbox_top,
+			hitbox_w_minus_shot_w,
+			hitbox_h_minus_shot_h
 		)) {
 			on_hit(i);
 			return true;

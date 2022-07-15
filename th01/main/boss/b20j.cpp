@@ -43,6 +43,7 @@ extern "C" {
 #include "th01/main/shape.hpp"
 #include "th01/main/player/player.hpp"
 #include "th01/main/player/orb.hpp"
+#include "th01/main/player/shot.hpp"
 #include "th01/main/boss/boss.hpp"
 #include "th01/main/boss/entity_a.hpp"
 #include "th01/main/boss/palette.hpp"
@@ -69,10 +70,7 @@ static const screen_y_t EYE_BOTTOM = 140;
 static const screen_x_t HITBOX_LEFT = 288;
 static const screen_y_t HITBOX_TOP = 120;
 
-static const pixel_t HITBOX_SHOT_W = 96;
-static const pixel_t HITBOX_SHOT_H = 40;
-
-// Including the Orb sprite:
+// Including the respective sprites:
 //
 // 	               [w]
 // 	    ┌───────────────────────┐
@@ -81,6 +79,8 @@ static const pixel_t HITBOX_SHOT_H = 40;
 // 	    │             sprite → ┌┤
 // 	    └──────────────────────┴┘
 //
+static const pixel_t HITBOX_SHOT_W = 112;
+static const pixel_t HITBOX_SHOT_H = 56;
 static const pixel_t HITBOX_ORB_W = 96;
 static const pixel_t HITBOX_ORB_H = 72;
 
@@ -1516,7 +1516,9 @@ void konngara_main(void)
 					(HITBOX_ORB_W - ORB_W),
 					(HITBOX_ORB_H - ORB_H)
 				),
-				HITBOX_LEFT, HITBOX_TOP, HITBOX_SHOT_W, HITBOX_SHOT_H
+				shot_hitbox_t(
+					HITBOX_LEFT, HITBOX_TOP, HITBOX_SHOT_W, HITBOX_SHOT_H
+				)
 			);
 		}
 	} hit;

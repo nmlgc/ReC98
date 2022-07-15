@@ -649,13 +649,14 @@ void singyoku_main(void)
 				3000,
 				boss_nop,
 				ent.hittest_orb(),
-
-				// A hitbox stretching the entire width of SinGyoku, but that's
-				// still shifted 16 pixels to the right?
-				(ent.cur_left + (SINGYOKU_W / 6)),
-				(ent.cur_top + (SINGYOKU_H / 3)),
-				SINGYOKU_W,
-				(SINGYOKU_H - (SINGYOKU_H / 3) - SHOT_H)
+				// A hitbox shifted 16 pixels to the right *and* with an
+				// additional 16 pixels on the right edge?
+				shot_hitbox_t(
+					(ent.cur_left + (SINGYOKU_W / 6)),
+					(ent.cur_top + (SINGYOKU_H / 3)),
+					(SINGYOKU_W + (SINGYOKU_W / 6)),
+					(SINGYOKU_H - (SINGYOKU_H / 3))
+				)
 			);
 		}
 	} hit = { false };

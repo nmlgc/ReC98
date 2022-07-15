@@ -16,7 +16,10 @@ static const int BOSS_HIT_INVINCIBILITY_FRAMES = 40;
 // invincibility of the latter… yeah, that's about the best summary for this
 // function that does way too many things:
 // • If a player shot hitbox is given, it also handles collisions between
-//   player shots, regardless of invincibility.
+//   player shots, regardless of invincibility. At the right and bottom edges,
+//   the coordinates of that hitbox correspond to the top-left edge of the shot
+//   sprite; use the shot_hitbox_t() macro to express their width and height in
+//   a more visually correct way.
 // • The hit testing against the Orb must be done before, with the result
 //   being passed in [colliding_with_orb]. That parameter is what mainly
 //   triggers the collision response of adding the [hit_score], decrementing
@@ -41,8 +44,8 @@ void boss_hit_update_and_render(
 	bool colliding_with_orb,
 	screen_x_t shot_hitbox_left = 0,
 	screen_y_t shot_hitbox_top = 0,
-	pixel_t shot_hitbox_w = 0,
-	pixel_t shot_hitbox_h = 0
+	pixel_t shot_hitbox_w_minus_shot_w = 0,
+	pixel_t shot_hitbox_h_minus_shot_h = 0
 );
 
 // Palette to fade to after the white boss defeat flash.

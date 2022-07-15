@@ -54,12 +54,6 @@ static const pixel_t GIRL_H = 96;
 static const pixel_t BAT_W = 48;
 static const pixel_t BAT_H = 32;
 
-static const pixel_t GIRL_HITBOX_W = (GIRL_W / 2);
-static const pixel_t GIRL_HITBOX_H = (GIRL_H / 2);
-
-static const pixel_t BAT_HITBOX_W = ((BAT_W / 3) * 2);
-static const pixel_t BAT_HITBOX_H = BAT_H;
-
 static const pixel_t BASE_CENTER_X = PLAYFIELD_CENTER_X;
 static const pixel_t BASE_CENTER_Y = (PLAYFIELD_TOP + ((PLAYFIELD_H / 21) * 5));
 
@@ -257,6 +251,22 @@ inline void ent_put_both(elis_entity_t ent, elis_entity_cel_t cel) {
 
 // Form-relative coordinates
 // -------------------------
+
+// Since we can't use shot_hitbox_t() in the main function due to [form] being
+// both a compile-time constant and a variable at runtime, we have to manually
+// replicate it here. This is also the only reason why the shot_hitbox_(w|h)()
+// macros have to exist.
+#include "th01/main/player/shot.hpp"
+#define form_shot_hitbox_w(form) ( \
+	(form == F_GIRL) \
+		? shot_hitbox_w((GIRL_W / 8) * 5) \
+		: shot_hitbox_w(BAT_W) \
+)
+#define form_shot_hitbox_h(form) ( \
+	(form == F_GIRL) \
+		? shot_hitbox_h((GIRL_H / 3) * 2) \
+		: shot_hitbox_h(( BAT_H * 3) / 2) \
+)
 
 inline screen_x_t form_center_x(elis_form_t form) {
 	return (form == F_GIRL)
@@ -1797,8 +1807,8 @@ void elis_main(void)
 					: ent_bat.hittest_orb(), \
 				form_shot_hitbox_left(form_inlined), \
 				form_shot_hitbox_top(form_inlined), \
-				(form_inlined == F_GIRL) ? GIRL_HITBOX_W : BAT_HITBOX_W, \
-				(form_inlined == F_GIRL) ? GIRL_HITBOX_H : BAT_HITBOX_H \
+				form_shot_hitbox_w(form_inlined), \
+				form_shot_hitbox_h(form_inlined) \
 			); \
 		}
 	} hit;

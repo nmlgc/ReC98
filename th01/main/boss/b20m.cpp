@@ -2603,10 +2603,9 @@ void sariel_main(void)
 				10000,
 				boss_nop,
 				colliding_with_orb,
-				FACE_LEFT,
-				FACE_TOP,
-				FACE_W,
-				(FACE_H / 2)
+				shot_hitbox_t(
+					FACE_LEFT, FACE_TOP, ((FACE_W * 5) / 4), ((FACE_H * 3) / 4)
+				)
 			);
 		}
 	} hit;
