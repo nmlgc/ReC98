@@ -28,9 +28,6 @@ extern "C" {
 #include "th01/main/playfld.hpp"
 #include "th01/main/vars.hpp"
 #include "th01/shiftjis/fns.hpp"
-#undef MISSILE_FN
-#define MISSILE_FN boss3_m_ptn_0
-extern const char MISSILE_FN[];
 #include "th01/main/particle.hpp"
 #include "th01/main/shape.hpp"
 #include "th01/main/player/orb.hpp"
@@ -95,27 +92,18 @@ enum mima_hp_t {
 	PHASE_3_END_HP = 0,
 };
 
-#define meteor_active	mima_meteor_active
-#define spreadin_interval	mima_spreadin_interval
-#define spreadin_speed	mima_spreadin_speed
+// State
+// -----
 
 // Whether meteor_put() has any effect.
-extern bool meteor_active;
+bool meteor_active = true;
 
 // Amount of frames between the individual steps of the spread-in transition
-extern uint8_t spreadin_interval;
+uint8_t spreadin_interval = 4;
 
 // Sprite pixels to spread in per frame, in one half of Mima's sprite
-extern uint8_t spreadin_speed;
-
-// File names
-// ----------
-
-extern const char boss3_1_bos[];
-extern const char boss3_2_bos[];
-extern const char boss3_grp_0[];
-extern const char boss5_gr_grc[];
-// ----------
+uint8_t spreadin_speed = 8;
+// -----
 
 // Entities
 // --------
@@ -134,8 +122,8 @@ enum anim_cel_t {
 #define ent_anim 	boss_entities[1]
 
 inline void mima_ent_load(void) {
-	ent_still.load(boss3_1_bos, 0);
-	ent_anim.load(boss3_2_bos, 1);
+	ent_still.load("boss3_1.bos", 0);
+	ent_anim.load("boss3_2.bos", 1);
 }
 
 inline void mima_ent_free(void) {
@@ -157,8 +145,7 @@ static const int BG_ENT_OFFSET = 3;
 // Patterns
 // --------
 
-#define pattern_state mima_pattern_state
-extern union {
+static union {
 	subpixel_t speed;
 	DecimalSubpixel speed_decimal;
 	int speed_multiplied_by_8;
@@ -172,7 +159,7 @@ void mima_load(void)
 	int comp;
 
 	mima_ent_load();
-	grp_palette_load_show(boss3_grp_0);
+	grp_palette_load_show("boss3.grp");
 	palette_copy(boss_post_defeat_palette, z_Palettes, col, comp);
 	void mima_setup(void);
 	mima_setup();
@@ -503,9 +490,7 @@ struct SquareState {
 
 void pattern_aimed_then_static_pellets_from_square_corners(void)
 {
-	#define sq	pattern0_sq
-
-	extern SquareState sq;
+	static SquareState sq;
 	SquareLocal(sql);
 
 	if(boss_phase_frame < 100) {
@@ -559,21 +544,16 @@ void pattern_aimed_then_static_pellets_from_square_corners(void)
 		square_set_coords_and_unput(sql, sql_corners, sq.radius, sq.angle);
 		boss_phase_frame = 0;
 	}
-
-	#undef sq
 }
 
 void pattern_aimed_missiles_from_square_corners(void)
 {
-	#define sq         	pattern1_sq
-	#define target_left	pattern1_target_left
-
-	extern SquareState sq;
+	static SquareState sq;
 	SquareLocal(sql);
 	int i;
 	Subpixel velocity_x;
 	Subpixel velocity_y;
-	extern screen_x_t target_left;
+	static screen_x_t target_left;
 
 	if(boss_phase_frame < 100) {
 		return;
@@ -618,16 +598,11 @@ void pattern_aimed_missiles_from_square_corners(void)
 		square_set_coords_and_unput(sql, sql_corners, sq.radius, sq.angle);
 		boss_phase_frame = 0;
 	}
-
-	#undef target_left
-	#undef sq
 }
 
 void pattern_static_pellets_from_corners_of_two_squares(void)
 {
-	#define sq	pattern2_sq
-
-	extern SquareState sq;
+	static SquareState sq;
 	SquareLocal2(sql);
 
 	if(boss_phase_frame == 50) {
@@ -690,8 +665,6 @@ void pattern_static_pellets_from_corners_of_two_squares(void)
 		boss_phase_frame = 0;
 		meteor_activate();
 	}
-
-	#undef sq
 }
 
 void pattern_hop_and_fire_chase_pellets(bool16 do_not_initialize = true)
@@ -707,11 +680,8 @@ void pattern_hop_and_fire_chase_pellets(bool16 do_not_initialize = true)
 		KEYFRAME_SPREADIN_DONE = (KEYFRAME_SPREADIN_START + SPREADIN_FRAMES),
 	};
 
-	#define hop      	pattern3_hop
-	#define direction	pattern3_direction
-
-	extern uint8_t hop;
-	extern x_direction_t direction;
+	static uint8_t hop;
+	static x_direction_t direction;
 	int i;
 	int pellet_count;
 	unsigned char angle;
@@ -809,12 +779,9 @@ void pattern_hop_and_fire_chase_pellets(bool16 do_not_initialize = true)
 		hop++;
 		boss_phase_frame = KEYFRAME_HOP;
 	}
-
-	#undef direction
-	#undef hop
 }
 
-extern const dot_rect_t(PILLAR_W, PILLAR_SEGMENT_H) sPILLAR[2];
+#include "th01/sprites/pillar.csp"
 
 inline pixel_t pillar_sprite_row(pixel_t y) {
 	return ((PILLAR_SEGMENT_H - 1) - (y % PILLAR_SEGMENT_H));
@@ -850,8 +817,6 @@ void pillar_put_8(screen_x_t left, vram_y_t bottom, pixel_t h)
 
 void pattern_pillars_and_aimed_spreads(void)
 {
-	#define ent	pattern4_ent
-
 	enum {
 		PILLAR_COUNT = 8,
 		DELAY_PER_CIRCLE = 20,
@@ -880,7 +845,7 @@ void pattern_pillars_and_aimed_spreads(void)
 		TIME_PILLARS_DONE = (TIME_PILLARS - PILLAR_FRAMES),
 	};
 
-	extern struct {
+	static struct {
 		int time[PILLAR_COUNT];
 		screen_x_t center_x[PILLAR_COUNT];
 		screen_y_t bottom[PILLAR_COUNT]; // could have been a constant
@@ -1041,20 +1006,15 @@ void pattern_pillars_and_aimed_spreads(void)
 	}
 
 	#undef is_circle_frame_for
-
-	#undef ent
 }
 
 void pattern_halfcircle_missiles_downwards_from_corners(void)
 {
-	#define sq           	pattern5_sq
-	#define missile_angle	pattern5_missile_angle
-
-	extern SquareState sq;
+	static SquareState sq;
 	SquareLocal(sql);
 	pixel_t velocity_x;
 	pixel_t velocity_y;
-	extern unsigned char missile_angle;
+	static unsigned char missile_angle;
 
 	if(boss_phase_frame < 100) {
 		return;
@@ -1101,9 +1061,6 @@ void pattern_halfcircle_missiles_downwards_from_corners(void)
 		square_set_coords_and_unput(sql, sql_corners, sq.radius, sq.angle);
 		boss_phase_frame = 0;
 	}
-
-	#undef missile_angle
-	#undef sq
 }
 
 void pattern_slow_pellet_spray_from_corners(void)
@@ -1115,12 +1072,9 @@ void pattern_slow_pellet_spray_from_corners(void)
 		KEYFRAME_DONE = 370,
 	};
 
-	#define sq          	pattern6_sq
-	#define pellet_angle	pattern6_pellet_angle
-
-	extern SquareState sq;
+	static SquareState sq;
 	SquareLocal(sql);
-	extern unsigned char pellet_angle;
+	static unsigned char pellet_angle;
 
 	if(boss_phase_frame < KEYFRAME_SQUARE) {
 		return;
@@ -1162,9 +1116,6 @@ void pattern_slow_pellet_spray_from_corners(void)
 		square_set_coords_and_unput(sql, sql_corners, sq.radius, sq.angle);
 		boss_phase_frame = 0;
 	}
-
-	#undef pellet_angle
-	#undef sq
 }
 
 void pattern_aimed_lasers_from_corners(void)
@@ -1173,17 +1124,14 @@ void pattern_aimed_lasers_from_corners(void)
 		LASER_W = 4,
 	};
 
-	#define sq           	pattern7_sq
-	#define sq_corners_x	pattern7_sq_corners_x
-	#define sq_corners_y	pattern7_sq_corners_y
-
-	extern SquareState sq;
+	static SquareState sq;
+	static int16_t unused; (unused); // MODDERS: Remove this line
 
 	// Could have been local just like in the other patterns, but eh, 16 bytes
 	// for the convenience of being easily able to fire lasers independent of
 	// square updates is still fine...
-	extern screen_x_t sq_corners_x[SQUARE_POINTS];
-	extern screen_y_t sq_corners_y[SQUARE_POINTS];
+	static screen_x_t sq_corners_x[SQUARE_POINTS];
+	static screen_y_t sq_corners_y[SQUARE_POINTS];
 
 	screen_x_t sql_center_x;
 	screen_y_t sql_center_y;
@@ -1229,33 +1177,23 @@ void pattern_aimed_lasers_from_corners(void)
 		square_set_coords_and_unput(sql, sq_corners, sq.radius, sq.angle);
 		boss_phase_frame = 0;
 	}
-
-	#undef sq_corners_y
-	#undef sq_corners_x
-	#undef sq
 }
 
 void mima_main(void)
 {
-	#define hit                	mima_hit
-	#define phase              	mima_phase
-	#define initial_hp_rendered	mima_initial_hp_rendered
-
-	struct hack { unsigned char col[2]; }; // XXX
-	extern const struct hack mima_invincibility_flash_colors;
-	struct hack flash_colors = mima_invincibility_flash_colors;
+	const unsigned char flash_colors[2] = { 3, 9 };
 	int i;
 
-	extern struct {
+	static struct {
 		int invincibility_frame;
 		bool16 invincible;
 
-		void update_and_render(const struct hack &flash_colors) {
+		void update_and_render(const unsigned char (&flash_colors)[2]) {
 			boss_hit_update_and_render(
 				invincibility_frame,
 				invincible,
 				boss_hp,
-				flash_colors.col,
+				flash_colors,
 				sizeof(flash_colors),
 				5000,
 				boss_nop,
@@ -1269,7 +1207,7 @@ void mima_main(void)
 			);
 		}
 	} hit;
-	extern struct {
+	static struct {
 		int pattern_cur;
 
 		void frame_common(void) const {
@@ -1288,7 +1226,7 @@ void mima_main(void)
 			pattern_cur = 0;
 		}
 	} phase;
-	extern bool initial_hp_rendered;
+	static bool initial_hp_rendered;
 
 	Missiles.unput_update_render();
 	particles_unput_update_render(PO_TOP_RIGHT, V_WHITE);
@@ -1407,8 +1345,4 @@ void mima_main(void)
 			scene_init_and_load(4);
 		}
 	}
-
-	#undef initial_hp_rendered
-	#undef phase
-	#undef hit
 }

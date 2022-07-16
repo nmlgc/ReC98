@@ -9238,19 +9238,6 @@ _boss2_bos  	db 'boss2.bos',0
 _boss3_m_ptn	db 'boss3_m.ptn',0
 _boss2_grp  	db 'boss2.grp',0
 flt_35B76	dd 2.0
-public _mima_meteor_active
-_mima_meteor_active	db 1
-public _mima_spreadin_interval, _mima_spreadin_speed
-_mima_spreadin_interval	db 4
-_mima_spreadin_speed   	db 8
-include th01/sprites/pillar.asp
-public _mima_invincibility_flash_colors
-_mima_invincibility_flash_colors	db 3, 9
-public _boss3_1_bos, _boss3_2_bos, _boss3_grp_0, _boss3_m_ptn_0
-_boss3_1_bos	db 'boss3_1.bos',0
-_boss3_2_bos	db 'boss3_2.bos',0
-_boss3_grp_0	db 'boss3.grp',0
-_boss3_m_ptn_0	db 'boss3_m.ptn',0
 
 	extern _card_flip_cycle:byte
 	extern _default_grp_fn:byte
@@ -9431,56 +9418,6 @@ _yuugenmagan_initial_hp_rendered	db ?
 
 angle_39E16	db ?
 angle_39E17	db ?
-
-public _mima_pattern_state
-_mima_pattern_state	dw ?
-
-SquareState struc
-	S_angle 	db ?
-	S_radius	dw ?
-SquareState ends
-
-public _pattern0_sq
-_pattern0_sq	SquareState <?>
-
-public _pattern1_sq, _pattern1_target_left
-_pattern1_sq         	SquareState <?>
-_pattern1_target_left	dw ?
-
-public _pattern2_sq
-_pattern2_sq	SquareState <?>
-
-public _pattern3_hop, _pattern3_direction
-_pattern3_hop      	db ?
-_pattern3_direction	db ?
-
-PILLAR_COUNT = 8
-public _pattern4_ent
-_pattern4_ent label
-	dw PILLAR_COUNT dup(?)	; time
-	dw PILLAR_COUNT dup(?)	; center_x
-	dw PILLAR_COUNT dup(?)	; bottom
-
-public _pattern5_sq, _pattern5_missile_angle
-_pattern5_sq           	SquareState <?>
-_pattern5_missile_angle	db ?
-
-public _pattern6_sq, _pattern6_pellet_angle
-_pattern6_sq          	SquareState <?>
-_pattern6_pellet_angle	db ?
-
-public _pattern7_sq, _pattern7_sq_corners_x, _pattern7_sq_corners_y
-_pattern7_sq          	SquareState <?>
-		dw ?
-_pattern7_sq_corners_x	dw 4 dup (?)
-_pattern7_sq_corners_y	dw 4 dup (?)
-
-public _mima_hit, _mima_phase, _mima_initial_hp_rendered
-_mima_hit label
-	dw ?	; invincibility_frame
-	dw ?	; invincible
-_mima_phase	dw ?
-_mima_initial_hp_rendered	db ?
 
 CCards struc
 	C_left       	dd ?
