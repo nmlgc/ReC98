@@ -1,4 +1,9 @@
+extern "C" {
+#include "th01/hardware/palette.h"
+}
 #include "th01/main/player/bomb.hpp"
+#include "th01/main/player/orb.hpp"
+#include "th01/main/player/shot.hpp"
 
 #define z_palette_flash_colors(colors, colors_count, i) \
 	for(i = 0; colors_count > i; i++) { \
@@ -34,28 +39,10 @@ void boss_hit_update_and_render(
 		shot_hitbox_left, shot_hitbox_top, shot_hitbox_w, shot_hitbox_h
 	);
 
-	/* TODO: Replace with the decompiled expression
-	 * 	if(
-	 * 		((colliding_with_orb == true) && (is_invincible == false)) ||
-	  *		(bomb_deals_damage(frame_rand) == true)
-	 * 	)
-	 * once that function is part of this translation unit */
-	if((colliding_with_orb == true) && (is_invincible == false)) {
-		goto got_hit;
-	}
-	_asm {
-		db  	0x66, 0xFF, 0x36;	// PUSH LARGE [m32]
-		dw  	offset frame_rand;
-		nop;
-		push	cs;
-		call	near ptr bomb_deals_damage;
-		add 	sp, 4;
-	}
-	if(_AX != 1) {
-		goto still_invincible;
-	}
-got_hit:
-	{
+	if(
+		((colliding_with_orb == true) && (is_invincible == false)) ||
+		(bomb_deals_damage(frame_rand) == true)
+	) {
 		invincibility_frame = 0;
 		z_palette_flash_colors(
 			invincibility_flash_colors, invincibility_flash_colors_count, i
@@ -85,7 +72,6 @@ got_hit:
 		hud_hp_decrement(hp);
 	}
 
-still_invincible:
 	if(
 		(is_invincible == true) &&
 		(invincibility_frame < BOSS_HIT_INVINCIBILITY_FRAMES)

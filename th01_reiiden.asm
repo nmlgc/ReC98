@@ -64,7 +64,6 @@ main_15 group main_15_TEXT, main_15__TEXT
 main_19 group main_19_TEXT, main_19__TEXT
 main_21 group main_21_TEXT, main_21__TEXT
 main_28 group main_28_TEXT, main_28__TEXT
-main_32 group main_32_TEXT, main_32__TEXT
 
 ; ===========================================================================
 
@@ -8790,13 +8789,10 @@ main_32_TEXT	segment	byte public 'CODE' use16
 	extern @BOSS_NOP$QV:proc
 	extern @hud_hp_render$qii:proc
 	extern @boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii:proc
-main_32_TEXT	ends
-
-main_32__TEXT	segment	byte public 'CODE' use16
 	extern @CMissiles@add$qiiddc:proc
 	extern @CMissiles@reset$qv:proc
 	extern @CMissiles@unput_update_render$qv:proc
-main_32__TEXT	ends
+main_32_TEXT	ends
 
 ; ===========================================================================
 

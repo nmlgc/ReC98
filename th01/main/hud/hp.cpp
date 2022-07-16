@@ -1,3 +1,4 @@
+#include "th01/v_colors.hpp"
 #include "th01/main/hud/hp.hpp"
 
 /// Constants

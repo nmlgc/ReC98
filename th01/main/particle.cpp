@@ -1,5 +1,3 @@
-#include "x86real.h"
-#include "th01/math/overlap.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/main/particle.hpp"
 
@@ -169,5 +167,7 @@ void particles_unput_update_render(particle_origin_t origin, int col)
 		}
 		grcg_pset(x[i].to_pixel(), y[i].to_pixel());
 	}
-	grcg_off();
+	// Same as grcg_off(), but the I/O is inlined here, and grcg_off() points
+	// to grcg_off_func() thanks to the prior inclusion of graph.h...
+	grcg_setmode(0);
 }
