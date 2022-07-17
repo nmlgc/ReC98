@@ -361,11 +361,23 @@ void konngara_load_and_entrance(int8_t)
 
 	// graph_accesspage_func(0);
 	grp_put_palette_show(SCROLL_BG_FN);
+
+	// ZUN bug: On its own, this call at this position in the code would just
+	// be redundant as the stage palette is never used here. After all, you
+	// can't enter the Pause menu or bomb during a blocking animation function.
+	// However, it's also the only call to stage_palette_set() in all of
+	// Konngara's code, and ends up setting a palette that doesn't exactly
+	// match the one used for the rest of the fight. Most notably, this is why
+	// entering the Pause menu or bombing changes color #10 from red to green,
+	// which is only corrected by boss_hit_update_and_render()'s periodic reset
+	// of the hardware palette to the [boss_palette].
 	stage_palette_set(z_Palettes);
+
 	stageobjs_init_and_render(BOSS_STAGE);
 
 	graph_accesspage_func(1);
 	grp_put_palette_show("boss8_a1.grp");
+	// The stage_palette_set() call should have been here.
 
 	graph_accesspage_func(0);
 	mdrv2_bgm_load("ALICE.MDT");

@@ -15,7 +15,7 @@ static const int BOSS_HIT_INVINCIBILITY_FRAMES = 40;
 // Processes collisions between the Orb and a boss, and the resulting
 // invincibility of the latter… yeah, that's about the best summary for this
 // function that does way too many things on the one hand, yet still leaves the
-// caller to do way too much itself on the other:
+// caller to do way too much itself:
 //
 // • If a player shot hitbox is given, it also handles collisions between
 //   player shots, regardless of invincibility. At the right and bottom edges,
