@@ -84,7 +84,17 @@ void boss_hit_update_and_render(
 			boss_palette_show();
 		}
 	} else if(invincibility_frame > BOSS_HIT_INVINCIBILITY_FRAMES) {
+		// ZUN bug: This is done even if [is_invincible] is false. Since all
+		// callers of this function increment [invincibility_frame] on every
+		// frame, this palette reset ends up happening periodically, completely
+		// unrelated to the boss getting hit and defying common sense. At best,
+		// this call acts as a safety net against wild mutation of the hardware
+		// palette during boss fights, but you're way more likely to perceive
+		// *this* as a wild unexpected palette change from out of nowhere.
+		//
+		// (For an example, see Mima's pattern_hop_and_fire_chase_pellets().)
 		boss_palette_show();
+
 		invincibility_frame = 0;
 		is_invincible = false;
 	}

@@ -1,4 +1,6 @@
-// The intended palette for a boss, with no effects applied.
+// The intended palette for a boss, with no effects applied. Used as the
+// reference palette for undoing color flashing in boss_hit_update_and_render().
+// MODDERS: Merge with the [stage_palette].
 extern Palette4 boss_palette;
 
 #define boss_palette_snap_inlined() { \

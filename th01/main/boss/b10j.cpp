@@ -768,6 +768,14 @@ void pattern_hop_and_fire_chase_pellets(bool16 do_not_initialize = true)
 		meteor_active = true;
 		boss_phase_frame = 0;
 	} else {
+		// Subtract #444 from every palette color for every new hop. Therefore,
+		// you would expect the screen to gradually darken with every
+		// successive hop, eventually reaching #000 by the last one… which is
+		// not what you see in-game, thanks to boss_hit_update_and_render()
+		// periodically resetting [z_Palettes] to the [boss_palette]. Hard to
+		// say what ZUN actually intended here – 30 frames of being completely
+		// blind to 3 groups of chase pellets isn't all *too* bad, even on
+		// Lunatic. (Then again, at maximum pellet speed...)
 		for(i = 0; i < COLOR_COUNT; i++) {
 			z_palette_set_show(
 				i,
