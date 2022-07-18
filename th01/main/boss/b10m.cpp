@@ -114,6 +114,10 @@ inline void yuugenmagan_ent_load(void) {
 	eye_southeast.metadata_assign(eye_west);
 	eye_north.metadata_assign(eye_west);
 }
+
+inline void yuugenmagan_ent_free(void) {
+	bos_entity_free(0);
+}
 // --------
 
 // .PTN
@@ -180,4 +184,10 @@ void unused_formula(int a, int b, int& ret)
 {
 	double delta = (b - a);
 	ret = ((delta * isqrt(3)) / 2.0f);
+}
+
+void yuugenmagan_free(void)
+{
+	yuugenmagan_ent_free();
+	ptn_free(PTN_SLOT_MISSILE);
 }

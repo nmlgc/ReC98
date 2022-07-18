@@ -1418,7 +1418,7 @@ loc_D4F3:
 ; ---------------------------------------------------------------------------
 
 loc_D4FA:
-		call	_yuugenmagan_free
+		call	@yuugenmagan_free$qv
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -4475,6 +4475,7 @@ main_27_TEXT	ends
 
 main_28_TEXT	segment	byte public 'CODE' use16
 	extern @yuugenmagan_load$qv:proc
+	extern @yuugenmagan_free$qv:proc
 main_28_TEXT	ends
 
 ; Segment type:	Pure code
@@ -4501,23 +4502,6 @@ eye_east	equ <_boss_entity_1>
 eye_southwest	equ <_boss_entity_2>
 eye_southeast	equ <_boss_entity_3>
 eye_north	equ <_boss_entity_4>
-
-PTN_SLOT_MISSILE = PTN_SLOT_BOSS_1
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public _yuugenmagan_free
-_yuugenmagan_free	proc far
-		push	bp
-		mov	bp, sp
-		call	@bos_entity_free$qi stdcall, 0
-		call	@ptn_free$q15main_ptn_slot_t stdcall, PTN_SLOT_MISSILE
-		add	sp, 4
-		pop	bp
-		retf
-_yuugenmagan_free	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
