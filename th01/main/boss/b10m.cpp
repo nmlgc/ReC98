@@ -5,6 +5,7 @@
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
+#include "master.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/math/area.hpp"
 #include "th01/math/subpixel.hpp"
@@ -173,4 +174,10 @@ void yuugenmagan_setup(void)
 
 	// (redundant, no particles are shown in this fight)
 	particles_unput_update_render(PO_INITIALIZE, V_WHITE);
+}
+
+void unused_formula(int a, int b, int& ret)
+{
+	double delta = (b - a);
+	ret = ((delta * isqrt(3)) / 2.0f);
 }

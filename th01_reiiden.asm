@@ -4507,39 +4507,6 @@ PTN_SLOT_MISSILE = PTN_SLOT_BOSS_1
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_1B53D	proc far
-
-var_A		= word ptr -0Ah
-var_8		= qword	ptr -8
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= dword	ptr  0Ah
-
-		enter	0Ah, 0
-		mov	ax, [bp+arg_2]
-		sub	ax, [bp+arg_0]
-		mov	[bp+var_A], ax
-		fild	[bp+var_A]
-		fstp	[bp+var_8]
-		pushd	3
-		fwait
-		call	isqrt
-		mov	[bp+var_A], ax
-		fild	[bp+var_A]
-		fmul	[bp+var_8]
-		fdiv	flt_35B76
-		call	ftol@
-		les	bx, [bp+arg_4]
-		mov	es:[bx], ax
-		leave
-		retf
-sub_1B53D	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
 public _yuugenmagan_free
 _yuugenmagan_free	proc far
 		push	bp
@@ -9136,7 +9103,6 @@ public _boss2_bos, _boss3_m_ptn, _boss2_grp
 _boss2_bos  	db 'boss2.bos',0
 _boss3_m_ptn	db 'boss3_m.ptn',0
 _boss2_grp  	db 'boss2.grp',0
-flt_35B76	dd 2.0
 
 	extern _card_flip_cycle:byte
 	extern _default_grp_fn:byte
