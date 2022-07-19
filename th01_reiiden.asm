@@ -2748,8 +2748,6 @@ graph_TEXT	segment	byte public 'CODE' use16
 	extern _graph_copy_accessed_page_to_othe:proc
 	extern _graph_r_vline:proc
 	extern _graph_r_line_unput:proc
-	extern _graph_r_line_patterned:proc
-	extern _graph_r_line:proc
 	extern _text_extent_fx:proc
 	extern _graph_putsa_fx:proc
 graph_TEXT	ends
@@ -2779,114 +2777,11 @@ main_09_TEXT	ends
 
 ; ===========================================================================
 
-; Segment type:	Pure code
-main_10_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_10_TEXT
-		;org 0Ah
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_114CA	proc far
-
-@@left		= word ptr  6
-@@top		= word ptr  8
-@@right		= word ptr  0Ah
-@@bottom		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		call	_graph_r_line_unput c, [bp+@@left], [bp+@@top], [bp+@@right], [bp+@@bottom]
-		pop	bp
-		retf
-sub_114CA	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_114E3	proc far
-
-@@left		= word ptr  6
-@@top		= word ptr  8
-@@right		= word ptr  0Ah
-@@bottom		= word ptr  0Ch
-@@col		= word ptr  0Eh
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+@@right]
-		mov	di, [bp+@@bottom]
-		call	_graph_r_line c, [bp+@@left], [bp+@@top], si, di, [bp+@@col]
-		cmp	si, _player_left
-		jle	short loc_11523
-		mov	ax, _player_left
-		add	ax, 32
-		cmp	ax, si
-		jle	short loc_11523
-		cmp	di, 384
-		jle	short loc_11523
-		cmp	_player_invincible, 0
-		jnz	short loc_11523
-		mov	_done, 1
-
-loc_11523:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_114E3	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_11527	proc far
-
-@@left		= word ptr  6
-@@top		= word ptr  8
-@@right		= word ptr  0Ah
-@@bottom		= word ptr  0Ch
-@@col		= word ptr  0Eh
-@@pattern		= word ptr  10h
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+@@right]
-		mov	di, [bp+@@bottom]
-		call	_graph_r_line_patterned c, [bp+@@left], [bp+@@top], si, di, [bp+@@col], [bp+@@pattern]
-		cmp	si, _player_left
-		jle	short loc_1156A
-		mov	ax, _player_left
-		add	ax, 32
-		cmp	ax, si
-		jle	short loc_1156A
-		cmp	di, 384
-		jle	short loc_1156A
-
-loc_1155E:
-		cmp	_player_invincible, 0
-
-loc_11563:
-		jnz	short loc_1156A
-		mov	_done, 1
-
-loc_1156A:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_11527	endp
-
-main_10_TEXT	ends
+BULLET_L_TEXT	segment	byte public 'CODE' use16
+	extern @linebullet_unput$qiiii:proc
+	extern @linebullet_put_and_hittest$qiiiii:proc
+	extern @linebullet_put_patterned_and_hit$qiiiiiui:proc
+BULLET_L_TEXT	ends
 
 ; ===========================================================================
 
@@ -5026,11 +4921,11 @@ arg_0		= word ptr  4
 		push	si
 		push	di
 		mov	di, [bp+arg_0]
-		call	sub_114CA stdcall, x_39DE6, y_39DF0, x_39DEA, y_39DF4
-		call	sub_114CA stdcall, x_39DEA, y_39DF4, x_39DEE, y_39DF8
-		call	sub_114CA stdcall, x_39DEE, y_39DF8, x_39DE8, y_39DF2
-		call	sub_114CA stdcall, x_39DE8, y_39DF2, x_39DEC, y_39DF6
-		call	sub_114CA stdcall, x_39DEC, y_39DF6, x_39DE6, y_39DF0
+		call	@linebullet_unput$qiiii stdcall, x_39DE6, y_39DF0, x_39DEA, y_39DF4
+		call	@linebullet_unput$qiiii stdcall, x_39DEA, y_39DF4, x_39DEE, y_39DF8
+		call	@linebullet_unput$qiiii stdcall, x_39DEE, y_39DF8, x_39DE8, y_39DF2
+		call	@linebullet_unput$qiiii stdcall, x_39DE8, y_39DF2, x_39DEC, y_39DF6
+		call	@linebullet_unput$qiiii stdcall, x_39DEC, y_39DF6, x_39DE6, y_39DF0
 		add	sp, 28h
 		xor	si, si
 		jmp	short loc_1B9B1
@@ -5068,11 +4963,11 @@ loc_1B956:
 loc_1B9B1:
 		cmp	si, 5
 		jl	short loc_1B956
-		call	sub_114E3 stdcall, x_39DE6, y_39DF0, x_39DEA, y_39DF4, 7
-		call	sub_114E3 stdcall, x_39DEA, y_39DF4, x_39DEE, y_39DF8, 7
-		call	sub_114E3 stdcall, x_39DEE, y_39DF8, x_39DE8, y_39DF2, 7
-		call	sub_114E3 stdcall, x_39DE8, y_39DF2, x_39DEC, y_39DF6, 7
-		call	sub_114E3 stdcall, x_39DEC, y_39DF6, x_39DE6, y_39DF0, 7
+		call	@linebullet_put_and_hittest$qiiiii stdcall, x_39DE6, y_39DF0, x_39DEA, y_39DF4, 7
+		call	@linebullet_put_and_hittest$qiiiii stdcall, x_39DEA, y_39DF4, x_39DEE, y_39DF8, 7
+		call	@linebullet_put_and_hittest$qiiiii stdcall, x_39DEE, y_39DF8, x_39DE8, y_39DF2, 7
+		call	@linebullet_put_and_hittest$qiiiii stdcall, x_39DE8, y_39DF2, x_39DEC, y_39DF6, 7
+		call	@linebullet_put_and_hittest$qiiiii stdcall, x_39DEC, y_39DF6, x_39DE6, y_39DF0, 7
 		add	sp, 32h
 		pop	di
 		pop	si
@@ -6727,8 +6622,8 @@ loc_1CBE8:
 		mov	ax, eye_north.BE_cur_left
 		add	ax, 28
 		mov	[bp+var_E], ax
-		call	sub_114CA stdcall, ax, [bp+var_C], [bp+var_A], RES_Y
-		call	sub_11527 stdcall, [bp+var_8], [bp+var_6], [bp+var_4], RES_Y, large (224 shl 16) or 7
+		call	@linebullet_unput$qiiii stdcall, ax, [bp+var_C], [bp+var_A], RES_Y
+		call	@linebullet_put_patterned_and_hit$qiiiiiui stdcall, [bp+var_8], [bp+var_6], [bp+var_4], RES_Y, large (224 shl 16) or 7
 		add	sp, 14h
 		cmp	x_39E06, 592
 		jl	loc_1CF52
@@ -6740,7 +6635,7 @@ loc_1CBE8:
 		mov	ax, eye_north.BE_cur_left
 		add	ax, 28
 		push	ax
-		call	sub_114CA
+		call	@linebullet_unput$qiiii
 		add	sp, 8
 		mov	word_39E08, 2
 		mov	_boss_phase_frame, 0
@@ -6812,8 +6707,8 @@ loc_1CCF1:
 		mov	ax, eye_north.BE_cur_left
 		add	ax, 28
 		mov	[bp+@@left], ax
-		call	sub_114CA stdcall, ax, [bp+var_18], [bp+var_16], RES_Y
-		call	sub_11527 stdcall, [bp+var_14], [bp+var_12], [bp+var_10], RES_Y, large (224 shl 16) or 7
+		call	@linebullet_unput$qiiii stdcall, ax, [bp+var_18], [bp+var_16], RES_Y
+		call	@linebullet_put_patterned_and_hit$qiiiiiui stdcall, [bp+var_14], [bp+var_12], [bp+var_10], RES_Y, large (224 shl 16) or 7
 		add	sp, 14h
 		cmp	x_39E06, 592
 		jl	loc_1CF52
@@ -6827,7 +6722,7 @@ loc_1CCF1:
 		mov	ax, eye_north.BE_cur_left
 		add	ax, 28
 		push	ax
-		call	sub_114CA
+		call	@linebullet_unput$qiiii
 		add	sp, 8
 		mov	word_39E08, 4
 		mov	_boss_phase_frame, 0
@@ -6884,8 +6779,8 @@ loc_1CDD6:
 		mov	ax, eye_north.BE_cur_left
 		add	ax, 28
 		mov	[bp+var_26], ax
-		call	sub_114CA stdcall, ax, [bp+var_24], [bp+var_22], RES_Y
-		call	sub_11527 stdcall, [bp+var_20], [bp+var_1E], [bp+var_1C], RES_Y, large (224 shl 16) or 7
+		call	@linebullet_unput$qiiii stdcall, ax, [bp+var_24], [bp+var_22], RES_Y
+		call	@linebullet_put_patterned_and_hit$qiiiiiui stdcall, [bp+var_20], [bp+var_1E], [bp+var_1C], RES_Y, large (224 shl 16) or 7
 		mov	ax, RES_X
 		sub	ax, x_39E06
 		mov	[bp+var_28], ax
@@ -6905,8 +6800,8 @@ loc_1CDD6:
 		mov	ax, eye_north.BE_cur_left
 		add	ax, 28
 		mov	[bp+var_32], ax
-		call	sub_114CA stdcall, ax, [bp+var_30], [bp+var_2E], RES_Y
-		call	sub_11527 stdcall, [bp+var_2C], [bp+var_2A], [bp+var_28], RES_Y, (224 shl 16) or 7
+		call	@linebullet_unput$qiiii stdcall, ax, [bp+var_30], [bp+var_2E], RES_Y
+		call	@linebullet_put_patterned_and_hit$qiiiiiui stdcall, [bp+var_2C], [bp+var_2A], [bp+var_28], RES_Y, (224 shl 16) or 7
 		add	sp, 28h
 		cmp	x_39E06, 288
 		jl	loc_1CF52
@@ -6918,7 +6813,7 @@ loc_1CDD6:
 		mov	ax, eye_north.BE_cur_left
 		add	ax, 28
 		push	ax
-		call	sub_114CA
+		call	@linebullet_unput$qiiii
 		push	RES_Y
 		mov	ax, RES_X
 		sub	ax, x_39E06
@@ -6929,7 +6824,7 @@ loc_1CDD6:
 		mov	ax, eye_north.BE_cur_left
 		add	ax, 28
 		push	ax
-		call	sub_114CA
+		call	@linebullet_unput$qiiii
 		add	sp, 10h
 		mov	word_39E08, 6
 		mov	_boss_phase_frame, 0
@@ -7237,7 +7132,7 @@ loc_1D230:
 		mov	ax, eye_north.BE_cur_left
 		add	ax, 28
 		push	ax
-		call	sub_114E3
+		call	@linebullet_put_and_hittest$qiiiii
 		push	7
 		mov	ax, eye_east.BE_cur_top
 		add	ax, 28
@@ -7251,7 +7146,7 @@ loc_1D230:
 		mov	ax, eye_southwest.BE_cur_left
 		add	ax, 28
 		push	ax
-		call	sub_114E3
+		call	@linebullet_put_and_hittest$qiiiii
 		push	7
 		mov	ax, eye_west.BE_cur_top
 		add	ax, 28
@@ -7265,7 +7160,7 @@ loc_1D230:
 		mov	ax, eye_east.BE_cur_left
 		add	ax, 28
 		push	ax
-		call	sub_114E3
+		call	@linebullet_put_and_hittest$qiiiii
 		push	7
 		mov	ax, eye_southeast.BE_cur_top
 		add	ax, 28
@@ -7279,7 +7174,7 @@ loc_1D230:
 		mov	ax, eye_west.BE_cur_left
 		add	ax, 28
 		push	ax
-		call	sub_114E3
+		call	@linebullet_put_and_hittest$qiiiii
 		push	7
 		mov	ax, eye_north.BE_cur_top
 		add	ax, 28
@@ -7293,7 +7188,7 @@ loc_1D230:
 		mov	ax, eye_southeast.BE_cur_left
 		add	ax, 28
 		push	ax
-		call	sub_114E3
+		call	@linebullet_put_and_hittest$qiiiii
 		add	sp, 32h
 		cmp	_boss_phase_frame, 140
 		jnz	short loc_1D2F6
@@ -7333,7 +7228,7 @@ loc_1D2F6:
 		mov	ax, eye_north.BE_cur_left
 		add	ax, 28
 		push	ax
-		call	sub_114CA
+		call	@linebullet_unput$qiiii
 		mov	ax, x_39E06
 		mov	bx, 3
 		cwd
@@ -7358,7 +7253,7 @@ loc_1D2F6:
 		add	ax, eye_southwest.BE_cur_left
 		add	ax, 28
 		push	ax
-		call	sub_114CA
+		call	@linebullet_unput$qiiii
 		mov	ax, x_39E06
 		mov	bx, 3
 		cwd
@@ -7380,7 +7275,7 @@ loc_1D2F6:
 		add	ax, 28
 		sub	ax, x_39E06
 		push	ax
-		call	sub_114CA
+		call	@linebullet_unput$qiiii
 		mov	ax, x_39E06
 		cwd
 		sub	ax, dx
@@ -7406,7 +7301,7 @@ loc_1D2F6:
 		add	ax, x_39E06
 		add	ax, 28
 		push	ax
-		call	sub_114CA
+		call	@linebullet_unput$qiiii
 		mov	ax, x_39E06
 		cwd
 		sub	ax, dx
@@ -7432,7 +7327,7 @@ loc_1D2F6:
 		add	dx, 28
 		sub	dx, ax
 		push	dx
-		call	sub_114CA
+		call	@linebullet_unput$qiiii
 		add	x_39E06, 8
 		push	7
 		mov	ax, x_39E06
@@ -7459,7 +7354,7 @@ loc_1D2F6:
 		mov	ax, eye_north.BE_cur_left
 		add	ax, 28
 		push	ax
-		call	sub_114E3
+		call	@linebullet_put_and_hittest$qiiiii
 		add	sp, 32h
 		push	7
 		mov	ax, x_39E06
@@ -7486,7 +7381,7 @@ loc_1D2F6:
 		add	ax, eye_southwest.BE_cur_left
 		add	ax, 28
 		push	ax
-		call	sub_114E3
+		call	@linebullet_put_and_hittest$qiiiii
 		push	7
 		mov	ax, x_39E06
 		mov	bx, 3
@@ -7509,7 +7404,7 @@ loc_1D2F6:
 		add	ax, 28
 		sub	ax, x_39E06
 		push	ax
-		call	sub_114E3
+		call	@linebullet_put_and_hittest$qiiiii
 		push	7
 		mov	ax, x_39E06
 		cwd
@@ -7536,7 +7431,7 @@ loc_1D2F6:
 		add	ax, x_39E06
 		add	ax, 28
 		push	ax
-		call	sub_114E3
+		call	@linebullet_put_and_hittest$qiiiii
 		push	7
 		mov	ax, x_39E06
 		cwd
@@ -7563,7 +7458,7 @@ loc_1D2F6:
 		add	dx, 28
 		sub	dx, ax
 		push	dx
-		call	sub_114E3
+		call	@linebullet_put_and_hittest$qiiiii
 		add	sp, 28h
 		cmp	x_39E06, 160
 		jle	loc_1D63F
@@ -8231,11 +8126,11 @@ loc_1DCD0:
 		mov	word_39E10, 7
 		mov	_yuugenmagan_invincibility_frame, 0
 		mov	x_39E06, 0
-		call	sub_114CA stdcall, x_39DE6, y_39DF0, x_39DEA, y_39DF4
-		call	sub_114CA stdcall, x_39DEA, y_39DF4, x_39DEE, y_39DF8
-		call	sub_114CA stdcall, x_39DEE, y_39DF8, x_39DE8, y_39DF2
-		call	sub_114CA stdcall, x_39DE8, y_39DF2, x_39DEC, y_39DF6
-		call	sub_114CA stdcall, x_39DEC, y_39DF6, x_39DE6, y_39DF0
+		call	@linebullet_unput$qiiii stdcall, x_39DE6, y_39DF0, x_39DEA, y_39DF4
+		call	@linebullet_unput$qiiii stdcall, x_39DEA, y_39DF4, x_39DEE, y_39DF8
+		call	@linebullet_unput$qiiii stdcall, x_39DEE, y_39DF8, x_39DE8, y_39DF2
+		call	@linebullet_unput$qiiii stdcall, x_39DE8, y_39DF2, x_39DEC, y_39DF6
+		call	@linebullet_unput$qiiii stdcall, x_39DEC, y_39DF6, x_39DE6, y_39DF0
 		add	sp, 28h
 		jmp	short loc_1DDD4
 ; ---------------------------------------------------------------------------
@@ -8305,11 +8200,11 @@ loc_1DE37:
 		mov	byte_39E14, 3
 		mov	_yuugenmagan_invincibility_frame, 0
 		mov	x_39E06, 0
-		call	sub_114CA stdcall, x_39DE6, y_39DF0, x_39DEA, y_39DF4
-		call	sub_114CA stdcall, x_39DEA, y_39DF4, x_39DEE, y_39DF8
-		call	sub_114CA stdcall, x_39DEE, y_39DF8, x_39DE8, y_39DF2
-		call	sub_114CA stdcall, x_39DE8, y_39DF2, x_39DEC, y_39DF6
-		call	sub_114CA stdcall, x_39DEC, y_39DF6, x_39DE6, y_39DF0
+		call	@linebullet_unput$qiiii stdcall, x_39DE6, y_39DF0, x_39DEA, y_39DF4
+		call	@linebullet_unput$qiiii stdcall, x_39DEA, y_39DF4, x_39DEE, y_39DF8
+		call	@linebullet_unput$qiiii stdcall, x_39DEE, y_39DF8, x_39DE8, y_39DF2
+		call	@linebullet_unput$qiiii stdcall, x_39DE8, y_39DF2, x_39DEC, y_39DF6
+		call	@linebullet_unput$qiiii stdcall, x_39DEC, y_39DF6, x_39DE6, y_39DF0
 		add	sp, 28h
 
 loc_1DED5:
