@@ -8,7 +8,12 @@
 #include "master.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/math/area.hpp"
+#include "th01/math/overlap.hpp"
 #include "th01/math/subpixel.hpp"
+extern "C" {
+#include "th01/hardware/graph.h"
+}
+#include "th01/hardware/input.hpp"
 #include "th01/hardware/palette.h"
 #include "th01/shiftjis/fns.hpp"
 #undef MISSILE_FN
@@ -26,6 +31,7 @@ extern const char MISSILE_FN[];
 #include "th01/main/boss/palette.hpp"
 #include "th01/main/bullet/missile.hpp"
 #include "th01/main/hud/hp.hpp"
+#include "th01/main/player/player.hpp"
 
 // Coordinates
 // -----------
@@ -95,16 +101,36 @@ enum eye_cel_t {
 	C_AHEAD = 6,
 };
 
-#define eye_west \
-	reinterpret_cast<CBossEntitySized<EYE_W, EYE_H> &>(boss_entity_0)
-#define eye_east \
-	reinterpret_cast<CBossEntitySized<EYE_W, EYE_H> &>(boss_entity_1)
-#define eye_southwest \
-	reinterpret_cast<CBossEntitySized<EYE_W, EYE_H> &>(boss_entity_2)
-#define eye_southeast \
-	reinterpret_cast<CBossEntitySized<EYE_W, EYE_H> &>(boss_entity_3)
-#define eye_north \
-	reinterpret_cast<CBossEntitySized<EYE_W, EYE_H> &>(boss_entity_4)
+struct CEyeEntity : public CBossEntitySized<EYE_W, EYE_H> {
+	// Relative pupil and iris coordinates
+	// -----------------------------------
+	// These only apply to the player-facing cels (C_DOWN, C_LEFT, and C_RIGHT).
+
+	// ZUN quirk: Doesn't really correspond to any precise feature of any eye
+	// cel. The best match is the center of the iris on C_DOWN, but even that
+	// would be off by 1 pixel – not to mention very wrong for every other cel.
+	screen_x_t offcenter_x(void) const {
+		return (cur_center_x() - 4);
+	}
+
+	// Correct for C_LEFT and C_RIGHT, off by 1 pixel for C_DOWN.
+	screen_y_t iris_top(void) const {
+		return (cur_center_y() + 4);
+	}
+	// -----------------------------------
+
+	void downwards_laser_put(void) const {
+		graph_r_vline(
+			offcenter_x(), iris_top(), (PLAYFIELD_BOTTOM - 2), V_WHITE
+		);
+	}
+};
+
+#define eye_west     	reinterpret_cast<CEyeEntity &>(boss_entity_0)
+#define eye_east     	reinterpret_cast<CEyeEntity &>(boss_entity_1)
+#define eye_southwest	reinterpret_cast<CEyeEntity &>(boss_entity_2)
+#define eye_southeast	reinterpret_cast<CEyeEntity &>(boss_entity_3)
+#define eye_north    	reinterpret_cast<CEyeEntity &>(boss_entity_4)
 
 inline void yuugenmagan_ent_load(void) {
 	extern const char boss2_bos[];
@@ -191,3 +217,73 @@ void yuugenmagan_free(void)
 	yuugenmagan_ent_free();
 	ptn_free(PTN_SLOT_MISSILE);
 }
+
+// Phases
+// ------
+
+static const int EYE_OPENING_FRAMES = 60;
+
+enum phase_0_keyframe_t {
+	KEYFRAME_LATERAL_OPENING = 100,
+	KEYFRAME_SOUTH_OPENING = 120,
+	KEYFRAME_NORTH_OPENING = 140,
+	KEYFRAME_LATERAL_OPEN = (KEYFRAME_LATERAL_OPENING + EYE_OPENING_FRAMES),
+	KEYFRAME_SOUTH_OPEN = (KEYFRAME_SOUTH_OPENING + EYE_OPENING_FRAMES),
+	KEYFRAME_NORTH_OPEN = (KEYFRAME_NORTH_OPENING + EYE_OPENING_FRAMES),
+
+	KEYFRAME_CLOSING = 240,
+	KEYFRAME_CLOSED = 260,
+	KEYFRAME_HIDDEN = 280,
+	KEYFRAME_LATERAL_LASER_DONE = 300,
+	KEYFRAME_SOUTH_LASER_DONE = 320,
+	KEYFRAME_NORTH_LASER_DONE = 330,
+};
+
+void phase_0_downwards_lasers(void)
+{
+	#define laser_hittest(eye, player_w) ( \
+		overlap_low_center_lt_gt( \
+			player_left, player_w, eye.offcenter_x(), (EYE_W - (EYE_W / 4)) \
+		) \
+	)
+
+	if(boss_phase_frame > KEYFRAME_LATERAL_OPEN) {
+		if(boss_phase_frame < KEYFRAME_LATERAL_LASER_DONE) {
+			eye_west.downwards_laser_put();
+			eye_east.downwards_laser_put();
+
+			// ZUN quirk: The hitbox for the rightmost eye is much larger than
+			// the other ones?!
+			if(
+				laser_hittest(eye_west, PLAYER_W) ||
+				laser_hittest(eye_east, (PLAYER_W / 4))
+			) {
+				done = true;
+			}
+		}
+		if(boss_phase_frame > KEYFRAME_SOUTH_OPEN) {
+			if(boss_phase_frame < KEYFRAME_SOUTH_LASER_DONE) {
+				eye_southwest.downwards_laser_put();
+				eye_southeast.downwards_laser_put();
+				if(
+					laser_hittest(eye_southwest, PLAYER_W) ||
+					laser_hittest(eye_southeast, PLAYER_W)
+				) {
+					done = true;
+				}
+			}
+			if(boss_phase_frame > KEYFRAME_NORTH_OPEN) {
+				eye_north.downwards_laser_put();
+				if(laser_hittest(eye_north, PLAYER_W)) {
+					done = true;
+				}
+			}
+		}
+	}
+	if(player_invincible) {
+		done = false;
+	}
+
+	#undef laser_hittest
+}
+// ------

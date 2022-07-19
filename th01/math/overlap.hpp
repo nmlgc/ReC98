@@ -1,6 +1,11 @@
 // Generic overlap testing macros for collision detection
 // ------------------------------------------------------
 
+#define overlap_low_center_lt_gt(low_edge_1, extent_1, center_2, extent_2) ( \
+	(low_edge_1) > ((center_2) - (extent_2 / 2)) && \
+	(low_edge_1) < ((center_2) + (extent_2 / 2) - (extent_1)) \
+)
+
 #define overlap_xywh_xywh_lt_gt(x1, y1, w1, h1, x2, y2, w2, h2) ( \
 	(((x1) - (x2)) < (w2)) && \
 	(((x1) - (x2)) > -(w1)) && \

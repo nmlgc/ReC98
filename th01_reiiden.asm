@@ -2746,7 +2746,6 @@ graph_TEXT	segment	byte public 'CODE' use16
 	extern _z_palette_set_show:proc
 	extern _z_graph_clear:proc
 	extern _graph_copy_accessed_page_to_othe:proc
-	extern _graph_r_vline:proc
 	extern _graph_r_line_unput:proc
 	extern _text_extent_fx:proc
 	extern _graph_putsa_fx:proc
@@ -4476,6 +4475,7 @@ main_27_TEXT	ends
 main_28_TEXT	segment	byte public 'CODE' use16
 	extern @yuugenmagan_load$qv:proc
 	extern @yuugenmagan_free$qv:proc
+	extern @phase_0_downwards_lasers$qv:proc
 main_28_TEXT	ends
 
 ; Segment type:	Pure code
@@ -4502,133 +4502,6 @@ eye_east	equ <_boss_entity_1>
 eye_southwest	equ <_boss_entity_2>
 eye_southeast	equ <_boss_entity_3>
 eye_north	equ <_boss_entity_4>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1B58F	proc far
-		push	bp
-		mov	bp, sp
-		cmp	_boss_phase_frame, 160
-		jle	loc_1B6CB
-		cmp	_boss_phase_frame, 300
-		jge	short loc_1B60E
-		push	(7 shl 16) or 398
-		mov	ax, eye_west.BE_cur_top
-		add	ax, 28
-		push	ax
-		mov	ax, eye_west.BE_cur_left
-		add	ax, 28
-		push	ax
-		call	_graph_r_vline
-		push	(7 shl 16) or 398
-		mov	ax, eye_east.BE_cur_top
-		add	ax, 28
-		push	ax
-		mov	ax, eye_east.BE_cur_left
-		add	ax, 28
-		push	ax
-		call	_graph_r_vline
-		add	sp, 10h
-		mov	ax, eye_west.BE_cur_left
-		add	ax, 4
-		cmp	ax, _player_left
-		jge	short loc_1B5F1
-		mov	ax, eye_west.BE_cur_left
-		add	ax, 20
-		cmp	ax, _player_left
-		jg	short loc_1B609
-
-loc_1B5F1:
-		mov	ax, eye_east.BE_cur_left
-		add	ax, 4
-		cmp	ax, _player_left
-		jge	short loc_1B60E
-		mov	ax, eye_east.BE_cur_left
-		add	ax, 44
-		cmp	ax, _player_left
-		jle	short loc_1B60E
-
-loc_1B609:
-		mov	_done, 1
-
-loc_1B60E:
-		cmp	_boss_phase_frame, 180
-		jle	loc_1B6CB
-		cmp	_boss_phase_frame, 320
-		jge	short loc_1B68A
-		push	(7 shl 16) or 398
-		mov	ax, eye_southwest.BE_cur_top
-		add	ax, 28
-		push	ax
-		mov	ax, eye_southwest.BE_cur_left
-		add	ax, 28
-		push	ax
-		call	_graph_r_vline
-		push	(7 shl 16) or 398
-		mov	ax, eye_southeast.BE_cur_top
-		add	ax, 28
-		push	ax
-		mov	ax, eye_southeast.BE_cur_left
-		add	ax, 28
-		push	ax
-		call	_graph_r_vline
-		add	sp, 10h
-		mov	ax, eye_southwest.BE_cur_left
-		add	ax, 4
-		cmp	ax, _player_left
-		jge	short loc_1B66D
-		mov	ax, eye_southwest.BE_cur_left
-		add	ax, 20
-		cmp	ax, _player_left
-		jg	short loc_1B685
-
-loc_1B66D:
-		mov	ax, eye_southeast.BE_cur_left
-		add	ax, 4
-		cmp	ax, _player_left
-		jge	short loc_1B68A
-		mov	ax, eye_southeast.BE_cur_left
-		add	ax, 20
-		cmp	ax, _player_left
-		jle	short loc_1B68A
-
-loc_1B685:
-		mov	_done, 1
-
-loc_1B68A:
-		cmp	_boss_phase_frame, 200
-		jle	short loc_1B6CB
-		push	(7 shl 16) or 398
-		mov	ax, eye_north.BE_cur_top
-		add	ax, 28
-		push	ax
-		mov	ax, eye_north.BE_cur_left
-		add	ax, 28
-		push	ax
-		call	_graph_r_vline
-		add	sp, 8
-		mov	ax, eye_north.BE_cur_left
-		add	ax, 4
-		cmp	ax, _player_left
-		jge	short loc_1B6CB
-		mov	ax, eye_north.BE_cur_left
-		add	ax, 20
-		cmp	ax, _player_left
-		jle	short loc_1B6CB
-		mov	_done, 1
-
-loc_1B6CB:
-		cmp	_player_invincible, 0
-		jz	short loc_1B6D7
-		mov	_done, 0
-
-loc_1B6D7:
-		pop	bp
-		retf
-sub_1B58F	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4987,7 +4860,7 @@ loc_1BA6C:
 		call	@CBossEntity@locked_move_unput_and_put_8$qiiii stdcall, offset eye_3, ds, large 0 or (0 shl 16), large 0 or (3 shl 16)
 		add	sp, 30h
 		call	@CBossEntity@locked_move_unput_and_put_8$qiiii       c, offset eye_4, ds, large 0 or (0 shl 16), large 0 or (3 shl 16)
-		call	sub_1B58F
+		call	@phase_0_downwards_lasers$qv
 		mov	ax, _boss_phase_frame
 		mov	bx, 40
 		cwd
