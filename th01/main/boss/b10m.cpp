@@ -10,6 +10,7 @@
 #include "th01/math/area.hpp"
 #include "th01/math/overlap.hpp"
 #include "th01/math/subpixel.hpp"
+#include "th01/math/vector.hpp"
 #include "th01/hardware/egc.h"
 extern "C" {
 #include "th01/hardware/graph.h"
@@ -333,3 +334,33 @@ void phase_1_pellets_from_lateral()
 	}
 }
 // ------
+
+// (cur_center_x() + 4) kind of corresponds to the right edge of C_DOWN.
+static const pixel_t MISSILE_OFFSET_LEFT = ((EYE_W / 2) + 4 - (MISSILE_W / 2));
+
+// (pupil_bottom() - (MISSILE_H / 2))
+static const pixel_t MISSILE_OFFSET_TOP = (
+	(EYE_H / 2) + PUPIL_H - (MISSILE_H / 2)
+);
+
+void pascal near fire_missile_pair_from_south(
+	unsigned char angle_for_southwest, unsigned char angle_for_southeast
+)
+{
+	point_t velocity;
+
+	vector2(velocity.x, velocity.y, 8, angle_for_southwest);
+	Missiles.add(
+		(eye_southwest.cur_left + MISSILE_OFFSET_LEFT),
+		(eye_southwest.cur_top  + MISSILE_OFFSET_TOP),
+		velocity.x,
+		velocity.y
+	);
+	vector2(velocity.x, velocity.y, 8, angle_for_southeast);
+	Missiles.add(
+		(eye_southeast.cur_left + MISSILE_OFFSET_LEFT),
+		(eye_southeast.cur_top  + MISSILE_OFFSET_TOP),
+		velocity.x,
+		velocity.y
+	);
+}

@@ -2806,7 +2806,6 @@ GRAPH_EX_TEXT	ends
 
 main_14_TEXT	segment	byte public 'CODE' use16
 	extern @vector2_between$qiiiimit5i:proc
-	extern @vector2$qmit1iuc:proc
 main_14_TEXT	ends
 
 ; ===========================================================================
@@ -4477,6 +4476,8 @@ main_28_TEXT	segment	byte public 'CODE' use16
 	extern @yuugenmagan_free$qv:proc
 	extern @phase_0_downwards_lasers$qv:proc
 	extern @phase_1_pellets_from_lateral$qv:proc
+	@FIRE_MISSILE_PAIR_FROM_SOUTH$QUCUC procdesc pascal near \
+		angle_for_southwest:word, angle_for_southeast:word
 main_28_TEXT	ends
 
 ; Segment type:	Pure code
@@ -4503,92 +4504,6 @@ eye_east	equ <_boss_entity_1>
 eye_southwest	equ <_boss_entity_2>
 eye_southeast	equ <_boss_entity_3>
 eye_north	equ <_boss_entity_4>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1B824	proc near
-
-var_18		= qword	ptr -18h
-var_10		= qword	ptr -10h
-var_6		= word ptr -6
-@@vector_x		= word ptr -4
-@@vector_y		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		enter	6, 0
-		push	[bp+arg_2]
-		push	8
-		push	ss
-		lea	ax, [bp+@@vector_y]
-		push	ax
-		push	ss
-		lea	ax, [bp+@@vector_x]
-		push	ax
-		call	@vector2$qmit1iuc
-		add	sp, 0Ch
-		push	0		; char
-		mov	ax, [bp+@@vector_y]
-		mov	[bp+var_6], ax
-		fild	[bp+var_6]
-		sub	sp, 8
-		fstp	[bp+var_10]
-		fwait
-		mov	ax, [bp+@@vector_x]
-		mov	[bp+var_6], ax
-		fild	[bp+var_6]
-		sub	sp, 8
-		fstp	[bp+var_18]
-		fwait
-		mov	ax, eye_southwest.BE_cur_top
-		add	ax, 28
-		push	ax		; int
-		mov	ax, eye_southwest.BE_cur_left
-		add	ax, 28
-		push	ax		; int
-		push	ds
-		push	offset _Missiles ; this
-		call	@CMissiles@add$qiiddc
-		add	sp, 1Ah
-		push	[bp+arg_0]
-		push	8
-		push	ss
-		lea	ax, [bp+@@vector_y]
-		push	ax
-		push	ss
-		lea	ax, [bp+@@vector_x]
-		push	ax
-		call	@vector2$qmit1iuc
-		add	sp, 0Ch
-		push	0		; char
-		mov	ax, [bp+@@vector_y]
-		mov	[bp+var_6], ax
-		fild	[bp+var_6]
-		sub	sp, 8
-		fstp	[bp+var_10]
-		fwait
-		mov	ax, [bp+@@vector_x]
-		mov	[bp+var_6], ax
-		fild	[bp+var_6]
-		sub	sp, 8
-		fstp	[bp+var_18]
-		fwait
-		mov	ax, eye_southeast.BE_cur_top
-		add	ax, 28
-		push	ax		; int
-		mov	ax, eye_southeast.BE_cur_left
-		add	ax, 28
-		push	ax		; int
-		push	ds
-		push	offset _Missiles ; this
-		call	@CMissiles@add$qiiddc
-		add	sp, 1Ah
-		leave
-		retn	4
-sub_1B824	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5359,9 +5274,7 @@ loc_1C21E:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1C236
-		push	word ptr angle_39E16
-		push	word ptr angle_39E17
-		call	sub_1B824
+		call	@fire_missile_pair_from_south$qucuc pascal, word ptr angle_39E16, word ptr angle_39E17
 
 loc_1C236:
 		cmp	_boss_phase_frame, 200
@@ -5391,9 +5304,7 @@ loc_1C25D:
 		mov	al, angle_39E17
 		add	al, 2
 		mov	angle_39E17, al
-		push	word ptr angle_39E16
-		push	word ptr angle_39E17
-		call	sub_1B824
+		call	@fire_missile_pair_from_south$qucuc pascal, word ptr angle_39E16, word ptr angle_39E17
 		cmp	x_39E06, 10
 		jle	loc_1C327
 		inc	word_39E08
@@ -5446,9 +5357,7 @@ loc_1C2FC:
 		mov	angle_39E17, al
 
 loc_1C2FF:
-		push	word ptr angle_39E16
-		push	word ptr angle_39E17
-		call	sub_1B824
+		call	@fire_missile_pair_from_south$qucuc pascal, word ptr angle_39E16, word ptr angle_39E17
 		cmp	x_39E06, 10
 		jle	short loc_1C327
 		mov	word_39E08, 0
@@ -6030,9 +5939,7 @@ loc_1C931:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1C949
-		push	word ptr angle_39E16
-		push	word ptr angle_39E17
-		call	sub_1B824
+		call	@fire_missile_pair_from_south$qucuc pascal, word ptr angle_39E16, word ptr angle_39E17
 
 loc_1C949:
 		cmp	_boss_phase_frame, 200
@@ -6073,9 +5980,7 @@ loc_1C993:
 
 loc_1C9A0:
 		mov	angle_39E17, al
-		push	word ptr angle_39E16
-		push	word ptr angle_39E17
-		call	sub_1B824
+		call	@fire_missile_pair_from_south$qucuc pascal, word ptr angle_39E16, word ptr angle_39E17
 		cmp	x_39E06, 10
 		jle	loc_1CA38
 		inc	word_39E08
@@ -6120,9 +6025,7 @@ loc_1CA0D:
 		mov	angle_39E17, al
 
 loc_1CA10:
-		push	word ptr angle_39E16
-		push	word ptr angle_39E17
-		call	sub_1B824
+		call	@fire_missile_pair_from_south$qucuc pascal, word ptr angle_39E16, word ptr angle_39E17
 		cmp	x_39E06, 10
 		jle	short loc_1CA38
 		mov	word_39E08, 0
@@ -8366,7 +8269,6 @@ main_32_TEXT	segment	byte public 'CODE' use16
 	extern @BOSS_NOP$QV:proc
 	extern @hud_hp_render$qii:proc
 	extern @boss_hit_update_and_render$qmit1t1xnxucucinqv$vuciiii:proc
-	extern @CMissiles@add$qiiddc:proc
 	extern @CMissiles@reset$qv:proc
 	extern @CMissiles@unput_update_render$qv:proc
 main_32_TEXT	ends
