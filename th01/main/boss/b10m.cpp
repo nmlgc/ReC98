@@ -10,6 +10,7 @@
 #include "th01/math/area.hpp"
 #include "th01/math/overlap.hpp"
 #include "th01/math/subpixel.hpp"
+#include "th01/hardware/egc.h"
 extern "C" {
 #include "th01/hardware/graph.h"
 }
@@ -23,6 +24,7 @@ extern const char MISSILE_FN[];
 #include "th01/formats/grp.h"
 #include "th01/formats/pf.hpp"
 #include "th01/formats/ptn.hpp"
+#include "th01/sprites/pellet.h"
 #include "th01/main/particle.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/player/orb.hpp"
@@ -30,6 +32,7 @@ extern const char MISSILE_FN[];
 #include "th01/main/boss/entity_a.hpp"
 #include "th01/main/boss/palette.hpp"
 #include "th01/main/bullet/missile.hpp"
+#include "th01/main/bullet/pellet.hpp"
 #include "th01/main/hud/hp.hpp"
 #include "th01/main/player/player.hpp"
 
@@ -38,6 +41,7 @@ extern const char MISSILE_FN[];
 
 static const pixel_t EYE_W = 64;
 static const pixel_t EYE_H = 48;
+static const pixel_t PUPIL_H = 12;
 
 static const pixel_t EYE_LATERAL_CENTER_DISTANCE_X = 224;
 static const pixel_t EYE_SOUTH_CENTER_DISTANCE_X = 96;
@@ -117,11 +121,25 @@ struct CEyeEntity : public CBossEntitySized<EYE_W, EYE_H> {
 	screen_y_t iris_top(void) const {
 		return (cur_center_y() + 4);
 	}
+
+	// Correct for C_LEFT and C_RIGHT, off by 1 pixel for C_DOWN.
+	screen_y_t pupil_bottom(void) const {
+		return (cur_center_y() + PUPIL_H);
+	}
 	// -----------------------------------
 
 	void downwards_laser_put(void) const {
 		graph_r_vline(
 			offcenter_x(), iris_top(), (PLAYFIELD_BOTTOM - 2), V_WHITE
+		);
+	}
+
+	void fire_from_bottom_center(pellet_group_t group, float speed_base) const {
+		Pellets.add_group(
+			(cur_center_x() - (PELLET_W / 2)),
+			(pupil_bottom() - (PELLET_H / 2)),
+			group,
+			to_sp(speed_base)
 		);
 	}
 };
@@ -151,6 +169,12 @@ inline void yuugenmagan_ent_free(void) {
 
 static const main_ptn_slot_t PTN_SLOT_MISSILE = PTN_SLOT_BOSS_1;
 // ----
+
+// Patterns
+// --------
+
+extern int pattern_interval;
+// --------
 
 void yuugenmagan_load(void)
 {
@@ -285,5 +309,27 @@ void phase_0_downwards_lasers(void)
 	}
 
 	#undef laser_hittest
+}
+
+inline void fire_from_lateral(pellet_group_t group, float speed_base) {
+	eye_west.fire_from_bottom_center(group, speed_base);
+	eye_east.fire_from_bottom_center(group, speed_base);
+}
+
+void phase_1_pellets_from_lateral()
+{
+	if((boss_phase_frame % pattern_interval) == 10) {
+		fire_from_lateral(PG_2_SPREAD_WIDE_AIMED, 1.5f);
+	} else if((boss_phase_frame % pattern_interval) == 25) {
+		fire_from_lateral(PG_2_SPREAD_WIDE_AIMED, 1.75f);
+	} else if((boss_phase_frame % pattern_interval) == 40) {
+		fire_from_lateral(PG_2_SPREAD_WIDE_AIMED, 2.0f);
+	} else if((boss_phase_frame % pattern_interval) == 60) {
+		fire_from_lateral(PG_2_SPREAD_WIDE_AIMED, 2.75f);
+	} else if((boss_phase_frame % pattern_interval) == 80) {
+		fire_from_lateral(PG_2_SPREAD_WIDE_AIMED, 3.125f);
+	} else if((boss_phase_frame % pattern_interval) == 110) {
+		fire_from_lateral(PG_1_AIMED, 4.25f);
+	}
 }
 // ------

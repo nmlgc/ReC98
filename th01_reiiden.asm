@@ -4476,6 +4476,7 @@ main_28_TEXT	segment	byte public 'CODE' use16
 	extern @yuugenmagan_load$qv:proc
 	extern @yuugenmagan_free$qv:proc
 	extern @phase_0_downwards_lasers$qv:proc
+	extern @phase_1_pellets_from_lateral$qv:proc
 main_28_TEXT	ends
 
 ; Segment type:	Pure code
@@ -4502,157 +4503,6 @@ eye_east	equ <_boss_entity_1>
 eye_southwest	equ <_boss_entity_2>
 eye_southeast	equ <_boss_entity_3>
 eye_north	equ <_boss_entity_4>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1B6D9	proc far
-		push	bp
-		mov	bp, sp
-		mov	ax, _boss_phase_frame
-		cwd
-		idiv	word_39DE4
-		cmp	dx, 10
-		jnz	short loc_1B70E
-		push	PG_2_SPREAD_WIDE_AIMED or (((1 shl 4) + 8) shl 16)
-		mov	ax, eye_west.BE_cur_top
-		add	ax, 32
-		push	ax
-		mov	ax, eye_west.BE_cur_left
-		add	ax, 28
-		push	ax
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_group$qii14pellet_group_ti
-		add	sp, 0Ch
-		push	(1 shl 4) + 8
-		jmp	loc_1B7D1
-; ---------------------------------------------------------------------------
-
-loc_1B70E:
-		mov	ax, _boss_phase_frame
-		cwd
-		idiv	word_39DE4
-		cmp	dx, 25
-		jnz	short loc_1B740
-		push	PG_2_SPREAD_WIDE_AIMED or (((1 shl 4) + 12) shl 16)
-		mov	ax, eye_west.BE_cur_top
-		add	ax, 32
-		push	ax
-		mov	ax, eye_west.BE_cur_left
-		add	ax, 28
-		push	ax
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_group$qii14pellet_group_ti
-		add	sp, 0Ch
-		push	(1 shl 4) + 12
-		jmp	loc_1B7D1
-; ---------------------------------------------------------------------------
-
-loc_1B740:
-		mov	ax, _boss_phase_frame
-		cwd
-		idiv	word_39DE4
-		cmp	dx, 40
-		jnz	short loc_1B771
-		push	PG_2_SPREAD_WIDE_AIMED or ((2 shl 4) shl 16)
-		mov	ax, eye_west.BE_cur_top
-		add	ax, 32
-		push	ax
-		mov	ax, eye_west.BE_cur_left
-		add	ax, 28
-		push	ax
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_group$qii14pellet_group_ti
-		add	sp, 0Ch
-		push	(2 shl 4)
-		jmp	short loc_1B7D1
-; ---------------------------------------------------------------------------
-
-loc_1B771:
-		mov	ax, _boss_phase_frame
-		cwd
-		idiv	word_39DE4
-		cmp	dx, 60
-		jnz	short loc_1B7A2
-		push	PG_2_SPREAD_WIDE_AIMED or (((2 shl 4) + 12) shl 16)
-		mov	ax, eye_west.BE_cur_top
-		add	ax, 32
-		push	ax
-		mov	ax, eye_west.BE_cur_left
-		add	ax, 28
-		push	ax
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_group$qii14pellet_group_ti
-		add	sp, 0Ch
-		push	(2 shl 4) + 12
-		jmp	short loc_1B7D1
-; ---------------------------------------------------------------------------
-
-loc_1B7A2:
-		mov	ax, _boss_phase_frame
-		cwd
-		idiv	word_39DE4
-		cmp	dx, 80
-		jnz	short loc_1B7D5
-		push	PG_2_SPREAD_WIDE_AIMED or (((3 shl 4) + 2) shl 16)
-		mov	ax, eye_west.BE_cur_top
-		add	ax, 32
-		push	ax
-		mov	ax, eye_west.BE_cur_left
-		add	ax, 28
-		push	ax
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_group$qii14pellet_group_ti
-		add	sp, 0Ch
-		push	(3 shl 4) + 2
-
-loc_1B7D1:
-		push	PG_2_SPREAD_WIDE_AIMED
-		jmp	short loc_1B808
-; ---------------------------------------------------------------------------
-
-loc_1B7D5:
-		mov	ax, _boss_phase_frame
-		cwd
-		idiv	word_39DE4
-		cmp	dx, 110
-		jnz	short loc_1B822
-		push	PG_1_AIMED or (((4 shl 4) + 4) shl 16)
-		mov	ax, eye_west.BE_cur_top
-		add	ax, 32
-		push	ax
-		mov	ax, eye_west.BE_cur_left
-		add	ax, 28
-		push	ax
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_group$qii14pellet_group_ti
-		add	sp, 0Ch
-		push	PG_1_AIMED or (((4 shl 4) + 4) shl 16)
-
-loc_1B808:
-		mov	ax, eye_east.BE_cur_top
-		add	ax, 32
-		push	ax
-		mov	ax, eye_east.BE_cur_left
-		add	ax, 28
-		push	ax
-		push	ds
-		push	offset _Pellets
-		call	@CPellets@add_group$qii14pellet_group_ti
-		add	sp, 0Ch
-
-loc_1B822:
-		pop	bp
-		retf
-sub_1B6D9	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5175,7 +5025,7 @@ loc_1BE97:
 		mov	ax, 300
 
 loc_1BE9A:
-		mov	word_39DE4, ax
+		mov	_pattern_interval, ax
 		push	RES_Y
 		mov	ax, eye_north.BE_cur_left
 		add	ax, 28
@@ -5251,7 +5101,7 @@ loc_1BF60:
 		mov	eye_east.BE_bos_image, CEL_DOWN
 
 loc_1BF66:
-		call	sub_1B6D9
+		call	@phase_1_pellets_from_lateral$qv
 		pushd	0 or (0 shl 16)	; (hitbox_w) or (hitbox_h)
 		pushd	0 or (0 shl 16)	; (hitbox_left) or (hitbox_top)
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_west, ds
@@ -5742,7 +5592,7 @@ loc_1C485:
 		mov	ax, 8
 
 loc_1C488:
-		mov	word_39DE4, ax
+		mov	_pattern_interval, ax
 		mov	angle_39E16, 0
 		jmp	loc_1DFFC
 ; ---------------------------------------------------------------------------
@@ -5819,7 +5669,7 @@ loc_1C55B:
 		jnz	short loc_1C5D4
 		mov	ax, x_39E06
 		cwd
-		idiv	word_39DE4
+		idiv	_pattern_interval
 		or	dx, dx
 		jnz	short loc_1C5BA
 		pushd	0 or (0 shl 16)
@@ -5876,7 +5726,7 @@ loc_1C5F3:
 		jnz	loc_1C67D
 		mov	ax, x_39E06
 		cwd
-		idiv	word_39DE4
+		idiv	_pattern_interval
 		or	dx, dx
 		jnz	short loc_1C65A
 		pushd	0 or (0 shl 16)
@@ -7529,7 +7379,7 @@ loc_1D849:
 		mov	ax, 14
 
 loc_1D84C:
-		mov	word_39DE4, ax
+		mov	_pattern_interval, ax
 		jmp	loc_1DFFC
 ; ---------------------------------------------------------------------------
 
@@ -7802,7 +7652,7 @@ loc_1DB36:
 		jnz	short loc_1DBAB
 		mov	ax, _boss_phase_frame
 		cwd
-		idiv	word_39DE4
+		idiv	_pattern_interval
 		or	dx, dx
 		jnz	short loc_1DBAB
 		cmp	word_39E10, 6
@@ -9109,7 +8959,10 @@ _player_submode	db ?
 _player_ptn_id_prev	db ?
 public _boss_post_defeat_palette
 _boss_post_defeat_palette	palette_t <?>
-word_39DE4	dw ?
+
+public _pattern_interval
+_pattern_interval	dw ?
+
 x_39DE6	dw ?
 x_39DE8	dw ?
 x_39DEA	dw ?
