@@ -9,6 +9,7 @@
 #include "th01/v_colors.hpp"
 #include "th01/math/area.hpp"
 #include "th01/math/overlap.hpp"
+#include "th01/math/polar.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th01/math/vector.hpp"
 #include "th01/hardware/egc.h"
@@ -32,6 +33,7 @@ extern const char MISSILE_FN[];
 #include "th01/main/boss/boss.hpp"
 #include "th01/main/boss/entity_a.hpp"
 #include "th01/main/boss/palette.hpp"
+#include "th01/main/bullet/line.hpp"
 #include "th01/main/bullet/missile.hpp"
 #include "th01/main/bullet/pellet.hpp"
 #include "th01/main/hud/hp.hpp"
@@ -364,3 +366,59 @@ void pascal near fire_missile_pair_from_south(
 		velocity.y
 	);
 }
+
+/// Pentagram
+/// ---------
+
+static const int PENTAGRAM_POINTS = 5;
+extern struct {
+	// Corners, arranged in counterclockwise order.
+	screen_x_t x[PENTAGRAM_POINTS];
+	screen_y_t y[PENTAGRAM_POINTS];
+
+	pixel_t radius;
+	screen_point_t center;
+
+	void unput(void) {
+		linebullet_unput(x[0], y[0], x[2], y[2]);
+		linebullet_unput(x[2], y[2], x[4], y[4]);
+		linebullet_unput(x[4], y[4], x[1], y[1]);
+		linebullet_unput(x[1], y[1], x[3], y[3]);
+		linebullet_unput(x[3], y[3], x[0], y[0]);
+	}
+
+	void put_and_hittest(void) {
+		linebullet_put_and_hittest(x[0], y[0], x[2], y[2], V_WHITE);
+		linebullet_put_and_hittest(x[2], y[2], x[4], y[4], V_WHITE);
+		linebullet_put_and_hittest(x[4], y[4], x[1], y[1], V_WHITE);
+		linebullet_put_and_hittest(x[1], y[1], x[3], y[3], V_WHITE);
+		linebullet_put_and_hittest(x[3], y[3], x[0], y[0], V_WHITE);
+	}
+} pentagram;
+
+#define pentagram_corners_set_regular(i, angle_offset) { \
+	for(i = 0; i < PENTAGRAM_POINTS; i++) { \
+		pentagram.x[i] = polar_x( \
+			pentagram.center.x, \
+			pentagram.radius, \
+			(angle_offset + (i * (0x100 / PENTAGRAM_POINTS))) \
+		); \
+		pentagram.y[i] = polar_y( \
+			pentagram.center.y, \
+			pentagram.radius, \
+			(angle_offset + (i * (0x100 / PENTAGRAM_POINTS))) \
+		); \
+	} \
+}
+
+// Also performs collision detection.
+void pascal near pentagram_regular_unput_update_render(
+	int angle_offset // ACTUAL TYPE: unsigned char
+)
+{
+	int i;
+	pentagram.unput();
+	pentagram_corners_set_regular(i, angle_offset);
+	pentagram.put_and_hittest();
+}
+/// ---------

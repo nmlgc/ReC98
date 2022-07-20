@@ -4478,6 +4478,8 @@ main_28_TEXT	segment	byte public 'CODE' use16
 	extern @phase_1_pellets_from_lateral$qv:proc
 	@FIRE_MISSILE_PAIR_FROM_SOUTH$QUCUC procdesc pascal near \
 		angle_for_southwest:word, angle_for_southeast:word
+	@PENTAGRAM_REGULAR_UNPUT_UPDATE_R$QI procdesc pascal near \
+		angle_offset:word
 main_28_TEXT	ends
 
 ; Segment type:	Pure code
@@ -4504,74 +4506,6 @@ eye_east	equ <_boss_entity_1>
 eye_southwest	equ <_boss_entity_2>
 eye_southeast	equ <_boss_entity_3>
 eye_north	equ <_boss_entity_4>
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1B8DE	proc near
-
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, [bp+arg_0]
-		call	@linebullet_unput$qiiii stdcall, x_39DE6, y_39DF0, x_39DEA, y_39DF4
-		call	@linebullet_unput$qiiii stdcall, x_39DEA, y_39DF4, x_39DEE, y_39DF8
-		call	@linebullet_unput$qiiii stdcall, x_39DEE, y_39DF8, x_39DE8, y_39DF2
-		call	@linebullet_unput$qiiii stdcall, x_39DE8, y_39DF2, x_39DEC, y_39DF6
-		call	@linebullet_unput$qiiii stdcall, x_39DEC, y_39DF6, x_39DE6, y_39DF0
-		add	sp, 28h
-		xor	si, si
-		jmp	short loc_1B9B1
-; ---------------------------------------------------------------------------
-
-loc_1B956:
-		movsx	eax, word_39DFA
-		mov	bx, si
-		imul	bx, 33h
-		add	bx, di
-		and	bx, 255
-		add	bx, bx
-		movsx	edx, _CosTable8[bx]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, point_39DFC.x
-		mov	bx, si
-		add	bx, bx
-		mov	[bx+5446h], ax
-		movsx	eax, word_39DFA
-		mov	bx, si
-		imul	bx, 33h
-		add	bx, di
-		and	bx, 255
-		add	bx, bx
-		movsx	edx, _SinTable8[bx]
-		imul	eax, edx
-		sar	eax, 8
-		add	ax, point_39DFC.y
-		mov	bx, si
-		add	bx, bx
-		mov	[bx+5450h], ax
-		inc	si
-
-loc_1B9B1:
-		cmp	si, 5
-		jl	short loc_1B956
-		call	@linebullet_put_and_hittest$qiiiii stdcall, x_39DE6, y_39DF0, x_39DEA, y_39DF4, 7
-		call	@linebullet_put_and_hittest$qiiiii stdcall, x_39DEA, y_39DF4, x_39DEE, y_39DF8, 7
-		call	@linebullet_put_and_hittest$qiiiii stdcall, x_39DEE, y_39DF8, x_39DE8, y_39DF2, 7
-		call	@linebullet_put_and_hittest$qiiiii stdcall, x_39DE8, y_39DF2, x_39DEC, y_39DF6, 7
-		call	@linebullet_put_and_hittest$qiiiii stdcall, x_39DEC, y_39DF6, x_39DE6, y_39DF0, 7
-		add	sp, 32h
-		pop	di
-		pop	si
-		pop	bp
-		retn	2
-sub_1B8DE	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7049,62 +6983,62 @@ loc_1D2F6:
 		jle	loc_1D63F
 		mov	ax, eye_north.BE_cur_left
 		add	ax, 28
-		mov	x_39DE6, ax
+		mov	_pentagram_x_0, ax
 		mov	ax, x_39E06
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		add	ax, eye_north.BE_cur_top
 		add	ax, 28
-		mov	y_39DF0, ax
+		mov	_pentagram_y_0, ax
 		mov	ax, x_39E06
 		mov	bx, 3
 		cwd
 		idiv	bx
 		add	ax, eye_southwest.BE_cur_left
 		add	ax, 28
-		mov	x_39DE8, ax
+		mov	_pentagram_x_1, ax
 		mov	ax, x_39E06
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		add	ax, eye_southwest.BE_cur_top
 		add	ax, 28
-		mov	y_39DF2, ax
+		mov	_pentagram_y_1, ax
 		mov	ax, eye_east.BE_cur_left
 		add	ax, 28
 		sub	ax, x_39E06
-		mov	x_39DEA, ax
+		mov	_pentagram_x_2, ax
 		mov	ax, x_39E06
 		cwd
 		idiv	bx
 		add	ax, eye_east.y
 		add	ax, 28
-		mov	y_39DF4, ax
+		mov	_pentagram_y_2, ax
 		mov	ax, eye_west.BE_cur_left
 		add	ax, x_39E06
 		add	ax, 28
-		mov	x_39DEC, ax
+		mov	_pentagram_x_3, ax
 		mov	ax, x_39E06
 		cwd
 		idiv	bx
 		add	ax, eye_west.BE_cur_top
 		add	ax, 28
-		mov	y_39DF6, ax
+		mov	_pentagram_y_3, ax
 		mov	ax, x_39E06
 		cwd
 		idiv	bx
 		mov	dx, eye_southeast.BE_cur_left
 		add	dx, 28
 		sub	dx, ax
-		mov	x_39DEE, dx
+		mov	_pentagram_x_4, dx
 		mov	ax, x_39E06
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		add	ax, eye_southeast.BE_cur_top
 		add	ax, 28
-		mov	y_39DF8, ax
+		mov	_pentagram_y_4, ax
 		mov	word_39E08, 3
 
 loc_1D63F:
@@ -7203,18 +7137,18 @@ loc_1D76D:
 		mov	_boss_phase_frame, 0
 		mov	_yuugenmagan_invincibility_frame, 0
 		mov	x_39E06, 0
-		mov	ax, y_39DF0
+		mov	ax, _pentagram_y_0
 		add	ax, 64
-		mov	point_39DFC.y, ax
-		mov	ax, x_39DE6
-		mov	point_39DFC.x, ax
-		mov	word_39DFA, 40h
+		mov	_pentagram_center.y, ax
+		mov	ax, _pentagram_x_0
+		mov	_pentagram_center.x, ax
+		mov	_pentagram_radius, 40h
 		xor	si, si
 		jmp	short loc_1D808
 ; ---------------------------------------------------------------------------
 
 loc_1D7B1:
-		movsx	eax, word_39DFA
+		movsx	eax, _pentagram_radius
 		mov	bx, si
 		imul	bx, 33h
 		and	bx, 255
@@ -7222,11 +7156,11 @@ loc_1D7B1:
 		movsx	edx, _CosTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
-		add	ax, point_39DFC.x
+		add	ax, _pentagram_center.x
 		mov	bx, si
 		add	bx, bx
-		mov	[bx+5446h], ax
-		movsx	eax, word_39DFA
+		mov	_pentagram_x[bx], ax
+		movsx	eax, _pentagram_radius
 		mov	bx, si
 		imul	bx, 33h
 		and	bx, 255
@@ -7234,17 +7168,17 @@ loc_1D7B1:
 		movsx	edx, _SinTable8[bx]
 		imul	eax, edx
 		sar	eax, 8
-		add	ax, point_39DFC.y
+		add	ax, _pentagram_center.y
 		mov	bx, si
 		add	bx, bx
-		mov	[bx+5450h], ax
+		mov	_pentagram_y[bx], ax
 		inc	si
 
 loc_1D808:
 		cmp	si, 5
 		jl	short loc_1D7B1
-		mov	ax, y_39DF8
-		mov	y_39DF2, ax
+		mov	ax, _pentagram_y_4
+		mov	_pentagram_y_1, ax
 		cmp	_rank, RANK_EASY
 		jnz	short loc_1D81F
 		mov	ax, 18h
@@ -7305,9 +7239,8 @@ loc_1D852:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1D88A
-		sub	point_39DFC.y, 3
-		push	0C0h ; '?'
-		call	sub_1B8DE
+		sub	_pentagram_center.y, 3
+		call	@pentagram_regular_unput_update_r$qi pascal, (-40h and 255)
 
 loc_1D88A:
 		cmp	_boss_phase_frame, 70
@@ -7569,13 +7502,13 @@ loc_1DB36:
 loc_1DB5B:
 		mov	bx, si
 		add	bx, bx
-		mov	ax, [bx+5450h]
-		sub	ax, point_39DFC.y
+		mov	ax, _pentagram_y[bx]
+		sub	ax, _pentagram_center.y
 		push	ax
 		mov	bx, si
 		add	bx, bx
-		mov	ax, [bx+5446h]
-		sub	ax, point_39DFC.x
+		mov	ax, _pentagram_x[bx]
+		sub	ax, _pentagram_center.x
 		push	ax
 		call	iatan2
 		mov	angle_39E16, al
@@ -7585,10 +7518,10 @@ loc_1DB5B:
 		push	word ptr angle_39E16
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+5450h]
+		push	word ptr _pentagram_y[bx]
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+5446h]
+		push	word ptr _pentagram_x[bx]
 		push	ds
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
@@ -7636,8 +7569,7 @@ loc_1DBF4:
 		idiv	bx
 		add	ax, 2
 		add	word_39E12, ax
-		push	word_39E12
-		call	sub_1B8DE
+		call	@pentagram_regular_unput_update_r$qi pascal, word_39E12
 
 loc_1DC18:
 		cmp	_boss_phase_frame, 200
@@ -7664,8 +7596,7 @@ loc_1DC38:
 		idiv	bx
 		add	ax, 2
 		sub	word_39E12, ax
-		push	word_39E12
-		call	sub_1B8DE
+		call	@pentagram_regular_unput_update_r$qi pascal, word_39E12
 
 loc_1DC5C:
 		cmp	_boss_phase_frame, 200
@@ -7683,9 +7614,9 @@ loc_1DC6D:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1DCD0
-		cmp	point_39DFC.y, 300
+		cmp	_pentagram_center.y, 300
 		jge	short loc_1DCAB
-		call	@vector2_between$qiiiimit5i c, point_39DFC.x, point_39DFC.y, _player_left, RES_Y, offset x_39E02, ds, offset y_39E00, ds, bx
+		call	@vector2_between$qiiiimit5i c, _pentagram_center.x, _pentagram_center.y, _player_left, RES_Y, offset x_39E02, ds, offset y_39E00, ds, bx
 
 loc_1DCAB:
 		mov	ax, _boss_phase_frame
@@ -7695,14 +7626,13 @@ loc_1DCAB:
 		add	ax, 2
 		add	word_39E12, ax
 		mov	ax, y_39E00
-		add	point_39DFC.y, ax
+		add	_pentagram_center.y, ax
 		mov	ax, x_39E02
-		add	point_39DFC.x, ax
-		push	word_39E12
-		call	sub_1B8DE
+		add	_pentagram_center.x, ax
+		call	@pentagram_regular_unput_update_r$qi pascal, word_39E12
 
 loc_1DCD0:
-		cmp	point_39DFC.y, 420
+		cmp	_pentagram_center.y, 420
 		jl	loc_1DDD4
 		mov	_boss_phase_frame, 0
 		mov	_boss_phase, 10
@@ -7711,11 +7641,11 @@ loc_1DCD0:
 		mov	word_39E10, 7
 		mov	_yuugenmagan_invincibility_frame, 0
 		mov	x_39E06, 0
-		call	@linebullet_unput$qiiii stdcall, x_39DE6, y_39DF0, x_39DEA, y_39DF4
-		call	@linebullet_unput$qiiii stdcall, x_39DEA, y_39DF4, x_39DEE, y_39DF8
-		call	@linebullet_unput$qiiii stdcall, x_39DEE, y_39DF8, x_39DE8, y_39DF2
-		call	@linebullet_unput$qiiii stdcall, x_39DE8, y_39DF2, x_39DEC, y_39DF6
-		call	@linebullet_unput$qiiii stdcall, x_39DEC, y_39DF6, x_39DE6, y_39DF0
+		call	@linebullet_unput$qiiii stdcall, _pentagram_x_0, _pentagram_y_0, _pentagram_x_2, _pentagram_y_2
+		call	@linebullet_unput$qiiii stdcall, _pentagram_x_2, _pentagram_y_2, _pentagram_x_4, _pentagram_y_4
+		call	@linebullet_unput$qiiii stdcall, _pentagram_x_4, _pentagram_y_4, _pentagram_x_1, _pentagram_y_1
+		call	@linebullet_unput$qiiii stdcall, _pentagram_x_1, _pentagram_y_1, _pentagram_x_3, _pentagram_y_3
+		call	@linebullet_unput$qiiii stdcall, _pentagram_x_3, _pentagram_y_3, _pentagram_x_0, _pentagram_y_0
 		add	sp, 28h
 		jmp	short loc_1DDD4
 ; ---------------------------------------------------------------------------
@@ -7729,15 +7659,14 @@ loc_1DD70:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1DD9F
-		inc	word_39DFA
+		inc	_pentagram_radius
 		mov	ax, _boss_phase_frame
 		mov	bx, 64
 		cwd
 		idiv	bx
 		add	ax, 2
 		add	word_39E12, ax
-		push	word_39E12
-		call	sub_1B8DE
+		call	@pentagram_regular_unput_update_r$qi pascal, word_39E12
 
 loc_1DD9F:
 		cmp	_boss_phase_frame, 200
@@ -7746,7 +7675,7 @@ loc_1DD9F:
 
 loc_1DDAD:
 		mov	_boss_phase_frame, 0
-		call	@vector2_between$qiiiimit5i c, point_39DFC.x, point_39DFC.y, _player_left, RES_Y, offset x_39E02, ds, offset y_39E00, ds, 4
+		call	@vector2_between$qiiiimit5i c, _pentagram_center.x, _pentagram_center.y, _player_left, RES_Y, offset x_39E02, ds, offset y_39E00, ds, 4
 
 loc_1DDD4:
 		cmp	word_39E10, 9
@@ -7757,26 +7686,25 @@ loc_1DDD4:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1DE37
-		cmp	point_39DFC.y, 260
+		cmp	_pentagram_center.y, 260
 		jge	short loc_1DE12
-		call	@vector2_between$qiiiimit5i c, point_39DFC.x, point_39DFC.y, _player_left, RES_Y, offset x_39E02, ds, offset y_39E00, ds, bx
+		call	@vector2_between$qiiiimit5i c, _pentagram_center.x, _pentagram_center.y, _player_left, RES_Y, offset x_39E02, ds, offset y_39E00, ds, bx
 
 loc_1DE12:
 		mov	ax, y_39E00
-		add	point_39DFC.y, ax
+		add	_pentagram_center.y, ax
 		mov	ax, x_39E02
-		add	point_39DFC.x, ax
+		add	_pentagram_center.x, ax
 		mov	ax, _boss_phase_frame
 		mov	bx, 64
 		cwd
 		idiv	bx
 		add	ax, 2
 		add	word_39E12, ax
-		push	word_39E12
-		call	sub_1B8DE
+		call	@pentagram_regular_unput_update_r$qi pascal, word_39E12
 
 loc_1DE37:
-		cmp	point_39DFC.y, 420
+		cmp	_pentagram_center.y, 420
 		jl	loc_1DED5
 		mov	word_39E10, 0
 		mov	_boss_phase_frame, 0
@@ -7785,11 +7713,11 @@ loc_1DE37:
 		mov	byte_39E14, 3
 		mov	_yuugenmagan_invincibility_frame, 0
 		mov	x_39E06, 0
-		call	@linebullet_unput$qiiii stdcall, x_39DE6, y_39DF0, x_39DEA, y_39DF4
-		call	@linebullet_unput$qiiii stdcall, x_39DEA, y_39DF4, x_39DEE, y_39DF8
-		call	@linebullet_unput$qiiii stdcall, x_39DEE, y_39DF8, x_39DE8, y_39DF2
-		call	@linebullet_unput$qiiii stdcall, x_39DE8, y_39DF2, x_39DEC, y_39DF6
-		call	@linebullet_unput$qiiii stdcall, x_39DEC, y_39DF6, x_39DE6, y_39DF0
+		call	@linebullet_unput$qiiii stdcall, _pentagram_x_0, _pentagram_y_0, _pentagram_x_2, _pentagram_y_2
+		call	@linebullet_unput$qiiii stdcall, _pentagram_x_2, _pentagram_y_2, _pentagram_x_4, _pentagram_y_4
+		call	@linebullet_unput$qiiii stdcall, _pentagram_x_4, _pentagram_y_4, _pentagram_x_1, _pentagram_y_1
+		call	@linebullet_unput$qiiii stdcall, _pentagram_x_1, _pentagram_y_1, _pentagram_x_3, _pentagram_y_3
+		call	@linebullet_unput$qiiii stdcall, _pentagram_x_3, _pentagram_y_3, _pentagram_x_0, _pentagram_y_0
 		add	sp, 28h
 
 loc_1DED5:
@@ -8862,21 +8790,25 @@ _player_ptn_id_prev	db ?
 public _boss_post_defeat_palette
 _boss_post_defeat_palette	palette_t <?>
 
-public _pattern_interval
+public _pattern_interval, _pentagram
 _pattern_interval	dw ?
 
-x_39DE6	dw ?
-x_39DE8	dw ?
-x_39DEA	dw ?
-x_39DEC	dw ?
-x_39DEE	dw ?
-y_39DF0	dw ?
-y_39DF2	dw ?
-y_39DF4	dw ?
-y_39DF6	dw ?
-y_39DF8	dw ?
-word_39DFA	dw ?
-point_39DFC	Point <?>
+_pentagram label word
+_pentagram_x label word
+_pentagram_x_0	dw ?
+_pentagram_x_1	dw ?
+_pentagram_x_2	dw ?
+_pentagram_x_3	dw ?
+_pentagram_x_4	dw ?
+_pentagram_y label word
+_pentagram_y_0	dw ?
+_pentagram_y_1	dw ?
+_pentagram_y_2	dw ?
+_pentagram_y_3	dw ?
+_pentagram_y_4	dw ?
+_pentagram_radius	dw ?
+_pentagram_center	Point <?>
+
 y_39E00	dw ?
 x_39E02	dw ?
 public _yuugenmagan_invincibility_frame
