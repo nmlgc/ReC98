@@ -108,6 +108,17 @@ enum eye_cel_t {
 	C_AHEAD = 6,
 };
 
+// Eye flags
+typedef int8_t eye_flag_t;
+
+// Code generation wants 16-bit constants, unfortunately
+static const int EF_NONE = 0;
+static const int EF_WEST = (1 << 1);
+static const int EF_EAST = (1 << 2);
+static const int EF_SOUTHWEST = (1 << 3);
+static const int EF_SOUTHEAST = (1 << 4);
+static const int EF_NORTH = (1 << 5);
+
 struct CEyeEntity : public CBossEntitySized<EYE_W, EYE_H> {
 	// Relative pupil and iris coordinates
 	// -----------------------------------
@@ -422,3 +433,22 @@ void pascal near pentagram_regular_unput_update_render(
 	pentagram.put_and_hittest();
 }
 /// ---------
+
+// Function ordering fails
+// -----------------------
+
+// Opens and closes the given eyes, and changes the 邪 color in [stage_palette]
+// (and, via transferring it to [z_Palettes], also the hardware color) by
+// gradually incrementing and decrementing the given components on 9 out of 10
+// frames. Takes ownership of [frame]. To keep the 邪 color unchanged, set
+// [yokoshima_comp_inc] and [yokoshima_comp_dec] to a value ≥ COMPONENT_COUNT.
+//
+// MODDERS: Make the component parameters unsigned.
+void eyes_toggle_and_yokoshima_recolor(
+	eye_flag_t eyes_to_close,
+	eye_flag_t eyes_to_open,
+	int yokoshima_comp_dec,
+	int yokoshima_comp_inc,
+	int& frame
+);
+// -----------------------

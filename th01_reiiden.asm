@@ -4507,6 +4507,13 @@ eye_southwest	equ <_boss_entity_2>
 eye_southeast	equ <_boss_entity_3>
 eye_north	equ <_boss_entity_4>
 
+EF_NONE = 0
+EF_WEST = (1 shl 0)
+EF_EAST = (1 shl 1)
+EF_SOUTHWEST = (1 shl 2)
+EF_SOUTHEAST = (1 shl 3)
+EF_NORTH = (1 shl 4)
+
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
@@ -5027,12 +5034,12 @@ loc_1C02D:
 		cbw
 		cmp	ax, 2
 		jnz	loc_1C0CA
-		push	ds
-		push	offset _boss_phase_frame
-		push	20000h
-		push	0Ch
-		push	3
-		nopcall	sub_1DFFF
+		push	ds	; frame (segment)
+		push	offset _boss_phase_frame	; frame (offset)
+		push	0 or (2 shl 16)	; yokoshima_comp_dec or (yokoshima_comp_inc)
+		push	(EF_SOUTHWEST or EF_SOUTHEAST)	; eyes_to_open
+		push	(EF_WEST or EF_EAST)	; eyes_to_close
+		nopcall	@eyes_toggle_and_yokoshima_recolo$qcciimi
 		add	sp, 0Ch
 		cmp	_boss_phase_frame, 70
 		jl	loc_1DFFC
@@ -5378,12 +5385,12 @@ loc_1C3EB:
 		cbw
 		cmp	ax, 4
 		jnz	loc_1C493
-		push	ds
-		push	offset _boss_phase_frame
-		pushd	1
-		push	3
-		push	0Ch
-		nopcall	sub_1DFFF
+		push	ds	; frame (segment)
+		push	offset _boss_phase_frame	; frame (offset)
+		pushd	1 or (0 shl 16)	; yokoshima_comp_dec or (yokoshima_comp_inc)
+		push	(EF_WEST or EF_EAST)	; eyes_to_open
+		push	(EF_SOUTHWEST or EF_SOUTHEAST)	; eyes_to_close
+		nopcall	@eyes_toggle_and_yokoshima_recolo$qcciimi
 		add	sp, 0Ch
 		cmp	_boss_phase_frame, 70
 		jl	loc_1DFFC
@@ -5693,12 +5700,12 @@ loc_1C741:
 		cbw
 		cmp	ax, 6
 		jnz	loc_1C7E4
-		push	ds
-		push	offset _boss_phase_frame
-		push	30000h
-		push	0Ch
-		push	3
-		nopcall	sub_1DFFF
+		push	ds	; frame (segment)
+		push	offset _boss_phase_frame	; frame (offset)
+		push	0 or (3 shl 16)	; yokoshima_comp_dec or (yokoshima_comp_inc)
+		push	(EF_SOUTHWEST or EF_SOUTHEAST)	; eyes_to_open
+		push	(EF_WEST or EF_EAST)	; eyes_to_close
+		nopcall	@eyes_toggle_and_yokoshima_recolo$qcciimi
 		add	sp, 0Ch
 		cmp	_boss_phase_frame, 70
 		jl	loc_1DFFC
@@ -6050,12 +6057,12 @@ loc_1CB08:
 		cbw
 		cmp	ax, 8
 		jnz	short loc_1CB3E
-		push	ds
-		push	offset _boss_phase_frame
-		push	10002h
-		push	10h
-		push	0Ch
-		nopcall	sub_1DFFF
+		push	ds	; frame (segment)
+		push	offset _boss_phase_frame	; frame (offset)
+		push	2 or (1 shl 16)	; yokoshima_comp_dec or (yokoshima_comp_inc)
+		push	EF_NORTH	; eyes_to_open
+		push	(EF_SOUTHWEST or EF_SOUTHEAST)	; eyes_to_close
+		nopcall	@eyes_toggle_and_yokoshima_recolo$qcciimi
 		add	sp, 0Ch
 		cmp	_boss_phase_frame, 70
 		jl	loc_1DFFC
@@ -6468,15 +6475,15 @@ loc_1D036:
 		cbw
 		cmp	ax, 10
 		jnz	short loc_1D08C
-		push	ds
-		push	offset _boss_phase_frame
+		push	ds	; frame (segment)
+		push	offset _boss_phase_frame	; frame (offset)
 		mov	al, byte_39E14
 		cbw
-		push	ax
-		push	word_39E08
-		push	1Fh
-		push	0
-		nopcall	sub_1DFFF
+		push	ax	; yokoshima_comp_inc
+		push	word_39E08	; yokoshima_comp_dec
+		push	(EF_WEST or EF_EAST or EF_SOUTHWEST or EF_SOUTHEAST or EF_NORTH)	; eyes_to_open
+		push	EF_NONE	; eyes_to_close
+		nopcall	@eyes_toggle_and_yokoshima_recolo$qcciimi
 		add	sp, 0Ch
 		cmp	_boss_phase_frame, 70
 		jl	loc_1DFFC
@@ -7226,12 +7233,12 @@ loc_1D852:
 		cmp	ax, 12
 		jnz	short loc_1D8D5
 		inc	_yuugenmagan_invincibility_frame
-		push	ds
-		push	offset _boss_phase_frame
-		pushd	1
-		push	1
-		push	1Eh
-		nopcall	sub_1DFFF
+		push	ds	; frame (segment)
+		push	offset _boss_phase_frame	; frame (offset)
+		pushd	1 or (0 shl 16)	; yokoshima_comp_dec or (yokoshima_comp_inc)
+		push	EF_WEST	; eyes_to_open
+		push	(EF_EAST or EF_SOUTHWEST or EF_SOUTHEAST or EF_NORTH)	; eyes_to_close
+		nopcall	@eyes_toggle_and_yokoshima_recolo$qcciimi
 		add	sp, 0Ch
 		mov	ax, _yuugenmagan_invincibility_frame
 		mov	bx, 4
@@ -7270,40 +7277,40 @@ loc_1D8D5:
 		inc	x_39E06
 		mov	al, byte_39E14
 		cbw
-		and	ax, 1
-		cmp	ax, 1
+		and	ax, EF_WEST
+		cmp	ax, EF_WEST
 		jnz	short loc_1D90D
 		call	@CBossEntity@locked_move_unput_and_put_8$qiiii c, offset eye_west, ds, large 0, large 0 or (3 shl 16)
 
 loc_1D90D:
 		mov	al, byte_39E14
 		cbw
-		and	ax, 2
-		cmp	ax, 2
+		and	ax, EF_EAST
+		cmp	ax, EF_EAST
 		jnz	short loc_1D92E
 		call	@CBossEntity@locked_move_unput_and_put_8$qiiii c, offset eye_east, ds, large 0, large 0 or (3 shl 16)
 
 loc_1D92E:
 		mov	al, byte_39E14
 		cbw
-		and	ax, 4
-		cmp	ax, 4
+		and	ax, EF_SOUTHWEST
+		cmp	ax, EF_SOUTHWEST
 		jnz	short loc_1D94F
 		call	@CBossEntity@locked_move_unput_and_put_8$qiiii c, offset eye_southwest, ds, large 0, large 0 or (3 shl 16)
 
 loc_1D94F:
 		mov	al, byte_39E14
 		cbw
-		and	ax, 8
-		cmp	ax, 8
+		and	ax, EF_SOUTHEAST
+		cmp	ax, EF_SOUTHEAST
 		jnz	short loc_1D970
 		call	@CBossEntity@locked_move_unput_and_put_8$qiiii c, offset eye_southeast, ds, large 0, large 0 or (3 shl 16)
 
 loc_1D970:
 		mov	al, byte_39E14
 		cbw
-		and	ax, 10h
-		cmp	ax, 10h
+		and	ax, EF_NORTH
+		cmp	ax, EF_NORTH
 		jnz	short loc_1D991
 		call	@CBossEntity@locked_move_unput_and_put_8$qiiii c, offset eye_north, ds, large 0, large 0 or (3 shl 16)
 
@@ -7325,15 +7332,15 @@ loc_1D991:
 loc_1D9BC:
 		cmp	word_39E0E, 0
 		jle	short loc_1DA05
-		push	ds
-		push	offset word_39E0E
-		push	30003h
-		push	word ptr byte_39E14
+		push	ds	; frame (segment)
+		push	offset word_39E0E	; frame (offset)
+		push	3 or (3 shl 16)	; yokoshima_comp_dec or (yokoshima_comp_inc)
+		push	word ptr byte_39E14	; eyes_to_open
 		mov	al, byte_39E14
 		cbw
 		cmp	ax, 1
 		jnz	short loc_1D9DE
-		mov	al, 10h
+		mov	al, EF_NORTH
 		jmp	short loc_1D9E4
 ; ---------------------------------------------------------------------------
 
@@ -7343,8 +7350,8 @@ loc_1D9DE:
 		sar	ax, 1
 
 loc_1D9E4:
-		push	ax
-		nopcall	sub_1DFFF
+		push	ax ; eyes_to_close
+		nopcall	@eyes_toggle_and_yokoshima_recolo$qcciimi
 		add	sp, 0Ch
 		cmp	word_39E0E, 46h	; 'F'
 		jl	loc_1DB36
@@ -7354,7 +7361,7 @@ loc_1D9E4:
 ; ---------------------------------------------------------------------------
 
 loc_1DA05:
-		test	byte_39E14, 1
+		test	byte_39E14, EF_WEST
 		jz	short loc_1DA42
 		mov	ax, eye_west.BE_cur_left
 		add	ax, 32
@@ -7380,7 +7387,7 @@ loc_1DA3C:
 		mov	eye_west.BE_bos_image, CEL_DOWN
 
 loc_1DA42:
-		test	byte_39E14, 2
+		test	byte_39E14, EF_EAST
 		jz	short loc_1DA7F
 		mov	ax, eye_east.BE_cur_left
 		add	ax, 32
@@ -7406,7 +7413,7 @@ loc_1DA79:
 		mov	eye_east.BE_bos_image, CEL_DOWN
 
 loc_1DA7F:
-		test	byte_39E14, 4
+		test	byte_39E14, EF_SOUTHWEST
 		jz	short loc_1DABC
 		mov	ax, eye_southwest.BE_cur_left
 		add	ax, 32
@@ -7432,7 +7439,7 @@ loc_1DAB6:
 		mov	eye_southwest.BE_bos_image, CEL_DOWN
 
 loc_1DABC:
-		test	byte_39E14, 8
+		test	byte_39E14, EF_SOUTHEAST
 		jz	short loc_1DAF9
 		mov	ax, eye_southeast.BE_cur_left
 		add	ax, 32
@@ -7458,7 +7465,7 @@ loc_1DAF3:
 		mov	eye_southeast.BE_bos_image, CEL_DOWN
 
 loc_1DAF9:
-		test	byte_39E14, 10h
+		test	byte_39E14, EF_NORTH
 		jz	short loc_1DB36
 		mov	ax, eye_north.BE_cur_left
 		add	ax, 32
@@ -7813,97 +7820,97 @@ sub_1BA32	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public @eyes_toggle_and_yokoshima_recolo$qcciimi
+@eyes_toggle_and_yokoshima_recolo$qcciimi	proc far
 
-sub_1DFFF	proc far
-
-arg_0		= byte ptr  6
-arg_2		= byte ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= dword	ptr  0Eh
+@@yes_to_close		= byte ptr  6
+@@eyes_to_open		= byte ptr  8
+@@yokoshima_comp_dec		= word ptr  0Ah
+@@yokoshima_comp_inc		= word ptr  0Ch
+@@frame		= dword	ptr  0Eh
 
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
-		mov	si, [bp+arg_4]
-		mov	di, [bp+arg_6]
-		mov	al, [bp+arg_0]
+		mov	si, [bp+@@yokoshima_comp_dec]
+		mov	di, [bp+@@yokoshima_comp_inc]
+		mov	al, [bp+@@yes_to_close]
 		cbw
-		and	ax, 1
-		cmp	ax, 1
+		and	ax, EF_WEST
+		cmp	ax, EF_WEST
 		jz	short loc_1E022
-		mov	al, [bp+arg_2]
+		mov	al, [bp+@@eyes_to_open]
 		cbw
-		and	ax, 1
-		cmp	ax, 1
+		and	ax, EF_WEST
+		cmp	ax, EF_WEST
 		jnz	short loc_1E037
 
 loc_1E022:
 		call	@CBossEntity@locked_move_unput_and_put_8$qiiii c, offset eye_west, ds, large 0, large 0 or (3 shl 16)
 
 loc_1E037:
-		mov	al, [bp+arg_0]
+		mov	al, [bp+@@yes_to_close]
 		cbw
-		and	ax, 2
-		cmp	ax, 2
+		and	ax, EF_EAST
+		cmp	ax, EF_EAST
 		jz	short loc_1E04F
-		mov	al, [bp+arg_2]
+		mov	al, [bp+@@eyes_to_open]
 		cbw
-		and	ax, 2
-		cmp	ax, 2
+		and	ax, EF_EAST
+		cmp	ax, EF_EAST
 		jnz	short loc_1E064
 
 loc_1E04F:
 		call	@CBossEntity@locked_move_unput_and_put_8$qiiii c, offset eye_east, ds, large 0, large 0 or (3 shl 16)
 
 loc_1E064:
-		mov	al, [bp+arg_0]
+		mov	al, [bp+@@yes_to_close]
 		cbw
-		and	ax, 4
-		cmp	ax, 4
+		and	ax, EF_SOUTHWEST
+		cmp	ax, EF_SOUTHWEST
 		jz	short loc_1E07C
-		mov	al, [bp+arg_2]
+		mov	al, [bp+@@eyes_to_open]
 		cbw
-		and	ax, 4
-		cmp	ax, 4
+		and	ax, EF_SOUTHWEST
+		cmp	ax, EF_SOUTHWEST
 		jnz	short loc_1E091
 
 loc_1E07C:
 		call	@CBossEntity@locked_move_unput_and_put_8$qiiii c, offset eye_southwest, ds, large 0, large 0 or (3 shl 16)
 
 loc_1E091:
-		mov	al, [bp+arg_0]
+		mov	al, [bp+@@yes_to_close]
 		cbw
-		and	ax, 8
-		cmp	ax, 8
+		and	ax, EF_SOUTHEAST
+		cmp	ax, EF_SOUTHEAST
 		jz	short loc_1E0A9
-		mov	al, [bp+arg_2]
+		mov	al, [bp+@@eyes_to_open]
 		cbw
-		and	ax, 8
-		cmp	ax, 8
+		and	ax, EF_SOUTHEAST
+		cmp	ax, EF_SOUTHEAST
 		jnz	short loc_1E0BE
 
 loc_1E0A9:
 		call	@CBossEntity@locked_move_unput_and_put_8$qiiii c, offset eye_southeast, ds, large 0, large 0 or (3 shl 16)
 
 loc_1E0BE:
-		mov	al, [bp+arg_0]
+		mov	al, [bp+@@yes_to_close]
 		cbw
-		and	ax, 10h
-		cmp	ax, 10h
+		and	ax, EF_NORTH
+		cmp	ax, EF_NORTH
 		jz	short loc_1E0D6
-		mov	al, [bp+arg_2]
+		mov	al, [bp+@@eyes_to_open]
 		cbw
-		and	ax, 10h
-		cmp	ax, 10h
+		and	ax, EF_NORTH
+		cmp	ax, EF_NORTH
 		jnz	short loc_1E0EB
 
 loc_1E0D6:
 		call	@CBossEntity@locked_move_unput_and_put_8$qiiii c, offset eye_north, ds, large 0, large 0 or (3 shl 16)
 
 loc_1E0EB:
-		les	bx, [bp+arg_8]
+		les	bx, [bp+@@frame]
 		inc	word ptr es:[bx]
 		mov	ax, es:[bx]
 		mov	bx, 10
@@ -7930,215 +7937,215 @@ loc_1E121:
 		call	_z_palette_set_all_show c, offset _stage_palette, ds
 
 loc_1E12D:
-		les	bx, [bp+arg_8]
-		cmp	word ptr es:[bx], 14h
+		les	bx, [bp+@@frame]
+		cmp	word ptr es:[bx], 20
 		jnz	loc_1E1F1
-		test	[bp+arg_0], 1
+		test	[bp+@@yes_to_close], EF_WEST
 		jz	short loc_1E144
 		mov	eye_west.BE_bos_image, CEL_HALFOPEN
 
 loc_1E144:
-		test	[bp+arg_0], 2
+		test	[bp+@@yes_to_close], EF_EAST
 		jz	short loc_1E150
 		mov	eye_east.BE_bos_image, CEL_HALFOPEN
 
 loc_1E150:
-		test	[bp+arg_0], 4
+		test	[bp+@@yes_to_close], EF_SOUTHWEST
 		jz	short loc_1E15C
 		mov	eye_southwest.BE_bos_image, CEL_HALFOPEN
 
 loc_1E15C:
-		test	[bp+arg_0], 8
+		test	[bp+@@yes_to_close], EF_SOUTHEAST
 		jz	short loc_1E168
 		mov	eye_southeast.BE_bos_image, CEL_HALFOPEN
 
 loc_1E168:
-		test	[bp+arg_0], 10h
+		test	[bp+@@yes_to_close], EF_NORTH
 		jz	short loc_1E174
 		mov	eye_north.BE_bos_image, CEL_HALFOPEN
 
 loc_1E174:
-		test	[bp+arg_2], 1
+		test	[bp+@@eyes_to_open], EF_WEST
 		jz	short loc_1E180
 		mov	eye_west.BE_bos_image, CEL_CLOSED
 
 loc_1E180:
-		test	[bp+arg_2], 2
+		test	[bp+@@eyes_to_open], EF_EAST
 		jz	short loc_1E18C
 		mov	eye_east.BE_bos_image, CEL_CLOSED
 
 loc_1E18C:
-		test	[bp+arg_2], 4
+		test	[bp+@@eyes_to_open], EF_SOUTHWEST
 		jz	short loc_1E198
 		mov	eye_southwest.BE_bos_image, CEL_CLOSED
 
 loc_1E198:
-		test	[bp+arg_2], 8
+		test	[bp+@@eyes_to_open], EF_SOUTHEAST
 		jz	short loc_1E1A4
 		mov	eye_southeast.BE_bos_image, CEL_CLOSED
 
 loc_1E1A4:
-		test	[bp+arg_2], 10h
+		test	[bp+@@eyes_to_open], EF_NORTH
 		jz	short loc_1E1B0
 		mov	eye_north.BE_bos_image, CEL_CLOSED
 
 loc_1E1B0:
-		test	[bp+arg_2], 1
+		test	[bp+@@eyes_to_open], EF_WEST
 		jz	short loc_1E1BC
 		mov	eye_west.BE_hitbox_orb_inactive, 0
 
 loc_1E1BC:
-		test	[bp+arg_2], 2
+		test	[bp+@@eyes_to_open], EF_EAST
 		jz	short loc_1E1C8
 		mov	eye_east.BE_hitbox_orb_inactive, 0
 
 loc_1E1C8:
-		test	[bp+arg_2], 4
+		test	[bp+@@eyes_to_open], EF_SOUTHWEST
 		jz	short loc_1E1D4
 		mov	eye_southwest.BE_hitbox_orb_inactive, 0
 
 loc_1E1D4:
-		test	[bp+arg_2], 8
+		test	[bp+@@eyes_to_open], EF_SOUTHEAST
 		jz	short loc_1E1E0
 		mov	eye_southeast.BE_hitbox_orb_inactive, 0
 
 loc_1E1E0:
-		test	[bp+arg_2], 10h
+		test	[bp+@@eyes_to_open], EF_NORTH
 		jz	loc_1E336
 		mov	eye_north.BE_hitbox_orb_inactive, 0
 		jmp	loc_1E336
 ; ---------------------------------------------------------------------------
 
 loc_1E1F1:
-		les	bx, [bp+arg_8]
-		cmp	word ptr es:[bx], 28h ;	'('
+		les	bx, [bp+@@frame]
+		cmp	word ptr es:[bx], 40
 		jnz	loc_1E2B5
-		test	[bp+arg_0], 1
+		test	[bp+@@yes_to_close], EF_WEST
 		jz	short loc_1E208
 		mov	eye_west.BE_bos_image, CEL_CLOSED
 
 loc_1E208:
-		test	[bp+arg_0], 2
+		test	[bp+@@yes_to_close], EF_EAST
 		jz	short loc_1E214
 		mov	eye_east.BE_bos_image, CEL_CLOSED
 
 loc_1E214:
-		test	[bp+arg_0], 4
+		test	[bp+@@yes_to_close], EF_SOUTHWEST
 		jz	short loc_1E220
 		mov	eye_southwest.BE_bos_image, CEL_CLOSED
 
 loc_1E220:
-		test	[bp+arg_0], 8
+		test	[bp+@@yes_to_close], EF_SOUTHEAST
 		jz	short loc_1E22C
 		mov	eye_southeast.BE_bos_image, CEL_CLOSED
 
 loc_1E22C:
-		test	[bp+arg_0], 10h
+		test	[bp+@@yes_to_close], EF_NORTH
 		jz	short loc_1E238
 		mov	eye_north.BE_bos_image, CEL_CLOSED
 
 loc_1E238:
-		test	[bp+arg_2], 1
+		test	[bp+@@eyes_to_open], EF_WEST
 		jz	short loc_1E244
 		mov	eye_west.BE_bos_image, CEL_HALFOPEN
 
 loc_1E244:
-		test	[bp+arg_2], 2
+		test	[bp+@@eyes_to_open], EF_EAST
 		jz	short loc_1E250
 		mov	eye_east.BE_bos_image, CEL_HALFOPEN
 
 loc_1E250:
-		test	[bp+arg_2], 4
+		test	[bp+@@eyes_to_open], EF_SOUTHWEST
 		jz	short loc_1E25C
 		mov	eye_southwest.BE_bos_image, CEL_HALFOPEN
 
 loc_1E25C:
-		test	[bp+arg_2], 8
+		test	[bp+@@eyes_to_open], EF_SOUTHEAST
 		jz	short loc_1E268
 		mov	eye_southeast.BE_bos_image, CEL_HALFOPEN
 
 loc_1E268:
-		test	[bp+arg_2], 10h
+		test	[bp+@@eyes_to_open], EF_NORTH
 		jz	short loc_1E274
 		mov	eye_north.BE_bos_image, CEL_HALFOPEN
 
 loc_1E274:
-		test	[bp+arg_0], 1
+		test	[bp+@@yes_to_close], EF_WEST
 		jz	short loc_1E280
 		mov	eye_west.BE_hitbox_orb_inactive, 1
 
 loc_1E280:
-		test	[bp+arg_0], 2
+		test	[bp+@@yes_to_close], EF_EAST
 		jz	short loc_1E28C
 		mov	eye_east.BE_hitbox_orb_inactive, 1
 
 loc_1E28C:
-		test	[bp+arg_0], 4
+		test	[bp+@@yes_to_close], EF_SOUTHWEST
 		jz	short loc_1E298
 		mov	eye_southwest.BE_hitbox_orb_inactive, 1
 
 loc_1E298:
-		test	[bp+arg_0], 8
+		test	[bp+@@yes_to_close], EF_SOUTHEAST
 		jz	short loc_1E2A4
 		mov	eye_southeast.BE_hitbox_orb_inactive, 1
 
 loc_1E2A4:
-		test	[bp+arg_0], 10h
+		test	[bp+@@yes_to_close], EF_NORTH
 		jz	loc_1E336
 		mov	eye_north.BE_hitbox_orb_inactive, 1
 		jmp	loc_1E336
 ; ---------------------------------------------------------------------------
 
 loc_1E2B5:
-		les	bx, [bp+arg_8]
-		cmp	word ptr es:[bx], 3Ch ;	'<'
+		les	bx, [bp+@@frame]
+		cmp	word ptr es:[bx], 60
 		jnz	short loc_1E336
-		test	[bp+arg_0], 1
+		test	[bp+@@yes_to_close], EF_WEST
 		jz	short loc_1E2CA
 		mov	eye_west.BE_bos_image, CEL_HIDDEN
 
 loc_1E2CA:
-		test	[bp+arg_0], 2
+		test	[bp+@@yes_to_close], EF_EAST
 		jz	short loc_1E2D6
 		mov	eye_east.BE_bos_image, CEL_HIDDEN
 
 loc_1E2D6:
-		test	[bp+arg_0], 4
+		test	[bp+@@yes_to_close], EF_SOUTHWEST
 		jz	short loc_1E2E2
 		mov	eye_southwest.BE_bos_image, CEL_HIDDEN
 
 loc_1E2E2:
-		test	[bp+arg_0], 8
+		test	[bp+@@yes_to_close], EF_SOUTHEAST
 		jz	short loc_1E2EE
 		mov	eye_southeast.BE_bos_image, CEL_HIDDEN
 
 loc_1E2EE:
-		test	[bp+arg_0], 10h
+		test	[bp+@@yes_to_close], EF_NORTH
 		jz	short loc_1E2FA
 		mov	eye_north.BE_bos_image, CEL_HIDDEN
 
 loc_1E2FA:
-		test	[bp+arg_2], 1
+		test	[bp+@@eyes_to_open], EF_WEST
 		jz	short loc_1E306
 		mov	eye_west.BE_bos_image, CEL_AHEAD
 
 loc_1E306:
-		test	[bp+arg_2], 2
+		test	[bp+@@eyes_to_open], EF_EAST
 		jz	short loc_1E312
 		mov	eye_east.BE_bos_image, CEL_AHEAD
 
 loc_1E312:
-		test	[bp+arg_2], 4
+		test	[bp+@@eyes_to_open], EF_SOUTHWEST
 		jz	short loc_1E31E
 		mov	eye_southwest.BE_bos_image, CEL_AHEAD
 
 loc_1E31E:
-		test	[bp+arg_2], 8
+		test	[bp+@@eyes_to_open], EF_SOUTHEAST
 		jz	short loc_1E32A
 		mov	eye_southeast.BE_bos_image, CEL_AHEAD
 
 loc_1E32A:
-		test	[bp+arg_2], 10h
+		test	[bp+@@eyes_to_open], EF_NORTH
 		jz	short loc_1E336
 
 loc_1E330:
@@ -8149,7 +8156,7 @@ loc_1E336:
 		pop	si
 		pop	bp
 		retf
-sub_1DFFF	endp
+@eyes_toggle_and_yokoshima_recolo$qcciimi	endp
 
 eye_west	equ <>
 eye_east	equ <>
