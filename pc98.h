@@ -84,6 +84,10 @@ typedef unsigned int utram_y_t;
 typedef bool page_t;
 
 #define COLOR_COUNT 16
+
+#define COMPONENT_R 0
+#define COMPONENT_G 1
+#define COMPONENT_B 2
 #define COMPONENT_COUNT 3
 
 // The 16-color mode supports 4 bits per RGB component, for a total of
