@@ -23,18 +23,18 @@ enum pellet_motion_t {
 	// frame, in a straight line at the same [speed].
 	PM_SLING_AIMED = 2,
 
-	// Lets the pellet bounce off the top of the playfield once, negating its
-	// X velocity, and zeroing its Y velocity. The pellet then switches to
-	// PM_GRAVITY.
+	// Behaves like PM_REGULAR until the pellet reaches the top of the
+	// playfield. There, it bounces off by negating its X velocity, and zeroing
+	// its Y velocity before switching to PM_GRAVITY.
 	// Unused in the original game. Should have bounced the bullets off the
-	// left and right edge of the playfield as well, but that code doesn't
+	// left and right edge of the playfield as well, but that part doesn't
 	// actually work in ZUN's original code.
 	PM_BOUNCE_FROM_TOP_THEN_GRAVITY = 3,
 
-	// Lets the pellet bounce off the top of the playfield once, zeroing its
-	// X velocity, and setting its Y velocity to [speed]. The pellet then
-	// switches to PM_REGULAR.
-	PM_FALL_STRAIGHT_FROM_TOP_THEN_NORMAL = 4,
+	// Behaves like PM_REGULAR until the pellet reaches the top of the
+	// playfield. There, it zeroes its X velocity and sets its Y velocity to
+	// [speed] before switching to PM_REGULAR.
+	PM_FALL_STRAIGHT_FROM_TOP_THEN_REGULAR = 4,
 
 	// Spins the pellet on a circle around a [spin_center] point, which moves
 	// at [spin_velocity], with [PELLET_SPIN_CIRCLE_RADIUS] and a rotational

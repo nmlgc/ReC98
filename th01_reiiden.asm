@@ -6153,7 +6153,7 @@ loc_1C5F3:
 		or	dx, dx
 		jnz	short loc_1C65A
 		pushd	0 or (0 shl 16)
-		push	PM_FALL_STRAIGHT_FROM_TOP_THEN_NORMAL or ((4 shl 4) shl 16)
+		push	PM_FALL_STRAIGHT_FROM_TOP_THEN_REGULAR or ((4 shl 4) shl 16)
 		push	(4 shl 4)
 		mov	al, 80h
 		sub	al, angle_39E16
@@ -6168,7 +6168,7 @@ loc_1C5F3:
 		push	offset _Pellets
 		call	@CPellets@add_single$qiiuci15pellet_motion_tiii
 		pushd	0 or (0 shl 16)
-		push	PM_FALL_STRAIGHT_FROM_TOP_THEN_NORMAL or ((4 shl 4) shl 16)
+		push	PM_FALL_STRAIGHT_FROM_TOP_THEN_REGULAR or ((4 shl 4) shl 16)
 		push	(4 shl 4)
 		push	word ptr angle_39E16
 		mov	ax, eye_east.BE_cur_top

@@ -1462,7 +1462,7 @@ void pattern_semicircle_rain_from_sleeve(void)
 		for(i = 0, angle = 0x00; i < SPREAD; i++, angle -= (0x80 / SPREAD)) {
 			Pellets.add_single(
 				LEFT_SLEEVE_LEFT, LEFT_SLEEVE_TOP, angle, to_sp(2.0f),
-				PM_FALL_STRAIGHT_FROM_TOP_THEN_NORMAL, to_sp(3.0f)
+				PM_FALL_STRAIGHT_FROM_TOP_THEN_REGULAR, to_sp(3.0f)
 			);
 		}
 		mdrv2_se_play(7);

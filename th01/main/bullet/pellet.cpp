@@ -368,7 +368,7 @@ void CPellets::motion_type_apply_for_cur(void)
 			}
 		}
 		break;
-	case PM_FALL_STRAIGHT_FROM_TOP_THEN_NORMAL:
+	case PM_FALL_STRAIGHT_FROM_TOP_THEN_REGULAR:
 		if(p->cur_top.to_pixel() <= PELLET_BOUNCE_TOP_MIN) {
 			p->velocity.x.set(0.0f);
 			p->velocity.y.v = p->speed.v;
