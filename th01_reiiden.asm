@@ -4483,6 +4483,14 @@ main_28__TEXT	segment	byte public 'CODE' use16
 		;org 0Fh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
+CEL_HIDDEN = 0
+CEL_CLOSED = 1
+CEL_HALFOPEN = 2
+CEL_DOWN = 3
+CEL_LEFT = 4
+CEL_RIGHT = 5
+CEL_AHEAD = 6
+
 eye_0	equ <_boss_entity_0>
 eye_1	equ <_boss_entity_1>
 eye_2	equ <_boss_entity_2>
@@ -5044,8 +5052,8 @@ loc_1BA6C:
 loc_1BAFD:
 		cmp	_boss_phase_frame, 100
 		jnz	short loc_1BB1F
-		mov	eye_west.BE_bos_image, 1
-		mov	eye_east.BE_bos_image, 1
+		mov	eye_west.BE_bos_image, CEL_CLOSED
+		mov	eye_east.BE_bos_image, CEL_CLOSED
 		mov	eye_west.BE_hitbox_orb_inactive, 0
 		mov	eye_east.BE_hitbox_orb_inactive, 0
 		jmp	loc_1DFFC
@@ -5054,10 +5062,10 @@ loc_1BAFD:
 loc_1BB1F:
 		cmp	_boss_phase_frame, 120
 		jnz	short loc_1BB4D
-		mov	eye_west.BE_bos_image, 2
-		mov	eye_east.BE_bos_image, 2
-		mov	eye_southwest.BE_bos_image, 1
-		mov	eye_southeast.BE_bos_image, 1
+		mov	eye_west.BE_bos_image, CEL_HALFOPEN
+		mov	eye_east.BE_bos_image, CEL_HALFOPEN
+		mov	eye_southwest.BE_bos_image, CEL_CLOSED
+		mov	eye_southeast.BE_bos_image, CEL_CLOSED
 		mov	eye_southwest.BE_hitbox_orb_inactive, 0
 		mov	eye_southeast.BE_hitbox_orb_inactive, 0
 		jmp	loc_1DFFC
@@ -5066,11 +5074,11 @@ loc_1BB1F:
 loc_1BB4D:
 		cmp	_boss_phase_frame, 140
 		jnz	short loc_1BB7C
-		mov	eye_west.BE_bos_image, 6
-		mov	eye_east.BE_bos_image, 6
-		mov	eye_southwest.BE_bos_image, 2
-		mov	eye_southeast.BE_bos_image, 2
-		mov	eye_north.BE_bos_image, 1
+		mov	eye_west.BE_bos_image, CEL_AHEAD
+		mov	eye_east.BE_bos_image, CEL_AHEAD
+		mov	eye_southwest.BE_bos_image, CEL_HALFOPEN
+		mov	eye_southeast.BE_bos_image, CEL_HALFOPEN
+		mov	eye_north.BE_bos_image, CEL_CLOSED
 		mov	eye_north.BE_hitbox_orb_inactive, 0
 		jmp	loc_1DFFC
 ; ---------------------------------------------------------------------------
@@ -5078,38 +5086,38 @@ loc_1BB4D:
 loc_1BB7C:
 		cmp	_boss_phase_frame, 160
 		jnz	short loc_1BBA5
-		mov	eye_west.BE_bos_image, 3
-		mov	eye_east.BE_bos_image, 3
-		mov	eye_southwest.BE_bos_image, 6
-		mov	eye_southeast.BE_bos_image, 6
-		mov	eye_north.BE_bos_image, 2
+		mov	eye_west.BE_bos_image, CEL_DOWN
+		mov	eye_east.BE_bos_image, CEL_DOWN
+		mov	eye_southwest.BE_bos_image, CEL_AHEAD
+		mov	eye_southeast.BE_bos_image, CEL_AHEAD
+		mov	eye_north.BE_bos_image, CEL_HALFOPEN
 		jmp	loc_1DFFC
 ; ---------------------------------------------------------------------------
 
 loc_1BBA5:
 		cmp	_boss_phase_frame, 180
 		jnz	short loc_1BBC2
-		mov	eye_southwest.BE_bos_image, 3
-		mov	eye_southeast.BE_bos_image, 3
-		mov	eye_north.BE_bos_image, 6
+		mov	eye_southwest.BE_bos_image, CEL_DOWN
+		mov	eye_southeast.BE_bos_image, CEL_DOWN
+		mov	eye_north.BE_bos_image, CEL_AHEAD
 		jmp	loc_1DFFC
 ; ---------------------------------------------------------------------------
 
 loc_1BBC2:
 		cmp	_boss_phase_frame, 200
 		jnz	short loc_1BBD3
-		mov	eye_north.BE_bos_image, 3
+		mov	eye_north.BE_bos_image, CEL_DOWN
 		jmp	loc_1DFFC
 ; ---------------------------------------------------------------------------
 
 loc_1BBD3:
 		cmp	_boss_phase_frame, 240
 		jnz	loc_1BC8C
-		mov	eye_0.BE_bos_image, 2
-		mov	eye_1.BE_bos_image, 2
-		mov	eye_2.BE_bos_image, 2
-		mov	eye_3.BE_bos_image, 2
-		mov	eye_4.BE_bos_image, 2
+		mov	eye_0.BE_bos_image, CEL_HALFOPEN
+		mov	eye_1.BE_bos_image, CEL_HALFOPEN
+		mov	eye_2.BE_bos_image, CEL_HALFOPEN
+		mov	eye_3.BE_bos_image, CEL_HALFOPEN
+		mov	eye_4.BE_bos_image, CEL_HALFOPEN
 		mov	eye_0.BE_hitbox_orb_inactive, 1
 		mov	eye_1.BE_hitbox_orb_inactive, 1
 		mov	eye_2.BE_hitbox_orb_inactive, 1
@@ -5160,11 +5168,11 @@ loc_1BBD3:
 loc_1BC8C:
 		cmp	_boss_phase_frame, 260
 		jnz	loc_1BD59
-		mov	eye_west.BE_bos_image, 1
-		mov	eye_east.BE_bos_image, 1
-		mov	eye_southwest.BE_bos_image, 1
-		mov	eye_southeast.BE_bos_image, 1
-		mov	eye_north.BE_bos_image, 1
+		mov	eye_west.BE_bos_image, CEL_CLOSED
+		mov	eye_east.BE_bos_image, CEL_CLOSED
+		mov	eye_southwest.BE_bos_image, CEL_CLOSED
+		mov	eye_southeast.BE_bos_image, CEL_CLOSED
+		mov	eye_north.BE_bos_image, CEL_CLOSED
 		mov	al, _rank
 		cbw
 		cmp	ax, 3
@@ -5229,19 +5237,19 @@ loc_1BD19:
 loc_1BD59:
 		cmp	_boss_phase_frame, 280
 		jnz	short loc_1BD82
-		mov	eye_west.BE_bos_image, 0
-		mov	eye_east.BE_bos_image, 0
-		mov	eye_southwest.BE_bos_image, 0
-		mov	eye_southeast.BE_bos_image, 0
-		mov	eye_north.BE_bos_image, 0
+		mov	eye_west.BE_bos_image, CEL_HIDDEN
+		mov	eye_east.BE_bos_image, CEL_HIDDEN
+		mov	eye_southwest.BE_bos_image, CEL_HIDDEN
+		mov	eye_southeast.BE_bos_image, CEL_HIDDEN
+		mov	eye_north.BE_bos_image, CEL_HIDDEN
 		jmp	loc_1DFFC
 ; ---------------------------------------------------------------------------
 
 loc_1BD82:
 		cmp	_boss_phase_frame, 300
 		jnz	short loc_1BDCD
-		mov	eye_west.BE_bos_image, 1
-		mov	eye_east.BE_bos_image, 1
+		mov	eye_west.BE_bos_image, CEL_CLOSED
+		mov	eye_east.BE_bos_image, CEL_CLOSED
 		push	RES_Y
 		mov	ax, eye_west.BE_cur_left
 		add	ax, 28
@@ -5268,8 +5276,8 @@ loc_1BD82:
 loc_1BDCD:
 		cmp	_boss_phase_frame, 320
 		jnz	short loc_1BE24
-		mov	eye_west.BE_bos_image, 2
-		mov	eye_east.BE_bos_image, 2
+		mov	eye_west.BE_bos_image, CEL_HALFOPEN
+		mov	eye_east.BE_bos_image, CEL_HALFOPEN
 		mov	eye_west.BE_hitbox_orb_inactive, 0
 		mov	eye_east.BE_hitbox_orb_inactive, 0
 		push	RES_Y
@@ -5304,8 +5312,8 @@ loc_1BE24:
 		call	_z_palette_set_all_show c, offset _stage_palette, ds
 		call	@boss_palette_snap$qv
 		mov	_yuugenmagan_initial_hp_rendered, 0
-		mov	eye_west.BE_bos_image, 4
-		mov	eye_east.BE_bos_image, 3
+		mov	eye_west.BE_bos_image, CEL_LEFT
+		mov	eye_east.BE_bos_image, CEL_DOWN
 		cmp	_rank, RANK_EASY
 		jnz	short loc_1BE6D
 		mov	ax, 15Eh
@@ -5376,7 +5384,7 @@ loc_1BEC0:
 		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1BF11
-		mov	eye_west.BE_bos_image, 4
+		mov	eye_west.BE_bos_image, CEL_LEFT
 		jmp	short loc_1BF30
 ; ---------------------------------------------------------------------------
 
@@ -5387,12 +5395,12 @@ loc_1BF11:
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1BF2A
-		mov	eye_west.BE_bos_image, 5
+		mov	eye_west.BE_bos_image, CEL_RIGHT
 		jmp	short loc_1BF30
 ; ---------------------------------------------------------------------------
 
 loc_1BF2A:
-		mov	eye_west.BE_bos_image, 3
+		mov	eye_west.BE_bos_image, CEL_DOWN
 
 loc_1BF30:
 		mov	ax, eye_east.BE_cur_left
@@ -5400,7 +5408,7 @@ loc_1BF30:
 		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1BF47
-		mov	eye_east.BE_bos_image, 4
+		mov	eye_east.BE_bos_image, CEL_LEFT
 		jmp	short loc_1BF66
 ; ---------------------------------------------------------------------------
 
@@ -5411,12 +5419,12 @@ loc_1BF47:
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1BF60
-		mov	eye_east.BE_bos_image, 5
+		mov	eye_east.BE_bos_image, CEL_RIGHT
 		jmp	short loc_1BF66
 ; ---------------------------------------------------------------------------
 
 loc_1BF60:
-		mov	eye_east.BE_bos_image, 3
+		mov	eye_east.BE_bos_image, CEL_DOWN
 
 loc_1BF66:
 		call	sub_1B6D9
@@ -5425,35 +5433,35 @@ loc_1BF66:
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_west, ds
 		cmp	ax, 1
 		jnz	short loc_1BF88
-		cmp	eye_west.BE_bos_image, 0
+		cmp	eye_west.BE_bos_image, CEL_HIDDEN
 		jnz	short loc_1BFE8
 
 loc_1BF88:
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_east, ds
 		cmp	ax, 1
 		jnz	short loc_1BFA0
-		cmp	eye_east.BE_bos_image, 0
+		cmp	eye_east.BE_bos_image, CEL_HIDDEN
 		jnz	short loc_1BFE8
 
 loc_1BFA0:
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_southwest, ds
 		cmp	ax, 1
 		jnz	short loc_1BFB8
-		cmp	eye_southwest.BE_bos_image, 0
+		cmp	eye_southwest.BE_bos_image, CEL_HIDDEN
 		jnz	short loc_1BFE8
 
 loc_1BFB8:
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_southeast, ds
 		cmp	ax, 1
 		jnz	short loc_1BFD0
-		cmp	eye_southeast.BE_bos_image, 0
+		cmp	eye_southeast.BE_bos_image, CEL_HIDDEN
 		jnz	short loc_1BFE8
 
 loc_1BFD0:
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_north, ds
 		cmp	ax, 1
 		jnz	short loc_1BFED
-		cmp	eye_north.BE_bos_image, 0
+		cmp	eye_north.BE_bos_image, CEL_HIDDEN
 		jz	short loc_1BFED
 
 loc_1BFE8:
@@ -5566,7 +5574,7 @@ loc_1C0CA:
 		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1C11B
-		mov	eye_southwest.BE_bos_image, 4
+		mov	eye_southwest.BE_bos_image, CEL_LEFT
 		jmp	short loc_1C13A
 ; ---------------------------------------------------------------------------
 
@@ -5577,12 +5585,12 @@ loc_1C11B:
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1C134
-		mov	eye_southwest.BE_bos_image, 5
+		mov	eye_southwest.BE_bos_image, CEL_RIGHT
 		jmp	short loc_1C13A
 ; ---------------------------------------------------------------------------
 
 loc_1C134:
-		mov	eye_southwest.BE_bos_image, 3
+		mov	eye_southwest.BE_bos_image, CEL_DOWN
 
 loc_1C13A:
 		mov	ax, eye_southeast.BE_cur_left
@@ -5590,7 +5598,7 @@ loc_1C13A:
 		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1C151
-		mov	eye_southeast.BE_bos_image, 4
+		mov	eye_southeast.BE_bos_image, CEL_LEFT
 		jmp	short loc_1C170
 ; ---------------------------------------------------------------------------
 
@@ -5601,12 +5609,12 @@ loc_1C151:
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1C16A
-		mov	eye_southeast.BE_bos_image, 5
+		mov	eye_southeast.BE_bos_image, CEL_RIGHT
 		jmp	short loc_1C170
 ; ---------------------------------------------------------------------------
 
 loc_1C16A:
-		mov	eye_southeast.BE_bos_image, 3
+		mov	eye_southeast.BE_bos_image, CEL_DOWN
 
 loc_1C170:
 		cmp	_boss_phase_frame, 90
@@ -5617,8 +5625,8 @@ loc_1C170:
 		jnz	short loc_1C191
 
 loc_1C185:
-		mov	eye_southwest.BE_bos_image, 1
-		mov	eye_southeast.BE_bos_image, 1
+		mov	eye_southwest.BE_bos_image, CEL_CLOSED
+		mov	eye_southeast.BE_bos_image, CEL_CLOSED
 
 loc_1C191:
 		cmp	_boss_phase_frame, 100
@@ -5780,35 +5788,35 @@ loc_1C327:
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_west, ds
 		cmp	ax, 1
 		jnz	short loc_1C345
-		cmp	eye_west.BE_bos_image, 0
+		cmp	eye_west.BE_bos_image, CEL_HIDDEN
 		jnz	short loc_1C3A5
 
 loc_1C345:
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_east, ds
 		cmp	ax, 1
 		jnz	short loc_1C35D
-		cmp	eye_east.BE_bos_image, 0
+		cmp	eye_east.BE_bos_image, CEL_HIDDEN
 		jnz	short loc_1C3A5
 
 loc_1C35D:
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_southwest, ds
 		cmp	ax, 1
 		jnz	short loc_1C375
-		cmp	eye_southwest.BE_bos_image, 0
+		cmp	eye_southwest.BE_bos_image, CEL_HIDDEN
 		jnz	short loc_1C3A5
 
 loc_1C375:
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_southeast, ds
 		cmp	ax, 1
 		jnz	short loc_1C38D
-		cmp	eye_southeast.BE_bos_image, 0
+		cmp	eye_southeast.BE_bos_image, CEL_HIDDEN
 		jnz	short loc_1C3A5
 
 loc_1C38D:
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_north, ds
 		cmp	ax, 1
 		jnz	short loc_1C3AA
-		cmp	eye_north.BE_bos_image, 0
+		cmp	eye_north.BE_bos_image, CEL_HIDDEN
 		jz	short loc_1C3AA
 
 loc_1C3A5:
@@ -5932,7 +5940,7 @@ loc_1C493:
 		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1C4EC
-		mov	eye_west.BE_bos_image, 4
+		mov	eye_west.BE_bos_image, CEL_LEFT
 		jmp	short loc_1C50B
 ; ---------------------------------------------------------------------------
 
@@ -5943,12 +5951,12 @@ loc_1C4EC:
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1C505
-		mov	eye_west.BE_bos_image, 5
+		mov	eye_west.BE_bos_image, CEL_RIGHT
 		jmp	short loc_1C50B
 ; ---------------------------------------------------------------------------
 
 loc_1C505:
-		mov	eye_west.BE_bos_image, 3
+		mov	eye_west.BE_bos_image, CEL_DOWN
 
 loc_1C50B:
 		mov	ax, eye_east.BE_cur_left
@@ -5956,7 +5964,7 @@ loc_1C50B:
 		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1C522
-		mov	eye_east.BE_bos_image, 4
+		mov	eye_east.BE_bos_image, CEL_LEFT
 		jmp	short loc_1C541
 ; ---------------------------------------------------------------------------
 
@@ -5967,12 +5975,12 @@ loc_1C522:
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1C53B
-		mov	eye_east.BE_bos_image, 5
+		mov	eye_east.BE_bos_image, CEL_RIGHT
 		jmp	short loc_1C541
 ; ---------------------------------------------------------------------------
 
 loc_1C53B:
-		mov	eye_east.BE_bos_image, 3
+		mov	eye_east.BE_bos_image, CEL_DOWN
 
 loc_1C541:
 		cmp	_boss_phase_frame, 100
@@ -6095,35 +6103,35 @@ loc_1C67D:
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_west, ds
 		cmp	ax, 1
 		jnz	short loc_1C69B
-		cmp	eye_west.BE_bos_image, 0
+		cmp	eye_west.BE_bos_image, CEL_HIDDEN
 		jnz	short loc_1C6FB
 
 loc_1C69B:
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_east, ds
 		cmp	ax, 1
 		jnz	short loc_1C6B3
-		cmp	eye_east.BE_bos_image, 0
+		cmp	eye_east.BE_bos_image, CEL_HIDDEN
 		jnz	short loc_1C6FB
 
 loc_1C6B3:
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_southwest, ds
 		cmp	ax, 1
 		jnz	short loc_1C6CB
-		cmp	eye_southwest.BE_bos_image, 0
+		cmp	eye_southwest.BE_bos_image, CEL_HIDDEN
 		jnz	short loc_1C6FB
 
 loc_1C6CB:
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_southeast, ds
 		cmp	ax, 1
 		jnz	short loc_1C6E3
-		cmp	eye_southeast.BE_bos_image, 0
+		cmp	eye_southeast.BE_bos_image, CEL_HIDDEN
 		jnz	short loc_1C6FB
 
 loc_1C6E3:
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_north, ds
 		cmp	ax, 1
 		jnz	short loc_1C700
-		cmp	eye_north.BE_bos_image, 0
+		cmp	eye_north.BE_bos_image, CEL_HIDDEN
 		jz	short loc_1C700
 
 loc_1C6FB:
@@ -6239,7 +6247,7 @@ loc_1C7E4:
 		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1C835
-		mov	eye_southwest.BE_bos_image, 4
+		mov	eye_southwest.BE_bos_image, CEL_LEFT
 		jmp	short loc_1C854
 ; ---------------------------------------------------------------------------
 
@@ -6250,12 +6258,12 @@ loc_1C835:
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1C84E
-		mov	eye_southwest.BE_bos_image, 5
+		mov	eye_southwest.BE_bos_image, CEL_RIGHT
 		jmp	short loc_1C854
 ; ---------------------------------------------------------------------------
 
 loc_1C84E:
-		mov	eye_southwest.BE_bos_image, 3
+		mov	eye_southwest.BE_bos_image, CEL_DOWN
 
 loc_1C854:
 		mov	ax, eye_southeast.BE_cur_left
@@ -6263,7 +6271,7 @@ loc_1C854:
 		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1C86B
-		mov	eye_southeast.BE_bos_image, 4
+		mov	eye_southeast.BE_bos_image, CEL_LEFT
 		jmp	short loc_1C88A
 ; ---------------------------------------------------------------------------
 
@@ -6274,12 +6282,12 @@ loc_1C86B:
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1C884
-		mov	eye_southeast.BE_bos_image, 5
+		mov	eye_southeast.BE_bos_image, CEL_RIGHT
 		jmp	short loc_1C88A
 ; ---------------------------------------------------------------------------
 
 loc_1C884:
-		mov	eye_southeast.BE_bos_image, 3
+		mov	eye_southeast.BE_bos_image, CEL_DOWN
 
 loc_1C88A:
 		cmp	_boss_phase_frame, 90
@@ -6290,8 +6298,8 @@ loc_1C88A:
 		jnz	short loc_1C8AB
 
 loc_1C89F:
-		mov	eye_southwest.BE_bos_image, 1
-		mov	eye_southeast.BE_bos_image, 1
+		mov	eye_southwest.BE_bos_image, CEL_CLOSED
+		mov	eye_southeast.BE_bos_image, CEL_CLOSED
 
 loc_1C8AB:
 		cmp	_boss_phase_frame, 100
@@ -6454,35 +6462,35 @@ loc_1CA38:
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_west, ds
 		cmp	ax, 1
 		jnz	short loc_1CA56
-		cmp	eye_west.BE_bos_image, 0
+		cmp	eye_west.BE_bos_image, CEL_HIDDEN
 		jnz	short loc_1CAB6
 
 loc_1CA56:
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_east, ds
 		cmp	ax, 1
 		jnz	short loc_1CA6E
-		cmp	eye_east.BE_bos_image, 0
+		cmp	eye_east.BE_bos_image, CEL_HIDDEN
 		jnz	short loc_1CAB6
 
 loc_1CA6E:
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_southwest, ds
 		cmp	ax, 1
 		jnz	short loc_1CA86
-		cmp	eye_southwest.BE_bos_image, 0
+		cmp	eye_southwest.BE_bos_image, CEL_HIDDEN
 		jnz	short loc_1CAB6
 
 loc_1CA86:
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_southeast, ds
 		cmp	ax, 1
 		jnz	short loc_1CA9E
-		cmp	eye_southeast.BE_bos_image, 0
+		cmp	eye_southeast.BE_bos_image, CEL_HIDDEN
 		jnz	short loc_1CAB6
 
 loc_1CA9E:
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_north, ds
 		cmp	ax, 1
 		jnz	short loc_1CABB
-		cmp	eye_north.BE_bos_image, 0
+		cmp	eye_north.BE_bos_image, CEL_HIDDEN
 		jz	short loc_1CABB
 
 loc_1CAB6:
@@ -6563,7 +6571,7 @@ loc_1CB3E:
 		jnz	short loc_1CB88
 
 loc_1CB82:
-		mov	eye_north.BE_bos_image, 1
+		mov	eye_north.BE_bos_image, CEL_CLOSED
 
 loc_1CB88:
 		cmp	_boss_phase_frame, 40
@@ -6590,19 +6598,19 @@ loc_1CBB2:
 		jnz	loc_1CF57
 		cmp	x_39E06, 256
 		jg	short loc_1CBD2
-		mov	eye_north.BE_bos_image, 4
+		mov	eye_north.BE_bos_image, CEL_LEFT
 		jmp	short loc_1CBE8
 ; ---------------------------------------------------------------------------
 
 loc_1CBD2:
 		cmp	x_39E06, 384
 		jl	short loc_1CBE2
-		mov	eye_north.BE_bos_image, 5
+		mov	eye_north.BE_bos_image, CEL_RIGHT
 		jmp	short loc_1CBE8
 ; ---------------------------------------------------------------------------
 
 loc_1CBE2:
-		mov	eye_north.BE_bos_image, 3
+		mov	eye_north.BE_bos_image, CEL_DOWN
 
 loc_1CBE8:
 		mov	ax, x_39E06
@@ -6673,19 +6681,19 @@ loc_1CCBB:
 		jnz	loc_1CF57
 		cmp	x_39E06, 256
 		jg	short loc_1CCDB
-		mov	eye_north.BE_bos_image, 5
+		mov	eye_north.BE_bos_image, CEL_RIGHT
 		jmp	short loc_1CCF1
 ; ---------------------------------------------------------------------------
 
 loc_1CCDB:
 		cmp	x_39E06, 384
 		jl	short loc_1CCEB
-		mov	eye_north.BE_bos_image, 4
+		mov	eye_north.BE_bos_image, CEL_LEFT
 		jmp	short loc_1CCF1
 ; ---------------------------------------------------------------------------
 
 loc_1CCEB:
-		mov	eye_north.BE_bos_image, 3
+		mov	eye_north.BE_bos_image, CEL_DOWN
 
 loc_1CCF1:
 		mov	ax, RES_X
@@ -6761,7 +6769,7 @@ loc_1CDD6:
 		idiv	bx
 		cmp	dx, 1
 		jnz	loc_1CF57
-		mov	eye_north.BE_bos_image, 6
+		mov	eye_north.BE_bos_image, CEL_AHEAD
 		mov	ax, x_39E06
 		mov	[bp+var_1C], ax
 		mov	ax, eye_north.BE_cur_top
@@ -6873,35 +6881,35 @@ loc_1CF57:
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_west, ds
 		cmp	ax, 1
 		jnz	short loc_1CF75
-		cmp	eye_west.BE_bos_image, 0
+		cmp	eye_west.BE_bos_image, CEL_HIDDEN
 		jnz	short loc_1CFD5
 
 loc_1CF75:
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_east, ds
 		cmp	ax, 1
 		jnz	short loc_1CF8D
-		cmp	eye_east.BE_bos_image, 0
+		cmp	eye_east.BE_bos_image, CEL_HIDDEN
 		jnz	short loc_1CFD5
 
 loc_1CF8D:
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_southwest, ds
 		cmp	ax, 1
 		jnz	short loc_1CFA5
-		cmp	eye_southwest.BE_bos_image, 0
+		cmp	eye_southwest.BE_bos_image, CEL_HIDDEN
 		jnz	short loc_1CFD5
 
 loc_1CFA5:
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_southeast, ds
 		cmp	ax, 1
 		jnz	short loc_1CFBD
-		cmp	eye_southeast.BE_bos_image, 0
+		cmp	eye_southeast.BE_bos_image, CEL_HIDDEN
 		jnz	short loc_1CFD5
 
 loc_1CFBD:
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_north, ds
 		cmp	ax, 1
 		jnz	short loc_1CFDA
-		cmp	eye_north.BE_bos_image, 0
+		cmp	eye_north.BE_bos_image, CEL_HIDDEN
 		jz	short loc_1CFDA
 
 loc_1CFD5:
@@ -6991,7 +6999,7 @@ loc_1D08C:
 		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1D116
-		mov	eye_west.BE_bos_image, 4
+		mov	eye_west.BE_bos_image, CEL_LEFT
 		jmp	short loc_1D135
 ; ---------------------------------------------------------------------------
 
@@ -7002,12 +7010,12 @@ loc_1D116:
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1D12F
-		mov	eye_west.BE_bos_image, 5
+		mov	eye_west.BE_bos_image, CEL_RIGHT
 		jmp	short loc_1D135
 ; ---------------------------------------------------------------------------
 
 loc_1D12F:
-		mov	eye_west.BE_bos_image, 3
+		mov	eye_west.BE_bos_image, CEL_DOWN
 
 loc_1D135:
 		mov	ax, eye_east.BE_cur_left
@@ -7015,7 +7023,7 @@ loc_1D135:
 		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1D14C
-		mov	eye_east.BE_bos_image, 4
+		mov	eye_east.BE_bos_image, CEL_LEFT
 		jmp	short loc_1D16B
 ; ---------------------------------------------------------------------------
 
@@ -7026,12 +7034,12 @@ loc_1D14C:
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1D165
-		mov	eye_east.BE_bos_image, 5
+		mov	eye_east.BE_bos_image, CEL_RIGHT
 		jmp	short loc_1D16B
 ; ---------------------------------------------------------------------------
 
 loc_1D165:
-		mov	eye_east.BE_bos_image, 3
+		mov	eye_east.BE_bos_image, CEL_DOWN
 
 loc_1D16B:
 		mov	ax, eye_southwest.BE_cur_left
@@ -7039,7 +7047,7 @@ loc_1D16B:
 		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1D182
-		mov	eye_southwest.BE_bos_image, 4
+		mov	eye_southwest.BE_bos_image, CEL_LEFT
 		jmp	short loc_1D1A1
 ; ---------------------------------------------------------------------------
 
@@ -7050,12 +7058,12 @@ loc_1D182:
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1D19B
-		mov	eye_southwest.BE_bos_image, 5
+		mov	eye_southwest.BE_bos_image, CEL_RIGHT
 		jmp	short loc_1D1A1
 ; ---------------------------------------------------------------------------
 
 loc_1D19B:
-		mov	eye_southwest.BE_bos_image, 3
+		mov	eye_southwest.BE_bos_image, CEL_DOWN
 
 loc_1D1A1:
 		mov	ax, eye_southeast.BE_cur_left
@@ -7063,7 +7071,7 @@ loc_1D1A1:
 		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1D1B8
-		mov	eye_southeast.BE_bos_image, 4
+		mov	eye_southeast.BE_bos_image, CEL_LEFT
 		jmp	short loc_1D1D7
 ; ---------------------------------------------------------------------------
 
@@ -7074,12 +7082,12 @@ loc_1D1B8:
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1D1D1
-		mov	eye_southeast.BE_bos_image, 5
+		mov	eye_southeast.BE_bos_image, CEL_RIGHT
 		jmp	short loc_1D1D7
 ; ---------------------------------------------------------------------------
 
 loc_1D1D1:
-		mov	eye_southeast.BE_bos_image, 3
+		mov	eye_southeast.BE_bos_image, CEL_DOWN
 
 loc_1D1D7:
 		mov	ax, eye_north.BE_cur_left
@@ -7087,7 +7095,7 @@ loc_1D1D7:
 		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1D1EE
-		mov	eye_north.BE_bos_image, 4
+		mov	eye_north.BE_bos_image, CEL_LEFT
 		jmp	short loc_1D20D
 ; ---------------------------------------------------------------------------
 
@@ -7098,12 +7106,12 @@ loc_1D1EE:
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1D207
-		mov	eye_north.BE_bos_image, 5
+		mov	eye_north.BE_bos_image, CEL_RIGHT
 		jmp	short loc_1D20D
 ; ---------------------------------------------------------------------------
 
 loc_1D207:
-		mov	eye_north.BE_bos_image, 3
+		mov	eye_north.BE_bos_image, CEL_DOWN
 
 loc_1D20D:
 		cmp	_boss_phase_frame, 100
@@ -7528,35 +7536,35 @@ loc_1D63F:
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_west, ds
 		cmp	ax, 1
 		jnz	short loc_1D65D
-		cmp	eye_west.BE_bos_image, 0
+		cmp	eye_west.BE_bos_image, CEL_HIDDEN
 		jnz	short loc_1D6BD
 
 loc_1D65D:
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_east, ds
 		cmp	ax, 1
 		jnz	short loc_1D675
-		cmp	eye_east.BE_bos_image, 0
+		cmp	eye_east.BE_bos_image, CEL_HIDDEN
 		jnz	short loc_1D6BD
 
 loc_1D675:
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_southwest, ds
 		cmp	ax, 1
 		jnz	short loc_1D68D
-		cmp	eye_southwest.BE_bos_image, 0
+		cmp	eye_southwest.BE_bos_image, CEL_HIDDEN
 		jnz	short loc_1D6BD
 
 loc_1D68D:
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_southeast, ds
 		cmp	ax, 1
 		jnz	short loc_1D6A5
-		cmp	eye_southeast.BE_bos_image, 0
+		cmp	eye_southeast.BE_bos_image, CEL_HIDDEN
 		jnz	short loc_1D6BD
 
 loc_1D6A5:
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_north, ds
 		cmp	ax, 1
 		jnz	short loc_1D6C2
-		cmp	eye_north.BE_bos_image, 0
+		cmp	eye_north.BE_bos_image, CEL_HIDDEN
 		jz	short loc_1D6C2
 
 loc_1D6BD:
@@ -7843,7 +7851,7 @@ loc_1DA05:
 		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1DA23
-		mov	eye_west.BE_bos_image, 4
+		mov	eye_west.BE_bos_image, CEL_LEFT
 		jmp	short loc_1DA42
 ; ---------------------------------------------------------------------------
 
@@ -7854,12 +7862,12 @@ loc_1DA23:
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1DA3C
-		mov	eye_west.BE_bos_image, 5
+		mov	eye_west.BE_bos_image, CEL_RIGHT
 		jmp	short loc_1DA42
 ; ---------------------------------------------------------------------------
 
 loc_1DA3C:
-		mov	eye_west.BE_bos_image, 3
+		mov	eye_west.BE_bos_image, CEL_DOWN
 
 loc_1DA42:
 		test	byte_39E14, 2
@@ -7869,7 +7877,7 @@ loc_1DA42:
 		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1DA60
-		mov	eye_east.BE_bos_image, 4
+		mov	eye_east.BE_bos_image, CEL_LEFT
 		jmp	short loc_1DA7F
 ; ---------------------------------------------------------------------------
 
@@ -7880,12 +7888,12 @@ loc_1DA60:
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1DA79
-		mov	eye_east.BE_bos_image, 5
+		mov	eye_east.BE_bos_image, CEL_RIGHT
 		jmp	short loc_1DA7F
 ; ---------------------------------------------------------------------------
 
 loc_1DA79:
-		mov	eye_east.BE_bos_image, 3
+		mov	eye_east.BE_bos_image, CEL_DOWN
 
 loc_1DA7F:
 		test	byte_39E14, 4
@@ -7895,7 +7903,7 @@ loc_1DA7F:
 		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1DA9D
-		mov	eye_southwest.BE_bos_image, 4
+		mov	eye_southwest.BE_bos_image, CEL_LEFT
 		jmp	short loc_1DABC
 ; ---------------------------------------------------------------------------
 
@@ -7906,12 +7914,12 @@ loc_1DA9D:
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1DAB6
-		mov	eye_southwest.BE_bos_image, 5
+		mov	eye_southwest.BE_bos_image, CEL_RIGHT
 		jmp	short loc_1DABC
 ; ---------------------------------------------------------------------------
 
 loc_1DAB6:
-		mov	eye_southwest.BE_bos_image, 3
+		mov	eye_southwest.BE_bos_image, CEL_DOWN
 
 loc_1DABC:
 		test	byte_39E14, 8
@@ -7921,7 +7929,7 @@ loc_1DABC:
 		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1DADA
-		mov	eye_southeast.BE_bos_image, 4
+		mov	eye_southeast.BE_bos_image, CEL_LEFT
 		jmp	short loc_1DAF9
 ; ---------------------------------------------------------------------------
 
@@ -7932,12 +7940,12 @@ loc_1DADA:
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1DAF3
-		mov	eye_southeast.BE_bos_image, 5
+		mov	eye_southeast.BE_bos_image, CEL_RIGHT
 		jmp	short loc_1DAF9
 ; ---------------------------------------------------------------------------
 
 loc_1DAF3:
-		mov	eye_southeast.BE_bos_image, 3
+		mov	eye_southeast.BE_bos_image, CEL_DOWN
 
 loc_1DAF9:
 		test	byte_39E14, 10h
@@ -7947,7 +7955,7 @@ loc_1DAF9:
 		sub	ax, _player_left
 		cmp	ax, 32
 		jle	short loc_1DB17
-		mov	eye_north.BE_bos_image, 4
+		mov	eye_north.BE_bos_image, CEL_LEFT
 		jmp	short loc_1DB36
 ; ---------------------------------------------------------------------------
 
@@ -7958,12 +7966,12 @@ loc_1DB17:
 		sub	dx, ax
 		cmp	dx, 32
 		jle	short loc_1DB30
-		mov	eye_north.BE_bos_image, 5
+		mov	eye_north.BE_bos_image, CEL_RIGHT
 		jmp	short loc_1DB36
 ; ---------------------------------------------------------------------------
 
 loc_1DB30:
-		mov	eye_north.BE_bos_image, 3
+		mov	eye_north.BE_bos_image, CEL_DOWN
 
 loc_1DB36:
 		cmp	word_39E08, 0
@@ -8213,35 +8221,35 @@ loc_1DED5:
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_west, ds
 		cmp	ax, 1
 		jnz	short loc_1DEF3
-		cmp	eye_west.BE_bos_image, 0
+		cmp	eye_west.BE_bos_image, CEL_HIDDEN
 		jnz	short loc_1DF53
 
 loc_1DEF3:
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_east, ds
 		cmp	ax, 1
 		jnz	short loc_1DF0B
-		cmp	eye_east.BE_bos_image, 0
+		cmp	eye_east.BE_bos_image, CEL_HIDDEN
 		jnz	short loc_1DF53
 
 loc_1DF0B:
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_southwest, ds
 		cmp	ax, 1
 		jnz	short loc_1DF23
-		cmp	eye_southwest.BE_bos_image, 0
+		cmp	eye_southwest.BE_bos_image, CEL_HIDDEN
 		jnz	short loc_1DF53
 
 loc_1DF23:
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_southeast, ds
 		cmp	ax, 1
 		jnz	short loc_1DF3B
-		cmp	eye_southeast.BE_bos_image, 0
+		cmp	eye_southeast.BE_bos_image, CEL_HIDDEN
 		jnz	short loc_1DF53
 
 loc_1DF3B:
 		call	@CBossEntity@hittest_orb$xqv c, offset eye_north, ds
 		cmp	ax, 1
 		jnz	short loc_1DF58
-		cmp	eye_north.BE_bos_image, 0
+		cmp	eye_north.BE_bos_image, CEL_HIDDEN
 		jz	short loc_1DF58
 
 loc_1DF53:
@@ -8422,52 +8430,52 @@ loc_1E12D:
 		jnz	loc_1E1F1
 		test	[bp+arg_0], 1
 		jz	short loc_1E144
-		mov	eye_west.BE_bos_image, 2
+		mov	eye_west.BE_bos_image, CEL_HALFOPEN
 
 loc_1E144:
 		test	[bp+arg_0], 2
 		jz	short loc_1E150
-		mov	eye_east.BE_bos_image, 2
+		mov	eye_east.BE_bos_image, CEL_HALFOPEN
 
 loc_1E150:
 		test	[bp+arg_0], 4
 		jz	short loc_1E15C
-		mov	eye_southwest.BE_bos_image, 2
+		mov	eye_southwest.BE_bos_image, CEL_HALFOPEN
 
 loc_1E15C:
 		test	[bp+arg_0], 8
 		jz	short loc_1E168
-		mov	eye_southeast.BE_bos_image, 2
+		mov	eye_southeast.BE_bos_image, CEL_HALFOPEN
 
 loc_1E168:
 		test	[bp+arg_0], 10h
 		jz	short loc_1E174
-		mov	eye_north.BE_bos_image, 2
+		mov	eye_north.BE_bos_image, CEL_HALFOPEN
 
 loc_1E174:
 		test	[bp+arg_2], 1
 		jz	short loc_1E180
-		mov	eye_west.BE_bos_image, 1
+		mov	eye_west.BE_bos_image, CEL_CLOSED
 
 loc_1E180:
 		test	[bp+arg_2], 2
 		jz	short loc_1E18C
-		mov	eye_east.BE_bos_image, 1
+		mov	eye_east.BE_bos_image, CEL_CLOSED
 
 loc_1E18C:
 		test	[bp+arg_2], 4
 		jz	short loc_1E198
-		mov	eye_southwest.BE_bos_image, 1
+		mov	eye_southwest.BE_bos_image, CEL_CLOSED
 
 loc_1E198:
 		test	[bp+arg_2], 8
 		jz	short loc_1E1A4
-		mov	eye_southeast.BE_bos_image, 1
+		mov	eye_southeast.BE_bos_image, CEL_CLOSED
 
 loc_1E1A4:
 		test	[bp+arg_2], 10h
 		jz	short loc_1E1B0
-		mov	eye_north.BE_bos_image, 1
+		mov	eye_north.BE_bos_image, CEL_CLOSED
 
 loc_1E1B0:
 		test	[bp+arg_2], 1
@@ -8502,52 +8510,52 @@ loc_1E1F1:
 		jnz	loc_1E2B5
 		test	[bp+arg_0], 1
 		jz	short loc_1E208
-		mov	eye_west.BE_bos_image, 1
+		mov	eye_west.BE_bos_image, CEL_CLOSED
 
 loc_1E208:
 		test	[bp+arg_0], 2
 		jz	short loc_1E214
-		mov	eye_east.BE_bos_image, 1
+		mov	eye_east.BE_bos_image, CEL_CLOSED
 
 loc_1E214:
 		test	[bp+arg_0], 4
 		jz	short loc_1E220
-		mov	eye_southwest.BE_bos_image, 1
+		mov	eye_southwest.BE_bos_image, CEL_CLOSED
 
 loc_1E220:
 		test	[bp+arg_0], 8
 		jz	short loc_1E22C
-		mov	eye_southeast.BE_bos_image, 1
+		mov	eye_southeast.BE_bos_image, CEL_CLOSED
 
 loc_1E22C:
 		test	[bp+arg_0], 10h
 		jz	short loc_1E238
-		mov	eye_north.BE_bos_image, 1
+		mov	eye_north.BE_bos_image, CEL_CLOSED
 
 loc_1E238:
 		test	[bp+arg_2], 1
 		jz	short loc_1E244
-		mov	eye_west.BE_bos_image, 2
+		mov	eye_west.BE_bos_image, CEL_HALFOPEN
 
 loc_1E244:
 		test	[bp+arg_2], 2
 		jz	short loc_1E250
-		mov	eye_east.BE_bos_image, 2
+		mov	eye_east.BE_bos_image, CEL_HALFOPEN
 
 loc_1E250:
 		test	[bp+arg_2], 4
 		jz	short loc_1E25C
-		mov	eye_southwest.BE_bos_image, 2
+		mov	eye_southwest.BE_bos_image, CEL_HALFOPEN
 
 loc_1E25C:
 		test	[bp+arg_2], 8
 		jz	short loc_1E268
-		mov	eye_southeast.BE_bos_image, 2
+		mov	eye_southeast.BE_bos_image, CEL_HALFOPEN
 
 loc_1E268:
 		test	[bp+arg_2], 10h
 		jz	short loc_1E274
-		mov	eye_north.BE_bos_image, 2
+		mov	eye_north.BE_bos_image, CEL_HALFOPEN
 
 loc_1E274:
 		test	[bp+arg_0], 1
@@ -8582,54 +8590,54 @@ loc_1E2B5:
 		jnz	short loc_1E336
 		test	[bp+arg_0], 1
 		jz	short loc_1E2CA
-		mov	eye_west.BE_bos_image, 0
+		mov	eye_west.BE_bos_image, CEL_HIDDEN
 
 loc_1E2CA:
 		test	[bp+arg_0], 2
 		jz	short loc_1E2D6
-		mov	eye_east.BE_bos_image, 0
+		mov	eye_east.BE_bos_image, CEL_HIDDEN
 
 loc_1E2D6:
 		test	[bp+arg_0], 4
 		jz	short loc_1E2E2
-		mov	eye_southwest.BE_bos_image, 0
+		mov	eye_southwest.BE_bos_image, CEL_HIDDEN
 
 loc_1E2E2:
 		test	[bp+arg_0], 8
 		jz	short loc_1E2EE
-		mov	eye_southeast.BE_bos_image, 0
+		mov	eye_southeast.BE_bos_image, CEL_HIDDEN
 
 loc_1E2EE:
 		test	[bp+arg_0], 10h
 		jz	short loc_1E2FA
-		mov	eye_north.BE_bos_image, 0
+		mov	eye_north.BE_bos_image, CEL_HIDDEN
 
 loc_1E2FA:
 		test	[bp+arg_2], 1
 		jz	short loc_1E306
-		mov	eye_west.BE_bos_image, 6
+		mov	eye_west.BE_bos_image, CEL_AHEAD
 
 loc_1E306:
 		test	[bp+arg_2], 2
 		jz	short loc_1E312
-		mov	eye_east.BE_bos_image, 6
+		mov	eye_east.BE_bos_image, CEL_AHEAD
 
 loc_1E312:
 		test	[bp+arg_2], 4
 		jz	short loc_1E31E
-		mov	eye_southwest.BE_bos_image, 6
+		mov	eye_southwest.BE_bos_image, CEL_AHEAD
 
 loc_1E31E:
 		test	[bp+arg_2], 8
 		jz	short loc_1E32A
-		mov	eye_southeast.BE_bos_image, 6
+		mov	eye_southeast.BE_bos_image, CEL_AHEAD
 
 loc_1E32A:
 		test	[bp+arg_2], 10h
 		jz	short loc_1E336
 
 loc_1E330:
-		mov	eye_north.BE_bos_image, 6
+		mov	eye_north.BE_bos_image, CEL_AHEAD
 
 loc_1E336:
 		pop	di

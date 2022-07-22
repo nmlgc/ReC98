@@ -49,8 +49,14 @@ static const int EYE_COUNT = 5;
 static const pixel_t EYE_W = 64;
 static const pixel_t EYE_H = 48;
 
-enum yuugenmagan_cel_t {
+enum eye_cel_t {
 	C_HIDDEN = 0,
+	C_CLOSED = 1,
+	C_HALFOPEN = 2,
+	C_DOWN = 3,
+	C_LEFT = 4,
+	C_RIGHT = 5,
+	C_AHEAD = 6,
 };
 
 #define eye_west \
