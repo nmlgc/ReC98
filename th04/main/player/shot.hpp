@@ -7,7 +7,7 @@ SPPoint pascal near shot_velocity_set(
 	SPPoint near* velocity, unsigned char angle
 );
 
-struct shot_t {
+struct Shot {
 	char flag;
 	char age;
 	PlayfieldMotion pos;
@@ -58,10 +58,10 @@ struct shot_t {
 #endif
 
 extern unsigned char shot_time;
-extern shot_t near shots[SHOT_COUNT];
+extern Shot near shots[SHOT_COUNT];
 
 // Points to the next free entry in [shots].
-extern shot_t near *shot_ptr;
+extern Shot near *shot_ptr;
 // Index of the last valid entry in [shots].
 extern char shot_last_id;
 
@@ -80,14 +80,14 @@ struct shot_alive_t {
 	// converted to a hitshot.
 	SPPoint pos;
 
-	shot_t near *shot;
+	Shot near *shot;
 };
 extern unsigned int shots_alive_count;
 extern shot_alive_t shots_alive[SHOT_COUNT];
 
 // Searches and returns the next free shot slot, or a nullptr if there are no
 // more free ones.
-shot_t near* near shots_add(void);
+Shot near* near shots_add(void);
 
 // Processes collisions of all shots against the shot_hitbox, decays any
 // colliding shots, and returns the total amount of damage dealt.

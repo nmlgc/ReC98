@@ -2,11 +2,11 @@
 
 #include "decomp.hpp"
 
-inline cdg_t near* cdg_slot_offset(const int &slot) {
+inline CDG near* cdg_slot_offset(const int &slot) {
 	_SI = slot;
-	_SI <<= 4;	// MODDERS: Should be sizeof(cdg_t);
+	_SI <<= 4;	// MODDERS: Should be sizeof(CDG);
 	_SI += FP_OFF(cdg_slots);
-	return reinterpret_cast<cdg_t near *>(_SI);
+	return reinterpret_cast<CDG near *>(_SI);
 }
 
 // Returns (vram_offset_shift(left, 0) + cdg->offset_at_bottom_left).

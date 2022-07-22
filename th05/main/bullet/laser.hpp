@@ -28,7 +28,7 @@ struct laser_coords_t {
 	unsigned char width; // pixel_t
 };
 
-struct laser_t {
+struct Laser {
 	laser_flag_t flag;
 	uint4_t col;
 	laser_coords_t coords;
@@ -66,8 +66,8 @@ struct laser_t {
 
 #define LASER_COUNT 32
 
-extern laser_t lasers[LASER_COUNT];
-extern laser_t laser_template;
+extern Laser lasers[LASER_COUNT];
+extern Laser laser_template;
 
 /// Control
 /// -------
@@ -96,7 +96,7 @@ void pascal near laser_stop(int slot);
 bool16 pascal near laser_render_ray(laser_coords_t near *coords);
 
 // Processes any collision between the given [laser] and the player.
-void pascal near laser_hittest(laser_t near &laser);
+void pascal near laser_hittest(Laser near &laser);
 
 void near lasers_update(void);
 void near lasers_render(void);

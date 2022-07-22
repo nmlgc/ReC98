@@ -136,7 +136,7 @@ union submode_t {
 	}
 };
 
-struct mode_frame_t {
+struct ModeFrame {
 	int8_t v;
 
 	// Should make sure to actually calculate a result within DASH_CELS...
@@ -319,7 +319,7 @@ inline void player_48x48_put(const player_48x48_cel_t& cel) {
 inline void slide_stop(
 	int8_t& mode,
 	submode_t& submode,
-	mode_frame_t& mode_frame,
+	ModeFrame& mode_frame,
 	player_48x32_cel_t cel_base
 ) {
 	mode = M_REGULAR;
@@ -394,7 +394,7 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 	} dash_cycle;
 
 	// Garbage in M_REGULAR, valid in all other [mode]s.
-	extern mode_frame_t mode_frame;
+	extern ModeFrame mode_frame;
 
 	extern int8_t mode; // mode_t
 	extern int8_t dash_direction; // x_direction_t

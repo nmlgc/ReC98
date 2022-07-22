@@ -353,6 +353,11 @@ These cases should gradually be removed as development goes along, though.
 * Generic 1-based IDs, with 0 indicating some sort of absence: `*_num`
 * Functionally identical reimplementations or micro-optimizations of
   master.lib functions: `z_<master.lib function name>`
+* Plain-old-data `struct`s: `struct snake_case_t {}`
+* `struct`s and `class`es with C++ methods: `(struct|class) CamelCase {}`
+  * Multiple consecutive capital letters are allowed.
+* `template` `struct`s and `class`es, as well as their template parameters, are
+  CamelCase regardless of whether they have methods or not.
 
 ## Identifiers from ZUN's original code
 

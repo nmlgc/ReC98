@@ -53,7 +53,7 @@ struct ShotAddIterator {
 	secondary_cycle, \
 	secondary_offset_expr \
 ) \
-	shot_t near *shot; \
+	Shot near *shot; \
 	ShotAddIterator sai(count); \
 	\
 	cycle = shot_cycle_init(); \

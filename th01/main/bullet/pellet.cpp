@@ -24,7 +24,7 @@ inline int decay_frames_for_cel(int cel) {
 
 /// Globals
 /// -------
-pellet_t near *p;
+Pellet near *p;
 bool pellet_interlace = false;
 unsigned int pellet_destroy_score_delta = 0;
 #include "th01/sprites/pellet.csp"

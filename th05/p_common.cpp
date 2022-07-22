@@ -50,7 +50,7 @@ void pascal near shot_l0(void)
 	if( (shot_cycle_init() & SC_3X) == 0) {
 		return;
 	}
-	shot_t near *shot;
+	Shot near *shot;
 	if(( shot = shots_add() ) != nullptr) {
 		shot->damage = 10;
 	}
@@ -61,7 +61,7 @@ void pascal near shot_l1(void)
 	if( (shot_cycle_init() & SC_3X) == 0) {
 		return;
 	}
-	shot_t near *shot;
+	Shot near *shot;
 	if(( shot = shots_add() ) != nullptr) {
 		shot_velocity_set(
 			&shot->pos.velocity, randring1_next8_and_ge_lt(-0x44, -0x3C)

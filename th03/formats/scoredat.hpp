@@ -26,7 +26,7 @@ struct scoredat_t {
 	// from.)
 	regi_patnum_t score[SCOREDAT_PLACES][SCORE_DIGITS + 2];
 
-	playchar_optional_t playchar[SCOREDAT_PLACES];
+	PlaycharOptional playchar[SCOREDAT_PLACES];
 	regi_patnum_t stage[SCOREDAT_PLACES];
 	uint8_t key1;
 	uint8_t key2;

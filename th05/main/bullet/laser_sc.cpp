@@ -14,7 +14,7 @@ extern "C" {
 
 void near lasers_shootout_add(void)
 {
-	laser_t near *laser;
+	Laser near *laser;
 	int i;
 	subpixel_t speed = playperf_speedtune(laser_template.shootout_speed.v);
 
@@ -46,7 +46,7 @@ void near lasers_shootout_add(void)
 
 void pascal near laser_fixed_spawn(int slot)
 {
-	laser_t near &laser = lasers[slot];
+	Laser near &laser = lasers[slot];
 	if(laser.flag != LF_FREE) {
 		return;
 	}
@@ -62,7 +62,7 @@ void pascal near laser_fixed_spawn(int slot)
 
 void pascal near laser_manual_fixed_spawn(int slot)
 {
-	laser_t near &laser = lasers[slot];
+	Laser near &laser = lasers[slot];
 	if(laser.flag != LF_FREE) {
 		return;
 	}

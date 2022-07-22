@@ -35,7 +35,7 @@ typedef struct {
 	uint8_t unused_1;
 	unsigned char invincibility_time;
 	char halfhearts;
-	playchar_paletted_t playchar_paletted;
+	PlaycharPaletted playchar_paletted;
 	speed_t speed;
 	shot_mode_t shot_mode;
 	unsigned char patnum_movement;

@@ -23,13 +23,13 @@ struct gather_t {
 	// Added to [angle_cur] every frame
 	unsigned char angle_delta;
 #if GAME == 4
-	bullet_template_t bullet_template;
+	BulletTemplate bullet_template;
 #endif
 	Subpixel radius_prev; // never read
 	// *Subtracted* from [radius_cur] every frame
 	Subpixel radius_delta;
 #if GAME == 5
-	bullet_template_t bullet_template;
+	BulletTemplate bullet_template;
 #endif
 };
 

@@ -112,7 +112,7 @@ enum pellet_group_t {
 	_pellet_group_t_FORCE_INT16 = 0x7FFF
 };
 
-struct pellet_t {
+struct Pellet {
 protected:
 	friend class CPellets;
 
@@ -163,7 +163,7 @@ public:
 };
 
 class CPellets {
-	pellet_t near pellets[PELLET_COUNT];
+	Pellet near pellets[PELLET_COUNT];
 	int alive_count; // only used for one single optimization
 	int unknown_zero[10];
 public:
@@ -174,8 +174,8 @@ public:
 	bool spawn_with_cloud;
 
 protected:
-	pellet_t near* iteration_start(void) {
-		return static_cast<pellet_t near *>(pellets);
+	Pellet near* iteration_start(void) {
+		return static_cast<Pellet near *>(pellets);
 	}
 
 	// Updates the velocity of the currently iterated pellet, depending on its

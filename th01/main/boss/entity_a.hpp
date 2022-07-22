@@ -15,8 +15,8 @@ public:
 	screen_y_t prev_top;
 	vram_byte_amount_t vram_w;
 	pixel_t h;
-	area_t<screen_x_t, screen_y_t> move_clamp; // Relative to VRAM
-	area_t<pixel_t, pixel_t> hitbox_orb; // Relative to [cur_left] and [cur_top]
+	Area<screen_x_t, screen_y_t> move_clamp; // Relative to VRAM
+	Area<pixel_t, pixel_t> hitbox_orb; // Relative to [cur_left] and [cur_top]
 
 	// Never actually read outside of the functions that set them...
 	pixel_t prev_delta_y;

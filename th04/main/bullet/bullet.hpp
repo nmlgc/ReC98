@@ -206,7 +206,7 @@ extern union {
 
 /// Template
 /// --------
-struct bullet_template_t {
+struct BulletTemplate {
 	uint8_t spawn_type;
 	unsigned char patnum;	// TH05: 0 = pellet
 	PlayfieldPoint origin;
@@ -260,7 +260,7 @@ struct bullet_template_t {
 #endif
 };
 
-extern bullet_template_t bullet_template;
+extern BulletTemplate bullet_template;
 // Separate from the template, for some reason?
 extern bullet_special_angle_t bullet_template_special_angle;
 

@@ -12,7 +12,7 @@ typedef enum {
 } playchar_t;
 
 // Encodes a playchar_t together with its alternate palette flag.
-struct playchar_paletted_t {
+struct PlaycharPaletted {
 	unsigned char v;
 
 	int filename_id() const {
@@ -25,7 +25,7 @@ struct playchar_paletted_t {
 };
 
 // Uses 0 to indicate "no character" and shifts all IDs up by 1.
-struct playchar_optional_t {
+struct PlaycharOptional {
 	unsigned char v;
 
 	playchar_t char_id() const {

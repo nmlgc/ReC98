@@ -65,18 +65,14 @@ extern mrs_t far *mrs_images[MRS_SLOT_COUNT];
 // but thankfully, pointer arithmetic does, and is also a lot cleaner...
 // conceptually, at least. It also inlines perfectly, allowing us to give some
 // meaningful names to these horrifying expressions.
-struct mrs_at_G_t : public mrs_plane_t {
+struct MrsPlaneIteratorG : public mrs_plane_t {
 	dots32_t dots_from_alpha(void) const { return *(*((this - 3)->dots)); }
 	dots32_t dots_from_B(void) const     { return *(*((this - 2)->dots)); }
 	dots32_t dots_from_R(void) const     { return *(*((this - 1)->dots)); }
 };
 
-static inline mrs_at_G_t near* mrs_at_G(void) {
-	return reinterpret_cast<mrs_at_G_t near *>(offsetof(mrs_t, planes.G));
-}
-
 // At least mrs_put_8() is somewhat sane.
-struct mrs_at_B_t : public mrs_plane_t {
+struct MrsPlaneIterator : public mrs_plane_t {
 	dots32_t dots_from_alpha(void) const  { return *(*((this + 0)->dots)); }
 	dots32_t dots_from_B(void) const      { return *(*((this + 1)->dots)); }
 	dots32_t dots_from_R(void) const      { return *(*((this + 2)->dots)); }
@@ -134,7 +130,7 @@ inline seg_t to_segment(const uscreen_y_t &top) {
 
 void pascal mrs_put_8(screen_x_t left, uscreen_y_t top, int slot)
 {
-	#define _SI	reinterpret_cast<mrs_at_B_t near *>(_SI)
+	#define _SI	reinterpret_cast<MrsPlaneIterator near *>(_SI)
 
 	grcg_setcolor(GC_RMW, 0);
 	_DI = to_bottom_left_8(left);
@@ -187,14 +183,14 @@ void pascal mrs_put_noalpha_8(
 	screen_x_t left, uscreen_y_t top, int slot, bool altered_colors
 )
 {
-	#define _SI	reinterpret_cast<mrs_at_G_t near *>(_SI)
+	#define _SI	reinterpret_cast<MrsPlaneIteratorG near *>(_SI)
 	#define at_bottom_left	_DX // *Not* rooted at (0, 0)!
 
 	_asm { push ds; }
 	_DI = to_bottom_left_8(left);
 	_AX = to_segment(top);
 	mrs_slot_assign(ds, si, slot);
-	_SI = mrs_at_G();
+	_SI = reinterpret_cast<MrsPlaneIteratorG near *>(offsetof(mrs_t, planes.G));
 
 	_FS = (_AX += SEG_PLANE_B);       	// = B
 	_GS = (_AX += SEG_PLANE_DIST_BRG);	// = R

@@ -522,7 +522,7 @@ static const pixel_t BIGCIRCLE_RADIUS = ((GIRL_W * 2) / 2);
 	} else if(bigcircle.frames != 0 /* return value */
 
 // Circle around the Star of David
-struct starcircle_t {
+struct StarCircle {
 	unsigned char angle;
 	int frames;
 
@@ -843,7 +843,7 @@ int pattern_random_downwards_missiles(void)
 
 int pattern_pellets_along_circle(void)
 {
-	static starcircle_t circle;
+	static StarCircle circle;
 	screen_x_t left;
 	screen_y_t top;
 
@@ -950,7 +950,7 @@ inline void star_of_david_unput(void) {
 // danmaku pattern.
 elis_starpattern_ret_t near star_of_david(void)
 {
-	static starcircle_t circle;
+	static StarCircle circle;
 
 	if(boss_phase_frame < 5) {
 		circle.frames = 0;
@@ -1618,7 +1618,7 @@ elis_starpattern_ret_t pattern_aimed_5_spreads_and_lasers_followed_by_ring(void)
 		KEYFRAME_START = 60,
 	};
 
-	static starcircle_t circle;
+	static StarCircle circle;
 	screen_x_t left;
 	screen_x_t top;
 
