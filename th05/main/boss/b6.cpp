@@ -8,6 +8,7 @@
 #include "pc98.h"
 #include "master.hpp"
 #include "th01/math/area.hpp"
+#include "th01/math/dir.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th02/main/tile/tile.hpp"
 #include "th02/main/player/bomb.hpp"
@@ -459,9 +460,6 @@ void near pattern_aimed_b6balls_and_symmetric_spreads(void)
 void near pattern_devil(void)
 {
 	enum {
-		CLOCKWISE = 0,
-		COUNTERCLOCKWISE = 1,
-
 		COLUMN_COUNT = 4,
 		SHINKI_TO_LAST_COLUMN_DISTANCE = (
 			(SHINKI_WING_W / 2) - (SHINKI_WING_W / 8)
