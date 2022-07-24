@@ -621,8 +621,16 @@ include th01/formats/grp_palette[bss].asm
 		db 1136 dup(?)
 include th01/formats/grp_buf[bss].asm
 include th01/hardware/vram_planes[bss].asm
-include libs/master.lib/pal[bss].asm
-include libs/master.lib/fil[bss].asm
-include libs/master.lib/clip[bss].asm
+
+	; libs/master.lib/pal[bss].asm
+	extern Palettes:rgb_t:COLOR_COUNT
+
+	; libs/master.lib/fil[bss].asm
+	extern file_Buffer:dword
+	extern file_BufferPos:dword
+	extern file_BufPtr:word
+	extern file_InReadBuf:word
+	extern file_Eof:word
+	extern file_ErrorStat:word
 
 		end

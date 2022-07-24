@@ -27,4 +27,10 @@ include libs/master.lib/dos_ropen[data].asm
 include libs/master.lib/clip[data].asm
 include libs/master.lib/rand[data].asm
 
+	.data?
+
+include libs/master.lib/pal[bss].asm
+include libs/master.lib/fil[bss].asm
+include libs/master.lib/clip[bss].asm
+
 	end
