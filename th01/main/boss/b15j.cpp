@@ -945,7 +945,7 @@ void kikuri_main(void)
 		union {
 			kikuri_phase_4_subphase_t subphase_4;
 			int phase_6_pattern;
-		} ax;
+		} u1;
 		int patterns_done;
 
 		void frame_common(void) const {
@@ -1098,7 +1098,7 @@ entrance_rings_still_active:
 		if(boss_phase_frame >= (FADE_INTERVAL * FADE_STEPS)) {
 			boss_phase = 4;
 			boss_phase_frame = 0;
-			phase.ax.subphase_4 = P4_SOUL_ACTIVATION;
+			phase.u1.subphase_4 = P4_SOUL_ACTIVATION;
 			z_palette_set_all_show(stage_palette); // (redundant)
 			boss_palette_snap();
 		}
@@ -1106,18 +1106,18 @@ entrance_rings_still_active:
 		phase.frame_common();
 		pattern_spinning_aimed_rings();
 
-		if(phase.ax.subphase_4 == P4_SOUL_ACTIVATION) {
-			phase.ax.subphase_4 = phase_4_souls_activate();
+		if(phase.u1.subphase_4 == P4_SOUL_ACTIVATION) {
+			phase.u1.subphase_4 = phase_4_souls_activate();
 		} else {
-			phase.ax.subphase_4 = pattern_souls_spreads();
+			phase.u1.subphase_4 = pattern_souls_spreads();
 		}
 
 		hit.update_and_render(flash_colors);
-		if(!hit.invincible && (phase.ax.subphase_4 == P4_DONE)) {
+		if(!hit.invincible && (phase.u1.subphase_4 == P4_DONE)) {
 			boss_phase = 5;
 
 			// Should be done during phase 6 initialization for clarity.
-			phase.ax.phase_6_pattern = 0;
+			phase.u1.phase_6_pattern = 0;
 
 			boss_phase_frame = 0;
 		}
@@ -1138,14 +1138,14 @@ entrance_rings_still_active:
 		phase.frame_common();
 		pattern_souls_single_aimed_pellet_and_move_diagonally();
 
-		if(phase.ax.phase_6_pattern == 0) {
-			phase.ax.phase_6_pattern = pattern_4_spiral_along_disc();
-		} else if(phase.ax.phase_6_pattern == 1) {
-			phase.ax.phase_6_pattern = pattern_single_lasers_from_left_eye();
-		} else if(phase.ax.phase_6_pattern == 2) {
-			phase.ax.phase_6_pattern = pattern_souls_symmetric_rain_lines();
-		} else if(phase.ax.phase_6_pattern == 3) {
-			phase.ax.phase_6_pattern = pattern_vertical_lasers_from_top();
+		if(phase.u1.phase_6_pattern == 0) {
+			phase.u1.phase_6_pattern = pattern_4_spiral_along_disc();
+		} else if(phase.u1.phase_6_pattern == 1) {
+			phase.u1.phase_6_pattern = pattern_single_lasers_from_left_eye();
+		} else if(phase.u1.phase_6_pattern == 2) {
+			phase.u1.phase_6_pattern = pattern_souls_symmetric_rain_lines();
+		} else if(phase.u1.phase_6_pattern == 3) {
+			phase.u1.phase_6_pattern = pattern_vertical_lasers_from_top();
 		}
 		if(boss_phase_frame == 0) {
 			phase.patterns_done++;

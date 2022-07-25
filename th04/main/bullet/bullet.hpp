@@ -134,13 +134,13 @@ struct bullet_t {
 	union {
 		unsigned char slowdown_time;	// with BMS_SLOWDOWN
 		unsigned char turns_done;   	// with BMS_SPECIAL
-	} ax;
+	} u1;
 	union {
 		// Difference between [speed_final] and the BMS_SLOWDOWN_BASE_SPEED.
 		// Always positive for BMS_SLOWDOWN bullets.
 		SubpixelLength8 slowdown_speed_delta;	// with BMS_SLOWDOWN
 		bullet_special_angle_t angle;        	// with BMS_SPECIAL
-	} dx;
+	} u2;
 	int patnum;
 
 #if GAME == 5

@@ -69,9 +69,9 @@ extern "C" {
 
 void pascal near bullet_turn_x(bullet_t near &bullet)
 {
-	bullet.ax.turns_done++;
+	bullet.u1.turns_done++;
 	bullet.angle = (0x80 - bullet.angle);
-	if(bullet.ax.turns_done >= bullet_special_motion.turns_max) {
+	if(bullet.u1.turns_done >= bullet_special_motion.turns_max) {
 		bullet.move_state = BMS_REGULAR;
 	}
 	bullet_velocity_set_from_angle_and_speed(bullet);
@@ -80,9 +80,9 @@ void pascal near bullet_turn_x(bullet_t near &bullet)
 
 void pascal near bullet_turn_y(bullet_t near &bullet)
 {
-	bullet.ax.turns_done++;
+	bullet.u1.turns_done++;
 	bullet.angle = (/* 0x00 */ - bullet.angle);
-	if(bullet.ax.turns_done >= bullet_special_motion.turns_max) {
+	if(bullet.u1.turns_done >= bullet_special_motion.turns_max) {
 		bullet.move_state = BMS_REGULAR;
 	}
 	bullet_velocity_set_from_angle_and_speed(bullet);
@@ -92,7 +92,7 @@ void pascal near bullet_turn_y(bullet_t near &bullet)
 #define bullet_turn_complete(bullet) \
 	bullet_update_patnum(bullet); \
 	bullet.speed_cur = bullet.speed_final; \
-	if(bullet.ax.turns_done >= bullet_special_motion.turns_max) { \
+	if(bullet.u1.turns_done >= bullet_special_motion.turns_max) { \
 		bullet.move_state = BMS_REGULAR; \
 	} \
 	bullet_velocity_set_from_angle_and_speed(bullet);
@@ -127,7 +127,7 @@ void pascal near bullet_update_special(bullet_t near &bullet)
 			bullet_velocity_set_from_angle_and_speed(bullet);
 			bullet.speed_cur.v--; // -= to_sp(1 / 16.0f)
 		} else {
-			bullet.ax.turns_done++;
+			bullet.u1.turns_done++;
 			bullet.angle = iatan2(
 				(player_pos.cur.y.v - bullet.pos.cur.y.v),
 				(player_pos.cur.x.v - bullet.pos.cur.x.v)
@@ -141,8 +141,8 @@ void pascal near bullet_update_special(bullet_t near &bullet)
 			bullet_velocity_set_from_angle_and_speed(bullet);
 			bullet.speed_cur.v--; // -= to_sp(1 / 16.0f)
 		} else {
-			bullet.ax.turns_done++;
-			bullet.angle += bullet.dx.angle.turn_by;
+			bullet.u1.turns_done++;
+			bullet.angle += bullet.u2.angle.turn_by;
 			bullet_turn_complete(bullet);
 		}
 		break;
@@ -163,11 +163,11 @@ void pascal near bullet_update_special(bullet_t near &bullet)
 			}
 			if(bullet.speed_cur.v < to_sp8(2.0f)) {
 				bullet.angle += (static_cast<int8_t>(
-					bullet.dx.angle.target - bullet.angle
+					bullet.u2.angle.target - bullet.angle
 				) / 4);
 			}
 		} else {
-			bullet.angle = bullet.dx.angle.target;
+			bullet.angle = bullet.u2.angle.target;
 			bullet.speed_cur.v = bullet.speed_final.v;
 			bullet.move_state = BMS_REGULAR;
 			bullet_velocity_set_from_angle_and_speed(bullet);
@@ -310,11 +310,11 @@ void bullets_update(void)
 			if(bullet->move_state == BMS_SPECIAL) {
 				bullet_update_special(*bullet);
 			} else if(bullet->move_state == BMS_SLOWDOWN) {
-				bullet->ax.slowdown_time--;
+				bullet->u1.slowdown_time--;
 				bullet->speed_cur.v = (bullet->speed_final.v + ((
-					bullet->ax.slowdown_time * bullet->dx.slowdown_speed_delta.v
+					bullet->u1.slowdown_time * bullet->u2.slowdown_speed_delta.v
 				) / BMS_SLOWDOWN_FRAMES));
-				if(bullet->ax.slowdown_time == 0) {
+				if(bullet->u1.slowdown_time == 0) {
 					bullet->speed_cur = bullet->speed_final;
 					bullet->move_state = BMS_REGULAR;
 				}

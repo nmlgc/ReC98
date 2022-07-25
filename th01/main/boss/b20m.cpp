@@ -2525,7 +2525,7 @@ void sariel_main(void)
 		union {
 			int patterns_done;
 			int pulse_fade_direction;
-		} ax;
+		} u1;
 		int patterns_until_next;
 
 		void next(int phase) {
@@ -2562,7 +2562,7 @@ void sariel_main(void)
 			// pulse effect to switch its fade direction. Too inconsequential
 			// to be really called a ZUN bug though, and it might have even
 			// been sort of intended.
-			ax.patterns_done++;
+			u1.patterns_done++;
 		}
 	} phase = { 0, 0, 0 };
 
@@ -2571,10 +2571,10 @@ void sariel_main(void)
 			boss_phase = PHASE_FORM1_DEFEATED; \
 		} \
 		if( \
-			(phase.ax.patterns_done >= phase.patterns_until_next) && \
+			(phase.u1.patterns_done >= phase.patterns_until_next) && \
 			!invincible \
 		) { \
-			phase.ax.patterns_done = 0; \
+			phase.u1.patterns_done = 0; \
 			boss_phase = next_phase; \
 			phase.pattern_cur = 0; \
 			boss_phase_frame = 0; \
@@ -2629,7 +2629,7 @@ void sariel_main(void)
 			)) {
 				boss_phase = 1;
 				phase.pattern_cur = 0;
-				phase.ax.patterns_done = 0;
+				phase.u1.patterns_done = 0;
 				phase.patterns_until_next = ((rand() % 6) + 1);
 				boss_phase_frame = 0;
 				initial_hp_rendered = 0;
@@ -2831,7 +2831,7 @@ entrance_rings_still_active:
 				boss_phase_frame = 0;
 				invincibility_frame = 0;
 				phase.pattern_cur = 0;
-				phase.ax.pulse_fade_direction = 0;
+				phase.u1.pulse_fade_direction = 0;
 				boss_phase = PHASE_FORM2;
 				player_invincibility_time = 0;
 				player_invincible = false;
@@ -2900,11 +2900,11 @@ entrance_rings_still_active:
 			// boss palette, modifying the one entry, and then capturing the
 			// palette again...
 			boss_palette_show();
-			if(phase.ax.pulse_fade_direction == 0) {
+			if(phase.u1.pulse_fade_direction == 0) {
 				if(z_Palettes[COL_FORM2_PULSE].c.r < 0xA) {
 					z_Palettes[COL_FORM2_PULSE].c.r++;
 				} else {
-					phase.ax.pulse_fade_direction = 1;
+					phase.u1.pulse_fade_direction = 1;
 				}
 				if(z_Palettes[COL_FORM2_PULSE].c.g < 0xA) {
 					z_Palettes[COL_FORM2_PULSE].c.g++;
@@ -2916,7 +2916,7 @@ entrance_rings_still_active:
 				if(z_Palettes[COL_FORM2_PULSE].c.r > 0x0) {
 					z_Palettes[COL_FORM2_PULSE].c.r--;
 				} else {
-					phase.ax.pulse_fade_direction = 0;
+					phase.u1.pulse_fade_direction = 0;
 				}
 				if(z_Palettes[COL_FORM2_PULSE].c.g > 0x0) {
 					z_Palettes[COL_FORM2_PULSE].c.g--;

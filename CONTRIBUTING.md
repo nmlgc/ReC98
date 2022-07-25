@@ -358,6 +358,8 @@ These cases should gradually be removed as development goes along, though.
   * Multiple consecutive capital letters are allowed.
 * `template` `struct`s and `class`es, as well as their template parameters, are
   CamelCase regardless of whether they have methods or not.
+* Fallback naming scheme for space-saving `union`s whose members have wildly
+  unrelated semantics: `u1`, `u2`, `u3`, …
 
 ## Identifiers from ZUN's original code
 
