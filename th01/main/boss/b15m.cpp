@@ -715,7 +715,6 @@ bool16 wave_teleport(screen_x_t target_left, screen_y_t target_top)
 	return false;
 }
 
-#define select_for_rank elis_select_for_rank
 #include "th01/main/select_r.cpp"
 
 int pattern_11_lasers_across(void)

@@ -218,7 +218,6 @@ void sphere_rotate_and_render(int interval, int cel_delta)
 	ent_unput_and_put(ent_sphere, image_new);
 }
 
-#define select_for_rank singyoku_select_for_rank
 #include "th01/main/select_r.cpp"
 
 // Renders a frame of the sphere rotation, starting from a rotational speed of

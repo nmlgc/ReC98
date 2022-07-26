@@ -385,7 +385,6 @@ void mima_free(void)
 	ptn_free(PTN_SLOT_MISSILE);
 }
 
-#define select_for_rank mima_select_for_rank
 #include "th01/main/select_r.cpp"
 
 // Rotating square

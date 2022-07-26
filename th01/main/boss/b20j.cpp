@@ -306,7 +306,6 @@ template <int SnakeCount> struct Snakes {
 #define GRZ_FN "boss8.grz"
 // ----------
 
-#define select_for_rank konngara_select_for_rank
 #include "th01/main/select_r.cpp"
 
 // Almost identical to Sariel's version. This one is better.

@@ -312,7 +312,6 @@ static const dots8_t sPARTICLE2X2 = 0xC0; // (**      )
 }
 // -------------
 
-#define select_for_rank sariel_select_for_rank
 #include "th01/main/select_r.cpp"
 
 void sariel_entrance(int8_t)
@@ -2267,7 +2266,7 @@ void pascal near pattern_rain_from_seal_center(int &frame)
 		rays.target_y = (PLAYFIELD_BOTTOM - 1);
 		debris_cel_cur = C_DEBRIS;
 		debris_cel_prev = C_DEBRIS;
-		sariel_select_for_rank(pattern_state.pellet_count, 30, 35, 40, 45);
+		select_for_rank(pattern_state.pellet_count, 30, 35, 40, 45);
 	}
 
 	if(rays.target_y > SEAL_CENTER_Y) {

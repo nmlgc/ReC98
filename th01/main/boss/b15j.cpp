@@ -183,7 +183,6 @@ union {
 } pattern_state;
 // --------
 
-#define select_for_rank kikuri_select_for_rank
 #include "th01/main/select_r.cpp"
 
 void kikuri_load(void)

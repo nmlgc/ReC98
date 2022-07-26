@@ -1,7 +1,7 @@
 // Writes the parameter for the current [rank] to [ret]. Duplicated for all
-// bosses except YuugenMagan, for some reason...
-// TODO: Should be `static` once all bosses have been decompiled.
-void select_for_rank(
+// bosses except YuugenMagan, who has a much cleaner implementation that just
+// returns the selected value.
+static void select_for_rank(
 	int &ret, int for_easy, int for_normal, int for_hard, int for_lunatic
 )
 {
