@@ -81,50 +81,6 @@ int boss_hp;
 int boss_phase_frame;
 // --------------------------------------------------------------
 
-// Patterns
-// --------
-static const int CHOOSE_NEW = 0;
-
-enum elis_starpattern_ret_t {
-	SP_STAR_OF_DAVID = false,
-	SP_PATTERN = true,
-
-	_elis_starpattern_ret_t_FORCE_INT16 = 0x7FFF,
-};
-
-enum elis_phase_5_subphase_t {
-	P5_PATTERN = false,
-	P5_TRANSFORM = true,
-
-	_elis_phase_5_subphase_t_FORCE_INT16 = 0x7FFF,
-};
-
-typedef int (*elis_phase_func_t)(int id);
-
-// Returns `CHOOSE_NEW` if done, or the pattern ID within the phase if still
-// ongoing.
-typedef int (*elis_phase_1_3_pattern_func_t)(void);
-
-// Returns `SP_STAR_OF_DAVID` if done, or `SP_PATTERN` if still ongoing.
-typedef elis_starpattern_ret_t (*elis_starpattern_func_t)(void);
-
-static union {
-	int angle_range; // ACTUAL TYPE: unsigned char
-	int count;
-	pellet_group_t group;
-	int interval;
-	int ring;
-	int speed_multiplied_by_8;
-	pixel_t speed;
-} pattern_state;
-// --------
-
-// Global boss state that is defined here for some reason, part 2
-// --------------------------------------------------------------
-
-int8_t boss_phase;
-// --------------------------------------------------------------
-
 // Entities
 // --------
 
@@ -578,6 +534,50 @@ void girl_bg_put(unnecessary_1_or_2_t unnecessary)
 		left, top, GIRL_W, GIRL_H, PTN_SLOT_BG_ENT, image, ptn_x, ptn_y
 	);
 }
+
+// Patterns
+// --------
+static const int CHOOSE_NEW = 0;
+
+enum elis_starpattern_ret_t {
+	SP_STAR_OF_DAVID = false,
+	SP_PATTERN = true,
+
+	_elis_starpattern_ret_t_FORCE_INT16 = 0x7FFF,
+};
+
+enum elis_phase_5_subphase_t {
+	P5_PATTERN = false,
+	P5_TRANSFORM = true,
+
+	_elis_phase_5_subphase_t_FORCE_INT16 = 0x7FFF,
+};
+
+typedef int (*elis_phase_func_t)(int id);
+
+// Returns `CHOOSE_NEW` if done, or the pattern ID within the phase if still
+// ongoing.
+typedef int (*elis_phase_1_3_pattern_func_t)(void);
+
+// Returns `SP_STAR_OF_DAVID` if done, or `SP_PATTERN` if still ongoing.
+typedef elis_starpattern_ret_t (*elis_starpattern_func_t)(void);
+
+static union {
+	int angle_range; // ACTUAL TYPE: unsigned char
+	int count;
+	pellet_group_t group;
+	int interval;
+	int ring;
+	int speed_multiplied_by_8;
+	pixel_t speed;
+} pattern_state;
+// --------
+
+// Global boss state that is defined here for some reason, part 2
+// --------------------------------------------------------------
+
+int8_t boss_phase;
+// --------------------------------------------------------------
 
 void elis_load(void)
 {
