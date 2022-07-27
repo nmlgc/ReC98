@@ -77,6 +77,7 @@ void singyoku_free(void);
 
 // Makai
 void yuugenmagan_load(void);
+void yuugenmagan_main(void);
 void yuugenmagan_free(void);
 
 void elis_load(void);

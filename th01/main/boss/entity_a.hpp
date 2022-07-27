@@ -341,6 +341,14 @@ public:
 		hitbox_orb.bottom = (bottom - ORB_HITBOX_H);
 	}
 
+	void hitbox_orb_activate() {
+		hitbox_orb_inactive = false;
+	}
+
+	void hitbox_orb_deactivate() {
+		hitbox_orb_inactive = true;
+	}
+
 	// Simply returns whether the orb collided with this entity on the last
 	// frame. (TODO: Last frame???)
 	bool16 hittest_orb(void) const;
