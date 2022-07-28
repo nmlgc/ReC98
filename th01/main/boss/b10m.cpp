@@ -26,6 +26,44 @@ extern const char MISSILE_FN[];
 #include "th01/main/bullet/missile.hpp"
 #include "th01/main/hud/hp.hpp"
 
+// Coordinates
+// -----------
+
+static const pixel_t EYE_W = 64;
+static const pixel_t EYE_H = 48;
+
+static const pixel_t EYE_LATERAL_CENTER_DISTANCE_X = 224;
+static const pixel_t EYE_SOUTH_CENTER_DISTANCE_X = 96;
+static const pixel_t EYE_NORTH_LATERAL_DISTANCE_Y = 64;
+static const pixel_t EYE_LATERAL_SOUTH_DISTANCE_Y = 48;
+
+static const screen_x_t EYE_WEST_LEFT = (
+	PLAYFIELD_CENTER_X - EYE_LATERAL_CENTER_DISTANCE_X - (EYE_W / 2)
+);
+
+static const screen_x_t EYE_EAST_LEFT = (
+	PLAYFIELD_CENTER_X + EYE_LATERAL_CENTER_DISTANCE_X - (EYE_W / 2)
+);
+
+static const screen_x_t EYE_SOUTHWEST_LEFT = (
+	PLAYFIELD_CENTER_X - EYE_SOUTH_CENTER_DISTANCE_X - (EYE_W / 2)
+);
+
+static const screen_x_t EYE_SOUTHEAST_LEFT = (
+	PLAYFIELD_CENTER_X + EYE_SOUTH_CENTER_DISTANCE_X - (EYE_W / 2)
+);
+
+static const screen_x_t EYE_NORTH_LEFT = (PLAYFIELD_CENTER_X - (EYE_W / 2));
+
+static const screen_y_t EYE_NORTH_TOP = PLAYFIELD_TOP;
+static const screen_y_t EYE_LATERAL_TOP = (
+	EYE_NORTH_TOP + EYE_NORTH_LATERAL_DISTANCE_Y
+);
+static const screen_y_t EYE_SOUTH_TOP = (
+	EYE_LATERAL_TOP + EYE_LATERAL_SOUTH_DISTANCE_Y
+);
+// -----------
+
 #define flash_colors	yuugenmagan_flash_colors
 #define invincible	yuugenmagan_invincible
 #define invincibility_frame	yuugenmagan_invincibility_frame
@@ -45,9 +83,6 @@ enum yuugenmagan_hp_t {
 // --------
 
 static const int EYE_COUNT = 5;
-
-static const pixel_t EYE_W = 64;
-static const pixel_t EYE_H = 48;
 
 enum eye_cel_t {
 	C_HIDDEN = 0,
@@ -113,11 +148,11 @@ void yuugenmagan_setup(void)
 	palette_copy(boss_post_defeat_palette, z_Palettes, col, comp);
 
 	// These exactly correspond to the yellow boxes in BOSS2.GRP.
-	eye_west     .pos_set( 64, 128);
-	eye_east     .pos_set(512, 128);
-	eye_southwest.pos_set(192, 176);
-	eye_southeast.pos_set(384, 176);
-	eye_north    .pos_set(288,  64);
+	eye_west     .pos_set(     EYE_WEST_LEFT, EYE_LATERAL_TOP);
+	eye_east     .pos_set(     EYE_EAST_LEFT, EYE_LATERAL_TOP);
+	eye_southwest.pos_set(EYE_SOUTHWEST_LEFT, EYE_SOUTH_TOP);
+	eye_southeast.pos_set(EYE_SOUTHEAST_LEFT, EYE_SOUTH_TOP);
+	eye_north    .pos_set(    EYE_NORTH_LEFT, EYE_NORTH_TOP);
 
 	eye_west     .hitbox_orb_set(-4, -4, (EYE_W + 4), EYE_H);
 	eye_east     .hitbox_orb_set(-4, -4, (EYE_W + 4), EYE_H);
