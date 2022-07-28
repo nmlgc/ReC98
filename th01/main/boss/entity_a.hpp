@@ -266,35 +266,6 @@ public:
 		screen_y_t move_clamp_bottom = (PLAYFIELD_BOTTOM - SINGYOKU_H)
 	);
 
-	// Sets [hitbox_orb] to the given coordinates, relative to the top-left
-	// corner of the image. The area corresponds to the one that the Orb's
-	// centered hitbox has to fully overlap. Relative to the entity's sprite:
-	//
-	// 	                                [this->cur_top]
-	// 	                 ┌──────────────────────────────────────────┐
-	// 	                 │            Orb top                       │
-	// 	                 │          ┌─────────┐                     │
-	// 	                 │          │       [top]                   │
-	// 	                 │ Orb left │ ╔═══════════════╗             │
-	// 	                 │          │ ║               ║             │
-	// 	                 │          └─║               ║ [right]     │
-	// 	[this->cur_left] │            ║               ║             │
-	// 	                 │     [left] ║               ║─┐           │
-	// 	                 │            ║               ║ │           │
-	// 	                 │            ╚═══════════════╝ │ Orb right │
-	// 	                 │                 [bottom]     │           │
-	// 	                 │                    └─────────┘           │
-	// 	                 │                     Orb bottom           │
-	// 	                 └──────────────────────────────────────────┘
-	void hitbox_orb_set(
-		pixel_t left, pixel_t top, pixel_t right, pixel_t bottom
-	) {
-		hitbox_orb.left = (left + ORB_HITBOX_W);
-		hitbox_orb.right = (right - ORB_HITBOX_W);
-		hitbox_orb.top = (top + ORB_HITBOX_H);
-		hitbox_orb.bottom = (bottom - ORB_HITBOX_H);
-	}
-
 	// (Just read the actual function code, it's impossible to summarize these
 	// without spelling out every single line here.)
 	void move_lock_and_put_8(
@@ -324,7 +295,36 @@ public:
 
 	/// Collision detection
 	/// -------------------
-public:
+
+	// Sets [hitbox_orb] to the given coordinates, relative to the top-left
+	// corner of the image. The area corresponds to the one that the Orb's
+	// centered hitbox has to fully overlap. Relative to the entity's sprite:
+	//
+	// 	                                [this->cur_top]
+	// 	                 ┌──────────────────────────────────────────┐
+	// 	                 │            Orb top                       │
+	// 	                 │          ┌─────────┐                     │
+	// 	                 │          │       [top]                   │
+	// 	                 │ Orb left │ ╔═══════════════╗             │
+	// 	                 │          │ ║               ║             │
+	// 	                 │          └─║               ║ [right]     │
+	// 	[this->cur_left] │            ║               ║             │
+	// 	                 │     [left] ║               ║─┐           │
+	// 	                 │            ║               ║ │           │
+	// 	                 │            ╚═══════════════╝ │ Orb right │
+	// 	                 │                 [bottom]     │           │
+	// 	                 │                    └─────────┘           │
+	// 	                 │                     Orb bottom           │
+	// 	                 └──────────────────────────────────────────┘
+	void hitbox_orb_set(
+		pixel_t left, pixel_t top, pixel_t right, pixel_t bottom
+	) {
+		hitbox_orb.left = (left + ORB_HITBOX_W);
+		hitbox_orb.right = (right - ORB_HITBOX_W);
+		hitbox_orb.top = (top + ORB_HITBOX_H);
+		hitbox_orb.bottom = (bottom - ORB_HITBOX_H);
+	}
+
 	// Simply returns whether the orb collided with this entity on the last
 	// frame. (TODO: Last frame???)
 	bool16 hittest_orb(void) const;
