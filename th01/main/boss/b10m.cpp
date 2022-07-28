@@ -249,6 +249,14 @@ inline void eyes_locked_unput_and_put_then_track(eye_flag_t eye_flag) {
 	#undef eye_flag_is_set
 }
 
+#define eyes_set_image(eye_flag, cel) { \
+	if(eye_flag &      EF_WEST) {      eye_west.set_image(cel); } \
+	if(eye_flag &      EF_EAST) {      eye_east.set_image(cel); } \
+	if(eye_flag & EF_SOUTHWEST) { eye_southwest.set_image(cel); } \
+	if(eye_flag & EF_SOUTHEAST) { eye_southeast.set_image(cel); } \
+	if(eye_flag &     EF_NORTH) {     eye_north.set_image(cel); } \
+}
+
 inline void yuugenmagan_ent_load(void) {
 	extern const char boss2_bos[];
 	eye_west.load(boss2_bos, 0);
@@ -378,6 +386,7 @@ enum phase_0_keyframe_t {
 	KEYFRAME_NORTH_LASER_DONE = 330,
 };
 
+// Matches the animation in eyes_toggle_and_yokoshima_recolor().
 inline void phase_0_eye_open(CEyeEntity& eye, int frame, int frame_first) {
 	eye.set_image(
 		((frame - frame_first) < ((EYE_OPENING_FRAMES / 3) * 1)) ? C_CLOSED :
@@ -1180,6 +1189,11 @@ struct Pentagram {
 // frames. Takes ownership of [frame]. To keep the 邪 color unchanged, set
 // [yokoshima_comp_inc] and [yokoshima_comp_dec] to a value ≥ COMPONENT_COUNT.
 //
+// ZUN quirk: While the final [z_Palettes] values are clamped to 0x0 and 0xF,
+// the [yokoshima_comp_inc] component in the [stage_palette] is *not* clamped
+// to 0xF after incrementing. This overflow can (and does) affect the final
+// color on successive recoloring operations.
+//
 // MODDERS: Make the component parameters unsigned.
 void eyes_toggle_and_yokoshima_recolor(
 	eye_flag_t eyes_to_close,
@@ -1364,6 +1378,7 @@ void yuugenmagan_main(void)
 		phase_0_downwards_lasers();
 
 		if((boss_phase_frame % 40) == 0) {
+			// Target color: (13, 13, 5) ⇒ #DD5
 			z_Palettes[COL_YOKOSHIMA].c.r++; // ZUN bloat
 			z_Palettes[COL_YOKOSHIMA].c.g++; // ZUN bloat
 			stage_palette[COL_YOKOSHIMA].c.r++;
@@ -1469,27 +1484,14 @@ void yuugenmagan_main(void)
 			phase.next(2);
 		}
 	} else if(boss_phase == 2) {
-		/* TODO: Replace with the decompiled call
-		 * eyes_toggle_and_yokoshima_recolor(
-		 * 	(EF_WEST | EF_EAST),
-		 * 	(EF_SOUTHWEST | EF_SOUTHEAST),
-		 * 	COMPONENT_R,
-		 * 	COMPONENT_B,
-		 * 	boss_phase_frame
-		 * );
-		 * once that function is part of this translation unit */
-		asm {
-			push	ds;
-			push	offset boss_phase_frame;
-			dw  	0x6866, COMPONENT_R, COMPONENT_B;
-			push	(EF_SOUTHWEST or EF_SOUTHEAST);
-			push	(EF_WEST or EF_EAST);
-			nop;
-			push 	cs;
-			call	near ptr eyes_toggle_and_yokoshima_recolor;
-			add 	sp, 0x0C;
-		}
-
+		// (13, 13, 5) → (0, 13, 68) ⇒ #0DF (cyan)
+		eyes_toggle_and_yokoshima_recolor(
+			(EF_WEST | EF_EAST),
+			(EF_SOUTHWEST | EF_SOUTHEAST),
+			COMPONENT_R,
+			COMPONENT_B,
+			boss_phase_frame
+		);
 		if(boss_phase_frame >= EYE_TOGGLE_FRAMES) {
 			phase.next(3, u2.subphase, u3.iterations_done);
 			u1.missile_pairs_fired_in_subphase = 0;
@@ -1519,27 +1521,14 @@ void yuugenmagan_main(void)
 			phase.next(4);
 		}
 	} else if(boss_phase == 4) {
-		/* TODO: Replace with the decompiled call
-		 * eyes_toggle_and_yokoshima_recolor(
-		 * 	(EF_SOUTHWEST | EF_SOUTHEAST),
-		 * 	(EF_WEST | EF_EAST),
-		 * 	COMPONENT_G,
-		 * 	COMPONENT_R,
-		 * 	boss_phase_frame
-		 * );
-		 * once that function is part of this translation unit */
-		asm {
-			push	ds;
-			push	offset boss_phase_frame;
-			db  	0x66, 0x6A, COMPONENT_G;
-			push	(EF_WEST or EF_EAST);
-			push	(EF_SOUTHWEST or EF_SOUTHEAST);
-			nop;
-			push 	cs;
-			call	near ptr eyes_toggle_and_yokoshima_recolor;
-			add 	sp, 0x0C;
-		}
-
+		// (0, 13, 68) → (63, 0, 68) ⇒ #F0F (magenta)
+		eyes_toggle_and_yokoshima_recolor(
+			(EF_SOUTHWEST | EF_SOUTHEAST),
+			(EF_WEST | EF_EAST),
+			COMPONENT_G,
+			COMPONENT_R,
+			boss_phase_frame
+		);
 		if(boss_phase_frame >= EYE_TOGGLE_FRAMES) {
 			phase.next(5, u2.subphase, u3.iterations_done);
 			u1.subphase_frame = 0;
@@ -1631,27 +1620,14 @@ void yuugenmagan_main(void)
 			phase.next(6);
 		}
 	} else if(boss_phase == 6) {
-		/* TODO: Replace with the decompiled call
-		 * eyes_toggle_and_yokoshima_recolor(
-		 * 	(EF_WEST | EF_EAST),
-		 * 	(EF_SOUTHWEST | EF_SOUTHEAST),
-		 * 	COMPONENT_R,
-		 * 	COMPONENT_COUNT,
-		 * 	boss_phase_frame
-		 * );
-		 * once that function is part of this translation unit */
-		asm {
-			push	ds;
-			push	offset boss_phase_frame;
-			dw  	0x6866, COMPONENT_R, COMPONENT_COUNT;
-			push	(EF_SOUTHWEST or EF_SOUTHEAST);
-			push	(EF_WEST or EF_EAST);
-			nop;
-			push 	cs;
-			call	near ptr eyes_toggle_and_yokoshima_recolor;
-			add 	sp, 0x0C;
-		}
-
+		// (63, 0, 68) → (0, 0, 68) ⇒ #00F (blue)
+		eyes_toggle_and_yokoshima_recolor(
+			(EF_WEST | EF_EAST),
+			(EF_SOUTHWEST | EF_SOUTHEAST),
+			COMPONENT_R,
+			COMPONENT_COUNT,
+			boss_phase_frame
+		);
 		if(boss_phase_frame >= EYE_TOGGLE_FRAMES) {
 			phase.next(7, u2.subphase, u3.iterations_done);
 			u1.missile_pairs_fired_in_subphase = 0;
@@ -1681,27 +1657,14 @@ void yuugenmagan_main(void)
 			phase.next(8);
 		}
 	} else if(boss_phase == 8) {
-		/* TODO: Replace with the decompiled call
-		 * eyes_toggle_and_yokoshima_recolor(
-		 * 	(EF_SOUTHWEST | EF_SOUTHEAST),
-		 * 	EF_NORTH,
-		 * 	COMPONENT_B,
-		 * 	COMPONENT_G,
-		 * 	boss_phase_frame
-		 * );
-		 * once that function is part of this translation unit */
-		asm {
-			push	ds;
-			push	offset boss_phase_frame;
-			dw  	0x6866, COMPONENT_B, COMPONENT_G;
-			push	EF_NORTH;
-			push	(EF_SOUTHWEST or EF_SOUTHEAST);
-			nop;
-			push 	cs;
-			call	near ptr eyes_toggle_and_yokoshima_recolor;
-			add 	sp, 0x0C;
-		}
-
+		// (0, 0, 68) → (0, 63, 5) ⇒ #0F5 (green, via cyan)
+		eyes_toggle_and_yokoshima_recolor(
+			(EF_SOUTHWEST | EF_SOUTHEAST),
+			EF_NORTH,
+			COMPONENT_B,
+			COMPONENT_G,
+			boss_phase_frame
+		);
 		if(boss_phase_frame >= EYE_TOGGLE_FRAMES) {
 			phase.next(9, u2.subphase);
 			u1.x_edge_offset = 0;
@@ -1758,30 +1721,15 @@ void yuugenmagan_main(void)
 	} else if(boss_phase == 10) {
 		// Prepare pentagram spawning by opening all eyes
 
-		/* TODO: Replace with the decompiled call
-		 * eyes_toggle_and_yokoshima_recolor(
-		 * 	EF_NONE,
-		 * 	(EF_WEST | EF_EAST | EF_SOUTHWEST | EF_SOUTHEAST | EF_NORTH),
-		 * 	u2.yokoshima_comp_dec,
-		 * 	u3.yokoshima_comp_inc,
-		 * 	boss_phase_frame
-		 * );
-		 * once that function is part of this translation unit */
-		asm {
-			push	ds;
-			push	offset boss_phase_frame;
-			mov 	al, u3.yokoshima_comp_inc;
-			cbw;
-			push	ax;
-			push	u2.yokoshima_comp_dec;
-			push	(EF_WEST or EF_EAST or EF_SOUTHWEST or EF_SOUTHEAST or EF_NORTH);
-			push	EF_NONE;
-			nop;
-			push 	cs;
-			call	near ptr eyes_toggle_and_yokoshima_recolor;
-			add 	sp, 0x0C;
-		}
-
+		// First iteration: (0, 63, 5) → (63, 0, 5) ⇒ #F05 (red, via yellow)
+		// Later iterations don't change the color; see back_from_13_to_10().
+		eyes_toggle_and_yokoshima_recolor(
+			EF_NONE,
+			(EF_WEST | EF_EAST | EF_SOUTHWEST | EF_SOUTHEAST | EF_NORTH),
+			u2.yokoshima_comp_dec,
+			u3.yokoshima_comp_inc,
+			boss_phase_frame
+		);
 		if(boss_phase_frame >= EYE_TOGGLE_FRAMES) {
 			phase.next(11, u2.subphase, u3.unused, 31 /* ZUN bloat */);
 			u1.distance = 0;
@@ -1909,27 +1857,27 @@ void yuugenmagan_main(void)
 		// the addition.
 		invincibility_frame++;
 
-		/* TODO: Replace with the decompiled call
-		 * eyes_toggle_and_yokoshima_recolor(
-		 * 	(EF_EAST | EF_SOUTHWEST | EF_SOUTHEAST | EF_NORTH),
-		 * 	EF_WEST,
-		 * 	COMPONENT_G,
-		 * 	COMPONENT_R,
-		 * 	boss_phase_frame
-		 * );
-		 * once that function is part of this translation unit */
-		asm {
-			push	ds;
-			push	offset boss_phase_frame;
-			db  	0x66, 0x6A, COMPONENT_G;
-			push	EF_WEST;
-			push	(EF_EAST or EF_SOUTHWEST or EF_SOUTHEAST or EF_NORTH);
-			nop;
-			push 	cs;
-			call	near ptr eyes_toggle_and_yokoshima_recolor;
-			add 	sp, 0x0C;
-		}
-
+		// ZUN quirk: Stays on red for the first iteration of the phase, due to
+		// merely going
+		//
+		// 	(63, 0, 5) → (126, 0, 5) ⇒ #F05
+		//
+		// On the second iteration though, the same addition causes the red
+		// component to overflow into negative numbers, which are clamped to
+		// zero:
+		//
+		// 	(126, 0, 5) → (-67, 0, 5) ⇒ #005 (dark blue)
+		//
+		// The apparent pattern then repeats, leading to the color alternating
+		// between red and dark blue on every 2.03 iterations if the player
+		// manages to stall the fight long enough.
+		eyes_toggle_and_yokoshima_recolor(
+			(EF_EAST | EF_SOUTHWEST | EF_SOUTHEAST | EF_NORTH),
+			EF_WEST,
+			COMPONENT_G,
+			COMPONENT_R,
+			boss_phase_frame
+		);
 		if((invincibility_frame % PENTAGRAM_INTERVAL) == 0) {
 			// ZUN bug: Missing an unblitting call for the final appearance of
 			// the shrunk pentagram from the previous phase. This would
@@ -1981,40 +1929,13 @@ void yuugenmagan_main(void)
 				u3.eyes_open = EF_WEST;
 			}
 		} else if(after_hit_frames > 0) {
-			/* TODO: Replace with the decompiled call
-			 * eyes_toggle_and_yokoshima_recolor(
-			 * 	(u3.eyes_open == EF_WEST) ? EF_NORTH : (u3.eyes_open >> 1),
-			 * 	u3.eyes_open,
-			 * 	COMPONENT_COUNT,
-			 * 	COMPONENT_COUNT,
-			 * 	after_hit_frames
-			 * );
-			* once that function is part of this translation unit */
-			asm {
-				push	ds;
-				push	offset after_hit_frames;
-				dw  	0x6866, COMPONENT_COUNT, COMPONENT_COUNT;
-				push	word ptr u3.eyes_open;
-				mov 	al, u3.eyes_open;
-				cbw;
-				cmp 	ax, EF_WEST;
-				jnz 	@@close_regular;
-				mov 	al, EF_NORTH;
-				jmp 	@@push_and_call;
-
-			@@close_regular:
-				mov 	al, u3.eyes_open;
-				cbw;
-				sar 	ax, 1;
-
-			@@push_and_call:
-				push	ax;
-				nop;
-				push 	cs;
-				call	near ptr eyes_toggle_and_yokoshima_recolor;
-				add 	sp, 0x0C;
-			}
-
+			eyes_toggle_and_yokoshima_recolor(
+				(u3.eyes_open == EF_WEST) ? EF_NORTH : (u3.eyes_open >> 1),
+				u3.eyes_open,
+				COMPONENT_COUNT,
+				COMPONENT_COUNT,
+				after_hit_frames
+			);
 			if(after_hit_frames >= EYE_TOGGLE_FRAMES) {
 				after_hit_frames = 0;
 				u1.unused = 0;
@@ -2086,4 +2007,77 @@ void yuugenmagan_main(void)
 		#undef eye_is_open_pedantic
 		#undef eye_is_open
 	}
+}
+
+void eyes_toggle_and_yokoshima_recolor(
+	eye_flag_t eyes_to_close,
+	eye_flag_t eyes_to_open,
+	int yokoshima_comp_dec,
+	int yokoshima_comp_inc,
+	int& frame
+)
+{
+	#define eye_should_be_closed(bit) ( \
+		eyes_to_close & bit \
+	)
+
+	#define eye_should_be_opened(bit) ( \
+		eyes_to_open & bit \
+	)
+
+	#define eye_is_toggled(bit) ( \
+		((eyes_to_close & bit) == bit) || ((eyes_to_open & bit) == bit) \
+	)
+
+	eyes_foreach_if(eye_is_toggled, locked_unput_and_put_8);
+	frame++;
+
+	// ZUN quirk: That's a color change on every frame *except* the 10th one...
+	if((frame % 10) != 0) {
+		if(yokoshima_comp_dec < COMPONENT_COUNT) {
+			// This clamping condition is actually rather important to keep
+			// [stage_palette] from running into negative numbers.
+			if(z_Palettes[COL_YOKOSHIMA].v[yokoshima_comp_dec] > 0) {
+				z_Palettes[COL_YOKOSHIMA].v[yokoshima_comp_dec]--; // ZUN bloat
+				stage_palette[COL_YOKOSHIMA].v[yokoshima_comp_dec]--;
+			}
+		}
+		if(yokoshima_comp_inc < COMPONENT_COUNT) {
+			// ZUN quirk: No equivalent clamping condition here. The final
+			// color in [z_Palettes] is clamped to 0xF, but there's nothing to
+			// prevent the [stage_palette] version from running past 0xF.
+			// If a component that was previously incremented like this is then
+			// decremented in subsequent recoloring operations, this overflow
+			// manifests itself as a noticeable delay: The component will spend
+			// most of the recoloring time above 0xF, and only fall back into
+			// the valid color range at the *end* of the recoloring phase. If
+			// the previously component additionally started out with a non-0x0
+			// value (which is the case for the blue component in the original
+			// game), decrementing it for a constant amount of frames can only
+			// ever reach that brighter initial value again.
+			z_Palettes[COL_YOKOSHIMA].v[yokoshima_comp_inc]++; // ZUN bloat
+			stage_palette[COL_YOKOSHIMA].v[yokoshima_comp_inc]++;
+		}
+
+		// ZUN bloat: z_palette_set_show(COL_YOKOSHIMA) is enough.
+		z_palette_set_all_show(stage_palette);
+	}
+
+	// Matches the animation in phase_0_eye_open().
+	if(frame == ((EYE_OPENING_FRAMES / 3) * 1)) {
+		eyes_set_image(eyes_to_close, C_HALFOPEN);
+		eyes_set_image(eyes_to_open, C_CLOSED);
+		eyes_foreach_if(eye_should_be_opened, hitbox_orb_activate);
+	} else if(frame == ((EYE_OPENING_FRAMES / 3) * 2)) {
+		eyes_set_image(eyes_to_close, C_CLOSED);
+		eyes_set_image(eyes_to_open, C_HALFOPEN);
+		eyes_foreach_if(eye_should_be_closed, hitbox_orb_deactivate);
+	} else if(frame == ((EYE_OPENING_FRAMES / 3) * 3)) {
+		eyes_set_image(eyes_to_close, C_HIDDEN);
+		eyes_set_image(eyes_to_open, C_AHEAD);
+	}
+
+	#undef eye_should_be_closed
+	#undef eye_should_be_opened
+	#undef eye_is_toggled
 }
