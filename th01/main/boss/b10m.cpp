@@ -22,10 +22,6 @@ extern "C" {
 #include "th01/hardware/palette.h"
 #include "th01/snd/mdrv2.h"
 }
-#include "th01/shiftjis/fns.hpp"
-#undef MISSILE_FN
-#define MISSILE_FN boss3_m_ptn
-extern const char MISSILE_FN[];
 #include "th01/main/vars.hpp"
 #include "th01/formats/grp.h"
 #include "th01/formats/pf.hpp"
@@ -258,8 +254,7 @@ inline void eyes_locked_unput_and_put_then_track(eye_flag_t eye_flag) {
 }
 
 inline void yuugenmagan_ent_load(void) {
-	extern const char boss2_bos[];
-	eye_west.load(boss2_bos, 0);
+	eye_west.load("boss2.bos", 0);
 	eye_east.metadata_assign(eye_west);
 	eye_southwest.metadata_assign(eye_west);
 	eye_southeast.metadata_assign(eye_west);
@@ -293,7 +288,7 @@ inline int select_for_rank(
 	);
 }
 
-extern int pattern_interval;
+static int pattern_interval;
 // --------
 
 void yuugenmagan_load(void)
@@ -307,11 +302,10 @@ void yuugenmagan_load(void)
 
 void yuugenmagan_setup(void)
 {
-	extern const char boss2_grp[];
 	int col;
 	int comp;
 
-	grp_palette_load_show(boss2_grp);
+	grp_palette_load_show("boss2.grp");
 	boss_palette_snap();
 
 	eye_west     .set_image(C_HIDDEN);
@@ -873,7 +867,7 @@ inline void conditionally_reset(pixel_t& x_edge_offset, bool cond) {
 
 static const int PENTAGRAM_INTERVAL = 4;
 static const int PENTAGRAM_POINTS = 5;
-extern struct {
+static struct {
 	// Corners, arranged in counterclockwise order.
 	screen_x_t x[PENTAGRAM_POINTS];
 	screen_y_t y[PENTAGRAM_POINTS];
@@ -1227,14 +1221,12 @@ inline void conditionally_reset_missiles(bool cond) {
 
 void yuugenmagan_main(void)
 {
-	struct hack { unsigned char col[2]; }; // XXX
-	extern const struct hack yuugenmagan_invincibility_flash_colors;
-	struct hack flash_colors = yuugenmagan_invincibility_flash_colors;
+	const unsigned char flash_colors[2] = { 1, 11 };
 	int i;
 
-	extern int invincibility_frame;
+	static int invincibility_frame;
 
-	extern union {
+	static union {
 		int missile_pairs_fired_in_subphase;
 		int subphase_frame;
 
@@ -1245,30 +1237,30 @@ void yuugenmagan_main(void)
 		int unused;
 	} u1;
 
-	extern union {
+	static union {
 		int subphase;
 		int yokoshima_comp_dec;
 		int unused;
 	} u2;
 
-	extern screen_x_t target_left;
-	extern pixel_t unused_distance;
+	static screen_x_t target_left;
+	static pixel_t unused_distance;
 
 	// Compared to just reusing [invincibility_frame], this "copy" has the
 	// advantage of not being reset every 40 frames, and thus lasting the full
 	// EYE_TOGGLE_FRAMES.
-	extern int after_hit_frames;
+	static int after_hit_frames;
 
-	extern Pentagram pentagram_;
+	static Pentagram pentagram_;
 
-	extern union {
+	static union {
 		int8_t iterations_done;
 		int8_t yokoshima_comp_inc;
 		eye_flag_t eyes_open;
 		int8_t unused;
 	} u3;
 
-	extern struct {
+	static struct {
 		bool initial_hp_rendered;
 
 		void frame_common(void) {
@@ -1320,18 +1312,18 @@ void yuugenmagan_main(void)
 		}
 	} phase;
 
-	extern union {
+	static union {
 		unsigned char missile_southwest;
 		unsigned char pellet_east;
 		unsigned char tmp; // MODDERS: Turn into a scope-local variable
 	} angle;
 
-	extern unsigned char angle_missile_southeast;
+	static unsigned char angle_missile_southeast;
 
-	extern struct {
+	static struct {
 		bool16 invincible;
 
-		void update_and_render(const struct hack &flash_colors) {
+		void update_and_render(const unsigned char (&flash_colors)[2]) {
 			#define hittest(eye) ( \
 				(eye.hittest_orb() == true) && (eye.image() != C_HIDDEN) \
 			)
@@ -1340,7 +1332,7 @@ void yuugenmagan_main(void)
 				invincibility_frame,
 				invincible,
 				boss_hp,
-				flash_colors.col,
+				flash_colors,
 				sizeof(flash_colors),
 				5000,
 				boss_nop,
@@ -1355,7 +1347,7 @@ void yuugenmagan_main(void)
 
 			#undef hittest
 		}
-	} hit;
+	} hit = { false };
 
 	Missiles.unput_update_render();
 

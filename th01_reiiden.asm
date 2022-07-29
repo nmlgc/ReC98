@@ -4923,17 +4923,6 @@ _player_bombing	db 0
 _player_combo_enabled	db 0
 public _ORB_FORCE_REPEL_CONSTANT
 _ORB_FORCE_REPEL_CONSTANT	dq -10.0
-	evendata
-
-public _yuugenmagan_invincibility_flash_, _hit
-_yuugenmagan_invincibility_flash_	db 1, 11
-_hit                             	dw 0
-
-public _boss2_bos, _boss3_m_ptn, _boss2_grp
-_boss2_bos  	db 'boss2.bos',0
-_boss3_m_ptn	db 'boss3_m.ptn',0
-_boss2_grp  	db 'boss2.grp',0
-
 	extern _card_flip_cycle:byte
 	extern _default_grp_fn:byte
 	extern _default_bgm_fn:byte
@@ -5082,43 +5071,6 @@ _player_submode	db ?
 _player_ptn_id_prev	db ?
 public _boss_post_defeat_palette
 _boss_post_defeat_palette	palette_t <?>
-
-public _pattern_interval, _pentagram
-_pattern_interval	dw ?
-
-_pentagram label word
-_pentagram_x label word
-_pentagram_x_0	dw ?
-_pentagram_x_1	dw ?
-_pentagram_x_2	dw ?
-_pentagram_x_3	dw ?
-_pentagram_x_4	dw ?
-_pentagram_y label word
-_pentagram_y_0	dw ?
-_pentagram_y_1	dw ?
-_pentagram_y_2	dw ?
-_pentagram_y_3	dw ?
-_pentagram_y_4	dw ?
-_pentagram_radius	dw ?
-_pentagram_center	Point <?>
-_pentagram_velocity_y	dw ?
-_pentagram_velocity_x	dw ?
-
-public _invincibility_frame, _u1, _u2, _target_left, _unused_distance, _u3
-public _after_hit_frames, _pentagram_, _phase, _angle, _angle_missile_southeast
-_invincibility_frame    	dw ?
-_u1                     	dw ?
-_u2                     	dw ?
-_target_left            	dw ?
-_unused_distance        	dw ?
-_after_hit_frames       	dw ?
-_pentagram_ label word
-_pentagram__phase       	dw ?
-_pentagram__angle       	dw ?
-_u3                     	db ?
-_phase                  	db ?
-_angle                  	db ?
-_angle_missile_southeast	db ?
 
 CCards struc
 	C_left       	dd ?

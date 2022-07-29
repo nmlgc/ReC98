@@ -56,7 +56,7 @@ protected:
 public:
 	// Loads the missile sprites into the given .PTN [slot].
 	void load(main_ptn_slot_t slot) {
-		ptn_load(slot, MISSILE_FN);
+		ptn_load(slot, "boss3_m.ptn");
 		ptn_id_base = PTN_ID(slot, 0);
 	}
 

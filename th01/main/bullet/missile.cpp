@@ -3,7 +3,6 @@
 extern "C" {
 #include "th01/hardware/input.hpp"
 }
-#include "th01/shiftjis/fns.hpp"
 #include "th01/main/bullet/missile.hpp"
 #include "th01/main/player/player.hpp"
 

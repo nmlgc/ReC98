@@ -30,7 +30,6 @@ extern "C" {
 #include "th01/main/entity.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/vars.hpp"
-#include "th01/shiftjis/fns.hpp"
 #include "th01/sprites/pellet.h"
 #include "th01/main/shape.hpp"
 #include "th01/main/particle.hpp"

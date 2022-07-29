@@ -27,7 +27,6 @@ extern "C" {
 #include "th01/sprites/pillar.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/vars.hpp"
-#include "th01/shiftjis/fns.hpp"
 #include "th01/main/particle.hpp"
 #include "th01/main/shape.hpp"
 #include "th01/main/player/orb.hpp"
