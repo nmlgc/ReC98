@@ -537,11 +537,11 @@ void CBossEntity::sloppy_unput() const
 	egc_copy_rect_1_to_0_16(cur_left, cur_top, (vram_w * BYTE_DOTS), h);
 }
 
-void CBossEntity::move_lock_unput_and_put_8(
+void CBossEntity::locked_move_unput_and_put_8(
 	int, pixel_t delta_x, pixel_t delta_y, int lock_frames
 )
 {
-	if(move_lock_frame == 0) {
+	if(lock_frame == 0) {
 		move(delta_x, delta_y);
 
 		screen_x_t unput_left = (prev_delta_x > 0)
@@ -558,26 +558,26 @@ void CBossEntity::move_lock_unput_and_put_8(
 
 		unput_and_put_8(cur_left, cur_top, bos_image);
 
-		move_lock_frame = 1;
-	} else if(move_lock_frame >= lock_frames) {
-		move_lock_frame = 0;
+		lock_frame = 1;
+	} else if(lock_frame >= lock_frames) {
+		lock_frame = 0;
 	} else {
-		move_lock_frame++;
+		lock_frame++;
 	}
 }
 
-void CBossEntity::move_lock_and_put_8(
+void CBossEntity::locked_move_and_put_8(
 	int, pixel_t delta_x, pixel_t delta_y, int lock_frames
 )
 {
-	if(move_lock_frame == 0) {
+	if(lock_frame == 0) {
 		move(delta_x, delta_y);
 		put_8(cur_left, cur_top, bos_image);
-		move_lock_frame = 1;
-	} else if(move_lock_frame >= lock_frames) {
-		move_lock_frame = 0;
+		lock_frame = 1;
+	} else if(lock_frame >= lock_frames) {
+		lock_frame = 0;
 	} else {
-		move_lock_frame++;
+		lock_frame++;
 	}
 }
 

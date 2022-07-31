@@ -253,7 +253,7 @@ bool16 near kikuri_hittest_orb(void)
 
 void pascal near soul_move_and_render(int i, pixel_t delta_x, pixel_t delta_y)
 {
-	souls[i].move_lock_unput_and_put_8(0, delta_x, delta_y, 1);
+	souls[i].locked_move_unput_and_put_8(0, delta_x, delta_y, 1);
 	if((boss_phase_frame % 12) == 0) {
 		if(souls[i].image() >= (SOUL_CELS - 1)) {
 			souls[i].set_image(0);
@@ -311,7 +311,7 @@ void near tears_update_and_render(void)
 	for(int i = 0; i < TEAR_COUNT; i++) {
 		if(tear_anim_frame[i] != 0) {
 			if(tears[i].cur_top <= TEAR_TOP_MAX) {
-				tears[i].move_lock_unput_and_put_8(0, 0, +8, 1);
+				tears[i].locked_move_unput_and_put_8(0, 0, +8, 1);
 			} else {
 				void pascal near ripple_update_and_render(
 					screen_x_t tear_left, screen_y_t tear_top_max, int8_t &frame

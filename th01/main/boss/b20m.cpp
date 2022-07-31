@@ -743,8 +743,8 @@ void near shield_render_both(void)
 	ent_shield.set_image(
 		(boss_phase_frame % (FRAMES_PER_CEL * CELS)) / FRAMES_PER_CEL
 	);
-	graph_accesspage_func(1);	ent_shield.move_lock_and_put_8();
-	graph_accesspage_func(0);	ent_shield.move_lock_and_put_8();
+	graph_accesspage_func(1);	ent_shield.unlock_put_lock_8();
+	graph_accesspage_func(0);	ent_shield.unlock_put_lock_8();
 }
 
 // Renders a frame of Sariel's wand raise animation on both VRAM pages, and

@@ -32,7 +32,10 @@ protected:
 public:
 	bool16 hitbox_orb_inactive;
 	bool16 loading;
-	int move_lock_frame;
+
+	// Locks both movement and rendering via the locked_*() methods if nonzero.
+	int lock_frame;
+
 	int zero_2;
 	char zero_3;
 	unsigned char bos_slot;
@@ -66,7 +69,7 @@ public:
 		unknown = other.unknown;
 		hitbox_orb_inactive = other.hitbox_orb_inactive;
 		loading = other.loading;
-		move_lock_frame = other.move_lock_frame;
+		lock_frame = other.lock_frame;
 		zero_2 = other.zero_2;
 		zero_3 = other.zero_3;
 		bos_slot = other.bos_slot;
@@ -267,29 +270,42 @@ public:
 	);
 
 	// (Just read the actual function code, it's impossible to summarize these
-	// without spelling out every single line here.)
-	void move_lock_and_put_8(
+	// without spelling out every single line here. Most notably though, it
+	// only actually moves or renders the entity if [lock_frame] is 0.)
+	void locked_move_and_put_8(
 		int unused, pixel_t delta_x, pixel_t delta_y, int lock_frames
 	);
-	void move_lock_unput_and_put_8(
+	void locked_move_unput_and_put_8(
 		int unused, pixel_t delta_x, pixel_t delta_y, int lock_frames
 	);
 
-	void move_lock_and_put_8(void) {
-		move_lock_frame = 0;
-		move_lock_and_put_8(0, 0, 0, 3);
+	// ZUN bug: The lock concept should really not apply to blitting. Only
+	// unblitting and reblitting an entity every 3 frames allows other
+	// overlapping sprites (i.e., bullets, player shots, or the Orb) to rip
+	// holes into it as part of their respective unblitting calls during these
+	// 3 frames. That's what causes the flickering during most of YuugenMagan's
+	// attack phases. This method can only be interpreted as a desperate
+	// attempt at improving performance, pointing out how much this game would
+	// have benefitted from a proper sprite system.
+	void locked_unput_and_put_8(void) {
+		locked_move_unput_and_put_8(0, 0, 0, 3);
 	}
 
-	void move_lock_and_put_image_8(int image) {
-		move_lock_frame = 0;
-		bos_image = image;
-		move_lock_and_put_8(0, 0, 0, 3);
+	void unlock_put_lock_8(void) {
+		lock_frame = 0;
+		locked_move_and_put_8(0, 0, 0, 3);
 	}
 
-	void move_lock_unput_and_put_image_8(int image) {
-		move_lock_frame = 0;
+	void unlock_put_image_lock_8(int image) {
+		lock_frame = 0;
 		bos_image = image;
-		move_lock_unput_and_put_8(0, 0, 0, 3);
+		locked_move_and_put_8(0, 0, 0, 3);
+	}
+
+	void unlock_unput_put_image_lock_8(int image) {
+		lock_frame = 0;
+		bos_image = image;
+		locked_unput_and_put_8();
 	}
 	/// --------
 

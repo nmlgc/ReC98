@@ -678,8 +678,8 @@ void singyoku_main(void)
 
 		boss_phase_frame = 0;
 		while(boss_phase_frame < 200) {
-			// Different function for a change? Move locking has no effect here.
-			ent_sphere.move_lock_unput_and_put_8(0, 0, 0, 3);
+			// Different function for a change?
+			ent_sphere.locked_unput_and_put_8();
 
 			boss_phase_frame++;
 			if((boss_phase_frame % rotation_interval) == 0) {

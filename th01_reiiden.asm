@@ -4445,7 +4445,7 @@ main_21_TEXT	segment	byte public 'CODE' use16
 	extern @CBossEntity@load_inner$qxnxci:proc
 	extern @CBossEntity@metadata_get$xqmimuct1t1:proc
 	extern @CBossEntity@put_8$xqiii:proc
-	extern @CBossEntity@move_lock_unput_and_put_8$qiiii:proc
+	extern @CBossEntity@locked_move_unput_and_put_8$qiiii:proc
 	extern @CBossEntity@hittest_orb$xqv:proc
 	extern @bos_entity_free$qi:proc
 main_21_TEXT	ends
@@ -5127,12 +5127,12 @@ var_4		= word ptr -4
 
 loc_1BA6C:
 		inc	_boss_phase_frame
-		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_0, ds, large 0 or (0 shl 16), large 0 or (3 shl 16)
-		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_1, ds, large 0 or (0 shl 16), large 0 or (3 shl 16)
-		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_2, ds, large 0 or (0 shl 16), large 0 or (3 shl 16)
-		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_3, ds, large 0 or (0 shl 16), large 0 or (3 shl 16)
+		call	@CBossEntity@locked_move_unput_and_put_8$qiiii stdcall, offset eye_0, ds, large 0 or (0 shl 16), large 0 or (3 shl 16)
+		call	@CBossEntity@locked_move_unput_and_put_8$qiiii stdcall, offset eye_1, ds, large 0 or (0 shl 16), large 0 or (3 shl 16)
+		call	@CBossEntity@locked_move_unput_and_put_8$qiiii stdcall, offset eye_2, ds, large 0 or (0 shl 16), large 0 or (3 shl 16)
+		call	@CBossEntity@locked_move_unput_and_put_8$qiiii stdcall, offset eye_3, ds, large 0 or (0 shl 16), large 0 or (3 shl 16)
 		add	sp, 30h
-		call	@CBossEntity@move_lock_unput_and_put_8$qiiii       c, offset eye_4, ds, large 0 or (0 shl 16), large 0 or (3 shl 16)
+		call	@CBossEntity@locked_move_unput_and_put_8$qiiii       c, offset eye_4, ds, large 0 or (0 shl 16), large 0 or (3 shl 16)
 		call	sub_1B58F
 		mov	ax, _boss_phase_frame
 		mov	bx, 40
@@ -5473,8 +5473,8 @@ loc_1BEC0:
 		jnz	loc_1C02D
 		inc	_boss_phase_frame
 		inc	_yuugenmagan_invincibility_frame
-		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_west, ds, large 0, large 0 or (3 shl 16)
-		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_east, ds, large 0, large 0 or (3 shl 16)
+		call	@CBossEntity@locked_move_unput_and_put_8$qiiii stdcall, offset eye_west, ds, large 0, large 0 or (3 shl 16)
+		call	@CBossEntity@locked_move_unput_and_put_8$qiiii stdcall, offset eye_east, ds, large 0, large 0 or (3 shl 16)
 		add	sp, 18h
 		mov	ax, eye_west.BE_cur_left
 		add	ax, 32
@@ -5663,8 +5663,8 @@ loc_1C0CA:
 		jnz	loc_1C3EB
 		inc	_boss_phase_frame
 		inc	_yuugenmagan_invincibility_frame
-		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_southwest, ds, large 0, large 0 or (3 shl 16)
-		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_southeast, ds, large 0, large 0 or (3 shl 16)
+		call	@CBossEntity@locked_move_unput_and_put_8$qiiii stdcall, offset eye_southwest, ds, large 0, large 0 or (3 shl 16)
+		call	@CBossEntity@locked_move_unput_and_put_8$qiiii stdcall, offset eye_southeast, ds, large 0, large 0 or (3 shl 16)
 		add	sp, 18h
 		mov	ax, eye_southwest.BE_cur_left.x
 		add	ax, 32
@@ -6029,8 +6029,8 @@ loc_1C493:
 		inc	_yuugenmagan_invincibility_frame
 		inc	x_39E06
 		dec	angle_39E16
-		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_west, ds, large 0, large 0 or (3 shl 16)
-		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_east, ds, large 0, large 0 or (3 shl 16)
+		call	@CBossEntity@locked_move_unput_and_put_8$qiiii stdcall, offset eye_west, ds, large 0, large 0 or (3 shl 16)
+		call	@CBossEntity@locked_move_unput_and_put_8$qiiii stdcall, offset eye_east, ds, large 0, large 0 or (3 shl 16)
 		add	sp, 18h
 		mov	ax, eye_west.BE_cur_left
 		add	ax, 32
@@ -6336,8 +6336,8 @@ loc_1C7E4:
 		jnz	loc_1CB08
 		inc	_boss_phase_frame
 		inc	_yuugenmagan_invincibility_frame
-		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_southwest, ds, large 0, large 0 or (3 shl 16)
-		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_southeast, ds, large 0, large 0 or (3 shl 16)
+		call	@CBossEntity@locked_move_unput_and_put_8$qiiii stdcall, offset eye_southwest, ds, large 0, large 0 or (3 shl 16)
+		call	@CBossEntity@locked_move_unput_and_put_8$qiiii stdcall, offset eye_southeast, ds, large 0, large 0 or (3 shl 16)
 		add	sp, 18h
 		mov	ax, eye_southwest.BE_cur_left
 		add	ax, 32
@@ -6657,7 +6657,7 @@ loc_1CB3E:
 		jnz	loc_1D036
 		inc	_boss_phase_frame
 		inc	_yuugenmagan_invincibility_frame
-		call	@CBossEntity@move_lock_unput_and_put_8$qiiii c, offset eye_north, ds, large 0, large 0 or (3 shl 16)
+		call	@CBossEntity@locked_move_unput_and_put_8$qiiii c, offset eye_north, ds, large 0, large 0 or (3 shl 16)
 		cmp	_boss_phase_frame, 30
 		jl	short loc_1CB88
 		cmp	word_39E08, 0
@@ -7085,12 +7085,12 @@ loc_1D08C:
 		jnz	loc_1D852
 		inc	_boss_phase_frame
 		inc	_yuugenmagan_invincibility_frame
-		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset      eye_west, ds, large 0, large 0 or (3 shl 16)
-		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset      eye_east, ds, large 0, large 0 or (3 shl 16)
-		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_southwest, ds, large 0, large 0 or (3 shl 16)
-		call	@CBossEntity@move_lock_unput_and_put_8$qiiii stdcall, offset eye_southeast, ds, large 0, large 0 or (3 shl 16)
+		call	@CBossEntity@locked_move_unput_and_put_8$qiiii stdcall, offset      eye_west, ds, large 0, large 0 or (3 shl 16)
+		call	@CBossEntity@locked_move_unput_and_put_8$qiiii stdcall, offset      eye_east, ds, large 0, large 0 or (3 shl 16)
+		call	@CBossEntity@locked_move_unput_and_put_8$qiiii stdcall, offset eye_southwest, ds, large 0, large 0 or (3 shl 16)
+		call	@CBossEntity@locked_move_unput_and_put_8$qiiii stdcall, offset eye_southeast, ds, large 0, large 0 or (3 shl 16)
 		add	sp, 30h
-		call	@CBossEntity@move_lock_unput_and_put_8$qiiii       c, offset     eye_north, ds, large 0, large 0 or (3 shl 16)
+		call	@CBossEntity@locked_move_unput_and_put_8$qiiii       c, offset     eye_north, ds, large 0, large 0 or (3 shl 16)
 		mov	ax, eye_west.BE_cur_left
 		add	ax, 32
 		sub	ax, _player_left
@@ -7860,7 +7860,7 @@ loc_1D8D5:
 		and	ax, 1
 		cmp	ax, 1
 		jnz	short loc_1D90D
-		call	@CBossEntity@move_lock_unput_and_put_8$qiiii c, offset eye_west, ds, large 0, large 0 or (3 shl 16)
+		call	@CBossEntity@locked_move_unput_and_put_8$qiiii c, offset eye_west, ds, large 0, large 0 or (3 shl 16)
 
 loc_1D90D:
 		mov	al, byte_39E14
@@ -7868,7 +7868,7 @@ loc_1D90D:
 		and	ax, 2
 		cmp	ax, 2
 		jnz	short loc_1D92E
-		call	@CBossEntity@move_lock_unput_and_put_8$qiiii c, offset eye_east, ds, large 0, large 0 or (3 shl 16)
+		call	@CBossEntity@locked_move_unput_and_put_8$qiiii c, offset eye_east, ds, large 0, large 0 or (3 shl 16)
 
 loc_1D92E:
 		mov	al, byte_39E14
@@ -7876,7 +7876,7 @@ loc_1D92E:
 		and	ax, 4
 		cmp	ax, 4
 		jnz	short loc_1D94F
-		call	@CBossEntity@move_lock_unput_and_put_8$qiiii c, offset eye_southwest, ds, large 0, large 0 or (3 shl 16)
+		call	@CBossEntity@locked_move_unput_and_put_8$qiiii c, offset eye_southwest, ds, large 0, large 0 or (3 shl 16)
 
 loc_1D94F:
 		mov	al, byte_39E14
@@ -7884,7 +7884,7 @@ loc_1D94F:
 		and	ax, 8
 		cmp	ax, 8
 		jnz	short loc_1D970
-		call	@CBossEntity@move_lock_unput_and_put_8$qiiii c, offset eye_southeast, ds, large 0, large 0 or (3 shl 16)
+		call	@CBossEntity@locked_move_unput_and_put_8$qiiii c, offset eye_southeast, ds, large 0, large 0 or (3 shl 16)
 
 loc_1D970:
 		mov	al, byte_39E14
@@ -7892,7 +7892,7 @@ loc_1D970:
 		and	ax, 10h
 		cmp	ax, 10h
 		jnz	short loc_1D991
-		call	@CBossEntity@move_lock_unput_and_put_8$qiiii c, offset eye_north, ds, large 0, large 0 or (3 shl 16)
+		call	@CBossEntity@locked_move_unput_and_put_8$qiiii c, offset eye_north, ds, large 0, large 0 or (3 shl 16)
 
 loc_1D991:
 		cmp	_yuugenmagan_invincible, 0
@@ -8432,7 +8432,7 @@ arg_8		= dword	ptr  0Eh
 		jnz	short loc_1E037
 
 loc_1E022:
-		call	@CBossEntity@move_lock_unput_and_put_8$qiiii c, offset eye_west, ds, large 0, large 0 or (3 shl 16)
+		call	@CBossEntity@locked_move_unput_and_put_8$qiiii c, offset eye_west, ds, large 0, large 0 or (3 shl 16)
 
 loc_1E037:
 		mov	al, [bp+arg_0]
@@ -8447,7 +8447,7 @@ loc_1E037:
 		jnz	short loc_1E064
 
 loc_1E04F:
-		call	@CBossEntity@move_lock_unput_and_put_8$qiiii c, offset eye_east, ds, large 0, large 0 or (3 shl 16)
+		call	@CBossEntity@locked_move_unput_and_put_8$qiiii c, offset eye_east, ds, large 0, large 0 or (3 shl 16)
 
 loc_1E064:
 		mov	al, [bp+arg_0]
@@ -8462,7 +8462,7 @@ loc_1E064:
 		jnz	short loc_1E091
 
 loc_1E07C:
-		call	@CBossEntity@move_lock_unput_and_put_8$qiiii c, offset eye_southwest, ds, large 0, large 0 or (3 shl 16)
+		call	@CBossEntity@locked_move_unput_and_put_8$qiiii c, offset eye_southwest, ds, large 0, large 0 or (3 shl 16)
 
 loc_1E091:
 		mov	al, [bp+arg_0]
@@ -8477,7 +8477,7 @@ loc_1E091:
 		jnz	short loc_1E0BE
 
 loc_1E0A9:
-		call	@CBossEntity@move_lock_unput_and_put_8$qiiii c, offset eye_southeast, ds, large 0, large 0 or (3 shl 16)
+		call	@CBossEntity@locked_move_unput_and_put_8$qiiii c, offset eye_southeast, ds, large 0, large 0 or (3 shl 16)
 
 loc_1E0BE:
 		mov	al, [bp+arg_0]
@@ -8492,7 +8492,7 @@ loc_1E0BE:
 		jnz	short loc_1E0EB
 
 loc_1E0D6:
-		call	@CBossEntity@move_lock_unput_and_put_8$qiiii c, offset eye_north, ds, large 0, large 0 or (3 shl 16)
+		call	@CBossEntity@locked_move_unput_and_put_8$qiiii c, offset eye_north, ds, large 0, large 0 or (3 shl 16)
 
 loc_1E0EB:
 		les	bx, [bp+arg_8]

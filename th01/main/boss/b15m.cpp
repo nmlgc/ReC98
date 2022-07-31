@@ -217,17 +217,17 @@ inline void ent_unput_and_put_both(
 ) {
 	graph_accesspage_func(1);
 	girl_bg_put(ent + 1);
-	boss_entities[ent].move_lock_and_put_image_8(cel);
+	boss_entities[ent].unlock_put_image_lock_8(cel);
 	graph_accesspage_func(0);
 	if(unput_0) {
 		girl_bg_put(ent + 1);
 	}
-	boss_entities[ent].move_lock_and_put_image_8(cel);
+	boss_entities[ent].unlock_put_image_lock_8(cel);
 }
 
 inline void ent_put_both(elis_entity_t ent, elis_entity_cel_t cel) {
-	graph_accesspage_func(1); boss_entities[ent].move_lock_and_put_image_8(cel);
-	graph_accesspage_func(0); boss_entities[ent].move_lock_and_put_image_8(cel);
+	graph_accesspage_func(1); boss_entities[ent].unlock_put_image_lock_8(cel);
+	graph_accesspage_func(0); boss_entities[ent].unlock_put_image_lock_8(cel);
 }
 
 #define ent_wave_put(ent, cel, len, amp, phase) { \
@@ -643,16 +643,16 @@ bool16 wave_teleport(screen_x_t target_left, screen_y_t target_top)
 		graph_accesspage_func(1);
 		girl_bg_put(1);
 		graph_accesspage_func(0);
-		ent_still_or_wave.move_lock_and_put_image_8(C_WAVE_1);
+		ent_still_or_wave.unlock_put_image_lock_8(C_WAVE_1);
 		ent_still_or_wave.hitbox_orb_inactive = true;
 	} else if(boss_phase_frame == 28) {
 		girl_bg_put(1);
-		ent_still_or_wave.move_lock_and_put_image_8(C_WAVE_2);
+		ent_still_or_wave.unlock_put_image_lock_8(C_WAVE_2);
 		ent_still_or_wave.hitbox_orb_inactive = true;
 	} else if(boss_phase_frame == 36) {
 		ent_still_or_wave.hitbox_orb_inactive = true;
 		girl_bg_put(1);
-		ent_still_or_wave.move_lock_and_put_image_8(C_WAVE_3);
+		ent_still_or_wave.unlock_put_image_lock_8(C_WAVE_3);
 	} else if(boss_phase_frame == 44) {
 		ent_still_or_wave.hitbox_orb_inactive = true;
 		egc_copy_rect_1_to_0_16(
@@ -666,21 +666,21 @@ bool16 wave_teleport(screen_x_t target_left, screen_y_t target_top)
 		ent_still_or_wave.pos_cur_set(target_left, target_top);
 		girl_bg_snap(1);
 		girl_bg_put(1); // unnecessary
-		ent_still_or_wave.move_lock_and_put_image_8(C_WAVE_3);
+		ent_still_or_wave.unlock_put_image_lock_8(C_WAVE_3);
 	} else if(boss_phase_frame == 60) {
 		ent_still_or_wave.hitbox_orb_inactive = true;
 		girl_bg_put(1);
-		ent_still_or_wave.move_lock_and_put_image_8(C_WAVE_2);
+		ent_still_or_wave.unlock_put_image_lock_8(C_WAVE_2);
 	} else if(boss_phase_frame == 68) {
 		ent_still_or_wave.hitbox_orb_inactive = true;
 		girl_bg_put(1);
-		ent_still_or_wave.move_lock_and_put_image_8(C_WAVE_1);
+		ent_still_or_wave.unlock_put_image_lock_8(C_WAVE_1);
 	} else if(boss_phase_frame == 76) {
 		ent_still_or_wave.hitbox_orb_inactive = false;
 		graph_accesspage_func(1);
-		ent_still_or_wave.move_lock_and_put_image_8(C_STILL);
+		ent_still_or_wave.unlock_put_image_lock_8(C_STILL);
 		graph_accesspage_func(0);
-		ent_still_or_wave.move_lock_and_put_image_8(C_STILL);
+		ent_still_or_wave.unlock_put_image_lock_8(C_STILL);
 	} else if(boss_phase_frame > 80) {
 		boss_phase_frame = 0;
 		return true;
@@ -2044,14 +2044,14 @@ void elis_main(void)
 					entrance_frame
 				);
 				// Unnecessary unblitting...
-				ent_still_or_wave.move_lock_unput_and_put_image_8(C_STILL);
+				ent_still_or_wave.unlock_unput_put_image_lock_8(C_STILL);
 			} else if(entrance_frame == KEYFRAME_SLIGHT_RIPPLE) {
 				girl_bg_put(1);
 				ent_wave_put(ent_still_or_wave, C_STILL, 3, 8, 64);
 			} else if(entrance_frame == KEYFRAME_SLIGHT_RIPPLE_DONE) {
 				ent_wave_sloppy_unput(ent_still_or_wave, 3, 8, 64);
 				// Unnecessary unblitting...
-				ent_still_or_wave.move_lock_unput_and_put_image_8(C_STILL);
+				ent_still_or_wave.unlock_unput_put_image_lock_8(C_STILL);
 			} else if(entrance_frame > KEYFRAME_ENTRANCE_DONE) {
 				break;
 			}
@@ -2071,10 +2071,10 @@ void elis_main(void)
 
 		// Necessary, since the entire entrance animation was only played on
 		// VRAM page 0...
-		graph_accesspage_func(1); ent_still_or_wave.move_lock_and_put_8();
+		graph_accesspage_func(1); ent_still_or_wave.unlock_put_lock_8();
 
 		// ... which makes this blitting call redundant, though.
-		graph_accesspage_func(0); ent_still_or_wave.move_lock_and_put_8();
+		graph_accesspage_func(0); ent_still_or_wave.unlock_put_lock_8();
 
 		phase.teleport_done = false;
 		phase.cur.pattern = 1;
@@ -2125,7 +2125,7 @@ void elis_main(void)
 	} else if(boss_phase == 5) {
 		phase.frame_common(5);
 		if(form != F_GIRL) {
-			ent_bat.move_lock_unput_and_put_8(
+			ent_bat.locked_move_unput_and_put_8(
 				0, bat_velocity_x, bat_velocity_y, (BAT_SPEED_DIVISOR - 1)
 			);
 
