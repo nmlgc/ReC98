@@ -121,25 +121,25 @@ void z_text_putsa(tram_x_t x, tram_y_t y, int z_atrb, const char *str)
 	#define tx_chars(byte) ((char*)MK_FP(0xA000, p + byte))
 	#define tx_atrbs(byte) ((int16_t*)MK_FP(0xA200, p + byte))
 
-	if(z_atrb & 1) {
+	if(z_atrb & Z_ATRB_BLUE) {
 		hw_atrb += 0x20;
 	}
-	if(z_atrb & 4) {
+	if(z_atrb & Z_ATRB_RED) {
 		hw_atrb += 0x40;
 	}
-	if(z_atrb & 2) {
+	if(z_atrb & Z_ATRB_GREEN) {
 		hw_atrb += 0x80;
 	}
-	if(z_atrb & 0x800) {
+	if(z_atrb & Z_ATRB_VLINE) {
 		hw_atrb += 0x10;
 	}
-	if(z_atrb & 0x400) {
+	if(z_atrb & Z_ATRB_UNDERLINE) {
 		hw_atrb += TX_UNDERLINE;
 	}
-	if(z_atrb & 0x200) {
+	if(z_atrb & Z_ATRB_REVERSE) {
 		hw_atrb += TX_REVERSE;
 	}
-	if(z_atrb & 0x100) {
+	if(z_atrb & Z_ATRB_BLINK) {
 		hw_atrb += TX_BLINK;
 	}
 	hw_atrb += hw_atrb << 8;
