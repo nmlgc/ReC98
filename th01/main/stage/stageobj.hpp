@@ -161,6 +161,7 @@ void stageobjs_init_and_render(int stage_id);
 
 // Blitting
 // --------
+
 // Stationary stage objects are blitted to both VRAM pages, which makes it
 // possible to efficiently unblit the other entities moving on top of them, by
 // simply restoring pixels from VRAM page 1. Since the player can remove
@@ -171,12 +172,13 @@ void stageobjs_init_and_render(int stage_id);
 // Since obstacles also need to be removed during a stage transition, their
 // backgrounds are stored as well. This makes absolutely sure that a .GRP only
 // needs to be blitted a single time, when entering a new scene.
-
+//
 // Planar<ptn_plane_t> would have been enough though, since there's no alpha
 // plane to be snapped from VRAM anyway... Assumed by everything to contain
 // [card_count] card backgrounds first, followed by [obstacle_count] obstacle
 // backgrounds.
 extern ptn_t *stageobj_bgs;
+
 extern unsigned long stageobj_bgs_size;
 
 // Frees any previously allocated [stageobj_bgs]. Always returns 0.

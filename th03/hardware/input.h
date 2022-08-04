@@ -18,6 +18,7 @@ static const input_t INPUT_Q          = 0x4000;
 
 /// Variables
 /// ---------
+
 // Multi-player P1/P2 controls
 extern input_t input_mp_p1;
 extern input_t input_mp_p2;

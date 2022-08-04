@@ -5,6 +5,7 @@
 
 /// <stdint.h>
 /// ----------
+
 // __TURBOC__ is #define'd on both "Borland" and "Turbo" editions, unlike
 // __BORLANDC__, which is only #define'd on the former.
 #if defined(__TURBOC__) && defined(__MSDOS__)

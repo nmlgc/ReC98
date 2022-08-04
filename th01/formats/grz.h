@@ -42,6 +42,7 @@ int grx_load_noplanar(unsigned int slot, const char *fn);
 
 // Display
 // -------
+
 // Equivalent to grz_put_stream(slot, 0);
 void grx_put(unsigned int slot);
 

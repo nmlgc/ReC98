@@ -62,6 +62,7 @@ extern screen_y_t entered_name_top;
 
 /// Alphabet
 /// --------
+
 #define ALPHABET_TOP 240
 #define MARGIN_W 32
 #define KANJI_PADDING_X 16

@@ -65,6 +65,7 @@ BOSS_DEC(louise);
 BOSS_DEC(alice);
 
 BOSS_DEC(mai_yuki);
+
 // Pointing to the same address as [boss2]! Might not be possible anymore once
 // that variable has to be moved to a C++ translation unit...
 extern boss_stuff_t yuki;

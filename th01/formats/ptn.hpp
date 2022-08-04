@@ -120,6 +120,7 @@ void ptn_put_8(screen_x_t left, vram_y_t top, int ptn_id);
 // like this:
 // | 0 | 1 |
 // | 2 | 3 |
+
 #define PTN_QUARTER_W 16
 #define PTN_QUARTER_H 16
 

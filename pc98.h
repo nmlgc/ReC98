@@ -35,6 +35,7 @@ typedef unsigned int utram_kanji_amount_t;
 // Display-space coordinate, with [0; RES_X[ being the visible area.
 typedef int screen_x_t;
 typedef unsigned int uscreen_x_t;
+
 // Display-space coordinate, with [0; RES_Y[ being the visible area. Does not
 // care about 200- or 400-line graphics modes or vertical scrolling.
 typedef int screen_y_t;
@@ -42,6 +43,7 @@ typedef unsigned int uscreen_y_t;
 
 // VRAM X coordinate, ranging from 0 to (RES_X / BYTE_DOTS).
 typedef int vram_x_t;
+
 // VRAM Y coordinate, ranging from 0 to either 400 or 200 depending on the
 // current graphics mode, and with an added vertical scrolling offset.
 typedef int vram_y_t;
@@ -50,6 +52,7 @@ typedef unsigned int uvram_y_t;
 // Text RAM X coordinate, ranging from 0 to (RES_X / GLYPH_HALF_W).
 typedef int tram_x_t;
 typedef unsigned int utram_x_t;
+
 // Text RAM Y coordinate, ranging from 0 to (RES_Y / GLYPH_H).
 typedef int tram_y_t;
 typedef unsigned int utram_y_t;
@@ -152,6 +155,7 @@ typedef int8_t uint4_t;
 
 /// Memory segments
 /// ---------------
+
 #define SEG_TRAM_JIS 0xA000
 #define SEG_TRAM_ATRB 0xA200
 
@@ -162,6 +166,7 @@ typedef int8_t uint4_t;
 
 // Segment distance between B↔R↔G
 #define SEG_PLANE_DIST_BRG 0x800
+
 // Segment distance between G↔E
 #define SEG_PLANE_DIST_E 0x2800
 /// ---------------

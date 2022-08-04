@@ -2,6 +2,7 @@
 
 // Low-level
 // ---------
+
 // Renders the "Enemy!!" caption and the HP bar, showing the given [bar_value]
 // between 0 and BAR_MAX.
 void pascal hud_hp_put(int bar_value);

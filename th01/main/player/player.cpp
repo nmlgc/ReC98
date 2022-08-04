@@ -974,6 +974,7 @@ void player_miss_animate_and_update(void)
 
 	// Miss sprite and shake
 	// ---------------------
+
 	// ZUN bug: This should have been the 48×48 unblitting call that's done
 	// after the shake. It's easily possible to get hit during an 48×48
 	// animation, which will end up leaving the extra pixels on screen during

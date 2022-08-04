@@ -1,5 +1,6 @@
 // master.lib text function reimplementations
 // ------------------------------------------
+
 typedef enum {
 	CURSOR_HIDE,
 	CURSOR_BLOCK,

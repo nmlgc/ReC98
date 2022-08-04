@@ -26,6 +26,7 @@ void pascal near tiles_render_all(void);
 
 /// Redraw
 /// ------
+
 // Subdivides each 16×16 tile into two 16×8 halves and marks whether that half
 // should be redrawn by the next call to tiles_redraw_invalidated() if its
 // entry is nonzero.

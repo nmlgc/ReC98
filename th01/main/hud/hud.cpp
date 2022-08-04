@@ -63,6 +63,7 @@ static const pixel_t SCORE_AND_CARDCOMBO_W = (CARDCOMBO_RIGHT - SCORE_LEFT);
 
 /// Globals
 /// -------
+
 // Forces re-rendering of all full-width numbers on the HUD, even if they
 // haven't changed since the last render call.
 extern bool fwnum_force_rerender;
@@ -75,6 +76,7 @@ extern unsigned char hud_cardcombo_max; // Why a separate variable???
 
 /// Functions
 /// ---------
+
 inline screen_x_t col_left(screen_x_t first_left, int col) {
 	return (first_left + (col * COL_W));
 }

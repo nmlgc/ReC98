@@ -54,6 +54,7 @@ extern page_t page_accessed;
 
 /// Clipping
 /// --------
+
 #define fix_order(tmp, low, high) \
 	if(low > high) { \
 		tmp = low; \
@@ -88,6 +89,7 @@ extern page_t page_accessed;
 
 /// BIOS
 /// ----
+
 inline void graph_access_and_show_0() {
 	graph_accesspage_func(0);
 	graph_showpage_func(0);
@@ -160,6 +162,7 @@ void z_graph_hide()
 
 /// Page flipping
 /// -------------
+
 void graph_showpage_func(page_t page)
 {
 	outportb(0xA4, page);
@@ -174,6 +177,7 @@ void graph_accesspage_func(int page)
 
 /// Hardware
 /// --------
+
 void z_palette_show_single(int col, int r, int g, int b)
 {
 	outportb(0xA8, col);
@@ -391,6 +395,7 @@ int z_graph_readdot(screen_x_t x, vram_y_t y)
 
 /// Restorable line drawing
 /// -----------------------
+
 // Never read from, so it's supposedly only there for debugging purposes?
 extern screen_point_t graph_r_last_line_end;
 // `true` copies the pixels to be drawn from the same position on page 1, thus
@@ -923,6 +928,7 @@ struct respal_t {
 // Memory Control Block
 // Adapted from FreeDOS' kernel/hdr/mcb.h
 // --------------------
+
 #define MCB_NORMAL 0x4d
 #define MCB_LAST   0x5a
 

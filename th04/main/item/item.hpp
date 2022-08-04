@@ -64,6 +64,7 @@ void pascal near items_miss_add(void);
 
 // Collection counters
 // -------------------
+
 // Reset to 0 when moving to a new stage.
 extern unsigned int stage_point_items_collected;
 
@@ -77,6 +78,7 @@ extern unsigned int items_collected;
 #endif
 
 extern unsigned int total_point_items_collected;
+
 // TH04 includes items collected above the PoC during a bomb, TH05 doesn't.
 extern unsigned int total_max_valued_point_items_collected;
 // -------------------

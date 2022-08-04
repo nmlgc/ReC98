@@ -24,6 +24,7 @@ void combo_update_and_render(void);
 
 /// Hit combo slots
 /// ---------------
+
 // Number of simultaneous, separate hit combos tracked per player. *Not*
 // related to the number of explosions on screen; rather, each explosion is
 // assigned one of these slots when it spawns. All consecutive explosions

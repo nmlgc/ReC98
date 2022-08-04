@@ -103,6 +103,7 @@ void z_palette_white_out(void);
 
 /// Resident palette
 /// ----------------
+
 // Copies the resident palette to z_Palettes and sets all hardware colors.
 // Returns 1 on success, 0 on failure.
 int z_respal_get_show(void);

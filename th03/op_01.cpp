@@ -21,6 +21,7 @@ bool snd_sel_disabled = false; // Yes, it's just (!snd_fm_possible).
 
 /// YUME.CFG loading and saving
 /// ---------------------------
+
 // These will be removed once the strings can be defined here
 #undef CFG_FN
 extern const char CFG_FN[];

@@ -103,5 +103,4 @@ extern scoredat_section_t hi2;
 	void near scoredat_load_for_cur(void);
 #endif
 // -------
-
 /// ---------

@@ -2,6 +2,7 @@
 
 /// Constants
 /// ---------
+
 // Can't declare these as `static const` variables, because that would break
 // compile-time Subpixel arithmetic
 #define PELLET_LEFT_MIN (PLAYFIELD_LEFT)

@@ -5,6 +5,7 @@
 
 /// Game-specific group and spawn types
 /// -----------------------------------
+
 #if GAME == 5
 	#include "th05/main/bullet/types.h"
 #else
@@ -14,6 +15,7 @@
 
 /// States and modes
 /// ----------------
+
 static const int BMS_DECAY_FRAMES_PER_CEL = 4;
 #define BSS_CLOUD_FRAMES (BULLET_CLOUD_CELS * 4)
 #define BMS_DECAY_FRAMES (BULLET_DECAY_CELS * BMS_DECAY_FRAMES_PER_CEL)
@@ -31,6 +33,7 @@ static const int BMS_DECAY_FRAMES_PER_CEL = 4;
 enum bullet_spawn_state_t {
 	/// Hitbox is active
 	/// ----------------
+
 	BSS_GRAZEABLE = 0,
 	BSS_GRAZED = 1,
 	BSS_ACTIVE = 2,
@@ -38,6 +41,7 @@ enum bullet_spawn_state_t {
 
 	/// Delay "cloud", no hitbox
 	/// ------------------------
+
 	BSS_CLOUD_BACKWARDS = 3,
 	BSS_CLOUD_FORWARDS = 4,
 	BSS_CLOUD_END = (BSS_CLOUD_FORWARDS + BSS_CLOUD_FRAMES),
@@ -49,6 +53,7 @@ enum bullet_spawn_state_t {
 enum bullet_move_state_t {
 	/// Hitbox is active
 	/// ----------------
+
 	// Slows down from BMS_SLOWDOWN_BASE_SPEED to [final_speed]
 	BMS_SLOWDOWN = 0,
 	// Special processing according to [special_motion]
@@ -59,6 +64,7 @@ enum bullet_move_state_t {
 
 	/// Decay, no hitbox
 	/// ----------------
+
 	BMS_DECAY = 4,
 	BMS_DECAY_END = (BMS_DECAY + BMS_DECAY_FRAMES),
 	/// ----------------
@@ -206,6 +212,7 @@ extern union {
 
 /// Template
 /// --------
+
 struct BulletTemplate {
 	uint8_t spawn_type;
 	unsigned char patnum;	// TH05: 0 = pellet
@@ -261,6 +268,7 @@ struct BulletTemplate {
 };
 
 extern BulletTemplate bullet_template;
+
 // Separate from the template, for some reason?
 extern bullet_special_angle_t bullet_template_special_angle;
 

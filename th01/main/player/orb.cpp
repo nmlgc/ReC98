@@ -11,6 +11,7 @@ inline double gravity_for(const double& force) {
 }
 /// Temporary data segment workarounds
 /// ----------------------------------
+
 // Also needs to be spelled out in ASM to avoid the unwanted WAIT instruction
 // afterwards.
 #define GRAVITY_FOR(force) \

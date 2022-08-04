@@ -61,6 +61,7 @@ struct bos_t {
 
 /// Entities
 /// --------
+
 extern bos_t bos_entity_images[BOS_ENTITY_SLOT_COUNT];
 extern bool bos_header_only;
 
@@ -116,6 +117,7 @@ void CBossEntity::metadata_get(
 
 /// Blitting
 /// --------
+
 void CBossEntity::put_8(screen_x_t left, vram_y_t top, int image) const
 {
 	vram_offset_t vram_offset_row = vram_offset_divmul(left, top);
@@ -609,6 +611,7 @@ void bos_entity_free(int slot)
 
 /// Non-entity animations
 /// ---------------------
+
 extern bos_t bos_anim_images[BOS_ANIM_SLOT_COUNT];
 
 int CBossAnim::load(const char fn[PF_FN_LEN], int slot)

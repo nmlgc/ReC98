@@ -11,6 +11,7 @@
 /// -------------------
 /// Used to automatically change the text color whenever a specific
 /// Shift-JIS code point is encountered.
+
 static const int COLMAP_COUNT = 8;
 
 typedef struct {

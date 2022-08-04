@@ -31,6 +31,7 @@ struct point_t {
 
 /// Memory model definitions (adapted from master.h)
 /// ------------------------------------------------
+
 #if !defined(MASTER_NEAR) && !defined(MASTER_FAR) && !defined(MASTER_COMPACT) && !defined(MASTER_MEDIUM)
 	#if defined(__SMALL__) || defined(__TINY__) || defined(M_I86SM) || defined(M_I86TM)
 		#define MASTER_NEAR
@@ -68,6 +69,7 @@ struct point_t {
 
 /// Original functions (only contains those actually called from ZUN code)
 /// ----------------------------------------------------------------------
+
 #ifdef __cplusplus
 extern "C" {
 #endif

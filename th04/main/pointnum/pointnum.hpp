@@ -69,6 +69,7 @@ void pascal near pointnums_update(void);
 
 /// Rendering
 /// ---------
+
 // Stores pointers to all point numbers that should be rendered in the current
 // frame. Starts with the white ones, and [pointnum_first_yellow_alive]
 // indicates the first yellow one.

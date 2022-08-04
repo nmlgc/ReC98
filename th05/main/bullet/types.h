@@ -1,5 +1,6 @@
 /// Group type components
 /// ---------------------
+
 // 0° angle definition, relative to the bullet origin.
 #define BGC0_STATIC 0	/* 0° = right */
 #define BGC0_AIMED  1	/* 0° = current player position */
@@ -46,9 +47,11 @@ typedef enum {
 
 /// Spawn types
 /// -----------
+
 // Spawns special-moving bullets with BST_NORMAL after the gather animation.
 // Effectively becomes BST_NORMAL when used outside a gather_t.
 #define BST_GATHER_NORMAL_SPECIAL_MOVE 0xFE
+
 // Won't spawn bullets at the end of a gather animation.
 #define BST_GATHER_ONLY 0xFF
 

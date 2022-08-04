@@ -27,6 +27,7 @@ void hud_lives_put(int prev);
 void hud_bombs_put(int prev);
 
 /// Background
+
 /// ----------
 // Loads the first plane from the .GRF file with the given [fn] into [hud_bg],
 // and sets [hud_bg_size] to its size in bytes. Always returns 0.

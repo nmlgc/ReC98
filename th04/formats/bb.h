@@ -23,6 +23,7 @@ void pascal near bb_boss_load(const char far *fn);
 
 /// Text dissolve circles
 /// ---------------------
+
 #define BB_TXT_W 32
 #define BB_TXT_H 32
 #define BB_TXT_VRAM_W (BB_TXT_W / BYTE_DOTS)

@@ -1,5 +1,6 @@
 /// BIOS
 /// ----
+
 // Enables the graphics layer in 640x400 mode, applies z_Palettes, and clears
 // page 0.
 void z_graph_init(void);
@@ -12,6 +13,7 @@ void z_graph_hide(void);
 
 /// Pages
 /// -----
+
 void graph_showpage_func(page_t page);
 void graph_accesspage_func(int page);
 
@@ -29,6 +31,7 @@ void graph_copy_accessed_page_to_other(void);
 
 /// GRCG
 /// ----
+
 void grcg_setcolor_rmw(int col);
 
 // Enters TCR (Tile Compare Read / "color extraction") mode. VRAM reads will
@@ -47,6 +50,7 @@ void z_grcg_boxfill(
 
 /// Points
 /// ------
+
 void z_grcg_pset(screen_x_t x, vram_y_t y, int col);
 // Returns the color value at the given point on the current VRAM page.
 int z_graph_readdot(screen_x_t x, vram_y_t y);
@@ -54,8 +58,11 @@ int z_graph_readdot(screen_x_t x, vram_y_t y);
 
 /// Restorable line drawing
 /// -----------------------
-// Draws straight horizontal or vertical lines.
+
+// Draws straight horizontal lines.
 void graph_r_hline(screen_x_t left, screen_x_t right, vram_y_t y, int col);
+
+// Draws straight vertical lines.
 void graph_r_vline(screen_x_t x, vram_y_t top, vram_y_t bottom, int col);
 
 // Draws a line with an arbitrary angle between the two points.
@@ -105,6 +112,7 @@ void graph_r_lineloop_unput(
 
 /// Text
 /// ----
+
 // Calculates the width of [str], displayed with the given [fx].
 int text_extent_fx(int fx, const unsigned char *str);
 
@@ -124,6 +132,7 @@ void graph_putfwnum_fx(
 
 /// Blitting
 /// --------
+
 // Copies the given rectangle on the current from
 //     (⌊left/8⌋*8, top)
 // to

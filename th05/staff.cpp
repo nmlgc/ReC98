@@ -32,6 +32,7 @@ typedef enum {
 
 // Particle structure
 // ------------------
+
 // Below this [phase_value.radius], the orb is rendered as a monochrome filled
 // circle.
 static const pixel_t ORB_RADIUS_FULL = 16;

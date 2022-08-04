@@ -27,6 +27,7 @@ extern "C" {
 
 // Input
 // -----
+
 void input_sense(bool16 reset_repeat)
 {
 	extern uint8_t input_prev[10];

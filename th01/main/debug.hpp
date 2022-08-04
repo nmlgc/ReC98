@@ -6,6 +6,7 @@ extern bool16 test_damage;
 
 /// Memory info screen
 /// ------------------
+
 // Hides the graphics layer and enters a memory usage screen with some debug
 // options, in a blocking way. Set [input_mem_leave] to `true` to return to
 // the game.

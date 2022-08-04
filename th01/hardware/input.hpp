@@ -6,6 +6,7 @@ extern bool input_ok;
 
 // REIIDEN.EXE and FUUIN.EXE
 // -------------------------
+
 // Hey, at least two inputs merged into a single variable! It's a start.
 enum input_lr_t {
 	INPUT_NONE = 0,

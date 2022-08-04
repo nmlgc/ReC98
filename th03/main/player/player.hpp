@@ -11,6 +11,7 @@
 
 // Gauge
 // -----
+
 #define GAUGE_MAX (0xFF << 4)
 
 typedef uint16_t gauge_t;
@@ -21,6 +22,7 @@ void pascal near gauge_avail_add(unsigned char pid, unsigned char charge);
 
 // Charge Shots
 // ------------
+
 typedef void (far pascal *near chargeshot_add_func_t)(
 	Subpixel center_x, Subpixel center_y
 );
