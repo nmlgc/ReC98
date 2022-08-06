@@ -1,4 +1,7 @@
 #include <stddef.h>
+#include "platform.h"
+#include "pc98.h"
+#include "planar.h"
 #include "x86real.h"
 #include "master.hpp"
 #include "th01/common.h"
@@ -7,6 +10,7 @@
 #include "th01/math/str_val.hpp"
 extern "C" {
 #include "th01/hardware/graph.h"
+#include "th01/hardware/grppsafx.h"
 }
 #include "th01/main/vars.hpp"
 #include "th01/formats/ptn.hpp"
@@ -66,12 +70,12 @@ static const pixel_t SCORE_AND_CARDCOMBO_W = (CARDCOMBO_RIGHT - SCORE_LEFT);
 
 // Forces re-rendering of all full-width numbers on the HUD, even if they
 // haven't changed since the last render call.
-extern bool fwnum_force_rerender;
+bool fwnum_force_rerender = false;
 
-// extern uint8_t *hud_bg;
-extern uint8_t hud_bg_rle_run_byte;
-extern unsigned char hud_cardcombo_max; // Why a separate variable???
-// size_t hud_bg_size;
+uint8_t *hud_bg;
+uint8_t hud_bg_rle_run_byte;
+unsigned char hud_cardcombo_max; // Why a separate variable???
+size_t hud_bg_size;
 /// -------
 
 /// Functions
@@ -101,6 +105,8 @@ inline screen_x_t col_left(screen_x_t first_left, int col) {
 // VRAM page 0 to VRAM page 1.
 void graph_copy_hud_row_0_to_1_8(screen_x_t left, vram_y_t top, pixel_t w);
 /// ---------
+
+#include "th01/hardware/grppfnfx.cpp"
 
 template <class T1, class T2> inline void fwnum_put(
 	screen_x_t left,
@@ -138,9 +144,7 @@ inline void cardcombo_put(screen_y_t top, int fx, const int &prev) {
 
 void hiscore_update_and_render(void)
 {
-	// TODO: Should just be `static` once the variable can be declared here
-	#define prev score_prev
-	extern long prev;
+	static long prev = 0;
 	long divisor = 1000000; // Must match SCORE_DIGITS!
 	unsigned long hiscore = resident->hiscore;
 
@@ -159,14 +163,11 @@ void hiscore_update_and_render(void)
 
 	prev = score;
 	resident->hiscore = score;
-	#undef prev
 }
 
 void cardcombo_max_render(void)
 {
-	// TODO: Should just be `static` once the variable can be declared here
-	#define prev cardcombo_max_prev
-	extern int prev;
+	static int prev;
 	int divisor = 10; // Must match CARDCOMBO_DIGITS!
 
 	for(int i = 0; i < CARDCOMBO_DIGITS; i++) {
@@ -180,16 +181,12 @@ void cardcombo_max_render(void)
 	graph_accesspage_func(0);	cardcombo_put(MAX_TOP, MAX_FX, prev);
 
 	prev = cardcombo_cur;
-	#undef prev
 }
 
 void hud_score_and_cardcombo_render(void)
 {
-	// TODO: Should just be `static` once the variable can be declared here
-	#define score_prev score_cur_prev
-	#define cardcombo_prev cardcombo_cur_prev
-	extern long score_prev;
-	extern int cardcombo_prev;
+	static long score_prev;
+	static int cardcombo_prev;
 
 	int digit;
 	int page;

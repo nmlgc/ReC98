@@ -4886,13 +4886,6 @@ public _BOMB_COLLECT_1, _BOMB_COLLECT_2, _BOMB_COLLECT_CAP
 _BOMB_COLLECT_1  	db 'Bomb',0
 _BOMB_COLLECT_2  	db 'Extend!!',0
 _BOMB_COLLECT_CAP	db 'ÇP‰›',0
-	evendata
-public _fwnum_force_rerender
-_fwnum_force_rerender	db 0
-include th01/hardware/grppfnfx_ptrs[data].asm
-public _score_prev
-_score_prev	dd 0
-include th01/hardware/grppfnfx[data].asm
 
 	extern _ptn_sloppy_unput_before_alpha_pu:byte
 	extern _card_flip_cycle:byte
@@ -5032,8 +5025,6 @@ public _items_bomb, _items_point
 _items_bomb 	item_t ITEM_BOMB_COUNT dup(<?>)
 _items_point	item_t ITEM_POINT_COUNT dup(<?>)
 
-include th01/main/hud/hud[bss].asm
-
 CCards struc
 	C_left       	dd ?
 	C_top        	dd ?
@@ -5051,6 +5042,8 @@ CObstacles struc
 	O_count 	dw ?
 CObstacles ends
 
+	extern _hud_bg:dword
+	extern _hud_bg_size:word
 	extern _stage_timer:word
 	extern _stageobj_bgs:dword
 	extern _stageobj_bgs_size:dword
