@@ -135,14 +135,6 @@ enum elis_form_t {
 	_elis_form_t_FORCE_INT16 = 0x7FFF,
 };
 
-enum elis_entity_t {
-	// "Girl" sprites
-	ENT_STILL_OR_WAVE = 0,
-	ENT_ATTACK = 1,
-
-	ENT_BAT = 2,
-};
-
 static const int BAT_CELS = 3;
 static const int BAT_FRAMES_PER_CEL = 3;
 static const int BAT_CYCLE_FRAMES = (BAT_CELS * BAT_FRAMES_PER_CEL);
@@ -167,18 +159,42 @@ enum elis_entity_cel_t {
 	C_BAT_last = (C_BAT + BAT_CELS - 1),
 };
 
+struct CGirlEntity : public CBossEntitySized<GIRL_W, GIRL_H> {
+	pixel_t surround_area_offset_y(pixel_t area_h) const {
+		return -(area_h - h_static()); // not centered
+	}
+
+	void pos_cur_set_to(CBossEntity& other) {
+		pos_cur_set(other.cur_left, other.cur_top);
+	}
+};
+
+struct CBatEntity : public CBossEntitySized<BAT_W, BAT_H> {
+	pixel_t surround_area_offset_y(pixel_t area_h) const {
+		return -((area_h - h_static()) / 2); // centered
+	}
+
+	void pos_cur_set_to(CGirlEntity& girl) {
+		pos_cur_set(
+			(girl.cur_left + ((girl.w_static() - w_static()) / 2)),
+			(girl.cur_top  + ((girl.h_static() - h_static()) / 2))
+		);
+	}
+};
+
 #define ent_still_or_wave \
-	reinterpret_cast<CBossEntitySized<GIRL_W, GIRL_H> &>(boss_entities[ \
-		ENT_STILL_OR_WAVE \
-	])
+	reinterpret_cast<CGirlEntity &>(boss_entity_0)
 
 #define ent_attack \
-	reinterpret_cast<CBossEntitySized<GIRL_W, GIRL_H> &>(boss_entities[ \
-		ENT_ATTACK \
-	])
+	reinterpret_cast<CGirlEntity &>(boss_entity_1)
 
 #define ent_bat \
-	reinterpret_cast<CBossEntitySized<BAT_W, BAT_H> &>(boss_entities[ENT_BAT])
+	reinterpret_cast<CBatEntity &>(boss_entity_2)
+
+// 1 for [ent_still_or_wave], 2 for [ent_attack]. Not actually needed anywhere
+// it's used, so it doesn't warrant subclassing those two just to solve that
+// distinction via pseudo-polymorphism.
+typedef int unnecessary_1_or_2_t;
 
 inline void elis_ent_load(void) {
 	ent_still_or_wave.load("boss5.bos", 0);
@@ -192,42 +208,32 @@ inline void elis_ent_free(void) {
 	bos_entity_free(2);
 }
 
-inline void ent_sync(elis_entity_t dst, elis_entity_t src) {
-	if(dst == ENT_BAT) {
-		boss_entities[dst].pos_cur_set(
-			(boss_entities[src].cur_left + ((GIRL_W - BAT_W) / 2)),
-			(boss_entities[src].cur_top  + ((GIRL_H - BAT_H) / 2))
-		);
-	} else {
-		boss_entities[dst].pos_cur_set(
-			boss_entities[src].cur_left, boss_entities[src].cur_top
-		);
-	}
-}
-
 // It's needed in the functions below...
-void girl_bg_put(int unncessary_parameter_that_still_needs_to_be_1_or_2);
+void girl_bg_put(unnecessary_1_or_2_t unnecessary);
 
 // [unput_0] should theoretically always be `true`. Making sure that both VRAM
 // pages are identical avoids visual glitches from blitting cels with different
 // transparent areas on top of each other (see: Mima's third arm)… but you can
 // always just *assume* rather than ensure, right? :zunpet:
 inline void ent_unput_and_put_both(
-	elis_entity_t ent, elis_entity_cel_t cel, bool unput_0 = true
+	CBossEntity& ent,
+	unnecessary_1_or_2_t unnecessary,
+	elis_entity_cel_t cel,
+	bool unput_0 = true
 ) {
 	graph_accesspage_func(1);
-	girl_bg_put(ent + 1);
-	boss_entities[ent].unlock_put_image_lock_8(cel);
+	girl_bg_put(unnecessary);
+	ent.unlock_put_image_lock_8(cel);
 	graph_accesspage_func(0);
 	if(unput_0) {
-		girl_bg_put(ent + 1);
+		girl_bg_put(unnecessary);
 	}
-	boss_entities[ent].unlock_put_image_lock_8(cel);
+	ent.unlock_put_image_lock_8(cel);
 }
 
-inline void ent_put_both(elis_entity_t ent, elis_entity_cel_t cel) {
-	graph_accesspage_func(1); boss_entities[ent].unlock_put_image_lock_8(cel);
-	graph_accesspage_func(0); boss_entities[ent].unlock_put_image_lock_8(cel);
+inline void ent_put_both(CBossEntity& ent, elis_entity_cel_t cel) {
+	graph_accesspage_func(1); ent.unlock_put_image_lock_8(cel);
+	graph_accesspage_func(0); ent.unlock_put_image_lock_8(cel);
 }
 
 #define ent_wave_put(ent, cel, len, amp, phase) { \
@@ -242,9 +248,9 @@ inline void ent_put_both(elis_entity_t ent, elis_entity_cel_t cel) {
 
 #define ent_attack_render() { \
 	if((boss_phase_frame % 8) == 0) { \
-		ent_unput_and_put_both(ENT_ATTACK, C_ATTACK_1); \
+		ent_unput_and_put_both(ent_attack, 2, C_ATTACK_1); \
 	} else if((boss_phase_frame % 8) == 4) { \
-		ent_put_both(ENT_ATTACK, C_ATTACK_2); \
+		ent_put_both(ent_attack, C_ATTACK_2); \
 	} \
 }
 // --------
@@ -329,21 +335,15 @@ inline screen_y_t girl_wing_center_y(void) {
 static const pixel_t SURROUND_AREA_W = ((PLAYFIELD_W * 3) / 10);
 static const pixel_t SURROUND_AREA_H = ((PLAYFIELD_H * 8) / 21);
 
-inline screen_x_t surround_random_left(elis_entity_t relative_to) {
-	return (
-		(boss_entities[relative_to].cur_left + (rand() % SURROUND_AREA_W)) -
-		((SURROUND_AREA_W - ((relative_to == ENT_BAT) ? BAT_W : GIRL_W)) / 2)
-	);
-}
+#define surround_random_left(relative_to) ( \
+	(relative_to.cur_left + (rand() % SURROUND_AREA_W)) - \
+	((SURROUND_AREA_W - relative_to.w_static()) / 2) \
+)
 
-inline screen_y_t surround_random_top(elis_entity_t relative_to) {
-	return (
-		(boss_entities[relative_to].cur_top + (rand() % SURROUND_AREA_H)) -
-		((relative_to == ENT_BAT)
-			? ((SURROUND_AREA_H - BAT_H) / 2)
-			: (SURROUND_AREA_H - GIRL_H) // not centered
-	));
-}
+#define surround_random_top(relative_to) ( \
+	(relative_to.cur_top + (rand() % SURROUND_AREA_H)) + \
+	relative_to.surround_area_offset_y(SURROUND_AREA_H) \
+)
 // -------------
 
 // Random teleport and bat movement coordinates
@@ -508,7 +508,7 @@ static const pixel_t BIGCIRCLE_RADIUS = ((GIRL_W * 2) / 2);
 			bigcircle_put(bigcircle, V_WHITE); \
 			\
 			bigcircle.frames = 1; \
-			ent_unput_and_put_both(ENT_STILL_OR_WAVE, C_STILL); \
+			ent_unput_and_put_both(ent_still_or_wave, 1, C_STILL); \
 		} \
 	} else if((bigcircle.frames != 0) && (bigcircle.frames < 40)) { \
 		bigcircle.frames++; \
@@ -538,18 +538,18 @@ static const main_ptn_slot_t PTN_SLOT_BG_ENT = PTN_SLOT_BOSS_1;
 static const main_ptn_slot_t PTN_SLOT_MISSILE = PTN_SLOT_BOSS_2;
 // ----
 
-#define bg_func_init(left, top, entity_src) { \
-	ent_sync(ENT_ATTACK, ENT_STILL_OR_WAVE); \
-	if(entity_src == (ENT_STILL_OR_WAVE + 1)) { \
+#define bg_func_init(left, top, unnecessary) { \
+	ent_attack.pos_cur_set_to(ent_still_or_wave); \
+	if(unnecessary == 1) { \
 		left = ent_still_or_wave.cur_left; \
 		top = ent_still_or_wave.cur_top; \
-	} else if(entity_src == (ENT_ATTACK + 1)) { \
+	} else if(unnecessary == 2) { \
 		left = ent_attack.cur_left; \
 		top = ent_attack.cur_top; \
 	} \
 }
 
-void girl_bg_snap(int unncessary_parameter_that_still_needs_to_be_1_or_2)
+void girl_bg_snap(unnecessary_1_or_2_t unnecessary)
 {
 	int ptn_x;
 	int ptn_y;
@@ -557,7 +557,7 @@ void girl_bg_snap(int unncessary_parameter_that_still_needs_to_be_1_or_2)
 	screen_y_t top;
 	int image;
 
-	bg_func_init(left, top, unncessary_parameter_that_still_needs_to_be_1_or_2);
+	bg_func_init(left, top, unnecessary);
 
 	image = 0;
 	ptn_snap_rect_from_1_8(
@@ -565,7 +565,7 @@ void girl_bg_snap(int unncessary_parameter_that_still_needs_to_be_1_or_2)
 	);
 }
 
-void girl_bg_put(int unncessary_parameter_that_still_needs_to_be_1_or_2)
+void girl_bg_put(unnecessary_1_or_2_t unnecessary)
 {
 	int ptn_x;
 	int ptn_y;
@@ -573,7 +573,7 @@ void girl_bg_put(int unncessary_parameter_that_still_needs_to_be_1_or_2)
 	screen_y_t top;
 	int image = 0;
 
-	bg_func_init(left, top, unncessary_parameter_that_still_needs_to_be_1_or_2);
+	bg_func_init(left, top, unnecessary);
 	ptn_put_rect_noalpha_8(
 		left, top, GIRL_W, GIRL_H, PTN_SLOT_BG_ENT, image, ptn_x, ptn_y
 	);
@@ -636,7 +636,7 @@ void elis_free(void)
 
 bool16 wave_teleport(screen_x_t target_left, screen_y_t target_top)
 {
-	ent_sync(ENT_ATTACK, ENT_STILL_OR_WAVE);
+	ent_attack.pos_cur_set_to(ent_still_or_wave);
 
 	// Wave sprite
 	if(boss_phase_frame == 20) {
@@ -698,14 +698,14 @@ bool16 wave_teleport(screen_x_t target_left, screen_y_t target_top)
 			egc_copy_rect_1_to_0_16_word_w(stars.left[i], stars.top[i], 8, 8);
 		}
 		if((boss_phase_frame < 40) || (boss_phase_frame > 52)) {
-			stars.left[i] = surround_random_left(ENT_STILL_OR_WAVE);
-			stars.top[i] = surround_random_top(ENT_STILL_OR_WAVE);
+			stars.left[i] = surround_random_left(ent_still_or_wave);
+			stars.top[i] = surround_random_top(ent_still_or_wave);
 		} else {
 			stars.left[i] = (stars.left[i] + (
-				(surround_random_left(ENT_STILL_OR_WAVE) - stars.left[i]) / 3
+				(surround_random_left(ent_still_or_wave) - stars.left[i]) / 3
 			));
 			stars.top[i] = (stars.top[i] + (
-				(surround_random_top(ENT_STILL_OR_WAVE) - stars.top[i]) / 3
+				(surround_random_top(ent_still_or_wave) - stars.top[i]) / 3
 			));
 		}
 		if(boss_phase_frame < 68) {
@@ -734,7 +734,7 @@ int pattern_11_lasers_across(void)
 
 	if(boss_phase_frame == 50) {
 		direction = (rand() % 2);
-		ent_unput_and_put_both(ENT_STILL_OR_WAVE, C_HAND, false);
+		ent_unput_and_put_both(ent_still_or_wave, 1, C_HAND, false);
 		select_laser_speed_for_rank(pattern_state.speed_multiplied_by_8,
 			6.25f, 6.875f, 7.5f, 8.125f
 		);
@@ -764,7 +764,7 @@ int pattern_11_lasers_across(void)
 			circle_center_x, circle_center_y, circle_radius, 0x20
 		);
 	} else if(boss_phase_frame == 150) {
-		ent_unput_and_put_both(ENT_STILL_OR_WAVE, C_STILL, false);
+		ent_unput_and_put_both(ent_still_or_wave, 1, C_STILL, false);
 	}
 
 	if((boss_phase_frame >= 70) && ((boss_phase_frame % INTERVAL) == 0)) {
@@ -816,7 +816,7 @@ int pattern_random_downwards_missiles(void)
 	unsigned char angle;
 
 	if(boss_phase_frame == 50) {
-		ent_unput_and_put_both(ENT_STILL_OR_WAVE, C_HAND, false);
+		ent_unput_and_put_both(ent_still_or_wave, 1, C_HAND, false);
 		select_for_rank(pattern_state.angle_range, 0x0F, 0x15, 0x19, 0x1D);
 	}
 
@@ -832,7 +832,7 @@ int pattern_random_downwards_missiles(void)
 		Missiles.add(rifts.left[i], rifts.top[i], velocity_x, velocity_y);
 	}
 
-	rifts_update_and_render(rifts, ENT_STILL_OR_WAVE, 60, 160, COL_FX, cel);
+	rifts_update_and_render(rifts, ent_still_or_wave, 60, 160, COL_FX, cel);
 
 	if(boss_phase_frame > 170) {
 		boss_phase_frame = 0;
@@ -851,7 +851,7 @@ int pattern_pellets_along_circle(void)
 		circle.frames = 0;
 	}
 	if(boss_phase_frame == 50) {
-		ent_unput_and_put_both(ENT_STILL_OR_WAVE, C_HAND, false);
+		ent_unput_and_put_both(ent_still_or_wave, 1, C_HAND, false);
 		circle.angle = 0x00;
 		select_for_rank(reinterpret_cast<int &>(pattern_state.group),
 			PG_1_AIMED,
@@ -961,7 +961,7 @@ elis_starpattern_ret_t near star_of_david(void)
 		return SP_STAR_OF_DAVID;
 	}
 	if(boss_phase_frame == 10) {
-		ent_unput_and_put_both(ENT_ATTACK, C_PREPARE);
+		ent_unput_and_put_both(ent_attack, 2, C_PREPARE);
 		circle.angle = 0x00;
 		circle.frames = 0;
 	}
@@ -1197,7 +1197,7 @@ int pattern_random_from_rifts(void)
 	}
 
 	rifts_update_and_render(
-		rifts, ENT_STILL_OR_WAVE, KEYFRAME_0, KEYFRAME_2, COL_FX, cel
+		rifts, ent_still_or_wave, KEYFRAME_0, KEYFRAME_2, COL_FX, cel
 	);
 
 	if(boss_phase_frame > KEYFRAME_3) {
@@ -1263,12 +1263,12 @@ elis_form_t transform_girl_to_bat(void)
 	int cel;  // ACTUAL TYPE: elis_grc_cel_t
 
 	if(boss_phase_frame == TRANSFORM_START_FRAME) {
-		ent_unput_and_put_both(ENT_ATTACK, C_PREPARE);
+		ent_unput_and_put_both(ent_attack, 2, C_PREPARE);
 	}
 
 	rifts_update_and_render(
 		rifts,
-		ENT_STILL_OR_WAVE,
+		ent_still_or_wave,
 		TRANSFORM_START_FRAME,
 		TRANSFORM_END_FRAME,
 		(rand() % COLOR_COUNT),
@@ -1277,7 +1277,7 @@ elis_form_t transform_girl_to_bat(void)
 	transform_shake(TRANSFORM_START_FRAME);
 
 	if(boss_phase_frame > TRANSFORM_END_FRAME) {
-		ent_sync(ENT_BAT, ENT_STILL_OR_WAVE);
+		ent_bat.pos_cur_set_to(ent_still_or_wave);
 
 		// ZUN bug: No bat sprite rendered this frame? Wouldn't have happened
 		// if the original code consistently used the ent_unput_and_put_both()
@@ -1302,7 +1302,7 @@ elis_form_t transform_bat_to_girl(void)
 
 	rifts_update_and_render(
 		rifts,
-		ENT_BAT,
+		ent_bat,
 		TRANSFORM_START_FRAME,
 		TRANSFORM_END_FRAME,
 		(rand() % COLOR_COUNT),
@@ -1332,7 +1332,7 @@ elis_form_t transform_bat_to_girl(void)
 		ent_still_or_wave.pos_cur_set(left, top);
 
 		girl_bg_snap(1);
-		ent_unput_and_put_both(ENT_ATTACK, C_ATTACK_1);
+		ent_unput_and_put_both(ent_attack, 2, C_ATTACK_1);
 		z_vsync_wait_and_scrollup(RES_Y);
 		boss_phase_frame = 0;
 		return F_GIRL;
@@ -1543,7 +1543,7 @@ elis_starpattern_ret_t pattern_safety_circle_and_rain_from_top(void)
 			bigcircle_put(circle, V_WHITE);
 
 			circle.frames = 1;
-			ent_unput_and_put_both(ENT_STILL_OR_WAVE, C_STILL);
+			ent_unput_and_put_both(ent_still_or_wave, 1, C_STILL);
 		}
 	} else if((circle.frames != 0) && (circle.frames < CIRCLE_DURATION)) {
 		circle.frames++;
@@ -1627,7 +1627,7 @@ elis_starpattern_ret_t pattern_aimed_5_spreads_and_lasers_followed_by_ring(void)
 	if(boss_phase_frame < KEYFRAME_INIT) {
 		return SP_PATTERN;
 	} else if(boss_phase_frame == KEYFRAME_INIT) {
-		ent_unput_and_put_both(ENT_STILL_OR_WAVE, C_HAND, false);
+		ent_unput_and_put_both(ent_still_or_wave, 1, C_HAND, false);
 		circle.angle = 0x00;
 		select_for_rank(pattern_state.interval, 40, 30, 20, 15);
 	}
@@ -1828,7 +1828,7 @@ void elis_main(void)
 			// Redundant – already done as part of ent_unput_and_put_both(),
 			// which is the only function that reads from [ent_attack].
 			if(phase_id != 1) {
-				ent_sync(ENT_ATTACK, ENT_STILL_OR_WAVE);
+				ent_attack.pos_cur_set_to(ent_still_or_wave);
 			}
 		}
 

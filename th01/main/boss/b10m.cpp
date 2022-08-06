@@ -53,23 +53,24 @@ enum yuugenmagan_cel_t {
 	C_HIDDEN = 0,
 };
 
-enum yuugenmagan_eye_t {
-	E_WEST = 0,
-	E_EAST = 1,
-	E_SOUTHWEST = 2,
-	E_SOUTHEAST = 3,
-	E_NORTH = 4,
-};
-
-#define eyes reinterpret_cast<CBossEntitySized<EYE_W, EYE_H> *>(boss_entities)
+#define eye_west \
+	reinterpret_cast<CBossEntitySized<EYE_W, EYE_H> &>(boss_entity_0)
+#define eye_east \
+	reinterpret_cast<CBossEntitySized<EYE_W, EYE_H> &>(boss_entity_1)
+#define eye_southwest \
+	reinterpret_cast<CBossEntitySized<EYE_W, EYE_H> &>(boss_entity_2)
+#define eye_southeast \
+	reinterpret_cast<CBossEntitySized<EYE_W, EYE_H> &>(boss_entity_3)
+#define eye_north \
+	reinterpret_cast<CBossEntitySized<EYE_W, EYE_H> &>(boss_entity_4)
 
 inline void yuugenmagan_ent_load(void) {
 	extern const char boss2_bos[];
-	eyes[0].load(boss2_bos, 0);
-	eyes[1].metadata_assign(eyes[0]);
-	eyes[2].metadata_assign(eyes[0]);
-	eyes[3].metadata_assign(eyes[0]);
-	eyes[4].metadata_assign(eyes[0]);
+	eye_west.load(boss2_bos, 0);
+	eye_east.metadata_assign(eye_west);
+	eye_southwest.metadata_assign(eye_west);
+	eye_southeast.metadata_assign(eye_west);
+	eye_north.metadata_assign(eye_west);
 }
 // --------
 
@@ -97,33 +98,31 @@ void yuugenmagan_setup(void)
 	grp_palette_load_show(boss2_grp);
 	boss_palette_snap();
 
-	// MODDERS: Loop over all eyes instead.
-	eyes[0].set_image(C_HIDDEN);
-	eyes[1].set_image(C_HIDDEN);
-	eyes[2].set_image(C_HIDDEN);
-	eyes[3].set_image(C_HIDDEN);
-	eyes[4].set_image(C_HIDDEN);
+	eye_west     .set_image(C_HIDDEN);
+	eye_east     .set_image(C_HIDDEN);
+	eye_southwest.set_image(C_HIDDEN);
+	eye_southeast.set_image(C_HIDDEN);
+	eye_north    .set_image(C_HIDDEN);
 
 	palette_copy(boss_post_defeat_palette, z_Palettes, col, comp);
 
 	// These exactly correspond to the yellow boxes in BOSS2.GRP.
-	eyes[     E_WEST].pos_set( 64, 128);
-	eyes[     E_EAST].pos_set(512, 128);
-	eyes[E_SOUTHWEST].pos_set(192, 176);
-	eyes[E_SOUTHEAST].pos_set(384, 176);
-	eyes[    E_NORTH].pos_set(288,  64);
+	eye_west     .pos_set( 64, 128);
+	eye_east     .pos_set(512, 128);
+	eye_southwest.pos_set(192, 176);
+	eye_southeast.pos_set(384, 176);
+	eye_north    .pos_set(288,  64);
 
-	// MODDERS: Loop over all eyes instead.
-	eyes[0].hitbox_orb_set(-4, -4, (EYE_W + 4), EYE_H);
-	eyes[1].hitbox_orb_set(-4, -4, (EYE_W + 4), EYE_H);
-	eyes[2].hitbox_orb_set(-4, -4, (EYE_W + 4), EYE_H);
-	eyes[3].hitbox_orb_set(-4, -4, (EYE_W + 4), EYE_H);
-	eyes[4].hitbox_orb_set(-4, -4, (EYE_W + 4), EYE_H);
-	eyes[0].hitbox_orb_inactive = true;
-	eyes[1].hitbox_orb_inactive = true;
-	eyes[2].hitbox_orb_inactive = true;
-	eyes[3].hitbox_orb_inactive = true;
-	eyes[4].hitbox_orb_inactive = true;
+	eye_west     .hitbox_orb_set(-4, -4, (EYE_W + 4), EYE_H);
+	eye_east     .hitbox_orb_set(-4, -4, (EYE_W + 4), EYE_H);
+	eye_southwest.hitbox_orb_set(-4, -4, (EYE_W + 4), EYE_H);
+	eye_southeast.hitbox_orb_set(-4, -4, (EYE_W + 4), EYE_H);
+	eye_north    .hitbox_orb_set(-4, -4, (EYE_W + 4), EYE_H);
+	eye_west     .hitbox_orb_inactive = true;
+	eye_east     .hitbox_orb_inactive = true;
+	eye_southwest.hitbox_orb_inactive = true;
+	eye_southeast.hitbox_orb_inactive = true;
+	eye_north    .hitbox_orb_inactive = true;
 
 	boss_phase_frame = 0;
 	boss_phase = 0;

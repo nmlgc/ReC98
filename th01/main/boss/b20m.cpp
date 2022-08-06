@@ -136,7 +136,7 @@ const char* BG_IMAGES[4] = {
 // Entities (and animations)
 // --------
 
-#define ent_shield	boss_entities[0]
+#define ent_shield	boss_entity_0
 #define anm_dress 	boss_anims[0]
 #define anm_wand  	boss_anims[1]
 

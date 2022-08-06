@@ -358,6 +358,14 @@ public:
 // we can't ever directly declare instance of this template without emitting
 // another constructor for this class.)
 template <pixel_t W, pixel_t H> struct CBossEntitySized : public CBossEntity {
+	pixel_t w_static() const {
+		return W;
+	}
+
+	pixel_t h_static() const {
+		return H;
+	}
+
 	screen_x_t cur_center_x(void) const {
 		return (cur_left + (W / 2));
 	}
@@ -369,12 +377,21 @@ template <pixel_t W, pixel_t H> struct CBossEntitySized : public CBossEntity {
 	screen_x_t cur_right(void) const {
 		return (cur_left + W);
 	}
-}
+};
 
 // Frees all images in the given [slot].
 void bos_entity_free(int slot);
 
-extern CBossEntity boss_entities[5];
+// MODDERS: The static initialization code in the original game proves that ZUN
+// declared these as 5 individual variables rather than a single 5-element
+// array. This fact explains why especially YuugenMagan and Elis ended up with
+// highly redundant code. There are definitely better and cleaner ways of
+// handling these entities.
+extern CBossEntity boss_entity_0;
+extern CBossEntity boss_entity_1;
+extern CBossEntity boss_entity_2;
+extern CBossEntity boss_entity_3;
+extern CBossEntity boss_entity_4;
 /// --------
 
 /// Non-entity animations

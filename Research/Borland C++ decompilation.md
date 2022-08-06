@@ -712,6 +712,9 @@ Resulting ASM:
 @MyClass@$bctr$qv endp
 ```
 
+* Arrays of nontrivially constructible objects are always constructed via
+  `_vector_new_`. Conversely, no `_vector_new_` = no array.
+
 ## Limits of decompilability
 
 ### `MOV BX, SP`-style functions, or others with no standard stack frame

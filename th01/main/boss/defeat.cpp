@@ -121,9 +121,7 @@ struct defeat_anim_t {
 
 void singyoku_defeat_animate_and_select_route(void)
 {
-	defeat_animate(
-		(boss_entities[0].cur_top + (SINGYOKU_H / 2)), 1, 15, 15
-	);
+	defeat_animate((boss_entity_0.cur_top + (SINGYOKU_H / 2)), 1, 15, 15);
 
 	palette_foreach(col, comp, {
 		if(z_Palettes[col].v[comp] > 0) {

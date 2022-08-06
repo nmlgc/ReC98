@@ -155,9 +155,9 @@ static face_direction_t face_direction = FD_UNINITIALIZED;
 static face_expression_t face_expression = FE_NEUTRAL;
 static bool16 face_direction_can_change = true;
 
-#define ent_head                	boss_entities[0]
-#define ent_face_closed_or_glare	boss_entities[1]
-#define ent_face_aim            	boss_entities[2]
+#define ent_head                	boss_entity_0
+#define ent_face_closed_or_glare	boss_entity_1
+#define ent_face_aim            	boss_entity_2
 
 inline void konngara_ent_load(void) {
 	ent_head.load("boss8_1.bos", 0);

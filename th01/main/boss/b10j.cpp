@@ -117,9 +117,9 @@ enum anim_cel_t {
 };
 
 #define ent_still \
-	reinterpret_cast<CBossEntitySized<MIMA_W, MIMA_H> &>(boss_entities[0])
+	reinterpret_cast<CBossEntitySized<MIMA_W, MIMA_H> &>(boss_entity_0)
 
-#define ent_anim 	boss_entities[1]
+#define ent_anim 	boss_entity_1
 
 inline void mima_ent_load(void) {
 	ent_still.load("boss3_1.bos", 0);

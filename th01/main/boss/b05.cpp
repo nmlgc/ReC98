@@ -117,12 +117,10 @@ enum singyoku_person_cel_t {
 };
 
 #define ent_sphere \
-	reinterpret_cast<CBossEntitySized<SINGYOKU_W, SINGYOKU_H> &>( \
-		boss_entities[0] \
-	)
+	reinterpret_cast<CBossEntitySized<SINGYOKU_W, SINGYOKU_H> &>(boss_entity_0)
 
-#define ent_flash 	boss_entities[1]
-#define ent_person	boss_entities[2]
+#define ent_flash 	boss_entity_1
+#define ent_person	boss_entity_2
 
 inline void singyoku_ent_load(void) {
 	ent_sphere.load("boss1.bos", 0);

@@ -4462,11 +4462,11 @@ main_21__TEXT	segment	byte public 'CODE' use16
 sub_17041	proc far
 		push	bp
 		mov	bp, sp
-		CBossEntity__ctor	boss_entity_0
-		CBossEntity__ctor	boss_entity_1
-		CBossEntity__ctor	boss_entity_2
-		CBossEntity__ctor	boss_entity_3
-		CBossEntity__ctor	boss_entity_4
+		CBossEntity__ctor	_boss_entity_0
+		CBossEntity__ctor	_boss_entity_1
+		CBossEntity__ctor	_boss_entity_2
+		CBossEntity__ctor	_boss_entity_3
+		CBossEntity__ctor	_boss_entity_4
 		push	seg main_21
 		push	offset @CBossEntity@$bctr$qv
 		push	5
@@ -4588,16 +4588,16 @@ main_28__TEXT	segment	byte public 'CODE' use16
 		;org 0Fh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-eye_0	equ <boss_entity_0>
-eye_1	equ <boss_entity_1>
-eye_2	equ <boss_entity_2>
-eye_3	equ <boss_entity_3>
-eye_4	equ <boss_entity_4>
-eye_west	equ <boss_entity_0>
-eye_east	equ <boss_entity_1>
-eye_southwest	equ <boss_entity_2>
-eye_southeast	equ <boss_entity_3>
-eye_north	equ <boss_entity_4>
+eye_0	equ <_boss_entity_0>
+eye_1	equ <_boss_entity_1>
+eye_2	equ <_boss_entity_2>
+eye_3	equ <_boss_entity_3>
+eye_4	equ <_boss_entity_4>
+eye_west	equ <_boss_entity_0>
+eye_east	equ <_boss_entity_1>
+eye_southwest	equ <_boss_entity_2>
+eye_southeast	equ <_boss_entity_3>
+eye_north	equ <_boss_entity_4>
 
 PTN_SLOT_MISSILE = PTN_SLOT_BOSS_1
 
@@ -9332,15 +9332,14 @@ include th01/hiscore/hiscore[bss].asm
 		db 4 dup(?)
 include th01/formats/bos[bss].asm
 
-public _boss_entities
-_boss_entities	CBossEntity 5 dup(<?>)
+public _boss_entity_0, _boss_entity_1, _boss_entity_2, _boss_entity_3
+public _boss_entity_4
+_boss_entity_0	CBossEntity <?>
+_boss_entity_1	CBossEntity <?>
+_boss_entity_2	CBossEntity <?>
+_boss_entity_3	CBossEntity <?>
+_boss_entity_4	CBossEntity <?>
 _boss_entities_unused	CBossEntity 5 dup(<?>)
-boss_entity_0	equ <_boss_entities[0 * size CBossEntity]>
-boss_entity_1	equ <_boss_entities[1 * size CBossEntity]>
-boss_entity_2	equ <_boss_entities[2 * size CBossEntity]>
-boss_entity_3	equ <_boss_entities[3 * size CBossEntity]>
-boss_entity_4	equ <_boss_entities[4 * size CBossEntity]>
-boss	equ boss_entity_0
 
 include th01/main/boss/anim.inc
 
