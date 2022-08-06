@@ -23,8 +23,6 @@ struct grc_t {
 	dots8_t* dots[GRC_IMAGES_PER_SLOT];
 };
 
-extern grc_t grc_images[GRC_SLOT_COUNT];
-
 // Loads all images from the .GRC file with the given [fn] inside the
 // currently active packfile into the given .GRC [slot]. Always returns 0.
 int grc_load(main_grc_slot_t slot, const char fn[PF_FN_LEN]);

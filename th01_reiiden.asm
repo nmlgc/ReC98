@@ -26,7 +26,6 @@ include th01/math/subpixel.inc
 include th01/main/playfld.inc
 include th01/main/boss/entity_a.inc
 include th01/formats/cfg.inc
-include th01/sprites/main_grc.inc
 include th01/sprites/main_ptn.inc
 
 LIVES_MAX = 6
@@ -4881,7 +4880,6 @@ include th01/hiscore/scorelod[data].asm
 include th01/hiscore/regist[data].asm
 include th01/main/boss/entity_a[data].asm
 include th01/formats/pf[data].asm
-include th01/sprites/shape8x8.asp
 
 	extern _ptn_sloppy_unput_before_alpha_pu:byte
 	extern _card_flip_cycle:byte
@@ -4998,10 +4996,6 @@ boss_anim_0	equ <_boss_anims[0 * size CBossAnim]>
 boss_anim_1	equ <_boss_anims[1 * size CBossAnim]>
 
 include th01/formats/pf[bss].asm
-include th01/formats/grc[bss].asm
-public _stage_palette
-_stage_palette	palette_t <?>
-		db 340 dup(?)
 
 CCards struc
 	C_left       	dd ?
@@ -5020,6 +5014,7 @@ CObstacles struc
 	O_count 	dw ?
 CObstacles ends
 
+	extern _stage_palette:palette_t
 	extern _hud_bg:dword
 	extern _hud_bg_size:word
 	extern _stage_timer:word

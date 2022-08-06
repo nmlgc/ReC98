@@ -8,6 +8,8 @@ extern "C" {
 }
 #include "th01/formats/grc.hpp"
 
+grc_t grc_images[GRC_SLOT_COUNT];
+
 int grc_load(main_grc_slot_t slot, const char fn[PF_FN_LEN])
 {
 	union {

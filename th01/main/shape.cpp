@@ -4,6 +4,15 @@
 #include "th01/sprites/shape8x8.hpp"
 #include "th01/main/shape.hpp"
 
+#include "th01/sprites/shape8x8.csp"
+
+// Global state that is defined here for some reason
+// -------------------------------------------------
+
+Palette4 stage_palette;
+int8_t unused[340]; // ZUN bloat
+// -------------------------------------------------
+
 #define shape8x8_put(shape, left, top, col) \
 	dot_rect_t(8, 8) sprite = sSHAPE8X8[shape]; \
 	vram_offset_t vram_offset_topleft = vram_offset_divmul(left, top); \
