@@ -124,7 +124,7 @@ loc_A139:
 loc_A13E:
 		call	_mdrv2_check_board
 		call	_game_init
-		call	sub_B945
+		call	@end_and_verdict_and_regist_anima$qv
 		call	_game_switch_binary
 		push	0
 		push	0
@@ -149,270 +149,13 @@ fuuin_02_TEXT	ends
 
 ; Segment type:	Pure code
 fuuin_03_TEXT	segment	byte public 'CODE' use16
-		assume cs:fuuin_03_TEXT
-		;org 5
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B945	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		push	ds
-		push	offset aIris_mdt ; "iris.mdt"
-		call	_mdrv2_bgm_load
-		add	sp, 4
-		call	_mdrv2_bgm_play
-		call	@grp_palette_settone$qi pascal, 0
-		call	@end_pics_load_palette_show$qnxc pascal, ds, offset aEd1a_grp ; "ED1A.grp"
-		call	@end_pic_show$qi stdcall, 0
-		pop	cx
-		call	@grp_palette_black_in$qui pascal, 6
-		call	_frame_delay stdcall, 100
-		pop	cx
-		call	@grp_palette_white_out$qui pascal, 5
-		call	_frame_delay stdcall, 100
-		pop	cx
-		call	@end_pic_show$qi stdcall, 1
-		pop	cx
-		call	@grp_palette_settone$qi pascal, 100
-		call	_frame_delay stdcall, 13
-		pop	cx
-		call	@end_pic_show$qi stdcall, 2
-		pop	cx
-		call	_frame_delay stdcall, 13
-		pop	cx
-		call	@end_pic_show$qi stdcall, 3
-		pop	cx
-		call	_frame_delay stdcall, 50
-		pop	cx
-		call	@end_pics_load_palette_show$qnxc pascal, ds, offset aEd1b_grp ; "ED1B.grp"
-		call	@end_pic_show$qi stdcall, 0
-		pop	cx
-		call	_frame_delay stdcall, 10
-		pop	cx
-		call	@end_pic_show$qi stdcall, 1
-		pop	cx
-		call	_frame_delay stdcall, 10
-		pop	cx
-		call	@end_pic_show$qi stdcall, 2
-		pop	cx
-		call	_frame_delay stdcall, 100
-		pop	cx
-		call	@grp_palette_black_out$qui pascal, 6
-		push	0
-		call	_graph_accesspage_func
-		pop	cx
-		call	_z_graph_clear
-		call	@grp_palette_settone$qi pascal, 100
-		call	@end_pics_load_palette_show$qnxc pascal, ds, offset aEd1c_grp ; "ED1C.GRP"
-		xor	si, si
-		jmp	short loc_BA49
-; ---------------------------------------------------------------------------
-
-loc_BA28:
-		call	@end_pic_show$qi stdcall, 0
-		pop	cx
-		call	_frame_delay stdcall, 20
-		pop	cx
-		call	@end_pic_show$qi stdcall, 1
-		pop	cx
-		call	_frame_delay stdcall, 20
-		pop	cx
-		inc	si
-
-loc_BA49:
-		cmp	si, 6
-		jl	short loc_BA28
-		call	@end_pic_show$qi stdcall, 0
-		pop	cx
-		call	_frame_delay stdcall, 40
-		pop	cx
-		call	@end_pic_show$qi stdcall, 2
-		pop	cx
-		call	_frame_delay stdcall, 40
-		pop	cx
-		call	@end_pics_load_palette_show$qnxc pascal, ds, offset aEd1d_grp ; "ED1D.GRP"
-		call	@end_pic_show$qi stdcall, 3
-		pop	cx
-		call	_frame_delay stdcall, 70
-		pop	cx
-		xor	si, si
-		jmp	loc_BB16
-; ---------------------------------------------------------------------------
-
-loc_BA8C:
-		or	si, si
-		jnz	short loc_BA98
-		call	@end_pic_show$qi stdcall, 0
-		pop	cx
-
-loc_BA98:
-		cmp	si, 14h
-		jnz	short loc_BAA5
-		call	@end_pic_show$qi stdcall, 1
-		pop	cx
-
-loc_BAA5:
-		cmp	si, 18h
-		jnz	short loc_BAB2
-		call	@end_pic_show$qi stdcall, 2
-		pop	cx
-
-loc_BAB2:
-		cmp	si, 1Ch
-		jnz	short loc_BABF
-		call	@end_pic_show$qi stdcall, 0
-		pop	cx
-
-loc_BABF:
-		cmp	si, 32h	; '2'
-		jnz	short loc_BACC
-		call	@end_pic_show$qi stdcall, 1
-		pop	cx
-
-loc_BACC:
-		cmp	si, 36h	; '6'
-		jnz	short loc_BAD9
-		call	@end_pic_show$qi stdcall, 2
-		pop	cx
-
-loc_BAD9:
-		cmp	si, 3Ah	; ':'
-		jnz	short loc_BAE6
-		call	@end_pic_show$qi stdcall, 0
-		pop	cx
-
-loc_BAE6:
-		cmp	si, 5Ah	; 'Z'
-		jnz	short loc_BAF3
-		call	@end_pic_show$qi stdcall, 1
-		pop	cx
-
-loc_BAF3:
-		cmp	si, 5Eh	; '^'
-		jnz	short loc_BB00
-		call	@end_pic_show$qi stdcall, 2
-		pop	cx
-
-loc_BB00:
-		cmp	si, 62h	; 'b'
-		jnz	short loc_BB0D
-		call	@end_pic_show$qi stdcall, 0
-		pop	cx
-
-loc_BB0D:
-		call	_frame_delay stdcall, 2
-		pop	cx
-		inc	si
-
-loc_BB16:
-		cmp	si, 64h	; 'd'
-		jge	short loc_BB1E
-		jmp	loc_BA8C
-; ---------------------------------------------------------------------------
-
-loc_BB1E:
-		call	@end_pic_show$qi stdcall, 3
-		pop	cx
-		call	_frame_delay stdcall, 60
-		pop	cx
-		call	@end_pic_show$qi stdcall, 0
-		pop	cx
-		call	_frame_delay stdcall, 20
-		pop	cx
-		call	@end_pic_show$qi stdcall, 3
-		pop	cx
-		call	@grp_palette_settone$qi pascal, 105
-		call	@end_pics_load_palette_show$qnxc pascal, ds, offset aEd1e_grp ; "ED1E.GRP"
-		call	@end_pic_show$qi stdcall, 0
-		pop	cx
-		xor	si, si
-		jmp	short loc_BB79
-; ---------------------------------------------------------------------------
-
-loc_BB62:
-		mov	ax, si
-		imul	ax, 5
-		add	ax, 110
-		call	@grp_palette_settone$qi pascal, ax
-		call	_frame_delay stdcall, 16
-		pop	cx
-		inc	si
-
-loc_BB79:
-		cmp	si, 4
-		jl	short loc_BB62
-		xor	si, si
-		jmp	short loc_BBB1
-; ---------------------------------------------------------------------------
-
-loc_BB82:
-		call	@end_pic_show$qi stdcall, 1
-		pop	cx
-		call	_frame_delay stdcall, 8
-		pop	cx
-		call	@end_pic_show$qi stdcall, 2
-		pop	cx
-		call	_frame_delay stdcall, 8
-		pop	cx
-		mov	ax, si
-		imul	ax, 5
-		add	ax, 130
-		call	@grp_palette_settone$qi pascal, ax
-		inc	si
-
-loc_BBB1:
-		cmp	si, 0Fh
-		jl	short loc_BB82
-		mov	ax, word ptr _continues_total
-		or	ax, word ptr _continues_total+2
-		jnz	short loc_BBC7
-		call	@end_good$qv
-		call	@boss_slides_animate$qv
-		jmp	short loc_BBF1
-; ---------------------------------------------------------------------------
-
-loc_BBC7:
-		call	@end_bad$qv
-		call	_mdrv2_bgm_fade_out_nonblock
-		call	@grp_palette_black_out$qui pascal, 10
-		call	_z_graph_clear
-		call	_mdrv2_bgm_stop
-		push	ds
-		push	offset aSt1_mdt	; "st1.mdt"
-		call	_mdrv2_bgm_load
-		add	sp, 4
-		call	_mdrv2_bgm_play
-
-loc_BBF1:
-		nopcall	@verdict_animate_and_regist$qv
-		pop	si
-		pop	bp
-		retf
-sub_B945	endp
-
-	@end_bad$qv procdesc near
-	@end_good$qv procdesc near
-	@boss_slides_animate$qv procdesc near
-	extern @verdict_animate_and_regist$qv:proc
+	extern @end_and_verdict_and_regist_anima$qv:proc
 fuuin_03_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
 fuuin_04_TEXT	segment	byte public 'CODE' use16
-	extern @END_PICS_LOAD_PALETTE_SHOW$QNXC:proc
-	extern @end_pic_show$qi:proc
-	extern _frame_delay:proc
-	extern @GRP_PALETTE_SETTONE$QI:proc
-	extern @GRP_PALETTE_BLACK_OUT$QUI:proc
-	extern @GRP_PALETTE_BLACK_IN$QUI:proc
-	extern @GRP_PALETTE_WHITE_OUT$QUI:proc
-	extern @GRP_PALETTE_WHITE_IN$QUI:proc
 fuuin_04_TEXT	ends
 
 ; ===========================================================================
@@ -438,8 +181,6 @@ initexit_TEXT	ends
 
 ; Segment type:	Pure code
 graph_TEXT	segment	byte public 'CODE' use16
-	extern _graph_accesspage_func:proc
-	extern _z_graph_clear:proc
 graph_TEXT	ends
 
 ; ===========================================================================
@@ -468,10 +209,6 @@ GRAPH_EX_TEXT	ends
 ; Segment type:	Pure code
 mdrv2_TEXT	segment	byte public 'CODE' use16
 	extern _mdrv2_resident:proc
-	extern _mdrv2_bgm_load:proc
-	extern _mdrv2_bgm_play:proc
-	extern _mdrv2_bgm_stop:proc
-	extern _mdrv2_bgm_fade_out_nonblock:proc
 	extern _mdrv2_check_board:proc
 mdrv2_TEXT	ends
 
@@ -546,16 +283,6 @@ aLTfvCMc	db 'ã÷ífÇÃó—åÁ',0
 aRvkeo		db 'ê¢äEé˜ÇÃót',0
 aIitsluucr_tomo	db 'â©íÈã„ìCê_íOåo',0
 aB@gagagkg	db 'Å@ÉAÉÄÉäÉ^',0
-
-; char aIris_mdt[]
-aIris_mdt	db 'iris.mdt',0
-aEd1a_grp	db 'ED1A.grp',0
-aEd1b_grp	db 'ED1B.grp',0
-aEd1c_grp	db 'ED1C.GRP',0
-aEd1d_grp	db 'ED1D.GRP',0
-aEd1e_grp	db 'ED1E.GRP',0
-; char aSt1_mdt[]
-aSt1_mdt	db 'st1.mdt',0
 
 	; th01/hardware/palette[data].asm
 	extern _z_Palettes:rgb_t:COLOR_COUNT

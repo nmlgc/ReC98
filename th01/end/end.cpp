@@ -58,8 +58,17 @@ static const int FINAL_DELAY_FRAMES = 300;
 // Function ordering fails
 // -----------------------
 
+void near end_good(void);
+void near end_bad(void);
 void near end_good_makai(void);
 void near end_good_jigoku(void);
+
+// Shows the route-specific boss slideshow.
+void near boss_slides_animate(void);
+
+// Shows the verdict screen, then calls regist() with the score and the cleared
+// route.
+void verdict_animate_and_regist(void);
 // -----------------------
 
 #define end_pic_show_and_delay(quarter, delay_frames) { \
@@ -71,6 +80,111 @@ void near end_good_jigoku(void);
 	end_pic_show(quarter); \
 	grp_palette_white_in(white_in_speed); \
 	frame_delay(delay_frames); \
+}
+
+inline void end_done(void) {
+	mdrv2_bgm_fade_out_nonblock();
+	grp_palette_black_out(10);
+
+	z_graph_clear();
+	mdrv2_bgm_stop();
+	mdrv2_bgm_load("st1.mdt");
+	mdrv2_bgm_play();
+}
+
+void end_and_verdict_and_regist_animate(void)
+{
+	enum {
+		WHITE_OUT_STEP = 5,
+		WHITE_OUT_INTERVAL = 16,
+	};
+
+	int i;
+
+	mdrv2_bgm_load("iris.mdt");
+	mdrv2_bgm_play();
+	grp_palette_settone(0);
+	end_pics_load_palette_show("ED1A.grp");
+
+	end_pic_show(0);
+	grp_palette_black_in(6);
+	frame_delay(100);
+
+	grp_palette_white_out(5);
+	frame_delay(100);
+
+	// Closing barn door
+	end_pic_show(1);
+	grp_palette_settone(100);
+	frame_delay(13);
+	end_pic_show_and_delay(2, 13);
+	end_pic_show_and_delay(3, 50);
+
+	// Seal
+	end_pics_load_palette_show("ED1B.grp");
+	end_pic_show_and_delay(0, 10);
+	end_pic_show_and_delay(1, 10);
+	end_pic_show_and_delay(2, 100);
+	grp_palette_black_out(6);
+
+	graph_accesspage_func(0);
+	z_graph_clear(); // ZUN bloat
+	grp_palette_settone(100);
+
+	// Reimu sweeping
+	end_pics_load_palette_show("ED1C.GRP");
+	for(i = 0; i < 6; i++) {
+		end_pic_show_and_delay(0, 20);
+		end_pic_show_and_delay(1, 20);
+	}
+	end_pic_show_and_delay(0, 40);
+	end_pic_show_and_delay(2, 40);
+
+	// Reimu looking at the Orb
+	end_pics_load_palette_show("ED1D.GRP");
+	end_pic_show_and_delay(3, 70);
+	for(i = 0; i < 100; i++) {
+		#define blink_at(first_frame, frame) { \
+			if(frame == (first_frame + 0)) { end_pic_show(1); } \
+			if(frame == (first_frame + 4)) { end_pic_show(2); } \
+			if(frame == (first_frame + 8)) { end_pic_show(0); } \
+		}
+
+		if(i == 0) { end_pic_show(0); }
+		blink_at(20, i);
+		blink_at(50, i);
+		blink_at(90, i);
+
+		frame_delay(2);
+
+		#undef blink_at
+	}
+	end_pic_show_and_delay(3, 60);
+	end_pic_show_and_delay(0, 20);
+	end_pic_show(3);
+	grp_palette_settone(105);
+
+	// Orb hovering and sparkling
+	end_pics_load_palette_show("ED1E.GRP");
+	end_pic_show(0);
+	for(i = 0; i < ((130 - 110) / WHITE_OUT_STEP); i++) {
+		grp_palette_settone(110 + (i * WHITE_OUT_STEP));
+		frame_delay(WHITE_OUT_INTERVAL);
+	}
+	for(i = 0; i < ((205 - 130) / WHITE_OUT_STEP); i++) {
+		end_pic_show_and_delay(1, (WHITE_OUT_INTERVAL / 2));
+		end_pic_show_and_delay(2, (WHITE_OUT_INTERVAL / 2));
+		grp_palette_settone(130 + (i * WHITE_OUT_STEP));
+	}
+
+	if(continues_total == 0) {
+		end_good();
+		boss_slides_animate();
+	} else {
+		end_bad();
+		end_done();
+	}
+	verdict_animate_and_regist();
 }
 
 void pascal near shake_then_boom(int shake_duration, int boom_duration)
@@ -248,13 +362,8 @@ void near pascal boss_slide_next(int quarter)
 
 void near boss_slides_animate(void)
 {
-	mdrv2_bgm_fade_out_nonblock();
-	grp_palette_black_out(10);
-
-	z_graph_clear();
-	mdrv2_bgm_stop();
-	mdrv2_bgm_load("st1.mdt");
-	mdrv2_bgm_play();
+	// MODDERS: Move to end_animate() for cleanliness.
+	end_done();
 
 	if(end_flag == ES_MAKAI) {
 		end_pics_load_palette_show("endb_a.grp");
