@@ -62,8 +62,8 @@ struct bos_t {
 /// Entities
 /// --------
 
-extern bos_t bos_entity_images[BOS_ENTITY_SLOT_COUNT];
-extern bool bos_header_only;
+bos_t bos_entity_images[BOS_ENTITY_SLOT_COUNT];
+bool bos_header_only = false;
 
 void bos_reset_all_broken(void)
 {
@@ -612,7 +612,7 @@ void bos_entity_free(int slot)
 /// Non-entity animations
 /// ---------------------
 
-extern bos_t bos_anim_images[BOS_ANIM_SLOT_COUNT];
+bos_t bos_anim_images[BOS_ANIM_SLOT_COUNT];
 
 int CBossAnim::load(const char fn[PF_FN_LEN], int slot)
 {
@@ -696,3 +696,15 @@ void bos_anim_free(int slot)
 	}
 }
 /// ---------------------
+
+// Slots
+// -----
+
+CBossEntity boss_entity_0;
+CBossEntity boss_entity_1;
+CBossEntity boss_entity_2;
+CBossEntity boss_entity_3;
+CBossEntity boss_entity_4;
+CBossEntity boss_entities_unused[5];
+CBossAnim boss_anims[2];
+// -----

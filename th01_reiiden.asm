@@ -24,7 +24,6 @@ include th01/hardware/grppsafx.inc
 include th01/math/area.inc
 include th01/math/subpixel.inc
 include th01/main/playfld.inc
-include th01/main/boss/entity_a.inc
 include th01/formats/cfg.inc
 include th01/sprites/main_ptn.inc
 
@@ -61,7 +60,6 @@ BOSS_STAGE = (STAGES_PER_SCENE - 1)
 main_01 group main_010_TEXT, main_011_TEXT, main_012_TEXT, main_013_TEXT
 main_15 group main_15_TEXT, main_15__TEXT
 main_19 group main_19_TEXT, main_19__TEXT
-main_21 group main_21_TEXT, main_21__TEXT
 
 ; ===========================================================================
 
@@ -4328,73 +4326,6 @@ main_21_TEXT	segment	byte public 'CODE' use16
 	extern @bos_entity_free$qi:proc
 main_21_TEXT	ends
 
-main_21__TEXT	segment	byte public 'CODE' use16
-		assume cs:main_21
-		;org 4
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_17041	proc far
-		push	bp
-		mov	bp, sp
-		CBossEntity__ctor	_boss_entity_0
-		CBossEntity__ctor	_boss_entity_1
-		CBossEntity__ctor	_boss_entity_2
-		CBossEntity__ctor	_boss_entity_3
-		CBossEntity__ctor	_boss_entity_4
-		push	seg main_21
-		push	offset @CBossEntity@$bctr$qv
-		push	5
-		pushd	5
-		push	size CBossEntity
-		push	ds
-		push	offset _boss_entities_unused
-		call	@_vector_new_$qnvuiuluie ; _vector_new_(void *,uint,ulong,uint,...)
-		add	sp, 10h
-		pop	bp
-		retf
-sub_17041	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public @CBossEntity@$bctr$qv
-@CBossEntity@$bctr$qv	proc far
-
-arg_0		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		cmp	[bp+arg_0], 0
-		jnz	short loc_170B2
-		push	32h ; '2'
-		call	@$bnew$qui	; operator new(uint)
-		pop	cx
-		mov	word ptr [bp+arg_0+2], dx
-		mov	word ptr [bp+arg_0], ax
-		or	ax, dx
-		jz	short loc_170C0
-
-loc_170B2:
-		les	bx, [bp+arg_0]
-		mov	word ptr es:[bx+2Ah], 0
-		mov	byte ptr es:[bx+30h], 0
-
-loc_170C0:
-		mov	dx, word ptr [bp+arg_0+2]
-
-loc_170C3:
-		mov	ax, word ptr [bp+arg_0]
-		pop	bp
-		retf
-@CBossEntity@$bctr$qv	endp
-
-main_21__TEXT	ends
-
 ; ===========================================================================
 
 ; Segment type:	Pure code
@@ -4876,7 +4807,6 @@ include th01/hiscore/alphabet_syms[data].asm
 include th01/hiscore/regist_name[data].asm
 include th01/hiscore/scorelod[data].asm
 include th01/hiscore/regist[data].asm
-include th01/main/boss/entity_a[data].asm
 
 	extern _arc_key:byte
 	extern _ptn_sloppy_unput_before_alpha_pu:byte
@@ -4893,9 +4823,6 @@ _INIT_	segment word public 'INITDATA' use16
 		db    1
 		db  20h
 		dd sub_1240A
-		db    1
-		db  20h
-		dd sub_17041
 _INIT_	ends
 
 	.data?
@@ -4975,23 +4902,6 @@ _resident	dd ?
 include th01/main/bullet/laser_s[bss].asm
 include th01/hiscore/hiscore[bss].asm
 		db 4 dup(?)
-include th01/formats/bos[bss].asm
-
-public _boss_entity_0, _boss_entity_1, _boss_entity_2, _boss_entity_3
-public _boss_entity_4
-_boss_entity_0	CBossEntity <?>
-_boss_entity_1	CBossEntity <?>
-_boss_entity_2	CBossEntity <?>
-_boss_entity_3	CBossEntity <?>
-_boss_entity_4	CBossEntity <?>
-_boss_entities_unused	CBossEntity 5 dup(<?>)
-
-include th01/main/boss/anim.inc
-
-public _boss_anims
-_boss_anims	CBossAnim 2 dup(<?>)
-boss_anim_0	equ <_boss_anims[0 * size CBossAnim]>
-boss_anim_1	equ <_boss_anims[1 * size CBossAnim]>
 
 CCards struc
 	C_left       	dd ?

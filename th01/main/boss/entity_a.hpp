@@ -40,7 +40,10 @@ public:
 	char zero_3;
 	unsigned char bos_slot;
 
-	CBossEntity();
+	CBossEntity() {
+		loading = false;
+		zero_3 = 0;
+	}
 
 	// Even Turbo C++ 4.0J implements copy constructors for trivially
 	// constructible types via an equivalent of memcpy() by default. This
