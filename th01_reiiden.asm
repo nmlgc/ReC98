@@ -4398,12 +4398,10 @@ main_21__TEXT	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-main_22_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_22_TEXT
-		;org 8
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-include th01/formats/pf.asm
-main_22_TEXT	ends
+PF_TEXT	segment	byte public 'CODE' use16
+	extern ARC_LOAD:proc
+	extern ARC_FREE:proc
+PF_TEXT	ends
 
 ; ===========================================================================
 
@@ -4879,8 +4877,8 @@ include th01/hiscore/regist_name[data].asm
 include th01/hiscore/scorelod[data].asm
 include th01/hiscore/regist[data].asm
 include th01/main/boss/entity_a[data].asm
-include th01/formats/pf[data].asm
 
+	extern _arc_key:byte
 	extern _ptn_sloppy_unput_before_alpha_pu:byte
 	extern _card_flip_cycle:byte
 	extern _default_grp_fn:byte
@@ -4994,8 +4992,6 @@ public _boss_anims
 _boss_anims	CBossAnim 2 dup(<?>)
 boss_anim_0	equ <_boss_anims[0 * size CBossAnim]>
 boss_anim_1	equ <_boss_anims[1 * size CBossAnim]>
-
-include th01/formats/pf[bss].asm
 
 CCards struc
 	C_left       	dd ?
