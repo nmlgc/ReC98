@@ -35,20 +35,9 @@ static const pixel_t ITEM_H = PTN_H;
 static const unsigned int POINT_CAP = 65530;
 static const unsigned int POINT_CAP_DIGITS = digit_count(POINT_CAP);
 
-// Assumes that [BOMB_COLLECT_1] and [BOMB_COLLECT_CAP] have the same length
-// in bytes!
 static const pixel_t BOMB_COLLECT_1_W = shiftjis_w(BOMB_COLLECT_1);
-
 static const pixel_t BOMB_COLLECT_2_W = shiftjis_w(BOMB_COLLECT_2);
 static const pixel_t POINT_COLLECT_W = (POINT_CAP_DIGITS * GLYPH_HALF_W);
-
-// TODO: Remove, once data can be emitted here
-#undef BOMB_COLLECT_1
-#undef BOMB_COLLECT_2
-#undef BOMB_COLLECT_CAP
-extern const unsigned char BOMB_COLLECT_1[];
-extern const unsigned char BOMB_COLLECT_2[];
-extern const unsigned char BOMB_COLLECT_CAP[];
 /// ---------
 
 /// Structures
@@ -84,8 +73,8 @@ struct item_t {
 static const int ITEM_BOMB_COUNT = 4;
 static const int ITEM_POINT_COUNT = 10;
 
-extern item_t items_bomb[ITEM_BOMB_COUNT];
-extern item_t items_point[ITEM_POINT_COUNT];
+item_t items_bomb[ITEM_BOMB_COUNT];
+item_t items_point[ITEM_POINT_COUNT];
 /// ----------
 
 /// Function types
@@ -145,6 +134,8 @@ inline screen_x_t bomb_collect_2_left(item_t* slots, const int i) {
 	enum {
 		X_OFFSET = ((BOMB_COLLECT_2_W - BOMB_COLLECT_1_W) / 2)
 	};
+	static_assert(sizeof(BOMB_COLLECT_1) == sizeof(BOMB_COLLECT_CAP));
+
 	return clamp_max_2(
 		clamp_min_2((slots[i].left - X_OFFSET), PLAYFIELD_LEFT),
 		(PLAYFIELD_RIGHT - BOMB_COLLECT_2_W)
@@ -269,6 +260,7 @@ void bomb_collect_update_and_render(int slot)
 {
 	#define item items_bomb[slot]
 
+	static_assert(sizeof(BOMB_COLLECT_1) == sizeof(BOMB_COLLECT_CAP));
 	egc_copy_rect_1_to_0_16(item.left, item.top, BOMB_COLLECT_1_W, GLYPH_H);
 	if(item.flag == IF_COLLECTED) {
 		egc_copy_rect_1_to_0_16(

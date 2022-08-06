@@ -4882,10 +4882,6 @@ include th01/hiscore/regist[data].asm
 include th01/main/boss/entity_a[data].asm
 include th01/formats/pf[data].asm
 include th01/sprites/shape8x8.asp
-public _BOMB_COLLECT_1, _BOMB_COLLECT_2, _BOMB_COLLECT_CAP
-_BOMB_COLLECT_1  	db 'Bomb',0
-_BOMB_COLLECT_2  	db 'Extend!!',0
-_BOMB_COLLECT_CAP	db 'ÇP‰›',0
 
 	extern _ptn_sloppy_unput_before_alpha_pu:byte
 	extern _card_flip_cycle:byte
@@ -5006,24 +5002,6 @@ include th01/formats/grc[bss].asm
 public _stage_palette
 _stage_palette	palette_t <?>
 		db 340 dup(?)
-
-item_t struc
-	ITEM_left         	dw ?
-	ITEM_top          	dw ?
-	ITEM_unknown_zero 	dw ?
-	ITEM_velocity_y   	dw ?
-	ITEM_flag         	db ?
-	ITEM_splash_radius	label byte
-	ITEM_collect_time 	label byte
-		db ?
-item_t ends
-
-ITEM_BOMB_COUNT = 4
-ITEM_POINT_COUNT = 10
-
-public _items_bomb, _items_point
-_items_bomb 	item_t ITEM_BOMB_COUNT dup(<?>)
-_items_point	item_t ITEM_POINT_COUNT dup(<?>)
 
 CCards struc
 	C_left       	dd ?
