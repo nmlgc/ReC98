@@ -28,10 +28,15 @@ extern "C" {
 #include "th01/main/stage/stages.hpp"
 #include "th01/main/stage/timer.hpp"
 
-extern unsigned int frames_since_harryup;
+unsigned int stage_timer;
+static unsigned int frames_since_harryup;
+
+// Function ordering fails
+// -----------------------
 
 void harryup_animate(void);
 void pattern_harryup(void);
+// -----------------------
 
 /// Constants
 /// ---------
@@ -66,9 +71,20 @@ inline void unput(void) {
 
 void timer_init_for(int stage_id, int route)
 {
-	extern unsigned int STAGE_TIMES[
+	static unsigned int STAGE_TIMES[
 		STAGES_OUTSIDE_ROUTE + (STAGES_ON_ROUTE * ROUTE_COUNT)
-	];
+	] = {
+		1000, 1000, 1000, 1000, 2000,	// Shrine
+		// Makai
+		1200, 1200, 1200, 1200, 3000,	// (06 - 10)
+		1400, 1400, 1400, 1400, 4000,	// (11 - 15)
+		1600, 1600, 1600,  600, 6000,	// (16 - 20)
+		// Jigoku
+		1200, 1200, 1200, 1200, 2000,	// (06 - 10)
+		1400, 1400, 1400, 1400, 4000,	// (11 - 15)
+		1600, 1800, 1800, 1600, 8000,	// (16 - 20)
+	};
+
 	if(stage_id < STAGES_OUTSIDE_ROUTE) {
 		stage_timer = STAGE_TIMES[stage_id];
 	} else {
@@ -184,7 +200,7 @@ void harryup_animate(void)
 
 void pattern_harryup(void)
 {
-	extern unsigned char harryup_cycle;
+	static unsigned char harryup_cycle;
 
 	frames_since_harryup++;
 	harryup_cycle++;

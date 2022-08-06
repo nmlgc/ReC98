@@ -4893,17 +4893,6 @@ include th01/hardware/grppfnfx_ptrs[data].asm
 public _score_prev
 _score_prev	dd 0
 include th01/hardware/grppfnfx[data].asm
-public _STAGE_TIMES
-_STAGE_TIMES	label word
-	dw 1000, 1000, 1000, 1000, 2000	; Shrine
-	; Makai
-	dw 1200, 1200, 1200, 1200, 3000	; (06 - 10)
-	dw 1400, 1400, 1400, 1400, 4000	; (11 - 15)
-	dw 1600, 1600, 1600,  600, 6000	; (16 - 20)
-	; Jigoku
-	dw 1200, 1200, 1200, 1200, 2000	; (06 - 10)
-	dw 1400, 1400, 1400, 1400, 4000	; (11 - 15)
-	dw 1600, 1800, 1800, 1600, 8000	; (16 - 20)
 
 	extern _ptn_sloppy_unput_before_alpha_pu:byte
 	extern _card_flip_cycle:byte
@@ -5044,10 +5033,6 @@ _items_bomb 	item_t ITEM_BOMB_COUNT dup(<?>)
 _items_point	item_t ITEM_POINT_COUNT dup(<?>)
 
 include th01/main/hud/hud[bss].asm
-public _stage_timer, _frames_since_harryup, _harryup_cycle
-_stage_timer	dw ?
-_frames_since_harryup	dw ?
-_harryup_cycle	db ?
 
 CCards struc
 	C_left       	dd ?
@@ -5066,6 +5051,7 @@ CObstacles struc
 	O_count 	dw ?
 CObstacles ends
 
+	extern _stage_timer:word
 	extern _stageobj_bgs:dword
 	extern _stageobj_bgs_size:dword
 	extern _cards:CCards
