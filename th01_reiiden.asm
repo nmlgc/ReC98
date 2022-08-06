@@ -4905,24 +4905,7 @@ _STAGE_TIMES	label word
 	dw 1400, 1400, 1400, 1400, 4000	; (11 - 15)
 	dw 1600, 1800, 1800, 1600, 8000	; (16 - 20)
 
-M_REGULAR = 0
-X_LEFT = 1
-
-public _player_invincible_against_orb
-_player_invincible_against_orb	db 0
-include th01/formats/ptn_main[data].asm
-public _player_dash_cycle, _player_mode_frame
-public _player_mode, _player_dash_direction
-public _player_bomb_state, _player_bombing, _player_combo_enabled
-_player_dash_cycle	db 0
-_player_mode_frame	db 0
-_player_mode	db M_REGULAR
-_player_dash_direction	db X_LEFT
-_player_bomb_state	db 0
-_player_bombing	db 0
-_player_combo_enabled	db 0
-public _ORB_FORCE_REPEL_CONSTANT
-_ORB_FORCE_REPEL_CONSTANT	dq -10.0
+	extern _ptn_sloppy_unput_before_alpha_pu:byte
 	extern _card_flip_cycle:byte
 	extern _default_grp_fn:byte
 	extern _default_bgm_fn:byte
@@ -5065,12 +5048,6 @@ public _stage_timer, _frames_since_harryup, _harryup_cycle
 _stage_timer	dw ?
 _frames_since_harryup	dw ?
 _harryup_cycle	db ?
-	evendata
-public _player_submode, _player_ptn_id_prev
-_player_submode	db ?
-_player_ptn_id_prev	db ?
-public _boss_post_defeat_palette
-_boss_post_defeat_palette	palette_t <?>
 
 CCards struc
 	C_left       	dd ?

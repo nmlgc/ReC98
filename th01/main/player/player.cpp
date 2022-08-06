@@ -358,16 +358,7 @@ inline void special_start_shot(
 
 void player_unput_update_render(bool16 do_not_reset_player_state)
 {
-	#define dash_cycle	player_dash_cycle
-	#define mode_frame	player_mode_frame
-	#define mode	player_mode
-	#define dash_direction	player_dash_direction
-	#define bomb_state	player_bomb_state
-	#define bombing	player_bombing
-	#define combo_enabled	player_combo_enabled
 	#define swing_deflection_frames	player_swing_deflection_frames
-	#define submode	player_submode
-	#define ptn_id_prev	player_ptn_id_prev
 
 	enum bomb_state_t {
 		BS_NONE = 0,
@@ -377,7 +368,7 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 		_bomb_state_t_FORCE_INT16 = 0x7FFF
 	};
 
-	extern struct {
+	static struct {
 		int8_t v;
 
 		main_ptn_id_t to_cel(main_ptn_id_t base) const {
@@ -391,19 +382,19 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 				((v % DASH_FRAMES) < DASH_FRAMES_PER_CEL) ? base : (base + 1)
 			);
 		}
-	} dash_cycle;
+	} dash_cycle = { 0 };
 
 	// Garbage in M_REGULAR, valid in all other [mode]s.
-	extern ModeFrame mode_frame;
+	static ModeFrame mode_frame = { 0 };
 
-	extern int8_t mode; // mode_t
-	extern int8_t dash_direction; // x_direction_t
-	extern int8_t bomb_state; // bomb_state_t
-	extern bool bombing; // redundant, already covered by bomb_state_t
-	extern char combo_enabled; // bool
+	static int8_t mode = M_REGULAR; // mode_t
+	static x_direction_t dash_direction = X_LEFT;
+	static int8_t bomb_state = BS_NONE; // ACTUAL TYPE: bomb_state_t
+	static bool bombing = false; // ZUN bloat: Already covered by bomb_state_t
+	static int8_t combo_enabled = false; // ACTUAL TYPE: bool
 	extern int8_t swing_deflection_frames;
-	extern submode_t submode;
-	extern int8_t ptn_id_prev; // main_ptn_id_t
+	static submode_t submode;
+	static int8_t ptn_id_prev; // ACTUAL TYPE: main_ptn_id_t
 
 	int prev;
 	player_48x48_cel_t cel_prev;
@@ -956,8 +947,7 @@ void orb_player_hittest(int repel_friction)
 		} else if(repel_friction == OR_3_X_8_LEFT) {
 			orb_velocity_x = OVX_8_LEFT;
 		}
-		extern double ORB_FORCE_REPEL_CONSTANT;
-		orb_force_new(ORB_FORCE_REPEL_CONSTANT, OF_IMMEDIATE);
+		orb_force_new(-10.0, OF_IMMEDIATE);
 	}
 }
 
@@ -1064,3 +1054,9 @@ void player_miss_animate_and_update(void)
 	timer_extend_and_put();
 	pellet_speed_lower(0.0f, -0.05f);
 }
+
+// Global state that is defined here for some reason
+// -------------------------------------------------
+
+Palette4 boss_post_defeat_palette;
+// -------------------------------------------------
