@@ -504,17 +504,19 @@ void verdict_title_calculate_and_render(void)
 		(VERDICT_LEFT - VERDICT_TITLE_LEFT_OFFSET + VERDICT_TITLE_PADDED_W),
 		verdict_line_top(12),
 		FX_TITLE,
-		"%s\0 EASY \0NORMAL\0 HARD \0LUNATIC",
+		"%s",
 		VERDICT_TITLES[group][level]
 	);
 }
 
 void verdict_animate_and_regist(void)
 {
-	struct hack { const char *str[RANK_COUNT]; }; // XXX
-	extern const hack ranks;
-
-	struct hack RANKS = ranks;
+	const char* RANKS[RANK_COUNT] = {
+		" EASY ",
+		"NORMAL",
+		" HARD ",
+		"LUNATIC"
+	};
 
 	grp_palette_black_out(10);
 
@@ -532,7 +534,7 @@ void verdict_animate_and_regist(void)
 	);
 	frame_delay(30);
 
-	verdict_line_render1(2, VERDICT_RANK"%s", RANKS.str[rank]);
+	verdict_line_render1(2, VERDICT_RANK"%s", RANKS[rank]);
 
 	// Should really all be %10lu (with the superflous right-padding removed
 	// from the strings) if you're already using `long`s here. Scoreplayers

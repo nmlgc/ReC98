@@ -235,54 +235,6 @@ include th01/hiscore/regist_name[data].asm
 include th01/hardware/grppfnfx[data].asm
 include th01/hiscore/scorelod[data].asm
 include th01/hiscore/regist[data].asm
-public _VERDICT_TITLES
-_VERDICT_TITLES label dword
-		dd aB@gvguglbB@		; "　モンキー　"
-		dd aB@cRlio		; "　類人猿"
-		dd aGzgvgtgsgggugx	; "ホモサピエンス"
-		dd aB@tRl		; "　超人"
-		dd aB@sR_b@		; "　靈神　"
-		dd aB@r_v		; "　神を超越"
-		dd aVioqclgqbGB		; "お子様ゲーマー"
-		dd aOcf			; "似非スコアラー"
-		dd aGGhglgxgrgagib	; "ミドルスコアラー"
-		dd aGngcgxgrgagib	; "ハイスコアラー"
-		dd aGxbGpbGqbGB		; "スーパーゲーマー"
-		dd aGqbGBV		; "ゲーマーを超越"
-		dd aXevVVViv		; "腐ったみかん"
-		dd aGugbgnbGavO		; "ザックームの実"
-		dd aLTfvCMc		; "禁断の林檎"
-		dd aRvkeo		; "世界樹の葉"
-		dd aIitsluucr_tomo	; "黄帝九鼎神丹経"
-		dd aB@gagagkg		; "　アムリタ"
-public _ranks
-_ranks	label dword
-	dd DGROUP:0763h
-	dd DGROUP:076Ah
-	dd DGROUP:0771h
-	dd DGROUP:0778h
-
-; Group 0
-aB@gvguglbB@	db '　モンキー　',0
-aB@cRlio	db '　類人猿',0
-aGzgvgtgsgggugx	db 'ホモサピエンス',0
-aB@tRl		db '　超人',0
-aB@sR_b@	db '　靈神　',0
-aB@r_v		db '　神を超越',0
-; Group 1
-aVioqclgqbGB	db 'お子様ゲーマー',0
-aOcf		db '似非スコアラー',0
-aGGhglgxgrgagib	db 'ミドルスコアラー',0
-aGngcgxgrgagib	db 'ハイスコアラー',0
-aGxbGpbGqbGB	db 'スーパーゲーマー',0
-aGqbGBV		db 'ゲーマーを超越',0
-; Group 2
-aXevVVViv	db '腐ったみかん',0
-aGugbgnbGavO	db 'ザックームの実',0
-aLTfvCMc	db '禁断の林檎',0
-aRvkeo		db '世界樹の葉',0
-aIitsluucr_tomo	db '黄帝九鼎神丹経',0
-aB@gagagkg	db '　アムリタ',0
 
 	; th01/hardware/palette[data].asm
 	extern _z_Palettes:rgb_t:COLOR_COUNT

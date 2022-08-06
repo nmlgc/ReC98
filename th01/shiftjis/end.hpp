@@ -52,5 +52,26 @@ static const pixel_t VERDICT_TITLE_PADDED_W = shiftjis_w(VERDICT_TITLE "    ");
 
 static const int VERDICT_GROUPS = 3;
 static const int VERDICT_LEVELS = 6;
-extern const unsigned char *VERDICT_TITLES[VERDICT_GROUPS][VERDICT_LEVELS];
+const unsigned char *VERDICT_TITLES[VERDICT_GROUPS][VERDICT_LEVELS] = { {
+	"　モンキー　",
+	"　類人猿",
+	"ホモサピエンス",
+	"　超人",
+	"　靈神　",
+	"　神を超越"
+}, {
+	"お子様ゲーマー",
+	"似非スコアラー",
+	"ミドルスコアラー",
+	"ハイスコアラー",
+	"スーパーゲーマー",
+	"ゲーマーを超越",
+}, {
+	"腐ったみかん",
+	"ザックームの実",
+	"禁断の林檎",
+	"世界樹の葉",
+	"黄帝九鼎神丹経",
+	"　アムリタ"
+} };
 // --------------
