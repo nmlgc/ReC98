@@ -21,6 +21,8 @@ extern "C" {
 #include "th01/hardware/graph.h"
 #include "th01/hardware/input.hpp"
 }
+#include "th01/shiftjis/fns.hpp"
+#include "th01/shiftjis/regist.hpp"
 #include "th01/hiscore/scoredat.hpp"
 
 #include "th01/hardware/grppfnfx.cpp"
@@ -67,18 +69,13 @@ void input_sense(bool16 reset_repeat)
 
 extern unsigned char rank;
 
-extern const char SCOREDAT_ERROR_NOT_FOUND[];
-extern const char SCOREDAT_ERROR_INVALID[];
-extern const char FOPEN_RB[];
-extern const char FOPEN_WB[];
-
 #define scoredat_declare() FILE *fp;
 #define scoredat_cli() disable()
 #define scoredat_sti() enable()
 #define scoredat_error(str) printf(str)
 #define scoredat_exist(fn) !access(fn, 0)
-#define scoredat_create(fn) (fp = fopen(fn, FOPEN_WB))
-#define scoredat_ropen(fn) (fp = fopen(fn, FOPEN_RB))
+#define scoredat_create(fn) (fp = fopen(fn, "wb"))
+#define scoredat_ropen(fn) (fp = fopen(fn, "rb"))
 #define scoredat_read(buf, size) read(fileno(fp), buf, size)
 #define scoredat_write(buf, size) write(fileno(fp), buf, size)
 #define scoredat_close() fclose(fp)
@@ -87,20 +84,15 @@ extern const char FOPEN_WB[];
 #include "th01/hiscore/score_nm.cpp"
 
 #define graph_putkanji_fx_declare()
-#define graph_putkanji_fx(left, top, fx, fmt_instance, kanji) \
-	extern const char ALPHABET_KANJI_FMT_##fmt_instance[]; \
-	graph_printf_fx( \
-		left, top, fx, \
-		ALPHABET_KANJI_FMT_##fmt_instance, kanji >> 8, kanji & 0xFF \
-	)
+#define graph_putkanji_fx(left, top, fx, kanji) { \
+	graph_printf_fx(left, top, fx, "%c%c", (kanji >> 8), (kanji & 0xFF)); \
+}
 
-#define graph_printf_s_fx(left, top, fx, fmt_instance, str) \
-	extern const char REGIST_STRING_FMT_##fmt_instance[]; \
-	graph_printf_fx(left, top, fx, REGIST_STRING_FMT_##fmt_instance, str);
+#define graph_printf_s_fx(left, top, fx, str) \
+	graph_printf_fx(left, top, fx, "%s", str);
 
 #define regist_route_put(left, top, fx, char_1, char_2) \
-	extern const char REGIST_ROUTE_FMT[]; \
-	graph_printf_fx(left, top, fx, REGIST_ROUTE_FMT, char_1, char_2);
+	graph_printf_fx(left, top, fx, "%c%c", char_1, char_2);
 
 #define regist_input_timeout_declare()
 #define regist_input_timeout_reset()
@@ -111,8 +103,9 @@ inline void regist_bg_put(const int16_t stage) {
 }
 
 #define regist_title_put(left, stage, ranks, fx) { \
-	extern const char REGIST_TITLE_FMT[]; \
-	graph_printf_fx(left, TITLE_TOP, fx, REGIST_TITLE_FMT, ranks[rank]); \
+	graph_printf_fx( \
+		left, TITLE_TOP, fx, REGIST_TITLE_WITH_SPACE "%s", ranks[rank] \
+	); \
 }
 
 #include "th01/hiscore/regist.cpp"

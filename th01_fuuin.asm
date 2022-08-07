@@ -229,12 +229,6 @@ arg0		db 'op',0
 		db    0
 include th01/hardware/input_main_end[data].asm
 		dd 0
-include th01/hiscore/alphabet_syms[data].asm
-include th01/hardware/grppfnfx_ptrs[data].asm
-include th01/hiscore/regist_name[data].asm
-include th01/hardware/grppfnfx[data].asm
-include th01/hiscore/scorelod[data].asm
-include th01/hiscore/regist[data].asm
 
 	; th01/hardware/palette[data].asm
 	extern _z_Palettes:rgb_t:COLOR_COUNT

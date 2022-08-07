@@ -4802,11 +4802,6 @@ aVavpvnvvbxvovm	db '‚a‚‚‚‚•‚o‚Œ‚‚™‚…‚’',0
 aB@b@vrvsvVfvd	db '@@‚r‚s‚`‚f‚d',0
 aVavnvmvtvrb@vo	db '‚a‚n‚m‚t‚r@‚o‚‚‰‚‚”',0
 aVgvivfb@vyb@vj	db '‚g‚‰‚”@‚y@‚j‚…‚™',0
-		db 0
-include th01/hiscore/alphabet_syms[data].asm
-include th01/hiscore/regist_name[data].asm
-include th01/hiscore/scorelod[data].asm
-include th01/hiscore/regist[data].asm
 
 	extern _arc_key:byte
 	extern _ptn_sloppy_unput_before_alpha_pu:byte

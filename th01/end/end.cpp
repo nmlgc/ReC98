@@ -26,7 +26,7 @@ extern "C" {
 #include "th01/end/type.hpp"
 #include "th01/end/vars.hpp"
 #include "th01/shiftjis/end.hpp"
-#include "th01/shiftjis/regist.hpp"
+#include "th01/shiftjis/scoredat.hpp"
 #include "th01/shiftjis/title.hpp"
 
 // > rendering text to VRAM, where it wouldn't be limited to the byte grid
@@ -597,9 +597,9 @@ void verdict_animate_and_regist(void)
 	grp_palette_settone(50);
 	regist_colors_set();
 	if(end_flag == ES_MAKAI) {
-		regist(score, SCOREDAT_CLEARED_MAKAI, REGIST_ROUTE_CLEAR);
+		regist(score, SCOREDAT_CLEARED_MAKAI, SCOREDAT_ROUTE_CLEAR);
 	} else {
-		regist(score, SCOREDAT_CLEARED_JIGOKU, REGIST_ROUTE_CLEAR);
+		regist(score, SCOREDAT_CLEARED_JIGOKU, SCOREDAT_ROUTE_CLEAR);
 	}
 	end_resident_clear();
 }
