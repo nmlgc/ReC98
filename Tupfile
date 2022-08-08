@@ -37,6 +37,7 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 : th01/sprites/pellet_c.bmp |> !bmp2arr -sym _sPELLET_CLOUD -of asm -sw 16 -sh 16 |> th01/sprites/pellet_c.asp
 : th01/sprites/pillar.bmp |> !bmp2arr -sym sPILLAR -of cpp -sw 32 -sh 8 |> th01/sprites/pillar.csp
 : th01/sprites/shape8x8.bmp |> !bmp2arr -sym sSHAPE8X8 -of cpp -sw 8 -sh 8 |> th01/sprites/shape8x8.csp
+: th01/sprites/bonusbox.bmp |> !bmp2arr -sym _sSTAGEBONUS_BOX -of asm -sw 8 -sh 4 |> th01/sprites/bonusbox.asp
 : th02/sprites/pellet.bmp |> !bmp2arr -sym _sPELLET -of asm -sw 8 -sh 8 -pshf outer |> th02/sprites/pellet.asp
 : th02/sprites/sparks.bmp |> !bmp2arr -sym _sSPARKS -of asm -sw 8 -sh 8 -pshf outer |> th02/sprites/sparks.asp
 : th02/sprites/pointnum.bmp |> !bmp2arr -sym _sPOINTNUMS -of asm -sw 8 -sh 8 |> th02/sprites/pointnum.asp
@@ -64,6 +65,7 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 	th01/sprites/ileave_m.asp \
 	th01/sprites/laser_s.asp \
 	th01/sprites/pellet_c.asp \
+	th01/sprites/bonusbox.asp \
 	|> !as |> bin\\th01\\reiiden.obj
 : th01_fuuin.asm |> !as |> bin\\th01\\fuuin.obj
 : th01_fuuin_data.asm |> !as |> bin\\th01\\fuuin_2.obj

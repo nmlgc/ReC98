@@ -12,6 +12,7 @@ bin\\Pipeline\\bmp2arr.exe -q -i th01/sprites/pellet.bmp -o th01/sprites/pellet.
 bin\\Pipeline\\bmp2arr.exe -q -i th01/sprites/pellet_c.bmp -o th01/sprites/pellet_c.asp -sym _sPELLET_CLOUD -of asm -sw 16 -sh 16
 bin\\Pipeline\\bmp2arr.exe -q -i th01/sprites/pillar.bmp -o th01/sprites/pillar.csp -sym sPILLAR -of cpp -sw 32 -sh 8
 bin\\Pipeline\\bmp2arr.exe -q -i th01/sprites/shape8x8.bmp -o th01/sprites/shape8x8.csp -sym sSHAPE8X8 -of cpp -sw 8 -sh 8
+bin\\Pipeline\\bmp2arr.exe -q -i th01/sprites/bonusbox.bmp -o th01/sprites/bonusbox.asp -sym _sSTAGEBONUS_BOX -of asm -sw 8 -sh 4
 bin\\Pipeline\\bmp2arr.exe -q -i th02/sprites/pellet.bmp -o th02/sprites/pellet.asp -sym _sPELLET -of asm -sw 8 -sh 8 -pshf outer
 bin\\Pipeline\\bmp2arr.exe -q -i th02/sprites/sparks.bmp -o th02/sprites/sparks.asp -sym _sSPARKS -of asm -sw 8 -sh 8 -pshf outer
 bin\\Pipeline\\bmp2arr.exe -q -i th02/sprites/pointnum.bmp -o th02/sprites/pointnum.asp -sym _sPOINTNUMS -of asm -sw 8 -sh 8

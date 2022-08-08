@@ -4,6 +4,7 @@
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
+#include "th01/v_colors.hpp"
 #include "th01/formats/ptn.hpp"
 extern "C" {
 #include "th01/hardware/egc.h"
@@ -13,9 +14,19 @@ extern "C" {
 #include "th01/snd/mdrv2.h"
 }
 #include "th01/formats/grp.h"
+#include "th01/sprites/bonusbox.hpp"
 
 /// Coordinates
 /// -----------
+
+// Stage bonus
+// -----------
+
+static const screen_x_t STAGEBONUS_PADDED_LEFT = 32;
+static const screen_y_t STAGEBONUS_PADDED_TOP = 40;
+static const pixel_t STAGEBONUS_PADDED_W = 320;
+static const pixel_t STAGEBONUS_PADDED_H = 280;
+// -----------
 
 // TOTLE
 // -----
@@ -202,4 +213,39 @@ void near totle_load_and_pagetrans_animate(void)
 	ptn_load(PTN_SLOT_NUMB, numb_ptn);
 	graph_accesspage_func(0);
 	totle_pagetrans_animate(0);
+}
+
+void near stagebonus_box_open_animate(void)
+{
+	vram_offset_t vo_upper_row = vram_offset_shift(
+		STAGEBONUS_PADDED_LEFT,
+		(STAGEBONUS_PADDED_TOP + (STAGEBONUS_PADDED_H / 2))
+	);
+	pixel_t x;
+	vram_offset_t vo_upper_column;
+	vram_offset_t vo_lower_row;
+	vram_offset_t vo_lower_column;
+	const dot_rect_t(8, 4) BOX = sSTAGEBONUS_BOX;
+
+	grcg_setcolor_rmw(V_BLACK);
+
+	vo_lower_row = vo_upper_row;
+	for(pixel_t row = 0; row < (STAGEBONUS_PADDED_H / 2); row++) {
+		x = 0;
+		vo_upper_column = vo_upper_row;
+		vo_lower_column = vo_lower_row;
+		while(x < (STAGEBONUS_PADDED_W / BYTE_DOTS)) {
+			grcg_put(vo_upper_column, BOX[row % BOX.h()], 8);
+			grcg_put(vo_lower_column, BOX[row % BOX.h()], 8);
+			x++;
+			vo_upper_column++;
+			vo_lower_column++;
+		}
+		vo_upper_row -= ROW_SIZE;
+		vo_lower_row += ROW_SIZE;
+		if((row % 6) == 0) {
+			frame_delay(1);
+		}
+	}
+	grcg_off();
 }

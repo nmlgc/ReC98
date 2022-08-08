@@ -2895,101 +2895,13 @@ main_18_TEXT	segment	byte public 'CODE' use16
 	@TOTLE_METRIC_DIGIT_ANIMATE$QIII procdesc pascal near \
 		digit:word, place_and_top:dword
 	@totle_load_and_pagetrans_animate$qv procdesc near
+	@stagebonus_box_open_animate$qv procdesc near
 main_18_TEXT	ends
 
 main_18__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_18
 		;org 0Bh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12F91	proc near
-
-var_C		= dword	ptr -0Ch
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-
-		enter	0Ch, 0
-		push	si
-		push	di
-		mov	di, 3844h
-		mov	eax, dword_3573A
-		mov	[bp+var_C], eax
-		call	_grcg_setcolor_rmw stdcall, 0
-		pop	cx
-		mov	[bp+var_6], di
-		xor	si, si
-		jmp	short loc_13024
-; ---------------------------------------------------------------------------
-
-loc_12FB1:
-		mov	[bp+var_2], 0
-		mov	[bp+var_4], di
-		mov	ax, [bp+var_6]
-		mov	[bp+var_8], ax
-		jmp	short loc_13002
-; ---------------------------------------------------------------------------
-
-loc_12FC1:
-		mov	ax, si
-		mov	bx, 4
-		cwd
-		idiv	bx
-		lea	ax, [bp+var_C]
-		add	dx, ax
-		mov	bx, dx
-		mov	al, ss:[bx]
-		les	bx, _VRAM_PLANE_B
-		add	bx, [bp+var_4]
-		mov	es:[bx], al
-		mov	ax, si
-		mov	bx, 4
-		cwd
-		idiv	bx
-		lea	ax, [bp+var_C]
-		add	dx, ax
-		mov	bx, dx
-		mov	al, ss:[bx]
-		mov	bx, word ptr _VRAM_PLANE_B
-		add	bx, [bp+var_8]
-		mov	es:[bx], al
-		inc	[bp+var_2]
-		inc	[bp+var_4]
-		inc	[bp+var_8]
-
-loc_13002:
-		cmp	[bp+var_2], 28h	; '('
-		jl	short loc_12FC1
-		sub	di, 50h	; 'P'
-		add	[bp+var_6], 50h	; 'P'
-		mov	ax, si
-		mov	bx, 6
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_13023
-		push	1
-		call	_frame_delay
-		pop	cx
-
-loc_13023:
-		inc	si
-
-loc_13024:
-		cmp	si, 8Ch
-		jl	short loc_12FB1
-		call	_grcg_off_func
-		pop	di
-		pop	si
-		leave
-		retn
-sub_12F91	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3147,7 +3059,7 @@ arg_0		= word ptr  6
 		call	sub_13033
 		add	sp, 6
 		call	_z_palette_set_all_show c, offset _stage_palette, ds
-		call	sub_12F91
+		call	@stagebonus_box_open_animate$qv
 		pushd	[bp+var_4]
 		push	((10 or FX_WEIGHT_BOLD) shl 16) or 80
 		push	64
@@ -4276,7 +4188,7 @@ _ROUTE_SEL_3     	db 'ÇrÇÖÇåÇÖÇÉÇîÅ@ÇéÇÖÇòÇîÅ@ÇqÇèÇïÇéÇÑ',0
 _ROUTE_SEL_4 	db 'ñÇäEÇ÷',0
 _ROUTE_SEL_5	db 'ínçñÇ÷',0
 	evendata
-dword_3573A	dd 0FFBBFFEEh
+include th01/sprites/bonusbox.asp
 off_3573E	dd aVo
 					; "ÇO"
 		dd aVp			; "ÇP"
