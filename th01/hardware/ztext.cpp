@@ -14,7 +14,7 @@
 #include "x86real.h"
 #include "pc98.h"
 #include "master.hpp"
-#include "th01/hardware/ztext.h"
+#include "th01/hardware/ztext.hpp"
 
 extern char txesc_25line[];
 extern char txesc_20line[];
@@ -87,7 +87,7 @@ void z_text_setcursor(z_text_cursor_t type)
 {
 	_BX = peekb2(0, 0x53B); // Text mode line height
 	outportb(0x62, 0x4B); // CSRFORM
-	outportb(0x60, _BL | 0x80);
+	outportb(0x60, (_BL | 0x80));
 	switch(type) {
 		case CURSOR_HIDE:
 			outportb(0x60, 0x9F);
@@ -96,10 +96,10 @@ void z_text_setcursor(z_text_cursor_t type)
 			outportb(0x60, 0x80);
 			break;
 		case CURSOR_UNDERLINE:
-			outportb(0x60, _BL + 0x7D);
+			outportb(0x60, (_BL + 0x7D));
 			break;
 	}
-	outportb(0x60, (_BL << 3) + 2);
+	outportb(0x60, ((_BL << 3) + 2));
 }
 
 void z_text_locate(char x, char y)
@@ -112,14 +112,19 @@ void z_text_locate(char x, char y)
 	int86(0xDC, &regs, &regs);
 }
 
+inline uint8_t* tram_jis(uint16_t offset) {
+	return reinterpret_cast<uint8_t *>(MK_FP(SEG_TRAM_JIS, offset));
+}
+
+inline uint16_t* tram_atrb(uint16_t offset) {
+	return reinterpret_cast<uint16_t *>(MK_FP(SEG_TRAM_ATRB, offset));
+}
+
 void z_text_putsa(tram_x_t x, tram_y_t y, int z_atrb, const char *str)
 {
 	uint16_t codepoint;
-	int p = ((y * text_width()) + x) * 2;
+	int p = (((y * text_width()) + x) * 2);
 	int hw_atrb = 1;
-
-	#define tx_chars(byte) ((char*)MK_FP(0xA000, p + byte))
-	#define tx_atrbs(byte) ((int16_t*)MK_FP(0xA200, p + byte))
 
 	if(z_atrb & Z_ATRB_BLUE) {
 		hw_atrb += 0x20;
@@ -142,34 +147,36 @@ void z_text_putsa(tram_x_t x, tram_y_t y, int z_atrb, const char *str)
 	if(z_atrb & Z_ATRB_BLINK) {
 		hw_atrb += TX_BLINK;
 	}
-	hw_atrb += hw_atrb << 8;
+	hw_atrb += (hw_atrb << 8);
 	while(str[0]) {
 		if(_ismbblead(str[0])) {
 			codepoint = _mbcjmstojis(
-				(str[0] << 8) + (unsigned char)str[1]
+				(str[0] << 8) + static_cast<uint8_t>(str[1])
 			);
 			str += 2;
-			if(codepoint >= 0x2921 && codepoint <= 0x2B7E) {
-				*tx_chars(0) = ((codepoint >> 8) + 0xE0) | 0x80;
-				*tx_chars(1) = codepoint;
-				*tx_atrbs(0) = hw_atrb;
-			} else if(x == text_width() - 1) {
-				*(int16_t*)tx_chars(0) = ' ';
-				*tx_atrbs(0) = hw_atrb;
+			if((codepoint >= 0x2921) && (codepoint <= 0x2B7E)) {
+				tram_jis(p)[0] = (((codepoint >> 8) + 0xE0) | 0x80);
+				tram_jis(p)[1] = codepoint;
+				tram_atrb(p)[0] = hw_atrb;
+			} else if(x == (text_width() - 1)) {
+				reinterpret_cast<int16_t *>(tram_jis(p))[0] = ' ';
+				tram_atrb(p)[0] = hw_atrb;
 			} else {
-				*tx_chars(0) = (codepoint >> 8) + 0xE0;
-				*tx_chars(1) = codepoint;
-				*tx_chars(2) = ((codepoint >> 8) + 0xE0) | 0x80;
-				*tx_chars(3) = codepoint;
+				tram_jis(p)[0] = ((codepoint >> 8) + 0xE0);
+				tram_jis(p)[1] = codepoint;
+				tram_jis(p)[2] = (((codepoint >> 8) + 0xE0) | 0x80);
+				tram_jis(p)[3] = codepoint;
 
-				*tx_atrbs(0) = hw_atrb;
-				*tx_atrbs(2) = hw_atrb;
+				tram_atrb(p)[0] = hw_atrb;
+				tram_atrb(p)[1] = hw_atrb;
 				p += 2;
 				x++;
 			}
 		} else {
-			*(int16_t*)tx_chars(0) = *(unsigned char*)(str++);
-			*tx_atrbs(0) = hw_atrb;
+			reinterpret_cast<int16_t *>(tram_jis(p))[0] = *reinterpret_cast<
+				const uint8_t *
+			>(str++);
+			tram_atrb(p)[0] = hw_atrb;
 		}
 		p += 2;
 		if(++x >= text_width()) {

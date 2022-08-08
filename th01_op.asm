@@ -165,7 +165,7 @@ sub_A7B5	proc far
 		call	_resident_stuff_set c, word ptr _opts.O_rank, word ptr _opts.O_bgm_mode, word ptr _opts.O_bombs, word ptr _opts.O_lives_extra, large [_rand]
 		call	sub_A79D
 		call	_mdrv2_bgm_fade_out_nonblock
-		call	_game_switch_binary
+		call	@game_switch_binary$qv
 		mov	al, _mode
 		cbw
 		cmp	ax, 2
@@ -258,7 +258,7 @@ sub_A8AD	proc far
 loc_A8E1:
 		call	sub_A79D
 		call	_mdrv2_bgm_fade_out_nonblock
-		call	_game_switch_binary
+		call	@game_switch_binary$qv
 		les	bx, _resident
 		assume es:nothing
 		mov	es:[bx+reiidenconfig_t.debug_mode], DM_OFF
@@ -1163,7 +1163,7 @@ loc_B06F:
 
 loc_B0D6:
 		call	_mdrv2_check_board
-		call	_game_init
+		call	@game_init$qv
 		call	_cfg_load
 		mov	al, _opts.O_bgm_mode
 		cbw
@@ -1320,7 +1320,7 @@ loc_B21A:
 		call	_graph_accesspage_func
 		pop	cx
 		call	_z_graph_clear
-		call	_game_exit
+		call	@game_exit$qv
 		call	_mdrv2_bgm_stop
 		push	ds
 		push	offset format	; "Ç®Ç¬Ç©ÇÍÇ≥Ç‹Ç≈ÇµÇΩÅIÅI\n"
@@ -1357,9 +1357,9 @@ ztext_TEXT	ends
 
 ; Segment type:	Pure code
 initexit_TEXT	segment	byte public 'CODE' use16
-	extern _game_init:proc
-	extern _game_exit:proc
-	extern _game_switch_binary:proc
+	extern @game_init$qv:proc
+	extern @game_exit$qv:proc
+	extern @game_switch_binary$qv:proc
 initexit_TEXT	ends
 
 ; ---------------------------------------------------------------------------

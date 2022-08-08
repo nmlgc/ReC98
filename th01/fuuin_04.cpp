@@ -12,8 +12,8 @@
 extern "C" {
 #include "th01/hardware/graph.h"
 #include "th01/hardware/palette.h"
-#include "th01/hardware/vsync.h"
 }
+#include "th01/hardware/vsync.hpp"
 #include "th01/formats/grp.h"
 #include "th01/end/type.hpp"
 

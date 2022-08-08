@@ -9,19 +9,19 @@
 #include "platform.h"
 #include "x86real.h"
 #include "pc98.h"
-#include "th01/hardware/vsync.h"
+#include "th01/hardware/vsync.hpp"
 
-extern char vsync_initialized;
+extern bool vsync_initialized;
 extern int vsync_callback_is_set;
 
 extern pixel_t RES_X_HALF;
 extern pixel_t RES_Y_HALF;
 
 extern int vsync_unused;
-extern void interrupt (*vsync_callback_old)(void);
+extern void interrupt (*vsync_callback_old)(...);
 extern void (*vsync_callback)(void);
 
-static void interrupt vsync_intfunc(void)
+static void interrupt vsync_intfunc(...)
 {
 	pixel_t res_x_half = RES_X_HALF;
 	pixel_t res_y_half = RES_Y_HALF;
@@ -36,14 +36,14 @@ static void interrupt vsync_intfunc(void)
 
 void vsync_init(void)
 {
-	if(vsync_initialized == 0) {
-		vsync_initialized = 1;
+	if(vsync_initialized == false) {
+		vsync_initialized = true;
 		disable();
 		vsync_callback_old = getvect(0x0A);
 		setvect(0x0A, vsync_intfunc);
 
 		// Disable all interrupts from 0x08 to 0x0F except for 0x0A
-		outportb(0x02, inportb(0x02) & 0xFB);
+		outportb(0x02, (inportb(0x02) & 0xFB));
 
 		outportb(0x64, 0); // VSync interrupt trigger
 		enable();
@@ -52,12 +52,12 @@ void vsync_init(void)
 
 void vsync_exit(void)
 {
-	if(vsync_initialized == 1) {
-		vsync_initialized = 0;
+	if(vsync_initialized == true) {
+		vsync_initialized = false;
 		disable();
 
 		// Reenable all interrupts from 0x08 to 0x0F except for 0x0A
-		outportb(0x02, inportb(0x02) | 0x04);
+		outportb(0x02, (inportb(0x02) | 0x04));
 
 		setvect(0x0a, vsync_callback_old);
 		enable();

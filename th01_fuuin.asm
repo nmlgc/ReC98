@@ -123,9 +123,9 @@ loc_A139:
 
 loc_A13E:
 		call	_mdrv2_check_board
-		call	_game_init
+		call	@game_init$qv
 		call	@end_and_verdict_and_regist_anima$qv
-		call	_game_switch_binary
+		call	@game_switch_binary$qv
 		push	0
 		push	0
 		push	ds
@@ -173,8 +173,8 @@ ztext_TEXT	ends
 
 ; Segment type:	Pure code
 initexit_TEXT	segment	byte public 'CODE' use16
-	extern _game_init:proc
-	extern _game_switch_binary:proc
+	extern @game_init$qv:proc
+	extern @game_switch_binary$qv:proc
 initexit_TEXT	ends
 
 ; ===========================================================================

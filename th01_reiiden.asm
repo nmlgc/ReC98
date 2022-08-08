@@ -547,7 +547,7 @@ loc_CD70:
 		jnz	short loc_CDA2
 		les	bx, _resident
 		mov	es:[bx+reiidenconfig_t.snd_need_init], 0
-		call	_game_switch_binary
+		call	@game_switch_binary$qv
 		les	bx, _resident
 		mov	es:[bx+reiidenconfig_t.p_value], 0
 		pushd	0
@@ -1530,7 +1530,7 @@ loc_D583:
 		mov	word_34A8A, ax
 		mov	eax, _frame_rand
 		mov	random_seed, eax
-		call	_game_init
+		call	@game_init$qv
 		call	key_start
 		push	3F003Fh
 		call	__control87
@@ -2324,7 +2324,7 @@ loc_DE47:
 		push	78h ; 'x'
 		call	_frame_delay
 		pop	cx
-		call	_game_switch_binary
+		call	@game_switch_binary$qv
 		pushd	0
 		push	ds
 		push	offset aFuuin	; "fuuin"
@@ -2425,7 +2425,7 @@ loc_DF52:
 		les	bx, _resident
 		mov	al, _bombs
 		mov	es:[bx+reiidenconfig_t.bombs], al
-		call	_game_switch_binary
+		call	@game_switch_binary$qv
 		pushd	0
 		push	ds
 		push	offset aReiiden	; "reiiden"
@@ -2644,7 +2644,7 @@ loc_E2A8:
 loc_E2CB:
 		call	sub_D487
 		call	sub_D4DD
-		call	_game_switch_binary
+		call	@game_switch_binary$qv
 		call	key_end
 		call	arc_free
 		pushd	0
@@ -2724,8 +2724,8 @@ ztext_TEXT	ends
 
 ; Segment type:	Pure code
 initexit_TEXT	segment	byte public 'CODE' use16
-	extern _game_init:proc
-	extern _game_switch_binary:proc
+	extern @game_init$qv:proc
+	extern @game_switch_binary$qv:proc
 initexit_TEXT	ends
 
 ; ===========================================================================

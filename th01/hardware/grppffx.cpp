@@ -3,7 +3,9 @@
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
-#include "th01/hardware/graph.h"
+extern "C" {
+#include "th01/hardware/grppsafx.h"
+}
 
 void graph_printf_fx(
 	screen_x_t left, vram_y_t top, int16_t col_and_fx, const char *fmt, ...
