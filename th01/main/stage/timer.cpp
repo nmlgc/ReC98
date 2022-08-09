@@ -12,6 +12,7 @@
 #include "th01/hardware/egc.h"
 extern "C" {
 #include "th01/hardware/graph.h"
+#include "th01/hardware/grppsafx.h"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/tram_x16.hpp"
 }

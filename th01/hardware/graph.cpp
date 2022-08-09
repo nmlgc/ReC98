@@ -12,6 +12,7 @@
 #include "th01/hardware/vsync.hpp"
 extern "C" {
 #include "th01/hardware/graph.h"
+#include "th01/hardware/grppsafx.h"
 #include "th01/hardware/palette.h"
 
 #undef grcg_off

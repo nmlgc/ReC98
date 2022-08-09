@@ -15,6 +15,7 @@ extern "C" {
 extern "C" {
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
+#include "th01/hardware/grppsafx.h"
 #include "th01/hardware/input.hpp"
 }
 #include "th01/hardware/grp2xscs.hpp"

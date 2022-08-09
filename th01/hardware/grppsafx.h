@@ -56,4 +56,7 @@
 	void graph_printf_fx(
 		screen_x_t left, vram_y_t top, int16_t col_and_fx, const char *fmt, ...
 	);
+
+	// Calculates the width of [str], displayed with the given [fx].
+	int text_extent_fx(int fx, const unsigned char *str);
 #endif

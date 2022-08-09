@@ -113,11 +113,6 @@ void graph_r_lineloop_unput(
 /// Text
 /// ----
 
-// Calculates the width of [str], displayed with the given [fx].
-int text_extent_fx(int fx, const unsigned char *str);
-
-#include "th01/hardware/grppsafx.h"
-
 // Puts the rightmost N [digits] of [num] onto the graphics RAM, using
 // full-width digits, and applying the given effect. (Consequently, the units
 // place will appear at x = [left] + (([digits] - 1) * GLYPH_FULL_W).)

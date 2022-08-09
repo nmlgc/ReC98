@@ -10,7 +10,7 @@
 #include "th01/math/str_val.hpp"
 #include "th01/hardware/egc.h"
 extern "C" {
-#include "th01/hardware/graph.h"
+#include "th01/hardware/grppsafx.h"
 }
 #include "th01/main/playfld.hpp"
 #include "th01/formats/ptn.hpp"

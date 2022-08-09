@@ -11,6 +11,7 @@
 #include "th01/hardware/input.hpp"
 extern "C" {
 #include "th01/hardware/graph.h"
+#include "th01/hardware/grppsafx.h"
 #include "th01/snd/mdrv2.h"
 }
 #include "th01/sprites/pellet.h"
