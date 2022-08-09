@@ -113,23 +113,6 @@ enum pellet_group_t {
 };
 
 struct Pellet {
-protected:
-	friend class CPellets;
-
-	// Why, I don't even?!?
-	void sloppy_wide_unput(void) {
-		egc_copy_rect_1_to_0_16_word_w(
-			prev_left.to_pixel(), prev_top.to_pixel(), PELLET_W, PELLET_H
-		);
-	}
-
-	void sloppy_wide_unput_at_cur_pos(void) {
-		egc_copy_rect_1_to_0_16_word_w(
-			cur_left.to_pixel(), cur_top.to_pixel(), PELLET_W, PELLET_H
-		);
-	}
-
-public:
 	bool moving;
 	unsigned char motion_type;
 

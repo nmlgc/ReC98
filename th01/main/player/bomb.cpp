@@ -6,7 +6,6 @@
 #include "th01/hardware/grpinv32.hpp"
 #include "th01/hardware/scrollup.hpp"
 #include "th01/formats/grc.hpp"
-#include "th01/sprites/pellet.h"
 #include "th01/main/bullet/pellet.hpp"
 
 // Coordinates

@@ -21,7 +21,6 @@ extern "C" {
 extern "C" {
 #include "th01/snd/mdrv2.h"
 }
-#include "th01/sprites/pellet.h"
 #include "th01/main/vars.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/bullet/pellet.hpp"

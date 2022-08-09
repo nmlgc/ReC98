@@ -25,6 +25,7 @@ inline int decay_frames_for_cel(int cel) {
 
 /// Globals
 /// -------
+
 Pellet near *p;
 bool pellet_interlace = false;
 unsigned int pellet_destroy_score_delta = 0;
@@ -564,6 +565,19 @@ void CPellets::decay_tick_for_cur(void)
 	}
 }
 
+// Why, I don't even?!?
+inline void p_sloppy_wide_unput() {
+	egc_copy_rect_1_to_0_16_word_w(
+		p->prev_left.to_pixel(), p->prev_top.to_pixel(), PELLET_W, PELLET_H
+	);
+}
+
+inline void p_sloppy_wide_unput_at_cur_pos() {
+	egc_copy_rect_1_to_0_16_word_w(
+		p->cur_left.to_pixel(), p->cur_top.to_pixel(), PELLET_W, PELLET_H
+	);
+}
+
 void CPellets::unput_update_render(void)
 {
 	int i;
@@ -579,7 +593,7 @@ void CPellets::unput_update_render(void)
 		}
 		if(!pellet_interlace || (interlace_field == (i % 2))) {
 			if(p->not_rendered == false && (p->prev_left.v != -1)) {
-				p->sloppy_wide_unput();
+				p_sloppy_wide_unput();
 			}
 		}
 		if(p->from_group == PG_NONE && p->motion_type) {
@@ -602,7 +616,7 @@ void CPellets::unput_update_render(void)
 				p->decay_frame = 0;
 				p->moving = false;
 				alive_count--;
-				p->sloppy_wide_unput();
+				p_sloppy_wide_unput();
 			}
 		}
 		// Clipping
@@ -615,7 +629,7 @@ void CPellets::unput_update_render(void)
 			p->moving = false;
 			alive_count--;
 			p->decay_frame = 0;
-			p->sloppy_wide_unput();
+			p_sloppy_wide_unput();
 		}
 	}
 
@@ -653,7 +667,7 @@ void CPellets::unput_update_render(void)
 			decay_tick_for_cur();
 		} else if(hittest_player_for_cur()) {
 			if(p->not_rendered == false) {
-				p->sloppy_wide_unput();
+				p_sloppy_wide_unput();
 			}
 			p->moving = false;
 			alive_count--;
@@ -670,7 +684,7 @@ void CPellets::unput_and_reset(void)
 			continue;
 		}
 		if(p->not_rendered == false) {
-			p->sloppy_wide_unput_at_cur_pos();
+			p_sloppy_wide_unput_at_cur_pos();
 		}
 		p->decay_frame = 0;
 		p->moving = false;
