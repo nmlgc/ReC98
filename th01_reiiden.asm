@@ -2897,80 +2897,14 @@ main_18_TEXT	segment	byte public 'CODE' use16
 	@totle_load_and_pagetrans_animate$qv procdesc near
 	@stagebonus_box_open_animate$qv procdesc near
 	extern @fullwidth_numeral$qm33%StupidBytewiseWrapperAround$tui%c:proc
+	@FULLWIDTH_STR_FROM_4_DIGIT_VALUE$QN33%STUPIDBYTEWISEWRAPPERAROUND$TUI%I procdesc pascal near \
+		str:dword, val:word
 main_18_TEXT	ends
 
 main_18__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_18
 		;org 0Bh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1307D	proc near
-
-@@num		= word ptr  4
-@@buf		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+@@num]
-		mov	ax, si
-		mov	bx, 1000
-		cwd
-		idiv	bx
-		call	@fullwidth_numeral$qm33%StupidBytewiseWrapperAround$tui%c c, large [bp+@@buf], ax
-		mov	bx, 1000
-		mov	ax, si
-		cwd
-		idiv	bx
-		mov	si, dx
-		mov	ax, si
-		mov	bx, 100
-		cwd
-		idiv	bx
-		push	ax
-		mov	ax, word ptr [bp+@@buf]
-		add	ax, 2
-		push	word ptr [bp+@@buf+2]
-		push	ax
-		call	@fullwidth_numeral$qm33%StupidBytewiseWrapperAround$tui%c
-		add	sp, 6
-		mov	bx, 100
-		mov	ax, si
-		cwd
-		idiv	bx
-		mov	si, dx
-		mov	ax, si
-		mov	bx, 10
-		cwd
-		idiv	bx
-		push	ax
-		mov	ax, word ptr [bp+@@buf]
-		add	ax, 4
-		push	word ptr [bp+@@buf+2]
-		push	ax
-		call	@fullwidth_numeral$qm33%StupidBytewiseWrapperAround$tui%c
-		add	sp, 6
-		mov	bx, 10
-		mov	ax, si
-		cwd
-		idiv	bx
-		mov	si, dx
-		push	dx
-		mov	ax, word ptr [bp+@@buf]
-		add	ax, 6
-		push	word ptr [bp+@@buf+2]
-		push	ax
-		call	@fullwidth_numeral$qm33%StupidBytewiseWrapperAround$tui%c
-		add	sp, 6
-		pop	si
-		pop	bp
-		retn	6
-sub_1307D	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3062,7 +2996,7 @@ loc_1321E:
 		push	ax
 		call	@fullwidth_numeral$qm33%StupidBytewiseWrapperAround$tui%c
 		add	sp, 6
-		call	sub_1307D pascal, large [bp+@@buf], si
+		call	@fullwidth_str_from_4_digit_value$qn33%StupidBytewiseWrapperAround$tui%i pascal, large [bp+@@buf], si
 		pushd	[bp+@@buf]
 		push	((7 or FX_WEIGHT_BOLD) shl 16) or 128
 		push	256
@@ -3088,7 +3022,7 @@ loc_1327B:
 loc_13285:
 		cmp	di, 0Ah
 		jb	short loc_1327B
-		call	sub_1307D pascal, large [bp+@@buf], si
+		call	@fullwidth_str_from_4_digit_value$qn33%StupidBytewiseWrapperAround$tui%i pascal, large [bp+@@buf], si
 		pushd	[bp+@@buf]
 		push	((7 or FX_WEIGHT_BOLD) shl 16) or 160
 		push	256
@@ -3118,7 +3052,7 @@ loc_132C6:
 loc_132D0:
 		cmp	di, 0Ah
 		jb	short loc_132C6
-		call	sub_1307D pascal, large [bp+@@buf], si
+		call	@fullwidth_str_from_4_digit_value$qn33%StupidBytewiseWrapperAround$tui%i pascal, large [bp+@@buf], si
 		pushd	[bp+@@buf]
 		push	((7 or FX_WEIGHT_BOLD) shl 16) or 192
 		push	256
@@ -3145,7 +3079,7 @@ loc_13309:
 loc_13313:
 		cmp	di, 0Ah
 		jb	short loc_13309
-		call	sub_1307D pascal, large [bp+@@buf], si
+		call	@fullwidth_str_from_4_digit_value$qn33%StupidBytewiseWrapperAround$tui%i pascal, large [bp+@@buf], si
 		pushd	[bp+@@buf]
 		push	((7 or FX_WEIGHT_BOLD) shl 16) or 224
 		push	256

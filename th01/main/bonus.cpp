@@ -263,3 +263,11 @@ void fullwidth_numeral(ShiftJISKanji& kanji, int8_t digit)
 	kanji.byte[0] = NUMERALS.x[digit]->byte[0];
 	kanji.byte[1] = NUMERALS.x[digit]->byte[1];
 }
+
+void pascal near fullwidth_str_from_4_digit_value(ShiftJISKanji str[4], int val)
+{
+	fullwidth_numeral(str[0], (val / 1000));	val %= 1000;
+	fullwidth_numeral(str[1], (val / 100)); 	val %= 100;
+	fullwidth_numeral(str[2], (val / 10));  	val %= 10;
+	fullwidth_numeral(str[3], val);
+}
