@@ -131,4 +131,12 @@ typedef enum {
 
 	PTN_BG_last = PTN_BG_HP_last,
 	// -------------------------
+
+	// Numerals on the TOTLE screen
+	// -----------------------------
+	PTN_TOTLE_NUMERAL_32 = PTN_ID(PTN_SLOT_NUMB, 0),
+	PTN_TOTLE_NUMERAL_32_last = (PTN_TOTLE_NUMERAL_32 + 9),
+	PTN_TOTLE_NUMERAL_16,
+	PTN_TOTLE_NUMERAL_16_last = last_for_quarters(PTN_TOTLE_NUMERAL_16, 10),
+	// -----------------------------
 } main_ptn_id_t;

@@ -44,7 +44,6 @@ BOSS_STAGE = (STAGES_PER_SCENE - 1)
 	extern __control87:proc
 	extern __turboFloat
 	extern _coreleft:proc
-	extern _delay:proc
 	extern _execl:proc
 	extern _exit:proc
 	extern _farheapcheck:proc
@@ -59,6 +58,7 @@ BOSS_STAGE = (STAGES_PER_SCENE - 1)
 
 main_01 group main_010_TEXT, main_011_TEXT, main_012_TEXT, main_013_TEXT
 main_15 group main_15_TEXT, main_15__TEXT
+main_18 group main_18_TEXT, main_18__TEXT
 main_19 group main_19_TEXT, main_19__TEXT
 
 ; ===========================================================================
@@ -2894,110 +2894,14 @@ main_17_TEXT	ends
 
 ; Segment type:	Pure code
 main_18_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_18_TEXT
+	@TOTLE_METRIC_DIGIT_ANIMATE$QIII procdesc pascal near \
+		digit:word, place_and_top:dword
+main_18_TEXT	ends
+
+main_18__TEXT	segment	byte public 'CODE' use16
+		assume cs:main_18
 		;org 0Bh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12BAB	proc near
-
-@@left		= word ptr -4
-var_2		= word ptr -2
-@@top		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-
-		enter	4, 0
-		push	si
-		push	di
-		mov	di, [bp+arg_4]
-		mov	[bp+var_2], 0
-		mov	ax, [bp+arg_2]
-		shl	ax, 4
-		add	ax, 224
-		mov	[bp+@@left], ax
-		mov	_ptn_sloppy_unput_before_alpha_pu, 1
-		xor	si, si
-		jmp	short loc_12C27
-; ---------------------------------------------------------------------------
-
-loc_12BCE:
-		mov	ax, si
-		mov	bx, 4
-		cwd
-		idiv	bx
-		push	dx
-		mov	ax, si
-		mov	bx, 10
-		cwd
-		idiv	bx
-		mov	bx, 4
-		mov	ax, dx
-		cwd
-		idiv	bx
-		add	ax, ((7 * PTN_IMAGES_PER_SLOT) + 10)
-		push	ax
-		push	[bp+@@top]
-		push	[bp+@@left]
-		call	@ptn_put_quarter_8$qiiii
-		add	sp, 8
-		mov	ax, si
-		mov	bx, 10
-		cwd
-		idiv	bx
-		mov	ax, di
-		push	dx
-		cwd
-		idiv	bx
-		pop	ax
-		cmp	ax, dx
-		jnz	short loc_12C0F
-		inc	[bp+var_2]
-
-loc_12C0F:
-		cmp	[bp+var_2], 2
-		jge	short loc_12C2C
-		push	4
-		call	_delay
-		push	2
-		call	_mdrv2_se_play
-		add	sp, 4
-		inc	si
-
-loc_12C27:
-		cmp	si, 14h
-		jl	short loc_12BCE
-
-loc_12C2C:
-		mov	ax, di
-		mov	bx, 4
-		cwd
-		idiv	bx
-		push	dx
-		mov	ax, di
-		mov	bx, 10
-		cwd
-		idiv	bx
-		mov	bx, 4
-		mov	ax, dx
-		cwd
-		idiv	bx
-		add	ax, ((7 * PTN_IMAGES_PER_SLOT) + 10)
-		push	ax
-		push	[bp+@@top]
-		push	[bp+@@left]
-		call	@ptn_put_quarter_8$qiiii
-		add	sp, 8
-		mov	_ptn_sloppy_unput_before_alpha_pu, 0
-		pop	di
-		pop	si
-		leave
-		retn	6
-sub_12BAB	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3920,9 +3824,7 @@ loc_13513:
 		mov	ebx, 1000
 		cdq
 		idiv	ebx
-		push	ax
-		pushd	56h ; 'V'
-		call	sub_12BAB
+		call	@totle_metric_digit_animate$qiii pascal, ax, large (0 shl 16) or 86
 		mov	eax, [bp+var_6]
 		mov	ebx, 1000
 		cdq
@@ -3932,9 +3834,7 @@ loc_13513:
 		mov	ebx, 100
 		cdq
 		idiv	ebx
-		push	ax
-		push	10056h
-		call	sub_12BAB
+		call	@totle_metric_digit_animate$qiii pascal, ax, large (1 shl 16) or 86
 		mov	eax, [bp+var_6]
 		mov	ebx, 100
 		cdq
@@ -3944,20 +3844,16 @@ loc_13513:
 		mov	ebx, 10
 		cdq
 		idiv	ebx
-		push	ax
-		push	20056h
-		call	sub_12BAB
+		call	@totle_metric_digit_animate$qiii pascal, ax, large (2 shl 16) or 86
 		mov	eax, [bp+var_6]
 		mov	ebx, 10
 		cdq
 		idiv	ebx
 		mov	[bp+var_6], edx
-		push	word ptr [bp+var_6]
-		push	30056h
-		call	sub_12BAB
-		pushd	4
-		push	56h ; 'V'
-		call	sub_12BAB
+		call	@totle_metric_digit_animate$qiii pascal, word ptr [bp+var_6], large (3 shl 16) or 86
+		pushd	(0 shl 16) or 4
+		push	86
+		call	@totle_metric_digit_animate$qiii
 		push	5
 		call	_frame_delay
 		pop	cx
@@ -3986,9 +3882,7 @@ loc_135E2:
 		mov	ebx, 1000
 		cdq
 		idiv	ebx
-		push	ax
-		pushd	6Bh ; 'k'
-		call	sub_12BAB
+		call	@totle_metric_digit_animate$qiii pascal, ax, large (0 shl 16) or 107
 		mov	eax, [bp+var_6]
 		mov	ebx, 1000
 		cdq
@@ -3998,9 +3892,7 @@ loc_135E2:
 		mov	ebx, 100
 		cdq
 		idiv	ebx
-		push	ax
-		push	1006Bh
-		call	sub_12BAB
+		call	@totle_metric_digit_animate$qiii pascal, ax, large (1 shl 16) or 107
 		mov	eax, [bp+var_6]
 		mov	ebx, 100
 		cdq
@@ -4010,20 +3902,16 @@ loc_135E2:
 		mov	ebx, 10
 		cdq
 		idiv	ebx
-		push	ax
-		push	2006Bh
-		call	sub_12BAB
+		call	@totle_metric_digit_animate$qiii pascal, ax, large (2 shl 16) or 107
 		mov	eax, [bp+var_6]
 		mov	ebx, 10
 		cdq
 		idiv	ebx
 		mov	[bp+var_6], edx
-		push	word ptr [bp+var_6]
-		push	3006Bh
-		call	sub_12BAB
-		pushd	4
-		push	6Bh ; 'k'
-		call	sub_12BAB
+		call	@totle_metric_digit_animate$qiii pascal, word ptr [bp+var_6], large (3 shl 16) or 107
+		pushd	(0 shl 16) or 4
+		push	107
+		call	@totle_metric_digit_animate$qiii
 		push	5
 		call	_frame_delay
 		pop	cx
@@ -4057,9 +3945,7 @@ loc_136BF:
 		mov	ebx, 1000
 		cdq
 		idiv	ebx
-		push	ax
-		pushd	80h
-		call	sub_12BAB
+		call	@totle_metric_digit_animate$qiii pascal, ax, large (0 shl 16) or 128
 		mov	eax, [bp+var_6]
 		mov	ebx, 1000
 		cdq
@@ -4069,9 +3955,7 @@ loc_136BF:
 		mov	ebx, 100
 		cdq
 		idiv	ebx
-		push	ax
-		push	10080h
-		call	sub_12BAB
+		call	@totle_metric_digit_animate$qiii pascal, ax, large (1 shl 16) or 128
 		mov	eax, [bp+var_6]
 		mov	ebx, 100
 		cdq
@@ -4081,20 +3965,16 @@ loc_136BF:
 		mov	ebx, 10
 		cdq
 		idiv	ebx
-		push	ax
-		push	20080h
-		call	sub_12BAB
+		call	@totle_metric_digit_animate$qiii pascal, ax, large (2 shl 16) or 128
 		mov	eax, [bp+var_6]
 		mov	ebx, 10
 		cdq
 		idiv	ebx
 		mov	[bp+var_6], edx
-		push	word ptr [bp+var_6]
-		push	30080h
-		call	sub_12BAB
-		pushd	4
-		push	80h
-		call	sub_12BAB
+		call	@totle_metric_digit_animate$qiii pascal, word ptr [bp+var_6], large (3 shl 16) or 128
+		pushd	(0 shl 16) or 4
+		push	128
+		call	@totle_metric_digit_animate$qiii
 		push	5
 		call	_frame_delay
 		pop	cx
@@ -4123,9 +4003,7 @@ loc_13792:
 		mov	ebx, 10000
 		cdq
 		idiv	ebx
-		push	ax
-		push	0FFFF0095h
-		call	sub_12BAB
+		call	@totle_metric_digit_animate$qiii pascal, ax, large (-1 shl 16) or 149
 		mov	eax, [bp+var_6]
 		mov	ebx, 10000
 		cdq
@@ -4135,9 +4013,7 @@ loc_13792:
 		mov	ebx, 1000
 		cdq
 		idiv	ebx
-		push	ax
-		pushd	95h
-		call	sub_12BAB
+		call	@totle_metric_digit_animate$qiii pascal, ax, large (0 shl 16) or 149
 		mov	eax, [bp+var_6]
 		mov	ebx, 1000
 		cdq
@@ -4147,9 +4023,7 @@ loc_13792:
 		mov	ebx, 100
 		cdq
 		idiv	ebx
-		push	ax
-		push	10095h
-		call	sub_12BAB
+		call	@totle_metric_digit_animate$qiii pascal, ax, large (1 shl 16) or 149
 		mov	eax, [bp+var_6]
 		mov	ebx, 100
 		cdq
@@ -4159,15 +4033,13 @@ loc_13792:
 		mov	ebx, 10
 		cdq
 		idiv	ebx
-		push	ax
-		push	20095h
-		call	sub_12BAB
-		pushd	3
-		push	95h
-		call	sub_12BAB
-		pushd	4
-		push	95h
-		call	sub_12BAB
+		call	@totle_metric_digit_animate$qiii pascal, ax, large (2 shl 16) or 149
+		pushd	(0 shl 16) or 3
+		push	149
+		call	@totle_metric_digit_animate$qiii
+		pushd	(0 shl 16) or 4
+		push	149
+		call	@totle_metric_digit_animate$qiii
 		push	5
 		call	_frame_delay
 		pop	cx
@@ -4185,24 +4057,18 @@ loc_13792:
 		mov	bx, 10
 		cwd
 		idiv	bx
-		push	ax
-		push	0FFFF00C4h
-		call	sub_12BAB
+		call	@totle_metric_digit_animate$qiii pascal, ax, large (-1 shl 16) or 196
 		mov	ax, [bp+var_2]
 		mov	bx, 10
 		cwd
 		idiv	bx
 		mov	[bp+var_2], dx
-		push	dx
-		pushd	0C4h ; 'ƒ'
-		call	sub_12BAB
+		call	@totle_metric_digit_animate$qiii pascal, dx, large (0 shl 16) or 196
 		mov	ax, di
 		mov	bx, 1000
 		cwd
 		idiv	bx
-		push	ax
-		push	100C4h
-		call	sub_12BAB
+		call	@totle_metric_digit_animate$qiii pascal, ax, large (1 shl 16) or 196
 		mov	ax, di
 		mov	bx, 1000
 		cwd
@@ -4212,9 +4078,7 @@ loc_13792:
 		mov	bx, 100
 		cwd
 		idiv	bx
-		push	ax
-		push	200C4h
-		call	sub_12BAB
+		call	@totle_metric_digit_animate$qiii pascal, ax, large (2 shl 16) or 196
 		mov	ax, di
 		mov	bx, 100
 		cwd
@@ -4224,17 +4088,13 @@ loc_13792:
 		mov	bx, 10
 		cwd
 		idiv	bx
-		push	ax
-		push	300C4h
-		call	sub_12BAB
+		call	@totle_metric_digit_animate$qiii pascal, ax, large (3 shl 16) or 196
 		mov	ax, di
 		mov	bx, 10
 		cwd
 		idiv	bx
 		mov	di, dx
-		push	dx
-		push	400C4h
-		call	sub_12BAB
+		call	@totle_metric_digit_animate$qiii pascal, dx, large (4 shl 16) or 196
 		push	5
 		call	_frame_delay
 		pop	cx
@@ -4276,7 +4136,7 @@ locret_13954:
 		retf
 sub_13475	endp
 
-main_18_TEXT	ends
+main_18__TEXT	ends
 
 ; ===========================================================================
 
@@ -4376,7 +4236,6 @@ main_26_TEXT	ends
 main_27_TEXT	segment	byte public 'CODE' use16
 	extern @ptn_unput_8$qiii:proc
 	extern @ptn_put_8$qiii:proc
-	extern @ptn_put_quarter_8$qiiii:proc
 	extern @player_unput_update_render$qi:proc
 OR_NONE = 0
 	extern @orb_player_hittest$qi:proc
@@ -4804,7 +4663,6 @@ aVavnvmvtvrb@vo	db 'ÇaÇnÇmÇtÇrÅ@ÇoÇèÇâÇéÇî',0
 aVgvivfb@vyb@vj	db 'ÇgÇâÇîÅ@ÇyÅ@ÇjÇÖÇô',0
 
 	extern _arc_key:byte
-	extern _ptn_sloppy_unput_before_alpha_pu:byte
 	extern _card_flip_cycle:byte
 	extern _default_grp_fn:byte
 	extern _default_bgm_fn:byte
