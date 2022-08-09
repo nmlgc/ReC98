@@ -3,9 +3,11 @@
 #include <mbctype.h>
 #include <mbstring.h>
 #include "platform.h"
+#include "decomp.hpp"
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
+#include "shiftjis.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/math/clamp.hpp"
 #include "th01/hardware/egc.h"
@@ -729,13 +731,13 @@ inline pixel_t fx_spacing_from(int col_and_fx) {
 	return ((col_and_fx / 0x40) % 8);
 }
 
-pixel_t text_extent_fx(int col_and_fx, const unsigned char *str)
+pixel_t text_extent_fx(int col_and_fx, const shiftjis_t *str)
 {
 	register pixel_t ret = 0;
 	register pixel_t spacing = fx_spacing_from(col_and_fx);
 	while(*str) {
 		if(_ismbblead(str[0])) {
-			uint16_t codepoint = ((char)str[0] << 8) + str[0];
+			shiftjis_kanji_t codepoint = ((char)str[0] << 8) + str[0];
 			str++;
 			str++;
 			if(codepoint < 0x8540) {
@@ -757,11 +759,11 @@ pixel_t text_extent_fx(int col_and_fx, const unsigned char *str)
 #include "th01/hardware/grppsafx.cpp"
 
 void graph_putsa_fx(
-	screen_x_t left, vram_y_t top, int16_t col_and_fx, const unsigned char *str
+	screen_x_t left, vram_y_t top, int16_t col_and_fx, const shiftjis_t *str
 )
 {
 	register screen_x_t x = left;
-	uint16_t codepoint;
+	jis_t codepoint;
 	dots_t(GLYPH_FULL_W) glyph_row;
 	dots8_t far *vram;
 	int fullwidth;

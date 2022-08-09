@@ -17,25 +17,26 @@
 int8_t scoredat_name_byte_encode(int8_t byte);
 int8_t scoredat_name_byte_decode(int8_t byte);
 
+#if 0
 // On-disk structure of the REYHI*.DAT files.
 // For reference, never actually used by the game itself
 struct scoredat_t {
 	// Not null-terminated!
 	char magic[sizeof(SCOREDAT_MAGIC) - 1];
 
-	// Exclusively used to store full-width Shift-JIS code points.
 	// Not null-terminated.
-	int16_t name[SCOREDAT_PLACES][SCOREDAT_NAME_KANJI];
+	shiftjis_kanji_t name[SCOREDAT_PLACES][SCOREDAT_NAME_KANJI];
 
 	uint32_t score[SCOREDAT_PLACES];
 	int16_t stage[SCOREDAT_PLACES];
-	twobyte_t route[SCOREDAT_PLACES];
+	shiftjis_kanji_t route[SCOREDAT_PLACES];
 };
+#endif
 
 extern int8_t* scoredat_names; // Yeah, technically a scoredat_name_t.
 extern int16_t* scoredat_stages;
 extern int32_t* scoredat_score;
-extern int8_t* scoredat_routes; // Yeah, technically a twobyte_t.
+extern int8_t* scoredat_routes; // Yeah, technically a shiftjis_kanji_t.
 
 // Byte-wise access to [scoredat_routes].
 inline int8_t& scoredat_route_byte(int place, int byte) {

@@ -25,14 +25,14 @@ void scoredat_recreate()
 {
 	int i;
 	int16_t stage;
-	const char *route = SCOREDAT_ROUTE_NONE;
+	const shiftjis_t *route = SCOREDAT_ROUTE_NONE;
 	int32_t score;
 	scoredat_declare();
 
 	// Will be name-encoded, and therefore modified in the .data section!
 	char *name = scoredat_name_default;
 
-	const char *magic  = SCOREDAT_MAGIC;
+	const char *magic = SCOREDAT_MAGIC;
 	char fn[16];
 
 	scoredat_fn(fn);
@@ -61,7 +61,7 @@ void scoredat_recreate()
 		stage = stage - 1;
 	}
 	for(i = 0; i < SCOREDAT_PLACES; i++) {
-		scoredat_write(route, sizeof(twobyte_t));
+		scoredat_write(route, sizeof(shiftjis_kanji_t));
 	}
 	scoredat_close();
 end:

@@ -13,8 +13,8 @@
 #include "pc98.h"
 #include "planar.h"
 #include "decomp.hpp"
-#include "twobyte.h"
 #include "master.hpp"
+#include "shiftjis.hpp"
 #include "th01/rank.h"
 #include "th01/formats/grp.h"
 extern "C" {
@@ -50,26 +50,28 @@ uint32_t scoredat_hiscore_get()
 
 #include "th01/hiscore/score_nm.cpp"
 
-void pascal near str_from_kanji(char str[3], uint16_t kanji)
+void pascal near str_from_swapped_kanji(
+	shiftjis_t str[3], shiftjis_kanji_swapped_t kanji
+)
 {
-	char tmp;
-	(reinterpret_cast<uint16_t *>(str))[0] = kanji;
+	uint8_t tmp;
+	(reinterpret_cast<shiftjis_kanji_t *>(str))[0] = kanji;
 	tmp = str[1];
 	str[1] = str[0];
 	str[0] = tmp;
 	str[2] = '\0';
 }
 
-#define graph_putkanji_fx_declare() char kanji_str[3];
+#define graph_putkanji_fx_declare() shiftjis_t kanji_str[3];
 #define graph_putkanji_fx(left, top, col_and_fx, kanji) { \
-	str_from_kanji(kanji_str, kanji); \
+	str_from_swapped_kanji(kanji_str, kanji); \
 	graph_putsa_fx(left, top, col_and_fx, kanji_str); \
 }
 #define graph_printf_fx graph_putsa_fx
 #define graph_printf_s_fx graph_putsa_fx
 
 #define regist_route_put(left, top, col_and_fx, char_1, char_2) \
-	unsigned char route[sizeof(twobyte_t) + 1]; \
+	unsigned char route[sizeof(shiftjis_kanji_t) + 1]; \
 	route[2] = '\0'; \
 	route[0] = char_1; \
 	route[1] = char_2; \

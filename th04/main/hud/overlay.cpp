@@ -5,6 +5,7 @@
 #include "x86real.h"
 #include "pc98.h"
 #include "master.hpp"
+#include "shiftjis.hpp"
 #include "th04/common.h"
 #include "th04/score.h"
 #include "th01/math/subpixel.hpp"
@@ -63,7 +64,7 @@ static const utram_kanji_amount_t POPUP_STRING_MAX_LEN = 8;
 extern const gaiji_th04_t* POPUP_STRINGS[];
 
 extern unsigned char dissolve_sprite; // = 0
-extern const char* PLAYFIELD_BLANK_ROW;
+extern const shiftjis_t* PLAYFIELD_BLANK_ROW;
 
 extern int stage_title_len;
 extern int stage_bgm_title_len;
@@ -75,12 +76,12 @@ extern int stage_bgm_title_len;
 // still need to preserve the original order
 extern unsigned char titles_frame;
 #if (GAME == 5)
-	extern char *stage_title;
-	extern char *stage_bgm_title;
-	extern char *boss_bgm_title;
+	extern shiftjis_t *stage_title;
+	extern shiftjis_t *stage_bgm_title;
+	extern shiftjis_t *boss_bgm_title;
 #else
-	extern const char* BGM_TITLES[];
-	extern const char* STAGE_TITLES[];
+	extern const shiftjis_t* BGM_TITLES[];
+	extern const shiftjis_t* STAGE_TITLES[];
 	#define stage_title (STAGE_TITLES[stage_title_id])
 	#define stage_bgm_title (BGM_TITLES[bgm_title_id])
 	#define boss_bgm_title stage_bgm_title
@@ -568,7 +569,7 @@ extern nearfunc_t_near overlay2;
 extern unsigned char titles_frame;
 extern unsigned long overlay_popup_bonus;
 #if (GAME == 5)
-	extern char *stage_title;
-	extern char *stage_bgm_title;
-	extern char *boss_bgm_title;
+	extern shiftjis_t *stage_title;
+	extern shiftjis_t *stage_bgm_title;
+	extern shiftjis_t *boss_bgm_title;
 #endif

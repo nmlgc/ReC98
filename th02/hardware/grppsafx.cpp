@@ -7,6 +7,7 @@
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
+#include "shiftjis.hpp"
 extern "C" {
 #include "th01/hardware/grppsafx.h"
 
@@ -15,10 +16,10 @@ extern "C" {
 #undef grcg_off
 
 void DEFCONV graph_putsa_fx(
-	screen_x_t left, vram_y_t top, int16_t col_and_fx, const unsigned char *str
+	screen_x_t left, vram_y_t top, int16_t col_and_fx, const shiftjis_t *str
 )
 {
-	uint16_t codepoint;
+	jis_t codepoint;
 	dots_t(GLYPH_FULL_W) glyph_row;
 	dots8_t far *vram;
 	int fullwidth;

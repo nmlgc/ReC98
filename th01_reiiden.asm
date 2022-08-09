@@ -2634,7 +2634,7 @@ loc_E2A8:
 		inc	ax
 		push	ax
 		pushd	[_score]
-		call	@regist$qlixnxc
+		call	@regist$qlixnxuc
 		add	sp, 0Ah
 		les	bx, _resident
 		mov	ax, [bp+@@stage]
@@ -4289,7 +4289,7 @@ main_19_TEXT	ends
 main_19__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_19
 	extern @scoredat_free$qv:proc
-	extern @regist$qlixnxc:proc
+	extern @regist$qlixnxuc:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 

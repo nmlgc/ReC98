@@ -14,8 +14,8 @@
 #include "planar.h"
 #include "decomp.hpp"
 #include "pc98kbd.h"
-#include "twobyte.h"
 #include "master.hpp"
+#include "shiftjis.hpp"
 #include "th01/rank.h"
 extern "C" {
 #include "th01/hardware/graph.h"

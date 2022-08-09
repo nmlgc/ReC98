@@ -10,7 +10,7 @@ void graph_putfwnum_fx(
 	int digit;
 	int digit_prev;
 	unsigned long divisor = 1;
-	const char* FULLWIDTH_NUMERAL[10] = FULLWIDTH_NUMERALS;
+	const shiftjis_t* FULLWIDTH_NUMERAL[10] = FULLWIDTH_NUMERALS;
 
 	for(divisor_i = 0; divisor_i < digits; divisor_i++) {
 		divisor *= 10;

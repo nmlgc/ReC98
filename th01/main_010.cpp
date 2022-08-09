@@ -13,7 +13,7 @@
 #include "planar.h"
 #include "master.hpp"
 #include "pc98kbd.h"
-#include "twobyte.h"
+#include "shiftjis.hpp"
 extern "C" {
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"

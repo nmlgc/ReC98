@@ -37,23 +37,17 @@ static const pixel_t REGIST_TITLE_W = shiftjis_w(REGIST_TITLE_WITH_SPACE);
 #define ALPHABET_RIGHT	"Å®"
 #define ALPHABET_ENTER	"èI"
 
-// ZUN bloat: Storing fullwidth characters as regular 16-bit big-endian
-// integers would have worked just fine.
-#define kanji_to_le(kanji) ( \
-	(static_cast<uint16_t>(kanji) << 8) | (static_cast<uint16_t>(kanji) >> 8) \
-)
+#define KANJI_A         	kanji_swap('Ç`')
+#define KANJI_a         	kanji_swap('ÇÅ')
+#define KANJI_b         	kanji_swap('ÇÇ')
+#define KANJI_0         	kanji_swap('ÇO')
+#define KANJI_SP        	kanji_swap('Å@')
+#define KANJI_UNDERSCORE	kanji_swap('ÅQ')
 
-#define KANJI_A         	kanji_to_le('Ç`')
-#define KANJI_a         	kanji_to_le('ÇÅ')
-#define KANJI_b         	kanji_to_le('ÇÇ')
-#define KANJI_0         	kanji_to_le('ÇO')
-#define KANJI_SP        	kanji_to_le('Å@')
-#define KANJI_UNDERSCORE	kanji_to_le('ÅQ')
-
-const uint16_t ALPHABET_SYMS[] = {
-	kanji_to_le('ÅI'), kanji_to_le('ÅH'), kanji_to_le('Åî'), kanji_to_le('Åï'),
-	kanji_to_le('Åñ'), kanji_to_le('Åò'), kanji_to_le('Åô'), kanji_to_le('Åü'),
-	kanji_to_le('Åá'), kanji_to_le('Åà'), kanji_to_le('Åâ'), kanji_to_le('Åä'),
-	kanji_to_le('Åc'), kanji_to_le('Åg'), kanji_to_le('Åh'), kanji_to_le('Å^'),
-	kanji_to_le('ÅD'), kanji_to_le('ÅE'),
+const shiftjis_kanji_swapped_t ALPHABET_SYMS[] = {
+	kanji_swap('ÅI'), kanji_swap('ÅH'), kanji_swap('Åî'), kanji_swap('Åï'),
+	kanji_swap('Åñ'), kanji_swap('Åò'), kanji_swap('Åô'), kanji_swap('Åü'),
+	kanji_swap('Åá'), kanji_swap('Åà'), kanji_swap('Åâ'), kanji_swap('Åä'),
+	kanji_swap('Åc'), kanji_swap('Åg'), kanji_swap('Åh'), kanji_swap('Å^'),
+	kanji_swap('ÅD'), kanji_swap('ÅE'),
 };

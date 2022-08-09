@@ -6,6 +6,7 @@
 #pragma option -zCmaine_01_TEXT
 
 #include "th04/end/box.cpp"
+#include "shiftjis.hpp"
 
 /// String-to-color map
 /// -------------------
@@ -15,7 +16,7 @@
 static const int COLMAP_COUNT = 8;
 
 typedef struct {
-	twobyte_t kanji;
+	shiftjis_kanji_t kanji;
 	int8_t padding[4]; // Might have been originally meant for full strings?
 } colmap_key_t;
 

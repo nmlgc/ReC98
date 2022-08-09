@@ -14,6 +14,7 @@
 #include "x86real.h"
 #include "pc98.h"
 #include "master.hpp"
+#include "shiftjis.hpp"
 #include "th01/hardware/ztext.hpp"
 
 extern char txesc_25line[];
@@ -120,9 +121,9 @@ inline uint16_t* tram_atrb(uint16_t offset) {
 	return reinterpret_cast<uint16_t *>(MK_FP(SEG_TRAM_ATRB, offset));
 }
 
-void z_text_putsa(tram_x_t x, tram_y_t y, int z_atrb, const char *str)
+void z_text_putsa(tram_x_t x, tram_y_t y, int z_atrb, const sshiftjis_t *str)
 {
-	uint16_t codepoint;
+	jis_t codepoint;
 	int p = (((y * text_width()) + x) * 2);
 	int hw_atrb = 1;
 
@@ -159,7 +160,7 @@ void z_text_putsa(tram_x_t x, tram_y_t y, int z_atrb, const char *str)
 				tram_jis(p)[1] = codepoint;
 				tram_atrb(p)[0] = hw_atrb;
 			} else if(x == (text_width() - 1)) {
-				reinterpret_cast<int16_t *>(tram_jis(p))[0] = ' ';
+				reinterpret_cast<jis_t *>(tram_jis(p))[0] = ' ';
 				tram_atrb(p)[0] = hw_atrb;
 			} else {
 				tram_jis(p)[0] = ((codepoint >> 8) + 0xE0);
@@ -173,7 +174,7 @@ void z_text_putsa(tram_x_t x, tram_y_t y, int z_atrb, const char *str)
 				x++;
 			}
 		} else {
-			reinterpret_cast<int16_t *>(tram_jis(p))[0] = *reinterpret_cast<
+			reinterpret_cast<jis_t *>(tram_jis(p))[0] = *reinterpret_cast<
 				const uint8_t *
 			>(str++);
 			tram_atrb(p)[0] = hw_atrb;
@@ -185,7 +186,9 @@ void z_text_putsa(tram_x_t x, tram_y_t y, int z_atrb, const char *str)
 	}
 }
 
-void z_text_vputsa(tram_x_t x, tram_y_t y, int z_atrb, const char *fmt, ...)
+void z_text_vputsa(
+	tram_x_t x, tram_y_t y, int z_atrb, const sshiftjis_t *fmt, ...
+)
 {
 	char str[256];
 	va_list ap;

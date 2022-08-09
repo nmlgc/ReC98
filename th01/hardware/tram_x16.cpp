@@ -1,4 +1,4 @@
-void TRAMCursor::putkanji(uint16_t jis_kanji, int atrb)
+void TRAMCursor::putkanji(jis_t jis_kanji, int atrb)
 {
 	// Yes, this is a correct way of writing any fullwidth character to TRAM.
 	// More research and proof forthcoming...
@@ -10,7 +10,7 @@ void TRAMCursor::putkanji(uint16_t jis_kanji, int atrb)
 	p++;
 }
 
-void TRAMCursor::putkanji_for_5_rows(uint16_t jis_kanji, int atrb)
+void TRAMCursor::putkanji_for_5_rows(jis_t jis_kanji, int atrb)
 {
 	for(int y = 0; y < 5; y++) {
 		for(int x = 0; x < (RES_X / GLYPH_FULL_W); x++) {
@@ -21,7 +21,7 @@ void TRAMCursor::putkanji_for_5_rows(uint16_t jis_kanji, int atrb)
 
 // Heavily inspired by the INT 18h, AH=14h sample program from the PC-9801
 // Programmers' Bible, on p. 121.
-void pascal tram_x16_kanji_center_reverse(uint16_t jis_kanji)
+void pascal tram_x16_kanji_center_reverse(jis_t jis_kanji)
 {
 	utram_kanji_amount_t x;
 	upixel_t glyph_y;
@@ -56,7 +56,7 @@ void pascal tram_x16_kanji_center_reverse(uint16_t jis_kanji)
 }
 
 // Where was this function above? :P
-void int18h_14h(REGS& in, pc98_glyph_t& glyph, uint16_t jis)
+void int18h_14h(REGS& in, pc98_glyph_t& glyph, jis_t jis)
 {
 	REGS out;
 	in.w.bx = FP_SEG(&glyph);

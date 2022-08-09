@@ -9,9 +9,7 @@ extern "C" {
 #include "th01/hiscore/regist.hpp"
 
 // Null-terminated version of scoredat_name_t, used internally.
-typedef StupidBytewiseWrapperAround<struct {
-	int16_t codepoint[SCOREDAT_NAME_KANJI + 1];
-}> scoredat_name_z_t;
+typedef ShiftJISKanjiBuffer<SCOREDAT_NAME_KANJI + 1> scoredat_name_z_t;
 
 #define TITLE_LEFT 48
 #define TITLE_TOP 0
@@ -101,7 +99,7 @@ inline pixel_t left_for(int kanji_id) {
 
 #define A_TO_Z_COUNT 26
 #define NUM_COUNT 10
-static const int SYM_COUNT = (sizeof(ALPHABET_SYMS) / sizeof(uint16_t));
+static const int SYM_COUNT = (sizeof(ALPHABET_SYMS) / sizeof(shiftjis_kanji_t));
 
 // Rows
 #define LOWER_TOP (ALPHABET_TOP)
@@ -119,11 +117,11 @@ static const int SYM_COUNT = (sizeof(ALPHABET_SYMS) / sizeof(uint16_t));
 #define RIGHT_LEFT left_for(LEFT_COLUMN + 1)
 #define ENTER_LEFT left_for(LEFT_COLUMN + 2)
 
-inline unsigned char kanji_hi(int16_t kanji) {
+inline uint8_t kanji_hi(sshiftjis_kanji_swapped_t kanji) {
 	return (kanji >> 8);
 }
 
-inline unsigned char kanji_lo(int16_t kanji) {
+inline uint8_t kanji_lo(sshiftjis_kanji_swapped_t kanji) {
 	return (kanji & 0xFF);
 }
 /// --------
@@ -131,7 +129,7 @@ inline unsigned char kanji_lo(int16_t kanji) {
 void alphabet_put_initial()
 {
 	int16_t col_and_fx = (COL_REGIST_REGULAR | FX_WEIGHT_BOLD);
-	uint16_t kanji;
+	shiftjis_kanji_swapped_t kanji;
 	int i;
 	graph_putkanji_fx_declare();
 
@@ -182,7 +180,7 @@ void regist_put_initial(
 	int entered_place,
 	long entered_score,
 	int entered_stage,
-	const char entered_route[SCOREDAT_ROUTE_LEN + 1],
+	const sshiftjis_t entered_route[SCOREDAT_ROUTE_LEN + 1],
 	const scoredat_name_z_t names_z[SCOREDAT_PLACES]
 )
 {
@@ -310,7 +308,7 @@ void regist_put_initial(
 
 void alphabet_put_at(screen_x_t left, screen_y_t top, bool16 is_selected)
 {
-	int16_t kanji = '\0';
+	sshiftjis_kanji_swapped_t kanji = '\0';
 
 	egc_copy_rect_1_to_0_16(left, top, KANJI_PADDED_W, GLYPH_H);
 
@@ -346,8 +344,8 @@ int regist_on_shot(
 	int &entered_name_cursor
 )
 {
-	int16_t kanji = '\0';
-	unsigned char cursor_str[SCOREDAT_NAME_BYTES + 1] = REGIST_NAME_SPACES;
+	shiftjis_kanji_swapped_t kanji = '\0';
+	shiftjis_t cursor_str[SCOREDAT_NAME_BYTES + 1] = REGIST_NAME_SPACES;
 
 	alphabet_if(kanji, left, top,
 		{ kanji = KANJI_SP; },
@@ -357,7 +355,7 @@ int regist_on_shot(
 	);
 
 	if(kanji != '\0') {
-		set_kanji_at(entered_name.byte, entered_name_cursor, kanji);
+		set_kanji_at(entered_name.ubyte, entered_name_cursor, kanji);
 		#if (BINARY == 'M')
 			if(entered_name_cursor == (SCOREDAT_NAME_KANJI - 1)) {
 				regist_jump_to_enter = true;
@@ -378,7 +376,7 @@ int regist_on_shot(
 		entered_name_left,
 		entered_name_top,
 		(COL_REGIST_SELECTED | FX_WEIGHT_BOLD),
-		entered_name.byte
+		entered_name.ubyte
 	);
 
 	set_kanji_at(cursor_str, entered_name_cursor, KANJI_UNDERSCORE);
@@ -529,9 +527,13 @@ void scoredat_save(void)
 		scoredat_names[i] = scoredat_name_byte_encode(scoredat_names[i]);
 	}
 	write(fileno(fp), scoredat_names, SCOREDAT_NAMES_SIZE);
-	write(fileno(fp), scoredat_score, sizeof(uint32_t) * SCOREDAT_PLACES);
-	write(fileno(fp), scoredat_stages, sizeof(int16_t) * SCOREDAT_PLACES);
-	write(fileno(fp), scoredat_routes, sizeof(twobyte_t) * SCOREDAT_PLACES);
+	write(fileno(fp), scoredat_score, (sizeof(uint32_t) * SCOREDAT_PLACES));
+	write(fileno(fp), scoredat_stages, (sizeof(int16_t) * SCOREDAT_PLACES));
+	write(
+		fileno(fp),
+		scoredat_routes,
+		(sizeof(shiftjis_kanji_t) * SCOREDAT_PLACES)
+	);
 	fclose(fp);
 }
 
@@ -550,9 +552,9 @@ void regist_name_enter(int entered_place)
 	top = LOWER_TOP;
 
 	for(i = 0; i < SCOREDAT_NAME_BYTES; i++) {
-		entered_name.byte[i] = ' ';
+		entered_name.ubyte[i] = ' ';
 	}
-	entered_name.byte[SCOREDAT_NAME_BYTES] = '\0';
+	entered_name.ubyte[SCOREDAT_NAME_BYTES] = '\0';
 
 	input_reset_sense();
 	while(1) {
@@ -579,7 +581,7 @@ void regist_name_enter(int entered_place)
 	for(i = 0; i < SCOREDAT_NAME_BYTES; i++) {
 		scoredat_names[
 			(entered_place * SCOREDAT_NAME_BYTES) + i
-		] = entered_name.byte[i];
+		] = entered_name.ubyte[i];
 	}
 	scoredat_save();
 }
@@ -588,11 +590,11 @@ static const int PLACE_NONE = (SCOREDAT_PLACES + 20);
 static const int SCOREDAT_NOT_CLEARED = (SCOREDAT_CLEARED - 10);
 
 void regist(
-	int32_t score, int16_t stage, const char route[SCOREDAT_ROUTE_LEN + 1]
+	int32_t score, int16_t stage, const shiftjis_t route[SCOREDAT_ROUTE_LEN + 1]
 )
 {
 	scoredat_name_z_t names[SCOREDAT_PLACES];
-	const char* RANKS[RANK_COUNT] = REGIST_TITLE_RANKS;
+	const shiftjis_t* RANKS[RANK_COUNT] = REGIST_TITLE_RANKS;
 	long place;
 
 	regist_bg_put(stage);
@@ -631,7 +633,7 @@ void regist(
 		return;
 	}
 	for(place = 0; place < SCOREDAT_PLACES; place++) {
-		scoredat_name_get(place, names[place].byte);
+		scoredat_name_get(place, names[place].ubyte);
 	}
 	for(place = 0; place < SCOREDAT_PLACES; place++) {
 		if(score >= scoredat_score[place]) {

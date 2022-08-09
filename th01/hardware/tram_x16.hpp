@@ -1,12 +1,3 @@
-inline uint16_t shiftjis_to_jis(uint16_t shiftjis) {
-	return (0x1F21 +
-		(((shiftjis >> 8) - (shiftjis >> 15) < 0x9E)
-			? ((((shiftjis >> 8) - (shiftjis >> 15) - 0x40) & 0x1FF))
-			: ((shiftjis >> 8) - (shiftjis >> 15) + 0x62)
-		) + ((shiftjis & 0x3F) << 9)
-	);
-}
-
 // Font ROM glyph retrieval
 // ------------------------
 
@@ -26,7 +17,7 @@ struct pc98_glyph_kanji_t : public pc98_glyph_t {
 	DotRect<dots_t(GLYPH_FULL_W), GLYPH_H> dots;
 };
 
-void int18h_14h(REGS& in, pc98_glyph_t& glyph, uint16_t jis);
+void int18h_14h(REGS& in, pc98_glyph_t& glyph, jis_t jis);
 
 inline void fontrom_get(REGS& in, pc98_glyph_ank_8x16_t& glyph, char ank) {
 	int18h_14h(in, glyph, (0x8000 + ank));
@@ -35,23 +26,23 @@ inline void fontrom_get(REGS& in, pc98_glyph_ank_8x16_t& glyph, char ank) {
 
 class TRAMCursor {
 	struct {
-		uint16_t left;
-		uint16_t right;
+		jis_t left;
+		jis_t right;
 	} near* p;
 
 public:
 	// Writes the given fullwidth JIS code point with the given attribute to
 	// the left and right cells at the current cursor position, then advances
 	// the cursor. Halfwidth code points will also be written to both cells.
-	void putkanji(uint16_t jis_kanji, int atrb);
+	void putkanji(jis_t jis_kanji, int atrb);
 
 	// Calls putkanji() for the next 5 TRAM rows.
-	void putkanji_for_5_rows(uint16_t jis_kanji, int atrb);
+	void putkanji_for_5_rows(jis_t jis_kanji, int atrb);
 
 	// This is always called at the (0-based) line 21, and therefore always
 	// ends up writing into the second TRAM page. Luckily, that page is used,
 	// and no code cares about it...
-	void putkanji_until_end(uint16_t jis_kanji, int atrb) {
+	void putkanji_until_end(jis_t jis_kanji, int atrb) {
 		putkanji_for_5_rows(jis_kanji, atrb);
 	}
 
@@ -68,7 +59,7 @@ public:
 
 // Fills text RAM with black and renders a transparent [jis_kanji] at its
 // center.
-void pascal tram_x16_kanji_center_reverse(uint16_t jis_kanji);
+void pascal tram_x16_kanji_center_reverse(jis_t jis_kanji);
 
 // Shows the red "STAGE [stage_num]" letters.
 void pascal tram_x16_stage(unsigned int stage_num);

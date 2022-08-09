@@ -6,6 +6,7 @@
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
+#include "shiftjis.hpp"
 extern "C" {
 #include "th01/hardware/graph.h"
 #include "th01/hardware/palette.h"

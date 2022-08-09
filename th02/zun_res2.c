@@ -45,7 +45,7 @@ int pascal scoredat_verify(void)
 				mov word ptr section_sum + 2, ax
 			}
 			for(i = 0; i < sizeof(hi.score); i++) {
-				section_sum += *((unsigned char*)(&hi.score) + i);
+				section_sum += *((uint8_t *)(&hi.score) + i);
 			}
 			for(i = 0; i < SCOREDAT_PLACES; i++) {
 				score_sum += hi.score.score[i];

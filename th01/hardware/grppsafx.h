@@ -44,19 +44,20 @@
 	// Puts the given [str] onto the graphics RAM at the given position,
 	// with the given graphics color and effect.
 	void DEFCONV graph_putsa_fx(
-		screen_x_t left,
-		vram_y_t top,
-		int16_t col_and_fx,
-		const unsigned char *str
+		screen_x_t left, vram_y_t top, int16_t col_and_fx, const shiftjis_t *str
 	);
 #endif
 
 #if (GAME == 1)
 	// Variadic version of graph_putsa_fx().
 	void graph_printf_fx(
-		screen_x_t left, vram_y_t top, int16_t col_and_fx, const char *fmt, ...
+		screen_x_t left,
+		vram_y_t top,
+		int16_t col_and_fx,
+		const shiftjis_t *fmt,
+		...
 	);
 
 	// Calculates the width of [str], displayed with the given [fx].
-	int text_extent_fx(int fx, const unsigned char *str);
+	int text_extent_fx(int fx, const shiftjis_t *str);
 #endif

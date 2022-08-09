@@ -52,7 +52,7 @@ static const pixel_t VERDICT_TITLE_PADDED_W = shiftjis_w(VERDICT_TITLE "    ");
 
 static const int VERDICT_GROUPS = 3;
 static const int VERDICT_LEVELS = 6;
-const unsigned char *VERDICT_TITLES[VERDICT_GROUPS][VERDICT_LEVELS] = { {
+const shiftjis_t *VERDICT_TITLES[VERDICT_GROUPS][VERDICT_LEVELS] = { {
 	"　モンキー　",
 	"　類人猿",
 	"ホモサピエンス",

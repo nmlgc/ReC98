@@ -15,6 +15,6 @@
 		hi.score.stage_sum += hi.score.stage[i]; \
 	} \
 	for(i = 0; i < sizeof(hi.score); i++) { \
-		hi.section_sum += *((unsigned char*)(&hi.score) + i); \
-		*((unsigned char*)(&hi.score) + i) += 0x12; \
+		hi.section_sum += *((uint8_t *)(&hi.score) + i); \
+		*((uint8_t *)(&hi.score) + i) += 0x12; \
 	}

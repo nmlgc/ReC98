@@ -20,5 +20,5 @@ extern enum {
 extern pixel_t graph_putsa_fx_spacing;
 
 void pascal graph_putsa_fx(
-	screen_x_t left, vram_y_t top, int color, const unsigned char *str
+	screen_x_t left, vram_y_t top, int color, const shiftjis_t *str
 );

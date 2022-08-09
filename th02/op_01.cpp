@@ -8,14 +8,15 @@
 #include "platform.h"
 #include "x86real.h"
 #include "pc98.h"
-#include "th02/resident.hpp"
 #include "master.hpp"
+#include "shiftjis.hpp"
 #include "libs/kaja/kaja.h"
 #include "th01/rank.h"
 #include "th01/math/clamp.hpp"
 extern "C" {
 #include "th01/hardware/grppsafx.h"
 #include "th02/common.h"
+#include "th02/resident.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/grp_rect.h"
 #include "th02/hardware/input.hpp"
@@ -326,8 +327,8 @@ const unsigned char gbcBGM_MODE[3][5] = {
 	gb_M_, gb_I_, gb_D_, gb_I_, 0
 };
 
-const char *PERF_TITLE = "演出";
-const char *PERF_OPTIONS[2] = {"　通常  ", "一部軽減"};
+const shiftjis_t *PERF_TITLE = "演出";
+const shiftjis_t *PERF_OPTIONS[2] = {"　通常  ", "一部軽減"};
 
 #pragma option -d
 

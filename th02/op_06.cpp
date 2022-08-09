@@ -9,6 +9,7 @@
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
+#include "shiftjis.hpp"
 #include "libs/kaja/kaja.h"
 #include "th01/math/polar.hpp"
 extern "C" {
@@ -28,7 +29,7 @@ static const int MUSIC_CMT_LINE_COUNT = 20;
 
 #define MUSIC_POLYGONS 16
 
-const char *MUSIC_TITLES[] = {
+const shiftjis_t *MUSIC_TITLES[] = {
 	"NO.1    “Œ•û••–‚˜^@`ò“y™Öä¶—…",
 	"NO.2    @ ”—í@`Eastern Wind ",
 	"NO.3    @   End of Daylight@  ",

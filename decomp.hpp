@@ -3,6 +3,8 @@
  * Declarations to help decompiling the seemingly impossible
  */
 
+#define DECOMP_HPP
+
 // Flag comparisons
 // ----------------
 // When used inside a conditional expression like

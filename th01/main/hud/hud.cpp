@@ -4,6 +4,7 @@
 #include "planar.h"
 #include "x86real.h"
 #include "master.hpp"
+#include "shiftjis.hpp"
 #include "th01/common.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
@@ -459,7 +460,7 @@ void stage_bg_snap_and_put(void)
 }
 
 inline void rank_put(void) {
-	extern const char* RANKS[RANK_COUNT];
+	extern const shiftjis_t* RANKS[RANK_COUNT];
 	graph_putsa_fx(
 		(RANK_CENTER_X - (text_extent_fx(V_WHITE, RANKS[rank]) / 2)),
 		RANK_TOP,

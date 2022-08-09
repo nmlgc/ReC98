@@ -11,6 +11,7 @@
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
+#include "shiftjis.hpp"
 #include "th01/rank.h"
 extern "C" {
 #include "th02/hardware/frmdelay.h"

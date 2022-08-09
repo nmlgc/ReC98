@@ -9,6 +9,7 @@
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
+#include "shiftjis.hpp"
 extern "C" {
 #include "th01/hardware/graph.h"
 #include "th01/hardware/grppsafx.h"
@@ -102,7 +103,7 @@ void pascal grp_palette_white_in(unsigned int frames)
 #pragma option -O-
 
 void pascal graph_type_ank_n(
-	screen_x_t left, vram_y_t top, int len, const char *str
+	screen_x_t left, vram_y_t top, int len, const sshiftjis_t *str
 )
 {
 	for(int i = 0; i < len; i++) {
@@ -114,7 +115,7 @@ void pascal graph_type_ank_n(
 }
 
 void pascal graph_type_kanji_n(
-	screen_x_t left, vram_y_t top, int len, const char *str
+	screen_x_t left, vram_y_t top, int len, const sshiftjis_kanji_t *str
 )
 {
 	for(int i = 0; i < len; i++) {

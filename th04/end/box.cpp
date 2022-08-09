@@ -3,7 +3,6 @@
 #include "pc98.h"
 #include "planar.h"
 #include "decomp.hpp"
-#include "twobyte.h"
 #include "master.hpp"
 
 // Note that this does not correspond to the tiled area painted into TH05's

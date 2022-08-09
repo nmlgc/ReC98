@@ -4,8 +4,8 @@
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
-#include "twobyte.h"
 #include "master.hpp"
+#include "shiftjis.hpp"
 #include "th01/common.h"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
@@ -511,7 +511,7 @@ void verdict_title_calculate_and_render(void)
 
 void verdict_animate_and_regist(void)
 {
-	const char* RANKS[RANK_COUNT] = {
+	const shiftjis_t* RANKS[RANK_COUNT] = {
 		" EASY ",
 		"NORMAL",
 		" HARD ",

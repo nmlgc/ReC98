@@ -3,6 +3,7 @@
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
+#include "shiftjis.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/formats/ptn.hpp"
 #include "th01/math/digit.hpp"

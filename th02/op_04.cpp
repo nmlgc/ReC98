@@ -10,6 +10,7 @@ extern "C" {
 #include "platform.h"
 #include "pc98.h"
 #include "master.hpp"
+#include "shiftjis.hpp"
 #include "th01/rank.h"
 #include "th02/common.h"
 #include "th02/hardware/frmdelay.h"
@@ -28,7 +29,7 @@ const unsigned char gbcRANKS[4][8] = {
 	gb_L_, gb_U_, gb_N_, gb_A_, gb_T_, gb_I_, gb_C_, 0,
 };
 
-const char *SHOTTYPES[] = {"çÇã@ìÆ", "ñhå‰", "çUåÇ"};
+const shiftjis_t *SHOTTYPES[] = {"çÇã@ìÆ", "ñhå‰", "çUåÇ"};
 int logo_step = 0;
 char need_op_h_bft = 1;
 int8_t need_op_h_bft_padding = 0;

@@ -14,8 +14,8 @@ void graph_2xscale_byterect_1_to_0_slow(
 // (Which are the only things that this 2× scale is performed on anyway.)
 
 // Blits [str] to the given glyph [row] with the given color and effects, for
-// a later 2× scale of the
-inline void graph_glyphrow_put(int row, int col_and_fx, const char *str) {
+// a later 2× nearest-neighbor scale of the same row.
+inline void graph_glyphrow_put(int row, int col_and_fx, const shiftjis_t *str) {
 	graph_putsa_fx(0, (GLYPH_H * row), (FX_CLEAR_BG | col_and_fx), str);
 }
 
