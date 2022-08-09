@@ -1,12 +1,18 @@
 #include <dos.h>
 #include "platform.h"
+#include "decomp.hpp"
 #include "pc98.h"
 #include "planar.h"
+#include "master.hpp"
 #include "th01/formats/ptn.hpp"
 extern "C" {
+#include "th01/hardware/egc.h"
+#include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
+#include "th01/hardware/palette.h"
 #include "th01/snd/mdrv2.h"
 }
+#include "th01/formats/grp.h"
 
 /// Coordinates
 /// -----------
@@ -121,4 +127,79 @@ void pascal near egc_pagetrans_rowshift_alternating(
 	graph_accesspage_func(0);	egc_chunk(vo_p0 + CHUNK_OFFSET_LEFT) = dots;
 	graph_accesspage_func(1);	dots = egc_chunk(u1.vo_p1 + CHUNK_OFFSET_RIGHT);
 	graph_accesspage_func(0);	egc_chunk(vo_p0 + CHUNK_OFFSET_RIGHT) = dots;
+}
+
+void pascal near totle_pagetrans_animate(int)
+{
+	upixel_t y;
+	unsigned int rows_active = 0;
+	uvram_byte_amount_t* row_transfer_offset;
+	bool16* row_active;
+	unsigned int rows_done = 0;
+	unsigned int col;
+	unsigned int comp;
+	unsigned int rows_done_prev = 1;
+	int unused_and_uninitialized_frame_count; // ZUN bloat
+
+	row_transfer_offset = new uvram_byte_amount_t[RES_Y];
+	row_active = new bool16[RES_Y];
+	for(y = 0; y < RES_Y; y++) {
+		row_transfer_offset[y] = 0;
+		row_active[y] = false;
+	}
+
+	egc_on();
+	egc_setup_copy();
+
+	while(1) {
+		for(y = 0; y < RES_Y; y++) {
+			if(!row_active[y]) {
+				continue;
+			}
+			egc_pagetrans_rowshift_alternating_32(y, row_transfer_offset[y]);
+			row_transfer_offset[y] += ROWSHIFT_CHUNK_SIZE;
+			if(row_transfer_offset[y] >= ROW_SIZE) {
+				row_active[y] = false;
+				rows_done++;
+			}
+		}
+		unused_and_uninitialized_frame_count++;
+		frame_delay(2);
+
+		if(rows_done >= RES_Y) {
+			break;
+		}
+		if(rows_active < RES_Y) {
+			row_active[rows_active + 0] = true;
+			row_active[rows_active + 1] = true;
+			row_active[rows_active + 2] = true;
+			row_active[rows_active + 3] = true;
+			row_active[rows_active + 4] = true;
+			row_active[rows_active + 5] = true;
+			row_active[rows_active + 6] = true;
+			row_active[rows_active + 7] = true;
+		}
+		rows_active += 8;
+
+		if((rows_done != rows_done_prev) && ((rows_active & 0xF) == 0)) {
+			z_palette_step_to(col, comp, grp_palette);
+		}
+		rows_done_prev = rows_done;
+	}
+
+	delete[] row_transfer_offset;
+	delete[] row_active;
+	egc_off();
+}
+
+void near totle_load_and_pagetrans_animate(void)
+{
+	extern const char CLEAR3_grp[];
+	extern const char numb_ptn[];
+
+	graph_accesspage_func(1);
+	grp_put(CLEAR3_grp);
+	ptn_load(PTN_SLOT_NUMB, numb_ptn);
+	graph_accesspage_func(0);
+	totle_pagetrans_animate(0);
 }

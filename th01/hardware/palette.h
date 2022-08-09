@@ -99,6 +99,22 @@ void z_palette_white_out(void);
 				: 0 \
 		); \
 	})
+
+
+// Performs a single ramping step from z_Palettes to [target_pal].
+#define z_palette_step_to(tmp_col, tmp_comp, target_pal) { \
+	z_Palettes_set_func_and_show(tmp_col, tmp_comp, { \
+		if( \
+			z_Palettes[tmp_col].v[tmp_comp] != \
+			target_pal[tmp_col].v[tmp_comp] \
+		) { \
+			z_Palettes.colors[tmp_col].v[tmp_comp] += ( \
+				z_Palettes[tmp_col].v[tmp_comp] < \
+				target_pal[tmp_col].v[tmp_comp] \
+			) ? 1 : -1; \
+		} \
+	}) \
+}
 /// ----------------
 
 /// Resident palette

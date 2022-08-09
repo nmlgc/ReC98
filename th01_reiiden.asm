@@ -36,7 +36,6 @@ BOSS_STAGE = (STAGES_PER_SCENE - 1)
 
 	extern @$bdla$qnv:proc
 	extern @$bnew$qui:proc
-	extern @$bnwa$qui:proc
 	extern @_vector_new_$qnvuiuluie:proc
 	extern @set_new_handler$qnqv$v:proc
 	extern FTOL@:proc
@@ -2760,7 +2759,6 @@ SHARED	ends
 PTN_GRP_GRZ	segment	byte public 'CODE' use16
 	extern @ptn_load$q15main_ptn_slot_tnxc:proc
 	extern @ptn_free$q15main_ptn_slot_t:proc
-	extern @grp_put$qnxc:proc
 PTN_GRP_GRZ	ends
 
 ; ===========================================================================
@@ -2896,260 +2894,13 @@ main_17_TEXT	ends
 main_18_TEXT	segment	byte public 'CODE' use16
 	@TOTLE_METRIC_DIGIT_ANIMATE$QIII procdesc pascal near \
 		digit:word, place_and_top:dword
-	@EGC_PAGETRANS_ROWSHIFT_ALTERNATI$QII procdesc pascal near \
-		y: word, transferred_chunk_left:word
+	@totle_load_and_pagetrans_animate$qv procdesc near
 main_18_TEXT	ends
 
 main_18__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_18
 		;org 0Bh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12D3F	proc near
-
-var_12		= word ptr -12h
-var_10		= word ptr -10h
-var_E		= word ptr -0Eh
-var_C		= word ptr -0Ch
-var_A		= word ptr -0Ah
-var_8		= dword	ptr -8
-_font		= dword	ptr -4
-
-		enter	12h, 0
-		push	si
-		push	di
-		xor	di, di
-		mov	[bp+var_A], 0
-		mov	[bp+var_10], 1
-		push	320h
-		call	@$bnwa$qui
-		pop	cx
-		mov	word ptr [bp+_font+2], dx
-		mov	word ptr [bp+_font], ax
-		push	320h
-		call	@$bnwa$qui
-		pop	cx
-		mov	word ptr [bp+var_8+2], dx
-		mov	word ptr [bp+var_8], ax
-		xor	si, si
-		jmp	short loc_12D90
-; ---------------------------------------------------------------------------
-
-loc_12D73:
-		mov	ax, si
-		add	ax, ax
-		les	bx, [bp+_font]
-		add	bx, ax
-		mov	word ptr es:[bx], 0
-		mov	ax, si
-		add	ax, ax
-		les	bx, [bp+var_8]
-		add	bx, ax
-		mov	word ptr es:[bx], 0
-		inc	si
-
-loc_12D90:
-		cmp	si, 190h
-		jb	short loc_12D73
-		call	egc_on
-		EGC_SETUP_COPY
-
-loc_12DC5:
-		xor	si, si
-		jmp	short loc_12E0D
-; ---------------------------------------------------------------------------
-
-loc_12DC9:
-		mov	ax, si
-		add	ax, ax
-		les	bx, [bp+var_8]
-		add	bx, ax
-		cmp	word ptr es:[bx], 0
-		jz	short loc_12E0C
-		push	si	; y
-		mov	ax, si
-		add	ax, ax
-		les	bx, [bp+_font]
-		add	bx, ax
-		push	word ptr es:[bx]	; transferred_chunk_left
-		call	@egc_pagetrans_rowshift_alternati$qii
-		mov	ax, si
-		add	ax, ax
-		les	bx, [bp+_font]
-		add	bx, ax
-		add	word ptr es:[bx], 4
-		cmp	word ptr es:[bx], 50h ;	'P'
-		jb	short loc_12E0C
-		mov	ax, si
-		add	ax, ax
-		les	bx, [bp+var_8]
-		add	bx, ax
-		mov	word ptr es:[bx], 0
-		inc	[bp+var_A]
-
-loc_12E0C:
-		inc	si
-
-loc_12E0D:
-		cmp	si, 190h
-		jb	short loc_12DC9
-		inc	[bp+var_12]
-		push	2
-		call	_frame_delay
-		pop	cx
-		cmp	[bp+var_A], 190h
-		jnb	loc_12F42
-		cmp	di, 190h
-		jnb	short loc_12EA4
-		mov	ax, di
-		add	ax, ax
-		les	bx, [bp+var_8]
-		add	bx, ax
-		mov	word ptr es:[bx], 1
-		lea	ax, [di+1]
-		add	ax, ax
-		mov	bx, word ptr [bp+var_8]
-		add	bx, ax
-		mov	word ptr es:[bx], 1
-		lea	ax, [di+2]
-		add	ax, ax
-		mov	bx, word ptr [bp+var_8]
-		add	bx, ax
-		mov	word ptr es:[bx], 1
-		lea	ax, [di+3]
-		add	ax, ax
-		mov	bx, word ptr [bp+var_8]
-		add	bx, ax
-		mov	word ptr es:[bx], 1
-		lea	ax, [di+4]
-		add	ax, ax
-		mov	bx, word ptr [bp+var_8]
-		add	bx, ax
-		mov	word ptr es:[bx], 1
-		lea	ax, [di+5]
-		add	ax, ax
-		mov	bx, word ptr [bp+var_8]
-		add	bx, ax
-		mov	word ptr es:[bx], 1
-		lea	ax, [di+6]
-		add	ax, ax
-		mov	bx, word ptr [bp+var_8]
-		add	bx, ax
-		mov	word ptr es:[bx], 1
-		lea	ax, [di+7]
-		add	ax, ax
-		mov	bx, word ptr [bp+var_8]
-		add	bx, ax
-		mov	word ptr es:[bx], 1
-
-loc_12EA4:
-		add	di, 8
-		mov	ax, [bp+var_A]
-		cmp	ax, [bp+var_10]
-		jz	loc_12F39
-		test	di, 0Fh
-		jnz	loc_12F39
-		mov	[bp+var_C], 0
-		jmp	short loc_12F27
-; ---------------------------------------------------------------------------
-
-loc_12EC0:
-		mov	[bp+var_E], 0
-		jmp	short loc_12F1E
-; ---------------------------------------------------------------------------
-
-loc_12EC7:
-		mov	bx, [bp+var_C]
-		imul	bx, size rgb_t
-		add	bx, [bp+var_E]
-		mov	al, _z_Palettes[bx]
-		mov	bx, [bp+var_C]
-		imul	bx, size rgb_t
-		add	bx, [bp+var_E]
-		cmp	al, byte ptr _grp_palette[bx]
-		jz	short loc_12F1B
-		mov	bx, [bp+var_C]
-		imul	bx, 3
-		add	bx, [bp+var_E]
-		mov	bx, [bp+var_C]
-		imul	bx, 3
-		add	bx, [bp+var_E]
-		cmp	al, byte ptr _grp_palette[bx]
-		jge	short loc_12EFF
-		mov	al, 1
-		jmp	short loc_12F01
-; ---------------------------------------------------------------------------
-
-loc_12EFF:
-		mov	al, -1
-
-loc_12F01:
-		mov	bx, [bp+var_C]
-		imul	bx, 3
-		add	bx, [bp+var_E]
-		add	al, _z_Palettes[bx]
-		mov	bx, [bp+var_C]
-		imul	bx, 3
-		add	bx, [bp+var_E]
-		mov	_z_Palettes[bx], al
-
-loc_12F1B:
-		inc	[bp+var_E]
-
-loc_12F1E:
-		cmp	[bp+var_E], size rgb_t
-		jb	short loc_12EC7
-		inc	[bp+var_C]
-
-loc_12F27:
-		cmp	[bp+var_C], COLOR_COUNT
-		jb	short loc_12EC0
-		call	_z_palette_set_all_show c, offset _z_Palettes, ds
-
-loc_12F39:
-		mov	ax, [bp+var_A]
-		mov	[bp+var_10], ax
-		jmp	loc_12DC5
-; ---------------------------------------------------------------------------
-
-loc_12F42:
-		pushd	[bp+_font]	; font
-		call	@$bdla$qnv
-		pushd	[bp+var_8] ; font
-		call	@$bdla$qnv
-		add	sp, 8
-		call	egc_off
-		pop	di
-		pop	si
-		leave
-		retn	2
-sub_12D3F	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12F62	proc near
-		push	bp
-		mov	bp, sp
-		push	1
-		call	_graph_accesspage_func
-		call	@grp_put$qnxc stdcall, offset aClear3_grp, ds ; "CLEAR3.grp"
-		call	@ptn_load$q15main_ptn_slot_tnxc stdcall, PTN_SLOT_NUMB, offset aNumb_ptn, ds ; "numb.ptn"
-		push	0
-		call	_graph_accesspage_func
-		add	sp, 0Eh
-		push	0
-		call	sub_12D3F
-		pop	bp
-		retn
-sub_12F62	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3680,7 +3431,7 @@ arg_0		= word ptr  6
 		call	_frame_delay
 		pop	cx
 		mov	[bp+var_6], 0
-		call	sub_12F62
+		call	@totle_load_and_pagetrans_animate$qv
 		mov	ax, [bp+arg_0]
 		mov	bx, 10
 		cwd
@@ -4538,8 +4289,9 @@ off_3573E	dd aVo
 		dd aVw			; "ÇW"
 		dd aVx			; "ÇX"
 		dd aB@			; "Å@"
-aClear3_grp	db 'CLEAR3.grp',0
-aNumb_ptn	db 'numb.ptn',0
+public _CLEAR3_grp, _numb_ptn
+_CLEAR3_grp	db 'CLEAR3.grp',0
+_numb_ptn  	db 'numb.ptn',0
 aVo		db 'ÇO',0
 aVp		db 'ÇP',0
 aVq		db 'ÇQ',0
