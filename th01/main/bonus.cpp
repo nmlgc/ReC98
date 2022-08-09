@@ -4,6 +4,7 @@
 #include "planar.h"
 #include "th01/formats/ptn.hpp"
 extern "C" {
+#include "th01/hardware/graph.h"
 #include "th01/snd/mdrv2.h"
 }
 
@@ -64,4 +65,60 @@ void pascal near totle_metric_digit_animate(
 	totle_metric_digit_scramble_if_ge_10_and_put_8(left, top, digit);
 
 	ptn_sloppy_unput_before_alpha_put = false;
+}
+
+static const int ROWSHIFT_CHUNK_DOTS = (EGC_REGISTER_DOTS * 2);
+static const int ROWSHIFT_CHUNK_SIZE = (EGC_REGISTER_SIZE * 2);
+
+// Shifts [ROWSHIFT_CHUNK_DOTS] pixels of the given row on VRAM page 0 from
+// either the right edge of VRAM to the left or vice versa depending on whether
+// [y] is even or odd, then fills the freed-up chunk with a chunk of pixels
+// from VRAM page 1 that start [transferred_offset] bytes away from the shifted
+// edge.
+// Assumes that VRAM page 0 is accessed, and that the EGC is active and
+// initialized for a copy.
+void pascal near egc_pagetrans_rowshift_alternating(
+	vram_y_t y, vram_byte_amount_t transferred_offset
+)
+{
+	enum {
+		CHUNK_OFFSET_LEFT  = (0 * EGC_REGISTER_SIZE),
+		CHUNK_OFFSET_RIGHT = (1 * EGC_REGISTER_SIZE),
+	};
+
+	uvram_offset_t vo_p0;
+	egc_temp_t dots;
+	vram_byte_amount_t negative_chunk_delta; // negative for extra confusion?
+	union {
+		vram_dword_amount_t num;
+		vram_offset_t vo_p1;
+	} u1;
+
+	// Shift
+	if(y & 1) {
+		vo_p0 = vram_offset_muldiv((RES_X - ROWSHIFT_CHUNK_DOTS), y);
+		negative_chunk_delta = -ROWSHIFT_CHUNK_SIZE;
+	} else {
+		vo_p0 = vram_offset_muldiv(0, y);
+		negative_chunk_delta = ROWSHIFT_CHUNK_SIZE;
+	}
+	for(u1.num = 0; u1.num < ((ROW_SIZE / ROWSHIFT_CHUNK_SIZE) - 1); u1.num++) {
+		vo_p0 += negative_chunk_delta;
+
+		// Inconsistent parentheses? Blame code generation.
+		dots = egc_chunk(vo_p0 + CHUNK_OFFSET_LEFT);
+		egc_chunk((vo_p0 - negative_chunk_delta + CHUNK_OFFSET_LEFT)) = dots;
+		dots = egc_chunk(vo_p0 + CHUNK_OFFSET_RIGHT);
+		egc_chunk((vo_p0 - negative_chunk_delta + CHUNK_OFFSET_RIGHT)) = dots;
+	}
+
+	// Transfer new pixels
+	u1.vo_p1 = ((negative_chunk_delta > 0)
+		? ((y * ROW_SIZE) + transferred_offset)
+		: ((y * ROW_SIZE) + ROW_SIZE - ROWSHIFT_CHUNK_SIZE - transferred_offset)
+	);
+	graph_accesspage_func(1);	dots = egc_chunk(u1.vo_p1 + CHUNK_OFFSET_LEFT);
+	graph_accesspage_func(0);	egc_chunk(vo_p0 + CHUNK_OFFSET_LEFT) = dots;
+	graph_accesspage_func(1);	dots = egc_chunk(u1.vo_p1 + CHUNK_OFFSET_RIGHT);
+	graph_accesspage_func(0);	egc_chunk(vo_p0 + CHUNK_OFFSET_RIGHT) = dots;
 }

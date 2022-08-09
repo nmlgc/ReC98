@@ -2896,115 +2896,14 @@ main_17_TEXT	ends
 main_18_TEXT	segment	byte public 'CODE' use16
 	@TOTLE_METRIC_DIGIT_ANIMATE$QIII procdesc pascal near \
 		digit:word, place_and_top:dword
+	@EGC_PAGETRANS_ROWSHIFT_ALTERNATI$QII procdesc pascal near \
+		y: word, transferred_chunk_left:word
 main_18_TEXT	ends
 
 main_18__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_18
 		;org 0Bh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12C62	proc near
-
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		enter	4, 0
-		push	si
-		push	di
-		test	byte ptr [bp+arg_2], 1
-		jz	short loc_12C80
-		mov	ax, [bp+arg_2]
-		imul	ax, 50h
-		add	ax, 4Ch	; 'L'
-		mov	si, ax
-		mov	[bp+var_2], 0FFFCh
-		jmp	short loc_12C8D
-; ---------------------------------------------------------------------------
-
-loc_12C80:
-		mov	ax, [bp+arg_2]
-		imul	ax, 50h
-		mov	si, ax
-		mov	[bp+var_2], 4
-
-loc_12C8D:
-		mov	[bp+var_4], 0
-		jmp	short loc_12CCC
-; ---------------------------------------------------------------------------
-
-loc_12C94:
-		add	si, [bp+var_2]
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		mov	di, es:[bx]
-		mov	ax, si
-		sub	ax, [bp+var_2]
-		mov	bx, word ptr _VRAM_PLANE_B
-		add	bx, ax
-		mov	es:[bx], di
-		mov	bx, word ptr _VRAM_PLANE_B
-		add	bx, si
-		mov	di, es:[bx+2]
-		mov	ax, si
-		sub	ax, [bp+var_2]
-		add	ax, 2
-		mov	bx, word ptr _VRAM_PLANE_B
-		add	bx, ax
-		mov	es:[bx], di
-		inc	[bp+var_4]
-
-loc_12CCC:
-		cmp	[bp+var_4], 13h
-		jl	short loc_12C94
-		cmp	[bp+var_2], 0
-		jle	short loc_12CE3
-		mov	ax, [bp+arg_2]
-		imul	ax, 50h
-		add	ax, [bp+arg_0]
-		jmp	short loc_12CEF
-; ---------------------------------------------------------------------------
-
-loc_12CE3:
-		mov	ax, [bp+arg_2]
-		imul	ax, 50h
-		add	ax, 4Ch	; 'L'
-		sub	ax, [bp+arg_0]
-
-loc_12CEF:
-		mov	[bp+var_4], ax
-		push	1
-		call	_graph_accesspage_func
-		les	bx, _VRAM_PLANE_B
-		add	bx, [bp+var_4]
-		mov	di, es:[bx]
-		push	0
-		call	_graph_accesspage_func
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		mov	es:[bx], di
-		push	1
-		call	_graph_accesspage_func
-		les	bx, _VRAM_PLANE_B
-		add	bx, [bp+var_4]
-		mov	di, es:[bx+2]
-		push	0
-		call	_graph_accesspage_func
-		add	sp, 8
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		mov	es:[bx+2], di
-		pop	di
-		pop	si
-		leave
-		retn	4
-sub_12C62	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3071,13 +2970,13 @@ loc_12DC9:
 		add	bx, ax
 		cmp	word ptr es:[bx], 0
 		jz	short loc_12E0C
-		push	si
+		push	si	; y
 		mov	ax, si
 		add	ax, ax
 		les	bx, [bp+_font]
 		add	bx, ax
-		push	word ptr es:[bx]
-		call	sub_12C62
+		push	word ptr es:[bx]	; transferred_chunk_left
+		call	@egc_pagetrans_rowshift_alternati$qii
 		mov	ax, si
 		add	ax, ax
 		les	bx, [bp+_font]

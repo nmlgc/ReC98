@@ -198,5 +198,6 @@ static inline vram_offset_t vram_offset_divshift_wtf(screen_x_t x, vram_y_t y) {
 typedef dots16_t egc_temp_t;
 
 #define egc_chunk(offset) \
+	/* For code generation reasons, [offset] must NOT be parenthesized here */ \
 	VRAM_CHUNK(B, offset, 16)
 // ----------
