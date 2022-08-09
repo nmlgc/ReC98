@@ -31,8 +31,7 @@ typedef enum {
 void pascal near box_1_to_0_masked(box_mask_t mask)
 {
 	extern const dot_rect_t(16, 4) BOX_MASKS[BOX_MASK_COUNT];
-	dots_t(16) dots;
-	#define CHUNK_W static_cast<int>(sizeof(dots) * BYTE_DOTS)
+	egc_temp_t tmp;
 
 	for(screen_y_t y = BOX_TOP; y < BOX_BOTTOM; y++) {
 		outport2(EGC_READPLANEREG, 0x00ff);
@@ -44,11 +43,10 @@ void pascal near box_1_to_0_masked(box_mask_t mask)
 		vram_offset_t vram_offset = vram_offset_shift(BOX_LEFT, y);
 		pixel_t x = 0;
 		while(x < BOX_W) {
-			graph_accesspage(1);	egc_snap(dots, vram_offset, 16);
-			graph_accesspage(0);	egc_put(vram_offset, dots, 16);
-			x += CHUNK_W;
-			vram_offset += (CHUNK_W / BYTE_DOTS);
+			graph_accesspage(1);	tmp = egc_chunk(vram_offset);
+			graph_accesspage(0);	egc_chunk(vram_offset) = tmp;
+			x += EGC_REGISTER_DOTS;
+			vram_offset += EGC_REGISTER_SIZE;
 		}
 	}
-	#undef CHUNK_W
 }

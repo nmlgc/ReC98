@@ -189,9 +189,14 @@ static inline vram_offset_t vram_offset_divshift_wtf(screen_x_t x, vram_y_t y) {
 	/* Nope, pokeb() doesn't generate the same code */ \
 	*reinterpret_cast<dots8_t *>(MK_FP(SEG_PLANE_B, offset)) = src
 
-#define grcg_snap(dst, offset, bit_count) \
-	VRAM_SNAP(dst, B, offset, bit_count)
+// EGC
+// ---
 
-#define egc_put         	grcg_put
-#define egc_put_emptyopt	grcg_put_emptyopt
-#define egc_snap        	grcg_snap
+// ZUN bloat: Dummy value returned from an EGC copy read. Can be replaced with
+// a pseudoregister to avoid one unnecessary store (for snapping) or load (for
+// blitting) per EGC operation.
+typedef dots16_t egc_temp_t;
+
+#define egc_chunk(offset) \
+	VRAM_CHUNK(B, offset, 16)
+// ----------

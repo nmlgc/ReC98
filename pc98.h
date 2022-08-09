@@ -174,3 +174,11 @@ typedef int8_t uint4_t;
 // Segment distance between G↔E
 #define SEG_PLANE_DIST_E 0x2800
 /// ---------------
+
+/// EGC
+/// ---
+/// The PC-98 EGC always operates on 16 dots at a time.
+
+static const int EGC_REGISTER_DOTS = 16;
+static const int EGC_REGISTER_SIZE = (EGC_REGISTER_DOTS / BYTE_DOTS);
+/// ---
