@@ -18,15 +18,10 @@ extern "C" {
 #include "th01/snd/mdrv2.h"
 }
 
-#undef RES_ID
-
 bool16 end_init(void)
 {
 	int i;
-	#define RES_ID RES_ID_0
-	extern const char RES_ID[];
 	resident_t __seg *sgm = ResData<resident_t>::exist(RES_ID);
-	#undef RES_ID
 	if(sgm) {
 		resident_t* resident = sgm;
 		if(resident->end_flag) {
@@ -48,13 +43,11 @@ bool16 end_init(void)
 			resident->continues_total = 0;
 			resident->score_highest = 0;
 		} else {
-			extern const char ERROR_END_FLAG[];
-			puts(ERROR_END_FLAG);
+			puts("ERROR : end_flag is not ture !!");
 			return false;
 		}
 	} else {
-		extern const char ERROR_NO_RESDATA[];
-		puts(ERROR_NO_RESDATA);
+		puts("ERROR : cfg_id is not alloc!!");
 		return false;
 	}
 	return true;
@@ -63,10 +56,7 @@ bool16 end_init(void)
 bool16 end_resident_clear(void)
 {
 	int i;
-	#define RES_ID RES_ID_1
-	extern const char RES_ID[];
 	resident_t __seg *sgm = ResData<resident_t>::exist(RES_ID);
-	#undef RES_ID
 	if(sgm) {
 		resident_t* resident = sgm;
 		resident->score = 0;
@@ -83,9 +73,6 @@ bool16 end_resident_clear(void)
 
 void main(int argc, const char *argv[])
 {
-	extern char OP_PATH[];
-	extern char OP_ARG0[];
-
 	if(!mdrv2_resident()) {
 		return;
 	}
@@ -110,5 +97,5 @@ void main(int argc, const char *argv[])
 	game_init();
 	end_and_verdict_and_regist_animate();
 	game_switch_binary();
-	execl(OP_PATH, OP_ARG0, nullptr, nullptr);
+	execl("op", "op", nullptr, nullptr);
 }

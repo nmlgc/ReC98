@@ -14,7 +14,7 @@
 ; Application type:  Executable	16bit
 
 		.386
-		.model use16 large _TEXT
+		.model use16 large
 
 include ReC98.inc
 include th01/th01.inc
@@ -48,92 +48,7 @@ include libs/master.lib/gdc_outpw.asm
 include libs/master.lib/random.asm
 _TEXT		ends
 
-; ===========================================================================
-
-; Segment type:	Pure code
-fuuin_01_TEXT	segment	byte public 'CODE' use16
-fuuin_01_TEXT	ends
-
-; ===========================================================================
-
-fuuin_02_TEXT	segment	byte public 'CODE' use16
-fuuin_02_TEXT	ends
-
-; ===========================================================================
-
-; Segment type:	Pure code
-fuuin_03_TEXT	segment	byte public 'CODE' use16
-fuuin_03_TEXT	ends
-
-; ===========================================================================
-
-; Segment type:	Pure code
-fuuin_04_TEXT	segment	byte public 'CODE' use16
-fuuin_04_TEXT	ends
-
-; ===========================================================================
-
-; Segment type:	Pure code
-vsync_TEXT	segment	byte public 'CODE' use16
-vsync_TEXT	ends
-
-; ===========================================================================
-
-ztext_TEXT	segment	byte public 'CODE' use16
-ztext_TEXT	ends
-
-; ===========================================================================
-
-; Segment type:	Pure code
-initexit_TEXT	segment	byte public 'CODE' use16
-initexit_TEXT	ends
-
-; ===========================================================================
-
-; Segment type:	Pure code
-graph_TEXT	segment	byte public 'CODE' use16
-graph_TEXT	ends
-
-; ===========================================================================
-
-grppffx_TEXT	segment	byte public 'CODE' use16
-grppffx_TEXT	ends
-
-; ===========================================================================
-
-PTN_GRP_GRZ	segment	byte public 'CODE' use16
-PTN_GRP_GRZ	ends
-
-; ===========================================================================
-
-SHARED	segment	byte public 'CODE' use16
-SHARED	ends
-
-; ===========================================================================
-
-; Segment type:	Pure code
-GRAPH_EX_TEXT	segment	byte public 'CODE' use16
-GRAPH_EX_TEXT	ends
-
-; ===========================================================================
-
-; Segment type:	Pure code
-mdrv2_TEXT	segment	byte public 'CODE' use16
-mdrv2_TEXT	ends
-
 	.data
-
-public _score, _score_highest
-public _RES_ID_0, _RES_ID_1, _ERROR_END_FLAG, _ERROR_NO_RESDATA
-public _OP_PATH, _OP_ARG0
-_score	dd 100000
-_score_highest	dd 100000
-_RES_ID_0	db 'ReiidenConfig',0
-_ERROR_END_FLAG  	db 'ERROR : end_flag is not ture !!',0
-_ERROR_NO_RESDATA	db 'ERROR : cfg_id is not alloc!!',0
-_RES_ID_1	db 'ReiidenConfig',0
-_OP_PATH	db 'op',0
-_OP_ARG0	db 'op',0
 
 	; libs/master.lib/grp[data].asm
 	extern graph_VramSeg:word
@@ -170,17 +85,6 @@ IDLEN EQU 10
 
 	; libs/master.lib/rand[data].asm
 	extern random_seed:dword
-
-	.data?
-
-public _continues_total, _continues_per_scene
-_continues_total	dd ?
-_continues_per_scene	dd SCENE_COUNT dup(?)
-		db 308 dup(?)
-public _start_lives_extra, _end_flag, _rank
-_start_lives_extra	db ?
-_end_flag	db ? ; ZUN symbol [Strings]
-_rank	db ?
 
 	; libs/master.lib/pal[bss].asm
 	extern Palettes:rgb_t:COLOR_COUNT
