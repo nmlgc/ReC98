@@ -34,7 +34,7 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 : th01/sprites/laser_s.bmp |> !bmp2arr -sym sSHOOTOUT_LASER -of cpp -sw 16 -sh 8 |> th01/sprites/laser_s.csp
 
 : th01/sprites/pellet.bmp |> !bmp2arr -sym sPELLET -of cpp -sw 8 -sh 8 -pshf inner |> th01/sprites/pellet.csp
-: th01/sprites/pellet_c.bmp |> !bmp2arr -sym _sPELLET_CLOUD -of asm -sw 16 -sh 16 |> th01/sprites/pellet_c.asp
+: th01/sprites/pellet_c.bmp |> !bmp2arr -sym sPELLET_CLOUD -of cpp -sw 16 -sh 16 |> th01/sprites/pellet_c.csp
 : th01/sprites/pillar.bmp |> !bmp2arr -sym sPILLAR -of cpp -sw 32 -sh 8 |> th01/sprites/pillar.csp
 : th01/sprites/shape8x8.bmp |> !bmp2arr -sym sSHAPE8X8 -of cpp -sw 8 -sh 8 |> th01/sprites/shape8x8.csp
 : th01/sprites/bonusbox.bmp |> !bmp2arr -sym sSTAGEBONUS_BOX -of cpp -sw 8 -sh 4 |> th01/sprites/bonusbox.csp
@@ -61,9 +61,7 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 : zuncom\\cstmstub.asm |> $(AS) zuncom\%b %o |> bin\\zuncom\\%B.obj
 
 : th01_op.asm |> !as |> bin\\th01\\op.obj
-: th01_reiiden.asm | \
-	th01/sprites/pellet_c.asp \
-	|> !as |> bin\\th01\\reiiden.obj
+: th01_reiiden.asm |> !as |> bin\\th01\\reiiden.obj
 : th01_fuuin.asm |> !as |> bin\\th01\\fuuin.obj
 : th01_fuuin_data.asm |> !as |> bin\\th01\\fuuin_2.obj
 : th01_fuuin_master.asm |> !as |> bin\\th01\\fuuinm.obj

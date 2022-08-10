@@ -3301,7 +3301,6 @@ include libs/master.lib/clip[data].asm
 include libs/master.lib/sin8[data].asm
 include libs/master.lib/atan8[data].asm
 include libs/master.lib/rand[data].asm
-include th01/sprites/pellet_c.asp
 
 	extern _arc_key:byte
 	extern _card_flip_cycle:byte

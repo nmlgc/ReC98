@@ -7,6 +7,8 @@ extern "C" {
 #include "th01/main/bullet/pellet_c.hpp"
 #include "th01/sprites/pellet_c.hpp"
 
+#include "th01/sprites/pellet_c.csp"
+
 void pellet_cloud_put_8(screen_x_t left, vram_y_t top, int col, int cel)
 {
 	vram_offset_t vram_offset = vram_offset_shift(left, top);
