@@ -16,8 +16,8 @@ extern "C" {
 #include "th01/hardware/ztext.hpp"
 #include "th01/core/initexit.hpp"
 
-extern bool game_initialized;
-extern void interrupt (* int06_old)(...);
+static bool game_initialized = false;
+static void interrupt (* int06_old)(...);
 
 void interrupt int06_game_exit(...);
 void game_exit_inner(void);

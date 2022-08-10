@@ -284,7 +284,6 @@ _input_prev	db 10 dup(?)
 		evendata
 include th01/hardware/vsync[bss].asm
 		db 256 dup(?)
-include th01/core/initexit[bss].asm
 
 	; libs/master.lib/pal[bss].asm
 	extern Palettes:rgb_t:COLOR_COUNT
