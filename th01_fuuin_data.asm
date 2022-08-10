@@ -6,6 +6,5 @@
 	.data
 
 include th01/hardware/vsync[data].asm
-include th01/hardware/ztext[data].asm
 
 	end

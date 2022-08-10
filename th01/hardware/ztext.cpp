@@ -17,11 +17,7 @@
 #include "shiftjis.hpp"
 #include "th01/hardware/ztext.hpp"
 
-extern char txesc_25line[];
-extern char txesc_20line[];
-extern char txesc_systemline_show[];
-extern char txesc_systemline_hide[];
-extern char txesc_clear[];
+static int8_t unused[256]; // ZUN bloat
 
 void z_text_init(void)
 {
@@ -47,27 +43,27 @@ void z_text_exit(void)
 
 void z_text_25line(void)
 {
-	z_text_print(txesc_25line);
+	z_text_print("\x1B[>3l");
 }
 
 void z_text_20line(void)
 {
-	z_text_print(txesc_20line);
+	z_text_print("\x1B[>3h");
 }
 
 void z_text_systemline_show(void)
 {
-	z_text_print(txesc_systemline_show);
+	z_text_print("\x1B[>1l");
 }
 
 void z_text_systemline_hide(void)
 {
-	z_text_print(txesc_systemline_hide);
+	z_text_print("\x1B[>1h");
 }
 
 void z_text_clear(void)
 {
-	z_text_print(txesc_clear);
+	z_text_print("\x1B[2J");
 }
 
 void z_text_show(void)

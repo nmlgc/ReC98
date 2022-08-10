@@ -1591,7 +1591,6 @@ aCon		db 'CON',0
 ; char format[]
 format		db 'Ç®Ç¬Ç©ÇÍÇ≥Ç‹Ç≈ÇµÇΩÅIÅI',0Ah,0
 include th01/hardware/vsync[data].asm
-include th01/hardware/ztext[data].asm
 
 	; libs/master.lib/grp[data].asm
 	extern graph_VramSeg:word
@@ -1648,11 +1647,6 @@ _rand	dd ?
 public _columns
 _columns	dd ROW_SIZE dup (?)
 include th01/hardware/vsync[bss].asm
-		db 191 dup (?)
-word_13627	dw ?
-		db 60 dup (?)
-word_13665	dw ?
-		db ?
 
 	; libs/master.lib/pal[bss].asm
 	extern Palettes:rgb_t:COLOR_COUNT
