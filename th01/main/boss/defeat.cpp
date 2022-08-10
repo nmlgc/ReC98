@@ -150,17 +150,6 @@ void singyoku_defeat_animate_and_select_route(void)
 		}
 	} route_sel;
 
-	#undef ROUTE_SEL_1
-	#undef ROUTE_SEL_2
-	#undef ROUTE_SEL_3
-	#undef ROUTE_SEL_4
-	#undef ROUTE_SEL_5
-	extern const char ROUTE_SEL_1[];
-	extern const char ROUTE_SEL_2[];
-	extern const char ROUTE_SEL_3[];
-	extern const char ROUTE_SEL_4[];
-	extern const char ROUTE_SEL_5[];
-
 	graph_accesspage_func(1);
 	z_graph_clear(); // redundant
 	graph_glyphrow_put(0, V_WHITE, ROUTE_SEL_1);

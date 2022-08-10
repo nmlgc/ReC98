@@ -3373,13 +3373,6 @@ include th01/sprites/ileave_m.asp
 		db 0FFh
 include th01/sprites/laser_s.asp
 include th01/snd/mdrv2[data].asm
-public _ROUTE_SEL_1, _ROUTE_SEL_2, _ROUTE_SEL_3
-public _ROUTE_SEL_4, _ROUTE_SEL_5
-_ROUTE_SEL_1     	db '‚q‚n‚t‚m‚c@‚P@‚b‚k‚d‚`‚q',0
-_ROUTE_SEL_2     	db '‚b‚‚‚‡‚’‚‚”‚•‚Œ‚‚”‚‰‚‚II',0
-_ROUTE_SEL_3     	db '‚r‚…‚Œ‚…‚ƒ‚”@‚‚…‚˜‚”@‚q‚‚•‚‚„',0
-_ROUTE_SEL_4 	db '–‚ŠE‚Ö',0
-_ROUTE_SEL_5	db '’n–‚Ö',0
 
 	extern _arc_key:byte
 	extern _card_flip_cycle:byte
