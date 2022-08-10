@@ -5,6 +5,8 @@
 
 #pragma option -O- -1 -Z-
 
+static long unused_long = { 0 }; // ZUN bloat
+
 #include <io.h>
 #include <stdio.h>
 #include <string.h>
@@ -110,3 +112,10 @@ inline void regist_bg_put(const int16_t stage) {
 }
 
 #include "th01/hiscore/regist.cpp"
+
+// Global state that is defined here for some reason
+// -------------------------------------------------
+
+static int8_t unused; // ZUN bloat
+static uint8_t input_prev[10];
+// -------------------------------------------------

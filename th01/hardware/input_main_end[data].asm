@@ -1,3 +1,5 @@
+		db    0
+
 public _input_up, _input_down, _input_lr, _input_shot, _input_strike, _input_ok
 public _input_bomb, _done, _paused, _input_mem_enter, _input_mem_leave
 _input_lr	db 0

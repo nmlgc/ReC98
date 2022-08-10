@@ -3054,7 +3054,6 @@ _RANKS label dword
 _timer_initialized	db 0
 		db    0
 _first_stage_in_scene	db 1
-		db    0
 include th01/hardware/input_main_end[data].asm
 		db    0
 public _player_deflecting, _bomb_damaging, _player_sliding

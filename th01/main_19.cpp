@@ -3,8 +3,6 @@
  * Code segment #19 of TH01's REIIDEN.EXE
  */
 
-#pragma option -d
-
 #include <io.h>
 #include <stdio.h>
 #include <string.h>
@@ -28,13 +26,6 @@ extern "C" {
 #include "th01/formats/scoredat.hpp"
 
 extern char rank;
-
-int8_t* scoredat_names;
-int8_t* scoredat_routes;
-int16_t* scoredat_stages;
-screen_x_t entered_name_left;
-screen_y_t entered_name_top;
-int32_t* scoredat_score;
 
 #define scoredat_declare()
 #define scoredat_cli()

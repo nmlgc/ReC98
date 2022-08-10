@@ -226,9 +226,6 @@ _RES_ID_1	db 'ReiidenConfig',0
 path		db 'op',0
 ; char arg0[3]
 arg0		db 'op',0
-		db    0
-include th01/hardware/input_main_end[data].asm
-		dd 0
 
 	; libs/master.lib/grp[data].asm
 	extern graph_VramSeg:word
@@ -276,11 +273,6 @@ public _start_lives_extra, _end_flag, _rank
 _start_lives_extra	db ?
 _end_flag	db ? ; ZUN symbol [Strings]
 _rank	db ?
-		db ?
-include th01/hiscore/hiscore[bss].asm
-		db    ?	;
-public _input_prev
-_input_prev	db 10 dup(?)
 
 	; libs/master.lib/pal[bss].asm
 	extern Palettes:rgb_t:COLOR_COUNT

@@ -33,19 +33,6 @@ struct scoredat_t {
 };
 #endif
 
-extern int8_t* scoredat_names; // Yeah, technically a scoredat_name_t.
-extern int16_t* scoredat_stages;
-extern int32_t* scoredat_score;
-extern int8_t* scoredat_routes; // Yeah, technically a shiftjis_kanji_t.
-
-// Byte-wise access to [scoredat_routes].
-inline int8_t& scoredat_route_byte(int place, int byte) {
-	if(byte == 0) {
-		return scoredat_routes[place * SCOREDAT_ROUTE_LEN];
-	}
-	return scoredat_routes[(place * SCOREDAT_ROUTE_LEN) + byte];
-}
-
 // Loads the score file for the current [rank], recreating it if necessary.
 // Returns 0 on success, 1 on failure.
 int scoredat_load();

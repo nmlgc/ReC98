@@ -11,6 +11,14 @@ extern "C" {
 // Null-terminated version of scoredat_name_t, used internally.
 typedef ShiftJISKanjiBuffer<SCOREDAT_NAME_KANJI + 1> scoredat_name_z_t;
 
+// Byte-wise access to [scoredat_routes].
+inline int8_t& scoredat_route_byte(int place, int byte) {
+	if(byte == 0) {
+		return scoredat_routes[place * SCOREDAT_ROUTE_LEN];
+	}
+	return scoredat_routes[(place * SCOREDAT_ROUTE_LEN) + byte];
+}
+
 #define TITLE_LEFT 48
 #define TITLE_TOP 0
 static const screen_x_t TITLE_BACK_LEFT = 0;
@@ -22,6 +30,7 @@ static const screen_y_t TITLE_BACK_BOTTOM = (TITLE_BACK_TOP + TITLE_BACK_H);
 
 /// Table
 /// -----
+
 #define TABLE_TOP 48
 #define TABLE_ROW_H GLYPH_H
 #define TABLE_BODY_TOP (TABLE_TOP + TABLE_ROW_H)
@@ -54,8 +63,8 @@ inline screen_x_t table_stage_left(int x_kanji) {
 }
 
 // Code generation actually prohibits this from being a Point!
-extern screen_x_t entered_name_left;
-extern screen_y_t entered_name_top;
+static screen_x_t entered_name_left;
+static screen_y_t entered_name_top;
 /// -----
 
 /// Alphabet
@@ -683,3 +692,9 @@ void regist(
 	_ES = FP_SEG(graph_accesspage_func); // Yes, no point to this at all.
 	scoredat_free();
 }
+
+// Global state that is defined here for some reason
+// -------------------------------------------------
+
+int32_t* scoredat_score;
+// -------------------------------------------------
