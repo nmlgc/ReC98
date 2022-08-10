@@ -1590,7 +1590,6 @@ aGogbgGtg@gcglv	db 'バッチファイルから起動してよ',0
 aCon		db 'CON',0
 ; char format[]
 format		db 'おつかれさまでした！！',0Ah,0
-include th01/hardware/vsync[data].asm
 
 	; libs/master.lib/grp[data].asm
 	extern graph_VramSeg:word
@@ -1646,7 +1645,6 @@ public _rand
 _rand	dd ?
 public _columns
 _columns	dd ROW_SIZE dup (?)
-include th01/hardware/vsync[bss].asm
 
 	; libs/master.lib/pal[bss].asm
 	extern Palettes:rgb_t:COLOR_COUNT

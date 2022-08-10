@@ -9,24 +9,41 @@
 #include "platform.h"
 #include "x86real.h"
 #include "pc98.h"
+#include "planar.h"
 #include "th01/hardware/vsync.hpp"
 
-extern bool vsync_initialized;
-extern int vsync_callback_is_set;
+extern bool vsync_initialized = false;
+extern bool16 vsync_callback_is_set = false;
 
-extern pixel_t RES_X_HALF;
-extern pixel_t RES_Y_HALF;
+static int32_t unused_7 = 7; // ZUN bloat
+static int32_t unused_0 = 0; // ZUN bloat
 
-extern int vsync_unused;
-extern void interrupt (*vsync_callback_old)(...);
-extern void (*vsync_callback)(void);
+static pixel_t RES_X_HALF = (RES_X / 2);
+static pixel_t RES_Y_HALF = (RES_Y / 2);
+
+// Unused mouse cursor (?!)
+// -------------------
+
+// (These meanings are just a guess.)
+static screen_x_t MOUSE_MIN_X = 0;
+static screen_y_t MOUSE_MIN_Y = 0;
+static screen_x_t MOUSE_MAX_X = (RES_X - 1);
+static screen_x_t MOUSE_MAX_Y = (RES_Y - 1);
+static int8_t mouse_unused = 0;
+#include "th01/sprites/mousecur.csp"
+// -------------------
+
+int z_vsync_Count1;
+int z_vsync_Count2;
+static void interrupt (*vsync_callback_old)(...);
+static void (*vsync_callback)(void);
 
 static void interrupt vsync_intfunc(...)
 {
 	pixel_t res_x_half = RES_X_HALF;
 	pixel_t res_y_half = RES_Y_HALF;
-	vsync_frame++;
-	vsync_unused++;
+	z_vsync_Count1++;
+	z_vsync_Count2++;
 	if(vsync_callback_is_set) {
 		vsync_callback();
 	}
@@ -76,12 +93,12 @@ void z_vsync_wait(void)
 
 void vsync_callback_set(void (*vsync_callback_new)())
 {
-	vsync_callback_is_set = 0;
+	vsync_callback_is_set = false;
 	vsync_callback = vsync_callback_new;
-	vsync_callback_is_set = 1;
+	vsync_callback_is_set = true;
 }
 
 void vsync_callback_clear(void)
 {
-	vsync_callback_is_set = 0;
+	vsync_callback_is_set = false;
 }

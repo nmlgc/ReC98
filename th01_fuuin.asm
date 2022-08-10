@@ -281,8 +281,6 @@ include th01/hiscore/hiscore[bss].asm
 		db    ?	;
 public _input_prev
 _input_prev	db 10 dup(?)
-		evendata
-include th01/hardware/vsync[bss].asm
 
 	; libs/master.lib/pal[bss].asm
 	extern Palettes:rgb_t:COLOR_COUNT

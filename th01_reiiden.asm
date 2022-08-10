@@ -3277,8 +3277,6 @@ aReiiden	db 'reiiden',0
 include th01/hiscore/routes[data].asm
 ; char aOp[3]
 aOp		db 'op',0
-		db 0
-include th01/hardware/vsync[data].asm
 
 	extern _z_Palettes:byte:(size rgb_t * COLOR_COUNT)
 PTN_SLOT_COUNT = 8
@@ -3412,7 +3410,6 @@ dword_3880A	dd ?
 word_3880E	dw ?
 public _player_left_prev
 _player_left_prev	dw ?
-include th01/hardware/vsync[bss].asm
 
 CCards struc
 	C_left       	dd ?

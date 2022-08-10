@@ -26,12 +26,13 @@ static const int TYPE_FX = (COL_TYPE | FX_WEIGHT_NORMAL);
 
 #include "th01/end/pic.cpp"
 
- // Special FUUIN.EXE version of frame_delay() that resets [vsync_frame] first.
+// Special FUUIN.EXE version of frame_delay() that resets [z_vsync_Count1]
+// first.
 extern "C" void frame_delay(unsigned int frames)
 {
-	vsync_frame = 0;
+	z_vsync_Count1 = 0;
 	while(1) {
-		if(vsync_frame >= frames) {
+		if(z_vsync_Count1 >= frames) {
 			break;
 		}
 		optimization_barrier();
@@ -40,6 +41,7 @@ extern "C" void frame_delay(unsigned int frames)
 
 /// .GRP palette fades
 /// ------------------
+
 void pascal grp_palette_settone(int tone)
 {
 	int col;

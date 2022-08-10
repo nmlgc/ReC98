@@ -1,4 +1,5 @@
-extern int vsync_frame;
+extern int z_vsync_Count1;
+extern int z_vsync_Count2;
 
 void vsync_init(void);
 void z_vsync_wait(void);
