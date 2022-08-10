@@ -3436,8 +3436,6 @@ include libs/master.lib/clip[bss].asm
 public _resident
 _resident	dd ?
 include th01/main/bullet/laser_s[bss].asm
-include th01/hiscore/hiscore[bss].asm
-		db 4 dup(?)
 
 CCards struc
 	C_left       	dd ?

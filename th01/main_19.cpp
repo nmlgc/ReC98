@@ -29,6 +29,13 @@ extern "C" {
 
 extern char rank;
 
+int8_t* scoredat_names;
+int8_t* scoredat_routes;
+int16_t* scoredat_stages;
+screen_x_t entered_name_left;
+screen_y_t entered_name_top;
+int32_t* scoredat_score;
+
 #define scoredat_declare()
 #define scoredat_cli()
 #define scoredat_sti()
@@ -119,3 +126,5 @@ void pascal near str_from_swapped_kanji(
 
 #include "th01/hiscore/regist.cpp"
 #include "th01/main/hiscore.cpp"
+
+static int32_t unused; // ZUN bloat
