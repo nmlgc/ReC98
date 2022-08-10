@@ -16,6 +16,5 @@ include th01/hardware/palette[data].asm
 include th01/hardware/graph_r[data].asm
 include th01/hardware/respal[data].asm
 include th01/formats/grp_ptn[data].asm
-include th01/snd/mdrv2[data].asm
 
 	end

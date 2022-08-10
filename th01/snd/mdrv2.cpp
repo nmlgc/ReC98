@@ -15,6 +15,8 @@ extern "C" {
 #include "th01/snd/mdrv2.h"
 }
 
+#define MDRV2_MAGIC "Mdrv2System"
+
 typedef enum {
 	MDRV2_MPLAY = 0x00,
 	MDRV2_MFADE_OUT_BLOCK = 0x01,
@@ -29,29 +31,32 @@ typedef enum {
 
 static const uint8_t MDRV2 = 0xF2;
 
+inline int16_t mdrv2_segment(void) {
+	// 0000:((0xF2 * 4) + 2)
+	return peek(0, ((MDRV2 * sizeof(void far *)) + sizeof(void near *)));
+}
+
 inline uint16_t mdrv2_call(mdrv2_func_t func) {
 	_AH = func;
 	geninterrupt(MDRV2);
 	return _AX;
 }
 
-extern char mdrv2_have_board;
-struct hack { char x[12]; }; // XXX
-extern const struct hack mdrv2_magic;
+static int8_t mdrv2_have_board = false; // ACTUAL TYPE: bool
+static int8_t mdrv2_unused = 0; // ZUN bloat
 
 bool16 mdrv2_resident(void)
 {
-	char s1[sizeof(mdrv2_magic)];
-	const struct hack s2 = mdrv2_magic;
-	char far *magicp = (char far *)(
-		((long)peek(0, MDRV2 * 4 + 2) << 16) + 0x102
+	char s1[sizeof(MDRV2_MAGIC)];
+	const char MAGIC[] = "Mdrv2System";
+	char far *magicp = reinterpret_cast<char far *>(
+		(static_cast<uint32_t>(mdrv2_segment()) << 16) + 0x102
 	);
-	int i;
 
-	for(i = 0; i < sizeof(s1); i++) {
+	for(int i = 0; i < sizeof(s1); i++) {
 		s1[i] = magicp[i];
 	}
-	if(strcmp(s1, s2.x) != 0) {
+	if(strcmp(s1, MAGIC) != 0) {
 		return false;
 	}
 	return true;

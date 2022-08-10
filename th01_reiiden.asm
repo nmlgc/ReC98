@@ -3343,7 +3343,6 @@ include th01/sprites/ileave_m.asp
 		db    0
 		db 0FFh
 include th01/sprites/laser_s.asp
-include th01/snd/mdrv2[data].asm
 
 	extern _arc_key:byte
 	extern _card_flip_cycle:byte
