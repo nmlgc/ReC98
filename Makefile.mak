@@ -53,7 +53,7 @@ bin\th01\reiiden.exe: bin\piloadc.obj bin\th01\reiiden.obj th01\main_010.cpp th0
 $**
 |
 
-bin\th01\fuuin.exe: bin\piloadc.obj bin\th01\fuuin.obj th01\fuuin_01.cpp th01\fuuin_02.cpp th01\fuuin_03.cpp th01\fuuin_04.cpp bin\th01\vsync.obj bin\th01\ztext.obj bin\th01\initexit.obj bin\th01\graph.obj bin\th01\grppffx.obj th01\fuuin_10.cpp bin\th01\vplanset.obj th01\fuuin_11.cpp th01\2x_fuuin.cpp bin\th01\mdrv2.obj bin\th01\fuuin_2.obj
+bin\th01\fuuin.exe: bin\piloadc.obj bin\th01\fuuin.obj th01\fuuin_01.cpp th01\fuuin_02.cpp th01\fuuin_03.cpp th01\fuuin_04.cpp bin\th01\fuuin_2.obj bin\th01\vsync.obj bin\th01\ztext.obj bin\th01\initexit.obj bin\th01\graph.obj bin\th01\grppffx.obj th01\fuuin_10.cpp bin\th01\vplanset.obj th01\fuuin_11.cpp th01\2x_fuuin.cpp bin\th01\mdrv2.obj bin\th01\fuuinm.obj
 	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -3 -Z -DGAME=1 -DBINARY='E' -nbin\th01\ -eFUUIN.EXE @&&|
 $**
 |
