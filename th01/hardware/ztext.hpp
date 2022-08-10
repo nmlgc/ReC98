@@ -10,7 +10,8 @@ typedef enum {
 } z_text_cursor_t;
 
 // Attribute bits for z_text_vputsa(), completely differing from the PC-98
-// hardware text attribute bits.
+// hardware text attribute bits. Probably because they match the default
+// [z_Palettes] colors?
 #define Z_ATRB_BLUE     	0x1
 #define Z_ATRB_GREEN    	0x2
 #define Z_ATRB_RED      	0x4

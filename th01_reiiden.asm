@@ -3281,10 +3281,8 @@ aOp		db 'op',0
 include th01/hardware/vsync[data].asm
 include th01/hardware/ztext[data].asm
 include th01/core/initexit[data].asm
-include th01/hardware/palette[data].asm
-include th01/hardware/graph_r[data].asm
-include th01/hardware/respal[data].asm
 
+	extern _z_Palettes:byte:(size rgb_t * COLOR_COUNT)
 PTN_SLOT_COUNT = 8
 	extern _ptn_image_count:byte:PTN_SLOT_COUNT
 
@@ -3419,7 +3417,6 @@ _player_left_prev	dw ?
 include th01/hardware/vsync[bss].asm
 		db 256 dup(?)
 include th01/core/initexit[bss].asm
-include th01/hardware/graph[bss].asm
 
 CCards struc
 	C_left       	dd ?

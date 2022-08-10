@@ -3,15 +3,10 @@
 	.386
 	.model use16 large
 
-include pc98.inc
-
 	.data
 
 include th01/hardware/vsync[data].asm
 include th01/hardware/ztext[data].asm
 include th01/core/initexit[data].asm
-include th01/hardware/palette[data].asm
-include th01/hardware/graph_r[data].asm
-include th01/hardware/respal[data].asm
 
 	end

@@ -1593,9 +1593,6 @@ format		db 'Ç®Ç¬Ç©ÇÍÇ≥Ç‹Ç≈ÇµÇΩÅIÅI',0Ah,0
 include th01/hardware/vsync[data].asm
 include th01/hardware/ztext[data].asm
 include th01/core/initexit[data].asm
-include th01/hardware/palette[data].asm
-include th01/hardware/graph_r[data].asm
-include th01/hardware/respal[data].asm
 
 	; libs/master.lib/grp[data].asm
 	extern graph_VramSeg:word
@@ -1658,7 +1655,6 @@ word_13627	dw ?
 word_13665	dw ?
 		db ?
 include th01/core/initexit[bss].asm
-include th01/hardware/graph[bss].asm
 
 	; libs/master.lib/pal[bss].asm
 	extern Palettes:rgb_t:COLOR_COUNT

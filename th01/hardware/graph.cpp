@@ -20,7 +20,11 @@ extern "C" {
 #undef grcg_off
 #define grcg_off() outportb(0x7C, 0);
 
-extern page_t page_accessed;
+// Never read from, so it's supposedly only there for debugging purposes?
+static screen_point_t graph_r_last_line_end;
+
+static int8_t unused; // ZUN bloat
+static page_t page_accessed;
 
 /// VRAM plane "structures"
 /// -----------------------
@@ -214,6 +218,28 @@ void grcg_off_func(void)
 
 /// Palette
 /// -------
+
+Palette4 z_Palettes = {
+	// These match the Z_ATRB_* bits, interestingly?
+	0x0, 0x0, 0x0, //  0: Black
+	0x0, 0x0, 0xF, //  1: Blue
+	0x0, 0xF, 0x0, //  2: Green
+	0x0, 0xF, 0xF, //  3: Cyan
+	0xF, 0x0, 0x0, //  4: Red
+	0xF, 0x0, 0xF, //  5: Magenta
+	0xF, 0xF, 0x0, //  6: Yellow
+	0xF, 0xF, 0xF, //  7: White
+
+	0x8, 0x8, 0x8, //  8: Gray
+	0x0, 0x0, 0xA, //  9: Dark blue
+	0x0, 0xA, 0x0, // 10: Dark green
+	0x0, 0xA, 0xA, // 11: Dark cyan
+	0xA, 0x0, 0x0, // 12: Dark red
+	0xA, 0x0, 0xA, // 13: Purple
+	0xA, 0xA, 0x0, // 14: Gold
+	0xC, 0xC, 0xC, // 15: Silver
+};
+
 void z_palette_set_all_show(const Palette4& pal)
 {
 	for(int i = 0; i < COLOR_COUNT; i++) {
@@ -280,6 +306,7 @@ void graph_copy_accessed_page_to_other(void)
 
 /// Palette fades
 /// -------------
+
 #define FADE_DELAY 10
 #define fade_loop(pal, per_comp) \
 	for(int i = 0; i < pal.range(); i++) { \
@@ -399,14 +426,13 @@ int z_graph_readdot(screen_x_t x, vram_y_t y)
 /// Restorable line drawing
 /// -----------------------
 
-// Never read from, so it's supposedly only there for debugging purposes?
-extern screen_point_t graph_r_last_line_end;
 // `true` copies the pixels to be drawn from the same position on page 1, thus
 // restoring them with the background image. `false` (the default) draws them
 // regularly in the given [col].
-extern bool graph_r_unput;
+static bool graph_r_unput = false;
+
 // Not used for purely horizontal lines.
-extern dots16_t graph_r_pattern;
+static dots16_t graph_r_pattern = 0x80; // 1 pixel (*       )
 
 void graph_r_hline(screen_x_t left, screen_x_t right, vram_y_t y, int col)
 {
@@ -909,9 +935,8 @@ void z_palette_fade_from(
 
 // Resident palette
 // ----------------
+
 #define RESPAL_ID "pal98 grb"
-struct hack { char x[sizeof(RESPAL_ID)]; }; // XXX
-extern const hack PAL98_GRB;
 
 // MASTER.MAN suggests that GBR ordering is some sort of standard on PC-98.
 // It does match the order of the hardware's palette register ports, after
@@ -948,7 +973,7 @@ respal_t __seg* z_respal_exist(void)
 {
 	union REGS regs;
 	struct SREGS sregs;
-	const hack ID = PAL98_GRB;
+	const char ID[] = RESPAL_ID;
 	seg_t mcb;
 	int i;
 
@@ -963,7 +988,7 @@ respal_t __seg* z_respal_exist(void)
 	while(1) {
 		if(MCB->m_psp != 0) {
 			for(i = 0; i < sizeof(ID); i++) {
-				if(reinterpret_cast<respal_t *>(MCB + 1)->id[i] != ID.x[i]) {
+				if(reinterpret_cast<respal_t *>(MCB + 1)->id[i] != ID[i]) {
 					break;
 				}
 			}

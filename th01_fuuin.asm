@@ -230,9 +230,6 @@ arg0		db 'op',0
 include th01/hardware/input_main_end[data].asm
 		dd 0
 
-	; th01/hardware/palette[data].asm
-	extern _z_Palettes:rgb_t:COLOR_COUNT
-
 	; libs/master.lib/grp[data].asm
 	extern graph_VramSeg:word
 	extern graph_VramWords:word
@@ -288,7 +285,6 @@ _input_prev	db 10 dup(?)
 include th01/hardware/vsync[bss].asm
 		db 256 dup(?)
 include th01/core/initexit[bss].asm
-include th01/hardware/graph[bss].asm
 
 	; libs/master.lib/pal[bss].asm
 	extern Palettes:rgb_t:COLOR_COUNT
