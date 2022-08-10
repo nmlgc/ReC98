@@ -31,7 +31,6 @@ struct ptn_t : public ptn_file_image_t {
 };
 
 extern ptn_t* ptn_images[PTN_SLOT_COUNT];
-extern int8_t ptn_image_count[PTN_SLOT_COUNT];
 
 // MODDERS: Make [id] unsigned
 static inline ptn_t* ptn_with_id(int id) {

@@ -71,8 +71,8 @@ extern dots8_t far *VRAM_PLANE[PLANE_COUNT];
 // And no, expressing these as a struct won't generate the same ASM.
 // Been there, tried that.
 extern dots8_t far *VRAM_PLANE_B;
-extern dots8_t far *VRAM_PLANE_G;
 extern dots8_t far *VRAM_PLANE_R;
+extern dots8_t far *VRAM_PLANE_G;
 extern dots8_t far *VRAM_PLANE_E;
 
 // Byte offset of an 8-pixel-aligned X/Y position on a VRAM bitplane,

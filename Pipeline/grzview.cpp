@@ -17,22 +17,6 @@ extern "C" {
 	{
 		grcg_off();
 	}
-
-	// Temporary declarations for local GRZ data
-	// -----------------------------------------
-	// TODO: These will cause duplicate symbol errors once those are defined
-	// in th01/formats/grz.cpp; remove this section once that is the case.
-
-	// `const` would prevent them from being exported?!
-	char HGRZ_MAGIC[4] = "HGRZ";
-	char HGRX_MAGIC[4] = "HGRX";
-
-	char planar_stream_id;
-	char grx_col;
-	uint8_t* rle_streams[GRX_COUNT];
-	dots8_t* planar_streams[GRX_COUNT][PLANAR_STREAM_PER_GRX_COUNT];
-	unsigned char planar_stream_count[GRX_COUNT];
-	// -----------------------------------------
 }
 
 void z_palette_set_all_show(const Palette4& pal)

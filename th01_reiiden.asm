@@ -3284,8 +3284,9 @@ include th01/core/initexit[data].asm
 include th01/hardware/palette[data].asm
 include th01/hardware/graph_r[data].asm
 include th01/hardware/respal[data].asm
-include th01/formats/grp_ptn[data].asm
-include th01/formats/grz[data].asm
+
+PTN_SLOT_COUNT = 8
+	extern _ptn_image_count:byte:PTN_SLOT_COUNT
 
 	; libs/master.lib/tx[data].asm
 	extern TextVramSeg:word
@@ -3376,6 +3377,8 @@ dword_36C20	dd ?
 include th01/main/player/player[bss].asm
 include th01/main/player/orb[bss].asm
 
+PTN_W = 32
+PTN_H = 32
 STAGEOBJ_W = PTN_W
 STAGEOBJ_H = PTN_H
 STAGEOBJS_X = (PLAYFIELD_W / STAGEOBJ_W)
@@ -3417,11 +3420,6 @@ include th01/hardware/vsync[bss].asm
 		db 256 dup(?)
 include th01/core/initexit[bss].asm
 include th01/hardware/graph[bss].asm
-include th01/hardware/vram_planes[bss].asm
-		db 80 dup(?)
-include th01/formats/grp_palette[bss].asm
-include th01/formats/ptn_grz[bss].asm
-include th01/formats/grp_buf[bss].asm
 
 CCards struc
 	C_left       	dd ?
@@ -3439,6 +3437,8 @@ CObstacles struc
 	O_frames	dd ?
 	O_count 	dw ?
 CObstacles ends
+
+	extern _ptn_images:dword:PTN_SLOT_COUNT
 
 	; libs/master.lib/pal[bss].asm
 	extern Palettes:rgb_t:COLOR_COUNT

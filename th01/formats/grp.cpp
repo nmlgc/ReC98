@@ -17,10 +17,9 @@ extern "C" {
 // *Not* offsetof(PiHeader, palette)!
 #define PI_PALETTE_OFFSET 0x12
 
-extern int8_t* grp_buf;
-extern int flag_palette_show; // = true
-extern int flag_grp_put; // = true
-extern bool flag_grp_colorkey; // = false
+extern bool16 flag_palette_show;
+extern bool16 flag_grp_put;
+extern bool flag_grp_colorkey;
 
 int grp_palette_load_show_sane(const char *fn)
 {
@@ -66,6 +65,7 @@ void grp_palette_set_all(const Palette4& pal)
 
 int grp_put_palette_show(const char *fn)
 {
+	extern int8_t* grp_buf;
 	int option = 0;
 	char ret;
 

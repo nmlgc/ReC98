@@ -289,11 +289,6 @@ include th01/hardware/vsync[bss].asm
 		db 256 dup(?)
 include th01/core/initexit[bss].asm
 include th01/hardware/graph[bss].asm
-		db 80 dup(?)
-include th01/formats/grp_palette[bss].asm
-		db 1136 dup(?)
-include th01/formats/grp_buf[bss].asm
-include th01/hardware/vram_planes[bss].asm
 
 	; libs/master.lib/pal[bss].asm
 	extern Palettes:rgb_t:COLOR_COUNT

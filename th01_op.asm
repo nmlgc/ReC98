@@ -1596,8 +1596,6 @@ include th01/core/initexit[data].asm
 include th01/hardware/palette[data].asm
 include th01/hardware/graph_r[data].asm
 include th01/hardware/respal[data].asm
-include th01/formats/grp_ptn[data].asm
-include th01/formats/grz[data].asm
 
 	; libs/master.lib/grp[data].asm
 	extern graph_VramSeg:word
@@ -1661,11 +1659,6 @@ word_13665	dw ?
 		db ?
 include th01/core/initexit[bss].asm
 include th01/hardware/graph[bss].asm
-include th01/hardware/vram_planes[bss].asm
-		db 80 dup(?)
-include th01/formats/grp_palette[bss].asm
-include th01/formats/ptn_grz[bss].asm
-include th01/formats/grp_buf[bss].asm
 
 	; libs/master.lib/pal[bss].asm
 	extern Palettes:rgb_t:COLOR_COUNT
