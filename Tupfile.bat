@@ -7,7 +7,7 @@ bin\\Pipeline\\bmp2arr.exe -q -i th01/sprites/leaf_s.bmp -o th01/sprites/leaf_s.
 bin\\Pipeline\\bmp2arr.exe -q -i th01/sprites/leaf_l.bmp -o th01/sprites/leaf_l.csp -sym sLEAF_LEFT -of cpp -sw 8 -sh 8
 bin\\Pipeline\\bmp2arr.exe -q -i th01/sprites/leaf_r.bmp -o th01/sprites/leaf_r.csp -sym sLEAF_RIGHT -of cpp -sw 8 -sh 8
 bin\\Pipeline\\bmp2arr.exe -q -i th01/sprites/ileave_m.bmp -o th01/sprites/ileave_m.asp -sym _sINTERLEAVE_MASKS -of asm -sw 8 -sh 8
-bin\\Pipeline\\bmp2arr.exe -q -i th01/sprites/laser_s.bmp -o th01/sprites/laser_s.asp -sym _sSHOOTOUT_LASER -of asm -sw 16 -sh 8
+bin\\Pipeline\\bmp2arr.exe -q -i th01/sprites/laser_s.bmp -o th01/sprites/laser_s.csp -sym sSHOOTOUT_LASER -of cpp -sw 16 -sh 8
 bin\\Pipeline\\bmp2arr.exe -q -i th01/sprites/pellet.bmp -o th01/sprites/pellet.csp -sym sPELLET -of cpp -sw 8 -sh 8 -pshf inner
 bin\\Pipeline\\bmp2arr.exe -q -i th01/sprites/pellet_c.bmp -o th01/sprites/pellet_c.asp -sym _sPELLET_CLOUD -of asm -sw 16 -sh 16
 bin\\Pipeline\\bmp2arr.exe -q -i th01/sprites/pillar.bmp -o th01/sprites/pillar.csp -sym sPILLAR -of cpp -sw 32 -sh 8

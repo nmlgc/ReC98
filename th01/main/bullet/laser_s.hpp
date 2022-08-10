@@ -65,6 +65,10 @@ public:
 	bool damaging;
 	char id;	// unused
 
+	CShootoutLaser() {
+		alive = false;
+	}
+
 protected:
 	// MODDERS: Just turn into a parameter of hittest_and_render().
 	enum { SL_RAY_UNPUT = false, SL_RAY_PUT = true } put_flag;

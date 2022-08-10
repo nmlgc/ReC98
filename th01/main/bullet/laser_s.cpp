@@ -2,7 +2,7 @@
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
-#include "th01/sprites/laser_s.h"
+#include "th01/sprites/laser_s.hpp"
 #include "th01/hardware/egc.h"
 extern "C" {
 #include "th01/hardware/graph.h"
@@ -11,6 +11,10 @@ extern "C" {
 #include "th01/main/playfld.hpp"
 #include "th01/main/player/player.hpp"
 #include "th01/main/bullet/laser_s.hpp"
+
+#include "th01/sprites/laser_s.csp"
+
+CShootoutLaser shootout_lasers[SHOOTOUT_LASER_COUNT];
 
 void CShootoutLaser::spawn(
 	screen_x_t _origin_left,

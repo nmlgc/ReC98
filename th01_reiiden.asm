@@ -35,8 +35,6 @@ BOSS_STAGE = (STAGES_PER_SCENE - 1)
 	option emulator
 
 	extern @$bdla$qnv:proc
-	extern @$bnew$qui:proc
-	extern @_vector_new_$qnvuiuluie:proc
 	extern @set_new_handler$qnqv$v:proc
 	extern FTOL@:proc
 	extern SCOPY@:proc
@@ -56,7 +54,6 @@ BOSS_STAGE = (STAGES_PER_SCENE - 1)
 	extern _toupper:proc
 
 main_01 group main_010_TEXT, main_011_TEXT, main_012_TEXT, main_013_TEXT
-main_15 group main_15_TEXT, main_15__TEXT
 
 ; ===========================================================================
 
@@ -2797,71 +2794,39 @@ main_14_TEXT	ends
 
 ; Segment type:	Pure code
 main_15_TEXT	segment	byte public 'CODE' use16
+SHOOTOUT_LASER_COUNT = 10
+
+CShootoutLaser struc
+	SL_origin_left	dd ?
+	SL_origin_y	dd ?
+	SL_ray_start_left	dd ?
+	SL_ray_start_y	dd ?
+	SL_ray_i_left	dd ?
+	SL_ray_i_y	dd ?
+	SL_ray_length	dw ?
+	SL_ray_moveout_speed	dw ?
+	SL_target_x	dw ?
+	SL_target_y	dw ?
+	SL_unknown	dw ?
+		dd ?
+	SL_velocity_y	dd ?
+	SL_step_y	dd ?
+	SL_velocity_x	dd ?
+	SL_step_x	dd ?
+	SL_ray_extend_speed	dw ?
+		dw ?
+	SL_alive	dw ?
+	SL_age	dw ?
+	SL_moveout_at_age	dw ?
+	SL_col	db ?
+	SL_width_cel	db ?
+	SL_damaging	db ?
+	SL_id	db ?
+		db ?
+CShootoutLaser ends
+
 	extern @CShootoutLaser@update_hittest_and_render$qv:proc
 main_15_TEXT	ends
-
-main_15__TEXT	segment	byte public 'CODE' use16
-		assume cs:main_15
-		;org 0Dh
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1240A	proc far
-		push	bp
-		mov	bp, sp
-		push	seg main_15
-		push	offset sub_12428
-		push	5
-		pushd	SHOOTOUT_LASER_COUNT
-		push	size CShootoutLaser
-		push	ds
-		push	offset _shootout_lasers
-		call	@_vector_new_$qnvuiuluie ; _vector_new_(void *,uint,ulong,uint,...)
-		add	sp, 10h
-		pop	bp
-		retf
-sub_1240A	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_12428	proc far
-
-@@CShootoutLaser		= dword	ptr  6
-
-		push	bp
-		mov	bp, sp
-		cmp	[bp+@@CShootoutLaser], 0
-		jnz	short loc_12444
-		push	size CShootoutLaser
-		call	@$bnew$qui	; operator new(uint)
-		pop	cx
-		mov	word ptr [bp+@@CShootoutLaser+2], dx
-		mov	word ptr [bp+@@CShootoutLaser], ax
-		or	ax, dx
-		jz	short loc_1244D
-
-loc_12444:
-		les	bx, [bp+@@CShootoutLaser]
-		mov	es:[bx+CShootoutLaser.SL_alive], 0
-
-loc_1244D:
-		mov	dx, word ptr [bp+@@CShootoutLaser+2]
-
-loc_12450:
-		mov	ax, word ptr [bp+@@CShootoutLaser]
-		pop	bp
-
-locret_12454:
-		retf
-sub_12428	endp
-
-main_15__TEXT	ends
 
 ; ===========================================================================
 
@@ -3342,7 +3307,6 @@ _res_id	db 'ReiidenConfig',0
 include th01/sprites/ileave_m.asp
 		db    0
 		db 0FFh
-include th01/sprites/laser_s.asp
 
 	extern _arc_key:byte
 	extern _card_flip_cycle:byte
@@ -3355,9 +3319,6 @@ _INIT_	segment word public 'INITDATA' use16
 		db    1
 		db  20h
 		dd sub_E319
-		db    1
-		db  20h
-		dd sub_1240A
 _INIT_	ends
 
 	.data?
@@ -3434,7 +3395,6 @@ include libs/master.lib/keystart[bss].asm
 include libs/master.lib/clip[bss].asm
 public _resident
 _resident	dd ?
-include th01/main/bullet/laser_s[bss].asm
 
 CCards struc
 	C_left       	dd ?
@@ -3453,6 +3413,7 @@ CObstacles struc
 	O_count 	dw ?
 CObstacles ends
 
+	extern _shootout_lasers:byte
 	extern _stage_palette:palette_t
 	extern _hud_bg:dword
 	extern _hud_bg_size:word
