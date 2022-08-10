@@ -11,15 +11,15 @@ extern "C" {
 #include "th01/common.h"
 #include "th01/resident.hpp"
 
-extern const char res_id[] /* = RES_ID */;
+resident_t far *resident;
 
 void resident_stuff_set(
 	char rank, char bgm_mode, char bombs, char start_lives_extra, long rand
 )
 {
-	resident_t __seg *sgm = ResData<resident_t>::exist(res_id);
+	resident_t __seg *sgm = ResData<resident_t>::exist(RES_ID);
 	if(!sgm) {
-		sgm = ResData<resident_t>::create(res_id);
+		sgm = ResData<resident_t>::create(RES_ID);
 		resident = sgm;
 		resident->stage = 0;
 		resident->continues_total = 0;
@@ -45,7 +45,7 @@ int resident_stuff_get(
 	int *stage
 )
 {
-	resident_t __seg *sgm = ResData<resident_t>::exist(res_id);
+	resident_t __seg *sgm = ResData<resident_t>::exist(RES_ID);
 	if(sgm) {
 		resident = sgm;
 		*rank = resident->rank;
@@ -62,7 +62,7 @@ int resident_stuff_get(
 
 void resident_free(void)
 {
-	resident_t __seg *sgm = ResData<resident_t>::exist(res_id);
+	resident_t __seg *sgm = ResData<resident_t>::exist(RES_ID);
 	if(sgm) {
 		resdata_free(sgm);
 	}

@@ -60,4 +60,4 @@ typedef struct {
 extern long continues_total;
 
 extern route_t route;
-extern resident_t *resident;
+extern resident_t far *resident;

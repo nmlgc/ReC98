@@ -39,9 +39,9 @@ bin\th01\zunsoft.com: th01\zunsoft.cpp
 	$(CC) $(CFLAGS) -mt -lt -DGAME=1 -nbin\th01\ $** masters.lib
 
 {th01}.c{bin\th01}.obj:
-	$(CC) $(CFLAGS) -ml -3 -Z -DGAME=1 -n$(@D) -c $**
+	$(CC) $(CFLAGS) -ml -3 -Z -d -DGAME=1 -n$(@D) -c $**
 {th01}.cpp{bin\th01}.obj:
-	$(CC) $(CFLAGS) -ml -3 -Z -DGAME=1 -n$(@D) -c $**
+	$(CC) $(CFLAGS) -ml -3 -Z -d -DGAME=1 -n$(@D) -c $**
 
 bin\th01\op.exe: bin\piloadc.obj bin\th01\op.obj th01\op_01.cpp bin\th01\frmdelay.obj bin\th01\vsync.obj bin\th01\ztext.obj bin\th01\initexit.obj bin\th01\graph.obj bin\th01\ptn_0to1.obj bin\th01\vplanset.obj th01\op_07.cpp bin\th01\grppffx.obj bin\th01\ptn.obj th01\op_09.cpp bin\th01\grz.obj bin\th01\resstuff.obj bin\th01\mdrv2.obj bin\th01\pf.obj
 	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -3 -Z -DGAME=1 -DBINARY='O' -nbin\th01\ -eOP.EXE @&&|

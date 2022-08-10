@@ -3302,8 +3302,6 @@ include libs/master.lib/sin8[data].asm
 include libs/master.lib/atan8[data].asm
 include libs/master.lib/rand[data].asm
 include th01/sprites/pellet_c.asp
-public _res_id
-_res_id	db 'ReiidenConfig',0
 
 	extern _arc_key:byte
 	extern _card_flip_cycle:byte
@@ -3390,8 +3388,6 @@ include libs/master.lib/pal[bss].asm
 include libs/master.lib/fil[bss].asm
 include libs/master.lib/keystart[bss].asm
 include libs/master.lib/clip[bss].asm
-public _resident
-_resident	dd ?
 
 CCards struc
 	C_left       	dd ?
@@ -3410,6 +3406,7 @@ CObstacles struc
 	O_count 	dw ?
 CObstacles ends
 
+	extern _resident:dword
 	extern _shootout_lasers:byte
 	extern _stage_palette:palette_t
 	extern _hud_bg:dword

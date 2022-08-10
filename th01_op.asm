@@ -1610,8 +1610,7 @@ include libs/master.lib/keyback[data].asm
 include libs/master.lib/dos_ropen[data].asm
 include libs/master.lib/clip[data].asm
 include libs/master.lib/rand[data].asm
-public _res_id
-_res_id	db 'ReiidenConfig',0
+
 	.data?
 
 public _rand
@@ -1635,7 +1634,7 @@ include libs/master.lib/pal[bss].asm
 include libs/master.lib/fil[bss].asm
 include libs/master.lib/keystart[bss].asm
 include libs/master.lib/clip[bss].asm
-public _resident
-_resident	dd ?
+
+	extern _resident:dword
 
 		end
