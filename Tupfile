@@ -26,7 +26,7 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 : th01/sprites/leaf_s.bmp |> !bmp2arr -sym sSPARK -of cpp -sw 8 -sh 8 |> th01/sprites/leaf_s.csp
 : th01/sprites/leaf_l.bmp |> !bmp2arr -sym sLEAF_LEFT -of cpp -sw 8 -sh 8 |> th01/sprites/leaf_l.csp
 : th01/sprites/leaf_r.bmp |> !bmp2arr -sym sLEAF_RIGHT -of cpp -sw 8 -sh 8 |> th01/sprites/leaf_r.csp
-: th01/sprites/ileave_m.bmp |> !bmp2arr -sym _sINTERLEAVE_MASKS -of asm -sw 8 -sh 8 |> th01/sprites/ileave_m.asp
+: th01/sprites/ileave_m.bmp |> !bmp2arr -sym sINTERLEAVE_MASKS -of cpp -sw 8 -sh 8 |> th01/sprites/ileave_m.csp
 
 # ZUN bug: Supposed to be 8 preshifted sprites, with a height of 1 and a width
 # of SHOOTOUT_LASER_MAX_W pixels each, but ZUN messed up a single pixel in the
@@ -62,7 +62,6 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 
 : th01_op.asm |> !as |> bin\\th01\\op.obj
 : th01_reiiden.asm | \
-	th01/sprites/ileave_m.asp \
 	th01/sprites/pellet_c.asp \
 	|> !as |> bin\\th01\\reiiden.obj
 : th01_fuuin.asm |> !as |> bin\\th01\\fuuin.obj

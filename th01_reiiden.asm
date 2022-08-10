@@ -3304,9 +3304,6 @@ include libs/master.lib/rand[data].asm
 include th01/sprites/pellet_c.asp
 public _res_id
 _res_id	db 'ReiidenConfig',0
-include th01/sprites/ileave_m.asp
-		db    0
-		db 0FFh
 
 	extern _arc_key:byte
 	extern _card_flip_cycle:byte
