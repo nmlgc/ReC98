@@ -67,7 +67,6 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 : th01_reiiden.asm |> !as |> bin\\th01\\reiiden.obj
 : th01_reiiden_master.asm |> !as |> bin\\th01\\reiidenm.obj
 : th01_fuuin.asm |> !as |> bin\\th01\\fuuin.obj
-: th01_fuuin_master.asm |> !as |> bin\\th01\\fuuinm.obj
 
 : th02_zuninit.asm |> !as |> bin\\th02\\zuninit.obj
 : th02_op.asm |> !as |> bin\\th02\\op.obj

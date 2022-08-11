@@ -30,7 +30,6 @@ tasm32 /m /mx /kh32768 /t th01_op_master.asm bin\th01\opm.obj
 tasm32 /m /mx /kh32768 /t th01_reiiden.asm bin\th01\reiiden.obj
 tasm32 /m /mx /kh32768 /t th01_reiiden_master.asm bin\th01\reiidenm.obj
 tasm32 /m /mx /kh32768 /t th01_fuuin.asm bin\th01\fuuin.obj
-tasm32 /m /mx /kh32768 /t th01_fuuin_master.asm bin\th01\fuuinm.obj
 tasm32 /m /mx /kh32768 /t th02_zuninit.asm bin\th02\zuninit.obj
 tasm32 /m /mx /kh32768 /t th02_op.asm bin\th02\op.obj
 tasm32 /m /mx /kh32768 /t th02_main.asm bin\th02\main.obj

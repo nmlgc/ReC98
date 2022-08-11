@@ -16,8 +16,9 @@
 		.386
 		.model use16 large
 
+GAME = 1
+
 include ReC98.inc
-include th01/th01.inc
 
 ; ===========================================================================
 
@@ -50,51 +51,20 @@ _TEXT		ends
 
 	.data
 
-	; libs/master.lib/grp[data].asm
-	extern graph_VramSeg:word
-	extern graph_VramWords:word
-	extern graph_VramLines:word
-	extern graph_VramZoom:word
+include libs/master.lib/version[data].asm
+include libs/master.lib/grp[data].asm
+include libs/master.lib/pal[data].asm
+include libs/master.lib/respal_exist[data].asm
+include libs/master.lib/resdata[data].asm
+include libs/master.lib/fil[data].asm
+include libs/master.lib/dos_ropen[data].asm
+include libs/master.lib/clip[data].asm
+include libs/master.lib/rand[data].asm
 
-	; libs/master.lib/pal[data].asm
-	extern PaletteTone:word
-	extern PalettesInit:rgb_t:COLOR_COUNT
-	extern PaletteNote:word
-	extern ResPalSeg:word
+	.data?
 
-	; libs/master.lib/respal_exist[data].asm
-IDLEN EQU 10
-	extern ResPalID:byte:IDLEN
-
-	; libs/master.lib/fil[data].asm
-	extern file_BufferSize:word
-	extern file_Handle:word
-
-	; libs/master.lib/dos_ropen[data].asm
-	extern file_sharingmode:word
-
-	; libs/master.lib/clip[data].asm
-	extern ClipXL:word
-	extern ClipXW:word
-	extern ClipXR:word
-	extern ClipYT:word
-	extern ClipYH:word
-	extern ClipYB:word
-	extern ClipYT_seg:word
-	extern ClipYB_adr:word
-
-	; libs/master.lib/rand[data].asm
-	extern random_seed:dword
-
-	; libs/master.lib/pal[bss].asm
-	extern Palettes:rgb_t:COLOR_COUNT
-
-	; libs/master.lib/fil[bss].asm
-	extern file_Buffer:dword
-	extern file_BufferPos:dword
-	extern file_BufPtr:word
-	extern file_InReadBuf:word
-	extern file_Eof:word
-	extern file_ErrorStat:word
+include libs/master.lib/pal[bss].asm
+include libs/master.lib/fil[bss].asm
+include libs/master.lib/clip[bss].asm
 
 		end
