@@ -1,3 +1,4 @@
+#include <stddef.h>
 #include <dos.h>
 #include "platform.h"
 #include "decomp.hpp"
@@ -5,17 +6,31 @@
 #include "planar.h"
 #include "master.hpp"
 #include "shiftjis.hpp"
+#include "th01/common.h"
+#include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
+#include "th01/math/clamp.hpp"
 #include "th01/formats/ptn.hpp"
 extern "C" {
 #include "th01/hardware/egc.h"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
+#include "th01/hardware/grppsafx.h"
+#include "th01/hardware/input.hpp"
 #include "th01/hardware/palette.h"
 #include "th01/snd/mdrv2.h"
 }
 #include "th01/formats/grp.h"
+#include "th01/shiftjis/bonus.hpp"
 #include "th01/sprites/bonusbox.hpp"
+#include "th01/main/extend.hpp"
+#include "th01/main/playfld.hpp"
+#include "th01/main/vars.hpp"
+#include "th01/main/hud/hud.hpp"
+#include "th01/main/bonus.hpp"
+#include "th01/main/player/player.hpp"
+#include "th01/main/stage/palette.hpp"
+#include "th01/main/stage/stages.hpp"
 
 /// Coordinates
 /// -----------
@@ -25,8 +40,12 @@ extern "C" {
 
 static const screen_x_t STAGEBONUS_PADDED_LEFT = 32;
 static const screen_y_t STAGEBONUS_PADDED_TOP = 40;
-static const pixel_t STAGEBONUS_PADDED_W = 320;
-static const pixel_t STAGEBONUS_PADDED_H = 280;
+static const int STAGEBONUS_ROWS = 14;
+static const pixel_t STAGEBONUS_PADDING_TOP = 40;
+static const pixel_t STAGEBONUS_PADDED_W = ((2 * GLYPH_FULL_W) + STAGEBONUS_W);
+static const pixel_t STAGEBONUS_PADDED_H = (
+	STAGEBONUS_PADDING_TOP + (STAGEBONUS_ROWS * GLYPH_H) + GLYPH_H
+);
 // -----------
 
 // TOTLE
@@ -36,6 +55,23 @@ static const vram_word_amount_t TOTLE_METRIC_VRAM_WORD_LEFT = (224 / 16);
 static const pixel_t TOTLE_METRIC_DIGIT_W = PTN_QUARTER_W;
 // -----
 /// -----------
+
+// State
+// -----
+
+extern unsigned long score_bonus; // Should be local to the respective function.
+
+#define clamp_and_add_x10_to_score_bonus(val, max, unnecessary_i) \
+	/* Sneaky! That's how we can pretend this is an actual function that */ \
+	/* returns a value. */ \
+	val; \
+	if(val > max) { \
+		val = max; \
+	} \
+	for(unnecessary_i = 0; unnecessary_i < 10; unnecessary_i++) { \
+		score_bonus += val; \
+	}
+// -----
 
 // ZUN quirk: No ([digit] % 10) for the quarter calculation? As a result, we
 // get scrambled numerals if [digit % 20] is between 10 and 19 inclusive:
@@ -270,4 +306,142 @@ void pascal near fullwidth_str_from_4_digit_value(ShiftJISKanji str[4], int val)
 	fullwidth_numeral(str[1], (val / 100)); 	val %= 100;
 	fullwidth_numeral(str[2], (val / 10));  	val %= 10;
 	fullwidth_numeral(str[3], val);
+}
+
+#define stagebonus_str_put(relative_left, row, col, str) { \
+	graph_putsa_fx( \
+		(STAGEBONUS_PADDED_LEFT + GLYPH_FULL_W + relative_left), \
+		(STAGEBONUS_PADDED_TOP + 40 + (row * GLYPH_H)), \
+		(col | FX_WEIGHT_BOLD), \
+		str \
+	); \
+}
+
+void stagebonus_animate(int stage_num)
+{
+	enum {
+		DIGITS = ((sizeof(stagebonus_digit_buf) - 1) / 2),
+		METRIC_W = shiftjis_w(stagebonus_digit_buf),
+
+		// Right-aligned?
+		TITLE_LEFT = (STAGEBONUS_W - STAGEBONUS_TITLE_W),
+
+		LABEL_LEFT = 0,
+
+		// Technically reaching into the right padding.
+		METRIC_LEFT = (STAGEBONUS_W + GLYPH_FULL_W - METRIC_W),
+
+		TOTAL_LEFT = (STAGEBONUS_W - METRIC_W),
+		HIT_KEY_LEFT = (
+			STAGEBONUS_W - (2 * GLYPH_FULL_W) - shiftjis_w(STAGEBONUS_HIT_KEY)
+		),
+	};
+
+	#undef stagebonus_title
+	#undef stagebonus_digit_buf
+	#undef STAGEBONUS_SUBTITLE
+	#undef STAGEBONUS_TIME
+	#undef STAGEBONUS_CARDCOMBO_MAX
+	#undef STAGEBONUS_RESOURCES
+	#undef STAGEBONUS_STAGE_NUMBER
+	#undef STAGEBONUS_TOTAL
+	#undef STAGEBONUS_HIT_KEY
+	extern stagebonus_title_t stagebonus_title;
+	extern ShiftJISKanji stagebonus_digit_buf[];
+	extern const char STAGEBONUS_SUBTITLE[];
+	extern const char STAGEBONUS_TIME[];
+	extern const char STAGEBONUS_CARDCOMBO_MAX[];
+	extern const char STAGEBONUS_RESOURCES[];
+	extern const char STAGEBONUS_STAGE_NUMBER[];
+	extern const char STAGEBONUS_TOTAL[];
+	extern const char STAGEBONUS_HIT_KEY[];
+
+	#define clamp_add_x10_to_score_bonus_and_put( \
+		digit_buf, row, val, max, unnecessary_i \
+	) { \
+		val = clamp_and_add_x10_to_score_bonus(val, max, unnecessary_i); \
+		fullwidth_str_from_4_digit_value(digit_buf, val); \
+		stagebonus_str_put(METRIC_LEFT, row, V_WHITE, digit_buf->byte); \
+	}
+
+	stagebonus_title_t* title = reinterpret_cast<stagebonus_title_t *>(
+		&stagebonus_title
+	);
+	ShiftJISKanji* digit_buf = reinterpret_cast<ShiftJISKanji *>(
+		stagebonus_digit_buf
+	);
+	int val = 0;
+	unsigned int i;
+
+	fullwidth_numeral(title->stage[0], (stage_num / 10));
+	fullwidth_numeral(title->stage[1], (stage_num % 10));
+
+	z_palette_set_all_show(stage_palette);
+	stagebonus_box_open_animate();
+
+	stagebonus_str_put(TITLE_LEFT, 0, V_RED, title->prefix->byte);
+	stagebonus_str_put(LABEL_LEFT, 2, V_WHITE, STAGEBONUS_SUBTITLE);
+	stagebonus_str_put(LABEL_LEFT, 3, V_WHITE, STAGEBONUS_TIME);
+	stagebonus_str_put(LABEL_LEFT, 5, V_WHITE, STAGEBONUS_CARDCOMBO_MAX);
+	stagebonus_str_put(LABEL_LEFT, 7, V_WHITE, STAGEBONUS_RESOURCES);
+	stagebonus_str_put(LABEL_LEFT, 9, V_WHITE, STAGEBONUS_STAGE_NUMBER);
+	stagebonus_str_put(LABEL_LEFT, 11, V_WHITE, STAGEBONUS_TOTAL);
+	stagebonus_str_put(HIT_KEY_LEFT, 13, V_RED, STAGEBONUS_HIT_KEY);
+
+	// Time
+	val = (stage_timer * 3);
+	val = clamp_and_add_x10_to_score_bonus(val, 6553, i);
+	fullwidth_numeral(digit_buf[4], 0);
+	fullwidth_numeral(digit_buf[5], FULLWIDTH_NUMERAL_SPACE);
+	fullwidth_str_from_4_digit_value(digit_buf, val);
+	stagebonus_str_put(METRIC_LEFT, 3, V_WHITE, digit_buf->byte);
+
+	// Card combo ("Continuous")
+	val = (cardcombo_max * 100);
+	clamp_add_x10_to_score_bonus_and_put(digit_buf, 5, val, 6553, i);
+
+	// Bomb & Player
+	val = (lives * 200);
+	val += (bombs * 100);
+	clamp_add_x10_to_score_bonus_and_put(digit_buf, 7, val, 6553, i);
+
+	// Stage number
+	val = ((stage_num - 1) * 200);
+	clamp_add_x10_to_score_bonus_and_put(digit_buf, 9, val, 6553, i);
+
+	// Commit
+	score += score_bonus;
+
+	// Sum
+	int bonus_div_10000 = (score_bonus / 10000);
+	int bonus_remainder = (score_bonus - (bonus_div_10000 * 10000));
+
+	resident->bonus_per_stage[(stage_num - 1) % STAGES_PER_SCENE] = score_bonus;
+
+	fullwidth_numeral(digit_buf[0], (bonus_div_10000 / 10));
+	fullwidth_numeral(digit_buf[1], (bonus_div_10000 % 10));
+	fullwidth_numeral(digit_buf[2], (bonus_remainder / 1000));
+	bonus_remainder %= 1000;
+	fullwidth_numeral(digit_buf[3], (bonus_remainder / 100));
+	bonus_remainder %= 100;
+	fullwidth_numeral(digit_buf[4], (bonus_remainder / 10));
+	fullwidth_numeral(digit_buf[5], 0);
+	stagebonus_str_put(TOTAL_LEFT, 11, V_WHITE, digit_buf->byte);
+
+	// Remember when we added to the [score] above?
+	hud_score_and_cardcombo_render();
+
+	// Don't you love explicitly spelling out everything that can happen?
+	score_extend_update_and_render();
+
+	input_reset_sense();
+	input_shot = true;
+	input_ok = true;
+	while((input_shot == true) && (input_ok == true)) {
+		input_sense(false);
+	}
+
+	score_bonus = 0;
+
+	#undef clamp_add_x10_to_score_bonus_and_put
 }

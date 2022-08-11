@@ -831,8 +831,8 @@ sub_CE5C	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_D02F	proc far
+public @score_extend_update_and_render$qv
+@score_extend_update_and_render$qv proc far
 		push	bp
 		mov	bp, sp
 		movsx	eax, word_34A8A
@@ -861,7 +861,7 @@ loc_D076:
 loc_D07A:
 		pop	bp
 		retf
-sub_D02F	endp
+@score_extend_update_and_render$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -2296,7 +2296,7 @@ loc_DD6B:
 loc_DDF8:
 		cmp	[bp+var_4], 1
 		jz	loc_E2CB
-		call	sub_D02F
+		call	@score_extend_update_and_render$qv
 		cmp	_mode_debug, 1
 		jnz	short loc_DE0F
 		call	sub_D340
@@ -2391,8 +2391,7 @@ loc_DF03:
 ; ---------------------------------------------------------------------------
 
 loc_DF23:
-		push	[bp+@@stage]
-		call	sub_13101
+		call	@stagebonus_animate$qi stdcall, [bp+@@stage]
 
 loc_DF2B:
 		pop	cx
@@ -2895,313 +2894,13 @@ main_18_TEXT	segment	byte public 'CODE' use16
 	@TOTLE_METRIC_DIGIT_ANIMATE$QIII procdesc pascal near \
 		digit:word, place_and_top:dword
 	@totle_load_and_pagetrans_animate$qv procdesc near
-	@stagebonus_box_open_animate$qv procdesc near
-	extern @fullwidth_numeral$qm33%StupidBytewiseWrapperAround$tui%c:proc
-	@FULLWIDTH_STR_FROM_4_DIGIT_VALUE$QN33%STUPIDBYTEWISEWRAPPERAROUND$TUI%I procdesc pascal near \
-		str:dword, val:word
+	extern @stagebonus_animate$qi:proc
 main_18_TEXT	ends
 
 main_18__TEXT	segment	byte public 'CODE' use16
 		assume cs:main_18
 		;org 0Bh
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_13101	proc far
-
-var_C		= word ptr -0Ch
-var_A		= word ptr -0Ah
-@@buf		= dword	ptr -8
-var_4		= dword	ptr -4
-arg_0		= word ptr  6
-
-		enter	0Ch, 0
-		push	si
-		push	di
-		mov	word ptr [bp+var_4+2], ds
-		mov	word ptr [bp+var_4], offset aSTAGE_COMPLETE
-		mov	word ptr [bp+@@buf+2], ds
-		mov	word ptr [bp+@@buf], offset aSTAGE_COMPLETE_NUM
-		xor	si, si
-		mov	ax, [bp+arg_0]
-		mov	bx, 10
-		cwd
-		idiv	bx
-		push	ax
-		mov	ax, word ptr [bp+var_4]
-		add	ax, 0Ch
-		push	word ptr [bp+var_4+2]
-		push	ax
-		call	@fullwidth_numeral$qm33%StupidBytewiseWrapperAround$tui%c
-		add	sp, 6
-		mov	ax, [bp+arg_0]
-		mov	bx, 10
-		cwd
-		idiv	bx
-		push	dx
-		mov	ax, word ptr [bp+var_4]
-		add	ax, 0Eh
-		push	word ptr [bp+var_4+2]
-		push	ax
-		call	@fullwidth_numeral$qm33%StupidBytewiseWrapperAround$tui%c
-		add	sp, 6
-		call	_z_palette_set_all_show c, offset _stage_palette, ds
-		call	@stagebonus_box_open_animate$qv
-		pushd	[bp+var_4]
-		push	((10 or FX_WEIGHT_BOLD) shl 16) or 80
-		push	64
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-		call	_graph_putsa_fx c,  48, large ((7  or FX_WEIGHT_BOLD) shl 16) or 112, offset aB@b@vavnvmvtvr, ds ; "Å@Å@ÇaÇnÇmÇtÇr"
-		call	_graph_putsa_fx c,  48, large ((7  or FX_WEIGHT_BOLD) shl 16) or 128, offset aB@vsvivnveb@, ds ; "   Å@ÇsÇâÇçÇÖÅ@"
-		call	_graph_putsa_fx c,  48, large ((7  or FX_WEIGHT_BOLD) shl 16) or 160, offset aVbvpvovfvivovx, ds ; "ÇbÇèÇéÇîÇâÇéÇïÇèÇïÇì"
-		call	_graph_putsa_fx c,  48, large ((7  or FX_WEIGHT_BOLD) shl 16) or 192, offset aVavpvnvvbxvovm, ds ; "ÇaÇèÇçÇÇÅïÇoÇåÇÅÇôÇÖÇí"
-		call	_graph_putsa_fx c,  48, large ((7  or FX_WEIGHT_BOLD) shl 16) or 224, offset aB@b@vrvsvVfvd, ds ;	"Å@Å@ÇrÇsÇ`ÇfÇd"
-		call	_graph_putsa_fx c,  48, large ((7  or FX_WEIGHT_BOLD) shl 16) or 256, offset aVavnvmvtvrb@vo, ds ; "ÇaÇnÇmÇtÇrÅ@ÇoÇèÇâÇéÇî"
-		call	_graph_putsa_fx c, 160, large ((10 or FX_WEIGHT_BOLD) shl 16) or 288, offset aVgvivfb@vyb@vj, ds ; "ÇgÇâÇîÅ@ÇyÅ@ÇjÇÖÇô"
-		mov	ax, _stage_timer
-		imul	ax, 3
-		mov	si, ax
-		cmp	si, 6553
-		jle	short loc_13210
-		mov	si, 6553
-
-loc_13210:
-		xor	di, di
-		jmp	short loc_1321E
-; ---------------------------------------------------------------------------
-
-loc_13214:
-		movsx	eax, si
-		add	score_34A5E, eax
-		inc	di
-
-loc_1321E:
-		cmp	di, 0Ah
-		jb	short loc_13214
-		push	0
-		mov	ax, word ptr [bp+@@buf]
-		add	ax, 8
-		push	word ptr [bp+@@buf+2]
-		push	ax
-		call	@fullwidth_numeral$qm33%StupidBytewiseWrapperAround$tui%c
-		add	sp, 6
-		push	0Ah
-		mov	ax, word ptr [bp+@@buf]
-		add	ax, 0Ah
-		push	word ptr [bp+@@buf+2]
-		push	ax
-		call	@fullwidth_numeral$qm33%StupidBytewiseWrapperAround$tui%c
-		add	sp, 6
-		call	@fullwidth_str_from_4_digit_value$qn33%StupidBytewiseWrapperAround$tui%i pascal, large [bp+@@buf], si
-		pushd	[bp+@@buf]
-		push	((7 or FX_WEIGHT_BOLD) shl 16) or 128
-		push	256
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-		mov	ax, _cardcombo_max
-		imul	ax, 100
-		mov	si, ax
-		cmp	si, 6553
-		jle	short loc_13277
-		mov	si, 6553
-
-loc_13277:
-		xor	di, di
-		jmp	short loc_13285
-; ---------------------------------------------------------------------------
-
-loc_1327B:
-		movsx	eax, si
-		add	score_34A5E, eax
-		inc	di
-
-loc_13285:
-		cmp	di, 0Ah
-		jb	short loc_1327B
-		call	@fullwidth_str_from_4_digit_value$qn33%StupidBytewiseWrapperAround$tui%i pascal, large [bp+@@buf], si
-		pushd	[bp+@@buf]
-		push	((7 or FX_WEIGHT_BOLD) shl 16) or 160
-		push	256
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-		mov	ax, _lives
-		imul	ax, 200
-		mov	si, ax
-		mov	al, _bombs
-		cbw
-		imul	ax, 100
-		add	si, ax
-		cmp	si, 6553
-		jle	short loc_132C2
-		mov	si, 6553
-
-loc_132C2:
-		xor	di, di
-		jmp	short loc_132D0
-; ---------------------------------------------------------------------------
-
-loc_132C6:
-		movsx	eax, si
-		add	score_34A5E, eax
-		inc	di
-
-loc_132D0:
-		cmp	di, 0Ah
-		jb	short loc_132C6
-		call	@fullwidth_str_from_4_digit_value$qn33%StupidBytewiseWrapperAround$tui%i pascal, large [bp+@@buf], si
-		pushd	[bp+@@buf]
-		push	((7 or FX_WEIGHT_BOLD) shl 16) or 192
-		push	256
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-		mov	ax, [bp+arg_0]
-		dec	ax
-		imul	ax, 200
-		mov	si, ax
-		cmp	si, 6553
-		jle	short loc_13305
-		mov	si, 6553
-
-loc_13305:
-		xor	di, di
-		jmp	short loc_13313
-; ---------------------------------------------------------------------------
-
-loc_13309:
-		movsx	eax, si
-		add	score_34A5E, eax
-		inc	di
-
-loc_13313:
-		cmp	di, 0Ah
-		jb	short loc_13309
-		call	@fullwidth_str_from_4_digit_value$qn33%StupidBytewiseWrapperAround$tui%i pascal, large [bp+@@buf], si
-		pushd	[bp+@@buf]
-		push	((7 or FX_WEIGHT_BOLD) shl 16) or 224
-		push	256
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-		mov	eax, score_34A5E
-		add	_score, eax
-		mov	ebx, 10000
-		xor	edx, edx
-		div	ebx
-		mov	[bp+var_A], ax
-		imul	ax, 10000
-		mov	dx, word ptr score_34A5E
-		sub	dx, ax
-		mov	[bp+var_C], dx
-		mov	ax, [bp+arg_0]
-		dec	ax
-		mov	bx, 5
-		cwd
-		idiv	bx
-		shl	dx, 2
-		les	bx, _resident
-		add	bx, dx
-		mov	eax, score_34A5E
-		mov	es:[bx+reiidenconfig_t.bonus_per_stage], eax
-		mov	ax, [bp+var_A]
-		mov	bx, 10
-		cwd
-		idiv	bx
-		call	@fullwidth_numeral$qm33%StupidBytewiseWrapperAround$tui%c c, [bp+@@buf], ax
-		mov	ax, [bp+var_A]
-		mov	bx, 10
-		cwd
-		idiv	bx
-		push	dx
-		mov	ax, word ptr [bp+@@buf]
-		add	ax, 2
-		push	word ptr [bp+@@buf+2]
-		push	ax
-		call	@fullwidth_numeral$qm33%StupidBytewiseWrapperAround$tui%c
-		add	sp, 6
-		mov	ax, [bp+var_C]
-		mov	bx, 1000
-		cwd
-		idiv	bx
-		push	ax
-		mov	ax, word ptr [bp+@@buf]
-		add	ax, 4
-		push	word ptr [bp+@@buf+2]
-		push	ax
-		call	@fullwidth_numeral$qm33%StupidBytewiseWrapperAround$tui%c
-		add	sp, 6
-		mov	bx, 1000
-		mov	ax, [bp+var_C]
-		cwd
-		idiv	bx
-		mov	[bp+var_C], dx
-		mov	ax, [bp+var_C]
-		mov	bx, 100
-		cwd
-		idiv	bx
-		push	ax
-		mov	ax, word ptr [bp+@@buf]
-		add	ax, 6
-		push	word ptr [bp+@@buf+2]
-		push	ax
-		call	@fullwidth_numeral$qm33%StupidBytewiseWrapperAround$tui%c
-		add	sp, 6
-		mov	bx, 100
-		mov	ax, [bp+var_C]
-		cwd
-		idiv	bx
-		mov	[bp+var_C], dx
-		mov	ax, [bp+var_C]
-		mov	bx, 10
-		cwd
-		idiv	bx
-		push	ax
-		mov	ax, word ptr [bp+@@buf]
-		add	ax, 8
-		push	word ptr [bp+@@buf+2]
-		push	ax
-		call	@fullwidth_numeral$qm33%StupidBytewiseWrapperAround$tui%c
-		add	sp, 6
-		push	0
-		mov	ax, word ptr [bp+@@buf]
-		add	ax, 0Ah
-		push	word ptr [bp+@@buf+2]
-		push	ax
-		call	@fullwidth_numeral$qm33%StupidBytewiseWrapperAround$tui%c
-		add	sp, 6
-		pushd	[bp+@@buf]
-		push	((7 or FX_WEIGHT_BOLD) shl 16) or 256
-		push	240
-		call	_graph_putsa_fx
-		add	sp, 0Ah
-		call	@hud_score_and_cardcombo_render$qv
-		call	sub_D02F
-		call	_input_reset_sense
-		mov	_input_shot, 1
-		mov	_input_ok, 1
-		jmp	short loc_1345A
-; ---------------------------------------------------------------------------
-
-loc_13452:
-		call	_input_sense stdcall, 0
-		pop	cx
-
-loc_1345A:
-		cmp	_input_shot, 1
-		jnz	short loc_13468
-		cmp	_input_ok, 1
-		jz	short loc_13452
-
-loc_13468:
-		mov	score_34A5E, 0
-		pop	di
-		pop	si
-		leave
-		retf
-sub_13101	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3255,7 +2954,7 @@ loc_13505:
 
 loc_13509:
 		mov	eax, [bp+var_6]
-		add	score_34A5E, eax
+		add	_score_bonus, eax
 		inc	si
 
 loc_13513:
@@ -3313,7 +3012,7 @@ loc_135D4:
 
 loc_135D8:
 		mov	eax, [bp+var_6]
-		add	score_34A5E, eax
+		add	_score_bonus, eax
 		inc	si
 
 loc_135E2:
@@ -3376,7 +3075,7 @@ loc_136B1:
 
 loc_136B5:
 		mov	eax, [bp+var_6]
-		add	score_34A5E, eax
+		add	_score_bonus, eax
 		inc	si
 
 loc_136BF:
@@ -3434,7 +3133,7 @@ loc_13784:
 
 loc_13788:
 		mov	eax, [bp+var_6]
-		add	score_34A5E, eax
+		add	_score_bonus, eax
 		inc	si
 
 loc_13792:
@@ -3484,14 +3183,14 @@ loc_13792:
 		push	5
 		call	_frame_delay
 		pop	cx
-		mov	eax, score_34A5E
+		mov	eax, _score_bonus
 		add	_score, eax
 		mov	ebx, 10000
 		xor	edx, edx
 		div	ebx
 		mov	[bp+var_2], ax
 		imul	ax, 10000
-		mov	dx, word ptr score_34A5E
+		mov	dx, word ptr _score_bonus
 		sub	dx, ax
 		mov	di, dx
 		mov	ax, [bp+var_2]
@@ -3566,7 +3265,7 @@ loc_13933:
 		jz	short loc_1392B
 
 loc_13941:
-		mov	score_34A5E, 0
+		mov	_score_bonus, 0
 		call	@ptn_free$q15main_ptn_slot_t stdcall, PTN_SLOT_NUMB
 		pop	cx
 		pop	di
@@ -3811,9 +3510,9 @@ public _player_deflecting, _bomb_damaging, _player_sliding
 _player_deflecting	db 0
 _bomb_damaging	db 0
 _player_sliding	db 0
-public _score, _bomb_frames
+public _score, _score_bonus, _bomb_frames
 _score	dd 0
-score_34A5E	dd 0
+_score_bonus	dd 0
 _bomb_frames	dd 0
 _continues_total	dd 0
 		dw 0
@@ -4095,15 +3794,19 @@ aVv		db 'ÇV',0
 aVw		db 'ÇW',0
 aVx		db 'ÇX',0
 aB@		db 'Å@',0
-aSTAGE_COMPLETE	db 'ÇrÇsÇ`ÇfÇdÅ@Å@Å@Å@ÇbÇnÇlÇoÇkÇdÇsÇd',0
-aSTAGE_COMPLETE_NUM	db 'Å@Å@Å@Å@ÇOÅ@',0
-aB@b@vavnvmvtvr	db 'Å@Å@ÇaÇnÇmÇtÇr',0
-aB@vsvivnveb@	db '   Å@ÇsÇâÇçÇÖÅ@',0
-aVbvpvovfvivovx	db 'ÇbÇèÇéÇîÇâÇéÇïÇèÇïÇì',0
-aVavpvnvvbxvovm	db 'ÇaÇèÇçÇÇÅïÇoÇåÇÅÇôÇÖÇí',0
-aB@b@vrvsvVfvd	db 'Å@Å@ÇrÇsÇ`ÇfÇd',0
-aVavnvmvtvrb@vo	db 'ÇaÇnÇmÇtÇrÅ@ÇoÇèÇâÇéÇî',0
-aVgvivfb@vyb@vj	db 'ÇgÇâÇîÅ@ÇyÅ@ÇjÇÖÇô',0
+
+public _stagebonus_title, _stagebonus_digit_buf, _STAGEBONUS_SUBTITLE
+public _STAGEBONUS_TIME, _STAGEBONUS_CARDCOMBO_MAX, _STAGEBONUS_RESOURCES
+public _STAGEBONUS_STAGE_NUMBER, _STAGEBONUS_TOTAL, _STAGEBONUS_HIT_KEY
+_stagebonus_title        	db 'ÇrÇsÇ`ÇfÇdÅ@Å@Å@Å@ÇbÇnÇlÇoÇkÇdÇsÇd',0
+_stagebonus_digit_buf    	db 'Å@Å@Å@Å@ÇOÅ@',0
+_STAGEBONUS_SUBTITLE     	db 'Å@Å@ÇaÇnÇmÇtÇr',0
+_STAGEBONUS_TIME         	db '   Å@ÇsÇâÇçÇÖÅ@',0
+_STAGEBONUS_CARDCOMBO_MAX	db 'ÇbÇèÇéÇîÇâÇéÇïÇèÇïÇì',0
+_STAGEBONUS_RESOURCES    	db 'ÇaÇèÇçÇÇÅïÇoÇåÇÅÇôÇÖÇí',0
+_STAGEBONUS_STAGE_NUMBER 	db 'Å@Å@ÇrÇsÇ`ÇfÇd',0
+_STAGEBONUS_TOTAL        	db 'ÇaÇnÇmÇtÇrÅ@ÇoÇèÇâÇéÇî',0
+_STAGEBONUS_HIT_KEY      	db 'ÇgÇâÇîÅ@ÇyÅ@ÇjÇÖÇô',0
 
 	extern _arc_key:byte
 	extern _card_flip_cycle:byte

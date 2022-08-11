@@ -5604,8 +5604,8 @@ public @ORANGE_BACKDROP_COLORFILL$QV
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public SCORE_EXTEND_UPDATE
-score_extend_update	proc near
+public SCORE_EXTEND_UPDATE_AND_RENDER
+score_extend_update_and_render	proc near
 
 var_1		= byte ptr -1
 
@@ -5680,7 +5680,7 @@ loc_EE8C:
 locret_EEA3:
 		leave
 		retn
-score_extend_update	endp
+score_extend_update_and_render	endp
 
 ; ---------------------------------------------------------------------------
 		db    0
