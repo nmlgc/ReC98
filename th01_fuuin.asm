@@ -16,17 +16,8 @@
 		.386
 		.model use16 large _TEXT
 
-BINARY = 'E'
-
 include ReC98.inc
 include th01/th01.inc
-
-	extern SCOPY@:proc
-	extern __setargv__:proc ; main() needs both to be set
-	extern __setenvp__:proc
-	extern _execl:proc
-
-fuuin_01 group fuuin_01_TEXT, fuuin_01__TEXT
 
 ; ===========================================================================
 
@@ -63,83 +54,6 @@ _TEXT		ends
 fuuin_01_TEXT	segment	byte public 'CODE' use16
 fuuin_01_TEXT	ends
 
-fuuin_01__TEXT	segment	byte public 'CODE' use16
-		assume cs:fuuin_01
-
-	extern _end_init:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-; int __cdecl main(int argc, const char	**argv,	const char **envp)
-public _main
-_main		proc far
-
-_argc		= word ptr  6
-_argv		= dword	ptr  8
-_envp		= dword	ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		call	_mdrv2_resident
-		or	ax, ax
-		jnz	short loc_A105
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_A105:
-		les	bx, [bp+_argv]
-		les	bx, es:[bx+4]
-		mov	al, es:[bx]
-		cbw
-		cmp	ax, 74h	; 't'
-		jz	short loc_A121
-		call	_end_init
-		or	ax, ax
-		jnz	short loc_A11F
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_A11F:
-		jmp	short loc_A13E
-; ---------------------------------------------------------------------------
-
-loc_A121:
-		les	bx, [bp+_argv]
-		les	bx, es:[bx+4]
-		mov	al, es:[bx+1]
-		cbw
-		cmp	ax, 31h	; '1'
-		jnz	short loc_A139
-		mov	_end_flag, 1
-		jmp	short loc_A13E
-; ---------------------------------------------------------------------------
-
-loc_A139:
-		mov	_end_flag, 2
-
-loc_A13E:
-		call	_mdrv2_check_board
-		call	@game_init$qv
-		call	@end_and_verdict_and_regist_anima$qv
-		call	@game_switch_binary$qv
-		push	0
-		push	0
-		push	ds
-		push	offset arg0	; "op"
-		push	ds
-		push	offset path	; "op"
-		call	_execl
-		add	sp, 0Ch
-		pop	bp
-		retf
-_main		endp
-
-fuuin_01__TEXT	ends
-
 ; ===========================================================================
 
 fuuin_02_TEXT	segment	byte public 'CODE' use16
@@ -149,7 +63,6 @@ fuuin_02_TEXT	ends
 
 ; Segment type:	Pure code
 fuuin_03_TEXT	segment	byte public 'CODE' use16
-	extern @end_and_verdict_and_regist_anima$qv:proc
 fuuin_03_TEXT	ends
 
 ; ===========================================================================
@@ -173,8 +86,6 @@ ztext_TEXT	ends
 
 ; Segment type:	Pure code
 initexit_TEXT	segment	byte public 'CODE' use16
-	extern @game_init$qv:proc
-	extern @game_switch_binary$qv:proc
 initexit_TEXT	ends
 
 ; ===========================================================================
@@ -208,24 +119,21 @@ GRAPH_EX_TEXT	ends
 
 ; Segment type:	Pure code
 mdrv2_TEXT	segment	byte public 'CODE' use16
-	extern _mdrv2_resident:proc
-	extern _mdrv2_check_board:proc
 mdrv2_TEXT	ends
 
 	.data
 
 public _score, _score_highest
 public _RES_ID_0, _RES_ID_1, _ERROR_END_FLAG, _ERROR_NO_RESDATA
+public _OP_PATH, _OP_ARG0
 _score	dd 100000
 _score_highest	dd 100000
 _RES_ID_0	db 'ReiidenConfig',0
 _ERROR_END_FLAG  	db 'ERROR : end_flag is not ture !!',0
 _ERROR_NO_RESDATA	db 'ERROR : cfg_id is not alloc!!',0
 _RES_ID_1	db 'ReiidenConfig',0
-; char path[]
-path		db 'op',0
-; char arg0[3]
-arg0		db 'op',0
+_OP_PATH	db 'op',0
+_OP_ARG0	db 'op',0
 
 	; libs/master.lib/grp[data].asm
 	extern graph_VramSeg:word

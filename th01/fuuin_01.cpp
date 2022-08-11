@@ -5,16 +5,22 @@
 
 #pragma option -O- -1 -Z-
 
+#include <process.h>
 #include <stdio.h>
 #include "platform.h"
 #include "master.hpp"
 #include "th01/common.h"
 #include "th01/resident.hpp"
+#include "th01/core/initexit.hpp"
+#include "th01/end/end.hpp"
 #include "th01/end/vars.hpp"
+extern "C" {
+#include "th01/snd/mdrv2.h"
+}
 
 #undef RES_ID
 
-extern "C" bool16 end_init(void)
+bool16 end_init(void)
 {
 	int i;
 	#define RES_ID RES_ID_0
@@ -73,4 +79,36 @@ bool16 end_resident_clear(void)
 		resident->stage = 0;
 	}
 	return true;
+}
+
+void main(int argc, const char *argv[])
+{
+	extern char OP_PATH[];
+	extern char OP_ARG0[];
+
+	if(!mdrv2_resident()) {
+		return;
+	}
+
+	// Should really be checked, but eh, it's Real Mode...
+	(argc);
+
+	// That's a hidden ending preview feature!
+	if(argv[1][0] != 't') {
+		if(!end_init()) {
+			return;
+		}
+	} else {
+		if(argv[1][1] == '1') {
+			end_flag = ES_MAKAI;
+		} else {
+			end_flag = ES_JIGOKU;
+		}
+	}
+
+	mdrv2_check_board();
+	game_init();
+	end_and_verdict_and_regist_animate();
+	game_switch_binary();
+	execl(OP_PATH, OP_ARG0, nullptr, nullptr);
 }

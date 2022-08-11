@@ -44,7 +44,11 @@ typedef struct {
 	pellet_speed_t pellet_speed;
 	long rand;
 	long score;
+
+	// ZUN bloat: Never actually read from. Even FUUIN.EXE, who does care
+	// about this value, manually derives it from [continues_per_scene].
 	long continues_total;
+
 	unsigned int continues_per_scene[SCENE_COUNT];
 
 	// of the current scene, without the boss stage
@@ -56,7 +60,6 @@ typedef struct {
 	uint16_t point_value;
 } resident_t;
 
-// ZUN bloat: Synced with the one in the resident structure anyway.
 extern long continues_total;
 
 extern route_t route;
