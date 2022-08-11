@@ -2896,6 +2896,7 @@ main_18_TEXT	segment	byte public 'CODE' use16
 		digit:word, place_and_top:dword
 	@totle_load_and_pagetrans_animate$qv procdesc near
 	@stagebonus_box_open_animate$qv procdesc near
+	extern @fullwidth_numeral$qm33%StupidBytewiseWrapperAround$tui%c:proc
 main_18_TEXT	ends
 
 main_18__TEXT	segment	byte public 'CODE' use16
@@ -2907,65 +2908,20 @@ main_18__TEXT	segment	byte public 'CODE' use16
 
 ; Attributes: bp-based frame
 
-sub_13033	proc far
-
-var_2C		= byte ptr -2Ch
-arg_0		= dword	ptr  6
-arg_4		= byte ptr  0Ah
-
-		enter	2Ch, 0
-		lea	ax, [bp+var_2C]
-		push	ss
-		push	ax
-		push	ds
-		push	offset off_3573E
-		mov	cx, 2Ch	; ','
-		call	SCOPY@
-		mov	al, [bp+arg_4]
-		cbw
-		shl	ax, 2
-		lea	dx, [bp+var_2C]
-		add	ax, dx
-		mov	bx, ax
-		les	bx, ss:[bx]
-		mov	al, es:[bx]
-		les	bx, [bp+arg_0]
-		mov	es:[bx], al
-		mov	al, [bp+arg_4]
-		cbw
-		shl	ax, 2
-		add	ax, dx
-		mov	bx, ax
-		les	bx, ss:[bx]
-		mov	al, es:[bx+1]
-		les	bx, [bp+arg_0]
-		mov	es:[bx+1], al
-		leave
-		retf
-sub_13033	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
 sub_1307D	proc near
 
-arg_0		= word ptr  4
-arg_2		= dword	ptr  6
+@@num		= word ptr  4
+@@buf		= dword	ptr  6
 
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, [bp+arg_0]
+		mov	si, [bp+@@num]
 		mov	ax, si
 		mov	bx, 1000
 		cwd
 		idiv	bx
-		push	ax
-		pushd	[bp+arg_2]
-		call	sub_13033
-		add	sp, 6
+		call	@fullwidth_numeral$qm33%StupidBytewiseWrapperAround$tui%c c, large [bp+@@buf], ax
 		mov	bx, 1000
 		mov	ax, si
 		cwd
@@ -2976,11 +2932,11 @@ arg_2		= dword	ptr  6
 		cwd
 		idiv	bx
 		push	ax
-		mov	ax, word ptr [bp+arg_2]
+		mov	ax, word ptr [bp+@@buf]
 		add	ax, 2
-		push	word ptr [bp+arg_2+2]
+		push	word ptr [bp+@@buf+2]
 		push	ax
-		call	sub_13033
+		call	@fullwidth_numeral$qm33%StupidBytewiseWrapperAround$tui%c
 		add	sp, 6
 		mov	bx, 100
 		mov	ax, si
@@ -2992,11 +2948,11 @@ arg_2		= dword	ptr  6
 		cwd
 		idiv	bx
 		push	ax
-		mov	ax, word ptr [bp+arg_2]
+		mov	ax, word ptr [bp+@@buf]
 		add	ax, 4
-		push	word ptr [bp+arg_2+2]
+		push	word ptr [bp+@@buf+2]
 		push	ax
-		call	sub_13033
+		call	@fullwidth_numeral$qm33%StupidBytewiseWrapperAround$tui%c
 		add	sp, 6
 		mov	bx, 10
 		mov	ax, si
@@ -3004,11 +2960,11 @@ arg_2		= dword	ptr  6
 		idiv	bx
 		mov	si, dx
 		push	dx
-		mov	ax, word ptr [bp+arg_2]
+		mov	ax, word ptr [bp+@@buf]
 		add	ax, 6
-		push	word ptr [bp+arg_2+2]
+		push	word ptr [bp+@@buf+2]
 		push	ax
-		call	sub_13033
+		call	@fullwidth_numeral$qm33%StupidBytewiseWrapperAround$tui%c
 		add	sp, 6
 		pop	si
 		pop	bp
@@ -3024,7 +2980,7 @@ sub_13101	proc far
 
 var_C		= word ptr -0Ch
 var_A		= word ptr -0Ah
-var_8		= dword	ptr -8
+@@buf		= dword	ptr -8
 var_4		= dword	ptr -4
 arg_0		= word ptr  6
 
@@ -3033,8 +2989,8 @@ arg_0		= word ptr  6
 		push	di
 		mov	word ptr [bp+var_4+2], ds
 		mov	word ptr [bp+var_4], offset aSTAGE_COMPLETE
-		mov	word ptr [bp+var_8+2], ds
-		mov	word ptr [bp+var_8], offset aSTAGE_COMPLETE_NUM
+		mov	word ptr [bp+@@buf+2], ds
+		mov	word ptr [bp+@@buf], offset aSTAGE_COMPLETE_NUM
 		xor	si, si
 		mov	ax, [bp+arg_0]
 		mov	bx, 10
@@ -3045,7 +3001,7 @@ arg_0		= word ptr  6
 		add	ax, 0Ch
 		push	word ptr [bp+var_4+2]
 		push	ax
-		call	sub_13033
+		call	@fullwidth_numeral$qm33%StupidBytewiseWrapperAround$tui%c
 		add	sp, 6
 		mov	ax, [bp+arg_0]
 		mov	bx, 10
@@ -3056,7 +3012,7 @@ arg_0		= word ptr  6
 		add	ax, 0Eh
 		push	word ptr [bp+var_4+2]
 		push	ax
-		call	sub_13033
+		call	@fullwidth_numeral$qm33%StupidBytewiseWrapperAround$tui%c
 		add	sp, 6
 		call	_z_palette_set_all_show c, offset _stage_palette, ds
 		call	@stagebonus_box_open_animate$qv
@@ -3093,23 +3049,21 @@ loc_1321E:
 		cmp	di, 0Ah
 		jb	short loc_13214
 		push	0
-		mov	ax, word ptr [bp+var_8]
+		mov	ax, word ptr [bp+@@buf]
 		add	ax, 8
-		push	word ptr [bp+var_8+2]
+		push	word ptr [bp+@@buf+2]
 		push	ax
-		call	sub_13033
+		call	@fullwidth_numeral$qm33%StupidBytewiseWrapperAround$tui%c
 		add	sp, 6
 		push	0Ah
-		mov	ax, word ptr [bp+var_8]
+		mov	ax, word ptr [bp+@@buf]
 		add	ax, 0Ah
-		push	word ptr [bp+var_8+2]
+		push	word ptr [bp+@@buf+2]
 		push	ax
-		call	sub_13033
+		call	@fullwidth_numeral$qm33%StupidBytewiseWrapperAround$tui%c
 		add	sp, 6
-		pushd	[bp+var_8]
-		push	si
-		call	sub_1307D
-		pushd	[bp+var_8]
+		call	sub_1307D pascal, large [bp+@@buf], si
+		pushd	[bp+@@buf]
 		push	((7 or FX_WEIGHT_BOLD) shl 16) or 128
 		push	256
 		call	_graph_putsa_fx
@@ -3134,10 +3088,8 @@ loc_1327B:
 loc_13285:
 		cmp	di, 0Ah
 		jb	short loc_1327B
-		pushd	[bp+var_8]
-		push	si
-		call	sub_1307D
-		pushd	[bp+var_8]
+		call	sub_1307D pascal, large [bp+@@buf], si
+		pushd	[bp+@@buf]
 		push	((7 or FX_WEIGHT_BOLD) shl 16) or 160
 		push	256
 		call	_graph_putsa_fx
@@ -3166,10 +3118,8 @@ loc_132C6:
 loc_132D0:
 		cmp	di, 0Ah
 		jb	short loc_132C6
-		pushd	[bp+var_8]
-		push	si
-		call	sub_1307D
-		pushd	[bp+var_8]
+		call	sub_1307D pascal, large [bp+@@buf], si
+		pushd	[bp+@@buf]
 		push	((7 or FX_WEIGHT_BOLD) shl 16) or 192
 		push	256
 		call	_graph_putsa_fx
@@ -3195,10 +3145,8 @@ loc_13309:
 loc_13313:
 		cmp	di, 0Ah
 		jb	short loc_13309
-		pushd	[bp+var_8]
-		push	si
-		call	sub_1307D
-		pushd	[bp+var_8]
+		call	sub_1307D pascal, large [bp+@@buf], si
+		pushd	[bp+@@buf]
 		push	((7 or FX_WEIGHT_BOLD) shl 16) or 224
 		push	256
 		call	_graph_putsa_fx
@@ -3227,31 +3175,28 @@ loc_13313:
 		mov	bx, 10
 		cwd
 		idiv	bx
-		push	ax
-		pushd	[bp+var_8]
-		call	sub_13033
-		add	sp, 6
+		call	@fullwidth_numeral$qm33%StupidBytewiseWrapperAround$tui%c c, [bp+@@buf], ax
 		mov	ax, [bp+var_A]
 		mov	bx, 10
 		cwd
 		idiv	bx
 		push	dx
-		mov	ax, word ptr [bp+var_8]
+		mov	ax, word ptr [bp+@@buf]
 		add	ax, 2
-		push	word ptr [bp+var_8+2]
+		push	word ptr [bp+@@buf+2]
 		push	ax
-		call	sub_13033
+		call	@fullwidth_numeral$qm33%StupidBytewiseWrapperAround$tui%c
 		add	sp, 6
 		mov	ax, [bp+var_C]
 		mov	bx, 1000
 		cwd
 		idiv	bx
 		push	ax
-		mov	ax, word ptr [bp+var_8]
+		mov	ax, word ptr [bp+@@buf]
 		add	ax, 4
-		push	word ptr [bp+var_8+2]
+		push	word ptr [bp+@@buf+2]
 		push	ax
-		call	sub_13033
+		call	@fullwidth_numeral$qm33%StupidBytewiseWrapperAround$tui%c
 		add	sp, 6
 		mov	bx, 1000
 		mov	ax, [bp+var_C]
@@ -3263,11 +3208,11 @@ loc_13313:
 		cwd
 		idiv	bx
 		push	ax
-		mov	ax, word ptr [bp+var_8]
+		mov	ax, word ptr [bp+@@buf]
 		add	ax, 6
-		push	word ptr [bp+var_8+2]
+		push	word ptr [bp+@@buf+2]
 		push	ax
-		call	sub_13033
+		call	@fullwidth_numeral$qm33%StupidBytewiseWrapperAround$tui%c
 		add	sp, 6
 		mov	bx, 100
 		mov	ax, [bp+var_C]
@@ -3279,20 +3224,20 @@ loc_13313:
 		cwd
 		idiv	bx
 		push	ax
-		mov	ax, word ptr [bp+var_8]
+		mov	ax, word ptr [bp+@@buf]
 		add	ax, 8
-		push	word ptr [bp+var_8+2]
+		push	word ptr [bp+@@buf+2]
 		push	ax
-		call	sub_13033
+		call	@fullwidth_numeral$qm33%StupidBytewiseWrapperAround$tui%c
 		add	sp, 6
 		push	0
-		mov	ax, word ptr [bp+var_8]
+		mov	ax, word ptr [bp+@@buf]
 		add	ax, 0Ah
-		push	word ptr [bp+var_8+2]
+		push	word ptr [bp+@@buf+2]
 		push	ax
-		call	sub_13033
+		call	@fullwidth_numeral$qm33%StupidBytewiseWrapperAround$tui%c
 		add	sp, 6
-		pushd	[bp+var_8]
+		pushd	[bp+@@buf]
 		push	((7 or FX_WEIGHT_BOLD) shl 16) or 256
 		push	240
 		call	_graph_putsa_fx
@@ -4189,8 +4134,9 @@ _ROUTE_SEL_4 	db 'ñÇäEÇ÷',0
 _ROUTE_SEL_5	db 'ínçñÇ÷',0
 	evendata
 include th01/sprites/bonusbox.asp
-off_3573E	dd aVo
-					; "ÇO"
+public _FULLWIDTH_NUMERALS_WITH_SPACE
+_FULLWIDTH_NUMERALS_WITH_SPACE	label dword
+		dd aVo			; "ÇO"
 		dd aVp			; "ÇP"
 		dd aVq			; "ÇQ"
 		dd aVr			; "ÇR"

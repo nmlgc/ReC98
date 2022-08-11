@@ -4,6 +4,7 @@
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
+#include "shiftjis.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/formats/ptn.hpp"
 extern "C" {
@@ -248,4 +249,17 @@ void near stagebonus_box_open_animate(void)
 		}
 	}
 	grcg_off();
+}
+
+static const int8_t FULLWIDTH_NUMERAL_SPACE = 10;
+
+void fullwidth_numeral(ShiftJISKanji& kanji, int8_t digit)
+{
+	struct hack { const ShiftJISKanji* x[11]; }; // XXX
+	extern const struct hack FULLWIDTH_NUMERALS_WITH_SPACE;
+
+	const struct hack NUMERALS = FULLWIDTH_NUMERALS_WITH_SPACE;
+
+	kanji.byte[0] = NUMERALS.x[digit]->byte[0];
+	kanji.byte[1] = NUMERALS.x[digit]->byte[1];
 }
