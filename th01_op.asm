@@ -14,7 +14,7 @@
 ; Application type:  Executable	16bit
 
 		.386
-		.model use16 large
+		.model use16 large _TEXT
 
 BINARY = 'O'
 
@@ -1428,29 +1428,24 @@ op_12_TEXT	ends
 
 	.data
 
-public _opts
-_opts	cfg_options_t <CFG_RANK_DEFAULT, CFG_BGM_MODE_DEFAULT, CFG_BOMBS_DEFAULT, CFG_LIVES_EXTRA_DEFAULT>
-_mode	db 0
-public _menu_sel, _option_rows
-public _input_left, _input_right, _input_ok, _input_shot, _input_cancel
-public _main_input_prev, _option_input_prev
-_menu_sel	db 0
-_input_left	db 0
-_input_ok	db 0
-_input_shot	db 0
-_input_cancel	db 0
-byte_1232A	db 0
-_input_right	db 0
-byte_1232C	db 0
-byte_1232D	db 0
-byte_1232E	db 0
-byte_1232F	db 0
-dword_12330	dd 0
-_main_input_prev	dw 2 dup (0)
-_option_rows	db 3
-_option_input_prev	dw 2 dup (0)
-public _WHITELINES_DRAWN_AT
-_WHITELINES_DRAWN_AT	db RES_Y dup(0)
+	extern _opts:cfg_options_t
+	extern _mode:byte
+	extern _menu_sel:byte
+	extern _input_left:byte
+	extern _input_ok:byte
+	extern _input_shot:byte
+	extern _input_cancel:byte
+	extern byte_1232A:byte
+	extern _input_right:byte
+	extern byte_1232C:byte
+	extern byte_1232D:byte
+	extern byte_1232E:byte
+	extern byte_1232F:byte
+	extern dword_12330:dword
+	extern _option_rows:byte
+
+		db 0
+
 off_124CD	dd aVrvsvVqvs
 					; "   ‚r‚s‚`‚q‚s   "
 		dd aVbvnvmvsvhvmvt	; "‚b‚n‚m‚s‚h‚m‚t‚d"

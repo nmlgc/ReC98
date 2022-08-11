@@ -21,16 +21,10 @@ BINARY = 'M'
 include ReC98.inc
 include th01/th01.inc
 include th01/hardware/grppsafx.inc
-include th01/math/area.inc
-include th01/math/subpixel.inc
-include th01/main/playfld.inc
-include th01/formats/cfg.inc
 include th01/sprites/main_ptn.inc
 
 LIVES_MAX = 6
-BOMBS_MAX = 5
 STAGES_PER_SCENE = 5
-BOSS_STAGE = (STAGES_PER_SCENE - 1)
 
 	option emulator
 
@@ -3033,98 +3027,8 @@ main_38_TEXT	ends
 
 	.data
 
-; Not *really* a cfg_options_t, since you'd expect that structure to contain
-; the immutable contents of REIIDEN.CFG. However, [bombs] is in fact the
-; *current* bomb count, and the .CFG value is saved to [credit_bombs]...
-public _rank, _bgm_mode, _bombs, _lives_extra
-_rank	db CFG_RANK_DEFAULT
-_bgm_mode	db CFG_BGM_MODE_DEFAULT
-_bombs	db CFG_BOMBS_DEFAULT
-_lives_extra	db    CFG_LIVES_EXTRA_DEFAULT
-public _stage_num
-_stage_num	db 0
-byte_34A35	db 0
-		db    0
-public _RANKS, _first_stage_in_scene, _timer_initialized
-_RANKS label dword
-		dd aEasy		; "EASY"
-		dd aNormal		; "NORMAL"
-		dd aHard		; "HARD"
-		dd aLunatic		; "LUNATIC"
-_timer_initialized	db 0
-		db    0
-_first_stage_in_scene	db 1
-include th01/hardware/input_main_end[data].asm
-		db    0
-public _player_deflecting, _bomb_damaging, _player_sliding
-_player_deflecting	db 0
-_bomb_damaging	db 0
-_player_sliding	db 0
-public _score, _score_bonus, _bomb_frames, _continues_total
-_score	dd 0
-_score_bonus	dd 0
-_bomb_frames	dd 0
-_continues_total	dd 0
-		dw 0
-public _mode_test
-_mode_test	dw 0
-public _bomb_doubletap_frames
-_bomb_doubletap_frames	dw 0
-word_34A70	dw 0
-public _test_damage
-_test_damage	dw 0
-word_34A74	dw 0
-		dw 0
-public _player_invincible
-_player_invincible	dw 0
-		dw 0
-public _orb_velocity_x, _lives, _stage_cleared
-_orb_velocity_x	dw 0
-word_34A7E	dw 0
-_lives	dw 4
-_stage_cleared	dw 0
-public _cardcombo_cur, _orb_in_portal, _cardcombo_max
-_cardcombo_cur	dw 0
-_orb_in_portal	dw 0
-_cardcombo_max	dw 0
-word_34A8A	dw 1
-word_34A8C	dw 1
-public _orb_prev_left, _orb_prev_top
-_orb_prev_left	dw ORB_LEFT_START
-_orb_prev_top 	dw  ORB_TOP_START
-word_34A92	dw 0
-include th01/main/player/orb[data].asm
-public _ptn_slot_stg_has_reduced_sprites, _bomb_palette_flash_peak_
-_ptn_slot_stg_has_reduced_sprites	db 0
-label _bomb_palette_flash_peak_ byte
-	db 0Fh, 0Fh, 0Fh
-	db 0Dh, 0Dh, 0Fh
-	db 0Dh, 0Dh, 0Fh
-	db 0Dh, 0Dh, 0Fh
-	db 0Dh, 0Dh, 0Fh
-	db 0Dh, 0Dh, 0Fh
-	db 0Dh, 0Dh, 0Fh
-	db 0Fh, 0Fh, 0Fh
-	db 0Dh, 0Dh, 0Fh
-	db 0Dh, 0Dh, 0Fh
-	db 0Dh, 0Dh, 0Fh
-	db 0Dh, 0Dh, 0Fh
-	db 0Dh, 0Dh, 0Fh
-	db 0Dh, 0Dh, 0Fh
-	db 0Dh, 0Dh, 0Fh
-	db 06h, 06h, 0Fh
-byte_34AD5	db 0
-word_34AD6	dw 0
-byte_34AD8	db 0
-word_34AD9	dw 0
-byte_34ADB	db 0
-word_34ADC	dw 0
-unk_34ADE	db    0
-byte_34ADF	db 0
-aEasy		db 'EASY',0
-aNormal		db 'NORMAL',0
-aHard		db 'HARD',0
-aLunatic	db 'LUNATIC',0
+	db 0
+
 public _esc_cls
 _esc_cls		db 1Bh,'*',0
 public _mask_grf, _miko_ac_bos, _miko_ac2_bos, _PTN_STG_CARDFLIP_FN, _miko_ptn
@@ -3277,6 +3181,63 @@ include th01/hiscore/routes[data].asm
 ; char aOp[3]
 aOp		db 'op',0
 
+INPUT_RIGHT = 01h
+INPUT_LEFT = 02h
+BOMB_DOUBLETAP_WINDOW = 20
+
+OVX_4_LEFT = 1
+OVX_4_RIGHT = 2
+OVX_8_LEFT = 3
+OVX_8_RIGHT = 4
+
+OF_BOUNCE_FROM_SURFACE = 0
+OF_BOUNCE_FROM_TOP = 1
+
+	extern _rank:byte
+	extern _bgm_mode:byte
+	extern _bombs:byte
+	extern _lives_extra:byte
+	extern _stage_num:byte
+	extern byte_34A35:byte
+	extern _timer_initialized:byte
+	extern _first_stage_in_scene:byte
+	extern _input_lr:byte
+	extern _input_mem_leave:byte
+	extern _input_shot:byte
+	extern _done:byte
+	extern _paused:byte
+	extern _input_ok:byte
+	extern _input_strike:byte
+	extern _input_up:byte
+	extern _input_down:byte
+	extern _player_deflecting:byte
+	extern _bomb_damaging:byte
+	extern _score:dword
+	extern _bomb_frames:dword
+	extern _continues_total:dword
+	extern _mode_test:word
+	extern _bomb_doubletap_frames:word
+	extern word_34A70:word
+	extern _test_damage:word
+	extern word_34A74:word
+	extern _player_invincible:word
+	extern _orb_velocity_x:word
+	extern word_34A7E:word
+	extern _lives:word
+	extern _stage_cleared:word
+	extern _cardcombo_cur:word
+	extern _orb_in_portal:word
+	extern _cardcombo_max:word
+	extern word_34A8A:word
+	extern word_34A8C:word
+	extern _orb_prev_left:word
+	extern _orb_prev_top:word
+	extern word_34A92:word
+	extern _orb_force:qword
+	extern _ptn_slot_stg_has_reduced_sprites:byte
+	extern byte_34AD5:byte
+	extern byte_34ADF:byte
+
 	extern _z_Palettes:byte:(size rgb_t * COLOR_COUNT)
 PTN_SLOT_COUNT = 8
 	extern _ptn_image_count:byte:PTN_SLOT_COUNT
@@ -3368,7 +3329,10 @@ public _mode_debug
 _mode_debug	db ?
 dword_36C20	dd ?
 include th01/main/player/player[bss].asm
-include th01/main/player/orb[bss].asm
+public _orb_cur_left, _orb_cur_top, _orb_force_frame
+_orb_cur_left	dw ?
+_orb_cur_top 	dw ?
+_orb_force_frame	dw ?
 
 PTN_W = 32
 PTN_H = 32
