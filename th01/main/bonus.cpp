@@ -22,8 +22,10 @@ extern "C" {
 #include "th01/snd/mdrv2.h"
 }
 #include "th01/formats/grp.h"
+#include "th01/shiftjis/fwnum.hpp"
 #include "th01/shiftjis/bonus.hpp"
 #include "th01/sprites/bonusbox.hpp"
+#include "th01/sprites/bonusbox.csp"
 #include "th01/main/extend.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/vars.hpp"
@@ -255,12 +257,9 @@ void pascal near totle_pagetrans_animate(int)
 
 void near totle_load_and_pagetrans_animate(void)
 {
-	extern const char CLEAR3_grp[];
-	extern const char numb_ptn[];
-
 	graph_accesspage_func(1);
-	grp_put(CLEAR3_grp);
-	ptn_load(PTN_SLOT_NUMB, numb_ptn);
+	grp_put("CLEAR3.grp");
+	ptn_load(PTN_SLOT_NUMB, "numb.ptn");
 	graph_accesspage_func(0);
 	totle_pagetrans_animate(0);
 }
@@ -279,7 +278,7 @@ void near stagebonus_box_open_animate(void)
 	vram_offset_t vo_upper_column;
 	vram_offset_t vo_lower_row;
 	vram_offset_t vo_lower_column;
-	const dot_rect_t(8, 4) BOX = sSTAGEBONUS_BOX;
+	const dot_rect_t(8, 4) BOX = sSTAGEBONUS_BOX[0];
 
 	grcg_setcolor_rmw(V_BLACK);
 
@@ -308,13 +307,9 @@ static const int8_t FULLWIDTH_NUMERAL_SPACE = 10;
 
 void fullwidth_numeral(ShiftJISKanji& kanji, int8_t digit)
 {
-	struct hack { const ShiftJISKanji* x[11]; }; // XXX
-	extern const struct hack FULLWIDTH_NUMERALS_WITH_SPACE;
-
-	const struct hack NUMERALS = FULLWIDTH_NUMERALS_WITH_SPACE;
-
-	kanji.byte[0] = NUMERALS.x[digit]->byte[0];
-	kanji.byte[1] = NUMERALS.x[digit]->byte[1];
+	const shiftjis_t* NUMERALS[11] = FULLWIDTH_NUMERALS_WITH_SPACE;
+	kanji.byte[0] = NUMERALS[digit][0];
+	kanji.byte[1] = NUMERALS[digit][1];
 }
 
 void pascal near fullwidth_str_from_4_digit_value(ShiftJISKanji str[4], int val)
@@ -353,25 +348,6 @@ void stagebonus_animate(int stage_num)
 			STAGEBONUS_W - (2 * GLYPH_FULL_W) - shiftjis_w(STAGEBONUS_HIT_KEY)
 		),
 	};
-
-	#undef stagebonus_title
-	#undef stagebonus_digit_buf
-	#undef STAGEBONUS_SUBTITLE
-	#undef STAGEBONUS_TIME
-	#undef STAGEBONUS_CARDCOMBO_MAX
-	#undef STAGEBONUS_RESOURCES
-	#undef STAGEBONUS_STAGE_NUMBER
-	#undef STAGEBONUS_TOTAL
-	#undef STAGEBONUS_HIT_KEY
-	extern stagebonus_title_t stagebonus_title;
-	extern ShiftJISKanji stagebonus_digit_buf[];
-	extern const char STAGEBONUS_SUBTITLE[];
-	extern const char STAGEBONUS_TIME[];
-	extern const char STAGEBONUS_CARDCOMBO_MAX[];
-	extern const char STAGEBONUS_RESOURCES[];
-	extern const char STAGEBONUS_STAGE_NUMBER[];
-	extern const char STAGEBONUS_TOTAL[];
-	extern const char STAGEBONUS_HIT_KEY[];
 
 	#define clamp_add_x10_to_score_bonus_and_put( \
 		digit_buf, row, val, max, unnecessary_i \

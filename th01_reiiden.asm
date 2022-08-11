@@ -3380,48 +3380,6 @@ _ROUTE_SEL_2     	db '‚b‚‚‚‡‚’‚‚”‚•‚Œ‚‚”‚‰‚‚II',0
 _ROUTE_SEL_3     	db '‚r‚…‚Œ‚…‚ƒ‚”@‚‚…‚˜‚”@‚q‚‚•‚‚„',0
 _ROUTE_SEL_4 	db '–‚ŠE‚Ö',0
 _ROUTE_SEL_5	db '’n–‚Ö',0
-	evendata
-include th01/sprites/bonusbox.asp
-public _FULLWIDTH_NUMERALS_WITH_SPACE
-_FULLWIDTH_NUMERALS_WITH_SPACE	label dword
-		dd aVo			; "‚O"
-		dd aVp			; "‚P"
-		dd aVq			; "‚Q"
-		dd aVr			; "‚R"
-		dd aVs			; "‚S"
-		dd aVt			; "‚T"
-		dd aVu			; "‚U"
-		dd aVv			; "‚V"
-		dd aVw			; "‚W"
-		dd aVx			; "‚X"
-		dd aB@			; "@"
-public _CLEAR3_grp, _numb_ptn
-_CLEAR3_grp	db 'CLEAR3.grp',0
-_numb_ptn  	db 'numb.ptn',0
-aVo		db '‚O',0
-aVp		db '‚P',0
-aVq		db '‚Q',0
-aVr		db '‚R',0
-aVs		db '‚S',0
-aVt		db '‚T',0
-aVu		db '‚U',0
-aVv		db '‚V',0
-aVw		db '‚W',0
-aVx		db '‚X',0
-aB@		db '@',0
-
-public _stagebonus_title, _stagebonus_digit_buf, _STAGEBONUS_SUBTITLE
-public _STAGEBONUS_TIME, _STAGEBONUS_CARDCOMBO_MAX, _STAGEBONUS_RESOURCES
-public _STAGEBONUS_STAGE_NUMBER, _STAGEBONUS_TOTAL, _STAGEBONUS_HIT_KEY
-_stagebonus_title        	db '‚r‚s‚`‚f‚d@@@@‚b‚n‚l‚o‚k‚d‚s‚d',0
-_stagebonus_digit_buf    	db '@@@@‚O@',0
-_STAGEBONUS_SUBTITLE     	db '@@‚a‚n‚m‚t‚r',0
-_STAGEBONUS_TIME         	db '   @‚s‚‰‚‚…@',0
-_STAGEBONUS_CARDCOMBO_MAX	db '‚b‚‚‚”‚‰‚‚•‚‚•‚“',0
-_STAGEBONUS_RESOURCES    	db '‚a‚‚‚‚•‚o‚Œ‚‚™‚…‚’',0
-_STAGEBONUS_STAGE_NUMBER 	db '@@‚r‚s‚`‚f‚d',0
-_STAGEBONUS_TOTAL        	db '‚a‚n‚m‚t‚r@‚o‚‚‰‚‚”',0
-_STAGEBONUS_HIT_KEY      	db '‚g‚‰‚”@‚y@‚j‚…‚™',0
 
 	extern _arc_key:byte
 	extern _card_flip_cycle:byte
