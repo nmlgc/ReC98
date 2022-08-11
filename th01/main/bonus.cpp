@@ -10,6 +10,7 @@
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/math/clamp.hpp"
+#include "th01/math/subpixel.hpp"
 #include "th01/formats/ptn.hpp"
 extern "C" {
 #include "th01/hardware/egc.h"
@@ -28,7 +29,9 @@ extern "C" {
 #include "th01/main/vars.hpp"
 #include "th01/main/hud/hud.hpp"
 #include "th01/main/bonus.hpp"
+#include "th01/main/bullet/pellet.hpp"
 #include "th01/main/player/player.hpp"
+#include "th01/main/player/shot.hpp"
 #include "th01/main/stage/palette.hpp"
 #include "th01/main/stage/stages.hpp"
 
@@ -51,8 +54,18 @@ static const pixel_t STAGEBONUS_PADDED_H = (
 // TOTLE
 // -----
 
+static const screen_x_t TOTLE_STAGE_LEFT = 224;
+static const screen_y_t TOTLE_STAGE_TOP = 14;
+
 static const vram_word_amount_t TOTLE_METRIC_VRAM_WORD_LEFT = (224 / 16);
 static const pixel_t TOTLE_METRIC_DIGIT_W = PTN_QUARTER_W;
+static const pixel_t TOTLE_METRIC_H = 21;
+
+static const screen_y_t TOTLE_METRIC_TIME_TOP = 86;
+static const screen_y_t TOTLE_METRIC_CARDCOMBO_MAX_TOP = 107;
+static const screen_y_t TOTLE_METRIC_RESOURCES_TOP = 128;
+static const screen_y_t TOTLE_METRIC_STAGE_NUMBER_TOP = 149;
+static const screen_y_t TOTLE_TOTLE_TOP = 196;
 // -----
 /// -----------
 
@@ -252,6 +265,10 @@ void near totle_load_and_pagetrans_animate(void)
 	totle_pagetrans_animate(0);
 }
 
+inline void totle_free(void) {
+	ptn_free(PTN_SLOT_NUMB);
+}
+
 void near stagebonus_box_open_animate(void)
 {
 	vram_offset_t vo_upper_row = vram_offset_shift(
@@ -444,4 +461,109 @@ void stagebonus_animate(int stage_num)
 	score_bonus = 0;
 
 	#undef clamp_add_x10_to_score_bonus_and_put
+}
+
+inline void totle_metric_4_digit_animate(long& val, screen_y_t top) {
+	totle_metric_digit_animate((val / 1000), 0, top);	val = (val % 1000);
+	totle_metric_digit_animate((val / 100), 1, top); 	val = (val % 100);
+	totle_metric_digit_animate((val / 10), 2, top);  	val = (val % 10);
+	totle_metric_digit_animate(val, 3, top);
+	totle_metric_digit_animate(0, 4, top);
+	frame_delay(5);
+}
+
+inline void totle_metric_5_digit_animate(long& val, screen_y_t top) {
+	totle_metric_digit_animate((val / 10000), -1, top);	val = (val % 10000);
+	totle_metric_digit_animate((val / 1000), 0, top);  	val = (val % 1000);
+	totle_metric_digit_animate((val / 100), 1, top);   	val = (val % 100);
+	totle_metric_digit_animate((val / 10), 2, top);
+
+	// MODDERS: Don't assume this one to be 0.
+	totle_metric_digit_animate(0, 3, top);
+
+	totle_metric_digit_animate(0, 4, top);
+	frame_delay(5);
+}
+
+void totle_animate(int stage_num)
+{
+	unsigned int i;
+	int bonus_remainder;
+	int bonus_div_10000;
+
+	Shots.unput_and_reset();
+	Pellets.unput_and_reset();
+	frame_delay(50);
+
+	long val = 0;
+
+	totle_load_and_pagetrans_animate();
+
+	ptn_put_8(
+		(TOTLE_STAGE_LEFT + (0 * PTN_W)),
+		TOTLE_STAGE_TOP,
+		(PTN_TOTLE_NUMERAL_32 + (stage_num / 10))
+	);
+	ptn_put_8(
+		(TOTLE_STAGE_LEFT + (1 * PTN_W)),
+		TOTLE_STAGE_TOP,
+		(PTN_TOTLE_NUMERAL_32 + (stage_num % 10))
+	);
+	frame_delay(30);
+
+	// Time
+	val = (stage_timer * 5);
+	clamp_and_add_x10_to_score_bonus(val, 6553, i);
+	totle_metric_4_digit_animate(val, TOTLE_METRIC_TIME_TOP);
+
+	// Card combo ("Continuous")
+	// There are no cards to be flipped in boss stages though?
+	val = (cardcombo_max * 200);
+	clamp_and_add_x10_to_score_bonus(val, 6553, i);
+	totle_metric_4_digit_animate(val, TOTLE_METRIC_CARDCOMBO_MAX_TOP);
+
+	// Bomb & Player ("MIKOsan")
+	val = (lives * 500);
+	val += (bombs * 200);
+	clamp_and_add_x10_to_score_bonus(val, 6553, i);
+	totle_metric_4_digit_animate(val, TOTLE_METRIC_RESOURCES_TOP);
+
+	// Stage number
+	// Obviously requires a higher clamping factor.
+	val = (stage_num * 1000);
+	clamp_and_add_x10_to_score_bonus(val, 65530, i);
+	totle_metric_5_digit_animate(val, TOTLE_METRIC_STAGE_NUMBER_TOP);
+
+	// Commit
+	score += score_bonus;
+
+	// TOTLE
+	bonus_div_10000 = (score_bonus / 10000);
+	bonus_remainder = (score_bonus - (bonus_div_10000 * 10000));
+	totle_metric_digit_animate((bonus_div_10000 / 10),  -1, TOTLE_TOTLE_TOP);
+	bonus_div_10000 = (bonus_div_10000 % 10);
+	totle_metric_digit_animate(bonus_div_10000,          0, TOTLE_TOTLE_TOP);
+	totle_metric_digit_animate((bonus_remainder / 1000), 1, TOTLE_TOTLE_TOP);
+	bonus_remainder = (bonus_remainder % 1000);
+	totle_metric_digit_animate((bonus_remainder / 100),  2, TOTLE_TOTLE_TOP);
+	bonus_remainder = (bonus_remainder % 100);
+	totle_metric_digit_animate((bonus_remainder / 10),   3, TOTLE_TOTLE_TOP);
+	bonus_remainder = (bonus_remainder % 10);
+	totle_metric_digit_animate(bonus_remainder,          4, TOTLE_TOTLE_TOP);
+	frame_delay(5);
+
+	input_reset_sense();
+	input_shot = true;
+	input_ok = true;
+
+	resident->continues_per_scene[(stage_num / STAGES_PER_SCENE) - 1] = (
+		continues_total
+	);
+
+	while((input_shot == true) && (input_ok == true)) {
+		input_sense(false);
+	}
+
+	score_bonus = 0;
+	totle_free();
 }

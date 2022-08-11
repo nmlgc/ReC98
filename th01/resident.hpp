@@ -56,5 +56,8 @@ typedef struct {
 	uint16_t point_value;
 } resident_t;
 
+// ZUN bloat: Synced with the one in the resident structure anyway.
+extern long continues_total;
+
 extern route_t route;
 extern resident_t *resident;
