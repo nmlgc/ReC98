@@ -20,7 +20,6 @@ typedef struct {
 } ptn_header_t;
 // -----------------------------
 
-extern int8_t ptn_image_count[PTN_SLOT_COUNT];
 extern bool16 flag_palette_show;
 
 ptn_error_t ptn_load_palette_show(main_ptn_slot_t slot, const char *fn)

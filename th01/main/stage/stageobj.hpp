@@ -178,6 +178,7 @@ extern unsigned long stageobj_bgs_size;
 
 // Frees any previously allocated [stageobj_bgs]. Always returns 0.
 bool16 stageobj_bgs_free(void);
+bool16 stageobj_bgs_free_wrap(void); // ZUN bloat: Just call the real function.
 
 // Blits the backgrounds for all cards and obstacles at their respective
 // positions, effectively removing those sprites from VRAM.

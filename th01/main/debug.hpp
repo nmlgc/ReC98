@@ -10,6 +10,8 @@ void out_of_memory_exit(void);
 /// Memory info screen
 /// ------------------
 
+extern uint32_t coreleft_prev;
+
 // Hides the graphics layer and enters a memory usage screen with some debug
 // options, in a blocking way. Set [input_mem_leave] to `true` to return to
 // the game.

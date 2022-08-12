@@ -29,7 +29,6 @@ void z_text_25line(void);
 void z_text_20line(void);
 void z_text_systemline_show(void);
 void z_text_systemline_hide(void);
-void z_text_clear(void);
 void z_text_show(void);
 void z_text_hide(void);
 void z_text_setcursor(z_text_cursor_t type);
@@ -38,6 +37,8 @@ void z_text_vputsa(
 	tram_x_t x, tram_y_t y, int z_atrb, const sshiftjis_t *fmt, ...
 );
 
+// Also moves the text cursor to the top-left corner of the screen.
+void z_text_clear(void);
 inline void z_text_clear_inlined() {
 	printf("\x1B*");
 }

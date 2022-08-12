@@ -1,5 +1,3 @@
-#include "th01/main/player/orb.hpp"
-
 extern int orb_frames_outside_portal; // unused
 extern double orb_velocity_y;
 

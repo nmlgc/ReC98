@@ -36,7 +36,6 @@ STAGES_PER_SCENE = 5
 	extern _execl:proc
 	extern _exit:proc
 	extern _farheapcheck:proc
-	extern _farheapchecknode:proc
 	extern _kbhit:proc
 	extern _printf:proc
 	extern _puts:proc
@@ -108,309 +107,6 @@ main_01_TEXT	segment	byte public 'CODE' use16
 
 ; Attributes: bp-based frame
 
-; int __stdcall	__far sub_D095(void far	*node, __int32)
-sub_D095	proc far
-
-_node		= dword	ptr  6
-arg_4		= dword	ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		pushd	[bp+arg_4]
-		push	ds
-		push	offset aS	; "%s"
-		call	_printf
-		add	sp, 8
-		pushd	[bp+_node]
-		push	ds
-		push	offset aFp	; " : [%Fp] -> "
-		call	_printf
-		add	sp, 8
-		pushd	[bp+_node]	; node
-		call	_farheapchecknode
-		add	sp, 4
-		sub	ax, 0FFFEh
-		mov	bx, ax
-		cmp	bx, 6
-		ja	short loc_D0F9
-		add	bx, bx
-		jmp	cs:off_D0FD[bx]
-
-loc_D0D5:
-		push	ds
-		push	offset aGqbGvvkvVViv ; "ヒープがみつかんないよぅ"
-		jmp	short loc_D0F1
-; ---------------------------------------------------------------------------
-
-loc_D0DB:
-		push	ds
-		push	offset aGqbGvvkfji ; "ヒープが破壊されてるわぁ"
-		jmp	short loc_D0F1
-; ---------------------------------------------------------------------------
-
-loc_D0E1:
-		push	ds
-		push	offset aGmbGhvkvVViv ; "ノードがみつかんないの"
-		jmp	short loc_D0F1
-; ---------------------------------------------------------------------------
-
-loc_D0E7:
-		push	ds
-		push	offset aVVVL	; "ここは空きブロックですわ"
-		jmp	short loc_D0F1
-; ---------------------------------------------------------------------------
-
-loc_D0ED:
-		push	ds
-		push	offset s	; "現在使用中のブロックよ"
-
-loc_D0F1:
-		call	_puts
-		add	sp, 4
-
-loc_D0F9:
-		pop	bp
-		retf	8
-sub_D095	endp
-
-; ---------------------------------------------------------------------------
-off_D0FD	dw offset loc_D0E1
-		dw offset loc_D0DB
-		dw offset loc_D0F9
-		dw offset loc_D0D5
-		dw offset loc_D0F9
-		dw offset loc_D0E7
-		dw offset loc_D0ED
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public @debug_mem$qv
-@debug_mem$qv proc far
-
-@@ptn_size_total		= dword	ptr -4
-
-		enter	4, 0
-		push	si
-		mov	[bp+@@ptn_size_total], 0
-
-loc_D118:
-		mov	[bp+@@ptn_size_total], 0
-		cmp	_mode_test, 1
-		jnz	loc_D317
-		call	@z_graph_hide$qv
-		call	_printf c, offset _esc_cls, ds
-		push	ds
-		push	offset aB@b@b@vVVriCVi ; "　　　これも運命か...\n"
-		call	_puts
-		add	sp, 4
-		pushd	[dword_36C1A]
-		push	ds
-		push	offset aOldCoreleft7lu ; "old coreleft %7lu bytes free\n"
-		call	_printf
-		add	sp, 8
-		call	_coreleft
-		push	dx
-		push	ax
-		push	ds
-		push	offset aCoreleft7luByt ; "    coreleft %7lu bytes free\n"
-		call	_printf
-		add	sp, 8
-		push	_obstacles.O_count
-		push	ds
-		push	offset aKabe_nD	; "    kabe_n =	%d\n"
-		call	_printf
-		add	sp, 6
-		push	_cards.C_count
-		push	ds
-		push	offset aPnl_nD	; "    pnl_n  =	%d\n"
-		call	_printf
-		add	sp, 6
-		movsx	eax, _cards.C_count
-		imul	eax, 281h
-		push	eax
-		push	ds
-		push	offset aPnl_nBuf7lu ; "	pnl_n buf = %7lu\n"
-		call	_printf
-		add	sp, 8
-		xor	si, si
-		jmp	short loc_D1E3
-; ---------------------------------------------------------------------------
-
-loc_D1A9:
-		mov	al, _ptn_image_count[si]
-		cbw
-		cwde
-		imul	eax, 281h
-		push	eax
-		push	si
-		push	ds
-		push	offset aB@b@ptnD7lu ; "　　ptn %d  = %7lu\n"
-		call	_printf
-		add	sp, 0Ah
-		cmp	si, 2
-		jl	short loc_D1E2
-		cmp	si, 5
-		jz	short loc_D1E2
-		mov	al, _ptn_image_count[si]
-		cbw
-		cwde
-		imul	eax, 281h
-		add	[bp+@@ptn_size_total], eax
-
-loc_D1E2:
-		inc	si
-
-loc_D1E3:
-		cmp	si, PTN_SLOT_COUNT
-		jl	short loc_D1A9
-		push	ds
-		push	(offset	aB@b@b@vVVriCVi+15h) ; s
-		call	_puts
-		add	sp, 4
-		pushd	[bp+@@ptn_size_total]
-		push	ds
-		push	offset aAllPtn7lu ; "all   ptn	 = %7lu\n"
-		call	_printf
-		add	sp, 8
-		pushd	[_stageobj_bgs_size]
-		push	ds
-		push	offset aKabeMem7lu ; "kabe  mem	  = %7lu\n"
-		call	_printf
-		add	sp, 8
-		push	_hud_bg_size
-		push	ds
-		push	offset aMaskMem7u ; "mask  mem	 = %7u\n"
-		call	_printf
-		add	sp, 6
-		mov	eax, dword_36C1A
-		sub	eax, [bp+@@ptn_size_total]
-		push	eax
-		push	ds
-		push	offset aOldPtn7lu ; "old - ptn	 = %7lu\n"
-		call	_printf
-		add	sp, 8
-		call	_coreleft
-		push	dx
-		push	ax
-		pop	eax
-		mov	edx, dword_36C1A
-		sub	edx, eax
-		sub	edx, _stageobj_bgs_size
-		push	edx
-		push	ds
-		push	offset aEtcMem7ld ; "etc   mem	 = %7ld\n\n"
-		call	_printf
-		add	sp, 8
-		push	ds
-		push	offset aZPtnFreeXBossF ; "Z = PTN FREE,	X = BOSS FREE, UP = TAMA "...
-		call	_puts
-		add	sp, 4
-		jmp	loc_D317
-; ---------------------------------------------------------------------------
-
-loc_D26E:
-		push	3
-		call	@frame_delay$qui
-		pop	cx
-		call	@input_sense$qi stdcall, 0
-		pop	cx
-		cmp	_input_shot, 0
-		jz	short loc_D28B
-		nopcall	sub_D47D
-		jmp	short loc_D2B8
-; ---------------------------------------------------------------------------
-
-loc_D28B:
-		cmp	_input_strike, 0
-		jz	short loc_D2A5
-		xor	si, si
-		jmp	short loc_D29E
-; ---------------------------------------------------------------------------
-
-loc_D296:
-		call	@bos_entity_free$qi stdcall, si
-		pop	cx
-		inc	si
-
-loc_D29E:
-		cmp	si, 4
-		jl	short loc_D296
-		jmp	short loc_D2B8
-; ---------------------------------------------------------------------------
-
-loc_D2A5:
-		cmp	_input_up, 0
-		jz	short loc_D2C7
-		call	@CPellets@unput_and_reset$qv c, offset _Pellets, ds
-
-loc_D2B8:
-		call	_printf c, offset _esc_cls, ds
-		jmp	loc_D118
-; ---------------------------------------------------------------------------
-
-loc_D2C7:
-		cmp	_input_down, 0
-		jnz	short loc_D2B8
-		cmp	_input_ok, 0
-		jz	short loc_D317
-		call	_printf c, offset _esc_cls, ds
-		xor	si, si
-		jmp	short loc_D2F8
-; ---------------------------------------------------------------------------
-
-loc_D2E5:
-		push	ds
-		push	offset aPtn	; "PTN "
-		mov	bx, si
-		shl	bx, 2
-		pushd	_ptn_images[bx] ; node
-		call	sub_D095
-		inc	si
-
-loc_D2F8:
-		cmp	si, 8
-		jl	short loc_D2E5
-		push	ds
-		push	offset aMask	; "MASK"
-		pushd	[_hud_bg]
-		call	sub_D095
-		push	ds
-		push	offset aKabe	; "KABE"
-		pushd	[_stageobj_bgs] ; node
-		call	sub_D095
-
-loc_D317:
-		cmp	_input_mem_leave, 0
-		jz	loc_D26E
-		pop	si
-		leave
-		retf
-@debug_mem$qv endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public @debug_show_game$qv
-@debug_show_game$qv proc far
-		push	bp
-		mov	bp, sp
-		cmp	_mode_test, 1
-		jnz	short loc_D33E
-		call	@z_graph_show$qv
-		call	_printf c, offset _esc_cls, ds
-
-loc_D33E:
-		pop	bp
-		retf
-@debug_show_game$qv endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
 sub_D340	proc far
 		push	bp
 		mov	bp, sp
@@ -421,12 +117,12 @@ sub_D340	proc far
 		idiv	ebx
 		cmp	edx, 100
 		jnz	short loc_D37C
-		call	_printf c, offset _esc_cursor_to_x0_y2, ds
+		call	_printf c, offset 049Dh, ds
 		call	_coreleft
 		push	dx
 		push	ax
 		push	ds
-		push	offset aCoreleft7luByt ; "    coreleft %7lu bytes free\n"
+		push	offset 0376h
 		call	_printf
 		add	sp, 8
 
@@ -535,14 +231,14 @@ sub_D340	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_D47D	proc far
+public @stageobj_bgs_free_wrap$qv
+@stageobj_bgs_free_wrap$qv	proc far
 		push	bp
 		mov	bp, sp
 		call	@stageobj_bgs_free$qv
 		pop	bp
 		retf
-sub_D47D	endp
+@stageobj_bgs_free_wrap$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -947,8 +643,8 @@ loc_D776:
 
 loc_D795:
 		call	_coreleft
-		mov	word ptr dword_36C1A+2,	dx
-		mov	word ptr dword_36C1A, ax
+		mov	word ptr _coreleft_prev+2,	dx
+		mov	word ptr _coreleft_prev, ax
 		call	@load_and_init_stuff_used_in_all_$qv
 		call	@z_graph_init$qv
 		push	0
@@ -1660,7 +1356,7 @@ loc_DF9A:
 		pop	cx
 
 loc_DFBC:
-		call	sub_D47D
+		call	@stageobj_bgs_free_wrap$qv
 		cmp	_cards.C_left, 0
 		jz	short loc_DFE0
 		call	@$bdla$qnv c, large [_cards.C_left]
@@ -1810,7 +1506,7 @@ loc_E244:
 		call	@player_gameover_animate$qv
 		call	@CShots@unput_and_reset$qv c, offset _Shots, ds
 		call	@CPellets@unput_and_reset$qv c, offset _Pellets, ds
-		call	sub_D47D
+		call	@stageobj_bgs_free_wrap$qv
 		mov	_extend_next, 1
 		cmp	byte_34ADF, 0
 		jz	short loc_E27B
@@ -2238,46 +1934,6 @@ main_38_TEXT	ends
 
 	.data
 
-aS		db '%s',0
-; char aFp[]
-aFp		db ' : [%Fp] -> ',0
-aGqbGvvkvVViv	db 'ヒープがみつかんないよぅ',0
-aGqbGvvkfji	db 'ヒープが破壊されてるわぁ',0
-aGmbGhvkvVViv	db 'ノードがみつかんないの',0
-aVVVL		db 'ここは空きブロックですわ',0
-; char s[]
-s		db '現在使用中のブロックよ',0
-; char aB[]
-aB@b@b@vVVriCVi	db '　　　これも運命か...',0Ah,0
-; char aOldCoreleft7lu[]
-aOldCoreleft7lu	db 'old coreleft %7lu bytes free',0Ah,0
-; char aCoreleft7luByt[]
-aCoreleft7luByt	db '    coreleft %7lu bytes free',0Ah,0
-; char aKabe_nD[]
-aKabe_nD	db '    kabe_n = %d',0Ah,0
-; char aPnl_nD[]
-aPnl_nD		db '    pnl_n  = %d',0Ah,0
-; char aPnl_nBuf7lu[]
-aPnl_nBuf7lu	db ' pnl_n buf = %7lu',0Ah,0
-; char aB[]
-aB@b@ptnD7lu	db '　　ptn %d  = %7lu',0Ah,0
-; char aAllPtn7lu[]
-aAllPtn7lu	db 'all   ptn   = %7lu',0Ah,0
-; char aKabeMem7lu[]
-aKabeMem7lu	db 'kabe  mem   = %7lu',0Ah,0
-; char aMaskMem7u[]
-aMaskMem7u	db 'mask  mem   = %7u',0Ah,0
-; char aOldPtn7lu[]
-aOldPtn7lu	db 'old - ptn   = %7lu',0Ah,0
-; char aEtcMem7ld[]
-aEtcMem7ld	db 'etc   mem   = %7ld',0Ah
-		db 0Ah,0
-; char aZPtnFreeXBossF[]
-aZPtnFreeXBossF	db 'Z = PTN FREE, X = BOSS FREE, UP = TAMA DEL, DOWN = REWIRTE, ret = NODE CHEAK',0
-aPtn		db 'PTN ',0
-aMask		db 'MASK',0
-aKabe		db 'KABE',0
-_esc_cursor_to_x0_y2		db 1Bh,'[3;0H',0
 _esc_cursor_to_x59_y2		db 1Bh,'[3;60H',0
 ; char aHeapCheak[]
 aHeapCheak	db 'HEAP Cheak  ',0
@@ -2354,7 +2010,6 @@ BOMB_DOUBLETAP_WINDOW = 20
 
 OVX_4_LEFT = 1
 
-	_esc_cls = 0159h
 	_PTN_STG_CARDFLIP_FN = 017Eh
 	extern _rank:byte
 	extern _bgm_mode:byte
@@ -2397,9 +2052,6 @@ OVX_4_LEFT = 1
 	extern _orb_force:qword
 	extern _ptn_slot_stg_has_reduced_sprites:byte
 	extern byte_34ADF:byte
-
-PTN_SLOT_COUNT = 8
-	extern _ptn_image_count:byte:PTN_SLOT_COUNT
 
 	; libs/master.lib/tx[data].asm
 	extern TextVramSeg:word
@@ -2480,9 +2132,9 @@ endm
 public _credit_bombs, _player_swing_deflection_frames
 _credit_bombs	db ?
 _player_swing_deflection_frames	db ?
-public _frame_rand
+public _frame_rand, _coreleft_prev
 _frame_rand	dd ?
-dword_36C1A	dd ?
+_coreleft_prev	dd ?
 byte_36C1E	db ?
 public _mode_debug
 _mode_debug	db ?
@@ -2550,8 +2202,6 @@ CObstacles struc
 	O_count 	dw ?
 CObstacles ends
 
-	extern _ptn_images:dword:PTN_SLOT_COUNT
-
 	; libs/master.lib/pal[bss].asm
 	extern Palettes:rgb_t:COLOR_COUNT
 
@@ -2569,11 +2219,7 @@ CObstacles ends
 
 	extern _resident:dword
 	extern _shootout_lasers:byte
-	extern _hud_bg:dword
-	extern _hud_bg_size:word
 	extern _stage_timer:word
-	extern _stageobj_bgs:dword
-	extern _stageobj_bgs_size:dword
 	extern _cards:CCards
 	extern _obstacles:CObstacles
 	extern _cards_score:dword

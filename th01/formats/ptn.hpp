@@ -32,7 +32,12 @@ struct ptn_t : public ptn_file_image_t {
 	ptn_plane_t alpha; // Derived from color #15 at load time
 };
 
+template <class T> inline int32_t ptn_sizeof_array(const T& count) {
+	return (count * static_cast<int32_t>(sizeof(ptn_t)));
+}
+
 extern ptn_t* ptn_images[PTN_SLOT_COUNT];
+extern int8_t ptn_image_count[PTN_SLOT_COUNT];
 
 // MODDERS: Make [id] unsigned
 static inline ptn_t* ptn_with_id(int id) {

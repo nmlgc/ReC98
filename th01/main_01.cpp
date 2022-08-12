@@ -19,6 +19,7 @@
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/core/initexit.hpp"
+#include "th01/math/area.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/frmdelay.h"
@@ -40,7 +41,10 @@
 #include "th01/formats/stagedat.hpp"
 #include "th01/main/player/anim.hpp"
 #include "th01/main/player/bomb.hpp"
+#include "th01/main/player/orb.hpp"
 #include "th01/main/player/player.hpp"
+#include "th01/main/boss/boss.hpp"
+#include "th01/main/boss/entity_a.hpp"
 #include "th01/main/bullet/laser_s.hpp"
 #include "th01/main/bullet/pellet.hpp"
 #include "th01/main/stage/card.hpp"
@@ -149,10 +153,7 @@ void input_sense(bool16 reset_repeat)
 		// until debug_mem() returns, making this variable entirely pointless.
 		input_onchange(14, (group_1 & K6_ROLL_UP), {
 			input_mem_enter = true;
-			/* TODO: Replace with the decompiled call
-			 * 	debug_mem();
-			 * once that function is part of this translation unit */
-			_asm { nop; push cs; call near ptr debug_mem; }
+			debug_mem();
 		} else {
 			input_mem_enter = false;
 		});
@@ -163,10 +164,7 @@ void input_sense(bool16 reset_repeat)
 		// appear as if you're already back in the game.
 		input_onchange(15, (group_1 & K6_ROLL_DOWN), {
 			input_mem_leave = true;
-			/* TODO: Replace with the decompiled call
-			 * 	debug_show_game();
-			 * once that function is part of this translation unit */
-			_asm { nop; push cs; call near ptr debug_show_game; }
+			debug_show_game();
 		} else {
 			input_mem_leave = false;
 		});
