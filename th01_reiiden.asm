@@ -954,8 +954,8 @@ off_D0FD	dw offset loc_D0E1
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public @test_mem$qv
-@test_mem$qv	proc far
+public @debug_mem$qv
+@debug_mem$qv proc far
 
 @@ptn_size_total		= dword	ptr -4
 
@@ -1155,14 +1155,14 @@ loc_D317:
 		pop	si
 		leave
 		retf
-@test_mem$qv	endp
+@debug_mem$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public @test_show_game$qv
-@test_show_game$qv	proc far
+public @debug_show_game$qv
+@debug_show_game$qv proc far
 		push	bp
 		mov	bp, sp
 		cmp	_mode_test, 1
@@ -1173,7 +1173,7 @@ public @test_show_game$qv
 loc_D33E:
 		pop	bp
 		retf
-@test_show_game$qv	endp
+@debug_show_game$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================

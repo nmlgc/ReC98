@@ -129,32 +129,32 @@ void input_sense(bool16 reset_repeat)
 		group_1 = key_sense(6);
 		group_1 |= key_sense(6);
 
-		// Hilarious bug: test_mem() itself renders a sub-screen in a blocking
+		// Hilarious bug: debug_mem() itself renders a sub-screen in a blocking
 		// way, and senses input after a 3-frame delay, thus recursing back
-		// into this function. Therefore, test_mem() will also be recursively
+		// into this function. Therefore, debug_mem() will also be recursively
 		// called for every 3 frames you're holding this key.
 		// [input_prev[14]], which is supposed to prevent that, isn't set
-		// until test_mem() returns, making this variable entirely pointless.
+		// until debug_mem() returns, making this variable entirely pointless.
 		input_onchange(14, (group_1 & K6_ROLL_UP), {
 			input_mem_enter = true;
 			/* TODO: Replace with the decompiled call
-			 * 	test_mem();
+			 * 	debug_mem();
 			 * once that function is part of this translation unit */
-			_asm { nop; push cs; call near ptr test_mem; }
+			_asm { nop; push cs; call near ptr debug_mem; }
 		} else {
 			input_mem_enter = false;
 		});
 		// And since this works as intended and only sets [input_mem_leave] to
 		// true on the first non-repeated key down event, you need to actually
-		// press and release this key once for every call to test_mem() to get
-		// back into the game - even though test_show_game() will make it
+		// press and release this key once for every call to debug_mem() to get
+		// back into the game - even though debug_show_game() will make it
 		// appear as if you're already back in the game.
 		input_onchange(15, (group_1 & K6_ROLL_DOWN), {
 			input_mem_leave = true;
 			/* TODO: Replace with the decompiled call
-			 * 	test_show_game();
+			 * 	debug_show_game();
 			 * once that function is part of this translation unit */
-			_asm { nop; push cs; call near ptr test_show_game; }
+			_asm { nop; push cs; call near ptr debug_show_game; }
 		} else {
 			input_mem_leave = false;
 		});

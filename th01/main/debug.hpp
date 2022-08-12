@@ -10,8 +10,8 @@ extern bool16 test_damage;
 // Hides the graphics layer and enters a memory usage screen with some debug
 // options, in a blocking way. Set [input_mem_leave] to `true` to return to
 // the game.
-void test_mem();
+void debug_mem();
 
 // Reactivates the graphics layer and clears the text layer.
-void test_show_game();
+void debug_show_game();
 /// ------------------
