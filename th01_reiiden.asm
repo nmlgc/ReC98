@@ -20,7 +20,6 @@ BINARY = 'M'
 
 include ReC98.inc
 include th01/th01.inc
-include th01/hardware/grppsafx.inc
 include th01/sprites/main_ptn.inc
 
 LIVES_MAX = 6
@@ -101,137 +100,7 @@ main_01_TEXT	segment	byte public 'CODE' use16
 	extern @pause_menu$qv:proc
 	extern @pellet_speed_lower$qii:proc
 	extern @pellet_speed_raise$qi:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CC0F	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		xor	di, di
-		push	1
-		call	@graph_accesspage_func$qi
-		pop	cx
-		call	@graph_copy_accessed_page_to_othe$qv
-		call	@graph_putsa_fx$qiiinxuc c, 0, ((FX_CLEAR_BG or (7 or FX_WEIGHT_BOLD)) shl 16) or 0, offset aVgvpvovfvivovx, ds ; "ｃｏｎｔｉｎｕｅ？　　　  "
-		call	@graph_putsa_fx$qiiinxuc c, 0, ((FX_CLEAR_BG or (7 or FX_WEIGHT_BOLD)) shl 16) or 16, offset aVxvevub@b@B@, ds ; "Ｙｅｓ　　  　"
-		call	@graph_putsa_fx$qiiinxuc c, 0, ((FX_CLEAR_BG or (7 or FX_WEIGHT_BOLD)) shl 16) or 32, offset aVmvpb@b@B@, ds ; "Ｎｏ　　	　 "
-		call	@graph_putsa_fx$qiiinxuc c, 0, ((FX_CLEAR_BG or (1 or FX_WEIGHT_BOLD)) shl 16) or 48, offset aVxvevub@b@c@, ds ; "Ｙｅｓ　　　  "
-		call	@graph_putsa_fx$qiiinxuc c, 0, ((FX_CLEAR_BG or (1 or FX_WEIGHT_BOLD)) shl 16) or 64, offset aVmvpb@b@c@, ds ; "Ｎｏ　　　   "
-		push	0
-		call	@graph_accesspage_func$qi
-		pop	cx
-		call	@graph_2xscale_byterect_1_to_0_sl$qiiiiii c, large ( 64 shl 16) or 160, large ( 0 shl 16) or 0, large (16 shl 16) or 144
-		call	@graph_2xscale_byterect_1_to_0_sl$qiiiiii c, large (200 shl 16) or 288, large (16 shl 16) or 0, large (16 shl 16) or  48
-		call	@graph_2xscale_byterect_1_to_0_sl$qiiiiii c, large (232 shl 16) or 288, large (64 shl 16) or 0, large (16 shl 16) or  48
-		mov	si, 1
-		mov	_input_ok, 0
-		mov	_paused, 0
-		mov	_input_shot, 0
-		call	@input_reset_sense$qv
-		les	bx, _resident
-		inc	es:[bx+reiidenconfig_t.continues_total]
-		inc	_continues_total
-		mov	ax, es:[bx+reiidenconfig_t.stage]
-		mov	bx, 5
-		xor	dx, dx
-		div	bx
-		add	ax, ax
-		mov	bx, word ptr _resident
-		add	bx, ax
-		inc	es:[bx+reiidenconfig_t.continues_per_scene]
-		mov	bx, word ptr _resident
-		mov	eax, es:[bx+reiidenconfig_t.score_highest]
-		cmp	eax, _score
-		jnb	short loc_CD2E
-		mov	eax, _score
-		mov	es:[bx+reiidenconfig_t.score_highest], eax
-
-loc_CD2E:
-		les	bx, _resident
-		mov	es:[bx+reiidenconfig_t.score], 0
-		mov	al, es:[bx+reiidenconfig_t.start_lives_extra]
-		add	al, 2
-		mov	es:[bx+reiidenconfig_t.rem_lives], al
-		call	@pellet_speed_lower$qii c, large (-2 and 0FFFFh) or (-5 shl 16)
-
-loc_CD52:
-		call	@input_sense$qi stdcall, 0
-		pop	cx
-		inc	di
-		push	1
-		call	@frame_delay$qui
-		pop	cx
-		cmp	_input_ok, 1
-		jz	short loc_CD70
-		cmp	_input_shot, 1
-		jnz	short loc_CDBC
-
-loc_CD70:
-		cmp	si, 1
-		jnz	short loc_CDA2
-		les	bx, _resident
-		mov	es:[bx+reiidenconfig_t.snd_need_init], 0
-		call	@game_switch_binary$qv
-		les	bx, _resident
-		mov	es:[bx+reiidenconfig_t.p_value], 0
-		pushd	0
-		push	ds
-		push	offset path	; "REIIDEN"
-		push	ds
-		push	offset path	; "REIIDEN"
-		call	_execl
-		add	sp, 0Ch
-		jmp	short loc_CDBC
-; ---------------------------------------------------------------------------
-
-loc_CDA2:
-		mov	_player_is_hit, 0
-		mov	_paused, 0
-		mov	_continues_total, 0
-		call	@mdrv2_bgm_stop$qv
-		jmp	short loc_CDD3
-; ---------------------------------------------------------------------------
-
-loc_CDBC:
-		cmp	di, 0BB8h
-		ja	short loc_CDA2
-		cmp	_paused, 1
-		jnz	short loc_CDD8
-		mov	_player_is_hit, 0
-		mov	_paused, 0
-
-loc_CDD3:
-		xor	ax, ax
-		jmp	loc_CE58
-; ---------------------------------------------------------------------------
-
-loc_CDD8:
-		cmp	_input_up, 1
-		jnz	short loc_CE16
-		mov	si, 1
-		call	@graph_2xscale_byterect_1_to_0_sl$qiiiiii c, large (200 shl 16) or 288, large (16 shl 16) or 0, large (16 shl 16) or 48
-		call	@graph_2xscale_byterect_1_to_0_sl$qiiiiii c, large (232 shl 16) or 288, large (64 shl 16) or 0, large (16 shl 16) or 48
-
-loc_CE16:
-		cmp	_input_down, 1
-		jnz	loc_CD52
-		xor	si, si
-		call	@graph_2xscale_byterect_1_to_0_sl$qiiiiii c, large (200 shl 16) or 288, large (48 shl 16) or 0, large (16 shl 16) or 48
-		call	@graph_2xscale_byterect_1_to_0_sl$qiiiiii c, large (232 shl 16) or 288, large (32 shl 16) or 0, large (16 shl 16) or 48
-		jmp	loc_CD52
-; ---------------------------------------------------------------------------
-
-loc_CE58:
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_CC0F	endp
-
+	extern @continue_menu$qv:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -501,7 +370,7 @@ sub_D07C	proc near
 		push	bp
 		mov	bp, sp
 		push	ds
-		push	offset aVvvtbV	; "いやーん、ヒープがたんないわ"
+		push	029Bh	; "いやーん、ヒープがたんないわ"
 		call	_puts
 		add	sp, 4
 		push	1		; status
@@ -2264,7 +2133,7 @@ loc_E2A8:
 		les	bx, _resident
 		mov	ax, [bp+@@stage]
 		mov	es:[bx+reiidenconfig_t.stage], ax
-		call	sub_CC0F
+		call	@continue_menu$qv
 
 loc_E2CB:
 		call	sub_D487
@@ -2361,10 +2230,8 @@ graph_TEXT	segment	byte public 'CODE' use16
 	extern @z_graph_show$qv:proc
 	extern @z_graph_hide$qv:proc
 	extern @graph_accesspage_func$qi:proc
-	extern @z_palette_set_all_show$qmx27%Palette$t14%RGB$tc$ii$16%%:proc
 	extern @z_graph_clear$qv:proc
 	extern @graph_copy_accessed_page_to_othe$qv:proc
-	extern @graph_putsa_fx$qiiinxuc:proc
 graph_TEXT	ends
 
 ; ===========================================================================
@@ -2411,7 +2278,6 @@ resstuff_TEXT	ends
 ; Segment type:	Pure code
 GRAPH_EX_TEXT	segment	byte public 'CODE' use16
 	extern @z_vsync_wait_and_scrollup$qi:proc
-	extern @graph_2xscale_byterect_1_to_0_sl$qiiiiii:proc
 GRAPH_EX_TEXT	ends
 
 ; ===========================================================================
@@ -2465,7 +2331,6 @@ mdrv2_TEXT	segment	byte public 'CODE' use16
 	extern @mdrv2_bgm_load$qnxc:proc
 	extern @mdrv2_se_load$qnxc:proc
 	extern @mdrv2_bgm_play$qv:proc
-	extern @mdrv2_bgm_stop$qv:proc
 	extern @mdrv2_bgm_fade_out_nonblock$qv:proc
 	extern @mdrv2_check_board$qv:proc
 	extern @mdrv2_se_play$qi:proc
@@ -2657,16 +2522,6 @@ main_38_TEXT	ends
 
 	.data
 
-aVgvpvovfvivovx	db 'ｃｏｎｔｉｎｕｅ？　　　  ',0
-aVxvevub@b@B@	db 'Ｙｅｓ　　  　',0
-aVmvpb@b@B@	db 'Ｎｏ　　  　 ',0
-aVxvevub@b@c@	db 'Ｙｅｓ　　　  ',0
-aVmvpb@b@c@	db 'Ｎｏ　　　   ',0
-; char path[]
-path		db 'REIIDEN',0
-; char aVvvtbV[]
-aVvvtbV		db 'いやーん、ヒープがたんないわ',0
-; char aS[3]
 aS		db '%s',0
 ; char aFp[]
 aFp		db ' : [%Fp] -> ',0

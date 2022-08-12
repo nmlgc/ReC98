@@ -23,3 +23,18 @@
 #define PAUSE_CHOICES 	PAUSE_CHOICE_0 PAUSE_CHOICE_1
 #define QUIT_CHOICES  	QUIT_CHOICE_0 QUIT_CHOICE_1
 // ----------
+
+// Continue menu
+// -------------
+// ZUN bloat: Note the subtle whitespace differences, and how they keep us from
+// calculating any of the actual used widths.
+
+#define CONTINUE_TITLE	"ｃｏｎｔｉｎｕｅ？　　　  "
+#define CONTINUE_YES_1	        "Ｙｅｓ　　  　"
+#define CONTINUE_NO_1 	        "Ｎｏ　　  　 "
+#define CONTINUE_YES_2	        "Ｙｅｓ　　　  "
+#define CONTINUE_NO_2 	        "Ｎｏ　　　   "
+
+static const pixel_t CONTINUE_TITLE_W = (9 * GLYPH_FULL_W);
+static const pixel_t CONTINUE_CHOICE_W = (3 * GLYPH_FULL_W);
+// -------------

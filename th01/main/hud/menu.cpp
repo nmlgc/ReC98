@@ -1,3 +1,4 @@
+#include "th01/hardware/grp2xscs.hpp"
 #include "th01/math/clamp.hpp"
 #include "th01/main/hud/menu.hpp"
 #include "th01/shiftjis/hud.hpp"
@@ -157,3 +158,114 @@ bool16 pause_menu(void)
 // -----------
 
 #include "th01/main/bullet/pellet_s.cpp"
+
+// Continue menu
+// -------------
+
+enum continue_line_t {
+	TITLE, YES_SELECTED, NO_SELECTED, YES, NO
+};
+
+inline void continue_back_put(
+	continue_line_t line, th01_vram_colors_t col, const shiftjis_t str[]
+) {
+	graph_putsa_fx(
+		0, (line * GLYPH_H), (FX_CLEAR_BG | FX_WEIGHT_BOLD | col), str
+	);
+}
+
+inline void continue_back_2xscale_to_front(
+	screen_x_t left_0, screen_y_t top_0, pixel_t w, continue_line_t line
+) {
+	graph_2xscale_byterect_1_to_0_slow(
+		left_0, top_0, 0, (line * GLYPH_H), w, GLYPH_H
+	);
+}
+
+inline void continue_choice_put(continue_line_t line) {
+	continue_back_2xscale_to_front(
+		((RES_X / 2) - (GLYPH_FULL_W * 2)),
+		((RES_Y / 2) + (((line - YES_SELECTED) % 2) * (GLYPH_H * 2))),
+		CONTINUE_CHOICE_W,
+		line
+	);
+}
+
+inline void continue_choice_render(bool yes) {
+	continue_choice_put(yes ? YES_SELECTED : YES);
+	continue_choice_put(yes ? NO : NO_SELECTED);
+}
+
+bool16 continue_menu(void)
+{
+	bool16 sel;
+	unsigned int frames = 0;
+
+	graph_accesspage_func(1);
+	graph_copy_accessed_page_to_other();
+	continue_back_put(TITLE, V_WHITE, CONTINUE_TITLE);
+	continue_back_put(YES_SELECTED, V_WHITE, CONTINUE_YES_1);
+	continue_back_put(NO_SELECTED, V_WHITE, CONTINUE_NO_1);
+	continue_back_put(YES, V_GRAY, CONTINUE_YES_2);
+	continue_back_put(NO, V_GRAY, CONTINUE_NO_2);
+
+	graph_accesspage_func(0);
+	continue_back_2xscale_to_front(
+		(RES_X / 4), PLAYFIELD_TOP, CONTINUE_TITLE_W, TITLE
+	);
+
+	continue_choice_render(true);
+	sel = true;
+	input_ok = false;
+	paused = false;
+	input_shot = false;
+	input_reset_sense();
+
+	// If we don't, we quit back to the main menu anyway.
+	resident_continue_use();
+	if(resident->score_highest < score) {
+		resident->score_highest = score;
+	}
+	resident->score = 0;
+	resident->rem_lives = (resident->start_lives_extra + 2);
+	pellet_speed_lower(-2, -5);
+
+	while(1) {
+		input_sense(false);
+		frames++;
+		frame_delay(1);
+
+		if((input_ok == true) || (input_shot == true)) {
+			if(sel == true) {
+				resident->snd_need_init = false;
+				game_switch_binary();
+				resident->point_value = 0;
+				execl(BINARY_MAIN_CAPS, BINARY_MAIN_CAPS, nullptr, nullptr);
+			} else {
+				no_continue:
+				player_is_hit = false;
+				paused = false;
+				continues_total = 0;
+				mdrv2_bgm_stop();
+				return false;
+			}
+		}
+		if(frames > 3000) {
+			goto no_continue;
+		}
+		if(paused == true) {
+			player_is_hit = false;
+			paused = false;
+			return false;
+		}
+		if(input_up == true) {
+			sel = true;
+			continue_choice_render(true);
+		}
+		if(input_down == true) {
+			sel = false;
+			continue_choice_render(false);
+		}
+	};
+}
+// -------------

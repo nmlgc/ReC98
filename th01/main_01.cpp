@@ -3,6 +3,7 @@
  * Code segment #1 of TH01's REIIDEN.EXE
  */
 
+#include <process.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <string.h>
@@ -17,6 +18,7 @@
 #include "th01/common.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
+#include "th01/core/initexit.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/frmdelay.h"
