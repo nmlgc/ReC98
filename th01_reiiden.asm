@@ -43,11 +43,8 @@ STAGES_PER_SCENE = 5
 	extern _printf:proc
 	extern _puts:proc
 	extern _scanf:proc
-	extern _strcmp:proc
 	extern _strcpy:proc
 	extern _toupper:proc
-
-main_01 group main_010_TEXT, main_012_TEXT, main_013_TEXT
 
 ; ===========================================================================
 
@@ -90,8 +87,8 @@ _TEXT		ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-main_010_TEXT	segment	byte public 'CODE' use16
-		assume cs:main_01
+main_01_TEXT	segment	byte public 'CODE' use16
+		assume cs:main_01_TEXT
 		;org 2
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -99,15 +96,9 @@ main_010_TEXT	segment	byte public 'CODE' use16
 	extern @input_reset_sense$qv:proc
 	extern @load_and_init_stuff_used_in_all_$qv:proc
 	extern @stage_entrance$qinxci:proc
-main_010_TEXT	ends
-
-main_012_TEXT	segment	byte public 'CODE' use16
 	extern @invincibility_sprites_update_and$qi:proc
 	extern @ORB_AND_PELLETS_AND_STAGE_UNPUT_$QI:proc
 	extern @pause_menu$qv:proc
-main_012_TEXT	ends
-
-main_013_TEXT	segment	byte public 'CODE' use16
 	extern @pellet_speed_lower$qii:proc
 	extern @pellet_speed_raise$qi:proc
 
@@ -1315,7 +1306,7 @@ loc_D6EB:
 
 loc_D6EE:
 		mov	[bp+@@scene_id], ax
-		push	seg main_01
+		push	seg main_01_TEXT
 		push	offset sub_D07C
 		call	@set_new_handler$qnqv$v	; set_new_handler(void (*)(void))
 		add	sp, 4
@@ -2333,7 +2324,7 @@ sub_E319	proc far
 		pop	bp
 		retf
 sub_E319	endp
-main_013_TEXT	ends
+main_01_TEXT	ends
 
 ; ===========================================================================
 

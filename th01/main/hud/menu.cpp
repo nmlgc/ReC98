@@ -155,3 +155,5 @@ bool16 pause_menu(void)
 	return false;
 }
 // -----------
+
+#include "th01/main/bullet/pellet_s.cpp"
