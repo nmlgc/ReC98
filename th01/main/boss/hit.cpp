@@ -48,13 +48,9 @@ void boss_hit_update_and_render(
 		hp--;
 		is_invincible = true;
 
-		if(
-			(orb_velocity_x == OVX_4_LEFT) || (orb_velocity_x == OVX_8_LEFT)
-		) {
+		if(orb_is_moving_left()) {
 			orb_velocity_x = OVX_4_RIGHT;
-		} else if(
-			(orb_velocity_x == OVX_4_RIGHT) || (orb_velocity_x == OVX_8_RIGHT)
-		) {
+		} else if(orb_is_moving_right()) {
 			orb_velocity_x = OVX_4_LEFT;
 		} else if(orb_velocity_x == OVX_0) {
 			if(orb_cur_left < (PLAYFIELD_CENTER_X - (ORB_W / 2))) {

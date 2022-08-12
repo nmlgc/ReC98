@@ -1,12 +1,8 @@
-#include "th01/v_colors.hpp"
 #include "th01/math/polar.hpp"
-#include "th01/math/subpixel.hpp"
-#include "th01/hardware/egc.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/grpinv32.hpp"
 #include "th01/hardware/scrollup.hpp"
 #include "th01/formats/grc.hpp"
-#include "th01/main/bullet/pellet.hpp"
 
 // Coordinates
 // -----------

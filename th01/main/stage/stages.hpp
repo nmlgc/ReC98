@@ -13,6 +13,10 @@ extern char default_bgm_fn[15];
 // (`true`).
 extern bool ptn_slot_stg_has_reduced_sprites;
 
+#define stage_is_boss(stage_id) ( \
+	((stage_id % STAGES_PER_SCENE) == BOSS_STAGE) \
+)
+
 // Render the initial stage screen and animations, depending on whether the
 // current stage is the [first_stage_in_scene]. If this is the case, this
 // function must be called with VRAM page 0 as the accessed page.

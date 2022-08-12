@@ -57,7 +57,7 @@ _continues_total	dd 0
 	dw 0
 _mode_test	dw 0
 public _bomb_doubletap_frames, word_34A70, _test_damage, word_34A74
-public _player_invincible, _orb_velocity_x, _lives, _stage_cleared, word_34A7E
+public _player_invincible, _orb_velocity_x, _lives, _stage_cleared, _orb_rotation_frame
 _bomb_doubletap_frames	dw 0
 word_34A70	dw 0
 _test_damage	dw 0
@@ -66,7 +66,7 @@ word_34A74	dw 0
 _player_invincible	dw 0
 	dw 0
 _orb_velocity_x	dw 0
-word_34A7E	dw 0
+_orb_rotation_frame	dw 0
 _lives	dw 4
 _stage_cleared	dw 0
 public _cardcombo_cur, _orb_in_portal, _cardcombo_max, word_34A8A, word_34A8C
@@ -75,10 +75,11 @@ _orb_in_portal	dw 0
 _cardcombo_max	dw 0
 word_34A8A	dw 1
 word_34A8C	dw 1
-public _orb_prev_left, _orb_prev_top, word_34A92, _orb_velocity_y, _orb_force
+public _orb_prev_left, _orb_prev_top, _orb_frames_outside_portal
+public _orb_velocity_y, _orb_force
 _orb_prev_left	dw ORB_LEFT_START
 _orb_prev_top 	dw  ORB_TOP_START
-word_34A92	dw 0
+_orb_frames_outside_portal	dw 0
 _orb_velocity_y	dq 0.0
 _orb_force	dq 0.0
 public _ptn_slot_stg_has_reduced_sprites, _bomb_palette_flash_peak_

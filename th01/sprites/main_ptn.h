@@ -13,6 +13,7 @@
 #define last_for_quarters(base, quarters) \
 	((base + ((quarters + 3) / 4)) - 1)
 
+static const int ORB_CELS = 4;
 static const int CARDCOMBO_DIGITS = 2;
 static const int PORTAL_ANIM_CELS = 2;
 static const int TIMER_DIGITS = 4;
@@ -51,10 +52,11 @@ typedef enum {
 	PTN_SHOT,
 	PTN_BLAST, // ???
 	PTN_ORB,
+	PTN_ORB_last = (PTN_ORB + ORB_CELS - 1),
 
 	// stg.ptn exclusives
 	// ------------------
-	PTN_CARD_UNUSED = 7,
+	PTN_CARD_UNUSED,
 	PTN_CARD_3HP, PTN_CARD_3HP_HALF, PTN_CARD_3HP_EDGE,
 	PTN_CARD_2HP, PTN_CARD_2HP_HALF, PTN_CARD_2HP_EDGE,
 	PTN_CARD_1HP, PTN_CARD_1HP_HALF, PTN_CARD_1HP_EDGE,

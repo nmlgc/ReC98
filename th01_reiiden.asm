@@ -14,7 +14,7 @@
 ; Application type:  Executable	16bit
 
 		.386
-		.model use16 large
+		.model use16 large _TEXT
 
 BINARY = 'M'
 
@@ -103,145 +103,7 @@ main_010_TEXT	ends
 
 main_012_TEXT	segment	byte public 'CODE' use16
 	extern @invincibility_sprites_update_and$qi:proc
-	extern @orb_velocity_y_update$qv:proc
-	extern @orb_force_new$qd11orb_force_t:proc
-	extern @orb_move_x$q16orb_velocity_x_t:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C766	proc far
-
-var_C		= qword	ptr -0Ch
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	si, [bp+arg_0]
-		cmp	_orb_in_portal, 0
-		jnz	loc_C816
-		call	@orb_move_x$q16orb_velocity_x_t stdcall, _orb_velocity_x
-		pop	cx
-		call	@orb_velocity_y_update$qv
-		add	_orb_cur_top, ax
-		inc	word_34A92
-		cmp	_orb_velocity_x, OVX_4_LEFT
-		jz	short loc_C799
-		cmp	_orb_velocity_x, OVX_8_LEFT
-		jnz	short loc_C79D
-
-loc_C799:
-		inc	word_34A7E
-
-loc_C79D:
-		cmp	_orb_velocity_x, OVX_4_RIGHT
-		jz	short loc_C7AB
-		cmp	_orb_velocity_x, OVX_8_RIGHT
-		jnz	short loc_C7AF
-
-loc_C7AB:
-		dec	word_34A7E
-
-loc_C7AF:
-		cmp	word_34A7E, 0Ah
-		jl	short loc_C7BC
-		mov	word_34A7E, 0
-
-loc_C7BC:
-		cmp	word_34A7E, 0
-		jge	short loc_C7C9
-		mov	word_34A7E, 9
-
-loc_C7C9:
-		cmp	_orb_cur_top, ORB_TOP_MAX
-		jle	short loc_C7F4
-		push	OF_BOUNCE_FROM_SURFACE
-		fld	_ORB_COEFFICIENT_OF_RESTITUTION
-		sub	sp, 8
-		fstp	[bp+var_C]
-		fwait
-		call	@orb_force_new$qd11orb_force_t
-		add	sp, 0Ah
-		mov	_orb_cur_top, ORB_TOP_MAX
-		mov	_cardcombo_cur, 0
-
-loc_C7F4:
-		cmp	_orb_cur_top, ORB_TOP_MIN
-		jge	short loc_C816
-		push	OF_BOUNCE_FROM_TOP
-		fldz
-		sub	sp, 8
-		fstp	[bp+var_C]
-		fwait
-		call	@orb_force_new$qd11orb_force_t
-		add	sp, 0Ah
-		mov	_orb_cur_top, ORB_TOP_MIN
-
-loc_C816:
-		push	1
-		call	@frame_delay$qui
-		pop	cx
-		call	@CPellets@unput_update_render$qv c, offset _Pellets, ds
-		mov	ax, si
-		mov	bx, 5
-		cwd
-		idiv	bx
-		cmp	dx, 4
-		jz	short loc_C846
-		call	@cards_hittest$qi pascal, si
-		pop	cx
-		call	@obstacles_update_and_render$qi stdcall, 0
-		pop	cx
-
-loc_C846:
-		cmp	_orb_in_portal, 0
-		jnz	short loc_C855
-		call	@orb_player_hittest$qi stdcall, OR_NONE
-		pop	cx
-
-loc_C855:
-		cmp	_orb_in_portal, 0
-		jnz	short loc_C879
-		mov	ax, word_34A7E
-		mov	bx, 3
-		cwd
-		idiv	bx
-		add	ax, 3
-		call	@ptn_unput_8$qiii c, _orb_prev_left, _orb_prev_top, ax
-
-loc_C879:
-		mov	ax, si
-		mov	bx, 5
-		cwd
-		idiv	bx
-		cmp	dx, 4
-		jz	short loc_C88B
-		call	@cards_update_and_render$qv
-
-loc_C88B:
-		cmp	_orb_in_portal, 0
-		jnz	short loc_C8B6
-		cmp	_player_is_hit, 0
-		jnz	short loc_C8B6
-		mov	ax, word_34A7E
-		mov	bx, 3
-		cwd
-		idiv	bx
-		add	ax, PTN_ORB
-		call	@ptn_put_8$qiii c, _orb_cur_left, _orb_cur_top, ax
-
-loc_C8B6:
-		mov	ax, _orb_cur_left
-		mov	_orb_prev_left, ax
-		mov	ax, _orb_cur_top
-		mov	_orb_prev_top, ax
-		pop	si
-		pop	bp
-		retf	2
-sub_C766	endp
-
+	extern @ORB_AND_PELLETS_AND_STAGE_UNPUT_$QI:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2272,8 +2134,7 @@ loc_DD6B:
 			call	@CShootoutLaser@update_hittest_and_render$qv c, offset _shootout_lasers[@@i * size CShootoutLaser], ds
 			@@i = @@i + 1
 		endm
-		push	[bp+@@stage]
-		call	sub_C766
+		call	@orb_and_pellets_and_stage_unput_$qi stdcall, [bp+@@stage]
 		cmp	_paused, 1
 		jnz	short loc_DDF8
 		call	sub_C942
@@ -2912,10 +2773,8 @@ main_26_TEXT	ends
 
 ; Segment type:	Pure code
 main_27_TEXT	segment	byte public 'CODE' use16
-	extern @ptn_unput_8$qiii:proc
 	extern @ptn_put_8$qiii:proc
 	extern @player_unput_update_render$qi:proc
-OR_NONE = 0
 	extern @orb_player_hittest$qi:proc
 	extern @player_miss_animate_and_update$qv:proc
 main_27_TEXT	ends
@@ -2941,8 +2800,6 @@ main_29_TEXT	ends
 
 ; Segment type:	Pure code
 main_30_TEXT	segment	byte public 'CODE' use16
-	extern @cards_hittest$qi:proc
-	extern @cards_update_and_render$qv:proc
 main_30_TEXT	ends
 
 ; ===========================================================================
@@ -3014,7 +2871,6 @@ main_37_TEXT	ends
 main_38_TEXT	segment	byte public 'CODE' use16
 	extern @CShots@unput_and_reset$qv:proc
 	extern @CPellets@$bctr$qv:proc
-	extern @CPellets@unput_update_render$qv:proc
 	extern @CPellets@unput_and_reset$qv:proc
 main_38_TEXT	ends
 
@@ -3153,16 +3009,9 @@ INPUT_LEFT = 02h
 BOMB_DOUBLETAP_WINDOW = 20
 
 OVX_4_LEFT = 1
-OVX_4_RIGHT = 2
-OVX_8_LEFT = 3
-OVX_8_RIGHT = 4
-
-OF_BOUNCE_FROM_SURFACE = 0
-OF_BOUNCE_FROM_TOP = 1
 
 	_esc_cls = 0159h
 	_PTN_STG_CARDFLIP_FN = 017Eh
-	_ORB_COEFFICIENT_OF_RESTITUTION = qword ptr ds:[01D0h]
 	extern _rank:byte
 	extern _bgm_mode:byte
 	extern _bombs:byte
@@ -3192,7 +3041,6 @@ OF_BOUNCE_FROM_TOP = 1
 	extern word_34A74:word
 	extern _player_invincible:word
 	extern _orb_velocity_x:word
-	extern word_34A7E:word
 	extern _lives:word
 	extern _stage_cleared:word
 	extern _cardcombo_cur:word
@@ -3202,7 +3050,6 @@ OF_BOUNCE_FROM_TOP = 1
 	extern word_34A8C:word
 	extern _orb_prev_left:word
 	extern _orb_prev_top:word
-	extern word_34A92:word
 	extern _orb_force:qword
 	extern _ptn_slot_stg_has_reduced_sprites:byte
 	extern byte_34AD5:byte

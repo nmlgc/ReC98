@@ -13,7 +13,7 @@ enum orb_velocity_x_t {
 
 enum orb_force_t {
 	OF_BOUNCE_FROM_SURFACE = 0, // bottom of playfield, or bumper
-	OF_BOUNCE_FROM_TOP = 1,
+	OF_BOUNCE_FROM_TOP = 1, // ignores [immediate]
 	OF_SHOT = 2,
 	OF_IMMEDIATE = 3, // new force passed directly in [immediate]
 
@@ -45,11 +45,14 @@ static const screen_y_t  ORB_TOP_START = ( ORB_TOP_MAX - 88);
 #define ORB_FORCE_START -8.0
 static const int ORB_FORCE_REPEL = -13;
 
+static const int ORB_FRAMES_PER_CEL = 3;
+
 extern screen_x_t orb_cur_left;
 extern screen_y_t orb_cur_top;
 extern screen_x_t orb_prev_left;
 extern screen_y_t orb_prev_top;
 extern bool16 orb_in_portal;
+extern int orb_rotation_frame;
 
 // Initial value of the current force acting on the orb
 extern double orb_force;
@@ -58,6 +61,14 @@ extern double orb_force;
 extern int orb_force_frame;
 
 extern orb_velocity_x_t orb_velocity_x;
+
+#define orb_is_moving_left() ( \
+	(orb_velocity_x == OVX_4_LEFT) || (orb_velocity_x == OVX_8_LEFT) \
+)
+
+#define orb_is_moving_right() ( \
+	(orb_velocity_x == OVX_4_RIGHT) || (orb_velocity_x == OVX_8_RIGHT) \
+)
 
 // Applies a new force of the given type onto the orb. Sets [orb_force], and
 // resets [orb_force_frame].
@@ -122,3 +133,12 @@ void orb_player_hittest(int repel_friction);
 		ptn_put_8(orb_cur_left, orb_cur_top, PTN_ORB);
 	}
 #endif
+
+// Unblits, updates, and renders the Orb, handling collisions with the top and
+// bottom of the playfield. Also calls the same unblit/update/render functions
+// for pellets and (on non-boss [stage_id] values) stage objects, after (yes,
+// *after*) doing the per-frame VSync wait… yeah, another function that should
+// either have been multiple ones, or not have existed at all.
+void pascal orb_and_pellets_and_stage_unput_update_render__vsync_wait(
+	int stage_id
+);
