@@ -104,217 +104,7 @@ main_010_TEXT	ends
 main_012_TEXT	segment	byte public 'CODE' use16
 	extern @invincibility_sprites_update_and$qi:proc
 	extern @ORB_AND_PELLETS_AND_STAGE_UNPUT_$QI:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C8C7	proc far
-
-arg_0		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		xor	si, si
-		jmp	short loc_C92D
-; ---------------------------------------------------------------------------
-
-loc_C8D0:
-		cmp	si, 7
-		jz	short loc_C92C
-		xor	di, di
-		jmp	short loc_C927
-; ---------------------------------------------------------------------------
-
-loc_C8D9:
-		mov	bx, si
-		imul	bx, 3
-		mov	al, _z_Palettes[bx+di]
-		cbw
-		imul	[bp+arg_0]
-		mov	bx, 100
-		cwd
-		idiv	bx
-		mov	bx, si
-		imul	bx, 3
-		mov	_z_Palettes[bx+di], al
-		mov	bx, si
-		imul	bx, 3
-		mov	al, _z_Palettes[bx+di]
-		cbw
-		or	ax, ax
-		jge	short loc_C90D
-		mov	bx, si
-		imul	bx, 3
-		mov	byte ptr _z_Palettes[bx+di], 0
-
-loc_C90D:
-		mov	bx, si
-		imul	bx, 3
-		mov	al, _z_Palettes[bx+di]
-		cbw
-		cmp	ax, 0Fh
-		jle	short loc_C926
-		mov	bx, si
-		imul	bx, 3
-		mov	byte ptr _z_Palettes[bx+di], 0Fh
-
-loc_C926:
-		inc	di
-
-loc_C927:
-		cmp	di, 3
-		jl	short loc_C8D9
-
-loc_C92C:
-		inc	si
-
-loc_C92D:
-		cmp	si, 10h
-		jl	short loc_C8D0
-		call	@z_palette_set_all_show$qmx27%Palette$t14%RGB$tc$ii$16%% c, offset _z_Palettes, ds
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_C8C7	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C942	proc far
-
-var_1		= byte ptr -1
-
-		enter	2, 0
-		mov	[bp+var_1], 0
-		call	@graph_putsa_fx$qiiinxuc c, 272, large ((7 or FX_WEIGHT_BLACK) shl 16) or 128, offset aVovVtvrvd, ds ; "ＰＡＵＳＥ"
-		call	@graph_putsa_fx$qiiinxuc c, 256, large ((7 or FX_WEIGHT_BLACK) shl 16) or 144, offset aB@nKjb@b@pic, ds ; "　再開　　終了"
-		call	@graph_putsa_fx$qiiinxuc c, 256, large (7 shl 16) or 144, offset aBB@b@b@b@b@b@, ds ;	"●　　　　　　"
-		push	28h ; '('
-		call	sub_C8C7
-		pop	cx
-		mov	_input_lr, 0
-		mov	_input_shot, 0
-		mov	_input_ok, 0
-		jmp	loc_CA30
-; ---------------------------------------------------------------------------
-
-loc_C9A2:
-		call	@input_sense$qi stdcall, 0
-		pop	cx
-		cmp	_player_is_hit, 1
-		jz	loc_CB91
-		cmp	_input_lr, INPUT_LEFT
-		jnz	short loc_C9E6
-		call	@egc_copy_rect_1_to_0_16$qiiii c, large (144 shl 16) or 320, large (16 shl 16) or 16
-		call	@graph_putsa_fx$qiiinxuc c, 256, large (7 shl 16) or 144, offset aB, ds	; "●"
-		mov	[bp+var_1], 0
-
-loc_C9E6:
-		cmp	_input_lr, INPUT_RIGHT
-		jnz	short loc_CA1A
-		call	@egc_copy_rect_1_to_0_16$qiiii c, large (144 shl 16) or 256, large (16 shl 16) or 16
-		call	@graph_putsa_fx$qiiinxuc c, 320, large (7 shl 16) or 144, offset aB, ds	; "●"
-		mov	[bp+var_1], 1
-
-loc_CA1A:
-		cmp	_input_shot, 0
-		jnz	short loc_CA39
-		cmp	_input_ok, 0
-		jnz	short loc_CA39
-		push	1
-		call	@frame_delay$qui
-		pop	cx
-
-loc_CA30:
-		cmp	_paused, 0
-		jnz	loc_C9A2
-
-loc_CA39:
-		call	@egc_copy_rect_1_to_0_16$qiiii c, large (128 shl 16) or 276, large (16 shl 16) or 80
-		call	@egc_copy_rect_1_to_0_16$qiiii c, large (144 shl 16) or 256, large (16 shl 16) or 112
-		push	14h
-		call	@frame_delay$qui
-		pop	cx
-		mov	_input_lr, 0
-		mov	_input_shot, 0
-		mov	_input_ok, 0
-		cmp	[bp+var_1], 0
-		jz	loc_CB96
-		cmp	_paused, 0
-		jz	loc_CB96
-		call	@graph_putsa_fx$qiiinxuc c, 224, large ((7 or FX_WEIGHT_BLACK) shl 16) or 128, offset aCUcvPicVVVsvdv, ds ; "本当に終了しちゃうの？"
-		call	@graph_putsa_fx$qiiinxuc c, 224, large ((7 or FX_WEIGHT_BLACK) shl 16) or 144, offset aB@vdvVVVgb@b@v, ds ; "　うそですぅ　　はいっ"
-		call	@graph_putsa_fx$qiiinxuc c, 224, large (7 shl 16) or 144, offset aB, ds	; "●"
-		mov	[bp+var_1], 0
-		jmp	loc_CB5D
-; ---------------------------------------------------------------------------
-
-loc_CACF:
-		call	@input_sense$qi stdcall, 0
-		pop	cx
-		cmp	_player_is_hit, 1
-		jz	loc_CB91
-		cmp	_input_lr, INPUT_LEFT
-		jnz	short loc_CB13
-		call	@egc_copy_rect_1_to_0_16$qiiii c, large (144 shl 16) or 336, large (16 shl 16) or 16
-		call	@graph_putsa_fx$qiiinxuc c, 224, large (7 shl 16) or 144, offset aB, ds	; "●"
-		mov	[bp+var_1], 0
-
-loc_CB13:
-		cmp	_input_lr, INPUT_RIGHT
-		jnz	short loc_CB47
-		call	@egc_copy_rect_1_to_0_16$qiiii c, large (144 shl 16) or 224, large (16 shl 16) or 16
-		call	@graph_putsa_fx$qiiinxuc c, 336, large (7 shl 16) or 144, offset aB, ds	; "●"
-		mov	[bp+var_1], 1
-
-loc_CB47:
-		cmp	_input_shot, 0
-		jnz	short loc_CB66
-		cmp	_input_ok, 0
-		jnz	short loc_CB66
-		push	1
-		call	@frame_delay$qui
-		pop	cx
-
-loc_CB5D:
-		cmp	_paused, 0
-		jnz	loc_CACF
-
-loc_CB66:
-		cmp	[bp+var_1], 0
-		jz	short loc_CB96
-		les	bx, _resident
-		inc	es:[bx+reiidenconfig_t.continues_total]
-		inc	_continues_total
-		mov	ax, es:[bx+reiidenconfig_t.stage]
-		mov	bx, 5
-		xor	dx, dx
-		div	bx
-		add	ax, ax
-		mov	bx, word ptr _resident
-		add	bx, ax
-		inc	es:[bx+reiidenconfig_t.continues_per_scene]
-
-loc_CB91:
-		mov	ax, 1
-		leave
-		retf
-; ---------------------------------------------------------------------------
-
-loc_CB96:
-		call	@z_palette_set_all_show$qmx27%Palette$t14%RGB$tc$ii$16%% c, offset _stage_palette, ds
-		call	@input_reset_sense$qv
-		call	@egc_copy_rect_1_to_0_16$qiiii c, large (128 shl 16) or 232, large (32 shl 16) or 176
-		xor	ax, ax
-		leave
-		retf
-sub_C942	endp
+	extern @pause_menu$qv:proc
 main_012_TEXT	ends
 
 main_013_TEXT	segment	byte public 'CODE' use16
@@ -2137,7 +1927,7 @@ loc_DD6B:
 		call	@orb_and_pellets_and_stage_unput_$qi stdcall, [bp+@@stage]
 		cmp	_paused, 1
 		jnz	short loc_DDF8
-		call	sub_C942
+		call	@pause_menu$qv
 		mov	[bp+var_4], ax
 
 loc_DDF8:
@@ -2876,12 +2666,6 @@ main_38_TEXT	ends
 
 	.data
 
-aVovVtvrvd	db 'ＰＡＵＳＥ',0
-aB@nKjb@b@pic	db '　再開　　終了',0
-aBB@b@b@b@b@b@	db '●　　　　　　',0
-aB		db '●',0
-aCUcvPicVVVsvdv	db '本当に終了しちゃうの？',0
-aB@vdvVVVgb@b@v	db '　うそですぅ　　はいっ',0
 aVgvpvovfvivovx	db 'ｃｏｎｔｉｎｕｅ？　　　  ',0
 aVxvevub@b@B@	db 'Ｙｅｓ　　  　',0
 aVmvpb@b@B@	db 'Ｎｏ　　  　 ',0
@@ -3004,8 +2788,6 @@ include th01/hiscore/routes[data].asm
 ; char aOp[3]
 aOp		db 'op',0
 
-INPUT_RIGHT = 01h
-INPUT_LEFT = 02h
 BOMB_DOUBLETAP_WINDOW = 20
 
 OVX_4_LEFT = 1
@@ -3055,7 +2837,6 @@ OVX_4_LEFT = 1
 	extern byte_34AD5:byte
 	extern byte_34ADF:byte
 
-	extern _z_Palettes:byte:(size rgb_t * COLOR_COUNT)
 PTN_SLOT_COUNT = 8
 	extern _ptn_image_count:byte:PTN_SLOT_COUNT
 
@@ -3227,7 +3008,6 @@ CObstacles ends
 
 	extern _resident:dword
 	extern _shootout_lasers:byte
-	extern _stage_palette:palette_t
 	extern _hud_bg:dword
 	extern _hud_bg_size:word
 	extern _stage_timer:word

@@ -35,6 +35,13 @@ void input_sense(bool16 reset_repeat);
 // keyboard state.
 void input_reset_sense(void);
 
+// Resets just menu-related inputs.
+inline void input_reset_menu_related(void) {
+	input_lr = INPUT_NONE;
+	input_shot = false;
+	input_ok = false;
+}
+
 #define input_func_flag(var, flag) { var |= flag; } else { var &= ~flag; }
 
 #define input_onchange(prev_slot, cur_sensed, if_pressed) \

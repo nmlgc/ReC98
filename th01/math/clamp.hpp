@@ -1,3 +1,7 @@
+#define max_macro(a, b) ( \
+	(a > b) ? a : b \
+)
+
 // Yes, these are exactly what every tutorial presents as a bad example of C
 // macros, especially if they are nested within each other.
 // MODDERS: Turn into template functions.
