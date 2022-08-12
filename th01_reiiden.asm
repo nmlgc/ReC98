@@ -102,26 +102,7 @@ main_01_TEXT	segment	byte public 'CODE' use16
 	extern @continue_menu$qv:proc
 	extern @player_gameover_animate$qv:proc
 	extern @score_extend_update_and_render$qv:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: noreturn bp-based	frame
-
-sub_D07C	proc near
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	029Bh	; "いやーん、ヒープがたんないわ"
-		call	_puts
-		add	sp, 4
-		push	1		; status
-		call	_exit
-sub_D07C	endp
-
-; ---------------------------------------------------------------------------
-		pop	cx
-		pop	bp
-		retf
+	extern @out_of_memory_exit$qv:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -916,10 +897,7 @@ loc_D6EB:
 
 loc_D6EE:
 		mov	[bp+@@scene_id], ax
-		push	seg main_01_TEXT
-		push	offset sub_D07C
-		call	@set_new_handler$qnqv$v	; set_new_handler(void (*)(void))
-		add	sp, 4
+		call	@set_new_handler$qnqv$v c, offset @out_of_memory_exit$qv, seg @out_of_memory_exit$qv
 		mov	_arc_key, 76h
 		call	@arc_load$qxnxc pascal, ds, offset aUmx	; "東方靈異.伝"
 		call	@vram_planes_set$qv

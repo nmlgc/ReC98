@@ -49,6 +49,7 @@
 #include "th01/main/stage/stages.hpp"
 #include "th01/main/stage/stageobj.hpp"
 #include "th01/main/hud/hud.hpp"
+#include "th01/shiftjis/debug.hpp"
 #include "th01/shiftjis/entrance.hpp"
 #include "th01/shiftjis/fns.hpp"
 
@@ -303,3 +304,4 @@ void stage_entrance(int stage_id, const char* bg_fn, bool16 clear_vram_page_0)
 #include "th01/main/hud/menu.cpp"
 #include "th01/main/player/gameover.cpp"
 #include "th01/main/extend.cpp"
+#include "th01/main/debug.cpp"

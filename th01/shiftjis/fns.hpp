@@ -1,5 +1,5 @@
 #define BINARY_OP       	"op"
-#define BINARY_MAIN_CAPS	"REIIDEN\0いやーん、ヒープがたんないわ"
+#define BINARY_MAIN_CAPS	"REIIDEN"
 
 #define REGIST_BG_CLEARED	"endm_a.grp"
 

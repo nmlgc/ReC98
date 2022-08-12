@@ -4,6 +4,9 @@ extern bool16 mode_test;
 // Deals damage to every damageable object on screen if true.
 extern bool16 test_damage;
 
+// set_new_handler() that immediately exit()s the game with an error message.
+void out_of_memory_exit(void);
+
 /// Memory info screen
 /// ------------------
 
