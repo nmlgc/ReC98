@@ -3023,32 +3023,6 @@ main_38_TEXT	ends
 
 	.data
 
-	db 0
-
-public _esc_cls
-_esc_cls		db 1Bh,'*',0
-public _mask_grf, _miko_ac_bos, _miko_ac2_bos, _PTN_STG_CARDFLIP_FN, _miko_ptn
-_mask_grf	db 'mask.grf',0
-_miko_ac_bos	db 'miko_ac.bos',0
-_miko_ac2_bos	db 'miko_ac2.bos',0
-_PTN_STG_CARDFLIP_FN	db 'stg.ptn',0
-_miko_ptn	db 'miko.ptn',0
-public _esc_color_bg_black_fg_black, _esc_cursor_to_x0_y0, _space
-public _esc_color_reset, _empty_grf, _kuzi1_grc, _kuzi2_grc
-_esc_color_bg_black_fg_black		db 1Bh,'[16;40m',0
-_esc_cursor_to_x0_y0		db 1Bh,'[0;0H',0
-_space	db ' ',0
-_esc_color_reset		db 1Bh,'[0m',0
-_empty_grf		db 'empty.grf',0
-_kuzi1_grc	db 'kuzi1.grc',0
-_kuzi2_grc	db 'kuzi2.grc',0
-public _ORB_VELOCITY_Y_MAX, _ORB_VELOCITY_Y_MIN
-public _ORB_COEFFICIENT_OF_RESTITUTION, _ORB_FORCE_2_0, _ORB_FORCE_SHOT_BASE
-_ORB_VELOCITY_Y_MAX	dd 16.0
-_ORB_VELOCITY_Y_MIN	dq -16.0
-_ORB_COEFFICIENT_OF_RESTITUTION	dq 0.78
-_ORB_FORCE_2_0	dd 2.0
-_ORB_FORCE_SHOT_BASE	dq -10.0
 aVovVtvrvd	db 'ＰＡＵＳＥ',0
 aB@nKjb@b@pic	db '　再開　　終了',0
 aBB@b@b@b@b@b@	db '●　　　　　　',0
@@ -3189,6 +3163,9 @@ OVX_8_RIGHT = 4
 OF_BOUNCE_FROM_SURFACE = 0
 OF_BOUNCE_FROM_TOP = 1
 
+	_esc_cls = 0159h
+	_PTN_STG_CARDFLIP_FN = 017Eh
+	_ORB_COEFFICIENT_OF_RESTITUTION = qword ptr ds:[01D0h]
 	extern _rank:byte
 	extern _bgm_mode:byte
 	extern _bombs:byte

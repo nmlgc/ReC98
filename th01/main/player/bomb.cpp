@@ -22,10 +22,8 @@ static const screen_y_t SQUARE_CENTER_Y = ((RES_Y / 2) - (32 / 2));
 
 void bomb_kuji_load(void)
 {
-	extern const char kuzi1_grc[];
-	extern const char kuzi2_grc[];
-	grc_load(GRC_SLOT_BOMB_KUJI_1, kuzi1_grc);
-	grc_load(GRC_SLOT_BOMB_KUJI_2, kuzi2_grc);
+	grc_load(GRC_SLOT_BOMB_KUJI_1, "kuzi1.grc");
+	grc_load(GRC_SLOT_BOMB_KUJI_2, "kuzi2.grc");
 }
 
 bool16 bomb_update_and_render(int frame)

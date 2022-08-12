@@ -20,6 +20,9 @@
 #include "th01/hardware/palette.h"
 #include "th01/hardware/text.h"
 #include "th01/hardware/tram_x16.hpp"
+}
+#include "th01/hardware/ztext.hpp"
+extern "C" {
 #include "th01/snd/mdrv2.h"
 #include "th01/formats/grp.h"
 #include "th01/formats/pf.hpp"
@@ -41,7 +44,7 @@
 #include "th01/shiftjis/entrance.hpp"
 #include "th01/shiftjis/fns.hpp"
 
-extern const char esc_cls[];
+int8_t temporary_padding = 0;
 
 inline void bomb_doubletap_update(uint8_t& pressed, uint8_t& other) {
 	if(bomb_doubletap_frames < BOMB_DOUBLETAP_WINDOW) {
@@ -217,26 +220,19 @@ void pascal stage_num_animate(unsigned int stage_num)
 	tram_cursor.putkanji_until_end(' ', TX_BLACK);
 
 	frame_delay(35);
-	printf(esc_cls);
+	z_text_clear_inlined();
 }
 
 void load_and_init_stuff_used_in_all_stages(void)
 {
-	extern const char mask_grf[];
-	extern const char miko_ac_bos[];
-	extern const char miko_ac2_bos[];
-	#undef PTN_STG_CARDFLIP_FN
-	extern const char PTN_STG_CARDFLIP_FN[];
-	extern const char miko_ptn[];
-
 	int i;
 
 	scoredat_load_hiscore();
-	hud_bg_load(mask_grf);
-	player_48x48.load(miko_ac_bos);
-	player_48x32.load(miko_ac2_bos);
+	hud_bg_load("mask.grf");
+	player_48x48.load("miko_ac.bos");
+	player_48x32.load("miko_ac2.bos");
 	ptn_load(PTN_SLOT_STG, PTN_STG_CARDFLIP_FN);
-	ptn_load(PTN_SLOT_MIKO, miko_ptn);
+	ptn_load(PTN_SLOT_MIKO, "miko.ptn");
 	ptn_new(PTN_SLOT_BG_HUD, ((PTN_BG_last - PTN_BG_first) + 1));
 	bomb_kuji_load();
 	shootout_lasers_init(i);
@@ -249,18 +245,10 @@ void stage_entrance(int stage_id, const char* bg_fn, bool16 clear_vram_page_0)
 	int y;
 
 	if(first_stage_in_scene == true) {
-		extern const char esc_color_bg_black_fg_black[];
-		extern const char esc_cursor_to_x0_y0[];
-		extern const char space[];
-		extern const char esc_color_reset[];
-		extern const char empty_grf[];
+		text_fill_black(x, y);
+		text_color_reset();
 
-		text_fill_black(
-			esc_color_bg_black_fg_black, esc_cursor_to_x0_y0, space, x, y
-		);
-		printf(esc_color_reset);
-
-		if(strcmp(bg_fn, empty_grf)) {
+		if(strcmp(bg_fn, "empty.grf")) {
 			grp_put_palette_show(bg_fn);
 		}
 		/* TODO: Replace with the decompiled call

@@ -1788,7 +1788,7 @@ void konngara_main(void)
 		// --------------------------------------------------------------------
 
 		printf("\x1B)3"); // Enter graph mode
-		text_fill_black("\x1B[16;40m", "\x1B[0;0H", " ", j, i);
+		text_fill_black(j, i);
 
 		grp_put_palette_show(SCROLL_BG_FN);
 		z_palette_set_black(j, i);

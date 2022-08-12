@@ -2,61 +2,19 @@
 
 extern double orb_velocity_y;
 
-extern const double ORB_VELOCITY_Y_MIN;
-extern const float ORB_VELOCITY_Y_MAX;
-extern const double ORB_COEFFICIENT_OF_RESTITUTION;
+#define COEFFICIENT_OF_RESTITUTION 0.78
 
 inline double gravity_for(const double& force) {
 	return ((orb_force_frame / 5) + orb_force);
 }
-/// Temporary data segment workarounds
-/// ----------------------------------
-
-// Also needs to be spelled out in ASM to avoid the unwanted WAIT instruction
-// afterwards.
-#define GRAVITY_FOR(force) \
-	_AX = orb_force_frame / 5; \
-	asm { mov 	[bp-2], ax; } \
-	asm { fild	word ptr [bp-2]; } \
-	asm { fadd	force; } \
-/// ----------------------------------
 
 pixel_t orb_velocity_y_update(void)
 {
-	/* TODO: Proper decompilation, once data can be emitted here:
-	 * ----------------------------------------------------------
 	orb_velocity_y = gravity_for(orb_force);
-	if(orb_velocity_y > ORB_VELOCITY_Y_MAX) {
-		orb_velocity_y = ORB_VELOCITY_Y_MAX;
-	} else if(orb_velocity_y < ORB_VELOCITY_Y_MIN) {
-		orb_velocity_y = ORB_VELOCITY_Y_MIN;
-	}
-	return gravity_for(orb_force);
-	 * ----------------------------------------------------------
-	 * Performing arithmetic or comparisons between a double (orb_velocity_y)
-	 * and a float (ORB_VELOCITY_Y_MAX) variable always FLDs the float first,
-	 * before emitting the corresponding FPU instruction with the double,
-	 * which is not what we want here.
-	*/
-	GRAVITY_FOR(orb_force);
-	asm {
-		fstp 	orb_velocity_y;
-		fld  	orb_velocity_y;
-		fcomp	ORB_VELOCITY_Y_MAX;
-		fstsw	[bp-2];
-		FWAIT_EMU;
-		mov  	ax, [bp-2];
-		sahf;
-		jbe  	min_velocity_check;
-		fld  	ORB_VELOCITY_Y_MAX;
-	}
-	goto set_velocity;
-min_velocity_check:
-	if(orb_velocity_y < ORB_VELOCITY_Y_MIN) _asm {
-		fld 	ORB_VELOCITY_Y_MIN;
-set_velocity:
-		fstp	orb_velocity_y;
-		FWAIT_EMU;
+	if(orb_velocity_y > 16.0f) {
+		orb_velocity_y = 16.0f;
+	} else if(orb_velocity_y < -16.0) {
+		orb_velocity_y = -16.0;
 	}
 	return gravity_for(orb_force);
 }
@@ -70,11 +28,8 @@ set_velocity:
 
 void orb_force_new(double immediate, orb_force_t force)
 {
-	extern const float ORB_FORCE_2_0;
-	extern const double ORB_FORCE_SHOT_BASE;
-
 	if(force == OF_BOUNCE_FROM_SURFACE) {
-		orb_force = (-orb_velocity_y * ORB_COEFFICIENT_OF_RESTITUTION);
+		orb_force = (-orb_velocity_y * COEFFICIENT_OF_RESTITUTION);
 		if(orb_velocity_x == OVX_0) {
 			random_velocity_change(0, OVX_4_LEFT);
 			random_velocity_change(1, OVX_4_RIGHT);
@@ -84,22 +39,7 @@ void orb_force_new(double immediate, orb_force_t force)
 		orb_force = ((-orb_velocity_y) - (orb_force_frame / 4));
 	}
 	if(force == OF_SHOT) {
-		/* TODO: Proper decompilation, once data can be emitted here:
-		 * ----------------------------------------------------------
-		orb_force = ((orb_velocity_y / ORB_FORCE_2_0) + ORB_FORCE_SHOT_BASE);
-		 * ----------------------------------------------------------
-		 * Performing arithmetic or comparisons between a double
-		 * (orb_velocity_y) and a float (ORB_FORCE_2_0) variable always FLDs
-		 * the float first, before emitting the corresponding FPU instruction
-		 * with the double, which is not what we want here.
-		*/
-		_asm {
-			fld 	orb_velocity_y;
-			fdiv	ORB_FORCE_2_0;
-			fadd	ORB_FORCE_SHOT_BASE;
-			fstp	orb_force;
-			FWAIT_EMU;
-		}
+		orb_force = (-10.0 + (orb_velocity_y / 2.0));
 	}
 	if(force == OF_IMMEDIATE) {
 		orb_force = immediate;

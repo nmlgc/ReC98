@@ -37,4 +37,8 @@ void z_text_print(const char *cmd);
 void z_text_vputsa(
 	tram_x_t x, tram_y_t y, int z_atrb, const sshiftjis_t *fmt, ...
 );
+
+inline void z_text_clear_inlined() {
+	printf("\x1B*");
+}
 // ------------------------------------------
