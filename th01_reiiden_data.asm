@@ -69,11 +69,11 @@ _orb_velocity_x	dw 0
 _orb_rotation_frame	dw 0
 _lives	dw 4
 _stage_cleared	dw 0
-public _cardcombo_cur, _orb_in_portal, _cardcombo_max, word_34A8A, word_34A8C
+public _cardcombo_cur, _orb_in_portal, _cardcombo_max, _extend_next, word_34A8C
 _cardcombo_cur	dw 0
 _orb_in_portal	dw 0
 _cardcombo_max	dw 0
-word_34A8A	dw 1
+_extend_next	dw 1
 word_34A8C	dw 1
 public _orb_prev_left, _orb_prev_top, _orb_frames_outside_portal
 public _orb_velocity_y, _orb_force

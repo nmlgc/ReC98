@@ -22,7 +22,6 @@ include ReC98.inc
 include th01/th01.inc
 include th01/sprites/main_ptn.inc
 
-LIVES_MAX = 6
 STAGES_PER_SCENE = 5
 
 	option emulator
@@ -102,42 +101,7 @@ main_01_TEXT	segment	byte public 'CODE' use16
 	extern @pellet_speed_raise$qi:proc
 	extern @continue_menu$qv:proc
 	extern @player_gameover_animate$qv:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public @score_extend_update_and_render$qv
-@score_extend_update_and_render$qv proc far
-		push	bp
-		mov	bp, sp
-		movsx	eax, word_34A8A
-		imul	eax, 400000
-		cmp	eax, _score
-		ja	short loc_D07A
-		cmp	_lives, LIVES_MAX
-		jge	short loc_D076
-		inc	_lives
-		les	bx, _resident
-		mov	al, byte ptr _lives
-		mov	es:[bx+reiidenconfig_t.rem_lives], al
-		mov	ax, _lives
-		dec	ax
-		call	@hud_lives_put$qi stdcall, ax
-		pop	cx
-		push	0Fh
-		call	@mdrv2_se_play$qi
-		pop	cx
-		call	@pellet_speed_raise$qi stdcall, 1
-		pop	cx
-
-loc_D076:
-		inc	word_34A8A
-
-loc_D07A:
-		pop	bp
-		retf
-@score_extend_update_and_render$qv endp
-
+	extern @score_extend_update_and_render$qv:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -801,7 +765,7 @@ loc_D583:
 		cdq
 		idiv	ebx
 		inc	ax
-		mov	word_34A8A, ax
+		mov	_extend_next, ax
 		mov	eax, _frame_rand
 		mov	random_seed, eax
 		call	@game_init$qv
@@ -1302,7 +1266,7 @@ loc_DA9D:
 		pop	cx
 
 loc_DA9E:
-		mov	ax, word_34A8A
+		mov	ax, _extend_next
 		mov	word_34A8C, ax
 		call	@hud_bg_snap_and_put$qv
 		mov	_cardcombo_max, 0
@@ -1869,7 +1833,7 @@ loc_E244:
 		call	@CShots@unput_and_reset$qv c, offset _Shots, ds
 		call	@CPellets@unput_and_reset$qv c, offset _Pellets, ds
 		call	sub_D47D
-		mov	word_34A8A, 1
+		mov	_extend_next, 1
 		cmp	byte_34ADF, 0
 		jz	short loc_E27B
 		call	sub_D4DD
@@ -2179,7 +2143,6 @@ main_24_TEXT	ends
 ; Segment type:	Pure code
 main_25_TEXT	segment	byte public 'CODE' use16
 	extern @hud_score_and_cardcombo_render$qv:proc
-	extern @hud_lives_put$qi:proc
 	extern @hud_bg_snap_and_put$qv:proc
 main_25_TEXT	ends
 
@@ -2449,7 +2412,7 @@ OVX_4_LEFT = 1
 	extern _cardcombo_cur:word
 	extern _orb_in_portal:word
 	extern _cardcombo_max:word
-	extern word_34A8A:word
+	extern _extend_next:word
 	extern word_34A8C:word
 	extern _orb_prev_left:word
 	extern _orb_prev_top:word
