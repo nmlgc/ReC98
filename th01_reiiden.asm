@@ -47,7 +47,7 @@ STAGES_PER_SCENE = 5
 	extern _strcpy:proc
 	extern _toupper:proc
 
-main_01 group main_010_TEXT, main_011_TEXT, main_012_TEXT, main_013_TEXT
+main_01 group main_010_TEXT, main_012_TEXT, main_013_TEXT
 
 ; ===========================================================================
 
@@ -91,9 +91,6 @@ _TEXT		ends
 
 ; Segment type:	Pure code
 main_010_TEXT	segment	byte public 'CODE' use16
-main_010_TEXT	ends
-
-main_011_TEXT	segment	byte public 'CODE' use16
 		assume cs:main_01
 		;org 2
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
@@ -102,7 +99,7 @@ main_011_TEXT	segment	byte public 'CODE' use16
 	extern @input_reset_sense$qv:proc
 	extern @load_and_init_stuff_used_in_all_$qv:proc
 	extern @stage_entrance$qinxci:proc
-main_011_TEXT	ends
+main_010_TEXT	ends
 
 main_012_TEXT	segment	byte public 'CODE' use16
 	extern @invincibility_sprites_update_and$qi:proc

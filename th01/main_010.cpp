@@ -20,9 +20,7 @@
 #include "th01/hardware/palette.h"
 #include "th01/hardware/text.h"
 #include "th01/hardware/tram_x16.hpp"
-}
 #include "th01/hardware/ztext.hpp"
-extern "C" {
 #include "th01/snd/mdrv2.h"
 #include "th01/formats/grp.h"
 #include "th01/formats/pf.hpp"
@@ -251,17 +249,7 @@ void stage_entrance(int stage_id, const char* bg_fn, bool16 clear_vram_page_0)
 		if(strcmp(bg_fn, "empty.grf")) {
 			grp_put_palette_show(bg_fn);
 		}
-		/* TODO: Replace with the decompiled call
-		 * 	stage_palette_set(z_Palettes);
-		 * once that function is part of this translation unit */
-		_asm {
-			push	ds;
-			push	offset z_Palettes;
-			nop;
-			push	cs;
-			call	near ptr stage_palette_set;
-			add 	sp, 4;
-		}
+		stage_palette_set(z_Palettes);
 		graph_copy_accessed_page_to_other(); // 0 → 1, redundant
 	} else {
 		graph_accesspage_func(1);
@@ -299,3 +287,6 @@ void stage_entrance(int stage_id, const char* bg_fn, bool16 clear_vram_page_0)
 }
 
 #include "th01/main/player/bomb.cpp"
+#include "th01/main/stage/palette.cpp"
+#include "th01/main/player/inv_spr.cpp"
+#include "th01/main/player/orb.cpp"
