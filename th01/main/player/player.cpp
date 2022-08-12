@@ -963,10 +963,7 @@ void player_miss_animate_and_update(void)
 	// the next 16 frames.
 	ptn_sloppy_unput_16(player_left, player_top);
 
-	orb_put_default();
-	player_put(PTN_MIKO_MISS + (
-		(rand() % 8) == 0 ? (PTN_MIKO_MISS_ALTERNATE - PTN_MIKO_MISS) : 0
-	));
+	player_miss_put();
 
 	for(frame = 0; frame < 16; frame++) {
 		z_vsync_wait_and_scrollup(RES_Y - ((frame % 2) * 8));

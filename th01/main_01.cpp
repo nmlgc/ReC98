@@ -301,3 +301,4 @@ void stage_entrance(int stage_id, const char* bg_fn, bool16 clear_vram_page_0)
 #include "th01/main/player/inv_spr.cpp"
 #include "th01/main/player/orb.cpp"
 #include "th01/main/hud/menu.cpp"
+#include "th01/main/player/gameover.cpp"

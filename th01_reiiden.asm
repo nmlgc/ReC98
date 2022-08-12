@@ -101,230 +101,7 @@ main_01_TEXT	segment	byte public 'CODE' use16
 	extern @pellet_speed_lower$qii:proc
 	extern @pellet_speed_raise$qi:proc
 	extern @continue_menu$qv:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_CE5C	proc far
-
-var_1E		= byte ptr -1Eh
-var_14		= byte ptr -14h
-var_12		= word ptr -12h
-var_10		= word ptr -10h
-var_E		= word ptr -0Eh
-var_A		= word ptr -0Ah
-var_8		= word ptr -8
-var_4		= word ptr -4
-var_2		= word ptr -2
-
-		enter	1Eh, 0
-		push	si
-		push	di
-		lea	ax, [bp+var_1E]
-		push	ss
-		push	ax
-		push	ds
-		push	offset byte_34AD5
-		mov	cx, 0Ah
-		call	SCOPY@
-		call	@items_bomb_reset$qv
-		call	@items_point_reset$qv
-		call	@ptn_put_8$qiii c, _orb_cur_left, _orb_cur_top, 3
-		call	IRand
-		mov	bx, 8
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_CEA3
-		mov	ax, 1
-		jmp	short loc_CEA5
-; ---------------------------------------------------------------------------
-
-loc_CEA3:
-		xor	ax, ax
-
-loc_CEA5:
-		add	ax, 56h
-		call	@ptn_put_8$qiii c, _player_left, _player_top, ax
-		xor	di, di
-		jmp	short loc_CEDA
-; ---------------------------------------------------------------------------
-
-loc_CEBC:
-		mov	bx, di
-		add	bx, bx
-		lea	ax, [bp+var_A]
-		add	bx, ax
-		mov	ax, _player_left
-		mov	ss:[bx], ax
-		mov	bx, di
-		add	bx, bx
-		lea	ax, [bp+var_14]
-		add	bx, ax
-		mov	word ptr ss:[bx], 170h
-		inc	di
-
-loc_CEDA:
-		cmp	di, 5
-		jl	short loc_CEBC
-		call	@graph_copy_accessed_page_to_othe$qv
-		xor	di, di
-		jmp	loc_D00D
-; ---------------------------------------------------------------------------
-
-loc_CEE9:
-		mov	ax, di
-		mov	bx, 2
-		cwd
-		idiv	bx
-		shl	dx, 3
-		mov	ax, RES_Y
-		sub	ax, dx
-		call	@z_vsync_wait_and_scrollup$qi stdcall, ax
-		pop	cx
-		xor	si, si
-		jmp	short loc_CF31
-; ---------------------------------------------------------------------------
-
-loc_CF04:
-		mov	bx, di
-		add	bx, bx
-		lea	ax, [bp+var_1E]
-		add	bx, ax
-		cmp	word ptr ss:[bx], 0
-		jnz	short loc_CF30
-		push	(32 shl 16) or 32
-		push	368
-		mov	bx, si
-		add	bx, bx
-		lea	ax, [bp+var_A]
-		add	bx, ax
-		push	word ptr ss:[bx]
-		call	@egc_copy_rect_1_to_0_16$qiiii
-		add	sp, 8
-
-loc_CF30:
-		inc	si
-
-loc_CF31:
-		cmp	si, 5
-		jl	short loc_CF04
-		sub	[bp+var_A], 8
-		pushd	2
-		call	isqrt
-		push	ax
-		mov	ax, 8
-		cwd
-		pop	bx
-		idiv	bx
-		sub	[bp+var_8], ax
-		pushd	2
-		call	isqrt
-		push	ax
-		mov	ax, 8
-		cwd
-		pop	bx
-		idiv	bx
-		add	[bp+var_4], ax
-		add	[bp+var_2], 8
-		pushd	2
-		call	isqrt
-		push	ax
-		mov	ax, 8
-		cwd
-		pop	bx
-		idiv	bx
-		sub	[bp+var_12], ax
-		pushd	2
-		call	isqrt
-		push	ax
-		mov	ax, 8
-		cwd
-		pop	bx
-		idiv	bx
-		sub	[bp+var_E], ax
-		sub	[bp+var_10], 8
-		xor	si, si
-		jmp	short loc_CFF8
-; ---------------------------------------------------------------------------
-
-loc_CF92:
-		mov	bx, si
-		add	bx, bx
-		lea	ax, [bp+var_A]
-		add	bx, ax
-		cmp	word ptr ss:[bx], 260h
-		jge	short loc_CFAE
-		mov	bx, si
-		add	bx, bx
-		add	bx, ax
-		cmp	word ptr ss:[bx], 0
-		jge	short loc_CFBC
-
-loc_CFAE:
-		mov	bx, si
-		add	bx, bx
-		lea	ax, [bp+var_1E]
-		add	bx, ax
-		mov	word ptr ss:[bx], 1
-
-loc_CFBC:
-		mov	bx, si
-		add	bx, bx
-		lea	ax, [bp+var_1E]
-		add	bx, ax
-		cmp	word ptr ss:[bx], 0
-		jnz	short loc_CFF7
-		mov	ax, di
-		mov	bx, 2
-		cwd
-		idiv	bx
-		add	dx, 84
-		push	dx
-		mov	bx, si
-		add	bx, bx
-		lea	ax, [bp+var_14]
-		add	bx, ax
-		push	word ptr ss:[bx]
-		mov	bx, si
-		add	bx, bx
-		lea	ax, [bp+var_A]
-		add	bx, ax
-		push	word ptr ss:[bx]
-		call	@ptn_put_8$qiii
-		add	sp, 6
-
-loc_CFF7:
-		inc	si
-
-loc_CFF8:
-		cmp	si, 5
-		jl	short loc_CF92
-		mov	ax, di
-		mov	bx, 6
-		cwd
-		idiv	bx
-		push	ax
-		call	@frame_delay$qui
-		pop	cx
-		inc	di
-
-loc_D00D:
-		cmp	di, 10h
-		jl	loc_CEE9
-		call	@z_vsync_wait_and_scrollup$qi stdcall, 0
-		pop	cx
-		mov	al, _credit_bombs
-		mov	_bombs, al
-		les	bx, _resident
-		mov	es:[bx+reiidenconfig_t.bombs], 1
-		pop	di
-		pop	si
-		leave
-		retf
-sub_CE5C	endp
-
+	extern @player_gameover_animate$qv:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2088,7 +1865,7 @@ loc_E224:
 
 loc_E244:
 		inc	si
-		call	sub_CE5C
+		call	@player_gameover_animate$qv
 		call	@CShots@unput_and_reset$qv c, offset _Shots, ds
 		call	@CPellets@unput_and_reset$qv c, offset _Pellets, ds
 		call	sub_D47D
@@ -2231,7 +2008,6 @@ graph_TEXT	segment	byte public 'CODE' use16
 	extern @z_graph_hide$qv:proc
 	extern @graph_accesspage_func$qi:proc
 	extern @z_graph_clear$qv:proc
-	extern @graph_copy_accessed_page_to_othe$qv:proc
 graph_TEXT	ends
 
 ; ===========================================================================
@@ -2239,7 +2015,6 @@ graph_TEXT	ends
 ; Segment type:	Pure code
 SHARED	segment	byte public 'CODE' use16
 	extern @vram_planes_set$qv:proc
-	extern @egc_copy_rect_1_to_0_16$qiiii:proc
 SHARED	ends
 
 ; ===========================================================================
@@ -2680,7 +2455,6 @@ OVX_4_LEFT = 1
 	extern _orb_prev_top:word
 	extern _orb_force:qword
 	extern _ptn_slot_stg_has_reduced_sprites:byte
-	extern byte_34AD5:byte
 	extern byte_34ADF:byte
 
 PTN_SLOT_COUNT = 8

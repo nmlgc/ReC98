@@ -40,6 +40,13 @@ void invincibility_sprites_update_and_render(bool16 invincible);
 	}
 #endif
 
+#define player_miss_put() { \
+	orb_put_default(); \
+	player_put(PTN_MIKO_MISS + ( \
+		(rand() % 8) == 0 ? (PTN_MIKO_MISS_ALTERNATE - PTN_MIKO_MISS) : 0 \
+	)); \
+}
+
 // Unblits, updates, and renders the player based on the current input,
 // handling all possible special moves together with any orb repulsion, but
 // *not* performing regular player/Orb collision detection. Setting that
