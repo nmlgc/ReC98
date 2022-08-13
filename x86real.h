@@ -7,6 +7,9 @@
 
 #define X86REAL_H
 
+// Turbo C++ 4.0J's <conio.h> tries to redefine them otherwise.
+#define _PORT_DEFS
+
 // This is a subset of Turbo C++ 4.0's <dos.h>.
 #if !(defined(__TURBOC__) && defined(__MSDOS__) && defined(__DOS_H))
 
