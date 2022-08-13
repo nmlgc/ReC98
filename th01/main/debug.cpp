@@ -1,4 +1,5 @@
 #include <alloc.h>
+#include <conio.h>
 #include <stdio.h>
 #include "th01/main/debug.hpp"
 #include "th01/shiftjis/debug.hpp"
@@ -99,7 +100,7 @@ print_stats:
 				debug_mem_node("PTN ", ptn_images[i]);
 			}
 			debug_mem_node("MASK", hud_bg);
-			debug_mem_node("KABE\0\x1B[3;0H", stageobj_bgs);
+			debug_mem_node("KABE", stageobj_bgs);
 		}
 	}
 }
@@ -110,4 +111,59 @@ void debug_show_game(void)
 		z_graph_show();
 		z_text_clear_inlined();
 	}
+}
+
+void debug_vars(void)
+{
+	extern long memory_check_cycle;
+	extern int heapcheck_ret_prev; // ZUN bloat
+	extern screen_x_t player_left_prev;
+
+	memory_check_cycle++;
+	if((memory_check_cycle % 1000) == 100) {
+		text_cursor_move_1_based(0, 3);
+		debug_coreleft();
+	}
+
+	text_cursor_move_1_based(60, 3);
+	printf("HEAP Cheak  ");
+	switch(heapcheck()) {
+	case _HEAPEMPTY:
+		printf("EMPTY   ");
+		break;
+	case _HEAPOK:
+		printf("OK      ");
+		break;
+	case _HEAPCORRUPT:
+		printf("CORRUPT ");
+		mdrv2_se_play(5); // Remember that this function runs every frame!
+		while(!input_ok) {
+			input_sense(0);
+		}
+		break;
+	}
+	heapcheck_ret_prev = heapcheck();
+
+	text_cursor_move_1_based(0, 2);
+	if(player_left_prev != player_left) {
+		printf("gx = %3d", player_left);
+		player_left_prev = player_left;
+	}
+
+	text_cursor_move_1_based(0, 4);
+	printf(
+		" kbhit:%d,dir:%d, sp:%d, sh:%d, exit:%d, end:%d\n",
+		kbhit(), input_lr, input_shot, input_strike, paused, player_is_hit
+	);
+
+	text_cursor_move_1_based(0, 5); // ZUN bloat: Already done via \n
+
+	// ZUN bug: A length for `bomb` would have been nice.
+	printf(
+		" main:%7lu, rand:%7lu, bomb:%d, timer:%7lu\n\0" ERROR_RESIDENT_INVALID,
+		bomb_frames,
+		frame_rand,
+		bomb_doubletap_frames,
+		frames_since_start_of_binary
+	);
 }

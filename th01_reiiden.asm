@@ -35,8 +35,6 @@ STAGES_PER_SCENE = 5
 	extern _coreleft:proc
 	extern _execl:proc
 	extern _exit:proc
-	extern _farheapcheck:proc
-	extern _kbhit:proc
 	extern _printf:proc
 	extern _puts:proc
 	extern _scanf:proc
@@ -102,131 +100,7 @@ main_01_TEXT	segment	byte public 'CODE' use16
 	extern @player_gameover_animate$qv:proc
 	extern @score_extend_update_and_render$qv:proc
 	extern @out_of_memory_exit$qv:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D340	proc far
-		push	bp
-		mov	bp, sp
-		inc	dword_3880A
-		mov	eax, dword_3880A
-		mov	ebx, 1000
-		cdq
-		idiv	ebx
-		cmp	edx, 100
-		jnz	short loc_D37C
-		call	_printf c, offset 049Dh, ds
-		call	_coreleft
-		push	dx
-		push	ax
-		push	ds
-		push	offset 0376h
-		call	_printf
-		add	sp, 8
-
-loc_D37C:
-		call	_printf c, offset _esc_cursor_to_x59_y2, ds
-		push	ds
-		push	offset aHeapCheak ; "HEAP Cheak	 "
-		call	_printf
-		add	sp, 4
-		call	_farheapcheck
-		cmp	ax, 0FFFFh
-		jz	short loc_D3BE
-		cmp	ax, 1
-		jz	short loc_D3AA
-		cmp	ax, 2
-		jz	short loc_D3B0
-		jmp	short loc_D3E1
-; ---------------------------------------------------------------------------
-
-loc_D3AA:
-		push	ds
-		push	offset aEmpty	; "EMPTY   "
-		jmp	short loc_D3B4
-; ---------------------------------------------------------------------------
-
-loc_D3B0:
-		push	ds
-		push	offset aOk	; "OK	   "
-
-loc_D3B4:
-		call	_printf
-		add	sp, 4
-		jmp	short loc_D3E1
-; ---------------------------------------------------------------------------
-
-loc_D3BE:
-		push	ds
-		push	offset aCorrupt	; "CORRUPT "
-		call	_printf
-		add	sp, 4
-		push	5
-		call	@mdrv2_se_play$qi
-		jmp	short loc_D3D9
-; ---------------------------------------------------------------------------
-
-loc_D3D3:
-		call	@input_sense$qi stdcall, 0
-
-loc_D3D9:
-		pop	cx
-		cmp	_input_ok, 0
-		jz	short loc_D3D3
-
-loc_D3E1:
-		call	_farheapcheck
-		mov	word_3880E, ax
-		call	_printf c, offset _esc_cursor_to_x0_y1, ds
-		mov	ax, _player_left_prev
-		cmp	ax, _player_left
-		jz	short loc_D414
-		push	_player_left
-		push	ds
-		push	offset aGx3d	; "gx =	%3d"
-		call	_printf
-		add	sp, 6
-		mov	ax, _player_left
-		mov	_player_left_prev, ax
-
-loc_D414:
-		call	_printf c, offset _esc_cursor_to_x0_y3, ds
-		mov	al, _player_is_hit
-		mov	ah, 0
-		push	ax
-		mov	al, _paused
-		mov	ah, 0
-		push	ax
-		mov	al, _input_strike
-		mov	ah, 0
-		push	ax
-		mov	al, _input_shot
-		mov	ah, 0
-		push	ax
-		mov	al, _input_lr
-		mov	ah, 0
-		push	ax
-		call	_kbhit
-		push	ax
-		push	ds
-		push	offset aKbhitDDirDSpDS ; " kbhit:%d,dir:%d, sp:%d, sh:%d, exit:%d"...
-		call	_printf
-		add	sp, 10h
-		call	_printf c, offset _esc_cursor_to_x0_y4, ds
-		pushd	[dword_36C20]
-		push	_bomb_doubletap_frames
-		pushd	[_frame_rand]
-		pushd	[_bomb_frames]
-		push	ds
-		push	offset aMain7luRand7lu ; " main:%7lu, rand:%7lu, bomb:%d, timer:%"...
-		call	_printf
-		add	sp, 12h
-		pop	bp
-		retf
-sub_D340	endp
-
+	extern @debug_vars$qv:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -282,7 +156,7 @@ sub_D4B1	proc far
 		push	bp
 		mov	bp, sp
 		push	ds
-		push	offset aGogbgGtg@gcglv ; "バッチファイルから起動してよ"
+		push	offset 054Fh ; "バッチファイルから起動してよ"
 		call	_printf
 		add	sp, 4
 		pop	bp
@@ -601,7 +475,7 @@ loc_D6EE:
 		pop	cx
 		cmp	_mode_debug, 1
 		jnz	short loc_D72E
-		call	sub_D340
+		call	@debug_vars$qv
 		push	28h ; '('
 		call	@frame_delay$qui
 		pop	cx
@@ -636,7 +510,7 @@ loc_D776:
 		push	offset a2	; "2 :"
 		call	_puts
 		add	sp, 4
-		call	sub_D340
+		call	@debug_vars$qv
 		push	28h ; '('
 		call	@frame_delay$qui
 		pop	cx
@@ -890,7 +764,7 @@ loc_DA2A:
 		push	offset a3	; "3 :"
 		call	_puts
 		add	sp, 4
-		call	sub_D340
+		call	@debug_vars$qv
 		push	28h ; '('
 		call	@frame_delay$qui
 		pop	cx
@@ -949,13 +823,13 @@ loc_DA9E:
 		mov	_Pellets.PELLET_unknown_seven, 7
 		cmp	_mode_debug, 1
 		jnz	short loc_DAD7
-		call	sub_D340
+		call	@debug_vars$qv
 		push	28h ; '('
 		call	@frame_delay$qui
 		pop	cx
 
 loc_DAD7:
-		mov	dword_36C20, 0
+		mov	_frames_since_start_of_binary, 0
 		mov	_orb_cur_left, ORB_LEFT_START
 		mov	_orb_cur_top, ORB_TOP_START
 		mov	ax, [bp+@@stage]
@@ -1127,7 +1001,7 @@ loc_DCCA:
 		pop	cx
 		call	@items_bomb_unput_update_render$qv
 		call	@items_point_unput_update_render$qv
-		inc	dword_36C20
+		inc	_frames_since_start_of_binary
 		inc	_orb_force_frame
 		inc	_bomb_frames
 		inc	_bomb_doubletap_frames
@@ -1211,7 +1085,7 @@ loc_DDF8:
 		call	@score_extend_update_and_render$qv
 		cmp	_mode_debug, 1
 		jnz	short loc_DE0F
-		call	sub_D340
+		call	@debug_vars$qv
 
 loc_DE0F:
 		mov	al, _game_cleared
@@ -1934,25 +1808,6 @@ main_38_TEXT	ends
 
 	.data
 
-_esc_cursor_to_x59_y2		db 1Bh,'[3;60H',0
-; char aHeapCheak[]
-aHeapCheak	db 'HEAP Cheak  ',0
-aEmpty		db 'EMPTY   ',0
-; char aOk[]
-aOk		db 'OK      ',0
-; char aCorrupt[]
-aCorrupt	db 'CORRUPT ',0
-_esc_cursor_to_x0_y1		db 1Bh,'[2;0H',0
-; char aGx3d[]
-aGx3d		db 'gx = %3d',0
-_esc_cursor_to_x0_y3		db 1Bh,'[4;0H',0
-; char aKbhitDDirDSpDS[]
-aKbhitDDirDSpDS	db ' kbhit:%d,dir:%d, sp:%d, sh:%d, exit:%d, end:%d',0Ah,0
-_esc_cursor_to_x0_y4		db 1Bh,'[5;0H',0
-; char aMain7luRand7lu[]
-aMain7luRand7lu	db ' main:%7lu, rand:%7lu, bomb:%d, timer:%7lu',0Ah,0
-; char aGogbgGtg[]
-aGogbgGtg@gcglv	db 'バッチファイルから起動してよ',0
 ; char aCGzgmgngg[]
 aCGzgmgngg	db '面セレクト',0Ah,0
 ; char aCRf[]
@@ -2136,9 +1991,9 @@ public _frame_rand, _coreleft_prev
 _frame_rand	dd ?
 _coreleft_prev	dd ?
 byte_36C1E	db ?
-public _mode_debug
+public _mode_debug, _frames_since_start_of_binary
 _mode_debug	db ?
-dword_36C20	dd ?
+_frames_since_start_of_binary	dd ?
 include th01/main/player/player[bss].asm
 public _orb_cur_left, _orb_cur_top, _orb_force_frame
 _orb_cur_left	dw ?
@@ -2180,9 +2035,9 @@ _bomb_entity label byte
 	db ?                                      	; angle
 
 include th01/main/player/inv_spr[bss].asm
-dword_3880A	dd ?
-word_3880E	dw ?
-public _player_left_prev
+public _memory_check_cycle, _heapcheck_ret_prev, _player_left_prev
+_memory_check_cycle	dd ?
+_heapcheck_ret_prev	dw ?
 _player_left_prev	dw ?
 
 CCards struc

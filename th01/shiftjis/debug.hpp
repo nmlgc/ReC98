@@ -1,7 +1,8 @@
 // Errors
 // ------
 
-#define ERROR_OUT_OF_MEMORY	"いやーん、ヒープがたんないわ"
+#define ERROR_OUT_OF_MEMORY   	"いやーん、ヒープがたんないわ"
+#define ERROR_RESIDENT_INVALID	"バッチファイルから起動してよ"
 // ------
 
 // Memory info screen
