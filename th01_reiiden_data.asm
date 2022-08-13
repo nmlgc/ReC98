@@ -101,9 +101,9 @@ label _bomb_palette_flash_peak_ byte
 	db 0Dh, 0Dh, 0Fh
 	db 0Dh, 0Dh, 0Fh
 	db 06h, 06h, 0Fh
-public _PLAYER_GAMEOVER_EFFECT_CLIPPED, byte_34ADF
+public _PLAYER_GAMEOVER_EFFECT_CLIPPED, _boss_id
 _PLAYER_GAMEOVER_EFFECT_CLIPPED	dw 5 dup (0)
-byte_34ADF	db 0
+_boss_id	db 0
 aEasy	db 'EASY',0
 aNormal	db 'NORMAL',0
 aHard	db 'HARD',0

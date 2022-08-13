@@ -105,75 +105,7 @@ main_01_TEXT	segment	byte public 'CODE' use16
 	extern @graphics_free_redundant_and_inco$qv:proc
 	extern @error_resident_invalid$qv:proc
 	extern @pellet_destroy_score_delta_commi$qv:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D4DD	proc far
-		push	bp
-		mov	bp, sp
-		mov	al, byte_34ADF
-		cbw
-		dec	ax
-		mov	bx, ax
-		cmp	bx, 6
-		ja	short loc_D522
-		add	bx, bx
-		jmp	cs:off_D524[bx]
-
-loc_D4F3:
-		call	@singyoku_free$qv
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_D4FA:
-		call	@yuugenmagan_free$qv
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_D501:
-		call	@mima_free$qv
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_D508:
-		call	@kikuri_free$qv
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_D50F:
-		call	@elis_free$qv
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_D516:
-		call	@sariel_free$qv
-		pop	bp
-		retf
-; ---------------------------------------------------------------------------
-
-loc_D51D:
-		call	@konngara_free$qv
-
-loc_D522:
-		pop	bp
-		retf
-sub_D4DD	endp
-
-; ---------------------------------------------------------------------------
-off_D524	dw offset loc_D4F3
-		dw offset loc_D4FA
-		dw offset loc_D501
-		dw offset loc_D508
-		dw offset loc_D50F
-		dw offset loc_D516
-		dw offset loc_D51D
+	extern @boss_free$qv:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -485,7 +417,7 @@ loc_D7E4:
 		call	@CShots@unput_and_reset$qv c, offset _Shots, ds
 		mov	word ptr [bp+s1+2], ds
 		mov	word ptr [bp+s1], offset _default_grp_fn
-		mov	byte_34ADF, 0
+		mov	_boss_id, 0
 		mov	_unused_boss_stage_flag, 0
 		mov	_player_invincible, 0
 		mov	_player_invincibility_time, 0
@@ -507,7 +439,7 @@ loc_D85B:
 		jmp	word ptr cs:[bx+8] ; switch jump
 
 loc_D85F:
-		mov	byte_34ADF, 1	; jumptable 0000D85B case 4
+		mov	_boss_id, 1	; jumptable 0000D85B case 4
 		mov	_unused_boss_stage_flag, 1
 		push	ds
 		push	offset src	; "boss1.grp"
@@ -532,7 +464,7 @@ loc_D892:
 loc_D89B:
 		mov	al, _route	; jumptable 0000D85B case 9
 		add	al, 2
-		mov	byte_34ADF, al
+		mov	_boss_id, al
 		mov	_unused_boss_stage_flag, 1
 		cmp	_route, 0
 		jnz	short loc_D8D9
@@ -573,7 +505,7 @@ loc_D901:
 		mov	al, 1		; jumptable 0000D85B case 14
 		sub	al, _route
 		add	al, 4
-		mov	byte_34ADF, al
+		mov	_boss_id, al
 		mov	_unused_boss_stage_flag, 1
 		mov	al, _route
 		cbw
@@ -621,7 +553,7 @@ loc_D96D:
 loc_D972:
 		mov	al, _route	; jumptable 0000D85B case 19
 		add	al, 6
-		mov	byte_34ADF, al
+		mov	_boss_id, al
 		mov	_unused_boss_stage_flag, 1
 		cmp	_route, 0
 		jnz	short loc_D99F
@@ -659,7 +591,7 @@ loc_D9B7:
 		xor	di, di
 
 loc_D9CA:
-		cmp	byte_34ADF, 0
+		cmp	_boss_id, 0
 		jz	short loc_DA06
 		xor	si, si
 		mov	_first_stage_in_scene, 1
@@ -699,11 +631,11 @@ loc_DA49:
 		mov	al, byte ptr [bp+@@stage]
 		inc	al
 		mov	_stage_num, al
-		mov	al, byte_34ADF
+		mov	al, _boss_id
 		cbw
 		cmp	ax, 6
 		jz	short loc_DA7B
-		mov	al, byte_34ADF
+		mov	al, _boss_id
 		cbw
 		cmp	ax, 7
 		jz	short loc_DA7B
@@ -720,7 +652,7 @@ loc_DA49:
 ; ---------------------------------------------------------------------------
 
 loc_DA7B:
-		mov	al, byte_34ADF
+		mov	al, _boss_id
 		cbw
 		cmp	ax, 7
 		jnz	short loc_DA8D
@@ -729,7 +661,7 @@ loc_DA7B:
 ; ---------------------------------------------------------------------------
 
 loc_DA8D:
-		mov	al, byte_34ADF
+		mov	al, _boss_id
 		cbw
 		cmp	ax, 6
 		jnz	short loc_DA9E
@@ -800,11 +732,11 @@ loc_DB3E:
 		mov	word_34A70, 3Ch	; '<'
 		call	@obstacles_update_and_render$qi stdcall, 1
 		pop	cx
-		mov	al, byte_34ADF
+		mov	al, _boss_id
 		cbw
 		cmp	ax, 6
 		jz	short loc_DBCC
-		mov	al, byte_34ADF
+		mov	al, _boss_id
 		cbw
 		cmp	ax, 7
 		jz	short loc_DBCC
@@ -826,9 +758,9 @@ loc_DBCC:
 		mov	_player_invincible, 1
 
 loc_DBDD:
-		cmp	byte_34ADF, 0
+		cmp	_boss_id, 0
 		jz	short loc_DC0E
-		mov	al, byte_34ADF
+		mov	al, _boss_id
 		cbw
 		cmp	ax, 1
 		jz	short loc_DBF9
@@ -951,7 +883,7 @@ loc_DD0E:
 loc_DD20:
 		call	@invincibility_sprites_update_and$qi stdcall, _player_invincible
 		pop	cx
-		mov	al, byte_34ADF
+		mov	al, _boss_id
 		cbw
 		dec	ax
 		mov	bx, ax
@@ -1082,9 +1014,9 @@ loc_DEDA:
 		jnz	loc_E104
 		mov	_stage_cleared, 0
 		mov	_player_is_hit, 0
-		cmp	byte_34ADF, 0
+		cmp	_boss_id, 0
 		jz	short loc_DF03
-		call	sub_D4DD
+		call	@boss_free$qv
 		mov	byte_36C1E, 1
 		mov	_first_stage_in_scene, 1
 
@@ -1094,7 +1026,7 @@ loc_DF03:
 		les	bx, _resident
 		mov	ax, [bp+@@stage]
 		mov	es:[bx+reiidenconfig_t.stage], ax
-		cmp	byte_34ADF, 0
+		cmp	_boss_id, 0
 		jz	short loc_DF23
 		xor	si, si
 		call	@totle_animate$qi stdcall, ax
@@ -1118,7 +1050,7 @@ loc_DF3D:
 		idiv	bx
 		cmp	dx, 4
 		jz	short loc_DF52
-		cmp	byte_34ADF, 0
+		cmp	_boss_id, 0
 		jz	short loc_DF9A
 
 loc_DF52:
@@ -1145,7 +1077,7 @@ loc_DF52:
 
 loc_DF9A:
 		mov	_orb_in_portal, 0
-		cmp	byte_34ADF, 0
+		cmp	_boss_id, 0
 		jnz	short loc_DFBC
 		push	1
 		call	@graph_accesspage_func$qi
@@ -1308,9 +1240,9 @@ loc_E244:
 		call	@CPellets@unput_and_reset$qv c, offset _Pellets, ds
 		call	@stageobj_bgs_free_wrap$qv
 		mov	_extend_next, 1
-		cmp	byte_34ADF, 0
+		cmp	_boss_id, 0
 		jz	short loc_E27B
-		call	sub_D4DD
+		call	@boss_free$qv
 		mov	_first_stage_in_scene, 1
 
 loc_E27B:
@@ -1352,7 +1284,7 @@ loc_E2A8:
 
 loc_E2CB:
 		call	@graphics_free_redundant_and_inco$qv
-		call	sub_D4DD
+		call	@boss_free$qv
 		call	@game_switch_binary$qv
 		call	key_end
 		call	@arc_free$qv
@@ -1641,7 +1573,6 @@ main_27_TEXT	ends
 main_28_TEXT	segment	byte public 'CODE' use16
 	extern @yuugenmagan_load$qv:proc
 	extern @yuugenmagan_main$qv:proc
-	extern @yuugenmagan_free$qv:proc
 main_28_TEXT	ends
 
 ; ===========================================================================
@@ -1649,7 +1580,6 @@ main_28_TEXT	ends
 ; Segment type:	Pure code
 main_29_TEXT	segment	byte public 'CODE' use16
 	extern @mima_load$qv:proc
-	extern @mima_free$qv:proc
 	extern @mima_main$qv:proc
 main_29_TEXT	ends
 
@@ -1680,7 +1610,6 @@ main_32_TEXT	ends
 main_33_TEXT	segment	byte public 'CODE' use16
 	extern @singyoku_load$qv:proc
 	extern @singyoku_main$qv:proc
-	extern @singyoku_free$qv:proc
 main_33_TEXT	ends
 
 ; ===========================================================================
@@ -1688,7 +1617,6 @@ main_33_TEXT	ends
 ; Segment type:	Pure code
 main_34_TEXT	segment	byte public 'CODE' use16
 	extern @kikuri_load$qv:proc
-	extern @kikuri_free$qv:proc
 	extern @kikuri_main$qv:proc
 main_34_TEXT	ends
 
@@ -1698,7 +1626,6 @@ main_34_TEXT	ends
 main_35_TEXT	segment	byte public 'CODE' use16
 	extern @elis_load$qv:proc
 	extern @elis_main$qv:proc
-	extern @elis_free$qv:proc
 main_35_TEXT	ends
 
 ; ===========================================================================
@@ -1707,7 +1634,6 @@ main_35_TEXT	ends
 main_36_TEXT	segment	byte public 'CODE' use16
 	extern @sariel_entrance$qc:proc
 	extern @sariel_load_and_init$qv:proc
-	extern @sariel_free$qv:proc
 	extern @sariel_main$qv:proc
 main_36_TEXT	ends
 
@@ -1717,7 +1643,6 @@ main_36_TEXT	ends
 main_37_TEXT	segment	byte public 'CODE' use16
 	extern @konngara_load_and_entrance$qc:proc
 	extern @konngara_init$qv:proc
-	extern @konngara_free$qv:proc
 	extern @konngara_main$qv:proc
 main_37_TEXT	ends
 
@@ -1830,7 +1755,7 @@ OVX_4_LEFT = 1
 	extern _orb_prev_top:word
 	extern _orb_force:qword
 	extern _ptn_slot_stg_has_reduced_sprites:byte
-	extern byte_34ADF:byte
+	extern _boss_id:byte
 
 	; libs/master.lib/tx[data].asm
 	extern TextVramSeg:word

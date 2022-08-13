@@ -331,3 +331,18 @@ void pellet_destroy_score_delta_commit(void)
 	hud_score_and_cardcombo_render();
 	pellet_destroy_score_delta = 0;
 }
+
+extern int8_t boss_id; // ACTUAL TYPE: boss_id_t
+
+void boss_free(void)
+{
+	switch(boss_id) {
+	case BID_SINGYOKU:   	singyoku_free();   	break;
+	case BID_YUUGENMAGAN:	yuugenmagan_free();	break;
+	case BID_MIMA:       	mima_free();       	break;
+	case BID_KIKURI:     	kikuri_free();     	break;
+	case BID_ELIS:       	elis_free();       	break;
+	case BID_SARIEL:     	sariel_free();     	break;
+	case BID_KONNGARA:   	konngara_free();   	break;
+	}
+}

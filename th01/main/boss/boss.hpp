@@ -66,6 +66,19 @@ extern Palette4 boss_post_defeat_palette;
 // Individual bosses
 // -----------------
 
+enum boss_id_t {
+	BID_NONE,
+	BID_SINGYOKU,
+	BID_YUUGENMAGAN,
+	BID_MIMA,
+	BID_KIKURI,
+	BID_ELIS,
+	BID_SARIEL,
+	BID_KONNGARA,
+
+	_boss_id_t_FORCE_INT16 = 0x7FFF
+};
+
 static const pixel_t SINGYOKU_W = 96;
 // Actually required publically, as singyoku_defeat_animate_and_select_route()
 // is part of the regular boss defeat translation unit.
@@ -86,6 +99,7 @@ void elis_free(void);
 
 void sariel_entrance(int8_t unused);
 void sariel_load_and_init(void);
+void sariel_free(void);
 
 // Jigoku
 void mima_load(void);
