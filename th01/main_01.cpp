@@ -324,3 +324,10 @@ void error_resident_invalid(void)
 {
 	printf(ERROR_RESIDENT_INVALID);
 }
+
+void pellet_destroy_score_delta_commit(void)
+{
+	score += pellet_destroy_score_delta;
+	hud_score_and_cardcombo_render();
+	pellet_destroy_score_delta = 0;
+}

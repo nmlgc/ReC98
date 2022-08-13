@@ -104,22 +104,7 @@ main_01_TEXT	segment	byte public 'CODE' use16
 	extern @stageobj_bgs_free_wrap$qv:proc
 	extern @graphics_free_redundant_and_inco$qv:proc
 	extern @error_resident_invalid$qv:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D4C2	proc far
-		push	bp
-		mov	bp, sp
-		movzx	eax, _pellet_destroy_score_delta
-		add	_score, eax
-		call	@hud_score_and_cardcombo_render$qv
-		mov	_pellet_destroy_score_delta, 0
-		pop	bp
-		retf
-sub_D4C2	endp
-
+	extern @pellet_destroy_score_delta_commi$qv:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1062,7 +1047,7 @@ loc_DE47:
 loc_DE67:
 		cmp	_pellet_destroy_score_delta, 0
 		jz	short loc_DE72
-		call	sub_D4C2
+		call	@pellet_destroy_score_delta_commi$qv
 
 loc_DE72:
 		cmp	_player_is_hit, 0
