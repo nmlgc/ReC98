@@ -160,7 +160,7 @@ void debug_vars(void)
 
 	// ZUN bug: A length for `bomb` would have been nice.
 	printf(
-		" main:%7lu, rand:%7lu, bomb:%d, timer:%7lu\n\0" ERROR_RESIDENT_INVALID,
+		" main:%7lu, rand:%7lu, bomb:%d, timer:%7lu\n",
 		bomb_frames,
 		frame_rand,
 		bomb_doubletap_frames,

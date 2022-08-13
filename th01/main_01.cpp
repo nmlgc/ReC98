@@ -319,3 +319,8 @@ void graphics_free_redundant_and_incomplete(void)
 		}
 	}
 }
+
+void error_resident_invalid(void)
+{
+	printf(ERROR_RESIDENT_INVALID);
+}

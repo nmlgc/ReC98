@@ -103,22 +103,7 @@ main_01_TEXT	segment	byte public 'CODE' use16
 	extern @debug_vars$qv:proc
 	extern @stageobj_bgs_free_wrap$qv:proc
 	extern @graphics_free_redundant_and_inco$qv:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D4B1	proc far
-		push	bp
-		mov	bp, sp
-		push	ds
-		push	offset 054Fh ; "バッチファイルから起動してよ"
-		call	_printf
-		add	sp, 4
-		pop	bp
-		retf
-sub_D4B1	endp
-
+	extern @error_resident_invalid$qv:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -258,7 +243,7 @@ loc_D54F:
 		jnz	short loc_D583
 
 loc_D579:
-		call	sub_D4B1
+		call	@error_resident_invalid$qv
 		mov	ax, 1
 		jmp	loc_E2F7
 ; ---------------------------------------------------------------------------
