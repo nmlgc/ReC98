@@ -303,3 +303,19 @@ void stage_entrance(int stage_id, const char* bg_fn, bool16 clear_vram_page_0)
 #include "th01/main/player/gameover.cpp"
 #include "th01/main/extend.cpp"
 #include "th01/main/debug.cpp"
+
+bool16 stageobj_bgs_free_wrap(void)
+{
+	return stageobj_bgs_free();
+}
+
+void graphics_free_redundant_and_incomplete(void)
+{
+	stageobj_bgs_free();
+	for(int i = PTN_SLOT_BOSS_1; i < PTN_SLOT_COUNT; i++) {
+		ptn_free(static_cast<main_ptn_slot_t>(i));
+		if(i < BOS_ENTITY_SLOT_COUNT) {
+			bos_entity_free(i);
+		}
+	}
+}

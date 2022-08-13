@@ -101,52 +101,8 @@ main_01_TEXT	segment	byte public 'CODE' use16
 	extern @score_extend_update_and_render$qv:proc
 	extern @out_of_memory_exit$qv:proc
 	extern @debug_vars$qv:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public @stageobj_bgs_free_wrap$qv
-@stageobj_bgs_free_wrap$qv	proc far
-		push	bp
-		mov	bp, sp
-		call	@stageobj_bgs_free$qv
-		pop	bp
-		retf
-@stageobj_bgs_free_wrap$qv	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D487	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		call	@stageobj_bgs_free$qv
-		mov	si, 2
-		jmp	short loc_D4A9
-; ---------------------------------------------------------------------------
-
-loc_D495:
-		call	@ptn_free$q15main_ptn_slot_t stdcall, si
-		pop	cx
-		cmp	si, 4
-		jge	short loc_D4A8
-		call	@bos_entity_free$qi stdcall, si
-		pop	cx
-
-loc_D4A8:
-		inc	si
-
-loc_D4A9:
-		cmp	si, 8
-		jl	short loc_D495
-		pop	si
-		pop	bp
-		retf
-sub_D487	endp
-
+	extern @stageobj_bgs_free_wrap$qv:proc
+	extern @graphics_free_redundant_and_inco$qv:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -481,7 +437,7 @@ loc_D6EE:
 		pop	cx
 
 loc_D72E:
-		call	sub_D487
+		call	@graphics_free_redundant_and_inco$qv
 		les	bx, _resident
 		mov	al, es:[bx+reiidenconfig_t.rem_lives]
 		cbw
@@ -1092,7 +1048,7 @@ loc_DE0F:
 		cbw
 		cmp	ax, 1
 		jnz	short loc_DE67
-		call	sub_D487
+		call	@graphics_free_redundant_and_inco$qv
 		les	bx, _resident
 		mov	al, _route
 		inc	al
@@ -1425,7 +1381,7 @@ loc_E2A8:
 		call	@continue_menu$qv
 
 loc_E2CB:
-		call	sub_D487
+		call	@graphics_free_redundant_and_inco$qv
 		call	sub_D4DD
 		call	@game_switch_binary$qv
 		call	key_end
@@ -1655,7 +1611,6 @@ main_20_TEXT	ends
 
 ; Segment type:	Pure code
 main_21_TEXT	segment	byte public 'CODE' use16
-	extern @bos_entity_free$qi:proc
 main_21_TEXT	ends
 
 ; ===========================================================================
@@ -1739,7 +1694,6 @@ main_30_TEXT	ends
 ; Segment type:	Pure code
 main_31_TEXT	segment	byte public 'CODE' use16
 	extern @stageobj_bgs_put_all$qv:proc
-	extern @stageobj_bgs_free$qv:proc
 	extern @scene_init_and_load$quc:proc
 	extern @obstacles_update_and_render$qi:proc
 main_31_TEXT	ends
