@@ -9,10 +9,8 @@
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/math/str_val.hpp"
-extern "C" {
 #include "th01/hardware/graph.h"
 #include "th01/hardware/grppsafx.h"
-}
 #include "th01/main/vars.hpp"
 #include "th01/formats/ptn.hpp"
 #include "th01/formats/grf.hpp"

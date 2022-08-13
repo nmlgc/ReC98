@@ -14,7 +14,6 @@
 #include "master.hpp"
 #include "pc98kbd.h"
 #include "shiftjis.hpp"
-extern "C" {
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/input.hpp"
@@ -22,16 +21,11 @@ extern "C" {
 #include "th01/hardware/text.h"
 #include "th01/hardware/tram_x16.hpp"
 #include "th01/snd/mdrv2.h"
-}
 #include "th01/formats/grp.h"
-extern "C" {
 #include "th01/formats/pf.hpp"
-}
 #include "th01/formats/ptn.hpp"
 #include "th01/formats/scoredat.hpp"
-extern "C" {
 #include "th01/main/debug.hpp"
-}
 #include "th01/main/playfld.hpp"
 #include "th01/main/vars.hpp"
 #include "th01/formats/stagedat.hpp"
@@ -46,7 +40,6 @@ extern "C" {
 #include "th01/main/hud/hud.hpp"
 #include "th01/shiftjis/entrance.hpp"
 #include "th01/shiftjis/fns.hpp"
-extern "C" {
 
 extern const char esc_cls[];
 
@@ -248,7 +241,6 @@ void load_and_init_stuff_used_in_all_stages(void)
 	bomb_kuji_load();
 	shootout_lasers_init(i);
 	ptn_slot_stg_has_reduced_sprites = false;
-}
 }
 
 void stage_entrance(int stage_id, const char* bg_fn, bool16 clear_vram_page_0)

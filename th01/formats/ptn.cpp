@@ -5,13 +5,9 @@
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
-extern "C" {
 #include "th01/hardware/palette.h"
-}
 #include "th01/formats/ptn.hpp"
-extern "C" {
 #include "th01/formats/pf.hpp"
-}
 
 // On-disk .PTN slot file header
 // -----------------------------

@@ -98,9 +98,9 @@ main_011_TEXT	segment	byte public 'CODE' use16
 		;org 2
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-	extern _input_sense:proc
-	extern _input_reset_sense:proc
-	extern _load_and_init_stuff_used_in_all_:proc
+	extern @input_sense$qi:proc
+	extern @input_reset_sense$qv:proc
+	extern @load_and_init_stuff_used_in_all_$qv:proc
 	extern @stage_entrance$qinxci:proc
 main_011_TEXT	ends
 
@@ -184,7 +184,7 @@ loc_C7F4:
 
 loc_C816:
 		push	1
-		call	_frame_delay
+		call	@frame_delay$qui
 		pop	cx
 		call	@CPellets@unput_update_render$qv c, offset _Pellets, ds
 		mov	ax, si
@@ -315,7 +315,7 @@ loc_C92C:
 loc_C92D:
 		cmp	si, 10h
 		jl	short loc_C8D0
-		call	_z_palette_set_all_show c, offset _z_Palettes, ds
+		call	@z_palette_set_all_show$qmx27%Palette$t14%RGB$tc$ii$16%% c, offset _z_Palettes, ds
 		pop	di
 		pop	si
 		pop	bp
@@ -333,9 +333,9 @@ var_1		= byte ptr -1
 
 		enter	2, 0
 		mov	[bp+var_1], 0
-		call	_graph_putsa_fx c, 272, large ((7 or FX_WEIGHT_BLACK) shl 16) or 128, offset aVovVtvrvd, ds ; "ＰＡＵＳＥ"
-		call	_graph_putsa_fx c, 256, large ((7 or FX_WEIGHT_BLACK) shl 16) or 144, offset aB@nKjb@b@pic, ds ; "　再開　　終了"
-		call	_graph_putsa_fx c, 256, large (7 shl 16) or 144, offset aBB@b@b@b@b@b@, ds ;	"●　　　　　　"
+		call	@graph_putsa_fx$qiiinxuc c, 272, large ((7 or FX_WEIGHT_BLACK) shl 16) or 128, offset aVovVtvrvd, ds ; "ＰＡＵＳＥ"
+		call	@graph_putsa_fx$qiiinxuc c, 256, large ((7 or FX_WEIGHT_BLACK) shl 16) or 144, offset aB@nKjb@b@pic, ds ; "　再開　　終了"
+		call	@graph_putsa_fx$qiiinxuc c, 256, large (7 shl 16) or 144, offset aBB@b@b@b@b@b@, ds ;	"●　　　　　　"
 		push	28h ; '('
 		call	sub_C8C7
 		pop	cx
@@ -346,21 +346,21 @@ var_1		= byte ptr -1
 ; ---------------------------------------------------------------------------
 
 loc_C9A2:
-		call	_input_sense stdcall, 0
+		call	@input_sense$qi stdcall, 0
 		pop	cx
 		cmp	_done, 1
 		jz	loc_CB91
 		cmp	_input_lr, INPUT_LEFT
 		jnz	short loc_C9E6
 		call	@egc_copy_rect_1_to_0_16$qiiii c, large (144 shl 16) or 320, large (16 shl 16) or 16
-		call	_graph_putsa_fx c, 256, large (7 shl 16) or 144, offset aB, ds	; "●"
+		call	@graph_putsa_fx$qiiinxuc c, 256, large (7 shl 16) or 144, offset aB, ds	; "●"
 		mov	[bp+var_1], 0
 
 loc_C9E6:
 		cmp	_input_lr, INPUT_RIGHT
 		jnz	short loc_CA1A
 		call	@egc_copy_rect_1_to_0_16$qiiii c, large (144 shl 16) or 256, large (16 shl 16) or 16
-		call	_graph_putsa_fx c, 320, large (7 shl 16) or 144, offset aB, ds	; "●"
+		call	@graph_putsa_fx$qiiinxuc c, 320, large (7 shl 16) or 144, offset aB, ds	; "●"
 		mov	[bp+var_1], 1
 
 loc_CA1A:
@@ -369,7 +369,7 @@ loc_CA1A:
 		cmp	_input_ok, 0
 		jnz	short loc_CA39
 		push	1
-		call	_frame_delay
+		call	@frame_delay$qui
 		pop	cx
 
 loc_CA30:
@@ -380,7 +380,7 @@ loc_CA39:
 		call	@egc_copy_rect_1_to_0_16$qiiii c, large (128 shl 16) or 276, large (16 shl 16) or 80
 		call	@egc_copy_rect_1_to_0_16$qiiii c, large (144 shl 16) or 256, large (16 shl 16) or 112
 		push	14h
-		call	_frame_delay
+		call	@frame_delay$qui
 		pop	cx
 		mov	_input_lr, 0
 		mov	_input_shot, 0
@@ -389,29 +389,29 @@ loc_CA39:
 		jz	loc_CB96
 		cmp	_paused, 0
 		jz	loc_CB96
-		call	_graph_putsa_fx c, 224, large ((7 or FX_WEIGHT_BLACK) shl 16) or 128, offset aCUcvPicVVVsvdv, ds ; "本当に終了しちゃうの？"
-		call	_graph_putsa_fx c, 224, large ((7 or FX_WEIGHT_BLACK) shl 16) or 144, offset aB@vdvVVVgb@b@v, ds ; "　うそですぅ　　はいっ"
-		call	_graph_putsa_fx c, 224, large (7 shl 16) or 144, offset aB, ds	; "●"
+		call	@graph_putsa_fx$qiiinxuc c, 224, large ((7 or FX_WEIGHT_BLACK) shl 16) or 128, offset aCUcvPicVVVsvdv, ds ; "本当に終了しちゃうの？"
+		call	@graph_putsa_fx$qiiinxuc c, 224, large ((7 or FX_WEIGHT_BLACK) shl 16) or 144, offset aB@vdvVVVgb@b@v, ds ; "　うそですぅ　　はいっ"
+		call	@graph_putsa_fx$qiiinxuc c, 224, large (7 shl 16) or 144, offset aB, ds	; "●"
 		mov	[bp+var_1], 0
 		jmp	loc_CB5D
 ; ---------------------------------------------------------------------------
 
 loc_CACF:
-		call	_input_sense stdcall, 0
+		call	@input_sense$qi stdcall, 0
 		pop	cx
 		cmp	_done, 1
 		jz	loc_CB91
 		cmp	_input_lr, INPUT_LEFT
 		jnz	short loc_CB13
 		call	@egc_copy_rect_1_to_0_16$qiiii c, large (144 shl 16) or 336, large (16 shl 16) or 16
-		call	_graph_putsa_fx c, 224, large (7 shl 16) or 144, offset aB, ds	; "●"
+		call	@graph_putsa_fx$qiiinxuc c, 224, large (7 shl 16) or 144, offset aB, ds	; "●"
 		mov	[bp+var_1], 0
 
 loc_CB13:
 		cmp	_input_lr, INPUT_RIGHT
 		jnz	short loc_CB47
 		call	@egc_copy_rect_1_to_0_16$qiiii c, large (144 shl 16) or 224, large (16 shl 16) or 16
-		call	_graph_putsa_fx c, 336, large (7 shl 16) or 144, offset aB, ds	; "●"
+		call	@graph_putsa_fx$qiiinxuc c, 336, large (7 shl 16) or 144, offset aB, ds	; "●"
 		mov	[bp+var_1], 1
 
 loc_CB47:
@@ -420,7 +420,7 @@ loc_CB47:
 		cmp	_input_ok, 0
 		jnz	short loc_CB66
 		push	1
-		call	_frame_delay
+		call	@frame_delay$qui
 		pop	cx
 
 loc_CB5D:
@@ -449,8 +449,8 @@ loc_CB91:
 ; ---------------------------------------------------------------------------
 
 loc_CB96:
-		call	_z_palette_set_all_show c, offset _stage_palette, ds
-		call	_input_reset_sense
+		call	@z_palette_set_all_show$qmx27%Palette$t14%RGB$tc$ii$16%% c, offset _stage_palette, ds
+		call	@input_reset_sense$qv
 		call	@egc_copy_rect_1_to_0_16$qiiii c, large (128 shl 16) or 232, large (32 shl 16) or 176
 		xor	ax, ax
 		leave
@@ -473,16 +473,16 @@ sub_CC0F	proc far
 		push	di
 		xor	di, di
 		push	1
-		call	_graph_accesspage_func
+		call	@graph_accesspage_func$qi
 		pop	cx
-		call	_graph_copy_accessed_page_to_othe
-		call	_graph_putsa_fx c, 0, ((FX_CLEAR_BG or (7 or FX_WEIGHT_BOLD)) shl 16) or 0, offset aVgvpvovfvivovx, ds ; "ｃｏｎｔｉｎｕｅ？　　　  "
-		call	_graph_putsa_fx c, 0, ((FX_CLEAR_BG or (7 or FX_WEIGHT_BOLD)) shl 16) or 16, offset aVxvevub@b@B@, ds ; "Ｙｅｓ　　  　"
-		call	_graph_putsa_fx c, 0, ((FX_CLEAR_BG or (7 or FX_WEIGHT_BOLD)) shl 16) or 32, offset aVmvpb@b@B@, ds ; "Ｎｏ　　	　 "
-		call	_graph_putsa_fx c, 0, ((FX_CLEAR_BG or (1 or FX_WEIGHT_BOLD)) shl 16) or 48, offset aVxvevub@b@c@, ds ; "Ｙｅｓ　　　  "
-		call	_graph_putsa_fx c, 0, ((FX_CLEAR_BG or (1 or FX_WEIGHT_BOLD)) shl 16) or 64, offset aVmvpb@b@c@, ds ; "Ｎｏ　　　   "
+		call	@graph_copy_accessed_page_to_othe$qv
+		call	@graph_putsa_fx$qiiinxuc c, 0, ((FX_CLEAR_BG or (7 or FX_WEIGHT_BOLD)) shl 16) or 0, offset aVgvpvovfvivovx, ds ; "ｃｏｎｔｉｎｕｅ？　　　  "
+		call	@graph_putsa_fx$qiiinxuc c, 0, ((FX_CLEAR_BG or (7 or FX_WEIGHT_BOLD)) shl 16) or 16, offset aVxvevub@b@B@, ds ; "Ｙｅｓ　　  　"
+		call	@graph_putsa_fx$qiiinxuc c, 0, ((FX_CLEAR_BG or (7 or FX_WEIGHT_BOLD)) shl 16) or 32, offset aVmvpb@b@B@, ds ; "Ｎｏ　　	　 "
+		call	@graph_putsa_fx$qiiinxuc c, 0, ((FX_CLEAR_BG or (1 or FX_WEIGHT_BOLD)) shl 16) or 48, offset aVxvevub@b@c@, ds ; "Ｙｅｓ　　　  "
+		call	@graph_putsa_fx$qiiinxuc c, 0, ((FX_CLEAR_BG or (1 or FX_WEIGHT_BOLD)) shl 16) or 64, offset aVmvpb@b@c@, ds ; "Ｎｏ　　　   "
 		push	0
-		call	_graph_accesspage_func
+		call	@graph_accesspage_func$qi
 		pop	cx
 		call	@graph_2xscale_byterect_1_to_0_sl$qiiiiii c, large ( 64 shl 16) or 160, large ( 0 shl 16) or 0, large (16 shl 16) or 144
 		call	@graph_2xscale_byterect_1_to_0_sl$qiiiiii c, large (200 shl 16) or 288, large (16 shl 16) or 0, large (16 shl 16) or  48
@@ -491,7 +491,7 @@ sub_CC0F	proc far
 		mov	_input_ok, 0
 		mov	_paused, 0
 		mov	_input_shot, 0
-		call	_input_reset_sense
+		call	@input_reset_sense$qv
 		les	bx, _resident
 		inc	es:[bx+reiidenconfig_t.continues_total]
 		inc	_continues_total
@@ -519,11 +519,11 @@ loc_CD2E:
 		call	@pellet_speed_lower$qii c, large (-2 and 0FFFFh) or (-5 shl 16)
 
 loc_CD52:
-		call	_input_sense stdcall, 0
+		call	@input_sense$qi stdcall, 0
 		pop	cx
 		inc	di
 		push	1
-		call	_frame_delay
+		call	@frame_delay$qui
 		pop	cx
 		cmp	_input_ok, 1
 		jz	short loc_CD70
@@ -552,7 +552,7 @@ loc_CDA2:
 		mov	_done, 0
 		mov	_paused, 0
 		mov	_continues_total, 0
-		call	_mdrv2_bgm_stop
+		call	@mdrv2_bgm_stop$qv
 		jmp	short loc_CDD3
 ; ---------------------------------------------------------------------------
 
@@ -659,7 +659,7 @@ loc_CEBC:
 loc_CEDA:
 		cmp	di, 5
 		jl	short loc_CEBC
-		call	_graph_copy_accessed_page_to_othe
+		call	@graph_copy_accessed_page_to_othe$qv
 		xor	di, di
 		jmp	loc_D00D
 ; ---------------------------------------------------------------------------
@@ -797,7 +797,7 @@ loc_CFF8:
 		cwd
 		idiv	bx
 		push	ax
-		call	_frame_delay
+		call	@frame_delay$qui
 		pop	cx
 		inc	di
 
@@ -839,7 +839,7 @@ public @score_extend_update_and_render$qv
 		call	@hud_lives_put$qi stdcall, ax
 		pop	cx
 		push	0Fh
-		call	_mdrv2_se_play
+		call	@mdrv2_se_play$qi
 		pop	cx
 		call	@pellet_speed_raise$qi stdcall, 1
 		pop	cx
@@ -954,8 +954,8 @@ off_D0FD	dw offset loc_D0E1
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public _test_mem
-_test_mem	proc far
+public @test_mem$qv
+@test_mem$qv	proc far
 
 @@ptn_size_total		= dword	ptr -4
 
@@ -967,7 +967,7 @@ loc_D118:
 		mov	[bp+@@ptn_size_total], 0
 		cmp	_mode_test, 1
 		jnz	loc_D317
-		call	_z_graph_hide
+		call	@z_graph_hide$qv
 		call	_printf c, offset _esc_cls, ds
 		push	ds
 		push	offset aB@b@b@vVVriCVi ; "　　　これも運命か...\n"
@@ -1080,9 +1080,9 @@ loc_D1E3:
 
 loc_D26E:
 		push	3
-		call	_frame_delay
+		call	@frame_delay$qui
 		pop	cx
-		call	_input_sense stdcall, 0
+		call	@input_sense$qi stdcall, 0
 		pop	cx
 		cmp	_input_shot, 0
 		jz	short loc_D28B
@@ -1155,25 +1155,25 @@ loc_D317:
 		pop	si
 		leave
 		retf
-_test_mem	endp
+@test_mem$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-public _test_show_game
-_test_show_game	proc far
+public @test_show_game$qv
+@test_show_game$qv	proc far
 		push	bp
 		mov	bp, sp
 		cmp	_mode_test, 1
 		jnz	short loc_D33E
-		call	_z_graph_show
+		call	@z_graph_show$qv
 		call	_printf c, offset _esc_cls, ds
 
 loc_D33E:
 		pop	bp
 		retf
-_test_show_game	endp
+@test_show_game$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -1237,12 +1237,12 @@ loc_D3BE:
 		call	_printf
 		add	sp, 4
 		push	5
-		call	_mdrv2_se_play
+		call	@mdrv2_se_play$qi
 		jmp	short loc_D3D9
 ; ---------------------------------------------------------------------------
 
 loc_D3D3:
-		call	_input_sense stdcall, 0
+		call	@input_sense$qi stdcall, 0
 
 loc_D3D9:
 		pop	cx
@@ -1473,7 +1473,7 @@ _envp		= dword	ptr  0Ch
 		mov	[bp+@@stage], 0
 		xor	si, si
 		mov	[bp+var_4], 0
-		call	_mdrv2_resident
+		call	@mdrv2_resident$qv
 		or	ax, ax
 		jnz	short loc_D54F
 		jmp	short loc_D579
@@ -1495,7 +1495,7 @@ loc_D54F:
 		push	offset _bgm_mode
 		push	ds
 		push	offset _rank
-		call	_resident_stuff_get
+		call	@resident_stuff_get$qnct1t1t1nlt5ni
 		add	sp, 1Ch
 		cmp	ax, 1
 		jnz	short loc_D583
@@ -1608,7 +1608,7 @@ loc_D68E:
 		cbw
 		cmp	ax, 1
 		jnz	short loc_D69C
-		call	_mdrv2_check_board
+		call	@mdrv2_check_board$qv
 
 loc_D69C:
 		cmp	[bp+@@stage], 5
@@ -1671,15 +1671,15 @@ loc_D6EE:
 		call	@set_new_handler$qnqv$v	; set_new_handler(void (*)(void))
 		add	sp, 4
 		mov	_arc_key, 76h
-		call	arc_load pascal, ds, offset aUmx	; "東方靈異.伝"
-		call	_vram_planes_set
+		call	@arc_load$qxnxc pascal, ds, offset aUmx	; "東方靈異.伝"
+		call	@vram_planes_set$qv
 		call	@scene_init_and_load$quc stdcall, [bp+@@scene_id]
 		pop	cx
 		cmp	_mode_debug, 1
 		jnz	short loc_D72E
 		call	sub_D340
 		push	28h ; '('
-		call	_frame_delay
+		call	@frame_delay$qui
 		pop	cx
 
 loc_D72E:
@@ -1697,12 +1697,12 @@ loc_D72E:
 		jz	short loc_D776
 		push	ds
 		push	offset aInit_mdt ; "init.mdt"
-		call	_mdrv2_bgm_load
+		call	@mdrv2_bgm_load$qnxc
 		add	sp, 4
-		call	_mdrv2_bgm_play
+		call	@mdrv2_bgm_play$qv
 		push	ds
 		push	offset aZigoku_mde ; "zigoku.mde"
-		call	_mdrv2_se_load
+		call	@mdrv2_se_load$qnxc
 		add	sp, 4
 
 loc_D776:
@@ -1714,19 +1714,19 @@ loc_D776:
 		add	sp, 4
 		call	sub_D340
 		push	28h ; '('
-		call	_frame_delay
+		call	@frame_delay$qui
 		pop	cx
 
 loc_D795:
 		call	_coreleft
 		mov	word ptr dword_36C1A+2,	dx
 		mov	word ptr dword_36C1A, ax
-		call	_load_and_init_stuff_used_in_all_
-		call	_z_graph_init
+		call	@load_and_init_stuff_used_in_all_$qv
+		call	@z_graph_init$qv
 		push	0
-		call	_graph_accesspage_func
+		call	@graph_accesspage_func$qi
 		pop	cx
-		call	_z_graph_clear
+		call	@z_graph_clear$qv
 		call	IRand
 		mov	bx, 60
 		cwd
@@ -1968,7 +1968,7 @@ loc_DA2A:
 		add	sp, 4
 		call	sub_D340
 		push	28h ; '('
-		call	_frame_delay
+		call	@frame_delay$qui
 		pop	cx
 
 loc_DA49:
@@ -2027,7 +2027,7 @@ loc_DA9E:
 		jnz	short loc_DAD7
 		call	sub_D340
 		push	28h ; '('
-		call	_frame_delay
+		call	@frame_delay$qui
 		pop	cx
 
 loc_DAD7:
@@ -2091,12 +2091,12 @@ loc_DB3E:
 		push	ss
 		lea	ax, [bp+_path]
 		push	ax		; path
-		call	_mdrv2_bgm_load
+		call	@mdrv2_bgm_load$qnxc
 		add	sp, 4
-		call	_mdrv2_bgm_play
+		call	@mdrv2_bgm_play$qv
 
 loc_DBCC:
-		call	_input_reset_sense
+		call	@input_reset_sense$qv
 		cmp	_player_invincibility_time, 1
 		jle	short loc_DBDD
 		mov	_player_invincible, 1
@@ -2137,12 +2137,12 @@ loc_DC0E:
 ; ---------------------------------------------------------------------------
 
 loc_DC17:
-		call	_input_sense stdcall, 0
+		call	@input_sense$qi stdcall, 0
 		pop	cx
 		call	@player_unput_update_render$qi stdcall, 1
 		pop	cx
 		push	1
-		call	_frame_delay
+		call	@frame_delay$qui
 		pop	cx
 		inc	_bomb_frames
 
@@ -2183,7 +2183,7 @@ loc_DC64:
 		pop	cx
 
 loc_DC9D:
-		call	_input_sense stdcall, 0
+		call	@input_sense$qi stdcall, 0
 		pop	cx
 		cmp	_player_invincibility_time, 1
 		jle	short loc_DCB7
@@ -2310,7 +2310,7 @@ loc_DE0F:
 
 loc_DE47:
 		push	78h ; 'x'
-		call	_frame_delay
+		call	@frame_delay$qui
 		pop	cx
 		call	@game_switch_binary$qv
 		pushd	0
@@ -2342,7 +2342,7 @@ loc_DE72:
 		cmp	_stage_cleared, 0
 		jnz	short loc_DEDA
 		push	5
-		call	_mdrv2_se_play
+		call	@mdrv2_se_play$qi
 		pop	cx
 		les	bx, _resident
 		dec	es:[bx+reiidenconfig_t.rem_lives]
@@ -2407,7 +2407,7 @@ loc_DF52:
 		mov	es:[bx+reiidenconfig_t.snd_need_init], 1
 		mov	al, _route
 		mov	es:[bx+reiidenconfig_t.route], al
-		call	_mdrv2_bgm_fade_out_nonblock
+		call	@mdrv2_bgm_fade_out_nonblock$qv
 		les	bx, _resident
 		mov	al, _bombs
 		mov	es:[bx+reiidenconfig_t.bombs], al
@@ -2425,11 +2425,11 @@ loc_DF9A:
 		cmp	byte_34ADF, 0
 		jnz	short loc_DFBC
 		push	1
-		call	_graph_accesspage_func
+		call	@graph_accesspage_func$qi
 		pop	cx
 		call	@stageobj_bgs_put_all$qv
 		push	0
-		call	_graph_accesspage_func
+		call	@graph_accesspage_func$qi
 		pop	cx
 
 loc_DFBC:
@@ -2632,7 +2632,7 @@ loc_E2CB:
 		call	sub_D4DD
 		call	@game_switch_binary$qv
 		call	key_end
-		call	arc_free
+		call	@arc_free$qv
 		pushd	0
 		push	ds
 		push	offset aOp	; "op"
@@ -2691,7 +2691,7 @@ main_013_TEXT	ends
 
 ; Segment type:	Pure code
 frmdelay_TEXT	segment	byte public 'CODE' use16
-	extern _frame_delay:proc
+	extern @frame_delay$qui:proc
 frmdelay_TEXT	ends
 
 ; ===========================================================================
@@ -2718,25 +2718,21 @@ initexit_TEXT	ends
 
 ; Segment type:	Pure code
 graph_TEXT	segment	byte public 'CODE' use16
-	extern _z_graph_init:proc
-	extern _z_graph_show:proc
-	extern _z_graph_hide:proc
-	extern _graph_accesspage_func:proc
-	extern _grcg_setcolor_rmw:proc
-	extern _grcg_off_func:proc
-	extern _z_palette_set_all_show:proc
-	extern _z_palette_set_show:proc
-	extern _z_graph_clear:proc
-	extern _graph_copy_accessed_page_to_othe:proc
-	extern _text_extent_fx:proc
-	extern _graph_putsa_fx:proc
+	extern @z_graph_init$qv:proc
+	extern @z_graph_show$qv:proc
+	extern @z_graph_hide$qv:proc
+	extern @graph_accesspage_func$qi:proc
+	extern @z_palette_set_all_show$qmx27%Palette$t14%RGB$tc$ii$16%%:proc
+	extern @z_graph_clear$qv:proc
+	extern @graph_copy_accessed_page_to_othe$qv:proc
+	extern @graph_putsa_fx$qiiinxuc:proc
 graph_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
 SHARED	segment	byte public 'CODE' use16
-	extern _vram_planes_set:proc
+	extern @vram_planes_set$qv:proc
 	extern @egc_copy_rect_1_to_0_16$qiiii:proc
 SHARED	ends
 
@@ -2768,7 +2764,7 @@ main_11_TEXT	ends
 
 ; Segment type:	Pure code
 resstuff_TEXT	segment	byte public 'CODE' use16
-	extern _resident_stuff_get:proc
+	extern @resident_stuff_get$qnct1t1t1nlt5ni:proc
 resstuff_TEXT	ends
 
 ; ===========================================================================
@@ -2826,14 +2822,14 @@ main_15_TEXT	ends
 
 ; Segment type:	Pure code
 mdrv2_TEXT	segment	byte public 'CODE' use16
-	extern _mdrv2_resident:proc
-	extern _mdrv2_bgm_load:proc
-	extern _mdrv2_se_load:proc
-	extern _mdrv2_bgm_play:proc
-	extern _mdrv2_bgm_stop:proc
-	extern _mdrv2_bgm_fade_out_nonblock:proc
-	extern _mdrv2_check_board:proc
-	extern _mdrv2_se_play:proc
+	extern @mdrv2_resident$qv:proc
+	extern @mdrv2_bgm_load$qnxc:proc
+	extern @mdrv2_se_load$qnxc:proc
+	extern @mdrv2_bgm_play$qv:proc
+	extern @mdrv2_bgm_stop$qv:proc
+	extern @mdrv2_bgm_fade_out_nonblock$qv:proc
+	extern @mdrv2_check_board$qv:proc
+	extern @mdrv2_se_play$qi:proc
 mdrv2_TEXT	ends
 
 ; ===========================================================================
@@ -2875,8 +2871,8 @@ main_21_TEXT	ends
 
 ; Segment type:	Pure code
 PF_TEXT	segment	byte public 'CODE' use16
-	extern ARC_LOAD:proc
-	extern ARC_FREE:proc
+	extern @ARC_LOAD$QXNXC:proc
+	extern @arc_free$qv:proc
 PF_TEXT	ends
 
 ; ===========================================================================

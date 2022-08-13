@@ -4,8 +4,8 @@
 #include "platform.h"
 #include "x86real.h"
 #include "master.hpp"
-extern "C" {
 #include "th01/hardware/vplanset.h"
+extern "C" {
 #include "th03/core/initexit.h"
 
 #if (GAME <= 3)

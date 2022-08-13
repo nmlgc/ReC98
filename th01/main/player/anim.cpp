@@ -2,16 +2,12 @@
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
-extern "C" {
 #include "th01/hardware/graph.h"
-}
 #include "th01/hardware/grph1to0.hpp"
 #include "th01/hardware/planar.h"
-extern "C" {
 #include "th01/formats/pf.hpp"
 #include "th01/formats/sprfmt_h.hpp"
 #include "th01/formats/bos.hpp"
-}
 #include "th01/main/playfld.hpp"
 #include "th01/main/player/player.hpp"
 #include "th01/main/player/anim.hpp"

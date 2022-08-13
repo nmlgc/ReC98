@@ -8,25 +8,17 @@
 #include "th01/v_colors.hpp"
 #include "th01/math/area.hpp"
 #include "th01/main/playfld.hpp"
-extern "C" {
 #include "th01/formats/pf.hpp"
-}
 #include "th01/formats/ptn.hpp"
 #include "th01/hardware/egc.h"
-extern "C" {
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/grppsafx.h"
 #include "th01/hardware/input.hpp"
-}
 #include "th01/hardware/grp2xscs.hpp"
-extern "C" {
 #include "th01/hardware/palette.h"
-}
 #include "th01/hardware/scrollup.hpp"
-extern "C" {
 #include "th01/snd/mdrv2.h"
-}
 #include "th01/main/player/orb.hpp"
 #include "th01/main/player/player.hpp"
 #include "th01/shiftjis/routesel.hpp"

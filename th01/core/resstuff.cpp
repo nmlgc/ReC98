@@ -5,7 +5,6 @@
 
 #pragma option -2 -Z-
 
-extern "C" {
 #include "platform.h"
 #include "master.hpp"
 #include "th01/common.h"
@@ -66,6 +65,4 @@ void resident_free(void)
 	if(sgm) {
 		resdata_free(sgm);
 	}
-}
-
 }

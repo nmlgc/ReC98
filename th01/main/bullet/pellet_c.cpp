@@ -1,9 +1,7 @@
-extern "C" {
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
 #include "th01/hardware/graph.h"
-}
 #include "th01/main/bullet/pellet_c.hpp"
 #include "th01/sprites/pellet_c.hpp"
 

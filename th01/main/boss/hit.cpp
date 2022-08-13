@@ -1,6 +1,4 @@
-extern "C" {
 #include "th01/hardware/palette.h"
-}
 #include "th01/main/player/bomb.hpp"
 #include "th01/main/player/orb.hpp"
 #include "th01/main/player/shot.hpp"

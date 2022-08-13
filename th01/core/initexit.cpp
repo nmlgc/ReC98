@@ -7,11 +7,9 @@
 #include "planar.h"
 #include "master.hpp"
 #include "shiftjis.hpp"
-extern "C" {
 #include "th01/hardware/graph.h"
 #include "th01/hardware/palette.h"
 #include "th01/hardware/vplanset.h"
-}
 #include "th01/hardware/vsync.hpp"
 #include "th01/hardware/ztext.hpp"
 #include "th01/core/initexit.hpp"

@@ -12,23 +12,17 @@
 #include "th01/math/overlap.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th01/math/vector.hpp"
-extern "C" {
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/palette.h"
 #include "th01/hardware/graph.h"
-}
 #include "th01/hardware/egc.h"
 #include "th01/hardware/scrollup.hpp"
 #include "th01/hardware/input.hpp"
 #include "th01/hardware/text.h"
-extern "C" {
 #include "th01/snd/mdrv2.h"
-}
 #include "th01/formats/grp.h"
-extern "C" {
 #include "th01/formats/grz.h"
 #include "th01/formats/pf.hpp"
-}
 #include "th01/formats/ptn.hpp"
 #include "th01/sprites/pellet.h"
 #include "th01/sprites/shape8x8.hpp"

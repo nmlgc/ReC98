@@ -13,7 +13,6 @@
 #include "master.hpp"
 #include "th01/rank.h"
 #include "th01/hardware/egc.h"
-extern "C" {
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/input.hpp"
@@ -268,5 +267,3 @@ void whitelines_animate(void)
 	graph_accesspage_func(0);
 }
 /// --------------------
-
-}

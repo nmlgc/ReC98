@@ -4,8 +4,6 @@
  * modifications for TH01
  */
 
-extern "C" {
-
 #include <ctype.h>
 #include <io.h>
 #include "platform.h"
@@ -68,7 +66,7 @@ void pascal arc_load(const char fn[PF_FN_LEN])
 	arc_pf_count = i;
 }
 
-void pascal arc_free(void)
+void arc_free(void)
 {
 	delete[] arc_pfs;
 }
@@ -200,14 +198,12 @@ void pascal arc_file_seek(char pos)
 	file_pos = pos;
 }
 
-void pascal arc_file_free(void)
+void arc_file_free(void)
 {
 	delete[] file_data;
 }
 
-int pascal arc_file_size(void)
+int arc_file_size(void)
 {
 	return file_pf->orgsize;
-}
-
 }

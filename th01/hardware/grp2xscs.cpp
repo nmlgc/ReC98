@@ -5,10 +5,8 @@
 #include "pc98.h"
 #include "planar.h"
 #include "shiftjis.hpp"
-extern "C" {
 #include "th01/hardware/graph.h"
 #include "th01/hardware/grppsafx.h"
-}
 #include "th01/hardware/grp2xscs.hpp"
 
 void scale_2x(dots32_t &dst32, sdots16_t src16)

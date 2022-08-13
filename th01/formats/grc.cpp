@@ -2,10 +2,8 @@
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
-extern "C" {
 #include "th01/hardware/graph.h"
 #include "th01/formats/pf.hpp"
-}
 #include "th01/formats/grc.hpp"
 
 grc_t grc_images[GRC_SLOT_COUNT];

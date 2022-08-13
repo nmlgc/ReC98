@@ -74,11 +74,11 @@ op_01__TEXT	segment	byte public 'CODE' use16
 		;org 4
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-	extern _cfg_load:proc
-	extern _cfg_save:proc
-	extern _main_input_sense:proc
-	extern _option_input_sense:proc
-	extern _whitelines_animate:proc
+	extern @cfg_load$qv:proc
+	extern @cfg_save$qv:proc
+	extern @main_input_sense$qv:proc
+	extern @option_input_sense$qv:proc
+	extern @whitelines_animate$qv:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -89,24 +89,24 @@ sub_A719	proc far
 		mov	bp, sp
 		push	ds
 		push	offset aReimu_mdt ; "reimu.mdt"
-		call	_mdrv2_bgm_load
+		call	@mdrv2_bgm_load$qnxc
 		add	sp, 4
-		call	_mdrv2_bgm_play
+		call	@mdrv2_bgm_play$qv
 		push	1
-		call	_graph_accesspage_func
+		call	@graph_accesspage_func$qi
 		pop	cx
 		call	@grp_put_palette_show$qnxc c, offset aReiiden2_grp, ds ; "REIIDEN2.grp"
-		call	_z_palette_black
-		call	_graph_copy_accessed_page_to_othe
+		call	@z_palette_black$qv
+		call	@graph_copy_accessed_page_to_othe$qv
 		call	@grp_put$qnxc c, offset aReiiden3_grp, ds ; "REIIDEN3.grp"
 		push	0
-		call	_graph_accesspage_func
+		call	@graph_accesspage_func$qi
 		pop	cx
-		call	_z_palette_black_in
+		call	@z_palette_black_in$qv
 		push	64h ; 'd'
-		call	_frame_delay
+		call	@frame_delay$qui
 		pop	cx
-		call	_whitelines_animate
+		call	@whitelines_animate$qv
 		pop	bp
 		retf
 sub_A719	endp
@@ -120,14 +120,14 @@ sub_A772	proc far
 		push	bp
 		mov	bp, sp
 		push	1
-		call	_graph_accesspage_func
+		call	@graph_accesspage_func$qi
 		pop	cx
-		call	_graph_copy_accessed_page_to_othe
+		call	@graph_copy_accessed_page_to_othe$qv
 		push	0
-		call	_graph_accesspage_func
+		call	@graph_accesspage_func$qi
 		pop	cx
 		call	@grp_put_colorkey$qnxc c, offset aOp_win_grp, ds ; "op_win.grp"
-		call	_graph_copy_accessed_page_to_othe
+		call	@graph_copy_accessed_page_to_othe$qv
 		pop	bp
 		retf
 sub_A772	endp
@@ -144,7 +144,7 @@ sub_A79D	proc far
 		cbw
 		cmp	ax, 1
 		jnz	short loc_A7AE
-		call	_resident_free
+		call	@resident_free$qv
 
 loc_A7AE:
 		call	key_end
@@ -161,10 +161,10 @@ sub_A7B5	proc far
 		push	bp
 		mov	bp, sp
 		push	si
-		call	_cfg_save
-		call	_resident_stuff_set c, word ptr _opts.O_rank, word ptr _opts.O_bgm_mode, word ptr _opts.O_bombs, word ptr _opts.O_lives_extra, large [_rand]
+		call	@cfg_save$qv
+		call	@resident_stuff_set$qccccl c, word ptr _opts.O_rank, word ptr _opts.O_bgm_mode, word ptr _opts.O_bombs, word ptr _opts.O_lives_extra, large [_rand]
 		call	sub_A79D
-		call	_mdrv2_bgm_fade_out_nonblock
+		call	@mdrv2_bgm_fade_out_nonblock$qv
 		call	@game_switch_binary$qv
 		mov	al, _mode
 		cbw
@@ -246,8 +246,8 @@ sub_A7B5	endp
 sub_A8AD	proc far
 		push	bp
 		mov	bp, sp
-		call	_cfg_save
-		call	_resident_stuff_set c, word ptr _opts.O_rank, word ptr _opts.O_bgm_mode, word ptr _opts.O_bombs, word ptr _opts.O_lives_extra, large [_rand]
+		call	@cfg_save$qv
+		call	@resident_stuff_set$qccccl c, word ptr _opts.O_rank, word ptr _opts.O_bgm_mode, word ptr _opts.O_bombs, word ptr _opts.O_lives_extra, large [_rand]
 		les	bx, _resident
 		cmp	es:[bx+reiidenconfig_t.stage], 0
 		jnz	short loc_A8E1
@@ -257,7 +257,7 @@ sub_A8AD	proc far
 
 loc_A8E1:
 		call	sub_A79D
-		call	_mdrv2_bgm_fade_out_nonblock
+		call	@mdrv2_bgm_fade_out_nonblock$qv
 		call	@game_switch_binary$qv
 		les	bx, _resident
 		assume es:nothing
@@ -291,7 +291,7 @@ arg_0		= word ptr  6
 		idiv	bx
 		cmp	dx, 50
 		jge	short loc_A954
-		call	_graph_putsa_fx c, 244, ((15 or FX_WEIGHT_BOLD) shl 16) or 306, offset aVgvhvsb@vjvdvx, ds ; " ÇgÇhÇsÅ@ÇjÇdÇx"
+		call	@graph_putsa_fx$qiiinxuc c, 244, ((15 or FX_WEIGHT_BOLD) shl 16) or 306, offset aVgvhvsb@vjvdvx, ds ; " ÇgÇhÇsÅ@ÇjÇdÇx"
 		pop	bp
 		retf
 ; ---------------------------------------------------------------------------
@@ -340,7 +340,7 @@ arg_2		= word ptr  8
 		push	ax
 		push	[bp+@@y]
 		push	[bp+@@x]
-		call	_graph_putsa_fx
+		call	@graph_putsa_fx$qiiinxuc
 		add	sp, 0Ah
 		pop	si
 		leave
@@ -443,7 +443,7 @@ loc_AA54:
 		push	ax		; int
 		push	[bp+var_A]	; int
 		push	di		; int
-		call	_graph_printf_fx
+		call	@graph_printf_fx$qiiinxuce
 		add	sp, 12h
 		jmp	short loc_AAB2
 ; ---------------------------------------------------------------------------
@@ -467,7 +467,7 @@ loc_AA8D:
 		push	ax		; int
 		push	[bp+var_A]	; int
 		push	di		; int
-		call	_graph_printf_fx
+		call	@graph_printf_fx$qiiinxuce
 		add	sp, 0Eh
 
 loc_AAB2:
@@ -538,7 +538,7 @@ arg_2		= word ptr  8
 		push	ax		; int
 		push	[bp+var_A]	; int
 		push	di		; int
-		call	_graph_printf_fx
+		call	@graph_printf_fx$qiiinxuce
 		add	sp, 10h
 		mov	al, byte_1251D
 		cbw
@@ -575,7 +575,7 @@ loc_AB69:
 
 loc_AB8A:
 		push	di		; int
-		call	_graph_printf_fx
+		call	@graph_printf_fx$qiiinxuce
 		add	sp, 0Eh
 
 loc_AB93:
@@ -915,7 +915,7 @@ var_3C		= byte ptr -3Ch
 		push	offset off_1256E
 		mov	cx, 3Ch	; '<'
 		call	SCOPY@
-		call	_mdrv2_bgm_stop
+		call	@mdrv2_bgm_stop$qv
 		mov	al, byte_1251D
 		cbw
 		shl	ax, 2
@@ -923,9 +923,9 @@ var_3C		= byte ptr -3Ch
 		add	ax, dx
 		mov	bx, ax
 		pushd	dword ptr ss:[bx]	; path
-		call	_mdrv2_bgm_load
+		call	@mdrv2_bgm_load$qnxc
 		add	sp, 4
-		call	_mdrv2_bgm_play
+		call	@mdrv2_bgm_play$qv
 		leave
 		retf
 sub_AE6D	endp
@@ -1090,7 +1090,7 @@ _envp		= dword	ptr  0Ah
 		push	di
 		xor	si, si
 		xor	di, di
-		call	_mdrv2_resident
+		call	@mdrv2_resident$qv
 		or	ax, ax
 		jnz	short loc_B015
 		push	ds
@@ -1162,9 +1162,9 @@ loc_B06F:
 		mov	byte_1232E, al
 
 loc_B0D6:
-		call	_mdrv2_check_board
+		call	@mdrv2_check_board$qv
 		call	@game_init$qv
-		call	_cfg_load
+		call	@cfg_load$qv
 		mov	al, _opts.O_bgm_mode
 		cbw
 		mov	si, ax
@@ -1194,7 +1194,7 @@ loc_B0D6:
 
 loc_B126:
 		push	1
-		call	_frame_delay
+		call	@frame_delay$qui
 		pop	cx
 		push	di
 		call	sub_A92C
@@ -1214,7 +1214,7 @@ loc_B135:
 loc_B14D:
 		cmp	byte_1232A, 0
 		jnz	short loc_B15F
-		call	_main_input_sense
+		call	@main_input_sense$qv
 		call	sub_AB97
 		jmp	loc_B1EE
 ; ---------------------------------------------------------------------------
@@ -1224,7 +1224,7 @@ loc_B15F:
 		cbw
 		cmp	ax, 1
 		jnz	short loc_B172
-		call	_option_input_sense
+		call	@option_input_sense$qv
 		call	sub_AC84
 		jmp	short loc_B1EE
 ; ---------------------------------------------------------------------------
@@ -1234,7 +1234,7 @@ loc_B172:
 		cbw
 		cmp	ax, 2
 		jnz	short loc_B185
-		call	_option_input_sense
+		call	@option_input_sense$qv
 		call	sub_AEA8
 		jmp	short loc_B1EE
 ; ---------------------------------------------------------------------------
@@ -1250,7 +1250,7 @@ loc_B185:
 		jz	short loc_B1C9
 		cmp	_opts.O_bgm_mode, 0
 		jnz	short loc_B1A4
-		call	_mdrv2_bgm_stop
+		call	@mdrv2_bgm_stop$qv
 		jmp	short loc_B1C3
 ; ---------------------------------------------------------------------------
 
@@ -1259,12 +1259,12 @@ loc_B1A4:
 		cbw
 		cmp	ax, 1
 		jnz	short loc_B1C3
-		call	_mdrv2_bgm_stop
+		call	@mdrv2_bgm_stop$qv
 		push	ds
 		push	offset aReimu_mdt ; "reimu.mdt"
-		call	_mdrv2_bgm_load
+		call	@mdrv2_bgm_load$qnxc
 		add	sp, 4
-		call	_mdrv2_bgm_play
+		call	@mdrv2_bgm_play$qv
 
 loc_B1C3:
 		mov	al, _opts.O_bgm_mode
@@ -1273,7 +1273,7 @@ loc_B1C3:
 
 loc_B1C9:
 		push	0Fh
-		call	_frame_delay
+		call	@frame_delay$qui
 		pop	cx
 		mov	byte_1232A, 0
 		jmp	short loc_B1EE
@@ -1285,7 +1285,7 @@ loc_B1D8:
 		cmp	ax, 4
 		jnz	short loc_B1EE
 		push	0Fh
-		call	_frame_delay
+		call	@frame_delay$qui
 		pop	cx
 		mov	byte_1232A, 1
 
@@ -1302,26 +1302,26 @@ loc_B1EE:
 		mov	byte ptr es:[((50h shl 4) + 28h)], 0 ; KB_COUNT
 		inc	_rand
 		push	1
-		call	_frame_delay
+		call	@frame_delay$qui
 		pop	cx
 
 loc_B21A:
 		cmp	byte_1232C, 0
 		jz	loc_B14D
-		call	_cfg_save
+		call	@cfg_save$qv
 		mov	byte_1232F, 1
-		call	_mdrv2_bgm_stop
+		call	@mdrv2_bgm_stop$qv
 		call	sub_A79D
 		push	1
-		call	_graph_accesspage_func
+		call	@graph_accesspage_func$qi
 		pop	cx
-		call	_z_graph_clear
+		call	@z_graph_clear$qv
 		push	0
-		call	_graph_accesspage_func
+		call	@graph_accesspage_func$qi
 		pop	cx
-		call	_z_graph_clear
+		call	@z_graph_clear$qv
 		call	@game_exit$qv
-		call	_mdrv2_bgm_stop
+		call	@mdrv2_bgm_stop$qv
 		push	ds
 		push	offset format	; "Ç®Ç¬Ç©ÇÍÇ≥Ç‹Ç≈ÇµÇΩÅIÅI\n"
 
@@ -1339,7 +1339,7 @@ op_01__TEXT	ends
 
 ; Segment type:	Pure code
 frmdelay_TEXT	segment	byte public 'CODE' use16
-	extern _frame_delay:proc
+	extern @frame_delay$qui:proc
 frmdelay_TEXT	ends
 
 ; ===========================================================================
@@ -1367,12 +1367,12 @@ initexit_TEXT	ends
 
 ; Segment type:	Pure code
 graph_TEXT	segment	byte public 'CODE' use16
-	extern _graph_accesspage_func:proc
-	extern _z_graph_clear:proc
-	extern _graph_copy_accessed_page_to_othe:proc
-	extern _z_palette_black:proc
-	extern _z_palette_black_in:proc
-	extern _graph_putsa_fx:proc
+	extern @graph_accesspage_func$qi:proc
+	extern @z_graph_clear$qv:proc
+	extern @graph_copy_accessed_page_to_othe$qv:proc
+	extern @z_palette_black$qv:proc
+	extern @z_palette_black_in$qv:proc
+	extern @graph_putsa_fx$qiiinxuc:proc
 graph_TEXT	ends
 
 ; ---------------------------------------------------------------------------
@@ -1387,7 +1387,7 @@ SHARED	ends
 
 ; Segment type:	Pure code
 grppffx_TEXT	segment	byte public 'CODE' use16
-	extern _graph_printf_fx:proc
+	extern @graph_printf_fx$qiiinxuce:proc
 grppffx_TEXT	ends
 
 ; ===========================================================================
@@ -1403,20 +1403,20 @@ PTN_GRP_GRZ	ends
 
 ; Segment type:	Pure code
 resstuff_TEXT	segment	byte public 'CODE' use16
-	extern _resident_stuff_set:proc
-	extern _resident_free:proc
+	extern @resident_stuff_set$qccccl:proc
+	extern @resident_free$qv:proc
 resstuff_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
 mdrv2_TEXT	segment	byte public 'CODE' use16
-	extern _mdrv2_resident:proc
-	extern _mdrv2_bgm_load:proc
-	extern _mdrv2_bgm_play:proc
-	extern _mdrv2_bgm_stop:proc
-	extern _mdrv2_bgm_fade_out_nonblock:proc
-	extern _mdrv2_check_board:proc
+	extern @mdrv2_resident$qv:proc
+	extern @mdrv2_bgm_load$qnxc:proc
+	extern @mdrv2_bgm_play$qv:proc
+	extern @mdrv2_bgm_stop$qv:proc
+	extern @mdrv2_bgm_fade_out_nonblock$qv:proc
+	extern @mdrv2_check_board$qv:proc
 mdrv2_TEXT	ends
 
 ; ===========================================================================

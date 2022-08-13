@@ -10,11 +10,9 @@
 #include "planar.h"
 #include "master.hpp"
 #include "shiftjis.hpp"
-extern "C" {
 #include "th01/hardware/graph.h"
 #include "th01/hardware/grppsafx.h"
 #include "th01/hardware/palette.h"
-}
 #include "th01/hardware/vsync.hpp"
 #include "th01/formats/grp.h"
 #include "th01/end/type.hpp"
@@ -28,7 +26,7 @@ static const int TYPE_FX = (COL_TYPE | FX_WEIGHT_NORMAL);
 
 // Special FUUIN.EXE version of frame_delay() that resets [z_vsync_Count1]
 // first.
-extern "C" void frame_delay(unsigned int frames)
+void frame_delay(unsigned int frames)
 {
 	z_vsync_Count1 = 0;
 	while(1) {

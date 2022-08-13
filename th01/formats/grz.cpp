@@ -7,7 +7,6 @@
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
-extern "C" {
 #include "th01/hardware/graph.h"
 #include "th01/formats/grz.h"
 
@@ -221,5 +220,3 @@ int grz_load_single(unsigned int slot, const char *fn, int n)
 	return 0;
 }
 /// -------------------
-
-}

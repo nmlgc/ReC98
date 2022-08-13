@@ -1,8 +1,6 @@
-extern "C" {
 #include "platform.h"
 #include "pc98.h"
 #include "th01/hardware/palette.h"
-}
 
 #include "th01/main/boss/palette.hpp"
 

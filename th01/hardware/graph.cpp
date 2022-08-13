@@ -12,7 +12,6 @@
 #include "th01/math/clamp.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/vsync.hpp"
-extern "C" {
 #include "th01/hardware/graph.h"
 #include "th01/hardware/grppsafx.h"
 #include "th01/hardware/palette.h"
@@ -1035,6 +1034,4 @@ int z_respal_set(void)
 		return 0;
 	}
 	return 1;
-}
-
 }

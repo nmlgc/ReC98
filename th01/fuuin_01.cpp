@@ -14,9 +14,7 @@
 #include "th01/core/initexit.hpp"
 #include "th01/end/end.hpp"
 #include "th01/end/vars.hpp"
-extern "C" {
 #include "th01/snd/mdrv2.h"
-}
 
 bool16 end_init(void)
 {

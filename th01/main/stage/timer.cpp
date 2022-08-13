@@ -11,17 +11,13 @@
 #include "th01/v_colors.hpp"
 #include "th01/math/str_val.hpp"
 #include "th01/hardware/egc.h"
-extern "C" {
 #include "th01/hardware/graph.h"
 #include "th01/hardware/grppsafx.h"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/tram_x16.hpp"
-}
 #include "th01/formats/ptn.hpp"
 #include "th01/math/subpixel.hpp"
-extern "C" {
 #include "th01/snd/mdrv2.h"
-}
 #include "th01/main/vars.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/bullet/pellet.hpp"

@@ -4,9 +4,7 @@
 #include "master.hpp"
 #include "th01/sprites/laser_s.hpp"
 #include "th01/hardware/egc.h"
-extern "C" {
 #include "th01/hardware/graph.h"
-}
 #include "th01/hardware/input.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/player/player.hpp"

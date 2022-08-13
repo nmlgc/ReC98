@@ -3,9 +3,7 @@
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
-extern "C" {
 #include "th01/hardware/vplanset.h"
-}
 
 void vram_planes_set(void)
 {

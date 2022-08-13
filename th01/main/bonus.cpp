@@ -12,7 +12,6 @@
 #include "th01/math/clamp.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th01/formats/ptn.hpp"
-extern "C" {
 #include "th01/hardware/egc.h"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
@@ -20,7 +19,6 @@ extern "C" {
 #include "th01/hardware/input.hpp"
 #include "th01/hardware/palette.h"
 #include "th01/snd/mdrv2.h"
-}
 #include "th01/formats/grp.h"
 #include "th01/shiftjis/fwnum.hpp"
 #include "th01/shiftjis/bonus.hpp"

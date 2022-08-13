@@ -10,7 +10,7 @@ extern char arc_key;
 void pascal arc_load(const char fn[PF_FN_LEN]);
 
 // Frees all internal buffers allocated during arc_load().
-void pascal arc_free();
+void arc_free();
 
 // Loads and decompresses or decrypts the given file inside the archive into
 // the internal file buffer, resetting the cursor to the start of the file.
@@ -30,4 +30,4 @@ void pascal arc_file_get(char *buf, size_t size);
 void pascal arc_file_seek(char pos);
 
 // Frees the internal file buffer.
-void pascal arc_file_free(void);
+void arc_file_free(void);

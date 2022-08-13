@@ -5,18 +5,16 @@
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
-extern "C" {
-	#include "th01/formats/grz.h"
+#include "th01/formats/grz.h"
 
-	void grcg_setcolor_rmw(int col)
-	{
-		grcg_setcolor(GC_RMW, col);
-	}
+void grcg_setcolor_rmw(int col)
+{
+	grcg_setcolor(GC_RMW, col);
+}
 
-	void grcg_off_func(void)
-	{
-		grcg_off();
-	}
+void grcg_off_func(void)
+{
+	grcg_off();
 }
 
 void z_palette_set_all_show(const Palette4& pal)

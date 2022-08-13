@@ -4,10 +4,8 @@
 #include "platform.h"
 #include "pc98.h"
 #include "master.hpp"
-extern "C" {
-#include "libs/piloadc/piloadc.h"
+#include "libs/piloadc/piloadc.hpp"
 #include "th01/hardware/palette.h"
-}
 #include "th01/formats/grp.h"
 
 // The same size that master.lib uses in graph_pi_load_pack(), with no

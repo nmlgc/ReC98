@@ -10,10 +10,8 @@
 #include "th01/common.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
-extern "C" {
 #include "th01/snd/mdrv2.h"
 #include "th01/hardware/graph.h"
-}
 #include "th01/hardware/egc.h"
 #include "th01/hardware/input.hpp"
 #include "th01/math/subpixel.hpp"

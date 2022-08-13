@@ -11,9 +11,7 @@
 #include <string.h>
 #include "platform.h"
 #include "x86real.h"
-extern "C" {
 #include "th01/snd/mdrv2.h"
-}
 
 #define MDRV2_MAGIC "Mdrv2System"
 
