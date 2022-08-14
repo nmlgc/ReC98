@@ -61,40 +61,6 @@ reiidenconfig_t struc ; (sizeof=0x4B)
 	p_value dw ?
 reiidenconfig_t ends
 
-; Text
-; ----
-FX_CLEAR_BG 	= 200h
-FX_UNDERLINE	= 400h
-FX_REVERSE  	= 800h
-; ----
-
-; Playfield
-; ---------
-PLAYFIELD_LEFT = 0
-PLAYFIELD_TOP = 64
-PLAYFIELD_RIGHT = RES_X
-PLAYFIELD_BOTTOM = RES_Y
-
-PLAYFIELD_W = (PLAYFIELD_RIGHT - PLAYFIELD_LEFT)
-PLAYFIELD_H = (PLAYFIELD_BOTTOM - PLAYFIELD_TOP)
-
-PLAYFIELD_CENTER_X = (((PLAYFIELD_RIGHT - PLAYFIELD_LEFT) / 2) + PLAYFIELD_LEFT)
-; ---------
-
-; Player
-; ------
-MISS_INVINCIBILITY_FRAMES = 150
-
-ORB_W = 32
-ORB_H = 32
-
-ORB_LEFT_MAX = (PLAYFIELD_RIGHT - ORB_W)
-ORB_TOP_MAX = (PLAYFIELD_BOTTOM - ORB_H)
-
-ORB_LEFT_START = (ORB_LEFT_MAX -  8)
- ORB_TOP_START = ( ORB_TOP_MAX - 88)
-; ------
-
 ; VRAM colors
 ; -----------
 V_WHITE = 7

@@ -167,6 +167,13 @@ void obstacles_update_and_render(bool16 reset);
 // Initialization
 // --------------
 
+#ifdef DECOMP_HPP
+	struct stage_t {
+		StupidBytewiseWrapperAround<stagedat_stage_t> dat;
+		int8_t padding[5];
+	};
+#endif
+
 // Copies all stage objects from VRAM page 0 to VRAM page 1.
 void stageobjs_copy_0_to_1(int stage_id);
 

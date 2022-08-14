@@ -11,6 +11,23 @@ struct CShots {
 	bool moving[SHOT_COUNT];
 	unsigned char decay_frame[SHOT_COUNT];
 
+	CShots() {
+		unknown[0] = 0x50;
+		unknown[1] = 0x60;
+		unknown[2] = 0x70;
+
+		// ZUN bloat: Why no loop?
+		static_assert(SHOT_COUNT == 8);
+		moving[0] = false;
+		moving[1] = false;
+		moving[2] = false;
+		moving[3] = false;
+		moving[4] = false;
+		moving[5] = false;
+		moving[6] = false;
+		moving[7] = false;
+	}
+
 	void add(screen_x_t new_left, screen_y_t new_top);
 	void unput_and_reset(void);
 	void unput_update_render(void);

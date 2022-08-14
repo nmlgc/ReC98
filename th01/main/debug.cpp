@@ -115,9 +115,9 @@ void debug_show_game(void)
 
 void debug_vars(void)
 {
-	extern long memory_check_cycle;
-	extern int heapcheck_ret_prev; // ZUN bloat
-	extern screen_x_t player_left_prev;
+	static long memory_check_cycle;
+	static int heapcheck_ret_prev; // ZUN bloat
+	static screen_x_t player_left_prev;
 
 	memory_check_cycle++;
 	if((memory_check_cycle % 1000) == 100) {

@@ -10,6 +10,11 @@ static const int PLAYER_MISS_INVINCIBILITY_FRAMES = 150;
 
 extern screen_x_t player_left;
 static const screen_y_t player_top = (PLAYFIELD_BOTTOM - PLAYER_H);
+extern bool player_deflecting;
+extern bool player_sliding;
+extern bool player_is_hit;
+extern bool16 player_invincible;
+extern int player_invincibility_time;
 
 inline screen_x_t player_center_x(void) {
 	return (player_left + (PLAYER_W / 2));
@@ -69,12 +74,6 @@ inline void player_reset(void) {
 // for, ironically, [lives], which is assumed to have been decremented prior
 // to calling this function.
 void player_miss_animate_and_update(void);
-
-extern bool player_deflecting;
-extern bool player_sliding;
-extern bool player_is_hit;
-extern bool16 player_invincible;
-extern int player_invincibility_time;
 
 extern int lives;
 extern int cardcombo_cur;

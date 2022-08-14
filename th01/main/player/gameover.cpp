@@ -7,14 +7,11 @@ void player_gameover_animate(void)
 		EFFECT_SPEED = 8,
 	};
 
-	struct hack { bool16 x[EFFECT_COUNT]; }; // XXX
-	extern const struct hack PLAYER_GAMEOVER_EFFECT_CLIPPED;
-
 	int i;
 	int j;
 	screen_x_t left[EFFECT_COUNT];
 	screen_y_t top[EFFECT_COUNT];
-	struct hack clipped = PLAYER_GAMEOVER_EFFECT_CLIPPED;
+	bool16 clipped[EFFECT_COUNT] = { false };
 
 	#define frame j
 
@@ -36,16 +33,18 @@ void player_gameover_animate(void)
 		z_vsync_wait_and_scrollup(RES_Y - ((j % 2) * 8));
 		for(i = 0; i < EFFECT_COUNT; i++) {
 			// ZUN bug: Indexing [clipped] with [frame] rather than [i],
-			// leading to a out-of-bounds read from frame 5 on.
-			if(!clipped.x[frame]) {
-				// Sloppy unblitting is actually a good choice here, since
-				// Reimu's sprite has also been blitted to VRAM page 1 above,
-				// and we're inside a blocking animation anyway. But this ends
-				// up unblitting a rectangle around Reimu with a constant
-				// height of 32 pixels and only growing on the X axis… OK. It
-				// probably wasn't meant to "correctly" unblit each effect
-				// sprite as you would usually expect, as that would look
-				// rather wimpy in comparison.
+			// leading to a out-of-bounds read from frame 5 on. In the original
+			// game, this ends up accessing [top] and [left], whose positions
+			// can never be 0.
+			if(!clipped[frame]) {
+				// ZUN quirk: Sloppy unblitting is actually a good choice here,
+				// since Reimu's sprite has also been blitted to VRAM page 1
+				// above, and we're inside a blocking animation anyway. But
+				// this ends up unblitting a rectangle around Reimu with a
+				// constant height of 32 pixels and only growing on the X
+				// axis... Then again, it probably wasn't meant to "correctly"
+				// unblit each effect sprite as you would usually expect, as
+				// that would look rather wimpy in comparison.
 				ptn_sloppy_unput_16(left[i], player_top);
 			}
 		}
@@ -73,9 +72,9 @@ void player_gameover_animate(void)
 				(left[i] >= (PLAYFIELD_RIGHT - PTN_W)) ||
 				(left[i] < PLAYFIELD_LEFT)
 			) {
-				clipped.x[i] = true;
+				clipped[i] = true;
 			}
-			if(!clipped.x[i]) {
+			if(!clipped[i]) {
 				ptn_put_8(left[i], top[i], (PTN_MISS_EFFECT + (frame % 2)));
 			}
 		}

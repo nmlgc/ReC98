@@ -34,20 +34,15 @@ bool16 bomb_update_and_render(int frame)
 		KEYFRAME_DONE = 140,
 	};
 
-	#define palette_flash_peak_ 	bomb_palette_flash_peak_
-	#define palette_flash_bright	bomb_palette_flash_bright
-	#define white_to_blue_speed 	bomb_white_to_blue_speed
-	#define entity              	bomb_entity
-
 	extern const Palette4 palette_flash_peak_;
 
-	// Only uses its V_WHITE value. MODDERS: Reduce to a single RGB4 value.
-	extern Palette4 palette_white;
+	// ZUN bloat: Only uses its V_WHITE value.
+	static Palette4 palette_white;
 
-	extern Palette4 palette_flash_bright;
-	extern uint4_t white_to_blue_speed;
+	static Palette4 palette_flash_bright;
+	static uint4_t white_to_blue_speed;
 
-	extern struct {
+	static struct {
 		screen_x_t left[(KUJI_COUNT * KUJI_RINGS) + 9]; // yup, 9 extra
 		screen_y_t top[(KUJI_COUNT * KUJI_RINGS) + 9]; // yup, 9 extra
 		unsigned char angle; // should be local
@@ -75,7 +70,24 @@ bool16 bomb_update_and_render(int frame)
 	#define col 	i
 	#define comp	j
 
-	Palette4 palette_flash_peak = palette_flash_peak_;
+	Palette4 palette_flash_peak = {
+		0xF, 0xF, 0xF, // 0
+		0xD, 0xD, 0xF, // 1
+		0xD, 0xD, 0xF, // 2
+		0xD, 0xD, 0xF, // 3
+		0xD, 0xD, 0xF, // 4
+		0xD, 0xD, 0xF, // 5
+		0xD, 0xD, 0xF, // 6
+		0xF, 0xF, 0xF, // 7 (V_WHITE)
+		0xD, 0xD, 0xF, // 8
+		0xD, 0xD, 0xF, // 9
+		0xD, 0xD, 0xF, // 10
+		0xD, 0xD, 0xF, // 11
+		0xD, 0xD, 0xF, // 12
+		0xD, 0xD, 0xF, // 13
+		0xD, 0xD, 0xF, // 14
+		0x6, 0x6, 0xF, // 15
+	};
 
 	player_invincible = true;
 	if(frame == 0) {
@@ -232,10 +244,4 @@ bool16 bomb_update_and_render(int frame)
 
 	#undef comp
 	#undef col
-
-	#undef entity
-	#undef white_to_blue_speed
-	#undef palette_flash_bright
-	#undef palette_white
-	#undef bomb_palette_flash_peak_
 }

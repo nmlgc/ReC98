@@ -8,12 +8,11 @@ static const int INVINCIBILITY_SPRITES_DONE = 0xFF;
 void invincibility_sprites_update_and_render(bool16 invincible)
 {
 	int i;
-	extern struct {
+	static struct {
 		int frame[INVINCIBILITY_SPRITE_COUNT];
 		screen_x_t left[INVINCIBILITY_SPRITE_COUNT];
 		vram_y_t top[INVINCIBILITY_SPRITE_COUNT];
-	} invincibility_sprites;
-	#define sprites invincibility_sprites
+	} sprites;
 
 	if(!invincible) {
 		if(sprites.frame[0] == INVINCIBILITY_SPRITES_DONE) {
@@ -59,5 +58,4 @@ void invincibility_sprites_update_and_render(bool16 invincible)
 		}
 		sprites.frame[i]++;
 	}
-	#undef sprites
 }

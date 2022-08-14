@@ -28,7 +28,6 @@
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/grppsafx.h"
-#include "th01/hardware/input.hpp"
 #include "th01/hardware/palette.h"
 #include "th01/hardware/text.h"
 #include "th01/hardware/tram_x16.hpp"
@@ -66,17 +65,73 @@
 #include "th01/shiftjis/fns.hpp"
 #include "th01/shiftjis/scoredat.hpp"
 
-int8_t temporary_padding = 0;
-
 // Random state that mostly doesn't belong here
 // --------------------------------------------
 
-extern bool bgm_change_blocked;
-extern int16_t unused_5;
-extern int bomb_doubletap_frames_unused;
-extern int unnecessary_copy_of_the_initial_value_of_extend_next; // ZUN bloat
+static int8_t unused_1 = 0; // ZUN bloat
+const char* RANKS[RANK_COUNT] = { "EASY", "NORMAL", "HARD", "LUNATIC" };
+bool timer_initialized = false;
+static int8_t unused_2 = 0; // ZUN bloat
+bool first_stage_in_scene = true;
 
-extern struct {
+#include "th01/hardware/input_mf.cpp"
+
+static int8_t unused_3 = 0; // ZUN bloat
+bool player_deflecting = false;
+bool bomb_damaging = false;
+bool player_sliding = false;
+uint32_t score = 0;
+uint32_t score_bonus = 0;
+unsigned long bomb_frames = 0;
+long continues_total = 0;
+static int16_t unused_4 = 0; // ZUN bloat
+bool16 mode_test = false;
+int bomb_doubletap_frames = 0;
+int bomb_doubletap_frames_unused = 0;
+bool16 test_damage = false;
+static int unused_5 = 0; // ZUN bloat
+static int unused_6 = 0; // ZUN bloat
+bool16 player_invincible = false;
+static int unused_7 = 0; // ZUN bloat
+orb_velocity_x_t orb_velocity_x = OVX_0;
+int orb_rotation_frame = 0;
+int lives = 4;
+bool16 stage_cleared = false;
+
+int8_t credit_bombs;
+int8_t player_swing_deflection_frames;
+unsigned long frame_rand;
+uint32_t coreleft_prev;
+bool stage_wait_for_shot_to_begin;
+
+bool mode_debug;
+unsigned long frames_since_start_of_binary;
+
+int player_invincibility_time;
+screen_x_t player_left;
+int cardcombo_cur = 0;
+bool16 orb_in_portal = false;
+int cardcombo_max = 0;
+int extend_next = 1;
+int unnecessary_copy_of_the_initial_value_of_extend_next = 1;
+
+screen_x_t orb_cur_left;
+screen_y_t orb_cur_top;
+screen_x_t orb_prev_left = ORB_LEFT_START;
+screen_y_t orb_prev_top = ORB_TOP_START;
+int orb_frames_outside_portal = 0;
+double orb_velocity_y = 0.0;
+double orb_force = 0.0;
+int orb_force_frame;
+
+stage_t scene_stage[STAGES_PER_SCENE];
+CPlayerAnim player_48x48;
+CPlayerAnim player_48x32;
+CPellets Pellets;
+CShots Shots;
+static int32_t unused_8; // ZUN bloat
+
+struct {
 	// Specifies whether PTN_SLOT_STG contains the full set of sprites required
 	// for card-flipping stages (`false`), or the trimmed-down version for boss
 	// stages (`true`).
@@ -97,7 +152,7 @@ extern struct {
 			has_reduced_sprites = true;
 		}
 	}
-} ptn_slot_stg;
+} ptn_slot_stg = { false };
 // --------------------------------------------
 
 inline void bomb_doubletap_update(uint8_t& pressed, uint8_t& other) {
@@ -112,7 +167,7 @@ inline void bomb_doubletap_update(uint8_t& pressed, uint8_t& other) {
 
 void input_sense(bool16 reset_repeat)
 {
-	extern uint8_t input_prev[16];
+	static uint8_t input_prev[16];
 	int group_1, group_2, group_3, group_4;
 
 	if(reset_repeat == true) {
@@ -374,7 +429,7 @@ void pellet_destroy_score_delta_commit(void)
 	pellet_destroy_score_delta = 0;
 }
 
-extern int8_t boss_id; // ACTUAL TYPE: boss_id_t
+int8_t boss_id = BID_NONE; // ACTUAL TYPE: boss_id_t
 
 void boss_free(void)
 {
