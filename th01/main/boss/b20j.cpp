@@ -17,7 +17,6 @@
 #include "th01/hardware/graph.h"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/scrollup.hpp"
-#include "th01/hardware/input.hpp"
 #include "th01/hardware/text.h"
 #include "th01/snd/mdrv2.h"
 #include "th01/formats/grp.h"
@@ -279,7 +278,7 @@ template <int SnakeCount> struct Snakes {
 			(player_bottom() - DIAMOND_H) \
 		)) { \
 			if(!player_invincible) { \
-				done = true; \
+				player_is_hit = true; \
 			} \
 		} \
 	}

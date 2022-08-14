@@ -736,7 +736,7 @@ bool16 CPellets::hittest_player_for_cur(void)
 		// Yup, <, not <= as in the overlap_point_le_ge() macro.
 		(p->cur_top.to_pixel() < (player_top + PLAYER_H - PELLET_H))
 	) {
-		done = true;
+		player_is_hit = true;
 		return true;
 	}
 	return false;

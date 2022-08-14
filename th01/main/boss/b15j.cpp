@@ -11,7 +11,6 @@
 #include "th01/hardware/egc.h"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
-#include "th01/hardware/input.hpp"
 #include "th01/snd/mdrv2.h"
 #include "th01/formats/ptn.hpp"
 #include "th01/hardware/grpinv32.hpp"
@@ -296,7 +295,7 @@ bool16 pascal near tear_ripple_hittest(screen_x_t left, pixel_t extra_w)
 			(player_left >= (left - ((PLAYER_W / 4) + (RIPPLE_W / 2)))) &&
 			(player_left <= (left + extra_w))
 		) {
-			done = true;
+			player_is_hit = true;
 			return true;
 		}
 	}

@@ -226,7 +226,7 @@ loc_C879:
 loc_C88B:
 		cmp	_orb_in_portal, 0
 		jnz	short loc_C8B6
-		cmp	_done, 0
+		cmp	_player_is_hit, 0
 		jnz	short loc_C8B6
 		mov	ax, word_34A7E
 		mov	bx, 3
@@ -348,7 +348,7 @@ var_1		= byte ptr -1
 loc_C9A2:
 		call	@input_sense$qi stdcall, 0
 		pop	cx
-		cmp	_done, 1
+		cmp	_player_is_hit, 1
 		jz	loc_CB91
 		cmp	_input_lr, INPUT_LEFT
 		jnz	short loc_C9E6
@@ -399,7 +399,7 @@ loc_CA39:
 loc_CACF:
 		call	@input_sense$qi stdcall, 0
 		pop	cx
-		cmp	_done, 1
+		cmp	_player_is_hit, 1
 		jz	loc_CB91
 		cmp	_input_lr, INPUT_LEFT
 		jnz	short loc_CB13
@@ -549,7 +549,7 @@ loc_CD70:
 ; ---------------------------------------------------------------------------
 
 loc_CDA2:
-		mov	_done, 0
+		mov	_player_is_hit, 0
 		mov	_paused, 0
 		mov	_continues_total, 0
 		call	@mdrv2_bgm_stop$qv
@@ -561,7 +561,7 @@ loc_CDBC:
 		ja	short loc_CDA2
 		cmp	_paused, 1
 		jnz	short loc_CDD8
-		mov	_done, 0
+		mov	_player_is_hit, 0
 		mov	_paused, 0
 
 loc_CDD3:
@@ -1266,7 +1266,7 @@ loc_D3E1:
 
 loc_D414:
 		call	_printf c, offset _esc_cursor_to_x0_y3, ds
-		mov	al, _done
+		mov	al, _player_is_hit
 		mov	ah, 0
 		push	ax
 		mov	al, _paused
@@ -2221,7 +2221,7 @@ loc_DCFA:
 loc_DD0E:
 		cmp	_input_down, 0
 		jz	short loc_DD20
-		mov	_done, 1
+		mov	_player_is_hit, 1
 		mov	_lives, 0
 
 loc_DD20:
@@ -2327,7 +2327,7 @@ loc_DE67:
 		call	sub_D4C2
 
 loc_DE72:
-		cmp	_done, 0
+		cmp	_player_is_hit, 0
 		jz	loc_DC64
 		mov	_timer_initialized, 0
 		call	@z_vsync_wait_and_scrollup$qi stdcall, 0
@@ -2348,7 +2348,7 @@ loc_DE72:
 		dec	es:[bx+reiidenconfig_t.rem_lives]
 		dec	_lives
 		call	@player_miss_animate_and_update$qv
-		mov	_done, 0
+		mov	_player_is_hit, 0
 		inc	si
 		mov	_player_invincibility_time, MISS_INVINCIBILITY_FRAMES
 		jmp	loc_DB3E
@@ -2358,7 +2358,7 @@ loc_DEDA:
 		cmp	_stage_cleared, 1
 		jnz	loc_E104
 		mov	_stage_cleared, 0
-		mov	_done, 0
+		mov	_player_is_hit, 0
 		cmp	byte_34ADF, 0
 		jz	short loc_DF03
 		call	sub_D4DD
@@ -3200,7 +3200,7 @@ OF_BOUNCE_FROM_TOP = 1
 	extern _input_lr:byte
 	extern _input_mem_leave:byte
 	extern _input_shot:byte
-	extern _done:byte
+	extern _player_is_hit:byte
 	extern _paused:byte
 	extern _input_ok:byte
 	extern _input_strike:byte

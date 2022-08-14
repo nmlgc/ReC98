@@ -1,3 +1,5 @@
+#define BINARY_OP	"op"
+
 #define REGIST_BG_CLEARED	"endm_a.grp"
 
 #define SCOREDAT_FN_EASY   	"REYHIES.DAT"

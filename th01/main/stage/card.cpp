@@ -9,7 +9,6 @@
 #include "th01/math/digit.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th01/hardware/egc.h"
-#include "th01/hardware/input.hpp"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/grppsafx.h"
 #include "th01/snd/mdrv2.h"
@@ -227,6 +226,6 @@ void cards_update_and_render(void)
 	}
 	if(cards_removed == cards.count) {
 		stage_cleared = true;
-		done = true;
+		player_is_hit = true;
 	}
 }

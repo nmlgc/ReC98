@@ -17,7 +17,6 @@
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/egcwave.hpp"
-#include "th01/hardware/input.hpp"
 #include "th01/hardware/scrollup.hpp"
 #include "th01/snd/mdrv2.h"
 #include "th01/formats/pf.hpp"
@@ -1555,10 +1554,10 @@ elis_starpattern_ret_t pattern_safety_circle_and_rain_from_top(void)
 				((circle.target_left - SAFETY_OFFSET_LEFT) >= player_left)
 			) {
 				delay(100);
-				done = true;
+				player_is_hit = true;
 			}
 		}
-		if(done == true) {
+		if(player_is_hit == true) {
 			circle.frames = CIRCLE_DURATION;
 		}
 		if((boss_phase_frame % pattern_state.interval) == 0) {

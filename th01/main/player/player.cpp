@@ -908,7 +908,7 @@ void orb_player_hittest(int repel_friction)
 			!player_invincible_against_orb &&
 			orb_hits_player((PLAYER_W - (ORB_W / 4)), (PLAYER_H - (ORB_H / 2)))
 		) {
-			done = true;
+			player_is_hit = true;
 		}
 	} else if(repel_friction < OR_3_X_UNCHANGED) {
 		if(!player_in_repel_range()) {

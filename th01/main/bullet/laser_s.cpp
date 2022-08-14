@@ -5,7 +5,6 @@
 #include "th01/sprites/laser_s.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/graph.h"
-#include "th01/hardware/input.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/player/player.hpp"
 #include "th01/main/bullet/laser_s.hpp"
@@ -89,7 +88,7 @@ void CShootoutLaser::hittest_and_render(void)
 						((player_left + ((PLAYER_W / 8) * 1)) <= left) &&
 						((player_left + ((PLAYER_W / 8) * 6)) >  left)
 					) {
-						done = true;
+						player_is_hit = true;
 					}
 				}
 			}

@@ -15,7 +15,6 @@
 #include "th01/math/vector.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/frmdelay.h"
-#include "th01/hardware/input.hpp"
 #include "th01/hardware/palette.h"
 #include "th01/snd/mdrv2.h"
 #include "th01/formats/grp.h"
@@ -407,7 +406,7 @@ void pattern_slam_into_player_and_back_up(void)
 		((ent.cur_left + (SINGYOKU_W - PLAYER_W)) >= player_left) &&
 		(ent.cur_top >= (player_top - SINGYOKU_H))
 	) {
-		done = true;
+		player_is_hit = true;
 	}
 }
 

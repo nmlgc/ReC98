@@ -2,7 +2,6 @@
 #include "pc98.h"
 #include "planar.h"
 #include "th01/hardware/graph.h"
-#include "th01/hardware/input.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/bullet/line.hpp"
 #include "th01/main/player/player.hpp"
@@ -16,7 +15,7 @@
 		(bottom > player_center_y()) && \
 		!player_invincible \
 	) { \
-		done = true; \
+		player_is_hit = true; \
 	} \
 }
 

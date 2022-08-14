@@ -63,6 +63,7 @@ void player_miss_animate_and_update(void);
 
 extern bool player_deflecting;
 extern bool player_sliding;
+extern bool player_is_hit;
 extern bool16 player_invincible;
 extern int player_invincibility_time;
 

@@ -1,6 +1,5 @@
 #include "th01/math/subpixel.hpp"
 #include "th01/hardware/egc.h"
-#include "th01/hardware/input.hpp"
 #include "th01/main/bullet/missile.hpp"
 #include "th01/main/player/player.hpp"
 
@@ -195,7 +194,7 @@ void CMissiles::unput_update_render(void)
 			(cur_top[i].to_pixel() < (player_top + HITBOX_OFFSET_BOTTOM)) &&
 			(cur_top[i].to_pixel() > (player_top + HITBOX_OFFSET_TOP))
 		) {
-			done = true;
+			player_is_hit = true;
 			return;
 		}
 	}

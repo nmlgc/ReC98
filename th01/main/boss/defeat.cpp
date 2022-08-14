@@ -213,12 +213,12 @@ void singyoku_defeat_animate_and_select_route(void)
 	}
 	route = static_cast<route_t>(route_sel.v);
 	stage_cleared = true;
-	done = true;
+	player_is_hit = true;
 }
 
 void boss_defeat_animate(void)
 {
 	defeat_animate((orb_cur_top + (ORB_H / 2)), 2, 7, 5);
 	stage_cleared = true;
-	done = true;
+	player_is_hit = true;
 }

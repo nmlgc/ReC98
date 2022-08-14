@@ -15,7 +15,6 @@
 #include "th01/hardware/egc.h"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
-#include "th01/hardware/input.hpp"
 #include "th01/hardware/palette.h"
 #include "th01/snd/mdrv2.h"
 #include "th01/formats/grp.h"
@@ -980,7 +979,7 @@ void pattern_pillars_and_aimed_spreads(void)
 				(player_left > (ent.center_x[i] - PLAYER_W - (PILLAR_W / 4))) &&
 				(player_left < (ent.center_x[i] + (PILLAR_W / 4)))
 			) {
-				done = true;
+				player_is_hit = true;
 			}
 			ent.time[i] -= PILLAR_COUNT;
 		} else if(ent.time[i] != PIXEL_NONE) {

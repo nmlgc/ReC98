@@ -32,12 +32,12 @@ _first_stage_in_scene	db 1
 	db 0
 
 public _input_up, _input_down, _input_lr, _input_shot, _input_strike, _input_ok
-public _input_bomb, _done, _paused, _input_mem_enter, _input_mem_leave
+public _input_bomb, _player_is_hit, _paused, _input_mem_enter, _input_mem_leave
 _input_lr	db 0
 _input_mem_enter	db 0
 _input_mem_leave	db 0
 _input_shot	db 0
-_done	db 0
+_player_is_hit	db 0
 _input_bomb	db 0
 _paused	db 0
 _input_ok	db 0

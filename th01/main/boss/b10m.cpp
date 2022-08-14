@@ -17,7 +17,6 @@
 #include "th01/math/vector.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/graph.h"
-#include "th01/hardware/input.hpp"
 #include "th01/hardware/palette.h"
 #include "th01/snd/mdrv2.h"
 #include "th01/main/vars.hpp"
@@ -439,7 +438,7 @@ void phase_0_downwards_lasers(void)
 				laser_hittest(eye_west, PLAYER_W) ||
 				laser_hittest(eye_east, (PLAYER_W / 4))
 			) {
-				done = true;
+				player_is_hit = true;
 			}
 		}
 		if(boss_phase_frame > KEYFRAME_SOUTH_OPEN) {
@@ -450,19 +449,19 @@ void phase_0_downwards_lasers(void)
 					laser_hittest(eye_southwest, PLAYER_W) ||
 					laser_hittest(eye_southeast, PLAYER_W)
 				) {
-					done = true;
+					player_is_hit = true;
 				}
 			}
 			if(boss_phase_frame > KEYFRAME_NORTH_OPEN) {
 				eye_north.downwards_laser_put();
 				if(laser_hittest(eye_north, PLAYER_W)) {
-					done = true;
+					player_is_hit = true;
 				}
 			}
 		}
 	}
 	if(player_invincible) {
-		done = false;
+		player_is_hit = false;
 	}
 
 	#undef laser_hittest

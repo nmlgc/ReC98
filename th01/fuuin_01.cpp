@@ -15,6 +15,7 @@
 #include "th01/end/end.hpp"
 #include "th01/end/vars.hpp"
 #include "th01/snd/mdrv2.h"
+#include "th01/shiftjis/fns.hpp"
 
 bool16 end_init(void)
 {
@@ -95,5 +96,5 @@ void main(int argc, const char *argv[])
 	game_init();
 	end_and_verdict_and_regist_animate();
 	game_switch_binary();
-	execl("op", "op", nullptr, nullptr);
+	execl(BINARY_OP, BINARY_OP, nullptr, nullptr);
 }

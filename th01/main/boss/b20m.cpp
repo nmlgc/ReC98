@@ -25,7 +25,6 @@
 #include "th01/hardware/palette.h"
 #include "th01/hardware/pgtrans.hpp"
 #include "th01/hardware/scrollup.hpp"
-#include "th01/hardware/input.hpp"
 #include "th01/snd/mdrv2.h"
 #include "th01/formats/pf.hpp"
 #include "th01/formats/grc.hpp"
@@ -700,7 +699,7 @@ void pascal near birds_reset_fire_spawn_unput_update_render(
 				(birds.top[i] > (player_top - (PLAYER_H / 2) - (BIRD_H / 4))) &&
 				(birds.top[i] < (player_top + (PLAYER_H / 2)))
 			) {
-				done = true;
+				player_is_hit = true;
 				delay(100); // ???
 				return;
 			}
@@ -1507,7 +1506,7 @@ void near pattern_detonating_snowflake(void)
 		((left.to_pixel() - ((HITBOX_W / 2) + (PLAYER_W / 2))) < player_left) &&
 		(state.phase >= P_DETONATION_START)
 	) {
-		done = true;
+		player_is_hit = true;
 	}
 
 	#undef ellipse_put
@@ -2490,7 +2489,7 @@ void pascal near pattern_swaying_leaves(int &frame, int spawn_interval_or_reset)
 				(left[i].to_pixel() < (player_left + PLAYER_W - LEAF_W)) &&
 				!player_invincible
 			) {
-				done = true;
+				player_is_hit = true;
 			}
 		}
 	}
