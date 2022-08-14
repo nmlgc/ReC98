@@ -16,8 +16,9 @@
 		.386
 		.model use16 large _TEXT
 
+GAME = 1
+
 include ReC98.inc
-include th01/th01.inc
 
 ; ===========================================================================
 
@@ -59,75 +60,27 @@ _TEXT		ends
 
 	.data
 
-	; libs/master.lib/tx[data].asm
-	extern TextVramSeg:word
-
-	; libs/master.lib/grp[data].asm
-	extern graph_VramSeg:word
-	extern graph_VramWords:word
-	extern graph_VramLines:word
-	extern graph_VramZoom:word
-
-	; libs/master.lib/pal[data].asm
-	extern PaletteTone:word
-	extern PalettesInit:rgb_t:COLOR_COUNT
-	extern PaletteNote:word
-	extern ResPalSeg:word
-
-	; libs/master.lib/respal_exist[data].asm
-IDLEN EQU 10
-	extern ResPalID:byte:IDLEN
-
-	; libs/master.lib/fil[data].asm
-	extern file_BufferSize:word
-	extern file_Handle:word
-
-	; libs/master.lib/keytable[data].asm
-	extern key_table_normal:word
-	extern key_table_shift:word
-	extern key_table_ctrl:word
-	extern key_table_alt:word
-
-	; libs/master.lib/keystart[data].asm
-	extern key_started:word
-
-	; libs/master.lib/keyback[data].asm
-	extern key_back_buffer:word
-
-	; libs/master.lib/dos_ropen[data].asm
-	extern file_sharingmode:word
-
-	; libs/master.lib/clip[data].asm
-	extern ClipXL:word
-	extern ClipXW:word
-	extern ClipXR:word
-	extern ClipYT:word
-	extern ClipYH:word
-	extern ClipYB:word
-	extern ClipYT_seg:word
-	extern ClipYB_adr:word
-
-	; libs/master.lib/atan8[data].asm
-	extern AtanTable8:word
-
-	; libs/master.lib/rand[data].asm
-	extern random_seed:dword
+include libs/master.lib/version[data].asm
+include libs/master.lib/tx[data].asm
+include libs/master.lib/grp[data].asm
+include libs/master.lib/pal[data].asm
+include libs/master.lib/respal_exist[data].asm
+include libs/master.lib/resdata[data].asm
+include libs/master.lib/fil[data].asm
+include libs/master.lib/keytable[data].asm
+include libs/master.lib/keystart[data].asm
+include libs/master.lib/keyback[data].asm
+include libs/master.lib/dos_ropen[data].asm
+include libs/master.lib/clip[data].asm
+include libs/master.lib/sin8[data].asm
+include libs/master.lib/atan8[data].asm
+include libs/master.lib/rand[data].asm
 
 	.data?
 
-	; libs/master.lib/pal[bss].asm
-	extern Palettes:rgb_t:COLOR_COUNT
-
-	; libs/master.lib/fil[bss].asm
-	extern file_Buffer:dword
-	extern file_BufferPos:dword
-	extern file_BufPtr:word
-	extern file_InReadBuf:word
-	extern file_Eof:word
-	extern file_ErrorStat:word
-
-	; libs/master.lib/keystart[bss].asm
-	extern key_backup:byte:786
-	extern keywork:byte:10
+include libs/master.lib/pal[bss].asm
+include libs/master.lib/fil[bss].asm
+include libs/master.lib/keystart[bss].asm
+include libs/master.lib/clip[bss].asm
 
 		end
