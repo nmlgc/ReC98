@@ -8,13 +8,15 @@ extern unsigned int stage_timer;
 extern char default_grp_fn[15];
 extern char default_bgm_fn[15];
 
-// Specifies whether PTN_SLOT_STG contains the full set of sprites required for
-// card-flipping stages (`false`), or the trimmed-down version for boss stages
-// (`true`).
-extern bool ptn_slot_stg_has_reduced_sprites;
-
 #define stage_is_boss(stage_id) ( \
 	((stage_id % STAGES_PER_SCENE) == BOSS_STAGE) \
+)
+#define stage_on_route(stage_id) ( \
+	stage_id >= (1 * STAGES_PER_SCENE) \
+)
+
+#define stage_resets_game_state(stage_id) ( \
+	((stage_id % STAGES_PER_SCENE) == 0) || stage_is_boss(stage_id) \
 )
 
 // Render the initial stage screen and animations, depending on whether the

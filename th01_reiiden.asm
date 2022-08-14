@@ -20,26 +20,8 @@ BINARY = 'M'
 
 include ReC98.inc
 include th01/th01.inc
-include th01/sprites/main_ptn.inc
 
 STAGES_PER_SCENE = 5
-
-	option emulator
-
-	extern @$bdla$qnv:proc
-	extern @set_new_handler$qnqv$v:proc
-	extern FTOL@:proc
-	extern SCOPY@:proc
-	extern __control87:proc
-	extern __turboFloat
-	extern _coreleft:proc
-	extern _execl:proc
-	extern _exit:proc
-	extern _printf:proc
-	extern _puts:proc
-	extern _scanf:proc
-	extern _strcpy:proc
-	extern _toupper:proc
 
 ; ===========================================================================
 
@@ -87,1238 +69,6 @@ main_01_TEXT	segment	byte public 'CODE' use16
 		;org 2
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-	extern @input_sense$qi:proc
-	extern @input_reset_sense$qv:proc
-	extern @load_and_init_stuff_used_in_all_$qv:proc
-	extern @stage_entrance$qinxci:proc
-	extern @invincibility_sprites_update_and$qi:proc
-	extern @ORB_AND_PELLETS_AND_STAGE_UNPUT_$QI:proc
-	extern @pause_menu$qv:proc
-	extern @pellet_speed_lower$qii:proc
-	extern @pellet_speed_raise$qi:proc
-	extern @continue_menu$qv:proc
-	extern @player_gameover_animate$qv:proc
-	extern @score_extend_update_and_render$qv:proc
-	extern @out_of_memory_exit$qv:proc
-	extern @debug_vars$qv:proc
-	extern @stageobj_bgs_free_wrap$qv:proc
-	extern @graphics_free_redundant_and_inco$qv:proc
-	extern @error_resident_invalid$qv:proc
-	extern @pellet_destroy_score_delta_commi$qv:proc
-	extern @boss_free$qv:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-; int __cdecl main(int argc, const char	**argv,	const char **envp)
-public _main
-_main		proc far
-
-_path		= byte ptr -1Eh
-var_E		= word ptr -0Eh
-var_C		= word ptr -0Ch
-s1		= dword	ptr -0Ah
-@@scene_id		= word ptr -6
-var_4		= word ptr -4
-@@stage		= word ptr -2
-_argc		= word ptr  6
-_argv		= dword	ptr  8
-_envp		= dword	ptr  0Ch
-
-		enter	1Eh, 0
-		push	si
-		push	di
-		mov	[bp+@@stage], 0
-		xor	si, si
-		mov	[bp+var_4], 0
-		call	@mdrv2_resident$qv
-		or	ax, ax
-		jnz	short loc_D54F
-		jmp	short loc_D579
-; ---------------------------------------------------------------------------
-
-loc_D54F:
-		push	ss
-		lea	ax, [bp+@@stage]
-		push	ax
-		push	ds
-		push	offset _continues_total
-		push	ds
-		push	offset _frame_rand
-		push	ds
-		push	offset _lives_extra
-		push	ds
-		push	offset _credit_bombs
-		push	ds
-		push	offset _bgm_mode
-		push	ds
-		push	offset _rank
-		call	@resident_stuff_get$qmct1t1t1mulmlmi
-		add	sp, 1Ch
-		cmp	ax, 1
-		jnz	short loc_D583
-
-loc_D579:
-		call	@error_resident_invalid$qv
-		mov	ax, 1
-		jmp	loc_E2F7
-; ---------------------------------------------------------------------------
-
-loc_D583:
-		mov	_credit_bombs, 1
-		les	bx, _resident
-		mov	eax, es:[bx+reiidenconfig_t.score]
-		mov	_score, eax
-		mov	ebx, 400000
-		cdq
-		idiv	ebx
-		inc	ax
-		mov	_extend_next, ax
-		mov	eax, _frame_rand
-		mov	random_seed, eax
-		call	@game_init$qv
-		call	key_start
-		push	3F003Fh
-		call	__control87
-		add	sp, 4
-		les	bx, _resident
-		mov	al, es:[bx+reiidenconfig_t.route]
-		mov	_route, al
-		cmp	es:[bx+reiidenconfig_t.debug_mode], DM_OFF
-		jz	loc_D68E
-		cmp	es:[bx+reiidenconfig_t.stage], 0
-		jnz	short loc_D649
-		push	ds
-		push	offset aCGzgmgngg ; "面セレクト\n"
-		call	_puts
-		add	sp, 4
-		push	ds
-		push	offset aCRf	; "面数"
-		call	_puts
-		add	sp, 4
-		push	ss
-		lea	ax, [bp+@@stage]
-		push	ax
-		push	ds
-		push	offset aD	; "%d"
-		call	_scanf
-		add	sp, 8
-		push	ds
-		push	offset aSelect_flag ; "select_flag"
-		call	_puts
-		add	sp, 4
-		push	ds
-		push	offset _route
-		push	ds
-		push	offset aD	; "%d"
-		call	_scanf
-		add	sp, 8
-		cmp	[bp+@@stage], 5
-		jge	short loc_D62C
-		jmp	short loc_D644
-; ---------------------------------------------------------------------------
-
-loc_D62C:
-		mov	al, _route
-		cbw
-		cmp	ax, 1
-		jle	short loc_D63C
-		mov	_route, 1
-		jmp	short loc_D649
-; ---------------------------------------------------------------------------
-
-loc_D63C:
-		mov	al, _route
-		cbw
-		or	ax, ax
-		jge	short loc_D649
-
-loc_D644:
-		mov	_route, 0
-
-loc_D649:
-		les	bx, _resident
-		mov	al, es:[bx+reiidenconfig_t.debug_mode]
-		cbw
-		cmp	ax, DM_TEST
-		jnz	short loc_D669
-		push	ds
-		push	offset aGegxgggvbGhbib ; "テストモード！！\n"
-		call	_puts
-		add	sp, 4
-		mov	_mode_test, 1
-
-loc_D669:
-		les	bx, _resident
-		mov	al, es:[bx+reiidenconfig_t.debug_mode]
-		cbw
-		cmp	ax, DM_FULL
-		jnz	short loc_D68E
-		push	ds
-		push	offset aGfgogbgogvbGhb ; "デバッグモード！！\n"
-		call	_puts
-		add	sp, 4
-		mov	_mode_debug, 1
-		mov	_mode_test, 1
-
-loc_D68E:
-		mov	al, _bgm_mode
-		cbw
-		cmp	ax, 1
-		jnz	short loc_D69C
-		call	@mdrv2_check_board$qv
-
-loc_D69C:
-		cmp	[bp+@@stage], 5
-		jge	short loc_D6A6
-		xor	ax, ax
-		jmp	short loc_D6EE
-; ---------------------------------------------------------------------------
-
-loc_D6A6:
-		cmp	[bp+@@stage], 10
-		jge	short loc_D6BD
-		cmp	_route, 0
-		jnz	short loc_D6B8
-		mov	ax, 1
-		jmp	short loc_D6EE
-; ---------------------------------------------------------------------------
-
-loc_D6B8:
-		mov	ax, 2
-		jmp	short loc_D6EE
-; ---------------------------------------------------------------------------
-
-loc_D6BD:
-		cmp	[bp+@@stage], 15
-		jge	short loc_D6D4
-		cmp	_route, 0
-		jnz	short loc_D6CF
-		mov	ax, 3
-		jmp	short loc_D6EE
-; ---------------------------------------------------------------------------
-
-loc_D6CF:
-		mov	ax, 4
-		jmp	short loc_D6EE
-; ---------------------------------------------------------------------------
-
-loc_D6D4:
-		cmp	[bp+@@stage], 20
-		jge	short loc_D6EB
-		cmp	_route, 0
-		jnz	short loc_D6E6
-		mov	ax, 5
-		jmp	short loc_D6E9
-; ---------------------------------------------------------------------------
-
-loc_D6E6:
-		mov	ax, 6
-
-loc_D6E9:
-		jmp	short loc_D6EE
-; ---------------------------------------------------------------------------
-
-loc_D6EB:
-		mov	ax, 7
-
-loc_D6EE:
-		mov	[bp+@@scene_id], ax
-		call	@set_new_handler$qnqv$v c, offset @out_of_memory_exit$qv, seg @out_of_memory_exit$qv
-		mov	_arc_key, 76h
-		call	@arc_load$qxnxc pascal, ds, offset aUmx	; "東方靈異.伝"
-		call	@vram_planes_set$qv
-		call	@scene_init_and_load$quc stdcall, [bp+@@scene_id]
-		pop	cx
-		cmp	_mode_debug, 1
-		jnz	short loc_D72E
-		call	@debug_vars$qv
-		push	28h ; '('
-		call	@frame_delay$qui
-		pop	cx
-
-loc_D72E:
-		call	@graphics_free_redundant_and_inco$qv
-		les	bx, _resident
-		mov	al, es:[bx+reiidenconfig_t.rem_lives]
-		cbw
-		mov	_lives, ax
-		mov	al, es:[bx+reiidenconfig_t.bombs]
-		mov	_bombs, al
-		mov	_player_left, PLAYER_LEFT_START
-		cmp	_bgm_mode, 0
-		jz	short loc_D776
-		cmp	es:[bx+reiidenconfig_t.snd_need_init], 0
-		jz	short loc_D776
-		push	ds
-		push	offset aInit_mdt ; "init.mdt"
-		call	@mdrv2_bgm_load$qnxc
-		add	sp, 4
-		call	@mdrv2_bgm_play$qv
-		push	ds
-		push	offset aZigoku_mde ; "zigoku.mde"
-		call	@mdrv2_se_load$qnxc
-		add	sp, 4
-
-loc_D776:
-		cmp	_mode_debug, 1
-		jnz	short loc_D795
-		push	ds
-		push	offset a2	; "2 :"
-		call	_puts
-		add	sp, 4
-		call	@debug_vars$qv
-		push	28h ; '('
-		call	@frame_delay$qui
-		pop	cx
-
-loc_D795:
-		call	_coreleft
-		mov	word ptr _coreleft_prev+2,	dx
-		mov	word ptr _coreleft_prev, ax
-		call	@load_and_init_stuff_used_in_all_$qv
-		call	@z_graph_init$qv
-		push	0
-		call	@graph_accesspage_func$qi
-		pop	cx
-		call	@z_graph_clear$qv
-		call	IRand
-		mov	bx, 60
-		cwd
-		idiv	bx
-		mov	_card_flip_cycle, dl
-		mov	_first_stage_in_scene, 1
-		mov	byte_36C1E, 1
-		les	bx, _resident
-		cmp	es:[bx+reiidenconfig_t.snd_need_init], 0
-		jnz	short loc_D7E0
-		mov	ax, 1
-		jmp	short loc_D7E2
-; ---------------------------------------------------------------------------
-
-loc_D7E0:
-		xor	ax, ax
-
-loc_D7E2:
-		mov	si, ax
-
-loc_D7E4:
-		les	bx, _resident
-		mov	ax, [bp+@@stage]
-		mov	es:[bx+reiidenconfig_t.stage], ax
-		mov	al, _route
-		mov	es:[bx+reiidenconfig_t.route], al
-		mov	eax, _score
-		mov	es:[bx+reiidenconfig_t.score], eax
-		mov	eax, _continues_total
-		mov	es:[bx+reiidenconfig_t.continues_total], eax
-		call	@CPellets@unput_and_reset$qv c, offset _Pellets, ds
-		call	@CShots@unput_and_reset$qv c, offset _Shots, ds
-		mov	word ptr [bp+s1+2], ds
-		mov	word ptr [bp+s1], offset _default_grp_fn
-		mov	_boss_id, 0
-		mov	_unused_boss_stage_flag, 0
-		mov	_player_invincible, 0
-		mov	_player_invincibility_time, 0
-		mov	ax, [bp+@@stage]
-		mov	[bp+var_E], ax
-		mov	cx, 4		; switch 4 cases
-		mov	bx, offset word_E309
-
-loc_D84B:
-		mov	ax, cs:[bx]
-		cmp	ax, [bp+var_E]
-		jz	short loc_D85B
-		add	bx, 2
-		loop	loc_D84B
-		jmp	loc_D9B7	; default
-; ---------------------------------------------------------------------------
-
-loc_D85B:
-		jmp	word ptr cs:[bx+8] ; switch jump
-
-loc_D85F:
-		mov	_boss_id, 1	; jumptable 0000D85B case 4
-		mov	_unused_boss_stage_flag, 1
-		push	ds
-		push	offset src	; "boss1.grp"
-		pushd	[bp+s1]	; dest
-		call	_strcpy
-		add	sp, 8
-		push	ds
-		push	offset aPositive_mdt ; "positive.mdt"
-		push	ss
-		lea	ax, [bp+_path]
-		push	ax		; dest
-		call	_strcpy
-		add	sp, 8
-		xor	di, di
-		call	@singyoku_load$qv
-
-loc_D892:
-		mov	_Pellets.PELLET_unknown_seven, 7
-		jmp	loc_D9CA
-; ---------------------------------------------------------------------------
-
-loc_D89B:
-		mov	al, _route	; jumptable 0000D85B case 9
-		add	al, 2
-		mov	_boss_id, al
-		mov	_unused_boss_stage_flag, 1
-		cmp	_route, 0
-		jnz	short loc_D8D9
-		push	ds
-		push	offset aLegend_mdt ; "LEGEND.mdt"
-		push	ss
-		lea	ax, [bp+_path]
-		push	ax		; dest
-		call	_strcpy
-		add	sp, 8
-		push	ds
-		push	offset aBoss2_grp ; "boss2.grp"
-		pushd	[bp+s1]	; dest
-		call	_strcpy
-		add	sp, 8
-		call	@yuugenmagan_load$qv
-		jmp	loc_D96D
-; ---------------------------------------------------------------------------
-
-loc_D8D9:
-		push	ds
-		push	offset aLegend_mdt ; "LEGEND.mdt"
-		push	ss
-		lea	ax, [bp+_path]
-		push	ax		; dest
-		call	_strcpy
-		add	sp, 8
-		push	ds
-		push	offset aBoss3_grp ; "boss3.grp"
-		pushd	[bp+s1]	; dest
-		call	_strcpy
-		add	sp, 8
-		call	@mima_load$qv
-		jmp	short loc_D96D
-; ---------------------------------------------------------------------------
-
-loc_D901:
-		mov	al, 1		; jumptable 0000D85B case 14
-		sub	al, _route
-		add	al, 4
-		mov	_boss_id, al
-		mov	_unused_boss_stage_flag, 1
-		mov	al, _route
-		cbw
-		cmp	ax, 1
-		jnz	short loc_D947
-		push	ds
-		push	offset aKami_mdt ; "kami.mdt"
-		push	ss
-		lea	ax, [bp+_path]
-		push	ax		; dest
-		call	_strcpy
-		add	sp, 8
-		push	ds
-		push	offset aBoss4_grp ; "boss4.grp"
-		pushd	[bp+s1]	; dest
-		call	_strcpy
-		add	sp, 8
-		call	@kikuri_load$qv
-
-loc_D941:
-		mov	di, 1
-		jmp	loc_D892
-; ---------------------------------------------------------------------------
-
-loc_D947:
-		push	ds
-		push	offset aKami2_mdt ; "kami2.mdt"
-		push	ss
-		lea	ax, [bp+_path]
-		push	ax		; dest
-		call	_strcpy
-		add	sp, 8
-		push	ds
-		push	offset aBoss5_grp ; "boss5.grp"
-		pushd	[bp+s1]	; dest
-		call	_strcpy
-		add	sp, 8
-		call	@elis_load$qv
-
-loc_D96D:
-		xor	di, di
-		jmp	loc_D892
-; ---------------------------------------------------------------------------
-
-loc_D972:
-		mov	al, _route	; jumptable 0000D85B case 19
-		add	al, 6
-		mov	_boss_id, al
-		mov	_unused_boss_stage_flag, 1
-		cmp	_route, 0
-		jnz	short loc_D99F
-		push	ds
-		push	offset aTensi_mdt ; "tensi.mdt"
-		push	ss
-		lea	ax, [bp+_path]
-		push	ax		; dest
-		call	_strcpy
-		add	sp, 8
-		call	@sariel_load_and_init$qv
-		jmp	short loc_D941
-; ---------------------------------------------------------------------------
-
-loc_D99F:
-		push	ds
-		push	offset aAlice_mdt ; "alice.mdt"
-		push	ss
-		lea	ax, [bp+_path]
-		push	ax		; dest
-		call	_strcpy
-		add	sp, 8
-		call	@konngara_init$qv
-		jmp	short loc_D96D
-; ---------------------------------------------------------------------------
-
-loc_D9B7:
-		push	ds		; default
-		push	offset _default_bgm_fn	; "ST .MDT"
-		push	ss
-		lea	ax, [bp+_path]
-		push	ax		; dest
-		call	_strcpy
-		add	sp, 8
-		xor	di, di
-
-loc_D9CA:
-		cmp	_boss_id, 0
-		jz	short loc_DA06
-		xor	si, si
-		mov	_first_stage_in_scene, 1
-		call	@items_bomb_reset$qv
-		call	@items_point_reset$qv
-		cmp	_ptn_slot_stg_has_reduced_sprites, 0
-		jnz	short loc_DA2A
-		call	@ptn_free$q15main_ptn_slot_t stdcall, PTN_SLOT_STG
-		pop	cx
-		call	@ptn_load$q15main_ptn_slot_tnxc c, PTN_SLOT_STG, offset aStg_b_ptn, ds ; "stg_b.ptn"
-		mov	_ptn_slot_stg_has_reduced_sprites, 1
-		jmp	short loc_DA2A
-; ---------------------------------------------------------------------------
-
-loc_DA06:
-		cmp	_ptn_slot_stg_has_reduced_sprites, 0
-		jz	short loc_DA2A
-		call	@ptn_free$q15main_ptn_slot_t stdcall, PTN_SLOT_STG
-		pop	cx
-		call	@ptn_load$q15main_ptn_slot_tnxc c, PTN_SLOT_STG, offset _PTN_STG_CARDFLIP_FN, ds	; "stg.ptn"
-		mov	_ptn_slot_stg_has_reduced_sprites, 0
-		jmp	short $+2
-
-loc_DA2A:
-		cmp	_mode_debug, 1
-		jnz	short loc_DA49
-		push	ds
-		push	offset a3	; "3 :"
-		call	_puts
-		add	sp, 4
-		call	@debug_vars$qv
-		push	28h ; '('
-		call	@frame_delay$qui
-		pop	cx
-
-loc_DA49:
-		mov	al, byte ptr [bp+@@stage]
-		inc	al
-		mov	_stage_num, al
-		mov	al, _boss_id
-		cbw
-		cmp	ax, 6
-		jz	short loc_DA7B
-		mov	al, _boss_id
-		cbw
-		cmp	ax, 7
-		jz	short loc_DA7B
-		push	di		; clear_vram_page_0
-		pushd	[bp+s1]	; bg_fn
-		mov	ax, [bp+@@stage]
-		mov	bx, 5
-		cwd
-		idiv	bx
-		push	dx		; int
-		call	@stage_entrance$qinxci
-		add	sp, 8
-		jmp	short loc_DA9E
-; ---------------------------------------------------------------------------
-
-loc_DA7B:
-		mov	al, _boss_id
-		cbw
-		cmp	ax, 7
-		jnz	short loc_DA8D
-		call	@konngara_load_and_entrance$qc stdcall, 0
-		jmp	short loc_DA9D
-; ---------------------------------------------------------------------------
-
-loc_DA8D:
-		mov	al, _boss_id
-		cbw
-		cmp	ax, 6
-		jnz	short loc_DA9E
-		push	0
-		call	@sariel_entrance$qc
-
-loc_DA9D:
-		pop	cx
-
-loc_DA9E:
-		mov	ax, _extend_next
-		mov	word_34A8C, ax
-		call	@hud_bg_snap_and_put$qv
-		mov	_cardcombo_max, 0
-		mov	_orb_in_portal, 0
-		mov	_bomb_frames, 0
-		mov	_Pellets.PELLET_unknown_seven, 7
-		cmp	_mode_debug, 1
-		jnz	short loc_DAD7
-		call	@debug_vars$qv
-		push	28h ; '('
-		call	@frame_delay$qui
-		pop	cx
-
-loc_DAD7:
-		mov	_frames_since_start_of_binary, 0
-		mov	_orb_cur_left, ORB_LEFT_START
-		mov	_orb_cur_top, ORB_TOP_START
-		mov	ax, [bp+@@stage]
-		mov	bx, 5
-		cwd
-		idiv	bx
-		or	dx, dx
-		jz	short loc_DB04
-		mov	ax, [bp+@@stage]
-		cwd
-		idiv	bx
-		cmp	dx, 4
-		jnz	short loc_DB0A
-
-loc_DB04:
-		mov	_player_left, PLAYER_LEFT_START
-
-loc_DB0A:
-		fld	dbl_34FF5
-		fstp	_orb_force
-		fwait
-		mov	_orb_force_frame, 0
-		mov	_orb_velocity_x, OVX_4_LEFT
-		mov	_orb_prev_left, ORB_LEFT_START
-		mov	_orb_prev_top, ORB_TOP_START
-		mov	_player_deflecting, 0
-		mov	_bomb_damaging, 0
-		mov	_cardcombo_cur, 0
-
-loc_DB3E:
-		call	@player_unput_update_render$qi stdcall, 0
-		pop	cx
-		call	@ptn_put_8$qiii c, _player_left, large (PTN_MIKO_L shl 16) or _player_top
-		call	@ptn_put_8$qiii c, _orb_cur_left, _orb_cur_top, 3
-		mov	word_34A74, 0
-		mov	_input_lr, 0
-		mov	_input_shot, 0
-		mov	_input_ok, 0
-		mov	_paused, 0
-		call	@hud_score_and_cardcombo_render$qv
-		mov	_bomb_doubletap_frames, (BOMB_DOUBLETAP_WINDOW * 3)
-		mov	word_34A70, 3Ch	; '<'
-		call	@obstacles_update_and_render$qi stdcall, 1
-		pop	cx
-		mov	al, _boss_id
-		cbw
-		cmp	ax, 6
-		jz	short loc_DBCC
-		mov	al, _boss_id
-		cbw
-		cmp	ax, 7
-		jz	short loc_DBCC
-		cmp	byte_34A35, 0
-		jnz	short loc_DBCC
-		or	si, si
-		jnz	short loc_DBCC
-		push	ss
-		lea	ax, [bp+_path]
-		push	ax		; path
-		call	@mdrv2_bgm_load$qnxc
-		add	sp, 4
-		call	@mdrv2_bgm_play$qv
-
-loc_DBCC:
-		call	@input_reset_sense$qv
-		cmp	_player_invincibility_time, 1
-		jle	short loc_DBDD
-		mov	_player_invincible, 1
-
-loc_DBDD:
-		cmp	_boss_id, 0
-		jz	short loc_DC0E
-		mov	al, _boss_id
-		cbw
-		cmp	ax, 1
-		jz	short loc_DBF9
-		cmp	ax, 3
-		jz	short loc_DC00
-		cmp	ax, 4
-		jz	short loc_DC07
-		jmp	short loc_DC3A
-; ---------------------------------------------------------------------------
-
-loc_DBF9:
-		call	@singyoku_main$qv
-		jmp	short loc_DC3A
-; ---------------------------------------------------------------------------
-
-loc_DC00:
-		call	@mima_main$qv
-		jmp	short loc_DC3A
-; ---------------------------------------------------------------------------
-
-loc_DC07:
-		mov	_input_strike, 0
-		jmp	short loc_DC3A
-; ---------------------------------------------------------------------------
-
-loc_DC0E:
-		cmp	byte_36C1E, 1
-		jnz	short loc_DC3A
-		jmp	short loc_DC33
-; ---------------------------------------------------------------------------
-
-loc_DC17:
-		call	@input_sense$qi stdcall, 0
-		pop	cx
-		call	@player_unput_update_render$qi stdcall, 1
-		pop	cx
-		push	1
-		call	@frame_delay$qui
-		pop	cx
-		inc	_bomb_frames
-
-loc_DC33:
-		cmp	_input_shot, 0
-		jz	short loc_DC17
-
-loc_DC3A:
-		mov	byte_36C1E, 0
-		mov	_input_shot, 0
-		mov	_timer_initialized, 1
-		mov	eax, _frame_rand
-		mov	random_seed, eax
-		mov	_bomb_doubletap_frames, BOMB_DOUBLETAP_WINDOW
-		mov	_first_stage_in_scene, 0
-		mov	[bp+var_C], 0BB8h
-		jmp	loc_DE72
-; ---------------------------------------------------------------------------
-
-loc_DC64:
-		inc	_frame_rand
-		mov	ax, _lives
-		imul	ax, 200
-		mov	dx, 1800
-		sub	dx, ax
-		mov	al, _bombs
-		cbw
-		imul	ax, 50
-		sub	dx, ax
-		mov	[bp+var_C], dx
-		movsx	ebx, [bp+var_C]
-		mov	eax, _frame_rand
-		xor	edx, edx
-		div	ebx
-		cmp	edx, 0
-		jnz	short loc_DC9D
-		call	@pellet_speed_raise$qi stdcall, 1
-		pop	cx
-
-loc_DC9D:
-		call	@input_sense$qi stdcall, 0
-		pop	cx
-		cmp	_player_invincibility_time, 1
-		jle	short loc_DCB7
-		dec	_player_invincibility_time
-		mov	_player_invincible, 1
-		jmp	short loc_DCCA
-; ---------------------------------------------------------------------------
-
-loc_DCB7:
-		cmp	_player_invincibility_time, 1
-		jnz	short loc_DCCA
-		mov	_player_invincible, 0
-		mov	_player_invincibility_time, 0
-
-loc_DCCA:
-		call	@player_unput_update_render$qi stdcall, 1
-		pop	cx
-		call	@items_bomb_unput_update_render$qv
-		call	@items_point_unput_update_render$qv
-		inc	_frames_since_start_of_binary
-		inc	_orb_force_frame
-		inc	_bomb_frames
-		inc	_bomb_doubletap_frames
-		test	byte ptr _frame_rand, 3
-		jnz	short loc_DCFA
-		call	@timer_tick_and_put$qv
-
-loc_DCFA:
-		cmp	_mode_test, 1
-		jnz	short loc_DD20
-		cmp	_input_ok, 0
-		jz	short loc_DD0E
-		mov	_test_damage, 1
-
-loc_DD0E:
-		cmp	_input_down, 0
-		jz	short loc_DD20
-		mov	_player_is_hit, 1
-		mov	_lives, 0
-
-loc_DD20:
-		call	@invincibility_sprites_update_and$qi stdcall, _player_invincible
-		pop	cx
-		mov	al, _boss_id
-		cbw
-		dec	ax
-		mov	bx, ax
-		cmp	bx, 6
-		ja	short loc_DD6B
-		add	bx, bx
-		jmp	cs:off_E2FB[bx]
-
-loc_DD3C:
-		call	@singyoku_main$qv
-		jmp	short loc_DD6B
-; ---------------------------------------------------------------------------
-
-loc_DD43:
-		call	@yuugenmagan_main$qv
-		jmp	short loc_DD6B
-; ---------------------------------------------------------------------------
-
-loc_DD4A:
-		call	@mima_main$qv
-		jmp	short loc_DD6B
-; ---------------------------------------------------------------------------
-
-loc_DD51:
-		call	@kikuri_main$qv
-		jmp	short loc_DD6B
-; ---------------------------------------------------------------------------
-
-loc_DD58:
-		call	@elis_main$qv
-		jmp	short loc_DD6B
-; ---------------------------------------------------------------------------
-
-loc_DD5F:
-		call	@sariel_main$qv
-		jmp	short loc_DD6B
-; ---------------------------------------------------------------------------
-
-loc_DD66:
-		call	@konngara_main$qv
-
-loc_DD6B:
-		@@i = 0
-		rept SHOOTOUT_LASER_COUNT
-			call	@CShootoutLaser@update_hittest_and_render$qv c, offset _shootout_lasers[@@i * size CShootoutLaser], ds
-			@@i = @@i + 1
-		endm
-		call	@orb_and_pellets_and_stage_unput_$qi stdcall, [bp+@@stage]
-		cmp	_paused, 1
-		jnz	short loc_DDF8
-		call	@pause_menu$qv
-		mov	[bp+var_4], ax
-
-loc_DDF8:
-		cmp	[bp+var_4], 1
-		jz	loc_E2CB
-		call	@score_extend_update_and_render$qv
-		cmp	_mode_debug, 1
-		jnz	short loc_DE0F
-		call	@debug_vars$qv
-
-loc_DE0F:
-		mov	al, _game_cleared
-		cbw
-		cmp	ax, 1
-		jnz	short loc_DE67
-		call	@graphics_free_redundant_and_inco$qv
-		les	bx, _resident
-		mov	al, _route
-		inc	al
-		mov	es:[bx+reiidenconfig_t.end_flag], al
-		mov	eax, _score
-		mov	es:[bx+reiidenconfig_t.score], eax
-		mov	eax, es:[bx+reiidenconfig_t.score_highest]
-		cmp	eax, _score
-		jnb	short loc_DE47
-		mov	eax, _score
-		mov	es:[bx+reiidenconfig_t.score_highest], eax
-
-loc_DE47:
-		push	78h ; 'x'
-		call	@frame_delay$qui
-		pop	cx
-		call	@game_switch_binary$qv
-		pushd	0
-		push	ds
-		push	offset aFuuin	; "fuuin"
-		push	ds
-		push	offset aFuuin	; "fuuin"
-		call	_execl
-		add	sp, 0Ch
-
-loc_DE67:
-		cmp	_pellet_destroy_score_delta, 0
-		jz	short loc_DE72
-		call	@pellet_destroy_score_delta_commi$qv
-
-loc_DE72:
-		cmp	_player_is_hit, 0
-		jz	loc_DC64
-		mov	_timer_initialized, 0
-		call	@z_vsync_wait_and_scrollup$qi stdcall, 0
-		pop	cx
-		les	bx, _resident
-		mov	eax, _frame_rand
-		mov	es:[bx+reiidenconfig_t.rand], eax
-		mov	_test_damage, 0
-		mov	_bomb_frames, 200 ; ???
-		cmp	_lives, 0
-		jle	short loc_DEDA
-		cmp	_stage_cleared, 0
-		jnz	short loc_DEDA
-		push	5
-		call	@mdrv2_se_play$qi
-		pop	cx
-		les	bx, _resident
-		dec	es:[bx+reiidenconfig_t.rem_lives]
-		dec	_lives
-		call	@player_miss_animate_and_update$qv
-		mov	_player_is_hit, 0
-		inc	si
-		mov	_player_invincibility_time, MISS_INVINCIBILITY_FRAMES
-		jmp	loc_DB3E
-; ---------------------------------------------------------------------------
-
-loc_DEDA:
-		cmp	_stage_cleared, 1
-		jnz	loc_E104
-		mov	_stage_cleared, 0
-		mov	_player_is_hit, 0
-		cmp	_boss_id, 0
-		jz	short loc_DF03
-		call	@boss_free$qv
-		mov	byte_36C1E, 1
-		mov	_first_stage_in_scene, 1
-
-loc_DF03:
-		inc	si
-		inc	[bp+@@stage]
-		les	bx, _resident
-		mov	ax, [bp+@@stage]
-		mov	es:[bx+reiidenconfig_t.stage], ax
-		cmp	_boss_id, 0
-		jz	short loc_DF23
-		xor	si, si
-		call	@totle_animate$qi stdcall, ax
-		jmp	short loc_DF2B
-; ---------------------------------------------------------------------------
-
-loc_DF23:
-		call	@stagebonus_animate$qi stdcall, [bp+@@stage]
-
-loc_DF2B:
-		pop	cx
-		les	bx, _resident
-		cmp	es:[bx+reiidenconfig_t.bullet_speed], 0
-		jge	short loc_DF3D
-		mov	es:[bx+reiidenconfig_t.bullet_speed], 0
-
-loc_DF3D:
-		mov	ax, [bp+@@stage]
-		mov	bx, 5
-		cwd
-		idiv	bx
-		cmp	dx, 4
-		jz	short loc_DF52
-		cmp	_boss_id, 0
-		jz	short loc_DF9A
-
-loc_DF52:
-		les	bx, _resident
-		mov	eax, _score
-		mov	es:[bx+reiidenconfig_t.score], eax
-		mov	al, byte ptr _lives
-		mov	es:[bx+reiidenconfig_t.rem_lives], al
-		mov	es:[bx+reiidenconfig_t.snd_need_init], 1
-		mov	al, _route
-		mov	es:[bx+reiidenconfig_t.route], al
-		call	@mdrv2_bgm_fade_out_nonblock$qv
-		les	bx, _resident
-		mov	al, _bombs
-		mov	es:[bx+reiidenconfig_t.bombs], al
-		call	@game_switch_binary$qv
-		pushd	0
-		push	ds
-		push	offset aReiiden	; "reiiden"
-		push	ds
-		push	offset aReiiden	; "reiiden"
-		call	_execl
-		add	sp, 0Ch
-
-loc_DF9A:
-		mov	_orb_in_portal, 0
-		cmp	_boss_id, 0
-		jnz	short loc_DFBC
-		push	1
-		call	@graph_accesspage_func$qi
-		pop	cx
-		call	@stageobj_bgs_put_all$qv
-		push	0
-		call	@graph_accesspage_func$qi
-		pop	cx
-
-loc_DFBC:
-		call	@stageobj_bgs_free_wrap$qv
-		cmp	_cards.C_left, 0
-		jz	short loc_DFE0
-		call	@$bdla$qnv c, large [_cards.C_left]
-		mov	_cards.C_left, 0
-		jmp	short $+2
-
-loc_DFE0:
-		cmp	_cards.C_top, 0
-		jz	short loc_E000
-		call	@$bdla$qnv c, large [_cards.C_top]
-		mov	_cards.C_top, 0
-		jmp	short $+2
-
-loc_E000:
-		cmp	_cards.C_flag, 0
-		jz	short loc_E020
-		call	@$bdla$qnv c, large [_cards.C_flag]
-		mov	_cards.C_flag, 0
-		jmp	short $+2
-
-loc_E020:
-		cmp	_cards.C_flip_frames, 0
-		jz	short loc_E040
-		call	@$bdla$qnv c, large [_cards.C_flip_frames]
-		mov	_cards.C_flip_frames, 0
-		jmp	short $+2
-
-loc_E040:
-		cmp	_cards.C_hp, 0
-		jz	short loc_E060
-		call	@$bdla$qnv c, large [_cards.C_hp]
-		mov	_cards.C_hp, 0
-		jmp	short $+2
-
-loc_E060:
-		cmp	_cards_score, 0
-		jz	short loc_E080
-		call	@$bdla$qnv c, large [_cards_score]
-		mov	_cards_score, 0
-		jmp	short $+2
-
-loc_E080:
-		cmp	_obstacles.O_left, 0
-		jz	short loc_E0A0
-		call	@$bdla$qnv c, large [_obstacles.O_left]
-		mov	_obstacles.O_left, 0
-		jmp	short $+2
-
-loc_E0A0:
-		cmp	_obstacles.O_top, 0
-		jz	short loc_E0C0
-		call	@$bdla$qnv c, large [_obstacles.O_top]
-		mov	_obstacles.O_top, 0
-		jmp	short $+2
-
-loc_E0C0:
-		cmp	_obstacles.O_type, 0
-		jz	short loc_E0E0
-		call	@$bdla$qnv c, large [_obstacles.O_type]
-		mov	_obstacles.O_type, 0
-		jmp	short $+2
-
-loc_E0E0:
-		cmp	_obstacles.O_frames, 0
-		jz	short loc_E101
-		call	@$bdla$qnv c, large [_obstacles.O_frames]
-		mov	_obstacles.O_frames, 0
-		jmp	loc_D7E4
-; ---------------------------------------------------------------------------
-
-loc_E101:
-		jmp	loc_D7E4
-; ---------------------------------------------------------------------------
-
-loc_E104:
-		cmp	_cards.C_left, 0
-		jz	short loc_E124
-		call	@$bdla$qnv c, large [_cards.C_left]
-		mov	_cards.C_left, 0
-		jmp	short $+2
-
-loc_E124:
-		cmp	_cards.C_top, 0
-		jz	short loc_E144
-		call	@$bdla$qnv c, large [_cards.C_top]
-		mov	_cards.C_top, 0
-		jmp	short $+2
-
-loc_E144:
-		cmp	_cards.C_flag, 0
-		jz	short loc_E164
-		call	@$bdla$qnv c, large [_cards.C_flag]
-		mov	_cards.C_flag, 0
-		jmp	short $+2
-
-loc_E164:
-		cmp	_cards.C_flip_frames, 0
-		jz	short loc_E184
-		call	@$bdla$qnv c, large [_cards.C_flip_frames]
-		mov	_cards.C_flip_frames, 0
-		jmp	short $+2
-
-loc_E184:
-		cmp	_cards.C_hp, 0
-		jz	short loc_E1A4
-		call	@$bdla$qnv c, large [_cards.C_hp]
-		mov	_cards.C_hp, 0
-		jmp	short $+2
-
-loc_E1A4:
-		cmp	_cards_score, 0
-		jz	short loc_E1C4
-		call	@$bdla$qnv c, large [_cards_score]
-		mov	_cards_score, 0
-		jmp	short $+2
-
-loc_E1C4:
-		cmp	_obstacles.O_left, 0
-		jz	short loc_E1E4
-		call	@$bdla$qnv c, large [_obstacles.O_left]
-		mov	_obstacles.O_left, 0
-		jmp	short $+2
-
-loc_E1E4:
-		cmp	_obstacles.O_top, 0
-		jz	short loc_E204
-		call	@$bdla$qnv c, large [_obstacles.O_top]
-		mov	_obstacles.O_top, 0
-		jmp	short $+2
-
-loc_E204:
-		cmp	_obstacles.O_type, 0
-		jz	short loc_E224
-		call	@$bdla$qnv c, large [_obstacles.O_type]
-		mov	_obstacles.O_type, 0
-		jmp	short $+2
-
-loc_E224:
-		cmp	_obstacles.O_frames, 0
-		jz	short loc_E244
-		call	@$bdla$qnv c, large [_obstacles.O_frames]
-		mov	_obstacles.O_frames, 0
-		jmp	short $+2
-
-loc_E244:
-		inc	si
-		call	@player_gameover_animate$qv
-		call	@CShots@unput_and_reset$qv c, offset _Shots, ds
-		call	@CPellets@unput_and_reset$qv c, offset _Pellets, ds
-		call	@stageobj_bgs_free_wrap$qv
-		mov	_extend_next, 1
-		cmp	_boss_id, 0
-		jz	short loc_E27B
-		call	@boss_free$qv
-		mov	_first_stage_in_scene, 1
-
-loc_E27B:
-		les	bx, _resident
-		mov	eax, _score
-		mov	es:[bx+reiidenconfig_t.score], eax
-		cmp	[bp+@@stage], 5
-		jge	short loc_E295
-		mov	dx, ds
-		mov	ax, offset _SCOREDAT_ROUTE_SHRINE
-		jmp	short loc_E2A8
-; ---------------------------------------------------------------------------
-
-loc_E295:
-		cmp	_route, 0
-		jnz	short loc_E2A3
-		mov	dx, ds
-		mov	ax, offset _SCOREDAT_ROUTE_MAKAI
-		jmp	short loc_E2A8
-; ---------------------------------------------------------------------------
-
-loc_E2A3:
-		mov	dx, ds
-		mov	ax, offset _SCOREDAT_ROUTE_JIGOKU
-
-loc_E2A8:
-		push	dx
-		push	ax
-		mov	ax, [bp+@@stage]
-		inc	ax
-		push	ax
-		pushd	[_score]
-		call	@regist$qlixnxc
-		add	sp, 0Ah
-		les	bx, _resident
-		mov	ax, [bp+@@stage]
-		mov	es:[bx+reiidenconfig_t.stage], ax
-		call	@continue_menu$qv
-
-loc_E2CB:
-		call	@graphics_free_redundant_and_inco$qv
-		call	@boss_free$qv
-		call	@game_switch_binary$qv
-		call	key_end
-		call	@arc_free$qv
-		pushd	0
-		push	ds
-		push	offset aOp	; "op"
-		push	ds
-		push	offset aOp	; "op"
-		call	_execl
-		add	sp, 0Ch
-		xor	ax, ax
-
-loc_E2F7:
-		pop	di
-		pop	si
-		leave
-		retf
-_main		endp
-
-; ---------------------------------------------------------------------------
-off_E2FB	dw offset loc_DD3C
-		dw offset loc_DD43
-		dw offset loc_DD4A
-		dw offset loc_DD51
-		dw offset loc_DD58
-		dw offset loc_DD5F
-		dw offset loc_DD66
-word_E309	dw	4,     9,   0Eh,   13h
-					; value	table for switch statement
-		dw offset loc_D85F	; jump table for switch	statement
-		dw offset loc_D89B
-		dw offset loc_D901
-		dw offset loc_D972
-
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
@@ -1346,7 +96,6 @@ main_01_TEXT	ends
 
 ; Segment type:	Pure code
 frmdelay_TEXT	segment	byte public 'CODE' use16
-	extern @frame_delay$qui:proc
 frmdelay_TEXT	ends
 
 ; ===========================================================================
@@ -1365,34 +114,24 @@ ztext_TEXT	ends
 
 ; Segment type:	Pure code
 initexit_TEXT	segment	byte public 'CODE' use16
-	extern @game_init$qv:proc
-	extern @game_switch_binary$qv:proc
 initexit_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
 graph_TEXT	segment	byte public 'CODE' use16
-	extern @z_graph_init$qv:proc
-	extern @z_graph_show$qv:proc
-	extern @z_graph_hide$qv:proc
-	extern @graph_accesspage_func$qi:proc
-	extern @z_graph_clear$qv:proc
 graph_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
 SHARED	segment	byte public 'CODE' use16
-	extern @vram_planes_set$qv:proc
 SHARED	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
 PTN_GRP_GRZ	segment	byte public 'CODE' use16
-	extern @ptn_load$q15main_ptn_slot_tnxc:proc
-	extern @ptn_free$q15main_ptn_slot_t:proc
 PTN_GRP_GRZ	ends
 
 ; ===========================================================================
@@ -1415,14 +154,12 @@ main_11_TEXT	ends
 
 ; Segment type:	Pure code
 resstuff_TEXT	segment	byte public 'CODE' use16
-	extern @resident_stuff_get$qmct1t1t1mulmlmi:proc
 resstuff_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
 GRAPH_EX_TEXT	segment	byte public 'CODE' use16
-	extern @z_vsync_wait_and_scrollup$qi:proc
 GRAPH_EX_TEXT	ends
 
 ; ===========================================================================
@@ -1434,73 +171,30 @@ main_14_TEXT	ends
 
 ; Segment type:	Pure code
 main_15_TEXT	segment	byte public 'CODE' use16
-SHOOTOUT_LASER_COUNT = 10
-
-CShootoutLaser struc
-	SL_origin_left	dd ?
-	SL_origin_y	dd ?
-	SL_ray_start_left	dd ?
-	SL_ray_start_y	dd ?
-	SL_ray_i_left	dd ?
-	SL_ray_i_y	dd ?
-	SL_ray_length	dw ?
-	SL_ray_moveout_speed	dw ?
-	SL_target_x	dw ?
-	SL_target_y	dw ?
-	SL_unknown	dw ?
-		dd ?
-	SL_velocity_y	dd ?
-	SL_step_y	dd ?
-	SL_velocity_x	dd ?
-	SL_step_x	dd ?
-	SL_ray_extend_speed	dw ?
-		dw ?
-	SL_alive	dw ?
-	SL_age	dw ?
-	SL_moveout_at_age	dw ?
-	SL_col	db ?
-	SL_width_cel	db ?
-	SL_damaging	db ?
-	SL_id	db ?
-		db ?
-CShootoutLaser ends
-
-	extern @CShootoutLaser@update_hittest_and_render$qv:proc
 main_15_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
 mdrv2_TEXT	segment	byte public 'CODE' use16
-	extern @mdrv2_resident$qv:proc
-	extern @mdrv2_bgm_load$qnxc:proc
-	extern @mdrv2_se_load$qnxc:proc
-	extern @mdrv2_bgm_play$qv:proc
-	extern @mdrv2_bgm_fade_out_nonblock$qv:proc
-	extern @mdrv2_check_board$qv:proc
-	extern @mdrv2_se_play$qi:proc
 mdrv2_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
 main_17_TEXT	segment	byte public 'CODE' use16
-	extern @singyoku_defeat_animate_and_sele$qv:proc
 main_17_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
 main_18_TEXT	segment	byte public 'CODE' use16
-	extern @stagebonus_animate$qi:proc
-	extern @totle_animate$qi:proc
 main_18_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
 main_19_TEXT	segment	byte public 'CODE' use16
-	extern @regist$qlixnxc:proc
 main_19_TEXT	ends
 
 ; ===========================================================================
@@ -1519,68 +213,47 @@ main_21_TEXT	ends
 
 ; Segment type:	Pure code
 PF_TEXT	segment	byte public 'CODE' use16
-	extern @ARC_LOAD$QXNXC:proc
-	extern @arc_free$qv:proc
 PF_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
 main_23_TEXT	segment	byte public 'CODE' use16
-	extern @shape_ellipse_arc_put$qiiiiiucucuc:proc
-	extern @shape_ellipse_arc_sloppy_unput$qiiiiucucuc:proc
-	extern _graph_r_lineloop_put:proc
-	extern _graph_r_lineloop_unput:proc
 main_23_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
 main_24_TEXT	segment	byte public 'CODE' use16
-	extern @items_bomb_reset$qv:proc
-	extern @items_bomb_unput_update_render$qv:proc
-	extern @items_point_reset$qv:proc
-	extern @items_point_unput_update_render$qv:proc
 main_24_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
 main_25_TEXT	segment	byte public 'CODE' use16
-	extern @hud_score_and_cardcombo_render$qv:proc
-	extern @hud_bg_snap_and_put$qv:proc
 main_25_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
 main_26_TEXT	segment	byte public 'CODE' use16
-	extern @timer_tick_and_put$qv:proc
 main_26_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
 main_27_TEXT	segment	byte public 'CODE' use16
-	extern @ptn_put_8$qiii:proc
-	extern @player_unput_update_render$qi:proc
-	extern @orb_player_hittest$qi:proc
-	extern @player_miss_animate_and_update$qv:proc
 main_27_TEXT	ends
 
 ; ===========================================================================
 
 main_28_TEXT	segment	byte public 'CODE' use16
-	extern @yuugenmagan_load$qv:proc
-	extern @yuugenmagan_main$qv:proc
 main_28_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
 main_29_TEXT	segment	byte public 'CODE' use16
-	extern @mima_load$qv:proc
-	extern @mima_main$qv:proc
 main_29_TEXT	ends
 
 ; ===========================================================================
@@ -1593,9 +266,6 @@ main_30_TEXT	ends
 
 ; Segment type:	Pure code
 main_31_TEXT	segment	byte public 'CODE' use16
-	extern @stageobj_bgs_put_all$qv:proc
-	extern @scene_init_and_load$quc:proc
-	extern @obstacles_update_and_render$qi:proc
 main_31_TEXT	ends
 
 ; ===========================================================================
@@ -1608,154 +278,40 @@ main_32_TEXT	ends
 
 ; Segment type:	Pure code
 main_33_TEXT	segment	byte public 'CODE' use16
-	extern @singyoku_load$qv:proc
-	extern @singyoku_main$qv:proc
 main_33_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
 main_34_TEXT	segment	byte public 'CODE' use16
-	extern @kikuri_load$qv:proc
-	extern @kikuri_main$qv:proc
 main_34_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
 main_35_TEXT	segment	byte public 'CODE' use16
-	extern @elis_load$qv:proc
-	extern @elis_main$qv:proc
 main_35_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
 main_36_TEXT	segment	byte public 'CODE' use16
-	extern @sariel_entrance$qc:proc
-	extern @sariel_load_and_init$qv:proc
-	extern @sariel_main$qv:proc
 main_36_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
 main_37_TEXT	segment	byte public 'CODE' use16
-	extern @konngara_load_and_entrance$qc:proc
-	extern @konngara_init$qv:proc
-	extern @konngara_main$qv:proc
 main_37_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
 main_38_TEXT	segment	byte public 'CODE' use16
-	extern @CShots@unput_and_reset$qv:proc
 	extern @CPellets@$bctr$qv:proc
-	extern @CPellets@unput_and_reset$qv:proc
 main_38_TEXT	ends
 
 	.data
-
-; char aCGzgmgngg[]
-aCGzgmgngg	db '面セレクト',0Ah,0
-; char aCRf[]
-aCRf		db '面数',0
-; char aD[]
-aD		db '%d',0
-; char aSelect_flag[]
-aSelect_flag	db 'select_flag',0
-; char aGegxgggvbGhbib[]
-aGegxgggvbGhbib	db 'テストモード！！',0Ah,0
-; char aGfgogbgogvbGhb[]
-aGfgogbgogvbGhb	db 'デバッグモード！！',0Ah,0
-aUmx		db '東方靈異.伝',0
-; char aInit_mdt[]
-aInit_mdt	db 'init.mdt',0
-; char aZigoku_mde[]
-aZigoku_mde	db 'zigoku.mde',0
-; char a2[]
-a2		db '2 :',0
-; char src[]
-src		db 'boss1.grp',0
-; char aPositive_mdt[]
-aPositive_mdt	db 'positive.mdt',0
-; char aLegend_mdt[]
-aLegend_mdt	db 'LEGEND.mdt',0
-; char aBoss2_grp[]
-aBoss2_grp	db 'boss2.grp',0
-; char aBoss3_grp[]
-aBoss3_grp	db 'boss3.grp',0
-; char aKami_mdt[]
-aKami_mdt	db 'kami.mdt',0
-; char aBoss4_grp[]
-aBoss4_grp	db 'boss4.grp',0
-; char aKami2_mdt[]
-aKami2_mdt	db 'kami2.mdt',0
-; char aBoss5_grp[]
-aBoss5_grp	db 'boss5.grp',0
-; char aTensi_mdt[]
-aTensi_mdt	db 'tensi.mdt',0
-; char aAlice_mdt[]
-aAlice_mdt	db 'alice.mdt',0
-aStg_b_ptn	db 'stg_b.ptn',0
-; char a3[]
-a3		db '3 :',0
-dbl_34FF5	dq -8.0
-; char aFuuin[]
-aFuuin		db 'fuuin',0
-; char aReiiden[]
-aReiiden	db 'reiiden',0
-include th01/hiscore/routes[data].asm
-; char aOp[3]
-aOp		db 'op',0
-
-BOMB_DOUBLETAP_WINDOW = 20
-
-OVX_4_LEFT = 1
-
-	_PTN_STG_CARDFLIP_FN = 017Eh
-	extern _rank:byte
-	extern _bgm_mode:byte
-	extern _bombs:byte
-	extern _lives_extra:byte
-	extern _stage_num:byte
-	extern byte_34A35:byte
-	extern _timer_initialized:byte
-	extern _first_stage_in_scene:byte
-	extern _input_lr:byte
-	extern _input_mem_leave:byte
-	extern _input_shot:byte
-	extern _player_is_hit:byte
-	extern _paused:byte
-	extern _input_ok:byte
-	extern _input_strike:byte
-	extern _input_up:byte
-	extern _input_down:byte
-	extern _player_deflecting:byte
-	extern _bomb_damaging:byte
-	extern _score:dword
-	extern _bomb_frames:dword
-	extern _continues_total:dword
-	extern _mode_test:word
-	extern _bomb_doubletap_frames:word
-	extern word_34A70:word
-	extern _test_damage:word
-	extern word_34A74:word
-	extern _player_invincible:word
-	extern _orb_velocity_x:word
-	extern _lives:word
-	extern _stage_cleared:word
-	extern _cardcombo_cur:word
-	extern _orb_in_portal:word
-	extern _cardcombo_max:word
-	extern _extend_next:word
-	extern word_34A8C:word
-	extern _orb_prev_left:word
-	extern _orb_prev_top:word
-	extern _orb_force:qword
-	extern _ptn_slot_stg_has_reduced_sprites:byte
-	extern _boss_id:byte
 
 	; libs/master.lib/tx[data].asm
 	extern TextVramSeg:word
@@ -1811,13 +367,6 @@ IDLEN EQU 10
 	; libs/master.lib/rand[data].asm
 	extern random_seed:dword
 
-	extern _arc_key:byte
-	extern _card_flip_cycle:byte
-	extern _default_grp_fn:byte
-	extern _default_bgm_fn:byte
-	extern _game_cleared:byte
-	extern _unused_boss_stage_flag:word
-	extern _pellet_destroy_score_delta:word
 _INIT_	segment word public 'INITDATA' use16
 		db    1
 		db  20h
@@ -1836,10 +385,10 @@ endm
 public _credit_bombs, _player_swing_deflection_frames
 _credit_bombs	db ?
 _player_swing_deflection_frames	db ?
-public _frame_rand, _coreleft_prev
+public _frame_rand, _coreleft_prev, _stage_wait_for_shot_to_begin
 _frame_rand	dd ?
 _coreleft_prev	dd ?
-byte_36C1E	db ?
+_stage_wait_for_shot_to_begin	db ?
 public _mode_debug, _frames_since_start_of_binary
 _mode_debug	db ?
 _frames_since_start_of_binary	dd ?
@@ -1889,23 +438,6 @@ _memory_check_cycle	dd ?
 _heapcheck_ret_prev	dw ?
 _player_left_prev	dw ?
 
-CCards struc
-	C_left       	dd ?
-	C_top        	dd ?
-	C_flag       	dd ?
-	C_count      	dw ?
-	C_flip_frames	dd ?
-	C_hp         	dd ?
-CCards ends
-
-CObstacles struc
-	O_left  	dd ?
-	O_top   	dd ?
-	O_type  	dd ?
-	O_frames	dd ?
-	O_count 	dw ?
-CObstacles ends
-
 	; libs/master.lib/pal[bss].asm
 	extern Palettes:rgb_t:COLOR_COUNT
 
@@ -1920,13 +452,5 @@ CObstacles ends
 	; libs/master.lib/keystart[bss].asm
 	extern key_backup:byte:786
 	extern keywork:byte:10
-
-	extern _resident:dword
-	extern _shootout_lasers:byte
-	extern _stage_timer:word
-	extern _cards:CCards
-	extern _obstacles:CObstacles
-	extern _cards_score:dword
-	extern _route:byte
 
 		end

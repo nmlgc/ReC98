@@ -99,6 +99,7 @@ void elis_free(void);
 
 void sariel_entrance(int8_t unused);
 void sariel_load_and_init(void);
+void sariel_main(void);
 void sariel_free(void);
 
 // Jigoku
@@ -107,6 +108,7 @@ void mima_main(void);
 void mima_free(void);
 
 void kikuri_load(void);
+void kikuri_main(void);
 void kikuri_free(void);
 
 void konngara_load_and_entrance(int8_t unused);

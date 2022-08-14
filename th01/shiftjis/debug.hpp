@@ -5,6 +5,21 @@
 #define ERROR_RESIDENT_INVALID	"バッチファイルから起動してよ"
 // ------
 
+// Modes
+// -----
+
+#define DM_TEST_STARTING	"テストモード！！"
+#define DM_FULL_STARTING	"デバッグモード！！"
+// -----
+
+// Stage selection
+// ---------------
+
+#define STAGESELECT_TITLE	"面セレクト"
+#define STAGESELECT_STAGE	"面数"
+#define STAGESELECT_ROUTE	"select_flag"
+// ---------------
+
 // Memory info screen
 // ------------------
 

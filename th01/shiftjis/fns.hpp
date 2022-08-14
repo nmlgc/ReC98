@@ -1,5 +1,10 @@
 #define BINARY_OP       	"op"
+#define BINARY_MAIN     	"reiiden"
 #define BINARY_MAIN_CAPS	"REIIDEN"
+#define BINARY_END      	"fuuin"
+
+#define ARC_FN "“Œ•ûèËˆÙ.“`"
+#define ARC_KEY 0x76
 
 #define REGIST_BG_CLEARED	"endm_a.grp"
 

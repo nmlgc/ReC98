@@ -12,13 +12,14 @@ include th01/formats/cfg.inc
 ; Not *really* a cfg_options_t, since you'd expect that structure to contain
 ; the immutable contents of REIIDEN.CFG. However, [bombs] is in fact the
 ; *current* bomb count, and the .CFG value is saved to [credit_bombs]...
-public _rank, _bgm_mode, _bombs, _lives_extra, _stage_num, byte_34A35
+public _rank, _bgm_mode, _bombs, _lives_extra, _stage_num
+public _bgm_change_blocked
 _rank	db CFG_RANK_DEFAULT
 _bgm_mode	db CFG_BGM_MODE_DEFAULT
 _bombs	db CFG_BOMBS_DEFAULT
 _lives_extra	db CFG_LIVES_EXTRA_DEFAULT
 _stage_num	db 0
-byte_34A35	db 0
+_bgm_change_blocked	db 0
 	db 0
 public _RANKS, _first_stage_in_scene, _timer_initialized
 _RANKS label dword
@@ -56,12 +57,13 @@ _bomb_frames	dd 0
 _continues_total	dd 0
 	dw 0
 _mode_test	dw 0
-public _bomb_doubletap_frames, word_34A70, _test_damage, word_34A74
-public _player_invincible, _orb_velocity_x, _lives, _stage_cleared, _orb_rotation_frame
+public _bomb_doubletap_frames, _bomb_doubletap_frames_unused, _test_damage
+public _unused_5, _player_invincible, _orb_velocity_x, _lives, _stage_cleared
+public _orb_rotation_frame
 _bomb_doubletap_frames	dw 0
-word_34A70	dw 0
+_bomb_doubletap_frames_unused	dw 0
 _test_damage	dw 0
-word_34A74	dw 0
+_unused_5	dw 0
 	dw 0
 _player_invincible	dw 0
 	dw 0
@@ -69,12 +71,13 @@ _orb_velocity_x	dw 0
 _orb_rotation_frame	dw 0
 _lives	dw 4
 _stage_cleared	dw 0
-public _cardcombo_cur, _orb_in_portal, _cardcombo_max, _extend_next, word_34A8C
+public _cardcombo_cur, _orb_in_portal, _cardcombo_max, _extend_next
+public _unnecessary_copy_of_the_initial_
 _cardcombo_cur	dw 0
 _orb_in_portal	dw 0
 _cardcombo_max	dw 0
 _extend_next	dw 1
-word_34A8C	dw 1
+_unnecessary_copy_of_the_initial_	dw 1
 public _orb_prev_left, _orb_prev_top, _orb_frames_outside_portal
 public _orb_velocity_y, _orb_force
 _orb_prev_left	dw ORB_LEFT_START
@@ -82,8 +85,8 @@ _orb_prev_top 	dw  ORB_TOP_START
 _orb_frames_outside_portal	dw 0
 _orb_velocity_y	dq 0.0
 _orb_force	dq 0.0
-public _ptn_slot_stg_has_reduced_sprites, _bomb_palette_flash_peak_
-_ptn_slot_stg_has_reduced_sprites	db 0
+public _ptn_slot_stg, _bomb_palette_flash_peak_
+_ptn_slot_stg	db 0
 label _bomb_palette_flash_peak_ byte
 	db 0Fh, 0Fh, 0Fh
 	db 0Dh, 0Dh, 0Fh

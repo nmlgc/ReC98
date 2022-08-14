@@ -20,7 +20,17 @@ void items_point_reset(void);
 void items_point_unput_update_render(void);
 /// -----
 
+inline void items_render(void) {
+	items_bomb_render();
+	items_point_render();
+}
+
 inline void items_reset(void) {
 	items_bomb_reset();
 	items_point_reset();
+}
+
+inline void items_unput_update_render(void) {
+	items_bomb_unput_update_render();
+	items_point_unput_update_render();
 }

@@ -13,6 +13,13 @@
 #endif
 // -----------
 
+#define stageobj_safe_delete(ptr) { \
+	if(ptr) { \
+		delete[] ptr; \
+		ptr = nullptr; \
+	} \
+}
+
 // Cards
 // -----
 
@@ -80,6 +87,15 @@ struct CCards {
 		}
 	}
 
+	void free() {
+		stageobj_safe_delete(left);
+		stageobj_safe_delete(top);
+		stageobj_safe_delete(flag);
+		stageobj_safe_delete(flip_frames);
+		stageobj_safe_delete(hp);
+		stageobj_safe_delete(cards_score);
+	}
+
 	CCards(void) {
 		count = 1; // What?!
 		left = nullptr;
@@ -131,6 +147,13 @@ struct CObstacles {
 		type = nullptr;
 		frames = nullptr;
 	}
+
+	void free() {
+		stageobj_safe_delete(left);
+		stageobj_safe_delete(top);
+		stageobj_safe_delete(type);
+		stageobj_safe_delete(frames);
+	}
 };
 
 extern CObstacles obstacles;
@@ -151,6 +174,9 @@ void stageobjs_copy_0_to_1(int stage_id);
 // [stage_id], using the previously loaded scene data, and renders them to the
 // current VRAM page. If [first_stage_in_scene] is true, a flip-in animation
 // is shown for every card.
+// ZUN quirk: [stage_id] is taken % STAGES_PER_SCENE, but the function doesn't
+// check against negative numbers. Passing one will show one of five
+// deterministic "glitch stages".
 void stageobjs_init_and_render(int stage_id);
 // --------------
 

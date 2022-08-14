@@ -148,9 +148,9 @@ struct Pellet {
 class CPellets {
 	Pellet near pellets[PELLET_COUNT];
 	int alive_count; // only used for one single optimization
-	int unknown_zero[10];
+	int unknown_zero[10]; // ZUN bloat
 public:
-	int unknown_seven;
+	int unknown_seven; // ZUN bloat
 
 	// Rendering pellets at odd or even indices this frame?
 	bool16 interlace_field;

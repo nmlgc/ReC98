@@ -373,7 +373,7 @@ void konngara_load_and_entrance(int8_t)
 
 	graph_accesspage_func(0);
 	mdrv2_bgm_load("ALICE.MDT");
-	mdrv2_se_load(SE_FN);
+	mdrv2_se_load(SE_FN); // ZUN bloat: Already done in main()
 	mdrv2_bgm_play();
 
 	z_palette_set_black(j, i);

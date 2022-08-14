@@ -1,5 +1,8 @@
-#define SCOREDAT_ROUTE_NONE 	"–³"
-#define SCOREDAT_ROUTE_CLEAR	"Š®"
+#define SCOREDAT_ROUTE_NONE  	"–³"
+#define SCOREDAT_ROUTE_CLEAR 	"Š®"
+#define SCOREDAT_ROUTE_SHRINE	"Ğ"
+#define SCOREDAT_ROUTE_MAKAI 	"–‚"
+#define SCOREDAT_ROUTE_JIGOKU	"’n"
 
 // Will be name-encoded, and therefore modified in the .data section!
 #define scoredat_name_default	"“Œ•ûšèËˆÙ“`@@"

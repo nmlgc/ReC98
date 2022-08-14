@@ -6,6 +6,8 @@ static const screen_x_t PLAYER_LEFT_MAX = (PLAYFIELD_RIGHT - PLAYER_W);
 
 static const screen_x_t PLAYER_LEFT_START = (PLAYFIELD_CENTER_X - (PLAYER_W / 2));
 
+static const int PLAYER_MISS_INVINCIBILITY_FRAMES = 150;
+
 extern screen_x_t player_left;
 static const screen_y_t player_top = (PLAYFIELD_BOTTOM - PLAYER_H);
 

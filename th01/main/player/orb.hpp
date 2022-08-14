@@ -41,6 +41,7 @@ static const screen_y_t ORB_TOP_MAX = (PLAYFIELD_BOTTOM - ORB_H);
 
 static const screen_x_t ORB_LEFT_START = (ORB_LEFT_MAX -  8);
 static const screen_y_t  ORB_TOP_START = ( ORB_TOP_MAX - 88);
+static const orb_velocity_x_t ORB_VELOCITY_X_START = OVX_4_LEFT;
 
 #define ORB_FORCE_START -8.0
 static const int ORB_FORCE_REPEL = -13;

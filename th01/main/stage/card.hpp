@@ -1,6 +1,9 @@
 // Card-related stuff that got a separate translation unit, for some reason
 // ------------------------------------------------------------------------
 
+static const uint8_t CARD_FLIP_CYCLE_INITIAL_MAX = 60;
+static const uint8_t CARD_FLIP_CYCLE_MAX = 140;
+
 extern uint8_t card_flip_cycle;
 
 // Processes any collision between a card and the Orb, together with any

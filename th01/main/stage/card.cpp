@@ -72,7 +72,7 @@ void cards_hittest(int stage_id)
 			hud_score_and_cardcombo_render();
 
 			if(((card_flip_cycle++) % 10) == 0) {
-				if(card_flip_cycle >= 140) {
+				if(card_flip_cycle >= CARD_FLIP_CYCLE_MAX) {
 					card_flip_cycle = 1;
 					if(bomb_damaging) {
 add_point_item:

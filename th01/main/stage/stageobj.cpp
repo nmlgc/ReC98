@@ -29,6 +29,11 @@ struct stage_t {
 	StupidBytewiseWrapperAround<stagedat_stage_t> dat;
 	int8_t padding[5];
 };
+
+// ZUN bloat: The scene data is immediately converted to an internal
+// representation anyway. This could have easily been a local variable… then
+// again, storing it in global data is what gives negative "glitch stages"
+// their deterministic appearance.
 extern stage_t scene_stage[STAGES_PER_SCENE];
 
 char default_grp_fn[15] = "ST .GRP";

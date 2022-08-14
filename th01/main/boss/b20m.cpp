@@ -319,7 +319,7 @@ void sariel_entrance(int8_t)
 	graph_accesspage_func(0);
 	stageobjs_init_and_render(BOSS_STAGE);
 	mdrv2_bgm_load("TENSI.MDT");
-	mdrv2_se_load(SE_FN);
+	mdrv2_se_load(SE_FN); // ZUN bloat: Already done in main()
 	mdrv2_bgm_play();
 
 	text_fillca(' ', TX_WHITE);
@@ -2765,7 +2765,7 @@ entrance_rings_still_active:
 		player_left = PLAYER_LEFT_START;
 		orb_force = ORB_FORCE_START;
 		orb_force_frame = 0;
-		orb_velocity_x = OVX_4_LEFT;
+		orb_velocity_x = ORB_VELOCITY_X_START;
 		player_deflecting = false;
 		bomb_damaging = false;
 		player_reset();
