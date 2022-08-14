@@ -2769,7 +2769,7 @@ entrance_rings_still_active:
 		orb_velocity_x = OVX_4_LEFT;
 		player_deflecting = false;
 		bomb_damaging = false;
-		player_unput_update_render(false);
+		player_reset();
 
 		invincible = false;
 		random_seed = frame_rand;

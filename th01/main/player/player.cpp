@@ -981,7 +981,7 @@ void player_miss_animate_and_update(void)
 
 	Shots.unput_and_reset();
 	Pellets.decay();
-	player_unput_update_render(false);
+	player_reset();
 
 	// Effect
 	// ------
