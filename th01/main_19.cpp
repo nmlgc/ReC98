@@ -83,12 +83,12 @@ void pascal near str_from_swapped_kanji(
 #define regist_input_timeout_inc() timeout++;
 #define regist_input_timeout_if_reached(then) if(timeout > 1000) then
 
-#define regist_bg_put(stage) { \
+#define regist_bg_put(stage_num_or_scoredat_constant) { \
 	z_graph_clear_0(); \
 	z_palette_black(); \
 	graph_accesspage_func(1); \
 	\
-	if(stage < SCOREDAT_NOT_CLEARED) { \
+	if(stage_num_or_scoredat_constant < SCOREDAT_NOT_CLEARED) { \
 		grp_put_palette_show("game_o.grp"); \
 	} else { \
 		grp_put(REGIST_BG_CLEARED); \
@@ -97,8 +97,10 @@ void pascal near str_from_swapped_kanji(
 	z_palette_black_in(); \
 }
 
-#define regist_title_put(left, stage, ranks, col_and_fx) { \
-	if(stage < SCOREDAT_NOT_CLEARED) { \
+#define regist_title_put( \
+	left, stage_num_or_scoredat_constant, ranks, col_and_fx \
+) { \
+	if(stage_num_or_scoredat_constant < SCOREDAT_NOT_CLEARED) { \
 		graph_putsa_fx( \
 			left, TITLE_BACK_TOP, col_and_fx, REGIST_TITLE_WITH_SPACE \
 		); \

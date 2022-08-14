@@ -597,20 +597,22 @@ static const int PLACE_NONE = (SCOREDAT_PLACES + 20);
 static const int SCOREDAT_NOT_CLEARED = (SCOREDAT_CLEARED - 10);
 
 void regist(
-	int32_t score, int16_t stage, const shiftjis_t route[SCOREDAT_ROUTE_LEN + 1]
+	int32_t score,
+	int16_t stage_num_or_scoredat_constant,
+	const shiftjis_t route[SCOREDAT_ROUTE_LEN + 1]
 )
 {
 	scoredat_name_z_t names[SCOREDAT_PLACES];
 	const shiftjis_t* RANKS[RANK_COUNT] = REGIST_TITLE_RANKS;
 	long place;
 
-	regist_bg_put(stage);
+	regist_bg_put(stage_num_or_scoredat_constant);
 
 	graph_accesspage_func(1);
 
 	regist_title_put(
 		TITLE_BACK_LEFT,
-		stage,
+		stage_num_or_scoredat_constant,
 		RANKS,
 		(COL_REGIST_REGULAR | FX_WEIGHT_BOLD | FX_CLEAR_BG)
 	);
@@ -618,7 +620,7 @@ void regist(
 	// not cleared, or at (TITLE_BACK_LEFT, TITLE_TOP) if cleared.
 
 	graph_accesspage_func(0);
-	if(stage < SCOREDAT_NOT_CLEARED) {
+	if(stage_num_or_scoredat_constant < SCOREDAT_NOT_CLEARED) {
 		graph_2xscale_byterect_1_to_0_slow(
 			TITLE_LEFT, TITLE_TOP,
 			TITLE_BACK_LEFT, TITLE_BACK_TOP, TITLE_BACK_W, TITLE_BACK_H
@@ -663,11 +665,13 @@ void regist(
 			scoredat_names[p] = scoredat_names[p - SCOREDAT_NAME_BYTES];
 			p--;
 		}
-		regist_put_initial(place, score, stage, route, names);
+		regist_put_initial(
+			place, score, stage_num_or_scoredat_constant, route, names
+		);
 		alphabet_put_initial();
 
 		scoredat_score[place] = score;
-		scoredat_stages[place] = stage;
+		scoredat_stages[place] = stage_num_or_scoredat_constant;
 		scoredat_route_byte(place, 0) = route[0];
 		scoredat_route_byte(place, 1) = route[1];
 
@@ -678,7 +682,9 @@ void regist(
 		scoredat_free();
 		return;
 	}
-	regist_put_initial(PLACE_NONE, score, stage, route, names);
+	regist_put_initial(
+		PLACE_NONE, score, stage_num_or_scoredat_constant, route, names
+	);
 	input_ok = true;
 	input_shot = true;
 	while(1) {

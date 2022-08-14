@@ -54,7 +54,7 @@ typedef struct {
 	// of the current scene, without the boss stage
 	long bonus_per_stage[STAGES_PER_SCENE - 1];
 
-	int stage;
+	int stage_id;
 	unsigned long hiscore;
 	long score_highest; // among all continues
 	uint16_t point_value;

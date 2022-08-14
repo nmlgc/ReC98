@@ -1495,7 +1495,7 @@ loc_D54F:
 		push	offset _bgm_mode
 		push	ds
 		push	offset _rank
-		call	@resident_stuff_get$qnct1t1t1nlt5ni
+		call	@resident_stuff_get$qmct1t1t1mlt5mi
 		add	sp, 1Ch
 		cmp	ax, 1
 		jnz	short loc_D583
@@ -2764,7 +2764,7 @@ main_11_TEXT	ends
 
 ; Segment type:	Pure code
 resstuff_TEXT	segment	byte public 'CODE' use16
-	extern @resident_stuff_get$qnct1t1t1nlt5ni:proc
+	extern @resident_stuff_get$qmct1t1t1mlt5mi:proc
 resstuff_TEXT	ends
 
 ; ===========================================================================

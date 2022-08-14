@@ -9,6 +9,7 @@
 #include "master.hpp"
 #include "th01/common.h"
 #include "th01/resident.hpp"
+#include "th01/core/resstuff.hpp"
 
 resident_t far *resident;
 
@@ -20,7 +21,7 @@ void resident_stuff_set(
 	if(!sgm) {
 		sgm = ResData<resident_t>::create(RES_ID);
 		resident = sgm;
-		resident->stage = 0;
+		resident->stage_id = 0;
 		resident->continues_total = 0;
 	}
 	if(sgm) {
@@ -35,25 +36,25 @@ void resident_stuff_set(
 }
 
 int resident_stuff_get(
-	char *rank,
-	char *bgm_mode,
-	char *bombs,
-	char *start_lives_extra,
-	long *rand,
-	long *continues_total,
-	int *stage
+	char& rank,
+	char& bgm_mode,
+	char& bombs,
+	char& start_lives_extra,
+	long& rand,
+	long& continues_total,
+	int& stage_id
 )
 {
 	resident_t __seg *sgm = ResData<resident_t>::exist(RES_ID);
 	if(sgm) {
 		resident = sgm;
-		*rank = resident->rank;
-		*bgm_mode = resident->bgm_mode;
-		*bombs = resident->bombs;
-		*start_lives_extra = resident->start_lives_extra;
-		*rand = resident->rand;
-		*continues_total = resident->continues_total;
-		*stage = resident->stage;
+		rank = resident->rank;
+		bgm_mode = resident->bgm_mode;
+		bombs = resident->bombs;
+		start_lives_extra = resident->start_lives_extra;
+		rand = resident->rand;
+		continues_total = resident->continues_total;
+		stage_id = resident->stage_id;
 		return 0;
 	}
 	return 1;

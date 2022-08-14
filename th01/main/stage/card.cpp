@@ -30,7 +30,7 @@
 
 unsigned char card_flip_cycle = 0;
 
-void cards_hittest(int stage_num)
+void cards_hittest(int stage_id)
 {
 	for(unsigned int i = 0; i < cards.count; i++) {
 		struct {
@@ -58,7 +58,7 @@ void cards_hittest(int stage_num)
 			(cards.flag[i] == CARD_ALIVE)
 		)) {
 			cards.flag[i] = CARD_FLIPPING;
-			cards_score[i] = ((((stage_num / 5) * 100) + 100) + (
+			cards_score[i] = ((((stage_id / 5) * 100) + 100) + (
 				static_cast<unsigned long>(cardcombo_cur * cardcombo_cur) *
 				(((rank == RANK_LUNATIC) * 15) + 20)
 			));
@@ -194,7 +194,7 @@ void cards_update_and_render(void)
 				if(rank == RANK_LUNATIC) {
 					pellet_group_t group;
 
-					if(stage_num < 10) {
+					if(stage_num < (STAGES_PER_SCENE * 2)) {
 						group = PG_1_AIMED;
 					} else {
 						group = PG_1_RANDOM_NARROW_AIMED;

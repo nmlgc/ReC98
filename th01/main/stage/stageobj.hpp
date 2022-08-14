@@ -93,11 +93,6 @@ struct CCards {
 
 extern CCards cards;
 
-// Processes any collision between a card and the Orb, together with any
-// immediate effects of such collisions. Score points for collisions are
-// granted in relation to the [stage_num].
-void cards_hittest(int stage_num);
-
 // Also sets the [stage_cleared] flag if all cards were cleared, and fires
 // revenge pellets on Lunatic.
 void cards_update_and_render(void);

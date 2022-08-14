@@ -64,7 +64,7 @@ bool16 end_resident_clear(void)
 		for(i = 0; i < SCENE_COUNT; i++) {
 			resident->continues_per_scene[i] = 0;
 		}
-		resident->stage = 0;
+		resident->stage_id = 0;
 	}
 	return true;
 }
