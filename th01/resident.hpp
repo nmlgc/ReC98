@@ -2,6 +2,8 @@ typedef enum {
 	ROUTE_MAKAI,
 	ROUTE_JIGOKU,
 	ROUTE_COUNT,
+
+	_route_t_FORCE_INT16 = 0x7FFF
 } route_t;
 
 enum end_sequence_t {
@@ -13,7 +15,9 @@ enum end_sequence_t {
 enum debug_mode_t {
 	DM_OFF = 0,
 	DM_TEST = 1,
-	DM_FULL = 3
+	DM_FULL = 3,
+
+	_debug_mode_t_FORCE_INT16 = 0x7FFF
 };
 
 // Much like subpixels, pellet speeds are stored pre-multiplied by 40 to allow
@@ -30,20 +34,20 @@ static const pellet_speed_t PELLET_SPEED_MULTIPLIER = 40;
 #define RES_ID "ReiidenConfig"
 typedef struct {
 	char id[sizeof(RES_ID)];
-	char rank;
-	char bgm_mode; // 0 = off, 1 = FM
-	char bombs;
-	char start_lives_extra; // Add 2 for the actual number of lives
+	int8_t rank;
+	int8_t bgm_mode; // 0 = off, 1 = FM
+	int8_t bombs;
+	int8_t start_lives_extra; // Add 2 for the actual number of lives
 	end_sequence_t end_flag; /* ZUN symbol [Strings] */
-	char unused_1;
-	char route;
-	char rem_lives;
-	char snd_need_init;
-	char unused_2;
-	debug_mode_t debug_mode;
+	int8_t unused_1;
+	int8_t route; // ACTUAL TYPE: route_t
+	int8_t rem_lives;
+	int8_t snd_need_init; // ACTUAL TYPE: bool
+	int8_t unused_2;
+	int8_t debug_mode; // ACTUAL TYPE: debug_mode_t
 	pellet_speed_t pellet_speed;
-	long rand;
-	long score;
+	unsigned long rand;
+	int32_t score;
 
 	// ZUN bloat: Never actually read from. Even FUUIN.EXE, who does care
 	// about this value, manually derives it from [continues_per_scene].
@@ -62,7 +66,7 @@ typedef struct {
 
 extern long continues_total;
 
-extern route_t route;
+extern int8_t route; // ACTUAL TYPE: route_t
 extern resident_t far *resident;
 
 inline void resident_continue_use(void) {

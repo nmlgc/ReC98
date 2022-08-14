@@ -14,7 +14,11 @@
 resident_t far *resident;
 
 void resident_stuff_set(
-	char rank, char bgm_mode, char bombs, char start_lives_extra, long rand
+	int8_t rank,
+	int8_t bgm_mode,
+	int8_t bombs,
+	int8_t start_lives_extra,
+	long rand
 )
 {
 	resident_t __seg *sgm = ResData<resident_t>::exist(RES_ID);
@@ -36,11 +40,11 @@ void resident_stuff_set(
 }
 
 int resident_stuff_get(
-	char& rank,
-	char& bgm_mode,
-	char& bombs,
-	char& start_lives_extra,
-	long& rand,
+	int8_t& rank,
+	int8_t& bgm_mode,
+	int8_t& bombs,
+	int8_t& start_lives_extra,
+	unsigned long& rand,
 	long& continues_total,
 	int& stage_id
 )

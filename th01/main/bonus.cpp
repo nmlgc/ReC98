@@ -72,7 +72,7 @@ static const screen_y_t TOTLE_TOTLE_TOP = 196;
 // State
 // -----
 
-extern unsigned long score_bonus; // Should be local to the respective function.
+extern uint32_t score_bonus; // Should be local to the respective function.
 
 #define clamp_and_add_x10_to_score_bonus(val, max, unnecessary_i) \
 	/* Sneaky! That's how we can pretend this is an actual function that */ \

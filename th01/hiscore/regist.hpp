@@ -17,5 +17,5 @@
 void regist(
 	int32_t score,
 	int16_t stage_num_or_scoredat_constant,
-	const shiftjis_t route[SCOREDAT_ROUTE_LEN + 1]
+	const sshiftjis_t route[SCOREDAT_ROUTE_LEN + 1]
 );

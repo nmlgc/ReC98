@@ -154,7 +154,7 @@ loc_D54F:
 		push	offset _bgm_mode
 		push	ds
 		push	offset _rank
-		call	@resident_stuff_get$qmct1t1t1mlt5mi
+		call	@resident_stuff_get$qmct1t1t1mulmlmi
 		add	sp, 1Ch
 		cmp	ax, 1
 		jnz	short loc_D583
@@ -1275,7 +1275,7 @@ loc_E2A8:
 		inc	ax
 		push	ax
 		pushd	[_score]
-		call	@regist$qlixnxuc
+		call	@regist$qlixnxc
 		add	sp, 0Ah
 		les	bx, _resident
 		mov	ax, [bp+@@stage]
@@ -1415,7 +1415,7 @@ main_11_TEXT	ends
 
 ; Segment type:	Pure code
 resstuff_TEXT	segment	byte public 'CODE' use16
-	extern @resident_stuff_get$qmct1t1t1mlt5mi:proc
+	extern @resident_stuff_get$qmct1t1t1mulmlmi:proc
 resstuff_TEXT	ends
 
 ; ===========================================================================
@@ -1500,7 +1500,7 @@ main_18_TEXT	ends
 
 ; Segment type:	Pure code
 main_19_TEXT	segment	byte public 'CODE' use16
-	extern @regist$qlixnxuc:proc
+	extern @regist$qlixnxc:proc
 main_19_TEXT	ends
 
 ; ===========================================================================

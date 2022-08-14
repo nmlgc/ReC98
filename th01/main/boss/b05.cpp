@@ -60,7 +60,7 @@ enum singyoku_hp_t {
 // Global state that is defined here for some reason
 // -------------------------------------------------
 
-route_t route;
+int8_t route; // ACTUAL TYPE: route_t
 // -------------------------------------------------
 
 // State that's suddenly no longer shared with other bosses

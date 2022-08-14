@@ -27,7 +27,7 @@
 #include "th01/main/stage/stageobj.hpp"
 #include "th01/main/stage/stages.hpp"
 
-unsigned char card_flip_cycle = 0;
+uint8_t card_flip_cycle = 0;
 
 void cards_hittest(int stage_id)
 {

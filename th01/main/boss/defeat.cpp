@@ -134,7 +134,7 @@ void singyoku_defeat_animate_and_select_route(void)
 		CURSOR_LEFT = 128,
 	};
 	struct {
-		int v; // route_t
+		int v; // ACTUAL TYPE: route_t
 
 		void render(int col_sel, int col_other) {
 			z_palette_set_show(col_sel, RGB4::max(), RGB4::max(), RGB4::max());
@@ -211,7 +211,7 @@ void singyoku_defeat_animate_and_select_route(void)
 	} else {
 		scene_init_and_load(2);
 	}
-	route = static_cast<route_t>(route_sel.v);
+	route = route_sel.v;
 	stage_cleared = true;
 	player_is_hit = true;
 }
