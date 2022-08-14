@@ -255,9 +255,6 @@ inline screen_y_t player_48x48_top(void) {
 // Rendering
 // ---------
 
-#define player_put(cel) \
-	ptn_put_8(player_left, player_top, cel)
-
 inline void player_unput(const int8_t& cel) {
 	ptn_unput_8(player_left, player_top, cel);
 }
@@ -966,7 +963,7 @@ void player_miss_animate_and_update(void)
 	// the next 16 frames.
 	ptn_sloppy_unput_16(player_left, player_top);
 
-	ptn_put_8(orb_cur_left, orb_cur_top, PTN_ORB);
+	orb_put_default();
 	player_put(PTN_MIKO_MISS + (
 		(rand() % 8) == 0 ? (PTN_MIKO_MISS_ALTERNATE - PTN_MIKO_MISS) : 0
 	));
@@ -1026,7 +1023,7 @@ void player_miss_animate_and_update(void)
 		}
 
 		// We might have accidentally unblitted it earlier, after all.
-		ptn_put_8(orb_cur_left, orb_cur_top, PTN_ORB);
+		orb_put_default();
 
 		miss_effect_put(player_left, frame);
 		miss_effect_put(effect_left, frame);

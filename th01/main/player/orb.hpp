@@ -1,5 +1,25 @@
 #define ORB_HPP
 
+enum orb_velocity_x_t {
+	OVX_0 = 0,
+	OVX_4_LEFT = 1,
+	OVX_4_RIGHT = 2,
+	OVX_8_LEFT = 3,
+	OVX_8_RIGHT = 4,
+	OVX_COUNT,
+
+	_orb_velocity_x_t_FORCE_INT16 = 0x7FFF
+};
+
+enum orb_force_t {
+	OF_BOUNCE_FROM_SURFACE = 0, // bottom of playfield, or bumper
+	OF_BOUNCE_FROM_TOP = 1,
+	OF_SHOT = 2,
+	OF_IMMEDIATE = 3, // new force passed directly in [immediate]
+
+	_orb_force_t_FORCE_INT16 = 0x7FFF
+};
+
 static const pixel_t ORB_W = 32;
 static const pixel_t ORB_H = 32;
 
@@ -21,35 +41,15 @@ static const screen_y_t ORB_TOP_MAX = (PLAYFIELD_BOTTOM - ORB_H);
 
 static const screen_x_t ORB_LEFT_START = (ORB_LEFT_MAX -  8);
 static const screen_y_t  ORB_TOP_START = ( ORB_TOP_MAX - 88);
+
 #define ORB_FORCE_START -8.0
+static const int ORB_FORCE_REPEL = -13;
 
 extern screen_x_t orb_cur_left;
 extern screen_y_t orb_cur_top;
 extern screen_x_t orb_prev_left;
 extern screen_y_t orb_prev_top;
 extern bool16 orb_in_portal;
-
-/// Physics
-/// -------
-enum orb_velocity_x_t {
-	OVX_0 = 0,
-	OVX_4_LEFT = 1,
-	OVX_4_RIGHT = 2,
-	OVX_8_LEFT = 3,
-	OVX_8_RIGHT = 4,
-	OVX_COUNT,
-
-	_orb_velocity_x_t_FORCE_INT16 = 0x7FFF
-};
-
-enum orb_force_t {
-	OF_BOUNCE_FROM_SURFACE = 0, // bottom of playfield, or bumper
-	OF_BOUNCE_FROM_TOP = 1,
-	OF_SHOT = 2,
-	OF_IMMEDIATE = 3, // new force passed directly in [immediate]
-
-	_orb_force_t_FORCE_INT16 = 0x7FFF
-};
 
 // Initial value of the current force acting on the orb
 extern double orb_force;
@@ -94,9 +94,6 @@ inline void orb_velocity_reflect_y(void) {
 // the global [orb_velocity_x] (!) to bounce the orb off the left or right
 // edge of the playfield, if necessary.
 void orb_move_x(orb_velocity_x_t velocity_x);
-/// -------
-
-static const int ORB_FORCE_REPEL = -13;
 
 enum orb_repel_friction_t {
 	OR_NONE = 0, // No repulsion, kills player on collision
@@ -117,3 +114,11 @@ enum orb_repel_friction_t {
 // number is below OR_MAX, otherwise the new force will end up pointing into
 // the ground.
 void orb_player_hittest(int repel_friction);
+
+#ifdef PTN_HPP
+	// Blits the default Orb sprite to its current position. Used whenever it
+	// was or might have been just unblitted.
+	inline void orb_put_default(void) {
+		ptn_put_8(orb_cur_left, orb_cur_top, PTN_ORB);
+	}
+#endif

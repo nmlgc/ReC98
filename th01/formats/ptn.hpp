@@ -5,6 +5,8 @@
 /// color #15. With functions for raw allocation and VRAM snapping, this can
 /// also be used to store the backgrounds of frequently updated VRAM regions.
 
+#define PTN_HPP
+
 // Color #15 (1111) is always the transparent one, meaning that transparent
 // dots are 1 in all 4 bitplanes. The alpha mask therefore simply is the
 // negation of ANDing all bitplanes together. Nifty!

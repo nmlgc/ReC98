@@ -89,7 +89,7 @@ struct defeat_anim_t {
 	graph_accesspage_func(0); \
 	\
 	/* Reimu might not have been standing still, after all. */ \
-	ptn_put_8(player_left, player_top, PTN_MIKO_L); \
+	player_put_default(); \
 	\
 	/* Fade to [boss_post_defeat_palette] */ \
 	while(1) { \

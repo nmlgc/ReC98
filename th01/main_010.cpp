@@ -279,7 +279,7 @@ void stage_entrance(int stage_id, const char* bg_fn, bool16 clear_vram_page_0)
 		graph_accesspage_func(1);
 		graph_copy_accessed_page_to_other();
 		graph_accesspage_func(0);
-		ptn_put_8(player_left, player_top, PTN_MIKO_L); // redundant
+		player_put_default(); // redundant
 	}
 
 	stageobjs_init_and_render(stage_id); // rendered to page 0
@@ -294,7 +294,7 @@ void stage_entrance(int stage_id, const char* bg_fn, bool16 clear_vram_page_0)
 		graph_accesspage_func(0);
 		graph_accesspage_func(1);
 		graph_accesspage_func(0);
-		ptn_put_8(player_left, player_top, PTN_MIKO_L);
+		player_put_default();
 		items_bomb_render();
 		items_point_render();
 	}

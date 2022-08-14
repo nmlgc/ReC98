@@ -28,6 +28,18 @@ inline screen_y_t player_bottom(void) {
 void player_move_and_clamp(pixel_t delta);
 void invincibility_sprites_update_and_render(bool16 invincible);
 
+#define player_put(cel) { \
+	ptn_put_8(player_left, player_top, cel); \
+}
+
+#ifdef PTN_HPP
+	// Blits the default player sprite to its current position. Used whenever
+	// it was or might have been just unblitted.
+	inline void player_put_default(void) {
+		player_put(PTN_MIKO_L);
+	}
+#endif
+
 // Unblits, updates, and renders the player based on the current input,
 // handling all possible special moves together with any orb repulsion, but
 // *not* performing regular player/Orb collision detection. Setting that

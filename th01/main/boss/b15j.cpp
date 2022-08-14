@@ -1002,8 +1002,8 @@ void kikuri_main(void)
 			// Well, if we're blocking and overwriting VRAM page 0...
 			// Not much point in restricting these to the rows that actually
 			// overwrote those sprites.
-			ptn_put_8(player_left, player_top, PTN_MIKO_L);
-			ptn_put_8(orb_cur_left, orb_cur_top, PTN_ORB);
+			player_put_default();
+			orb_put_default();
 
 			frame_delay(1);
 		}
