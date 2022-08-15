@@ -22,16 +22,6 @@ include ReC98.inc
 include th01/th01.inc
 include th01/formats/cfg.inc
 
-	extern SCOPY@:proc
-	extern __setargv__:proc ; main() needs both to be set
-	extern __setenvp__:proc
-	extern _atol:proc
-	extern _int86:proc
-	extern _memcmp:proc
-	extern _printf:proc
-
-op_01 group op_01_TEXT, op_01__TEXT
-
 ; ===========================================================================
 
 ; Segment type:	Pure code
@@ -67,297 +57,10 @@ _TEXT		ends
 op_01_TEXT	segment	byte public 'CODE' use16
 op_01_TEXT	ends
 
-op_01__TEXT	segment	byte public 'CODE' use16
-		assume cs:op_01
-		;org 4
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
-
-	extern @cfg_load$qv:proc
-	extern @cfg_save$qv:proc
-	extern @main_input_sense$qv:proc
-	extern @option_input_sense$qv:proc
-	extern @whitelines_animate$qv:proc
-	extern @title_init$qv:proc
-	extern @title_window_put$qv:proc
-	extern @title_exit$qv:proc
-	extern @title_hit_key_put$qi:proc
-	extern @music_choice_unput_and_put$qii:proc
-	extern @main_update_and_render$qv:proc
-	extern @option_update_and_render$qv:proc
-	extern @music_update_and_render$qv:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-; int __cdecl main(int argc, const char	**argv,	const char **envp)
-public _main
-_main		proc far
-
-outregs		= REGS ptr -2Ch
-inregs		= REGS ptr -1Ch
-@@kb_buf		= word ptr -0Ch
-var_9		= byte ptr -9
-var_8		= dword	ptr -8
-var_4		= dword	ptr -4
-_argc		= word ptr  4
-_argv		= dword	ptr  6
-_envp		= dword	ptr  0Ah
-
-		enter	2Ch, 0
-		push	si
-		push	di
-		xor	si, si
-		xor	di, di
-		call	@mdrv2_resident$qv
-		or	ax, ax
-		jnz	short loc_B015
-		push	ds
-		push	offset aGogbgGtg@gcglv ; "バッチファイルから起動してよ"
-		jmp	loc_B25D
-; ---------------------------------------------------------------------------
-
-loc_B015:
-		mov	byte_1232D, 0
-		mov	dword_12330, 0
-		mov	byte_1232E, 0
-		cmp	word ptr [bp+_argv], 1
-		jle	loc_B0D6
-		les	bx, [bp+_argv+2]
-		les	bx, es:[bx+4]
-		mov	al, es:[bx]
-		cbw
-		cmp	ax, 73h	; 's'
-		jnz	short loc_B045
-		mov	_debug_mode, 1
-
-loc_B045:
-		les	bx, [bp+_argv+2]
-		les	bx, es:[bx+4]
-		mov	al, es:[bx]
-		cbw
-		cmp	ax, 74h	; 't'
-		jnz	short loc_B05A
-		mov	_debug_mode, 2
-
-loc_B05A:
-		les	bx, [bp+_argv+2]
-		les	bx, es:[bx+4]
-		mov	al, es:[bx]
-		cbw
-		cmp	ax, 64h	; 'd'
-		jnz	short loc_B06F
-		mov	_debug_mode, 3
-
-loc_B06F:
-		push	3		; n
-		push	ds
-		push	offset aCon	; "CON"
-		les	bx, [bp+_argv+2]
-		pushd	dword ptr es:[bx+4] ; s1
-		call	_memcmp
-		add	sp, 0Ah
-		or	ax, ax
-		jnz	short loc_B0D6
-		les	bx, [bp+_argv+2]
-		mov	eax, es:[bx+8]
-		mov	[bp+var_4], eax
-		pushd	[bp+var_4]
-		call	_atol
-		add	sp, 4
-		mov	byte_1232D, al
-		les	bx, [bp+_argv+2]
-		pushd	dword ptr es:[bx+0Ch]
-		call	_atol
-		add	sp, 4
-		mov	word ptr dword_12330+2,	dx
-		mov	word ptr dword_12330, ax
-		les	bx, [bp+_argv+2]
-		mov	eax, es:[bx+10h]
-		mov	[bp+var_8], eax
-		pushd	[bp+var_8]
-		call	_atol
-		add	sp, 4
-		mov	byte_1232E, al
-
-loc_B0D6:
-		call	@mdrv2_check_board$qv
-		call	@game_init$qv
-		call	@cfg_load$qv
-		mov	al, _opts.O_bgm_mode
-		cbw
-		mov	si, ax
-		mov	byte ptr [bp+inregs+1],	3
-		push	ss
-		lea	ax, [bp+outregs]
-		push	ax		; outregs
-		push	ss
-		lea	ax, [bp+inregs]
-		push	ax		; inregs
-		push	18h		; intno
-		call	_int86
-		add	sp, 0Ah
-		call	key_start
-		call	@title_init$qv
-		xor	ax, ax
-		mov	es, ax
-		mov	al, es:((50h shl 4) + 00h) ; BIOS_FLAG
-		or	al, 20h ; Do not beep when key buffer overflows
-		mov	[bp+var_9], al
-		xor	ax, ax
-		mov	dl, [bp+var_9]
-		mov	es, ax
-		mov	es:((50h shl 4) + 00h), dl  ; BIOS_FLAG
-		jmp	short loc_B135
-; ---------------------------------------------------------------------------
-
-loc_B126:
-		push	1
-		call	@frame_delay$qui
-		pop	cx
-		call	@title_hit_key_put$qi stdcall, di
-		pop	cx
-		inc	di
-
-loc_B135:
-		call	key_sense_bios
-		or	ax, ax
-		jz	short loc_B126
-		call	@title_window_put$qv
-		mov	eax, _rand
-		mov	random_seed, eax
-		jmp	loc_B21A
-; ---------------------------------------------------------------------------
-
-loc_B14D:
-		cmp	_menu_id, 0
-		jnz	short loc_B15F
-		call	@main_input_sense$qv
-		call	@main_update_and_render$qv
-		jmp	loc_B1EE
-; ---------------------------------------------------------------------------
-
-loc_B15F:
-		mov	al, _menu_id
-		cbw
-		cmp	ax, 1
-		jnz	short loc_B172
-		call	@option_input_sense$qv
-		call	@option_update_and_render$qv
-		jmp	short loc_B1EE
-; ---------------------------------------------------------------------------
-
-loc_B172:
-		mov	al, _menu_id
-		cbw
-		cmp	ax, 2
-		jnz	short loc_B185
-		call	@option_input_sense$qv
-		call	@music_update_and_render$qv
-		jmp	short loc_B1EE
-; ---------------------------------------------------------------------------
-
-loc_B185:
-		mov	al, _menu_id
-		cbw
-		cmp	ax, 3
-		jnz	short loc_B1D8
-		mov	al, _opts.O_bgm_mode
-		cbw
-		cmp	ax, si
-		jz	short loc_B1C9
-		cmp	_opts.O_bgm_mode, 0
-		jnz	short loc_B1A4
-		call	@mdrv2_bgm_stop$qv
-		jmp	short loc_B1C3
-; ---------------------------------------------------------------------------
-
-loc_B1A4:
-		mov	al, _opts.O_bgm_mode
-		cbw
-		cmp	ax, 1
-		jnz	short loc_B1C3
-		call	@mdrv2_bgm_stop$qv
-		push	ds
-		push	offset _aReimu_mdt ; "reimu.mdt"
-		call	@mdrv2_bgm_load$qnxc
-		add	sp, 4
-		call	@mdrv2_bgm_play$qv
-
-loc_B1C3:
-		mov	al, _opts.O_bgm_mode
-		cbw
-		mov	si, ax
-
-loc_B1C9:
-		push	0Fh
-		call	@frame_delay$qui
-		pop	cx
-		mov	_menu_id, 0
-		jmp	short loc_B1EE
-; ---------------------------------------------------------------------------
-
-loc_B1D8:
-		mov	al, _menu_id
-		cbw
-		cmp	ax, 4
-		jnz	short loc_B1EE
-		push	0Fh
-		call	@frame_delay$qui
-		pop	cx
-		mov	_menu_id, 1
-
-loc_B1EE:
-		xor	ax, ax
-		mov	es, ax
-		mov	ax, word ptr es:[((50h shl 4) + 24h)] ; KB_BUF_HEAD
-		mov	[bp+@@kb_buf], ax
-		xor	ax, ax
-		mov	dx, [bp+@@kb_buf]
-		mov	es, ax
-		mov	word ptr es:[((50h shl 4) + 26h)], dx ; KB_BUF_TAIL
-		mov	es, ax
-		mov	byte ptr es:[((50h shl 4) + 28h)], 0 ; KB_COUNT
-		inc	_rand
-		push	1
-		call	@frame_delay$qui
-		pop	cx
-
-loc_B21A:
-		cmp	_quit, 0
-		jz	loc_B14D
-		call	@cfg_save$qv
-		mov	_free_resident_structure_on_title, 1
-		call	@mdrv2_bgm_stop$qv
-		call	@title_exit$qv
-		push	1
-		call	@graph_accesspage_func$qi
-		pop	cx
-		call	@z_graph_clear$qv
-		push	0
-		call	@graph_accesspage_func$qi
-		pop	cx
-		call	@z_graph_clear$qv
-		call	@game_exit$qv
-		call	@mdrv2_bgm_stop$qv
-		push	ds
-		push	offset format	; "おつかれさまでした！！\n"
-
-loc_B25D:
-		call	_printf
-		add	sp, 4
-		pop	di
-		pop	si
-		leave
-		retf
-_main		endp
-op_01__TEXT	ends
-
 ; ===========================================================================
 
 ; Segment type:	Pure code
 frmdelay_TEXT	segment	byte public 'CODE' use16
-	extern @frame_delay$qui:proc
 frmdelay_TEXT	ends
 
 ; ===========================================================================
@@ -375,8 +78,6 @@ ztext_TEXT	ends
 
 ; Segment type:	Pure code
 initexit_TEXT	segment	byte public 'CODE' use16
-	extern @game_init$qv:proc
-	extern @game_exit$qv:proc
 initexit_TEXT	ends
 
 ; ---------------------------------------------------------------------------
@@ -384,8 +85,6 @@ initexit_TEXT	ends
 
 ; Segment type:	Pure code
 graph_TEXT	segment	byte public 'CODE' use16
-	extern @graph_accesspage_func$qi:proc
-	extern @z_graph_clear$qv:proc
 graph_TEXT	ends
 
 ; ---------------------------------------------------------------------------
@@ -417,11 +116,6 @@ resstuff_TEXT	ends
 
 ; Segment type:	Pure code
 mdrv2_TEXT	segment	byte public 'CODE' use16
-	extern @mdrv2_resident$qv:proc
-	extern @mdrv2_bgm_load$qnxc:proc
-	extern @mdrv2_bgm_play$qv:proc
-	extern @mdrv2_bgm_stop$qv:proc
-	extern @mdrv2_check_board$qv:proc
 mdrv2_TEXT	ends
 
 ; ===========================================================================
@@ -432,15 +126,6 @@ op_12_TEXT	ends
 ; ===========================================================================
 
 	.data
-
-	extern _opts:cfg_options_t
-	extern _debug_mode:byte
-	extern _menu_id:byte
-	extern _quit:byte
-	extern byte_1232D:byte
-	extern byte_1232E:byte
-	extern _free_resident_structure_on_title:byte
-	extern dword_12330:dword
 
 		db 0
 
@@ -587,7 +272,7 @@ aB@b@oavVVrvivV	db '　　死なばもろとも　　',0
 aB@b@Rpchmxom	db '　　  星幽剣士',0
 aB@b@b@gagcgkgx	db '　　　アイリス',0
 
-public _aS_2d
+public _aS_2d, _ERROR_RESIDENT_INVALID, _CON, _GOODBYE
 _aS_2d		db '%s%.2d',0
 aZipangu_mdt	db 'ZIPANGU.mdt',0
 aSt0_mdt	db 'st0.mdt',0
@@ -603,10 +288,9 @@ aTensi_mdt	db 'tensi.mdt',0
 aSyugen_mdt	db 'syugen.mdt',0
 aAlice_mdt	db 'alice.mdt',0
 aIris_mdt	db 'iris.mdt',0
-aGogbgGtg@gcglv	db 'バッチファイルから起動してよ',0
-aCon		db 'CON',0
-; char format[]
-format		db 'おつかれさまでした！！',0Ah,0
+_ERROR_RESIDENT_INVALID	db 'バッチファイルから起動してよ',0
+_CON	db 'CON',0
+_GOODBYE	db 'おつかれさまでした！！',0Ah,0
 
 	; libs/master.lib/grp[data].asm
 	extern graph_VramSeg:word
@@ -658,9 +342,8 @@ IDLEN EQU 10
 
 	.data?
 
-public _rand
-_rand	dd ?
-public _columns
+public _frame_rand, _columns
+_frame_rand	dd ?
 _columns	dd ROW_SIZE dup (?)
 
 	; libs/master.lib/pal[bss].asm

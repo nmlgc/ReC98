@@ -6,6 +6,7 @@
 #include <mem.h>
 #include <process.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "platform.h"
 #include "x86real.h"
 #include "pc98.h"
@@ -30,7 +31,7 @@
 #include "th01/snd/mdrv2.h"
 #include "th01/shiftjis/op.hpp"
 
-extern long rand;
+extern long frame_rand;
 
 extern const char aReimu_mdt[];
 
@@ -124,6 +125,14 @@ void cfg_save(void)
 /// Input
 /// -----
 
+enum menu_id_t {
+	MID_MAIN,
+	MID_OPTION,
+	MID_MUSIC,
+	MID_UPDATE_BGM_MODE__DELAY__SWITCH_TO_MAIN,
+	MID_DELAY__SWITCH_TO_OPTION,
+};
+
 static const int MAIN_CHOICE_COUNT = 4;
 static const int OPTION_CHOICE_COUNT = 5;
 static const int MUSIC_CHOICE_COUNT = 2;
@@ -160,19 +169,17 @@ extern int8_t menu_sel;
 extern int8_t input_left; // ACTUAL TYPE: bool
 extern bool input_cancel;
 
-extern enum {
-	MID_MAIN,
-	MID_OPTION,
-	MID_MUSIC,
-	MID_UPDATE_BGM_MODE__DELAY__SWITCH_TO_MAIN,
-	MID_DELAY__SWITCH_TO_OPTION,
-} menu_id;
+extern int8_t menu_id; // ACTUAL TYPE: menu_id_t
 
 extern int8_t input_right; // ACTUAL TYPE: bool
 extern bool quit;
+extern int8_t unused_con_arg_0;
+extern int8_t unused_con_arg_2;
 
 // ZUN bloat: Just call resident_free() in the one case it's actually needed.
 extern int8_t free_resident_structure_on_title_exit; // ACTUAL TYPE: bool
+
+extern int32_t unused_con_arg_1;
 
 inline void keygroup_sense(REGS& out, REGS& in, char group_id) {
 	in.h.ah = 0x04;
@@ -351,7 +358,7 @@ void start_game(void)
 
 	cfg_save();
 	resident_create_and_stuff_set(
-		opts.rank, opts.bgm_mode, opts.bombs, opts.lives_extra, rand
+		opts.rank, opts.bgm_mode, opts.bombs, opts.lives_extra, frame_rand
 	);
 	title_exit();
 	mdrv2_bgm_fade_out_nonblock();
@@ -389,7 +396,7 @@ void start_continue(void)
 {
 	cfg_save();
 	resident_create_and_stuff_set(
-		opts.rank, opts.bgm_mode, opts.bombs, opts.lives_extra, rand
+		opts.rank, opts.bgm_mode, opts.bombs, opts.lives_extra, frame_rand
 	);
 
 	if(resident->stage_id == 0) {
@@ -720,8 +727,11 @@ void music_update_and_render(void)
 		menu_sel = 0;
 		sel_prev = 0;
 		in_this_menu = true;
+
+		// This is not a functional way of locking these keys...
 		input_ok = false;
 		input_shot = false;
+
 		option_choice_max = (MUSIC_CHOICE_COUNT - 1);
 
 		menu_unput(CHOICE_COUNT_MAX);
@@ -757,5 +767,138 @@ void music_update_and_render(void)
 	#undef left_locked
 	#undef sel_prev
 	#undef in_this_menu
+}
+
+void main(int argc, const char *argv[])
+{
+	extern const char ERROR_RESIDENT_INVALID[];
+	extern const char CON[];
+	extern const char GOODBYE[];
+
+	int bgm_mode_cur = 0;
+	int hit_key_frames = 0;
+	const char* arg2; // ZUN bloat
+	const char* arg4; // ZUN bloat
+	uint8_t bios_flag;
+	seg_t kb_buf_head;
+	REGS in;
+	REGS out;
+
+	if(!mdrv2_resident()) {
+		printf(ERROR_RESIDENT_INVALID);
+		return;
+	}
+
+	unused_con_arg_0 = 0;
+	unused_con_arg_1 = 0;
+	unused_con_arg_2 = 0;
+
+	if(argc > 1) {
+		if(argv[1][0] == 's') {
+			// Probably supposed to just show the stage selection screen
+			// without any other debugging features, but start_game() ignores
+			// this value.
+			debug_mode = 1;
+		}
+		if(argv[1][0] == 't') {
+			debug_mode = 2;
+		}
+		if(argv[1][0] == 'd') {
+			debug_mode = 3;
+		}
+
+		// ZUN bug: Could theoretically be out-of-bounds.
+		if(memcmp(argv[1], CON, 3) == 0) {
+			arg2 = argv[2];
+			unused_con_arg_0 = atol(arg2);
+			unused_con_arg_1 = atol(argv[3]);
+			arg4 = argv[4];
+			unused_con_arg_2 = atol(arg4);
+		}
+	}
+
+	mdrv2_check_board();
+	game_init();
+	cfg_load();
+
+	bgm_mode_cur = opts.bgm_mode;
+
+	// Initialize the PC-98 keyboard interface and clear the key buffer.
+	in.h.ah = 0x03;
+	int86(0x18, &in, &out);
+
+	key_start();
+
+	title_init();
+
+	// Set the BIOS_FLAG to not beep when the keyboard buffer overflows, as
+	// we're clearing and setting its length to 0 below… I guess?
+	pokeb(0, 0x0500 /* BIOS_FLAG */, (peekb(0, 0x0500 /* BIOS_FLAG */) | 0x20));
+
+	while(!key_sense_bios()) {
+		frame_delay(1);
+		title_hit_key_put(hit_key_frames);
+		hit_key_frames++;
+	}
+
+	title_window_put();
+
+	// Since [frame_rand] is always 0 here, the white line animation always
+	// looks identical.
+	srand(frame_rand);
+
+	while(!quit) {
+		if(menu_id == MID_MAIN) {
+			main_input_sense();
+			main_update_and_render();
+		} else if(menu_id == MID_OPTION) {
+			option_input_sense();
+			option_update_and_render();
+		} else if(menu_id == MID_MUSIC) {
+			option_input_sense();
+			music_update_and_render();
+		} else if(menu_id == MID_UPDATE_BGM_MODE__DELAY__SWITCH_TO_MAIN) {
+			if(opts.bgm_mode != bgm_mode_cur) {
+				if(opts.bgm_mode == BGM_MODE_OFF) {
+					mdrv2_bgm_stop();
+				} else if(static_cast<int>(opts.bgm_mode) == BGM_MODE_MDRV2) {
+					mdrv2_bgm_stop();
+					mdrv2_bgm_load(aReimu_mdt);
+					mdrv2_bgm_play();
+				}
+				bgm_mode_cur = opts.bgm_mode;
+			}
+
+			// ZUN quirk: These delays are only here to prevent this menu from
+			// being immediately entered again if the OK or Shot key isn't
+			// immediately released on the next frame. This would need a
+			// cross-menu locking approach to be solved properly.
+			frame_delay(15);
+			menu_id = MID_MAIN;
+		} else if(menu_id == MID_DELAY__SWITCH_TO_OPTION) {
+			// ZUN quirk: Same here.
+			frame_delay(15);
+			menu_id = MID_OPTION;
+		}
+
+		// Clear the PC-98 BIOS keyboard buffer… yeah, this is not a proper
+		// way to handle cross-menu locking either.
+		poke(0, 0x0526 /* KB_BUF_TAIL */, peek(0, 0x0524) /* KB_BUF_HEAD */);
+		pokeb(0, 0x0528 /* KB_COUNT */, 0);
+
+		frame_rand++;
+		frame_delay(1);
+	}
+	cfg_save();
+	free_resident_structure_on_title_exit = true;
+	mdrv2_bgm_stop();
+	title_exit();
+
+	graph_accesspage_func(1);	z_graph_clear();
+	graph_accesspage_func(0);	z_graph_clear();
+
+	game_exit();
+	mdrv2_bgm_stop();
+	printf(GOODBYE);
 }
 /// ---------
