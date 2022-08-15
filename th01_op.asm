@@ -84,38 +84,7 @@ op_01__TEXT	segment	byte public 'CODE' use16
 	extern @music_choice_unput_and_put$qii:proc
 	extern @main_update_and_render$qv:proc
 	extern @option_update_and_render$qv:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_AE6D	proc far
-
-var_3C		= byte ptr -3Ch
-
-		enter	3Ch, 0
-		lea	ax, [bp+var_3C]
-		push	ss
-		push	ax
-		push	ds
-		push	offset _MUSIC_FILES
-		mov	cx, 3Ch	; '<'
-		call	SCOPY@
-		call	@mdrv2_bgm_stop$qv
-		mov	al, _music_sel
-		cbw
-		shl	ax, 2
-		lea	dx, [bp+var_3C]
-		add	ax, dx
-		mov	bx, ax
-		pushd	dword ptr ss:[bx]	; path
-		call	@mdrv2_bgm_load$qnxc
-		add	sp, 4
-		call	@mdrv2_bgm_play$qv
-		leave
-		retf
-sub_AE6D	endp
-
+	extern @music_play_selected$qv:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -238,7 +207,7 @@ loc_AFE0:
 loc_AFEE:
 		cmp	_menu_sel, 0
 		jnz	short loc_AFF9
-		call	sub_AE6D
+		call	@music_play_selected$qv
 
 loc_AFF9:
 		pop	bp

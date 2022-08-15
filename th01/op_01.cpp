@@ -688,4 +688,13 @@ void option_update_and_render(void)
 	#undef sel_prev
 	#undef in_this_menu
 }
+
+void music_play_selected(void)
+{
+	extern const TextArray<TRACK_COUNT> MUSIC_FILES;
+	const TextArray<TRACK_COUNT> FILES = MUSIC_FILES;
+	mdrv2_bgm_stop();
+	mdrv2_bgm_load(FILES.t[music_sel]);
+	mdrv2_bgm_play();
+}
 /// ---------
