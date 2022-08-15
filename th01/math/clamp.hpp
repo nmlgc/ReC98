@@ -39,6 +39,12 @@
 		(val) = 0; \
 	}
 
+#define ring_inc_ge(val, ring_end) \
+	(val)++; \
+	if((val) >= (ring_end)) { \
+		(val) = 0; \
+	}
+
 #define ring_dec(val, ring_end) \
 	(val)--; \
 	if(val < ring_min()) { \

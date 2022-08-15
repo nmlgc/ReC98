@@ -165,6 +165,7 @@ extern enum {
 	MID_OPTION,
 	MID_MUSIC,
 	MID_UPDATE_BGM_MODE__DELAY__SWITCH_TO_MAIN,
+	MID_DELAY__SWITCH_TO_OPTION,
 } menu_id;
 
 extern int8_t input_right; // ACTUAL TYPE: bool
@@ -431,6 +432,11 @@ static const int CHOICE_COUNT_MAX = 5;
 
 static const int TRACK_COUNT = 15;
 
+// ZUN bloat: Needed to circumvent 16-bit promotion in a single comparison.
+inline int8_t track_count(void) {
+	return TRACK_COUNT;
+}
+
 #define choice_top_0(choice_count) ( \
 	(MENU_CENTER_Y - (((choice_count) * CHOICE_PADDED_H) / 2)) \
 )
@@ -696,5 +702,60 @@ void music_play_selected(void)
 	mdrv2_bgm_stop();
 	mdrv2_bgm_load(FILES.t[music_sel]);
 	mdrv2_bgm_play();
+}
+
+void music_update_and_render(void)
+{
+	#define in_this_menu	music_in_this_menu
+	#define sel_prev    	music_sel_prev
+	#define left_locked 	music_left_locked
+	#define right_locked	music_right_locked
+
+	extern bool16 in_this_menu;
+	extern int sel_prev;
+	extern bool16 left_locked;
+	extern bool16 right_locked;
+
+	if(!in_this_menu) {
+		menu_sel = 0;
+		sel_prev = 0;
+		in_this_menu = true;
+		input_ok = false;
+		input_shot = false;
+		option_choice_max = (MUSIC_CHOICE_COUNT - 1);
+
+		menu_unput(CHOICE_COUNT_MAX);
+		music_choice_unput_and_put(0, COL_ACTIVE);
+		music_choice_unput_and_put(1, COL_INACTIVE);
+	}
+	choice_render_if_changed(sel_prev, menu_sel, music_choice_unput_and_put);
+
+	on_condition_if_not_locked_2((input_left == true), left_locked, {
+		if(menu_sel == 0) {
+			ring_dec(music_sel, (TRACK_COUNT - 1));
+		}
+		music_choice_unput_and_put(menu_sel, COL_ACTIVE);
+	});
+
+	on_condition_if_not_locked_2((input_right == true), right_locked, {
+		if(menu_sel == 0) {
+			ring_inc_ge(music_sel, track_count());
+		}
+		music_choice_unput_and_put(menu_sel, COL_ACTIVE);
+	});
+
+	if(((input_ok || input_shot) && (menu_sel == 1)) || input_cancel) {
+		menu_id = MID_DELAY__SWITCH_TO_OPTION;
+		in_this_menu = false;
+		menu_sel = 3; // Music Test in the option menu
+	}
+	if((input_ok || input_shot) && (menu_sel == 0)) {
+		music_play_selected();
+	}
+
+	#undef right_locked
+	#undef left_locked
+	#undef sel_prev
+	#undef in_this_menu
 }
 /// ---------

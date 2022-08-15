@@ -84,136 +84,7 @@ op_01__TEXT	segment	byte public 'CODE' use16
 	extern @music_choice_unput_and_put$qii:proc
 	extern @main_update_and_render$qv:proc
 	extern @option_update_and_render$qv:proc
-	extern @music_play_selected$qv:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_AEA8	proc far
-		push	bp
-		mov	bp, sp
-		cmp	word_125AA, 0
-		jnz	short loc_AF00
-		mov	_menu_sel, 0
-		mov	word_125AC, 0
-		mov	word_125AA, 1
-		mov	_input_ok, 0
-		mov	_input_shot, 0
-		mov	_option_choice_max, 1
-		call	@egc_copy_rect_1_to_0_16$qiiii c, large (266 shl 16) or 220, large (100 shl 16) or 176
-		call	@music_choice_unput_and_put$qii c, large 0 or (15 shl 16)
-		call	@music_choice_unput_and_put$qii c, large 1 or (5 shl 16)
-
-loc_AF00:
-		mov	al, _menu_sel
-		cbw
-		cmp	ax, word_125AC
-		jz	short loc_AF2C
-		call	@music_choice_unput_and_put$qii c, word_125AC, 5
-		push	0Fh
-		mov	al, _menu_sel
-		cbw
-		push	ax
-		call	@music_choice_unput_and_put$qii
-		add	sp, 4
-		mov	al, _menu_sel
-		cbw
-		mov	word_125AC, ax
-
-loc_AF2C:
-		mov	al, _input_left
-		cbw
-		cmp	ax, 1
-		jnz	short loc_AF69
-		cmp	word_125AE, 0
-		jnz	short loc_AF6F
-		cmp	_menu_sel, 0
-		jnz	short loc_AF53
-		dec	_music_sel
-		cmp	_music_sel, 0
-		jge	short loc_AF53
-		mov	_music_sel, 0Eh
-
-loc_AF53:
-		push	0Fh
-		mov	al, _menu_sel
-		cbw
-		push	ax
-		call	@music_choice_unput_and_put$qii
-		add	sp, 4
-		mov	word_125AE, 1
-		jmp	short loc_AF6F
-; ---------------------------------------------------------------------------
-
-loc_AF69:
-		mov	word_125AE, 0
-
-loc_AF6F:
-		mov	al, _input_right
-		cbw
-		cmp	ax, 1
-		jnz	short loc_AFAC
-		cmp	word_125B0, 0
-		jnz	short loc_AFB2
-		cmp	_menu_sel, 0
-		jnz	short loc_AF96
-		inc	_music_sel
-		cmp	_music_sel, 0Fh
-		jl	short loc_AF96
-		mov	_music_sel, 0
-
-loc_AF96:
-		push	0Fh
-		mov	al, _menu_sel
-		cbw
-		push	ax
-		call	@music_choice_unput_and_put$qii
-		add	sp, 4
-		mov	word_125B0, 1
-		jmp	short loc_AFB2
-; ---------------------------------------------------------------------------
-
-loc_AFAC:
-		mov	word_125B0, 0
-
-loc_AFB2:
-		cmp	_input_ok, 0
-		jnz	short loc_AFC0
-		cmp	_input_shot, 0
-		jz	short loc_AFC9
-
-loc_AFC0:
-		mov	al, _menu_sel
-		cbw
-		cmp	ax, 1
-		jz	short loc_AFD0
-
-loc_AFC9:
-		cmp	_input_cancel, 0
-		jz	short loc_AFE0
-
-loc_AFD0:
-		mov	_menu_id, 4
-		mov	word_125AA, 0
-		mov	_menu_sel, 3
-
-loc_AFE0:
-		cmp	_input_ok, 0
-		jnz	short loc_AFEE
-		cmp	_input_shot, 0
-		jz	short loc_AFF9
-
-loc_AFEE:
-		cmp	_menu_sel, 0
-		jnz	short loc_AFF9
-		call	@music_play_selected$qv
-
-loc_AFF9:
-		pop	bp
-		retf
-sub_AEA8	endp
-
+	extern @music_update_and_render$qv:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -382,7 +253,7 @@ loc_B172:
 		cmp	ax, 2
 		jnz	short loc_B185
 		call	@option_input_sense$qv
-		call	sub_AEA8
+		call	@music_update_and_render$qv
 		jmp	short loc_B1EE
 ; ---------------------------------------------------------------------------
 
@@ -522,7 +393,6 @@ graph_TEXT	ends
 
 ; Segment type:	Pure code
 SHARED	segment	byte public 'CODE' use16
-	extern @egc_copy_rect_1_to_0_16$qiiii:proc
 SHARED	ends
 
 ; ===========================================================================
@@ -565,19 +435,12 @@ op_12_TEXT	ends
 
 	extern _opts:cfg_options_t
 	extern _debug_mode:byte
-	extern _menu_sel:byte
-	extern _input_left:byte
-	extern _input_ok:byte
-	extern _input_shot:byte
-	extern _input_cancel:byte
 	extern _menu_id:byte
-	extern _input_right:byte
 	extern _quit:byte
 	extern byte_1232D:byte
 	extern byte_1232E:byte
 	extern _free_resident_structure_on_title:byte
 	extern dword_12330:dword
-	extern _option_choice_max:byte
 
 		db 0
 
@@ -664,10 +527,12 @@ _MUSIC_FILES	label dword
 	dd aAlice_mdt		; "alice.mdt"
 	dd aIris_mdt		; "iris.mdt"
 
-word_125AA	dw 0
-word_125AC	dw 0
-word_125AE	dw 0
-word_125B0	dw 0
+public _music_in_this_menu, _music_sel_prev
+public _music_left_locked, _music_right_locked
+_music_in_this_menu	dw 0
+_music_sel_prev	dw 0
+_music_left_locked	dw 0
+_music_right_locked	dw 0
 include th01/formats/cfg[data].asm
 ; char _aReimu_mdt[]
 public _aReimu_mdt, _aReiiden2_grp, _aReiiden3_grp, _aOp_win_grp
