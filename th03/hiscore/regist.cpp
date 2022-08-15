@@ -6,6 +6,7 @@
 #include "planar.h"
 #include "master.hpp"
 #include "shiftjis.hpp"
+#include "game/input.hpp"
 #include "th01/rank.h"
 extern "C" {
 #include "th01/hardware/grppsafx.h"
@@ -342,17 +343,6 @@ void near regist_name_enter(void)
 		} \
 	}
 
-	#define on_action(condition, lock, func) { \
-		if(condition) { \
-			if(lock == false) { \
-				func \
-			} \
-			lock = true; \
-		} else { \
-			lock = false; \
-		} \
-	}
-
 	struct input_hold_frames_t {
 		int up;
 		int down;
@@ -417,7 +407,7 @@ void near regist_name_enter(void)
 			rerender = true;
 		});
 
-		on_action(
+		on_condition_if_not_locked(
 			((input_sp & INPUT_OK) || (input_sp & INPUT_SHOT)), enter_locked, {
 				if(regi == REGI_BS) {
 					cursor_backspace(cursor_backwards, top);
@@ -435,7 +425,7 @@ void near regist_name_enter(void)
 			}
 		);
 
-		on_action((input_sp & INPUT_BOMB), back_locked, { \
+		on_condition_if_not_locked((input_sp & INPUT_BOMB), back_locked, { \
 			cursor_backspace(cursor_backwards, top);
 			rerender = true;
 		});
@@ -465,6 +455,5 @@ void near regist_name_enter(void)
 		frame_delay(1);
 	}
 
-	#undef on_action
 	#undef on_direction
 }
