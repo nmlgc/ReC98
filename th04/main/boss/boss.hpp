@@ -100,7 +100,7 @@ struct explosion_t {
 	SPPoint center;
 	SPPoint radius_cur;
 	SPPoint radius_delta;
-	int8_t unused;
+	int8_t unused; // ZUN bloat
 	// Offset to add to the angle for the Y coordinate, turning the circle
 	// into a slanted ellipse. See https://www.desmos.com/calculator/faeefi6w1u
 	// for a plot of the effect.

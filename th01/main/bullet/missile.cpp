@@ -32,7 +32,7 @@ void CMissiles::ptn_cel_for(int i, main_ptn_id_t& ptn_id, int& quarter) const
 		ANGLE_PER_CEL = (0x100 / MISSILE_CELS),
 	};
 
-	// I have no words. Every further line in this function is bad.
+	// ZUN bloat: I have no words. Every further line in this function is bad.
 	// A sane version:
 	//
 	// 	unsigned char angle = iatan2(velocity_y[i], velocity_x[i]);

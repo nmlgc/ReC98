@@ -197,6 +197,7 @@ void items_bomb_reset(void)
 	items_bomb[3].flag = IF_FREE;
 }
 
+// ZUN bloat: Just pass an item_t structure?
 void item_unput_update_render(
 	int slot,
 	char &flag,

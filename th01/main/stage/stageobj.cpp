@@ -383,9 +383,10 @@ void stageobjs_init_and_render(int stage_id)
 	cards.new_counted();
 	obstacles.new_counted();
 
-	// No, not the ID of the one card that might remain unflipped after a bomb.
-	// That's down to a per-frame rand(), see cards_hittest() for the actual
-	// algorithm.
+	// ZUN bloat: No, not the ID of the one card that might remain unflipped
+	// after a bomb. That's down to a per-frame rand(), see cards_hittest()
+	// for the actual algorithm. (It also happens to divide by 0 if cards.count
+	// is 0.)
 	static int a_random_unused_card_id;
 	a_random_unused_card_id = (rand() % cards.count);
 
@@ -1030,4 +1031,4 @@ void portal_enter_update_and_render_or_reset(int obstacle_slot, bool16 reset)
 	}
 }
 
-static int8_t unused[4];
+static int8_t unused[4]; // ZUN bloat

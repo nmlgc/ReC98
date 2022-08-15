@@ -721,7 +721,7 @@ void pattern_symmetrical_from_cup_fire(unsigned char angle)
 void pattern_symmetrical_from_cup(void)
 {
 	static unsigned char angle;
-	static int16_t unused;
+	static int16_t unused; // ZUN bloat
 
 	if(boss_phase_frame == 10) {
 		face_expression_set_and_put(FE_CLOSED);

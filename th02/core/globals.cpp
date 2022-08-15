@@ -8,7 +8,7 @@ resident_t *resident;
 int8_t unused_op_2_3; // Maybe debug mode?
 char lives;
 char bombs;
-int8_t unused_3;
-int16_t unused_4;
+int8_t unused_3; // ZUN bloat
+int16_t unused_4; // ZUN bloat
 long score;
-int16_t unused_5;
+int16_t unused_5; // ZUN bloat

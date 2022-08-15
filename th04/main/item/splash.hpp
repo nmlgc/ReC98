@@ -8,7 +8,7 @@ enum item_splash_flag_t {
 // semantic differences to the circle_t structure.
 struct item_splash_t {
 	item_splash_flag_t flag;
-	char time;	// unused
+	char time;	// ZUN bloat: Expressed via the radius.
 	SPPoint center;
 	Subpixel radius_cur;
 	Subpixel radius_prev;

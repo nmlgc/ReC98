@@ -37,4 +37,4 @@ void pascal score_delta_commit(void)
 	}
 }
 
-static int unused_6CAC[3];
+static int unused_6CAC[3]; // ZUN bloat

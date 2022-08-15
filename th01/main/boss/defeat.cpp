@@ -135,7 +135,7 @@ void singyoku_defeat_animate_and_select_route(void)
 	} route_sel;
 
 	graph_accesspage_func(1);
-	z_graph_clear(); // redundant
+	z_graph_clear(); // ZUN bloat: graph_glyphrow_put() passes FX_CLEAR_BG
 	graph_glyphrow_put(0, V_WHITE, ROUTE_SEL_1);
 	graph_glyphrow_put(2, V_WHITE, ROUTE_SEL_2);
 	graph_glyphrow_put(4, V_WHITE, ROUTE_SEL_3);

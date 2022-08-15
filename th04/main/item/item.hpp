@@ -15,7 +15,7 @@ enum item_type_t {
 
 struct item_t {
 	char flag;
-	char unused;
+	char unused; // ZUN bloat
 	PlayfieldMotion pos;
 	unsigned char type;
 	char unknown;

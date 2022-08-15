@@ -183,7 +183,7 @@ void singyoku_setup(void)
 	hud_hp_first_redwhite = 2; // fully arbitrary, doesn't indicate anything
 	boss_phase = 0;
 
-	// (redundant, no particles are shown in this fight)
+	// ZUN bloat: Redundant, no particles are shown in this fight.
 	particles_unput_update_render(PO_INITIALIZE, V_WHITE);
 }
 
@@ -622,7 +622,7 @@ void singyoku_main(void)
 
 	static struct {
 		int pattern_cur;
-		int16_t unused;
+		int16_t unused; // ZUN bloat
 
 		void frame_common(void) {
 			boss_phase_frame++;
@@ -709,7 +709,7 @@ void singyoku_main(void)
 		stage_palette_set(z_Palettes);
 		boss_palette_snap();
 		ent.hitbox_orb_inactive = false;
-		invincibility_frame = 0; // (redundant)
+		invincibility_frame = 0;
 
 		// Huh?
 		pattern_state.unknown = (
@@ -753,7 +753,7 @@ void singyoku_main(void)
 				phase.unused = 0;
 				phase.pattern_cur = 0;
 				boss_phase_frame = 0;
-				invincibility_frame = 0; // (redundant)
+				invincibility_frame = 0; // ZUN bloat: Already 0 here
 			}
 		}
 	} else if(boss_phase == 2) {
@@ -779,7 +779,7 @@ void singyoku_main(void)
 		if(boss_hp <= PHASE_2_END_HP) {
 			boss_phase = 8;
 			mdrv2_se_play(5);
-			boss_phase_frame = 0; // (redundant)
+			boss_phase_frame = 0; // ZUN bloat: The fight is over
 		}
 	} else if(boss_phase == 8) {
 		// This has no effect if SinGyoku was defeated in its sphere form, and

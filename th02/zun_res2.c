@@ -20,7 +20,7 @@ void pascal near scoredat_load(void);
 const char *SCOREDAT_FN = "huuhi.dat";
 unsigned char g_name_first_sum = 0;
 unsigned char stage_sum = 0;
-unsigned char unused_2 = 0;
+unsigned char unused_2 = 0; // ZUN bloat
 long score_sum = 0;
 long section_sum = 0;
 
@@ -30,7 +30,7 @@ int pascal scoredat_verify(void)
 		scoredat_recreate();
 	} else {
 		for(rank = 0; rank < RANK_COUNT; rank++) {
-			register int unused;
+			register int unused; // ZUN bloat
 			register int i;
 
 			scoredat_load();

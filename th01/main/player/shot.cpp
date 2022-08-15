@@ -1,7 +1,7 @@
 #include "th01/math/overlap.hpp"
 #include "th01/sprites/pellet.h"
 
-bool16 unused_boss_stage_flag = false;
+bool16 unused_boss_stage_flag = false; // ZUN bloat
 
 static const pixel_t SHOT_SPRITE_MARGIN = 2;
 static const int SHOT_DECAY_FRAMES = 7;

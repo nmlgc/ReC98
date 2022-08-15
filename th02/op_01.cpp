@@ -36,11 +36,11 @@ typedef void pascal near putfunc_t(int sel, unsigned int atrb);
 char menu_sel = 0;
 bool in_option = false;
 bool quit = false;
-char unused_1 = 0;
+char unused_1 = 0; // ZUN bloat
 
 static bool main_input_allowed;
 unsigned char snd_bgm_mode;
-static int unused_2;
+static int unused_2; // ZUN bloat
 unsigned int idle_frames;
 unsigned char demo_num;
 resident_t __seg *resident_sgm;

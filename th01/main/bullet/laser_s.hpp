@@ -45,14 +45,14 @@ public:
 	pixel_t ray_moveout_speed;
 	screen_x_t target_left;	// unused
 	vram_y_t target_y;	// unused
-	int unknown;	// unused
-	int32_t unused_1;
-	LaserPixel velocity_y;	// per frame, unused
+	int unknown;	// ZUN bloat
+	int32_t unused_1;	// ZUN bloat
+	LaserPixel velocity_y;	// per frame, ZUN bloat
 	LaserPixel step_y;	// per ray pixel, [-1.0, +1.0]
-	LaserPixel velocity_x;	// per frame, unused
+	LaserPixel velocity_x;	// per frame, ZUN bloat
 	LaserPixel step_x;	// per ray pixel, [-1.0, +1.0]
 	pixel_t ray_extend_speed;
-	int16_t unused_2;
+	int16_t unused_2;	// ZUN bloat
 	bool16 alive;
 	int age;
 
@@ -63,14 +63,14 @@ public:
 	unsigned char col;
 	unsigned char width_cel;
 	bool damaging;
-	char id;	// unused
+	char id;	// ZUN bloat
 
 	CShootoutLaser() {
 		alive = false;
 	}
 
 protected:
-	// MODDERS: Just turn into a parameter of hittest_and_render().
+	// ZUN bloat: Just turn into a parameter of hittest_and_render().
 	enum { SL_RAY_UNPUT = false, SL_RAY_PUT = true } put_flag;
 
 	void hittest_and_render(void);

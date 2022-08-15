@@ -135,7 +135,8 @@ inline void mima_ent_free(void) {
 static const main_ptn_slot_t PTN_SLOT_BG_ENT = PTN_SLOT_BOSS_1;
 static const main_ptn_slot_t PTN_SLOT_MISSILE = PTN_SLOT_BOSS_2;
 
-// Three unused background .PTN IDs, for three unused 32×32 animations?
+// ZUN bloat: Three unused background .PTN IDs, for three unused 32×32
+// animations?
 static const int BG_ENT_OFFSET = 3;
 // ----
 
@@ -472,9 +473,7 @@ struct SquareState {
 }
 
 #define square_set_coords_and_put(sql, corners, radius, angle) { \
-	/* (always redundant in context) */ \
 	square_corners_set(sql, corners, radius, angle); \
-	\
 	square_put(corners); \
 }
 // ---------------
@@ -653,7 +652,9 @@ void pattern_static_pellets_from_corners_of_two_squares(void)
 		Pellets.spawn_with_cloud = false;
 	}
 	if(boss_phase_frame > 320) {
-		square_center_set(sql); // Not redundant!
+		// Not redundant, these are local variables here!
+		square_center_set(sql);
+
 		square_corners_set(sql, sql_corners_ccw, sq.radius, sq.angle);
 		square_corners_set(sql, sql_corners_cw, sq.radius, (0x00 - sq.angle));
 		square_unput(sql_corners_ccw);
@@ -1129,7 +1130,7 @@ void pattern_aimed_lasers_from_corners(void)
 	};
 
 	static SquareState sq;
-	static int16_t unused; (unused); // MODDERS: Remove this line
+	static int16_t unused; (unused); // ZUN bloat
 
 	// Could have been local just like in the other patterns, but eh, 16 bytes
 	// for the convenience of being easily able to fire lasers independent of
@@ -1306,7 +1307,7 @@ void mima_main(void)
 			spreadin_interval = 4;
 			spreadin_speed = 8;
 
-			// Redundant, already done by phase_spreadin() in phase 2.
+			// ZUN bloat: Already done by phase_spreadin() in phase 2.
 			ent_still.pos_cur_set(BASE_LEFT, BASE_TOP);
 			mima_bg_snap();
 

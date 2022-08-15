@@ -200,7 +200,7 @@ void kikuri_load(void)
 	void kikuri_setup(void);
 	kikuri_setup();
 
-	// (redundant, no particles are shown in this fight)
+	// ZUN bloat: Redundant, no particles are shown in this fight.
 	particles_unput_update_render(PO_INITIALIZE, V_WHITE);
 }
 
@@ -217,8 +217,8 @@ void kikuri_setup(void)
 	hud_hp_first_white = PHASE_2_END_HP;
 	hud_hp_first_redwhite = PHASE_5_END_HP;
 
-	// Redundant – already called before the sprites are first rendered, and
-	// (0, 0) isn't used to indicate "soul is not alive".
+	// ZUN bloat: Already called before the sprites are first rendered, and
+	// (0, 0) isn't used to indicate "soul is not alive" either.
 	souls[0].pos_set(0, 0, 50,
 		SOUL_AREA_LEFT, SOUL_AREA_RIGHT, SOUL_AREA_TOP, SOUL_AREA_BOTTOM
 	);
@@ -783,7 +783,7 @@ int near pattern_single_lasers_from_left_eye(void)
 		RANGE_X = ((PLAYFIELD_W / 10) - LASER_W),
 	};
 
-	if(boss_phase_frame <= 200) { // (redundant)
+	if(boss_phase_frame <= 200) { // ZUN bloat
 		return 1;
 	}
 	if(boss_phase_frame == 250) {
@@ -1096,7 +1096,7 @@ entrance_rings_still_active:
 			boss_phase = 4;
 			boss_phase_frame = 0;
 			phase.u1.subphase_4 = P4_SOUL_ACTIVATION;
-			z_palette_set_all_show(stage_palette); // (redundant)
+			z_palette_set_all_show(stage_palette);
 			boss_palette_snap();
 		}
 	} else if(boss_phase == 4) {

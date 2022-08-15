@@ -122,7 +122,8 @@ void near cheetos_update(void)
 			ANGLE_DELTA_SNAP = 0x02,
 		};
 
-		// What follows is a whole lot of code that can be simplified to:
+		// ZUN bloat: What follows is a whole lot of code that can be
+		// simplified to:
 		//
 		// 	if(
 		// 		(angle_delta > ANGLE_DELTA_SNAP) &&

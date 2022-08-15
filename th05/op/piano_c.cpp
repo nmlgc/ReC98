@@ -66,8 +66,8 @@ extern piano_notes_t piano_notes_cur;
 extern piano_notes_t piano_notes_prev;
 /// ---------
 
-/// Redundant garbage
-/// -----------------
+/// ZUN bloat: Redundant garbage
+/// ----------------------------
 
 #undef grcg_setmode
 #undef grcg_off
@@ -81,7 +81,7 @@ extern piano_notes_t piano_notes_prev;
 	db 	0x32, 0xC0; /* XOR AL, AL (alternate encoding) */ \
 	out	0x7C, al; \
 }
-/// -----------------
+/// ----------------------------
 
 /// Helper functions
 /// ----------------

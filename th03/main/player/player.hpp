@@ -34,7 +34,7 @@ extern farfunc_t_near chargeshot_render[PLAYER_COUNT];
 typedef struct {
 	PlayfieldPoint center;
 	bool is_hit;
-	uint8_t unused_1;
+	uint8_t unused_1; // ZUN bloat
 	unsigned char invincibility_time;
 	char halfhearts;
 	PlaycharPaletted playchar_paletted;
@@ -95,8 +95,8 @@ typedef struct {
 extern unsigned char pid_current;
 extern unsigned char pid_other;
 
-// Doubly redundant: The player ID is already covered by [pid_current], while
-// [so_attack] can be easily calculated from that ID. MODDERS: Delete.
+// ZUN bloat: Doubly redundant: The player ID is already covered by
+// [pid_current], while [so_attack] can be easily calculated from that ID.
 extern union {
 	unsigned char current;
 	unsigned char so_attack; // sprite16_offset_t

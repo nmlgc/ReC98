@@ -86,7 +86,7 @@ long continues_total = 0;
 static int16_t unused_4 = 0; // ZUN bloat
 bool16 mode_test = false;
 int bomb_doubletap_frames = 0;
-int bomb_doubletap_frames_unused = 0;
+int bomb_doubletap_frames_unused = 0; // ZUN bloat
 bool16 test_damage = false;
 static int unused_5 = 0; // ZUN bloat
 static int unused_6 = 0; // ZUN bloat
@@ -354,27 +354,35 @@ void stage_entrance(int stage_id, const char* bg_fn, bool16 clear_vram_page_0)
 			grp_put_palette_show(bg_fn);
 		}
 		stage_palette_set(z_Palettes);
-		graph_copy_accessed_page_to_other(); // 0 → 1, redundant
+
+		// Copy the raw background image to page 1, so that
+		// stageobjs_init_and_render() can snap the correct backgrounds.
+		graph_copy_accessed_page_to_other();
 	} else {
 		graph_accesspage_func(1);
 		graph_copy_accessed_page_to_other();
 		graph_accesspage_func(0);
-		player_put_default(); // redundant
+
+		// Keep the player on screen during stage_num_animate()
+		player_put_default();
 	}
 
 	stageobjs_init_and_render(stage_id); // rendered to page 0
 
 	if(first_stage_in_scene == true) {
-		graph_copy_accessed_page_to_other(); // 0 → 1
+		graph_copy_accessed_page_to_other(); // 0 → 1, with new stage objects
 	} else if(first_stage_in_scene == false) {
-		// Yes, this entire function would not have been necessary.
+		// ZUN bloat: This entire function would not have been necessary if ZUN
+		// just rendered the stage objects to page 1 and then always copied the
+		// entire page, not just if [first_stage_in_scene] is true.
 		stageobjs_copy_0_to_1(stage_id);
 
-		// :zunpet:
+		// ZUN bloat: Already did this above.
 		graph_accesspage_func(0);
 		graph_accesspage_func(1);
 		graph_accesspage_func(0);
 		player_put_default();
+
 		items_bomb_render();
 		items_point_render();
 	}

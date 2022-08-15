@@ -129,8 +129,8 @@ struct bullet_t {
 	unsigned char flag;
 	char age;
 	PlayfieldMotion pos;
-	unsigned char from_group; // unused
-	int8_t unused;
+	unsigned char from_group; // ZUN bloat: Unused
+	int8_t unused; // ZUN bloat
 	SubpixelLength8 speed_cur;
 	unsigned char angle;
 	bullet_spawn_state_t spawn_state;
@@ -261,9 +261,9 @@ struct BulletTemplate {
 	SubpixelLength8 speed;
 	unsigned char count;
 	bullet_template_delta_t delta;
-	uint8_t unused_1;
+	uint8_t unused_1; // ZUN bloat
 	bullet_special_motion_t special_motion;
-	uint8_t unused_2;
+	uint8_t unused_2; // ZUN bloat
 #endif
 };
 

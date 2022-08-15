@@ -338,7 +338,7 @@ void yuugenmagan_setup(void)
 	hud_hp_first_white = PHASE_3_END_HP;
 	hud_hp_first_redwhite = PHASE_7_END_HP;
 
-	// (redundant, no particles are shown in this fight)
+	// ZUN bloat: Redundant, no particles are shown in this fight.
 	particles_unput_update_render(PO_INITIALIZE, V_WHITE);
 }
 

@@ -646,7 +646,7 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 				}
 				input_strike = false;
 				bomb_frames = 0;
-				combo_enabled = false; // redundant, see below
+				combo_enabled = false; // ZUN bloat: Redundant, see below
 				player_invincible_against_orb = false;
 			}
 		} else if(submode.direction == SD_LEFT) {

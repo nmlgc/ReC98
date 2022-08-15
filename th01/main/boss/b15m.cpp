@@ -454,7 +454,7 @@ static const pixel_t BIGCIRCLE_RADIUS = ((GIRL_W * 2) / 2);
 #define bigcircle_summon_and_flash(bigcircle, start_frame, q4_offset_end) \
 	bigcircle_is_summon_frame(start_frame) && (bigcircle.frames == 0)) { \
 		if(bigcircle_summon(bigcircle, start_frame, q4_offset_end)) { \
-			bigcircle_sloppy_unput(bigcircle);	/* (redundant) */ \
+			bigcircle_sloppy_unput(bigcircle);	/* ZUN bloat */ \
 			\
 			/* Also looks redundant, but we might have unblitted parts of */ \
 			/* the circle during the summon animation… */ \
@@ -466,10 +466,10 @@ static const pixel_t BIGCIRCLE_RADIUS = ((GIRL_W * 2) / 2);
 	} else if((bigcircle.frames != 0) && (bigcircle.frames < 40)) { \
 		bigcircle.frames++; \
 		if((bigcircle.frames % 8) == 0) { \
-			bigcircle_sloppy_unput(bigcircle);	/* (redundant) */ \
+			bigcircle_sloppy_unput(bigcircle);	/* ZUN bloat */ \
 			bigcircle_put(bigcircle, COL_FX); \
 		} else if((bigcircle.frames % 8) == 4) { \
-			bigcircle_sloppy_unput(bigcircle);	/* (redundant) */ \
+			bigcircle_sloppy_unput(bigcircle);	/* ZUN bloat */ \
 			bigcircle_put(bigcircle, V_WHITE); \
 		} \
 	} else if(bigcircle.frames != 0 /* return value */
@@ -588,7 +588,7 @@ void elis_load(void)
 	void elis_setup(void);
 	elis_setup();
 
-	// (redundant, no particles are shown in this fight)
+	// ZUN bloat: Redundant, no particles are shown in this fight.
 	particles_unput_update_render(PO_INITIALIZE, V_WHITE);
 }
 
@@ -599,8 +599,8 @@ void elis_setup(void)
 
 	ent_still_or_wave.pos_set(BASE_LEFT, BASE_TOP);
 
-	// These two are redundant, as they're synced with [ent_still_or_wave]
-	// before first use anyway.
+	// ZUN bloat: These two are redundant, as they're synced with
+	// [ent_still_or_wave] before first use anyway.
 	ent_attack.pos_set(BASE_LEFT, BASE_TOP);
 	ent_bat.pos_set(BASE_LEFT, BASE_TOP);
 
@@ -964,7 +964,7 @@ elis_starpattern_ret_t near star_of_david(void)
 	if(bigcircle_is_summon_frame(10) && (circle.frames == 0)) {
 		if(bigcircle_summon(circle, 10, 0x02)) {
 			circle.frames = 1;
-			bigcircle_sloppy_unput(circle);	// (redundant, position unchanged)
+			bigcircle_sloppy_unput(circle);	// ZUN bloat: Position unchanged
 			bigcircle_put(circle, V_WHITE);
 		}
 	} else if(bigcircle_summon_done(circle)) {
@@ -1215,7 +1215,6 @@ int phase_3(int id)
 
 	static int pattern_cur = CHOOSE_NEW;
 
-	// (redundant, the branch is only taken on the first call to this function)
 	if(id == 99) {
 		pattern_cur = CHOOSE_NEW;
 		return CHOOSE_NEW;
@@ -1535,7 +1534,7 @@ elis_starpattern_ret_t pattern_safety_circle_and_rain_from_top(void)
 		}
 		bigcircle_summon_update_and_render(circle, 0x02);
 		if(bigcircle_summon_done(circle)) {
-			bigcircle_sloppy_unput(circle);	// (redundant, position unchanged)
+			bigcircle_sloppy_unput(circle);	// ZUN bloat: Position unchanged
 			bigcircle_put(circle, V_WHITE);
 
 			circle.frames = 1;
@@ -1548,7 +1547,7 @@ elis_starpattern_ret_t pattern_safety_circle_and_rain_from_top(void)
 		// any overlapping sprite will "cut a hole" into the circle. So, um...
 		// let's just re-blit it every 4 frames? :zunpet:
 		if((circle.frames % 4) == 0) {
-			bigcircle_sloppy_unput(circle); // (redundant, position unchanged)
+			bigcircle_sloppy_unput(circle); // ZUN bloat: Position unchanged
 			bigcircle_put(circle, V_WHITE);
 		}
 		if(!player_invincible) {
@@ -1599,8 +1598,8 @@ elis_starpattern_ret_t pattern_safety_circle_and_rain_from_top(void)
 		}
 		if(circle.frames > (CIRCLE_DURATION + 60)) {
 			boss_phase_frame = 0;
-			circle.frames = 0; // (redundant, gets reset at the beginning)
-			circle.angle = 0x00; // (redundant, gets reset at the beginning)
+			circle.frames = 0; // ZUN bloat: Gets reset at the beginning.
+			circle.angle = 0x00; // ZUN bloat: Gets reset at the beginning.
 			return SP_STAR_OF_DAVID;
 		}
 	}
@@ -1697,7 +1696,6 @@ elis_phase_5_subphase_t phase_5_girl(bool16 reset = false)
 	static int pattern_cur = CHOOSE_NEW;
 	static elis_starpattern_ret_t subphase = SP_STAR_OF_DAVID;
 
-	// (redundant, the branch is only taken on the first call to this function)
 	if(reset == true) {
 		pattern_cur = CHOOSE_NEW;
 		subphase = SP_STAR_OF_DAVID;
@@ -1734,7 +1732,6 @@ void phase_5(
 	static elis_phase_5_subphase_t subphase = P5_PATTERN;
 	static int pattern_bat_cur = CHOOSE_NEW;
 
-	// (redundant, the branch is only taken on the first call to this function)
 	if(reset == true) {
 		subphase = P5_PATTERN;
 		pattern_bat_cur = CHOOSE_NEW;
@@ -1812,7 +1809,7 @@ void elis_main(void)
 		union {
 			int pattern;
 
-			// (redundant, the static one would have been fine)
+			// ZUN bloat: The static one would have been fine.
 			elis_form_t form;
 		} cur;
 		bool16 teleport_done;
@@ -1821,7 +1818,7 @@ void elis_main(void)
 			boss_phase_frame++;
 			hit.invincibility_frame++;
 
-			// Redundant – already done as part of ent_unput_and_put_both(),
+			// ZUN bloat: Already done as part of ent_unput_and_put_both(),
 			// which is the only function that reads from [ent_attack].
 			if(phase_id != 1) {
 				ent_attack.pos_cur_set_to(ent_still_or_wave);
@@ -2093,7 +2090,6 @@ void elis_main(void)
 		boss_phase_frame++;
 		phase.teleport_done = wave_teleport(BASE_LEFT, BASE_TOP);
 		if(phase.teleport_done == true) {
-			// (redundant, function initializes itself)
 			phase_3(99);
 
 			phase.next(3, 1);
@@ -2115,7 +2111,6 @@ void elis_main(void)
 			phase.next(5, CHOOSE_NEW);
 			form = F_BAT;
 
-			// (redundant, function initializes itself)
 			phase_5(form, bat_velocity_x, bat_velocity_y, true);
 		}
 	} else if(boss_phase == 5) {

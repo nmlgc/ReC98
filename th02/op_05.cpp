@@ -48,7 +48,7 @@ const shiftjis_t *CLEARED = "  ™™‚b‚k‚d‚`‚q‚d‚c™™  ";
 
 char cleared_game_with[SHOTTYPE_COUNT];
 char cleared_extra_with[SHOTTYPE_COUNT];
-long unused[2];
+long unused[2]; // ZUN bloat
 
 void copy_pic_back(int sel, int highlight)
 {

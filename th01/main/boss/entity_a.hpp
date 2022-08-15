@@ -393,8 +393,8 @@ template <pixel_t W, pixel_t H> struct CBossEntitySized : public CBossEntity {
 // Frees all images in the given [slot].
 void bos_entity_free(int slot);
 
-// MODDERS: The static initialization code in the original game proves that ZUN
-// declared these as 5 individual variables rather than a single 5-element
+// ZUN bloat: The static initialization code in the original game proves that
+// ZUN declared these as 5 individual variables rather than a single 5-element
 // array. This fact explains why especially YuugenMagan and Elis ended up with
 // highly redundant code. There are definitely better and cleaner ways of
 // handling these entities.

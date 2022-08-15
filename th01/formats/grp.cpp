@@ -46,7 +46,7 @@ int grp_palette_load(const char *fn)
 	return 0;
 }
 
-// Random unused function is random
+// ZUN bloat: Random unused function is random
 int getkanji(FILE *fp)
 {
 	int low = getc(fp);
