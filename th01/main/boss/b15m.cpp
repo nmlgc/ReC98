@@ -48,11 +48,13 @@ static const pixel_t GIRL_H = 96;
 static const pixel_t BAT_W = 48;
 static const pixel_t BAT_H = 32;
 
-static const pixel_t BASE_CENTER_X = PLAYFIELD_CENTER_X;
-static const pixel_t BASE_CENTER_Y = (PLAYFIELD_TOP + ((PLAYFIELD_H / 21) * 5));
+static const screen_x_t BASE_CENTER_X = PLAYFIELD_CENTER_X;
+static const screen_y_t BASE_CENTER_Y = (
+	PLAYFIELD_TOP + ((PLAYFIELD_H / 21) * 5)
+);
 
-static const pixel_t BASE_LEFT = (BASE_CENTER_X - (GIRL_W / 2));
-static const pixel_t BASE_TOP = (BASE_CENTER_Y - (GIRL_H / 2));
+static const screen_x_t BASE_LEFT = (BASE_CENTER_X - (GIRL_W / 2));
+static const screen_y_t BASE_TOP = (BASE_CENTER_Y - (GIRL_H / 2));
 // -----------
 
 enum elis_colors_t {
@@ -770,7 +772,7 @@ int pattern_11_lasers_across(void)
 				(((boss_phase_frame - 70) / INTERVAL) * (PLAYFIELD_W / 10))
 			);
 		}
-		target_y = RES_Y;
+		target_y = PLAYFIELD_BOTTOM;
 		shootout_laser_safe(boss_phase_frame / INTERVAL).spawn(
 			girl_lefteye_x(),
 			girl_lefteye_y(),

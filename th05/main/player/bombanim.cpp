@@ -153,10 +153,10 @@ void pascal near reimu_stars_update_and_render(void)
 		trail += ((REIMU_STAR_NODE_COUNT - 1) - 2);
 		// trail == [6 | 14 | 22 | 30 | 38 | 46]
 
-		/*    */	reimu_star_put(trail, 6);
+		/*       */	reimu_star_put(trail, 6);
 		trail -= 2;	reimu_star_put(trail, 6);
 		trail -= 2;	reimu_star_put(trail, 6);
-		/*    */	reimu_star_put(head, 7);
+		/*       */	reimu_star_put(head, 7);
 
 		// trail == [2 | 10 | 18 | 26 | 34 | 42]
 

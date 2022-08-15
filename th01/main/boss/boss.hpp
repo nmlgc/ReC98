@@ -80,7 +80,7 @@ enum boss_id_t {
 };
 
 static const pixel_t SINGYOKU_W = 96;
-// Actually required publically, as singyoku_defeat_animate_and_select_route()
+// Actually required publicly, as singyoku_defeat_animate_and_select_route()
 // is part of the regular boss defeat translation unit.
 static const pixel_t SINGYOKU_H = 96;
 

@@ -171,8 +171,8 @@ void harryup_animate(void)
 		for(i = 0; i < 5; i++) {
 			tram_x16_row_put_red(row, tram_cursor, x, glyphs[i].byte[glyph_y]);
 		}
-		// 5 halfwidth glyphs scaled a factor of 16 just happen to exactly fit
-		// into one TRAM row, so we're already at the next one here.
+		// 5 halfwidth glyphs scaled by a factor of 16 just happen to exactly
+		// fit into one TRAM row, so we're already at the next one here.
 		glyph_y++;
 	}
 

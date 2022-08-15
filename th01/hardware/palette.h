@@ -40,7 +40,7 @@ void z_palette_black_in(void);
 void z_palette_white_in(void);
 
 // Fades all hardware colors from their value in z_Palettes to #000 or #FFF,
-// without modifiying z_Palettes.
+// without modifying z_Palettes.
 void z_palette_black_out(void);
 void z_palette_white_out(void);
 

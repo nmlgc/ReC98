@@ -41,7 +41,7 @@ where the scalar-type variable is declared in relation to them.
 | | |
 |-|-|
 | `ADD [m8], imm8` | Only achievable through a C++ method operating on a  member? |
-| `MOV AX, [m16]`<br />`ADD AL, [m8]` | Same – `m[16]` must be returned from an inlined function to avoid the optimization of it being directly shortened to 8 bits. |
+| `MOV AX, [m16]`<br />`ADD AL, [m8]` | Same – `[m16]` must be returned from an inlined function to avoid the optimization of it being directly shortened to 8 bits. |
 | `MOV AL, [m8]`<br />`ADD AL, imm8`<br />`MOV [m8], AL` | Opposite; *not* an inlined function |
 | `CWD`<br />`SUB AX, DX`<br />`SAR AX, 1` | `AX / 2`, `AX` is *int* |
 | `MOV [new_var], AX`<br />`CWD`<br />`XOR AX, DX`<br />`SUB AX, DX` | `abs(AX)`, defined in `<stdlib.h>`. `AX` is *int* |
@@ -527,8 +527,8 @@ Inhibited by:
       // Second declaration of [v]. Even though it's assigned to the same stack
       // offset, the second `PUSH c` call will still be emitted separately.
       // Thus, jump optimization only reuses the `CALL use` instruction.
-      // Move the `int v;` declaraion to the beginning of the function to avoid
-      // this.
+      // Move the `int v;` declaration to the beginning of the function to
+      // avoid this.
       int v = set_v();
       use(v);
   }

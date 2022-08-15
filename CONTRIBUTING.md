@@ -21,9 +21,10 @@ actual intent will already be helpful. *Any* name is better than
 
 ## Rule #1
 
-**`master` must never introduce code changes that change the decompressed
-program image, or the unordered set of relocations, of any original game
-binary, as compared using [mzdiff].** The only allowed exceptions are:
+**`master` must never introduce code that changes the decompressed program
+image, or the unordered set of relocations, of any original game binary, as
+compared using [mzdiff].** The only allowed exceptions are:
+
 1) different encodings of identical x86 instructions within code segments
 2) padding with `00` bytes at the end of the file.
 
@@ -281,7 +282,7 @@ These cases should gradually be removed as development goes along, though.
   here" or "this code would read really nicely if this functionality was
   encapsulated in a method". (Sometimes, you will have little choice, in
   fact!) Despite Turbo C++'s notoriously outdated C++ implementation, [there
-  are quite a lot of possibilites for abstractions that inline perfectly][1].
+  are quite a lot of possibilities for abstractions that inline perfectly][1].
   Subpixels, as seen in 9d121c7, are the prime example here. Don't overdo it,
   though – use classes where they meaningfully enhance the original procedural
   code, not to replace it with an overly nested, "enterprise-y" class

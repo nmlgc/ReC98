@@ -87,7 +87,7 @@ void boss_hit_update_and_render(
 		// *this* as a wild unexpected palette change from out of nowhere.
 		//
 		// (For examples, see Mima's pattern_hop_and_fire_chase_pellets(), and
-		// Konngara's konngara_load_and_entrance())
+		// Konngara's konngara_load_and_entrance().)
 		boss_palette_show();
 
 		invincibility_frame = 0;

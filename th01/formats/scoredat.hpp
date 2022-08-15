@@ -1,7 +1,8 @@
 #define SCOREDAT_MAGIC "HISCORE"
 #define SCOREDAT_PLACES 10
 #define SCOREDAT_NAME_KANJI 8
-// Actually creates slightly different assembly compared to sizeof() on a
+
+// Actually creates slightly different assembly compared to sizeof() on an
 // int8_t array!
 #define SCOREDAT_NAME_BYTES (SCOREDAT_NAME_KANJI * 2)
 #define SCOREDAT_NAMES_SIZE (SCOREDAT_PLACES * SCOREDAT_NAME_BYTES)

@@ -2,7 +2,7 @@ static const int SHOOTOUT_LASER_COUNT = 10;
 
 /// Q24.8 fixed-point format
 /// ------------------------
-/// This format matches the precision of master.lib's [SinTable8] and
+// This format matches the precision of master.lib's [SinTable8] and
 // [CosTable8] lookup tables, and directly maps its values to the range of
 // [-1.0, +1.0].
 

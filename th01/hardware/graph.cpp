@@ -248,9 +248,9 @@ void z_palette_set_all_show(const Palette4& pal)
 
 void z_palette_set_show(int col, int r, int g, int b)
 {
-	r = clamp_min(clamp_max(r, RGB4::max()), 0);
-	g = clamp_min(clamp_max(g, RGB4::max()), 0);
-	b = clamp_min(clamp_max(b, RGB4::max()), 0);
+	r = clamp_min(clamp_max(r, RGB4::max()), RGB4::min());
+	g = clamp_min(clamp_max(g, RGB4::max()), RGB4::min());
+	b = clamp_min(clamp_max(b, RGB4::max()), RGB4::min());
 
 	z_Palettes[col].c.r = r;
 	z_Palettes[col].c.g = g;
@@ -937,7 +937,7 @@ void z_palette_fade_from(
 
 #define RESPAL_ID "pal98 grb"
 
-// MASTER.MAN suggests that GBR ordering is some sort of standard on PC-98.
+// MASTER.MAN suggests that GRB ordering is some sort of standard on PC-98.
 // It does match the order of the hardware's palette register ports, after
 // all. (0AAh = green, 0ACh = red, 0AEh = blue)
 struct grb_t {

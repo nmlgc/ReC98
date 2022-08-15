@@ -728,8 +728,6 @@ void near exalice_hexagrams_update_and_render(void)
 	}
 	exalice_grcg_hexagram_put(set.radius[0].v, set.angle[0]);
 	grcg_off();
-
-	#undef state
 }
 
 void pascal near exalice_bg_render(void)

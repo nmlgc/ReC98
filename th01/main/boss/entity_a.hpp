@@ -366,7 +366,7 @@ public:
 // boilerplate coordinate functions.
 //
 // (Due to CBossEntity unfortunately having a non-inlined default constructor,
-// we can't ever directly declare instance of this template without emitting
+// we can't ever directly declare instances of this template without emitting
 // another constructor for this class.)
 template <pixel_t W, pixel_t H> struct CBossEntitySized : public CBossEntity {
 	pixel_t w_static() const {

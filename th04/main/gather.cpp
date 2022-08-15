@@ -15,10 +15,6 @@ extern "C" {
 #include "th04/main/bullet/bullet.hpp"
 #include "th04/main/gather.hpp"
 
-inline void far* bullet_template_as_ptr(void) {
-	return &bullet_template;
-}
-
 void pascal near set_bullet_template_to_gather_template(gather_t near &gather)
 {
 	// MODDERS: bullet_template = gather.bullet_template;

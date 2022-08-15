@@ -44,7 +44,7 @@
 #include "th01/main/bullet/laser_s.hpp"
 #include "th01/main/hud/hp.hpp"
 
-static const char* unused_entrace_letters_maybe[] = { "ANGEL", "OF", "DEATH" };
+static const char* unused_entrance_letters_maybe[] = { "ANGEL", "OF", "DEATH" };
 
 // Coordinates
 // -----------
@@ -513,7 +513,7 @@ void konngara_setup(void)
 	face_direction = FD_CENTER;
 }
 
-// Happens to be entirely protected to double frees. Yes, this matters.
+// Happens to be entirely protected from double frees. Yes, this matters.
 void konngara_free(void)
 {
 	konngara_ent_free();

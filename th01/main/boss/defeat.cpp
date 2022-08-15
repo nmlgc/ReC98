@@ -38,13 +38,6 @@ void grcg_whiteline(screen_y_t y)
 	grcg_off();
 }
 
-struct defeat_anim_t {
-	int frame;
-	int components_done;
-	screen_y_t bottom;
-	screen_y_t top;
-};
-
 #define defeat_animate( \
 	start_y, line_distance, whiteout_interval, whitein_interval \
 ) \

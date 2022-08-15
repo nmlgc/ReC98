@@ -1975,8 +1975,8 @@ void near pattern_vertical_stacks_from_bottom_then_random_rain_from_top(void)
 		PLAYFIELD_CENTER_X, FACE_CENTER_Y, (DEBRIS_W / 4)
 	> rays;
 
-	// ZUN bug: Leaving this uninitalized indeed implies vortex sprites for the
-	// first 5 frames, until this actually reaches C_DEBRIS...
+	// ZUN bug: Leaving this uninitialized indeed implies vortex sprites for
+	// the first 5 frames, until this actually reaches C_DEBRIS...
 	static vortex_or_debris_cel_t debris_cel;
 
 	unsigned char angle;

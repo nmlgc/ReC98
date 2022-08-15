@@ -6,7 +6,9 @@
 
 void boss_palette_snap(void)
 {
-	boss_palette_snap_inlined();
+	int col;
+	int comp;
+	palette_copy(boss_palette, z_Palettes, col, comp);
 }
 
 void boss_palette_show(void)

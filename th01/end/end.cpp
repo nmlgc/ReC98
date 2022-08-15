@@ -496,7 +496,7 @@ void verdict_title_calculate_and_render(void)
 	else if(skill >= 40) { level = 3; }
 	else if(skill >= 20) { level = 2; }
 	else if(skill >=  0) { level = 1; }
-	else /*          */ { level = 0; }
+	else /*           */ { level = 0; }
 
 	graph_printf_fx(
 		(VERDICT_LEFT - VERDICT_TITLE_LEFT_OFFSET + VERDICT_TITLE_PADDED_W),
@@ -534,7 +534,7 @@ void verdict_animate_and_regist(void)
 
 	verdict_line_render1(2, VERDICT_RANK"%s", RANKS[rank]);
 
-	// Should really all be %10lu (with the superflous right-padding removed
+	// Should really all be %10lu (with the superfluous right-padding removed
 	// from the strings) if you're already using `long`s here. Scoreplayers
 	// can definitely reach 8 digits.
 	verdict_line_render1(3, VERDICT_SCORE_HIGHEST"%7lu", score_highest);

@@ -152,7 +152,7 @@ inline void poked_eax(Decomp_GS *sgm, Decomp_DI *off, uint8_t op) {
 	template <class T> inline T keep_0(T x) {
 		if(x == 0) {
 			extern void *near address_0;
-			return reinterpret_cast<pixel_t>(&address_0);
+			return reinterpret_cast<T>(&address_0);
 		}
 		return x;
 	}

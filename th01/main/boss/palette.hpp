@@ -3,12 +3,6 @@
 // MODDERS: Merge with the [stage_palette].
 extern Palette4 boss_palette;
 
-#define boss_palette_snap_inlined() { \
-	int col; \
-	int comp; \
-	palette_copy(boss_palette, z_Palettes, col, comp); \
-}
-
 // Overwrites [boss_palette] with [z_Palettes].
 void boss_palette_snap(void);
 

@@ -532,7 +532,7 @@ inline void option_quit(bool &initialized) {
 	initialized = false;
 }
 
-// Circumventing 16-bit promition inside comparisons between two 8-bit values
+// Circumventing 16-bit promotion inside comparisons between two 8-bit values
 // in Borland C++'s C++ mode...
 inline char option_rank_max()  { return RANK_LUNATIC; }
 inline char option_bgm_max()   { return SND_BGM_MIDI; }

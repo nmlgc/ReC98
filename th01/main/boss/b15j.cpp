@@ -189,7 +189,7 @@ void kikuri_load(void)
 
 	pellet_interlace = true;
 	Pellets.unknown_seven = 7;
-	palette_copy(boss_palette, z_Palettes, i, j);
+	palette_copy(boss_palette, z_Palettes, i, j); // = boss_palette_snap
 
 	for(i = 0; i < TEAR_COUNT; i++) {
 		tear_anim_frame[i] = 0;
@@ -383,7 +383,7 @@ void pascal near ripple_update_and_render(
 	// code below does, by symmetrically moving out from the center to the
 	// left and right edges. But then, unblitting every successive ripple
 	// column by rounding its X coordinate down and up to the nearest word will
-	// also cause half  of the previously drawn column to be unblitted. This is
+	// also cause half of the previously drawn column to be unblitted. This is
 	// exactly why most ripple animations show up with weird empty 8-pixel-wide
 	// stripes on the inside (→ non-word-aligned X positions), while some do
 	// show up fine (→ word-aligned X positions).
@@ -1052,7 +1052,7 @@ entrance_rings_still_active:
 				}
 				z_palette_set_all_show(z_Palettes);
 			}
-			if(frame_half % 2) {  // That's why we've renamed the variable
+			if(frame_half % 2) { // That's why we've renamed the variable
 				frame_delay(1);
 			}
 			#undef frame_half

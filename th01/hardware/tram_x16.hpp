@@ -40,7 +40,7 @@ public:
 	void putkanji_for_5_rows(jis_t jis_kanji, int atrb);
 
 	// This is always called at the (0-based) line 21, and therefore always
-	// ends up writing into the second TRAM page. Luckily, that page is used,
+	// ends up writing into the second TRAM page. Luckily, that page is unused,
 	// and no code cares about it...
 	void putkanji_until_end(jis_t jis_kanji, int atrb) {
 		putkanji_for_5_rows(jis_kanji, atrb);
