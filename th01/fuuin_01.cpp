@@ -96,5 +96,5 @@ void main(int argc, const char *argv[])
 	game_init();
 	end_and_verdict_and_regist_animate();
 	game_switch_binary();
-	execl(BINARY_OP, BINARY_OP, nullptr, nullptr);
+	execl(BINARY_OP, BINARY_OP, nullptr);
 }

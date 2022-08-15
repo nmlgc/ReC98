@@ -240,7 +240,7 @@ bool16 continue_menu(void)
 				resident->snd_need_init = false;
 				game_switch_binary();
 				resident->point_value = 0;
-				execl(BINARY_MAIN_CAPS, BINARY_MAIN_CAPS, nullptr, nullptr);
+				execl(BINARY_MAIN_CAPS, BINARY_MAIN_CAPS, nullptr);
 			} else {
 				no_continue:
 				player_is_hit = false;

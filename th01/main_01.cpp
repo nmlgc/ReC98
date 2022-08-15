@@ -891,7 +891,7 @@ int main(void)
 					}
 					frame_delay(120);
 					game_switch_binary();
-					execl(BINARY_END, BINARY_END, nullptr, nullptr);
+					execl(BINARY_END, BINARY_END, nullptr);
 				}
 
 				// ZUN quirk: Placing this after the [game_cleared] branch robs
@@ -956,7 +956,7 @@ int main(void)
 				mdrv2_bgm_fade_out_nonblock();
 				resident->bombs = bombs;
 				game_switch_binary();
-				execl(BINARY_MAIN, BINARY_MAIN, nullptr, nullptr);
+				execl(BINARY_MAIN, BINARY_MAIN, nullptr);
 			}
 			orb_in_portal = false;
 			if(boss_id == BID_NONE) {
@@ -1002,6 +1002,6 @@ op:
 	game_switch_binary();
 	key_end();
 	arc_free();
-	execl(BINARY_OP, BINARY_OP, nullptr, nullptr);
+	execl(BINARY_OP, BINARY_OP, nullptr);
 	return 0;
 }
