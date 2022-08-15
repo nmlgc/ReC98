@@ -9,6 +9,7 @@
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
+#include "th01/resident.hpp"
 #include "th01/math/overlap.hpp"
 #include "th01/hardware/graph.h"
 #include "th01/snd/mdrv2.h"

@@ -1,4 +1,3 @@
-#include "th01/common.h"
 #include "th01/resident.hpp"
 
 void scoredat_load_hiscore(void)

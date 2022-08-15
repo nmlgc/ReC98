@@ -1,4 +1,5 @@
 #include "platform.h"
+#include "th01/resident.hpp"
 #include "th01/formats/cfg.hpp"
 #include "th01/main/vars.hpp"
 #include "th01/main/stage/stages.hpp"

@@ -6,7 +6,6 @@
 #include "planar.h"
 #include "master.hpp"
 #include "shiftjis.hpp"
-#include "th01/common.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/math/str_val.hpp"

@@ -1,3 +1,5 @@
+#include "th01/common.h"
+
 typedef enum {
 	ROUTE_MAKAI,
 	ROUTE_JIGOKU,

@@ -1,5 +1,4 @@
 #include "platform.h"
-#include "th01/common.h"
 #include "th01/resident.hpp"
 
 long score = 100000;

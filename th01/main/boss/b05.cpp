@@ -6,7 +6,6 @@
 #include "decomp.hpp"
 #include "pc98.h"
 #include "master.hpp"
-#include "th01/common.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/math/area.hpp"

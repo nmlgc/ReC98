@@ -7,6 +7,7 @@
 #include "x86real.h"
 #include "planar.h"
 #include "master.hpp"
+#include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/frmdelay.h"

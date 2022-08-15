@@ -17,7 +17,6 @@
 #include "master.hpp"
 #include "pc98kbd.h"
 #include "shiftjis.hpp"
-#include "th01/common.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/core/initexit.hpp"

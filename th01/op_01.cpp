@@ -12,6 +12,7 @@
 #include "pc98kbd.h"
 #include "master.hpp"
 #include "th01/rank.h"
+#include "th01/resident.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"

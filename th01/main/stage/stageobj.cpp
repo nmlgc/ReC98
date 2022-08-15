@@ -6,7 +6,7 @@
 #include "decomp.hpp"
 #include "planar.h"
 #include "master.hpp"
-#include "th01/common.h"
+#include "th01/resident.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"

@@ -7,7 +7,6 @@
 
 #include "platform.h"
 #include "master.hpp"
-#include "th01/common.h"
 #include "th01/resident.hpp"
 #include "th01/core/resstuff.hpp"
 
