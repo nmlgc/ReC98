@@ -13,8 +13,10 @@
 #include "pc98kbd.h"
 #include "master.hpp"
 #include "shiftjis.hpp"
+#include "game/input.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
+#include "th01/math/clamp.hpp"
 #include "th01/core/initexit.hpp"
 #include "th01/core/resstuff.hpp"
 #include "th01/hardware/egc.h"
@@ -155,15 +157,17 @@ static const int MUSIC_CHOICE_COUNT = 2;
 	}
 
 extern int8_t menu_sel;
-extern bool input_left;
+extern int8_t input_left; // ACTUAL TYPE: bool
 extern bool input_cancel;
 
 extern enum {
 	MID_MAIN,
 	MID_OPTION,
+	MID_MUSIC,
+	MID_UPDATE_BGM_MODE__DELAY__SWITCH_TO_MAIN,
 } menu_id;
 
-extern bool input_right;
+extern int8_t input_right; // ACTUAL TYPE: bool
 extern bool quit;
 
 // ZUN bloat: Just call resident_free() in the one case it's actually needed.
@@ -606,5 +610,82 @@ void main_update_and_render(void)
 
 	#undef in_this_menu
 	#undef sel_prev
+}
+
+void option_update_and_render(void)
+{
+	#define in_this_menu	option_in_this_menu
+	#define sel_prev    	option_sel_prev
+	#define left_locked 	option_left_locked
+	#define right_locked	option_right_locked
+
+	extern bool16 in_this_menu;
+	extern int sel_prev;
+	extern bool16 left_locked;
+	extern bool16 right_locked;
+
+	if(!in_this_menu) {
+		menu_sel = 0;
+		sel_prev = 0;
+		in_this_menu = true;
+		option_choice_max = (OPTION_CHOICE_COUNT - 1);
+
+		menu_unput(max_macro(MAIN_CHOICE_COUNT, MUSIC_CHOICE_COUNT));
+		option_choice_unput_and_put(0, COL_ACTIVE);
+
+		option_choice_unput_and_put(1, COL_INACTIVE);
+		option_choice_unput_and_put(2, COL_INACTIVE);
+		option_choice_unput_and_put(3, COL_INACTIVE);
+		option_choice_unput_and_put(4, COL_INACTIVE);
+	}
+	choice_render_if_changed(sel_prev, menu_sel, option_choice_unput_and_put);
+
+	on_condition_if_not_locked_2((input_left == true), left_locked, {
+		switch(menu_sel) {
+		case 0:
+			ring_dec_16(opts.rank, RANK_LUNATIC);
+			break;
+		case 1:
+			ring_dec_16(
+				static_cast<int8_t>(opts.bgm_mode), (BGM_MODE_COUNT - 1)
+			);
+			break;
+		case 2:
+			ring_dec_16(opts.lives_extra, (CFG_LIVES_EXTRA_MAX - 1));
+			break;
+		}
+		option_choice_unput_and_put(menu_sel, COL_ACTIVE);
+	});
+
+	on_condition_if_not_locked_2((input_right == true), right_locked, {
+		switch(menu_sel) {
+		case 0:
+			ring_inc(opts.rank, RANK_LUNATIC);
+			break;
+		case 1:
+			ring_inc(static_cast<int8_t>(opts.bgm_mode), (BGM_MODE_COUNT - 1));
+			break;
+		case 2:
+			ring_inc(opts.lives_extra, (CFG_LIVES_EXTRA_MAX - 1));
+			break;
+		}
+		option_choice_unput_and_put(menu_sel, COL_ACTIVE);
+	});
+
+	if(((input_ok || input_shot) && (menu_sel == 4)) || input_cancel) {
+		menu_id = MID_UPDATE_BGM_MODE__DELAY__SWITCH_TO_MAIN;
+		in_this_menu = false;
+		menu_sel = 2; // Option in the main menu
+	}
+	if((input_ok || input_shot) && (menu_sel == 3)) {
+		menu_id = MID_MUSIC;
+		in_this_menu = false;
+		menu_sel = 0; // Track selection in the Music Test
+	}
+
+	#undef right_locked
+	#undef left_locked
+	#undef sel_prev
+	#undef in_this_menu
 }
 /// ---------

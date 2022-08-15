@@ -44,3 +44,9 @@
 	if(val < ring_min()) { \
 		(val) = ring_end; \
 	}
+
+#define ring_dec_16(val, ring_end) \
+	(val)--; \
+	if(val < 0) { \
+		(val) = ring_end; \
+	}

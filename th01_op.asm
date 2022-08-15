@@ -81,207 +81,9 @@ op_01__TEXT	segment	byte public 'CODE' use16
 	extern @title_window_put$qv:proc
 	extern @title_exit$qv:proc
 	extern @title_hit_key_put$qi:proc
-	extern @option_choice_unput_and_put$qii:proc
 	extern @music_choice_unput_and_put$qii:proc
 	extern @main_update_and_render$qv:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_AC84	proc far
-		push	bp
-		mov	bp, sp
-		cmp	word_12566, 0
-		jnz	short loc_ACF9
-		mov	_menu_sel, 0
-		mov	word_12568, 0
-		mov	word_12566, 1
-		mov	_option_choice_max, 4
-		call	@egc_copy_rect_1_to_0_16$qiiii c, large (276 shl 16) or 220, large (80 shl 16) or 176
-		call	@option_choice_unput_and_put$qii c, large 0 or (15 shl 16)
-		call	@option_choice_unput_and_put$qii c, large 1 or (5 shl 16)
-		call	@option_choice_unput_and_put$qii c, large 2 or (5 shl 16)
-		call	@option_choice_unput_and_put$qii c, large 3 or (5 shl 16)
-		call	@option_choice_unput_and_put$qii c, large 4 or (5 shl 16)
-
-loc_ACF9:
-		mov	al, _menu_sel
-		cbw
-		cmp	ax, word_12568
-		jz	short loc_AD25
-		call	@option_choice_unput_and_put$qii c, word_12568, 5
-		push	0Fh
-		mov	al, _menu_sel
-		cbw
-		push	ax
-		call	@option_choice_unput_and_put$qii
-		add	sp, 4
-		mov	al, _menu_sel
-		cbw
-		mov	word_12568, ax
-
-loc_AD25:
-		mov	al, _input_left
-		cbw
-		cmp	ax, 1
-		jnz	short loc_AD96
-		cmp	word_1256A, 0
-		jnz	short loc_AD9C
-		mov	al, _menu_sel
-		cbw
-		or	ax, ax
-		jz	short loc_AD49
-		cmp	ax, 1
-		jz	short loc_AD5C
-		cmp	ax, 2
-		jz	short loc_AD6F
-		jmp	short loc_AD80
-; ---------------------------------------------------------------------------
-
-loc_AD49:
-		dec	_opts.O_rank
-		mov	al, _opts.O_rank
-		cbw
-		or	ax, ax
-		jge	short loc_AD80
-		mov	_opts.O_rank, RANK_LUNATIC
-		jmp	short loc_AD80
-; ---------------------------------------------------------------------------
-
-loc_AD5C:
-		dec	_opts.O_bgm_mode
-		mov	al, _opts.O_bgm_mode
-		cbw
-		or	ax, ax
-		jge	short loc_AD80
-		mov	_opts.O_bgm_mode, 1
-		jmp	short loc_AD80
-; ---------------------------------------------------------------------------
-
-loc_AD6F:
-		dec	_opts.O_lives_extra
-		mov	al, _opts.O_lives_extra
-		cbw
-		or	ax, ax
-		jge	short loc_AD80
-		mov	_opts.O_lives_extra, (CFG_LIVES_EXTRA_MAX - 1)
-
-loc_AD80:
-		push	0Fh
-		mov	al, _menu_sel
-		cbw
-		push	ax
-		call	@option_choice_unput_and_put$qii
-		add	sp, 4
-		mov	word_1256A, 1
-		jmp	short loc_AD9C
-; ---------------------------------------------------------------------------
-
-loc_AD96:
-		mov	word_1256A, 0
-
-loc_AD9C:
-		mov	al, _input_right
-		cbw
-		cmp	ax, 1
-		jnz	short loc_AE10
-		cmp	word_1256C, 0
-		jnz	short loc_AE16
-		mov	al, _menu_sel
-		cbw
-		or	ax, ax
-		jz	short loc_ADC0
-		cmp	ax, 1
-		jz	short loc_ADD4
-		cmp	ax, 2
-		jz	short loc_ADE8
-		jmp	short loc_ADFA
-; ---------------------------------------------------------------------------
-
-loc_ADC0:
-		inc	_opts.O_rank
-		mov	al, _opts.O_rank
-		cbw
-		cmp	ax, RANK_LUNATIC
-		jle	short loc_ADFA
-		mov	_opts.O_rank, RANK_EASY
-		jmp	short loc_ADFA
-; ---------------------------------------------------------------------------
-
-loc_ADD4:
-		inc	_opts.O_bgm_mode
-		mov	al, _opts.O_bgm_mode
-		cbw
-		cmp	ax, 1
-		jle	short loc_ADFA
-		mov	_opts.O_bgm_mode, 0
-		jmp	short loc_ADFA
-; ---------------------------------------------------------------------------
-
-loc_ADE8:
-		inc	_opts.O_lives_extra
-		mov	al, _opts.O_lives_extra
-		cbw
-		cmp	ax, (CFG_LIVES_EXTRA_MAX - 1)
-		jle	short loc_ADFA
-		mov	_opts.O_lives_extra, 0
-
-loc_ADFA:
-		push	0Fh
-		mov	al, _menu_sel
-		cbw
-		push	ax
-		call	@option_choice_unput_and_put$qii
-		add	sp, 4
-		mov	word_1256C, 1
-		jmp	short loc_AE16
-; ---------------------------------------------------------------------------
-
-loc_AE10:
-		mov	word_1256C, 0
-
-loc_AE16:
-		cmp	_input_ok, 0
-		jnz	short loc_AE24
-		cmp	_input_shot, 0
-		jz	short loc_AE2D
-
-loc_AE24:
-		mov	al, _menu_sel
-		cbw
-		cmp	ax, 4
-		jz	short loc_AE34
-
-loc_AE2D:
-		cmp	_input_cancel, 0
-		jz	short loc_AE44
-
-loc_AE34:
-		mov	_menu_id, 3
-		mov	word_12566, 0
-		mov	_menu_sel, 2
-
-loc_AE44:
-		cmp	_input_ok, 0
-		jnz	short loc_AE52
-		cmp	_input_shot, 0
-		jz	short loc_AE6B
-
-loc_AE52:
-		mov	al, _menu_sel
-		cbw
-		cmp	ax, 3
-		jnz	short loc_AE6B
-		mov	_menu_id, 2
-		mov	word_12566, 0
-		mov	_menu_sel, 0
-
-loc_AE6B:
-		pop	bp
-		retf
-sub_AC84	endp
-
+	extern @option_update_and_render$qv:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -601,7 +403,7 @@ loc_B15F:
 		cmp	ax, 1
 		jnz	short loc_B172
 		call	@option_input_sense$qv
-		call	sub_AC84
+		call	@option_update_and_render$qv
 		jmp	short loc_B1EE
 ; ---------------------------------------------------------------------------
 
@@ -866,13 +668,14 @@ _MUSIC_TITLES	label dword
 	dd aB@b@b@gagcgkgx	; "　　　アイリス"
 
 public _main_sel_prev, _main_in_this_menu
+public _option_in_this_menu, _option_sel_prev
+public _option_left_locked, _option_right_locked
 _main_sel_prev	dw 99
 _main_in_this_menu	dw 0
-
-word_12566	dw 0
-word_12568	dw 0
-word_1256A	dw 0
-word_1256C	dw 0
+_option_in_this_menu	dw 0
+_option_sel_prev	dw 0
+_option_left_locked	dw 0
+_option_right_locked	dw 0
 
 public _MUSIC_FILES
 _MUSIC_FILES	label dword
