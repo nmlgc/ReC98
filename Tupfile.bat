@@ -26,7 +26,6 @@ tasm32 /m /mx /kh32768 /t /ml libs\piloadc\piloadc.asm bin\piloadc.obj
 tasm32 /m /mx /kh32768 /t zuncom\zun_stub.asm bin\zuncom\zun_stub.obj
 tasm32 /m /mx /kh32768 /t zuncom\cstmstub.asm bin\zuncom\cstmstub.obj
 tasm32 /m /mx /kh32768 /t th01_op.asm bin\th01\op.obj
-tasm32 /m /mx /kh32768 /t th01_op_master.asm bin\th01\opm.obj
 tasm32 /m /mx /kh32768 /t th01_reiiden.asm bin\th01\reiiden.obj
 tasm32 /m /mx /kh32768 /t th01_fuuin.asm bin\th01\fuuin.obj
 tasm32 /m /mx /kh32768 /t th02_zuninit.asm bin\th02\zuninit.obj
