@@ -162,7 +162,7 @@ sub_A7B5	proc far
 		mov	bp, sp
 		push	si
 		call	@cfg_save$qv
-		call	@resident_stuff_set$qccccl c, word ptr _opts.O_rank, word ptr _opts.O_bgm_mode, word ptr _opts.O_bombs, word ptr _opts.O_lives_extra, large [_rand]
+		call	@resident_stuff_set$qc10bgm_mode_tccl c, word ptr _opts.O_rank, word ptr _opts.O_bgm_mode, word ptr _opts.O_bombs, word ptr _opts.O_lives_extra, large [_rand]
 		call	sub_A79D
 		call	@mdrv2_bgm_fade_out_nonblock$qv
 		call	@game_switch_binary$qv
@@ -247,7 +247,7 @@ sub_A8AD	proc far
 		push	bp
 		mov	bp, sp
 		call	@cfg_save$qv
-		call	@resident_stuff_set$qccccl c, word ptr _opts.O_rank, word ptr _opts.O_bgm_mode, word ptr _opts.O_bombs, word ptr _opts.O_lives_extra, large [_rand]
+		call	@resident_stuff_set$qc10bgm_mode_tccl c, word ptr _opts.O_rank, word ptr _opts.O_bgm_mode, word ptr _opts.O_bombs, word ptr _opts.O_lives_extra, large [_rand]
 		les	bx, _resident
 		cmp	es:[bx+reiidenconfig_t.stage], 0
 		jnz	short loc_A8E1
@@ -1403,7 +1403,7 @@ PTN_GRP_GRZ	ends
 
 ; Segment type:	Pure code
 resstuff_TEXT	segment	byte public 'CODE' use16
-	extern @resident_stuff_set$qccccl:proc
+	extern @resident_stuff_set$qc10bgm_mode_tccl:proc
 	extern @resident_free$qv:proc
 resstuff_TEXT	ends
 

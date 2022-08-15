@@ -535,7 +535,8 @@ int main(void)
 		}
 	}
 
-	if(bgm_mode == true) {
+	// ZUN bloat: Unnecessary cast.
+	if(static_cast<int>(bgm_mode) == BGM_MODE_MDRV2) {
 		mdrv2_check_board();
 	}
 	scene_id = (
@@ -565,7 +566,7 @@ int main(void)
 	bombs = resident->bombs;
 	player_left = PLAYER_LEFT_START;
 
-	if(bgm_mode && resident->snd_need_init) {
+	if((bgm_mode != BGM_MODE_OFF) && resident->snd_need_init) {
 		mdrv2_bgm_load("init.mdt");
 		mdrv2_bgm_play();
 		mdrv2_se_load(SE_FN);

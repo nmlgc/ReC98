@@ -1,5 +1,11 @@
 #include "th01/common.h"
 
+enum bgm_mode_t {
+	BGM_MODE_OFF,
+	BGM_MODE_MDRV2,
+	BGM_MODE_COUNT,
+};
+
 typedef enum {
 	ROUTE_MAKAI,
 	ROUTE_JIGOKU,
@@ -37,7 +43,7 @@ static const pellet_speed_t PELLET_SPEED_MULTIPLIER = 40;
 typedef struct {
 	char id[sizeof(RES_ID)];
 	int8_t rank;
-	int8_t bgm_mode; // 0 = off, 1 = FM
+	bgm_mode_t bgm_mode;
 	int8_t bombs;
 	int8_t start_lives_extra; // Add 2 for the actual number of lives
 	end_sequence_t end_flag; /* ZUN symbol [Strings] */

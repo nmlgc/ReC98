@@ -14,7 +14,7 @@ resident_t far *resident;
 
 void resident_stuff_set(
 	int8_t rank,
-	int8_t bgm_mode,
+	bgm_mode_t bgm_mode,
 	int8_t bombs,
 	int8_t start_lives_extra,
 	long rand
@@ -40,7 +40,7 @@ void resident_stuff_set(
 
 int resident_stuff_get(
 	int8_t& rank,
-	int8_t& bgm_mode,
+	bgm_mode_t& bgm_mode,
 	int8_t& bombs,
 	int8_t& start_lives_extra,
 	unsigned long& rand,
