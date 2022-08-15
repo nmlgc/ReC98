@@ -26,6 +26,11 @@
 #include "th01/formats/cfg.hpp"
 #include "th01/formats/grp.h"
 #include "th01/snd/mdrv2.h"
+#include "th01/shiftjis/op.hpp"
+
+extern long rand;
+
+extern const char aReimu_mdt[];
 
 // Unused. The only thing on the main menu with this color is the "1996 ZUN"
 // text at the bottom... probably part of an effect that we never got to see.
@@ -58,11 +63,13 @@ void snap_col_4(void)
 
 /// REIIDEN.CFG loading and saving
 /// ------------------------------
+
 extern cfg_options_t opts;
+extern int8_t debug_mode;
 // These will be removed once the strings can be defined here
 #undef CFG_FN
 #undef CFG_ID
-extern const char CFG_FN[], CFG_ID[], FOPEN_RB[], FOPEN_WB[];
+extern char CFG_FN[], CFG_ID[], FOPEN_RB[], FOPEN_WB[];
 
 void cfg_load(void)
 {
@@ -114,6 +121,11 @@ void cfg_save(void)
 
 /// Input
 /// -----
+
+static const int MAIN_CHOICE_COUNT = 4;
+static const int OPTION_CHOICE_COUNT = 5;
+static const int MUSIC_CHOICE_COUNT = 2;
+
 #undef RING_INC
 #undef RING_DEC
 
@@ -146,7 +158,9 @@ extern char menu_sel;
 extern bool input_left;
 extern bool input_cancel;
 extern bool input_right;
-extern unsigned char option_rows;
+
+// ZUN bloat: Just call resident_free() in the one case it's actually needed.
+extern int8_t free_resident_structure_on_title_exit; // ACTUAL TYPE: bool
 
 inline void keygroup_sense(REGS& out, REGS& in, char group_id) {
 	in.h.ah = 0x04;
@@ -191,6 +205,8 @@ void main_input_sense(void)
 	ok_shot_cancel_sense(out1, in);
 }
 
+extern uint8_t option_choice_max;
+
 void option_input_sense(void)
 {
 	REGS in;
@@ -205,7 +221,7 @@ void option_input_sense(void)
 
 	input_onchange_ring(0,
 		(out1.h.ah & K7_ARROW_UP) || (out2.h.ah & K8_NUM_8),
-		RING_DEC(menu_sel, option_rows)
+		RING_DEC(menu_sel, option_choice_max)
 	);
 	input_update_bool(
 		input_left, (out1.h.ah & K7_ARROW_LEFT) || (out2.h.ah & K8_NUM_4)
@@ -215,7 +231,7 @@ void option_input_sense(void)
 
 	input_onchange_ring(1,
 		(out1.h.ah & K7_ARROW_DOWN) || (out2.h.ah & K9_NUM_2),
-		RING_INC(menu_sel, option_rows)
+		RING_INC(menu_sel, option_choice_max)
 	);
 	input_update_bool(
 		input_right, (out1.h.ah & K7_ARROW_RIGHT) || (out2.h.ah & K9_NUM_6)
@@ -225,8 +241,6 @@ void option_input_sense(void)
 }
 /// -----
 
-/// White line animation
-/// --------------------
 void whiteline_put(screen_y_t y)
 {
 	vram_offset_t vram_offset = vram_offset_shift(0, y);
@@ -276,8 +290,8 @@ void whitelines_animate(void)
 	graph_accesspage_func(0);
 }
 
-void titlescreen_init(void) {
-	extern const char aReimu_mdt[];
+void title_init(void)
+{
 	extern const char aReiiden2_grp[];
 	extern const char aReiiden3_grp[];
 
@@ -291,10 +305,12 @@ void titlescreen_init(void) {
 	graph_accesspage_func(0);
 	z_palette_black_in();
 	frame_delay(100);
+
 	whitelines_animate();
 }
 
-void titlescreen_create_op_win(void) {
+void title_window_put(void)
+{
 	extern const char aOp_win_grp[];
 
 	graph_accesspage_func(1);
@@ -304,41 +320,45 @@ void titlescreen_create_op_win(void) {
 	graph_copy_accessed_page_to_other();
 }
 
-void key_end_resident_free(void) {
-	extern char quit_flag;
-
-	if(quit_flag == 1)
+void title_exit(void)
+{
+	if(free_resident_structure_on_title_exit == true) {
 		resident_free();
-
+	}
 	key_end();
 }
 
-extern long rand;
-extern char mode;
+// Starting the game
+// -----------------
 
-void start(void) {
+static const pellet_speed_t PELLET_SPEED_DEFAULT = to_pellet_speed(-0.1);
+
+void start_game(void)
+{
 	extern char aReiiden_0[];
 
 	cfg_save();
-	resident_stuff_set(opts.rank, opts.bgm_mode, opts.bombs, opts.lives_extra, rand);
-	key_end_resident_free();
+	resident_create_and_stuff_set(
+		opts.rank, opts.bgm_mode, opts.bombs, opts.lives_extra, rand
+	);
+	title_exit();
 	mdrv2_bgm_fade_out_nonblock();
 	game_switch_binary();
 
-	if(mode == 2) {
+	if(debug_mode == 2) {
 		resident->debug_mode = DM_TEST;
-	} else if(mode == 3) {
+	} else if(debug_mode == 3) {
 		resident->debug_mode = DM_FULL;
-	} else if(mode == 0) {
+	} else if(debug_mode == 0) {
 		resident->debug_mode = DM_OFF;
 	}
 
-	resident->route = 0;
+	resident->route = ROUTE_MAKAI;
 	resident->stage_id = 0;
-	resident->rem_lives = opts.lives_extra + 2;
+	resident->rem_lives = (opts.lives_extra + 2);
 	resident->point_value = 0;
 
-	for(int i = 0; i < 4; i++) {
+	for(int i = 0; i < SCENE_COUNT; i++) {
 		resident->continues_per_scene[i] = 0;
 		resident->bonus_per_stage[i] = 0;
 	}
@@ -347,140 +367,171 @@ void start(void) {
 	resident->continues_total = 0;
 	resident->end_flag = ES_NONE;
 	resident->unused_1 = 0;
-	resident->snd_need_init = 1;
-	resident->pellet_speed = -4;
+	resident->snd_need_init = true;
+	resident->pellet_speed = PELLET_SPEED_DEFAULT;
 
-	execl(aReiiden_0, aReiiden_0, NULL);
+	execl(aReiiden_0, aReiiden_0, nullptr);
 }
 
-void Continue(void) { // Reserved keyword
+void start_continue(void)
+{
 	cfg_save();
-	resident_stuff_set(opts.rank, opts.bgm_mode, opts.bombs, opts.lives_extra, rand);
+	resident_create_and_stuff_set(
+		opts.rank, opts.bgm_mode, opts.bombs, opts.lives_extra, rand
+	);
 
 	if(resident->stage_id == 0) {
-		_ES = FP_SEG(cfg_load); // Yes, no point to this at all
+		_ES = FP_SEG(cfg_load); // ZUN bloat: Yes, no point to this at all
 	}
 
-	key_end_resident_free();
+	title_exit();
 	mdrv2_bgm_fade_out_nonblock();
 	game_switch_binary();
 
 	resident->debug_mode = DM_OFF;
-	resident->snd_need_init = 1;
-	resident->rem_lives = opts.lives_extra + 2;
+	resident->snd_need_init = true;
+	resident->rem_lives = (opts.lives_extra + 2);
 	resident->unused_1 = 0;
-	resident->pellet_speed = -4;
+	resident->pellet_speed = PELLET_SPEED_DEFAULT;
 	resident->point_value = 0;
 
-	execl((char*)MK_FP(_DS, CFG_ID), (char*)MK_FP(_DS, CFG_ID), NULL);
+	execl(CFG_ID, CFG_ID, nullptr);
+}
+// -----------------
+
+/// Main menu
+/// ---------
+/// Terminology: "Choice" = Top-level menu selection (not amount of values)
+
+static const int COL_ACTIVE = 15;
+static const int16_t FX = FX_WEIGHT_BLACK;
+
+// Coordinates
+// -----------
+
+static const screen_x_t MENU_CENTER_X = 316;
+static const screen_y_t MENU_CENTER_Y = 316;
+static const pixel_t MENU_W = 176;
+
+static const pixel_t CHOICE_PADDED_H = 20;
+
+static const int TRACK_COUNT = 15;
+
+#define choice_top_0(choice_count) ( \
+	(MENU_CENTER_Y - (((choice_count) * CHOICE_PADDED_H) / 2)) \
+)
+
+#define choice_top(choice, choice_count) ( \
+	(choice_top_0(choice_count) + (choice * CHOICE_PADDED_H)) \
+)
+
+#define music_choice_top(choice, choice_count) ( \
+	(choice_top_0(choice_count + 1) + (choice * (CHOICE_PADDED_H * 2))) \
+)
+// -----------
+
+extern const shiftjis_t aSS[];
+
+#define choice_put(left, top, col, str) { \
+	graph_printf_fx(left, top, (col | FX), (aSS + 2), str); \
 }
 
-#define HIT_KEY_CYCLE_DUR 70
-#define HIT_KEY_SHOW_FRAMES 50
+#define choice_put_value(left, top, col, str, val) { \
+	graph_printf_fx(left, top, (col | FX), aSS, str, val); \
+}
 
-#define HIT_KEY_LEFT 244
-#define MAIN_MENU_LEFT 228
-#define MAIN_MENU_TOP 306
-#define MAIN_MENU_TEXT_WIDTH 128
-#define MAIN_MENU_TEXT_HEIGHT 16
-#define MAIN_MENU_OPTION_DISTANCE 20
-#define MAIN_MENU_OPTION_TOP 276
+void title_hit_key_put(int frame)
+{
+	enum {
+		LEFT = (((RES_X / 2) - GLYPH_FULL_W) - (shiftjis_w(HIT_KEY) / 2)),
+		TOP = choice_top(0, 1),
+	};
+	extern const shiftjis_t GP_HIT_KEY[];
 
-void titlescreen_flash_hit_key_prompt(int frame) {
-	extern const char GP_HIT_KEY[];
-
-	if(frame % HIT_KEY_CYCLE_DUR < HIT_KEY_SHOW_FRAMES) {
-		graph_putsa_fx(HIT_KEY_LEFT, MAIN_MENU_TOP, FX_WEIGHT_BOLD | 0xF, GP_HIT_KEY);
+	if((frame % 70) < 50) {
+		graph_putsa_fx(LEFT, TOP, (FX_WEIGHT_BOLD | COL_ACTIVE), GP_HIT_KEY);
 	} else {
-		egc_copy_rect_1_to_0_16(HIT_KEY_LEFT, MAIN_MENU_TOP, MAIN_MENU_TEXT_WIDTH, MAIN_MENU_TEXT_HEIGHT);
+		egc_copy_rect_1_to_0_16_word_w(LEFT, TOP, shiftjis_w(HIT_KEY), GLYPH_H);
 	}
 }
 
-#define MAIN_MENU_ENTRY_COUNT 4
-#define OPTIONS_COUNT 5
-#define RANK_COUNT 4
-#define FM_OPTION_COUNT 2
-#define LIFES_AMOUNT_TEXT_COUNT 5
-
-#define MUSIC_TEST_MENU_OPTION_COUNT 2
-#define MUSIC_TEST_SONG_COUNT 15
-
-template <int c> struct text_array_t {
-	const char* t[c];
+template <int Count> struct TextArray {
+	const shiftjis_t* t[Count];
 };
 
-void main_menu_draw_option(int str_idx, int col) {
-	extern text_array_t<MAIN_MENU_ENTRY_COUNT> MAIN_MENU_TEXT;
+void main_choice_unput_and_put(int choice, int col)
+{
+	extern TextArray<MAIN_CHOICE_COUNT> MAIN_CHOICES;
+	const TextArray<MAIN_CHOICE_COUNT> CHOICES = MAIN_CHOICES;
 
-	int _str_idx = str_idx;
-	int x;
-	int y;
+	screen_x_t left = (MENU_CENTER_X - (MAIN_CHOICE_W / 2));
+	screen_y_t top = choice_top(choice, MAIN_CHOICE_COUNT);
 
-	text_array_t<MAIN_MENU_ENTRY_COUNT> _main_menu_text = MAIN_MENU_TEXT;
-
-	x = HIT_KEY_LEFT;
-	y = _str_idx * MAIN_MENU_OPTION_DISTANCE + MAIN_MENU_OPTION_TOP;
-
-	graph_putsa_fx(x, y, col | FX_WEIGHT_BLACK, _main_menu_text.t[_str_idx]);
+	// No unblitting necessary here, as only the colors change.
+	graph_putsa_fx(left, top, (col | FX), CHOICES.t[choice]);
 }
 
-extern const char aSS[];
+void option_choice_unput_and_put(int choice, int col)
+{
+	extern TextArray<OPTION_CHOICE_COUNT> OPTION_CHOICES;
+	extern TextArray<RANK_COUNT> RANK_VALUES;
+	extern TextArray<BGM_MODE_COUNT> BGM_MODE_VALUES;
+	extern TextArray<CFG_LIVES_EXTRA_MAX> START_LIFE_VALUES;
 
-void option_menu_draw_option(int option, int col) {
-	extern text_array_t<OPTIONS_COUNT> OPTIONS_TEXT;
-	extern text_array_t<RANK_COUNT> RANK_TEXT;
-	extern text_array_t<FM_OPTION_COUNT> FM_OPTION;
-	extern text_array_t<LIFES_AMOUNT_TEXT_COUNT> LIFES_AMOUNT_TEXT;
+	const TextArray<OPTION_CHOICE_COUNT> CHOICES = OPTION_CHOICES;
+	const TextArray<RANK_COUNT> RANKS = RANK_VALUES;
+	const TextArray<BGM_MODE_COUNT> MUSIC_MODES = BGM_MODE_VALUES;
+	const TextArray<CFG_LIVES_EXTRA_MAX> START_LIVES = START_LIFE_VALUES;
 
-	int _option = option;
+	screen_x_t left = (MENU_CENTER_X - (MENU_W / 2));
+	screen_y_t top = choice_top(choice, OPTION_CHOICE_COUNT);
 
-	text_array_t<OPTIONS_COUNT> _options_text = OPTIONS_TEXT;
-	text_array_t<RANK_COUNT> _rank_text = RANK_TEXT;
-	text_array_t<FM_OPTION_COUNT> _fm_option = FM_OPTION;
-	text_array_t<LIFES_AMOUNT_TEXT_COUNT> _lifes_amount_text = LIFES_AMOUNT_TEXT;
+	egc_copy_rect_1_to_0_16(left, top, MENU_W, GLYPH_H);
 
-	int left = MAIN_MENU_LEFT;
-	int top = _option * 20 + 266;
-
-	egc_copy_rect_1_to_0_16(left, top, 0xB0, 0x10);
-
-	if(_option == 0) {
-		graph_printf_fx(left, top, col | FX_WEIGHT_BLACK, aSS, _options_text.t[_option], _rank_text.t[opts.rank]);
-	} else if(_option == 1) {
-		graph_printf_fx(left, top, col | FX_WEIGHT_BLACK, aSS, _options_text.t[_option], _fm_option.t[opts.bgm_mode]);
-	} else if(_option == 2) {
-		graph_printf_fx(left, top, col | FX_WEIGHT_BLACK, aSS, _options_text.t[_option], _lifes_amount_text.t[opts.lives_extra]);
-	} else if(_option == 3) {
-		graph_printf_fx(left, top, col | FX_WEIGHT_BLACK, aSS + 2, _options_text.t[_option]);
-	} else if(_option == 4) {
-		graph_printf_fx(left, top, col | FX_WEIGHT_BLACK, aSS + 2, _options_text.t[_option]);
+	if(choice == 0) {
+		choice_put_value(left, top, col, CHOICES.t[choice], RANKS.t[opts.rank]);
+	} else if(choice == 1) {
+		choice_put_value(
+			left, top, col, CHOICES.t[choice], MUSIC_MODES.t[opts.bgm_mode]
+		);
+	} else if(choice == 2) {
+		choice_put_value(
+			left, top, col, CHOICES.t[choice], START_LIVES.t[opts.lives_extra]
+		);
+	} else if(choice == 3) {
+		choice_put(left, top, col, CHOICES.t[choice]);
+	} else if(choice == 4) {
+		choice_put(left, top, col, CHOICES.t[choice]);
 	}
 }
 
-extern char bgm_playing;
-extern const char aS_2d[];
+extern int8_t music_sel;
 
-void music_test_draw(int line, int col) {
-	int _line = line;
+void music_choice_unput_and_put(int choice, int col)
+{
+	extern const char aS_2d[];
+	extern TextArray<MUSIC_CHOICE_COUNT> MUSIC_CHOICES;
+	extern TextArray<TRACK_COUNT> MUSIC_TITLES;
 
-	extern text_array_t<MUSIC_TEST_MENU_OPTION_COUNT> MUSIC_TEST_MENU_TEXT;
-	extern text_array_t<MUSIC_TEST_SONG_COUNT> MUSIC_TEST_SONGS;
+	const TextArray<MUSIC_CHOICE_COUNT> CHOICES = MUSIC_CHOICES;
+	const TextArray<TRACK_COUNT> TITLES = MUSIC_TITLES;
 
-	text_array_t<MUSIC_TEST_MENU_OPTION_COUNT> _music_test_menu_text = MUSIC_TEST_MENU_TEXT;
-	text_array_t<MUSIC_TEST_SONG_COUNT> _music_test_songs = MUSIC_TEST_SONGS;
+	screen_x_t left = (MENU_CENTER_X - (MENU_W / 2));
+	screen_y_t top = music_choice_top(choice, MUSIC_CHOICE_COUNT);
 
-	int left = MAIN_MENU_LEFT;
-	int top = _line * 40 + 286;
+	egc_copy_rect_1_to_0_16(left, top, MENU_W, GLYPH_H);
 
-	egc_copy_rect_1_to_0_16(left, top, 176, 16);
-
-	if(_line == 0) {
-		egc_copy_rect_1_to_0_16(left, top + 20, 192, 16);
-		graph_printf_fx(left, top, col | FX_WEIGHT_BLACK, aS_2d, _music_test_menu_text.t[_line], bgm_playing);
-		graph_printf_fx(left, top + 20, col | FX_WEIGHT_BLACK, aSS + 2, _music_test_songs.t[bgm_playing]);
-	} else if(_line == 1){
-		graph_printf_fx(left, top, col | FX_WEIGHT_BLACK, aSS + 2, _music_test_menu_text.t[_line]);
+	if(choice == 0) {
+		// ZUN bug: That's larger than the menu?
+		egc_copy_rect_1_to_0_16(
+			left, (top + CHOICE_PADDED_H), (MENU_W + GLYPH_FULL_W), GLYPH_H
+		);
+		graph_printf_fx(
+			left, top, (col | FX), aS_2d, CHOICES.t[choice], music_sel
+		);
+		choice_put(left, (top + CHOICE_PADDED_H), col, TITLES.t[music_sel]);
+	} else if(choice == 1) {
+		choice_put(left, top, col, CHOICES.t[choice]);
 	}
 }
-
-/// --------------------
+/// ---------

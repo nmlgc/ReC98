@@ -13,7 +13,7 @@ static const bgm_mode_t CFG_BGM_MODE_DEFAULT = BGM_MODE_MDRV2;
 #define CFG_BOMBS_DEFAULT (1)
 #define CFG_LIVES_EXTRA_DEFAULT (2)
 
-#define CFG_LIVES_EXTRA_MAX (4)
+static const int8_t CFG_LIVES_EXTRA_MAX = 5;
 
 struct cfg_t {
 	char id[sizeof(CFG_ID) - 1];

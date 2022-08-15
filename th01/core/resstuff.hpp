@@ -1,4 +1,6 @@
-void resident_stuff_set(
+// Allocates the resident structure if it doesn't exist yet, and initializes
+// the given bunch of data with the respective values.
+void resident_create_and_stuff_set(
 	int8_t rank,
 	bgm_mode_t bgm_mode,
 	int8_t bombs,
@@ -18,4 +20,5 @@ int resident_stuff_get(
 	int& stage_id
 );
 
+// Frees the resident structure if it exists.
 void resident_free(void);

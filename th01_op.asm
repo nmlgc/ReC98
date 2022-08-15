@@ -20,14 +20,12 @@ BINARY = 'O'
 
 include ReC98.inc
 include th01/th01.inc
-include th01/hardware/grppsafx.inc
 include th01/formats/cfg.inc
 
 	extern SCOPY@:proc
 	extern __setargv__:proc ; main() needs both to be set
 	extern __setenvp__:proc
 	extern _atol:proc
-	extern _execl:proc
 	extern _int86:proc
 	extern _memcmp:proc
 	extern _printf:proc
@@ -79,15 +77,15 @@ op_01__TEXT	segment	byte public 'CODE' use16
 	extern @main_input_sense$qv:proc
 	extern @option_input_sense$qv:proc
 	extern @whitelines_animate$qv:proc
-	extern @titlescreen_init$qv:proc
-	extern @titlescreen_create_op_win$qv:proc
-	extern @key_end_resident_free$qv:proc
-	extern @start$qv:proc
-	extern @Continue$qv:proc
-	extern @titlescreen_flash_hit_key_prompt$qi:proc
-	extern @main_menu_draw_option$qii:proc
-	extern @option_menu_draw_option$qii:proc
-	extern @music_test_draw$qii:proc
+	extern @title_init$qv:proc
+	extern @title_window_put$qv:proc
+	extern @title_exit$qv:proc
+	extern @start_game$qv:proc
+	extern @start_continue$qv:proc
+	extern @title_hit_key_put$qi:proc
+	extern @main_choice_unput_and_put$qii:proc
+	extern @option_choice_unput_and_put$qii:proc
+	extern @music_choice_unput_and_put$qii:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -99,23 +97,15 @@ sub_AB97	proc far
 		cmp	word_12564, 0
 		jnz	short loc_AC04
 		call	@egc_copy_rect_1_to_0_16$qiiii c, large (266 shl 16) or 220, large (100 shl 16) or 176
-		push	50000h
-		call	@main_menu_draw_option$qii
-		add	sp, 4
-		push	50001h
-		call	@main_menu_draw_option$qii
-		add	sp, 4
-		push	50002h
-		call	@main_menu_draw_option$qii
-		add	sp, 4
-		push	50003h
-		call	@main_menu_draw_option$qii
-		add	sp, 4
-		push	0Fh
+		call	@main_choice_unput_and_put$qii c, large 0 or (5 shl 16)
+		call	@main_choice_unput_and_put$qii c, large 1 or (5 shl 16)
+		call	@main_choice_unput_and_put$qii c, large 2 or (5 shl 16)
+		call	@main_choice_unput_and_put$qii c, large 3 or (5 shl 16)
+		push	15
 		mov	al, _menu_sel
 		cbw
 		push	ax
-		call	@main_menu_draw_option$qii
+		call	@main_choice_unput_and_put$qii
 		add	sp, 4
 		mov	word_12564, 1
 		mov	al, _menu_sel
@@ -127,15 +117,12 @@ loc_AC04:
 		cbw
 		cmp	ax, word_12562
 		jz	short loc_AC30
-		push	5
-		push	word_12562
-		call	@main_menu_draw_option$qii
-		add	sp, 4
+		call	@main_choice_unput_and_put$qii c, word_12562, 5
 		push	0Fh
 		mov	al, _menu_sel
 		cbw
 		push	ax
-		call	@main_menu_draw_option$qii
+		call	@main_choice_unput_and_put$qii
 		add	sp, 4
 		mov	al, _menu_sel
 		cbw
@@ -157,12 +144,12 @@ loc_AC3E:
 		jmp	cs:off_AC7C[bx]
 
 loc_AC50:
-		call	@start$qv
+		call	@start_game$qv
 		jmp	short loc_AC6E
 ; ---------------------------------------------------------------------------
 
 loc_AC56:
-		call	@Continue$qv
+		call	@start_continue$qv
 		jmp	short loc_AC6E
 ; ---------------------------------------------------------------------------
 
@@ -203,38 +190,25 @@ sub_AC84	proc far
 		mov	_menu_sel, 0
 		mov	word_12568, 0
 		mov	word_12566, 1
-		mov	_option_rows, 4
+		mov	_option_choice_max, 4
 		call	@egc_copy_rect_1_to_0_16$qiiii c, large (276 shl 16) or 220, large (80 shl 16) or 176
-		push	0F0000h
-		call	@option_menu_draw_option$qii
-		add	sp, 4
-		push	50001h
-		call	@option_menu_draw_option$qii
-		add	sp, 4
-		push	50002h
-		call	@option_menu_draw_option$qii
-		add	sp, 4
-		push	50003h
-		call	@option_menu_draw_option$qii
-		add	sp, 4
-		push	50004h
-		call	@option_menu_draw_option$qii
-		add	sp, 4
+		call	@option_choice_unput_and_put$qii c, large 0 or (15 shl 16)
+		call	@option_choice_unput_and_put$qii c, large 1 or (5 shl 16)
+		call	@option_choice_unput_and_put$qii c, large 2 or (5 shl 16)
+		call	@option_choice_unput_and_put$qii c, large 3 or (5 shl 16)
+		call	@option_choice_unput_and_put$qii c, large 4 or (5 shl 16)
 
 loc_ACF9:
 		mov	al, _menu_sel
 		cbw
 		cmp	ax, word_12568
 		jz	short loc_AD25
-		push	5
-		push	word_12568
-		call	@option_menu_draw_option$qii
-		add	sp, 4
+		call	@option_choice_unput_and_put$qii c, word_12568, 5
 		push	0Fh
 		mov	al, _menu_sel
 		cbw
 		push	ax
-		call	@option_menu_draw_option$qii
+		call	@option_choice_unput_and_put$qii
 		add	sp, 4
 		mov	al, _menu_sel
 		cbw
@@ -284,14 +258,14 @@ loc_AD6F:
 		cbw
 		or	ax, ax
 		jge	short loc_AD80
-		mov	_opts.O_lives_extra, CFG_LIVES_EXTRA_MAX
+		mov	_opts.O_lives_extra, (CFG_LIVES_EXTRA_MAX - 1)
 
 loc_AD80:
 		push	0Fh
 		mov	al, _menu_sel
 		cbw
 		push	ax
-		call	@option_menu_draw_option$qii
+		call	@option_choice_unput_and_put$qii
 		add	sp, 4
 		mov	word_1256A, 1
 		jmp	short loc_AD9C
@@ -342,7 +316,7 @@ loc_ADE8:
 		inc	_opts.O_lives_extra
 		mov	al, _opts.O_lives_extra
 		cbw
-		cmp	ax, CFG_LIVES_EXTRA_MAX
+		cmp	ax, (CFG_LIVES_EXTRA_MAX - 1)
 		jle	short loc_ADFA
 		mov	_opts.O_lives_extra, 0
 
@@ -351,7 +325,7 @@ loc_ADFA:
 		mov	al, _menu_sel
 		cbw
 		push	ax
-		call	@option_menu_draw_option$qii
+		call	@option_choice_unput_and_put$qii
 		add	sp, 4
 		mov	word_1256C, 1
 		jmp	short loc_AE16
@@ -415,11 +389,11 @@ var_3C		= byte ptr -3Ch
 		push	ss
 		push	ax
 		push	ds
-		push	offset _MUSIC_TEST_SONG_FILES
+		push	offset _MUSIC_FILES
 		mov	cx, 3Ch	; '<'
 		call	SCOPY@
 		call	@mdrv2_bgm_stop$qv
-		mov	al, _bgm_playing
+		mov	al, _music_sel
 		cbw
 		shl	ax, 2
 		lea	dx, [bp+var_3C]
@@ -448,29 +422,22 @@ sub_AEA8	proc far
 		mov	word_125AA, 1
 		mov	_input_ok, 0
 		mov	_input_shot, 0
-		mov	_option_rows, 1
+		mov	_option_choice_max, 1
 		call	@egc_copy_rect_1_to_0_16$qiiii c, large (266 shl 16) or 220, large (100 shl 16) or 176
-		push	0F0000h
-		call	@music_test_draw$qii
-		add	sp, 4
-		push	50001h
-		call	@music_test_draw$qii
-		add	sp, 4
+		call	@music_choice_unput_and_put$qii c, large 0 or (15 shl 16)
+		call	@music_choice_unput_and_put$qii c, large 1 or (5 shl 16)
 
 loc_AF00:
 		mov	al, _menu_sel
 		cbw
 		cmp	ax, word_125AC
 		jz	short loc_AF2C
-		push	5
-		push	word_125AC
-		call	@music_test_draw$qii
-		add	sp, 4
+		call	@music_choice_unput_and_put$qii c, word_125AC, 5
 		push	0Fh
 		mov	al, _menu_sel
 		cbw
 		push	ax
-		call	@music_test_draw$qii
+		call	@music_choice_unput_and_put$qii
 		add	sp, 4
 		mov	al, _menu_sel
 		cbw
@@ -485,17 +452,17 @@ loc_AF2C:
 		jnz	short loc_AF6F
 		cmp	_menu_sel, 0
 		jnz	short loc_AF53
-		dec	_bgm_playing
-		cmp	_bgm_playing, 0
+		dec	_music_sel
+		cmp	_music_sel, 0
 		jge	short loc_AF53
-		mov	_bgm_playing, 0Eh
+		mov	_music_sel, 0Eh
 
 loc_AF53:
 		push	0Fh
 		mov	al, _menu_sel
 		cbw
 		push	ax
-		call	@music_test_draw$qii
+		call	@music_choice_unput_and_put$qii
 		add	sp, 4
 		mov	word_125AE, 1
 		jmp	short loc_AF6F
@@ -513,17 +480,17 @@ loc_AF6F:
 		jnz	short loc_AFB2
 		cmp	_menu_sel, 0
 		jnz	short loc_AF96
-		inc	_bgm_playing
-		cmp	_bgm_playing, 0Fh
+		inc	_music_sel
+		cmp	_music_sel, 0Fh
 		jl	short loc_AF96
-		mov	_bgm_playing, 0
+		mov	_music_sel, 0
 
 loc_AF96:
 		push	0Fh
 		mov	al, _menu_sel
 		cbw
 		push	ax
-		call	@music_test_draw$qii
+		call	@music_choice_unput_and_put$qii
 		add	sp, 4
 		mov	word_125B0, 1
 		jmp	short loc_AFB2
@@ -613,7 +580,7 @@ loc_B015:
 		cbw
 		cmp	ax, 73h	; 's'
 		jnz	short loc_B045
-		mov	_mode, 1
+		mov	_debug_mode, 1
 
 loc_B045:
 		les	bx, [bp+_argv+2]
@@ -622,7 +589,7 @@ loc_B045:
 		cbw
 		cmp	ax, 74h	; 't'
 		jnz	short loc_B05A
-		mov	_mode, 2
+		mov	_debug_mode, 2
 
 loc_B05A:
 		les	bx, [bp+_argv+2]
@@ -631,7 +598,7 @@ loc_B05A:
 		cbw
 		cmp	ax, 64h	; 'd'
 		jnz	short loc_B06F
-		mov	_mode, 3
+		mov	_debug_mode, 3
 
 loc_B06F:
 		push	3		; n
@@ -682,7 +649,7 @@ loc_B0D6:
 		call	_int86
 		add	sp, 0Ah
 		call	key_start
-		call	@titlescreen_init$qv
+		call	@title_init$qv
 		xor	ax, ax
 		mov	es, ax
 		mov	al, es:((50h shl 4) + 00h) ; BIOS_FLAG
@@ -699,8 +666,7 @@ loc_B126:
 		push	1
 		call	@frame_delay$qui
 		pop	cx
-		push	di
-		call	@titlescreen_flash_hit_key_prompt$qi
+		call	@title_hit_key_put$qi stdcall, di
 		pop	cx
 		inc	di
 
@@ -708,7 +674,7 @@ loc_B135:
 		call	key_sense_bios
 		or	ax, ax
 		jz	short loc_B126
-		call	@titlescreen_create_op_win$qv
+		call	@title_window_put$qv
 		mov	eax, _rand
 		mov	random_seed, eax
 		jmp	loc_B21A
@@ -812,9 +778,9 @@ loc_B21A:
 		cmp	byte_1232C, 0
 		jz	loc_B14D
 		call	@cfg_save$qv
-		mov	_quit_flag, 1
+		mov	_free_resident_structure_on_title, 1
 		call	@mdrv2_bgm_stop$qv
-		call	@key_end_resident_free$qv
+		call	@title_exit$qv
 		push	1
 		call	@graph_accesspage_func$qi
 		pop	cx
@@ -862,7 +828,6 @@ ztext_TEXT	ends
 initexit_TEXT	segment	byte public 'CODE' use16
 	extern @game_init$qv:proc
 	extern @game_exit$qv:proc
-	extern @game_switch_binary$qv:proc
 initexit_TEXT	ends
 
 ; ---------------------------------------------------------------------------
@@ -872,10 +837,6 @@ initexit_TEXT	ends
 graph_TEXT	segment	byte public 'CODE' use16
 	extern @graph_accesspage_func$qi:proc
 	extern @z_graph_clear$qv:proc
-	extern @graph_copy_accessed_page_to_othe$qv:proc
-	extern @z_palette_black$qv:proc
-	extern @z_palette_black_in$qv:proc
-	extern @graph_putsa_fx$qiiinxuc:proc
 graph_TEXT	ends
 
 ; ---------------------------------------------------------------------------
@@ -889,25 +850,19 @@ SHARED	ends
 ; ===========================================================================
 
 ; Segment type:	Pure code
-grppffx_TEXT	segment	byte public 'CODE' use16
-	extern @graph_printf_fx$qiiinxuce:proc
+grppffx_TEXT	segment	byte public 'CODE'
 grppffx_TEXT	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
 PTN_GRP_GRZ	segment	byte public 'CODE' use16
-	extern @grp_put_palette_show$qnxc:proc
-	extern @grp_put$qnxc:proc
-	extern @grp_put_colorkey$qnxc:proc
 PTN_GRP_GRZ	ends
 
 ; ===========================================================================
 
 ; Segment type:	Pure code
-resstuff_TEXT	segment	byte public 'CODE' use16
-	extern @resident_stuff_set$qc10bgm_mode_tccl:proc
-	extern @resident_free$qv:proc
+resstuff_TEXT	segment	byte public 'CODE'
 resstuff_TEXT	ends
 
 ; ===========================================================================
@@ -918,7 +873,6 @@ mdrv2_TEXT	segment	byte public 'CODE' use16
 	extern @mdrv2_bgm_load$qnxc:proc
 	extern @mdrv2_bgm_play$qv:proc
 	extern @mdrv2_bgm_stop$qv:proc
-	extern @mdrv2_bgm_fade_out_nonblock$qv:proc
 	extern @mdrv2_check_board$qv:proc
 mdrv2_TEXT	ends
 
@@ -932,7 +886,7 @@ op_12_TEXT	ends
 	.data
 
 	extern _opts:cfg_options_t
-	extern _mode:byte
+	extern _debug_mode:byte
 	extern _menu_sel:byte
 	extern _input_left:byte
 	extern _input_ok:byte
@@ -943,51 +897,51 @@ op_12_TEXT	ends
 	extern byte_1232C:byte
 	extern byte_1232D:byte
 	extern byte_1232E:byte
-	extern _quit_flag:byte
+	extern _free_resident_structure_on_title:byte
 	extern dword_12330:dword
-	extern _option_rows:byte
+	extern _option_choice_max:byte
 
 		db 0
 
-public _MAIN_MENU_TEXT
-_MAIN_MENU_TEXT	label dword
+public _MAIN_CHOICES
+_MAIN_CHOICES	label dword
 	dd aVrvsvVqvs	; "   ‚r‚s‚`‚q‚s   "
 	dd aVbvnvmvsvhvmvt	; "‚b‚n‚m‚s‚h‚m‚t‚d"
 	dd aB@vnvovsvhvnvm	; "@‚n‚o‚s‚h‚n‚m@"
 	dd aB@b@vpvtvhvsb@	; "@@‚p‚t‚h‚s@@"
 
-public _OPTIONS_TEXT, _RANK_TEXT, _FM_OPTION, _LIFES_AMOUNT_TEXT
-_OPTIONS_TEXT label dword
+public _OPTION_CHOICES, _RANK_VALUES, _BGM_MODE_VALUES, _START_LIFE_VALUES
+_OPTION_CHOICES label dword
 	dd aB@vqvVmvjb@	; "@‚q‚`‚m‚j@	"
 	dd aVlvtvrvhvb	; " ‚l‚t‚r‚h‚b	"
 	dd aVovkvVxvdvq	; "‚o‚k‚`‚x‚d‚q	"
 	dd aVlbdvsvdvrvs	; "‚lD‚s‚d‚r‚s	"
 	dd aB@vpvtvhvsb@	; "@‚p‚t‚h‚s@	"
-_RANK_TEXT label dword
+_RANK_VALUES label dword
 	dd aEasy	; " EASY "
 	dd aNormal		; "NORMAL"
 	dd aHard		; " HARD "
 	dd aLunatic		; "LUNATIC"
-_FM_OPTION	label dword
+_BGM_MODE_VALUES	label dword
 	dd aOff	; "  OFF "
 	dd aFm	; "  FM	 "
-_LIFES_AMOUNT_TEXT	label dword
+_START_LIFE_VALUES	label dword
 	dd a3	; "   3	 "
 	dd a4	; "   4	 "
 	dd a5	; "   5	 "
 	dd a6	; "   6	 "
 	dd a7	; "   7	 "
 
-public _bgm_playing
-_bgm_playing	db 0
+public _music_sel
+_music_sel	db 0
 
-public _MUSIC_TEST_MENU_TEXT
-_MUSIC_TEST_MENU_TEXT label dword
+public _MUSIC_CHOICES
+_MUSIC_CHOICES label dword
 	dd aVlvtvrvhvbb@vm	; "‚l‚t‚r‚h‚b@‚m‚D"
 	dd aB@b@vpvxvivf	; "@@‚p‚•‚‰‚”	     "
 
-public _MUSIC_TEST_SONGS
-_MUSIC_TEST_SONGS	label dword
+public _MUSIC_TITLES
+_MUSIC_TITLES	label dword
 	dd aASacretLot	; "    A Sacret	Lot"
 	dd aXcvR_o	; "	 •—‚Ì_ŽÐ     "
 	dd aIiiuvIPc	; "	‰i‰“‚Ì›Þ—    "
@@ -1011,8 +965,8 @@ word_12568	dw 0
 word_1256A	dw 0
 word_1256C	dw 0
 
-public _MUSIC_TEST_SONG_FILES
-_MUSIC_TEST_SONG_FILES	label dword
+public _MUSIC_FILES
+_MUSIC_FILES	label dword
 	dd _aReimu_mdt	; "reimu.mdt"
 	dd aZipangu_mdt		; "ZIPANGU.mdt"
 	dd aSt0_mdt		; "st0.mdt"
@@ -1177,7 +1131,5 @@ _columns	dd ROW_SIZE dup (?)
 	; libs/master.lib/keystart[bss].asm
 	extern key_backup:byte:786
 	extern keywork:byte:10
-
-	extern _resident:dword
 
 		end

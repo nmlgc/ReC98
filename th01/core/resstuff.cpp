@@ -12,7 +12,7 @@
 
 resident_t far *resident;
 
-void resident_stuff_set(
+void resident_create_and_stuff_set(
 	int8_t rank,
 	bgm_mode_t bgm_mode,
 	int8_t bombs,

@@ -31,10 +31,6 @@ REGS		ends
 
 SCENE_COUNT = 4
 
-DM_OFF = 0
-DM_TEST = 1
-DM_FULL = 3
-
 reiidenconfig_t struc ; (sizeof=0x4B)
 	id db 13 dup(?)	; = "ReiidenConfig"
 		db ?
