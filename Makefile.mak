@@ -43,8 +43,8 @@ bin\th01\zunsoft.com: th01\zunsoft.cpp
 {th01}.cpp{bin\th01}.obj:
 	$(CC) $(CFLAGS) -ml -3 -Z -d -DGAME=1 -n$(@D) -c $**
 
-bin\th01\op.exe: bin\piloadc.obj bin\th01\opd.obj th01\op_01.cpp bin\th01\op.obj bin\th01\frmdelay.obj bin\th01\vsync.obj bin\th01\ztext.obj bin\th01\initexit.obj bin\th01\graph.obj bin\th01\ptn_0to1.obj bin\th01\vplanset.obj th01\op_07.cpp bin\th01\grppffx.obj bin\th01\ptn.obj th01\op_09.cpp bin\th01\f_imgd.obj bin\th01\grz.obj bin\th01\opm.obj bin\th01\resstuff.obj bin\th01\mdrv2.obj bin\th01\pf.obj
-	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -3 -Z -DGAME=1 -DBINARY='O' -nbin\th01\ -eOP.EXE @&&|
+bin\th01\op.exe: bin\piloadc.obj th01\op_01.cpp bin\th01\op.obj bin\th01\frmdelay.obj bin\th01\vsync.obj bin\th01\ztext.obj bin\th01\initexit.obj bin\th01\graph.obj bin\th01\ptn_0to1.obj bin\th01\vplanset.obj th01\op_07.cpp bin\th01\grppffx.obj bin\th01\ptn.obj th01\op_09.cpp bin\th01\f_imgd.obj bin\th01\grz.obj bin\th01\opm.obj bin\th01\resstuff.obj bin\th01\mdrv2.obj bin\th01\pf.obj
+	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -3 -Z -d -DGAME=1 -DBINARY='O' -nbin\th01\ -eOP.EXE @&&|
 $**
 |
 

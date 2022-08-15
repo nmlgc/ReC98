@@ -8,10 +8,10 @@ struct cfg_options_t {
 	int8_t lives_extra;	// Add 2 for the actual number of lives
 };
 
-#define CFG_RANK_DEFAULT (RANK_NORMAL)
+static const rank_t CFG_RANK_DEFAULT = RANK_NORMAL;
 static const bgm_mode_t CFG_BGM_MODE_DEFAULT = BGM_MODE_MDRV2;
-#define CFG_BOMBS_DEFAULT (1)
-#define CFG_LIVES_EXTRA_DEFAULT (2)
+static const int8_t CFG_BOMBS_DEFAULT = 1;
+static const int8_t CFG_LIVES_EXTRA_DEFAULT = 2;
 
 static const int8_t CFG_LIVES_EXTRA_MAX = 5;
 

@@ -508,12 +508,7 @@ void verdict_title_calculate_and_render(void)
 
 void verdict_animate_and_regist(void)
 {
-	const shiftjis_t* RANKS[RANK_COUNT] = {
-		" EASY ",
-		"NORMAL",
-		" HARD ",
-		"LUNATIC"
-	};
+	const shiftjis_t* RANKS[RANK_COUNT] = RANKS_CAPS_CENTERED;
 
 	grp_palette_black_out(10);
 

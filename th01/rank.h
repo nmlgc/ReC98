@@ -18,3 +18,14 @@ typedef enum {
 
 	_rank_t_FORCE_INT16 = 0x7FFF
 } rank_t;
+
+#define RANKS_CAPS { \
+	"EASY", "NORMAL", "HARD", "LUNATIC" \
+}
+
+#define RANKS_CAPS_CENTERED { \
+	" EASY ", \
+	"NORMAL", \
+	" HARD ", \
+	"LUNATIC" \
+}

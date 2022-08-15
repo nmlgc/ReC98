@@ -6,6 +6,11 @@ enum bgm_mode_t {
 	BGM_MODE_COUNT,
 };
 
+#define BGM_MODES_CENTERED { \
+	"  OFF ", \
+	"  FM  ", \
+}
+
 typedef enum {
 	ROUTE_MAKAI,
 	ROUTE_JIGOKU,

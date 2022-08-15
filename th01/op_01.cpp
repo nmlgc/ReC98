@@ -29,17 +29,17 @@
 #include "th01/formats/cfg.hpp"
 #include "th01/formats/grp.h"
 #include "th01/snd/mdrv2.h"
+#include "th01/shiftjis/debug.hpp"
+#include "th01/shiftjis/fns.hpp"
 #include "th01/shiftjis/op.hpp"
 
-extern long frame_rand;
-
-extern const char aReimu_mdt[];
+long frame_rand;
 
 // Unused. The only thing on the main menu with this color is the "1996 ZUN"
 // text at the bottom... probably part of an effect that we never got to see.
 void snap_col_4(void)
 {
-	extern dots8_t* columns[ROW_SIZE];
+	static dots8_t* columns[ROW_SIZE];
 	register vram_x_t x;
 	register screen_y_t y;
 	vram_offset_t vram_offset;
@@ -67,12 +67,13 @@ void snap_col_4(void)
 /// REIIDEN.CFG loading and saving
 /// ------------------------------
 
-extern cfg_options_t opts;
-extern int8_t debug_mode;
-// These will be removed once the strings can be defined here
-#undef CFG_FN
-#undef CFG_ID
-extern char CFG_FN[], CFG_ID[], FOPEN_RB[], FOPEN_WB[];
+cfg_options_t opts = {
+	CFG_RANK_DEFAULT,
+	CFG_BGM_MODE_DEFAULT,
+	CFG_BOMBS_DEFAULT,
+	CFG_LIVES_EXTRA_DEFAULT
+};
+int8_t debug_mode = 0;
 
 void cfg_load(void)
 {
@@ -80,7 +81,7 @@ void cfg_load(void)
 	bool read_failure = false;
 	FILE* fp;
 
-	if(( fp = fopen(CFG_FN, FOPEN_RB) ) == nullptr) {
+	if(( fp = fopen(CFG_FN, "rb") ) == nullptr) {
 use_defaults:
 		read_failure = true;
 	}
@@ -108,7 +109,7 @@ void cfg_save(void)
 	bool write_failure = false;
 	FILE* fp;
 
-	if(( fp = fopen(CFG_FN, FOPEN_WB) ) == nullptr) {
+	if(( fp = fopen(CFG_FN, "wb") ) == nullptr) {
 		write_failure = true;
 	}
 	if(!write_failure) {
@@ -165,21 +166,23 @@ static const int MUSIC_CHOICE_COUNT = 2;
 		input_prev[prev_slot] = false; \
 	}
 
-extern int8_t menu_sel;
-extern int8_t input_left; // ACTUAL TYPE: bool
-extern bool input_cancel;
+int8_t menu_sel = 0;
+int8_t input_left = false; // ACTUAL TYPE: bool
+bool input_ok = false;
+bool input_shot = false;
+bool input_cancel = false;
 
-extern int8_t menu_id; // ACTUAL TYPE: menu_id_t
+int8_t menu_id = MID_MAIN; // ACTUAL TYPE: menu_id_t
 
-extern int8_t input_right; // ACTUAL TYPE: bool
-extern bool quit;
-extern int8_t unused_con_arg_0;
-extern int8_t unused_con_arg_2;
+int8_t input_right = false; // ACTUAL TYPE: bool
+bool quit = false;
+int8_t unused_con_arg_0 = 0;
+int8_t unused_con_arg_2 = 0;
 
 // ZUN bloat: Just call resident_free() in the one case it's actually needed.
-extern int8_t free_resident_structure_on_title_exit; // ACTUAL TYPE: bool
+int8_t free_resident_structure_on_title_exit = false; // ACTUAL TYPE: bool
 
-extern int32_t unused_con_arg_1;
+int32_t unused_con_arg_1 = 0;
 
 inline void keygroup_sense(REGS& out, REGS& in, char group_id) {
 	in.h.ah = 0x04;
@@ -202,9 +205,7 @@ void main_input_sense(void)
 {
 	REGS in;
 	REGS out1, out2;
-	// TODO: Should just be `static` once the variable can be declared here
-	#define input_prev main_input_prev
-	extern bool16 input_prev[2];
+	static bool16 input_prev[2] = { false };
 
 	keygroup_sense(out1, in, 7);
 	keygroup_sense(out2, in, 8);
@@ -224,16 +225,13 @@ void main_input_sense(void)
 	ok_shot_cancel_sense(out1, in);
 }
 
-extern uint8_t option_choice_max;
+uint8_t option_choice_max = 3;
 
 void option_input_sense(void)
 {
 	REGS in;
 	REGS out1, out2;
-	// TODO: Should just be `static` once the variable can be declared here
-	#undef  input_prev
-	#define input_prev option_input_prev
-	extern bool16 input_prev[2];
+	static bool16 input_prev[2] = { false };
 
 	keygroup_sense(out1, in, 7);
 	keygroup_sense(out2, in, 8);
@@ -277,28 +275,24 @@ void whiteline_put(screen_y_t y)
 
 void whitelines_animate(void)
 {
-	struct hack {
-		bool y[RES_Y];
-	};
-	extern const hack WHITELINES_DRAWN_AT;
-
 	unsigned int i = 0;
 	screen_y_t y1 = 0;
 	screen_y_t y2 = 0;
-	hack drawn_at = WHITELINES_DRAWN_AT;
+	bool drawn_at[RES_Y] = { false };
+
 	while(i++ < (RES_Y / 4)) {
 		egc_copy_rect_1_to_0_16(0, y1, RES_X, 1);
 		egc_copy_rect_1_to_0_16(0, y2, RES_X, 1);
 
 		do {
 			y1 = (rand() % RES_Y);
-		} while(drawn_at.y[y1]);
-		drawn_at.y[y1] = true;
+		} while(drawn_at[y1]);
+		drawn_at[y1] = true;
 
 		do {
 			y2 = (rand() % RES_Y);
-		} while(drawn_at.y[y2]);
-		drawn_at.y[y2] = true;
+		} while(drawn_at[y2]);
+		drawn_at[y2] = true;
 
 		whiteline_put(y1);
 		whiteline_put(y2);
@@ -311,16 +305,13 @@ void whitelines_animate(void)
 
 void title_init(void)
 {
-	extern const char aReiiden2_grp[];
-	extern const char aReiiden3_grp[];
-
-	mdrv2_bgm_load(aReimu_mdt);
+	mdrv2_bgm_load("reimu.mdt");
 	mdrv2_bgm_play();
 	graph_accesspage_func(1);
-	grp_put_palette_show(aReiiden2_grp);
+	grp_put_palette_show("REIIDEN2.grp");
 	z_palette_black();
 	graph_copy_accessed_page_to_other();
-	grp_put(aReiiden3_grp);
+	grp_put("REIIDEN3.grp");
 	graph_accesspage_func(0);
 	z_palette_black_in();
 	frame_delay(100);
@@ -330,12 +321,10 @@ void title_init(void)
 
 void title_window_put(void)
 {
-	extern const char aOp_win_grp[];
-
 	graph_accesspage_func(1);
 	graph_copy_accessed_page_to_other();
 	graph_accesspage_func(0);
-	grp_put_colorkey(aOp_win_grp);
+	grp_put_colorkey("op_win.grp");
 	graph_copy_accessed_page_to_other();
 }
 
@@ -354,8 +343,6 @@ static const pellet_speed_t PELLET_SPEED_DEFAULT = to_pellet_speed(-0.1);
 
 void start_game(void)
 {
-	extern char aReiiden_0[];
-
 	cfg_save();
 	resident_create_and_stuff_set(
 		opts.rank, opts.bgm_mode, opts.bombs, opts.lives_extra, frame_rand
@@ -389,7 +376,7 @@ void start_game(void)
 	resident->snd_need_init = true;
 	resident->pellet_speed = PELLET_SPEED_DEFAULT;
 
-	execl(aReiiden_0, aReiiden_0, nullptr);
+	execl(BINARY_MAIN, BINARY_MAIN, nullptr);
 }
 
 void start_continue(void)
@@ -466,14 +453,12 @@ inline void menu_unput(int choice_count) {
 	);
 }
 
-extern const shiftjis_t aSS[];
-
 #define choice_put(left, top, col, str) { \
-	graph_printf_fx(left, top, (col | FX), (aSS + 2), str); \
+	graph_printf_fx(left, top, (col | FX), "%s", str); \
 }
 
 #define choice_put_value(left, top, col, str, val) { \
-	graph_printf_fx(left, top, (col | FX), aSS, str, val); \
+	graph_printf_fx(left, top, (col | FX), "%s%s", str, val); \
 }
 
 #define choice_render_if_changed(prev, cur, unput_and_put_func) { \
@@ -490,42 +475,36 @@ void title_hit_key_put(int frame)
 		LEFT = (((RES_X / 2) - GLYPH_FULL_W) - (shiftjis_w(HIT_KEY) / 2)),
 		TOP = choice_top(0, 1),
 	};
-	extern const shiftjis_t GP_HIT_KEY[];
-
 	if((frame % 70) < 50) {
-		graph_putsa_fx(LEFT, TOP, (FX_WEIGHT_BOLD | COL_ACTIVE), GP_HIT_KEY);
+		graph_putsa_fx(LEFT, TOP, (FX_WEIGHT_BOLD | COL_ACTIVE), HIT_KEY);
 	} else {
 		egc_copy_rect_1_to_0_16_word_w(LEFT, TOP, shiftjis_w(HIT_KEY), GLYPH_H);
 	}
 }
 
-template <int Count> struct TextArray {
-	const shiftjis_t* t[Count];
-};
-
 void main_choice_unput_and_put(int choice, int col)
 {
-	extern TextArray<MAIN_CHOICE_COUNT> MAIN_CHOICES;
-	const TextArray<MAIN_CHOICE_COUNT> CHOICES = MAIN_CHOICES;
+	const shiftjis_t* CHOICES[MAIN_CHOICE_COUNT] = MAIN_CHOICES;
 
 	screen_x_t left = (MENU_CENTER_X - (MAIN_CHOICE_W / 2));
 	screen_y_t top = choice_top(choice, MAIN_CHOICE_COUNT);
 
 	// No unblitting necessary here, as only the colors change.
-	graph_putsa_fx(left, top, (col | FX), CHOICES.t[choice]);
+	graph_putsa_fx(left, top, (col | FX), CHOICES[choice]);
 }
 
 void option_choice_unput_and_put(int choice, int col)
 {
-	extern TextArray<OPTION_CHOICE_COUNT> OPTION_CHOICES;
-	extern TextArray<RANK_COUNT> RANK_VALUES;
-	extern TextArray<BGM_MODE_COUNT> BGM_MODE_VALUES;
-	extern TextArray<CFG_LIVES_EXTRA_MAX> START_LIFE_VALUES;
-
-	const TextArray<OPTION_CHOICE_COUNT> CHOICES = OPTION_CHOICES;
-	const TextArray<RANK_COUNT> RANKS = RANK_VALUES;
-	const TextArray<BGM_MODE_COUNT> MUSIC_MODES = BGM_MODE_VALUES;
-	const TextArray<CFG_LIVES_EXTRA_MAX> START_LIVES = START_LIFE_VALUES;
+	const shiftjis_t* CHOICES[OPTION_CHOICE_COUNT] = OPTION_CHOICES;
+	const shiftjis_t* RANKS[RANK_COUNT] = RANKS_CAPS_CENTERED;
+	const shiftjis_t* MUSIC_MODES[BGM_MODE_COUNT] = BGM_MODES_CENTERED;
+	const shiftjis_t* START_LIVES[CFG_LIVES_EXTRA_MAX] = {
+		"   3  ",
+		"   4  ",
+		"   5  ",
+		"   6  ",
+		"   7  ",
+	};
 
 	screen_x_t left = (MENU_CENTER_X - (MENU_W / 2));
 	screen_y_t top = choice_top(choice, OPTION_CHOICE_COUNT);
@@ -533,32 +512,28 @@ void option_choice_unput_and_put(int choice, int col)
 	egc_copy_rect_1_to_0_16(left, top, MENU_W, GLYPH_H);
 
 	if(choice == 0) {
-		choice_put_value(left, top, col, CHOICES.t[choice], RANKS.t[opts.rank]);
+		choice_put_value(left, top, col, CHOICES[choice], RANKS[opts.rank]);
 	} else if(choice == 1) {
 		choice_put_value(
-			left, top, col, CHOICES.t[choice], MUSIC_MODES.t[opts.bgm_mode]
+			left, top, col, CHOICES[choice], MUSIC_MODES[opts.bgm_mode]
 		);
 	} else if(choice == 2) {
 		choice_put_value(
-			left, top, col, CHOICES.t[choice], START_LIVES.t[opts.lives_extra]
+			left, top, col, CHOICES[choice], START_LIVES[opts.lives_extra]
 		);
 	} else if(choice == 3) {
-		choice_put(left, top, col, CHOICES.t[choice]);
+		choice_put(left, top, col, CHOICES[choice]);
 	} else if(choice == 4) {
-		choice_put(left, top, col, CHOICES.t[choice]);
+		choice_put(left, top, col, CHOICES[choice]);
 	}
 }
 
-extern int8_t music_sel;
+int8_t music_sel = 0;
 
 void music_choice_unput_and_put(int choice, int col)
 {
-	extern const char aS_2d[];
-	extern TextArray<MUSIC_CHOICE_COUNT> MUSIC_CHOICES;
-	extern TextArray<TRACK_COUNT> MUSIC_TITLES;
-
-	const TextArray<MUSIC_CHOICE_COUNT> CHOICES = MUSIC_CHOICES;
-	const TextArray<TRACK_COUNT> TITLES = MUSIC_TITLES;
+	const shiftjis_t* CHOICES[MUSIC_CHOICE_COUNT]  = MUSIC_CHOICES;
+	const shiftjis_t* TITLES[TRACK_COUNT]  = MUSIC_TITLES;
 
 	screen_x_t left = (MENU_CENTER_X - (MENU_W / 2));
 	screen_y_t top = music_choice_top(choice, MUSIC_CHOICE_COUNT);
@@ -571,21 +546,18 @@ void music_choice_unput_and_put(int choice, int col)
 			left, (top + CHOICE_PADDED_H), (MENU_W + GLYPH_FULL_W), GLYPH_H
 		);
 		graph_printf_fx(
-			left, top, (col | FX), aS_2d, CHOICES.t[choice], music_sel
+			left, top, (col | FX), "%s%.2d", CHOICES[choice], music_sel
 		);
-		choice_put(left, (top + CHOICE_PADDED_H), col, TITLES.t[music_sel]);
+		choice_put(left, (top + CHOICE_PADDED_H), col, TITLES[music_sel]);
 	} else if(choice == 1) {
-		choice_put(left, top, col, CHOICES.t[choice]);
+		choice_put(left, top, col, CHOICES[choice]);
 	}
 }
 
 void main_update_and_render(void)
 {
-	#define sel_prev    	main_sel_prev
-	#define in_this_menu	main_in_this_menu
-
-	extern int sel_prev;
-	extern bool16 in_this_menu;
+	static int sel_prev = 99;
+	static bool16 in_this_menu = false;
 
 	if(!in_this_menu) {
 		menu_unput(CHOICE_COUNT_MAX);
@@ -620,22 +592,14 @@ void main_update_and_render(void)
 	if(input_cancel) {
 		quit = true;
 	}
-
-	#undef in_this_menu
-	#undef sel_prev
 }
 
 void option_update_and_render(void)
 {
-	#define in_this_menu	option_in_this_menu
-	#define sel_prev    	option_sel_prev
-	#define left_locked 	option_left_locked
-	#define right_locked	option_right_locked
-
-	extern bool16 in_this_menu;
-	extern int sel_prev;
-	extern bool16 left_locked;
-	extern bool16 right_locked;
+	static bool16 in_this_menu = false;
+	static int sel_prev = 0;
+	static bool16 left_locked = false;
+	static bool16 right_locked = false;
 
 	if(!in_this_menu) {
 		menu_sel = 0;
@@ -695,33 +659,22 @@ void option_update_and_render(void)
 		in_this_menu = false;
 		menu_sel = 0; // Track selection in the Music Test
 	}
-
-	#undef right_locked
-	#undef left_locked
-	#undef sel_prev
-	#undef in_this_menu
 }
 
 void music_play_selected(void)
 {
-	extern const TextArray<TRACK_COUNT> MUSIC_FILES;
-	const TextArray<TRACK_COUNT> FILES = MUSIC_FILES;
+	const char* FILES[TRACK_COUNT] = MUSIC_FILES;
 	mdrv2_bgm_stop();
-	mdrv2_bgm_load(FILES.t[music_sel]);
+	mdrv2_bgm_load(FILES[music_sel]);
 	mdrv2_bgm_play();
 }
 
 void music_update_and_render(void)
 {
-	#define in_this_menu	music_in_this_menu
-	#define sel_prev    	music_sel_prev
-	#define left_locked 	music_left_locked
-	#define right_locked	music_right_locked
-
-	extern bool16 in_this_menu;
-	extern int sel_prev;
-	extern bool16 left_locked;
-	extern bool16 right_locked;
+	static bool16 in_this_menu = false;
+	static int sel_prev = 0;
+	static bool16 left_locked = false;
+	static bool16 right_locked = false;
 
 	if(!in_this_menu) {
 		menu_sel = 0;
@@ -762,19 +715,10 @@ void music_update_and_render(void)
 	if((input_ok || input_shot) && (menu_sel == 0)) {
 		music_play_selected();
 	}
-
-	#undef right_locked
-	#undef left_locked
-	#undef sel_prev
-	#undef in_this_menu
 }
 
 void main(int argc, const char *argv[])
 {
-	extern const char ERROR_RESIDENT_INVALID[];
-	extern const char CON[];
-	extern const char GOODBYE[];
-
 	int bgm_mode_cur = 0;
 	int hit_key_frames = 0;
 	const char* arg2; // ZUN bloat
@@ -807,8 +751,9 @@ void main(int argc, const char *argv[])
 			debug_mode = 3;
 		}
 
-		// ZUN bug: Could theoretically be out-of-bounds.
-		if(memcmp(argv[1], CON, 3) == 0) {
+		// ZUN bug: The string could theoretically be less than 3 characters
+		// long.
+		if(memcmp(argv[1], "CON", 3) == 0) {
 			arg2 = argv[2];
 			unused_con_arg_0 = atol(arg2);
 			unused_con_arg_1 = atol(argv[3]);
@@ -866,7 +811,7 @@ void main(int argc, const char *argv[])
 					mdrv2_bgm_stop();
 				} else if(static_cast<int>(opts.bgm_mode) == BGM_MODE_MDRV2) {
 					mdrv2_bgm_stop();
-					mdrv2_bgm_load(aReimu_mdt);
+					mdrv2_bgm_load("reimu.mdt");
 					mdrv2_bgm_play();
 				}
 				bgm_mode_cur = opts.bgm_mode;

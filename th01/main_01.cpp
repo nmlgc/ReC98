@@ -68,7 +68,7 @@
 // --------------------------------------------
 
 static int8_t unused_1 = 0; // ZUN bloat
-const char* RANKS[RANK_COUNT] = { "EASY", "NORMAL", "HARD", "LUNATIC" };
+const char* RANKS[RANK_COUNT] = RANKS_CAPS;
 bool timer_initialized = false;
 static int8_t unused_2 = 0; // ZUN bloat
 bool first_stage_in_scene = true;
