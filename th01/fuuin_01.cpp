@@ -91,7 +91,11 @@ void main(int argc, const char *argv[])
 		}
 	}
 
-	mdrv2_check_board();
+	// ZUN bug: Should be done conditionally based on resident_t::bgm_mode.
+	// This is why you still get music during this binary despite disabling BGM
+	// in the options.
+	mdrv2_enable_if_board_installed();
+
 	game_init();
 	end_and_verdict_and_regist_animate();
 	game_switch_binary();

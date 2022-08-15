@@ -545,7 +545,7 @@ int main(void)
 
 	// ZUN bloat: Unnecessary cast.
 	if(static_cast<int>(bgm_mode) == BGM_MODE_MDRV2) {
-		mdrv2_check_board();
+		mdrv2_enable_if_board_installed();
 	}
 	scene_id = (
 		(stage_id < (1 * STAGES_PER_SCENE)) ? 0 :

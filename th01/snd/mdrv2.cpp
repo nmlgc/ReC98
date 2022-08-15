@@ -40,7 +40,7 @@ inline uint16_t mdrv2_call(mdrv2_func_t func) {
 	return _AX;
 }
 
-static int8_t mdrv2_have_board = false; // ACTUAL TYPE: bool
+static int8_t mdrv2_active = false; // ACTUAL TYPE: bool
 static int8_t mdrv2_unused = 0; // ZUN bloat
 
 bool16 mdrv2_resident(void)
@@ -62,7 +62,7 @@ bool16 mdrv2_resident(void)
 
 void near pascal mdrv2_load(const char *fn, char func)
 {
-	if(mdrv2_have_board) {
+	if(mdrv2_active) {
 		int handle = open(fn, (O_BINARY | O_RDONLY));	// opens a DOS handle
 		int length = filelength(handle);
 		seg_t sgm;
@@ -110,48 +110,48 @@ void mdrv2_se_load(const char *fn)
 
 void mdrv2_bgm_play(void)
 {
-	if(mdrv2_have_board) {
+	if(mdrv2_active) {
 		mdrv2_call(MDRV2_MPLAY);
 	}
 }
 
 void mdrv2_bgm_stop(void)
 {
-	if(mdrv2_have_board) {
+	if(mdrv2_active) {
 		mdrv2_call(MDRV2_MSTOP);
 	}
 }
 
 void mdrv2_bgm_fade_out_nonblock(void)
 {
-	if(mdrv2_have_board) {
+	if(mdrv2_active) {
 		mdrv2_call(MDRV2_MFADE_OUT_NONBLOCK);
 	}
 }
 
 void mdrv2_bgm_fade_out_block(void)
 {
-	if(mdrv2_have_board) {
+	if(mdrv2_active) {
 		mdrv2_call(MDRV2_MFADE_OUT_BLOCK);
 	}
 }
 
 void mdrv2_bgm_fade_in(void)
 {
-	if(mdrv2_have_board) {
+	if(mdrv2_active) {
 		mdrv2_call(MDRV2_MFADE_IN);
 	}
 }
 
-int mdrv2_check_board(void)
+int mdrv2_enable_if_board_installed(void)
 {
-	mdrv2_have_board = mdrv2_call(MDRV2_CHECK_BOARD);
-	return mdrv2_have_board;
+	mdrv2_active = mdrv2_call(MDRV2_CHECK_BOARD);
+	return mdrv2_active;
 }
 
 void mdrv2_se_play(int se)
 {
-	if(se && mdrv2_have_board) {
+	if(se && mdrv2_active) {
 		se += (MDRV2_EPLAY << 8);
 		_asm { mov	ax, se; } // Prevent [se] from being put into a register
 		geninterrupt(MDRV2);
