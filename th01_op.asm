@@ -80,103 +80,10 @@ op_01__TEXT	segment	byte public 'CODE' use16
 	extern @title_init$qv:proc
 	extern @title_window_put$qv:proc
 	extern @title_exit$qv:proc
-	extern @start_game$qv:proc
-	extern @start_continue$qv:proc
 	extern @title_hit_key_put$qi:proc
-	extern @main_choice_unput_and_put$qii:proc
 	extern @option_choice_unput_and_put$qii:proc
 	extern @music_choice_unput_and_put$qii:proc
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_AB97	proc far
-		push	bp
-		mov	bp, sp
-		cmp	word_12564, 0
-		jnz	short loc_AC04
-		call	@egc_copy_rect_1_to_0_16$qiiii c, large (266 shl 16) or 220, large (100 shl 16) or 176
-		call	@main_choice_unput_and_put$qii c, large 0 or (5 shl 16)
-		call	@main_choice_unput_and_put$qii c, large 1 or (5 shl 16)
-		call	@main_choice_unput_and_put$qii c, large 2 or (5 shl 16)
-		call	@main_choice_unput_and_put$qii c, large 3 or (5 shl 16)
-		push	15
-		mov	al, _menu_sel
-		cbw
-		push	ax
-		call	@main_choice_unput_and_put$qii
-		add	sp, 4
-		mov	word_12564, 1
-		mov	al, _menu_sel
-		cbw
-		mov	word_12562, ax
-
-loc_AC04:
-		mov	al, _menu_sel
-		cbw
-		cmp	ax, word_12562
-		jz	short loc_AC30
-		call	@main_choice_unput_and_put$qii c, word_12562, 5
-		push	0Fh
-		mov	al, _menu_sel
-		cbw
-		push	ax
-		call	@main_choice_unput_and_put$qii
-		add	sp, 4
-		mov	al, _menu_sel
-		cbw
-		mov	word_12562, ax
-
-loc_AC30:
-		cmp	_input_ok, 0
-		jnz	short loc_AC3E
-		cmp	_input_shot, 0
-		jz	short loc_AC6E
-
-loc_AC3E:
-		mov	al, _menu_sel
-		cbw
-		mov	bx, ax
-		cmp	bx, 3
-		ja	short loc_AC6E
-		add	bx, bx
-		jmp	cs:off_AC7C[bx]
-
-loc_AC50:
-		call	@start_game$qv
-		jmp	short loc_AC6E
-; ---------------------------------------------------------------------------
-
-loc_AC56:
-		call	@start_continue$qv
-		jmp	short loc_AC6E
-; ---------------------------------------------------------------------------
-
-loc_AC5C:
-		mov	byte_1232A, 1
-		mov	word_12564, 0
-		jmp	short loc_AC6E
-; ---------------------------------------------------------------------------
-
-loc_AC69:
-		mov	byte_1232C, 1
-
-loc_AC6E:
-		cmp	_input_cancel, 0
-		jz	short loc_AC7A
-		mov	byte_1232C, 1
-
-loc_AC7A:
-		pop	bp
-		retf
-sub_AB97	endp
-
-; ---------------------------------------------------------------------------
-off_AC7C	dw offset loc_AC50
-		dw offset loc_AC56
-		dw offset loc_AC5C
-		dw offset loc_AC69
+	extern @main_update_and_render$qv:proc
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -351,7 +258,7 @@ loc_AE2D:
 		jz	short loc_AE44
 
 loc_AE34:
-		mov	byte_1232A, 3
+		mov	_menu_id, 3
 		mov	word_12566, 0
 		mov	_menu_sel, 2
 
@@ -366,7 +273,7 @@ loc_AE52:
 		cbw
 		cmp	ax, 3
 		jnz	short loc_AE6B
-		mov	byte_1232A, 2
+		mov	_menu_id, 2
 		mov	word_12566, 0
 		mov	_menu_sel, 0
 
@@ -516,7 +423,7 @@ loc_AFC9:
 		jz	short loc_AFE0
 
 loc_AFD0:
-		mov	byte_1232A, 4
+		mov	_menu_id, 4
 		mov	word_125AA, 0
 		mov	_menu_sel, 3
 
@@ -681,15 +588,15 @@ loc_B135:
 ; ---------------------------------------------------------------------------
 
 loc_B14D:
-		cmp	byte_1232A, 0
+		cmp	_menu_id, 0
 		jnz	short loc_B15F
 		call	@main_input_sense$qv
-		call	sub_AB97
+		call	@main_update_and_render$qv
 		jmp	loc_B1EE
 ; ---------------------------------------------------------------------------
 
 loc_B15F:
-		mov	al, byte_1232A
+		mov	al, _menu_id
 		cbw
 		cmp	ax, 1
 		jnz	short loc_B172
@@ -699,7 +606,7 @@ loc_B15F:
 ; ---------------------------------------------------------------------------
 
 loc_B172:
-		mov	al, byte_1232A
+		mov	al, _menu_id
 		cbw
 		cmp	ax, 2
 		jnz	short loc_B185
@@ -709,7 +616,7 @@ loc_B172:
 ; ---------------------------------------------------------------------------
 
 loc_B185:
-		mov	al, byte_1232A
+		mov	al, _menu_id
 		cbw
 		cmp	ax, 3
 		jnz	short loc_B1D8
@@ -744,19 +651,19 @@ loc_B1C9:
 		push	0Fh
 		call	@frame_delay$qui
 		pop	cx
-		mov	byte_1232A, 0
+		mov	_menu_id, 0
 		jmp	short loc_B1EE
 ; ---------------------------------------------------------------------------
 
 loc_B1D8:
-		mov	al, byte_1232A
+		mov	al, _menu_id
 		cbw
 		cmp	ax, 4
 		jnz	short loc_B1EE
 		push	0Fh
 		call	@frame_delay$qui
 		pop	cx
-		mov	byte_1232A, 1
+		mov	_menu_id, 1
 
 loc_B1EE:
 		xor	ax, ax
@@ -775,7 +682,7 @@ loc_B1EE:
 		pop	cx
 
 loc_B21A:
-		cmp	byte_1232C, 0
+		cmp	_quit, 0
 		jz	loc_B14D
 		call	@cfg_save$qv
 		mov	_free_resident_structure_on_title, 1
@@ -892,9 +799,9 @@ op_12_TEXT	ends
 	extern _input_ok:byte
 	extern _input_shot:byte
 	extern _input_cancel:byte
-	extern byte_1232A:byte
+	extern _menu_id:byte
 	extern _input_right:byte
-	extern byte_1232C:byte
+	extern _quit:byte
 	extern byte_1232D:byte
 	extern byte_1232E:byte
 	extern _free_resident_structure_on_title:byte
@@ -958,8 +865,10 @@ _MUSIC_TITLES	label dword
 	dd aB@b@Rpchmxom	; "　　	 星幽剣士"
 	dd aB@b@b@gagcgkgx	; "　　　アイリス"
 
-word_12562	dw 63h
-word_12564	dw 0
+public _main_sel_prev, _main_in_this_menu
+_main_sel_prev	dw 99
+_main_in_this_menu	dw 0
+
 word_12566	dw 0
 word_12568	dw 0
 word_1256A	dw 0

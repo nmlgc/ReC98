@@ -154,10 +154,17 @@ static const int MUSIC_CHOICE_COUNT = 2;
 		input_prev[prev_slot] = false; \
 	}
 
-extern char menu_sel;
+extern int8_t menu_sel;
 extern bool input_left;
 extern bool input_cancel;
+
+extern enum {
+	MID_MAIN,
+	MID_OPTION,
+} menu_id;
+
 extern bool input_right;
+extern bool quit;
 
 // ZUN bloat: Just call resident_free() in the one case it's actually needed.
 extern int8_t free_resident_structure_on_title_exit; // ACTUAL TYPE: bool
@@ -192,14 +199,14 @@ void main_input_sense(void)
 
 	input_onchange_ring(0,
 		(out1.h.ah & K7_ARROW_UP) || (out2.h.ah & K8_NUM_8),
-		RING_DEC(menu_sel, 3)
+		RING_DEC(menu_sel, (MAIN_CHOICE_COUNT - 1))
 	);
 
 	keygroup_sense(out2, in, 9);
 
 	input_onchange_ring(1,
 		(out1.h.ah & K7_ARROW_DOWN) || (out2.h.ah & K9_NUM_2),
-		RING_INC(menu_sel, 3)
+		RING_INC(menu_sel, (MAIN_CHOICE_COUNT - 1))
 	);
 
 	ok_shot_cancel_sense(out1, in);
@@ -403,17 +410,20 @@ void start_continue(void)
 /// ---------
 /// Terminology: "Choice" = Top-level menu selection (not amount of values)
 
-static const int COL_ACTIVE = 15;
+static const uint4_t COL_ACTIVE = 15;
+static const uint4_t COL_INACTIVE = 5;
 static const int16_t FX = FX_WEIGHT_BLACK;
 
 // Coordinates
 // -----------
 
+static const screen_x_t MENU_LEFT = 220;
 static const screen_x_t MENU_CENTER_X = 316;
 static const screen_y_t MENU_CENTER_Y = 316;
 static const pixel_t MENU_W = 176;
 
 static const pixel_t CHOICE_PADDED_H = 20;
+static const int CHOICE_COUNT_MAX = 5;
 
 static const int TRACK_COUNT = 15;
 
@@ -430,6 +440,15 @@ static const int TRACK_COUNT = 15;
 )
 // -----------
 
+inline void menu_unput(int choice_count) {
+	egc_copy_rect_1_to_0_16(
+		MENU_LEFT,
+		choice_top_0(choice_count),
+		MENU_W,
+		(choice_count * CHOICE_PADDED_H)
+	);
+}
+
 extern const shiftjis_t aSS[];
 
 #define choice_put(left, top, col, str) { \
@@ -438,6 +457,14 @@ extern const shiftjis_t aSS[];
 
 #define choice_put_value(left, top, col, str, val) { \
 	graph_printf_fx(left, top, (col | FX), aSS, str, val); \
+}
+
+#define choice_render_if_changed(prev, cur, unput_and_put_func) { \
+	if(cur != prev) { \
+		unput_and_put_func(prev, COL_INACTIVE); \
+		unput_and_put_func(cur, COL_ACTIVE); \
+		prev = cur; \
+	} \
 }
 
 void title_hit_key_put(int frame)
@@ -533,5 +560,51 @@ void music_choice_unput_and_put(int choice, int col)
 	} else if(choice == 1) {
 		choice_put(left, top, col, CHOICES.t[choice]);
 	}
+}
+
+void main_update_and_render(void)
+{
+	#define sel_prev    	main_sel_prev
+	#define in_this_menu	main_in_this_menu
+
+	extern int sel_prev;
+	extern bool16 in_this_menu;
+
+	if(!in_this_menu) {
+		menu_unput(CHOICE_COUNT_MAX);
+		main_choice_unput_and_put(0, COL_INACTIVE);
+		main_choice_unput_and_put(1, COL_INACTIVE);
+		main_choice_unput_and_put(2, COL_INACTIVE);
+		main_choice_unput_and_put(3, COL_INACTIVE);
+
+		main_choice_unput_and_put(menu_sel, COL_ACTIVE);
+		in_this_menu = true;
+		sel_prev = menu_sel;
+	}
+	choice_render_if_changed(sel_prev, menu_sel, main_choice_unput_and_put);
+
+	if(input_ok || input_shot) {
+		switch(menu_sel) {
+		case 0:
+			start_game();
+			break;
+		case 1:
+			start_continue();
+			break;
+		case 2:
+			menu_id = MID_OPTION;
+			in_this_menu = false;
+			break;
+		case 3:
+			quit = true;
+			break;
+		}
+	}
+	if(input_cancel) {
+		quit = true;
+	}
+
+	#undef in_this_menu
+	#undef sel_prev
 }
 /// ---------
