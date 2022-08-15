@@ -1464,9 +1464,13 @@ void near pattern_detonating_snowflake(void)
 		radius_outer_1 = RADIUS_MAX;
 		radius_outer_2 = 16;
 		radius_inner = 24;
+
 		// ZUN bug: Assigning a subpixel to a regular pixel. Will affect a
-		// single frame, until the X position is randomized again.
+		// single frame, until we enter P_DETONATION_ACTIVE via the
+		// [detonation_frame] in the condition below, where the X position is
+		// randomized again.
 		star_left = left.v;
+
 		star_top = (PLAYFIELD_BOTTOM - (rand() % RADIUS_MAX));
 		mdrv2_se_play(10);
 	}
@@ -2550,10 +2554,9 @@ void sariel_main(void)
 					? ring_min
 					: (pattern_cur + 1);
 			}
-			// Modifying this variable during the second form also causes the
-			// pulse effect to switch its fade direction. Too inconsequential
-			// to be really called a ZUN bug though, and it might have even
-			// been sort of intended.
+			// ZUN quirk: Modifying this variable during the second form also
+			// causes the pulse effect to switch its fade direction. Might have
+			// even been sort of intended.
 			u1.patterns_done++;
 		}
 	} phase = { 0, 0, 0 };

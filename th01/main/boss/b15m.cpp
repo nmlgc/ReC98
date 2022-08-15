@@ -248,7 +248,7 @@ inline screen_x_t form_shot_hitbox_left(elis_form_t form) {
 inline screen_y_t form_shot_hitbox_top(elis_form_t form) {
 	return (form == F_GIRL)
 		? (ent_still_or_wave.cur_top + (GIRL_H / 3))
-		: ent_bat.cur_left; // ZUN bug: Should be cur_top
+		: ent_bat.cur_left; // ZUN quirk: Should be cur_top
 }
 
 inline screen_x_t girl_lefteye_x(void) {
@@ -860,10 +860,10 @@ int pattern_pellets_along_circle(void)
 		);
 	}
 
-	// Adding a `double` value < 1.0 to an integer is still a NOP. That leads
-	// to the start and end angle for quadrant IV being identical, and nothing
-	// being drawn there as a result. Hard to call it a ZUN bug though, since
-	// this is the only function where this happens. But if it this was
+	// ZUN quirk: Adding a `double` value < 1.0 to an integer is still a no-op.
+	// That leads to the start and end angle for quadrant IV being identical,
+	// and nothing being drawn there as a result. Hard to call it a bug though,
+	// since this is the only function where this happens. But if it this was
 	// intended after all, why not just remove the call for quadrant IV?!
 	if(bigcircle_summon_and_flash(circle, 60, 0.05)) {
 		bigcircle_sloppy_unput(circle);
@@ -1584,8 +1584,8 @@ elis_starpattern_ret_t pattern_safety_circle_and_rain_from_top(void)
 		}
 		circle.frames++;
 		if((circle.frames % 8) == 0) {
-			// ZUN bug: Spawning pellets relative to the top-left corner of the
-			// bat sprite rather than the girl one. Since this pattern only
+			// ZUN quirk: Spawning pellets relative to the top-left corner of
+			// the bat sprite rather than the girl one. Since this pattern only
 			// ever runs after a bat transformation, the position isn't
 			// *completely* random at least, just calculated a lot lower than
 			// you would expect.

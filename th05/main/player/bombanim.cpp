@@ -109,7 +109,7 @@ void pascal near reimu_stars_update_and_render(void)
 			trail--;	trail->topleft = head->topleft;
 			trail--;	trail->topleft = head->topleft;
 			trail--;	trail->topleft = head->topleft;
-			trail += 10; // ZUN bug
+			trail += 10; // ZUN quirk
 
 			speed.v = randring1_next16_and_ge_lt_sp(10.0f, 18.0f);
 			angle = (0x40 + randring1_next8_mod_ge_lt(-0x18, +0x18));

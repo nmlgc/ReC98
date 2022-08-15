@@ -427,8 +427,8 @@ void bullets_update(void)
 		score_per_bullet = 1;
 		score_step = 1;
 		#if (GAME == 5)
-			// ZUN bug: All code below uses TH04's patnum for that sprite. This
-			// causes the decay animation to never actually play in TH05.
+			// ZUN quirk: All code below uses TH04's patnum for that sprite.
+			// This causes the decay animation to never actually play in TH05.
 			#define PAT_BULLET_ZAP 72
 
 			score_per_bullet_cap = (rank == RANK_EXTRA)
@@ -458,7 +458,7 @@ void bullets_update(void)
 			bullet->pos.velocity.set(0.0f, 0.0f);
 			bullet->pos.update_seg3();
 
-			// ZUN bug: Always false in TH05, see above
+			// ZUN quirk: Always false in TH05, see above
 			if(patnum < (PAT_BULLET_ZAP + BULLET_DECAY_CELS)) {
 				bullet->patnum = patnum;
 				#if (GAME == 5)
@@ -494,7 +494,7 @@ void bullets_update(void)
 		}
 		bullet_zap.frames++;
 
-		// ZUN bug: Always true in TH05, see above
+		// ZUN quirk: Always true in TH05, see above
 		if(patnum >= (PAT_BULLET_ZAP + BULLET_ZAP_CELS)) {
 			bullet_zap.active = false;
 		}

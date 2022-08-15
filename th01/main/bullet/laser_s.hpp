@@ -97,7 +97,7 @@ public:
 	// even crashes the game.
 	void unput_and_reset(void) {
 		if(alive) {
-			// Two ZUN bugs here:
+			// ZUN bug: And even two of them:
 			//
 			// 1) Surely this should have unblitted from the start to the end
 			//    of the ray instead? Except that this class doesn't explicitly

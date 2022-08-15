@@ -5,7 +5,7 @@ items_invalidate	proc near
 	mov	_tile_invalidate_box, (ITEM_W shl 16) or ITEM_H
 	mov	si, offset _items
 if GAME eq 5
-	; ZUN bug! ITEM_COUNT was 32 in TH04 and is 40 in TH05. This is the only
+	; ZUN bug: ITEM_COUNT was 32 in TH04 and is 40 in TH05. This is the only
 	; function in TH05 that still has 32.
 	mov	di, 32
 else

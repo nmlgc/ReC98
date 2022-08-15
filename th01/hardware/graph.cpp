@@ -586,13 +586,13 @@ void graph_r_line(
 				grcg_put(vram_offset, pixels, 16); \
 				pixels = 0; \
 			} else { \
-				/* ZUN bug: Getting here with a [vram_offset] of 0x0000 will
-				 * cause a 4-byte write starting at 0xFFFF. On the 80286 and
-				 * later CPUs, offset overflows within an instruction are
-				 * illegal even in Real Mode, and will raise a General
-				 * Protection Fault.
-				 * As of May 2022, Anex86 is the only PC-98 emulator to
-				 * correctly replicate this behavior of real hardware,
+				/* ZUN bug: Getting here with a [vram_offset] of 0x0000 will \
+				 * cause a 4-byte write starting at 0xFFFF. On the 80286 and \
+				 * later CPUs, offset overflows within an instruction are \
+				 * illegal even in Real Mode, and will raise a General \
+				 * Protection Fault. \
+				 * As of May 2022, Anex86 is the only PC-98 emulator to \
+				 * correctly replicate this behavior of real hardware, \
 				 * though. */ \
 				vram_offset--; \
 				unput32_at(vram_offset); \

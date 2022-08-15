@@ -208,7 +208,7 @@ void pascal near shake_then_boom(int shake_duration, int boom_duration)
 		end_pic_show_and_delay(1, 2);
 
 		if(i & 1) {
-			// ZUN bug: No delay after rendering this image. Unlike the
+			// ZUN quirk: No delay after rendering this image. Unlike the
 			// z_vsync_wait_and_scrollup() function used in REIIDEN.EXE,
 			// master.lib's graph_scrollup() doesn't wait for VSync, causing
 			// this image to immediately be overwritten with pic #1 on the next

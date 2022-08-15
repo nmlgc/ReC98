@@ -66,9 +66,11 @@ int pascal snd_determine_modes(int req_bgm_mode, int req_se_mode);
 // | SND_SE_FM      | [fn].efc   | [fn].efc  |
 // | SND_SE_BEEP    | [fn].efs   | [fn].efs  | (using master.lib's BGM driver)
 //
-// ZUN bugs and caveats:
+// Caveats:
 // • [fn] still needs to be null-terminated.
 // • The TH04 version does not handle file errors.
+//
+// ZUN bug: Two of them:
 // • In SND_SE_BEEP mode, the TH04 version requires master.lib's BGM subsystem
 //   to have been initialized before.
 // • The TH05 version will infinitely loop if neither the file for the current

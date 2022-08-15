@@ -240,9 +240,9 @@ void input_sense(bool16 reset_repeat)
 		group_1 = key_sense(6);
 		group_1 |= key_sense(6);
 
-		// Hilarious bug: debug_mem() itself renders a sub-screen in a blocking
-		// way, and senses input after a 3-frame delay, thus recursing back
-		// into this function. Therefore, debug_mem() will also be recursively
+		// ZUN bug: debug_mem() itself renders a sub-screen in a blocking way,
+		// and senses input after a 3-frame delay, thus recursing back into
+		// this function. Therefore, debug_mem() will also be recursively
 		// called for every 3 frames you're holding this key.
 		// [input_prev[14]], which is supposed to prevent that, isn't set
 		// until debug_mem() returns, making this variable entirely pointless.

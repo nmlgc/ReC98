@@ -340,7 +340,7 @@ void pascal near boss_phase_next(
 		}
 	} else if(boss.phase_frame == BDF_FADEOUT) {
 		#if (GAME == 5)
-			// ZUN bug: TH04 doesn't do this. It's not a problem in stages 1
+			// ZUN quirk: TH04 doesn't do this. It's not a problem in stages 1
 			// to 5 because the remaining score delta will carry over into the
 			// next stage and be added to the score there. During the final and
 			// Extra Stage though, the lack of this call causes the Clear Bonus

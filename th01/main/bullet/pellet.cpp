@@ -341,7 +341,7 @@ void CPellets::motion_type_apply_for_cur(void)
 		}
 		break;
 	case PM_BOUNCE_FROM_TOP_THEN_GRAVITY:
-		// Wow... Three ZUN bugs in one single if() expression.
+		// ZUN bug: Wow... Three of them in one single if() expression.
 		// 1)
 		// 2) Pellets are clipped at both the left (1) and the right (2)
 		//    edge of the playfield at those exact same coordinates,

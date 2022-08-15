@@ -921,7 +921,7 @@ void orb_player_hittest(int repel_friction)
 			if((rand() % 8) == 0) {
 				orb_velocity_x = OVX_4_LEFT;
 			}
-			// ZUN bug? Shouldn't this be OVX_4_RIGHT, maybe?
+			// ZUN quirk: Shouldn't this be OVX_4_RIGHT, maybe?
 			if((rand() % 8) == 4) {
 				orb_velocity_x = OVX_4_LEFT;
 			}
