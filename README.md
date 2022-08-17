@@ -11,7 +11,7 @@
 
 [HP]: https://rec98.nmlgc.net
 [Finalized]: https://rec98.nmlgc.net/blog/2021-12-15
-[Position independence]: https://rec98.nmlgc.net/faq#position-independence
+[Position independence]: https://rec98.nmlgc.net/faq#pi-what
 
 ----
 
