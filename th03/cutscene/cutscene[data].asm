@@ -1,3 +1,9 @@
+if (GAME eq 5)
+	public _colmap_count
+	_colmap_count	db 0
+		evendata
+endif
+
 public _BOX_MASKS
 _BOX_MASKS label word
 	dw   8888h,     0h,  2222h,     0h

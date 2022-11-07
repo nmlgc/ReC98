@@ -3,17 +3,9 @@
 #include "pc98.h"
 #include "planar.h"
 #include "decomp.hpp"
+#include "shiftjis.hpp"
 #include "master.hpp"
-
-// Note that this does not correspond to the tiled area painted into TH05's
-// EDBK?.PI images.
-static const screen_x_t BOX_LEFT = 80;
-static const screen_y_t BOX_TOP = 320;
-static const pixel_t BOX_W = 480;
-static const pixel_t BOX_H = (GLYPH_H * 4);
-
-static const screen_y_t BOX_RIGHT = (BOX_LEFT + BOX_W);
-static const screen_y_t BOX_BOTTOM = (BOX_TOP + BOX_H);
+#include "th03/cutscene/cutscene.hpp"
 
 typedef enum {
 	BOX_MASK_0,
