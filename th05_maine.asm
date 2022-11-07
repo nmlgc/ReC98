@@ -7604,7 +7604,7 @@ include th03/formats/cdg[data].asm
 public _colmap_count
 _colmap_count	db 0
 	evendata
-include th04/end/box[data].asm
+include th04/cutscene/box[data].asm
 asc_1085A	db '  ', 0
 	even
 byte_1085E	db 0
@@ -7886,7 +7886,7 @@ include th04/hardware/input[bss].asm
 include th04/formats/cdg[bss].asm
 include libs/master.lib/pfint21[bss].asm
 include th04/hardware/egcrect[bss].asm
-include th04/end/cutscene_script[bss].asm
+include th04/cutscene/cutscene[bss].asm
 		db 4 dup(?)
 byte_14F8E	db ?
 		db 60 dup(?)

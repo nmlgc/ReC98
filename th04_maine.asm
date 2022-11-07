@@ -4665,7 +4665,7 @@ include th03/snd/se_state[data].asm
 include th04/hardware/bgimage[data].asm
 include th03/formats/cdg[data].asm
 include th03/formats/pi_put_masked[data].asm
-include th04/end/box[data].asm
+include th04/cutscene/box[data].asm
 asc_EB84	db '  ', 0
 	even
 aSff1_pi	db 'sff1.pi',0
@@ -4752,7 +4752,7 @@ include th02/snd/load[bss].asm
 include th04/mem[bss].asm
 include th04/hardware/input[bss].asm
 include th04/formats/cdg[bss].asm
-include th04/end/cutscene_script[bss].asm
+include th04/cutscene/cutscene[bss].asm
 dword_1247A	dd ?
 byte_1247E	db ?
 		db 61 dup(?)

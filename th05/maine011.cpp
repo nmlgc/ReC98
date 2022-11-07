@@ -5,7 +5,7 @@
 
 #pragma option -zCmaine_01_TEXT
 
-#include "th04/end/box.cpp"
+#include "th04/cutscene/box.cpp"
 #include "shiftjis.hpp"
 
 /// String-to-color map
