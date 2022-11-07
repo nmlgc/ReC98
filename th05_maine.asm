@@ -536,7 +536,7 @@ sub_A8EC	proc near
 		mov	bp, sp
 		push	si
 		graph_accesspage 0
-		call	egc_start_copy_1
+		call	@egc_start_copy_1$qv
 		cmp	byte_14F8E, 0
 		jnz	short loc_A917
 		xor	si, si

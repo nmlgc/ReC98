@@ -29,15 +29,15 @@ endm
 ; Varieties of egc_on() + EGC_SETUP_COPY.
 EGC_START_COPY_DEF macro instance, distance
 	; void egc_start_copy();
-	public egc_start_copy_&instance
-	egc_start_copy_&instance	proc distance
+	public @egc_start_copy_&instance&$qv
+	@egc_start_copy_&instance&$qv	proc distance
 		push	bp
 		mov	bp, sp
 		call	egc_on
 		EGC_SETUP_COPY
 		pop	bp
 		ret
-	egc_start_copy_&instance	endp
+	@egc_start_copy_&instance&$qv	endp
 endm
 
 EGC_START_COPY_INLINED macro

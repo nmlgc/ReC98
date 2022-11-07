@@ -1282,7 +1282,7 @@ arg_2		= word ptr  6
 		shl	dx, 4
 		add	ax, dx
 		mov	si, ax
-		call	egc_start_copy_1
+		call	@egc_start_copy_1$qv
 		xor	di, di
 		jmp	short loc_A225
 ; ---------------------------------------------------------------------------
@@ -1389,7 +1389,7 @@ loc_A26F:
 
 loc_A2B4:
 		call	graph_pack_put_8_noclip pascal, large 400, [bp+var_8], 320
-		call	egc_start_copy_1
+		call	@egc_start_copy_1$qv
 		egc_selectpat
 		egc_setrop	EGC_COMPAREREAD or EGC_WS_PATREG or EGC_RL_MEMREAD
 		outw2	EGC_BITLENGTHREG, 0Fh
