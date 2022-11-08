@@ -30,3 +30,13 @@ extern uint4_t text_col;
 extern uint8_t text_fx; // TH04 and TH05 directly set [graph_putsa_fx_func].
 extern int script_number_param_default;
 // -----
+
+// Function ordering fails
+// -----------------------
+
+#if (GAME >= 4)
+	// Crossfades the text box area from VRAM page 1 to VRAM page 0, spending
+	// [text_interval] frames on each step.
+	void near box_1_to_0_animate(void);
+#endif
+// -----------------------

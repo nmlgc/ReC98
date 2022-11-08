@@ -911,7 +911,7 @@ sub_A73B	proc near
 		mov	_cursor.x, (BOX_LEFT + NAME_W)
 		cmp	_cursor.y, BOX_BOTTOM
 		jl	short loc_A78D
-		call	sub_A815
+		call	@box_1_to_0_animate$qv
 		cmp	_fast_forward, 0
 		jnz	short loc_A76F
 		call	input_wait_for_change pascal, 0
@@ -931,42 +931,7 @@ sub_A73B	endp
 maine_01_TEXT	ends
 
 maine_01__TEXT	segment	byte public 'CODE' use16
-	@BOX_1_TO_0_MASKED$Q10BOX_MASK_T procdesc pascal near \
-		mask:word
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A815	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		call	@egc_start_copy_1$qv
-		cmp	_fast_forward, 0
-		jnz	short loc_A83A
-		xor	si, si
-		jmp	short loc_A835
-; ---------------------------------------------------------------------------
-
-loc_A827:
-		call	@box_1_to_0_masked$q10box_mask_t pascal, si
-		push	_text_interval
-		call	frame_delay
-		inc	si
-
-loc_A835:
-		cmp	si, 4
-		jl	short loc_A827
-
-loc_A83A:
-		call	@box_1_to_0_masked$q10box_mask_t pascal, 4
-		call	egc_off
-		pop	si
-		pop	bp
-		retn
-sub_A815	endp
-
+	@box_1_to_0_animate$qv procdesc pascal near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1015,7 +980,7 @@ loc_A88F:
 		mov	bx, _script_p	; jumptable 0000A876 case 115
 		mov	al, [bx]
 		mov	[bp+arg_0], al
-		call	sub_A815
+		call	@box_1_to_0_animate$qv
 		cmp	[bp+arg_0], '-'
 		jz	short loc_A8C0
 		mov	_script_number_param_default, 0
@@ -1098,7 +1063,7 @@ loc_A954:
 ; ---------------------------------------------------------------------------
 
 loc_A95F:
-		call	sub_A815
+		call	@box_1_to_0_animate$qv
 		mov	_script_number_param_default, 64
 		cmp	[bp+arg_0], 'm'
 		jz	short loc_A994

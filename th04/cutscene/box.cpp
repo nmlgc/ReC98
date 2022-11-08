@@ -5,6 +5,9 @@
 #include "decomp.hpp"
 #include "shiftjis.hpp"
 #include "master.hpp"
+extern "C" {
+#include "th02/hardware/frmdelay.h"
+}
 #include "th03/cutscene/cutscene.hpp"
 
 typedef enum {
@@ -17,6 +20,9 @@ typedef enum {
 
 	_box_mask_t_FORCE_UINT16 = 0xFFFF
 } box_mask_t;
+
+#define egc_start_copy egc_start_copy_1
+void near egc_start_copy(void);
 
 // Copies the text box area from VRAM page 1 to VRAM page 0, applying the
 // given [mask]. Assumes that the EGC is active, and initialized for a copy.
@@ -41,4 +47,26 @@ void pascal near box_1_to_0_masked(box_mask_t mask)
 			vram_offset += EGC_REGISTER_SIZE;
 		}
 	}
+}
+
+void near box_1_to_0_animate(void)
+{
+	// ZUN bloat: box_1_to_0_masked() switches the accessed page anyway.
+	#if (GAME == 5)
+		graph_accesspage(0);
+	#endif
+
+	egc_start_copy();
+	if(!fast_forward) {
+		for(int i = BOX_MASK_0; i < BOX_MASK_COPY; i++) {
+			box_1_to_0_masked(static_cast<box_mask_t>(i));
+			frame_delay(text_interval);
+		}
+	}
+	box_1_to_0_masked(BOX_MASK_COPY);
+	egc_off();
+
+	#if (GAME == 5)
+		frame_delay(1);
+	#endif
 }
