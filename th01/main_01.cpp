@@ -272,7 +272,7 @@ void input_sense(bool16 reset_repeat)
 // Largely copy-pasted from harryup_animate().
 void pascal stage_num_animate(unsigned int stage_num)
 {
-	utram_kanji_amount_t x;
+	ushiftjis_kanji_amount_t x;
 	upixel_t glyph_y;
 	TRAMx16Row<dots_t(GLYPH_HALF_W)> row;
 	TRAMCursor tram_cursor;

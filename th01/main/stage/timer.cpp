@@ -144,7 +144,7 @@ void timer_extend_and_put(void)
 // Largely copy-pasted from stage_num_animate()
 void harryup_animate(void)
 {
-	utram_kanji_amount_t x;
+	ushiftjis_kanji_amount_t x;
 	upixel_t glyph_y;
 	TRAMx16Row<dots_t(GLYPH_HALF_W)> row;
 	TRAMCursor tram_cursor;

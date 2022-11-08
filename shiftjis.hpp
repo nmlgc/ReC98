@@ -15,6 +15,11 @@ typedef int8_t sshiftjis_kanji_t; // MODDERS: Delete
 typedef uint16_t shiftjis_kanji_swapped_t;
 typedef int16_t sshiftjis_kanji_swapped_t; // MODDERS: Delete
 
+// Widths
+typedef int shiftjis_ank_amount_t;
+typedef int shiftjis_kanji_amount_t;
+typedef unsigned int ushiftjis_kanji_amount_t;
+
 #define kanji_swap(kanji) static_cast<shiftjis_kanji_swapped_t>( \
 	(static_cast<shiftjis_kanji_t>(kanji) << 8) | \
 	(static_cast<shiftjis_kanji_t>(kanji) >> 8) \

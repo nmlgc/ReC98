@@ -23,7 +23,7 @@ void TRAMCursor::putkanji_for_5_rows(jis_t jis_kanji, int atrb)
 // Programmers' Bible, on p. 121.
 void pascal tram_x16_kanji_center_reverse(jis_t jis_kanji)
 {
-	utram_kanji_amount_t x;
+	ushiftjis_kanji_amount_t x;
 	upixel_t glyph_y;
 	TRAMCursor tram_cursor;
 	TRAMx16Row<dots_t(GLYPH_FULL_W)> row;

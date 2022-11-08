@@ -60,7 +60,7 @@ extern const gaiji_th04_t gpFULL_POWERUP[];
 #endif
 
 // MODDERS: Keep this up-to-date!
-static const utram_kanji_amount_t POPUP_STRING_MAX_LEN = 8;
+static const ushiftjis_kanji_amount_t POPUP_STRING_MAX_LEN = 8;
 extern const gaiji_th04_t* POPUP_STRINGS[];
 
 extern unsigned char dissolve_sprite; // = 0
@@ -100,8 +100,10 @@ const int POPUP_FRAMES_UNTIL_OUT_DISSOLVE = 192;
 
 #define vram_y_to_tram(y) (PLAYFIELD_TRAM_TOP + (TO_PIXEL(y) / GLYPH_H))
 
-const tram_ank_amount_t STAGE_NUM_W = ((sizeof(gStage_1) - 1) * GAIJI_TRAM_W);
-const tram_ank_amount_t STAGE_NUM_FE_W = (
+const shiftjis_kanji_amount_t STAGE_NUM_W = (
+	(sizeof(gStage_1) - 1) * GAIJI_TRAM_W
+);
+const shiftjis_kanji_amount_t STAGE_NUM_FE_W = (
 	(sizeof(gFINAL_STAGE) - 1) * GAIJI_TRAM_W
 );
 const tram_x_t STAGE_NUM_TRAM_LEFT = (
@@ -193,7 +195,7 @@ inline tram_x_t bgm_title_tram_left(int title_len) {
 // and playfield-space Y position.
 // Assumes that the GRCG is active, and set to the intended color.
 void pascal near dissolve_put(
-	tram_x_t tram_left, subpixel_t top, tram_ank_amount_t ank_len
+	tram_x_t tram_left, subpixel_t top, shiftjis_ank_amount_t ank_len
 )
 {
 	vram_x_t vram_left = tram_left;
