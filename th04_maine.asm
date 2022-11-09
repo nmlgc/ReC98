@@ -26,7 +26,7 @@ include th04/hardware/grppsafx.inc
 	extern _tolower:proc
 	extern __ctype:byte
 
-maine_01 group CFG_LRES_TEXT, maine_01_TEXT, maine_01__TEXT
+maine_01 group CFG_LRES_TEXT, CUTSCENE_TEXT, maine_01_TEXT, maine_01__TEXT
 g_SHARED group SHARED, SHARED_
 
 ; ===========================================================================
@@ -152,7 +152,7 @@ CFG_LRES_TEXT	segment	byte public 'CODE' use16
 CFG_LRES_TEXT	ends
 
 ; Segment type:	Pure code
-maine_01_TEXT	segment	byte public 'CODE' use16
+CUTSCENE_TEXT segment byte public 'CODE' use16
 		assume cs:maine_01
 		;org 9
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
@@ -205,9 +205,9 @@ sub_A0BD	proc near
 		mov	es:[bx+5], al
 		push	word ptr off_E5C0+2
 		push	bx
-		call	sub_A292
+		call	@cutscene_script_load$qnxc
 		call	sub_ADFC
-		call	sub_A2D1
+		call	@cutscene_script_free$qv
 		pop	bp
 		retn
 sub_A0BD	endp
@@ -333,53 +333,12 @@ locret_A290:
 		retf
 _main		endp
 
+	@CUTSCENE_SCRIPT_LOAD$QNXC procdesc pascal near \
+		fn:dword
+	@cutscene_script_free$qv procdesc near
+CUTSCENE_TEXT ends
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A292	proc near
-
-var_2		= word ptr -2
-arg_0		= dword	ptr  4
-
-		enter	2, 0
-		call	sub_A2D1
-		pushd	[bp+arg_0]
-		call	file_ropen
-		or	ax, ax
-		jnz	short loc_A2AD
-		mov	ax, 1
-		leave
-		retn	4
-; ---------------------------------------------------------------------------
-
-loc_A2AD:
-		call	file_size
-		mov	[bp+var_2], ax
-		mov	_script_p, offset _script
-		push	ds
-		push	_script_p
-		push	ax
-		call	file_read
-		call	file_close
-		xor	ax, ax
-		leave
-		retn	4
-sub_A292	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A2D1	proc near
-		push	bp
-		mov	bp, sp
-		pop	bp
-		retn
-sub_A2D1	endp
-
+maine_01_TEXT segment byte public 'CODE' use16
 EGC_START_COPY_DEF 1, near
 
 ; =============== S U B	R O U T	I N E =======================================

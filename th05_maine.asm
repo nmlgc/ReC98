@@ -27,7 +27,7 @@ include th04/hardware/grppsafx.inc
 	extern _tolower:proc
 	extern __ctype:byte
 
-maine_01 group CFG_LRES_TEXT, maine_01_TEXT, maine_01__TEXT, maine_01___TEXT
+maine_01 group CFG_LRES_TEXT, CUTSCENE_TEXT, maine_01_TEXT, maine_01__TEXT, maine_01___TEXT
 g_SHARED group SHARED, SHARED_
 
 ; ===========================================================================
@@ -159,7 +159,7 @@ CFG_LRES_TEXT	segment	byte public 'CODE' use16
 CFG_LRES_TEXT	ends
 
 ; Segment type:	Pure code
-maine_01_TEXT	segment	byte public 'CODE' use16
+CUTSCENE_TEXT segment byte public 'CODE' use16
 		assume cs:maine_01
 		;org 5
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
@@ -225,7 +225,7 @@ loc_A5DC:
 		mov	es:[bx+4], al
 		push	word ptr off_10190+2
 		push	bx
-		call	sub_A695
+		call	@cutscene_script_load$qnxc
 		call	sub_AFD6
 		pop	bp
 		retn
@@ -301,40 +301,11 @@ loc_A693:
 		retf
 _main		endp
 
+	@CUTSCENE_SCRIPT_LOAD$QNXC procdesc pascal near \
+		fn:dword
+CUTSCENE_TEXT ends
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A695	proc near
-
-var_2		= word ptr -2
-arg_0		= dword	ptr  4
-
-		enter	2, 0
-		pushd	[bp+arg_0]
-		call	file_ropen
-		or	ax, ax
-		jnz	short loc_A6AD
-		mov	ax, 1
-		leave
-		retn	4
-; ---------------------------------------------------------------------------
-
-loc_A6AD:
-		call	file_size
-		mov	[bp+var_2], ax
-		mov	_script_p, offset _script
-		push	ds
-		push	_script_p
-		push	ax
-		call	file_read
-		call	file_close
-		xor	ax, ax
-		leave
-		retn	4
-sub_A695	endp
-
+maine_01_TEXT	segment	byte public 'CODE' use16
 EGC_START_COPY_DEF 1, near
 
 ; =============== S U B	R O U T	I N E =======================================

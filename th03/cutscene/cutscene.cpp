@@ -4,11 +4,16 @@
 // 1) TH03 and TH04 allocate dedicated memory for backing up the text box area
 //    in VRAM ([box_bg]), TH05 uses the bgimage system instead.
 
+#include <stddef.h>
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
 #include "shiftjis.hpp"
 #include "master.hpp"
+extern "C" {
+#include "th02/hardware/frmdelay.h"
+}
+#include "th03/cutscene/cutscene.hpp"
 
 // State
 // -----
@@ -46,3 +51,35 @@ extern int script_number_param_default;
 	void near box_1_to_0_animate(void);
 #endif
 // -----------------------
+
+bool16 pascal near cutscene_script_load(const char* fn)
+{
+	cutscene_script_free();
+
+	if(!file_ropen(fn)) {
+		return true;
+	}
+	size_t size = file_size();
+	#if (GAME >= 4)
+		// PORTERS: Required for TH03 on flat memory models as well.
+		// ZUN bug: Missing an error check if [size] >= sizeof(script);
+		script_p = static_cast<unsigned char near *>(script);
+	#else
+		script = reinterpret_cast<unsigned char far *>(hmem_allocbyte(size));
+	#endif
+	file_read(script_p, size);
+	file_close();
+	return false;
+}
+
+#if (GAME <= 4)
+	void near cutscene_script_free(void)
+	{
+		#if (GAME == 3)
+			if(script) {
+				HMem<unsigned char>::free(script);
+				script = nullptr;
+			}
+		#endif
+	}
+#endif

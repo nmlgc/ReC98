@@ -27,7 +27,7 @@ include th03/formats/scoredat.inc
 	extern _execl:proc
 	extern _tolower:proc
 
-group_01 group CFG_LRES_TEXT, mainl_01_TEXT, SCOREDAT_TEXT, REGIST_TEXT, mainl_03_TEXT
+group_01 group CFG_LRES_TEXT, CUTSCENE_TEXT, mainl_01_TEXT, SCOREDAT_TEXT, REGIST_TEXT, mainl_03_TEXT
 
 ; ===========================================================================
 
@@ -135,7 +135,7 @@ CFG_LRES_TEXT	segment	byte public 'CODE' use16
 CFG_LRES_TEXT	ends
 
 ; Segment type:	Pure code
-mainl_01_TEXT	segment	byte public 'CODE' use16
+CUTSCENE_TEXT segment byte public 'CODE' use16
 		assume cs:group_01
 		;org 3
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
@@ -998,10 +998,9 @@ loc_9EF1:
 		graph_showpage al
 		call	graph_clear
 		call	graph_show
-		pushd	[off_E4B6]
-		call	sub_A12E
+		call	@cutscene_script_load$qnxc pascal, [off_E4B6]
 		call	sub_AC6E
-		call	sub_A174
+		call	@cutscene_script_free$qv
 		call	sub_990C
 		call	sub_9A2C
 		call	gaiji_restore
@@ -1197,66 +1196,12 @@ loc_A12A:
 		retn
 sub_9F8D	endp
 
+	@CUTSCENE_SCRIPT_LOAD$QNXC procdesc pascal near \
+		fn:dword
+	@cutscene_script_free$qv procdesc near
+CUTSCENE_TEXT ends
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A12E	proc near
-
-arg_0		= dword	ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	si
-		call	sub_A174
-		pushd	[bp+arg_0]
-		call	file_ropen
-		or	ax, ax
-		jnz	short loc_A147
-		mov	ax, 1
-		jmp	short loc_A16F
-; ---------------------------------------------------------------------------
-
-loc_A147:
-		call	file_size
-		mov	si, ax
-		push	ax
-		call	hmem_allocbyte
-		mov	word ptr _script+2, ax
-		mov	word ptr _script, 0
-		push	ax
-		push	word ptr _script
-		push	si
-		call	file_read
-		call	file_close
-		xor	ax, ax
-
-loc_A16F:
-		pop	si
-		pop	bp
-		retn	4
-sub_A12E	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A174	proc near
-		push	bp
-		mov	bp, sp
-		cmp	_script, 0
-		jz	short loc_A191
-		push	word ptr _script+2
-		call	hmem_free
-		mov	_script, 0
-
-loc_A191:
-		pop	bp
-		retn
-sub_A174	endp
-
+mainl_01_TEXT segment byte public 'CODE' use16
 EGC_START_COPY_DEF 1, near
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -2878,10 +2823,9 @@ loc_B9DD:
 		graph_showpage al
 		call	graph_clear
 		call	graph_show
-		pushd	[off_EE4E]
-		call	sub_A12E
+		call	@cutscene_script_load$qnxc pascal, [off_EE4E]
 		call	sub_AC6E
-		call	sub_A174
+		call	@cutscene_script_free$qv
 		call	sub_C40D
 		les	bx, _resident
 		mov	es:[bx+resident_t.story_stage], STAGE_ALL
@@ -2898,9 +2842,9 @@ loc_B9DD:
 		graph_showpage 0
 		push	ds
 		push	offset a@99ed_txt ; "@99ED.TXT"
-		call	sub_A12E
+		call	@cutscene_script_load$qnxc
 		call	sub_AC6E
-		call	sub_A174
+		call	@cutscene_script_free$qv
 
 loc_BA66:
 		call	text_clear
