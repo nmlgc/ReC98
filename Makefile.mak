@@ -155,7 +155,7 @@ $**
 |
 
 bin\th05\maine.exe: bin\th05\maine.obj bin\th04\cfg_lres.obj th05\maine011.cpp th05\regist.cpp th05\staff.cpp bin\th04\cdg_p_na.obj bin\th04\snd_se_r.obj bin\th04\snd_se.obj bin\th04\bgimage.obj bin\th04\exit.obj bin\th05\vector.obj bin\th05\bgimager.obj bin\th05\snd_load.obj bin\th05\snd_kaja.obj bin\th05\pi_cpp_1.obj bin\th05\pi_asm_1.obj bin\th05\pi_cpp_2.obj bin\th05\pi_asm_2.obj bin\th05\initmain.obj bin\th05\input_s.obj bin\th05\inp_h_w.obj bin\th05\snd_dlym.obj bin\th05\frmdelay.obj bin\th04\cdg_load.obj bin\th05\egcrect.obj bin\th03\hfliplut.obj bin\th04\snd_pmdr.obj bin\th04\snd_mmdr.obj bin\th04\snd_mode.obj
-	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -DGAME=5 -DBINARY='E' -Z -nbin\th05\ -eMAINE.EXE @&&|
+	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -DGAME=5 -DBINARY='E' -3 -Z -nbin\th05\ -eMAINE.EXE @&&|
 $**
 |
 

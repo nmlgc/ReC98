@@ -510,8 +510,7 @@ sub_A826	proc near
 		call	@box_1_to_0_animate$qv
 		cmp	_fast_forward, 0
 		jnz	short loc_A858
-		push	0
-		call	sub_A92B
+		call	@box_wait_animate$qi pascal, 0
 
 loc_A858:
 		mov	_cursor.x, BOX_LEFT
@@ -525,79 +524,8 @@ maine_01_TEXT	ends
 
 maine_01__TEXT	segment	byte public 'CODE' use16
 	@box_1_to_0_animate$qv procdesc pascal near
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A92B	proc near
-
-var_2		= word ptr -2
-arg_0		= word ptr  4
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	si, [bp+arg_0]
-		xor	di, di
-		mov	[bp+var_2], 0
-
-loc_A93B:
-		call	_input_reset_sense_held
-		cmp	_key_det, INPUT_NONE
-		jz	short loc_A950
-		push	1
-		call	frame_delay
-		jmp	short loc_A93B
-; ---------------------------------------------------------------------------
-
-loc_A950:
-		or	si, si
-		jnz	short loc_A95C
-		mov	si, 999
-		mov	[bp+var_2], 1
-
-loc_A95C:
-		graph_accesspage 0
-
-loc_A962:
-		call	_input_reset_sense_held
-		call	bgimage_put_rect pascal, 576, _cursor.y, (GLYPH_FULL_W shl 16) or GLYPH_H
-		or	si, si
-		jle	short loc_A9BD
-		test	_key_det.hi, high INPUT_OK
-		jnz	short loc_A9BD
-		test	_key_det.lo, low INPUT_SHOT
-		jnz	short loc_A9BD
-		test	_key_det.hi, high INPUT_CANCEL
-		jnz	short loc_A9BD
-		push	576
-		push	_cursor.y
-		mov	ax, di
-		shr	ax, 3
-		and	ax, ga_RETURN_KEY_CELS - 1
-		add	ax, ga_RETURN_KEY
-		push	ax
-		push	V_WHITE
-		call	graph_gaiji_putc
-		inc	di
-		cmp	[bp+var_2], 0
-		jnz	short loc_A9B4
-		dec	si
-
-loc_A9B4:
-		push	1
-		call	frame_delay
-		jmp	short loc_A962
-; ---------------------------------------------------------------------------
-
-loc_A9BD:
-		pop	di
-		pop	si
-		leave
-		retn	2
-sub_A92B	endp
-
+	@BOX_WAIT_ANIMATE$QI procdesc pascal near \
+		frames_to_wait:word
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -656,8 +584,7 @@ loc_AA0B:
 		call	sub_A738
 		cmp	_fast_forward, 0
 		jnz	short loc_AA3E
-		push	[bp+var_2]
-		call	sub_A92B
+		call	@box_wait_animate$qi pascal, [bp+var_2]
 		jmp	short loc_AA3E
 ; ---------------------------------------------------------------------------
 
@@ -921,8 +848,7 @@ loc_AC87:
 		call	sub_A738
 		cmp	_fast_forward, 0
 		jnz	loc_AF8F	; default
-		push	[bp+var_2]
-		call	sub_A92B
+		call	@box_wait_animate$qi pascal, [bp+var_2]
 		jmp	loc_AF8F	; default
 ; ---------------------------------------------------------------------------
 

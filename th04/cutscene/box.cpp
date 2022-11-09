@@ -7,6 +7,11 @@
 #include "master.hpp"
 extern "C" {
 #include "th02/hardware/frmdelay.h"
+#if (GAME == 5)
+	#include "th02/v_colors.hpp"
+	#include "th04/hardware/bgimage.hpp"
+	#include "th04/gaiji/gaiji.h"
+#endif
 }
 #include "th03/cutscene/cutscene.hpp"
 
@@ -67,6 +72,60 @@ void near box_1_to_0_animate(void)
 	egc_off();
 
 	#if (GAME == 5)
-		frame_delay(1);
+		frame_delay(1); // ZUN quirk
 	#endif
 }
+
+#if (GAME == 5)
+	void pascal near box_wait_animate(int frames_to_wait)
+	{
+		enum {
+			LEFT = (BOX_RIGHT + GLYPH_FULL_W),
+		};
+
+		unsigned int frames_waited = 0;
+		bool16 ignore_frames = false;
+
+		while(1) {
+			cutscene_input_sense();
+			if(key_det == INPUT_NONE) {
+				break;
+			}
+			frame_delay(1);
+		}
+
+		if(frames_to_wait == 0) {
+			frames_to_wait = 999;
+			ignore_frames = true;
+		}
+
+		graph_accesspage(0);
+		while(1) {
+			cutscene_input_sense();
+
+			// ZUN bloat: A white glyph aligned to the 8×16 cell grid, without
+			// applying boldface… why not just show it on TRAM?
+			bgimage_put_rect(LEFT, cursor.y, GLYPH_FULL_W, GLYPH_H);
+
+			if(
+				(frames_to_wait <= 0) ||
+				(key_det & INPUT_OK) ||
+				(key_det & INPUT_SHOT) ||
+				(key_det & INPUT_CANCEL)
+			) {
+				return;
+			}
+			graph_gaiji_putc(
+				LEFT,
+				cursor.y,
+				(ga_RETURN_KEY + ((frames_waited / 8) & (RETURN_KEY_CELS - 1))),
+				V_WHITE
+			);
+			frames_waited++;
+			if(!ignore_frames) {
+				frames_to_wait--;
+			}
+			frame_delay(1);
+		}
+	}
+#endif

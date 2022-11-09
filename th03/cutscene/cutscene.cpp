@@ -34,6 +34,12 @@ extern int script_number_param_default;
 // Function ordering fails
 // -----------------------
 
+#if (GAME == 5)
+	// Waits the given amount of frames (0 = forever) for the OK, Shot, or
+	// Cancel button to be pressed, while showing the ⏎ Return key animation
+	// in a blocking way.
+	void pascal near box_wait_animate(int frames_to_wait = 0);
+#endif
 #if (GAME >= 4)
 	// Crossfades the text box area from VRAM page 1 to VRAM page 0, spending
 	// [text_interval] frames on each step.

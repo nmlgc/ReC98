@@ -6,10 +6,17 @@
 #include "th04/gaiji/bar.h"
 
 #define OVERLAY_FADE_CELS 8
+#define RETURN_KEY_CELS 4
 
 typedef enum {
 	g_NULL = '\0',
 	g_EMPTY = 0x02,
+
+	#if (GAME == 5)
+		ga_RETURN_KEY = 0x1C,
+		ga_RETURN_KEY_last = (ga_RETURN_KEY + RETURN_KEY_CELS - 1),
+	#endif
+
 	gaiji_bar(0x20),
 	gaiji_bar_max(0x30),
 	g_OVERLAY_FADE,
