@@ -1461,7 +1461,7 @@ loc_A598:
 		mov	ah, 0
 		cmp	ax, si
 		jnz	short loc_A5A6
-		mov	al, 0Fh
+		mov	al, V_WHITE
 		jmp	short loc_A5A8
 ; ---------------------------------------------------------------------------
 
@@ -1566,7 +1566,7 @@ loc_ACFA:
 		dec	_music_sel
 
 loc_AD05:
-		call	draw_track pascal, word ptr _music_sel, 15
+		call	draw_track pascal, word ptr _music_sel, V_WHITE
 
 loc_AD0E:
 		test	_input_sp.lo, low INPUT_DOWN
@@ -1587,7 +1587,7 @@ loc_AD30:
 		inc	_music_sel
 
 loc_AD3B:
-		call	draw_track pascal, word ptr _music_sel, 15
+		call	draw_track pascal, word ptr _music_sel, V_WHITE
 
 loc_AD44:
 		test	_input_sp.lo, low INPUT_SHOT
@@ -2948,7 +2948,7 @@ loc_BB06:
 		push	0
 		cmp	byte_FC5A, 0
 		jz	short loc_BB22
-		mov	al, 0Fh
+		mov	al, V_WHITE
 		jmp	short loc_BB24
 ; ---------------------------------------------------------------------------
 
@@ -2961,7 +2961,7 @@ loc_BB24:
 		push	1
 		cmp	byte_FC5B, 0
 		jz	short loc_BB35
-		mov	al, 0Fh
+		mov	al, V_WHITE
 		jmp	short loc_BB37
 ; ---------------------------------------------------------------------------
 
@@ -3089,7 +3089,7 @@ loc_BC69:
 		push	0
 		cmp	byte_FC5A, 0
 		jz	short loc_BC8E
-		mov	al, 0Fh
+		mov	al, V_WHITE
 		jmp	short loc_BC90
 ; ---------------------------------------------------------------------------
 
@@ -3104,7 +3104,7 @@ loc_BC90:
 		push	1
 		cmp	byte_FC5B, 0
 		jz	short loc_BCA8
-		mov	al, 0Fh
+		mov	al, V_WHITE
 		jmp	short loc_BCAA
 ; ---------------------------------------------------------------------------
 
@@ -3222,7 +3222,7 @@ loc_BDC1:
 		push	0
 		cmp	byte_FC5A, 0
 		jz	short loc_BDDD
-		mov	al, 0Fh
+		mov	al, V_WHITE
 		jmp	short loc_BDDF
 ; ---------------------------------------------------------------------------
 

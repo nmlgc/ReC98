@@ -2840,7 +2840,7 @@ loc_B88B:
 loc_B88F:
 		cmp	di, 0Ch
 		jl	short loc_B839
-		mov	dx, 15
+		mov	dx, V_WHITE
 		mov	ah, SPRITE16_SET_COLOR
 		int	SPRITE16
 		cmp	byte ptr [si], 0
@@ -3608,7 +3608,7 @@ sub_BE5D	proc near
 		jz	loc_C0D5
 		cmp	byte_20CE6, 0
 		jnz	loc_BF51
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + V_WHITE
 		mov	word_20CE4, 3284h
 		xor	si, si
 		jmp	loc_BF41
@@ -3819,7 +3819,7 @@ loc_BFF0:
 loc_C08D:
 		cmp	byte_20CE6, 3
 		jnz	short loc_C0D5
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + V_WHITE
 		mov	ax, 0A800h
 		mov	es, ax
 		assume es:nothing
@@ -4991,7 +4991,7 @@ loc_C901:
 ; ---------------------------------------------------------------------------
 
 loc_C909:
-		push	(GC_RMW shl 16) + 15
+		push	(GC_RMW shl 16) + V_WHITE
 
 loc_C90F:
 		call	grcg_setcolor
@@ -5016,7 +5016,7 @@ loc_C936:
 ; ---------------------------------------------------------------------------
 
 loc_C93E:
-		push	(GC_RMW shl 16) + 15
+		push	(GC_RMW shl 16) + V_WHITE
 
 loc_C944:
 		call	grcg_setcolor
@@ -5032,7 +5032,7 @@ loc_C956:
 		jz	short loc_C9A6
 		cmp	cx, 64
 		jnb	short loc_C968
-		mov	[bp+var_1], 0Fh
+		mov	[bp+var_1], V_WHITE
 		jmp	short loc_C990
 ; ---------------------------------------------------------------------------
 
@@ -5076,7 +5076,7 @@ loc_C9A6:
 		jz	short loc_C9F6
 		cmp	cx, 64
 		jnb	short loc_C9B8
-		mov	[bp+var_1], 0Fh
+		mov	[bp+var_1], V_WHITE
 		jmp	short loc_C9E0
 ; ---------------------------------------------------------------------------
 
@@ -6521,7 +6521,7 @@ sub_D50E	endp
 
 
 sub_D52E	proc near
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + V_WHITE
 		mov	ax, 0A82Dh
 		mov	es, ax
 		assume es:nothing
@@ -15075,7 +15075,7 @@ loc_12AD0:
 ; ---------------------------------------------------------------------------
 
 loc_12AD4:
-		push	0Fh
+		push	V_WHITE
 
 loc_12AD6:
 		call	sub_12B38
@@ -18178,7 +18178,7 @@ loc_14658:
 loc_1465C:
 		or	si, si
 		jg	short loc_14615
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + V_WHITE
 		mov	bx, word_1FE4E
 		push	word ptr [bx+2]
 		mov	al, _pid_current
@@ -24794,7 +24794,7 @@ loc_17CD9:
 		mov	dx, 1
 		mov	ah, SPRITE16_SET_MONO
 		int	SPRITE16
-		mov	dx, 15
+		mov	dx, V_WHITE
 		mov	ah, SPRITE16_SET_COLOR
 		int	SPRITE16
 		mov	_sprite16_put_w, (32 / 16)
@@ -24834,7 +24834,7 @@ loc_17D48:
 
 loc_17D56:
 		call	egc_off
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + V_WHITE
 		mov	ax, 0A800h
 		mov	es, ax
 		assume es:nothing
@@ -26771,7 +26771,7 @@ loc_18E7C:
 		mov	ah, 0
 		push	ax	; altered_colors
 		call	@mrs_put_noalpha_8$qiuiiuc
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + V_WHITE
 		mov	ax, 900h
 		sub	ax, word_220EC
 		push	ax
@@ -27063,7 +27063,7 @@ loc_190CF:
 		add	ax, 3
 		push	ax
 		call	grcg_trapezoid
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + V_WHITE
 		push	8
 		mov	ax, [bp+var_4]
 		dec	ax
@@ -27136,7 +27136,7 @@ loc_19179:
 		call	grcg_trapezoid
 
 loc_191E4:
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + V_WHITE
 		call	grcg_line pascal, [bp+var_4], 8, [bp+var_8], 192
 
 loc_191FF:

@@ -12,6 +12,7 @@
 #include "th01/math/clamp.hpp"
 extern "C" {
 #include "th01/hardware/grppsafx.h"
+#include "th02/v_colors.hpp"
 #include "th02/common.h"
 #include "th02/resident.hpp"
 #include "th02/hardware/frmdelay.h"
@@ -125,8 +126,8 @@ void pascal draw_header(void)
 		grcg_setcolor(GC_RMW, 0);  grcg_round_boxfill(16, 48, 624,  96, 8);
 		grcg_off();
 
-		graph_putsa_fx(32, 56, (15 | FX_WEIGHT_BOLD), EXTRA_NOTE[0]);
-		graph_putsa_fx(32, 72, (15 | FX_WEIGHT_BOLD), EXTRA_NOTE[1]);
+		graph_putsa_fx(32, 56, (V_WHITE | FX_WEIGHT_BOLD), EXTRA_NOTE[0]);
+		graph_putsa_fx(32, 72, (V_WHITE | FX_WEIGHT_BOLD), EXTRA_NOTE[1]);
 	}
 }
 
@@ -134,13 +135,13 @@ void pascal shottype_menu_init(void)
 {
 	#define draw_cleared_for(cleared_mode_with) \
 		if(cleared_mode_with[0]) { \
-			graph_putsa_fx(16, 112, (15 | FX_WEIGHT_BOLD), CLEARED); \
+			graph_putsa_fx(16, 112, (V_WHITE | FX_WEIGHT_BOLD), CLEARED); \
 		} \
 		if(cleared_mode_with[1]) { \
-			graph_putsa_fx(224, 112, (15 | FX_WEIGHT_BOLD), CLEARED); \
+			graph_putsa_fx(224, 112, (V_WHITE | FX_WEIGHT_BOLD), CLEARED); \
 		} \
 		if(cleared_mode_with[2]) { \
-			graph_putsa_fx(432, 112, (15 | FX_WEIGHT_BOLD), CLEARED); \
+			graph_putsa_fx(432, 112, (V_WHITE | FX_WEIGHT_BOLD), CLEARED); \
 		}
 
 	palette_black();

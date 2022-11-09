@@ -362,7 +362,7 @@ setup_bgm_help_put	proc near
 @@put_line:
 	push	SETUP_HELP_LEFT
 	push	di
-	push	15
+	push	V_WHITE
 	mov	bx, si
 	shl	bx, 2
 	pushd	SETUP_BGM_HELP[bx]
@@ -394,7 +394,7 @@ setup_se_help_put	proc near
 @@put_line:
 	push	SETUP_HELP_LEFT
 	push	di
-	push	15
+	push	V_WHITE
 	mov	bx, si
 	shl	bx, 2
 	pushd	SETUP_SE_HELP[bx]

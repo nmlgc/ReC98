@@ -9,6 +9,7 @@
 #include "th04/common.h"
 #include "th04/score.h"
 #include "th01/math/subpixel.hpp"
+#include "th02/v_colors.hpp"
 #include "th04/hardware/grcg.hpp"
 #include "th04/gaiji/gaiji.h"
 extern "C" {
@@ -256,7 +257,7 @@ inline void titles_dissolve_put(const int& bgm_len) {
 	}
 	bgm_note_dissolve_put(bgm_len);
 
-	grcg_setcolor_direct(15); // White
+	grcg_setcolor_direct(V_WHITE);
 	bgm_title_dissolve_put(bgm_len);
 	dissolve_put(
 		(PLAYFIELD_TRAM_CENTER_X - (stage_title_len / 2)),
@@ -301,7 +302,7 @@ inline void boss_bgm_dissolve_put(const int& bgm_len) {
 	grcg_setcolor_direct(11);	// Yellow
 	bgm_note_dissolve_put(bgm_len);
 
-	grcg_setcolor_direct(15);	// White
+	grcg_setcolor_direct(V_WHITE);
 	bgm_title_dissolve_put(bgm_len);
 
 	grcg_off();

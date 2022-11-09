@@ -14,7 +14,7 @@ public @SHINKI_CUSTOMBULLETS_RENDER$QV
 	jz	short @@next
 	cmp	[si+b6ball_t.flag], 1
 	jnz	short @@no_cloud
-	mov	ah, 0Fh
+	mov	ah, V_WHITE
 	call	@grcg_setcolor_direct_raw$qv
 	mov	ax, [si+b6ball_t.pos.cur.x]
 	sar	ax, 4

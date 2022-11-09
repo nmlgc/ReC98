@@ -9,6 +9,7 @@ include th03/chars.inc
 include th03/formats/cfg.inc
 include th03/formats/cdg.inc
 include th02/score.inc
+include th02/v_colors.inc
 
 KM_KEY_KEY = 0
 KM_JOY_KEY = 1

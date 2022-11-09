@@ -5,6 +5,7 @@ include th02/hardware/input.inc
 include th02/math/randring.inc
 include th02/gaiji/gaiji.inc
 include th02/score.inc
+include th02/v_colors.inc
 
 kajacall	macro func, param := <0>
 	call	_snd_kaja_interrupt pascal, (func shl 8) or (param and 0ffh)

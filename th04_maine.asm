@@ -1604,7 +1604,7 @@ var_1		= byte ptr -1
 		mov	point_124BC.x, 80
 		mov	point_124BC.y, 320
 		mov	word_124C0, 1
-		mov	col_124C2, 15
+		mov	col_124C2, V_WHITE
 		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
 		call	sub_A4AE
 		mov	byte_1247E, 0
@@ -1703,7 +1703,7 @@ arg_4		= word ptr  8
 ; ---------------------------------------------------------------------------
 
 loc_AEF1:
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + V_WHITE
 		mov	bx, 4
 		mov	ax, si
 		cwd
@@ -1859,7 +1859,7 @@ arg_4		= word ptr  8
 ; ---------------------------------------------------------------------------
 
 loc_B04E:
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + V_WHITE
 		mov	ax, si
 		cwd
 		sub	ax, dx
@@ -1977,7 +1977,7 @@ arg_4		= word ptr  8
 ; ---------------------------------------------------------------------------
 
 loc_B165:
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + V_WHITE
 		mov	ax, si
 		cwd
 		sub	ax, dx
@@ -2921,18 +2921,18 @@ var_4		= dword	ptr -4
 		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
 		graph_accesspage 0
 		graph_showpage al
-		call	graph_putsa_fx pascal, (16 shl 16) or  48, 15, ds, offset aB@b@b@b@b@b@b@ ; "　　　　　　　 腕前判定"
-		call	graph_putsa_fx pascal, (16 shl 16) or  72, 15, ds, offset aUqiUx	; "難易度"
-		call	graph_putsa_fx pascal, (16 shl 16) or  96, 15, ds, offset aNPiuU_	; "最終得点"
-		call	graph_putsa_fx pascal, (16 shl 16) or 120, 15, ds, offset aGGxi	; "ミス回数"
-		call	graph_putsa_fx pascal, (16 shl 16) or 144, 15, ds, offset aGGaogcpi ; "ボム使用回数"
-		call	graph_putsa_fx pascal, (16 shl 16) or 168, 15, ds, offset aGqbGatbrmcj ; "ゲーム達成率"
-		call	graph_putsa_fx pascal, (16 shl 16) or 192, 15, ds, offset aIlcSObcj ; "悪霊退治率"
-		call	graph_putsa_fx pascal, (16 shl 16) or 216, 15, ds, offset aGagcgegai ; "アイテム回収率"
-		call	graph_putsa_fx pascal, (16 shl 16) or 240, 15, ds, offset aUU_gagcgeganNv ; "得点アイテム最高点率"
-		call	graph_putsa_fx pascal, (16 shl 16) or 264, 15, ds, offset aLcnzvv	; "気合い"
-		call	graph_putsa_fx pascal, (16 shl 16) or 288, 15, ds, offset aPicacovCj ; "処理落ち率"
-		call	graph_putsa_fx pascal, (16 shl 16) or 336, 15, ds, offset aVavVVSrso ; "あなたの腕前"
+		call	graph_putsa_fx pascal, (16 shl 16) or  48, V_WHITE, ds, offset aB@b@b@b@b@b@b@ ; "　　　　　　　 腕前判定"
+		call	graph_putsa_fx pascal, (16 shl 16) or  72, V_WHITE, ds, offset aUqiUx	; "難易度"
+		call	graph_putsa_fx pascal, (16 shl 16) or  96, V_WHITE, ds, offset aNPiuU_	; "最終得点"
+		call	graph_putsa_fx pascal, (16 shl 16) or 120, V_WHITE, ds, offset aGGxi	; "ミス回数"
+		call	graph_putsa_fx pascal, (16 shl 16) or 144, V_WHITE, ds, offset aGGaogcpi ; "ボム使用回数"
+		call	graph_putsa_fx pascal, (16 shl 16) or 168, V_WHITE, ds, offset aGqbGatbrmcj ; "ゲーム達成率"
+		call	graph_putsa_fx pascal, (16 shl 16) or 192, V_WHITE, ds, offset aIlcSObcj ; "悪霊退治率"
+		call	graph_putsa_fx pascal, (16 shl 16) or 216, V_WHITE, ds, offset aGagcgegai ; "アイテム回収率"
+		call	graph_putsa_fx pascal, (16 shl 16) or 240, V_WHITE, ds, offset aUU_gagcgeganNv ; "得点アイテム最高点率"
+		call	graph_putsa_fx pascal, (16 shl 16) or 264, V_WHITE, ds, offset aLcnzvv	; "気合い"
+		call	graph_putsa_fx pascal, (16 shl 16) or 288, V_WHITE, ds, offset aPicacovCj ; "処理落ち率"
+		call	graph_putsa_fx pascal, (16 shl 16) or 336, V_WHITE, ds, offset aVavVVSrso ; "あなたの腕前"
 		les	bx, _resident
 		cmp	es:[bx+resident_t.stage], STAGE_EXTRA
 		jnz	short loc_BC71
@@ -3290,7 +3290,7 @@ loc_C084:
 		push	40h
 		call	frame_delay
 		push	(64 shl 16) or 360
-		push	15
+		push	V_WHITE
 		push	ds
 		push	offset unk_124D3
 		jmp	short loc_C0CB
@@ -3299,7 +3299,7 @@ loc_C084:
 loc_C0AE:
 		call	graph_putsa_fx pascal, (192 shl 16) or 336, 14, ds, offset aBhbhbhbhbhbhu_ ; "？？？？？？点"
 		push	(64 shl 16) or 360
-		push	15
+		push	V_WHITE
 		push	ds
 		push	offset aPicacovVVcvsfT ; "処理落ちによる判定不可"
 

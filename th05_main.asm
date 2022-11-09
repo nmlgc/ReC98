@@ -1756,7 +1756,7 @@ bomb_reimu	proc near
 		mov	bp, sp
 		cmp	_bomb_frame, 32
 		jnb	short loc_C7AE
-		mov	_tiles_bb_col, 15
+		mov	_tiles_bb_col, V_WHITE
 		mov	al, _bomb_frame
 		mov	ah, 0
 		cwd
@@ -1950,7 +1950,7 @@ loc_C8E4:
 		push	ax
 		push	[bp+@@y]
 		call	grcg_boxfill
-		mov	ah, 0Fh
+		mov	ah, V_WHITE
 		call	@grcg_setcolor_direct_raw$qv
 		dec	[bp+var_6]
 		mov	ax, [bp+@@x]
@@ -2201,7 +2201,7 @@ sub_CB30	proc near
 		call	grcg_vline pascal, (208 shl 16) or 336, PLAYFIELD_BOTTOM - 1
 		call	grcg_vline pascal, (239 shl 16) or PLAYFIELD_TOP, PLAYFIELD_TOP + 47
 		call	grcg_vline pascal, (239 shl 16) or 336, PLAYFIELD_BOTTOM - 1
-		mov	ah, 15
+		mov	ah, V_WHITE
 		call	@grcg_setcolor_direct_raw$qv
 		call	mima_circles_update_and_render
 		mov	al, _bomb_frame
@@ -2415,7 +2415,7 @@ bomb_yuuka	proc near
 		mov	bp, sp
 		cmp	_bomb_frame, 32
 		jnb	short loc_CDB4
-		mov	_tiles_bb_col, 15
+		mov	_tiles_bb_col, V_WHITE
 		mov	al, _bomb_frame
 		mov	ah, 0
 		cwd
@@ -4491,7 +4491,7 @@ loc_101BD:
 		dec	_pellet_clouds_render_count
 		or	ax, ax
 		jnz	short loc_1018A
-		mov	ah, 0Fh
+		mov	ah, V_WHITE
 		call	@grcg_setcolor_direct_raw$qv
 		call	_pellets_render_top
 		mov	ah, byte ptr _pellet_bottom_col
@@ -5492,7 +5492,7 @@ loc_10BC7:
 		jnz	short loc_10BFD
 		cmp	_stage_frame_mod2, 0
 		jz	short loc_10C25
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + V_WHITE
 		mov	ax, [bp+@@left]
 		add	ax, 16
 		call	grcg_circle pascal, ax, di, [si+puppet_t.radius_gather]
@@ -5502,7 +5502,7 @@ loc_10BC7:
 loc_10BFD:
 		cmp	_boss_statebyte[9], 2
 		jnz	short loc_10C25
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + V_WHITE
 		mov	ax, [bp+@@left]
 		add	ax, 16
 		call	grcg_circlefill pascal, ax, di, [si+puppet_t.radius_gather]

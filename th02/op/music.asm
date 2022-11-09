@@ -367,7 +367,7 @@ music_flip	proc near
 if GAME eq 5
 	call	_piano_render
 endif
-	call	grcg_setcolor pascal, ((GC_RMW or GC_B) shl 16) + 15
+	call	grcg_setcolor pascal, ((GC_RMW or GC_B) shl 16) + V_WHITE
 	call	polygons_update_and_render
 if GAME ge 4
 	GRCG_OFF_CLOBBERING dx

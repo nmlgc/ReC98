@@ -1195,7 +1195,7 @@ var_2		= word ptr -2
 		enter	2, 0
 		mov	_window_tiles.x, (448 / WINDOW_TILE_W)
 		call	window_singleline pascal, (96 shl 16) or 80
-		call	graph_putsa_fx pascal, (112 shl 16) or 88, 15, ds, offset aSETUP_BGM_HEAD
+		call	graph_putsa_fx pascal, (112 shl 16) or 88, V_WHITE, ds, offset aSETUP_BGM_HEAD
 		mov	_window_tiles.x, (160 / WINDOW_TILE_W)
 		mov	_window_tiles.y, 1 + 3
 		call	window_dropdown_animate pascal, ( 32 shl 16) or 128
@@ -1207,7 +1207,7 @@ loc_B3AC:
 		push	[bp+var_2]
 		cmp	[bp+var_2], 2
 		jnz	short loc_B3BA
-		mov	ax, 0Fh
+		mov	ax, V_WHITE
 		jmp	short loc_B3BC
 ; ---------------------------------------------------------------------------
 
@@ -1249,7 +1249,7 @@ loc_B41E:
 		inc	[bp+var_2]
 
 loc_B421:
-		call	setup_bgm_choice_put pascal, [bp+var_2], 0Fh
+		call	setup_bgm_choice_put pascal, [bp+var_2], V_WHITE
 
 loc_B429:
 		test	_key_det.lo, low INPUT_DOWN
@@ -1265,7 +1265,7 @@ loc_B445:
 		dec	[bp+var_2]
 
 loc_B448:
-		call	setup_bgm_choice_put pascal, [bp+var_2], 0Fh
+		call	setup_bgm_choice_put pascal, [bp+var_2], V_WHITE
 		jmp	short loc_B3E6
 ; ---------------------------------------------------------------------------
 
@@ -1295,7 +1295,7 @@ var_2		= word ptr -2
 		enter	2, 0
 		mov	_window_tiles.x, (448 / WINDOW_TILE_W)
 		call	window_singleline pascal, (96 shl 16) or 80
-		call	graph_putsa_fx pascal, (112 shl 16) or 88, 15, ds, offset aSETUP_SE_HEAD
+		call	graph_putsa_fx pascal, (112 shl 16) or 88, V_WHITE, ds, offset aSETUP_SE_HEAD
 		mov	_window_tiles.x, (160 / WINDOW_TILE_W)
 		mov	_window_tiles.y, 1 + 3
 		call	window_dropdown_animate pascal, ( 32 shl 16) or 128
@@ -1307,7 +1307,7 @@ loc_B4C9:
 		push	[bp+var_2]
 		cmp	[bp+var_2], 1
 		jnz	short loc_B4D7
-		mov	ax, 15
+		mov	ax, V_WHITE
 		jmp	short loc_B4D9
 ; ---------------------------------------------------------------------------
 
@@ -1349,7 +1349,7 @@ loc_B53B:
 		inc	[bp+var_2]
 
 loc_B53E:
-		call	setup_se_choice_put pascal, [bp+var_2], 15
+		call	setup_se_choice_put pascal, [bp+var_2], V_WHITE
 
 loc_B546:
 		test	_key_det.lo, low INPUT_UP
@@ -1365,7 +1365,7 @@ loc_B562:
 		dec	[bp+var_2]
 
 loc_B565:
-		call	setup_se_choice_put pascal, [bp+var_2], 15
+		call	setup_se_choice_put pascal, [bp+var_2], V_WHITE
 		jmp	short loc_B503
 ; ---------------------------------------------------------------------------
 

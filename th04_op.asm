@@ -428,7 +428,7 @@ loc_AB59:
 		mov	dx, 624
 		sub	dx, ax
 		push	dx
-		push	(384 shl 16) or 15
+		push	(384 shl 16) or V_WHITE
 		mov	bx, [bp+var_2]
 		shl	bx, 2
 		pushd	_MENU_DESC[bx]
@@ -639,7 +639,7 @@ loc_ADC0:
 		mov	dx, 624
 		sub	dx, ax
 		push	dx
-		push	(384 shl 16) or 15
+		push	(384 shl 16) or V_WHITE
 		mov	bx, si
 		shl	bx, 2
 		pushd	_MENU_DESC[bx]
@@ -1339,7 +1339,7 @@ var_2		= word ptr -2
 		enter	2, 0
 		mov	_window_tiles.x, (448 / WINDOW_TILE_W)
 		call	window_singleline pascal, (96 shl 16) or 80
-		call	graph_putsa_fx pascal, (112 shl 16) or 88, 15, ds, offset aSETUP_BGM_HEAD
+		call	graph_putsa_fx pascal, (112 shl 16) or 88, V_WHITE, ds, offset aSETUP_BGM_HEAD
 		mov	_window_tiles.x, (160 / WINDOW_TILE_W)
 		mov	_window_tiles.y, 1 + 3
 		call	window_dropdown_animate pascal, ( 32 shl 16) or 128
@@ -1351,7 +1351,7 @@ loc_B7D4:
 		push	[bp+var_2]
 		cmp	[bp+var_2], 2
 		jnz	short loc_B7E2
-		mov	ax, 15
+		mov	ax, V_WHITE
 		jmp	short loc_B7E4
 ; ---------------------------------------------------------------------------
 
@@ -1393,7 +1393,7 @@ loc_B846:
 		inc	[bp+var_2]
 
 loc_B849:
-		call	setup_bgm_choice_put pascal, [bp+var_2], 15
+		call	setup_bgm_choice_put pascal, [bp+var_2], V_WHITE
 
 loc_B851:
 		test	_key_det.lo, low INPUT_DOWN
@@ -1409,7 +1409,7 @@ loc_B86D:
 		dec	[bp+var_2]
 
 loc_B870:
-		call	setup_bgm_choice_put pascal, [bp+var_2], 15
+		call	setup_bgm_choice_put pascal, [bp+var_2], V_WHITE
 		jmp	short loc_B80E
 ; ---------------------------------------------------------------------------
 
@@ -1439,7 +1439,7 @@ var_2		= word ptr -2
 		enter	2, 0
 		mov	_window_tiles.x, (448 / WINDOW_TILE_W)
 		call	window_singleline pascal, (96 shl 16) or 80
-		call	graph_putsa_fx pascal, (112 shl 16) or 88, 15, ds, offset aSETUP_SE_HEAD
+		call	graph_putsa_fx pascal, (112 shl 16) or 88, V_WHITE, ds, offset aSETUP_SE_HEAD
 		mov	_window_tiles.x, (160 / WINDOW_TILE_W)
 		mov	_window_tiles.y, 1 + 3
 		call	window_dropdown_animate pascal, ( 32 shl 16) or 128
@@ -1451,7 +1451,7 @@ loc_B8F1:
 		push	[bp+var_2]
 		cmp	[bp+var_2], 1
 		jnz	short loc_B8FF
-		mov	ax, 15
+		mov	ax, V_WHITE
 		jmp	short loc_B901
 ; ---------------------------------------------------------------------------
 
@@ -1493,7 +1493,7 @@ loc_B963:
 		inc	[bp+var_2]
 
 loc_B966:
-		call	setup_se_choice_put pascal, [bp+var_2], 15
+		call	setup_se_choice_put pascal, [bp+var_2], V_WHITE
 
 loc_B96E:
 		test	_key_det.lo, low INPUT_UP
@@ -1509,7 +1509,7 @@ loc_B98A:
 		dec	[bp+var_2]
 
 loc_B98D:
-		call	setup_se_choice_put pascal, [bp+var_2], 15
+		call	setup_se_choice_put pascal, [bp+var_2], V_WHITE
 		jmp	short loc_B92B
 ; ---------------------------------------------------------------------------
 
@@ -2446,7 +2446,7 @@ var_3		= byte ptr -3
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		graph_accesspage 1
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + V_WHITE
 		call	grcg_byteboxfill_x pascal, large 0, (((RES_X - 1) / 8) shl 16) or (RES_Y - 1)
 		GRCG_OFF_CLOBBERING dx
 		call	graph_copy_page pascal, 0

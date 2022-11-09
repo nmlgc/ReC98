@@ -585,13 +585,13 @@ loc_9A8E:
 		add	ax, ax
 		mov	[bp+var_4], ax
 		push	(80 shl 16) or 292
-		push	(15 or FX_WEIGHT_BOLD)
+		push	(V_WHITE or FX_WEIGHT_BOLD)
 		mov	bx, [bp+var_4]
 		shl	bx, 2
 		pushd	CHAR_TITLE[bx]
 		call	graph_putsa_fx
 		push	(128 shl 16) or 308
-		push	(15 or FX_WEIGHT_BOLD)
+		push	(V_WHITE or FX_WEIGHT_BOLD)
 		mov	bx, [bp+var_4]
 		shl	bx, 2
 		pushd	CHAR_NAME[bx]
@@ -606,13 +606,13 @@ loc_9A8E:
 		add	ax, ax
 		mov	[bp+var_4], ax
 		push	(336 shl 16) or 292
-		push	(15 or FX_WEIGHT_BOLD)
+		push	(V_WHITE or FX_WEIGHT_BOLD)
 		mov	bx, [bp+var_4]
 		shl	bx, 2
 		pushd	CHAR_TITLE[bx]
 		call	graph_putsa_fx
 		push	(384 shl 16) or 308
-		push	(15 or FX_WEIGHT_BOLD)
+		push	(V_WHITE or FX_WEIGHT_BOLD)
 		mov	bx, [bp+var_4]
 		shl	bx, 2
 		pushd	CHAR_NAME[bx]
@@ -2485,7 +2485,7 @@ var_1		= byte ptr -1
 		mov	point_105D0.x, 80
 		mov	point_105D0.y, 320
 		mov	word_105D4, 1
-		mov	col_105D6, 0Fh
+		mov	col_105D6, V_WHITE
 		mov	byte_105D7, 20h	; ' '
 		mov	[bp+var_2], 0
 		call	sub_A36B
@@ -3791,7 +3791,7 @@ var_2		= word ptr -2
 		push	si
 		push	di
 		push	(352 shl 16) or 174
-		push	(15 or FX_WEIGHT_BOLD)
+		push	(V_WHITE or FX_WEIGHT_BOLD)
 		mov	al, playchar_10BD7
 		mov	ah, 0
 		shl	ax, 2
@@ -3799,7 +3799,7 @@ var_2		= word ptr -2
 		pushd	aVERDICT_PLAYCHARS[bx]
 		call	graph_putsa_fx
 		push	(360 shl 16) or 199
-		push	(15 or FX_WEIGHT_BOLD)
+		push	(V_WHITE or FX_WEIGHT_BOLD)
 		mov	al, _rank
 		mov	ah, 0
 		shl	ax, 2
@@ -3830,7 +3830,7 @@ loc_C2F7:
 		cmp	[bp+var_4], 0
 		jz	short loc_C316
 		push	si
-		push	(224 shl 16) or (15 or FX_WEIGHT_BOLD)
+		push	(224 shl 16) or (V_WHITE or FX_WEIGHT_BOLD)
 		mov	bx, di
 		shl	bx, 2
 		pushd	aVERDICT_NUMBERS[bx]
@@ -3847,13 +3847,13 @@ loc_C319:
 		mov	ah, 0
 		mov	di, ax
 		push	si
-		push	(224 shl 16) or (15 or FX_WEIGHT_BOLD)
+		push	(224 shl 16) or (V_WHITE or FX_WEIGHT_BOLD)
 		mov	bx, di
 		shl	bx, 2
 		pushd	aVERDICT_NUMBERS[bx]
 		call	graph_putsa_fx
 		push	(408 shl 16) or 248
-		push	(15 or FX_WEIGHT_BOLD)
+		push	(V_WHITE or FX_WEIGHT_BOLD)
 		mov	bx, di
 		shl	bx, 2
 		pushd	aVERDICT_NUMBERS[bx]
@@ -3871,7 +3871,7 @@ loc_C319:
 		sub	si, 16
 		mov	[bp+var_4], 1
 		push	si
-		push	(291 shl 16) or (15 or FX_WEIGHT_BOLD)
+		push	(291 shl 16) or (V_WHITE or FX_WEIGHT_BOLD)
 		mov	bx, di
 		shl	bx, 2
 		pushd	aVERDICT_NUMBERS[bx]
@@ -3900,7 +3900,7 @@ loc_C3B4:
 		cmp	[bp+var_4], 0
 		jz	short loc_C3D3
 		push	si
-		push	(291 shl 16) or (15 or FX_WEIGHT_BOLD)
+		push	(291 shl 16) or (V_WHITE or FX_WEIGHT_BOLD)
 		mov	bx, di
 		shl	bx, 2
 		pushd	aVERDICT_NUMBERS[bx]
@@ -3915,13 +3915,13 @@ loc_C3D3:
 		idiv	bx
 		mov	di, dx
 		push	si
-		push	(291 shl 16) or (15 or FX_WEIGHT_BOLD)
+		push	(291 shl 16) or (V_WHITE or FX_WEIGHT_BOLD)
 		mov	bx, di
 		shl	bx, 2
 		pushd	aVERDICT_NUMBERS[bx]
 		call	graph_putsa_fx
 		lea	ax, [si+16]
-		call	graph_putsa_fx pascal, ax, (291 shl 16) or (15 or FX_WEIGHT_BOLD), ds, offset aU_	; "“_"
+		call	graph_putsa_fx pascal, ax, (291 shl 16) or (V_WHITE or FX_WEIGHT_BOLD), ds, offset aU_	; "“_"
 		pop	di
 		pop	si
 		leave

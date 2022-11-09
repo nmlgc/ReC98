@@ -616,7 +616,7 @@ loc_A962:
 		and	ax, ga_RETURN_KEY_CELS - 1
 		add	ax, ga_RETURN_KEY
 		push	ax
-		push	15
+		push	V_WHITE
 		call	graph_gaiji_putc
 		inc	di
 		cmp	[bp+var_2], 0
@@ -1303,7 +1303,7 @@ var_3		= word ptr -3
 		mov	point_15004.x, 80
 		mov	point_15004.y, 320
 		mov	word_15008, 2
-		mov	_text_col, 15
+		mov	_text_col, V_WHITE
 		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
 		mov	byte_14F8E, 0
 
@@ -1541,9 +1541,9 @@ sub_B1B5	proc near
 ; ---------------------------------------------------------------------------
 
 loc_B1F7:
-		call	graph_putsa_fx pascal, 64, si, 15, large [bp+@@str]
+		call	graph_putsa_fx pascal, 64, si, V_WHITE, large [bp+@@str]
 		call	sub_B37C
-		call	graph_putsa_fx pascal, 64, si, 15, large [bp+@@str]
+		call	graph_putsa_fx pascal, 64, si, V_WHITE, large [bp+@@str]
 		call	sub_B37C
 		dec	_graph_putsa_fx_func
 		inc	di
@@ -1552,9 +1552,9 @@ loc_B21E:
 		cmp	di, FX_MASK
 		jl	short loc_B1F7
 		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
-		call	graph_putsa_fx pascal, 64, si, 15, large [bp+@@str]
+		call	graph_putsa_fx pascal, 64, si, V_WHITE, large [bp+@@str]
 		call	sub_B37C
-		call	graph_putsa_fx pascal, 64, si, 15, large [bp+@@str]
+		call	graph_putsa_fx pascal, 64, si, V_WHITE, large [bp+@@str]
 		call	sub_B37C
 		inc	allcast_step
 		inc	allcast_line_on_screen
@@ -6934,7 +6934,7 @@ loc_E0FB:
 ; ---------------------------------------------------------------------------
 
 loc_E161:
-		call	grcg_setcolor pascal, (GC_RMW shl 16) + 15
+		call	grcg_setcolor pascal, (GC_RMW shl 16) + V_WHITE
 		mov	ax, [bp+@@x]
 		add	ax, (ORB_W / 2)
 		push	ax

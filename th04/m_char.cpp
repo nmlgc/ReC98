@@ -14,6 +14,7 @@
 #include "shiftjis.hpp"
 #include "th01/rank.h"
 extern "C" {
+#include "th02/v_colors.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th03/formats/pi.hpp"
 #include "th04/common.h"
@@ -32,7 +33,7 @@ extern "C" {
 static const pixel_t PIC_W = 256;
 static const pixel_t PIC_H = 244;
 
-static const int COL_SELECTED = 15;
+static const int COL_SELECTED = V_WHITE;
 static const int COL_NOT_SELECTED = 3;
 static const int COL_BOX = 2;
 static const int COL_SHADOW = 1;

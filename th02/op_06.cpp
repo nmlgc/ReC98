@@ -14,6 +14,7 @@
 #include "th01/math/polar.hpp"
 extern "C" {
 #include "th01/hardware/grppsafx.h"
+#include "th02/v_colors.hpp"
 #include "th02/math/vector.hpp"
 #include "th02/hardware/frmdelay.h"
 #include "th02/hardware/input.hpp"
@@ -97,7 +98,7 @@ void pascal near draw_tracks(unsigned char sel)
 {
 	int i;
 	for(i = 0; i < sizeof(MUSIC_TITLES) / sizeof(MUSIC_TITLES[0]); i++) {
-		draw_track(i, i == sel ? 15 : 3);
+		draw_track(i, (i == sel) ? V_WHITE : 3);
 	}
 }
 
@@ -188,7 +189,7 @@ void pascal near polygons_update_and_render(void)
 void pascal near music_flip(void)
 {
 	screen_back_B_put();
-	grcg_setcolor(GC_RMW | GC_B, 15);
+	grcg_setcolor((GC_RMW | GC_B), V_WHITE);
 	polygons_update_and_render();
 	grcg_off();
 	graph_showpage(music_page);
@@ -257,7 +258,7 @@ void pascal near draw_cmt(int track)
 	screen_back_B_put();
 	cmt_back_put();
 
-	graph_putsa_fx(160, 64, (15 | FX_WEIGHT_HEAVY), music_cmt[0]);
+	graph_putsa_fx(160, 64, (V_WHITE | FX_WEIGHT_HEAVY), music_cmt[0]);
 	for(line = 1; line < MUSIC_CMT_LINE_COUNT; line++) {
 		graph_putsa_fx(
 			304, ((line + 4) * GLYPH_H), (13 | FX_WEIGHT_HEAVY), music_cmt[line]
@@ -311,7 +312,7 @@ controls:
 			if(music_sel == TRACK_COUNT) {
 				music_sel--;
 			}
-			draw_track(music_sel, 15);
+			draw_track(music_sel, V_WHITE);
 		}
 		if(key_det & INPUT_DOWN) {
 			draw_track(music_sel, 3);
@@ -323,7 +324,7 @@ controls:
 			if(music_sel == TRACK_COUNT) {
 				music_sel++;
 			}
-			draw_track(music_sel, 15);
+			draw_track(music_sel, V_WHITE);
 		}
 		if(key_det & INPUT_SHOT || key_det & INPUT_OK) {
 			if(music_sel != SEL_QUIT) {
