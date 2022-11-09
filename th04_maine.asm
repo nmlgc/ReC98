@@ -337,75 +337,11 @@ _main		endp
 		fn:dword
 	@cutscene_script_free$qv procdesc near
 	@egc_start_copy$qv procdesc near
+	@PIC_COPY_TO_OTHER$QII procdesc pascal near \
+		left:word, top:word
 CUTSCENE_TEXT ends
 
 maine_01_TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A30A	proc near
-
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		enter	4, 0
-		push	si
-		push	di
-		mov	ax, [bp+arg_2]
-		sar	ax, 3
-		mov	dx, [bp+arg_0]
-		shl	dx, 6
-		add	ax, dx
-		mov	dx, [bp+arg_0]
-		shl	dx, 4
-		add	ax, dx
-		mov	si, ax
-		call	@egc_start_copy$qv
-		xor	di, di
-		jmp	short loc_A368
-; ---------------------------------------------------------------------------
-
-loc_A32F:
-		mov	[bp+var_2], 0
-		jmp	short loc_A35E
-; ---------------------------------------------------------------------------
-
-loc_A336:
-		graph_accesspage 0
-		les	bx, _VRAM_PLANE_B
-		add	bx, si
-		mov	ax, es:[bx]
-		mov	[bp+var_4], ax
-		mov	al, 1
-		out	dx, al
-		mov	bx, word ptr _VRAM_PLANE_B
-		add	bx, si
-		mov	ax, [bp+var_4]
-		mov	es:[bx], ax
-		add	[bp+var_2], 2
-		add	si, 2
-
-loc_A35E:
-		cmp	[bp+var_2], 28h	; '('
-		jl	short loc_A336
-		inc	di
-		add	si, 28h	; '('
-
-loc_A368:
-		cmp	di, 0C8h
-		jl	short loc_A32F
-		call	egc_off
-		graph_accesspage 0
-		pop	di
-		pop	si
-		leave
-		retn	4
-sub_A30A	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -418,8 +354,8 @@ var_4		= word ptr -4
 var_2		= word ptr -2
 arg_0		= word ptr  4
 arg_2		= word ptr  6
-arg_4		= word ptr  8
-arg_6		= word ptr  0Ah
+@@top		= word ptr  8
+@@left		= word ptr  0Ah
 
 		enter	8, 0
 		push	si
@@ -519,9 +455,7 @@ loc_A491:
 		cmp	di, 0C8h
 		jl	loc_A3F7
 		graph_showpage 0
-		push	[bp+arg_6]
-		push	[bp+arg_4]
-		call	sub_A30A
+		call	@pic_copy_to_other$qii pascal, [bp+@@left], [bp+@@top]
 		pop	di
 		pop	si
 		leave
@@ -1383,8 +1317,8 @@ loc_ACE0:
 
 loc_ACF0:
 		graph_showpage 0
-		push	0A00040h
-		call	sub_A30A
+		push	(160 shl 16) or 64
+		call	@pic_copy_to_other$qii
 
 loc_ACFF:
 		jmp	loc_ADB5	; default

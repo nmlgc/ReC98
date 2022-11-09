@@ -6,6 +6,7 @@
 
 #include <stddef.h>
 #include "platform.h"
+#include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
 #include "shiftjis.hpp"
@@ -13,7 +14,17 @@
 extern "C" {
 #include "th02/hardware/frmdelay.h"
 }
+#include "th03/formats/pi.hpp"
 #include "th03/cutscene/cutscene.hpp"
+
+// Constants
+// ---------
+
+static const pixel_t PIC_W = PI_QUARTER_W;
+static const pixel_t PIC_H = PI_QUARTER_H;
+
+static const vram_byte_amount_t PIC_VRAM_W = (PIC_W / BYTE_DOTS);
+// ---------
 
 // State
 // -----
@@ -88,3 +99,39 @@ bool16 pascal near cutscene_script_load(const char* fn)
 #define egc_start_copy	near egc_start_copy
 #include "th01/hardware/egcstart.cpp"
 #undef egc_start_copy
+
+#if (GAME <= 4)
+	void pascal near pic_copy_to_other(screen_x_t left, vram_y_t top)
+	{
+		vram_offset_t vo = vram_offset_shift(left, top);
+		pixel_t y;
+		vram_byte_amount_t vram_x;
+
+		egc_start_copy();
+
+		// Faster than TH01's very slow end_pic_show() version, but still not
+		// as optimal as you can get within the EGC's limited 16-dot tile
+		// register.
+		y = 0;
+		while(y < PIC_H) {
+			vram_x = 0;
+			while(vram_x < PIC_VRAM_W) {
+				egc_temp_t tmp;
+
+				graph_accesspage(0);	tmp = egc_chunk(vo);
+				graph_accesspage(1);	egc_chunk(vo) = tmp;
+
+				vram_x += EGC_REGISTER_SIZE;
+				vo += EGC_REGISTER_SIZE;
+			}
+			y++;
+			vo += (ROW_SIZE - PIC_VRAM_W);
+		}
+		egc_off();
+
+		// ZUN bloat: All blitting operations in this module access the
+		// intended page before they blit. That's why preliminary state
+		// changes like this one are completely redundant, thankfully.
+		graph_accesspage(0);
+	}
+#endif
