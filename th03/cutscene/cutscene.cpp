@@ -83,3 +83,8 @@ bool16 pascal near cutscene_script_load(const char* fn)
 		#endif
 	}
 #endif
+
+// ZUN bloat: Turn into a single global inline function.
+#define egc_start_copy	near egc_start_copy
+#include "th01/hardware/egcstart.cpp"
+#undef egc_start_copy

@@ -1199,10 +1199,10 @@ sub_9F8D	endp
 	@CUTSCENE_SCRIPT_LOAD$QNXC procdesc pascal near \
 		fn:dword
 	@cutscene_script_free$qv procdesc near
+	@egc_start_copy$qv procdesc near
 CUTSCENE_TEXT ends
 
 mainl_01_TEXT segment byte public 'CODE' use16
-EGC_START_COPY_DEF 1, near
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1227,7 +1227,7 @@ arg_2		= word ptr  6
 		shl	dx, 4
 		add	ax, dx
 		mov	si, ax
-		call	@egc_start_copy_1$qv
+		call	@egc_start_copy$qv
 		xor	di, di
 		jmp	short loc_A225
 ; ---------------------------------------------------------------------------
@@ -1334,7 +1334,7 @@ loc_A26F:
 
 loc_A2B4:
 		call	graph_pack_put_8_noclip pascal, large 400, [bp+var_8], 320
-		call	@egc_start_copy_1$qv
+		call	@egc_start_copy$qv
 		egc_selectpat
 		egc_setrop	EGC_COMPAREREAD or EGC_WS_PATREG or EGC_RL_MEMREAD
 		outw2	EGC_BITLENGTHREG, 0Fh

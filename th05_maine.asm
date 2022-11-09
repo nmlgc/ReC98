@@ -305,8 +305,7 @@ _main		endp
 		fn:dword
 CUTSCENE_TEXT ends
 
-maine_01_TEXT	segment	byte public 'CODE' use16
-EGC_START_COPY_DEF 1, near
+maine_01_TEXT segment byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 

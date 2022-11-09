@@ -26,7 +26,6 @@ typedef enum {
 	_box_mask_t_FORCE_UINT16 = 0xFFFF
 } box_mask_t;
 
-#define egc_start_copy egc_start_copy_1
 void near egc_start_copy(void);
 
 // Copies the text box area from VRAM page 1 to VRAM page 0, applying the
