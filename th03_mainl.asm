@@ -1203,214 +1203,12 @@ sub_9F8D	endp
 		left:word, top:word
 	@PIC_PUT_BOTH_MASKED$QIIII procdesc pascal near \
 		left_and_top:dword, quarter:word, mask_id:word
+	@box_bg_allocate_and_snap$qv procdesc pascal near
+	@box_bg_free$qv procdesc pascal near
+	@box_bg_put$qv procdesc pascal near
 CUTSCENE_TEXT ends
 
 mainl_01_TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A36B	proc near
-
-@@vo		= word ptr -8
-@@dst_byte		= word ptr -6
-@@dst_y		= word ptr -4
-@@src_x		= word ptr -2
-
-		enter	8, 0
-		push	si
-		push	di
-		call	sub_A43C
-		graph_accesspage 0
-		call	hmem_allocbyte pascal, (BOX_VRAM_W * BOX_H * PLANE_COUNT)
-		mov	word ptr _box_bg+2, ax
-		mov	word ptr _box_bg, 0
-		xor	si, si
-		mov	di, BOX_TOP
-		mov	[bp+@@dst_y], 0
-		jmp	loc_A430
-; ---------------------------------------------------------------------------
-
-loc_A398:
-		mov	[bp+@@src_x], BOX_LEFT
-		mov	[bp+@@dst_byte], 0
-		jmp	loc_A424
-; ---------------------------------------------------------------------------
-
-loc_A3A5:
-		mov	ax, [bp+@@src_x]
-		sar	ax, 3
-		mov	dx, di
-		shl	dx, 6
-		add	ax, dx
-		mov	dx, di
-		shl	dx, 4
-		add	ax, dx
-		mov	[bp+@@vo], ax
-		les	bx, _VRAM_PLANE_B
-		add	bx, [bp+@@vo]
-		mov	ax, es:[bx]
-		mov	dx, si
-		add	dx, dx
-		les	bx, _box_bg
-		add	bx, dx
-		mov	es:[bx], ax
-		inc	si
-		les	bx, _VRAM_PLANE_R
-		add	bx, [bp+@@vo]
-		mov	ax, es:[bx]
-		mov	dx, si
-		add	dx, dx
-		les	bx, _box_bg
-		add	bx, dx
-		mov	es:[bx], ax
-		inc	si
-		les	bx, _VRAM_PLANE_G
-		add	bx, [bp+@@vo]
-		mov	ax, es:[bx]
-		mov	dx, si
-		add	dx, dx
-		les	bx, _box_bg
-		add	bx, dx
-		mov	es:[bx], ax
-		inc	si
-		les	bx, _VRAM_PLANE_E
-		add	bx, [bp+@@vo]
-		mov	ax, es:[bx]
-		mov	dx, si
-		add	dx, dx
-		les	bx, _box_bg
-		add	bx, dx
-		mov	es:[bx], ax
-		inc	si
-		add	[bp+@@dst_byte], 2
-		add	[bp+@@src_x], (2 * BYTE_DOTS)
-
-loc_A424:
-		cmp	[bp+@@dst_byte], BOX_VRAM_W
-		jl	loc_A3A5
-		inc	[bp+@@dst_y]
-		inc	di
-
-loc_A430:
-		cmp	[bp+@@dst_y], BOX_H
-		jl	loc_A398
-		pop	di
-		pop	si
-		leave
-		retn
-sub_A36B	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A43C	proc near
-		push	bp
-		mov	bp, sp
-		cmp	_box_bg, 0
-		jz	short loc_A459
-		push	word ptr _box_bg+2
-		call	hmem_free
-		mov	_box_bg, 0
-
-loc_A459:
-		pop	bp
-		retn
-sub_A43C	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A45B	proc near
-
-@@byte_		= word ptr -6
-@@dst_y		= word ptr -4
-@@src_x		= word ptr -2
-
-		enter	6, 0
-		push	si
-		push	di
-		xor	cx, cx
-		mov	si, BOX_TOP
-		mov	[bp+@@dst_y], 0
-		jmp	loc_A4FE
-; ---------------------------------------------------------------------------
-
-loc_A46E:
-		mov	[bp+@@src_x], BOX_LEFT
-		mov	[bp+@@byte_], 0
-		jmp	short loc_A4F4
-; ---------------------------------------------------------------------------
-
-loc_A47A:
-		mov	ax, [bp+@@src_x]
-		sar	ax, 3
-		mov	dx, si
-		shl	dx, 6
-		add	ax, dx
-		mov	dx, si
-		shl	dx, 4
-		add	ax, dx
-		mov	di, ax
-		mov	ax, cx
-		add	ax, ax
-		les	bx, _box_bg
-		add	bx, ax
-		mov	ax, es:[bx]
-		les	bx, _VRAM_PLANE_B
-		add	bx, di
-		mov	es:[bx], ax
-		inc	cx
-		mov	ax, cx
-		add	ax, ax
-		les	bx, _box_bg
-		add	bx, ax
-		mov	ax, es:[bx]
-		les	bx, _VRAM_PLANE_R
-		add	bx, di
-		mov	es:[bx], ax
-		inc	cx
-		mov	ax, cx
-		add	ax, ax
-		les	bx, _box_bg
-		add	bx, ax
-		mov	ax, es:[bx]
-		les	bx, _VRAM_PLANE_G
-		add	bx, di
-		mov	es:[bx], ax
-		inc	cx
-		mov	ax, cx
-		add	ax, ax
-		les	bx, _box_bg
-		add	bx, ax
-		mov	ax, es:[bx]
-		les	bx, _VRAM_PLANE_E
-		add	bx, di
-		mov	es:[bx], ax
-		inc	cx
-		add	[bp+@@byte_], 2
-		add	[bp+@@src_x], (2 * BYTE_DOTS)
-
-loc_A4F4:
-		cmp	[bp+@@byte_], BOX_VRAM_W
-		jl	short loc_A47A
-		inc	[bp+@@dst_y]
-		inc	si
-
-loc_A4FE:
-		cmp	[bp+@@dst_y], BOX_H
-		jl	loc_A46E
-		pop	di
-		pop	si
-		leave
-		retn
-sub_A45B	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1556,9 +1354,9 @@ loc_A62D:
 		mov	_cursor.x, BOX_LEFT
 		mov	_cursor.y, BOX_TOP
 		graph_accesspage 1
-		call	sub_A45B
+		call	@box_bg_put$qv
 		graph_accesspage 0
-		call	sub_A45B
+		call	@box_bg_put$qv
 
 loc_A64B:
 		pop	bp
@@ -1633,9 +1431,9 @@ loc_A6C8:
 		mov	_cursor.x, BOX_LEFT
 		mov	_cursor.y, BOX_TOP
 		graph_accesspage 1
-		call	sub_A45B
+		call	@box_bg_put$qv
 		graph_accesspage 0
-		call	sub_A45B
+		call	@box_bg_put$qv
 		jmp	loc_AC1E	; default
 ; ---------------------------------------------------------------------------
 
@@ -1972,7 +1770,7 @@ loc_A9FE:
 		call	pi_put_8 pascal, large 0, 0
 		call	graph_copy_page pascal, 0
 		graph_accesspage 0
-		call	sub_A36B
+		call	@box_bg_allocate_and_snap$qv
 		jmp	loc_AC1E	; default
 ; ---------------------------------------------------------------------------
 
@@ -2244,7 +2042,7 @@ var_1		= byte ptr -1
 		mov	_text_col, V_WHITE
 		mov	_text_fx, FX_WEIGHT_BOLD
 		mov	[bp+var_2], 0
-		call	sub_A36B
+		call	@box_bg_allocate_and_snap$qv
 		mov	_fast_forward, 0
 
 loc_ACA3:
@@ -2347,8 +2145,8 @@ loc_AD9A:
 ; ---------------------------------------------------------------------------
 
 loc_ADA0:
-		call	sub_A45B
-		call	sub_A43C
+		call	@box_bg_put$qv
+		call	@box_bg_free$qv
 		pop	si
 		leave
 		retn
