@@ -170,8 +170,8 @@ void near raise_bg_allocate_and_snap(void)
 	vram_offset_t vo_marisa_row;
 	vram_offset_t vo_marisa;
 
-	raise_bg[PLAYCHAR_REIMU] = HMem<dots8_t>::allocbyte(RAISE_BG_SIZE);
-	raise_bg[PLAYCHAR_MARISA] = HMem<dots8_t>::allocbyte(RAISE_BG_SIZE);
+	raise_bg[PLAYCHAR_REIMU] = HMem<dots8_t>::alloc(RAISE_BG_SIZE);
+	raise_bg[PLAYCHAR_MARISA] = HMem<dots8_t>::alloc(RAISE_BG_SIZE);
 
 	vo_reimu_row  = raise(vram_offset_shift(REIMU_LEFT,  REIMU_TOP));
 	vo_marisa_row = raise(vram_offset_shift(MARISA_LEFT, MARISA_TOP));

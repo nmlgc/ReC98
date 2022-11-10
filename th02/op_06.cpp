@@ -103,7 +103,7 @@ void pascal near draw_tracks(unsigned char sel)
 
 void pascal near screen_back_B_snap(void)
 {
-	screen_back_B = HMem<dots8_t>::allocbyte(PLANE_SIZE);
+	screen_back_B = HMem<dots8_t>::alloc(PLANE_SIZE);
 	plane_dword_blit(screen_back_B, VRAM_PLANE_B);
 }
 
@@ -226,7 +226,7 @@ void pascal near cmt_back_snap(void)
 	screen_x_t x;
 	vram_offset_t vo;
 	for(int i = 0; i < PLANE_COUNT; i++) {
-		cmt_back[i] = HMem<dots8_t>::allocbyte(
+		cmt_back[i] = HMem<dots8_t>::alloc(
 			(304 * (320 / BYTE_DOTS)) + (16 * (320 / BYTE_DOTS))
 		);
 	}

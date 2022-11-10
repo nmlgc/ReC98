@@ -653,8 +653,10 @@ void MASTER_RET vsync_end(void);
 #ifdef __cplusplus
 	// Type-safe hmem_* memory allocation
 	template<class T> struct HMem {
-		static T __seg* allocbyte(size_t size) {
-			return reinterpret_cast<T __seg *>(hmem_allocbyte(size));
+		static T __seg* alloc(unsigned int size_in_elements) {
+			return reinterpret_cast<T __seg *>(hmem_allocbyte(
+				size_in_elements * sizeof(T)
+			));
 		}
 
 		static void free(T *&block) {

@@ -1,7 +1,6 @@
 #pragma option -zCSHARED_ -k-
 
 #include <mem.h>
-#include <stddef.h>
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
@@ -33,10 +32,10 @@ inline void memcpy_movsd(
 void bgimage_snap(void)
 {
 	if(bgimage.B == nullptr) {
-		bgimage.B = HMem<dots8_t>::allocbyte(PLANE_SIZE);
-		bgimage.R = HMem<dots8_t>::allocbyte(PLANE_SIZE);
-		bgimage.G = HMem<dots8_t>::allocbyte(PLANE_SIZE);
-		bgimage.E = HMem<dots8_t>::allocbyte(PLANE_SIZE);
+		bgimage.B = HMem<dots8_t>::alloc(PLANE_SIZE);
+		bgimage.R = HMem<dots8_t>::alloc(PLANE_SIZE);
+		bgimage.G = HMem<dots8_t>::alloc(PLANE_SIZE);
+		bgimage.E = HMem<dots8_t>::alloc(PLANE_SIZE);
 	}
 
 	_DL = PLANE_COUNT;
