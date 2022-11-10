@@ -303,41 +303,11 @@ _main		endp
 
 	@CUTSCENE_SCRIPT_LOAD$QNXC procdesc pascal near \
 		fn:dword
+	@PIC_PUT_BOTH_MASKED$QIIII procdesc pascal near \
+		left_and_top:dword, quarter:word, mask_id:word
 CUTSCENE_TEXT ends
 
 maine_01_TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A705	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-arg_6		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+arg_6]
-		mov	di, [bp+arg_4]
-		graph_accesspage 1
-		push	si
-		push	di
-		push	0
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		call	pi_put_quarter_masked_8
-		call	egc_copy_rect_1_to_0_16 pascal, si, di, (320 shl 16) or 200
-		pop	di
-		pop	si
-		pop	bp
-		retn	8
-sub_A705	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -963,10 +933,7 @@ loc_AE1A:
 ; ---------------------------------------------------------------------------
 
 loc_AE25:
-		push	0A00040h
-		push	[bp+var_2]
-		push	si
-		call	sub_A705
+		call	@pic_put_both_masked$qiiii pascal, (160 shl 16) or 64, [bp+var_2], si
 		cmp	_fast_forward, 0
 		jnz	short loc_AE41
 		push	[bp+var_4]

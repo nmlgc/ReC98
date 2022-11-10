@@ -1199,132 +1199,13 @@ sub_9F8D	endp
 	@CUTSCENE_SCRIPT_LOAD$QNXC procdesc pascal near \
 		fn:dword
 	@cutscene_script_free$qv procdesc near
-	@egc_start_copy$qv procdesc near
 	@PIC_COPY_TO_OTHER$QII procdesc pascal near \
 		left:word, top:word
+	@PIC_PUT_BOTH_MASKED$QIIII procdesc pascal near \
+		left_and_top:dword, quarter:word, mask_id:word
 CUTSCENE_TEXT ends
 
 mainl_01_TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A23C	proc near
-
-var_8		= dword	ptr -8
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-@@top		= word ptr  8
-@@left		= word ptr  0Ah
-
-		enter	8, 0
-		push	si
-		push	di
-		mov	eax, _pi_buffers
-		mov	[bp+var_8], eax
-		cmp	[bp+arg_2], 1
-		jnz	short loc_A257
-		add	word ptr [bp+var_8], 0A0h
-		jmp	short loc_A26F
-; ---------------------------------------------------------------------------
-
-loc_A257:
-		cmp	[bp+arg_2], 2
-		jnz	short loc_A264
-		add	word ptr [bp+var_8], 0FA00h
-		jmp	short loc_A26F
-; ---------------------------------------------------------------------------
-
-loc_A264:
-		cmp	[bp+arg_2], 3
-		jnz	short loc_A26F
-		add	word ptr [bp+var_8], 0FAA0h
-
-loc_A26F:
-		mov	eax, [bp+var_8]
-		shr	eax, 10h
-		mov	dx, word ptr [bp+var_8]
-		shr	dx, 4
-		add	ax, dx
-		mov	dx, word ptr [bp+var_8]
-		and	dx, 0Fh
-		mov	word ptr [bp+var_8+2], ax
-		mov	word ptr [bp+var_8], dx
-		graph_showpage 1
-		mov	ax, [bp+@@left]
-		sar	ax, 3
-		mov	dx, [bp+@@top]
-		shl	dx, 6
-		add	ax, dx
-		mov	dx, [bp+@@top]
-		shl	dx, 4
-		add	ax, dx
-		mov	si, ax
-		graph_accesspage 0
-		xor	di, di
-		jmp	loc_A34E
-; ---------------------------------------------------------------------------
-
-loc_A2B4:
-		call	graph_pack_put_8_noclip pascal, large 400, [bp+var_8], 320
-		call	@egc_start_copy$qv
-		egc_selectpat
-		egc_setrop	EGC_COMPAREREAD or EGC_WS_PATREG or EGC_RL_MEMREAD
-		outw2	EGC_BITLENGTHREG, 0Fh
-		mov	bx, [bp+arg_0]
-		shl	bx, 3
-		mov	ax, di
-		and	ax, 3
-		add	ax, ax
-		add	bx, ax
-		outw2	EGC_MASKREG, _PI_MASKS[bx]
-		mov	[bp+var_4], 7D00h
-		mov	[bp+var_2], 0
-		jmp	short loc_A31E
-; ---------------------------------------------------------------------------
-
-loc_A301:
-		les	bx, _VRAM_PLANE_B
-		add	bx, [bp+var_4]
-		mov	ax, es:[bx]
-		mov	bx, word ptr _VRAM_PLANE_B
-		add	bx, si
-		mov	es:[bx], ax
-		inc	[bp+var_2]
-		add	si, 2
-		add	[bp+var_4], 2
-
-loc_A31E:
-		cmp	[bp+var_2], 14h
-		jl	short loc_A301
-		call	egc_off
-		add	si, 28h	; '('
-		add	word ptr [bp+var_8], 140h
-		mov	eax, [bp+var_8]
-		shr	eax, 10h
-		mov	dx, word ptr [bp+var_8]
-		shr	dx, 4
-		add	ax, dx
-		mov	dx, word ptr [bp+var_8]
-		and	dx, 0Fh
-		mov	word ptr [bp+var_8+2], ax
-		mov	word ptr [bp+var_8], dx
-		inc	di
-
-loc_A34E:
-		cmp	di, 0C8h
-		jl	loc_A2B4
-		graph_showpage 0
-		call	@pic_copy_to_other$qii pascal, [bp+@@left], [bp+@@top]
-		pop	di
-		pop	si
-		leave
-		retn	8
-sub_A23C	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2195,10 +2076,7 @@ loc_AAF8:
 ; ---------------------------------------------------------------------------
 
 loc_AB16:
-		push	(160 shl 16) or 64
-		push	[bp+var_2]
-		push	si
-		call	sub_A23C
+		call	@pic_put_both_masked$qiiii pascal, (160 shl 16) or 64, [bp+var_2], si
 		cmp	_fast_forward, 0
 		jnz	short loc_AB32
 		push	[bp+var_4]

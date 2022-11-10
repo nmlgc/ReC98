@@ -13,8 +13,15 @@
 #include "master.hpp"
 extern "C" {
 #include "th02/hardware/frmdelay.h"
+#if (GAME == 5)
+	#include "th01/hardware/egc.h"
+	#include "th05/formats/pi.hpp"
+#elif (GAME == 4)
+	#include "th03/formats/pi.hpp"
+#else
+	#include "th03/formats/pi.hpp"
+#endif
 }
-#include "th03/formats/pi.hpp"
 #include "th03/cutscene/cutscene.hpp"
 
 // Constants
@@ -24,6 +31,8 @@ static const pixel_t PIC_W = PI_QUARTER_W;
 static const pixel_t PIC_H = PI_QUARTER_H;
 
 static const vram_byte_amount_t PIC_VRAM_W = (PIC_W / BYTE_DOTS);
+
+static const int PIC_SLOT = 0;
 // ---------
 
 // State
@@ -100,7 +109,20 @@ bool16 pascal near cutscene_script_load(const char* fn)
 #include "th01/hardware/egcstart.cpp"
 #undef egc_start_copy
 
-#if (GAME <= 4)
+#if (GAME == 5)
+	#define pic_copy_to_other(left, top) { \
+		egc_copy_rect_1_to_0_16(left, top, PIC_W, PIC_H); \
+	}
+
+	void pascal near pic_put_both_masked(
+		screen_x_t left, vram_y_t top, int quarter, int mask_id
+	)
+	{
+		graph_accesspage(1);
+		pi_put_quarter_masked_8(left, top, PIC_SLOT, quarter, mask_id);
+		pic_copy_to_other(left, top);
+	}
+#else
 	void pascal near pic_copy_to_other(screen_x_t left, vram_y_t top)
 	{
 		vram_offset_t vo = vram_offset_shift(left, top);
@@ -133,5 +155,46 @@ bool16 pascal near cutscene_script_load(const char* fn)
 		// intended page before they blit. That's why preliminary state
 		// changes like this one are completely redundant, thankfully.
 		graph_accesspage(0);
+	}
+
+	void pascal near pic_put_both_masked(
+		screen_x_t left, vram_y_t top, int quarter, int mask_id
+	)
+	{
+		enum {
+			TEMP_ROW = RES_Y,
+		};
+
+		vram_word_amount_t vram_word;
+		vram_offset_t vo_temp;
+		pi_buffer_p_t row_p;
+
+		pi_buffer_p_init_quarter(row_p, PIC_SLOT, quarter);
+
+		graph_showpage(1);
+		vram_offset_t vo = vram_offset_shift(left, top);
+		graph_accesspage(0);
+		for(pixel_t y = 0; y < PIC_H; y++) {
+			// This might actually be faster than clearing the masked pixels
+			// using the GRCG and doing an unaccelerated 4-plane VRAM OR.
+			graph_pack_put_8_noclip(0, TEMP_ROW, row_p, PIC_W);
+			egc_start_copy();
+			egc_setup_copy_masked(PI_MASKS[mask_id][y & (PI_MASK_COUNT - 1)]);
+			vo_temp = vram_offset_shift(0, TEMP_ROW);
+			vram_word = 0;
+			while(vram_word < (PIC_W / EGC_REGISTER_DOTS)) {
+				egc_chunk(vo) = egc_chunk(vo_temp);
+				vram_word++;
+				vo += EGC_REGISTER_SIZE;
+				vo_temp += EGC_REGISTER_SIZE;
+			}
+			egc_off();
+
+			vo += (ROW_SIZE - PIC_VRAM_W);
+			pi_buffer_p_offset(row_p, PI_W, 0);
+			pi_buffer_p_normalize(row_p);
+		}
+		graph_showpage(0);
+		pic_copy_to_other(left, top);
 	}
 #endif

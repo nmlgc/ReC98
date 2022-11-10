@@ -5,6 +5,7 @@
 #include "decomp.hpp"
 #include "shiftjis.hpp"
 #include "master.hpp"
+#include "th01/hardware/egc.h"
 extern "C" {
 #include "th02/hardware/frmdelay.h"
 #if (GAME == 5)
@@ -36,11 +37,7 @@ void pascal near box_1_to_0_masked(box_mask_t mask)
 	egc_temp_t tmp;
 
 	for(screen_y_t y = BOX_TOP; y < BOX_BOTTOM; y++) {
-		outport2(EGC_READPLANEREG, 0x00ff);
-		// EGC_COMPAREREAD | EGC_WS_PATREG | EGC_RL_MEMREAD
-		outport2(EGC_MODE_ROP_REG, 0x3100);
-		outport2(EGC_BITLENGTHREG, 0xF);
-		outport(EGC_MASKREG, BOX_MASKS[mask][y & 3]);
+		egc_setup_copy_masked(BOX_MASKS[mask][y & 3]);
 
 		vram_offset_t vram_offset = vram_offset_shift(BOX_LEFT, y);
 		pixel_t x = 0;
