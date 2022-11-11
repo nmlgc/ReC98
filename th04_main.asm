@@ -2241,6 +2241,9 @@ include th04/main/dialog/box_fade_in.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 
+; A version of str_parse_up_to_3_digits_and_advance().
+_IS_DIG = 02h
+
 ; Attributes: bp-based frame
 
 sub_D0CA	proc near

@@ -1206,131 +1206,13 @@ sub_9F8D	endp
 	@box_bg_allocate_and_snap$qv procdesc pascal near
 	@box_bg_free$qv procdesc pascal near
 	@box_bg_put$qv procdesc pascal near
+	@SCRIPT_NUMBER_PARAM_READ_FIRST$QMI procdesc pascal near \
+		ret:dword
+	@SCRIPT_NUMBER_PARAM_READ_SECOND$QMI procdesc pascal near \
+		ret:dword
 CUTSCENE_TEXT ends
 
 mainl_01_TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A50A	proc near
-
-var_2		= byte ptr -2
-var_1		= byte ptr -1
-arg_0		= dword	ptr  4
-
-		enter	2, 0
-		les	bx, _script
-		mov	cl, es:[bx]
-		inc	word ptr _script
-		les	bx, _script
-		mov	al, es:[bx]
-		mov	[bp+var_1], al
-		inc	word ptr _script
-		les	bx, _script
-		mov	al, es:[bx]
-		mov	[bp+var_2], al
-		inc	word ptr _script
-		mov	al, cl
-		mov	ah, 0
-		mov	bx, ax
-		test	(__ctype + 1)[bx], _IS_DIG
-		jnz	short loc_A554
-		les	bx, [bp+arg_0]
-		mov	ax, _script_number_param_default
-		mov	es:[bx], ax
-		sub	word ptr _script, 3
-		leave
-		retn	4
-; ---------------------------------------------------------------------------
-
-loc_A554:
-		mov	al, [bp+var_1]
-		mov	ah, 0
-		mov	bx, ax
-		test	(__ctype + 1)[bx], _IS_DIG
-		jnz	short loc_A578
-		mov	al, cl
-		mov	ah, 0
-		add	ax, 0FFD0h
-		les	bx, [bp+arg_0]
-		mov	es:[bx], ax
-		sub	word ptr _script, 2
-		leave
-		retn	4
-; ---------------------------------------------------------------------------
-
-loc_A578:
-		mov	al, [bp+var_2]
-		mov	ah, 0
-		mov	bx, ax
-		test	(__ctype + 1)[bx], _IS_DIG
-		jnz	short loc_A5A8
-		mov	al, cl
-		mov	ah, 0
-		add	ax, 0FFD0h
-		imul	ax, 0Ah
-		mov	dl, [bp+var_1]
-		mov	dh, 0
-		add	ax, dx
-		add	ax, 0FFD0h
-		les	bx, [bp+arg_0]
-		mov	es:[bx], ax
-		dec	word ptr _script
-		leave
-		retn	4
-; ---------------------------------------------------------------------------
-
-loc_A5A8:
-		mov	al, cl
-		mov	ah, 0
-		add	ax, 0FFD0h
-		imul	ax, 64h
-		mov	dl, [bp+var_1]
-		mov	dh, 0
-		add	dx, 0FFD0h
-		imul	dx, 0Ah
-		add	ax, dx
-		mov	dl, [bp+var_2]
-		mov	dh, 0
-		add	ax, dx
-		add	ax, 0FFD0h
-		les	bx, [bp+arg_0]
-		mov	es:[bx], ax
-		leave
-		retn	4
-sub_A50A	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A5D3	proc near
-
-arg_0		= dword	ptr  4
-
-		push	bp
-		mov	bp, sp
-		les	bx, _script
-		cmp	byte ptr es:[bx], ','
-		jnz	short loc_A5EF
-		inc	word ptr _script
-		pushd	[bp+arg_0]
-		call	sub_A50A
-		pop	bp
-		retn	4
-; ---------------------------------------------------------------------------
-
-loc_A5EF:
-		les	bx, [bp+arg_0]
-		mov	ax, _script_number_param_default
-		mov	es:[bx], ax
-		pop	bp
-		retn	4
-sub_A5D3	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1417,7 +1299,7 @@ loc_A695:
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
-		call	sub_A50A
+		call	@script_number_param_read_first$qmi
 		cmp	_fast_forward, 0
 		jnz	short loc_A6C8
 		call	input_wait_for_change pascal, [bp+var_2]
@@ -1442,7 +1324,7 @@ loc_A6E9:
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
-		call	sub_A50A
+		call	@script_number_param_read_first$qmi
 		mov	al, byte ptr [bp+var_2]
 		mov	_text_col, al
 		jmp	loc_AC1E	; default
@@ -1453,7 +1335,7 @@ loc_A700:
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
-		call	sub_A50A
+		call	@script_number_param_read_first$qmi
 		mov	bx, [bp+var_2]
 		cmp	bx, 3
 		ja	loc_AC1E	; default
@@ -1499,7 +1381,7 @@ loc_A75E:
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
-		call	sub_A50A
+		call	@script_number_param_read_first$qmi
 		cmp	[bp+arg_0], 'i'
 		jnz	short loc_A781
 		push	[bp+var_2]
@@ -1525,7 +1407,7 @@ loc_A7A2:
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
-		call	sub_A50A
+		call	@script_number_param_read_first$qmi
 		cmp	_fast_forward, 0
 		jnz	loc_AC1E	; default
 		cmp	[bp+arg_0], 'k'
@@ -1553,11 +1435,11 @@ loc_A7E7:
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
-		call	sub_A50A
+		call	@script_number_param_read_first$qmi
 		push	ss
 		lea	ax, [bp+var_4]
 		push	ax
-		call	sub_A5D3
+		call	@script_number_param_read_second$qmi
 		cmp	_fast_forward, 0
 		jnz	loc_AC1E	; default
 		cmp	[bp+arg_0], 'k'
@@ -1581,7 +1463,7 @@ loc_A822:
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
-		call	sub_A50A
+		call	@script_number_param_read_first$qmi
 		mov	ax, [bp+var_2]
 		mov	_text_interval, ax
 		jmp	loc_AC1E	; default
@@ -1593,7 +1475,7 @@ loc_A843:
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
-		call	sub_A50A
+		call	@script_number_param_read_first$qmi
 		graph_showpage byte ptr [bp+var_2]
 		jmp	loc_AC1E	; default
 ; ---------------------------------------------------------------------------
@@ -1603,7 +1485,7 @@ loc_A85F:
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
-		call	sub_A50A
+		call	@script_number_param_read_first$qmi
 		cmp	_fast_forward, 0
 		jnz	short loc_A87B
 		push	1
@@ -1633,7 +1515,7 @@ loc_A8A7:
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
-		call	sub_A50A
+		call	@script_number_param_read_first$qmi
 		cmp	[bp+arg_0], 'i'
 		jnz	short loc_A8CA
 		push	[bp+var_2]
@@ -1653,7 +1535,7 @@ loc_A8D5:
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
-		call	sub_A50A
+		call	@script_number_param_read_first$qmi
 		mov	ax, [bp+var_2]
 		add	ax, 200h
 		push	ax
@@ -1668,7 +1550,7 @@ loc_A8F1:
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
-		call	sub_A50A
+		call	@script_number_param_read_first$qmi
 		mov	[bp+var_4], 0
 		jmp	short loc_A933
 ; ---------------------------------------------------------------------------
@@ -1707,7 +1589,7 @@ loc_A945:
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
-		call	sub_A50A
+		call	@script_number_param_read_first$qmi
 		graph_accesspage 1
 		push	_cursor.x
 		push	_cursor.y
@@ -1735,7 +1617,7 @@ loc_A997:
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
-		call	sub_A50A
+		call	@script_number_param_read_first$qmi
 		cmp	_fast_forward, 0
 		jnz	loc_AC1E	; default
 		call	input_wait_for_change pascal, 0
@@ -1843,7 +1725,7 @@ loc_AAA3:
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
-		call	sub_A50A
+		call	@script_number_param_read_first$qmi
 		graph_showpage 1
 		graph_accesspage 0
 		cmp	[bp+var_2], 4
@@ -1863,12 +1745,12 @@ loc_AAF8:
 		push	ss
 		lea	ax, [bp+var_2]
 		push	ax
-		call	sub_A50A
+		call	@script_number_param_read_first$qmi
 		mov	_script_number_param_default, 1
 		push	ss
 		lea	ax, [bp+var_4]
 		push	ax
-		call	sub_A5D3
+		call	@script_number_param_read_second$qmi
 		xor	si, si
 		jmp	short loc_AB33
 ; ---------------------------------------------------------------------------
@@ -1974,7 +1856,7 @@ loc_ABFE:
 		push	ss		; jumptable 0000A67C case 101
 		lea	ax, [bp+var_2]
 		push	ax
-		call	sub_A50A
+		call	@script_number_param_read_first$qmi
 		call	_snd_se_reset
 		call	snd_se_play pascal, [bp+var_2]
 		call	_snd_se_update

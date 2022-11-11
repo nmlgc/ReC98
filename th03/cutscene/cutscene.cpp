@@ -11,6 +11,7 @@
 #include "planar.h"
 #include "shiftjis.hpp"
 #include "master.hpp"
+#include "th03/math/str_val.hpp"
 extern "C" {
 #include "th02/hardware/frmdelay.h"
 #if (GAME == 5)
@@ -262,3 +263,18 @@ bool16 pascal near cutscene_script_load(const char* fn)
 		box_bg_loop(box_bg_put_func);
 	}
 #endif
+
+void pascal near script_number_param_read_first(int& ret)
+{
+	str_consume_up_to_3_digits(&ret, script_p, script_number_param_default);
+}
+
+void pascal near script_number_param_read_second(int& ret)
+{
+	if(*script_p == ',') {
+		script_p++;
+		script_number_param_read_first(ret);
+	} else {
+		ret = script_number_param_default;
+	}
+}
