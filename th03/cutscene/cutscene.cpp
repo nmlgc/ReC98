@@ -66,6 +66,10 @@ extern int script_number_param_default;
 	// in a blocking way.
 	void pascal near box_wait_animate(int frames_to_wait = 0);
 #else
+	#define box_wait_animate(frames_to_wait) { \
+		input_wait_for_change(frames_to_wait); \
+	}
+
 	void near box_bg_allocate_and_snap(void);
 	void near box_bg_free(void);
 #endif
@@ -276,5 +280,41 @@ void pascal near script_number_param_read_second(int& ret)
 		script_number_param_read_first(ret);
 	} else {
 		ret = script_number_param_default;
+	}
+}
+
+void near cursor_advance_and_animate(void)
+{
+	cursor.x += GLYPH_FULL_W;
+	if(cursor.x >= BOX_RIGHT) {
+		cursor.y += GLYPH_H;
+		cursor.x = (BOX_LEFT + NAME_W);
+
+		if(cursor.y >= BOX_BOTTOM) {
+			#if (GAME >= 4)
+				box_1_to_0_animate();
+			#endif
+
+			// ZUN quirk: Since [cursor.y] is >= BOX_BOTTOM here, the TH05
+			// Return key animation will be displayed at the right edge of the
+			// "5th" line, below BOX_BOTTOM.
+			if(!fast_forward) {
+				box_wait_animate(0);
+			}
+
+			// Unconditionally moving the cursor into the name area? This is
+			// not what a script author would expect, especially with automatic
+			// line breaks doing the opposite. If you are forced to write your
+			// script in a way that anticipates such a cursor move, you might
+			// as well explicitly add the necessary text box change commands
+			// manually.
+			cursor.x = BOX_LEFT;
+			cursor.y = BOX_TOP;
+
+			#if (GAME != 5)
+				graph_accesspage(1);	box_bg_put();
+				graph_accesspage(0);	box_bg_put();
+			#endif
+		}
 	}
 }

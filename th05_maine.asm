@@ -27,7 +27,7 @@ include th04/hardware/grppsafx.inc
 	extern _tolower:proc
 	extern __ctype:byte
 
-maine_01 group CFG_LRES_TEXT, CUTSCENE_TEXT, maine_01_TEXT, maine_01__TEXT, maine_01___TEXT
+maine_01 group CFG_LRES_TEXT, CUTSCENE_TEXT, maine_01_TEXT, maine_01__TEXT, maine_01__TEXT, maine_01___TEXT
 g_SHARED group SHARED, SHARED_
 
 ; ===========================================================================
@@ -309,43 +309,17 @@ _main		endp
 		ret:dword
 	@SCRIPT_NUMBER_PARAM_READ_SECOND$QMI procdesc pascal near \
 		ret:dword
-CUTSCENE_TEXT ends
-
-maine_01_TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A826	proc near
-		push	bp
-		mov	bp, sp
-		add	_cursor.x, GLYPH_FULL_W
-		cmp	_cursor.x, BOX_RIGHT
-		jl	short loc_A864
-		add	_cursor.y, GLYPH_H
-		mov	_cursor.x, (BOX_LEFT + NAME_W)
-		cmp	_cursor.y, BOX_BOTTOM
-		jl	short loc_A864
-		call	@box_1_to_0_animate$qv
-		cmp	_fast_forward, 0
-		jnz	short loc_A858
-		call	@box_wait_animate$qi pascal, 0
-
-loc_A858:
-		mov	_cursor.x, BOX_LEFT
-		mov	_cursor.y, BOX_TOP
-
-loc_A864:
-		pop	bp
-		retn
-sub_A826	endp
-maine_01_TEXT	ends
-
-maine_01__TEXT	segment	byte public 'CODE' use16
+	@cursor_advance_and_animate$qv procdesc pascal near
 	@box_1_to_0_animate$qv procdesc pascal near
 	@BOX_WAIT_ANIMATE$QI procdesc pascal near \
 		frames_to_wait:word
+	@cursor_advance_and_animate$qv procdesc pascal near
+CUTSCENE_TEXT ends
+
+maine_01_TEXT segment byte public 'CODE' use16
+maine_01_TEXT ends
+
+maine_01__TEXT segment byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -1180,7 +1154,7 @@ loc_B164:
 		graph_accesspage 0
 
 loc_B18D:
-		call	sub_A826
+		call	@cursor_advance_and_animate$qv
 		mov	si, 1
 		jmp	loc_B005
 ; ---------------------------------------------------------------------------

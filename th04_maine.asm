@@ -347,45 +347,14 @@ _main		endp
 		ret:dword
 	@SCRIPT_NUMBER_PARAM_READ_SECOND$QMI procdesc pascal near \
 		ret:dword
+	@box_1_to_0_animate$qv procdesc pascal near
+	@cursor_advance_and_animate$qv procdesc pascal near
 CUTSCENE_TEXT ends
 
 maine_01_TEXT segment byte public 'CODE' use16
+maine_01_TEXT ends
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_A73B	proc near
-		push	bp
-		mov	bp, sp
-		add	_cursor.x, GLYPH_FULL_W
-		cmp	_cursor.x, BOX_RIGHT
-		jl	short loc_A78D
-		add	_cursor.y, GLYPH_H
-		mov	_cursor.x, (BOX_LEFT + NAME_W)
-		cmp	_cursor.y, BOX_BOTTOM
-		jl	short loc_A78D
-		call	@box_1_to_0_animate$qv
-		cmp	_fast_forward, 0
-		jnz	short loc_A76F
-		call	input_wait_for_change pascal, 0
-
-loc_A76F:
-		mov	_cursor.x, BOX_LEFT
-		mov	_cursor.y, BOX_TOP
-		graph_accesspage 1
-		call	@box_bg_put$qv
-		graph_accesspage 0
-		call	@box_bg_put$qv
-
-loc_A78D:
-		pop	bp
-		retn
-sub_A73B	endp
-maine_01_TEXT	ends
-
-maine_01__TEXT	segment	byte public 'CODE' use16
-	@box_1_to_0_animate$qv procdesc pascal near
+maine_01__TEXT segment byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -706,7 +675,7 @@ loc_AAF2:
 		mov	ah, 0
 		push	ax
 		call	graph_gaiji_putc
-		call	sub_A73B
+		call	@cursor_advance_and_animate$qv
 		jmp	loc_ADB5	; default
 ; ---------------------------------------------------------------------------
 
@@ -1079,7 +1048,7 @@ loc_AE82:
 		push	word ptr [bp+var_6+2]
 		push	bx
 		call	graph_putsa_fx
-		call	sub_A73B
+		call	@cursor_advance_and_animate$qv
 		jmp	loc_AE2D
 ; ---------------------------------------------------------------------------
 
