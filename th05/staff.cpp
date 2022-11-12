@@ -3,7 +3,7 @@
  * TH05 Staff Roll
  */
 
-#pragma option -zCmaine_01__TEXT
+#pragma option -zCmaine_01_TEXT
 
 extern "C" {
 #include <stddef.h>

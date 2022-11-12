@@ -11,18 +11,24 @@
 #include "planar.h"
 #include "shiftjis.hpp"
 #include "master.hpp"
-#include "th03/math/str_val.hpp"
+#include "th02/v_colors.hpp"
 extern "C" {
 #include "th02/hardware/frmdelay.h"
 #if (GAME == 5)
 	#include "th01/hardware/egc.h"
+	#include "th04/hardware/bgimage.hpp"
+	#include "th04/gaiji/gaiji.h"
+	#include "th05/hardware/input.h"
 	#include "th05/formats/pi.hpp"
 #elif (GAME == 4)
 	#include "th03/formats/pi.hpp"
+	#include "th04/hardware/input.h"
 #else
+	#include "th03/hardware/input.h"
 	#include "th03/formats/pi.hpp"
 #endif
 }
+#include "th03/math/str_val.hpp"
 #include "th03/cutscene/cutscene.hpp"
 
 // Constants
@@ -34,6 +40,25 @@ static const pixel_t PIC_H = PI_QUARTER_H;
 static const vram_byte_amount_t PIC_VRAM_W = (PIC_W / BYTE_DOTS);
 
 static const int PIC_SLOT = 0;
+
+// Note that this does not correspond to the tiled area painted into TH05's
+// EDBK?.PI images.
+static const screen_x_t BOX_LEFT = 80;
+static const screen_y_t BOX_TOP = 320;
+static const pixel_t BOX_W = 480;
+static const pixel_t BOX_H = (GLYPH_H * 4);
+
+static const vram_byte_amount_t BOX_VRAM_W = (BOX_W / BYTE_DOTS);
+static const screen_x_t BOX_RIGHT = (BOX_LEFT + BOX_W);
+static const screen_y_t BOX_BOTTOM = (BOX_TOP + BOX_H);
+
+static const shiftjis_ank_amount_t NAME_LEN = 6;
+static const shiftjis_kanji_amount_t NAME_KANJI_LEN = (
+	NAME_LEN / sizeof(shiftjis_kanji_t)
+);
+
+// Adding a fullwidth colon after the name
+static const pixel_t NAME_W = ((NAME_LEN * GLYPH_HALF_W) + GLYPH_FULL_W);
 // ---------
 
 // State
@@ -52,10 +77,39 @@ static const int PIC_SLOT = 0;
 	#define script_p script
 #endif
 
-extern uint4_t text_col;
+extern Planar<dots16_t>* box_bg;
+
+// Skips any delays during the cutscene if `true`.
+extern bool fast_forward;
+
+// [y] is always aligned to GLYPH_H pixels.
+extern screen_point_t cursor;
+
+extern int text_interval;
+extern uint8_t text_col;
 extern uint8_t text_fx; // TH04 and TH05 directly set [graph_putsa_fx_func].
 extern int script_number_param_default;
 // -----
+
+#if (GAME == 5)
+	// String-to-color map
+	// -------------------
+	// Used to automatically change the text color whenever a specific
+	// Shift-JIS code point is encountered.
+
+	static const int COLMAP_COUNT = 8;
+
+	typedef struct {
+		uint4_t values[COLMAP_COUNT];
+
+		// Might have been originally meant for a complete character name?
+		shiftjis_kanji_t keys[COLMAP_COUNT][NAME_KANJI_LEN];
+	} colmap_t;
+
+	extern colmap_t colmap;
+	extern unsigned char colmap_count;
+	// -------------------
+#endif
 
 // Function ordering fails
 // -----------------------
@@ -79,6 +133,30 @@ extern int script_number_param_default;
 	void near box_1_to_0_animate(void);
 #endif
 // -----------------------
+
+// ZUN quirk: The cutscene system features both
+// 1) a top-level input sensing mechanism (for updating the fast-forward flag),
+//    and
+// 2) nested, blocking input loops (during all the interruptable wait commands)
+//    which are skipped based on the fast-forward flag.
+// With this combination, the accurate detection of held keys matters: Since
+// this function is only called once on every iteration of the loop before
+// evaluating a command, a momentary key release scancode from 1) can cause 2)
+// to be entered even if the fast-forward key is still being held. Only TH03's
+// and TH05's input functions defend against this possibility – at the cost of
+// 614.4 µs for every call to them. TH04's cutscene system does suffer from the
+// detection issue, but runs significantly faster in exchange, as it's not
+// slowed down on every iteration of the script interpreter loop, i.e., between
+// every script command or 2-byte text pair.
+inline void cutscene_input_sense(void) {
+	#if (GAME == 5)
+		input_reset_sense_held();
+	#elif (GAME == 4)
+		input_reset_sense();
+	#elif (GAME == 3)
+		input_mode_interface();
+	#endif
+}
 
 bool16 pascal near cutscene_script_load(const char* fn)
 {
@@ -318,3 +396,113 @@ void near cursor_advance_and_animate(void)
 		}
 	}
 }
+
+#if (GAME >= 4)
+	typedef enum {
+		BOX_MASK_0,
+		BOX_MASK_1,
+		BOX_MASK_2,
+		BOX_MASK_3,
+		BOX_MASK_COPY,
+		BOX_MASK_COUNT,
+
+		_box_mask_t_FORCE_UINT16 = 0xFFFF
+	} box_mask_t;
+
+	// Copies the text box area from VRAM page 1 to VRAM page 0, applying the
+	// given [mask]. Assumes that the EGC is active, and initialized for a copy.
+	void pascal near box_1_to_0_masked(box_mask_t mask)
+	{
+		extern const dot_rect_t(16, 4) BOX_MASKS[BOX_MASK_COUNT];
+		egc_temp_t tmp;
+
+		for(screen_y_t y = BOX_TOP; y < BOX_BOTTOM; y++) {
+			egc_setup_copy_masked(BOX_MASKS[mask][y & 3]);
+
+			vram_offset_t vram_offset = vram_offset_shift(BOX_LEFT, y);
+			pixel_t x = 0;
+			while(x < BOX_W) {
+				graph_accesspage(1);	tmp = egc_chunk(vram_offset);
+				graph_accesspage(0);	egc_chunk(vram_offset) = tmp;
+				x += EGC_REGISTER_DOTS;
+				vram_offset += EGC_REGISTER_SIZE;
+			}
+		}
+	}
+
+	void near box_1_to_0_animate(void)
+	{
+		// ZUN bloat: box_1_to_0_masked() switches the accessed page anyway.
+		#if (GAME == 5)
+			graph_accesspage(0);
+		#endif
+
+		egc_start_copy();
+		if(!fast_forward) {
+			for(int i = BOX_MASK_0; i < BOX_MASK_COPY; i++) {
+				box_1_to_0_masked(static_cast<box_mask_t>(i));
+				frame_delay(text_interval);
+			}
+		}
+		box_1_to_0_masked(BOX_MASK_COPY);
+		egc_off();
+
+		#if (GAME == 5)
+			frame_delay(1); // ZUN quirk
+		#endif
+	}
+#endif
+
+#if (GAME == 5)
+	void pascal near box_wait_animate(int frames_to_wait)
+	{
+		enum {
+			LEFT = (BOX_RIGHT + GLYPH_FULL_W),
+		};
+
+		unsigned int frames_waited = 0;
+		bool16 ignore_frames = false;
+
+		while(1) {
+			cutscene_input_sense();
+			if(key_det == INPUT_NONE) {
+				break;
+			}
+			frame_delay(1);
+		}
+
+		if(frames_to_wait == 0) {
+			frames_to_wait = 999;
+			ignore_frames = true;
+		}
+
+		graph_accesspage(0);
+		while(1) {
+			cutscene_input_sense();
+
+			// ZUN bloat: A white glyph aligned to the 8×16 cell grid, without
+			// applying boldface… why not just show it on TRAM?
+			bgimage_put_rect(LEFT, cursor.y, GLYPH_FULL_W, GLYPH_H);
+
+			if(
+				(frames_to_wait <= 0) ||
+				(key_det & INPUT_OK) ||
+				(key_det & INPUT_SHOT) ||
+				(key_det & INPUT_CANCEL)
+			) {
+				return;
+			}
+			graph_gaiji_putc(
+				LEFT,
+				cursor.y,
+				(ga_RETURN_KEY + ((frames_waited / 8) & (RETURN_KEY_CELS - 1))),
+				V_WHITE
+			);
+			frames_waited++;
+			if(!ignore_frames) {
+				frames_to_wait--;
+			}
+			frame_delay(1);
+		}
+	}
+#endif

@@ -27,7 +27,7 @@ include th04/hardware/grppsafx.inc
 	extern _tolower:proc
 	extern __ctype:byte
 
-maine_01 group CFG_LRES_TEXT, CUTSCENE_TEXT, maine_01_TEXT, maine_01__TEXT, maine_01__TEXT, maine_01___TEXT
+maine_01 group CFG_LRES_TEXT, CUTSCENE_TEXT, maine_01_TEXT, maine_01__TEXT
 g_SHARED group SHARED, SHARED_
 
 ; ===========================================================================
@@ -317,9 +317,6 @@ _main		endp
 CUTSCENE_TEXT ends
 
 maine_01_TEXT segment byte public 'CODE' use16
-maine_01_TEXT ends
-
-maine_01__TEXT segment byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4829,9 +4826,9 @@ loc_D2FE:
 		leave
 		retn
 sub_D21D	endp
-maine_01__TEXT	ends
+maine_01_TEXT	ends
 
-maine_01___TEXT	segment	byte public 'CODE' use16
+maine_01__TEXT	segment	byte public 'CODE' use16
 	SPACE_WINDOW_SET procdesc pascal near \
 		center_x:word, center_y:word, w:word, h:word
 
@@ -7179,7 +7176,7 @@ loc_E7CC:
 		retn
 sub_E41D	endp
 
-maine_01___TEXT	ends
+maine_01__TEXT	ends
 
 ; ---------------------------------------------------------------------------
 ; ===========================================================================

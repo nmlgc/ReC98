@@ -26,7 +26,7 @@ include th04/hardware/grppsafx.inc
 	extern _tolower:proc
 	extern __ctype:byte
 
-maine_01 group CFG_LRES_TEXT, CUTSCENE_TEXT, maine_01_TEXT, maine_01__TEXT
+maine_01 group CFG_LRES_TEXT, CUTSCENE_TEXT, maine_01_TEXT
 g_SHARED group SHARED, SHARED_
 
 ; ===========================================================================
@@ -352,9 +352,6 @@ _main		endp
 CUTSCENE_TEXT ends
 
 maine_01_TEXT segment byte public 'CODE' use16
-maine_01_TEXT ends
-
-maine_01__TEXT segment byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3961,7 +3958,7 @@ loc_CC66:
 sub_CBF3	endp
 		db    0
 
-maine_01__TEXT	ends
+maine_01_TEXT	ends
 
 ; ===========================================================================
 
