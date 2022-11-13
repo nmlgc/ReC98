@@ -26,7 +26,6 @@
 #include "th01/hardware/pgtrans.hpp"
 #include "th01/hardware/scrollup.hpp"
 #include "th01/snd/mdrv2.h"
-#include "th01/formats/pf.hpp"
 #include "th01/formats/grc.hpp"
 #include "th01/formats/grp.h"
 #include "th01/formats/ptn.hpp"

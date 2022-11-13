@@ -1,7 +1,6 @@
 /// Jigoku Stage 10 Boss - Mima
 /// ---------------------------
 
-#include <stddef.h>
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
@@ -19,7 +18,6 @@
 #include "th01/hardware/palette.h"
 #include "th01/snd/mdrv2.h"
 #include "th01/formats/grp.h"
-#include "th01/formats/pf.hpp"
 #include "th01/formats/ptn.hpp"
 #include "th01/sprites/pellet.h"
 #include "th01/sprites/pillar.hpp"

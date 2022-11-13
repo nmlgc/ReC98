@@ -1,5 +1,3 @@
-#define PF_FN_LEN 13
-
 // Encraption key
 extern char arc_key;
 

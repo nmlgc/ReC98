@@ -83,15 +83,13 @@ void snd_delay_until_volume(uint8_t volume);
 		SND_LOAD_SE = (PMD_GET_SE_ADDRESS << 8),
 	} snd_load_func_t;
 
-	#define SND_FN_LEN 13
-
-	#if (GAME <= 3)
+	#if (GAME <= 3) && defined(MASTER_HPP)
 		// Loads a song in .M format ([func] == SND_LOAD_SONG) or a sound
 		// effect bank in EFC format ([func] == SND_LOAD_SE) into the
 		// respective work buffer of the sound driver. If MIDI is used, 'md'
 		// is appended to the file name.
 		// [fn] still needs to be null-terminated, despite its fixed length.
-		void snd_load(const char fn[SND_FN_LEN], snd_load_func_t func);
+		void snd_load(const char fn[PF_FN_LEN], snd_load_func_t func);
 	#endif
 #endif
 

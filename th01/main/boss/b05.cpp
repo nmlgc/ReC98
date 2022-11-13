@@ -1,7 +1,6 @@
 /// Stage 5 Boss - SinGyoku
 /// -----------------------
 
-#include <stddef.h>
 #include "platform.h"
 #include "decomp.hpp"
 #include "pc98.h"
@@ -17,7 +16,6 @@
 #include "th01/hardware/palette.h"
 #include "th01/snd/mdrv2.h"
 #include "th01/formats/grp.h"
-#include "th01/formats/pf.hpp"
 #include "th01/sprites/pellet.h"
 #include "th01/main/particle.hpp"
 #include "th01/main/playfld.hpp"

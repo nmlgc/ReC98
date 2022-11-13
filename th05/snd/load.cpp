@@ -9,10 +9,10 @@
 extern "C" {
 #include "th05/snd/snd.h"
 
-extern char snd_load_fn[SND_FN_LEN];
+extern char snd_load_fn[PF_FN_LEN];
 extern const char SND_LOAD_EXT[4][4];
 
-void pascal snd_load(const char fn[SND_FN_LEN], snd_load_func_t func)
+void pascal snd_load(const char fn[PF_FN_LEN], snd_load_func_t func)
 {
 	#define _DI	reinterpret_cast<char near *>(_DI)
 	#define func_local	_BP

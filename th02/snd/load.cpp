@@ -2,13 +2,14 @@
 
 #include "platform.h"
 #include "x86real.h"
+#include "master.hpp"
 #include "libs/kaja/kaja.h"
 extern "C" {
 #include "th02/snd/snd.h"
 
-extern char snd_load_fn[SND_FN_LEN];
+extern char snd_load_fn[PF_FN_LEN];
 
-void snd_load(const char fn[SND_FN_LEN], snd_load_func_t func)
+void snd_load(const char fn[PF_FN_LEN], snd_load_func_t func)
 {
 	int i;
 	_asm { push ds; }
