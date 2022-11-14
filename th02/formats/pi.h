@@ -9,6 +9,7 @@
 #define PI_W RES_X
 #define PI_H RES_Y
 
+static const int PI_QUARTER_COUNT = 4;
 static const pixel_t PI_QUARTER_W = (PI_W / 2);
 static const pixel_t PI_QUARTER_H = (PI_H / 2);
 

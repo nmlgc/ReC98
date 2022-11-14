@@ -60,11 +60,9 @@ void snd_delay_until_volume(uint8_t volume);
 #endif
 
 #if defined(PMD) /* requires kaja.h */
-	#if defined(__cplusplus)
-		inline int16_t snd_kaja_func(kaja_func_t func, int8_t param) {
-			return snd_kaja_interrupt((func) << 8 | (param));
-		}
-		#endif
+	#define snd_kaja_func(func, param) ( \
+		snd_kaja_interrupt(((func) << 8) + (param)) \
+	)
 	#if defined(__cplusplus) && (GAME <= 4)
 		static inline uint16_t snd_load_size() {
 			// ZUN bug: Should rather retrieve the maximum data size for song
@@ -97,11 +95,9 @@ void snd_se_reset(void);
 void DEFCONV snd_se_play(int new_se);
 void snd_se_update(void);
 
-#ifdef __cplusplus
-	// Cancels any currently playing sound effect to play the given one.
-	inline void snd_se_play_force(int new_se) {
-		snd_se_reset();
-		snd_se_play(new_se);
-		snd_se_update();
-	}
-#endif
+// Cancels any currently playing sound effect to play the given one.
+#define snd_se_play_force(new_se) { \
+	snd_se_reset(); \
+	snd_se_play(new_se); \
+	snd_se_update(); \
+}

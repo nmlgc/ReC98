@@ -2,7 +2,7 @@
 
 // TH04 adds 4 dissolve masks with patterns of increasing strength, and splits
 // the [fx] parameter into two separate global variables.
-extern enum {
+enum graph_putsa_fx_func_t {
 	FX_WEIGHT_NORMAL = WEIGHT_NORMAL,
 	FX_WEIGHT_HEAVY  = WEIGHT_HEAVY,
 	FX_WEIGHT_BOLD   = WEIGHT_BOLD,
@@ -15,8 +15,10 @@ extern enum {
 	FX_MASK_3,
 	FX_MASK_4,
 	FX_MASK_END,
+
 	_graph_putsa_fx_func_FORCE_INT16 = 0x7FFF
-} graph_putsa_fx_func;
+};
+extern graph_putsa_fx_func_t graph_putsa_fx_func;
 extern pixel_t graph_putsa_fx_spacing;
 
 void pascal graph_putsa_fx(
