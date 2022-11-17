@@ -226,7 +226,7 @@ loc_A5DC:
 		push	word ptr off_10190+2
 		push	bx
 		call	@cutscene_script_load$qnxc
-		call	sub_AFD6
+		call	@cutscene_animate$qv
 		pop	bp
 		retn
 sub_A5A4	endp
@@ -303,235 +303,10 @@ _main		endp
 
 	@CUTSCENE_SCRIPT_LOAD$QNXC procdesc pascal near \
 		fn:dword
-	@SCRIPT_NUMBER_PARAM_READ_FIRST$QMI procdesc pascal near \
-		ret:dword
-	@cursor_advance_and_animate$qv procdesc pascal near
-	@SCRIPT_OP$QUC procdesc pascal near \
-		c:word
+	@cutscene_animate$qv procdesc pascal near
 CUTSCENE_TEXT ends
 
 maine_01_TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_AFD6	proc near
-
-var_A		= word ptr -0Ah
-@@str		= dword	ptr -8
-var_3		= word ptr -3
-@@ch		= word ptr -2
-
-		enter	0Ah, 0
-		push	si
-		mov	word ptr [bp+@@str+2], ds
-		mov	word ptr [bp+@@str], offset asc_1085A
-		mov	_cursor.x, BOX_LEFT
-		mov	_cursor.y, BOX_TOP
-		mov	_text_interval, 2
-		mov	_text_col, V_WHITE
-		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
-		mov	_fast_forward, 0
-
-loc_B005:
-		call	_input_reset_sense_held
-		test	_key_det.hi, high INPUT_CANCEL
-		jz	short loc_B018
-		mov	_fast_forward, 1
-		jmp	short loc_B01D
-; ---------------------------------------------------------------------------
-
-loc_B018:
-		mov	_fast_forward, 0
-
-loc_B01D:
-		xor	si, si
-		mov	bx, _script_p
-		mov	al, [bx]
-		mov	byte ptr [bp+var_3], al
-		inc	_script_p
-		mov	ah, 0
-		mov	bx, ax
-		test	(__ctype + 1)[bx], _IS_CTL
-		jnz	short loc_B005
-		cmp	byte ptr [bp+var_3], ' '
-		jz	short loc_B005
-		cmp	byte ptr [bp+var_3], '\'
-		jnz	short loc_B05D
-		mov	bx, _script_p
-		mov	al, [bx]
-		mov	byte ptr [bp+var_3], al
-		inc	_script_p
-		call	@script_op$quc pascal, [bp+var_3]
-		cmp	al, -1
-		jnz	short loc_B005
-		jmp	loc_B196
-; ---------------------------------------------------------------------------
-
-loc_B05D:
-		cmp	byte ptr [bp+var_3], '@'
-		jnz	loc_B118
-		mov	bx, _script_p
-		mov	al, [bx]
-		mov	ah, 0
-		push	ax		; ch
-		call	_tolower
-		pop	cx
-		mov	byte ptr [bp+var_3], al
-		inc	_script_p
-		mov	ah, 0
-		mov	[bp+var_A], ax
-		mov	cx, 4		; switch 4 cases
-		mov	bx, offset word_B1A5
-
-loc_B086:
-		mov	ax, cs:[bx]
-		cmp	ax, [bp+var_A]
-		jz	short loc_B095
-		add	bx, 2
-		loop	loc_B086
-		jmp	short loc_B0E2	; default
-; ---------------------------------------------------------------------------
-
-loc_B095:
-		jmp	word ptr cs:[bx+8] ; switch jump
-
-loc_B099:
-		mov	[bp+@@ch], 9	; jumptable 0000B095 case 116
-		jmp	short loc_B0F4
-; ---------------------------------------------------------------------------
-
-loc_B0A0:
-		mov	[bp+@@ch], 6	; jumptable 0000B095 case 104
-		jmp	short loc_B0F4
-; ---------------------------------------------------------------------------
-
-loc_B0A7:
-		mov	[bp+@@ch], 8	; jumptable 0000B095 case 63
-		jmp	short loc_B0F4
-; ---------------------------------------------------------------------------
-
-loc_B0AE:
-		mov	bx, _script_p	; jumptable 0000B095 case 33
-		mov	al, [bx]
-		mov	byte ptr [bp+var_3], al
-		inc	_script_p
-		mov	ah, 0
-		cmp	ax, '!'
-		jz	short loc_B0C9
-		cmp	ax, '?'
-		jz	short loc_B0D0
-		jmp	short loc_B0D7
-; ---------------------------------------------------------------------------
-
-loc_B0C9:
-		mov	[bp+@@ch], 0Ah
-		jmp	short loc_B0F4
-; ---------------------------------------------------------------------------
-
-loc_B0D0:
-		mov	[bp+@@ch], 0Bh
-		jmp	short loc_B0F4
-; ---------------------------------------------------------------------------
-
-loc_B0D7:
-		dec	_script_p
-		mov	[bp+@@ch], 7
-		jmp	short loc_B0F4
-; ---------------------------------------------------------------------------
-
-loc_B0E2:
-		dec	_script_p	; default
-		mov	_script_number_param_default, 3
-		push	ss
-		lea	ax, [bp+@@ch]
-		push	ax
-		call	@script_number_param_read_first$qmi
-
-loc_B0F4:
-		graph_showpage 0
-		graph_accesspage 1
-		push	_cursor.x
-		push	_cursor.y
-		push	[bp+@@ch]
-		mov	al, _text_col
-		mov	ah, 0
-		push	ax
-		call	graph_gaiji_putc
-		jmp	short loc_B18D
-; ---------------------------------------------------------------------------
-
-loc_B118:
-		les	bx, [bp+@@str]
-		mov	al, byte ptr [bp+var_3]
-		mov	es:[bx], al
-		mov	bx, _script_p
-		mov	al, [bx]
-		mov	byte ptr [bp+var_3], al
-		mov	bx, word ptr [bp+@@str]
-		mov	es:[bx+1], al
-		inc	_script_p
-		cmp	_cursor.x, 80
-		jnz	short loc_B164
-		xor	si, si
-		jmp	short @@colmap_more?
-; ---------------------------------------------------------------------------
-
-@@colmap_loop:
-		mov	bx, si
-		imul	bx, NAME_LEN
-		mov	ax, _colmap.CM_keys[bx]
-		les	bx, [bp+@@str]
-		cmp	ax, es:[bx]
-		jnz	short @@colmap_next
-		mov	al, _colmap.CM_values[si]
-		mov	_text_col, al
-		jmp	short loc_B164
-; ---------------------------------------------------------------------------
-
-@@colmap_next:
-		inc	si
-
-@@colmap_more?:
-		mov	al, _colmap_count
-		mov	ah, 0
-		cmp	ax, si
-		jg	short @@colmap_loop
-
-loc_B164:
-		graph_showpage 0
-		graph_accesspage 1
-		push	_cursor.x
-		push	_cursor.y
-		mov	al, _text_col
-		mov	ah, 0
-		push	ax
-		pushd	[bp+@@str]
-		call	graph_putsa_fx
-		graph_accesspage 0
-
-loc_B18D:
-		call	@cursor_advance_and_animate$qv
-		mov	si, 1
-		jmp	loc_B005
-; ---------------------------------------------------------------------------
-
-loc_B196:
-		call	_bgimage_free
-		call	pi_free pascal, 0
-		pop	si
-		leave
-		retn
-sub_AFD6	endp
-
-; ---------------------------------------------------------------------------
-word_B1A5	dw    21h,   3Fh,   68h,   74h
-					; value	table for switch statement
-		dw offset loc_B0AE	; jump table for switch	statement
-		dw offset loc_B0A7
-		dw offset loc_B0A0
-		dw offset loc_B099
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -6453,6 +6228,7 @@ loc_E70D:
 		; No idea why TASM can't assemble this properly after script_op() was
 		; decompiled. Seems to be related to the size of this segment; it works
 		; when removing some instructions further above.
+		; It still doesn't after decompiling cutscene_animate() though?
 		db	0Fh, 8Ch, 93h, 00h
 		test	_key_det.hi, high INPUT_CANCEL
 		jnz	short loc_E757
@@ -6629,8 +6405,6 @@ include th05/formats/pi_buffers[bss].asm
 include th05/hardware/vram_planes[data].asm
 include th03/formats/cdg[data].asm
 include th03/cutscene/cutscene[data].asm
-asc_1085A	db '  ', 0
-	even
 byte_1085E	db 0
 		db 0
 public _ALLCAST_BG_FN

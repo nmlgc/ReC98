@@ -11,3 +11,6 @@ bool16 pascal near cutscene_script_load(const char *fn);
 #else
 	void near cutscene_script_free();
 #endif
+
+// Runs the loaded cutscene script in a blocking way.
+void near cutscene_animate(void);

@@ -11,6 +11,14 @@
 typedef enum {
 	g_NULL = '\0',
 	g_EMPTY = 0x02,
+	gs_NOTES, // ♫
+
+	gs_HEART_2 = 0x06, // 🎔 (duplicated)
+	gs_EXCLAMATION, // !
+	gs_QUESTION, // ?
+	gs_SWEAT, // 💦
+	gs_DOUBLE_EXCLAMATION, // ‼
+	gs_EXCLAMATION_QUESTION, // ⁉
 
 	#if (GAME == 5)
 		ga_RETURN_KEY = 0x1C,

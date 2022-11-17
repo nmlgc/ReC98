@@ -1,15 +1,5 @@
 NAME_LEN = 6
 NAME_KANJI_LEN = (NAME_LEN / 2)
-NAME_W = ((NAME_LEN * GLYPH_HALF_W) + GLYPH_FULL_W)
-
-BOX_LEFT = 80
-BOX_TOP = 320
-BOX_W = 480
-BOX_H = (GLYPH_H * 4)
-
-BOX_VRAM_W = (BOX_W / BYTE_DOTS)
-BOX_RIGHT = (BOX_LEFT + BOX_W)
-BOX_BOTTOM = (BOX_TOP + BOX_H)
 
 public _script, _fast_forward, _box_bg
 if (GAME ge 4)

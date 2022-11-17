@@ -45,6 +45,9 @@ void pascal input_mode_cpu_vs_1p();
 void pascal input_mode_cpu_vs_cpu();
 // Just allows quitting via pressing any button.
 void pascal input_mode_attract();
+
+// Input sense function used in UIs
+#define input_reset_sense_interface input_mode_interface
 /// -----
 
 // Basic keyboard input function in this game. Resets and updates all three

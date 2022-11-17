@@ -26,7 +26,7 @@ include th03/formats/scoredat.inc
 	extern __ctype:byte
 	extern _execl:proc
 
-group_01 group CFG_LRES_TEXT, CUTSCENE_TEXT, mainl_01_TEXT, SCOREDAT_TEXT, REGIST_TEXT, mainl_03_TEXT
+group_01 group CFG_LRES_TEXT, CUTSCENE_TEXT, SCOREDAT_TEXT, REGIST_TEXT, mainl_03_TEXT
 
 ; ===========================================================================
 
@@ -998,7 +998,7 @@ loc_9EF1:
 		call	graph_clear
 		call	graph_show
 		call	@cutscene_script_load$qnxc pascal, [off_E4B6]
-		call	sub_AC6E
+		call	@cutscene_animate$qv
 		call	@cutscene_script_free$qv
 		call	sub_990C
 		call	sub_9A2C
@@ -1198,145 +1198,8 @@ sub_9F8D	endp
 	@CUTSCENE_SCRIPT_LOAD$QNXC procdesc pascal near \
 		fn:dword
 	@cutscene_script_free$qv procdesc near
-	@box_bg_allocate_and_snap$qv procdesc pascal near
-	@box_bg_free$qv procdesc pascal near
-	@box_bg_put$qv procdesc pascal near
-	@cursor_advance_and_animate$qv procdesc pascal near
-	@SCRIPT_OP$QUC procdesc pascal near \
-		c:word
+	@cutscene_animate$qv procdesc pascal near
 CUTSCENE_TEXT ends
-
-mainl_01_TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_AC6E	proc near
-
-var_6		= dword	ptr -6
-var_2		= byte ptr -2
-var_1		= byte ptr -1
-
-		enter	6, 0
-		push	si
-		mov	word ptr [bp+var_6+2], ds
-		mov	word ptr [bp+var_6], offset asc_EFC2
-		mov	_cursor.x, BOX_LEFT
-		mov	_cursor.y, BOX_TOP
-		mov	_text_interval, 1
-		mov	_text_col, V_WHITE
-		mov	_text_fx, FX_WEIGHT_BOLD
-		mov	[bp+var_2], 0
-		call	@box_bg_allocate_and_snap$qv
-		mov	_fast_forward, 0
-
-loc_ACA3:
-		call	input_mode_interface
-		test	_input_sp.hi, high INPUT_CANCEL
-		jz	short loc_ACB6
-		mov	_fast_forward, 1
-		jmp	short loc_ACBB
-; ---------------------------------------------------------------------------
-
-loc_ACB6:
-		mov	_fast_forward, 0
-
-loc_ACBB:
-		les	bx, _script
-		mov	al, es:[bx]
-		mov	[bp+var_1], al
-		inc	word ptr _script
-		mov	ah, 0
-		mov	bx, ax
-		test	(__ctype + 1)[bx], _IS_CTL
-		jnz	short loc_ACA3
-		cmp	[bp+var_1], ' '
-		jz	short loc_ACA3
-		cmp	[bp+var_1], '\'
-		jnz	short loc_ACFB
-		les	bx, _script
-		mov	al, es:[bx]
-		mov	[bp+var_1], al
-		inc	word ptr _script
-		call	@script_op$quc pascal, word ptr [bp+var_1]
-		cmp	al, -1
-		jnz	short loc_ACA3
-		jmp	loc_ADA0
-; ---------------------------------------------------------------------------
-
-loc_ACFB:
-		les	bx, [bp+var_6]
-		mov	al, [bp+var_1]
-		mov	es:[bx], al
-		les	bx, _script
-		mov	al, es:[bx]
-		mov	[bp+var_1], al
-		les	bx, [bp+var_6]
-		mov	es:[bx+1], al
-		inc	word ptr _script
-		graph_accesspage 1
-		push	_cursor.x
-		push	_cursor.y
-		mov	al, _text_col
-		or	al, _text_fx
-		mov	ah, 0
-		push	ax
-		push	word ptr [bp+var_6+2]
-		push	bx
-		call	graph_putsa_fx
-		graph_accesspage 0
-		push	_cursor.x
-		push	_cursor.y
-		mov	al, _text_col
-		or	al, _text_fx
-		mov	ah, 0
-		push	ax
-		pushd	[bp+var_6]
-		call	graph_putsa_fx
-		call	@cursor_advance_and_animate$qv
-		cmp	_fast_forward, 0
-		jnz	loc_ACA3
-		cmp	_input_sp, INPUT_NONE
-		jnz	short loc_AD7A
-		push	_text_interval
-		call	frame_delay
-		jmp	loc_ACA3
-; ---------------------------------------------------------------------------
-
-loc_AD7A:
-		mov	ax, _text_interval
-		mov	bx, 3
-		cwd
-		idiv	bx
-		mov	si, ax
-		test	[bp+var_2], 1
-		jnz	short loc_AD8F
-		or	si, si
-		jz	short loc_AD9A
-
-loc_AD8F:
-		or	si, si
-		jnz	short loc_AD94
-		inc	si
-
-loc_AD94:
-		push	si
-		call	frame_delay
-
-loc_AD9A:
-		inc	[bp+var_2]
-		jmp	loc_ACA3
-; ---------------------------------------------------------------------------
-
-loc_ADA0:
-		call	@box_bg_put$qv
-		call	@box_bg_free$qv
-		pop	si
-		leave
-		retn
-sub_AC6E	endp
-mainl_01_TEXT	ends
 
 SCOREDAT_TEXT segment byte public 'CODE' use16
 	@SCOREDAT_LOAD_AND_DECODE$Q6RANK_T procdesc pascal near \
@@ -1619,7 +1482,7 @@ loc_B9DD:
 		call	graph_clear
 		call	graph_show
 		call	@cutscene_script_load$qnxc pascal, [off_EE4E]
-		call	sub_AC6E
+		call	@cutscene_animate$qv
 		call	@cutscene_script_free$qv
 		call	sub_C40D
 		les	bx, _resident
@@ -1638,7 +1501,7 @@ loc_B9DD:
 		push	ds
 		push	offset a@99ed_txt ; "@99ED.TXT"
 		call	@cutscene_script_load$qnxc
-		call	sub_AC6E
+		call	@cutscene_animate$qv
 		call	@cutscene_script_free$qv
 
 loc_BA66:
@@ -3101,7 +2964,8 @@ include th03/snd/se_priority[data].asm
 a0		db  '0',0
 aOver_pi	db 'over.pi',0
 include th03/formats/pi_put_masked[data].asm
-asc_EFC2	db  '  ', 0
+public _CUTSCENE_KANJI
+_CUTSCENE_KANJI	db  '  ', 0
 	even
 public _REGIST_PLAYCHARS
 _REGIST_PLAYCHARS label dword

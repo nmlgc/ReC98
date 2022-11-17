@@ -206,7 +206,7 @@ sub_A0BD	proc near
 		push	word ptr off_E5C0+2
 		push	bx
 		call	@cutscene_script_load$qnxc
-		call	sub_ADFC
+		call	@cutscene_animate$qv
 		call	@cutscene_script_free$qv
 		pop	bp
 		retn
@@ -336,101 +336,10 @@ _main		endp
 	@CUTSCENE_SCRIPT_LOAD$QNXC procdesc pascal near \
 		fn:dword
 	@cutscene_script_free$qv procdesc near
-	@box_bg_allocate_and_snap$qv procdesc pascal near
-	@box_bg_free$qv procdesc pascal near
-	@box_bg_put$qv procdesc pascal near
-	@cursor_advance_and_animate$qv procdesc pascal near
-	@SCRIPT_OP$QUC procdesc pascal near \
-		c:word
+	@cutscene_animate$qv procdesc pascal near
 CUTSCENE_TEXT ends
 
 maine_01_TEXT segment byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_ADFC	proc near
-
-var_6		= dword	ptr -6
-var_1		= byte ptr -1
-
-		enter	6, 0
-		mov	word ptr [bp+var_6+2], ds
-		mov	word ptr [bp+var_6], offset asc_EB84
-		mov	_cursor.x, BOX_LEFT
-		mov	_cursor.y, BOX_TOP
-		mov	_text_interval, 1
-		mov	_text_col, V_WHITE
-		mov	_graph_putsa_fx_func, FX_WEIGHT_BOLD
-		call	@box_bg_allocate_and_snap$qv
-		mov	_fast_forward, 0
-
-loc_AE2D:
-		call	far ptr	_input_reset_sense
-		test	_key_det.hi, high INPUT_CANCEL
-		jz	short loc_AE40
-		mov	_fast_forward, 1
-		jmp	short loc_AE45
-; ---------------------------------------------------------------------------
-
-loc_AE40:
-		mov	_fast_forward, 0
-
-loc_AE45:
-		mov	bx, _script_p
-		mov	al, [bx]
-		mov	[bp+var_1], al
-		inc	_script_p
-		mov	ah, 0
-		mov	bx, ax
-		test	(__ctype + 1)[bx], _IS_CTL
-		jnz	short loc_AE2D
-		cmp	[bp+var_1], ' '
-		jz	short loc_AE2D
-		cmp	[bp+var_1], '\'
-		jnz	short loc_AE82
-		mov	bx, _script_p
-		mov	al, [bx]
-		mov	[bp+var_1], al
-		inc	_script_p
-		call	@script_op$quc pascal, word ptr [bp+var_1]
-		cmp	al, -1
-		jnz	short loc_AE2D
-		jmp	short loc_AEC8
-; ---------------------------------------------------------------------------
-
-loc_AE82:
-		les	bx, [bp+var_6]
-		mov	al, [bp+var_1]
-		mov	es:[bx], al
-		mov	bx, _script_p
-		mov	al, [bx]
-		mov	[bp+var_1], al
-		mov	bx, word ptr [bp+var_6]
-		mov	es:[bx+1], al
-		inc	_script_p
-		graph_showpage 0
-		graph_accesspage 1
-		push	_cursor.x
-		push	_cursor.y
-		mov	al, _text_col
-		mov	ah, 0
-		push	ax
-		push	word ptr [bp+var_6+2]
-		push	bx
-		call	graph_putsa_fx
-		call	@cursor_advance_and_animate$qv
-		jmp	loc_AE2D
-; ---------------------------------------------------------------------------
-
-loc_AEC8:
-		call	@box_bg_put$qv
-		call	@box_bg_free$qv
-		leave
-		retn
-sub_ADFC	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -3418,8 +3327,6 @@ include th04/hardware/bgimage[data].asm
 include th03/formats/cdg[data].asm
 include th03/formats/pi_put_masked[data].asm
 include th03/cutscene/cutscene[data].asm
-asc_EB84	db '  ', 0
-	even
 aSff1_pi	db 'sff1.pi',0
 aStaff		db 'staff',0
 aSff1_cdg	db 'sff1.cdg',0
