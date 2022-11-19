@@ -25,7 +25,18 @@
 		if(left <= (RES_X - GLYPH_HALF_W)) { \
 			for(line = 0; line < GLYPH_H; line++) { \
 				outportb(0xA5, line | 0x20); \
-				glyph[line] = inportb(0xA9) << 8; \
+				\
+				/* \
+				 * While moving halfwidth glyphs to the high byte of a glyph \
+				 * row ensures that any additional boldface dots to the left \
+				 * of the glyph are lost (see the bug below), it's better than \
+				 * storing them in the low byte and spilling such new dots \
+				 * into the high one. In that case, these dots would appear on \
+				 * screen as glitched pixels if the glyph was displayed at a \
+				 * byte-aligned position. (That's exactly what happens in the \
+				 * ASM version of this code, introduced in TH04.) \
+				 */ \
+				glyph[line] = (inportb(0xA9) << 8); \
 			} \
 			fullwidth = 0; \
 		} else { \
@@ -47,6 +58,14 @@
 	tmp = row; \
 	row |= tmp << 1;
 
+// ZUN bug: The left shifts and additions here can generate new dots to the
+// left of [row_in]. Therefore, a bold glyph can (and with FX_WEIGHT_BLACK,
+// actually does) extend into the VRAM byte to the left of the calculated
+// offset. To properly handle this case, you would center [row_in] within a
+// 32-dot variable, which leaves a bit more room for both additional dots left
+// and right of the glyph, as well as [first_bit]-based shifting towards the
+// right. However, ZUN ignored this possibility by having [row_out] be a 16-dot
+// variable as well, effectively cutting off these additional pixels.
 #define apply_weight(row_out, row_in, row_tmp, weight) \
 	row_out = row_in; \
 	switch(weight) { \
