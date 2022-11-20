@@ -9318,92 +9318,8 @@ main_03__TEXT	segment	byte public 'CODE' use16
 	RANDRING2_NEXT16 procdesc pascal near
 	PELLET_RENDER procdesc pascal near \
 		left:word, top:word
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_FB42	proc near
-
-var_B		= byte ptr -0Bh
-var_A		= dword	ptr -0Ah
-var_6		= dword	ptr -6
-@@gaiji		= word ptr -2
-arg_0		= dword	ptr  4
-arg_4		= word ptr  8
-@@tram_y		= word ptr  0Ah
-@@tram_x		= word ptr  0Ch
-
-		enter	0Ch, 0
-		push	si
-		push	di
-		mov	di, [bp+arg_4]
-		mov	[bp+@@gaiji], gb_0_
-		mov	[bp+var_6], 10000000
-		mov	[bp+var_B], 0
-		mov	si, 8
-		jmp	short loc_FB75
-; ---------------------------------------------------------------------------
-
-loc_FB61:
-		mov	ebx, 10
-		mov	eax, [bp+var_6]
-		cdq
-		idiv	ebx
-		mov	[bp+var_6], eax
-		dec	si
-
-loc_FB75:
-		cmp	si, di
-		jg	short loc_FB61
-		xor	si, si
-		jmp	short loc_FBDF
-; ---------------------------------------------------------------------------
-
-loc_FB7D:
-		mov	eax, [bp+arg_0]
-		cdq
-		idiv	[bp+var_6]
-		mov	ebx, 10
-		cdq
-		idiv	ebx
-		mov	[bp+var_A], edx
-		mov	eax, [bp+var_6]
-		cdq
-		idiv	ebx
-		mov	[bp+var_6], eax
-		mov	ax, word ptr [bp+var_A]
-		add	ax, gb_0_
-		mov	[bp+@@gaiji], ax
-		cmp	[bp+var_A], 0
-		jz	short loc_FBB7
-		mov	[bp+var_B], 1
-
-loc_FBB7:
-		lea	ax, [di-1]
-		cmp	ax, si
-		jnz	short loc_FBC2
-		mov	[bp+var_B], 1
-
-loc_FBC2:
-		cmp	[bp+var_B], 0
-		jz	short loc_FBDE
-		mov	ax, si
-		add	ax, ax
-		add	ax, [bp+@@tram_x]
-		call	gaiji_putca pascal, ax, [bp+@@tram_y], [bp+@@gaiji], TX_WHITE
-
-loc_FBDE:
-		inc	si
-
-loc_FBDF:
-		cmp	si, di
-		jl	short loc_FB7D
-		pop	di
-		pop	si
-		leave
-		retn	0Ah
-sub_FB42	endp
+	@OVERLAY_INT_PUT$QIIIL procdesc pascal near \
+		left_and_y:dword, digits:word, val:dword
 
 overlay_loop_func	@overlay_wipe$qv, far, <TX_WHITE>
 
@@ -9425,12 +9341,12 @@ arg_A		= word ptr  0Eh
 		mov	di, [bp+arg_A]
 		mov	si, [bp+arg_0]
 		call	text_putsa pascal, 8, di, [bp+arg_6], TX_WHITE
-		push	16h
+		push	22
 		push	di
 		push	5
 		movsx	eax, si
 		push	eax
-		call	sub_FB42
+		call	@overlay_int_put$qiiil
 		mov	bx, 0Ah
 		mov	ax, si
 		cwd
@@ -9569,28 +9485,22 @@ loc_FCFB:
 
 loc_FD5A:
 		call	text_putsa pascal, (6 shl 16) + 18, ds, offset aU_, TX_WHITE
-		push	0A0012h
+		push	(10 shl 16) or 18
 		push	3
 		movsx	eax, _point_items_collected
 		push	eax
-		call	sub_FB42
+		call	@overlay_int_put$qiiil
 		call	text_putsa pascal, (18 shl 16) + 18, ds, offset aB, TX_WHITE
 		movsx	eax, [bp+var_6]
 		mov	[bp+var_4], eax
 		imul	eax, 0Ah
 		mov	[bp+var_4], eax
-		push	160012h
-		push	5
-		push	eax
-		call	sub_FB42
+		call	@overlay_int_put$qiiil pascal, (22 shl 16) or 18, 5, eax
 		call	text_putsa pascal, (34 shl 16) + 18, ds, offset aBb, TX_WHITE
 		movsx	eax, _point_items_collected
 		imul	eax, [bp+var_4]
 		mov	[bp+var_4], eax
-		push	260012h
-		push	6
-		push	eax
-		call	sub_FB42
+		call	@overlay_int_put$qiiil pascal, (38 shl 16) or 18, 6, eax
 		mov	ebx, 0Ah
 		mov	eax, [bp+var_4]
 		cdq
@@ -9708,28 +9618,22 @@ loc_FEB9:
 		push	si
 		call	sub_FC15
 		call	text_putsa pascal, (6 shl 16) + 18, ds, offset aU_, TX_WHITE
-		push	0A0012h
+		push	(10 shl 16) or 18
 		push	3
 		movsx	eax, _point_items_collected
 		push	eax
-		call	sub_FB42
+		call	@overlay_int_put$qiiil
 		call	text_putsa pascal, (18 shl 16) + 18, ds, offset aB, TX_WHITE
 		movsx	eax, [bp+var_6]
 		mov	[bp+var_4], eax
 		imul	eax, 0Ah
 		mov	[bp+var_4], eax
-		push	160012h
-		push	5
-		push	eax
-		call	sub_FB42
+		call	@overlay_int_put$qiiil pascal, (22 shl 16) or 18, 5, eax
 		call	text_putsa pascal, (34 shl 16) + 18, ds, offset aBb, TX_WHITE
 		movsx	eax, _point_items_collected
 		imul	eax, [bp+var_4]
 		mov	[bp+var_4], eax
-		push	240012h
-		push	7
-		push	eax
-		call	sub_FB42
+		call	@overlay_int_put$qiiil pascal, (36 shl 16) or 18, 7, eax
 		mov	ebx, 0Ah
 		mov	eax, [bp+var_4]
 		cdq
