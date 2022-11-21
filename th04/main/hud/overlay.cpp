@@ -65,7 +65,6 @@ static const ushiftjis_kanji_amount_t POPUP_STRING_MAX_LEN = 8;
 extern const gaiji_th04_t* POPUP_STRINGS[];
 
 extern unsigned char dissolve_sprite; // = 0
-extern const shiftjis_t* PLAYFIELD_BLANK_ROW;
 
 extern int stage_title_len;
 extern int stage_bgm_title_len;
@@ -119,6 +118,20 @@ const tram_y_t STAGE_TITLE_TRAM_CENTER_Y = vram_y_to_tram(STAGE_TITLE_CENTER_Y);
 const tram_y_t BGM_TRAM_Y = vram_y_to_tram(BGM_CENTER_Y);
 const tram_x_t BGM_TRAM_RIGHT = (PLAYFIELD_TRAM_RIGHT - 1);
 // -----------
+
+// Overlay fills
+// -------------
+
+void near overlay_wipe(void)
+{
+	overlay_fill(TX_WHITE);
+}
+
+void near overlay_black(void)
+{
+	overlay_fill(TX_BLACK | TX_REVERSE);
+}
+// -------------
 
 // Stage transitions
 // -----------------
@@ -409,7 +422,7 @@ void pascal near overlay_boss_bgm_update_and_render(void)
 const unsigned char POPUP_DURATION = 128;
 
 inline void line_wipe(tram_y_t y) {
-	text_putsa(PLAYFIELD_TRAM_LEFT, y, PLAYFIELD_BLANK_ROW, TX_WHITE);
+	overlay_line_fill(y, TX_WHITE);
 }
 
 inline void near popup_put_points(const unsigned long &points) {

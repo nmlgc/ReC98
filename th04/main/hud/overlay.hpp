@@ -1,6 +1,8 @@
 /// TRAM text overlaid on top of the playfield
 /// -------------------------------------------
 
+#include "th02/main/hud/overlay.hpp"
+
 extern nearfunc_t_near overlay1; // Rendered first
 extern nearfunc_t_near overlay2; // Rendered second
 

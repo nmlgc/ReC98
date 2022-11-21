@@ -6935,12 +6935,11 @@ loc_118CD:
 		pop	bp
 		retn
 @midboss5_render$qv	endp
-
-overlay_loop_func	@overlay_wipe$qv, near, <TX_WHITE>
-overlay_loop_func	@overlay_black$qv, near, <TX_BLACK + TX_REVERSE>
 main_0_TEXT	ends
 
 HUD_OVRL_TEXT	segment	byte public 'CODE' use16
+	@overlay_wipe$qv procdesc near
+	@overlay_black$qv procdesc near
 	@OVERLAY_STAGE_ENTER_UPDATE_AND_R$QV procdesc near
 	@OVERLAY_STAGE_LEAVE_UPDATE_AND_R$QV procdesc near
 	@overlay_titles_invalidate$qv procdesc near

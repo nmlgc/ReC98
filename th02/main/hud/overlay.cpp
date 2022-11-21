@@ -4,6 +4,7 @@
 #include "pc98.h"
 #include "master.hpp"
 #include "th02/gaiji/gaiji.h"
+#include "th02/main/playfld.hpp"
 #include "th02/main/hud/overlay.hpp"
 
 void pascal near overlay_int_put(
@@ -37,4 +38,9 @@ void pascal near overlay_int_put(
 			gaiji_putca((left + (i * GAIJI_TRAM_W)), y, gaiji, TX_WHITE);
 		}
 	}
+}
+
+void overlay_wipe(void)
+{
+	overlay_fill(TX_WHITE);
 }

@@ -9320,8 +9320,7 @@ main_03__TEXT	segment	byte public 'CODE' use16
 		left:word, top:word
 	@OVERLAY_INT_PUT$QIIIL procdesc pascal near \
 		left_and_y:dword, digits:word, val:dword
-
-overlay_loop_func	@overlay_wipe$qv, far, <TX_WHITE>
+	extern @overlay_wipe$qv:far
 
 ; =============== S U B	R O U T	I N E =======================================
 
