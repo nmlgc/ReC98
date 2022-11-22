@@ -1,15 +1,17 @@
-/* ReC98 / TH05
- * ------------
- * Update code for Part 1 of the Stage 4 boss fight, against both Mai and Yuki
- */
+/// Stage 4 Boss - Mai & Yuki (both)
+/// --------------------------------
+
+#pragma option -zCB4_UPDATE_TEXT -zPmain_03
 
 #include "platform.h"
 #include "pc98.h"
 #include "th01/math/area.hpp"
 #include "th01/math/subpixel.hpp"
+extern "C" {
 #include "th04/math/vector.hpp"
 #include "th04/math/motion.hpp"
 #include "th04/math/randring.hpp"
+}
 #include "th05/sprites/main_pat.h"
 #include "th04/main/playfld.hpp"
 #include "th05/main/boss/boss.hpp"
@@ -20,6 +22,9 @@
 
 extern y_direction_t mai_flystep_random_next_y_direction;
 extern y_direction_t yuki_flystep_random_next_y_direction;
+
+// Game logic
+// ----------
 
 // See boss_flystep_random().
 bool pascal near flystep_random(
@@ -47,3 +52,4 @@ bool pascal near mai_yuki_flystep_random(int frame)
 	/*  */ flystep_random(mai,  frame, mai_flystep_random_next_y_direction);
 	return flystep_random(yuki, frame, yuki_flystep_random_next_y_direction);
 }
+// ----------

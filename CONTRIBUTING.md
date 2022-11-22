@@ -288,8 +288,8 @@ These cases should gradually be removed as development goes along, though.
   code, not to replace it with an overly nested, "enterprise-y" class
   hierarchy.
 
-* Use `#pragma option -zC` and `#pragma option -zP` to rename code segments
-  and their groups, not `#pragma codeseg`. Might look uglier, but has the
+* Prefer `#pragma option -zC` and `#pragma option -zP` for renaming code
+  segments and groups. It might look uglier than `#pragma codeseg`, but has the
   advantage of not generating an empty segment with the default name and the
   default padding. This is particularly relevant [if the `-WX` option is used
   to enforce word-aligned code segments][3]: That empty default segment would
@@ -299,6 +299,11 @@ These cases should gradually be removed as development goes along, though.
   * These options can only be used "at the beginning" of a translation unit –
     before the first non-preprocessor and non-comment C language token. Any
     other `#pragma option` settings should also be put there.
+
+  * `#pragma codeseg` will still be necessary if a translation unit emits code
+    into more than one segment. In that case, use `#pragma option -zC` and
+    `#pragma option -zP` for the first segment and group, and `#pragma codeseg`
+    for the second and later ones.
 
 ## Decompilation
 

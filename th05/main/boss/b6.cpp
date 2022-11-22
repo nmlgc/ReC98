@@ -1,7 +1,7 @@
-#pragma option -zPmain_03
-
 /// Stage 6 Boss - Shinki
 /// ---------------------
+
+#pragma option -zCB6_UPDATE_TEXT -zPmain_03
 
 #include "platform.h"
 #include "decomp.hpp"
@@ -88,6 +88,9 @@ inline subpixel_t shinki_wing_random_y(void) {
 extern pattern_oneshot_func_t phase_2_3_pattern;
 extern pattern_loop_func_t wing_pattern;
 // -----
+
+// Game logic
+// ----------
 
 #include "th05/main/bullet/b6ball.cpp"
 
@@ -1074,3 +1077,4 @@ void pascal shinki_update(void)
 
 	#undef phase_relative
 }
+// ----------

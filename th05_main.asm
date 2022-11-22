@@ -39,7 +39,7 @@ include th05/main/enemy/enemy.inc
 
 main_01 group SLOWDOWN_TEXT, m_TEXT, DEMO_TEXT, EMS_TEXT, ma_TEXT, CFG_LRES_TEXT, mai_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT, main_TEXT, main__TEXT, PLAYFLD_TEXT, main_0_TEXT, HUD_OVRL_TEXT, DIALOG_TEXT, PLAYER_P_TEXT, main_01_TEXT
 g_SHARED group SHARED, SHARED_
-main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, VECTOR2N_TEXT, SPARK_A_TEXT, BULLET_P_TEXT, GRCG_3_TEXT, PLAYER_A_TEXT, BULLET_A_TEXT, main_032_TEXT, main_033_TEXT, MIDBOSS_TEXT, HUD_HP_TEXT, MB_DFT_TEXT, LASER_SC_TEXT, CHEETO_U_TEXT, IT_SPL_U_TEXT, BULLET_U_TEXT, MIDBOSS1_TEXT, main_034_TEXT, main_035_TEXT, BOSS_6_TEXT, BOSS_X_TEXT, main_036_TEXT, BOSS_TEXT
+main_03 group SCROLLY3_TEXT, MOTION_3_TEXT, main_031_TEXT, VECTOR2N_TEXT, SPARK_A_TEXT, BULLET_P_TEXT, GRCG_3_TEXT, PLAYER_A_TEXT, BULLET_A_TEXT, main_032_TEXT, main_033_TEXT, MIDBOSS_TEXT, HUD_HP_TEXT, MB_DFT_TEXT, LASER_SC_TEXT, CHEETO_U_TEXT, IT_SPL_U_TEXT, BULLET_U_TEXT, MIDBOSS1_TEXT, B4_UPDATE_TEXT, main_035_TEXT, B6_UPDATE_TEXT, BX_UPDATE_TEXT, main_036_TEXT, BOSS_TEXT
 
 ; ===========================================================================
 
@@ -10310,7 +10310,7 @@ BULLET_U_TEXT	ends
 MIDBOSS1_TEXT	segment	byte public 'CODE' use16
 MIDBOSS1_TEXT	ends
 
-main_034_TEXT	segment	byte public 'CODE' use16
+B4_UPDATE_TEXT	segment	byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14056,11 +14056,12 @@ loc_1A45A:
 		pop	bp
 		retn
 mai_yuki_1A42B	endp
-main_034_TEXT	ends
+
+	@MAI_YUKI_FLYSTEP_RANDOM$QI procdesc pascal near \
+		frame:word
+B4_UPDATE_TEXT	ends
 
 main_035_TEXT	segment	byte public 'CODE' use16
-	MAI_YUKI_FLYSTEP_RANDOM procdesc pascal near \
-		frame:word
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -14975,7 +14976,7 @@ loc_1AD20:
 		mov	[bp+var_2], ax
 
 loc_1AD29:
-		call	mai_yuki_flystep_random pascal, [bp+var_2]
+		call	@mai_yuki_flystep_random$qi pascal, [bp+var_2]
 		or	al, al
 		jz	loc_1ADCF
 		mov	_boss_phase_frame, 0
@@ -18884,14 +18885,14 @@ off_1D524	dw offset loc_1D29C
 		dw offset loc_1D4DD
 main_035_TEXT	ends
 
-BOSS_6_TEXT	segment	byte public 'CODE' use16
+B6_UPDATE_TEXT	segment	byte public 'CODE' use16
 	@pattern_curved_rings$qv procdesc near
 	@pattern_dualspeed_rings$qv procdesc near
 	@pattern_random_directional_and_k$qv procdesc near
 	@pattern_dense_blue_stacks$qv procdesc near
-BOSS_6_TEXT	ends
+B6_UPDATE_TEXT	ends
 
-BOSS_X_TEXT	segment	byte public 'CODE' use16
+BX_UPDATE_TEXT	segment	byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -19272,7 +19273,7 @@ loc_1E864:
 	@FIREWAVES_ADD$QIUC procdesc pascal near \
 		amp:word, is_right:byte
 	@firewaves_update$qv procdesc pascal near
-BOSS_X_TEXT	ends
+BX_UPDATE_TEXT	ends
 
 main_036_TEXT	segment	byte public 'CODE' use16
 

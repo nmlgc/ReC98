@@ -1,6 +1,8 @@
 /// Stage 4 Boss - Marisa
 /// ---------------------
 
+#pragma option -zCB4M_UPDATE_TEXT -zPmain_03
+
 #include "platform.h"
 #include "pc98.h"
 #include "th01/math/subpixel.hpp"
@@ -9,11 +11,14 @@
 #include "th04/main/phase.hpp"
 #include "th04/main/boss/boss.hpp"
 
-/// State
-/// -----
+// State
+// -----
 
 #define flystep_pointreflected_frame boss_statebyte[13]
-/// -----
+// -----
+
+// Game logic
+// ----------
 
 // On [flystep_pointreflected_frame] 0, this function sets up [boss] movement
 // towards the point reflection of Marisa's position across a fixed position
@@ -55,3 +60,4 @@ bool pascal near marisa_flystep_pointreflected(int duration)
 	boss.pos.update_seg3();
 	return false;
 }
+// ----------
