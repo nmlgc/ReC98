@@ -66,6 +66,9 @@ inline int midboss_hittest_shots_invincible(
 // [midboss.phase_frame], incrementing it on every call.
 void near midboss_defeat_update(void);
 
+// Renders the default PHASE_EXPLODE_BIG animation.
+void near midboss_defeat_render(void);
+
 #define MIDBOSS_DEC(stage) \
 	void pascal  far midboss##stage##_update(void); \
 	void pascal near midboss##stage##_render(void);

@@ -1718,7 +1718,7 @@ loc_C836:
 loc_C877:
 		cmp	_midboss_phase, PHASE_EXPLODE_BIG
 		jnz	short loc_C881
-		call	main_01:sub_11A9A
+		call	@midboss_defeat_render$qv
 
 loc_C881:
 		pop	di
@@ -1756,7 +1756,7 @@ public @MIDBOSS3_RENDER$QV
 		mov	[bp+@@y], ax
 		cmp	_midboss_phase, PHASE_EXPLODE_BIG
 		jnz	short loc_C8D2
-		call	main_01:sub_11A9A
+		call	@midboss_defeat_render$qv
 		jmp	short loc_C946
 ; ---------------------------------------------------------------------------
 
@@ -2115,7 +2115,7 @@ loc_CE6E:
 loc_CE85:
 		cmp	_midboss_phase, PHASE_EXPLODE_BIG
 		jnz	short loc_CE8F
-		call	main_01:sub_11A9A
+		call	@midboss_defeat_render$qv
 
 loc_CE8F:
 		pop	di
@@ -9385,8 +9385,8 @@ loc_11A90:
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_11A9A	proc near
+public @midboss_defeat_render$qv
+@midboss_defeat_render$qv	proc near
 
 @@length		= word ptr -4
 var_2		= word ptr -2
@@ -9462,7 +9462,7 @@ loc_11B3A:
 		pop	si
 		leave
 		retn
-sub_11A9A	endp
+@midboss_defeat_render$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================

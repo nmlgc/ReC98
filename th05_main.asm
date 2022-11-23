@@ -3880,8 +3880,8 @@ include th04/main/item/render.asm
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_F7EC	proc near
+public @midboss_defeat_render$qv
+@midboss_defeat_render$qv	proc near
 
 var_4		= word ptr -4
 var_2		= word ptr -2
@@ -3957,7 +3957,7 @@ loc_F88C:
 		pop	si
 		leave
 		retn
-sub_F7EC	endp
+@midboss_defeat_render$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -5107,7 +5107,7 @@ loc_108C2:
 loc_108F6:
 		cmp	_midboss_phase, PHASE_EXPLODE_BIG
 		jnz	short loc_10900
-		call	sub_F7EC
+		call	@midboss_defeat_render$qv
 
 loc_10900:
 		pop	di
@@ -5266,7 +5266,7 @@ loc_10A05:
 loc_10A1C:
 		cmp	_midboss_phase, PHASE_EXPLODE_BIG
 		jnz	short loc_10A26
-		call	sub_F7EC
+		call	@midboss_defeat_render$qv
 
 loc_10A26:
 		pop	di
@@ -5395,7 +5395,7 @@ loc_10AF8:
 loc_10B0F:
 		cmp	_midboss_phase, PHASE_EXPLODE_BIG
 		jnz	short loc_10B19
-		call	sub_F7EC
+		call	@midboss_defeat_render$qv
 
 loc_10B19:
 		pop	di
@@ -5847,7 +5847,7 @@ loc_10E8D:
 loc_10EA4:
 		cmp	_midboss_phase, PHASE_EXPLODE_BIG
 		jnz	short loc_10EAE
-		call	sub_F7EC
+		call	@midboss_defeat_render$qv
 
 loc_10EAE:
 		pop	di
@@ -6632,7 +6632,7 @@ loc_1166D:
 loc_11687:
 		cmp	_midboss_phase, PHASE_EXPLODE_BIG
 		jnz	short loc_11691
-		call	sub_F7EC
+		call	@midboss_defeat_render$qv
 
 loc_11691:
 		pop	di
@@ -6927,7 +6927,7 @@ loc_118A9:
 loc_118C3:
 		cmp	_midboss_phase, PHASE_EXPLODE_BIG
 		jnz	short loc_118CD
-		call	sub_F7EC
+		call	@midboss_defeat_render$qv
 
 loc_118CD:
 		pop	di
