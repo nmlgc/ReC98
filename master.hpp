@@ -708,5 +708,16 @@ void MASTER_RET vsync_end(void);
 			));
 		}
 	};
+
+	#ifdef PC98_H
+		// Generates a super_roll_put_1plane [plane_put] constant for blitting
+		// the sprite in the single given color.
+		inline uint16_t super_plane(uint8_t col, bool erase = false) {
+			return (
+				(erase ? PLANE_ERASE : (0xFF00 | GC_RMW)) +
+				((COLOR_COUNT - 1) - col)
+			);
+		}
+	#endif
 #endif
 /// ------------------

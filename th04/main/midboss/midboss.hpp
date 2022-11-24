@@ -61,6 +61,20 @@ inline int midboss_hittest_shots_invincible(
 	return midboss_hittest_shots_damage(radius_x, radius_y, 10);
 }
 
+// ZUN quirk: This is the place where [damage_this_frame] is reset, but this
+// function is typically not called during PHASE_EXPLODE_BIG. As a result, the
+// nonzero [damage_this_frame] value that caused the midboss to be defeated in
+// the first place is carried over to the next midboss, causing it to flash
+// white during the first frame that calls this function.
+#define midboss_put_generic(left, top, patnum) { \
+	if(midboss.damage_this_frame == 0) { \
+		super_roll_put(left, top, patnum); \
+	} else { \
+		super_roll_put_1plane(left, top, patnum, 0, super_plane(V_WHITE)); \
+		midboss.damage_this_frame = 0; \
+	} \
+}
+
 // Updates the defeat animation during PHASE_EXPLODE_BIG, and resets the boss
 // during any other phase. TH04's version also takes ownership of
 // [midboss.phase_frame], incrementing it on every call.

@@ -6878,63 +6878,6 @@ loc_11862:
 		leave
 		retn
 @exalice_fg_render$qv	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-public @MIDBOSS5_RENDER$QV
-@midboss5_render$qv	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		cmp	_midboss_phase, PHASE_EXPLODE_BIG
-		jnb	short loc_118C3
-		cmp	_midboss_pos.cur.y, 0
-		jl	short loc_118CD
-		mov	ax, _midboss_pos.cur.x
-		sar	ax, 4
-		mov	si, ax
-		mov	ax, _midboss_pos.cur.y
-		add	ax, (-16 shl 4)
-		call	scroll_subpixel_y_to_vram_seg1 pascal, ax
-		mov	di, ax
-		cmp	_midboss_damage_this_frame, 0
-		jnz	short loc_118A9
-		push	si
-		push	ax
-		mov	al, _midboss_sprite
-		mov	ah, 0
-		push	ax
-		call	super_roll_put
-		jmp	short loc_118CD
-; ---------------------------------------------------------------------------
-
-loc_118A9:
-		push	si
-		push	di
-		mov	al, _midboss_sprite
-		mov	ah, 0
-		push	ax
-		pushd	PLANE_PUT or GC_BRGI
-		call	super_roll_put_1plane
-		mov	_midboss_damage_this_frame, 0
-		jmp	short loc_118CD
-; ---------------------------------------------------------------------------
-
-loc_118C3:
-		cmp	_midboss_phase, PHASE_EXPLODE_BIG
-		jnz	short loc_118CD
-		call	@midboss_defeat_render$qv
-
-loc_118CD:
-		pop	di
-		pop	si
-		pop	bp
-		retn
-@midboss5_render$qv	endp
 main_0_TEXT	ends
 
 HUD_OVRL_TEXT	segment	byte public 'CODE' use16

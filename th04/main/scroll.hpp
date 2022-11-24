@@ -17,7 +17,7 @@ extern bool scroll_active;
 
 // Transforms [y] to its corresponding VRAM line, adding the current
 // [scroll_line] or 0 if scrolling is disabled.
-vram_y_t pascal near scroll_subpixel_y_to_vram_seg1(subpixel_t y);
+extern "C" vram_y_t pascal near scroll_subpixel_y_to_vram_seg1(subpixel_t y);
 vram_y_t pascal near scroll_subpixel_y_to_vram_seg3(subpixel_t y);
 // Like the one above, but always adds [scroll_line], even if scrolling is
 // disabled.

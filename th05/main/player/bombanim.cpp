@@ -76,7 +76,7 @@ extern union {
 		star->topleft.screen_y.to_pixel_slow(), \
 		PAT_PLAYCHAR_BOMB, \
 		0, \
-		(PLANE_ERASE | ((COLOR_COUNT - 1) - col)) \
+		super_plane(col, true) \
 	);
 
 void pascal near reimu_stars_update_and_render(void)
