@@ -797,7 +797,21 @@ script_ret_t pascal near script_op(unsigned char c)
 
 			graph_accesspage(1);
 			#if (GAME == 3)
+				// Might look like a ZUN bug, but actually works around the
+				// master.lib bug mentioned in the comment of this function,
+				// which ZUN only fixed for TH04 and TH05. In the original
+				// binary, the ASCII→digit conversion inside
+				// str_consume_up_to_3_digits() is done by ADDing a negative
+				// number, which causes the x86 carry flag to always be set
+				// when we get here and haven't fallen back onto the default
+				// value. Therefore, the bug will always add 1 onto the gaiji
+				// ID, which can be worked around by subtracting 1 from ID
+				// before passing it as a parameter. Once graph_gaiji_putc()
+				// returns, the carry flag happens to be cleared, which is
+				// why the subtraction is not necessary for the call below to
+				// display the intended gaiji.
 				graph_gaiji_putc(cursor.x, cursor.y, (p1 - 1), text_col);
+
 				graph_accesspage(0);
 			#endif
 			// [text_fx] is also ignored here...

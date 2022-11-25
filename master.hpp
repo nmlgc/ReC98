@@ -200,9 +200,17 @@ int MASTER_RET graph_copy_page(int to_page);
 void MASTER_RET graph_scrollup(unsigned line);
 
 #if defined(PC98_H) && defined(__cplusplus)
-	void MASTER_RET graph_gaiji_putc(int x, int y, int c, int color);
+	// master.lib bug: In all game-specific versions before TH04, these
+	// functions accidentally add the x86 carry flag on top of [c].
+	void MASTER_RET graph_gaiji_putc(
+		screen_x_t left, vram_y_t top, int c, int col
+	);
 	void MASTER_RET graph_gaiji_puts(
-		int x, int y, int step, const char MASTER_PTR *str, int color
+		screen_x_t left,
+		vram_y_t top,
+		pixel_t step,
+		const char MASTER_PTR *str,
+		int col
 	);
 
 	// Clipping
