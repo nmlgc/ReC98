@@ -41,7 +41,12 @@ There are a number reasons why achieving moddability via full decompilation seem
 * These games stopped being sold in 2002, ZUN has confirmed on multiple occasions to have lost all the data of the "earlier games" <sup>[citation needed]</sup>, and PC-98 hardware is long obsolete. In short, these games are as abandoned as they can possibly be, and are unlikely to ever turn a profit again.
 
 #### Is this even viable?
-Definitely. During the development of the static English patches for these games, we identified two main libraries used across all 5 games, and even found their source code. These are:
+
+Ever since crowdfunding has brought a continuous stream of support, progress has been steady. Decompilation of TH01 fully completed in August 2022, and the remaining games are only a matter of time.
+
+Over the years, this project led to a deep understanding of the original compilers and PC-98 hardware, to the point where the decompilation itself has become pretty mechanical. To ensure that this project remains both worthwhile to support and interesting to work on, its focus has shifted more toward meticulous documentation and review of ZUN's original code. The [project blog] details all the findings in a more generally readable way and has arguably become the main attraction, with the source code reconstruction itself almost turning into a byproduct of the underlying deep research into these games.
+
+The project started out pretty viable as well. During the development of the static English patches for these games, we identified two main libraries used across all 5 games, and even found their source code. These are:
 
 * [master.lib](http://www.koizuka.jp/~koizuka/master.lib/), a 16-bit x86 assembly library providing an abstraction layer for all components of a PC-98 DOS system
 * as well as the Borland C/C++ runtime library, version 4.0.
@@ -50,9 +55,7 @@ Definitely. During the development of the static English patches for these games
 
 master.lib and the C/C++ runtime alone make up a sizable amount of the code in all the executables. In TH05, for example, they amount to 74% of all code in `OP.EXE`, and 40% of all code in `MAIN.EXE`. That's already quite a lot of code we do not have to deal with. Identifying the rest of the code shared across the games will further reduce the workload to a more acceptable amount.
 
-With DOSBox-X and [the Debug edition of Neko Project II](https://github.com/nmlgc/np2debug), we now also have two open-source PC-9821 emulators capable of running the games. This will greatly help in understanding all hardware-specific code.
-
-And while this project has made decent progress so far, completing the decompilation of even just a single game will still take a long time. Any help will be appreciated! If you are interested, check [`CONTRIBUTING.md`](CONTRIBUTING.md) for the general contribution guidelines.
+With DOSBox-X and [the Debug edition of Neko Project II](https://github.com/nmlgc/np2debug), we also have two open-source PC-9821 emulators capable of running the games. These have helped to answer most hardware-related questions, together with old books about PC-98 development and occasional tests on real hardware.
 
 ## Dumped executables
 * TH01: `zunsoft.com`, `op.exe`, `reiiden.exe`, `fuuin.exe`
@@ -213,11 +216,14 @@ The final executables will be put into `bin\th0?`, using the same names as the o
 
   ([Source](http://oshow.txt-nifty.com/blog/2008/11/loader-error-00.html))
 
+## Contribution guidelines
+
+See [`CONTRIBUTING.md`](CONTRIBUTING.md).
+
 ----
 
 [indistinguishable]: https://github.com/nmlgc/mzdiff
-[can't be decompiled]: Research/Borland%20C++%20decompilation.md#limits-of-decompilability
-[conventional memory]: https://en.wikipedia.org/wiki/Conventional_memory
+[project blog]: https://rec98.nmlgc.net/blog
 [converter for hardcoded sprites]: https://github.com/nmlgc/ReC98/issues/8
 [Borland/Embarcadero's own C++ 7.30]: https://www.embarcadero.com/de/free-tools/ccompiler/free-download
 
