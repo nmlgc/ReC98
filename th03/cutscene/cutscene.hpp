@@ -1,3 +1,13 @@
+extern "C" {
+#if (GAME == 5)
+	#include "th05/hardware/input.h"
+#elif (GAME == 4)
+	#include "th04/hardware/input.h"
+#else
+	#include "th03/hardware/input.h"
+#endif
+}
+
 static const shiftjis_ank_amount_t NAME_LEN = 6;
 static const shiftjis_kanji_amount_t NAME_KANJI_LEN = (
 	NAME_LEN / sizeof(shiftjis_kanji_t)
@@ -26,3 +36,27 @@ extern bool fast_forward;
 extern screen_point_t cursor;
 
 extern int text_interval;
+
+// ZUN quirk: The cutscene system features both
+// 1) a top-level input sensing mechanism (for updating the fast-forward flag),
+//    and
+// 2) nested, blocking input loops (during all the interruptable wait commands)
+//    which are skipped based on the fast-forward flag.
+// With this combination, the accurate detection of held keys matters: Since
+// this function is only called once on every iteration of the loop before
+// evaluating a command, a momentary key release scancode from 1) can cause 2)
+// to be entered even if the fast-forward key is still being held. Only TH03's
+// and TH05's input functions defend against this possibility – at the cost of
+// 614.4 µs for every call to them. TH04's cutscene system does suffer from the
+// detection issue, but runs significantly faster in exchange, as it's not
+// slowed down on every iteration of the script interpreter loop, i.e., between
+// every script command or 2-byte text pair.
+inline void cutscene_input_sense(void) {
+	#if (GAME == 5)
+		input_reset_sense_held();
+	#elif (GAME == 4)
+		input_reset_sense();
+	#elif (GAME == 3)
+		input_mode_interface();
+	#endif
+}
