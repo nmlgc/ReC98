@@ -11,7 +11,7 @@ extern "C" {
 void snd_delay_until_measure(int measure)
 {
 	if(!snd_active) {
-		frame_delay(100);
+		frame_delay(SND_FALLBACK_DELAY_FRAMES);
 		return;
 	}
 	do {

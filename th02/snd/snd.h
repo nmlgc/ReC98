@@ -56,6 +56,18 @@ int16_t DEFCONV snd_kaja_interrupt(int16_t ax);
 void snd_delay_until_volume(uint8_t volume);
 
 #if (GAME == 2)
+	#define SND_FALLBACK_DELAY_FRAMES 100
+
+	// Blocks until the active sound driver has played back the current BGM for
+	// the *total* given number of full measures. Does *not* correspond to a
+	// specific measure of the song; a [measure] within the looping section
+	// would still only be hit once, during the first loop.
+	// If no sound driver is active, the delay is replaced with
+	// frame_delay([SND_FALLBACK_DELAY_FRAMES]).
+	// ZUN bug: Neither PMD nor MMD reset the internal measure when stopping
+	// playback. If no BGM is playing and the previous one hasn't been played
+	// back for at least the given number of [measures], the function will
+	// deadlock.
 	void snd_delay_until_measure(int measure);
 #endif
 

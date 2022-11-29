@@ -717,6 +717,8 @@ script_ret_t pascal near script_op(unsigned char c)
 			script_number_param_read_first(p1);
 			script_number_param_read_second(p2);
 			if(!fast_forward) {
+				// ZUN bug: Does not prevent the potential deadlock issue with
+				// this function.
 				#if (GAME >= 4)
 					snd_delay_until_measure(p1, p2);
 				#else
