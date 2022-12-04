@@ -26,8 +26,8 @@ extern "C" {
 #include "th04/main/rank.hpp"
 #include "th04/main/playfld.hpp"
 #include "th04/main/bullet/bullet.hpp"
-#include "th04/main/gather.hpp"
 }
+#include "th04/main/gather.hpp"
 #include "th04/main/phase.hpp"
 #include "th04/main/hud/hud.hpp"
 #include "th04/main/tile/bb.hpp"

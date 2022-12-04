@@ -13,6 +13,7 @@ extern "C" {
 #include "th04/main/playfld.hpp"
 #include "th04/main/drawp.hpp"
 #include "th04/main/bullet/bullet.hpp"
+}
 #include "th04/main/gather.hpp"
 
 void pascal near set_bullet_template_to_gather_template(gather_t near &gather)
@@ -107,6 +108,4 @@ void gather_render(void)
 			gather_point_render(_AX, _DX);
 		}
 	}
-}
-
 }

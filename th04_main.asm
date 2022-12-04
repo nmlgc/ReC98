@@ -380,7 +380,7 @@ loc_ABBA:
 		call	_midboss_update
 		call	_boss_update
 		call	items_update
-		call	_gather_update
+		call	@gather_update$qv
 		call	_stage_render
 		call	main_01:sub_1020A
 		call	_boss_fg_render
@@ -389,7 +389,7 @@ loc_ABBA:
 		call	@shots_render$qv
 		call	main_01:player_render
 		call	@grcg_setmode_rmw$qv
-		call	_gather_render
+		call	@gather_render$qv
 		call	_sparks_render
 		call	main_01:items_render
 		call	main_01:pointnums_render
@@ -11994,8 +11994,8 @@ GATHER_TEXT	segment	byte public 'CODE' use16
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
 include th04/main/gather_add.asm
-	extern _gather_update:proc
-	extern _gather_render:proc
+	extern @gather_update$qv:proc
+	extern @gather_render$qv:proc
 GATHER_TEXT	ends
 
 SCROLLY3_TEXT	segment	word public 'CODE' use16
@@ -12590,7 +12590,7 @@ loc_14552:
 		mov	_gather_template.GT_center.y, ax
 		mov	ax, _midboss_phase_frame
 		add	ax, -64
-		call	gather_add_only_3stack pascal, ax, large (V_WHITE shl 16) or 9
+		call	@gather_add_only_3stack$qiii pascal, ax, large (V_WHITE shl 16) or 9
 		mov	ax, _midboss_phase_frame
 		cmp	ax, 64
 		jz	short loc_14584
@@ -13473,7 +13473,7 @@ loc_14DBE:
 		mov	_gather_template.GT_center.y, ax
 		mov	ax, _midboss_phase_frame
 		add	ax, -48
-		call	gather_add_only_3stack pascal, ax, large (V_WHITE shl 16) or 7
+		call	@gather_add_only_3stack$qiii pascal, ax, large (V_WHITE shl 16) or 7
 		mov	ax, _midboss_phase_frame
 		cmp	ax, 1
 		jz	short loc_14E20
@@ -15714,7 +15714,7 @@ loc_161FA:
 		mov	_gather_template.GT_angle_delta, 3
 
 loc_1621C:
-		call	_gather_add_only	; jumptable 000161F6 case 5
+		call	@gather_add_only$qv	; jumptable 000161F6 case 5
 		jmp	short loc_1626B	; default
 ; ---------------------------------------------------------------------------
 
@@ -15917,7 +15917,7 @@ loc_163D8:
 		mov	_gather_template.GT_radius, (256 shl 4)
 
 loc_163FD:
-		call	_gather_add_only	; jumptable 000163A9 cases 44,52,60,68,76,84
+		call	@gather_add_only$qv	; jumptable 000163A9 cases 44,52,60,68,76,84
 		jmp	short loc_16437	; default
 ; ---------------------------------------------------------------------------
 
@@ -16557,7 +16557,7 @@ loc_16A69:
 		mov	_gather_template.GT_col, 2
 
 loc_16A6E:
-		call	_gather_add_only
+		call	@gather_add_only$qv
 
 loc_16A71:
 		cmp	_boss_phase_frame, 16
@@ -17071,7 +17071,7 @@ loc_16EC3:
 		mov	_gather_template.GT_radius, (256 shl 4)
 
 loc_16EE5:
-		call	_gather_add_only	; jumptable 00016EBF case 36
+		call	@gather_add_only$qv	; jumptable 00016EBF case 36
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -19002,9 +19002,9 @@ mugetsu_1802F	proc near
 		push	bp
 		mov	bp, sp
 		mov	_gather_template.GT_angle_delta, -2
-		call	_gather_add_only
+		call	@gather_add_only$qv
 		mov	_gather_template.GT_angle_delta, 2
-		call	_gather_add_only
+		call	@gather_add_only$qv
 		pop	bp
 		retn
 mugetsu_1802F	endp
@@ -21099,7 +21099,7 @@ loc_191DC:
 loc_191F1:
 		test	byte ptr _boss_phase_frame, 7
 		jnz	short loc_191FB
-		call	_gather_add_only
+		call	@gather_add_only$qv
 
 loc_191FB:
 		cmp	_boss_phase_frame, 320
@@ -21532,7 +21532,7 @@ var_2		= word ptr -2
 		enter	4, 0
 		mov	ax, _boss_phase_frame
 		add	ax, -70
-		call	gather_add_only_3stack pascal, ax, large (7 shl 16) or 6
+		call	@gather_add_only_3stack$qiii pascal, ax, large (7 shl 16) or 6
 		cmp	_boss_phase_frame, 16
 		jl	short loc_19678
 		cmp	_boss_phase_frame, 16
@@ -21956,7 +21956,7 @@ loc_199AD:
 		mov	_gather_template.GT_center.x, ax
 		mov	ax, _bullet_template.BT_origin.y
 		mov	_gather_template.GT_center.y, ax
-		call	_gather_add_only
+		call	@gather_add_only$qv
 
 loc_199BC:
 		cmp	_boss_phase_frame, 112
@@ -22106,7 +22106,7 @@ loc_19B35:
 loc_19B4C:
 		test	byte ptr _boss_phase_frame, 7
 		jnz	short loc_19B56
-		call	_gather_add_only
+		call	@gather_add_only$qv
 
 loc_19B56:
 		cmp	_boss_phase_frame, 352
@@ -22289,7 +22289,7 @@ loc_19D15:
 		mov	_gather_template.GT_center.x, ax
 		mov	ax, _bullet_template.BT_origin.y
 		mov	_gather_template.GT_center.y, ax
-		call	_gather_add_only
+		call	@gather_add_only$qv
 
 loc_19D2B:
 		cmp	_boss_phase_frame, 112
@@ -23102,19 +23102,19 @@ loc_1A92A:
 		mov	_gather_template.GT_angle_delta, -2
 
 loc_1A959:
-		call	_gather_add_only	; jumptable 0001A926 case 20
+		call	@gather_add_only$qv	; jumptable 0001A926 case 20
 		sub	_gather_template.GT_center.x, (44 shl 4)
 		mov	_gather_template.GT_angle_delta, 2
 
 loc_1A967:
-		call	_gather_add_only
+		call	@gather_add_only$qv
 		leave
 		retn
 ; ---------------------------------------------------------------------------
 
 loc_1A96C:
 		mov	_gather_template.GT_col, 8	; jumptable 0001A926 case 18
-		call	_gather_add_only
+		call	@gather_add_only$qv
 		add	_gather_template.GT_center.x, (44 shl 4)
 		mov	_gather_template.GT_angle_delta, -2
 		jmp	short loc_1A967
@@ -23152,9 +23152,9 @@ yuuka6_1A9B5	proc near
 		push	bp
 		mov	bp, sp
 		mov	_gather_template.GT_angle_delta, -2
-		call	_gather_add_only
+		call	@gather_add_only$qv
 		mov	_gather_template.GT_angle_delta, 2
-		call	_gather_add_only
+		call	@gather_add_only$qv
 		pop	bp
 		retn
 yuuka6_1A9B5	endp
@@ -24208,7 +24208,7 @@ loc_1B2ED:
 		mov	al, _gather_template.GT_angle_delta
 		neg	al
 		mov	_gather_template.GT_angle_delta, al
-		call	_gather_add_only
+		call	@gather_add_only$qv
 
 locret_1B311:
 		leave
@@ -25382,9 +25382,9 @@ loc_1BDE2:
 
 loc_1BDFF:
 		mov	_gather_template.GT_angle_delta, -2
-		call	_gather_add_only
+		call	@gather_add_only$qv
 		mov	_gather_template.GT_angle_delta, 2
-		call	_gather_add_only
+		call	@gather_add_only$qv
 		jmp	short loc_1BE2E	; default
 ; ---------------------------------------------------------------------------
 
@@ -28077,7 +28077,7 @@ loc_1EA6F:
 		mov	_gather_template.GT_ring_points, 16
 		mov	_gather_template.GT_radius, (256 shl 4)
 		mov	_gather_template.GT_col, 9
-		call	_gather_add_only
+		call	@gather_add_only$qv
 		mov	_boss_sprite, 129
 		call	snd_se_play pascal, 8
 		mov	_circles_color, V_WHITE
@@ -28088,7 +28088,7 @@ loc_1EAA8:
 		mov	_gather_template.GT_col, 8
 
 loc_1EAAD:
-		call	_gather_add_only
+		call	@gather_add_only$qv
 		jmp	short loc_1EAF9	; default
 ; ---------------------------------------------------------------------------
 
@@ -29707,9 +29707,9 @@ gengetsu_1F8EE	proc near
 		push	bp
 		mov	bp, sp
 		mov	_gather_template.GT_angle_delta, -2
-		call	_gather_add_only
+		call	@gather_add_only$qv
 		mov	_gather_template.GT_angle_delta, 2
-		call	_gather_add_only
+		call	@gather_add_only$qv
 		pop	bp
 		retn
 gengetsu_1F8EE	endp
@@ -30226,7 +30226,7 @@ loc_1FCE0:
 		mov	_bullet_template.BT_group, BG_RING_AIMED
 		mov	_bullet_template.count, 16
 		mov	_bullet_template.speed, (4 shl 4)
-		call	_gather_add_bullets
+		call	@gather_add_bullets$qv
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------

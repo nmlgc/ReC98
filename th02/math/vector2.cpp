@@ -1,6 +1,5 @@
 #pragma option -zCSHARED -3
 
-extern "C" {
 #include "platform.h"
 #include "pc98.h"
 #include "master.hpp"
@@ -27,6 +26,4 @@ void pascal vector2_between_plus(
 	plus_angle = iatan2((y2 - y1), (x2 - x1)) + plus_angle;
 	ret_x = polar_x_fast(0, length, plus_angle);
 	ret_y = polar_y_fast(0, length, plus_angle);
-}
-
 }

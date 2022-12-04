@@ -9282,8 +9282,8 @@ SHARED	segment	word public 'CODE' use16
 	extern MPN_LOAD:proc
 	extern _mpn_free:proc
 	extern _pi_load:proc
-	extern VECTOR2:proc
-	extern VECTOR2_BETWEEN_PLUS:proc
+	extern @VECTOR2$QMIT1UCI:proc
+	extern @VECTOR2_BETWEEN_PLUS$QIIIIUCMIT6I:proc
 	extern FRAME_DELAY:proc
 	extern _input_sense:proc
 	extern _game_exit:proc
@@ -10458,7 +10458,7 @@ loc_1065D:
 		lea	ax, [si+0Ch]
 		push	ax
 		push	[bp+@@length]
-		call	vector2_between_plus
+		call	@vector2_between_plus$qiiiiucmit6i
 		jmp	short loc_1069D
 ; ---------------------------------------------------------------------------
 
@@ -10473,7 +10473,7 @@ loc_10684:
 		add	al, byte ptr [bp+var_2]
 		push	ax
 		push	[bp+@@length]
-		call	vector2
+		call	@vector2$qmit1uci
 
 loc_1069D:
 		les	bx, [bp+arg_6]
@@ -10851,7 +10851,7 @@ loc_10924:
 		push	ax
 		push	[bp+@@angle]
 		push	[bp+@@length]
-		call	vector2
+		call	@vector2$qmit1uci
 		jmp	short loc_1096B
 ; ---------------------------------------------------------------------------
 
@@ -10979,7 +10979,7 @@ loc_10A23:
 		mov	al, [si+11h]
 		mov	ah, 0
 		push	ax
-		call	vector2_between_plus
+		call	@vector2_between_plus$qiiiiucmit6i
 		jmp	loc_10BAD
 ; ---------------------------------------------------------------------------
 
@@ -11014,7 +11014,7 @@ loc_10A57:
 		mov	al, [si+11h]
 		mov	ah, 0
 		push	ax
-		call	vector2_between_plus
+		call	@vector2_between_plus$qiiiiucmit6i
 		inc	byte ptr [si+12h]
 		mov	al, [si+12h]
 		mov	ah, 0
@@ -11046,7 +11046,7 @@ loc_10AC3:
 		mov	al, [si+11h]
 		mov	ah, 0
 		push	ax
-		call	vector2
+		call	@vector2$qmit1uci
 		inc	byte ptr [si+12h]
 		mov	al, [si+12h]
 		mov	ah, 0
@@ -11069,7 +11069,7 @@ loc_10B02:
 		mov	al, [si+11h]
 		mov	ah, 0
 		push	ax
-		call	vector2
+		call	@vector2$qmit1uci
 		mov	ax, [bp+@@x1]
 		cmp	ax, [bp+@@x2]
 		jge	short loc_10B34
@@ -21743,7 +21743,7 @@ loc_16458:
 		push	ds
 		push	offset point_255A4.y
 		push	48
-		call	vector2_between_plus
+		call	@vector2_between_plus$qiiiiucmit6i
 		mov	ax, point_255A4.x
 		neg	ax
 		mov	word_255AC, ax
@@ -22522,7 +22522,7 @@ sub_16AFC	proc near
 		mov	al, [bx+2]
 		mov	ah, 0
 		push	ax
-		call	vector2_between_plus
+		call	@vector2_between_plus$qiiiiucmit6i
 		mov	bx, word_26C52
 		mov	al, byte ptr [bp+@@vector_x]
 		mov	[bx], al
@@ -22592,7 +22592,7 @@ loc_16B9F:
 		mov	al, [bx+si+2]
 		mov	ah, 0
 		push	ax
-		call	vector2
+		call	@vector2$qmit1uci
 		mov	bx, word_26C4A
 		mov	ax, [bp+@@vector_x]
 		add	[bx], ax
@@ -22676,7 +22676,7 @@ loc_16C2D:
 		mov	al, [bx+si]
 		mov	ah, 0
 		push	ax
-		call	vector2
+		call	@vector2$qmit1uci
 		les	bx, [bp+var_4]
 		mov	ax, [bp+@@vector_x]
 		add	es:[bx], ax
@@ -25825,7 +25825,7 @@ sub_188AA	proc near
 		mov	ax, [bx]
 		add	ax, 40h
 		mov	[bp+@@y1], ax
-		call	vector2_between_plus pascal, [bp+@@x1], ax, point_205F6.x, point_205F6.y, 0, ds, offset point_26CD6.x, ds, offset point_26CD6.y, 48
+		call	@vector2_between_plus$qiiiiucmit6i pascal, [bp+@@x1], ax, point_205F6.x, point_205F6.y, 0, ds, offset point_26CD6.x, ds, offset point_26CD6.y, 48
 
 loc_188F8:
 		push	ds
@@ -26117,7 +26117,7 @@ var_2		= word ptr -2
 		mov	ax, [bx]
 		add	ax, 40h
 		mov	[bp+var_4], ax
-		call	vector2_between_plus pascal, [bp+var_2], ax, point_205F6.x, point_205F6.y, 0, ds, offset point_26CDE.x, ds, offset point_26CDE.y, 52
+		call	@vector2_between_plus$qiiiiucmit6i pascal, [bp+var_2], ax, point_205F6.x, point_205F6.y, 0, ds, offset point_26CDE.x, ds, offset point_26CDE.y, 52
 
 loc_18B99:
 		push	ds

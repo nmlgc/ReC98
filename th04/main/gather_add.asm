@@ -32,8 +32,8 @@ endif
 gather_bullet_template_pull	endp
 
 
-public _gather_add_bullets
-_gather_add_bullets	proc near
+public @gather_add_bullets$qv
+@gather_add_bullets$qv proc near
 	push	bp
 	mov	bp, sp
 	push	si
@@ -87,11 +87,11 @@ _gather_add_bullets	proc near
 	pop	si
 	pop	bp
 	retn
-_gather_add_bullets	endp
+@gather_add_bullets$qv endp
 
 
-public _gather_add_only
-_gather_add_only	proc near
+public @gather_add_only$qv
+@gather_add_only$qv proc near
 	push	bp
 	mov	bp, sp
 	push	si
@@ -143,11 +143,11 @@ _gather_add_only	proc near
 	pop	si
 	pop	bp
 	retn
-_gather_add_only	endp
+@gather_add_only$qv endp
 
 
-public GATHER_ADD_ONLY_3STACK
-gather_add_only_3stack	proc near
+public @GATHER_ADD_ONLY_3STACK$QIII
+@gather_add_only_3stack$qiii proc near
 
 @@col_for_2_and_4		= byte ptr  4
 @@col_for_0		= byte ptr  6
@@ -178,7 +178,7 @@ gather_add_only_3stack	proc near
 	mov	_gather_template.GT_col, al
 
 @@add:
-	call	_gather_add_only
+	call	@gather_add_only$qv
 	pop	bp
 	retn	6
-gather_add_only_3stack	endp
+@gather_add_only_3stack$qiii endp

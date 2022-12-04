@@ -15,8 +15,10 @@ extern "C" {
 #include "th04/main/player/player.hpp"
 #include "th04/main/bullet/bullet.hpp"
 #include "th04/main/bullet/clearzap.hpp"
+}
 #include "th04/main/gather.hpp"
 
 #pragma option -a2
+extern "C" {
 #include "th04/main/bullet/add.cpp"
 }
