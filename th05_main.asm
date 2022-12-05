@@ -10254,49 +10254,10 @@ MIDBOSS1_TEXT	segment	byte public 'CODE' use16
 MIDBOSS1_TEXT	ends
 
 B1_UPDATE_TEXT	segment	byte public 'CODE' use16
+	@phase_2_with_pattern$qv procdesc near
 B1_UPDATE_TEXT	ends
 
 B4_UPDATE_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_181E5	proc near
-		push	bp
-		mov	bp, sp
-		cmp	_boss_phase_frame, 16
-		jge	short loc_1821C
-		mov	ax, _boss_phase_frame
-		dec	ax
-		call	@gather_add_only_3stack$qiii pascal, ax, large (9 shl 16) or 8
-		cmp	_boss_phase_frame, 1
-		jnz	short loc_18239
-		call	snd_se_play pascal, 8
-		mov	_boss_statebyte[15], 80h
-		mov	_boss_statebyte[14], 0
-		mov	_boss_statebyte[13], 8
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_1821C:
-		mov	ax, _boss_phase_frame
-		add	ax, -16
-		call	@boss_flystep_random$qi pascal, ax
-		or	al, al
-		jz	short loc_18235
-		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0
-
-loc_18235:
-		call	_sara_phase_2_3_pattern
-
-loc_18239:
-		pop	bp
-		retn
-sub_181E5	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -10919,7 +10880,7 @@ loc_187DE:
 ; ---------------------------------------------------------------------------
 
 loc_18800:
-		call	sub_181E5
+		call	@phase_2_with_pattern$qv
 		cmp	_boss_phase_frame, 0
 		jnz	short loc_18819
 		cmp	_boss_statebyte[9], 0Ch
