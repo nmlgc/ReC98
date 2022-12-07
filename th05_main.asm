@@ -10255,71 +10255,11 @@ MIDBOSS1_TEXT	ends
 
 B1_UPDATE_TEXT	segment	byte public 'CODE' use16
 	@phase_2_with_pattern$qv procdesc near
+	@pattern_blue_curve_counterclockw$qv procdesc near
+	@pattern_blue_curve_clockwise$qv procdesc near
 B1_UPDATE_TEXT	ends
 
 B4_UPDATE_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1823B	proc near
-		push	bp
-		mov	bp, sp
-		mov	ax, _boss_phase_frame
-		mov	bx, 2
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_18274
-		mov	_bullet_template.spawn_type, BST_CLOUD_FORWARDS
-		mov	_bullet_template.patnum, PAT_BULLET16_N_BLUE
-		mov	_bullet_template.BT_group, BG_SINGLE
-		mov	al, _boss_statebyte[15]
-		mov	_bullet_template.BT_angle, al
-		mov	_bullet_template.speed, (1 shl 4) + 8
-		call	_bullet_template_tune
-		call	_bullets_add_regular
-		mov	al, _boss_statebyte[15]
-		add	al, -0Ah
-		mov	_boss_statebyte[15], al
-
-loc_18274:
-		pop	bp
-		retn
-sub_1823B	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_18276	proc near
-		push	bp
-		mov	bp, sp
-		mov	ax, _boss_phase_frame
-		mov	bx, 2
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_182AF
-		mov	_bullet_template.spawn_type, BST_CLOUD_FORWARDS
-		mov	_bullet_template.patnum, PAT_BULLET16_N_BLUE
-		mov	_bullet_template.BT_group, BG_SINGLE
-		mov	al, _boss_statebyte[14]
-		mov	_bullet_template.BT_angle, al
-		mov	_bullet_template.speed, (1 shl 4) + 8
-		call	_bullet_template_tune
-		call	_bullets_add_regular
-		mov	al, _boss_statebyte[14]
-		add	al, 0Ah
-		mov	_boss_statebyte[14], al
-
-loc_182AF:
-		pop	bp
-		retn
-sub_18276	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -21238,8 +21178,8 @@ include th04/main/hud/power[data].asm
 include th04/main/hud/hp[data].asm
 aB@b@bB@b@	db '　　×　　',0
 aB@b@bB@b@_0	db '　　×　　',0
-off_22758	dw offset sub_1823B
-		dw offset sub_18276
+off_22758	dw offset @pattern_blue_curve_counterclockw$qv
+		dw offset @pattern_blue_curve_clockwise$qv
 		dw offset sub_182B1
 off_2275E	dw offset sub_182ED
 		dw offset sub_183F5

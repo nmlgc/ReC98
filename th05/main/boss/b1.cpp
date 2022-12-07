@@ -15,6 +15,7 @@ extern "C" {
 #include "th04/main/bullet/bullet.hpp"
 }
 #include "th04/main/gather.hpp"
+#include "th05/sprites/main_pat.h"
 #include "th05/main/boss/boss.hpp"
 
 // Constants
@@ -87,4 +88,27 @@ void near phase_2_with_pattern(void)
 		boss.mode = 0;
 	}
 	phase_2_3_pattern();
+}
+
+#define pattern_blue(pattern_angle, angle_delta) { \
+	if((boss.phase_frame % 2) == 0) { \
+		bullet_template.spawn_type = BST_CLOUD_FORWARDS; \
+		bullet_template.patnum = PAT_BULLET16_N_BALL_BLUE; \
+		bullet_template.group = BG_SINGLE; \
+		bullet_template.angle = pattern_angle; \
+		bullet_template.speed.set(1.5f); \
+		bullet_template_tune(); \
+		bullets_add_regular(); \
+		pattern_angle = (pattern_angle + angle_delta); \
+	} \
+}
+
+void near pattern_blue_curve_counterclockwise(void)
+{
+	pattern_blue(state->phase_2.angle_counterclockwise, -0x0A);
+}
+
+void near pattern_blue_curve_clockwise(void)
+{
+	pattern_blue(state->phase_2.angle_clockwise, +0x0A);
 }
