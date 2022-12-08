@@ -234,6 +234,14 @@ private:
 		reinterpret_cast<uint16_t &>(val) = (b0 | (b1 << 8));
 	}
 
+	void set32(
+		unsigned char& val, uint8_t b0, uint8_t b1, uint32_t b2, uint32_t b3
+	) {
+		reinterpret_cast<uint32_t &>(val) = (
+			b0 | (b1 << 8) | (b2 << 16) | (b3 << 24)
+		);
+	}
+
 	#ifdef RANK_H
 		void set16_for_rank(
 			unsigned char& val,
@@ -254,6 +262,15 @@ private:
 public:
 	void set_spread(unsigned char count, unsigned char angle_delta) {
 		set16(spread, count, angle_delta);
+	}
+
+	void set_spread_stack(
+		unsigned char spread, unsigned char spread_angle_delta,
+		unsigned char stack, float stack_speed_delta
+	) {
+		set32(this->spread,
+			spread, spread_angle_delta, stack, to_sp8(stack_speed_delta)
+		);
 	}
 
 	#ifdef RANK_H

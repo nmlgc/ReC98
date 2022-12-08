@@ -112,3 +112,18 @@ void near pattern_blue_curve_clockwise(void)
 {
 	pattern_blue(state->phase_2.angle_clockwise, +0x0A);
 }
+
+void near pattern_aimed_red_spread_stack(void)
+{
+	if(boss.phase_frame == (PHASE_2_PATTERN_START_FRAME + 16)) {
+		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_SLOWDOWN);
+		bullet_template.patnum = PAT_BULLET16_N_BALL_RED;
+		bullet_template.group = BG_SPREAD_STACK_AIMED;
+		bullet_template.angle = 0;
+		bullet_template.set_spread_stack(5, 0x10, 5, 0.4375f);
+		bullet_template.speed.set(1.0f);
+		bullet_template_tune();
+		bullets_add_regular();
+		snd_se_play(15);
+	}
+}
