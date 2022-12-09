@@ -10258,44 +10258,10 @@ B1_UPDATE_TEXT	segment	byte public 'CODE' use16
 	@pattern_blue_curve_counterclockw$qv procdesc near
 	@pattern_blue_curve_clockwise$qv procdesc near
 	@pattern_aimed_red_spread_stack$qv procdesc near
+	@pattern_red_stacks$qv procdesc near
 B1_UPDATE_TEXT	ends
 
 B4_UPDATE_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_182ED	proc near
-		push	bp
-		mov	bp, sp
-		mov	ax, _boss_phase_frame
-		mov	bx, 8
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_18339
-		mov	_bullet_template.spawn_type, BST_CLOUD_FORWARDS or BST_NO_SLOWDOWN
-		mov	_bullet_template.patnum, PAT_BULLET16_N_RED
-		mov	_bullet_template.BT_group, BG_STACK
-		mov	al, _boss_angle
-		add	al, _boss_statebyte[13]
-		add	al, 80h
-		mov	_bullet_template.BT_angle, al
-		mov	word ptr _bullet_template.BT_stack, (6 shl 8) or 8
-		mov	_bullet_template.speed, (1 shl 4)
-		call	_bullet_template_tune
-		call	_bullets_add_regular
-		mov	al, _boss_statebyte[13]
-		add	al, -8
-		mov	_boss_statebyte[13], al
-		call	snd_se_play pascal, 15
-
-loc_18339:
-		pop	bp
-		retn
-sub_182ED	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -21157,7 +21123,7 @@ aB@b@bB@b@_0	db '　　×　　',0
 off_22758	dw offset @pattern_blue_curve_counterclockw$qv
 		dw offset @pattern_blue_curve_clockwise$qv
 		dw offset @pattern_aimed_red_spread_stack$qv
-off_2275E	dw offset sub_182ED
+off_2275E	dw offset @pattern_red_stacks$qv
 		dw offset sub_183F5
 		dw offset sub_1847D
 		dw offset sub_184BC

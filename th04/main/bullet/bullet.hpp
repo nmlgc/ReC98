@@ -264,6 +264,12 @@ public:
 		set16(spread, count, angle_delta);
 	}
 
+	void set_stack(unsigned char count, float speed_delta) {
+		// MODDERS: Just assign the values regularly, and don't rely on the
+		// physical layout of the structure.
+		set16(stack, count, to_sp8(speed_delta));
+	}
+
 	void set_spread_stack(
 		unsigned char spread, unsigned char spread_angle_delta,
 		unsigned char stack, float stack_speed_delta

@@ -127,3 +127,21 @@ void near pattern_aimed_red_spread_stack(void)
 		snd_se_play(15);
 	}
 }
+
+void near pattern_red_stacks(void)
+{
+	if((boss.phase_frame % 8) == 0) {
+		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_SLOWDOWN);
+		bullet_template.patnum = PAT_BULLET16_N_BALL_RED;
+		bullet_template.group = BG_STACK;
+		bullet_template.angle = (
+			boss.angle + state->phase_2.angle_stacks - 0x80
+		);
+		bullet_template.set_stack(8, 0.375f);
+		bullet_template.speed.set(1.0f);
+		bullet_template_tune();
+		bullets_add_regular();
+		state->phase_2.angle_stacks -= 0x08;
+		snd_se_play(15);
+	}
+}
