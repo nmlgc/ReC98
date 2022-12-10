@@ -5,6 +5,9 @@
 #define PARTICLE_H 16
 
 #define PARTICLE_CELS 4
+#define WIND_STAY_CELS 4
+#define WIND_MOVE_CELS 2
+#define SPIN_CELS 4
 #define B4BALL_CELS 4
 #define B4_CELS 16
 
@@ -98,6 +101,17 @@ typedef enum {
 
 	/// Stage 1
 	/// =======
+	// st01.bb1
+	// --------
+	PAT_SARA_STAY = 180,
+	PAT_SARA_STAY_last = (PAT_SARA_STAY + WIND_STAY_CELS - 1),
+	PAT_SARA_RIGHT,
+	PAT_SARA_RIGHT_last = (PAT_SARA_RIGHT + WIND_MOVE_CELS - 1),
+	PAT_SARA_LEFT,
+	PAT_SARA_LEFT_last = (PAT_SARA_LEFT + WIND_MOVE_CELS - 1),
+	PAT_SARA_SPIN,
+	PAT_SARA_SPIN_last = (PAT_SARA_SPIN + SPIN_CELS - 1),
+	// --------
 	// st01.bft
 	// --------
 	PAT_MIDBOSS1 = 204,

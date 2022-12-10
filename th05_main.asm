@@ -5150,9 +5150,9 @@ loc_10932:
 ; ---------------------------------------------------------------------------
 
 loc_10934:
-		cmp	_boss_sprite, 184
+		cmp	_boss_sprite, PAT_SARA_RIGHT
 		jz	short loc_10942
-		cmp	_boss_sprite, 186
+		cmp	_boss_sprite, PAT_SARA_LEFT
 		jnz	short loc_1094D
 
 loc_10942:
@@ -5163,7 +5163,7 @@ loc_10942:
 ; ---------------------------------------------------------------------------
 
 loc_1094D:
-		cmp	_boss_sprite, 180
+		cmp	_boss_sprite, PAT_SARA_STAY
 		jnz	short loc_1096F
 		mov	al, _boss_sprite
 		mov	ah, 0
@@ -5171,7 +5171,7 @@ loc_1094D:
 
 loc_1095D:
 		mov	dh, 0
-		mov	bx, 4
+		mov	bx, WIND_STAY_CELS
 		push	ax
 		mov	ax, dx
 		cwd
@@ -10435,7 +10435,7 @@ sub_1833B	proc near
 		cmp	_boss_phase_frame, 16
 		jnz	loc_183F3
 		call	snd_se_play pascal, 8
-		mov	_boss_sprite, 188
+		mov	_boss_sprite, PAT_SARA_SPIN
 		mov	_boss_statebyte[15], 38h
 		mov	_boss_statebyte[14], 48h
 		mov	_boss_statebyte[13], 18h
@@ -10483,9 +10483,9 @@ loc_183C4:
 		inc	_boss_sprite
 
 loc_183C8:
-		cmp	_boss_sprite, 192
+		cmp	_boss_sprite, (PAT_SARA_SPIN + SPIN_CELS)
 		jb	short loc_183D4
-		mov	_boss_sprite, 188
+		mov	_boss_sprite, PAT_SARA_SPIN
 
 loc_183D4:
 		call	_sara_phase_2_3_pattern
@@ -10495,7 +10495,7 @@ loc_183D4:
 		jg	short loc_183F3
 		mov	_boss_phase_frame, 0
 		mov	_boss_mode, 0
-		mov	_boss_sprite, 180
+		mov	_boss_sprite, PAT_SARA_STAY
 
 loc_183F3:
 		pop	bp
@@ -10697,7 +10697,7 @@ sub_18590	proc near
 		mov	bp, sp
 		cmp	_boss_phase_frame, 1
 		jnz	short loc_1859F
-		mov	_boss_sprite, 188
+		mov	_boss_sprite, PAT_SARA_SPIN
 
 loc_1859F:
 		cmp	_boss_phase_frame, 32

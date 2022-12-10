@@ -28,11 +28,11 @@ void pascal near stage1_setup(void)
 	boss_bg_render_func = sara_bg_render;
 	boss_update_func = sara_update;
 	boss_fg_render_func = sara_fg_render;
-	boss.sprite = 180;
+	boss.sprite = PAT_SARA_STAY;
 	boss_hitbox_radius.set(24, 24);
-	boss_sprite_left = 186;
-	boss_sprite_right = 184;
-	boss_sprite_stay = 180;
+	boss_sprite_left = PAT_SARA_LEFT;
+	boss_sprite_right = PAT_SARA_RIGHT;
+	boss_sprite_stay = PAT_SARA_STAY;
 	boss_backdrop_colorfill = sara_backdrop_colorfill;
 
 	super_entry_bfnt("st00.bmt");
