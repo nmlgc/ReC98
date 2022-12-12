@@ -22,6 +22,7 @@ extern "C" {
 // ---------
 
 static const int PHASE_2_PATTERN_START_FRAME = 16;
+static const int PHASE_3_PATTERN_START_FRAME = 32;
 
 enum sara_colors_t {
 	COL_GATHER_1 = 9,
@@ -143,5 +144,48 @@ void near pattern_red_stacks(void)
 		bullets_add_regular();
 		state->phase_2.angle_stacks -= 0x08;
 		snd_se_play(15);
+	}
+}
+
+void near phase_3_with_pattern(void)
+{
+	if(boss.phase_frame < PHASE_3_PATTERN_START_FRAME) {
+		gather_add_only_3stack(
+			(boss.phase_frame - 16), COL_GATHER_1, COL_GATHER_2
+		);
+		if(boss.phase_frame == 16) {
+			snd_se_play(8);
+			boss.sprite = PAT_SARA_SPIN;
+			state->phase_3.angle_clockwise = (0x40 - 0x08);
+			state->phase_3.angle_counterclockwise = (0x40 + 0x08);
+			state->phase_3.ring_speed.set(1.5f);
+		}
+		return;
+	}
+
+	if(boss.phase_frame < 64) {
+		boss.sprite++;
+	} else if(boss.phase_frame < 96) {
+		if((boss.phase_frame % 2) == 0) {
+			boss.sprite++;
+		}
+	} else if(boss.phase_frame < 128) {
+		if((boss.phase_frame % 4) == 0) {
+			boss.sprite++;
+		}
+	} else if((boss.phase_frame < 160)) {
+		if((boss.phase_frame % 8) == 0) {
+			boss.sprite++;
+		}
+	}
+
+	if(boss.sprite >= (PAT_SARA_SPIN_last + 1)) {
+		boss.sprite = PAT_SARA_SPIN;
+	}
+	phase_2_3_pattern();
+	if(boss.phase_frame >= state->phase_3.pattern_duration) {
+		boss.phase_frame = 0;
+		boss.mode = 0;
+		boss.sprite = PAT_SARA_STAY;
 	}
 }

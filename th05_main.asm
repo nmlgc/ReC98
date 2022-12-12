@@ -10259,92 +10259,10 @@ B1_UPDATE_TEXT	segment	byte public 'CODE' use16
 	@pattern_blue_curve_clockwise$qv procdesc near
 	@pattern_aimed_red_spread_stack$qv procdesc near
 	@pattern_red_stacks$qv procdesc near
+	@phase_3_with_pattern$qv procdesc near
 B1_UPDATE_TEXT	ends
 
 B4_UPDATE_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1833B	proc near
-		push	bp
-		mov	bp, sp
-		cmp	_boss_phase_frame, 32
-		jge	short loc_1837B
-		mov	ax, _boss_phase_frame
-		add	ax, -16
-		call	@gather_add_only_3stack$qiii pascal, ax, large (9 shl 16) or 8
-		cmp	_boss_phase_frame, 16
-		jnz	loc_183F3
-		call	snd_se_play pascal, 8
-		mov	_boss_sprite, PAT_SARA_SPIN
-		mov	_boss_statebyte[15], 38h
-		mov	_boss_statebyte[14], 48h
-		mov	_boss_statebyte[13], 18h
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_1837B:
-		cmp	_boss_phase_frame, 64
-		jl	short loc_183C4
-		cmp	_boss_phase_frame, 96
-		jge	short loc_18398
-		mov	ax, _boss_phase_frame
-		mov	bx, 2
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_183C8
-		jmp	short loc_183C4
-; ---------------------------------------------------------------------------
-
-loc_18398:
-		cmp	_boss_phase_frame, 128
-		jge	short loc_183AF
-		mov	ax, _boss_phase_frame
-		mov	bx, 4
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_183C8
-		jmp	short loc_183C4
-; ---------------------------------------------------------------------------
-
-loc_183AF:
-		cmp	_boss_phase_frame, 160
-		jge	short loc_183C8
-		mov	ax, _boss_phase_frame
-		mov	bx, 8
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_183C8
-
-loc_183C4:
-		inc	_boss_sprite
-
-loc_183C8:
-		cmp	_boss_sprite, (PAT_SARA_SPIN + SPIN_CELS)
-		jb	short loc_183D4
-		mov	_boss_sprite, PAT_SARA_SPIN
-
-loc_183D4:
-		call	_sara_phase_2_3_pattern
-		mov	al, _boss_statebyte[9]
-		mov	ah, 0
-		cmp	ax, _boss_phase_frame
-		jg	short loc_183F3
-		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0
-		mov	_boss_sprite, PAT_SARA_STAY
-
-loc_183F3:
-		pop	bp
-		retn
-sub_1833B	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -10819,7 +10737,7 @@ loc_18862:
 ; ---------------------------------------------------------------------------
 
 loc_18884:
-		call	sub_1833B
+		call	@phase_3_with_pattern$qv
 		cmp	_boss_phase_frame, 0
 		jnz	short loc_1889D
 		cmp	_boss_statebyte[9], -4Ch
