@@ -9,6 +9,7 @@
 #include "th01/math/subpixel.hpp"
 extern "C" {
 #include "th04/math/motion.hpp"
+#include "th04/math/randring.hpp"
 #include "th04/snd/snd.h"
 #include "th04/main/playfld.hpp"
 #include "th04/main/pattern.hpp"
@@ -187,5 +188,34 @@ void near phase_3_with_pattern(void)
 		boss.phase_frame = 0;
 		boss.mode = 0;
 		boss.sprite = PAT_SARA_STAY;
+	}
+}
+
+void near pattern_pellet_arcs_at_expanding_random_angles(void)
+{
+	if((boss.phase_frame % 8) == 0) {
+		bullet_template.spawn_type = BST_NO_SLOWDOWN;
+		bullet_template.patnum = 0;
+		bullet_template.group = BG_SPREAD;
+		bullet_template.angle = (
+			randring2_next16_mod(boss.phase_frame * 2) - boss.phase_frame + 0x40
+		);
+		bullet_template.set_spread(3, 0x3);
+		bullet_template.special_motion = BSM_EXACT_LINEAR;
+		bullet_template.speed.v = randring2_next8_and_ge_lt_sp(1.0f, 3.0f);
+		bullet_template_tune();
+		bullets_add_special();
+
+		bullet_template.spawn_type = BST_CLOUD_BACKWARDS;
+		bullet_template.patnum = PAT_BULLET16_N_BALL_BLUE;
+		bullet_template.group = BG_SINGLE;
+		bullet_template.angle = (
+			randring2_next16_mod(boss.phase_frame * 2) - boss.phase_frame + 0x40
+		);
+		bullet_template.speed.v = randring2_next8_and_ge_lt_sp(1.5f, 3.5f);
+		bullet_template_tune();
+		bullets_add_regular();
+
+		snd_se_play(3);
 	}
 }

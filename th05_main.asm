@@ -10260,62 +10260,10 @@ B1_UPDATE_TEXT	segment	byte public 'CODE' use16
 	@pattern_aimed_red_spread_stack$qv procdesc near
 	@pattern_red_stacks$qv procdesc near
 	@phase_3_with_pattern$qv procdesc near
+	@pattern_pellet_arcs_at_expanding$qv procdesc near
 B1_UPDATE_TEXT	ends
 
 B4_UPDATE_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_183F5	proc near
-		push	bp
-		mov	bp, sp
-		mov	ax, _boss_phase_frame
-		mov	bx, 8
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_1847B
-		mov	_bullet_template.spawn_type, BST_NO_SLOWDOWN
-		mov	_bullet_template.patnum, 0
-		mov	_bullet_template.BT_group, BG_SPREAD
-		mov	ax, _boss_phase_frame
-		add	ax, ax
-		push	ax
-		call	randring2_next16_mod
-		sub	al, byte ptr _boss_phase_frame
-		add	al, 40h
-		mov	_bullet_template.BT_angle, al
-		mov	word ptr _bullet_template.spread, (3 shl 8) or 3
-		mov	_bullet_template.BT_special_motion, BSM_EXACT_LINEAR
-		call	randring2_next16_and pascal, 1Fh
-		add	al, (1 shl 4)
-		mov	_bullet_template.speed, al
-		call	_bullet_template_tune
-		call	_bullets_add_special
-		mov	_bullet_template.spawn_type, BST_CLOUD_BACKWARDS
-		mov	_bullet_template.patnum, PAT_BULLET16_N_BLUE
-		mov	_bullet_template.BT_group, BG_SINGLE
-		mov	ax, _boss_phase_frame
-		add	ax, ax
-		push	ax
-		call	randring2_next16_mod
-		sub	al, byte ptr _boss_phase_frame
-		add	al, 40h
-		mov	_bullet_template.BT_angle, al
-		call	randring2_next16_and pascal, 1Fh
-		add	al, (1 shl 4) + 8
-		mov	_bullet_template.speed, al
-		call	_bullet_template_tune
-		call	_bullets_add_regular
-		call	snd_se_play pascal, 3
-
-loc_1847B:
-		pop	bp
-		retn
-sub_183F5	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -21042,7 +20990,7 @@ off_22758	dw offset @pattern_blue_curve_counterclockw$qv
 		dw offset @pattern_blue_curve_clockwise$qv
 		dw offset @pattern_aimed_red_spread_stack$qv
 off_2275E	dw offset @pattern_red_stacks$qv
-		dw offset sub_183F5
+		dw offset @pattern_pellet_arcs_at_expanding$qv
 		dw offset sub_1847D
 		dw offset sub_184BC
 		dw offset sub_18526
