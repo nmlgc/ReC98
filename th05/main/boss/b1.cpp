@@ -219,3 +219,18 @@ void near pattern_pellet_arcs_at_expanding_random_angles(void)
 		snd_se_play(3);
 	}
 }
+
+void near pattern_random_red_rings(void)
+{
+	if((boss.phase_frame % 16) == 0) {
+		bullet_template.spawn_type = BST_CLOUD_FORWARDS;
+		bullet_template.patnum = PAT_BULLET16_N_BALL_RED;
+		bullet_template.group = BG_RING;
+		bullet_template.angle = randring2_next16();
+		bullet_template.speed.set(2.0f);
+		bullet_template.spread = 12;
+		bullet_template_tune();
+		bullets_add_regular();
+		snd_se_play(3);
+	}
+}

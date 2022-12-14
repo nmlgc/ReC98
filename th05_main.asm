@@ -10261,39 +10261,10 @@ B1_UPDATE_TEXT	segment	byte public 'CODE' use16
 	@pattern_red_stacks$qv procdesc near
 	@phase_3_with_pattern$qv procdesc near
 	@pattern_pellet_arcs_at_expanding$qv procdesc near
+	@pattern_random_red_rings$qv procdesc near
 B1_UPDATE_TEXT	ends
 
 B4_UPDATE_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_1847D	proc near
-		push	bp
-		mov	bp, sp
-		mov	ax, _boss_phase_frame
-		mov	bx, 16
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_184BA
-		mov	_bullet_template.spawn_type, BST_CLOUD_FORWARDS
-		mov	_bullet_template.patnum, PAT_BULLET16_N_RED
-		mov	_bullet_template.BT_group, BG_RING
-		call	randring2_next16
-		mov	_bullet_template.BT_angle, al
-		mov	_bullet_template.speed, (2 shl 4)
-		mov	_bullet_template.spread, 12
-		call	_bullet_template_tune
-		call	_bullets_add_regular
-		call	snd_se_play pascal, 3
-
-loc_184BA:
-		pop	bp
-		retn
-sub_1847D	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -20991,7 +20962,7 @@ off_22758	dw offset @pattern_blue_curve_counterclockw$qv
 		dw offset @pattern_aimed_red_spread_stack$qv
 off_2275E	dw offset @pattern_red_stacks$qv
 		dw offset @pattern_pellet_arcs_at_expanding$qv
-		dw offset sub_1847D
+		dw offset @pattern_random_red_rings$qv
 		dw offset sub_184BC
 		dw offset sub_18526
 off_22768	dw offset sub_198B7
