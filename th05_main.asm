@@ -10262,111 +10262,11 @@ B1_UPDATE_TEXT	segment	byte public 'CODE' use16
 	@phase_3_with_pattern$qv procdesc near
 	@pattern_pellet_arcs_at_expanding$qv procdesc near
 	@pattern_random_red_rings$qv procdesc near
+	@pattern_accelerating_spirals_clo$qv procdesc near
+	@pattern_accelerating_spirals_cou$qv procdesc near
 B1_UPDATE_TEXT	ends
 
 B4_UPDATE_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_184BC	proc near
-		push	bp
-		mov	bp, sp
-		mov	ax, _boss_phase_frame
-		mov	bx, 8
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_18524
-		mov	_bullet_template.spawn_type, BST_NORMAL
-		mov	_bullet_template.BT_group, BG_RING
-		mov	_bullet_template.spread, 3
-		mov	_bullet_template.patnum, PAT_BULLET16_N_BLUE
-		mov	al, _boss_statebyte[15]
-		mov	_bullet_template.BT_angle, al
-		mov	al, _boss_statebyte[13]
-		mov	_bullet_template.speed, al
-		mov	ax, _boss_phase_frame
-		mov	bx, 16
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_18506
-		mov	al, _bullet_template.speed
-		mov	ah, 0
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	_bullet_template.speed, al
-
-loc_18506:
-		call	_bullet_template_tune
-		call	_bullets_add_regular
-		call	snd_se_play pascal, 3
-		mov	al, _boss_statebyte[15]
-		add	al, 6
-		mov	_boss_statebyte[15], al
-		mov	al, _boss_statebyte[13]
-		add	al, 4
-		mov	_boss_statebyte[13], al
-
-loc_18524:
-		pop	bp
-		retn
-sub_184BC	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_18526	proc near
-		push	bp
-		mov	bp, sp
-		mov	ax, _boss_phase_frame
-		mov	bx, 8
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_1858E
-		mov	_bullet_template.spawn_type, BST_NORMAL
-		mov	_bullet_template.BT_group, BG_RING
-		mov	_bullet_template.spread, 3
-		mov	_bullet_template.patnum, PAT_BULLET16_N_BLUE
-		mov	al, _boss_statebyte[14]
-		mov	_bullet_template.BT_angle, al
-		mov	al, _boss_statebyte[13]
-		mov	_bullet_template.speed, al
-		mov	ax, _boss_phase_frame
-		mov	bx, 16
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_18570
-		mov	al, _bullet_template.speed
-		mov	ah, 0
-		cwd
-		sub	ax, dx
-		sar	ax, 1
-		mov	_bullet_template.speed, al
-
-loc_18570:
-		call	_bullet_template_tune
-		call	_bullets_add_regular
-		call	snd_se_play pascal, 3
-		mov	al, _boss_statebyte[14]
-		add	al, -6
-		mov	_boss_statebyte[14], al
-		mov	al, _boss_statebyte[13]
-		add	al, 4
-		mov	_boss_statebyte[13], al
-
-loc_1858E:
-		pop	bp
-		retn
-sub_18526	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -20963,8 +20863,8 @@ off_22758	dw offset @pattern_blue_curve_counterclockw$qv
 off_2275E	dw offset @pattern_red_stacks$qv
 		dw offset @pattern_pellet_arcs_at_expanding$qv
 		dw offset @pattern_random_red_rings$qv
-		dw offset sub_184BC
-		dw offset sub_18526
+		dw offset @pattern_accelerating_spirals_clo$qv
+		dw offset @pattern_accelerating_spirals_cou$qv
 off_22768	dw offset sub_198B7
 		dw offset sub_19928
 		dw offset sub_1999A

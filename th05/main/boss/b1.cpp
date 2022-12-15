@@ -234,3 +234,33 @@ void near pattern_random_red_rings(void)
 		snd_se_play(3);
 	}
 }
+
+#define pattern_accelerating_rings(pattern_angle, angle_delta) { \
+	if((boss.phase_frame % 8) == 0) { \
+		bullet_template.spawn_type = BST_NORMAL; \
+		bullet_template.group = BG_RING; \
+		bullet_template.spread = 3; \
+		bullet_template.patnum = PAT_BULLET16_N_BALL_BLUE; \
+		bullet_template.angle = pattern_angle; \
+		bullet_template.speed = state->phase_3.ring_speed; \
+		if((boss.phase_frame % 16) == 0) { \
+			bullet_template.speed.v /= 2; \
+		} \
+		bullet_template_tune(); \
+		bullets_add_regular(); \
+		snd_se_play(3); \
+		\
+		pattern_angle += angle_delta; \
+		state->phase_3.ring_speed.v += to_sp(0.25f); \
+	} \
+}
+
+void near pattern_accelerating_spirals_clockwise(void)
+{
+	pattern_accelerating_rings(state->phase_3.angle_clockwise, +0x06);
+}
+
+void near pattern_accelerating_spirals_counterclockwise(void)
+{
+	pattern_accelerating_rings(state->phase_3.angle_counterclockwise, -0x06);
+}
