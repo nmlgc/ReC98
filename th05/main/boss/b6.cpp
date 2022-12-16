@@ -225,8 +225,10 @@ bool near pattern_dense_blue_stacks(void)
 		bullet_template.angle = 0x00;
 		bullet_template.set_spread(2, 0x04);
 		bullet_template.set_stack_for_rank(
-			12, 12, 13, 13,
-			to_sp8(0.3125f), to_sp8(0.375f), to_sp8(0.375f), to_sp8(0.4375f)
+			5, 0.75f,
+			6, 0.75f,
+			6, 0.8125f,
+			7, 0.8125f
 		);
 		bullet_template.speed.set(2.0f);
 	}

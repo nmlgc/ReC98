@@ -227,30 +227,47 @@ struct BulletTemplate {
 	unsigned char angle;
 	SubpixelLength8 speed;
 
+private:
+	// MODDERS: Just assign the values regularly, and don't rely on the
+	// physical layout of the structure.
+	void set16(unsigned char& val, uint8_t b0, uint8_t b1) {
+		reinterpret_cast<uint16_t &>(val) = (b0 | (b1 << 8));
+	}
+
+	#ifdef RANK_H
+		void set16_for_rank(
+			unsigned char& val,
+			uint8_t b0_e, uint8_t b1_e,
+			uint8_t b0_n, uint8_t b1_n,
+			uint8_t b0_h, uint8_t b1_h,
+			uint8_t b0_l, uint8_t b1_l
+		) {
+			reinterpret_cast<uint16_t &>(val) = select_for_rank(
+				(b0_e | (b1_e << 8)),
+				(b0_n | (b1_n << 8)),
+				(b0_h | (b1_h << 8)),
+				(b0_l | (b1_l << 8))
+			);
+		}
+	#endif
+
+public:
 	void set_spread(unsigned char count, unsigned char angle_delta) {
-		// MODDERS: Just assign the values regularly, and don't rely on the
-		// physical layout of the structure.
-		reinterpret_cast<uint16_t &>(spread) = ((angle_delta << 8) | count);
+		set16(spread, count, angle_delta);
 	}
 
 	#ifdef RANK_H
 		void set_stack_for_rank(
-			unsigned char count_for_easy,
-			unsigned char count_for_normal,
-			unsigned char count_for_hard,
-			unsigned char count_for_lunatic,
-			subpixel_length_8_t speed_delta_for_easy,
-			subpixel_length_8_t speed_delta_for_normal,
-			subpixel_length_8_t speed_delta_for_hard,
-			subpixel_length_8_t speed_delta_for_lunatic
+			unsigned char count_easy, float speed_delta_easy,
+			unsigned char count_normal, float speed_delta_normal,
+			unsigned char count_hard, float speed_delta_hard,
+			unsigned char count_lunatic, float speed_delta_lunatic
 		) {
-			// MODDERS: Just assign the values regularly, and don't rely on the
-			// physical layout of the structure.
-			reinterpret_cast<uint16_t &>(stack) = select_for_rank(
-				((count_for_easy << 8) | speed_delta_for_easy),
-				((count_for_normal << 8) | speed_delta_for_normal),
-				((count_for_hard << 8) | speed_delta_for_hard),
-				((count_for_lunatic << 8) | speed_delta_for_lunatic)
+			set16_for_rank(stack,
+				count_easy, to_sp8(speed_delta_easy),
+				count_normal, to_sp8(speed_delta_normal),
+				count_hard, to_sp8(speed_delta_hard),
+				count_lunatic, to_sp8(speed_delta_lunatic)
 			);
 		}
 	#endif
