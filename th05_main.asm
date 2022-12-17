@@ -10264,118 +10264,10 @@ B1_UPDATE_TEXT	segment	byte public 'CODE' use16
 	@pattern_random_red_rings$qv procdesc near
 	@pattern_accelerating_spirals_clo$qv procdesc near
 	@pattern_accelerating_spirals_cou$qv procdesc near
+	@pattern_dense_spreads_and_random$qv procdesc near
 B1_UPDATE_TEXT	ends
 
 B4_UPDATE_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_18590	proc near
-		push	bp
-		mov	bp, sp
-		cmp	_boss_phase_frame, 1
-		jnz	short loc_1859F
-		mov	_boss_sprite, PAT_SARA_SPIN
-
-loc_1859F:
-		cmp	_boss_phase_frame, 32
-		jnz	short loc_185DD
-		mov	eax, _boss_pos.cur
-		mov	_laser_template.coords.origin, eax
-		mov	_laser_template.coords.angle, -32
-		mov	_laser_template.LASER_color, 8
-		mov	_laser_template.coords.LASER_width, 8
-		call	@laser_manual_fixed_spawn$qi pascal, 0
-		mov	_laser_template.coords.angle, -96
-		call	@laser_manual_fixed_spawn$qi pascal, 1
-		mov	_boss_statebyte[15], 0
-		mov	_boss_statebyte[14], 1
-		mov	_boss_statebyte[13], 1
-		pop	bp
-		retn
-; ---------------------------------------------------------------------------
-
-loc_185DD:
-		cmp	_boss_phase_frame, 32
-		jle	loc_186B4
-		cmp	_boss_phase_frame, 64
-		jnz	short loc_185F7
-		call	@laser_manual_grow$qi pascal, 0
-		call	@laser_manual_grow$qi pascal, 1
-
-loc_185F7:
-		mov	al, _boss_statebyte[13]
-		mov	ah, 0
-		push	ax
-		mov	ax, _boss_phase_frame
-		cwd
-		pop	bx
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_1863F
-		cmp	_lasers[1 * size laser_t].coords.angle, 74
-		jbe	short loc_1863F
-		mov	al, _lasers[0 * size laser_t].coords.angle
-		inc	al
-		mov	_lasers[0 * size laser_t].coords.angle, al
-		mov	al, _lasers[1 * size laser_t].coords.angle
-		add	al, -1
-		mov	_lasers[1 * size laser_t].coords.angle, al
-		cmp	_lasers[1 * size laser_t].coords.angle, 128
-		jz	short loc_1863B
-		cmp	_lasers[1 * size laser_t].coords.angle, 96
-		jz	short loc_1863B
-		cmp	_lasers[1 * size laser_t].coords.angle, 88
-		jz	short loc_1863B
-		cmp	_lasers[1 * size laser_t].coords.angle, 80
-		jnz	short loc_1863F
-
-loc_1863B:
-		inc	_boss_statebyte[13]
-
-loc_1863F:
-		cmp	_stage_frame_mod16, 0
-		jnz	short loc_1869C
-		mov	_bullet_template.spawn_type, BST_NO_SLOWDOWN
-		mov	al, _boss_statebyte[15]
-		mov	_bullet_template.BT_angle, al
-		mov	_bullet_template.BT_group, BG_SPREAD
-		mov	_bullet_template.BT_special_motion, BSM_EXACT_LINEAR
-		push	(((1 shl 8) or 5) shl 16) or ((1 shl 8) or 6)
-		push	(((1 shl 8) or 7) shl 16) or ((1 shl 8) or 8)
-		call	select_for_rank
-		mov	word ptr _bullet_template.spread, ax
-		mov	_bullet_template.speed, (2 shl 4)
-		mov	_bullet_template.patnum, 0
-		call	_bullets_add_special
-		mov	_bullet_template.BT_group, BG_RANDOM_ANGLE_AND_SPEED
-		mov	_bullet_template.speed, (1 shl 4)
-		mov	al, _boss_statebyte[14]
-		mov	_bullet_template.spread, al
-		mov	_bullet_template.patnum, PAT_BULLET16_N_BLUE
-		call	_bullets_add_regular
-		mov	al, _boss_statebyte[15]
-		add	al, 0Eh
-		mov	_boss_statebyte[15], al
-
-loc_1869C:
-		mov	ax, _boss_phase_frame
-		mov	bx, 64
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_186B4
-		cmp	_boss_statebyte[14], 8
-		jnb	short loc_186B4
-		inc	_boss_statebyte[14]
-
-loc_186B4:
-		pop	bp
-		retn
-sub_18590	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -10577,7 +10469,7 @@ loc_188A9:
 ; ---------------------------------------------------------------------------
 
 loc_188B4:
-		call	sub_18590
+		call	@pattern_dense_spreads_and_random$qv
 		cmp	_boss_phase_frame, 1300
 		jl	short loc_188C6
 		mov	_boss_phase_state, 0

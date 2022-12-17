@@ -293,6 +293,20 @@ public:
 				count_lunatic, to_sp8(speed_delta_lunatic)
 			);
 		}
+
+		void set_spread_for_rank(
+			unsigned char count_easy, unsigned char angle_delta_easy,
+			unsigned char count_normal, unsigned char angle_delta_normal,
+			unsigned char count_hard, unsigned char angle_delta_hard,
+			unsigned char count_lunatic, unsigned char angle_delta_lunatic
+		) {
+			set16_for_rank(spread,
+				count_easy, angle_delta_easy,
+				count_normal, angle_delta_normal,
+				count_hard, angle_delta_hard,
+				count_lunatic, angle_delta_lunatic
+			);
+		}
 	#endif
 #else
 	PlayfieldPoint velocity;

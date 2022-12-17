@@ -6,18 +6,22 @@
 #include "platform.h"
 #include "pc98.h"
 #include "th01/math/area.hpp"
+#include "th01/math/dir.hpp"
 #include "th01/math/subpixel.hpp"
 extern "C" {
 #include "th04/math/motion.hpp"
 #include "th04/math/randring.hpp"
 #include "th04/snd/snd.h"
+#include "th04/main/rank.hpp"
 #include "th04/main/playfld.hpp"
 #include "th04/main/pattern.hpp"
 #include "th04/main/bullet/bullet.hpp"
 }
+#include "th04/main/frames.h"
 #include "th04/main/gather.hpp"
 #include "th05/sprites/main_pat.h"
 #include "th05/main/boss/boss.hpp"
+#include "th05/main/bullet/laser.hpp"
 
 // Constants
 // ---------
@@ -263,4 +267,85 @@ void near pattern_accelerating_spirals_clockwise(void)
 void near pattern_accelerating_spirals_counterclockwise(void)
 {
 	pattern_accelerating_rings(state->phase_3.angle_counterclockwise, -0x06);
+}
+
+void near pattern_dense_spreads_and_random_balls_within_laser_walls(void)
+{
+	enum {
+		CORRIDOR_ANGLE = 0x14, // centered around 0x40
+	};
+
+	if(boss.phase_frame == 1) {
+		boss.sprite = PAT_SARA_SPIN;
+	}
+
+	if(boss.phase_frame == 32) {
+		laser_template.coords.origin = boss.pos.cur;
+		laser_template.coords.angle = (-0x40 + 0x20);
+		laser_template.col = 8;
+		laser_template.coords.width = 8;
+		laser_manual_fixed_spawn(X_RIGHT);
+
+		laser_template.coords.angle = (-0x40 - 0x20);
+		laser_manual_fixed_spawn(X_LEFT);
+		state->phase_4.spread_angle = 0x00;
+		state->phase_4.random_ball_count = 1;
+		state->phase_4.laser_angle_interval = 1;
+		return;
+	}
+	if(boss.phase_frame <= 32) {
+		return;
+	}
+
+	if(boss.phase_frame == 64) {
+		laser_manual_grow(X_RIGHT);
+		laser_manual_grow(X_LEFT);
+	}
+
+	if(
+		((boss.phase_frame % state->phase_4.laser_angle_interval) == 0) &&
+		(lasers[X_LEFT].coords.angle > (0x40 + (CORRIDOR_ANGLE / 2)))
+	) {
+		lasers[X_RIGHT].coords.angle += 0x01;
+		lasers[X_LEFT].coords.angle -= 0x01;
+		if(
+			(lasers[X_LEFT].coords.angle == 0x80) ||
+			(lasers[X_LEFT].coords.angle == 0x60) ||
+			(lasers[X_LEFT].coords.angle == 0x58) ||
+			(lasers[X_LEFT].coords.angle == 0x50)
+		) {
+			state->phase_4.laser_angle_interval++;
+		}
+	}
+
+	if(stage_frame_mod16 == 0) {
+		bullet_template.spawn_type = BST_NO_SLOWDOWN;
+		bullet_template.angle = state->phase_4.spread_angle;
+		bullet_template.group = BG_SPREAD;
+		bullet_template.special_motion = BSM_EXACT_LINEAR;
+		bullet_template.set_spread_for_rank(
+			5, 0x1,
+			6, 0x1,
+			7, 0x1,
+			8, 0x1
+		);
+		bullet_template.speed.set(2.0f);
+		bullet_template.patnum = 0;
+		bullets_add_special();
+
+		bullet_template.group = BG_RANDOM_ANGLE_AND_SPEED;
+		bullet_template.speed.set(1.0f);
+		bullet_template.spread = state->phase_4.random_ball_count;
+		bullet_template.patnum = PAT_BULLET16_N_BALL_BLUE;
+		bullets_add_regular();
+
+		state->phase_4.spread_angle += 0x0E;
+	}
+
+	if(
+		((boss.phase_frame % 64) == 0) &&
+		(state->phase_4.random_ball_count < 8)
+	) {
+		state->phase_4.random_ball_count++;
+	}
 }
