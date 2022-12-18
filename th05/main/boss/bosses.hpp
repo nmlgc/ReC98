@@ -59,6 +59,7 @@ void near shinki_bg_type_d_colorfill(void);
 
 // Same for all bosses in this game.
 static const int ENTRANCE_BB_FRAMES_PER_CEL = 4;
+static const int ENTRANCE_BB_TRANSITION_FRAMES_PER_CEL = 2;
 
 BOSS_DEC(sara);
 BOSS_DEC(louise);

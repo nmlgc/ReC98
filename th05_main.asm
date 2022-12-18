@@ -10254,258 +10254,17 @@ MIDBOSS1_TEXT	segment	byte public 'CODE' use16
 MIDBOSS1_TEXT	ends
 
 B1_UPDATE_TEXT	segment	byte public 'CODE' use16
-	@phase_2_with_pattern$qv procdesc near
 	@pattern_blue_curve_counterclockw$qv procdesc near
 	@pattern_blue_curve_clockwise$qv procdesc near
 	@pattern_aimed_red_spread_stack$qv procdesc near
 	@pattern_red_stacks$qv procdesc near
-	@phase_3_with_pattern$qv procdesc near
 	@pattern_pellet_arcs_at_expanding$qv procdesc near
 	@pattern_random_red_rings$qv procdesc near
 	@pattern_accelerating_spirals_clo$qv procdesc near
 	@pattern_accelerating_spirals_cou$qv procdesc near
-	@pattern_dense_spreads_and_random$qv procdesc near
 B1_UPDATE_TEXT	ends
 
 B4_UPDATE_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-public @SARA_UPDATE$QV
-@sara_update$qv	proc far
-		push	bp
-		mov	bp, sp
-		mov	ax, _boss_pos.cur.x
-		mov	_homing_target.x, ax
-		mov	ax, _boss_pos.cur.y
-		mov	_homing_target.y, ax
-		inc	_boss_phase_frame
-		mov	_bullet_template.spawn_type, BST_NORMAL
-		mov	eax, _boss_pos.cur
-		mov	_bullet_template.BT_origin, eax
-		mov	_gather_template.GT_center, eax
-		mov	al, _boss_phase
-		mov	ah, 0
-		mov	bx, ax
-		cmp	bx, 4
-		ja	loc_188E9
-		add	bx, bx
-		jmp	cs:off_188FB[bx]
-
-loc_186EF:
-		cmp	_boss_phase_frame, 1
-		jnz	short loc_18702
-		mov	_boss_hp, 4650
-		mov	_boss_phase_end_hp, 2550
-
-loc_18702:
-		call	@boss_hittest_shots_invincible$qv
-		cmp	_boss_phase_frame, 224
-		jl	short loc_1874E
-		cmp	_boss_phase_frame, 224
-		jnz	short loc_18737
-		mov	ax, _boss_pos.cur.x
-		mov	_gather_template.GT_center.x, ax
-		mov	ax, _boss_pos.cur.y
-		mov	_gather_template.GT_center.y, ax
-		mov	_gather_template.GT_radius, (320 shl 4)
-		mov	_gather_template.GT_ring_points, 32
-		mov	_gather_template.GT_angle_delta, 3
-		mov	_gather_template.GT_col, 9
-
-loc_18737:
-		test	byte ptr _boss_phase_frame, 7
-		jnz	short loc_18741
-		call	@gather_add_only$qv
-
-loc_18741:
-		cmp	_boss_phase_frame, 224
-		jnz	short loc_1874E
-		mov	_gather_template.GT_col, 8
-
-loc_1874E:
-		cmp	_boss_phase_frame, 256
-		jl	loc_188EE
-		mov	_gather_template.GT_radius, (64 shl 4)
-		mov	_gather_template.GT_angle_delta, 2
-		mov	_gather_template.GT_ring_points, 8
-		inc	_boss_phase
-		mov	_boss_phase_frame, 0
-		call	snd_se_play pascal, 13
-
-loc_1877A:
-		mov	_bg_render_bombing_func, offset @sara_bg_render$qv
-		jmp	loc_188EE
-; ---------------------------------------------------------------------------
-
-loc_18783:
-		call	@boss_hittest_shots_invincible$qv
-		cmp	_boss_phase_frame, 32
-		jl	loc_188EE
-		inc	_boss_phase
-		mov	_boss_phase_frame, 0
-		mov	_boss_mode, 0
-		mov	_boss_phase_state, 0
-		mov	_boss_statebyte[10], -1
-		mov	_boss_statebyte[9], 40h
-		jmp	short loc_1877A
-; ---------------------------------------------------------------------------
-
-loc_187AF:
-		mov	al, _boss_mode
-		mov	ah, 0
-		or	ax, ax
-		jz	short loc_187BA
-		jmp	short loc_18800
-; ---------------------------------------------------------------------------
-
-loc_187BA:
-		mov	al, _boss_statebyte[9]
-		mov	ah, 0
-		mov	dx, _boss_phase_frame
-		sub	dx, ax
-		call	@boss_flystep_random$qi pascal, dx
-		or	al, al
-		jz	short loc_18819
-		mov	_boss_phase_frame, 0
-		inc	_boss_phase_state
-		cmp	_boss_phase_state, 32
-		jnb	short loc_18827
-
-loc_187DE:
-		push	4
-		call	randring2_next16_mod
-		inc	al
-		mov	_boss_mode, al
-		cmp	al, _boss_statebyte[10]
-		jz	short loc_187DE
-		mov	_boss_statebyte[10], al
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		mov	ax, off_22758[bx-2]
-		mov	_sara_phase_2_3_pattern, ax
-		jmp	short loc_18819
-; ---------------------------------------------------------------------------
-
-loc_18800:
-		call	@phase_2_with_pattern$qv
-		cmp	_boss_phase_frame, 0
-		jnz	short loc_18819
-		cmp	_boss_statebyte[9], 0Ch
-		jbe	short loc_18819
-		mov	al, _boss_statebyte[9]
-		add	al, -0Ch
-		mov	_boss_statebyte[9], al
-
-loc_18819:
-		call	@boss_hittest_shots$qv
-		or	al, al
-		jz	loc_188EE
-		call	@boss_score_bonus$qui pascal, 5
-
-loc_18827:
-		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_NW_SE shl 16) or 450
-		mov	_boss_statebyte[9], 50h	; 'P'
-		jmp	loc_188EE
-; ---------------------------------------------------------------------------
-
-loc_18838:
-		mov	al, _boss_mode
-		mov	ah, 0
-		or	ax, ax
-		jz	short loc_18843
-		jmp	short loc_18884
-; ---------------------------------------------------------------------------
-
-loc_18843:
-		mov	ax, _boss_phase_frame
-		add	ax, -16
-		call	@boss_flystep_random$qi pascal, ax
-		or	al, al
-		jz	short loc_1889D
-		mov	_boss_phase_frame, 0
-		inc	_boss_phase_state
-		cmp	_boss_phase_state, 24
-		jnb	short loc_188A9
-
-loc_18862:
-		push	4
-		call	randring2_next16_mod
-		inc	al
-		mov	_boss_mode, al
-		cmp	al, _boss_statebyte[10]
-		jz	short loc_18862
-		mov	_boss_statebyte[10], al
-		mov	ah, 0
-		add	ax, ax
-		mov	bx, ax
-		mov	ax, off_2275E[bx]
-		mov	_sara_phase_2_3_pattern, ax
-		jmp	short loc_1889D
-; ---------------------------------------------------------------------------
-
-loc_18884:
-		call	@phase_3_with_pattern$qv
-		cmp	_boss_phase_frame, 0
-		jnz	short loc_1889D
-		cmp	_boss_statebyte[9], -4Ch
-		jnb	short loc_1889D
-		mov	al, _boss_statebyte[9]
-		add	al, 18h
-		mov	_boss_statebyte[9], al
-
-loc_1889D:
-		call	@boss_hittest_shots$qv
-		or	al, al
-		jz	short loc_188EE
-		call	@boss_score_bonus$qui pascal, 5
-
-loc_188A9:
-		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_SW_NE shl 16) or 0
-		jmp	short loc_188EE
-; ---------------------------------------------------------------------------
-
-loc_188B4:
-		call	@pattern_dense_spreads_and_random$qv
-		cmp	_boss_phase_frame, 1300
-		jl	short loc_188C6
-		mov	_boss_phase_state, 0
-		jmp	short loc_188D2
-; ---------------------------------------------------------------------------
-
-loc_188C6:
-		call	@boss_hittest_shots$qv
-		or	al, al
-		jz	short loc_188EE
-		mov	_boss_phase_state, 1
-
-loc_188D2:
-		call	@laser_stop$qi pascal, 0
-		call	@laser_stop$qi pascal, 1
-		mov	_boss_phase_frame, 0
-		mov	_boss_phase, PHASE_BOSS_EXPLODE_SMALL
-		jmp	short loc_188EE
-; ---------------------------------------------------------------------------
-
-loc_188E9:
-		call	@boss_defeat_update$qui pascal, 10
-
-loc_188EE:
-		call	@hud_hp_update_and_render$qii pascal, _boss_hp, 4650
-		pop	bp
-		retf
-@sara_update$qv	endp
-
-; ---------------------------------------------------------------------------
-		db 0
-off_188FB	dw offset loc_186EF
-		dw offset loc_18783
-		dw offset loc_187AF
-		dw offset loc_18838
-		dw offset loc_188B4
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -20749,10 +20508,12 @@ include th04/main/hud/power[data].asm
 include th04/main/hud/hp[data].asm
 aB@b@bB@b@	db '　　×　　',0
 aB@b@bB@b@_0	db '　　×　　',0
-off_22758	dw offset @pattern_blue_curve_counterclockw$qv
+public _SARA_PATTERNS_PHASE_2_3
+_SARA_PATTERNS_PHASE_2_3 label word
+		dw offset @pattern_blue_curve_counterclockw$qv
 		dw offset @pattern_blue_curve_clockwise$qv
 		dw offset @pattern_aimed_red_spread_stack$qv
-off_2275E	dw offset @pattern_red_stacks$qv
+		dw offset @pattern_red_stacks$qv
 		dw offset @pattern_pellet_arcs_at_expanding$qv
 		dw offset @pattern_random_red_rings$qv
 		dw offset @pattern_accelerating_spirals_clo$qv

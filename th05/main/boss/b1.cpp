@@ -8,6 +8,8 @@
 #include "th01/math/area.hpp"
 #include "th01/math/dir.hpp"
 #include "th01/math/subpixel.hpp"
+#include "th02/main/tile/tile.hpp"
+#include "th04/formats/bb.h"
 extern "C" {
 #include "th04/math/motion.hpp"
 #include "th04/math/randring.hpp"
@@ -17,10 +19,16 @@ extern "C" {
 #include "th04/main/pattern.hpp"
 #include "th04/main/bullet/bullet.hpp"
 }
+#include "th04/main/bg.hpp"
 #include "th04/main/frames.h"
 #include "th04/main/gather.hpp"
+#include "th04/main/homing.hpp"
+#include "th04/main/phase.hpp"
+#include "th04/main/hud/hud.hpp"
+#include "th04/main/tile/bb.hpp"
 #include "th05/sprites/main_pat.h"
 #include "th05/main/boss/boss.hpp"
+#include "th05/main/boss/bosses.hpp"
 #include "th05/main/bullet/laser.hpp"
 
 // Constants
@@ -32,6 +40,14 @@ static const int PHASE_3_PATTERN_START_FRAME = 32;
 enum sara_colors_t {
 	COL_GATHER_1 = 9,
 	COL_GATHER_2 = 8,
+};
+
+// Always denotes the last phase that ends with that amount of HP.
+enum sara_hp_t {
+	HP_TOTAL = 4650,
+	HP_PHASE_2_END = 2550,
+	HP_PHASE_3_END = 450,
+	HP_PHASE_4_END = 0,
 };
 // ---------
 
@@ -75,7 +91,7 @@ union sara_state_t {
 extern pattern_loop_func_t phase_2_3_pattern;
 // -----
 
-void near phase_2_with_pattern(void)
+static void near phase_2_with_pattern(void)
 {
 	if(boss.phase_frame < PHASE_2_PATTERN_START_FRAME) {
 		gather_add_only_3stack(
@@ -152,7 +168,7 @@ void near pattern_red_stacks(void)
 	}
 }
 
-void near phase_3_with_pattern(void)
+static void near phase_3_with_pattern(void)
 {
 	if(boss.phase_frame < PHASE_3_PATTERN_START_FRAME) {
 		gather_add_only_3stack(
@@ -348,4 +364,185 @@ void near pattern_dense_spreads_and_random_balls_within_laser_walls(void)
 	) {
 		state->phase_4.random_ball_count++;
 	}
+}
+
+extern const pattern_loop_func_t SARA_PATTERNS_PHASE_2_3[2][4];
+
+#define phase_2_3_wait_fly_and_select_pattern( \
+	pattern_prev, phase, fly_delay, patterns_max, timeout_label \
+) { \
+	if(boss_flystep_random(boss.phase_frame - fly_delay)) { \
+		boss.phase_frame = 0; \
+		boss.phase_state.patterns_seen++; \
+		\
+		/* Timeout condition */ \
+		if(boss.phase_state.patterns_seen >= patterns_max) { \
+			goto timeout_label; \
+		} \
+		do { \
+			boss.mode = randring2_next8_ge_lt(1, 5); \
+		} while(boss.mode == pattern_prev); \
+		pattern_prev = boss.mode; \
+		phase_2_3_pattern = SARA_PATTERNS_PHASE_2_3[phase - 2][boss.mode - 1]; \
+	} \
+}
+
+#pragma option -a2
+
+void pascal sara_update(void)
+{
+	homing_target.x = boss.pos.cur.x;
+	homing_target.y = boss.pos.cur.y;
+	boss.phase_frame++;
+	bullet_template.spawn_type = BST_NORMAL; // ZUN bloat
+	bullet_template.origin = boss.pos.cur;
+	gather_template.center = boss.pos.cur;
+
+	switch(boss.phase) {
+	case PHASE_HP_FILL:
+		enum {
+			KEYFRAME_GATHER_SPAWN_START = (HUD_HP_FILL_FRAMES + 96),
+			KEYFRAME_GATHER_SPAWN_END = (KEYFRAME_GATHER_SPAWN_START + 32),
+		};
+
+		if(boss.phase_frame == 1) {
+			boss.hp = HP_TOTAL;
+			boss.phase_end_hp = HP_PHASE_2_END;
+		}
+		boss_hittest_shots_invincible();
+		if(boss.phase_frame >= KEYFRAME_GATHER_SPAWN_START) {
+			if(boss.phase_frame == KEYFRAME_GATHER_SPAWN_START) {
+				gather_template.center.x = boss.pos.cur.x;
+				gather_template.center.y = boss.pos.cur.y;
+				gather_template.radius.set(RES_X / 2.0f);
+				gather_template.ring_points = 32;
+				gather_template.angle_delta = 0x03;
+				gather_template.col = COL_GATHER_1;
+			}
+			if((boss.phase_frame & 7) == 0) {
+				gather_add_only();
+			}
+			if(boss.phase_frame == KEYFRAME_GATHER_SPAWN_START) {
+				gather_template.col = COL_GATHER_2;
+			}
+		}
+
+		// Timeout condition
+		if(boss.phase_frame >= KEYFRAME_GATHER_SPAWN_END) {
+			// Next phase
+			gather_template.radius.set(BOSS_W / 1.0f);
+			gather_template.angle_delta = 0x02;
+			gather_template.ring_points = 8;
+			boss.phase++;
+			boss.phase_frame = 0;
+			snd_se_play(13);
+			bg_render_bombing_func = sara_bg_render;
+		}
+		break;
+
+	case PHASE_BOSS_ENTRANCE_BB:
+		boss_hittest_shots_invincible();
+
+		// Timeout condition
+		if(boss.phase_frame >= (
+			ENTRANCE_BB_TRANSITION_FRAMES_PER_CEL * TILES_BB_CELS
+		)) {
+			// Next phase
+			boss.phase++;
+			boss.phase_frame = 0;
+			boss.mode = 0;
+			boss.phase_state.patterns_seen = 0;
+			state->phase_2.pattern_prev = -1;
+			state->phase_2.fly_delay = 64;
+
+			// ZUN bloat: Already set at the end of the previous phase, and
+			// it's not set at any other place.
+			bg_render_bombing_func = sara_bg_render;
+		}
+		break;
+
+	case 2:
+		switch(boss.mode) {
+		case 0:
+			phase_2_3_wait_fly_and_select_pattern(
+				state->phase_2.pattern_prev,
+				2,
+				state->phase_2.fly_delay,
+				32,
+				phase_2_timed_out
+			);
+			break;
+
+		default:
+			phase_2_with_pattern();
+			if((boss.phase_frame == 0) && (state->phase_2.fly_delay > 12)) {
+				state->phase_2.fly_delay -= 12;
+			}
+			break;
+		}
+		if(!boss_hittest_shots()) {
+			break;
+		}
+
+		// Next phase
+		boss_score_bonus(5);
+	phase_2_timed_out:
+		boss_phase_next(ET_NW_SE, HP_PHASE_3_END);
+		state->phase_3.pattern_duration = 80;
+		break;
+
+	case 3:
+		switch(boss.mode) {
+		case 0:
+			phase_2_3_wait_fly_and_select_pattern(
+				state->phase_3.pattern_prev, 3, 16, 24, phase_3_timed_out
+			);
+			break;
+
+		default:
+			phase_3_with_pattern();
+			if(
+				(boss.phase_frame == 0) &&
+				(state->phase_3.pattern_duration < 180)
+			) {
+				state->phase_3.pattern_duration += 24;
+			}
+			break;
+		}
+		if(!boss_hittest_shots()) {
+			break;
+		}
+
+		// Next phase
+		boss_score_bonus(5);
+	phase_3_timed_out:
+		boss_phase_next(ET_SW_NE, HP_PHASE_4_END);
+		break;
+
+	case 4:
+		pattern_dense_spreads_and_random_balls_within_laser_walls();
+
+		// Timeout condition
+		if(boss.phase_frame >= 1300) {
+			boss.phase_state.defeat_bonus = false;
+		} else {
+			// Boss defeated?
+			if(!boss_hittest_shots()) {
+				break;
+			}
+			boss.phase_state.defeat_bonus = true;
+		}
+
+		// Boss defeated
+		laser_stop(0);
+		laser_stop(1);
+		boss.phase_frame = 0;
+		boss.phase = PHASE_BOSS_EXPLODE_SMALL;
+		break;
+
+	default:
+		boss_defeat_update(10);
+		break;
+	}
+	hud_hp_update_and_render(boss.hp, HP_TOTAL);
 }
