@@ -89,12 +89,12 @@ enum yuugenmagan_colors_t {
 // Always denotes the last phase that ends with that amount of HP.
 enum yuugenmagan_hp_t {
 	HP_TOTAL = 16,
-	PHASE_1_END_HP = 15,
-	PHASE_3_END_HP = 12,
-	PHASE_5_END_HP = 10,
-	PHASE_7_END_HP = 8,
-	PHASE_9_END_HP = 2,
-	PHASE_13_END_HP = 0,
+	HP_PHASE_1_END = 15,
+	HP_PHASE_3_END = 12,
+	HP_PHASE_5_END = 10,
+	HP_PHASE_7_END = 8,
+	HP_PHASE_9_END = 2,
+	HP_PHASE_13_END = 0,
 };
 
 // Entities
@@ -333,8 +333,8 @@ void yuugenmagan_setup(void)
 	boss_phase_frame = 0;
 	boss_phase = 0;
 	boss_hp = HP_TOTAL;
-	hud_hp_first_white = PHASE_3_END_HP;
-	hud_hp_first_redwhite = PHASE_7_END_HP;
+	hud_hp_first_white = HP_PHASE_3_END;
+	hud_hp_first_redwhite = HP_PHASE_7_END;
 
 	// ZUN bloat: Redundant, no particles are shown in this fight.
 	particles_unput_update_render(PO_INITIALIZE, V_WHITE);
@@ -1468,7 +1468,7 @@ void yuugenmagan_main(void)
 
 		phase_1_pellets_from_lateral();
 		hit.update_and_render(flash_colors);
-		if((boss_hp <= PHASE_1_END_HP) || (boss_phase_frame > 1100)) {
+		if((boss_hp <= HP_PHASE_1_END) || (boss_phase_frame > 1100)) {
 			phase.next(2);
 		}
 	} else if(boss_phase == 2) {
@@ -1505,7 +1505,7 @@ void yuugenmagan_main(void)
 			missile_pairs_shift_angle_2_towards
 		);
 		hit.update_and_render(flash_colors);
-		if((boss_hp <= PHASE_3_END_HP) || (u3.iterations_done >= 5)) {
+		if((boss_hp <= HP_PHASE_3_END) || (u3.iterations_done >= 5)) {
 			phase.next(4);
 		}
 	} else if(boss_phase == 4) {
@@ -1604,7 +1604,7 @@ void yuugenmagan_main(void)
 			}
 		}
 		hit.update_and_render(flash_colors);
-		if((boss_hp <= PHASE_5_END_HP) || (u3.iterations_done > 4)) {
+		if((boss_hp <= HP_PHASE_5_END) || (u3.iterations_done > 4)) {
 			phase.next(6);
 		}
 	} else if(boss_phase == 6) {
@@ -1641,7 +1641,7 @@ void yuugenmagan_main(void)
 			missile_pairs_shift_angle_2_clock
 		);
 		hit.update_and_render(flash_colors);
-		if((boss_hp <= PHASE_7_END_HP) || (u3.iterations_done > 4)) {
+		if((boss_hp <= HP_PHASE_7_END) || (u3.iterations_done > 4)) {
 			phase.next(8);
 		}
 	} else if(boss_phase == 8) {
@@ -1689,7 +1689,7 @@ void yuugenmagan_main(void)
 		}
 		hit.update_and_render(flash_colors);
 		if(
-			(boss_hp <= PHASE_9_END_HP) ||
+			(boss_hp <= HP_PHASE_9_END) ||
 			(u2.subphase == laser_subphase(2, LSP_DONE))
 		) {
 			// ZUN bug: We can get here with a laser still on screen,
@@ -1804,9 +1804,9 @@ void yuugenmagan_main(void)
 			}
 		}
 		hit.update_and_render(flash_colors);
-		yuugenmagan_defeat_if((boss_hp <= PHASE_13_END_HP), false, i);
+		yuugenmagan_defeat_if((boss_hp <= HP_PHASE_13_END), false, i);
 		if(
-			((boss_hp <= PHASE_13_END_HP) || (u2.subphase == P11_DONE)) &&
+			((boss_hp <= HP_PHASE_13_END) || (u2.subphase == P11_DONE)) &&
 			!hit.invincible
 		) {
 			phase.next(12, u2.unused, u3.eyes_open, EF_WEST);
@@ -1990,7 +1990,7 @@ void yuugenmagan_main(void)
 			}
 		}
 		hit.update_and_render(flash_colors);
-		yuugenmagan_defeat_if((boss_hp <= PHASE_13_END_HP), true, i);
+		yuugenmagan_defeat_if((boss_hp <= HP_PHASE_13_END), true, i);
 
 		#undef eye_is_open_pedantic
 		#undef eye_is_open

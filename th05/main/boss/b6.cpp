@@ -47,15 +47,15 @@ static const int PHASE_2_3_PATTERN_START_FRAME = 32;
 // Always denotes the last phase that ends with that amount of HP.
 enum shinki_hp_t {
 	HP_TOTAL = 22800,
-	PHASE_2_END_HP = 20600,
-	PHASE_3_END_HP = 18400,
-	PHASE_6_END_HP = 14600,
-	PHASE_7_END_HP = 11600,
-	PHASE_9_END_HP = 8600,
-	PHASE_10_DEVIL_LASER_HP = 5600,
-	PHASE_10_DEVIL_FAST_HP = 3800,
-	PHASE_10_END_HP = 2800,
-	PHASE_12_END_HP = 0,
+	HP_PHASE_2_END = 20600,
+	HP_PHASE_3_END = 18400,
+	HP_PHASE_6_END = 14600,
+	HP_PHASE_7_END = 11600,
+	HP_PHASE_9_END = 8600,
+	HP_PHASE_10_DEVIL_LASER = 5600,
+	HP_PHASE_10_DEVIL_FAST = 3800,
+	HP_PHASE_10_END = 2800,
+	HP_PHASE_12_END = 0,
 };
 // ---------
 
@@ -479,7 +479,7 @@ void near pattern_devil(void)
 	// Careful, collides with [phase_relative] in shinki_update()! *Must* be
 	// set to 1 before ending the pattern to ensure that the remaining phases
 	// run in their expected order. Guaranteed in the original code by setting
-	// PHASE_10_DEVIL_LASER_HP a much higher value than PHASE_10_END_HP.
+	// HP_PHASE_10_DEVIL_LASER to a much higher value than HP_PHASE_10_END.
 	#define lasers_active    	static_cast<bool>(boss_statebyte[10])
 
 	#define bullet_direction 	boss_statebyte[11]
@@ -498,7 +498,7 @@ void near pattern_devil(void)
 	int phase_frame_minus_startup_delay = (boss.phase_frame - 192);
 
 	// Laser activation
-	if((boss.hp <= PHASE_10_DEVIL_LASER_HP) || (boss.phase_frame >= 1800)) {
+	if((boss.hp <= HP_PHASE_10_DEVIL_LASER) || (boss.phase_frame >= 1800)) {
 		if(laser_grow_delay == 0) {
 			laser_template.coords.width = 6;
 			laser_template.coords.angle = 0x40;
@@ -652,7 +652,7 @@ void near pattern_devil(void)
 				laser_direction--; // = CLOCKWISE;
 			}
 		}
-		if((boss.hp <= PHASE_10_DEVIL_FAST_HP) || (boss.phase_frame >= 2500)) {
+		if((boss.hp <= HP_PHASE_10_DEVIL_FAST) || (boss.phase_frame >= 2500)) {
 			if((laser_grow_delay++) == 65) {
 				b6ball_interval = select_for_rank(52, 20, 16, 12);
 				boss_explode_small(ET_CIRCLE);
@@ -805,7 +805,7 @@ void pascal shinki_update(void)
 	case PHASE_HP_FILL:
 		if(boss.phase_frame == 1) {
 			boss.hp = HP_TOTAL;
-			boss.phase_end_hp = PHASE_2_END_HP;
+			boss.phase_end_hp = HP_PHASE_2_END;
 			gather_template_init();
 			boss.sprite = PAT_SHINKI_STILL;
 
@@ -889,11 +889,11 @@ void pascal shinki_update(void)
 	phase_2_3_timed_out:
 		// Next phase
 		if(phase_relative == 0) {
-			boss_phase_next(ET_NW_SE, PHASE_3_END_HP);
+			boss_phase_next(ET_NW_SE, HP_PHASE_3_END);
 			boss.mode = 1;
 			phase_2_3_pattern = pattern_random_directional_and_kunai;
 		} else {
-			boss_phase_next(ET_NW_SE, PHASE_6_END_HP);
+			boss_phase_next(ET_NW_SE, HP_PHASE_6_END);
 		}
 		phase_relative++;
 		break;
@@ -954,12 +954,12 @@ void pascal shinki_update(void)
 
 		// Next phase
 		if(phase_relative == 0) {
-			boss_phase_next(ET_SW_NE, PHASE_7_END_HP);
+			boss_phase_next(ET_SW_NE, HP_PHASE_7_END);
 			wing_pattern = pattern_cheetos_within_spread_walls;
 			boss.phase_frame = 0; // redundant
 			phase_relative++;
 		} else {
-			boss_phase_next(ET_HORIZONTAL, PHASE_9_END_HP);
+			boss_phase_next(ET_HORIZONTAL, HP_PHASE_9_END);
 		}
 		break;
 
@@ -1014,12 +1014,12 @@ void pascal shinki_update(void)
 
 		// Next phase
 		if(phase_relative == 0) {
-			boss_phase_next(ET_SW_NE, PHASE_10_END_HP);
+			boss_phase_next(ET_SW_NE, HP_PHASE_10_END);
 			shinki_wing_pattern = pattern_devil;
 			boss.phase_frame = 0; // redundant
 			phase_relative++;
 		} else {
-			boss_phase_next(ET_HORIZONTAL, PHASE_12_END_HP);
+			boss_phase_next(ET_HORIZONTAL, HP_PHASE_12_END);
 			playfield_shake_anim_time = PHASE_11_FRAMES;
 			// The pattern_devil() lasers. Should ideally be stopped inside the
 			// pattern, but since it's a looping one without a clear end,

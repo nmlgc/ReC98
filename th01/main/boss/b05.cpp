@@ -50,8 +50,8 @@ static const screen_y_t BASE_TOP  = (BASE_CENTER_Y - (SINGYOKU_H / 2));
 // Always denotes the last phase that ends with that amount of HP.
 enum singyoku_hp_t {
 	HP_TOTAL = 8,
-	PHASE_1_END_HP = 6,
-	PHASE_2_END_HP = 0,
+	HP_PHASE_1_END = 6,
+	HP_PHASE_2_END = 0,
 };
 
 // Global state that is defined here for some reason
@@ -177,7 +177,7 @@ void singyoku_setup(void)
 	ent_sphere.set_image(0);
 
 	boss_hp = HP_TOTAL;
-	hud_hp_first_white = PHASE_1_END_HP;
+	hud_hp_first_white = HP_PHASE_1_END;
 	hud_hp_first_redwhite = 2; // fully arbitrary, doesn't indicate anything
 	boss_phase = 0;
 
@@ -741,7 +741,7 @@ void singyoku_main(void)
 
 		hit.update_and_render(flash_colors);
 
-		if((boss_hp <= PHASE_1_END_HP) && !hit.invincible) {
+		if((boss_hp <= HP_PHASE_1_END) && !hit.invincible) {
 			// Good catch – we don't want to stop the slam movement in the
 			// middle of it, and leave SinGyoku somewhere below BASE_TOP.
 			// (Conditionally setting [phase.pattern_cur] to 4 would have made
@@ -774,7 +774,7 @@ void singyoku_main(void)
 		}
 
 		hit.update_and_render(flash_colors);
-		if(boss_hp <= PHASE_2_END_HP) {
+		if(boss_hp <= HP_PHASE_2_END) {
 			boss_phase = 8;
 			mdrv2_se_play(5);
 			boss_phase_frame = 0; // ZUN bloat: The fight is over

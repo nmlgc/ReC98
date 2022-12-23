@@ -88,9 +88,9 @@ enum kikuri_colors_t {
 // Always denotes the last phase that ends with that amount of HP.
 enum kikuri_hp_t {
 	HP_TOTAL = 14,
-	PHASE_2_END_HP = 10,
-	PHASE_5_END_HP = 6,
-	PHASE_6_END_HP = 0,
+	HP_PHASE_2_END = 10,
+	HP_PHASE_5_END = 6,
+	HP_PHASE_6_END = 0,
 };
 
 // Global boss state that is defined here for some reason
@@ -212,8 +212,8 @@ void kikuri_setup(void)
 
 	// Same HP and phase settings as Elis.
 	boss_hp = HP_TOTAL;
-	hud_hp_first_white = PHASE_2_END_HP;
-	hud_hp_first_redwhite = PHASE_5_END_HP;
+	hud_hp_first_white = HP_PHASE_2_END;
+	hud_hp_first_redwhite = HP_PHASE_5_END;
 
 	// ZUN bloat: Already called before the sprites are first rendered, and
 	// (0, 0) isn't used to indicate "soul is not alive" either.
@@ -1066,7 +1066,7 @@ entrance_rings_still_active:
 			phase.patterns_done++;
 		}
 		if(!hit.invincible && (
-			(boss_hp <= PHASE_2_END_HP) || (phase.patterns_done >= 6)
+			(boss_hp <= HP_PHASE_2_END) || (phase.patterns_done >= 6)
 		)) {
 			boss_phase = 3;
 			boss_phase_frame = 0;
@@ -1122,7 +1122,7 @@ entrance_rings_still_active:
 		pattern_two_crossed_eye_lasers();
 		hit.update_and_render(flash_colors);
 		if(!hit.invincible && (
-			(boss_hp <= PHASE_5_END_HP) || (boss_phase_frame > 1600)
+			(boss_hp <= HP_PHASE_5_END) || (boss_phase_frame > 1600)
 		)) {
 			boss_phase = 6;
 			boss_phase_frame = 0;

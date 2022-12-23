@@ -83,8 +83,8 @@ enum mima_colors_t {
 // Always denotes the last phase that ends with that amount of HP.
 enum mima_hp_t {
 	HP_TOTAL = 12,
-	PHASE_1_END_HP = 6,
-	PHASE_3_END_HP = 0,
+	HP_PHASE_1_END = 6,
+	HP_PHASE_3_END = 0,
 };
 
 // State
@@ -369,7 +369,7 @@ void mima_setup(void)
 	boss_phase_frame = 0;
 	boss_phase = 0;
 	boss_hp = HP_TOTAL;
-	hud_hp_first_white = PHASE_1_END_HP;
+	hud_hp_first_white = HP_PHASE_1_END;
 	hud_hp_first_redwhite = 2;  // fully arbitrary, doesn't indicate anything
 	particles_unput_update_render(PO_INITIALIZE, V_WHITE);
 }
@@ -1294,7 +1294,7 @@ void mima_main(void)
 		// is cleaned up.
 		if(boss_phase_frame == 0) {
 			phase.pattern_next(4);
-			if(boss_hp <= PHASE_1_END_HP) {
+			if(boss_hp <= HP_PHASE_1_END) {
 				phase.pattern_cur = 99;
 			}
 		}
@@ -1335,7 +1335,7 @@ void mima_main(void)
 		}
 
 		hit.update_and_render(flash_colors);
-		if(boss_hp <= PHASE_3_END_HP) {
+		if(boss_hp <= HP_PHASE_3_END) {
 			graph_accesspage_func(1);
 			mima_unput();
 			graph_accesspage_func(0);

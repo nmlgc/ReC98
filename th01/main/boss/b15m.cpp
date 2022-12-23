@@ -65,9 +65,9 @@ enum elis_colors_t {
 // Always denotes the last phase that ends with that amount of HP.
 enum elis_hp_t {
 	HP_TOTAL = 14,
-	PHASE_1_END_HP = 10,
-	PHASE_3_END_HP = 6,
-	PHASE_5_END_HP = 0,
+	HP_PHASE_1_END = 10,
+	HP_PHASE_3_END = 6,
+	HP_PHASE_5_END = 0,
 };
 
 // Global boss state that is defined here for some reason, part 1
@@ -615,8 +615,8 @@ void elis_setup(void)
 
 	// Same HP and phase settings as Kikuri.
 	boss_hp = HP_TOTAL;
-	hud_hp_first_white = PHASE_1_END_HP;
-	hud_hp_first_redwhite = PHASE_3_END_HP;
+	hud_hp_first_white = HP_PHASE_1_END;
+	hud_hp_first_redwhite = HP_PHASE_3_END;
 
 	random_seed = frame_rand;
 	palette_set_grayscale(boss_post_defeat_palette, 0x0, col, comp);
@@ -2082,7 +2082,7 @@ void elis_main(void)
 		hud_hp_increment_render(initial_hp_rendered, boss_hp, boss_phase_frame);
 
 		phase_frame_common(1, phase_1, flash_colors);
-		if(!hit.invincible && phase_done(PHASE_1_END_HP)) {
+		if(!hit.invincible && phase_done(HP_PHASE_1_END)) {
 			phase.next(2, CHOOSE_NEW);
 		}
 	} else if(boss_phase == 2) {
@@ -2095,7 +2095,7 @@ void elis_main(void)
 		}
 	} else if(boss_phase == 3) {
 		phase_frame_common(3, phase_3, flash_colors);
-		if(!hit.invincible && phase_done(PHASE_3_END_HP)) {
+		if(!hit.invincible && phase_done(HP_PHASE_3_END)) {
 			phase.next(4, CHOOSE_NEW);
 			form = F_GIRL;
 		}
@@ -2131,7 +2131,7 @@ void elis_main(void)
 		}
 		phase_5(form, bat_velocity_x, bat_velocity_y);
 		hit_update_and_render(form, flash_colors);
-		if(boss_hp <= PHASE_5_END_HP) {
+		if(boss_hp <= HP_PHASE_5_END) {
 			int i;
 
 			mdrv2_bgm_fade_out_nonblock();
