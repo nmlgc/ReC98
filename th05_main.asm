@@ -21360,8 +21360,8 @@ off_22832	dw offset sub_1CCD3
 		dw 0
 		dw 0
 		dw 0
-public _shinki_patterns_phase_2_3
-_shinki_patterns_phase_2_3 label word
+public _SHINKI_PATTERNS_PHASE_2_3
+_SHINKI_PATTERNS_PHASE_2_3 label word
 		dw offset @pattern_curved_rings$qv
 		dw offset @pattern_dualspeed_rings$qv
 		dw offset @pattern_random_directional_and_k$qv

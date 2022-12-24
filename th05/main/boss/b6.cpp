@@ -154,16 +154,16 @@ bool near pattern_dualspeed_rings(void)
 	#undef interval
 }
 
-void near gather_then_phase_2_3_pattern(void)
+static void near phase_2_3_with_pattern(void)
 {
 	if(boss.phase_frame < PHASE_2_3_PATTERN_START_FRAME) {
 		gather_add_only_3stack((boss.phase_frame - 16), 7, 6);
 		if(boss.phase_frame == 2) {
 			boss.sprite = PAT_SHINKI_CAST;
 
-			// What's this, part of an unused pattern? Actually, it's just
-			// copy-pasted from a similar function in Yumeko's fight, which
-			// does fire bullets based on that template.
+			// ZUN bloat: What's this, part of an unused pattern? Actually,
+			// it's just copy-pasted from a similar function in Yumeko's fight,
+			// which does fire bullets based on that template.
 			bullet_template.spawn_type = (
 				BST_CLOUD_BACKWARDS | BST_NO_SLOWDOWN
 			);
@@ -859,13 +859,13 @@ void pascal shinki_update(void)
 			if(boss_flystep_random(
 				boss.phase_frame - PHASE_2_3_PATTERN_START_FRAME
 			)) {
-				#define patterns shinki_patterns_phase_2_3
-				extern pattern_oneshot_func_t patterns[2][2];
+				#define PATTERNS SHINKI_PATTERNS_PHASE_2_3
+				extern const pattern_oneshot_func_t PATTERNS[2][2];
 
 				boss.phase_frame = 0;
 				boss.phase_state.patterns_seen++;
 				boss.mode++;
-				phase_2_3_pattern = patterns[phase_relative][
+				phase_2_3_pattern = PATTERNS[phase_relative][
 					boss.phase_state.patterns_seen & 1
 				];
 
@@ -874,11 +874,11 @@ void pascal shinki_update(void)
 					goto phase_2_3_timed_out;
 				}
 
-				#undef patterns
+				#undef PATTERNS
 			}
 			break;
 		case 1:
-			gather_then_phase_2_3_pattern();
+			phase_2_3_with_pattern();
 			break;
 		}
 		if(!boss_hittest_shots()) {
@@ -977,7 +977,7 @@ void pascal shinki_update(void)
 			// Next phase
 			boss.phase++;
 			boss.phase_frame = 0;
-			shinki_wing_pattern = pattern_aimed_b6balls_and_symmetric_spreads;
+			wing_pattern = pattern_aimed_b6balls_and_symmetric_spreads;
 			phase_relative = 0;
 		}
 		break;
