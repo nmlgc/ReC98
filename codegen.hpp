@@ -21,6 +21,12 @@
 ///    assembly (`#pragma inline`) would work and generate the correct
 ///    instructions, but that would incur yet another dependency on a 16-bit
 ///    TASM for something honestly quite insignificant.
+/// 2) If _SI or _DI are used within a function, Turbo C++ 4.0 always generates
+///    a `PUSH SI` and `PUSH DI` instruction in the function prolog, and a
+///    `POP DI` and `POP SI` instruction in the epilog, in this order. If a
+///    function needs both these registers and a different prolog or epilog, all
+///    use of these registers must be hidden via __emit__(). These macros can
+///    help retain some readability in this case.
 ///
 /// Provides access to the following instructions that are unavailable in Turbo
 /// C++ 4.0's inline assembler, for arbitrary registers:
@@ -34,6 +40,7 @@
 
 struct X86 {
 	enum Prefix {
+		P_SS = 0x36,
 		P_ES = 0x26,
 		P_FS = 0x64,
 		P_GS = 0x65,
@@ -41,6 +48,7 @@ struct X86 {
 	};
 
 	enum Reg16 {
+		R_AX = 0,
 		R_DI = 7,
 	};
 
@@ -54,7 +62,9 @@ struct X86 {
 
 	enum OpRegMem {
 		OR_RM_R_32  = 0x09,	// OR  r/m32, r32
+		MOV_RM_R_16 = 0x89,	// MOV r/m16, r16
 		MOV_RM_R_32 = 0x89,	// MOV r/m32, r32
+		MOV_R_RM_16 = 0x8B,	// MOV r16, r/m16
 	};
 
 	enum OpRegRegMem {
@@ -68,8 +78,21 @@ struct X86 {
 		__emit__(op, (0xC0 + (dst * 8) + src), imm);
 	}
 
-	static void reg_mem(OpRegMem op, Prefix prefix, RM rm, Reg32 reg) {
-		__emit__(P_OPERAND_SIZE, prefix, op, ((reg * 8) + rm));
+	static void reg_mem(
+		OpRegMem op, Prefix prefix, RM rm, Reg16 reg, uint8_t disp = 0
+	) {
+		if(disp) {
+			__emit__(prefix, op, (0x40 + ((reg * 8) + rm)), disp);
+		} else {
+			__emit__(prefix, op, ((reg * 8) + rm));
+		}
+	}
+
+	static void reg_mem(
+		OpRegMem op, Prefix prefix, RM rm, Reg32 reg, uint8_t disp = 0
+	) {
+		__emit__(P_OPERAND_SIZE);
+		reg_mem(op, prefix, rm, static_cast<Reg16>(reg), disp);
 	}
 	// --------
 };
@@ -79,6 +102,15 @@ struct X86 {
 
 #define _imul_reg_to_reg(dst_reg, src_reg, imm) \
 	X86::reg_reg(X86::IMUL_R_RM_IMM_8, X86::R##dst_reg, X86::R##src_reg, imm);
+
+#define _mov_to_mem(dst_sgm, dst_off, dst_disp, src_reg) \
+	X86::reg_mem( \
+		X86::MOV_RM_R_16, \
+		X86::P##dst_sgm, \
+		X86::RM_ADDRESS##dst_off, \
+		X86::R##src_reg, \
+		dst_disp \
+	);
 
 // Removing [val] from the parameter lists of the template functions below
 // perfects the inlining.
@@ -100,5 +132,8 @@ struct X86 {
 
 #define imul_reg_to_reg(dst_reg, src_reg, imm) \
 	_imul_reg_to_reg(dst_reg, src_reg, imm)
+
+#define mov_to_mem(dst_sgm, dst_off, dst_disp, src_reg) \
+	_mov_to_mem(dst_sgm, dst_off, dst_disp, src_reg)
 // ---------------------------------------------------
 /// ----------------------

@@ -1,26 +1,4 @@
-; Returns the Y coordinate in AX.
-
-; int __usercall near vector2_at_opt(int angle<cx>, pixel_t length<bx>, Point origin<ss:bp>, Point near *ret<ss:di>)
-vector2_at_opt	proc near
-	push	si
-	mov	si, cx
-	add	si, si
-	movsx	eax, bx
-	movsx	edx, _CosTable8[si]
-	imul	eax, edx
-	sar	eax, 8
-	add	ax, [bp+Point.x]
-	mov	ss:[di+Point.x], ax
-	movsx	eax, bx
-	movsx	edx, _SinTable8[si]
-	imul	eax, edx
-	sar	eax, 8
-	add	ax, [bp+Point.y]
-	mov	ss:[di+Point.y], ax
-	pop	si
-	retn
-vector2_at_opt	endp
-
+	@vector2_at_opt$qv procdesc near
 
 ; Builds a line starting at [s], with [t] being [edgelength] 1/16th pixel
 ; units away from [s]. [s] and [t] are returned in pixel units.
@@ -79,10 +57,10 @@ point7  	= Point ptr -4
 	mov	ch, 0
 	lea	di, [bp+point6]
 	sub	bp, size Point ; bp = point7
-	call	vector2_at_opt
+	call	@vector2_at_opt$qv
 	add	cl, 128
 	sub	di, 4 ; di = point5
-	call	vector2_at_opt
+	call	@vector2_at_opt$qv
 	sub	[bp-(size Point)+Point.y], ax ; bp = line edge length (Y)
 	mov	ax, [bp-(size Point * 2).Point.x]
 	sub	[bp-(size Point)+Point.x], ax ; bp = line edge length (X)
@@ -90,10 +68,10 @@ point7  	= Point ptr -4
 	mov	bx, [si+laser_coords_t.starts_at_distance]
 	sub	di, size Point * 5 ; di = point0
 	sub	bp, size Point * 2 ; bp = point5
-	call	vector2_at_opt
+	call	@vector2_at_opt$qv
 	mov	bx, [si+laser_coords_t.ends_at_distance]
 	add	di, size Point * 3 ; di = point3
-	call	vector2_at_opt
+	call	@vector2_at_opt$qv
 	lea	di, [bp-(size Point * 5)] ; di = point0
 	lea	bx, [bp-(size Point * 4)] ; bx = point1
 	call	build_line_in_pixels
@@ -143,7 +121,7 @@ laser		= word ptr  4
 	lea	di, [bp+testrect_center]
 
 @@loop:
-	call	vector2_at_opt
+	call	@vector2_at_opt$qv
 	add	ax, (6 shl 4)
 	sub	ax, _player_pos.cur.y
 	cmp	ax, (12 shl 4)
