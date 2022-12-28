@@ -1,31 +1,5 @@
 	@vector2_at_opt$qv procdesc near
-
-; Builds a line starting at [s], with [t] being [edgelength] 1/16th pixel
-; units away from [s]. [s] and [t] are returned in pixel units.
-
-; void __usercall build_line_in_pixels(
-; 	Point *s<ss:di> /* (inout) */,
-; 	Point *t<ss:bx> /* (out) */,
-; 	const Point *edgelength<ss:bp-4> /* (out) */
-; )
-build_line_in_pixels	proc near
-	mov	ax, [bp+size Point+Point.x]
-	mov	dx, ss:[di+Point.x]
-	add	ax, dx
-	sar	ax, 4
-	sar	dx, 4
-	mov	ss:[bx+Point.x], ax
-	mov	ss:[di+Point.x], dx
-	mov	ax, [bp+size Point+Point.y]
-	mov	dx, ss:[di+Point.y]
-	add	ax, dx
-	sar	ax, 4
-	sar	dx, 4
-	mov	ss:[bx+Point.y], ax
-	mov	ss:[di+Point.y], dx
-	retn
-build_line_in_pixels	endp
-
+	@build_line_in_pixels$qv procdesc near
 
 public @LASER_RENDER_RAY$QP14LASER_COORDS_T
 @laser_render_ray$qp14laser_coords_t proc near
@@ -74,10 +48,10 @@ point7  	= Point ptr -4
 	call	@vector2_at_opt$qv
 	lea	di, [bp-(size Point * 5)] ; di = point0
 	lea	bx, [bp-(size Point * 4)] ; bx = point1
-	call	build_line_in_pixels
+	call	@build_line_in_pixels$qv
 	add	di, size Point * 3 ; di = point3
 	add	bx, size Point     ; bx = point2
-	call	build_line_in_pixels
+	call	@build_line_in_pixels$qv
 	add	bp, size Point * 3 ; bp = (what you'd actually expect it to be)
 	lea	di, [bp+point0]
 	call	grc_clip_polygon_n pascal, ss, di, 8, ss, di, 4

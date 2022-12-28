@@ -49,6 +49,7 @@ struct X86 {
 
 	enum Reg16 {
 		R_AX = 0,
+		R_DX = 2,
 		R_DI = 7,
 	};
 
@@ -58,6 +59,7 @@ struct X86 {
 
 	enum RM {
 		RM_ADDRESS_DI = 0x05,
+		RM_ADDRESS_BP = 0x06,
 	};
 
 	enum OpRegMem {
@@ -81,10 +83,13 @@ struct X86 {
 	static void reg_mem(
 		OpRegMem op, Prefix prefix, RM rm, Reg16 reg, uint8_t disp = 0
 	) {
+		if(!((prefix == P_SS) && (rm == RM_ADDRESS_BP))) {
+			__emit__(prefix);
+		}
 		if(disp) {
-			__emit__(prefix, op, (0x40 + ((reg * 8) + rm)), disp);
+			__emit__(op, (0x40 + ((reg * 8) + rm)), disp);
 		} else {
-			__emit__(prefix, op, ((reg * 8) + rm));
+			__emit__(op, ((reg * 8) + rm));
 		}
 	}
 
@@ -102,6 +107,15 @@ struct X86 {
 
 #define _imul_reg_to_reg(dst_reg, src_reg, imm) \
 	X86::reg_reg(X86::IMUL_R_RM_IMM_8, X86::R##dst_reg, X86::R##src_reg, imm);
+
+#define _mov_to_reg(dst_reg, src_sgm, src_off, src_disp) \
+	X86::reg_mem( \
+		X86::MOV_R_RM_16, \
+		X86::P##src_sgm, \
+		X86::RM_ADDRESS##src_off, \
+		X86::R##dst_reg, \
+		src_disp \
+	);
 
 #define _mov_to_mem(dst_sgm, dst_off, dst_disp, src_reg) \
 	X86::reg_mem( \
@@ -132,6 +146,9 @@ struct X86 {
 
 #define imul_reg_to_reg(dst_reg, src_reg, imm) \
 	_imul_reg_to_reg(dst_reg, src_reg, imm)
+
+#define mov_to_reg(dst_reg, src_sgm, src_off, src_disp) \
+	_mov_to_reg(dst_reg, src_sgm, src_off, src_disp)
 
 #define mov_to_mem(dst_sgm, dst_off, dst_disp, src_reg) \
 	_mov_to_mem(dst_sgm, dst_off, dst_disp, src_reg)
