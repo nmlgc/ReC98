@@ -40,6 +40,7 @@ where the scalar-type variable is declared in relation to them.
 
 | | |
 |-|-|
+| `ADD r8, imm8` | For non-`AL` registers, `imm8` must be `static_cast` to `uint8_t`. Otherwise, the addition is done on `AL` and then `MOV`ed to `r8`. |
 | `ADD [m8], imm8` | Only achievable through a C++ method operating on a  member? |
 | `MOV AX, [m16]`<br />`ADD AL, [m8]` | Same – `[m16]` must be returned from an inlined function to avoid the optimization of it being directly shortened to 8 bits. |
 | `MOV AL, [m8]`<br />`ADD AL, imm8`<br />`MOV [m8], AL` | Opposite; *not* an inlined function |

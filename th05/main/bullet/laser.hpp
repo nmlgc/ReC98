@@ -93,7 +93,7 @@ void pascal near laser_stop(int slot);
 /// -------
 
 // Returns `true` if the laser is entirely off-screen.
-bool16 pascal near laser_render_ray(laser_coords_t near *coords);
+bool16 pascal near laser_render_ray(const laser_coords_t near& coords);
 
 // Processes any collision between the given [laser] and the player.
 void pascal near laser_hittest(Laser near &laser);

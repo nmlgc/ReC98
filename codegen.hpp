@@ -47,9 +47,14 @@ struct X86 {
 		P_OPERAND_SIZE = 0x66,
 	};
 
+	enum Reg8 {
+		R_CL = 1,
+	};
+
 	enum Reg16 {
 		R_AX = 0,
 		R_DX = 2,
+		R_BX = 3,
 		R_DI = 7,
 	};
 
@@ -67,6 +72,7 @@ struct X86 {
 		MOV_RM_R_16 = 0x89,	// MOV r/m16, r16
 		MOV_RM_R_32 = 0x89,	// MOV r/m32, r32
 		MOV_R_RM_16 = 0x8B,	// MOV r16, r/m16
+		LEA_R_M_16  = 0x8D,	// LEA r16, m
 	};
 
 	enum OpRegRegMem {
@@ -105,8 +111,17 @@ struct X86 {
 // First macro layer to transform pseudoregisters into x86 constants
 // -----------------------------------------------------------------
 
+#define _stack_to_reg(op, dst_reg, imm) \
+	X86::reg_mem(op, X86::P_SS, X86::RM_ADDRESS_BP, X86::R##dst_reg, imm);
+
 #define _imul_reg_to_reg(dst_reg, src_reg, imm) \
 	X86::reg_reg(X86::IMUL_R_RM_IMM_8, X86::R##dst_reg, X86::R##src_reg, imm);
+
+#define _lea_local_to_reg(dst_reg, src_top, src_ptr) \
+	_stack_to_reg(X86::LEA_R_M_16, dst_reg, ( \
+		reinterpret_cast<uint8_t __ss *>(src_ptr) - \
+		reinterpret_cast<uint8_t __ss *>(src_top) \
+	));
 
 #define _mov_to_reg(dst_reg, src_sgm, src_off, src_disp) \
 	X86::reg_mem( \
@@ -146,6 +161,9 @@ struct X86 {
 
 #define imul_reg_to_reg(dst_reg, src_reg, imm) \
 	_imul_reg_to_reg(dst_reg, src_reg, imm)
+
+#define lea_local_to_reg(dst_reg, src_top, src_ptr) \
+	_lea_local_to_reg(dst_reg, src_top, src_ptr)
 
 #define mov_to_reg(dst_reg, src_sgm, src_off, src_disp) \
 	_mov_to_reg(dst_reg, src_sgm, src_off, src_disp)

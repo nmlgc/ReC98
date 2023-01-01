@@ -180,9 +180,7 @@ void pascal near polygons_update_and_render(void)
 		if(pos[i].y >= (RES_Y * 20)) {
 			polygon_init(i, -(RES_Y * 4), (8 - (rand() & 15)));
 		}
-		grcg_polygon_c(
-			reinterpret_cast<Point *>(points), polygon_vertex_count(i)
-		);
+		grcg_polygon_c(points, polygon_vertex_count(i));
 	}
 }
 

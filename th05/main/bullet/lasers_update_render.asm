@@ -1,3 +1,6 @@
+	@LASER_RENDER_RAY$QRX14LASER_COORDS_T procdesc pascal near \
+		coords:word
+
 public @lasers_update$qv
 @lasers_update$qv proc near
 	push	bp
@@ -242,7 +245,7 @@ public @lasers_render$qv
 	mov	[bp+@@end_distance_orig], ax
 	sub	[si+laser_t.coords.ends_at_distance], (2 shl 4)
 	lea	ax, [si+laser_t.coords]
-	call	@laser_render_ray$qp14laser_coords_t pascal, ax
+	call	@laser_render_ray$qrx14laser_coords_t pascal, ax
 	mov	ax, [bp+@@end_distance_orig]
 	mov	[si+laser_t.coords.ends_at_distance], ax
 
@@ -318,7 +321,7 @@ public @lasers_render$qv
 
 @@draw_inner_ray:
 	lea	ax, [si+laser_t.coords]
-	call	@laser_render_ray$qp14laser_coords_t pascal, ax
+	call	@laser_render_ray$qrx14laser_coords_t pascal, ax
 	or	ax, ax
 	jz	@@width_reset
 	mov	[si+laser_t.flag], LF_FREE

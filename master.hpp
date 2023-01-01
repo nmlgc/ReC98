@@ -269,10 +269,10 @@ void MASTER_RET grcg_off(void);
 
 	// Polygons
 	void MASTER_RET grcg_polygon_c(
-		const struct Point MASTER_PTR *pts, int npoint
+		const screen_point_t MASTER_PTR *pts, int npoint
 	);
 	void MASTER_RET grcg_polygon_cx(
-		const struct Point MASTER_PTR *pts, int npoint
+		const screen_point_t MASTER_PTR *pts, int npoint
 	);
 
 	// Triangles

@@ -7,6 +7,7 @@
 #include "th01/math/polar.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th04/main/playfld.hpp"
+#include "th05/main/bullet/laser.hpp"
 
 #pragma option -k-
 
@@ -18,13 +19,17 @@ union SpaceChangingPoint {
 };
 
 // Register parameters for vector2_at_opt().
-#define v_length_	_BX
-#define v_length	static_cast<subpixel_t>(v_length_)
-#define v_angle 	_CX
-#define v_center_	_BP
-#define v_center	reinterpret_cast<SPPoint __ss *>(v_center_)
-#define v_ret_  	_DI
-#define v_ret   	reinterpret_cast<SpaceChangingPoint __ss *>(v_ret_)
+#define v_length_     	_BX
+#define v_length     	static_cast<subpixel_t>(v_length_)
+#define v_length_high	_BH // ZUN bloat
+#define v_length_low 	_BL // ZUN bloat
+#define v_angle      	_CX
+#define v_angle_low  	_CL
+#define v_angle_high 	_CH
+#define v_center_    	_BP
+#define v_center     	reinterpret_cast<SPPoint __ss *>(v_center_)
+#define v_ret_       	_DI
+#define v_ret        	reinterpret_cast<SpaceChangingPoint __ss *>(v_ret_)
 
 // Register parameters for build_line_in_pixels().
 #define p_0_       	_DI
@@ -34,6 +39,12 @@ union SpaceChangingPoint {
 #define p_distance_	_BP
 #define p_distance 	reinterpret_cast<SPPoint __ss *>(p_distance_)
 
+// ZUN bloat: To work around the need for shifting BP even further once control
+// flow reaches build_line_in_pixels(), ZUN hardcoded the offset from the
+// current value of BP to [p_distance] within the function itself. This offset
+// actually matches [p_distance]'s position if build_line_in_pixels() were a
+// regular function… which means that this madness saves a grand total of one
+// single PUSH instruction. Wow.
 #define p_distance_offset	1
 
 // A regular vector2_at() function with [v_center], [v_angle], and [v_length].
@@ -75,4 +86,162 @@ void near build_line_in_pixels()
 
 	#undef tmp_1
 	#undef tmp_0
+}
+
+bool16 pascal near laser_render_ray(const laser_coords_t near& coords)
+{
+	// ZUN bloat: Micro-optimized based on the wrong assumption that using more
+	// stack space is bad? This assumption had dramatic effects on the
+	// complexity of the resulting monstrosity, for three main reasons:
+	//
+	// 1) Using BP as a parameter to the helper functions above, within a
+	//    function that declares local variables which are accessed *relative*
+	//    to BP. This shifts the function's view of its own variables, which in
+	//    turn forces us to provide these shifted views as additional structs
+	//    within the main union just to keep the code comprehensible.
+	//
+	// 2) The misguided assumption that pointer arithmetic with addresses of
+	//    local variables is superior to just fully recalculating the pointers.
+	//    On a 486, both `LEA r16, m` and `ADD r16, imm` take 1 cycle. Sure,
+	//    thanks to 1), these addresses are constantly shifting, but it's still
+	//    better than us having to annotate the exact movement to the target
+	//    variable.
+	//
+	// 3) The necessary conversion from subpixel space to screen space is done
+	//    within the same variables, requiring further unions within unions to
+	//    describe which type is active at any given time.
+	//
+	// The /// comments spell out the core algorithm in pseudocode, and are
+	// probably easier to follow than the actual compiled mess of code.
+
+	#define _BP        	reinterpret_cast<SpaceChangingPoint __ss *>(_BP)
+	#define point_count	static_cast<int>(_AX)
+
+	union {
+		// Subpixel points used for initial construction.
+		// Since the meaning of "left" and "right" would be flipped depending
+		// on whether the laser points up and down, we use `_ccw` and `cw` to
+		// indicate the ray's corner points as a counter-clockwise or clockwise
+		// quarter-circle rotation away from the centered origin.
+		struct {
+			SPPoint start_ccw;
+			/* -------------------- */ point_t _unused_1;
+			/* -------------------- */ point_t _unused_2;
+			SPPoint end_ccw;
+			/* -------------------- */ point_t _unused_3;
+			SPPoint origin_ccw;
+			SPPoint ccw_to_cw_delta;
+			SPPoint origin;
+		} c;
+
+		// Variant of [c] for correct addressing with BP shifted by one point.
+		struct {
+			/* -------------------- */ point_t _shift_dummy;
+			SPPoint start_ccw;
+			/* -------------------- */ point_t _unused_1;
+			/* -------------------- */ point_t _unused_2;
+			SPPoint end_ccw;
+			/* -------------------- */ point_t _unused_3;
+			SPPoint origin_ccw;
+			SPPoint ccw_to_cw_delta;
+		} c_bp_shifted;
+
+		// Screen-space points, converted from [c].
+		struct {
+			SpaceChangingPoint start_ccw;
+			SpaceChangingPoint start_cw;
+			SpaceChangingPoint end_cw;
+			SpaceChangingPoint end_ccw;
+		} p;
+
+		// Final clipped points
+		screen_point_t clipped[8];
+
+		// BP reference points for stack offset calculation
+		SpaceChangingPoint bp[8];
+	} ps;
+
+	v_length_low = coords.width;
+	v_length_high = 0;
+	v_length <<= (SUBPIXEL_BITS - 1);
+
+	ps.c.origin.x.v = (to_sp(PLAYFIELD_LEFT) + coords.origin.x);
+	ps.c.origin.y.v = (to_sp(PLAYFIELD_TOP) + coords.origin.y);
+
+	v_angle_low = coords.angle;
+	v_angle_low += static_cast<uint8_t>(0x40);
+	v_angle_high = 0;
+
+	/// ps.c.ccw_to_cw_delta = vector2_at(
+	/// 	ps.c.origin, (coords.width / 2), (coords.angle + 0x40)
+	/// );
+	lea_local_to_reg(v_ret_, &ps.bp[8], &ps.c.ccw_to_cw_delta);
+	_BP -= (&ps.bp[8].sp /* current */ - &ps.c.origin /* target */);
+	v_center = &_BP->sp;
+	vector2_at_opt();
+
+	/// ps.c.origin_ccw = vector2_at(
+	/// 	ps.c.origin, (coords.width / 2), (coords.angle - 0x40)
+	/// );
+	/// ps.c.ccw_to_cw_delta -= ps.c.origin_ccw;
+	v_angle_low += static_cast<uint8_t>(0x80);
+	v_ret -= (
+		&ps.c.ccw_to_cw_delta /* current */ - &ps.c.origin_ccw /* target */
+	);
+	ps.c_bp_shifted.ccw_to_cw_delta.y.v -= vector2_at_opt();
+	ps.c_bp_shifted.ccw_to_cw_delta.x.v -= ps.c_bp_shifted.origin_ccw.x.v;
+
+	/// ps.c.start_ccw = vector2_at(
+	/// 	ps.c.origin_ccw, coords.starts_at_distance, coords.angle
+	/// );
+	v_angle_low = coords.angle;
+	v_length = coords.starts_at_distance;
+	v_ret -= (&ps.c.origin_ccw /* current */ - &ps.c.start_ccw /* target */);
+	_BP -= (&ps.c.origin /* current */ - &ps.c.origin_ccw /* target */);
+	v_center = &_BP->sp;
+	vector2_at_opt();
+
+	/// ps.c.end_ccw = vector2_at(
+	/// 	ps.c.origin_ccw, coords.ends_at_distance, coords.angle
+	/// );
+	v_length = coords.ends_at_distance;
+	v_ret += (&ps.c.end_ccw /* target */ - &ps.c.start_ccw /* current */);
+	vector2_at_opt();
+
+	/// ps.p.start_ccw = ps.c.start_ccw.to_pixel();
+	/// ps.p.start_cw = (ps.c.start_ccw + ps.c.ccw_to_cw_delta).to_pixel();
+	lea_local_to_reg(p_0_, &ps.bp[5], &ps.p.start_ccw);
+	lea_local_to_reg(p_1_, &ps.bp[5], &ps.p.start_cw);
+	p_distance = (&_BP->sp + p_distance_offset + (
+		&ps.c.origin_ccw /* current */ - &ps.c.ccw_to_cw_delta /* target */
+	));
+	build_line_in_pixels();
+
+	/// ps.p.end_ccw = ps.c.end_ccw.to_pixel();
+	/// ps.p.end_cw = (ps.c.end_ccw + ps.c.ccw_to_cw_delta).to_pixel();
+	p_0 += (&ps.p.end_ccw /* target */ - &ps.p.start_ccw /* current */);
+	p_1 += (&ps.p.end_cw /* target */ - &ps.p.start_cw /* current */);
+	build_line_in_pixels();
+
+	// Return BP back to where you'd expect it to be
+	_BP += (&ps.bp[8].sp /* target */ - &ps.c.origin_ccw /* current */);
+
+	lea_local_to_reg(v_ret_, &ps.bp[8], &ps.clipped[0]);
+	point_count = grc_clip_polygon_n(&v_ret->pixel, 8, &v_ret->pixel, 4);
+	if(point_count == 0) {
+		goto offscreen;
+	}
+	asm { jge draw; } /// if(point_count < 0) {
+		point_count = 4;
+	/// }
+
+draw:
+	grcg_polygon_cx(&v_ret->pixel, point_count);
+	return false;
+
+offscreen:
+	return true;
+
+	#undef point_count
+	#undef _BP
 }
