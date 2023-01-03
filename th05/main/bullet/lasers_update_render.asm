@@ -1,5 +1,7 @@
 	@LASER_RENDER_RAY$QRX14LASER_COORDS_T procdesc pascal near \
 		coords:word
+	@LASER_HITTEST$QR5LASER procdesc pascal near \
+		laser:word
 
 public @lasers_update$qv
 @lasers_update$qv proc near
@@ -53,7 +55,7 @@ loc_FC52:
 	add	[si+laser_t.coords.starts_at_distance], ax
 
 loc_FC60:
-	call	@laser_hittest$qr7laser_t pascal, si
+	call	@laser_hittest$qr5Laser pascal, si
 	jmp	@@age_inc
 ; ---------------------------------------------------------------------------
 
@@ -83,7 +85,7 @@ laser_update_fixed_grow:
 ; ---------------------------------------------------------------------------
 
 laser_update_fixed_active:
-	call	@laser_hittest$qr7laser_t pascal, si
+	call	@laser_hittest$qr5Laser pascal, si
 	cmp	[si+laser_t.shrink_at_age], 0
 	jle	short @@age_inc
 	mov	ax, [si+laser_t.LASER_age]

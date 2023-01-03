@@ -61,6 +61,10 @@
 #define overlap_xy_xywh_le_ge_2(x1, y1, x2, y2, w2, h2) \
 	overlap_xy_lrbt_le_ge(x1, y1, x2, y2, (x2 + w2), (y2 + h2))
 
+#define overlap_1d_fast(p1, p2, extent) ( \
+	((unsigned int)(p1 + (extent / 2) - p2) < extent) \
+)
+
 // Ugly, and should not exist, but generates one fewer instruction when used
 // with _AX and _DX register pseudovariables...
 #define overlap_offcenter_1d_inplace_fast(delta, dist_edge1, dist_edge2) ( \

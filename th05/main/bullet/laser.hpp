@@ -96,7 +96,7 @@ void pascal near laser_stop(int slot);
 bool16 pascal near laser_render_ray(const laser_coords_t near& coords);
 
 // Processes any collision between the given [laser] and the player.
-void pascal near laser_hittest(Laser near &laser);
+void pascal near laser_hittest(Laser near& laser);
 
 void near lasers_update(void);
 void near lasers_render(void);

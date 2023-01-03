@@ -3160,7 +3160,6 @@ public @shinki_bg_type_d_colorfill$qv
 LASER_RH_TEXT	ends
 
 main_TEXT	segment	word public 'CODE' use16
-include th05/main/bullet/laser_render_hittest.asm
 
 ; =============== S U B	R O U T	I N E =======================================
 

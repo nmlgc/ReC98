@@ -4,9 +4,12 @@
 #include "codegen.hpp"
 #include "pc98.h"
 #include "master.hpp"
+#include "th01/math/overlap.hpp"
 #include "th01/math/polar.hpp"
 #include "th01/math/subpixel.hpp"
+#include "th04/math/motion.hpp"
 #include "th04/main/playfld.hpp"
+#include "th04/main/player/player.hpp"
 #include "th05/main/bullet/laser.hpp"
 
 #pragma option -k-
@@ -244,4 +247,80 @@ offscreen:
 
 	#undef point_count
 	#undef _BP
+}
+
+void pascal near laser_hittest(Laser near& laser__)
+{
+	#define laser_         	_DI
+	#define laser          	reinterpret_cast<Laser near *>(laser_)
+	#define distance_start_	_SI
+	#define distance_start 	static_cast<subpixel_t>(distance_start_)
+
+	union {
+		struct {
+			SPPoint test_center;
+			SPPoint origin;
+		} c;
+
+		// BP reference points for stack offset calculation
+		SPPoint bp[2];
+	} ps;
+
+	// ZUN bloat: A reversed prolog and epilog means that we've got to
+	// __emit__() *every* instruction that touches these registers... Luckily,
+	// this function is simple enough, and doesn't need lots of comments to
+	// describe what it does: generating boxes at fixed intervals along the
+	// laser ray and hit-testing every one of them.
+	__emit__(0x57); // PUSH DI
+	__emit__(0x56); // PUSH SI
+
+	mov_param_to_reg(laser_, 4); (laser__); /// laser_ = &laser__;
+
+	mov_to_reg(
+		v_length_, _DS, laser_, offsetof(Laser, coords.ends_at_distance)
+	);
+	mov_to_reg(
+		distance_start_, _DS, laser_, offsetof(Laser, coords.starts_at_distance)
+	);
+	reinterpret_cast<SPPoint __ss *>(_BP) -= (
+		&ps.bp[2] /* current */ - &ps.c.origin /* target */
+	);
+	v_center = reinterpret_cast<SPPoint __ss *>(_BP);
+	mov_to_reg(_EAX, _DS, laser_, offsetof(Laser, coords.origin));
+	mov_to_mem(_SS, v_center_, 0, _EAX);
+	mov_to_reg(v_angle_low, _DS, laser_, offsetof(Laser, coords.angle));
+	v_angle_high ^= v_angle_high;
+	lea_local_to_reg(v_ret_, &ps.c.origin, &ps.c.test_center);
+
+	loop: {
+		_AX = vector2_at_opt();
+
+		// ZUN quirk: 12×12-pixel boxes in 16-pixel intervals = 4-pixel gaps
+		// between the boxes that allow the player to pass through the laser.
+		if(overlap_1d_fast(_AX, player_pos.cur.y, to_sp(12.0f))) {
+			mov_to_reg(_AX, _SS, v_ret_, offsetof(SPPoint, x));
+			if(overlap_1d_fast(_AX, player_pos.cur.x, to_sp(12.0f))) {
+				player_is_hit = true;
+				goto ret;
+			}
+		}
+		v_length -= to_sp(16.0f);
+		cmp_reg_reg(v_length_, distance_start_);
+		asm { jge loop; }
+	}
+
+ret:
+	// Return BP back to where you'd expect it to be, allowing the function to
+	// properly return.
+	reinterpret_cast<SPPoint __ss *>(_BP) += (
+		&ps.bp[2] /* target */ - &ps.c.origin /* current */
+	);
+
+	__emit__(0x5E); // POP SI
+	__emit__(0x5F); // POP DI
+
+	#undef distance_start
+	#undef distance_start_
+	#undef laser
+	#undef laser_
 }
