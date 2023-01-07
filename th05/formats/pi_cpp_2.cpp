@@ -66,7 +66,7 @@ int DEFCONV pi_load(int slot, const char *fn)
 	_SI = _DI;
 	_SI <<= 2;	// *= sizeof(void far *)
 	_SI += reinterpret_cast<uint16_t>(pi_buffers);
-	imul_di(sizeof(PiHeader));
+	imul_reg_to_reg(_DI, _DI, sizeof(PiHeader));
 	_DI += reinterpret_cast<uint16_t>(pi_headers);
 	return graph_pi_load_pack(
 		fn,

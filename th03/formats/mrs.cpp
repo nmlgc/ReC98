@@ -5,6 +5,7 @@
 #include "pc98.h"
 #include "planar.h"
 #include "decomp.hpp"
+#include "codegen.hpp"
 #include "master.hpp"
 #include "th03/formats/hfliplut.h"
 #include "th03/formats/mrs.hpp"

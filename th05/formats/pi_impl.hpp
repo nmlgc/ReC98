@@ -1,17 +1,14 @@
 // Shared parts of the pi_put_*() functions.
 
+#include "codegen.hpp"
 #include "decomp.hpp"
-
-inline void imul_di(int8_t factor) {
-	__emit__(0x6B, 0xFF, factor);
-}
 
 #define pi_put_impl(slot, rowloop_func) \
 	_SI = slot; \
 	_DI = _SI; \
 	_SI <<= 2;	/* *= sizeof(void far *) */  \
 	asm { les	si, pi_buffers[si]; } \
-	imul_di(sizeof(PiHeader)); \
+	imul_reg_to_reg(_DI, _DI, sizeof(PiHeader)); \
 	rowloop_func
 
 #define buffer_offset_off	_AX
