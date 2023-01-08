@@ -2,19 +2,26 @@
 /// ---------------------
 
 // 0° angle definition, relative to the bullet origin.
-#define BGC0_STATIC 0	/* 0° = right */
-#define BGC0_AIMED  1	/* 0° = current player position */
+#define BGC0_STATIC 0	// 0° = right
+#define BGC0_AIMED  1	// 0° = current player position
 
-// Circular distribution of a number of bullets, given in [spread].
-#define BGCC_SPREAD 2 /* [spread]-way arc centered around 0°, with
-                         [spread_delta_angle]° between each bullet */
-#define BGCC_RING   4 /* Full circle, ignoring [spread_delta_angle] */
+// Circular distributions
+// ----------------------
+
+// [spread]-way arc centered around 0°, with [spread_delta_angle]° between each
+// bullet
+#define BGCC_SPREAD 2
+
+// Full [spread]-bullet circle, ignoring [spread_delta_angle]
+#define BGCC_RING   4
+// ----------------------
 
 // Turns every bullet that would already be fired into a multi-bullet stack
 // with varying speeds. Number of bullets in [stack], with each subsequent
 // bullet getting faster by [stack_delta_speed].
 #define BGCS_STACK  6
 /// ---------------------
+
 // Will always fire a single bullet, regardless of rank or playperf.
 #define BGCF_SINGLE 14
 
