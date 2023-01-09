@@ -7050,7 +7050,7 @@ loc_12188:
 		mov	[bp+var_1], 1
 
 loc_121A9:
-		call	player_move pascal, si
+		call	@player_move$qui pascal, si
 		or	al, al
 		jnz	short loc_121CA
 		cmp	[bp+var_1], 0
@@ -7818,7 +7818,7 @@ sub_12842	endp
 	SHOT_YUUKA_L8 procdesc pascal near
 	SHOT_YUUKA_L9 procdesc pascal near
 	PLAYER_INVALIDATE procdesc pascal near
-	PLAYER_MOVE procdesc pascal near \
+	@PLAYER_MOVE$QUI procdesc pascal near \
 		input:word
 	HUD_BAR_PUT procdesc near
 	HUD_SCORE_PUT procdesc near

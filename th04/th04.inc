@@ -48,7 +48,4 @@ resident_t struc
 		db 54 dup(?)
 resident_t ends
 
-playchar_speed_aligned = 4 shl 4
-playchar_speed_diagonal = 3 shl 4
-
 BOMB_INVINCIBILITY_FRAMES = 255
