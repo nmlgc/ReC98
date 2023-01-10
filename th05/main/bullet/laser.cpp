@@ -12,6 +12,9 @@ extern "C" {
 }
 #include "th05/main/bullet/laser.hpp"
 
+// Segment 3 (as allocated in the header)
+// ---------
+
 void near lasers_shootout_add(void)
 {
 	Laser near *laser;
@@ -98,3 +101,4 @@ void pascal near laser_stop(int slot)
 		lasers[slot].flag = LF_FREE;
 	}
 }
+// ---------

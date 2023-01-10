@@ -4368,7 +4368,9 @@ loc_FBF7:
 		leave
 		retn
 sub_FAA3	endp
+main__TEXT	ends
 
+PLAYFLD_TEXT	segment	byte public 'CODE' use16
 include th05/main/bullet/lasers_update_render.asm
 include th05/main/bullet/cheetos_render.asm
 include th04/main/item/splashes_render.asm
@@ -4584,9 +4586,7 @@ loc_10282:
 		pop	bp
 		retn
 sub_10214	endp
-main__TEXT	ends
 
-PLAYFLD_TEXT	segment	byte public 'CODE' use16
 	@playfield_shake_update_and_rende$qv procdesc pascal near
 PLAYFLD_TEXT	ends
 

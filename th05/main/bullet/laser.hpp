@@ -73,6 +73,8 @@ extern Laser laser_template;
 /// -------
 /// "Manual" lasers ignore any age fields from the laser template.
 
+#pragma codeseg LASER_SC_TEXT
+
 // Spawns a new shoot-out laser based on the [laser_template].
 void near lasers_shootout_add(void);
 
@@ -90,6 +92,8 @@ void pascal near laser_manual_grow(int slot);
 // Transitions the laser at [slot] to a stopping phase appropriate for its
 // current one.
 void pascal near laser_stop(int slot);
+
+#pragma codeseg
 /// -------
 
 // Returns `true` if the laser is entirely off-screen.
@@ -98,5 +102,9 @@ bool16 pascal near laser_render_ray(const laser_coords_t near& coords);
 // Processes any collision between the given [laser] and the player.
 void pascal near laser_hittest(Laser near& laser);
 
+#pragma codeseg main__TEXT main_01
+
 void near lasers_update(void);
 void near lasers_render(void);
+
+#pragma codeseg
