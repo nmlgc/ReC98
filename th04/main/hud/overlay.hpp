@@ -1,5 +1,7 @@
 /// TRAM text overlaid on top of the playfield
-/// -------------------------------------------
+/// ------------------------------------------
+
+#pragma codeseg HUD_OVRL_TEXT main_01
 
 #include "th02/main/hud/overlay.hpp"
 
@@ -23,17 +25,21 @@ void near overlay_black(void);
 	);
 #endif
 
-#include "decomp.hpp"
+// Needs to be here to get the effect of `#pragma codeseg`.
+void pascal near overlay_stage_enter_update_and_render(void);
+void pascal near overlay_stage_leave_update_and_render(void);
 
 // Shows the fade-in effect, followed by either the stage or BGM title or the
 // blinking DEMO PLAY text.
-#define overlay_stage_enter() \
-	set_nearfunc_ptr_to_farfunc(overlay1, overlay_stage_enter_update_and_render)
+inline void overlay_stage_enter(void) {
+	overlay1 = overlay_stage_enter_update_and_render;
+}
 
 // Shows the fade-out effect. Must be called after a corresponding
 // overlay_stage_enter() transition!
-#define overlay_stage_leave() \
-	set_nearfunc_ptr_to_farfunc(overlay1, overlay_stage_leave_update_and_render)
+inline void overlay_stage_leave(void) {
+	overlay1 = overlay_stage_leave_update_and_render;
+}
 // -----------------
 
 // Popup messages for common gameplay events, shown at the top of the playfield
@@ -54,9 +60,12 @@ enum popup_id_t {
 extern popup_id_t overlay_popup_id_new;
 extern unsigned long overlay_popup_bonus;
 
-#define overlay_popup_show(popup_new)  {\
-	overlay_popup_id_new = popup_new; \
-	set_nearfunc_ptr_to_farfunc(overlay2, overlay_popup_update_and_render); \
+// Needs to be here to get the effect of `#pragma codeseg`.
+void pascal near overlay_popup_update_and_render(void);
+
+inline void overlay_popup_show(popup_id_t popup_new) {
+	overlay_popup_id_new = popup_new;
+	overlay2 = overlay_popup_update_and_render;
 }
 // ----------------------------------------------------------------------------
 
@@ -69,3 +78,5 @@ void near overlay_titles_invalidate(void);
 void pascal near overlay_titles_update_and_render(void);
 void pascal near overlay_boss_bgm_update_and_render(void);
 // --------------------
+
+#pragma codeseg

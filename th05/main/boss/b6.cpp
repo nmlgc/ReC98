@@ -89,8 +89,19 @@ extern pattern_oneshot_func_t phase_2_3_pattern;
 extern pattern_loop_func_t wing_pattern;
 // -----
 
+// Rendering
+// ---------
+
+#pragma codeseg main_0_TEXT
+
+void pascal near shinki_custombullets_render()
+;
+// ---------
+
 // Game logic
 // ----------
+
+#pragma codeseg
 
 #include "th05/main/bullet/b6ball.cpp"
 
@@ -826,9 +837,7 @@ void pascal shinki_update(void)
 			boss.phase_frame = 0;
 			boss.phase++;
 			snd_se_play(13);
-			set_nearfunc_ptr_to_farfunc(
-				bg_render_bombing_func, shinki_bg_render
-			);
+			bg_render_bombing_func = shinki_bg_render;
 		}
 		break;
 
@@ -920,9 +929,7 @@ void pascal shinki_update(void)
 			boss.phase++;
 			boss.phase_frame = 0;
 			boss.pos.velocity.y.set(0.0f);
-			set_nearfunc_ptr_to_farfunc(
-				boss_custombullets_render, shinki_custombullets_render
-			);
+			boss_custombullets_render = shinki_custombullets_render;
 			// How generous for Yuuka players!
 			boss_hitbox_radius.x.v = select_for_playchar(
 				to_sp(50.0f), to_sp(35.0f), to_sp(45.0f), to_sp(50.0f)

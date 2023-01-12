@@ -1,4 +1,5 @@
 #include "platform.h"
+#include "decomp.hpp"
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"

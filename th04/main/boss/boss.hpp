@@ -58,9 +58,11 @@ extern  farfunc_t_near boss_update_func;
 extern nearfunc_t_near boss_bg_render_func;
 extern nearfunc_t_near boss_fg_render_func;
 
+// Does not include the *_bg_render() function, as this one always goes into a
+// fixed, defined segment. With more decompilation progress, this will be true
+// for these two functions as well, making this macro ultimately redundant.
 #define BOSS_DEC(name) \
 	void pascal  far name##_update(void); \
-	void pascal near name##_bg_render(void); \
 	void pascal near name##_fg_render(void);
 
 // Collision detection

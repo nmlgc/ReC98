@@ -294,7 +294,8 @@ These cases should gradually be removed as development goes along, though.
   default padding. This is particularly relevant [if the `-WX` option is used
   to enforce word-aligned code segments][3]: That empty default segment would
   otherwise also (unnecessarily) enforce word alignment for the segment that
-  ends up following the empty default one.
+  ends up following the empty default one. It also reduces a bit of bloat from
+  linker map files.
 
   * These options can only be used "at the beginning" of a translation unit –
     before the first non-preprocessor and non-comment C language token. Any
@@ -304,6 +305,12 @@ These cases should gradually be removed as development goes along, though.
     into more than one segment. In that case, use `#pragma option -zC` and
     `#pragma option -zP` for the first segment and group, and `#pragma codeseg`
     for the second and later ones.
+
+  * When working with `near` functions, `#pragma codeseg` directives might be
+    needed in headers to ensure that other translation units [calculate their
+    references correctly][4]. In that case, these directives should *only*
+    occur there if possible, and not in the `.cpp` file corresponding to such a
+    header.
 
 ## Decompilation
 
@@ -391,3 +398,4 @@ Currently, we know about the following [references]:
 [1]: Research/Borland%20C++%20decompilation.md#c
 [2]: https://github.com/nmlgc/ReC98/invitations
 [3]: Research/Borland%20C++%20decompilation.md#padding-bytes-in-code-segments
+[4]: Research/Borland%20C++%20decompilation.md#memory-segmentation

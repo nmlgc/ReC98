@@ -75,9 +75,21 @@ BOSS_DEC(yumeko);
 #define yumeko_interval_phase4 boss_statebyte[0]
 #define yumeko_interval_phase7 boss_statebyte[1]
 
-// TODO: Can't be declared here due to the set_nearfunc_ptr_to_farfunc()
-// workarounds in shinki_update().
-// BOSS_DEC(shinki);
-// void pascal near shinki_custombullets_render();
-
+BOSS_DEC(shinki);
 BOSS_DEC(exalice);
+
+/// Rendering functions
+/// -------------------
+
+#pragma codeseg BOSS_BG_TEXT
+
+void pascal near sara_bg_render(void);
+void pascal near louise_bg_render(void);
+void pascal near alice_bg_render(void);
+void pascal near mai_yuki_bg_render(void);
+void pascal near yumeko_bg_render(void);
+void pascal near shinki_bg_render(void);
+void pascal near exalice_bg_render(void);
+
+#pragma codeseg
+/// -------------------

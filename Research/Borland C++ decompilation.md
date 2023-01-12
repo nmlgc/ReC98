@@ -263,29 +263,6 @@ Type syntax (cf. [platform.h](../platform.h)):
 
 Calling conventions can be added before the `*`.
 
-* Assigning a `near` function defined in a different group to a `nn_t` will
-  cause a fixup overflow error at link time. The reason for that is pointed
-  out in the compiler's assembly output (`-S)`:
-
-  | C                        | ASM                                                                                  |
-  |--------------------------|--------------------------------------------------------------------------------------|
-  | `void near bar();`       | `extrn _bar:near`                                                                    |
-  | `static nn_t foo = bar;` | `mov   word ptr DGROUP:_foo, offset CURRENTLY_​COMPILED_​BUT_​NOT_​ACTUAL_​GROUP_​OF:_bar` |
-
-  The only known way of enforcing this assignment involves declaring `bar()` as
-  a far function and then casting its implicit segment away:
-
-  ```c++
-  void far bar();
-  static nn_t foo = reinterpret_cast<nn_t>(bar);
-  ```
-
-  This wrong declaration of `bar()` must, of course, not be `#include`d into
-  the translation unit that actually defines `bar()` as a `near` function, as
-  it was intended. It can't also be local to an inlined function that's part of
-  a public header, since those declarations seem to escape to the global scope
-  there.
-
 ## `switch` statements
 
 * Sequence of the individual cases is identical in both C and ASM
@@ -620,6 +597,72 @@ static_storage  db  2, 0, 6
   **Certainty**: Reverse-engineering `TCC.EXE` confirmed that these are the
   only ways.
 
+## Memory segmentation
+
+The segment and group a function will be emitted into can be controlled via
+`#pragma option -zC` / `#pragma option -zP` and `#pragma codeseg`. These
+mechanisms apply equally to function declarations and definitions. The active
+segment/group during a function's first reference will take precedence over any
+later segment/group the function shows up in:
+
+```c++
+#pragma option -zCfoo_TEXT -zPfoo
+
+void bar(void);
+
+#pragma codeseg baz_TEXT baz
+
+// Despite the segment change in the line above, this function will still be
+// put into `foo_TEXT`, the active segment during the first appearance of the
+// function name.
+void bar(void) {
+}
+
+// This function hasn't been declared yet, so it will go into `baz_TEXT` as
+// expected.
+void baz(void) {
+}
+```
+
+When fixing up near references, the linker takes the actual flat/linear address
+and subtracts it from the base address of the reference's declared segment,
+assuming that the respective segment register is set to that specific segment
+at runtime. Therefore, incorrect segment declarations lead to incorrectly
+calculated offsets, and the linker can't realistically warn about such cases.
+There *is* the `Fixup overflow` error, but the linker only throws that one if
+the calculated distance exceeds 64 KiB and thus couldn't be expressed in a near
+reference to begin with.
+
+Generally, it's better to just fix wrong segments at declaration time:
+
+```c++
+// Set the correct segment and group
+#pragma codeseg bar_TEXT bar_correct_group
+
+void near bar(void);
+
+// Return to the default code segment
+#pragma codeseg
+```
+
+However, there is a workaround if the intended near offset should simply be
+relative to the actual segment of the symbol: Declaring the identifier as `far`
+rather than near, and casting its implicit segment away for the near context.
+In the case of [function pointers]:
+
+```c++
+void far bar();
+static nn_t qux = reinterpret_cast<nn_t>(bar);
+```
+
+This works because a `far` symbol always includes the segment it was emitted
+into. The cast simply reduces such a reference to its offset part within that
+segment.\
+This wrong declaration of `bar()` must, of course, not be `#include`d into the
+translation unit that actually defines `bar()` as a `near` function, as it was
+intended. It can't also be local to an inlined function that's part of a public
+header, since those declarations seem to escape to the global scope there.
+
 ## C++
 
 In C++ mode, the value of a `const` scalar-type variable declared at global
@@ -778,3 +821,4 @@ contains one of the following:
 ----
 
 [Bug:]: #compiler-bugs
+[function pointers]: #function-pointers

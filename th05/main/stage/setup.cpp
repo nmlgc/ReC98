@@ -173,10 +173,6 @@ void pascal near stage5_setup(void)
 
 void pascal near stage6_setup(void)
 {
-	// TODO: Can't be declared publicly due to the
-	// set_nearfunc_ptr_to_farfunc() workarounds in shinki_update().
-	BOSS_DEC(shinki);
-
 	midboss_update_func = nullfunc_far;
 	midboss_render_func = nullfunc_near;
 	midboss.frames_until = 30000;

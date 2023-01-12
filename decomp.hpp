@@ -58,18 +58,6 @@ template <class T> union StupidBytewiseWrapperAround {
 	}
 #endif
 
-// Trying to assign a `near` function to a nearfunc_t_near* outside the group
-// of the function will cause a fixup overflow error at link time. The only
-// known workaround involves lying to the compiler about the true distance of
-// the function, removing any declaration of the function from global scope to
-// prevent a redefinition error, and casting away its segment.
-// TODO: Might no longer be necessary once we can fully rely on segment names
-// for code layout, and don't have to mess with groups anymore.
-#define set_nearfunc_ptr_to_farfunc(ptr, func) { \
-	void pascal far func(void); \
-	ptr = reinterpret_cast<nearfunc_t_near>(func); \
-}
-
 // poke() versions that actually inline with pseudoregisters
 // ---------------------------------------------------------
 #define pokew(sgm, off, val) { *(uint16_t far *)(MK_FP(sgm, off)) = val; }
