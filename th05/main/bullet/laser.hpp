@@ -1,6 +1,9 @@
 #define LASER_DISTANCE_MIN 16.0f
 #define LASER_DISTANCE_MAX 550.0f /* Far away enough? */
 
+static const pixel_t LASER_SHOOTOUT_DECAY_WIDTH = 6;
+static const pixel_t LASER_SHOOTOUT_DECAY_WIDTH_MAX = 28;
+
 enum laser_flag_t {
 	LF_FREE = 0,
 	LF_SHOOTOUT = 1,
@@ -11,9 +14,15 @@ enum laser_flag_t {
 	// player on contact.
 	LF_FIXED_ACTIVE = 4,
 
+	// Fixed laser will shrink to a width of 1 and then either be removed
+	// (LF_FIXED_SHRINK) or go back to LF_FIXED_WAIT_TO_GROW with its [age]
+	// reset to 0 (LF_FIXED_SHRINK_AND_WAIT_TO_GROW).
 	LF_FIXED_SHRINK = 5,
 	LF_FIXED_SHRINK_AND_WAIT_TO_GROW = 6,
-	LF_DECAY = 7,
+
+	LF_SHOOTOUT_DECAY = 7,
+
+	_laser_flag_t_FORCE_UINT8 = 0xFF
 };
 
 struct laser_coords_t {
@@ -25,7 +34,22 @@ struct laser_coords_t {
 	Subpixel ends_at_distance;
 
 	unsigned char angle;
-	unsigned char width; // pixel_t
+
+	// In pixels.
+	union {
+		// ZUN bug: LF_FIXED_SHRINK and LF_FIXED_SHRINK_AND_WAIT_TO_GROW are
+		// effectively limited to a maximum width of 127 pixels due to an
+		// implementation convenience in their update code. For larger values,
+		// their shrink animation wouldn't play, and the laser will transition
+		// to its next flag immediately.
+		int8_t shrink;
+
+		// Other types have no limit besides the 8-bit one inherent to the
+		// type. Shootout lasers should probably still be kept below
+		// LASER_SHOOTOUT_DECAY_WIDTH_MAX though, as any larger value would
+		// skip the decay animation.
+		uint8_t nonshrink;
+	} width;
 };
 
 struct Laser {

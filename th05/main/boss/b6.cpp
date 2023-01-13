@@ -513,7 +513,7 @@ void near pattern_devil(void)
 	// Laser activation
 	if((boss.hp <= HP_PHASE_10_DEVIL_LASER) || (boss.phase_frame >= 1800)) {
 		if(laser_grow_delay == 0) {
-			laser_template.coords.width = 6;
+			laser_template.coords.width.nonshrink = 6;
 			laser_template.coords.angle = 0x40;
 			laser_template.col = 0xE;
 

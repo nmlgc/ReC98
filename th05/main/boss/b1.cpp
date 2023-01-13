@@ -299,7 +299,7 @@ void near pattern_dense_spreads_and_random_balls_within_laser_walls(void)
 		laser_template.coords.origin = boss.pos.cur;
 		laser_template.coords.angle = (-0x40 + 0x20);
 		laser_template.col = 8;
-		laser_template.coords.width = 8;
+		laser_template.coords.width.nonshrink = 8;
 		laser_manual_fixed_spawn(X_RIGHT);
 
 		laser_template.coords.angle = (-0x40 - 0x20);

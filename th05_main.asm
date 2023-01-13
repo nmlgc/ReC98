@@ -4368,6 +4368,8 @@ loc_FBF7:
 		leave
 		retn
 sub_FAA3	endp
+
+	@lasers_update$qv procdesc near
 main__TEXT	ends
 
 PLAYFLD_TEXT	segment	byte public 'CODE' use16

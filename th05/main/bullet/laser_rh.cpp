@@ -164,7 +164,7 @@ bool16 pascal near laser_render_ray(const laser_coords_t near& coords)
 		SpaceChangingPoint bp[8];
 	} ps;
 
-	v_length_low = coords.width;
+	v_length_low = coords.width.nonshrink;
 	v_length_high = 0;
 	v_length <<= (SUBPIXEL_BITS - 1);
 
