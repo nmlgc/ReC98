@@ -4370,10 +4370,10 @@ loc_FBF7:
 sub_FAA3	endp
 
 	@lasers_update$qv procdesc near
+	@lasers_render$qv procdesc near
 main__TEXT	ends
 
 PLAYFLD_TEXT	segment	byte public 'CODE' use16
-include th05/main/bullet/lasers_update_render.asm
 include th05/main/bullet/cheetos_render.asm
 include th04/main/item/splashes_render.asm
 
@@ -20825,7 +20825,8 @@ byte_2C98A	db ?
 include th04/main/midboss/funcs[bss].asm
 byte_2C99C	db ?
 		db ?
-include th05/main/bullet/lasers_render[bss].asm
+public _laser_line_endpoint
+_laser_line_endpoint	Point <?>
 include th05/main/bullet/cheeto[bss].asm
 include th04/main/item/splashes[bss].asm
 include th05/main/bullet/pellet_r[bss].asm

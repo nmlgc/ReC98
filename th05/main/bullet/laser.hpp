@@ -1,5 +1,5 @@
-#define LASER_DISTANCE_MIN 16.0f
-#define LASER_DISTANCE_MAX 550.0f /* Far away enough? */
+#define LASER_DISTANCE_MIN to_sp(16.0f)
+#define LASER_DISTANCE_MAX to_sp(550.0f) // Far away enough?
 
 static const pixel_t LASER_SHOOTOUT_DECAY_WIDTH = 6;
 static const pixel_t LASER_SHOOTOUT_DECAY_WIDTH_MAX = 28;
@@ -20,6 +20,9 @@ enum laser_flag_t {
 	LF_FIXED_SHRINK = 5,
 	LF_FIXED_SHRINK_AND_WAIT_TO_GROW = 6,
 
+	// Shootout laser is reduced to the two edges parallel to its moving
+	// direction, which are drawn as 1-pixel lines. The laser "grows" until its
+	// width reaches LASER_SHOOTOUT_DECAY_WIDTH_MAX, at which it's removed.
 	LF_SHOOTOUT_DECAY = 7,
 
 	_laser_flag_t_FORCE_UINT8 = 0xFF
@@ -82,8 +85,8 @@ struct Laser {
 	void fixed_init(const PlayfieldPoint &origin) {
 		flag = LF_FIXED_WAIT_TO_GROW;
 		coords.origin = origin;
-		coords.starts_at_distance.set(LASER_DISTANCE_MIN);
-		coords.ends_at_distance.set(LASER_DISTANCE_MAX);
+		coords.starts_at_distance.v = LASER_DISTANCE_MIN;
+		coords.ends_at_distance.v = LASER_DISTANCE_MAX;
 		age = 0;
 	}
 };
@@ -129,6 +132,8 @@ void pascal near laser_hittest(Laser near& laser);
 #pragma codeseg main__TEXT main_01
 
 void near lasers_update(void);
+
+// Also sets any clipped lasers to LF_FREE.
 void near lasers_render(void);
 
 #pragma codeseg

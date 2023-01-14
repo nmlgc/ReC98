@@ -1,3 +1,5 @@
+#pragma option -zPmain_01
+
 #include <stddef.h>
 #include "platform.h"
 #include "x86real.h"
@@ -164,6 +166,7 @@ bool16 pascal near laser_render_ray(const laser_coords_t near& coords)
 		SpaceChangingPoint bp[8];
 	} ps;
 
+	// Same transformation as in lasers_render(), for LF_SHOOTOUT_DECAY.
 	v_length_low = coords.width.nonshrink;
 	v_length_high = 0;
 	v_length <<= (SUBPIXEL_BITS - 1);
