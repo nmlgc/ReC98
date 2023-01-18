@@ -70,7 +70,9 @@ Crossed-out files are identical to their version in the previous game. ONGCHK.CO
 
 ## Branches
 
-* **[`master`]: ZUN's original code, without mods or bugfixes**
+* ▶ **`master`: ZUN's original code, without mods or bugfixes** (You are here!)
+* [`debloated`]: Rearchitected version of ZUN's code that is easier to read and modify, and builds smaller and faster PC-98 binaries. Only removes [bloat]; all [bugs] and [quirks] from ZUN's original code are left in place. **Ports should start from that branch**, and it's also the recommended base for mods that don't care about similarity to the original binary.
+* [`anniversary`]: Takes `debloated` and additionally fixes [bugs], achieving a smoother and flicker-free gameplay experience on the PC-98 platform while still leaving [quirks] in place. Might be an even better starting port for mods and ports.
 * [`BossRush`]
 * [`th03_no_gdc_frequency_check`]: Allows TH03 to be run with the GDC clock set to 5&nbsp;MHz. The original game enforces 2.5&nbsp;MHz, but doesn't functionally require it, even on real hardware.
 * [`xJeePx`]: Code changes for xJeePx's 2014 English translation patch.
@@ -226,6 +228,9 @@ See [`CONTRIBUTING.md`](CONTRIBUTING.md).
 [project blog]: https://rec98.nmlgc.net/blog
 [converter for hardcoded sprites]: https://github.com/nmlgc/ReC98/issues/8
 [Borland/Embarcadero's own C++ 7.30]: https://www.embarcadero.com/de/free-tools/ccompiler/free-download
+[bloat]: https://rec98.nmlgc.net/blog/2022-08-15#zun-bloat
+[bugs]: https://rec98.nmlgc.net/blog/2022-08-15#zun-bug
+[quirks]: https://rec98.nmlgc.net/blog/2022-08-15#zun-quirk
 
 [TH04 Stage 5 Yuuka No-EMS crash]: https://rec98.nmlgc.net/blog/2021-11-29
 [TH01 Sariel fight]: https://rec98.nmlgc.net/blog/2022-01-31
@@ -234,7 +239,8 @@ See [`CONTRIBUTING.md`](CONTRIBUTING.md).
 [TH04 Stage 4 Marisa Divide Error crash]: https://rec98.nmlgc.net/blog/2022-04-18
 [two critical bugs in TH01]: https://rec98.nmlgc.net/blog/2022-05-31
 
-[`master`]: https://github.com/nmlgc/ReC98/tree/master
+[`anniversary`]: https://github.com/nmlgc/ReC98/tree/anniversary
+[`debloated`]: https://github.com/nmlgc/ReC98/tree/debloated
 [`BossRush`]: https://github.com/nmlgc/ReC98/tree/BossRush
 [`community_choice_fixes`]: https://github.com/nmlgc/ReC98/tree/community_choice_fixes
 [`mem_assign_all`]: https://github.com/nmlgc/ReC98/tree/mem_assign_all

@@ -1,6 +1,32 @@
-# ReC98
-# -----
 # Makefile for the 16-bit part of the build process
+# -------------------------------------------------
+
+
+
+
+
+
+
+
+# ⚠️ CAUTION! ⚠️
+
+# You are on the `master` branch, which builds PC-98 DOS binaries that are
+# identical to ZUN's originally released binaries. If you want to port the game
+# to other architectures or develop a mod that doesn't need to be byte-for-byte
+# comparable to the original binary, start from the cleaned-up `debloated`
+# branch instead. That branch is easier to read and modify, and builds smaller
+# and faster PC-98 binaries while leaving all bugs and quirks from ZUN's
+# original code in place.
+# Seriously, you'd just be torturing yourself if you do anything nontrivial
+# based on this branch.
+
+# ⚠️ CAUTION! ⚠️
+
+
+
+
+
+
 
 CFLAGS = -ls -I. -Lbin\ -O -b-
 AFLAGS = /m /ml
