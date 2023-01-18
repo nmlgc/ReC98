@@ -10,15 +10,12 @@
 
 # ⚠️ CAUTION! ⚠️
 
-# You are on the `master` branch, which builds PC-98 DOS binaries that are
-# identical to ZUN's originally released binaries. If you want to port the game
-# to other architectures or develop a mod that doesn't need to be byte-for-byte
-# comparable to the original binary, start from the cleaned-up `debloated`
-# branch instead. That branch is easier to read and modify, and builds smaller
-# and slightly faster PC-98 binaries while leaving all bugs and quirks from
-# ZUN's original code in place.
-# Seriously, you'd just be torturing yourself if you do anything nontrivial
-# based on this branch.
+# You are on the `debloated` branch, which contains a simplified and optimized
+# version of ZUN's original code. This branch is the ideal starting point for
+# ports and nontrivial mods that don't care about similarity to the original
+# binary, as the binaries built from this branch are *different* from ZUN's
+# original ones and cannot be easily compared to them. If you do care about
+# comparability, check out `master` instead.
 
 # ⚠️ CAUTION! ⚠️
 
