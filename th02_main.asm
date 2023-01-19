@@ -19,8 +19,9 @@
 include ReC98.inc
 include th02/th02.inc
 include th02/main/playfld.inc
-include th02/main/hud/hud.inc
 include th02/main/sparks.inc
+include th02/main/hud/hud.inc
+include th02/main/tile/tile.inc
 include th02/sprites/main_pat.inc
 
 	extern SCOPY@:proc
@@ -980,11 +981,11 @@ loc_434D:
 
 loc_4356:
 		mov	ax, si
-		mov	bx, 19h
+		mov	bx, TILE_AREA_ROWS
 		cwd
 		idiv	bx
 		shl	ax, 4
-		add	ax, 576
+		add	ax, TILE_AREA_LEFT
 		push	ax
 		mov	ax, si
 		cwd
@@ -1002,7 +1003,7 @@ loc_4356:
 
 loc_4383:
 		mov	ax, si
-		mov	bx, 19h
+		mov	bx, TILE_AREA_ROWS
 		cwd
 		idiv	bx
 		add	ax, ax
@@ -1013,14 +1014,14 @@ loc_4383:
 		imul	dx, (TILE_H * ROW_SIZE)
 		pop	ax
 		add	ax, dx
-		add	ax, 48h	; 'H'
+		add	ax, TILE_AREA_VRAM_LEFT
 		mov	bx, si
 		add	bx, bx
-		mov	[bx+4D2Ah], ax
+		mov	_tile_image_vos[bx], ax
 		inc	si
 
 loc_43A6:
-		cmp	si, 64h	; 'd'
+		cmp	si, TILE_IMAGE_COUNT
 		jl	short loc_434D
 		pop	di
 		pop	si
@@ -1056,7 +1057,7 @@ arg_2		= word ptr  6
 		mov	di, [bp+arg_2]
 		mov	bx, [bp+arg_0]
 		add	bx, bx
-		mov	ax, [bx+4D2Ah]
+		mov	ax, _tile_image_vos[bx]
 		mov	dx, word_22862
 		shl	dx, 6
 		add	ax, dx
@@ -1068,8 +1069,8 @@ arg_2		= word ptr  6
 loc_4405:
 		mov	ax, es:[si]
 		mov	es:[di], ax
-		add	di, 50h	; 'P'
-		add	si, 50h	; 'P'
+		add	di, ROW_SIZE
+		add	si, ROW_SIZE
 		loop	loc_4405
 		pop	di
 		pop	si
@@ -1094,14 +1095,14 @@ arg_2		= word ptr  6
 		mov	di, [bp+arg_2]
 		mov	bx, [bp+arg_0]
 		add	bx, bx
-		mov	si, [bx+4D2Ah]
-		mov	cx, 10h
+		mov	si, _tile_image_vos[bx]
+		mov	cx, TILE_H
 
 loc_442D:
 		mov	ax, es:[si]
 		mov	es:[di], ax
-		add	di, 50h	; 'P'
-		add	si, 50h	; 'P'
+		add	di, ROW_SIZE
+		add	si, ROW_SIZE
 		loop	loc_442D
 		pop	di
 		pop	si
@@ -1783,7 +1784,7 @@ arg_4		= word ptr  0Ah
 		mov	di, ax
 		mov	bx, [bp+arg_0]
 		add	bx, bx
-		mov	bx, [bx+4D2Ah]
+		mov	bx, _tile_image_vos[bx]
 		xor	si, si
 		jmp	short loc_48D9
 ; ---------------------------------------------------------------------------
@@ -1791,17 +1792,17 @@ arg_4		= word ptr  0Ah
 loc_48C2:
 		mov	ax, es:[bx]
 		mov	es:[di], ax
-		add	di, 50h	; 'P'
-		add	bx, 50h	; 'P'
-		cmp	di, 7D00h
+		add	di, ROW_SIZE
+		add	bx, ROW_SIZE
+		cmp	di, PLANE_SIZE
 		jle	short loc_48D8
-		sub	di, 7D00h
+		sub	di, PLANE_SIZE
 
 loc_48D8:
 		inc	si
 
 loc_48D9:
-		cmp	si, 10h
+		cmp	si, TILE_H
 		jl	short loc_48C2
 		pop	di
 		pop	si
@@ -34712,7 +34713,11 @@ map	db    MAP_SIZE dup (?)
 		db 320 dup(?)
 word_22796	dw ?
 byte_22798	db ?
-		db 201 dup(?)
+	evendata
+
+public _tile_image_vos
+_tile_image_vos	dw TILE_IMAGE_COUNT dup(?)
+
 word_22862	dw ?
 word_22864	dw ?
 		db 24 dup(?)

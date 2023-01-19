@@ -209,7 +209,7 @@ arg_6		= word ptr  0Ch
 		mov	ax, SEG_PLANE_G
 		mov	es, ax
 		assume es:nothing
-		mov	cx, 16
+		mov	cx, TILE_H
 
 loc_36CA:
 		mov	ax, [si-40h]
@@ -219,11 +219,11 @@ loc_36CA:
 		movsw
 		add	di, (ROW_SIZE - word)
 		loop	loc_36CA
-		sub	di, (16 * ROW_SIZE)
+		sub	di, (TILE_H * ROW_SIZE)
 		mov	ax, SEG_PLANE_E
 		mov	es, ax
 		assume es:nothing
-		mov	cx, 16
+		mov	cx, TILE_H
 
 loc_36E8:
 		movsw
@@ -1242,7 +1242,7 @@ var_6		= word ptr -6
 		call	mpn_load_palette_show pascal, 0, large [bp+@@fn]
 		mov	[bp+var_6], 0
 		mov	[bp+@@tile_x], 0
-		mov	si, 576
+		mov	si, TILE_AREA_LEFT
 		jmp	short loc_B95E
 ; ---------------------------------------------------------------------------
 
@@ -1270,13 +1270,13 @@ loc_B925:
 		add	di, TILE_H
 
 loc_B952:
-		cmp	[bp+@@tile_y], TILES_Y
+		cmp	[bp+@@tile_y], TILE_AREA_ROWS
 		jl	short loc_B925
 		inc	[bp+@@tile_x]
 		add	si, TILE_W
 
 loc_B95E:
-		cmp	[bp+@@tile_x], 4
+		cmp	[bp+@@tile_x], TILE_AREA_COLUMNS
 		jl	short loc_B91C
 		call	mpn_free pascal, 0
 		pop	di

@@ -1198,7 +1198,7 @@ loc_BB08:
 		out	0A6h, al
 		push	ax
 		xor	bp, bp
-		mov	si, 576
+		mov	si, TILE_AREA_LEFT
 
 loc_BB10:
 		xor	di, di
@@ -6377,13 +6377,13 @@ loc_11441:
 		mov	ax, di
 		add	ax, ax
 		add	bx, ax
-		mov	_tile_ring[bx], ((576 / 8) + (256 * ROW_SIZE))
+		mov	_tile_ring[bx], (TILE_AREA_VRAM_LEFT + (256 * ROW_SIZE))
 		mov	bx, [bp+var_2]
 		shl	bx, 6
 		mov	ax, [bp+var_4]
 		add	ax, ax
 		add	bx, ax
-		mov	_tile_ring[bx], ((576 / 8) + (256 * ROW_SIZE))
+		mov	_tile_ring[bx], (TILE_AREA_VRAM_LEFT + (256 * ROW_SIZE))
 		inc	[bp+var_2]
 
 loc_11469:
