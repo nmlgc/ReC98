@@ -1,7 +1,16 @@
+#pragma option -zC_TEXT
+
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
+#include "th02/main/playfld.hpp"
 #include "th02/main/tile/tile.hpp"
+
+// Terminology:
+// • Line: [TILE_W]×1 stripe within a tile
+// • Row: [TILES_X]×[TILE_H] stripe within the full tile map or a tile section
+
+typedef dots_t(TILE_W) tile_line_dots_t;
 
 // State
 // -----
@@ -25,3 +34,26 @@ void pascal near tile_egc_copy_8(vram_offset_t vo_topleft, int image)
 // tile register. Assumes that the GRCG is set to RMW or TDW mode.
 void pascal near tile_grcg_clear_8(vram_offset_t vo_topleft)
 ;
+
+void pascal tile_egc_roll_copy_8(screen_x_t left, vram_y_t top, int image)
+{
+	#define vo_src	static_cast<vram_offset_t>(_BX)
+
+	_ES = SEG_PLANE_E;
+	_CX = _CX; // ZUN bloat: Just blocks this register from being used.
+
+	vram_offset_t vo_dst = vram_offset_shift_fast(left, top);
+	vo_src = tile_image_vos[image];
+	for(register pixel_t line = 0; line < TILE_H; line++) {
+		*reinterpret_cast<tile_line_dots_t __es *>(vo_dst) = (
+			*reinterpret_cast<tile_line_dots_t __es *>(vo_src)
+		);
+		vo_dst += ROW_SIZE;
+		vo_src += ROW_SIZE;
+		if(vo_dst > PLANE_SIZE) {
+			vo_dst -= PLANE_SIZE;
+		}
+	}
+
+	#undef vo_src
+}

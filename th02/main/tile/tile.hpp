@@ -21,6 +21,13 @@ static const screen_x_t TILE_AREA_LEFT = (RES_X - (TILE_AREA_COLUMNS * TILE_W));
 static const screen_y_t TILE_AREA_TOP = 0;
 
 static const vram_x_t TILE_AREA_VRAM_LEFT = (TILE_AREA_LEFT / BYTE_DOTS);
+
+#if (GAME == 2)
+	// Blits the given tile [image] from its position in the source area to
+	// (⌊left/8⌋*8, top), wrapping it vertically at the bottom of VRAM. Assumes
+	// that the EGC is active and initialized for a copy.
+	void pascal tile_egc_roll_copy_8(screen_x_t left, vram_y_t top, int image);
+#endif
 // ------------------------
 
 #if (GAME == 2)

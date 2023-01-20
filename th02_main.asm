@@ -1752,62 +1752,8 @@ arg_4		= word ptr  0Ah
 		retf	6
 sub_480C	endp
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_4896	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, 0E000h
-		mov	es, ax
-		assume es:nothing
-		mov	ax, [bp+arg_4]
-		sar	ax, 3
-		mov	dx, [bp+arg_2]
-		shl	dx, 6
-		add	ax, dx
-		shr	dx, 2
-		add	ax, dx
-		mov	di, ax
-		mov	bx, [bp+arg_0]
-		add	bx, bx
-		mov	bx, _tile_image_vos[bx]
-		xor	si, si
-		jmp	short loc_48D9
-; ---------------------------------------------------------------------------
-
-loc_48C2:
-		mov	ax, es:[bx]
-		mov	es:[di], ax
-		add	di, ROW_SIZE
-		add	bx, ROW_SIZE
-		cmp	di, PLANE_SIZE
-		jle	short loc_48D8
-		sub	di, PLANE_SIZE
-
-loc_48D8:
-		inc	si
-
-loc_48D9:
-		cmp	si, TILE_H
-		jl	short loc_48C2
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-sub_4896	endp
-
+		even
+	extern @TILE_EGC_ROLL_COPY_8$QIII:proc
 _TEXT		ends
 
 ; ===========================================================================
@@ -27965,8 +27911,8 @@ mima_end	endp
 
 sub_19E2F	proc far
 
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@top       	= word ptr -4
+@@tile_image	= word ptr -2
 
 		push	bp
 		mov	bp, sp
@@ -27987,7 +27933,7 @@ var_2		= word ptr -2
 		call	sub_45FC
 		call	sub_4692
 		egc_setrop	EGC_WS_ROP or 0FCh
-		mov	word_26D54, 98h
+		mov	word_26D54, 152
 		mov	ax, _scroll_line
 		add	word_26D54, ax
 		cmp	word_26D54, RES_Y
@@ -27996,38 +27942,35 @@ var_2		= word ptr -2
 
 loc_19EA7:
 		mov	ax, word_26D54
-		mov	[bp+var_4], ax
-		mov	[bp+var_2], 0
+		mov	[bp+@@top], ax
+		mov	[bp+@@tile_image], 0
 		jmp	short loc_19EE4
 ; ---------------------------------------------------------------------------
 
 loc_19EB4:
-		mov	si, 0B0h ; '°'
-		mov	di, [bp+var_2]
+		mov	si, 176
+		mov	di, [bp+@@tile_image]
 		jmp	short loc_19ECA
 ; ---------------------------------------------------------------------------
 
 loc_19EBC:
-		push	si
-		push	[bp+var_4]
-		push	di
-		call	sub_4896
-		add	si, 10h
+		call	@tile_egc_roll_copy_8$qiii pascal, si, [bp+@@top], di
+		add	si, TILE_W
 		inc	di
 
 loc_19ECA:
-		cmp	si, 110h
+		cmp	si, 272
 		jl	short loc_19EBC
-		add	[bp+var_4], 10h
-		cmp	[bp+var_4], 190h
+		add	[bp+@@top], TILE_H
+		cmp	[bp+@@top], RES_Y
 		jl	short loc_19EE0
-		sub	[bp+var_4], 190h
+		sub	[bp+@@top], RES_Y
 
 loc_19EE0:
-		add	[bp+var_2], 10h
+		add	[bp+@@tile_image], 10h
 
 loc_19EE4:
-		cmp	[bp+var_2], 60h
+		cmp	[bp+@@tile_image], 60h
 		jl	short loc_19EB4
 		call	egc_off
 
