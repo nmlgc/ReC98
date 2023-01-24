@@ -29037,7 +29037,7 @@ marisa_init	proc far
 		mov	super_patnum, 80h
 		call	super_entry_bfnt pascal, ds, offset aStage3_b_bft ; "stage3_b.bft"
 		call	super_entry_bfnt pascal, ds, offset aStage3_b_btt_0 ; "stage3_b.btt"
-		mov	word_20652, 0B0h ; '�'
+		mov	word_20652, 0B0h
 		mov	ax, word_20652
 		mov	word_20654, ax
 		mov	word_20656, 40h
