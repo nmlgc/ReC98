@@ -927,8 +927,8 @@ sub_42F8	proc far
 		mov	word_22796, 17h
 		mov	_tile_line_at_top, 0
 		mov	_page_back, 0
-		mov	byte_2287E, 1
-		mov	byte_22D48, 0
+		mov	_tile_mode, TM_TILES
+		mov	_tiles_egc_render_all, 0
 		retf
 sub_42F8	endp
 
@@ -1388,7 +1388,7 @@ arg_6		= word ptr  0Ch
 		mov	bp, sp
 		push	si
 		push	di
-		cmp	byte_2287E, 2
+		cmp	_tile_mode, TM_NONE
 		jnz	short loc_460B
 		jmp	loc_468C
 ; ---------------------------------------------------------------------------
@@ -1481,14 +1481,14 @@ var_2		= word ptr -2
 		mov	ax, 0E000h
 		mov	es, ax
 		assume es:nothing
-		cmp	byte_2287E, 1
+		cmp	_tile_mode, TM_TILES
 		jnz	short loc_46FE
 		xor	di, di
 		jmp	short loc_46F7
 ; ---------------------------------------------------------------------------
 
 loc_46AA:
-		cmp	byte_22D48, 1
+		cmp	_tiles_egc_render_all, 1
 		jz	short loc_46B8
 		cmp	_tile_column_dirty[di], 0
 		jz	short loc_46F6
@@ -1503,7 +1503,7 @@ loc_46B8:
 ; ---------------------------------------------------------------------------
 
 loc_46C6:
-		cmp	byte_22D48, 1
+		cmp	_tiles_egc_render_all, 1
 		jz	short loc_46D9
 		mov	bx, di
 		imul	bx, TILES_Y
@@ -1537,7 +1537,7 @@ loc_46F7:
 ; ---------------------------------------------------------------------------
 
 loc_46FE:
-		cmp	byte_2287E, 0
+		cmp	_tile_mode, TM_COL_0
 		jnz	short loc_475E
 		push	GC_RMW
 		push	0
@@ -1547,7 +1547,7 @@ loc_46FE:
 ; ---------------------------------------------------------------------------
 
 loc_4713:
-		cmp	byte_22D48, 1
+		cmp	_tiles_egc_render_all, 1
 		jz	short loc_4721
 		cmp	_tile_column_dirty[di], 0
 		jz	short loc_4753
@@ -1562,7 +1562,7 @@ loc_4721:
 ; ---------------------------------------------------------------------------
 
 loc_472F:
-		cmp	byte_22D48, 1
+		cmp	_tiles_egc_render_all, 1
 		jz	short loc_4742
 		mov	bx, di
 		imul	bx, TILES_Y
@@ -1604,7 +1604,7 @@ loc_4770:
 		mov	_tile_column_dirty[bx], 0
 		inc	bx
 		loop	loc_4770
-		mov	byte_22D48, 0
+		mov	_tiles_egc_render_all, 0
 		pop	di
 		pop	si
 		leave
@@ -1635,7 +1635,7 @@ var_2		= word ptr -2
 		mov	_tile_copy_lines_top, 0
 		mov	_tile_copy_lines_h, TILE_H
 		call	@egc_start_copy_noframe$qv
-		cmp	byte_2287E, 1
+		cmp	_tile_mode, TM_TILES
 		jnz	short loc_47E6
 		mov	[bp+var_2], 0
 		mov	[bp+var_6], 4
@@ -7342,7 +7342,7 @@ loc_E38A:
 		jnz	short loc_E39D
 		cmp	_bomb_frame, BOMB_CIRCLE_FRAMES
 		jg	short loc_E39D
-		mov	byte_22D48, 1
+		mov	_tiles_egc_render_all, 1
 
 loc_E39D:
 		les	bx, _resident
@@ -7373,7 +7373,7 @@ loc_E3D7:
 		jnz	short loc_E3EA
 
 loc_E3E5:
-		mov	byte_22D48, 1
+		mov	_tiles_egc_render_all, 1
 
 loc_E3EA:
 		pop	di
@@ -7724,9 +7724,9 @@ loc_E680:
 		mov	Palettes[0 * size rgb_t].g, 0
 		mov	Palettes[0 * size rgb_t].b, 128
 		call	far ptr	palette_show
-		mov	al, byte_2287E
-		mov	byte_21A4C, al
-		mov	byte_2287E, 2
+		mov	al, _tile_mode
+		mov	tilemode_21A4C, al
+		mov	_tile_mode, TM_NONE
 		call	grcg_boxfill pascal, (PLAYFIELD_LEFT shl 16) or 0, ((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 		jmp	loc_E892
 ; ---------------------------------------------------------------------------
@@ -7853,8 +7853,8 @@ loc_E821:
 		mov	Palettes[0 * size rgb_t].b, al
 		call	far ptr	palette_show
 		call	_snd_se_play c, 16
-		mov	al, byte_21A4C
-		mov	byte_2287E, al
+		mov	al, tilemode_21A4C
+		mov	_tile_mode, al
 		mov	byte_2066D, 1
 		mov	PaletteTone, 200
 		call	far ptr	palette_show
@@ -7923,9 +7923,9 @@ var_4		= word ptr -4
 loc_E8C9:
 		cmp	_bomb_frame, BOMB_CIRCLE_FRAMES
 		jnz	short loc_E915
-		mov	al, byte_2287E
-		mov	byte_21A53, al
-		mov	byte_2287E, 2
+		mov	al, _tile_mode
+		mov	tilemode_21A53, al
+		mov	_tile_mode, TM_NONE
 		call	grcg_boxfill pascal, (PLAYFIELD_LEFT shl 16) or 0, ((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 		mov	[bp+var_4], 0
 		jmp	short loc_E902
@@ -8021,8 +8021,8 @@ loc_E9F3:
 loc_EA11:
 		cmp	_bomb_frame, 112
 		jnz	short loc_EA35
-		mov	al, byte_21A53
-		mov	byte_2287E, al
+		mov	al, tilemode_21A53
+		mov	_tile_mode, al
 		mov	byte_2066D, 1
 		mov	PaletteTone, 200
 		call	far ptr	palette_show
@@ -8152,9 +8152,9 @@ loc_EB07:
 		cmp	_bomb_frame, BOMB_CIRCLE_FRAMES
 		jnz	short loc_EB32
 		mov	byte_21A55, 0
-		mov	al, byte_2287E
-		mov	byte_21A54, al
-		mov	byte_2287E, 2
+		mov	al, _tile_mode
+		mov	tilemode_21A54, al
+		mov	_tile_mode, TM_NONE
 		call	grcg_boxfill pascal, (PLAYFIELD_LEFT shl 16) or 0, ((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 		jmp	loc_ECA2
 ; ---------------------------------------------------------------------------
@@ -8264,8 +8264,8 @@ loc_EC56:
 		cmp	_bomb_frame, 164
 		jnz	short loc_EC85
 		call	_snd_se_play c, 16
-		mov	al, byte_21A54
-		mov	byte_2287E, al
+		mov	al, tilemode_21A54
+		mov	_tile_mode, al
 		mov	byte_2066D, 1
 		mov	PaletteTone, 200
 		call	far ptr	palette_show
@@ -15410,10 +15410,10 @@ loc_12E24:
 
 loc_12E30:
 		mov	[bp+var_4], RES_Y
-		cmp	byte_2287E, 2
+		cmp	_tile_mode, TM_NONE
 		jnz	short loc_12E48
 		mov	byte_24E7B, 1
-		mov	byte_2287E, 0
+		mov	_tile_mode, TM_COL_0
 		jmp	short loc_12E8B
 ; ---------------------------------------------------------------------------
 
@@ -15503,7 +15503,7 @@ loc_12EC5:
 		cmp	byte_24E7B, 1
 		jnz	short loc_12F18
 		mov	byte_24E7B, 0
-		mov	byte_2287E, 2
+		mov	_tile_mode, TM_NONE
 
 loc_12F18:
 		graph_accesspage _page_back
@@ -22320,7 +22320,7 @@ evileye_init	proc far
 		push	bp
 		mov	bp, sp
 		call	sub_1A6C5
-		mov	byte_2287E, 2
+		mov	_tile_mode, TM_NONE
 		call	sub_12DE0
 		call	super_clean pascal, (128 shl 16) or 192
 		mov	super_patnum, 80h
@@ -27755,7 +27755,7 @@ mima_init	proc far
 		mov	word_26C68, 0
 		mov	word_26C66, 0
 		mov	word_26CBE, 0
-		mov	byte_2287E, 2
+		mov	_tile_mode, TM_NONE
 		mov	byte_26CC1, 0
 		mov	byte_26CC2, 0
 		mov	byte_26CC3, 0Dh
@@ -29140,7 +29140,7 @@ marisa_init	proc far
 		call	graph_copy_page pascal, ax
 		graph_accesspage _page_back
 		graph_showpage _page_front
-		mov	byte_2287E, 2
+		mov	_tile_mode, TM_NONE
 		call	sub_D376
 		mov	word_2065A, 0
 		mov	byte_2066A, 0
@@ -34702,33 +34702,37 @@ word_218CA	dw ?
 public _playchar_bomb_func
 _playchar_bomb_func	dw ?
 		db 128 dup(?)
-byte_21A4C	db ?
+tilemode_21A4C	db ?
 rgb_21A4D	rgb_t <?>
 rgb_21A50	rgb_t <?>
-byte_21A53	db ?
-byte_21A54	db ?
+tilemode_21A53	db ?
+tilemode_21A54	db ?
 byte_21A55	db ?
 map	db    MAP_SIZE dup (?)
 		db 320 dup(?)
 word_22796	dw ?
 
 TILE_COUNT = TILES_X * TILES_Y
+TM_COL_0 = 0
+TM_TILES = 1
+TM_NONE = 2
 
 public _tile_line_at_top, _tile_image_vos, _tile_copy_lines_top
 public _tile_copy_lines_h, _tile_ring, _tile_dirty, _tile_column_dirty
+public _tile_mode, _tiles_egc_render_all
 _tile_line_at_top	db ?
 	evendata
 _tile_image_vos	dw TILE_IMAGE_COUNT dup(?)
 _tile_copy_lines_top	dw ?
 _tile_copy_lines_h  	dw ?
 		db 24 dup(?)
-byte_2287E	db ?
+_tile_mode	db ?
 _tile_ring	db TILE_COUNT dup(?)
 	evendata
 _tile_dirty	db TILE_COUNT dup(?)
 _tile_column_dirty	db TILES_X dup(?)
-byte_22D48	db ?
-		db ?
+_tiles_egc_render_all	db ?
+	evendata
 byte_22D4A	db ?
 byte_22D4B	db ?
 word_22D4C	dw ?

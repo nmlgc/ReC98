@@ -27,5 +27,24 @@ static const vram_x_t TILE_AREA_VRAM_LEFT = (TILE_AREA_LEFT / BYTE_DOTS);
 	// Column-major index of a tile within the tile source area.
 	typedef unsigned char tile_image_id_t;
 
+	enum tile_mode_t {
+		// Fills all dirty tiles with hardware palette color 0.
+		TM_COL_0 = 0,
+
+		// Blits dirty tiles from the tile source area, according to the
+		// [tile_ring]. The typical mode during a regular stage.
+		TM_TILES = 1,
+
+		// Disables tile rendering.
+		TM_NONE = 2,
+
+		_tile_mode_t_FORCE_UINT8 = 0xFF
+	};
+
+	extern tile_mode_t tile_mode;
 	extern tile_image_id_t tile_ring[TILES_Y][TILES_X];
+
+	// If `true`, the next call to tiles_egc_render() will unconditionally
+	// redraw all tiles and then reset this flag to `false`.
+	extern bool tiles_egc_render_all;
 #endif
