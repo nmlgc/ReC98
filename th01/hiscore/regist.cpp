@@ -165,9 +165,9 @@ void alphabet_put_initial()
 		kanji++;
 	}
 	alphabet_putsa_fx(NUM_TOP, i, col_and_fx, ALPHABET_SPACE);	i = LEFT_COLUMN;
-	alphabet_putsa_fx(NUM_TOP, i, col_and_fx, ALPHABET_LEFT); 	i++;
-	alphabet_putsa_fx(NUM_TOP, i, col_and_fx, ALPHABET_RIGHT);	i++;
-	alphabet_putsa_fx(NUM_TOP, i, col_and_fx, ALPHABET_ENTER);	i++;
+	alphabet_putca_fx(NUM_TOP, i, col_and_fx, KANJI_LEFT); 	i++;
+	alphabet_putca_fx(NUM_TOP, i, col_and_fx, KANJI_RIGHT);	i++;
+	alphabet_putca_fx(NUM_TOP, i, col_and_fx, KANJI_ENTER);	i++;
 }
 
 inline void header_cell_put(screen_x_t left, const char str[]) {
@@ -283,35 +283,34 @@ void regist_put_initial(
 	}
 }
 
-#define alphabet_left_to_column(left) \
-	((left - left_for(0)) / KANJI_PADDED_W)
-
-#define alphabet_if(kanji, left, top, on_space, on_left, on_right, on_enter) \
-	if(top == LOWER_TOP) { \
-		kanji = (KANJI_a + alphabet_left_to_column(left)); \
-	} else if(top == LOWER2_TOP) { \
-		kanji = (KANJI_a + alphabet_left_to_column(left)) + KANJI_PER_ROW; \
-	} else if(top == UPPER_TOP) { \
-		kanji = (KANJI_A + alphabet_left_to_column(left)); \
-	} else if(top == UPPER2_TOP) { \
-		kanji = (KANJI_A + alphabet_left_to_column(left)) + KANJI_PER_ROW; \
-	} else if(top == SYM_TOP) { \
-		kanji = ALPHABET_SYMS[alphabet_left_to_column(left)]; \
-	} else if(top == NUM_TOP && left < SPACE_LEFT) { \
-		kanji = (KANJI_0 + alphabet_left_to_column(left)); \
-	} else if((top == NUM_TOP) && (left == SPACE_LEFT)) { \
-		on_space \
-	} else if((top == NUM_TOP) && (left == LEFT_LEFT)) { \
-		on_left \
-	} else if((top == NUM_TOP) && (left == RIGHT_LEFT)) { \
-		on_right \
-	} else if((top == NUM_TOP) && (left == ENTER_LEFT)) { \
-		on_enter \
+shiftjis_kanji_swapped_t alphabet_kanji_at(screen_x_t left, screen_y_t top)
+{
+	const int column = ((left - left_for(0)) / KANJI_PADDED_W);
+	switch(top) {
+	case LOWER_TOP: 	return  (KANJI_a + column);
+	case LOWER2_TOP:	return ((KANJI_a + column) + KANJI_PER_ROW);
+	case UPPER_TOP: 	return  (KANJI_A + column);
+	case UPPER2_TOP:	return ((KANJI_A + column) + KANJI_PER_ROW);
+	case SYM_TOP:   	return ALPHABET_SYMS[column];
+	case NUM_TOP:
+		if(left < SPACE_LEFT) {
+			return (KANJI_0 + column);
+		} else if(left == SPACE_LEFT) {
+			return KANJI_SPACE;
+		} else if(left == LEFT_LEFT) {
+			return KANJI_LEFT;
+		} else if(left == RIGHT_LEFT) {
+			return KANJI_RIGHT;
+		} else if(left == ENTER_LEFT) {
+			return KANJI_ENTER;
+		}
 	}
+	return '\0';
+}
 
 void alphabet_put_at(screen_x_t left, screen_y_t top, bool16 is_selected)
 {
-	sshiftjis_kanji_swapped_t kanji = '\0';
+	shiftjis_kanji_swapped_t kanji = alphabet_kanji_at(left, top);
 
 	egc_copy_rect_1_to_0_16(left, top, KANJI_PADDED_W, GLYPH_H);
 
@@ -319,15 +318,16 @@ void alphabet_put_at(screen_x_t left, screen_y_t top, bool16 is_selected)
 		!is_selected ? COL_REGIST_REGULAR : (FX_REVERSE | COL_REGIST_SELECTED)
 	));
 
-	alphabet_if(kanji, left, top,
-		{ graph_printf_fx(left, top, col_and_fx, ALPHABET_SPACE); },
-		{ graph_printf_fx(left, top, col_and_fx, ALPHABET_LEFT); },
-		{ graph_printf_fx(left, top, col_and_fx, ALPHABET_RIGHT); },
-		{ graph_printf_fx(left, top, col_and_fx, ALPHABET_ENTER); }
-	);
-	if(kanji != '\0') {
+	switch(kanji) {
+	case '\0':
+		break;
+	case KANJI_SPACE:
+		graph_printf_fx(left, top, col_and_fx, ALPHABET_SPACE);
+		break;
+	default:
 		graph_putkanji_fx_declare();
 		graph_putkanji_fx(left, top, col_and_fx, kanji);
+		break;
 	}
 }
 
@@ -347,17 +347,21 @@ int regist_on_shot(
 	int &entered_name_cursor
 )
 {
-	shiftjis_kanji_swapped_t kanji = '\0';
+	shiftjis_kanji_swapped_t kanji = alphabet_kanji_at(left, top);
 	shiftjis_t cursor_str[SCOREDAT_NAME_BYTES + 1] = REGIST_NAME_SPACES;
 
-	alphabet_if(kanji, left, top,
-		{ kanji = KANJI_SP; },
-		{ clamp_dec(entered_name_cursor, 0); },
-		{ clamp_inc(entered_name_cursor, (SCOREDAT_NAME_KANJI - 1)); },
-		{ return 1; }
-	);
-
-	if(kanji != '\0') {
+	switch(kanji) {
+	case '\0':
+		break;
+	case KANJI_LEFT:
+		clamp_dec(entered_name_cursor, 0);
+		break;
+	case KANJI_RIGHT:
+		clamp_inc(entered_name_cursor, (SCOREDAT_NAME_KANJI - 1));
+		break;
+	case KANJI_ENTER:
+		return 1;
+	default:
 		set_kanji_at(entered_name.ubyte, entered_name_cursor, kanji);
 		#if (BINARY == 'M')
 			if(entered_name_cursor == (SCOREDAT_NAME_KANJI - 1)) {
@@ -367,6 +371,7 @@ int regist_on_shot(
 		if(entered_name_cursor < (SCOREDAT_NAME_KANJI - 1)) {
 			entered_name_cursor++;
 		}
+		break;
 	}
 
 	egc_copy_rect_1_to_0_16(

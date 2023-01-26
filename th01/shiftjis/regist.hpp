@@ -33,15 +33,15 @@ static const pixel_t REGIST_TITLE_W = shiftjis_w(REGIST_TITLE_WITH_SPACE);
 
 #define ALPHABET_A    	"ÇÅ"
 #define ALPHABET_SPACE	"SP"
-#define ALPHABET_LEFT 	"Å©"
-#define ALPHABET_RIGHT	"Å®"
-#define ALPHABET_ENTER	"èI"
 
 #define KANJI_A         	kanji_swap('Ç`')
 #define KANJI_a         	kanji_swap('ÇÅ')
 #define KANJI_b         	kanji_swap('ÇÇ')
 #define KANJI_0         	kanji_swap('ÇO')
-#define KANJI_SP        	kanji_swap('Å@')
+#define KANJI_SPACE     	kanji_swap('Å@')
+#define KANJI_LEFT      	kanji_swap('Å©')
+#define KANJI_RIGHT     	kanji_swap('Å®')
+#define KANJI_ENTER     	kanji_swap('èI')
 #define KANJI_UNDERSCORE	kanji_swap('ÅQ')
 
 const shiftjis_kanji_swapped_t ALPHABET_SYMS[] = {
