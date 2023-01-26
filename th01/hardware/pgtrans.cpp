@@ -1,4 +1,4 @@
-#pragma option -zCGRAPH_EX_TEXT -2 -Z-
+#pragma option -zCGRAPH_EX_TEXT
 
 #include <dos.h>
 #include "platform.h"

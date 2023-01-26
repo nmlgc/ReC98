@@ -3,8 +3,6 @@
  * Code segment #4 of TH01's FUUIN.EXE
  */
 
-#pragma option -1 -Z-
-
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
@@ -28,8 +26,6 @@ void frame_delay(unsigned int frames)
 	while(z_vsync_Count1 < frames) {
 	}
 }
-
-#pragma option -O-
 
 void pascal graph_type_ank_n(
 	screen_x_t left, vram_y_t top, int len, const sshiftjis_t *str

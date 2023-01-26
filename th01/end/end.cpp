@@ -1,5 +1,3 @@
-#pragma option -O- -1 -Z-
-
 #include <stddef.h>
 #include "platform.h"
 #include "pc98.h"

@@ -1,5 +1,3 @@
-#pragma option -O-
-
 #include "th01/hardware/egc.h"
 #include "th01/formats/grp.h"
 #include "th01/end/pic.hpp"
@@ -45,5 +43,3 @@ void end_pic_show(int quarter)
 	}
 	egc_off();
 }
-
-#pragma option -O.

@@ -4,8 +4,6 @@
  * unused anyway.
  */
 
-#pragma option -1 -Z-
-
 #include <mbctype.h>
 #include <mbstring.h>
 #include <stdarg.h>

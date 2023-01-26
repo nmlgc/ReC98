@@ -3,8 +3,6 @@
  * Random resident structure stuff
  */
 
-#pragma option -2 -Z-
-
 #include "platform.h"
 #include "master.hpp"
 #include "th01/resident.hpp"

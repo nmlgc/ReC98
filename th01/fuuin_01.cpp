@@ -3,8 +3,6 @@
  * Code segment #1 of TH01's FUUIN.EXE
  */
 
-#pragma option -O- -1 -Z-
-
 #include <process.h>
 #include <stdio.h>
 #include "platform.h"
