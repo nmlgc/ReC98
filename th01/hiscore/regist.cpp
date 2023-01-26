@@ -68,13 +68,13 @@ static screen_y_t entered_name_top;
 /// Alphabet
 /// --------
 
-#define ALPHABET_TOP 240
-#define MARGIN_W 32
-#define KANJI_PADDING_X 16
-#define KANJI_PADDING_Y 8
+static const screen_y_t ALPHABET_TOP = 240;
+static const pixel_t MARGIN_W = 32;
+static const pixel_t KANJI_PADDING_X = 16;
+static const pixel_t KANJI_PADDING_Y = 8;
 
-#define KANJI_PADDED_W (GLYPH_FULL_W + KANJI_PADDING_X)
-#define KANJI_PADDED_H (GLYPH_H + KANJI_PADDING_Y)
+static const pixel_t KANJI_PADDED_W = (GLYPH_FULL_W + KANJI_PADDING_X);
+static const pixel_t KANJI_PADDED_H = (GLYPH_H + KANJI_PADDING_Y);
 
 #define KANJI_PER_ROW \
 	((RES_X - (MARGIN_W * 2)) / KANJI_PADDED_W)
@@ -86,13 +86,11 @@ inline pixel_t relative_top_for(int kanji_id) {
 	return relative_top(kanji_id / KANJI_PER_ROW);
 }
 
-inline int row_ceil(int count) {
-	return ((count + (KANJI_PER_ROW - 1)) / KANJI_PER_ROW);
-}
+#define row_ceil(count) \
+	((count + (KANJI_PER_ROW - 1)) / KANJI_PER_ROW)
 
-inline pixel_t left_for(int kanji_id) {
-	return (((kanji_id % KANJI_PER_ROW) * KANJI_PADDED_W) + MARGIN_W);
-}
+#define left_for(kanji_id) \
+	((((kanji_id) % KANJI_PER_ROW) * KANJI_PADDED_W) + MARGIN_W)
 
 #define alphabet_putca_fx(top_for_0, i, fx, kanji) { \
 	graph_putkanji_fx( \
@@ -109,20 +107,26 @@ inline pixel_t left_for(int kanji_id) {
 static const int SYM_COUNT = (sizeof(ALPHABET_SYMS) / sizeof(shiftjis_kanji_t));
 
 // Rows
-#define LOWER_TOP (ALPHABET_TOP)
-#define LOWER2_TOP (LOWER_TOP + relative_top(1))
-#define UPPER_TOP (LOWER_TOP + relative_top(row_ceil(A_TO_Z_COUNT)))
-#define UPPER2_TOP (UPPER_TOP + relative_top(1))
-#define SYM_TOP (UPPER_TOP + relative_top(row_ceil(A_TO_Z_COUNT)))
-#define NUM_TOP (SYM_TOP + relative_top(row_ceil(SYM_COUNT)))
+static const screen_y_t LOWER_TOP = ALPHABET_TOP;
+static const screen_y_t LOWER2_TOP = (LOWER_TOP + relative_top(1));
+static const screen_y_t UPPER_TOP = (
+	LOWER_TOP + relative_top(row_ceil(A_TO_Z_COUNT))
+);
+static const screen_y_t UPPER2_TOP = (UPPER_TOP + relative_top(1));
+static const screen_y_t SYM_TOP = (
+	UPPER_TOP + relative_top(row_ceil(A_TO_Z_COUNT))
+);
+static const screen_y_t NUM_TOP = (SYM_TOP + relative_top(row_ceil(SYM_COUNT)));
 
 // Columns
-#define A_TO_Z_2_END_LEFT left_for(A_TO_Z_COUNT - KANJI_PER_ROW)
-#define SPACE_LEFT left_for(NUM_COUNT)
-#define LEFT_COLUMN (KANJI_PER_ROW - 3)
-#define LEFT_LEFT  left_for(LEFT_COLUMN + 0)
-#define RIGHT_LEFT left_for(LEFT_COLUMN + 1)
-#define ENTER_LEFT left_for(LEFT_COLUMN + 2)
+static const screen_x_t A_TO_Z_2_END_LEFT = left_for(
+	A_TO_Z_COUNT - KANJI_PER_ROW
+);
+static const screen_x_t SPACE_LEFT = left_for(NUM_COUNT);
+static const screen_x_t LEFT_COLUMN = (KANJI_PER_ROW - 3);
+static const screen_x_t LEFT_LEFT =  left_for(LEFT_COLUMN + 0);
+static const screen_x_t RIGHT_LEFT = left_for(LEFT_COLUMN + 1);
+static const screen_x_t ENTER_LEFT = left_for(LEFT_COLUMN + 2);
 
 inline uint8_t kanji_hi(sshiftjis_kanji_swapped_t kanji) {
 	return (kanji >> 8);
