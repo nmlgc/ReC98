@@ -1132,5 +1132,3 @@ void portal_enter_update_and_render_or_reset(int obstacle_slot, bool16 reset)
 		portals_blocked = false;
 	}
 }
-
-static int8_t unused[4]; // ZUN bloat

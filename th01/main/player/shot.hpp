@@ -3,17 +3,11 @@ static const pixel_t SHOT_W = 16;
 static const pixel_t SHOT_H = 16;
 
 struct CShots : public EntitiesTopleft<SHOT_COUNT> {
-	int unknown[SHOT_COUNT];
-
 	// A shot slot can be considered "alive" if either of these are nonzero.
 	bool moving[SHOT_COUNT];
 	unsigned char decay_frame[SHOT_COUNT];
 
 	CShots() {
-		unknown[0] = 0x50;
-		unknown[1] = 0x60;
-		unknown[2] = 0x70;
-
 		// ZUN bloat: Why no loop?
 		static_assert(SHOT_COUNT == 8);
 		moving[0] = false;
@@ -65,9 +59,6 @@ struct CShots : public EntitiesTopleft<SHOT_COUNT> {
 		pixel_t hitbox_h_minus_shot_h
 	);
 };
-
-// Might even be related to pellets, and not to shots.
-extern bool16 unused_boss_stage_flag;
 
 extern CShots Shots;
 

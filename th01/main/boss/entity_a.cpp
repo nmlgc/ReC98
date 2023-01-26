@@ -703,6 +703,5 @@ CBossEntity boss_entity_1;
 CBossEntity boss_entity_2;
 CBossEntity boss_entity_3;
 CBossEntity boss_entity_4;
-CBossEntity boss_entities_unused[5];
 CBossAnim boss_anims[2];
 // -----

@@ -3,7 +3,6 @@
 #include "platform.h"
 #include "th01/hardware/input.hpp"
 
-static bool input_unused = false; // ZUN bloat
 uint8_t input_lr = INPUT_NONE;
 bool input_mem_enter = false;
 bool input_mem_leave = false;

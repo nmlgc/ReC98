@@ -187,7 +187,6 @@ void kikuri_load(void)
 	int j;
 
 	pellet_interlace = true;
-	Pellets.unknown_seven = 7;
 	palette_copy(boss_palette, z_Palettes, i, j); // = boss_palette_snap
 
 	for(i = 0; i < TEAR_COUNT; i++) {

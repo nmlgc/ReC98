@@ -43,9 +43,6 @@ CPellets::CPellets(void)
 	}
 
 	alive_count = 0;
-	for(i = 0; i < sizeof(unknown_zero) / sizeof(unknown_zero[0]); i++) {
-		unknown_zero[i] = 0;
-	}
 }
 
 void vector2_to_player_from(

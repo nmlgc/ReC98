@@ -115,5 +115,3 @@ void pascal near str_from_swapped_kanji(
 
 #include "th01/hiscore/regist.cpp"
 #include "th01/main/hiscore.cpp"
-
-static int32_t unused; // ZUN bloat

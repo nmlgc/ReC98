@@ -119,5 +119,3 @@ void pagetrans_diagonal_8x8_with_palette(
 		delay(step_ms);
 	}
 }
-
-static int8_t unused[2] = { 0x00, 0xFF }; // ZUN bloat

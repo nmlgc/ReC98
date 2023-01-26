@@ -17,8 +17,6 @@
 #include "shiftjis.hpp"
 #include "th01/hardware/ztext.hpp"
 
-static int8_t unused[256]; // ZUN bloat
-
 void z_text_init(void)
 {
 	union REGS regs;

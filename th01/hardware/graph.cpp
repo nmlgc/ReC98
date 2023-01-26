@@ -21,7 +21,6 @@
 // Never read from, so it's supposedly only there for debugging purposes?
 static screen_point_t graph_r_last_line_end;
 
-static int8_t unused; // ZUN bloat
 static page_t page_accessed;
 
 /// VRAM plane "structures"

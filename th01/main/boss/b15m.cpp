@@ -578,7 +578,6 @@ int8_t boss_phase;
 void elis_load(void)
 {
 	pellet_interlace = true;
-	Pellets.unknown_seven = 7;
 	elis_ent_load();
 	grc_load(GRC_SLOT_BOSS_1, "boss5_gr.grc");
 	ptn_new(PTN_SLOT_BG_ENT, ((GIRL_W / PTN_W) * (GIRL_H / PTN_H)));

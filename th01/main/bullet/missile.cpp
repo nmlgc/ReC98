@@ -6,8 +6,7 @@
 CMissiles Missiles;
 
 void CMissiles::add(
-	screen_x_t left, screen_x_t top, double velocity_x, double velocity_y,
-	int8_t unknown
+	screen_x_t left, screen_x_t top, double velocity_x, double velocity_y
 )
 {
 	for(int i = 0; i < MISSILE_COUNT; i++) {
@@ -19,7 +18,6 @@ void CMissiles::add(
 		this->prev_left[i].v = MISSILE_NEW;
 		this->velocity_x[i].v = (velocity_x * SUBPIXEL_FACTOR);
 		this->velocity_y[i].v = (velocity_y * SUBPIXEL_FACTOR);
-		this->unknown[i] = unknown;
 		this->flag[i] = MF_MOVING;
 		return;
 	}

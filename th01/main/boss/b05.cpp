@@ -621,13 +621,12 @@ void singyoku_main(void)
 
 	static struct {
 		int pattern_cur;
-		int16_t unused; // ZUN bloat
 
 		void frame_common(void) {
 			boss_phase_frame++;
 			invincibility_frame++;
 		}
-	} phase = { 0, 0 };
+	} phase = { 0 };
 	static struct {
 		bool16 invincible;
 
@@ -700,7 +699,6 @@ void singyoku_main(void)
 		}
 		boss_phase = 1;
 		phase.pattern_cur = 0;
-		phase.unused = 0;
 		hit.invincible = false;
 		boss_phase_frame = 0;
 		initial_hp_rendered = false;
@@ -749,7 +747,6 @@ void singyoku_main(void)
 			// no difference anyway).
 			if(phase.pattern_cur != 1)  {
 				boss_phase = 2;
-				phase.unused = 0;
 				phase.pattern_cur = 0;
 				boss_phase_frame = 0;
 				invincibility_frame = 0; // ZUN bloat: Already 0 here

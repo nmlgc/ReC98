@@ -561,8 +561,7 @@ void pascal near birds_reset_fire_spawn_unput_update_render(
 	double func_or_left,
 	double top = 0.0f,
 	double velocity_x = 0.0f,
-	double velocity_y = 0.0f,
-	int8_t unknown = 0
+	double velocity_y = 0.0f
 )
 {
 	static char birds_alive[BIRD_COUNT] = { false }; // Should be bool.
@@ -571,7 +570,6 @@ void pascal near birds_reset_fire_spawn_unput_update_render(
 		double top[BIRD_COUNT];
 		double velocity_x[BIRD_COUNT];
 		double velocity_y[BIRD_COUNT];
-		int8_t unknown[BIRD_COUNT];
 		char hatch_time[BIRD_COUNT];
 		char hatch_duration[BIRD_COUNT];
 
@@ -651,7 +649,6 @@ void pascal near birds_reset_fire_spawn_unput_update_render(
 				);
 				birds.left[i] = func_or_left;
 				birds.top[i] = top;
-				birds.unknown[i] = unknown;
 				birds.hatch_duration[i] = birds.hatch_time[i];
 				return;
 			}
@@ -713,7 +710,7 @@ inline void birds_reset(void) {
 
 #define birds_spawn(left, top, velocity_x, velocity_y) \
 	birds_reset_fire_spawn_unput_update_render( \
-		left, top, velocity_x, velocity_y, 1 \
+		left, top, velocity_x, velocity_y \
 	);
 
 #define birds_fire(pellet_group) \

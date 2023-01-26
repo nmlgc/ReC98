@@ -15,9 +15,6 @@
 extern bool vsync_initialized = false;
 extern bool16 vsync_callback_is_set = false;
 
-static int32_t unused_7 = 7; // ZUN bloat
-static int32_t unused_0 = 0; // ZUN bloat
-
 static pixel_t RES_X_HALF = (RES_X / 2);
 static pixel_t RES_Y_HALF = (RES_Y / 2);
 

@@ -75,16 +75,12 @@ int8_t rem_bombs = CFG_CREDIT_BOMBS_DEFAULT;
 int8_t credit_lives_extra = CFG_CREDIT_LIVES_EXTRA_DEFAULT;
 
 int8_t stage_num = 0;
-bool bgm_change_blocked = false;
-static int8_t unused_1 = 0; // ZUN bloat
 const shiftjis_t* RANKS[RANK_COUNT] = RANKS_CAPS;
 bool timer_initialized = false;
-static int8_t unused_2 = 0; // ZUN bloat
 bool first_stage_in_scene = true;
 
 #include "th01/hardware/input_mf.cpp"
 
-static int8_t unused_3 = 0; // ZUN bloat
 bool player_deflecting = false;
 bool bomb_damaging = false;
 bool player_sliding = false;
@@ -92,15 +88,10 @@ uscore_t score = 0;
 uscore_t score_bonus = 0;
 unsigned long bomb_frames = 0;
 long continues_total = 0;
-static int16_t unused_4 = 0; // ZUN bloat
 bool16 mode_test = false;
 int bomb_doubletap_frames = 0;
-int bomb_doubletap_frames_unused = 0; // ZUN bloat
 bool16 test_damage = false;
-static int unused_5 = 0; // ZUN bloat
-static int unused_6 = 0; // ZUN bloat
 bool16 player_invincible = false;
-static int unused_7 = 0; // ZUN bloat
 orb_velocity_x_t orb_velocity_x = OVX_0;
 int orb_rotation_frame = 0;
 int rem_lives = 4;
@@ -121,7 +112,6 @@ int cardcombo_cur = 0;
 bool16 orb_in_portal = false;
 int cardcombo_max = 0;
 int extend_next = 1;
-int unnecessary_copy_of_the_initial_value_of_extend_next = 1;
 
 screen_x_t orb_cur_left;
 screen_y_t orb_cur_top;
@@ -137,7 +127,6 @@ CPlayerAnim player_48x48;
 CPlayerAnim player_48x32;
 CPellets Pellets;
 CShots Shots;
-static int32_t unused_8; // ZUN bloat
 
 struct {
 	// Specifies whether PTN_SLOT_STG contains the full set of sprites required
@@ -619,24 +608,20 @@ int main(void)
 		grp_fn = default_grp_fn;
 
 		boss_id = BID_NONE;
-		unused_boss_stage_flag = false;
 		player_invincible = false;
 		player_invincibility_time = 0;
 
 		switch(stage_id) {
 		case ((0 * STAGES_PER_SCENE) + BOSS_STAGE):
 			boss_id = BID_SINGYOKU;
-			unused_boss_stage_flag = true;
 			strcpy(grp_fn, "boss1.grp");
 			strcpy(bgm_fn, "positive.mdt");
 			clear_vram_page_0 = false;
 			singyoku_load();
-			Pellets.unknown_seven = 7;
 			break;
 
 		case ((1 * STAGES_PER_SCENE) + BOSS_STAGE):
 			boss_id = (BID_YUUGENMAGAN + route);
-			unused_boss_stage_flag = true;
 			if(route == ROUTE_MAKAI) {
 				strcpy(bgm_fn, "LEGEND.mdt");
 				strcpy(grp_fn, "boss2.grp");
@@ -647,42 +632,35 @@ int main(void)
 				mima_load();
 			}
 			clear_vram_page_0 = false;
-			Pellets.unknown_seven = 7;
 			break;
 
 		case ((2 * STAGES_PER_SCENE) + BOSS_STAGE):
 			boss_id = (BID_KIKURI + (ROUTE_JIGOKU - route));
-			unused_boss_stage_flag = true;
 			if(route == ROUTE_JIGOKU) {
 				strcpy(bgm_fn, "kami.mdt");
 				strcpy(grp_fn, "boss4.grp");
 				kikuri_load();
 				clear_vram_page_0 = true;
-				Pellets.unknown_seven = 7;
 			} else {
 				strcpy(bgm_fn, "kami2.mdt");
 				strcpy(grp_fn, "boss5.grp");
 				elis_load();
 				clear_vram_page_0 = false;
-				Pellets.unknown_seven = 7;
 			}
 			break;
 
 		case ((3 * STAGES_PER_SCENE) + BOSS_STAGE):
 			boss_id = (BID_SARIEL + route);
-			unused_boss_stage_flag = true;
 
 			// ZUN bloat: Both bosses have their own BGM playback calls.
 			if(route == ROUTE_MAKAI) {
 				strcpy(bgm_fn, "tensi.mdt");
 				sariel_load_and_init();
 				clear_vram_page_0 = true;
-				Pellets.unknown_seven = 7;
 			} else {
 				strcpy(bgm_fn, "alice.mdt");
 				konngara_init();
 				clear_vram_page_0 = false;
-				Pellets.unknown_seven = 7;
 			}
 			break;
 
@@ -716,13 +694,11 @@ int main(void)
 		} else if(boss_id == BID_SARIEL) {
 			sariel_entrance(0);
 		}
-		unnecessary_copy_of_the_initial_value_of_extend_next = extend_next;
 		hud_bg_snap_and_put();
 
 		cardcombo_max = 0;
 		orb_in_portal = false;
 		bomb_frames = 0;
-		Pellets.unknown_seven = 7;
 
 		if(mode_debug == true) {
 			debug_startup_delay();
@@ -749,14 +725,12 @@ int main(void)
 			player_reset();
 			player_put_default();
 			orb_put_default();
-			unused_5 = 0;
 			input_lr = INPUT_NONE;
 			input_shot = false;
 			input_ok = false;
 			paused = false;
 			hud_score_and_cardcombo_render();
 			bomb_doubletap_frames = (BOMB_DOUBLETAP_WINDOW * 3);
-			bomb_doubletap_frames_unused = (BOMB_DOUBLETAP_WINDOW * 3);
 			obstacles_update_and_render(true);
 
 			// Play stage BGM. Why inside this loop though? The code would be
@@ -764,7 +738,6 @@ int main(void)
 			if(
 				(boss_id != BID_SARIEL) &&
 				(boss_id != BID_KONNGARA) &&
-				(bgm_change_blocked == false) &&
 				(bgm_reload_and_play_if_0 == 0)
 			) {
 				mdrv2_bgm_load(bgm_fn);

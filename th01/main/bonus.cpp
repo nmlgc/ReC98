@@ -199,7 +199,6 @@ void pascal near totle_pagetrans_animate(int)
 	unsigned int col;
 	unsigned int comp;
 	unsigned int rows_done_prev = 1;
-	int unused_and_uninitialized_frame_count; // ZUN bloat
 
 	row_transfer_offset = new uvram_byte_amount_t[RES_Y];
 	row_active = new bool16[RES_Y];
@@ -223,7 +222,6 @@ void pascal near totle_pagetrans_animate(int)
 				rows_done++;
 			}
 		}
-		unused_and_uninitialized_frame_count++;
 		frame_delay(2);
 
 		if(rows_done >= RES_Y) {

@@ -10,7 +10,6 @@
 // -------------------------------------------------
 
 Palette4 stage_palette;
-static int8_t unused[340]; // ZUN bloat
 // -------------------------------------------------
 
 #define shape8x8_put(shape, left, top, col) \

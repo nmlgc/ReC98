@@ -17,8 +17,6 @@
 #endif
 
 
-static int8_t unused[80]; // ZUN bloat
-
 // .GRP and .PTN
 // -------------
 
@@ -30,7 +28,6 @@ bool16 flag_palette_show = true;
 
 Palette4 grp_palette;
 bool16 flag_grp_put = true;
-static bool flag_grp_unused[3] = { false }; // ZUN bloat
 // ----
 
 // .PTN

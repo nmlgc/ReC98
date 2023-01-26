@@ -721,7 +721,6 @@ void pattern_symmetrical_from_cup_fire(unsigned char angle)
 void pattern_symmetrical_from_cup(void)
 {
 	static unsigned char angle;
-	static int16_t unused; // ZUN bloat
 
 	if(boss_phase_frame == 10) {
 		face_expression_set_and_put(FE_CLOSED);
@@ -731,7 +730,6 @@ void pattern_symmetrical_from_cup(void)
 	}
 	if(boss_phase_frame == 100) {
 		angle = 0x40;
-		unused = -1;
 		select_subpixel_for_rank(pattern_state.speed, 5.0f, 5.0f, 6.0f, 7.0f);
 	}
 	if((boss_phase_frame < 140) && ((boss_phase_frame % 8) == 0)) {

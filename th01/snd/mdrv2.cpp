@@ -41,7 +41,6 @@ inline uint16_t mdrv2_call(mdrv2_func_t func) {
 }
 
 static int8_t mdrv2_active = false; // ACTUAL TYPE: bool
-static int8_t mdrv2_unused = 0; // ZUN bloat
 
 bool16 mdrv2_resident(void)
 {

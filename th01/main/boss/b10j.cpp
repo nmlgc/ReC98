@@ -1129,7 +1129,6 @@ void pattern_aimed_lasers_from_corners(void)
 	};
 
 	static SquareState sq;
-	static int16_t unused; (unused); // ZUN bloat
 
 	// Could have been local just like in the other patterns, but eh, 16 bytes
 	// for the convenience of being easily able to fire lasers independent of
