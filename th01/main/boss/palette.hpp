@@ -3,6 +3,9 @@
 // MODDERS: Merge with the [stage_palette].
 extern Palette4 boss_palette;
 
+// Palette to fade to after the white boss defeat flash.
+extern Palette4 boss_post_defeat_palette;
+
 // Overwrites [boss_palette] with [z_Palettes].
 void boss_palette_snap(void);
 

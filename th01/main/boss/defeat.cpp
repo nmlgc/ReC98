@@ -22,6 +22,7 @@
 #include "th01/main/player/player.hpp"
 #include "th01/shiftjis/routesel.hpp"
 #include "th01/main/boss/boss.hpp"
+#include "th01/main/boss/palette.hpp"
 #include "th01/main/boss/entity_a.hpp"
 #include "th01/main/boss/defeat.hpp"
 #include "th01/main/stage/stages.hpp"
