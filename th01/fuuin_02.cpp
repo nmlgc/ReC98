@@ -5,7 +5,6 @@
 
 #include <string.h>
 #include "platform.h"
-#include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
 #include "pc98kbd.h"
@@ -60,8 +59,5 @@ void input_sense(bool16 reset_repeat)
 
 #include "th01/hardware/input_rs.cpp"
 // -----
-
-#define graph_printf_s_fx(left, top, fx, str) \
-	graph_printf_fx(left, top, fx, "%s", str);
 
 #include "th01/hiscore/regist.cpp"

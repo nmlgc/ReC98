@@ -1,9 +1,9 @@
+#include "th01/score.h"
+#include "th01/v_colors.hpp"
 #include "th01/math/clamp.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/grp2xscs.hpp"
-#include "th01/v_colors.hpp"
-#include "th01/score.h"
 #include "th01/hiscore/regist.hpp"
 
 // Null-terminated version of scoredat_name_t, used internally.
@@ -101,7 +101,7 @@ inline pixel_t relative_top_for(int kanji_id) {
 }
 
 #define alphabet_putsa_fx(top_for_0, i, fx, str) { \
-	graph_printf_fx(left_for(i), (top_for_0 + relative_top_for(i)), fx, str); \
+	graph_putsa_fx(left_for(i), (top_for_0 + relative_top_for(i)), fx, str); \
 }
 
 #define A_TO_Z_COUNT 26
@@ -204,18 +204,10 @@ void regist_put_initial(
 
 		#define col_and_fx_text (place_col | FX_WEIGHT_BOLD)
 
-		#if (BINARY == 'E')
-			#define place_col ((i == entered_place) \
-				? COL_REGIST_SELECTED \
-				: COL_REGIST_REGULAR \
-			)
-			#define top table_row_top(i)
-		#else
-			int place_col = (
-				(i == entered_place) ? COL_REGIST_SELECTED : COL_REGIST_REGULAR
-			);
-			vram_y_t top = table_row_top(i);
-		#endif
+		int place_col = (
+			(i == entered_place) ? COL_REGIST_SELECTED : COL_REGIST_REGULAR
+		);
+		vram_y_t top = table_row_top(i);
 
 		switch(i) {
 		case 0:	place_cell_put(top, col_and_fx_text, REGIST_PLACE_0);	break;
@@ -276,8 +268,6 @@ void regist_put_initial(
 			entered_name_left = table_name_left(0);
 			entered_name_top = table_row_top(i);
 		}
-		#undef top
-		#undef place_col
 		#undef col_and_fx_text
 		#undef stage_expr
 	}
@@ -373,7 +363,7 @@ regist_shot_ret_t regist_on_shot(
 		(SCOREDAT_NAME_KANJI * GLYPH_FULL_W),
 		GLYPH_H
 	);
-	graph_printf_s_fx(
+	graph_putsa_fx(
 		entered_name_left,
 		entered_name_top,
 		(COL_REGIST_SELECTED | FX_WEIGHT_BOLD),
@@ -640,7 +630,6 @@ void regist(
 		// Writes the new name to scoredat_names[] and calls scoredat_save()
 		regist_name_enter(place, cleared);
 
-		_ES = FP_SEG(graph_accesspage_func); // Yes, no point to this at all.
 		scoredat_free();
 		return;
 	}
@@ -655,6 +644,5 @@ void regist(
 			break;
 		}
 	}
-	_ES = FP_SEG(graph_accesspage_func); // Yes, no point to this at all.
 	scoredat_free();
 }
