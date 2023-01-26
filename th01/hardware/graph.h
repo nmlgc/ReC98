@@ -113,16 +113,6 @@ void graph_r_lineloop_unput(
 /// Blitting
 /// --------
 
-// Copies the given rectangle on the current from
-//     (⌊left/8⌋*8, top)
-// to
-//     (⌊left/8⌋*8 + ⌊(right-left)/8⌋*8, bottom)
-// from the VRAM page that was previously set as the accessed one via a call
-// to graph_accesspage_func() to the same position on the opposite page.
-void graph_copy_byterect_from_accessed_page_to_other(
-	screen_x_t left, vram_y_t top, screen_x_t right, vram_y_t bottom
-);
-
 // Moves the given source rectangle from
 //     (⌊left/8⌋*8, top)
 // on the [src] page to

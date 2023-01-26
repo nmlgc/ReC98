@@ -97,16 +97,6 @@ void z_text_setcursor(z_text_cursor_t type)
 	outportb(0x60, ((_BL << 3) + 2));
 }
 
-void z_text_locate(char x, char y)
-{
-	union REGS regs;
-	regs.h.cl = 0x10;
-	regs.h.ah = 3;
-	regs.h.dh = y;
-	regs.h.dl = x;
-	int86(0xDC, &regs, &regs);
-}
-
 inline uint8_t* tram_jis(uint16_t offset) {
 	return reinterpret_cast<uint8_t *>(MK_FP(SEG_TRAM_JIS, offset));
 }

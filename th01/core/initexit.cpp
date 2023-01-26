@@ -36,8 +36,6 @@ void game_init(void)
 	z_text_init();
 	egc_start();
 	graph_start();
-	respal_create();
-	z_respal_set();
 	vram_planes_set();
 }
 
@@ -48,7 +46,6 @@ void game_exit(void)
 	}
 	game_initialized = false;
 	game_exit_inner();
-	respal_free();
 }
 
 void game_switch_binary(void)
@@ -80,17 +77,4 @@ void interrupt int06_game_exit(...)
 {
 	game_exit();
 	exit(0);
-}
-
-void game_exit_print_error(const char *fmt, ...)
-{
-	char buf[256];
-	va_list ap;
-
-	va_start(ap, fmt);
-	vsprintf(buf, fmt, ap);
-	game_exit();
-	z_text_print(buf);
-	exit(1);
-	va_end(ap);
 }

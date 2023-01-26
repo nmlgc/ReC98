@@ -1,6 +1,5 @@
 #pragma option -zCPTN_GRP_GRZ
 
-#include <stdio.h>
 #include "platform.h"
 #include "pc98.h"
 #include "master.hpp"
@@ -46,21 +45,6 @@ int grp_palette_load(const char *fn)
 	return 0;
 }
 
-// ZUN bloat: Random unused function is random
-int getkanji(FILE *fp)
-{
-	int low = getc(fp);
-	low += (getc(fp) << 8);
-	return low;
-}
-
-void grp_palette_set_all(const Palette4& pal)
-{
-	int col;
-	int comp;
-	palette_copy(grp_palette, pal, col, comp);
-}
-
 int grp_put_palette_show(const char *fn)
 {
 	extern int8_t* grp_buf;
@@ -68,11 +52,6 @@ int grp_put_palette_show(const char *fn)
 	char ret;
 
 	grp_buf = new int8_t[GRP_BUFFER_SIZE];
-	if(flag_palette_show == true) {
-		// Setting bit 1 should set a resident palette of sorts, but this is
-		// not actually supported by the PC-98 version of piloadc...
-		option |= 2;
-	}
 	if(flag_grp_colorkey == true) {
 		option = PILOAD_OPT_COLORKEY(15);
 	}

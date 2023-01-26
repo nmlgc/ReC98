@@ -122,14 +122,3 @@ void z_palette_white_out(void);
 		z_palette_set_show(colors[i], RGB4::max(), RGB4::max(), RGB4::max()); \
 	}
 /// ----------------
-
-/// Resident palette
-/// ----------------
-
-// Copies the resident palette to z_Palettes and sets all hardware colors.
-// Returns 1 on success, 0 on failure.
-int z_respal_get_show(void);
-// Copies z_Palettes to the resident palette. Returns 1 on success, 0 on
-// failure.
-int z_respal_set(void);
-/// ----------------

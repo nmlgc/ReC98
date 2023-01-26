@@ -15,9 +15,6 @@
 extern bool vsync_initialized = false;
 extern bool16 vsync_callback_is_set = false;
 
-static pixel_t RES_X_HALF = (RES_X / 2);
-static pixel_t RES_Y_HALF = (RES_Y / 2);
-
 // Unused mouse cursor (?!)
 // -------------------
 
@@ -37,8 +34,6 @@ static void (*vsync_callback)(void);
 
 static void interrupt vsync_intfunc(...)
 {
-	pixel_t res_x_half = RES_X_HALF;
-	pixel_t res_y_half = RES_Y_HALF;
 	z_vsync_Count1++;
 	z_vsync_Count2++;
 	if(vsync_callback_is_set) {
