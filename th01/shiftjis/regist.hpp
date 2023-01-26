@@ -25,7 +25,6 @@ static const pixel_t REGIST_TITLE_W = shiftjis_w(REGIST_TITLE_WITH_SPACE);
 #define REGIST_PLACE_7           	"âAÅ@ózÅ@ét"
 #define REGIST_PLACE_8           	"ËÀÅ@î}Å@ét"
 #define REGIST_PLACE_9           	"èCÅ@ã∆Å@é“"
-#define REGIST_NAME_SPACES       	"Å@Å@Å@Å@Å@Å@Å@Å@"
 #define REGIST_NAME_BLANK        	"ÅQÅQÅQÅQÅQÅQÅQÅQ"
 #define REGIST_STAGE_ROUTE_DASH  	"Å|"
 #define REGIST_STAGE_MAKAI       	"ñÇäE"
@@ -34,20 +33,17 @@ static const pixel_t REGIST_TITLE_W = shiftjis_w(REGIST_TITLE_WITH_SPACE);
 #define ALPHABET_A    	"ÇÅ"
 #define ALPHABET_SPACE	"SP"
 
-#define KANJI_A         	kanji_swap('Ç`')
-#define KANJI_a         	kanji_swap('ÇÅ')
-#define KANJI_b         	kanji_swap('ÇÇ')
-#define KANJI_0         	kanji_swap('ÇO')
-#define KANJI_SPACE     	kanji_swap('Å@')
-#define KANJI_LEFT      	kanji_swap('Å©')
-#define KANJI_RIGHT     	kanji_swap('Å®')
-#define KANJI_ENTER     	kanji_swap('èI')
-#define KANJI_UNDERSCORE	kanji_swap('ÅQ')
+static const shiftjis_kanji_t KANJI_A          = 'Ç`';
+static const shiftjis_kanji_t KANJI_a          = 'ÇÅ';
+static const shiftjis_kanji_t KANJI_b          = 'ÇÇ';
+static const shiftjis_kanji_t KANJI_0          = 'ÇO';
+static const shiftjis_kanji_t KANJI_SPACE      = 'Å@';
+static const shiftjis_kanji_t KANJI_LEFT       = 'Å©';
+static const shiftjis_kanji_t KANJI_RIGHT      = 'Å®';
+static const shiftjis_kanji_t KANJI_ENTER      = 'èI';
+static const shiftjis_kanji_t KANJI_UNDERSCORE = 'ÅQ';
 
-const shiftjis_kanji_swapped_t ALPHABET_SYMS[] = {
-	kanji_swap('ÅI'), kanji_swap('ÅH'), kanji_swap('Åî'), kanji_swap('Åï'),
-	kanji_swap('Åñ'), kanji_swap('Åò'), kanji_swap('Åô'), kanji_swap('Åü'),
-	kanji_swap('Åá'), kanji_swap('Åà'), kanji_swap('Åâ'), kanji_swap('Åä'),
-	kanji_swap('Åc'), kanji_swap('Åg'), kanji_swap('Åh'), kanji_swap('Å^'),
-	kanji_swap('ÅD'), kanji_swap('ÅE'),
+const shiftjis_kanji_t ALPHABET_SYMS[] = {
+	'ÅI', 'ÅH', 'Åî', 'Åï', 'Åñ', 'Åò', 'Åô', 'Åü', 'Åá',
+	'Åà', 'Åâ', 'Åä', 'Åc', 'Åg', 'Åh', 'Å^', 'ÅD', 'ÅE',
 };

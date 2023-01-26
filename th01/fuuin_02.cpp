@@ -61,11 +61,6 @@ void input_sense(bool16 reset_repeat)
 #include "th01/hardware/input_rs.cpp"
 // -----
 
-#define graph_putkanji_fx_declare()
-#define graph_putkanji_fx(left, top, fx, kanji) { \
-	graph_printf_fx(left, top, fx, "%c%c", (kanji >> 8), (kanji & 0xFF)); \
-}
-
 #define graph_printf_s_fx(left, top, fx, str) \
 	graph_printf_fx(left, top, fx, "%s", str);
 

@@ -21,24 +21,6 @@
 #include "th01/shiftjis/regist.hpp"
 #include "th01/formats/scoredat.hpp"
 
-void near str_from_swapped_kanji(
-	shiftjis_t str[3], shiftjis_kanji_swapped_t kanji
-)
-{
-	uint8_t tmp;
-	(reinterpret_cast<shiftjis_kanji_t *>(str))[0] = kanji;
-	tmp = str[1];
-	str[1] = str[0];
-	str[0] = tmp;
-	str[2] = '\0';
-}
-
-#define graph_putkanji_fx_declare() shiftjis_t kanji_str[3];
-#define graph_putkanji_fx(left, top, col_and_fx, kanji) { \
-	str_from_swapped_kanji(kanji_str, kanji); \
-	graph_putsa_fx(left, top, col_and_fx, kanji_str); \
-}
-
 #define graph_printf_fx graph_putsa_fx
 #define graph_printf_s_fx graph_putsa_fx
 

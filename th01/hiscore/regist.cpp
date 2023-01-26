@@ -57,6 +57,16 @@ static screen_x_t entered_name_left;
 static screen_y_t entered_name_top;
 /// -----
 
+void graph_putkanji_fx(
+	screen_x_t left, screen_y_t top, int16_t col_and_fx, shiftjis_kanji_t kanji
+)
+{
+	shiftjis_kanji_t str[2];
+	str[0] = kanji;
+	str[1] = '\0';
+	graph_putsa_fx(left, top, col_and_fx, reinterpret_cast<shiftjis_t *>(str));
+}
+
 /// Alphabet
 /// --------
 
@@ -119,27 +129,18 @@ static const screen_x_t LEFT_COLUMN = (KANJI_PER_ROW - 3);
 static const screen_x_t LEFT_LEFT =  left_for(LEFT_COLUMN + 0);
 static const screen_x_t RIGHT_LEFT = left_for(LEFT_COLUMN + 1);
 static const screen_x_t ENTER_LEFT = left_for(LEFT_COLUMN + 2);
-
-inline uint8_t kanji_hi(sshiftjis_kanji_swapped_t kanji) {
-	return (kanji >> 8);
-}
-
-inline uint8_t kanji_lo(sshiftjis_kanji_swapped_t kanji) {
-	return (kanji & 0xFF);
-}
 /// --------
 
 void alphabet_put_initial()
 {
 	int16_t col_and_fx = (COL_REGIST_REGULAR | FX_WEIGHT_BOLD);
-	shiftjis_kanji_swapped_t kanji;
+	shiftjis_kanji_t kanji;
 	int i;
-	graph_putkanji_fx_declare();
 
 	kanji = KANJI_b;
 	for(i = 1; i < A_TO_Z_COUNT; i++) {
 		alphabet_putca_fx(LOWER_TOP, i, col_and_fx, kanji);
-		kanji++;
+		kanji += 0x100;
 	}
 	graph_putsa_fx(
 		MARGIN_W,
@@ -151,7 +152,7 @@ void alphabet_put_initial()
 	kanji = KANJI_A;
 	for(i = 0; i < A_TO_Z_COUNT; i++) {
 		alphabet_putca_fx(UPPER_TOP, i, col_and_fx, kanji);
-		kanji++;
+		kanji += 0x100;
 	}
 
 	for(i = 0; i < SYM_COUNT; i++) {
@@ -162,7 +163,7 @@ void alphabet_put_initial()
 	kanji = KANJI_0;
 	for(i = 0; i < NUM_COUNT; i++) {
 		alphabet_putca_fx(NUM_TOP, i, col_and_fx, kanji);
-		kanji++;
+		kanji += 0x100;
 	}
 	alphabet_putsa_fx(NUM_TOP, i, col_and_fx, ALPHABET_SPACE);	i = LEFT_COLUMN;
 	alphabet_putca_fx(NUM_TOP, i, col_and_fx, KANJI_LEFT); 	i++;
@@ -265,7 +266,6 @@ void regist_put_initial(
 		graph_putsa_fx(
 			table_stage_left(2), top, col_and_fx_text, REGIST_STAGE_ROUTE_DASH
 		);
-		graph_putkanji_fx_declare();
 		graph_putkanji_fx(
 			table_stage_left(3),
 			top,
@@ -283,18 +283,18 @@ void regist_put_initial(
 	}
 }
 
-shiftjis_kanji_swapped_t alphabet_kanji_at(screen_x_t left, screen_y_t top)
+shiftjis_kanji_t alphabet_kanji_at(screen_x_t left, screen_y_t top)
 {
 	const int column = ((left - left_for(0)) / KANJI_PADDED_W);
 	switch(top) {
-	case LOWER_TOP: 	return  (KANJI_a + column);
-	case LOWER2_TOP:	return ((KANJI_a + column) + KANJI_PER_ROW);
-	case UPPER_TOP: 	return  (KANJI_A + column);
-	case UPPER2_TOP:	return ((KANJI_A + column) + KANJI_PER_ROW);
+	case LOWER_TOP: 	return (KANJI_a + (column * 0x100));
+	case LOWER2_TOP:	return (KANJI_a + ((column + KANJI_PER_ROW) * 0x100));
+	case UPPER_TOP: 	return (KANJI_A + (column * 0x100));
+	case UPPER2_TOP:	return (KANJI_A + ((column + KANJI_PER_ROW) * 0x100));
 	case SYM_TOP:   	return ALPHABET_SYMS[column];
 	case NUM_TOP:
 		if(left < SPACE_LEFT) {
-			return (KANJI_0 + column);
+			return (KANJI_0 + (column * 0x100));
 		} else if(left == SPACE_LEFT) {
 			return KANJI_SPACE;
 		} else if(left == LEFT_LEFT) {
@@ -310,7 +310,7 @@ shiftjis_kanji_swapped_t alphabet_kanji_at(screen_x_t left, screen_y_t top)
 
 void alphabet_put_at(screen_x_t left, screen_y_t top, bool16 is_selected)
 {
-	shiftjis_kanji_swapped_t kanji = alphabet_kanji_at(left, top);
+	shiftjis_kanji_t kanji = alphabet_kanji_at(left, top);
 
 	egc_copy_rect_1_to_0_16(left, top, KANJI_PADDED_W, GLYPH_H);
 
@@ -322,10 +322,9 @@ void alphabet_put_at(screen_x_t left, screen_y_t top, bool16 is_selected)
 	case '\0':
 		break;
 	case KANJI_SPACE:
-		graph_printf_fx(left, top, col_and_fx, ALPHABET_SPACE);
+		graph_putsa_fx(left, top, col_and_fx, ALPHABET_SPACE);
 		break;
 	default:
-		graph_putkanji_fx_declare();
 		graph_putkanji_fx(left, top, col_and_fx, kanji);
 		break;
 	}
@@ -335,11 +334,6 @@ void alphabet_put_at(screen_x_t left, screen_y_t top, bool16 is_selected)
 	bool regist_jump_to_enter = false;
 #endif
 
-#define set_kanji_at(name, pos, kanji) { \
-	name[(pos * 2) + 0] = kanji_hi(kanji); \
-	name[(pos * 2) + 1] = kanji_lo(kanji); \
-}
-
 int regist_on_shot(
 	screen_x_t left,
 	screen_y_t top,
@@ -347,8 +341,7 @@ int regist_on_shot(
 	int &entered_name_cursor
 )
 {
-	shiftjis_kanji_swapped_t kanji = alphabet_kanji_at(left, top);
-	shiftjis_t cursor_str[SCOREDAT_NAME_BYTES + 1] = REGIST_NAME_SPACES;
+	shiftjis_kanji_t kanji = alphabet_kanji_at(left, top);
 
 	switch(kanji) {
 	case '\0':
@@ -362,7 +355,7 @@ int regist_on_shot(
 	case KANJI_ENTER:
 		return 1;
 	default:
-		set_kanji_at(entered_name.ubyte, entered_name_cursor, kanji);
+		entered_name.t[entered_name_cursor] = kanji;
 		#if (BINARY == 'M')
 			if(entered_name_cursor == (SCOREDAT_NAME_KANJI - 1)) {
 				regist_jump_to_enter = true;
@@ -387,9 +380,10 @@ int regist_on_shot(
 		entered_name.ubyte
 	);
 
-	set_kanji_at(cursor_str, entered_name_cursor, KANJI_UNDERSCORE);
-	graph_printf_s_fx(
-		entered_name_left, entered_name_top, COL_REGIST_SELECTED, cursor_str
+	graph_putkanji_fx(
+		(entered_name_left + (entered_name_cursor * GLYPH_FULL_W)), entered_name_top,
+		COL_REGIST_SELECTED,
+		KANJI_UNDERSCORE
 	);
 	return 0;
 }
