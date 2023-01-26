@@ -4,6 +4,8 @@
 static const pixel_t SHOT_SPRITE_MARGIN = 2;
 static const int SHOT_DECAY_FRAMES = 7;
 
+CShots Shots;
+
 void CShots::add(screen_x_t new_left, screen_y_t new_top)
 {
 	if(new_left < PLAYFIELD_LEFT || new_left > (PLAYFIELD_RIGHT - 1)) {

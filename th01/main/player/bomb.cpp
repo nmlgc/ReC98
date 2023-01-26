@@ -16,6 +16,15 @@ static const screen_x_t SQUARE_CENTER_X = ((RES_X / 2) - (32 / 2));
 static const screen_y_t SQUARE_CENTER_Y = ((RES_Y / 2) - (32 / 2));
 // -----------
 
+// State
+// -----
+
+bool bomb_damaging = false;
+unsigned long bomb_frames = 0;
+int bomb_doubletap_frames = 0;
+int8_t bombs_extra_per_life_lost;
+// -----
+
 void bomb_kuji_load(void)
 {
 	grc_load(GRC_SLOT_BOMB_KUJI_1, "kuzi1.grc");

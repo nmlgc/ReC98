@@ -4,6 +4,14 @@
 #include "th01/main/player/orb.hpp"
 #include "th01/main/player/shot.hpp"
 
+// Generic state variables
+// -----------------------
+
+int boss_hp;
+int boss_phase_frame;
+int8_t boss_phase;
+// -----------------------
+
 void boss_hit_update_and_render(
 	int &invincibility_frame,
 	bool16 &is_invincible,

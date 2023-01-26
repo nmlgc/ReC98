@@ -75,6 +75,9 @@ uint8_t *hud_bg;
 uint8_t hud_bg_rle_run_byte;
 unsigned char hud_cardcombo_max; // Why a separate variable???
 size_t hud_bg_size;
+
+unsigned int hud_hp_first_white;
+unsigned int hud_hp_first_redwhite;
 /// -------
 
 /// Functions
@@ -457,8 +460,9 @@ void stage_bg_snap_and_put(void)
 	);
 }
 
-inline void rank_put(void) {
-	extern const shiftjis_t* RANKS[RANK_COUNT];
+void rank_put(void)
+{
+	static const shiftjis_t* RANKS[RANK_COUNT] = RANKS_CAPS;
 	graph_putsa_fx(
 		(RANK_CENTER_X - (text_extent_fx(V_WHITE, RANKS[rank]) / 2)),
 		RANK_TOP,

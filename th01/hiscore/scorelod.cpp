@@ -6,7 +6,7 @@
 int8_t* scoredat_names; // Yeah, technically a scoredat_name_t.
 int8_t* scoredat_routes; // Yeah, technically a shiftjis_kanji_t.
 int16_t* scoredat_stages;
-extern score_t* scoredat_score;
+score_t* scoredat_score;
 // -----
 
 #define scoredat_fn(buf) { \

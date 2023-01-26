@@ -199,6 +199,12 @@ struct ModeFrame {
 /// Shared state
 /// ------------
 
+screen_x_t player_left;
+bool player_deflecting = false;
+bool player_sliding = false;
+bool16 player_invincible = false;
+int player_invincibility_time;
+
 // Seems pointless, as it's only `true` in modes where the Orb is repelled,
 // which only execute a branch of orb_player_hittest() that doesn't check this
 // flag to begin with. Except that some of them actually do, on the initial
@@ -206,7 +212,10 @@ struct ModeFrame {
 // So it's actually a *workaround* for the fact that the one parameter to
 // orb_player_hittest() bundles both the "repel/no repel" flag and the repel
 // friction.
-extern bool player_invincible_against_orb;
+static bool player_invincible_against_orb = false;
+
+int cardcombo_cur = 0;
+int cardcombo_max = 0;
 /// ------------
 
 /// Helper functions
@@ -352,8 +361,6 @@ inline void special_start_shot(
 
 void player_unput_update_render(bool16 do_not_reset_player_state)
 {
-	#define swing_deflection_frames	player_swing_deflection_frames
-
 	enum bomb_state_t {
 		BS_NONE = 0,
 		BS_START = 2,
@@ -386,7 +393,7 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 	static int8_t bomb_state = BS_NONE; // ACTUAL TYPE: bomb_state_t
 	static bool bombing = false; // ZUN bloat: Already covered by bomb_state_t
 	static int8_t combo_enabled = false; // ACTUAL TYPE: bool
-	extern int8_t swing_deflection_frames;
+	static int8_t swing_deflection_frames;
 	static submode_t submode;
 	static int8_t ptn_id_prev; // ACTUAL TYPE: main_ptn_id_t
 
@@ -1046,9 +1053,3 @@ void player_miss_animate_and_update(void)
 	timer_extend_and_put();
 	pellet_speed_lower(0.0f, -0.05f);
 }
-
-// Global state that is defined here for some reason
-// -------------------------------------------------
-
-Palette4 boss_post_defeat_palette;
-// -------------------------------------------------

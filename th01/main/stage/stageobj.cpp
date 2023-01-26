@@ -105,10 +105,7 @@ stage_t scene_glitch[STAGES_PER_SCENE - 1] = {
 
 // ZUN bloat: The scene data is immediately converted to an internal
 // representation anyway. This could have easily been a local variable.
-extern stage_t scene_stage[STAGES_PER_SCENE];
-
-char default_grp_fn[15] = "ST .GRP";
-char default_bgm_fn[15] = "ST .MDT";
+stage_t scene_stage[STAGES_PER_SCENE];
 
 uint8_t CARD_ANIM[CARD_HP_MAX][CARD_CELS] = { {
 	PTN_CARD_0HP,
@@ -348,9 +345,6 @@ void scene_init_and_load(uint8_t id)
 
 	arc_file_load(scene_fn);
 	arc_file_get_near(header);
-
-	default_grp_fn[2] = (id + '0');
-	default_bgm_fn[2] = (id + '0');
 
 	for(int i = 0; i < STAGES_PER_SCENE; i++) {
 		arc_file_get_near(scene_stage[i].dat);

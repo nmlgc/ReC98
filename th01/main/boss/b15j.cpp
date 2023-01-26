@@ -92,12 +92,6 @@ enum kikuri_hp_t {
 	HP_PHASE_6_END = 0,
 };
 
-// Global boss state that is defined here for some reason
-// ------------------------------------------------------
-
-Palette4 boss_palette;
-// ------------------------------------------------------
-
 // State that's suddenly no longer shared with other bosses
 // --------------------------------------------------------
 

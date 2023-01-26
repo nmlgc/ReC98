@@ -1,11 +1,11 @@
-/// Generic state variables
-/// -----------------------
-/// Really just freely usable memory shared between all bosses.
+// Generic state variables
+// -----------------------
+// Really just freely usable memory shared between all bosses.
 
 extern int boss_hp;
 extern int boss_phase_frame;
 extern int8_t boss_phase;
-/// -----------------------
+// -----------------------
 
 static const int BOSS_HIT_INVINCIBILITY_FRAMES = 40;
 

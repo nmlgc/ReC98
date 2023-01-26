@@ -66,66 +66,20 @@
 #include "th01/shiftjis/fns.hpp"
 #include "th01/shiftjis/scoredat.hpp"
 
-// Random state that mostly doesn't belong here
-// --------------------------------------------
+// Redundant copies of resident structure fields to static data
+// ------------------------------------------------------------
 
 int8_t rank = CFG_RANK_DEFAULT;
 bgm_mode_t bgm_mode = CFG_BGM_MODE_DEFAULT;
 int8_t rem_bombs = CFG_CREDIT_BOMBS_DEFAULT;
 int8_t credit_lives_extra = CFG_CREDIT_LIVES_EXTRA_DEFAULT;
-
-int8_t stage_num = 0;
-const shiftjis_t* RANKS[RANK_COUNT] = RANKS_CAPS;
-bool first_stage_in_scene = true;
+int rem_lives = 4;
+unsigned long frame_rand;
+uscore_t score = 0;
+long continues_total = 0;
+// ------------------------------------------------------------
 
 #include "th01/hardware/input_mf.cpp"
-
-bool player_deflecting = false;
-bool bomb_damaging = false;
-bool player_sliding = false;
-uscore_t score = 0;
-uscore_t score_bonus = 0;
-unsigned long bomb_frames = 0;
-long continues_total = 0;
-bool16 mode_test = false;
-int bomb_doubletap_frames = 0;
-bool16 test_damage = false;
-bool16 player_invincible = false;
-orb_velocity_x_t orb_velocity_x = OVX_0;
-int orb_rotation_frame = 0;
-int rem_lives = 4;
-bool16 stage_cleared = false;
-
-int8_t bombs_extra_per_life_lost;
-int8_t player_swing_deflection_frames;
-unsigned long frame_rand;
-uint32_t coreleft_prev;
-bool stage_wait_for_shot_to_begin;
-
-bool mode_debug;
-unsigned long frames_since_start_of_binary;
-
-int player_invincibility_time;
-screen_x_t player_left;
-int cardcombo_cur = 0;
-bool16 orb_in_portal = false;
-int cardcombo_max = 0;
-int extend_next = 1;
-
-screen_x_t orb_cur_left;
-screen_y_t orb_cur_top;
-screen_x_t orb_prev_left = ORB_LEFT_START;
-screen_y_t orb_prev_top = ORB_TOP_START;
-int orb_frames_outside_portal = 0;
-double orb_velocity_y = 0.0;
-double orb_force = 0.0;
-int orb_force_frame;
-
-stage_t scene_stage[STAGES_PER_SCENE];
-CPlayerAnim player_48x48;
-CPlayerAnim player_48x32;
-CPellets Pellets;
-CShots Shots;
 
 struct {
 	// Specifies whether PTN_SLOT_STG contains the full set of sprites required
@@ -149,7 +103,6 @@ struct {
 		}
 	}
 } ptn_slot_stg = { false };
-// --------------------------------------------
 
 inline void bomb_doubletap_update(uint8_t& pressed, uint8_t& other) {
 	if(bomb_doubletap_frames < BOMB_DOUBLETAP_WINDOW) {
@@ -431,9 +384,13 @@ inline void debug_startup_delay() {
 	frame_delay(40);
 }
 
+// Default filenames for the background image and music.
+char default_grp_fn[15] = "ST .GRP";
+char default_bgm_fn[15] = "ST .MDT";
+
 int main(void)
 {
-	extern bool stage_wait_for_shot_to_begin;
+	bool stage_wait_for_shot_to_begin;
 
 	int stage_id = 0;
 	int bgm_reload_and_play_if_0 = 0;
@@ -532,6 +489,10 @@ int main(void)
 	arc_key = ARC_KEY;
 	arc_load(ARC_FN);
 	vram_planes_set();
+
+	default_grp_fn[2] = (scene_id + '0');
+	default_bgm_fn[2] = (scene_id + '0');
+
 	scene_init_and_load(scene_id);
 
 	if(mode_debug == true) {

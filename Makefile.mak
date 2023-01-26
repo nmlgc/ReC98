@@ -53,7 +53,7 @@ th05:: $(TH05:\=bin\th05\)
 .obj.com:
 	tlink /t /3 $**
 
-bin\Pipeline\grzview.com: Pipeline\grzview.cpp th01\formats\grz.cpp bin\th01\f_imgd.obj platform\x86real\pc98\palette.cpp
+bin\Pipeline\grzview.com: Pipeline\grzview.cpp th01\formats\grz.cpp platform\x86real\pc98\palette.cpp
 	$(CC) $(CFLAGS) -Z -DGAME=1 -mt -lt -nbin\Pipeline\ @&&|
 $**
 | masters.lib
@@ -66,12 +66,12 @@ bin\th01\zunsoft.com: th01\zunsoft.cpp
 {th01}.cpp{bin\th01}.obj:
 	$(CC) $(CFLAGS) -ml -3 -Z -d -DGAME=1 -n$(@D) -c $**
 
-bin\th01\op.exe: bin\piloadc.obj th01\op_01.cpp bin\th01\frmdelay.obj bin\th01\vsync.obj bin\th01\ztext.obj bin\th01\initexit.obj bin\th01\graph.obj bin\th01\vplanset.obj bin\th01\egc.obj bin\th01\grp_text.obj th01\op_09.cpp bin\th01\f_imgd.obj bin\th01\grz.obj bin\th01\op.obj bin\th01\resstuff.obj bin\th01\mdrv2.obj bin\th01\pf.obj
+bin\th01\op.exe: bin\piloadc.obj th01\op_01.cpp bin\th01\frmdelay.obj bin\th01\vsync.obj bin\th01\ztext.obj bin\th01\initexit.obj bin\th01\graph.obj bin\th01\vplanset.obj bin\th01\egc.obj bin\th01\grp_text.obj th01\op_09.cpp bin\th01\f_imgd.obj bin\th01\op.obj bin\th01\resstuff.obj bin\th01\mdrv2.obj bin\th01\pf.obj
 	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -3 -Z -d -DGAME=1 -DBINARY='O' -nbin\th01\ -eOP.EXE @&&|
 $**
 |
 
-bin\th01\reiiden.exe: bin\piloadc.obj th01\main_01.cpp bin\th01\frmdelay.obj bin\th01\vsync.obj bin\th01\ztext.obj bin\th01\initexit.obj bin\th01\graph.obj bin\th01\vplanset.obj bin\th01\egc.obj bin\th01\ptn.obj th01\main_08.cpp bin\th01\f_imgd.obj bin\th01\grz.obj bin\th01\reiiden.obj th01\main_09.cpp th01\bullet_l.cpp th01\grpinv32.cpp bin\th01\resstuff.obj th01\scrollup.cpp th01\pgtrans.cpp th01\2x_main.cpp th01\grph1to0.cpp th01\main_14.cpp th01\main_15.cpp bin\th01\mdrv2.obj th01\main_17.cpp th01\main_18.cpp th01\main_19.cpp th01\main_20.cpp th01\main_21.cpp bin\th01\pf.obj th01\main_23.cpp th01\main_24.cpp th01\main_25.cpp th01\main_26.cpp th01\main_27.cpp th01\main_28.cpp th01\main_29.cpp th01\main_30.cpp th01\main_31.cpp th01\main_32.cpp th01\main_33.cpp th01\main_34.cpp th01\main_35.cpp th01\main_36.cpp th01\main_37.cpp th01\main_38.cpp
+bin\th01\reiiden.exe: bin\piloadc.obj th01\main_01.cpp bin\th01\frmdelay.obj bin\th01\vsync.obj bin\th01\ztext.obj bin\th01\initexit.obj bin\th01\graph.obj bin\th01\vplanset.obj bin\th01\egc.obj bin\th01\ptn.obj th01\main_08.cpp bin\th01\f_imgd.obj bin\th01\grz.obj bin\th01\reiiden.obj th01\main_09.cpp th01\bullet_l.cpp th01\grpinv32.cpp bin\th01\resstuff.obj th01\scrollup.cpp th01\pgtrans.cpp th01\2x_main.cpp th01\grph1to0.cpp th01\main_14.cpp th01\main_15.cpp bin\th01\mdrv2.obj th01\main_17.cpp th01\main_18.cpp th01\main_19.cpp th01\main_20.cpp th01\main_21.cpp bin\th01\pf.obj th01\main_23.cpp th01\main_24.cpp th01\main_25.cpp th01\main_26.cpp th01\main_27.cpp th01\stages.cpp th01\main_28.cpp th01\main_29.cpp th01\main_30.cpp th01\main_31.cpp th01\main_32.cpp th01\main_33.cpp th01\main_34.cpp th01\main_35.cpp th01\main_36.cpp th01\main_37.cpp th01\main_38.cpp
 	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -3 -Z -d -DGAME=1 -DBINARY='M' -nbin\th01\ -eREIIDEN.EXE @&&|
 $**
 |

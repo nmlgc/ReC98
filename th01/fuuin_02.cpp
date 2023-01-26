@@ -31,7 +31,7 @@
 
 void input_sense(bool16 reset_repeat)
 {
-	extern uint8_t input_prev[10];
+	static uint8_t input_prev[10];
 	int group_1, group_2;
 
 	if(reset_repeat == true) {
@@ -108,9 +108,3 @@ inline void regist_bg_put(int16_t stage_num_or_scoredat_constant) {
 }
 
 #include "th01/hiscore/regist.cpp"
-
-// Global state that is defined here for some reason
-// -------------------------------------------------
-
-static uint8_t input_prev[10];
-// -------------------------------------------------

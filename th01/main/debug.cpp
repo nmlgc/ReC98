@@ -4,6 +4,16 @@
 #include "th01/main/debug.hpp"
 #include "th01/shiftjis/debug.hpp"
 
+// State
+// -----
+
+bool mode_debug;
+bool16 mode_test = false;
+bool16 test_damage = false;
+unsigned long frames_since_start_of_binary;
+uint32_t coreleft_prev;
+// -----
+
 void out_of_memory_exit(void)
 {
 	puts(ERROR_OUT_OF_MEMORY);

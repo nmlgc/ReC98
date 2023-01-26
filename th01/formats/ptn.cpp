@@ -22,6 +22,13 @@ typedef struct {
 } ptn_header_t;
 // -----------------------------
 
+// State
+// -----
+
+ptn_t* ptn_images[PTN_SLOT_COUNT];
+int8_t ptn_image_count[PTN_SLOT_COUNT] = { 0 };
+// -----
+
 // Loading and freeing
 // -------------------
 

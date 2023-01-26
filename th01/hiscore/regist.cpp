@@ -700,9 +700,3 @@ void regist(
 	_ES = FP_SEG(graph_accesspage_func); // Yes, no point to this at all.
 	scoredat_free();
 }
-
-// Global state that is defined here for some reason
-// -------------------------------------------------
-
-score_t* scoredat_score;
-// -------------------------------------------------

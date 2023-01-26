@@ -1,5 +1,7 @@
 #include "th01/main/extend.hpp"
 
+int extend_next = 1;
+
 void score_extend_update_and_render(void)
 {
 	if(score >= (extend_next * SCORE_PER_EXTEND)) {

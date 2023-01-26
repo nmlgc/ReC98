@@ -7,11 +7,6 @@ extern int8_t game_cleared; // ACTUAL TYPE: bool
 // Amount of time until the player has to HARRY UP.
 extern unsigned int stage_timer;
 
-// Default filenames for the background image and music. Adjusted by
-// scene_init_and_load().
-extern char default_grp_fn[15];
-extern char default_bgm_fn[15];
-
 #define stage_is_boss(stage_id) ( \
 	((stage_id % STAGES_PER_SCENE) == BOSS_STAGE) \
 )

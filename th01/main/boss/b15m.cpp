@@ -68,13 +68,6 @@ enum elis_hp_t {
 	HP_PHASE_5_END = 0,
 };
 
-// Global boss state that is defined here for some reason, part 1
-// --------------------------------------------------------------
-
-int boss_hp;
-int boss_phase_frame;
-// --------------------------------------------------------------
-
 // Entities
 // --------
 
@@ -556,12 +549,6 @@ static union {
 	pixel_t speed;
 } pattern_state;
 // --------
-
-// Global boss state that is defined here for some reason, part 2
-// --------------------------------------------------------------
-
-int8_t boss_phase;
-// --------------------------------------------------------------
 
 void elis_load(void)
 {

@@ -1,5 +1,19 @@
-extern int orb_frames_outside_portal; // unused
-extern double orb_velocity_y;
+// State
+// -----
+
+static int orb_frames_outside_portal = 0; // unused
+
+screen_x_t orb_cur_left;
+screen_y_t orb_cur_top;
+screen_x_t orb_prev_left = ORB_LEFT_START;
+screen_y_t orb_prev_top = ORB_TOP_START;
+bool16 orb_in_portal = false;
+int orb_rotation_frame = 0;
+double orb_force = 0.0;
+int orb_force_frame;
+orb_velocity_x_t orb_velocity_x = OVX_0;
+double orb_velocity_y = 0.0;
+// -----
 
 #define COEFFICIENT_OF_RESTITUTION 0.78
 

@@ -53,7 +53,6 @@
 #include "th01/main/hud/hud.hpp"
 
 static const char* unused_entrance_letters_maybe[] = { "ANGEL", "OF", "DEATH" };
-int8_t game_cleared = false; // ACTUAL TYPE: bool
 
 // Coordinates
 // -----------

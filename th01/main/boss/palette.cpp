@@ -4,6 +4,9 @@
 
 #include "th01/main/boss/palette.hpp"
 
+Palette4 boss_palette;
+Palette4 boss_post_defeat_palette;
+
 void boss_palette_snap(void)
 {
 	int col;

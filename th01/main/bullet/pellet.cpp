@@ -26,6 +26,7 @@ inline int decay_frames_for_cel(int cel) {
 /// Globals
 /// -------
 
+CPellets Pellets;
 Pellet near *p;
 bool pellet_interlace = false;
 unsigned int pellet_destroy_score_delta = 0;

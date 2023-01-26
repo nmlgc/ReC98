@@ -12,9 +12,11 @@
 
 static int8_t planar_stream_id = 0;
 static int8_t grx_col = 0;
-extern uint8_t* rle_streams[GRX_COUNT];
-extern dots8_t* planar_streams[GRX_COUNT][PLANAR_STREAM_PER_GRX_COUNT];
-extern uint8_t planar_stream_count[GRX_COUNT];
+static uint8_t planar_stream_count[GRX_COUNT];
+static uint8_t* rle_streams[GRX_COUNT];
+
+// ZUN bloat: Actually a Planar<dots8_t*>, but used like a dots8_t* everywhere.
+static dots8_t* planar_streams[GRX_COUNT][PLANAR_STREAM_PER_GRX_COUNT];
 
 void grx_put_stream(unsigned int slot, int planar_stream)
 {

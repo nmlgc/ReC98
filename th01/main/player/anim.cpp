@@ -13,6 +13,9 @@
 #include "th01/main/player/player.hpp"
 #include "th01/main/player/anim.hpp"
 
+CPlayerAnim player_48x48;
+CPlayerAnim player_48x32;
+
 int CPlayerAnim::load(const char fn[PF_FN_LEN])
 {
 	vram_byte_amount_t plane_size;

@@ -109,7 +109,7 @@ bool grp_palette_load_show(const char *fn)
 
 int grp_put(const char *fn, grp_put_flag_t flag)
 {
-	extern int8_t* grp_buf;
+	static int8_t* grp_buf;
 	int option = 0;
 	char ret;
 
