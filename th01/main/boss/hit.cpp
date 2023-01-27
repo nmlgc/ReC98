@@ -3,11 +3,6 @@
 #include "th01/main/player/orb.hpp"
 #include "th01/main/player/shot.hpp"
 
-#define z_palette_flash_colors(colors, colors_count, i) \
-	for(i = 0; colors_count > i; i++) { \
-		z_palette_set_show(colors[i], RGB4::max(), RGB4::max(), RGB4::max()); \
-	}
-
 void boss_hit_update_and_render(
 	int &invincibility_frame,
 	bool16 &is_invincible,
@@ -94,5 +89,3 @@ void boss_hit_update_and_render(
 		is_invincible = false;
 	}
 }
-
-#undef z_palette_flash_colors

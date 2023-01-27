@@ -115,6 +115,12 @@ void z_palette_white_out(void);
 		} \
 	}) \
 }
+
+// Sets the given specific hardware [colors] to #FFF.
+#define z_palette_flash_colors(colors, colors_count, i) \
+	for(i = 0; colors_count > i; i++) { \
+		z_palette_set_show(colors[i], RGB4::max(), RGB4::max(), RGB4::max()); \
+	}
 /// ----------------
 
 /// Resident palette
