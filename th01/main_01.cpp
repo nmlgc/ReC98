@@ -76,7 +76,6 @@ int8_t credit_lives_extra = CFG_CREDIT_LIVES_EXTRA_DEFAULT;
 
 int8_t stage_num = 0;
 const shiftjis_t* RANKS[RANK_COUNT] = RANKS_CAPS;
-bool timer_initialized = false;
 bool first_stage_in_scene = true;
 
 #include "th01/hardware/input_mf.cpp"
@@ -694,6 +693,8 @@ int main(void)
 		} else if(boss_id == BID_SARIEL) {
 			sariel_entrance(0);
 		}
+
+		timer_init_for((stage_num - 1), route);
 		hud_bg_snap_and_put();
 
 		cardcombo_max = 0;
@@ -785,7 +786,6 @@ int main(void)
 
 			stage_wait_for_shot_to_begin = false;
 			input_shot = false;
-			timer_initialized = true;
 			srand(frame_rand);
 			bomb_doubletap_frames = BOMB_DOUBLETAP_WINDOW;
 			first_stage_in_scene = false;
@@ -895,7 +895,6 @@ int main(void)
 			}
 			// At this point, the player either lost a life or cleared a
 			// non-final stage.
-			timer_initialized = false;
 			z_vsync_wait_and_scrollup(0);
 			resident->rand = frame_rand;
 			test_damage = false;

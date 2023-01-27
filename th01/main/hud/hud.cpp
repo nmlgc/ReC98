@@ -474,9 +474,6 @@ void hud_bg_snap_and_put(void)
 	graph_accesspage_func(1); hud_bg_put();
 	graph_accesspage_func(0); hud_bg_put();
 
-	if(!timer_initialized) {
-		timer_init_for((stage_num - 1), route);
-	}
 	if(first_stage_in_scene == true) {
 		lives_bg_snap_and_put();
 		bombs_bg_snap_and_put();
