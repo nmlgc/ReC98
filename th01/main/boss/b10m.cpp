@@ -1338,7 +1338,6 @@ void yuugenmagan_main(void)
 				flash_colors,
 				sizeof(flash_colors),
 				5000,
-				boss_nop,
 				(
 					hittest(eye_west) ||
 					hittest(eye_east) ||

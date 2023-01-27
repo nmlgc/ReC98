@@ -1199,7 +1199,6 @@ void mima_main(void)
 				flash_colors,
 				sizeof(flash_colors),
 				5000,
-				boss_nop,
 				ent_still.hittest_orb(),
 				shot_hitbox_t(
 					(ent_still.cur_right() - HITBOX_SHOT_W),

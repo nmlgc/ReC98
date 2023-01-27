@@ -1506,7 +1506,6 @@ void konngara_main(void)
 				flash_colors,
 				sizeof(flash_colors),
 				10000,
-				boss_nop,
 				overlap_xy_xywh_le_ge_2(
 					orb_cur_left,
 					orb_cur_top,

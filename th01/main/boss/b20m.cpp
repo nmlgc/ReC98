@@ -2588,7 +2588,6 @@ void sariel_main(void)
 				flash_colors,
 				sizeof(flash_colors),
 				10000,
-				boss_nop,
 				colliding_with_orb,
 				shot_hitbox_t(
 					FACE_LEFT, FACE_TOP, ((FACE_W * 5) / 4), ((FACE_H * 3) / 4)

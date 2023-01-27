@@ -20,9 +20,8 @@
 #include "th01/main/hud/hud.hpp"
 #include "th01/main/boss/palette.hpp"
 
-#include "th01/main/boss/nop.cpp"
 #include "th01/main/hud/hp.cpp"
-#include "th01/main/boss/hit.cpp"
+#include "th01/main/boss/boss.cpp"
 #include "th01/main/bullet/missile.cpp"
 #include "th01/main/player/bomb_d_f.cpp"
 #include "th01/main/particle.cpp"

@@ -424,12 +424,16 @@ enum singyoku_transform_keyframe_t {
 	TKF_DONE = 260,
 };
 
+void callback_nop(void)
+{
+}
+
 // Ends its corresponding pattern at TKF_DONE.
 void transform_to_person_and_back_to_sphere(
 	singyoku_form_t form,
-	void pascal on_attack_1() = boss_nop,
-	void pascal on_attack_2() = boss_nop,
-	void pascal on_still() = boss_nop
+	void on_attack_1() = callback_nop,
+	void on_attack_2() = callback_nop,
+	void on_still() = callback_nop
 )
 {
 	#define person_cel_for_form (C_PERSON_FORM * form)
@@ -556,7 +560,7 @@ void pattern_crossing_pellets(void)
 	}
 }
 
-void pascal fire_random_downwards_pellets(void)
+void fire_random_downwards_pellets(void)
 {
 	// Could be a local variable.
 	select_subpixel_for_rank(pattern_state.speed_in_subpixels,
@@ -574,7 +578,7 @@ void pascal fire_random_downwards_pellets(void)
 	}
 }
 
-void pascal fire_random_sling_pellets(void)
+void fire_random_sling_pellets(void)
 {
 	// Could be a local variable.
 	select_subpixel_for_rank(pattern_state.speed_in_subpixels,
@@ -638,7 +642,6 @@ void singyoku_main(void)
 				flash_colors,
 				sizeof(flash_colors),
 				3000,
-				boss_nop,
 				ent.hittest_orb(),
 				// A hitbox shifted 16 pixels to the right *and* with an
 				// additional 16 pixels on the right edge?

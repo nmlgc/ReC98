@@ -1,4 +1,5 @@
 #include "th01/hardware/palette.h"
+#include "th01/main/boss/boss.hpp"
 #include "th01/main/player/bomb.hpp"
 #include "th01/main/player/orb.hpp"
 #include "th01/main/player/shot.hpp"
@@ -10,7 +11,6 @@ void boss_hit_update_and_render(
 	const unsigned char invincibility_flash_colors[],
 	unsigned char invincibility_flash_colors_count,
 	int hit_score,
-	farfunc_t_far hit_callback,
 	bool colliding_with_orb,
 	screen_x_t shot_hitbox_left,
 	screen_y_t shot_hitbox_top,
@@ -57,7 +57,6 @@ void boss_hit_update_and_render(
 		score += hit_score;
 		hud_score_and_cardcombo_render();
 		mdrv2_se_play(3);
-		hit_callback();
 		hud_hp_decrement(hp);
 	}
 

@@ -928,7 +928,6 @@ void kikuri_main(void)
 				flash_colors,
 				sizeof(flash_colors),
 				7000,
-				boss_nop,
 				kikuri_hittest_orb()
 			);
 		}

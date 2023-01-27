@@ -1792,7 +1792,6 @@ void elis_main(void)
 				flash_colors, \
 				sizeof(flash_colors), \
 				7000, \
-				boss_nop, \
 				(form == F_GIRL) \
 					? ent_still_or_wave.hittest_orb() \
 					: ent_bat.hittest_orb(), \

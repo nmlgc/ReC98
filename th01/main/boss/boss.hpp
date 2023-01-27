@@ -7,9 +7,6 @@ extern int boss_phase_frame;
 extern int8_t boss_phase;
 /// -----------------------
 
-// No-op function for callbacks.
-void pascal boss_nop(void);
-
 static const int BOSS_HIT_INVINCIBILITY_FRAMES = 40;
 
 // Processes collisions between the Orb and a boss, and the resulting
@@ -26,8 +23,8 @@ static const int BOSS_HIT_INVINCIBILITY_FRAMES = 40;
 // • The hit testing against the Orb must be done before, with the result
 //   being passed in [colliding_with_orb]. That parameter is what mainly
 //   triggers the collision response of adding the [hit_score], decrementing
-//   [hp], bouncing off the Orb in the opposite direction, calling
-//   [hit_callback], and rendering the invincibility flashing effect.
+//   [hp], bouncing off the Orb in the opposite direction, and rendering the
+//   invincibility flashing effect.
 //
 // • The caller is still responsible to increment [invincibility_frame]. This
 //   function only reads from it or resets it to 0 once it reaches
@@ -52,7 +49,6 @@ void boss_hit_update_and_render(
 	const unsigned char invincibility_flash_colors[],
 	unsigned char invincibility_flash_colors_count,
 	int hit_score,
-	farfunc_t_far hit_callback,
 	bool colliding_with_orb,
 	screen_x_t shot_hitbox_left = 0,
 	screen_y_t shot_hitbox_top = 0,
