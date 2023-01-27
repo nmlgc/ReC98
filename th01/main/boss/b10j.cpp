@@ -1345,6 +1345,10 @@ void mima_main(void)
 			Missiles.reset();
 			shootout_lasers_unput_and_reset_broken(i, 5); // 5? Doubly broken...
 			boss_defeat_animate();
+
+			// ZUN bloat: Already done at the start of REIIDEN.EXE's main().
+			// The REIIDEN.EXE process restarts after the end of a scene
+			// anyway, making this load doubly pointless.
 			scene_init_and_load(4);
 		}
 	}
