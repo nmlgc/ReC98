@@ -38,7 +38,6 @@
 #include "th01/main/hud/hp.hpp"
 #include "th01/main/player/player.hpp"
 #include "th01/main/stage/palette.hpp"
-#include "th01/main/stage/stages.hpp"
 
 // Coordinates
 // -----------
@@ -1212,13 +1211,6 @@ inline void conditionally_reset_missiles(bool cond) {
 		/* 5? Triply broken, since this fight doesn't even use lasers... */ \
 		shootout_lasers_unput_and_reset_broken(tmp_i, 5); \
 		boss_defeat_animate(); \
-		\
-		/** \
-		 * ZUN bloat: Already done at the start of REIIDEN.EXE's main(). \
-		 * The REIIDEN.EXE process restarts after the end of a scene \
-		 * anyway, making this load doubly pointless. \
-		 */ \
-		scene_init_and_load(3); \
 	} \
 }
 

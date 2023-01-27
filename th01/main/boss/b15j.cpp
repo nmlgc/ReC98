@@ -31,7 +31,6 @@
 #include "th01/main/boss/defeat.hpp"
 #include "th01/main/boss/entity_a.hpp"
 #include "th01/main/stage/palette.hpp"
-#include "th01/main/stage/stages.hpp"
 
 // Coordinates
 // -----------
@@ -1156,11 +1155,6 @@ entrance_rings_still_active:
 			Pellets.unput_and_reset();
 			shootout_lasers_unput_and_reset_broken(i, 4); // 4? Doubly broken...
 			boss_defeat_animate();
-
-			// ZUN bloat: Already done at the start of REIIDEN.EXE's main().
-			// The REIIDEN.EXE process restarts after the end of a scene
-			// anyway, making this load doubly pointless.
-			scene_init_and_load(6);
 		}
 	}
 }
