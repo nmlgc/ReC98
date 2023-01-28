@@ -330,17 +330,20 @@ void alphabet_put_at(screen_x_t left, screen_y_t top, bool16 is_selected)
 	}
 }
 
-#if (BINARY == 'M')
-	bool regist_jump_to_enter = false;
-#endif
+enum regist_shot_ret_t {
+	RS_REGULAR = 0,
+	RS_ENTER = 1,
+	RS_NAME_CURSOR_AT_END = 2,
+};
 
-int regist_on_shot(
+regist_shot_ret_t regist_on_shot(
 	screen_x_t left,
 	screen_y_t top,
 	scoredat_name_z_t &entered_name,
 	int &entered_name_cursor
 )
 {
+	regist_shot_ret_t ret = RS_REGULAR;
 	shiftjis_kanji_t kanji = alphabet_kanji_at(left, top);
 
 	switch(kanji) {
@@ -353,16 +356,13 @@ int regist_on_shot(
 		clamp_inc(entered_name_cursor, (SCOREDAT_NAME_KANJI - 1));
 		break;
 	case KANJI_ENTER:
-		return 1;
+		return RS_ENTER;
 	default:
 		entered_name.t[entered_name_cursor] = kanji;
-		#if (BINARY == 'M')
-			if(entered_name_cursor == (SCOREDAT_NAME_KANJI - 1)) {
-				regist_jump_to_enter = true;
-			}
-		#endif
 		if(entered_name_cursor < (SCOREDAT_NAME_KANJI - 1)) {
 			entered_name_cursor++;
+		} else {
+			ret = RS_NAME_CURSOR_AT_END;
 		}
 		break;
 	}
@@ -385,7 +385,7 @@ int regist_on_shot(
 		COL_REGIST_SELECTED,
 		KANJI_UNDERSCORE
 	);
-	return 0;
+	return ret;
 }
 
 enum regist_input_ret_t {
@@ -398,7 +398,8 @@ enum regist_input_ret_t {
 
 regist_input_ret_t regist_on_input(
 	screen_x_t &left, screen_y_t &top,
-	scoredat_name_z_t& entered_name, int& entered_name_cursor
+	scoredat_name_z_t& entered_name, int& entered_name_cursor,
+	bool jump_to_enter_when_name_cursor_at_end
 )
 {
 	if(input_up == true) {
@@ -478,20 +479,22 @@ regist_input_ret_t regist_on_input(
 		alphabet_put_at(left, top, true);
 		input_lr = 0;
 	} else if(input_shot == true) {
-		if(regist_on_shot(left, top, entered_name, entered_name_cursor)) {
+		switch(regist_on_shot(left, top, entered_name, entered_name_cursor)) {
+		case RS_REGULAR:
+			break;
+		case RS_ENTER:
 			return RI_ENTER;
-		}
-		#if (BINARY == 'M')
-			if(regist_jump_to_enter) {
+		case RS_NAME_CURSOR_AT_END:
+			if(jump_to_enter_when_name_cursor_at_end) {
 				alphabet_put_at(left, top, false);
 
 				left = ENTER_LEFT;
 				top = NUM_TOP;
 
 				alphabet_put_at(left, top, true);
-				regist_jump_to_enter = false;
 			}
-		#endif
+			break;
+		}
 		input_shot = false;
 	} else if(input_strike == true) {
 		regist_on_shot(LEFT_LEFT, NUM_TOP, entered_name, entered_name_cursor);
@@ -530,7 +533,7 @@ void regist_name_enter(int entered_place, bool cleared)
 	while(1) {
 		input_sense(false);
 		int input_ret = regist_on_input(
-			left, top, entered_name, entered_name_cursor
+			left, top, entered_name, entered_name_cursor, !cleared
 		);
 		// Code generation for FUUIN.EXE forces these to be in separate
 		// statements...
