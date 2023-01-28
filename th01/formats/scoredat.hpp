@@ -44,4 +44,4 @@ void scoredat_load_hiscore();
 
 // Sets [str] to the null-terminated name at the given [place] for the
 // difficulty previously loaded by scoredat_load().
-void scoredat_name_get(int place, char str[SCOREDAT_NAME_BYTES + 1]);
+void scoredat_name_get(int place, unsigned char str[SCOREDAT_NAME_BYTES + 1]);
