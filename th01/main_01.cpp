@@ -904,6 +904,13 @@ int __cdecl main(void)
 	}
 	resident->score = score;
 
+	z_graph_clear_0();
+	z_palette_black();
+	graph_accesspage_func(1);
+	grp_put("game_o.grp", GPF_PALETTE_SHOW);
+	graph_copy_accessed_page_to_other();
+	z_palette_black_in();
+
 	regist(score, (stage_id + 1), (
 		!stage_on_route(stage_id) ? SCOREDAT_ROUTE_SHRINE :
 		(route == ROUTE_MAKAI) ? SCOREDAT_ROUTE_MAKAI : SCOREDAT_ROUTE_JIGOKU

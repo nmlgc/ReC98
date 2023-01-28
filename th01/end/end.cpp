@@ -20,7 +20,6 @@
 #include "th01/end/pic.hpp"
 #include "th01/end/type.hpp"
 #include "th01/shiftjis/end.hpp"
-#include "th01/shiftjis/fns.hpp"
 #include "th01/shiftjis/scoredat.hpp"
 #include "th01/shiftjis/title.hpp"
 
@@ -519,7 +518,7 @@ void verdict_animate_and_regist(void)
 	grp_palette_black_out(10);
 
 	graph_accesspage_func(1);
-	grp_put(REGIST_BG_CLEARED, GPF_PALETTE_SHOW);
+	grp_put("endm_a.grp", GPF_PALETTE_SHOW);
 	graph_copy_accessed_page_to_other();
 
 	graph_accesspage_func(0);

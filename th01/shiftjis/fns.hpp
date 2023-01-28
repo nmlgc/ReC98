@@ -24,8 +24,6 @@
 	"iris.mdt", \
 }
 
-#define REGIST_BG_CLEARED	"endm_a.grp"
-
 #define SCOREDAT_FN_EASY   	"REYHIES.DAT"
 #define SCOREDAT_FN_NORMAL 	"REYHINO.DAT"
 #define SCOREDAT_FN_HARD   	"REYHIHA.DAT"

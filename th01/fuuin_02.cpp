@@ -69,9 +69,6 @@ void input_sense(bool16 reset_repeat)
 #define regist_input_timeout_inc()
 #define regist_input_timeout_if_reached(then)
 
-inline void regist_bg_put(int16_t stage_num_or_scoredat_constant) {
-}
-
 #define regist_title_put( \
 	left, stage_num_or_scoredat_constant, ranks, col_and_fx \
 ) { \

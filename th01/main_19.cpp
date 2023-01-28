@@ -12,12 +12,10 @@
 #include "shiftjis.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
-#include "th01/formats/grp.h"
 #include "th01/hardware/palette.h"
 #include "th01/hardware/input.hpp"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/grp_text.hpp"
-#include "th01/shiftjis/fns.hpp"
 #include "th01/shiftjis/regist.hpp"
 #include "th01/formats/scoredat.hpp"
 
@@ -33,20 +31,6 @@
 #define regist_input_timeout_reset() timeout = 0;
 #define regist_input_timeout_inc() timeout++;
 #define regist_input_timeout_if_reached(then) if(timeout > 1000) then
-
-#define regist_bg_put(stage_num_or_scoredat_constant) { \
-	z_graph_clear_0(); \
-	z_palette_black(); \
-	graph_accesspage_func(1); \
-	\
-	if(stage_num_or_scoredat_constant < SCOREDAT_NOT_CLEARED) { \
-		grp_put("game_o.grp", GPF_PALETTE_SHOW); \
-	} else { \
-		grp_put(REGIST_BG_CLEARED, GPF_PALETTE_KEEP); \
-	} \
-	graph_copy_accessed_page_to_other(); \
-	z_palette_black_in(); \
-}
 
 #define regist_title_put( \
 	left, stage_num_or_scoredat_constant, ranks, col_and_fx \

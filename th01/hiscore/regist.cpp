@@ -564,8 +564,6 @@ void regist(
 	const shiftjis_t* RANKS[RANK_COUNT] = REGIST_TITLE_RANKS;
 	long place;
 
-	regist_bg_put(stage_num_or_scoredat_constant);
-
 	graph_accesspage_func(1);
 
 	regist_title_put(
