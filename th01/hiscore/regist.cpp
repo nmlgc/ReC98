@@ -502,17 +502,22 @@ regist_input_ret_t regist_on_input(
 	return RI_REGULAR;
 }
 
-void regist_name_enter(int entered_place)
+void regist_name_enter(int entered_place, bool cleared)
 {
+	// The Game Over variant in REIIDEN.EXE features a hidden timeout that
+	// force-enters a high score name after 1000… *keyboard inputs*? Not
+	// frames? Why. Like, how do even you realistically get to such a number.
+	// (Best guess: It's a hidden easter egg to amuse players who place
+	// drinking glasses on cursor keys. Or beer bottles.)
+	unsigned int timeout = 0;
+
 	scoredat_name_z_t entered_name;
-	regist_input_timeout_declare();
 	screen_x_t left;
 	screen_y_t top;
 	int entered_name_cursor;
 	int i;
 
 	entered_name_cursor = 0;
-	regist_input_timeout_reset();
 	left = left_for(0);
 	top = LOWER_TOP;
 
@@ -535,12 +540,14 @@ void regist_name_enter(int entered_place)
 		if(input_ok) {
 			break;
 		}
-		regist_input_timeout_if_reached({ break; });
+		if(!cleared && (timeout > 1000)) {
+			break;
+		}
 		if(input_ret == RI_NONE) {
 			continue;
 		}
 		frame_delay(4);
-		regist_input_timeout_inc();
+		timeout++;
 	}
 	input_ok = false;
 	for(i = 0; i < SCOREDAT_NAME_BYTES; i++) {
@@ -628,7 +635,7 @@ void regist(
 		scoredat_routes[place] = route;
 
 		// Writes the new name to scoredat_names[] and calls scoredat_save()
-		regist_name_enter(place);
+		regist_name_enter(place, cleared);
 
 		_ES = FP_SEG(graph_accesspage_func); // Yes, no point to this at all.
 		scoredat_free();
