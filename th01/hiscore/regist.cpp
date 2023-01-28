@@ -525,27 +525,22 @@ regist_input_ret_t regist_on_input(
 
 void scoredat_save(void)
 {
-	FILE* fp;
 	const char magic[sizeof(SCOREDAT_MAGIC)] = SCOREDAT_MAGIC; // ZUN bloat
 	char fn[16];
 	scoredat_fn(fn);
 
-	if( (fp = fopen(fn, "wb")) == nullptr) {
+	if(!file_create(fn)) {
 		return;
 	}
-	write(fileno(fp), magic, sizeof(SCOREDAT_MAGIC) - 1);
+	file_write(magic, sizeof(SCOREDAT_MAGIC) - 1);
 	for(int i = 0; i < SCOREDAT_NAMES_SIZE; i++) {
 		scoredat_names[i] = scoredat_name_byte_encode(scoredat_names[i]);
 	}
-	write(fileno(fp), scoredat_names, SCOREDAT_NAMES_SIZE);
-	write(fileno(fp), scoredat_score, (sizeof(score_t) * SCOREDAT_PLACES));
-	write(fileno(fp), scoredat_stages, (sizeof(int16_t) * SCOREDAT_PLACES));
-	write(
-		fileno(fp),
-		scoredat_routes,
-		(sizeof(shiftjis_kanji_t) * SCOREDAT_PLACES)
-	);
-	fclose(fp);
+	file_write(scoredat_names, SCOREDAT_NAMES_SIZE);
+	file_write(scoredat_score, (sizeof(score_t) * SCOREDAT_PLACES));
+	file_write(scoredat_stages, (sizeof(int16_t) * SCOREDAT_PLACES));
+	file_write(scoredat_routes, (sizeof(shiftjis_kanji_t) * SCOREDAT_PLACES));
+	file_close();
 }
 
 void regist_name_enter(int entered_place)

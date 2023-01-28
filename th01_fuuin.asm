@@ -37,8 +37,12 @@ include libs/master.lib/palette_init.asm
 include libs/master.lib/resdata.asm
 include libs/master.lib/file_read.asm
 include libs/master.lib/file_close.asm
+include libs/master.lib/file_exist.asm
 include libs/master.lib/file_ropen.asm
+include libs/master.lib/file_write.asm
+include libs/master.lib/file_create.asm
 include libs/master.lib/file_seek.asm
+include libs/master.lib/dos_axdx.asm
 include libs/master.lib/key_sense.asm
 include libs/master.lib/dos_ropen.asm
 include libs/master.lib/egc.asm

@@ -3,7 +3,6 @@
  * Code segment #19 of TH01's REIIDEN.EXE
  */
 
-#include <io.h>
 #include <stdio.h>
 #include <string.h>
 #include "platform.h"
@@ -23,16 +22,6 @@
 #include "th01/shiftjis/regist.hpp"
 #include "th01/formats/scoredat.hpp"
 
-#define scoredat_declare()
-#define scoredat_cli()
-#define scoredat_sti()
-#define scoredat_error(str)
-#define scoredat_exist(fn) file_exist(fn)
-#define scoredat_create(fn) file_create(fn)
-#define scoredat_ropen(fn) file_ropen(fn)
-#define scoredat_read(buf, size) file_read(buf, size)
-#define scoredat_write(buf, size) file_write(buf, size)
-#define scoredat_close() file_close()
 #include "th01/hiscore/scorelod.cpp"
 
 score_t scoredat_hiscore_get()

@@ -3,7 +3,6 @@
  * Code segment #2 of TH01's FUUIN.EXE
  */
 
-#include <io.h>
 #include <stdio.h>
 #include <string.h>
 #include "platform.h"
@@ -64,18 +63,7 @@ void input_sense(bool16 reset_repeat)
 #include "th01/hardware/input_rs.cpp"
 // -----
 
-#define scoredat_declare() FILE *fp;
-#define scoredat_cli() disable()
-#define scoredat_sti() enable()
-#define scoredat_error(str) printf(str)
-#define scoredat_exist(fn) !access(fn, 0)
-#define scoredat_create(fn) (fp = fopen(fn, "wb"))
-#define scoredat_ropen(fn) (fp = fopen(fn, "rb"))
-#define scoredat_read(buf, size) read(fileno(fp), buf, size)
-#define scoredat_write(buf, size) write(fileno(fp), buf, size)
-#define scoredat_close() fclose(fp)
 #include "th01/hiscore/scorelod.cpp"
-
 #include "th01/hiscore/score_nm.cpp"
 
 #define graph_putkanji_fx_declare()

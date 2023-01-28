@@ -28,15 +28,12 @@ int8_t scoredat_name_byte_decode(int8_t byte)
 	return (byte + (0x100 - SCOREDAT_NAME_KEY));
 }
 
-#pragma warn -rch
-
 void scoredat_recreate()
 {
 	int i;
 	int16_t stage;
 	const shiftjis_t *route = SCOREDAT_ROUTE_NONE;
 	score_t score;
-	scoredat_declare();
 
 	// Will be name-encoded, and therefore modified in the .data section!
 	char *name = scoredat_name_default;
@@ -46,12 +43,10 @@ void scoredat_recreate()
 
 	scoredat_fn(fn);
 
-	scoredat_cli();
-	if(scoredat_create(fn) == 0) {
-		goto end;
+	if(file_create(fn) == 0) {
 		return;
 	}
-	scoredat_write(magic, sizeof(SCOREDAT_MAGIC) - 1);
+	file_write(magic, sizeof(SCOREDAT_MAGIC) - 1);
 
 	stage = SCOREDAT_PLACES;
 	score = (SCOREDAT_PLACES * 100);
@@ -59,22 +54,20 @@ void scoredat_recreate()
 		name[i] = scoredat_name_byte_encode(name[i]);
 	}
 	for(i = 0; i < SCOREDAT_PLACES; i++) {
-		scoredat_write(name, SCOREDAT_NAME_BYTES);
+		file_write(name, SCOREDAT_NAME_BYTES);
 	}
 	for(i = 0; i < SCOREDAT_PLACES; i++) {
-		scoredat_write(&score, sizeof(score));
+		file_write(&score, sizeof(score));
 		score = score - 100;
 	}
 	for(i = 0; i < SCOREDAT_PLACES; i++) {
-		scoredat_write(&stage, sizeof(stage));
+		file_write(&stage, sizeof(stage));
 		stage = stage - 1;
 	}
 	for(i = 0; i < SCOREDAT_PLACES; i++) {
-		scoredat_write(route, sizeof(shiftjis_kanji_t));
+		file_write(route, sizeof(shiftjis_kanji_t));
 	}
-	scoredat_close();
-end:
-	scoredat_sti();
+	file_close();
 }
 
 int scoredat_load()
@@ -84,25 +77,21 @@ int scoredat_load()
 		char space[50];
 	} buf;
 	char fn[16];
-	scoredat_declare();
 
 	scoredat_fn(fn);
-	if(!scoredat_exist(fn)) {
+	if(!file_exist(fn)) {
 		scoredat_recreate();
 	}
 
-	scoredat_cli();
-	if(scoredat_ropen(fn) == 0) {
-		scoredat_error(SCOREDAT_ERROR_NOT_FOUND);
-		scoredat_sti();
+	if(file_ropen(fn) == 0) {
+		puts(SCOREDAT_ERROR_NOT_FOUND);
 		return 1;
 	}
-	scoredat_read(buf.magic, sizeof(buf.magic));
+	file_read(buf.magic, sizeof(buf.magic));
 	// Who cares about the last three bytes anyway, right.
 	if(memcmp(buf.magic, SCOREDAT_MAGIC, 4)) {
-		scoredat_close();
-		scoredat_error(SCOREDAT_ERROR_INVALID);
-		scoredat_sti();
+		file_close();
+		puts(SCOREDAT_ERROR_INVALID);
 		return 1;
 	}
 
@@ -111,15 +100,14 @@ int scoredat_load()
 	scoredat_routes = new int8_t[SCOREDAT_ROUTE_LEN * SCOREDAT_PLACES];
 	scoredat_score = new score_t[SCOREDAT_PLACES];
 
-	scoredat_read(scoredat_names, SCOREDAT_NAMES_SIZE);
-	scoredat_read(scoredat_score, sizeof(score_t) * SCOREDAT_PLACES);
-	scoredat_read(scoredat_stages, sizeof(int16_t) * SCOREDAT_PLACES);
-	scoredat_read(scoredat_routes, SCOREDAT_ROUTE_LEN * SCOREDAT_PLACES);
-	scoredat_close();
+	file_read(scoredat_names, SCOREDAT_NAMES_SIZE);
+	file_read(scoredat_score, sizeof(score_t) * SCOREDAT_PLACES);
+	file_read(scoredat_stages, sizeof(int16_t) * SCOREDAT_PLACES);
+	file_read(scoredat_routes, SCOREDAT_ROUTE_LEN * SCOREDAT_PLACES);
+	file_close();
 
 	for(int i = 0; i < SCOREDAT_NAMES_SIZE; i++) {
 		scoredat_names[i] = scoredat_name_byte_decode(scoredat_names[i]);
 	}
-	scoredat_sti();
 	return 0;
 }
