@@ -69,9 +69,6 @@ void input_sense(bool16 reset_repeat)
 #define graph_printf_s_fx(left, top, fx, str) \
 	graph_printf_fx(left, top, fx, "%s", str);
 
-#define regist_route_put(left, top, fx, char_1, char_2) \
-	graph_printf_fx(left, top, fx, "%c%c", char_1, char_2);
-
 #define regist_input_timeout_declare()
 #define regist_input_timeout_reset()
 #define regist_input_timeout_inc()

@@ -42,13 +42,6 @@ void near str_from_swapped_kanji(
 #define graph_printf_fx graph_putsa_fx
 #define graph_printf_s_fx graph_putsa_fx
 
-#define regist_route_put(left, top, col_and_fx, char_1, char_2) \
-	unsigned char route[sizeof(shiftjis_kanji_t) + 1]; \
-	route[2] = '\0'; \
-	route[0] = char_1; \
-	route[1] = char_2; \
-	graph_putsa_fx(left, top, col_and_fx, route); \
-
 // A completely hidden timeout that force-enters a high score name after
 // 1000... *keyboard inputs*? Not frames? Why. Like, how do even you
 // realistically get to such a number.

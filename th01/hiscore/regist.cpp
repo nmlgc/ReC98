@@ -9,14 +9,6 @@
 // Null-terminated version of scoredat_name_t, used internally.
 typedef ShiftJISKanjiBuffer<SCOREDAT_NAME_KANJI + 1> scoredat_name_z_t;
 
-// Byte-wise access to [scoredat_routes].
-inline int8_t& scoredat_route_byte(int place, int byte) {
-	if(byte == 0) {
-		return scoredat_routes[place * SCOREDAT_ROUTE_LEN];
-	}
-	return scoredat_routes[(place * SCOREDAT_ROUTE_LEN) + byte];
-}
-
 #define TITLE_LEFT 48
 #define TITLE_TOP 0
 static const screen_x_t TITLE_BACK_LEFT = 0;
@@ -191,7 +183,7 @@ void regist_put_initial(
 	int entered_place,
 	score_t entered_score,
 	int entered_stage,
-	const sshiftjis_t entered_route[SCOREDAT_ROUTE_LEN + 1],
+	shiftjis_kanji_t entered_route,
 	const scoredat_name_z_t names_z[SCOREDAT_PLACES]
 )
 {
@@ -273,12 +265,12 @@ void regist_put_initial(
 		graph_putsa_fx(
 			table_stage_left(2), top, col_and_fx_text, REGIST_STAGE_ROUTE_DASH
 		);
-		regist_route_put(
+		graph_putkanji_fx_declare();
+		graph_putkanji_fx(
 			table_stage_left(3),
 			top,
 			col_and_fx_text,
-			(i == entered_place) ? entered_route[0] : scoredat_route_byte(i, 0),
-			(i == entered_place) ? entered_route[1] : scoredat_route_byte(i, 1)
+			(i == entered_place) ? entered_route : scoredat_routes[i]
 		);
 		if(entered_place == i) {
 			entered_name_left = table_name_left(0);
@@ -566,7 +558,7 @@ static const int SCOREDAT_NOT_CLEARED = (SCOREDAT_CLEARED - 10);
 void regist(
 	score_t score,
 	int16_t stage_num_or_scoredat_constant,
-	const sshiftjis_t route[SCOREDAT_ROUTE_LEN + 1]
+	shiftjis_kanji_t route
 )
 {
 	scoredat_name_z_t names[SCOREDAT_PLACES];
@@ -624,8 +616,7 @@ void regist(
 			strcpy(names[shift].byte, names[shift - 1].byte);
 			scoredat_score[shift] = scoredat_score[shift - 1];
 			scoredat_stages[shift] = scoredat_stages[shift - 1];
-			scoredat_route_byte(shift, 0) = scoredat_route_byte(shift, -2);
-			scoredat_route_byte(shift, 1) = scoredat_route_byte(shift, -1);
+			scoredat_routes[shift] = scoredat_routes[shift - 1];
 		}
 		long p = (SCOREDAT_NAMES_SIZE - 1);
 		while(((place * SCOREDAT_NAME_BYTES) + SCOREDAT_NAME_BYTES) <= p) {
@@ -639,8 +630,7 @@ void regist(
 
 		scoredat_score[place] = score;
 		scoredat_stages[place] = stage_num_or_scoredat_constant;
-		scoredat_route_byte(place, 0) = route[0];
-		scoredat_route_byte(place, 1) = route[1];
+		scoredat_routes[place] = route;
 
 		// Writes the new name to scoredat_names[] and calls scoredat_save()
 		regist_name_enter(place);

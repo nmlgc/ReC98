@@ -6,7 +6,6 @@
 // int8_t array!
 #define SCOREDAT_NAME_BYTES (SCOREDAT_NAME_KANJI * 2)
 #define SCOREDAT_NAMES_SIZE (SCOREDAT_PLACES * SCOREDAT_NAME_BYTES)
-#define SCOREDAT_ROUTE_LEN 2
 
 #define SCOREDAT_CLEARED 40
 #define SCOREDAT_CLEARED_MAKAI (SCOREDAT_CLEARED + 10)
@@ -35,7 +34,7 @@ struct scoredat_t {
 #endif
 
 extern int8_t* scoredat_names;
-extern int8_t* scoredat_routes;
+extern shiftjis_kanji_t* scoredat_routes;
 extern int16_t* scoredat_stages;
 extern int32_t* scoredat_score;
 

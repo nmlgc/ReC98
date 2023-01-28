@@ -13,7 +13,7 @@
 // -----
 
 int8_t* scoredat_names; // Yeah, technically a scoredat_name_t.
-int8_t* scoredat_routes; // Yeah, technically a shiftjis_kanji_t.
+shiftjis_kanji_t* scoredat_routes;
 int16_t* scoredat_stages;
 score_t* scoredat_score;
 // -----
@@ -46,7 +46,7 @@ void scoredat_recreate()
 {
 	int i;
 	int16_t stage;
-	const shiftjis_t *route = SCOREDAT_ROUTE_NONE;
+	const shiftjis_kanji_t route = SCOREDAT_ROUTE_NONE;
 	score_t score;
 
 	// Will be name-encoded, and therefore modified in the .data section!
@@ -79,7 +79,7 @@ void scoredat_recreate()
 		stage = stage - 1;
 	}
 	for(i = 0; i < SCOREDAT_PLACES; i++) {
-		file_write(route, sizeof(shiftjis_kanji_t));
+		file_write(&route, sizeof(shiftjis_kanji_t));
 	}
 	file_close();
 }
@@ -111,13 +111,13 @@ int scoredat_load()
 
 	scoredat_names = new int8_t[SCOREDAT_NAMES_SIZE];
 	scoredat_stages = new int16_t[SCOREDAT_PLACES];
-	scoredat_routes = new int8_t[SCOREDAT_ROUTE_LEN * SCOREDAT_PLACES];
+	scoredat_routes = new shiftjis_kanji_t[SCOREDAT_PLACES];
 	scoredat_score = new score_t[SCOREDAT_PLACES];
 
 	file_read(scoredat_names, SCOREDAT_NAMES_SIZE);
 	file_read(scoredat_score, sizeof(score_t) * SCOREDAT_PLACES);
 	file_read(scoredat_stages, sizeof(int16_t) * SCOREDAT_PLACES);
-	file_read(scoredat_routes, SCOREDAT_ROUTE_LEN * SCOREDAT_PLACES);
+	file_read(scoredat_routes, (sizeof(shiftjis_kanji_t) * SCOREDAT_PLACES));
 	file_close();
 
 	for(int i = 0; i < SCOREDAT_NAMES_SIZE; i++) {
