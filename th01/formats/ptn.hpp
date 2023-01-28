@@ -61,10 +61,7 @@ ptn_error_t ptn_new(main_ptn_slot_t slot, int image_count);
 // Frees all images in [slot], then loads all images from the .PTN file with
 // the given name into the same slot, retaining the current hardware palette.
 // Also derives the alpha plane from color #15 of every image.
-void ptn_load(main_ptn_slot_t slot, const char *fn);
-
-// Like ptn_load(), but sets the hardware palette to the one in [fn]'s header.
-ptn_error_t ptn_load_palette_show(main_ptn_slot_t slot, const char *fn);
+ptn_error_t ptn_load(main_ptn_slot_t slot, const char *fn);
 
 // Frees all images in [slot].
 void ptn_free(main_ptn_slot_t slot);

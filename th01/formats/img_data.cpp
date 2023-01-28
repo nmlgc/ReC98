@@ -16,17 +16,11 @@
 	dots8_t far *VRAM_PLANE_E;
 #endif
 
-
-// .GRP and .PTN
-// -------------
-
-bool16 flag_palette_show = true;
-// -------------
-
 // .GRP
 // ----
 
 Palette4 grp_palette;
+bool16 flag_palette_show = true;
 bool16 flag_grp_put = true;
 // ----
 

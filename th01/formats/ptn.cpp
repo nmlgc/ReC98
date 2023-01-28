@@ -5,7 +5,6 @@
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
-#include "th01/hardware/palette.h"
 #include "th01/formats/ptn.hpp"
 #include "th01/formats/pf.hpp"
 
@@ -20,9 +19,7 @@ typedef struct {
 } ptn_header_t;
 // -----------------------------
 
-extern bool16 flag_palette_show;
-
-ptn_error_t ptn_load_palette_show(main_ptn_slot_t slot, const char *fn)
+ptn_error_t ptn_load(main_ptn_slot_t slot, const char *fn)
 {
 	union {
 		Palette4 pal;
@@ -51,9 +48,6 @@ ptn_error_t ptn_load_palette_show(main_ptn_slot_t slot, const char *fn)
 	}
 
 	arc_file_get_far(h.pal);
-	if(flag_palette_show) {
-		z_palette_set_all_show(h.pal);
-	}
 
 	ptn_image_count[slot] = image_count;
 	ptn = ptn_images[slot];
@@ -87,14 +81,6 @@ ptn_error_t ptn_new(main_ptn_slot_t slot, int image_count)
 		return PE_OUT_OF_MEMORY;
 	}
 	return PE_OK;
-}
-
-void ptn_load(main_ptn_slot_t slot, const char *fn)
-{
-	flag_palette_show = false;
-	int ret = ptn_load_palette_show(slot, fn);
-	flag_palette_show = true;
-	ret;
 }
 
 void ptn_free(main_ptn_slot_t slot)
