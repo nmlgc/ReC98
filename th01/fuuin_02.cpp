@@ -69,12 +69,4 @@ void input_sense(bool16 reset_repeat)
 #define regist_input_timeout_inc()
 #define regist_input_timeout_if_reached(then)
 
-#define regist_title_put( \
-	left, stage_num_or_scoredat_constant, ranks, col_and_fx \
-) { \
-	graph_printf_fx( \
-		left, TITLE_TOP, col_and_fx, REGIST_TITLE_WITH_SPACE "%s", ranks[rank] \
-	); \
-}
-
 #include "th01/hiscore/regist.cpp"

@@ -1,15 +1,11 @@
 #include "th01/shiftjis/title.hpp"
 
-#define REGIST_TITLE             	GAME_TITLE "　強者の記録"
-#define REGIST_TITLE_WITH_SPACE  	REGIST_TITLE "　"
-#define REGIST_TITLE_RANKS { \
-	"　イージー　", \
-	"　ノーマル　", \
-	"　ハード　　", \
-	"ルナティック", \
-}
-
-static const pixel_t REGIST_TITLE_W = shiftjis_w(REGIST_TITLE_WITH_SPACE);
+static const shiftjis_t* REGIST_TITLE[RANK_COUNT] = {
+	GAME_TITLE "　強者の記録　　イージー　",
+	GAME_TITLE "　強者の記録　　ノーマル　",
+	GAME_TITLE "　強者の記録　　ハード　　",
+	GAME_TITLE "　強者の記録　ルナティック",
+};
 
 #define REGIST_HEADER_PLACE      	"　霊　位　"
 #define REGIST_HEADER_NAME       	"　　名　　前　　"

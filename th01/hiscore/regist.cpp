@@ -552,7 +552,6 @@ void regist_name_enter(int entered_place)
 }
 
 static const int PLACE_NONE = (SCOREDAT_PLACES + 20);
-static const int SCOREDAT_NOT_CLEARED = (SCOREDAT_CLEARED - 10);
 
 void regist(
 	score_t score,
@@ -560,23 +559,22 @@ void regist(
 	shiftjis_kanji_t route
 )
 {
+	const bool cleared = (
+		stage_num_or_scoredat_constant >= (SCOREDAT_CLEARED - 10)
+	);
 	scoredat_name_z_t names[SCOREDAT_PLACES];
-	const shiftjis_t* RANKS[RANK_COUNT] = REGIST_TITLE_RANKS;
 	long place;
 
 	graph_accesspage_func(1);
-
-	regist_title_put(
+	graph_putsa_fx(
 		TITLE_BACK_LEFT,
-		stage_num_or_scoredat_constant,
-		RANKS,
-		(COL_REGIST_REGULAR | FX_WEIGHT_BOLD | FX_CLEAR_BG)
+		(cleared ? TITLE_TOP : TITLE_BACK_TOP),
+		(COL_REGIST_REGULAR | FX_WEIGHT_BOLD | FX_CLEAR_BG),
+		REGIST_TITLE[rank]
 	);
-	// On page 1, the title should now at (TITLE_BACK_LEFT, TITLE_BACK_TOP) if
-	// not cleared, or at (TITLE_BACK_LEFT, TITLE_TOP) if cleared.
 
 	graph_accesspage_func(0);
-	if(stage_num_or_scoredat_constant < SCOREDAT_NOT_CLEARED) {
+	if(!cleared) {
 		graph_2xscale_byterect_1_to_0_slow(
 			TITLE_LEFT, TITLE_TOP,
 			TITLE_BACK_LEFT, TITLE_BACK_TOP, TITLE_BACK_W, TITLE_BACK_H

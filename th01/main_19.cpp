@@ -32,22 +32,4 @@
 #define regist_input_timeout_inc() timeout++;
 #define regist_input_timeout_if_reached(then) if(timeout > 1000) then
 
-#define regist_title_put( \
-	left, stage_num_or_scoredat_constant, ranks, col_and_fx \
-) { \
-	if(stage_num_or_scoredat_constant < SCOREDAT_NOT_CLEARED) { \
-		graph_putsa_fx( \
-			left, TITLE_BACK_TOP, col_and_fx, REGIST_TITLE_WITH_SPACE \
-		); \
-		graph_putsa_fx( \
-			(left + REGIST_TITLE_W), TITLE_BACK_TOP, col_and_fx, ranks[rank] \
-		); \
-	} else { \
-		graph_putsa_fx(left, TITLE_TOP, col_and_fx, REGIST_TITLE); \
-		graph_putsa_fx( \
-			(left + REGIST_TITLE_W), TITLE_TOP, col_and_fx, ranks[rank] \
-		); \
-	} \
-}
-
 #include "th01/hiscore/regist.cpp"
