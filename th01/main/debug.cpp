@@ -82,7 +82,7 @@ print_stats:
 		frame_delay(3);
 		input_sense(false);
 		if(input_shot) {
-			stageobj_bgs_free_wrap(); // For the third time, that's not *all*...
+			stageobj_bgs_free(); // For the third time, that's not *all*...
 			recurse();
 		} else if(input_strike) {
 			for(int i = 0; i < BOS_ENTITY_SLOT_COUNT; i++) {

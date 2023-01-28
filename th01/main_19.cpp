@@ -35,8 +35,6 @@
 #define scoredat_close() file_close()
 #include "th01/hiscore/scorelod.cpp"
 
-// Returns the high score for the difficulty previously loaded by
-// scoredat_load().
 score_t scoredat_hiscore_get()
 {
 	return scoredat_score[0];
@@ -114,4 +112,3 @@ void pascal near str_from_swapped_kanji(
 }
 
 #include "th01/hiscore/regist.cpp"
-#include "th01/main/hiscore.cpp"

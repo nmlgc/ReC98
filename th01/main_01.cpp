@@ -322,19 +322,6 @@ void pascal stage_num_animate(unsigned int stage_num)
 	z_text_clear_inlined();
 }
 
-void load_and_init_stuff_used_in_all_stages(void)
-{
-	scoredat_load_hiscore();
-	hud_bg_load("mask.grf");
-	player_48x48.load("miko_ac.bos");
-	player_48x32.load("miko_ac2.bos");
-	ptn_load(PTN_SLOT_STG, PTN_STG_CARDFLIP_FN);
-	ptn_load(PTN_SLOT_MIKO, "miko.ptn");
-	ptn_new(PTN_SLOT_BG_HUD, ((PTN_BG_last - PTN_BG_first) + 1));
-	bomb_kuji_load();
-	ptn_slot_stg.has_reduced_sprites = false;
-}
-
 void stage_entrance(int stage_id, const char* bg_fn, bool16 clear_vram_page_0)
 {
 	int x;
@@ -398,11 +385,6 @@ void stage_entrance(int stage_id, const char* bg_fn, bool16 clear_vram_page_0)
 #include "th01/main/extend.cpp"
 #include "th01/main/debug.cpp"
 
-bool16 stageobj_bgs_free_wrap(void)
-{
-	return stageobj_bgs_free();
-}
-
 // ZUN bloat: This function is only ever (meaningfully) called before process
 // termination when the standard library heap is destroyed anyway. You might
 // argue that it's cleaner to free all memory, but then, why doesn't it free
@@ -421,13 +403,6 @@ void graphics_free_redundant_and_incomplete(void)
 void error_resident_invalid(void)
 {
 	printf(ERROR_RESIDENT_INVALID);
-}
-
-void pellet_destroy_score_delta_commit(void)
-{
-	score += pellet_destroy_score_delta;
-	hud_score_and_cardcombo_render();
-	pellet_destroy_score_delta = 0;
 }
 
 int8_t boss_id = BID_NONE; // ACTUAL TYPE: boss_id_t
@@ -563,9 +538,6 @@ int main(void)
 		debug_startup_delay();
 	}
 
-	// ZUN bloat: We just started the program, these are still empty!
-	graphics_free_redundant_and_incomplete();
-
 	rem_lives = resident->rem_lives;
 	rem_bombs = resident->rem_bombs;
 	player_left = PLAYER_LEFT_START;
@@ -582,7 +554,19 @@ int main(void)
 	}
 
 	coreleft_prev = coreleft();
-	load_and_init_stuff_used_in_all_stages();
+
+	scoredat_load();
+	resident->hiscore = scoredat_hiscore_get();
+	scoredat_free();
+	hud_bg_load("mask.grf");
+	player_48x48.load("miko_ac.bos");
+	player_48x32.load("miko_ac2.bos");
+	ptn_load(PTN_SLOT_STG, PTN_STG_CARDFLIP_FN);
+	ptn_load(PTN_SLOT_MIKO, "miko.ptn");
+	ptn_new(PTN_SLOT_BG_HUD, ((PTN_BG_last - PTN_BG_first) + 1));
+	bomb_kuji_load();
+	ptn_slot_stg.has_reduced_sprites = false;
+
 	z_graph_init();
 	graph_accesspage_func(0);
 	z_graph_clear();
@@ -887,7 +871,9 @@ int main(void)
 				// the player of the pellet destroy points gained on the last
 				// frame of a final boss.
 				if(pellet_destroy_score_delta) {
-					pellet_destroy_score_delta_commit();
+					score += pellet_destroy_score_delta;
+					hud_score_and_cardcombo_render();
+					pellet_destroy_score_delta = 0;
 				}
 			}
 			// At this point, the player either lost a life or cleared a
@@ -952,7 +938,7 @@ int main(void)
 				stageobj_bgs_put_all();
 				graph_accesspage_func(0);
 			}
-			stageobj_bgs_free_wrap();
+			stageobj_bgs_free();
 			cards.free();
 			obstacles.free();
 		} else {
@@ -967,7 +953,7 @@ int main(void)
 	player_gameover_animate();
 	Shots.unput_and_reset();
 	Pellets.unput_and_reset();
-	stageobj_bgs_free_wrap();
+	stageobj_bgs_free();
 	extend_next = 1;
 	if(boss_id != BID_NONE) {
 		boss_free();
