@@ -29,6 +29,11 @@ public:
 /// ------------------------
 
 class CShootoutLaser {
+	enum put_flag_t {
+		SL_RAY_UNPUT = false,
+		SL_RAY_PUT = true,
+	};
+
 public:
 	LaserPixel origin_left;
 	LaserPixel origin_y;
@@ -43,17 +48,9 @@ protected:
 public:
 	pixel_t ray_length;
 	pixel_t ray_moveout_speed;
-	screen_x_t target_left;	// unused
-	vram_y_t target_y;	// unused
-	int unknown;	// ZUN bloat
-	int32_t unused_1;	// ZUN bloat
-	LaserPixel velocity_y;	// per frame, ZUN bloat
 	LaserPixel step_y;	// per ray pixel, [-1.0, +1.0]
-	LaserPixel velocity_x;	// per frame, ZUN bloat
 	LaserPixel step_x;	// per ray pixel, [-1.0, +1.0]
 	pixel_t ray_extend_speed;
-	int16_t unused_2;	// ZUN bloat
-	bool16 alive;
 	int age;
 
 	// At this [age], [ray_extend_speed] stops being added to [ray_length],
@@ -62,18 +59,15 @@ public:
 
 	unsigned char col;
 	unsigned char width_cel;
+	bool alive;
 	bool damaging;
-	char id;	// ZUN bloat
 
 	CShootoutLaser() {
 		alive = false;
 	}
 
 protected:
-	// ZUN bloat: Just turn into a parameter of hittest_and_render().
-	enum { SL_RAY_UNPUT = false, SL_RAY_PUT = true } put_flag;
-
-	void hittest_and_render(void);
+	void hittest_and_render(put_flag_t put_flag);
 
 public:
 	// Does nothing if this laser is already [alive], and patterns do rely on
@@ -130,13 +124,6 @@ public:
 };
 
 extern CShootoutLaser shootout_lasers[SHOOTOUT_LASER_COUNT];
-
-#define shootout_lasers_init(i) { \
-	for(i = 0; i < SHOOTOUT_LASER_COUNT; i++) { \
-		int id = i; \
-		shootout_lasers[i].id = id; \
-	} \
-}
 
 // Quite a roundabout way of preventing buffer overflows, but fine.
 #define shootout_laser_safe(i) \

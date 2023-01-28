@@ -324,8 +324,6 @@ void pascal stage_num_animate(unsigned int stage_num)
 
 void load_and_init_stuff_used_in_all_stages(void)
 {
-	int i;
-
 	scoredat_load_hiscore();
 	hud_bg_load("mask.grf");
 	player_48x48.load("miko_ac.bos");
@@ -334,7 +332,6 @@ void load_and_init_stuff_used_in_all_stages(void)
 	ptn_load(PTN_SLOT_MIKO, "miko.ptn");
 	ptn_new(PTN_SLOT_BG_HUD, ((PTN_BG_last - PTN_BG_first) + 1));
 	bomb_kuji_load();
-	shootout_lasers_init(i);
 	ptn_slot_stg.has_reduced_sprites = false;
 }
 

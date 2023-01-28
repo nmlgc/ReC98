@@ -16,8 +16,8 @@ CShootoutLaser shootout_lasers[SHOOTOUT_LASER_COUNT];
 void CShootoutLaser::spawn(
 	screen_x_t _origin_left,
 	vram_y_t _origin_y,
-	screen_x_t _target_left,
-	vram_y_t _target_y,
+	screen_x_t target_left,
+	vram_y_t target_y,
 	int speed_multiplied_by_8,
 	int _col,
 	int _moveout_at_age,
@@ -31,17 +31,12 @@ void CShootoutLaser::spawn(
 	origin_y.v = to_laser_pixel(_origin_y);
 	ray_start_left.v = origin_left.v;
 	ray_start_y.v = origin_y.v;
-	target_left = _target_left;
-	target_y = _target_y;
-	unknown = -256;
 
 	unsigned char angle = iatan2(
-		(_target_y - _origin_y), (_target_left - _origin_left)
+		(target_y - _origin_y), (target_left - _origin_left)
 	);
 	step_x.v = Cos8(angle);
 	step_y.v = Sin8(angle);
-	velocity_x.v = ((speed_multiplied_by_8 * step_x.v) >> 3);
-	velocity_y.v = ((speed_multiplied_by_8 * step_y.v) >> 3);
 	ray_extend_speed = (speed_multiplied_by_8 / 8);
 
 	w--;
@@ -55,7 +50,7 @@ void CShootoutLaser::spawn(
 	ray_length = 0;
 }
 
-void CShootoutLaser::hittest_and_render(void)
+void CShootoutLaser::hittest_and_render(put_flag_t put_flag)
 {
 	screen_x_t left = ray_i_left.to_pixel();
 	vram_y_t y = ray_i_y.to_pixel();
@@ -63,14 +58,10 @@ void CShootoutLaser::hittest_and_render(void)
 	vram_offset_t vram_offset;
 	int preshift = (width_cel * PRESHIFT);
 	dots16_t dots = 0;
-	unsigned int pixel_count;
-
-	if(put_flag) {
-		pixel_count = ray_length;
-		grcg_setcolor_rmw(col);
-	} else {
-		pixel_count = ray_moveout_speed;
-	}
+	unsigned int pixel_count = ((put_flag == SL_RAY_PUT)
+		? ray_length
+		: ray_moveout_speed
+	);
 
 	for(i = 0; i < pixel_count; i++) {
 		if(
@@ -122,10 +113,6 @@ void CShootoutLaser::hittest_and_render(void)
 		ray_i_left.v += step_x.v;
 		ray_i_y.v += step_y.v;
 	}
-
-	if(put_flag) {
-		grcg_off_func();
-	}
 }
 
 void CShootoutLaser::update_hittest_and_render(void)
@@ -137,8 +124,7 @@ void CShootoutLaser::update_hittest_and_render(void)
 		ray_i_left.v = ray_start_left.v;
 		ray_i_y.v = ray_start_y.v;
 
-		put_flag = SL_RAY_UNPUT;
-		hittest_and_render();
+		hittest_and_render(SL_RAY_UNPUT);
 
 		// hittest_and_render() has conveniently advanced [ray_i_*] by
 		// [ray_moveout_speed]...
@@ -160,6 +146,7 @@ void CShootoutLaser::update_hittest_and_render(void)
 	ray_i_left.v = ray_start_left.v;
 	ray_i_y.v = ray_start_y.v;
 
-	put_flag = SL_RAY_PUT;
-	hittest_and_render();
+	grcg_setcolor_rmw(col);
+	hittest_and_render(SL_RAY_PUT);
+	grcg_off_func();
 }
