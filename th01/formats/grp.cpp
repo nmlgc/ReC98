@@ -18,24 +18,21 @@
 // Palette
 // -------
 
-#define TONE_STEP_PER_FRAME 5
+static const int TONE_STEP_PER_FRAME = 5;
 
 Palette4 grp_palette;
 static int grp_palette_tone = 100;
 
 void pascal grp_palette_settone(int tone)
 {
-	int col;
-	int comp;
-	int blend;
-
 	if(tone < 0) {
 		tone = 0;
 	} else if(tone > 200) {
 		tone = 200;
 	}
-	for(col = 1; col < COLOR_COUNT; col++) {
-		for(comp = 0; comp < COMPONENT_COUNT; comp++) {
+	for(int col = 1; col < COLOR_COUNT; col++) {
+		for(int comp = 0; comp < COMPONENT_COUNT; comp++) {
+			int blend;
 			if(tone > 100) {
 				blend = (RGB4::max() - grp_palette[col].v[comp]);
 				blend *= (tone - 100);
@@ -45,7 +42,7 @@ void pascal grp_palette_settone(int tone)
 				blend = grp_palette[col].v[comp];
 				blend *= (100 - tone);
 				blend /= 100;
-				z_Palettes[col].v[comp] = (-blend + grp_palette[col].v[comp]);
+				z_Palettes[col].v[comp] = (grp_palette[col].v[comp] - blend);
 			}
 		}
 	}
@@ -53,33 +50,36 @@ void pascal grp_palette_settone(int tone)
 	z_palette_set_all_show(z_Palettes);
 }
 
-#define fade_loop(tone_start, direction, delay) \
-	int i; \
-	int tone = tone_start; \
-	for(i = 0; i < (100 / TONE_STEP_PER_FRAME); i++) { \
-		tone direction TONE_STEP_PER_FRAME; \
-		grp_palette_settone(tone); \
-		frame_delay(delay); \
+void pascal grp_palette_inout(
+	int tone_start, int speed, unsigned int frame_delay_per_step
+)
+{
+	int tone = tone_start;
+	for(int i = 0; i < (100 / TONE_STEP_PER_FRAME); i++) {
+		tone += (TONE_STEP_PER_FRAME * speed);
+		grp_palette_settone(tone);
+		frame_delay(frame_delay_per_step);
 	}
+}
 
 void pascal grp_palette_black_out(unsigned int frame_delay_per_step)
 {
-	fade_loop(100, -=, frame_delay_per_step);
+	grp_palette_inout(100, -1, frame_delay_per_step);
 }
 
 void pascal grp_palette_black_in(unsigned int frame_delay_per_step)
 {
-	fade_loop(0, +=, frame_delay_per_step);
+	grp_palette_inout(  0, +1, frame_delay_per_step);
 }
 
 void pascal grp_palette_white_out(unsigned int frame_delay_per_step)
 {
-	fade_loop(100, +=, frame_delay_per_step);
+	grp_palette_inout(100, +1, frame_delay_per_step);
 }
 
 void pascal grp_palette_white_in(unsigned int frame_delay_per_step)
 {
-	fade_loop(200, -=, frame_delay_per_step);
+	grp_palette_inout(200, -1, frame_delay_per_step);
 }
 
 bool grp_palette_load(const char *fn)
@@ -98,11 +98,11 @@ bool grp_palette_load_show(const char *fn)
 	if(grp_palette_load(fn)) {
 		return true;
 	}
-#if (BINARY == 'E')
-	grp_palette_settone(grp_palette_tone);
-#else
-	z_palette_set_all_show(grp_palette);
-#endif
+	if(grp_palette_tone != 100) {
+		grp_palette_settone(grp_palette_tone);
+	} else {
+		z_palette_set_all_show(grp_palette);
+	}
 	return false;
 }
 // -------
