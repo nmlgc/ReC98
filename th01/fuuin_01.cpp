@@ -39,7 +39,7 @@ bool16 end_init(void)
 	resident_t __seg *sgm = ResData<resident_t>::exist(RES_ID);
 	if(sgm) {
 		resident_t* resident = sgm;
-		if(resident->end_flag) {
+		if(resident->end_flag != ES_NONE) {
 			score = resident->score;
 			continues_total = 0;
 			end_flag = resident->end_flag;
