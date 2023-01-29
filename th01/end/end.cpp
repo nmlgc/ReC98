@@ -521,7 +521,7 @@ void verdict_animate_and_regist(void)
 	grp_palette_black_out(10);
 
 	graph_accesspage_func(1);
-	grp_put_palette_show(REGIST_BG_CLEARED);
+	grp_put(REGIST_BG_CLEARED, GPF_PALETTE_SHOW);
 	graph_copy_accessed_page_to_other();
 
 	graph_accesspage_func(0);

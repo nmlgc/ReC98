@@ -14,9 +14,6 @@
 // *Not* offsetof(PiHeader, palette)!
 #define PI_PALETTE_OFFSET 0x12
 
-extern bool16 flag_palette_show;
-extern bool flag_grp_colorkey;
-
 bool grp_palette_load(const char *fn)
 {
 	if(!file_ropen(fn)) {
@@ -41,41 +38,23 @@ bool grp_palette_load_show(const char *fn)
 	return false;
 }
 
-int grp_put_palette_show(const char *fn)
+int grp_put(const char *fn, grp_put_flag_t flag)
 {
 	extern int8_t* grp_buf;
 	int option = 0;
 	char ret;
 
 	grp_buf = new int8_t[GRP_BUFFER_SIZE];
-	if(flag_grp_colorkey == true) {
+	if(flag & GPF_COLORKEY) {
 		option = PILOAD_OPT_COLORKEY(15);
 	}
 	ret = PiLoad(fn, grp_buf, GRP_BUFFER_SIZE, 0, 0, 100, option);
-	if(flag_palette_show == true) {
+	if(flag & GPF_PALETTE_SHOW) {
 		grp_palette_load_show(fn);
 	} else {
 		grp_palette_load(fn);
 	}
 
 	delete[] grp_buf;
-	return ret;
-}
-
-int grp_put(const char *fn)
-{
-	flag_palette_show = false;
-	int ret = grp_put_palette_show(fn);
-	flag_palette_show = true;
-	return ret;
-}
-
-int grp_put_colorkey(const char *fn)
-{
-	flag_grp_colorkey = true;
-	flag_palette_show = false;
-	int ret = grp_put_palette_show(fn);
-	flag_palette_show = true;
-	flag_grp_colorkey = false;
 	return ret;
 }

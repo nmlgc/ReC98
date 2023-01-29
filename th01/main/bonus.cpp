@@ -253,7 +253,7 @@ void pascal near totle_pagetrans_animate(int)
 void near totle_load_and_pagetrans_animate(void)
 {
 	graph_accesspage_func(1);
-	grp_put("CLEAR3.grp");
+	grp_put("CLEAR3.grp", GPF_PALETTE_KEEP);
 	ptn_load(PTN_SLOT_NUMB, "numb.ptn");
 	graph_accesspage_func(0);
 	totle_pagetrans_animate(0);

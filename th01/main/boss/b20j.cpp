@@ -352,7 +352,7 @@ void konngara_load_and_entrance(int8_t)
 	text_fillca(' ', (TX_BLACK | TX_REVERSE));
 
 	// graph_accesspage_func(0);
-	grp_put_palette_show(SCROLL_BG_FN);
+	grp_put(SCROLL_BG_FN, GPF_PALETTE_SHOW);
 
 	// ZUN bug: On its own, this call at this position in the code would just
 	// be redundant as the stage palette is never used here. After all, you
@@ -368,7 +368,7 @@ void konngara_load_and_entrance(int8_t)
 	stageobjs_init_and_render(BOSS_STAGE);
 
 	graph_accesspage_func(1);
-	grp_put_palette_show("boss8_a1.grp");
+	grp_put("boss8_a1.grp", GPF_PALETTE_SHOW);
 	// The stage_palette_set() call should have been here.
 
 	graph_accesspage_func(0);
@@ -481,10 +481,10 @@ void konngara_load_and_entrance(int8_t)
 	// -------------------------------
 
 	siddham_col_white();
-	grp_put_colorkey("boss8_d1.grp");
-	grp_put_colorkey("boss8_d2.grp");
-	grp_put_colorkey("boss8_d3.grp");
-	grp_put_colorkey("boss8_d4.grp");
+	grp_put("boss8_d1.grp", GPF_COLORKEY);
+	grp_put("boss8_d2.grp", GPF_COLORKEY);
+	grp_put("boss8_d3.grp", GPF_COLORKEY);
+	grp_put("boss8_d4.grp", GPF_COLORKEY);
 
 	for(j = 0; j < RGB4::Range; j++) {
 		siddham_col_white_in_step();
@@ -1787,7 +1787,7 @@ void konngara_main(void)
 		printf("\x1B)3"); // Enter graph mode
 		text_fill_black(j, i);
 
-		grp_put_palette_show(SCROLL_BG_FN);
+		grp_put(SCROLL_BG_FN, GPF_PALETTE_SHOW);
 		z_palette_set_black(j, i);
 
 		printf("\x1B)0"); // Back to regular kanji mode

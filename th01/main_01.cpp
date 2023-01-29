@@ -348,7 +348,7 @@ void stage_entrance(int stage_id, const char* bg_fn, bool16 clear_vram_page_0)
 		text_color_reset();
 
 		if(strcmp(bg_fn, "empty.grf")) {
-			grp_put_palette_show(bg_fn);
+			grp_put(bg_fn, GPF_PALETTE_SHOW);
 		}
 		stage_palette_set(z_Palettes);
 

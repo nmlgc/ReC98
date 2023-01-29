@@ -16,6 +16,21 @@
 ///
 /// More info on the original format: https://mooncore.eu/bunny/txt/pi-pic.htm
 
+// Flags
+// -----
+
+typedef uint8_t grp_put_flag_t;
+
+// Keeps the current hardware palette. Still updates [grp_palette] though!
+static const grp_put_flag_t GPF_PALETTE_KEEP = (0 << 0);
+
+// Sets the hardware palette to the one from the header of the displayed .GRP.
+static const grp_put_flag_t GPF_PALETTE_SHOW = (1 << 0);
+
+// Treats color #15 as transparent.
+static const grp_put_flag_t GPF_COLORKEY     = (1 << 1);
+// -----
+
 // Always updated by any of the .GRP loading or blitting functions.
 extern Palette4 grp_palette;
 
@@ -25,15 +40,8 @@ extern Palette4 grp_palette;
 bool grp_palette_load_show(const char *fn);
 
 // Displays the .GRP image loaded from [fn] on the currently accessed VRAM
-// page, using the current hardware palette. Returns the return value from
-// PiLoad.
-int grp_put(const char *fn);
-
-// Like grp_put(), but sets the hardware palette to the one in [fn]'s header.
-int grp_put_palette_show(const char *fn);
-
-// Like grp_put(), but treats color #15 as transparent.
-int grp_put_colorkey(const char *fn);
+// page, applying the given flags. Returns the return value from PiLoad.
+int grp_put(const char *fn, grp_put_flag_t flag);
 
 #if (BINARY == 'E')
 	extern int grp_palette_tone;

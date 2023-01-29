@@ -5,7 +5,7 @@
 void pascal end_pics_load_palette_show(const char *fn)
 {
 	graph_accesspage_func(1);
-	grp_put_palette_show(fn);
+	grp_put(fn, GPF_PALETTE_SHOW);
 }
 
 // Avoid symbol duplication...

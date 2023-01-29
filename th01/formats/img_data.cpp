@@ -20,7 +20,6 @@
 // ----
 
 Palette4 grp_palette;
-bool16 flag_palette_show = true;
 // ----
 
 // .PTN
@@ -47,7 +46,6 @@ uint8_t planar_stream_count[GRX_COUNT];
 #if (BINARY == 'E')
 	int grp_palette_tone = 100;
 #endif
-bool flag_grp_colorkey = false;
 int8_t* grp_buf;
 // ----------
 

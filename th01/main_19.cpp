@@ -87,9 +87,9 @@ void pascal near str_from_swapped_kanji(
 	graph_accesspage_func(1); \
 	\
 	if(stage_num_or_scoredat_constant < SCOREDAT_NOT_CLEARED) { \
-		grp_put_palette_show("game_o.grp"); \
+		grp_put("game_o.grp", GPF_PALETTE_SHOW); \
 	} else { \
-		grp_put(REGIST_BG_CLEARED); \
+		grp_put(REGIST_BG_CLEARED, GPF_PALETTE_KEEP); \
 	} \
 	graph_copy_accessed_page_to_other(); \
 	z_palette_black_in(); \

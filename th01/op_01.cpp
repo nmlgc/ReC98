@@ -312,10 +312,10 @@ void title_init(void)
 	mdrv2_bgm_load("reimu.mdt");
 	mdrv2_bgm_play();
 	graph_accesspage_func(1);
-	grp_put_palette_show("REIIDEN2.grp");
+	grp_put("REIIDEN2.grp", GPF_PALETTE_SHOW);
 	z_palette_black();
 	graph_copy_accessed_page_to_other();
-	grp_put("REIIDEN3.grp");
+	grp_put("REIIDEN3.grp", GPF_PALETTE_KEEP);
 	graph_accesspage_func(0);
 	z_palette_black_in();
 	frame_delay(100);
@@ -328,7 +328,7 @@ void title_window_put(void)
 	graph_accesspage_func(1);
 	graph_copy_accessed_page_to_other();
 	graph_accesspage_func(0);
-	grp_put_colorkey("op_win.grp");
+	grp_put("op_win.grp", GPF_COLORKEY);
 	graph_copy_accessed_page_to_other();
 }
 

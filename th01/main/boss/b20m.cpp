@@ -313,8 +313,8 @@ void sariel_entrance(int8_t)
 
 	text_fillca(' ', (TX_BLACK | TX_REVERSE));
 
-	/*  graph_accesspage_func(0);  */	grp_put_palette_show("boss6_l.grp");
-	/**/graph_accesspage_func(1)/**/;	grp_put_palette_show("boss6_h.grp");
+	/*  graph_accesspage_func(0);  */ grp_put("boss6_l.grp", GPF_PALETTE_SHOW);
+	/**/graph_accesspage_func(1)/**/; grp_put("boss6_h.grp", GPF_PALETTE_SHOW);
 
 	graph_accesspage_func(0);
 	stageobjs_init_and_render(BOSS_STAGE);
@@ -336,7 +336,7 @@ void sariel_entrance(int8_t)
 	// ------
 
 	graph_accesspage_func(1);
-	grp_put_palette_show(BG_IMAGES[0]);
+	grp_put(BG_IMAGES[0], GPF_PALETTE_SHOW);
 	graph_accesspage_func(0);
 	pagetrans_diagonal_8x8(40);
 
@@ -1277,7 +1277,7 @@ void pascal near bg_transition(int image_id_new)
 			z_vsync_wait_and_scrollup(0);
 
 			graph_accesspage_func(1);
-			grp_put_palette_show(BG_IMAGES[image_id_new]);
+			grp_put(BG_IMAGES[image_id_new], GPF_PALETTE_SHOW);
 			graph_copy_accessed_page_to_other();
 			stage_palette_set(z_Palettes);
 
@@ -2775,13 +2775,13 @@ entrance_rings_still_active:
 
 		// boss6.grp is not part of the game? Might have been a defeat graphic.
 		graph_accesspage_func(1);
-		grp_put_palette_show("boss6.grp");
+		grp_put("boss6.grp", GPF_PALETTE_SHOW);
 		z_palette_set_show(0xF, 0x0, 0x0, 0x0);
 		boss_palette_snap();
 		graph_copy_accessed_page_to_other();
 
 		graph_accesspage_func(1);
-		grp_put("boss6_a5.grp");
+		grp_put("boss6_a5.grp", GPF_PALETTE_KEEP);
 		graph_accesspage_func(0);
 
 		while(1) {
@@ -2814,7 +2814,7 @@ entrance_rings_still_active:
 				graph_accesspage_func(1);
 				mdrv2_bgm_load("syugen.MDT");
 				mdrv2_bgm_play();
-				grp_put_palette_show("boss6_a6.grp");
+				grp_put("boss6_a6.grp", GPF_PALETTE_SHOW);
 				z_palette_set_show(COL_FORM2_PULSE, 0x0, 0x0, 0x0);
 				graph_copy_accessed_page_to_other();
 				hud_rerender();
@@ -2929,7 +2929,7 @@ entrance_rings_still_active:
 		}
 	} else if(boss_phase == PHASE_FORM2_DEFEATED) {
 		graph_accesspage_func(1);
-		grp_put_palette_show("boss6_a6.grp");
+		grp_put("boss6_a6.grp", GPF_PALETTE_SHOW);
 
 		// Actually a different color inside the .GRP! Would have been nicer to
 		// reuse the previous state of the color from above.
