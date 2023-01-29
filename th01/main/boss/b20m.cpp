@@ -21,7 +21,6 @@
 #include "th01/hardware/graph.h"
 #include "th01/hardware/grcg8x8m.hpp"
 #include "th01/hardware/egc.h"
-#include "th01/hardware/egcrows.hpp"
 #include "th01/hardware/grpinv32.hpp"
 #include "th01/hardware/palette.h"
 #include "th01/hardware/pgtrans.hpp"

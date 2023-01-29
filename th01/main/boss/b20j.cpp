@@ -17,7 +17,6 @@
 #include "th01/hardware/palette.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/egc.h"
-#include "th01/hardware/egcrows.hpp"
 #include "th01/hardware/scrollup.hpp"
 #include "th01/hardware/text.h"
 #include "th01/snd/mdrv2.h"

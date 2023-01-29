@@ -10,10 +10,6 @@ void pascal end_pics_load_palette_show(const char *fn)
 	grp_put(fn, GPF_PALETTE_SHOW);
 }
 
-// Avoid symbol duplication...
-#define egc_start_copy egc_start_copy_1
-#include "th01/hardware/egcstart.cpp"
-
 void end_pic_show(int quarter)
 {
 	egc_start_copy();

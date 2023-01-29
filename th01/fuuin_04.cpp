@@ -25,11 +25,7 @@ static const int TYPE_FX = (COL_TYPE | FX_WEIGHT_NORMAL);
 void frame_delay(unsigned int frames)
 {
 	z_vsync_Count1 = 0;
-	while(1) {
-		if(z_vsync_Count1 >= frames) {
-			break;
-		}
-		optimization_barrier();
+	while(z_vsync_Count1 < frames) {
 	}
 }
 

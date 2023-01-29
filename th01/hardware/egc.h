@@ -20,6 +20,16 @@
 	outport(EGC_MASKREG, mask); \
 }
 
+#if (GAME == 1)
+	// Initializes the EGC for a VRAM-to-VRAM copy.
+	void egc_start_copy(void);
+
+	// Blits [h] rows starting at [top] from VRAM page 1 to the same position
+	// on VRAM page 0. Mainly used after a previous GDC scroll of [h] rows, to
+	// smoothly scroll between two full background images.
+	void egc_copy_rows_1_to_0(vram_y_t top, pixel_t h);
+#endif
+
 // Blits the rectangle from
 // 	(⌊left/16⌋*16, top)
 // to
