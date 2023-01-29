@@ -7,6 +7,7 @@
 #include "th01/rank.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
+#include "th01/hardware/egc.h"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/input.hpp"
 #include "th01/hardware/graph.h"
@@ -17,11 +18,124 @@
 #include "th01/formats/scoredat.hpp"
 #include "th01/hiscore/regist.hpp"
 #include "th01/end/end.hpp"
-#include "th01/end/pic.hpp"
-#include "th01/end/type.hpp"
 #include "th01/shiftjis/end.hpp"
 #include "th01/shiftjis/scoredat.hpp"
 #include "th01/shiftjis/title.hpp"
+
+// Pictures
+// --------
+
+static const pixel_t PIC_W = (RES_X / 2);
+static const pixel_t PIC_H = (RES_Y / 2);
+static const screen_x_t PIC_LEFT   = ((RES_X / 2) - (PIC_W / 2));
+static const screen_y_t PIC_TOP    = ((RES_Y / 2) - (PIC_H / 2));
+static const screen_y_t PIC_RIGHT  = (PIC_LEFT + PIC_W);
+static const screen_y_t PIC_BOTTOM = (PIC_TOP + PIC_H);
+
+static const pixel_t PIC_VRAM_W = (PIC_W / BYTE_DOTS);
+
+// Loads the ending pictures from the .GRP file [fn] onto graphics page #1,
+// and sets the hardware color palette to the one in [fn]'s header.
+void end_pics_load_palette_show(const char *fn)
+{
+	graph_accesspage_func(1);
+	grp_put(fn, GPF_PALETTE_SHOW);
+}
+
+// Blits the given [quarter] of the set of ending pictures currently loaded
+// onto graphics page #1 to the center of page #0.
+// The quarters are numbered like this:
+// | 0 | 1 |
+// | 2 | 3 |
+// Implemented using EGC inter-page copies, and therefore really slow.
+void end_pic_show(int quarter)
+{
+	egc_start_copy();
+
+	pixel_t src_left = ((quarter % 2) * PIC_W);
+	pixel_t src_top  = ((quarter / 2) * PIC_H);
+	uvram_offset_t vram_offset_src = vram_offset_shift(src_left, src_top);
+	uvram_offset_t vram_offset_dst = vram_offset_shift(PIC_LEFT, PIC_TOP);
+	vram_word_amount_t vram_x;
+	pixel_t y;
+
+	// ZUN quirk: This EGC-"accelerated" copy operation ends up performing a
+	// total of ((320 / 16) × 200 × 2) = 8000 VRAM page switches, which are
+	// everything but instant. Even the optimal assembly instructions for a
+	// *single* page switch, `MOV AL, (0|1)` followed by `OUT 0xA6, AL`, take
+	// 12 cycles on a 386 and 17 cycles on a 486, and ZUN adds the bloat of a
+	// standard function call on top of even that.
+	// Optimizations aside, using the EGC can't give you a better algorithm,
+	// as its tile registers are limited to 16 dots. Expanding to at least 32
+	// dots would have really been nice for ≥386 CPUs...
+	for(y = 0; y < PIC_H; y++) {
+		for(vram_x = 0; vram_x < (PIC_VRAM_W / EGC_REGISTER_SIZE); vram_x++) {
+			egc_temp_t d;
+
+			graph_accesspage_func(1);	d = egc_chunk(vram_offset_src);
+			graph_accesspage_func(0);	egc_chunk(vram_offset_dst) = d;
+
+			vram_offset_src += EGC_REGISTER_SIZE;
+			vram_offset_dst += EGC_REGISTER_SIZE;
+		}
+		vram_offset_src += (ROW_SIZE - PIC_VRAM_W);
+		vram_offset_dst += (ROW_SIZE - PIC_VRAM_W);
+	}
+	egc_off();
+}
+
+#define end_pic_show_and_delay(quarter, delay_frames) { \
+	end_pic_show(quarter); \
+	frame_delay(delay_frames); \
+}
+
+#define end_pic_white_in_and_delay(quarter, white_in_speed, delay_frames) { \
+	end_pic_show(quarter); \
+	grp_palette_white_in(white_in_speed); \
+	frame_delay(delay_frames); \
+}
+// --------
+
+// Text typing
+// -----------
+// Types [len] half- (ank) or full-width (kanji) characters of [str] onto the
+// given position in VRAM, with a frame delay between each character.
+
+static const unsigned int TYPE_DELAY = 3;
+static const uint4_t COL_TYPE = 15;
+static const int16_t TYPE_FX = (COL_TYPE | FX_WEIGHT_NORMAL);
+
+void graph_type_ank_n(
+	screen_x_t left, vram_y_t top, int len, const sshiftjis_t *str
+)
+{
+	for(int i = 0; i < len; i++) {
+		graph_printf_fx(
+			left + (i * GLYPH_HALF_W), top, TYPE_FX, "%c", str[i]
+		);
+		frame_delay(TYPE_DELAY);
+	}
+}
+
+void graph_type_kanji_n(
+	screen_x_t left, vram_y_t top, int len, const sshiftjis_kanji_t *str
+)
+{
+	for(int i = 0; i < len; i++) {
+		graph_printf_fx(
+			left + (i * GLYPH_FULL_W), top, TYPE_FX,
+			"%c%c", str[(2 * i) + 0], str[(2 * i) + 1]
+		);
+		frame_delay(TYPE_DELAY);
+	}
+}
+
+#define graph_type_ank(left, top, str) { \
+	graph_type_ank_n(left, top, (sizeof(str) - 1), str); \
+}
+#define graph_type_kanji(left, top, str) { \
+	graph_type_kanji_n(left, top, ((sizeof(str) - 1) / 2), str); \
+}
 
 // > rendering text to VRAM, where it wouldn't be limited to the byte grid
 // > still aligning it to the byte grid
@@ -43,6 +157,7 @@ inline void pic_caption_type_n(int line, size_t len, const char str[]) {
 	\
 	pic_caption_type_n(1, (sizeof(line_2) - 1 + incorrect_extra_w), line_2); \
 }
+// -----------
 
 /// Endings
 /// -------
@@ -67,17 +182,6 @@ void near boss_slides_animate(void);
 // route.
 void verdict_animate_and_regist(void);
 // -----------------------
-
-#define end_pic_show_and_delay(quarter, delay_frames) { \
-	end_pic_show(quarter); \
-	frame_delay(delay_frames); \
-}
-
-#define end_pic_white_in_and_delay(quarter, white_in_speed, delay_frames) { \
-	end_pic_show(quarter); \
-	grp_palette_white_in(white_in_speed); \
-	frame_delay(delay_frames); \
-}
 
 inline void end_done(void) {
 	mdrv2_bgm_fade_out_nonblock();
