@@ -54,7 +54,7 @@ void snap_col_4(void)
 		y = 0;
 		vram_offset = x;
 		while(y < RES_Y) {
-			columns[x][y] = VRAM_PLANE_B[vram_offset];
+			columns[x][y] = VRAM_CHUNK(B, vram_offset, 8);
 			y++;
 			vram_offset += ROW_SIZE;
 		}
