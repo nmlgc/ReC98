@@ -21,7 +21,6 @@
 
 Palette4 grp_palette;
 bool16 flag_palette_show = true;
-bool16 flag_grp_put = true;
 // ----
 
 // .PTN

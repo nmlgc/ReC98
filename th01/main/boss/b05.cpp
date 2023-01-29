@@ -156,7 +156,7 @@ void singyoku_load(void)
 
 	singyoku_ent_load();
 
-	grp_palette_load_show_sane("boss1.grp");
+	grp_palette_load_show("boss1.grp");
 	palette_copy(boss_post_defeat_palette, z_Palettes, col, comp);
 	stage_palette_set(boss_post_defeat_palette);
 

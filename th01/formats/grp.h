@@ -20,12 +20,9 @@
 extern Palette4 grp_palette;
 
 // Just loads [grp_palette] from the .GRP file with the given [fn], and updates
-// the hardware palette with it. Returns garbage.
-int grp_palette_load_show(const char *fn);
-
-// Sane version of grp_palette_load_show(). Returns 0 on success, 1 on file
+// the hardware palette with it. Returns `false` on success, `true` on file
 // opening failure.
-int grp_palette_load_show_sane(const char *fn);
+bool grp_palette_load_show(const char *fn);
 
 // Displays the .GRP image loaded from [fn] on the currently accessed VRAM
 // page, using the current hardware palette. Returns the return value from
