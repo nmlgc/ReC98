@@ -127,19 +127,6 @@ void ptn_put_8(screen_x_t left, vram_y_t top, int ptn_id);
 #define PTN_QUARTER_W 16
 #define PTN_QUARTER_H 16
 
-#define ptn_quarter_y(quarter) ((quarter & 2) ? PTN_QUARTER_H : 0)
-#define ptn_quarter_x(quarter) ((quarter & 1) ? PTN_QUARTER_W : 0)
-
-struct PTNQuarter
-{
-	pixel_t x, y;
-
-	void init(const int& quarter) {
-		y = ptn_quarter_y(quarter);
-		x = ptn_quarter_x(quarter);
-	}
-};
-
 // Displays the given [quarter] of the given [ptn_id] at (⌊left/8⌋*8, top),
 // diregarding its alpha plane.
 void ptn_put_quarter_noalpha_8(
