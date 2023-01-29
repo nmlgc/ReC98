@@ -18,7 +18,6 @@
 #include "th01/hardware/egc.h"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/graph.h"
-#include "th01/hardware/egcwave.hpp"
 #include "th01/hardware/scrollup.hpp"
 #include "th01/snd/mdrv2.h"
 #include "th01/formats/grc.hpp"
@@ -185,16 +184,6 @@ inline void ent_unput_and_put_both(
 inline void ent_put_both(CBossEntity& ent, elis_entity_cel_t cel) {
 	graph_accesspage_func(1); ent.unlock_put_image_lock_8(cel);
 	graph_accesspage_func(0); ent.unlock_put_image_lock_8(cel);
-}
-
-#define ent_wave_put(ent, cel, len, amp, phase) { \
-	ent.wave_put(ent.cur_left, ent.cur_top, cel, len, amp, phase); \
-}
-
-#define ent_wave_sloppy_unput(ent, len, amp, phase) { \
-	egc_wave_unput( \
-		ent.cur_left, ent.cur_top, len, amp, phase, ent.w_aligned(), ent.h \
-	); \
 }
 
 #define ent_attack_render() { \
@@ -2008,8 +1997,7 @@ void elis_main(void)
 						// here (not +), matching the blitting function below.
 						// Good that this function is so sloppy with all its
 						// word alignment that it actually makes no difference.
-						ent_wave_sloppy_unput(
-							ent_still_or_wave,
+						ent_still_or_wave.wave_sloppy_unput(
 							((entrance_frame - WAVE_INTERVAL) + 2),
 							(
 								(KEYFRAME_WAVE_DONE + WAVE_INTERVAL) -
@@ -2018,8 +2006,7 @@ void elis_main(void)
 							((entrance_frame - WAVE_INTERVAL) * 6)
 						);
 					}
-					ent_wave_put(
-						ent_still_or_wave,
+					ent_still_or_wave.wave_put(
 						C_STILL,
 						(entrance_frame + 2),
 						(KEYFRAME_WAVE_DONE - entrance_frame),
@@ -2029,8 +2016,7 @@ void elis_main(void)
 			} else if(entrance_frame == KEYFRAME_WAVE_DONE) {
 				// Phase should technically be (entrance_frame * 6), but...
 				// yeah, see above. No difference here either.
-				ent_wave_sloppy_unput(
-					ent_still_or_wave,
+				ent_still_or_wave.wave_sloppy_unput(
 					(entrance_frame + 2),
 					(KEYFRAME_WAVE_DONE - entrance_frame),
 					entrance_frame
@@ -2039,9 +2025,9 @@ void elis_main(void)
 				ent_still_or_wave.unlock_unput_put_image_lock_8(C_STILL);
 			} else if(entrance_frame == KEYFRAME_SLIGHT_RIPPLE) {
 				girl_bg_put(1);
-				ent_wave_put(ent_still_or_wave, C_STILL, 3, 8, 64);
+				ent_still_or_wave.wave_put(C_STILL, 3, 8, 64);
 			} else if(entrance_frame == KEYFRAME_SLIGHT_RIPPLE_DONE) {
-				ent_wave_sloppy_unput(ent_still_or_wave, 3, 8, 64);
+				ent_still_or_wave.wave_sloppy_unput(3, 8, 64);
 				// Unnecessary unblitting...
 				ent_still_or_wave.unlock_unput_put_image_lock_8(C_STILL);
 			} else if(entrance_frame > KEYFRAME_ENTRANCE_DONE) {

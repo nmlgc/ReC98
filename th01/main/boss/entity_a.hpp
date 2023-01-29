@@ -176,28 +176,17 @@ public:
 	) const;
 
 	// Blits [image] with a wave function applied to the starting X coordinate
-	// for each row, based at the given (left, top) point. Used for Elis'
+	// for each row, based at the entity's current position. Used for Elis'
 	// entrance animation.
 	// Calls put_1line() for each row, and clips the sprite accordingly.
-	void wave_put(
-		screen_x_t left,
-		vram_y_t top,
-		int image,
-		int len,
-		pixel_t amp,
-		int phase
-	) const;
+	void wave_put(int image, int len, pixel_t amp, int phase) const;
+
+	// Like wave_put(), but calls egc_copy_rect_1_to_0_16() for each line
+	// instead.
+	void wave_sloppy_unput(int len, pixel_t amp, int phase) const;
 
 	// Like wave_put(), but calls unput_and_put_1line() for each line instead.
-	// For a sloppy, EGC-accelerated unblitter function, see egc_wave_unput().
-	void wave_unput_and_put(
-		screen_x_t left,
-		vram_y_t top,
-		int image,
-		int len,
-		pixel_t amp,
-		int phase
-	) const;
+	void wave_unput_and_put(int image, int len, pixel_t amp, int phase) const;
 
 	// Tries to unblit the two sprites at (left_1, top) and (left_2, top) that
 	// were previously blitted with the given wave function using the EGC, but
