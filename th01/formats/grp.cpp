@@ -4,6 +4,7 @@
 #include "pc98.h"
 #include "master.hpp"
 #include "libs/piloadc/piloadc.hpp"
+#include "th01/hardware/frmdelay.h"
 #include "th01/hardware/palette.h"
 #include "th01/formats/grp.h"
 
@@ -13,6 +14,73 @@
 
 // *Not* offsetof(PiHeader, palette)!
 #define PI_PALETTE_OFFSET 0x12
+
+// Palette
+// -------
+
+#define TONE_STEP_PER_FRAME 5
+
+Palette4 grp_palette;
+static int grp_palette_tone = 100;
+
+void pascal grp_palette_settone(int tone)
+{
+	int col;
+	int comp;
+	int blend;
+
+	if(tone < 0) {
+		tone = 0;
+	} else if(tone > 200) {
+		tone = 200;
+	}
+	for(col = 1; col < COLOR_COUNT; col++) {
+		for(comp = 0; comp < COMPONENT_COUNT; comp++) {
+			if(tone > 100) {
+				blend = (RGB4::max() - grp_palette[col].v[comp]);
+				blend *= (tone - 100);
+				blend /= 100;
+				z_Palettes[col].v[comp] = (grp_palette[col].v[comp] + blend);
+			} else {
+				blend = grp_palette[col].v[comp];
+				blend *= (100 - tone);
+				blend /= 100;
+				z_Palettes[col].v[comp] = (-blend + grp_palette[col].v[comp]);
+			}
+		}
+	}
+	grp_palette_tone = tone;
+	z_palette_set_all_show(z_Palettes);
+}
+
+#define fade_loop(tone_start, direction, delay) \
+	int i; \
+	int tone = tone_start; \
+	for(i = 0; i < (100 / TONE_STEP_PER_FRAME); i++) { \
+		tone direction TONE_STEP_PER_FRAME; \
+		grp_palette_settone(tone); \
+		frame_delay(delay); \
+	}
+
+void pascal grp_palette_black_out(unsigned int frame_delay_per_step)
+{
+	fade_loop(100, -=, frame_delay_per_step);
+}
+
+void pascal grp_palette_black_in(unsigned int frame_delay_per_step)
+{
+	fade_loop(0, +=, frame_delay_per_step);
+}
+
+void pascal grp_palette_white_out(unsigned int frame_delay_per_step)
+{
+	fade_loop(100, +=, frame_delay_per_step);
+}
+
+void pascal grp_palette_white_in(unsigned int frame_delay_per_step)
+{
+	fade_loop(200, -=, frame_delay_per_step);
+}
 
 bool grp_palette_load(const char *fn)
 {
@@ -37,6 +105,7 @@ bool grp_palette_load_show(const char *fn)
 #endif
 	return false;
 }
+// -------
 
 int grp_put(const char *fn, grp_put_flag_t flag)
 {

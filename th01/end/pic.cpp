@@ -1,5 +1,7 @@
 #pragma option -O-
 
+#include "th01/hardware/egc.h"
+#include "th01/formats/grp.h"
 #include "th01/end/pic.hpp"
 
 void pascal end_pics_load_palette_show(const char *fn)

@@ -12,15 +12,11 @@
 #include "shiftjis.hpp"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/grp_text.hpp"
-#include "th01/hardware/palette.h"
 #include "th01/hardware/vsync.hpp"
-#include "th01/formats/grp.h"
 #include "th01/end/type.hpp"
 
 #define TYPE_DELAY 3
 static const int TYPE_FX = (COL_TYPE | FX_WEIGHT_NORMAL);
-
-#define TONE_STEP_PER_FRAME 5
 
 #include "th01/end/pic.cpp"
 
@@ -36,69 +32,6 @@ void frame_delay(unsigned int frames)
 		optimization_barrier();
 	}
 }
-
-/// .GRP palette fades
-/// ------------------
-
-void pascal grp_palette_settone(int tone)
-{
-	int col;
-	int comp;
-	int blend;
-
-	if(tone < 0) {
-		tone = 0;
-	} else if(tone > 200) {
-		tone = 200;
-	}
-	for(col = 1; col < COLOR_COUNT; col++) {
-		for(comp = 0; comp < COMPONENT_COUNT; comp++) {
-			if(tone > 100) {
-				blend = (RGB4::max() - grp_palette[col].v[comp]);
-				blend *= (tone - 100);
-				blend /= 100;
-				z_Palettes[col].v[comp] = (grp_palette[col].v[comp] + blend);
-			} else {
-				blend = grp_palette[col].v[comp];
-				blend *= (100 - tone);
-				blend /= 100;
-				z_Palettes[col].v[comp] = (-blend + grp_palette[col].v[comp]);
-			}
-		}
-	}
-	grp_palette_tone = tone;
-	z_palette_set_all_show(z_Palettes);
-}
-
-#define fade_loop(tone_start, direction, delay) \
-	int i; \
-	int tone = tone_start; \
-	for(i = 0; i < (100 / TONE_STEP_PER_FRAME); i++) { \
-		tone direction TONE_STEP_PER_FRAME; \
-		grp_palette_settone(tone); \
-		frame_delay(delay); \
-	}
-
-void pascal grp_palette_black_out(unsigned int frame_delay_per_step)
-{
-	fade_loop(100, -=, frame_delay_per_step);
-}
-
-void pascal grp_palette_black_in(unsigned int frame_delay_per_step)
-{
-	fade_loop(0, +=, frame_delay_per_step);
-}
-
-void pascal grp_palette_white_out(unsigned int frame_delay_per_step)
-{
-	fade_loop(100, +=, frame_delay_per_step);
-}
-
-void pascal grp_palette_white_in(unsigned int frame_delay_per_step)
-{
-	fade_loop(200, -=, frame_delay_per_step);
-}
-/// ------------------
 
 #pragma option -O-
 

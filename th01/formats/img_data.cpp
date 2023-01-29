@@ -16,12 +16,6 @@
 	dots8_t far *VRAM_PLANE_E;
 #endif
 
-// .GRP
-// ----
-
-Palette4 grp_palette;
-// ----
-
 // .PTN
 // ----
 
@@ -43,9 +37,6 @@ uint8_t planar_stream_count[GRX_COUNT];
 // .GRP again
 // ----------
 
-#if (BINARY == 'E')
-	int grp_palette_tone = 100;
-#endif
 int8_t* grp_buf;
 // ----------
 

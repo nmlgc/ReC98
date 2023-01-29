@@ -31,31 +31,31 @@ static const grp_put_flag_t GPF_PALETTE_SHOW = (1 << 0);
 static const grp_put_flag_t GPF_COLORKEY     = (1 << 1);
 // -----
 
+// Palette
+// -------
+
 // Always updated by any of the .GRP loading or blitting functions.
 extern Palette4 grp_palette;
+
+// Sets colors 1 - 15 (excluding color 0!) of z_Palettes and the hardware
+// palette to [grp_palette] at the given [tone].
+// The toning algorithm is equivalent to master.lib's palette_settone().
+void pascal grp_palette_settone(int tone);
+
+// Equivalent to the master.lib functions, but based on the [grp_palette].
+// Implemented using grp_palette_settone(), and thus ignoring color 0.
+void pascal grp_palette_black_out(unsigned int frame_delay_per_step);
+void pascal grp_palette_black_in(unsigned int frame_delay_per_step);
+void pascal grp_palette_white_out(unsigned int frame_delay_per_step);
+void pascal grp_palette_white_in(unsigned int frame_delay_per_step);
 
 // Just loads [grp_palette] from the .GRP file with the given [fn], and updates
 // the hardware palette with it. Returns `false` on success, `true` on file
 // opening failure.
 bool grp_palette_load_show(const char *fn);
+// -------
 
 // Displays the .GRP image loaded from [fn] on the currently accessed VRAM
 // page, applying the given flags. Returns the return value from PiLoad.
 int grp_put(const char *fn, grp_put_flag_t flag);
-
-#if (BINARY == 'E')
-	extern int grp_palette_tone;
-
-	// Sets colors 1 - 15 (excluding color 0!) of z_Palettes and the hardware
-	// palette to [grp_palette] at the given [tone].
-	// The toning algorithm is equivalent to master.lib's palette_settone().
-	void pascal grp_palette_settone(int tone);
-
-	// Equivalent to the master.lib functions, but based on the [grp_palette].
-	// Implemented using grp_palette_settone(), and thus ignoring color 0.
-	void pascal grp_palette_black_out(unsigned int frame_delay_per_step);
-	void pascal grp_palette_black_in(unsigned int frame_delay_per_step);
-	void pascal grp_palette_white_out(unsigned int frame_delay_per_step);
-	void pascal grp_palette_white_in(unsigned int frame_delay_per_step);
-#endif
 /// -----------
