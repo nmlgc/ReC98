@@ -50,9 +50,10 @@ int grp_put_colorkey(const char *fn);
 	void pascal grp_palette_settone(int tone);
 
 	// Equivalent to the master.lib functions, but based on the [grp_palette].
-	void pascal grp_palette_black_out(unsigned int frames);
-	void pascal grp_palette_black_in(unsigned int frames);
-	void pascal grp_palette_white_out(unsigned int frames);
-	void pascal grp_palette_white_in(unsigned int frames);
+	// Implemented using grp_palette_settone(), and thus ignoring color 0.
+	void pascal grp_palette_black_out(unsigned int frame_delay_per_step);
+	void pascal grp_palette_black_in(unsigned int frame_delay_per_step);
+	void pascal grp_palette_white_out(unsigned int frame_delay_per_step);
+	void pascal grp_palette_white_in(unsigned int frame_delay_per_step);
 #endif
 /// -----------

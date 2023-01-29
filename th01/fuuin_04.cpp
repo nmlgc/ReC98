@@ -79,24 +79,24 @@ void pascal grp_palette_settone(int tone)
 		frame_delay(delay); \
 	}
 
-void pascal grp_palette_black_out(unsigned int frames)
+void pascal grp_palette_black_out(unsigned int frame_delay_per_step)
 {
-	fade_loop(100, -=, frames);
+	fade_loop(100, -=, frame_delay_per_step);
 }
 
-void pascal grp_palette_black_in(unsigned int frames)
+void pascal grp_palette_black_in(unsigned int frame_delay_per_step)
 {
-	fade_loop(0, +=, frames);
+	fade_loop(0, +=, frame_delay_per_step);
 }
 
-void pascal grp_palette_white_out(unsigned int frames)
+void pascal grp_palette_white_out(unsigned int frame_delay_per_step)
 {
-	fade_loop(100, +=, frames);
+	fade_loop(100, +=, frame_delay_per_step);
 }
 
-void pascal grp_palette_white_in(unsigned int frames)
+void pascal grp_palette_white_in(unsigned int frame_delay_per_step)
 {
-	fade_loop(200, -=, frames);
+	fade_loop(200, -=, frame_delay_per_step);
 }
 /// ------------------
 
