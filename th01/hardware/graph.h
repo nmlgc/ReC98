@@ -110,21 +110,6 @@ void graph_r_lineloop_unput(
 );
 /// -----------------------
 
-/// Text
-/// ----
-
-// Puts the rightmost N [digits] of [num] onto the graphics RAM, using
-// full-width digits, and applying the given effect. (Consequently, the units
-// place will appear at x = [left] + (([digits] - 1) * GLYPH_FULL_W).)
-// Each digit is blitted separately; if [num_prev] is nonzero, the function
-// only blits the digits of [num] that differ from those in [num_prev].
-// Will put nothing if [put_leading_zeroes] is false and [num] is 0.
-void graph_putfwnum_fx(
-	screen_x_t left, vram_y_t top, int16_t col_and_fx, int digits,
-	long num, long num_prev, bool16 put_leading_zeroes
-);
-/// ----
-
 /// Blitting
 /// --------
 

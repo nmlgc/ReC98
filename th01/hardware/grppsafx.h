@@ -20,18 +20,6 @@
 #define WEIGHT_COUNT 4
 // ------------
 
-#if (GAME == 1)
-	// TH01-exclusive effects
-	// ----------------------
-	// Puts a black background behind the text. Useful if the text is rendered
-	// onto the back page and should then be 2✕ scaled onto the front page.
-	#define FX_CLEAR_BG 	0x200
-
-	#define FX_UNDERLINE 	0x400
-	#define FX_REVERSE  	0x800
-	// ----------------------
-#endif
-
 #if (GAME <= 3)
 	#define FX_WEIGHT_NORMAL (WEIGHT_NORMAL << 4)
 	#define FX_WEIGHT_HEAVY  (WEIGHT_HEAVY << 4)
@@ -46,18 +34,4 @@
 	void DEFCONV graph_putsa_fx(
 		screen_x_t left, vram_y_t top, int16_t col_and_fx, const shiftjis_t *str
 	);
-#endif
-
-#if (GAME == 1)
-	// Variadic version of graph_putsa_fx().
-	void graph_printf_fx(
-		screen_x_t left,
-		vram_y_t top,
-		int16_t col_and_fx,
-		const shiftjis_t *fmt,
-		...
-	);
-
-	// Calculates the width of [str], displayed with the given [fx].
-	int text_extent_fx(int fx, const shiftjis_t *str);
 #endif

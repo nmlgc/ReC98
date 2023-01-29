@@ -3,7 +3,7 @@
 #include "platform.h"
 #include "pc98.h"
 #include "shiftjis.hpp"
-#include "th01/hardware/grppsafx.h"
+#include "th01/hardware/grp_text.hpp"
 
 void graph_printf_fx(
 	screen_x_t left,
