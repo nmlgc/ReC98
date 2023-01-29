@@ -1,7 +1,5 @@
 #include <dos.h>
 #include <mem.h>
-#include <mbctype.h>
-#include <mbstring.h>
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
@@ -744,99 +742,6 @@ void graph_r_box(
 	graph_r_vline(left, top, bottom, col);
 	graph_r_vline(right, top, bottom, col);
 	graph_r_hline(left, right, bottom, col);
-}
-
-inline int fx_weight_from(int col_and_fx) {
-	return ((col_and_fx / 0x10) % 4);
-}
-
-inline pixel_t fx_spacing_from(int col_and_fx) {
-	return ((col_and_fx / 0x40) % 8);
-}
-
-pixel_t text_extent_fx(int col_and_fx, const shiftjis_t *str)
-{
-	register pixel_t ret = 0;
-	register pixel_t spacing = fx_spacing_from(col_and_fx);
-	while(*str) {
-		if(_ismbblead(str[0])) {
-			shiftjis_kanji_t codepoint = ((char)str[0] << 8) + str[0];
-			str++;
-			str++;
-			if(codepoint < 0x8540) {
-				ret += GLYPH_FULL_W;
-			} else if(codepoint > 0x869E) {
-				ret += GLYPH_FULL_W;
-			} else {
-				ret += GLYPH_HALF_W;
-			}
-		} else {
-			ret += GLYPH_HALF_W;
-			str++;
-		}
-		ret += spacing;
-	}
-	return ret - spacing;
-}
-
-#include "th01/hardware/grppsafx.cpp"
-
-void graph_putsa_fx(
-	screen_x_t left, vram_y_t top, int16_t col_and_fx, const shiftjis_t *str
-)
-{
-	register screen_x_t x = left;
-	jis_t codepoint;
-	dots_t(GLYPH_FULL_W) glyph_row;
-	dots8_t far *vram;
-	bool16 fullwidth;
-	int first_bit;
-	int weight = fx_weight_from(col_and_fx);
-	pixel_t spacing = fx_spacing_from(col_and_fx);
-	bool16 clear_bg = (col_and_fx & FX_CLEAR_BG);
-	bool16 underline = (col_and_fx & FX_UNDERLINE);
-	bool16 reverse = (col_and_fx & FX_REVERSE);
-	pixel_t w;
-	pixel_t line;
-	dot_rect_t(GLYPH_FULL_W, GLYPH_H) glyph;
-	register dots_t(GLYPH_FULL_W) glyph_row_tmp;
-
-	if(clear_bg) {
-		w = text_extent_fx(col_and_fx, str);
-		if(underline) {
-			z_grcg_boxfill(x, top, (x + w - 1), (top + GLYPH_H + 1), 0);
-			graph_r_hline(x, (x + w - 1), (top + GLYPH_H + 1), V_WHITE);
-		} else {
-			z_grcg_boxfill(x, top, (x + w - 1), (top + GLYPH_H - 1), 0);
-		}
-	} else if(underline) {
-		w = text_extent_fx(col_and_fx, str);
-		graph_r_hline(x, (x + w - 1), (top + GLYPH_H + 1), V_WHITE);
-	}
-
-	grcg_setcolor_rmw(col_and_fx);
-	outportb(0x68, 0xB); // CG ROM dot access
-
-	while(str[0]) {
-		set_vram_ptr(vram, first_bit, x, top);
-		get_glyph(glyph, codepoint, fullwidth, str, x, line);
-
-		for(line = 0; line < GLYPH_H; line++) {
-			apply_weight(glyph_row, glyph[line], glyph_row_tmp, weight);
-			if(reverse) {
-				if(fullwidth) {
-					glyph_row ^= 0xFFFF;
-				} else {
-					glyph_row ^= 0xFF00;
-				}
-			}
-			put_row_and_advance(vram, glyph_row, first_bit);
-		}
-		advance_left(x, fullwidth, spacing);
-	}
-
-	outportb(0x68, 0xA); // CG ROM code access
-	grcg_off_func();
 }
 
 void graph_move_byterect_interpage(

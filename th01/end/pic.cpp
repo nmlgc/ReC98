@@ -1,4 +1,5 @@
 #include "th01/hardware/egc.h"
+#include "th01/hardware/graph.h"
 #include "th01/formats/grp.h"
 #include "th01/end/pic.hpp"
 

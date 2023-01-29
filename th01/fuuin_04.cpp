@@ -8,7 +8,6 @@
 #include "planar.h"
 #include "master.hpp"
 #include "shiftjis.hpp"
-#include "th01/hardware/graph.h"
 #include "th01/hardware/grp_text.hpp"
 #include "th01/hardware/vsync.hpp"
 #include "th01/end/type.hpp"

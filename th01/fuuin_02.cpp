@@ -7,10 +7,7 @@
 #include "pc98.h"
 #include "pc98kbd.h"
 #include "master.hpp"
-#include "shiftjis.hpp"
 #include "th01/hardware/input.hpp"
-
-#include "th01/hardware/grppfnfx.cpp"
 
 // Input
 // -----

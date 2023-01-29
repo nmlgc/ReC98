@@ -108,8 +108,6 @@ inline screen_x_t col_left(screen_x_t first_left, int col) {
 void graph_copy_hud_row_0_to_1_8(screen_x_t left, vram_y_t top, pixel_t w);
 /// ---------
 
-#include "th01/hardware/grppfnfx.cpp"
-
 template <class T1, class T2> inline void fwnum_put(
 	screen_x_t left,
 	screen_y_t top,
