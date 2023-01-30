@@ -71,6 +71,10 @@
 uint8_t rank = CFG_RANK_DEFAULT;
 bgm_mode_t bgm_mode = CFG_BGM_MODE_DEFAULT;
 int8_t rem_bombs = CFG_CREDIT_BOMBS_DEFAULT;
+
+// TODO: Remove once the three binaries have been merged.
+end_sequence_t end_flag = ES_NONE;
+
 int rem_lives = 4;
 unsigned long frame_rand;
 uscore_t score = 0;
@@ -799,14 +803,19 @@ int __cdecl main(void)
 
 				if(game_cleared == true) {
 					graphics_free_redundant_and_incomplete();
-					resident->end_flag = static_cast<end_sequence_t>(
-						ES_MAKAI + route
-					);
 					resident->score = score;
 					if(score > resident->score_highest) {
 						resident->score_highest = score;
 					}
+
+					// frame_delay() abuses a non-ES_NONE [end_flag] to pick
+					// FUUIN.EXE delay semantics. Therefore, we only set it
+					// after the final delay.
 					frame_delay(120);
+					resident->end_flag = static_cast<end_sequence_t>(
+						ES_MAKAI + route
+					);
+
 					game_switch_binary();
 					execl(BINARY_END, BINARY_END, nullptr);
 				}

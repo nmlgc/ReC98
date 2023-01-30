@@ -36,6 +36,9 @@
 // Redundant copies of resident structure fields to static data
 // ------------------------------------------------------------
 
+// TODO: Remove once the three binaries have been merged.
+end_sequence_t end_flag = ES_NONE;
+
 unsigned long frame_rand;
 // ------------------------------------------------------------
 
