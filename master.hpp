@@ -635,10 +635,9 @@ void MASTER_RET text_hide(void);
 // VSync
 // -----
 
+// Incremented by 1 on every VSync interrupt. Can be manually reset to 0 to
+// simplify frame delay loops.
 extern unsigned volatile int vsync_Count1, vsync_Count2;
-
-#define vsync_reset1()	(vsync_Count1 = 0)
-#define vsync_reset2()	(vsync_Count2 = 0)
 
 void MASTER_RET vsync_start(void);
 void MASTER_RET vsync_end(void);

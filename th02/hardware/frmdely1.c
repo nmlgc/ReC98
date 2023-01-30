@@ -5,6 +5,6 @@
 
 void pascal frame_delay(int frames)
 {
-	vsync_reset1();
+	vsync_Count1 = 0;
 	while(vsync_Count1 < frames) {}
 }

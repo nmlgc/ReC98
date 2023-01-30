@@ -28,12 +28,12 @@ bool16 near playchar_menu(void);
 #ifdef X86REAL_H
 	// Synchronizes both VRAM pages within a 2-frame delay.
 	inline void sync_pages_and_delay() {
-		vsync_reset1();
+		vsync_Count1 = 0;
 		frame_delay(1);
 
 		graph_showpage(1);
 		graph_copy_page(0);
-		vsync_reset1();
+		vsync_Count1 = 0;
 		frame_delay(1);
 
 		graph_showpage(0);

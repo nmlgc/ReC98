@@ -33,8 +33,8 @@ static int8_t mouse_unused = 0;
 #include "th01/sprites/mousecur.csp"
 // -------------------
 
-int z_vsync_Count1;
-int z_vsync_Count2;
+volatile int z_vsync_Count1;
+volatile int z_vsync_Count2;
 static void interrupt (*vsync_callback_old)(...);
 static void (*vsync_callback)(void);
 
