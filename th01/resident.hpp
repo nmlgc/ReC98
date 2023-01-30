@@ -62,11 +62,7 @@ typedef struct {
 	pellet_speed_t pellet_speed;
 	unsigned long rand;
 	score_t score;
-
-	// ZUN bloat: Never actually read from. Even FUUIN.EXE, who does care
-	// about this value, manually derives it from [continues_per_scene].
-	int32_t continues_total;
-
+	int32_t unused_3;
 	uint16_t continues_per_scene[SCENE_COUNT];
 
 	// of the current scene, without the boss stage
@@ -114,8 +110,6 @@ extern int32_t continues_per_scene[SCENE_COUNT];
 extern score_t score_highest;
 
 inline void resident_continue_use(void) {
-	resident->continues_total++;
-	continues_total++;
 	resident->continues_per_scene[resident->stage_id / STAGES_PER_SCENE]++;
 }
 // ------------------------------------------------------------

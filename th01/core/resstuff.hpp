@@ -16,7 +16,6 @@ int resident_stuff_get(
 	int8_t& rem_bombs,
 	int8_t& credit_lives_extra,
 	unsigned long& rand,
-	int32_t& continues_total,
 	int& stage_id
 );
 

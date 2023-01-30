@@ -23,7 +23,6 @@ void resident_create_and_stuff_set(
 		sgm = ResData<resident_t>::create(RES_ID);
 		resident = sgm;
 		resident->stage_id = 0;
-		resident->continues_total = 0;
 	}
 	if(sgm) {
 		resident = sgm;
@@ -42,7 +41,6 @@ int resident_stuff_get(
 	int8_t& rem_bombs,
 	int8_t& credit_lives_extra,
 	unsigned long& rand,
-	int32_t& continues_total,
 	int& stage_id
 )
 {
@@ -54,7 +52,6 @@ int resident_stuff_get(
 		rem_bombs = resident->rem_bombs;
 		credit_lives_extra = resident->credit_lives_extra;
 		rand = resident->rand;
-		continues_total = resident->continues_total;
 		stage_id = resident->stage_id;
 		return 0;
 	}

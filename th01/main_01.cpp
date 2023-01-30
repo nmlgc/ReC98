@@ -75,7 +75,6 @@ int8_t credit_lives_extra = CFG_CREDIT_LIVES_EXTRA_DEFAULT;
 int rem_lives = 4;
 unsigned long frame_rand;
 uscore_t score = 0;
-long continues_total = 0;
 // ------------------------------------------------------------
 
 #include "th01/hardware/input_mf.cpp"
@@ -411,7 +410,6 @@ int __cdecl main(void)
 		bombs_extra_per_life_lost, // ZUN bloat: Supposed to be [rem_bombs]...
 		credit_lives_extra,
 		frame_rand,
-		continues_total,
 		stage_id
 	) == 1) {
 		error_resident_invalid();
@@ -540,7 +538,6 @@ int __cdecl main(void)
 		resident->stage_id = stage_id;
 
 		resident->score = score;
-		resident->continues_total = continues_total;
 		Pellets.unput_and_reset();
 		Shots.unput_and_reset();
 

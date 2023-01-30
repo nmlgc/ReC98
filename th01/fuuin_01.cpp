@@ -49,7 +49,6 @@ bool16 end_init(void)
 			random_seed = resident->rand;
 			credit_lives_extra = resident->credit_lives_extra;
 			resident->score = 0;
-			resident->continues_total = 0;
 			resident->score_highest = 0;
 		} else {
 			puts("ERROR : end_flag is not ture !!");
@@ -69,7 +68,6 @@ bool16 end_resident_clear(void)
 	if(sgm) {
 		resident_t* resident = sgm;
 		resident->score = 0;
-		resident->continues_total = 0;
 		resident->end_flag = ES_NONE;
 		resident->score_highest = 0;
 		for(i = 0; i < SCENE_COUNT; i++) {

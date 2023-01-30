@@ -245,7 +245,6 @@ bool16 continue_menu(void)
 				no_continue:
 				player_is_hit = false;
 				paused = false;
-				continues_total = 0;
 				mdrv2_bgm_stop();
 				return false;
 			}

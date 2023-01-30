@@ -364,7 +364,6 @@ void start_game(bool new_game)
 			resident->bonus_per_stage[i] = 0;
 		}
 		resident->score_highest = 0;
-		resident->continues_total = 0;
 		resident->end_flag = ES_NONE;
 	}
 

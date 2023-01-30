@@ -525,10 +525,6 @@ void totle_animate(int stage_num)
 	input_shot = true;
 	input_ok = true;
 
-	resident->continues_per_scene[(stage_num / STAGES_PER_SCENE) - 1] = (
-		continues_total
-	);
-
 	while((input_shot == true) && (input_ok == true)) {
 		input_sense(false);
 	}
