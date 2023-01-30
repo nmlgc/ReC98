@@ -86,7 +86,6 @@ extern resident_t far *resident;
 	extern uint8_t rank;
 #endif
 
-extern bgm_mode_t bgm_mode;
 extern int8_t rem_bombs;
 extern int8_t credit_lives_extra;
 extern end_sequence_t end_flag; /* ZUN symbol [Strings] */

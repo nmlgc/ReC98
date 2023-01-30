@@ -406,7 +406,6 @@ int __cdecl main(void)
 	}
 	if(resident_stuff_get(
 		rank,
-		bgm_mode,
 		bombs_extra_per_life_lost, // ZUN bloat: Supposed to be [rem_bombs]...
 		credit_lives_extra,
 		frame_rand,
@@ -469,8 +468,7 @@ int __cdecl main(void)
 		}
 	}
 
-	// ZUN bloat: Unnecessary cast.
-	if(static_cast<int>(bgm_mode) == BGM_MODE_MDRV2) {
+	if(resident->bgm_mode == BGM_MODE_MDRV2) {
 		mdrv2_enable_if_board_installed();
 	}
 	scene_id = (
@@ -500,7 +498,7 @@ int __cdecl main(void)
 	rem_bombs = resident->rem_bombs;
 	player_left = PLAYER_LEFT_START;
 
-	if((bgm_mode != BGM_MODE_OFF) && resident->snd_need_init) {
+	if((resident->bgm_mode != BGM_MODE_OFF) && resident->snd_need_init) {
 		mdrv2_bgm_load("init.mdt");
 		mdrv2_bgm_play();
 		mdrv2_se_load(SE_FN);
