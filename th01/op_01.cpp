@@ -182,10 +182,6 @@ int8_t input_right = false; // ACTUAL TYPE: bool
 bool quit = false;
 int8_t unused_con_arg_0 = 0;
 int8_t unused_con_arg_2 = 0;
-
-// ZUN bloat: Just call resident_free() in the one case it's actually needed.
-int8_t free_resident_structure_on_title_exit = false; // ACTUAL TYPE: bool
-
 int32_t unused_con_arg_1 = 0;
 
 inline void keygroup_sense(REGS& out, REGS& in, char group_id) {
@@ -332,20 +328,10 @@ void title_window_put(void)
 	graph_copy_accessed_page_to_other();
 }
 
-void title_exit(void)
-{
-	if(free_resident_structure_on_title_exit == true) {
-		resident_free();
-	}
-	key_end();
-}
-
 // Starting the game
 // -----------------
 
-static const pellet_speed_t PELLET_SPEED_DEFAULT = to_pellet_speed(-0.1);
-
-void start_game(void)
+void start_game(bool new_game)
 {
 	cfg_save();
 	resident_create_and_stuff_set(
@@ -355,65 +341,37 @@ void start_game(void)
 		opts.credit_lives_extra,
 		frame_rand
 	);
-	title_exit();
+	key_end();
 	mdrv2_bgm_fade_out_nonblock();
 	game_switch_binary();
 
-	if(debug_mode == 2) {
+	if(!new_game || (debug_mode == 0)) {
+		resident->debug_mode = DM_OFF;
+	} else if(debug_mode == 2) {
 		resident->debug_mode = DM_TEST;
 	} else if(debug_mode == 3) {
 		resident->debug_mode = DM_FULL;
-	} else if(debug_mode == 0) {
-		resident->debug_mode = DM_OFF;
 	}
 
-	resident->route = ROUTE_MAKAI;
-	resident->stage_id = 0;
 	resident->rem_lives = (opts.credit_lives_extra + 2);
 	resident->point_value = 0;
 
-	for(int i = 0; i < SCENE_COUNT; i++) {
-		resident->continues_per_scene[i] = 0;
-		resident->bonus_per_stage[i] = 0;
+	if(new_game) {
+		resident->route = ROUTE_MAKAI;
+		resident->stage_id = 0;
+		for(int i = 0; i < SCENE_COUNT; i++) {
+			resident->continues_per_scene[i] = 0;
+			resident->bonus_per_stage[i] = 0;
+		}
+		resident->score_highest = 0;
+		resident->continues_total = 0;
+		resident->end_flag = ES_NONE;
 	}
 
-	resident->score_highest = 0;
-	resident->continues_total = 0;
-	resident->end_flag = ES_NONE;
-	resident->unused_1 = 0;
 	resident->snd_need_init = true;
-	resident->pellet_speed = PELLET_SPEED_DEFAULT;
+	resident->pellet_speed = to_pellet_speed(-0.1);
 
 	execl(BINARY_MAIN, BINARY_MAIN, nullptr);
-}
-
-void start_continue(void)
-{
-	cfg_save();
-	resident_create_and_stuff_set(
-		opts.rank,
-		opts.bgm_mode,
-		opts.credit_bombs,
-		opts.credit_lives_extra,
-		frame_rand
-	);
-
-	if(resident->stage_id == 0) {
-		_ES = FP_SEG(cfg_load); // ZUN bloat: Yes, no point to this at all
-	}
-
-	title_exit();
-	mdrv2_bgm_fade_out_nonblock();
-	game_switch_binary();
-
-	resident->debug_mode = DM_OFF;
-	resident->snd_need_init = true;
-	resident->rem_lives = (opts.credit_lives_extra + 2);
-	resident->unused_1 = 0;
-	resident->pellet_speed = PELLET_SPEED_DEFAULT;
-	resident->point_value = 0;
-
-	execl(BINARY_MAIN_CAPS, BINARY_MAIN_CAPS, nullptr);
 }
 // -----------------
 
@@ -591,10 +549,10 @@ void main_update_and_render(void)
 	if(input_ok || input_shot) {
 		switch(menu_sel) {
 		case 0:
-			start_game();
+			start_game(true);
 			break;
 		case 1:
-			start_continue();
+			start_game(false);
 			break;
 		case 2:
 			menu_id = MID_OPTION;
@@ -856,9 +814,9 @@ void __cdecl main(int argc, const char *argv[])
 		frame_delay(1);
 	}
 	cfg_save();
-	free_resident_structure_on_title_exit = true;
 	mdrv2_bgm_stop();
-	title_exit();
+	key_end();
+	resident_free();
 
 	graph_accesspage_func(1);	z_graph_clear();
 	graph_accesspage_func(0);	z_graph_clear();
