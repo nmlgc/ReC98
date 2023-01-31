@@ -26,11 +26,11 @@ int CPlayerAnim::load(const char fn[PF_FN_LEN])
 		planes.R[i] = new dots8_t[plane_size];
 		planes.G[i] = new dots8_t[plane_size];
 		planes.E[i] = new dots8_t[plane_size];
-		arc_file_get(reinterpret_cast<char *>(alpha[i]), plane_size);
-		arc_file_get(reinterpret_cast<char *>(planes.B[i]), plane_size);
-		arc_file_get(reinterpret_cast<char *>(planes.R[i]), plane_size);
-		arc_file_get(reinterpret_cast<char *>(planes.G[i]), plane_size);
-		arc_file_get(reinterpret_cast<char *>(planes.E[i]), plane_size);
+		arc_file_get(reinterpret_cast<uint8_t *>(alpha[i]), plane_size);
+		arc_file_get(reinterpret_cast<uint8_t *>(planes.B[i]), plane_size);
+		arc_file_get(reinterpret_cast<uint8_t *>(planes.R[i]), plane_size);
+		arc_file_get(reinterpret_cast<uint8_t *>(planes.G[i]), plane_size);
+		arc_file_get(reinterpret_cast<uint8_t *>(planes.E[i]), plane_size);
 
 		for(bos_p = 0; bos_p < plane_size; bos_p++) {
 			alpha[i][bos_p] = ~alpha[i][bos_p];

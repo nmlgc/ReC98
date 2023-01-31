@@ -64,9 +64,9 @@ typedef struct {
 
 	// ZUN bloat: Never actually read from. Even FUUIN.EXE, who does care
 	// about this value, manually derives it from [continues_per_scene].
-	long continues_total;
+	int32_t continues_total;
 
-	unsigned int continues_per_scene[SCENE_COUNT];
+	uint16_t continues_per_scene[SCENE_COUNT];
 
 	// of the current scene, without the boss stage
 	long bonus_per_stage[STAGES_PER_SCENE - 1];
@@ -77,7 +77,7 @@ typedef struct {
 	uint16_t point_value;
 } resident_t;
 
-extern long continues_total;
+extern int32_t continues_total;
 
 extern int8_t route; // ACTUAL TYPE: route_t
 extern resident_t far *resident;

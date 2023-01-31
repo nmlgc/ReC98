@@ -791,13 +791,13 @@ void graph_putsa_fx(
 	jis_t codepoint;
 	dots_t(GLYPH_FULL_W) glyph_row;
 	dots8_t far *vram;
-	int fullwidth;
+	bool16 fullwidth;
 	int first_bit;
 	int weight = fx_weight_from(col_and_fx);
 	pixel_t spacing = fx_spacing_from(col_and_fx);
-	int clear_bg = (col_and_fx & FX_CLEAR_BG);
-	int underline = (col_and_fx & FX_UNDERLINE);
-	int reverse = (col_and_fx & FX_REVERSE);
+	bool16 clear_bg = (col_and_fx & FX_CLEAR_BG);
+	bool16 underline = (col_and_fx & FX_UNDERLINE);
+	bool16 reverse = (col_and_fx & FX_REVERSE);
 	pixel_t w;
 	pixel_t line;
 	dot_rect_t(GLYPH_FULL_W, GLYPH_H) glyph;

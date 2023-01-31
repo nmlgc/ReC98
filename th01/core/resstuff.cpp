@@ -44,7 +44,7 @@ int resident_stuff_get(
 	int8_t& bombs,
 	int8_t& start_lives_extra,
 	unsigned long& rand,
-	long& continues_total,
+	int32_t& continues_total,
 	int& stage_id
 )
 {

@@ -38,7 +38,7 @@
 				 */ \
 				glyph[line] = (inportb(0xA9) << 8); \
 			} \
-			fullwidth = 0; \
+			fullwidth = false; \
 		} else { \
 			break; \
 		} \
@@ -49,7 +49,7 @@
 			outportb(0xA5, line); \
 			glyph[line] += inportb(0xA9); \
 		} \
-		fullwidth = 1; \
+		fullwidth = true; \
 	} else { \
 		break; \
 	}

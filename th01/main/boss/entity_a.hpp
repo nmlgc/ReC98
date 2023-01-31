@@ -38,7 +38,7 @@ public:
 
 	int zero_2;
 	char zero_3;
-	unsigned char bos_slot;
+	uint8_t bos_slot;
 
 	CBossEntity() {
 		loading = false;

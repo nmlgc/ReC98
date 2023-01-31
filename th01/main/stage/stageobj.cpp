@@ -263,7 +263,7 @@ void stageobj_bgs_snap_from_1_8(screen_x_t left, vram_y_t top, int slot)
 	graph_accesspage_func(0);
 }
 
-void scene_init_and_load(unsigned char id)
+void scene_init_and_load(uint8_t id)
 {
 	stagedat_header_t header;
 	char scene_fn[15] = "stage .dat";

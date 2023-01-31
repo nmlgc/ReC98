@@ -27,4 +27,4 @@ void stage_entrance(int stage_id, const char* bg_fn, bool16 clear_vram_page_0);
 // Loads the contents of STAGE[id].DAT, and sets [default_grp_fn] and
 // [default_bgm_fn] accordingly. [id] must be ≥0 and ≤9.
 // (Defined in stageobj.cpp.)
-void scene_init_and_load(unsigned char id);
+void scene_init_and_load(uint8_t id);

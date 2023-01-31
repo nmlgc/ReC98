@@ -4,7 +4,7 @@
 #include "th01/hardware/input.hpp"
 
 static bool input_unused = false; // ZUN bloat
-bool input_lr = false;
+uint8_t input_lr = INPUT_NONE;
 bool input_mem_enter = false;
 bool input_mem_leave = false;
 bool input_shot = false;

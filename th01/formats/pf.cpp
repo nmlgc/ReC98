@@ -16,8 +16,8 @@
 #define CACHE_SIZE 0x100
 
 typedef struct {
-	char type[2]; // •• if RLE-compressed
-	char aux; // Always 3, unused
+	uint8_t type[2]; // •• if RLE-compressed
+	int8_t aux; // Always 3, unused
 	char fn[PF_FN_LEN];
 	int32_t packsize;
 	int32_t orgsize;
@@ -29,14 +29,14 @@ pf_header_t *arc_pfs;
 pf_header_t *file_pf;
 int cur_file_id;
 int arc_pf_count;
-char file_compressed;
-char arc_key;
+bool file_compressed;
+uint8_t arc_key;
 
-char *file_data;
-char *cache;
+uint8_t *file_data;
+uint8_t *cache;
 char arc_fn[PF_FN_LEN];
-unsigned int file_pos;
-unsigned int cache_bytes_read;
+size_t file_pos;
+size_t cache_bytes_read;
 
 void pascal arc_load(const char fn[PF_FN_LEN])
 {
@@ -71,22 +71,22 @@ void arc_free(void)
 	delete[] arc_pfs;
 }
 
-int pascal near at_pos_of(const char fn[PF_FN_LEN])
+bool16 pascal near at_pos_of(const char fn[PF_FN_LEN])
 {
 	int i;
 	for(i = 0; i < PF_FN_LEN; i++) {
 		if(arc_pfs[cur_file_id].fn[i] != toupper(fn[i])) {
-			return 0;
+			return false;
 		}
 		if(fn[i] == 0) {
-			return 1;
+			return true;
 		}
 	}
-	return 0;
+	return false;
 }
 
 // Get it? En*crap*tion?
-void pascal near crapt(char *buf, size_t size)
+void pascal near crapt(uint8_t *buf, size_t size)
 {
 	size_t i;
 	for(i = 0; i < size; i++) {
@@ -94,9 +94,9 @@ void pascal near crapt(char *buf, size_t size)
 	}
 }
 
-unsigned char pascal near cache_next(void)
+uint8_t pascal near cache_next(void)
 {
-	char b;
+	uint8_t b;
 	if(cache_bytes_read == 0) {
 		file_read(cache, CACHE_SIZE);
 	}
@@ -109,11 +109,11 @@ unsigned char pascal near cache_next(void)
 	return b;
 }
 
-void pascal near unrle(unsigned int input_size)
+void pascal near unrle(size_t input_size)
 {
-	unsigned char var_1;
-	unsigned char runs;
-	unsigned char var_3;
+	uint8_t var_1;
+	uint8_t runs;
+	uint8_t var_3;
 	long bytes_read = 0;
 	long bytes_written = 0;
 	#define NEXT() \
@@ -148,7 +148,7 @@ void pascal near unrle(unsigned int input_size)
 
 void pascal arc_file_load(const char fn[PF_FN_LEN])
 {
-	const char rle_type[] = {"••"};
+	const uint8_t rle_type[] = {"••"};
 	int i;
 
 	cur_file_id = 0;
@@ -162,14 +162,14 @@ void pascal arc_file_load(const char fn[PF_FN_LEN])
 	file_ropen(arc_fn);
 	file_seek(file_pf->offset, SEEK_SET);
 	if(file_pf->type[0] == rle_type[0] && file_pf->type[1] == rle_type[1]) {
-		file_compressed = 1;
+		file_compressed = true;
 	} else {
-		file_compressed = 0;
+		file_compressed = false;
 	}
 	file_pos = 0;
-	file_data = new char[file_pf->orgsize];
+	file_data = new uint8_t[file_pf->orgsize];
 	if(file_compressed) {
-		cache = new char[CACHE_SIZE];
+		cache = new uint8_t[CACHE_SIZE];
 		cache_bytes_read = 0;
 		unrle(file_pf->packsize);
 		delete[] cache;
@@ -180,9 +180,9 @@ void pascal arc_file_load(const char fn[PF_FN_LEN])
 	file_close();
 }
 
-void pascal arc_file_get(char *buf, size_t size)
+void pascal arc_file_get(uint8_t *buf, size_t size)
 {
-	char *p = buf;
+	uint8_t *p = buf;
 	size_t i;
 	for(i = 0; i < size; i++) {
 		if(file_pos >= file_pf->orgsize) {
@@ -193,7 +193,7 @@ void pascal arc_file_get(char *buf, size_t size)
 	}
 }
 
-void pascal arc_file_seek(char pos)
+void pascal arc_file_seek(int8_t pos)
 {
 	file_pos = pos;
 }

@@ -84,14 +84,14 @@ int CBossEntity::load_inner(const char fn[PF_FN_LEN], int slot)
 	if(!bos_header_only) {
 		bos_entity_free(slot);
 		for(int i = 0; bos_image_count > i; i++) {
-			#define image bos_entity_images[slot].image[i]
-			bos_image_new(image, plane_size);
-			arc_file_get(reinterpret_cast<char *>(image.alpha), plane_size);
-			arc_file_get(reinterpret_cast<char *>(image.planes.B), plane_size);
-			arc_file_get(reinterpret_cast<char *>(image.planes.R), plane_size);
-			arc_file_get(reinterpret_cast<char *>(image.planes.G), plane_size);
-			arc_file_get(reinterpret_cast<char *>(image.planes.E), plane_size);
-			#undef image
+			#define img bos_entity_images[slot].image[i]
+			bos_image_new(img, plane_size);
+			arc_file_get(reinterpret_cast<uint8_t *>(img.alpha), plane_size);
+			arc_file_get(reinterpret_cast<uint8_t *>(img.planes.B), plane_size);
+			arc_file_get(reinterpret_cast<uint8_t *>(img.planes.R), plane_size);
+			arc_file_get(reinterpret_cast<uint8_t *>(img.planes.G), plane_size);
+			arc_file_get(reinterpret_cast<uint8_t *>(img.planes.E), plane_size);
+			#undef img
 		}
 	}
 
@@ -620,17 +620,17 @@ int CBossAnim::load(const char fn[PF_FN_LEN], int slot)
 	if(!bos_header_only) {
 		bos_anim_free(slot);
 		for(int i = 0; bos_image_count > i; i++) {
-			#define image bos_anim_images[slot].image[i]
-			bos_image_new(image, plane_size);
-			arc_file_get(reinterpret_cast<char *>(image.alpha), plane_size);
+			#define img bos_anim_images[slot].image[i]
+			bos_image_new(img, plane_size);
+			arc_file_get(reinterpret_cast<uint8_t *>(img.alpha), plane_size);
 			for(int bos_p = 0; bos_p < (plane_size / 2); bos_p++) {
-				image.alpha[bos_p] = ~image.alpha[bos_p];
+				img.alpha[bos_p] = ~img.alpha[bos_p];
 			}
-			arc_file_get(reinterpret_cast<char *>(image.planes.B), plane_size);
-			arc_file_get(reinterpret_cast<char *>(image.planes.R), plane_size);
-			arc_file_get(reinterpret_cast<char *>(image.planes.G), plane_size);
-			arc_file_get(reinterpret_cast<char *>(image.planes.E), plane_size);
-			#undef image
+			arc_file_get(reinterpret_cast<uint8_t *>(img.planes.B), plane_size);
+			arc_file_get(reinterpret_cast<uint8_t *>(img.planes.R), plane_size);
+			arc_file_get(reinterpret_cast<uint8_t *>(img.planes.G), plane_size);
+			arc_file_get(reinterpret_cast<uint8_t *>(img.planes.E), plane_size);
+			#undef img
 		}
 	}
 
