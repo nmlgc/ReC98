@@ -3,6 +3,9 @@
 // These are only really correct for bumper sprites, which have a visual width
 // of exactly 24×24, but are used for cards and portals as well.
 
+static const int STAGEOBJ_W = PTN_W;
+static const int STAGEOBJ_H = PTN_H;
+
 #ifdef ORB_HPP
 	static const pixel_t STAGEOBJ_ORB_DISTANCE_X = (
 		((STAGEOBJ_W * 3) / 8) + (ORB_VISUAL_W / 2)

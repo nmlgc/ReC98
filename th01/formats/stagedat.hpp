@@ -1,11 +1,15 @@
 /// STAGE?.DAT format, describing the object layout of *all* stages in a scene
 /// --------------------------------------------------------------------------
 
-static const int STAGEOBJ_W = PTN_W;
-static const int STAGEOBJ_H = PTN_H;
-
-#define STAGEOBJS_X (PLAYFIELD_W / STAGEOBJ_W)
-#define STAGEOBJS_Y (PLAYFIELD_H / STAGEOBJ_H)
+// We *don't* define these in terms of the playfield width and height, for two
+// reasons:
+// 1) Having a file in /formats/ depend on a constant from /main/ breaks the
+//    subsystem hierarchy.
+// 2) It's definitely imaginable to mod playfield metrics independent of stage
+//    object counts or vice versa. In such a case, we shouldn't break
+//    compatibility with the original data files by default.
+#define STAGEOBJS_X 20
+#define STAGEOBJS_Y 10
 
 static const int STAGEOBJS_COUNT = (STAGEOBJS_X * STAGEOBJS_Y);
 
