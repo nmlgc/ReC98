@@ -4,7 +4,6 @@
  */
 
 #include <mem.h>
-#include <process.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "platform.h"
@@ -18,6 +17,7 @@
 #include "th01/rank.h"
 #include "th01/resident.hpp"
 #include "th01/math/clamp.hpp"
+#include "th01/core/entry.hpp"
 #include "th01/core/initexit.hpp"
 #include "th01/core/resstuff.hpp"
 #include "th01/hardware/egc.h"
@@ -32,15 +32,6 @@
 #include "th01/shiftjis/debug.hpp"
 #include "th01/shiftjis/fns.hpp"
 #include "th01/shiftjis/op.hpp"
-
-// Redundant copies of resident structure fields to static data
-// ------------------------------------------------------------
-
-// TODO: Remove once the three binaries have been merged.
-end_sequence_t end_flag = ES_NONE;
-
-unsigned long frame_rand;
-// ------------------------------------------------------------
 
 // Unused. The only thing on the main menu with this color is the "1996 ZUN"
 // text at the bottom... probably part of an effect that we never got to see.
@@ -175,8 +166,6 @@ static const int MUSIC_CHOICE_COUNT = 2;
 
 int8_t menu_sel = 0;
 int8_t input_left = false; // ACTUAL TYPE: bool
-bool input_ok = false;
-bool input_shot = false;
 bool input_cancel = false;
 
 int8_t menu_id = MID_MAIN; // ACTUAL TYPE: menu_id_t
@@ -346,7 +335,6 @@ void start_game(bool new_game)
 	);
 	key_end();
 	mdrv2_bgm_fade_out_nonblock();
-	game_switch_binary();
 
 	if(!new_game || (debug_mode == 0)) {
 		resident->debug_mode = DM_OFF;
@@ -373,7 +361,7 @@ void start_game(bool new_game)
 	resident->snd_need_init = true;
 	resident->pellet_speed = to_pellet_speed(-0.1);
 
-	execl(BINARY_MAIN, BINARY_MAIN, nullptr);
+	game_switch_binary(EP_MAIN);
 }
 // -----------------
 
@@ -695,7 +683,7 @@ void music_update_and_render(void)
 	}
 }
 
-void __cdecl main(int argc, const char *argv[])
+int main_op(int argc, const char *argv[])
 {
 	int bgm_mode_cur = 0;
 	int hit_key_frames = 0;
@@ -708,7 +696,7 @@ void __cdecl main(int argc, const char *argv[])
 
 	if(!mdrv2_resident()) {
 		printf(ERROR_RESIDENT_INVALID);
-		return;
+		return 1;
 	}
 
 	unused_con_arg_0 = 0;
@@ -826,5 +814,7 @@ void __cdecl main(int argc, const char *argv[])
 	game_exit();
 	mdrv2_bgm_stop();
 	printf(GOODBYE);
+
+	return 0;
 }
 /// ---------

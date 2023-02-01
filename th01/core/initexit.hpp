@@ -5,6 +5,6 @@ void game_init(void);
 // game.
 void game_exit(void);
 
-// Clears all text and fades out the graphics layer to prepare for executing
-// another binary. (Yes, it's effectively the same as game_exit().)
-void game_switch_binary(void);
+// Clears all text, fades out the graphics layer, and executes another binary.
+// (Mostly the same as game_exit().)
+void game_switch_binary(entrypoint_t entrypoint);

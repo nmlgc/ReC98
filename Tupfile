@@ -92,9 +92,7 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 : zuncom\\zun_stub.asm |> $(AS) zuncom\%b %o |> bin\\zuncom\\%B.obj
 : zuncom\\cstmstub.asm |> $(AS) zuncom\%b %o |> bin\\zuncom\\%B.obj
 
-: th01_op.asm |> !as |> bin\\th01\\op.obj
-: th01_reiiden.asm |> !as |> bin\\th01\\reiiden.obj
-: th01_fuuin.asm |> !as |> bin\\th01\\fuuin.obj
+: th01.asm |> !as |> bin\\th01\\th01.obj
 
 : th02_zuninit.asm |> !as |> bin\\th02\\zuninit.obj
 : th02_op.asm |> !as |> bin\\th02\\op.obj

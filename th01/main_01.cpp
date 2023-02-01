@@ -19,6 +19,7 @@
 #include "th01/rank.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
+#include "th01/core/entry.hpp"
 #include "th01/core/initexit.hpp"
 #include "th01/core/resstuff.hpp"
 #include "th01/math/area.hpp"
@@ -68,16 +69,11 @@
 // Redundant copies of resident structure fields to static data
 // ------------------------------------------------------------
 
-uint8_t rank = CFG_RANK_DEFAULT;
+uint8_t rank;
 bgm_mode_t bgm_mode = CFG_BGM_MODE_DEFAULT;
 int8_t rem_bombs = CFG_CREDIT_BOMBS_DEFAULT;
-
-// TODO: Remove once the three binaries have been merged.
-end_sequence_t end_flag = ES_NONE;
-
 int rem_lives = 4;
 unsigned long frame_rand;
-uscore_t score = 0;
 // ------------------------------------------------------------
 
 struct {
@@ -274,7 +270,7 @@ inline void debug_startup_delay() {
 char default_grp_fn[15] = "ST .GRP";
 char default_bgm_fn[15] = "ST .MDT";
 
-int __cdecl main(void)
+int main_main(int, const char *[])
 {
 	bool stage_wait_for_shot_to_begin;
 
@@ -701,8 +697,7 @@ int __cdecl main(void)
 						ES_MAKAI + route
 					);
 
-					game_switch_binary();
-					execl(BINARY_END, BINARY_END, nullptr);
+					game_switch_binary(EP_CUTSCENE);
 				}
 
 				// ZUN quirk: Placing this after the [game_cleared] branch robs
@@ -766,8 +761,7 @@ int __cdecl main(void)
 				resident->snd_need_init = true;
 				mdrv2_bgm_fade_out_nonblock();
 				resident->rem_bombs = rem_bombs;
-				game_switch_binary();
-				execl(BINARY_MAIN, BINARY_MAIN, nullptr);
+				game_switch_binary(EP_MAIN);
 			}
 			orb_in_portal = false;
 			if(boss_id == BID_NONE) {
@@ -816,9 +810,8 @@ int __cdecl main(void)
 op:
 	graphics_free_redundant_and_incomplete();
 	boss_free();
-	game_switch_binary();
 	key_end();
 	arc_free();
-	execl(BINARY_OP, BINARY_OP, nullptr);
+	game_switch_binary(EP_OP);
 	return 0;
 }

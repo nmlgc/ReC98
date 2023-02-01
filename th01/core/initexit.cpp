@@ -11,6 +11,7 @@
 #include "th01/hardware/palette.h"
 #include "th01/hardware/vsync.hpp"
 #include "th01/hardware/ztext.hpp"
+#include "th01/core/entry.hpp"
 #include "th01/core/initexit.hpp"
 
 static bool game_initialized = false;
@@ -46,7 +47,7 @@ void game_exit(void)
 	game_exit_inner();
 }
 
-void game_switch_binary(void)
+void game_switch_binary(entrypoint_t entrypoint)
 {
 	if(game_initialized != true) {
 		return;
@@ -57,6 +58,7 @@ void game_switch_binary(void)
 	z_text_clear();
 	z_text_show();
 	game_initialized = false;
+	entrypoint_exec(entrypoint);
 }
 
 void game_exit_inner(void)

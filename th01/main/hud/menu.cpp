@@ -238,9 +238,8 @@ bool16 continue_menu(void)
 		if((input_ok == true) || (input_shot == true)) {
 			if(sel == true) {
 				resident->snd_need_init = false;
-				game_switch_binary();
 				resident->point_value = 0;
-				execl(BINARY_MAIN_CAPS, BINARY_MAIN_CAPS, nullptr);
+				game_switch_binary(EP_MAIN);
 			} else {
 				no_continue:
 				player_is_hit = false;

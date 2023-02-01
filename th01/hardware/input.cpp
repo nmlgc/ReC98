@@ -2,6 +2,7 @@
 #include "pc98.h"
 #include "pc98kbd.h"
 #include "master.hpp"
+#include "th01/resident.hpp"
 #include "th01/hardware/input.hpp"
 #include "th01/main/debug.hpp"
 #include "th01/main/player/bomb.hpp"
@@ -23,7 +24,6 @@ bool input_down = false;
 // -----
 
 inline void bomb_doubletap_update(uint8_t& pressed, uint8_t& other) {
-	#if (BINARY == 'M')
 	if(bomb_doubletap_frames < BOMB_DOUBLETAP_WINDOW) {
 		pressed++;
 	} else {
@@ -31,7 +31,6 @@ inline void bomb_doubletap_update(uint8_t& pressed, uint8_t& other) {
 		pressed = 1;
 		other = 0;
 	}
-	#endif
 }
 
 void input_sense(bool16 reset_repeat)
@@ -63,19 +62,19 @@ void input_sense(bool16 reset_repeat)
 
 	group_1 = key_sense(7);
 	group_2 = key_sense(5);
-	#if (BINARY == 'E')
+	if(end_flag != ES_NONE) {
 		group_3 = 0;
 		group_4 = 0;
-	#else
+	} else {
 		group_3 = key_sense(8);
 		group_4 = key_sense(9);
-	#endif
+	}
 	group_1 |= key_sense(7);
 	group_2 |= key_sense(5);
-	#if (BINARY == 'M')
+	if(end_flag == ES_NONE) {
 		group_3 |= key_sense(8);
 		group_4 |= key_sense(9);
-	#endif
+	}
 
 	input_onchange_bool_2(0, 8,
 		input_up, (group_1 & K7_ARROW_UP), (group_3 & K8_NUM_8)
@@ -113,8 +112,7 @@ void input_sense(bool16 reset_repeat)
 		bomb_doubletap_shot = 0;
 	}
 
-	#if (BINARY == 'M')
-	if(mode_test) {
+	if((end_flag == ES_NONE) && mode_test) {
 		group_1 = key_sense(6);
 		group_1 |= key_sense(6);
 
@@ -142,7 +140,6 @@ void input_sense(bool16 reset_repeat)
 			input_mem_leave = false;
 		});
 	}
-	#endif
 }
 
 void input_reset_sense(void)

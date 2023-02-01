@@ -3,15 +3,14 @@
  * Code segment #1 of TH01's FUUIN.EXE
  */
 
-#include <process.h>
 #include <stdio.h>
 #include "platform.h"
 #include "master.hpp"
 #include "th01/resident.hpp"
+#include "th01/core/entry.hpp"
 #include "th01/core/initexit.hpp"
 #include "th01/end/end.hpp"
 #include "th01/snd/mdrv2.h"
-#include "th01/shiftjis/fns.hpp"
 
 // Resident structure fields
 // -------------------------
@@ -23,8 +22,7 @@ score_t score_highest = 100000;
 int32_t continues_total;
 int32_t continues_per_scene[SCENE_COUNT];
 int8_t credit_lives_extra;
-end_sequence_t end_flag;
-uint8_t rank;
+end_sequence_t end_flag = ES_NONE;
 // -------------------------
 
 bool16 end_init(void)
@@ -78,10 +76,10 @@ bool16 end_resident_clear(void)
 	return true;
 }
 
-void __cdecl main(int argc, const char *argv[])
+int main_cutscene(int argc, const char *argv[])
 {
 	if(!mdrv2_resident()) {
-		return;
+		return 1;
 	}
 
 	// Should really be checked, but eh, it's Real Mode...
@@ -90,7 +88,7 @@ void __cdecl main(int argc, const char *argv[])
 	// That's a hidden ending preview feature!
 	if(argv[1][0] != 't') {
 		if(!end_init()) {
-			return;
+			return 2;
 		}
 	} else {
 		if(argv[1][1] == '1') {
@@ -107,6 +105,7 @@ void __cdecl main(int argc, const char *argv[])
 
 	game_init();
 	end_and_verdict_and_regist_animate();
-	game_switch_binary();
-	execl(BINARY_OP, BINARY_OP, nullptr);
+	game_switch_binary(EP_OP);
+
+	return 0;
 }
