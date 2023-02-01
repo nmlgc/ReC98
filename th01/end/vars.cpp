@@ -1,8 +1,8 @@
 #include "platform.h"
 #include "th01/resident.hpp"
 
-long score = 100000;
-long score_highest = 100000;
+score_t score = 100000;
+score_t score_highest = 100000;
 int32_t continues_total;
 int32_t continues_per_scene[SCENE_COUNT];
 

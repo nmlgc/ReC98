@@ -60,11 +60,11 @@ enum card_cel_t {
 static const int CARD_HP_MAX = 5; // STAGE?.DAT only supports up to 4, though!
 extern uint8_t CARD_ANIM[CARD_HP_MAX][CARD_CELS]; // ACTUAL TYPE: main_ptn_t
 
-static const int CARD_SCORE_CAP = 25600;
+static const score_t CARD_SCORE_CAP = 25600;
 
 // Stored outside the class for some reason... Only valid during the card flip
 // animation, and reset to 0 afterwards.
-extern unsigned long *cards_score;
+extern uscore_t *cards_score;
 
 struct CCards {
 	screen_x_t *left;
@@ -86,7 +86,7 @@ struct CCards {
 			flag = new char[count];
 			flip_frames = new int[count];
 			hp = new char[count];
-			cards_score = new unsigned long[count];
+			cards_score = new uscore_t[count];
 		}
 	}
 

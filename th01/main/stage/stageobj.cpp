@@ -70,7 +70,7 @@ ptn_t *stageobj_bgs;
 unsigned long stageobj_bgs_size;
 CCards cards;
 CObstacles obstacles;
-unsigned long *cards_score;
+uscore_t *cards_score;
 // -------
 
 // Byte-wise iterators for STAGE?.DAT arrays

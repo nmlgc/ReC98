@@ -183,13 +183,13 @@ void cardcombo_max_render(void)
 
 void hud_score_and_cardcombo_render(void)
 {
-	static long score_prev;
+	static score_t score_prev;
 	static int cardcombo_prev;
 
 	int digit;
 	int page;
 	int cardcombo_divisor;
-	long score_divisor;
+	score_t score_divisor;
 
 	score_divisor = 1000000; // Must match SCORE_DIGITS!
 	cardcombo_divisor = 10; // Must match CARDCOMBO_DIGITS!

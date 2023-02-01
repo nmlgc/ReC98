@@ -442,21 +442,26 @@ void verdict_title_calculate_and_render(void)
 	int skill = 0;
 	int level;
 
+	// ZUN bug: [score] and [score_highest] are declared as signed in the
+	// original FUUIN.EXE, turning these into signed comparisons even without
+	// the casts. (These are just here to allow a single unsigned declaration
+	// on the `debloated` branch.)
+
 	// skill += ((min(max(score, 0), 2500000) / 500000) * 2);
-	/**/ if(score >= 2500000) { skill += 10; }
-	else if(score >= 2000000) { skill +=  8; }
-	else if(score >= 1500000) { skill +=  6; }
-	else if(score >= 1000000) { skill +=  4; }
-	else if(score >=  500000) { skill +=  2; }
+	/**/ if(static_cast<score_t>(score) >= 2500000) { skill += 10; }
+	else if(static_cast<score_t>(score) >= 2000000) { skill +=  8; }
+	else if(static_cast<score_t>(score) >= 1500000) { skill +=  6; }
+	else if(static_cast<score_t>(score) >= 1000000) { skill +=  4; }
+	else if(static_cast<score_t>(score) >=  500000) { skill +=  2; }
 
 	// skill += (
 	// 	((min(max(score_highest, 0), 3000000) - 1000000) / 400000) * 2
 	// );
-	/**/ if(score_highest >= 3000000) { skill += 10; }
-	else if(score_highest >= 2600000) { skill +=  8; }
-	else if(score_highest >= 2200000) { skill +=  6; }
-	else if(score_highest >= 1800000) { skill +=  4; }
-	else if(score_highest >= 1400000) { skill +=  2; }
+	/**/ if(static_cast<score_t>(score_highest) >= 3000000) { skill += 10; }
+	else if(static_cast<score_t>(score_highest) >= 2600000) { skill +=  8; }
+	else if(static_cast<score_t>(score_highest) >= 2200000) { skill +=  6; }
+	else if(static_cast<score_t>(score_highest) >= 1800000) { skill +=  4; }
+	else if(static_cast<score_t>(score_highest) >= 1400000) { skill +=  2; }
 
 	// skill += ((continues_total == 0) * 18 + (
 	// 	(12 - min(max(continues_total, 0), 22)) / 2) * 2)

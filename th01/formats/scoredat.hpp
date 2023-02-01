@@ -28,7 +28,7 @@ struct scoredat_t {
 	// Not null-terminated.
 	shiftjis_kanji_t name[SCOREDAT_PLACES][SCOREDAT_NAME_KANJI];
 
-	uint32_t score[SCOREDAT_PLACES];
+	score_t score[SCOREDAT_PLACES];
 	int16_t stage[SCOREDAT_PLACES];
 	shiftjis_kanji_t route[SCOREDAT_PLACES];
 };

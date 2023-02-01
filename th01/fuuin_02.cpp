@@ -19,6 +19,7 @@ static long unused_long = { 0 }; // ZUN bloat
 #include "master.hpp"
 #include "shiftjis.hpp"
 #include "th01/rank.h"
+#include "th01/resident.hpp"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/grp_text.hpp"
 #include "th01/hardware/input.hpp"

@@ -6,7 +6,7 @@
 int8_t* scoredat_names; // Yeah, technically a scoredat_name_t.
 int8_t* scoredat_routes; // Yeah, technically a shiftjis_kanji_t.
 int16_t* scoredat_stages;
-extern int32_t* scoredat_score;
+extern score_t* scoredat_score;
 // -----
 
 #define scoredat_fn(buf) { \
@@ -35,7 +35,7 @@ void scoredat_recreate()
 	int i;
 	int16_t stage;
 	const shiftjis_t *route = SCOREDAT_ROUTE_NONE;
-	int32_t score;
+	score_t score;
 	scoredat_declare();
 
 	// Will be name-encoded, and therefore modified in the .data section!
@@ -109,10 +109,10 @@ int scoredat_load()
 	scoredat_names = new int8_t[SCOREDAT_NAMES_SIZE];
 	scoredat_stages = new int16_t[SCOREDAT_PLACES];
 	scoredat_routes = new int8_t[SCOREDAT_ROUTE_LEN * SCOREDAT_PLACES];
-	scoredat_score = new int32_t[SCOREDAT_PLACES];
+	scoredat_score = new score_t[SCOREDAT_PLACES];
 
 	scoredat_read(scoredat_names, SCOREDAT_NAMES_SIZE);
-	scoredat_read(scoredat_score, sizeof(int32_t) * SCOREDAT_PLACES);
+	scoredat_read(scoredat_score, sizeof(score_t) * SCOREDAT_PLACES);
 	scoredat_read(scoredat_stages, sizeof(int16_t) * SCOREDAT_PLACES);
 	scoredat_read(scoredat_routes, SCOREDAT_ROUTE_LEN * SCOREDAT_PLACES);
 	scoredat_close();

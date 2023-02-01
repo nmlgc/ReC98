@@ -1,4 +1,4 @@
-static const int32_t SCORE_PER_EXTEND = 400000;
+static const score_t SCORE_PER_EXTEND = 400000;
 
 extern int extend_next;
 

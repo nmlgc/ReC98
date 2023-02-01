@@ -185,7 +185,7 @@ inline void header_cell_put(screen_x_t left, const char str[]) {
 
 void regist_put_initial(
 	int entered_place,
-	long entered_score,
+	score_t entered_score,
 	int entered_stage,
 	const sshiftjis_t entered_route[SCOREDAT_ROUTE_LEN + 1],
 	const scoredat_name_z_t names_z[SCOREDAT_PLACES]
@@ -534,7 +534,7 @@ void scoredat_save(void)
 		scoredat_names[i] = scoredat_name_byte_encode(scoredat_names[i]);
 	}
 	write(fileno(fp), scoredat_names, SCOREDAT_NAMES_SIZE);
-	write(fileno(fp), scoredat_score, (sizeof(uint32_t) * SCOREDAT_PLACES));
+	write(fileno(fp), scoredat_score, (sizeof(score_t) * SCOREDAT_PLACES));
 	write(fileno(fp), scoredat_stages, (sizeof(int16_t) * SCOREDAT_PLACES));
 	write(
 		fileno(fp),
@@ -597,7 +597,7 @@ static const int PLACE_NONE = (SCOREDAT_PLACES + 20);
 static const int SCOREDAT_NOT_CLEARED = (SCOREDAT_CLEARED - 10);
 
 void regist(
-	int32_t score,
+	score_t score,
 	int16_t stage_num_or_scoredat_constant,
 	const sshiftjis_t route[SCOREDAT_ROUTE_LEN + 1]
 )
@@ -700,5 +700,5 @@ void regist(
 // Global state that is defined here for some reason
 // -------------------------------------------------
 
-int32_t* scoredat_score;
+score_t* scoredat_score;
 // -------------------------------------------------

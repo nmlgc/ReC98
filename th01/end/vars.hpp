@@ -1,5 +1,5 @@
-extern long score;
-extern long score_highest;
+extern score_t score;
+extern score_t score_highest;
 extern int32_t continues_total;
 
 // ZUN bloat: The resident structure just uses uint16_t.

@@ -18,5 +18,5 @@ extern unsigned long frame_rand;
 
 extern int8_t lives_extra;
 extern bool first_stage_in_scene;
-extern uint32_t score;
+extern uscore_t score;
 extern int8_t game_cleared; // ACTUAL TYPE: bool

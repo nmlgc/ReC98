@@ -44,6 +44,9 @@ static const pellet_speed_t PELLET_SPEED_MULTIPLIER = 40;
 #define to_pellet_speed(pixel_v) \
 	static_cast<pellet_speed_t>(pixel_v * PELLET_SPEED_MULTIPLIER)
 
+typedef int32_t score_t; // ZUN bug: Should have maybe been unsigned…
+typedef uint32_t uscore_t; // ZUN bug: …or consistent, at least.
+
 #define RES_ID "ReiidenConfig"
 typedef struct {
 	char id[sizeof(RES_ID)];
@@ -60,7 +63,7 @@ typedef struct {
 	int8_t debug_mode; // ACTUAL TYPE: debug_mode_t
 	pellet_speed_t pellet_speed;
 	unsigned long rand;
-	int32_t score;
+	score_t score;
 
 	// ZUN bloat: Never actually read from. Even FUUIN.EXE, who does care
 	// about this value, manually derives it from [continues_per_scene].
@@ -69,11 +72,11 @@ typedef struct {
 	uint16_t continues_per_scene[SCENE_COUNT];
 
 	// of the current scene, without the boss stage
-	long bonus_per_stage[STAGES_PER_SCENE - 1];
+	score_t bonus_per_stage[STAGES_PER_SCENE - 1];
 
 	unsigned int stage_id;
 	unsigned long hiscore;
-	long score_highest; // among all continues
+	score_t score_highest; // among all continues
 	uint16_t point_value;
 } resident_t;
 

@@ -14,6 +14,7 @@
 #include "master.hpp"
 #include "shiftjis.hpp"
 #include "th01/rank.h"
+#include "th01/resident.hpp"
 #include "th01/formats/grp.h"
 #include "th01/hardware/palette.h"
 #include "th01/hardware/input.hpp"
@@ -39,7 +40,7 @@ extern int8_t rank;
 
 // Returns the high score for the difficulty previously loaded by
 // scoredat_load().
-long scoredat_hiscore_get()
+score_t scoredat_hiscore_get()
 {
 	return scoredat_score[0];
 }
