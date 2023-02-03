@@ -2,8 +2,6 @@
 #include "th01/resident.hpp"
 #include "th01/main/vars.hpp"
 #include "th01/formats/cfg.hpp"
-#include "th01/main/stage/stages.hpp"
-#include "th01/main/stage/timer.hpp"
 
 int8_t rank = CFG_RANK_DEFAULT;
 bgm_mode_t bgm_mode = CFG_BGM_MODE_DEFAULT;

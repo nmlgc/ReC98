@@ -145,9 +145,6 @@ void singyoku_defeat_animate_and_select_route(void)
 	graph_accesspage_func(0);
 	route_sel.render(COL_MAKAI, COL_JIGOKU);
 
-	// Re-#define the literals...
-	#include "th01/shiftjis/routesel.hpp"
-
 	graph_glyphrow_2xscale_1_to_0(64, 64, 0, shiftjis_w(ROUTE_SEL_1));
 	graph_glyphrow_2xscale_1_to_0(32, 96, 2, shiftjis_w(ROUTE_SEL_2));
 	graph_glyphrow_2xscale_1_to_0(32, 180, 4, shiftjis_w(ROUTE_SEL_3));
