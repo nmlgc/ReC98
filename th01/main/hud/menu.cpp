@@ -227,7 +227,7 @@ bool16 continue_menu(void)
 		resident->score_highest = score;
 	}
 	resident->score = 0;
-	resident->rem_lives = (resident->start_lives_extra + 2);
+	resident->rem_lives = (resident->credit_lives_extra + 2);
 	pellet_speed_lower(-2, -5);
 
 	while(1) {

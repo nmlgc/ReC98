@@ -16,7 +16,7 @@ void resident_create_and_stuff_set(
 	int8_t rank,
 	bgm_mode_t bgm_mode,
 	int8_t bombs,
-	int8_t start_lives_extra,
+	int8_t credit_lives_extra,
 	long rand
 )
 {
@@ -32,7 +32,7 @@ void resident_create_and_stuff_set(
 		resident->rank = rank;
 		resident->bgm_mode = bgm_mode;
 		resident->bombs = bombs;
-		resident->start_lives_extra = start_lives_extra;
+		resident->credit_lives_extra = credit_lives_extra;
 		resident->rand = rand;
 		resident->score = 0;
 	}
@@ -42,7 +42,7 @@ int resident_stuff_get(
 	int8_t& rank,
 	bgm_mode_t& bgm_mode,
 	int8_t& bombs,
-	int8_t& start_lives_extra,
+	int8_t& credit_lives_extra,
 	unsigned long& rand,
 	int32_t& continues_total,
 	int& stage_id
@@ -54,7 +54,7 @@ int resident_stuff_get(
 		rank = resident->rank;
 		bgm_mode = resident->bgm_mode;
 		bombs = resident->bombs;
-		start_lives_extra = resident->start_lives_extra;
+		credit_lives_extra = resident->credit_lives_extra;
 		rand = resident->rand;
 		continues_total = resident->continues_total;
 		stage_id = resident->stage_id;

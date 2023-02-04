@@ -70,8 +70,8 @@ void snap_col_4(void)
 cfg_options_t opts = {
 	CFG_RANK_DEFAULT,
 	CFG_BGM_MODE_DEFAULT,
-	CFG_BOMBS_DEFAULT,
-	CFG_LIVES_EXTRA_DEFAULT
+	CFG_CREDIT_BOMBS_DEFAULT,
+	CFG_CREDIT_LIVES_EXTRA_DEFAULT
 };
 int8_t debug_mode = 0;
 
@@ -93,14 +93,14 @@ use_defaults:
 		}
 		opts.rank = cfg_in.opts.rank;
 		opts.bgm_mode = cfg_in.opts.bgm_mode;
-		opts.bombs = cfg_in.opts.bombs;
-		opts.lives_extra = cfg_in.opts.lives_extra;
+		opts.credit_bombs = cfg_in.opts.credit_bombs;
+		opts.credit_lives_extra = cfg_in.opts.credit_lives_extra;
 		fclose(fp);
 	} else {
 		opts.rank = CFG_RANK_DEFAULT;
 		opts.bgm_mode = CFG_BGM_MODE_DEFAULT;
-		opts.bombs = CFG_BOMBS_DEFAULT;
-		opts.lives_extra = CFG_LIVES_EXTRA_DEFAULT;
+		opts.credit_bombs = CFG_CREDIT_BOMBS_DEFAULT;
+		opts.credit_lives_extra = CFG_CREDIT_LIVES_EXTRA_DEFAULT;
 	}
 }
 
@@ -116,8 +116,8 @@ void cfg_save(void)
 		fputs(CFG_ID, fp);
 		fputc(opts.rank, fp);
 		fputc(opts.bgm_mode, fp);
-		fputc(opts.bombs, fp);
-		fputc(opts.lives_extra, fp);
+		fputc(opts.credit_bombs, fp);
+		fputc(opts.credit_lives_extra, fp);
 		fclose(fp);
 	}
 }
@@ -345,7 +345,11 @@ void start_game(void)
 {
 	cfg_save();
 	resident_create_and_stuff_set(
-		opts.rank, opts.bgm_mode, opts.bombs, opts.lives_extra, frame_rand
+		opts.rank,
+		opts.bgm_mode,
+		opts.credit_bombs,
+		opts.credit_lives_extra,
+		frame_rand
 	);
 	title_exit();
 	mdrv2_bgm_fade_out_nonblock();
@@ -361,7 +365,7 @@ void start_game(void)
 
 	resident->route = ROUTE_MAKAI;
 	resident->stage_id = 0;
-	resident->rem_lives = (opts.lives_extra + 2);
+	resident->rem_lives = (opts.credit_lives_extra + 2);
 	resident->point_value = 0;
 
 	for(int i = 0; i < SCENE_COUNT; i++) {
@@ -383,7 +387,11 @@ void start_continue(void)
 {
 	cfg_save();
 	resident_create_and_stuff_set(
-		opts.rank, opts.bgm_mode, opts.bombs, opts.lives_extra, frame_rand
+		opts.rank,
+		opts.bgm_mode,
+		opts.credit_bombs,
+		opts.credit_lives_extra,
+		frame_rand
 	);
 
 	if(resident->stage_id == 0) {
@@ -396,7 +404,7 @@ void start_continue(void)
 
 	resident->debug_mode = DM_OFF;
 	resident->snd_need_init = true;
-	resident->rem_lives = (opts.lives_extra + 2);
+	resident->rem_lives = (opts.credit_lives_extra + 2);
 	resident->unused_1 = 0;
 	resident->pellet_speed = PELLET_SPEED_DEFAULT;
 	resident->point_value = 0;
@@ -498,7 +506,7 @@ void option_choice_unput_and_put(int choice, int col)
 	const shiftjis_t* CHOICES[OPTION_CHOICE_COUNT] = OPTION_CHOICES;
 	const shiftjis_t* RANKS[RANK_COUNT] = RANKS_CAPS_CENTERED;
 	const shiftjis_t* MUSIC_MODES[BGM_MODE_COUNT] = BGM_MODES_CENTERED;
-	const shiftjis_t* START_LIVES[CFG_LIVES_EXTRA_MAX] = {
+	const shiftjis_t* START_LIVES[CFG_CREDIT_LIVES_EXTRA_MAX] = {
 		"   3  ",
 		"   4  ",
 		"   5  ",
@@ -519,7 +527,11 @@ void option_choice_unput_and_put(int choice, int col)
 		);
 	} else if(choice == 2) {
 		choice_put_value(
-			left, top, col, CHOICES[choice], START_LIVES[opts.lives_extra]
+			left,
+			top,
+			col,
+			CHOICES[choice],
+			START_LIVES[opts.credit_lives_extra]
 		);
 	} else if(choice == 3) {
 		choice_put(left, top, col, CHOICES[choice]);
@@ -628,7 +640,9 @@ void option_update_and_render(void)
 			);
 			break;
 		case 2:
-			ring_dec_16(opts.lives_extra, (CFG_LIVES_EXTRA_MAX - 1));
+			ring_dec_16(
+				opts.credit_lives_extra, (CFG_CREDIT_LIVES_EXTRA_MAX - 1)
+			);
 			break;
 		}
 		option_choice_unput_and_put(menu_sel, COL_ACTIVE);
@@ -643,7 +657,7 @@ void option_update_and_render(void)
 			ring_inc(static_cast<int8_t>(opts.bgm_mode), (BGM_MODE_COUNT - 1));
 			break;
 		case 2:
-			ring_inc(opts.lives_extra, (CFG_LIVES_EXTRA_MAX - 1));
+			ring_inc(opts.credit_lives_extra, (CFG_CREDIT_LIVES_EXTRA_MAX - 1));
 			break;
 		}
 		option_choice_unput_and_put(menu_sel, COL_ACTIVE);

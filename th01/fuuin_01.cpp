@@ -36,7 +36,7 @@ bool16 end_init(void)
 			}
 
 			random_seed = resident->rand;
-			start_lives_extra = resident->start_lives_extra;
+			credit_lives_extra = resident->credit_lives_extra;
 			resident->score = 0;
 			resident->continues_total = 0;
 			resident->score_highest = 0;

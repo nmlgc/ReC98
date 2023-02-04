@@ -486,11 +486,11 @@ void verdict_title_calculate_and_render(void)
 
 	/**/ if(end_flag == ES_JIGOKU) { skill += 5; }
 
-	// skill += ((-5 * min(max(start_lives_extra, 0), 4)) + 10);
-	/**/ if(start_lives_extra == 4) { skill -= 10; }
-	else if(start_lives_extra == 3) { skill -=  5; }
-	else if(start_lives_extra == 1) { skill +=  5; }
-	else if(start_lives_extra == 0) { skill += 10; }
+	// skill += ((-5 * min(max(credit_lives_extra, 0), 4)) + 10);
+	/**/ if(credit_lives_extra == 4) { skill -= 10; }
+	else if(credit_lives_extra == 3) { skill -=  5; }
+	else if(credit_lives_extra == 1) { skill +=  5; }
+	else if(credit_lives_extra == 0) { skill += 10; }
 
 	int group = (rand() % VERDICT_GROUPS);
 

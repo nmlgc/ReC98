@@ -484,7 +484,7 @@ int main(void)
 		rank,
 		bgm_mode,
 		credit_bombs,
-		lives_extra,
+		credit_lives_extra,
 		frame_rand,
 		continues_total,
 		stage_id

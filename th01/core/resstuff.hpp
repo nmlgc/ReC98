@@ -4,7 +4,7 @@ void resident_create_and_stuff_set(
 	int8_t rank,
 	bgm_mode_t bgm_mode,
 	int8_t bombs,
-	int8_t start_lives_extra,
+	int8_t credit_lives_extra,
 	long rand
 );
 
@@ -14,7 +14,7 @@ int resident_stuff_get(
 	int8_t& rank,
 	bgm_mode_t& bgm_mode,
 	int8_t& bombs,
-	int8_t& start_lives_extra,
+	int8_t& credit_lives_extra,
 	unsigned long& rand,
 	int32_t& continues_total,
 	int& stage_id

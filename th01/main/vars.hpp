@@ -16,7 +16,7 @@ extern bool bgm_change_blocked;
 // like that, due to obviously colliding with the C standard library function.
 extern unsigned long frame_rand;
 
-extern int8_t lives_extra;
+extern int8_t credit_lives_extra;
 extern bool first_stage_in_scene;
 extern uscore_t score;
 extern int8_t game_cleared; // ACTUAL TYPE: bool
