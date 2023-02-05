@@ -410,22 +410,22 @@ inline screen_y_t lives_top(int i) {
 
 void lives_bg_snap_and_put(void)
 {
-	bg_snap_and_put(LIVES_LEFT, LIVES_TOP, lives_bg, lives_put, lives);
+	bg_snap_and_put(LIVES_LEFT, LIVES_TOP, lives_bg, lives_put, rem_lives);
 }
 
 void hud_lives_put(int prev)
 {
-	put_change(LIVES_LEFT, LIVES_TOP, lives_bg, lives_put, prev, lives);
+	put_change(LIVES_LEFT, LIVES_TOP, lives_bg, lives_put, prev, rem_lives);
 }
 
 void bombs_bg_snap_and_put(void)
 {
-	bg_snap_and_put(BOMBS_LEFT, BOMBS_TOP, bombs_bg, bombs_put, bombs);
+	bg_snap_and_put(BOMBS_LEFT, BOMBS_TOP, bombs_bg, bombs_put, rem_bombs);
 }
 
 void hud_bombs_put(int prev)
 {
-	put_change(BOMBS_LEFT, BOMBS_TOP, bombs_bg, bombs_put, prev, bombs);
+	put_change(BOMBS_LEFT, BOMBS_TOP, bombs_bg, bombs_put, prev, rem_bombs);
 }
 
 #undef bg_snap_and_put

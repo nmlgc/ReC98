@@ -158,9 +158,9 @@ void bomb_hittest(int slot)
 
 	item_collect_init(items_bomb[slot]);
 
-	if(bombs < BOMBS_MAX) {
-		bombs++;
-		hud_bombs_put(bombs - 1);
+	if(rem_bombs < BOMBS_MAX) {
+		rem_bombs++;
+		hud_bombs_put(rem_bombs - 1);
 		items_bomb[slot].flag = IF_COLLECTED;
 	} else {
 		score += 10000;

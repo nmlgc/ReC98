@@ -1,11 +1,8 @@
 #include "th01/rank.h"
 
-// Not *really* a cfg_options_t, since you'd expect that structure to contain
-// the immutable contents of REIIDEN.CFG. However, [bombs] is in fact the
-// *current* bomb count, and the .CFG value is saved to [credit_bombs]...
 extern int8_t rank; // ACTUAL TYPE: rank_t
 extern bgm_mode_t bgm_mode;
-extern int8_t bombs;
+extern int8_t rem_bombs;
 extern int8_t credit_bombs;
 
 extern int8_t stage_num;

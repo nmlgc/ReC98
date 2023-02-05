@@ -15,7 +15,7 @@ resident_t far *resident;
 void resident_create_and_stuff_set(
 	int8_t rank,
 	bgm_mode_t bgm_mode,
-	int8_t bombs,
+	int8_t rem_bombs,
 	int8_t credit_lives_extra,
 	long rand
 )
@@ -31,7 +31,7 @@ void resident_create_and_stuff_set(
 		resident = sgm;
 		resident->rank = rank;
 		resident->bgm_mode = bgm_mode;
-		resident->bombs = bombs;
+		resident->rem_bombs = rem_bombs;
 		resident->credit_lives_extra = credit_lives_extra;
 		resident->rand = rand;
 		resident->score = 0;
@@ -41,7 +41,7 @@ void resident_create_and_stuff_set(
 int resident_stuff_get(
 	int8_t& rank,
 	bgm_mode_t& bgm_mode,
-	int8_t& bombs,
+	int8_t& rem_bombs,
 	int8_t& credit_lives_extra,
 	unsigned long& rand,
 	int32_t& continues_total,
@@ -53,7 +53,7 @@ int resident_stuff_get(
 		resident = sgm;
 		rank = resident->rank;
 		bgm_mode = resident->bgm_mode;
-		bombs = resident->bombs;
+		rem_bombs = resident->rem_bombs;
 		credit_lives_extra = resident->credit_lives_extra;
 		rand = resident->rand;
 		continues_total = resident->continues_total;

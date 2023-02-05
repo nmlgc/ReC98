@@ -391,8 +391,8 @@ void stagebonus_animate(int stage_num)
 	clamp_add_x10_to_score_bonus_and_put(digit_buf, 5, val, 6553, i);
 
 	// Bomb & Player
-	val = (lives * 200);
-	val += (bombs * 100);
+	val = (rem_lives * 200);
+	val += (rem_bombs * 100);
 	clamp_add_x10_to_score_bonus_and_put(digit_buf, 7, val, 6553, i);
 
 	// Stage number
@@ -496,8 +496,8 @@ void totle_animate(int stage_num)
 	totle_metric_4_digit_animate(val, TOTLE_METRIC_CARDCOMBO_MAX_TOP);
 
 	// Bomb & Player ("MIKOsan")
-	val = (lives * 500);
-	val += (bombs * 200);
+	val = (rem_lives * 500);
+	val += (rem_bombs * 200);
 	clamp_and_add_x10_to_score_bonus(val, 6553, i);
 	totle_metric_4_digit_animate(val, TOTLE_METRIC_RESOURCES_TOP);
 

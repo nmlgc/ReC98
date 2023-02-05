@@ -94,7 +94,7 @@ bool16 player_invincible = false;
 static int unused_7 = 0; // ZUN bloat
 orb_velocity_x_t orb_velocity_x = OVX_0;
 int orb_rotation_frame = 0;
-int lives = 4;
+int rem_lives = 4;
 bool16 stage_cleared = false;
 
 int8_t credit_bombs;
@@ -570,8 +570,8 @@ int main(void)
 	// ZUN bloat: We just started the program, these are still empty!
 	graphics_free_redundant_and_incomplete();
 
-	lives = resident->rem_lives;
-	bombs = resident->bombs;
+	rem_lives = resident->rem_lives;
+	rem_bombs = resident->rem_bombs;
 	player_left = PLAYER_LEFT_START;
 
 	if((bgm_mode != BGM_MODE_OFF) && resident->snd_need_init) {
@@ -811,7 +811,7 @@ int main(void)
 			while(!player_is_hit) {
 				frame_rand++;
 				pellet_speed_raise_cycle = (
-					1800 - (lives * 200) - (bombs * 50)
+					1800 - (rem_lives * 200) - (rem_bombs * 50)
 				);
 				if((frame_rand % pellet_speed_raise_cycle) == 0) {
 					pellet_speed_raise(0.025f);
@@ -842,7 +842,7 @@ int main(void)
 					}
 					if(input_down) {
 						player_is_hit = true;
-						lives = 0;
+						rem_lives = 0;
 					}
 				}
 
@@ -916,7 +916,7 @@ int main(void)
 			resident->rand = frame_rand;
 			test_damage = false;
 			bomb_frames = 200;
-			if((lives <= 0) || stage_cleared) {
+			if((rem_lives <= 0) || stage_cleared) {
 				break;
 			}
 
@@ -925,7 +925,7 @@ int main(void)
 			// the life loop.
 			mdrv2_se_play(5);
 			resident->rem_lives--;
-			lives--;
+			rem_lives--;
 			player_miss_animate_and_update();
 			player_is_hit = false;
 			bgm_reload_and_play_if_0++;
@@ -958,11 +958,11 @@ int main(void)
 			// checks are necessary to handle switching into and out of a boss.
 			if(stage_is_boss(stage_id) || (boss_id != BID_NONE)) {
 				resident->score = score;
-				resident->rem_lives = lives;
+				resident->rem_lives = rem_lives;
 				resident->snd_need_init = true;
 				resident->route = route;
 				mdrv2_bgm_fade_out_nonblock();
-				resident->bombs = bombs;
+				resident->rem_bombs = rem_bombs;
 				game_switch_binary();
 				execl(BINARY_MAIN, BINARY_MAIN, nullptr);
 			}

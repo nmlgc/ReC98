@@ -71,10 +71,10 @@ inline void player_reset(void) {
 
 // Shows the player hit/respawn animation in a blocking way, and updates the
 // HUD to reflect the lost life, together with all related game state. Except
-// for, ironically, [lives], which is assumed to have been decremented prior
-// to calling this function.
+// for, ironically, [rem_lives], which is assumed to have been decremented
+// prior to calling this function.
 void player_miss_animate_and_update(void);
 
-extern int lives;
+extern int rem_lives;
 extern int cardcombo_cur;
 extern int cardcombo_max;

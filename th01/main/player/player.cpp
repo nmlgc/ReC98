@@ -427,14 +427,14 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 
 	dash_cycle.v++;
 	dash_cycle.v &= (DASH_FRAMES - 1);
-	if(((bombs != 0) || bombing) && (bomb_state >= BS_START)) {
+	if(((rem_bombs != 0) || bombing) && (bomb_state >= BS_START)) {
 		if(bomb_state == BS_START) {
 			bomb_frames = 0;
 			bomb_state = BS_ACTIVE;
 			player_deflecting = true;
 			bombing = true;
-			bombs--;
-			hud_bombs_put(bombs + 1);
+			rem_bombs--;
+			hud_bombs_put(rem_bombs + 1);
 		}
 		orb_player_hittest(1);
 		bomb_done = bomb_update_and_render(bomb_frames);
@@ -455,7 +455,7 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 		}
 	} else if(
 		// Yes, not `< M_SPECIAL_FIRST`.
-		(input_bomb == true) && (mode != M_SPECIAL_FIRST) && (bombs != 0)
+		(input_bomb == true) && (mode != M_SPECIAL_FIRST) && (rem_bombs != 0)
 	) {
 		bomb_state = BS_START;
 		input_bomb = false;
@@ -1030,12 +1030,12 @@ void player_miss_animate_and_update(void)
 	ptn_sloppy_unput_16(effect_left, player_top);
 	// ------
 
-	hud_lives_put(lives + 1);
+	hud_lives_put(rem_lives + 1);
 
-	prev_bombs = bombs;
-	bombs = (credit_bombs + bombs);
-	if(bombs > BOMBS_MAX) {
-		bombs = BOMBS_MAX;
+	prev_bombs = rem_bombs;
+	rem_bombs = (credit_bombs + rem_bombs);
+	if(rem_bombs > BOMBS_MAX) {
+		rem_bombs = BOMBS_MAX;
 	} else {
 		hud_bombs_put(prev_bombs);
 	}

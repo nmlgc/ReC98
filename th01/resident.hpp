@@ -52,7 +52,7 @@ typedef struct {
 	char id[sizeof(RES_ID)];
 	int8_t rank;
 	bgm_mode_t bgm_mode;
-	int8_t bombs;
+	int8_t rem_bombs;
 	int8_t credit_lives_extra; // Add 2 for the actual number of lives
 	end_sequence_t end_flag; /* ZUN symbol [Strings] */
 	int8_t unused_1;

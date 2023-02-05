@@ -82,8 +82,8 @@ void player_gameover_animate(void)
 	}
 
 	z_vsync_wait_and_scrollup(0);
-	bombs = credit_bombs;
-	resident->bombs = 1;
+	rem_bombs = credit_bombs;
+	resident->rem_bombs = 1;
 
 	#undef frame
 }
