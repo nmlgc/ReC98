@@ -82,7 +82,13 @@ void player_gameover_animate(void)
 	}
 
 	z_vsync_wait_and_scrollup(0);
-	rem_bombs = credit_bombs;
+
+	// ZUN bug: Both should have been set to [credit_bombs] from REIIDEN.CFG.
+	// That file is never read in REIIDEN.EXE though, nor is the value
+	// preserved in the resident structure. In the end it makes no difference,
+	// as both [credit_bombs] and [bombs_extra_per_life_lost] are a constant 1
+	// in the original game.
+	rem_bombs = bombs_extra_per_life_lost;
 	resident->rem_bombs = 1;
 
 	#undef frame

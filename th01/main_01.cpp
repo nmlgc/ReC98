@@ -97,7 +97,7 @@ int orb_rotation_frame = 0;
 int rem_lives = 4;
 bool16 stage_cleared = false;
 
-int8_t credit_bombs;
+int8_t bombs_extra_per_life_lost;
 int8_t player_swing_deflection_frames;
 unsigned long frame_rand;
 uint32_t coreleft_prev;
@@ -483,7 +483,7 @@ int main(void)
 	if(resident_stuff_get(
 		rank,
 		bgm_mode,
-		credit_bombs,
+		bombs_extra_per_life_lost, // ZUN bloat: Supposed to be [rem_bombs]...
 		credit_lives_extra,
 		frame_rand,
 		continues_total,
@@ -493,7 +493,9 @@ int main(void)
 		return 1;
 	}
 
-	credit_bombs = 1;
+	// ZUN bloat: ...and the variable is hardcoded here anyway.
+	bombs_extra_per_life_lost = 1;
+
 	score = resident->score;
 	extend_next = ((resident->score / SCORE_PER_EXTEND) + 1);
 	srand(frame_rand);

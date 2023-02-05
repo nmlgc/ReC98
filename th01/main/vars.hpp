@@ -3,7 +3,7 @@
 extern int8_t rank; // ACTUAL TYPE: rank_t
 extern bgm_mode_t bgm_mode;
 extern int8_t rem_bombs;
-extern int8_t credit_bombs;
+extern int8_t bombs_extra_per_life_lost;
 
 extern int8_t stage_num;
 extern bool bgm_change_blocked;
