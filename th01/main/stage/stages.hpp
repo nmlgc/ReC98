@@ -1,4 +1,8 @@
+extern int8_t stage_num;
+extern bool first_stage_in_scene;
+
 extern bool16 stage_cleared;
+extern int8_t game_cleared; // ACTUAL TYPE: bool
 
 // Amount of time until the player has to HARRY UP.
 extern unsigned int stage_timer;

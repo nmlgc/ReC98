@@ -12,9 +12,26 @@
 #include "th01/resident.hpp"
 #include "th01/core/initexit.hpp"
 #include "th01/end/end.hpp"
-#include "th01/end/vars.hpp"
 #include "th01/snd/mdrv2.h"
 #include "th01/shiftjis/fns.hpp"
+
+// Resident structure fields
+// -------------------------
+// Not actually redundant because ending previews can run without an allocated
+// resident structure.
+
+score_t score = 100000;
+score_t score_highest = 100000;
+int32_t continues_total;
+int32_t continues_per_scene[SCENE_COUNT];
+
+// ZUN bloat: 308 unused bytes… for 77 extra scenes, maybe?!
+static int8_t unused[308];
+
+int8_t credit_lives_extra;
+end_sequence_t end_flag;
+uint8_t rank;
+// -------------------------
 
 bool16 end_init(void)
 {

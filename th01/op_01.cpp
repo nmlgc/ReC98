@@ -33,7 +33,11 @@
 #include "th01/shiftjis/fns.hpp"
 #include "th01/shiftjis/op.hpp"
 
-long frame_rand;
+// Redundant copies of resident structure fields to static data
+// ------------------------------------------------------------
+
+unsigned long frame_rand;
+// ------------------------------------------------------------
 
 // Unused. The only thing on the main menu with this color is the "1996 ZUN"
 // text at the bottom... probably part of an effect that we never got to see.

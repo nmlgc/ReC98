@@ -14,7 +14,6 @@
 #include "th01/formats/stagedat.hpp"
 #include "th01/snd/mdrv2.h"
 #include "th01/main/playfld.hpp"
-#include "th01/main/vars.hpp"
 #include "th01/main/stage/stageobj.hpp"
 #include "th01/main/player/player.hpp"
 #include "th01/main/hud/hud.hpp"

@@ -17,6 +17,7 @@
 #include "master.hpp"
 #include "pc98kbd.h"
 #include "shiftjis.hpp"
+#include "th01/rank.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/core/initexit.hpp"
@@ -33,6 +34,7 @@
 #include "th01/hardware/vplanset.h"
 #include "th01/hardware/ztext.hpp"
 #include "th01/snd/mdrv2.h"
+#include "th01/formats/cfg.hpp"
 #include "th01/formats/grp.h"
 #include "th01/formats/pf.hpp"
 #include "th01/formats/ptn.hpp"
@@ -42,7 +44,6 @@
 #include "th01/main/bonus.hpp"
 #include "th01/main/debug.hpp"
 #include "th01/main/playfld.hpp"
-#include "th01/main/vars.hpp"
 #include "th01/main/player/anim.hpp"
 #include "th01/main/player/bomb.hpp"
 #include "th01/main/player/orb.hpp"
@@ -67,6 +68,13 @@
 // Random state that mostly doesn't belong here
 // --------------------------------------------
 
+int8_t rank = CFG_RANK_DEFAULT;
+bgm_mode_t bgm_mode = CFG_BGM_MODE_DEFAULT;
+int8_t rem_bombs = CFG_CREDIT_BOMBS_DEFAULT;
+int8_t credit_lives_extra = CFG_CREDIT_LIVES_EXTRA_DEFAULT;
+
+int8_t stage_num = 0;
+bool bgm_change_blocked = false;
 static int8_t unused_1 = 0; // ZUN bloat
 const shiftjis_t* RANKS[RANK_COUNT] = RANKS_CAPS;
 bool timer_initialized = false;

@@ -75,6 +75,5 @@ inline void player_reset(void) {
 // prior to calling this function.
 void player_miss_animate_and_update(void);
 
-extern int rem_lives;
 extern int cardcombo_cur;
 extern int cardcombo_max;

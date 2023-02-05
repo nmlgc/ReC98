@@ -16,7 +16,6 @@
 #include "th01/formats/ptn.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/debug.hpp"
-#include "th01/main/vars.hpp"
 #include "th01/main/hud/hud.hpp"
 #include "th01/main/boss/palette.hpp"
 

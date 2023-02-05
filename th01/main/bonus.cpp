@@ -25,7 +25,6 @@
 #include "th01/sprites/bonusbox.csp"
 #include "th01/main/extend.hpp"
 #include "th01/main/playfld.hpp"
-#include "th01/main/vars.hpp"
 #include "th01/main/hud/hud.hpp"
 #include "th01/main/bonus.hpp"
 #include "th01/main/bullet/pellet.hpp"

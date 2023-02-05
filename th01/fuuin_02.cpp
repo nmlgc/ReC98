@@ -69,8 +69,6 @@ void input_sense(bool16 reset_repeat)
 #include "th01/hardware/input_rs.cpp"
 // -----
 
-extern uint8_t rank;
-
 #define scoredat_declare() FILE *fp;
 #define scoredat_cli() disable()
 #define scoredat_sti() enable()

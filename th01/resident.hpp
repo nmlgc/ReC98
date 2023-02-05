@@ -80,13 +80,45 @@ typedef struct {
 	uint16_t point_value;
 } resident_t;
 
+extern resident_t far *resident;
+
+// Redundant copies of resident structure fields to static data
+// ------------------------------------------------------------
+
+// ACTUAL TYPE: rank_t
+#if (BINARY == 'M')
+	extern int8_t rank;
+#elif (BINARY == 'E')
+	extern uint8_t rank;
+#endif
+
+extern bgm_mode_t bgm_mode;
+extern int8_t rem_bombs;
+extern int8_t credit_lives_extra;
+extern end_sequence_t end_flag; /* ZUN symbol [Strings] */
+extern int8_t route; // ACTUAL TYPE: route_t
+extern int rem_lives; // ZUN bloat: The resident structure just uses int8_t.
+
+// Current gameplay frame plus resident_t::rand, without any frame_delay().
+// Displayed as "rand" in the debug output, but can't be /* ZUN symbol */'d
+// like that, due to obviously colliding with the C standard library function.
+extern unsigned long frame_rand;
+
+#if (BINARY == 'M')
+	extern uscore_t score;
+#elif (BINARY == 'E')
+	extern score_t score;
+#endif
 extern int32_t continues_total;
 
-extern int8_t route; // ACTUAL TYPE: route_t
-extern resident_t far *resident;
+// ZUN bloat: The resident structure just uses uint16_t.
+extern int32_t continues_per_scene[SCENE_COUNT];
+
+extern score_t score_highest;
 
 inline void resident_continue_use(void) {
 	resident->continues_total++;
 	continues_total++;
 	resident->continues_per_scene[resident->stage_id / STAGES_PER_SCENE]++;
 }
+// ------------------------------------------------------------

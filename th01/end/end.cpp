@@ -21,7 +21,6 @@
 #include "th01/end/end.hpp"
 #include "th01/end/pic.hpp"
 #include "th01/end/type.hpp"
-#include "th01/end/vars.hpp"
 #include "th01/shiftjis/end.hpp"
 #include "th01/shiftjis/fns.hpp"
 #include "th01/shiftjis/scoredat.hpp"
@@ -55,6 +54,9 @@ static const int FINAL_DELAY_FRAMES = 300;
 
 // Function ordering fails
 // -----------------------
+
+// Resets all end-related data in the resident structure. Always returns true.
+bool16 end_resident_clear(void);
 
 void near end_good(void);
 void near end_bad(void);

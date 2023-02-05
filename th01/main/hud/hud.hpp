@@ -11,13 +11,14 @@ void hud_score_and_cardcombo_render(void);
 void hud_bg_snap_and_put(void);
 extern bool timer_initialized;
 
-// Must be called after every background change.
-inline void hud_rerender(void) {
-	first_stage_in_scene = true;
-	hud_bg_snap_and_put();
-
-	// Unnecessary, already done as part of hud_bg_snap_and_put()
-	hud_score_and_cardcombo_render();
+// Must be called after every background change. Left as a macro to avoid a
+// general dependency on [first_stage_in_scene].
+#define hud_rerender() { \
+	first_stage_in_scene = true; \
+	hud_bg_snap_and_put(); \
+	\
+	/* Unnecessary, already done as part of hud_bg_snap_and_put() */ \
+	hud_score_and_cardcombo_render(); \
 }
 
 // Re-renders the life or bomb display. Assumes [prev] to be the number of

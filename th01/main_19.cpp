@@ -24,8 +24,6 @@
 #include "th01/shiftjis/regist.hpp"
 #include "th01/formats/scoredat.hpp"
 
-extern int8_t rank;
-
 #define scoredat_declare()
 #define scoredat_cli()
 #define scoredat_sti()
