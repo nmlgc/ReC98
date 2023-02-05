@@ -3,20 +3,12 @@
  * Code segment #2 of TH01's FUUIN.EXE
  */
 
-#include <string.h>
 #include "platform.h"
 #include "pc98.h"
-#include "planar.h"
 #include "pc98kbd.h"
 #include "master.hpp"
 #include "shiftjis.hpp"
-#include "th01/rank.h"
-#include "th01/resident.hpp"
-#include "th01/hardware/graph.h"
-#include "th01/hardware/grp_text.hpp"
 #include "th01/hardware/input.hpp"
-#include "th01/shiftjis/regist.hpp"
-#include "th01/formats/scoredat.hpp"
 
 #include "th01/hardware/grppfnfx.cpp"
 
@@ -59,5 +51,3 @@ void input_sense(bool16 reset_repeat)
 
 #include "th01/hardware/input_rs.cpp"
 // -----
-
-#include "th01/hiscore/regist.cpp"

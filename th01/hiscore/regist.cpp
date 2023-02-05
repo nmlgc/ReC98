@@ -1,10 +1,26 @@
+// High Score menu
+// ---------------
+
+#include <string.h>
+#include "platform.h"
+#include "pc98.h"
+#include "planar.h"
+#include "master.hpp"
+#include "shiftjis.hpp"
+#include "th01/rank.h"
+#include "th01/resident.hpp"
 #include "th01/score.h"
 #include "th01/v_colors.hpp"
 #include "th01/math/clamp.hpp"
+#include "th01/hardware/input.hpp"
+#include "th01/hardware/graph.h"
+#include "th01/hardware/grp_text.hpp"
+#include "th01/formats/scoredat.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/grp2xscs.hpp"
 #include "th01/hiscore/regist.hpp"
+#include "th01/shiftjis/regist.hpp"
 
 // Null-terminated version of scoredat_name_t, used internally.
 typedef ShiftJISKanjiBuffer<SCOREDAT_NAME_KANJI + 1> scoredat_name_z_t;

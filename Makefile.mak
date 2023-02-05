@@ -75,12 +75,12 @@ bin\th01\op.exe: bin\piloadc.obj th01\op_01.cpp bin\th01\frmdelay.obj bin\th01\v
 $**
 |
 
-bin\th01\reiiden.exe: bin\piloadc.obj th01\main_01.cpp bin\th01\frmdelay.obj bin\th01\vsync.obj bin\th01\ztext.obj bin\th01\initexit.obj bin\th01\graph.obj bin\th01\planar.obj bin\th01\egc.obj bin\th01\ptn.obj bin\th01\grp.obj bin\th01\grz.obj bin\th01\reiiden.obj th01\main_09.cpp th01\bullet_l.cpp th01\grpinv32.cpp bin\th01\resstuff.obj th01\scrollup.cpp th01\pgtrans.cpp bin\th01\grp2xscs.obj th01\grph1to0.cpp th01\main_14.cpp th01\main_15.cpp bin\th01\mdrv2.obj th01\main_17.cpp th01\main_18.cpp th01\main_19.cpp th01\main_20.cpp th01\main_21.cpp bin\th01\pf.obj th01\main_23.cpp th01\main_24.cpp th01\main_25.cpp th01\main_26.cpp th01\main_27.cpp th01\stages.cpp th01\main_28.cpp th01\main_29.cpp th01\main_30.cpp th01\main_31.cpp th01\main_32.cpp th01\main_33.cpp th01\main_34.cpp th01\main_35.cpp th01\main_36.cpp th01\main_37.cpp th01\main_38.cpp bin\th01\scoredat.obj
+bin\th01\reiiden.exe: bin\piloadc.obj th01\main_01.cpp bin\th01\frmdelay.obj bin\th01\vsync.obj bin\th01\ztext.obj bin\th01\initexit.obj bin\th01\graph.obj bin\th01\planar.obj bin\th01\egc.obj bin\th01\ptn.obj bin\th01\grp.obj bin\th01\grz.obj bin\th01\reiiden.obj th01\main_09.cpp th01\bullet_l.cpp th01\grpinv32.cpp bin\th01\resstuff.obj th01\scrollup.cpp th01\pgtrans.cpp bin\th01\grp2xscs.obj th01\grph1to0.cpp th01\main_14.cpp th01\main_15.cpp bin\th01\mdrv2.obj th01\main_17.cpp th01\main_18.cpp bin\th01\regist.obj th01\main_20.cpp th01\main_21.cpp bin\th01\pf.obj th01\main_23.cpp th01\main_24.cpp th01\main_25.cpp th01\main_26.cpp th01\main_27.cpp th01\stages.cpp th01\main_28.cpp th01\main_29.cpp th01\main_30.cpp th01\main_31.cpp th01\main_32.cpp th01\main_33.cpp th01\main_34.cpp th01\main_35.cpp th01\main_36.cpp th01\main_37.cpp th01\main_38.cpp bin\th01\scoredat.obj
 	$(CC) $(CFLAGS_RELEASE) $(LARGE_LFLAGS) -DGAME=1 -DBINARY='M' -nbin\th01\ -eREIIDEN.EXE @&&|
 $**
 |
 
-bin\th01\fuuin.exe: bin\piloadc.obj th01\fuuin_01.cpp bin\th01\input_mf.obj th01\fuuin_02.cpp th01\fuuin_03.cpp th01\fuuin_04.cpp bin\th01\vsync.obj bin\th01\ztext.obj bin\th01\initexit.obj bin\th01\graph.obj bin\th01\grp_text.obj bin\th01\planar.obj bin\th01\grp.obj bin\th01\egc.obj bin\th01\grp2xscs.obj bin\th01\mdrv2.obj bin\th01\fuuin.obj bin\th01\scoredat.obj
+bin\th01\fuuin.exe: bin\piloadc.obj th01\fuuin_01.cpp bin\th01\input_mf.obj th01\fuuin_02.cpp th01\fuuin_03.cpp th01\fuuin_04.cpp bin\th01\regist.obj bin\th01\vsync.obj bin\th01\ztext.obj bin\th01\initexit.obj bin\th01\graph.obj bin\th01\grp_text.obj bin\th01\planar.obj bin\th01\grp.obj bin\th01\egc.obj bin\th01\grp2xscs.obj bin\th01\mdrv2.obj bin\th01\fuuin.obj bin\th01\scoredat.obj
 	$(CC) $(CFLAGS_RELEASE) $(LARGE_LFLAGS) -DGAME=1 -DBINARY='E' -nbin\th01\ -eFUUIN.EXE @&&|
 $**
 |
