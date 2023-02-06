@@ -83,14 +83,18 @@ void segread(struct SREGS *__segp);
 
 #ifdef __cplusplus
 	extern "C" {
-		void interrupt (__far * getvect(int __interruptno))(...);
-		void setvect(int __interruptno, void interrupt (__far *__isr)(...));
-		int int86(int __intno, union REGS *__inregs, union REGS *__outregs);
+		void interrupt (__far * __cdecl getvect(int __interruptno))(...);
+		void __cdecl setvect(
+			int __interruptno, void interrupt (__far *__isr)(...)
+		);
+		int __cdecl int86(
+			int __intno, union REGS *__inregs, union REGS *__outregs
+		);
 	}
 #else
-	void interrupt (__far * getvect(int __interruptno))();
-	void setvect(int __interruptno, void interrupt(__far *__isr)());
-	int int86(int __intno, union REGS *__inregs, union REGS *__outregs);
+	void interrupt (__far * __cdecl getvect(int __interruptno))();
+	void __cdecl setvect(int __interruptno, void interrupt(__far *__isr)());
+	int __cdecl int86(int __intno, union REGS *__inregs, union REGS *__outregs);
 #endif
 
 /// ----------

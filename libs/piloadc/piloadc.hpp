@@ -14,6 +14,6 @@
 	#define PiLoad PiLoadC
 #endif
 
-extern "C" int PiLoad(
+extern "C" int __cdecl PiLoad(
 	const char *name, char *buff, int Size, int X, int Y, int tone, int option
 );

@@ -381,8 +381,8 @@ unsigned MASTER_RET get_machine(void);
 // Math
 // ----
 
-extern const short SinTable8[256], CosTable8[256];
-extern long random_seed;
+extern const short __cdecl SinTable8[256], CosTable8[256];
+extern long __cdecl random_seed;
 
 #define Sin8(t) SinTable8[(t) & 0xff]
 #define Cos8(t) CosTable8[(t) & 0xff]
@@ -637,7 +637,7 @@ void MASTER_RET text_hide(void);
 
 // Incremented by 1 on every VSync interrupt. Can be manually reset to 0 to
 // simplify frame delay loops.
-extern unsigned volatile int vsync_Count1, vsync_Count2;
+extern __cdecl volatile unsigned int vsync_Count1, vsync_Count2;
 
 void MASTER_RET vsync_start(void);
 void MASTER_RET vsync_end(void);
