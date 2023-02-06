@@ -35650,7 +35650,7 @@ include libs/master.lib/vs[bss].asm
 include libs/master.lib/vsync[bss].asm
 include libs/master.lib/mem[bss].asm
 include libs/master.lib/superpa[bss].asm
-include th01/hardware/vram_planes[bss].asm
+include th02/hardware/vram_planes[bss].asm
 include th02/snd/snd[bss].asm
 include libs/master.lib/pfint21[bss].asm
 include th03/hardware/input[bss].asm

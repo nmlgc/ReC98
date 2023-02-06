@@ -31,7 +31,6 @@
 #include "th01/hardware/palette.h"
 #include "th01/hardware/text.h"
 #include "th01/hardware/tram_x16.hpp"
-#include "th01/hardware/vplanset.h"
 #include "th01/hardware/ztext.hpp"
 #include "th01/snd/mdrv2.h"
 #include "th01/formats/cfg.hpp"
@@ -488,7 +487,6 @@ int main(void)
 	set_new_handler(out_of_memory_exit);
 	arc_key = ARC_KEY;
 	arc_load(ARC_FN);
-	vram_planes_set();
 
 	default_grp_fn[2] = (scene_id + '0');
 	default_bgm_fn[2] = (scene_id + '0');

@@ -9,7 +9,6 @@
 #include "shiftjis.hpp"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/palette.h"
-#include "th01/hardware/vplanset.h"
 #include "th01/hardware/vsync.hpp"
 #include "th01/hardware/ztext.hpp"
 #include "th01/core/initexit.hpp"
@@ -36,7 +35,6 @@ void game_init(void)
 	z_text_init();
 	egc_start();
 	graph_start();
-	vram_planes_set();
 }
 
 void game_exit(void)

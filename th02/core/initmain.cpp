@@ -1,7 +1,7 @@
 #pragma option -zCSHARED
 
 #include "master.hpp"
-#include "th01/hardware/vplanset.h"
+#include "th02/hardware/vplanset.h"
 #include "th02/mem.h"
 extern "C" {
 #include "th02/formats/pf.hpp"

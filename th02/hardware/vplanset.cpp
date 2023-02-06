@@ -1,9 +1,9 @@
-#pragma option -zCSHARED
+#pragma option -zCSHARED -3
 
 #include "platform.h"
 #include "pc98.h"
 #include "planar.h"
-#include "th01/hardware/vplanset.h"
+#include "th02/hardware/vplanset.h"
 
 void vram_planes_set(void)
 {
