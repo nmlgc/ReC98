@@ -30,7 +30,7 @@ AFLAGS = /m /ml
 
 # Additional generally good compilation flags. Should be used for all code that
 # does not need to match the original binaries.
-CFLAGS_RELEASE = $(CFLAGS) -3 -Z -d -G -k- -x-
+CFLAGS_RELEASE = $(CFLAGS) -3 -Z -d -G -k- -p -x-
 
 # Currently, it only makes sense to enable extended dictionary processing for
 # binaries that don't link the original binary release of MASTERS.LIB, which

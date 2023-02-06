@@ -57,7 +57,7 @@ bool16 mdrv2_resident(void)
 	return true;
 }
 
-void near pascal mdrv2_load(const char *fn, char func)
+void near mdrv2_load(const char *fn, char func)
 {
 	if(mdrv2_active) {
 		int handle = open(fn, (O_BINARY | O_RDONLY));	// opens a DOS handle

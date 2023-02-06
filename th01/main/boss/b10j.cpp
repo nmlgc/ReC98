@@ -393,7 +393,7 @@ static const pixel_t SQUARE_RADIUS_STEP = (
 	SQUARE_INTERVAL * SQUARE_RADIUS_PER_FRAME
 );
 
-void pascal near regular_polygon(
+void near regular_polygon(
 	screen_x_t *corners_x,
 	screen_y_t *corners_y,
 	screen_x_t center_x,

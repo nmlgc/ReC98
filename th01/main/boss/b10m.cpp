@@ -519,7 +519,7 @@ inline unsigned char missile_angle(
 	);
 }
 
-void pascal near fire_missile_pair_from_south(
+void near fire_missile_pair_from_south(
 	unsigned char angle_for_southwest, unsigned char angle_for_southeast
 )
 {
@@ -1099,7 +1099,7 @@ enum pentagram_attack_phase_t {
 )
 
 // Also performs collision detection.
-void pascal near pentagram_regular_unput_update_render(
+void near pentagram_regular_unput_update_render(
 	int angle_offset // ACTUAL TYPE: unsigned char
 )
 {

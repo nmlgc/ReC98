@@ -9,7 +9,7 @@ static const pixel_t PIC_VRAM_W = (PIC_W / BYTE_DOTS);
 
 // Loads the ending pictures from the .GRP file [fn] onto graphics page #1,
 // and sets the hardware color palette to the one in [fn]'s header.
-void pascal end_pics_load_palette_show(const char *fn);
+void end_pics_load_palette_show(const char *fn);
 
 // Blits the given [quarter] of the set of ending pictures currently loaded
 // onto graphics page #1 to the center of page #0.

@@ -219,7 +219,7 @@ void input_sense(bool16 reset_repeat)
 #include "th01/hardware/tram_x16.cpp"
 
 // Largely copy-pasted from harryup_animate().
-void pascal stage_num_animate(unsigned int stage_num)
+void stage_num_animate(unsigned int stage_num)
 {
 	ushiftjis_kanji_amount_t x;
 	upixel_t glyph_y;
@@ -387,7 +387,7 @@ inline void debug_startup_delay() {
 char default_grp_fn[15] = "ST .GRP";
 char default_bgm_fn[15] = "ST .MDT";
 
-int main(void)
+int __cdecl main(void)
 {
 	bool stage_wait_for_shot_to_begin;
 

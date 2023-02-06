@@ -859,7 +859,7 @@ int pattern_pellets_along_circle(void)
 }
 
 // Draws a line from [angle_1] to [angle_2] on the star circle around Elis.
-void pascal near starcircle_line_put(
+void near starcircle_line_put(
 	unsigned char angle_1, unsigned char angle_2, int col
 )
 {
@@ -870,7 +870,7 @@ void pascal near starcircle_line_put(
 	graph_r_line(p1_x, p1_y, p2_x, p2_y, col);
 }
 
-void pascal near starcircle_line_unput(
+void near starcircle_line_unput(
 	unsigned char angle_1, unsigned char angle_2
 )
 {
@@ -896,7 +896,7 @@ int phase_1(int id)
 	return CHOOSE_NEW;
 }
 
-void pascal near star_of_david_put(int col)
+void near star_of_david_put(int col)
 {
 	starcircle_line_put(-0x40, +0x16, col);
 	starcircle_line_put(-0x40, +0x6A, col);

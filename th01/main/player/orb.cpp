@@ -90,9 +90,7 @@ inline main_ptn_id_t orb_anim_cel(void) {
 	);
 }
 
-void pascal orb_and_pellets_and_stage_unput_update_render__vsync_wait(
-	int stage_id
-)
+void orb_and_pellets_and_stage_unput_update_render__vsync_wait(int stage_id)
 {
 	if(!orb_in_portal) {
 		orb_move_x(orb_velocity_x);

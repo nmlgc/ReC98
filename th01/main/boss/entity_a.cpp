@@ -208,21 +208,21 @@ void CBossEntity::put_1line(
 		bos_p++;
 	}
 }
-void pascal near vram_snap_masked(
+void near vram_snap_masked(
 	dots16_t &dst, dots8_t plane[], vram_offset_t vram_offset, dots16_t mask
 )
 {
 	dst = (reinterpret_cast<dots16_t &>(plane[vram_offset]) & mask);
 }
 
-void pascal near vram_put_bg_fg(
+void near vram_put_bg_fg(
 	sdots16_t fg, dots8_t plane[], vram_offset_t vram_offset, sdots16_t bg_masked
 )
 {
 	reinterpret_cast<dots16_t &>(plane[vram_offset]) = (fg | bg_masked);
 }
 
-void pascal near vram_put_unaligned_bg_fg(
+void near vram_put_unaligned_bg_fg(
 	sdots16_t fg,
 	dots8_t plane[],
 	vram_offset_t vram_offset,

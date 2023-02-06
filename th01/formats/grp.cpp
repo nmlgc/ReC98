@@ -23,7 +23,7 @@ static const int TONE_STEP_PER_FRAME = 5;
 Palette4 grp_palette;
 static int grp_palette_tone = 100;
 
-void pascal grp_palette_settone(int tone)
+void grp_palette_settone(int tone)
 {
 	if(tone < 0) {
 		tone = 0;
@@ -50,7 +50,7 @@ void pascal grp_palette_settone(int tone)
 	z_palette_set_all_show(z_Palettes);
 }
 
-void pascal grp_palette_inout(
+void grp_palette_inout(
 	int tone_start, int speed, unsigned int frame_delay_per_step
 )
 {
@@ -62,22 +62,22 @@ void pascal grp_palette_inout(
 	}
 }
 
-void pascal grp_palette_black_out(unsigned int frame_delay_per_step)
+void grp_palette_black_out(unsigned int frame_delay_per_step)
 {
 	grp_palette_inout(100, -1, frame_delay_per_step);
 }
 
-void pascal grp_palette_black_in(unsigned int frame_delay_per_step)
+void grp_palette_black_in(unsigned int frame_delay_per_step)
 {
 	grp_palette_inout(  0, +1, frame_delay_per_step);
 }
 
-void pascal grp_palette_white_out(unsigned int frame_delay_per_step)
+void grp_palette_white_out(unsigned int frame_delay_per_step)
 {
 	grp_palette_inout(100, +1, frame_delay_per_step);
 }
 
-void pascal grp_palette_white_in(unsigned int frame_delay_per_step)
+void grp_palette_white_in(unsigned int frame_delay_per_step)
 {
 	grp_palette_inout(200, -1, frame_delay_per_step);
 }

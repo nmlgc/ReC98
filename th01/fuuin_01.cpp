@@ -80,7 +80,7 @@ bool16 end_resident_clear(void)
 	return true;
 }
 
-void main(int argc, const char *argv[])
+void __cdecl main(int argc, const char *argv[])
 {
 	if(!mdrv2_resident()) {
 		return;

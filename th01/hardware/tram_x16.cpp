@@ -21,7 +21,7 @@ void TRAMCursor::putkanji_for_5_rows(jis_t jis_kanji, int atrb)
 
 // Heavily inspired by the INT 18h, AH=14h sample program from the PC-9801
 // Programmers' Bible, on p. 121.
-void pascal tram_x16_kanji_center_reverse(jis_t jis_kanji)
+void tram_x16_kanji_center_reverse(jis_t jis_kanji)
 {
 	ushiftjis_kanji_amount_t x;
 	upixel_t glyph_y;

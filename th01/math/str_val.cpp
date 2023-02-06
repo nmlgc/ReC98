@@ -1,8 +1,6 @@
 #include "th01/math/str_val.hpp"
 
-void pascal str_right_aligned_from_uint16(
-	char *str, uint16_t val, uint16_t width
-)
+void str_right_aligned_from_uint16(char *str, uint16_t val, uint16_t width)
 {
 	uint16_t divisor = 10000;
 	unsigned int i = width;
@@ -27,7 +25,7 @@ void pascal str_right_aligned_from_uint16(
 	str[width] = '\0';
 }
 
-void pascal str_from_positive_int16(char *str, int16_t val)
+void str_from_positive_int16(char *str, int16_t val)
 {
 	int16_t divisor = 10000;
 	int i;

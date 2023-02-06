@@ -40,14 +40,14 @@ extern Palette4 grp_palette;
 // Sets colors 1 - 15 (excluding color 0!) of z_Palettes and the hardware
 // palette to [grp_palette] at the given [tone].
 // The toning algorithm is equivalent to master.lib's palette_settone().
-void pascal grp_palette_settone(int tone);
+void grp_palette_settone(int tone);
 
 // Equivalent to the master.lib functions, but based on the [grp_palette].
 // Implemented using grp_palette_settone(), and thus ignoring color 0.
-void pascal grp_palette_black_out(unsigned int frame_delay_per_step);
-void pascal grp_palette_black_in(unsigned int frame_delay_per_step);
-void pascal grp_palette_white_out(unsigned int frame_delay_per_step);
-void pascal grp_palette_white_in(unsigned int frame_delay_per_step);
+void grp_palette_black_out(unsigned int frame_delay_per_step);
+void grp_palette_black_in(unsigned int frame_delay_per_step);
+void grp_palette_white_out(unsigned int frame_delay_per_step);
+void grp_palette_white_in(unsigned int frame_delay_per_step);
 
 // Just loads [grp_palette] from the .GRP file with the given [fn], and updates
 // the hardware palette with it. Returns `false` on success, `true` on file

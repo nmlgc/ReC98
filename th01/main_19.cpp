@@ -42,7 +42,7 @@ score_t scoredat_hiscore_get()
 
 #include "th01/hiscore/score_nm.cpp"
 
-void pascal near str_from_swapped_kanji(
+void near str_from_swapped_kanji(
 	shiftjis_t str[3], shiftjis_kanji_swapped_t kanji
 )
 {

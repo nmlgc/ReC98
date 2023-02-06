@@ -97,9 +97,7 @@ uscore_t score_bonus = 0; // Should be local to the respective function.
 } \
 
 // [digit] must be a value from 0 to 9, but [place] can be negative.
-void pascal near totle_metric_digit_animate(
-	int digit, int place, screen_y_t top
-)
+void near totle_metric_digit_animate(int digit, int place, screen_y_t top)
 {
 	enum {
 		DIGIT_LOOPS = 2, // Number of full loops from 0 to 9
@@ -143,7 +141,7 @@ static const int ROWSHIFT_CHUNK_SIZE = (EGC_REGISTER_SIZE * 2);
 // edge.
 // Assumes that VRAM page 0 is accessed, and that the EGC is active and
 // initialized for a copy.
-void pascal near egc_pagetrans_rowshift_alternating(
+void near egc_pagetrans_rowshift_alternating(
 	vram_y_t y, vram_byte_amount_t transferred_offset
 )
 {
@@ -189,7 +187,7 @@ void pascal near egc_pagetrans_rowshift_alternating(
 	graph_accesspage_func(0);	egc_chunk(vo_p0 + CHUNK_OFFSET_RIGHT) = dots;
 }
 
-void pascal near totle_pagetrans_animate(int)
+void near totle_pagetrans_animate(int)
 {
 	upixel_t y;
 	unsigned int rows_active = 0;
@@ -307,7 +305,7 @@ void fullwidth_numeral(ShiftJISKanji& kanji, int8_t digit)
 	kanji.byte[1] = NUMERALS[digit][1];
 }
 
-void pascal near fullwidth_str_from_4_digit_value(ShiftJISKanji str[4], int val)
+void near fullwidth_str_from_4_digit_value(ShiftJISKanji str[4], int val)
 {
 	fullwidth_numeral(str[0], (val / 1000));	val %= 1000;
 	fullwidth_numeral(str[1], (val / 100)); 	val %= 100;

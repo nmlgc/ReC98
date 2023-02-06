@@ -27,7 +27,7 @@ void frame_delay(unsigned int frames)
 	}
 }
 
-void pascal graph_type_ank_n(
+void graph_type_ank_n(
 	screen_x_t left, vram_y_t top, int len, const sshiftjis_t *str
 )
 {
@@ -39,7 +39,7 @@ void pascal graph_type_ank_n(
 	}
 }
 
-void pascal graph_type_kanji_n(
+void graph_type_kanji_n(
 	screen_x_t left, vram_y_t top, int len, const sshiftjis_kanji_t *str
 )
 {

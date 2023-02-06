@@ -40,7 +40,7 @@ char arc_fn[PF_FN_LEN];
 size_t file_pos;
 size_t cache_bytes_read;
 
-void pascal arc_load(const char fn[PF_FN_LEN])
+void arc_load(const char fn[PF_FN_LEN])
 {
 	int i;
 	int c;
@@ -74,7 +74,7 @@ void arc_free(void)
 	delete[] arc_pfs;
 }
 
-bool16 pascal near at_pos_of(const char fn[PF_FN_LEN])
+bool16 near at_pos_of(const char fn[PF_FN_LEN])
 {
 	for(int i = 0; i < PF_FN_LEN; i++) {
 		if(arc_pfs[cur_file_id].fn[i] != toupper(fn[i])) {
@@ -88,14 +88,14 @@ bool16 pascal near at_pos_of(const char fn[PF_FN_LEN])
 }
 
 // Get it? En*crap*tion?
-void pascal near crapt(uint8_t *buf, size_t size)
+void near crapt(uint8_t *buf, size_t size)
 {
 	for(size_t i = 0; i < size; i++) {
 		buf[i] ^= arc_key;
 	}
 }
 
-uint8_t pascal near cache_next_raw(void)
+uint8_t near cache_next_raw(void)
 {
 	uint8_t b;
 	if(cache_bytes_read == 0) {
@@ -115,7 +115,7 @@ inline void near cache_next(uint8_t& ret, long& bytes_read) {
 	bytes_read++;
 }
 
-void pascal near unrle(size_t input_size)
+void near unrle(size_t input_size)
 {
 	// Simple run-length encoding scheme, compressing runs of three or more
 	// identical bytes by replacing arbitrarily many bytes after the third one
@@ -198,7 +198,7 @@ void pascal near unrle(size_t input_size)
 	}
 }
 
-void pascal arc_file_load(const char fn[PF_FN_LEN])
+void arc_file_load(const char fn[PF_FN_LEN])
 {
 	const uint8_t rle_type[] = PF_TYPE_COMPRESSED;
 
@@ -231,7 +231,7 @@ void pascal arc_file_load(const char fn[PF_FN_LEN])
 	file_close();
 }
 
-void pascal arc_file_get(uint8_t *buf, size_t size)
+void arc_file_get(uint8_t *buf, size_t size)
 {
 	uint8_t *p = buf;
 	for(size_t i = 0; i < size; i++) {
@@ -243,7 +243,7 @@ void pascal arc_file_get(uint8_t *buf, size_t size)
 	}
 }
 
-void pascal arc_file_seek(int8_t pos)
+void arc_file_seek(int8_t pos)
 {
 	file_pos = pos;
 }

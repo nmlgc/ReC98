@@ -140,6 +140,4 @@ void orb_player_hittest(int repel_friction);
 // for pellets and (on non-boss [stage_id] values) stage objects, after (yes,
 // *after*) doing the per-frame VSync wait… yeah, another function that should
 // either have been multiple ones, or not have existed at all.
-void pascal orb_and_pellets_and_stage_unput_update_render__vsync_wait(
-	int stage_id
-);
+void orb_and_pellets_and_stage_unput_update_render__vsync_wait(int stage_id);

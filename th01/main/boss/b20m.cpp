@@ -407,7 +407,7 @@ void sariel_free(void)
 }
 
 // Almost identical to Konngara's version. This one is worse.
-void pascal near spawnray_unput_and_put(
+void near spawnray_unput_and_put(
 	screen_x_t origin_x, vram_y_t origin_y,
 	screen_x_t target_x, vram_y_t target_y,
 	int col
@@ -555,7 +555,7 @@ static const int BF_UNPUT_UPDATE_RENDER = 0;
 static const int BF_RESET = 1000;
 static const int BF_FIRE = 1001;
 
-void pascal near birds_reset_fire_spawn_unput_update_render(
+void near birds_reset_fire_spawn_unput_update_render(
 	double func_or_left,
 	double top = 0.0f,
 	double velocity_x = 0.0f,
@@ -736,7 +736,7 @@ void near shield_render_both(void)
 
 // Renders a frame of Sariel's wand raise animation on both VRAM pages, and
 // returns `true` once the animation completed.
-bool16 pascal near wand_render_raise_both(bool16 restart = false)
+bool16 near wand_render_raise_both(bool16 restart = false)
 {
 	static int frames = 0;
 
@@ -796,7 +796,7 @@ inline screen_y_t vortex_pellet_bottom(screen_y_t vortex_bottom) {
 }
 
 // Shouldn't really take [angle] as a parameter...
-void pascal near vortex_fire_3_spread(
+void near vortex_fire_3_spread(
 	const screen_x_t left[VORTEX_COUNT],
 	const vram_y_t top[VORTEX_COUNT],
 	int i,
@@ -1147,7 +1147,7 @@ void near pattern_birds_on_ellipse_arc(void)
 	}
 }
 
-void pascal near bg_transition(int image_id_new)
+void near bg_transition(int image_id_new)
 {
 	// Terminology:
 	// • Gust: The full animation drawn across the whole width of VRAM
@@ -1292,7 +1292,7 @@ void pascal near bg_transition(int image_id_new)
 	#undef stripe_vram_offset
 }
 
-void pascal near particles2x2_vertical_unput_update_render(bool16 from_bottom)
+void near particles2x2_vertical_unput_update_render(bool16 from_bottom)
 {
 	// Also indicates whether a particle is alive.
 	static uint4_t col[PARTICLE2X2_COUNT] = { 0 };
@@ -2046,7 +2046,7 @@ void near pattern_vertical_stacks_from_bottom_then_random_rain_from_top(void)
 	}
 }
 
-void near pascal dottedcircle_unput_update_render(
+void near dottedcircle_unput_update_render(
 	screen_x_t center_x,
 	screen_y_t center_y,
 	int frame_1based,
@@ -2082,7 +2082,7 @@ void near pascal dottedcircle_unput_update_render(
 	#undef radius_cur
 }
 
-void pascal near particles2x2_horizontal_unput_update_render(int frame)
+void near particles2x2_horizontal_unput_update_render(int frame)
 {
 	// Also indicates whether a particle is alive.
 	static uint4_t col[PARTICLE2X2_COUNT] = { 0 };
@@ -2194,7 +2194,7 @@ struct CurvedSpray {
 	}
 };
 
-void pascal near pattern_curved_spray_leftright_once(int &frame)
+void near pattern_curved_spray_leftright_once(int &frame)
 {
 	static CurvedSpray spray;
 
@@ -2239,7 +2239,7 @@ void pascal near pattern_curved_spray_leftright_once(int &frame)
 	#undef spray
 }
 
-void pascal near pattern_rain_from_seal_center(int &frame)
+void near pattern_rain_from_seal_center(int &frame)
 {
 	enum {
 		VELOCITY_Y = 8,
@@ -2290,7 +2290,7 @@ void pascal near pattern_rain_from_seal_center(int &frame)
 	frame = 0;
 }
 
-void pascal near pattern_curved_spray_leftright_twice(int &frame)
+void near pattern_curved_spray_leftright_twice(int &frame)
 {
 	static CurvedSpray spray;
 
@@ -2317,7 +2317,7 @@ void pascal near pattern_curved_spray_leftright_twice(int &frame)
 	}
 }
 
-void pascal near pattern_swaying_leaves(int &frame, int spawn_interval_or_reset)
+void near pattern_swaying_leaves(int &frame, int spawn_interval_or_reset)
 {
 	enum {
 		LEAF_COUNT = 30,

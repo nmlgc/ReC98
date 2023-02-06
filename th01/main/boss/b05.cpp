@@ -493,7 +493,7 @@ void transform_to_person_and_back_to_sphere(
 	#undef person_cel_for_form
 }
 
-void pascal fire_chasing_pellets(void)
+void fire_chasing_pellets(void)
 {
 	subpixel_t chase_speed;
 
@@ -517,7 +517,7 @@ void pascal fire_chasing_pellets(void)
 	);
 };
 
-void pascal fire_crossing_pellets(void)
+void fire_crossing_pellets(void)
 {
 	subpixel_t speed;
 

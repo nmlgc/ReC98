@@ -185,7 +185,7 @@ void end_and_verdict_and_regist_animate(void)
 	verdict_animate_and_regist();
 }
 
-void pascal near shake_then_boom(int shake_duration, int boom_duration)
+void near shake_then_boom(int shake_duration, int boom_duration)
 {
 	int i;
 
@@ -348,7 +348,7 @@ void near end_good_makai(void)
 static const int BOSS_SLIDE_DELAY = 150;
 static const int BOSS_TEXT_DELAY = 50;
 
-void near pascal boss_slide_next(int quarter)
+void near boss_slide_next(int quarter)
 {
 	frame_delay(BOSS_SLIDE_DELAY);
 	grp_palette_black_out(5);

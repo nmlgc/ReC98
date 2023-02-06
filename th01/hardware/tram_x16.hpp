@@ -45,10 +45,10 @@ public:
 
 // Fills text RAM with black and renders a transparent [jis_kanji] at its
 // center.
-void pascal tram_x16_kanji_center_reverse(jis_t jis_kanji);
+void tram_x16_kanji_center_reverse(jis_t jis_kanji);
 
 // Shows the red "STAGE [stage_num]" letters.
-void pascal tram_x16_stage(unsigned int stage_num);
+void tram_x16_stage(unsigned int stage_num);
 
 #define tram_x16_put_center_margin(tram_cursor, x, atrb) \
 	for(x = 0; x < (((RES_X / GLYPH_FULL_W) - GLYPH_FULL_W) / 2); x++) { \

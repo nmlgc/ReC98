@@ -207,7 +207,7 @@ void logo_render_and_update(void)
 	}
 }
 
-void main(void)
+void __cdecl main(void)
 {
 	int keygroup, quit;
 

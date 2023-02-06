@@ -2,7 +2,7 @@
 #include "th01/formats/grp.h"
 #include "th01/end/pic.hpp"
 
-void pascal end_pics_load_palette_show(const char *fn)
+void end_pics_load_palette_show(const char *fn)
 {
 	graph_accesspage_func(1);
 	grp_put(fn, GPF_PALETTE_SHOW);

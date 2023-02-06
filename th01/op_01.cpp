@@ -735,7 +735,7 @@ void music_update_and_render(void)
 	}
 }
 
-void main(int argc, const char *argv[])
+void __cdecl main(int argc, const char *argv[])
 {
 	int bgm_mode_cur = 0;
 	int hit_key_frames = 0;

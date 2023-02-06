@@ -229,7 +229,7 @@ bool16 near kikuri_hittest_orb(void)
 	return false;
 }
 
-void pascal near soul_move_and_render(int i, pixel_t delta_x, pixel_t delta_y)
+void near soul_move_and_render(int i, pixel_t delta_x, pixel_t delta_y)
 {
 	souls[i].locked_move_unput_and_put_8(delta_x, delta_y, 1);
 	if((boss_phase_frame % 12) == 0) {
@@ -241,7 +241,7 @@ void pascal near soul_move_and_render(int i, pixel_t delta_x, pixel_t delta_y)
 	}
 }
 
-void pascal near tears_add(screen_x_t left, screen_y_t top)
+void near tears_add(screen_x_t left, screen_y_t top)
 {
 	for(int i = 0; i < TEAR_COUNT; i++) {
 		if(tear_anim_frame[i] == 0) {
@@ -256,7 +256,7 @@ void pascal near tears_add(screen_x_t left, screen_y_t top)
 	}
 }
 
-bool16 pascal near tear_ripple_hittest(screen_x_t left, pixel_t extra_w)
+bool16 near tear_ripple_hittest(screen_x_t left, pixel_t extra_w)
 {
 	if(player_invincible != true) {
 		// Translation: 8 pixels in Reimu's center vs. 10 pixels in the ripple
@@ -291,7 +291,7 @@ void near tears_update_and_render(void)
 			if(tears[i].cur_top <= TEAR_TOP_MAX) {
 				tears[i].locked_move_unput_and_put_8(0, +8, 1);
 			} else {
-				void pascal near ripple_update_and_render(
+				void near ripple_update_and_render(
 					screen_x_t tear_left, screen_y_t tear_top_max, int8_t &frame
 				);
 				ripple_update_and_render(
@@ -305,7 +305,7 @@ void near tears_update_and_render(void)
 // Oh hey, ZUN did write the obvious wrapper function! Definitely nicer than
 // the [ptn_sloppy_unput_before_alpha_put] hack, but it still suffers from the
 // same word alignment bug.
-void pascal near ripple_unput_and_put(
+void near ripple_unput_and_put(
 	screen_x_t left, vram_y_t top, int ptn_id, int quarter
 )
 {
@@ -313,7 +313,7 @@ void pascal near ripple_unput_and_put(
 	ptn_put_quarter_8(left, top, ptn_id, quarter);
 }
 
-void pascal near ripple_update_and_render(
+void near ripple_update_and_render(
 	screen_x_t tear_left, screen_y_t tear_top_max, int8_t &frame
 )
 {
@@ -464,7 +464,7 @@ inline void souls_move_diagonally_and_render__tears_update_and_render(
 }
 
 // What's a EGC?
-void pascal near graph_copy_line_1_to_0_masked(vram_y_t y, dots16_t mask)
+void near graph_copy_line_1_to_0_masked(vram_y_t y, dots16_t mask)
 {
 	vram_offset_t vo = vram_offset_muldiv(0, y);
 	dots16_t p1;

@@ -24,7 +24,7 @@ inline void debug_coreleft(void) {
 	printf("    coreleft %7lu bytes free\n", coreleft());
 }
 
-void pascal debug_mem_node(const char label[], void far* node)
+void debug_mem_node(const char label[], void far* node)
 {
 	printf("%s", label);
 	printf(" : [%Fp] -> ", node);
