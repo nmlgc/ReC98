@@ -3,7 +3,6 @@
  * Code segment #19 of TH01's REIIDEN.EXE
  */
 
-#include <stdio.h>
 #include <string.h>
 #include "platform.h"
 #include "x86real.h"
@@ -22,15 +21,6 @@
 #include "th01/shiftjis/regist.hpp"
 #include "th01/formats/scoredat.hpp"
 
-#include "th01/hiscore/scorelod.cpp"
-
-score_t scoredat_hiscore_get()
-{
-	return scoredat_score[0];
-}
-
-#include "th01/hiscore/score_nm.cpp"
-
 void near str_from_swapped_kanji(
 	shiftjis_t str[3], shiftjis_kanji_swapped_t kanji
 )
@@ -48,6 +38,7 @@ void near str_from_swapped_kanji(
 	str_from_swapped_kanji(kanji_str, kanji); \
 	graph_putsa_fx(left, top, col_and_fx, kanji_str); \
 }
+
 #define graph_printf_fx graph_putsa_fx
 #define graph_printf_s_fx graph_putsa_fx
 

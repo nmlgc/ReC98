@@ -3,7 +3,6 @@
  * Code segment #2 of TH01's FUUIN.EXE
  */
 
-#include <stdio.h>
 #include <string.h>
 #include "platform.h"
 #include "x86real.h"
@@ -17,7 +16,6 @@
 #include "th01/hardware/graph.h"
 #include "th01/hardware/grp_text.hpp"
 #include "th01/hardware/input.hpp"
-#include "th01/shiftjis/fns.hpp"
 #include "th01/shiftjis/regist.hpp"
 #include "th01/formats/scoredat.hpp"
 
@@ -62,9 +60,6 @@ void input_sense(bool16 reset_repeat)
 
 #include "th01/hardware/input_rs.cpp"
 // -----
-
-#include "th01/hiscore/scorelod.cpp"
-#include "th01/hiscore/score_nm.cpp"
 
 #define graph_putkanji_fx_declare()
 #define graph_putkanji_fx(left, top, fx, kanji) { \

@@ -1,3 +1,12 @@
+#include <stdio.h>
+#include <string.h>
+#include "platform.h"
+#include "shiftjis.hpp"
+#include "master.hpp"
+#include "th01/rank.h"
+#include "th01/resident.hpp"
+#include "th01/formats/scoredat.hpp"
+#include "th01/shiftjis/fns.hpp"
 #include "th01/shiftjis/scoredat.hpp"
 
 // State
@@ -26,6 +35,11 @@ int8_t scoredat_name_byte_encode(int8_t byte)
 int8_t scoredat_name_byte_decode(int8_t byte)
 {
 	return (byte + (0x100 - SCOREDAT_NAME_KEY));
+}
+
+score_t scoredat_hiscore_get()
+{
+	return scoredat_score[0];
 }
 
 void scoredat_recreate()
@@ -110,4 +124,40 @@ int scoredat_load()
 		scoredat_names[i] = scoredat_name_byte_decode(scoredat_names[i]);
 	}
 	return 0;
+}
+
+void scoredat_save(void)
+{
+	const char magic[sizeof(SCOREDAT_MAGIC)] = SCOREDAT_MAGIC; // ZUN bloat
+	char fn[16];
+	scoredat_fn(fn);
+
+	if(!file_create(fn)) {
+		return;
+	}
+	file_write(magic, sizeof(SCOREDAT_MAGIC) - 1);
+	for(int i = 0; i < SCOREDAT_NAMES_SIZE; i++) {
+		scoredat_names[i] = scoredat_name_byte_encode(scoredat_names[i]);
+	}
+	file_write(scoredat_names, SCOREDAT_NAMES_SIZE);
+	file_write(scoredat_score, (sizeof(score_t) * SCOREDAT_PLACES));
+	file_write(scoredat_stages, (sizeof(int16_t) * SCOREDAT_PLACES));
+	file_write(scoredat_routes, (sizeof(shiftjis_kanji_t) * SCOREDAT_PLACES));
+	file_close();
+}
+
+void scoredat_name_get(int place, unsigned char str[SCOREDAT_NAME_BYTES + 1])
+{
+	for(int i = 0; i < SCOREDAT_NAME_BYTES; i++) {
+		str[i] = scoredat_names[(place * SCOREDAT_NAME_BYTES) + i];
+	}
+	str[SCOREDAT_NAME_BYTES] = '\0';
+}
+
+void scoredat_free(void)
+{
+	delete[] scoredat_names;
+	delete[] scoredat_stages;
+	delete[] scoredat_routes;
+	delete[] scoredat_score;
 }

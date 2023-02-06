@@ -34,6 +34,11 @@ struct scoredat_t {
 };
 #endif
 
+extern int8_t* scoredat_names;
+extern int8_t* scoredat_routes;
+extern int16_t* scoredat_stages;
+extern int32_t* scoredat_score;
+
 // Loads the score file for the current [rank], recreating it if necessary.
 // Returns 0 on success, 1 on failure.
 int scoredat_load();
@@ -45,6 +50,9 @@ score_t scoredat_hiscore_get();
 // Sets [str] to the null-terminated name at the given [place] for the
 // difficulty previously loaded by scoredat_load().
 void scoredat_name_get(int place, unsigned char str[SCOREDAT_NAME_BYTES + 1]);
+
+// Saves the internal score file data to the file for the current [rank].
+void scoredat_save(void);
 
 // Frees the previously loaded score file data.
 void scoredat_free(void);
