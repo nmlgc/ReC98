@@ -12,11 +12,13 @@
 
 #undef arc_file_get
 
-#define FILE_COUNT 64
-#define CACHE_SIZE 0x100
+static const int FILE_COUNT = 64;
+static const size_t CACHE_SIZE = 0x100;
+
+#define PF_TYPE_COMPRESSED "\x95\x95" // "Â∞Å" in Shift-JIS
 
 typedef struct {
-	uint8_t type[2]; // ïï if RLE-compressed
+	uint8_t type[2]; // PF_TYPE_COMPRESSED if RLE-compressed
 	int8_t aux; // Always 3, unused
 	char fn[PF_FN_LEN];
 	int32_t packsize;
@@ -40,24 +42,25 @@ size_t cache_bytes_read;
 
 void pascal arc_load(const char fn[PF_FN_LEN])
 {
-	int i, c;
+	int i;
+	int c;
 
 	arc_pfs = new pf_header_t[FILE_COUNT];
 	file_ropen(fn);
 	for(i = 0; i < PF_FN_LEN; i++) {
 		arc_fn[i] = fn[i];
-		if(fn[i] == 0) {
+		if(fn[i] == '\0') {
 			break;
 		}
 	}
-	file_read(arc_pfs, sizeof(pf_header_t) * FILE_COUNT);
+	file_read(arc_pfs, (sizeof(pf_header_t) * FILE_COUNT));
 	file_close();
 	for(i = 0; i < FILE_COUNT; i++) {
 		if(arc_pfs[i].type[0] == 0) {
 			break;
 		}
 		for(c = 0; c < PF_FN_LEN; c++) {
-			if(arc_pfs[i].fn[c] == 0) {
+			if(arc_pfs[i].fn[c] == '\0') {
 				break;
 			}
 			arc_pfs[i].fn[c] = ~arc_pfs[i].fn[c];
@@ -73,12 +76,11 @@ void arc_free(void)
 
 bool16 pascal near at_pos_of(const char fn[PF_FN_LEN])
 {
-	int i;
-	for(i = 0; i < PF_FN_LEN; i++) {
+	for(int i = 0; i < PF_FN_LEN; i++) {
 		if(arc_pfs[cur_file_id].fn[i] != toupper(fn[i])) {
 			return false;
 		}
-		if(fn[i] == 0) {
+		if(fn[i] == '\0') {
 			return true;
 		}
 	}
@@ -88,13 +90,12 @@ bool16 pascal near at_pos_of(const char fn[PF_FN_LEN])
 // Get it? En*crap*tion?
 void pascal near crapt(uint8_t *buf, size_t size)
 {
-	size_t i;
-	for(i = 0; i < size; i++) {
+	for(size_t i = 0; i < size; i++) {
 		buf[i] ^= arc_key;
 	}
 }
 
-uint8_t pascal near cache_next(void)
+uint8_t pascal near cache_next_raw(void)
 {
 	uint8_t b;
 	if(cache_bytes_read == 0) {
@@ -109,6 +110,11 @@ uint8_t pascal near cache_next(void)
 	return b;
 }
 
+inline void near cache_next(uint8_t& ret, long& bytes_read) {
+	ret = cache_next_raw();
+	bytes_read++;
+}
+
 void pascal near unrle(size_t input_size)
 {
 	uint8_t var_1;
@@ -116,43 +122,34 @@ void pascal near unrle(size_t input_size)
 	uint8_t var_3;
 	long bytes_read = 0;
 	long bytes_written = 0;
-	#define NEXT() \
-		cache_next(); \
-		bytes_read++;
-	var_3 = NEXT();
+	cache_next(var_3, bytes_read);
 	while(input_size > bytes_read) {
 		do {
-			file_data[bytes_written] = var_3;
-			var_1 = var_3;
-			bytes_written++;
-			var_3 = NEXT();
+			var_1 = file_data[bytes_written++] = var_3;
+			cache_next(var_3, bytes_read);
 		} while(var_1 != var_3);
-		file_data[bytes_written] = var_3;
+		file_data[bytes_written++] = var_3;
 		while(1) {
-			bytes_written++;
-			runs = NEXT();
+			cache_next(runs, bytes_read);
 			while(runs > 0) {
-				file_data[bytes_written] = var_1;
-				bytes_written++;
+				file_data[bytes_written++] = var_1;
 				runs--;
 			}
-			var_3 = NEXT();
+			cache_next(var_3, bytes_read);
 			if(var_3 != var_1) {
 				break;
 			}
-			file_data[bytes_written] = var_1;
+			file_data[bytes_written++] = var_1;
 		}
 	}
-	#undef NEXT()
 }
 
 void pascal arc_file_load(const char fn[PF_FN_LEN])
 {
-	const uint8_t rle_type[] = {"ïï"};
-	int i;
+	const uint8_t rle_type[] = PF_TYPE_COMPRESSED;
 
 	cur_file_id = 0;
-	for(i = 0; i < arc_pf_count; i++) {
+	for(int i = 0; i < arc_pf_count; i++) {
 		if(at_pos_of(fn)) {
 			break;
 		}
@@ -161,7 +158,7 @@ void pascal arc_file_load(const char fn[PF_FN_LEN])
 	file_pf = &arc_pfs[cur_file_id];
 	file_ropen(arc_fn);
 	file_seek(file_pf->offset, SEEK_SET);
-	if(file_pf->type[0] == rle_type[0] && file_pf->type[1] == rle_type[1]) {
+	if((file_pf->type[0] == rle_type[0]) && (file_pf->type[1] == rle_type[1])) {
 		file_compressed = true;
 	} else {
 		file_compressed = false;
@@ -183,8 +180,7 @@ void pascal arc_file_load(const char fn[PF_FN_LEN])
 void pascal arc_file_get(uint8_t *buf, size_t size)
 {
 	uint8_t *p = buf;
-	size_t i;
-	for(i = 0; i < size; i++) {
+	for(size_t i = 0; i < size; i++) {
 		if(file_pos >= file_pf->orgsize) {
 			break;
 		}
