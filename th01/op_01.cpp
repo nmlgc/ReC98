@@ -557,7 +557,7 @@ void music_choice_unput_and_put(int choice, int col)
 	egc_copy_rect_1_to_0_16(left, top, MENU_W, GLYPH_H);
 
 	if(choice == 0) {
-		// ZUN bug: That's larger than the menu?
+		// ZUN landmine: That's larger than the menu?
 		egc_copy_rect_1_to_0_16(
 			left, (top + CHOICE_PADDED_H), (MENU_W + GLYPH_FULL_W), GLYPH_H
 		);
@@ -769,8 +769,8 @@ void main(int argc, const char *argv[])
 			debug_mode = 3;
 		}
 
-		// ZUN bug: The string could theoretically be less than 3 characters
-		// long.
+		// ZUN landmine: The string could theoretically be less than 3
+		// characters long.
 		if(memcmp(argv[1], "CON", 3) == 0) {
 			arg2 = argv[2];
 			unused_con_arg_0 = atol(arg2);

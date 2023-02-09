@@ -526,7 +526,7 @@ int main(void)
 			puts(STAGESELECT_STAGE);
 			scanf("%d", &stage_id);
 
-			// ZUN bug: Reinterprets the 8-bit pointer &[route] as a 16-bit
+			// ZUN landmine: Reinterprets the 8-bit pointer &[route] as a 16-bit
 			// pointer, which will overwrite the byte that follows in memory.
 			// Luckily, it just hits the low byte of SinGyoku's phase frame,
 			// which is set to 0 in that fight's entrance animation.

@@ -428,6 +428,38 @@ Bloat is removed on the aptly named `debloated` branch. That branch is the
 recommended foundation for nontrivial mods that don't care about being
 byte-for-byte comparable to ZUN's original binary.
 
+#### `ZUN landmine`
+
+Code that is technically wrong, but does *not* have [observable] effects within
+the following assumptions:
+
+* ZUN's original build of the decompiled game is correctly installed and
+  accessible, together with all its original data files.
+* No files of this installation were modified.
+* All files can be read as intended without I/O errors.
+* The game runs on a clean PC-98 DOS system that matches the official minimum
+  system requirements, with enough free memory.
+* The only active TSRs are the game's intended sound driver, an [expanded
+  memory][5] manager, and the resident part of `COMMAND.COM`.
+* All system-level interfaces (interrupt APIs, I/O ports, and special memory
+  segments) behave as typically expected.
+
+The effects might never be triggered by the original data, or they might be
+mitigated by other parts of the original binary, including Turbo C++ 4.0J
+code generation details.
+
+Examples:
+
+* Out-of-bounds memory accesses with no consequences
+* Every [bug] in unused code
+* Missing error handling for file I/O
+
+Landmines are likely to cause issues as soon as the game is modded or compiled
+with a different compiler, which breaks the above assumptions. Therefore, it
+should be fixed on every branch that breaks the code or data layout of the
+game. Most notably, they are removed from the `debloated` and `anniversary`
+branches.
+
 #### `ZUN bug`
 
 Logic errors or incorrect programming language / interface / system use with
@@ -475,11 +507,11 @@ project, but forks are welcome to do so.
 
 #### Summary
 
-|                             | Bloat | Bugs | Quirks |
-| --------------------------- | ----- | ---- | ------ |
-| Fix would be [observable]   | No    | Yes  | Yes    |
-| Fix would desync replays    | No    | No   | Yes    |
-| Might have been intentional | No*   | No   | Yes    |
+|                             | Bloat | Landmines | Bugs | Quirks |
+| --------------------------- | ----- | --------- | ---- | ------ |
+| Fix would be [observable]   | No    | No        | Yes  | Yes    |
+| Fix would desync replays    | No    | No        | No   | Yes    |
+| Might have been intentional | No*   | No        | No   | Yes    |
 
 (* The games contain code that explicitly delays execution at microsecond,
 millisecond, and frame granularity. If bloated code does not include explicit
@@ -489,9 +521,9 @@ time of the respective game's development. [He admitted as much in an
 interview.](https://en.touhougarakuta.com/article/specialtaidan_zun_hiroyuki_2-en))
 
 The comments for each of these issues should be prefixed with a `ZUN
-(bloat|bug|quirk):` label, and include a description that points out the
-specific issue. This description can be left out for obvious cases of bloat,
-like unused variables or code with no effect.
+(bloat|landmine|bug|quirk):` label, and include a description that points out
+the specific issue. This description can be left out for obvious cases of
+bloat, like unused variables or code with no effect.
 
 ----
 
@@ -500,5 +532,6 @@ like unused variables or code with no effect.
 [2]: https://github.com/nmlgc/ReC98/invitations
 [3]: Research/Borland%20C++%20decompilation.md#padding-bytes-in-code-segments
 [4]: Research/Borland%20C++%20decompilation.md#memory-segmentation
+[5]: https://en.wikipedia.org/wiki/Expanded_memory
 [bug]: #zun-bug
 [observable]: #observable

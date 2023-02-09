@@ -76,7 +76,8 @@ enum pellet_sling_direction_t {
 // • spreads with  odd numbers of pellets are aimed *at* the player, while
 // • spreads with even numbers of pellets are aimed *around* the player.
 enum pellet_group_t {
-	// Does not actually work, due to a ZUN bug in group_velocity_set()!
+	// Not a valid pellet type, due to a potential ZUN bug in
+	// group_velocity_set()!
 	PG_NONE = 0,
 
 	PG_1 = 1,

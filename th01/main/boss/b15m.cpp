@@ -1930,11 +1930,14 @@ void elis_main(void)
 					(angle + (i * (0x100 / SPHERE_COUNT)))
 				);
 
-				// ZUN bug: Reads uninitialized stack memory in frame 0.
+				// ZUN landmine: Reads uninitialized stack memory in frame 0.
+				// Thankfully doesn't end up hitting the player or orb sprite
+				// in the original binary.
 				sphere_unput_and_put_head(i, head_left, head_top);
 
-				// ZUN bug: Both of these calls read uninitialized stack memory
-				// during frames 2 and 3, respectively.
+				// ZUN landmine: Both of these calls read uninitialized stack
+				// memory during frames 2 and 3, respectively. Invisible as
+				// well.
 				if(entrance_frame > 1) {
 					sphere_unput_and_put_trail(i, 0);
 					if(entrance_frame > 2) {

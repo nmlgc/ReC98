@@ -39,9 +39,9 @@ inline void pic_caption_type_n(int line, size_t len, const char str[]) {
 
 // MODDERS: Remove the [incorrect_extra_w] parameter.
 #define pic_caption_type_2(line_1, line_2, incorrect_extra_w) { \
-	/* ZUN bug: This accesses one extra byte for the "STAGE 5 BOSS" string. \
-	 * Which, luckily, happens to be the null terminator, and doesn't have \
-	 * any visible effect. */ \
+	/* ZUN landmine: This accesses one extra byte for the "STAGE 5 BOSS" \
+	 * string. Which, luckily, happens to be the null terminator, and doesn't \
+	 * have any visible effect. */ \
 	pic_caption_type_n(0, (sizeof(line_1) - 1 + incorrect_extra_w), line_1); \
 	\
 	pic_caption_type_n(1, (sizeof(line_2) - 1 + incorrect_extra_w), line_2); \

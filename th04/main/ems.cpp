@@ -42,8 +42,8 @@ inline void ems_write_cdg_color_planes(
 	);
 }
 
-// ZUN bug: Should clamp the amount of images to the maximum amount allocated
-// in the EMS cache area.
+// ZUN landmine: Should clamp the amount of images to the maximum amount
+// allocated in the EMS cache area.
 #define ems_transfer_cdgs_until_freed_slot(offset_first, slot_first) { \
 	int slot = slot_first; \
 	uint32_t offset = offset_first; \

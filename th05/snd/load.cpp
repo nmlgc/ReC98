@@ -74,7 +74,7 @@ void pascal snd_load(const char fn[PF_FN_LEN], snd_load_func_t func)
 	}
 	ext = *reinterpret_cast<const int32_t *>(&SND_LOAD_EXT[0][_BX]);
 
-	// ZUN bug: Infinite loop if neither the file for the current
+	// ZUN landmine: Infinite loop if neither the file for the current
 	// [snd_bgm_mode] nor "[fn].m" exist.
 	while(1) {
 		*reinterpret_cast<uint32_t near *>(_DI) = ext;

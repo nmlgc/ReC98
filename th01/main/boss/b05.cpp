@@ -263,7 +263,7 @@ void sphere_move_rotate_and_render(
 		egc_copy_rect_1_to_0_16(ent.cur_left, ent.cur_top, SINGYOKU_W, delta_y);
 	}
 
-	// ZUN bug: Why implicitly limit [delta_x] to 8? (Which is actually at
+	// ZUN landmine: Why implicitly limit [delta_x] to 8? (Which is actually at
 	// least 16, due to egc_copy_rect_1_to_0_16() rounding up to the next
 	// word.) The actual maximum value for [delta_x] that doesn't permanently
 	// leave sphere parts in VRAM is 23 – at 24, a byte-aligned sphere moves at

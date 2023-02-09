@@ -24,8 +24,9 @@ static const int DASH_CELS = 2;
 #define HP_POINT_W 8
 #define HP_H 15
 
-// ZUN bug: The actual limit is half of this number, due to another ZUN bug in
-// hud_hp_render().
+// ZUN bug: The actual limit is half of this number, due to another bug in
+// hud_hp_render(). (Not a landmine because this number controls when the
+// observable heap corruption in debug mode occurs.)
 static const int HP_MAX = 96;
 
 typedef enum {

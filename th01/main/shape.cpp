@@ -52,7 +52,7 @@ void shape_ellipse_arc_put(
 	dots8_t cache_dots = 0;
 	vram_offset_t cache_vram_offset = -1;
 
-	// ZUN bug: Leaves the GRCG activated if the return condition below is
+	// ZUN landmine: Leaves the GRCG activated if the return condition below is
 	// `true`. Should be done after that branch instead.
 	grcg_setcolor_rmw(col);
 

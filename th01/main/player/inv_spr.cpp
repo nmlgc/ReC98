@@ -43,7 +43,10 @@ void invincibility_sprites_update_and_render(bool16 invincible)
 			sprites.top[i]   = ((rand() % 48) + (player_top - 16));
 			sprites.frame[i] = ((rand() % 7) + 1);
 		}
-		// ZUN bug: Did you mean: `sprites.left[i]`?
+		// ZUN bug: Did you mean: `sprites.left[i]`? With Reimu's fixed
+		// position at the bottom of the playfield, this condition is always
+		// true, and these sprites won't be clipped at the left and right edges
+		// of VRAM after all.
 		if(
 			(sprites.top[i] >= 0) &&
 			(sprites.top[i] < (RES_X - sSHAPE8X8[0].w()))

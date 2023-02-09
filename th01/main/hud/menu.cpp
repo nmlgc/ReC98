@@ -118,8 +118,8 @@ bool16 pause_menu(void)
 	input_reset_menu_related();
 	pause_select_loop(sel, PAUSE_CHOICE_0_LEFT, PAUSE_CHOICE_1_LEFT);
 
-	// ZUN bug: Wrong left coordinate. Thankfully doesn't matter due to that
-	// function's word alignment.
+	// ZUN landmine: Wrong left coordinate. Thankfully doesn't matter due to
+	// that function's word alignment.
 	egc_copy_rect_1_to_0_16(
 		(PAUSE_TITLE_LEFT + 4), pause_top(0), shiftjis_w(PAUSE_TITLE), GLYPH_H
 	);
@@ -145,7 +145,7 @@ bool16 pause_menu(void)
 	z_palette_set_all_show(stage_palette);
 	input_reset_sense();
 
-	// ZUN bug: Same as above.
+	// ZUN landmine: Same as above.
 	egc_copy_rect_1_to_0_16(
 		((PAUSE_CENTER_X - (MENU_W / 2)) + 8),
 		pause_top(0),

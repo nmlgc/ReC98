@@ -70,9 +70,9 @@ int pascal snd_determine_modes(int req_bgm_mode, int req_se_mode);
 // • [fn] still needs to be null-terminated.
 // • The TH04 version does not handle file errors.
 //
-// ZUN bug: Two of them:
+// ZUN landmine: Two of them:
 // • In SND_SE_BEEP mode, the TH04 version requires master.lib's BGM subsystem
-//   to have been initialized before.
+//   to have been initialized before. TH05 initializes it on demand.
 // • The TH05 version will infinitely loop if neither the file for the current
 //   [snd_bgm_mode] nor "[fn].m" exist.
 void pascal snd_load(const char fn[PF_FN_LEN], snd_load_func_t func);

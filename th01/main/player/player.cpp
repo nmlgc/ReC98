@@ -856,9 +856,10 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 			}
 			player_invincible_against_orb = false;
 			mode = M_REGULAR;
-			// ZUN bug: [submode.direction] should really have been initialized
-			// here as well. Since it's not, the next call to this function
-			// will interpret the current special attack as a direction.
+			// ZUN bug: [submode.direction] should really have been set here as
+			// well. Since it's not, the next call to this function will
+			// interpret the current special attack as a direction, adding an
+			// additional invisibility frame.
 		} else {
 			// Special attack still going on. Check for orb collision
 			switch(submode.special) {

@@ -945,7 +945,8 @@ void portal_enter_update_and_render_or_reset(int obstacle_slot, bool16 reset)
 		portals_blocked = false;
 		if(orb_in_portal) {
 			// ZUN bug: Missing an unblitting call. This just blits the regular
-			// portal sprite on top of an animated one.
+			// portal sprite on top of an animated one. Very noticeable when
+			// losing a life while a PTN_PORTAL_ANIM sprite is in VRAM.
 			ptn_put_8(dst_left, dst_top, PTN_PORTAL);
 
 			orb_in_portal = false;

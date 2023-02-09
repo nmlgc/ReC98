@@ -128,9 +128,10 @@ void pascal orb_and_pellets_and_stage_unput_update_render__vsync_wait(
 	}
 
 	if(!orb_in_portal) {
-		// ZUN bug: Shouldn't you unblit *before* updating the rotation frame?
-		// While it's OK (and even sort of essential) to assume that all Orb
-		// sprites are shaped identically, it still violates common sense.
+		// ZUN landmine: Shouldn't you unblit *before* updating the rotation
+		// frame? While it's OK (and even sort of essential) to assume that all
+		// Orb sprites are shaped identically (as they are in the original
+		// data), ordering the calls like this still violates common sense.
 		ptn_unput_8(orb_prev_left, orb_prev_top, orb_anim_cel());
 	}
 

@@ -64,10 +64,10 @@ void snd_delay_until_volume(uint8_t volume);
 	// would still only be hit once, during the first loop.
 	// If no sound driver is active, the delay is replaced with
 	// frame_delay([SND_FALLBACK_DELAY_FRAMES]).
-	// ZUN bug: Neither PMD nor MMD reset the internal measure when stopping
-	// playback. If no BGM is playing and the previous one hasn't been played
-	// back for at least the given number of [measures], the function will
-	// deadlock.
+	// ZUN landmine: Neither PMD nor MMD reset the internal measure when
+	// stopping playback. If no BGM is playing and the previous one hasn't been
+	// played back for at least the given number of [measures], the function
+	// will deadlock.
 	void snd_delay_until_measure(int measure);
 #endif
 
@@ -77,8 +77,8 @@ void snd_delay_until_volume(uint8_t volume);
 	)
 	#if defined(__cplusplus) && (GAME <= 4)
 		static inline uint16_t snd_load_size() {
-			// ZUN bug: Should rather retrieve the maximum data size for song
-			// or sound effect data via PMD_GET_BUFFER_SIZES, instead of
+			// ZUN landmine: Should rather retrieve the maximum data size for
+			// song or sound effect data via PMD_GET_BUFFER_SIZES, instead of
 			// hardcoding a random maximum and risking overflowing PMD's data
 			// buffer.
 			// (Unfortunately, MMD lacks a similar function...)

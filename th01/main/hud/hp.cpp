@@ -106,7 +106,7 @@ bool16 hud_hp_render(int hp_total, int func)
 		// Since a .PTN quarter stores the background of two hit points, the
 		// calls above will unblit two hit points if [hp_total] is odd. So...
 		if((hp_total % 2) == 1) {
-			// ZUN bug: Yes, this will use the wrong section pattern when
+			// ZUN landmine: Yes, this will use the wrong section pattern when
 			// the section boundaries are odd. Just use one parameter... sigh.
 			hp_put((hp_total - 1), hp_total);
 		}

@@ -203,7 +203,7 @@ bool16 pascal near cutscene_script_load(const char* fn)
 	size_t size = file_size();
 	#if (GAME >= 4)
 		// PORTERS: Required for TH03 on flat memory models as well.
-		// ZUN bug: Missing an error check if [size] >= sizeof(script);
+		// ZUN landmine: Missing an error check if [size] >= sizeof(script);
 		script_p = static_cast<unsigned char near *>(script);
 	#else
 		script = reinterpret_cast<unsigned char far *>(hmem_allocbyte(size));
@@ -453,8 +453,8 @@ void near cursor_advance_and_animate(void)
 			cursor.x = BOX_LEFT;
 			cursor.y = BOX_TOP;
 
-			// ZUN bug: The \s command is the only place in TH05 where text is
-			// unblitted from any page. Not doing it here completely breaks
+			// ZUN landmine: The \s command is the only place in TH05 where text
+			// is unblitted from any page. Not doing it here completely breaks
 			// automatically added text boxes in that game, as any new text
 			// will just be blitted on top of old one.
 			// (Not that the feature would have been particularly usable
@@ -717,8 +717,8 @@ script_ret_t pascal near script_op(unsigned char c)
 			script_number_param_read_first(p1);
 			script_number_param_read_second(p2);
 			if(!fast_forward) {
-				// ZUN bug: Does not prevent the potential deadlock issue with
-				// this function.
+				// ZUN landmine: Does not prevent the potential deadlock issue
+				// with this function.
 				#if (GAME >= 4)
 					snd_delay_until_measure(p1, p2);
 				#else
@@ -825,16 +825,20 @@ script_ret_t pascal near script_op(unsigned char c)
 		return CONTINUE;
 
 	case 'k':
-		// ZUN bug: Should have also been done in TH04. Without this call, this
-		// command will wait on an invisible text box, and needs to be preceded
-		// by a \vp1 command to actually work as a mid-box pause.
+		// ZUN landmine: Should have also been done in TH04. Without this call,
+		// this command will wait on an invisible text box, and needs to be
+		// preceded by a \vp1 command to actually work as a mid-box pause.
 		#if (GAME == 5)
 			box_1_to_0_animate();
 		#endif
 
 		script_number_param_read_first(p1, 0);
 		if(!fast_forward) {
-			// ZUN bug: This parameter is ignored in TH03.
+			// ZUN quirk: This parameter is ignored in TH03. Labeling this as a
+			// quirk because the original TH03 scripts call this command with a
+			// non-0 parameter in 19 of 34 cases, suggesting that ZUN made the
+			// conscious decision to override these parameters with 0 later in
+			// development.
 			box_wait_animate((GAME >= 4) ? p1 : 0);
 		}
 		return CONTINUE;
@@ -845,7 +849,7 @@ script_ret_t pascal near script_op(unsigned char c)
 		#if (GAME == 5)
 			bgimage_snap();
 		#else
-			// ZUN bug: Missing a box_bg_allocate_and_snap() or equivalent
+			// ZUN landmine: Missing a box_bg_allocate_and_snap() or equivalent
 			// call. Any future box_bg_put() call will still display the box
 			// area snapped from any previously displayed background image.
 			// This bug therefore effectively restricts usage of this command
@@ -923,13 +927,14 @@ script_ret_t pascal near script_op(unsigned char c)
 				//   anyway), the entire system would have only needed a single
 				//   graph_showpage(0) call at the start of cutscene_animate().
 				//
-				// ZUN bug: Since TH04 renders text to VRAM page 1, calling \=
-				// or \== in the middle of a string of text temporarily shows
-				// any new text rendered since the last box_1_to_0_animate()
-				// call if any of the following blit operations spends more
-				// than one frame with page 1 visible. In practice, this only
-				// happens on very underclocked systems far below the game's
-				// target of 66 MHz, but it's a bug nonetheless.
+				// ZUN landmine: Since TH04 renders text to VRAM page 1,
+				// calling \= or \== in the middle of a string of text
+				// temporarily shows any text rendered since the last
+				// box_1_to_0_animate() call if any of the following blit
+				// operations spends more than one frame with page 1 visible.
+				// In practice, this only happens on very underclocked systems
+				// far below the game's target of 66 MHz, but it's a landmine
+				// nonetheless.
 				graph_showpage(1);
 				graph_accesspage(0);
 			#endif
@@ -959,7 +964,7 @@ script_ret_t pascal near script_op(unsigned char c)
 				frame_delay(1); // ZUN quirk
 			#else
 				// ZUN bloat: See above.
-				// ZUN bug: See above.
+				// ZUN landmine: See above.
 				graph_showpage(1);
 				graph_accesspage(0);
 
@@ -1004,7 +1009,7 @@ script_ret_t pascal near script_op(unsigned char c)
 		script_p++;
 		colmap.keys[colmap_count][0].byte[1] = *script_p;
 
-		// ZUN bug: Jumps over the additional comma separating the two
+		// ZUN landmine: Jumps over the additional comma separating the two
 		// parameters, and assumes it's always present. Come on!
 		// script_number_param_read_second() exists to handle exactly this
 		// situation in a cleaner way.
@@ -1012,7 +1017,7 @@ script_ret_t pascal near script_op(unsigned char c)
 
 		script_number_param_read_first(p1, V_WHITE);
 
-		// ZUN bug: No bounds check
+		// ZUN landmine: No bounds check
 		colmap.values[colmap_count] = p1;
 		colmap_count++;
 		break;
@@ -1048,8 +1053,8 @@ void near cutscene_animate(void)
 
 	// Necessary because scripts can (and do) show multiple text boxes on the
 	// initially black background.
-	// ZUN bug: TH05 assumes that they don't. While this is true for all
-	// scripts in the original game, it's still technically a bug.
+	// ZUN landmine: TH05 assumes that they don't, which is true for all
+	// scripts in the original game.
 	#if (GAME != 5)
 		box_bg_allocate_and_snap();
 	#endif

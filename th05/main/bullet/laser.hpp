@@ -40,8 +40,8 @@ struct laser_coords_t {
 
 	// In pixels.
 	union {
-		// ZUN bug: LF_FIXED_SHRINK and LF_FIXED_SHRINK_AND_WAIT_TO_GROW are
-		// effectively limited to a maximum width of 127 pixels due to an
+		// ZUN landmine: LF_FIXED_SHRINK and LF_FIXED_SHRINK_AND_WAIT_TO_GROW
+		// are effectively limited to a maximum width of 127 pixels due to an
 		// implementation convenience in their update code. For larger values,
 		// their shrink animation wouldn't play, and the laser will transition
 		// to its next flag immediately.

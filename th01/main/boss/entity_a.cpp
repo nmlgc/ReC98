@@ -453,7 +453,7 @@ void CBossEntity::egc_sloppy_wave_unput_double_broken(
 		x_2 = wave_x(amp_2, t_2) + left_2;
 		t_1 += (0x100 / len_1);
 		t_2 += (0x100 / len_2);
-		// ZUN bug: Shouldn't the [h] parameter be 1?
+		// ZUN landmine: Shouldn't the [h] parameter be 1?
 		if(x_1 > x_2) {
 			egc_copy_rect_1_to_0_16_word_w(
 				x_2, (top + bos_y), (x_1 - x_2), bos_y

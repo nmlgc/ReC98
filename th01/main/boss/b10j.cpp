@@ -268,7 +268,7 @@ void mima_unput(bool16 just_the_animated_part = false)
 		image++;
 	}
 
-	// ZUN bug (?): Why is MIMA_ANIM_H assumed to be 48 (16 above + 32 here)?
+	// ZUN landmine: Why is MIMA_ANIM_H assumed to be 48 (16 above + 32 here)?
 	// This might have even worked if the bottom 16 pixels of all [ent_anim]
 	// cels were identical, but they differ between C_CAST and C_METEOR.
 	//

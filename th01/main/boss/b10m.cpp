@@ -1700,8 +1700,8 @@ void yuugenmagan_main(void)
 			(u2.subphase == laser_subphase(2, LSP_DONE))
 		) {
 			// ZUN bug: We can get here with a laser still on screen,
-			// particularly in debug mode. There should at least be an
-			// unblitting call here.
+			// particularly when holding ↵ Return in debug mode. There should
+			// at least be an unblitting call here.
 
 			boss_phase = 10;
 			boss_phase_frame = 0;

@@ -55,7 +55,7 @@ void pascal snd_load(const char fn[PF_FN_LEN], snd_load_func_t func)
 	_AX = 0x3D00;
 	geninterrupt(0x21);
 	_BX = _AX;
-	// ZUN bug: No error handling
+	// ZUN landmine: No error handling
 
 	// Using inline assembly rather than _AX to prevent parameters from being
 	// moved to the DI register
