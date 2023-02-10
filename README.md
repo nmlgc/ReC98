@@ -228,9 +228,9 @@ See [`CONTRIBUTING.md`](CONTRIBUTING.md).
 [project blog]: https://rec98.nmlgc.net/blog
 [converter for hardcoded sprites]: https://github.com/nmlgc/ReC98/issues/8
 [Borland/Embarcadero's own C++ 7.30]: https://www.embarcadero.com/de/free-tools/ccompiler/free-download
-[bloat]: https://rec98.nmlgc.net/blog/2022-08-15#zun-bloat
-[bugs]: https://rec98.nmlgc.net/blog/2022-08-15#zun-bug
-[quirks]: https://rec98.nmlgc.net/blog/2022-08-15#zun-quirk
+[bloat]: CONTRIBUTING.md#zun-bloat
+[bugs]: CONTRIBUTING.md#zun-bug
+[quirks]: CONTRIBUTING.md#zun-quirk
 
 [TH04 Stage 5 Yuuka No-EMS crash]: https://rec98.nmlgc.net/blog/2021-11-29
 [TH01 Sariel fight]: https://rec98.nmlgc.net/blog/2022-01-31

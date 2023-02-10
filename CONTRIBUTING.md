@@ -394,8 +394,111 @@ Currently, we know about the following [references]:
   displays a piece of TH04's `MAIN.EXE`, handling demo recording and the setup
   of the game's EMS area.
 
+## Labeling weird or broken code
+
+There's a lot of it in these games, and each such piece of code is relevant to
+a different audience of this codebase. While `master` won't fix anything in the
+original code, it is the right branch to point out all of these issues in
+source code comments. By assigning specific labels based on the code's impact,
+`master` can make it easier for other branches and forks to identify and fix
+only the subset of issues they care about.
+
+When categorizing such issues, first ask whether a fix could be <a
+id="observable" href="#observable">🔗 observed</a>: Would it change any of the
+individual frames rendered by the game, as defined by the original frame delay
+boundaries?
+
+### Categories
+
+#### `ZUN bloat`
+
+Code that wastes memory, CPU cycles, or even just the mental capacity of anyone
+trying to read and understand the code. The broadest label, encompassing all
+code that could be significantly simplified without making [observable]
+changes.
+
+Examples:
+
+* Splitting the game into multiple executables for misguided reasons
+* Code without any effect
+* Assembly code at any place above the lowest level of the platform layer
+* Unused code or data
+
+Bloat is removed on the aptly named `debloated` branch. That branch is the
+recommended foundation for nontrivial mods that don't care about being
+byte-for-byte comparable to ZUN's original binary.
+
+#### `ZUN bug`
+
+Logic errors or incorrect programming language / interface / system use with
+[observable] negative or unexpected effects in ZUN's original build. The
+surrounding code must provide evidence that ZUN did not intend the bug. Fixing
+these issues must not affect hypothetical replay compatibility, and any
+resulting visual changes must match ZUN's provable intentions. As a result of
+these constraints, bugs are pretty much limited to rendering issues and
+crashes.
+
+Examples:
+
+* All crashes
+* Sprites that were created to be shown in a single place, but are never
+  rendered because of a logic error in their clipping condition
+* Blitting operations that are limited to the PC-98's 8×1-pixel VRAM byte grid,
+  but reflect the position of entities that can move at a finer granularity.
+  This was likely done for performance reasons rather than artistic ones.
+
+Bugs are fixed on the `anniversary` branch. Critical ones may also receive
+individual bugfix branches that preserve the code and data layout of the
+original game by only modifying as few bytes as possible.
+
+#### `ZUN quirk`
+
+Weird code that looks incorrect in context, but either defines game logic or is
+part of a possibly intentional visual effect. Fixing these issues would desync
+a hypothetical replay recorded on the original game, or affect the visuals so
+much that the result is no longer faithful to ZUN's original release. It might
+very well be called a fangame at that point.
+
+Examples:
+
+* Incorrect or inconsistent coordinate calculations of gameplay entities
+* Inconsistencies in visual effects that lack the clear evidence necessary for
+  a [bug]. One example is the missing quarter of the big dotted circle featured
+  in an early pattern of the TH01 Elis fight: There is code that is supposed to
+  render the quarter, but doesn't due to an incorrect angle calculation. In
+  this case, it can be argued that this is either a bug (because the
+  inconsistency exists in the first place) or a feature (because the
+  inconsistency is easily spotted, and ZUN did not fix it).
+
+Fixing quirks is fanfiction territory and thus out of scope for the main ReC98
+project, but forks are welcome to do so.
+
+#### Summary
+
+|                             | Bloat | Bugs | Quirks |
+| --------------------------- | ----- | ---- | ------ |
+| Fix would be [observable]   | No    | Yes  | Yes    |
+| Fix would desync replays    | No    | No   | Yes    |
+| Might have been intentional | No*   | No   | Yes    |
+
+(* The games contain code that explicitly delays execution at microsecond,
+millisecond, and frame granularity. If bloated code does not include explicit
+delays, it makes sense to assume that it was not written to be slow on purpose,
+and the bloat simply came from ZUN's lack of knowledge and experience at the
+time of the respective game's development. [He admitted as much in an
+interview.](https://en.touhougarakuta.com/article/specialtaidan_zun_hiroyuki_2-en))
+
+The comments for each of these issues should be prefixed with a `ZUN
+(bloat|bug|quirk):` label, and include a description that points out the
+specific issue. This description can be left out for obvious cases of bloat,
+like unused variables or code with no effect.
+
+----
+
 [mzdiff]: https://github.com/nmlgc/mzdiff
 [1]: Research/Borland%20C++%20decompilation.md#c
 [2]: https://github.com/nmlgc/ReC98/invitations
 [3]: Research/Borland%20C++%20decompilation.md#padding-bytes-in-code-segments
 [4]: Research/Borland%20C++%20decompilation.md#memory-segmentation
+[bug]: #zun-bug
+[observable]: #observable
