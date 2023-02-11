@@ -18,7 +18,7 @@
 // Not actually redundant because ending previews can run without an allocated
 // resident structure.
 
-score_t score = 100000;
+uscore_t score = 100000;
 score_t score_highest = 100000;
 int32_t continues_total;
 int32_t continues_per_scene[SCENE_COUNT];

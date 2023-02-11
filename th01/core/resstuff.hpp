@@ -11,7 +11,7 @@ void resident_create_and_stuff_set(
 // Retrieves another incomplete bunch of data from the resident structure.
 // Returns 0 on success, 1 on error.
 int resident_stuff_get(
-	int8_t& rank, int8_t& rem_bombs, unsigned long& rand, int& stage_id
+	uint8_t& rank, int8_t& rem_bombs, unsigned long& rand, int& stage_id
 );
 
 // Frees the resident structure if it exists.

@@ -36,7 +36,7 @@ void resident_create_and_stuff_set(
 }
 
 int resident_stuff_get(
-	int8_t& rank, int8_t& rem_bombs, unsigned long& rand, int& stage_id
+	uint8_t& rank, int8_t& rem_bombs, unsigned long& rand, int& stage_id
 )
 {
 	resident_t __seg *sgm = ResData<resident_t>::exist(RES_ID);

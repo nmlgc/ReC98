@@ -68,7 +68,7 @@
 // Redundant copies of resident structure fields to static data
 // ------------------------------------------------------------
 
-int8_t rank = CFG_RANK_DEFAULT;
+uint8_t rank = CFG_RANK_DEFAULT;
 bgm_mode_t bgm_mode = CFG_BGM_MODE_DEFAULT;
 int8_t rem_bombs = CFG_CREDIT_BOMBS_DEFAULT;
 int rem_lives = 4;

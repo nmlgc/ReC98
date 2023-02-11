@@ -48,7 +48,7 @@ typedef uint32_t uscore_t; // ZUN bug: …or consistent, at least.
 #define RES_ID "ReiidenConfig"
 typedef struct {
 	char id[sizeof(RES_ID)];
-	int8_t rank;
+	uint8_t rank;
 	bgm_mode_t bgm_mode;
 	int8_t rem_bombs;
 	int8_t credit_lives_extra; // Add 2 for the actual number of lives
@@ -79,13 +79,7 @@ extern resident_t far *resident;
 // Redundant copies of resident structure fields to static data
 // ------------------------------------------------------------
 
-// ACTUAL TYPE: rank_t
-#if (BINARY == 'M')
-	extern int8_t rank;
-#elif (BINARY == 'E')
-	extern uint8_t rank;
-#endif
-
+extern uint8_t rank;
 extern int8_t rem_bombs;
 extern int8_t credit_lives_extra;
 extern end_sequence_t end_flag; /* ZUN symbol [Strings] */
@@ -96,11 +90,7 @@ extern int rem_lives; // ZUN bloat: The resident structure just uses int8_t.
 // like that, due to obviously colliding with the C standard library function.
 extern unsigned long frame_rand;
 
-#if (BINARY == 'M')
-	extern uscore_t score;
-#elif (BINARY == 'E')
-	extern score_t score;
-#endif
+extern uscore_t score;
 extern int32_t continues_total;
 
 // ZUN bloat: The resident structure just uses uint16_t.
