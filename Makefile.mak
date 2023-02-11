@@ -57,6 +57,11 @@ th05:: $(TH05:\=bin\th05\)
 .obj.com:
 	tlink /t /3 $**
 
+{platform\x86real}.cpp{bin\platform\x86real}.obj:
+	$(CC) $(CFLAGS_RELEASE) -ml -zCPLATFORM_TEXT -n$(@D) -c @&&|
+$**
+|
+
 bin\Pipeline\grzview.com: Pipeline\grzview.cpp th01\formats\grz.cpp platform\x86real\pc98\palette.cpp
 	$(CC) $(CFLAGS) -DGAME=1 -mt -lt -nbin\Pipeline\ @&&|
 $**
@@ -70,7 +75,7 @@ bin\th01\zunsoft.com: th01\zunsoft.cpp
 {th01}.cpp{bin\th01}.obj:
 	$(CC) $(CFLAGS_RELEASE) -ml -DGAME=1 -n$(@D) -c $**
 
-bin\th01\debloat.exe: bin\piloadc.obj bin\th01\th01.obj th01\entry.cpp th01\egc.cpp th01\frmdelay.cpp th01\graph.cpp th01\grp2xscs.cpp th01\grp_text.cpp th01\grp.cpp th01\initexit.cpp th01\mdrv2.cpp th01\pf.cpp th01\planar.cpp th01\scoredat.cpp th01\regist.cpp th01\resstuff.cpp th01\vsync.cpp th01\ztext.cpp th01\op_01.cpp th01\input.cpp th01\main_01.cpp th01\ptn.cpp th01\grz.cpp th01\main_09.cpp th01\bullet_l.cpp th01\grpinv32.cpp th01\scrollup.cpp th01\pgtrans.cpp th01\grph1to0.cpp th01\main_14.cpp th01\main_15.cpp th01\main_17.cpp th01\main_18.cpp th01\main_20.cpp th01\main_21.cpp th01\main_23.cpp th01\main_24.cpp th01\main_25.cpp th01\main_26.cpp th01\main_27.cpp th01\stages.cpp th01\main_28.cpp th01\main_29.cpp th01\main_30.cpp th01\main_31.cpp th01\main_32.cpp th01\main_33.cpp th01\main_34.cpp th01\main_35.cpp th01\main_36.cpp th01\main_37.cpp th01\main_38.cpp th01\fuuin_01.cpp th01\fuuin_03.cpp
+bin\th01\debloat.exe: bin\platform\x86real\noexcept.obj bin\piloadc.obj bin\th01\th01.obj th01\entry.cpp th01\egc.cpp th01\frmdelay.cpp th01\graph.cpp th01\grp2xscs.cpp th01\grp_text.cpp th01\grp.cpp th01\initexit.cpp th01\mdrv2.cpp th01\pf.cpp th01\planar.cpp th01\scoredat.cpp th01\regist.cpp th01\resstuff.cpp th01\vsync.cpp th01\ztext.cpp th01\op_01.cpp th01\input.cpp th01\main_01.cpp th01\ptn.cpp th01\grz.cpp th01\main_09.cpp th01\bullet_l.cpp th01\grpinv32.cpp th01\scrollup.cpp th01\pgtrans.cpp th01\grph1to0.cpp th01\main_14.cpp th01\main_15.cpp th01\main_17.cpp th01\main_18.cpp th01\main_20.cpp th01\main_21.cpp th01\main_23.cpp th01\main_24.cpp th01\main_25.cpp th01\main_26.cpp th01\main_27.cpp th01\stages.cpp th01\main_28.cpp th01\main_29.cpp th01\main_30.cpp th01\main_31.cpp th01\main_32.cpp th01\main_33.cpp th01\main_34.cpp th01\main_35.cpp th01\main_36.cpp th01\main_37.cpp th01\main_38.cpp th01\fuuin_01.cpp th01\fuuin_03.cpp
 	$(CC) $(CFLAGS_RELEASE) $(LARGE_LFLAGS) -DGAME=1 -nbin\th01\ -eDEBLOAT.EXE @&&|
 $**
 |

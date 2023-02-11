@@ -29,6 +29,8 @@ if errorlevel 1 goto no_bcc32
 : Neither BCC32 nor TASM32 automatically create nonexisting output
 : directories. Tup would, but not everybody can use it.
 mkdir bin\zuncom %STDERR_IGNORE%
+mkdir bin\platform %STDERR_IGNORE%
+mkdir bin\platform\x86real %STDERR_IGNORE%
 mkdir bin\Pipeline %STDERR_IGNORE%
 for %%i in (1 2 3 4 5) do mkdir bin\th0%%i %STDERR_IGNORE%
 
