@@ -100,19 +100,6 @@ int CBossEntity::load_inner(const char fn[PF_FN_LEN], int slot)
 	return 0;
 }
 
-void CBossEntity::metadata_get(
-	int &image_count,
-	unsigned char &slot,
-	vram_byte_amount_t &vram_w,
-	pixel_t &h
-) const
-{
-	image_count = this->bos_image_count;
-	slot = this->bos_slot;
-	h = this->h;
-	vram_w = this->vram_w;
-}
-
 /// Blitting
 /// --------
 
