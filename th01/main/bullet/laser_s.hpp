@@ -62,10 +62,6 @@ public:
 	bool alive;
 	bool damaging;
 
-	CShootoutLaser() {
-		alive = false;
-	}
-
 protected:
 	void hittest_and_render(put_flag_t put_flag);
 
