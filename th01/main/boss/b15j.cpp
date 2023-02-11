@@ -213,15 +213,6 @@ void kikuri_setup(void)
 	hud_hp_first_white = HP_PHASE_2_END;
 	hud_hp_first_redwhite = HP_PHASE_5_END;
 
-	// ZUN bloat: Already called before the sprites are first rendered, and
-	// (0, 0) isn't used to indicate "soul is not alive" either.
-	souls[0].pos_set(0, 0, 50,
-		SOUL_AREA_LEFT, SOUL_AREA_RIGHT, SOUL_AREA_TOP, SOUL_AREA_BOTTOM
-	);
-	souls[1].pos_set(0, 0, 50,
-		SOUL_AREA_LEFT, SOUL_AREA_RIGHT, SOUL_AREA_TOP, SOUL_AREA_BOTTOM
-	);
-
 	palette_set_grayscale(boss_post_defeat_palette, 0x0, col, comp);
 }
 
@@ -246,7 +237,7 @@ bool16 near kikuri_hittest_orb(void)
 
 void pascal near soul_move_and_render(int i, pixel_t delta_x, pixel_t delta_y)
 {
-	souls[i].locked_move_unput_and_put_8(0, delta_x, delta_y, 1);
+	souls[i].locked_move_unput_and_put_8(delta_x, delta_y, 1);
 	if((boss_phase_frame % 12) == 0) {
 		if(souls[i].image() >= (SOUL_CELS - 1)) {
 			souls[i].set_image(0);
@@ -261,7 +252,7 @@ void pascal near tears_add(screen_x_t left, screen_y_t top)
 	for(int i = 0; i < TEAR_COUNT; i++) {
 		if(tear_anim_frame[i] == 0) {
 			tears[i].pos_set(
-				left, top, 50,
+				left, top,
 				SOUL_AREA_LEFT, SOUL_AREA_RIGHT, SOUL_AREA_TOP, SOUL_AREA_BOTTOM
 			);
 			tears[i].set_image(0);
@@ -304,7 +295,7 @@ void near tears_update_and_render(void)
 	for(int i = 0; i < TEAR_COUNT; i++) {
 		if(tear_anim_frame[i] != 0) {
 			if(tears[i].cur_top <= TEAR_TOP_MAX) {
-				tears[i].locked_move_unput_and_put_8(0, 0, +8, 1);
+				tears[i].locked_move_unput_and_put_8(0, +8, 1);
 			} else {
 				void pascal near ripple_update_and_render(
 					screen_x_t tear_left, screen_y_t tear_top_max, int8_t &frame
@@ -585,12 +576,12 @@ kikuri_phase_4_subphase_t near phase_4_souls_activate(void)
 	if(boss_phase_frame == 200) {
 		souls[0].pos_set(
 			(LIGHTBALL_CENTER_X - (SOUL_W / 2)),
-			(LIGHTBALL_CENTER_Y - (SOUL_H / 2)), 50,
+			(LIGHTBALL_CENTER_Y - (SOUL_H / 2)),
 			SOUL_AREA_LEFT, SOUL_AREA_RIGHT, SOUL_AREA_TOP, SOUL_AREA_BOTTOM
 		);
 		souls[1].pos_set(
 			(LIGHTBALL_CENTER_X - (SOUL_W / 2)),
-			(LIGHTBALL_CENTER_Y - (SOUL_H / 2)), 50,
+			(LIGHTBALL_CENTER_Y - (SOUL_H / 2)),
 			SOUL_AREA_LEFT, SOUL_AREA_RIGHT, SOUL_AREA_TOP, SOUL_AREA_BOTTOM
 		);
 	} else if((boss_phase_frame > 200) && ((boss_phase_frame % 2) == 0)) {

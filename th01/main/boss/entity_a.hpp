@@ -17,44 +17,22 @@ public:
 	pixel_t h;
 	Area<screen_x_t, screen_y_t> move_clamp; // Relative to VRAM
 	Area<pixel_t, pixel_t> hitbox_orb; // Relative to [cur_left] and [cur_top]
-
-	// Never actually read outside of the functions that set them...
-	pixel_t prev_delta_y;
-	pixel_t prev_delta_x;
-
 	int bos_image_count;
 
 protected:
-	int zero_1;
 	int bos_image;
-	int unknown;
 
 public:
-	bool16 hitbox_orb_inactive;
-	bool16 loading;
+	uint8_t bos_slot;
+	bool hitbox_orb_inactive;
 
 	// Locks both movement and rendering via the locked_*() methods if nonzero.
 	int lock_frame;
 
-	int zero_2;
-	char zero_3;
-	uint8_t bos_slot;
-
-	CBossEntity() {
-		loading = false;
-		zero_3 = 0;
-	}
-
 	// Loads all images from the .BOS file with the given [fn] inside the
 	// currently active packfile into the given CBossEntity .BOS [slot], and
 	// keeps the .BOS metadata in this CBossEntity instance. Always returns 0.
-	void load(const char fn[PF_FN_LEN], int slot) {
-		loading = true;
-		load_inner(fn, slot);
-		loading = false;
-	}
-
-	int load_inner(const char fn[PF_FN_LEN], int slot);
+	int load(const char fn[PF_FN_LEN], int slot);
 
 	// Copies the .BOS header data of [src] to this instance.
 	void metadata_assign(const CBossEntity near &src) {
@@ -172,12 +150,10 @@ public:
 	/// --------
 protected:
 	void move(const pixel_t &delta_x, const pixel_t &delta_y) {
-		prev_delta_x = delta_x;
-		prev_delta_y = delta_y;
 		prev_left = cur_left;
 		prev_top = cur_top;
 
-		cur_left += prev_delta_x;
+		cur_left += delta_x;
 		if(move_clamp.left > cur_left) {
 			cur_left = move_clamp.left;
 		}
@@ -185,7 +161,7 @@ protected:
 			cur_left = move_clamp.right;
 		}
 
-		cur_top += prev_delta_y;
+		cur_top += delta_y;
 		if(cur_top < move_clamp.top) {
 			cur_top = move_clamp.top;
 		}
@@ -200,7 +176,7 @@ public:
 		cur_top = top;
 	}
 
-	// Sets [cur_left], [cur_top], [unknown], and the [move_clamp] area.
+	// Sets [cur_left], [cur_top], and the [move_clamp] area.
 	//
 	// Kikuri is the only boss who relies on move clamping. All others ignore
 	// the feature by just directly partying on [cur_left] and [cur_top], and
@@ -211,7 +187,6 @@ public:
 	void pos_set(
 		screen_x_t left,
 		screen_y_t top,
-		int unknown = 48,
 		screen_x_t move_clamp_left = PLAYFIELD_LEFT,
 		screen_x_t move_clamp_right = (PLAYFIELD_RIGHT + SINGYOKU_W),
 		screen_y_t move_clamp_top = PLAYFIELD_TOP,
@@ -222,10 +197,10 @@ public:
 	// without spelling out every single line here. Most notably though, it
 	// only actually moves or renders the entity if [lock_frame] is 0.)
 	void locked_move_and_put_8(
-		int unused, pixel_t delta_x, pixel_t delta_y, int lock_frames
+		pixel_t delta_x, pixel_t delta_y, int lock_frames
 	);
 	void locked_move_unput_and_put_8(
-		int unused, pixel_t delta_x, pixel_t delta_y, int lock_frames
+		pixel_t delta_x, pixel_t delta_y, int lock_frames
 	);
 
 	// ZUN bug: The lock concept should really not apply to blitting. Only
@@ -237,18 +212,18 @@ public:
 	// attempt at improving performance, pointing out how much this game would
 	// have benefitted from a proper sprite system.
 	void locked_unput_and_put_8(void) {
-		locked_move_unput_and_put_8(0, 0, 0, 3);
+		locked_move_unput_and_put_8(0, 0, 3);
 	}
 
 	void unlock_put_lock_8(void) {
 		lock_frame = 0;
-		locked_move_and_put_8(0, 0, 0, 3);
+		locked_move_and_put_8(0, 0, 3);
 	}
 
 	void unlock_put_image_lock_8(int image) {
 		lock_frame = 0;
 		bos_image = image;
-		locked_move_and_put_8(0, 0, 0, 3);
+		locked_move_and_put_8(0, 0, 3);
 	}
 
 	void unlock_unput_put_image_lock_8(int image) {

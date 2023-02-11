@@ -2102,7 +2102,7 @@ void elis_main(void)
 		phase.frame_common(5);
 		if(form != F_GIRL) {
 			ent_bat.locked_move_unput_and_put_8(
-				0, bat_velocity_x, bat_velocity_y, (BAT_SPEED_DIVISOR - 1)
+				bat_velocity_x, bat_velocity_y, (BAT_SPEED_DIVISOR - 1)
 			);
 
 			#define bat_cycle_frame (boss_phase_frame % BAT_CYCLE_FRAMES)

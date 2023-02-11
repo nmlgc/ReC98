@@ -76,7 +76,7 @@ void bos_reset_all_broken(void)
 	}
 }
 
-int CBossEntity::load_inner(const char fn[PF_FN_LEN], int slot)
+int CBossEntity::load(const char fn[PF_FN_LEN], int slot)
 {
 	int plane_size;
 
@@ -510,7 +510,6 @@ void CBossEntity::unput_and_put_16x8_8(pixel_t bos_left, pixel_t bos_top) const
 void CBossEntity::pos_set(
 	screen_x_t left,
 	screen_y_t top,
-	int unknown,
 	screen_x_t move_clamp_left,
 	screen_x_t move_clamp_right,
 	screen_y_t move_clamp_top,
@@ -519,12 +518,10 @@ void CBossEntity::pos_set(
 {
 	this->cur_left = left;
 	this->cur_top = top;
-	this->unknown = unknown;
 	this->move_clamp.left = move_clamp_left;
 	this->move_clamp.right = move_clamp_right;
 	this->move_clamp.top = move_clamp_top;
 	this->move_clamp.bottom = move_clamp_bottom;
-	this->zero_2 = 0;
 }
 
 void CBossEntity::sloppy_unput() const
@@ -533,13 +530,13 @@ void CBossEntity::sloppy_unput() const
 }
 
 void CBossEntity::locked_move_unput_and_put_8(
-	int, pixel_t delta_x, pixel_t delta_y, int lock_frames
+	pixel_t delta_x, pixel_t delta_y, int lock_frames
 )
 {
 	if(lock_frame == 0) {
 		move(delta_x, delta_y);
 
-		screen_x_t unput_left = (prev_delta_x > 0)
+		screen_x_t unput_left = (delta_x > 0)
 			? ((prev_left / BYTE_DOTS) * BYTE_DOTS)
 			: (((cur_left / BYTE_DOTS) * BYTE_DOTS) + (vram_w * BYTE_DOTS));
 		egc_copy_rect_1_to_0_16(unput_left, prev_top, 8, h);
@@ -562,7 +559,7 @@ void CBossEntity::locked_move_unput_and_put_8(
 }
 
 void CBossEntity::locked_move_and_put_8(
-	int, pixel_t delta_x, pixel_t delta_y, int lock_frames
+	pixel_t delta_x, pixel_t delta_y, int lock_frames
 )
 {
 	if(lock_frame == 0) {
