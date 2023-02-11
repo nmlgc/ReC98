@@ -1044,7 +1044,7 @@ void player_miss_animate_and_update(void)
 	hud_lives_put(rem_lives + 1);
 
 	prev_bombs = rem_bombs;
-	rem_bombs = (bombs_extra_per_life_lost + rem_bombs);
+	rem_bombs = (BOMBS_EXTRA_PER_LIFE_LOST + rem_bombs);
 	if(rem_bombs > BOMBS_MAX) {
 		rem_bombs = BOMBS_MAX;
 	} else {

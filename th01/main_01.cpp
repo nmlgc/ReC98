@@ -403,18 +403,10 @@ int __cdecl main(void)
 		error_resident_invalid();
 		return 1;
 	}
-	if(resident_stuff_get(
-		rank,
-		bombs_extra_per_life_lost, // ZUN bloat: Supposed to be [rem_bombs]...
-		frame_rand,
-		stage_id
-	) == 1) {
+	if(resident_stuff_get(rank, frame_rand, stage_id) == 1) {
 		error_resident_invalid();
 		return 1;
 	}
-
-	// ZUN bloat: ...and the variable is hardcoded here anyway.
-	bombs_extra_per_life_lost = 1;
 
 	score = resident->score;
 	extend_next = ((resident->score / SCORE_PER_EXTEND) + 1);

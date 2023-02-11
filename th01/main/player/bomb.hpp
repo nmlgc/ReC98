@@ -1,4 +1,5 @@
 #define BOMB_DOUBLETAP_WINDOW 20
+static const int BOMBS_EXTRA_PER_LIFE_LOST = 1;
 
 // Indicates whether a bomb is active and dealing damage to everything on
 // screen.
@@ -10,7 +11,6 @@ extern bool bomb_damaging;
 extern int bomb_doubletap_frames;
 
 extern unsigned long bomb_frames;
-extern int8_t bombs_extra_per_life_lost;
 
 // Renders the given [frame] of the bomb animation, and applies any
 // frame-specific game state modifications. Returns false if the animation is

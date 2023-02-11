@@ -35,15 +35,12 @@ void resident_create_and_stuff_set(
 	}
 }
 
-int resident_stuff_get(
-	uint8_t& rank, int8_t& rem_bombs, unsigned long& rand, int& stage_id
-)
+int resident_stuff_get(uint8_t& rank, unsigned long& rand, int& stage_id)
 {
 	resident_t __seg *sgm = ResData<resident_t>::exist(RES_ID);
 	if(sgm) {
 		resident = sgm;
 		rank = resident->rank;
-		rem_bombs = resident->rem_bombs;
 		rand = resident->rand;
 		stage_id = resident->stage_id;
 		return 0;
