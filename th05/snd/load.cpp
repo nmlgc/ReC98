@@ -3,9 +3,9 @@
 #include <errno.h>
 #include "platform.h"
 #include "x86real.h"
-#include "decomp.hpp"
 #include "master.hpp"
 #include "libs/kaja/kaja.h"
+#include "platform/x86real/flags.hpp"
 extern "C" {
 #include "th05/snd/snd.h"
 

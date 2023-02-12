@@ -1,5 +1,6 @@
 // Shared parts of the cdg_put_*() functions.
 
+#include "platform/x86real/flags.hpp"
 #include "decomp.hpp"
 
 inline CDG near* cdg_slot_offset(const int &slot) {

@@ -1,8 +1,8 @@
 #pragma option -zCSHARED_
 
 #include "platform.h"
-#include "decomp.hpp"
 #include "master.hpp"
+#include "platform/x86real/flags.hpp"
 extern "C" {
 #include "th05/hardware/input.h"
 }

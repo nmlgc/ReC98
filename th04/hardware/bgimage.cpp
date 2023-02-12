@@ -6,6 +6,7 @@
 #include "planar.h"
 #include "decomp.hpp"
 #include "master.hpp"
+#include "platform/x86real/flags.hpp"
 extern "C" {
 #include "th04/hardware/bgimage.hpp"
 

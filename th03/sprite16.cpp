@@ -9,8 +9,8 @@
 #include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
-#include "decomp.hpp"
 #include "master.hpp"
+#include "platform/x86real/flags.hpp"
 #include "libs/sprite16/sprite16.h"
 extern "C" {
 #include "th03/sprite16.hpp"
