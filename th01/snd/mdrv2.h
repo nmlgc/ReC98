@@ -15,3 +15,12 @@ void mdrv2_bgm_stop(void);
 void mdrv2_bgm_fade_out_nonblock(void);
 
 void mdrv2_se_play(int se);
+
+// Spawns the MDRV2 TSR, reserving the given number of KiB for the music data
+// area, reporting any error on screen. Returns the MDRV2 exit code, or -1 on
+// error.
+int mdrv2_spawn(uint8_t bgm_data_kib);
+
+// Removes the MDRV2 TSR, reporting any error on screen. Returns the MDRV2 exit
+// code, or -1 on error.
+int mdrv2_remove(void);

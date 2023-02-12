@@ -14,7 +14,7 @@ int __cdecl main(int argc, const char *argv[])
 	int (*entry)(int, const char* []);
 
 	if(argc < 2) {
-		entry = main_op;
+		entry = main_setup;
 	} else if(!stricmp(argv[1], ENTRYPOINTS[EP_OP])) {
 		entry = main_op;
 	} else if(!stricmp(argv[1], ENTRYPOINTS[EP_MAIN])) {
@@ -23,8 +23,8 @@ int __cdecl main(int argc, const char *argv[])
 		entry = main_cutscene;
 	} else {
 		// No entry point string means that we've got debug flags. Pass them
-		// along to OP, just like GAME.BAT does.
-		return main_op(argc, argv);
+		// along to the GAME.BAT reimplementation.
+		return main_setup(argc, argv);
 	}
 	return entry((argc - 1), &argv[1]);
 }

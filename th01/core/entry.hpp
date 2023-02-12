@@ -11,6 +11,7 @@ enum entrypoint_t {
 int __cdecl main(int argc, const char *argv[]);
 
 // Consistent names to allow this code to be reused for later games as well.
+int main_setup(int argc, const char *argv[]);
 int main_op(int argc, const char *argv[]);
 int main_main(int argc, const char *argv[]);
 int main_cutscene(int argc, const char *argv[]);

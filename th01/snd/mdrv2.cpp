@@ -3,14 +3,18 @@
  * MDRV2 functions
  */
 
+#include <dos.h>
 #include <fcntl.h>
 #include <io.h>
 #include <malloc.h>
 #include <string.h>
+#include <stdio.h>
 #include "platform.h"
+#include "platform/x86real/spawn.hpp"
 #include "x86real.h"
 #include "th01/snd/mdrv2.h"
 
+#define MDRV2_FN "MDRV98.COM"
 #define MDRV2_MAGIC "Mdrv2System"
 
 typedef enum {
@@ -153,4 +157,28 @@ void mdrv2_se_play(int se)
 		_asm { mov	ax, se; } // Prevent [se] from being put into a register
 		geninterrupt(MDRV2);
 	}
+}
+
+static const uint8_t MDRV2_DRIVER_KIB = 16; // Assumed by the ver 3.4F binary.
+static const uint8_t MDRV2_RESERVE_KIB_MAX = (64 - MDRV2_DRIVER_KIB);
+
+int mdrv2_spawn(uint8_t bgm_data_kib)
+{
+	if((bgm_data_kib < 1) || (bgm_data_kib > MDRV2_RESERVE_KIB_MAX)) {
+		printf(
+			"%s: MDRV2 reserve size must be between 1 and %d KiB, got %d KiB",
+			_argv[0], MDRV2_RESERVE_KIB_MAX, bgm_data_kib
+		);
+		return -1;
+	}
+	uint32_t reserve = ((MDRV2_DRIVER_KIB + bgm_data_kib) * 1024L);
+	char param_m[5] = "-M\0\0";
+	param_m[2] = ('0' + (bgm_data_kib / 10));
+	param_m[3] = ('0' + (bgm_data_kib % 10));
+	return spawn_at_top_report(reserve, MDRV2_FN, param_m);
+}
+
+int mdrv2_remove(void)
+{
+	return spawn_adjacent_report(MDRV2_FN, "-R");
 }
