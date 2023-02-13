@@ -413,7 +413,7 @@ void start_continue(void)
 	resident->pellet_speed = PELLET_SPEED_DEFAULT;
 	resident->point_value = 0;
 
-	execl(CFG_ID, CFG_ID, nullptr);
+	execl(BINARY_MAIN_CAPS, BINARY_MAIN_CAPS, nullptr);
 }
 // -----------------
 

@@ -46,7 +46,7 @@ static int8_t mdrv2_unused = 0; // ZUN bloat
 bool16 mdrv2_resident(void)
 {
 	char s1[sizeof(MDRV2_MAGIC)];
-	const char MAGIC[] = "Mdrv2System";
+	const char MAGIC[] = MDRV2_MAGIC;
 	char far *magicp = reinterpret_cast<char far *>(
 		(static_cast<uint32_t>(mdrv2_segment()) << 16) + 0x102
 	);

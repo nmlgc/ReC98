@@ -97,9 +97,6 @@ template <class T> union StupidBytewiseWrapperAround {
 #endif
 // ------------------------------------
 
-// Neither WAIT nor FWAIT emit the emulated WAIT we want...
-#define FWAIT_EMU	db 0xCD, 0x3D;
-
 // 32-bit ASM instructions not supported by Turbo C++ 4.0J's built-in
 // assembler. Makes no sense to compile with `#pragma inline` (and thus,
 // require a 16-bit TASM) just for those.
