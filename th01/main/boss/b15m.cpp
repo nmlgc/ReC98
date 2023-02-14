@@ -1857,7 +1857,7 @@ void elis_main(void)
 	static bool initial_hp_rendered;
 
 	screen_x_t head_left;
-	screen_x_t head_top;
+	screen_y_t head_top;
 	bool16 trails_offscreen;
 	const unsigned char flash_colors[] = { 3, 6, 8, 2 };
 	unsigned char angle;
