@@ -572,7 +572,7 @@ void pattern_diamond_cross_to_edges_followed_by_rain(void)
 
 	static pixel_t velocity_bottomleft_x, velocity_topleft_x;
 	static pixel_t velocity_bottomleft_y, velocity_topleft_y;
-	static CEntities<4> diamonds;
+	static EntitiesTopleft<4> diamonds;
 	static int frames_with_diamonds_at_edges;
 
 	#define diamonds_unput(i) \

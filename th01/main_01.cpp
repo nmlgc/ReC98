@@ -43,6 +43,7 @@
 #include "th01/hiscore/regist.hpp"
 #include "th01/main/bonus.hpp"
 #include "th01/main/debug.hpp"
+#include "th01/main/entity.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/player/anim.hpp"
 #include "th01/main/player/bomb.hpp"

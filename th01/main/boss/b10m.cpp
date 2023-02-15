@@ -23,6 +23,7 @@
 #include "th01/formats/grp.h"
 #include "th01/formats/ptn.hpp"
 #include "th01/sprites/pellet.h"
+#include "th01/main/entity.hpp"
 #include "th01/main/particle.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/player/orb.hpp"

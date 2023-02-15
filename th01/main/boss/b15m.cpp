@@ -687,7 +687,7 @@ bool16 wave_teleport(screen_x_t target_left, screen_y_t target_top)
 		return false;
 	}
 
-	static CEntities<5> stars;
+	static EntitiesTopleft<5> stars;
 
 	for(int i = 0; i < stars.count(); i++) {
 		if(boss_phase_frame > 4) {
@@ -804,7 +804,7 @@ int pattern_11_lasers_across(void)
 
 int pattern_random_downwards_missiles(void)
 {
-	static CEntities<5> rifts;
+	static EntitiesTopleft<5> rifts;
 	int cel; // ACTUAL TYPE: elis_grc_cel_t
 	pixel_t velocity_x;
 	pixel_t velocity_y;
@@ -1056,7 +1056,7 @@ int pattern_clusters_from_spheres(void)
 		KEYFRAME_DONE = (KEYFRAME_REMOVE_DONE + 20),
 	};
 
-	struct Spheres : public CEntities<SPHERE_COUNT> {
+	struct Spheres : public EntitiesTopleft<SPHERE_COUNT> {
 		static pixel_t column_w(screen_x_t edge) {
 			return ((edge - ent_still_or_wave.cur_left) / count());
 		}
@@ -1160,7 +1160,7 @@ int pattern_random_from_rifts(void)
 		KEYFRAME_3 = 220,	// Pattern done
 	};
 
-	static CEntities<5> rifts;
+	static EntitiesTopleft<5> rifts;
 	int cel; // ACTUAL TYPE: elis_grc_cel_t
 	unsigned char angle;
 
@@ -1253,7 +1253,7 @@ enum {
 
 elis_form_t transform_girl_to_bat(void)
 {
-	static CEntities<5> rifts;
+	static EntitiesTopleft<5> rifts;
 	int cel;  // ACTUAL TYPE: elis_grc_cel_t
 
 	if(boss_phase_frame == TRANSFORM_START_FRAME) {
@@ -1289,7 +1289,7 @@ elis_form_t transform_girl_to_bat(void)
 
 elis_form_t transform_bat_to_girl(void)
 {
-	static CEntities<5> rifts;
+	static EntitiesTopleft<5> rifts;
 	int cel;  // ACTUAL TYPE: elis_grc_cel_t
 	screen_x_t left;
 	screen_y_t top;

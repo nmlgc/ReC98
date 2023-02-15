@@ -835,8 +835,8 @@ void pascal near vortex_fire_3_spread(
 void near pattern_vortices(void)
 {
 	static bool16 wand_raise_animation_done = false;
-	static CEntities<VORTEX_COUNT> cur;
-	static CEntities<VORTEX_COUNT> prev;
+	static EntitiesTopleft<VORTEX_COUNT> cur;
+	static EntitiesTopleft<VORTEX_COUNT> prev;
 	static bool16 dir_first; // x_direction_t
 	static bool16 dir_second; // x_direction_t
 
@@ -1024,7 +1024,7 @@ void near pattern_birds_on_ellipse_arc(void)
 	static bool wand_raise_animation_done = false;
 	static bird_pellet_group_t pellet_group = BPG_AIMED;
 	static int eggs_alive = 0;
-	static CEntities<BIRD_COUNT> egg;
+	static EntitiesTopleft<BIRD_COUNT> egg;
 	static Subpixel spawner_left;
 	static Subpixel spawner_top;
 	static Subpixel spawner_velocity_y;

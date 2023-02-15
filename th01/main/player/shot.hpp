@@ -2,9 +2,7 @@ static const int SHOT_COUNT = 8;
 static const pixel_t SHOT_W = 16;
 static const pixel_t SHOT_H = 16;
 
-struct CShots {
-	screen_x_t left[SHOT_COUNT];
-	screen_y_t top[SHOT_COUNT];
+struct CShots : public EntitiesTopleft<SHOT_COUNT> {
 	int unknown[SHOT_COUNT];
 
 	// A shot slot can be considered "alive" if either of these are nonzero.

@@ -23,6 +23,7 @@
 #include "th01/shiftjis/bonus.hpp"
 #include "th01/sprites/bonusbox.hpp"
 #include "th01/sprites/bonusbox.csp"
+#include "th01/main/entity.hpp"
 #include "th01/main/extend.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/hud/hud.hpp"

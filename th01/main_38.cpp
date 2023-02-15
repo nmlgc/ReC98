@@ -17,6 +17,7 @@
 #include "th01/math/polar.hpp"
 #include "th01/math/vector.hpp"
 #include "th01/formats/ptn.hpp"
+#include "th01/main/entity.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/player/player.hpp"
 #include "th01/main/player/shot.hpp"
