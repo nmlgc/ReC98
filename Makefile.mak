@@ -43,7 +43,7 @@ TH03 = \zunsp.com \res_yume.com \op.exe \main.exe \mainl.exe \zun.com
 TH04 = \zuninit.com \memchk.com \res_huma.com \op.exe \main.exe \maine.exe  \zun.com
 TH05 = \zuninit.com \memchk.com \gjinit.com \res_kso.com \op.exe \main.exe \maine.exe  \zun.com
 
-all: pipeline th01 th02 th03 th04 th05
+all: pipeline th01 th02 th03 th04 th05 Research
 	@echo Done. Find the executables in the bin\ subdirectory.
 
 pipeline:: $(PIPELINE:\=bin\Pipeline\)
@@ -184,6 +184,11 @@ bin\th05\maine.exe: bin\th05\maine.obj th05\cutscene.cpp bin\th04\cfg_lres.obj t
 	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -DGAME=5 -DBINARY='E' -3 -Z -nbin\th05\ -eMAINE.EXE @&&|
 $**
 |
+
+Research:
+	cd Research
+	-$(MAKE)
+	cd ..\
 
 # ZUN.COM packing
 

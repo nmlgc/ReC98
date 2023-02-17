@@ -5,7 +5,7 @@
 
 #pragma option -ms
 
-#include "../libs/master.lib/master.h"
+#include "master.hpp"
 
 #if defined(__TURBOC__) && defined(__MSDOS__)
 // Remove C++ exception handler bloat on Borland compilers

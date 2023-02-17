@@ -4,7 +4,8 @@
 
 .autodepend
 
-LFLAGS = -L..\bin\
+LFLAGS = -L..\bin
+CFLAGS = -I..\
 
 all: HOLDKEY.EXE
 

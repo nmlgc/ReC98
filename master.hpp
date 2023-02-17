@@ -90,6 +90,8 @@ int MASTER_RET bgm_sound(int num);
 // These use INT 21h syscalls as directly as possible.
 
 int MASTER_RET dos_getch(void);
+void MASTER_RET dos_putch(int chr);
+void MASTER_RET dos_puts(const char MASTER_PTR * str);
 void MASTER_RET dos_puts2(const char MASTER_PTR *string);
 
 void MASTER_RET dos_free(void __seg *seg);
