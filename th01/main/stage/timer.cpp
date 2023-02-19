@@ -149,7 +149,7 @@ void harryup_animate(void)
 	TRAMCursor tram_cursor;
 	unsigned int i;
 	REGS in;
-	StupidBytewiseWrapperAround<pc98_glyph_ank_8x16_t> glyphs[7];
+	StupidBytewiseWrapperAround<font_glyph_ank_8x16_t> glyphs[7];
 
 	mdrv2_se_play(17);
 
@@ -164,8 +164,8 @@ void harryup_animate(void)
 	tram_cursor.rewind_to_topleft();
 	tram_cursor.putkanji_for_5_rows(' ', TX_BLACK);
 
-	glyph_y = offsetof(pc98_glyph_ank_8x16_t, dots);
-	while(glyph_y <= (sizeof(pc98_glyph_ank_8x16_t) - 1)) {
+	glyph_y = offsetof(font_glyph_ank_8x16_t, dots);
+	while(glyph_y <= (sizeof(font_glyph_ank_8x16_t) - 1)) {
 		for(i = 0; i < 5; i++) {
 			tram_x16_row_put_red(row, tram_cursor, x, glyphs[i].byte[glyph_y]);
 		}
@@ -179,8 +179,8 @@ void harryup_animate(void)
 	tram_cursor.rewind_to_topleft();
 	tram_cursor.putkanji_for_5_rows(' ', TX_BLACK);
 
-	glyph_y = offsetof(pc98_glyph_ank_8x16_t, dots);
-	while(glyph_y <= (sizeof(pc98_glyph_ank_8x16_t) - 1)) {
+	glyph_y = offsetof(font_glyph_ank_8x16_t, dots);
+	while(glyph_y <= (sizeof(font_glyph_ank_8x16_t) - 1)) {
 		tram_x16_put_center_margin(tram_cursor, x, TX_BLACK);
 		for(i = 5; i < 7; i++) {
 			tram_x16_row_put_red(row, tram_cursor, x, glyphs[i].byte[glyph_y]);

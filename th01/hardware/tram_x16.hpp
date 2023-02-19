@@ -1,25 +1,11 @@
 // Font ROM glyph retrieval
 // ------------------------
 
-// Structure returned from INT 18h, AH=14h. The amount of bytes returned
-// depends on the type of glyph (8×8, 8×16, or 16×16) indicated by its code
-// point, so make sure to allocate the correct subclass for it.
-struct pc98_glyph_t {
-	uint8_t tram_w;
-	uint8_t h_divided_by_8;
-};
+#include "platform/x86real/pc98/font.hpp"
 
-struct pc98_glyph_ank_8x16_t : public pc98_glyph_t {
-	DotRect<dots_t(GLYPH_HALF_W), GLYPH_H> dots;
-};
+void int18h_14h(REGS& in, font_glyph_header_t& glyph, jis_t jis);
 
-struct pc98_glyph_kanji_t : public pc98_glyph_t {
-	DotRect<dots_t(GLYPH_FULL_W), GLYPH_H> dots;
-};
-
-void int18h_14h(REGS& in, pc98_glyph_t& glyph, jis_t jis);
-
-inline void fontrom_get(REGS& in, pc98_glyph_ank_8x16_t& glyph, char ank) {
+inline void fontrom_get(REGS& in, font_glyph_ank_8x16_t& glyph, char ank) {
 	int18h_14h(in, glyph, (0x8000 + ank));
 }
 // ------------------------

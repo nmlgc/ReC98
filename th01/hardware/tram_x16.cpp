@@ -29,7 +29,7 @@ void pascal tram_x16_kanji_center_reverse(jis_t jis_kanji)
 	TRAMx16Row<dots_t(GLYPH_FULL_W)> row;
 	REGS in;
 	REGS out;
-	StupidBytewiseWrapperAround<pc98_glyph_kanji_t> glyph;
+	StupidBytewiseWrapperAround<font_glyph_kanji_t> glyph;
 
 	in.w.bx = FP_SEG(&glyph);
 	in.w.cx = FP_OFF(&glyph);
@@ -56,7 +56,7 @@ void pascal tram_x16_kanji_center_reverse(jis_t jis_kanji)
 }
 
 // Where was this function above? :P
-void int18h_14h(REGS& in, pc98_glyph_t& glyph, jis_t jis)
+void int18h_14h(REGS& in, font_glyph_header_t& glyph, jis_t jis)
 {
 	REGS out;
 	in.w.bx = FP_SEG(&glyph);
