@@ -10,6 +10,8 @@ struct Blitter {
 
 // Internals
 // ---------
+// Mainly here because BLITPERF needs access to them to implement custom
+// blitters.
 
 static const upixel_t UNROLL_H = 8;
 

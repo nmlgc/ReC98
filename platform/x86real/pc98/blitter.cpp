@@ -46,6 +46,7 @@ template <class RowDots> inline void single_or(RowDots *) {
 	FOREACH_WIDTH
 #undef X
 
+// Non-`const` because BLITPERF wants to patch these.
 Blitter BLITTER_FUNCS[] = {
 	{ nullptr, nullptr }, // We want this array to be 1-based
 	#define X(width) \

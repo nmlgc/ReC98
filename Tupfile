@@ -80,6 +80,8 @@ BMP2ARR = bin\\Pipeline\\bmp2arr.exe
 : th05/sprites/gaiji.bmp |> !bmp2arr -sym _sGAIJI -of asm -sw 16 -sh 16 |> th05/sprites/gaiji.asp
 : th05/sprites/piano_l.bmp |> !bmp2arr -sym _sPIANO_LABEL_FONT -of asm -sw 8 -sh 8 |> th05/sprites/piano_l.asp
 
+: Research/blitperf.bmp |> !bmp2arr -sym sBLITPERF -of cpp -sw 16 -sh 16 |> Research/blitperf.csp
+
 !as = |> $(AS) %f %o |> bin\\%B.obj
 !as2 = |> $(AS) /dGAME=2 th02\%b %o |> bin\\th02\\%B.obj
 !as3 = |> $(AS) /dGAME=3 th03\%b %o |> bin\\th03\\%B.obj
