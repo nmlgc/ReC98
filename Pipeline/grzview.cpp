@@ -5,6 +5,7 @@
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
+#include "platform/x86real/pc98/palette.hpp"
 #include "th01/formats/grz.h"
 
 void grcg_setcolor_rmw(int col)
@@ -15,16 +16,6 @@ void grcg_setcolor_rmw(int col)
 void grcg_off_func(void)
 {
 	grcg_off();
-}
-
-void z_palette_set_all_show(const Palette4& pal)
-{
-	for(int i = 0; i < COLOR_COUNT; i++) {
-		outportb(0xA8, i);
-		outportb(0xAA, pal[i].c.g);
-		outportb(0xAC, pal[i].c.r);
-		outportb(0xAE, pal[i].c.b);
-	}
 }
 
 const Palette4 boss8_grz_pal = {
@@ -71,7 +62,7 @@ int main(int argc, const char **argv)
 	}
 	text_hide();
 	graph_start();
-	z_palette_set_all_show(boss8_grz_pal);
+	palette_show(boss8_grz_pal);
 
 	grx_put(0);
 	dos_getch();
