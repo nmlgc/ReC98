@@ -218,7 +218,6 @@ Sprite sprites[14500];
 enum option_type_t {
 	OPT_SPRITE_COUNT,
 	OPT_DURATION,
-	OPT_SEED,
 	OPT_COUNT,
 	OPT_INVALID = -1
 };
@@ -357,7 +356,6 @@ void Test::run(bool grcg_only)
 Test t = {{
 	{ 'c', "Sprite count", 2000, 1, (sizeof(sprites) / sizeof(sprites[0])) },
 	{ 'd', "Frames per test", 100, 1, 999 },
-	{ 's', "Seed", 0, 0, 0xFFFF },
 }};
 
 const Palette4 PALETTE = {
@@ -463,7 +461,7 @@ int __cdecl main(int argc, const char *argv[])
 	}}
 	puts("\nCall with /? for options, hold Q to quit, or TAB to skip to the next test.\n");
 
-	srand(t.opt[OPT_SEED].val);
+	srand(0);
 	{for(uint16_t i = 0; i < t.opt[OPT_SPRITE_COUNT].val; i++) {
 		sprites[i].init();
 	}}
