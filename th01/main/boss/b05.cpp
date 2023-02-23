@@ -55,12 +55,6 @@ enum singyoku_hp_t {
 	HP_PHASE_2_END = 0,
 };
 
-// Global state that is defined here for some reason
-// -------------------------------------------------
-
-int8_t route; // ACTUAL TYPE: route_t
-// -------------------------------------------------
-
 // State that's suddenly no longer shared with other bosses
 // --------------------------------------------------------
 

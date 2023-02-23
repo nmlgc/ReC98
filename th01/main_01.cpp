@@ -430,7 +430,7 @@ int __cdecl main(void)
 	// Disable all FPU exceptions
 	_control87(MCW_EM, MCW_EM);
 
-	route = resident->route;
+	route_t route = resident->route;
 	if(resident->debug_mode != DM_OFF) {
 		if(resident->stage_id == 0) {
 			puts(STAGESELECT_TITLE "\n");
@@ -442,12 +442,12 @@ int __cdecl main(void)
 			puts(STAGESELECT_STAGE);
 			scanf("%d", &stage_id);
 
-			// ZUN landmine: Reinterprets the 8-bit pointer &[route] as a 16-bit
-			// pointer, which will overwrite the byte that follows in memory.
-			// Luckily, it just hits the low byte of SinGyoku's phase frame,
-			// which is set to 0 in that fight's entrance animation.
+			// %d assumes that the argument is an `int`, which `route_t` might
+			// not be.
+			int route_scanf_d;
 			puts(STAGESELECT_ROUTE);
-			scanf("%d", &route);
+			scanf("%d", &route_scanf_d);
+			route = static_cast<route_t>(route_scanf_d);
 
 			if(!stage_on_route(stage_id)) {
 				route = ROUTE_MAKAI;
@@ -458,6 +458,7 @@ int __cdecl main(void)
 					route = ROUTE_MAKAI;
 				}
 			}
+			resident->route = route;
 		}
 		if(resident->debug_mode == DM_TEST) {
 			puts(DM_TEST_STARTING "\n");
@@ -537,7 +538,6 @@ int __cdecl main(void)
 	// Stage loop
 	while(1) {
 		resident->stage_id = stage_id;
-		resident->route = route;
 
 		resident->score = score;
 		resident->continues_total = continues_total;
@@ -885,7 +885,6 @@ int __cdecl main(void)
 				resident->score = score;
 				resident->rem_lives = rem_lives;
 				resident->snd_need_init = true;
-				resident->route = route;
 				mdrv2_bgm_fade_out_nonblock();
 				resident->rem_bombs = rem_bombs;
 				game_switch_binary();

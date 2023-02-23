@@ -15,8 +15,6 @@ typedef enum {
 	ROUTE_MAKAI,
 	ROUTE_JIGOKU,
 	ROUTE_COUNT,
-
-	_route_t_FORCE_INT16 = 0x7FFF
 } route_t;
 
 enum end_sequence_t {
@@ -56,7 +54,7 @@ typedef struct {
 	int8_t credit_lives_extra; // Add 2 for the actual number of lives
 	end_sequence_t end_flag; /* ZUN symbol [Strings] */
 	int8_t unused_1;
-	int8_t route; // ACTUAL TYPE: route_t
+	route_t route;
 	int8_t rem_lives;
 	int8_t snd_need_init; // ACTUAL TYPE: bool
 	int8_t unused_2;
@@ -96,7 +94,6 @@ extern bgm_mode_t bgm_mode;
 extern int8_t rem_bombs;
 extern int8_t credit_lives_extra;
 extern end_sequence_t end_flag; /* ZUN symbol [Strings] */
-extern int8_t route; // ACTUAL TYPE: route_t
 extern int rem_lives; // ZUN bloat: The resident structure just uses int8_t.
 
 // Current gameplay frame plus resident_t::rand, without any frame_delay().
