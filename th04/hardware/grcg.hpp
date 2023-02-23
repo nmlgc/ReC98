@@ -17,26 +17,15 @@ inline void grcg_setmode_rmw_inlined(void) {
 	_outportb_(0x7C, 0xC0);
 }
 
-// Builds the contents of a GRCG tile register from the x86 carry flag by
-// extending its value to a full byte (CF=0 → 0x00, CF=1 → 0xFF).
-//
-// (Technically returns a dots8_t, but why add a planar.h dependency just for
-// one type.)
-inline uint8_t tile_register_from_carry(uint8_t unused)  {
-	__emit__(0x1A, 0xC0); // SBB AL, AL
-	return _AL;
-}
-
 // And this is why [col] is stored in AH: x86 simply only supports AL as the
-// source operand for OUT. By shifting each successive bit of [col] into the
-// carry flag and using the function above, we get the minimum of three
-// instructions (SHR, SBB, OUT) per bitplane, with no register spills. Quite a
-// beautiful optimization!
+// source operand for OUT.
 #define grcg_setcolor_direct_inlined(col) { \
 	disable(); \
 	_DX = 0x7E; \
 	/* Just in case people want to call this with an immediate color value… */ \
 	_AH = col; \
+	\
+	/* Same algorithm as in platform/x86real/pc98/grcg.cpp. */ \
 	outportb(_DX, tile_register_from_carry(_AH >>= 1)); \
 	outportb(_DX, tile_register_from_carry(_AH >>= 1)); \
 	outportb(_DX, tile_register_from_carry(_AH >>= 1)); \
