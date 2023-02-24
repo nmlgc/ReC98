@@ -1,12 +1,15 @@
 // PC-98 font ROM access
 // ---------------------
 
-// Structure returned by INT 18h, AH=14h. The amount of bytes returned depends
-// on the type of glyph (8×8, 8×16, or 16×16) as indicated by its codepoint,
-// so make sure to allocate the correct subclass for it.
+// Indicates the size of the glyph (8×8, 8×16, or 16×16), and by extension the
+// amount of bytes returned from font_read().
 struct font_glyph_header_t {
-	uint8_t tram_w;
-	uint8_t h_divided_by_8;
+	uint8_t h; // in pixels
+	uint8_t w; // in pixels
+};
+
+struct font_glyph_ank_8x8_t : public font_glyph_header_t {
+	dot_rect_t(GLYPH_HALF_W, GLYPH_HALF_H) dots;
 };
 
 struct font_glyph_ank_8x16_t : public font_glyph_header_t {
@@ -16,6 +19,24 @@ struct font_glyph_ank_8x16_t : public font_glyph_header_t {
 struct font_glyph_kanji_t : public font_glyph_header_t {
 	dot_rect_t(GLYPH_FULL_W, GLYPH_H) dots;
 };
+
+// Tagged union for all possible glyph sizes returned from font_read().
+struct font_glyph_t {
+	font_glyph_header_t tag;
+	union {
+		dot_rect_t(GLYPH_HALF_W, GLYPH_HALF_H) ank_8x8;
+		dot_rect_t(GLYPH_HALF_W, GLYPH_H) ank_8x16;
+		dot_rect_t(GLYPH_FULL_W, GLYPH_H) kanji;
+	};
+};
+
+// Reads the font ROM glyph for the given JIS codepoint.
+void font_read(font_glyph_t& glyph, jis_t jis);
+
+// Strongly-typed, memory-conserving wrappers around font_read() for smaller
+// glyphs.
+void font_read(font_glyph_ank_8x8_t& glyph, ank_t ank);
+void font_read(font_glyph_ank_8x16_t& glyph, ank_t ank);
 
 // Writes user-defined glyphs to the given offset inside the PC-98 gaiji RAM.
 // The 256 possible gaiji IDs are mapped onto JIS X 0208 codepoints as follows:

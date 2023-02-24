@@ -20,6 +20,27 @@
 //   in the PC-98HA BIOS).
 // • Emulators directly implement it in native code.
 
+void font_read(font_glyph_t& glyph, jis_t jis)
+{
+	_BX = FP_SEG(&glyph);
+	_CX = FP_OFF(&glyph);
+	_DX = jis;
+	_AH = 0x14;
+	geninterrupt(0x18);
+	glyph.tag.w *= GLYPH_HALF_W;
+	glyph.tag.h *= GLYPH_HALF_H;
+}
+
+void font_read(font_glyph_ank_8x8_t& glyph, ank_t ank)
+{
+	font_read(reinterpret_cast<font_glyph_t &>(glyph), static_cast<jis_t>(ank));
+}
+
+void font_read(font_glyph_ank_8x16_t& glyph, ank_t ank)
+{
+	font_read(reinterpret_cast<font_glyph_t &>(glyph), (0x8000 + ank));
+}
+
 void font_gaiji_write(
 	const dot_rect_t(GLYPH_FULL_W, GLYPH_H)* gaiji,
 	uint16_t count,

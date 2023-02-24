@@ -1,3 +1,6 @@
+// 1-byte JIS X 0201 codepoint (ASCII, numeric, or halfwidth katakana).
+typedef uint8_t ank_t;
+
 // 2-byte JIS X 0208 codepoint.
 typedef uint16_t jis_t;
 
