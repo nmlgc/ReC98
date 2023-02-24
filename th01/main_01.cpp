@@ -99,42 +99,35 @@ struct {
 	}
 } ptn_slot_stg = { false };
 
-#include "th01/hardware/tram_x16.cpp"
-
 // Largely copy-pasted from harryup_animate().
 void stage_num_animate(unsigned int stage_num)
 {
-	ushiftjis_kanji_amount_t x;
-	upixel_t glyph_y;
-	TRAMx16Row<dots_t(GLYPH_HALF_W)> row;
 	TRAMCursor tram_cursor;
-	unsigned int stage_num_local = stage_num;
-	unsigned int i;
 	REGS in;
-	StupidBytewiseWrapperAround<font_glyph_ank_8x16_t> glyphs[7];
+	font_glyph_ank_8x16_t glyphs[7];
 
-	fontrom_get(in, glyphs[0].t, 'S');
-	fontrom_get(in, glyphs[1].t, 'T');
-	fontrom_get(in, glyphs[2].t, 'A');
-	fontrom_get(in, glyphs[3].t, 'G');
-	fontrom_get(in, glyphs[4].t, 'E');
+	fontrom_get(in, glyphs[0], 'S');
+	fontrom_get(in, glyphs[1], 'T');
+	fontrom_get(in, glyphs[2], 'A');
+	fontrom_get(in, glyphs[3], 'G');
+	fontrom_get(in, glyphs[4], 'E');
 	// Yes, these are technically fontrom_get() calls as well, and were just
 	// inlined for code generation reasons.
-	int18h_14h(in, glyphs[5].t, (0x8000 + '0' + (stage_num_local / 10)));
-	int18h_14h(in, glyphs[6].t, (0x8000 + '0' + (stage_num_local % 10)));
+	int18h_14h(in, glyphs[5], (0x8000 + '0' + (stage_num / 10)));
+	int18h_14h(in, glyphs[6], (0x8000 + '0' + (stage_num % 10)));
 
 	tram_cursor.rewind_to_topleft();
 	tram_cursor.putkanji_for_5_rows(' ', TX_BLACK);
 
-	glyph_y = offsetof(font_glyph_ank_8x16_t, dots);
-	while(glyph_y <= (sizeof(font_glyph_ank_8x16_t) - 1)) {
-		for(i = 0; i < 5; i++) {
-			tram_x16_row_put_red(row, tram_cursor, x, glyphs[i].byte[glyph_y]);
+	{for(upixel_t glyph_y = 0; glyph_y < GLYPH_H; glyph_y++) {
+		for(unsigned int i = 0; i < 5; i++) {
+			tram_x16_row_put_red(
+				tram_cursor, &glyphs[i].dots[glyph_y], GLYPH_HALF_W
+			);
 		}
 		// 5 halfwidth glyphs scaled by a factor of 16 just happen to exactly
 		// fit into one TRAM row, so we're already at the next one here.
-		glyph_y++;
-	}
+	}}
 	tram_cursor.putkanji_until_end(' ', TX_BLACK);
 
 	frame_delay(35);
@@ -142,15 +135,15 @@ void stage_num_animate(unsigned int stage_num)
 	tram_cursor.rewind_to_topleft();
 	tram_cursor.putkanji_for_5_rows(' ', TX_BLACK);
 
-	glyph_y = offsetof(font_glyph_ank_8x16_t, dots);
-	while(glyph_y <= (sizeof(font_glyph_ank_8x16_t) - 1)) {
-		tram_x16_put_center_margin(tram_cursor, x, TX_BLACK);
-		for(i = 5; i < 7; i++) {
-			tram_x16_row_put_red(row, tram_cursor, x, glyphs[i].byte[glyph_y]);
+	{for(upixel_t glyph_y = 0; glyph_y < GLYPH_H; glyph_y++) {
+		tram_x16_put_center_margin(tram_cursor, TX_BLACK);
+		for(unsigned int i = 5; i < 7; i++) {
+			tram_x16_row_put_red(
+				tram_cursor, &glyphs[i].dots[glyph_y], GLYPH_HALF_W
+			);
 		}
-		tram_x16_put_center_margin(tram_cursor, x, TX_BLACK);
-		glyph_y++;
-	}
+		tram_x16_put_center_margin(tram_cursor, TX_BLACK);
+	}}
 	tram_cursor.putkanji_until_end(' ', TX_BLACK);
 
 	frame_delay(35);

@@ -1,3 +1,11 @@
+#include "platform.h"
+#include "x86real.h"
+#include "pc98.h"
+#include "planar.h"
+#include "shiftjis.hpp"
+#include "master.hpp"
+#include "th01/hardware/tram_x16.hpp"
+
 void TRAMCursor::putkanji(jis_t jis_kanji, int atrb)
 {
 	// Yes, this is a correct way of writing any fullwidth character to TRAM.
@@ -19,17 +27,47 @@ void TRAMCursor::putkanji_for_5_rows(jis_t jis_kanji, int atrb)
 	}
 }
 
+static const ushiftjis_kanji_amount_t TRAM_X16_CENTER_MARGIN = (
+	((RES_X / GLYPH_FULL_W) - GLYPH_FULL_W) / 2
+);
+
+void tram_x16_put_center_margin(TRAMCursor& tram_cursor, int atrb)
+{
+	for(ushiftjis_kanji_amount_t x = 0; x < TRAM_X16_CENTER_MARGIN; x++) {
+		tram_cursor.putkanji(' ', atrb);
+	}
+}
+
+void tram_x16_row_put(
+	TRAMCursor& tram_cursor,
+	int atrb_fg,
+	int atrb_bg,
+	const dots8_t* row,
+	pixel_t row_w
+)
+{
+	uint8_t dot_cur = 0;
+	for(ushiftjis_kanji_amount_t x = 0; x < row_w; x++) {
+		if(dot_cur == 0) {
+			dot_cur = (1 << (BYTE_DOTS - 1));
+		}
+		if((row[x >> 3] & dot_cur) == 0) {
+			tram_cursor.putkanji(' ', atrb_bg);
+		} else {
+			tram_cursor.putkanji(' ', atrb_fg);
+		}
+		dot_cur >>= 1;
+	}
+}
+
 // Heavily inspired by the INT 18h, AH=14h sample program from the PC-9801
 // Programmers' Bible, on p. 121.
 void tram_x16_kanji_center_reverse(jis_t jis_kanji)
 {
-	ushiftjis_kanji_amount_t x;
-	upixel_t glyph_y;
 	TRAMCursor tram_cursor;
-	TRAMx16Row<dots_t(GLYPH_FULL_W)> row;
 	REGS in;
 	REGS out;
-	StupidBytewiseWrapperAround<font_glyph_kanji_t> glyph;
+	font_glyph_kanji_t glyph;
 
 	in.w.bx = FP_SEG(&glyph);
 	in.w.cx = FP_OFF(&glyph);
@@ -40,17 +78,16 @@ void tram_x16_kanji_center_reverse(jis_t jis_kanji)
 	tram_cursor.rewind_to_topleft();
 	tram_cursor.putkanji_for_5_rows(' ', (TX_BLACK | TX_REVERSE));
 
-	for(glyph_y = 1; glyph_y <= GLYPH_H; glyph_y++) {
-		tram_x16_row_init(row, (
-			(glyph.ubyte[(glyph_y * sizeof(row.dots)) + 0] << BYTE_DOTS) +
-			(glyph.ubyte[(glyph_y * sizeof(row.dots)) + 1])
-		));
-
-		tram_x16_put_center_margin(tram_cursor, x, (TX_BLACK | TX_REVERSE));
+	for(upixel_t glyph_y = 0; glyph_y < GLYPH_H; glyph_y++) {
+		tram_x16_put_center_margin(tram_cursor, (TX_BLACK | TX_REVERSE));
 		tram_x16_row_put(
-			row, tram_cursor, x, TX_BLACK, (TX_BLACK | TX_REVERSE)
+			tram_cursor,
+			TX_BLACK,
+			(TX_BLACK | TX_REVERSE),
+			reinterpret_cast<dots8_t *>(&glyph.dots[glyph_y]),
+			glyph.dots.w()
 		);
-		tram_x16_put_center_margin(tram_cursor, x, (TX_BLACK | TX_REVERSE));
+		tram_x16_put_center_margin(tram_cursor, (TX_BLACK | TX_REVERSE));
 	}
 	tram_cursor.putkanji_until_end(' ', (TX_BLACK | TX_REVERSE));
 }

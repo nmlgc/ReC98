@@ -50,39 +50,28 @@ void tram_x16_kanji_center_reverse(jis_t jis_kanji);
 // Shows the red "STAGE [stage_num]" letters.
 void tram_x16_stage(unsigned int stage_num);
 
-#define tram_x16_put_center_margin(tram_cursor, x, atrb) \
-	for(x = 0; x < (((RES_X / GLYPH_FULL_W) - GLYPH_FULL_W) / 2); x++) { \
-		tram_cursor.putkanji(' ', atrb); \
-	}
-
 // Helper functions
 // ----------------
 
-template <class RowDots> struct TRAMx16Row {
-	RowDots dot_cur;
-	RowDots dots;
+// Advances the cursor by the margin of a single centered fullwidth glyph (or
+// two centered halfwidth glyphs) at 16× magnification, filling all TRAM cells
+// with the given attribute.
+void tram_x16_put_center_margin(TRAMCursor& tram_cursor, int atrb);
 
-	pixel_t w() const {
-		return ((sizeof(dots) * BYTE_DOTS));
-	}
-};
+// Renders the given row of pixels at 16× magnification onto TRAM. 0 dots are
+// rendered with [atrb_bg], 1 dots with [atrb_fg].
+void tram_x16_row_put(
+	TRAMCursor& tram_cursor,
+	int atrb_fg,
+	int atrb_bg,
+	const dots8_t* row,
+	pixel_t row_w
+);
 
-#define tram_x16_row_init(row, row_dots) \
-	row.dots = row_dots; \
-	row.dot_cur = (1 << (row.w() - 1));
-
-#define tram_x16_row_put(row, tram_cursor, x, atrb_fg, atrb_bg) \
-	for(x = 0; x < row.w(); x++) { \
-		if((row.dots & row.dot_cur) == 0) { \
-			tram_cursor.putkanji(' ', atrb_bg); \
-		} else { \
-			tram_cursor.putkanji(' ', atrb_fg); \
-		} \
-		row.dot_cur >>= 1; \
-	}
-
-#define tram_x16_row_put_red(row, tram_cursor, x, row_dots) \
-	tram_x16_row_init(row, row_dots); \
-	tram_x16_row_put(row, tram_cursor, x, (TX_RED | TX_REVERSE), TX_BLACK);
+inline void tram_x16_row_put_red(
+	TRAMCursor& tram_cursor, const dots8_t *row, pixel_t row_w
+) {
+	tram_x16_row_put(tram_cursor, (TX_RED | TX_REVERSE), TX_BLACK, row, row_w);
+}
 // ----------------
 // --------------------
