@@ -218,6 +218,7 @@ Sprite sprites[14500];
 enum option_type_t {
 	OPT_SPRITE_COUNT,
 	OPT_DURATION,
+	OPT_SPRITE_COL,
 	OPT_COUNT,
 	OPT_INVALID = -1
 };
@@ -309,7 +310,8 @@ void Test::run(bool grcg, const char* prompt, test_func_t func)
 		graph_clear();
 
 		if(grcg) {
-			GRCGStaticColor<SPRITE_COL> grcg(GC_RMW);
+			GRCG grcg(GC_RMW);
+			grcg.setcolor(opt[OPT_SPRITE_COL].val);
 			sprite_loop(func);
 		} else {
 			sprite_loop(func);
@@ -354,8 +356,9 @@ void Test::run(bool grcg_only)
 // ---------
 
 Test t = {{
-	{ 'c', "Sprite count", 2000, 1, (sizeof(sprites) / sizeof(sprites[0])) },
+	{ 's', "Sprite count", 2000, 1, (sizeof(sprites) / sizeof(sprites[0])) },
 	{ 'd', "Frames per test", 100, 1, 999 },
+	{ 'c', "GRCG sprite color", 2, 0x1, 0xF },
 }};
 
 const Palette4 PALETTE = {
