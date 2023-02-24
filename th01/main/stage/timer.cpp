@@ -149,13 +149,13 @@ void harryup_animate(void)
 
 	mdrv2_se_play(17);
 
-	fontrom_get(in, glyphs[0], 'H');
-	fontrom_get(in, glyphs[1], 'A');
-	fontrom_get(in, glyphs[2], 'R');
-	fontrom_get(in, glyphs[3], 'R');
-	fontrom_get(in, glyphs[4], 'Y');
-	fontrom_get(in, glyphs[5], 'U');
-	fontrom_get(in, glyphs[6], 'P');
+	font_read(glyphs[0], 'H');
+	font_read(glyphs[1], 'A');
+	font_read(glyphs[2], 'R');
+	font_read(glyphs[3], 'R');
+	font_read(glyphs[4], 'Y');
+	font_read(glyphs[5], 'U');
+	font_read(glyphs[6], 'P');
 
 	tram_cursor.rewind_to_topleft();
 	tram_cursor.putkanji_for_5_rows(' ', TX_BLACK);

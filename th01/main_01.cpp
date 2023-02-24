@@ -106,15 +106,13 @@ void stage_num_animate(unsigned int stage_num)
 	REGS in;
 	font_glyph_ank_8x16_t glyphs[7];
 
-	fontrom_get(in, glyphs[0], 'S');
-	fontrom_get(in, glyphs[1], 'T');
-	fontrom_get(in, glyphs[2], 'A');
-	fontrom_get(in, glyphs[3], 'G');
-	fontrom_get(in, glyphs[4], 'E');
-	// Yes, these are technically fontrom_get() calls as well, and were just
-	// inlined for code generation reasons.
-	int18h_14h(in, glyphs[5], (0x8000 + '0' + (stage_num / 10)));
-	int18h_14h(in, glyphs[6], (0x8000 + '0' + (stage_num % 10)));
+	font_read(glyphs[0], 'S');
+	font_read(glyphs[1], 'T');
+	font_read(glyphs[2], 'A');
+	font_read(glyphs[3], 'G');
+	font_read(glyphs[4], 'E');
+	font_read(glyphs[5], ('0' + (stage_num / 10)));
+	font_read(glyphs[6], ('0' + (stage_num % 10)));
 
 	tram_cursor.rewind_to_topleft();
 	tram_cursor.putkanji_for_5_rows(' ', TX_BLACK);

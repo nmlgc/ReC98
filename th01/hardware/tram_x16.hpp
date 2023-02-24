@@ -1,14 +1,4 @@
-// Font ROM glyph retrieval
-// ------------------------
-
 #include "platform/x86real/pc98/font.hpp"
-
-void int18h_14h(REGS& in, font_glyph_header_t& glyph, jis_t jis);
-
-inline void fontrom_get(REGS& in, font_glyph_ank_8x16_t& glyph, char ank) {
-	int18h_14h(in, glyph, (0x8000 + ank));
-}
-// ------------------------
 
 class TRAMCursor {
 	struct {

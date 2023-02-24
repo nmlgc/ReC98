@@ -65,15 +65,9 @@ void tram_x16_row_put(
 void tram_x16_kanji_center_reverse(jis_t jis_kanji)
 {
 	TRAMCursor tram_cursor;
-	REGS in;
-	REGS out;
-	font_glyph_kanji_t glyph;
+	font_glyph_t glyph;
 
-	in.w.bx = FP_SEG(&glyph);
-	in.w.cx = FP_OFF(&glyph);
-	in.w.dx = jis_kanji;
-	in.h.ah = 0x14;
-	int86(0x18, &in, &out);
+	font_read(glyph, jis_kanji);
 
 	tram_cursor.rewind_to_topleft();
 	tram_cursor.putkanji_for_5_rows(' ', (TX_BLACK | TX_REVERSE));
@@ -84,21 +78,10 @@ void tram_x16_kanji_center_reverse(jis_t jis_kanji)
 			tram_cursor,
 			TX_BLACK,
 			(TX_BLACK | TX_REVERSE),
-			reinterpret_cast<dots8_t *>(&glyph.dots[glyph_y]),
-			glyph.dots.w()
+			reinterpret_cast<dots8_t *>(&glyph.kanji[glyph_y]),
+			glyph.kanji.w()
 		);
 		tram_x16_put_center_margin(tram_cursor, (TX_BLACK | TX_REVERSE));
 	}
 	tram_cursor.putkanji_until_end(' ', (TX_BLACK | TX_REVERSE));
-}
-
-// Where was this function above? :P
-void int18h_14h(REGS& in, font_glyph_header_t& glyph, jis_t jis)
-{
-	REGS out;
-	in.w.bx = FP_SEG(&glyph);
-	in.w.cx = FP_OFF(&glyph);
-	in.w.dx = jis;
-	in.h.ah = 0x14;
-	int86(0x18, &in, &out);
 }
