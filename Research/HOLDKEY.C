@@ -69,7 +69,7 @@ void frame(void)
 	}
 }
 
-void main(void)
+void __cdecl main(void)
 {
 	vsync_start();
 	hr(79);
