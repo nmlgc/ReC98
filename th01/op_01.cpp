@@ -13,6 +13,7 @@
 #include "pc98kbd.h"
 #include "master.hpp"
 #include "shiftjis.hpp"
+#include "bin/fork.h"
 #include "game/input.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
@@ -295,6 +296,13 @@ void whitelines_animate(void)
 	graph_accesspage_func(0);
 }
 
+void forkbanner_row_put(int row, const char* str)
+{
+	graph_putsa_fx(
+		0, (RES_Y - ((GLYPH_HALF_H + 2) * (4 - row))), (FX_8X8 | 7), str
+	);
+}
+
 void title_init(void)
 {
 	mdrv2_bgm_load("reimu.mdt");
@@ -304,6 +312,12 @@ void title_init(void)
 	z_palette_black();
 	graph_copy_accessed_page_to_other();
 	grp_put("REIIDEN3.grp", GPF_PALETTE_KEEP);
+
+	forkbanner_row_put(0, "Anniversary Edition");
+	forkbanner_row_put(1, FORK_TAG);
+	forkbanner_row_put(2, FORK_DATE);
+	forkbanner_row_put(3, FORK_CREDIT);
+
 	graph_accesspage_func(0);
 	z_palette_black_in();
 	frame_delay(100);
