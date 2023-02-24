@@ -13,6 +13,7 @@ static const int16_t FX_CLEAR_BG  = 0x200;
 
 static const int16_t FX_UNDERLINE = 0x400;
 static const int16_t FX_REVERSE   = 0x800;
+static const int16_t FX_8X8       = 0x1000; // Use the 8×8 font
 // ----------------------
 
 // Calculates the width of [str], displayed with the given [fx].

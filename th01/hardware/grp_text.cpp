@@ -64,10 +64,10 @@ void graph_putsa_fx(
 			codepoint = _mbcjmstojis((str[0] << 8) + str[1]);
 			str += sizeof(shiftjis_kanji_t);
 		} else if(_ismbbkana(str[0])) {
-			codepoint = (str[0] + 0x2980);
+			codepoint = (str[0] + ((col_and_fx & FX_8X8) ? 0 : 0x2980));
 			str += 1;
 		} else if(isgraph(str[0])) {
-			codepoint = (str[0] + 0x2900);
+			codepoint = (str[0] + ((col_and_fx & FX_8X8) ? 0 : 0x2900));
 			str += 1;
 		} else {
 			codepoint = 0x2B21; // One of many JIS whitespace characters
