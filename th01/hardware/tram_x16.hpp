@@ -69,7 +69,7 @@ template <class RowDots> struct TRAMx16Row {
 
 #define tram_x16_row_init(row, row_dots) \
 	row.dots = row_dots; \
-	row.dot_cur = (1 << (row.w()- 1));
+	row.dot_cur = (1 << (row.w() - 1));
 
 #define tram_x16_row_put(row, tram_cursor, x, atrb_fg, atrb_bg) \
 	for(x = 0; x < row.w(); x++) { \
@@ -82,7 +82,7 @@ template <class RowDots> struct TRAMx16Row {
 	}
 
 #define tram_x16_row_put_red(row, tram_cursor, x, row_dots) \
-	tram_x16_row_init(row, glyphs[i].byte[glyph_y]); \
+	tram_x16_row_init(row, row_dots); \
 	tram_x16_row_put(row, tram_cursor, x, (TX_RED | TX_REVERSE), TX_BLACK);
 // ----------------
 // --------------------
