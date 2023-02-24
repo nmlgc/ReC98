@@ -1,13 +1,15 @@
 #include <mbctype.h>
 #include <mbstring.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
 #include "platform.h"
 #include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
-#include "master.hpp"
 #include "shiftjis.hpp"
+#include "platform/x86real/pc98/font.hpp"
+#include "platform/x86real/pc98/grcg.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/grp_text.hpp"
@@ -28,23 +30,15 @@ void graph_putsa_fx(
 )
 {
 	register screen_x_t x = left;
-	jis_t codepoint;
-	dots_t(GLYPH_FULL_W) glyph_row;
 	dots8_t far *vram;
-	bool16 fullwidth;
-	int first_bit;
 	int weight = fx_weight_from(col_and_fx);
 	pixel_t spacing = fx_spacing_from(col_and_fx);
 	bool16 clear_bg = (col_and_fx & FX_CLEAR_BG);
 	bool16 underline = (col_and_fx & FX_UNDERLINE);
 	bool16 reverse = (col_and_fx & FX_REVERSE);
-	pixel_t w;
-	pixel_t line;
-	dot_rect_t(GLYPH_FULL_W, GLYPH_H) glyph;
-	register dots_t(GLYPH_FULL_W) glyph_row_tmp;
 
 	if(clear_bg) {
-		w = text_extent_fx(col_and_fx, str);
+		pixel_t w = text_extent_fx(col_and_fx, str);
 		if(underline) {
 			z_grcg_boxfill(x, top, (x + w - 1), (top + GLYPH_H + 1), 0);
 			graph_r_hline(x, (x + w - 1), (top + GLYPH_H + 1), V_WHITE);
@@ -52,19 +46,57 @@ void graph_putsa_fx(
 			z_grcg_boxfill(x, top, (x + w - 1), (top + GLYPH_H - 1), 0);
 		}
 	} else if(underline) {
-		w = text_extent_fx(col_and_fx, str);
+		pixel_t w = text_extent_fx(col_and_fx, str);
 		graph_r_hline(x, (x + w - 1), (top + GLYPH_H + 1), V_WHITE);
 	}
 
-	grcg_setcolor_rmw(col_and_fx);
-	outportb(0x68, 0xB); // CG ROM dot access
+	GRCG grcg(GC_RMW);
+	grcg.setcolor(col_and_fx);
 
 	while(str[0]) {
-		set_vram_ptr(vram, first_bit, x, top);
-		get_glyph(glyph, codepoint, fullwidth, str, x, line);
+		font_glyph_t glyph;
+		jis_t codepoint;
+		uint8_t first_bit;
 
-		for(line = 0; line < GLYPH_H; line++) {
-			apply_weight(glyph_row, glyph[line], glyph_row_tmp, weight);
+		set_vram_ptr(vram, first_bit, x, top);
+
+		if(_ismbblead(str[0])) {
+			codepoint = _mbcjmstojis((str[0] << 8) + str[1]);
+			str += sizeof(shiftjis_kanji_t);
+		} else if(_ismbbkana(str[0])) {
+			codepoint = (str[0] + 0x2980);
+			str += 1;
+		} else if(isgraph(str[0])) {
+			codepoint = (str[0] + 0x2900);
+			str += 1;
+		} else {
+			codepoint = 0x2B21; // One of many JIS whitespace characters
+			str += 1;
+		}
+
+		font_read(glyph, codepoint);
+
+		bool fullwidth = (glyph.tag.w == GLYPH_FULL_W);
+		if((left + glyph.tag.w) > RES_X) {
+			break;
+		}
+		for(uint8_t line = 0; line < glyph.tag.h; line++) {
+			dots_t(GLYPH_FULL_W) glyph_row_tmp;
+			dots_t(GLYPH_FULL_W) glyph_row = (fullwidth
+				? __rotr__(glyph.kanji[line], 8)
+
+				// While moving halfwidth glyphs to the high byte of a glyph
+				// row ensures that any additional boldface dots to the left
+				// of the glyph are lost (see the bug in apply_weight()), it's
+				// better than storing them in the low byte and spilling such
+				// new dots into the high one. In that case, these dots would
+				// appear on screen as glitched pixels if the glyph was
+				// displayed at a byte-aligned position. (That's exactly what
+				// happens in the ASM version of this code, introduced in
+				// TH04.)
+				: (glyph.ank_8x16[line] << 8)
+			);
+			apply_weight(glyph_row, glyph_row, glyph_row_tmp, weight);
 			if(reverse) {
 				if(fullwidth) {
 					glyph_row ^= 0xFFFF;
@@ -74,11 +106,8 @@ void graph_putsa_fx(
 			}
 			put_row_and_advance(vram, glyph_row, first_bit);
 		}
-		advance_left(x, fullwidth, spacing);
+		x += (glyph.tag.w + spacing);
 	}
-
-	outportb(0x68, 0xA); // CG ROM code access
-	grcg_off_func();
 }
 
 pixel_t text_extent_fx(int col_and_fx, const shiftjis_t *str)
