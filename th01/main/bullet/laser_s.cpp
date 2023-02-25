@@ -74,7 +74,7 @@ void CShootoutLaser::hittest_and_render(void)
 
 	for(i = 0; i < pixel_count; i++) {
 		if(
-			((left >> 3) != ray_i_left.to_vram_byte_amount()) ||
+			((left >> BYTE_BITS) != ray_i_left.to_vram_byte_amount()) ||
 			(y != ray_i_y.to_pixel())
 		) {
 			if(put_flag) {

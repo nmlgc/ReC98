@@ -110,7 +110,10 @@ void shape_ellipse_arc_sloppy_unput(
 	for(angle = angle_start; angle <= angle_end; angle += angle_step) {
 		cur_x = polar_x(center_x, radius_x, angle);
 		cur_y = polar_y(center_y, radius_y, angle);
-		if((prev_y != cur_y) || ((prev_x >> 3) != (cur_x >> 3))) {
+		if(
+			(prev_y != cur_y) ||
+			((prev_x >> BYTE_BITS) != (cur_x >> BYTE_BITS))
+		) {
 			egc_copy_rect_1_to_0_16(cur_x, cur_y, BYTE_DOTS, 1);
 			prev_x = cur_x;
 			prev_y = cur_y;

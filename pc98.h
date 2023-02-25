@@ -69,6 +69,7 @@ typedef unsigned int utram_y_t;
 /// --------
 #define BYTE_DOTS 8
 #define BYTE_MASK (BYTE_DOTS - 1)
+#define BYTE_BITS 3
 #define RES_X 640
 #define RES_Y 400
 #define ROW_SIZE (RES_X / BYTE_DOTS)

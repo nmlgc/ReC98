@@ -18,7 +18,7 @@ inline CDG near* cdg_slot_offset(const int &slot) {
 	/* returns a value. */ \
 	ret; \
 	ret = left; \
-	ret >>= 3; \
+	ret >>= BYTE_BITS; \
 	ret += cdg->offset_at_bottom_left;
 
 // Returns (SEG_PLANE_B + (top * (ROW_SIZE / 16))).

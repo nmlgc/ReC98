@@ -598,7 +598,7 @@ void graph_r_line(
 				unput32_at(vram_offset); \
 			} \
 			y_vram = y_cur; \
-			x_vram = (x_cur >> 3); \
+			x_vram = (x_cur >> BYTE_BITS); \
 		} \
 		pixels |= (graph_r_pattern >> (x_cur & BYTE_MASK)); \
 		pixels |= (graph_r_pattern << (16 - (x_cur & BYTE_MASK))); \
@@ -655,7 +655,7 @@ void graph_r_line(
 	w = right - left;
 	h = (bottom - top) * y_direction;
 	pixels = 0;
-	x_vram = (x_cur >> 3);
+	x_vram = (x_cur >> BYTE_BITS);
 	y_vram = y_cur;
 
 	if(!graph_r_unput) {
@@ -716,7 +716,7 @@ void z_grcg_boxfill(
 	grcg_setcolor_rmw(col);
 	vram_row = (dots8_t *)(MK_FP(SEG_PLANE_B, vram_offset_mulshift(left, top)));
 	for(y = top; y <= bottom; y++) {
-		full_bytes_to_put = (right >> 3) - (left >> 3);
+		full_bytes_to_put = ((right >> BYTE_BITS) - (left >> BYTE_BITS));
 		left_pixels = 0xFF >> (left & BYTE_MASK);
 		right_pixels = 0xFF << (BYTE_MASK - (right & BYTE_MASK));
 

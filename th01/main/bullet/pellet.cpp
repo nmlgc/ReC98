@@ -421,7 +421,7 @@ void pellet_put(screen_x_t left, vram_y_t top, int cel)
 	// instruction than the one in ZUN's original binary.
 	_ES = SEG_PLANE_B;
 
-	_AX = (left >> 3);
+	_AX = (left >> BYTE_BITS);
 	_DX = top;
 	_DX <<= 6;
 	asm { add	ax, dx; }

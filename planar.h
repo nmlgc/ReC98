@@ -82,7 +82,7 @@ typedef int16_t vram_offset_t;
 typedef uint16_t uvram_offset_t;
 
 #define VRAM_OFFSET_SHIFT(x, y) \
-	(x >> 3) + (y << 6) + (y << 4)
+	(x >> BYTE_BITS) + (y << 6) + (y << 4)
 
 #ifdef __cplusplus
 // MODDERS: Replace with a single function
@@ -107,7 +107,7 @@ static inline vram_offset_t vram_offset_divmul_wtf(screen_x_t x, vram_y_t y) {
 }
 
 static inline vram_offset_t vram_offset_mulshift(screen_x_t x, vram_y_t y) {
-	return (y * ROW_SIZE) + (x >> 3);
+	return (y * ROW_SIZE) + (x >> BYTE_BITS);
 }
 
 static inline vram_offset_t vram_offset_divshift_wtf(screen_x_t x, vram_y_t y) {

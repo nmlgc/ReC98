@@ -153,7 +153,8 @@ void CPlayerAnim::unput_and_put_overlapped_8(
 
 	// Probably supposed to needlessly make sure that both values are positive?
 	vram_distance_from_unput_to_put = (
-		((put_left + PLAYER_W) >> 3) - ((unput_left + PLAYER_W) >> 3)
+		((  put_left + PLAYER_W) >> BYTE_BITS) -
+		((unput_left + PLAYER_W) >> BYTE_BITS)
 	);
 	bos_p = 0;
 

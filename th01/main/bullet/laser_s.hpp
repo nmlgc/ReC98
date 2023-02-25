@@ -23,7 +23,7 @@ public:
 	}
 
 	int32_t to_vram_byte_amount() const {
-		return (v >> 11);
+		return (v >> (8 + BYTE_BITS));
 	}
 };
 /// ------------------------

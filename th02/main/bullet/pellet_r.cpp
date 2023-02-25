@@ -7,7 +7,7 @@ void pascal near pellet_render(screen_x_t left, vram_y_t top)
 	_ES = SEG_PLANE_B;
 	_BX = _BX; // Keeps any parameters from being put into BX
 
-	_AX = (left >> 3);
+	_AX = (left >> BYTE_BITS);
 	_DX = top;
 	_DX <<= 6;
 	_AX += _DX;

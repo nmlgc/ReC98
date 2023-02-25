@@ -121,7 +121,7 @@ void pascal mrs_free(int slot)
 #pragma codestring "\x90"
 
 inline uint16_t to_bottom_left_8(const screen_x_t &left) {
-	return ((left >> 3) + ((MRS_H - 1) * ROW_SIZE));
+	return ((left >> BYTE_BITS) + ((MRS_H - 1) * ROW_SIZE));
 }
 
 inline seg_t to_segment(const uscreen_y_t &top) {
