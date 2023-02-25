@@ -132,7 +132,6 @@ struct Pellet {
 	// hit testing if true.
 	bool16 not_rendered;
 
-	int age;
 	Subpixel speed; // for recalculating velocities with certain motion types
 	int decay_frame;
 	int cloud_frame;

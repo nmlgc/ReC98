@@ -237,7 +237,6 @@ void CPellets::add_group(
 		}
 		pellet_init(p, left, top, group, spawn_with_cloud);
 		p->prev_left.v = -1;
-		p->age = 0;
 		alive_count++;
 		group_done = group_velocity_set(
 			vel_x, vel_y, group, speed, group_i, left, top
@@ -282,7 +281,6 @@ void CPellets::add_single(
 		pellet_init(p, left, top, PG_NONE, spawn_with_cloud);
 		p->motion_type = motion_type;
 		p->prev_left.v = -1;
-		p->age = 0;
 		alive_count++;
 		p->spin_center.x.v = TO_SP(spin_center_x);
 		p->spin_center.y.v = TO_SP(spin_center_y);
@@ -660,7 +658,6 @@ void CPellets::unput_update_render(void)
 			p->prev_left.v = p->cur_left.v;
 			p->prev_top.v = p->cur_top.v;
 		}
-		p->age++;
 		if(p->decay_frame) {
 			decay_tick_for_cur();
 		} else if(hittest_player_for_cur()) {
