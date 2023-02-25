@@ -4,18 +4,17 @@
 #include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
-#include "decomp.hpp"
 #include "master.hpp"
 #include "platform/x86real/flags.hpp"
 extern "C" {
 #include "th01/hardware/egc.h"
 
-#define graph_accesspage_1() \
-	outportb2(0xA6, 1);
-
-#define graph_accesspage_0()  \
-	_AX ^= _AX; \
-	asm { out 0xA6, al; }
+inline void graph_accesspage_1(void) {
+	_outportb_(0xA6, 1);
+}
+inline void graph_accesspage_0(void) {
+	_outportb_(0xA6, (_AX ^= _AX));
+}
 
 extern vram_word_amount_t egcrect_w;
 

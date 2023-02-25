@@ -14,7 +14,6 @@ static long unused_long = { 0 }; // ZUN bloat
 #include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
-#include "decomp.hpp"
 #include "pc98kbd.h"
 #include "master.hpp"
 #include "shiftjis.hpp"

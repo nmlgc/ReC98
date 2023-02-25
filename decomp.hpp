@@ -5,12 +5,6 @@
 
 #define DECOMP_HPP
 
-// Alternate version that doesn't spill the port number to DX
-#define outportb2(port, val) _asm { \
-	mov al, val; \
-	out port, al; \
-}
-
 // Alternate version that sets the value first
 #define outport2(port, val) _asm { \
 	mov ax, val; \

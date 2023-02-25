@@ -10,7 +10,6 @@
 #include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
-#include "decomp.hpp"
 #include "master.hpp"
 #include "shiftjis.hpp"
 #include "th01/rank.h"

@@ -24,7 +24,6 @@
 extern "C" {
 #include "th02/hardware/frmdelay.h"
 #if (GAME == 5)
-	#include "th01/hardware/egc.h"
 	#include "th04/hardware/bgimage.hpp"
 	#include "th04/hardware/grppsafx.h"
 	#include "th04/snd/snd.h"
@@ -226,9 +225,11 @@ bool16 pascal near cutscene_script_load(const char* fn)
 #endif
 
 // ZUN bloat: Turn into a single global inline function.
-#define egc_start_copy	near egc_start_copy
-#include "th01/hardware/egcstart.cpp"
-#undef egc_start_copy
+extern "C" {
+	#define egc_start_copy	near egc_start_copy
+	#include "th01/hardware/egcstart.cpp"
+	#undef egc_start_copy
+}
 
 // Picture crossfading works by doing a masked blit of the new picture on top
 // of the old one on the invisible VRAM page, then blitting the result to the

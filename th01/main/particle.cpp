@@ -1,4 +1,3 @@
-#include "th01/hardware/egc.h"
 #include "th01/main/particle.hpp"
 
 void particles_unput_update_render(particle_origin_t origin, int col)

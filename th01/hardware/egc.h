@@ -3,23 +3,31 @@
 /// Enabling and disabling
 /// ----------------------
 
-#define graph_mode_change(enable_or_disable) \
-	outportb2(0x6A, (0x06 + enable_or_disable))
+#ifdef X86REAL_H
+	inline void graph_mode_change(bool enable_or_disable) {
+		_outportb_(0x6A, (0x06 + enable_or_disable));
+	}
 
-// Requires graphics mode changing to be enabled via graph_mode_change(true).
-#define graph_mode_egc(enable_or_disable) \
-	outportb2(0x6A, (0x04 + enable_or_disable))
+	// Requires graphics mode changing to be enabled via
+	// graph_mode_change(true).
+	inline void graph_mode_egc(bool enable_or_disable) {
+		_outportb_(0x6A, (0x04 + enable_or_disable));
+	}
 
-#define graph_egc(enable_or_disable) \
-	graph_mode_change(true); \
-	graph_mode_egc(enable_or_disable); \
-	graph_mode_change(false);
+	inline void graph_egc(bool enable_or_disable) {
+		graph_mode_change(true);
+		graph_mode_egc(enable_or_disable);
+		graph_mode_change(false);
+	}
 
-#define graph_egc_on() \
-	graph_egc(true);
+	inline void graph_egc_on(void) {
+		graph_egc(true);
+	}
 
-#define graph_egc_off() \
-	graph_egc(false);
+	inline void graph_egc_off(void) {
+		graph_egc(false);
+	}
+#endif
 /// ----------------------
 
 // Requires the EGC to have been activated before.
@@ -57,4 +65,3 @@ void DEFCONV egc_copy_rect_1_to_0_16(
 // Unnecessary wrapper, as the regular function word-aligns [w] anyway.
 #define egc_copy_rect_1_to_0_16_word_w(left, top, w, h) \
 	egc_copy_rect_1_to_0_16(left, top, (((w / 16) * 16) + 16), h);
-

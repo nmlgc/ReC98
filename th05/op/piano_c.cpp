@@ -4,7 +4,6 @@
 #include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
-#include "decomp.hpp"
 #include "master.hpp"
 #include "libs/kaja/kaja.h"
 #include "th04/hardware/grcg.hpp"
@@ -72,9 +71,8 @@ extern piano_notes_t piano_notes_prev;
 #undef grcg_setmode
 #undef grcg_off
 
-#define grcg_setmode(mode) _asm { \
-	mov	al, mode; \
-	out	0x7C, al; \
+#define grcg_setmode(mode) { \
+	_outportb_(0x7C, mode); \
 }
 
 #define grcg_off() _asm { \

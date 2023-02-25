@@ -13,8 +13,8 @@ void near grcg_setcolor_direct_seg3_raw(void);
 // Implementation macros
 // ---------------------
 
-#define grcg_setmode_rmw_inlined() { \
-	outportb2(0x7C, 0xC0); \
+inline void grcg_setmode_rmw_inlined(void) {
+	_outportb_(0x7C, 0xC0);
 }
 
 // Builds the contents of a GRCG tile register from the x86 carry flag by

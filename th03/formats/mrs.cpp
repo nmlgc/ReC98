@@ -2,6 +2,7 @@
 
 #include <stddef.h>
 #include "platform.h"
+#include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
 #include "decomp.hpp"
@@ -13,8 +14,7 @@
 
 #undef grcg_off
 #define grcg_off() { \
-	_AL ^= _AL; \
-	asm { out 0x7C, al; } \
+	_outportb_(0x7C, (_AL ^= _AL)); \
 }
 
 static const vram_byte_amount_t MRS_BYTE_W = (MRS_W / BYTE_DOTS);

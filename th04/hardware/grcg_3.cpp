@@ -4,7 +4,6 @@
 
 #include "platform.h"
 #include "x86real.h"
-#include "decomp.hpp"
 #include "th04/hardware/grcg.hpp"
 
 #pragma option -k-

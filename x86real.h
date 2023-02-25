@@ -134,4 +134,18 @@ void segread(struct SREGS *__segp);
 #define _peekb_(a,b)   (*(( int8_t __far * )MK_FP((a),(b))))
 #define _poke_(a,b,c)  (*((int16_t __far * )MK_FP((a),(b))) = (int16_t)(c))
 #define _pokeb_(a,b,c) (*(( int8_t __far * )MK_FP((a),(b))) = ( int8_t)(c))
+
+// Alternate versions for 8-bit port numbers that don't spill the port number
+// to DX.
+#ifdef __cplusplus
+	#define _outportb_(port, val) { \
+		_AL = val; \
+		__emit__(0xE6, port); /* OUT port, AL */ \
+	}
+
+	inline uint8_t _inportb_(uint8_t port) {
+		__emit__(0xE4, port); // IN AL, port
+		return _AL;
+	}
+#endif
 // --------------------------

@@ -6,7 +6,6 @@
 #include "platform.h"
 #include "x86real.h"
 #include "pc98.h"
-#include "decomp.hpp"
 #include "master.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/math/polar.hpp"
@@ -161,13 +160,13 @@ void stars_render_and_update(void)
 
 void wait(void)
 {
-	do _asm {
-		out 0x5F, al;
-		in  al, 0xA0;
+	do {
+		_outportb_(0x5F, _AL);
+		_AL = _inportb_(0xA0);
 	} while((_AL & 0x20) != 0);
-	do _asm {
-		out 0x5F, al;
-		in  al, 0xA0;
+	do {
+		_outportb_(0x5F, _AL);
+		_AL = _inportb_(0xA0);
 	} while((_AL & 0x20) == 0);
 }
 
@@ -217,7 +216,7 @@ void main(void)
 	_ES = _AX;
 	if(peekb(_ES, 0x45C) & 0x40) {
 		graph_mode_change(true);
-		outportb2(0x6A, 0x20); // Disable 256-color mode
+		_outportb_(0x6A, 0x20); // Disable 256-color mode
 		graph_mode_change(false);
 
 		// Activate all graphics hardware in 16-color mode
@@ -245,9 +244,9 @@ void main(void)
 
 		_AL = page_write;
 		page_show = _AL;
-		asm { out	0xA4, al; } // graph_showpage
+		_outportb_(0xA4, _AL); // graph_showpage
 		page_write ^= 1;
-		outportb2(0xA6, page_write); // graph_accesspage
+		_outportb_(0xA6, page_write); // graph_accesspage
 
 		quit = 0;
 		for(keygroup = 0; keygroup < 8; keygroup++) {
