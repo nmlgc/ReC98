@@ -75,7 +75,7 @@ void DEFCONV egc_copy_rect_1_to_0_16(
 				_DI |= _DI;
 				if((!FLAGS_SIGN) && (_DI < PLANE_SIZE)) {
 					graph_accesspage_1();	dots = peek(_ES, _DI);
-					graph_accesspage_0();	poke2(_ES, _DI, dots);
+					graph_accesspage_0();	_poke_(_ES, _DI, dots);
 				}
 				_DI += 2;
 			#else

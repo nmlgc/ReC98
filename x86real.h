@@ -10,7 +10,7 @@
 // Turbo C++ 4.0J's <conio.h> tries to redefine them otherwise.
 #define _PORT_DEFS
 
-// This is a subset of Turbo C++ 4.0's <dos.h>.
+// This file is a subset of Turbo C++ 4.0's <dos.h>, for the most part.
 #if !(defined(__TURBOC__) && defined(__MSDOS__) && defined(__DOS_H))
 
 /// Opcodes
@@ -120,12 +120,18 @@ void segread(struct SREGS *__segp);
 		(*((int8_t __far *)MK_FP(__segment, __offset)) = __value);
 	}
 #endif
-
-// The macro forms are also required in C++ code from time to time.
-#define peek2(a,b)    (*((int16_t __far * )MK_FP((a),(b))))
-#define peekb2(a,b)   (*(( int8_t __far * )MK_FP((a),(b))))
-#define poke2(a,b,c)  (*((int16_t __far * )MK_FP((a),(b))) = (int16_t)(c))
-#define pokeb2(a,b,c) (*(( int8_t __far * )MK_FP((a),(b))) = ( int8_t)(c))
 /// ----------------
 
 #endif
+
+// Optimally inlined variants
+// --------------------------
+// Also required in C++ code from time to time. The naming scheme is inspired
+// by Turbo C++ 4.0J's intrinsics, but using only a single underscore to avoid
+// collisions.
+
+#define _peek_(a,b)    (*((int16_t __far * )MK_FP((a),(b))))
+#define _peekb_(a,b)   (*(( int8_t __far * )MK_FP((a),(b))))
+#define _poke_(a,b,c)  (*((int16_t __far * )MK_FP((a),(b))) = (int16_t)(c))
+#define _pokeb_(a,b,c) (*(( int8_t __far * )MK_FP((a),(b))) = ( int8_t)(c))
+// --------------------------

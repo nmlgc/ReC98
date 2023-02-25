@@ -82,7 +82,7 @@ void z_text_hide(void)
 
 void z_text_setcursor(z_text_cursor_t type)
 {
-	_BX = peekb2(0, 0x53B); // Text mode line height
+	_BX = _peekb_(0, 0x53B); // Text mode line height
 	outportb(0x62, 0x4B); // CSRFORM
 	outportb(0x60, (_BL | 0x80));
 	switch(type) {

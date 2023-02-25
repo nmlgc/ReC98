@@ -491,13 +491,13 @@ void pascal near graph_copy_line_1_to_0_masked(vram_y_t y, dots16_t mask)
 	}
 	for(vram_word_amount_t word_x = 0; word_x < (ROW_SIZE / 2); word_x++) {
 		graph_accesspage_func(1);	p1 = (peek(SEG_PLANE_B, vo) & mask);
-		graph_accesspage_func(0);	poke2(SEG_PLANE_B, vo, p1);
+		graph_accesspage_func(0);	_poke_(SEG_PLANE_B, vo, p1);
 		graph_accesspage_func(1);	p1 = (peek(SEG_PLANE_R, vo) & mask);
-		graph_accesspage_func(0);	poke2(SEG_PLANE_R, vo, p1);
+		graph_accesspage_func(0);	_poke_(SEG_PLANE_R, vo, p1);
 		graph_accesspage_func(1);	p1 = (peek(SEG_PLANE_G, vo) & mask);
-		graph_accesspage_func(0);	poke2(SEG_PLANE_G, vo, p1);
+		graph_accesspage_func(0);	_poke_(SEG_PLANE_G, vo, p1);
 		graph_accesspage_func(1);	p1 = (peek(SEG_PLANE_E, vo) & mask);
-		graph_accesspage_func(0);	poke2(SEG_PLANE_E, vo, p1);
+		graph_accesspage_func(0);	_poke_(SEG_PLANE_E, vo, p1);
 		vo += 2;
 	}
 }
