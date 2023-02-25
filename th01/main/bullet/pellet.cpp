@@ -229,10 +229,7 @@ void CPellets::add_group(
 
 	p = iteration_start();
 	for(i = 0; i < PELLET_COUNT; i++, p++) {
-		if(p->moving == true) {
-			continue;
-		}
-		if(p->cloud_frame) {
+		if(p->moving || p->cloud_frame) {
 			continue;
 		}
 		pellet_init(p, left, top, group, spawn_with_cloud);
@@ -243,7 +240,7 @@ void CPellets::add_group(
 		);
 		p->velocity.x.v = vel_x.v;
 		p->velocity.y.v = vel_y.v;
-		if(group_done == true) {
+		if(group_done) {
 			return;
 		}
 	}
@@ -272,10 +269,7 @@ void CPellets::add_single(
 
 	p = iteration_start();
 	for(i = 0; i < PELLET_COUNT; i++, p++) {
-		if(p->moving == true) {
-			continue;
-		}
-		if(p->cloud_frame) {
+		if(p->moving || p->cloud_frame) {
 			continue;
 		}
 		pellet_init(p, left, top, PG_NONE, spawn_with_cloud);
@@ -459,13 +453,6 @@ inline bool overlaps_shot(
 	);
 }
 
-inline bool overlaps_orb(screen_x_t pellet_left, screen_y_t pellet_top) {
-	return overlap_xywh_xywh_lt_gt(
-		pellet_left, pellet_top, PELLET_W, PELLET_H,
-		orb_cur_left, orb_cur_top, ORB_W, ORB_H
-	);
-}
-
 bool CPellets::visible_after_hittests_for_cur(
 	screen_x_t pellet_left, screen_y_t pellet_top
 )
@@ -500,22 +487,19 @@ bool CPellets::visible_after_hittests_for_cur(
 	// It's just so hilarious how these mitigations don't help fixing the
 	// underlying problem, at all.
 	for(int i = 0; i < 3; i++) {
-		if(
-			(Shots.is_moving(i) == true) &&
-			(overlaps_shot(pellet_left, pellet_top, i) == true)
-		) {
+		if(Shots.is_moving(i) && overlaps_shot(pellet_left, pellet_top, i)) {
 			return false;
-		} else if(overlaps_shot((pellet_left + 8), pellet_top, i) == true) {
+		} else if(overlaps_shot((pellet_left + 8), pellet_top, i)) {
 			return false;
 		}
 	}
 	if(p->decay_frame) {
 		return true;
 	}
-	if(
-		(overlaps_orb(pellet_left, pellet_top) == true) ||
-		(overlaps_orb((pellet_left + 8), pellet_top) == true)
-	) {
+	if(overlap_xywh_xywh_lt_gt(
+		pellet_left, pellet_top, (PELLET_W + 8), PELLET_H,
+		orb_cur_left, orb_cur_top, ORB_W, ORB_H
+	)) {
 		// Hey, let's also process a collision! Why not?! This is one magical
 		// Orb, after all. Even collides with pellets it doesn't actually hit.
 		p->velocity.y.v >>= 1;
@@ -524,7 +508,7 @@ bool CPellets::visible_after_hittests_for_cur(
 		pellet_destroy_score_delta += PELLET_DESTROY_SCORE;
 		return true;
 	}
-	if((player_deflecting == true) && (overlap_xywh_xywh_lt_gt(
+	if(player_deflecting && overlap_xywh_xywh_lt_gt(
 		pellet_left,
 		pellet_top,
 		PELLET_W,
@@ -533,7 +517,7 @@ bool CPellets::visible_after_hittests_for_cur(
 		(player_top - (PELLET_H * 2)),
 		(PLAYER_W + (PELLET_W * 2)),
 		(PLAYER_H + (PELLET_H * 2))
-	) == true)) {
+	)) {
 		char deflect_angle;
 		if(p->cur_left.to_pixel() <= (player_left + 12)) {
 			deflect_angle = 0x80;
@@ -584,11 +568,11 @@ void CPellets::unput_update_render(void)
 
 	p = iteration_start();
 	for(i = 0; i < PELLET_COUNT; i++, p++) {
-		if(p->moving == false) {
+		if(!p->moving) {
 			continue;
 		}
 		if(!pellet_interlace || (interlace_field == (i % 2))) {
-			if(p->not_rendered == false && (p->prev_left.v != -1)) {
+			if(!p->not_rendered && (p->prev_left.v != -1)) {
 				p_sloppy_wide_unput();
 			}
 		}
@@ -605,16 +589,15 @@ void CPellets::unput_update_render(void)
 		p->cur_left.v += p->velocity.x.v;
 
 		// Shot<->Pellet hit testing
-		if(p->decay_frame == 0) {
-			if(Shots.hittest_pellet(
-				p->cur_left.to_pixel(), p->cur_top.to_pixel()
-			)) {
-				p->decay_frame = 0;
-				p->moving = false;
-				alive_count--;
-				p_sloppy_wide_unput();
-			}
+		if((p->decay_frame == 0) && Shots.hittest_pellet(
+			p->cur_left.to_pixel(), p->cur_top.to_pixel()
+		)) {
+			p->decay_frame = 0;
+			p->moving = false;
+			alive_count--;
+			p_sloppy_wide_unput();
 		}
+
 		// Clipping
 		if(
 			p->cur_top.v >= to_sp(PELLET_TOP_MAX) ||
@@ -633,14 +616,14 @@ void CPellets::unput_update_render(void)
 
 	p = iteration_start();
 	for(i = 0; i < PELLET_COUNT; i++, p++) {
-		if(p->moving == false) {
+		if(!p->moving) {
 			continue;
 		}
 		if(!pellet_interlace || ((interlace_field & 1) == (i % 2))) {
 			if(visible_after_hittests_for_cur(
 				p->cur_left.to_pixel(), p->cur_top.to_pixel()
-			) == true) {
-				if(p->not_rendered == true) {
+			)) {
+				if(p->not_rendered) {
 					p->not_rendered = false;
 				}
 				#define render pellet_render
@@ -661,7 +644,7 @@ void CPellets::unput_update_render(void)
 		if(p->decay_frame) {
 			decay_tick_for_cur();
 		} else if(hittest_player_for_cur()) {
-			if(p->not_rendered == false) {
+			if(!p->not_rendered) {
 				p_sloppy_wide_unput();
 			}
 			p->moving = false;
@@ -675,10 +658,10 @@ void CPellets::unput_and_reset(void)
 {
 	p = iteration_start();
 	for(int i = 0; i < PELLET_COUNT; i++, p++) {
-		if(p->moving == false) {
+		if(!p->moving) {
 			continue;
 		}
-		if(p->not_rendered == false) {
+		if(!p->not_rendered) {
 			p_sloppy_wide_unput_at_cur_pos();
 		}
 		p->decay_frame = 0;
@@ -692,10 +675,7 @@ void CPellets::decay(void)
 {
 	p = iteration_start();
 	for(int i = 0; i < PELLET_COUNT; i++, p++) {
-		if(p->moving == false) {
-			continue;
-		}
-		if(p->decay_frame) {
+		if(!p->moving || p->decay_frame) {
 			continue;
 		}
 		p->velocity.y.v /= 1.5f;
@@ -709,7 +689,7 @@ void CPellets::reset(void)
 {
 	p = iteration_start();
 	for(int i = 0; i < PELLET_COUNT; i++, p++) {
-		if(p->moving == false) {
+		if(!p->moving) {
 			continue;
 		}
 		p->moving = false;
@@ -721,7 +701,7 @@ void CPellets::reset(void)
 
 bool CPellets::hittest_player_for_cur(void)
 {
-	if(player_invincible == true || p->decay_frame) {
+	if(player_invincible || p->decay_frame) {
 		return false;
 	}
 	if(
