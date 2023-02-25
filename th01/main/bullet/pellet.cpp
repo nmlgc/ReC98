@@ -1,3 +1,6 @@
+#include "x86real.h"
+#include "platform/x86real/pc98/blitter.hpp"
+#include "platform/x86real/pc98/grcg.hpp"
 #include "th01/main/bullet/pellet.hpp"
 
 /// Constants
@@ -17,10 +20,9 @@
 static const unsigned int PELLET_DESTROY_SCORE = 10;
 static const int PELLET_DECAY_FRAMES = 20;
 static const int PELLET_DECAY_CELS = 2;
-
-inline int decay_frames_for_cel(int cel) {
-	return ((PELLET_DECAY_FRAMES / PELLET_DECAY_CELS) * cel);
-}
+static const int PELLET_DECAY_FRAMES_PER_CEL = (
+	PELLET_DECAY_FRAMES / PELLET_DECAY_CELS
+);
 /// ---------
 
 /// Globals
@@ -404,46 +406,6 @@ void CPellets::motion_type_apply_for_cur(void)
 	}
 }
 
-void pellet_put(screen_x_t left, vram_y_t top, int cel)
-{
-	// Some `asm` statements here look like they could be expressed using
-	// register pseudovariables. However, TCC would then use a different
-	// instruction than the one in ZUN's original binary.
-	_ES = SEG_PLANE_B;
-
-	_AX = (left >> BYTE_BITS);
-	_DX = top;
-	_DX <<= 6;
-	asm { add	ax, dx; }
-	_DX >>= 2;
-	asm { add	ax, dx; }
-	asm { mov	di, ax; }
-
-	_AX = (left & 7) << 4;
-	_BX = cel;
-	_BX <<= 7;
-	asm { add	ax, bx; }
-	_AX += reinterpret_cast<uint16_t>(sPELLET);
-
-	asm { mov	si, ax; }
-	_CX = PELLET_H;
-	put_loop: {
-		asm { movsw; }
-		_DI += (ROW_SIZE - sizeof(dots16_t));
-		if(static_cast<int16_t>(_DI) >= PLANE_SIZE) {
-			return;
-		}
-	}
-	asm { loop	put_loop; }
-}
-
-void pellet_render(screen_x_t left, screen_y_t top, int cel)
-{
-	grcg_setcolor_rmw(V_WHITE);
-	pellet_put(left, top, cel);
-	grcg_off();
-}
-
 inline bool overlaps_shot(
 	screen_x_t pellet_left, screen_y_t pellet_top, int i
 ) {
@@ -614,27 +576,35 @@ void CPellets::unput_update_render(void)
 
 	Shots.unput_update_render();
 
+	GRCGStaticColor<V_WHITE> grcg(GC_RMW);
+
 	p = iteration_start();
 	for(i = 0; i < PELLET_COUNT; i++, p++) {
 		if(!p->moving) {
 			continue;
 		}
 		if(!pellet_interlace || ((interlace_field & 1) == (i % 2))) {
-			if(visible_after_hittests_for_cur(
-				p->cur_left.to_pixel(), p->cur_top.to_pixel()
-			)) {
+			const screen_x_t screen_left = p->cur_left.to_pixel();
+			const screen_y_t screen_top = p->cur_top.to_pixel();
+			if(visible_after_hittests_for_cur(screen_left, screen_top)) {
 				if(p->not_rendered) {
 					p->not_rendered = false;
 				}
-				#define render pellet_render
-				if(p->decay_frame == 0) {
-					render(p->cur_left.to_pixel(), p->cur_top.to_pixel(), 0);
-				} else if(p->decay_frame <= decay_frames_for_cel(1)) {
-					render(p->cur_left.to_pixel(), p->cur_top.to_pixel(), 1);
-				}  else if(p->decay_frame < decay_frames_for_cel(2)) {
-					render(p->cur_left.to_pixel(), p->cur_top.to_pixel(), 2);
+				const Blitter __ds* b = blitter_init_clip_b(
+					(screen_left >> BYTE_BITS),
+					screen_top,
+					sizeof(sPELLET[0][0][0]),
+					PELLET_H
+				);
+				if(b && (p->decay_frame < PELLET_DECAY_FRAMES)) {
+					const int cel = (
+						(p->decay_frame + (PELLET_DECAY_FRAMES_PER_CEL - 1)) /
+						PELLET_DECAY_FRAMES_PER_CEL
+					);
+					b->write(
+						SEG_PLANE_B, &sPELLET[cel][screen_left & BYTE_MASK]
+					);
 				}
-				#undef render
 			} else {
 				p->not_rendered = true;
 			}
@@ -645,7 +615,8 @@ void CPellets::unput_update_render(void)
 			decay_tick_for_cur();
 		} else if(hittest_player_for_cur()) {
 			if(!p->not_rendered) {
-				p_sloppy_wide_unput();
+				p_sloppy_wide_unput(); // Turns off the GRCG...
+				grcg_setcolor_rmw(V_WHITE);
 			}
 			p->moving = false;
 			alive_count--;
