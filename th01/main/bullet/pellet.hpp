@@ -237,11 +237,13 @@ extern CPellets Pellets;
 
 // If true, CPellets::unput_update_render() performs
 // • rendering,
-// • and hit testing against the Orb and the player
-// for only half of the [pellets] each frame, alternating between even and odd
-// [pellets] array indices. However,
+// • hit testing against the Orb,
+// • and deflection testing against the player
+// for only half of the [Pellets] each frame, alternating between even and odd
+// [Pellets] array indices. However,
 // • motion updates,
-// • and hit testing against *player shots*
+// • life-losing hit testing against the player
+// • and hit testing against player shots
 // are still done for all pellets every frame.
 //
 // Probably not really meant to save CPU and/or VRAM accesses, but rather to
