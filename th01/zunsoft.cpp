@@ -7,6 +7,7 @@
 #include "x86real.h"
 #include "pc98.h"
 #include "master.hpp"
+#include "platform/x86real/pc98/page.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/math/polar.hpp"
 
@@ -16,8 +17,8 @@
 const char LOGO_FILENAME[] = "touhou.dat";
 static char CIRCLE_COLORS[] = {4, 3, 2, 1};
 
-char page_write;
-char page_show;
+page_t page_back;
+page_t page_front;
 char tone;
 char logo_patnum;
 char wave_len;
@@ -51,8 +52,8 @@ void zunsoft_init(void)
 	egc_start();
 	graph_clear_both();
 	text_clear();
-	page_write = 0;
-	page_show = 1;
+	page_back = 0;
+	page_front = 1;
 	grc_setclip(96, 100, 543, 299);
 	graph_hide();
 	super_entry_bfnt(LOGO_FILENAME);
@@ -242,11 +243,11 @@ void main(void)
 		wait();
 		wait();
 
-		_AL = page_write;
-		page_show = _AL;
-		_outportb_(0xA4, _AL); // graph_showpage
-		page_write ^= 1;
-		_outportb_(0xA6, page_write); // graph_accesspage
+		_AL = page_back;
+		page_front = _AL;
+		page_show(_AL);
+		page_back ^= 1;
+		page_access(page_back);
 
 		quit = 0;
 		for(keygroup = 0; keygroup < 8; keygroup++) {
