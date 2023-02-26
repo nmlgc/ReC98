@@ -1,35 +1,5 @@
 #include "defconv.h"
 
-/// Enabling and disabling
-/// ----------------------
-
-#ifdef X86REAL_H
-	inline void graph_mode_change(bool enable_or_disable) {
-		_outportb_(0x6A, (0x06 + enable_or_disable));
-	}
-
-	// Requires graphics mode changing to be enabled via
-	// graph_mode_change(true).
-	inline void graph_mode_egc(bool enable_or_disable) {
-		_outportb_(0x6A, (0x04 + enable_or_disable));
-	}
-
-	inline void graph_egc(bool enable_or_disable) {
-		graph_mode_change(true);
-		graph_mode_egc(enable_or_disable);
-		graph_mode_change(false);
-	}
-
-	inline void graph_egc_on(void) {
-		graph_egc(true);
-	}
-
-	inline void graph_egc_off(void) {
-		graph_egc(false);
-	}
-#endif
-/// ----------------------
-
 // Requires the EGC to have been activated before.
 #define egc_setup_copy() \
 	outport2(EGC_ACTIVEPLANEREG, 0xFFF0); \

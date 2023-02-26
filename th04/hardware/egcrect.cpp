@@ -6,6 +6,7 @@
 #include "planar.h"
 #include "master.hpp"
 #include "platform/x86real/flags.hpp"
+#include "platform/x86real/pc98/egc.hpp"
 extern "C" {
 #include "th01/hardware/egc.h"
 

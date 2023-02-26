@@ -7,6 +7,7 @@
 #include "x86real.h"
 #include "pc98.h"
 #include "master.hpp"
+#include "platform/x86real/pc98/egc.hpp"
 #include "platform/x86real/pc98/page.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/math/polar.hpp"
