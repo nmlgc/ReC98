@@ -45,7 +45,7 @@ void DEFCONV egc_copy_rect_1_to_0_16(
 	asm { mov	dx, top; }
 
 	vo_tmp = _AX;
-	static_cast<vram_offset_t>(vo_tmp) >>= 4;
+	static_cast<vram_offset_t>(vo_tmp) >>= EGC_REGISTER_BITS;
 	asm { shl	bx, 1; }
 	_DX <<= 6;
 	vo_tmp += _DX;
@@ -53,16 +53,16 @@ void DEFCONV egc_copy_rect_1_to_0_16(
 	vo_tmp += _DX;
 
 	_DI = vo_tmp;
-	_AX &= ((BYTE_DOTS * 2) - 1);
+	_AX &= EGC_REGISTER_MASK;
 	first_bit = _AX;
 
-	w_tmp = ((_AX + w) >> 4);
+	w_tmp = ((_AX + w) >> EGC_REGISTER_BITS);
 	if(first_bit) {
 		w_tmp++;
 	}
 	egcrect_w = w_tmp;
 
-	_CX = (ROW_SIZE / 2);
+	_CX = (ROW_SIZE / EGC_REGISTER_SIZE);
 	_CX -= w_tmp;
 	asm { shl	cx, 1; }
 	rows_remaining = h;

@@ -176,5 +176,7 @@ typedef int8_t uint4_t;
 /// The PC-98 EGC always operates on 16 dots at a time.
 
 static const int EGC_REGISTER_DOTS = 16;
+static const int EGC_REGISTER_BITS = 4;
+static const int EGC_REGISTER_MASK = (EGC_REGISTER_DOTS - 1);
 static const int EGC_REGISTER_SIZE = (EGC_REGISTER_DOTS / BYTE_DOTS);
 /// ---
