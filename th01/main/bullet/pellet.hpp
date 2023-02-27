@@ -214,6 +214,8 @@ public:
 	// points for each one.
 	void decay(void);
 
+	void unput(void);
+
 	// Also calls Shots.unput_update_render()!
 	void unput_update_render(void);
 

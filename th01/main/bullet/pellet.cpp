@@ -1,5 +1,6 @@
 #include "x86real.h"
 #include "platform/x86real/pc98/blitter.hpp"
+#include "platform/x86real/pc98/egc.hpp"
 #include "platform/x86real/pc98/grcg.hpp"
 #include "th01/main/bullet/pellet.hpp"
 
@@ -520,23 +521,43 @@ inline void p_sloppy_wide_unput_at_cur_pos() {
 	);
 }
 
+void CPellets::unput(void)
+{
+	if(alive_count == 0) {
+		return;
+	}
+	EGCCopy egc;
+	p = iteration_start();
+	for(int i = 0; i < PELLET_COUNT; i++, p++) {
+		if(!p->moving || (p->prev_left.v == -1)) {
+			continue;
+		}
+		if(pellet_interlace && (interlace_field != (i & 1))) {
+			continue;
+		}
+		if(p->not_rendered) {
+			continue;
+		}
+		egc.rect_interpage(
+			p->prev_left.to_pixel(), p->prev_top.to_pixel(), PELLET_W, PELLET_H,
+			1
+		);
+	}
+}
+
 void CPellets::unput_update_render(void)
 {
 	int i;
 
-	interlace_field = (interlace_field == false) ? true : false;
+	interlace_field ^= 1;
 
 	clouds_unput_update_render();
+	unput();
 
 	p = iteration_start();
 	for(i = 0; i < PELLET_COUNT; i++, p++) {
 		if(!p->moving) {
 			continue;
-		}
-		if(!pellet_interlace || (interlace_field == (i % 2))) {
-			if(!p->not_rendered && (p->prev_left.v != -1)) {
-				p_sloppy_wide_unput();
-			}
 		}
 		if(p->from_group == PG_NONE && p->motion_type) {
 			motion_type_apply_for_cur();
