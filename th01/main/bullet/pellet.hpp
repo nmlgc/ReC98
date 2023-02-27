@@ -130,7 +130,7 @@ struct Pellet {
 
 	// Used only for poor attempts at reducing flickering. Does not disable
 	// hit testing if true.
-	bool16 not_rendered;
+	bool not_rendered;
 
 	Subpixel speed; // for recalculating velocities with certain motion types
 	int decay_frame;
@@ -151,7 +151,7 @@ class CPellets {
 
 public:
 	// Rendering pellets at odd or even indices this frame?
-	bool16 interlace_field;
+	bool interlace_field;
 	bool spawn_with_cloud;
 
 protected:
@@ -164,7 +164,7 @@ protected:
 	void motion_type_apply_for_cur(void);
 
 	void decay_tick_for_cur(void);
-	bool16 hittest_player_for_cur(void);
+	bool hittest_player_for_cur(void);
 
 	// Processes any collision between the currently iterated pellet, the Orb,
 	// or a deflecting player. (Regular, life-losing hit testing between
@@ -173,7 +173,7 @@ protected:
 	//
 	// (And yes, this function does operate on the currently iterated pellet,
 	// despite taking separate position parameters!)
-	bool16 visible_after_hittests_for_cur(
+	bool visible_after_hittests_for_cur(
 		screen_x_t pellet_left, screen_y_t pellet_top
 	);
 

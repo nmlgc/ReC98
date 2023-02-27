@@ -64,7 +64,7 @@ void vector2_to_player_from(
 
 // Sets the velocity for pellet #[i] in the given [group]. Returns true if
 // this was the last pellet for this group.
-bool16 group_velocity_set(
+bool group_velocity_set(
 	Subpixel &ret_x,
 	Subpixel &ret_y,
 	pellet_group_t group,
@@ -80,7 +80,7 @@ bool16 group_velocity_set(
 	// initialized anywhere.
 	// (Not really a ZUN bug until we can discover a game state where this can
 	// actually happen.)
-	bool16 done = false;
+	bool done = false;
 	unsigned char angle = 0x00;
 	unsigned char spread_delta = 0x00;
 
@@ -450,7 +450,7 @@ void pellet_render(screen_x_t left, screen_y_t top, int cel)
 	grcg_off();
 }
 
-inline bool16 overlaps_shot(
+inline bool overlaps_shot(
 	screen_x_t pellet_left, screen_y_t pellet_top, int i
 ) {
 	return overlap_xywh_xywh_lt_gt(
@@ -459,14 +459,14 @@ inline bool16 overlaps_shot(
 	);
 }
 
-inline bool16 overlaps_orb(screen_x_t pellet_left, screen_y_t pellet_top) {
+inline bool overlaps_orb(screen_x_t pellet_left, screen_y_t pellet_top) {
 	return overlap_xywh_xywh_lt_gt(
 		pellet_left, pellet_top, PELLET_W, PELLET_H,
 		orb_cur_left, orb_cur_top, ORB_W, ORB_H
 	);
 }
 
-bool16 CPellets::visible_after_hittests_for_cur(
+bool CPellets::visible_after_hittests_for_cur(
 	screen_x_t pellet_left, screen_y_t pellet_top
 )
 {
@@ -719,7 +719,7 @@ void CPellets::reset(void)
 	alive_count = 0;
 }
 
-bool16 CPellets::hittest_player_for_cur(void)
+bool CPellets::hittest_player_for_cur(void)
 {
 	if(player_invincible == true || p->decay_frame) {
 		return false;
