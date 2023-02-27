@@ -353,6 +353,7 @@ void stageobjs_init_and_render(int stage_id)
 	int obstacle_slot = 0;
 	screen_x_t card_left;
 	vram_y_t card_top;
+	stage_t* stage;
 
 	#define offset j
 	#define nth_bit i
@@ -366,15 +367,17 @@ void stageobjs_init_and_render(int stage_id)
 		return;
 	}
 
+	stage = &scene_stage[stage_id];
+
 	for(offset = cards_begin(); offset < cards_end(); offset++) {
 		for(nth_bit = (1 << (CARDS_PER_BYTE - 1)); nth_bit != 0; nth_bit >>= 1) {
-			if(scene_stage[stage_id].dat.byte[offset] & nth_bit) {
+			if(stage->dat.byte[offset] & nth_bit) {
 				cards.count++;
 			}
 		}
 	}
 	for(offset = obstacles_begin(); offset < obstacles_end(); offset++) {
-		if_actual_obstacle(scene_stage[stage_id].dat.byte[offset], {
+		if_actual_obstacle(stage->dat.byte[offset], {
 			obstacles.count++;
 		});
 	}
@@ -405,7 +408,7 @@ void stageobjs_init_and_render(int stage_id)
 			case (1 << 2):	card_bit = 1;	break;
 			case (1 << 3):	card_bit = 0;	break;
 			}
-			if(scene_stage[stage_id].dat.byte[offset] & nth_bit) {
+			if(stage->dat.byte[offset] & nth_bit) {
 				card_left = card_left_from(offset, card_bit);
 				card_top = card_top_from(offset);
 
@@ -425,7 +428,9 @@ void stageobjs_init_and_render(int stage_id)
 
 	obstacle_slot = 0; // Again?!
 	for(offset = obstacles_begin(); offset < obstacles_end(); offset++) {
-		#define obstacle_type scene_stage[stage_id].dat.byte[offset]
+		const obstacle_type_t obstacle_type = static_cast<obstacle_type_t>(
+			stage->dat.byte[offset]
+		);
 		switch(obstacle_type) {
 		case OT_BUMPER:
 			obstacles_init_advance_slot(offset, PTN_BUMPER, obstacle_slot);
@@ -481,11 +486,10 @@ void stageobjs_init_and_render(int stage_id)
 			goto actual_obstacle;
 
 		actual_obstacle:
-			obstacles.type[obstacle_slot - 1] = obstacle_type_t(obstacle_type);
+			obstacles.type[obstacle_slot - 1] = obstacle_type;
 			obstacles.frames[obstacle_slot - 1].v = 0; // Again?!
 			break;
 		}
-		#undef obstacle_type
 	}
 
 	if(first_stage_in_scene == true) {
