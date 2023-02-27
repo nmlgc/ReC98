@@ -31,7 +31,6 @@
 #include "th01/main/boss/boss.hpp"
 #include "th01/main/boss/entity_a.hpp"
 #include "th01/main/boss/palette.hpp"
-#include "th01/main/bullet/laser_s.hpp"
 #include "th01/main/bullet/line.hpp"
 #include "th01/main/bullet/missile.hpp"
 #include "th01/main/bullet/pellet.hpp"
@@ -1207,9 +1206,6 @@ inline void conditionally_reset_missiles(bool cond) {
 		mdrv2_bgm_fade_out_nonblock(); \
 		Pellets.unput_and_reset(); \
 		conditionally_reset_missiles(reset_missiles); \
-		\
-		/* 5? Triply broken, since this fight doesn't even use lasers... */ \
-		shootout_lasers_unput_and_reset_broken(tmp_i, 5); \
 		boss_defeat_animate(); \
 	} \
 }
