@@ -43,7 +43,6 @@ CPellets::CPellets(void)
 	p = iteration_start();
 	for(i = 0; i < PELLET_COUNT; i++, p++) {
 		p->moving = false;
-		p->not_rendered = false;
 	}
 
 	alive_count = 0;
@@ -416,62 +415,27 @@ inline bool overlaps_shot(
 	);
 }
 
-bool CPellets::visible_after_hittests_for_cur(
-	screen_x_t pellet_left, screen_y_t pellet_top
-)
+// Processes any collision between the currently iterated pellet, the Orb, or
+// a deflecting player. (Regular, life-losing hit testing between pellets and
+// the player is done elsewhere!)
+void pellet_hittest_orb_and_deflect(Pellet near* p)
 {
-	// Well, well. Since ZUN uses this super sloppy 16x8 rectangle to unblit
-	// 8x8 pellets, there's now the (completely unnecessary) possibility of
-	// accidentally unblitting parts of a sprite that was previously drawn
-	// into the 8 pixels right of a pellet.
-	// "Oh, I know! Let's test the entire 16 pixels, and in case we got an
-	// entity there, we simply make the *pellet* invisible for this frame!
-	// Then we don't even have to unblit it later! :tannedcirno:"
-	//
-	// Except that the only entity type this is done for are the player shots,
-	// and also only for 3 basically random ones? Note that indices 0, 1, and
-	// 2 in the shot array don't necessarily have to be the 3 ones that
-	// spawned last... although given the sheer ~quality~ of all this code, it
-	// might very well have been intended like that? Or maybe this code was
-	// written when the intended SHOT_COUNT was still 3. Urgh.
-	//
-	// Also note that the code is still testing the left 8 pixels that make up
-	// the actual pellet, despite already having hit-tested them with a call
-	// to CShots::hittest_pellet() before. Turns out that the check there
-	// (which actually does affect gameplay) is more precise and excludes the
-	// transparent edges of the shot sprite, which the blitting-related check
-	// here shouldn't do. (This entire paragraph would have been unnecessary
-	// if this code had just tested all 16 pixels at once, rather than having
-	// this weird, bloated, and slow split into two 8-pixel checks.)
-	//
-	// This is certainly a contender for the most stupid piece of code in this
-	// game. What about the player sprite, the Orb (for which we *do* the same
-	// test, but always return `true` regardless), or, heck, *other pellets*?
-	// It's just so hilarious how these mitigations don't help fixing the
-	// underlying problem, at all.
-	for(int i = 0; i < 3; i++) {
-		if(Shots.is_moving(i) && overlaps_shot(pellet_left, pellet_top, i)) {
-			return false;
-		} else if(overlaps_shot((pellet_left + 8), pellet_top, i)) {
-			return false;
-		}
-	}
 	if(p->decay_frame) {
-		return true;
+		return;
 	}
+
+	const screen_x_t pellet_left = p->cur_left.to_pixel();
+	const screen_y_t pellet_top = p->cur_top.to_pixel();
+
 	if(overlap_xywh_xywh_lt_gt(
 		pellet_left, pellet_top, (PELLET_W + 8), PELLET_H,
 		orb_cur_left, orb_cur_top, ORB_W, ORB_H
 	)) {
-		// Hey, let's also process a collision! Why not?! This is one magical
-		// Orb, after all. Even collides with pellets it doesn't actually hit.
 		p->velocity.y.v >>= 1;
 		p->velocity.x.v >>= 1;
 		p->decay_frame = 1;
 		pellet_destroy_score_delta += PELLET_DESTROY_SCORE;
-		return true;
-	}
-	if(player_deflecting && overlap_xywh_xywh_lt_gt(
+	} else if(player_deflecting && overlap_xywh_xywh_lt_gt(
 		pellet_left,
 		pellet_top,
 		PELLET_W,
@@ -491,11 +455,7 @@ bool CPellets::visible_after_hittests_for_cur(
 		if(!p->from_group) {
 			p->motion_type = PM_REGULAR;
 		}
-		// Yes, deflected pellets aren't rendered on the frames they're
-		// deflected on!
-		return false;
 	}
-	return true;
 }
 
 void CPellets::decay_tick_for_cur(void)
@@ -533,9 +493,6 @@ void CPellets::unput(void)
 			continue;
 		}
 		if(pellet_interlace && (interlace_field != (i & 1))) {
-			continue;
-		}
-		if(p->not_rendered) {
 			continue;
 		}
 		egc.rect_interpage(
@@ -604,30 +561,22 @@ void CPellets::unput_update_render(void)
 		if(!p->moving) {
 			continue;
 		}
-		if(!pellet_interlace || ((interlace_field & 1) == (i % 2))) {
+		if(!pellet_interlace || (interlace_field == (i & 1))) {
+			pellet_hittest_orb_and_deflect(p);
 			const screen_x_t screen_left = p->cur_left.to_pixel();
 			const screen_y_t screen_top = p->cur_top.to_pixel();
-			if(visible_after_hittests_for_cur(screen_left, screen_top)) {
-				if(p->not_rendered) {
-					p->not_rendered = false;
-				}
-				const Blitter __ds* b = blitter_init_clip_b(
-					(screen_left >> BYTE_BITS),
-					screen_top,
-					sizeof(sPELLET[0][0][0]),
-					PELLET_H
+			const Blitter __ds* b = blitter_init_clip_b(
+				(screen_left >> BYTE_BITS),
+				screen_top,
+				sizeof(sPELLET[0][0][0]),
+				PELLET_H
+			);
+			if(b && (p->decay_frame < PELLET_DECAY_FRAMES)) {
+				const int cel = (
+					(p->decay_frame + (PELLET_DECAY_FRAMES_PER_CEL - 1)) /
+					PELLET_DECAY_FRAMES_PER_CEL
 				);
-				if(b && (p->decay_frame < PELLET_DECAY_FRAMES)) {
-					const int cel = (
-						(p->decay_frame + (PELLET_DECAY_FRAMES_PER_CEL - 1)) /
-						PELLET_DECAY_FRAMES_PER_CEL
-					);
-					b->write(
-						SEG_PLANE_B, &sPELLET[cel][screen_left & BYTE_MASK]
-					);
-				}
-			} else {
-				p->not_rendered = true;
+				b->write(SEG_PLANE_B, &sPELLET[cel][screen_left & BYTE_MASK]);
 			}
 			p->prev_left.v = p->cur_left.v;
 			p->prev_top.v = p->cur_top.v;
@@ -635,10 +584,9 @@ void CPellets::unput_update_render(void)
 		if(p->decay_frame) {
 			decay_tick_for_cur();
 		} else if(hittest_player_for_cur()) {
-			if(!p->not_rendered) {
-				p_sloppy_wide_unput(); // Turns off the GRCG...
-				grcg_setcolor_rmw(V_WHITE);
-			}
+			p_sloppy_wide_unput(); // Turns off the GRCG...
+			grcg_setcolor_rmw(V_WHITE);
+
 			p->moving = false;
 			alive_count--;
 			p->decay_frame = 0;
@@ -653,9 +601,7 @@ void CPellets::unput_and_reset(void)
 		if(!p->moving) {
 			continue;
 		}
-		if(!p->not_rendered) {
-			p_sloppy_wide_unput_at_cur_pos();
-		}
+		p_sloppy_wide_unput_at_cur_pos();
 		p->decay_frame = 0;
 		p->moving = false;
 		p->cloud_frame = 0;

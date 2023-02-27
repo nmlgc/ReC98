@@ -128,10 +128,6 @@ struct Pellet {
 	SPPoint velocity; // unused for PM_SPIN
 	SPPoint spin_velocity; // only used for PM_SPIN
 
-	// Used only for poor attempts at reducing flickering. Does not disable
-	// hit testing if true.
-	bool not_rendered;
-
 	Subpixel speed; // for recalculating velocities with certain motion types
 	int decay_frame;
 	int cloud_frame;
