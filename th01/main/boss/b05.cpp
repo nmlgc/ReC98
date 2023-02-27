@@ -648,7 +648,7 @@ void singyoku_main(void)
 			);
 		}
 	} hit = { false };
-	static bool16 initial_hp_rendered = false;
+	static bool initial_hp_rendered = false;
 
 	// Entrance animation
 	if(boss_phase == 0) {

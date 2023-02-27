@@ -80,36 +80,36 @@ static const pixel_t HP_2POINT_W = PTN_QUARTER_W;
 	)
 //// ---------
 
-bool16 hud_hp_render(int hp_total, int func)
+void hud_hp_decrement(int hp_total_new)
 {
-	if(func == HUD_HP_FUNC_DECREMENT) {
-		graph_accesspage_func(1); hp_bg_put_doublepoint_containing(hp_total);
-		graph_accesspage_func(0); hp_bg_put_doublepoint_containing(hp_total);
-		// Since a .PTN quarter stores the background of two hit points, the
-		// calls above will unblit two hit points if [hp_total] is odd. So...
-		if((hp_total % 2) == 1) {
-			hp_put(hp_total - 1);
-		}
-	} else if(func == HUD_HP_FUNC_RERENDER) {
-		for(int i = 0; i < hp_total; i++) {
-			hp_bg_snap_nth_doublepoint(i);
-			hp_put(i);
-		}
-	} else { // Increment
-		#define hp_cur func
-
-		// ZUN bug: [hp_cur] should be limited to (HP_MAX / 2) here to prevent
-		// heap corruption.
-		hp_bg_snap_nth_doublepoint(hp_cur);
-		hp_put(hp_cur);
-
-		// ZUN bug: Should be <= to ensure that the incrementing process always
-		// completes.
-		if((hp_total - 1) == hp_cur) {
-			return true;
-		}
-
-		#undef hp_cur
+	graph_accesspage_func(1); hp_bg_put_doublepoint_containing(hp_total_new);
+	graph_accesspage_func(0); hp_bg_put_doublepoint_containing(hp_total_new);
+	// Since a .PTN quarter stores the background of two hit points, the calls
+	// above will unblit two hit points if [hp_total_new] is odd. So...
+	if((hp_total_new & 1) == 1) {
+		hp_put(hp_total_new - 1);
 	}
-	return false;
+}
+
+void hud_hp_rerender(int hp_total)
+{
+	for(int i = 0; i < hp_total; i++) {
+		hp_bg_snap_nth_doublepoint(i);
+		hp_put(i);
+	}
+}
+
+void hud_hp_increment_render(bool& done, int hp_total, int hp_cur)
+{
+	if(done) {
+		return;
+	}
+	// ZUN bug: [hp_cur] should be limited to (HP_MAX / 2) here to prevent
+	// heap corruption.
+	hp_bg_snap_nth_doublepoint(hp_cur);
+	hp_put(hp_cur);
+
+	// ZUN bug: Should be <= to ensure that the incrementing process always
+	// completes.
+	done = ((hp_total - 1) == hp_cur);
 }
