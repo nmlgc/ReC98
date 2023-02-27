@@ -82,41 +82,6 @@ public:
 
 	// Directly sets [done] if the laser collides with the player.
 	void update_hittest_and_render(void);
-
-	// Tries to unblit the entire laser, but fails hilariously and potentially
-	// even crashes the game.
-	void unput_and_reset(void) {
-		if(alive) {
-			// ZUN bug: And even two of them:
-			//
-			// 1) Surely this should have unblitted from the start to the end
-			//    of the ray instead? Except that this class doesn't explicitly
-			//    store that end point… so the best alternative would be the
-			//    target point. But given that we use our own blitting routine,
-			//    who knows how accurate that actually is?
-			//
-			// 2) graph_r_line_unput() takes screen_x_t and vram_y_t, not
-			//    LaserPixels truncated to 16-bits. :zunpet: The function then
-			//    interpolates and clips these values in a rather clumsy
-			//    attempt to find a line segment between those garbage
-			//    coordinates that actually falls within the boundaries of
-			//    VRAM. At best, this search fails, and the function simply
-			//    does nothing. At worst, the resulting line triggers the ZUN
-			//    bugs in graph_r_line_unput(), raising a General Protection
-			//    Fault.
-			//    The latter is exactly the cause behind potential crashes when
-			//    defeating bosses while there are diagonally moving lasers on
-			//    screen, which are most commonly reported for Elis and Mima.
-			//
-			// So yeah, not doing anything would have been the much better
-			// choice.
-			graph_r_line_unput(
-				ray_start_left.v, ray_start_y.v, origin_left.v, origin_y.v
-			);
-
-			alive = false;
-		}
-	}
 };
 
 extern CShootoutLaser shootout_lasers[SHOOTOUT_LASER_COUNT];
@@ -125,8 +90,6 @@ extern CShootoutLaser shootout_lasers[SHOOTOUT_LASER_COUNT];
 #define shootout_laser_safe(i) \
 	shootout_lasers[(i) % SHOOTOUT_LASER_COUNT]
 
-#define shootout_lasers_unput_and_reset_broken(i, count) { \
-	for(i = 0; i < count; i++) { \
-		shootout_lasers[i].unput_and_reset(); \
-	} \
-}
+// Resets all lasers, but leaves them in VRAM. The boss defeat animation is
+// supposed to get rid of them.
+void shootout_lasers_reset(void);

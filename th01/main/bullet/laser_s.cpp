@@ -150,3 +150,10 @@ void CShootoutLaser::update_hittest_and_render(void)
 	hittest_and_render(SL_RAY_PUT);
 	grcg_off_func();
 }
+
+void shootout_lasers_reset(void)
+{
+	for(int i = 0; i < SHOOTOUT_LASER_COUNT; i++) {
+		shootout_lasers[i].alive = false;
+	}
+}

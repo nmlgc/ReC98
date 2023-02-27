@@ -1138,7 +1138,7 @@ entrance_rings_still_active:
 		if(boss_hp <= 0) {
 			mdrv2_bgm_fade_out_nonblock();
 			Pellets.unput_and_reset();
-			shootout_lasers_unput_and_reset_broken(i, 4); // 4? Doubly broken...
+			shootout_lasers_reset();
 			boss_defeat_animate();
 		}
 	}

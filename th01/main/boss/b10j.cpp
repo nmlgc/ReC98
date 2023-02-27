@@ -1341,7 +1341,7 @@ void mima_main(void)
 			mdrv2_bgm_fade_out_nonblock();
 			Pellets.unput_and_reset();
 			Missiles.reset();
-			shootout_lasers_unput_and_reset_broken(i, 5); // 5? Doubly broken...
+			shootout_lasers_reset();
 			boss_defeat_animate();
 		}
 	}
