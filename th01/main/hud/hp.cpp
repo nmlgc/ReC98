@@ -60,9 +60,6 @@ static const pixel_t HP_2POINT_W = PTN_QUARTER_W;
 #define hp_bg_left(point_divided_by_2) \
 	(((point_divided_by_2) * HP_2POINT_W) + HP_LEFT)
 
-// As a result, this one ends up always being called twice as much (i.e., for
-// each hit point) as it needs to be (i.e., once for every 2 HP).
-// ZUN bug: This further limits HP_MAX to half of its value.
 #define hp_bg_snap_nth_doublepoint(point_divided_by_2) \
 	ptn_snap_quarter_8(\
 		hp_bg_left(point_divided_by_2), \
@@ -80,6 +77,13 @@ static const pixel_t HP_2POINT_W = PTN_QUARTER_W;
 	)
 //// ---------
 
+static void hud_hp_bg_snap(int hp_total)
+{
+	for(int i = 0; i < ((hp_total + 1) / 2); i++) {
+		hp_bg_snap_nth_doublepoint(i);
+	}
+}
+
 void hud_hp_decrement(int hp_total_new)
 {
 	if(hp_total_new < 0) {
@@ -96,8 +100,8 @@ void hud_hp_decrement(int hp_total_new)
 
 void hud_hp_rerender(int hp_total)
 {
+	hud_hp_bg_snap(hp_total);
 	for(int i = 0; i < hp_total; i++) {
-		hp_bg_snap_nth_doublepoint(i);
 		hp_put(i);
 	}
 }
@@ -107,9 +111,9 @@ void hud_hp_increment_render(bool& done, int hp_total, int hp_cur)
 	if(done) {
 		return;
 	}
-	// ZUN bug: [hp_cur] should be limited to (HP_MAX / 2) here to prevent
-	// heap corruption.
-	hp_bg_snap_nth_doublepoint(hp_cur);
+	if(hp_cur == 0) {
+		hud_hp_bg_snap(hp_total);
+	}
 	hp_put(hp_cur);
 
 	done = ((hp_total - 1) <= hp_cur);
