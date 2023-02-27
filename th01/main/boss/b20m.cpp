@@ -2378,7 +2378,10 @@ void near pattern_swaying_leaves(int &frame, int spawn_interval_or_reset)
 			}
 		} else if(flag[i] <= LF_SPLASH_DONE) {
 			if(leaf_on_screen(i)) {
-				grc_sloppy_unput(left[i].to_pixel(), top[i].to_pixel());
+				grc_sloppy_unput(
+					left[i].to_pixel() + ((LEAF_W / 2) - (LEAFSPLASH_W / 2)),
+					top[i].to_pixel()  + ((LEAF_H / 2) - (LEAFSPLASH_H / 2))
+				);
 			}
 			if(flag[i] == LF_SPLASH_DONE) {
 				flag[i] = LF_LEAF;
@@ -2415,12 +2418,9 @@ void near pattern_swaying_leaves(int &frame, int spawn_interval_or_reset)
 			leaf_put(vo, first_bit, i, sSPARK);
 		} else if(flag[i] <= LF_SPLASH_DONE) {
 			if(leaf_on_screen(i)) {
-				// ZUN bug: Another missing conversion to screen pixels,
-				// resulting in the entire leaf splash animation never being
-				// actually rendered, and becoming effectively unused.
 				grc_put_8(
-					left[i].v, // should be pixels
-					top[i].v, // should be pixels
+					left[i].to_pixel() + ((LEAF_W / 2) - (LEAFSPLASH_W / 2)),
+					top[i].to_pixel()  + ((LEAF_H / 2) - (LEAFSPLASH_H / 2)),
 					GRC_SLOT_LEAFSPLASH,
 					(flag[i] - LF_SPLASH),
 					V_WHITE
