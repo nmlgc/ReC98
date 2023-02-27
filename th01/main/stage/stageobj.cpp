@@ -16,6 +16,7 @@
 #include "th01/formats/pf.hpp"
 #include "th01/formats/stagedat.hpp"
 #include "th01/sprites/pellet.h"
+#include "th01/main/debug.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/bullet/pellet.hpp"
 #include "th01/main/player/orb.hpp"
@@ -25,10 +26,85 @@
 // Globals
 // -------
 
+// ZUN quirk: Hardcoding the original glitch stages to preserve their layout...
+// Not the exact data, just enough of it to preserve the look of the static
+// parts and lock them down as canon, so to speak.
+// (See https://rec98.nmlgc.net/blog/2022-08-14.)
+stage_t scene_glitch[STAGES_PER_SCENE - 1] = {
+	{{{	// Stage -1
+		{	// Cards
+			9, 9, 9, 9, 9,
+			9, 9, 9, 9, 9,
+			9, 9, 9, 9, 9,
+			9, 9, 9, 9, 9,
+			9, 9, 9, 9, 9,
+			9, 9, 9, 9, 9,
+			9, 9, 9, 9, 9,
+			9, 9, 9, 9, 9,
+			9, 9, 9, 9, 9,
+			9, 9, 9, 9, 9,
+		}, {
+			// Obstacles
+			12,  12,  12,  12,  12,  12,  12,  12,  12,  12,  12,  12,  12,  12,  12,  12,  12,  12,  12,  12,
+			12,  12,  12,  12,  12,  12,  12,  12,  12,   0,   0,   0,   0,  80,  65,  84,  72,   0,  47,  92,
+			 0,   0,  46,  66,  65,  84,   0,  46,  67,  79,  77,   0,  46,  69,  88,  69,   0,  46,  66,  65,
+			84,   0,  67,  79,  77,  83,  80,  69,  67,   0,  47,  99,   0, 184,  26,   0, 166, 102,  28, 132,
+			31, 124,  31,   5, 166,   5, 166,   5, 166,   1,  32,  25,  46,  80,  11,   1,  32, 122,   3,   9,
+			18,   1,  32,  81,  26,  95,  21,   1,  32, 137,  20,  57,  32,   1,  32,  95,  27,  42,  35,   0,
+			16, 180,  22,   0,   0,   1,  32,  32,  45,   0,   0,   0,   2, 155,  54,   0,   0,   0,  16, 127,
+			66,   0,   0,   0,  15, 221,  80,   0,   0,   0,  16,  78, 171,   0,   0,   1,  16, 108, 175,   0,
+			 0,   0,  15,  27, 177,   0,   0,   0,  16,  27,  25,   0,   0,   1,  32, 123,  45,   0,   0,   0,
+			 0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+		}
+	}}},
+	{{{	// Stage -2
+		{	// Cards
+			0x75, 0x74, 0x20, 0x6F, 0x66,
+			0x20, 0x72, 0x61, 0x6E, 0x67,
+			0x65, 0x00, 0x53, 0x74, 0x72,
+			0x69, 0x6E, 0x67, 0x20, 0x72,
+			0x65, 0x66, 0x65, 0x72, 0x65,
+			0x6E, 0x63, 0x65, 0x20, 0x6F,
+			0x75, 0x74, 0x20, 0x6F, 0x66,
+			0x20, 0x72, 0x61, 0x6E, 0x67,
+			0x65, 0x00, 0x53, 0x74, 0x72,
+			0x69, 0x6E, 0x67, 0x20, 0x72,
+		}, {
+			// Obstacles
+			 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+			 0,  0,  0,  9,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+			 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+			 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+			 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  8,  8,  8,  8,  8,
+			 8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,
+			 8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,
+			 8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  0,  8,
+			12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12,
+			10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,  8, 10, 10, 10, 10, 10,  9,  9,  9,
+		}
+	}}},
+	{{{
+		// Stage -3 (No cards = Divide Error)
+		0
+	}}},
+	{{{	// Stage -4
+		{	// Cards
+			0x14, 0x0D, 0x14, 0x14, 0x14,
+			0x14, 0x14, 0x14, 0x14, 0x14,
+			0x14, 0x14, 0x10, 0x0A, 0x0F,
+			0x0F, 0x0F, 0x08, 0x0A, 0x14,
+			0x14, 0x06, 0x14, 0x12, 0x0B,
+			0x0E, 0x14, 0x14, 0x11, 0x14,
+			0x0C, 0x14, 0x14, 0x0D, 0x14,
+			0x14, 0x14, 0x14, 0x14, 0x14,
+			0x14, 0x00, 0x00, 0x00, 0x00,
+			0x00, 0x00, 0x00, 0x00, 0x00,
+		}
+	}}}
+};
+
 // ZUN bloat: The scene data is immediately converted to an internal
-// representation anyway. This could have easily been a local variable… then
-// again, storing it in global data is what gives negative "glitch stages"
-// their deterministic appearance.
+// representation anyway. This could have easily been a local variable.
 extern stage_t scene_stage[STAGES_PER_SCENE];
 
 char default_grp_fn[15] = "ST .GRP";
@@ -281,6 +357,23 @@ void scene_init_and_load(uint8_t id)
 	}
 
 	arc_file_free();
+
+	// Preserve the glitch stages, which we hardcoded above, and fill in
+	// dynamic data from overlapping memory locations in the original binary...
+	if(id == 0) {
+		// Emulate segment relocations for the far pointers in the `InitStart`
+		// and `InitEnd` segments
+		seg_t reloc_base = (_psp + 0x10);
+		for(int i = 0; i < 90; i += 6) {
+			*reinterpret_cast<seg_t *>(&scene_glitch[0].dat.byte[143 + i]) += (
+				reloc_base
+			);
+		}
+
+		int8_t* obstacle_row_9 = scene_glitch[0].dat.t.obstacles[9];
+		*reinterpret_cast<unsigned long *>(&obstacle_row_9[1]) = frame_rand;
+		obstacle_row_9[10] = mode_debug;
+	}
 }
 
 void obstacles_init_advance_slot(int dat_offset, int ptn_id, int &slot)
@@ -367,7 +460,11 @@ void stageobjs_init_and_render(int stage_id)
 		return;
 	}
 
-	stage = &scene_stage[stage_id];
+	if(stage_id < 0) {
+		stage = &scene_glitch[-stage_id - 1];
+	} else {
+		stage = &scene_stage[stage_id];
+	}
 
 	for(offset = cards_begin(); offset < cards_end(); offset++) {
 		for(nth_bit = (1 << (CARDS_PER_BYTE - 1)); nth_bit != 0; nth_bit >>= 1) {
