@@ -555,168 +555,131 @@ static const int BF_UNPUT_UPDATE_RENDER = 0;
 static const int BF_RESET = 1000;
 static const int BF_FIRE = 1001;
 
-void near birds_reset_fire_spawn_unput_update_render(
-	double func_or_left,
-	double top = 0.0f,
-	double velocity_x = 0.0f,
-	double velocity_y = 0.0f
-)
+struct CBirds {
+	double left[BIRD_COUNT];
+	double top[BIRD_COUNT];
+	double velocity_x[BIRD_COUNT];
+	double velocity_y[BIRD_COUNT];
+	char hatch_time[BIRD_COUNT];
+	char hatch_duration[BIRD_COUNT];
+	char alive[BIRD_COUNT];
+
+	void reset(void);
+	void fire(bird_pellet_group_t group);
+	void spawn(double left, double top, double velocity_x, double velocity_y);
+	void unput_update_render(void);
+};
+
+void CBirds::reset(void)
 {
-	static char birds_alive[BIRD_COUNT] = { false }; // Should be bool.
-	static struct {
-		double left[BIRD_COUNT];
-		double top[BIRD_COUNT];
-		double velocity_x[BIRD_COUNT];
-		double velocity_y[BIRD_COUNT];
-		char hatch_time[BIRD_COUNT];
-		char hatch_duration[BIRD_COUNT];
+	for(int i = 0; i < BIRD_COUNT; i++) {
+		alive[i] = false;
+	}
+}
 
-		double pellet_left(int i) {
-			return (left[i] + ((BIRD_W / 2) - (PELLET_W / 2)));
+void CBirds::fire(bird_pellet_group_t group)
+{
+	for(int i = 0; i < BIRD_COUNT; i++) {
+		if(!alive[i] || hatch_time[i]) {
+			continue;
 		}
+		const screen_x_t pellet_left = (
+			left[i] + ((BIRD_W / 2) - (PELLET_W / 2))
+		);
+		const screen_y_t pellet_top = (
+			top[i] + ((BIRD_H / 2) - (PELLET_H / 2))
+		);
+		switch(group) {
+		case BPG_AIMED:
+			Pellets.add_group(pellet_left, pellet_top, PG_1_AIMED, to_sp(3.0f));
+			break;
 
-		double pellet_top(int i) {
-			return (top[i] + ((BIRD_H / 2) - (PELLET_H / 2)));
-		}
-
-		// Yes, this is a genuine ZUN abstraction, nothing I refactored.
-		// Why would you not just have a per-instance spawn() method?!
-		void set_velocity_and_hatch_time(
-			const double velocity_x, const double velocity_y,
-			double& out_velocity_x, double& out_velocity_y, char& hatch_time
-		) {
-			out_velocity_x = velocity_x;
-			out_velocity_y = velocity_y;
-			hatch_time = 25;
-		}
-	} birds;
-
-	if(func_or_left == BF_RESET) {
-		for(int i = 0; i < BIRD_COUNT; i++) {
-			birds_alive[i] = false;
-		}
-	} else if(func_or_left == (BF_FIRE + BPG_AIMED)) {
-		for(int i = 0; i < BIRD_COUNT; i++) {
-			if(!birds_alive[i] || birds.hatch_time[i]) {
-				continue;
-			}
-			Pellets.add_group(
-				birds.pellet_left(i),
-				birds.pellet_top(i),
-				PG_1_AIMED,
-				to_sp(3.0f)
-			);
-		}
-	} else if(func_or_left == (BF_FIRE + BPG_6_RING)) {
-		for(int i = 0; i < BIRD_COUNT; i++) {
-			if(!birds_alive[i] || birds.hatch_time[i]) {
-				continue;
-			}
-			for(int j = 0; j < 6; j++) {
+		case BPG_6_RING:
+			{for(int j = 0; j < 6; j++) {
 				Pellets.add_single(
-					birds.pellet_left(i),
-					birds.pellet_top(i),
-					(j * (0x100 / 6)),
-					to_sp(4.0f)
+					pellet_left, pellet_top, (j * (0x100 / 6)), to_sp(4.0f)
 				);
-			}
-		}
-	} else if(func_or_left == (BF_FIRE + BPG_RANDOM_RAIN)) {
-		for(int i = 0; i < BIRD_COUNT; i++) {
-			if(!birds_alive[i] || birds.hatch_time[i]) {
-				continue;
-			}
+			}}
+			break;
+
+		case BPG_RANDOM_RAIN:
 			pellets_add_single_rain(
-				birds.pellet_left(i),
-				birds.pellet_top(i),
-				((rand() & 0x7F) + 0x80),
-				4.0f
+				pellet_left, pellet_top, ((rand() & 0x7F) + 0x80), 4.0f
 			);
-		}
-	} else if(func_or_left != BF_UNPUT_UPDATE_RENDER) {
-		// (Yes, this prevents birds from being spawned at [left] == 0.)
-		for(int i = 0; i < BIRD_COUNT; i++) {
-			if(birds_alive[i] != true) {
-				birds_alive[i] = true;
-				birds.set_velocity_and_hatch_time(
-					velocity_x,
-					velocity_y,
-					birds.velocity_x[i],
-					birds.velocity_y[i],
-					birds.hatch_time[i]
-				);
-				birds.left[i] = func_or_left;
-				birds.top[i] = top;
-				birds.hatch_duration[i] = birds.hatch_time[i];
-				return;
-			}
-		}
-	} else {
-		int i;
-		for(i = 0; i < BIRD_COUNT; i++) {
-			if(!birds_alive[i]) {
-				continue;
-			}
-			if(birds.hatch_time[i] > 0) {
-				bird_put_8(birds.left[i], birds.top[i], ((
-					(birds.hatch_duration[i] - birds.hatch_time[i]) /
-					(birds.hatch_duration[i] / BIRD_HATCH_CELS)
-				) + C_HATCH));
-				birds.hatch_time[i]--;
-			} else {
-				// ZUN bug: Shouldn't these be unblitted unconditionally?
-				// Because they aren't, each cel of the hatch animation is
-				// blitted on top of the previous one...
-				grc_sloppy_unput(birds.left[i], birds.top[i]);
-			}
-		}
-		for(i = 0; i < BIRD_COUNT; i++) {
-			if(!birds_alive[i] || birds.hatch_time[i]) {
-				continue;
-			}
-			birds.left[i] += birds.velocity_x[i];
-			birds.top[i] += birds.velocity_y[i];
-			if(!overlap_xy_lrtb_le_ge(
-				birds.left[i], birds.top[i], 0, 0, (RES_X - 1), (RES_Y - 1)
-			)) {
-				grc_sloppy_unput(birds.left[i], birds.top[i]);
-				birds_alive[i] = false;
-				continue;
-			}
-			bird_put_8(birds.left[i], birds.top[i], (
-				C_FLY + ((boss_phase_frame / 5) % BIRD_FLY_CELS)
-			));
-			// 14×38 pixels… still unfair given the shape of such a bird.
-			if(
-				!player_invincible &&
-				(birds.left[i] > (player_left - (PLAYER_W / 4))) &&
-				(birds.left[i] < (player_left + (PLAYER_W / 4))) &&
-				(birds.top[i] > (player_top - (PLAYER_H / 2) - (BIRD_H / 4))) &&
-				(birds.top[i] < (player_top + (PLAYER_H / 2)))
-			) {
-				player_is_hit = true;
-				delay(100); // ???
-				return;
-			}
+			break;
 		}
 	}
 }
 
-inline void birds_reset(void) {
-	birds_reset_fire_spawn_unput_update_render(BF_RESET);
+void CBirds::spawn(
+	double left_, double top_, double velocity_x_, double velocity_y_
+)
+{
+	for(int i = 0; i < BIRD_COUNT; i++) {
+		if(!alive[i]) {
+			alive[i] = true;
+			velocity_x[i] = velocity_x_;
+			velocity_y[i] = velocity_y_;
+			hatch_time[i] = 25;
+			left[i] = left_;
+			top[i] = top_;
+			hatch_duration[i] = hatch_time[i];
+			return;
+		}
+	}
 }
 
-#define birds_spawn(left, top, velocity_x, velocity_y) \
-	birds_reset_fire_spawn_unput_update_render( \
-		left, top, velocity_x, velocity_y \
-	);
-
-#define birds_fire(pellet_group) \
-	birds_reset_fire_spawn_unput_update_render(BF_FIRE + pellet_group);
-
-inline void birds_unput_update_render(void) {
-	birds_reset_fire_spawn_unput_update_render(BF_UNPUT_UPDATE_RENDER);
+void CBirds::unput_update_render(void)
+{
+	{for(int i = 0; i < BIRD_COUNT; i++) {
+		if(!alive[i]) {
+			continue;
+		}
+		if(hatch_time[i] > 0) {
+			bird_put_8(left[i], top[i], ((
+				(hatch_duration[i] - hatch_time[i]) /
+				(hatch_duration[i] / BIRD_HATCH_CELS)
+			) + C_HATCH));
+			hatch_time[i]--;
+		} else {
+			// ZUN bug: Shouldn't these be unblitted unconditionally?
+			// Because they aren't, each cel of the hatch animation is
+			// blitted on top of the previous one...
+			grc_sloppy_unput(left[i], top[i]);
+		}
+	}}
+	{for(int i = 0; i < BIRD_COUNT; i++) {
+		if(!alive[i] || hatch_time[i]) {
+			continue;
+		}
+		left[i] += velocity_x[i];
+		top[i] += velocity_y[i];
+		if(!overlap_xy_lrtb_le_ge(
+			left[i], top[i], 0, 0, (RES_X - 1), (RES_Y - 1)
+		)) {
+			grc_sloppy_unput(left[i], top[i]);
+			alive[i] = false;
+			continue;
+		}
+		bird_put_8(left[i], top[i], (
+			C_FLY + ((boss_phase_frame / 5) % BIRD_FLY_CELS)
+		));
+		// 14×38 pixels… still unfair given the shape of such a bird.
+		if(
+			!player_invincible &&
+			(left[i] > (player_left - (PLAYER_W / 4))) &&
+			(left[i] < (player_left + (PLAYER_W / 4))) &&
+			(top[i] > (player_top - (PLAYER_H / 2) - (BIRD_H / 4))) &&
+			(top[i] < (player_top + (PLAYER_H / 2)))
+		) {
+			player_is_hit = true;
+			delay(100); // ???
+			return;
+		}
+	}}
 }
+
+CBirds Birds;
 
 void near shield_render_both(void)
 {
@@ -1096,7 +1059,7 @@ void near pattern_birds_on_ellipse_arc(void)
 			}
 			for(int i = (eggs_alive - 1); i >= 0; i--) {
 				vector2(velocity.x, velocity.y, 3, ((rand() & 0x7F) + 0x80));
-				birds_spawn(egg.left[i], egg.top[i], velocity.x, velocity.y);
+				Birds.spawn(egg.left[i], egg.top[i], velocity.x, velocity.y);
 			}
 			wand_lower_both();
 			pellet_group = static_cast<bird_pellet_group_t>(
@@ -1139,7 +1102,7 @@ void near pattern_birds_on_ellipse_arc(void)
 			}
 		}
 		if(((boss_phase_frame % 16) == 0) || ((boss_phase_frame % 16) == 2)) {
-			birds_fire(pellet_group);
+			Birds.fire(pellet_group);
 		}
 	} else if(boss_phase_frame == 400) {
 		boss_phase_frame = 0;
@@ -1893,13 +1856,13 @@ void near pattern_symmetric_birds_from_bottom(void)
 				velocity.x, velocity.y,
 				4
 			);
-			birds_spawn(
+			Birds.spawn(
 				rays.target_x(X_LEFT),
 				(rays.target_y - BIRD_H),
 				velocity.x,
 				velocity.y
 			);
-			birds_spawn(
+			Birds.spawn(
 				rays.target_x(X_RIGHT),
 				(rays.target_y - BIRD_H),
 				-velocity.x,
@@ -1907,14 +1870,14 @@ void near pattern_symmetric_birds_from_bottom(void)
 			);
 		}
 		if((boss_phase_frame % 6) == 0) {
-			birds_fire(BPG_RANDOM_RAIN);
+			Birds.fire(BPG_RANDOM_RAIN);
 		}
 		return;
 	} else if(boss_phase_frame == 100) {
 		rays.ray_unput_right(VELOCITY_X);
 		return;
 	} else if((boss_phase_frame % 10) == 0) {
-		birds_fire(BPG_RANDOM_RAIN);
+		Birds.fire(BPG_RANDOM_RAIN);
 	}
 	if(boss_phase_frame >= 300) {
 		boss_phase_frame = 0;
@@ -2626,7 +2589,7 @@ void sariel_main(void)
 				ent_shield.pos_cur_set(SHIELD_LEFT, SHIELD_TOP);
 				wand_lowered_snap();
 				wand_render_raise_both(true);
-				birds_reset();
+				Birds.reset();
 				break;
 			}
 entrance_rings_still_active:
@@ -2638,7 +2601,7 @@ entrance_rings_still_active:
 	} else if(boss_phase == 1) {
 		hud_hp_increment_render(initial_hp_rendered, boss_hp, boss_phase_frame);
 		phase.frame_common(false);
-		birds_unput_update_render();
+		Birds.unput_update_render();
 
 		if(phase.pattern_cur == 0) {
 			pattern_random_purple_lasers();
@@ -2723,7 +2686,7 @@ entrance_rings_still_active:
 	} else if(boss_phase == 7) {
 		phase.frame_common(false);
 		particles2x2_vertical_unput_update_render(true);
-		birds_unput_update_render();
+		Birds.unput_update_render();
 
 		if(phase.pattern_cur == 0) {
 			pattern_symmetric_birds_from_bottom();
