@@ -230,16 +230,14 @@ extern CPellets Pellets;
 	); \
 }
 
-// If true, CPellets::unput_update_render() performs
-// • rendering,
-// • hit testing against the Orb,
-// • and deflection testing against the player
-// for only half of the [Pellets] each frame, alternating between even and odd
-// [Pellets] array indices. However,
-// • motion updates,
-// • life-losing hit testing against the player
-// • and hit testing against player shots
-// are still done for all pellets every frame.
+// If true, CPellets::unput_update_render() performs and hit testing against
+// the Orb and the player for only half of the [pellets] each frame,
+// alternating between even and odd [pellets] array indices. The original game
+// also only rendered half of the pellets each frame, but this was removed in
+// the Anniversary Edition.
+//
+// Probably not really meant to save CPU and/or VRAM accesses, but rather to
+// reduce flicker in busy boss battles, due to all the sloppy unblitting...
 //
 // Probably not really meant to save CPU and/or VRAM accesses, but rather to
 // reduce flicker in busy boss battles, due to all the sloppy unblitting...

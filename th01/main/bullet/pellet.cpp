@@ -492,9 +492,6 @@ void CPellets::unput(void)
 		if(!p->moving || (p->prev_left.v == -1)) {
 			continue;
 		}
-		if(pellet_interlace && (interlace_field != (i & 1))) {
-			continue;
-		}
 		egc.rect_interpage(
 			p->prev_left.to_pixel(), p->prev_top.to_pixel(), PELLET_W, PELLET_H,
 			1
@@ -563,24 +560,24 @@ void CPellets::unput_update_render(void)
 		}
 		if(!pellet_interlace || (interlace_field == (i & 1))) {
 			pellet_hittest_orb_and_deflect(p);
-			const screen_x_t screen_left = p->cur_left.to_pixel();
-			const screen_y_t screen_top = p->cur_top.to_pixel();
-			const Blitter __ds* b = blitter_init_clip_b(
-				(screen_left >> BYTE_BITS),
-				screen_top,
-				sizeof(sPELLET[0][0][0]),
-				PELLET_H
-			);
-			if(b && (p->decay_frame < PELLET_DECAY_FRAMES)) {
-				const int cel = (
-					(p->decay_frame + (PELLET_DECAY_FRAMES_PER_CEL - 1)) /
-					PELLET_DECAY_FRAMES_PER_CEL
-				);
-				b->write(SEG_PLANE_B, &sPELLET[cel][screen_left & BYTE_MASK]);
-			}
-			p->prev_left.v = p->cur_left.v;
-			p->prev_top.v = p->cur_top.v;
 		}
+		const screen_x_t screen_left = p->cur_left.to_pixel();
+		const screen_y_t screen_top = p->cur_top.to_pixel();
+		const Blitter __ds* b = blitter_init_clip_b(
+			(screen_left >> BYTE_BITS),
+			screen_top,
+			sizeof(sPELLET[0][0][0]),
+			PELLET_H
+		);
+		if(b && (p->decay_frame < PELLET_DECAY_FRAMES)) {
+			const int cel = (
+				(p->decay_frame + (PELLET_DECAY_FRAMES_PER_CEL - 1)) /
+				PELLET_DECAY_FRAMES_PER_CEL
+			);
+			b->write(SEG_PLANE_B, &sPELLET[cel][screen_left & BYTE_MASK]);
+		}
+		p->prev_left.v = p->cur_left.v;
+		p->prev_top.v = p->cur_top.v;
 		if(p->decay_frame) {
 			decay_tick_for_cur();
 		} else if(hittest_player_for_cur()) {
