@@ -16,11 +16,4 @@ void hud_hp_rerender(int hp_total);
 
 // Renders the HP bar increment animation until [done], initializing the
 // backgrounds used for unblitting the individual points along the way.
-//
-// ZUN bug: If [hp_total] is reduced while [frame] increases, the two values
-// might run past each other without ever meeting the termination condition of
-// (([hp_total] - 1) == hp_cur). This will lead to heap corruption if
-// ([hp_cur] > (HP_MAX / 2)), which can easily happen in debug mode by holding
-// ↵ Return (and thus subtracting 1 HP per frame) during the phase that calls
-// this function.
 void hud_hp_increment_render(bool& done, int hp_total, int hp_cur);

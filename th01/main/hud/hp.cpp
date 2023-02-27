@@ -82,6 +82,9 @@ static const pixel_t HP_2POINT_W = PTN_QUARTER_W;
 
 void hud_hp_decrement(int hp_total_new)
 {
+	if(hp_total_new < 0) {
+		return;
+	}
 	graph_accesspage_func(1); hp_bg_put_doublepoint_containing(hp_total_new);
 	graph_accesspage_func(0); hp_bg_put_doublepoint_containing(hp_total_new);
 	// Since a .PTN quarter stores the background of two hit points, the calls
@@ -109,7 +112,5 @@ void hud_hp_increment_render(bool& done, int hp_total, int hp_cur)
 	hp_bg_snap_nth_doublepoint(hp_cur);
 	hp_put(hp_cur);
 
-	// ZUN bug: Should be <= to ensure that the incrementing process always
-	// completes.
-	done = ((hp_total - 1) == hp_cur);
+	done = ((hp_total - 1) <= hp_cur);
 }
