@@ -11,15 +11,6 @@ static const vram_y_t HP_TOP = 48;
 /// Foreground
 /// ----------
 
-// Yup, numbered right-to-left :zunpet:
-enum hp_section_t {
-	HP_SECTION_WHITE,
-	HP_SECTION_REDWHITE,
-	HP_SECTION_RED,
-
-	_hp_section_t_FORCE_INT16 = 0x7FFF,
-};
-
 void grcg_set_redwhite(void)
 {
 	grcg_setmode(GC_RMW);	// Final color: (A7A7A7A7)
@@ -29,19 +20,19 @@ void grcg_set_redwhite(void)
 	outportb(0x7E, 0xAA);	//           E: (* * * * )
 }
 
-void hp_put_with_section_pattern(int point, hp_section_t section)
+void hp_put(int point)
 {
 	dots8_t dots = 0xFE; // (******* )
 	vram_offset_t vo = (
 		vram_offset_shift(HP_LEFT, HP_TOP) + (point * (HP_POINT_W / BYTE_DOTS))
 	);
 
-	if(section == HP_SECTION_RED) {
+	if(point < hud_hp_first_redwhite) {
 		grcg_setcolor_rmw(V_RED);
-	} else if(section == HP_SECTION_WHITE) {
-		grcg_setcolor_rmw(V_WHITE);
-	} else if(section == HP_SECTION_REDWHITE) {
+	} else if(point < hud_hp_first_white) {
 		grcg_set_redwhite();
+	} else {
+		grcg_setcolor_rmw(V_WHITE);
 	}
 
 	for(unsigned char y = 0; y < HP_H; y++) {
@@ -51,15 +42,6 @@ void hp_put_with_section_pattern(int point, hp_section_t section)
 	}
 	grcg_off();
 }
-
-#define hp_put(point_to_put, point_in_hopefully_same_section) \
-	 if(point_in_hopefully_same_section < hud_hp_first_redwhite) { \
-		hp_put_with_section_pattern(point_to_put, HP_SECTION_RED); \
-	} else if(point_in_hopefully_same_section < hud_hp_first_white) { \
-		hp_put_with_section_pattern(point_to_put, HP_SECTION_REDWHITE); \
-	} else { \
-		hp_put_with_section_pattern(point_to_put, HP_SECTION_WHITE); \
-	}
 /// ----------
 
 /// Background
@@ -106,14 +88,12 @@ bool16 hud_hp_render(int hp_total, int func)
 		// Since a .PTN quarter stores the background of two hit points, the
 		// calls above will unblit two hit points if [hp_total] is odd. So...
 		if((hp_total % 2) == 1) {
-			// ZUN landmine: Yes, this will use the wrong section pattern when
-			// the section boundaries are odd. Just use one parameter... sigh.
-			hp_put((hp_total - 1), hp_total);
+			hp_put(hp_total - 1);
 		}
 	} else if(func == HUD_HP_FUNC_RERENDER) {
 		for(int i = 0; i < hp_total; i++) {
 			hp_bg_snap_nth_doublepoint(i);
-			hp_put(i, i);
+			hp_put(i);
 		}
 	} else { // Increment
 		#define hp_cur func
@@ -121,7 +101,7 @@ bool16 hud_hp_render(int hp_total, int func)
 		// ZUN bug: [hp_cur] should be limited to (HP_MAX / 2) here to prevent
 		// heap corruption.
 		hp_bg_snap_nth_doublepoint(hp_cur);
-		hp_put(hp_cur, hp_cur);
+		hp_put(hp_cur);
 
 		// ZUN bug: Should be <= to ensure that the incrementing process always
 		// completes.
