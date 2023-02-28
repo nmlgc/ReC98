@@ -71,8 +71,8 @@ Crossed-out files are identical to their version in the previous game. ONGCHK.CO
 ## Branches
 
 * [`master`]: ZUN's original code, without mods or bugfixes
-* ▶ **`debloated`: Rearchitected version of ZUN's code that is easier to read and modify, and builds smaller and faster PC-98 binaries. Only removes [bloat] and [landmines]; all [bugs] and [quirks] from ZUN's original code are left in place. Ports should start from this branch, and it's also the recommended base for mods that don't care about similarity to the original binary.** (You are here!)
-* [`anniversary`]: Takes `debloated` and additionally fixes [bugs], achieving a smoother and flicker-free gameplay experience on the PC-98 platform while still leaving [quirks] in place. Might be an even better starting port for mods and ports.
+* [`debloated`]: Rearchitected version of ZUN's code that is easier to read and modify, and builds smaller and faster PC-98 binaries. Only removes [bloat] and [landmines]; all [bugs] and [quirks] from ZUN's original code are left in place. Ports should start from this branch, and it's also the recommended base for mods that don't care about similarity to the original binary.
+* ▶ **`anniversary`: Takes `debloated` and additionally fixes [bugs], achieving a smoother and flicker-free gameplay experience on the PC-98 platform while still leaving [quirks] in place. Might be an even better starting port for mods and ports.** (You are here!)
 * [`BossRush`]
 * [`th03_no_gdc_frequency_check`]: Allows TH03 to be run with the GDC clock set to 5&nbsp;MHz. The original game enforces 2.5&nbsp;MHz, but doesn't functionally require it, even on real hardware.
 * [`xJeePx`]: Code changes for xJeePx's 2014 English translation patch.

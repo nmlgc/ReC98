@@ -10,12 +10,11 @@
 
 # ⚠️ CAUTION! ⚠️
 
-# You are on the `debloated` branch, which contains a simplified and optimized
-# version of ZUN's original code. This branch is the ideal starting point for
-# ports and nontrivial mods that don't care about similarity to the original
-# binary, as the binaries built from this branch are *different* from ZUN's
-# original ones and cannot be easily compared to them. If you do care about
-# comparability, check out `master` instead.
+# You are on the `anniversary` branch, which builds a rearchitected, bugfixed,
+# and significantly optimized version of the original games (the "Anniversary
+# Edition"). If you rather like to base your work on ZUN's original code, check
+# out `master`; for a branch that only contains the architectural changes while
+# leaving all original bugs in place, check out `debloated`.
 
 # ⚠️ CAUTION! ⚠️
 
