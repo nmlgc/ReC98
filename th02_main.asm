@@ -1693,66 +1693,7 @@ loc_4803:
 		retf
 sub_4782	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_480C	proc far
-
-@@vo		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-@@image		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 6
-		push	si
-		push	di
-		mov	ax, 0A800h
-		mov	es, ax
-		mov	di, [bp+arg_4]
-		mov	si, [bp+arg_2]
-		mov	ax, si
-		sar	ax, 4
-		mov	[bp+var_2], ax
-		lea	ax, [di-20h]
-		sar	ax, 4
-		mov	[bp+var_4], ax
-		mov	_tile_copy_lines_top, 0
-		mov	_tile_copy_lines_h, TILE_H
-		mov	bx, [bp+var_2]
-		imul	bx, TILES_X
-		add	bx, [bp+var_4]
-		mov	al, byte ptr [bp+@@image]
-		mov	_tile_ring[bx], al
-		call	@egc_start_copy_noframe$qv
-		graph_accesspage _page_front
-		mov	ax, [bp+var_2]
-		shl	ax, 4
-		mov	si, ax
-		mov	ax, di
-		sar	ax, 3
-		mov	dx, si
-		shl	dx, 6
-		add	ax, dx
-		shr	dx, 2
-		add	ax, dx
-		mov	[bp+@@vo], ax
-		call	@tile_egc_copy_lines_8$qii pascal, ax, [bp+@@image]
-		graph_accesspage _page_back
-		call	@tile_egc_copy_lines_8$qii pascal, [bp+@@vo], [bp+@@image]
-		nopcall	egc_off
-		pop	di
-		pop	si
-		leave
-		retf	6
-sub_480C	endp
-
-		even
+	extern @TILE_RING_SET_AND_PUT_BOTH_8$QIII:proc
 	extern @TILE_EGC_ROLL_COPY_8$QIII:proc
 _TEXT		ends
 
@@ -13870,7 +13811,7 @@ sub_121F3	endp
 
 sub_1223E	proc near
 
-var_2		= word ptr -2
+@@left		= word ptr -2
 
 		push	bp
 		mov	bp, sp
@@ -13880,28 +13821,28 @@ var_2		= word ptr -2
 		mov	si, 5546h
 		call	@egc_start_copy_noframe$qv
 		xor	di, di
-		mov	[bp+var_2], 20h	; ' '
+		mov	[bp+@@left], PLAYFIELD_LEFT
 		jmp	short loc_122A7
 ; ---------------------------------------------------------------------------
 
 loc_12257:
 		cmp	byte ptr [si], 1
 		jnz	short loc_12269
-		push	[bp+var_2]
-		push	word_22D9C
-		push	word_22FD2
+		push	[bp+@@left]
+		push	y_22D9C
+		push	tile_image_22FD2
 		jmp	short loc_12279
 ; ---------------------------------------------------------------------------
 
 loc_12269:
 		cmp	byte ptr [si], 2
 		jnz	short loc_12283
-		push	[bp+var_2]
-		push	word_22D9C
-		push	word_22FD4
+		push	[bp+@@left]
+		push	y_22D9C
+		push	tile_image_22FD4
 
 loc_12279:
-		call	sub_480C
+		call	@tile_ring_set_and_put_both_8$qiii
 		mov	byte ptr [si], 0
 		jmp	short loc_122A1
 ; ---------------------------------------------------------------------------
@@ -13909,20 +13850,17 @@ loc_12279:
 loc_12283:
 		cmp	byte ptr [di+5546h], 3
 		jnz	short loc_122A1
-		push	[bp+var_2]
-		push	word_22D9C
-		push	word_22FD6
-		call	sub_480C
+		call	@tile_ring_set_and_put_both_8$qiii pascal, [bp+@@left], y_22D9C, tile_image_22FD6
 		mov	byte ptr [si], 0
 		inc	byte_22FD0
 
 loc_122A1:
 		inc	di
-		add	[bp+var_2], 10h
+		add	[bp+@@left], TILE_W
 		inc	si
 
 loc_122A7:
-		cmp	di, 18h
+		cmp	di, TILES_X
 		jl	short loc_12257
 		call	egc_off
 		pop	di
@@ -13958,9 +13896,9 @@ loc_122D1:
 		mov	byte_22FCF, 0
 		mov	byte_22FCE, 0
 		mov	byte_22FD0, 0
-		mov	word_22FD2, 29h	; ')'
-		mov	word_22FD4, 2Ah	; '*'
-		mov	word_22FD6, 2Bh	; '+'
+		mov	tile_image_22FD2, 41
+		mov	tile_image_22FD4, 42
+		mov	tile_image_22FD6, 43
 		jmp	short loc_1231B
 ; ---------------------------------------------------------------------------
 
@@ -14030,9 +13968,9 @@ loc_1234B:
 		mov	byte_22FCF, 0
 		mov	byte_22FCE, 0
 		mov	byte_22FD0, 0
-		mov	word_22FD2, 2Ah	; '*'
-		mov	word_22FD4, 29h	; ')'
-		mov	word_22FD6, 28h	; '('
+		mov	tile_image_22FD2, 42
+		mov	tile_image_22FD4, 41
+		mov	tile_image_22FD6, 40
 		jmp	short loc_12395
 ; ---------------------------------------------------------------------------
 
@@ -14546,12 +14484,12 @@ loc_127A5:
 		mov	byte_22D56, 0
 		mov	byte_22D57, 0
 		mov	angle_1E510, 20h
-		mov	word_22D9C, 60h
+		mov	y_22D9C, 96
 		mov	ax, _scroll_line
-		add	word_22D9C, ax
-		cmp	word_22D9C, RES_Y
+		add	y_22D9C, ax
+		cmp	y_22D9C, RES_Y
 		jl	short loc_12835
-		sub	word_22D9C, RES_Y
+		sub	y_22D9C, RES_Y
 
 loc_12835:
 		call	sub_11997
@@ -16829,31 +16767,19 @@ loc_139AA:
 
 loc_139C5:
 		mov	bx, word_2065C
-		push	word ptr [bx]
-		push	si
-		push	3Ch ; '<'
-		call	sub_480C
+		call	@tile_ring_set_and_put_both_8$qiii pascal, word ptr [bx], si, 60
 		mov	bx, word_2065C
 		mov	ax, [bx]
-		add	ax, 10h
-		push	ax
-		push	si
-		push	3Dh ; '='
-		call	sub_480C
+		add	ax, 16
+		call	@tile_ring_set_and_put_both_8$qiii pascal, ax, si, 61
 		mov	bx, word_2065C
 		mov	ax, [bx]
-		add	ax, 20h	; ' '
-		push	ax
-		push	si
-		push	3Eh ; '>'
-		call	sub_480C
+		add	ax, 32
+		call	@tile_ring_set_and_put_both_8$qiii pascal, ax, si, 62
 		mov	bx, word_2065C
 		mov	ax, [bx]
-		add	ax, 30h	; '0'
-		push	ax
-		push	si
-		push	3Fh ; '?'
-		call	sub_480C
+		add	ax, 48
+		call	@tile_ring_set_and_put_both_8$qiii pascal, ax, si, 63
 
 loc_13A09:
 		mov	bx, word_2065E
@@ -19793,8 +19719,8 @@ loc_15393:
 		inc	byte ptr [si+1]
 		test	byte ptr [si+1], 7
 		jnz	short loc_153F5
-		push	word ptr [si+2]
-		push	word ptr [si+4]
+		push	word ptr [si+2]	; left
+		push	word ptr [si+4]	; y
 		mov	al, [si]
 		mov	ah, 0
 		lea	dx, [bp+var_8]
@@ -19802,8 +19728,8 @@ loc_15393:
 		mov	bx, ax
 		mov	al, ss:[bx]
 		mov	ah, 0
-		push	ax
-		call	sub_480C
+		push	ax	; image
+		call	@tile_ring_set_and_put_both_8$qiii
 		inc	byte ptr [si]
 		cmp	byte ptr [si], 7
 		jb	short loc_153F5
@@ -23531,22 +23457,22 @@ loc_17473:
 
 loc_1747D:
 		mov	bx, word_26C4A
-		push	word ptr [bx]
+		push	word ptr [bx]	; left
 		mov	al, [bp+var_7]
 		mov	ah, 0
 		add	ax, word_26C44
 		mov	bx, ax
 		mov	al, [bx+1]
 		mov	ah, 0
-		push	ax
+		push	ax	; y
 		mov	al, [bp+var_7]
 		mov	ah, 0
 		add	ax, word_26C44
 		mov	bx, ax
 		mov	al, [bx+2]
 		mov	ah, 0
-		push	ax
-		call	sub_480C
+		push	ax	; image
+		call	@tile_ring_set_and_put_both_8$qiii
 		mov	[bp+var_4], 3
 		jmp	short loc_174E1
 ; ---------------------------------------------------------------------------
@@ -34669,7 +34595,7 @@ word_22D94	dw ?
 word_22D96	dw ?
 word_22D98	dw ?
 word_22D9A	dw ?
-word_22D9C	dw ?
+y_22D9C	dw ?
 word_22D9E	dw ?
 word_22DA0	dw ?
 word_22DA2	dw ?
@@ -34690,9 +34616,9 @@ byte_22FCE	db ?
 byte_22FCF	db ?
 byte_22FD0	db ?
 		db ?
-word_22FD2	dw ?
-word_22FD4	dw ?
-word_22FD6	dw ?
+tile_image_22FD2	dw ?
+tile_image_22FD4	dw ?
+tile_image_22FD6	dw ?
 _map_length	dw ?
 		db    ?	;
 byte_22FDB	db ?

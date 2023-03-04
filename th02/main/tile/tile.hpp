@@ -7,6 +7,9 @@
 #define TILE_FLAG_H (TILE_H / 2)
 #define TILE_FLAGS_Y (TILES_Y * (TILE_H / TILE_FLAG_H))
 
+#define TILE_BITS_W 4
+#define TILE_BITS_H 4
+
 // Tile source area in VRAM
 // ------------------------
 // For fast EGC-accelerated blitting, the games blit all tiles to a reserved
@@ -23,6 +26,15 @@ static const screen_y_t TILE_AREA_TOP = 0;
 static const vram_x_t TILE_AREA_VRAM_LEFT = (TILE_AREA_LEFT / BYTE_DOTS);
 
 #if (GAME == 2)
+	// Sets the [tile_ring] tile at (left, y) to the given [image], then blits
+	// it at (⌊left/8⌋*8, ⌊y/TILE_H⌋*TILE_H).
+	// (This function would have been easier to describe if it only used [left]
+	// to locate the tile and then blit it at its standard position, but it can
+	// fact also blit a tile *between* two horizontal ones…)
+	void pascal tile_ring_set_and_put_both_8(
+		screen_x_t left, vram_y_t y, int image
+	);
+
 	// Blits the given tile [image] from its position in the source area to
 	// (⌊left/8⌋*8, top), wrapping it vertically at the bottom of VRAM. Assumes
 	// that the EGC is active and initialized for a copy.

@@ -1,8 +1,12 @@
-#pragma option -zC_TEXT
+#pragma option -zC_TEXT -G
 
 #include "platform.h"
+#include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
+#include "master.hpp"
+#include "th02/hardware/egc.hpp"
+#include "th02/hardware/pages.hpp"
 #include "th02/main/playfld.hpp"
 #include "th02/main/tile/tile.hpp"
 
@@ -34,6 +38,43 @@ void pascal near tile_egc_copy_8(vram_offset_t vo_topleft, int image)
 // tile register. Assumes that the GRCG is set to RMW or TDW mode.
 void pascal near tile_grcg_clear_8(vram_offset_t vo_topleft)
 ;
+
+void pascal tile_ring_set_and_put_both_8(
+	screen_x_t left_, vram_y_t y_, int image
+)
+{
+	static_assert((1 << TILE_BITS_W) == TILE_W);
+	static_assert((1 << TILE_BITS_H) == TILE_H);
+
+	_ES = SEG_PLANE_B;
+
+	screen_x_t left = left_;
+	vram_y_t top = y_;
+	int tile_y = (top >> TILE_BITS_H);
+	int tile_x = ((left - PLAYFIELD_LEFT) >> TILE_BITS_W);
+
+	tile_copy_lines_top = 0;
+	tile_copy_lines_h = TILE_H;
+	tile_ring[tile_y][tile_x] = image;
+
+	/* TODO: Replace with the decompiled call
+	 * 	egc_start_copy_noframe();
+	 * once that function is part of this translation unit */
+	_asm { push cs; call near ptr egc_start_copy_noframe; }
+
+	graph_accesspage(page_front);
+
+	top = (tile_y * TILE_H);
+
+	// Should really also be calculated from [tile_x]...
+	vram_offset_t vo = vram_offset_shift_fast(left, top);
+
+	tile_egc_copy_lines_8(vo, image);
+	graph_accesspage(page_back);
+	tile_egc_copy_lines_8(vo, image);
+	egc_off();
+}
+#pragma codestring "\x90"
 
 void pascal tile_egc_roll_copy_8(screen_x_t left, vram_y_t top, int image)
 {
