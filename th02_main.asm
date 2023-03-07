@@ -925,7 +925,7 @@ sub_4288	endp
 
 sub_42F8	proc far
 		mov	word_22796, 17h
-		mov	byte_22798, 0
+		mov	_tile_line_at_top, 0
 		mov	_page_back, 0
 		mov	byte_2287E, 1
 		mov	byte_22D48, 0
@@ -1058,13 +1058,13 @@ arg_2		= word ptr  6
 		mov	bx, [bp+arg_0]
 		add	bx, bx
 		mov	ax, _tile_image_vos[bx]
-		mov	dx, word_22862
+		mov	dx, _tile_copy_lines_top
 		shl	dx, 6
 		add	ax, dx
 		shr	dx, 2
 		add	ax, dx
 		mov	si, ax
-		mov	cx, word_22864
+		mov	cx, _tile_copy_lines_h
 
 loc_4405:
 		mov	ax, es:[si]
@@ -1142,25 +1142,25 @@ sub_4441	endp
 sub_445A	proc far
 
 var_2		= word ptr -2
-arg_0		= word ptr  6
+@@h		= word ptr  6
 
 		push	bp
 		mov	bp, sp
 		sub	sp, 2
 		push	si
 		push	di
-		mov	al, byte_22798
-		sub	al, byte ptr [bp+arg_0]
-		mov	byte_22798, al
+		mov	al, _tile_line_at_top
+		sub	al, byte ptr [bp+@@h]
+		mov	_tile_line_at_top, al
 		mov	ax, _scroll_line
 		sar	ax, 4
 		imul	ax, 18h
 		mov	[bp+var_2], ax
-		cmp	byte_22798, 0
+		cmp	_tile_line_at_top, 0
 		jge	short loc_44D9
-		mov	al, byte_22798
-		add	al, 10h
-		mov	byte_22798, al
+		mov	al, _tile_line_at_top
+		add	al, TILE_H
+		mov	_tile_line_at_top, al
 		inc	word_22796
 		mov	ax, word_22796
 		shr	ax, 3
@@ -1201,11 +1201,11 @@ loc_44D4:
 		jl	short loc_44BF
 
 loc_44D9:
-		mov	al, byte_22798
+		mov	al, _tile_line_at_top
 		cbw
-		mov	word_22862, ax
-		mov	ax, [bp+arg_0]
-		mov	word_22864, ax
+		mov	_tile_copy_lines_top, ax
+		mov	ax, [bp+@@h]
+		mov	_tile_copy_lines_h, ax
 		mov	ax, _scroll_line
 		shl	ax, 6
 		mov	dx, ax
@@ -1422,14 +1422,14 @@ loc_463D:
 		mov	[bp+arg_4], ax
 		mov	si, [bp+arg_6]
 		mov	ax, si
-		imul	ax, 19h
+		imul	ax, TILES_Y
 		jmp	short loc_4687
 ; ---------------------------------------------------------------------------
 
 loc_4653:
 		or	si, si
 		jl	short loc_4683
-		cmp	si, 18h
+		cmp	si, TILES_X
 		jge	short loc_4683
 		mov	cx, [bp+arg_4]
 
@@ -1443,15 +1443,15 @@ loc_466B:
 		sar	dx, 4
 		mov	bx, ax
 		add	bx, dx
-		mov	byte ptr [bx+5068h], 1
+		mov	_tile_dirty[bx], 1
 		add	cx, 10h
 		cmp	cx, di
 		jle	short loc_465F
-		mov	byte ptr [si+52C0h], 1
+		mov	_tile_column_dirty[si], 1
 
 loc_4683:
 		inc	si
-		add	ax, 19h
+		add	ax, TILES_Y
 
 loc_4687:
 		cmp	si, [bp+arg_2]
@@ -1490,7 +1490,7 @@ var_2		= word ptr -2
 loc_46AA:
 		cmp	byte_22D48, 1
 		jz	short loc_46B8
-		cmp	byte ptr [di+52C0h], 0
+		cmp	_tile_column_dirty[di], 0
 		jz	short loc_46F6
 
 loc_46B8:
@@ -1506,8 +1506,8 @@ loc_46C6:
 		cmp	byte_22D48, 1
 		jz	short loc_46D9
 		mov	bx, di
-		imul	bx, 19h
-		cmp	byte ptr [bx+si+5068h],	0
+		imul	bx, TILES_Y
+		cmp	_tile_dirty[bx+si], 0
 		jz	short loc_46EB
 
 loc_46D9:
@@ -1524,14 +1524,14 @@ loc_46EB:
 		add	[bp+var_2], 500h
 
 loc_46F1:
-		cmp	si, 19h
+		cmp	si, TILES_Y
 		jl	short loc_46C6
 
 loc_46F6:
 		inc	di
 
 loc_46F7:
-		cmp	di, 18h
+		cmp	di, TILES_X
 		jl	short loc_46AA
 		jmp	short loc_475E
 ; ---------------------------------------------------------------------------
@@ -1549,7 +1549,7 @@ loc_46FE:
 loc_4713:
 		cmp	byte_22D48, 1
 		jz	short loc_4721
-		cmp	byte ptr [di+52C0h], 0
+		cmp	_tile_column_dirty[di], 0
 		jz	short loc_4753
 
 loc_4721:
@@ -1565,8 +1565,8 @@ loc_472F:
 		cmp	byte_22D48, 1
 		jz	short loc_4742
 		mov	bx, di
-		imul	bx, 19h
-		cmp	byte ptr [bx+si+5068h],	0
+		imul	bx, TILES_Y
+		cmp	_tile_dirty[bx+si], 0
 		jz	short loc_4748
 
 loc_4742:
@@ -1578,30 +1578,30 @@ loc_4748:
 		add	[bp+var_2], 500h
 
 loc_474E:
-		cmp	si, 19h
+		cmp	si, TILES_Y
 		jl	short loc_472F
 
 loc_4753:
 		inc	di
 
 loc_4754:
-		cmp	di, 18h
+		cmp	di, TILES_X
 		jl	short loc_4713
 		nopcall	grcg_off
 
 loc_475E:
 		xor	bx, bx
-		mov	cx, 258h
+		mov	cx, TILE_COUNT
 
 loc_4763:
-		mov	byte ptr [bx+5068h], 0
+		mov	_tile_dirty[bx], 0
 		inc	bx
 		loop	loc_4763
 		xor	bx, bx
-		mov	cx, 18h
+		mov	cx, TILES_X
 
 loc_4770:
-		mov	byte ptr [bx+52C0h], 0
+		mov	_tile_column_dirty[bx], 0
 		inc	bx
 		loop	loc_4770
 		mov	byte_22D48, 0
@@ -1632,8 +1632,8 @@ var_2		= word ptr -2
 		mov	ax, 0A800h
 		mov	es, ax
 		assume es:nothing
-		mov	word_22862, 0
-		mov	word_22864, 10h
+		mov	_tile_copy_lines_top, 0
+		mov	_tile_copy_lines_h, TILE_H
 		call	@egc_start_copy_noframe$qv
 		cmp	byte_2287E, 1
 		jnz	short loc_47E6
@@ -1720,8 +1720,8 @@ arg_4		= word ptr  0Ah
 		lea	ax, [di-20h]
 		sar	ax, 4
 		mov	[bp+var_4], ax
-		mov	word_22862, 0
-		mov	word_22864, 10h
+		mov	_tile_copy_lines_top, 0
+		mov	_tile_copy_lines_h, TILE_H
 		mov	bx, [bp+var_2]
 		imul	bx, TILES_X
 		add	bx, [bp+var_4]
@@ -2827,8 +2827,7 @@ loc_BE3B:
 		call	@egc_start_copy_1$qv
 		mov	al, _scroll_speed
 		mov	ah, 0
-		push	ax
-		call	sub_445A
+		call	sub_445A pascal, ax
 		mov	byte_1E501, al
 		outw2	EGC_ACTIVEPLANEREG, 0FFF0h
 		outw2	EGC_MASKREG, 0FFFFh
@@ -34712,18 +34711,22 @@ byte_21A55	db ?
 map	db    MAP_SIZE dup (?)
 		db 320 dup(?)
 word_22796	dw ?
-byte_22798	db ?
+
+TILE_COUNT = TILES_X * TILES_Y
+
+public _tile_line_at_top, _tile_image_vos, _tile_copy_lines_top
+public _tile_copy_lines_h, _tile_ring, _tile_dirty, _tile_column_dirty
+_tile_line_at_top	db ?
 	evendata
-
-public _tile_image_vos
 _tile_image_vos	dw TILE_IMAGE_COUNT dup(?)
-
-word_22862	dw ?
-word_22864	dw ?
+_tile_copy_lines_top	dw ?
+_tile_copy_lines_h  	dw ?
 		db 24 dup(?)
 byte_2287E	db ?
-include th02/main/tile/tiles[bss].asm
-		db 625 dup(?)
+_tile_ring	db TILE_COUNT dup(?)
+	evendata
+_tile_dirty	db TILE_COUNT dup(?)
+_tile_column_dirty	db TILES_X dup(?)
 byte_22D48	db ?
 		db ?
 byte_22D4A	db ?
