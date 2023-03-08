@@ -1038,7 +1038,7 @@ sub_4344	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
-
+public @egc_start_copy_noframe$qv
 @egc_start_copy_noframe$qv	proc far
 		nopcall	egc_on
 		EGC_SETUP_COPY
@@ -1049,18 +1049,18 @@ sub_4344	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public @TILE_EGC_COPY_LINES_8$QII
+@tile_egc_copy_lines_8$qii	proc near
 
-sub_43E0	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
+@@image	= word ptr  4
+@@vo   	= word ptr  6
 
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
-		mov	di, [bp+arg_2]
-		mov	bx, [bp+arg_0]
+		mov	di, [bp+@@vo]
+		mov	bx, [bp+@@image]
 		add	bx, bx
 		mov	ax, _tile_image_vos[bx]
 		mov	dx, _tile_copy_lines_top
@@ -1081,24 +1081,24 @@ loc_4405:
 		pop	si
 		pop	bp
 		retn	4
-sub_43E0	endp
+@tile_egc_copy_lines_8$qii	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public @TILE_EGC_COPY_8$QII
+@tile_egc_copy_8$qii	proc near
 
-sub_4419	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
+@@image	= word ptr  4
+@@vo   	= word ptr  6
 
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
-		mov	di, [bp+arg_2]
-		mov	bx, [bp+arg_0]
+		mov	di, [bp+@@vo]
+		mov	bx, [bp+@@image]
 		add	bx, bx
 		mov	si, _tile_image_vos[bx]
 		mov	cx, TILE_H
@@ -1113,31 +1113,31 @@ loc_442D:
 		pop	si
 		pop	bp
 		retn	4
-sub_4419	endp
+@tile_egc_copy_8$qii	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public @TILE_GRCG_CLEAR_8$QI
+@tile_grcg_clear_8$qi	proc near
 
-sub_4441	proc near
-
-arg_0		= word ptr  4
+@@vo	= word ptr  4
 
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, [bp+arg_0]
-		mov	cx, 10h
+		mov	si, [bp+@@vo]
+		mov	cx, TILE_H
 
 loc_444B:
 		mov	word ptr es:[si], 0FFFFh
-		add	si, 50h	; 'P'
+		add	si, ROW_SIZE
 		loop	loc_444B
 		pop	si
 		pop	bp
 		retn	2
-sub_4441	endp
+@tile_grcg_clear_8$qi	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -1230,7 +1230,7 @@ loc_4508:
 		mov	al, [si+4DF6h]
 		mov	ah, 0
 		push	ax
-		call	sub_43E0
+		call	@tile_egc_copy_lines_8$qii
 		inc	si
 		add	di, 2
 
@@ -1248,7 +1248,7 @@ loc_4525:
 		mov	al, [si+4DF6h]
 		mov	ah, 0
 		push	ax
-		call	sub_43E0
+		call	@tile_egc_copy_lines_8$qii
 
 loc_4534:
 		or	si, si
@@ -1476,7 +1476,7 @@ sub_45FC	endp
 
 sub_4692	proc far
 
-var_2		= word ptr -2
+@@vo		= word ptr -2
 
 		push	bp
 		mov	bp, sp
@@ -1502,7 +1502,7 @@ loc_46B8:
 		mov	ax, di
 		add	ax, ax
 		add	ax, 4
-		mov	[bp+var_2], ax
+		mov	[bp+@@vo], ax
 		xor	si, si
 		jmp	short loc_46F1
 ; ---------------------------------------------------------------------------
@@ -1516,17 +1516,17 @@ loc_46C6:
 		jz	short loc_46EB
 
 loc_46D9:
-		push	[bp+var_2]
+		push	[bp+@@vo]
 		mov	bx, si
 		imul	bx, TILES_X
 		mov	al, _tile_ring[bx+di]
 		mov	ah, 0
 		push	ax
-		call	sub_4419
+		call	@tile_egc_copy_8$qii
 
 loc_46EB:
 		inc	si
-		add	[bp+var_2], 500h
+		add	[bp+@@vo], (TILE_H * ROW_SIZE)
 
 loc_46F1:
 		cmp	si, TILES_Y
@@ -1561,7 +1561,7 @@ loc_4721:
 		mov	ax, di
 		add	ax, ax
 		add	ax, 4
-		mov	[bp+var_2], ax
+		mov	[bp+@@vo], ax
 		xor	si, si
 		jmp	short loc_474E
 ; ---------------------------------------------------------------------------
@@ -1575,12 +1575,11 @@ loc_472F:
 		jz	short loc_4748
 
 loc_4742:
-		push	[bp+var_2]
-		call	sub_4441
+		call	@tile_grcg_clear_8$qi pascal, [bp+@@vo]
 
 loc_4748:
 		inc	si
-		add	[bp+var_2], 500h
+		add	[bp+@@vo], (TILE_H * ROW_SIZE)
 
 loc_474E:
 		cmp	si, TILES_Y
@@ -1625,8 +1624,8 @@ sub_4692	endp
 
 sub_4782	proc far
 
-var_6		= word ptr -6
-var_4		= word ptr -4
+@@vo		= word ptr -6
+@@image		= word ptr -4
 var_2		= word ptr -2
 
 		push	bp
@@ -1643,13 +1642,13 @@ var_2		= word ptr -2
 		cmp	_tile_mode, TM_TILES
 		jnz	short loc_47E6
 		mov	[bp+var_2], 0
-		mov	[bp+var_6], 4
+		mov	[bp+@@vo], PLAYFIELD_VRAM_LEFT
 		jmp	short loc_47DE
 ; ---------------------------------------------------------------------------
 
 loc_47B2:
 		xor	si, si
-		mov	di, [bp+var_6]
+		mov	di, [bp+@@vo]
 		jmp	short loc_47D1
 ; ---------------------------------------------------------------------------
 
@@ -1658,21 +1657,19 @@ loc_47B9:
 		imul	bx, TILES_X
 		mov	al, _tile_ring[bx+si]
 		mov	ah, 0
-		mov	[bp+var_4], ax
-		push	di
-		push	ax
-		call	sub_43E0
+		mov	[bp+@@image], ax
+		call	@tile_egc_copy_lines_8$qii pascal, di, ax
 		inc	si
-		add	di, 2
+		add	di, TILE_VRAM_W
 
 loc_47D1:
 		cmp	si, TILES_X
 		jl	short loc_47B9
 		inc	[bp+var_2]
-		add	[bp+var_6], 500h
+		add	[bp+@@vo], (TILE_H * ROW_SIZE)
 
 loc_47DE:
-		cmp	[bp+var_2], 19h
+		cmp	[bp+var_2], TILES_Y
 		jl	short loc_47B2
 		jmp	short loc_4803
 ; ---------------------------------------------------------------------------
@@ -1703,10 +1700,10 @@ sub_4782	endp
 
 sub_480C	proc far
 
-var_6		= word ptr -6
+@@vo		= word ptr -6
 var_4		= word ptr -4
 var_2		= word ptr -2
-@@tile		= word ptr  6
+@@image		= word ptr  6
 arg_2		= word ptr  8
 arg_4		= word ptr  0Ah
 
@@ -1730,7 +1727,7 @@ arg_4		= word ptr  0Ah
 		mov	bx, [bp+var_2]
 		imul	bx, TILES_X
 		add	bx, [bp+var_4]
-		mov	al, byte ptr [bp+@@tile]
+		mov	al, byte ptr [bp+@@image]
 		mov	_tile_ring[bx], al
 		call	@egc_start_copy_noframe$qv
 		graph_accesspage _page_front
@@ -1744,14 +1741,10 @@ arg_4		= word ptr  0Ah
 		add	ax, dx
 		shr	dx, 2
 		add	ax, dx
-		mov	[bp+var_6], ax
-		push	ax
-		push	[bp+@@tile]
-		call	sub_43E0
+		mov	[bp+@@vo], ax
+		call	@tile_egc_copy_lines_8$qii pascal, ax, [bp+@@image]
 		graph_accesspage _page_back
-		push	[bp+var_6]
-		push	[bp+@@tile]
-		call	sub_43E0
+		call	@tile_egc_copy_lines_8$qii pascal, [bp+@@vo], [bp+@@image]
 		nopcall	egc_off
 		pop	di
 		pop	si

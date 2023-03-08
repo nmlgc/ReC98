@@ -15,3 +15,13 @@ extern bool tile_dirty[TILES_X][TILES_Y];
 // Optimization to skip checking all vertical tiles for clean columns.
 extern bool tile_column_dirty[TILES_X];
 // -----
+
+void pascal near tile_egc_copy_lines_8(vram_offset_t vo_dst, int image)
+;
+void pascal near tile_egc_copy_8(vram_offset_t vo_topleft, int image)
+;
+
+// Overwrites the tile starting at [vo_topleft] with the contents of the GRCG
+// tile register. Assumes that the GRCG is set to RMW or TDW mode.
+void pascal near tile_grcg_clear_8(vram_offset_t vo_topleft)
+;
