@@ -66,4 +66,9 @@ static const vram_x_t TILE_AREA_VRAM_LEFT = (TILE_AREA_LEFT / BYTE_DOTS);
 	// If `true`, the next call to tiles_egc_render() will unconditionally
 	// redraw all tiles and then reset this flag to `false`.
 	extern bool tiles_egc_render_all;
+
+	// Blits all tiles in the [tile_ring] from the tile source area to the
+	// playfield if [tile_mode] to TM_TILES. Fills the playfield with hardware
+	// palette color 0 in all other modes.
+	void tiles_render_all(void);
 #endif

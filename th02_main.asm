@@ -1614,85 +1614,9 @@ loc_4770:
 		leave
 		retf
 sub_4692	endp
+		even
 
-; ---------------------------------------------------------------------------
-		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_4782	proc far
-
-@@vo		= word ptr -6
-@@image		= word ptr -4
-var_2		= word ptr -2
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 6
-		push	si
-		push	di
-		mov	ax, 0A800h
-		mov	es, ax
-		assume es:nothing
-		mov	_tile_copy_lines_top, 0
-		mov	_tile_copy_lines_h, TILE_H
-		call	@egc_start_copy_noframe$qv
-		cmp	_tile_mode, TM_TILES
-		jnz	short loc_47E6
-		mov	[bp+var_2], 0
-		mov	[bp+@@vo], PLAYFIELD_VRAM_LEFT
-		jmp	short loc_47DE
-; ---------------------------------------------------------------------------
-
-loc_47B2:
-		xor	si, si
-		mov	di, [bp+@@vo]
-		jmp	short loc_47D1
-; ---------------------------------------------------------------------------
-
-loc_47B9:
-		mov	bx, [bp+var_2]
-		imul	bx, TILES_X
-		mov	al, _tile_ring[bx+si]
-		mov	ah, 0
-		mov	[bp+@@image], ax
-		call	@tile_egc_copy_lines_8$qii pascal, di, ax
-		inc	si
-		add	di, TILE_VRAM_W
-
-loc_47D1:
-		cmp	si, TILES_X
-		jl	short loc_47B9
-		inc	[bp+var_2]
-		add	[bp+@@vo], (TILE_H * ROW_SIZE)
-
-loc_47DE:
-		cmp	[bp+var_2], TILES_Y
-		jl	short loc_47B2
-		jmp	short loc_4803
-; ---------------------------------------------------------------------------
-
-loc_47E6:
-		push	GC_RMW
-		push	0
-		nopcall	grcg_setcolor
-		push	PLAYFIELD_VRAM_LEFT
-		push	PLAYFIELD_TOP
-		push	PLAYFIELD_VRAM_RIGHT
-		push	PLAYFIELD_BOTTOM
-		nopcall	grcg_byteboxfill_x
-		nopcall	grcg_off
-
-loc_4803:
-		nopcall	egc_off
-		pop	di
-		pop	si
-		leave
-		retf
-sub_4782	endp
-
+	extern @tiles_render_all$qv:proc
 	extern @TILE_RING_SET_AND_PUT_BOTH_8$QIII:proc
 	extern @TILE_EGC_ROLL_COPY_8$QIII:proc
 _TEXT		ends
@@ -2281,7 +2205,7 @@ loc_B8B5:
 		graph_accesspage 1
 		call	sub_4596
 		graph_accesspage 0
-		call	sub_4782
+		call	@tiles_render_all$qv
 		call	_mpn_free
 		call	mpn_load pascal, ds, offset aMiko_k_mpn ; "miko_k.mpn"
 		les	bx, _resident
@@ -2338,9 +2262,9 @@ sub_B98E	proc near
 		call	sub_C5B0
 		mov	_player_invincibility_time, CONTINUE_INVINCIBILITY_FRAMES
 		graph_accesspage _page_front
-		call	sub_4782
+		call	@tiles_render_all$qv
 		graph_accesspage _page_back
-		call	sub_4782
+		call	@tiles_render_all$qv
 		call	sub_10E0A
 		mov	PaletteTone, 100
 		call	far ptr	palette_show

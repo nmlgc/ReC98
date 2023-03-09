@@ -1,4 +1,4 @@
-#pragma option -zC_TEXT -G
+#pragma option -zC_TEXT -G -2
 
 #include "platform.h"
 #include "x86real.h"
@@ -38,6 +38,47 @@ void pascal near tile_egc_copy_8(vram_offset_t vo_topleft, int image)
 // tile register. Assumes that the GRCG is set to RMW or TDW mode.
 void pascal near tile_grcg_clear_8(vram_offset_t vo_topleft)
 ;
+
+void tiles_render_all(void)
+{
+	_ES = SEG_PLANE_B;
+	tile_copy_lines_top = 0;
+	tile_copy_lines_h = TILE_H;
+
+	/* TODO: Replace with the decompiled call
+	 * 	egc_start_copy_noframe();
+	 * once that function is part of this translation unit */
+	_asm { push cs; call near ptr egc_start_copy_noframe; }
+
+	if(tile_mode == TM_TILES) {
+		int tile_y = 0;
+		int image;
+		vram_offset_t vo_row = vram_offset_shift(PLAYFIELD_LEFT, 0);
+		while(tile_y < TILES_Y) {
+			int tile_x = 0;
+			vram_offset_t vo_col = vo_row;
+			while(tile_x < TILES_X) {
+				image = tile_ring[tile_y][tile_x];
+
+				// ZUN bloat: Only needs a regular tile copy, which wouldn't
+				// have needed the [tile_copy_*] assignments above.
+				tile_egc_copy_lines_8(vo_col, image);
+
+				tile_x++;
+				vo_col += TILE_VRAM_W;
+			}
+			tile_y++;
+			vo_row += (TILE_H * ROW_SIZE);
+		}
+	} else {
+		grcg_setcolor(GC_RMW, 0);
+		grcg_boxfill_8( \
+			PLAYFIELD_LEFT, PLAYFIELD_TOP, PLAYFIELD_RIGHT, PLAYFIELD_BOTTOM \
+		);
+		grcg_off();
+	}
+	egc_off();
+}
 
 void pascal tile_ring_set_and_put_both_8(
 	screen_x_t left_, vram_y_t y_, int image
