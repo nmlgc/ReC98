@@ -39,6 +39,61 @@ void pascal near tile_egc_copy_8(vram_offset_t vo_topleft, int image)
 void pascal near tile_grcg_clear_8(vram_offset_t vo_topleft)
 ;
 
+#define tile_grcg_clear_8_func(vo_topleft, unused) { \
+	tile_grcg_clear_8(vo_topleft); \
+}
+
+#define tiles_egc_render_loop(func) { \
+	for(register int tile_x = 0; tile_x < TILES_X; tile_x++) { \
+		if((tiles_egc_render_all == true) || tile_column_dirty[tile_x]) { \
+			vram_offset_t vo = ( \
+				vram_offset_shift(PLAYFIELD_LEFT, 0) + (tile_x * TILE_VRAM_W) \
+			); \
+			register int tile_y = 0; \
+			while(tile_y < TILES_Y) { \
+				if( \
+					(tiles_egc_render_all == true) || \
+					tile_dirty[tile_x][tile_y] \
+				) { \
+					func(vo, tile_ring[tile_y][tile_x]); \
+				} \
+				tile_y++; \
+				vo += (TILE_H * ROW_SIZE); \
+			} \
+		} \
+	} \
+}
+
+void tiles_egc_render(void)
+{
+	_ES = SEG_PLANE_E;
+	if(tile_mode == TM_TILES) {
+		tiles_egc_render_loop(tile_egc_copy_8);
+	} else if(tile_mode == TM_COL_0) {
+		grcg_setcolor(GC_RMW, 0);
+		tiles_egc_render_loop(tile_grcg_clear_8_func);
+		grcg_off();
+	}
+
+	// ZUN bloat: memset()ting the two arrays would have been actually fast...
+	_BX = 0;
+	_CX = (TILES_X * TILES_Y);
+	dirty_reset_loop: {
+		tile_dirty[0][_BX++] = false;
+		asm { loop dirty_reset_loop; }
+	}
+	_BX = 0;
+	_CX = TILES_X;
+	dirty_column_reset_loop: {
+		tile_column_dirty[_BX++] = false;
+		asm { loop dirty_column_reset_loop; }
+	}
+
+	tiles_egc_render_all = false;
+}
+
+#pragma codestring "\x90"
+
 void tiles_render_all(void)
 {
 	_ES = SEG_PLANE_B;

@@ -1469,153 +1469,7 @@ loc_468C:
 		retf	8
 sub_45FC	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_4692	proc far
-
-@@vo		= word ptr -2
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 2
-		push	si
-		push	di
-		mov	ax, 0E000h
-		mov	es, ax
-		assume es:nothing
-		cmp	_tile_mode, TM_TILES
-		jnz	short loc_46FE
-		xor	di, di
-		jmp	short loc_46F7
-; ---------------------------------------------------------------------------
-
-loc_46AA:
-		cmp	_tiles_egc_render_all, 1
-		jz	short loc_46B8
-		cmp	_tile_column_dirty[di], 0
-		jz	short loc_46F6
-
-loc_46B8:
-		mov	ax, di
-		add	ax, ax
-		add	ax, 4
-		mov	[bp+@@vo], ax
-		xor	si, si
-		jmp	short loc_46F1
-; ---------------------------------------------------------------------------
-
-loc_46C6:
-		cmp	_tiles_egc_render_all, 1
-		jz	short loc_46D9
-		mov	bx, di
-		imul	bx, TILES_Y
-		cmp	_tile_dirty[bx+si], 0
-		jz	short loc_46EB
-
-loc_46D9:
-		push	[bp+@@vo]
-		mov	bx, si
-		imul	bx, TILES_X
-		mov	al, _tile_ring[bx+di]
-		mov	ah, 0
-		push	ax
-		call	@tile_egc_copy_8$qii
-
-loc_46EB:
-		inc	si
-		add	[bp+@@vo], (TILE_H * ROW_SIZE)
-
-loc_46F1:
-		cmp	si, TILES_Y
-		jl	short loc_46C6
-
-loc_46F6:
-		inc	di
-
-loc_46F7:
-		cmp	di, TILES_X
-		jl	short loc_46AA
-		jmp	short loc_475E
-; ---------------------------------------------------------------------------
-
-loc_46FE:
-		cmp	_tile_mode, TM_COL_0
-		jnz	short loc_475E
-		push	GC_RMW
-		push	0
-		nopcall	grcg_setcolor
-		xor	di, di
-		jmp	short loc_4754
-; ---------------------------------------------------------------------------
-
-loc_4713:
-		cmp	_tiles_egc_render_all, 1
-		jz	short loc_4721
-		cmp	_tile_column_dirty[di], 0
-		jz	short loc_4753
-
-loc_4721:
-		mov	ax, di
-		add	ax, ax
-		add	ax, 4
-		mov	[bp+@@vo], ax
-		xor	si, si
-		jmp	short loc_474E
-; ---------------------------------------------------------------------------
-
-loc_472F:
-		cmp	_tiles_egc_render_all, 1
-		jz	short loc_4742
-		mov	bx, di
-		imul	bx, TILES_Y
-		cmp	_tile_dirty[bx+si], 0
-		jz	short loc_4748
-
-loc_4742:
-		call	@tile_grcg_clear_8$qi pascal, [bp+@@vo]
-
-loc_4748:
-		inc	si
-		add	[bp+@@vo], (TILE_H * ROW_SIZE)
-
-loc_474E:
-		cmp	si, TILES_Y
-		jl	short loc_472F
-
-loc_4753:
-		inc	di
-
-loc_4754:
-		cmp	di, TILES_X
-		jl	short loc_4713
-		nopcall	grcg_off
-
-loc_475E:
-		xor	bx, bx
-		mov	cx, TILE_COUNT
-
-loc_4763:
-		mov	_tile_dirty[bx], 0
-		inc	bx
-		loop	loc_4763
-		xor	bx, bx
-		mov	cx, TILES_X
-
-loc_4770:
-		mov	_tile_column_dirty[bx], 0
-		inc	bx
-		loop	loc_4770
-		mov	_tiles_egc_render_all, 0
-		pop	di
-		pop	si
-		leave
-		retf
-sub_4692	endp
-		even
-
+	extern @tiles_egc_render$qv:proc
 	extern @tiles_render_all$qv:proc
 	extern @TILE_RING_SET_AND_PUT_BOTH_8$QIII:proc
 	extern @TILE_EGC_ROLL_COPY_8$QIII:proc
@@ -2541,7 +2395,7 @@ loc_BCF9:
 loc_BD26:
 		call	@egc_start_copy_1$qv
 		call	farfp_1F4A0
-		call	sub_4692
+		call	@tiles_egc_render$qv
 		call	farfp_1F490
 		outw2	EGC_ACTIVEPLANEREG, 0FFF0h
 		outw2	EGC_MASKREG, 0FFFFh
@@ -9626,7 +9480,7 @@ loc_1015A:
 		cmp	[bp+var_8], 100h
 		jl	loc_100DB
 		add	[bp+arg_0], 2
-		call	sub_4692
+		call	@tiles_egc_render$qv
 		call	egc_off
 
 loc_10171:
@@ -15237,7 +15091,7 @@ loc_12E4F:
 		push	200140h
 		push	1800050h
 		call	sub_45FC
-		call	sub_4692
+		call	@tiles_egc_render$qv
 		call	egc_off
 		call	sub_12CE5
 		push	ss
@@ -15295,7 +15149,7 @@ loc_12EC5:
 		push	200140h
 		push	1800050h
 		call	sub_45FC
-		call	sub_4692
+		call	@tiles_egc_render$qv
 		call	egc_off
 		call	sub_12CE5
 		push	ss
@@ -27781,7 +27635,7 @@ sub_19E2F	proc far
 		push	0B0009Ch
 		push	600060h
 		call	sub_45FC
-		call	sub_4692
+		call	@tiles_egc_render$qv
 		egc_setrop	EGC_WS_ROP or 0FCh
 		mov	word_26D54, 152
 		mov	ax, _scroll_line

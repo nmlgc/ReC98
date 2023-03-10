@@ -67,6 +67,11 @@ static const vram_x_t TILE_AREA_VRAM_LEFT = (TILE_AREA_LEFT / BYTE_DOTS);
 	// redraw all tiles and then reset this flag to `false`.
 	extern bool tiles_egc_render_all;
 
+	// Redraws the currently invalidated tiles according to the current
+	// [tile_mode]. For TM_TILES, the EGC is assumed to be active and
+	// initialized for a copy.
+	void tiles_egc_render(void);
+
 	// Blits all tiles in the [tile_ring] from the tile source area to the
 	// playfield if [tile_mode] to TM_TILES. Fills the playfield with hardware
 	// palette color 0 in all other modes.
