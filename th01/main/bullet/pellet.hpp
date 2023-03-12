@@ -148,7 +148,13 @@ struct Pellet {
 
 class CPellets {
 	Pellet near pellets[PELLET_COUNT];
-	int alive_count; // only used for one single optimization
+
+	// Only used to skip the looping over all pellets in the spawn functions if
+	// this reached [PELLET_COUNT]. Should *not* be used to skip any other
+	// loop, as the ZUN quirk that led to this name causes it to no longer
+	// accurately reflect all living pellets after a reset.
+	int alive_count_excluding_cloud_pellets_after_reset;
+
 	int unknown_zero[10]; // ZUN bloat
 public:
 	int unknown_seven; // ZUN bloat
@@ -220,8 +226,8 @@ public:
 	// Also calls Shots.unput_update_render()!
 	void unput_update_render(void);
 
-	void unput_and_reset(void);
-	void reset(void);
+	void unput_and_reset_nonclouds(void);
+	void reset_nonclouds(void);
 };
 
 /// Globals

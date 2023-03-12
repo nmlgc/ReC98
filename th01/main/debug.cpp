@@ -90,7 +90,7 @@ print_stats:
 			}
 			recurse();
 		} else if(input_up) {
-			Pellets.unput_and_reset();
+			Pellets.unput_and_reset_nonclouds();
 			recurse();
 		} else if(input_down) {
 			recurse();

@@ -1206,7 +1206,7 @@ inline void conditionally_reset_missiles(bool cond) {
 #define yuugenmagan_defeat_if(cond, reset_missiles, tmp_i) { \
 	if(cond) { \
 		mdrv2_bgm_fade_out_nonblock(); \
-		Pellets.unput_and_reset(); \
+		Pellets.unput_and_reset_nonclouds(); \
 		conditionally_reset_missiles(reset_missiles); \
 		\
 		/* 5? Triply broken, since this fight doesn't even use lasers... */ \

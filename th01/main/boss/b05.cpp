@@ -788,7 +788,7 @@ void singyoku_main(void)
 		ent_sphere.put_8();
 
 		mdrv2_bgm_fade_out_nonblock();
-		Pellets.unput_and_reset();
+		Pellets.unput_and_reset_nonclouds();
 		singyoku_defeat_animate_and_select_route();
 	}
 }

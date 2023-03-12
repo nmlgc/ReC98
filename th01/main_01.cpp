@@ -613,7 +613,7 @@ int main(void)
 
 		resident->score = score;
 		resident->continues_total = continues_total;
-		Pellets.unput_and_reset();
+		Pellets.unput_and_reset_nonclouds();
 		Shots.unput_and_reset();
 
 		grp_fn = default_grp_fn;
@@ -997,7 +997,7 @@ int main(void)
 	bgm_reload_and_play_if_0++; // ZUN bloat
 	player_gameover_animate();
 	Shots.unput_and_reset();
-	Pellets.unput_and_reset();
+	Pellets.unput_and_reset_nonclouds();
 	stageobj_bgs_free_wrap();
 	extend_next = 1;
 	if(boss_id != BID_NONE) {

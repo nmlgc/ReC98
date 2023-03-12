@@ -1342,7 +1342,7 @@ void mima_main(void)
 			graph_accesspage_func(0);
 
 			mdrv2_bgm_fade_out_nonblock();
-			Pellets.unput_and_reset();
+			Pellets.unput_and_reset_nonclouds();
 			Missiles.reset();
 			shootout_lasers_unput_and_reset_broken(i, 5); // 5? Doubly broken...
 			boss_defeat_animate();
