@@ -143,7 +143,9 @@ struct Pellet {
 
 class CPellets {
 	Pellet near pellets[PELLET_COUNT];
-	int alive_count; // only used for one single optimization
+
+	// Actually a reliable counter on this branch, unlike on `master`.
+	int alive_count;
 
 public:
 	// Rendering pellets at odd or even indices this frame?
@@ -215,8 +217,8 @@ public:
 	// Also calls Shots.unput_update_render()!
 	void unput_update_render(void);
 
-	void unput_and_reset(void);
-	void reset(void);
+	void unput_and_reset_nonclouds(void);
+	void reset_nonclouds(void);
 };
 
 /// Globals

@@ -2108,7 +2108,7 @@ void elis_main(void)
 			int i;
 
 			mdrv2_bgm_fade_out_nonblock();
-			Pellets.unput_and_reset();
+			Pellets.unput_and_reset_nonclouds();
 			girl_bg_put(1);
 			Missiles.reset();
 			shootout_lasers_reset();

@@ -1137,7 +1137,7 @@ entrance_rings_still_active:
 		hit.update_and_render(flash_colors);
 		if(boss_hp <= 0) {
 			mdrv2_bgm_fade_out_nonblock();
-			Pellets.unput_and_reset();
+			Pellets.unput_and_reset_nonclouds();
 			shootout_lasers_reset();
 			boss_defeat_animate();
 		}

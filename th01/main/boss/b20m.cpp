@@ -2706,7 +2706,7 @@ entrance_rings_still_active:
 		invincibility_frame = 399;
 
 		Shots.unput_and_reset();
-		Pellets.unput_and_reset();
+		Pellets.unput_and_reset_nonclouds();
 		shootout_lasers_reset();
 
 		// MODDERS: Move this to a common player reset function.

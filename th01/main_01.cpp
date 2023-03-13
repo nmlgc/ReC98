@@ -402,7 +402,7 @@ int main_main(int, const char *[])
 		resident->stage_id = stage_id;
 
 		resident->score = score;
-		Pellets.unput_and_reset();
+		Pellets.unput_and_reset_nonclouds();
 		Shots.unput_and_reset();
 
 		grp_fn = default_grp_fn;
@@ -774,7 +774,7 @@ int main_main(int, const char *[])
 	bgm_reload_and_play_if_0++; // ZUN bloat
 	player_gameover_animate();
 	Shots.unput_and_reset();
-	Pellets.unput_and_reset();
+	Pellets.unput_and_reset_nonclouds();
 	stageobj_bgs_free();
 	extend_next = 1;
 	if(boss_id != BID_NONE) {

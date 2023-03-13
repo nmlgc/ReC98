@@ -215,8 +215,7 @@ void CPellets::add_group(
 	Subpixel vel_x;
 	Subpixel vel_y;
 
-	// Should be >=, but yeah, it's just an inconsequential oversight.
-	if(alive_count > PELLET_COUNT) {
+	if(alive_count >= PELLET_COUNT) {
 		return;
 	}
 	if(
@@ -263,8 +262,7 @@ void CPellets::add_single(
 	Subpixel vel_x;
 	Subpixel vel_y;
 
-	// Should be >=, but yeah, it's just an inconsequential oversight.
-	if(alive_count > PELLET_COUNT) {
+	if(alive_count >= PELLET_COUNT) {
 		return;
 	}
 	speed_set(speed_base);
@@ -591,19 +589,31 @@ void CPellets::unput_update_render(void)
 	}
 }
 
-void CPellets::unput_and_reset(void)
+void CPellets::unput_and_reset_nonclouds(void)
 {
 	p = iteration_start();
 	for(int i = 0; i < PELLET_COUNT; i++, p++) {
+		// ZUN quirk: This condition skips the reset for active delay clouds,
+		// i.e., pellets where (([moving] == false) && ([cloud_frame] > 0)).
+		// These continue their delay animation after this function and
+		// eventually turn into regular pellets. In most cases, that doesn't
+		// matter because this is the final pellet-related method to be called
+		// before the process restarts, but it does make a difference in
+		// exactly two places:
+		//
+		// • The "TAMA DEL" command on the debug screen
+		// • Sariel's second form, where this is the exact reason why some
+		//   pellets are carried over from the first to the second form
 		if(!p->moving) {
 			continue;
 		}
+
 		p_sloppy_wide_unput_at_cur_pos();
 		p->decay_frame = 0;
 		p->moving = false;
 		p->cloud_frame = 0;
+		alive_count--;
 	}
-	alive_count = 0;
 }
 
 void CPellets::decay(void)
@@ -620,18 +630,20 @@ void CPellets::decay(void)
 	}
 }
 
-void CPellets::reset(void)
+void CPellets::reset_nonclouds(void)
 {
 	p = iteration_start();
 	for(int i = 0; i < PELLET_COUNT; i++, p++) {
+		// ZUN quirk: Same as in unput_and_reset_nonclouds().
 		if(!p->moving) {
 			continue;
 		}
+
 		p->moving = false;
 		p->decay_frame = 0;
 		p->cloud_frame = 0;
+		alive_count--;
 	}
-	alive_count = 0;
 }
 
 bool CPellets::hittest_player_for_cur(void)
