@@ -148,11 +148,8 @@ struct Pellet {
 class CPellets {
 	Pellet near pellets[PELLET_COUNT];
 
-	// Only used to skip the looping over all pellets in the spawn functions if
-	// this reached [PELLET_COUNT]. Should *not* be used to skip any other
-	// loop, as the ZUN quirk that led to this name causes it to no longer
-	// accurately reflect all living pellets after a reset.
-	int alive_count_excluding_cloud_pellets_after_reset;
+	// Actually a reliable counter on this branch, unlike on `master`.
+	int alive_count;
 
 public:
 	// Rendering pellets at odd or even indices this frame?
