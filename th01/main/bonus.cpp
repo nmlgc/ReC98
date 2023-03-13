@@ -461,7 +461,7 @@ void totle_animate(int stage_num)
 	int bonus_div_10000;
 
 	Shots.unput_and_reset();
-	Pellets.unput_and_reset();
+	Pellets.unput_and_reset_nonclouds();
 	frame_delay(50);
 
 	long val = 0;
