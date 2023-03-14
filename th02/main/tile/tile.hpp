@@ -67,6 +67,12 @@ static const vram_x_t TILE_AREA_VRAM_LEFT = (TILE_AREA_LEFT / BYTE_DOTS);
 	// redraw all tiles and then reset this flag to `false`.
 	extern bool tiles_egc_render_all;
 
+	// Marks all tiles for redrawing that lie within the given area of the
+	// screen.
+	void pascal tiles_invalidate_rect(
+		screen_x_t left, vram_y_t top, pixel_t w, pixel_t h
+	);
+
 	// Redraws the currently invalidated tiles according to the current
 	// [tile_mode]. For TM_TILES, the EGC is assumed to be active and
 	// initialized for a copy.

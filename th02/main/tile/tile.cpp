@@ -2,12 +2,14 @@
 
 #include "platform.h"
 #include "x86real.h"
+#include "decomp.hpp"
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
 #include "th02/hardware/egc.hpp"
 #include "th02/hardware/pages.hpp"
 #include "th02/main/playfld.hpp"
+#include "th02/main/scroll.hpp"
 #include "th02/main/tile/tile.hpp"
 
 // Terminology:
@@ -62,6 +64,92 @@ void pascal near tile_grcg_clear_8(vram_offset_t vo_topleft)
 			} \
 		} \
 	} \
+}
+
+void pascal tiles_invalidate_rect(
+	screen_x_t left, vram_y_t top, pixel_t w, pixel_t h
+)
+{
+	static_assert(sizeof(tile_dirty[0]) == (RES_Y / TILE_H));
+
+	#define screen_top  	static_cast<int>(_AX)
+	#define array_offset	static_cast<int>(_AX)
+	#define tile_left   	left
+	#define screen_right	w
+	#define tile_right  	w
+
+	register pixel_t y;
+	register pixel_t y_tmp;
+	register vram_y_t bottom;
+	register int tile_x;
+
+	if(tile_mode == TM_NONE) {
+		return;
+	}
+
+	// Round down to the closest tile so that we don't unnecessarily invalidate
+	// an additional tile to the right if e.g. ([left] % TILE_W) is 0 and [w]
+	// is TILE_W.
+	w--;
+
+	/// ZUN bloat: The comments indicate the semantic flow of data, which
+	/// couldn't be retained for code generation reasons.
+	/* screen_right = left; */
+	screen_right += left;
+	/* tile_right = screen_right; */
+	tile_right >>= TILE_BITS_W;
+	/* tile_left = left; */
+	tile_left >>= TILE_BITS_W;
+
+	tile_left -= (PLAYFIELD_LEFT / TILE_W);
+	tile_right -= (PLAYFIELD_LEFT / TILE_W);
+
+	screen_top = (top + scroll_line);
+	if(screen_top >= RES_Y) {
+		screen_top -= RES_Y;
+	} else if(screen_top < keep_0(0u)) {
+		// ZUN bug: Since the comparison above is unsigned, it can never be
+		// true, and this branch can therefore never execute. Even Turbo C++
+		// 4.0J would have warned about this if ZUN had just written idiomatic
+		// C here… As a result, the array writes below can leave their bounds
+		// if this function is ever called with a negative [top] value. This
+		// doesn't seem to happen all that easily in this game though, but
+		// let's still classify this as a bug until we can prove it to be a
+		// landmine.
+		screen_top += RES_Y;
+	}
+
+	bottom = h;
+	bottom--; // Same rounding we saw above.
+	bottom += screen_top;
+	top = (screen_top & ~(TILE_H - 1));
+
+	tile_x = tile_left;
+	array_offset = (tile_x * TILES_Y);
+	while(tile_x <= tile_right) {
+		// Could have been clamped outside, but eh, fine.
+		if((tile_x >= 0) && (tile_x < TILES_X)) {
+			y = top;
+			do {
+				y_tmp = y;
+				if(y_tmp >= RES_Y) {
+					y_tmp -= RES_Y;
+				}
+				y_tmp >>= TILE_BITS_H;
+				tile_dirty[0][array_offset + y_tmp] = true;
+				y += TILE_H;
+			} while(y <= bottom);
+			tile_column_dirty[tile_x] = true;
+		}
+		tile_x++;
+		array_offset += TILES_Y;
+	}
+
+	#undef tile_right
+	#undef screen_right
+	#undef tile_left
+	#undef array_offset
+	#undef screen_top
 }
 
 void tiles_egc_render(void)

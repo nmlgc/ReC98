@@ -877,23 +877,23 @@ loc_4296:
 		mov	bx, ax
 		mov	ax, [bx+si+2]
 		sar	ax, 4
-		push	ax
+		push	ax	; left
 		mov	ax, [bx+si+4]
 		sar	ax, 4
-		push	ax
+		push	ax	; top
 		cmp	byte ptr [si+0Eh], 0
 		jnz	short loc_42BF
-		push	1
-		push	1
+		push	1	; w
+		push	1	; h
 		jmp	short loc_42C3
 ; ---------------------------------------------------------------------------
 
 loc_42BF:
-		push	8
-		push	8
+		push	8	; w
+		push	8	; h
 
 loc_42C3:
-		nopcall	sub_45FC
+		nopcall	@tiles_invalidate_rect$qiiii
 		cmp	byte ptr [si], 2
 		jnz	short loc_42D2
 		mov	byte ptr [si], 0
@@ -1377,98 +1377,7 @@ loc_45F3:
 		retf
 sub_4596	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_45FC	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		cmp	_tile_mode, TM_NONE
-		jnz	short loc_460B
-		jmp	loc_468C
-; ---------------------------------------------------------------------------
-
-loc_460B:
-		dec	[bp+arg_2]
-		mov	ax, [bp+arg_6]
-		add	[bp+arg_2], ax
-		sar	[bp+arg_2], 4
-		sar	[bp+arg_6], 4
-		sub	[bp+arg_6], 2
-		sub	[bp+arg_2], 2
-		mov	ax, [bp+arg_4]
-		add	ax, _scroll_line
-		cmp	ax, RES_Y
-		jl	short loc_4635
-		sub	ax, RES_Y
-		jmp	short loc_463D
-; ---------------------------------------------------------------------------
-
-loc_4635:
-		cmp	ax, 0
-		jnb	short loc_463D
-		add	ax, RES_Y
-
-loc_463D:
-		mov	di, [bp+arg_0]
-		dec	di
-		add	di, ax
-		and	ax, 0FFF0h
-		mov	[bp+arg_4], ax
-		mov	si, [bp+arg_6]
-		mov	ax, si
-		imul	ax, TILES_Y
-		jmp	short loc_4687
-; ---------------------------------------------------------------------------
-
-loc_4653:
-		or	si, si
-		jl	short loc_4683
-		cmp	si, TILES_X
-		jge	short loc_4683
-		mov	cx, [bp+arg_4]
-
-loc_465F:
-		mov	dx, cx
-		cmp	dx, 190h
-		jl	short loc_466B
-		sub	dx, 190h
-
-loc_466B:
-		sar	dx, 4
-		mov	bx, ax
-		add	bx, dx
-		mov	_tile_dirty[bx], 1
-		add	cx, 10h
-		cmp	cx, di
-		jle	short loc_465F
-		mov	_tile_column_dirty[si], 1
-
-loc_4683:
-		inc	si
-		add	ax, TILES_Y
-
-loc_4687:
-		cmp	si, [bp+arg_2]
-		jle	short loc_4653
-
-loc_468C:
-		pop	di
-		pop	si
-		pop	bp
-		retf	8
-sub_45FC	endp
-
+	extern @TILES_INVALIDATE_RECT$QIIII:proc
 	extern @tiles_egc_render$qv:proc
 	extern @tiles_render_all$qv:proc
 	extern @TILE_RING_SET_AND_PUT_BOTH_8$QIII:proc
@@ -3308,24 +3217,24 @@ var_2		= word ptr -2
 		add	ax, 2B8Ch
 		mov	word_205F4, ax
 		mov	bx, word_205EE
-		push	word ptr [bx]
+		push	word ptr [bx]	; left
 		mov	bx, word_205F0
-		push	word ptr [bx]
-		push	200030h
-		call	sub_45FC
+		push	word ptr [bx]	; top
+		push	(32 shl 16) or 48	; (w shl 16) or h
+		call	@tiles_invalidate_rect$qiiii
 		mov	bx, word_205F2
 		mov	si, [bx]
-		push	si
+		push	si	; left
 		mov	bx, word_205F4
-		push	word ptr [bx]
-		push	100010h
-		call	sub_45FC
+		push	word ptr [bx]	; top
+		push	(16 shl 16) or 16	; (w shl 16) or h
+		call	@tiles_invalidate_rect$qiiii
 		lea	ax, [si+30h]
-		push	ax
+		push	ax	; left
 		mov	bx, word_205F4
-		push	word ptr [bx]
-		push	100010h
-		call	sub_45FC
+		push	word ptr [bx]	; top
+		push	(16 shl 16) or 16	; (w shl 16) or h
+		call	@tiles_invalidate_rect$qiiii
 		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
@@ -3483,16 +3392,16 @@ loc_C825:
 		jz	short loc_C884
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+2808h]
+		push	word ptr [bx+2808h]	; left
 		mov	bx, si
 		shl	bx, 2
 		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		add	bx, ax
-		push	word ptr [bx+2830h]
-		push	400008h
-		call	sub_45FC
+		push	word ptr [bx+2830h]	; top
+		push	(64 shl 16) or 8	; (w shl 16) or h
+		call	@tiles_invalidate_rect$qiiii
 		cmp	byte ptr [si+28A8h], 2
 		jnz	short loc_C85F
 		mov	byte ptr [si+28A8h], 0
@@ -5104,7 +5013,7 @@ sub_D376	endp
 sub_D38F	proc near
 
 var_3		= byte ptr -3
-var_2		= word ptr -2
+@@left		= word ptr -2
 
 		push	bp
 		mov	bp, sp
@@ -5136,38 +5045,38 @@ loc_D3BF:
 		mov	bx, ax
 		mov	ax, [bx+si+2]
 		sar	ax, 4
-		mov	[bp+var_2], ax
+		mov	[bp+@@left], ax
 		cmp	byte ptr [si+0Eh], 7Ch ; '|'
 		jb	short loc_D3DE
 		cmp	byte ptr [si+1], 0
 		jnz	short loc_D3FA
 
 loc_D3DE:
-		push	[bp+var_2]
+		push	[bp+@@left]	; left
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		mov	ax, [bx+si+4]
 		sar	ax, 4
-		push	ax
-		push	100010h
+		push	ax	; top
+		push	(16 shl 16) or 16	; (w shl 16) or h
 		jmp	short loc_D414
 ; ---------------------------------------------------------------------------
 
 loc_D3FA:
-		push	[bp+var_2]
+		push	[bp+@@left]	; left
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
 		mov	ax, [bx+si+4]
 		sar	ax, 4
-		push	ax
-		push	200020h
+		push	ax	; top
+		push	(32 shl 16) or 32	; (w shl 16) or h
 
 loc_D414:
-		call	sub_45FC
+		call	@tiles_invalidate_rect$qiiii
 
 loc_D419:
 		cmp	byte ptr [si], 2
@@ -5809,10 +5718,7 @@ loc_D880:
 		mov	ax, [di+2]
 		sar	ax, 4
 		mov	[bp+var_2], ax
-		push	word ptr [di]
-		push	ax
-		push	100010h
-		call	sub_45FC
+		call	@tiles_invalidate_rect$qiiii pascal, word ptr [di], ax, (16 shl 16) or 16
 		mov	bx, si
 		shl	bx, 4
 		mov	al, _page_front
@@ -6931,7 +6837,7 @@ player_bomb	endp
 sub_E2D9	proc near
 
 @@angle		= byte ptr -5
-var_4		= word ptr -4
+@@left		= word ptr -4
 var_2		= word ptr -2
 
 		push	bp
@@ -6964,7 +6870,7 @@ loc_E30C:
 		imul	eax, edx
 		sar	eax, 8
 		add	ax, _bomb_circle_center.x
-		mov	[bp+var_4], ax
+		mov	[bp+@@left], ax
 		movsx	eax, [bp+var_2]
 		mov	dl, [bp+@@angle]
 		mov	dh, 0
@@ -6979,10 +6885,7 @@ loc_E30C:
 		jle	short loc_E36B
 		cmp	si, PLAYFIELD_BOTTOM
 		jge	short loc_E36B
-		push	[bp+var_4]
-		push	si
-		push	80008h
-		call	sub_45FC
+		call	@tiles_invalidate_rect$qiiii pascal, [bp+@@left], si, (8 shl 16) or 8
 
 loc_E36B:
 		inc	di
@@ -9468,10 +9371,7 @@ loc_100DB:
 		jle	short loc_10156
 		cmp	[bp+var_2], 180h
 		jge	short loc_10156
-		push	di
-		push	ax
-		push	100010h
-		call	sub_45FC
+		call	@tiles_invalidate_rect$qiiii pascal, di, ax, (16 shl 16) or 16
 
 loc_10156:
 		add	[bp+var_8], 4
@@ -11039,14 +10939,14 @@ loc_10D4C:
 		mov	bx, word_2174E
 		mov	ax, [bx]
 		sar	ax, 4
-		push	ax
+		push	ax	; left
 		mov	bx, word_21750
 		mov	ax, [bx]
 		sar	ax, 4
-		push	ax
-		push	di
-		push	di
-		call	sub_45FC
+		push	ax	; top
+		push	di	; w
+		push	di	; h
+		call	@tiles_invalidate_rect$qiiii
 		mov	bx, si
 		imul	bx, 14h
 		mov	al, [bx+2C18h]
@@ -11169,7 +11069,7 @@ loc_10E57:
 		shl	dx, 2
 		add	ax, dx
 		mov	bx, ax
-		push	word ptr [bx+5336h]
+		push	word ptr [bx+5336h]	; left
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 8
@@ -11177,9 +11077,9 @@ loc_10E57:
 		shl	dx, 2
 		add	ax, dx
 		mov	bx, ax
-		push	word ptr [bx+5338h]
-		push	10002h
-		call	sub_45FC
+		push	word ptr [bx+5338h]	; top
+		push	(1 shl 16) or 2	; (w shl 16) or h
+		call	@tiles_invalidate_rect$qiiii
 		inc	si
 
 loc_10E8D:
@@ -11448,13 +11348,13 @@ loc_110CE:
 		mov	bx, si
 		shl	bx, 2
 		les	bx, [bx+52ECh]
-		push	word ptr es:[bx]
+		push	word ptr es:[bx]	; left
 		mov	bx, si
 		shl	bx, 2
 		les	bx, [bx+5300h]
-		push	word ptr es:[bx]
-		push	400020h
-		call	sub_45FC
+		push	word ptr es:[bx]	; top
+		push	(64 shl 16) or 32	; (w shl 16) or h
+		call	@tiles_invalidate_rect$qiiii
 		mov	bx, si
 		shl	bx, 2
 		mov	al, _page_front
@@ -12104,12 +12004,12 @@ loc_116B5:
 		jnb	short loc_116E3
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+5314h]
+		push	word ptr [bx+5314h]	; left
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+531Eh]
-		push	200020h
-		call	sub_45FC
+		push	word ptr [bx+531Eh]	; top
+		push	(32 shl 16) or 32	; (w shl 16) or h
+		call	@tiles_invalidate_rect$qiiii
 		cmp	byte ptr [si+2BF0h], 3
 		jnz	short loc_116E3
 		mov	byte ptr [si+2BF0h], 4
@@ -14619,13 +14519,13 @@ loc_12A89:
 		cmp	byte ptr [si+0Ah], 4
 		ja	short loc_12AB9
 		mov	ax, [si+2]
-		add	ax, 0FFF8h
-		push	ax
+		add	ax, -8
+		push	ax	; left
 		mov	ax, [si+4]
-		add	ax, 0FFF8h
-		push	ax
-		push	200020h
-		call	sub_45FC
+		add	ax, -8
+		push	ax	; top
+		push	(32 shl 16) or 32	; (w shl 16) or h
+		call	@tiles_invalidate_rect$qiiii
 		test	byte ptr dword_20612, 3
 		jnz	short loc_12ACD
 		inc	byte ptr [si+0Ah]
@@ -14633,13 +14533,13 @@ loc_12A89:
 ; ---------------------------------------------------------------------------
 
 loc_12AB9:
-		push	word ptr [si+2]
-		push	word ptr [si+4]
-		push	10h
-		mov	ax, 190h
+		push	word ptr [si+2]	; left
+		push	word ptr [si+4]	; top
+		push	16	; w
+		mov	ax, RES_Y
 		sub	ax, [si+4]
-		push	ax
-		call	sub_45FC
+		push	ax	; h
+		call	@tiles_invalidate_rect$qiiii
 
 loc_12ACD:
 		cmp	byte ptr [si], 2
@@ -15088,9 +14988,7 @@ loc_12E4F:
 		mov	[bp+var_2], ax
 		call	frame_delay pascal, 1
 		call	@egc_start_copy_2$qv
-		push	200140h
-		push	1800050h
-		call	sub_45FC
+		call	@tiles_invalidate_rect$qiiii pascal, (32 shl 16) or 320, (384 shl 16) or 80
 		call	@tiles_egc_render$qv
 		call	egc_off
 		call	sub_12CE5
@@ -15146,9 +15044,7 @@ loc_12EC5:
 		mov	[bp+var_2], ax
 		call	frame_delay pascal, 1
 		call	@egc_start_copy_2$qv
-		push	200140h
-		push	1800050h
-		call	sub_45FC
+		call	@tiles_invalidate_rect$qiiii pascal, (32 shl 16) or 320, (384 shl 16) or 80
 		call	@tiles_egc_render$qv
 		call	egc_off
 		call	sub_12CE5
@@ -16029,15 +15925,15 @@ loc_13527:
 		add	ax, ax
 		les	bx, [bp+var_4]
 		add	bx, ax
-		push	word ptr es:[bx+2]
+		push	word ptr es:[bx+2]	; left
 		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, word ptr [bp+var_4]
 		add	bx, ax
-		push	word ptr es:[bx+6]
-		push	20003h
-		call	sub_45FC
+		push	word ptr es:[bx+6]	; top
+		push	(2 shl 16) or 3	; (w shl 16) or h
+		call	@tiles_invalidate_rect$qiiii
 		les	bx, [bp+var_4]
 		cmp	byte ptr es:[bx], 2
 		jnz	short loc_1356A
@@ -16301,24 +16197,24 @@ sub_13786	proc far
 		jz	short loc_137BE
 		mov	bx, word_2065C
 		mov	ax, [bx]
-		add	ax, 0FFF0h
-		push	ax
+		add	ax, -16
+		push	ax	; left
 		mov	bx, word_2065E
-		push	word ptr [bx]
-		push	60h
+		push	word ptr [bx]	; top
+		push	96	; w
 		jmp	short loc_137CC
 ; ---------------------------------------------------------------------------
 
 loc_137BE:
 		mov	bx, word_2065C
-		push	word ptr [bx]
+		push	word ptr [bx]	; left
 		mov	bx, word_2065E
-		push	word ptr [bx]
-		push	40h
+		push	word ptr [bx]	; top
+		push	64	; w
 
 loc_137CC:
-		push	60h
-		call	sub_45FC
+		push	96	; h
+		call	@tiles_invalidate_rect$qiiii
 		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
@@ -16727,10 +16623,7 @@ rika_bg_render	proc far
 		add	ax, 2BE2h
 		mov	word_2065C, ax
 		mov	bx, word_2065C
-		push	word ptr [bx]
-		push	300040h
-		push	60h
-		call	sub_45FC
+		call	@tiles_invalidate_rect$qiiii pascal, word ptr [bx], (48 shl 16) or 64, 96
 		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
@@ -16742,9 +16635,7 @@ rika_bg_render	proc far
 		jnz	short loc_13C0A
 		cmp	word_20650, 3
 		jge	short loc_13C0A
-		push	0D00010h
-		push	200020h
-		call	sub_45FC
+		call	@tiles_invalidate_rect$qiiii pascal, (208 shl 16) or 16, (32 shl 16) or 32
 
 loc_13C0A:
 		pop	bp
@@ -17339,11 +17230,11 @@ sub_1410A	proc far
 		add	ax, 2BE6h
 		mov	word_2065E, ax
 		mov	bx, word_2065C
-		push	word ptr [bx]
+		push	word ptr [bx]	; left
 		mov	bx, word_2065E
-		push	word ptr [bx]
-		push	400040h
-		call	sub_45FC
+		push	word ptr [bx]	; top
+		push	(64 shl 16) or 64	; (w shl 16) or h
+		call	@tiles_invalidate_rect$qiiii
 		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
@@ -17641,11 +17532,11 @@ meira_bg_render	proc far
 		add	ax, 2BE6h
 		mov	word_2065E, ax
 		mov	bx, word_2065C
-		push	word ptr [bx]
+		push	word ptr [bx]	; left
 		mov	bx, word_2065E
-		push	word ptr [bx]
-		push	400040h
-		call	sub_45FC
+		push	word ptr [bx]	; top
+		push	(64 shl 16) or 64	; (w shl 16) or h
+		call	@tiles_invalidate_rect$qiiii
 		cmp	word_250FE, 0
 		jz	loc_144ED
 		xor	si, si
@@ -17682,7 +17573,7 @@ loc_14428:
 		add	dx, dx
 		add	ax, dx
 		mov	bx, ax
-		push	word ptr [bx+7676h]
+		push	word ptr [bx+7676h]	; left
 		mov	al, _page_back
 		mov	ah, 0
 		imul	ax, 6
@@ -17690,9 +17581,9 @@ loc_14428:
 		add	dx, dx
 		add	ax, dx
 		mov	bx, ax
-		push	word ptr [bx+7682h]
-		push	400040h
-		call	sub_45FC
+		push	word ptr [bx+7682h]	; top
+		push	(64 shl 16) or 64	; (w shl 16) or h
+		call	@tiles_invalidate_rect$qiiii
 
 loc_14493:
 		mov	al, _page_front
@@ -17990,10 +17881,7 @@ sub_146EF	proc near
 loc_146FB:
 		cmp	byte ptr [si], 0
 		jz	short loc_14719
-		push	word ptr [si+2]
-		push	word ptr [si+4]
-		push	200020h
-		call	sub_45FC
+		call	@tiles_invalidate_rect$qiiii pascal, word ptr [si+2], word ptr [si+4], (32 shl 16) or 32
 		cmp	byte ptr [si], 2
 		jnz	short loc_14719
 		mov	byte ptr [si], 0
@@ -23829,10 +23717,7 @@ loc_1798E:
 		shl	ax, 2
 		add	bx, ax
 		mov	di, [bx+7B52h]
-		push	si
-		push	di
-		push	200020h
-		call	sub_45FC
+		call	@tiles_invalidate_rect$qiiii pascal, si, di, (32 shl 16) or 32
 		mov	bx, [bp+var_2]
 		imul	bx, 26h
 		cmp	byte ptr [bx+7B5Eh], 2
@@ -24408,7 +24293,7 @@ loc_17E9A:
 		add	dx, dx
 		add	ax, dx
 		mov	bx, ax
-		push	word ptr [bx-6E04h]
+		push	word ptr [bx-6E04h]	; left
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 4
@@ -24416,9 +24301,9 @@ loc_17E9A:
 		add	dx, dx
 		add	ax, dx
 		mov	bx, ax
-		push	word ptr [bx-6DE4h]
-		push	200020h
-		call	sub_45FC
+		push	word ptr [bx-6DE4h]	; top
+		push	(32 shl 16) or 32	; (w shl 16) or h
+		call	@tiles_invalidate_rect$qiiii
 		mov	bx, si
 		add	bx, bx
 		cmp	word ptr [bx-6DC4h], 2
@@ -27632,9 +27517,7 @@ sub_19E2F	proc far
 		outw2	EGC_ADDRRESSREG, 0
 		outw2	EGC_BITLENGTHREG, 0Fh
 		egc_setrop	EGC_WS_PATREG or EGC_RL_MEMREAD
-		push	0B0009Ch
-		push	600060h
-		call	sub_45FC
+		call	@tiles_invalidate_rect$qiiii pascal, (176 shl 16) or 156, (96 shl 16) or 96
 		call	@tiles_egc_render$qv
 		egc_setrop	EGC_WS_ROP or 0FCh
 		mov	word_26D54, 152
@@ -27704,11 +27587,11 @@ sub_19EF3	proc far
 		add	ax, 2BE6h
 		mov	word_2065E, ax
 		mov	bx, word_2065C
-		push	word ptr [bx]
+		push	word ptr [bx]	; left
 		mov	bx, word_2065E
-		push	word ptr [bx]
-		push	400040h
-		call	sub_45FC
+		push	word ptr [bx]	; top
+		push	(64 shl 16) or 64	; (w shl 16) or h
+		call	@tiles_invalidate_rect$qiiii
 		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
@@ -31721,15 +31604,15 @@ loc_1C35B:
 		jle	short loc_1C3CC
 		cmp	di, 180h
 		jge	short loc_1C3CC
-		push	si
-		push	ax
+		push	si	; left
+		push	ax	; top
 		mov	al, [bp+var_4]
 		mov	ah, 0
-		push	ax
+		push	ax	; w
 		mov	al, [bp+var_4]
 		mov	ah, 0
-		push	ax
-		call	sub_45FC
+		push	ax	; h
+		call	@tiles_invalidate_rect$qiiii
 
 loc_1C3CC:
 		mov	ax, [bp+arg_0]
