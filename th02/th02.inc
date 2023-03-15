@@ -42,8 +42,6 @@ mikoconfig_t	ends
 
 END_LINE_LEN = 46
 
-MAP_SIZE = 0C00h
-
 ; Player
 ; ------
 MISS_INVINCIBILITY_FRAMES = 220

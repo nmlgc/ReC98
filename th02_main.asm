@@ -29,6 +29,11 @@ include th02/sprites/main_pat.inc
 	extern _getdate:proc
 	extern _memcpy:proc
 
+MAP_ROWS_PER_SECTION = 8
+MAP_BITS_PER_SECTION = 3
+MAP_SECTION_COUNT = 16
+MAP_LENGTH_MAX = 320
+
 main_03 group main_03_TEXT, main_03__TEXT
 
 ; ===========================================================================
@@ -924,7 +929,7 @@ sub_4288	endp
 
 
 sub_42F8	proc far
-		mov	word_22796, 17h
+		mov	_map_full_row_at_top_of_screen, (PLAYFIELD_H / TILE_H)
 		mov	_tile_line_at_top, 0
 		mov	_page_back, 0
 		mov	_tile_mode, TM_TILES
@@ -954,8 +959,8 @@ map_load proc pascal
 	push	MAP_SIG_SIZE
 	nopcall	file_read
 	push	ds
-	push	offset map
-	push	MAP_SIZE
+	push	offset _map_section_tiles
+	push	(MAP_SECTION_COUNT * MAP_ROWS_PER_SECTION * TILES_X)
 	nopcall	file_read
 	nopcall	file_close
 	ret
@@ -1161,26 +1166,26 @@ var_2		= word ptr -2
 		mov	al, _tile_line_at_top
 		add	al, TILE_H
 		mov	_tile_line_at_top, al
-		inc	word_22796
-		mov	ax, word_22796
+		inc	_map_full_row_at_top_of_screen
+		mov	ax, _map_full_row_at_top_of_screen
 		shr	ax, 3
-		cmp	ax, word_22FD8
+		cmp	ax, _map_length
 		jb	short loc_449C
 		mov	ax, 1
 		jmp	loc_453A
 ; ---------------------------------------------------------------------------
 
 loc_449C:
-		mov	ax, word_22796
+		mov	ax, _map_full_row_at_top_of_screen
 		shr	ax, 3
 		mov	bx, ax
-		mov	al, [bx+4BE6h]
+		mov	al, _map[bx]
 		mov	ah, 0
-		imul	ax, 0C0h
+		imul	ax, (MAP_ROWS_PER_SECTION * TILES_X)
 		mov	di, ax
-		mov	ax, word_22796
-		and	ax, 7
-		imul	ax, 18h
+		mov	ax, _map_full_row_at_top_of_screen
+		and	ax, (MAP_ROWS_PER_SECTION - 1)
+		imul	ax, TILES_X
 		mov	cx, ax
 		xor	si, si
 		jmp	short loc_44D4
@@ -1189,7 +1194,7 @@ loc_449C:
 loc_44BF:
 		mov	bx, di
 		add	bx, cx
-		mov	al, map[bx]
+		mov	al, _map_section_tiles[bx]
 		mov	[si+4DF6h], al
 		mov	bx, [bp+var_2]
 		mov	_tile_ring[bx+si], al
@@ -1197,7 +1202,7 @@ loc_44BF:
 		inc	cx
 
 loc_44D4:
-		cmp	si, 18h
+		cmp	si, TILES_X
 		jl	short loc_44BF
 
 loc_44D9:
@@ -1271,7 +1276,7 @@ sub_4540	proc near
 		mov	ax, [bp+4]
 		sar	ax, 3
 		mov	di, ax
-		mov	al, [di+4BE6h]
+		mov	al, _map[di]
 		mov	ah, 0
 		mov	di, ax
 		xor	si, si
@@ -1280,12 +1285,12 @@ sub_4540	proc near
 
 loc_455C:
 		mov	bx, di
-		imul	bx, 0C0h
+		imul	bx, (MAP_ROWS_PER_SECTION * TILES_X)
 		mov	ax, [bp+4]
-		and	ax, 7
-		imul	ax, 18h
+		and	ax, (MAP_ROWS_PER_SECTION - 1)
+		imul	ax, TILES_X
 		add	bx, ax
-		mov	al, map[bx+si]
+		mov	al, _map_section_tiles[bx+si]
 		mov	ah, 0
 		mov	[bp-2],	ax
 		mov	ax, si
@@ -1298,7 +1303,7 @@ loc_455C:
 		inc	si
 
 loc_458B:
-		cmp	si, 18h
+		cmp	si, TILES_X
 		jl	short loc_455C
 		pop	di
 		pop	si
@@ -1337,7 +1342,7 @@ loc_45A2:
 		sar	ax, 3
 		mov	[bp+var_2], ax
 		mov	bx, [bp+var_2]
-		mov	al, [bx+4BE6h]
+		mov	al, _map[bx]
 		mov	ah, 0
 		mov	[bp+var_2], ax
 		xor	si, si
@@ -1346,13 +1351,13 @@ loc_45A2:
 
 loc_45CB:
 		mov	bx, [bp+var_2]
-		imul	bx, 0C0h
+		imul	bx, (MAP_ROWS_PER_SECTION * TILES_X)
 		mov	ax, di
-		and	ax, 7
-		imul	ax, 18h
+		and	ax, (MAP_ROWS_PER_SECTION - 1)
+		imul	ax, TILES_X
 		add	bx, ax
-		mov	al, map[bx+si]
-		mov	bx, 17h
+		mov	al, _map_section_tiles[bx+si]
+		mov	bx, 23
 		sub	bx, di
 		imul	bx, TILES_X
 		mov	_tile_ring[bx+si], al
@@ -1364,7 +1369,7 @@ loc_45ED:
 		inc	di
 
 loc_45F3:
-		cmp	di, 18h
+		cmp	di, 24
 		jl	short loc_45A2
 		pop	di
 		pop	si
@@ -32181,7 +32186,7 @@ var_2		= word ptr -2
 		call	file_close
 		les	bx, [bp+src]
 		mov	ax, es:[bx]
-		mov	word_22FD8, ax
+		mov	_map_length, ax
 		add	word ptr [bp+src], 2
 		xor	di, di
 		jmp	short loc_1C451
@@ -32190,12 +32195,12 @@ var_2		= word ptr -2
 loc_1C443:
 		les	bx, [bp+src]
 		mov	al, es:[bx]
-		mov	[di+4BE6h], al
+		mov	_map[di], al
 		inc	word ptr [bp+src]
 		inc	di
 
 loc_1C451:
-		cmp	di, word_22FD8
+		cmp	di, _map_length
 		jl	short loc_1C443
 		les	bx, [bp+src]
 		mov	ax, es:[bx]
@@ -34708,9 +34713,10 @@ rgb_21A50	rgb_t <?>
 tilemode_21A53	db ?
 tilemode_21A54	db ?
 byte_21A55	db ?
-map	db    MAP_SIZE dup (?)
-		db 320 dup(?)
-word_22796	dw ?
+public _map_section_tiles, _map, _map_full_row_at_top_of_screen
+_map_section_tiles	db (MAP_SECTION_COUNT * MAP_ROWS_PER_SECTION * TILES_X) dup (?)
+_map              	db MAP_LENGTH_MAX dup(?)
+_map_full_row_at_top_of_screen	dw ?
 
 TILE_COUNT = TILES_X * TILES_Y
 TM_COL_0 = 0
@@ -34779,7 +34785,7 @@ byte_22FD0	db ?
 word_22FD2	dw ?
 word_22FD4	dw ?
 word_22FD6	dw ?
-word_22FD8	dw ?
+_map_length	dw ?
 		db    ?	;
 byte_22FDB	db ?
 		db 2704 dup(?)
