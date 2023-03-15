@@ -144,20 +144,20 @@ include libs/master.lib/super_zoom.asm
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public @MPN_PUT_8$QIII
+@mpn_put_8$qiii	proc far
 
-sub_3998	proc far
-
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
+@@image	= word ptr  6
+@@top  	= word ptr  8
+@@left 	= word ptr  0Ah
 
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
 		push	ds
-		mov	di, [bp+arg_2]
-		mov	ax, [bp+arg_4]
+		mov	di, [bp+@@top]
+		mov	ax, [bp+@@left]
 		sar	ax, 3
 		mov	dx, di
 		shl	dx, 6
@@ -165,7 +165,7 @@ arg_4		= word ptr  0Ah
 		shr	dx, 2
 		add	ax, dx
 		mov	di, ax
-		mov	ax, [bp+arg_0]
+		mov	ax, [bp+@@image]
 		shl	ax, 7
 		mov	dx, word ptr _mpn_images+2
 		mov	bx, word ptr _mpn_images
@@ -203,7 +203,7 @@ loc_39CC:
 		pop	si
 		pop	bp
 		retf	6
-sub_3998	endp
+@mpn_put_8$qiii	endp
 
 include libs/master.lib/pfint21.asm
 		db 0
@@ -991,14 +991,14 @@ loc_4356:
 		idiv	bx
 		shl	ax, 4
 		add	ax, TILE_AREA_LEFT
-		push	ax
+		push	ax	; left
 		mov	ax, si
 		cwd
 		idiv	bx
 		shl	dx, 4
-		push	dx
-		push	si
-		nopcall	sub_3998
+		push	dx	; top
+		push	si	; image
+		nopcall	@mpn_put_8$qiii
 		cmp	di, 0
 		jz	short loc_4383
 		xor	di, di
@@ -1296,10 +1296,10 @@ loc_455C:
 		mov	ax, si
 		shl	ax, 4
 		add	ax, [bp+8]
-		push	ax
-		push	word ptr [bp+6]
-		push	word ptr [bp-2]
-		nopcall	sub_3998
+		push	ax	; left
+		push	word ptr [bp+6]	; top
+		push	word ptr [bp-2]	; image
+		nopcall	@mpn_put_8$qiii
 		inc	si
 
 loc_458B:
@@ -15518,16 +15518,16 @@ sub_12E95	endp
 
 sub_12F23	proc near
 
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  4
+@@top_2    	= word ptr -4
+@@top_1    	= word ptr -2
+@@mpn_image	= word ptr  4
 
 		enter	4, 0
 		push	si
 		push	di
-		mov	di, [bp+arg_0]
-		mov	[bp+var_2], 0
-		mov	[bp+var_4], 0
+		mov	di, [bp+@@mpn_image]
+		mov	[bp+@@top_1], 0
+		mov	[bp+@@top_2], 0
 		mov	si, 328
 		add	si, _scroll_line
 		cmp	si, RES_Y
@@ -15535,19 +15535,19 @@ arg_0		= word ptr  4
 		sub	si, RES_Y
 
 loc_12F47:
-		lea	ax, [si+10h]
-		add	[bp+var_2], ax
-		cmp	[bp+var_2], 190h
+		lea	ax, [si+TILE_H]
+		add	[bp+@@top_1], ax
+		cmp	[bp+@@top_1], RES_Y
 		jl	short loc_12F59
-		sub	[bp+var_2], 190h
+		sub	[bp+@@top_1], RES_Y
 
 loc_12F59:
-		mov	ax, [bp+var_2]
-		add	ax, 10h
-		add	[bp+var_4], ax
-		cmp	[bp+var_4], 190h
+		mov	ax, [bp+@@top_1]
+		add	ax, TILE_H
+		add	[bp+@@top_2], ax
+		cmp	[bp+@@top_2], RES_Y
 		jl	short loc_12F6E
-		sub	[bp+var_4], 190h
+		sub	[bp+@@top_2], RES_Y
 
 loc_12F6E:
 		cmp	di, 255
@@ -15564,50 +15564,47 @@ loc_12F6E:
 ; ---------------------------------------------------------------------------
 
 loc_12F94:
-		push	28h ; '('
-		push	si
-		push	di
-		call	sub_3998
-		push	38h ; '8'
-		push	si
+		call	@mpn_put_8$qiii pascal, 40, si, di
+		push	56	; left
+		push	si	; top
 		lea	ax, [di+1]
-		push	ax
-		call	sub_3998
-		push	48h ; 'H'
-		push	si
+		push	ax	; image
+		call	@mpn_put_8$qiii
+		push	72	; left
+		push	si	; top
 		lea	ax, [di+2]
-		push	ax
-		call	sub_3998
-		push	28h ; '('
-		push	[bp+var_2]
+		push	ax	; image
+		call	@mpn_put_8$qiii
+		push	40	; left
+		push	[bp+@@top_1]	; top
 		lea	ax, [di+10h]
-		push	ax
-		call	sub_3998
-		push	38h ; '8'
-		push	[bp+var_2]
+		push	ax	; image
+		call	@mpn_put_8$qiii
+		push	56	; left
+		push	[bp+@@top_1]	; top
 		lea	ax, [di+11h]
-		push	ax
-		call	sub_3998
-		push	48h ; 'H'
-		push	[bp+var_2]
+		push	ax	; image
+		call	@mpn_put_8$qiii
+		push	72	; left
+		push	[bp+@@top_1]	; top
 		lea	ax, [di+12h]
-		push	ax
-		call	sub_3998
-		push	28h ; '('
-		push	[bp+var_4]
+		push	ax	; image
+		call	@mpn_put_8$qiii
+		push	40	; left
+		push	[bp+@@top_2]	; top
 		lea	ax, [di+20h]
-		push	ax
-		call	sub_3998
-		push	38h ; '8'
-		push	[bp+var_4]
+		push	ax	; image
+		call	@mpn_put_8$qiii
+		push	56	; left
+		push	[bp+@@top_2]	; top
 		lea	ax, [di+21h]
-		push	ax
-		call	sub_3998
-		push	48h ; 'H'
-		push	[bp+var_4]
+		push	ax	; image
+		call	@mpn_put_8$qiii
+		push	72	; left
+		push	[bp+@@top_2]	; top
 		lea	ax, [di+22h]
-		push	ax
-		call	sub_3998
+		push	ax	; image
+		call	@mpn_put_8$qiii
 
 loc_13009:
 		pop	di
@@ -15675,7 +15672,7 @@ sub_13055	proc near
 
 var_4		= word ptr -4
 var_2		= word ptr -2
-arg_0		= word ptr  4
+@@mpn_image		= word ptr  4
 
 		enter	4, 0
 		push	si
@@ -15692,8 +15689,7 @@ arg_0		= word ptr  4
 
 loc_13090:
 		call	_input_sense
-		push	[bp+arg_0]
-		call	sub_12F23
+		call	sub_12F23 pascal, [bp+@@mpn_image]
 		cmp	si, 24h	; '$'
 		jg	short loc_130B3
 		push	0
@@ -15782,8 +15778,7 @@ loc_13123:
 		imul	bx, 16h
 		mov	al, [bx+si+115Ch]
 		mov	ah, 0
-		push	ax
-		call	sub_13055
+		call	sub_13055 pascal, ax
 		inc	si
 
 loc_13134:
@@ -15809,10 +15804,8 @@ sub_1310B	endp
 sub_1314C	proc near
 		push	bp
 		mov	bp, sp
-		push	0
-		call	sub_13055
-		push	60h
-		call	sub_13055
+		call	sub_13055 pascal, 0
+		call	sub_13055 pascal, 96
 		pop	bp
 		retn
 sub_1314C	endp
@@ -15842,8 +15835,7 @@ var_8		= byte ptr -8
 loc_13175:
 		mov	al, [bp+si+var_8]
 		mov	ah, 0
-		push	ax
-		call	sub_13055
+		call	sub_13055 pascal, ax
 		inc	si
 
 loc_1317F:
@@ -15879,8 +15871,7 @@ var_C		= byte ptr -0Ch
 loc_131A1:
 		mov	al, [bp+si+var_C]
 		mov	ah, 0
-		push	ax
-		call	sub_13055
+		call	sub_13055 pascal, ax
 		inc	si
 
 loc_131AB:
@@ -15949,8 +15940,7 @@ loc_13238:
 		add	bx, bx
 		lea	ax, [bp+var_6]
 		add	bx, ax
-		push	word ptr ss:[bx]
-		call	sub_13055
+		call	sub_13055 pascal, word ptr ss:[bx]
 		inc	si
 
 loc_13248:
@@ -16025,8 +16015,7 @@ loc_132ED:
 		add	bx, bx
 		lea	ax, [bp+var_10]
 		add	bx, ax
-		push	word ptr ss:[bx]
-		call	sub_13055
+		call	sub_13055 pascal, word ptr ss:[bx]
 		inc	si
 
 loc_132FD:
@@ -16048,8 +16037,7 @@ loc_13310:
 		add	bx, bx
 		lea	ax, [bp+var_1A]
 		add	bx, ax
-		push	word ptr ss:[bx]
-		call	sub_13055
+		call	sub_13055 pascal, word ptr ss:[bx]
 		inc	si
 
 loc_13320:
@@ -16070,10 +16058,8 @@ sub_131D9	endp
 sub_13328	proc near
 		push	bp
 		mov	bp, sp
-		push	6
-		call	sub_13055
-		push	69h ; 'i'
-		call	sub_13055
+		call	sub_13055 pascal, 6
+		call	sub_13055 pascal, 105
 		pop	bp
 		retn
 sub_13328	endp
@@ -16104,10 +16090,8 @@ var_16		= byte ptr -16h
 		push	offset unk_1ED2C
 		mov	cx, 11h
 		call	SCOPY@
-		push	6
-		call	sub_13055
-		push	69h ; 'i'
-		call	sub_13055
+		call	sub_13055 pascal, 6
+		call	sub_13055 pascal, 105
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.continues_used], 0
 		jz	short loc_13390
@@ -16118,8 +16102,7 @@ var_16		= byte ptr -16h
 loc_13377:
 		mov	al, [bp+si+var_16]
 		mov	ah, 0
-		push	ax
-		call	sub_13055
+		call	sub_13055 pascal, ax
 		inc	si
 
 loc_13381:
@@ -16142,8 +16125,7 @@ loc_13390:
 loc_1339C:
 		mov	al, [bp+si+var_28]
 		mov	ah, 0
-		push	ax
-		call	sub_13055
+		call	sub_13055 pascal, ax
 		inc	si
 
 loc_133A6:
@@ -16164,8 +16146,7 @@ sub_13337	endp
 sub_133AE	proc near
 		push	bp
 		mov	bp, sp
-		push	69h ; 'i'
-		call	sub_13055
+		call	sub_13055 pascal, 105
 		pop	bp
 		retn
 sub_133AE	endp
@@ -16201,8 +16182,7 @@ var_6		= byte ptr -6
 loc_133E5:
 		mov	al, [bp+si+var_6]
 		mov	ah, 0
-		push	ax
-		call	sub_13055
+		call	sub_13055 pascal, ax
 		inc	si
 
 loc_133EF:
@@ -16222,8 +16202,7 @@ loc_133F6:
 loc_13402:
 		mov	al, byte ptr [bp+si+var_A]
 		mov	ah, 0
-		push	ax
-		call	sub_13055
+		call	sub_13055 pascal, ax
 		inc	si
 
 loc_1340C:
@@ -16267,20 +16246,16 @@ sub_13439	proc near
 		nopcall	@overlay_wipe$qv
 		kajacall	KAJA_SONG_STOP
 		pop	cx
-		push	69h ; 'i'
-		call	sub_13055
+		call	sub_13055 pascal, 105
 		call	sub_13414
 		call	frame_delay pascal, 10
-		push	69h ; 'i'
-		call	sub_13055
+		call	sub_13055 pascal, 105
 		call	frame_delay pascal, 30
 		call	sub_13414
 		call	frame_delay pascal, 20
-		push	69h ; 'i'
-		call	sub_13055
+		call	sub_13055 pascal, 105
 		call	frame_delay pascal, 20
-		push	69h ; 'i'
-		call	sub_13055
+		call	sub_13055 pascal, 105
 		call	sub_13414
 		call	frame_delay pascal, 20
 		call	sub_13414
@@ -16300,12 +16275,9 @@ sub_13439	endp
 sub_134A0	proc near
 		push	bp
 		mov	bp, sp
-		push	255
-		call	sub_13055
-		push	0
-		call	sub_13055
-		push	255
-		call	sub_13055
+		call	sub_13055 pascal, 255
+		call	sub_13055 pascal, 0
+		call	sub_13055 pascal, 255
 		pop	bp
 		retn
 sub_134A0	endp

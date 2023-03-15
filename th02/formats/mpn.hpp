@@ -25,6 +25,10 @@ typedef struct {
 	// header.
 	int pascal mpn_load_palette_show(const char *fn);
 
+	// Blits the given [image] from the currently loaded .MPN to
+	// (⌊left/8⌋*8, top).
+	void pascal mpn_put_8(screen_x_t left, vram_y_t top, int image);
+
 	void mpn_free(void);
 #endif
 /// -------------------------------------------------------------------------
