@@ -11,6 +11,8 @@
 #include "th02/main/playfld.hpp"
 #include "th02/main/scroll.hpp"
 #include "th02/main/tile/tile.hpp"
+#include "th02/formats/map.hpp"
+#include "th02/formats/mpn.hpp"
 
 // Terminology:
 // • Line: [TILE_W]×1 stripe within a tile
@@ -30,6 +32,21 @@ extern bool tile_dirty[TILES_X][TILES_Y];
 // Optimization to skip checking all vertical tiles for clean columns.
 extern bool tile_column_dirty[TILES_X];
 // -----
+
+// Map tiles
+// ---------
+
+#define section_for_map_row(row, ret) \
+	/* Sneaky! That's how we can pretend this is an actual function that */ \
+	/* returns a value. */ \
+	(row >> MAP_BITS_PER_SECTION); \
+	ret = map[ret]; \
+	static_assert((1 << MAP_BITS_PER_SECTION) == MAP_ROWS_PER_SECTION);
+
+inline tile_image_id_t map_tile_image_at(int section, int row, int x) {
+	return map_section_tiles[section].row[row & (MAP_ROWS_PER_SECTION - 1)][x];
+}
+// ---------
 
 void pascal near tile_egc_copy_lines_8(vram_offset_t vo_dst, int image)
 ;
@@ -64,6 +81,42 @@ void pascal near tile_grcg_clear_8(vram_offset_t vo_topleft)
 			} \
 		} \
 	} \
+}
+
+void pascal near tile_row_put_8(screen_x_t left, vram_y_t top, int row)
+{
+	int section = section_for_map_row(row, section);
+	for(int tile_x = 0; tile_x < TILES_X; tile_x++) {
+		int image = map_tile_image_at(section, row, tile_x);
+		mpn_put_8((left + (tile_x * TILE_W)), top, image);
+	}
+}
+
+void tiles_fill_and_put_initial(void)
+{
+	int x;
+	int section;
+
+	// Skips the last row in the [tile_ring] (at (TILES_Y - 1)) because there's
+	// no data to fill it with and it's covered by black TRAM cells on the
+	// initial screen of a stage anyway.
+	// ZUN landmine: This function only blits to one VRAM page, with the other
+	// one being covered by tiles_render_all(). That function does actually
+	// render the entire tile ring, including the row we skipped here.
+	// Initializing that row at least with *something* might therefore be
+	// better than skipping it.
+	for(int y = 0; y < ((PLAYFIELD_H / TILE_H) + 1); y++) {
+		tile_row_put_8(
+			PLAYFIELD_LEFT, (PLAYFIELD_BOTTOM - TILE_H - (y * TILE_H)), y
+		);
+
+		section = section_for_map_row(y, section);
+		for(x = 0; x < TILES_X; x++) {
+			tile_ring[(PLAYFIELD_H / TILE_H) - y][x] = map_tile_image_at(
+				section, y, x
+			);
+		}
+	}
 }
 
 void pascal tiles_invalidate_rect(

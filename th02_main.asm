@@ -1262,121 +1262,7 @@ loc_453A:
 		retf	2
 sub_445A	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_4540	proc near
-		push	bp
-		mov	bp, sp
-		sub	sp, 2
-		push	si
-		push	di
-		mov	ax, [bp+4]
-		sar	ax, 3
-		mov	di, ax
-		mov	al, _map[di]
-		mov	ah, 0
-		mov	di, ax
-		xor	si, si
-		jmp	short loc_458B
-; ---------------------------------------------------------------------------
-
-loc_455C:
-		mov	bx, di
-		imul	bx, (MAP_ROWS_PER_SECTION * TILES_X)
-		mov	ax, [bp+4]
-		and	ax, (MAP_ROWS_PER_SECTION - 1)
-		imul	ax, TILES_X
-		add	bx, ax
-		mov	al, _map_section_tiles[bx+si]
-		mov	ah, 0
-		mov	[bp-2],	ax
-		mov	ax, si
-		shl	ax, 4
-		add	ax, [bp+8]
-		push	ax	; left
-		push	word ptr [bp+6]	; top
-		push	word ptr [bp-2]	; image
-		nopcall	@mpn_put_8$qiii
-		inc	si
-
-loc_458B:
-		cmp	si, TILES_X
-		jl	short loc_455C
-		pop	di
-		pop	si
-		leave
-		retn	6
-sub_4540	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_4596	proc far
-
-var_2		= word ptr -2
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 2
-		push	si
-		push	di
-		xor	di, di
-		jmp	short loc_45F3
-; ---------------------------------------------------------------------------
-
-loc_45A2:
-		push	20h ; ' '
-		mov	ax, di
-		shl	ax, 4
-		mov	dx, 170h
-		sub	dx, ax
-		push	dx
-		push	di
-		call	sub_4540
-		mov	ax, di
-		sar	ax, 3
-		mov	[bp+var_2], ax
-		mov	bx, [bp+var_2]
-		mov	al, _map[bx]
-		mov	ah, 0
-		mov	[bp+var_2], ax
-		xor	si, si
-		jmp	short loc_45ED
-; ---------------------------------------------------------------------------
-
-loc_45CB:
-		mov	bx, [bp+var_2]
-		imul	bx, (MAP_ROWS_PER_SECTION * TILES_X)
-		mov	ax, di
-		and	ax, (MAP_ROWS_PER_SECTION - 1)
-		imul	ax, TILES_X
-		add	bx, ax
-		mov	al, _map_section_tiles[bx+si]
-		mov	bx, 23
-		sub	bx, di
-		imul	bx, TILES_X
-		mov	_tile_ring[bx+si], al
-		inc	si
-
-loc_45ED:
-		cmp	si, TILES_X
-		jl	short loc_45CB
-		inc	di
-
-loc_45F3:
-		cmp	di, 24
-		jl	short loc_45A2
-		pop	di
-		pop	si
-		leave
-		retf
-sub_4596	endp
-
+	extern @tiles_fill_and_put_initial$qv:proc
 	extern @TILES_INVALIDATE_RECT$QIIII:proc
 	extern @tiles_egc_render$qv:proc
 	extern @tiles_render_all$qv:proc
@@ -1966,7 +1852,7 @@ loc_B8B5:
 		add	sp, 0Ah
 		call	far ptr	palette_show
 		graph_accesspage 1
-		call	sub_4596
+		call	@tiles_fill_and_put_initial$qv
 		graph_accesspage 0
 		call	@tiles_render_all$qv
 		call	_mpn_free

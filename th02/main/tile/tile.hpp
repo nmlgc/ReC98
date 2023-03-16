@@ -67,6 +67,12 @@ static const vram_x_t TILE_AREA_VRAM_LEFT = (TILE_AREA_LEFT / BYTE_DOTS);
 	// redraw all tiles and then reset this flag to `false`.
 	extern bool tiles_egc_render_all;
 
+	// Fills [tile_ring] with the initial screen of tiles at the bottom/start
+	// of the map, and blits them to the playfield area in VRAM. Reads tile
+	// images from our data segment, the tile source area is neither read from
+	// nor written to.
+	void tiles_fill_and_put_initial(void);
+
 	// Marks all tiles for redrawing that lie within the given area of the
 	// screen.
 	void pascal tiles_invalidate_rect(
