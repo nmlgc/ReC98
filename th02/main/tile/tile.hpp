@@ -67,6 +67,16 @@ static const vram_x_t TILE_AREA_VRAM_LEFT = (TILE_AREA_LEFT / BYTE_DOTS);
 	// redraw all tiles and then reset this flag to `false`.
 	extern bool tiles_egc_render_all;
 
+	// Scrolls the map by [speed] pixels towards the top/end, updates the
+	// [tile_ring] with any newly scrolled-in tile row, and blits the newly
+	// scrolled-in tile lines from the tile source area to the playfield. Can
+	// only blit lines from a single tile row, so the caller must ensure that
+	// the passed [speed] values always end up exactly on a [TILE_H] boundary.
+	// In addition, this also means that [speed] must be ≤[TILE_H].
+	// Returns `true` if the top/end row of a map was reached.
+	// Assumes the EGC to be active and initialized for a copy.
+	bool16 pascal tiles_scroll_and_egc_render_both(pixel_t speed);
+
 	// Fills [tile_ring] with the initial screen of tiles at the bottom/start
 	// of the map, and blits them to the playfield area in VRAM. Reads tile
 	// images from our data segment, the tile source area is neither read from

@@ -27,6 +27,11 @@ extern int8_t tile_line_at_top;
 extern vram_offset_t tile_image_vos[TILE_IMAGE_COUNT];
 extern pixel_t tile_copy_lines_top;
 extern pixel_t tile_copy_lines_h;
+
+// ZUN bloat: Just a redundant copy of a single tile ring row. Could have been
+// local to tiles_scroll_and_egc_render_both(), or just removed outright.
+extern tile_image_id_t tiles_for_new_row[TILES_X];
+
 extern bool tile_dirty[TILES_X][TILES_Y];
 
 // Optimization to skip checking all vertical tiles for clean columns.
@@ -81,6 +86,92 @@ void pascal near tile_grcg_clear_8(vram_offset_t vo_topleft)
 			} \
 		} \
 	} \
+}
+
+// Enforces signed 8-bit comparisons in one place. MODDERS: Just remove this.
+inline int8_t tile_line_0(void) { return 0; }
+
+bool16 pascal tiles_scroll_and_egc_render_both(pixel_t speed)
+{
+	int x;
+	int offset;
+
+	tile_line_at_top -= speed;
+	int tile_ring_offset = ((scroll_line >> TILE_BITS_H) * TILES_X);
+
+	// ZUN landmine: This comparison and the following addition suggest that
+	// this function can scroll from any line within one tile to any line
+	// within another, but the function only ever blits a single line.
+	if(tile_line_at_top < tile_line_0()) {
+		#define row_offset	_CX
+
+		tile_line_at_top += TILE_H;
+		map_full_row_at_top_of_screen++;
+
+		// This comparison means that every map effectively stops at the second
+		// to last tile row. The last row *is* blitted, but only to the top of
+		// the *screen* (where it is covered by black TRAM cells), not the
+		// *playfield*.
+		if(
+			(map_full_row_at_top_of_screen / MAP_ROWS_PER_SECTION) >= map_length
+		) {
+			return true;
+		}
+
+		// ZUN bloat: Generates an additional instruction compared to just
+		// inlining the calculation...
+		_BX = (map_full_row_at_top_of_screen / MAP_ROWS_PER_SECTION);
+
+		offset = (map[_BX] * (MAP_ROWS_PER_SECTION * TILES_X));
+		row_offset = (
+			(map_full_row_at_top_of_screen & (MAP_ROWS_PER_SECTION - 1)) *
+			TILES_X
+		);
+		x = 0;
+		while(x < TILES_X) {
+			// ZUN bloat: Same here.
+			_BX = offset;
+			_BX += row_offset;
+
+			tile_ring[0][tile_ring_offset + x] = tiles_for_new_row[x] = (
+				map_section_tiles[0].row[0][_BX]
+			);
+			x++;
+			row_offset++;
+		}
+
+		#undef row_offset
+	}
+
+	tile_copy_lines_top = tile_line_at_top;
+	tile_copy_lines_h = speed;
+	offset = (
+		vram_offset_shift_fast(0, scroll_line) + (PLAYFIELD_LEFT / BYTE_DOTS)
+	);
+
+	graph_accesspage(page_front);
+	_ES = SEG_PLANE_B;
+
+	x = 0;
+	while(x < TILES_X) {
+		tile_egc_copy_lines_8(offset, tiles_for_new_row[x]);
+		x++;
+		offset += TILE_VRAM_W;
+	}
+
+	// ZUN landmine: Copying backwards on the other page is just asking for
+	// off-by-one errors… :zunpet: As such, the final iteration of this loop
+	// renders [tiles_for_new_row[-1]] to (PLAYFIELD_LEFT - TILE_W). Good that
+	// this unnecessary glitch tile is covered by black TRAM cells.
+	// (In the original binary, [tiles_for_new_row[-1]] corresponds to the high
+	// byte of [tile_copy_lines_h], which is always 0.)
+	graph_accesspage(page_back);
+	while(x >= 0) {
+		x--;
+		offset -= TILE_VRAM_W;
+		tile_egc_copy_lines_8(offset, tiles_for_new_row[x]);
+	}
+	return false;
 }
 
 void pascal near tile_row_put_8(screen_x_t left, vram_y_t top, int row)

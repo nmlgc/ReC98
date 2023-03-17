@@ -1139,129 +1139,7 @@ loc_444B:
 		retn	2
 @tile_grcg_clear_8$qi	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_445A	proc far
-
-var_2		= word ptr -2
-@@h		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 2
-		push	si
-		push	di
-		mov	al, _tile_line_at_top
-		sub	al, byte ptr [bp+@@h]
-		mov	_tile_line_at_top, al
-		mov	ax, _scroll_line
-		sar	ax, 4
-		imul	ax, 18h
-		mov	[bp+var_2], ax
-		cmp	_tile_line_at_top, 0
-		jge	short loc_44D9
-		mov	al, _tile_line_at_top
-		add	al, TILE_H
-		mov	_tile_line_at_top, al
-		inc	_map_full_row_at_top_of_screen
-		mov	ax, _map_full_row_at_top_of_screen
-		shr	ax, 3
-		cmp	ax, _map_length
-		jb	short loc_449C
-		mov	ax, 1
-		jmp	loc_453A
-; ---------------------------------------------------------------------------
-
-loc_449C:
-		mov	ax, _map_full_row_at_top_of_screen
-		shr	ax, 3
-		mov	bx, ax
-		mov	al, _map[bx]
-		mov	ah, 0
-		imul	ax, (MAP_ROWS_PER_SECTION * TILES_X)
-		mov	di, ax
-		mov	ax, _map_full_row_at_top_of_screen
-		and	ax, (MAP_ROWS_PER_SECTION - 1)
-		imul	ax, TILES_X
-		mov	cx, ax
-		xor	si, si
-		jmp	short loc_44D4
-; ---------------------------------------------------------------------------
-
-loc_44BF:
-		mov	bx, di
-		add	bx, cx
-		mov	al, _map_section_tiles[bx]
-		mov	[si+4DF6h], al
-		mov	bx, [bp+var_2]
-		mov	_tile_ring[bx+si], al
-		inc	si
-		inc	cx
-
-loc_44D4:
-		cmp	si, TILES_X
-		jl	short loc_44BF
-
-loc_44D9:
-		mov	al, _tile_line_at_top
-		cbw
-		mov	_tile_copy_lines_top, ax
-		mov	ax, [bp+@@h]
-		mov	_tile_copy_lines_h, ax
-		mov	ax, _scroll_line
-		shl	ax, 6
-		mov	dx, ax
-		shr	dx, 2
-		add	ax, dx
-		add	ax, 4
-		mov	di, ax
-		graph_accesspage _page_front
-		mov	ax, 0A800h
-		mov	es, ax
-		xor	si, si
-		jmp	short loc_4517
-; ---------------------------------------------------------------------------
-
-loc_4508:
-		push	di
-		mov	al, [si+4DF6h]
-		mov	ah, 0
-		push	ax
-		call	@tile_egc_copy_lines_8$qii
-		inc	si
-		add	di, 2
-
-loc_4517:
-		cmp	si, 18h
-		jl	short loc_4508
-		graph_accesspage _page_back
-		jmp	short loc_4534
-; ---------------------------------------------------------------------------
-
-loc_4525:
-		dec	si
-		sub	di, 2
-		push	di
-		mov	al, [si+4DF6h]
-		mov	ah, 0
-		push	ax
-		call	@tile_egc_copy_lines_8$qii
-
-loc_4534:
-		or	si, si
-		jge	short loc_4525
-		xor	ax, ax
-
-loc_453A:
-		pop	di
-		pop	si
-		leave
-		retf	2
-sub_445A	endp
-
+	extern @TILES_SCROLL_AND_EGC_RENDER_BOTH$QI:proc
 	extern @tiles_fill_and_put_initial$qv:proc
 	extern @TILES_INVALIDATE_RECT$QIIII:proc
 	extern @tiles_egc_render$qv:proc
@@ -2285,7 +2163,7 @@ loc_BE3B:
 		call	@egc_start_copy_1$qv
 		mov	al, _scroll_speed
 		mov	ah, 0
-		call	sub_445A pascal, ax
+		call	@tiles_scroll_and_egc_render_both$qi pascal, ax
 		mov	byte_1E501, al
 		outw2	EGC_ACTIVEPLANEREG, 0FFF0h
 		outw2	EGC_MASKREG, 0FFFFh
@@ -34105,14 +33983,14 @@ TM_TILES = 1
 TM_NONE = 2
 
 public _tile_line_at_top, _tile_image_vos, _tile_copy_lines_top
-public _tile_copy_lines_h, _tile_ring, _tile_dirty, _tile_column_dirty
-public _tile_mode, _tiles_egc_render_all
+public _tile_copy_lines_h, _tiles_for_new_row, _tile_ring, _tile_dirty
+public _tile_column_dirty, _tile_mode, _tiles_egc_render_all
 _tile_line_at_top	db ?
 	evendata
 _tile_image_vos	dw TILE_IMAGE_COUNT dup(?)
 _tile_copy_lines_top	dw ?
 _tile_copy_lines_h  	dw ?
-		db 24 dup(?)
+_tiles_for_new_row  	db TILES_X dup(?)
 _tile_mode	db ?
 _tile_ring	db TILE_COUNT dup(?)
 	evendata
@@ -34166,6 +34044,7 @@ byte_22FD0	db ?
 tile_image_22FD2	dw ?
 tile_image_22FD4	dw ?
 tile_image_22FD6	dw ?
+public _map_length
 _map_length	dw ?
 		db    ?	;
 byte_22FDB	db ?
