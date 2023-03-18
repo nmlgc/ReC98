@@ -37,6 +37,19 @@ extern bool tile_dirty[TILES_X][TILES_Y];
 
 // Optimization to skip checking all vertical tiles for clean columns.
 extern bool tile_column_dirty[TILES_X];
+
+#pragma option -k-
+
+void tiles_stuff_reset(void)
+{
+	map_full_row_at_top_of_screen = (PLAYFIELD_H / TILE_H);
+	tile_line_at_top = 0;
+	page_back = 0;
+	tile_mode = TM_TILES;
+	tiles_egc_render_all = false;
+}
+#pragma codestring "\x90"
+#pragma option -k.
 // -----
 
 // Map tiles

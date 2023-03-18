@@ -71,6 +71,10 @@ static const vram_x_t TILE_AREA_VRAM_LEFT = (TILE_AREA_LEFT / BYTE_DOTS);
 	// redraw all tiles and then reset this flag to `false`.
 	extern bool tiles_egc_render_all;
 
+	// Resets a random bunch of data to its initial values at the beginning of
+	// a stage.
+	void tiles_stuff_reset(void);
+
 	// Scrolls the map by [speed] pixels towards the top/end, updates the
 	// [tile_ring] with any newly scrolled-in tile row, and blits the newly
 	// scrolled-in tile lines from the tile source area to the playfield. Can

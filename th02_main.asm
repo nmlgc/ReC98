@@ -924,20 +924,7 @@ loc_42EF:
 		retf
 sub_4288	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_42F8	proc far
-		mov	_map_full_row_at_top_of_screen, (PLAYFIELD_H / TILE_H)
-		mov	_tile_line_at_top, 0
-		mov	_page_back, 0
-		mov	_tile_mode, TM_TILES
-		mov	_tiles_egc_render_all, 0
-		retf
-sub_42F8	endp
-		nop
-
+	extern @tiles_stuff_reset$qv:proc
 	extern @MAP_LOAD$QNXC:proc
 	extern @tile_area_init_and_put_both$qv:proc
 	extern @egc_start_copy_noframe$qv:proc
@@ -1376,7 +1363,7 @@ loc_B4D7:
 		lea	ax, [bp+var_C]
 		push	ax
 		call	@map_load$qnxc
-		call	sub_42F8
+		call	@tiles_stuff_reset$qv
 		push	ss
 		lea	ax, [bp+var_C]
 		push	ax
