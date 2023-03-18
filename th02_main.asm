@@ -966,75 +966,7 @@ map_load proc pascal
 	ret
 map_load endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_4344	proc far
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		xor	si, si
-		jmp	short loc_43A6
-; ---------------------------------------------------------------------------
-
-loc_434D:
-		mov	di, 1
-		graph_accesspage 1
-
-loc_4356:
-		mov	ax, si
-		mov	bx, TILE_AREA_ROWS
-		cwd
-		idiv	bx
-		shl	ax, 4
-		add	ax, TILE_AREA_LEFT
-		push	ax	; left
-		mov	ax, si
-		cwd
-		idiv	bx
-		shl	dx, 4
-		push	dx	; top
-		push	si	; image
-		nopcall	@mpn_put_8$qiii
-		cmp	di, 0
-		jz	short loc_4383
-		xor	di, di
-		graph_accesspage 0
-		jmp	short loc_4356
-; ---------------------------------------------------------------------------
-
-loc_4383:
-		mov	ax, si
-		mov	bx, TILE_AREA_ROWS
-		cwd
-		idiv	bx
-		add	ax, ax
-		push	ax
-		mov	ax, si
-		cwd
-		idiv	bx
-		imul	dx, (TILE_H * ROW_SIZE)
-		pop	ax
-		add	ax, dx
-		add	ax, TILE_AREA_VRAM_LEFT
-		mov	bx, si
-		add	bx, bx
-		mov	_tile_image_vos[bx], ax
-		inc	si
-
-loc_43A6:
-		cmp	si, TILE_IMAGE_COUNT
-		jl	short loc_434D
-		pop	di
-		pop	si
-		pop	bp
-		retf
-sub_4344	endp
-		nop
-
+	extern @tile_area_init_and_put_both$qv:proc
 	extern @egc_start_copy_noframe$qv:proc
 	extern @TILES_SCROLL_AND_EGC_RENDER_BOTH$QI:proc
 	extern @tiles_fill_and_put_initial$qv:proc
@@ -1597,7 +1529,7 @@ loc_B832:
 		mov	_scroll_interval, 2
 
 loc_B88A:
-		call	sub_4344
+		call	@tile_area_init_and_put_both$qv
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.demo_num], 0
 		jnz	short loc_B8AF

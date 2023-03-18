@@ -6,6 +6,7 @@
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
+#include "platform/x86real/flags.hpp"
 #include "th02/hardware/egc.hpp"
 #include "th02/hardware/pages.hpp"
 #include "th02/main/playfld.hpp"
@@ -52,6 +53,38 @@ inline tile_image_id_t map_tile_image_at(int section, int row, int x) {
 	return map_section_tiles[section].row[row & (MAP_ROWS_PER_SECTION - 1)][x];
 }
 // ---------
+
+void tile_area_init_and_put_both(void)
+{
+	// ZUN landmine: Should be limited to ([mpn_count] + 1) rather than
+	// TILE_IMAGE_COUNT. Since mpn_put_8() does not limit its tile image
+	// parameter, this function fills the tiles between ([mpn_count] + 1) and
+	// TILE_IMAGE_COUNT with undefined garbage data.
+	for(int i = 0; i < TILE_IMAGE_COUNT; i++) {
+		_DI = 1;
+		graph_accesspage(1);
+		do {
+			mpn_put_8(
+				(TILE_AREA_LEFT + ((i / TILE_AREA_ROWS) * TILE_W)),
+				(TILE_AREA_TOP +  ((i % TILE_AREA_ROWS) * TILE_H)),
+				i
+			);
+			asm { cmp di, 0; }
+			if(FLAGS_ZERO) {
+				break;
+			}
+			_DI = 0;
+			graph_accesspage(0);
+			optimization_barrier();
+		} while(1);
+
+		tile_image_vos[i] = (
+			(TILE_AREA_VRAM_LEFT + ((i / TILE_AREA_ROWS) * TILE_VRAM_W)) +
+			(TILE_AREA_TOP + ((i % TILE_AREA_ROWS) * (TILE_H * ROW_SIZE)))
+		);
+	}
+}
+#pragma codestring "\x90"
 
 #include "th02/hardware/egc.cpp"
 

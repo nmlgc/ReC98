@@ -6,12 +6,12 @@ typedef Planar<mpn_plane_t> mpn_image_t;
 
 typedef struct {
 	char magic[4]; // = "MPTN"
-	uint8_t count;
+	uint8_t count; // Stored minus 1.
 	int8_t unused;
 } mpn_header_t;
 
 #if (GAME == 2)
-	extern uint8_t mpn_count;
+	extern uint8_t mpn_count;  // Stored minus 1.
 	extern mpn_image_t *mpn_images;
 	extern Palette8 mpn_palette;
 
@@ -27,6 +27,8 @@ typedef struct {
 
 	// Blits the given [image] from the currently loaded .MPN to
 	// (⌊left/8⌋*8, top).
+	// ZUN landmine: Does not restrict [image] to ([mpn_count] + 1), which
+	// matters in conjunction with tile_area_init_and_put_both().
 	void pascal mpn_put_8(screen_x_t left, vram_y_t top, int image);
 
 	void mpn_free(void);

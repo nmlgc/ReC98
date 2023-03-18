@@ -26,6 +26,10 @@ static const screen_y_t TILE_AREA_TOP = 0;
 static const vram_x_t TILE_AREA_VRAM_LEFT = (TILE_AREA_LEFT / BYTE_DOTS);
 
 #if (GAME == 2)
+	// Initializes internal tile area lookup tables, and blits all loaded .MPN
+	// images to the tile area on both VRAM pages.
+	void tile_area_init_and_put_both(void);
+
 	// Sets the [tile_ring] tile at (left, y) to the given [image], then blits
 	// it at (⌊left/8⌋*8, ⌊y/TILE_H⌋*TILE_H).
 	// (This function would have been easier to describe if it only used [left]
