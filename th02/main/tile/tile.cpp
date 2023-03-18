@@ -53,15 +53,57 @@ inline tile_image_id_t map_tile_image_at(int section, int row, int x) {
 }
 // ---------
 
+#include "th02/hardware/egc.cpp"
+
+#define tile_egc_copy_loop_8(vo_dst, vo_src, lines) { \
+	_CX = lines; \
+	loop: { \
+		*reinterpret_cast<tile_line_dots_t __es *>(vo_dst) = ( \
+			*reinterpret_cast<tile_line_dots_t __es *>(vo_src) \
+		); \
+		vo_dst += ROW_SIZE; \
+		vo_src += ROW_SIZE; \
+		asm { loop loop; } \
+	} \
+}
+
 void pascal near tile_egc_copy_lines_8(vram_offset_t vo_dst, int image)
-;
+{
+	_DI = vo_dst;
+
+	// ZUN bloat: Same as (
+	// 	tile_image_vos[image] + vram_offset_shift(0, tile_copy_lines_top)
+	// ).
+	_AX = tile_image_vos[image];
+	_DX = tile_copy_lines_top;
+	_DX <<= 6;
+	_AX += _DX;
+	_DX >>= 2;
+	_SI = (_AX + _DX);
+	tile_egc_copy_loop_8(_DI, _SI, tile_copy_lines_h);
+}
+
 void pascal near tile_egc_copy_8(vram_offset_t vo_topleft, int image)
-;
+{
+	_DI = vo_topleft;
+	_SI = tile_image_vos[image];
+	tile_egc_copy_loop_8(_DI, _SI, TILE_H);
+}
 
 // Overwrites the tile starting at [vo_topleft] with the contents of the GRCG
 // tile register. Assumes that the GRCG is set to RMW or TDW mode.
 void pascal near tile_grcg_clear_8(vram_offset_t vo_topleft)
-;
+{
+	vram_offset_t vo = vo_topleft;
+	_CX = TILE_H;
+	loop: {
+		*reinterpret_cast<tile_line_dots_t __es *>(vo) = (
+			static_cast<tile_line_dots_t>(-1)
+		);
+		vo += ROW_SIZE;
+		asm { loop loop; }
+	}
+}
 
 #define tile_grcg_clear_8_func(vo_topleft, unused) { \
 	tile_grcg_clear_8(vo_topleft); \
@@ -332,11 +374,7 @@ void tiles_render_all(void)
 	tile_copy_lines_top = 0;
 	tile_copy_lines_h = TILE_H;
 
-	/* TODO: Replace with the decompiled call
-	 * 	egc_start_copy_noframe();
-	 * once that function is part of this translation unit */
-	_asm { push cs; call near ptr egc_start_copy_noframe; }
-
+	egc_start_copy_noframe();
 	if(tile_mode == TM_TILES) {
 		int tile_y = 0;
 		int image;
@@ -385,11 +423,7 @@ void pascal tile_ring_set_and_put_both_8(
 	tile_copy_lines_h = TILE_H;
 	tile_ring[tile_y][tile_x] = image;
 
-	/* TODO: Replace with the decompiled call
-	 * 	egc_start_copy_noframe();
-	 * once that function is part of this translation unit */
-	_asm { push cs; call near ptr egc_start_copy_noframe; }
-
+	egc_start_copy_noframe();
 	graph_accesspage(page_front);
 
 	top = (tile_y * TILE_H);
