@@ -426,7 +426,7 @@ loc_3F15:
 		mov	ax, [bx+si+4]
 		sar	ax, 4
 		mov	word_20166, ax
-		cmp	byte_2066C, 0
+		cmp	_reduce_effects, 0
 		jz	short loc_3F4B
 		mov	al, _page_back
 		mov	ah, 0
@@ -586,7 +586,7 @@ loc_404F:
 
 loc_4055:
 		mov	[si+0Ah], bl
-		cmp	byte_2066C, 0
+		cmp	_reduce_effects, 0
 		jz	short loc_406E
 		mov	al, _page_back
 		mov	ah, 0
@@ -1122,8 +1122,8 @@ loc_B2F5:
 		call	gaiji_load
 		call	sub_E178
 		les	bx, _resident
-		mov	al, es:[bx+mikoconfig_t.perf]
-		mov	byte_2066C, al
+		mov	al, es:[bx+mikoconfig_t.reduce_effects]
+		mov	_reduce_effects, al
 		setfarfp	farfp_1F4A4, sub_BCB1
 		cmp	es:[bx+mikoconfig_t.continues_used], 0
 		jz	short loc_B34C
@@ -1454,7 +1454,7 @@ loc_B76A:
 		setfarfp	_boss_end, marisa_end
 		setfarfp	_boss_bg_render_func, marisa_bg_render
 		setfarfp	_boss_update_func, marisa_update
-		cmp	byte_2066C, 0
+		cmp	_reduce_effects, 0
 		jnz	short loc_B7CB
 		setfarfp	farfp_1F490, sub_19E2F
 
@@ -4582,7 +4582,7 @@ var_3		= byte ptr -3
 loc_D3A3:
 		cmp	byte ptr [si], 0
 		jz	loc_D46E
-		cmp	byte_2066C, 0
+		cmp	_reduce_effects, 0
 		jz	short loc_D3BF
 		mov	al, _page_back
 		mov	ah, 0
@@ -4705,7 +4705,7 @@ var_2		= word ptr -2
 		sub	sp, 0Eh
 		push	si
 		push	di
-		mov	al, byte_2066C
+		mov	al, _reduce_effects
 		mov	cl, _page_back
 		shl	al, cl
 		mov	[bp+var_9], al
@@ -5751,7 +5751,7 @@ var_4		= dword	ptr -4
 		sub	sp, 4
 		cmp	score_218AC, 0
 		jz	loc_DE46
-		cmp	byte_2066C, 0
+		cmp	_reduce_effects, 0
 		jnz	short loc_DDA1
 		mov	eax, score_218AC
 		mov	[bp+var_4], eax
@@ -6898,7 +6898,7 @@ loc_E74D:
 ; ---------------------------------------------------------------------------
 
 loc_E774:
-		cmp	byte_2066C, 0
+		cmp	_reduce_effects, 0
 		jz	short loc_E782
 		test	byte ptr _bomb_frame, 1
 		jz	short loc_E7A0
@@ -7314,7 +7314,7 @@ loc_EB9E:
 		jge	loc_EC56
 		call	grcg_boxfill pascal, (PLAYFIELD_LEFT shl 16) or 0, ((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
 		mov	byte_2066D, 2
-		cmp	byte_2066C, 0
+		cmp	_reduce_effects, 0
 		jz	short loc_EBCC
 		test	byte ptr _bomb_frame, 1
 		jz	short loc_EBEF
@@ -9084,7 +9084,7 @@ sub_102D6	proc far
 		mov	bp, sp
 		push	si
 		push	di
-		cmp	byte_2066C, 0
+		cmp	_reduce_effects, 0
 		jnz	short loc_102EE
 		mov	byte_2174B, 1
 		mov	byte_2174C, 30h	; '0'
@@ -15702,7 +15702,7 @@ loc_13739:
 		jl	short locret_13784
 		call	sub_1403E
 		inc	word_1ED94
-		mov	al, byte_2066C
+		mov	al, _reduce_effects
 		mov	ah, 0
 		add	ax, ax
 		add	ax, 3EAh
@@ -21221,7 +21221,7 @@ loc_167A0:
 		mov	al, [bp+var_1]
 		mov	ah, 0
 		push	ax
-		mov	al, byte_2066C
+		mov	al, _reduce_effects
 		mov	ah, 0
 		imul	ax, 0Eh
 		add	ax, 2
@@ -23501,7 +23501,7 @@ var_1		= byte ptr -1
 		call	egc_off
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 0
 		call	grcg_byteboxfill_x pascal, (PLAYFIELD_VRAM_LEFT shl 16) or PLAYFIELD_TOP, ((PLAYFIELD_VRAM_RIGHT - 1) shl 16) or PLAYFIELD_BOTTOM - 1
-		mov	al, byte_2066C
+		mov	al, _reduce_effects
 		mov	ah, 0
 		mov	dx, ax
 		add	dx, dx
@@ -26147,7 +26147,7 @@ var_1		= byte ptr -1
 		mov	word_26C64, ax
 		test	byte ptr dword_20612, 1
 		jnz	short loc_1953B
-		cmp	byte_2066C, 0
+		cmp	_reduce_effects, 0
 		jnz	short loc_1950F
 		mov	al, byte_26CF8
 		add	al, 8
@@ -30603,7 +30603,7 @@ loc_1BF3A:
 		inc	word_20650
 		test	byte ptr dword_20612, 1
 		jz	short loc_1BF78
-		cmp	byte_2066C, 0
+		cmp	_reduce_effects, 0
 		jz	short loc_1BF53
 		test	byte ptr dword_20612, 3
 		jz	short loc_1BF78
@@ -33698,7 +33698,8 @@ byte_20664	db ?
 		db 5 dup(?)
 byte_2066A	db ?
 byte_2066B	db ?
-byte_2066C	db ?
+public _reduce_effects
+_reduce_effects	db ?
 byte_2066D	db ?
 word_2066E	dw ?
 word_20670	dw ?

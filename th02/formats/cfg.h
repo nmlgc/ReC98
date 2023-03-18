@@ -5,7 +5,7 @@
 		int8_t bgm_mode;
 		int8_t bombs;
 		int8_t lives;
-		int8_t perf;
+		bool reduce_effects;
 	} cfg_options_t;
 
 	#define CFG_LIVES_MAX 4

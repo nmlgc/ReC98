@@ -16,7 +16,7 @@ extern "C" int pascal scoredat_verify(void);
 
 char debug = 0;
 const cfg_options_t OPTS_DEFAULT = {
-	RANK_NORMAL, SND_BGM_FM, CFG_BOMBS_DEFAULT, CFG_LIVES_DEFAULT, 0
+	RANK_NORMAL, SND_BGM_FM, CFG_BOMBS_DEFAULT, CFG_LIVES_DEFAULT, false
 };
 
 #include "th02/formats/cfg_init.c"

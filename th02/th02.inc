@@ -31,7 +31,7 @@ mikoconfig_t	struc
 	unused_1 dw ?
 	unused_2 db ?
 	main_retval db ?
-	perf db ?
+	reduce_effects db ?
 	unused_3 db ?
 	shottype db ?
 	demo_num db ?

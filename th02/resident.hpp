@@ -18,7 +18,7 @@ typedef struct {
 	int unused_1;
 	char unused_2;
 	unsigned char op_main_retval;
-	bool perf;
+	bool reduce_effects;
 	char unused_3;
 	char shottype;
 	char demo_num;
@@ -28,3 +28,9 @@ typedef struct {
 } resident_t;
 
 extern resident_t *resident;
+
+// Redundant copies of resident structure fields to static data
+// ------------------------------------------------------------
+
+extern bool reduce_effects;
+// ------------------------------------------------------------
