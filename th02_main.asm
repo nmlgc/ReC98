@@ -17,7 +17,9 @@
 		.model use16 large _TEXT
 
 include ReC98.inc
+include th01/math/subpixel.inc
 include th02/th02.inc
+include th02/main/entity.inc
 include th02/main/playfld.inc
 include th02/main/sparks.inc
 include th02/main/hud/hud.inc
@@ -626,81 +628,81 @@ sub_3F8A	endp
 
 sub_4090	proc far
 
-var_8		= word ptr -8
-var_6		= word ptr -6
+@@i		= word ptr -8
+@@page_offset		= word ptr -6
 var_4		= word ptr -4
 var_2		= word ptr -2
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-arg_6		= word ptr  0Ch
-arg_8		= word ptr  0Eh
+@@as_circle_sprite		= word ptr  6
+@@count		= word ptr  8
+@@speed		= word ptr  0Ah
+@@top		= word ptr  0Ch
+@@left		= word ptr  0Eh
 
 		enter	8, 0
 		push	si
 		push	di
-		mov	ax, [bp+arg_6]
-		cmp	ax, 190h
+		mov	ax, [bp+@@top]
+		cmp	ax, RES_Y
 		jb	short loc_40A1
-		sub	ax, 190h
+		sub	ax, RES_Y
 
 loc_40A1:
-		mov	[bp+arg_6], ax
-		shl	[bp+arg_8], 4
-		shl	[bp+arg_6], 4
-		mov	ax, 37D0h
+		mov	[bp+@@top], ax
+		shl	[bp+@@left], SUBPIXEL_BITS
+		shl	[bp+@@top], SUBPIXEL_BITS
+		mov	ax, offset _sparks
 		mov	si, ax
-		mov	ax, word_20274
-		mov	[bp+var_8], ax
-		mov	cl, 14h
+		mov	ax, _spark_ring_i
+		mov	[bp+@@i], ax
+		mov	cl, size spark_t
 		imul	cl
 		add	si, ax
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
-		mov	[bp+var_6], ax
+		mov	[bp+@@page_offset], ax
 		xor	di, di
 		jmp	short loc_4142
 ; ---------------------------------------------------------------------------
 
 loc_40CC:
-		mov	byte ptr [si], 1
-		mov	byte ptr [si+1], 0
-		mov	bx, [bp+var_6]
-		mov	dx, [bp+arg_8]
-		mov	[bx+si+2], dx
-		mov	dx, [bp+arg_6]
-		mov	[bx+si+4], dx
-		cmp	[bp+arg_0], 0
+		mov	[si+spark_t.SPARK_flag], F_ALIVE
+		mov	[si+spark_t.SPARK_age], 0
+		mov	bx, [bp+@@page_offset]
+		mov	dx, [bp+@@left]
+		mov	[bx+si+spark_t.SPARK_screen_topleft+Point.x], dx
+		mov	dx, [bp+@@top]
+		mov	[bx+si+spark_t.SPARK_screen_topleft+Point.y], dx
+		cmp	[bp+@@as_circle_sprite], 0
 		jnz	short loc_4100
-		mov	al, [si+13h]
-		mov	[si+0Eh], al
-		mov	al, [si+11h]
+		mov	al, [si+spark_t.SPARK_default_render_as]
+		mov	[si+spark_t.SPARK_render_as], al
+		mov	al, [si+spark_t.SPARK_speed_base]
 		mov	ah, 0
-		add	ax, [bp+arg_4]
+		add	ax, [bp+@@speed]
 		mov	[bp+var_2], ax
-		mov	al, [si+10h]
+		mov	al, [si+spark_t.SPARK_angle]
 		mov	ah, 0
 		jmp	short loc_4114
 ; ---------------------------------------------------------------------------
 
 loc_4100:
-		mov	byte ptr [si+0Eh], 0Eh
-		mov	ax, [bp+arg_4]
+		mov	[si+spark_t.SPARK_render_as], SRA_SPRITE
+		mov	ax, [bp+@@speed]
 		mov	[bp+var_2], ax
 		mov	ax, di
 		mov	cl, 8
 		shl	ax, cl
 		cwd
-		idiv	[bp+arg_2]
+		idiv	[bp+@@count]
 
 loc_4114:
 		mov	[bp+var_4], ax
 		push	ds
-		lea	ax, [si+0Ah]
+		lea	ax, [si+spark_t.SPARK_velocity+Point.x]
 		push	ax
 		push	ds
-		lea	ax, [si+0Ch]
+		lea	ax, [si+spark_t.SPARK_velocity+Point.y]
 		push	ax
 		push	[bp+var_4]
 		push	[bp+var_2]
@@ -711,19 +713,19 @@ loc_4114:
 		db 036h
 		db 0b4h
 		inc	di
-		add	si, 14h
-		inc	[bp+var_8]
-		cmp	[bp+var_8], 40h
+		add	si, size spark_t
+		inc	[bp+@@i]
+		cmp	[bp+@@i], SPARK_COUNT
 		jl	short loc_4142
-		mov	[bp+var_8], 0
-		sub	si, 500h
+		mov	[bp+@@i], 0
+		sub	si, (SPARK_COUNT * size spark_t)
 
 loc_4142:
-		cmp	di, [bp+arg_2]
+		cmp	di, [bp+@@count]
 		jl	short loc_40CC
-		mov	ax, [bp+arg_2]
-		add	byte ptr word_20274, al
-		and	byte ptr word_20274, 3Fh
+		mov	ax, [bp+@@count]
+		add	byte ptr _spark_ring_i, al
+		and	byte ptr _spark_ring_i, (SPARK_COUNT - 1)
 		pop	di
 		pop	si
 		leave
@@ -741,11 +743,11 @@ include th02/main/spark_render.asm
 
 sub_41AA	proc far
 
-var_E		= word ptr -0Eh
-var_C		= word ptr -0Ch
-var_A		= word ptr -0Ah
-var_6		= word ptr -6
-var_2		= word ptr -2
+@@screen_top 	= word ptr -0Eh
+@@screen_left	= word ptr -0Ch
+@@top_p      	= word ptr -0Ah
+@@left_p     	= word ptr -6
+@@i          	= word ptr -2
 
 		enter	0Eh, 0
 		push	si
@@ -753,14 +755,14 @@ var_2		= word ptr -2
 		push	GC_RMW
 		push	14
 		nopcall	grcg_setcolor
-		mov	ax, 37D0h
+		mov	ax, offset _sparks
 		mov	si, ax
-		mov	[bp+var_2], 0
+		mov	[bp+@@i], 0
 		jmp	loc_4276
 ; ---------------------------------------------------------------------------
 
 loc_41C7:
-		cmp	byte ptr [si], 1
+		cmp	[si+spark_t.SPARK_flag], F_ALIVE
 		jz	short loc_41CF
 		jmp	loc_4270
 ; ---------------------------------------------------------------------------
@@ -770,45 +772,45 @@ loc_41CF:
 		mov	ah, 0
 		shl	ax, 2
 		add	ax, si
-		add	ax, 2
-		mov	[bp+var_6], ax
-		add	ax, 2
-		mov	[bp+var_A], ax
-		mov	ax, [si+0Ah]
-		mov	bx, [bp+var_6]
+		add	ax, SPARK_screen_topleft
+		mov	[bp+@@left_p], ax
+		add	ax, Point.y
+		mov	[bp+@@top_p], ax
+		mov	ax, [si+spark_t.SPARK_velocity+Point.x]
+		mov	bx, [bp+@@left_p]
 		add	[bx], ax
-		mov	ax, word_1EB0A
-		add	[si+0Ah], ax
-		mov	ax, [si+0Ch]
-		mov	bx, [bp+var_A]
+		mov	ax, _spark_accel_x
+		add	[si+spark_t.SPARK_velocity+Point.x], ax
+		mov	ax, [si+spark_t.SPARK_velocity+Point.y]
+		mov	bx, [bp+@@top_p]
 		add	[bx], ax
 		mov	ax, [bx]
-		mov	[bp+var_E], ax
-		mov	bx, [bp+var_6]
+		mov	[bp+@@screen_top], ax
+		mov	bx, [bp+@@left_p]
 		mov	ax, [bx]
 		sar	ax, 4
-		mov	[bp+var_C], ax
-		mov	bx, [bp+var_A]
+		mov	[bp+@@screen_left], ax
+		mov	bx, [bp+@@top_p]
 		mov	ax, [bx]
 		sar	ax, 4
-		mov	[bp+var_E], ax
-		mov	di, [bp+var_E]
-		inc	word ptr [si+0Ch]
-		inc	byte ptr [si+1]
-		cmp	[bp+var_C], 20h	; ' '
+		mov	[bp+@@screen_top], ax
+		mov	di, [bp+@@screen_top]
+		inc	word ptr [si+spark_t.SPARK_velocity+Point.y]
+		inc	[si+spark_t.SPARK_age]
+		cmp	[bp+@@screen_left], PLAYFIELD_LEFT
 		jl	short loc_4240
-		cmp	[bp+var_C], 198h
+		cmp	[bp+@@screen_left], (PLAYFIELD_RIGHT - SPARK_W)
 		jge	short loc_4240
-		mov	al, [si+1]
-		cmp	al, byte_2174C
+		mov	al, [si+spark_t.SPARK_age]
+		cmp	al, _spark_age_max
 		ja	short loc_4240
-		cmp	di, 180h
+		cmp	di, PLAYFIELD_BOTTOM
 		jge	short loc_4240
-		cmp	di, 8
+		cmp	di, (PLAYFIELD_TOP - SPARK_H)
 		jg	short loc_4245
 
 loc_4240:
-		mov	byte ptr [si], 2
+		mov	[si+spark_t.SPARK_flag], F_REMOVE
 		jmp	short loc_4270
 ; ---------------------------------------------------------------------------
 
@@ -819,27 +821,27 @@ loc_4245:
 		sub	di, RES_Y
 
 loc_4253:
-		push	[bp+var_C]
+		push	[bp+@@screen_left]
 		push	di
-		cmp	byte ptr [si+0Eh], 0
+		cmp	[si+spark_t.SPARK_render_as], SRA_DOT
 		jnz	short loc_4264
 		nopcall	grcg_pset
 		jmp	short loc_4270
 ; ---------------------------------------------------------------------------
 
 loc_4264:
-		mov	al, [si+1]
+		mov	al, [si+spark_t.SPARK_age]
 		mov	ah, 0
-		and	ax, 7
+		and	ax, (SPARK_CELS - 1)
 		push	ax
 		call	spark_render
 
 loc_4270:
-		inc	[bp+var_2]
-		add	si, 14h
+		inc	[bp+@@i]
+		add	si, size spark_t
 
 loc_4276:
-		cmp	[bp+var_2], 40h
+		cmp	[bp+@@i], SPARK_COUNT
 		jge	short loc_427F
 		jmp	loc_41C7
 ; ---------------------------------------------------------------------------
@@ -862,26 +864,26 @@ sub_4288	proc far
 		mov	bp, sp
 		push	si
 		push	di
-		mov	ax, 37D0h
+		mov	ax, offset _sparks
 		mov	si, ax
 		xor	di, di
 		jmp	short loc_42EF
 ; ---------------------------------------------------------------------------
 
 loc_4296:
-		cmp	byte ptr [si], 0
+		cmp	[si+spark_t.SPARK_flag], F_FREE
 		jz	short loc_42EB
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		mov	ax, [bx+si+2]
-		sar	ax, 4
+		mov	ax, [bx+si+spark_t.SPARK_screen_topleft+Point.x]
+		sar	ax, SUBPIXEL_BITS
 		push	ax	; left
-		mov	ax, [bx+si+4]
-		sar	ax, 4
+		mov	ax, [bx+si+spark_t.SPARK_screen_topleft+Point.y]
+		sar	ax, SUBPIXEL_BITS
 		push	ax	; top
-		cmp	byte ptr [si+0Eh], 0
+		cmp	[si+spark_t.SPARK_render_as], SRA_DOT
 		jnz	short loc_42BF
 		push	1	; w
 		push	1	; h
@@ -889,14 +891,14 @@ loc_4296:
 ; ---------------------------------------------------------------------------
 
 loc_42BF:
-		push	8	; w
-		push	8	; h
+		push	SPARK_W	; w
+		push	SPARK_H	; h
 
 loc_42C3:
 		nopcall	@tiles_invalidate_rect$qiiii
-		cmp	byte ptr [si], 2
+		cmp	[si+spark_t.SPARK_flag], F_REMOVE
 		jnz	short loc_42D2
-		mov	byte ptr [si], 0
+		mov	[si+spark_t.SPARK_flag], F_FREE
 		jmp	short loc_42EB
 ; ---------------------------------------------------------------------------
 
@@ -905,18 +907,18 @@ loc_42D2:
 		mov	ah, 0
 		shl	ax, 2
 		mov	bx, ax
-		mov	ax, [bx+si+2]
-		mov	dx, [bx+si+4]
-		xor	bx, 4
-		mov	[bx+si+2], ax
-		mov	[bx+si+4], dx
+		mov	ax, [bx+si+spark_t.SPARK_screen_topleft+Point.x]
+		mov	dx, [bx+si+spark_t.SPARK_screen_topleft+Point.y]
+		xor	bx, size Point
+		mov	[bx+si+spark_t.SPARK_screen_topleft+Point.x], ax
+		mov	[bx+si+spark_t.SPARK_screen_topleft+Point.y], dx
 
 loc_42EB:
 		inc	di
-		add	si, 14h
+		add	si, size spark_t
 
 loc_42EF:
-		cmp	di, 40h
+		cmp	di, SPARK_COUNT
 		jl	short loc_4296
 		pop	di
 		pop	si
@@ -9086,14 +9088,14 @@ sub_102D6	proc far
 		push	di
 		cmp	_reduce_effects, 0
 		jnz	short loc_102EE
-		mov	byte_2174B, 1
-		mov	byte_2174C, 30h	; '0'
+		mov	_spark_sprite_interval, 1
+		mov	_spark_age_max, 48
 		jmp	short loc_102F8
 ; ---------------------------------------------------------------------------
 
 loc_102EE:
-		mov	byte_2174B, 7
-		mov	byte_2174C, 18h
+		mov	_spark_sprite_interval, 7
+		mov	_spark_age_max, 24
 
 loc_102F8:
 		mov	si, 2C18h
@@ -9109,35 +9111,35 @@ loc_102FF:
 loc_10306:
 		cmp	di, 96h
 		jl	short loc_102FF
-		mov	si, 37D0h
+		mov	si, offset _sparks
 		xor	di, di
 		jmp	short loc_1033F
 ; ---------------------------------------------------------------------------
 
 loc_10313:
-		mov	byte ptr [si], 0
+		mov	[si+spark_t.SPARK_flag], F_FREE
 		call	IRand
-		mov	[si+10h], al
+		mov	[si+spark_t.SPARK_angle], al
 		call	IRand
 		and	al, 3Fh
-		mov	[si+11h], al
-		mov	al, byte_2174B
+		mov	[si+spark_t.SPARK_speed_base], al
+		mov	al, _spark_sprite_interval
 		mov	ah, 0
 		test	ax, di
 		jnz	short loc_10337
-		mov	byte ptr [si+13h], 0Eh
+		mov	[si+spark_t.SPARK_default_render_as], SRA_SPRITE
 		jmp	short loc_1033B
 ; ---------------------------------------------------------------------------
 
 loc_10337:
-		mov	byte ptr [si+13h], 0
+		mov	[si+spark_t.SPARK_default_render_as], SRA_DOT
 
 loc_1033B:
 		inc	di
-		add	si, 14h
+		add	si, size spark_t
 
 loc_1033F:
-		cmp	di, 40h
+		cmp	di, SPARK_COUNT
 		jl	short loc_10313
 		mov	word_21744, 1
 		mov	word_21746, 40h
@@ -15688,7 +15690,7 @@ var_2		= byte ptr -2
 		mov	Palettes[14 * size rgb_t].r, 224
 		mov	Palettes[14 * size rgb_t].g, 192
 		mov	Palettes[14 * size rgb_t].b, 176
-		mov	word_1EB0A, 0FFFFh
+		mov	_spark_accel_x, -1
 		mov	word_1EDA4, 1
 
 loc_13732:
@@ -16156,7 +16158,7 @@ rika_end	proc far
 		call	_key_delay
 		call	sub_E162
 		inc	_stage_id
-		mov	word_1EB0A, 0
+		mov	_spark_accel_x, 0
 		mov	word_1EDA4, 0
 		pop	bp
 		retf
@@ -16740,7 +16742,7 @@ sub_140AE	proc far
 		jz	short loc_140D4
 		call	grc_setclip pascal, (PLAYFIELD_LEFT shl 16) or 0, (PLAYFIELD_RIGHT shl 16) or (RES_Y - 1)
 		mov	byte_1EDA6, 0
-		mov	word_1EB0A, 0FFFFh
+		mov	_spark_accel_x, -1
 
 loc_140D4:
 		inc	word_1EDA2
@@ -18757,7 +18759,7 @@ meira_end	proc far
 		call	_key_delay
 		call	sub_E162
 		inc	_stage_id
-		mov	word_1EB0A, 0
+		mov	_spark_accel_x, 0
 		pop	bp
 		retf
 meira_end	endp
@@ -32889,7 +32891,8 @@ asc_1E6DF	db '  ',0
 		db  7Eh	; ~
 		db  3Ch	; <
 include th02/sprites/sparks.asp
-word_1EB0A	dw 0
+public _spark_accel_x
+_spark_accel_x	dw 0
 byte_1EB0C	db 0
 byte_1EB0D	db -1
 byte_1EB0E	db -1
@@ -33614,7 +33617,8 @@ public _resident
 _resident	dd ?
 		db 2 dup(?)
 word_20272	dw ?
-word_20274	dw ?
+public _spark_ring_i
+_spark_ring_i	dw ?
 col_20276	db ?
 		db 201 dup(?)
 include th02/main/pointnum/pointnum[bss].asm
@@ -33707,7 +33711,29 @@ byte_20672	db ?
 		db 15 dup(?)
 dword_20682	dd ?
 word_20686	dw ?
-		db 4280 dup(?)
+		db 3000 dup(?)
+
+SRA_DOT = 0
+SRA_SPRITE = 14
+
+SPARK_COUNT = 64
+
+spark_t struc
+	SPARK_flag             	db ?
+	SPARK_age              	db ?
+	SPARK_screen_topleft   	Point 2 dup(<?>)
+	SPARK_velocity         	Point <?>
+	SPARK_render_as        	db ?
+	                       	db ?
+	SPARK_angle            	db ?
+	SPARK_speed_base       	db ?
+	                       	db ?
+	SPARK_default_render_as	db ?
+spark_t ends
+
+public _sparks
+_sparks	spark_t SPARK_COUNT dup(<?>)
+
 public _bullet_left
 _bullet_left	dw ?
 word_21742	dw ?
@@ -33715,9 +33741,10 @@ word_21744	dw ?
 word_21746	dw ?
 word_21748	dw ?
 byte_2174A	db ?
-byte_2174B	db ?
-byte_2174C	db ?
-		db ?
+public _spark_sprite_interval, _spark_age_max
+_spark_sprite_interval	db ?
+_spark_age_max	db ?
+	evendata
 word_2174E	dw ?
 word_21750	dw ?
 byte_21752	db ?
