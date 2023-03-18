@@ -936,36 +936,9 @@ sub_42F8	proc far
 		mov	_tiles_egc_render_all, 0
 		retf
 sub_42F8	endp
-
-; ---------------------------------------------------------------------------
 		nop
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-MAP_SIG_SIZE = 10
-
-map_load proc pascal
-	arg @@fn:dword
-	local @@ms:byte:MAP_SIG_SIZE
-
-	push	word ptr @@fn+2
-	push	word ptr @@fn
-	nopcall	file_ropen
-	push	ss
-	lea	ax, @@ms
-	push	ax
-	push	MAP_SIG_SIZE
-	nopcall	file_read
-	push	ds
-	push	offset _map_section_tiles
-	push	(MAP_SECTION_COUNT * MAP_ROWS_PER_SECTION * TILES_X)
-	nopcall	file_read
-	nopcall	file_close
-	ret
-map_load endp
-
+	extern @MAP_LOAD$QNXC:proc
 	extern @tile_area_init_and_put_both$qv:proc
 	extern @egc_start_copy_noframe$qv:proc
 	extern @TILES_SCROLL_AND_EGC_RENDER_BOTH$QI:proc
@@ -1402,7 +1375,7 @@ loc_B4D7:
 		push	ss
 		lea	ax, [bp+var_C]
 		push	ax
-		call	map_load
+		call	@map_load$qnxc
 		call	sub_42F8
 		push	ss
 		lea	ax, [bp+var_C]

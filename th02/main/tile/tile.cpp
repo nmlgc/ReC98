@@ -1,4 +1,4 @@
-#pragma option -zC_TEXT -G -2
+#pragma option -zC_TEXT -2
 
 #include "platform.h"
 #include "x86real.h"
@@ -52,7 +52,11 @@ extern bool tile_column_dirty[TILES_X];
 inline tile_image_id_t map_tile_image_at(int section, int row, int x) {
 	return map_section_tiles[section].row[row & (MAP_ROWS_PER_SECTION - 1)][x];
 }
+
+#include "th02/formats/map.cpp"
 // ---------
+
+#pragma option -G
 
 void tile_area_init_and_put_both(void)
 {
