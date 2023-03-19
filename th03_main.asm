@@ -35890,7 +35890,7 @@ byte_220E0	db ?
 byte_220E6	db ?
 		db 5 dup(?)
 word_220EC	dw ?
-public _collmap_topleft, _collmap_center, _collmap_stripe_tile_w,
+public _collmap_topleft, _collmap_center, _collmap_stripe_tile_w
 public _collmap_tile_h, _collmap_bottomright, _collmap_pid, _collmap
 _collmap_topleft label Point
 _collmap_center label Point
