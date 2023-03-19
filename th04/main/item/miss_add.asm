@@ -39,9 +39,9 @@ items_miss_add	proc far
 	jmp	@@more_available?
 
 @@loop:
-	cmp	[si+item_t.flag], 0
+	cmp	[si+item_t.flag], F_FREE
 	jnz	short @@next
-	mov	[si+item_t.flag], 1
+	mov	[si+item_t.flag], F_ALIVE
 	mov	[si+item_t.ITEM_unknown], 0
 	mov	ax, _player_pos.cur.x
 	mov	[si+item_t.pos.cur.x], ax

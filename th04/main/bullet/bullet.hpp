@@ -1,6 +1,7 @@
 /// Everything here needs to be kept in sync with the ASM versions in
 /// bullet.inc!
 
+#include "th02/main/entity.hpp"
 #include "th04/sprites/cels.h"
 
 /// Game-specific group and spawn types
@@ -126,7 +127,7 @@ union bullet_special_angle_t {
 /// ----------------
 
 struct bullet_t {
-	unsigned char flag;
+	entity_flag_t flag;
 	char age;
 	PlayfieldMotion pos;
 	unsigned char from_group; // ZUN bloat: Unused

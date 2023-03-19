@@ -233,11 +233,11 @@ void bullets_update(void)
 
 	if(bullet_zap.active == false) {
 		for(i = 0; i < BULLET_COUNT; i++, bullet--) {
-			if(bullet->flag == 0) {
+			if(bullet->flag == F_FREE) {
 				continue;
 			}
-			if(bullet->flag == 2) {
-				bullet->flag = 0;
+			if(bullet->flag == F_REMOVE) {
+				bullet->flag = F_FREE;
 				continue;
 			}
 			bullets_seen++;
@@ -257,7 +257,7 @@ void bullets_update(void)
 					reinterpret_cast<unsigned char &>(bullet->move_state)++;
 					if(bullet->move_state >= BMS_DECAY_END) {
 						bullet->pos.update_seg3();
-						bullet->flag = 2;
+						bullet->flag = F_REMOVE;
 						continue;
 					}
 					if((bullet->move_state % BMS_DECAY_FRAMES_PER_CEL) == 0) {
@@ -292,7 +292,7 @@ void bullets_update(void)
 								BULLET16_W,
 								BULLET16_H
 							)) {
-								bullet->flag = 2;
+								bullet->flag = F_REMOVE;
 								continue;
 							}
 						#endif
@@ -323,7 +323,7 @@ void bullets_update(void)
 
 			/* DX:AX = */ bullet->pos.update_seg3();
 			if(!playfield_encloses(_AX, _DX, BULLET16_W, BULLET16_H)) {
-				bullet->flag = 2;
+				bullet->flag = F_REMOVE;
 				continue;
 			}
 
@@ -339,7 +339,7 @@ void bullets_update(void)
 					if(overlap_wh_inplace_fast(
 						_AX, _DX, BULLET_KILLBOX_W, BULLET_KILLBOX_H
 					)) {
-						bullet->flag = 2;
+						bullet->flag = F_REMOVE;
 						player_is_hit = true;
 						continue;
 					}
@@ -452,7 +452,7 @@ void bullets_update(void)
 
 		overlay_popup_bonus = 0;
 		for(i = 0; i < BULLET_COUNT; i++, bullet--) {
-			if(bullet->flag != 1) {
+			if(bullet->flag != F_ALIVE) {
 				continue;
 			}
 			bullet->pos.velocity.set(0.0f, 0.0f);
@@ -478,7 +478,7 @@ void bullets_update(void)
 				score_per_bullet = score_per_bullet_cap;
 			}
 
-			bullet->flag = 2;
+			bullet->flag = F_REMOVE;
 			#if (GAME == 5)
 				if(bullet_zap_drop_point_items && ((bullets_seen % 4) == 0)) {
 					items_add(bullet->pos.cur.x, bullet->pos.cur.y, IT_POINT);

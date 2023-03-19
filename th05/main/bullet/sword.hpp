@@ -3,7 +3,7 @@
 #define SWORD_H 32
 
 typedef struct {
-	unsigned char flag;
+	entity_flag_t flag;
 	unsigned char angle;
 	PlayfieldMotion pos;
 	unsigned int twirl_time;

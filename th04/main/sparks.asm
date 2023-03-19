@@ -6,11 +6,11 @@ _sparks_update proc near
 	mov	si, offset _sparks
 
 @@loop:
-	cmp	[si+spark_t.flag], 0
+	cmp	[si+spark_t.flag], F_FREE
 	jz	short @@more?
-	cmp	[si+spark_t.flag], 1
+	cmp	[si+spark_t.flag], F_ALIVE
 	jz	short @@update
-	mov	[si+spark_t.flag], 0
+	mov	[si+spark_t.flag], F_FREE
 	jmp	short @@more?
 
 @@update:
@@ -24,7 +24,7 @@ _sparks_update proc near
 	jb	short @@age
 
 @@remove:
-	mov	[si+spark_t.flag], 2
+	mov	[si+spark_t.flag], F_REMOVE
 	jmp	short @@more?
 
 @@age:
@@ -32,7 +32,7 @@ _sparks_update proc near
 	inc	[si+spark_t.age]
 	cmp	[si+spark_t.age], 40
 	jbe	short @@more?
-	mov	[si+spark_t.flag], 2
+	mov	[si+spark_t.flag], F_REMOVE
 
 @@more?:
 	add	si, size spark_t
@@ -57,7 +57,7 @@ _sparks_render proc near
 	mov	si, offset _sparks
 
 @@loop:
-	cmp	[si+spark_t.flag], 1
+	cmp	[si+spark_t.flag], F_ALIVE
 	jnz	short @@more?
 	mov	ax, [si+spark_t.pos.cur.y]
 	add	ax, ((PLAYFIELD_TOP - (SPARK_H / 2)) shl 4)
@@ -89,7 +89,7 @@ _sparks_invalidate proc near
 	mov	si, offset _sparks
 
 @@loop:
-	cmp	[si+spark_t.flag], 0
+	cmp	[si+spark_t.flag], F_FREE
 	jz	short @@more?
 	call	tiles_invalidate_around pascal, dword ptr [si+spark_t.pos.prev]
 

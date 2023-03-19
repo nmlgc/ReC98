@@ -44,9 +44,9 @@ public @gather_add_bullets$qv
 ; ---------------------------------------------------------------------------
 
 @@loop:
-	cmp	[si+gather_t.G_flag], 0
+	cmp	[si+gather_t.G_flag], F_FREE
 	jnz	short @@next
-	mov	[si+gather_t.G_flag], 1
+	mov	[si+gather_t.G_flag], F_ALIVE
 	call	gather_bullet_template_pull pascal, si
 	mov	ax, _gather_template.GT_center.x
 	mov	[si+gather_t.G_center.x], ax
@@ -101,9 +101,9 @@ public @gather_add_only$qv
 ; ---------------------------------------------------------------------------
 
 @@loop:
-	cmp	[si+gather_t.G_flag], 0
+	cmp	[si+gather_t.G_flag], F_FREE
 	jnz	short @@next
-	mov	[si+gather_t.G_flag], 1
+	mov	[si+gather_t.G_flag], F_ALIVE
 	mov	[si+gather_t.G_bullet_template.spawn_type], BST_GATHER_ONLY
 	mov	ax, _gather_template.GT_center.x
 	mov	[si+gather_t.G_center.x], ax

@@ -14,7 +14,7 @@ item_splashes_render	proc near
 	jmp	short @@more?
 
 @@alive?:
-	cmp	[si+item_splash_t.flag], 1
+	cmp	[si+item_splash_t.flag], F_ALIVE
 	jnz	short @@next_circle
 	xor	di, di
 	jmp	short @@drawn_all_dots?

@@ -8329,7 +8329,7 @@ sub_10444	proc near
 ; ---------------------------------------------------------------------------
 
 loc_1045C:
-		cmp	[si+shot_t.flag], 0
+		cmp	[si+shot_t.flag], F_FREE
 		jz	short loc_1046A
 		call	main_01:tiles_invalidate_around pascal, [si+shot_t.pos.prev.y], [si+shot_t.pos.prev.x]
 
@@ -8570,7 +8570,7 @@ var_6		= word ptr -6
 		cmp	ax, [bp+var_C]
 		ja	short @@shot_next
 		mov	si, [bx+shot_alive_t.SA_shot]
-		mov	[si+shot_t.flag], 2
+		mov	[si+shot_t.flag], F_REMOVE
 		mov	ax, [si+shot_t.pos.velocity.x]
 		mov	bx, 6
 		cwd
@@ -11495,7 +11495,7 @@ bullets_render	proc near
 ; ---------------------------------------------------------------------------
 
 @@sprite_bullet_loop:
-		cmp	[si+bullet_t.flag], 1
+		cmp	[si+bullet_t.flag], F_ALIVE
 		jnz	@@sprite_bullet_next
 		cmp	[si+bullet_t.spawn_state], BSS_CLOUD_BACKWARDS
 		ja	short loc_12D24
@@ -11582,7 +11582,7 @@ loc_12DBE:
 ; ---------------------------------------------------------------------------
 
 @@dot_bullet_loop:
-		cmp	[si+bullet_t.flag], 1
+		cmp	[si+bullet_t.flag], F_ALIVE
 		jnz	short @@dot_bullet_next
 		mov	ax, [si+bullet_t.pos.cur.y]
 		add	ax, ((PLAYFIELD_TOP - (BULLET16_H / 2)) shl 4)

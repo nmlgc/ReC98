@@ -134,9 +134,9 @@ _bullets_add_raw proc near
 	jmp	short $+2
 
 @@loop:
-	cmp	[si+bullet_t.flag], 0
+	cmp	[si+bullet_t.flag], F_FREE
 	jnz	@@next
-	mov	[si+bullet_t.flag], 1
+	mov	[si+bullet_t.flag], F_ALIVE
 
 	@@spawn_state = byte ptr $+3
 	mov	[si+bullet_t.spawn_state], 123

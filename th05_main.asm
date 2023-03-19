@@ -4398,7 +4398,7 @@ sub_100C6	proc near
 ; ---------------------------------------------------------------------------
 
 loc_100DE:
-		cmp	[si+bullet_t.flag], 1
+		cmp	[si+bullet_t.flag], F_ALIVE
 		jnz	loc_1016B
 		cmp	[si+bullet_t.spawn_state], BSS_CLOUD_BACKWARDS
 		ja	short loc_10108
@@ -4511,7 +4511,7 @@ loc_101DC:
 ; ---------------------------------------------------------------------------
 
 loc_101E3:
-		cmp	[si+bullet_t.flag], 1
+		cmp	[si+bullet_t.flag], F_ALIVE
 		jnz	short loc_10203
 		mov	ax, [si+bullet_t.pos.cur.y]
 		add	ax, (8 shl 4)
@@ -5429,7 +5429,7 @@ puppets_render	proc near
 ; ---------------------------------------------------------------------------
 
 loc_10B2E:
-		cmp	[si+puppet_t.flag], 0
+		cmp	[si+puppet_t.flag], F_FREE
 		jz	loc_10C38
 		mov	ax, [si+puppet_t.pos.cur.x]
 		sar	ax, 4
@@ -5470,7 +5470,7 @@ loc_10B87:
 		add	di, ax
 		mov	ax, [si+puppet_t.PUPPET_patnum]
 		mov	[bp+@@patnum], ax
-		cmp	[si+puppet_t.flag], 1
+		cmp	[si+puppet_t.flag], F_ALIVE
 		jnz	short loc_10BA1
 		mov	al, _stage_frame_mod2
 		mov	ah, 0
@@ -7158,7 +7158,7 @@ sub_123AD	proc near
 ; ---------------------------------------------------------------------------
 
 loc_123CC:
-		cmp	[si+shot_t.flag], 0
+		cmp	[si+shot_t.flag], F_FREE
 		jz	short loc_123DA
 		call	tiles_invalidate_around pascal, [si+shot_t.pos.prev.y], [si+shot_t.pos.prev.x]
 
@@ -11804,9 +11804,9 @@ puppets_update	proc near
 ; ---------------------------------------------------------------------------
 
 @@loop:
-		cmp	[si+puppet_t.flag], 0
+		cmp	[si+puppet_t.flag], F_FREE
 		jz	@@next
-		cmp	[si+puppet_t.flag], 1
+		cmp	[si+puppet_t.flag], F_ALIVE
 		jnz	loc_19851
 		mov	eax, dword ptr [si+puppet_t.pos.cur]
 		cmp	eax, dword ptr [si+puppet_t.pos.prev]
@@ -11985,7 +11985,7 @@ loc_19851:
 		inc	[si+puppet_t.PUPPET_patnum]
 		cmp	[si+puppet_t.PUPPET_patnum], 12
 		jl	short loc_198A3
-		mov	[si+puppet_t.flag], 0
+		mov	[si+puppet_t.flag], F_FREE
 		mov	[si+puppet_t.pos.cur.x], ((PLAYFIELD_W / 2) shl 4)
 		mov	[si+puppet_t.pos.cur.y], (-256 shl 4)
 		mov	[si+puppet_t.pos.prev.x], ((PLAYFIELD_W / 2) shl 4)
@@ -12927,14 +12927,14 @@ loc_1A101:
 		cmp	_boss_phase_frame, 128
 		jnz	short loc_1A15A
 		mov	si, offset puppets
-		mov	[si+puppet_t.flag], 1
+		mov	[si+puppet_t.flag], F_ALIVE
 		mov	[si+puppet_t.PUPPET_patnum], 190
 		mov	[si+puppet_t.radius_motion], (256 shl 4)
 		mov	[si+puppet_t.PUPPET_angle], 60h
 		mov	[si+puppet_t.PUPPET_hp_cur], PUPPET_HP
 		mov	[si+puppet_t.pos.cur.x], SUBPIXEL_NONE
 		add	si, size puppet_t
-		mov	[si+puppet_t.flag], 1
+		mov	[si+puppet_t.flag], F_ALIVE
 		mov	[si+puppet_t.PUPPET_patnum], 190
 		mov	[si+puppet_t.radius_motion], (256 shl 4)
 		mov	[si+puppet_t.PUPPET_angle], 20h
@@ -13128,8 +13128,8 @@ loc_1A35E:
 loc_1A396:
 		mov	_boss_phase_frame, 0
 		mov	_boss_phase, PHASE_BOSS_EXPLODE_SMALL
-		mov	puppet0.flag, 2
-		mov	puppet1.flag, 2
+		mov	puppet0.flag, F_REMOVE
+		mov	puppet1.flag, F_REMOVE
 		jmp	short loc_1A3B2
 ; ---------------------------------------------------------------------------
 
