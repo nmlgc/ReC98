@@ -1,5 +1,5 @@
 explosion_t struc
-	flag	db ?
+	EXPLOSION_alive	db ?
 	age	db ?
 	center	Point <?>
 	EXPLOSION_radius_cur	Point <?>

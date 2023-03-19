@@ -6464,7 +6464,7 @@ loc_114F8:
 		imul	ax, size s2particle_t
 		add	ax, offset s2particles
 		mov	si, ax
-		mov	[si+s2particle_t.flag], 1
+		mov	[si+s2particle_t.S2P_alive], 1
 		call	randring1_next16_mod pascal, 20h
 		add	al, 30h
 		mov	[si+s2particle_t.S2P_angle], al
@@ -6496,7 +6496,7 @@ loc_11553:
 ; ---------------------------------------------------------------------------
 
 loc_11568:
-		cmp	[si+s2particle_t.flag], 0
+		cmp	[si+s2particle_t.S2P_alive], 0
 		jz	short loc_115CE
 		lea	ax, [si+s2particle_t.pos]
 		call	@PlayfieldMotion@update_seg1$qv pascal, ax

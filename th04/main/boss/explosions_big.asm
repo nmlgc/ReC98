@@ -9,7 +9,7 @@ public @explosions_big_update_and_render$qv
 	push	si
 	push	di
 	mov	si, offset _explosions_big
-	cmp	[si+explosion_t.flag], 0
+	cmp	[si+explosion_t.EXPLOSION_alive], 0
 	jz	@@reset_frame
 	mov	[bp+@@i], 0
 	mov	[bp+@@angle], 0
@@ -68,7 +68,7 @@ public @explosions_big_update_and_render$qv
 	inc	[si+explosion_t.age]
 	cmp	[si+explosion_t.age], EXPLOSION_AGE_MAX
 	jb	short @@tone_update
-	mov	[si+explosion_t.flag], 0
+	mov	[si+explosion_t.EXPLOSION_alive], 0
 
 @@tone_update:
 	inc	_explosion_big_frame

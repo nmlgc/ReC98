@@ -22,7 +22,7 @@ enum shot_active_t {
 };
 
 struct shotpair_t {
-	char flag;
+	bool alive;
 	char unused_1; // ZUN bloat
 	PlayfieldPoint topleft;
 	Subpixel velocity_y;
