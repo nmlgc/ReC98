@@ -17,6 +17,15 @@ For starters, simply naming functions or global variables to reflect their
 actual intent will already be helpful. *Any* name is better than
 `sub_<something>`, and can always be fixed or improved later.
 
+## Setup
+
+Before committing anything, enable the Git hooks from the `hooks/` subdirectory
+to automatically catch common mistakes:
+
+```shell
+git config --local core.hooksPath hooks/
+```
+
 # Contribution guidelines
 
 ## Rule #1
