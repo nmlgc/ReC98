@@ -1,0 +1,18 @@
+#!/bin/sh
+
+if git rev-parse --verify HEAD >/dev/null 2>&1
+then
+	against=HEAD
+else
+	# Initial commit: diff against an empty tree object
+	against=4b825dc642cb6eb9a060e54bf8d69288fbee4904
+fi
+
+# Remove trailing commas from `public` directives. These crash on TASM32
+# version 5.0, but work on later versions.
+for f in `git diff-index --name-only --cached --diff-filter=ACMRX ${against} | grep \.asm$ -i`; do
+	if [ -n "$(sed -i -E 's/(public\s+[^;]+?),\s*(;.*)?$/\1\2/w /dev/stdout' "$f")" ]; then
+		echo "$f"': removed a trailing comma from a `public` line, please re-stage.'
+		exit 1
+	fi
+done
