@@ -2823,13 +2823,13 @@ sub_C764	proc near
 ; ---------------------------------------------------------------------------
 
 loc_C76C:
-		mov	byte ptr [si+28A8h], 0
+		mov	_pointnums.PN_flag[si], F_FREE
 		inc	si
 
 loc_C772:
-		cmp	si, 14h
+		cmp	si, POINTNUM_COUNT
 		jl	short loc_C76C
-		mov	col_20276, V_WHITE
+		mov	_pointnums.PN_col, V_WHITE
 		mov	al, _rank
 		cbw
 		mov	bx, ax
@@ -2839,26 +2839,26 @@ loc_C772:
 		jmp	cs:off_C7C0[bx]
 
 loc_C78E:
-		mov	_pointnum_operator, POINTNUM_EMPTY
-		mov	_pointnum_operand, POINTNUM_EMPTY
+		mov	_pointnums.PN_op, POINTNUM_EMPTY
+		mov	_pointnums.PN_operand, POINTNUM_EMPTY
 		jmp	short loc_C7BC
 ; ---------------------------------------------------------------------------
 
 loc_C79A:
-		mov	_pointnum_operator, POINTNUM_TIMES
-		mov	_pointnum_operand, 2
+		mov	_pointnums.PN_op, POINTNUM_MUL
+		mov	_pointnums.PN_operand, 2
 		jmp	short loc_C7BC
 ; ---------------------------------------------------------------------------
 
 loc_C7A6:
-		mov	_pointnum_operator, POINTNUM_TIMES
-		mov	_pointnum_operand, 4
+		mov	_pointnums.PN_op, POINTNUM_MUL
+		mov	_pointnums.PN_operand, 4
 		jmp	short loc_C7BC
 ; ---------------------------------------------------------------------------
 
 loc_C7B2:
-		mov	_pointnum_operator, POINTNUM_TIMES
-		mov	_pointnum_operand, 8
+		mov	_pointnums.PN_op, POINTNUM_MUL
+		mov	_pointnums.PN_operand, 8
 
 loc_C7BC:
 		pop	si
@@ -2880,38 +2880,38 @@ off_C7C0	dw offset loc_C78E
 
 sub_C7CA	proc near
 
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
+@@points	= word ptr  4
+@@top   	= word ptr  6
+@@left  	= word ptr  8
 
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
-		mov	cx, [bp+arg_4]
-		mov	dx, [bp+arg_2]
-		mov	di, [bp+arg_0]
+		mov	cx, [bp+@@left]
+		mov	dx, [bp+@@top]
+		mov	di, [bp+@@points]
 		xor	si, si
 		jmp	short loc_C812
 ; ---------------------------------------------------------------------------
 
 loc_C7DC:
-		cmp	byte ptr [si+28A8h], 0
+		cmp	_pointnums.PN_flag[si], F_FREE
 		jnz	short loc_C811
-		mov	byte ptr [si+28A8h], 1
-		mov	byte ptr [si+28BCh], 0
+		mov	_pointnums.PN_flag[si], F_ALIVE
+		mov	_pointnums.PN_age[si], 0
 		mov	bx, si
 		add	bx, bx
-		mov	[bx+2880h], di
+		mov	_pointnums.PN_points[bx], di
 		mov	bx, si
 		add	bx, bx
-		mov	[bx+2808h], cx
+		mov	_pointnums.PN_left[bx], cx
 		mov	bx, si
 		shl	bx, 2
-		mov	[bx+2830h], dx
+		mov	_pointnums.PN_top[bx + (0 * word)], dx
 		mov	bx, si
 		shl	bx, 2
-		mov	[bx+2832h], dx
+		mov	_pointnums.PN_top[bx + (1 * word)], dx
 		jmp	short loc_C817
 ; ---------------------------------------------------------------------------
 
@@ -2919,7 +2919,7 @@ loc_C811:
 		inc	si
 
 loc_C812:
-		cmp	si, 14h
+		cmp	si, POINTNUM_COUNT
 		jl	short loc_C7DC
 
 loc_C817:
@@ -2943,23 +2943,23 @@ sub_C81D	proc near
 ; ---------------------------------------------------------------------------
 
 loc_C825:
-		cmp	byte ptr [si+28A8h], 0
+		cmp	_pointnums.PN_flag[si], F_FREE
 		jz	short loc_C884
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+2808h]	; left
+		push	_pointnums.PN_left[bx]	; left
 		mov	bx, si
 		shl	bx, 2
 		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		add	bx, ax
-		push	word ptr [bx+2830h]	; top
+		push	_pointnums.PN_top[bx]	; top
 		push	(64 shl 16) or 8	; (w shl 16) or h
 		call	@tiles_invalidate_rect$qiiii
-		cmp	byte ptr [si+28A8h], 2
+		cmp	_pointnums.PN_flag[si], F_REMOVE
 		jnz	short loc_C85F
-		mov	byte ptr [si+28A8h], 0
+		mov	_pointnums.PN_flag[si], F_FREE
 		jmp	short loc_C884
 ; ---------------------------------------------------------------------------
 
@@ -2970,20 +2970,20 @@ loc_C85F:
 		mov	ah, 0
 		add	ax, ax
 		add	bx, ax
-		mov	ax, [bx+2830h]
+		mov	ax, _pointnums.PN_top[bx]
 		mov	bx, si
 		shl	bx, 2
 		mov	dl, _page_back
 		mov	dh, 0
 		add	dx, dx
 		add	bx, dx
-		mov	[bx+2830h], ax
+		mov	_pointnums.PN_top[bx], ax
 
 loc_C884:
 		inc	si
 
 loc_C885:
-		cmp	si, 14h
+		cmp	si, POINTNUM_COUNT
 		jl	short loc_C825
 		pop	si
 		pop	bp
@@ -3055,14 +3055,14 @@ loc_C8E0:
 		lea	ax, [di+(POINTNUM_W * 1)]
 		push	ax
 		push	[bp+@@top]
-		mov	al, _pointnum_operator
+		mov	al, _pointnums.PN_op
 		mov	ah, 0
 		push	ax
 		call	pointnum_put
 		lea	ax, [di+(POINTNUM_W * 2)]
 		push	ax
 		push	[bp+@@top]
-		mov	al, _pointnum_operand
+		mov	al, _pointnums.PN_operand
 		mov	ah, 0
 		push	ax
 		call	pointnum_put
@@ -3083,7 +3083,7 @@ sub_C914	proc near
 		push	si
 		push	di
 		push	GC_RMW
-		mov	al, col_20276
+		mov	al, _pointnums.PN_col
 		mov	ah, 0
 		push	ax
 		call	grcg_setcolor
@@ -3095,9 +3095,9 @@ sub_C914	proc near
 ; ---------------------------------------------------------------------------
 
 loc_C930:
-		cmp	byte ptr [si+28A8h], 1
+		cmp	_pointnums.PN_flag[si], F_ALIVE
 		jnz	short loc_C996
-		cmp	byte ptr [si+28BCh], 6
+		cmp	_pointnums.PN_age[si], 6
 		jbe	short loc_C95E
 		mov	bx, si
 		shl	bx, 2
@@ -3105,22 +3105,22 @@ loc_C930:
 		mov	ah, 0
 		add	ax, ax
 		add	bx, ax
-		dec	word ptr [bx+2830h]
-		cmp	byte ptr [si+28BCh], 18h
+		dec	_pointnums.PN_top[bx]
+		cmp	_pointnums.PN_age[si], 24
 		jbe	short loc_C95E
-		mov	byte ptr [si+28A8h], 2
+		mov	_pointnums.PN_flag[si], F_REMOVE
 		jmp	short loc_C996
 ; ---------------------------------------------------------------------------
 
 loc_C95E:
-		inc	byte ptr [si+28BCh]
+		inc	_pointnums.PN_age[si]
 		mov	bx, si
 		shl	bx, 2
 		mov	al, _page_back
 		mov	ah, 0
 		add	ax, ax
 		add	bx, ax
-		mov	di, [bx+2830h]
+		mov	di, _pointnums.PN_top[bx]
 		add	di, _scroll_line
 		cmp	di, RES_Y
 		jl	short loc_C982
@@ -3129,18 +3129,18 @@ loc_C95E:
 loc_C982:
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+2808h]
+		push	_pointnums.PN_left[bx]
 		push	di
 		mov	bx, si
 		add	bx, bx
-		push	word ptr [bx+2880h]
+		push	_pointnums.PN_points[bx]
 		call	sub_C88D
 
 loc_C996:
 		inc	si
 
 loc_C997:
-		cmp	si, 14h
+		cmp	si, POINTNUM_COUNT
 		jl	short loc_C930
 		call	grcg_off
 		pop	di
@@ -5370,11 +5370,11 @@ loc_D96F:
 
 loc_D984:
 		inc	byte_218A8
-		push	si
-		push	word_2189C
+		push	si	; left
+		push	word_2189C	; top
 		mov	bx, power_overflow_level
 		add	bx, bx
-		push	POWER_OVERFLOW_BONUS[bx]
+		push	POWER_OVERFLOW_BONUS[bx]	; points
 		call	sub_C7CA
 		jmp	loc_DAB6
 ; ---------------------------------------------------------------------------
@@ -5417,10 +5417,7 @@ loc_D9E1:
 		inc	byte_218A8
 
 loc_D9E5:
-		push	si
-		push	word_2189C
-		push	di
-		call	sub_C7CA
+		call	sub_C7CA pascal, si, word_2189C, di
 		movzx	eax, di
 		add	dword_218A4, eax
 		jmp	loc_DAB6
@@ -5432,21 +5429,15 @@ loc_D9FA:
 		cmp	ax, 5
 		jge	short loc_DA21
 		inc	bombs
-		add	dword_218A4, 3E8h
-		push	si
-		push	word_2189C
-		push	3E8h
-		call	sub_C7CA
+		add	dword_218A4, 1000
+		call	sub_C7CA pascal, si, word_2189C, 1000
 		call	hud_bombs_put
 		jmp	loc_DAB6
 ; ---------------------------------------------------------------------------
 
 loc_DA21:
-		add	dword_218A4, 1999h
-		push	si
-		push	word_2189C
-		push	1999h
-		call	sub_C7CA
+		add	dword_218A4, 6553
+		call	sub_C7CA pascal, si, word_2189C, 6553
 		mov	al, byte_218A8
 		add	al, 10h
 		mov	byte_218A8, al
@@ -5482,11 +5473,11 @@ loc_DA6F:
 		add	dword_218A4, eax
 
 loc_DA85:
-		push	si
-		push	word_2189C
+		push	si	; left
+		push	word_2189C	; top
 		mov	bx, power_overflow_level
 		add	bx, bx
-		push	POWER_OVERFLOW_BONUS[bx]
+		push	POWER_OVERFLOW_BONUS[bx]	; points
 		call	sub_C7CA
 		call	hud_power_put
 		jmp	short loc_DAB6
@@ -33619,9 +33610,29 @@ _resident	dd ?
 word_20272	dw ?
 public _spark_ring_i
 _spark_ring_i	dw ?
-col_20276	db ?
-		db 201 dup(?)
-include th02/main/pointnum/pointnum[bss].asm
+
+POINTNUM_W = 8
+POINTNUM_H = 8
+
+POINTNUM = 0
+POINTNUM_MUL = 10
+POINTNUM_EMPTY = 12
+POINTNUM_COUNT = 20
+
+public _pointnums
+CPointnums struc
+	PN_col    	db ?
+	          	db ?
+	PN_left   	dw POINTNUM_COUNT dup(?)
+	PN_top    	dw POINTNUM_COUNT dup(2 dup(?))
+	PN_points 	dw POINTNUM_COUNT dup(?)
+	PN_flag   	db POINTNUM_COUNT dup(?)
+	PN_age    	db POINTNUM_COUNT dup(?)
+	PN_op     	db ?
+	PN_operand	db ?
+CPointnums ends
+_pointnums	CPointnums <?>
+
 public _scroll_speed, _scroll_cycle, _scroll_line, _scroll_unused
 _scroll_speed	db ?
 _scroll_cycle	db ?
