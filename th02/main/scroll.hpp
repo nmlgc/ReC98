@@ -14,3 +14,12 @@ extern vram_y_t scroll_line;
 	// scrolling speeds below 1 pixel per frame. Must be ≥1.
 	extern uint8_t scroll_interval;
 #endif
+
+#define scroll_screen_y_to_vram(ret, screen_y) \
+	/* Sneaky! That's how we can pretend this is an actual function that */ \
+	/* returns a value. */ \
+	screen_y; \
+	ret += scroll_line; \
+	if(ret >= RES_Y) { \
+		ret -= RES_Y; \
+	}

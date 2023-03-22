@@ -2816,90 +2816,10 @@ POINTNUM_TEXT	segment	byte public 'CODE' use16
 	@POINTNUMS_ADD$QIIUI procdesc pascal near \
 		left:word, top:word, points:word
 	@pointnums_invalidate$qv procdesc near
-	@POINTNUM_RENDER$QIIUI procdesc pascal near \
-		left:word, top:word, points:word
+	@pointnums_update_and_render$qv procdesc near
 POINTNUM_TEXT	ends
 
-main_01__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C914	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	GC_RMW
-		mov	al, _pointnums.PN_col
-		mov	ah, 0
-		push	ax
-		call	grcg_setcolor
-		mov	ax, 0A800h
-		mov	es, ax
-		assume es:nothing
-		xor	si, si
-		jmp	short loc_C997
-; ---------------------------------------------------------------------------
-
-loc_C930:
-		cmp	_pointnums.PN_flag[si], F_ALIVE
-		jnz	short loc_C996
-		cmp	_pointnums.PN_age[si], 6
-		jbe	short loc_C95E
-		mov	bx, si
-		shl	bx, 2
-		mov	al, _page_back
-		mov	ah, 0
-		add	ax, ax
-		add	bx, ax
-		dec	_pointnums.PN_top[bx]
-		cmp	_pointnums.PN_age[si], 24
-		jbe	short loc_C95E
-		mov	_pointnums.PN_flag[si], F_REMOVE
-		jmp	short loc_C996
-; ---------------------------------------------------------------------------
-
-loc_C95E:
-		inc	_pointnums.PN_age[si]
-		mov	bx, si
-		shl	bx, 2
-		mov	al, _page_back
-		mov	ah, 0
-		add	ax, ax
-		add	bx, ax
-		mov	di, _pointnums.PN_top[bx]
-		add	di, _scroll_line
-		cmp	di, RES_Y
-		jl	short loc_C982
-		sub	di, RES_Y
-
-loc_C982:
-		mov	bx, si
-		add	bx, bx
-		push	_pointnums.PN_left[bx]
-		push	di
-		mov	bx, si
-		add	bx, bx
-		push	_pointnums.PN_points[bx]
-		call	@pointnum_render$qiiui
-
-loc_C996:
-		inc	si
-
-loc_C997:
-		cmp	si, POINTNUM_COUNT
-		jl	short loc_C930
-		call	grcg_off
-		pop	di
-		pop	si
-		pop	bp
-		retn
-sub_C914	endp
-
-; ---------------------------------------------------------------------------
-		db 0
+main_01__TEXT	segment	word public 'CODE' use16
 include th02/main/pointnum/num_put.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -5412,7 +5332,7 @@ loc_DC28:
 		add	score_218AC, eax
 
 loc_DC31:
-		call	sub_C914
+		call	@pointnums_update_and_render$qv
 		pop	di
 		pop	si
 		leave

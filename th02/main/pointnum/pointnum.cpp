@@ -2,12 +2,14 @@
 
 #include "platform.h"
 #include "pc98.h"
+#include "master.hpp"
 #include "th01/rank.h"
 #include "th02/v_colors.hpp"
 #include "th02/core/globals.hpp"
 #include "th02/hardware/pages.hpp"
 #include "th02/main/entity.hpp"
 #include "th02/main/playfld.hpp"
+#include "th02/main/scroll.hpp"
 #include "th02/main/pointnum/pointnum.hpp"
 #include "th02/main/tile/tile.hpp"
 #include "th02/sprites/pointnum.h"
@@ -136,4 +138,32 @@ void pascal near pointnum_render(screen_x_t left, vram_y_t top, uint16_t points)
 	pointnum_put((left + (POINTNUM_W * 0)), top, POINTNUM_0);
 	pointnum_put((left + (POINTNUM_W * 1)), top, pointnums.op);
 	pointnum_put((left + (POINTNUM_W * 2)), top, pointnums.operand);
+}
+
+void near pointnums_update_and_render(void)
+{
+	grcg_setcolor(GC_RMW, pointnums.col);
+	_ES = SEG_PLANE_B;
+	for(int i = 0; i < POINTNUM_COUNT; i++) {
+		if(pointnums.flag[i] != F_ALIVE) {
+			continue;
+		}
+
+		// Update
+		if(pointnums.age[i] > 6) {
+			pointnums.top[i][page_back] -= 1;
+			if(pointnums.age[i] > 24) {
+				pointnums.flag[i] = F_REMOVE;
+				continue;
+			}
+		}
+		pointnums.age[i]++;
+
+		// Render
+		vram_y_t top = scroll_screen_y_to_vram(
+			top, pointnums.top[i][page_back]
+		);
+		pointnum_render(pointnums.left[i], top, pointnums.points[i]);
+	}
+	grcg_off();
 }
