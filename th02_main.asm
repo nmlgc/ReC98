@@ -2815,70 +2815,10 @@ POINTNUM_TEXT	segment	byte public 'CODE' use16
 	@pointnums_init_for_rank_and_rese$qv procdesc near
 	@POINTNUMS_ADD$QIIUI procdesc pascal near \
 		left:word, top:word, points:word
+	@pointnums_invalidate$qv procdesc near
 POINTNUM_TEXT	ends
 
 main_01__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C81D	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_C885
-; ---------------------------------------------------------------------------
-
-loc_C825:
-		cmp	_pointnums.PN_flag[si], F_FREE
-		jz	short loc_C884
-		mov	bx, si
-		add	bx, bx
-		push	_pointnums.PN_left[bx]	; left
-		mov	bx, si
-		shl	bx, 2
-		mov	al, _page_back
-		mov	ah, 0
-		add	ax, ax
-		add	bx, ax
-		push	_pointnums.PN_top[bx]	; top
-		push	(64 shl 16) or 8	; (w shl 16) or h
-		call	@tiles_invalidate_rect$qiiii
-		cmp	_pointnums.PN_flag[si], F_REMOVE
-		jnz	short loc_C85F
-		mov	_pointnums.PN_flag[si], F_FREE
-		jmp	short loc_C884
-; ---------------------------------------------------------------------------
-
-loc_C85F:
-		mov	bx, si
-		shl	bx, 2
-		mov	al, _page_front
-		mov	ah, 0
-		add	ax, ax
-		add	bx, ax
-		mov	ax, _pointnums.PN_top[bx]
-		mov	bx, si
-		shl	bx, 2
-		mov	dl, _page_back
-		mov	dh, 0
-		add	dx, dx
-		add	bx, dx
-		mov	_pointnums.PN_top[bx], ax
-
-loc_C884:
-		inc	si
-
-loc_C885:
-		cmp	si, POINTNUM_COUNT
-		jl	short loc_C825
-		pop	si
-		pop	bp
-		retn
-sub_C81D	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5193,7 +5133,7 @@ loc_D8F9:
 loc_D8FA:
 		cmp	si, 14h
 		jl	short loc_D880
-		call	sub_C81D
+		call	@pointnums_invalidate$qv
 		pop	di
 		pop	si
 		leave

@@ -1,3 +1,6 @@
+static const pixel_t POINTNUM_W = 8;
+static const pixel_t POINTNUM_H = 8;
+
 enum pointnum_cel_t {
 	POINTNUM_0,
 	POINTNUM_1,

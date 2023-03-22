@@ -5,8 +5,11 @@
 #include "th01/rank.h"
 #include "th02/v_colors.hpp"
 #include "th02/core/globals.hpp"
+#include "th02/hardware/pages.hpp"
 #include "th02/main/entity.hpp"
+#include "th02/main/playfld.hpp"
 #include "th02/main/pointnum/pointnum.hpp"
+#include "th02/main/tile/tile.hpp"
 #include "th02/sprites/pointnum.h"
 
 #pragma option -a2
@@ -74,6 +77,32 @@ void pascal near pointnums_add(
 			pointnums.top[i][0] = top;
 			pointnums.top[i][1] = top;
 			break;
+		}
+	}
+}
+
+void near pointnums_invalidate(void)
+{
+	for(int i = 0; i < POINTNUM_COUNT; i++) {
+		if(pointnums.flag[i] == F_FREE) {
+			continue;
+		}
+
+		tiles_invalidate_rect(
+			pointnums.left[i],
+			pointnums.top[i][page_back],
+
+			// Adding the trailing 0, operator, and operand.
+			// ZUN bloat: And one unnecessary glyph?
+			(POINTNUM_W * (POINTNUM_DIGITS + 3 + 1)),
+
+			POINTNUM_H
+		);
+
+		if(pointnums.flag[i] == F_REMOVE) {
+			pointnums.flag[i] = F_FREE;
+		} else {
+			pointnums.top[i][page_back] = pointnums.top[i][page_front];
 		}
 	}
 }

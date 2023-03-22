@@ -1,4 +1,9 @@
+// Significant, internal digits. An additional 0 is appended to the on-screen
+// representation.
+static const int POINTNUM_DIGITS = 4;
+
 void near pointnums_init_for_rank_and_reset(void);
+void near pointnums_invalidate(void);
 void pascal near pointnums_add(
 	screen_x_t left, screen_y_t top, uint16_t points
 );
