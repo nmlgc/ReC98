@@ -36,6 +36,7 @@ MAP_BITS_PER_SECTION = 3
 MAP_SECTION_COUNT = 16
 MAP_LENGTH_MAX = 320
 
+main_01 group main_01_TEXT, POINTNUM_TEXT, main_01__TEXT
 main_03 group main_03_TEXT, main_03__TEXT
 
 ; ===========================================================================
@@ -943,7 +944,7 @@ _TEXT		ends
 
 ; Segment type:	Pure code
 main_01_TEXT	segment	word public 'CODE' use16
-		assume cs:main_01_TEXT
+		assume cs:main_01
 		;org 3
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
@@ -2808,71 +2809,13 @@ var_2		= word ptr -2
 		leave
 		retn
 sub_C6B2	endp
+main_01_TEXT	ends
 
+POINTNUM_TEXT	segment	byte public 'CODE' use16
+	@pointnums_init_for_rank_and_rese$qv procdesc near
+POINTNUM_TEXT	ends
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C764	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_C772
-; ---------------------------------------------------------------------------
-
-loc_C76C:
-		mov	_pointnums.PN_flag[si], F_FREE
-		inc	si
-
-loc_C772:
-		cmp	si, POINTNUM_COUNT
-		jl	short loc_C76C
-		mov	_pointnums.PN_col, V_WHITE
-		mov	al, _rank
-		cbw
-		mov	bx, ax
-		cmp	bx, RANK_EXTRA
-		ja	short loc_C7BC
-		add	bx, bx
-		jmp	cs:off_C7C0[bx]
-
-loc_C78E:
-		mov	_pointnums.PN_op, POINTNUM_EMPTY
-		mov	_pointnums.PN_operand, POINTNUM_EMPTY
-		jmp	short loc_C7BC
-; ---------------------------------------------------------------------------
-
-loc_C79A:
-		mov	_pointnums.PN_op, POINTNUM_MUL
-		mov	_pointnums.PN_operand, 2
-		jmp	short loc_C7BC
-; ---------------------------------------------------------------------------
-
-loc_C7A6:
-		mov	_pointnums.PN_op, POINTNUM_MUL
-		mov	_pointnums.PN_operand, 4
-		jmp	short loc_C7BC
-; ---------------------------------------------------------------------------
-
-loc_C7B2:
-		mov	_pointnums.PN_op, POINTNUM_MUL
-		mov	_pointnums.PN_operand, 8
-
-loc_C7BC:
-		pop	si
-		pop	bp
-		retn
-sub_C764	endp
-
-; ---------------------------------------------------------------------------
-		db 0
-off_C7C0	dw offset loc_C78E
-		dw offset loc_C78E
-		dw offset loc_C79A
-		dw offset loc_C7A6
-		dw offset loc_C7B2
+main_01__TEXT	segment	byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -4918,7 +4861,7 @@ loc_D644:
 		cmp	si, 14h
 		jl	short loc_D639
 		mov	_point_items_collected, 0
-		call	sub_C764
+		call	@pointnums_init_for_rank_and_rese$qv
 		mov	byte_218A1, 0
 		pop	si
 		pop	bp
@@ -8384,7 +8327,7 @@ off_F443	dw offset loc_F238
 		dw offset loc_F260
 		dw offset loc_F288
 		dw offset loc_F2A4
-main_01_TEXT	ends
+main_01__TEXT	ends
 
 ; ===========================================================================
 
