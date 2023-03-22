@@ -2813,65 +2813,11 @@ main_01_TEXT	ends
 
 POINTNUM_TEXT	segment	byte public 'CODE' use16
 	@pointnums_init_for_rank_and_rese$qv procdesc near
+	@POINTNUMS_ADD$QIIUI procdesc pascal near \
+		left:word, top:word, points:word
 POINTNUM_TEXT	ends
 
 main_01__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C7CA	proc near
-
-@@points	= word ptr  4
-@@top   	= word ptr  6
-@@left  	= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	cx, [bp+@@left]
-		mov	dx, [bp+@@top]
-		mov	di, [bp+@@points]
-		xor	si, si
-		jmp	short loc_C812
-; ---------------------------------------------------------------------------
-
-loc_C7DC:
-		cmp	_pointnums.PN_flag[si], F_FREE
-		jnz	short loc_C811
-		mov	_pointnums.PN_flag[si], F_ALIVE
-		mov	_pointnums.PN_age[si], 0
-		mov	bx, si
-		add	bx, bx
-		mov	_pointnums.PN_points[bx], di
-		mov	bx, si
-		add	bx, bx
-		mov	_pointnums.PN_left[bx], cx
-		mov	bx, si
-		shl	bx, 2
-		mov	_pointnums.PN_top[bx + (0 * word)], dx
-		mov	bx, si
-		shl	bx, 2
-		mov	_pointnums.PN_top[bx + (1 * word)], dx
-		jmp	short loc_C817
-; ---------------------------------------------------------------------------
-
-loc_C811:
-		inc	si
-
-loc_C812:
-		cmp	si, POINTNUM_COUNT
-		jl	short loc_C7DC
-
-loc_C817:
-		pop	di
-		pop	si
-		pop	bp
-		retn	6
-sub_C7CA	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5318,7 +5264,7 @@ loc_D984:
 		mov	bx, power_overflow_level
 		add	bx, bx
 		push	POWER_OVERFLOW_BONUS[bx]	; points
-		call	sub_C7CA
+		call	@pointnums_add$qiiui
 		jmp	loc_DAB6
 ; ---------------------------------------------------------------------------
 
@@ -5329,17 +5275,17 @@ loc_D99D:
 		mov	al, byte_218A8
 		add	al, 8
 		mov	byte_218A8, al
-		mov	di, 1400h
+		mov	di, 5120
 		jmp	short loc_D9E5
 ; ---------------------------------------------------------------------------
 
 loc_D9B4:
 		mov	ax, [bp+var_2]
 		imul	ax, 7
-		mov	dx, 0AF0h
+		mov	dx, 2800
 		sub	dx, ax
 		mov	di, dx
-		cmp	di, 7D0h
+		cmp	di, 2000
 		jb	short loc_D9D1
 		mov	al, byte_218A8
 		add	al, 4
@@ -5348,7 +5294,7 @@ loc_D9B4:
 ; ---------------------------------------------------------------------------
 
 loc_D9D1:
-		cmp	di, 3E8h
+		cmp	di, 1000
 		jb	short loc_D9E1
 		mov	al, byte_218A8
 		add	al, 2
@@ -5360,7 +5306,7 @@ loc_D9E1:
 		inc	byte_218A8
 
 loc_D9E5:
-		call	sub_C7CA pascal, si, word_2189C, di
+		call	@pointnums_add$qiiui pascal, si, word_2189C, di
 		movzx	eax, di
 		add	dword_218A4, eax
 		jmp	loc_DAB6
@@ -5373,14 +5319,14 @@ loc_D9FA:
 		jge	short loc_DA21
 		inc	bombs
 		add	dword_218A4, 1000
-		call	sub_C7CA pascal, si, word_2189C, 1000
+		call	@pointnums_add$qiiui pascal, si, word_2189C, 1000
 		call	hud_bombs_put
 		jmp	loc_DAB6
 ; ---------------------------------------------------------------------------
 
 loc_DA21:
 		add	dword_218A4, 6553
-		call	sub_C7CA pascal, si, word_2189C, 6553
+		call	@pointnums_add$qiiui pascal, si, word_2189C, 6553
 		mov	al, byte_218A8
 		add	al, 10h
 		mov	byte_218A8, al
@@ -5421,7 +5367,7 @@ loc_DA85:
 		mov	bx, power_overflow_level
 		add	bx, bx
 		push	POWER_OVERFLOW_BONUS[bx]	; points
-		call	sub_C7CA
+		call	@pointnums_add$qiiui
 		call	hud_power_put
 		jmp	short loc_DAB6
 ; ---------------------------------------------------------------------------

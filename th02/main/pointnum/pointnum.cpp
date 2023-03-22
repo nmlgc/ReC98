@@ -57,3 +57,23 @@ void near pointnums_init_for_rank_and_reset(void)
 		break;
 	}
 }
+
+void pascal near pointnums_add(
+	screen_x_t left_, screen_y_t top_, uint16_t points_
+)
+{
+	register screen_x_t left = left_;
+	register screen_y_t top = top_;
+	register uint16_t points = points_;
+	for(register int i = 0; i < POINTNUM_COUNT; i++) {
+		if(pointnums.flag[i] == F_FREE) {
+			pointnums.flag[i] = F_ALIVE;
+			pointnums.age[i] = 0;
+			pointnums.points[i] = points;
+			pointnums.left[i] = left;
+			pointnums.top[i][0] = top;
+			pointnums.top[i][1] = top;
+			break;
+		}
+	}
+}
