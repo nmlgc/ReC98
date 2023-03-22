@@ -2816,91 +2816,11 @@ POINTNUM_TEXT	segment	byte public 'CODE' use16
 	@POINTNUMS_ADD$QIIUI procdesc pascal near \
 		left:word, top:word, points:word
 	@pointnums_invalidate$qv procdesc near
+	@POINTNUM_RENDER$QIIUI procdesc pascal near \
+		left:word, top:word, points:word
 POINTNUM_TEXT	ends
 
 main_01__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_C88D	proc near
-
-@@numeral		= byte ptr -2
-var_1		= byte ptr -1
-arg_0		= word ptr  4
-@@top		= word ptr  6
-arg_4		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 2
-		push	si
-		push	di
-		mov	di, [bp+arg_4]
-		mov	[bp+var_1], 0
-		xor	si, si
-		jmp	short loc_C8E0
-; ---------------------------------------------------------------------------
-
-loc_C8A0:
-		mov	bx, si
-		add	bx, bx
-		mov	ax, [bp+arg_0]
-		xor	dx, dx
-		div	word ptr [bx+0A20h]
-		mov	[bp+@@numeral], al
-		mov	bx, si
-		add	bx, bx
-		mov	ax, [bp+arg_0]
-		xor	dx, dx
-		div	word ptr [bx+0A20h]
-		mov	[bp+arg_0], dx
-		cmp	[bp+@@numeral], 0
-		jnz	short loc_C8CC
-		cmp	[bp+var_1], 0
-		jz	short loc_C8DC
-
-loc_C8CC:
-		mov	[bp+var_1], 1
-		push	di
-		push	[bp+@@top]
-		mov	al, [bp+@@numeral]
-		cbw
-		push	ax
-		call	pointnum_put
-
-loc_C8DC:
-		inc	si
-		add	di, POINTNUM_W
-
-loc_C8E0:
-		cmp	si, 4
-		jl	short loc_C8A0
-		push	di
-		push	[bp+@@top]
-		push	0
-		call	pointnum_put
-		lea	ax, [di+(POINTNUM_W * 1)]
-		push	ax
-		push	[bp+@@top]
-		mov	al, _pointnums.PN_op
-		mov	ah, 0
-		push	ax
-		call	pointnum_put
-		lea	ax, [di+(POINTNUM_W * 2)]
-		push	ax
-		push	[bp+@@top]
-		mov	al, _pointnums.PN_operand
-		mov	ah, 0
-		push	ax
-		call	pointnum_put
-		pop	di
-		pop	si
-		leave
-		retn	6
-sub_C88D	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2963,7 +2883,7 @@ loc_C982:
 		mov	bx, si
 		add	bx, bx
 		push	_pointnums.PN_points[bx]
-		call	sub_C88D
+		call	@pointnum_render$qiiui
 
 loc_C996:
 		inc	si
@@ -32451,14 +32371,8 @@ aGngkgagGcga	db 'クリアタイム',0
 include th02/gaiji/gameover[data].asm
 asc_1E47E	db '                ',0
 		db 0
-		db 0E8h
-		db    3
-		db  64h	; d
-		db    0
-		db  0Ah
-		db    0
-		db    1
-		db    0
+public _FOUR_DIGIT_POWERS_OF_10
+_FOUR_DIGIT_POWERS_OF_10 dw 1000, 100, 10, 1
 include th02/sprites/pointnum.asp
 public _scroll_interval
 _scroll_interval	db 4

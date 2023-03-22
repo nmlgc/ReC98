@@ -1,4 +1,4 @@
-#pragma option -zPmain_01
+#pragma option -zPmain_01 -G
 
 #include "platform.h"
 #include "pc98.h"
@@ -29,6 +29,15 @@ struct CPointnums {
 };
 
 extern CPointnums pointnums;
+
+// Function ordering fails
+// -----------------------
+
+// Blits the given [numeral] to the given position. Assumptions:
+// • ES is already be set to the beginning of a VRAM segment
+// • The GRCG is active, and set to the intended color
+void pascal near pointnum_put(screen_x_t left, vram_y_t top, int numeral);
+// -----------------------
 
 void near pointnums_init_for_rank_and_reset(void)
 {
@@ -105,4 +114,26 @@ void near pointnums_invalidate(void)
 			pointnums.top[i][page_back] = pointnums.top[i][page_front];
 		}
 	}
+}
+
+void pascal near pointnum_render(screen_x_t left, vram_y_t top, uint16_t points)
+{
+	extern uint16_t FOUR_DIGIT_POWERS_OF_10[POINTNUM_DIGITS];
+
+	int i;
+	bool past_leading_zeroes = false;
+	for(i = 0; i < POINTNUM_DIGITS; (i++, left += POINTNUM_W)) {
+		// ZUN landmine: Since [FOUR_DIGIT_POWERS_OF_10] doesn't cover the
+		// full value range of an uint16_t, [numeral] should be limited to the
+		// 0-9 range.
+		int8_t numeral = (POINTNUM_0 + (points / FOUR_DIGIT_POWERS_OF_10[i]));
+		points %= FOUR_DIGIT_POWERS_OF_10[i];
+		if((numeral != POINTNUM_0) || past_leading_zeroes) {
+			past_leading_zeroes = true;
+			pointnum_put(left, top, numeral);
+		}
+	}
+	pointnum_put((left + (POINTNUM_W * 0)), top, POINTNUM_0);
+	pointnum_put((left + (POINTNUM_W * 1)), top, pointnums.op);
+	pointnum_put((left + (POINTNUM_W * 2)), top, pointnums.operand);
 }
