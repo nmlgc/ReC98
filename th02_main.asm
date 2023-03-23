@@ -36,7 +36,7 @@ MAP_BITS_PER_SECTION = 3
 MAP_SECTION_COUNT = 16
 MAP_LENGTH_MAX = 320
 
-main_01 group main_01_TEXT, POINTNUM_TEXT, main_01__TEXT
+main_01 group main_01_TEXT, POINTNUM_TEXT, main_01__TEXT, PLAYER_B_TEXT, main_01___TEXT
 main_03 group main_03_TEXT, main_03__TEXT
 
 ; ===========================================================================
@@ -6171,8 +6171,8 @@ sub_E2D9	endp
 sub_E3EE	proc near
 
 @@angle		= byte ptr -5
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@top 	= word ptr -4
+@@left	= word ptr -2
 
 		push	bp
 		mov	bp, sp
@@ -6207,7 +6207,7 @@ loc_E42A:
 		imul	eax, edx
 		sar	eax, 8
 		add	ax, _bomb_circle_center.x
-		mov	[bp+var_2], ax
+		mov	[bp+@@left], ax
 		movsx	eax, di
 		mov	dl, [bp+@@angle]
 		mov	dh, 0
@@ -6217,10 +6217,8 @@ loc_E42A:
 		imul	eax, edx
 		sar	eax, 8
 		add	ax, _bomb_circle_center.y
-		mov	[bp+var_4], ax
-		push	[bp+var_2]
-		push	ax
-		call	sub_ED11
+		mov	[bp+@@top], ax
+		call	@bomb_circle_point_put$qii pascal, [bp+@@left], ax
 		inc	si
 		mov	al, [bp+@@angle]
 		add	al, 4
@@ -6244,8 +6242,8 @@ sub_E3EE	endp
 sub_E48C	proc near
 
 @@angle		= byte ptr -5
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@top		= word ptr -4
+@@left		= word ptr -2
 arg_0		= word ptr  4
 
 		push	bp
@@ -6272,7 +6270,7 @@ loc_E4AE:
 		imul	eax, edx
 		sar	eax, 8
 		add	ax, _bomb_circle_center.x
-		mov	[bp+var_2], ax
+		mov	[bp+@@left], ax
 		movsx	eax, di
 		mov	dl, [bp+@@angle]
 		mov	dh, 0
@@ -6282,10 +6280,8 @@ loc_E4AE:
 		imul	eax, edx
 		sar	eax, 8
 		add	ax, _bomb_circle_center.y
-		mov	[bp+var_4], ax
-		push	[bp+var_2]
-		push	ax
-		call	sub_ED11
+		mov	[bp+@@top], ax
+		call	@bomb_circle_point_put$qii pascal, [bp+@@left], ax
 		inc	si
 		mov	al, [bp+@@angle]
 		add	al, 4
@@ -7128,87 +7124,14 @@ loc_ED0E:
 		pop	bp
 		retn
 sub_ECAC	endp
+main_01__TEXT	ends
 
+PLAYER_B_TEXT	segment	byte public 'CODE' use16
+	@BOMB_CIRCLE_POINT_PUT$QII procdesc pascal near \
+		left:word, top:word
+PLAYER_B_TEXT	ends
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_ED11	proc near
-
-var_4		= word ptr -4
-var_1		= byte ptr -1
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		enter	4, 0
-		push	si
-		push	di
-		cmp	[bp+arg_2], 18h
-		jle	short loc_ED99
-		cmp	[bp+arg_2], 1A0h
-		jge	short loc_ED99
-		cmp	[bp+arg_0], 8
-		jle	short loc_ED99
-		cmp	[bp+arg_0], 180h
-		jge	short loc_ED99
-		mov	ax, 0A800h
-		mov	es, ax
-		assume es:nothing
-		mov	dx, [bp+arg_0]
-		add	dx, _scroll_line
-		cmp	dx, RES_Y
-		jl	short loc_ED47
-		sub	dx, RES_Y
-
-loc_ED47:
-		mov	bx, [bp+arg_2]
-		mov	ax, bx
-		sar	ax, 3
-		shl	dx, 6
-		add	ax, dx
-		shr	dx, 2
-		add	ax, dx
-		mov	di, ax
-		; Hack (and bx, 7)
-		db 081h
-		db 0e3h
-		db 007h
-		db 000h
-		mov	[bp+var_4], bx
-		mov	dx, 10h
-		sub	dx, bx
-		mov	si, offset _sBOMB_PARTICLES[4 * 8]
-		mov	[bp+var_1], 0
-
-loc_ED6E:
-		xor	ax, ax
-		mov	al, [si]
-		mov	bx, ax
-		mov	cx, [bp+var_4]
-		shr	bx, cl
-		mov	cx, dx
-		shl	ax, cl
-		add	ax, bx
-		mov	es:[di], ax
-		add	di, 50h	; 'P'
-		cmp	di, 7D00h
-		jl	short loc_ED8F
-		sub	di, 7D00h
-
-loc_ED8F:
-		inc	si
-		inc	[bp+var_1]
-		cmp	[bp+var_1], 8
-		jl	short loc_ED6E
-
-loc_ED99:
-		pop	di
-		pop	si
-		leave
-		retn	4
-sub_ED11	endp
-
+main_01___TEXT	segment	byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -8053,7 +7976,7 @@ off_F443	dw offset loc_F238
 		dw offset loc_F260
 		dw offset loc_F288
 		dw offset loc_F2A4
-main_01__TEXT	ends
+main_01___TEXT	ends
 
 ; ===========================================================================
 
