@@ -7178,7 +7178,7 @@ loc_ED47:
 		mov	[bp+var_4], bx
 		mov	dx, 10h
 		sub	dx, bx
-		mov	si, 0C92h
+		mov	si, offset _sBOMB_PARTICLES[4 * 8]
 		mov	[bp+var_1], 0
 
 loc_ED6E:
@@ -7240,7 +7240,7 @@ loc_EDBA:
 		shr	dx, 2
 		add	ax, dx
 		mov	di, ax
-		mov	si, 0C72h
+		mov	si, offset _sBOMB_PARTICLES
 		mov	ax, [bp+arg_0]
 		shl	ax, 3
 		add	si, ax
@@ -7291,7 +7291,7 @@ loc_EE0B:
 		shr	dx, 2
 		add	ax, dx
 		mov	di, ax
-		mov	si, 0C92h
+		mov	si, offset _sBOMB_PARTICLES[4 * 8]
 		add	si, 4
 		mov	cx, 4
 		mov	dx, 10h
@@ -32504,46 +32504,7 @@ aBomb3_pi	db 'bomb3.pi',0
 aBomb2_pi	db 'bomb2.pi',0
 aBomb1_bft	db 'bomb1.bft',0
 asc_1E6DF	db '  ',0
-		db    0
-		db    0
-		db    0
-		db  10h
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db  10h
-		db  38h	; 8
-		db  10h
-		db    0
-		db    0
-		db    0
-		db    0
-		db  10h
-		db  10h
-		db  7Ch	; |
-		db  10h
-		db  10h
-		db    0
-		db    0
-		db  10h
-		db  10h
-		db  38h	; 8
-		db 0FEh
-		db  38h	; 8
-		db  10h
-		db  10h
-		db    0
-		db  3Ch	; <
-		db  7Eh	; ~
-		db 0FFh
-		db 0FFh
-		db 0FFh
-		db 0FFh
-		db  7Eh	; ~
-		db  3Ch	; <
+include th02/sprites/bombpart.asp
 include th02/sprites/sparks.asp
 public _spark_accel_x
 _spark_accel_x	dw 0
