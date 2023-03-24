@@ -6410,34 +6410,34 @@ var_4		= dword	ptr -4
 		add	bx, ax
 		mov	word ptr [bp+var_4+2], dx
 		mov	word ptr [bp+var_4], bx
-		mov	si, 10h
+		mov	si, PLAYFIELD_TOP
 		jmp	short loc_E60F
 ; ---------------------------------------------------------------------------
 
 loc_E5DD:
-		push	20h ; ' '
-		push	si
+		push	(PLAYFIELD_LEFT + (0 * 8 * TILE_W))	; left
+		push	si	; top
 		les	bx, [bp+var_4]
 		mov	al, es:[bx]
-		push	ax
-		call	sub_EE76
-		push	0A0h
-		push	si
+		push	ax	; eight_tiles
+		call	@bomb_bft_8tiles_put_8$qiiuc
+		push	(PLAYFIELD_LEFT + (1 * 8 * TILE_W))	; left
+		push	si	; top
 		les	bx, [bp+var_4]
 		mov	al, es:[bx+1]
-		push	ax
-		call	sub_EE76
-		push	120h
-		push	si
+		push	ax	; eight_tiles
+		call	@bomb_bft_8tiles_put_8$qiiuc
+		push	(PLAYFIELD_LEFT + (2 * 8 * TILE_W))	; left
+		push	si	; top
 		les	bx, [bp+var_4]
 		mov	al, es:[bx+2]
-		push	ax
-		call	sub_EE76
+		push	ax	; eight_tiles
+		call	@bomb_bft_8tiles_put_8$qiiuc
 		add	word ptr [bp+var_4], 3
-		add	si, 10h
+		add	si, TILE_H
 
 loc_E60F:
-		cmp	si, 190h
+		cmp	si, (PLAYFIELD_BOTTOM + TILE_H) ; ???
 		jl	short loc_E5DD
 		pop	si
 		leave
@@ -7133,92 +7133,11 @@ PLAYER_B_TEXT	segment	byte public 'CODE' use16
 		left:word, top:word, cel:word
 	@BOMB_SMEAR_PUT_8$QII procdesc pascal near \
 		left:word
+	@BOMB_BFT_8TILES_PUT_8$QIIUC procdesc pascal near \
+		left:word, top:word, eight_tiles:byte
 PLAYER_B_TEXT	ends
 
 main_01___TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EE52	proc near
-
-arg_0		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		push	di
-		mov	cx, 10h
-		mov	di, [bp+arg_0]
-		mov	bx, 0FFFFh
-
-loc_EE5F:
-		mov	es:[di], bx
-		add	di, 50h	; 'P'
-		cmp	di, 7D00h
-		jl	short loc_EE6F
-		sub	di, 7D00h
-
-loc_EE6F:
-		loop	loc_EE5F
-		pop	di
-		pop	bp
-		retn	2
-sub_EE52	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EE76	proc near
-
-arg_0		= byte ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, 0A800h
-		mov	es, ax
-		mov	dx, [bp+arg_2]
-		add	dx, _scroll_line
-		cmp	dx, RES_Y
-		jl	short loc_EE91
-		sub	dx, RES_Y
-
-loc_EE91:
-		mov	ax, [bp+arg_4]
-		sar	ax, 3
-		shl	dx, 6
-		add	ax, dx
-		shr	dx, 2
-		add	ax, dx
-		mov	di, ax
-		mov	al, 80h
-		mov	ah, [bp+arg_0]
-		xor	si, si
-
-loc_EEAA:
-		test	al, ah
-		jz	short loc_EEB2
-		push	di
-		call	sub_EE52
-
-loc_EEB2:
-		shr	al, 1
-		add	di, 2
-		inc	si
-		cmp	si, 8
-		jl	short loc_EEAA
-		pop	di
-		pop	si
-		pop	bp
-		retn	6
-sub_EE76	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 

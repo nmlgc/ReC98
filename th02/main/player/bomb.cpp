@@ -5,6 +5,7 @@
 #include "th01/math/overlap.hpp"
 #include "th02/main/playfld.hpp"
 #include "th02/main/scroll.hpp"
+#include "th02/main/tile/tile.hpp"
 #include "th02/sprites/bombpart.h"
 
 extern int bomb_frame;
@@ -21,6 +22,9 @@ extern nearfunc_t_near playchar_bomb_func;
 void pascal near bomb_circle_point_put(screen_x_t left, screen_y_t top);
 void pascal near bomb_particle_put_8(screen_x_t left, screen_y_t top, int cel);
 void pascal near bomb_smear_put_8(screen_x_t left, screen_y_t column_bottom);
+void pascal near bomb_bft_8tiles_put_8(
+	screen_x_t left, screen_y_t top, dots8_t dots
+);
 // -----------------------
 
 void pascal near bomb_reimu_a(void);
@@ -158,4 +162,46 @@ void pascal near bomb_smear_put_8(screen_x_t left, screen_y_t column_bottom_)
 
 	#undef column_bottom
 	#undef y
+}
+
+void pascal near bomb_bft_tile_put_8(vram_offset_t vo)
+{
+	_CX = TILE_H;
+	_DI = vo;
+	_BX = static_cast<dots_t(TILE_W)>(-1);
+	loop: {
+		*reinterpret_cast<dots_t(TILE_W) __es *>(_DI) = _BX;
+		vram_offset_add_and_roll(_DI, ROW_SIZE);
+		asm { loop loop; }
+	}
+}
+
+// Renders [dots] from BOMBS.BFT as a 8×1 row of 16×16 blocks, covering a total
+// size of 128×16 pixels, to (⌊left/8⌋*8, top). Each tile is filled with the
+// current GRCG tile if its corresponding bit is 1, or skipped otherwise.
+// Conceptually identical to the tiles_bb_*() functions from TH04 and TH05.
+void pascal near bomb_bft_8tiles_put_8(
+	screen_x_t left, screen_y_t top, dots8_t dots
+)
+{
+	#define tile_cur	static_cast<dots8_t>(_AL)
+	#define tiles   	static_cast<dots8_t>(_AH)
+
+	_ES = SEG_PLANE_B;
+	_DX = scroll_screen_y_to_vram(static_cast<vram_y_t>(_DX), top);
+	vram_offset_shift_fast_asm(di, left, _DX);
+	tile_cur = 0x80;
+	tiles = dots;
+	asm { xor	si, si; }
+	do {
+		if(tile_cur & tiles) {
+			bomb_bft_tile_put_8(_DI);
+		}
+		tile_cur >>= 1;
+		_DI += TILE_VRAM_W;
+		_SI++;
+	} while(_SI < BYTE_DOTS);
+
+	#undef tiles
+	#undef tile_cur
 }
