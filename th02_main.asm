@@ -1274,7 +1274,7 @@ var_C		= byte ptr -0Ch
 		mov	dword_20612, 0
 		mov	byte_2061A, 0
 		mov	byte_1F466, 0
-		mov	byte_2066D, 1
+		mov	_slowdown_factor, 1
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.demo_num], 0
 		jnz	short loc_B4BB
@@ -2017,12 +2017,12 @@ loc_BEDC:
 		inc	_scroll_cycle
 
 loc_BEE0:
-		cmp	byte_2066D, 1
+		cmp	_slowdown_factor, 1
 		jnz	short loc_BEED
 		mov	vsync_Count1, 0
 
 loc_BEED:
-		mov	al, byte_2066D
+		mov	al, _slowdown_factor
 		mov	ah, 0
 		cmp	ax, vsync_Count1
 		ja	short loc_BEED
@@ -6941,7 +6941,7 @@ loc_E7C0:
 		call	far ptr	palette_show
 		cmp	_bomb_frame, 111
 		jle	short loc_E7E8
-		mov	byte_2066D, 2
+		mov	_slowdown_factor, 2
 
 loc_E7E8:
 		cmp	_bomb_frame, 86
@@ -6974,7 +6974,7 @@ loc_E821:
 		call	_snd_se_play c, 16
 		mov	al, tilemode_21A4C
 		mov	_tile_mode, al
-		mov	byte_2066D, 1
+		mov	_slowdown_factor, 1
 		mov	PaletteTone, 200
 		call	far ptr	palette_show
 		call	sub_10E0A
@@ -7074,7 +7074,7 @@ loc_E915:
 		add	ax, -300
 		mov	PaletteTone, ax
 		call	far ptr	palette_show
-		mov	byte_2066D, 2
+		mov	_slowdown_factor, 2
 
 loc_E94C:
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 14
@@ -7142,7 +7142,7 @@ loc_EA11:
 		jnz	short loc_EA35
 		mov	al, tilemode_21A53
 		mov	_tile_mode, al
-		mov	byte_2066D, 1
+		mov	_slowdown_factor, 1
 		mov	PaletteTone, 200
 		call	far ptr	palette_show
 		call	sub_10E0A
@@ -7313,7 +7313,7 @@ loc_EB9E:
 		cmp	_bomb_frame, 164
 		jge	loc_EC56
 		call	grcg_boxfill pascal, (PLAYFIELD_LEFT shl 16) or 0, ((PLAYFIELD_RIGHT - 1) shl 16) or (RES_Y - 1)
-		mov	byte_2066D, 2
+		mov	_slowdown_factor, 2
 		cmp	_reduce_effects, 0
 		jz	short loc_EBCC
 		test	byte ptr _bomb_frame, 1
@@ -7385,7 +7385,7 @@ loc_EC56:
 		call	_snd_se_play c, 16
 		mov	al, tilemode_21A54
 		mov	_tile_mode, al
-		mov	byte_2066D, 1
+		mov	_slowdown_factor, 1
 		mov	PaletteTone, 200
 		call	far ptr	palette_show
 		call	sub_10E0A
@@ -8937,7 +8937,7 @@ loc_1015A:
 		call	egc_off
 
 loc_10171:
-		mov	byte_2066D, 1
+		mov	_slowdown_factor, 1
 		cmp	[bp+arg_0], 18h
 		jge	loc_10286
 		mov	ax, [bp+arg_0]
@@ -9005,7 +9005,7 @@ loc_1022C:
 loc_10230:
 		cmp	[bp+var_8], 100h
 		jl	loc_1019D
-		mov	byte_2066D, 2
+		mov	_slowdown_factor, 2
 		cmp	[bp+arg_0], 8
 		jg	short loc_10258
 		mov	ax, [bp+arg_0]
@@ -9030,7 +9030,7 @@ loc_10258:
 		push	ax
 		push	[bp+var_8]
 		call	graph_scroll
-		mov	byte_2066D, 3
+		mov	_slowdown_factor, 3
 
 loc_10286:
 		pop	di
@@ -10692,7 +10692,7 @@ loc_10EE4:
 		push	ax
 		push	di
 		call	graph_scroll
-		mov	byte_2066D, 3
+		mov	_slowdown_factor, 3
 		mov	word_22DA0, 0E0h
 		mov	word_22DA2, 0C8h
 		mov	word_22D9E, 0
@@ -10705,7 +10705,7 @@ loc_10F22:
 		jnb	short loc_10F5E
 		cmp	word_20686, 0C8h
 		jnz	short loc_10F37
-		mov	byte_2066D, 1
+		mov	_slowdown_factor, 1
 
 loc_10F37:
 		mov	ax, word_20686
@@ -19926,14 +19926,14 @@ loc_15C95:
 		push	ax
 		push	si
 		call	graph_scroll
-		mov	byte_2066D, 2
+		mov	_slowdown_factor, 2
 		jmp	loc_15D51
 ; ---------------------------------------------------------------------------
 
 loc_15CBC:
 		cmp	word_20650, 0DCh
 		jg	short loc_15D1C
-		mov	byte_2066D, 1
+		mov	_slowdown_factor, 1
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + V_WHITE
 		mov	al, byte_2558F
 		mov	ah, 0
@@ -33698,9 +33698,9 @@ byte_20664	db ?
 		db 5 dup(?)
 byte_2066A	db ?
 byte_2066B	db ?
-public _reduce_effects
+public _reduce_effects, _slowdown_factor
 _reduce_effects	db ?
-byte_2066D	db ?
+_slowdown_factor	db ?
 word_2066E	dw ?
 word_20670	dw ?
 byte_20672	db ?
