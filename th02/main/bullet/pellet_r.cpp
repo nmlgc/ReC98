@@ -18,10 +18,7 @@ void pascal near pellet_render(screen_x_t left, vram_y_t top)
 	_CX = 8;
 	put_loop: {
 		asm { movsw; }
-		_DI += (ROW_SIZE - sizeof(dots16_t));
-		if(static_cast<int16_t>(_DI) >= PLANE_SIZE) {
-			_DI -= PLANE_SIZE;
-		}
+		vram_offset_add_and_roll(_DI, (ROW_SIZE - sizeof(dots16_t)));
+		asm { loop put_loop; }
 	}
-	asm { loop put_loop; }
 }

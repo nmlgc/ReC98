@@ -84,6 +84,15 @@ typedef uint16_t uvram_offset_t;
 #define VRAM_OFFSET_SHIFT(x, y) \
 	(x >> BYTE_BITS) + (y << 6) + (y << 4)
 
+// Adds [imm] to [vo] and rolls [vo] back to the top of VRAM if it crossed the
+// bottom. Necessary with hardware scrolling.
+#define vram_offset_add_and_roll(vo, imm) { \
+	vo += imm; \
+	if(static_cast<vram_offset_t>(vo) >= PLANE_SIZE) { \
+		vo -= PLANE_SIZE; \
+	} \
+}
+
 #ifdef __cplusplus
 // MODDERS: Replace with a single function
 static inline vram_offset_t vram_offset_shift(screen_x_t x, vram_y_t y) {
