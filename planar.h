@@ -99,6 +99,12 @@ static inline vram_offset_t vram_offset_shift(screen_x_t x, vram_y_t y) {
 	return VRAM_OFFSET_SHIFT(x, y);
 }
 
+// Avoids a reload of [y] (= one MOV instruction) compared to the regular
+// vram_offset_shift().
+#define vram_offset_shift_fast(x, y) ( \
+	(x >> BYTE_BITS) + (_DX = (y << 6)) + (_DX >> 2) \
+)
+
 static inline vram_offset_t vram_offset_muldiv(screen_x_t x, vram_y_t y) {
 	return (y * ROW_SIZE) + (x / BYTE_DOTS);
 }
