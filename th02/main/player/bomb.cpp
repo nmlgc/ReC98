@@ -20,6 +20,7 @@ extern nearfunc_t_near playchar_bomb_func;
 // color.
 void pascal near bomb_circle_point_put(screen_x_t left, screen_y_t top);
 void pascal near bomb_particle_put_8(screen_x_t left, screen_y_t top, int cel);
+void pascal near bomb_smear_put_8(screen_x_t left, screen_y_t column_bottom);
 // -----------------------
 
 void pascal near bomb_reimu_a(void);
@@ -116,4 +117,45 @@ void pascal near bomb_particle_put_8(screen_x_t left, screen_y_t top, int cel)
 	}
 
 	#undef _DI
+}
+
+void pascal near bomb_smear_put_8(screen_x_t left, screen_y_t column_bottom_)
+{
+	#define y            	static_cast<vram_y_t>(_DX)
+	#define column_bottom	static_cast<screen_y_t>(_BX)
+
+	_ES = SEG_PLANE_B;
+	y = scroll_screen_y_to_vram(y, PLAYFIELD_TOP);
+	vram_offset_shift_fast_asm(di, left, y);
+
+	// ZUN bloat: &sBOMB_CIRCLE[BOMB_PARTICLE_H / 2];
+	register const bomb_particle_dots_t near* sprite = &sBOMB_CIRCLE[0];
+	sprite += ((BOMB_PARTICLE_H / 2) * sizeof(bomb_particle_dots_t));
+
+	_CX = (BOMB_PARTICLE_H / 2);
+	y = PLAYFIELD_TOP;
+	column_bottom = column_bottom_;
+	_AL = static_cast<bomb_particle_dots_t>(-1);
+	loop: {
+		*reinterpret_cast<bomb_particle_dots_t __es *>(_DI) = _AL;
+		vram_offset_add_and_roll(_DI, ROW_SIZE);
+		y++;
+
+		// ZUN bloat: if(y >= column_bottom)
+		asm { cmp	dx, bx; }
+		asm { jl 	still_in_column; }
+
+		// We're in the bottom part; switch to drawing the sprite rather than
+		// the constant 0xFF set before the loop.
+		_AL = *sprite++;
+		_CX--;
+
+	still_in_column:
+		// ZUN bloat: do { … } while(_CX > 0);
+		asm { cmp	cx, 0; }
+		asm { ja 	loop; }
+	}
+
+	#undef column_bottom
+	#undef y
 }

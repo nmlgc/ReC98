@@ -6753,12 +6753,12 @@ loc_E96C:
 		add	[bx+3E62h], ax
 		mov	ax, [bp+var_4]
 		shl	ax, 3
-		add	ax, 20h	; ' '
-		push	ax
+		add	ax, 32
+		push	ax	; column_bottom
 		mov	bx, [bp+var_4]
 		shl	bx, 2
-		push	word ptr [bx+3E62h]
-		call	sub_EDF0
+		push	word ptr [bx+3E62h]	; left
+		call	@bomb_smear_put_8$qii
 		inc	[bp+var_4]
 
 loc_E99D:
@@ -7131,70 +7131,11 @@ PLAYER_B_TEXT	segment	byte public 'CODE' use16
 		left:word, top:word
 	@BOMB_PARTICLE_PUT_8$QIII procdesc pascal near \
 		left:word, top:word, cel:word
+	@BOMB_SMEAR_PUT_8$QII procdesc pascal near \
+		left:word
 PLAYER_B_TEXT	ends
 
 main_01___TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EDF0	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, 0A800h
-		mov	es, ax
-		mov	dx, 16
-		add	dx, _scroll_line
-		cmp	dx, RES_Y
-		jl	short loc_EE0B
-		sub	dx, RES_Y
-
-loc_EE0B:
-		mov	ax, [bp+arg_2]
-		sar	ax, 3
-		shl	dx, 6
-		add	ax, dx
-		shr	dx, 2
-		add	ax, dx
-		mov	di, ax
-		mov	si, offset _sBOMB_PARTICLES[4 * 8]
-		add	si, 4
-		mov	cx, 4
-		mov	dx, 10h
-		mov	bx, [bp+arg_0]
-		mov	al, 11111111b
-
-loc_EE2E:
-		mov	es:[di], al
-		add	di, 50h	; 'P'
-		cmp	di, 7D00h
-		jl	short loc_EE3E
-		sub	di, 7D00h
-
-loc_EE3E:
-		inc	dx
-		cmp	dx, bx
-		jl	short loc_EE47
-		mov	al, [si]
-		inc	si
-		dec	cx
-
-loc_EE47:
-		cmp	cx, 0
-		ja	short loc_EE2E
-		pop	di
-		pop	si
-		pop	bp
-		retn	4
-sub_EDF0	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
