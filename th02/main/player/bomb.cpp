@@ -19,6 +19,7 @@ extern nearfunc_t_near playchar_bomb_func;
 // These assume the GRCG to be set to RMW mode, with a tile in the intended
 // color.
 void pascal near bomb_circle_point_put(screen_x_t left, screen_y_t top);
+void pascal near bomb_particle_put_8(screen_x_t left, screen_y_t top, int cel);
 // -----------------------
 
 void pascal near bomb_reimu_a(void);
@@ -90,4 +91,29 @@ void pascal near bomb_circle_point_put(screen_x_t left, screen_y_t top)
 
 	#undef first_bit_mirrored
 	#undef vram_top
+}
+
+void pascal near bomb_particle_put_8(screen_x_t left, screen_y_t top, int cel)
+{
+	#define _DI	static_cast<vram_offset_t>(_DI)
+
+	_ES = SEG_PLANE_B;
+	_DX = scroll_screen_y_to_vram(static_cast<vram_y_t>(_DX), top);
+	vram_offset_shift_fast_asm(di, left, _DX);
+
+	// ZUN bloat: _SI  = &sBOMB_PARTICLES[cel];
+	_SI = reinterpret_cast<uint16_t>(&sBOMB_PARTICLES[0][0]);
+	_AX = (cel * sizeof(sBOMB_PARTICLES[0]));
+	asm { add	si, ax; }
+
+	_CX = BOMB_PARTICLE_H;
+	loop: {
+		asm { movsb; }
+		vram_offset_add_and_roll(
+			_DI, (ROW_SIZE - (BOMB_PARTICLE_W / BYTE_DOTS))
+		);
+		asm { loop loop; }
+	}
+
+	#undef _DI
 }

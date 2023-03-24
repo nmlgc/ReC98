@@ -6364,15 +6364,15 @@ loc_E566:
 loc_E58E:
 		mov	bx, si
 		shl	bx, 2
-		push	word ptr [bx+3F5Ch]
+		push	word ptr [bx+3F5Ch]	; cel
 		mov	bx, si
 		shl	bx, 2
-		push	word ptr [bx+3F5Eh]
+		push	word ptr [bx+3F5Eh]	; top
 		mov	al, [si+3F28h]
 		mov	ah, 0
 		dec	ax
-		push	ax
-		call	sub_ED9F
+		push	ax	; left
+		call	@bomb_particle_put_8$qiii
 
 loc_E5AB:
 		inc	si
@@ -7129,61 +7129,11 @@ main_01__TEXT	ends
 PLAYER_B_TEXT	segment	byte public 'CODE' use16
 	@BOMB_CIRCLE_POINT_PUT$QII procdesc pascal near \
 		left:word, top:word
+	@BOMB_PARTICLE_PUT_8$QIII procdesc pascal near \
+		left:word, top:word, cel:word
 PLAYER_B_TEXT	ends
 
 main_01___TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_ED9F	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	ax, 0A800h
-		mov	es, ax
-		mov	dx, [bp+arg_2]
-		add	dx, _scroll_line
-		cmp	dx, RES_Y
-		jl	short loc_EDBA
-		sub	dx, RES_Y
-
-loc_EDBA:
-		mov	ax, [bp+arg_4]
-		sar	ax, 3
-		shl	dx, 6
-		add	ax, dx
-		shr	dx, 2
-		add	ax, dx
-		mov	di, ax
-		mov	si, offset _sBOMB_PARTICLES
-		mov	ax, [bp+arg_0]
-		shl	ax, 3
-		add	si, ax
-		mov	cx, 8
-
-loc_EDDA:
-		movsb
-		add	di, 4Fh	; 'O'
-		cmp	di, 7D00h
-		jl	short loc_EDE8
-		sub	di, 7D00h
-
-loc_EDE8:
-		loop	loc_EDDA
-		pop	di
-		pop	si
-		pop	bp
-		retn	6
-sub_ED9F	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
