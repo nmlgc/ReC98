@@ -3,7 +3,6 @@
 // Gaiji available to TH04 and TH05
 
 #include "th02/gaiji/from_2.h"
-#include "th03/gaiji/bar.h"
 
 #define OVERLAY_FADE_CELS 8
 #define RETURN_KEY_CELS 4
