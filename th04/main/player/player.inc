@@ -5,6 +5,9 @@ PLAYER_OPTION_DISTANCE = (PLAYER_W / 2) + (PLAYER_OPTION_W / 2)
 
 ; Shots
 ; -----
+
+POWER_MAX = 128
+
 SHOT_W = 16
 SHOT_H = 16
 

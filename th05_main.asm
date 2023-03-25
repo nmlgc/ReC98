@@ -578,7 +578,7 @@ loc_B099:
 loc_B09F:
 		cmp	si, SCORE_DIGITS
 		jl	short loc_B099
-		mov	_power, 1
+		mov	_power, POWER_MIN
 		mov	_dream, 1
 		call	bb_txt_load
 		mov	al, _playchar
@@ -776,7 +776,7 @@ loc_B2A5:
 		mov	_stage_id, al
 		cmp	es:[bx+resident_t.demo_num], 5
 		jz	short loc_B2CE
-		mov	_power, 128
+		mov	_power, POWER_MAX
 
 loc_B2CE:
 		mov	fp_2300E, offset @DemoPlay$qv
@@ -2886,10 +2886,10 @@ sub_E4FC	proc far
 		xor	bx, bx
 		xor	ax, ax
 		mov	al, _power
-		mov	cx, 9
+		mov	cx, SHOT_LEVEL_MAX
 
 loc_E506:
-		cmp	ax, SHOT_LEVELS[bx]
+		cmp	ax, _SHOT_LEVEL_TO_POWER[bx]
 		jb	short loc_E511
 		add	bx, 2
 		loop	loc_E506
@@ -4340,7 +4340,7 @@ loc_FBB5:
 		or	di, di
 		jnz	short loc_FBF5
 		call	sub_E8F2
-		mov	_power, 1
+		mov	_power, POWER_MIN
 		mov	_dream, 1
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.credit_bombs]
@@ -4906,7 +4906,7 @@ public @hud_graze_put$qv
 public HUD_POWER_PUT
 hud_power_put	proc far
 
-@@bar_colors		= byte ptr -(((HUD_POWER_COLOR_COUNT + 1) / word) * word)
+@@bar_colors	= byte ptr -(((SHOT_LEVEL_MAX + 1) / word) * word)
 
 		push	bp
 		mov	bp, sp
@@ -4917,7 +4917,7 @@ hud_power_put	proc far
 		lea	di, [bp+@@bar_colors]
 		push	ss
 		pop	es
-		mov	cx, ((HUD_POWER_COLOR_COUNT + 1) / word)
+		mov	cx, ((SHOT_LEVEL_MAX + 1) / word)
 		rep movsw
 		push	16h
 		mov	al, _power
@@ -6915,7 +6915,7 @@ var_1		= byte ptr -1
 		jnz	short loc_12092
 		mov	_player_pos.velocity.x, 0
 		mov	_player_pos.velocity.y, 0
-		mov	_power_overflow_level, 0
+		mov	_power_overflow, 0
 		mov	_miss_explosion_radius, 0
 		call	items_miss_add
 		mov	al, _power
@@ -9800,9 +9800,9 @@ arg_0		= word ptr  4
 		jmp	cs:off_171BA[bx]
 
 loc_16F76:
-		cmp	_power, 128
+		cmp	_power, POWER_MAX
 		jnb	short loc_16FAA
-		cmp	_power, 127
+		cmp	_power, (POWER_MAX - 1)
 		jnz	short loc_16F9B
 		mov	_overlay_popup_id_new, POPUP_ID_FULL_POWERUP
 		mov	_overlay2, offset @overlay_popup_update_and_render$qv
@@ -9818,10 +9818,10 @@ loc_16F9B:
 ; ---------------------------------------------------------------------------
 
 loc_16FAA:
-		inc	_power_overflow_level
-		cmp	_power_overflow_level, 42
+		inc	_power_overflow
+		cmp	_power_overflow, POWER_OVERFLOW_MAX
 		jb	short loc_16FD1
-		mov	_power_overflow_level, 42
+		mov	_power_overflow, POWER_OVERFLOW_MAX
 		mov	[bp+@@yellow], 1
 		cmp	_items_pull_to_player, 0
 		jnz	short loc_16FD1
@@ -9830,9 +9830,9 @@ loc_16FAA:
 		inc	_dream
 
 loc_16FD1:
-		mov	bx, _power_overflow_level
+		mov	bx, _power_overflow
 		add	bx, bx
-		mov	si, POWER_OVERFLOW_BONUS[bx]
+		mov	si, _POWER_OVERFLOW_BONUS[bx]
 		call	hud_dream_put
 		jmp	loc_17174
 ; ---------------------------------------------------------------------------
@@ -9930,14 +9930,14 @@ loc_17097:
 ; ---------------------------------------------------------------------------
 
 loc_170B5:
-		cmp	_power, 128
+		cmp	_power, POWER_MAX
 		jnb	short loc_170F2
 		mov	al, _power
 		add	al, 10
 		mov	_power, al
-		cmp	_power, 128
+		cmp	_power, POWER_MAX
 		jb	short loc_170E7
-		mov	_power, 128
+		mov	_power, POWER_MAX
 		mov	_overlay_popup_id_new, POPUP_ID_FULL_POWERUP
 		mov	_overlay2, offset @overlay_popup_update_and_render$qv
 		cmp	_bullet_clear_time, 20
@@ -9951,16 +9951,16 @@ loc_170E7:
 ; ---------------------------------------------------------------------------
 
 loc_170F2:
-		add	_power_overflow_level, 5
-		mov	bx, _power_overflow_level
+		add	_power_overflow, 5
+		mov	bx, _power_overflow
 		add	bx, bx
-		mov	si, POWER_OVERFLOW_BONUS[bx]
-		cmp	_power_overflow_level, 42
+		mov	si, _POWER_OVERFLOW_BONUS[bx]
+		cmp	_power_overflow, POWER_OVERFLOW_MAX
 		jbe	short loc_1710E
-		mov	_power_overflow_level, 42
+		mov	_power_overflow, POWER_OVERFLOW_MAX
 
 loc_1710E:
-		cmp	_power_overflow_level, 42
+		cmp	_power_overflow, POWER_OVERFLOW_MAX
 		jnz	short loc_17174
 		mov	si, 2560
 		mov	[bp+@@yellow], 1
@@ -9993,7 +9993,7 @@ loc_17150:
 loc_1715C:
 		mov	_overlay_popup_id_new, POPUP_ID_FULL_POWERUP
 		mov	_overlay2, offset @overlay_popup_update_and_render$qv
-		mov	_power, 128
+		mov	_power, POWER_MAX
 		call	sub_E4FC
 
 loc_17171:
@@ -20507,7 +20507,7 @@ include th04/gaiji/hud[data].asm
 gsRUIKEI	db 0EDh, 0EEh, 0, 0, 0
 byte_22720	db 0
 include th05/main/hud/dream[data].asm
-include th04/main/hud/power[data].asm
+include th02/main/hud/power[data].asm
 include th04/main/hud/hp[data].asm
 aB@b@bB@b@	db '　　×　　',0
 aB@b@bB@b@_0	db '　　×　　',0

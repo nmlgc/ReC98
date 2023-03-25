@@ -24,6 +24,7 @@ include th02/main/playfld.inc
 include th02/main/sparks.inc
 include th02/main/hud/hud.inc
 include th02/main/tile/tile.inc
+include th02/main/player/player.inc
 include th02/sprites/main_pat.inc
 
 	extern SCOPY@:proc
@@ -2270,7 +2271,7 @@ demo_load	proc far
 		call	hmem_allocbyte pascal, DEMO_N * 2
 		mov	word ptr _DemoBuf+2, ax
 		mov	word ptr _DemoBuf, 0
-		mov	power, 80
+		mov	_power, POWER_MAX
 		mov	word_20272, 0Ch
 		les	bx, _resident
 		mov	es:[bx+mikoconfig_t.frame], 12h
@@ -2387,10 +2388,10 @@ cfg_load	proc near
 		mov	al, es:[bx+mikoconfig_t.rank]
 		mov	_rank, al
 		mov	al, es:[bx+mikoconfig_t.start_power]
-		mov	power, al
-		cmp	power, 0
+		mov	_power, al
+		cmp	_power, 0
 		jnz	short loc_C2DF
-		inc	power
+		inc	_power
 
 loc_C2DF:
 		mov	word_20272, 0
@@ -2600,7 +2601,7 @@ loc_C516:
 		mov	lives, al
 		mov	al, es:[bx+mikoconfig_t.start_bombs]
 		mov	bombs, al
-		mov	power, 1
+		mov	_power, POWER_MIN
 		inc	es:[bx+mikoconfig_t.continues_used]
 		call	sub_DD1B
 		mov	al, _stage_id
@@ -2610,7 +2611,7 @@ loc_C516:
 		idiv	bx
 		add	dx, 2
 		mov	word_1E51E, dx
-		mov	power_overflow_level, 10
+		mov	_power_overflow, 10
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		call	@overlay_wipe$qv
@@ -2981,10 +2982,10 @@ loc_CB53:
 		shl	bx, 4
 		cmp	byte ptr [bx+2908h], 0
 		jnz	loc_CD00
-		mov	al, shot_level
+		mov	al, _shot_level
 		mov	ah, 0
 		mov	bx, ax
-		cmp	bx, 9
+		cmp	bx, SHOT_LEVEL_MAX
 		ja	loc_CCFB
 		add	bx, bx
 		jmp	cs:off_CD16[bx]
@@ -3298,10 +3299,10 @@ loc_CD54:
 		jnz	loc_D035
 		cmp	[bp+var_3], 0
 		jnz	loc_CEF7
-		mov	al, shot_level
+		mov	al, _shot_level
 		mov	ah, 0
 		mov	bx, ax
-		cmp	bx, 9
+		cmp	bx, SHOT_LEVEL_MAX
 		ja	loc_CEE8
 		add	bx, bx
 		jmp	cs:off_D057[bx]
@@ -3538,9 +3539,9 @@ loc_CEE8:
 ; ---------------------------------------------------------------------------
 
 loc_CEF7:
-		cmp	shot_level, 2
+		cmp	_shot_level, 2
 		jb	loc_D042
-		cmp	shot_level, 9
+		cmp	_shot_level, SHOT_LEVEL_MAX
 		jnz	short loc_CF0F
 		mov	ax, word_205D8
 		mov	word_205DC, ax
@@ -3553,7 +3554,7 @@ loc_CF0F:
 loc_CF15:
 		cmp	byte_205DE, 0
 		jnz	loc_D042
-		mov	al, shot_level
+		mov	al, _shot_level
 		mov	ah, 0
 		sub	ax, 2
 		mov	bx, ax
@@ -3773,7 +3774,7 @@ var_2		= word ptr -2
 		add	ax, 32
 		shl	ax, 4
 		mov	word_205E4, ax
-		cmp	shot_level, 2
+		cmp	_shot_level, 2
 		jb	short loc_D09C
 		mov	byte_1E519, 7Ch	; '|'
 
@@ -3789,10 +3790,10 @@ loc_D0A5:
 		jnz	loc_D341
 		cmp	[bp+var_3], 0
 		jnz	loc_D17D
-		mov	al, shot_level
+		mov	al, _shot_level
 		mov	ah, 0
 		mov	bx, ax
-		cmp	bx, 9
+		cmp	bx, SHOT_LEVEL_MAX
 		ja	loc_D16E
 		add	bx, bx
 		jmp	cs:off_D362[bx]
@@ -3899,9 +3900,9 @@ loc_D16E:
 ; ---------------------------------------------------------------------------
 
 loc_D17D:
-		cmp	shot_level, 2
+		cmp	_shot_level, 2
 		jb	loc_D34E
-		cmp	shot_level, 3
+		cmp	_shot_level, 3
 		jnb	short loc_D197
 		cmp	byte_205DE, 0
 		jz	short loc_D1E3
@@ -3909,7 +3910,7 @@ loc_D17D:
 ; ---------------------------------------------------------------------------
 
 loc_D197:
-		cmp	shot_level, 4
+		cmp	_shot_level, 4
 		jnb	short loc_D1B0
 		mov	al, byte_20350
 		mov	ah, 0
@@ -3922,7 +3923,7 @@ loc_D197:
 ; ---------------------------------------------------------------------------
 
 loc_D1B0:
-		cmp	shot_level, 6
+		cmp	_shot_level, 6
 		jnb	short loc_D1C1
 		test	byte_20350, 3
 		jz	short loc_D1E3
@@ -3930,7 +3931,7 @@ loc_D1B0:
 ; ---------------------------------------------------------------------------
 
 loc_D1C1:
-		cmp	shot_level, 9
+		cmp	_shot_level, SHOT_LEVEL_MAX
 		jnb	short loc_D1DA
 		mov	al, byte_20350
 		mov	ah, 0
@@ -3947,7 +3948,7 @@ loc_D1DA:
 		jnz	loc_D34E
 
 loc_D1E3:
-		mov	al, shot_level
+		mov	al, _shot_level
 		mov	ah, 0
 		sub	ax, 2
 		mov	bx, ax
@@ -5016,24 +5017,24 @@ arg_0		= word ptr  4
 		jmp	cs:off_DAE6[bx]
 
 loc_D949:
-		cmp	power, 80
+		cmp	_power, POWER_MAX
 		jnb	short loc_D964
-		inc	power
+		inc	_power
 		call	hud_power_put
-		mov	power_overflow_level, 0
+		mov	_power_overflow, 0
 		inc	dword_218A4
 		jmp	short loc_D984
 ; ---------------------------------------------------------------------------
 
 loc_D964:
-		cmp	power_overflow_level, 42
+		cmp	_power_overflow, POWER_OVERFLOW_MAX
 		jge	short loc_D96F
-		inc	power_overflow_level
+		inc	_power_overflow
 
 loc_D96F:
-		mov	bx, power_overflow_level
+		mov	bx, _power_overflow
 		add	bx, bx
-		movsx	eax, POWER_OVERFLOW_BONUS[bx]
+		movsx	eax, _POWER_OVERFLOW_BONUS[bx]
 		add	dword_218A4, eax
 		inc	byte_218A8
 
@@ -5041,9 +5042,9 @@ loc_D984:
 		inc	byte_218A8
 		push	si	; left
 		push	word_2189C	; top
-		mov	bx, power_overflow_level
+		mov	bx, _power_overflow
 		add	bx, bx
-		push	POWER_OVERFLOW_BONUS[bx]	; points
+		push	_POWER_OVERFLOW_BONUS[bx]	; points
 		call	@pointnums_add$qiiui
 		jmp	loc_DAB6
 ; ---------------------------------------------------------------------------
@@ -5114,39 +5115,39 @@ loc_DA21:
 ; ---------------------------------------------------------------------------
 
 loc_DA3F:
-		cmp	power, 70
+		cmp	_power, (POWER_MAX - 10)
 		jnb	short loc_DA5B
-		mov	al, power
+		mov	al, _power
 		add	al, 10
-		mov	power, al
+		mov	_power, al
 		inc	dword_218A4
-		mov	power_overflow_level, 0
+		mov	_power_overflow, 0
 		jmp	short loc_DA85
 ; ---------------------------------------------------------------------------
 
 loc_DA5B:
-		cmp	power_overflow_level, 38
+		cmp	_power_overflow, (POWER_OVERFLOW_MAX - 4)
 		jge	short loc_DA69
-		add	power_overflow_level, 5
+		add	_power_overflow, 5
 		jmp	short loc_DA6F
 ; ---------------------------------------------------------------------------
 
 loc_DA69:
-		mov	power_overflow_level, 42
+		mov	_power_overflow, POWER_OVERFLOW_MAX
 
 loc_DA6F:
-		mov	power, 80
-		mov	bx, power_overflow_level
+		mov	_power, POWER_MAX
+		mov	bx, _power_overflow
 		add	bx, bx
-		movsx	eax, POWER_OVERFLOW_BONUS[bx]
+		movsx	eax, _POWER_OVERFLOW_BONUS[bx]
 		add	dword_218A4, eax
 
 loc_DA85:
 		push	si	; left
 		push	word_2189C	; top
-		mov	bx, power_overflow_level
+		mov	bx, _power_overflow
 		add	bx, bx
-		push	POWER_OVERFLOW_BONUS[bx]	; points
+		push	_POWER_OVERFLOW_BONUS[bx]	; points
 		call	@pointnums_add$qiiui
 		call	hud_power_put
 		jmp	short loc_DAB6
@@ -5584,13 +5585,13 @@ var_2		= word ptr -2
 		mov	[bp+var_16], ax
 		mov	ax, word_1E5EB
 		mov	[bp+var_14], ax
-		mov	al, power
+		mov	al, _power
 		mov	ah, 0
 		sar	ax, 2
 		mov	bx, ax
-		mov	al, SHOT_LEVELS[bx]
-		mov	shot_level, al
-		cmp	shot_level, 9
+		mov	al, _POWER_TO_SHOT_LEVEL[bx]
+		mov	_shot_level, al
+		cmp	_shot_level, SHOT_LEVEL_MAX
 		jnz	short loc_DF20
 		push	(62 shl 16) + 20
 		push	ss
@@ -5601,7 +5602,7 @@ var_2		= word ptr -2
 ; ---------------------------------------------------------------------------
 
 loc_DF20:
-		mov	al, power
+		mov	al, _power
 		mov	ah, 0
 		mov	[bp+var_2], ax
 		sub	[bp+var_2], 10h
@@ -5616,7 +5617,7 @@ loc_DF2E:
 loc_DF37:
 		cmp	[bp+var_2], 0
 		jg	short loc_DF2E
-		mov	al, power
+		mov	al, _power
 		mov	ah, 0
 		dec	ax
 		and	ax, 0Fh
@@ -5628,7 +5629,7 @@ loc_DF37:
 		push	ss
 		lea	ax, [bp+var_18]
 		push	ax
-		mov	al, shot_level
+		mov	al, _shot_level
 		mov	ah, 0
 		lea	dx, [bp+@@bar_colors]
 		add	ax, dx
@@ -7197,7 +7198,7 @@ loc_EF9E:
 		call	super_roll_put pascal, point_205F6.x, si, word_1E512
 
 loc_EFAC:
-		cmp	power, 8
+		cmp	_power, 8
 		jb	short loc_EFEF
 		mov	bx, word_205F4
 		mov	si, [bx]
@@ -7332,11 +7333,11 @@ loc_F0B9:
 ; ---------------------------------------------------------------------------
 
 loc_F107:
-		mov	al, shot_level
+		mov	al, _shot_level
 		mov	ah, 0
 		mov	bx, ax
 		mov	al, [bx+109Fh]
-		mov	power, al
+		mov	_power, al
 		call	hud_power_put
 		mov	bx, word_205EE
 		push	word ptr [bx]
@@ -7638,7 +7639,7 @@ loc_F368:
 		jz	short loc_F3B3
 		cmp	byte_22D4A, 0
 		jnz	short loc_F3AF
-		cmp	shot_level, 9
+		cmp	_shot_level, SHOT_LEVEL_MAX
 		jnz	short loc_F38B
 		mov	al, byte_2060E
 		mov	byte_1E519, al
@@ -7667,7 +7668,7 @@ loc_F3B3:
 		jnb	short loc_F434
 		cmp	byte_22D4B, 0
 		jnz	short loc_F426
-		cmp	shot_level, 9
+		cmp	_shot_level, SHOT_LEVEL_MAX
 		jnz	short loc_F40D
 		mov	al, byte_2060E
 		mov	byte_1E519, al
@@ -13103,7 +13104,7 @@ arg_6		= word ptr  0Ah
 		sub	sp, 12h
 		push	si
 		push	di
-		mov	bl, shot_level
+		mov	bl, _shot_level
 		mov	bh, 0
 		add	bx, bx
 		mov	ax, [bx+10DAh]
@@ -27717,7 +27718,7 @@ loc_1AB43:
 		mov	bx, 50h	; 'P'
 		cwd
 		idiv	bx
-		mov	al, power
+		mov	al, _power
 		mov	ah, 0
 		cmp	dx, ax
 		jl	short loc_1ABD1
@@ -32000,14 +32001,15 @@ angle_1E510	db 20h
 word_1E512	dw 0
 		db    0
 		db    0
-power	db 1
+public _power
+_power	db 1
 byte_1E517	db 0
 byte_1E518	db 4
 byte_1E519	db 40h
 byte_1E51A	db 4Ch
-public _player_option_patnum
+public _player_option_patnum, _power_overflow
 _player_option_patnum	db PAT_OPTION_A
-power_overflow_level	dw 0
+_power_overflow	dw 0
 word_1E51E	dw 0
 		db    0
 		db    1
@@ -32082,8 +32084,8 @@ gsREIMU		db 0C9h, 0CAh, 0, 0, 0
 gsREIGEKI	db 0CCh, 0CDh, 0, 0, 0
 gsREIRYOKU	db 0C7h, 0C8h, 0, 0, 0
 aMikoft_bft	db 'MIKOFT.bft',0
-; Indexed with (power / 4).
-SHOT_LEVELS	db 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 6, 7, 7, 7, 8, 8, 8, 8, 9
+public _POWER_TO_SHOT_LEVEL
+_POWER_TO_SHOT_LEVEL	db 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 6, 7, 7, 7, 8, 8, 8, 8, 9
 byte_1E64E	db 0
 		db 0
 		db    4
@@ -33086,7 +33088,8 @@ byte_218A8	db ?
 word_218AA	dw ?
 score_218AC	dd ?
 word_218B0	dw ?
-shot_level	db ?
+public _shot_level
+_shot_level	db ?
 		db ?
 include th02/main/player/bomb[bss].asm
 dword_218BA	dd ?
