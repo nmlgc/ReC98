@@ -1,3 +1,6 @@
+static const int8_t LIVES_MAX = 5;
+static const int8_t BOMBS_MAX = 5;
+
 #define RES_ID "MIKOConfig"
 typedef struct {
 	char id[sizeof(RES_ID)];
@@ -32,5 +35,7 @@ extern resident_t *resident;
 // Redundant copies of resident structure fields to static data
 // ------------------------------------------------------------
 
+extern int8_t bombs;
+extern int8_t lives;
 extern bool reduce_effects;
 // ------------------------------------------------------------

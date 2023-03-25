@@ -36,6 +36,8 @@ MAP_ROWS_PER_SECTION = 8
 MAP_BITS_PER_SECTION = 3
 MAP_SECTION_COUNT = 16
 MAP_LENGTH_MAX = 320
+LIVES_MAX = 5
+BOMBS_MAX = 5
 
 main_01 group main_01_TEXT, POINTNUM_TEXT, main_01__TEXT, PLAYER_B_TEXT, main_01___TEXT
 main_03 group main_03_TEXT, main_03__TEXT
@@ -2382,9 +2384,9 @@ cfg_load	proc near
 		mov	al, es:[bx+mikoconfig_t.stage]
 		mov	_stage_id, al
 		mov	al, es:[bx+mikoconfig_t.start_lives]
-		mov	lives, al
+		mov	_lives, al
 		mov	al, es:[bx+mikoconfig_t.start_bombs]
-		mov	bombs, al
+		mov	_bombs, al
 		mov	al, es:[bx+mikoconfig_t.rank]
 		mov	_rank, al
 		mov	al, es:[bx+mikoconfig_t.start_power]
@@ -2598,9 +2600,9 @@ loc_C516:
 		les	bx, _resident
 		mov	es:[bx+mikoconfig_t.score_highest], eax
 		mov	al, es:[bx+mikoconfig_t.start_lives]
-		mov	lives, al
+		mov	_lives, al
 		mov	al, es:[bx+mikoconfig_t.start_bombs]
-		mov	bombs, al
+		mov	_bombs, al
 		mov	_power, POWER_MIN
 		inc	es:[bx+mikoconfig_t.continues_used]
 		call	sub_DD1B
@@ -4691,9 +4693,9 @@ arg_4		= word ptr  0Ah
 loc_D6EB:
 		mov	si, 3CE6h
 		shl	cx, 4
-		mov	al, lives
+		mov	al, _lives
 		cbw
-		cmp	ax, 5
+		cmp	ax, LIVES_MAX
 		jnz	short loc_D705
 		cmp	[bp+arg_0], 4
 		jnz	short loc_D705
@@ -5094,11 +5096,11 @@ loc_D9E5:
 ; ---------------------------------------------------------------------------
 
 loc_D9FA:
-		mov	al, bombs
+		mov	al, _bombs
 		cbw
-		cmp	ax, 5
+		cmp	ax, BOMBS_MAX
 		jge	short loc_DA21
-		inc	bombs
+		inc	_bombs
 		add	dword_218A4, 1000
 		call	@pointnums_add$qiiui pascal, si, word_2189C, 1000
 		call	hud_bombs_put
@@ -5154,11 +5156,11 @@ loc_DA85:
 ; ---------------------------------------------------------------------------
 
 loc_DA9C:
-		mov	al, lives
+		mov	al, _lives
 		cbw
-		cmp	ax, 5
+		cmp	ax, LIVES_MAX
 		jge	short loc_DAB6
-		inc	lives
+		inc	_lives
 		call	hud_lives_put
 		call	_snd_se_play c, 8
 
@@ -5471,21 +5473,21 @@ loc_DE01:
 		mov	eax, [bx+0B2Eh]
 		cmp	eax, _score
 		jg	short locret_DE4C
-		mov	al, lives
+		mov	al, _lives
 		cbw
-		cmp	ax, 5
+		cmp	ax, LIVES_MAX
 		jge	short loc_DE26
-		inc	lives
+		inc	_lives
 		call	hud_lives_put
 		jmp	short loc_DE36
 ; ---------------------------------------------------------------------------
 
 loc_DE26:
-		mov	al, bombs
+		mov	al, _bombs
 		cbw
-		cmp	ax, 5
+		cmp	ax, BOMBS_MAX
 		jge	short loc_DE36
-		inc	bombs
+		inc	_bombs
 		call	hud_bombs_put
 
 loc_DE36:
@@ -5526,11 +5528,11 @@ loc_DE7A:
 		mov	eax, [bx+0B2Eh]
 		cmp	eax, _score
 		jg	short loc_DEAB
-		mov	al, lives
+		mov	al, _lives
 		cbw
-		cmp	ax, 5
+		cmp	ax, LIVES_MAX
 		jge	short loc_DEA7
-		inc	lives
+		inc	_lives
 		call	hud_lives_put
 		call	_snd_se_play c, 8
 
@@ -5666,11 +5668,11 @@ loc_DF7E:
 		inc	si
 
 loc_DF95:
-		mov	al, lives
+		mov	al, _lives
 		cbw
 		cmp	ax, si
 		jg	short loc_DF7E
-		mov	al, lives
+		mov	al, _lives
 		cbw
 		mov	si, ax
 		jmp	short loc_DFBC
@@ -5712,11 +5714,11 @@ loc_DFCC:
 		inc	si
 
 loc_DFE3:
-		mov	al, bombs
+		mov	al, _bombs
 		cbw
 		cmp	ax, si
 		jg	short loc_DFCC
-		mov	al, bombs
+		mov	al, _bombs
 		cbw
 		mov	si, ax
 		jmp	short loc_E00A
@@ -6024,11 +6026,11 @@ player_bomb	proc near
 		mov	bp, sp
 		cmp	_bombing, 0
 		jnz	short loc_E2D7
-		cmp	bombs, 0
+		cmp	_bombs, 0
 		jz	short loc_E2D7
 		mov	_bombing, 1
 		mov	_player_invincible_via_bomb, 1
-		dec	bombs
+		dec	_bombs
 		call	hud_bombs_put
 		mov	_bomb_frame, 0
 		inc	byte_218C2
@@ -7318,7 +7320,7 @@ loc_F0B9:
 		push	800020h
 		push	1
 		call	sub_4090
-		cmp	lives, 0
+		cmp	_lives, 0
 		jnz	short loc_F107
 		mov	byte_20609, 0
 		mov	byte_218A1, 1
@@ -7358,16 +7360,16 @@ loc_F12A:
 loc_F13B:
 		cmp	byte_20609, 2Bh	; '+'
 		jnz	short loc_F198
-		dec	lives
+		dec	_lives
 		call	hud_lives_put
 		les	bx, _resident
 		assume es:nothing
 		mov	al, es:[bx+mikoconfig_t.start_bombs]
-		mov	bombs, al
-		cmp	lives, 0
+		mov	_bombs, al
+		cmp	_lives, 0
 		jnz	short loc_F160
 		add	al, 2
-		mov	bombs, al
+		mov	_bombs, al
 
 loc_F160:
 		call	hud_bombs_put
@@ -26230,9 +26232,9 @@ loc_19C4A:
 		add	eax, edx
 		mov	es:[bx+mikoconfig_t.score], eax
 		mov	es:[bx+mikoconfig_t.stage], 7Fh
-		mov	al, lives
+		mov	al, _lives
 		mov	es:[bx+mikoconfig_t.rem_lives], al
-		mov	al, bombs
+		mov	al, _bombs
 		mov	es:[bx+mikoconfig_t.rem_bombs], al
 		call	sub_19949
 		call	@GameExecl$qnxc c, offset aMaine_0, ds	; "maine"
@@ -32039,10 +32041,10 @@ word_1E592	dw 0BCC8h
 word_1E594	dw 0BCB0h
 byte_1E596	db 0C8h
 byte_1E597	db 0
-public _score
+public _score, _lives, _bombs
 _score	dd 0
-lives	db 3
-bombs	db 3
+_lives	db 3
+_bombs	db 3
 		db 0A0h
 		db  86h
 		db    1

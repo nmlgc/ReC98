@@ -104,7 +104,7 @@ bin\th02\main.exe: bin\th02\main.obj bin\th02\tile.obj th02\pointnum.cpp th02\pl
 $**
 |
 
-bin\th02\maine.exe: bin\th02\ranks_c.obj bin\th02\maine.obj bin\th02\grppsafx.obj bin\th02\keydelay.obj bin\th01\vplanset.obj bin\th02\pi_load.obj bin\th02\frmdely1.obj th02\maine022.cpp bin\th02\input_s.obj bin\th02\exit.obj bin\th02\snd_mmdr.obj bin\th02\snd_mode.obj bin\th02\snd_pmdr.obj bin\th02\snd_load.obj bin\th02\initmain.obj bin\th02\pi_put.obj bin\th02\snd_kaja.obj bin\th02\snd_dlym.obj bin\th02\globals.obj th02\maine_03.c th02\maine_04.cpp th02\maine_05.cpp
+bin\th02\maine.exe: bin\th02\ranks_c.obj bin\th02\maine.obj bin\th02\grppsafx.obj bin\th02\keydelay.obj bin\th01\vplanset.obj bin\th02\pi_load.obj bin\th02\frmdely1.obj th02\maine022.cpp bin\th02\input_s.obj bin\th02\exit.obj bin\th02\snd_mmdr.obj bin\th02\snd_mode.obj bin\th02\snd_pmdr.obj bin\th02\snd_load.obj bin\th02\initmain.obj bin\th02\pi_put.obj bin\th02\snd_kaja.obj bin\th02\snd_dlym.obj bin\th02\globals.obj th02\maine_03.cpp th02\maine_04.cpp th02\maine_05.cpp
 	$(CC) $(CFLAGS) $(LARGE_LFLAGS) -3 -Z -DGAME=2 -nbin\th02\ -eMAINE.EXE @&&|
 $**
 |

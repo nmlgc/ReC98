@@ -12,6 +12,8 @@
 	#define CFG_LIVES_DEFAULT 2
 	#define CFG_BOMBS_MAX 3
 	#define CFG_BOMBS_DEFAULT CFG_BOMBS_MAX
+
+	int cfg_load(void);
 #endif
 
 typedef struct {

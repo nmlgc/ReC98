@@ -10,7 +10,7 @@
 #include "th02/core/globals.hpp"
 #include "th02/formats/cfg.h"
 
-int pascal cfg_load(void)
+int cfg_load(void)
 {
 	resident_t __seg *resident_sgm;
 
