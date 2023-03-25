@@ -1916,7 +1916,7 @@ loc_BDA2:
 
 loc_BDCC:
 		call	sub_F1D8
-		call	sub_ECAC
+		call	@bomb_update_and_render$qv
 		call	farfp_26C40
 		call	_boss_update
 		mov	byte_1F466, al
@@ -6036,7 +6036,7 @@ player_bomb	proc near
 		mov	_bomb_circle_center.x, (PLAYFIELD_LEFT + (PLAYFIELD_W / 2) - 4)
 		mov	_bomb_circle_center.y, (PLAYFIELD_TOP + (PLAYFIELD_H / 2) - 4)
 		mov	_bomb_circle_frame, 0
-		mov	word_218CA, 0
+		mov	_bomb_circle_done, 0
 		call	sub_10E0A
 
 loc_E2D7:
@@ -6119,7 +6119,7 @@ loc_E386:
 		inc	_bomb_frame
 
 loc_E38A:
-		cmp	word_218CA, 1
+		cmp	_bomb_circle_done, 1
 		jnz	short loc_E39D
 		cmp	_bomb_frame, BOMB_CIRCLE_FRAMES
 		jg	short loc_E39D
@@ -6167,8 +6167,8 @@ sub_E2D9	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_E3EE	proc near
+public @bomb_circle_update_and_render$qv
+@bomb_circle_update_and_render$qv proc near
 
 @@angle		= byte ptr -5
 @@top 	= word ptr -4
@@ -6232,7 +6232,7 @@ loc_E47B:
 		pop	si
 		leave
 		retn
-sub_E3EE	endp
+@bomb_circle_update_and_render$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -7074,59 +7074,10 @@ loc_ECA9:
 		pop	bp
 		retn
 bomb_reimu_b	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_ECAC	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		cmp	_bombing, 0
-		jz	short loc_ED0E
-		inc	_bomb_frame
-		cmp	word_218CA, 0
-		jnz	short loc_ECE3
-		cmp	_bomb_frame, BOMB_CIRCLE_FRAMES
-		jg	short loc_ECD0
-		call	sub_E3EE
-		jmp	short loc_ECF0
-; ---------------------------------------------------------------------------
-
-loc_ECD0:
-		cmp	_bomb_circle_frame, 0
-		jnz	short loc_ECF0
-		mov	_bomb_frame, 0
-		inc	word_218CA
-		jmp	short loc_ECF0
-; ---------------------------------------------------------------------------
-
-loc_ECE3:
-		cmp	word_218CA, 1
-		jnz	short loc_ECF0
-		call	_playchar_bomb_func
-		mov	si, ax
-
-loc_ECF0:
-		or	si, si
-		jz	short loc_ED0E
-		mov	_bombing, 0
-		mov	_player_invincible_via_bomb, 0
-		mov	_player_invincibility_time, BOMB_INVINCIBILITY_FRAMES_AFTER
-		mov	PaletteTone, 100
-		call	far ptr	palette_show
-
-loc_ED0E:
-		pop	si
-		pop	bp
-		retn
-sub_ECAC	endp
 main_01__TEXT	ends
 
 PLAYER_B_TEXT	segment	byte public 'CODE' use16
+	@bomb_update_and_render$qv procdesc near
 	@BOMB_CIRCLE_POINT_PUT$QII procdesc pascal near \
 		left:word, top:word
 	@BOMB_PARTICLE_PUT_8$QIII procdesc pascal near \
@@ -33143,10 +33094,10 @@ word_218BE	dw ?
 word_218C0	dw ?
 byte_218C2	db ?
 		db ?
-public _bomb_circle_center, _bomb_circle_frame
+public _bomb_circle_center, _bomb_circle_frame, _bomb_circle_done
 _bomb_circle_center	Point <?>
 _bomb_circle_frame	dw ?
-word_218CA	dw ?
+_bomb_circle_done	dw ?
 		db 254 dup(?)
 public _playchar_bomb_func
 _playchar_bomb_func	dw ?

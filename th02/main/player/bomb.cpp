@@ -6,13 +6,16 @@
 #include "th02/main/playfld.hpp"
 #include "th02/main/scroll.hpp"
 #include "th02/main/tile/tile.hpp"
+#include "th02/main/player/player.h"
+#include "th02/main/player/bomb.hpp"
 #include "th02/sprites/bombpart.h"
 
 extern int bomb_frame;
 extern point_t bomb_circle_center;
 extern int bomb_circle_frame;
+extern bool16 bomb_circle_done;
 
-extern nearfunc_t_near playchar_bomb_func;
+extern bool16 (near pascal *near playchar_bomb_func)(void);
 
 // Function ordering fails
 // -----------------------
@@ -27,9 +30,38 @@ void pascal near bomb_bft_8tiles_put_8(
 );
 // -----------------------
 
+void near bomb_circle_update_and_render(void)
+;
+
 void pascal near bomb_reimu_a(void);
 void pascal near bomb_reimu_c(void);
 void pascal near bomb_reimu_b(void);
+
+void near bomb_update_and_render(void)
+{
+	bool16 done = false;
+
+	if(!bombing) {
+		return;
+	}
+	bomb_frame++;
+	if(bomb_circle_done == false) {
+		if(bomb_frame <= BOMB_CIRCLE_FRAMES) {
+			bomb_circle_update_and_render();
+		} else if(bomb_circle_frame == 0) {
+			bomb_frame = 0;
+			bomb_circle_done++;
+		}
+	} else if(bomb_circle_done == true) {
+		done = playchar_bomb_func();
+	}
+	if(done) {
+		bombing = false;
+		player_invincible_via_bomb = false;
+		player_invincibility_time = 70;
+		palette_100();
+	}
+}
 
 // ZUN bloat: Needed to circumvent 16-bit promotion in a single comparison.
 inline int8_t bomb_particle_h(void) {

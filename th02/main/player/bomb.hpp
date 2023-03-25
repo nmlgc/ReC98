@@ -4,3 +4,5 @@ extern bool bombing;
 
 // Drops a bomb, if possible.
 void pascal near player_bomb(void);
+
+void near bomb_update_and_render(void);
