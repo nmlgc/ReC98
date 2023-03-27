@@ -4569,7 +4569,7 @@ loc_1024F:
 		mov	al, _scroll_subpixel_line
 		add	al, _scroll_speed
 		mov	_scroll_subpixel_line, al
-		cmp	al, 16
+		cmp	al, (1 shl 4)
 		jb	short loc_10282
 		mov	ah, 0
 		shr	ax, 4

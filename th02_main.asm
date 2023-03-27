@@ -2270,8 +2270,8 @@ loc_B4D7:
 		setfarfp	farfp_1F498, sub_C05D
 		setfarfp	farfp_1F48C, sub_BF95
 		call	sub_C5B0
-		mov	byte_20342, 1
-		mov	byte_1E500, 4
+		mov	_scroll_speed, 1
+		mov	_scroll_interval, 4
 		mov	al, _stage_id
 		cbw
 		mov	bx, ax
@@ -2334,8 +2334,8 @@ loc_B76A:
 
 loc_B7CB:
 		call	sub_129FC
-		mov	byte_20342, 2
-		mov	byte_1E500, 1
+		mov	_scroll_speed, 2
+		mov	_scroll_interval, 1
 		jmp	loc_B88A
 ; ---------------------------------------------------------------------------
 
@@ -2347,7 +2347,7 @@ loc_B7DD:
 		setfarfp	_boss_end, mima_end
 		setfarfp	_boss_bg_render_func, mima_bg_render
 		setfarfp	_boss_update_func, mima_update
-		mov	byte_1E500, 1
+		mov	_scroll_interval, 1
 		jmp	short loc_B88A
 ; ---------------------------------------------------------------------------
 
@@ -2360,7 +2360,7 @@ loc_B832:
 		setfarfp	_boss_bg_render_func, evileye_bg_render
 		setfarfp	_boss_update_func, evileye_update
 		call	sub_129FC
-		mov	byte_1E500, 2
+		mov	_scroll_interval, 2
 
 loc_B88A:
 		call	sub_4344
@@ -2749,9 +2749,9 @@ loc_BD62:
 		mov	_scroll_line, si
 		cmp	byte_1E501, 0
 		jnz	short loc_BDA2
-		mov	al, byte_20343
+		mov	al, _scroll_cycle
 		mov	ah, 0
-		mov	dl, byte_1E500
+		mov	dl, _scroll_interval
 		mov	dh, 0
 		push	dx
 		cwd
@@ -2759,7 +2759,7 @@ loc_BD62:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_BDA2
-		mov	al, byte_20342
+		mov	al, _scroll_speed
 		mov	ah, 0
 		sub	_scroll_line, ax
 		cmp	_scroll_line, 0
@@ -2767,7 +2767,7 @@ loc_BD62:
 		add	_scroll_line, RES_Y
 
 loc_BD9C:
-		mov	al, byte_20342
+		mov	al, _scroll_speed
 		mov	byte_1E503, al
 
 loc_BDA2:
@@ -2824,7 +2824,7 @@ loc_BE0F:
 
 loc_BE3B:
 		call	@egc_start_copy_1$qv
-		mov	al, byte_20342
+		mov	al, _scroll_speed
 		mov	ah, 0
 		push	ax
 		call	sub_445A
@@ -2889,7 +2889,7 @@ loc_BE8D:
 		jnz	short loc_BEE0
 
 loc_BEDC:
-		inc	byte_20343
+		inc	_scroll_cycle
 
 loc_BEE0:
 		cmp	byte_2066D, 1
@@ -3061,7 +3061,7 @@ loc_C015:
 		mov	eax, _boss_update_func
 		mov	_boss_update, eax
 		setfarfp	farfp_1F48C, sub_BF9C
-		mov	byte_20343, -1
+		mov	_scroll_cycle, -1
 		mov	bgm_show_timer, 1
 		mov	al, byte_1F46E
 		mov	_bgm_title_id, al
@@ -4033,12 +4033,12 @@ include th02/main/pointnum/num_put.asm
 sub_CA1C	proc far
 		push	bp
 		mov	bp, sp
-		mov	byte_20342, 1
-		mov	byte_20343, 0
+		mov	_scroll_speed, 1
+		mov	_scroll_cycle, 0
 		mov	_scroll_line, 0
-		mov	word_20346, 0
+		mov	_scroll_unused, 0
 		mov	word_2034A, 0
-		mov	byte_1E500, 4
+		mov	_scroll_interval, 4
 		mov	byte_1E501, 0
 		mov	byte_2034E, 0
 		mov	byte_1E502, 0
@@ -4362,7 +4362,7 @@ loc_CC6A:
 loc_CC76:
 		cmp	si, 3
 		jnz	short loc_CC82
-		mov	[bp+var_2], 0B0h ; '°'
+		mov	[bp+var_2], 0B0h ; 'Â°'
 		jmp	short loc_CC87
 ; ---------------------------------------------------------------------------
 
@@ -33585,7 +33585,8 @@ asc_1E47E	db '                ',0
 		db    1
 		db    0
 include th02/sprites/pointnum.asp
-byte_1E500	db 4
+public _scroll_interval
+_scroll_interval	db 4
 byte_1E501	db 0
 byte_1E502	db 0
 byte_1E503	db 0
@@ -34564,10 +34565,11 @@ word_20274	dw ?
 col_20276	db ?
 		db 201 dup(?)
 include th02/main/pointnum/pointnum[bss].asm
-byte_20342	db ?
-byte_20343	db ?
+public _scroll_speed, _scroll_cycle, _scroll_line, _scroll_unused
+_scroll_speed	db ?
+_scroll_cycle	db ?
 _scroll_line	dw ?
-word_20346	dw ?
+_scroll_unused	dw ?
 word_20348	dw ?
 word_2034A	dw ?
 word_2034C	dw ?

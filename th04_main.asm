@@ -2036,7 +2036,7 @@ loc_CCFE:
 		mov	al, _scroll_subpixel_line
 		add	al, _scroll_speed
 		mov	_scroll_subpixel_line, al
-		cmp	al, 16
+		cmp	al, (1 shl 4)
 		jb	short loc_CD31
 		mov	ah, 0
 		shr	ax, 4
@@ -5210,7 +5210,7 @@ var_2		= word ptr -2
 		mov	_tile_invalidate_box.y, 2
 		call	main_01:tiles_invalidate_around pascal, large ((PLAYFIELD_W / 2) shl 4)
 		mov	ax, _scroll_line
-		mov	bx, 16
+		mov	bx, (1 shl 4)
 		cwd
 		idiv	bx
 		mov	[bp+var_2], ax
