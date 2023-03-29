@@ -421,14 +421,7 @@ void pellet_put(screen_x_t left, vram_y_t top, int cel)
 	// instruction than the one in ZUN's original binary.
 	_ES = SEG_PLANE_B;
 
-	// ZUN bloat: Same as vram_offset_shift_fast(left, top).
-	_AX = (left >> BYTE_BITS);
-	_DX = top;
-	_DX <<= 6;
-	asm { add	ax, dx; }
-	_DX >>= 2;
-	asm { add	ax, dx; }
-	asm { mov	di, ax; }
+	vram_offset_shift_fast_asm(di, left, top);
 
 	_AX = (left & 7) << 4;
 	_BX = cel;
