@@ -73,7 +73,7 @@ cfg_options_t opts = {
 	CFG_CREDIT_BOMBS_DEFAULT,
 	CFG_CREDIT_LIVES_EXTRA_DEFAULT
 };
-int8_t debug_mode = 0;
+debug_mode_t debug_mode = DM_OFF;
 
 void cfg_load(void)
 {
@@ -351,28 +351,10 @@ void start_game(bool new_game)
 	key_end();
 	mdrv2_bgm_fade_out_nonblock();
 
-	// ZUN bug: Does not initialize [resident->debug_mode] if [debug_mode] is
-	// 1, which happens when starting the game with `game s`. This mode is
-	// supposed to just show the stage selection screen at the beginning of
-	// REIIDEN.EXE, without enabling other debug features.
-	// However, since master.lib doesn't clear the resident structure after
-	// allocation, `game s` might actually *have* the intended effect if
-	// anything on the system previously wrote a value other than DM_OFF,
-	// DM_TEST, or DM_FULL to the specific byte in memory that now corresponds
-	// to [resident->debug_mode]. This happens on a certain widely circulated
-	// .HDI copy of TH01 that boots MS-DOS 3.30C and then directly launches the
-	// game, which might be the whole reason why `game s` is widely documented
-	// to trigger a stage selection to begin with.
-	//
-	// The fact that main() does have a conditional branch that sets
-	// [debug_mode] to a distinct value proves that ZUN did have a stage
-	// selection mode during development, fitting the bug classification.
-	if(!new_game || (debug_mode == 0)) {
+	if(!new_game) {
 		resident->debug_mode = DM_OFF;
-	} else if(debug_mode == 2) {
-		resident->debug_mode = DM_TEST;
-	} else if(debug_mode == 3) {
-		resident->debug_mode = DM_FULL;
+	} else {
+		resident->debug_mode = debug_mode;
 	}
 
 	resident->rem_lives = (opts.credit_lives_extra + 2);
@@ -735,14 +717,10 @@ int main_op(int argc, const char *argv[])
 	unused_con_arg_2 = 0;
 
 	if(argc > 1) {
-		if(argv[1][0] == 's') {
-			debug_mode = 1;
-		}
-		if(argv[1][0] == 't') {
-			debug_mode = 2;
-		}
-		if(argv[1][0] == 'd') {
-			debug_mode = 3;
+		switch(argv[1][0]) {
+		case 's':	debug_mode = DM_STAGESELECT;	break;
+		case 't':	debug_mode = DM_TEST;       	break;
+		case 'd':	debug_mode = DM_FULL;       	break;
 		}
 
 		// ZUN landmine: The string could theoretically be less than 3

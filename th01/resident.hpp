@@ -25,10 +25,9 @@ enum end_sequence_t {
 
 enum debug_mode_t {
 	DM_OFF = 0,
-	DM_TEST = 1,
+	DM_STAGESELECT = 1,
+	DM_TEST = 2,
 	DM_FULL = 3,
-
-	_debug_mode_t_FORCE_INT16 = 0x7FFF
 };
 
 // Much like subpixels, pellet speeds are stored pre-multiplied by 40 to allow
