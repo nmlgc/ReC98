@@ -21,10 +21,6 @@ struct CParticles {
 	Subpixel velocity_x[PARTICLE_COUNT];
 	Subpixel velocity_y[PARTICLE_COUNT];
 	bool alive[PARTICLE_COUNT];
-
-	// MODDERS: Should be local, and just a single variable, not an array.
-	unsigned char velocity_base[PARTICLE_COUNT];
-
 	unsigned char spawn_cycle;
 
 	void init();

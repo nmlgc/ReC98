@@ -36,7 +36,7 @@ void CParticles::unput_update_render(particle_origin_t origin, int col)
 		i = (spawn_cycle / spawn_interval);
 		if(alive[i] == false) {
 			alive[i] = true;
-			velocity_base[i] = ((rand() % velocity_base_max) + 1);
+			const pixel_t velocity_base = ((rand() % velocity_base_max) + 1);
 			if((i % 2) == 0) {
 				switch(origin) {
 				case PO_TOP:
@@ -81,36 +81,36 @@ void CParticles::unput_update_render(particle_origin_t origin, int col)
 
 			switch(origin) {
 			case PO_TOP:
-				velocity_y[i].v = TO_SP(velocity_base[i]);
+				velocity_y[i].v = TO_SP(velocity_base);
 				velocity_x[i].set(0.0f);
 				break;
 			case PO_TOP_RIGHT:
-				velocity_x[i].v = (-(velocity_base[i] * to_sp(0.8125f)));
-				velocity_y[i].v = (  velocity_base[i] * to_sp(0.5f));
+				velocity_x[i].v = (-(velocity_base * to_sp(0.8125f)));
+				velocity_y[i].v = (  velocity_base * to_sp(0.5f));
 				break;
 			case PO_RIGHT:
-				velocity_x[i].v = TO_SP(-velocity_base[i]);
+				velocity_x[i].v = TO_SP(-velocity_base);
 				velocity_y[i].set(0.0f);
 				break;
 			case PO_BOTTOM_RIGHT:
-				velocity_x[i].v = (-(velocity_base[i]  * to_sp(0.8125f)));
-				velocity_y[i].v = ((-velocity_base[i]) * to_sp(0.5f));
+				velocity_x[i].v = (-(velocity_base  * to_sp(0.8125f)));
+				velocity_y[i].v = ((-velocity_base) * to_sp(0.5f));
 				break;
 			case PO_BOTTOM:
-				velocity_y[i].v = TO_SP(-velocity_base[i]);
+				velocity_y[i].v = TO_SP(-velocity_base);
 				velocity_x[i].set(0.0f);
 				break;
 			case PO_BOTTOM_LEFT:
-				velocity_x[i].v = (  velocity_base[i]  * to_sp(0.8125f));
-				velocity_y[i].v = ((-velocity_base[i]) * to_sp(0.5f));
+				velocity_x[i].v = (  velocity_base  * to_sp(0.8125f));
+				velocity_y[i].v = ((-velocity_base) * to_sp(0.5f));
 				break;
 			case PO_LEFT:
-				velocity_x[i].v = TO_SP(velocity_base[i]);
+				velocity_x[i].v = TO_SP(velocity_base);
 				velocity_y[i].set(0.0f);
 				break;
 			case PO_TOP_LEFT:
-				velocity_x[i].v = (velocity_base[i] * to_sp(0.8125f));
-				velocity_y[i].v = (velocity_base[i] * to_sp(0.5f));
+				velocity_x[i].v = (velocity_base * to_sp(0.8125f));
+				velocity_y[i].v = (velocity_base * to_sp(0.5f));
 				break;
 			}
 		}
