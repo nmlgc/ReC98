@@ -359,6 +359,22 @@ void start_game(void)
 	mdrv2_bgm_fade_out_nonblock();
 	game_switch_binary();
 
+	// ZUN bug: Does not initialize [resident->debug_mode] if [debug_mode] is
+	// 1, which happens when starting the game with `game s`. This mode is
+	// supposed to just show the stage selection screen at the beginning of
+	// REIIDEN.EXE, without enabling other debug features.
+	// However, since master.lib doesn't clear the resident structure after
+	// allocation, `game s` might actually *have* the intended effect if
+	// anything on the system previously wrote a value other than DM_OFF,
+	// DM_TEST, or DM_FULL to the specific byte in memory that now corresponds
+	// to [resident->debug_mode]. This happens on a certain widely circulated
+	// .HDI copy of TH01 that boots MS-DOS 3.30C and then directly launches the
+	// game, which might be the whole reason why `game s` is widely documented
+	// to trigger a stage selection to begin with.
+	//
+	// The fact that main() does have a conditional branch that sets
+	// [debug_mode] to a distinct value proves that ZUN did have a stage
+	// selection mode during development, fitting the bug classification.
 	if(debug_mode == 2) {
 		resident->debug_mode = DM_TEST;
 	} else if(debug_mode == 3) {
@@ -757,9 +773,6 @@ void main(int argc, const char *argv[])
 
 	if(argc > 1) {
 		if(argv[1][0] == 's') {
-			// Probably supposed to just show the stage selection screen
-			// without any other debugging features, but start_game() ignores
-			// this value.
 			debug_mode = 1;
 		}
 		if(argv[1][0] == 't') {
