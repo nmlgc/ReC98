@@ -1,3 +1,10 @@
+#include "platform.h"
+#include "x86real.h"
+#include "pc98.h"
+#include "master.hpp"
+#include "th01/math/overlap.hpp"
+#include "th01/math/subpixel.hpp"
+#include "th01/hardware/egc.h"
 #include "th01/main/particle.hpp"
 
 void particles_unput_update_render(particle_origin_t origin, int col)

@@ -24,4 +24,3 @@
 #include "th01/main/boss/boss.cpp"
 #include "th01/main/bullet/missile.cpp"
 #include "th01/main/player/bomb_d_f.cpp"
-#include "th01/main/particle.cpp"
