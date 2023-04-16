@@ -24,25 +24,16 @@ void CParticles::unput_update_render(particle_origin_t origin, int col)
 
 	// Spawn
 
-	// ZUN bug: Should rather be done after spawning? Doing it here results in
-	// the particle at slot 0 not being written on the first cycle. It also...
+	// This should have maybe been done after spawning, and the fact that it's
+	// done here was partly responsible for an off-by-one bug in the original
+	// game. Keeping it here to at least preserve the single frame of delay
+	// before the first spawn.
 	spawn_cycle++;
-
-	// ... turns the usage of > instead of >= into an off-by-one error...
-	if(spawn_cycle > (spawn_interval * PARTICLE_COUNT)) {
+	if(spawn_cycle >= (spawn_interval * PARTICLE_COUNT)) {
 		spawn_cycle = 0;
 	}
-	// ... which leads to this code still being run if [spawn_cycle] is
-	// ([spawn_interval] * PARTICLE_COUNT), ...
 	if((spawn_cycle % spawn_interval) == 0) {
-		// ...and to [i] == PARTICLE_COUNT setting the stage for out-of-bounds
-		// structure accesses.
 		i = (spawn_cycle / spawn_interval);
-
-		// Luckily, [alive[PARTICLE_COUNT]] corresponds to
-		// [velocity_base[0]]. Due to the first ZUN bug in this function, this
-		// value is 0 only during the first cycle, which causes actual
-		// out-of-bounds accesses to only happen on one single frame.
 		if(alive[i] == false) {
 			alive[i] = true;
 			velocity_base[i] = ((rand() % velocity_base_max) + 1);
@@ -87,11 +78,7 @@ void CParticles::unput_update_render(particle_origin_t origin, int col)
 					break;
 				}
 			}
-			// Due to the SoA layout, setting [velocity_y[PARTICLE_COUNT]] will
-			// overwrite [alive[0]] and [alive[1]].
-			// Since [velocity_y[PARTICLE_COUNT]] is always smaller than
-			// to_sp(16.0f) or 0x100, [alive[1]] will be set to `false`. And
-			// if that particle was still alive before...
+
 			switch(origin) {
 			case PO_TOP:
 				velocity_y[i].v = TO_SP(velocity_base[i]);
@@ -131,9 +118,6 @@ void CParticles::unput_update_render(particle_origin_t origin, int col)
 
 	// Unput/Update
 	for(i = 0; i < PARTICLE_COUNT; i++) {
-		// ... its unblitting call will never run, leaving its pixel on the
-		// screen until it's overlapped by a different entity and unblitted
-		// via that one.
 		if(!alive[i]) {
 			continue;
 		}
