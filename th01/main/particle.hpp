@@ -24,11 +24,12 @@ struct CParticles {
 	unsigned char spawn_cycle;
 
 	void init();
+	void unput(EGCCopy& egc);
 
 	// Runs a frame of the particle system, with new particles spawning from a
 	// random position on the [origin] edge(s) and flying into the opposite
 	// direction. init() must have been called before!
-	void unput_update_render(particle_origin_t origin, int col);
+	void update_and_render(particle_origin_t origin, int col);
 };
 
 extern CParticles Particles;

@@ -6,6 +6,7 @@
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
+#include "platform/x86real/pc98/egc.hpp"
 #include "platform/x86real/pc98/page.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
@@ -1231,8 +1232,12 @@ void mima_main(void)
 	} phase;
 	static bool initial_hp_rendered;
 
+	{
+		EGCCopy egc;
+		Particles.unput(egc);
+	}
 	Missiles.unput_update_render();
-	Particles.unput_update_render(PO_TOP_RIGHT, V_WHITE);
+	Particles.update_and_render(PO_TOP_RIGHT, V_WHITE);
 
 	// Entrance animation
 	if(boss_phase == 0) {

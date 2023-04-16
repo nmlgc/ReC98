@@ -2,9 +2,9 @@
 #include "x86real.h"
 #include "pc98.h"
 #include "master.hpp"
+#include "platform/x86real/pc98/egc.hpp"
 #include "th01/math/overlap.hpp"
 #include "th01/math/subpixel.hpp"
-#include "th01/hardware/egc.h"
 #include "th01/main/particle.hpp"
 
 CParticles Particles;
@@ -18,7 +18,16 @@ void CParticles::init()
 	velocity_base_max = 10;
 }
 
-void CParticles::unput_update_render(particle_origin_t origin, int col)
+void CParticles::unput(EGCCopy& egc)
+{
+	for(int i = 0; i < PARTICLE_COUNT; i++) {
+		if(alive[i]) {
+			egc.rect_interpage(x[i].to_pixel(), y[i].to_pixel(), 1, 1, 1);
+		}
+	}
+}
+
+void CParticles::update_and_render(particle_origin_t origin, int col)
 {
 	unsigned char i;
 
@@ -116,12 +125,11 @@ void CParticles::unput_update_render(particle_origin_t origin, int col)
 		}
 	}
 
-	// Unput/Update
+	// Update
 	for(i = 0; i < PARTICLE_COUNT; i++) {
 		if(!alive[i]) {
 			continue;
 		}
-		egc_copy_rect_1_to_0_16(x[i].to_pixel(), y[i].to_pixel(), 8, 1);
 		x[i].v += velocity_x[i].v;
 		y[i].v += velocity_y[i].v;
 
