@@ -7,25 +7,10 @@
 #include "th01/hardware/egc.h"
 #include "th01/main/particle.hpp"
 
-void particles_unput_update_render(particle_origin_t origin, int col)
+CParticles Particles;
+
+void CParticles::unput_update_render(particle_origin_t origin, int col)
 {
-	enum {
-		PARTICLE_COUNT = 40,
-	};
-
-	static int spawn_interval;
-	static pixel_t velocity_base_max;
-	static Subpixel x[PARTICLE_COUNT];
-	static Subpixel y[PARTICLE_COUNT];
-	static Subpixel velocity_x[PARTICLE_COUNT];
-	static Subpixel velocity_y[PARTICLE_COUNT];
-	static bool alive[PARTICLE_COUNT];
-
-	// MODDERS: Should be local, and just a single variable, not an array.
-	static unsigned char velocity_base[PARTICLE_COUNT];
-
-	static unsigned char spawn_cycle;
-
 	unsigned char i;
 
 	// Completely pointless, since all of this could have been statically

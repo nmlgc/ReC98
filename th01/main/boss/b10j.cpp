@@ -371,7 +371,7 @@ void mima_setup(void)
 	boss_hp = HP_TOTAL;
 	hud_hp_first_white = HP_PHASE_1_END;
 	hud_hp_first_redwhite = 2;  // fully arbitrary, doesn't indicate anything
-	particles_unput_update_render(PO_INITIALIZE, V_WHITE);
+	Particles.unput_update_render(PO_INITIALIZE, V_WHITE);
 }
 
 void mima_free(void)
@@ -1230,7 +1230,7 @@ void mima_main(void)
 	static bool initial_hp_rendered;
 
 	Missiles.unput_update_render();
-	particles_unput_update_render(PO_TOP_RIGHT, V_WHITE);
+	Particles.unput_update_render(PO_TOP_RIGHT, V_WHITE);
 
 	// Entrance animation
 	if(boss_phase == 0) {
