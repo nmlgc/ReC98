@@ -20,7 +20,6 @@
 #include "th01/math/polar.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th01/sprites/pellet.h"
-#include "th01/main/particle.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/hud/hp.hpp"
 #include "th01/main/player/orb.hpp"
@@ -189,9 +188,6 @@ void kikuri_load(void)
 	kikuri_ent_load(i);
 	void kikuri_setup(void);
 	kikuri_setup();
-
-	// ZUN bloat: Redundant, no particles are shown in this fight.
-	particles_unput_update_render(PO_INITIALIZE, V_WHITE);
 }
 
 void kikuri_setup(void)

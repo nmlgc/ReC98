@@ -26,7 +26,6 @@
 #include "th01/main/playfld.hpp"
 #include "th01/sprites/pellet.h"
 #include "th01/main/shape.hpp"
-#include "th01/main/particle.hpp"
 #include "th01/main/hud/hp.hpp"
 #include "th01/main/player/player.hpp"
 #include "th01/main/player/orb.hpp"
@@ -560,9 +559,6 @@ void elis_load(void)
 	boss_palette_snap();
 	void elis_setup(void);
 	elis_setup();
-
-	// ZUN bloat: Redundant, no particles are shown in this fight.
-	particles_unput_update_render(PO_INITIALIZE, V_WHITE);
 }
 
 void elis_setup(void)
