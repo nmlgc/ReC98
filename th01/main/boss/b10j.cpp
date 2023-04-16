@@ -371,7 +371,7 @@ void mima_setup(void)
 	boss_hp = HP_TOTAL;
 	hud_hp_first_white = HP_PHASE_1_END;
 	hud_hp_first_redwhite = 2;  // fully arbitrary, doesn't indicate anything
-	Particles.unput_update_render(PO_INITIALIZE, V_WHITE);
+	Particles.init();
 }
 
 void mima_free(void)

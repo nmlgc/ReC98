@@ -9,20 +9,18 @@
 
 CParticles Particles;
 
+void CParticles::init()
+{
+	for(int i = 0; i < PARTICLE_COUNT; i++) {
+		alive[i] = false;
+	}
+	spawn_interval = 2;
+	velocity_base_max = 10;
+}
+
 void CParticles::unput_update_render(particle_origin_t origin, int col)
 {
 	unsigned char i;
-
-	// Completely pointless, since all of this could have been statically
-	// initialized.
-	if(origin == PO_INITIALIZE) {
-		for(i = 0; i < PARTICLE_COUNT; i++) {
-			alive[i] = false;
-		}
-		spawn_interval = 2;
-		velocity_base_max = 10;
-		return;
-	}
 
 	// Spawn
 

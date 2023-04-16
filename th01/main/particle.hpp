@@ -7,7 +7,6 @@ enum particle_origin_t {
 	PO_BOTTOM_LEFT = 5,
 	PO_LEFT = 6,
 	PO_TOP_LEFT = 7,
-	PO_INITIALIZE = 255, // (renders nothing)
 
 	_particle_origin_t_FORCE_INT16 = 0x7FFF
 };
@@ -28,9 +27,11 @@ struct CParticles {
 
 	unsigned char spawn_cycle;
 
+	void init();
+
 	// Runs a frame of the particle system, with new particles spawning from a
 	// random position on the [origin] edge(s) and flying into the opposite
-	// direction. Must be called with [origin] == PO_INITIALIZE first!
+	// direction. init() must have been called before!
 	void unput_update_render(particle_origin_t origin, int col);
 };
 
