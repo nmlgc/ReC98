@@ -72,7 +72,7 @@ void pascal near str_from_swapped_kanji(
 	graph_putsa_fx(left, top, col_and_fx, route); \
 
 // A completely hidden timeout that force-enters a high score name after
-// 1000... *keyboard inputs*? Not frames? Why. Like, how do even you
+// 1000... *keyboard inputs*? Not frames? Why. Like, how do you even
 // realistically get to such a number.
 // (Best guess: It's a hidden easter egg to amuse players who place drinking
 // glasses on cursor keys. Or beer bottles.)

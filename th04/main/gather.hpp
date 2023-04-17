@@ -74,7 +74,7 @@ void pascal near gather_add_only_3stack(
 );
 
 // Blits the gather point sprite to ([left], [top]). Assumptions:
-// • ES is already be set to the beginning of a VRAM segment
+// • ES is already set to the beginning of a VRAM segment
 // • The GRCG is active, and set to the intended color
 void __fastcall near gather_point_render(screen_x_t left, vram_y_t top);
 

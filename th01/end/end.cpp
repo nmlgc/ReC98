@@ -362,7 +362,7 @@ void near pascal boss_slide_next(int quarter)
 
 void near boss_slides_animate(void)
 {
-	// MODDERS: Move to end_animate() for cleanliness.
+	// MODDERS: Move to end_and_verdict_and_regist_animate() for cleanliness.
 	end_done();
 
 	if(end_flag == ES_MAKAI) {
@@ -374,7 +374,7 @@ void near boss_slides_animate(void)
 	grp_palette_settone(100);
 	frame_delay(BOSS_TEXT_DELAY);
 
-	// ZUN calculated with one extra character? Was this character originally
+	// ZUN calculated with one extra romaji? Was this character originally
 	// called "ShinGyoku" after all?!
 	pic_caption_type_2(SLIDES_TITLE_5, SLIDES_BOSS_5, 1);
 

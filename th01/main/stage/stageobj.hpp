@@ -111,10 +111,6 @@ struct CCards {
 };
 
 extern CCards cards;
-
-// Also sets the [stage_cleared] flag if all cards were cleared, and fires
-// revenge pellets on Lunatic.
-void cards_update_and_render(void);
 // -----
 
 // "Obstacles"

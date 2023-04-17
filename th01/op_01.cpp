@@ -548,8 +548,8 @@ int8_t music_sel = 0;
 
 void music_choice_unput_and_put(int choice, int col)
 {
-	const shiftjis_t* CHOICES[MUSIC_CHOICE_COUNT]  = MUSIC_CHOICES;
-	const shiftjis_t* TITLES[TRACK_COUNT]  = MUSIC_TITLES;
+	const shiftjis_t* CHOICES[MUSIC_CHOICE_COUNT] = MUSIC_CHOICES;
+	const shiftjis_t* TITLES[TRACK_COUNT] = MUSIC_TITLES;
 
 	screen_x_t left = (MENU_CENTER_X - (MENU_W / 2));
 	screen_y_t top = music_choice_top(choice, MUSIC_CHOICE_COUNT);
