@@ -492,7 +492,9 @@ void konngara_load_and_entrance(int8_t)
 		siddham_col_white_in_step();
 		frame_delay(10);
 	}
+	graph_accesspage_func(0);
 	graph_copy_accessed_page_to_other();
+	graph_accesspage_func(0);
 	// -------------------------------
 }
 

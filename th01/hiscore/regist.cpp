@@ -595,12 +595,14 @@ void regist(
 			TITLE_LEFT, TITLE_TOP,
 			TITLE_BACK_LEFT, TITLE_BACK_TOP, TITLE_BACK_W, TITLE_BACK_H
 		);
+		graph_accesspage_func(0);
 		graph_move_byterect_interpage(
 			TITLE_BACK_LEFT, TITLE_BACK_TOP,
 			TITLE_BACK_RIGHT, TITLE_BACK_BOTTOM,
 			TITLE_BACK_LEFT, TITLE_BACK_TOP,
 			0, 1
 		);
+		graph_accesspage_func(0);
 	} else {
 		graph_2xscale_byterect_1_to_0_slow(
 			TITLE_LEFT, TITLE_TOP,

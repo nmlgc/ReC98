@@ -303,6 +303,7 @@ void title_init(void)
 	grp_put("REIIDEN2.grp", GPF_PALETTE_SHOW);
 	z_palette_black();
 	graph_copy_accessed_page_to_other();
+	graph_accesspage_func(1);
 	grp_put("REIIDEN3.grp", GPF_PALETTE_KEEP);
 	graph_accesspage_func(0);
 	z_palette_black_in();
@@ -318,6 +319,7 @@ void title_window_put(void)
 	graph_accesspage_func(0);
 	grp_put("op_win.grp", GPF_COLORKEY);
 	graph_copy_accessed_page_to_other();
+	graph_accesspage_func(0);
 }
 
 // Starting the game

@@ -203,6 +203,7 @@ bool16 continue_menu(void)
 
 	graph_accesspage_func(1);
 	graph_copy_accessed_page_to_other();
+	graph_accesspage_func(1);
 	continue_back_put(TITLE, V_WHITE, CONTINUE_TITLE);
 	continue_back_put(YES_SELECTED, V_WHITE, CONTINUE_YES_1);
 	continue_back_put(NO_SELECTED, V_WHITE, CONTINUE_NO_1);

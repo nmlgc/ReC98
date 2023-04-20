@@ -164,20 +164,24 @@ void stage_entrance(int stage_id, const char* bg_fn, bool16 clear_vram_page_0)
 
 		// Copy the raw background image to page 1, so that
 		// stageobjs_init_and_render() can snap the correct backgrounds.
+		graph_accesspage_func(0);
 		graph_copy_accessed_page_to_other();
+		graph_accesspage_func(0);
 	} else {
 		graph_accesspage_func(1);
 		graph_copy_accessed_page_to_other();
-		graph_accesspage_func(0);
 
 		// Keep the player on screen during stage_num_animate()
+		graph_accesspage_func(0);
 		player_put_default();
 	}
 
 	stageobjs_init_and_render(stage_id); // rendered to page 0
 
 	if(first_stage_in_scene == true) {
+		graph_accesspage_func(0);
 		graph_copy_accessed_page_to_other(); // 0 → 1, with new stage objects
+		graph_accesspage_func(0);
 	} else if(first_stage_in_scene == false) {
 		// ZUN bloat: This entire function would not have been necessary if ZUN
 		// just rendered the stage objects to page 1 and then always copied the
@@ -788,6 +792,7 @@ int main_main(int, const char *[])
 	graph_accesspage_func(1);
 	grp_put("game_o.grp", GPF_PALETTE_SHOW);
 	graph_copy_accessed_page_to_other();
+	graph_accesspage_func(1);
 	z_palette_black_in();
 
 	regist(score, (stage_id + 1), (

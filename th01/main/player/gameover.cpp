@@ -25,9 +25,11 @@ void player_gameover_animate(void)
 		top[j] = player_top;
 	}
 
-	// 0 → 1, to make sure we don't unblit the miss sprite. Kind of wasteful
+	// Make sure we don't unblit the miss sprite. Kind of wasteful
 	// to copy the whole page, but who cares.
+	graph_accesspage_func(0);
 	graph_copy_accessed_page_to_other();
+	graph_accesspage_func(0);
 
 	for(frame = 0; frame < 16; frame++) {
 		z_vsync_wait_and_scrollup(RES_Y - ((j % 2) * 8));

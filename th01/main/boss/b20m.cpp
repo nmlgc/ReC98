@@ -2781,6 +2781,7 @@ entrance_rings_still_active:
 				grp_put("boss6_a6.grp", GPF_PALETTE_SHOW);
 				z_palette_set_show(COL_FORM2_PULSE, 0x0, 0x0, 0x0);
 				graph_copy_accessed_page_to_other();
+				graph_accesspage_func(1);
 				hud_rerender();
 				z_vsync_wait_and_scrollup(0);
 				boss_phase_frame = 0;
