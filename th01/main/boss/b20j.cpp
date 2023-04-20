@@ -3,9 +3,11 @@
 
 #include <stdio.h>
 #include "platform.h"
+#include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
+#include "platform/x86real/pc98/egc.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
@@ -456,8 +458,9 @@ void konngara_load_and_entrance(int8_t)
 
 	// "Pan" up to Konngara
 	for(line_on_top = RES_Y; line_on_top >= 0; line_on_top -= (MAGNITUDE * 2)) {
+		EGCCopy egc;
 		z_vsync_wait_and_scrollup(line_on_top);
-		egc_copy_rows_1_to_0(line_on_top, (MAGNITUDE * 2));
+		egc.rect_interpage(0, line_on_top, RES_X, (MAGNITUDE * 2), 1);
 		frame_delay(1);
 	}
 

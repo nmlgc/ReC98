@@ -4,10 +4,12 @@
 #include <stdlib.h>
 #include <dos.h>
 #include "platform.h"
+#include "x86real.h"
 #include "decomp.hpp"
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
+#include "platform/x86real/pc98/egc.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
@@ -326,8 +328,9 @@ void sariel_entrance(int8_t)
 	// ------
 
 	for(pixel_t line_on_top = (RES_Y - 1); line_on_top >= 0; line_on_top--) {
+		EGCCopy egc;
 		z_vsync_wait_and_scrollup(line_on_top);
-		egc_copy_rows_1_to_0(line_on_top, 1);
+		egc.rect_interpage(0, line_on_top, RES_X, 1, 1);
 		frame_delay(1);
 	}
 	z_vsync_wait_and_scrollup(0);
