@@ -235,9 +235,7 @@ bool16 bomb_update_and_render(int frame)
 		}
 	} else if(frame == KEYFRAME_DONE) {
 		z_vsync_wait_and_scrollup(0);
-
-		graph_accesspage_func(1);
-		graph_copy_accessed_page_to_other();
+		graph_copy_page_to_other(1);
 		graph_accesspage_func(0);
 
 		z_palette_set_all_show(stage_palette);

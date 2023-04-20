@@ -630,7 +630,7 @@ void verdict_animate_and_regist(void)
 
 	graph_accesspage_func(1);
 	grp_put("endm_a.grp", GPF_PALETTE_SHOW);
-	graph_copy_accessed_page_to_other();
+	graph_copy_page_to_other(1);
 
 	graph_accesspage_func(0);
 	grp_palette_black_in(8);
@@ -698,8 +698,7 @@ void verdict_animate_and_regist(void)
 	}
 
 	// Unblit all text
-	graph_accesspage_func(1);
-	graph_copy_accessed_page_to_other();
+	graph_copy_page_to_other(1);
 	graph_accesspage_func(0);
 
 	grp_palette_settone(50);

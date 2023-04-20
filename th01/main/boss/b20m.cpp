@@ -1242,7 +1242,7 @@ void near bg_transition(int image_id_new)
 
 			graph_accesspage_func(1);
 			grp_put(BG_IMAGES[image_id_new], GPF_PALETTE_SHOW);
-			graph_copy_accessed_page_to_other();
+			graph_copy_page_to_other(1);
 			stage_palette_set(z_Palettes);
 
 			graph_accesspage_func(0);
@@ -2742,7 +2742,7 @@ entrance_rings_still_active:
 		grp_put("boss6.grp", GPF_PALETTE_SHOW);
 		z_palette_set_show(0xF, 0x0, 0x0, 0x0);
 		boss_palette_snap();
-		graph_copy_accessed_page_to_other();
+		graph_copy_page_to_other(1);
 
 		graph_accesspage_func(1);
 		grp_put("boss6_a5.grp", GPF_PALETTE_KEEP);
@@ -2780,7 +2780,7 @@ entrance_rings_still_active:
 				mdrv2_bgm_play();
 				grp_put("boss6_a6.grp", GPF_PALETTE_SHOW);
 				z_palette_set_show(COL_FORM2_PULSE, 0x0, 0x0, 0x0);
-				graph_copy_accessed_page_to_other();
+				graph_copy_page_to_other(1);
 				graph_accesspage_func(1);
 				hud_rerender();
 				z_vsync_wait_and_scrollup(0);
@@ -2902,7 +2902,7 @@ entrance_rings_still_active:
 
 		boss_palette_snap(); // No longer necessary.
 
-		graph_copy_accessed_page_to_other();
+		graph_copy_page_to_other(1);
 		graph_accesspage_func(0);
 
 		while(1) {

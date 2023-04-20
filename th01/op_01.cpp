@@ -290,8 +290,7 @@ void whitelines_animate(void)
 		whiteline_put(y2);
 		frame_delay(1);
 	}
-	graph_accesspage_func(1);
-	graph_copy_accessed_page_to_other();
+	graph_copy_page_to_other(1);
 	graph_accesspage_func(0);
 }
 
@@ -302,7 +301,7 @@ void title_init(void)
 	graph_accesspage_func(1);
 	grp_put("REIIDEN2.grp", GPF_PALETTE_SHOW);
 	z_palette_black();
-	graph_copy_accessed_page_to_other();
+	graph_copy_page_to_other(1);
 	graph_accesspage_func(1);
 	grp_put("REIIDEN3.grp", GPF_PALETTE_KEEP);
 	graph_accesspage_func(0);
@@ -314,11 +313,10 @@ void title_init(void)
 
 void title_window_put(void)
 {
-	graph_accesspage_func(1);
-	graph_copy_accessed_page_to_other();
+	graph_copy_page_to_other(1);
 	graph_accesspage_func(0);
 	grp_put("op_win.grp", GPF_COLORKEY);
-	graph_copy_accessed_page_to_other();
+	graph_copy_page_to_other(0);
 	graph_accesspage_func(0);
 }
 

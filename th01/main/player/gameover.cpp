@@ -27,8 +27,7 @@ void player_gameover_animate(void)
 
 	// Make sure we don't unblit the miss sprite. Kind of wasteful
 	// to copy the whole page, but who cares.
-	graph_accesspage_func(0);
-	graph_copy_accessed_page_to_other();
+	graph_copy_page_to_other(0);
 	graph_accesspage_func(0);
 
 	for(frame = 0; frame < 16; frame++) {

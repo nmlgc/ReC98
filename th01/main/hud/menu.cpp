@@ -201,8 +201,7 @@ bool16 continue_menu(void)
 	bool16 sel;
 	unsigned int frames = 0;
 
-	graph_accesspage_func(1);
-	graph_copy_accessed_page_to_other();
+	graph_copy_page_to_other(1);
 	graph_accesspage_func(1);
 	continue_back_put(TITLE, V_WHITE, CONTINUE_TITLE);
 	continue_back_put(YES_SELECTED, V_WHITE, CONTINUE_YES_1);

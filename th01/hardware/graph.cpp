@@ -283,17 +283,15 @@ void z_graph_clear_col(uint4_t col)
 	grcg_off_func();
 }
 
-void graph_copy_accessed_page_to_other(void)
+void graph_copy_page_to_other(page_t src)
 {
 	PlanarRow_declare(tmp);
 	Planes_declare(p);
-	page_t page_front = (page_accessed ^ 1);
+	page_t dst = (src ^ 1);
 
 	for(screen_y_t y = 0; y < RES_Y; y++) {
-		PlanarRow_blit(tmp, p, ROW_SIZE);
-		graph_accesspage(page_front);
-		PlanarRow_blit(p, tmp, ROW_SIZE);
-		graph_accesspage(page_accessed);
+		graph_accesspage(src);	PlanarRow_blit(tmp, p, ROW_SIZE);
+		graph_accesspage(dst);	PlanarRow_blit(p, tmp, ROW_SIZE);
 		Planes_next_row(p);
 	}
 }
@@ -751,7 +749,7 @@ void graph_move_byterect_interpage(
 	vram_y_t src_bottom,
 	screen_x_t dst_left,
 	vram_y_t dst_top,
-	int src, int dst
+	page_t src
 )
 {
 	pixel_t w = (src_right - src_left) / BYTE_DOTS;
@@ -763,15 +761,14 @@ void graph_move_byterect_interpage(
 
 	Planes_offset(src, src_left, src_top);
 	Planes_offset(dst, dst_left, dst_top);
+
+	page_t dst = (src ^ 1);
 	for(row = 0; row < h; row++) {
-		PlanarRow_blit(tmp, src, w);
-		graph_accesspage(dst);
-		PlanarRow_blit(dst, tmp, w);
-		graph_accesspage(src);
+		graph_accesspage(src);	PlanarRow_blit(tmp, src, w);
+		graph_accesspage(dst);	PlanarRow_blit(dst, tmp, w);
 		Planes_next_row(src);
 		Planes_next_row(dst);
 	}
-	graph_accesspage(page_accessed);
 }
 
 void z_palette_fade_from(

@@ -77,8 +77,7 @@ void grcg_whiteline(screen_y_t y)
 	z_palette_set_white(col, comp); \
 	\
 	/* Unblit all white lines and return to the regular stage background */ \
-	graph_accesspage_func(1); \
-	graph_copy_accessed_page_to_other(); \
+	graph_copy_page_to_other(1); \
 	graph_accesspage_func(0); \
 	\
 	/* Reimu might not have been standing still, after all. */ \
@@ -150,8 +149,7 @@ void singyoku_defeat_animate_and_select_route(void)
 	graph_glyphrow_2xscale_1_to_0(32, 180, 4, shiftjis_w(ROUTE_SEL_3));
 	graph_glyphrow_2xscale_1_to_0(256, MAKAI_TOP, 6, shiftjis_w(ROUTE_SEL_4));
 	graph_glyphrow_2xscale_1_to_0(256, JIGOKU_TOP, 8, shiftjis_w(ROUTE_SEL_5));
-	graph_accesspage_func(0);
-	graph_copy_accessed_page_to_other();
+	graph_copy_page_to_other(0);
 	graph_accesspage_func(0);
 	ptn_put_8(CURSOR_LEFT, MAKAI_TOP, PTN_ORB);
 
