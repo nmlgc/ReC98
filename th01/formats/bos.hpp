@@ -60,10 +60,10 @@ inline vram_y_t vram_intended_y_for(
 	(((vram_offset + 1) / ROW_SIZE) == intended_y)
 
 #define vram_unput_masked_emptyopt(plane, offset, bit_count, mask, tmp_dots) \
-	graph_accesspage_func(1); \
+	page_access(1); \
 	VRAM_SNAP(tmp_dots, plane, offset, bit_count); \
 	if(tmp_dots) { \
-		graph_accesspage_func(0); \
+		page_access(0); \
 		VRAM_CHUNK(plane, offset, bit_count) |= (mask & tmp_dots); \
 	}
 

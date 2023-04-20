@@ -10,6 +10,7 @@
 #include "planar.h"
 #include "master.hpp"
 #include "platform/x86real/pc98/egc.hpp"
+#include "platform/x86real/pc98/page.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
@@ -313,10 +314,10 @@ void sariel_entrance(int8_t)
 
 	text_fillca(' ', (TX_BLACK | TX_REVERSE));
 
-	/*  graph_accesspage_func(0);  */ grp_put("boss6_l.grp", GPF_PALETTE_SHOW);
-	/**/graph_accesspage_func(1)/**/; grp_put("boss6_h.grp", GPF_PALETTE_SHOW);
+	/*  page_access(0);  */ grp_put("boss6_l.grp", GPF_PALETTE_SHOW);
+	/**/page_access(1)/**/; grp_put("boss6_h.grp", GPF_PALETTE_SHOW);
 
-	graph_accesspage_func(0);
+	page_access(0);
 	stageobjs_init_and_render(BOSS_STAGE);
 	mdrv2_bgm_load("TENSI.MDT");
 	mdrv2_se_load(SE_FN); // ZUN bloat: Already done in main()
@@ -336,9 +337,9 @@ void sariel_entrance(int8_t)
 	z_vsync_wait_and_scrollup(0);
 	// ------
 
-	graph_accesspage_func(1);
+	page_access(1);
 	grp_put(BG_IMAGES[0], GPF_PALETTE_SHOW);
-	graph_accesspage_func(0);
+	page_access(0);
 	pagetrans_diagonal_8x8(40);
 
 	random_seed = frame_rand;
@@ -696,8 +697,8 @@ void near shield_render_both(void)
 	ent_shield.set_image(
 		(boss_phase_frame % (FRAMES_PER_CEL * CELS)) / FRAMES_PER_CEL
 	);
-	graph_accesspage_func(1);	ent_shield.unlock_put_lock_8();
-	graph_accesspage_func(0);	ent_shield.unlock_put_lock_8();
+	page_access(1);	ent_shield.unlock_put_lock_8();
+	page_access(0);	ent_shield.unlock_put_lock_8();
 }
 
 // Renders a frame of Sariel's wand raise animation on both VRAM pages, and
@@ -714,12 +715,12 @@ bool16 near wand_render_raise_both(bool16 restart = false)
 		frames++;
 		if(frames == 2) {
 			anm_wand.bos_image = 0;
-			graph_accesspage_func(1);	anm_wand.put_8();
-			graph_accesspage_func(0);	anm_wand.put_8();
+			page_access(1);	anm_wand.put_8();
+			page_access(0);	anm_wand.put_8();
 		} else if(frames == 16) {
 			anm_wand.bos_image = 1;
-			graph_accesspage_func(1);	anm_wand.put_8();
-			graph_accesspage_func(0);	anm_wand.put_8();
+			page_access(1);	anm_wand.put_8();
+			page_access(0);	anm_wand.put_8();
 			frames = 0;
 			return true;
 		}
@@ -730,8 +731,8 @@ bool16 near wand_render_raise_both(bool16 restart = false)
 // Should maybe return `false`, for consistency with wand_render_raise_both().
 void near wand_lower_both(void)
 {
-	graph_accesspage_func(1);	wand_lowered_put();
-	graph_accesspage_func(0);	wand_lowered_put();
+	page_access(1);	wand_lowered_put();
+	page_access(0);	wand_lowered_put();
 }
 
 void near dress_render_both(void)
@@ -745,8 +746,8 @@ void near dress_render_both(void)
 	}
 	int cel = ((boss_phase_frame % (FRAMES_PER_CEL * CELS)) / FRAMES_PER_CEL);
 	anm_dress.bos_image = cel;
-	graph_accesspage_func(1);	anm_dress.put_8();
-	graph_accesspage_func(0);	anm_dress.put_8();
+	page_access(1);	anm_dress.put_8();
+	page_access(0);	anm_dress.put_8();
 }
 
 static const subpixel_t VORTEX_PELLET_SPEED = TO_SP(7);
@@ -1185,7 +1186,7 @@ void near bg_transition(int image_id_new)
 		grcg_setcolor_tcr(COL_AIR);
 		cell_offset_right = (rand() % 8);
 
-		graph_accesspage(1);
+		page_access(1);
 		for(stripe_id = 0; stripe_id < (STRIPES_PER_CELL * 2); stripe_id++) {
 			if(stripe_y(0, 0) != stripe_y(0, stripe_id)) {
 				break;
@@ -1195,7 +1196,7 @@ void near bg_transition(int image_id_new)
 			}
 		}
 
-		graph_accesspage(0);
+		page_access(0);
 		for(stripe_id = 0; stripe_id < STRIPES_PER_CELL; stripe_id++) {
 			if(stripe_y(0, 0) != stripe_y(0, stripe_id)) {
 				break;
@@ -1240,12 +1241,12 @@ void near bg_transition(int image_id_new)
 		if(gust_id >= 3) {
 			z_vsync_wait_and_scrollup(0);
 
-			graph_accesspage_func(1);
+			page_access(1);
 			grp_put(BG_IMAGES[image_id_new], GPF_PALETTE_SHOW);
 			graph_copy_page_to_other(1);
 			stage_palette_set(z_Palettes);
 
-			graph_accesspage_func(0);
+			page_access(0);
 			hud_rerender();
 			hud_hp_rerender(boss_hp);
 			boss_phase_frame = 0;
@@ -1308,9 +1309,9 @@ void near particles2x2_vertical_unput_update_render(bool16 from_bottom)
 		}
 
 		// Unblit
-		graph_accesspage_func(1);	particle2x2_snap_2(dots, vo, first_bit);
+		page_access(1);	particle2x2_snap_2(dots, vo, first_bit);
 		grcg_setcolor_rmw(COL_AIR);
-		graph_accesspage_func(0);	particle2x2_put(vo, first_bit, dots);
+		page_access(0);	particle2x2_put(vo, first_bit, dots);
 
 		// Update
 		top[i] += velocity_y[i];
@@ -1324,9 +1325,9 @@ void near particles2x2_vertical_unput_update_render(bool16 from_bottom)
 
 		// Render
 		grcg_setcolor_tcr(COL_AIR);
-		graph_accesspage_func(1);	particle2x2_snap_2(dots, vo, first_bit);
+		page_access(1);	particle2x2_snap_2(dots, vo, first_bit);
 		grcg_setcolor_rmw(col[i]);
-		graph_accesspage_func(0);	particle2x2_put(vo, first_bit, dots);
+		page_access(0);	particle2x2_put(vo, first_bit, dots);
 	}
 	grcg_off();
 }
@@ -1578,9 +1579,9 @@ void near particles2x2_wavy_unput_update_render()
 		first_bit = (wave_left & BYTE_MASK);
 
 		// Unblit
-		graph_accesspage_func(1);	particle2x2_snap(dots, vo, first_bit);
+		page_access(1);	particle2x2_snap(dots, vo, first_bit);
 		grcg_setcolor_rmw(COL_AIR);
-		graph_accesspage_func(0);	particle2x2_put(vo, first_bit, dots);
+		page_access(0);	particle2x2_put(vo, first_bit, dots);
 
 		// Update
 		top[i] += velocity_y[i];
@@ -1597,9 +1598,9 @@ void near particles2x2_wavy_unput_update_render()
 
 		// Render
 		grcg_setcolor_tcr(COL_AIR);
-		graph_accesspage_func(1);	particle2x2_snap(dots, vo, first_bit);
+		page_access(1);	particle2x2_snap(dots, vo, first_bit);
 		grcg_setcolor_rmw(col[i]);
-		graph_accesspage_func(0);	particle2x2_put(vo, first_bit, dots);
+		page_access(0);	particle2x2_put(vo, first_bit, dots);
 	}
 	grcg_off();
 }
@@ -2088,10 +2089,10 @@ void near particles2x2_horizontal_unput_update_render(int frame)
 		particle2x2_linear_vram_offset(vo, first_bit, left[i], top[i]);
 
 		// Unblit
-		graph_accesspage_func(1);
+		page_access(1);
 		particle2x2_snap_left_right(dots_left, dots_right, vo, first_bit);
 		grcg_setcolor_rmw(COL_AIR);
-		graph_accesspage_func(0);
+		page_access(0);
 		particle2x2_put_left_right(vo, first_bit, dots_left, dots_right);
 
 		// Update
@@ -2107,11 +2108,11 @@ void near particles2x2_horizontal_unput_update_render(int frame)
 
 		// Render
 		grcg_setcolor_tcr(COL_AIR);
-		graph_accesspage_func(1);
+		page_access(1);
 		particle2x2_snap_left_right(dots_left, dots_right, vo, first_bit);
 
 		grcg_setcolor_rmw(col[i]);
-		graph_accesspage_func(0);
+		page_access(0);
 		particle2x2_put_left_right(vo, first_bit, dots_left, dots_right);
 	}
 	grcg_off();
@@ -2738,15 +2739,15 @@ entrance_rings_still_active:
 		mdrv2_bgm_fade_out_nonblock();
 
 		// boss6.grp is not part of the game? Might have been a defeat graphic.
-		graph_accesspage_func(1);
+		page_access(1);
 		grp_put("boss6.grp", GPF_PALETTE_SHOW);
 		z_palette_set_show(0xF, 0x0, 0x0, 0x0);
 		boss_palette_snap();
 		graph_copy_page_to_other(1);
 
-		graph_accesspage_func(1);
+		page_access(1);
 		grp_put("boss6_a5.grp", GPF_PALETTE_KEEP);
-		graph_accesspage_func(0);
+		page_access(0);
 
 		while(1) {
 			boss_phase_frame++;
@@ -2775,13 +2776,13 @@ entrance_rings_still_active:
 				}
 				// The palette was loaded from boss6_a5.grp earlier.
 				pagetrans_diagonal_8x8_with_palette(0, z_Palettes, grp_palette);
-				graph_accesspage_func(1);
+				page_access(1);
 				mdrv2_bgm_load("syugen.MDT");
 				mdrv2_bgm_play();
 				grp_put("boss6_a6.grp", GPF_PALETTE_SHOW);
 				z_palette_set_show(COL_FORM2_PULSE, 0x0, 0x0, 0x0);
 				graph_copy_page_to_other(1);
-				graph_accesspage_func(1);
+				page_access(1);
 				hud_rerender();
 				z_vsync_wait_and_scrollup(0);
 				boss_phase_frame = 0;
@@ -2893,7 +2894,7 @@ entrance_rings_still_active:
 			invincibility_frame = 0;
 		}
 	} else if(boss_phase == PHASE_FORM2_DEFEATED) {
-		graph_accesspage_func(1);
+		page_access(1);
 		grp_put("boss6_a6.grp", GPF_PALETTE_SHOW);
 
 		// Actually a different color inside the .GRP! Would have been nicer to
@@ -2903,7 +2904,7 @@ entrance_rings_still_active:
 		boss_palette_snap(); // No longer necessary.
 
 		graph_copy_page_to_other(1);
-		graph_accesspage_func(0);
+		page_access(0);
 
 		while(1) {
 			boss_phase_frame++;

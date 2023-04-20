@@ -3,10 +3,12 @@
 
 #include <string.h>
 #include "platform.h"
+#include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
 #include "shiftjis.hpp"
+#include "platform/x86real/pc98/page.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
 #include "th01/score.h"
@@ -206,7 +208,7 @@ void regist_put_initial(
 {
 	const unsigned char name_blank[SCOREDAT_NAME_BYTES + 1] = REGIST_NAME_BLANK;
 
-	graph_accesspage_func(0);
+	page_access(0);
 
 	header_cell_put(table_place_left(0), REGIST_HEADER_PLACE);
 	header_cell_put(table_name_left(0), REGIST_HEADER_NAME);
@@ -581,7 +583,7 @@ void regist(
 	scoredat_name_z_t names[SCOREDAT_PLACES];
 	long place;
 
-	graph_accesspage_func(1);
+	page_access(1);
 	graph_putsa_fx(
 		TITLE_BACK_LEFT,
 		(cleared ? TITLE_TOP : TITLE_BACK_TOP),
@@ -600,7 +602,7 @@ void regist(
 			TITLE_BACK_LEFT, TITLE_BACK_TOP,
 			0
 		);
-		graph_accesspage_func(0);
+		page_access(0);
 	} else {
 		graph_2xscale_byterect_1_to_0_slow(
 			TITLE_LEFT, TITLE_TOP,

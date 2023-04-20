@@ -1,3 +1,4 @@
+#include "platform/x86real/pc98/page.hpp"
 #include "th01/main/player/gameover.hpp"
 
 void player_gameover_animate(void)
@@ -28,7 +29,7 @@ void player_gameover_animate(void)
 	// Make sure we don't unblit the miss sprite. Kind of wasteful
 	// to copy the whole page, but who cares.
 	graph_copy_page_to_other(0);
-	graph_accesspage_func(0);
+	page_access(0);
 
 	for(frame = 0; frame < 16; frame++) {
 		z_vsync_wait_and_scrollup(RES_Y - ((j % 2) * 8));

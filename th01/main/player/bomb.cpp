@@ -1,3 +1,4 @@
+#include "platform/x86real/pc98/page.hpp"
 #include "th01/math/polar.hpp"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/grpinv32.hpp"
@@ -236,7 +237,7 @@ bool16 bomb_update_and_render(int frame)
 	} else if(frame == KEYFRAME_DONE) {
 		z_vsync_wait_and_scrollup(0);
 		graph_copy_page_to_other(1);
-		graph_accesspage_func(0);
+		page_access(0);
 
 		z_palette_set_all_show(stage_palette);
 

@@ -6,11 +6,11 @@
 #include "planar.h"
 #include "master.hpp"
 #include "shiftjis.hpp"
+#include "platform/x86real/pc98/page.hpp"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/math/str_val.hpp"
 #include "th01/hardware/egc.h"
-#include "th01/hardware/graph.h"
 #include "th01/hardware/grppsafx.h"
 #include "th01/hardware/frmdelay.h"
 #include "th01/hardware/tram_x16.hpp"
@@ -98,9 +98,9 @@ void timer_bg_snap_and_put(void)
 
 	str_right_aligned_from_uint16(str, stage_timer, TIMER_DIGITS);
 
-	graph_accesspage_func(1);
+	page_access(1);
 	graph_putsa_fx(TIMER_LEFT, TIMER_TOP, TIMER_COL_AND_FX, str);
-	graph_accesspage_func(0);
+	page_access(0);
 	graph_putsa_fx(TIMER_LEFT, TIMER_TOP, TIMER_COL_AND_FX, str);
 }
 
@@ -111,8 +111,8 @@ void timer_put(void)
 		: TIMER_COL_AND_FX;
 	char tmp_str[TIMER_DIGITS + 1];
 
-	graph_accesspage_func(1); unput(); put(tmp_str, col_and_fx);
-	graph_accesspage_func(0); unput(); put(tmp_str, col_and_fx);
+	page_access(1); unput(); put(tmp_str, col_and_fx);
+	page_access(0); unput(); put(tmp_str, col_and_fx);
 }
 
 void timer_tick_and_put(void)

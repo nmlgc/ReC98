@@ -6,6 +6,7 @@
 #include "x86real.h"
 #include "planar.h"
 #include "master.hpp"
+#include "platform/x86real/pc98/page.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
@@ -469,14 +470,14 @@ void near graph_copy_line_1_to_0_masked(vram_y_t y, dots16_t mask)
 		return;
 	}
 	for(vram_word_amount_t word_x = 0; word_x < (ROW_SIZE / 2); word_x++) {
-		graph_accesspage_func(1);	p1 = (peek(SEG_PLANE_B, vo) & mask);
-		graph_accesspage_func(0);	_poke_(SEG_PLANE_B, vo, p1);
-		graph_accesspage_func(1);	p1 = (peek(SEG_PLANE_R, vo) & mask);
-		graph_accesspage_func(0);	_poke_(SEG_PLANE_R, vo, p1);
-		graph_accesspage_func(1);	p1 = (peek(SEG_PLANE_G, vo) & mask);
-		graph_accesspage_func(0);	_poke_(SEG_PLANE_G, vo, p1);
-		graph_accesspage_func(1);	p1 = (peek(SEG_PLANE_E, vo) & mask);
-		graph_accesspage_func(0);	_poke_(SEG_PLANE_E, vo, p1);
+		page_access(1);	p1 = (peek(SEG_PLANE_B, vo) & mask);
+		page_access(0);	_poke_(SEG_PLANE_B, vo, p1);
+		page_access(1);	p1 = (peek(SEG_PLANE_R, vo) & mask);
+		page_access(0);	_poke_(SEG_PLANE_R, vo, p1);
+		page_access(1);	p1 = (peek(SEG_PLANE_G, vo) & mask);
+		page_access(0);	_poke_(SEG_PLANE_G, vo, p1);
+		page_access(1);	p1 = (peek(SEG_PLANE_E, vo) & mask);
+		page_access(0);	_poke_(SEG_PLANE_E, vo, p1);
 		vo += 2;
 	}
 }

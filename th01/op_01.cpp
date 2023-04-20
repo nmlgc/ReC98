@@ -13,6 +13,7 @@
 #include "pc98kbd.h"
 #include "master.hpp"
 #include "shiftjis.hpp"
+#include "platform/x86real/pc98/page.hpp"
 #include "game/input.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
@@ -46,7 +47,7 @@ void snap_col_4(void)
 		columns[x] = new dots8_t[RES_Y];
 	}
 	grcg_setcolor_tcr(4);
-	graph_accesspage_func(1);
+	page_access(1);
 
 	for(x = 0; x < ROW_SIZE; x++) {
 		y = 0;
@@ -59,7 +60,7 @@ void snap_col_4(void)
 	}
 
 	grcg_off();
-	graph_accesspage_func(0);
+	page_access(0);
 }
 
 /// REIIDEN.CFG loading and saving
@@ -291,20 +292,20 @@ void whitelines_animate(void)
 		frame_delay(1);
 	}
 	graph_copy_page_to_other(1);
-	graph_accesspage_func(0);
+	page_access(0);
 }
 
 void title_init(void)
 {
 	mdrv2_bgm_load("reimu.mdt");
 	mdrv2_bgm_play();
-	graph_accesspage_func(1);
+	page_access(1);
 	grp_put("REIIDEN2.grp", GPF_PALETTE_SHOW);
 	z_palette_black();
 	graph_copy_page_to_other(1);
-	graph_accesspage_func(1);
+	page_access(1);
 	grp_put("REIIDEN3.grp", GPF_PALETTE_KEEP);
-	graph_accesspage_func(0);
+	page_access(0);
 	z_palette_black_in();
 	frame_delay(100);
 
@@ -314,10 +315,10 @@ void title_init(void)
 void title_window_put(void)
 {
 	graph_copy_page_to_other(1);
-	graph_accesspage_func(0);
+	page_access(0);
 	grp_put("op_win.grp", GPF_COLORKEY);
 	graph_copy_page_to_other(0);
-	graph_accesspage_func(0);
+	page_access(0);
 }
 
 // Starting the game
@@ -821,8 +822,8 @@ int main_op(int argc, const char *argv[])
 	key_end();
 	resident_free();
 
-	graph_accesspage_func(1);	z_graph_clear();
-	graph_accesspage_func(0);	z_graph_clear();
+	page_access(1);	z_graph_clear();
+	page_access(0);	z_graph_clear();
 
 	game_exit();
 	mdrv2_bgm_stop();

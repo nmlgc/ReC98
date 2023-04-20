@@ -1,3 +1,4 @@
+#include "platform/x86real/pc98/page.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/main/hud/hp.hpp"
 
@@ -36,8 +37,8 @@ void hp_put(int point)
 	}
 
 	for(unsigned char y = 0; y < HP_H; y++) {
-		graph_accesspage_func(1);	grcg_put(vo, dots, HP_POINT_W);
-		graph_accesspage_func(0);	grcg_put(vo, dots, HP_POINT_W);
+		page_access(1);	grcg_put(vo, dots, HP_POINT_W);
+		page_access(0);	grcg_put(vo, dots, HP_POINT_W);
 		vo += ROW_SIZE;
 	}
 	grcg_off();
@@ -82,8 +83,8 @@ static const pixel_t HP_2POINT_W = PTN_QUARTER_W;
 
 void hud_hp_decrement(int hp_total_new)
 {
-	graph_accesspage_func(1); hp_bg_put_doublepoint_containing(hp_total_new);
-	graph_accesspage_func(0); hp_bg_put_doublepoint_containing(hp_total_new);
+	page_access(1); hp_bg_put_doublepoint_containing(hp_total_new);
+	page_access(0); hp_bg_put_doublepoint_containing(hp_total_new);
 	// Since a .PTN quarter stores the background of two hit points, the calls
 	// above will unblit two hit points if [hp_total_new] is odd. So...
 	if((hp_total_new & 1) == 1) {

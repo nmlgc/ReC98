@@ -1,9 +1,11 @@
 #include <stddef.h>
 #include "platform.h"
+#include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
 #include "shiftjis.hpp"
+#include "platform/x86real/pc98/page.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
@@ -12,7 +14,6 @@
 #include "th01/math/digit.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th01/hardware/egc.h"
-#include "th01/hardware/graph.h"
 #include "th01/hardware/grppsafx.h"
 #include "th01/snd/mdrv2.h"
 #include "th01/sprites/pellet.h"
@@ -187,8 +188,8 @@ void cards_update_and_render(void)
 				(cards.flip_frames[i] < FRAME_ANIM_DONE) &&
 				((cards.flip_frames[i] % CARD_FRAMES_PER_CEL) == 0)
 			) {
-				graph_accesspage_func(1);	card_put_8(i);
-				graph_accesspage_func(0);	card_put_8(i);
+				page_access(1);	card_put_8(i);
+				page_access(0);	card_put_8(i);
 			}
 			cards.flip_frames[i]++;
 			if(cards.flip_frames[i] >= card_first_frame_of(CARD_CEL_FLIPPED)) {

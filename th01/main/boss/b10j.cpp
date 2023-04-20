@@ -2,9 +2,11 @@
 /// ---------------------------
 
 #include "platform.h"
+#include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
+#include "platform/x86real/pc98/page.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
@@ -176,8 +178,8 @@ inline void ent_anim_sync_with_still(void) {
 inline void ent_anim_sync_with_still_and_put_both(int cel) {
 	ent_anim_sync_with_still();
 	ent_anim.set_image(cel);
-	graph_accesspage_func(1);	ent_anim.put_8(cel);
-	graph_accesspage_func(0);	ent_anim.put_8(cel);
+	page_access(1);	ent_anim.put_8(cel);
+	page_access(0);	ent_anim.put_8(cel);
 }
 
 void meteor_put(void)
@@ -211,8 +213,8 @@ void meteor_activate(void)
 
 void mima_put_still_both(void)
 {
-	graph_accesspage_func(1);	ent_still.put_8();
-	graph_accesspage_func(0);	ent_still.put_8();
+	page_access(1);	ent_still.put_8();
+	page_access(0);	ent_still.put_8();
 }
 
 void mima_bg_snap(void)
@@ -280,8 +282,8 @@ void mima_unput(bool16 just_the_animated_part = false)
 }
 
 inline void mima_unput_both(void) {
-	graph_accesspage_func(1);	mima_unput();
-	graph_accesspage_func(0);	mima_unput();
+	page_access(1);	mima_unput();
+	page_access(0);	mima_unput();
 }
 
 inline pixel_t spreadin_bottom_cur(void) {
@@ -751,8 +753,8 @@ void pattern_hop_and_fire_chase_pellets(bool16 do_not_initialize = true)
 	}
 	if(hop >= 4) {
 		// MODDERS: Same as mima_put_still_both().
-		graph_accesspage_func(1);	ent_still.put_8(0);
-		graph_accesspage_func(0);	ent_still.put_8(0);
+		page_access(1);	ent_still.put_8(0);
+		page_access(0);	ent_still.put_8(0);
 
 		z_palette_set_all_show(stage_palette);
 
@@ -1234,7 +1236,7 @@ void mima_main(void)
 
 	// Entrance animation
 	if(boss_phase == 0) {
-		graph_accesspage_func(0);
+		page_access(0);
 		boss_phase_frame = 0;
 		ent_still.hitbox_orb_inactive = false;
 		bool16 done = false; // (redundant)
@@ -1334,9 +1336,9 @@ void mima_main(void)
 
 		hit.update_and_render(flash_colors);
 		if(boss_hp <= HP_PHASE_3_END) {
-			graph_accesspage_func(1);
+			page_access(1);
 			mima_unput();
-			graph_accesspage_func(0);
+			page_access(0);
 
 			mdrv2_bgm_fade_out_nonblock();
 			Pellets.unput_and_reset_nonclouds();

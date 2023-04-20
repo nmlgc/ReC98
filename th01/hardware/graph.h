@@ -14,9 +14,6 @@ void z_graph_hide(void);
 /// Pages
 /// -----
 
-void graph_showpage_func(page_t page);
-void graph_accesspage_func(int page);
-
 // Fills the entire active page with hardware color 0 or the given [col].
 void z_graph_clear(void);
 void z_graph_clear_col(uint4_t col);

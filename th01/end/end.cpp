@@ -1,8 +1,10 @@
 #include <stddef.h>
 #include "platform.h"
+#include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
+#include "platform/x86real/pc98/page.hpp"
 #include "shiftjis.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
@@ -38,7 +40,7 @@ static const pixel_t PIC_VRAM_W = (PIC_W / BYTE_DOTS);
 // and sets the hardware color palette to the one in [fn]'s header.
 void end_pics_load_palette_show(const char *fn)
 {
-	graph_accesspage_func(1);
+	page_access(1);
 	grp_put(fn, GPF_PALETTE_SHOW);
 }
 
@@ -72,8 +74,8 @@ void end_pic_show(int quarter)
 		for(vram_x = 0; vram_x < (PIC_VRAM_W / EGC_REGISTER_SIZE); vram_x++) {
 			egc_temp_t d;
 
-			graph_accesspage_func(1);	d = egc_chunk(vram_offset_src);
-			graph_accesspage_func(0);	egc_chunk(vram_offset_dst) = d;
+			page_access(1);	d = egc_chunk(vram_offset_src);
+			page_access(0);	egc_chunk(vram_offset_dst) = d;
 
 			vram_offset_src += EGC_REGISTER_SIZE;
 			vram_offset_dst += EGC_REGISTER_SIZE;
@@ -228,7 +230,7 @@ void end_and_verdict_and_regist_animate(void)
 	end_pic_show_and_delay(2, 100);
 	grp_palette_black_out(6);
 
-	graph_accesspage_func(0);
+	page_access(0);
 	z_graph_clear(); // ZUN bloat
 	grp_palette_settone(100);
 
@@ -628,11 +630,11 @@ void verdict_animate_and_regist(void)
 
 	grp_palette_black_out(10);
 
-	graph_accesspage_func(1);
+	page_access(1);
 	grp_put("endm_a.grp", GPF_PALETTE_SHOW);
 	graph_copy_page_to_other(1);
 
-	graph_accesspage_func(0);
+	page_access(0);
 	grp_palette_black_in(8);
 
 	graph_type_kanji(VERDICT_GAME_TITLE_LEFT, verdict_line_top(1), GAME_TITLE);
@@ -699,7 +701,7 @@ void verdict_animate_and_regist(void)
 
 	// Unblit all text
 	graph_copy_page_to_other(1);
-	graph_accesspage_func(0);
+	page_access(0);
 
 	grp_palette_settone(50);
 	regist_colors_set();

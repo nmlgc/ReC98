@@ -5,6 +5,7 @@
 #include "x86real.h"
 #include "master.hpp"
 #include "shiftjis.hpp"
+#include "platform/x86real/pc98/page.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
@@ -153,13 +154,13 @@ void hiscore_update_and_render(void)
 	}
 	for(int i = 0; i < SCORE_DIGITS; i++) {
 		if(digit_changed(score, prev, divisor)) {
-			graph_accesspage_func(1);	score_max_bg(bg_put, i);
-			graph_accesspage_func(0);	score_max_bg(bg_put, i);
+			page_access(1);	score_max_bg(bg_put, i);
+			page_access(0);	score_max_bg(bg_put, i);
 		}
 		divisor /= 10;
 	}
-	graph_accesspage_func(1);	score_put(MAX_TOP, MAX_FX, prev);
-	graph_accesspage_func(0);	score_put(MAX_TOP, MAX_FX, prev);
+	page_access(1);	score_put(MAX_TOP, MAX_FX, prev);
+	page_access(0);	score_put(MAX_TOP, MAX_FX, prev);
 
 	prev = score;
 	resident->hiscore = score;
@@ -172,13 +173,13 @@ void cardcombo_max_render(void)
 
 	for(int i = 0; i < CARDCOMBO_DIGITS; i++) {
 		if(digit_changed(cardcombo_cur, prev, divisor)) {
-			graph_accesspage_func(1);	cardcombo_max_bg(bg_put, i);
-			graph_accesspage_func(0);	cardcombo_max_bg(bg_put, i);
+			page_access(1);	cardcombo_max_bg(bg_put, i);
+			page_access(0);	cardcombo_max_bg(bg_put, i);
 		}
 		divisor /= 10;
 	}
-	graph_accesspage_func(1);	cardcombo_put(MAX_TOP, MAX_FX, prev);
-	graph_accesspage_func(0);	cardcombo_put(MAX_TOP, MAX_FX, prev);
+	page_access(1);	cardcombo_put(MAX_TOP, MAX_FX, prev);
+	page_access(0);	cardcombo_put(MAX_TOP, MAX_FX, prev);
 
 	prev = cardcombo_cur;
 }
@@ -196,7 +197,7 @@ void hud_score_and_cardcombo_render(void)
 	score_divisor = 1000000; // Must match SCORE_DIGITS!
 	cardcombo_divisor = 10; // Must match CARDCOMBO_DIGITS!
 	for(page = 1; page >= 0; page--) {
-		graph_accesspage_func(page);
+		page_access(page);
 		score_divisor = 1000000; // Must match SCORE_DIGITS!
 		cardcombo_divisor = 10; // Must match CARDCOMBO_DIGITS!
 
@@ -236,11 +237,11 @@ inline void cardcombo_bg_snap_and_put(screen_y_t top, int fx) {
 }
 
 #define score_bg_snap_and_put(digit, top, ptn_id, fx, score) \
-	graph_accesspage_func(1); \
+	page_access(1); \
 	for(digit = 0; digit < SCORE_DIGITS; digit++) { \
 		score_bg(bg_snap, digit, top, ptn_id); \
 	} \
-	graph_accesspage_func(0); \
+	page_access(0); \
 	graph_putfwnum_fx(SCORE_LEFT, top, fx, SCORE_DIGITS, score, 0, true);
 
 // Setting [first_run] to false will only reset the card combo display.
@@ -251,21 +252,21 @@ void score_and_cardcombo_bg_snap_and_put(bool16 first_run)
 	// Spot the difference… :(
 	if(first_run) {
 		score_bg_snap_and_put(digit, CUR_TOP, PTN_BG_CUR_SCORE, CUR_FX, score);
-		graph_accesspage_func(1);
+		page_access(1);
 		cardcombo_bg_loop(bg_snap, digit, CUR_TOP, PTN_BG_CUR_CARDCOMBO);
 	} else {
 		cardcombo_bg_loop(bg_put, digit, CUR_TOP, PTN_BG_CUR_CARDCOMBO);
 	}
-	graph_accesspage_func(0);
+	page_access(0);
 	cardcombo_bg_snap_and_put(CUR_TOP, CUR_FX);
 
 	if(first_run) {
 		score_bg_snap_and_put(
 			digit, MAX_TOP, PTN_BG_MAX_SCORE, MAX_FX, resident->hiscore
 		);
-		graph_accesspage_func(1);
+		page_access(1);
 		cardcombo_bg_loop(bg_snap, digit, MAX_TOP, PTN_BG_MAX_CARDCOMBO);
-		graph_accesspage_func(0);
+		page_access(0);
 	} else {
 		cardcombo_bg_loop(bg_put, digit, MAX_TOP, PTN_BG_MAX_CARDCOMBO);
 	}
@@ -360,7 +361,7 @@ void graph_copy_hud_row_0_to_1_8(screen_x_t left, vram_y_t top, pixel_t w)
 		}
 		vram_offset_row += ROW_SIZE;
 	}
-	graph_accesspage_func(0);
+	page_access(0);
 }
 
 /// Lives and bombs
@@ -398,13 +399,13 @@ inline screen_y_t lives_top(int i) {
 #define put_change(left, top, func_bg, func_sprite, var_prev, var_new) \
 	if(var_prev > var_new) { \
 		for(int i = var_new; i < var_prev; i++) { \
-			graph_accesspage_func(1);	func_bg(bg_put, left, i); \
-			graph_accesspage_func(0);	func_bg(bg_put, left, i); \
+			page_access(1);	func_bg(bg_put, left, i); \
+			page_access(0);	func_bg(bg_put, left, i); \
 		} \
 	} else if(var_prev < var_new) { \
 		for(int i = var_prev; i < var_new; i++) { \
 			func_bg(bg_snap, left, i); \
-			graph_accesspage_func(0); \
+			page_access(0); \
 			func_sprite(left, i); \
 		} \
 		graph_copy_hud_row_0_to_1_8(left, top, var_new * COL_W); \
@@ -473,8 +474,8 @@ void hud_bg_snap_and_put(void)
 {
 	char str[STAGE_DIGITS + 1];
 
-	graph_accesspage_func(1); hud_bg_put();
-	graph_accesspage_func(0); hud_bg_put();
+	page_access(1); hud_bg_put();
+	page_access(0); hud_bg_put();
 
 	if(first_stage_in_scene == true) {
 		lives_bg_snap_and_put();
@@ -483,9 +484,9 @@ void hud_bg_snap_and_put(void)
 		timer_bg_snap_and_put();
 	}
 
-	graph_accesspage_func(1);
+	page_access(1);
 	rank_put();	stage_unput();	stage_num_to(str);	stage_put(str);
-	graph_accesspage_func(0);
+	page_access(0);
 	rank_put();	stage_unput();	stage_put(str);
 
 	hud_cardcombo_max = 0;

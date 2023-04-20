@@ -179,13 +179,13 @@ void ptn_put_quarter(screen_x_t left, vram_y_t top, int ptn_id, int quarter);
 #define ptn_snap_rect_from_1_8( \
 	left, top, w, h, slot, image_first, tmp_ptn_x, tmp_ptn_y \
 ) { \
-	graph_accesspage_func(1); \
+	page_access(1); \
 	for(tmp_ptn_y = 0; tmp_ptn_y < (h / PTN_H); tmp_ptn_y++) { \
 		ptn_row(ptn_snap_8, \
 			left, (top + (tmp_ptn_y * PTN_H)), w, slot, image_first, tmp_ptn_x \
 		); \
 	} \
-	graph_accesspage_func(0); \
+	page_access(0); \
 }
 
 // Blits a single (⌈w/32⌉*32 × 32) row of successive .PTN sprites, starting at

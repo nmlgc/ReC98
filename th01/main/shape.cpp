@@ -1,3 +1,4 @@
+#include "platform/x86real/pc98/page.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/math/polar.hpp"
 #include "th01/hardware/egc.h"
@@ -185,26 +186,24 @@ void shape8x8_invincibility_put_with_mask_from_B_plane(
 		if(first_bit == 0) {
 			dots8_t bg_B;
 
-			graph_accesspage_func(1);
-			bg_B = (grcg_chunk_8(vram_offset) & sprite);
-			graph_accesspage_func(0);
-			grcg_put_8(vram_offset, bg_B);
+			page_access(1);	bg_B = (grcg_chunk_8(vram_offset) & sprite);
+			page_access(0);	grcg_put_8(vram_offset, bg_B);
 		} else {
 			// MODDERS: Add clipping at the right edge
 			dots8_t bg_B_left;
 			dots8_t bg_B_right;
 
-			graph_accesspage_func(1);
+			page_access(1);
 			bg_B_left = (grcg_chunk_8(vram_offset + 0) & (sprite >> first_bit));
 
-			graph_accesspage_func(1);
+			page_access(1);
 			bg_B_right = (
 				grcg_chunk_8(vram_offset + 1) &
 				(sprite << (BYTE_DOTS - first_bit))
 			);
 
-			graph_accesspage_func(0); grcg_put_8((vram_offset + 0), bg_B_left);
-			graph_accesspage_func(0); grcg_put_8((vram_offset + 1), bg_B_right);
+			page_access(0); grcg_put_8((vram_offset + 0), bg_B_left);
+			page_access(0); grcg_put_8((vram_offset + 1), bg_B_right);
 		}
 
 		vram_offset += ROW_SIZE;

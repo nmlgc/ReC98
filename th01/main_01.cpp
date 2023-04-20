@@ -15,6 +15,7 @@
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
+#include "platform/x86real/pc98/page.hpp"
 #include "shiftjis.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
@@ -165,12 +166,12 @@ void stage_entrance(int stage_id, const char* bg_fn, bool16 clear_vram_page_0)
 		// Copy the raw background image to page 1, so that
 		// stageobjs_init_and_render() can snap the correct backgrounds.
 		graph_copy_page_to_other(0);
-		graph_accesspage_func(0);
+		page_access(0);
 	} else {
 		graph_copy_page_to_other(1);
 
 		// Keep the player on screen during stage_num_animate()
-		graph_accesspage_func(0);
+		page_access(0);
 		player_put_default();
 	}
 
@@ -178,7 +179,7 @@ void stage_entrance(int stage_id, const char* bg_fn, bool16 clear_vram_page_0)
 
 	if(first_stage_in_scene == true) {
 		graph_copy_page_to_other(0); // 0 → 1, with new stage objects
-		graph_accesspage_func(0);
+		page_access(0);
 	} else if(first_stage_in_scene == false) {
 		// ZUN bloat: This entire function would not have been necessary if ZUN
 		// just rendered the stage objects to page 1 and then always copied the
@@ -186,9 +187,7 @@ void stage_entrance(int stage_id, const char* bg_fn, bool16 clear_vram_page_0)
 		stageobjs_copy_0_to_1(stage_id);
 
 		// ZUN bloat: Already did this above.
-		graph_accesspage_func(0);
-		graph_accesspage_func(1);
-		graph_accesspage_func(0);
+		page_access(0);
 		player_put_default();
 
 		items_bomb_render();
@@ -391,7 +390,7 @@ int main_main(int, const char *[])
 	ptn_slot_stg.has_reduced_sprites = false;
 
 	z_graph_init();
-	graph_accesspage_func(0);
+	page_access(0);
 	z_graph_clear();
 	card_flip_cycle = (rand() % CARD_FLIP_CYCLE_INITIAL_MAX);
 	first_stage_in_scene = true;
@@ -757,9 +756,9 @@ int main_main(int, const char *[])
 			}
 			orb_in_portal = false;
 			if(boss_id == BID_NONE) {
-				graph_accesspage_func(1);
+				page_access(1);
 				stageobj_bgs_put_all();
-				graph_accesspage_func(0);
+				page_access(0);
 			}
 			stageobj_bgs_free();
 			cards.free();
@@ -786,10 +785,10 @@ int main_main(int, const char *[])
 
 	z_graph_clear_0();
 	z_palette_black();
-	graph_accesspage_func(1);
+	page_access(1);
 	grp_put("game_o.grp", GPF_PALETTE_SHOW);
 	graph_copy_page_to_other(1);
-	graph_accesspage_func(1);
+	page_access(1);
 	z_palette_black_in();
 
 	regist(score, (stage_id + 1), (

@@ -1,9 +1,11 @@
 #include <stddef.h>
 #include "platform.h"
+#include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
 #include "shiftjis.hpp"
+#include "platform/x86real/pc98/page.hpp"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/math/area.hpp"
@@ -78,7 +80,7 @@ void grcg_whiteline(screen_y_t y)
 	\
 	/* Unblit all white lines and return to the regular stage background */ \
 	graph_copy_page_to_other(1); \
-	graph_accesspage_func(0); \
+	page_access(0); \
 	\
 	/* Reimu might not have been standing still, after all. */ \
 	player_put_default(); \
@@ -134,14 +136,14 @@ void singyoku_defeat_animate_and_select_route(void)
 		}
 	} route_sel;
 
-	graph_accesspage_func(1);
+	page_access(1);
 	z_graph_clear(); // ZUN bloat: graph_glyphrow_put() passes FX_CLEAR_BG
 	graph_glyphrow_put(0, V_WHITE, ROUTE_SEL_1);
 	graph_glyphrow_put(2, V_WHITE, ROUTE_SEL_2);
 	graph_glyphrow_put(4, V_WHITE, ROUTE_SEL_3);
 	graph_glyphrow_put(6, COL_MAKAI, ROUTE_SEL_4);
 	graph_glyphrow_put(8, COL_JIGOKU, ROUTE_SEL_5);
-	graph_accesspage_func(0);
+	page_access(0);
 	route_sel.render(COL_MAKAI, COL_JIGOKU);
 
 	graph_glyphrow_2xscale_1_to_0(64, 64, 0, shiftjis_w(ROUTE_SEL_1));
@@ -150,7 +152,7 @@ void singyoku_defeat_animate_and_select_route(void)
 	graph_glyphrow_2xscale_1_to_0(256, MAKAI_TOP, 6, shiftjis_w(ROUTE_SEL_4));
 	graph_glyphrow_2xscale_1_to_0(256, JIGOKU_TOP, 8, shiftjis_w(ROUTE_SEL_5));
 	graph_copy_page_to_other(0);
-	graph_accesspage_func(0);
+	page_access(0);
 	ptn_put_8(CURSOR_LEFT, MAKAI_TOP, PTN_ORB);
 
 	route_sel.v = ROUTE_MAKAI;

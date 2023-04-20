@@ -1,11 +1,13 @@
 #include <stddef.h>
 #include <dos.h>
 #include "platform.h"
+#include "x86real.h"
 #include "decomp.hpp"
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
 #include "shiftjis.hpp"
+#include "platform/x86real/pc98/page.hpp"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/math/clamp.hpp"
@@ -181,10 +183,10 @@ void near egc_pagetrans_rowshift_alternating(
 		? ((y * ROW_SIZE) + transferred_offset)
 		: ((y * ROW_SIZE) + ROW_SIZE - ROWSHIFT_CHUNK_SIZE - transferred_offset)
 	);
-	graph_accesspage_func(1);	dots = egc_chunk(u1.vo_p1 + CHUNK_OFFSET_LEFT);
-	graph_accesspage_func(0);	egc_chunk(vo_p0 + CHUNK_OFFSET_LEFT) = dots;
-	graph_accesspage_func(1);	dots = egc_chunk(u1.vo_p1 + CHUNK_OFFSET_RIGHT);
-	graph_accesspage_func(0);	egc_chunk(vo_p0 + CHUNK_OFFSET_RIGHT) = dots;
+	page_access(1);	dots = egc_chunk(u1.vo_p1 + CHUNK_OFFSET_LEFT);
+	page_access(0);	egc_chunk(vo_p0 + CHUNK_OFFSET_LEFT) = dots;
+	page_access(1);	dots = egc_chunk(u1.vo_p1 + CHUNK_OFFSET_RIGHT);
+	page_access(0);	egc_chunk(vo_p0 + CHUNK_OFFSET_RIGHT) = dots;
 }
 
 void near totle_pagetrans_animate(int)
@@ -250,10 +252,10 @@ void near totle_pagetrans_animate(int)
 
 void near totle_load_and_pagetrans_animate(void)
 {
-	graph_accesspage_func(1);
+	page_access(1);
 	grp_put("CLEAR3.grp", GPF_PALETTE_KEEP);
 	ptn_load(PTN_SLOT_NUMB, "numb.ptn");
-	graph_accesspage_func(0);
+	page_access(0);
 	totle_pagetrans_animate(0);
 }
 
