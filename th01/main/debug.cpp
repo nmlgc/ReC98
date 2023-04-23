@@ -166,9 +166,8 @@ void debug_vars(void)
 
 	text_cursor_move_1_based(0, 5); // ZUN bloat: Already done via \n
 
-	// ZUN bug: A length for `bomb` would have been nice.
 	printf(
-		" main:%7lu, rand:%7lu, bomb:%d, timer:%7lu\n",
+		" main:%7lu, rand:%7lu, bomb:%6d, timer:%7lu\n",
 		bomb_frames,
 		frame_rand,
 		bomb_doubletap_frames,
