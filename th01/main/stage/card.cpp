@@ -124,15 +124,11 @@ void cards_score_render(void)
 			}
 
 			// cards_hittest() ensures that 100 is the minimum value.
-			// ZUN bug: Should be >=. Can in fact be observed on stages 96-99
-			// on non-Lunatic, and stages 321-324 on Lunatic.
-			if(cards_score[i] > 10000) {
+			if(cards_score[i] >= 10000) {
 				offset_left = -GLYPH_HALF_W;
-			} else if(cards_score[i] > 1000) {
+			} else if(cards_score[i] >= 1000) {
 				offset_left = 0;
-			} else {
-				if(cards_score[i] > 100) {
-				}
+			} else /* if(cards_score[i] >= 100) */ {
 				offset_left = +GLYPH_HALF_W;
 			}
 
