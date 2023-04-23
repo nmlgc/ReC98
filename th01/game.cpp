@@ -2,6 +2,7 @@
 // ----------------
 
 #include "platform.h"
+#include "platform/x86real/spawn.hpp"
 #include "th01/core/entry.hpp"
 #include "th01/snd/mdrv2.h"
 
@@ -14,6 +15,7 @@ int main_setup(int argc, const char *argv[])
 		if(mdrv2_spawn(7) == -1) {
 			return -1;
 		}
+		spawn_adjacent_report("zunsoft.com", "");
 	}
 	int ret = main_op(argc, argv);
 	if(mdrv2_not_spawned_outside) {
