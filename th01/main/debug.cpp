@@ -126,7 +126,6 @@ void debug_show_game(void)
 void debug_vars(void)
 {
 	static long memory_check_cycle;
-	static int heapcheck_ret_prev; // ZUN bloat
 	static screen_x_t player_left_prev;
 
 	memory_check_cycle++;
@@ -152,7 +151,6 @@ void debug_vars(void)
 		}
 		break;
 	}
-	heapcheck_ret_prev = heapcheck();
 
 	text_cursor_move_1_based(0, 2);
 	if(player_left_prev != player_left) {
