@@ -415,7 +415,8 @@ only the subset of issues they care about.
 When categorizing such issues, first ask whether a fix could be <a
 id="observable" href="#observable">🔗 observed</a>: Would it change any of the
 individual frames rendered by the game, as defined by the original frame delay
-boundaries?
+boundaries? Assume that these frames are rendered by an infinitely fast PC-98
+that will never add additional lag frames on top.
 
 ### Categories
 

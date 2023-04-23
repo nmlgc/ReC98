@@ -23,7 +23,7 @@ void end_pic_show(int quarter)
 	vram_word_amount_t vram_x;
 	pixel_t y;
 
-	// ZUN quirk: This EGC-"accelerated" copy operation ends up performing a
+	// ZUN bloat: This EGC-"accelerated" copy operation ends up performing a
 	// total of ((320 / 16) × 200 × 2) = 8000 VRAM page switches, which are
 	// everything but instant. Even the optimal assembly instructions for a
 	// *single* page switch, `MOV AL, (0|1)` followed by `OUT 0xA6, AL`, take
