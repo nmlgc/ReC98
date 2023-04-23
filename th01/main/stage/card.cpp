@@ -173,11 +173,6 @@ void cards_update_and_render(void)
 	int i;
 	int cards_removed = 0;
 
-	// ZUN bug: Why is this called first? The animated card sprites will
-	// therefore overlap the score popup every [CARD_FRAMES_PER_CEL] frames,
-	// leading to some minor flickering.
-	cards_score_render();
-
 	for(i = 0; i < cards.count; i++) {
 		if(cards.flag[i] == CARD_FLIPPING) {
 			if(
@@ -223,6 +218,9 @@ void cards_update_and_render(void)
 			cards_removed++;
 		}
 	}
+
+	cards_score_render();
+
 	if(cards_removed == cards.count) {
 		stage_cleared = true;
 		player_is_hit = true;
