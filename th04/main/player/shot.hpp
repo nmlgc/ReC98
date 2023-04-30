@@ -1,3 +1,5 @@
+#include "th02/main/entity.hpp"
+
 // Sets [velocity] to a vector with the given [angle] and a 12-pixel length.
 //
 // TH05 also insists on setting shot_t::angle via a ridiculous out-of-bounds
@@ -8,7 +10,7 @@ SPPoint pascal near shot_velocity_set(
 );
 
 struct Shot {
-	char flag;
+	entity_flag_t flag;
 	char age;
 	PlayfieldMotion pos;
 	// The displayed sprite changes between this one and

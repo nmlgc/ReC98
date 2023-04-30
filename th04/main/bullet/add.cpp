@@ -544,8 +544,8 @@ void pascal near bullets_add_regular_raw(void)
 
 	group_i = 0;
 	while(bullets_available > 0) {
-		if(bullet->flag == 0) {
-			bullet->flag = 1;
+		if(bullet->flag == F_FREE) {
+			bullet->flag = F_ALIVE;
 			bullet->move_state = static_cast<bullet_move_state_t>(move_state);
 			bullet->u1.slowdown_time = BMS_SLOWDOWN_FRAMES;
 			bullet->u2.slowdown_speed_delta.v = (
@@ -579,8 +579,8 @@ void pascal near bullets_add_special_raw(void)
 	);
 	group_i = 0;
 	while(bullets_available > 0) {
-		if(bullet->flag == 0) {
-			bullet->flag = 1;
+		if(bullet->flag == F_FREE) {
+			bullet->flag = F_ALIVE;
 			bullet->move_state = BMS_SPECIAL;
 			bullet->special_motion = bullet_template.special_motion;
 			bullet->u1.turns_done = 0;

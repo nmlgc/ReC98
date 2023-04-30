@@ -19,7 +19,7 @@ public @explosions_small_update_and_rend$qv
 ; ---------------------------------------------------------------------------
 
 @@explosion_loop:
-	cmp	[si+explosion_t.flag], 0
+	cmp	[si+explosion_t.EXPLOSION_alive], 0
 	jz	@@next_explosion
 	xor	di, di
 	mov	[bp+@@angle], 0
@@ -78,7 +78,7 @@ public @explosions_small_update_and_rend$qv
 	inc	[si+explosion_t.age]
 	cmp	[si+explosion_t.age], EXPLOSION_AGE_MAX
 	jb	short @@next_explosion
-	mov	[si+explosion_t.flag], 0
+	mov	[si+explosion_t.EXPLOSION_alive], 0
 
 @@next_explosion:
 	inc	[bp+@@i]

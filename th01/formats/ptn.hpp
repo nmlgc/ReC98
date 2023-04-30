@@ -128,7 +128,7 @@ void ptn_put_8(screen_x_t left, vram_y_t top, int ptn_id);
 #define PTN_QUARTER_H 16
 
 // Displays the given [quarter] of the given [ptn_id] at (⌊left/8⌋*8, top),
-// diregarding its alpha plane.
+// disregarding its alpha plane.
 void ptn_put_quarter_noalpha_8(
 	screen_x_t left, vram_y_t top, int ptn_id, int quarter
 );

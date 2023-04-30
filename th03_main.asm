@@ -985,7 +985,7 @@ loc_9F1D:
 loc_9F26:
 		mov	bx, di
 		imul	bx, size shotpair_t
-		mov	_shotpairs[bx].flag, 0
+		mov	_shotpairs[bx].SP_alive, 0
 		inc	di
 
 loc_9F31:
@@ -8206,7 +8206,7 @@ sub_E313	proc near
 ; ---------------------------------------------------------------------------
 
 loc_E31F:
-		mov	[si+shotpair_t.flag], 0
+		mov	[si+shotpair_t.SP_alive], 0
 		inc	ax
 		add	si, size shotpair_t
 
@@ -8672,9 +8672,9 @@ loc_E7D4:
 ; ---------------------------------------------------------------------------
 
 loc_E7E2:
-		cmp	[di+shotpair_t.flag], 0
+		cmp	[di+shotpair_t.SP_alive], 0
 		jnz	short loc_E82F
-		mov	[di+shotpair_t.flag], 1
+		mov	[di+shotpair_t.SP_alive], 1
 		mov	[di+shotpair_t.unused_1], 0
 		mov	ax, [bp+@@left]
 		mov	[di+shotpair_t.topleft.x], ax
@@ -20485,7 +20485,7 @@ loc_15914:
 ; ---------------------------------------------------------------------------
 
 loc_15950:
-		cmp	[si+shotpair_t.flag], 1
+		cmp	[si+shotpair_t.SP_alive], 1
 		jnz	short loc_159AC
 		mov	al, [si+shotpair_t.pid]
 		cmp	al, pid_20E3A
@@ -20507,7 +20507,7 @@ loc_15950:
 		jl	short loc_159AC
 		cmp	ax, word_20E38
 		jg	short loc_159AC
-		mov	[si+shotpair_t.flag], 0
+		mov	[si+shotpair_t.SP_alive], 0
 		mov	al, [bp+var_5]
 		add	al, 2
 		mov	[bp+var_5], al

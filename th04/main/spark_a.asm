@@ -35,11 +35,11 @@ clip macro center_x:req, center_y:req, label_if_clipped:req
 endm
 
 init macro p:req, center_x:req, center_y:req
-	; p->flag = SF_ALIVE;
+	; p->flag = F_ALIVE;
 	; p->age = 0;
 	; p->pos.cur.x = center_x;
 	; p->pos.cur.y = center_y;
-	mov	word ptr [p+spark_t.flag], SF_ALIVE or (0 shl 8)
+	mov	word ptr [p+spark_t.flag], F_ALIVE or (0 shl 8)
 	mov	ax, @@center_x
 	mov	[p+spark_t.pos.cur.x], ax
 	mov	ax, @@center_y
@@ -77,7 +77,7 @@ public @SPARKS_ADD_RANDOM$Q20%SUBPIXELBASE$TI$TI%T1II
 @@loop:
 	mov 	@@p, _spark_ring_offset
 	add 	@@p, offset _sparks
-	cmp 	[@@p+spark_t.flag], SF_FREE
+	cmp 	[@@p+spark_t.flag], F_FREE
 	jnz 	short @@next
 	init	@@p, @@center_x, @@center_y
 
@@ -129,7 +129,7 @@ public @SPARKS_ADD_CIRCLE$Q20%SUBPIXELBASE$TI$TI%T1II
 @@loop:
 	mov 	@@p, _spark_ring_offset
 	add 	@@p, offset _sparks
-	cmp 	[@@p+spark_t.flag], SF_FREE
+	cmp 	[@@p+spark_t.flag], F_FREE
 	jnz 	short @@next
 	init	@@p, @@center_x, @@center_y
 

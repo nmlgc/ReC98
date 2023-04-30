@@ -515,7 +515,7 @@ void regist_name_enter(int entered_place, bool cleared)
 {
 	// The Game Over variant in REIIDEN.EXE features a hidden timeout that
 	// force-enters a high score name after 1000… *keyboard inputs*? Not
-	// frames? Why. Like, how do even you realistically get to such a number.
+	// frames? Why. Like, how do you even realistically get to such a number.
 	// (Best guess: It's a hidden easter egg to amuse players who place
 	// drinking glasses on cursor keys. Or beer bottles.)
 	unsigned int timeout = 0;

@@ -97,7 +97,7 @@ void near boss_hittest_shots_invincible(void);
 #define EXPLOSION_SMALL_COUNT 2
 
 struct explosion_t {
-	char flag;
+	bool alive;
 	unsigned char age;
 	SPPoint center;
 	SPPoint radius_cur;

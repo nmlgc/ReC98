@@ -19,7 +19,7 @@ bullets_gather_invalidate	proc near
 	endif
 
 @@pellet_loop:
-	cmp	[si+bullet_t.flag], 0
+	cmp	[si+bullet_t.flag], F_FREE
 	jz	short @@pellet_next
 	if GAME eq 5
 		cmp	[si+bullet_t.spawn_state], BSS_GRAZED
@@ -51,7 +51,7 @@ bullets_gather_invalidate	proc near
 	endif
 
 @@bullet16_loop:
-	cmp	[si+bullet_t.flag], 0
+	cmp	[si+bullet_t.flag], F_FREE
 	jz	short @@bullet16_next
 	cmp	[si+bullet_t.spawn_state], BSS_GRAZED
 	jbe	short @@bullet16_not_grazed
@@ -72,7 +72,7 @@ bullets_gather_invalidate	proc near
 	mov	di, GATHER_COUNT
 
 @@gather_loop:
-	cmp	[si+gather_t.G_flag], 0
+	cmp	[si+gather_t.G_flag], F_FREE
 	jz	short @@gather_next
 	mov	ax, [si+gather_t.G_radius_cur]
 	shr	ax, 3

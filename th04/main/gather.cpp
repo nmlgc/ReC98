@@ -27,10 +27,10 @@ void gather_update(void)
 	gather_t near *gather;
 	int i;
 	for((gather = gather_circles, i = 0); i < GATHER_CAP; (i++, gather++)) {
-		if(gather->flag == GF_FREE) {
+		if(gather->flag == F_FREE) {
 			continue;
-		} else if(gather->flag >= GF_DONE) {
-			gather->flag = GF_FREE;
+		} else if(gather->flag >= F_REMOVE) {
+			gather->flag = F_FREE;
 			continue;
 		}
 		gather->center.update_seg3();
@@ -38,7 +38,7 @@ void gather_update(void)
 		gather->radius_cur.v -= gather->radius_delta.v;
 		gather->angle_cur += gather->angle_delta;
 		if(gather->radius_cur.v < GATHER_RADIUS_END) {
-			gather->flag = GF_DONE;
+			gather->flag = F_REMOVE;
 			if(gather->bullet_template.spawn_type != BST_GATHER_ONLY) {
 				set_bullet_template_to_gather_template(*gather);
 				bullet_template.origin.x = gather->center.cur.x;
@@ -79,7 +79,7 @@ void gather_render(void)
 	gather = gather_circles;
 
 	for(circle_i = 0; circle_i < GATHER_CAP; circle_i++, gather++) {
-		if(gather->flag != GF_ALIVE) {
+		if(gather->flag != F_ALIVE) {
 			continue;
 		}
 		if(gather->col != col_cur) {

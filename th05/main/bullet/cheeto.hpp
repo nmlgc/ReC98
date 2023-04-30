@@ -50,7 +50,7 @@ extern cheeto_trail_t cheeto_trails[CHEETO_COUNT + 1];
 
 // Puts the given cheeto bullet [sprite] (between 0 and BULLET_D_CELS) at the
 // given position. Assumptions:
-// • ES is already be set to the beginning of a VRAM segment
+// • ES is already set to the beginning of a VRAM segment
 // • The GRCG is active, and set to the intended color
 // Beware, [top] is actually interpreted as an unsigned screen-space
 // coordinate! [top] must therefore be between 0 and (RES_Y - 1).

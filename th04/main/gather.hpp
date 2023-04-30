@@ -1,19 +1,11 @@
 /// Everything here needs to be kept in sync with the ASM versions in
 /// gather.inc!
 
-enum gather_flag_t {
-	GF_FREE = 0,
-	GF_ALIVE = 1,
-	GF_DONE = 2,
-
-	_gather_flag_t_FORCE_UINT8 = 0xFF
-};
-
 // Shrinking gather circles. Can fire bullets according to the included
 // template once their radius reaches GATHER_RADIUS_END, unless
 // [bullet_template.spawn_type] is set to BST_GATHER_ONLY.
 struct gather_t {
-	gather_flag_t flag;
+	entity_flag_t flag;
 	uint4_t col;
 	PlayfieldMotion center;
 	Subpixel radius_cur;
@@ -82,7 +74,7 @@ void pascal near gather_add_only_3stack(
 );
 
 // Blits the gather point sprite to ([left], [top]). Assumptions:
-// • ES is already be set to the beginning of a VRAM segment
+// • ES is already set to the beginning of a VRAM segment
 // • The GRCG is active, and set to the intended color
 void __fastcall near gather_point_render(screen_x_t left, vram_y_t top);
 

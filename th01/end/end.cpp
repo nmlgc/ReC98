@@ -59,7 +59,7 @@ void end_pic_show(int quarter)
 	vram_word_amount_t vram_x;
 	pixel_t y;
 
-	// ZUN quirk: This EGC-"accelerated" copy operation ends up performing a
+	// ZUN bloat: This EGC-"accelerated" copy operation ends up performing a
 	// total of ((320 / 16) × 200 × 2) = 8000 VRAM page switches, which are
 	// everything but instant. Even the optimal assembly instructions for a
 	// *single* page switch, `MOV AL, (0|1)` followed by `OUT 0xA6, AL`, take
@@ -312,7 +312,7 @@ void near shake_then_boom(int shake_duration, int boom_duration)
 		end_pic_show_and_delay(1, 2);
 
 		if(i & 1) {
-			// ZUN quirk: No delay after rendering this image. Unlike the
+			// ZUN bug: No delay after rendering this image. Unlike the
 			// z_vsync_wait_and_scrollup() function used in REIIDEN.EXE,
 			// master.lib's graph_scrollup() doesn't wait for VSync, causing
 			// this image to immediately be overwritten with pic #1 on the next
@@ -323,6 +323,13 @@ void near shake_then_boom(int shake_duration, int boom_duration)
 			// usual slowness of PC-98 VRAM, you'll still end up seeing at
 			// least parts of the "boom"/"ドカーン" image even on faster PC-98
 			// systems before it's fully overwritten on the next iteration.
+			//
+			// Technically this could be considered a quirk, as the resulting
+			// frame drops affect the length of the ending. On the other hand,
+			// we explicitly judge observability in terms of an infinitely fast
+			// PC-98. Such a system would consequently never show this image
+			// that ZUN clearly intended to show, thus turning this into the
+			// exact definition of a bug.
 			end_pic_show(2);
 		} else {
 			// And why are we re-showing the same pic here? Redundant,
@@ -463,7 +470,7 @@ void near boss_slide_next(int quarter)
 
 void near boss_slides_animate(void)
 {
-	// MODDERS: Move to end_animate() for cleanliness.
+	// MODDERS: Move to end_and_verdict_and_regist_animate() for cleanliness.
 	end_done();
 
 	if(end_flag == ES_MAKAI) {
@@ -475,7 +482,7 @@ void near boss_slides_animate(void)
 	grp_palette_settone(100);
 	frame_delay(BOSS_TEXT_DELAY);
 
-	// ZUN calculated with one extra character? Was this character originally
+	// ZUN calculated with one extra romaji? Was this character originally
 	// called "ShinGyoku" after all?!
 	pic_caption_type_2(SLIDES_TITLE_5, SLIDES_BOSS_5, 1);
 

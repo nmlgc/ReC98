@@ -50,8 +50,8 @@ void particles_unput_update_render(particle_origin_t origin, int col)
 		i = (spawn_cycle / spawn_interval);
 
 		// Luckily, [alive[PARTICLE_COUNT]] corresponds to
-		// [velocity_base_max[0]]. Due to the first ZUN bug in this function,
-		// this value is 0 only during the first cycle, which causes actual
+		// [velocity_base[0]]. Due to the first ZUN bug in this function, this
+		// value is 0 only during the first cycle, which causes actual
 		// out-of-bounds accesses to only happen on one single frame.
 		if(alive[i] == false) {
 			alive[i] = true;

@@ -3,7 +3,6 @@
 // Gaiji available to TH04 and TH05
 
 #include "th02/gaiji/from_2.h"
-#include "th04/gaiji/bar.h"
 
 #define OVERLAY_FADE_CELS 8
 #define RETURN_KEY_CELS 4
@@ -26,7 +25,18 @@ typedef enum {
 	#endif
 
 	gaiji_bar(0x20),
-	gaiji_bar_max(0x30),
+
+	// A completely filled, 128-pixel bar, stored in 8 consecutive gaiji
+	// characters. TH05 has *MAX♡ drawn on the last three.
+	g_BAR_MAX_0,
+	g_BAR_MAX_1,
+	g_BAR_MAX_2,
+	g_BAR_MAX_3,
+	g_BAR_MAX_4,
+	g_BAR_MAX_5,
+	g_BAR_MAX_6,
+	g_BAR_MAX_7,
+
 	g_OVERLAY_FADE,
 	g_OVERLAY_FADE_last = (g_OVERLAY_FADE + OVERLAY_FADE_CELS - 1),
 	gaiji_boldfont(0xA0),

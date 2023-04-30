@@ -14,7 +14,7 @@ swords_render proc near
 ; ---------------------------------------------------------------------------
 
 @@loop:
-	cmp	[si+sword_t.flag], 0
+	cmp	[si+sword_t.flag], F_FREE
 	jz	short @@next
 	mov	ax, [si+sword_t.SWORD_patnum_tiny]
 	mov	[bp+@@patnum_tiny], ax

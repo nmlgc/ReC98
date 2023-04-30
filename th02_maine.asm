@@ -2834,7 +2834,7 @@ _envp		= dword	ptr  0Ch
 
 		push	bp
 		mov	bp, sp
-		call	cfg_load
+		call	@cfg_load$qv
 		or	ax, ax
 		jz	loc_B1FE
 		les	bx, _resident
@@ -2944,7 +2944,7 @@ SHARED	ends
 ; ===========================================================================
 
 maine_03_TEXT	segment	word public 'CODE' use16
-	extern CFG_LOAD:proc
+	extern @cfg_load$qv:proc
 maine_03_TEXT	ends
 
 ; ===========================================================================

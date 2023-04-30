@@ -1,4 +1,5 @@
-POWER_OVERFLOW_BONUS label word
+public _POWER_OVERFLOW_BONUS
+_POWER_OVERFLOW_BONUS label word
 	dw     1
 	dw     1
 	dw     2

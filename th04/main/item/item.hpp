@@ -1,3 +1,5 @@
+#include "th02/main/entity.hpp"
+
 enum item_type_t {
 #if GAME == 5
 	IT_NONE = -2,
@@ -14,7 +16,7 @@ enum item_type_t {
 };
 
 struct item_t {
-	char flag;
+	entity_flag_t flag;
 	char unused; // ZUN bloat
 	PlayfieldMotion pos;
 	unsigned char type;
