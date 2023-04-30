@@ -76,7 +76,7 @@ These cases should gradually be removed as development goes along, though.
     which keeps the annoyance from accidentally destroyed files to a minimum.
 
 * Use `_asm` as the keyword for decently sane or temporary inline assembly.
-  This variation has the biggest compiler support, which will ease potential
+  This variant has the biggest compiler support, which will ease potential
   future ports to other x86 systems:
 
    | Compiler support                  | `asm` |  `_asm` | `__asm` |
@@ -415,7 +415,8 @@ only the subset of issues they care about.
 When categorizing such issues, first ask whether a fix could be <a
 id="observable" href="#observable">🔗 observed</a>: Would it change any of the
 individual frames rendered by the game, as defined by the original frame delay
-boundaries?
+boundaries? Assume that these frames are rendered by an infinitely fast PC-98
+that will never add additional lag frames on top.
 
 ### Categories
 
@@ -464,7 +465,7 @@ Examples:
 * Missing error handling for file I/O
 
 Landmines are likely to cause issues as soon as the game is modded or compiled
-with a different compiler, which breaks the above assumptions. Therefore, it
+with a different compiler, which breaks the above assumptions. Therefore, they
 should be fixed on every branch that breaks the code or data layout of the
 game. Most notably, they are removed from the `debloated` and `anniversary`
 branches.

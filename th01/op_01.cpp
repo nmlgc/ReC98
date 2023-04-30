@@ -14,6 +14,7 @@
 #include "master.hpp"
 #include "shiftjis.hpp"
 #include "bin/fork.h"
+#include "platform/x86real/pc98/page.hpp"
 #include "game/input.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
@@ -47,7 +48,7 @@ void snap_col_4(void)
 		columns[x] = new dots8_t[RES_Y];
 	}
 	grcg_setcolor_tcr(4);
-	graph_accesspage_func(1);
+	page_access(1);
 
 	for(x = 0; x < ROW_SIZE; x++) {
 		y = 0;
@@ -60,7 +61,7 @@ void snap_col_4(void)
 	}
 
 	grcg_off();
-	graph_accesspage_func(0);
+	page_access(0);
 }
 
 /// REIIDEN.CFG loading and saving
@@ -291,9 +292,8 @@ void whitelines_animate(void)
 		whiteline_put(y2);
 		frame_delay(1);
 	}
-	graph_accesspage_func(1);
-	graph_copy_accessed_page_to_other();
-	graph_accesspage_func(0);
+	graph_copy_page_to_other(1);
+	page_access(0);
 }
 
 void forkbanner_row_put(int row, const char* str)
@@ -307,10 +307,11 @@ void title_init(void)
 {
 	mdrv2_bgm_load("reimu.mdt");
 	mdrv2_bgm_play();
-	graph_accesspage_func(1);
+	page_access(1);
 	grp_put("REIIDEN2.grp", GPF_PALETTE_SHOW);
 	z_palette_black();
-	graph_copy_accessed_page_to_other();
+	graph_copy_page_to_other(1);
+	page_access(1);
 	grp_put("REIIDEN3.grp", GPF_PALETTE_KEEP);
 
 	forkbanner_row_put(0, "Anniversary Edition");
@@ -318,7 +319,7 @@ void title_init(void)
 	forkbanner_row_put(2, FORK_DATE);
 	forkbanner_row_put(3, FORK_CREDIT);
 
-	graph_accesspage_func(0);
+	page_access(0);
 	z_palette_black_in();
 	frame_delay(100);
 
@@ -327,11 +328,11 @@ void title_init(void)
 
 void title_window_put(void)
 {
-	graph_accesspage_func(1);
-	graph_copy_accessed_page_to_other();
-	graph_accesspage_func(0);
+	graph_copy_page_to_other(1);
+	page_access(0);
 	grp_put("op_win.grp", GPF_COLORKEY);
-	graph_copy_accessed_page_to_other();
+	graph_copy_page_to_other(0);
+	page_access(0);
 }
 
 // Starting the game
@@ -350,6 +351,22 @@ void start_game(bool new_game)
 	key_end();
 	mdrv2_bgm_fade_out_nonblock();
 
+	// ZUN bug: Does not initialize [resident->debug_mode] if [debug_mode] is
+	// 1, which happens when starting the game with `game s`. This mode is
+	// supposed to just show the stage selection screen at the beginning of
+	// REIIDEN.EXE, without enabling other debug features.
+	// However, since master.lib doesn't clear the resident structure after
+	// allocation, `game s` might actually *have* the intended effect if
+	// anything on the system previously wrote a value other than DM_OFF,
+	// DM_TEST, or DM_FULL to the specific byte in memory that now corresponds
+	// to [resident->debug_mode]. This happens on a certain widely circulated
+	// .HDI copy of TH01 that boots MS-DOS 3.30C and then directly launches the
+	// game, which might be the whole reason why `game s` is widely documented
+	// to trigger a stage selection to begin with.
+	//
+	// The fact that main() does have a conditional branch that sets
+	// [debug_mode] to a distinct value proves that ZUN did have a stage
+	// selection mode during development, fitting the bug classification.
 	if(!new_game || (debug_mode == 0)) {
 		resident->debug_mode = DM_OFF;
 	} else if(debug_mode == 2) {
@@ -510,8 +527,8 @@ int8_t music_sel = 0;
 
 void music_choice_unput_and_put(int choice, int col)
 {
-	const shiftjis_t* CHOICES[MUSIC_CHOICE_COUNT]  = MUSIC_CHOICES;
-	const shiftjis_t* TITLES[TRACK_COUNT]  = MUSIC_TITLES;
+	const shiftjis_t* CHOICES[MUSIC_CHOICE_COUNT] = MUSIC_CHOICES;
+	const shiftjis_t* TITLES[TRACK_COUNT] = MUSIC_TITLES;
 
 	screen_x_t left = (MENU_CENTER_X - (MENU_W / 2));
 	screen_y_t top = music_choice_top(choice, MUSIC_CHOICE_COUNT);
@@ -719,9 +736,6 @@ int main_op(int argc, const char *argv[])
 
 	if(argc > 1) {
 		if(argv[1][0] == 's') {
-			// Probably supposed to just show the stage selection screen
-			// without any other debugging features, but start_game() ignores
-			// this value.
 			debug_mode = 1;
 		}
 		if(argv[1][0] == 't') {
@@ -822,8 +836,8 @@ int main_op(int argc, const char *argv[])
 	key_end();
 	resident_free();
 
-	graph_accesspage_func(1);	z_graph_clear();
-	graph_accesspage_func(0);	z_graph_clear();
+	page_access(1);	z_graph_clear();
+	page_access(0);	z_graph_clear();
 
 	game_exit();
 	mdrv2_bgm_stop();

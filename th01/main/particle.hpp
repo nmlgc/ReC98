@@ -7,12 +7,32 @@ enum particle_origin_t {
 	PO_BOTTOM_LEFT = 5,
 	PO_LEFT = 6,
 	PO_TOP_LEFT = 7,
-	PO_INITIALIZE = 255, // (renders nothing)
 
 	_particle_origin_t_FORCE_INT16 = 0x7FFF
 };
 
-// Runs a frame of the particle system, with new particles spawning from a
-// random position on the [origin] edge(s) and flying into the opposite
-// direction. Must be called with [origin] == PO_INITIALIZE first!
-void particles_unput_update_render(particle_origin_t origin, int col);
+static const int PARTICLE_COUNT = 40;
+
+struct CParticles {
+	int spawn_interval;
+	pixel_t velocity_base_max;
+	Subpixel x[PARTICLE_COUNT];
+	Subpixel y[PARTICLE_COUNT];
+	Subpixel velocity_x[PARTICLE_COUNT];
+	Subpixel velocity_y[PARTICLE_COUNT];
+	bool alive[PARTICLE_COUNT];
+
+	// MODDERS: Should be local, and just a single variable, not an array.
+	unsigned char velocity_base[PARTICLE_COUNT];
+
+	unsigned char spawn_cycle;
+
+	void init();
+
+	// Runs a frame of the particle system, with new particles spawning from a
+	// random position on the [origin] edge(s) and flying into the opposite
+	// direction. init() must have been called before!
+	void unput_update_render(particle_origin_t origin, int col);
+};
+
+extern CParticles Particles;

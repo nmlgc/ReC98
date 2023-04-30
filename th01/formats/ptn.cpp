@@ -2,9 +2,11 @@
 
 #include <stddef.h>
 #include "platform.h"
+#include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
+#include "platform/x86real/pc98/page.hpp"
 #include "th01/hardware/egc.h"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/planar.h"
@@ -158,11 +160,11 @@ void ptn_copy_8_0_to_1(screen_x_t left, vram_y_t top)
 	Planar<dots_t(PTN_W)> row;
 	vram_offset_t vram_offset = vram_offset_shift(left, top);
 	for(pixel_t y = 0; y < PTN_H; y++) {
-		graph_accesspage_func(0);	VRAM_SNAP_PLANAR(row, vram_offset, PTN_W);
-		graph_accesspage_func(1);	VRAM_PUT_PLANAR(vram_offset, row, PTN_W);
+		page_access(0);	VRAM_SNAP_PLANAR(row, vram_offset, PTN_W);
+		page_access(1);	VRAM_PUT_PLANAR(vram_offset, row, PTN_W);
 		vram_offset += ROW_SIZE;
 	}
-	graph_accesspage_func(0);
+	page_access(0);
 }
 
 void ptn_unput_8(screen_x_t left, vram_y_t top, int ptn_id)
@@ -173,16 +175,16 @@ void ptn_unput_8(screen_x_t left, vram_y_t top, int ptn_id)
 
 	for(upixel_t y = 0; y < PTN_H; y++) {
 		mask = ptn->alpha[y];
-		graph_accesspage_func(0);
+		page_access(0);
 		if(mask) {
 			Planar<ptn_plane_t::row_dots_t> page1;
 
 			vram_erase(vram_offset, mask, PTN_W);
 
-			graph_accesspage_func(1);
+			page_access(1);
 			vram_snap_planar_masked(page1, vram_offset, PTN_W, mask);
 
-			graph_accesspage_func(0);
+			page_access(0);
 			vram_or_planar(vram_offset, page1, PTN_W);
 		}
 		vram_offset += ROW_SIZE;
@@ -310,14 +312,14 @@ void ptn_unput_quarter_8(
 	for(y = q.y; y < (q.y + PTN_QUARTER_H); y++) {
 		mask_full = ptn->alpha[y];
 
-		graph_accesspage_func(0);
+		page_access(0);
 
 		mask = (mask_full >> q.x);
 		if(mask) {
 			vram_erase(vram_offset, mask, PTN_QUARTER_W);
-			graph_accesspage_func(1);
+			page_access(1);
 			vram_snap_planar_masked(page1, vram_offset, PTN_QUARTER_W, mask);
-			graph_accesspage_func(0);
+			page_access(0);
 			vram_or_planar(vram_offset, page1, PTN_QUARTER_W);
 		}
 		vram_offset += ROW_SIZE;

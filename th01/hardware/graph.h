@@ -14,9 +14,6 @@ void z_graph_hide(void);
 /// Pages
 /// -----
 
-void graph_showpage_func(page_t page);
-void graph_accesspage_func(int page);
-
 // Fills the entire active page with hardware color 0 or the given [col].
 void z_graph_clear(void);
 void z_graph_clear_col(uint4_t col);
@@ -24,9 +21,9 @@ void z_graph_clear_col(uint4_t col);
 // Fills page #0 with hardware color 0.
 void z_graph_clear_0(void);
 
-// Copies the content of the VRAM page that was previously set as the accessed
-// one via a call to graph_accesspage_func() to the opposite one.
-void graph_copy_accessed_page_to_other(void);
+// Copies the contents of the given VRAM page to the other one. Returns with
+// the other one (= ![src]) as the accessed VRAM page.
+void graph_copy_page_to_other(page_t src);
 /// -----
 
 /// GRCG
@@ -117,7 +114,8 @@ void graph_r_lineloop_unput(
 //     (⌊left/8⌋*8, top)
 // on the [src] page to
 //     (⌊left/8⌋*8 + ⌊(right-left)/8⌋*8, bottom)
-// on the [dst] page. Already assumes [src] to be the currently accessed page.
+// on the other page. Returns with the other one (= ![src]) as the accessed
+// VRAM page.
 void graph_move_byterect_interpage(
 	screen_x_t src_left,
 	vram_y_t src_top,
@@ -125,6 +123,6 @@ void graph_move_byterect_interpage(
 	vram_y_t src_bottom,
 	screen_x_t dst_left,
 	vram_y_t dst_top,
-	int src, int dst
+	page_t src
 );
 /// --------

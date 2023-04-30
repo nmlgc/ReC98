@@ -78,7 +78,7 @@ const Blitter __ds* blitter_init_clip_lrtb(
 	vram_x_t left, vram_y_t top, vram_byte_amount_t w, pixel_t h
 );
 
-// Checks the bottom edge of VRAM, assumes that the sprite does not intersect
+// Checks the bottom edge of VRAM.
 const Blitter __ds* blitter_init_clip_b(
 	vram_x_t left, vram_y_t top, vram_byte_amount_t w, pixel_t h
 );

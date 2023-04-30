@@ -578,7 +578,7 @@ loc_B099:
 loc_B09F:
 		cmp	si, SCORE_DIGITS
 		jl	short loc_B099
-		mov	_power, 1
+		mov	_power, POWER_MIN
 		mov	_dream, 1
 		call	bb_txt_load
 		mov	al, _playchar
@@ -776,7 +776,7 @@ loc_B2A5:
 		mov	_stage_id, al
 		cmp	es:[bx+resident_t.demo_num], 5
 		jz	short loc_B2CE
-		mov	_power, 128
+		mov	_power, POWER_MAX
 
 loc_B2CE:
 		mov	fp_2300E, offset @DemoPlay$qv
@@ -1198,7 +1198,7 @@ loc_BB08:
 		out	0A6h, al
 		push	ax
 		xor	bp, bp
-		mov	si, 576
+		mov	si, TILE_AREA_LEFT
 
 loc_BB10:
 		xor	di, di
@@ -2886,10 +2886,10 @@ sub_E4FC	proc far
 		xor	bx, bx
 		xor	ax, ax
 		mov	al, _power
-		mov	cx, 9
+		mov	cx, SHOT_LEVEL_MAX
 
 loc_E506:
-		cmp	ax, SHOT_LEVELS[bx]
+		cmp	ax, _SHOT_LEVEL_TO_POWER[bx]
 		jb	short loc_E511
 		add	bx, 2
 		loop	loc_E506
@@ -4340,7 +4340,7 @@ loc_FBB5:
 		or	di, di
 		jnz	short loc_FBF5
 		call	sub_E8F2
-		mov	_power, 1
+		mov	_power, POWER_MIN
 		mov	_dream, 1
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.credit_bombs]
@@ -4398,7 +4398,7 @@ sub_100C6	proc near
 ; ---------------------------------------------------------------------------
 
 loc_100DE:
-		cmp	[si+bullet_t.flag], 1
+		cmp	[si+bullet_t.flag], F_ALIVE
 		jnz	loc_1016B
 		cmp	[si+bullet_t.spawn_state], BSS_CLOUD_BACKWARDS
 		ja	short loc_10108
@@ -4511,7 +4511,7 @@ loc_101DC:
 ; ---------------------------------------------------------------------------
 
 loc_101E3:
-		cmp	[si+bullet_t.flag], 1
+		cmp	[si+bullet_t.flag], F_ALIVE
 		jnz	short loc_10203
 		mov	ax, [si+bullet_t.pos.cur.y]
 		add	ax, (8 shl 4)
@@ -4569,7 +4569,7 @@ loc_1024F:
 		mov	al, _scroll_subpixel_line
 		add	al, _scroll_speed
 		mov	_scroll_subpixel_line, al
-		cmp	al, 16
+		cmp	al, (1 shl 4)
 		jb	short loc_10282
 		mov	ah, 0
 		shr	ax, 4
@@ -4906,7 +4906,7 @@ public @hud_graze_put$qv
 public HUD_POWER_PUT
 hud_power_put	proc far
 
-@@bar_colors		= byte ptr -(((HUD_POWER_COLOR_COUNT + 1) / word) * word)
+@@bar_colors	= byte ptr -(((SHOT_LEVEL_MAX + 1) / word) * word)
 
 		push	bp
 		mov	bp, sp
@@ -4917,7 +4917,7 @@ hud_power_put	proc far
 		lea	di, [bp+@@bar_colors]
 		push	ss
 		pop	es
-		mov	cx, ((HUD_POWER_COLOR_COUNT + 1) / word)
+		mov	cx, ((SHOT_LEVEL_MAX + 1) / word)
 		rep movsw
 		push	16h
 		mov	al, _power
@@ -5429,7 +5429,7 @@ puppets_render	proc near
 ; ---------------------------------------------------------------------------
 
 loc_10B2E:
-		cmp	[si+puppet_t.flag], 0
+		cmp	[si+puppet_t.flag], F_FREE
 		jz	loc_10C38
 		mov	ax, [si+puppet_t.pos.cur.x]
 		sar	ax, 4
@@ -5470,7 +5470,7 @@ loc_10B87:
 		add	di, ax
 		mov	ax, [si+puppet_t.PUPPET_patnum]
 		mov	[bp+@@patnum], ax
-		cmp	[si+puppet_t.flag], 1
+		cmp	[si+puppet_t.flag], F_ALIVE
 		jnz	short loc_10BA1
 		mov	al, _stage_frame_mod2
 		mov	ah, 0
@@ -6377,13 +6377,13 @@ loc_11441:
 		mov	ax, di
 		add	ax, ax
 		add	bx, ax
-		mov	_tile_ring[bx], ((576 / 8) + (256 * ROW_SIZE))
+		mov	_tile_ring[bx], (TILE_AREA_VRAM_LEFT + (256 * ROW_SIZE))
 		mov	bx, [bp+var_2]
 		shl	bx, 6
 		mov	ax, [bp+var_4]
 		add	ax, ax
 		add	bx, ax
-		mov	_tile_ring[bx], ((576 / 8) + (256 * ROW_SIZE))
+		mov	_tile_ring[bx], (TILE_AREA_VRAM_LEFT + (256 * ROW_SIZE))
 		inc	[bp+var_2]
 
 loc_11469:
@@ -6464,7 +6464,7 @@ loc_114F8:
 		imul	ax, size s2particle_t
 		add	ax, offset s2particles
 		mov	si, ax
-		mov	[si+s2particle_t.flag], 1
+		mov	[si+s2particle_t.S2P_alive], 1
 		call	randring1_next16_mod pascal, 20h
 		add	al, 30h
 		mov	[si+s2particle_t.S2P_angle], al
@@ -6496,7 +6496,7 @@ loc_11553:
 ; ---------------------------------------------------------------------------
 
 loc_11568:
-		cmp	[si+s2particle_t.flag], 0
+		cmp	[si+s2particle_t.S2P_alive], 0
 		jz	short loc_115CE
 		lea	ax, [si+s2particle_t.pos]
 		call	@PlayfieldMotion@update_seg1$qv pascal, ax
@@ -6915,7 +6915,7 @@ var_1		= byte ptr -1
 		jnz	short loc_12092
 		mov	_player_pos.velocity.x, 0
 		mov	_player_pos.velocity.y, 0
-		mov	_power_overflow_level, 0
+		mov	_power_overflow, 0
 		mov	_miss_explosion_radius, 0
 		call	items_miss_add
 		mov	al, _power
@@ -7158,7 +7158,7 @@ sub_123AD	proc near
 ; ---------------------------------------------------------------------------
 
 loc_123CC:
-		cmp	[si+shot_t.flag], 0
+		cmp	[si+shot_t.flag], F_FREE
 		jz	short loc_123DA
 		call	tiles_invalidate_around pascal, [si+shot_t.pos.prev.y], [si+shot_t.pos.prev.x]
 
@@ -9800,9 +9800,9 @@ arg_0		= word ptr  4
 		jmp	cs:off_171BA[bx]
 
 loc_16F76:
-		cmp	_power, 128
+		cmp	_power, POWER_MAX
 		jnb	short loc_16FAA
-		cmp	_power, 127
+		cmp	_power, (POWER_MAX - 1)
 		jnz	short loc_16F9B
 		mov	_overlay_popup_id_new, POPUP_ID_FULL_POWERUP
 		mov	_overlay2, offset @overlay_popup_update_and_render$qv
@@ -9818,10 +9818,10 @@ loc_16F9B:
 ; ---------------------------------------------------------------------------
 
 loc_16FAA:
-		inc	_power_overflow_level
-		cmp	_power_overflow_level, 42
+		inc	_power_overflow
+		cmp	_power_overflow, POWER_OVERFLOW_MAX
 		jb	short loc_16FD1
-		mov	_power_overflow_level, 42
+		mov	_power_overflow, POWER_OVERFLOW_MAX
 		mov	[bp+@@yellow], 1
 		cmp	_items_pull_to_player, 0
 		jnz	short loc_16FD1
@@ -9830,9 +9830,9 @@ loc_16FAA:
 		inc	_dream
 
 loc_16FD1:
-		mov	bx, _power_overflow_level
+		mov	bx, _power_overflow
 		add	bx, bx
-		mov	si, POWER_OVERFLOW_BONUS[bx]
+		mov	si, _POWER_OVERFLOW_BONUS[bx]
 		call	hud_dream_put
 		jmp	loc_17174
 ; ---------------------------------------------------------------------------
@@ -9930,14 +9930,14 @@ loc_17097:
 ; ---------------------------------------------------------------------------
 
 loc_170B5:
-		cmp	_power, 128
+		cmp	_power, POWER_MAX
 		jnb	short loc_170F2
 		mov	al, _power
 		add	al, 10
 		mov	_power, al
-		cmp	_power, 128
+		cmp	_power, POWER_MAX
 		jb	short loc_170E7
-		mov	_power, 128
+		mov	_power, POWER_MAX
 		mov	_overlay_popup_id_new, POPUP_ID_FULL_POWERUP
 		mov	_overlay2, offset @overlay_popup_update_and_render$qv
 		cmp	_bullet_clear_time, 20
@@ -9951,16 +9951,16 @@ loc_170E7:
 ; ---------------------------------------------------------------------------
 
 loc_170F2:
-		add	_power_overflow_level, 5
-		mov	bx, _power_overflow_level
+		add	_power_overflow, 5
+		mov	bx, _power_overflow
 		add	bx, bx
-		mov	si, POWER_OVERFLOW_BONUS[bx]
-		cmp	_power_overflow_level, 42
+		mov	si, _POWER_OVERFLOW_BONUS[bx]
+		cmp	_power_overflow, POWER_OVERFLOW_MAX
 		jbe	short loc_1710E
-		mov	_power_overflow_level, 42
+		mov	_power_overflow, POWER_OVERFLOW_MAX
 
 loc_1710E:
-		cmp	_power_overflow_level, 42
+		cmp	_power_overflow, POWER_OVERFLOW_MAX
 		jnz	short loc_17174
 		mov	si, 2560
 		mov	[bp+@@yellow], 1
@@ -9993,7 +9993,7 @@ loc_17150:
 loc_1715C:
 		mov	_overlay_popup_id_new, POPUP_ID_FULL_POWERUP
 		mov	_overlay2, offset @overlay_popup_update_and_render$qv
-		mov	_power, 128
+		mov	_power, POWER_MAX
 		call	sub_E4FC
 
 loc_17171:
@@ -11804,9 +11804,9 @@ puppets_update	proc near
 ; ---------------------------------------------------------------------------
 
 @@loop:
-		cmp	[si+puppet_t.flag], 0
+		cmp	[si+puppet_t.flag], F_FREE
 		jz	@@next
-		cmp	[si+puppet_t.flag], 1
+		cmp	[si+puppet_t.flag], F_ALIVE
 		jnz	loc_19851
 		mov	eax, dword ptr [si+puppet_t.pos.cur]
 		cmp	eax, dword ptr [si+puppet_t.pos.prev]
@@ -11985,7 +11985,7 @@ loc_19851:
 		inc	[si+puppet_t.PUPPET_patnum]
 		cmp	[si+puppet_t.PUPPET_patnum], 12
 		jl	short loc_198A3
-		mov	[si+puppet_t.flag], 0
+		mov	[si+puppet_t.flag], F_FREE
 		mov	[si+puppet_t.pos.cur.x], ((PLAYFIELD_W / 2) shl 4)
 		mov	[si+puppet_t.pos.cur.y], (-256 shl 4)
 		mov	[si+puppet_t.pos.prev.x], ((PLAYFIELD_W / 2) shl 4)
@@ -12927,14 +12927,14 @@ loc_1A101:
 		cmp	_boss_phase_frame, 128
 		jnz	short loc_1A15A
 		mov	si, offset puppets
-		mov	[si+puppet_t.flag], 1
+		mov	[si+puppet_t.flag], F_ALIVE
 		mov	[si+puppet_t.PUPPET_patnum], 190
 		mov	[si+puppet_t.radius_motion], (256 shl 4)
 		mov	[si+puppet_t.PUPPET_angle], 60h
 		mov	[si+puppet_t.PUPPET_hp_cur], PUPPET_HP
 		mov	[si+puppet_t.pos.cur.x], SUBPIXEL_NONE
 		add	si, size puppet_t
-		mov	[si+puppet_t.flag], 1
+		mov	[si+puppet_t.flag], F_ALIVE
 		mov	[si+puppet_t.PUPPET_patnum], 190
 		mov	[si+puppet_t.radius_motion], (256 shl 4)
 		mov	[si+puppet_t.PUPPET_angle], 20h
@@ -13128,8 +13128,8 @@ loc_1A35E:
 loc_1A396:
 		mov	_boss_phase_frame, 0
 		mov	_boss_phase, PHASE_BOSS_EXPLODE_SMALL
-		mov	puppet0.flag, 2
-		mov	puppet1.flag, 2
+		mov	puppet0.flag, F_REMOVE
+		mov	puppet1.flag, F_REMOVE
 		jmp	short loc_1A3B2
 ; ---------------------------------------------------------------------------
 
@@ -20507,7 +20507,7 @@ include th04/gaiji/hud[data].asm
 gsRUIKEI	db 0EDh, 0EEh, 0, 0, 0
 byte_22720	db 0
 include th05/main/hud/dream[data].asm
-include th04/main/hud/power[data].asm
+include th02/main/hud/power[data].asm
 include th04/main/hud/hp[data].asm
 aB@b@bB@b@	db '　　×　　',0
 aB@b@bB@b@_0	db '　　×　　',0

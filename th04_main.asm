@@ -209,7 +209,7 @@ arg_6		= word ptr  0Ch
 		mov	ax, SEG_PLANE_G
 		mov	es, ax
 		assume es:nothing
-		mov	cx, 16
+		mov	cx, TILE_H
 
 loc_36CA:
 		mov	ax, [si-40h]
@@ -219,11 +219,11 @@ loc_36CA:
 		movsw
 		add	di, (ROW_SIZE - word)
 		loop	loc_36CA
-		sub	di, (16 * ROW_SIZE)
+		sub	di, (TILE_H * ROW_SIZE)
 		mov	ax, SEG_PLANE_E
 		mov	es, ax
 		assume es:nothing
-		mov	cx, 16
+		mov	cx, TILE_H
 
 loc_36E8:
 		movsw
@@ -515,7 +515,7 @@ loc_AD35:
 loc_AD3B:
 		cmp	si, SCORE_DIGITS
 		jl	short loc_AD35
-		mov	_power, 1
+		mov	_power, POWER_MIN
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.credit_bombs]
 		mov	es:[bx+resident_t.rem_bombs], al
@@ -689,7 +689,7 @@ loc_AEF9:
 		mov	al, es:[bx+resident_t.demo_stage]
 		mov	es:[bx+resident_t.stage], al
 		mov	_stage_id, al
-		mov	_power, 128
+		mov	_power, POWER_MAX
 		add	al, '0'
 		mov	es:[bx+resident_t.stage_ascii], al
 		mov	fp_23D90, offset @DemoPlay$qv
@@ -1242,7 +1242,7 @@ var_6		= word ptr -6
 		call	mpn_load_palette_show pascal, 0, large [bp+@@fn]
 		mov	[bp+var_6], 0
 		mov	[bp+@@tile_x], 0
-		mov	si, 576
+		mov	si, TILE_AREA_LEFT
 		jmp	short loc_B95E
 ; ---------------------------------------------------------------------------
 
@@ -1270,13 +1270,13 @@ loc_B925:
 		add	di, TILE_H
 
 loc_B952:
-		cmp	[bp+@@tile_y], TILES_Y
+		cmp	[bp+@@tile_y], TILE_AREA_ROWS
 		jl	short loc_B925
 		inc	[bp+@@tile_x]
 		add	si, TILE_W
 
 loc_B95E:
-		cmp	[bp+@@tile_x], 4
+		cmp	[bp+@@tile_x], TILE_AREA_COLUMNS
 		jl	short loc_B91C
 		call	mpn_free pascal, 0
 		pop	di
@@ -2036,7 +2036,7 @@ loc_CCFE:
 		mov	al, _scroll_subpixel_line
 		add	al, _scroll_speed
 		mov	_scroll_subpixel_line, al
-		cmp	al, 16
+		cmp	al, (1 shl 4)
 		jb	short loc_CD31
 		mov	ah, 0
 		shr	ax, 4
@@ -4818,7 +4818,7 @@ loc_E796:
 		or	di, di
 		jnz	short loc_E7D8
 		call	main_01:sub_12CB5
-		mov	_power, 1
+		mov	_power, POWER_MIN
 		mov	_dream_items_collected, 0
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.credit_bombs]
@@ -5210,7 +5210,7 @@ var_2		= word ptr -2
 		mov	_tile_invalidate_box.y, 2
 		call	main_01:tiles_invalidate_around pascal, large ((PLAYFIELD_W / 2) shl 4)
 		mov	ax, _scroll_line
-		mov	bx, 16
+		mov	bx, (1 shl 4)
 		cwd
 		idiv	bx
 		mov	[bp+var_2], ax
@@ -5948,7 +5948,7 @@ public @hud_graze_put$qv
 public HUD_POWER_PUT
 hud_power_put	proc far
 
-@@bar_colors		= byte ptr -(((HUD_POWER_COLOR_COUNT + 1) / word) * word)
+@@bar_colors	= byte ptr -(((SHOT_LEVEL_MAX + 1) / word) * word)
 
 		push	bp
 		mov	bp, sp
@@ -5959,7 +5959,7 @@ hud_power_put	proc far
 		lea	di, [bp+@@bar_colors]
 		push	ss
 		pop	es
-		mov	cx, ((HUD_POWER_COLOR_COUNT + 1) / word)
+		mov	cx, ((SHOT_LEVEL_MAX + 1) / word)
 		rep movsw
 		push	16h
 		mov	al, _power
@@ -8329,7 +8329,7 @@ sub_10444	proc near
 ; ---------------------------------------------------------------------------
 
 loc_1045C:
-		cmp	[si+shot_t.flag], 0
+		cmp	[si+shot_t.flag], F_FREE
 		jz	short loc_1046A
 		call	main_01:tiles_invalidate_around pascal, [si+shot_t.pos.prev.y], [si+shot_t.pos.prev.x]
 
@@ -8570,7 +8570,7 @@ var_6		= word ptr -6
 		cmp	ax, [bp+var_C]
 		ja	short @@shot_next
 		mov	si, [bx+shot_alive_t.SA_shot]
-		mov	[si+shot_t.flag], 2
+		mov	[si+shot_t.flag], F_REMOVE
 		mov	ax, [si+shot_t.pos.velocity.x]
 		mov	bx, 6
 		cwd
@@ -8690,7 +8690,7 @@ var_1		= byte ptr -1
 		jnz	loc_10A25
 		mov	_player_pos.velocity.x, 0
 		mov	_player_pos.velocity.y, 0
-		mov	_power_overflow_level, 0
+		mov	_power_overflow, 0
 		mov	_miss_explosion_radius, 0
 		call	items_miss_add
 		mov	al, _power
@@ -9766,10 +9766,10 @@ sub_11DE6	proc far
 		xor	bx, bx
 		xor	ax, ax
 		mov	al, _power
-		mov	cx, 9
+		mov	cx, SHOT_LEVEL_MAX
 
 loc_11DF0:
-		cmp	ax, SHOT_LEVELS[bx]
+		cmp	ax, _SHOT_LEVEL_TO_POWER[bx]
 		jb	short loc_11DFB
 		add	bx, 2
 		loop	loc_11DF0
@@ -11495,7 +11495,7 @@ bullets_render	proc near
 ; ---------------------------------------------------------------------------
 
 @@sprite_bullet_loop:
-		cmp	[si+bullet_t.flag], 1
+		cmp	[si+bullet_t.flag], F_ALIVE
 		jnz	@@sprite_bullet_next
 		cmp	[si+bullet_t.spawn_state], BSS_CLOUD_BACKWARDS
 		ja	short loc_12D24
@@ -11582,7 +11582,7 @@ loc_12DBE:
 ; ---------------------------------------------------------------------------
 
 @@dot_bullet_loop:
-		cmp	[si+bullet_t.flag], 1
+		cmp	[si+bullet_t.flag], F_ALIVE
 		jnz	short @@dot_bullet_next
 		mov	ax, [si+bullet_t.pos.cur.y]
 		add	ax, ((PLAYFIELD_TOP - (BULLET16_H / 2)) shl 4)
@@ -27104,9 +27104,9 @@ arg_0		= word ptr  4
 		jmp	cs:off_1DDE9[bx]
 
 loc_1DBD0:
-		cmp	_power, 128
+		cmp	_power, POWER_MAX
 		jnb	short loc_1DC04
-		cmp	_power, 127
+		cmp	_power, (POWER_MAX - 1)
 		jnz	short loc_1DBF5
 		mov	_overlay_popup_id_new, POPUP_ID_FULL_POWERUP
 		mov	_overlay2, offset @overlay_popup_update_and_render$qv
@@ -27122,16 +27122,16 @@ loc_1DBF5:
 ; ---------------------------------------------------------------------------
 
 loc_1DC04:
-		inc	_power_overflow_level
-		cmp	_power_overflow_level, 42
+		inc	_power_overflow
+		cmp	_power_overflow, POWER_OVERFLOW_MAX
 		jb	short loc_1DC19
-		mov	_power_overflow_level, 42
+		mov	_power_overflow, POWER_OVERFLOW_MAX
 		mov	[bp+@@yellow], 1
 
 loc_1DC19:
-		mov	bx, _power_overflow_level
+		mov	bx, _power_overflow
 		add	bx, bx
-		mov	si, POWER_OVERFLOW_BONUS[bx]
+		mov	si, _POWER_OVERFLOW_BONUS[bx]
 		cmp	_pointnum_times_2, 0
 		jz	loc_1DD93
 		inc	_item_playperf_raise
@@ -27204,14 +27204,14 @@ loc_1DC9A:
 ; ---------------------------------------------------------------------------
 
 loc_1DCCC:
-		cmp	_power, 128
+		cmp	_power, POWER_MAX
 		jnb	short loc_1DD09
 		mov	al, _power
 		add	al, 10
 		mov	_power, al
-		cmp	_power, 128
+		cmp	_power, POWER_MAX
 		jb	short loc_1DCFE
-		mov	_power, 128
+		mov	_power, POWER_MAX
 		mov	_overlay_popup_id_new, POPUP_ID_FULL_POWERUP
 		mov	_overlay2, offset @overlay_popup_update_and_render$qv
 		cmp	_bullet_clear_time, 20
@@ -27225,16 +27225,16 @@ loc_1DCFE:
 ; ---------------------------------------------------------------------------
 
 loc_1DD09:
-		add	_power_overflow_level, 5
-		mov	bx, _power_overflow_level
+		add	_power_overflow, 5
+		mov	bx, _power_overflow
 		add	bx, bx
-		mov	si, POWER_OVERFLOW_BONUS[bx]
-		cmp	_power_overflow_level, 42
+		mov	si, _POWER_OVERFLOW_BONUS[bx]
+		cmp	_power_overflow, POWER_OVERFLOW_MAX
 		jbe	short loc_1DD25
-		mov	_power_overflow_level, 42
+		mov	_power_overflow, POWER_OVERFLOW_MAX
 
 loc_1DD25:
-		cmp	_power_overflow_level, 42
+		cmp	_power_overflow, POWER_OVERFLOW_MAX
 		jnz	short loc_1DD93
 		mov	si, 2560
 		mov	[bp+@@yellow], 1
@@ -27268,7 +27268,7 @@ loc_1DD6F:
 loc_1DD7B:
 		mov	_overlay_popup_id_new, POPUP_ID_FULL_POWERUP
 		mov	_overlay2, offset @overlay_popup_update_and_render$qv
-		mov	_power, 128
+		mov	_power, POWER_MAX
 		call	sub_11DE6
 
 loc_1DD90:
@@ -31795,7 +31795,7 @@ unk_22D9E	db 0DCh
 		db    1
 include th04/score[data].asm
 include th04/gaiji/hud[data].asm
-include th04/main/hud/power[data].asm
+include th02/main/hud/power[data].asm
 include th04/main/hud/hp[data].asm
 include th04/main/hud/bar_put[data].asm
 aB@b@bB@b@	db '　　×　　',0

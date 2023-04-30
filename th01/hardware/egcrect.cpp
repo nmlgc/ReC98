@@ -20,8 +20,8 @@ void egc_copy_rect_1_to_0_16(screen_x_t x, vram_y_t y, pixel_t w, pixel_t h)
 			column < x_end;
 			(vo += EGC_REGISTER_SIZE, column += EGC_REGISTER_DOTS)
 		) {
-			graph_accesspage_func(1);	tmp = egc_chunk(vo);
-			graph_accesspage_func(0);	egc_chunk(vo) = tmp;
+			page_access(1);	tmp = egc_chunk(vo);
+			page_access(0);	egc_chunk(vo) = tmp;
 		}
 		vo_row += ROW_SIZE;
 	}

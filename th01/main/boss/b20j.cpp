@@ -3,9 +3,12 @@
 
 #include <stdio.h>
 #include "platform.h"
+#include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
+#include "platform/x86real/pc98/egc.hpp"
+#include "platform/x86real/pc98/page.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
 #include "th01/v_colors.hpp"
@@ -350,7 +353,7 @@ void konngara_load_and_entrance(int8_t)
 
 	text_fillca(' ', (TX_BLACK | TX_REVERSE));
 
-	// graph_accesspage_func(0);
+	// page_access(0);
 	grp_put(SCROLL_BG_FN, GPF_PALETTE_SHOW);
 
 	// ZUN bug: On its own, this call at this position in the code would just
@@ -366,11 +369,11 @@ void konngara_load_and_entrance(int8_t)
 
 	stageobjs_init_and_render(BOSS_STAGE);
 
-	graph_accesspage_func(1);
+	page_access(1);
 	grp_put("boss8_a1.grp", GPF_PALETTE_SHOW);
 	// The stage_palette_set() call should have been here.
 
-	graph_accesspage_func(0);
+	page_access(0);
 	mdrv2_bgm_load("ALICE.MDT");
 	mdrv2_se_load(SE_FN); // ZUN bloat: Already done in main()
 	mdrv2_bgm_play();
@@ -456,8 +459,9 @@ void konngara_load_and_entrance(int8_t)
 
 	// "Pan" up to Konngara
 	for(line_on_top = RES_Y; line_on_top >= 0; line_on_top -= (MAGNITUDE * 2)) {
+		EGCCopy egc;
 		z_vsync_wait_and_scrollup(line_on_top);
-		egc_copy_rows_1_to_0(line_on_top, (MAGNITUDE * 2));
+		egc.rect_interpage(0, line_on_top, RES_X, (MAGNITUDE * 2), 1);
 		frame_delay(1);
 	}
 
@@ -489,7 +493,8 @@ void konngara_load_and_entrance(int8_t)
 		siddham_col_white_in_step();
 		frame_delay(10);
 	}
-	graph_copy_accessed_page_to_other();
+	graph_copy_page_to_other(0);
+	page_access(0);
 	// -------------------------------
 }
 
@@ -526,14 +531,14 @@ void face_direction_set_and_put(face_direction_t fd_new)
 	if(!face_direction_can_change || (face_direction == fd_new)) {
 		return;
 	}
-	graph_accesspage_func(1);	head_put(fd_new);
-	graph_accesspage_func(0);	head_put(fd_new);
+	page_access(1);	head_put(fd_new);
+	page_access(0);	head_put(fd_new);
 	if(face_expression == FE_AIM) {
-		graph_accesspage_func(1);	face_aim_put(fd_new);
-		graph_accesspage_func(0);	face_aim_put(fd_new);
+		page_access(1);	face_aim_put(fd_new);
+		page_access(0);	face_aim_put(fd_new);
 	} else if(face_expression != FE_NEUTRAL) {
-		graph_accesspage_func(1);	face_put(face_expression, fd_new);
-		graph_accesspage_func(0);	face_put(face_expression, fd_new);
+		page_access(1);	face_put(face_expression, fd_new);
+		page_access(0);	face_put(face_expression, fd_new);
 	}
 	face_direction = fd_new;
 }
@@ -544,22 +549,22 @@ void face_expression_set_and_put(face_expression_t fe_new)
 		return;
 	}
 	if(fe_new == FE_AIM) {
-		graph_accesspage_func(1);	face_aim_put(face_direction);
-		graph_accesspage_func(0);	face_aim_put(face_direction);
+		page_access(1);	face_aim_put(face_direction);
+		page_access(0);	face_aim_put(face_direction);
 	} else if(fe_new != FE_NEUTRAL) {
-		graph_accesspage_func(1);	face_put(fe_new, face_direction);
-		graph_accesspage_func(0);	face_put(fe_new, face_direction);
+		page_access(1);	face_put(fe_new, face_direction);
+		page_access(0);	face_put(fe_new, face_direction);
 	} else {
-		graph_accesspage_func(1);	head_put(face_direction);
-		graph_accesspage_func(0);	head_put(face_direction);
+		page_access(1);	head_put(face_direction);
+		page_access(0);	head_put(face_direction);
 	}
 	face_expression = fe_new;
 }
 
 void slash_put(int image)
 {
-	graph_accesspage_func(1);	grx_put(image);
-	graph_accesspage_func(0);	grx_put(image);
+	page_access(1);	grx_put(image);
+	page_access(0);	grx_put(image);
 }
 
 void pattern_diamond_cross_to_edges_followed_by_rain(void)

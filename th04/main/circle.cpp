@@ -1,6 +1,6 @@
 // Note the slight semantic differences to the item_splash_t structure.
 struct circle_t {
-	char flag;
+	entity_flag_t flag;
 	unsigned char age;
 	point_t center;
 	pixel_t radius_cur;

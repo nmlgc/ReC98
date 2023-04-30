@@ -24,7 +24,6 @@
 #include "th01/formats/ptn.hpp"
 #include "th01/sprites/pellet.h"
 #include "th01/main/entity.hpp"
-#include "th01/main/particle.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/player/orb.hpp"
 #include "th01/main/boss/defeat.hpp"
@@ -334,9 +333,6 @@ void yuugenmagan_setup(void)
 	boss_hp = HP_TOTAL;
 	hud_hp_first_white = HP_PHASE_3_END;
 	hud_hp_first_redwhite = HP_PHASE_7_END;
-
-	// ZUN bloat: Redundant, no particles are shown in this fight.
-	particles_unput_update_render(PO_INITIALIZE, V_WHITE);
 }
 
 void unused_formula(int a, int b, int& ret)

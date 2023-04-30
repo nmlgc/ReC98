@@ -74,7 +74,7 @@ int cfg_load(void)
 			return 1;
 		}
 		resident = resident_sgm;
-		resident->perf = cfg.opts.perf;
+		resident->reduce_effects = cfg.opts.reduce_effects;
 		resident->debug = cfg.debug;
 		file_close();
 
@@ -103,7 +103,7 @@ void cfg_save(void)
 	cfg.opts.bgm_mode = snd_bgm_mode;
 	cfg.opts.bombs = bombs;
 	cfg.opts.lives = lives;
-	cfg.opts.perf = resident->perf;
+	cfg.opts.reduce_effects = resident->reduce_effects;
 
 	file_create(cfg_fn);
 	file_write(&cfg, offsetof(cfg_t, resident));
@@ -327,8 +327,7 @@ const unsigned char gbcBGM_MODE[3][5] = {
 	gb_M_, gb_I_, gb_D_, gb_I_, 0
 };
 
-const shiftjis_t *PERF_TITLE = "‰‰o";
-const shiftjis_t *PERF_OPTIONS[2] = {"@’Êí  ", "ˆê•”ŒyŒ¸"};
+#include "th02/shiftjis/op_main.hpp"
 
 #pragma option -d
 
@@ -467,7 +466,7 @@ void pascal near option_put_shadow(void)
 	graph_gaiji_puts(196, 276, 16, gbMUSIC, 0);
 	graph_gaiji_puts(196, 292, 16, gbPLAYER, 0);
 	graph_gaiji_puts(196, 308, 16, gbBOMB, 0);
-	graph_putsa_fx(196, 324, 0, PERF_TITLE);
+	graph_putsa_fx(196, 324, 0, REDUCE_EFFECTS_TITLE);
 	graph_gaiji_puts(284, 340, 16, gbRESET, 0);
 	graph_gaiji_puts(292, 372, 16, gbQUIT, 0);
 }
@@ -495,10 +494,14 @@ void pascal near option_put(int sel, unsigned int atrb)
 		graph_copy_rect_1_to_0_16(392, 308, 32, 16);
 		graph_gaiji_putc(396, 308, bombs + gb_0_, 0);
 	} else if(sel == 4) {
-		text_putsa(24, 20, PERF_TITLE, atrb);
-		text_putsa(45, 20, PERF_OPTIONS[resident->perf], atrb);
+		text_putsa(24, 20, REDUCE_EFFECTS_TITLE, atrb);
+		text_putsa(
+			45, 20, REDUCE_EFFECTS_CHOICES[resident->reduce_effects], atrb
+		);
 		graph_copy_rect_1_to_0_16(360, 324, 128, 16);
-		graph_putsa_fx(364, 324, 0, PERF_OPTIONS[resident->perf]);
+		graph_putsa_fx(
+			364, 324, 0, REDUCE_EFFECTS_CHOICES[resident->reduce_effects]
+		);
 	} else if(sel == 5) {
 		gaiji_putsa(35, 21, gbRESET, atrb);
 	} else if(sel == 6) {
@@ -561,7 +564,7 @@ void option_update_and_render(void)
 			ring_direction(bombs, option_bombs_max()); \
 			break; \
 		case 4: \
-			resident->perf = 1 - resident->perf; \
+			resident->reduce_effects = (true - resident->reduce_effects); \
 			break; \
 		} \
 		option_put(menu_sel, TX_WHITE);
@@ -608,7 +611,7 @@ void option_update_and_render(void)
 				lives = CFG_LIVES_DEFAULT;
 				bombs = CFG_BOMBS_DEFAULT;
 				resident->unused_2 = 1;
-				resident->perf = 0;
+				resident->reduce_effects = false;
 				option_put(0, TX_YELLOW);
 				option_put(1, TX_YELLOW);
 				option_put(2, TX_YELLOW);

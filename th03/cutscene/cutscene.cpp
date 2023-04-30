@@ -457,7 +457,7 @@ void near cursor_advance_and_animate(void)
 			// ZUN landmine: The \s command is the only place in TH05 where text
 			// is unblitted from any page. Not doing it here completely breaks
 			// automatically added text boxes in that game, as any new text
-			// will just be blitted on top of old one.
+			// will just be blitted on top of old text.
 			// (Not that the feature would have been particularly usable
 			// without this bug, thanks to the assignments above…)
 			#if (GAME != 5)

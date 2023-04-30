@@ -2,9 +2,11 @@
 
 #include <stdlib.h>
 #include "platform.h"
+#include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
 #include "shiftjis.hpp"
+#include "platform/x86real/pc98/page.hpp"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/grp_text.hpp"
 #include "th01/hardware/grp2xscs.hpp"
@@ -45,7 +47,7 @@ void graph_2xscale_byterect_1_to_0_slow(
 		vram_offset_t p1 = row_p1;
 		for(col16 = 0; col16 < w_1 / 16; col16++) {
 			vram_byte_amount_t scale_p;
-			graph_accesspage_func(1);
+			page_access(1);
 			VRAM_SNAP_PLANAR(px16, p1, 16);
 			px16_nonzero = (px16.B | px16.R | px16.G | px16.E);
 			for(scale_p = 0; scale_p < (ROW_SIZE * 2); scale_p += ROW_SIZE) {
@@ -53,7 +55,7 @@ void graph_2xscale_byterect_1_to_0_slow(
 				dots32_t px32_nonzero;
 
 				// Parentheses omitted for code generation reasons.
-				graph_accesspage_func(0);
+				page_access(0);
 				scale_2x(px32_nonzero, px16_nonzero);
 				grcg_setcolor_rmw(0);
 				grcg_put(p0 + scale_p, px32_nonzero, 32);

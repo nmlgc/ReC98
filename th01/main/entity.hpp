@@ -1,4 +1,4 @@
-// Single entity that is positioned in terms of its top-left coordinated. Does
+// Single entity that is positioned in terms of its top-left coordinate. Does
 // not occur in ZUN's original TH01 code, but should be used to improve the
 // code. Note the semantic difference to a `screen_point_t`.
 struct entity_topleft_t {

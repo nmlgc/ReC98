@@ -1,36 +1,26 @@
+#include "platform.h"
+#include "x86real.h"
+#include "pc98.h"
+#include "master.hpp"
+#include "th01/math/overlap.hpp"
+#include "th01/math/subpixel.hpp"
+#include "th01/hardware/egc.h"
 #include "th01/main/particle.hpp"
 
-void particles_unput_update_render(particle_origin_t origin, int col)
+CParticles Particles;
+
+void CParticles::init()
 {
-	enum {
-		PARTICLE_COUNT = 40,
-	};
-
-	static int spawn_interval;
-	static pixel_t velocity_base_max;
-	static Subpixel x[PARTICLE_COUNT];
-	static Subpixel y[PARTICLE_COUNT];
-	static Subpixel velocity_x[PARTICLE_COUNT];
-	static Subpixel velocity_y[PARTICLE_COUNT];
-	static bool alive[PARTICLE_COUNT];
-
-	// MODDERS: Should be local, and just a single variable, not an array.
-	static unsigned char velocity_base[PARTICLE_COUNT];
-
-	static unsigned char spawn_cycle;
-
-	unsigned char i;
-
-	// Completely pointless, since all of this could have been statically
-	// initialized.
-	if(origin == PO_INITIALIZE) {
-		for(i = 0; i < PARTICLE_COUNT; i++) {
-			alive[i] = false;
-		}
-		spawn_interval = 2;
-		velocity_base_max = 10;
-		return;
+	for(int i = 0; i < PARTICLE_COUNT; i++) {
+		alive[i] = false;
 	}
+	spawn_interval = 2;
+	velocity_base_max = 10;
+}
+
+void CParticles::unput_update_render(particle_origin_t origin, int col)
+{
+	unsigned char i;
 
 	// Spawn
 
@@ -50,8 +40,8 @@ void particles_unput_update_render(particle_origin_t origin, int col)
 		i = (spawn_cycle / spawn_interval);
 
 		// Luckily, [alive[PARTICLE_COUNT]] corresponds to
-		// [velocity_base_max[0]]. Due to the first ZUN bug in this function,
-		// this value is 0 only during the first cycle, which causes actual
+		// [velocity_base[0]]. Due to the first ZUN bug in this function, this
+		// value is 0 only during the first cycle, which causes actual
 		// out-of-bounds accesses to only happen on one single frame.
 		if(alive[i] == false) {
 			alive[i] = true;

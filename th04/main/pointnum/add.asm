@@ -28,7 +28,7 @@ pointnums_add proc near
 @@add:
 	shl	bx, 4
 	add	bx, offset _pointnums
-	mov	word ptr [bx+pointnum_t.flag], 1	; flag = 1, age = 0
+	mov	word ptr [bx+pointnum_t.flag], F_ALIVE	; flag = F_ALIVE, age = 0
 	push	bp
 	mov	bp, sp
 	mov	ax, [bp+@@center_x]

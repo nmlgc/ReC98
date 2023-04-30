@@ -9,7 +9,7 @@ custom_t ends
 S2PARTICLE_COUNT = 64
 
 s2particle_t struc
-	flag	db ?
+	S2P_alive	db ?
 	S2P_angle	db ?
 	pos	motion_t <?>
 	zoom	dw ?

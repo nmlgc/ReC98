@@ -1,7 +1,9 @@
 #include <stddef.h>
 #include "platform.h"
+#include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
+#include "platform/x86real/pc98/page.hpp"
 #include "master.hpp"
 #include "th01/hardware/graph.h"
 #include "th01/hardware/grph1to0.hpp"
@@ -85,7 +87,7 @@ void CPlayerAnim::unput_8(screen_x_t left, vram_y_t top, int image) const
 			break;
 		}
 	}
-	graph_accesspage_func(0);
+	page_access(0);
 }
 
 #define put_row(bos_byte_x, vram_offset, intended_y, bos_p, image) \
@@ -129,7 +131,7 @@ void CPlayerAnim::put_0_8(screen_x_t left, vram_y_t top, int image) const
 			break;
 		}
 	}
-	graph_accesspage_func(0);
+	page_access(0);
 }
 
 void CPlayerAnim::unput_and_put_overlapped_8(
@@ -211,7 +213,7 @@ void CPlayerAnim::unput_and_put_overlapped_8(
 			break;
 		}
 	}
-	graph_accesspage_func(0);
+	page_access(0);
 }
 
 void CPlayerAnim::free(void)

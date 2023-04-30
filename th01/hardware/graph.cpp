@@ -1,10 +1,12 @@
 #include <dos.h>
 #include <mem.h>
 #include "platform.h"
+#include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
 #include "shiftjis.hpp"
+#include "platform/x86real/pc98/page.hpp"
 #include "th01/v_colors.hpp"
 #include "th01/math/clamp.hpp"
 #include "th01/hardware/egc.h"
@@ -18,8 +20,6 @@
 
 // Never read from, so it's supposedly only there for debugging purposes?
 static screen_point_t graph_r_last_line_end;
-
-static page_t page_accessed;
 
 /// VRAM plane "structures"
 /// -----------------------
@@ -93,8 +93,8 @@ static page_t page_accessed;
 /// ----
 
 inline void graph_access_and_show_0() {
-	graph_accesspage_func(0);
-	graph_showpage_func(0);
+	page_access(0);
+	page_show(0);
 }
 
 inline void cgrom_code_and_grcg_off() {
@@ -161,21 +161,6 @@ void z_graph_hide()
 	int86(0x18, &regs, &regs);
 }
 /// ----
-
-/// Page flipping
-/// -------------
-
-void graph_showpage_func(page_t page)
-{
-	outportb(0xA4, page);
-}
-
-void graph_accesspage_func(int page)
-{
-	page_accessed = page;
-	outportb(0xA6, page);
-}
-/// -------------
 
 /// Hardware
 /// --------
@@ -270,8 +255,8 @@ void z_graph_clear_0(void)
 {
 	// Yes, page 2, twice. Which effectively is the same as page 0... at least
 	// according to any real hardware and emulator tests I could come up with.
-	graph_accesspage_func(2);	z_graph_clear();
-	graph_accesspage_func(2);	z_graph_clear();
+	page_access(2);	z_graph_clear();
+	page_access(2);	z_graph_clear();
 }
 
 void z_graph_clear_col(uint4_t col)
@@ -283,17 +268,15 @@ void z_graph_clear_col(uint4_t col)
 	grcg_off_func();
 }
 
-void graph_copy_accessed_page_to_other(void)
+void graph_copy_page_to_other(page_t src)
 {
 	PlanarRow_declare(tmp);
 	Planes_declare(p);
-	page_t page_front = (page_accessed ^ 1);
+	page_t dst = (src ^ 1);
 
 	for(screen_y_t y = 0; y < RES_Y; y++) {
-		PlanarRow_blit(tmp, p, ROW_SIZE);
-		graph_accesspage(page_front);
-		PlanarRow_blit(p, tmp, ROW_SIZE);
-		graph_accesspage(page_accessed);
+		page_access(src);	PlanarRow_blit(tmp, p, ROW_SIZE);
+		page_access(dst);	PlanarRow_blit(p, tmp, ROW_SIZE);
 		Planes_next_row(p);
 	}
 }
@@ -565,8 +548,8 @@ void graph_r_line(
 
 #define unput32_at(vram_offset) { \
 	Planar<dots32_t> page1; \
-	graph_accesspage_func(1);	VRAM_SNAP_PLANAR(page1, vram_offset, 32); \
-	graph_accesspage_func(0);	VRAM_PUT_PLANAR(vram_offset, page1, 32); \
+	page_access(1);	VRAM_SNAP_PLANAR(page1, vram_offset, 32); \
+	page_access(0);	VRAM_PUT_PLANAR(vram_offset, page1, 32); \
 }
 
 #define plot_loop(\
@@ -751,7 +734,7 @@ void graph_move_byterect_interpage(
 	vram_y_t src_bottom,
 	screen_x_t dst_left,
 	vram_y_t dst_top,
-	int src, int dst
+	page_t src
 )
 {
 	pixel_t w = (src_right - src_left) / BYTE_DOTS;
@@ -763,15 +746,14 @@ void graph_move_byterect_interpage(
 
 	Planes_offset(src, src_left, src_top);
 	Planes_offset(dst, dst_left, dst_top);
+
+	page_t dst = (src ^ 1);
 	for(row = 0; row < h; row++) {
-		PlanarRow_blit(tmp, src, w);
-		graph_accesspage(dst);
-		PlanarRow_blit(dst, tmp, w);
-		graph_accesspage(src);
+		page_access(src);	PlanarRow_blit(tmp, src, w);
+		page_access(dst);	PlanarRow_blit(dst, tmp, w);
 		Planes_next_row(src);
 		Planes_next_row(dst);
 	}
-	graph_accesspage(page_accessed);
 }
 
 void z_palette_fade_from(

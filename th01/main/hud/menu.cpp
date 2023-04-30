@@ -1,3 +1,4 @@
+#include "platform/x86real/pc98/page.hpp"
 #include "th01/hardware/grp2xscs.hpp"
 #include "th01/math/clamp.hpp"
 #include "th01/main/hud/menu.hpp"
@@ -201,15 +202,15 @@ bool16 continue_menu(void)
 	bool16 sel;
 	unsigned int frames = 0;
 
-	graph_accesspage_func(1);
-	graph_copy_accessed_page_to_other();
+	graph_copy_page_to_other(1);
+	page_access(1);
 	continue_back_put(TITLE, V_WHITE, CONTINUE_TITLE);
 	continue_back_put(YES_SELECTED, V_WHITE, CONTINUE_YES_1);
 	continue_back_put(NO_SELECTED, V_WHITE, CONTINUE_NO_1);
 	continue_back_put(YES, V_GRAY, CONTINUE_YES_2);
 	continue_back_put(NO, V_GRAY, CONTINUE_NO_2);
 
-	graph_accesspage_func(0);
+	page_access(0);
 	continue_back_2xscale_to_front(
 		(RES_X / 4), PLAYFIELD_TOP, CONTINUE_TITLE_W, TITLE
 	);

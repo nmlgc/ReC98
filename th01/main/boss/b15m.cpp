@@ -4,8 +4,10 @@
 #include <dos.h>
 #include <stdlib.h>
 #include "platform.h"
+#include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
+#include "platform/x86real/pc98/page.hpp"
 #include "master.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
@@ -26,7 +28,6 @@
 #include "th01/main/playfld.hpp"
 #include "th01/sprites/pellet.h"
 #include "th01/main/shape.hpp"
-#include "th01/main/particle.hpp"
 #include "th01/main/hud/hp.hpp"
 #include "th01/main/player/player.hpp"
 #include "th01/main/player/orb.hpp"
@@ -164,10 +165,10 @@ inline void ent_unput_and_put_both(
 	elis_entity_cel_t cel,
 	bool unput_0 = true
 ) {
-	graph_accesspage_func(1);
+	page_access(1);
 	girl_bg_put(unnecessary);
 	ent.unlock_put_image_lock_8(cel);
-	graph_accesspage_func(0);
+	page_access(0);
 	if(unput_0) {
 		girl_bg_put(unnecessary);
 	}
@@ -175,8 +176,8 @@ inline void ent_unput_and_put_both(
 }
 
 inline void ent_put_both(CBossEntity& ent, elis_entity_cel_t cel) {
-	graph_accesspage_func(1); ent.unlock_put_image_lock_8(cel);
-	graph_accesspage_func(0); ent.unlock_put_image_lock_8(cel);
+	page_access(1); ent.unlock_put_image_lock_8(cel);
+	page_access(0); ent.unlock_put_image_lock_8(cel);
 }
 
 #define ent_attack_render() { \
@@ -560,9 +561,6 @@ void elis_load(void)
 	boss_palette_snap();
 	void elis_setup(void);
 	elis_setup();
-
-	// ZUN bloat: Redundant, no particles are shown in this fight.
-	particles_unput_update_render(PO_INITIALIZE, V_WHITE);
 }
 
 void elis_setup(void)
@@ -610,9 +608,9 @@ bool16 wave_teleport(screen_x_t target_left, screen_y_t target_top)
 
 	// Wave sprite
 	if(boss_phase_frame == 20) {
-		graph_accesspage_func(1);
+		page_access(1);
 		girl_bg_put(1);
-		graph_accesspage_func(0);
+		page_access(0);
 		ent_still_or_wave.unlock_put_image_lock_8(C_WAVE_1);
 		ent_still_or_wave.hitbox_orb_inactive = true;
 	} else if(boss_phase_frame == 28) {
@@ -647,9 +645,9 @@ bool16 wave_teleport(screen_x_t target_left, screen_y_t target_top)
 		ent_still_or_wave.unlock_put_image_lock_8(C_WAVE_1);
 	} else if(boss_phase_frame == 76) {
 		ent_still_or_wave.hitbox_orb_inactive = false;
-		graph_accesspage_func(1);
+		page_access(1);
 		ent_still_or_wave.unlock_put_image_lock_8(C_STILL);
-		graph_accesspage_func(0);
+		page_access(0);
 		ent_still_or_wave.unlock_put_image_lock_8(C_STILL);
 	} else if(boss_phase_frame > 80) {
 		boss_phase_frame = 0;
@@ -998,7 +996,7 @@ int pattern_curved_5_stack_rings(void)
 		// if any player shot, bomb, or Orb sprites overlap Elis between the
 		// end of this pattern and the start of the teleport animation, their
 		// corresponding unblitting calls will rip holes into the Elis sprite.
-		graph_accesspage_func(1);
+		page_access(1);
 		girl_bg_put(2);
 
 		return CHOOSE_NEW;
@@ -1251,8 +1249,8 @@ elis_form_t transform_girl_to_bat(void)
 		// if the original code consistently used the ent_unput_and_put_both()
 		// helper function we've added. :P
 		ent_bat.set_image(C_BAT);
-		graph_accesspage_func(1);	girl_bg_put(2);
-		graph_accesspage_func(0);	girl_bg_put(2);
+		page_access(1);	girl_bg_put(2);
+		page_access(0);	girl_bg_put(2);
 
 		z_vsync_wait_and_scrollup(RES_Y);
 		boss_phase_frame = 0;
@@ -2036,10 +2034,10 @@ void elis_main(void)
 
 		// Necessary, since the entire entrance animation was only played on
 		// VRAM page 0...
-		graph_accesspage_func(1); ent_still_or_wave.unlock_put_lock_8();
+		page_access(1); ent_still_or_wave.unlock_put_lock_8();
 
 		// ... which makes this blitting call redundant, though.
-		graph_accesspage_func(0); ent_still_or_wave.unlock_put_lock_8();
+		page_access(0); ent_still_or_wave.unlock_put_lock_8();
 
 		phase.teleport_done = false;
 		phase.cur.pattern = 1;

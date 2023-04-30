@@ -3,10 +3,12 @@
 
 #include <string.h>
 #include "platform.h"
+#include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
 #include "master.hpp"
 #include "shiftjis.hpp"
+#include "platform/x86real/pc98/page.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
 #include "th01/score.h"
@@ -206,7 +208,7 @@ void regist_put_initial(
 {
 	const unsigned char name_blank[SCOREDAT_NAME_BYTES + 1] = REGIST_NAME_BLANK;
 
-	graph_accesspage_func(0);
+	page_access(0);
 
 	header_cell_put(table_place_left(0), REGIST_HEADER_PLACE);
 	header_cell_put(table_name_left(0), REGIST_HEADER_NAME);
@@ -515,7 +517,7 @@ void regist_name_enter(int entered_place, bool cleared)
 {
 	// The Game Over variant in REIIDEN.EXE features a hidden timeout that
 	// force-enters a high score name after 1000… *keyboard inputs*? Not
-	// frames? Why. Like, how do even you realistically get to such a number.
+	// frames? Why. Like, how do you even realistically get to such a number.
 	// (Best guess: It's a hidden easter egg to amuse players who place
 	// drinking glasses on cursor keys. Or beer bottles.)
 	unsigned int timeout = 0;
@@ -581,7 +583,7 @@ void regist(
 	scoredat_name_z_t names[SCOREDAT_PLACES];
 	long place;
 
-	graph_accesspage_func(1);
+	page_access(1);
 	graph_putsa_fx(
 		TITLE_BACK_LEFT,
 		(cleared ? TITLE_TOP : TITLE_BACK_TOP),
@@ -589,7 +591,6 @@ void regist(
 		REGIST_TITLE[rank]
 	);
 
-	graph_accesspage_func(0);
 	if(!cleared) {
 		graph_2xscale_byterect_1_to_0_slow(
 			TITLE_LEFT, TITLE_TOP,
@@ -599,8 +600,9 @@ void regist(
 			TITLE_BACK_LEFT, TITLE_BACK_TOP,
 			TITLE_BACK_RIGHT, TITLE_BACK_BOTTOM,
 			TITLE_BACK_LEFT, TITLE_BACK_TOP,
-			0, 1
+			0
 		);
+		page_access(0);
 	} else {
 		graph_2xscale_byterect_1_to_0_slow(
 			TITLE_LEFT, TITLE_TOP,

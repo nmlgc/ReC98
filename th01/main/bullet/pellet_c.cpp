@@ -1,6 +1,8 @@
 #include "platform.h"
+#include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
+#include "platform/x86real/pc98/page.hpp"
 #include "th01/hardware/graph.h"
 #include "th01/main/bullet/pellet_c.hpp"
 #include "th01/sprites/pellet_c.hpp"
@@ -34,12 +36,12 @@ void pellet_cloud_unput_8(screen_x_t left, vram_y_t top, int cel)
 	pixel_t y = 0;
 	while(y < PELLET_CLOUD_H) {
 		if(sPELLET_CLOUD[cel][y]) {
-			graph_accesspage_func(1);
+			page_access(1);
 			vram_snap_planar_masked(
 				page1, vram_offset, PELLET_CLOUD_W, sPELLET_CLOUD[cel][y]
 			);
 
-			graph_accesspage_func(0);
+			page_access(0);
 			vram_or_planar_emptyopt(vram_offset, page1, PELLET_CLOUD_W);
 		}
 		y++;

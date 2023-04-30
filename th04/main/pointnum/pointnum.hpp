@@ -77,7 +77,7 @@ extern pointnum_t near *pointnums_alive[POINTNUM_COUNT + 1];
 extern pointnum_t near *pointnum_first_yellow_alive;
 
 // Blits the given point[num] sprite to the given position. Assumptions:
-// • ES is already be set to the beginning of a VRAM segment
+// • ES is already set to the beginning of a VRAM segment
 // • The GRCG is active, and set to the intended color
 // Returns _DX (= left) advanced by the width of the numeral.
 #define pointnum_put(left, top, numeral) \

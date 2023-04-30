@@ -18,8 +18,8 @@ include th02/main/power_overflow[data].asm
 public _DREAM_SCORE_PER_ITEMS
 _DREAM_SCORE_PER_ITEMS	dw 0, 100, 200, 400, 600, 800, 1000, 1280
 
-public _power_overflow_level, _items_spawned, _items_collected
-_power_overflow_level	dw 0
+public _power_overflow, _items_spawned, _items_collected
+_power_overflow	dw 0
 _items_spawned	dw 0
 _items_collected	dw 0
 

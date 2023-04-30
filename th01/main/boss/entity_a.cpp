@@ -1,8 +1,10 @@
 #include <stdlib.h>
 #include "platform.h"
+#include "x86real.h"
 #include "decomp.hpp"
 #include "pc98.h"
 #include "planar.h"
+#include "platform/x86real/pc98/page.hpp"
 #include "master.hpp"
 #include "th01/math/area.hpp"
 #include "th01/math/wave.hpp"
@@ -290,17 +292,17 @@ void CBossEntity::unput_and_put_1line(
 			fg.G = bos.planes.G[bos_p];
 			fg.E = bos.planes.E[bos_p];
 			if(first_bit == 0) {
-				graph_accesspage_func(1);
+				page_access(1);
 				vram_snap_masked_planar(bg_masked, vram_offset, alpha);
-				graph_accesspage_func(0);
+				page_access(0);
 				vram_put_bg_fg_planar(vram_offset, bg_masked, fg);
 			} else {
-				graph_accesspage_func(1);
+				page_access(1);
 				mask_unaligned = (
 					(alpha >> first_bit) + (alpha << other_shift)
 				);
 				vram_snap_masked_planar(bg_masked, vram_offset, mask_unaligned);
-				graph_accesspage_func(0);
+				page_access(0);
 				vram_put_unaligned_bg_fg_planar(
 					vram_offset, bg_masked, fg, first_bit
 				);
@@ -336,7 +338,7 @@ void CBossEntity::unput_and_put_8(
 				vram_offset_at_intended_y_16(vram_offset, intended_y) &&
 				(vram_offset >= 0) // Clip at the top edge
 			) {
-				graph_accesspage_func(1);
+				page_access(1);
 				if(bos.alpha[bos_p]) {
 					vram_snap_planar_masked(
 						bg_masked, vram_offset, 16, bos.alpha[bos_p]
@@ -344,7 +346,7 @@ void CBossEntity::unput_and_put_8(
 				} else {
 					bg_masked.B = bg_masked.R = bg_masked.G = bg_masked.E = 0;
 				}
-				graph_accesspage_func(0);
+				page_access(0);
 				VRAM_PUT(B, vram_offset, bos.planes.B[bos_p] | bg_masked.B, 16);
 				VRAM_PUT(R, vram_offset, bos.planes.R[bos_p] | bg_masked.R, 16);
 				VRAM_PUT(G, vram_offset, bos.planes.G[bos_p] | bg_masked.G, 16);
@@ -399,7 +401,7 @@ void CBossEntity::unput_8(screen_x_t left, vram_y_t top, int image) const
 			break;
 		}
 	}
-	graph_accesspage_func(0);
+	page_access(0);
 }
 
 #define wave_func(len, amp, phase, call) { \
@@ -492,9 +494,9 @@ void CBossEntity::unput_and_put_16x8_8(pixel_t bos_left, pixel_t bos_top) const
 			(((vram_offset + 1) / ROW_SIZE) == intended_y) &&
 			(vram_offset >= 0) // Clip at the top edge
 		) {
-			graph_accesspage_func(1);
+			page_access(1);
 			vram_snap_masked_planar(bg_masked, vram_offset, bos.alpha[bos_p]);
-			graph_accesspage_func(0);
+			page_access(0);
 			vram_put_bg_word_planar(vram_offset, bg_masked, bos.planes, bos_p);
 			vram_offset += 2;
 		}

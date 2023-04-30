@@ -2,15 +2,16 @@
 #include <stdlib.h>
 #include <malloc.h>
 #include "platform.h"
+#include "x86real.h"
 #include "pc98.h"
 #include "decomp.hpp"
 #include "planar.h"
+#include "platform/x86real/pc98/page.hpp"
 #include "master.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th01/hardware/frmdelay.h"
-#include "th01/hardware/graph.h"
 #include "th01/hardware/egc.h"
 #include "th01/formats/ptn.hpp"
 #include "th01/formats/pf.hpp"
@@ -328,12 +329,12 @@ void stageobj_bgs_snap_from_1_8(screen_x_t left, vram_y_t top, int slot)
 	vram_offset_t vo = vram_offset_muldiv(left, top);
 	ptn_t *bg = &stageobj_bgs[slot];
 
-	graph_accesspage_func(1);
+	page_access(1);
 	for(pixel_t y = 0; y < PTN_H; y++) {
 		vram_snap_ptn_planar(bg, y, vo);
 		vo += ROW_SIZE;
 	}
-	graph_accesspage_func(0);
+	page_access(0);
 }
 
 void scene_init_and_load(uint8_t id)
@@ -947,9 +948,9 @@ void turret_fire_update_and_render_or_reset(int obstacle_slot, bool16 reset)
 		// pixels compared to PTN_TURRET, and doesn't remove any. Unblit the
 		// previous portal sprite to ensure this.
 
-		graph_accesspage_func(1);
+		page_access(1);
 		stageobj_put_8(obstacles, obstacle_slot, PTN_TURRET_FIRING);
-		graph_accesspage_func(0);
+		page_access(0);
 		stageobj_put_8(obstacles, obstacle_slot, PTN_TURRET_FIRING);
 
 		turret_state[obstacle_slot] = TS_WARMUP;
@@ -1007,9 +1008,9 @@ void turret_fire_update_and_render_or_reset(int obstacle_slot, bool16 reset)
 	} else {
 		reinterpret_cast<int &>(turret_state[obstacle_slot])++;
 		if(turret_state[obstacle_slot] >= TS_DONE) {
-			graph_accesspage_func(1);
+			page_access(1);
 			stageobj_put_8(obstacles, obstacle_slot, PTN_TURRET);
-			graph_accesspage_func(0);
+			page_access(0);
 			stageobj_put_8(obstacles, obstacle_slot, PTN_TURRET);
 
 			turret_state[obstacle_slot] = TS_READY;

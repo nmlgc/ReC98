@@ -2,10 +2,11 @@
 
 #include <dos.h>
 #include "platform.h"
+#include "x86real.h"
 #include "pc98.h"
 #include "planar.h"
+#include "platform/x86real/pc98/page.hpp"
 #include "th01/sprites/ileave_m.hpp"
-#include "th01/hardware/graph.h"
 #include "th01/hardware/palette.h"
 #include "th01/hardware/pgtrans.hpp"
 
@@ -26,9 +27,9 @@ void graph_interleave_pages_8x8_8(screen_x_t left, vram_y_t top, int mask_id)
 			VRAM_CHUNK(plane, vo, 8)
 
 		#define interleave(plane, vram_offset) \
-			graph_accesspage_func(1); dots  = ((~mask) & snap(plane, vo)); \
-			graph_accesspage_func(0); dots |= (  mask  & snap(plane, vo)); \
-			graph_accesspage_func(0); VRAM_PUT(plane, vo, dots, 8);
+			page_access(1); dots  = ((~mask) & snap(plane, vo)); \
+			page_access(0); dots |= (  mask  & snap(plane, vo)); \
+			page_access(0); VRAM_PUT(plane, vo, dots, 8);
 
 		interleave(B, vo);
 		interleave(R, vo);

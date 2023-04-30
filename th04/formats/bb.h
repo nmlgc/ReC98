@@ -34,7 +34,7 @@ void pascal near bb_boss_load(const char far *fn);
 #define BB_TXT_OUT_CELS 16
 
 // Puts the given TXT*.BB sprite at (⌊left/8⌋*8, top). Assumptions:
-// • ES is already be set to the beginning of a VRAM segment
+// • ES is already set to the beginning of a VRAM segment
 // • The GRCG is active, and set to the intended color
 #define bb_txt_put_8(left, top, sprite) \
 	_CX = sprite; \

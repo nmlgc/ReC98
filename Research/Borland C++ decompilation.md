@@ -63,7 +63,7 @@ where the scalar-type variable is declared in relation to them.
 
 ### Arithmetic on a register *after* assigning it to a variable?
 
-Assigment is part of the C expression. If it's a comparison, that comparison
+Assignment is part of the C expression. If it's a comparison, that comparison
 must be spelled out to silence the `Possibly incorrect assignment` warning.
 
 | | |
@@ -173,7 +173,7 @@ case it's part of an arithmetic expression that was promoted to `int`.
 |-|-|
 | `MOV ???, [SI+????]` | Only achievable through pointer arithmetic? |
 
-* When assigning to a array element at a variable or non-0 index, the array
+* When assigning to an array element at a variable or non-0 index, the array
   element address is typically evaluated before the expression to be assigned.
   But when assigning
   * the result of any arithmetic expression of a *16-bit type*

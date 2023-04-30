@@ -19,7 +19,6 @@
 #include "th01/formats/grp.h"
 #include "th01/sprites/pellet.h"
 #include "th01/main/entity.hpp"
-#include "th01/main/particle.hpp"
 #include "th01/main/playfld.hpp"
 #include "th01/main/hud/hp.hpp"
 #include "th01/main/player/player.hpp"
@@ -175,9 +174,6 @@ void singyoku_setup(void)
 	hud_hp_first_white = HP_PHASE_1_END;
 	hud_hp_first_redwhite = 2; // fully arbitrary, doesn't indicate anything
 	boss_phase = 0;
-
-	// ZUN bloat: Redundant, no particles are shown in this fight.
-	particles_unput_update_render(PO_INITIALIZE, V_WHITE);
 }
 
 void singyoku_free(void)
