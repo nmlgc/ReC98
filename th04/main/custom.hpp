@@ -3,20 +3,22 @@
 // To define such a custom type, declare your own structure, then
 // reinterpret_cast [custom_entities] to that type.
 
-#define CUSTOM_COUNT 64
+#if (GAME == 5)
+	#define CUSTOM_COUNT 64
 
-typedef struct {
-	uint8_t flag;
-	uint8_t angle;
-	PlayfieldMotion pos;
-	uint16_t val1;
-	uint16_t val2;
-	int16_t sprite;
-	int16_t val3;
-	int16_t damage;
-	SubpixelLength8 speed;
-	int8_t padding;	// Unused across all custom entities in ZUN's code
-} custom_t;
+	struct custom_t {
+		uint8_t flag;
+		uint8_t angle;
+		PlayfieldMotion pos;
+		uint16_t val1;
+		uint16_t val2;
+		int16_t sprite;
+		int16_t val3;
+		int16_t damage;
+		SubpixelLength8 speed;
+		int8_t padding;	// Unused across all custom entities in ZUN's code
+	};
+#endif
 
 extern custom_t custom_entities[CUSTOM_COUNT];
 
