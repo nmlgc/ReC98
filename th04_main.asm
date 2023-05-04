@@ -9822,8 +9822,8 @@ sub_11ECB	proc near
 		push	offset _bullets
 		push	(size _pellets + size _bullets16) / 4
 		call	main_01:sub_C34E
-		push	0B204h
-		push	0D0h
+		push	offset _custom_entities
+		push	size _custom_entities / 4
 		call	main_01:sub_C34E
 		push	offset _circles
 		push	size _circles / 4
@@ -32040,7 +32040,10 @@ include th04/main/gather[bss].asm
 include th04/main/circles[bss].asm
 include th04/main/pointnum/pointnum[bss].asm
 include th04/main/item/items[bss].asm
-		db 858 dup(?)
+
+CUSTOM_COUNT = 32
+
+include th04/main/custom[bss].asm
 include th04/main/player/shots[bss].asm
 		db 96 dup(?)
 public _resident
