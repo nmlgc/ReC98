@@ -8980,10 +8980,10 @@ main_012_TEXT	segment	byte public 'CODE' use16
 
 @kurumi_fg_render$qv	proc near
 
-var_A		= word ptr -0Ah
+@@spawnraw_p	= word ptr -0Ah
 var_8		= word ptr -8
 var_6		= word ptr -6
-var_4		= word ptr -4
+@@spawnraw_i		= word ptr -4
 var_2		= word ptr -2
 
 		enter	0Ah, 0
@@ -9099,51 +9099,51 @@ loc_118BE:
 		call	@grcg_setmode_rmw$qv
 		mov	ah, GC_RG
 		call	@grcg_setcolor_direct_raw$qv
-		mov	[bp+var_A], 0B204h
-		mov	[bp+var_4], 0
+		mov	[bp+@@spawnraw_p], offset kurumi_spawnrays
+		mov	[bp+@@spawnraw_i], 0
 		jmp	short loc_11932
 ; ---------------------------------------------------------------------------
 
 loc_118D2:
-		mov	bx, [bp+var_A]
-		cmp	byte ptr [bx], 0
+		mov	bx, [bp+@@spawnraw_p]
+		cmp	[bx+kurumi_spawnray_t.B2S_flag], B2SF_FREE
 		jz	short loc_1192B
-		mov	bx, [bp+var_A]
-		mov	ax, [bx+2]
-		mov	bx, 16
+		mov	bx, [bp+@@spawnraw_p]
+		mov	ax, [bx+kurumi_spawnray_t.B2S_target.x]
+		mov	bx, SUBPIXEL_FACTOR
 		cwd
 		idiv	bx
-		add	ax, 32
+		add	ax, PLAYFIELD_LEFT
 		mov	si, ax
-		mov	bx, [bp+var_A]
-		mov	ax, [bx+4]
-		mov	bx, 16
+		mov	bx, [bp+@@spawnraw_p]
+		mov	ax, [bx+kurumi_spawnray_t.B2S_target.y]
+		mov	bx, SUBPIXEL_FACTOR
 		cwd
 		idiv	bx
-		add	ax, 16
+		add	ax, PLAYFIELD_TOP
 		mov	di, ax
-		mov	bx, [bp+var_A]
-		mov	ax, [bx+6]
-		mov	bx, 16
+		mov	bx, [bp+@@spawnraw_p]
+		mov	ax, [bx+kurumi_spawnray_t.B2S_origin.x]
+		mov	bx, SUBPIXEL_FACTOR
 		cwd
 		idiv	bx
-		add	ax, 32
+		add	ax, PLAYFIELD_LEFT
 		mov	[bp+var_6], ax
-		mov	bx, [bp+var_A]
-		mov	ax, [bx+8]
-		mov	bx, 16
+		mov	bx, [bp+@@spawnraw_p]
+		mov	ax, [bx+kurumi_spawnray_t.B2S_origin.y]
+		mov	bx, SUBPIXEL_FACTOR
 		cwd
 		idiv	bx
-		add	ax, 16
+		add	ax, PLAYFIELD_TOP
 		mov	[bp+var_8], ax
 		call	grcg_line pascal, si, di, [bp+var_6], ax
 
 loc_1192B:
-		inc	[bp+var_4]
-		add	[bp+var_A], 1Ah
+		inc	[bp+@@spawnraw_i]
+		add	[bp+@@spawnraw_p], size kurumi_spawnray_t
 
 loc_11932:
-		cmp	[bp+var_4], 6
+		cmp	[bp+@@spawnraw_i], KURUMI_SPAWNRAY_COUNT
 		jl	short loc_118D2
 		jmp	short loc_11961
 ; ---------------------------------------------------------------------------
@@ -20010,42 +20010,42 @@ include th04/main/pointnum/digits.asm
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public @KURUMI_SPAWNRAYS_ADD$QIUC
+@kurumi_spawnrays_add$qiuc	proc near
 
-kurumi_18A14	proc near
-
-@@angle		= word ptr  4
-arg_2		= word ptr  6
+@@angle                 	= word ptr  4
+@@distance_from_center_x	= word ptr  6
 
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
-		mov	si, 0B204h
+		mov	si, offset kurumi_spawnrays
 		xor	di, di
 		jmp	short loc_18A6E
 ; ---------------------------------------------------------------------------
 
 loc_18A20:
-		cmp	byte ptr [si], 0
+		cmp	[si+kurumi_spawnray_t.B2S_flag], B2SF_FREE
 		jnz	short loc_18A6A
-		mov	byte ptr [si], 1
+		mov	[si+kurumi_spawnray_t.B2S_flag], B2SF_GROW
 		mov	ax, _boss_pos.cur.x
-		add	ax, [bp+arg_2]
-		mov	[si+2],	ax
+		add	ax, [bp+@@distance_from_center_x]
+		mov	[si+kurumi_spawnray_t.B2S_target.x], ax
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-10 shl 4)
-		mov	[si+4],	ax
+		mov	[si+kurumi_spawnray_t.B2S_target.y], ax
 		mov	ax, _boss_pos.cur.x
-		add	ax, [bp+arg_2]
-		mov	[si+6],	ax
+		add	ax, [bp+@@distance_from_center_x]
+		mov	[si+kurumi_spawnray_t.B2S_origin.x], ax
 		mov	ax, _boss_pos.cur.y
 		add	ax, (-10 shl 4)
-		mov	[si+8],	ax
+		mov	[si+kurumi_spawnray_t.B2S_origin.y], ax
 		push	ds
-		lea	ax, [si+0Ah]
+		lea	ax, [si+kurumi_spawnray_t.B2S_velocity.x]
 		push	ax
 		push	ds
-		lea	ax, [si+0Ch]
+		lea	ax, [si+kurumi_spawnray_t.B2S_velocity.y]
 		push	ax
 		push	[bp+@@angle]
 		push	(16 shl 4)
@@ -20056,10 +20056,10 @@ loc_18A20:
 
 loc_18A6A:
 		inc	di
-		add	si, 1Ah
+		add	si, size kurumi_spawnray_t
 
 loc_18A6E:
-		cmp	di, 6
+		cmp	di, KURUMI_SPAWNRAY_COUNT
 		jl	short loc_18A20
 
 loc_18A73:
@@ -20067,7 +20067,7 @@ loc_18A73:
 		pop	si
 		pop	bp
 		retn	4
-kurumi_18A14	endp
+@kurumi_spawnrays_add$qiuc	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -20082,41 +20082,41 @@ var_2		= word ptr -2
 		enter	4, 0
 		push	si
 		push	di
-		mov	si, 0B204h
+		mov	si, offset kurumi_spawnrays
 		xor	di, di
 		mov	[bp+var_2], 0
 		jmp	loc_18B51
 ; ---------------------------------------------------------------------------
 
 loc_18A8C:
-		cmp	byte ptr [si], 0
+		cmp	[si+kurumi_spawnray_t.B2S_flag], B2SF_FREE
 		jnz	short loc_18A94
 		inc	[bp+var_2]
 
 loc_18A94:
-		cmp	byte ptr [si], 1
+		cmp	[si+kurumi_spawnray_t.B2S_flag], B2SF_GROW
 		jnz	loc_18B1D
-		cmp	word ptr [si+2], 1800h
+		cmp	[si+kurumi_spawnray_t.B2S_target.x], (PLAYFIELD_W shl 4)
 		jge	short loc_18AC4
-		cmp	word ptr [si+4], 1700h
+		cmp	[si+kurumi_spawnray_t.B2S_target.y], (PLAYFIELD_H shl 4)
 		jge	short loc_18AC4
-		cmp	word ptr [si+2], 0
+		cmp	[si+kurumi_spawnray_t.B2S_target.x], (0 shl 4)
 		jle	short loc_18AC4
-		cmp	word ptr [si+4], 0
+		cmp	[si+kurumi_spawnray_t.B2S_target.y], (0 shl 4)
 		jle	short loc_18AC4
-		mov	ax, [si+0Ah]
-		add	[si+2],	ax
-		mov	ax, [si+0Ch]
-		add	[si+4],	ax
+		mov	ax, [si+kurumi_spawnray_t.B2S_velocity.x]
+		add	[si+kurumi_spawnray_t.B2S_target.x], ax
+		mov	ax, [si+kurumi_spawnray_t.B2S_velocity.y]
+		add	[si+kurumi_spawnray_t.B2S_target.y], ax
 		jmp	loc_18B4D
 ; ---------------------------------------------------------------------------
 
 loc_18AC4:
-		mov	ax, [si+2]
-		sub	ax, [si+0Ah]
+		mov	ax, [si+kurumi_spawnray_t.B2S_target.x]
+		sub	ax, [si+kurumi_spawnray_t.B2S_velocity.x]
 		mov	_bullet_template.BT_origin.x, ax
-		mov	ax, [si+4]
-		sub	ax, [si+0Ch]
+		mov	ax, [si+kurumi_spawnray_t.B2S_target.y]
+		sub	ax, [si+kurumi_spawnray_t.B2S_velocity.y]
 		mov	_bullet_template.BT_origin.y, ax
 		mov	_bullet_template.BT_special_motion, BSM_SPEEDUP
 		mov	_bullet_special_motion_speed_delta, 1
@@ -20135,7 +20135,7 @@ loc_18AEC:
 loc_18AFA:
 		cmp	[bp+var_4], 3
 		jl	short loc_18AEC
-		inc	byte ptr [si]
+		inc	[si+kurumi_spawnray_t.B2S_flag] ; = B2SF_SHRINK
 		call	snd_se_play pascal, 6
 		mov	_circles_color, GC_RG
 		call	circles_add_growing pascal, _bullet_template.BT_origin.x, _bullet_template.BT_origin.y
@@ -20143,34 +20143,34 @@ loc_18AFA:
 ; ---------------------------------------------------------------------------
 
 loc_18B1D:
-		cmp	byte ptr [si], 2
+		cmp	[si+kurumi_spawnray_t.B2S_flag], B2SF_SHRINK
 		jnz	short loc_18B4D
-		cmp	word ptr [si+6], 1800h
+		cmp	[si+kurumi_spawnray_t.B2S_origin.x], (PLAYFIELD_W shl 4)
 		jge	short loc_18B4A
-		cmp	word ptr [si+8], 1700h
+		cmp	[si+kurumi_spawnray_t.B2S_origin.y], (PLAYFIELD_H shl 4)
 		jge	short loc_18B4A
-		cmp	word ptr [si+6], 0
+		cmp	[si+kurumi_spawnray_t.B2S_origin.x], (0 shl 4)
 		jle	short loc_18B4A
-		cmp	word ptr [si+8], 0
+		cmp	[si+kurumi_spawnray_t.B2S_origin.y], (0 shl 4)
 		jle	short loc_18B4A
-		mov	ax, [si+0Ah]
-		add	[si+6],	ax
-		mov	ax, [si+0Ch]
-		add	[si+8],	ax
+		mov	ax, [si+kurumi_spawnray_t.B2S_velocity.x]
+		add	[si+kurumi_spawnray_t.B2S_origin.x], ax
+		mov	ax, [si+kurumi_spawnray_t.B2S_velocity.y]
+		add	[si+kurumi_spawnray_t.B2S_origin.y], ax
 		jmp	short loc_18B4D
 ; ---------------------------------------------------------------------------
 
 loc_18B4A:
-		mov	byte ptr [si], 0
+		mov	[si+kurumi_spawnray_t.B2S_flag], B2SF_FREE
 
 loc_18B4D:
 		inc	di
-		add	si, 1Ah
+		add	si, size kurumi_spawnray_t
 
 loc_18B51:
-		cmp	di, 6
+		cmp	di, KURUMI_SPAWNRAY_COUNT
 		jl	loc_18A8C
-		cmp	[bp+var_2], 6
+		cmp	[bp+var_2], KURUMI_SPAWNRAY_COUNT
 		jnz	short loc_18B62
 		mov	al, 1
 		jmp	short loc_18B64
@@ -20279,12 +20279,12 @@ loc_18C1F:
 		cmp	_boss_phase_frame, 64
 		jnz	short loc_18C3E
 		mov	_boss_sprite, 0
-		push	0FF40000Fh
+		push	(-(12 shl 4) shl 16) or 15
 		call	randring2_next16_and
 		mov	dl, 18h
 		sub	dl, al
-		push	dx
-		call	kurumi_18A14
+		push	dx	; angle
+		call	@kurumi_spawnrays_add$qiuc
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -20344,11 +20344,11 @@ loc_18CAF:
 		cmp	_boss_phase_frame, 64
 		jnz	short loc_18CCC
 		mov	_boss_sprite, 0
-		push	0C0000Fh
+		push	((12 shl 4) shl 16) or 15
 		call	randring2_next16_and
-		add	al, 68h	; 'h'
-		push	ax
-		call	kurumi_18A14
+		add	al, 68h
+		push	ax	; angle
+		call	@kurumi_spawnrays_add$qiuc
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -20380,7 +20380,7 @@ kurumi_18C76	endp
 
 kurumi_18D04	proc near
 
-var_1		= byte ptr -1
+@@angle		= byte ptr -1
 
 		enter	2, 0
 		cmp	_boss_phase_frame, 16
@@ -20420,15 +20420,13 @@ loc_18D51:
 		push	0Fh
 		call	randring2_next16_and
 		add	al, 68h	; 'h'
-		mov	[bp+var_1], al
-		push	0C0h
-		push	word ptr [bp+var_1]
-		call	kurumi_18A14
-		push	0FF40h
+		mov	[bp+@@angle], al
+		call	@kurumi_spawnrays_add$qiuc pascal, (12 shl 4), word ptr [bp+@@angle]
+		push	(-12 shl 4)	; distance_from_center_x
 		mov	al, 80h
-		sub	al, [bp+var_1]
-		push	ax
-		call	kurumi_18A14
+		sub	al, [bp+@@angle]
+		push	ax	; angle
+		call	@kurumi_spawnrays_add$qiuc
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -20551,9 +20549,7 @@ loc_18E7C:
 		cmp	_boss_phase_frame, 64
 		jnz	short loc_18E92
 		mov	_boss_sprite, 0
-		push	0FF40h
-		push	18h
-		call	kurumi_18A14
+		call	@kurumi_spawnrays_add$qiuc pascal, (-12 shl 4), 18h
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -20563,19 +20559,19 @@ loc_18E92:
 		jle	short loc_18EE5
 		cmp	_boss_phase_frame, 80
 		jnz	short loc_18EA7
-		push	0FF40h
-		push	10h
+		push	(-12 shl 4)	; distance_from_center_x
+		push	10h	; angle
 		jmp	short loc_18EB3
 ; ---------------------------------------------------------------------------
 
 loc_18EA7:
 		cmp	_boss_phase_frame, 96
 		jnz	short loc_18EB6
-		push	0FF40h
-		push	8
+		push	(-12 shl 4)	; distance_from_center_x
+		push	8	; angle
 
 loc_18EB3:
-		call	kurumi_18A14
+		call	@kurumi_spawnrays_add$qiuc
 
 loc_18EB6:
 		mov	_bullet_template.spawn_type, BST_BULLET16
@@ -20629,9 +20625,7 @@ loc_18F20:
 		cmp	_boss_phase_frame, 64
 		jnz	short loc_18F36
 		mov	_boss_sprite, 0
-		push	0C0h
-		push	68h ; 'h'
-		call	kurumi_18A14
+		call	@kurumi_spawnrays_add$qiuc pascal, (12 shl 4), 68h
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -20641,19 +20635,19 @@ loc_18F36:
 		jle	short loc_18F89
 		cmp	_boss_phase_frame, 80
 		jnz	short loc_18F4B
-		push	0C0h
-		push	70h ; 'p'
+		push	(12 shl 4)	; distance_from_center_x
+		push	70h	; angle
 		jmp	short loc_18F57
 ; ---------------------------------------------------------------------------
 
 loc_18F4B:
 		cmp	_boss_phase_frame, 96
 		jnz	short loc_18F5A
-		push	0C0h
-		push	78h ; 'x'
+		push	(12 shl 4)	; distance_from_center_x
+		push	78h	; angle
 
 loc_18F57:
-		call	kurumi_18A14
+		call	@kurumi_spawnrays_add$qiuc
 
 loc_18F5A:
 		mov	_bullet_template.spawn_type, BST_BULLET16
@@ -20715,12 +20709,8 @@ loc_18FD7:
 		cmp	_boss_phase_frame, 64
 		jnz	short loc_18FF5
 		mov	_boss_sprite, 0
-		push	0FF40h
-		push	18h
-		call	kurumi_18A14
-		push	0C0h
-		push	68h ; 'h'
-		call	kurumi_18A14
+		call	@kurumi_spawnrays_add$qiuc pascal, (-12 shl 4), 18h
+		call	@kurumi_spawnrays_add$qiuc pascal, ( 12 shl 4), 68h
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -20730,25 +20720,21 @@ loc_18FF5:
 		jle	short loc_19058
 		cmp	_boss_phase_frame, 80
 		jnz	short loc_19012
-		push	0FF40h
-		push	10h
-		call	kurumi_18A14
-		push	0C0h
-		push	70h ; 'p'
+		call	@kurumi_spawnrays_add$qiuc pascal, (-12 shl 4), 10h
+		push	(12 shl 4)	; distance_from_center_x
+		push	70h	; angle
 		jmp	short loc_19026
 ; ---------------------------------------------------------------------------
 
 loc_19012:
 		cmp	_boss_phase_frame, 96
 		jnz	short loc_19029
-		push	0FF40h
-		push	8
-		call	kurumi_18A14
-		push	0C0h
-		push	78h ; 'x'
+		call	@kurumi_spawnrays_add$qiuc pascal, (-12 shl 4), 8
+		push	(12 shl 4)	; distance_from_center_x
+		push	78h	; angle
 
 loc_19026:
-		call	kurumi_18A14
+		call	@kurumi_spawnrays_add$qiuc
 
 loc_19029:
 		mov	_bullet_template.spawn_type, BST_BULLET16
@@ -20897,19 +20883,19 @@ loc_19178:
 		mov	Palettes[0 * size rgb_t].g, 0
 		mov	Palettes[0 * size rgb_t].b, 0
 		mov	_palette_changed, 1
-		mov	word ptr [bp-2], 0B204h
+		mov	word ptr [bp-2], offset kurumi_spawnrays
 		xor	si, si
 		jmp	short loc_191B3
 ; ---------------------------------------------------------------------------
 
 loc_191A8:
 		mov	bx, [bp-2]
-		mov	byte ptr [bx], 0
+		mov	[bx+kurumi_spawnray_t.B2S_flag], B2SF_FREE
 		inc	si
-		add	word ptr [bp-2], 1Ah
+		add	word ptr [bp-2], size kurumi_spawnray_t
 
 loc_191B3:
-		cmp	si, 6
+		cmp	si, KURUMI_SPAWNRAY_COUNT
 		jl	short loc_191A8
 		mov	ax, _boss_pos.cur.x
 		mov	_gather_template.GT_center.x, ax
@@ -32042,6 +32028,27 @@ include th04/main/pointnum/pointnum[bss].asm
 include th04/main/item/items[bss].asm
 
 CUSTOM_COUNT = 32
+
+; Kurumi's spawn rays
+; -------------------
+
+KURUMI_SPAWNRAY_COUNT = 6
+
+B2SF_FREE = 0
+B2SF_GROW = 1
+B2SF_SHRINK = 2
+
+kurumi_spawnray_t struc
+	B2S_flag    	db ?
+		db ?
+	B2S_target  	Point <?>
+	B2S_origin  	Point <?>
+	B2S_velocity	Point <?>
+		db 12 dup(?)
+kurumi_spawnray_t ends
+
+kurumi_spawnrays equ <_custom_entities>
+; -------------------
 
 include th04/main/custom[bss].asm
 include th04/main/player/shots[bss].asm
