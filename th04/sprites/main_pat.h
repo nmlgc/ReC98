@@ -52,6 +52,14 @@ typedef enum {
 
 	PAT_STAGE = 128,
 
+	/// Stage 4 – Marisa
+	/// ================
+	// st03b22.bbt
+	// -----------
+	PAT_MARISA_BIT = (PAT_STAGE + 8),
+	// -----------
+	/// ================
+
 	/// Stage 6
 	/// =======
 	// st05.bb1

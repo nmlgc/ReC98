@@ -5354,77 +5354,80 @@ var_2		= word ptr -2
 loc_ECA1:
 		mov	bx, di
 		add	bx, bx
-		push	word ptr [bx+4336h]
+		push	_bit_center_x[bx-word]
 		mov	bx, di
 		add	bx, bx
-		push	word ptr [bx+433Eh]
+		push	_bit_center_y[bx-word]
 		mov	bx, di
 		add	bx, bx
-		push	word ptr [bx+4338h]
+		push	_bit_center_x[bx]
 		mov	bx, di
 		add	bx, bx
-		push	word ptr [bx+4340h]
+		push	_bit_center_y[bx]
 		call	grcg_line
 		inc	di
 
 loc_ECC7:
-		mov	al, byte_25672
+		mov	al, _bits_alive
 		mov	ah, 0
 		cmp	ax, di
 		jg	short loc_ECA1
-		cmp	byte_25672, 3
+		cmp	_bits_alive, 3
 		jb	short loc_ECF4
 		mov	bx, di
 		add	bx, bx
-		push	word ptr [bx+4336h]
+		push	_bit_center_x[bx-word]
 		mov	bx, di
 		add	bx, bx
-		push	word ptr [bx+433Eh]
-		push	word_25678
-		push	word_25680
+		push	_bit_center_y[bx-word]
+		push	_bit_center_x[0]
+		push	_bit_center_y[0]
 		call	grcg_line
 
 loc_ECF4:
 		GRCG_OFF_CLOBBERING dx
-		mov	si, 0B204h
+		mov	si, offset marisa_bits
 		xor	di, di
 		jmp	short loc_ED68
 ; ---------------------------------------------------------------------------
 
 loc_ED01:
-		cmp	byte ptr [si], 0
+		cmp	[si+marisa_bit_t.B4MB_flag], BF_FREE
 		jz	short loc_ED64
-		cmp	word ptr [si+2], 0FF00h
+
+		; ZUN bug: Clipped at the right and bottom edges 16 pixels too early.
+		cmp	[si+marisa_bit_t.B4MB_center.x], (-(MARISA_BIT_W / 2) shl 4)
 		jle	short loc_ED64
-		cmp	word ptr [si+2], 1800h
+		cmp	[si+marisa_bit_t.B4MB_center.x], (PLAYFIELD_W shl 4)
 		jge	short loc_ED64
-		cmp	word ptr [si+4], 0FF00h
+		cmp	[si+marisa_bit_t.B4MB_center.y], (-(MARISA_BIT_H / 2) shl 4)
 		jle	short loc_ED64
-		cmp	word ptr [si+4], 1700h
+		cmp	[si+marisa_bit_t.B4MB_center.y], (PLAYFIELD_H shl 4)
 		jge	short loc_ED64
-		mov	ax, [si+2]
+
+		mov	ax, [si+marisa_bit_t.B4MB_center.x]
 		sar	ax, 4
-		add	ax, 10h
+		add	ax, (PLAYFIELD_LEFT - (MARISA_BIT_W / 2))
 		mov	[bp+var_2], ax
-		mov	ax, [si+4]
+		mov	ax, [si+marisa_bit_t.B4MB_center.y]
 		sar	ax, 4
 		mov	[bp+var_4], ax
-		cmp	word ptr [si+16h], 0
+		cmp	[si+marisa_bit_t.B4MB_damage_this_frame], 0
 		jnz	short loc_ED4B
-		call	super_roll_put pascal, [bp+var_2], ax, word ptr [si+6]
+		call	super_roll_put pascal, [bp+var_2], ax, [si+marisa_bit_t.B4MB_patnum]
 		jmp	short loc_ED64
 ; ---------------------------------------------------------------------------
 
 loc_ED4B:
-		call	super_roll_put_1plane pascal, [bp+var_2], [bp+var_4], word ptr [si+6], large PLANE_PUT or GC_BRGI
-		mov	word ptr [si+16h], 0
+		call	super_roll_put_1plane pascal, [bp+var_2], [bp+var_4], [si+marisa_bit_t.B4MB_patnum], large PLANE_PUT or GC_BRGI
+		mov	[si+marisa_bit_t.B4MB_damage_this_frame], 0
 
 loc_ED64:
 		inc	di
-		add	si, 1Ah
+		add	si, size marisa_bit_t
 
 loc_ED68:
-		cmp	di, 4
+		cmp	di, MARISA_BIT_COUNT
 		jl	short loc_ED01
 		pop	di
 		pop	si
@@ -16559,49 +16562,49 @@ main_033_TEXT	segment	byte public 'CODE' use16
 
 marisa_16C05	proc near
 
-var_A		= byte ptr -0Ah
-var_1		= byte ptr -1
+@@bit_hp	= byte ptr -0Ah
+@@angle 	= byte ptr -1
 
 		enter	0Ah, 0
 		push	si
 		push	di
-		lea	ax, [bp+var_A]
+		lea	ax, [bp+@@bit_hp]
 		push	ss
 		push	ax
 		push	ds
-		push	offset unk_22D9E
-		mov	cx, 8
+		push	offset _MARISA_BIT_HP
+		mov	cx, (MARISA_BIT_COUNT * word)
 		call	SCOPY@
 		call	randring2_next16
-		mov	[bp+var_1], al
-		mov	si, 0B204h
+		mov	[bp+@@angle], al
+		mov	si, offset marisa_bits
 		xor	di, di
 		jmp	short loc_16C61
 ; ---------------------------------------------------------------------------
 
 loc_16C29:
-		mov	byte ptr [si], 1
+		mov	[si+marisa_bit_t.B4MB_flag], BF_MOVEOUT_SPIN
 		mov	al, byte_25671
-		mov	[si+19h], al
-		mov	al, [bp+var_1]
-		mov	[si+1],	al
-		add	al, 40h
-		mov	[bp+var_1], al
-		lea	ax, [di+88h]
-		mov	[si+6],	ax
-		mov	word ptr [si+10h], 0
+		mov	[si+marisa_bit_t.B4MB_angle_speed], al
+		mov	al, [bp+@@angle]
+		mov	[si+marisa_bit_t.B4MB_angle], al
+		add	al, (256 / MARISA_BIT_COUNT)
+		mov	[bp+@@angle], al
+		lea	ax, [di+PAT_MARISA_BIT]
+		mov	[si+marisa_bit_t.B4MB_patnum], ax
+		mov	[si+marisa_bit_t.B4MB_distance], 0
 		mov	bx, di
 		add	bx, bx
-		lea	ax, [bp+var_A]
+		lea	ax, [bp+@@bit_hp]
 		add	bx, ax
 		mov	ax, ss:[bx]
-		mov	[si+14h], ax
-		mov	word ptr [si+12h], 20h ; ' '
+		mov	[si+marisa_bit_t.B4MB_hp], ax
+		mov	[si+marisa_bit_t.B4MB_moveout_speed], (2 shl 4)
 		inc	di
-		add	si, 1Ah
+		add	si, size marisa_bit_t
 
 loc_16C61:
-		cmp	di, 4
+		cmp	di, MARISA_BIT_COUNT
 		jl	short loc_16C29
 		pop	di
 		pop	si
@@ -16617,89 +16620,89 @@ marisa_16C05	endp
 marisa_16C6A	proc near
 
 var_4		= word ptr -4
-var_2		= word ptr -2
+@@i		= word ptr -2
 
 		enter	4, 0
 		push	si
 		push	di
-		mov	byte_25672, 0
-		mov	si, 0B204h
-		mov	[bp+var_2], 0
+		mov	_bits_alive, 0
+		mov	si, offset marisa_bits
+		mov	[bp+@@i], 0
 		jmp	loc_16DCB
 ; ---------------------------------------------------------------------------
 
 loc_16C80:
-		cmp	byte ptr [si], 0
+		cmp	[si+marisa_bit_t.B4MB_flag], BF_FREE
 		jz	loc_16DC5
-		cmp	byte ptr [si], 80h
+		cmp	[si+marisa_bit_t.B4MB_flag], BF_KILL_ANIM
 		jb	short loc_16CB4
-		mov	al, [si]
+		mov	al, [si+marisa_bit_t.B4MB_flag]
 		inc	al
-		mov	[si], al
+		mov	[si+marisa_bit_t.B4MB_flag], al
 		mov	ah, 0
 		mov	di, ax
-		add	ax, 0FF80h
-		mov	bx, 4
+		add	ax, -BF_KILL_ANIM
+		mov	bx, MARISA_BIT_KILL_FRAMES_PER_CEL
 		cwd
 		idiv	bx
-		add	ax, 4
+		add	ax, PAT_ENEMY_KILL
 		mov	di, ax
-		mov	[si+6],	di
-		cmp	di, 0Ch
+		mov	[si+marisa_bit_t.B4MB_patnum], di
+		cmp	di, (PAT_ENEMY_KILL + ENEMY_KILL_CELS)
 		jl	loc_16DC5
-		mov	byte ptr [si], 0
+		mov	[si+marisa_bit_t.B4MB_flag], BF_FREE
 		jmp	loc_16DC5
 ; ---------------------------------------------------------------------------
 
 loc_16CB4:
-		mov	al, [si+19h]
-		add	[si+1],	al
-		mov	ax, [si+12h]
-		add	[si+10h], ax
-		lea	ax, [si+2]
+		mov	al, [si+marisa_bit_t.B4MB_angle_speed]
+		add	[si+marisa_bit_t.B4MB_angle], al
+		mov	ax, [si+marisa_bit_t.B4MB_moveout_speed]
+		add	[si+marisa_bit_t.B4MB_distance], ax
+		lea	ax, [si+marisa_bit_t.B4MB_center]
 		push	ax
 		push	_boss_pos.cur.x
 		push	_boss_pos.cur.y
-		push	word ptr [si+10h]
-		mov	al, [si+1]
+		push	[si+marisa_bit_t.B4MB_distance]
+		mov	al, [si+marisa_bit_t.B4MB_angle]
 		mov	ah, 0
 		push	ax
 		call	vector2_at
-		cmp	byte ptr [si], 1
+		cmp	[si+marisa_bit_t.B4MB_flag], BF_MOVEOUT_SPIN
 		jnz	short loc_16CEF
-		cmp	word ptr [si+10h], 400h
+		cmp	[si+marisa_bit_t.B4MB_distance], (64 shl 4)
 		jl	short loc_16CFC
-		inc	byte ptr [si]
-		mov	word ptr [si+12h], 0
+		inc	[si+marisa_bit_t.B4MB_flag]
+		mov	[si+marisa_bit_t.B4MB_moveout_speed], 0
 		jmp	short loc_16CFC
 ; ---------------------------------------------------------------------------
 
 loc_16CEF:
-		cmp	byte ptr [si], 2
+		cmp	[si+marisa_bit_t.B4MB_flag], BF_SPIN
 		jnz	short loc_16CFC
-		cmp	word ptr [si+10h], 40h
+		cmp	[si+marisa_bit_t.B4MB_distance], (4 shl 4)
 		jl	short loc_16CFC
-		inc	byte ptr [si]
+		inc	[si+marisa_bit_t.B4MB_flag]
 
 loc_16CFC:
 		mov	_shot_hitbox_radius.x, (12 shl 4)
 		mov	_shot_hitbox_radius.y, (12 shl 4)
-		mov	ax, [si+2]
+		mov	ax, [si+marisa_bit_t.B4MB_center.x]
 		mov	_shot_hitbox_center.x, ax
-		mov	ax, [si+4]
+		mov	ax, [si+marisa_bit_t.B4MB_center.y]
 		mov	_shot_hitbox_center.y, ax
 		call	@shots_hittest$qv
-		mov	[si+16h], ax
-		mov	ax, [si+16h]
-		sub	[si+14h], ax
-		cmp	word ptr [si+14h], 0
+		mov	[si+marisa_bit_t.B4MB_damage_this_frame], ax
+		mov	ax, [si+marisa_bit_t.B4MB_damage_this_frame]
+		sub	[si+marisa_bit_t.B4MB_hp], ax
+		cmp	[si+marisa_bit_t.B4MB_hp], 0
 		jg	short loc_16D53
-		mov	word ptr [si+6], 4
-		mov	byte ptr [si], 80h
+		mov	[si+marisa_bit_t.B4MB_patnum], PAT_ENEMY_KILL
+		mov	[si+marisa_bit_t.B4MB_flag], BF_KILL_ANIM
 		call	snd_se_play pascal, 3
 		add	_score_delta, 5120
-		push	word ptr [si+2]
-		push	word ptr [si+4]
+		push	[si+marisa_bit_t.B4MB_center.x]
+		push	[si+marisa_bit_t.B4MB_center.y]
 		push	large (((4 shl 4) shl 16) or 8)
 		nop
 		call	@sparks_add_random$q20%SubpixelBase$ti$ti%t1ii
@@ -16707,56 +16710,56 @@ loc_16CFC:
 ; ---------------------------------------------------------------------------
 
 loc_16D53:
-		mov	ax, [si+2]
-		add	ax, 0FF40h
+		mov	ax, [si+marisa_bit_t.B4MB_center.x]
+		add	ax, (-12 shl 4)
 		mov	di, ax
-		mov	ax, [si+4]
-		add	ax, 0FF40h
+		mov	ax, [si+marisa_bit_t.B4MB_center.y]
+		add	ax, (-12 shl 4)
 		mov	[bp+var_4], ax
 		mov	ax, _player_pos.cur.x
 		sub	ax, di
-		cmp	ax, 180h
+		cmp	ax, (24 shl 4)
 		jnb	short loc_16D7E
 		mov	ax, _player_pos.cur.y
 		sub	ax, [bp+var_4]
-		cmp	ax, 180h
+		cmp	ax, (24 shl 4)
 		jnb	short loc_16D7E
 		mov	_player_is_hit, 1
 
 loc_16D7E:
-		mov	ax, [si+4]
+		mov	ax, [si+marisa_bit_t.B4MB_center.y]
 		cmp	ax, _homing_target.y
 		jge	short loc_16D93
-		mov	ax, [si+2]
+		mov	ax, [si+marisa_bit_t.B4MB_center.x]
 		mov	_homing_target.x, ax
-		mov	ax, [si+4]
+		mov	ax, [si+marisa_bit_t.B4MB_center.y]
 		mov	_homing_target.y, ax
 
 loc_16D93:
-		mov	ax, [si+2]
+		mov	ax, [si+marisa_bit_t.B4MB_center.x]
 		sar	ax, 4
-		add	ax, 20h	; ' '
-		mov	dl, byte_25672
+		add	ax, PLAYFIELD_LEFT
+		mov	dl, _bits_alive
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
-		mov	[bx+4338h], ax
-		mov	ax, [si+4]
+		mov	_bit_center_x[bx], ax
+		mov	ax, [si+marisa_bit_t.B4MB_center.y]
 		sar	ax, 4
-		add	ax, 10h
-		mov	dl, byte_25672
+		add	ax, PLAYFIELD_TOP
+		mov	dl, _bits_alive
 		mov	dh, 0
 		add	dx, dx
 		mov	bx, dx
-		mov	[bx+4340h], ax
-		inc	byte_25672
+		mov	_bit_center_y[bx], ax
+		inc	_bits_alive
 
 loc_16DC5:
-		inc	[bp+var_2]
-		add	si, 1Ah
+		inc	[bp+@@i]
+		add	si, size marisa_bit_t
 
 loc_16DCB:
-		cmp	[bp+var_2], 4
+		cmp	[bp+@@i], MARISA_BIT_COUNT
 		jl	loc_16C80
 		pop	di
 		pop	si
@@ -16774,25 +16777,24 @@ marisa_16DD7	proc near
 		mov	bp, sp
 		push	si
 		push	di
-		mov	si, 0B204h
+		mov	si, offset marisa_bits
 		xor	di, di
 		jmp	short loc_16DF6
 ; ---------------------------------------------------------------------------
 
 loc_16DE3:
-		cmp	byte ptr [si], 0
+		cmp	[si+marisa_bit_t.B4MB_flag], BF_FREE
 		jz	short loc_16DF2
-		cmp	byte ptr [si], 80h
+		cmp	[si+marisa_bit_t.B4MB_flag], BF_KILL_ANIM
 		jnb	short loc_16DF2
-		push	si
-		call	fp_25676
+		call	_bit_fire pascal, si
 
 loc_16DF2:
 		inc	di
-		add	si, 1Ah
+		add	si, size marisa_bit_t
 
 loc_16DF6:
-		cmp	di, 4
+		cmp	di, MARISA_BIT_COUNT
 		jl	short loc_16DE3
 		pop	di
 		pop	si
@@ -16946,20 +16948,20 @@ word_16F10	dw    20h,   22h,   24h,   40h
 
 ; Attributes: bp-based frame
 
-marisa_16F24	proc near
+marisa_bit_fire_16F24	proc near
 
 @@angle		= byte ptr -1
-arg_0		= word ptr  4
+@@bit		= word ptr  4
 
 		enter	2, 0
 		push	si
-		mov	si, [bp+arg_0]
-		cmp	byte_25672, 2
+		mov	si, [bp+@@bit]
+		cmp	_bits_alive, 2
 		ja	short loc_16F38
 		mov	_bullet_template.count, 5
 
 loc_16F38:
-		cmp	byte ptr [si+19h], 0
+		cmp	byte ptr [si+marisa_bit_t.B4MB_angle_speed], 0
 		jl	short loc_16F42
 		mov	al, -40h
 		jmp	short loc_16F44
@@ -16970,16 +16972,16 @@ loc_16F42:
 
 loc_16F44:
 		mov	[bp+@@angle], al
-		mov	al, [si+1]
+		mov	al, [si+marisa_bit_t.B4MB_angle]
 		add	al, [bp+@@angle]
 		mov	_bullet_template.BT_angle, al
-		mov	eax, [si+2]
+		mov	eax, dword ptr [si+marisa_bit_t.B4MB_center]
 		mov	_bullet_template.BT_origin, eax
 		call	_bullets_add_regular
 		pop	si
 		leave
 		retn	2
-marisa_16F24	endp
+marisa_bit_fire_16F24	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -17003,7 +17005,7 @@ var_1		= byte ptr -1
 		mov	_bullet_template.count, 3
 		mov	_bullet_template.BT_delta.spread_angle, 8
 		call	_bullet_template_tune
-		mov	fp_25676, offset marisa_16F24
+		mov	_bit_fire, offset marisa_bit_fire_16F24
 		mov	al, byte ptr _boss_phase_frame
 		mov	_boss_statebyte[15].BSB_last_frame_with_bits_alive, al
 		jmp	loc_1705D
@@ -17018,7 +17020,7 @@ loc_16F9F:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1702D
-		cmp	byte_25672, 0
+		cmp	_bits_alive, 0
 		jz	short loc_16FC6
 		call	marisa_16DD7
 		mov	al, byte ptr _boss_phase_frame
@@ -17062,20 +17064,20 @@ loc_17026:
 loc_1702D:
 		cmp	_boss_phase_frame, 160
 		jl	short loc_1705D
-		mov	si, 0B204h
+		mov	si, offset marisa_bits
 		xor	di, di
 		jmp	short loc_17048
 ; ---------------------------------------------------------------------------
 
 loc_1703C:
-		mov	al, [si+19h]
+		mov	al, [si+marisa_bit_t.B4MB_angle_speed]
 		neg	al
-		mov	[si+19h], al
+		mov	[si+marisa_bit_t.B4MB_angle_speed], al
 		inc	di
-		add	si, 1Ah
+		add	si, size marisa_bit_t
 
 loc_17048:
-		cmp	di, 4
+		cmp	di, MARISA_BIT_COUNT
 		jl	short loc_1703C
 		mov	_boss_phase_frame, 0
 		mov	_boss_mode, -1
@@ -17093,21 +17095,21 @@ marisa_16F61	endp
 
 ; Attributes: bp-based frame
 
-marisa_17061	proc near
+marisa_bit_fire_17061	proc near
 
-arg_0		= word ptr  4
+@@bit		= word ptr  4
 
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, [bp+4]
-		mov	eax, [si+2]
+		mov	si, [bp+@@bit]
+		mov	eax, dword ptr [si+marisa_bit_t.B4MB_center]
 		mov	_bullet_template.BT_origin, eax
 		call	_bullets_add_regular
 		pop	si
 		pop	bp
 		retn	2
-marisa_17061	endp
+marisa_bit_fire_17061	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -17129,20 +17131,20 @@ var_1		= byte ptr -1
 		mov	_bullet_template.speed, (1 shl 4)
 		mov	_bullet_template.BT_group, BG_SINGLE
 		call	_bullet_template_tune
-		mov	fp_25676, offset marisa_17061
-		mov	si, 0B204h
+		mov	_bit_fire, offset marisa_bit_fire_17061
+		mov	si, offset marisa_bits
 		xor	di, di
 		jmp	short loc_170B5
 ; ---------------------------------------------------------------------------
 
 loc_170AB:
-		mov	al, [si+19h]
-		add	[si+19h], al
+		mov	al, [si+marisa_bit_t.B4MB_angle_speed]
+		add	[si+marisa_bit_t.B4MB_angle_speed], al
 		inc	di
-		add	si, 1Ah
+		add	si, size marisa_bit_t
 
 loc_170B5:
-		cmp	di, 4
+		cmp	di, MARISA_BIT_COUNT
 		jl	short loc_170AB
 		mov	al, byte ptr _boss_phase_frame
 		mov	_boss_statebyte[15].BSB_last_frame_with_bits_alive, al
@@ -17166,7 +17168,7 @@ loc_170C3:
 		push	ax
 		call	iatan2
 		mov	_bullet_template.BT_angle, al
-		cmp	byte_25672, 0
+		cmp	_bits_alive, 0
 		jz	short loc_17102
 		call	marisa_16DD7
 		mov	al, byte ptr _boss_phase_frame
@@ -17198,23 +17200,23 @@ loc_17136:
 loc_17145:
 		cmp	_boss_phase_frame, 160
 		jl	short loc_17179
-		mov	si, 0B204h
+		mov	si, offset marisa_bits
 		xor	di, di
 		jmp	short loc_17164
 ; ---------------------------------------------------------------------------
 
 loc_17154:
-		mov	al, [si+19h]
+		mov	al, [si+marisa_bit_t.B4MB_angle_speed]
 		cbw
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	[si+19h], al
+		mov	[si+marisa_bit_t.B4MB_angle_speed], al
 		inc	di
-		add	si, 1Ah
+		add	si, size marisa_bit_t
 
 loc_17164:
-		cmp	di, 4
+		cmp	di, MARISA_BIT_COUNT
 		jl	short loc_17154
 		mov	_boss_phase_frame, 0
 		mov	_boss_mode, -1
@@ -17244,7 +17246,7 @@ var_1		= byte ptr -1
 		cmp	[bp+var_1], 2
 		jnz	short loc_171A2
 		mov	_bullet_template.spawn_type, BST_PELLET
-		mov	fp_25676, offset marisa_16F24
+		mov	_bit_fire, offset marisa_bit_fire_16F24
 		mov	_boss_statebyte[15].BSB_subpattern_num, 0
 		jmp	loc_17331
 ; ---------------------------------------------------------------------------
@@ -17252,22 +17254,22 @@ var_1		= byte ptr -1
 loc_171A2:
 		cmp	[bp+var_1], 1
 		jnz	loc_17331
-		cmp	byte_25672, 0
+		cmp	_bits_alive, 0
 		jz	loc_1726E
 		cmp	_boss_phase_frame, 192
 		jg	short loc_171D2
-		mov	si, 0B204h
+		mov	si, offset marisa_bits
 		xor	di, di
 		jmp	short loc_171CA
 ; ---------------------------------------------------------------------------
 
 loc_171C2:
-		add	word ptr [si+10h], 18h
+		add	[si+marisa_bit_t.B4MB_distance], 18h
 		inc	di
-		add	si, 1Ah
+		add	si, size marisa_bit_t
 
 loc_171CA:
-		cmp	di, 4
+		cmp	di, MARISA_BIT_COUNT
 		jl	short loc_171C2
 		jmp	loc_17331
 ; ---------------------------------------------------------------------------
@@ -17307,37 +17309,37 @@ loc_1720D:
 loc_17232:
 		cmp	_boss_phase_frame, 384
 		jg	short loc_17251
-		mov	si, 0B204h
+		mov	si, offset marisa_bits
 		xor	di, di
 		jmp	short loc_17249
 ; ---------------------------------------------------------------------------
 
 loc_17241:
-		sub	word ptr [si+10h], 18h
+		sub	[si+marisa_bit_t.B4MB_distance], 18h
 		inc	di
-		add	si, 1Ah
+		add	si, size marisa_bit_t
 
 loc_17249:
-		cmp	di, 4
+		cmp	di, MARISA_BIT_COUNT
 		jl	short loc_17241
 		jmp	loc_17331
 ; ---------------------------------------------------------------------------
 
 loc_17251:
-		mov	si, 0B204h
+		mov	si, offset marisa_bits
 		xor	di, di
 		jmp	short loc_17266
 ; ---------------------------------------------------------------------------
 
 loc_17258:
-		mov	al, [si+19h]
+		mov	al, [si+marisa_bit_t.B4MB_angle_speed]
 		neg	al
-		mov	[si+19h], al
+		mov	[si+marisa_bit_t.B4MB_angle_speed], al
 		add	di, 2
-		add	si, 34h	; '4'
+		add	si, (size marisa_bit_t * 2)
 
 loc_17266:
-		cmp	di, 4
+		cmp	di, MARISA_BIT_COUNT
 		jl	short loc_17258
 		jmp	loc_17318
 ; ---------------------------------------------------------------------------
@@ -17440,14 +17442,14 @@ var_3		= byte ptr -3
 		mov	_bullet_template.BT_group, BG_RING_AIMED
 		mov	_bullet_template.BT_angle, 0
 		call	_bullet_template_tune
-		mov	fp_25676, offset marisa_17061
+		mov	_bit_fire, offset marisa_bit_fire_17061
 		jmp	loc_1748D
 ; ---------------------------------------------------------------------------
 
 loc_1736D:
 		cmp	[bp+var_3], 1
 		jnz	loc_1748D
-		cmp	byte_25672, 0
+		cmp	_bits_alive, 0
 		jz	short loc_173D3
 		mov	ax, _boss_phase_frame
 		mov	bx, 32
@@ -17455,7 +17457,7 @@ loc_1736D:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_173AC
-		mov	al, byte_25672
+		mov	al, _bits_alive
 		add	al, al
 		mov	dl, 24
 		sub	dl, al
@@ -17471,20 +17473,20 @@ loc_173A2:
 loc_173AC:
 		cmp	_boss_phase_frame, 160
 		jl	loc_1748D
-		mov	di, 0B204h
+		mov	di, offset marisa_bits
 		xor	si, si
 		jmp	short loc_173CB
 ; ---------------------------------------------------------------------------
 
 loc_173BD:
-		mov	al, [di+19h]
+		mov	al, [di+marisa_bit_t.B4MB_angle_speed]
 		neg	al
-		mov	[di+19h], al
+		mov	[di+marisa_bit_t.B4MB_angle_speed], al
 		add	si, 2
-		add	di, 34h	; '4'
+		add	di, (size marisa_bit_t * 2)
 
 loc_173CB:
-		cmp	si, 4
+		cmp	si, MARISA_BIT_COUNT
 		jl	short loc_173BD
 		jmp	loc_1747D
 ; ---------------------------------------------------------------------------
@@ -17589,7 +17591,7 @@ var_1		= byte ptr -1
 		mov	_bullet_template.BT_group, BG_SINGLE
 		mov	_bullet_template.BT_special_motion, BSM_SLOWDOWN_TO_ANGLE
 		call	_bullet_template_tune
-		mov	fp_25676, offset marisa_17061
+		mov	_bit_fire, offset marisa_bit_fire_17061
 		mov	_boss_statebyte[15].BSB_bitless_pattern_started, 0
 		jmp	loc_1769B
 ; ---------------------------------------------------------------------------
@@ -17597,7 +17599,7 @@ var_1		= byte ptr -1
 loc_174CD:
 		cmp	[bp+var_1], 1
 		jnz	loc_1769B
-		cmp	byte_25672, 0
+		cmp	_bits_alive, 0
 		jz	loc_17615
 		cmp	_boss_phase_frame, 96
 		jg	short loc_17515
@@ -17808,7 +17810,7 @@ var_1		= byte ptr -1
 		mov	_bullet_template.BT_special_motion, BSM_NONE
 		mov	_bullet_template.BT_angle, -40h
 		mov	_bullet_template.speed, (6 shl 4)
-		mov	fp_25676, offset marisa_17061
+		mov	_bit_fire, offset marisa_bit_fire_17061
 		mov	_boss_statebyte[15].BSB_bitless_pattern_started, 0
 		leave
 		retn
@@ -17817,7 +17819,7 @@ var_1		= byte ptr -1
 loc_176D9:
 		cmp	[bp+var_1], 1
 		jnz	locret_17811
-		cmp	byte_25672, 0
+		cmp	_bits_alive, 0
 		jz	loc_1779E
 		cmp	_boss_phase_frame, 128
 		jg	short loc_17707
@@ -18004,7 +18006,7 @@ loc_178AD:
 		call	marisa_16A1A
 		cmp	al, 1
 		jnz	loc_179B8
-		cmp	byte_25672, 0
+		cmp	_bits_alive, 0
 		jz	loc_1795F
 		mov	ax, _boss_phase_frame
 		mov	bx, 4
@@ -18012,7 +18014,7 @@ loc_178AD:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1793D
-		mov	fp_25676, offset marisa_17061
+		mov	_bit_fire, offset marisa_bit_fire_17061
 		mov	_bullet_template.spawn_type, BST_PELLET
 		mov	_bullet_template.speed, (2 shl 4)
 		mov	_bullet_template.BT_group, BG_SINGLE
@@ -18033,7 +18035,7 @@ loc_178F6:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_17936
-		mov	fp_25676, offset marisa_16F24
+		mov	_bit_fire, offset marisa_bit_fire_16F24
 		mov	_bullet_template.spawn_type, BST_BULLET16_CLOUD_FORWARDS
 		mov	_bullet_template.patnum, PAT_BULLET16_N_BALL_BLUE
 		mov	al, _boss_statebyte[14].BSB_spread_speed
@@ -18051,20 +18053,20 @@ loc_17936:
 loc_1793D:
 		cmp	_boss_phase_frame, 160
 		jl	short loc_179B8
-		mov	si, 0B204h
+		mov	si, offset marisa_bits
 		xor	di, di
 		jmp	short loc_17958
 ; ---------------------------------------------------------------------------
 
 loc_1794C:
-		mov	al, [si+19h]
+		mov	al, [si+marisa_bit_t.B4MB_angle_speed]
 		neg	al
-		mov	[si+19h], al
+		mov	[si+marisa_bit_t.B4MB_angle_speed], al
 		inc	di
-		add	si, 1Ah
+		add	si, size marisa_bit_t
 
 loc_17958:
-		cmp	di, 4
+		cmp	di, MARISA_BIT_COUNT
 		jl	short loc_1794C
 		jmp	short loc_179A8
 ; ---------------------------------------------------------------------------
@@ -18114,7 +18116,7 @@ marisa_179BC	proc near
 		call	@boss_hittest_shots_damage$qiii pascal, (24 shl 4) or ((24 shl 4) shl 16), 4
 		mov	_boss_damage_this_frame, al
 		mov	ah, 0
-		mov	dl, byte_25672
+		mov	dl, _bits_alive
 		mov	dh, 0
 		inc	dx
 		push	dx
@@ -18280,7 +18282,7 @@ loc_17B1E:
 		mov	_boss_statebyte[13].BSB_flystep_pointreflected_frame, 0
 		cmp	byte_2566F, 0
 		jnz	short loc_17B62
-		cmp	byte_25672, 0
+		cmp	_bits_alive, 0
 		jnz	short loc_17B62
 		inc	byte_25673
 		cmp	byte_25673, 2
@@ -18310,7 +18312,7 @@ loc_17B62:
 		mov	al, byte ptr [bp+var_2]
 		mov	_boss_mode, al
 		mov	byte_2566E, al
-		mov	al, byte_25672
+		mov	al, _bits_alive
 		mov	byte_2566F, al
 
 loc_17B84:
@@ -31600,14 +31602,8 @@ aJL		db 'J-L',0
 		db    0
 		db    1
 word_22D9C	dw 0
-unk_22D9E	db 0DCh
-		db    0
-		db  90h
-		db    1
-		db  18h
-		db    1
-		db 0C2h
-		db    1
+public _MARISA_BIT_HP
+_MARISA_BIT_HP	dw 220, 400, 280, 450
 include th04/score[data].asm
 include th04/gaiji/hud[data].asm
 include th02/main/hud/power[data].asm
@@ -31913,15 +31909,18 @@ byte_2566E	db ?
 byte_2566F	db ?
 byte_25670	db ?
 byte_25671	db ?
-byte_25672	db ?
+
+public _bits_alive
+_bits_alive	db ?
 byte_25673	db ?
 byte_25674	db ?
-		db ?
-fp_25676	dw ?
-word_25678	dw ?
-		db 6 dup(?)
-word_25680	dw ?
-		db 6 dup(?)
+	evendata
+
+public _bit_fire, _bit_center_x, _bit_center_y
+_bit_fire	dw ?
+_bit_center_x  	dw MARISA_BIT_COUNT dup(?)
+_bit_center_y  	dw MARISA_BIT_COUNT dup(?)
+
 public _rank
 _rank	db ?
 include th04/main/score[bss].asm
@@ -32049,6 +32048,37 @@ kurumi_spawnray_t ends
 
 kurumi_spawnrays equ <_custom_entities>
 ; -------------------
+
+; Stage 4 Marisa's bits
+; ---------------------
+
+MARISA_BIT_W = 32
+MARISA_BIT_H = 32
+
+MARISA_BIT_COUNT = 4
+MARISA_BIT_KILL_FRAMES_PER_CEL = 4
+
+BF_FREE = 0
+BF_MOVEOUT_SPIN = 1
+BF_SPIN = 2
+BF_KILL_ANIM = 80h
+
+marisa_bit_t struc
+	B4MB_flag              	db ?
+	B4MB_angle             	db ?
+	B4MB_center            	Point <?>
+	B4MB_patnum            	dw ?
+		db 8 dup(?)
+	B4MB_distance          	dw ?
+	B4MB_moveout_speed     	dw ?
+	B4MB_hp               	dw ?
+	B4MB_damage_this_frame	dw ?
+		db ?
+	B4MB_angle_speed       	db ?
+marisa_bit_t ends
+
+marisa_bits equ <_custom_entities>
+; ---------------------
 
 include th04/main/custom[bss].asm
 include th04/main/player/shots[bss].asm
