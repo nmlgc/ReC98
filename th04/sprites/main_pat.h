@@ -1,5 +1,7 @@
 #include "th04/sprites/cels.h"
 
+#define REIMU_ORB_CELS 4
+
 /// Pattern numbers for the super_*() functions.
 /// Since super_entry_bfnt() doesn't take a "start patnum" parameter, the
 /// order in which the files are loaded has to match the order here.
@@ -51,6 +53,17 @@ typedef enum {
 	/// =================
 
 	PAT_STAGE = 128,
+
+	/// Stage 4 – Reimu
+	/// ===============
+	// st03b.bbt
+	// -----------
+	PAT_REIMU_ORB_BLUE = (PAT_STAGE + 12),
+	PAT_REIMU_ORB_BLUE_last = (PAT_REIMU_ORB_BLUE + REIMU_ORB_CELS - 1),
+	PAT_REIMU_ORB_YELLOW,
+	PAT_REIMU_ORB_YELLOW_last = (PAT_REIMU_ORB_YELLOW + REIMU_ORB_CELS - 1),
+	// -----------
+	/// ===============
 
 	/// Stage 4 – Marisa
 	/// ================

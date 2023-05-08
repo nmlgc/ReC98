@@ -11456,24 +11456,24 @@ sub_12E37	proc near
 		enter	6, 0
 		push	si
 		push	di
-		mov	si, 0B204h
+		mov	si, offset reimu_orbs
 		xor	di, di
 		jmp	short loc_12E8A
 ; ---------------------------------------------------------------------------
 
 loc_12E44:
-		cmp	byte ptr [si], 0
+		cmp	[si+reimu_orb_t.B4RO_flag], OF_FREE
 		jz	short loc_12E86
-		cmp	word ptr [si+4], 0FF00h
+		cmp	[si+reimu_orb_t.B4RO_center.y], (-(REIMU_ORB_H / 2) shl 4)
 		jle	short loc_12E86
-		mov	ax, [si+2]
+		mov	ax, [si+reimu_orb_t.B4RO_center.x]
 		sar	ax, 4
-		add	ax, 16
+		add	ax, (PLAYFIELD_LEFT - (REIMU_ORB_W / 2))
 		mov	[bp+@@x], ax
-		mov	ax, [si+4]
+		mov	ax, [si+reimu_orb_t.B4RO_center.y]
 		sar	ax, 4
 		mov	[bp+@@y], ax
-		mov	al, byte_2D03B
+		mov	al, _orb_patnum_base
 		mov	ah, 0
 		mov	dx, _stage_frame
 		add	dx, di
@@ -11485,10 +11485,10 @@ loc_12E44:
 
 loc_12E86:
 		inc	di
-		add	si, 1Ah
+		add	si, size reimu_orb_t
 
 loc_12E8A:
-		cmp	di, 20h	; ' '
+		cmp	di, REIMU_ORB_COUNT
 		jl	short loc_12E44
 		pop	di
 		pop	si
@@ -27994,36 +27994,36 @@ word_1EB09	dw 0Eh
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-reimu_1EB31	proc near
+public @ORBS_ADD_MOVING$QV
+@orbs_add_moving$qv	proc near
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
-		mov	si, 0B204h
+		mov	si, offset reimu_orbs
 		xor	di, di
 		jmp	short loc_1EB83
 ; ---------------------------------------------------------------------------
 
 loc_1EB3D:
-		cmp	byte ptr [si], 0
+		cmp	[si+reimu_orb_t.B4RO_flag], OF_FREE
 		jnz	short loc_1EB7F
-		mov	byte ptr [si], 2
-		mov	eax, dword ptr point_2D040
-		mov	[si+2],	eax
-		mov	eax, dword_2D044
-		mov	[si+6],	eax
-		mov	ax, word_2D050
-		mov	[si+12h], ax
-		mov	al, byte_2D056
-		mov	[si+18h], al
-		mov	al, angle_2D03F
-		mov	[si+1],	al
-		mov	word ptr [si+10h], 0
-		lea	ax, [si+0Ah]
+		mov	[si+reimu_orb_t.B4RO_flag], OF_MOVE
+		mov	eax, dword ptr _orb_template.B4RO_center
+		mov	dword ptr [si+reimu_orb_t.B4RO_center], eax
+		mov	eax, dword ptr _orb_template.B4RO_origin
+		mov	dword ptr [si+reimu_orb_t.B4RO_origin], eax
+		mov	ax, _orb_template.B4RO_unknown
+		mov	[si+reimu_orb_t.B4RO_unknown], ax
+		mov	al, _orb_template.B4RO_move_speed
+		mov	[si+reimu_orb_t.B4RO_move_speed], al
+		mov	al, _orb_template.B4RO_angle
+		mov	[si+reimu_orb_t.B4RO_angle], al
+		mov	[si+reimu_orb_t.B4RO_distance], 0
+		lea	ax, [si+reimu_orb_t.B4RO_velocity]
 		push	ax
-		push	word ptr angle_2D03F
-		mov	al, byte_2D056
+		push	word ptr _orb_template.B4RO_angle
+		mov	al, _orb_template.B4RO_move_speed
 		mov	ah, 0
 		push	ax
 		call	vector2_near
@@ -28032,10 +28032,10 @@ loc_1EB3D:
 
 loc_1EB7F:
 		inc	di
-		add	si, 1Ah
+		add	si, size reimu_orb_t
 
 loc_1EB83:
-		cmp	di, 20h	; ' '
+		cmp	di, REIMU_ORB_COUNT
 		jl	short loc_1EB3D
 
 loc_1EB88:
@@ -28043,61 +28043,61 @@ loc_1EB88:
 		pop	si
 		pop	bp
 		retn
-reimu_1EB31	endp
+@orbs_add_moving$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public @ORBS_ADD_SPINNING$QUCI
+@orbs_add_spinning$quci	proc near
 
-reimu_1EB8C	proc near
-
-arg_0		= word ptr  4
-arg_2		= byte ptr  6
+@@count       	= word ptr  4
+@@angle_offset	= byte ptr  6
 
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
 		xor	cx, cx
-		mov	si, 0B204h
+		mov	si, offset reimu_orbs
 		xor	di, di
 		jmp	short loc_1EBE8
 ; ---------------------------------------------------------------------------
 
 loc_1EB9A:
-		cmp	byte ptr [si], 0
+		cmp	[si+reimu_orb_t.B4RO_flag], OF_FREE
 		jnz	short loc_1EBE4
-		mov	byte ptr [si], 1
-		mov	ax, word_2D04C
-		mov	[si+0Eh], ax
-		mov	eax, dword ptr point_2D040
-		mov	[si+2],	eax
-		mov	eax, dword_2D044
-		mov	[si+6],	eax
-		mov	ax, word_2D050
-		mov	[si+12h], ax
-		mov	al, byte_2D056
-		mov	[si+18h], al
+		mov	[si+reimu_orb_t.B4RO_flag], OF_MOVEOUT_SPIN
+		mov	ax, _orb_template.B4RO_spin_time
+		mov	[si+reimu_orb_t.B4RO_spin_time], ax
+		mov	eax, dword ptr _orb_template.B4RO_center
+		mov	dword ptr [si+reimu_orb_t.B4RO_center], eax
+		mov	eax, dword ptr _orb_template.B4RO_origin
+		mov	dword ptr [si+reimu_orb_t.B4RO_origin], eax
+		mov	ax, _orb_template.B4RO_unknown
+		mov	[si+reimu_orb_t.B4RO_unknown], ax
+		mov	al, _orb_template.B4RO_move_speed
+		mov	[si+reimu_orb_t.B4RO_move_speed], al
 		mov	ax, cx
 		shl	ax, 8
 		cwd
-		idiv	[bp+arg_0]
-		add	al, [bp+arg_2]
-		mov	[si+1],	al
-		mov	word ptr [si+10h], 0
-		mov	al, byte_2D057
-		mov	[si+19h], al
+		idiv	[bp+@@count]
+		add	al, [bp+@@angle_offset]
+		mov	[si+reimu_orb_t.B4RO_angle], al
+		mov	[si+reimu_orb_t.B4RO_distance], 0
+		mov	al, _orb_template.B4RO_angle_speed
+		mov	[si+reimu_orb_t.B4RO_angle_speed], al
 		inc	cx
-		cmp	cx, [bp+arg_0]
+		cmp	cx, [bp+@@count]
 		jge	short loc_1EBED
 
 loc_1EBE4:
 		inc	di
-		add	si, 1Ah
+		add	si, size reimu_orb_t
 
 loc_1EBE8:
-		cmp	di, 20h	; ' '
+		cmp	di, REIMU_ORB_COUNT
 		jl	short loc_1EB9A
 
 loc_1EBED:
@@ -28105,7 +28105,7 @@ loc_1EBED:
 		pop	si
 		pop	bp
 		retn	4
-reimu_1EB8C	endp
+@orbs_add_spinning$quci	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -28120,124 +28120,124 @@ var_2		= word ptr -2
 		enter	4, 0
 		push	si
 		push	di
-		mov	si, 0B204h
+		mov	si, offset reimu_orbs
 		xor	di, di
 		jmp	loc_1ED0A
 ; ---------------------------------------------------------------------------
 
 loc_1EC01:
-		cmp	byte ptr [si], 0
+		cmp	[si+reimu_orb_t.B4RO_flag], OF_FREE
 		jz	loc_1ED06
-		cmp	byte ptr [si], 1
+		cmp	[si+reimu_orb_t.B4RO_flag], OF_MOVEOUT_SPIN
 		jnz	short loc_1EC86
-		push	word ptr [si+6]
-		push	word ptr [si+10h]
-		mov	al, [si+1]
+		push	word ptr [si+reimu_orb_t.B4RO_origin.x]
+		push	[si+reimu_orb_t.B4RO_distance]
+		mov	al, [si+reimu_orb_t.B4RO_angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		push	_CosTable8[bx]
 		call	vector1_at
-		mov	[si+2],	ax
-		push	word ptr [si+8]
-		push	word ptr [si+10h]
-		mov	al, [si+1]
+		mov	[si+reimu_orb_t.B4RO_center.x], ax
+		push	word ptr [si+reimu_orb_t.B4RO_origin.y]
+		push	[si+reimu_orb_t.B4RO_distance]
+		mov	al, [si+reimu_orb_t.B4RO_angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		push	_SinTable8[bx]
 		call	vector1_at
-		mov	[si+4],	ax
-		cmp	word ptr [si+10h], 400h
+		mov	[si+reimu_orb_t.B4RO_center.y],	ax
+		cmp	[si+reimu_orb_t.B4RO_distance], (64 shl 4)
 		jge	short loc_1EC4E
-		add	word ptr [si+10h], 40h
+		add	[si+reimu_orb_t.B4RO_distance], (4 shl 4)
 
 loc_1EC4E:
-		dec	word ptr [si+0Eh]
-		mov	al, [si+19h]
-		add	[si+1],	al
-		cmp	word ptr [si+0Eh], 0
+		dec	word ptr [si+reimu_orb_t.B4RO_spin_time]
+		mov	al, [si+reimu_orb_t.B4RO_angle_speed]
+		add	[si+reimu_orb_t.B4RO_angle], al
+		cmp	word ptr [si+reimu_orb_t.B4RO_spin_time], 0
 		jnz	short loc_1ECBC
-		cmp	byte ptr [si+19h], 0
+		cmp	byte ptr [si+reimu_orb_t.B4RO_angle_speed], 0
 		jl	short loc_1EC6A
-		mov	al, [si+1]
+		mov	al, [si+reimu_orb_t.B4RO_angle]
 		add	al, 40h
 		jmp	short loc_1EC6F
 ; ---------------------------------------------------------------------------
 
 loc_1EC6A:
-		mov	al, [si+1]
-		add	al, 0C0h
+		mov	al, [si+reimu_orb_t.B4RO_angle]
+		add	al, -40h
 
 loc_1EC6F:
-		mov	[si+1],	al
-		lea	ax, [si+0Ah]
+		mov	[si+reimu_orb_t.B4RO_angle], al
+		lea	ax, [si+reimu_orb_t.B4RO_velocity]
 		push	ax
-		push	word ptr [si+1]
-		mov	al, [si+18h]
+		push	word ptr [si+reimu_orb_t.B4RO_angle]
+		mov	al, [si+reimu_orb_t.B4RO_move_speed]
 		mov	ah, 0
 		push	ax
 		call	vector2_near
-		inc	byte ptr [si]
+		inc	[si+reimu_orb_t.B4RO_flag] ; = OF_MOVE
 		jmp	short loc_1ECBC
 ; ---------------------------------------------------------------------------
 
 loc_1EC86:
-		cmp	byte ptr [si], 2
+		cmp	[si+reimu_orb_t.B4RO_flag], OF_MOVE
 		jnz	short loc_1ECBC
-		inc	word ptr [si+0Eh]
-		mov	ax, [si+0Ah]
-		add	[si+2],	ax
-		cmp	word ptr [si+2], 0
+		inc	word ptr [si+reimu_orb_t.B4RO_spin_time]	; ZUN bloat
+		mov	ax, [si+reimu_orb_t.B4RO_velocity.x]
+		add	[si+reimu_orb_t.B4RO_center.x], ax
+		cmp	word ptr [si+reimu_orb_t.B4RO_center.x], (0 shl 4)
 		jl	short loc_1ECA1
-		cmp	word ptr [si+2], 1800h
+		cmp	word ptr [si+reimu_orb_t.B4RO_center.x], (PLAYFIELD_W shl 4)
 		jle	short loc_1ECA9
 
 loc_1ECA1:
-		mov	ax, [si+0Ah]
+		mov	ax, [si+reimu_orb_t.B4RO_velocity.x]
 		neg	ax
-		mov	[si+0Ah], ax
+		mov	[si+reimu_orb_t.B4RO_velocity.x], ax
 
 loc_1ECA9:
-		mov	ax, [si+0Ch]
-		add	[si+4],	ax
-		cmp	word ptr [si+4], 1700h
+		mov	ax, [si+reimu_orb_t.B4RO_velocity.y]
+		add	[si+reimu_orb_t.B4RO_center.y],	ax
+		cmp	[si+reimu_orb_t.B4RO_center.y], (PLAYFIELD_H shl 4)
 		jl	short loc_1ECB9
-		mov	byte ptr [si], 0
+		mov	[si+reimu_orb_t.B4RO_flag], OF_FREE
 
 loc_1ECB9:
-		inc	word ptr [si+0Ch]
+		inc	word ptr [si+reimu_orb_t.B4RO_velocity.y]
 
 loc_1ECBC:
 		mov	_shot_hitbox_radius.x, (12 shl 4)
 		mov	_shot_hitbox_radius.y, (12 shl 4)
-		mov	ax, [si+2]
+		mov	ax, [si+reimu_orb_t.B4RO_center.x]
 		mov	_shot_hitbox_center.x, ax
-		mov	ax, [si+4]
+		mov	ax, [si+reimu_orb_t.B4RO_center.y]
 		mov	_shot_hitbox_center.y, ax
 		call	@shots_hittest$qv
-		mov	ax, [si+2]
-		add	ax, 0FF40h
+		mov	ax, [si+reimu_orb_t.B4RO_center.x]
+		add	ax, (-12 shl 4)
 		mov	[bp+var_2], ax
-		mov	ax, [si+4]
-		add	ax, 0FF40h
+		mov	ax, [si+reimu_orb_t.B4RO_center.y]
+		add	ax, (-12 shl 4)
 		mov	[bp+var_4], ax
 		mov	ax, _player_pos.cur.x
 		sub	ax, [bp+var_2]
-		cmp	ax, 180h
+		cmp	ax, (24 shl 4)
 		jnb	short loc_1ED06
 		mov	ax, _player_pos.cur.y
 		sub	ax, [bp+var_4]
-		cmp	ax, 180h
+		cmp	ax, (24 shl 4)
 		jnb	short loc_1ED06
 		mov	_player_is_hit, 1
 
 loc_1ED06:
 		inc	di
-		add	si, 1Ah
+		add	si, size reimu_orb_t
 
 loc_1ED0A:
-		cmp	di, 20h	; ' '
+		cmp	di, REIMU_ORB_COUNT
 		jl	loc_1EC01
 		pop	di
 		pop	si
@@ -28369,16 +28369,16 @@ reimu_1EE21	proc near
 		cmp	_boss_phase_frame, 32
 		jnz	short loc_1EE57
 		mov	_boss_sprite, 136
-		mov	word_2D04C, 40h
-		mov	byte_2D056, 38h	; '8'
+		mov	_orb_template.B4RO_spin_time, 64
+		mov	_orb_template.B4RO_move_speed, 38h
 		mov	eax, _boss_pos.cur
-		mov	dword_2D044, eax
+		mov	dword ptr _orb_template.B4RO_origin, eax
 		call	randring2_next16
-		push	ax
+		push	ax	; angle_offset
 		mov	al, _boss_statebyte[0].BSB_orb_count
 		mov	ah, 0
-		push	ax
-		call	reimu_1EB8C
+		push	ax	; count
+		call	@orbs_add_spinning$quci
 		call	snd_se_play pascal, 8
 
 loc_1EE57:
@@ -28386,9 +28386,9 @@ loc_1EE57:
 		jl	short loc_1EE71
 		mov	_boss_phase_frame, 0
 		mov	_boss_mode, -1
-		mov	al, byte_2D057
+		mov	al, _orb_template.B4RO_angle_speed
 		neg	al
-		mov	byte_2D057, al
+		mov	_orb_template.B4RO_angle_speed, al
 
 loc_1EE71:
 		pop	bp
@@ -28658,12 +28658,12 @@ reimu_1F111	proc near
 		cmp	_boss_phase_frame, 32
 		jnz	short loc_1F13D
 		mov	_boss_sprite, 136
-		mov	angle_2D03F, 0
-		mov	byte_2D056, 38h	; '8'
+		mov	_orb_template.B4RO_angle, 00h
+		mov	_orb_template.B4RO_move_speed, 38h
 		mov	ax, _boss_pos.cur.x
-		mov	point_2D040.x, ax
+		mov	_orb_template.B4RO_center.x, ax
 		mov	ax, _boss_pos.cur.y
-		mov	point_2D040.y, ax
+		mov	_orb_template.B4RO_center.y, ax
 		call	snd_se_play pascal, 8
 
 loc_1F13D:
@@ -28678,18 +28678,18 @@ loc_1F13D:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1F15F
-		mov	al, byte_2D057
-		sub	angle_2D03F, al
-		call	reimu_1EB31
+		mov	al, _orb_template.B4RO_angle_speed
+		sub	_orb_template.B4RO_angle, al
+		call	@orbs_add_moving$qv
 
 loc_1F15F:
 		cmp	_boss_phase_frame, 180
 		jl	short loc_1F17A
 		mov	_boss_phase_frame, 0
 		mov	_boss_mode, -1
-		mov	al, byte_2D057
+		mov	al, _orb_template.B4RO_angle_speed
 		neg	al
-		mov	byte_2D057, al
+		mov	_orb_template.B4RO_angle_speed, al
 
 loc_1F17A:
 		pop	bp
@@ -29078,8 +29078,8 @@ loc_1F4DC:
 		mov	_boss_phase_state, 0
 		mov	_boss_mode, 0
 		mov	_boss_sprite, 129
-		mov	byte_2D057, 4
-		mov	byte_2D03B, 8Ch
+		mov	_orb_template.B4RO_angle_speed, 04h
+		mov	_orb_patnum_base, PAT_REIMU_ORB_BLUE
 		mov	_boss_statebyte[10].BSB_subpattern_id, 0
 		jmp	loc_1F8A5
 ; ---------------------------------------------------------------------------
@@ -29273,8 +29273,8 @@ loc_1F680:
 		mov	_boss_phase_state, 0
 		mov	_boss_mode, 0
 		mov	_boss_sprite, 129
-		mov	byte_2D057, 12h
-		mov	byte_2D03B, 90h
+		mov	_orb_template.B4RO_angle_speed, 12h
+		mov	_orb_patnum_base, PAT_REIMU_ORB_YELLOW
 		jmp	loc_1F8A5
 ; ---------------------------------------------------------------------------
 
@@ -29319,7 +29319,7 @@ loc_1F6E9:
 loc_1F701:
 		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_HORIZONTAL shl 16) or 900
 		mov	_boss_pos.velocity.x, 0
-		mov	byte_2D057, 3
+		mov	_orb_template.B4RO_angle_speed, 03h
 		jmp	loc_1F8A5
 ; ---------------------------------------------------------------------------
 
@@ -29360,7 +29360,7 @@ loc_1F73A:
 loc_1F752:
 		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_VERTICAL shl 16) or 0
 		mov	_boss_pos.velocity.x, 0
-		mov	byte_2D057, 3
+		mov	_orb_template.B4RO_angle_speed, 03h
 		mov	Palettes[0 * size rgb_t].r, 60
 		jmp	loc_1F8A5
 ; ---------------------------------------------------------------------------
@@ -29421,7 +29421,7 @@ loc_1F7E1:
 		mov	_boss_phase_state, 0
 		mov	_boss_mode, 0
 		mov	_boss_sprite, 129
-		mov	byte_2D057, 4
+		mov	_orb_template.B4RO_angle_speed, 04h
 		jmp	loc_1F8A5
 ; ---------------------------------------------------------------------------
 
@@ -32080,6 +32080,35 @@ marisa_bit_t ends
 marisa_bits equ <_custom_entities>
 ; ---------------------
 
+; Stage 4 Reimu's orbs
+; --------------------
+
+REIMU_ORB_W = 32
+REIMU_ORB_H = 32
+
+REIMU_ORB_COUNT = CUSTOM_COUNT
+
+OF_FREE = 0
+OF_MOVEOUT_SPIN = 1
+OF_MOVE = 2
+
+reimu_orb_t struc
+	B4RO_flag        	db ?
+	B4RO_angle       	db ?
+	B4RO_center      	Point <?>
+	B4RO_origin      	Point <?>
+	B4RO_velocity    	Point <?>
+	B4RO_spin_time   	dw ?
+	B4RO_distance    	dw ?
+	B4RO_unknown     	dw ?
+		db 4 dup(?)
+	B4RO_move_speed  	db ?
+	B4RO_angle_speed	db ?
+reimu_orb_t ends
+
+reimu_orbs equ <_custom_entities>
+; --------------------
+
 include th04/main/custom[bss].asm
 include th04/main/player/shots[bss].asm
 		db 96 dup(?)
@@ -32122,19 +32151,15 @@ public _stage5_star_center_y
 _stage5_star_center_y	dw STAGE5_STAR_COUNT dup(?)
 
 byte_2D03A	db ?
-byte_2D03B	db ?
+
+public _orb_patnum_base
+_orb_patnum_base	db ?
 byte_2D03C	db ?
-		db 2 dup(?)
-angle_2D03F	db ?
-point_2D040	Point <?>
-dword_2D044	dd ?
-		db 4 dup(?)
-word_2D04C	dw ?
-		db 2 dup(?)
-word_2D050	dw ?
-		db 4 dup(?)
-byte_2D056	db ?
-byte_2D057	db ?
+	evendata
+
+public _orb_template
+_orb_template	reimu_orb_t <?>
+
 byte_2D058	db ?
 		db ?
 word_2D05A	dw ?
