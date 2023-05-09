@@ -1,6 +1,7 @@
 #include "th04/sprites/cels.h"
 
 #define REIMU_ORB_CELS 4
+#define YUUKA6_CHASECROSS_CELS 4
 
 /// Pattern numbers for the super_*() functions.
 /// Since super_entry_bfnt() doesn't take a "start patnum" parameter, the
@@ -122,6 +123,13 @@ typedef enum {
 	PAT_YUUKA6_VANISH_1 = 176,
 	PAT_YUUKA6_VANISH_2 = 178,
 	PAT_YUUKA6_VANISH_3 = 180,
+	// --------
+	// st05.bb9
+	// --------
+	PAT_YUUKA6_CHASECROSS = 186,
+	PAT_YUUKA6_CHASECROSS_last = (
+		PAT_YUUKA6_CHASECROSS + YUUKA6_CHASECROSS_CELS - 1
+	),
 	// --------
 	/// =======
 

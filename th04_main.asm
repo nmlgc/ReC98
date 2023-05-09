@@ -9399,31 +9399,31 @@ sub_11B44	proc near
 		enter	4, 0
 		push	si
 		push	di
-		mov	si, 0B204h
+		mov	si, offset yuuka6_chasecrosses
 		xor	di, di
 		jmp	loc_11BD1
 ; ---------------------------------------------------------------------------
 
 loc_11B52:
-		cmp	byte ptr [si], 0
+		cmp	[si+yuuka6_chasecross_t.B6C_flag], CCF_FREE
 		jz	short loc_11BCD
-		mov	ax, [si+2]
+		mov	ax, [si+yuuka6_chasecross_t.B6C_center.x]
 		sar	ax, 4
-		add	ax, 10h
+		add	ax, (PLAYFIELD_LEFT - (YUUKA6_CHASECROSS_W / 2))
 		mov	[bp+@@x], ax
-		mov	ax, [si+4]
+		mov	ax, [si+yuuka6_chasecross_t.B6C_center.y]
 		sar	ax, 4
 		mov	[bp+@@y], ax
-		cmp	byte ptr [si], 1
+		cmp	[si+yuuka6_chasecross_t.B6C_flag], CCF_ALIVE
 		jnz	short loc_11BAD
-		cmp	word ptr [si+16h], 0
+		cmp	[si+yuuka6_chasecross_t.B6C_damage_this_frame], 0
 		jnz	short loc_11B8E
 		push	[bp+@@x]
 		push	ax
-		mov	ax, [si+0Eh]
+		mov	ax, [si+yuuka6_chasecross_t.B6C_age]
 		shr	ax, 1
-		and	ax, 3
-		add	ax, 186
+		and	ax, (YUUKA6_CHASECROSS_CELS - 1)
+		add	ax, PAT_YUUKA6_CHASECROSS
 		push	ax
 		call	super_put
 		jmp	short loc_11BCD
@@ -9432,10 +9432,10 @@ loc_11B52:
 loc_11B8E:
 		push	[bp+@@x]
 		push	[bp+@@y]
-		mov	ax, [si+0Eh]
+		mov	ax, [si+yuuka6_chasecross_t.B6C_age]
 		shr	ax, 1
-		and	ax, 3
-		add	ax, 186
+		and	ax, (YUUKA6_CHASECROSS_CELS - 1)
+		add	ax, PAT_YUUKA6_CHASECROSS
 		push	ax
 		pushd	PLANE_PUT or GC_BRGI
 		call	super_put_1plane
@@ -9445,24 +9445,24 @@ loc_11B8E:
 loc_11BAD:
 		push	[bp+@@x]
 		push	[bp+@@y]
-		mov	al, [si]
+		mov	al, [si+yuuka6_chasecross_t.B6C_flag]
 		mov	ah, 0
-		mov	bx, 4
+		mov	bx, CHASECROSS_KILL_FRAMES_PER_CEL
 		cwd
 		idiv	bx
 		push	ax
 		call	super_put
-		inc	byte ptr [si]
-		cmp	byte ptr [si], 30h ; '0'
+		inc	[si+yuuka6_chasecross_t.B6C_flag]
+		cmp	[si+yuuka6_chasecross_t.B6C_flag], CCF_KILL_ANIM_END
 		jb	short loc_11BCD
-		mov	byte ptr [si], 0
+		mov	[si+yuuka6_chasecross_t.B6C_flag], CCF_FREE
 
 loc_11BCD:
 		inc	di
-		add	si, 1Ah
+		add	si, size yuuka6_chasecross_t
 
 loc_11BD1:
-		cmp	di, 1Fh
+		cmp	di, YUUKA6_CHASECROSS_COUNT
 		jl	loc_11B52
 		cmp	byte ptr [si], 0
 		jz	short loc_11C16
@@ -22292,51 +22292,51 @@ main_034_TEXT	segment	byte public 'CODE' use16
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public @CHASECROSSES_ADD$QUCUC
+@chasecrosses_add$qucuc	proc near
 
-yuuka6_1A087	proc near
-
-arg_0		= byte ptr  4
-arg_2		= byte ptr  6
+@@speed	= byte ptr  4
+@@angle	= byte ptr  6
 
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, 0B204h
+		mov	si, offset yuuka6_chasecrosses
 		xor	dx, dx
 		jmp	short loc_1A0C7
 ; ---------------------------------------------------------------------------
 
 loc_1A092:
-		cmp	byte ptr [si], 0
+		cmp	[si+yuuka6_chasecross_t.B6C_flag], CCF_FREE
 		jnz	short loc_1A0C3
-		mov	byte ptr [si], 1
-		mov	word ptr [si+16h], 0
-		mov	word ptr [si+0Eh], 0
-		mov	al, [bp+arg_2]
-		mov	[si+1],	al
-		mov	al, [bp+arg_0]
-		mov	[si+18h], al
-		mov	word ptr [si+14h], 64h ; 'd'
+		mov	[si+yuuka6_chasecross_t.B6C_flag], CCF_ALIVE
+		mov	[si+yuuka6_chasecross_t.B6C_damage_this_frame], 0
+		mov	[si+yuuka6_chasecross_t.B6C_age], 0
+		mov	al, [bp+@@angle]
+		mov	[si+yuuka6_chasecross_t.B6C_angle], al
+		mov	al, [bp+@@speed]
+		mov	[si+yuuka6_chasecross_t.B6C_speed], al
+		mov	[si+yuuka6_chasecross_t.B6C_hp], 100
 		mov	ax, _boss_pos.cur.x
-		mov	[si+2],	ax
+		mov	[si+yuuka6_chasecross_t.B6C_center.x], ax
 		mov	ax, _boss_pos.cur.y
-		mov	[si+4],	ax
+		mov	[si+yuuka6_chasecross_t.B6C_center.y], ax
 		jmp	short loc_1A0CC
 ; ---------------------------------------------------------------------------
 
 loc_1A0C3:
 		inc	dx
-		add	si, 1Ah
+		add	si, size yuuka6_chasecross_t
 
 loc_1A0C7:
-		cmp	dx, 20h	; ' '
+		cmp	dx, (YUUKA6_CHASECROSS_COUNT + 1)
 		jl	short loc_1A092
 
 loc_1A0CC:
 		pop	si
 		pop	bp
 		retn	4
-yuuka6_1A087	endp
+@chasecrosses_add$qucuc	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -22384,42 +22384,42 @@ var_4		= word ptr -4
 		push	di
 		mov	_shot_hitbox_radius.x, (12 shl 4)
 		mov	_shot_hitbox_radius.y, (12 shl 4)
-		mov	si, 0B204h
+		mov	si, offset yuuka6_chasecrosses
 		xor	di, di
 		jmp	loc_1A235
 ; ---------------------------------------------------------------------------
 
 loc_1A12A:
-		cmp	byte ptr [si], 1
+		cmp	[si+yuuka6_chasecross_t.B6C_flag], CCF_ALIVE
 		jnz	loc_1A231
-		lea	ax, [si+0Ah]
+		lea	ax, [si+yuuka6_chasecross_t.B6C_velocity]
 		push	ax
-		push	word ptr [si+1]
-		mov	al, [si+18h]
+		push	word ptr [si+yuuka6_chasecross_t.B6C_angle]
+		mov	al, [si+yuuka6_chasecross_t.B6C_speed]
 		mov	ah, 0
 		push	ax
 		call	vector2_near
-		mov	ax, [si+0Ah]
-		add	[si+2],	ax
-		mov	ax, [si+0Ch]
-		add	[si+4],	ax
-		cmp	word ptr [si+2], 0FF00h
+		mov	ax, [si+yuuka6_chasecross_t.B6C_velocity.x]
+		add	[si+yuuka6_chasecross_t.B6C_center.x], ax
+		mov	ax, [si+yuuka6_chasecross_t.B6C_velocity.y]
+		add	[si+yuuka6_chasecross_t.B6C_center.y], ax
+		cmp	[si+yuuka6_chasecross_t.B6C_center.x], (-(YUUKA6_CHASECROSS_W / 2) shl 4)
 		jle	short loc_1A169
-		cmp	word ptr [si+2], 1900h
+		cmp	[si+yuuka6_chasecross_t.B6C_center.x], ((PLAYFIELD_W + (YUUKA6_CHASECROSS_W / 2)) shl 4)
 		jge	short loc_1A169
-		cmp	word ptr [si+4], 1800h
+		cmp	[si+yuuka6_chasecross_t.B6C_center.y], ((PLAYFIELD_H + (YUUKA6_CHASECROSS_H / 2)) shl 4)
 		jge	short loc_1A169
-		cmp	word ptr [si+4], 0FF00h
+		cmp	[si+yuuka6_chasecross_t.B6C_center.y], (-(YUUKA6_CHASECROSS_H / 2) shl 4)
 		jg	short loc_1A16C
 
 loc_1A169:
-		mov	byte ptr [si], 0
+		mov	[si+yuuka6_chasecross_t.B6C_flag], CCF_FREE
 
 loc_1A16C:
-		mov	ax, [si+2]
+		mov	ax, [si+yuuka6_chasecross_t.B6C_center.x]
 		add	ax, (-12 shl 4)
 		mov	[bp+@@length], ax
-		mov	ax, [si+4]
+		mov	ax, [si+yuuka6_chasecross_t.B6C_center.y]
 		add	ax, (-12 shl 4)
 		mov	[bp+var_4], ax
 		mov	ax, _player_pos.cur.x
@@ -22433,65 +22433,65 @@ loc_1A16C:
 		mov	_player_is_hit, 1
 
 loc_1A199:
-		cmp	word ptr [si+0Eh], 38h ; '8'
+		cmp	[si+yuuka6_chasecross_t.B6C_age], 56
 		jnb	short loc_1A1CF
 		mov	ax, _player_pos.cur.y
-		sub	ax, [si+4]
+		sub	ax, [si+yuuka6_chasecross_t.B6C_center.y]
 		push	ax
 		mov	ax, _player_pos.cur.x
-		sub	ax, [si+2]
+		sub	ax, [si+yuuka6_chasecross_t.B6C_center.x]
 		push	ax
 		call	iatan2
 		mov	[bp+@@angle], al
-		mov	al, [si+1]
+		mov	al, [si+yuuka6_chasecross_t.B6C_angle]
 		sub	[bp+@@angle], al
 		cmp	[bp+@@angle], 80h
 		jnb	short loc_1A1C6
-		inc	byte ptr [si+1]
+		inc	[si+yuuka6_chasecross_t.B6C_angle]
 		jmp	short loc_1A1CF
 ; ---------------------------------------------------------------------------
 
 loc_1A1C6:
 		cmp	[bp+@@angle], 80h
 		jb	short loc_1A1CF
-		dec	byte ptr [si+1]
+		dec	[si+yuuka6_chasecross_t.B6C_angle]
 
 loc_1A1CF:
-		mov	ax, [si+2]
+		mov	ax, [si+yuuka6_chasecross_t.B6C_center.x]
 		mov	_shot_hitbox_center.x, ax
-		mov	ax, [si+4]
+		mov	ax, [si+yuuka6_chasecross_t.B6C_center.y]
 		mov	_shot_hitbox_center.y, ax
 		call	@shots_hittest$qv
-		mov	[si+16h], ax
+		mov	[si+yuuka6_chasecross_t.B6C_damage_this_frame], ax
 		or	ax, ax
 		jz	short loc_1A1EE
 		call	snd_se_play pascal, 4
 
 loc_1A1EE:
-		mov	ax, [si+16h]
-		sub	[si+14h], ax
-		cmp	word ptr [si+14h], 0
+		mov	ax, [si+yuuka6_chasecross_t.B6C_damage_this_frame]
+		sub	[si+yuuka6_chasecross_t.B6C_hp], ax
+		cmp	[si+yuuka6_chasecross_t.B6C_hp], 0
 		jg	short loc_1A22E
 		call	snd_se_play pascal, 3
 		add	_score_delta, 3000
-		mov	byte ptr [si], 10h
-		mov	word ptr [si+0Eh], 0
-		push	word ptr [si+2]
-		push	word ptr [si+4]
+		mov	[si+yuuka6_chasecross_t.B6C_flag], CCF_KILL_ANIM
+		mov	[si+yuuka6_chasecross_t.B6C_age], 0
+		push	[si+yuuka6_chasecross_t.B6C_center.x]
+		push	[si+yuuka6_chasecross_t.B6C_center.y]
 		push	large (((4 shl 4) shl 16) or 8)
 		nop
 		call	@sparks_add_random$q20%SubpixelBase$ti$ti%t1ii
-		call	@items_add$qii11item_type_t pascal, word ptr [si+2], word ptr [si+4], IT_BIGPOWER
+		call	@items_add$qii11item_type_t pascal, [si+yuuka6_chasecross_t.B6C_center.x], [si+yuuka6_chasecross_t.B6C_center.y], IT_BIGPOWER
 
 loc_1A22E:
-		inc	word ptr [si+0Eh]
+		inc	[si+yuuka6_chasecross_t.B6C_age]
 
 loc_1A231:
 		inc	di
-		add	si, 1Ah
+		add	si, size yuuka6_chasecross_t
 
 loc_1A235:
-		cmp	di, 1Fh
+		cmp	di, YUUKA6_CHASECROSS_COUNT
 		jl	loc_1A12A
 		mov	al, [si]
 		mov	ah, 0
@@ -23947,13 +23947,9 @@ yuuka6_1B22B	proc near
 		cmp	_stage_frame_mod8, 0
 		jnz	short loc_1B26D
 		call	randring2_next16
-		push	ax
-		push	20h ; ' '
-		call	yuuka6_1A087
+		call	@chasecrosses_add$qucuc pascal, ax, (2 shl 4)
 		call	randring2_next16
-		push	ax
-		push	20h ; ' '
-		call	yuuka6_1A087
+		call	@chasecrosses_add$qucuc pascal, ax, (2 shl 4)
 		call	snd_se_play pascal, 3
 		jmp	short loc_1B26D
 ; ---------------------------------------------------------------------------
@@ -32108,6 +32104,40 @@ reimu_orb_t ends
 
 reimu_orbs equ <_custom_entities>
 ; --------------------
+
+; Stage 6 Yuuka's chasing cross bullets
+; -------------------------------------
+
+YUUKA6_CHASECROSS_W = 32
+YUUKA6_CHASECROSS_H = 32
+
+YUUKA6_CHASECROSS_COUNT = (CUSTOM_COUNT - 1)
+
+CHASECROSS_KILL_FRAMES_PER_CEL = 4
+
+CCF_FREE = 0
+CCF_ALIVE = 1
+CCF_KILL_ANIM = (PAT_ENEMY_KILL * CHASECROSS_KILL_FRAMES_PER_CEL)
+CCF_KILL_ANIM_END = ( \
+	CCF_KILL_ANIM + (ENEMY_KILL_CELS * CHASECROSS_KILL_FRAMES_PER_CEL) \
+)
+
+yuuka6_chasecross_t struc
+	B6C_flag             	db ?
+	B6C_angle            	db ?
+	B6C_center           	Point <?>
+		db 4 dup(?)
+	B6C_velocity         	Point <?>
+	B6C_age               	dw ?
+		db 4 dup(?)
+	B6C_hp               	dw ?
+	B6C_damage_this_frame	dw ?
+	B6C_speed            	db ?
+		db ?
+yuuka6_chasecross_t ends
+
+yuuka6_chasecrosses equ <_custom_entities>
+; -------------------------------------
 
 include th04/main/custom[bss].asm
 include th04/main/player/shots[bss].asm
