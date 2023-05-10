@@ -45,6 +45,31 @@ struct chasecross_t {
 };
 
 #define chasecrosses (reinterpret_cast<chasecross_t *>(custom_entities))
+
+enum safetycircle_flag_t {
+	SCF_FREE = 0,
+	SCF_GROW = 1,
+	SCF_SHRINK = 2,
+
+	_safetycircle_flag_t_FORCE_UINT8 = 0xFF
+};
+
+struct safetycircle_t {
+	safetycircle_flag_t flag;
+	/* ------------------------- */ int8_t unused_1;
+	screen_point_t center;
+	/* ------------------------- */ int8_t unused_2[8];
+	unsigned int shrink_frames;
+	pixel_t radius_filled;
+	pixel_t radius_ring_distance;
+	/* ------------------------- */ int8_t unused_3[8];
+	uint4_t col_ring;
+	/* ------------------------- */ int8_t padding;
+};
+
+#define safetycircle ( \
+	reinterpret_cast<safetycircle_t &>(custom_entities[CUSTOM_COUNT - 1]) \
+)
 // ----------
 
 // These indicate the state of the last completed animation, and are only used

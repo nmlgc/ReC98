@@ -9464,20 +9464,20 @@ loc_11BCD:
 loc_11BD1:
 		cmp	di, YUUKA6_CHASECROSS_COUNT
 		jl	loc_11B52
-		cmp	byte ptr [si], 0
+		cmp	[si+yuuka6_safetycircle_t.B6S_flag], SCF_FREE
 		jz	short loc_11C16
 		call	@grcg_setmode_rmw$qv
 		mov	ah, GC_BGI
 		call	@grcg_setcolor_direct_raw$qv
-		call	grcg_circlefill pascal, word ptr [si+2], word ptr [si+4], word ptr [si+10h]
-		cmp	byte ptr [si], 1
+		call	grcg_circlefill pascal, [si+yuuka6_safetycircle_t.B6S_center.x], [si+yuuka6_safetycircle_t.B6S_center.y], [si+yuuka6_safetycircle_t.B6S_radius_filled]
+		cmp	[si+yuuka6_safetycircle_t.B6S_flag], SCF_GROW
 		jz	short loc_11C16
-		mov	ah, [si+18h]
+		mov	ah, [si+yuuka6_safetycircle_t.B6S_col_ring]
 		call	@grcg_setcolor_direct_raw$qv
-		push	word ptr [si+2]
-		push	word ptr [si+4]
-		mov	ax, [si+12h]
-		add	ax, [si+10h]
+		push	[si+yuuka6_safetycircle_t.B6S_center.x]
+		push	[si+yuuka6_safetycircle_t.B6S_center.y]
+		mov	ax, [si+yuuka6_safetycircle_t.B6S_radius_ring_distance]
+		add	ax, [si+yuuka6_safetycircle_t.B6S_radius_filled]
 		push	ax
 		call	grcg_circle
 		GRCG_OFF_CLOBBERING dx
@@ -22329,6 +22329,15 @@ loc_1A0C3:
 		add	si, size yuuka6_chasecross_t
 
 loc_1A0C7:
+		; ZUN landmine: This could possibly spawn a chasing cross bullet in the
+		; safety circle slot. Doesn't happen in the original game because
+		; there's only one pattern that spawns up to 24 chasing cross bullets,
+		; at a fast enough speed that all of them left the playfield by the
+		; time Yuuka fires the pattern again. And even if it did, it would not
+		; be observable: These bullets use Q12.4 coordinates for their position
+		; and assign these to structure fields that the safety circle
+		; interprets as raw pixels. Yuuka would therefore have to move near the
+		; top-left corner of the playfield for the circle to not be clipped.
 		cmp	dx, (YUUKA6_CHASECROSS_COUNT + 1)
 		jl	short loc_1A092
 
@@ -22347,20 +22356,20 @@ yuuka6_1A0D1	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, 0B52Ah
-		mov	byte ptr [si], 1
-		mov	word ptr [si+0Eh], 0
-		mov	byte ptr [si+18h], 8
+		mov	si, offset yuuka6_safetycircle
+		mov	[si+yuuka6_safetycircle_t.B6S_flag], SCF_GROW
+		mov	[si+yuuka6_safetycircle_t.B6S_shrink_frames], 0
+		mov	[si+yuuka6_safetycircle_t.B6S_col_ring], 8
 		mov	ax, _player_pos.cur.x
 		sar	ax, 4
-		add	ax, 20h	; ' '
-		mov	[si+2],	ax
+		add	ax, PLAYFIELD_LEFT
+		mov	[si+yuuka6_safetycircle_t.B6S_center.x], ax
 		mov	ax, _player_pos.cur.y
 		sar	ax, 4
-		add	ax, 10h
-		mov	[si+4],	ax
-		mov	word ptr [si+10h], 8
-		mov	word ptr [si+12h], 50h ; 'P'
+		add	ax, PLAYFIELD_TOP
+		mov	[si+yuuka6_safetycircle_t.B6S_center.y], ax
+		mov	[si+yuuka6_safetycircle_t.B6S_radius_filled], 8
+		mov	[si+yuuka6_safetycircle_t.B6S_radius_ring_distance], 80
 		call	snd_se_play pascal, 8
 		pop	si
 		pop	bp
@@ -22493,82 +22502,82 @@ loc_1A231:
 loc_1A235:
 		cmp	di, YUUKA6_CHASECROSS_COUNT
 		jl	loc_1A12A
-		mov	al, [si]
+		mov	al, [si+yuuka6_safetycircle_t.B6S_flag]
 		mov	ah, 0
-		cmp	ax, 1
+		cmp	ax, SCF_GROW
 		jz	short loc_1A24D
-		cmp	ax, 2
+		cmp	ax, SCF_SHRINK
 		jz	short loc_1A261
 		jmp	loc_1A3BF
 ; ---------------------------------------------------------------------------
 
 loc_1A24D:
-		cmp	word ptr [si+10h], 80h
+		cmp	[si+yuuka6_safetycircle_t.B6S_radius_filled], 128
 		jg	short loc_1A25B
-		add	word ptr [si+10h], 8
+		add	[si+yuuka6_safetycircle_t.B6S_radius_filled], 8
 		jmp	loc_1A3BF
 ; ---------------------------------------------------------------------------
 
 loc_1A25B:
-		mov	byte ptr [si], 2
+		mov	[si+yuuka6_safetycircle_t.B6S_flag], SCF_SHRINK
 		jmp	loc_1A3BF
 ; ---------------------------------------------------------------------------
 
 loc_1A261:
-		cmp	word ptr [si+0Eh], 8
+		cmp	[si+yuuka6_safetycircle_t.B6S_shrink_frames], 8
 		jnb	short loc_1A26E
-		sub	word ptr [si+12h], 8
+		sub	[si+yuuka6_safetycircle_t.B6S_radius_ring_distance], 8
 		jmp	loc_1A3BC
 ; ---------------------------------------------------------------------------
 
 loc_1A26E:
-		cmp	word ptr [si+0Eh], 8
+		cmp	[si+yuuka6_safetycircle_t.B6S_shrink_frames], 8
 		jnz	short loc_1A27B
-		mov	byte ptr [si+18h], 9
+		mov	[si+yuuka6_safetycircle_t.B6S_col_ring], 9
 		jmp	loc_1A3BC
 ; ---------------------------------------------------------------------------
 
 loc_1A27B:
-		cmp	word ptr [si+0Eh], 10h
+		cmp	[si+yuuka6_safetycircle_t.B6S_shrink_frames], 16
 		jnb	short loc_1A288
-		sub	word ptr [si+12h], 2
+		sub	[si+yuuka6_safetycircle_t.B6S_radius_ring_distance], 2
 		jmp	loc_1A3BC
 ; ---------------------------------------------------------------------------
 
 loc_1A288:
-		cmp	word ptr [si+0Eh], 0A0h
+		cmp	[si+yuuka6_safetycircle_t.B6S_shrink_frames], 160
 		jnb	loc_1A3A8
-		mov	ax, [si+0Eh]
+		mov	ax, [si+yuuka6_safetycircle_t.B6S_shrink_frames]
 		and	ax, 1Fh
-		cmp	ax, 10h
+		cmp	ax, 16
 		jnb	short loc_1A2A1
-		inc	word ptr [si+12h]
+		inc	[si+yuuka6_safetycircle_t.B6S_radius_ring_distance]
 		jmp	short loc_1A2A4
 ; ---------------------------------------------------------------------------
 
 loc_1A2A1:
-		dec	word ptr [si+12h]
+		dec	[si+yuuka6_safetycircle_t.B6S_radius_ring_distance]
 
 loc_1A2A4:
 		cmp	_stage_frame_mod2, 0
 		jz	short loc_1A2B1
-		mov	byte ptr [si+18h], 0Fh
+		mov	[si+yuuka6_safetycircle_t.B6S_col_ring], 15
 		jmp	short loc_1A2B5
 ; ---------------------------------------------------------------------------
 
 loc_1A2B1:
-		mov	byte ptr [si+18h], 9
+		mov	[si+yuuka6_safetycircle_t.B6S_col_ring], 9
 
 loc_1A2B5:
-		cmp	word ptr [si+0Eh], 68h ; 'h'
+		cmp	[si+yuuka6_safetycircle_t.B6S_shrink_frames], 104
 		ja	short loc_1A2BE
-		dec	word ptr [si+10h]
+		dec	[si+yuuka6_safetycircle_t.B6S_radius_filled]
 
 loc_1A2BE:
-		test	byte ptr [si+0Eh], 0Fh
+		test	byte ptr [si+yuuka6_safetycircle_t.B6S_shrink_frames], 0Fh
 		jnz	loc_1A3BC
 		mov	[bp+var_6], 0C0h
-		test	byte ptr [si+0Eh], 1Fh
+		test	byte ptr [si+yuuka6_safetycircle_t.B6S_shrink_frames], 1Fh
 		jnz	short loc_1A309
 		mov	ax, _boss_pos.cur.x
 		mov	_bullet_template.BT_origin.x, ax
@@ -22593,7 +22602,7 @@ loc_1A309:
 		xor	dx, dx
 		div	bx
 		mov	[bp+@@angle], al
-		mov	ax, [si+10h]
+		mov	ax, [si+yuuka6_safetycircle_t.B6S_radius_filled]
 		add	ax, 4
 		mov	[bp+@@length], ax
 		xor	di, di
@@ -22605,8 +22614,8 @@ loc_1A32D:
 		add	al, [bp+var_6]
 		mov	_bullet_template.BT_angle, al
 		push	offset _bullet_template.BT_origin
-		push	word ptr [si+2]
-		push	word ptr [si+4]
+		push	[si+yuuka6_safetycircle_t.B6S_center.x]
+		push	[si+yuuka6_safetycircle_t.B6S_center.y]
 		push	[bp+@@length]
 		mov	al, [bp+@@angle]
 		mov	ah, 0
@@ -22641,18 +22650,18 @@ loc_1A39A:
 ; ---------------------------------------------------------------------------
 
 loc_1A3A8:
-		cmp	word ptr [si+0Eh], 0B0h	; '°'
+		cmp	[si+yuuka6_safetycircle_t.B6S_shrink_frames], 176
 		jnb	short loc_1A3B9
-		add	word ptr [si+12h], 10h
-		sub	word ptr [si+10h], 2
+		add	[si+yuuka6_safetycircle_t.B6S_radius_ring_distance], 16
+		sub	[si+yuuka6_safetycircle_t.B6S_radius_filled], 2
 		jmp	short loc_1A3BC
 ; ---------------------------------------------------------------------------
 
 loc_1A3B9:
-		mov	byte ptr [si], 0
+		mov	[si+yuuka6_safetycircle_t.B6S_flag], SCF_FREE
 
 loc_1A3BC:
-		inc	word ptr [si+0Eh]
+		inc	[si+yuuka6_safetycircle_t.B6S_shrink_frames]
 
 loc_1A3BF:
 		pop	di
@@ -32138,6 +32147,29 @@ yuuka6_chasecross_t ends
 
 yuuka6_chasecrosses equ <_custom_entities>
 ; -------------------------------------
+
+; Stage 6 Yuuka's safety circle
+; -----------------------------
+
+SCF_FREE = 0
+SCF_GROW = 1
+SCF_SHRINK = 2
+
+yuuka6_safetycircle_t struc
+	B6S_flag                	db ?
+		db ?
+	B6S_center              	Point <?>
+		db 8 dup(?)
+	B6S_shrink_frames       	dw ?
+	B6S_radius_filled       	dw ?
+	B6S_radius_ring_distance	dw ?
+		db 4 dup(?)
+	B6S_col_ring            	db ?
+		db ?
+yuuka6_safetycircle_t ends
+
+yuuka6_safetycircle equ <_custom_entities + ((CUSTOM_COUNT - 1) * size custom_t)>
+; -----------------------------
 
 include th04/main/custom[bss].asm
 include th04/main/player/shots[bss].asm
