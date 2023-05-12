@@ -11600,7 +11600,7 @@ loc_12F55:
 public @GENGETSU_FG_RENDER$QV
 @gengetsu_fg_render$qv	proc near
 
-var_2		= word ptr -2
+@@spawncolumn	= word ptr -2
 
 		enter	2, 0
 		push	si
@@ -11757,25 +11757,25 @@ loc_130B6:
 
 loc_130B8:
 		call	@grcg_setcolor_direct_raw$qv
-		mov	[bp+var_2], 0B204h
+		mov	[bp+@@spawncolumn], offset gengetsu_spawncolumns
 		xor	si, si
 		jmp	short loc_130E4
 ; ---------------------------------------------------------------------------
 
 loc_130C4:
-		mov	bx, [bp+var_2]
-		mov	ax, [bx+2]
+		mov	bx, [bp+@@spawncolumn]
+		mov	ax, [bx+gengetsu_spawncolumn_t.BX2S_pos.x]
 		mov	bx, 16
 		cwd
 		idiv	bx
-		add	ax, 32
+		add	ax, PLAYFIELD_LEFT
 		mov	di, ax
 		call	grcg_vline pascal, ax, bx, PLAYFIELD_BOTTOM - 1
 		inc	si
-		add	[bp+var_2], 1Ah
+		add	[bp+@@spawncolumn], size gengetsu_spawncolumn_t
 
 loc_130E4:
-		cmp	si, 10h
+		cmp	si, GENGETSU_SPAWNCOLUMN_COUNT
 		jl	short loc_130C4
 
 loc_130E9:
@@ -30289,7 +30289,7 @@ var_1		= byte ptr -1
 		push	1
 		call	randring2_next16_and
 		mov	[bp+var_1], al
-		mov	si, 0B204h
+		mov	si, offset gengetsu_spawncolumns
 		xor	di, di
 		jmp	short loc_1FF29
 ; ---------------------------------------------------------------------------
@@ -30298,27 +30298,27 @@ loc_1FEFB:
 		cmp	[bp+var_1], 0
 		jnz	short loc_1FF0C
 		mov	ax, di
-		imul	ax, 180h
-		add	ax, 0C0h
+		imul	ax, ((PLAYFIELD_W / GENGETSU_SPAWNCOLUMN_COUNT) shl 4)
+		add	ax, (12 shl 4)
 		jmp	short loc_1FF1D
 ; ---------------------------------------------------------------------------
 
 loc_1FF0C:
-		push	0C0h
+		push	(12 shl 4)
 		call	randring2_next16_mod
 		mov	dx, di
-		imul	dx, 180h
-		add	dx, 60h
+		imul	dx, ((PLAYFIELD_W / GENGETSU_SPAWNCOLUMN_COUNT) shl 4)
+		add	dx, (6 shl 4)
 		add	ax, dx
 
 loc_1FF1D:
-		mov	[si+2],	ax
-		mov	word ptr [si+4], 0
+		mov	[si+gengetsu_spawncolumn_t.BX2S_pos.x],	ax
+		mov	[si+gengetsu_spawncolumn_t.BX2S_pos.y], 0
 		inc	di
-		add	si, 1Ah
+		add	si, size gengetsu_spawncolumn_t
 
 loc_1FF29:
-		cmp	di, 10h
+		cmp	di, GENGETSU_SPAWNCOLUMN_COUNT
 		jl	short loc_1FEFB
 
 loc_1FF2E:
@@ -30391,20 +30391,20 @@ loc_1FFF8:
 		mov	_bullet_template.spawn_type, BST_BULLET16
 		mov	_bullet_template.BT_origin.y, 0
 		mov	_bullet_template.BT_group, BG_SINGLE
-		mov	si, 0B204h
+		mov	si, offset gengetsu_spawncolumns
 		xor	di, di
 		jmp	short loc_2002B
 ; ---------------------------------------------------------------------------
 
 loc_2001E:
-		mov	ax, [si+2]
+		mov	ax, [si+gengetsu_spawncolumn_t.BX2S_pos.x]
 		mov	_bullet_template.BT_origin.x, ax
 		call	_bullets_add_regular_fixedspeed
 		inc	di
-		add	si, 1Ah
+		add	si, size gengetsu_spawncolumn_t
 
 loc_2002B:
-		cmp	di, 10h
+		cmp	di, GENGETSU_SPAWNCOLUMN_COUNT
 		jl	short loc_2001E
 		call	snd_se_play pascal, 3
 		jmp	short loc_20044
@@ -32170,6 +32170,20 @@ yuuka6_safetycircle_t ends
 
 yuuka6_safetycircle equ <_custom_entities + ((CUSTOM_COUNT - 1) * size custom_t)>
 ; -----------------------------
+
+; Gengetsu's column bullet spawn lines
+; ------------------------------------
+
+GENGETSU_SPAWNCOLUMN_COUNT = 16
+
+gengetsu_spawncolumn_t struc
+		db 2 dup(?)
+	BX2S_pos	Point <?>
+		db 20 dup(?)
+gengetsu_spawncolumn_t ends
+
+gengetsu_spawncolumns equ <_custom_entities>
+; ------------------------------------
 
 include th04/main/custom[bss].asm
 include th04/main/player/shots[bss].asm
