@@ -29525,6 +29525,8 @@ off_1F8D4	dw offset loc_1F3D6
 		dw offset loc_1F802
 		dw offset loc_1F845
 
+WAVE_TARGET_MARGIN = (PLAYFIELD_W / 12)
+
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
@@ -29621,7 +29623,7 @@ gengetsu_1F97A	proc near
 		mov	bp, sp
 		cmp	_boss_phase_frame, 1
 		jnz	short loc_1F994
-		mov	ax, word_2D05A
+		mov	ax, _gengetsu_wave_target_x
 		sub	ax, _boss_pos.cur.x
 		mov	bx, 64
 		cwd
@@ -30735,25 +30737,24 @@ loc_20330:
 		test	_boss_phase_state, 1
 		jz	short loc_20364
 		mov	ax, _player_pos.cur.x
-		mov	word_2D05A, ax
-		cmp	word_2D05A, 200h
+		mov	_gengetsu_wave_target_x, ax
+		cmp	_gengetsu_wave_target_x, (WAVE_TARGET_MARGIN shl 4)
 		jge	short loc_20354
-		mov	word_2D05A, 200h
+		mov	_gengetsu_wave_target_x, (WAVE_TARGET_MARGIN shl 4)
 		jmp	short loc_20370
 ; ---------------------------------------------------------------------------
 
 loc_20354:
-		cmp	word_2D05A, 1600h
+		cmp	_gengetsu_wave_target_x, ((PLAYFIELD_W - WAVE_TARGET_MARGIN) shl 4)
 		jle	short loc_20370
-		mov	word_2D05A, 1600h
+		mov	_gengetsu_wave_target_x, ((PLAYFIELD_W - WAVE_TARGET_MARGIN) shl 4)
 		jmp	short loc_20370
 ; ---------------------------------------------------------------------------
 
 loc_20364:
-		push	1000h
-		call	randring2_next16_mod
-		add	ax, 400h
-		mov	word_2D05A, ax
+		call	randring2_next16_mod pascal, ((PLAYFIELD_W - (WAVE_TARGET_MARGIN * 4)) shl 4)
+		add	ax, ((WAVE_TARGET_MARGIN * 2) shl 4)
+		mov	_gengetsu_wave_target_x, ax
 
 loc_20370:
 		call	gengetsu_1F97A
@@ -30813,25 +30814,24 @@ loc_203D7:
 		test	_boss_phase_state, 1
 		jz	short loc_2040B
 		mov	ax, _player_pos.cur.x
-		mov	word_2D05A, ax
-		cmp	word_2D05A, 200h
+		mov	_gengetsu_wave_target_x, ax
+		cmp	_gengetsu_wave_target_x, (WAVE_TARGET_MARGIN shl 4)
 		jge	short loc_203FB
-		mov	word_2D05A, 200h
+		mov	_gengetsu_wave_target_x, (WAVE_TARGET_MARGIN shl 4)
 		jmp	short loc_20417
 ; ---------------------------------------------------------------------------
 
 loc_203FB:
-		cmp	word_2D05A, 1600h
+		cmp	_gengetsu_wave_target_x, ((PLAYFIELD_W - WAVE_TARGET_MARGIN) shl 4)
 		jle	short loc_20417
-		mov	word_2D05A, 1600h
+		mov	_gengetsu_wave_target_x, ((PLAYFIELD_W - WAVE_TARGET_MARGIN) shl 4)
 		jmp	short loc_20417
 ; ---------------------------------------------------------------------------
 
 loc_2040B:
-		push	1000h
-		call	randring2_next16_mod
-		add	ax, 400h
-		mov	word_2D05A, ax
+		call	randring2_next16_mod pascal, ((PLAYFIELD_W - (WAVE_TARGET_MARGIN * 4)) shl 4)
+		add	ax, ((WAVE_TARGET_MARGIN * 2) shl 4)
+		mov	_gengetsu_wave_target_x, ax
 
 loc_20417:
 		call	gengetsu_1F97A
@@ -30891,25 +30891,24 @@ loc_2047E:
 		test	_boss_phase_state, 1
 		jz	short loc_204B2
 		mov	ax, _player_pos.cur.x
-		mov	word_2D05A, ax
-		cmp	word_2D05A, 200h
+		mov	_gengetsu_wave_target_x, ax
+		cmp	_gengetsu_wave_target_x, (WAVE_TARGET_MARGIN shl 4)
 		jge	short loc_204A2
-		mov	word_2D05A, 200h
+		mov	_gengetsu_wave_target_x, (WAVE_TARGET_MARGIN shl 4)
 		jmp	short loc_204BE
 ; ---------------------------------------------------------------------------
 
 loc_204A2:
-		cmp	word_2D05A, 1600h
+		cmp	_gengetsu_wave_target_x, ((PLAYFIELD_W - WAVE_TARGET_MARGIN) shl 4)
 		jle	short loc_204BE
-		mov	word_2D05A, 1600h
+		mov	_gengetsu_wave_target_x, ((PLAYFIELD_W - WAVE_TARGET_MARGIN) shl 4)
 		jmp	short loc_204BE
 ; ---------------------------------------------------------------------------
 
 loc_204B2:
-		push	1000h
-		call	randring2_next16_mod
-		add	ax, 400h
-		mov	word_2D05A, ax
+		call	randring2_next16_mod pascal, ((PLAYFIELD_W - (WAVE_TARGET_MARGIN * 4)) shl 4)
+		add	ax, ((WAVE_TARGET_MARGIN * 2) shl 4)
+		mov	_gengetsu_wave_target_x, ax
 
 loc_204BE:
 		call	gengetsu_1F97A
@@ -30969,25 +30968,24 @@ loc_20525:
 		test	_boss_phase_state, 1
 		jz	short loc_20559
 		mov	ax, _player_pos.cur.x
-		mov	word_2D05A, ax
-		cmp	word_2D05A, 200h
+		mov	_gengetsu_wave_target_x, ax
+		cmp	_gengetsu_wave_target_x, (WAVE_TARGET_MARGIN shl 4)
 		jge	short loc_20549
-		mov	word_2D05A, 200h
+		mov	_gengetsu_wave_target_x, (WAVE_TARGET_MARGIN shl 4)
 		jmp	short loc_20565
 ; ---------------------------------------------------------------------------
 
 loc_20549:
-		cmp	word_2D05A, 1600h
+		cmp	_gengetsu_wave_target_x, ((PLAYFIELD_W - WAVE_TARGET_MARGIN) shl 4)
 		jle	short loc_20565
-		mov	word_2D05A, 1600h
+		mov	_gengetsu_wave_target_x, ((PLAYFIELD_W - WAVE_TARGET_MARGIN) shl 4)
 		jmp	short loc_20565
 ; ---------------------------------------------------------------------------
 
 loc_20559:
-		push	1000h
-		call	randring2_next16_mod
-		add	ax, 400h
-		mov	word_2D05A, ax
+		call	randring2_next16_mod pascal, ((PLAYFIELD_W - (WAVE_TARGET_MARGIN * 4)) shl 4)
+		add	ax, ((WAVE_TARGET_MARGIN * 2) shl 4)
+		mov	_gengetsu_wave_target_x, ax
 
 loc_20565:
 		call	gengetsu_1F97A
@@ -31020,7 +31018,7 @@ loc_205A4:
 loc_205AA:
 		call	@boss_phase_next$q16explosion_type_ti
 		mov	_boss_mode, -1
-		mov	word_2D05A, 0C00h
+		mov	_gengetsu_wave_target_x, ((PLAYFIELD_W / 2) shl 4)
 		jmp	loc_206B6
 ; ---------------------------------------------------------------------------
 
@@ -31046,7 +31044,7 @@ loc_205D4:
 loc_205ED:
 		call	@boss_phase_next$q16explosion_type_ti pascal, (ET_VERTICAL shl 16) or 0
 		mov	_boss_mode, -1
-		mov	word_2D05A, 0C00h
+		mov	_gengetsu_wave_target_x, ((PLAYFIELD_W / 2) shl 4)
 		mov	_boss_statebyte[15].BSB_origin_offset_x, 16
 		jmp	loc_206B6
 ; ---------------------------------------------------------------------------
@@ -32238,6 +32236,6 @@ _orb_template	reimu_orb_t <?>
 
 byte_2D058	db ?
 		db ?
-word_2D05A	dw ?
+	extern _gengetsu_wave_target_x:word
 
 		end
