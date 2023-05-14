@@ -43,7 +43,7 @@ include th04/main/enemy/enemy.inc
 	extern _tolower:proc
 	extern __ctype:byte
 
-main_01 group SLOWDOWN_TEXT, ma_TEXT, DEMO_TEXT, EMS_TEXT, mai_TEXT, PLAYFLD_TEXT, main_TEXT, DIALOG_TEXT, main__TEXT, PLAYER_M_TEXT, PLAYER_P_TEXT, main_0_TEXT, HUD_OVRL_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT
+main_01 group SLOWDOWN_TEXT, m_TEXT, DEMO_TEXT, EMS_TEXT, ma_TEXT, PLAYFLD_TEXT, mai_TEXT, DIALOG_TEXT, main_TEXT, STAGES_TEXT, main__TEXT, PLAYER_M_TEXT, PLAYER_P_TEXT, main_0_TEXT, HUD_OVRL_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT
 g_SHARED group SHARED, SHARED_
 main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, VECTOR2N_TEXT, SPARK_A_TEXT, GRCG_3_TEXT, IT_SPL_U_TEXT, B4M_UPDATE_TEXT, main_033_TEXT, MIDBOSS_TEXT, HUD_HP_TEXT, MB_DFT_TEXT, main_034_TEXT, BULLET_U_TEXT, BULLET_A_TEXT, main_035_TEXT, BOSS_TEXT, main_036_TEXT
 
@@ -270,7 +270,7 @@ SLOWDOWN_TEXT segment word public 'CODE' use16
 SLOWDOWN_TEXT ends
 
 ; Segment type:	Pure code
-ma_TEXT	segment	word public 'CODE' use16
+m_TEXT	segment	word public 'CODE' use16
 		assume cs:main_01
 		;org 1
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
@@ -1011,7 +1011,7 @@ var_4		= dword	ptr -4
 		leave
 		retn
 demo_load	endp
-ma_TEXT	ends
+m_TEXT	ends
 
 DEMO_TEXT	segment	byte public 'CODE' use16
 	@DemoPlay$qv procdesc near
@@ -1023,7 +1023,7 @@ EMS_TEXT	segment	byte public 'CODE' use16
 	@eyecatch_animate$qv procdesc near
 EMS_TEXT	ends
 
-mai_TEXT	segment	word public 'CODE' use16
+ma_TEXT	segment	word public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2055,13 +2055,13 @@ loc_CD31:
 		pop	bp
 		retn
 sub_CCD6	endp
-mai_TEXT	ends
+ma_TEXT	ends
 
 PLAYFLD_TEXT	segment	byte public 'CODE' use16
 	@playfield_shake_update_and_rende$qv procdesc pascal near
 PLAYFLD_TEXT	ends
 
-main_TEXT	segment	byte public 'CODE' use16
+mai_TEXT	segment	byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -2123,7 +2123,7 @@ loc_CE8F:
 		leave
 		retn
 @midboss4_render$qv	endp
-main_TEXT	ends
+mai_TEXT	ends
 
 DIALOG_TEXT	segment	byte public 'CODE' use16
 	@dialog_load$qv procdesc near
@@ -3000,7 +3000,7 @@ public @dialog_animate$qv
 	@dialog_exit$qv procdesc near
 DIALOG_TEXT	ends
 
-main__TEXT	segment	byte public 'CODE' use16
+main_TEXT	segment	byte public 'CODE' use16
 include th04/main/boss/explosions_small.asm
 include th04/main/boss/explosions_big.asm
 
@@ -5323,7 +5323,9 @@ loc_EBEA:
 		leave
 		retn
 stage4_render	endp
+main_TEXT	ends
 
+STAGES_TEXT	segment	byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5415,7 +5417,9 @@ loc_EC86:
 		pop	bp
 		retn
 stage5_invalidate	endp
+STAGES_TEXT	ends
 
+main__TEXT	segment	byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
