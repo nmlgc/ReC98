@@ -10,7 +10,7 @@
 #include "th04/main/midboss/midboss.hpp"
 #include "th04/main/tile/tile.hpp"
 
-// See tile.hpp for the reason this declaration is necessary
+// See tile.hpp for the reason why this declaration is necessary
 extern "C" void pascal near tiles_invalidate_around(const SPPoint center);
 
 void pascal near midboss_invalidate_func(void)

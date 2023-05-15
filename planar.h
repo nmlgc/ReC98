@@ -19,7 +19,9 @@ typedef int32_t sdots32_t;
 #define PRESHIFT BYTE_DOTS
 
 typedef enum {
-	PL_B, PL_R, PL_G, PL_E
+	PL_B, PL_R, PL_G, PL_E,
+
+	_vram_plane_t_FORCE_INT16 = 0x7FFF
 } vram_plane_t;
 
 // Abstracted dot and planar types, with their width defined by a macro.

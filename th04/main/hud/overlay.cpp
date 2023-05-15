@@ -31,7 +31,7 @@ extern "C" {
 	#include "th04/resident.hpp"
 #endif
 
-// See tile.hpp for the reason this declaration is necessary
+// See tile.hpp for the reason why this declaration is necessary
 extern "C" void pascal near tiles_invalidate_around(
 	subpixel_t center_y, subpixel_t center_x
 );

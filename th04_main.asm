@@ -5326,97 +5326,8 @@ stage4_render	endp
 main_TEXT	ends
 
 STAGES_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-stage5_render	proc near
-
-@@top		= word ptr -2
-
-		enter	2, 0
-		push	si
-		cmp	_boss_phase, PHASE_BOSS_ENTRANCE_BB
-		jb	short loc_EC01
-		cmp	_boss_phase, PHASE_EXPLODE_BIG
-		jb	short loc_EC56
-
-loc_EC01:
-		xor	si, si
-		jmp	short loc_EC51
-; ---------------------------------------------------------------------------
-
-loc_EC05:
-		mov	bx, si
-		add	bx, bx
-		add	word ptr [bx-430Ch], 40h
-		mov	bx, si
-		add	bx, bx
-		cmp	word ptr [bx-430Ch], 1900h
-		jl	short loc_EC24
-		mov	bx, si
-		add	bx, bx
-		sub	word ptr [bx-430Ch], 1900h
-
-loc_EC24:
-		mov	bx, si
-		add	bx, bx
-		mov	ax, [bx-430Ch]
-		add	ax, (-24 shl 4)
-		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
-		mov	[bp+@@top], ax
-		mov	ax, si
-		shl	ax, 7
-		add	ax, 48
-		call	cdg_put_plane_roll_8 pascal, ax, [bp+@@top], (17 shl 16) or 0, SEG_PLANE_E
-		inc	si
-
-loc_EC51:
-		cmp	si, 3
-		jl	short loc_EC05
-
-loc_EC56:
-		pop	si
-		leave
-		retn
-stage5_render	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-stage5_invalidate	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		mov	_tile_invalidate_box.x, 96
-		mov	_tile_invalidate_box.y, 80
-		xor	si, si
-		jmp	short loc_EC86
-; ---------------------------------------------------------------------------
-
-loc_EC6D:
-		mov	bx, si
-		add	bx, bx
-		mov	ax, [bx-430Ch]
-		add	ax, (-4 shl 4)
-		push	ax
-		mov	ax, si
-		shl	ax, 0Bh
-		add	ax, (64 shl 4)
-		push	ax
-		call	main_01:tiles_invalidate_around
-		inc	si
-
-loc_EC86:
-		cmp	si, 3
-		jl	short loc_EC6D
-		pop	si
-		pop	bp
-		retn
-stage5_invalidate	endp
+	@STAGE5_RENDER$QV procdesc near
+	@STAGE5_INVALIDATE$QV procdesc near
 STAGES_TEXT	ends
 
 main__TEXT	segment	byte public 'CODE' use16
@@ -11981,7 +11892,6 @@ SHARED_	segment	word public 'CODE' use16
 	extern _game_exit:proc
 	extern GAME_INIT_MAIN:proc
 	extern CDG_PUT_NOALPHA_8:proc
-	extern CDG_PUT_PLANE_ROLL_8:proc
 	extern _input_reset_sense:proc
 	extern _input_sense:proc
 	extern _snd_se_reset:proc
@@ -27795,11 +27705,11 @@ stage5_setup	proc far
 		call	cdg_load_single_noalpha pascal, CDG_BG_BOSS, ds, offset aSt04bk_cdg, 0
 		call	@bb_boss_load$qnxc pascal, ds, offset aSt04_bb
 		call	cdg_load_single_noalpha pascal, CDG_BG_2, ds, offset aSt04_cdg, 0
-		mov	word_2D034, 1400h
-		mov	word_2D036, 280h
-		mov	word_2D038, 0BE0h
-		mov	_stage_render, offset stage5_render
-		mov	_stage_invalidate, offset stage5_invalidate
+		mov	_stage5_star_center_y[0 * word], (320 shl 4)
+		mov	_stage5_star_center_y[1 * word], (40 shl 4)
+		mov	_stage5_star_center_y[2 * word], (190 shl 4)
+		mov	_stage_render, offset @stage5_render$qv
+		mov	_stage_invalidate, offset @stage5_invalidate$qv
 		push	(144 shl 16) or 160
 		push	(168 shl 16) or 180
 		call	select_for_rank
@@ -32240,9 +32150,12 @@ _dream_score	dw ?
 byte_2D00E	db ?
 		db ?
 include th04/main/boss/boss[bss].asm
-word_2D034	dw ?
-word_2D036	dw ?
-word_2D038	dw ?
+
+STAGE5_STAR_COUNT = 3
+
+public _stage5_star_center_y
+_stage5_star_center_y	dw STAGE5_STAR_COUNT dup(?)
+
 byte_2D03A	db ?
 byte_2D03B	db ?
 byte_2D03C	db ?
