@@ -1482,83 +1482,7 @@ public @YUUKA5_BACKDROP_COLORFILL$QV
 		retn
 @yuuka5_backdrop_colorfill$qv	endp
 
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_C01A	proc near
-		mov	bx, sp
-		push	ds
-		push	si
-		push	di
-		mov	di, ax
-		shl	ax, 2
-		add	di, ax
-		shl	di, 4
-		mov	ax, cx
-		and	cx, 7
-		shr	ax, 3
-		add	di, ax
-		mov	bx, ss:[bx+2]
-		shl	bx, 1
-		mov	ds, word ptr [bx+2AC4h]
-		xor	si, si
-		mov	ch, 10h
-		jcxz	short loc_C088
-		mov	dx, 0FFFFh
-		shr	dl, cl
-		mov	dh, dl
-		not	dh
-		test	di, 1
-		jnz	short loc_C06C
-
-loc_C052:
-		lodsw
-		ror	ax, cl
-		mov	bl, al
-		and	al, dl
-		and	bl, dh
-		mov	es:[di], ax
-		mov	es:[di+2], bl
-		add	di, 50h	; 'P'
-		dec	ch
-		jnz	short loc_C052
-		jmp	short loc_C093
-; ---------------------------------------------------------------------------
-		nop
-
-loc_C06C:
-		lodsw
-		ror	ax, cl
-		mov	bh, al
-		and	al, dl
-		and	bh, dh
-		mov	bl, ah
-		mov	es:[di], al
-		mov	es:[di+1], bx
-		add	di, 50h	; 'P'
-		dec	ch
-		jnz	short loc_C06C
-		jmp	short loc_C093
-; ---------------------------------------------------------------------------
-		nop
-
-loc_C088:
-		lodsw
-		mov	es:[di], ax
-		add	di, 50h	; 'P'
-		dec	ch
-		jnz	short loc_C088
-
-loc_C093:
-		pop	di
-		pop	si
-		pop	ds
-		retn	2
-sub_C01A	endp
-
-; ---------------------------------------------------------------------------
-		nop
+include th04/formats/z_super_put_16x16_mono.asm
 include th04/formats/bb_txt_put.asm
 include th04/main/item/invalidate.asm
 
@@ -8199,8 +8123,7 @@ loc_103F8:
 		sar	ax, 4
 		add	ax, (PLAYFIELD_TOP - (BOMB_STAR_H / 2))
 		mov	cx, [bp+@@vector_x]
-		push	78h ; 'x'
-		call	main_01:sub_C01A
+		call	@z_super_put_16x16_mono_raw$qi pascal, 120
 		inc	di
 		add	si, size bomb_star_t
 
@@ -10352,8 +10275,8 @@ sub_12461	proc near
 var_9		= byte ptr -9
 @@vector_y		= word ptr -8
 @@vector_x		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@patnum  	= word ptr -4
+@@left    	= word ptr -2
 
 		enter	0Ah, 0
 		push	si
@@ -10449,7 +10372,7 @@ loc_12522:
 		inc	byte_2CDD1
 		cmp	byte_2CDD1, 254
 		jb	loc_127EC
-		mov	word_2CF28, 78h	; 'x'
+		mov	patnum_2CF28, 120
 		mov	byte_2CDD0, 4
 		mov	si, 0BA92h
 		xor	di, di
@@ -10473,12 +10396,12 @@ loc_12554:
 loc_12567:
 		cmp	byte_2CDD1, 255
 		jnz	loc_127EC
-		inc	word_2CF28
+		inc	patnum_2CF28
 		inc	byte_2CDD0
 		cmp	byte_2CDD0, 4
 		jb	short loc_1258A
 		mov	byte_2CDD0, 0
-		mov	word_2CF28, 78h	; 'x'
+		mov	patnum_2CF28, 120
 
 loc_1258A:
 		mov	si, 0BA92h
@@ -10505,7 +10428,7 @@ loc_125A5:
 		inc	byte_2CDD1
 		cmp	byte_2CDD1, 254
 		jb	loc_127EC
-		mov	word_2CF28, 78h	; 'x'
+		mov	patnum_2CF28, 120
 		mov	byte_2CDD0, 6
 		mov	si, 0BA92h
 		xor	di, di
@@ -10554,7 +10477,7 @@ loc_12627:
 		inc	byte_2CDD1
 		cmp	byte_2CDD1, 254
 		jb	loc_127EC
-		mov	word_2CF28, 78h	; 'x'
+		mov	patnum_2CF28, 120
 		cmp	byte_2CDD0, 0Ah
 		jnb	short loc_12645
 		mov	al, 8
@@ -10612,7 +10535,7 @@ loc_126A6:
 		inc	byte_2CDD1
 		cmp	byte_2CDD1, 254
 		jb	loc_127EC
-		mov	word_2CF28, 78h	; 'x'
+		mov	patnum_2CF28, 120
 		cmp	byte_2CDD0, 0Ch
 		jnb	short loc_126C4
 		mov	al, 0Ah
@@ -10702,7 +10625,7 @@ loc_12743:
 		inc	byte_2CDD1
 		cmp	byte_2CDD1, 254
 		jb	loc_127EC
-		mov	word_2CF28, 7Ch	; '|'
+		mov	patnum_2CF28, 124
 		mov	byte_2CDD0, 10h
 		mov	byte_2CDD1, 255
 		mov	si, 0BA92h
@@ -10748,7 +10671,7 @@ loc_127B1:
 loc_127B7:
 		cmp	_boss_phase, PHASE_EXPLODE_BIG
 		jb	short loc_127EC
-		mov	word_2CF28, 7Dh	; '}'
+		mov	patnum_2CF28, 125
 		mov	byte_2CDD0, 11h
 		mov	byte_2CDD1, 255
 		mov	si, 0BA92h
@@ -10807,27 +10730,26 @@ loc_12823:
 ; ---------------------------------------------------------------------------
 
 loc_12834:
-		mov	ax, word_2CF28
-		mov	[bp+var_4], ax
+		mov	ax, patnum_2CF28
+		mov	[bp+@@patnum], ax
 		cmp	byte_2CDD0, 11h
 		jb	short loc_1284C
 		mov	ax, di
 		mov	bx, 3
 		cwd
 		idiv	bx
-		add	[bp+var_4], dx
+		add	[bp+@@patnum], dx
 
 loc_1284C:
 		mov	ax, [si]
 		sar	ax, 4
-		add	ax, 18h
-		mov	[bp+var_2], ax
+		add	ax, (PLAYFIELD_LEFT - 8)
+		mov	[bp+@@left], ax
 		mov	ax, [si+2]
 		sar	ax, 4
 		add	ax, 8
-		mov	cx, [bp+var_2]
-		push	[bp+var_4]
-		call	main_01:sub_C01A
+		mov	cx, [bp+@@left]
+		call	@z_super_put_16x16_mono_raw$qi pascal, [bp+@@patnum]
 		inc	di
 		add	si, 6
 
@@ -10915,7 +10837,7 @@ loc_12904:
 		cmp	di, 38h	; '8'
 		jl	short loc_128E7
 		mov	word_2CF2A, 10h
-		mov	word_2CF28, 78h	; 'x'
+		mov	patnum_2CF28, 120
 		mov	byte_2CDD0, 0
 		mov	byte_2CDD1, 0
 		jmp	short loc_12975
@@ -32192,7 +32114,7 @@ include th04/main/boss/bg[bss].asm
 byte_2CDD0	db ?
 byte_2CDD1	db ?
 		db 342 dup(?)
-word_2CF28	dw ?
+patnum_2CF28	dw ?
 word_2CF2A	dw ?
 fp_2CF2C	dw ?
 include th04/formats/scoredat[bss].asm
