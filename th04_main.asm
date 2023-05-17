@@ -10192,78 +10192,78 @@ loc_123EC:
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public @BG_SHAPE_CLIP_AND_RESPAWN_IN_CEN$QR10BG_SHAPE_T
+@bg_shape_clip_and_respawn_in_cen$qr10bg_shape_t proc near
 
-sub_123F1	proc near
-
-arg_0		= word ptr  4
+@@shape	= word ptr  4
 
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, [bp+4]
-		inc	byte ptr [si+5]
-		cmp	word ptr [si], 0FF80h
+		mov	si, [bp+@@shape]
+		inc	[si+yuuka6_bg_shape_t.B6B_speed]
+		cmp	[si+yuuka6_bg_shape_t.B6B_pos.x], (-(YUUKA6_BG_SHAPE_W / 2) shl 4)
 		jle	short loc_12413
-		cmp	word ptr [si], 1880h
+		cmp	[si+yuuka6_bg_shape_t.B6B_pos.x], ((PLAYFIELD_W + (YUUKA6_BG_SHAPE_W / 2)) shl 4)
 		jge	short loc_12413
-		cmp	word ptr [si+2], 0FF80h
+		cmp	[si+yuuka6_bg_shape_t.B6B_pos.y], (-(YUUKA6_BG_SHAPE_H / 2) shl 4)
 		jle	short loc_12413
-		cmp	word ptr [si+2], 1800h
+		cmp	[si+yuuka6_bg_shape_t.B6B_pos.y], ((PLAYFIELD_H + YUUKA6_BG_SHAPE_H) shl 4) ; ZUN quirk: Not halved?
 		jl	short loc_12422
 
 loc_12413:
-		mov	word ptr [si], 0C00h
-		mov	word ptr [si+2], 0B80h
-		mov	al, byte ptr word_2CF2A
-		mov	[si+5],	al
+		mov	[si+yuuka6_bg_shape_t.B6B_pos.x], ((PLAYFIELD_W / 2) shl 4)
+		mov	[si+yuuka6_bg_shape_t.B6B_pos.y], ((PLAYFIELD_H / 2) shl 4)
+		mov	al, byte ptr _bg_shape_flyout_speed
+		mov	[si+yuuka6_bg_shape_t.B6B_speed], al
 
 loc_12422:
 		pop	si
 		pop	bp
 		retn	2
-sub_123F1	endp
+@bg_shape_clip_and_respawn_in_cen$qr10bg_shape_t endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public @BG_SHAPE_CLIP_AND_WRAP$QR10BG_SHAPE_T
+@bg_shape_clip_and_wrap$qr10bg_shape_t proc near
 
-sub_12427	proc near
-
-arg_0		= word ptr  4
+@@shape	= word ptr  4
 
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, [bp+4]
-		cmp	word ptr [si], 0FF80h
+		mov	si, [bp+@@shape]
+		cmp	[si+yuuka6_bg_shape_t.B6B_pos.x], (-(YUUKA6_BG_SHAPE_W / 2) shl 4)
 		jg	short loc_12439
-		add	word ptr [si], 1900h
+		add	[si+yuuka6_bg_shape_t.B6B_pos.x], ((PLAYFIELD_W + YUUKA6_BG_SHAPE_W) shl 4)
 		jmp	short loc_12443
 ; ---------------------------------------------------------------------------
 
 loc_12439:
-		cmp	word ptr [si], 1880h
+		cmp	[si+yuuka6_bg_shape_t.B6B_pos.x], ((PLAYFIELD_W + (YUUKA6_BG_SHAPE_W / 2)) shl 4)
 		jl	short loc_12443
-		sub	word ptr [si], 1900h
+		sub	[si+yuuka6_bg_shape_t.B6B_pos.x], ((PLAYFIELD_W + YUUKA6_BG_SHAPE_W) shl 4)
 
 loc_12443:
-		cmp	word ptr [si+2], 0FF80h
+		cmp	[si+yuuka6_bg_shape_t.B6B_pos.y], (-(YUUKA6_BG_SHAPE_H / 2) shl 4)
 		jg	short loc_12450
-		add	word ptr [si+2], 1880h
+		add	[si+yuuka6_bg_shape_t.B6B_pos.y], ((PLAYFIELD_H + ((YUUKA6_BG_SHAPE_H / 2) * 3)) shl 4)	; ZUN quirk?
 		jmp	short loc_1245C
 ; ---------------------------------------------------------------------------
 
 loc_12450:
-		cmp	word ptr [si+2], 1800h
+		cmp	[si+yuuka6_bg_shape_t.B6B_pos.y], ((PLAYFIELD_H + YUUKA6_BG_SHAPE_H) shl 4)
 		jl	short loc_1245C
-		sub	word ptr [si+2], 1880h
+		sub	[si+yuuka6_bg_shape_t.B6B_pos.y], ((PLAYFIELD_H + ((YUUKA6_BG_SHAPE_H / 2) * 3)) shl 4)	; ZUN quirk?
 
 loc_1245C:
 		pop	si
 		pop	bp
 		retn	2
-sub_12427	endp
+@bg_shape_clip_and_wrap$qr10bg_shape_t endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -10283,7 +10283,7 @@ var_9		= byte ptr -9
 		push	di
 		cmp	byte_2CDD1, 0
 		jnz	short loc_12492
-		mov	si, 0BA92h
+		mov	si, offset _bg_shapes	; ZUN bloat
 		mov	al, byte_2CDD0
 		mov	ah, 0
 		mov	bx, ax
@@ -10293,12 +10293,12 @@ var_9		= byte ptr -9
 		jmp	word ptr cs:table_1289F[bx]
 
 loc_12484:
-		mov	fp_2CF2C, offset sub_12427
+		mov	_bg_shape_clip, offset @bg_shape_clip_and_wrap$qr10bg_shape_t
 		jmp	short loc_12492
 ; ---------------------------------------------------------------------------
 
 loc_1248C:
-		mov	fp_2CF2C, offset sub_123F1
+		mov	_bg_shape_clip, offset @bg_shape_clip_and_respawn_in_cen$qr10bg_shape_t
 
 loc_12492:
 		call	@grcg_setmode_rmw$qv
@@ -10372,52 +10372,52 @@ loc_12522:
 		inc	byte_2CDD1
 		cmp	byte_2CDD1, 254
 		jb	loc_127EC
-		mov	patnum_2CF28, 120
+		mov	_bg_shape_patnum, 120
 		mov	byte_2CDD0, 4
-		mov	si, 0BA92h
+		mov	si, offset _bg_shapes
 		xor	di, di
 		jmp	short loc_12554
 ; ---------------------------------------------------------------------------
 
 loc_12548:
-		mov	byte ptr [si+4], 40h
-		mov	byte ptr [si+5], 40h
+		mov	[si+yuuka6_bg_shape_t.B6B_angle], 40h
+		mov	[si+yuuka6_bg_shape_t.B6B_speed], (4 shl 4)
 		inc	di
-		add	si, 6
+		add	si, size yuuka6_bg_shape_t
 
 loc_12554:
-		cmp	di, 38h	; '8'
+		cmp	di, YUUKA6_BG_SHAPE_COUNT
 		jl	short loc_12548
 		mov	byte_2CDD1, 255
-		mov	word_2CF2A, 40h
+		mov	_bg_shape_flyout_speed, (4 shl 4)
 		jmp	loc_127EC
 ; ---------------------------------------------------------------------------
 
 loc_12567:
 		cmp	byte_2CDD1, 255
 		jnz	loc_127EC
-		inc	patnum_2CF28
+		inc	_bg_shape_patnum
 		inc	byte_2CDD0
 		cmp	byte_2CDD0, 4
 		jb	short loc_1258A
 		mov	byte_2CDD0, 0
-		mov	patnum_2CF28, 120
+		mov	_bg_shape_patnum, 120
 
 loc_1258A:
-		mov	si, 0BA92h
+		mov	si, offset _bg_shapes
 		xor	di, di
 		jmp	short loc_1259D
 ; ---------------------------------------------------------------------------
 
 loc_12591:
 		mov	al, 80h
-		sub	al, [si+4]
-		mov	[si+4],	al
+		sub	al, [si+yuuka6_bg_shape_t.B6B_angle]
+		mov	[si+yuuka6_bg_shape_t.B6B_angle], al
 		inc	di
-		add	si, 6
+		add	si, size yuuka6_bg_shape_t
 
 loc_1259D:
-		cmp	di, 38h	; '8'
+		cmp	di, YUUKA6_BG_SHAPE_COUNT
 		jl	short loc_12591
 		jmp	loc_127EC
 ; ---------------------------------------------------------------------------
@@ -10428,30 +10428,30 @@ loc_125A5:
 		inc	byte_2CDD1
 		cmp	byte_2CDD1, 254
 		jb	loc_127EC
-		mov	patnum_2CF28, 120
+		mov	_bg_shape_patnum, 120
 		mov	byte_2CDD0, 6
-		mov	si, 0BA92h
+		mov	si, offset _bg_shapes
 		xor	di, di
 		jmp	short loc_125E8
 ; ---------------------------------------------------------------------------
 
 loc_125CB:
-		mov	ax, [si+2]
-		add	ax, 0F400h
+		mov	ax, [si+yuuka6_bg_shape_t.B6B_pos.y]
+		add	ax, (-((PLAYFIELD_H / 2) + (YUUKA6_BG_SHAPE_H / 2)) shl 4)
 		push	ax
-		mov	ax, [si]
-		add	ax, 0F380h
+		mov	ax, [si+yuuka6_bg_shape_t.B6B_pos.x]
+		add	ax, (-((PLAYFIELD_W / 2) + (YUUKA6_BG_SHAPE_W / 2)) shl 4)
 		push	ax
 		call	iatan2
-		mov	[si+4],	al
-		mov	byte ptr [si+5], 10h
+		mov	[si+yuuka6_bg_shape_t.B6B_angle], al
+		mov	[si+yuuka6_bg_shape_t.B6B_speed], (1 shl 4)
 		inc	di
-		add	si, 6
+		add	si, size yuuka6_bg_shape_t
 
 loc_125E8:
-		cmp	di, 38h	; '8'
+		cmp	di, YUUKA6_BG_SHAPE_COUNT
 		jl	short loc_125CB
-		mov	word_2CF2A, 10h
+		mov	_bg_shape_flyout_speed, (1 shl 4)
 		jmp	loc_12705
 ; ---------------------------------------------------------------------------
 
@@ -10477,7 +10477,7 @@ loc_12627:
 		inc	byte_2CDD1
 		cmp	byte_2CDD1, 254
 		jb	loc_127EC
-		mov	patnum_2CF28, 120
+		mov	_bg_shape_patnum, 120
 		cmp	byte_2CDD0, 0Ah
 		jnb	short loc_12645
 		mov	al, 8
@@ -10489,28 +10489,25 @@ loc_12645:
 
 loc_12647:
 		mov	byte_2CDD0, al
-		mov	si, 0BA92h
+		mov	si, offset _bg_shapes
 		xor	di, di
 		jmp	short loc_12674
 ; ---------------------------------------------------------------------------
 
 loc_12651:
-		push	1800h
-		call	main_01:randring1_next16_mod
-		mov	[si], ax
-		push	1700h
-		call	main_01:randring1_next16_mod
-		mov	[si+2],	ax
-		push	0Fh
-		call	main_01:randring1_next16_and
-		add	al, 0B8h
-		mov	[si+4],	al
-		mov	byte ptr [si+5], 48h ; 'H'
+		call	randring1_next16_mod pascal, (PLAYFIELD_W shl 4)
+		mov	[si+yuuka6_bg_shape_t.B6B_pos.x], ax
+		call	randring1_next16_mod pascal, (PLAYFIELD_H shl 4)
+		mov	[si+yuuka6_bg_shape_t.B6B_pos.y], ax
+		call	randring1_next16_and pascal, 0Fh
+		add	al, -48h
+		mov	[si+yuuka6_bg_shape_t.B6B_angle], al
+		mov	[si+yuuka6_bg_shape_t.B6B_speed], 48h
 		inc	di
-		add	si, 6
+		add	si, size yuuka6_bg_shape_t
 
 loc_12674:
-		cmp	di, 38h	; '8'
+		cmp	di, YUUKA6_BG_SHAPE_COUNT
 		jl	short loc_12651
 		jmp	loc_126FF
 ; ---------------------------------------------------------------------------
@@ -10535,7 +10532,7 @@ loc_126A6:
 		inc	byte_2CDD1
 		cmp	byte_2CDD1, 254
 		jb	loc_127EC
-		mov	patnum_2CF28, 120
+		mov	_bg_shape_patnum, 120
 		cmp	byte_2CDD0, 0Ch
 		jnb	short loc_126C4
 		mov	al, 0Ah
@@ -10547,39 +10544,39 @@ loc_126C4:
 
 loc_126C6:
 		mov	byte_2CDD0, al
-		mov	si, 0BA92h
+		mov	si, offset _bg_shapes
 		xor	di, di
 		jmp	short loc_126FA
 ; ---------------------------------------------------------------------------
 
 loc_126D0:
-		mov	ax, [si+2]
-		add	ax, 0F400h
+		mov	ax, [si+yuuka6_bg_shape_t.B6B_pos.y]
+		add	ax, (-((PLAYFIELD_H / 2) + (YUUKA6_BG_SHAPE_H / 2)) shl 4)
 		push	ax
-		mov	ax, [si]
-		add	ax, 0F380h
+		mov	ax, [si+yuuka6_bg_shape_t.B6B_pos.x]
+		add	ax, (-((PLAYFIELD_W / 2) + (YUUKA6_BG_SHAPE_W / 2)) shl 4)
 		push	ax
 		call	iatan2
-		mov	[si+4],	al
+		mov	[si+yuuka6_bg_shape_t.B6B_angle], al
 		cmp	byte_2CDD0, 0Eh
 		jz	short loc_126F2
-		mov	byte ptr [si+5], 10h
+		mov	[si+yuuka6_bg_shape_t.B6B_speed], (1 shl 4)
 		jmp	short loc_126F6
 ; ---------------------------------------------------------------------------
 
 loc_126F2:
-		mov	byte ptr [si+5], 40h
+		mov	[si+yuuka6_bg_shape_t.B6B_speed], (4 shl 4)
 
 loc_126F6:
 		inc	di
-		add	si, 6
+		add	si, size yuuka6_bg_shape_t
 
 loc_126FA:
-		cmp	di, 38h	; '8'
+		cmp	di, YUUKA6_BG_SHAPE_COUNT
 		jl	short loc_126D0
 
 loc_126FF:
-		mov	word_2CF2A, 40h
+		mov	_bg_shape_flyout_speed, (4 shl 4)
 
 loc_12705:
 		mov	byte_2CDD1, 255
@@ -10595,7 +10592,7 @@ loc_1270D:
 ; ---------------------------------------------------------------------------
 
 loc_12722:
-		mov	si, 0BA92h
+		mov	si, offset _bg_shapes
 		cmp	byte_2CDD0, 0Eh
 		jnz	short loc_12730
 		mov	al, 2
@@ -10603,7 +10600,7 @@ loc_12722:
 ; ---------------------------------------------------------------------------
 
 loc_12730:
-		mov	al, 0FEh
+		mov	al, -2
 
 loc_12732:
 		mov	[bp+var_9], al
@@ -10613,42 +10610,40 @@ loc_12732:
 
 loc_12739:
 		mov	al, [bp+var_9]
-		add	[si+4],	al
+		add	[si+yuuka6_bg_shape_t.B6B_angle], al
 		inc	di
-		add	si, 6
+		add	si, size yuuka6_bg_shape_t
 
 loc_12743:
-		cmp	di, 38h	; '8'
+		cmp	di, YUUKA6_BG_SHAPE_COUNT
 		jl	short loc_12739
 		cmp	_boss_phase, 0Fh
 		jb	short loc_1279D
 		inc	byte_2CDD1
 		cmp	byte_2CDD1, 254
 		jb	loc_127EC
-		mov	patnum_2CF28, 124
+		mov	_bg_shape_patnum, 124
 		mov	byte_2CDD0, 10h
 		mov	byte_2CDD1, 255
-		mov	si, 0BA92h
+		mov	si, offset _bg_shapes
 		xor	di, di
 		jmp	short loc_12790
 ; ---------------------------------------------------------------------------
 
 loc_12773:
-		push	1800h
-		call	main_01:randring1_next16_mod
-		mov	[si], ax
-		push	1700h
-		call	main_01:randring1_next16_mod
-		mov	[si+2],	ax
-		mov	byte ptr [si+4], 40h
-		mov	byte ptr [si+5], 0C0h
+		call	randring1_next16_mod pascal, (PLAYFIELD_W shl 4)
+		mov	[si+yuuka6_bg_shape_t.B6B_pos.x], ax
+		call	randring1_next16_mod pascal, (PLAYFIELD_H shl 4)
+		mov	[si+yuuka6_bg_shape_t.B6B_pos.y], ax
+		mov	[si+yuuka6_bg_shape_t.B6B_angle], 40h
+		mov	[si+yuuka6_bg_shape_t.B6B_speed], (12 shl 4)
 		inc	di
-		add	si, 6
+		add	si, size yuuka6_bg_shape_t
 
 loc_12790:
-		cmp	di, 38h	; '8'
+		cmp	di, YUUKA6_BG_SHAPE_COUNT
 		jl	short loc_12773
-		mov	word_2CF2A, 0C0h
+		mov	_bg_shape_flyout_speed, (12 shl 4)
 		jmp	short loc_127EC
 ; ---------------------------------------------------------------------------
 
@@ -10671,28 +10666,28 @@ loc_127B1:
 loc_127B7:
 		cmp	_boss_phase, PHASE_EXPLODE_BIG
 		jb	short loc_127EC
-		mov	patnum_2CF28, 125
+		mov	_bg_shape_patnum, 125
 		mov	byte_2CDD0, 11h
 		mov	byte_2CDD1, 255
-		mov	si, 0BA92h
+		mov	si, offset _bg_shapes
 		xor	di, di
 		jmp	short loc_127E1
 ; ---------------------------------------------------------------------------
 
 loc_127D5:
-		mov	byte ptr [si+4], 40h
-		mov	byte ptr [si+5], 10h
+		mov	[si+yuuka6_bg_shape_t.B6B_angle], 40h
+		mov	[si+yuuka6_bg_shape_t.B6B_speed], (1 shl 4)
 		inc	di
-		add	si, 6
+		add	si, size yuuka6_bg_shape_t
 
 loc_127E1:
-		cmp	di, 38h	; '8'
+		cmp	di, YUUKA6_BG_SHAPE_COUNT
 		jl	short loc_127D5
-		mov	word_2CF2A, 10h
+		mov	_bg_shape_flyout_speed, (1 shl 4)
 
 loc_127EC:
 		inc	byte_2CDD1
-		mov	si, 0BA92h
+		mov	si, offset _bg_shapes
 		xor	di, di
 		jmp	short loc_12823
 ; ---------------------------------------------------------------------------
@@ -10704,33 +10699,32 @@ loc_127F7:
 		push	ss
 		lea	ax, [bp+@@vector_y]
 		push	ax
-		push	word ptr [si+4]
-		mov	al, [si+5]
+		push	word ptr [si+yuuka6_bg_shape_t.B6B_angle]
+		mov	al, [si+yuuka6_bg_shape_t.B6B_speed]
 		mov	ah, 0
 		push	ax
 		call	vector2
 		mov	ax, [bp+@@vector_x]
-		add	[si], ax
+		add	[si+yuuka6_bg_shape_t.B6B_pos.x], ax
 		mov	ax, [bp+@@vector_y]
-		add	[si+2],	ax
-		push	si
-		call	fp_2CF2C
+		add	[si+yuuka6_bg_shape_t.B6B_pos.y], ax
+		call	_bg_shape_clip pascal, si
 		inc	di
-		add	si, 6
+		add	si, size yuuka6_bg_shape_t
 
 loc_12823:
-		cmp	di, 38h	; '8'
+		cmp	di, YUUKA6_BG_SHAPE_COUNT
 		jl	short loc_127F7
 		mov	ax, GRAM_400
 		mov	es, ax
 		assume es:nothing
-		mov	si, 0BA92h
+		mov	si, offset _bg_shapes
 		xor	di, di
 		jmp	short loc_1286D
 ; ---------------------------------------------------------------------------
 
 loc_12834:
-		mov	ax, patnum_2CF28
+		mov	ax, _bg_shape_patnum
 		mov	[bp+@@patnum], ax
 		cmp	byte_2CDD0, 11h
 		jb	short loc_1284C
@@ -10741,20 +10735,20 @@ loc_12834:
 		add	[bp+@@patnum], dx
 
 loc_1284C:
-		mov	ax, [si]
+		mov	ax, [si+yuuka6_bg_shape_t.B6B_pos.x]
 		sar	ax, 4
-		add	ax, (PLAYFIELD_LEFT - 8)
+		add	ax, (PLAYFIELD_LEFT - (YUUKA6_BG_SHAPE_W / 2))
 		mov	[bp+@@left], ax
-		mov	ax, [si+2]
+		mov	ax, [si+yuuka6_bg_shape_t.B6B_pos.y]
 		sar	ax, 4
-		add	ax, 8
+		add	ax, (PLAYFIELD_TOP - (YUUKA6_BG_SHAPE_H / 2))
 		mov	cx, [bp+@@left]
 		call	@z_super_put_16x16_mono_raw$qi pascal, [bp+@@patnum]
 		inc	di
-		add	si, 6
+		add	si, size yuuka6_bg_shape_t
 
 loc_1286D:
-		cmp	di, 38h	; '8'
+		cmp	di, YUUKA6_BG_SHAPE_COUNT
 		jl	short loc_12834
 		GRCG_OFF_CLOBBERING dx
 		pop	di
@@ -10816,28 +10810,26 @@ table_1289F	dw loc_12484
 		GRCG_OFF_CLOBBERING dx
 		cmp	_boss_phase_frame, 2
 		jnz	loc_12975
-		mov	si, 0BA92h
+		mov	si, offset _bg_shapes
 		xor	di, di
 		jmp	short loc_12904
 ; ---------------------------------------------------------------------------
 
 loc_128E7:
-		push	1800h
-		call	main_01:randring1_next16_mod
-		mov	[si], ax
-		push	1700h
-		call	main_01:randring1_next16_mod
-		mov	[si+2],	ax
-		mov	byte ptr [si+4], 60h
-		mov	byte ptr [si+5], 10h
+		call	randring1_next16_mod pascal, (PLAYFIELD_W shl 4)
+		mov	[si+yuuka6_bg_shape_t.B6B_pos.x], ax
+		call	randring1_next16_mod pascal, (PLAYFIELD_H shl 4)
+		mov	[si+yuuka6_bg_shape_t.B6B_pos.y], ax
+		mov	[si+yuuka6_bg_shape_t.B6B_angle], 60h
+		mov	[si+yuuka6_bg_shape_t.B6B_speed], (1 shl 4)
 		inc	di
-		add	si, 6
+		add	si, size yuuka6_bg_shape_t
 
 loc_12904:
-		cmp	di, 38h	; '8'
+		cmp	di, YUUKA6_BG_SHAPE_COUNT
 		jl	short loc_128E7
-		mov	word_2CF2A, 10h
-		mov	patnum_2CF28, 120
+		mov	_bg_shape_flyout_speed, (1 shl 4)
+		mov	_bg_shape_patnum, 120
 		mov	byte_2CDD0, 0
 		mov	byte_2CDD1, 0
 		jmp	short loc_12975
@@ -32113,10 +32105,24 @@ _resident	dd ?
 include th04/main/boss/bg[bss].asm
 byte_2CDD0	db ?
 byte_2CDD1	db ?
-		db 342 dup(?)
-patnum_2CF28	dw ?
-word_2CF2A	dw ?
-fp_2CF2C	dw ?
+
+YUUKA6_BG_SHAPE_COUNT = 56
+YUUKA6_BG_SHAPE_W = 16
+YUUKA6_BG_SHAPE_H = 16
+
+yuuka6_bg_shape_t struc
+	B6B_pos  	Point <?>
+	B6B_angle	db ?
+	B6B_speed	db ?
+yuuka6_bg_shape_t ends
+
+public _bg_shapes, _bg_shape_patnum, _bg_shape_flyout_speed, _bg_shape_clip
+_bg_shapes	yuuka6_bg_shape_t YUUKA6_BG_SHAPE_COUNT dup (<?>)
+	yuuka6_bg_shape_t <?>
+_bg_shape_patnum	dw ?
+_bg_shape_flyout_speed	dw ?
+_bg_shape_clip	dw ?
+
 include th04/formats/scoredat[bss].asm
 byte_2CFF2	db ?
 		db ?

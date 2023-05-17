@@ -8,6 +8,9 @@
 // Constants
 // ---------
 
+static const pixel_t BG_SHAPE_W = 16;
+static const pixel_t BG_SHAPE_H = 16;
+
 static const pixel_t CHASECROSS_W = 32;
 static const pixel_t CHASECROSS_H = 32;
 static const int CHASECROSS_KILL_FRAMES_PER_CEL = 4;
@@ -15,6 +18,24 @@ static const int CHASECROSS_KILL_FRAMES_PER_CEL = 4;
 
 // Structures
 // ----------
+
+#define BG_SHAPE_COUNT 56
+
+struct bg_shape_t {
+	SPPoint pos;
+	unsigned char angle;
+	SubpixelLength8 speed;
+};
+
+// 1 additional unused one, for some reason?
+extern bg_shape_t bg_shapes[BG_SHAPE_COUNT + 1];
+
+extern main_patnum_t bg_shape_patnum;
+extern Subpixel bg_shape_flyout_speed;
+
+// Called on every frame for each shape after [pos] was updated. Can implement
+// custom clipping and respawning behavior.
+extern void (near pascal *near bg_shape_clip)(bg_shape_t near& shape);
 
 #define CHASECROSS_COUNT (CUSTOM_COUNT - 1)
 
