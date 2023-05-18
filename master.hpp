@@ -11,23 +11,11 @@
 /// Types
 /// -----
 
-// A version of master.lib's Point without the constructor, even in C++
-struct point_t {
-	int x, y;
-};
-
-#ifdef PC98_H
-	struct screen_point_t {
-		screen_x_t x;
-		screen_y_t y;
-	};
-
-	#if defined(__cplusplus)
+#if (defined(PC98_H) && defined(__cplusplus))
 	// master.lib palettes use twice the bits per RGB component for more
 	// toning precision
 	typedef RGB<uint8_t, 256> RGB8;
 	typedef Palette<RGB8> Palette8;
-	#endif
 #endif
 /// -----
 

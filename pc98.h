@@ -13,6 +13,11 @@
 typedef int pixel_t;
 typedef unsigned int upixel_t;
 
+// A version of master.lib's Point without the constructor, even in C++
+struct point_t {
+	pixel_t x, y;
+};
+
 // VRAM widths and object-space coordinates
 typedef int vram_byte_amount_t;
 typedef int vram_word_amount_t;
@@ -35,6 +40,12 @@ typedef unsigned int uscreen_x_t;
 // care about 200- or 400-line graphics modes or vertical scrolling.
 typedef int screen_y_t;
 typedef unsigned int uscreen_y_t;
+
+// Display-space point.
+struct screen_point_t {
+	screen_x_t x;
+	screen_y_t y;
+};
 
 // VRAM X coordinate, ranging from 0 to (RES_X / BYTE_DOTS).
 typedef int vram_x_t;
