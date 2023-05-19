@@ -13,9 +13,11 @@ static const int TILE_ROWS_PER_SECTION = 5;
 static const int TILE_SECTION_COUNT_MAX = 32;
 extern const uint16_t TILE_SECTION_OFFSETS[TILE_SECTION_COUNT_MAX];
 
+#ifdef PLANAR_H
 // TH04 starts addressing individual tiles directly via their 16-bit offset
-// in the VRAM.
-extern uint16_t tile_ring[TILES_Y][TILES_MEMORY_X];
+// in VRAM.
+extern vram_offset_t tile_ring[TILES_Y][TILES_MEMORY_X];
+#endif
 
 // Completely fills [tile_ring] with the initial screen of a stage, by loading
 // the section IDs from [std_seg], and the tiles themselves from [map_seg].

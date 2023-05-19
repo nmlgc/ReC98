@@ -3,6 +3,8 @@
  * Declarations for planar 4bpp graphics
  */
 
+#define PLANAR_H
+
 // 1bpp types, describing horizontal lines of 8, 16, or 32 pixels.
 typedef uint8_t dots8_t;
 typedef uint16_t dots16_t;

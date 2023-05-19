@@ -95,10 +95,7 @@ void tile_area_init_and_put_both(void)
 			optimization_barrier();
 		} while(1);
 
-		tile_image_vos[i] = (
-			(TILE_AREA_VRAM_LEFT + ((i / TILE_AREA_ROWS) * TILE_VRAM_W)) +
-			(TILE_AREA_TOP + ((i % TILE_AREA_ROWS) * (TILE_H * ROW_SIZE)))
-		);
+		tile_image_vos[i] = tile_image_vo(i);
 	}
 }
 #pragma codestring "\x90"
