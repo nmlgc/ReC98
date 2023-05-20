@@ -4190,64 +4190,64 @@ off_E2B9	dw offset loc_E257
 
 sub_E2C3	proc near
 
-var_A		= word ptr -0Ah
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@screen_top            	= word ptr -0Ah
+@@screen_left           	= word ptr -8
+@@screen_circle_center_y	= word ptr -6
+@@screen_center_x       	= word ptr -4
+@@i                     	= word ptr -2
 
 		push	bp
 		mov	bp, sp
 		sub	sp, 0Ah
 		push	si
 		push	di
-		mov	si, 42F0h
-		mov	[bp+var_2], 0
+		mov	si, offset _thicklasers
+		mov	[bp+@@i], 0
 		jmp	loc_E44F
 ; ---------------------------------------------------------------------------
 
 loc_E2D6:
-		cmp	byte ptr [si], 0
+		cmp	[si+thicklaser_t.TL_flag], TF_FREE
 		jz	loc_E449
-		cmp	byte ptr [si], 1
+		cmp	[si+thicklaser_t.TL_flag], TF_LINE
 		jnz	short loc_E316
-		mov	ax, [si+2]
+		mov	ax, [si+thicklaser_t.TL_origin.x]
 		sar	ax, 4
-		add	ax, 20h	; ' '
-		mov	[bp+var_4], ax
-		mov	ax, [si+4]
+		add	ax, PLAYFIELD_LEFT
+		mov	[bp+@@screen_center_x], ax
+		mov	ax, [si+thicklaser_t.TL_origin.y]
 		sar	ax, 4
-		add	ax, 10h
-		mov	[bp+var_6], ax
+		add	ax, PLAYFIELD_TOP
+		mov	[bp+@@screen_circle_center_y], ax
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + V_WHITE
-		call	grcg_vline pascal, [bp+var_4], [bp+var_6], PLAYFIELD_BOTTOM -1
+		call	grcg_vline pascal, [bp+@@screen_center_x], [bp+@@screen_circle_center_y], (PLAYFIELD_BOTTOM - 1)
 		jmp	loc_E449
 ; ---------------------------------------------------------------------------
 
 loc_E316:
-		mov	ax, [si+2]
+		mov	ax, [si+thicklaser_t.TL_origin.x]
 		sar	ax, 4
-		add	ax, 20h	; ' '
-		mov	[bp+var_4], ax
-		mov	ax, [si+4]
+		add	ax, PLAYFIELD_LEFT
+		mov	[bp+@@screen_center_x], ax
+		mov	ax, [si+thicklaser_t.TL_origin.y]
 		sar	ax, 4
-		add	ax, [si+14h]
-		add	ax, 10h
-		mov	[bp+var_6], ax
-		mov	ax, [bp+var_4]
-		sub	ax, [si+14h]
-		mov	[bp+var_8], ax
-		mov	ax, [si+14h]
-		add	ax, [bp+var_4]
-		mov	[bp+var_A], ax
-		mov	ax, [si+14h]
+		add	ax, [si+thicklaser_t.TL_radius_cur]
+		add	ax, PLAYFIELD_TOP
+		mov	[bp+@@screen_circle_center_y], ax
+		mov	ax, [bp+@@screen_center_x]
+		sub	ax, [si+thicklaser_t.TL_radius_cur]
+		mov	[bp+@@screen_left], ax
+		mov	ax, [si+thicklaser_t.TL_radius_cur]
+		add	ax, [bp+@@screen_center_x]
+		mov	[bp+@@screen_top], ax
+		mov	ax, [si+thicklaser_t.TL_radius_cur]
 		mov	bx, 4
 		cwd
 		idiv	bx
 		mov	di, ax
-		cmp	di, 10h
+		cmp	di, 16
 		jle	short loc_E356
-		mov	di, 10h
+		mov	di, 16
 
 loc_E356:
 		mov	ax, di
@@ -4257,18 +4257,18 @@ loc_E356:
 		or	ax, ax
 		jz	short loc_E3B1
 		push	GC_RMW
-		mov	al, [si+10h]
+		mov	al, [si+thicklaser_t.TL_col_outline]
 		mov	ah, 0
 		push	ax
 		call	grcg_setcolor
-		call	grcg_circlefill pascal, [bp+var_4], [bp+var_6], word ptr [si+14h]
-		push	[bp+var_8]
-		push	[bp+var_6]
+		call	grcg_circlefill pascal, [bp+@@screen_center_x], [bp+@@screen_circle_center_y], [si+thicklaser_t.TL_radius_cur]
+		push	[bp+@@screen_left]
+		push	[bp+@@screen_circle_center_y]
 		mov	ax, di
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, [bp+var_8]
+		add	ax, [bp+@@screen_left]
 		push	ax
 		push	(PLAYFIELD_BOTTOM - 1)
 		call	grcg_boxfill
@@ -4276,11 +4276,11 @@ loc_E356:
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	dx, [bp+var_A]
+		mov	dx, [bp+@@screen_top]
 		sub	dx, ax
 		push	dx
-		push	[bp+var_6]
-		push	[bp+var_A]
+		push	[bp+@@screen_circle_center_y]
+		push	[bp+@@screen_top]
 		push	(PLAYFIELD_BOTTOM - 1)
 		call	grcg_boxfill
 
@@ -4288,18 +4288,18 @@ loc_E3B1:
 		or	di, di
 		jz	short loc_E416
 		push	GC_RMW
-		mov	al, [si+10h]
+		mov	al, [si+thicklaser_t.TL_col_outline]
 		mov	ah, 0
 		inc	ax
 		push	ax
 		call	grcg_setcolor
-		push	[bp+var_4]
-		push	[bp+var_6]
+		push	[bp+@@screen_center_x]
+		push	[bp+@@screen_circle_center_y]
 		mov	ax, di
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	dx, [si+14h]
+		mov	dx, [si+thicklaser_t.TL_radius_cur]
 		sub	dx, ax
 		push	dx
 		call	grcg_circlefill
@@ -4307,46 +4307,46 @@ loc_E3B1:
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		add	ax, [bp+var_8]
+		add	ax, [bp+@@screen_left]
 		push	ax
-		push	[bp+var_6]
-		mov	ax, [bp+var_8]
+		push	[bp+@@screen_circle_center_y]
+		mov	ax, [bp+@@screen_left]
 		add	ax, di
 		push	ax
 		push	(PLAYFIELD_BOTTOM - 1)
 		call	grcg_boxfill
-		mov	ax, [bp+var_A]
+		mov	ax, [bp+@@screen_top]
 		sub	ax, di
 		push	ax
-		push	[bp+var_6]
+		push	[bp+@@screen_circle_center_y]
 		mov	ax, di
 		cwd
 		sub	ax, dx
 		sar	ax, 1
-		mov	dx, [bp+var_A]
+		mov	dx, [bp+@@screen_top]
 		sub	dx, ax
 		push	dx
 		push	(PLAYFIELD_BOTTOM - 1)
 		call	grcg_boxfill
 
 loc_E416:
-		add	[bp+var_8], di
-		sub	[bp+var_A], di
+		add	[bp+@@screen_left], di
+		sub	[bp+@@screen_top], di
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + V_WHITE
-		push	[bp+var_4]
-		push	[bp+var_6]
-		mov	ax, [si+14h]
+		push	[bp+@@screen_center_x]
+		push	[bp+@@screen_circle_center_y]
+		mov	ax, [si+thicklaser_t.TL_radius_cur]
 		sub	ax, di
 		push	ax
 		call	grcg_circlefill
-		call	grcg_boxfill pascal, [bp+var_8], [bp+var_6], [bp+var_A], (PLAYFIELD_BOTTOM - 1)
+		call	grcg_boxfill pascal, [bp+@@screen_left], [bp+@@screen_circle_center_y], [bp+@@screen_top], (PLAYFIELD_BOTTOM - 1)
 
 loc_E449:
-		inc	[bp+var_2]
-		add	si, 18h
+		inc	[bp+@@i]
+		add	si, size thicklaser_t
 
 loc_E44F:
-		cmp	[bp+var_2], 2
+		cmp	[bp+@@i], THICKLASER_COUNT
 		jl	loc_E2D6
 		GRCG_OFF_CLOBBERING dx
 		pop	di
@@ -14910,23 +14910,23 @@ sub_15D74	proc far
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, 42F0h
+		mov	si, offset _thicklasers
 		xor	ax, ax
 		jmp	short loc_15D86
 ; ---------------------------------------------------------------------------
 
 loc_15D7F:
-		mov	byte ptr [si], 0
+		mov	[si+thicklaser_t.TL_flag], TF_FREE
 		inc	ax
-		add	si, 18h
+		add	si, size thicklaser_t
 
 loc_15D86:
-		cmp	ax, 2
+		cmp	ax, THICKLASER_COUNT
 		jl	short loc_15D7F
-		mov	word_25622, 0
-		mov	byte_25618, 1
-		mov	word_2562C, 1
-		mov	word_2562E, 1
+		mov	_thicklaser_template.TL_cur_flag_frames, 0
+		mov	_thicklaser_template.TL_flag, 1
+		mov	_thicklaser_template.TL_radius_cur, 1
+		mov	_thicklaser_template.TL_radius_speed, 1
 		pop	si
 		pop	bp
 		retf
@@ -14936,27 +14936,27 @@ sub_15D74	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public @THICKLASER_TEMPLATE_PULL$QR12THICKLASER_T
+@thicklaser_template_pull$qr12thicklaser_t	proc near
 
-sub_15DA5	proc near
-
-arg_0		= word ptr  4
+@@thicklaser	= word ptr  4
 
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
-		mov	cx, 0Ch
+		mov	cx, (size thicklaser_t / word)
 		push	ds
 		pop	es
 		assume es:_DATA
-		mov	si, 42D8h
-		mov	di, [bp+arg_0]
+		mov	si, offset _thicklaser_template
+		mov	di, [bp+@@thicklaser]
 		rep movsw
 		pop	di
 		pop	si
 		pop	bp
 		retn	2
-sub_15DA5	endp
+@thicklaser_template_pull$qr12thicklaser_t	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -14968,26 +14968,25 @@ sub_15DBD	proc near
 		mov	bp, sp
 		push	si
 		push	di
-		mov	si, 42F0h
+		mov	si, offset _thicklasers
 		xor	di, di
 		jmp	short loc_15DDF
 ; ---------------------------------------------------------------------------
 
 loc_15DC9:
-		cmp	byte ptr [si], 0
+		cmp	[si+thicklaser_t.TL_flag], TF_FREE
 		jnz	short loc_15DDB
-		push	si
-		call	sub_15DA5
+		call	@thicklaser_template_pull$qr12thicklaser_t pascal, si
 		call	snd_se_play pascal, 5
 		jmp	short loc_15DE4
 ; ---------------------------------------------------------------------------
 
 loc_15DDB:
 		inc	di
-		add	si, 18h
+		add	si, size thicklaser_t
 
 loc_15DDF:
-		cmp	di, 2
+		cmp	di, THICKLASER_COUNT
 		jl	short loc_15DC9
 
 loc_15DE4:
@@ -15004,106 +15003,106 @@ sub_15DBD	endp
 
 sub_15DE8	proc near
 
-var_2		= word ptr -2
+@@i		= word ptr -2
 
 		push	bp
 		mov	bp, sp
 		sub	sp, 2
 		push	si
 		push	di
-		mov	si, 42F0h
-		mov	[bp+var_2], 0
+		mov	si, offset _thicklasers
+		mov	[bp+@@i], 0
 		jmp	loc_15EC2
 ; ---------------------------------------------------------------------------
 
 loc_15DFB:
-		cmp	byte ptr [si], 0
+		cmp	[si+thicklaser_t.TL_flag], TF_FREE
 		jz	loc_15EBC
-		cmp	byte ptr [si], 1
+		cmp	[si+thicklaser_t.TL_flag], TF_LINE
 		jnz	short loc_15E1F
-		mov	ax, [si+0Ah]
-		cmp	ax, [si+0Ch]
+		mov	ax, [si+thicklaser_t.TL_cur_flag_frames]
+		cmp	ax, [si+thicklaser_t.TL_line_frames]
 		jl	short loc_15E6B
-		inc	byte ptr [si]
-		mov	word ptr [si+0Ah], 0
+		inc	[si+thicklaser_t.TL_flag]
+		mov	[si+thicklaser_t.TL_cur_flag_frames], 0
 		call	snd_se_play pascal, 6
 		jmp	short loc_15E6B
 ; ---------------------------------------------------------------------------
 
 loc_15E1F:
-		cmp	byte ptr [si], 2
+		cmp	[si+thicklaser_t.TL_flag], TF_GROW
 		jnz	short loc_15E41
-		mov	ax, [si+16h]
-		add	[si+14h], ax
-		mov	ax, [si+14h]
-		cmp	ax, [si+12h]
+		mov	ax, [si+thicklaser_t.TL_radius_speed]
+		add	[si+thicklaser_t.TL_radius_cur], ax
+		mov	ax, [si+thicklaser_t.TL_radius_cur]
+		cmp	ax, [si+thicklaser_t.TL_radius_max]
 		jl	short loc_15E6B
-		inc	byte ptr [si]
-		mov	word ptr [si+0Ah], 0
-		mov	ax, [si+12h]
-		mov	[si+14h], ax
+		inc	[si+thicklaser_t.TL_flag]
+		mov	[si+thicklaser_t.TL_cur_flag_frames], 0
+		mov	ax, [si+thicklaser_t.TL_radius_max]
+		mov	[si+thicklaser_t.TL_radius_cur], ax
 		jmp	short loc_15E6B
 ; ---------------------------------------------------------------------------
 
 loc_15E41:
-		cmp	byte ptr [si], 3
+		cmp	[si+thicklaser_t.TL_flag], TF_STATIC
 		jnz	short loc_15E57
-		mov	ax, [si+0Ah]
-		cmp	ax, [si+0Eh]
+		mov	ax, [si+thicklaser_t.TL_cur_flag_frames]
+		cmp	ax, [si+thicklaser_t.TL_static_frames]
 		jl	short loc_15E6B
-		inc	byte ptr [si]
-		mov	word ptr [si+0Ah], 0
+		inc	[si+thicklaser_t.TL_flag]
+		mov	[si+thicklaser_t.TL_cur_flag_frames], 0
 		jmp	short loc_15E6B
 ; ---------------------------------------------------------------------------
 
 loc_15E57:
-		cmp	byte ptr [si], 4
+		cmp	[si+thicklaser_t.TL_flag], TF_SHRINK
 		jnz	short loc_15E6B
-		mov	ax, [si+16h]
-		sub	[si+14h], ax
-		cmp	word ptr [si+14h], 1
+		mov	ax, [si+thicklaser_t.TL_radius_speed]
+		sub	[si+thicklaser_t.TL_radius_cur], ax
+		cmp	[si+thicklaser_t.TL_radius_cur], 1
 		jg	short loc_15E6B
-		mov	byte ptr [si], 0
+		mov	[si+thicklaser_t.TL_flag], TF_FREE
 
 loc_15E6B:
-		inc	word ptr [si+0Ah]
-		cmp	byte ptr [si], 1
+		inc	[si+thicklaser_t.TL_cur_flag_frames]
+		cmp	[si+thicklaser_t.TL_flag], TF_LINE
 		jbe	short loc_15EBC
-		mov	ax, [si+14h]
+		mov	ax, [si+thicklaser_t.TL_radius_cur]
 		shl	ax, 3
 		mov	di, ax
-		mov	ax, [si+4]
+		mov	ax, [si+thicklaser_t.TL_origin.y]
 		add	ax, di
 		cmp	ax, _player_pos.cur.y
 		jg	short loc_15EBC
-		mov	ax, [si+14h]
+		mov	ax, [si+thicklaser_t.TL_radius_cur]
 		shl	ax, 2
 		mov	di, ax
-		cmp	di, 100h
+		cmp	di, (16 shl 4)
 		jl	short loc_15E97
-		mov	di, 100h
+		mov	di, (16 shl 4)
 
 loc_15E97:
-		mov	ax, [si+14h]
+		mov	ax, [si+thicklaser_t.TL_radius_cur]
 		shl	ax, 4
 		sub	ax, di
 		mov	di, ax
-		mov	ax, [si+2]
+		mov	ax, [si+thicklaser_t.TL_origin.x]
 		sub	ax, di
 		cmp	ax, _player_pos.cur.x
 		jg	short loc_15EBC
-		mov	ax, [si+2]
+		mov	ax, [si+thicklaser_t.TL_origin.x]
 		add	ax, di
 		cmp	ax, _player_pos.cur.x
 		jl	short loc_15EBC
 		mov	_player_is_hit, 1
 
 loc_15EBC:
-		inc	[bp+var_2]
-		add	si, 18h
+		inc	[bp+@@i]
+		add	si, size thicklaser_t
 
 loc_15EC2:
-		cmp	[bp+var_2], 2
+		cmp	[bp+@@i], THICKLASER_COUNT
 		jl	loc_15DFB
 		pop	di
 		pop	si
@@ -15678,16 +15677,16 @@ loc_16402:
 
 loc_16409:
 		mov	ax, _bullet_template.BT_origin.x ; jumptable 000163A9 case 96
-		mov	point_2561A.x, ax
+		mov	_thicklaser_template.TL_origin.x, ax
 		mov	ax, _bullet_template.BT_origin.y
-		mov	point_2561A.y, ax
+		mov	_thicklaser_template.TL_origin.y, ax
 		mov	al, _boss_statebyte[0].BSB_thicklaser_radius
 		mov	ah, 0
-		mov	word_2562A, ax
-		mov	word_2562E, 6
-		mov	word_25624, 20h	; ' '
-		mov	word_25626, 90h
-		mov	byte_25628, 8
+		mov	_thicklaser_template.TL_radius_max, ax
+		mov	_thicklaser_template.TL_radius_speed, 6
+		mov	_thicklaser_template.TL_line_frames, 32
+		mov	_thicklaser_template.TL_static_frames, 144
+		mov	_thicklaser_template.TL_col_outline, 8
 		call	sub_15DBD
 
 loc_16437:
@@ -23542,22 +23541,22 @@ loc_1AF59:
 		jnz	short loc_1AFA6
 		mov	al, _boss_statebyte[0].BSB_thicklaser_radius
 		mov	ah, 0
-		mov	word_2562A, ax
-		mov	word_2562E, 4
-		mov	word_25624, 24h	; '$'
-		mov	word_25626, 28h	; '('
-		mov	byte_25628, 8
+		mov	_thicklaser_template.TL_radius_max, ax
+		mov	_thicklaser_template.TL_radius_speed, 4
+		mov	_thicklaser_template.TL_line_frames, 36
+		mov	_thicklaser_template.TL_static_frames, 40
+		mov	_thicklaser_template.TL_col_outline, 8
 		mov	ax, _boss_pos.cur.x
-		mov	point_2561A.x, ax
+		mov	_thicklaser_template.TL_origin.x, ax
 		mov	ax, _boss_pos.cur.y
 		add	ax, (32 shl 4)
-		mov	point_2561A.y, ax
+		mov	_thicklaser_template.TL_origin.y, ax
 		call	sub_15DBD
 		mov	ax, point_25A0C.x
-		mov	point_2561A.x, ax
+		mov	_thicklaser_template.TL_origin.x, ax
 		mov	ax, point_25A0C.y
 		add	ax, (40 shl 4)
-		mov	point_2561A.y, ax
+		mov	_thicklaser_template.TL_origin.y, ax
 		call	sub_15DBD
 
 loc_1AFA6:
@@ -30272,14 +30271,14 @@ loc_1FF44:
 
 loc_1FF93:
 		mov	ax, _bullet_template.BT_origin.x
-		mov	point_2561A.x, ax
+		mov	_thicklaser_template.TL_origin.x, ax
 		mov	ax, _boss_pos.cur.y
-		mov	point_2561A.y, ax
-		mov	word_2562A, 40h
-		mov	word_2562E, 6
-		mov	word_25624, 20h	; ' '
-		mov	word_25626, 30h	; '0'
-		mov	byte_25628, 8
+		mov	_thicklaser_template.TL_origin.y, ax
+		mov	_thicklaser_template.TL_radius_max, 64
+		mov	_thicklaser_template.TL_radius_speed, 6
+		mov	_thicklaser_template.TL_line_frames, 32
+		mov	_thicklaser_template.TL_static_frames, 48
+		mov	_thicklaser_template.TL_col_outline, 8
 		call	sub_15DBD
 		jmp	loc_20044
 ; ---------------------------------------------------------------------------
@@ -31799,19 +31798,37 @@ byte_2560A	db ?
 		db ?
 public _player_option_laser_pos
 _player_option_laser_pos	motion_t <?>
-byte_25618	db ?
+
+THICKLASER_COUNT = 2
+
+TF_FREE = 0
+TF_LINE = 1
+TF_GROW = 2
+TF_STATIC = 3
+TF_SHRINK = 4
+
+thicklaser_t struc
+	TL_flag           	db ?
 		db ?
-point_2561A	Point <?>
-		dd    ?	;
-word_25622	dw ?
-word_25624	dw ?
-word_25626	dw ?
-byte_25628	db ?
+	TL_origin         	Point <?>
 		db ?
-word_2562A	dw ?
-word_2562C	dw ?
-word_2562E	dw ?
-		db 48 dup(?)
+		db ?
+		db ?
+		db ?
+	TL_cur_flag_frames	dw ?
+	TL_line_frames    	dw ?
+	TL_static_frames  	dw ?
+	TL_col_outline    	db ?
+		db ?
+	TL_radius_max     	dw ?
+	TL_radius_cur     	dw ?
+	TL_radius_speed   	dw ?
+thicklaser_t ends
+
+public _thicklaser_template, _thicklasers
+_thicklaser_template	thicklaser_t <?>
+_thicklasers        	thicklaser_t THICKLASER_COUNT dup(<?>)
+
 byte_25660	db ?
 		db ?
 word_25662	dw ?
