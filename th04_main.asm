@@ -13820,12 +13820,12 @@ loc_15370:
 		jnz	short loc_1538C
 		cmp	_midboss_pos.cur.x, (180 shl 4)
 		jl	short loc_15384
-		mov	ax, 0FFC0h
+		mov	ax, (-4 shl 4)
 		jmp	short loc_15387
 ; ---------------------------------------------------------------------------
 
 loc_15384:
-		mov	ax, 40h
+		mov	ax, (4 shl 4)
 
 loc_15387:
 		mov	_midboss_pos.velocity.x, ax
@@ -15138,20 +15138,18 @@ loc_15EEA:
 		mov	byte_25667, 2
 		cmp	[bp+arg_0], 0
 		jnz	short loc_15F23
-		push	1000h
-		call	randring2_next16_mod
-		add	ax, 400h
+		call	randring2_next16_mod pascal, (256 shl 4)
+		add	ax, (64 shl 4)
 		mov	si, ax
-		push	400h
-		call	randring2_next16_mod
-		add	ax, 400h
+		call	randring2_next16_mod pascal, (64 shl 4)
+		add	ax, (64 shl 4)
 		mov	di, ax
 		jmp	short loc_15F29
 ; ---------------------------------------------------------------------------
 
 loc_15F23:
-		mov	si, 0C00h
-		mov	di, 500h
+		mov	si, ((PLAYFIELD_W / 2) shl 4)
+		mov	di, (80 shl 4)
 
 loc_15F29:
 		mov	ax, si
@@ -15236,7 +15234,7 @@ loc_15FCF:
 loc_15FDE:
 		cmp	_boss_phase_frame, 31
 		jnz	short loc_15FF3
-		add	word_25662, 400h
+		add	word_25662, (64 shl 4)
 		mov	_bullet_template.BT_angle, 80h
 		jmp	loc_1607E
 ; ---------------------------------------------------------------------------
@@ -15244,7 +15242,7 @@ loc_15FDE:
 loc_15FF3:
 		cmp	_boss_phase_frame, 47
 		jnz	short loc_16007
-		sub	word_25662, 400h
+		sub	word_25662, (64 shl 4)
 		mov	_bullet_template.BT_angle, 10h
 		jmp	short loc_1607E
 ; ---------------------------------------------------------------------------
@@ -15252,7 +15250,7 @@ loc_15FF3:
 loc_16007:
 		cmp	_boss_phase_frame, 63
 		jnz	short loc_1601B
-		add	word_25662, 400h
+		add	word_25662, (64 shl 4)
 		mov	_bullet_template.BT_angle, 70h
 		jmp	short loc_1607E
 ; ---------------------------------------------------------------------------
@@ -15260,7 +15258,7 @@ loc_16007:
 loc_1601B:
 		cmp	_boss_phase_frame, 79
 		jnz	short loc_1602F
-		sub	word_25662, 400h
+		sub	word_25662, (64 shl 4)
 		mov	_bullet_template.BT_angle, 20h
 		jmp	short loc_1607E
 ; ---------------------------------------------------------------------------
@@ -15268,7 +15266,7 @@ loc_1601B:
 loc_1602F:
 		cmp	_boss_phase_frame, 95
 		jnz	short loc_16043
-		add	word_25662, 400h
+		add	word_25662, (64 shl 4)
 		mov	_bullet_template.BT_angle, 60h
 		jmp	short loc_1607E
 ; ---------------------------------------------------------------------------
@@ -15276,7 +15274,7 @@ loc_1602F:
 loc_16043:
 		cmp	_boss_phase_frame, 111
 		jnz	short loc_16057
-		sub	word_25662, 400h
+		sub	word_25662, (64 shl 4)
 		mov	_bullet_template.BT_angle, 30h
 		jmp	short loc_1607E
 ; ---------------------------------------------------------------------------
@@ -15284,7 +15282,7 @@ loc_16043:
 loc_16057:
 		cmp	_boss_phase_frame, 127
 		jnz	short loc_1606B
-		add	word_25662, 400h
+		add	word_25662, (64 shl 4)
 		mov	_bullet_template.BT_angle, 50h
 		jmp	short loc_1607E
 ; ---------------------------------------------------------------------------
@@ -21260,8 +21258,8 @@ off_195D6	dw offset loc_19178
 
 orange_195E4	proc near
 
-var_4		= word ptr -4
-var_2		= word ptr -2
+@@y	= word ptr -4
+@@x	= word ptr -2
 
 		enter	4, 0
 		mov	ax, _boss_phase_frame
@@ -21271,21 +21269,19 @@ var_2		= word ptr -2
 		jl	short loc_19678
 		cmp	_boss_phase_frame, 16
 		jnz	short loc_19647
-		push	1400h
-		call	randring2_next16_mod
-		add	ax, 200h
-		mov	[bp+var_2], ax
-		push	600h
-		call	randring2_next16_mod
-		add	ax, 400h
-		mov	[bp+var_4], ax
-		mov	ax, [bp+var_2]
+		call	randring2_next16_mod pascal, (320 shl 4)
+		add	ax, (32 shl 4)
+		mov	[bp+@@x], ax
+		call	randring2_next16_mod pascal, (96 shl 4)
+		add	ax, (64 shl 4)
+		mov	[bp+@@y], ax
+		mov	ax, [bp+@@x]
 		sub	ax, _boss_pos.cur.x
 		mov	bx, (4 shl 4)
 		cwd
 		idiv	bx
 		mov	_boss_pos.velocity.x, ax
-		mov	ax, [bp+var_4]
+		mov	ax, [bp+@@y]
 		sub	ax, _boss_pos.cur.y
 		cwd
 		idiv	bx
@@ -22646,8 +22642,7 @@ loc_1A41C:
 ; ---------------------------------------------------------------------------
 
 loc_1A42E:
-		push	0C000500h
-		call	yuuka6_1A439
+		call	yuuka6_1A439 pascal, (((PLAYFIELD_W / 2) shl 4) shl 16) or (80 shl 4)
 		pop	bp
 		retn
 yuuka6_1A3C3	endp
@@ -22659,15 +22654,15 @@ yuuka6_1A3C3	endp
 
 yuuka6_1A439	proc near
 
-arg_0		= word ptr  4
-arg_2		= word ptr  6
+@@y	= word ptr  4
+@@x	= word ptr  6
 
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
-		mov	si, [bp+arg_2]
-		mov	di, [bp+arg_0]
+		mov	si, [bp+@@x]
+		mov	di, [bp+@@y]
 		cmp	_boss_phase_frame, 64
 		jge	short loc_1A457
 		cmp	_yuuka6_sprite_state, Y6SS_VANISHED
@@ -24201,8 +24196,7 @@ loc_1B59A:
 
 loc_1B5A6:
 		inc	_boss_phase_frame
-		push	0C000500h
-		call	yuuka6_1A439
+		call	yuuka6_1A439 pascal, (((PLAYFIELD_W / 2) shl 4) shl 16) or (80 shl 4)
 		or	al, al
 		jz	loc_1B8EA
 		inc	_boss_phase
@@ -24227,12 +24221,9 @@ loc_1B5DB:
 ; ---------------------------------------------------------------------------
 
 loc_1B5E0:
-		push	1200h
-		call	randring2_next16_mod
-		add	ax, 300h
-		push	ax
-		push	500h
-		call	yuuka6_1A439
+		call	randring2_next16_mod pascal, (288 shl 4)
+		add	ax, (48 shl 4)
+		call	yuuka6_1A439 pascal, ax, (80 shl 4)
 		or	al, al
 		jz	short loc_1B600
 		mov	_boss_mode, 0
@@ -24341,12 +24332,9 @@ loc_1B6F7:
 ; ---------------------------------------------------------------------------
 
 loc_1B6FC:
-		push	900h		; jumptable 0001B6E9 case 255
-		call	randring2_next16_mod
-		add	ax, 300h
-		push	ax
-		push	500h
-		call	yuuka6_1A439
+		call	randring2_next16_mod pascal, (144 shl 4)	; jumptable 0001B6E9 case 255
+		add	ax, (48 shl 4)
+		call	yuuka6_1A439 pascal, ax, (80 shl 4)
 		or	al, al
 		jz	short loc_1B72E	; default
 
