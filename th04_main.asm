@@ -21363,7 +21363,7 @@ loc_196AF:
 ; ---------------------------------------------------------------------------
 
 loc_196BD:
-		mov	al, 0F5h
+		mov	al, -0Bh
 
 loc_196BF:
 		mov	_boss_phase_state, al
@@ -22485,7 +22485,7 @@ loc_1A2B5:
 loc_1A2BE:
 		test	byte ptr [si+yuuka6_safetycircle_t.B6S_shrink_frames], 0Fh
 		jnz	loc_1A3BC
-		mov	[bp+var_6], 0C0h
+		mov	[bp+var_6], -40h
 		test	byte ptr [si+yuuka6_safetycircle_t.B6S_shrink_frames], 1Fh
 		jnz	short loc_1A309
 		mov	ax, _boss_pos.cur.x
@@ -24669,7 +24669,7 @@ loc_1B9E1:
 loc_1BA19:
 		cmp	[bp+var_1], 80h
 		jb	short loc_1BA33
-		cmp	[bp+var_1], 0F0h
+		cmp	[bp+var_1], -10h
 		ja	short loc_1BA33
 		mov	byte_25A38, -1
 
@@ -25191,7 +25191,7 @@ elly_1BE78	proc near
 		sub	ax, _boss_pos.cur.x
 		push	ax
 		call	iatan2
-		add	al, 0C0h
+		add	al, -40h
 		jmp	loc_1BF40
 ; ---------------------------------------------------------------------------
 
@@ -25330,7 +25330,7 @@ elly_1BFAB	proc near
 		sub	ax, _boss_pos.cur.x
 		push	ax
 		call	iatan2
-		add	al, 0C0h
+		add	al, -40h
 		jmp	short loc_1C033
 ; ---------------------------------------------------------------------------
 
@@ -28183,7 +28183,7 @@ var_1		= byte ptr -1
 		call	_bullet_template_tune
 		cmp	_player_pos.cur.x, 192 * 16
 		jge	short loc_1ED6C
-		mov	al, 0FEh
+		mov	al, -2
 		jmp	short loc_1ED6E
 ; ---------------------------------------------------------------------------
 
