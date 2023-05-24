@@ -43,7 +43,7 @@ include th04/main/enemy/enemy.inc
 	extern _tolower:proc
 	extern __ctype:byte
 
-main_01 group SLOWDOWN_TEXT, m_TEXT, DEMO_TEXT, EMS_TEXT, ma_TEXT, PLAYFLD_TEXT, mai_TEXT, DIALOG_TEXT, main_TEXT, STAGES_TEXT, main__TEXT, PLAYER_M_TEXT, PLAYER_P_TEXT, main_0_TEXT, HUD_OVRL_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT
+main_01 group SLOWDOWN_TEXT, m_TEXT, DEMO_TEXT, EMS_TEXT, ma_TEXT, PLAYFLD_TEXT, mai_TEXT, DIALOG_TEXT, main_TEXT, STAGES_TEXT, main__TEXT, PLAYER_M_TEXT, PLAYER_P_TEXT, main_0_TEXT, HUD_OVRL_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT, CHECKERB_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT
 g_SHARED group SHARED, SHARED_
 main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, VECTOR2N_TEXT, SPARK_A_TEXT, GRCG_3_TEXT, IT_SPL_U_TEXT, B4M_UPDATE_TEXT, main_033_TEXT, MIDBOSS_TEXT, HUD_HP_TEXT, MB_DFT_TEXT, main_034_TEXT, BULLET_U_TEXT, BULLET_A_TEXT, main_035_TEXT, BOSS_TEXT, main_036_TEXT
 
@@ -9914,96 +9914,11 @@ playfield_fill	proc near
 playfield_fill	endp
 
 include th04/hardware/grcg_fill_rows.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-
-sub_12076	proc near
-		push	di
-		cli
-		mov	dx, 126	; Port 007Eh: GRCG tile register
-		xor	al, al
-		out	dx, al
-		out	dx, al
-		out	dx, al
-		out	dx, al
-		sti
-		mov	bx, word_23240
-
-loc_12086:
-		mov	dx, word_2323A
-		mov	di, bx
-		and	di, 255
-		add	di, word_2323C
-		jmp	short loc_120AF
-; ---------------------------------------------------------------------------
-
-loc_12096:
-		mov	dx, GRAM_400 + (PLAYFIELD_TOP * ROW_SIZE) shr 4
-		mov	di, bx
-		and	di, 255
-		add	di, word_2323E
-		jmp	short loc_120AF
-; ---------------------------------------------------------------------------
-
-loc_120A5:
-		mov	di, bx
-		and	di, 255
-		add	di, 9B0h
-
-loc_120AF:
-		mov	es, dx
-
-loc_120B1:
-		mov	cx, 6
-
-loc_120B4:
-		mov	es:[di], eax
-		add	di, 8
-		loop	loc_120B4
-		sub	di, 80h
-		jge	short loc_120B1
-		xor	bl, 0Ch
-		sub	dx, 0A0h
-		cmp	dx, GRAM_400 + (PLAYFIELD_TOP * ROW_SIZE) shr 4
-		jg	short loc_120A5
-		cmp	dx, 0A7B0h
-		jnz	short loc_12096
-		dec	bh
-		jz	short loc_120F0
-		cli
-		mov	dx, 126	; Port 007Eh: GRCG tile register
-		mov	al, 11111111b
-		out	dx, al
-		xor	al, al
-		out	dx, al
-		out	dx, al
-		out	dx, al
-		sti
-		mov	bl, byte ptr word_23240
-		xor	bl, 0Ch
-		jmp	short loc_12086
-; ---------------------------------------------------------------------------
-
-loc_120F0:
-		sub	word_2323A, 14h
-		add	word_2323C, 140h
-		cmp	word_2323A, 0AEE0h
-		jge	short loc_12114
-		mov	word_2323A, 0AF6Ch
-		mov	word_2323C, 140h
-		xor	byte ptr word_23240, 0Ch
-
-loc_12114:
-		sub	word_2323E, 140h
-		jns	short loc_12122
-		mov	word_2323E, 9B0h
-
-loc_12122:
-		pop	di
-		retn
-sub_12076	endp
 main_013_TEXT	ends
+
+CHECKERB_TEXT	segment	byte public 'CODE' use16
+	@playfield_checkerboard_grcg_tdw_$qv procdesc near
+CHECKERB_TEXT	ends
 
 MB_INV_TEXT	segment	byte public 'CODE' use16
 	@MIDBOSS_INVALIDATE_FUNC$QV procdesc near
@@ -11020,7 +10935,7 @@ loc_12921:
 ; ---------------------------------------------------------------------------
 
 loc_12944:
-		call	main_01:sub_12076
+		call	@playfield_checkerboard_grcg_tdw_$qv
 
 loc_12947:
 		mov	ax, _bb_boss_seg
@@ -11034,7 +10949,7 @@ loc_12947:
 loc_12958:
 		cmp	_boss_phase, PHASE_EXPLODE_BIG
 		jnb	short loc_12964
-		call	main_01:sub_12076
+		call	@playfield_checkerboard_grcg_tdw_$qv
 		jmp	short loc_12972
 ; ---------------------------------------------------------------------------
 
@@ -31808,11 +31723,21 @@ angle_23212	db 0
 		db  10h
 include th04/main/player/shot_levels[data].asm
 include th04/formats/cfg_lres[data].asm
-		db    0
-word_2323A	dw 0AF30h
-word_2323C	dw 4B0h
-word_2323E	dw 9B0h
-word_23240	dw 204h
+	evendata
+
+CHECKERBOARD_H = 32
+
+checkerboard_t struc
+	B6C_seg_at_bottom_left	dw (SEG_PLANE_B + (((PLAYFIELD_BOTTOM - (CHECKERBOARD_H / 2)) * ROW_SIZE) / 16))
+	B6C_off_at_bottom_left	dw (((CHECKERBOARD_H / 2) - 1) * ROW_SIZE)
+	B6C_off_at_top_left   	dw ((CHECKERBOARD_H - 1) * ROW_SIZE)
+	B6C_vo_x_of_dark      	db PLAYFIELD_VRAM_LEFT
+	B6C_loops              	db 2
+checkerboard_t ends
+
+public _checkerboard
+_checkerboard checkerboard_t <>
+
 byte_23242	db 0
 		db    0
 gCONTINUE	db 0ACh, 0B8h, 0B7h, 0BDh, 0B2h, 0B7h, 0BEh, 0AEh

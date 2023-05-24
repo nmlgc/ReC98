@@ -203,6 +203,14 @@ static inline vram_offset_t vram_offset_divshift_wtf(screen_x_t x, vram_y_t y) {
 		*(dots32_t*)((dst) + p) = *(dots32_t*)((src) + p); \
 	}
 
+// Converts the given ([x], [y]) position to an x86 segment inside the B plane.
+// Only defined for paragraph-aligned values of [x], i.e., multiples of 128
+// pixels.
+#define grcg_segment(x, y) ( \
+	static_assert((((y * ROW_SIZE) + (x / BYTE_DOTS)) % 16) == 0), \
+	(SEG_PLANE_B + (((y * ROW_SIZE) + (x / BYTE_DOTS)) / 16)) \
+)
+
 #define grcg_chunk(vram_offset, bit_count) \
 	VRAM_CHUNK(B, vram_offset, bit_count)
 
