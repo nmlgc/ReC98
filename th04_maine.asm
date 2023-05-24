@@ -1016,16 +1016,14 @@ sub_B44D	proc near
 		call	palette_black_in
 		call	cdg_load_single pascal, 0, ds, offset aSff1_cdg, 0
 		call	cdg_load_single_noalpha pascal, 1, ds, offset aSff1b_cdg, 0
-		push	30040h
-		call	snd_delay_until_measure
+		call	snd_delay_until_measure pascal, (3 shl 16) or 64
 		mov	byte_124C6, 0
 		mov	fp_124C8, offset sub_AED0
 		push	16000A0h
 		call	sub_B291
 		call	cdg_load_single pascal, 2, ds, offset aSff2_cdg, 0
 		call	cdg_load_single_noalpha pascal, 3, ds, offset aSff2b_cdg, 0
-		push	700A0h
-		call	snd_delay_until_measure
+		call	snd_delay_until_measure pascal, (7 shl 16) or 160
 		mov	fp_124C8, offset sub_B02D
 		push	16000A0h
 		call	sub_B31E
@@ -1037,12 +1035,10 @@ sub_B44D	proc near
 		mov	byte_124C6, 0
 		call	cdg_load_single pascal, 0, ds, offset aSff3_cdg, 0
 		call	cdg_load_single_noalpha pascal, 1, ds, offset aSff3b_cdg, 0
-		push	0B00A0h
-		call	snd_delay_until_measure
+		call	snd_delay_until_measure pascal, (11 shl 16) or 160
 		push	12000C8h
 		call	sub_B291
-		push	1300A0h
-		call	snd_delay_until_measure
+		call	snd_delay_until_measure pascal, (19 shl 16) or 160
 		mov	fp_124C8, offset sub_B02D
 		push	0C00080h
 		push	12000C8h
@@ -1061,8 +1057,7 @@ sub_B44D	proc near
 		call	palette_black_in
 		call	cdg_load_single pascal, 2, ds, offset aSff4_cdg, 0
 		call	cdg_load_single_noalpha pascal, 3, ds, offset aSff4b_cdg, 0
-		push	1700A0h
-		call	snd_delay_until_measure
+		call	snd_delay_until_measure pascal, (23 shl 16) or 160
 		mov	byte_124C6, 2
 		mov	fp_124C8, offset sub_B144
 		push	200070h
@@ -1070,16 +1065,14 @@ sub_B44D	proc near
 		call	cdg_free pascal, 2
 		call	cdg_load_single pascal, 4, ds, offset aSff5_cdg, 0
 		call	cdg_load_single_noalpha pascal, 5, ds, offset aSff5b_cdg, 0
-		push	1B00A0h
-		call	snd_delay_until_measure
+		call	snd_delay_until_measure pascal, (27 shl 16) or 160
 		mov	byte_124C6, 4
 		mov	fp_124C8, offset sub_B02D
 		push	2000B8h
 		call	sub_B291
 		call	cdg_load_single pascal, 0, ds, offset aSff8_cdg, 0
 		call	cdg_load_single_noalpha pascal, 1, ds, offset aSff8b_cdg, 0
-		push	1F00A0h
-		call	snd_delay_until_measure
+		call	snd_delay_until_measure pascal, (31 shl 16) or 160
 		mov	fp_124C8, offset sub_B144
 		push	2000B8h
 		call	sub_B31E
@@ -1088,8 +1081,7 @@ sub_B44D	proc near
 		call	sub_B291
 		call	cdg_load_single pascal, 4, ds, offset aSff9_cdg, 0
 		call	cdg_load_single_noalpha pascal, 5, ds, offset aSff9b_cdg, 0
-		push	2300A0h
-		call	snd_delay_until_measure
+		call	snd_delay_until_measure pascal, (35 shl 16) or 160
 		mov	fp_124C8, offset sub_AED0
 		push	4000B8h
 		call	sub_B31E
@@ -1098,16 +1090,14 @@ sub_B44D	proc near
 		call	sub_B291
 		call	cdg_load_single pascal, 0, ds, offset aSff6_cdg, 0
 		call	cdg_load_single_noalpha pascal, 1, ds, offset aSff6b_cdg, 0
-		push	2700A0h
-		call	snd_delay_until_measure
+		call	snd_delay_until_measure pascal, (39 shl 16) or 160
 		mov	fp_124C8, offset sub_B02D
 		push	4000B8h
 		call	sub_B31E
 		mov	byte_124C6, 0
 		push	2000B8h
 		call	sub_B291
-		push	2B00A0h
-		call	snd_delay_until_measure
+		call	snd_delay_until_measure pascal, (43 shl 16) or 160
 		mov	fp_124C8, offset sub_B144
 		push	200070h
 		push	2000B8h
@@ -1117,8 +1107,7 @@ sub_B44D	proc near
 		mov	byte_124C6, 0
 		push	200150h
 		call	sub_B291
-		push	3000A0h
-		call	snd_delay_until_measure
+		call	snd_delay_until_measure pascal, (48 shl 16) or 160
 		call	_bgimage_free
 		call	cdg_free_all
 		push	4
