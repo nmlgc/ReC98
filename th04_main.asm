@@ -447,15 +447,15 @@ loc_AC7A:
 		mov	si, ax
 		cmp	si, 10
 		jl	short loc_ACD1
-		mov	ax, 3E8h
+		mov	ax, 1000
 		jmp	short loc_ACDE
 ; ---------------------------------------------------------------------------
 
 loc_ACD1:
 		mov	ax, si
-		imul	ax, 1F4h
+		imul	ax, 500
 		push	ax
-		mov	ax, 1770h
+		mov	ax, 6000
 		pop	dx
 		sub	ax, dx
 
@@ -24924,7 +24924,7 @@ elly_1BC3C	endp
 elly_1BC73	proc near
 		push	bp
 		mov	bp, sp
-		cmp	word_25A3A, 80h
+		cmp	word_25A3A, 128
 		jge	short loc_1BC8A
 		add	_boss_pos.prev.x, 8
 		mov	_boss_angle, 96
@@ -24932,16 +24932,16 @@ elly_1BC73	proc near
 ; ---------------------------------------------------------------------------
 
 loc_1BC8A:
-		cmp	word_25A3A, 100h
+		cmp	word_25A3A, 256
 		jge	short loc_1BC98
 		dec	_boss_angle
 		jmp	short loc_1BCE9
 ; ---------------------------------------------------------------------------
 
 loc_1BC98:
-		cmp	word_25A3A, 180h
+		cmp	word_25A3A, 384
 		jl	short loc_1BCCA
-		cmp	word_25A3A, 200h
+		cmp	word_25A3A, 512
 		jge	short loc_1BCB4
 		add	_boss_pos.prev.x, 8
 		mov	_boss_angle, 32
@@ -24949,14 +24949,14 @@ loc_1BC98:
 ; ---------------------------------------------------------------------------
 
 loc_1BCB4:
-		cmp	word_25A3A, 280h
+		cmp	word_25A3A, 640
 		jge	short loc_1BCC2
 		inc	_boss_angle
 		jmp	short loc_1BCE9
 ; ---------------------------------------------------------------------------
 
 loc_1BCC2:
-		cmp	word_25A3A, 300h
+		cmp	word_25A3A, 768
 		jge	short loc_1BCD1
 
 loc_1BCCA:
@@ -24965,7 +24965,7 @@ loc_1BCCA:
 ; ---------------------------------------------------------------------------
 
 loc_1BCD1:
-		cmp	word_25A3A, 300h
+		cmp	word_25A3A, 768
 		jl	short loc_1BCE9
 		add	_boss_pos.prev.x, 8
 		mov	_boss_angle, 96
@@ -30386,7 +30386,7 @@ gengetsu_200B6	proc near
 		add	al, al
 		mov	_bullet_template.BT_angle, al
 		mov	ax, _stage_frame
-		and	ax, 1FFh
+		and	ax, 511
 		cmp	ax, 256
 		jb	short loc_200F6
 		mov	al, _bullet_template.BT_angle
