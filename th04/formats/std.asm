@@ -1,6 +1,5 @@
-; void pascal near std_load(void);
-public STD_LOAD
-std_load	proc near
+public @std_load$qv
+@std_load$qv proc near
 @@enemy_script_count	= byte ptr -4
 @@chunk_size	= byte ptr -3
 @@std_size 	= word ptr -2
@@ -8,7 +7,7 @@ std_load	proc near
 	enter	4, 0
 	push	si
 	push	di
-	call	std_free
+	call	@std_free$qv
 	les	bx, _resident
 	mov	al, es:[bx+resident_t.stage_ascii]
 	les	bx, _std_fn
@@ -28,7 +27,7 @@ std_load	proc near
 	call	file_read pascal, es, si, [bp+@@std_size]
 	call	file_close
 	mov	es, _std_seg
-	mov	_tile_section, 4
+	mov	_std_map_section_id, 4
 	mov	_tile_row_in_section, 0
 	mov	al, [bp+@@chunk_size]
 	mov	ah, 0
@@ -36,7 +35,7 @@ std_load	proc near
 	mov	al, es:[si]
 	mov	[bp+@@chunk_size], al
 	lea	ax, [si+5]
-	mov	_tile_scrollspeed_ptr, ax
+	mov	_std_scroll_speed, ax
 	mov	al, es:[si]
 	mov	_scroll_speed, al
 	mov	al, [bp+@@chunk_size]
@@ -54,7 +53,7 @@ std_load	proc near
 	inc	si
 	mov	bx, di
 	add	bx, bx
-	mov	_enemy_script_ptrs[bx], si
+	mov	_std_enemy_scripts[bx], si
 	inc	di
 	mov	ah, 0
 	add	si, ax
@@ -64,17 +63,16 @@ std_load	proc near
 	inc	si
 	mov	word ptr _std_ip+2,	es
 	mov	word ptr _std_ip, si
-	setfarfp	_stage_vm, std_run
+	setfarfp	_stage_vm, @std_run$qv
 	pop	di
 	pop	si
 	leave
 	ret
-std_load	endp
+@std_load$qv endp
 
 
-; void pascal near std_free(void);
-public STD_FREE
-std_free	proc near
+public @std_free$qv
+@std_free$qv proc near
 	push	bp
 	mov	bp, sp
 	cmp	_std_seg, 0
@@ -85,4 +83,4 @@ std_free	proc near
 @@ret:
 	pop	bp
 	retn
-std_free	endp
+@std_free$qv endp

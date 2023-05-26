@@ -19,6 +19,8 @@ extern const uint16_t TILE_SECTION_OFFSETS[TILE_SECTION_COUNT_MAX];
 extern vram_offset_t tile_ring[TILES_Y][TILES_MEMORY_X];
 #endif
 
+extern int8_t tile_row_in_section;
+
 // Completely fills [tile_ring] with the initial screen of a stage, by loading
 // the section IDs from [std_seg], and the tiles themselves from [map_seg].
 void pascal near tiles_fill_initial(void);

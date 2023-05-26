@@ -977,7 +977,7 @@ loc_B4A6:
 
 loc_B4A9:
 		call	map_load
-		call	std_load
+		call	@std_load$qv
 		call	@dialog_load$qv
 		call	tiles_fill_initial
 		graph_accesspage 0
@@ -1096,7 +1096,7 @@ sub_B609	proc near
 		push	si
 		call	@bb_boss_free$qv
 		call	@dialog_free$qv
-		call	std_free
+		call	@std_free$qv
 		call	map_free
 		call	super_clean pascal, (180 shl 16) or 256
 		mov	si, CDG_PER_STAGE
@@ -1412,9 +1412,9 @@ loc_BD36:
 		dec	_tile_row_in_section
 		jns	short loc_BD88
 		mov	_tile_row_in_section, 4
-		inc	_tile_section_ptr
-		inc	_tile_scrollspeed_ptr
-		mov	bx, _tile_scrollspeed_ptr
+		inc	_std_map_section_p
+		inc	_std_scroll_speed
+		mov	bx, _std_scroll_speed
 		mov	dl, es:[bx]
 		mov	_scroll_speed, dl
 		or	dl, dl
@@ -1434,7 +1434,7 @@ loc_BD88:
 		xor	ax, ax
 		mov	al, _tile_row_in_section
 		shl	ax, 6
-		mov	bx, _tile_section_ptr
+		mov	bx, _std_map_section_p
 		mov	bl, es:[bx]
 		xor	bh, bh
 		mov	bx, _TILE_SECTION_OFFSETS[bx]
@@ -3865,7 +3865,7 @@ loc_F71C:
 		call	@bb_boss_free$qv
 		call	@dialog_free$qv
 		call	bb_playchar_free
-		call	std_free
+		call	@std_free$qv
 		call	map_free
 		call	super_free
 		call	graph_hide
@@ -8732,7 +8732,7 @@ enemies_add	proc near
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, _enemy_script_ptrs[bx]
+		mov	ax, _std_enemy_scripts[bx]
 		mov	[si+enemy_t.E_script], ax
 		cmp	di, ENEMY_POS_RANDOM
 		jnz	short loc_15F6D
@@ -8814,8 +8814,8 @@ enemies_add	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-std_run	proc far
+public @STD_RUN$QV
+@std_run$qv proc far
 
 var_1		= byte ptr -1
 
@@ -8849,7 +8849,7 @@ loc_1603F:
 locret_16063:
 		leave
 		retf
-std_run	endp
+@std_run$qv endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
