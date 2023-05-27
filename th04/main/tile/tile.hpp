@@ -28,6 +28,18 @@ void pascal near tiles_fill_initial(void);
 // Blits all tiles in the ring buffer to the playfield in VRAM.
 void pascal near tiles_render_all(void);
 
+#if (defined(SUBPIXEL_HPP) && defined(PLANAR_H))
+// Sets the [tile_ring] tile at (x, y) to the given VRAM offset.
+void pascal tile_ring_set_vo(
+	subpixel_t x, subpixel_t y, vram_offset_t image_vo
+);
+
+// Sets the [tile_ring] tile at (x, y) to the given tile_image_id_t.
+#define tile_ring_set(x, y, id) ( \
+	tile_ring_set_vo(x, y, tile_image_vo(id)) \
+)
+#endif
+
 /// Redraw
 /// ------
 

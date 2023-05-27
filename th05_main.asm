@@ -1569,6 +1569,7 @@ include th05/main/pointnum/render.asm
 include th04/main/pointnum/num_put.asm
 
 ; ---------------------------------------------------------------------------
+		; Identical copy of TH04's tile_ring_set(), already decompiled there.
 		enter	2, 0
 		push	si
 		push	di

@@ -43,7 +43,7 @@ include th04/main/enemy/enemy.inc
 	extern _tolower:proc
 	extern __ctype:byte
 
-main_01 group SLOWDOWN_TEXT, m_TEXT, DEMO_TEXT, EMS_TEXT, ma_TEXT, PLAYFLD_TEXT, mai_TEXT, DIALOG_TEXT, main_TEXT, STAGES_TEXT, main__TEXT, PLAYER_M_TEXT, PLAYER_P_TEXT, main_0_TEXT, HUD_OVRL_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT, CHECKERB_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT
+main_01 group SLOWDOWN_TEXT, m_TEXT, DEMO_TEXT, EMS_TEXT, TILE_SET_TEXT, STD_TEXT, ma_TEXT, PLAYFLD_TEXT, mai_TEXT, DIALOG_TEXT, main_TEXT, STAGES_TEXT, main__TEXT, PLAYER_M_TEXT, PLAYER_P_TEXT, main_0_TEXT, HUD_OVRL_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT, CHECKERB_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT
 g_SHARED group SHARED, SHARED_
 main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, VECTOR2N_TEXT, SPARK_A_TEXT, GRCG_3_TEXT, IT_SPL_U_TEXT, B4M_UPDATE_TEXT, main_033_TEXT, MIDBOSS_TEXT, HUD_HP_TEXT, MB_DFT_TEXT, main_034_TEXT, BULLET_U_TEXT, BULLET_A_TEXT, main_035_TEXT, BOSS_TEXT, main_036_TEXT
 
@@ -1023,54 +1023,15 @@ EMS_TEXT	segment	byte public 'CODE' use16
 	@eyecatch_animate$qv procdesc near
 EMS_TEXT	ends
 
+TILE_SET_TEXT	segment	byte public 'CODE' use16
+	extern @TILE_RING_SET_VO$QIII:proc
+TILE_SET_TEXT	ends
+
+STD_TEXT	segment	byte public 'CODE' use16
+	@std_load$qv procdesc near
+STD_TEXT	ends
+
 ma_TEXT	segment	word public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_B682	proc far
-
-var_1		= byte ptr -1
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	si, [bp+arg_4]
-		mov	di, [bp+arg_2]
-		mov	ax, si
-		sar	ax, 4
-		mov	si, ax
-		mov	al, _scroll_active
-		mov	[bp+var_1], al
-		mov	_scroll_active, 1
-		lea	ax, [di+(16 shl 4)]
-		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
-		mov	di, ax
-		mov	bx, 16
-		cwd
-		idiv	bx
-		shl	ax, 6
-		push	ax
-		mov	ax, si
-		cwd
-		idiv	bx
-		add	ax, ax
-		pop	bx
-		add	bx, ax
-		mov	ax, [bp+arg_0]
-		mov	_tile_ring[bx], ax
-		mov	al, [bp+var_1]
-		mov	_scroll_active, al
-		pop	di
-		pop	si
-		leave
-		retf	6
-sub_B682	endp
-
 include th04/formats/std.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -11850,28 +11811,22 @@ public @MIDBOSS1_UPDATE$QV
 		call	@PlayfieldMotion@update_seg3$qv
 		mov	ax, _midboss_pos.cur.x
 		add	ax, (-16 shl 4)
-		push	ax
+		push	ax	; x
 		mov	ax, _midboss_pos.cur.y
 		add	ax, (-16 shl 4)
-		push	ax
-		push	4B4Ah
-		call	sub_B682
-		push	_midboss_pos.cur.x
+		push	ax	; y
+		push	(TILE_AREA_VRAM_LEFT + ((40 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (TILE_AREA_TOP + ((40 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE)))	; image_vo
+		call	@tile_ring_set_vo$qiii
+		push	_midboss_pos.cur.x	; x
 		mov	ax, _midboss_pos.cur.y
 		add	ax, (-16 shl 4)
-		push	ax
-		push	504Ah
-		call	sub_B682
+		push	ax	; y
+		push	(TILE_AREA_VRAM_LEFT + ((41 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (TILE_AREA_TOP + ((41 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE)))	; image_vo
+		call	@tile_ring_set_vo$qiii
 		mov	ax, _midboss_pos.cur.x
 		add	ax, (-16 shl 4)
-		push	ax
-		push	_midboss_pos.cur.y
-		push	1E4Ch
-		call	sub_B682
-		push	_midboss_pos.cur.x
-		push	_midboss_pos.cur.y
-		push	234Ch
-		call	sub_B682
+		call	@tile_ring_set_vo$qiii pascal,                 ax, _midboss_pos.cur.y, (TILE_AREA_VRAM_LEFT + ((56 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (TILE_AREA_TOP + ((56 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE)))
+		call	@tile_ring_set_vo$qiii pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, (TILE_AREA_VRAM_LEFT + ((57 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (TILE_AREA_TOP + ((57 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE)))
 		inc	_midboss_phase_frame
 		cmp	_midboss_phase_frame, 288
 		jl	loc_142E4
@@ -11880,28 +11835,22 @@ public @MIDBOSS1_UPDATE$QV
 		mov	_midboss_pos.velocity.y, 2
 		mov	ax, _midboss_pos.cur.x
 		add	ax, (-16 shl 4)
-		push	ax
+		push	ax	; x
 		mov	ax, _midboss_pos.cur.y
 		add	ax, (-16 shl 4)
-		push	ax
-		push	554Ah
-		call	sub_B682
-		push	_midboss_pos.cur.x
+		push	ax	; y
+		push	(TILE_AREA_VRAM_LEFT + ((42 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (TILE_AREA_TOP + ((42 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE)))	; image_vo
+		call	@tile_ring_set_vo$qiii
+		push	_midboss_pos.cur.x	; x
 		mov	ax, _midboss_pos.cur.y
 		add	ax, (-16 shl 4)
-		push	ax
-		push	5A4Ah
-		call	sub_B682
+		push	ax	; y
+		push	(TILE_AREA_VRAM_LEFT + ((43 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (TILE_AREA_TOP + ((43 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE)))	; image_vo
+		call	@tile_ring_set_vo$qiii
 		mov	ax, _midboss_pos.cur.x
 		add	ax, (-16 shl 4)
-		push	ax
-		push	_midboss_pos.cur.y
-		push	284Ch
-		call	sub_B682
-		push	_midboss_pos.cur.x
-		push	_midboss_pos.cur.y
-		push	2D4Ch
-		call	sub_B682
+		call	@tile_ring_set_vo$qiii pascal,                 ax, _midboss_pos.cur.y, (TILE_AREA_VRAM_LEFT + ((58 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (TILE_AREA_TOP + ((58 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE)))
+		call	@tile_ring_set_vo$qiii pascal, _midboss_pos.cur.x, _midboss_pos.cur.y, (TILE_AREA_VRAM_LEFT + ((59 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (TILE_AREA_TOP + ((59 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE)))
 		mov	_midboss_sprite, 136
 		sub	_midboss_pos.cur.y, (4 shl 4)
 		mov	al, _scroll_subpixel_line
@@ -14679,12 +14628,12 @@ loc_15ACD:
 ; ---------------------------------------------------------------------------
 
 loc_15AD2:
-		push	[si+enemy_t.cur.pos.x]
-		push	[si+enemy_t.cur.pos.y]
+		push	[si+enemy_t.cur.pos.x]	; x
+		push	[si+enemy_t.cur.pos.y]	; y
 		mov	al, es:[di+1]
 		mov	ah, 0
-		push	ax
-		call	sub_B682
+		push	ax	; image_vo
+		call	@tile_ring_set_vo$qiii
 
 loc_15AE4:
 		mov	[bp+var_2], 2
