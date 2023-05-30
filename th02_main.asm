@@ -39,7 +39,7 @@ MAP_LENGTH_MAX = 320
 LIVES_MAX = 5
 BOMBS_MAX = 5
 
-main_01 group main_01_TEXT, POINTNUM_TEXT, main_01__TEXT, PLAYER_B_TEXT, main_01___TEXT
+main_01 group main_01_TEXT, POINTNUM_TEXT, main_01__TEXT, HUD_TEXT, main_01___TEXT, PLAYER_B_TEXT, main_01____TEXT
 main_03 group main_03_TEXT, main_03__TEXT
 
 ; ===========================================================================
@@ -5022,7 +5022,7 @@ loc_D949:
 		cmp	_power, POWER_MAX
 		jnb	short loc_D964
 		inc	_power
-		call	hud_power_put
+		call	@player_shot_level_update_and_hud$qv
 		mov	_power_overflow, 0
 		inc	dword_218A4
 		jmp	short loc_D984
@@ -5151,7 +5151,7 @@ loc_DA85:
 		add	bx, bx
 		push	_POWER_OVERFLOW_BONUS[bx]	; points
 		call	@pointnums_add$qiiui
-		call	hud_power_put
+		call	@player_shot_level_update_and_hud$qv
 		jmp	short loc_DAB6
 ; ---------------------------------------------------------------------------
 
@@ -5543,110 +5543,13 @@ loc_DEAB:
 		pop	bp
 		retf
 sub_DE4E	endp
+main_01__TEXT	ends
 
+HUD_TEXT	segment	byte public 'CODE' use16
+	@player_shot_level_update_and_hud$qv procdesc near
+HUD_TEXT	ends
 
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public HUD_POWER_PUT
-hud_power_put	proc near
-
-var_18		= word ptr -18h
-var_16		= word ptr -16h
-var_14		= word ptr -14h
-@@bar_colors		= byte ptr -12h
-var_8		= word ptr -8
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 18h
-		push	si
-		xor	si, si
-		mov	ax, word_1E5D8
-		mov	[bp+var_8], ax
-		mov	ax, word_1E5DA
-		mov	[bp+var_6], ax
-		mov	ax, word_1E5DC
-		mov	[bp+var_4], ax
-		mov	ax, word ptr _HUD_POWER_COLORS + 0
-		mov	word ptr [bp+@@bar_colors], ax
-		mov	ax, word ptr _HUD_POWER_COLORS + 2
-		mov	word ptr [bp+@@bar_colors + 2], ax
-		mov	ax, word ptr _HUD_POWER_COLORS + 4
-		mov	word ptr [bp+@@bar_colors + 4], ax
-		mov	ax, word ptr _HUD_POWER_COLORS + 6
-		mov	word ptr [bp+@@bar_colors + 6], ax
-		mov	al, _HUD_POWER_COLORS + 8
-		mov	[bp+@@bar_colors + 8], al
-		mov	ax, word_1E5E7
-		mov	[bp+var_18], ax
-		mov	ax, word_1E5E9
-		mov	[bp+var_16], ax
-		mov	ax, word_1E5EB
-		mov	[bp+var_14], ax
-		mov	al, _power
-		mov	ah, 0
-		sar	ax, 2
-		mov	bx, ax
-		mov	al, _POWER_TO_SHOT_LEVEL[bx]
-		mov	_shot_level, al
-		cmp	_shot_level, SHOT_LEVEL_MAX
-		jnz	short loc_DF20
-		push	(62 shl 16) + 20
-		push	ss
-		lea	ax, [bp+var_8]
-		push	ax
-		push	TX_WHITE
-		jmp	short loc_DF6E
-; ---------------------------------------------------------------------------
-
-loc_DF20:
-		mov	al, _power
-		mov	ah, 0
-		mov	[bp+var_2], ax
-		sub	[bp+var_2], 10h
-		jmp	short loc_DF37
-; ---------------------------------------------------------------------------
-
-loc_DF2E:
-		mov	byte ptr [bp+si+var_18], 3Fh ; '?'
-		sub	[bp+var_2], 10h
-		inc	si
-
-loc_DF37:
-		cmp	[bp+var_2], 0
-		jg	short loc_DF2E
-		mov	al, _power
-		mov	ah, 0
-		dec	ax
-		and	ax, 0Fh
-		mov	[bp+var_2], ax
-		mov	al, byte ptr [bp+var_2]
-		add	al, 30h	; '0'
-		mov	byte ptr [bp+si+var_18], al
-		push	(62 shl 16) + 20
-		push	ss
-		lea	ax, [bp+var_18]
-		push	ax
-		mov	al, _shot_level
-		mov	ah, 0
-		lea	dx, [bp+@@bar_colors]
-		add	ax, dx
-		mov	bx, ax
-		mov	al, ss:[bx]
-		mov	ah, 0
-		push	ax
-
-loc_DF6E:
-		call	gaiji_putsa
-		pop	si
-		leave
-		retn
-hud_power_put	endp
-
+main_01___TEXT	segment	word public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5766,7 +5669,7 @@ hud_put	proc near
 		call	gaiji_putsa pascal, (57 shl 16) + 15, ds, offset gsREIGEKI, TX_YELLOW
 		call	hud_bombs_put
 		call	gaiji_putsa pascal, (57 shl 16) + 20, ds, offset gsREIRYOKU, TX_YELLOW
-		call	hud_power_put
+		call	@player_shot_level_update_and_hud$qv
 		push	(57 shl 16) + 22
 		push	ds
 		mov	al, _rank
@@ -7077,7 +6980,7 @@ loc_ECA9:
 		pop	bp
 		retn
 bomb_reimu_b	endp
-main_01__TEXT	ends
+main_01___TEXT	ends
 
 PLAYER_B_TEXT	segment	byte public 'CODE' use16
 	@bomb_update_and_render$qv procdesc near
@@ -7091,7 +6994,7 @@ PLAYER_B_TEXT	segment	byte public 'CODE' use16
 		left:word, top:word, eight_tiles:byte
 PLAYER_B_TEXT	ends
 
-main_01___TEXT	segment	byte public 'CODE' use16
+main_01____TEXT	segment	byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7340,7 +7243,7 @@ loc_F107:
 		mov	bx, ax
 		mov	al, [bx+109Fh]
 		mov	_power, al
-		call	hud_power_put
+		call	@player_shot_level_update_and_hud$qv
 		mov	bx, word_205EE
 		push	word ptr [bx]
 		mov	bx, word_205F0
@@ -7740,7 +7643,7 @@ off_F443	dw offset loc_F238
 		dw offset loc_F260
 		dw offset loc_F288
 		dw offset loc_F2A4
-main_01___TEXT	ends
+main_01____TEXT	ends
 
 ; ===========================================================================
 
@@ -32049,13 +31952,15 @@ _EXTEND_SCORES	dd 100000, 200000, 300000, 500000, 800000, 99999999
 _extends_gained	dw 0
 dword_1E5B8	dd 40000
 include th02/main/hud/score_put[data].asm
-word_1E5D8	dw 4140h
-word_1E5DA	dw 4342h
-word_1E5DC	dw 44h
+
+public _gHUD_BAR_MAX, _HUD_POWER_COLORS, _gHUD_BAR_BLANK
+_gHUD_BAR_MAX label byte
+	db g_BAR_MAX_0, g_BAR_MAX_1, g_BAR_MAX_2, g_BAR_MAX_3, g_BAR_MAX_4, 0
+
 include th02/main/hud/power[data].asm
-word_1E5E7	dw 0CFCFh
-word_1E5E9	dw 0CFCFh
-word_1E5EB	dw 0CFh
+
+_gHUD_BAR_BLANK	db gb_SP, gb_SP, gb_SP, gb_SP, gb_SP, 0
+
 include th02/gaiji/ranks_left[data].asm
 gsSCORE		db 0C4h, 0C5h, 0C6h, 0,	0
 gsHISCORE	db 0CEh, 0C4h, 0C5h, 0C6h, 0

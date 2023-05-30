@@ -8,6 +8,16 @@ typedef enum {
 	gs_YINYANG = 0x02, // ☯
 	gs_BOMB, // ◉? ⦿? 🎯? 🖸? Or simply 💣?
 
+	gaiji_bar(0x30),
+
+	// A completely filled, 80-pixel bar with MAX drawn on top, stored in 5
+	// consecutive gaiji characters.
+	g_BAR_MAX_0,
+	g_BAR_MAX_1,
+	g_BAR_MAX_2,
+	g_BAR_MAX_3,
+	g_BAR_MAX_4,
+
 	gaiji_boldfont(0xA0),
 
 	gb_SP = 0xCF,

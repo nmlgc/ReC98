@@ -1,5 +1,7 @@
 #pragma option -3
 
+#include "platform.h"
+#include "pc98.h"
 #include "th04/main/hud/hud.hpp"
 
 void pascal near hud_hp_update_and_render(int hp_cur, int hp_max)

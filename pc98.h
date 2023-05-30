@@ -27,6 +27,9 @@ typedef int vram_dword_amount_t;
 typedef unsigned int uvram_byte_amount_t;
 typedef unsigned int uvram_word_amount_t;
 typedef unsigned int uvram_dword_amount_t;
+
+// TRAM widths
+typedef int tram_cell_amount_t;
 /// ------
 
 /// Coordinate systems
