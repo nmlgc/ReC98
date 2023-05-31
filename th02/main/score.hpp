@@ -8,3 +8,4 @@
 extern const int32_t EXTEND_SCORES[];
 
 extern unsigned int extends_gained;
+extern int32_t score_delta;
