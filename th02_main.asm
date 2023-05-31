@@ -5352,17 +5352,17 @@ include th02/main/hud/score_put.asm
 sub_DCD1	proc near
 		push	bp
 		mov	bp, sp
-		mov	word_1E5B6, 0
+		mov	_extends_gained, 0
 		jmp	short loc_DCE0
 ; ---------------------------------------------------------------------------
 
 loc_DCDC:
-		inc	word_1E5B6
+		inc	_extends_gained
 
 loc_DCE0:
-		mov	bx, word_1E5B6
+		mov	bx, _extends_gained
 		shl	bx, 2
-		mov	eax, [bx+0B2Eh]
+		mov	eax, _EXTEND_SCORES[bx]
 		cmp	eax, _score
 		jle	short loc_DCDC
 		mov	score_218AC, 0
@@ -5468,9 +5468,9 @@ loc_DDCE:
 		call	hud_score_put pascal, 4, eax
 
 loc_DE01:
-		mov	bx, word_1E5B6
+		mov	bx, _extends_gained
 		shl	bx, 2
-		mov	eax, [bx+0B2Eh]
+		mov	eax, _EXTEND_SCORES[bx]
 		cmp	eax, _score
 		jg	short locret_DE4C
 		mov	al, _lives
@@ -5492,7 +5492,7 @@ loc_DE26:
 
 loc_DE36:
 		call	_snd_se_play c, 8
-		inc	word_1E5B6
+		inc	_extends_gained
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -5523,9 +5523,9 @@ sub_DE4E	proc far
 		call	hud_score_put pascal, 4, eax
 
 loc_DE7A:
-		mov	bx, word_1E5B6
+		mov	bx, _extends_gained
 		shl	bx, 2
-		mov	eax, [bx+0B2Eh]
+		mov	eax, _EXTEND_SCORES[bx]
 		cmp	eax, _score
 		jg	short loc_DEAB
 		mov	al, _lives
@@ -5537,7 +5537,7 @@ loc_DE7A:
 		call	_snd_se_play c, 8
 
 loc_DEA7:
-		inc	word_1E5B6
+		inc	_extends_gained
 
 loc_DEAB:
 		pop	bp
@@ -32041,35 +32041,12 @@ word_1E592	dw 0BCC8h
 word_1E594	dw 0BCB0h
 byte_1E596	db 0C8h
 byte_1E597	db 0
-public _score, _lives, _bombs
+public _score, _lives, _bombs, _EXTEND_SCORES, _extends_gained
 _score	dd 0
 _lives	db 3
 _bombs	db 3
-		db 0A0h
-		db  86h
-		db    1
-		db    0
-		db  40h
-		db  0Dh
-		db    3
-		db    0
-		db 0E0h
-		db  93h
-		db    4
-		db    0
-		db  20h
-		db 0A1h
-		db    7
-		db    0
-		db    0
-		db  35h	; 5
-		db  0Ch
-		db    0
-		db 0FFh
-		db 0E0h
-		db 0F5h
-		db    5
-word_1E5B6	dw 0
+_EXTEND_SCORES	dd 100000, 200000, 300000, 500000, 800000, 99999999
+_extends_gained	dw 0
 dword_1E5B8	dd 40000
 include th02/main/hud/score_put[data].asm
 word_1E5D8	dw 4140h
