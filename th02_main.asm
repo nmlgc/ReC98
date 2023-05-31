@@ -2067,12 +2067,12 @@ loc_BF36:
 		jmp	short $+2
 
 loc_BF60:
-		call	sub_DD41
+		call	@score_update_and_render$qv
 
 loc_BF63:
 		cmp	byte_20607, 0
 		jz	loc_BCC3
-		nopcall	sub_DCFE
+		nopcall	@score_delta_commit$qv
 		mov	byte_20607, 0
 		xor	ax, ax
 
@@ -2605,7 +2605,7 @@ loc_C516:
 		mov	_bombs, al
 		mov	_power, POWER_MIN
 		inc	es:[bx+mikoconfig_t.continues_used]
-		call	sub_DD1B
+		call	@score_reset$qv
 		mov	al, _stage_id
 		cbw
 		mov	bx, 5
@@ -5375,7 +5375,7 @@ sub_DCD1	endp
 
 ; Attributes: bp-based frame
 
-sub_DCFE	proc far
+@score_delta_commit$qv	proc far
 		push	bp
 		mov	bp, sp
 		mov	eax, _score_delta
@@ -5384,14 +5384,14 @@ sub_DCFE	proc far
 		mov	_score_delta_transferred_prev, 0
 		pop	bp
 		retf
-sub_DCFE	endp
+@score_delta_commit$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_DD1B	proc near
+@score_reset$qv	proc near
 		push	bp
 		mov	bp, sp
 		mov	_score, 0
@@ -5400,14 +5400,14 @@ sub_DD1B	proc near
 		mov	dword_1E5B8, 40000
 		pop	bp
 		retn
-sub_DD1B	endp
+@score_reset$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
 
-sub_DD41	proc near
+@score_update_and_render$qv	proc near
 
 var_4		= dword	ptr -4
 
@@ -5460,12 +5460,12 @@ loc_DDCE:
 		mov	_score_delta, eax
 		movzx	eax, _score_delta_transferred_prev
 		add	_score, eax
-		call	hud_score_put pascal, 6, large [_score]
+		call	@hud_score_put$quil pascal, 6, large [_score]
 		mov	eax, _score
 		cmp	eax, _hiscore
 		jle	short loc_DE01
 		mov	_hiscore, eax
-		call	hud_score_put pascal, 4, eax
+		call	@hud_score_put$quil pascal, 4, eax
 
 loc_DE01:
 		mov	bx, _extends_gained
@@ -5503,49 +5503,11 @@ loc_DE46:
 locret_DE4C:
 		leave
 		retn
-sub_DD41	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_DE4E	proc far
-		push	bp
-		mov	bp, sp
-		mov	eax, _score_delta
-		add	_score, eax
-		call	hud_score_put pascal, 6, large [_score]
-		mov	eax, _score
-		cmp	eax, _hiscore
-		jle	short loc_DE7A
-		mov	_hiscore, eax
-		call	hud_score_put pascal, 4, eax
-
-loc_DE7A:
-		mov	bx, _extends_gained
-		shl	bx, 2
-		mov	eax, _EXTEND_SCORES[bx]
-		cmp	eax, _score
-		jg	short loc_DEAB
-		mov	al, _lives
-		cbw
-		cmp	ax, LIVES_MAX
-		jge	short loc_DEA7
-		inc	_lives
-		call	@hud_lives_put$qv
-		call	_snd_se_play c, 8
-
-loc_DEA7:
-		inc	_extends_gained
-
-loc_DEAB:
-		pop	bp
-		retf
-sub_DE4E	endp
+@score_update_and_render$qv	endp
 main_01__TEXT	ends
 
 HUD_TEXT	segment	byte public 'CODE' use16
+	extern @score_grant_current_delta_as_bon$qv:proc
 	@player_shot_level_update_and_hud$qv procdesc near
 	@hud_lives_put$qv procdesc near
 	@hud_bombs_put$qv procdesc near
@@ -5561,14 +5523,14 @@ hud_put	proc near
 		push	bp
 		mov	bp, sp
 		call	gaiji_putsa pascal, (61 shl 16) + 5, ds, offset gsSCORE, TX_YELLOW
-		call	hud_score_put pascal, 6, large [_score]
+		call	@hud_score_put$quil pascal, 6, large [_score]
 		push	6
 		les	bx, _resident
 		assume es:nothing
 		push	es:[bx+mikoconfig_t.continues_used]
 		call	hud_continues_put
 		call	gaiji_putsa pascal, (60 shl 16) + 3, ds, offset gsHISCORE, TX_YELLOW
-		call	hud_score_put pascal, 4, large [_hiscore]
+		call	@hud_score_put$quil pascal, 4, large [_hiscore]
 		push	4
 		mov	al, byte_252FC
 		mov	ah, 0
@@ -7064,7 +7026,7 @@ sub_EFF2	proc near
 		call	_snd_se_play c, 2
 		mov	byte_1E517, 1
 		inc	byte_20608
-		nopcall	sub_DCFE
+		nopcall	@score_delta_commit$qv
 		inc	byte_1EB0C
 		mov	bx, word_205EE
 		mov	ax, [bx]
@@ -7788,7 +7750,11 @@ loc_FD5A:
 		mov	[bp+var_4], eax
 		add	_score_delta, eax
 		call	_snd_se_reset
-		call	sub_DE4E
+
+		; Not a quirk because the game immediately moves to the next stage and
+		; calls score_reset() before rendering the next game frame.
+		call	@score_grant_current_delta_as_bon$qv
+
 		call	_snd_se_update
 		mov	_key_det, 1
 		call	_key_delay
@@ -7801,8 +7767,8 @@ loc_FD5A:
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_FE12	proc near
+public @stage_extra_clear_bonus_animate$qv
+@stage_extra_clear_bonus_animate$qv	proc near
 
 var_C		= byte ptr -0Ch
 var_6		= word ptr -6
@@ -7921,14 +7887,17 @@ loc_FEB9:
 		mov	[bp+var_4], eax
 		add	_score_delta, eax
 		call	_snd_se_reset
-		call	sub_DE4E
+
+		; Not a quirk because the game launches MAINE.EXE soon afterward.
+		call	@score_grant_current_delta_as_bon$qv
+
 		call	_snd_se_update
 		mov	_key_det, 1
 		call	_key_delay
 		pop	si
 		leave
 		retn
-sub_FE12	endp
+@stage_extra_clear_bonus_animate$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -13665,7 +13634,12 @@ var_2		= word ptr -2
 		push	di
 		mov	di, 32
 		nopcall	@overlay_wipe$qv
-		call	sub_DE4E
+
+		; ZUN quirk: The game doesn't reset [score_delta] before the next
+		; proper game frame calls score_update_and_render(), thus retaining the
+		; inherent quirk of this function.
+		call	@score_grant_current_delta_as_bon$qv
+
 		call	graph_scrollup pascal, _scroll_line
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
@@ -20591,7 +20565,7 @@ evileye_end	proc far
 		call	sub_12DE0
 		push	1
 		call	sub_1310B
-		call	sub_FE12
+		call	@stage_extra_clear_bonus_animate$qv
 		call	_key_delay
 		les	bx, _resident
 		mov	es:[bx+mikoconfig_t.stage], 7Fh

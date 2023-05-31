@@ -6,6 +6,10 @@
 #include "shiftjis.hpp"
 #include "th02/resident.hpp"
 #include "th02/gaiji/gaiji.h"
+#include "th02/core/globals.hpp"
+extern "C" {
+#include "th02/snd/snd.h"
+}
 #include "th02/main/player/player.hpp"
 #include "th02/main/hud/hud.hpp"
 
@@ -20,6 +24,9 @@ static const shiftjis_kanji_amount_t HUD_LABELED_GAIJI_W = (
 static const uint8_t SHOT_LEVEL_INTERVAL_BITS = 2;
 
 extern uint8_t POWER_TO_SHOT_LEVEL[POWER_MAX >> SHOT_LEVEL_INTERVAL_BITS];
+
+void pascal near hud_score_put(utram_y_t y, long value)
+;
 
 #include "th02/main/score.cpp"
 

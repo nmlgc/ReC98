@@ -4,6 +4,8 @@
 static const tram_x_t HUD_LEFT = 56;
 static const tram_cell_amount_t HUD_TRAM_W = 16;
 
+static const tram_y_t HUD_HISCORE_Y = 4;
+static const tram_y_t HUD_SCORE_Y = 6;
 static const tram_y_t HUD_BOMBS_Y = 15;
 static const tram_y_t HUD_LIVES_Y = 17;
 static const tram_y_t HUD_POWER_Y = 20;
