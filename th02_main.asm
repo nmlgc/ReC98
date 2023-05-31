@@ -5103,7 +5103,7 @@ loc_D9FA:
 		inc	_bombs
 		add	dword_218A4, 1000
 		call	@pointnums_add$qiiui pascal, si, word_2189C, 1000
-		call	hud_bombs_put
+		call	@hud_bombs_put$qv
 		jmp	loc_DAB6
 ; ---------------------------------------------------------------------------
 
@@ -5161,7 +5161,7 @@ loc_DA9C:
 		cmp	ax, LIVES_MAX
 		jge	short loc_DAB6
 		inc	_lives
-		call	hud_lives_put
+		call	@hud_lives_put$qv
 		call	_snd_se_play c, 8
 
 loc_DAB6:
@@ -5478,7 +5478,7 @@ loc_DE01:
 		cmp	ax, LIVES_MAX
 		jge	short loc_DE26
 		inc	_lives
-		call	hud_lives_put
+		call	@hud_lives_put$qv
 		jmp	short loc_DE36
 ; ---------------------------------------------------------------------------
 
@@ -5488,7 +5488,7 @@ loc_DE26:
 		cmp	ax, BOMBS_MAX
 		jge	short loc_DE36
 		inc	_bombs
-		call	hud_bombs_put
+		call	@hud_bombs_put$qv
 
 loc_DE36:
 		call	_snd_se_play c, 8
@@ -5533,7 +5533,7 @@ loc_DE7A:
 		cmp	ax, LIVES_MAX
 		jge	short loc_DEA7
 		inc	_lives
-		call	hud_lives_put
+		call	@hud_lives_put$qv
 		call	_snd_se_play c, 8
 
 loc_DEA7:
@@ -5547,101 +5547,11 @@ main_01__TEXT	ends
 
 HUD_TEXT	segment	byte public 'CODE' use16
 	@player_shot_level_update_and_hud$qv procdesc near
+	@hud_lives_put$qv procdesc near
+	@hud_bombs_put$qv procdesc near
 HUD_TEXT	ends
 
 main_01___TEXT	segment	word public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public HUD_LIVES_PUT
-hud_lives_put	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_DF95
-; ---------------------------------------------------------------------------
-
-loc_DF7E:
-		mov	ax, si
-		add	ax, ax
-		add	ax, 62
-		call	gaiji_putca pascal, ax, (17 shl 16) + gs_YINYANG, TX_WHITE
-		inc	si
-
-loc_DF95:
-		mov	al, _lives
-		cbw
-		cmp	ax, si
-		jg	short loc_DF7E
-		mov	al, _lives
-		cbw
-		mov	si, ax
-		jmp	short loc_DFBC
-; ---------------------------------------------------------------------------
-
-loc_DFA5:
-		mov	ax, si
-		add	ax, ax
-		add	ax, 62
-		call	gaiji_putca pascal, ax, (17 shl 16) + gb_SP, TX_WHITE
-		inc	si
-
-loc_DFBC:
-		cmp	si, 5
-		jl	short loc_DFA5
-		pop	si
-		pop	bp
-		retn
-hud_lives_put	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public HUD_BOMBS_PUT
-hud_bombs_put	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		xor	si, si
-		jmp	short loc_DFE3
-; ---------------------------------------------------------------------------
-
-loc_DFCC:
-		mov	ax, si
-		add	ax, ax
-		add	ax, 62
-		call	gaiji_putca pascal, ax, (15 shl 16) + gs_BOMB, TX_WHITE
-		inc	si
-
-loc_DFE3:
-		mov	al, _bombs
-		cbw
-		cmp	ax, si
-		jg	short loc_DFCC
-		mov	al, _bombs
-		cbw
-		mov	si, ax
-		jmp	short loc_E00A
-; ---------------------------------------------------------------------------
-
-loc_DFF3:
-		mov	ax, si
-		add	ax, ax
-		add	ax, 62
-		call	gaiji_putca pascal, ax, (15 shl 16) + gb_SP, TX_WHITE
-		inc	si
-
-loc_E00A:
-		cmp	si, 5
-		jl	short loc_DFF3
-		pop	si
-		pop	bp
-		retn
-hud_bombs_put	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -5665,9 +5575,9 @@ hud_put	proc near
 		push	ax
 		call	hud_continues_put
 		call	gaiji_putsa pascal, (57 shl 16) + 17, ds, offset gsREIMU, TX_YELLOW
-		call	hud_lives_put
+		call	@hud_lives_put$qv
 		call	gaiji_putsa pascal, (57 shl 16) + 15, ds, offset gsREIGEKI, TX_YELLOW
-		call	hud_bombs_put
+		call	@hud_bombs_put$qv
 		call	gaiji_putsa pascal, (57 shl 16) + 20, ds, offset gsREIRYOKU, TX_YELLOW
 		call	@player_shot_level_update_and_hud$qv
 		push	(57 shl 16) + 22
@@ -5934,7 +5844,7 @@ player_bomb	proc near
 		mov	_bombing, 1
 		mov	_player_invincible_via_bomb, 1
 		dec	_bombs
-		call	hud_bombs_put
+		call	@hud_bombs_put$qv
 		mov	_bomb_frame, 0
 		inc	byte_218C2
 		inc	byte_1E64E
@@ -7264,7 +7174,7 @@ loc_F13B:
 		cmp	byte_20609, 2Bh	; '+'
 		jnz	short loc_F198
 		dec	_lives
-		call	hud_lives_put
+		call	@hud_lives_put$qv
 		les	bx, _resident
 		assume es:nothing
 		mov	al, es:[bx+mikoconfig_t.start_bombs]
@@ -7275,7 +7185,7 @@ loc_F13B:
 		mov	_bombs, al
 
 loc_F160:
-		call	hud_bombs_put
+		call	@hud_bombs_put$qv
 		mov	bx, word_205EE
 		mov	ax, [bx]
 		add	ax, 10h

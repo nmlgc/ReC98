@@ -3,9 +3,19 @@
 #include "platform.h"
 #include "pc98.h"
 #include "master.hpp"
+#include "shiftjis.hpp"
+#include "th02/resident.hpp"
 #include "th02/gaiji/gaiji.h"
 #include "th02/main/player/player.hpp"
 #include "th02/main/hud/hud.hpp"
+
+// Coordinates
+// -----------
+
+static const shiftjis_kanji_amount_t HUD_LABELED_GAIJI_W = (
+	HUD_LABELED_W / GAIJI_TRAM_W
+);
+// -----------
 
 static const uint8_t SHOT_LEVEL_INTERVAL_BITS = 2;
 
@@ -52,4 +62,34 @@ void near player_shot_level_update_and_hud_power_put(void)
 	g_buf.x[i] = (g_BAR_01W + value_rem);
 
 	gaiji_putsa(HUD_LABELED_LEFT, HUD_POWER_Y, g_buf.x, COLORS.x[shot_level]);
+}
+
+#define hud_gaiji_tally_put(y, value, gaiji) { \
+	/** \
+	 * ZUN landmine: No check for values > HUD_LABELED_GAIJI_W. These will \
+	 * extend the tally into adjacent TRAM cells, and even wrap into the \
+	 * next TRAM row and cover the playfield if necessary. \
+	 */ \
+	{for(int i = 0; value > i; i++) { \
+		gaiji_putca( \
+			(HUD_LABELED_LEFT + (i * GAIJI_TRAM_W)), y, gaiji, TX_WHITE \
+		); \
+	}} \
+	{for(int i = value; i < HUD_LABELED_GAIJI_W; i++) { \
+		gaiji_putca( \
+			(HUD_LABELED_LEFT + (i * GAIJI_TRAM_W)), y, gb_SP, TX_WHITE \
+		); \
+	}} \
+}
+
+void near hud_lives_put(void)
+{
+	static_assert(LIVES_MAX <= HUD_LABELED_GAIJI_W);
+	hud_gaiji_tally_put(HUD_LIVES_Y, lives, gs_YINYANG);
+}
+
+void near hud_bombs_put(void)
+{
+	static_assert(BOMBS_MAX <= HUD_LABELED_GAIJI_W);
+	hud_gaiji_tally_put(HUD_BOMBS_Y, bombs, gs_BOMB);
 }
