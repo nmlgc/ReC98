@@ -11,6 +11,9 @@ extern unsigned int extends_gained;
 extern int32_t score_delta;
 extern int32_t hiscore;
 
+// Sets [extends_gained] based on the current [score].
+void near score_extend_init(void);
+
 // Adds the entire [score_delta] at once to the current score, but does not
 // re-render it.
 void score_delta_commit(void);

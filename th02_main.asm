@@ -1510,7 +1510,7 @@ loc_B88A:
 
 loc_B8AF:
 		call	sub_D629
-		call	sub_DCD1
+		call	@score_extend_init$qv
 
 loc_B8B5:
 		cmp	vsync_Count1, 64h	; 'd'
@@ -5344,66 +5344,12 @@ sub_DAF0	endp
 
 include th02/gaiji/loadfree.asm
 include th02/main/hud/score_put.asm
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_DCD1	proc near
-		push	bp
-		mov	bp, sp
-		mov	_extends_gained, 0
-		jmp	short loc_DCE0
-; ---------------------------------------------------------------------------
-
-loc_DCDC:
-		inc	_extends_gained
-
-loc_DCE0:
-		mov	bx, _extends_gained
-		shl	bx, 2
-		mov	eax, _EXTEND_SCORES[bx]
-		cmp	eax, _score
-		jle	short loc_DCDC
-		mov	_score_delta, 0
-		pop	bp
-		retn
-sub_DCD1	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-@score_delta_commit$qv	proc far
-		push	bp
-		mov	bp, sp
-		mov	eax, _score_delta
-		add	_score, eax
-		mov	_score_delta, 0
-		mov	_score_delta_transferred_prev, 0
-		pop	bp
-		retf
-@score_delta_commit$qv	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-@score_reset$qv	proc near
-		push	bp
-		mov	bp, sp
-		mov	_score, 0
-		mov	_score_delta, 0
-		mov	_score_delta_transferred_prev, 0
-		mov	dword_1E5B8, 40000
-		pop	bp
-		retn
-@score_reset$qv	endp
 main_01__TEXT	ends
 
 HUD_TEXT	segment	byte public 'CODE' use16
+	@score_extend_init$qv procdesc near
+	extern @score_delta_commit$qv:proc
+	@score_reset$qv procdesc near
 	@score_update_and_render$qv procdesc near
 	extern @score_grant_current_delta_as_bon$qv:proc
 	@player_shot_level_update_and_hud$qv procdesc near
@@ -6924,7 +6870,13 @@ sub_EFF2	proc near
 		call	_snd_se_play c, 2
 		mov	byte_1E517, 1
 		inc	byte_20608
+
+		; ZUN bug: The fact that this function does not re-render the score
+		; means that any existing [score_delta] will stop being animated. The
+		; score display will therefore only refresh with the correct value
+		; after the player gained another point.
 		nopcall	@score_delta_commit$qv
+
 		inc	byte_1EB0C
 		mov	bx, word_205EE
 		mov	ax, [bx]
@@ -31727,12 +31679,13 @@ word_1E594	dw 0BCB0h
 byte_1E596	db 0C8h
 byte_1E597	db 0
 public _score, _lives, _bombs, _EXTEND_SCORES, _extends_gained
+public _score_reset_unknown_40000
 _score	dd 0
 _lives	db 3
 _bombs	db 3
 _EXTEND_SCORES	dd 100000, 200000, 300000, 500000, 800000, 99999999
 _extends_gained	dw 0
-dword_1E5B8	dd 40000
+_score_reset_unknown_40000	dd 40000
 include th02/main/hud/score_put[data].asm
 
 public _gHUD_BAR_MAX, _HUD_POWER_COLORS, _gHUD_BAR_BLANK

@@ -8,6 +8,32 @@
 extern unsigned int score_delta_transferred_prev;
 // -----
 
+void near score_extend_init(void)
+{
+	extends_gained = 0;
+	while(EXTEND_SCORES[extends_gained] <= score) {
+		extends_gained++;
+	}
+	score_delta = 0;
+}
+
+void score_delta_commit(void)
+{
+	score += score_delta;
+	score_delta = 0;
+	score_delta_transferred_prev = 0;
+}
+
+void near score_reset(void)
+{
+	extern int32_t score_reset_unknown_40000;
+
+	score = 0;
+	score_delta = 0;
+	score_delta_transferred_prev = 0;
+	score_reset_unknown_40000 = 40000;
+}
+
 // Due to how the branches below are nested, it's not worth it to try working
 // around these warnings.
 #if defined(__TURBOC__) && defined(__MSDOS__)
