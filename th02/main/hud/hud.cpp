@@ -4,6 +4,7 @@
 #include "pc98.h"
 #include "master.hpp"
 #include "shiftjis.hpp"
+#include "th02/score.h"
 #include "th02/resident.hpp"
 #include "th02/gaiji/gaiji.h"
 #include "th02/core/globals.hpp"
@@ -16,6 +17,10 @@ extern "C" {
 // Coordinates
 // -----------
 
+static const tram_x_t HUD_CONTINUES_LEFT = (
+	HUD_LEFT + ((SCORE_DIGITS - 1) * GAIJI_TRAM_W)
+);
+
 static const shiftjis_kanji_amount_t HUD_LABELED_GAIJI_W = (
 	HUD_LABELED_W / GAIJI_TRAM_W
 );
@@ -25,8 +30,30 @@ static const uint8_t SHOT_LEVEL_INTERVAL_BITS = 2;
 
 extern uint8_t POWER_TO_SHOT_LEVEL[POWER_MAX >> SHOT_LEVEL_INTERVAL_BITS];
 
-void pascal near hud_score_put(utram_y_t y, long value)
-;
+// Only prints the seven score digits, in contrast to the TH04/TH05 version!
+void pascal near hud_score_put(utram_y_t y, int32_t value)
+{
+	extern int32_t SEVEN_DIGIT_POWERS_OF_10[SCORE_DIGITS - 1];
+
+	int32_t near* po10_p = SEVEN_DIGIT_POWERS_OF_10;
+	int c;
+	for(tram_x_t x = HUD_LEFT; x < HUD_CONTINUES_LEFT; x += GAIJI_TRAM_W) {
+		int numeral = (value / *po10_p);
+		value -= (numeral * (*po10_p));
+		po10_p++;
+		c = (gb_0_ + numeral);
+		gaiji_putca(x, y, c, TX_WHITE);
+	}
+}
+
+void pascal near hud_continues_put(utram_y_t y, int continues_used)
+{
+	if(continues_used >= 10) {
+		continues_used = 9;
+	}
+	int c = (gb_0_ + continues_used);
+	gaiji_putca(HUD_CONTINUES_LEFT, y, c, TX_WHITE);
+}
 
 #include "th02/main/score.cpp"
 

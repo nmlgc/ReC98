@@ -5343,10 +5343,12 @@ loc_DC31:
 sub_DAF0	endp
 
 include th02/gaiji/loadfree.asm
-include th02/main/hud/score_put.asm
 main_01__TEXT	ends
 
 HUD_TEXT	segment	byte public 'CODE' use16
+	@HUD_SCORE_PUT$QUIL procdesc pascal near \
+		y:word, value:dword
+	@HUD_CONTINUES_PUT$QUII procdesc near
 	@score_extend_init$qv procdesc near
 	extern @score_delta_commit$qv:proc
 	@score_reset$qv procdesc near
@@ -5372,14 +5374,14 @@ hud_put	proc near
 		les	bx, _resident
 		assume es:nothing
 		push	es:[bx+mikoconfig_t.continues_used]
-		call	hud_continues_put
+		call	@hud_continues_put$quii
 		call	gaiji_putsa pascal, (60 shl 16) + 3, ds, offset gsHISCORE, TX_YELLOW
 		call	@hud_score_put$quil pascal, 4, large [_hiscore]
 		push	4
 		mov	al, byte_252FC
 		mov	ah, 0
 		push	ax
-		call	hud_continues_put
+		call	@hud_continues_put$quii
 		call	gaiji_putsa pascal, (57 shl 16) + 17, ds, offset gsREIMU, TX_YELLOW
 		call	@hud_lives_put$qv
 		call	gaiji_putsa pascal, (57 shl 16) + 15, ds, offset gsREIGEKI, TX_YELLOW
