@@ -1254,7 +1254,7 @@ var_C		= byte ptr -0Ch
 		graph_accesspage 0
 		call	graph_clear
 		graph_showpage 0
-		call	hud_put
+		call	@hud_put$qv
 		call	@overlay_wipe$qv
 		call	_pi_palette_apply stdcall, 0
 		call	_pi_palette_apply stdcall, 0
@@ -1573,7 +1573,7 @@ off_B982	dw offset loc_B63C
 sub_B98E	proc near
 		push	bp
 		mov	bp, sp
-		call	hud_put
+		call	@hud_put$qv
 		nopcall	sub_E162
 		mov	ax, 0D0h
 		mov	word_205E8, ax
@@ -5346,9 +5346,6 @@ include th02/gaiji/loadfree.asm
 main_01__TEXT	ends
 
 HUD_TEXT	segment	byte public 'CODE' use16
-	@HUD_SCORE_PUT$QUIL procdesc pascal near \
-		y:word, value:dword
-	@HUD_CONTINUES_PUT$QUII procdesc near
 	@score_extend_init$qv procdesc near
 	extern @score_delta_commit$qv:proc
 	@score_reset$qv procdesc near
@@ -5357,78 +5354,10 @@ HUD_TEXT	segment	byte public 'CODE' use16
 	@player_shot_level_update_and_hud$qv procdesc near
 	@hud_lives_put$qv procdesc near
 	@hud_bombs_put$qv procdesc near
+	@hud_put$qv procdesc near
 HUD_TEXT	ends
 
-main_01___TEXT	segment	word public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public HUD_PUT
-hud_put	proc near
-		push	bp
-		mov	bp, sp
-		call	gaiji_putsa pascal, (61 shl 16) + 5, ds, offset gsSCORE, TX_YELLOW
-		call	@hud_score_put$quil pascal, 6, large [_score]
-		push	6
-		les	bx, _resident
-		assume es:nothing
-		push	es:[bx+mikoconfig_t.continues_used]
-		call	@hud_continues_put$quii
-		call	gaiji_putsa pascal, (60 shl 16) + 3, ds, offset gsHISCORE, TX_YELLOW
-		call	@hud_score_put$quil pascal, 4, large [_hiscore]
-		push	4
-		mov	al, byte_252FC
-		mov	ah, 0
-		push	ax
-		call	@hud_continues_put$quii
-		call	gaiji_putsa pascal, (57 shl 16) + 17, ds, offset gsREIMU, TX_YELLOW
-		call	@hud_lives_put$qv
-		call	gaiji_putsa pascal, (57 shl 16) + 15, ds, offset gsREIGEKI, TX_YELLOW
-		call	@hud_bombs_put$qv
-		call	gaiji_putsa pascal, (57 shl 16) + 20, ds, offset gsREIRYOKU, TX_YELLOW
-		call	@player_shot_level_update_and_hud$qv
-		push	(57 shl 16) + 22
-		push	ds
-		mov	al, _rank
-		cbw
-		shl	ax, 3
-		add	ax, offset glEASY
-		push	ax
-		cmp	_rank, RANK_EASY
-		jnz	short loc_E0C2
-		mov	ax, TX_GREEN
-		jmp	short loc_E0E1
-; ---------------------------------------------------------------------------
-
-loc_E0C2:
-		mov	al, _rank
-		cbw
-		cmp	ax, RANK_NORMAL
-		jnz	short loc_E0D0
-		mov	ax, TX_CYAN
-		jmp	short loc_E0E1
-; ---------------------------------------------------------------------------
-
-loc_E0D0:
-		mov	al, _rank
-		cbw
-		cmp	ax, RANK_HARD
-		jnz	short loc_E0DE
-		mov	ax, TX_MAGENTA
-		jmp	short loc_E0E1
-; ---------------------------------------------------------------------------
-
-loc_E0DE:
-		mov	ax, TX_RED
-
-loc_E0E1:
-		push	ax
-		call	gaiji_putsa
-		pop	bp
-		retn
-hud_put	endp
-
+main_01___TEXT	segment	byte public 'CODE' use16
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -31372,7 +31301,7 @@ loc_1CD75:
 		mov	ebx, 0Ah
 		cdq
 		idiv	ebx
-		mov	byte_252FC, dl
+		mov	_hiscore_continues, dl
 		pop	bp
 		retf
 sub_1CD36	endp
@@ -31698,12 +31627,19 @@ include th02/main/hud/power[data].asm
 
 _gHUD_BAR_BLANK	db gb_SP, gb_SP, gb_SP, gb_SP, gb_SP, 0
 
-include th02/gaiji/ranks_left[data].asm
-gsSCORE		db 0C4h, 0C5h, 0C6h, 0,	0
-gsHISCORE	db 0CEh, 0C4h, 0C5h, 0C6h, 0
-gsREIMU		db 0C9h, 0CAh, 0, 0, 0
-gsREIGEKI	db 0CCh, 0CDh, 0, 0, 0
-gsREIRYOKU	db 0C7h, 0C8h, 0, 0, 0
+public _gRANKS, _gsSCORE, _gsHISCORE, _gsREIMU, _gsREIGEKI, _gsREIRYOKU
+_gRANKS label byte
+_gEASY     	db gb_E_, gb_A_, gb_S_, gb_Y_, gb_SP, gb_SP, gb_SP, 0
+_gNORMAL   	db gb_N_, gb_O_, gb_R_, gb_M_, gb_A_, gb_L_, gb_SP, 0
+_gHARD     	db gb_H_, gb_A_, gb_R_, gb_D_, gb_SP, gb_SP, gb_SP, 0
+_gLUNATIC  	db gb_L_, gb_U_, gb_N_, gb_A_, gb_T_, gb_I_, gb_C_, 0
+_gEXTRA    	db gb_E_, gb_X_, gb_T_, gb_R_, gb_A_, gb_SP, gb_SP, 0
+
+_gsSCORE   	db gs_Sc, gs_cor, gs_e, 0, 0
+_gsHISCORE 	db gs_Hi, gs_Sc, gs_cor, gs_e, 0
+_gsREIMU   	db gs_REIMU_REI, gs_REIMU_MU, 0, 0, 0
+_gsREIGEKI 	db gs_REIGEKI_REI, gs_REIGEKI_GEKI, 0, 0, 0
+_gsREIRYOKU	db gs_REIRYOKU_REI, gs_REIRYOKU_RYOKU, 0, 0, 0
 aMikoft_bft	db 'MIKOFT.bft',0
 public _POWER_TO_SHOT_LEVEL
 _POWER_TO_SHOT_LEVEL	db 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 6, 7, 7, 7, 8, 8, 8, 8, 9
@@ -32844,9 +32780,9 @@ word_252F2	dw ?
 word_252F4	dw ?
 byte_252F6	db ?
 byte_252F7	db ?
-public _hiscore
+public _hiscore, _hiscore_continues
 _hiscore	dd ?
-byte_252FC	db ?
+_hiscore_continues	db ?
 		db ?
 word_252FE	dw ?
 dword_25300	dd ?

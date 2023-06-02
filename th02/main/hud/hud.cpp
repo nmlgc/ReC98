@@ -4,6 +4,7 @@
 #include "pc98.h"
 #include "master.hpp"
 #include "shiftjis.hpp"
+#include "th01/rank.h"
 #include "th02/score.h"
 #include "th02/resident.hpp"
 #include "th02/gaiji/gaiji.h"
@@ -14,12 +15,32 @@ extern "C" {
 #include "th02/main/player/player.hpp"
 #include "th02/main/hud/hud.hpp"
 
+// Gaiji strings
+// -------------
+// ZUN bloat: Needlessly using a consistent length ruins any chance of
+// calculating lengths at compile time. (At least in ancient C++.)
+
+extern const gaiji_th02_t gsSCORE[5];
+extern const gaiji_th02_t gsHISCORE[5];
+extern const gaiji_th02_t gsREIMU[5];
+extern const gaiji_th02_t gsREIGEKI[5];
+extern const gaiji_th02_t gsREIRYOKU[5];
+
+static const tram_cell_amount_t gsSCORE_W = (3 * GAIJI_TRAM_W);
+static const tram_cell_amount_t gsHISCORE_W = (4 * GAIJI_TRAM_W);
+
+extern const gaiji_th02_t gRANKS[RANK_COUNT][8];
+// -------------
+
 // Coordinates
 // -----------
 
 static const tram_x_t HUD_CONTINUES_LEFT = (
 	HUD_LEFT + ((SCORE_DIGITS - 1) * GAIJI_TRAM_W)
 );
+static const tram_x_t HUD_LABELED_LABEL_LEFT = (HUD_LEFT + HUD_LABEL_PADDING);
+
+static const tram_x_t HUD_CENTER_X = (HUD_LEFT + (HUD_TRAM_W / 2));
 
 static const shiftjis_kanji_amount_t HUD_LABELED_GAIJI_W = (
 	HUD_LABELED_W / GAIJI_TRAM_W
@@ -126,4 +147,42 @@ void near hud_bombs_put(void)
 {
 	static_assert(BOMBS_MAX <= HUD_LABELED_GAIJI_W);
 	hud_gaiji_tally_put(HUD_BOMBS_Y, bombs, gs_BOMB);
+}
+
+inline void hud_label_put(utram_x_t left, utram_y_t y, const gaiji_th02_t* s) {
+	gaiji_putsa(left, y, reinterpret_cast<const char *>(s), TX_YELLOW);
+}
+
+void near hud_put(void)
+{
+	hud_label_put((HUD_CENTER_X - (gsSCORE_W / 2)), (HUD_SCORE_Y - 1), gsSCORE);
+	hud_score_put(HUD_SCORE_Y, score);
+	hud_continues_put(HUD_SCORE_Y, resident->continues_used);
+
+	hud_label_put(
+		(HUD_CENTER_X - (gsHISCORE_W / 2)), (HUD_HISCORE_Y - 1), gsHISCORE
+	);
+	hud_score_put(HUD_HISCORE_Y, hiscore);
+	hud_continues_put(HUD_HISCORE_Y, hiscore_continues);
+
+	hud_label_put(HUD_LABELED_LABEL_LEFT, HUD_LIVES_Y, gsREIMU);
+	hud_lives_put();
+
+	hud_label_put(HUD_LABELED_LABEL_LEFT, HUD_BOMBS_Y, gsREIGEKI);
+	hud_bombs_put();
+
+	hud_label_put(HUD_LABELED_LABEL_LEFT, HUD_POWER_Y, gsREIRYOKU);
+	player_shot_level_update_and_hud_power_put();
+
+	gaiji_putsa(
+		HUD_LABELED_LABEL_LEFT,
+		HUD_RANK_Y,
+		reinterpret_cast<const char near *>(gRANKS[rank]),
+		(
+			(rank ==    RANK_EASY) ? TX_GREEN :
+			(rank ==  RANK_NORMAL) ? TX_CYAN :
+			(rank ==    RANK_HARD) ? TX_MAGENTA :
+			/*       RANK_LUNATIC */ TX_RED
+		)
+	);
 }

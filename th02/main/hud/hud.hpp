@@ -9,6 +9,7 @@ static const tram_y_t HUD_SCORE_Y = 6;
 static const tram_y_t HUD_BOMBS_Y = 15;
 static const tram_y_t HUD_LIVES_Y = 17;
 static const tram_y_t HUD_POWER_Y = 20;
+static const tram_y_t HUD_RANK_Y = 22;
 
 static const tram_cell_amount_t HUD_LABEL_PADDING = 1;
 static const tram_cell_amount_t HUD_LABEL_W = (2 * GAIJI_TRAM_W);
@@ -28,3 +29,6 @@ void near player_shot_level_update_and_hud_power_put(void);
 
 void near hud_lives_put(void);
 void near hud_bombs_put(void);
+
+// Renders the entire HUD, reflecting all current values.
+void near hud_put(void);

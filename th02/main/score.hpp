@@ -10,6 +10,7 @@ extern const int32_t EXTEND_SCORES[];
 extern unsigned int extends_gained;
 extern int32_t score_delta;
 extern int32_t hiscore;
+extern uint8_t hiscore_continues;
 
 // Sets [extends_gained] based on the current [score].
 void near score_extend_init(void);

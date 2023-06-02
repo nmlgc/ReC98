@@ -20,7 +20,18 @@ typedef enum {
 
 	gaiji_boldfont(0xA0),
 
-	gb_SP = 0xCF,
+	gs_Sc,
+	gs_cor,
+	gs_e,
+	gs_REIRYOKU_REI,
+	gs_REIRYOKU_RYOKU,
+	gs_REIMU_REI,
+	gs_REIMU_MU,
+	gs_BLANK,
+	gs_REIGEKI_REI,
+	gs_REIGEKI_GEKI,
+	gs_Hi,
+	gb_SP,
 	gs_NOTES = 0xD8, // ♫
 	gs_BULLET = 0xDA, // •
 	gs_PERIOD, // .
