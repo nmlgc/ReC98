@@ -1,6 +1,8 @@
 #define PLAYER_W 32
 #define PLAYER_H 48
 
+extern screen_point_t player_topleft;
+
 extern bool player_is_hit;
 
 // Grants invincibility when >0. Decrements by 1 each frame in that case.

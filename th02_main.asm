@@ -2871,7 +2871,7 @@ arg_2		= word ptr  6
 		add	ax, ax
 		mov	cx, ax
 		mov	word ptr [si], 1
-		mov	ax, point_205F6.x
+		mov	ax, _player_topleft.x
 		add	ax, [bp+arg_2]
 		shl	ax, 4
 		mov	bx, cx
@@ -2971,7 +2971,7 @@ var_2		= word ptr -2
 		xor	si, si
 		xor	di, di
 		mov	[bp+var_2], 0
-		mov	ax, point_205F6.y
+		mov	ax, _player_topleft.y
 		add	ax, 32
 		shl	ax, 4
 		mov	word_205E4, ax
@@ -3286,7 +3286,7 @@ var_2		= word ptr -2
 		xor	di, di
 		mov	[bp+var_2], 0
 		mov	[bp+var_3], 0
-		mov	ax, point_205F6.y
+		mov	ax, _player_topleft.y
 		add	ax, 32
 		shl	ax, 4
 		mov	word_205E4, ax
@@ -3470,11 +3470,11 @@ loc_CE5B:
 		cmp	word_205DA, 0
 		jle	short loc_CE96
 		mov	ax, word_205DA
-		sub	ax, point_205F6.y
+		sub	ax, _player_topleft.y
 		add	ax, -32
 		push	ax
 		mov	ax, word_205D8
-		sub	ax, point_205F6.x
+		sub	ax, _player_topleft.x
 		push	ax
 		call	iatan2
 		mov	[bp+var_2], ax
@@ -3500,11 +3500,11 @@ loc_CE9F:
 		cmp	word_205DA, 0
 		jle	short loc_CED8
 		mov	ax, word_205DA
-		sub	ax, point_205F6.y
+		sub	ax, _player_topleft.y
 		add	ax, -32
 		push	ax
 		mov	ax, word_205D8
-		sub	ax, point_205F6.x
+		sub	ax, _player_topleft.x
 		add	ax, -16
 		push	ax
 		call	iatan2
@@ -3772,7 +3772,7 @@ var_2		= word ptr -2
 		xor	di, di
 		mov	[bp+var_3], 0
 		inc	byte_20350
-		mov	ax, point_205F6.y
+		mov	ax, _player_topleft.y
 		add	ax, 32
 		shl	ax, 4
 		mov	word_205E4, ax
@@ -4785,14 +4785,19 @@ arg_2		= word ptr  6
 		mov	[bp+var_16], ax
 		mov	al, byte_1E596
 		mov	[bp+var_14], al
-		cmp	point_205F6.x, 128
+
+		; ZUN quirk: Probably meant to be ((PLAYFIELD_W / 3) * 1), but
+		; [player_topleft] is relative to the top-left corner of the *screen*,
+		; not the playfield.
+		cmp	_player_topleft.x, (PLAYFIELD_LEFT + (PLAYFIELD_W / 4))
 		jg	short loc_D794
 		mov	al, -1
 		jmp	short loc_D7A2
 ; ---------------------------------------------------------------------------
 
 loc_D794:
-		cmp	point_205F6.x, 256
+		; Same here, with ((PLAYFIELD_W / 3) * 2).
+		cmp	_player_topleft.x, (PLAYFIELD_LEFT + ((PLAYFIELD_W / 12) * 7))
 		jg	short loc_D7A0
 		mov	al, 0
 		jmp	short loc_D7A2
@@ -5000,10 +5005,10 @@ arg_0		= word ptr  4
 		push	di
 		mov	ax, word_2189C
 		mov	[bp+var_2], ax
-		cmp	ax, point_205F6.y
+		cmp	ax, _player_topleft.y
 		jl	loc_DADE
-		mov	ax, point_205F6.y
-		add	ax, 24
+		mov	ax, _player_topleft.y
+		add	ax, (PLAYER_H / 2)
 		cmp	ax, [bp+var_2]
 		jl	loc_DADE
 		mov	ax, word_2189A
@@ -5280,11 +5285,11 @@ loc_DB9D:
 		inc	word ptr [si+0Ah]
 		cmp	_player_is_hit, 0
 		jnz	short loc_DBCA
-		mov	ax, point_205F6.x
+		mov	ax, _player_topleft.x
 		add	ax, -8
 		cmp	ax, word_2189A
 		jg	short loc_DBCA
-		mov	ax, point_205F6.x
+		mov	ax, _player_topleft.x
 		add	ax, 24
 		cmp	ax, word_2189A
 		jl	short loc_DBCA
@@ -6656,43 +6661,43 @@ arg_2		= word ptr  6
 		mov	bp, sp
 		mov	bx, word_205F0
 		mov	ax, [bx]
-		mov	point_205F6.y, ax
+		mov	_player_topleft.y, ax
 		mov	ax, [bp+arg_0]
-		add	point_205F6.y, ax
-		cmp	point_205F6.y, 16
+		add	_player_topleft.y, ax
+		cmp	_player_topleft.y, PLAYFIELD_TOP
 		jge	short loc_EEE5
-		mov	point_205F6.y, 16
+		mov	_player_topleft.y, PLAYFIELD_TOP
 		jmp	short loc_EEF3
 ; ---------------------------------------------------------------------------
 
 loc_EEE5:
-		cmp	point_205F6.y, 344
+		cmp	_player_topleft.y, (PLAYFIELD_BOTTOM - PLAYER_H + (PLAYER_H / 6))
 		jle	short loc_EEF3
-		mov	point_205F6.y, 344
+		mov	_player_topleft.y, (PLAYFIELD_BOTTOM - PLAYER_H + (PLAYER_H / 6))
 
 loc_EEF3:
 		mov	bx, word_205F0
-		mov	ax, point_205F6.y
+		mov	ax, _player_topleft.y
 		mov	[bx], ax
 		mov	bx, word_205EE
 		mov	ax, [bx]
-		mov	point_205F6.x, ax
+		mov	_player_topleft.x, ax
 		mov	ax, [bp+arg_2]
-		add	point_205F6.x, ax
-		cmp	point_205F6.x, 390
+		add	_player_topleft.x, ax
+		cmp	_player_topleft.x, (PLAYFIELD_RIGHT - PLAYER_W + 6)
 		jl	short loc_EF1C
-		mov	point_205F6.x, 390
+		mov	_player_topleft.x, (PLAYFIELD_RIGHT - PLAYER_W + 6)
 		jmp	short loc_EF29
 ; ---------------------------------------------------------------------------
 
 loc_EF1C:
-		cmp	point_205F6.x, 28
+		cmp	_player_topleft.x, (PLAYFIELD_LEFT - (PLAYER_W / 8))
 		jg	short loc_EF29
-		mov	point_205F6.x, 28
+		mov	_player_topleft.x, (PLAYFIELD_LEFT - (PLAYER_W / 8))
 
 loc_EF29:
 		mov	bx, word_205EE
-		mov	ax, point_205F6.x
+		mov	ax, _player_topleft.x
 		mov	[bx], ax
 		pop	bp
 		retn	4
@@ -6740,14 +6745,14 @@ loc_EF7F:
 		and	ax, 3
 		cmp	ax, 3
 		jge	short loc_EFAC
-		mov	si, point_205F6.y
+		mov	si, _player_topleft.y
 		add	si, _scroll_line
 		cmp	si, RES_Y
 		jl	short loc_EF9E
 		sub	si, RES_Y
 
 loc_EF9E:
-		call	super_roll_put pascal, point_205F6.x, si, word_1E512
+		call	super_roll_put pascal, _player_topleft.x, si, word_1E512
 
 loc_EFAC:
 		cmp	_power, 8
@@ -6824,10 +6829,10 @@ sub_EFF2	proc near
 loc_F03D:
 		mov	bx, word_205EE
 		mov	ax, [bx]
-		mov	point_205F6.x, ax
+		mov	_player_topleft.x, ax
 		mov	bx, word_205F0
 		mov	ax, [bx]
-		mov	point_205F6.y, ax
+		mov	_player_topleft.y, ax
 		inc	byte_20609
 		cmp	byte_20609, 18h
 		jnb	short loc_F08A
@@ -7152,12 +7157,12 @@ loc_F2FB:
 		push	si
 		push	di
 		call	sub_EEC3
-		mov	ax, point_205F6.x
+		mov	ax, _player_topleft.x
 		add	ax, -16
 		sub	ax, si
 		mov	bx, word_205F2
 		mov	[bx], ax
-		mov	ax, point_205F6.y
+		mov	ax, _player_topleft.y
 		add	ax, 16
 		sub	ax, di
 		mov	bx, word_205F4
@@ -8145,10 +8150,10 @@ arg_6		= dword	ptr  0Ah
 		mov	bx, ax
 		mov	ax, [bx+si+4]
 		mov	[bp+@@y1], ax
-		mov	ax, point_205F6.y
+		mov	ax, _player_topleft.y
 		add	ax, 20
 		mov	[bp+@@y2], ax
-		mov	ax, point_205F6.x
+		mov	ax, _player_topleft.x
 		add	ax, 12
 		mov	[bp+@@x2], ax
 		mov	al, _page_back
@@ -8936,14 +8941,14 @@ arg_0		= word ptr  4
 		mov	ax, [bx]
 		sar	ax, 4
 		mov	di, ax
-		mov	ax, point_205F6.y
+		mov	ax, _player_topleft.y
 		add	ax, 8
 		mov	[bp+@@y2], ax
 		mov	bx, word_2174E
 		mov	ax, [bx]
 		sar	ax, 4
 		mov	[bp+@@x1], ax
-		mov	ax, point_205F6.x
+		mov	ax, _player_topleft.x
 		add	ax, 8
 		mov	[bp+@@x2], ax
 		mov	al, [si+0Fh]
@@ -9274,19 +9279,19 @@ loc_10C72:
 		cbw
 		cmp	ax, 1
 		jnz	short loc_10CA9
-		mov	ax, point_205F6.x
+		mov	ax, _player_topleft.x
 		add	ax, 7
 		cmp	ax, _bullet_left
 		jg	short loc_10CDC
-		mov	ax, point_205F6.x
+		mov	ax, _player_topleft.x
 		add	ax, 17
 		cmp	ax, _bullet_left
 		jle	short loc_10CDC
-		mov	ax, point_205F6.y
+		mov	ax, _player_topleft.y
 		add	ax, 12
 		cmp	ax, di
 		jg	short loc_10CDC
-		mov	ax, point_205F6.y
+		mov	ax, _player_topleft.y
 		add	ax, 22
 		cmp	ax, di
 		jl	short loc_10CDC
@@ -9294,19 +9299,19 @@ loc_10C72:
 ; ---------------------------------------------------------------------------
 
 loc_10CA9:
-		mov	ax, point_205F6.x
+		mov	ax, _player_topleft.x
 		add	ax, -3
 		cmp	ax, _bullet_left
 		jg	short loc_10CDC
-		mov	ax, point_205F6.x
+		mov	ax, _player_topleft.x
 		add	ax, 19
 		cmp	ax, _bullet_left
 		jle	short loc_10CDC
-		mov	ax, point_205F6.y
+		mov	ax, _player_topleft.y
 		add	ax, 4
 		cmp	ax, di
 		jg	short loc_10CDC
-		mov	ax, point_205F6.y
+		mov	ax, _player_topleft.y
 		add	ax, 24
 		cmp	ax, di
 		jl	short loc_10CDC
@@ -10808,7 +10813,7 @@ loc_11970:
 		jl	short loc_1194A
 
 loc_11975:
-		cmp	point_205F6.y, 96
+		cmp	_player_topleft.y, (PLAYFIELD_TOP + 80)
 		jge	short loc_11993
 		push	word_22D98
 		push	word_22D9A
@@ -11186,8 +11191,8 @@ var_2		= word ptr -2
 		or	dx, dx
 		jnz	short loc_11C7A
 		mov	byte_23A70, 1Eh
-		mov	ax, point_205F6.x
-		add	ax, 16
+		mov	ax, _player_topleft.x
+		add	ax, (PLAYER_W / 2)
 		and	ax, 0FFF0h
 		mov	[bp+var_2], ax
 		push	ax
@@ -11226,10 +11231,10 @@ var_1		= byte ptr -1
 		idiv	bx
 		or	dx, dx
 		jnz	locret_11D2E
-		mov	ax, point_205F6.y
+		mov	ax, _player_topleft.y
 		add	ax, -32
 		push	ax
-		mov	ax, point_205F6.x
+		mov	ax, _player_topleft.x
 		sub	ax, word_22D8C
 		push	ax
 		call	iatan2
@@ -11268,10 +11273,10 @@ loc_11CF5:
 		idiv	bx
 		or	dx, dx
 		jnz	short locret_11D2E
-		mov	ax, point_205F6.y
+		mov	ax, _player_topleft.y
 		add	ax, -32
 		push	ax
-		mov	ax, point_205F6.x
+		mov	ax, _player_topleft.x
 		sub	ax, word_22D8C
 		push	ax
 		call	iatan2
@@ -11665,12 +11670,12 @@ sub_1200F	proc near
 ; ---------------------------------------------------------------------------
 
 loc_1202D:
-		mov	ax, point_205F6.y
+		mov	ax, _player_topleft.y
 		add	ax, -32
 		push	ax
 		mov	bx, si
 		add	bx, bx
-		mov	ax, point_205F6.x
+		mov	ax, _player_topleft.x
 		sub	ax, [bx+5314h]
 		push	ax
 		call	iatan2
@@ -13094,13 +13099,13 @@ loc_12B5E:
 		jnz	short loc_12B98
 		mov	ax, point_23A6C.x
 		add	ax, -24
-		cmp	ax, point_205F6.x
+		cmp	ax, _player_topleft.x
 		jge	short loc_12B98
 		mov	ax, point_23A6C.x
 		add	ax, 8
-		cmp	ax, point_205F6.x
+		cmp	ax, _player_topleft.x
 		jle	short loc_12B98
-		mov	ax, point_205F6.y
+		mov	ax, _player_topleft.y
 		cmp	ax, point_23A6C.y
 		jl	short loc_12B98
 		cmp	_player_is_hit, 0
@@ -13270,14 +13275,14 @@ sub_12CE5	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		mov	si, point_205F6.y
+		mov	si, _player_topleft.y
 		add	si, _scroll_line
 		cmp	si, RES_Y
 		jl	short loc_12CFB
 		sub	si, RES_Y
 
 loc_12CFB:
-		call	super_roll_put pascal, point_205F6.x, si, 0
+		call	super_roll_put pascal, _player_topleft.x, si, 0
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
@@ -16220,16 +16225,16 @@ var_2		= word ptr -2
 		mov	si, [bx]
 		mov	bx, word_2065C
 		mov	ax, [bx]
-		cmp	ax, point_205F6.x
+		cmp	ax, _player_topleft.x
 		jg	short loc_1461A
 		add	ax, 32
-		cmp	ax, point_205F6.x
+		cmp	ax, _player_topleft.x
 		jle	short loc_1461A
 		lea	ax, [si-10h]
-		cmp	ax, point_205F6.y
+		cmp	ax, _player_topleft.y
 		jge	short loc_1461A
 		lea	ax, [si+20h]
-		cmp	ax, point_205F6.y
+		cmp	ax, _player_topleft.y
 		jle	short loc_1461A
 		mov	_player_is_hit, 1
 
@@ -16410,17 +16415,17 @@ loc_14757:
 		dec	byte ptr [si+0Ah]
 		mov	ax, [si+2]
 		add	ax, -16
-		cmp	ax, point_205F6.x
+		cmp	ax, _player_topleft.x
 		jg	loc_14829
 		mov	ax, [si+2]
-		cmp	ax, point_205F6.x
+		cmp	ax, _player_topleft.x
 		jl	loc_14829
 		mov	ax, [si+4]
 		add	ax, -16
-		cmp	ax, point_205F6.y
+		cmp	ax, _player_topleft.y
 		jge	loc_14829
 		mov	ax, [si+4]
-		cmp	ax, point_205F6.y
+		cmp	ax, _player_topleft.y
 		jle	loc_14829
 		mov	_player_is_hit, 1
 		jmp	loc_14829
@@ -16616,7 +16621,7 @@ sub_148FD	proc near
 		mov	bx, word_2065C
 		mov	ax, [bx]
 		add	ax, 16
-		cmp	ax, point_205F6.x
+		cmp	ax, _player_topleft.x
 		jge	short loc_1492B
 		mov	ax, 1
 		jmp	short loc_1492D
@@ -17000,7 +17005,7 @@ sub_14C76	proc near
 		mov	bx, word_2065C
 		mov	ax, [bx]
 		add	ax, 16
-		cmp	ax, point_205F6.x
+		cmp	ax, _player_topleft.x
 		jge	short loc_14C9D
 		mov	ax, 1
 		jmp	short loc_14C9F
@@ -18929,7 +18934,7 @@ var_1		= byte ptr -1
 		cmp	word_20650, 14h
 		jnz	short loc_15D83
 		mov	byte_25596, 0
-		cmp	point_205F6.x, 208
+		cmp	_player_topleft.x, (PLAYFIELD_LEFT + (PLAYFIELD_W / 2) - (PLAYER_W / 2))
 		jge	short loc_15D7E
 		mov	al, 1
 		jmp	short loc_15D80
@@ -19133,7 +19138,7 @@ sub_15EF7	proc near
 loc_15F06:
 		cmp	word_20650, 32h	; '2'
 		jnz	short loc_15F1E
-		cmp	point_205F6.x, 208
+		cmp	_player_topleft.x, (PLAYFIELD_LEFT + (PLAYFIELD_W / 2) - (PLAYER_W / 2))
 		jge	short loc_15F19
 		mov	al, 1
 		jmp	short loc_15F1B
@@ -19248,10 +19253,10 @@ loc_15FB7:
 loc_15FCF:
 		cmp	word_20650, 64h	; 'd'
 		jnz	short loc_15FFD
-		mov	ax, point_205F6.x
+		mov	ax, _player_topleft.x
 		add	ax, 16
 		mov	word_2559A, ax
-		mov	ax, point_205F6.y
+		mov	ax, _player_topleft.y
 		add	ax, 16
 		mov	word_2559C, ax
 		mov	byte_2558C, 3
@@ -19709,10 +19714,10 @@ loc_16458:
 		jnz	short loc_164AD
 		push	word_253B6
 		push	word_253B8
-		mov	ax, point_205F6.x
+		mov	ax, _player_topleft.x
 		add	ax, 16
 		push	ax
-		mov	ax, point_205F6.y
+		mov	ax, _player_topleft.y
 		add	ax, 16
 		push	ax
 		push	0
@@ -19759,7 +19764,7 @@ loc_164E3:
 		add	word_255AE, ax
 		mov	ax, point_255A4.y
 		add	word_255AA, ax
-		mov	ax, point_205F6.x
+		mov	ax, _player_topleft.x
 		add	ax, 16
 		cmp	ax, word_255A8
 		jle	short loc_1650B
@@ -19768,14 +19773,14 @@ loc_164E3:
 ; ---------------------------------------------------------------------------
 
 loc_1650B:
-		mov	ax, point_205F6.x
+		mov	ax, _player_topleft.x
 		add	ax, 16
 		cmp	ax, word_255A8
 		jge	short loc_1651C
 		sub	word_255A8, 10h
 
 loc_1651C:
-		mov	ax, point_205F6.x
+		mov	ax, _player_topleft.x
 		add	ax, 16
 		cmp	ax, word_255AE
 		jle	short loc_1652F
@@ -19784,7 +19789,7 @@ loc_1651C:
 ; ---------------------------------------------------------------------------
 
 loc_1652F:
-		mov	ax, point_205F6.x
+		mov	ax, _player_topleft.x
 		add	ax, 16
 		cmp	ax, word_255AE
 		jge	short loc_16540
@@ -19824,10 +19829,10 @@ loc_1656B:
 		and	ax, 3Fh
 		cmp	ax, 20h	; ' '
 		jnz	short loc_16589
-		mov	ax, point_205F6.x
+		mov	ax, _player_topleft.x
 		add	ax, 16
 		push	ax
-		mov	ax, point_205F6.y
+		mov	ax, _player_topleft.y
 		add	ax, 16
 		push	ax
 		push	30h ; '0'
@@ -19867,7 +19872,7 @@ sub_165A5	proc near
 loc_165B4:
 		cmp	word_20650, 32h	; '2'
 		jnz	short loc_165CC
-		cmp	point_205F6.x, 208
+		cmp	_player_topleft.x, (PLAYFIELD_LEFT + (PLAYFIELD_W / 2) - (PLAYER_W / 2))
 		jge	short loc_165C7
 		mov	al, 2
 		jmp	short loc_165C9
@@ -19930,10 +19935,10 @@ sub_16606	proc near
 loc_1661C:
 		test	byte ptr word_20650, 3Fh
 		jnz	short loc_16636
-		mov	ax, point_205F6.x
+		mov	ax, _player_topleft.x
 		add	ax, 16
 		push	ax
-		mov	ax, point_205F6.y
+		mov	ax, _player_topleft.y
 		add	ax, 16
 		push	ax
 		push	30h ; '0'
@@ -20005,10 +20010,10 @@ sub_1668E	proc near
 loc_166A4:
 		test	byte ptr word_20650, 1Fh
 		jnz	short loc_166BE
-		mov	ax, point_205F6.x
+		mov	ax, _player_topleft.x
 		add	ax, 16
 		push	ax
-		mov	ax, point_205F6.y
+		mov	ax, _player_topleft.y
 		add	ax, 16
 		push	ax
 		push	30h ; '0'
@@ -20476,14 +20481,14 @@ sub_16AFC	proc near
 		push	bp
 		mov	bp, sp
 		sub	sp, 6
-		mov	ax, point_205F6.y
+		mov	ax, _player_topleft.y
 		add	ax, 16
 		mov	[bp+@@y2], ax
 		mov	bx, word_26C4A
 		push	word ptr [bx]
 		mov	bx, word_26C4C
 		push	word ptr [bx]
-		mov	ax, point_205F6.x
+		mov	ax, _player_topleft.x
 		add	ax, 24
 		push	ax
 		push	[bp+@@y2]
@@ -21743,10 +21748,10 @@ var_2		= word ptr -2
 		cmp	[bx+2B76h], dx
 		jge	short loc_175D1
 		lea	ax, [si-10h]
-		cmp	ax, point_205F6.y
+		cmp	ax, _player_topleft.y
 		jge	short loc_175D1
 		lea	ax, [si+10h]
-		cmp	ax, point_205F6.y
+		cmp	ax, _player_topleft.y
 		jle	short loc_175D1
 		mov	bx, word_26C46
 		mov	word ptr [bx+0Ah], 0
@@ -23110,7 +23115,7 @@ var_2		= byte ptr -2
 		mov	bx, word_2065C
 		mov	ax, [bx]
 		add	ax, 64
-		cmp	ax, point_205F6.x
+		cmp	ax, _player_topleft.x
 		jge	short loc_181E5
 		mov	ax, 2
 		jmp	short loc_181E8
@@ -23220,11 +23225,11 @@ loc_182DD:
 		mov	bx, word_2065C
 		mov	ax, [bx]
 		add	ax, 16
-		cmp	ax, point_205F6.x
+		cmp	ax, _player_topleft.x
 		jge	short loc_1834B
 		mov	ax, [bx]
 		add	ax, 96
-		cmp	ax, point_205F6.x
+		cmp	ax, _player_topleft.x
 		jle	short loc_1834B
 		mov	_player_is_hit, 1
 
@@ -23800,7 +23805,7 @@ sub_188AA	proc near
 		mov	ax, [bx]
 		add	ax, 40h
 		mov	[bp+@@y1], ax
-		call	@vector2_between_plus$qiiiiucmit6i pascal, [bp+@@x1], ax, point_205F6.x, point_205F6.y, 0, ds, offset point_26CD6.x, ds, offset point_26CD6.y, 48
+		call	@vector2_between_plus$qiiiiucmit6i pascal, [bp+@@x1], ax, _player_topleft.x, _player_topleft.y, 0, ds, offset point_26CD6.x, ds, offset point_26CD6.y, 48
 
 loc_188F8:
 		push	ds
@@ -23830,7 +23835,7 @@ sub_18905	proc near
 		mov	bx, word_2065C
 		mov	ax, [bx]
 		add	ax, 64
-		cmp	ax, point_205F6.x
+		cmp	ax, _player_topleft.x
 		jge	short loc_18932
 		mov	ax, 2
 		jmp	short loc_18935
@@ -23946,7 +23951,7 @@ sub_18A1B	proc near
 		mov	bx, word_2065C
 		mov	ax, [bx]
 		add	ax, 64
-		cmp	ax, point_205F6.x
+		cmp	ax, _player_topleft.x
 		jge	short loc_18A48
 		mov	ax, 2
 		jmp	short loc_18A4B
@@ -24092,7 +24097,7 @@ var_2		= word ptr -2
 		mov	ax, [bx]
 		add	ax, 40h
 		mov	[bp+var_4], ax
-		call	@vector2_between_plus$qiiiiucmit6i pascal, [bp+var_2], ax, point_205F6.x, point_205F6.y, 0, ds, offset point_26CDE.x, ds, offset point_26CDE.y, 52
+		call	@vector2_between_plus$qiiiiucmit6i pascal, [bp+var_2], ax, _player_topleft.x, _player_topleft.y, 0, ds, offset point_26CDE.x, ds, offset point_26CDE.y, 52
 
 loc_18B99:
 		push	ds
@@ -24188,7 +24193,7 @@ sub_18C4A	proc near
 		mov	bx, word_2065C
 		mov	ax, [bx]
 		add	ax, 64
-		cmp	ax, point_205F6.x
+		cmp	ax, _player_topleft.x
 		jge	short loc_18C77
 		mov	ax, 2
 		jmp	short loc_18C7A
@@ -24220,15 +24225,15 @@ loc_18C9B:
 		jnz	short loc_18CEE
 		call	_snd_se_play c, 10
 		mov	patnum_2064E, 134
-		mov	ax, point_205F6.y
+		mov	ax, _player_topleft.y
 		sub	ax, word_26C62
 		push	ax
-		mov	ax, point_205F6.x
+		mov	ax, _player_topleft.x
 		sub	ax, word_26C5A
 		push	ax
 		call	iatan2
 		mov	byte_26CE2, al
-		cmp	point_205F6.x, 208
+		cmp	_player_topleft.x, (PLAYFIELD_LEFT + (PLAYFIELD_W / 2) - (PLAYER_W / 2))
 		jg	short loc_18CDF
 		mov	al, -1
 		jmp	short loc_18CE1
@@ -24354,7 +24359,7 @@ sub_18DE0	proc near
 		mov	bx, word_2065C
 		mov	ax, [bx]
 		add	ax, 64
-		cmp	ax, point_205F6.x
+		cmp	ax, _player_topleft.x
 		jge	short loc_18E0D
 		mov	ax, 2
 		jmp	short loc_18E10
@@ -24746,11 +24751,11 @@ sub_191CC	proc near
 		jl	loc_19351
 		cmp	word_20650, 32h	; '2'
 		jnz	short loc_1920E
-		mov	ax, point_205F6.y
+		mov	ax, _player_topleft.y
 		add	ax, 12
 		sub	ax, word_26C64
 		push	ax
-		mov	ax, point_205F6.x
+		mov	ax, _player_topleft.x
 		add	ax, 12
 		sub	ax, word_26C5C
 		push	ax
@@ -25480,7 +25485,7 @@ loc_1988A:
 		cmp	word_20650, 1Eh
 		jge	short loc_198A8
 		mov	ax, word_26C5C
-		cmp	ax, point_205F6.x
+		cmp	ax, _player_topleft.x
 		jge	short loc_1989F
 		mov	ax, 1
 		jmp	short loc_198A2
@@ -25684,7 +25689,7 @@ mima_init	proc far
 		add	ax, 2
 		push	ax
 		call	super_put_rect
-		call	super_roll_put pascal, point_205F6.x, point_205F6.y, 0
+		call	super_roll_put pascal, _player_topleft.x, _player_topleft.y, 0
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
@@ -26842,7 +26847,7 @@ loc_1A613:
 		call	grcg_off
 		push	600000h
 		call	sub_1A423
-		call	super_roll_put pascal, point_205F6.x, point_205F6.y, 0
+		call	super_roll_put pascal, _player_topleft.x, _player_topleft.y, 0
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
@@ -26905,7 +26910,7 @@ sub_1A6C5	proc near
 		mov	al, _page_front
 		mov	ah, 0
 		add	ax, ax
-		mov	dx, point_205F6.y
+		mov	dx, _player_topleft.y
 		mov	bx, ax
 		mov	[bx+2B7Ah], dx
 		mov	_scroll_line, 0
@@ -26918,18 +26923,18 @@ sub_1A6C5	proc near
 		call	frame_delay pascal, 1
 		call	graph_scrollup pascal, 0
 		graph_accesspage _page_front
-		call	super_roll_put pascal, point_205F6.x, point_205F6.y, 0
+		call	super_roll_put pascal, _player_topleft.x, _player_topleft.y, 0
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
-		mov	dx, point_205F6.x
+		mov	dx, _player_topleft.x
 		add	dx, -16
 		mov	bx, ax
 		mov	[bx+2B8Ah], dx
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
-		mov	dx, point_205F6.y
+		mov	dx, _player_topleft.y
 		add	dx, 16
 		mov	bx, ax
 		mov	[bx+2B8Ch], dx
@@ -27031,7 +27036,7 @@ marisa_init	proc far
 		inc	ax
 		push	ax
 		call	super_put_rect
-		call	super_roll_put pascal, point_205F6.x, point_205F6.y, 0
+		call	super_roll_put pascal, _player_topleft.x, _player_topleft.y, 0
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
@@ -27078,7 +27083,7 @@ marisa_init	proc far
 		inc	ax
 		push	ax
 		call	super_put_rect
-		call	super_roll_put pascal, point_205F6.x, point_205F6.y, 0
+		call	super_roll_put pascal, _player_topleft.x, _player_topleft.y, 0
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
@@ -28402,7 +28407,7 @@ sub_1B555	proc near
 		jnz	short loc_1B592
 		mov	ax, point_26D76.x
 		add	ax, 32
-		cmp	ax, point_205F6.x
+		cmp	ax, _player_topleft.x
 		jge	short loc_1B579
 		mov	al, 1
 		jmp	short loc_1B57B
@@ -29419,7 +29424,7 @@ sub_1BE72	proc near
 		jnz	short loc_1BEC5
 		mov	ax, point_26D76.x
 		add	ax, 32
-		cmp	ax, point_205F6.x
+		cmp	ax, _player_topleft.x
 		jge	short loc_1BE94
 		mov	ax, 1
 		jmp	short loc_1BE97
@@ -32529,7 +32534,8 @@ word_205EE	dw ?
 word_205F0	dw ?
 word_205F2	dw ?
 word_205F4	dw ?
-point_205F6	Point <?>
+public _player_topleft
+_player_topleft	Point <?>
 		db 8 dup(?)
 playchar_shot_func	dw ?
 include th01/main/player_is_hit[bss].asm
