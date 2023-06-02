@@ -4583,11 +4583,11 @@ sub_D629	proc near
 loc_D639:
 		mov	bx, si
 		shl	bx, 4
-		mov	byte ptr [bx+3CE6h], 0
+		mov	_items[bx].ITEM_flag, F_FREE
 		inc	si
 
 loc_D644:
-		cmp	si, 14h
+		cmp	si, ITEM_COUNT
 		jl	short loc_D639
 		mov	_point_items_collected, 0
 		call	@pointnums_init_for_rank_and_rese$qv
@@ -4604,21 +4604,21 @@ sub_D629	endp
 
 sub_D65A	proc far
 
-arg_0		= word ptr  6
-arg_2		= word ptr  8
+@@top 	= word ptr  6
+@@left	= word ptr  8
 
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
-		mov	si, [bp+arg_2]
-		mov	di, [bp+arg_0]
+		mov	si, [bp+@@left]
+		mov	di, [bp+@@top]
 		cmp	word_1E51E, 0
 		jz	short loc_D67B
 		dec	word_1E51E
-		push	si
-		push	di
-		push	3
+		push	si	; left
+		push	di	; top
+		push	IT_BIGPOWER	; type
 		nopcall	sub_D6CA
 		jmp	short loc_D6C4
 ; ---------------------------------------------------------------------------
@@ -4636,21 +4636,21 @@ loc_D67B:
 		and	ax, 1FFh
 		cmp	ax, 12h
 		jnz	short loc_D69F
-		push	si
-		push	di
-		push	2
+		push	si	; left
+		push	di	; top
+		push	IT_BOMB	; type
 		jmp	short loc_D6AF
 ; ---------------------------------------------------------------------------
 
 loc_D69F:
-		push	si
-		push	di
+		push	si	; left
+		push	di	; top
 		mov	al, byte_218A0
 		mov	ah, 0
 		mov	bx, ax
 		mov	al, [bx+0AB0h]
 		mov	ah, 0
-		push	ax
+		push	ax	; type
 
 loc_D6AF:
 		nopcall	sub_D6CA
@@ -4673,33 +4673,33 @@ sub_D65A	endp
 
 sub_D6CA	proc far
 
-arg_0		= word ptr  6
-arg_2		= word ptr  8
-arg_4		= word ptr  0Ah
+@@type	= word ptr  6
+@@top 	= word ptr  8
+@@left	= word ptr  0Ah
 
 		push	bp
 		mov	bp, sp
 		push	si
 		push	di
-		mov	di, [bp+arg_4]
-		mov	cx, [bp+arg_2]
+		mov	di, [bp+@@left]
+		mov	cx, [bp+@@top]
 		cmp	word_1E51E, 0
 		jz	short loc_D6EB
-		cmp	[bp+arg_0], 2
+		cmp	[bp+@@type], IT_BOMB
 		jge	short loc_D6EB
 		dec	word_1E51E
-		mov	[bp+arg_0], 3
+		mov	[bp+@@type], IT_BIGPOWER
 
 loc_D6EB:
-		mov	si, 3CE6h
+		mov	si, offset _items
 		shl	cx, 4
 		mov	al, _lives
 		cbw
 		cmp	ax, LIVES_MAX
 		jnz	short loc_D705
-		cmp	[bp+arg_0], 4
+		cmp	[bp+@@type], IT_1UP
 		jnz	short loc_D705
-		mov	[bp+arg_0], 2
+		mov	[bp+@@type], IT_BOMB
 
 loc_D705:
 		xor	dx, dx
@@ -4707,27 +4707,27 @@ loc_D705:
 ; ---------------------------------------------------------------------------
 
 loc_D709:
-		cmp	byte ptr [si], 0
+		cmp	[si+item_t.ITEM_flag], F_FREE
 		jnz	short loc_D734
-		mov	byte ptr [si], 1
-		mov	al, byte ptr [bp+arg_0]
-		mov	[si+1],	al
-		mov	[si+2],	di
-		mov	[si+4],	cx
-		mov	[si+6],	di
-		mov	[si+8],	cx
-		mov	word ptr [si+0Ah], 0FFD0h
-		mov	word ptr [si+0Ch], 0
-		mov	word ptr [si+0Eh], 0
+		mov	[si+item_t.ITEM_flag], F_ALIVE
+		mov	al, byte ptr [bp+@@type]
+		mov	[si+item_t.ITEM_type], al
+		mov	[si+item_t.ITEM_pos[0 * size item_pos_t].ITEM_screen_left], di
+		mov	[si+item_t.ITEM_pos[0 * size item_pos_t].ITEM_screen_top], cx
+		mov	[si+item_t.ITEM_pos[1 * size item_pos_t].ITEM_screen_left], di
+		mov	[si+item_t.ITEM_pos[1 * size item_pos_t].ITEM_screen_top], cx
+		mov	[si+item_t.ITEM_velocity_y], (-3 shl 4)
+		mov	[si+item_t.ITEM_velocity_x_during_bounce], 0
+		mov	[si+item_t.ITEM_age], 0
 		jmp	short loc_D73D
 ; ---------------------------------------------------------------------------
 
 loc_D734:
 		inc	dx
-		add	si, 10h
+		add	si, size item_t
 
 loc_D738:
-		cmp	dx, 14h
+		cmp	dx, ITEM_COUNT
 		jl	short loc_D709
 
 loc_D73D:
@@ -4754,11 +4754,11 @@ var_E		= byte ptr -0Eh
 var_C		= word ptr -0Ch
 var_A		= word ptr -0Ah
 var_8		= byte ptr -8
-var_6		= word ptr -6
+@@type		= word ptr -6
 var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= word ptr  6
+@@i          	= word ptr -2
+@@screen_top 	= word ptr  4
+@@screen_left	= word ptr  6
 
 		push	bp
 		mov	bp, sp
@@ -4808,25 +4808,25 @@ loc_D7A0:
 
 loc_D7A2:
 		mov	[bp+var_19], al
-		mov	si, 3CE6h
-		shl	[bp+arg_0], 4
-		mov	[bp+var_2], 0
+		mov	si, offset _items
+		shl	[bp+@@screen_top], 4
+		mov	[bp+@@i], 0
 		jmp	loc_D866
 ; ---------------------------------------------------------------------------
 
 loc_D7B4:
-		cmp	byte ptr [si], 0
+		cmp	[si+item_t.ITEM_flag], F_FREE
 		jnz	loc_D860
-		mov	byte ptr [si], 1
-		mov	ax, [bp+arg_2]
-		mov	[si+2],	ax
-		mov	ax, [bp+arg_0]
-		mov	[si+4],	ax
-		mov	ax, [bp+arg_2]
-		mov	[si+6],	ax
-		mov	ax, [bp+arg_0]
-		mov	[si+8],	ax
-		mov	word ptr [si+0Eh], 0
+		mov	[si+item_t.ITEM_flag], F_ALIVE
+		mov	ax, [bp+@@screen_left]
+		mov	[si+item_t.ITEM_pos[0 * size item_pos_t].ITEM_screen_left], ax
+		mov	ax, [bp+@@screen_top]
+		mov	[si+item_t.ITEM_pos[0 * size item_pos_t].ITEM_screen_top], ax
+		mov	ax, [bp+@@screen_left]
+		mov	[si+item_t.ITEM_pos[1 * size item_pos_t].ITEM_screen_left], ax
+		mov	ax, [bp+@@screen_top]
+		mov	[si+item_t.ITEM_pos[1 * size item_pos_t].ITEM_screen_top], ax
+		mov	[si+item_t.ITEM_age], 0
 		cmp	byte_218A1, 0
 		jnz	short loc_D82B
 		cmp	[bp+var_4], 0
@@ -4839,49 +4839,49 @@ loc_D7B4:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_D7FE
-		mov	ax, 3
+		mov	ax, IT_BIGPOWER
 		jmp	short loc_D80B
 ; ---------------------------------------------------------------------------
 
 loc_D7FE:
 		call	@randring1_next8$qv
 		mov	ah, 0
-		mov	bx, 2
+		mov	bx, IT_BOMB
 		cwd
 		idiv	bx
 		mov	ax, dx
 
 loc_D80B:
-		mov	[bp+var_6], ax
+		mov	[bp+@@type], ax
 		jmp	short loc_D81E
 ; ---------------------------------------------------------------------------
 
 loc_D810:
 		call	@randring1_next8$qv
 		mov	ah, 0
-		mov	bx, 2
+		mov	bx, IT_BOMB
 		cwd
 		idiv	bx
-		mov	[bp+var_6], dx
+		mov	[bp+@@type], dx
 
 loc_D81E:
-		cmp	[bp+var_6], 3
+		cmp	[bp+@@type], IT_BIGPOWER
 		jnz	short loc_D830
 		mov	[bp+var_4], 0
 		jmp	short loc_D830
 ; ---------------------------------------------------------------------------
 
 loc_D82B:
-		mov	[bp+var_6], 3
+		mov	[bp+@@type], IT_BIGPOWER
 
 loc_D830:
-		mov	al, byte ptr [bp+var_6]
-		mov	[si+1],	al
+		mov	al, byte ptr [bp+@@type]
+		mov	[si+item_t.ITEM_type], al
 		cmp	[bp+var_19], 0
 		jz	short loc_D84C
 		mov	al, byte ptr [bp+di+var_C]
 		cbw
-		mov	[si+0Ah], ax
+		mov	[si+item_t.ITEM_velocity_y], ax
 		mov	al, [bp+var_19]
 		cbw
 		imul	ax, -2
@@ -4891,22 +4891,22 @@ loc_D830:
 loc_D84C:
 		mov	al, byte ptr [bp+di+var_18]
 		cbw
-		mov	[si+0Ah], ax
+		mov	[si+item_t.ITEM_velocity_y], ax
 		mov	al, byte ptr [bp+di+var_12]
 		cbw
 
 loc_D857:
-		mov	[si+0Ch], ax
+		mov	[si+item_t.ITEM_velocity_x_during_bounce], ax
 		inc	di
 		cmp	di, 5
 		jge	short loc_D86E
 
 loc_D860:
-		inc	[bp+var_2]
-		add	si, 10h
+		inc	[bp+@@i]
+		add	si, size item_t
 
 loc_D866:
-		cmp	[bp+var_2], 14h
+		cmp	[bp+@@i], ITEM_COUNT
 		jl	loc_D7B4
 
 loc_D86E:
@@ -4937,7 +4937,7 @@ var_2		= word ptr -2
 loc_D880:
 		mov	bx, si
 		shl	bx, 4
-		cmp	byte ptr [bx+3CE6h], 0
+		cmp	_items[bx].ITEM_flag, F_FREE
 		jz	short loc_D8F9
 		mov	ax, si
 		shl	ax, 4
@@ -4945,41 +4945,41 @@ loc_D880:
 		mov	dh, 0
 		shl	dx, 2
 		add	ax, dx
-		add	ax, 3CE8h
+		add	ax, offset _items.ITEM_pos
 		mov	di, ax
-		mov	ax, [di+2]
+		mov	ax, [di+item_pos_t.ITEM_screen_top]
 		sar	ax, 4
 		mov	[bp+var_2], ax
-		call	@tiles_invalidate_rect$qiiii pascal, word ptr [di], ax, (16 shl 16) or 16
+		call	@tiles_invalidate_rect$qiiii pascal, [di+item_pos_t.ITEM_screen_left], ax, (16 shl 16) or 16
 		mov	bx, si
 		shl	bx, 4
 		mov	al, _page_front
 		mov	ah, 0
 		shl	ax, 2
 		add	bx, ax
-		mov	ax, [bx+3CE8h]
-		mov	[di], ax
+		mov	ax, _items[bx].ITEM_pos.ITEM_screen_left
+		mov	[di+item_pos_t.ITEM_screen_left], ax
 		mov	bx, si
 		shl	bx, 4
 		mov	al, _page_front
 		mov	ah, 0
 		shl	ax, 2
 		add	bx, ax
-		mov	ax, [bx+3CEAh]
-		mov	[di+2],	ax
+		mov	ax, _items[bx].ITEM_pos.ITEM_screen_top
+		mov	[di+item_pos_t.ITEM_screen_top], ax
 		mov	bx, si
 		shl	bx, 4
-		cmp	byte ptr [bx+3CE6h], 2
+		cmp	_items[bx].ITEM_flag, F_REMOVE
 		jnz	short loc_D8F9
 		mov	bx, si
 		shl	bx, 4
-		mov	byte ptr [bx+3CE6h], 0
+		mov	_items[bx].ITEM_flag, F_FREE
 
 loc_D8F9:
 		inc	si
 
 loc_D8FA:
-		cmp	si, 14h
+		cmp	si, ITEM_COUNT
 		jl	short loc_D880
 		call	@pointnums_invalidate$qv
 		pop	di
@@ -4996,7 +4996,7 @@ sub_D874	endp
 sub_D906	proc near
 
 var_2		= word ptr -2
-arg_0		= word ptr  4
+@@item		= word ptr  4
 
 		push	bp
 		mov	bp, sp
@@ -5014,8 +5014,8 @@ arg_0		= word ptr  4
 		mov	ax, word_2189A
 		add	ax, 0FFF4h
 		mov	si, ax
-		mov	bx, [bp+arg_0]
-		mov	al, [bx+1]
+		mov	bx, [bp+@@item]
+		mov	al, [bx+item_t.ITEM_type]
 		mov	ah, 0
 		mov	bx, ax
 		cmp	bx, 4
@@ -5170,8 +5170,8 @@ loc_DA9C:
 		call	_snd_se_play c, 8
 
 loc_DAB6:
-		mov	bx, [bp+arg_0]
-		mov	byte ptr [bx], 2
+		mov	bx, [bp+@@item]
+		mov	[bx+item_t.ITEM_flag], F_REMOVE
 		call	_snd_se_play c, 13
 		cmp	byte_218A8, 20h	; ' '
 		jb	short loc_DAD9
@@ -5208,14 +5208,14 @@ off_DAE6	dw offset loc_D949
 
 sub_DAF0	proc near
 
-var_2		= word ptr -2
+@@pos		= word ptr -2
 
 		push	bp
 		mov	bp, sp
 		sub	sp, 2
 		push	si
 		push	di
-		mov	si, 3CE6h
+		mov	si, offset _items
 		inc	word_218AA
 		mov	dword_218A4, 0
 		xor	di, di
@@ -5223,25 +5223,25 @@ var_2		= word ptr -2
 ; ---------------------------------------------------------------------------
 
 loc_DB0D:
-		cmp	byte ptr [si], 1
+		cmp	[si+item_t.ITEM_flag], F_ALIVE
 		jnz	loc_DBFA
 		mov	al, _page_back
 		mov	ah, 0
 		shl	ax, 2
 		add	ax, si
-		add	ax, 2
-		mov	[bp+var_2], ax
+		add	ax, item_t.ITEM_pos
+		mov	[bp+@@pos], ax
 		mov	word_21896, ax
-		add	ax, 2
+		add	ax, item_pos_t.ITEM_screen_top
 		mov	word_21898, ax
-		cmp	word ptr [si+0Ah], 0
+		cmp	[si+item_t.ITEM_velocity_y], 0
 		jg	short loc_DB3C
-		mov	ax, [si+0Ch]
+		mov	ax, [si+item_t.ITEM_velocity_x_during_bounce]
 		mov	bx, word_21896
 		add	[bx], ax
 
 loc_DB3C:
-		mov	ax, [si+0Ah]
+		mov	ax, [si+item_t.ITEM_velocity_y]
 		mov	bx, word_21898
 		add	[bx], ax
 		mov	bx, word_21896
@@ -5261,7 +5261,7 @@ loc_DB3C:
 loc_DB6D:
 		cmp	word_2189C, 180h
 		jl	short loc_DB89
-		mov	byte ptr [si], 2
+		mov	[si+item_t.ITEM_flag], F_REMOVE
 		inc	byte_1E597
 		test	byte_1E597, 0Fh
 		jnz	short loc_DBFA
@@ -5276,13 +5276,13 @@ loc_DB89:
 		jl	short loc_DB9D
 
 loc_DB98:
-		mov	byte ptr [si], 2
+		mov	[si+item_t.ITEM_flag], F_REMOVE
 		jmp	short loc_DBFA
 ; ---------------------------------------------------------------------------
 
 loc_DB9D:
-		inc	word ptr [si+0Eh]
-		inc	word ptr [si+0Ah]
+		inc	[si+item_t.ITEM_age]
+		inc	[si+item_t.ITEM_velocity_y]
 		cmp	_player_is_hit, 0
 		jnz	short loc_DBCA
 		mov	ax, _player_topleft.x
@@ -5293,8 +5293,7 @@ loc_DB9D:
 		add	ax, 24
 		cmp	ax, word_2189A
 		jl	short loc_DBCA
-		push	si
-		call	sub_D906
+		call	sub_D906 pascal, si
 		or	ax, ax
 		jnz	short loc_DBFA
 
@@ -5308,7 +5307,7 @@ loc_DBCA:
 loc_DBDF:
 		push	word_2189A
 		push	word_2189C
-		mov	al, [si+1]
+		mov	al, [si+item_t.ITEM_type]
 		mov	ah, 0
 		mov	bx, ax
 		mov	al, [bx+0ABAh]
@@ -5318,10 +5317,10 @@ loc_DBDF:
 
 loc_DBFA:
 		inc	di
-		add	si, 10h
+		add	si, size item_t
 
 loc_DBFE:
-		cmp	di, 14h
+		cmp	di, ITEM_COUNT
 		jl	loc_DB0D
 		cmp	dword_218A4, 0
 		jz	short loc_DC31
@@ -6886,9 +6885,9 @@ loc_F0B9:
 		mov	byte_20609, 0
 		mov	byte_218A1, 1
 		mov	bx, word_205EE
-		push	word ptr [bx]
+		push	word ptr [bx]	; screen_left
 		mov	bx, word_205F0
-		push	word ptr [bx]
+		push	word ptr [bx]	; screen_top
 		call	sub_D743
 		mov	byte_218A1, 0
 		mov	_player_is_hit, -1
@@ -6903,9 +6902,9 @@ loc_F107:
 		mov	_power, al
 		call	@player_shot_level_update_and_hud$qv
 		mov	bx, word_205EE
-		push	word ptr [bx]
+		push	word ptr [bx]	; screen_left
 		mov	bx, word_205F0
-		push	word ptr [bx]
+		push	word ptr [bx]	; screen_top
 		call	sub_D743
 		jmp	loc_F1D5
 ; ---------------------------------------------------------------------------
@@ -10747,30 +10746,30 @@ loc_118DC:
 		add	bx, bx
 		mov	ax, [bx+5314h]
 		add	ax, 8
-		push	ax
+		push	ax	; left
 		mov	bx, si
 		add	bx, bx
 		mov	ax, [bx+531Eh]
 		add	ax, 0Ch
-		push	ax
+		push	ax	; top
 		or	si, si
 		jnz	short loc_1191A
-		mov	ax, 2
+		mov	ax, IT_BOMB
 		jmp	short loc_11927
 ; ---------------------------------------------------------------------------
 
 loc_1191A:
-		cmp	si, 2
+		cmp	si, IT_BOMB
 		jg	short loc_11924
-		mov	ax, 3
+		mov	ax, IT_BIGPOWER
 		jmp	short loc_11927
 ; ---------------------------------------------------------------------------
 
 loc_11924:
-		mov	ax, 2
+		mov	ax, IT_BOMB
 
 loc_11927:
-		push	ax
+		push	ax	; type
 		call	sub_D6CA
 		call	_snd_se_play c, 2
 		jmp	short loc_1193E
@@ -22017,12 +22016,12 @@ loc_1780E:
 		jbe	short loc_17854
 		mov	ax, word_26C4E
 		add	ax, 0Ch
-		push	ax
-		push	word_26C50
+		push	ax	; left
+		push	word_26C50	; top
 		mov	al, [bx+10h]
 		mov	ah, 0
-		add	ax, 0FFFEh
-		push	ax
+		add	ax, -IT_BOMB
+		push	ax	; type
 		call	sub_D6CA
 		jmp	short loc_17864
 ; ---------------------------------------------------------------------------
@@ -22030,9 +22029,7 @@ loc_1780E:
 loc_17854:
 		mov	ax, word_26C4E
 		add	ax, 0Ch
-		push	ax
-		push	word_26C50
-		call	sub_D65A
+		call	sub_D65A pascal, ax, word_26C50
 
 loc_17864:
 		call	_snd_se_play c, 3
@@ -24138,9 +24135,9 @@ loc_18BCB:
 		mov	patnum_2064E, 134
 		cmp	word_26C68, 6
 		jnz	short loc_18C39
-		push	word_26C5A
-		push	word_26C62
-		push	2
+		push	word_26C5A	; left
+		push	word_26C62	; top
+		push	IT_BOMB	; type
 		jmp	short loc_18C43
 ; ---------------------------------------------------------------------------
 
@@ -24158,16 +24155,16 @@ loc_18C0F:
 		mov	patnum_2064E, 128
 		cmp	word_26C68, 2
 		jnz	short loc_18C39
-		push	word_26C5A
-		push	word_26C62
-		push	4
+		push	word_26C5A	; left
+		push	word_26C62	; top
+		push	IT_1UP	; type
 		jmp	short loc_18C43
 ; ---------------------------------------------------------------------------
 
 loc_18C39:
-		push	word_26C5A
-		push	word_26C62
-		push	3
+		push	word_26C5A	; left
+		push	word_26C62	; top
+		push	IT_BIGPOWER	; type
 
 loc_18C43:
 		call	sub_D6CA
@@ -26228,20 +26225,17 @@ loc_1A07E:
 		add	_score_delta, 50000
 		cmp	word_20616, 660h
 		jnz	short loc_1A0B6
-		mov	di, 4
+		mov	di, IT_1UP
 		jmp	short loc_1A0B9
 ; ---------------------------------------------------------------------------
 
 loc_1A0B6:
-		mov	di, 2
+		mov	di, IT_BOMB
 
 loc_1A0B9:
 		mov	ax, point_26D76.x
 		add	ax, 24
-		push	ax
-		push	point_26D76.y
-		push	di
-		call	sub_D6CA
+		call	sub_D6CA pascal, ax, point_26D76.y, di
 
 loc_1A0CA:
 		pop	di
@@ -27302,14 +27296,14 @@ loc_1AB43:
 		les	bx, [bx-6D1Ah]
 		mov	ax, es:[bx]
 		add	ax, 8
-		push	ax
+		push	ax	; left
 		mov	bx, si
 		shl	bx, 2
 		les	bx, [bx-6D0Ah]
 		mov	ax, es:[bx]
 		add	ax, 8
-		push	ax
-		push	3
+		push	ax	; top
+		push	IT_BIGPOWER	; type
 		call	sub_D6CA
 
 loc_1ABD1:
@@ -32634,7 +32628,33 @@ word_21750	dw ?
 byte_21752	db ?
 byte_21753	db ?
 byte_21754	db ?
-		db 321 dup(?)
+	evendata
+
+ITEM_COUNT = 20
+
+IT_POWER = 0
+IT_POINT = 1
+IT_BOMB = 2
+IT_BIGPOWER = 3
+IT_1UP = 4
+
+item_pos_t struc
+	ITEM_screen_left	dw ?
+	ITEM_screen_top 	dw ?
+item_pos_t ends
+
+item_t struc
+	ITEM_flag                    	db ?
+	ITEM_type                    	db ?
+	ITEM_pos                     	item_pos_t 2 dup(<?>)
+	ITEM_velocity_y              	dw ?
+	ITEM_velocity_x_during_bounce	dw ?
+	ITEM_age                     	dw ?
+item_t ends
+
+public _items
+_items	item_t ITEM_COUNT dup(<?>)
+
 word_21896	dw ?
 word_21898	dw ?
 word_2189A	dw ?
