@@ -1125,7 +1125,7 @@ loc_B2EE:
 loc_B2F5:
 		cmp	si, 128
 		jl	short loc_B2EE
-		call	gaiji_load
+		call	@gaiji_load$qv
 		call	sub_E178
 		les	bx, _resident
 		mov	al, es:[bx+mikoconfig_t.reduce_effects]
@@ -2643,7 +2643,7 @@ public @GameExecl$qnxc
 		call	super_free
 		call	graph_clear
 		call	text_clear
-		call	gaiji_free
+		call	@gaiji_free$qv
 		call	_game_exit
 		call	_execl c, large [bp+@@binary_fn], large [bp+@@binary_fn], large 0
 		pop	bp
@@ -5341,11 +5341,11 @@ loc_DC31:
 		leave
 		retn
 sub_DAF0	endp
-
-include th02/gaiji/loadfree.asm
 main_01__TEXT	ends
 
 HUD_TEXT	segment	byte public 'CODE' use16
+	@gaiji_load$qv procdesc near
+	@gaiji_free$qv procdesc near
 	@score_extend_init$qv procdesc near
 	extern @score_delta_commit$qv:proc
 	@score_reset$qv procdesc near
@@ -31640,8 +31640,8 @@ _gsHISCORE 	db gs_Hi, gs_Sc, gs_cor, gs_e, 0
 _gsREIMU   	db gs_REIMU_REI, gs_REIMU_MU, 0, 0, 0
 _gsREIGEKI 	db gs_REIGEKI_REI, gs_REIGEKI_GEKI, 0, 0, 0
 _gsREIRYOKU	db gs_REIRYOKU_REI, gs_REIRYOKU_RYOKU, 0, 0, 0
-aMikoft_bft	db 'MIKOFT.bft',0
-public _POWER_TO_SHOT_LEVEL
+public _GAIJI_FN, _POWER_TO_SHOT_LEVEL
+_GAIJI_FN	db 'MIKOFT.bft',0
 _POWER_TO_SHOT_LEVEL	db 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 6, 7, 7, 7, 8, 8, 8, 8, 9
 byte_1E64E	db 0
 		db 0

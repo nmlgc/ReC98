@@ -32,6 +32,8 @@ static const tram_cell_amount_t gsHISCORE_W = (4 * GAIJI_TRAM_W);
 extern const gaiji_th02_t gRANKS[RANK_COUNT][8];
 // -------------
 
+#include "th02/gaiji/loadfree.cpp"
+
 // Coordinates
 // -----------
 
