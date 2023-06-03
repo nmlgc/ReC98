@@ -4617,7 +4617,7 @@ sub_D65A	proc far
 		push	si	; left
 		push	di	; top
 		push	IT_BIGPOWER	; type
-		nopcall	sub_D6CA
+		nopcall	@items_add$qiii
 		jmp	short loc_D6C4
 ; ---------------------------------------------------------------------------
 
@@ -4651,7 +4651,7 @@ loc_D69F:
 		push	ax	; type
 
 loc_D6AF:
-		nopcall	sub_D6CA
+		nopcall	@items_add$qiii
 		inc	byte_218A0
 		cmp	byte_218A0, 0Ah
 		jb	short loc_D6C4
@@ -4663,80 +4663,10 @@ loc_D6C4:
 		pop	bp
 		retf	4
 sub_D65A	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D6CA	proc far
-
-@@type	= word ptr  6
-@@top 	= word ptr  8
-@@left	= word ptr  0Ah
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	di, [bp+@@left]
-		mov	cx, [bp+@@top]
-		cmp	_item_bigpower_override, 0
-		jz	short loc_D6EB
-		cmp	[bp+@@type], IT_BOMB
-		jge	short loc_D6EB
-		dec	_item_bigpower_override
-		mov	[bp+@@type], IT_BIGPOWER
-
-loc_D6EB:
-		mov	si, offset _items
-		shl	cx, 4
-		mov	al, _lives
-		cbw
-		cmp	ax, LIVES_MAX
-		jnz	short loc_D705
-		cmp	[bp+@@type], IT_1UP
-		jnz	short loc_D705
-		mov	[bp+@@type], IT_BOMB
-
-loc_D705:
-		xor	dx, dx
-		jmp	short loc_D738
-; ---------------------------------------------------------------------------
-
-loc_D709:
-		cmp	[si+item_t.ITEM_flag], F_FREE
-		jnz	short loc_D734
-		mov	[si+item_t.ITEM_flag], F_ALIVE
-		mov	al, byte ptr [bp+@@type]
-		mov	[si+item_t.ITEM_type], al
-		mov	[si+item_t.ITEM_pos[0 * size item_pos_t].ITEM_screen_left], di
-		mov	[si+item_t.ITEM_pos[0 * size item_pos_t].ITEM_screen_top], cx
-		mov	[si+item_t.ITEM_pos[1 * size item_pos_t].ITEM_screen_left], di
-		mov	[si+item_t.ITEM_pos[1 * size item_pos_t].ITEM_screen_top], cx
-		mov	[si+item_t.ITEM_velocity_y], (-3 shl 4)
-		mov	[si+item_t.ITEM_velocity_x_during_bounce], 0
-		mov	[si+item_t.ITEM_age], 0
-		jmp	short loc_D73D
-; ---------------------------------------------------------------------------
-
-loc_D734:
-		inc	dx
-		add	si, size item_t
-
-loc_D738:
-		cmp	dx, ITEM_COUNT
-		jl	short loc_D709
-
-loc_D73D:
-		pop	di
-		pop	si
-		pop	bp
-		retf	6
-sub_D6CA	endp
 main_01__TEXT	ends
 
 ITEM_TEXT	segment	byte public 'CODE' use16
+	extern @ITEMS_ADD$QIII:proc
 	@ITEMS_MISS_ADD$QII procdesc pascal near \
 		player_left:word, player_top:word
 	@items_invalidate$qv procdesc near
@@ -10166,7 +10096,7 @@ loc_11924:
 
 loc_11927:
 		push	ax	; type
-		call	sub_D6CA
+		call	@items_add$qiii
 		call	_snd_se_play c, 2
 		jmp	short loc_1193E
 ; ---------------------------------------------------------------------------
@@ -21418,7 +21348,7 @@ loc_1780E:
 		mov	ah, 0
 		add	ax, -IT_BOMB
 		push	ax	; type
-		call	sub_D6CA
+		call	@items_add$qiii
 		jmp	short loc_17864
 ; ---------------------------------------------------------------------------
 
@@ -23563,7 +23493,7 @@ loc_18C39:
 		push	IT_BIGPOWER	; type
 
 loc_18C43:
-		call	sub_D6CA
+		call	@items_add$qiii
 
 loc_18C48:
 		pop	bp
@@ -25631,7 +25561,7 @@ loc_1A0B6:
 loc_1A0B9:
 		mov	ax, point_26D76.x
 		add	ax, 24
-		call	sub_D6CA pascal, ax, point_26D76.y, di
+		call	@items_add$qiii pascal, ax, point_26D76.y, di
 
 loc_1A0CA:
 		pop	di
@@ -26700,7 +26630,7 @@ loc_1AB43:
 		add	ax, 8
 		push	ax	; top
 		push	IT_BIGPOWER	; type
-		call	sub_D6CA
+		call	@items_add$qiii
 
 loc_1ABD1:
 		call	_snd_se_play c, 2

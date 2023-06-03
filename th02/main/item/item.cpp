@@ -75,6 +75,40 @@ extern union {
 extern int32_t item_score_this_frame;
 // -----
 
+void pascal items_add(screen_x_t left, screen_y_t top, int type)
+{
+	if(item_bigpower_override && (type < IT_BOMB)) {
+		item_bigpower_override--;
+		type = IT_BIGPOWER;
+	}
+
+	item_t near* p = items;
+
+	// ZUN bloat: Should be a separate variable.
+	top <<= SUBPIXEL_BITS;
+	#define top static_cast<subpixel_t>(top)
+
+	if((lives == LIVES_MAX) && (type == IT_1UP)) {
+		type = IT_BOMB;
+	}
+	for(int i = 0; i < ITEM_COUNT; (i++, p++)) {
+		if(p->flag == F_FREE) {
+			p->flag = F_ALIVE;
+			p->type = static_cast<item_type_t>(type); // ZUN bloat
+			p->pos[0].screen_left = left;
+			p->pos[0].screen_top.v = top;
+			p->pos[1].screen_left = left;
+			p->pos[1].screen_top.v = top;
+			p->velocity_y.set(-3.0f);
+			p->velocity_x_during_bounce = 0;
+			p->age = 0;
+			break;
+		}
+	}
+
+	#undef top
+}
+
 template <class T> struct hack {
 	T x[ITEM_MISS_COUNT];
 };
@@ -277,6 +311,8 @@ bool16 pascal near item_hittest_y(item_t near& item)
 			break;
 
 		case IT_1UP:
+			// If this is `false`, items_add() has likely already turned this
+			// into a bomb item. Makes sense to not do anything in that case.
 			if(lives < LIVES_MAX) {
 				lives++;
 				hud_lives_put();

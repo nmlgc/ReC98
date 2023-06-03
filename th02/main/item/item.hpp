@@ -11,6 +11,8 @@ enum item_type_t {
 
 #define ITEM_COUNT 20
 
+// Turns the next N power or point items spawned via items_add() into big power
+// items. Used for recharging power after using a continue after a Game Over.
 extern unsigned int item_bigpower_override;
 
 // Increases by varying amounts depending on how well items are collected,
@@ -23,6 +25,8 @@ extern int point_items_collected;
 // ZUN bloat: Both turning this into a parameter or hardcoding the condition
 // (as TH04 and TH05 do it) would have been better than this.
 extern bool items_miss_add_gameover;
+
+void pascal items_add(int type, screen_x_t left, screen_y_t top);
 
 // Spawns each of the items dropped when losing a life at the given position.
 void pascal near items_miss_add(screen_x_t left, screen_y_t top);
