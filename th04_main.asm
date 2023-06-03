@@ -26728,7 +26728,7 @@ loc_1DA76:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		mov	ax, _ITEM_TYPE_PATNUM[bx]
+		mov	ax, _ITEM_PATNUM[bx]
 		mov	[si+item_t.ITEM_patnum], ax
 		call	@item_splashes_add$q20%SubpixelBase$ti$ti%t1 pascal, [bp+@@x], [bp+@@y]
 		mov	word ptr [si+12h], 0

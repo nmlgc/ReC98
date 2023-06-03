@@ -39,7 +39,7 @@ MAP_LENGTH_MAX = 320
 LIVES_MAX = 5
 BOMBS_MAX = 5
 
-main_01 group main_01_TEXT, POINTNUM_TEXT, main_01__TEXT, HUD_TEXT, main_01___TEXT, PLAYER_B_TEXT, main_01____TEXT
+main_01 group main_01_TEXT, POINTNUM_TEXT, main_01__TEXT, ITEM_TEXT, HUD_TEXT, main_01___TEXT, PLAYER_B_TEXT, main_01____TEXT
 main_03 group main_03_TEXT, main_03__TEXT
 
 ; ===========================================================================
@@ -1929,7 +1929,7 @@ loc_BDCC:
 
 loc_BDE8:
 		call	sub_EF36
-		call	sub_DAF0
+		call	@items_update_and_render$qv
 		call	farfp_23A76
 		call	sub_10BC6
 		call	sub_41AA
@@ -4992,8 +4992,8 @@ sub_D874	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
-
-sub_D906	proc near
+public @ITEM_HITTEST_Y$QR6ITEM_T
+@item_hittest_y$qr6item_t	proc near
 
 var_2		= word ptr -2
 @@item		= word ptr  4
@@ -5193,7 +5193,7 @@ loc_DAE0:
 		pop	si
 		leave
 		retn	2
-sub_D906	endp
+@item_hittest_y$qr6item_t	endp
 
 ; ---------------------------------------------------------------------------
 off_DAE6	dw offset loc_D949
@@ -5201,151 +5201,11 @@ off_DAE6	dw offset loc_D949
 		dw offset loc_D9FA
 		dw offset loc_DA3F
 		dw offset loc_DA9C
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_DAF0	proc near
-
-@@pos		= word ptr -2
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 2
-		push	si
-		push	di
-		mov	si, offset _items
-		inc	word_218AA
-		mov	_item_score_this_frame, 0
-		xor	di, di
-		jmp	loc_DBFE
-; ---------------------------------------------------------------------------
-
-loc_DB0D:
-		cmp	[si+item_t.ITEM_flag], F_ALIVE
-		jnz	loc_DBFA
-		mov	al, _page_back
-		mov	ah, 0
-		shl	ax, 2
-		add	ax, si
-		add	ax, item_t.ITEM_pos
-		mov	[bp+@@pos], ax
-		mov	word_21896, ax
-		add	ax, item_pos_t.ITEM_screen_top
-		mov	word_21898, ax
-		cmp	[si+item_t.ITEM_velocity_y], 0
-		jg	short loc_DB3C
-		mov	ax, [si+item_t.ITEM_velocity_x_during_bounce]
-		mov	bx, word_21896
-		add	[bx], ax
-
-loc_DB3C:
-		mov	ax, [si+item_t.ITEM_velocity_y]
-		mov	bx, word_21898
-		add	[bx], ax
-		mov	bx, word_21896
-		mov	ax, [bx]
-		mov	_item_p_left, ax
-		mov	bx, word_21898
-		mov	ax, [bx]
-		sar	ax, 4
-		mov	_item_p_top, ax
-		cmp	_item_p_top, (PLAYFIELD_TOP - ITEM_H)
-		jge	short loc_DB6D
-		mov	_item_p_top, (PLAYFIELD_TOP - ITEM_H)
-		mov	word ptr [bx], 0
-		jmp	short loc_DB89
-; ---------------------------------------------------------------------------
-
-loc_DB6D:
-		cmp	_item_p_top, PLAYFIELD_BOTTOM
-		jl	short loc_DB89
-		mov	[si+item_t.ITEM_flag], F_REMOVE
-		inc	byte_1E597
-		test	byte_1E597, 0Fh
-		jnz	short loc_DBFA
-		dec	_item_skill
-		jmp	short loc_DBFA
-; ---------------------------------------------------------------------------
-
-loc_DB89:
-		cmp	_item_p_left, (PLAYFIELD_LEFT - ITEM_W)
-		jle	short loc_DB98
-		cmp	_item_p_left, PLAYFIELD_RIGHT
-		jl	short loc_DB9D
-
-loc_DB98:
-		mov	[si+item_t.ITEM_flag], F_REMOVE
-		jmp	short loc_DBFA
-; ---------------------------------------------------------------------------
-
-loc_DB9D:
-		inc	[si+item_t.ITEM_age]
-		inc	[si+item_t.ITEM_velocity_y]
-		cmp	_player_is_hit, 0
-		jnz	short loc_DBCA
-		mov	ax, _player_topleft.x
-		add	ax, -8
-		cmp	ax, _item_p_left
-		jg	short loc_DBCA
-		mov	ax, _player_topleft.x
-		add	ax, 24
-		cmp	ax, _item_p_left
-		jl	short loc_DBCA
-		call	sub_D906 pascal, si
-		or	ax, ax
-		jnz	short loc_DBFA
-
-loc_DBCA:
-		mov	ax, _scroll_line
-		add	_item_p_top, ax
-		cmp	_item_p_top, RES_Y
-		jl	short loc_DBDF
-		sub	_item_p_top, RES_Y
-
-loc_DBDF:
-		push	_item_p_left
-		push	_item_p_top
-		mov	al, [si+item_t.ITEM_type]
-		mov	ah, 0
-		mov	bx, ax
-		mov	al, [bx+0ABAh]
-		mov	ah, 0
-		push	ax
-		call	super_roll_put_tiny
-
-loc_DBFA:
-		inc	di
-		add	si, size item_t
-
-loc_DBFE:
-		cmp	di, ITEM_COUNT
-		jl	loc_DB0D
-		cmp	_item_score_this_frame, 0
-		jz	short loc_DC31
-		mov	al, _rank
-		cbw
-		cmp	ax, RANK_HARD
-		jl	short loc_DC28
-		mov	cl, _rank
-		add	cl, -1
-		mov	eax, _item_score_this_frame
-		shl	eax, cl
-		mov	_item_score_this_frame, eax
-
-loc_DC28:
-		mov	eax, _item_score_this_frame
-		add	_score_delta, eax
-
-loc_DC31:
-		call	@pointnums_update_and_render$qv
-		pop	di
-		pop	si
-		leave
-		retn
-sub_DAF0	endp
 main_01__TEXT	ends
+
+ITEM_TEXT	segment	byte public 'CODE' use16
+	@items_update_and_render$qv procdesc near
+ITEM_TEXT	ends
 
 HUD_TEXT	segment	byte public 'CODE' use16
 	@gaiji_load$qv procdesc near
@@ -31580,7 +31440,7 @@ public _player_option_patnum, _power_overflow
 _player_option_patnum	db PAT_OPTION_A
 _power_overflow	dw 0
 
-public _item_bigpower_override, _item_skill
+public _item_bigpower_override, _ITEM_PATNUM, _item_skill, _item_drop_cycle
 _item_bigpower_override	dw 0
 		db    0
 		db    1
@@ -31592,12 +31452,13 @@ _item_bigpower_override	dw 0
 		db    1
 		db    1
 		db    0
-		db  44h	; D
-		db  45h	; E
-		db  46h	; F
-		db  47h	; G
-		db  57h	; W
-		db    0
+_ITEM_PATNUM label byte
+	db PAT_ITEM_POWER
+	db PAT_ITEM_POINT
+	db PAT_ITEM_BOMB
+	db PAT_ITEM_BIGPOWER
+	db PAT_ITEM_1UP
+	evendata
 include th02/main/power_overflow[data].asm
 _item_skill	dw 0
 word_1E588	dw 0BCB0h
@@ -31609,7 +31470,8 @@ byte_1E591	db 2
 word_1E592	dw 0BCC8h
 word_1E594	dw 0BCB0h
 byte_1E596	db 0C8h
-byte_1E597	db 0
+_item_drop_cycle	db 0
+
 public _score, _lives, _bombs, _EXTEND_SCORES, _extends_gained
 public _score_reset_unknown_40000
 _score	dd 0
@@ -32657,15 +32519,15 @@ item_t struc
 	ITEM_age                     	dw ?
 item_t ends
 
-public _items, _item_p_left, _item_p_top
+public _items, _item_p_left_ptr, _item_p_top_ptr, _item_p_left, _item_p_top
 _items	item_t ITEM_COUNT dup(<?>)
 
-word_21896	dw ?
-word_21898	dw ?
-_item_p_left	dw ?
-_item_p_top 	dw ?
+_item_p_left_ptr	dw ?
+_item_p_top_ptr 	dw ?
+_item_p_left    	dw ?
+_item_p_top     	dw ?
 
-public _point_items_collected, _item_score_this_frame
+public _point_items_collected, _item_score_this_frame, _item_frames_unused
 _point_items_collected	dw ?
 byte_218A0	db ?
 byte_218A1	db ?
@@ -32674,7 +32536,8 @@ byte_218A2	db ?
 _item_score_this_frame	dd ?
 byte_218A8	db ?
 		db ?
-word_218AA	dw ?
+_item_frames_unused	dw ?
+
 public _score_delta, _score_delta_transferred_prev, _shot_level
 _score_delta      	dd ?
 _score_delta_transferred_prev	dw ?

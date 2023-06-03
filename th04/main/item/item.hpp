@@ -37,7 +37,7 @@ struct item_t {
 
 extern item_t items[ITEM_COUNT];
 
-extern const int ITEM_TYPE_PATNUM[IT_COUNT];
+extern const int ITEM_PATNUM[IT_COUNT];
 
 void pascal near items_add(subpixel_t x, subpixel_t y, item_type_t type);
 

@@ -18,3 +18,5 @@ extern unsigned int item_bigpower_override;
 extern int item_skill;
 
 extern int point_items_collected;
+
+void near items_update_and_render(void);

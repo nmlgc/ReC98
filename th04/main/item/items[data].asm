@@ -2,8 +2,8 @@ public _item_playperf_raise, _item_playperf_lower
 _item_playperf_raise	db 0
 _item_playperf_lower	db 0
 
-public _ITEM_TYPE_PATNUM
-_ITEM_TYPE_PATNUM label word
+public _ITEM_PATNUM
+_ITEM_PATNUM label word
 	dw	PAT_ITEM + IT_POWER
 	dw	PAT_ITEM + IT_POINT
 	dw	PAT_ITEM + IT_DREAM
