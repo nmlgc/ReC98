@@ -1852,7 +1852,7 @@ loc_BCF9:
 		call	sub_C6B2
 		call	sub_10D42
 		call	farfp_23A72
-		call	sub_D874
+		call	@items_invalidate$qv
 		call	sub_4288
 		call	sub_E2D9
 		cmp	word_2034C, 0
@@ -4913,81 +4913,10 @@ loc_D86E:
 		leave
 		retn	4
 sub_D743	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D874	proc near
-
-var_2		= word ptr -2
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 2
-		push	si
-		push	di
-		xor	si, si
-		jmp	short loc_D8FA
-; ---------------------------------------------------------------------------
-
-loc_D880:
-		mov	bx, si
-		shl	bx, 4
-		cmp	_items[bx].ITEM_flag, F_FREE
-		jz	short loc_D8F9
-		mov	ax, si
-		shl	ax, 4
-		mov	dl, _page_back
-		mov	dh, 0
-		shl	dx, 2
-		add	ax, dx
-		add	ax, offset _items.ITEM_pos
-		mov	di, ax
-		mov	ax, [di+item_pos_t.ITEM_screen_top]
-		sar	ax, 4
-		mov	[bp+var_2], ax
-		call	@tiles_invalidate_rect$qiiii pascal, [di+item_pos_t.ITEM_screen_left], ax, (16 shl 16) or 16
-		mov	bx, si
-		shl	bx, 4
-		mov	al, _page_front
-		mov	ah, 0
-		shl	ax, 2
-		add	bx, ax
-		mov	ax, _items[bx].ITEM_pos.ITEM_screen_left
-		mov	[di+item_pos_t.ITEM_screen_left], ax
-		mov	bx, si
-		shl	bx, 4
-		mov	al, _page_front
-		mov	ah, 0
-		shl	ax, 2
-		add	bx, ax
-		mov	ax, _items[bx].ITEM_pos.ITEM_screen_top
-		mov	[di+item_pos_t.ITEM_screen_top], ax
-		mov	bx, si
-		shl	bx, 4
-		cmp	_items[bx].ITEM_flag, F_REMOVE
-		jnz	short loc_D8F9
-		mov	bx, si
-		shl	bx, 4
-		mov	_items[bx].ITEM_flag, F_FREE
-
-loc_D8F9:
-		inc	si
-
-loc_D8FA:
-		cmp	si, ITEM_COUNT
-		jl	short loc_D880
-		call	@pointnums_invalidate$qv
-		pop	di
-		pop	si
-		leave
-		retn
-sub_D874	endp
 main_01__TEXT	ends
 
 ITEM_TEXT	segment	byte public 'CODE' use16
+	@items_invalidate$qv procdesc near
 	@items_update_and_render$qv procdesc near
 ITEM_TEXT	ends
 

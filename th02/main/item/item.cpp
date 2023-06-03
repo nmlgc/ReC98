@@ -21,6 +21,7 @@ extern "C" {
 #include "th02/main/item/shared.hpp"
 #include "th02/main/player/player.hpp"
 #include "th02/main/pointnum/pointnum.hpp"
+#include "th02/main/tile/tile.hpp"
 #include "th02/sprites/main_pat.h"
 
 // Constants
@@ -72,6 +73,28 @@ extern union {
 } p_top;
 extern int32_t item_score_this_frame;
 // -----
+
+void near items_invalidate(void)
+{
+	for(int i = 0; i < ITEM_COUNT; i++) {
+		if(items[i].flag == F_FREE) {
+			continue;
+		}
+
+		item_pos_t near* pos = &items[i].pos[page_back];
+
+		screen_y_t top = pos->screen_top.to_pixel();
+		tiles_invalidate_rect(pos->screen_left, top, ITEM_W, ITEM_H);
+
+		pos->screen_left = items[i].pos[page_front].screen_left;
+		pos->screen_top  = items[i].pos[page_front].screen_top;
+
+		if(items[i].flag == F_REMOVE) {
+			items[i].flag = F_FREE;
+		}
+	}
+	pointnums_invalidate();
+}
 
 // Returns `true` if the player collided with and collected the item.
 bool16 pascal near item_hittest_y(item_t near& item)
