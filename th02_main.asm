@@ -1152,7 +1152,7 @@ loc_B333:
 		cwd
 		idiv	bx
 		add	dx, 2
-		mov	word_1E51E, dx
+		mov	_item_bigpower_override, dx
 
 loc_B34C:
 		cmp	_rank, RANK_EASY
@@ -2397,7 +2397,7 @@ cfg_load	proc near
 
 loc_C2DF:
 		mov	word_20272, 0
-		mov	word_1E51E, 0
+		mov	_item_bigpower_override, 0
 		mov	ax, 1
 		leave
 		retn
@@ -2612,7 +2612,7 @@ loc_C516:
 		cwd
 		idiv	bx
 		add	dx, 2
-		mov	word_1E51E, dx
+		mov	_item_bigpower_override, dx
 		mov	_power_overflow, 10
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
@@ -4613,9 +4613,9 @@ sub_D65A	proc far
 		push	di
 		mov	si, [bp+@@left]
 		mov	di, [bp+@@top]
-		cmp	word_1E51E, 0
+		cmp	_item_bigpower_override, 0
 		jz	short loc_D67B
-		dec	word_1E51E
+		dec	_item_bigpower_override
 		push	si	; left
 		push	di	; top
 		push	IT_BIGPOWER	; type
@@ -4683,11 +4683,11 @@ sub_D6CA	proc far
 		push	di
 		mov	di, [bp+@@left]
 		mov	cx, [bp+@@top]
-		cmp	word_1E51E, 0
+		cmp	_item_bigpower_override, 0
 		jz	short loc_D6EB
 		cmp	[bp+@@type], IT_BOMB
 		jge	short loc_D6EB
-		dec	word_1E51E
+		dec	_item_bigpower_override
 		mov	[bp+@@type], IT_BIGPOWER
 
 loc_D6EB:
@@ -5003,7 +5003,7 @@ var_2		= word ptr -2
 		sub	sp, 2
 		push	si
 		push	di
-		mov	ax, word_2189C
+		mov	ax, _item_p_top
 		mov	[bp+var_2], ax
 		cmp	ax, _player_topleft.y
 		jl	loc_DADE
@@ -5011,8 +5011,8 @@ var_2		= word ptr -2
 		add	ax, (PLAYER_H / 2)
 		cmp	ax, [bp+var_2]
 		jl	loc_DADE
-		mov	ax, word_2189A
-		add	ax, 0FFF4h
+		mov	ax, _item_p_left
+		add	ax, -12
 		mov	si, ax
 		mov	bx, [bp+@@item]
 		mov	al, [bx+item_t.ITEM_type]
@@ -5029,7 +5029,7 @@ loc_D949:
 		inc	_power
 		call	@player_shot_level_update_and_hud$qv
 		mov	_power_overflow, 0
-		inc	dword_218A4
+		inc	_item_score_this_frame
 		jmp	short loc_D984
 ; ---------------------------------------------------------------------------
 
@@ -5042,13 +5042,13 @@ loc_D96F:
 		mov	bx, _power_overflow
 		add	bx, bx
 		movsx	eax, _POWER_OVERFLOW_BONUS[bx]
-		add	dword_218A4, eax
+		add	_item_score_this_frame, eax
 		inc	byte_218A8
 
 loc_D984:
 		inc	byte_218A8
 		push	si	; left
-		push	word_2189C	; top
+		push	_item_p_top	; top
 		mov	bx, _power_overflow
 		add	bx, bx
 		push	_POWER_OVERFLOW_BONUS[bx]	; points
@@ -5094,9 +5094,9 @@ loc_D9E1:
 		inc	byte_218A8
 
 loc_D9E5:
-		call	@pointnums_add$qiiui pascal, si, word_2189C, di
+		call	@pointnums_add$qiiui pascal, si, _item_p_top, di
 		movzx	eax, di
-		add	dword_218A4, eax
+		add	_item_score_this_frame, eax
 		jmp	loc_DAB6
 ; ---------------------------------------------------------------------------
 
@@ -5106,15 +5106,15 @@ loc_D9FA:
 		cmp	ax, BOMBS_MAX
 		jge	short loc_DA21
 		inc	_bombs
-		add	dword_218A4, 1000
-		call	@pointnums_add$qiiui pascal, si, word_2189C, 1000
+		add	_item_score_this_frame, 1000
+		call	@pointnums_add$qiiui pascal, si, _item_p_top, 1000
 		call	@hud_bombs_put$qv
 		jmp	loc_DAB6
 ; ---------------------------------------------------------------------------
 
 loc_DA21:
-		add	dword_218A4, 6553
-		call	@pointnums_add$qiiui pascal, si, word_2189C, 6553
+		add	_item_score_this_frame, 6553
+		call	@pointnums_add$qiiui pascal, si, _item_p_top, 6553
 		mov	al, byte_218A8
 		add	al, 10h
 		mov	byte_218A8, al
@@ -5127,7 +5127,7 @@ loc_DA3F:
 		mov	al, _power
 		add	al, 10
 		mov	_power, al
-		inc	dword_218A4
+		inc	_item_score_this_frame
 		mov	_power_overflow, 0
 		jmp	short loc_DA85
 ; ---------------------------------------------------------------------------
@@ -5147,11 +5147,11 @@ loc_DA6F:
 		mov	bx, _power_overflow
 		add	bx, bx
 		movsx	eax, _POWER_OVERFLOW_BONUS[bx]
-		add	dword_218A4, eax
+		add	_item_score_this_frame, eax
 
 loc_DA85:
 		push	si	; left
-		push	word_2189C	; top
+		push	_item_p_top	; top
 		mov	bx, _power_overflow
 		add	bx, bx
 		push	_POWER_OVERFLOW_BONUS[bx]	; points
@@ -5175,7 +5175,7 @@ loc_DAB6:
 		call	_snd_se_play c, 13
 		cmp	byte_218A8, 20h	; ' '
 		jb	short loc_DAD9
-		inc	word_1E586
+		inc	_item_skill
 		mov	al, byte_218A8
 		add	al, 0E0h
 		mov	byte_218A8, al
@@ -5217,7 +5217,7 @@ sub_DAF0	proc near
 		push	di
 		mov	si, offset _items
 		inc	word_218AA
-		mov	dword_218A4, 0
+		mov	_item_score_this_frame, 0
 		xor	di, di
 		jmp	loc_DBFE
 ; ---------------------------------------------------------------------------
@@ -5246,33 +5246,33 @@ loc_DB3C:
 		add	[bx], ax
 		mov	bx, word_21896
 		mov	ax, [bx]
-		mov	word_2189A, ax
+		mov	_item_p_left, ax
 		mov	bx, word_21898
 		mov	ax, [bx]
 		sar	ax, 4
-		mov	word_2189C, ax
-		cmp	word_2189C, 0
+		mov	_item_p_top, ax
+		cmp	_item_p_top, (PLAYFIELD_TOP - ITEM_H)
 		jge	short loc_DB6D
-		mov	word_2189C, 0
+		mov	_item_p_top, (PLAYFIELD_TOP - ITEM_H)
 		mov	word ptr [bx], 0
 		jmp	short loc_DB89
 ; ---------------------------------------------------------------------------
 
 loc_DB6D:
-		cmp	word_2189C, 180h
+		cmp	_item_p_top, PLAYFIELD_BOTTOM
 		jl	short loc_DB89
 		mov	[si+item_t.ITEM_flag], F_REMOVE
 		inc	byte_1E597
 		test	byte_1E597, 0Fh
 		jnz	short loc_DBFA
-		dec	word_1E586
+		dec	_item_skill
 		jmp	short loc_DBFA
 ; ---------------------------------------------------------------------------
 
 loc_DB89:
-		cmp	word_2189A, 10h
+		cmp	_item_p_left, (PLAYFIELD_LEFT - ITEM_W)
 		jle	short loc_DB98
-		cmp	word_2189A, 1A0h
+		cmp	_item_p_left, PLAYFIELD_RIGHT
 		jl	short loc_DB9D
 
 loc_DB98:
@@ -5287,11 +5287,11 @@ loc_DB9D:
 		jnz	short loc_DBCA
 		mov	ax, _player_topleft.x
 		add	ax, -8
-		cmp	ax, word_2189A
+		cmp	ax, _item_p_left
 		jg	short loc_DBCA
 		mov	ax, _player_topleft.x
 		add	ax, 24
-		cmp	ax, word_2189A
+		cmp	ax, _item_p_left
 		jl	short loc_DBCA
 		call	sub_D906 pascal, si
 		or	ax, ax
@@ -5299,14 +5299,14 @@ loc_DB9D:
 
 loc_DBCA:
 		mov	ax, _scroll_line
-		add	word_2189C, ax
-		cmp	word_2189C, RES_Y
+		add	_item_p_top, ax
+		cmp	_item_p_top, RES_Y
 		jl	short loc_DBDF
-		sub	word_2189C, RES_Y
+		sub	_item_p_top, RES_Y
 
 loc_DBDF:
-		push	word_2189A
-		push	word_2189C
+		push	_item_p_left
+		push	_item_p_top
 		mov	al, [si+item_t.ITEM_type]
 		mov	ah, 0
 		mov	bx, ax
@@ -5322,7 +5322,7 @@ loc_DBFA:
 loc_DBFE:
 		cmp	di, ITEM_COUNT
 		jl	loc_DB0D
-		cmp	dword_218A4, 0
+		cmp	_item_score_this_frame, 0
 		jz	short loc_DC31
 		mov	al, _rank
 		cbw
@@ -5330,12 +5330,12 @@ loc_DBFE:
 		jl	short loc_DC28
 		mov	cl, _rank
 		add	cl, -1
-		mov	eax, dword_218A4
+		mov	eax, _item_score_this_frame
 		shl	eax, cl
-		mov	dword_218A4, eax
+		mov	_item_score_this_frame, eax
 
 loc_DC28:
-		mov	eax, dword_218A4
+		mov	eax, _item_score_this_frame
 		add	_score_delta, eax
 
 loc_DC31:
@@ -25587,19 +25587,19 @@ sub_19949	proc near
 
 loc_19986:
 		add	cx, si
-		cmp	word_1E586, 19h
+		cmp	_item_skill, 25
 		jle	short loc_19997
-		mov	word_1E586, 19h
+		mov	_item_skill, 25
 		jmp	short loc_199A4
 ; ---------------------------------------------------------------------------
 
 loc_19997:
-		cmp	word_1E586, 0
+		cmp	_item_skill, 0
 		jge	short loc_199A4
-		mov	word_1E586, 0
+		mov	_item_skill, 0
 
 loc_199A4:
-		add	cx, word_1E586
+		add	cx, _item_skill
 		les	bx, _resident
 		mov	es:[bx+mikoconfig_t.skill], cx
 		pop	si
@@ -31579,7 +31579,9 @@ byte_1E51A	db 4Ch
 public _player_option_patnum, _power_overflow
 _player_option_patnum	db PAT_OPTION_A
 _power_overflow	dw 0
-word_1E51E	dw 0
+
+public _item_bigpower_override, _item_skill
+_item_bigpower_override	dw 0
 		db    0
 		db    1
 		db    0
@@ -31597,7 +31599,7 @@ word_1E51E	dw 0
 		db  57h	; W
 		db    0
 include th02/main/power_overflow[data].asm
-word_1E586	dw 0
+_item_skill	dw 0
 word_1E588	dw 0BCB0h
 word_1E58A	dw 0D4C8h
 byte_1E58C	db 0E0h
@@ -32638,6 +32640,9 @@ IT_BOMB = 2
 IT_BIGPOWER = 3
 IT_1UP = 4
 
+ITEM_W = 16
+ITEM_H = 16
+
 item_pos_t struc
 	ITEM_screen_left	dw ?
 	ITEM_screen_top 	dw ?
@@ -32652,20 +32657,21 @@ item_t struc
 	ITEM_age                     	dw ?
 item_t ends
 
-public _items
+public _items, _item_p_left, _item_p_top
 _items	item_t ITEM_COUNT dup(<?>)
 
 word_21896	dw ?
 word_21898	dw ?
-word_2189A	dw ?
-word_2189C	dw ?
-public _point_items_collected
+_item_p_left	dw ?
+_item_p_top 	dw ?
+
+public _point_items_collected, _item_score_this_frame
 _point_items_collected	dw ?
 byte_218A0	db ?
 byte_218A1	db ?
 byte_218A2	db ?
 		db ?
-dword_218A4	dd ?
+_item_score_this_frame	dd ?
 byte_218A8	db ?
 		db ?
 word_218AA	dw ?

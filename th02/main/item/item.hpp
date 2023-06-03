@@ -10,3 +10,11 @@ enum item_type_t {
 };
 
 #define ITEM_COUNT 20
+
+extern unsigned int item_bigpower_override;
+
+// Increases by varying amounts depending on how well items are collected,
+// decrements for every 16 dropped items.
+extern int item_skill;
+
+extern int point_items_collected;
