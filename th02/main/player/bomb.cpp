@@ -64,7 +64,7 @@ void near bomb_update_and_render(void)
 }
 
 // ZUN bloat: Needed to circumvent 16-bit promotion in a single comparison.
-inline int8_t bomb_particle_h(void) {
+inline pixel_delta_8_t bomb_particle_h(void) {
 	return BOMB_PARTICLE_H;
 }
 
@@ -74,7 +74,7 @@ void pascal near bomb_circle_point_put(screen_x_t left, screen_y_t top)
 	#define first_bit_mirrored	_DX
 
 	register const bomb_particle_dots_t near* sprite;
-	int8_t y;
+	pixel_delta_8_t y;
 	unsigned int first_bit;
 
 	if(!overlap_xy_ltrb_lt_gt(

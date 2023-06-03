@@ -98,7 +98,7 @@ bool meteor_active = true;
 uint8_t spreadin_interval = 4;
 
 // Sprite pixels to spread in per frame, in one half of Mima's sprite
-uint8_t spreadin_speed = 8;
+pixel_length_8_t spreadin_speed = 8;
 // -----
 
 // Entities

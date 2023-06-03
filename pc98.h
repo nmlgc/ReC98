@@ -12,6 +12,8 @@
 // Display-space widths, heights, and object-space coordinates
 typedef int pixel_t;
 typedef unsigned int upixel_t;
+typedef int8_t pixel_delta_8_t;
+typedef uint8_t pixel_length_8_t;
 
 // A version of master.lib's Point without the constructor, even in C++
 struct point_t {
