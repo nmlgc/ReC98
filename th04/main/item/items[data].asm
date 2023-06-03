@@ -36,7 +36,7 @@ public _items_pull_to_player
 _items_pull_to_player	db 0
 	evendata
 
-MISS_ITEM_COUNT = 5
+ITEM_MISS_COUNT = 5
 MISS_FIELD_LEFT = 0
 MISS_FIELD_CENTER = 1
 MISS_FIELD_RIGHT = 2

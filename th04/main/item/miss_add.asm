@@ -10,11 +10,11 @@ items_miss_add	proc far
 	enter	0Ah, 0
 	push	si
 	push	di
-	call	@randring2_next16_mod$qui pascal, MISS_ITEM_COUNT
+	call	@randring2_next16_mod$qui pascal, ITEM_MISS_COUNT
 	mov	[bp+@@bigpower_index], ax
 
 @@unused_loop:
-	call	@randring2_next16_mod$qui pascal, MISS_ITEM_COUNT
+	call	@randring2_next16_mod$qui pascal, ITEM_MISS_COUNT
 	mov	[bp+@@unused_index], ax
 	cmp	ax, [bp+@@bigpower_index]
 	jz	short @@unused_loop
@@ -48,18 +48,18 @@ items_miss_add	proc far
 	mov	ax, _player_pos.cur.y
 	mov	[si+item_t.pos.cur.y],	ax
 	mov	bx, [bp+@@field]
-	imul	bx, MISS_ITEM_COUNT * word * 2
+	imul	bx, ITEM_MISS_COUNT * word * 2
 	mov	ax, di
 	add	ax, ax
 	add	bx, ax
-	mov	ax, (_ITEM_MISS_VELOCITIES + (MISS_ITEM_COUNT * word * 0))[bx]
+	mov	ax, (_ITEM_MISS_VELOCITIES + (ITEM_MISS_COUNT * word * 0))[bx]
 	mov	[si+item_t.pos.velocity.y], ax
 	mov	bx, [bp+@@field]
-	imul	bx, MISS_ITEM_COUNT * word * 2
+	imul	bx, ITEM_MISS_COUNT * word * 2
 	mov	ax, di
 	add	ax, ax
 	add	bx, ax
-	mov	ax, (_ITEM_MISS_VELOCITIES + (MISS_ITEM_COUNT * word * 1))[bx]
+	mov	ax, (_ITEM_MISS_VELOCITIES + (ITEM_MISS_COUNT * word * 1))[bx]
 	mov	[si+item_t.pos.velocity.x], ax
 	mov	[si+item_t.pulled_to_player], 0
 	cmp	[bp+@@bigpower_index], di
@@ -90,7 +90,7 @@ endif
 	mov	[si+item_t.ITEM_patnum], ax
 	inc	di
 	inc	_items_spawned
-	cmp	di, MISS_ITEM_COUNT
+	cmp	di, ITEM_MISS_COUNT
 	jge	short @@ret
 
 @@next:

@@ -7,6 +7,7 @@
 #include "th01/math/subpixel.hpp"
 #include "th02/common.h"
 #include "th02/resident.hpp"
+#include "th02/math/randring.hpp"
 #include "th02/core/globals.hpp"
 #include "th02/hardware/pages.hpp"
 extern "C" {
@@ -73,6 +74,90 @@ extern union {
 } p_top;
 extern int32_t item_score_this_frame;
 // -----
+
+template <class T> struct hack {
+	T x[ITEM_MISS_COUNT];
+};
+
+void pascal near items_miss_add(screen_x_t left, screen_y_t top)
+{
+	int items_added = 0;
+	int i;
+	bool16 bigpower_not_spawned_yet = true;
+
+	// ZUN bloat: Just use a item_type_t.
+	union {
+		item_type_t type;
+		int v;
+	} type;
+
+	extern const hack<Subpixel8> ITEM_MISS_VELOCITY_Y_SIDES;
+	extern const hack<pixel_delta_8_t> ITEM_MISS_VELOCITY_X_CENTER;
+	extern const hack<Subpixel8> ITEM_MISS_VELOCITY_Y_CENTER;
+
+	const hack<Subpixel8> VELOCITY_Y_SIDES = ITEM_MISS_VELOCITY_Y_SIDES;
+	const hack<pixel_delta_8_t> VELOCITY_X_CENTER = ITEM_MISS_VELOCITY_X_CENTER;
+	const hack<Subpixel8> VELOCITY_Y_CENTER = ITEM_MISS_VELOCITY_Y_CENTER;
+
+	// ZUN quirk: Probably meant to be ((PLAYFIELD_W / 3) * 1) and
+	// ((PLAYFIELD_W / 3) * 2), but [player_topleft] is relative to the
+	// top-left corner of the *screen*, not the playfield.
+	int8_t field_distance_from_center = (
+		(player_topleft.x <= (PLAYFIELD_LEFT + ((PLAYFIELD_W /  4) * 1))) ? -1 :
+		(player_topleft.x <= (PLAYFIELD_LEFT + ((PLAYFIELD_W / 12) * 7))) ?  0 :
+		/*                                                               */  1
+	);
+
+	item_t near* p = items;
+
+	// ZUN bloat: Should be a separate variable.
+	top <<= SUBPIXEL_BITS;
+	#define top static_cast<subpixel_t>(top)
+
+	for(i = 0; i < ITEM_COUNT; (i++, p++)) {
+		if(p->flag != F_FREE) {
+			continue;
+		}
+		p->flag = F_ALIVE;
+		p->pos[0].screen_left = left;
+		p->pos[0].screen_top.v = top;
+		p->pos[1].screen_left = left;
+		p->pos[1].screen_top.v = top;
+		p->age = 0;
+
+		if(!items_miss_add_gameover) {
+			if(bigpower_not_spawned_yet) {
+				type.v = (
+					((randring1_next8() % (ITEM_MISS_COUNT - items_added)) == 0)
+						? IT_BIGPOWER
+						: (randring1_next8() % IT_BOMB) // Power or point
+				);
+			} else {
+				type.v = (randring1_next8() % IT_BOMB); // Power or point
+			}
+			if(type.v == IT_BIGPOWER) {
+				bigpower_not_spawned_yet = false;
+			}
+		} else {
+			type.v = IT_BIGPOWER;
+		}
+
+		p->type = type.type;
+		if(field_distance_from_center != 0) {
+			p->velocity_y.v = VELOCITY_Y_SIDES.x[items_added];
+			p->velocity_x_during_bounce = (field_distance_from_center * -2);
+		} else {
+			p->velocity_y.v = VELOCITY_Y_CENTER.x[items_added];
+			p->velocity_x_during_bounce = VELOCITY_X_CENTER.x[items_added];
+		}
+		items_added++;
+		if(items_added >= ITEM_MISS_COUNT) {
+			break;
+		}
+	}
+
+	#undef top
+}
 
 void near items_invalidate(void)
 {

@@ -51,7 +51,7 @@ extern unsigned char item_playperf_lower;
 
 // Items dropped when losing a life
 // --------------------------------
-#define MISS_ITEM_COUNT 5
+#define ITEM_MISS_COUNT 5
 typedef enum {
 	MISS_FIELD_LEFT = 0,
 	MISS_FIELD_CENTER = 1,
@@ -59,7 +59,7 @@ typedef enum {
 	MISS_FIELD_COUNT,
 };
 // Yes, these have Y first and X second.
-extern const Subpixel ITEM_MISS_VELOCITIES[MISS_FIELD_COUNT][2][MISS_ITEM_COUNT];
+extern const Subpixel ITEM_MISS_VELOCITIES[MISS_FIELD_COUNT][2][ITEM_MISS_COUNT];
 
 void pascal near items_miss_add(void);
 // --------------------------------

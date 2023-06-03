@@ -19,4 +19,12 @@ extern int item_skill;
 
 extern int point_items_collected;
 
+// Spawns the Game Over item set on the next call to items_miss_add().
+// ZUN bloat: Both turning this into a parameter or hardcoding the condition
+// (as TH04 and TH05 do it) would have been better than this.
+extern bool items_miss_add_gameover;
+
+// Spawns each of the items dropped when losing a life at the given position.
+void pascal near items_miss_add(screen_x_t left, screen_y_t top);
+
 void near items_update_and_render(void);

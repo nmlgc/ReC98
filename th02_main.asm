@@ -4589,7 +4589,7 @@ loc_D644:
 		jl	short loc_D639
 		mov	_point_items_collected, 0
 		call	@pointnums_init_for_rank_and_rese$qv
-		mov	byte_218A1, 0
+		mov	_items_miss_add_gameover, 0
 		pop	si
 		pop	bp
 		retn
@@ -4734,188 +4734,11 @@ loc_D73D:
 		pop	bp
 		retf	6
 sub_D6CA	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D743	proc near
-
-var_19		= byte ptr -19h
-var_18		= word ptr -18h
-var_16		= word ptr -16h
-var_14		= byte ptr -14h
-var_12		= word ptr -12h
-var_10		= word ptr -10h
-var_E		= byte ptr -0Eh
-var_C		= word ptr -0Ch
-var_A		= word ptr -0Ah
-var_8		= byte ptr -8
-@@type		= word ptr -6
-var_4		= word ptr -4
-@@i          	= word ptr -2
-@@screen_top 	= word ptr  4
-@@screen_left	= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 1Ah
-		push	si
-		push	di
-		xor	di, di
-		mov	[bp+var_4], 1
-		mov	ax, word_1E588
-		mov	[bp+var_C], ax
-		mov	ax, word_1E58A
-		mov	[bp+var_A], ax
-		mov	al, byte_1E58C
-		mov	[bp+var_8], al
-		mov	ax, word_1E58D
-		mov	[bp+var_12], ax
-		mov	ax, word_1E58F
-		mov	[bp+var_10], ax
-		mov	al, byte_1E591
-		mov	[bp+var_E], al
-		mov	ax, word_1E592
-		mov	[bp+var_18], ax
-		mov	ax, word_1E594
-		mov	[bp+var_16], ax
-		mov	al, byte_1E596
-		mov	[bp+var_14], al
-
-		; ZUN quirk: Probably meant to be ((PLAYFIELD_W / 3) * 1), but
-		; [player_topleft] is relative to the top-left corner of the *screen*,
-		; not the playfield.
-		cmp	_player_topleft.x, (PLAYFIELD_LEFT + (PLAYFIELD_W / 4))
-		jg	short loc_D794
-		mov	al, -1
-		jmp	short loc_D7A2
-; ---------------------------------------------------------------------------
-
-loc_D794:
-		; Same here, with ((PLAYFIELD_W / 3) * 2).
-		cmp	_player_topleft.x, (PLAYFIELD_LEFT + ((PLAYFIELD_W / 12) * 7))
-		jg	short loc_D7A0
-		mov	al, 0
-		jmp	short loc_D7A2
-; ---------------------------------------------------------------------------
-
-loc_D7A0:
-		mov	al, 1
-
-loc_D7A2:
-		mov	[bp+var_19], al
-		mov	si, offset _items
-		shl	[bp+@@screen_top], 4
-		mov	[bp+@@i], 0
-		jmp	loc_D866
-; ---------------------------------------------------------------------------
-
-loc_D7B4:
-		cmp	[si+item_t.ITEM_flag], F_FREE
-		jnz	loc_D860
-		mov	[si+item_t.ITEM_flag], F_ALIVE
-		mov	ax, [bp+@@screen_left]
-		mov	[si+item_t.ITEM_pos[0 * size item_pos_t].ITEM_screen_left], ax
-		mov	ax, [bp+@@screen_top]
-		mov	[si+item_t.ITEM_pos[0 * size item_pos_t].ITEM_screen_top], ax
-		mov	ax, [bp+@@screen_left]
-		mov	[si+item_t.ITEM_pos[1 * size item_pos_t].ITEM_screen_left], ax
-		mov	ax, [bp+@@screen_top]
-		mov	[si+item_t.ITEM_pos[1 * size item_pos_t].ITEM_screen_top], ax
-		mov	[si+item_t.ITEM_age], 0
-		cmp	byte_218A1, 0
-		jnz	short loc_D82B
-		cmp	[bp+var_4], 0
-		jz	short loc_D810
-		call	@randring1_next8$qv
-		mov	ah, 0
-		mov	bx, 5
-		sub	bx, di
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_D7FE
-		mov	ax, IT_BIGPOWER
-		jmp	short loc_D80B
-; ---------------------------------------------------------------------------
-
-loc_D7FE:
-		call	@randring1_next8$qv
-		mov	ah, 0
-		mov	bx, IT_BOMB
-		cwd
-		idiv	bx
-		mov	ax, dx
-
-loc_D80B:
-		mov	[bp+@@type], ax
-		jmp	short loc_D81E
-; ---------------------------------------------------------------------------
-
-loc_D810:
-		call	@randring1_next8$qv
-		mov	ah, 0
-		mov	bx, IT_BOMB
-		cwd
-		idiv	bx
-		mov	[bp+@@type], dx
-
-loc_D81E:
-		cmp	[bp+@@type], IT_BIGPOWER
-		jnz	short loc_D830
-		mov	[bp+var_4], 0
-		jmp	short loc_D830
-; ---------------------------------------------------------------------------
-
-loc_D82B:
-		mov	[bp+@@type], IT_BIGPOWER
-
-loc_D830:
-		mov	al, byte ptr [bp+@@type]
-		mov	[si+item_t.ITEM_type], al
-		cmp	[bp+var_19], 0
-		jz	short loc_D84C
-		mov	al, byte ptr [bp+di+var_C]
-		cbw
-		mov	[si+item_t.ITEM_velocity_y], ax
-		mov	al, [bp+var_19]
-		cbw
-		imul	ax, -2
-		jmp	short loc_D857
-; ---------------------------------------------------------------------------
-
-loc_D84C:
-		mov	al, byte ptr [bp+di+var_18]
-		cbw
-		mov	[si+item_t.ITEM_velocity_y], ax
-		mov	al, byte ptr [bp+di+var_12]
-		cbw
-
-loc_D857:
-		mov	[si+item_t.ITEM_velocity_x_during_bounce], ax
-		inc	di
-		cmp	di, 5
-		jge	short loc_D86E
-
-loc_D860:
-		inc	[bp+@@i]
-		add	si, size item_t
-
-loc_D866:
-		cmp	[bp+@@i], ITEM_COUNT
-		jl	loc_D7B4
-
-loc_D86E:
-		pop	di
-		pop	si
-		leave
-		retn	4
-sub_D743	endp
 main_01__TEXT	ends
 
 ITEM_TEXT	segment	byte public 'CODE' use16
+	@ITEMS_MISS_ADD$QII procdesc pascal near \
+		player_left:word, player_top:word
 	@items_invalidate$qv procdesc near
 	@items_update_and_render$qv procdesc near
 ITEM_TEXT	ends
@@ -6456,13 +6279,13 @@ loc_F0B9:
 		cmp	_lives, 0
 		jnz	short loc_F107
 		mov	byte_20609, 0
-		mov	byte_218A1, 1
+		mov	_items_miss_add_gameover, 1
 		mov	bx, word_205EE
 		push	word ptr [bx]	; screen_left
 		mov	bx, word_205F0
 		push	word ptr [bx]	; screen_top
-		call	sub_D743
-		mov	byte_218A1, 0
+		call	@items_miss_add$qii
+		mov	_items_miss_add_gameover, 0
 		mov	_player_is_hit, -1
 		jmp	loc_F1D5
 ; ---------------------------------------------------------------------------
@@ -6478,7 +6301,7 @@ loc_F107:
 		push	word ptr [bx]	; screen_left
 		mov	bx, word_205F0
 		push	word ptr [bx]	; screen_top
-		call	sub_D743
+		call	@items_miss_add$qii
 		jmp	loc_F1D5
 ; ---------------------------------------------------------------------------
 
@@ -31153,7 +30976,9 @@ public _player_option_patnum, _power_overflow
 _player_option_patnum	db PAT_OPTION_A
 _power_overflow	dw 0
 
-public _item_bigpower_override, _ITEM_PATNUM, _item_skill, _item_drop_cycle
+public _item_bigpower_override, _ITEM_PATNUM, _ITEM_MISS_VELOCITY_Y_SIDES
+public _ITEM_MISS_VELOCITY_X_CENTER, _ITEM_MISS_VELOCITY_Y_CENTER, _item_skill
+public _item_drop_cycle
 _item_bigpower_override	dw 0
 		db    0
 		db    1
@@ -31174,15 +30999,13 @@ _ITEM_PATNUM label byte
 	evendata
 include th02/main/power_overflow[data].asm
 _item_skill	dw 0
-word_1E588	dw 0BCB0h
-word_1E58A	dw 0D4C8h
-byte_1E58C	db 0E0h
-word_1E58D	dw 0FFFEh
-word_1E58F	dw 100h
-byte_1E591	db 2
-word_1E592	dw 0BCC8h
-word_1E594	dw 0BCB0h
-byte_1E596	db 0C8h
+
+public
+public _ITEM_MISS_VELOCITY_Y_CENTER
+_ITEM_MISS_VELOCITY_Y_SIDES 	db 0B0h, 0BCh, 0C8h, 0D4h, 0E0h
+_ITEM_MISS_VELOCITY_X_CENTER	db -2, -1, 0, 1, 2
+_ITEM_MISS_VELOCITY_Y_CENTER	db 0C8h, 0BCh, 0B0h, 0BCh, 0C8h
+
 _item_drop_cycle	db 0
 
 public _score, _lives, _bombs, _EXTEND_SCORES, _extends_gained
@@ -32240,11 +32063,12 @@ _item_p_top_ptr 	dw ?
 _item_p_left    	dw ?
 _item_p_top     	dw ?
 
-public _point_items_collected, _item_score_this_frame, _item_collect_skill
+public _point_items_collected, _items_miss_add_gameover, _item_score_this_frame
+public _item_collect_skill
 public _item_frames_unused
 _point_items_collected	dw ?
 byte_218A0	db ?
-byte_218A1	db ?
+_items_miss_add_gameover	db ?
 byte_218A2	db ?
 		db ?
 _item_score_this_frame	dd ?
