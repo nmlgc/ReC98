@@ -2816,8 +2816,6 @@ main_01_TEXT	ends
 
 POINTNUM_TEXT	segment	byte public 'CODE' use16
 	@pointnums_init_for_rank_and_rese$qv procdesc near
-	@POINTNUMS_ADD$QIIUI procdesc pascal near \
-		left:word, top:word, points:word
 	@pointnums_invalidate$qv procdesc near
 	@pointnums_update_and_render$qv procdesc near
 POINTNUM_TEXT	ends
@@ -4987,220 +4985,6 @@ loc_D8FA:
 		leave
 		retn
 sub_D874	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public @ITEM_HITTEST_Y$QR6ITEM_T
-@item_hittest_y$qr6item_t	proc near
-
-var_2		= word ptr -2
-@@item		= word ptr  4
-
-		push	bp
-		mov	bp, sp
-		sub	sp, 2
-		push	si
-		push	di
-		mov	ax, _item_p_top
-		mov	[bp+var_2], ax
-		cmp	ax, _player_topleft.y
-		jl	loc_DADE
-		mov	ax, _player_topleft.y
-		add	ax, (PLAYER_H / 2)
-		cmp	ax, [bp+var_2]
-		jl	loc_DADE
-		mov	ax, _item_p_left
-		add	ax, -12
-		mov	si, ax
-		mov	bx, [bp+@@item]
-		mov	al, [bx+item_t.ITEM_type]
-		mov	ah, 0
-		mov	bx, ax
-		cmp	bx, 4
-		ja	loc_DAB6
-		add	bx, bx
-		jmp	cs:off_DAE6[bx]
-
-loc_D949:
-		cmp	_power, POWER_MAX
-		jnb	short loc_D964
-		inc	_power
-		call	@player_shot_level_update_and_hud$qv
-		mov	_power_overflow, 0
-		inc	_item_score_this_frame
-		jmp	short loc_D984
-; ---------------------------------------------------------------------------
-
-loc_D964:
-		cmp	_power_overflow, POWER_OVERFLOW_MAX
-		jge	short loc_D96F
-		inc	_power_overflow
-
-loc_D96F:
-		mov	bx, _power_overflow
-		add	bx, bx
-		movsx	eax, _POWER_OVERFLOW_BONUS[bx]
-		add	_item_score_this_frame, eax
-		inc	byte_218A8
-
-loc_D984:
-		inc	byte_218A8
-		push	si	; left
-		push	_item_p_top	; top
-		mov	bx, _power_overflow
-		add	bx, bx
-		push	_POWER_OVERFLOW_BONUS[bx]	; points
-		call	@pointnums_add$qiiui
-		jmp	loc_DAB6
-; ---------------------------------------------------------------------------
-
-loc_D99D:
-		inc	_point_items_collected
-		cmp	[bp+var_2], 40h
-		jg	short loc_D9B4
-		mov	al, byte_218A8
-		add	al, 8
-		mov	byte_218A8, al
-		mov	di, 5120
-		jmp	short loc_D9E5
-; ---------------------------------------------------------------------------
-
-loc_D9B4:
-		mov	ax, [bp+var_2]
-		imul	ax, 7
-		mov	dx, 2800
-		sub	dx, ax
-		mov	di, dx
-		cmp	di, 2000
-		jb	short loc_D9D1
-		mov	al, byte_218A8
-		add	al, 4
-		mov	byte_218A8, al
-		jmp	short loc_D9E5
-; ---------------------------------------------------------------------------
-
-loc_D9D1:
-		cmp	di, 1000
-		jb	short loc_D9E1
-		mov	al, byte_218A8
-		add	al, 2
-		mov	byte_218A8, al
-		jmp	short loc_D9E5
-; ---------------------------------------------------------------------------
-
-loc_D9E1:
-		inc	byte_218A8
-
-loc_D9E5:
-		call	@pointnums_add$qiiui pascal, si, _item_p_top, di
-		movzx	eax, di
-		add	_item_score_this_frame, eax
-		jmp	loc_DAB6
-; ---------------------------------------------------------------------------
-
-loc_D9FA:
-		mov	al, _bombs
-		cbw
-		cmp	ax, BOMBS_MAX
-		jge	short loc_DA21
-		inc	_bombs
-		add	_item_score_this_frame, 1000
-		call	@pointnums_add$qiiui pascal, si, _item_p_top, 1000
-		call	@hud_bombs_put$qv
-		jmp	loc_DAB6
-; ---------------------------------------------------------------------------
-
-loc_DA21:
-		add	_item_score_this_frame, 6553
-		call	@pointnums_add$qiiui pascal, si, _item_p_top, 6553
-		mov	al, byte_218A8
-		add	al, 10h
-		mov	byte_218A8, al
-		jmp	short loc_DAB6
-; ---------------------------------------------------------------------------
-
-loc_DA3F:
-		cmp	_power, (POWER_MAX - 10)
-		jnb	short loc_DA5B
-		mov	al, _power
-		add	al, 10
-		mov	_power, al
-		inc	_item_score_this_frame
-		mov	_power_overflow, 0
-		jmp	short loc_DA85
-; ---------------------------------------------------------------------------
-
-loc_DA5B:
-		cmp	_power_overflow, (POWER_OVERFLOW_MAX - 4)
-		jge	short loc_DA69
-		add	_power_overflow, 5
-		jmp	short loc_DA6F
-; ---------------------------------------------------------------------------
-
-loc_DA69:
-		mov	_power_overflow, POWER_OVERFLOW_MAX
-
-loc_DA6F:
-		mov	_power, POWER_MAX
-		mov	bx, _power_overflow
-		add	bx, bx
-		movsx	eax, _POWER_OVERFLOW_BONUS[bx]
-		add	_item_score_this_frame, eax
-
-loc_DA85:
-		push	si	; left
-		push	_item_p_top	; top
-		mov	bx, _power_overflow
-		add	bx, bx
-		push	_POWER_OVERFLOW_BONUS[bx]	; points
-		call	@pointnums_add$qiiui
-		call	@player_shot_level_update_and_hud$qv
-		jmp	short loc_DAB6
-; ---------------------------------------------------------------------------
-
-loc_DA9C:
-		mov	al, _lives
-		cbw
-		cmp	ax, LIVES_MAX
-		jge	short loc_DAB6
-		inc	_lives
-		call	@hud_lives_put$qv
-		call	_snd_se_play c, 8
-
-loc_DAB6:
-		mov	bx, [bp+@@item]
-		mov	[bx+item_t.ITEM_flag], F_REMOVE
-		call	_snd_se_play c, 13
-		cmp	byte_218A8, 20h	; ' '
-		jb	short loc_DAD9
-		inc	_item_skill
-		mov	al, byte_218A8
-		add	al, 0E0h
-		mov	byte_218A8, al
-
-loc_DAD9:
-		mov	ax, 1
-		jmp	short loc_DAE0
-; ---------------------------------------------------------------------------
-
-loc_DADE:
-		xor	ax, ax
-
-loc_DAE0:
-		pop	di
-		pop	si
-		leave
-		retn	2
-@item_hittest_y$qr6item_t	endp
-
-; ---------------------------------------------------------------------------
-off_DAE6	dw offset loc_D949
-		dw offset loc_D99D
-		dw offset loc_D9FA
-		dw offset loc_DA3F
-		dw offset loc_DA9C
 main_01__TEXT	ends
 
 ITEM_TEXT	segment	byte public 'CODE' use16
@@ -32527,14 +32311,15 @@ _item_p_top_ptr 	dw ?
 _item_p_left    	dw ?
 _item_p_top     	dw ?
 
-public _point_items_collected, _item_score_this_frame, _item_frames_unused
+public _point_items_collected, _item_score_this_frame, _item_collect_skill
+public _item_frames_unused
 _point_items_collected	dw ?
 byte_218A0	db ?
 byte_218A1	db ?
 byte_218A2	db ?
 		db ?
 _item_score_this_frame	dd ?
-byte_218A8	db ?
+_item_collect_skill	db ?
 		db ?
 _item_frames_unused	dw ?
 

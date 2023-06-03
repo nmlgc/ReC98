@@ -18,7 +18,6 @@ static const uint8_t POWER_MIN = 1;
 	extern bool player_invincible_via_bomb;
 #endif
 
-static const int POWER_OVERFLOW_MAX = 42;
 static const int SHOT_LEVEL_MAX = 9;
 
 extern uint8_t power;
