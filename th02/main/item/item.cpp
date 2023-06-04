@@ -31,7 +31,14 @@ extern "C" {
 static const pixel_t ITEM_W = 16;
 static const pixel_t ITEM_H = 16;
 
+#define SEMIRANDOM_RING	ITEM_SEMIRANDOM_RING
+
+extern const item_type_t SEMIRANDOM_RING[10];
 extern const main_patnum_t ITEM_PATNUM[IT_COUNT];
+
+static const uint8_t SEMIRANDOM_RING_SIZE = (
+	sizeof(SEMIRANDOM_RING) / sizeof(SEMIRANDOM_RING[0])
+);
 // ---------
 
 struct item_pos_t {
@@ -53,13 +60,15 @@ struct item_t {
 
 extern item_t items[ITEM_COUNT];
 
-#define p_left_ptr   	item_p_left_ptr
-#define p_top_ptr    	item_p_top_ptr
-#define p_left       	item_p_left
-#define p_top        	item_p_top
-#define drop_cycle   	item_drop_cycle
-#define collect_skill	item_collect_skill
-#define frames_unused	item_frames_unused
+#define p_left_ptr       	item_p_left_ptr
+#define p_top_ptr        	item_p_top_ptr
+#define p_left           	item_p_left
+#define p_top            	item_p_top
+#define semirandom_ring_p	item_semirandom_ring_p
+#define semirandom_cycle 	item_semirandom_cycle
+#define drop_cycle       	item_drop_cycle
+#define collect_skill    	item_collect_skill
+#define frames_unused    	item_frames_unused
 
 // ZUN bloat: Should have been local to items_update_and_render(), and been a
 // single reference instead of two pointers.
@@ -72,8 +81,33 @@ extern union {
 	screen_y_t screen;
 	vram_y_t vram;
 } p_top;
+extern uint8_t semirandom_ring_p;
 extern int32_t item_score_this_frame;
 // -----
+
+void pascal items_add_semirandom(screen_x_t left, screen_y_t top)
+{
+	if(item_bigpower_override) {
+		item_bigpower_override--;
+		items_add(left, top, IT_BIGPOWER);
+		return;
+	}
+
+	extern uint8_t semirandom_cycle;
+	if((semirandom_cycle++ % 3) != 0) {
+		return;
+	}
+
+	if(randring1_next16_ge_lt(0, 512) == 18) {
+		items_add(left, top, IT_BOMB);
+	} else {
+		items_add(left, top, SEMIRANDOM_RING[semirandom_ring_p]);
+	}
+	semirandom_ring_p++;
+	if(semirandom_ring_p >= SEMIRANDOM_RING_SIZE) {
+		semirandom_ring_p = 0;
+	}
+}
 
 void pascal items_add(screen_x_t left, screen_y_t top, int type)
 {

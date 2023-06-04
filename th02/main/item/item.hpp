@@ -26,6 +26,11 @@ extern int point_items_collected;
 // (as TH04 and TH05 do it) would have been better than this.
 extern bool items_miss_add_gameover;
 
+// Unconditionally spawns a big power item if [item_bigpower_override] is > 0.
+// Otherwise, spawns a bomb item with a 1-in-512 chance, or the next item along
+// a hardcoded ring of power and point items.
+void pascal items_add_semirandom(screen_x_t left, screen_y_t top);
+
 void pascal items_add(int type, screen_x_t left, screen_y_t top);
 
 // Spawns each of the items dropped when losing a life at the given position.

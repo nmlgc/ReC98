@@ -4573,7 +4573,7 @@ sub_D629	proc near
 		push	si
 		push	7
 		call	@randring1_next8_and$quc
-		mov	byte_218A0, al
+		mov	_item_semirandom_ring_p, al
 		xor	si, si
 		jmp	short loc_D644
 ; ---------------------------------------------------------------------------
@@ -4594,78 +4594,10 @@ loc_D644:
 		pop	bp
 		retn
 sub_D629	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D65A	proc far
-
-@@top 	= word ptr  6
-@@left	= word ptr  8
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		mov	si, [bp+@@left]
-		mov	di, [bp+@@top]
-		cmp	_item_bigpower_override, 0
-		jz	short loc_D67B
-		dec	_item_bigpower_override
-		push	si	; left
-		push	di	; top
-		push	IT_BIGPOWER	; type
-		nopcall	@items_add$qiii
-		jmp	short loc_D6C4
-; ---------------------------------------------------------------------------
-
-loc_D67B:
-		mov	al, byte_218A2
-		inc	byte_218A2
-		mov	ah, 0
-		mov	bx, 3
-		cwd
-		idiv	bx
-		or	dx, dx
-		jnz	short loc_D6C4
-		call	@randring1_next16$qv
-		and	ax, 1FFh
-		cmp	ax, 12h
-		jnz	short loc_D69F
-		push	si	; left
-		push	di	; top
-		push	IT_BOMB	; type
-		jmp	short loc_D6AF
-; ---------------------------------------------------------------------------
-
-loc_D69F:
-		push	si	; left
-		push	di	; top
-		mov	al, byte_218A0
-		mov	ah, 0
-		mov	bx, ax
-		mov	al, [bx+0AB0h]
-		mov	ah, 0
-		push	ax	; type
-
-loc_D6AF:
-		nopcall	@items_add$qiii
-		inc	byte_218A0
-		cmp	byte_218A0, 0Ah
-		jb	short loc_D6C4
-		mov	byte_218A0, 0
-
-loc_D6C4:
-		pop	di
-		pop	si
-		pop	bp
-		retf	4
-sub_D65A	endp
 main_01__TEXT	ends
 
 ITEM_TEXT	segment	byte public 'CODE' use16
+	extern @ITEMS_ADD_SEMIRANDOM$QII:proc
 	extern @ITEMS_ADD$QIII:proc
 	@ITEMS_MISS_ADD$QII procdesc pascal near \
 		player_left:word, player_top:word
@@ -21355,7 +21287,7 @@ loc_1780E:
 loc_17854:
 		mov	ax, word_26C4E
 		add	ax, 0Ch
-		call	sub_D65A pascal, ax, word_26C50
+		call	@items_add_semirandom$qii pascal, ax, word_26C50
 
 loc_17864:
 		call	_snd_se_play c, 3
@@ -30906,20 +30838,21 @@ public _player_option_patnum, _power_overflow
 _player_option_patnum	db PAT_OPTION_A
 _power_overflow	dw 0
 
-public _item_bigpower_override, _ITEM_PATNUM, _ITEM_MISS_VELOCITY_Y_SIDES
-public _ITEM_MISS_VELOCITY_X_CENTER, _ITEM_MISS_VELOCITY_Y_CENTER, _item_skill
-public _item_drop_cycle
+public _item_bigpower_override, _ITEM_SEMIRANDOM_RING, _ITEM_PATNUM
+public _ITEM_MISS_VELOCITY_Y_SIDES, _ITEM_MISS_VELOCITY_X_CENTER
+public _ITEM_MISS_VELOCITY_Y_CENTER, _item_skill, _item_drop_cycle
 _item_bigpower_override	dw 0
-		db    0
-		db    1
-		db    0
-		db    1
-		db    1
-		db    0
-		db    0
-		db    1
-		db    1
-		db    0
+_ITEM_SEMIRANDOM_RING label byte
+	db IT_POWER
+	db IT_POINT
+	db IT_POWER
+	db IT_POINT
+	db IT_POINT
+	db IT_POWER
+	db IT_POWER
+	db IT_POINT
+	db IT_POINT
+	db IT_POWER
 _ITEM_PATNUM label byte
 	db PAT_ITEM_POWER
 	db PAT_ITEM_POINT
@@ -31993,14 +31926,14 @@ _item_p_top_ptr 	dw ?
 _item_p_left    	dw ?
 _item_p_top     	dw ?
 
-public _point_items_collected, _items_miss_add_gameover, _item_score_this_frame
-public _item_collect_skill
+public _point_items_collected, _item_semirandom_ring_p, _items_miss_add_gameover
+public _item_semirandom_cycle, _item_score_this_frame, _item_collect_skill
 public _item_frames_unused
 _point_items_collected	dw ?
-byte_218A0	db ?
+_item_semirandom_ring_p	db ?
 _items_miss_add_gameover	db ?
-byte_218A2	db ?
-		db ?
+_item_semirandom_cycle	db ?
+	evendata
 _item_score_this_frame	dd ?
 _item_collect_skill	db ?
 		db ?
