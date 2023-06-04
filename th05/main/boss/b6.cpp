@@ -294,7 +294,7 @@ bool near pattern_wing_preparation(void)
 		for(i = 0; i < 50; i++) {
 			bullet_template.origin.x.v = shinki_wing_random_x();
 			bullet_template.origin.y.v = shinki_wing_random_y();
-			bullet_template.angle = randring2_next8_ge_lt(0x10, 0x70);
+			bullet_template.angle = randring2_next8_mod_ge_lt(0x10, 0x70);
 			bullet_template.speed.v = randring2_next8_and_ge_lt_sp(1.5f, 5.5f);
 			bullets_add_regular();
 		}
@@ -332,7 +332,7 @@ void near pattern_random_rain_and_spreads_from_wings(void)
 	}
 	if((boss.phase_frame % 8) == 0) {
 		b6ball_template.origin.x.v = randring2_next16_mod(to_sp(PLAYFIELD_W));
-		b6ball_template.origin.y.v = randring2_next16_ge_lt_sp(
+		b6ball_template.origin.y.v = randring2_next16_mod_ge_lt_sp(
 			((2 / 23.0f) * PLAYFIELD_H), ((6 / 23.0f) * PLAYFIELD_H)
 		);
 		b6ball_template.angle = 0x40;
@@ -418,7 +418,7 @@ bool near pattern_wings_to_purple(void)
 		for(int i = 0; i < 16; i++) {
 			b6ball_template.origin.x.v = shinki_wing_random_x();
 			b6ball_template.origin.y.v = shinki_wing_random_y();
-			b6ball_template.angle = randring2_next8_ge_lt(0x20, 0x60);
+			b6ball_template.angle = randring2_next8_mod_ge_lt(0x20, 0x60);
 			b6ball_template.speed.v = randring2_next8_and_ge_lt_sp(2.0f, 6.0f);
 			b6balls_add();
 		}

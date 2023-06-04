@@ -380,7 +380,7 @@ extern const pattern_loop_func_t SARA_PATTERNS_PHASE_2_3[2][4];
 			goto timeout_label; \
 		} \
 		do { \
-			boss.mode = randring2_next8_ge_lt(1, 5); \
+			boss.mode = randring2_next8_mod_ge_lt(1, 5); \
 		} while(boss.mode == pattern_prev); \
 		pattern_prev = boss.mode; \
 		phase_2_3_pattern = SARA_PATTERNS_PHASE_2_3[phase - 2][boss.mode - 1]; \

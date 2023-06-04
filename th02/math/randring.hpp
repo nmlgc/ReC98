@@ -15,3 +15,13 @@ void near randring_fill(void);
 #endif
 
 uint16_t near randring2_next16(void);
+
+/// Constrained random numbers
+/// --------------------------
+/// These limit the next random number between [min] inclusive and [max]
+/// exclusive, via either AND or MOD.
+
+template <class T> inline bool is_range_a_power_of_two(T min, T max) {
+	return (((max - min) & ((max - min) - 1)) == 0);
+}
+/// --------------------------
