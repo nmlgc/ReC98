@@ -13,8 +13,8 @@ extern "C" {
 #include "th04/common.h"
 #include "th04/gaiji/gaiji.h"
 #include "th04/math/motion.hpp"
-extern "C" {
 #include "th04/math/randring.hpp"
+extern "C" {
 #include "th04/snd/snd.h"
 }
 #if (GAME == 5)

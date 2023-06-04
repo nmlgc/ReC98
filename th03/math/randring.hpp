@@ -1,6 +1,6 @@
-#include "th02/math/randring.h"
+#include "th02/math/randring.hpp"
 
-uint16_t pascal near randring1_next16(void);
+uint16_t near randring1_next16(void);
 uint16_t pascal near randring1_next16_and(uint16_t mask);
 uint16_t pascal near randring2_next16_and(uint16_t mask);
 uint16_t pascal near randring2_next16_mod(uint16_t mask);

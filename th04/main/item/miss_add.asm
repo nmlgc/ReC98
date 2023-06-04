@@ -10,11 +10,11 @@ items_miss_add	proc far
 	enter	0Ah, 0
 	push	si
 	push	di
-	call	randring2_next16_mod pascal, MISS_ITEM_COUNT
+	call	@randring2_next16_mod$qui pascal, MISS_ITEM_COUNT
 	mov	[bp+@@bigpower_index], ax
 
 @@unused_loop:
-	call	randring2_next16_mod pascal, MISS_ITEM_COUNT
+	call	@randring2_next16_mod$qui pascal, MISS_ITEM_COUNT
 	mov	[bp+@@unused_index], ax
 	cmp	ax, [bp+@@bigpower_index]
 	jz	short @@unused_loop
@@ -64,7 +64,7 @@ items_miss_add	proc far
 	mov	[si+item_t.pulled_to_player], 0
 	cmp	[bp+@@bigpower_index], di
 	jz	short @@set_bigpower
-	call	randring2_next16_and pascal, IT_POINT
+	call	@randring2_next16_and$qui pascal, IT_POINT
 	mov	[bp+@@type], ax
 	jmp	short @@last_life?
 

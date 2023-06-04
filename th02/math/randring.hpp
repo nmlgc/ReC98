@@ -2,14 +2,16 @@
 
 extern uint8_t randring[RANDRING_SIZE];
 
+void near randring_fill(void);
+
 #if GAME == 2
 	extern uint8_t randring_p;
 
-	uint8_t pascal near randring1_next8(void);
+	uint8_t near randring1_next8(void);
 	uint8_t pascal near randring1_next8_and(uint8_t mask);
-	uint16_t pascal near randring1_next16(void);
-	uint8_t pascal near randring2_next8(void);
+	uint16_t near randring1_next16(void);
+	uint8_t near randring2_next8(void);
 	uint8_t pascal near randring2_next8_and(uint8_t mask);
 #endif
 
-uint16_t pascal near randring2_next16(void);
+uint16_t near randring2_next16(void);

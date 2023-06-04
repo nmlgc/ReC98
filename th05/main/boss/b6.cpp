@@ -17,8 +17,8 @@
 #include "th04/main/frames.h"
 #include "th04/main/pattern.hpp"
 #include "th04/math/motion.hpp"
-extern "C" {
 #include "th04/math/randring.hpp"
+extern "C" {
 #include "th04/math/vector.hpp"
 #include "th04/snd/snd.h"
 #include "th04/main/bg.hpp"

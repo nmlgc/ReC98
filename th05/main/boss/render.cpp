@@ -15,9 +15,11 @@
 #include "th04/hardware/grcg.hpp"
 extern "C" {
 #include "th04/math/vector.hpp"
+}
 #include "th04/math/motion.hpp"
 #include "th04/math/randring.hpp"
 #include "th04/formats/bb.h"
+extern "C" {
 #include "th04/formats/cdg.h"
 #include "th04/main/frames.h"
 #include "th04/main/playfld.hpp"

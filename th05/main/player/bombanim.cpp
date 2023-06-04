@@ -2,10 +2,13 @@
 #include "pc98.h"
 #include "master.hpp"
 #include "th01/math/subpixel.hpp"
+extern "C" {
 #include "th04/math/vector.hpp"
+}
 #include "th04/math/randring.hpp"
 #include "th04/main/playfld.hpp"
 #include "th04/main/frames.h"
+extern "C" {
 #include "th04/main/circle.hpp"
 #include "th05/sprites/main_pat.h"
 #include "th05/main/player/bomb.hpp"
@@ -184,4 +187,6 @@ void pascal near reimu_stars_update_and_render(void)
 			}
 		}
 	}
+}
+
 }

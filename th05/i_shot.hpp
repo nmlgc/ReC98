@@ -6,9 +6,7 @@
 #include "platform.h"
 #include "pc98.h"
 #include "th01/math/subpixel.hpp"
-extern "C" {
 #include "th03/math/randring.hpp"
-}
 #include "th04/math/motion.hpp"
 #include "th04/main/playfld.hpp"
 #include "th04/main/player/player.hpp"

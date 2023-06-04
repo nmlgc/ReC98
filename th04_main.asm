@@ -938,7 +938,7 @@ sub_B1D0	proc near
 		mov	_scroll_active, 1
 		call	main_01:sub_1042A
 		nopcall	main_01:sub_11DE6
-		call	main_01:randring_fill
+		call	@randring_fill$qv
 		call	sub_1DA1B
 		call	main_01:sub_FFA4
 		call	_sparks_init
@@ -2925,7 +2925,7 @@ shot_marisa_l1	proc near
 		add	ax, 0Ah
 		push	ax
 		push	7
-		call	main_01:randring1_next16_and
+		call	@randring1_next16_and$qui
 		add	al, 0BCh
 		push	ax
 		call	@shot_velocity_set$qp7sppointuc
@@ -3029,7 +3029,7 @@ loc_DB62:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	7
-		call	main_01:randring1_next16_and
+		call	@randring1_next16_and$qui
 		add	al, 0BCh
 		push	ax
 		call	@shot_velocity_set$qp7sppointuc
@@ -3370,7 +3370,7 @@ loc_DDA9:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	7
-		call	main_01:randring1_next16_and
+		call	@randring1_next16_and$qui
 		add	al, 0BCh
 		push	ax
 		call	@shot_velocity_set$qp7sppointuc
@@ -3522,7 +3522,7 @@ loc_DEA3:
 		push	ds
 		lea	ax, [si+0Ch]
 		push	ax
-		call	main_01:randring1_next16_and pascal, 7
+		call	@randring1_next16_and$qui pascal, 7
 		add	al, -44h
 		push	ax
 		push	(16 shl 4)
@@ -3591,7 +3591,7 @@ loc_DF23:
 		push	ds
 		lea	ax, [si+0Ch]
 		push	ax
-		call	main_01:randring1_next16_and pascal, 7
+		call	@randring1_next16_and$qui pascal, 7
 		add	al, -44h
 		push	ax
 		push	(16 shl 4)
@@ -5962,7 +5962,7 @@ shot_reimu_l1	proc near
 		add	ax, 0Ah
 		push	ax
 		push	7
-		call	main_01:randring1_next16_and
+		call	@randring1_next16_and$qui
 		add	al, 0BCh
 		push	ax
 		call	@shot_velocity_set$qp7sppointuc
@@ -6010,7 +6010,7 @@ loc_F3FA:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	0Fh
-		call	main_01:randring1_next16_and
+		call	@randring1_next16_and$qui
 		add	al, 0B8h
 		push	ax
 		call	@shot_velocity_set$qp7sppointuc
@@ -6033,7 +6033,7 @@ loc_F426:
 		jz	short loc_F43A
 		push	si
 		push	7
-		call	main_01:randring1_next16_and
+		call	@randring1_next16_and$qui
 		sub	al, 4
 		push	ax
 		call	main_01:sub_F33C
@@ -6121,7 +6121,7 @@ loc_F4BC:
 		jz	short loc_F4D0
 		push	si
 		push	7
-		call	main_01:randring1_next16_and
+		call	@randring1_next16_and$qui
 		sub	al, 4
 		push	ax
 		call	main_01:sub_F33C
@@ -6206,7 +6206,7 @@ loc_F558:
 		jz	short loc_F56C
 		push	si
 		push	7
-		call	main_01:randring1_next16_and
+		call	@randring1_next16_and$qui
 		sub	al, 4
 		push	ax
 		call	main_01:sub_F33C
@@ -6291,7 +6291,7 @@ loc_F5F4:
 		jz	short loc_F608
 		push	si
 		push	7
-		call	main_01:randring1_next16_and
+		call	@randring1_next16_and$qui
 		sub	al, 4
 		push	ax
 		call	main_01:sub_F33C
@@ -6376,7 +6376,7 @@ loc_F690:
 		jz	short loc_F6A4
 		push	si
 		push	7
-		call	main_01:randring1_next16_and
+		call	@randring1_next16_and$qui
 		sub	al, 4
 		push	ax
 		call	main_01:sub_F33C
@@ -6490,7 +6490,7 @@ loc_F760:
 		jz	short loc_F774
 		push	si
 		push	7
-		call	main_01:randring1_next16_and
+		call	@randring1_next16_and$qui
 		sub	al, 4
 		push	ax
 		call	main_01:sub_F33C
@@ -6592,7 +6592,7 @@ loc_F813:
 		jz	short loc_F827
 		push	si
 		push	7
-		call	main_01:randring1_next16_and
+		call	@randring1_next16_and$qui
 		sub	al, 4
 		push	ax
 		call	main_01:sub_F33C
@@ -6713,7 +6713,7 @@ loc_F8F2:
 		jz	short loc_F908
 		push	si
 		push	7
-		call	main_01:randring1_next16_and
+		call	@randring1_next16_and$qui
 		sub	al, 4
 		push	ax
 		call	main_01:sub_F33C
@@ -6812,7 +6812,7 @@ loc_F98F:
 		lea	ax, [si+0Ah]
 		push	ax
 		push	0Fh
-		call	main_01:randring1_next16_and
+		call	@randring1_next16_and$qui
 		add	al, 0B8h
 		push	ax
 		call	@shot_velocity_set$qp7sppointuc
@@ -7783,7 +7783,7 @@ loc_1015E:
 		add	ax, -80
 		shl	ax, 3
 		push	ax
-		call	main_01:randring1_next16_mod
+		call	@randring1_next16_mod$qui
 		mov	dl, _bomb_frame
 		mov	dh, 0
 		add	dx, -64
@@ -7799,7 +7799,7 @@ loc_101B6:
 		sub	dx, ax
 		shl	dx, 3
 		push	dx
-		call	main_01:randring1_next16_mod
+		call	@randring1_next16_mod$qui
 		mov	dl, _bomb_frame
 		mov	dh, 0
 		mov	bx, 161
@@ -7966,9 +7966,9 @@ bomb_stars_update_and_render_for	proc near
 ; ---------------------------------------------------------------------------
 
 loc_10321:
-		call	randring1_next16_mod pascal, (PLAYFIELD_W shl 4)
+		call	@randring1_next16_mod$qui pascal, (PLAYFIELD_W shl 4)
 		mov	[si+bomb_star_t.BS_center.x], ax
-		call	randring1_next16_mod pascal, (PLAYFIELD_H shl 4)
+		call	@randring1_next16_mod$qui pascal, (PLAYFIELD_H shl 4)
 		mov	[si+bomb_star_t.BS_center.y], ax
 		cmp	[bp+@@playchar], PLAYCHAR_REIMU
 		jnz	short loc_1036F
@@ -7977,7 +7977,7 @@ loc_10321:
 ; ---------------------------------------------------------------------------
 
 loc_1033E:
-		call	randring1_next16_mod pascal, (PLAYFIELD_W shl 4)
+		call	@randring1_next16_mod$qui pascal, (PLAYFIELD_W shl 4)
 		mov	[si+bomb_star_t.BS_center.x], ax
 
 loc_10346:
@@ -8008,7 +8008,7 @@ loc_10364:
 
 loc_1036F:
 		mov	[si+bomb_star_t.BS_angle], -20h
-		call	randring1_next16_and pascal, ((8 shl 4) - 1)
+		call	@randring1_next16_and$qui pascal, ((8 shl 4) - 1)
 		add	al, (10 shl 4)
 
 loc_1037A:
@@ -8062,13 +8062,13 @@ loc_103D6:
 		test	di, 1
 		jz	short loc_103EB
 		mov	[si+bomb_star_t.BS_center.x], (-8 shl 4)
-		call	randring1_next16_mod pascal, (PLAYFIELD_H shl 4)
+		call	@randring1_next16_mod$qui pascal, (PLAYFIELD_H shl 4)
 		mov	[si+bomb_star_t.BS_center.y], ax
 		jmp	short loc_103F8
 ; ---------------------------------------------------------------------------
 
 loc_103EB:
-		call	randring1_next16_mod pascal, (PLAYFIELD_W shl 4)
+		call	@randring1_next16_mod$qui pascal, (PLAYFIELD_W shl 4)
 		mov	[si+bomb_star_t.BS_center.x], ax
 		mov	[si+bomb_star_t.BS_center.y], ((PLAYFIELD_H + (BOMB_STAR_H / 2)) shl 4)
 
@@ -10456,11 +10456,11 @@ loc_12647:
 ; ---------------------------------------------------------------------------
 
 loc_12651:
-		call	randring1_next16_mod pascal, (PLAYFIELD_W shl 4)
+		call	@randring1_next16_mod$qui pascal, (PLAYFIELD_W shl 4)
 		mov	[si+yuuka6_bg_shape_t.B6B_pos.x], ax
-		call	randring1_next16_mod pascal, (PLAYFIELD_H shl 4)
+		call	@randring1_next16_mod$qui pascal, (PLAYFIELD_H shl 4)
 		mov	[si+yuuka6_bg_shape_t.B6B_pos.y], ax
-		call	randring1_next16_and pascal, 0Fh
+		call	@randring1_next16_and$qui pascal, 0Fh
 		add	al, -48h
 		mov	[si+yuuka6_bg_shape_t.B6B_angle], al
 		mov	[si+yuuka6_bg_shape_t.B6B_speed], 48h
@@ -10592,9 +10592,9 @@ loc_12743:
 ; ---------------------------------------------------------------------------
 
 loc_12773:
-		call	randring1_next16_mod pascal, (PLAYFIELD_W shl 4)
+		call	@randring1_next16_mod$qui pascal, (PLAYFIELD_W shl 4)
 		mov	[si+yuuka6_bg_shape_t.B6B_pos.x], ax
-		call	randring1_next16_mod pascal, (PLAYFIELD_H shl 4)
+		call	@randring1_next16_mod$qui pascal, (PLAYFIELD_H shl 4)
 		mov	[si+yuuka6_bg_shape_t.B6B_pos.y], ax
 		mov	[si+yuuka6_bg_shape_t.B6B_angle], 40h
 		mov	[si+yuuka6_bg_shape_t.B6B_speed], (12 shl 4)
@@ -10777,9 +10777,9 @@ table_1289F	dw loc_12484
 ; ---------------------------------------------------------------------------
 
 loc_128E7:
-		call	randring1_next16_mod pascal, (PLAYFIELD_W shl 4)
+		call	@randring1_next16_mod$qui pascal, (PLAYFIELD_W shl 4)
 		mov	[si+yuuka6_bg_shape_t.B6B_pos.x], ax
-		call	randring1_next16_mod pascal, (PLAYFIELD_H shl 4)
+		call	@randring1_next16_mod$qui pascal, (PLAYFIELD_H shl 4)
 		mov	[si+yuuka6_bg_shape_t.B6B_pos.y], ax
 		mov	[si+yuuka6_bg_shape_t.B6B_angle], 60h
 		mov	[si+yuuka6_bg_shape_t.B6B_speed], (1 shl 4)
@@ -12093,7 +12093,7 @@ sub_14383	proc near
 		mov	_bullet_template.BT_group, BG_RING
 		mov	_bullet_template.count, 32
 		mov	_bullet_template.speed, (2 shl 4) + 8
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	_bullet_template.BT_angle, al
 		call	_bullet_template_tune
 		call	_bullets_add_regular_fixedspeed
@@ -12156,7 +12156,7 @@ sub_14425	proc near
 		mov	bp, sp
 		cmp	_midboss_phase_frame, 1
 		jnz	short loc_14435
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	_midboss_angle, al
 
 loc_14435:
@@ -12221,10 +12221,10 @@ var_4		= word ptr -4
 		mov	_midboss_pos.velocity.x, 0
 		mov	_midboss_pos.velocity.y, 0
 		push	3
-		call	randring2_next16_and
+		call	@randring2_next16_and$qui
 		mov	byte_25598, al
 		push	1
-		call	randring2_next16_and
+		call	@randring2_next16_and$qui
 		mov	byte_25599, al
 		mov	byte_2559A, 0
 		jmp	loc_1468D
@@ -12493,7 +12493,7 @@ sub_1476F	proc near
 		jnz	short loc_14796
 		mov	_bullet_template.BT_group, BG_RING
 		mov	_bullet_template.count, 32
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	_bullet_template.BT_angle, al
 		mov	_bullet_template.speed, (3 shl 4)
 		call	_bullet_template_tune
@@ -12518,7 +12518,7 @@ sub_14798	proc near
 		mov	_bullet_template.patnum, PAT_BULLET16_N_BALL_BLUE
 		mov	_bullet_template.BT_group, BG_RING
 		mov	_bullet_template.count, 32
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	_bullet_template.BT_angle, al
 		mov	ax, _midboss_phase_frame
 		mov	bx, 4
@@ -12552,7 +12552,7 @@ sub_147DB	proc near
 		mov	_bullet_template.BT_delta.spread_angle, 0Ch
 		mov	_bullet_template.patnum, PAT_BULLET16_N_CROSS_YELLOW
 		mov	_bullet_template.speed, (2 shl 4)
-		call	randring2_next16_and pascal, 0Fh
+		call	@randring2_next16_and$qui pascal, 0Fh
 		add	al, -048h
 		mov	_bullet_template.BT_angle, al
 		call	_bullet_template_tune
@@ -12577,14 +12577,14 @@ sub_14828	proc near
 		jnz	short loc_1486C
 		mov	_bullet_template.BT_group, BG_RING
 		mov	_bullet_template.count, 32
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	_bullet_template.BT_angle, al
 		mov	_bullet_template.speed, (2 shl 4)
 		call	_bullet_template_tune
 		call	_bullets_add_regular
 		mov	_bullet_template.BT_group, BG_RING
 		mov	_bullet_template.count, 16
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	_bullet_template.BT_angle, al
 		mov	_bullet_template.speed, (3 shl 4)
 		call	_bullet_template_tune
@@ -13209,7 +13209,7 @@ loc_14E20:
 		mov	_gather_template.GT_radius, (96 shl 4)
 		cmp	byte_255B3, 1
 		jnz	short loc_14E5E
-		call	randring2_next16
+		call	@randring2_next16$qv
 		test	al, 1
 		jz	short loc_14E4C
 		mov	_midboss_sprite, 1
@@ -13344,20 +13344,20 @@ loc_14F9B:
 		mov	_bullet_template.BT_group, BG_SPREAD_AIMED
 		mov	_bullet_template.count, 2
 		mov	_bullet_template.BT_delta.spread_angle, 6
-		call	randring2_next16_mod pascal, 18h
+		call	@randring2_next16_mod$qui pascal, 18h
 		add	al, (2 shl 4)
 		mov	_bullet_template.speed, al
-		call	randring2_next16_mod pascal, 60h
+		call	@randring2_next16_mod$qui pascal, 60h
 		sub	al, 30h
 		mov	_bullet_template.BT_angle, al
 		call	_bullet_template_tune
 		call	_bullets_add_regular
 		mov	_bullet_template.spawn_type, BST_BULLET16
 		mov	_bullet_template.patnum, PAT_BULLET16_N_SMALL_BALL_YELLOW
-		call	randring2_next16_mod pascal, (1 shl 4) + 8
+		call	@randring2_next16_mod$qui pascal, (1 shl 4) + 8
 		add	al, (2 shl 4)
 		mov	_bullet_template.speed, al
-		call	randring2_next16_mod pascal, 60h
+		call	@randring2_next16_mod$qui pascal, 60h
 		sub	al, 30h
 		mov	_bullet_template.BT_angle, al
 		call	_bullets_add_regular
@@ -13531,11 +13531,11 @@ loc_15142:
 		test	byte ptr _midboss_phase_frame, 7
 		jnz	short loc_1517E
 		mov	_bullet_template.BT_group, BG_SPREAD_AIMED
-		call	randring2_next16_and pascal, 3
+		call	@randring2_next16_and$qui pascal, 3
 		add	al, al
 		inc	al
 		mov	_bullet_template.count, al
-		call	randring2_next16_and pascal, 7
+		call	@randring2_next16_and$qui pascal, 7
 		add	al, 0Ah
 		mov	_bullet_template.BT_delta.spread_angle, al
 		mov	_bullet_template.speed, (3 shl 4) + 2
@@ -14266,7 +14266,7 @@ loc_157D7:
 ; ---------------------------------------------------------------------------
 
 loc_157E2:
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	[si+enemy_t.E_angle], al
 		jmp	loc_158BE
 ; ---------------------------------------------------------------------------
@@ -14355,7 +14355,7 @@ loc_158AE:
 ; ---------------------------------------------------------------------------
 
 loc_158B8:
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	[si+enemy_t.E_bullet_template.BT_angle], al
 
 loc_158BE:
@@ -15087,10 +15087,10 @@ loc_15EEA:
 		mov	byte_25667, 2
 		cmp	[bp+arg_0], 0
 		jnz	short loc_15F23
-		call	randring2_next16_mod pascal, (256 shl 4)
+		call	@randring2_next16_mod$qui pascal, (256 shl 4)
 		add	ax, (64 shl 4)
 		mov	si, ax
-		call	randring2_next16_mod pascal, (64 shl 4)
+		call	@randring2_next16_mod$qui pascal, (64 shl 4)
 		add	ax, (64 shl 4)
 		mov	di, ax
 		jmp	short loc_15F29
@@ -15442,7 +15442,7 @@ loc_1626B:
 		idiv	bx
 		or	dx, dx
 		jnz	short locret_16290
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	_bullet_template.BT_angle, al
 		call	_bullets_add_special
 		call	snd_se_play pascal, 9
@@ -16344,7 +16344,7 @@ loc_16B0A:
 
 loc_16B1A:
 		push	1
-		call	randring2_next16_and
+		call	@randring2_next16_and$qui
 		or	ax, ax
 		jz	short loc_16B28
 		mov	ax, (1 shl 4)
@@ -16375,7 +16375,7 @@ loc_16B4E:
 		push	3
 
 loc_16B50:
-		call	randring2_next16_and	; jumptable 0001EA6B case 7819
+		call	@randring2_next16_and$qui	; jumptable 0001EA6B case 7819
 		mov	[bp+var_1], al
 		cmp	[bp+var_1], 0
 		jnz	short loc_16B61
@@ -16435,7 +16435,7 @@ marisa_16C05	proc near
 		push	offset _MARISA_BIT_HP
 		mov	cx, (MARISA_BIT_COUNT * word)
 		call	SCOPY@
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	[bp+@@angle], al
 		mov	si, offset marisa_bits
 		xor	di, di
@@ -16695,10 +16695,10 @@ loc_16E2E:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_16E84
-		call	randring2_next16_and pascal, 3
+		call	@randring2_next16_and$qui pascal, 3
 		inc	al
 		mov	_bullet_template.count, al
-		call	randring2_next16_and pascal, 1Fh
+		call	@randring2_next16_and$qui pascal, 1Fh
 		add	al, (2 shl 4)
 		mov	_bullet_template.speed, al
 		mov	al, _bullet_template.BT_angle
@@ -16706,10 +16706,10 @@ loc_16E2E:
 		mov	_bullet_template.BT_angle, al
 		sub	_bullet_template.BT_origin.x, (6 shl 4)
 		call	_bullets_add_regular
-		call	randring2_next16_and pascal, 3
+		call	@randring2_next16_and$qui pascal, 3
 		inc	al
 		mov	_bullet_template.count, al
-		call	randring2_next16_and pascal, 1Fh
+		call	@randring2_next16_and$qui pascal, 1Fh
 		add	al, (2 shl 4)
 		mov	_bullet_template.speed, al
 		add	_bullet_template.BT_origin.x, (12 shl 4)
@@ -17223,10 +17223,10 @@ loc_1729F:
 		idiv	bx
 		or	dx, dx
 		jnz	loc_17331
-		call	randring2_next16_and pascal, 3
+		call	@randring2_next16_and$qui pascal, 3
 		inc	al
 		mov	_bullet_template.count, al
-		call	randring2_next16_and pascal, 1Fh
+		call	@randring2_next16_and$qui pascal, 1Fh
 		add	al, (1 shl 4)
 		mov	_bullet_template.speed, al
 		test	_boss_statebyte[15].BSB_subpattern_num, 1
@@ -17244,10 +17244,10 @@ loc_172D5:
 		mov	_bullet_template.BT_angle, al
 		sub	_bullet_template.BT_origin.x, (6 shl 4)
 		call	_bullets_add_regular
-		call	randring2_next16_and pascal, 3
+		call	@randring2_next16_and$qui pascal, 3
 		inc	al
 		mov	_bullet_template.count, al
-		call	randring2_next16_and pascal, 1Fh
+		call	@randring2_next16_and$qui pascal, 1Fh
 		add	al, (1 shl 4)
 		mov	_bullet_template.speed, al
 		add	_bullet_template.BT_origin.x, (12 shl 4)
@@ -17371,17 +17371,17 @@ loc_173D3:
 ; ---------------------------------------------------------------------------
 
 loc_17409:
-		call	randring2_next16_mod pascal, (64 shl 4)
+		call	@randring2_next16_mod$qui pascal, (64 shl 4)
 		mov	dx, _boss_pos.cur.x
 		add	dx, (-52 shl 4)
 		add	ax, dx
 		mov	_bullet_template.BT_origin.x, ax
-		call	randring2_next16_mod pascal, (64 shl 4)
+		call	@randring2_next16_mod$qui pascal, (64 shl 4)
 		mov	dx, _boss_pos.cur.y
 		add	dx, (-40 shl 4)
 		add	ax, dx
 		mov	_bullet_template.BT_origin.y, ax
-		call	randring2_next16_mod pascal, (6 shl 4)
+		call	@randring2_next16_mod$qui pascal, (6 shl 4)
 		add	ax, (1 shl 4)
 		mov	[bp+@@speed], ax
 		mov	al, byte ptr [bp+@@speed]
@@ -17397,7 +17397,7 @@ loc_1744D:
 		sub	ax, [bp+@@speed]
 		mov	[bp+@@speed], ax
 		push	ax
-		call	randring2_next16_mod
+		call	@randring2_next16_mod$qui
 		push	ax
 		mov	ax, [bp+@@speed]
 		cwd
@@ -17603,7 +17603,7 @@ loc_17615:
 		call	@marisa_flystep_pointreflected$qi pascal, 128
 		cmp	_boss_statebyte[15].BSB_bitless_pattern_started, 0
 		jnz	short loc_17634
-		call	randring2_next16_and pascal, 1Fh
+		call	@randring2_next16_and$qui pascal, 1Fh
 		mov	dl, 80h
 		sub	dl, al
 		mov	_bullet_template.BT_angle, dl
@@ -17697,33 +17697,33 @@ loc_17707:
 		cmp	_stage_frame_mod4, 0
 		jnz	locret_17811
 		mov	_bullet_template.BT_origin.x, 0
-		call	randring2_next16_mod pascal, (192 shl 4)
+		call	@randring2_next16_mod$qui pascal, (192 shl 4)
 		mov	_bullet_template.BT_origin.y, ax
-		call	randring2_next16_and pascal, 1Fh
+		call	@randring2_next16_and$qui pascal, 1Fh
 		add	al, (1 shl 4)
 		mov	_bullet_template.speed, al
-		call	randring2_next16_and pascal, 1Fh
+		call	@randring2_next16_and$qui pascal, 1Fh
 		mov	dl, 30h
 		sub	dl, al
 		mov	_bullet_template.BT_angle, dl
 		call	_bullets_add_special
 		mov	_bullet_template.BT_origin.x, (384 shl 4)
-		call	randring2_next16_mod pascal, (192 shl 4)
+		call	@randring2_next16_mod$qui pascal, (192 shl 4)
 		mov	_bullet_template.BT_origin.y, ax
-		call	randring2_next16_and pascal, 1Fh
+		call	@randring2_next16_and$qui pascal, 1Fh
 		add	al, (1 shl 4)
 		mov	_bullet_template.speed, al
-		call	randring2_next16_and pascal, 1Fh
+		call	@randring2_next16_and$qui pascal, 1Fh
 		add	al, 50h
 		mov	_bullet_template.BT_angle, al
 		call	_bullets_add_special
-		call	randring2_next16_mod pascal, (384 shl 4)
+		call	@randring2_next16_mod$qui pascal, (384 shl 4)
 		mov	_bullet_template.BT_origin.x, ax
 		mov	_bullet_template.BT_origin.y, 0
-		call	randring2_next16_and pascal, 1Fh
+		call	@randring2_next16_and$qui pascal, 1Fh
 		add	al, (1 shl 4)
 		mov	_bullet_template.speed, al
-		call	randring2_next16_and pascal, 1Fh
+		call	@randring2_next16_and$qui pascal, 1Fh
 		add	al, 30h
 		mov	_bullet_template.BT_angle, al
 		call	_bullets_add_special
@@ -17741,7 +17741,7 @@ loc_1779E:
 		call	@marisa_flystep_pointreflected$qi pascal, 160
 		cmp	_boss_statebyte[15].BSB_bitless_pattern_started, 0
 		jnz	short loc_177B8
-		call	randring2_next16_and pascal, 1Fh
+		call	@randring2_next16_and$qui pascal, 1Fh
 		mov	_bullet_template.BT_angle, al
 		mov	_boss_statebyte[15].BSB_bitless_pattern_started, 1
 
@@ -17799,7 +17799,7 @@ var_1		= byte ptr -1
 		mov	_bullet_template.speed, (3 shl 4) + 8
 		call	_bullet_template_tune
 		push	1
-		call	randring2_next16_and
+		call	@randring2_next16_and$qui
 		or	ax, ax
 		jnz	short loc_17848
 		mov	al, 1
@@ -17859,7 +17859,7 @@ var_1		= byte ptr -1
 		jnz	short loc_178AD
 		mov	_boss_statebyte[14].BSB_spread_speed, (2 shl 4)
 		push	1
-		call	randring2_next16_and
+		call	@randring2_next16_and$qui
 		mov	_boss_statebyte[15].BSB_angle_mirror_y, al
 
 loc_178AD:
@@ -18154,7 +18154,7 @@ loc_17B1E:
 
 loc_17B56:
 		push	1
-		call	randring2_next16_and
+		call	@randring2_next16_and$qui
 		add	al, 0Ah
 		mov	_boss_mode, al
 		jmp	short loc_17B84
@@ -18162,7 +18162,7 @@ loc_17B56:
 
 loc_17B62:
 		push	7
-		call	randring2_next16_mod
+		call	@randring2_next16_mod$qui
 		inc	ax
 		mov	[bp+var_2], ax
 		mov	al, byte_2566E
@@ -18352,13 +18352,13 @@ arg_6		= word ptr  0Ah
 		mov	[si+enemy_t.E_script], ax
 		cmp	di, ENEMY_POS_RANDOM
 		jnz	short loc_17D3C
-		call	randring2_next16_mod pascal, (PLAYFIELD_W shl 4)
+		call	@randring2_next16_mod$qui pascal, (PLAYFIELD_W shl 4)
 		mov	di, ax
 
 loc_17D3C:
 		cmp	[bp+@@center_y], ENEMY_POS_RANDOM
 		jnz	short loc_17D4C
-		call	randring2_next16_mod pascal, ((PLAYFIELD_H) shl 4)
+		call	@randring2_next16_mod$qui pascal, ((PLAYFIELD_H) shl 4)
 		mov	[bp+@@center_y], ax
 
 loc_17D4C:
@@ -18397,7 +18397,7 @@ loc_17D6D:
 
 loc_17D98:
 		mov	[si+enemy_t.E_spawned_in_left_half], al
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	[si+enemy_t.E_autofire_cur_frame], al
 		mov	[si+enemy_t.E_autofire_interval], 128
 		mov	[si+enemy_t.E_bullet_template.BT_group], BG_FORCESINGLE_AIMED
@@ -19144,10 +19144,10 @@ loc_1832E:
 		mov	_bullet_template.BT_group, BG_RING
 		mov	_bullet_template.count, 8
 		mov	_bullet_template.speed, (2 shl 4)
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	_bullet_template.BT_angle, al
 		push	1
-		call	randring2_next16_and
+		call	@randring2_next16_and$qui
 		mov	_boss_statebyte[15].BSB_direction, al
 		pop	bp
 		retn
@@ -19296,7 +19296,7 @@ loc_18473:
 		mov	_bullet_template.BT_group, BG_RING
 		mov	_bullet_template.count, 40
 		mov	_bullet_template.speed, (1 shl 4)
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	_bullet_template.BT_angle, al
 		call	_bullets_add_regular
 		call	snd_se_play pascal, 15
@@ -19344,15 +19344,15 @@ loc_184D9:
 		jz	short loc_18554
 		mov	_bullet_template.spawn_type, BST_BULLET16
 		mov	_bullet_template.patnum, PAT_BULLET16_N_SMALL_BALL_YELLOW
-		call	randring2_next16_and pascal, 3Fh
+		call	@randring2_next16_and$qui pascal, 3Fh
 		add	al, (1 shl 4)
 		mov	_bullet_template.speed, al
-		call	randring2_next16_mod pascal, (64 shl 4)
+		call	@randring2_next16_mod$qui pascal, (64 shl 4)
 		mov	dx, _boss_pos.cur.x
 		add	dx, (-32 shl 4)
 		add	ax, dx
 		mov	_bullet_template.BT_origin.x, ax
-		call	randring2_next16_mod pascal, (32 shl 4)
+		call	@randring2_next16_mod$qui pascal, (32 shl 4)
 		mov	dx, _boss_pos.cur.y
 		add	dx, (-26 shl 4)
 		add	ax, dx
@@ -19360,7 +19360,7 @@ loc_184D9:
 		mov	_bullet_template.BT_angle, 0
 		mov	_bullet_template_special_angle.BSA_turn_by, 40h
 		call	_bullets_add_special
-		call	randring2_next16_and pascal, 3Fh
+		call	@randring2_next16_and$qui pascal, 3Fh
 		add	al, (1 shl 4)
 		mov	_bullet_template.speed, al
 		mov	_bullet_template.BT_angle, 80h
@@ -19411,23 +19411,23 @@ loc_18570:
 loc_18580:
 		cmp	_stage_frame_mod8, 0
 		jnz	short loc_185E2
-		call	randring2_next16_and pascal, BST_PELLET
+		call	@randring2_next16_and$qui pascal, BST_PELLET
 		mov	_bullet_template.spawn_type, al
 		mov	_bullet_template.patnum, PAT_BULLET16_N_BALL_BLUE
-		call	randring2_next16_and pascal, 3Fh
+		call	@randring2_next16_and$qui pascal, 3Fh
 		add	al, (1 shl 4)
 		mov	_bullet_template.speed, al
-		call	randring2_next16_mod pascal, (64 shl 4)
+		call	@randring2_next16_mod$qui pascal, (64 shl 4)
 		mov	dx, _boss_pos.cur.x
 		add	dx, (-32 shl 4)
 		add	ax, dx
 		mov	_bullet_template.BT_origin.x, ax
-		call	randring2_next16_mod pascal, (32 shl 4)
+		call	@randring2_next16_mod$qui pascal, (32 shl 4)
 		mov	dx, _boss_pos.cur.y
 		add	dx, (-26 shl 4)
 		add	ax, dx
 		mov	_bullet_template.BT_origin.y, ax
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	_bullet_template.BT_angle, al
 		call	_bullets_add_regular
 		call	snd_se_play pascal, 3
@@ -19513,7 +19513,7 @@ mugetsu_18655	proc near
 		mov	_bullet_template.count, 32
 		mov	_bullet_template.patnum, PAT_BULLET16_D_BLUE
 		mov	_bullet_template.spawn_type, BST_BULLET16
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	_bullet_template.BT_angle, al
 		mov	_bullet_template.speed, (7 shl 4)
 		call	_bullets_add_regular
@@ -19675,7 +19675,7 @@ loc_187FC:
 		cmp	_boss_phase_frame, 16	; jumptable 000187E2 case 255
 		jle	short loc_18856	; default
 		push	3
-		call	randring2_next16_and
+		call	@randring2_next16_and$qui
 		or	ax, ax
 		jnz	short loc_18814
 		mov	fp_259E8, offset mugetsu_180BB
@@ -19687,7 +19687,7 @@ loc_18814:
 
 loc_1881A:
 		push	5
-		call	randring2_next16_mod
+		call	@randring2_next16_mod$qui
 		mov	[bp+var_1], al
 		mov	al, _boss_phase_state
 		cmp	al, [bp+var_1]
@@ -20142,7 +20142,7 @@ loc_18C1F:
 		jnz	short loc_18C3E
 		mov	_boss_sprite, 0
 		push	(-(12 shl 4) shl 16) or 15
-		call	randring2_next16_and
+		call	@randring2_next16_and$qui
 		mov	dl, 18h
 		sub	dl, al
 		push	dx	; angle
@@ -20207,7 +20207,7 @@ loc_18CAF:
 		jnz	short loc_18CCC
 		mov	_boss_sprite, 0
 		push	((12 shl 4) shl 16) or 15
-		call	randring2_next16_and
+		call	@randring2_next16_and$qui
 		add	al, 68h
 		push	ax	; angle
 		call	@kurumi_spawnrays_add$qiuc
@@ -20280,7 +20280,7 @@ loc_18D51:
 		jnz	short loc_18D7E
 		mov	_boss_sprite, 0
 		push	0Fh
-		call	randring2_next16_and
+		call	@randring2_next16_and$qui
 		add	al, 68h	; 'h'
 		mov	[bp+@@angle], al
 		call	@kurumi_spawnrays_add$qiuc pascal, (12 shl 4), word ptr [bp+@@angle]
@@ -20346,7 +20346,7 @@ loc_18DCF:
 		mov	_bullet_template.count, 16
 		mov	_bullet_template.BT_special_motion, BSM_SLOWDOWN_THEN_TURN
 		mov	_bullet_template.speed, (3 shl 4)
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	_bullet_template.BT_angle, al
 		mov	_bullet_special_motion_turns_max, 1
 		test	byte_259F0, 1
@@ -20366,7 +20366,7 @@ loc_18E1B:
 		add	al, 80h
 		mov	_bullet_template_special_angle.BSA_turn_by, al
 		mov	_bullet_template.speed, (2 shl 4)
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	_bullet_template.BT_angle, al
 		call	_bullets_add_special
 		inc	byte_259F0
@@ -20629,12 +20629,12 @@ kurumi_1905A	proc near
 		cmp	_boss_phase_frame, 16
 		jnz	short loc_1908E
 		push	0Fh
-		call	randring2_next16_and
+		call	@randring2_next16_and$qui
 		mov	dl, -20h
 		sub	dl, al
 		mov	_boss_statebyte[15].BSB_stack_right_angle, dl
 		push	0Fh
-		call	randring2_next16_and
+		call	@randring2_next16_and$qui
 		add	al, -60h
 		mov	_boss_statebyte[14].BSB_stack_left_angle, al
 		mov	_boss_statebyte[13].BSB_stacks_fired, 0
@@ -20658,12 +20658,12 @@ loc_1908E:
 		cmp	_boss_statebyte[13].BSB_stacks_fired, 10
 		jbe	short loc_190D7
 		push	0Fh
-		call	randring2_next16_and
+		call	@randring2_next16_and$qui
 		mov	dl, -20h
 		sub	dl, al
 		mov	_boss_statebyte[15].BSB_stack_right_angle, dl
 		push	0Fh
-		call	randring2_next16_and
+		call	@randring2_next16_and$qui
 		add	al, -60h
 		mov	_boss_statebyte[14].BSB_stack_left_angle, al
 		mov	_boss_statebyte[13].BSB_stacks_fired, 0
@@ -20704,7 +20704,7 @@ loc_190DE:
 		mov	_bullet_template.BT_delta.spread_angle, 9
 		mov	_bullet_template.BT_angle, 0
 		mov	_bullet_template.spawn_type, BST_PELLET
-		call	randring2_next16_and pascal, 0Fh
+		call	@randring2_next16_and$qui pascal, 0Fh
 		add	al, (2 shl 4)
 		mov	_bullet_template.speed, al
 		mov	_bullet_template.BT_special_motion, BSM_NONE
@@ -20830,7 +20830,7 @@ loc_19279:
 		jl	loc_19309
 		mov	_boss_phase_frame, 0
 		push	3
-		call	randring2_next16_and
+		call	@randring2_next16_and$qui
 		inc	al
 		mov	_boss_mode, al
 		inc	_boss_phase_state
@@ -20844,7 +20844,7 @@ loc_19279:
 		mov	_bullet_template.patnum, PAT_BULLET16_N_OUTLINED_BALL_BLUE
 		mov	_bullet_template.BT_group, BG_RING
 		mov	_bullet_template.count, 22
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	_bullet_template.BT_angle, al
 		call	_bullet_template_tune
 		mov	_bullet_template.speed, (1 shl 4)
@@ -20951,7 +20951,7 @@ loc_19387:
 		jl	loc_19417
 		mov	_boss_phase_frame, 0
 		push	3
-		call	randring2_next16_mod
+		call	@randring2_next16_mod$qui
 		inc	al
 		mov	_boss_mode, al
 		inc	_boss_phase_state
@@ -20965,7 +20965,7 @@ loc_19387:
 		mov	_bullet_template.patnum, PAT_BULLET16_N_OUTLINED_BALL_BLUE
 		mov	_bullet_template.BT_group, BG_RING
 		mov	_bullet_template.count, 22
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	_bullet_template.BT_angle, al
 		call	_bullet_template_tune
 		mov	_bullet_template.speed, (1 shl 4)
@@ -21218,10 +21218,10 @@ orange_195E4	proc near
 		jl	short loc_19678
 		cmp	_boss_phase_frame, 16
 		jnz	short loc_19647
-		call	randring2_next16_mod pascal, (320 shl 4)
+		call	@randring2_next16_mod$qui pascal, (320 shl 4)
 		add	ax, (32 shl 4)
 		mov	[bp+@@x], ax
-		call	randring2_next16_mod pascal, (96 shl 4)
+		call	@randring2_next16_mod$qui pascal, (96 shl 4)
 		add	ax, (64 shl 4)
 		mov	[bp+@@y], ax
 		mov	ax, [bp+@@x]
@@ -21292,7 +21292,7 @@ orange_19686	proc near
 		cmp	_boss_phase_frame, 86
 		jnz	short loc_196C2
 		push	1
-		call	randring2_next16_and
+		call	@randring2_next16_and$qui
 		mov	_boss_phase_state, al
 		cmp	_boss_phase_state, 0
 		jnz	short loc_196AD
@@ -21575,7 +21575,7 @@ loc_1993D:
 
 loc_19942:
 		mov	_bullet_template.speed, (2 shl 4)
-		call	randring2_next16_and pascal, 1
+		call	@randring2_next16_and$qui pascal, 1
 		or	ax, ax
 		jnz	short loc_19954
 		mov	al, BST_PELLET
@@ -21587,12 +21587,12 @@ loc_19954:
 
 loc_19956:
 		mov	_bullet_template.spawn_type, al
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	_bullet_template.BT_angle, al
 		call	_bullet_template_tune
 		call	_bullets_add_regular
 		add	_bullet_template.BT_origin.x, (64 shl 4)
-		call	randring2_next16_and pascal, 1
+		call	@randring2_next16_and$qui pascal, 1
 		or	ax, ax
 		jnz	short loc_1997A
 		mov	al, BST_PELLET
@@ -21604,7 +21604,7 @@ loc_1997A:
 
 loc_1997C:
 		mov	_bullet_template.spawn_type, al
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	_bullet_template.BT_angle, al
 		call	_bullets_add_regular
 
@@ -21858,7 +21858,7 @@ loc_19C23:
 
 loc_19C29:
 		push	3
-		call	randring2_next16_and
+		call	@randring2_next16_and$qui
 		inc	al
 		mov	_boss_mode, al
 		mov	al, _boss_statebyte[14].BSB_pattern_num_prev
@@ -23251,18 +23251,18 @@ loc_1ACD9:
 		mov	_bullet_template.BT_group, BG_RANDOM_ANGLE_AND_SPEED
 		mov	_bullet_template.count, 4
 		mov	_bullet_template.BT_special_motion, BSM_GRAVITY
-		call	randring2_next16_mod pascal, (1 shl 4) + 8
+		call	@randring2_next16_mod$qui pascal, (1 shl 4) + 8
 		add	al, 8
 		mov	_bullet_template.speed, al
 		mov	ax, _boss_pos.cur.x
 		add	ax, (-20 shl 4)
 		mov	_bullet_template.BT_origin.x, ax
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	_bullet_template.BT_angle, al
 		mov	_bullet_special_motion_speed_delta, 1
 		call	_bullet_template_tune
 		call	_bullets_add_special_fixedspeed
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	_bullet_template.BT_angle, al
 		add	_bullet_template.BT_origin.x, (44 shl 4)
 		call	_bullets_add_special_fixedspeed
@@ -23359,7 +23359,7 @@ yuuka6_1ADDB	proc near
 		jnz	short loc_1AE40
 		mov	_bullet_template.spawn_type, BST_BULLET16
 		mov	_bullet_template.patnum, PAT_BULLET16_N_SMALL_BALL_RED
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	_bullet_template.BT_angle, al
 		mov	_bullet_template.BT_group, BG_RING
 		mov	_bullet_template.count, 16
@@ -23549,14 +23549,14 @@ loc_1AFD0:
 		mov	_bullet_template.patnum, PAT_BULLET16_D_YELLOW
 		mov	_bullet_template.BT_group, BG_SPREAD
 		mov	_bullet_template.count, 5
-		call	randring2_next16_and pascal, 1Fh
+		call	@randring2_next16_and$qui pascal, 1Fh
 		add	al, 12
 		mov	_bullet_template.speed, al
 		mov	_bullet_template.BT_delta.spread_angle, 10h
 		mov	al, _boss_statebyte[15].BSB_spread_angle_range
 		mov	ah, 0
 		add	ax, ax
-		call	randring2_next16_mod pascal, ax
+		call	@randring2_next16_mod$qui pascal, ax
 		mov	dl, 40h
 		sub	dl, _boss_statebyte[15].BSB_spread_angle_range
 		add	al, dl
@@ -23567,7 +23567,7 @@ loc_1AFD0:
 		mov	al, _boss_statebyte[15].BSB_spread_angle_range
 		mov	ah, 0
 		add	ax, ax
-		call	randring2_next16_mod pascal, ax
+		call	@randring2_next16_mod$qui pascal, ax
 		mov	dl, 40h
 		sub	dl, _boss_statebyte[15].BSB_spread_angle_range
 		add	al, dl
@@ -23703,7 +23703,7 @@ loc_1B13C:
 		mov	_bullet_template.speed, (9 shl 4)
 		cmp	_rank, RANK_EASY
 		jz	short loc_1B196
-		call	randring2_next16_and pascal, 1
+		call	@randring2_next16_and$qui pascal, 1
 		or	ax, ax
 		jz	short loc_1B18F
 		mov	al, 1
@@ -23812,9 +23812,9 @@ yuuka6_1B22B	proc near
 		mov	_boss_sprite, al
 		cmp	_stage_frame_mod8, 0
 		jnz	short loc_1B26D
-		call	randring2_next16
+		call	@randring2_next16$qv
 		call	@chasecrosses_add$qucuc pascal, ax, (2 shl 4)
-		call	randring2_next16
+		call	@randring2_next16$qv
 		call	@chasecrosses_add$qucuc pascal, ax, (2 shl 4)
 		call	snd_se_play pascal, 3
 		jmp	short loc_1B26D
@@ -24077,7 +24077,7 @@ loc_1B4EB:
 		mov	_yuuka6_anim_frame, 0
 		mov	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_OPEN
 		push	1
-		call	randring2_next16_and
+		call	@randring2_next16_and$qui
 		mov	byte_25A07, al
 		jmp	loc_1B8EA
 ; ---------------------------------------------------------------------------
@@ -24170,7 +24170,7 @@ loc_1B5DB:
 ; ---------------------------------------------------------------------------
 
 loc_1B5E0:
-		call	randring2_next16_mod pascal, (288 shl 4)
+		call	@randring2_next16_mod$qui pascal, (288 shl 4)
 		add	ax, (48 shl 4)
 		call	yuuka6_1A439 pascal, ax, (80 shl 4)
 		or	al, al
@@ -24281,7 +24281,7 @@ loc_1B6F7:
 ; ---------------------------------------------------------------------------
 
 loc_1B6FC:
-		call	randring2_next16_mod pascal, (144 shl 4)	; jumptable 0001B6E9 case 255
+		call	@randring2_next16_mod$qui pascal, (144 shl 4)	; jumptable 0001B6E9 case 255
 		add	ax, (48 shl 4)
 		call	yuuka6_1A439 pascal, ax, (80 shl 4)
 		or	al, al
@@ -24289,7 +24289,7 @@ loc_1B6FC:
 
 loc_1B710:
 		push	3
-		call	randring2_next16_mod
+		call	@randring2_next16_mod$qui
 		mov	_boss_mode, al
 		mov	al, byte_25A02
 		cmp	al, _boss_mode
@@ -25530,23 +25530,23 @@ elly_1C1CF	proc near
 		mov	_bullet_template.speed, (2 shl 4)
 		mov	_bullet_template.BT_group, BG_RING
 		mov	_bullet_template.count, 16
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	_bullet_template.BT_angle, al
 		sub	_bullet_template.BT_origin.x, (32 shl 4)
 		call	_bullet_template_tune
 		call	_bullets_add_regular
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	_bullet_template.BT_angle, al
 		add	_bullet_template.BT_origin.x, (64 shl 4)
 		call	_bullets_add_regular
-		call	randring2_next16
+		call	@randring2_next16$qv
 
 loc_1C21B:
 		mov	_bullet_template.BT_angle, al
 		sub	_bullet_template.BT_origin.x, (32 shl 4)
 		sub	_bullet_template.BT_origin.y, (32 shl 4)
 		call	_bullets_add_regular
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	_bullet_template.BT_angle, al
 		add	_bullet_template.BT_origin.y, (64 shl 4)
 		call	_bullets_add_regular
@@ -28228,7 +28228,7 @@ reimu_1EE21	proc near
 		mov	_orb_template.B4RO_move_speed, 38h
 		mov	eax, _boss_pos.cur
 		mov	dword ptr _orb_template.B4RO_origin, eax
-		call	randring2_next16
+		call	@randring2_next16$qv
 		push	ax	; angle_offset
 		mov	al, _boss_statebyte[0].BSB_orb_count
 		mov	ah, 0
@@ -28271,17 +28271,17 @@ var_1		= byte ptr -1
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1EEF5
-		call	randring2_next16_mod pascal, (64 shl 4)
+		call	@randring2_next16_mod$qui pascal, (64 shl 4)
 		mov	dx, _boss_pos.cur.x
 		add	dx, (-32 shl 4)
 		add	ax, dx
 		mov	_bullet_template.BT_origin.x, ax
-		call	randring2_next16_mod pascal, (64 shl 4)
+		call	@randring2_next16_mod$qui pascal, (64 shl 4)
 		mov	dx, _boss_pos.cur.y
 		add	dx, (-32 shl 4)
 		add	ax, dx
 		mov	_bullet_template.BT_origin.y, ax
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	_bullet_template.BT_angle, al
 		mov	_bullet_template.spawn_type, BST_BULLET16_CLOUD_BACKWARDS
 		mov	_bullet_template.patnum, PAT_BULLET16_N_BALL_BLUE
@@ -28302,17 +28302,17 @@ loc_1EEF5:
 		idiv	bx
 		cmp	dx, 16
 		jnz	short loc_1EF6C
-		call	randring2_next16_mod pascal, (64 shl 4)
+		call	@randring2_next16_mod$qui pascal, (64 shl 4)
 		mov	dx, _boss_pos.cur.x
 		add	dx, (-32 shl 4)
 		add	ax, dx
 		mov	_bullet_template.BT_origin.x, ax
-		call	randring2_next16_mod pascal, (64 shl 4)
+		call	@randring2_next16_mod$qui pascal, (64 shl 4)
 		mov	dx, _boss_pos.cur.y
 		add	dx, (-32 shl 4)
 		add	ax, dx
 		mov	_bullet_template.BT_origin.y, ax
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	_bullet_template.BT_angle, al
 		mov	_bullet_template.spawn_type, BST_PELLET
 		mov	_bullet_template.speed, (1 shl 4) + 8
@@ -28321,7 +28321,7 @@ loc_1EEF5:
 		mov	_bullet_template.BT_delta.stack_speed, 8
 		call	_bullet_template_tune
 		xor	si, si
-		call	randring2_next16
+		call	@randring2_next16$qv
 		jmp	short loc_1EF5D
 ; ---------------------------------------------------------------------------
 
@@ -28371,7 +28371,7 @@ var_1		= byte ptr -1
 		jnz	loc_1F034
 		mov	_bullet_template.spawn_type, BST_PELLET
 		mov	_bullet_template.speed, (8 shl 4)
-		call	randring2_next16_and pascal, 7
+		call	@randring2_next16_and$qui pascal, 7
 		add	al, -44h
 		mov	_bullet_template.BT_angle, al
 		mov	_bullet_template.BT_group, BG_SPREAD
@@ -28386,12 +28386,12 @@ var_1		= byte ptr -1
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1F034
-		call	randring2_next16_mod pascal, (64 shl 4)
+		call	@randring2_next16_mod$qui pascal, (64 shl 4)
 		mov	dx, _boss_pos.cur.x
 		add	dx, (-32 shl 4)
 		add	ax, dx
 		mov	_bullet_template.BT_origin.x, ax
-		call	randring2_next16_mod pascal, (64 shl 4)
+		call	@randring2_next16_mod$qui pascal, (64 shl 4)
 		mov	dx, _boss_pos.cur.y
 		add	dx, (-32 shl 4)
 		add	ax, dx
@@ -28477,7 +28477,7 @@ loc_1F0B0:
 		mov	_bullet_template.patnum, PAT_BULLET16_N_BALL_BLUE
 		mov	_bullet_template.BT_group, BG_RING
 		mov	_bullet_template.count, 32
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	_bullet_template.BT_angle, al
 		mov	_bullet_template.speed, (3 shl 4)
 		mov	_bullet_template.BT_special_motion, BSM_SPEEDUP
@@ -28579,17 +28579,17 @@ loc_1F1AA:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1F227
-		call	randring2_next16_mod pascal, (64 shl 4)
+		call	@randring2_next16_mod$qui pascal, (64 shl 4)
 		mov	dx, _boss_pos.cur.x
 		add	dx, (-32 shl 4)
 		add	ax, dx
 		mov	_bullet_template.BT_origin.x, ax
-		call	randring2_next16_mod pascal, (64 shl 4)
+		call	@randring2_next16_mod$qui pascal, (64 shl 4)
 		mov	dx, _boss_pos.cur.y
 		add	dx, (-32 shl 4)
 		add	ax, dx
 		mov	_bullet_template.BT_origin.y, ax
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	_bullet_template.BT_angle, al
 		mov	_bullet_template.spawn_type, BST_PELLET
 		mov	_bullet_template.speed, (1 shl 4) + 8
@@ -28598,7 +28598,7 @@ loc_1F1AA:
 		mov	_bullet_template.BT_delta.stack_speed, 10
 		call	_bullet_template_tune
 		xor	si, si
-		call	randring2_next16
+		call	@randring2_next16$qv
 		jmp	short loc_1F218
 ; ---------------------------------------------------------------------------
 
@@ -28660,20 +28660,20 @@ loc_1F263:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_1F2D9
-		call	randring2_next16_and pascal, 1Fh
+		call	@randring2_next16_and$qui pascal, 1Fh
 		add	al, (1 shl 4)
 		mov	_bullet_template.speed, al
 		mov	_bullet_template.BT_group, BG_SPREAD
-		call	randring2_next16_and pascal, 3
+		call	@randring2_next16_and$qui pascal, 3
 		add	al, 2
 		mov	_bullet_template.count, al
 		call	_bullet_template_tune
-		call	randring2_next16_mod pascal, (64 shl 4)
+		call	@randring2_next16_mod$qui pascal, (64 shl 4)
 		mov	dx, _boss_pos.cur.x
 		add	dx, (-32 shl 4)
 		add	ax, dx
 		mov	_bullet_template.BT_origin.x, ax
-		call	randring2_next16_mod pascal, (64 shl 4)
+		call	@randring2_next16_mod$qui pascal, (64 shl 4)
 		mov	dx, _boss_pos.cur.y
 		add	dx, (-32 shl 4)
 		add	ax, dx
@@ -28974,7 +28974,7 @@ loc_1F547:
 		cmp	_boss_statebyte[10].BSB_subpattern_id, 2
 		ja	short loc_1F568
 		push	1
-		call	randring2_next16_and
+		call	@randring2_next16_and$qui
 		or	ax, ax
 		jz	short loc_1F561
 		inc	_boss_statebyte[10].BSB_subpattern_id
@@ -29672,7 +29672,7 @@ loc_1FABE:
 		mov	_bullet_template.speed, (4 shl 4) + 6
 		mov	_bullet_template.BT_group, BG_RING
 		mov	_bullet_template.count, 90
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	_bullet_template.BT_angle, al
 		call	_bullets_add_regular
 		call	snd_se_play pascal, 9
@@ -29726,10 +29726,10 @@ loc_1FB10:
 loc_1FB36:
 		cmp	_stage_frame_mod2, 0
 		jnz	short loc_1FB84
-		call	randring2_next16_and pascal, 3Fh
+		call	@randring2_next16_and$qui pascal, 3Fh
 		add	al, 8
 		mov	_bullet_template.speed, al
-		call	randring2_next16_and pascal, 3
+		call	@randring2_next16_and$qui pascal, 3
 		add	al, 5
 		mov	_bullet_template.count, al
 		mov	al, _boss_statebyte[15].BSB_spread_angle
@@ -29789,22 +29789,22 @@ loc_1FBAD:
 		mov	_bullet_template.BT_group, BG_SINGLE
 		mov	_bullet_template.spawn_type, BST_BULLET16
 		mov	_bullet_template.patnum, PAT_BULLET16_N_CROSS_YELLOW
-		call	randring2_next16_and pascal, 3Fh
+		call	@randring2_next16_and$qui pascal, 3Fh
 		add	al, (2 shl 4) + 10
 		mov	_bullet_template.speed, al
-		call	randring2_next16_mod pascal, (64 shl 4)
+		call	@randring2_next16_mod$qui pascal, (64 shl 4)
 		mov	dx, _boss_pos.cur.x
 		add	dx, (-32 shl 4)
 		add	ax, dx
 		mov	_bullet_template.BT_origin.x, ax
-		call	randring2_next16_mod pascal, (32 shl 4)
+		call	@randring2_next16_mod$qui pascal, (32 shl 4)
 		mov	dx, _boss_pos.cur.y
 		add	dx, (-32 shl 4)
 		add	ax, dx
 		mov	_bullet_template.BT_origin.y, ax
 		mov	_bullet_template.BT_angle, -20h
 		call	_bullets_add_special
-		call	randring2_next16_and pascal, 3Fh
+		call	@randring2_next16_and$qui pascal, 3Fh
 		add	al, (2 shl 4) + 10
 		mov	_bullet_template.speed, al
 		mov	_bullet_template.BT_angle, -60h
@@ -29863,22 +29863,22 @@ loc_1FC68:
 		mov	_bullet_template.BT_group, BG_SINGLE
 		mov	_bullet_template.spawn_type, BST_BULLET16
 		mov	_bullet_template.patnum, PAT_BULLET16_N_SMALL_BALL_YELLOW
-		call	randring2_next16_and pascal, 3Fh
+		call	@randring2_next16_and$qui pascal, 3Fh
 		add	al, (1 shl 4)
 		mov	_bullet_template.speed, al
 		push	(64 shl 4)
-		call	randring2_next16_mod
+		call	@randring2_next16_mod$qui
 		mov	dx, _boss_pos.cur.x ; jumptable 0001EA6B case 32792
 		add	dx, (-32 shl 4)
 		add	ax, dx
 		mov	_bullet_template.BT_origin.x, ax
 		push	(32 shl 4)
-		call	randring2_next16_mod
+		call	@randring2_next16_mod$qui
 		mov	dx, _boss_pos.cur.y
 		add	dx, (-26 shl 4)
 		add	ax, dx
 		mov	_bullet_template.BT_origin.y, ax
-		call	randring2_next16_and pascal, 3Fh
+		call	@randring2_next16_and$qui pascal, 3Fh
 		add	al, (1 shl 4)
 		mov	_bullet_template.speed, al
 		mov	_bullet_template.BT_angle, 80h
@@ -29898,7 +29898,7 @@ loc_1FCE0:
 		mov	_bullet_template.spawn_type, BST_PELLET
 		mov	ax, _bullet_template.BT_origin.y
 		mov	_gather_template.GT_center.y, ax
-		call	randring2_next16_mod pascal, (320 shl 4)
+		call	@randring2_next16_mod$qui pascal, (320 shl 4)
 		add	ax, (32 shl 4)
 		mov	_gather_template.GT_center.x, ax
 		mov	_bullet_template.BT_group, BG_RING_AIMED
@@ -30139,7 +30139,7 @@ var_1		= byte ptr -1
 		cmp	_boss_phase_frame, 1
 		jnz	short loc_1FF2E
 		push	1
-		call	randring2_next16_and
+		call	@randring2_next16_and$qui
 		mov	[bp+var_1], al
 		mov	si, offset gengetsu_spawncolumns
 		xor	di, di
@@ -30157,7 +30157,7 @@ loc_1FEFB:
 
 loc_1FF0C:
 		push	(12 shl 4)
-		call	randring2_next16_mod
+		call	@randring2_next16_mod$qui
 		mov	dx, di
 		imul	dx, ((PLAYFIELD_W / GENGETSU_SPAWNCOLUMN_COUNT) shl 4)
 		add	dx, (6 shl 4)
@@ -30289,14 +30289,14 @@ gengetsu_20050	proc near
 		mov	_boss_sprite, 128
 		cmp	_stage_frame_mod8, 0
 		jnz	short loc_200B4
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	_bullet_template.BT_angle, al
-		call	randring2_next16_mod pascal, (64 shl 4)
+		call	@randring2_next16_mod$qui pascal, (64 shl 4)
 		mov	dx, _boss_pos.cur.x
 		add	dx, (-32 shl 4)
 		add	ax, dx
 		mov	_bullet_template.BT_origin.x, ax
-		call	randring2_next16_mod pascal, (32 shl 4)
+		call	@randring2_next16_mod$qui pascal, (32 shl 4)
 		mov	dx, _boss_pos.cur.y
 		add	dx, (-26 shl 4)
 		add	ax, dx
@@ -30305,7 +30305,7 @@ gengetsu_20050	proc near
 		mov	_bullet_template.count, 16
 		mov	_bullet_template.spawn_type, BST_BULLET16
 		mov	_bullet_template.patnum, PAT_BULLET16_D_BLUE
-		call	randring2_next16_and pascal, 3Fh
+		call	@randring2_next16_and$qui pascal, 3Fh
 		add	al, (1 shl 4)
 		mov	_bullet_template.speed, al
 		call	_bullets_add_regular
@@ -30353,7 +30353,7 @@ loc_200F6:
 		mov	_bullet_template.BT_delta.spread_angle, 1
 		mov	_bullet_template.count, 3
 		mov	_bullet_template.patnum, PAT_BULLET16_N_BALL_BLUE
-		call	randring2_next16_mod pascal, (32 shl 4)
+		call	@randring2_next16_mod$qui pascal, (32 shl 4)
 		mov	dx, _boss_pos.cur.y
 		add	dx, (-26 shl 4)
 		add	ax, dx
@@ -30418,21 +30418,21 @@ loc_201A6:
 loc_201AB:
 		cmp	_stage_frame_mod4, 0
 		jnz	short loc_20200
-		call	randring2_next16_and pascal, 1
+		call	@randring2_next16_and$qui pascal, 1
 		mov	_bullet_template.spawn_type, al
-		call	randring2_next16_mod pascal, (64 shl 4)
+		call	@randring2_next16_mod$qui pascal, (64 shl 4)
 		mov	dx, _boss_pos.cur.x
 		add	dx, (-32 shl 4)
 		add	ax, dx
 		mov	_bullet_template.BT_origin.x, ax
-		call	randring2_next16_mod pascal, (32 shl 4)
+		call	@randring2_next16_mod$qui pascal, (32 shl 4)
 		mov	dx, _boss_pos.cur.y
 		add	dx, (-26 shl 4)
 		add	ax, dx
 		mov	_bullet_template.BT_origin.y, ax
 		mov	_bullet_template.BT_group, BG_RING
 		mov	_bullet_template.count, 32
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	_bullet_template.BT_angle, al
 		mov	_bullet_template.speed, (6 shl 4) + 4
 		call	_bullets_add_regular
@@ -30490,7 +30490,7 @@ gengetsu_2023B	proc near
 		mov	_bullet_template.count, 32
 		mov	_bullet_template.patnum, PAT_BULLET16_D_BLUE
 		mov	_bullet_template.spawn_type, BST_BULLET16
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	_bullet_template.BT_angle, al
 		mov	_bullet_template.speed, (7 shl 4)
 		call	_bullets_add_regular
@@ -30602,7 +30602,7 @@ loc_20354:
 ; ---------------------------------------------------------------------------
 
 loc_20364:
-		call	randring2_next16_mod pascal, ((PLAYFIELD_W - (WAVE_TARGET_MARGIN * 4)) shl 4)
+		call	@randring2_next16_mod$qui pascal, ((PLAYFIELD_W - (WAVE_TARGET_MARGIN * 4)) shl 4)
 		add	ax, ((WAVE_TARGET_MARGIN * 2) shl 4)
 		mov	_gengetsu_wave_target_x, ax
 
@@ -30679,7 +30679,7 @@ loc_203FB:
 ; ---------------------------------------------------------------------------
 
 loc_2040B:
-		call	randring2_next16_mod pascal, ((PLAYFIELD_W - (WAVE_TARGET_MARGIN * 4)) shl 4)
+		call	@randring2_next16_mod$qui pascal, ((PLAYFIELD_W - (WAVE_TARGET_MARGIN * 4)) shl 4)
 		add	ax, ((WAVE_TARGET_MARGIN * 2) shl 4)
 		mov	_gengetsu_wave_target_x, ax
 
@@ -30756,7 +30756,7 @@ loc_204A2:
 ; ---------------------------------------------------------------------------
 
 loc_204B2:
-		call	randring2_next16_mod pascal, ((PLAYFIELD_W - (WAVE_TARGET_MARGIN * 4)) shl 4)
+		call	@randring2_next16_mod$qui pascal, ((PLAYFIELD_W - (WAVE_TARGET_MARGIN * 4)) shl 4)
 		add	ax, ((WAVE_TARGET_MARGIN * 2) shl 4)
 		mov	_gengetsu_wave_target_x, ax
 
@@ -30833,7 +30833,7 @@ loc_20549:
 ; ---------------------------------------------------------------------------
 
 loc_20559:
-		call	randring2_next16_mod pascal, ((PLAYFIELD_W - (WAVE_TARGET_MARGIN * 4)) shl 4)
+		call	@randring2_next16_mod$qui pascal, ((PLAYFIELD_W - (WAVE_TARGET_MARGIN * 4)) shl 4)
 		add	ax, ((WAVE_TARGET_MARGIN * 2) shl 4)
 		mov	_gengetsu_wave_target_x, ax
 

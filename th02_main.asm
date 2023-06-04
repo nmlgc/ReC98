@@ -1268,7 +1268,7 @@ var_C		= byte ptr -0Ch
 		call	_snd_se_reset
 		call	sub_1028C
 		nopcall	sub_CA1C
-		call	randring_fill
+		call	@randring_fill$qv
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
 		mov	ax, 0D0h
@@ -3002,7 +3002,7 @@ loc_CB78:
 loc_CB83:
 		push	8
 		push	3
-		call	randring1_next8_and
+		call	@randring1_next8_and$quc
 		add	al, 0BEh
 		push	ax
 		call	sub_CA62
@@ -3017,7 +3017,7 @@ loc_CB93:
 loc_CB9D:
 		push	[bp+var_2]
 		push	7
-		call	randring1_next8_and
+		call	@randring1_next8_and$quc
 		add	al, 0BCh
 		push	ax
 
@@ -3090,7 +3090,7 @@ loc_CBFD:
 
 loc_CC09:
 		push	1Fh
-		call	randring1_next8_and
+		call	@randring1_next8_and$quc
 		mov	ah, 0
 		add	ax, 0B1h
 		mov	[bp+var_2], ax
@@ -3319,7 +3319,7 @@ loc_CD81:
 loc_CD8C:
 		push	8
 		push	3
-		call	randring1_next8_and
+		call	@randring1_next8_and$quc
 		add	al, 0BEh
 		jmp	short loc_CDA0
 ; ---------------------------------------------------------------------------
@@ -3327,7 +3327,7 @@ loc_CD8C:
 loc_CD97:
 		push	8
 		push	7
-		call	randring1_next8_and
+		call	@randring1_next8_and$quc
 		add	al, 0BCh
 
 loc_CDA0:
@@ -3348,7 +3348,7 @@ loc_CDAF:
 
 loc_CDB1:
 		push	7
-		call	randring1_next8_and
+		call	@randring1_next8_and$quc
 		add	al, 0BCh
 		push	ax
 		call	sub_CA62
@@ -3435,7 +3435,7 @@ loc_CE29:
 
 loc_CE30:
 		push	1Fh
-		call	randring1_next8_and
+		call	@randring1_next8_and$quc
 		mov	ah, 0
 		add	ax, 0B1h
 		mov	[bp+var_2], ax
@@ -3479,7 +3479,7 @@ loc_CE5B:
 		call	iatan2
 		mov	[bp+var_2], ax
 		push	7
-		call	randring1_next8_and
+		call	@randring1_next8_and$quc
 		mov	ah, 0
 		add	ax, 0FFFDh
 		add	[bp+var_2], ax
@@ -3510,7 +3510,7 @@ loc_CE9F:
 		call	iatan2
 		mov	[bp+var_2], ax
 		push	7
-		call	randring1_next8_and
+		call	@randring1_next8_and$quc
 		mov	ah, 0
 		add	ax, 0FFFDh
 		add	[bp+var_2], ax
@@ -3810,7 +3810,7 @@ loc_D0D2:
 loc_D0DD:
 		push	8
 		push	3
-		call	randring1_next8_and
+		call	@randring1_next8_and$quc
 		add	al, 0BEh
 		jmp	short loc_D0F1
 ; ---------------------------------------------------------------------------
@@ -3818,7 +3818,7 @@ loc_D0DD:
 loc_D0E8:
 		push	8
 		push	7
-		call	randring1_next8_and
+		call	@randring1_next8_and$quc
 		add	al, 0BCh
 
 loc_D0F1:
@@ -4574,7 +4574,7 @@ sub_D629	proc near
 		mov	bp, sp
 		push	si
 		push	7
-		call	randring1_next8_and
+		call	@randring1_next8_and$quc
 		mov	byte_218A0, al
 		xor	si, si
 		jmp	short loc_D644
@@ -4632,7 +4632,7 @@ loc_D67B:
 		idiv	bx
 		or	dx, dx
 		jnz	short loc_D6C4
-		call	randring1_next16
+		call	@randring1_next16$qv
 		and	ax, 1FFh
 		cmp	ax, 12h
 		jnz	short loc_D69F
@@ -4826,7 +4826,7 @@ loc_D7B4:
 		jnz	short loc_D82B
 		cmp	[bp+var_4], 0
 		jz	short loc_D810
-		call	randring1_next8
+		call	@randring1_next8$qv
 		mov	ah, 0
 		mov	bx, 5
 		sub	bx, di
@@ -4839,7 +4839,7 @@ loc_D7B4:
 ; ---------------------------------------------------------------------------
 
 loc_D7FE:
-		call	randring1_next8
+		call	@randring1_next8$qv
 		mov	ah, 0
 		mov	bx, 2
 		cwd
@@ -4852,7 +4852,7 @@ loc_D80B:
 ; ---------------------------------------------------------------------------
 
 loc_D810:
-		call	randring1_next8
+		call	@randring1_next8$qv
 		mov	ah, 0
 		mov	bx, 2
 		cwd
@@ -6319,7 +6319,7 @@ sub_E512	proc near
 ; ---------------------------------------------------------------------------
 
 loc_E525:
-		call	randring1_next16
+		call	@randring1_next16$qv
 		mov	bx, 384
 		xor	dx, dx
 		div	bx
@@ -6328,7 +6328,7 @@ loc_E525:
 		add	bx, si
 		shl	bx, 2
 		mov	[bx+3F5Ch], dx
-		call	randring1_next16
+		call	@randring1_next16$qv
 		mov	bx, 368
 		xor	dx, dx
 		div	bx
@@ -7780,10 +7780,10 @@ main_03__TEXT	segment	byte public 'CODE' use16
 		;org 6
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-	RANDRING2_NEXT8 procdesc pascal near
-	RANDRING2_NEXT8_AND procdesc pascal near \
+	@randring2_next8$qv procdesc near
+	@RANDRING2_NEXT8_AND$QUC procdesc pascal near \
 		mask:byte
-	RANDRING2_NEXT16 procdesc pascal near
+	@randring2_next16$qv procdesc near
 	PELLET_RENDER procdesc pascal near \
 		left:word, top:word
 	@OVERLAY_INT_PUT$QIIIL procdesc pascal near \
@@ -8874,7 +8874,7 @@ loc_10613:
 ; ---------------------------------------------------------------------------
 
 loc_10618:
-		call	randring2_next8
+		call	@randring2_next8$qv
 		mov	ah, 0
 		mov	[bp+var_2], ax
 		mov	di, 1
@@ -8882,7 +8882,7 @@ loc_10618:
 ; ---------------------------------------------------------------------------
 
 loc_10625:
-		call	randring2_next8
+		call	@randring2_next8$qv
 		mov	ah, 0
 		mov	[bp+var_2], ax
 		mov	al, [si+10h]
@@ -8894,10 +8894,10 @@ loc_10625:
 ; ---------------------------------------------------------------------------
 
 loc_1063C:
-		call	randring2_next8
+		call	@randring2_next8$qv
 		mov	ah, 0
 		mov	[bp+var_2], ax
-		call	randring2_next8_and pascal, 1Fh
+		call	@randring2_next8_and$quc pascal, 1Fh
 		mov	ah, 0
 		add	[bp+@@length], ax
 		mov	al, [si+10h]
@@ -11249,7 +11249,7 @@ loc_11975:
 		jge	short loc_11993
 		push	word_22D98
 		push	word_22D9A
-		call	randring2_next8_and pascal, 0Fh
+		call	@randring2_next8_and$quc pascal, 0Fh
 		add	al, 0F9h
 		push	ax
 		push	19h
@@ -11671,7 +11671,7 @@ var_1		= byte ptr -1
 		push	ax
 		call	iatan2
 		mov	[bp+var_1], al
-		call	randring2_next8_and pascal, 1Fh
+		call	@randring2_next8_and$quc pascal, 1Fh
 		add	al, 10h
 
 loc_11CC4:
@@ -11822,7 +11822,7 @@ loc_11E0A:
 		mov	bx, si
 		add	bx, bx
 		push	word ptr [bx+531Eh]
-		call	randring2_next8
+		call	@randring2_next8$qv
 		push	ax
 		push	83h
 		push	520020h
@@ -11856,7 +11856,7 @@ sub_11E40	proc near
 		jnz	short loc_11E66
 		push	word_22D98
 		push	word_22D9A
-		call	randring2_next8
+		call	@randring2_next8$qv
 		push	ax
 		push	word_20670+1
 		mov	ax, word_20650
@@ -11896,7 +11896,7 @@ sub_11E76	proc near
 		or	dx, dx
 		jnz	short loc_11EBE
 		mov	byte_23A70, 1Eh
-		call	randring2_next8
+		call	@randring2_next8$qv
 		mov	ah, 0
 		mov	bx, 18h
 		cwd
@@ -11939,7 +11939,7 @@ loc_11EE5:
 ; ---------------------------------------------------------------------------
 
 loc_11EFC:
-		call	randring2_next8
+		call	@randring2_next8$qv
 		mov	ah, 0
 		mov	bx, 18h
 		cwd
@@ -14776,7 +14776,7 @@ loc_134CD:
 		mov	es:[bx+6], ax
 		mov	es:[bx+4], di
 		mov	es:[bx+8], ax
-		call	randring2_next8_and pascal, 3
+		call	@randring2_next8_and$quc pascal, 3
 		mov	ah, 0
 		add	ax, 3
 		les	bx, [bp+var_4]
@@ -15057,7 +15057,7 @@ loc_13739:
 		add	ax, 3EAh
 		cmp	ax, word_1ED94
 		jge	short loc_13771
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	bx, 640
 		xor	dx, dx
 		div	bx
@@ -16067,7 +16067,7 @@ loc_14083:
 		jnz	short loc_140AC
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
-		call	randring2_next16
+		call	@randring2_next16$qv
 		and	ax, 3FFh
 		add	ax, 14h
 		add	word_250E4, ax
@@ -16095,7 +16095,7 @@ loc_140D4:
 		inc	word_1EDA2
 		test	byte ptr word_1EDA2, 1
 		jnz	short loc_140F2
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	bx, 640
 		xor	dx, dx
 		div	bx
@@ -17693,7 +17693,7 @@ loc_14ED8:
 		mov	ax, [bx]
 		add	ax, 18h
 		push	ax
-		call	randring2_next8
+		call	@randring2_next8$qv
 		push	ax
 		push	87h
 		mov	ax, si
@@ -17793,13 +17793,13 @@ loc_14F8F:
 loc_14FAE:
 		cmp	di, 3
 		jl	short loc_14F8F
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	bx, 320
 		xor	dx, dx
 		div	bx
 		add	dx, 20h	; ' '
 		mov	word_252F0, dx
-		call	randring2_next8
+		call	@randring2_next8$qv
 		mov	ah, 0
 		add	ax, 10h
 		mov	word_252F2, ax
@@ -17866,7 +17866,7 @@ loc_1505F:
 		mov	ax, [bx]
 		add	ax, 18h
 		push	ax
-		call	randring2_next8
+		call	@randring2_next8$qv
 		push	ax
 		push	87h
 		lea	ax, [di+7Ah]
@@ -19418,7 +19418,7 @@ loc_15DD7:
 		jz	loc_15E81
 
 loc_15DF2:
-		call	randring2_next8_and pascal, 7Fh
+		call	@randring2_next8_and$quc pascal, 7Fh
 		mov	ah, 0
 		add	ax, point_254E6.x
 		push	ax
@@ -19427,7 +19427,7 @@ loc_15DF2:
 		push	ax
 		push	40h
 		push	20h ; ' '
-		call	randring2_next8_and pascal, 1Fh
+		call	@randring2_next8_and$quc pascal, 1Fh
 		mov	ah, 0
 		add	ax, 1Eh
 		push	ax
@@ -19439,7 +19439,7 @@ loc_15E19:
 		cmp	word_20650, 1B8h
 		jge	short loc_15E7B
 		inc	byte_25596
-		call	randring2_next8
+		call	@randring2_next8$qv
 		mov	ah, 0
 		mov	dl, byte_25596
 		mov	dh, 0
@@ -19459,7 +19459,7 @@ loc_15E19:
 ; ---------------------------------------------------------------------------
 
 loc_15E4D:
-		call	randring2_next8_and pascal, 7Fh
+		call	@randring2_next8_and$quc pascal, 7Fh
 		mov	ah, 0
 		add	ax, point_254E6.x
 		push	ax
@@ -19468,7 +19468,7 @@ loc_15E4D:
 		push	ax
 		push	word ptr [bp+var_1]
 		push	20h ; ' '
-		call	randring2_next8_and pascal, 1Fh
+		call	@randring2_next8_and$quc pascal, 1Fh
 		mov	ah, 0
 		add	ax, 1Eh
 		push	ax
@@ -19635,7 +19635,7 @@ sub_15F6F	proc near
 		jnz	short loc_15F93
 		push	word_253B6
 		push	word_253B8
-		call	randring2_next8
+		call	@randring2_next8$qv
 		push	ax
 		push	27h ; '''
 		push	55h ; 'U'
@@ -19797,7 +19797,7 @@ loc_16122:
 		jnz	short loc_16172
 		push	word_253B6
 		push	word_253B8
-		call	randring2_next8
+		call	@randring2_next8$qv
 		push	ax
 		push	27h ; '''
 		push	50h ; 'P'
@@ -19835,7 +19835,7 @@ sub_16176	proc near
 		jnz	short loc_1619A
 		push	word_253B6
 		push	word_253B8
-		call	randring2_next8
+		call	@randring2_next8$qv
 		push	ax
 		push	25h ; '%'
 		push	32h ; '2'
@@ -20225,7 +20225,7 @@ loc_1652F:
 loc_16540:
 		push	word_253B6
 		push	word_253B8
-		call	randring2_next8
+		call	@randring2_next8$qv
 		push	ax
 		push	25h ; '%'
 		push	3Ch ; '<'
@@ -20270,7 +20270,7 @@ loc_16589:
 		jnz	short loc_165A3
 		push	word_253B6
 		push	word_253B8
-		call	randring2_next8
+		call	@randring2_next8$qv
 		push	ax
 		push	27h ; '''
 		push	3Ch ; '<'
@@ -20453,7 +20453,7 @@ loc_166BE:
 		jnz	short loc_166DC
 		push	word_253B6
 		push	word_253B8
-		call	randring2_next8
+		call	@randring2_next8$qv
 		push	ax
 		push	25h ; '%'
 		push	3Ch ; '<'
@@ -21151,7 +21151,7 @@ arg_6		= word ptr  0Ah
 		mov	bx, [bp+arg_2]
 		imul	bx, 26h
 		mov	word ptr [bx+7B5Ah], 0
-		call	randring2_next8
+		call	@randring2_next8$qv
 		mov	bx, [bp+arg_2]
 		imul	bx, 26h
 		mov	[bx+7B5Fh], al
@@ -21412,7 +21412,7 @@ loc_16F0F:
 ; ---------------------------------------------------------------------------
 
 loc_16F19:
-		call	randring2_next8
+		call	@randring2_next8$qv
 		mov	[bp+@@angle], al
 		mov	al, [bp+var_7]
 		mov	ah, 0
@@ -21568,7 +21568,7 @@ loc_17025:
 ; ---------------------------------------------------------------------------
 
 loc_1705E:
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	dl, [bp+var_7]
 		mov	dh, 0
 		add	dx, word_26C44
@@ -21619,7 +21619,7 @@ loc_170C1:
 ; ---------------------------------------------------------------------------
 
 loc_170CF:
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	dl, [bp+var_7]
 		mov	dh, 0
 		add	dx, word_26C44
@@ -23496,7 +23496,7 @@ loc_18170:
 		jnz	short loc_181B1
 		push	word_26C58
 		push	word_26C60
-		call	randring2_next8_and pascal, 0Fh
+		call	@randring2_next8_and$quc pascal, 0Fh
 		add	al, 38h	; '8'
 		push	ax
 		push	word_2066E
@@ -23640,7 +23640,7 @@ loc_182DD:
 		mov	bx, word_2065E
 		mov	[bx], dx
 		call	grcg_setcolor pascal, (GC_RMW shl 16) + 13
-		call	randring2_next8_and pascal, 7Fh
+		call	@randring2_next8_and$quc pascal, 7Fh
 		mov	[bp+@@angle], al
 		mov	ah, 0
 		mov	bx, word_2065C
@@ -24293,7 +24293,7 @@ loc_1895D:
 		jnz	short loc_18985
 		call	_snd_se_play c, 10
 		mov	patnum_2064E, 134
-		call	randring2_next8
+		call	@randring2_next8$qv
 		mov	byte ptr word_26CDA, al
 		jmp	short loc_189DC
 ; ---------------------------------------------------------------------------
@@ -24471,7 +24471,7 @@ loc_18ADD:
 loc_18B0D:
 		push	word_26C5A
 		push	word_26C62
-		call	randring2_next8_and pascal, 3Fh
+		call	@randring2_next8_and$quc pascal, 3Fh
 		add	al, 20h	; ' '
 		push	ax
 		push	20h ; ' '
@@ -24479,7 +24479,7 @@ loc_18B0D:
 		call	sub_1078E
 		push	word_26C5A
 		push	word_26C62
-		call	randring2_next8_and pascal, 3Fh
+		call	@randring2_next8_and$quc pascal, 3Fh
 		add	al, 20h	; ' '
 		push	ax
 		push	20h ; ' '
@@ -24894,7 +24894,7 @@ var_3		= word ptr -3
 		add	ax, 50h	; 'P'
 		mov	word_26CE8, ax
 		mov	word_26CEA, 4
-		call	randring2_next8
+		call	@randring2_next8$qv
 		mov	byte_26CEC, al
 		jmp	loc_19169
 ; ---------------------------------------------------------------------------
@@ -25424,7 +25424,7 @@ loc_1941F:
 ; ---------------------------------------------------------------------------
 
 loc_19430:
-		call	randring2_next8
+		call	@randring2_next8$qv
 		mov	ah, 0
 		mov	bx, 3
 		cwd
@@ -25570,7 +25570,7 @@ loc_1953B:
 		mov	byte_26CFA, 0
 		mov	word_26C68, 1
 		mov	word_20650, 0
-		call	randring2_next8
+		call	@randring2_next8$qv
 		mov	ah, 0
 		mov	bx, 3
 		cwd
@@ -25646,7 +25646,7 @@ loc_195F8:
 		jle	loc_198A8
 		mov	word_26C68, 3
 		mov	word_20650, 0
-		call	randring2_next8
+		call	@randring2_next8$qv
 		mov	ah, 0
 		mov	bx, 3
 		cwd
@@ -25724,7 +25724,7 @@ loc_196A3:
 		jle	loc_198A8
 		mov	word_26C68, 5
 		mov	word_20650, 0
-		call	randring2_next8
+		call	@randring2_next8$qv
 		mov	ah, 0
 		mov	bx, 3
 		cwd
@@ -25804,7 +25804,7 @@ loc_19770:
 		mov	byte_26CF9, al
 		mov	word_26C68, 7
 		mov	word_20650, 0
-		call	randring2_next8_and pascal, 7
+		call	@randring2_next8_and$quc pascal, 7
 		mov	ah, 0
 		mov	word_26C6A, ax
 		mov	word_26CBE, 0
@@ -25938,7 +25938,7 @@ loc_198A8:
 		mov	patnum_2064E, 128
 		mov	word_26CBE, 0
 		mov	word_20650, 0
-		call	randring2_next8
+		call	@randring2_next8$qv
 		mov	ah, 0
 		mov	bx, 3
 		cwd
@@ -26847,7 +26847,7 @@ loc_1A1D5:
 		add	ax, 28
 		push	ax
 		push	word_26D00
-		call	randring2_next8_and pascal, 3Fh
+		call	@randring2_next8_and$quc pascal, 3Fh
 		add	al, 20h	; ' '
 		push	ax
 		push	20h ; ' '
@@ -26965,7 +26965,7 @@ loc_1A30A:
 		mov	ax, 0FFFFh
 		imul	word_26CFE
 		mov	word_26CFE, ax
-		call	randring2_next8
+		call	@randring2_next8$qv
 		mov	ah, 0
 		mov	bx, 5
 		cwd
@@ -27036,7 +27036,7 @@ loc_1A3A3:
 		mov	ax, 0FFFFh
 		imul	word_26CFE
 		mov	word_26CFE, ax
-		call	randring2_next8
+		call	@randring2_next8$qv
 		mov	ah, 0
 		mov	bx, 5
 		cwd
@@ -27715,7 +27715,7 @@ loc_1AB43:
 		add	bx, bx
 		cmp	word ptr [bx-6D4Eh], 6Eh ; 'n'
 		jl	short loc_1ABEE
-		call	randring2_next8
+		call	@randring2_next8$qv
 		mov	ah, 0
 		mov	bx, 50h	; 'P'
 		cwd
@@ -28610,7 +28610,7 @@ sub_1B35F	proc near
 		call	sub_1B19D
 		cmp	word_20650, 32h	; '2'
 		jnz	short loc_1B39A
-		call	randring2_next8
+		call	@randring2_next8$qv
 		mov	byte ptr word_26D7F+1, al
 		mov	al, byte_1EEA4
 		mov	ah, 0
@@ -28883,7 +28883,7 @@ loc_1B592:
 		mov	point_26D76.y, ax
 		test	byte ptr word_20650, 0Fh
 		jnz	short loc_1B654
-		call	randring2_next8_and pascal, 3
+		call	@randring2_next8_and$quc pascal, 3
 		mov	ah, 0
 		mov	si, ax
 		mov	bx, si
@@ -29451,7 +29451,7 @@ loc_1BAC5:
 		add	al, byte ptr [bp+var_4]
 		push	ax
 		push	20h ; ' '
-		call	randring2_next8_and pascal, 1Fh
+		call	@randring2_next8_and$quc pascal, 1Fh
 		mov	ah, 0
 		add	ax, 10h
 		push	ax
@@ -29758,13 +29758,13 @@ loc_1BDBD:
 ; ---------------------------------------------------------------------------
 
 loc_1BDC4:
-		call	randring2_next8_and pascal, 7
+		call	@randring2_next8_and$quc pascal, 7
 		mov	dl, byte_1EEA5
 		shl	dl, 4
 		add	al, dl
 		add	al, 40h
 		mov	byte ptr [bp+var_3], al
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	bx, 368
 		xor	dx, dx
 		div	bx
@@ -29774,13 +29774,13 @@ loc_1BDC4:
 		push	[bp+var_3]
 		push	255
 		push	55h ; 'U'
-		call	randring2_next8_and pascal, 1Fh
+		call	@randring2_next8_and$quc pascal, 1Fh
 		mov	ah, 0
 		add	ax, 10h
 		push	ax
 		call	sub_10865
 		push	si
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	bx, 320
 		xor	dx, dx
 		div	bx
@@ -29789,7 +29789,7 @@ loc_1BDC4:
 		push	[bp+var_3]
 		push	255
 		push	55h ; 'U'
-		call	randring2_next8_and pascal, 1Fh
+		call	@randring2_next8_and$quc pascal, 1Fh
 		mov	ah, 0
 		add	ax, 10h
 		push	ax
@@ -29876,7 +29876,7 @@ loc_1BEA6:
 ; ---------------------------------------------------------------------------
 
 loc_1BEB2:
-		call	randring2_next8
+		call	@randring2_next8$qv
 		mov	ah, 0
 		mov	bx, 3
 		cwd
@@ -29958,7 +29958,7 @@ loc_1BF3A:
 		jz	short loc_1BF78
 
 loc_1BF53:
-		call	randring2_next16
+		call	@randring2_next16$qv
 		mov	bx, 384
 		xor	dx, dx
 		div	bx
@@ -30123,7 +30123,7 @@ loc_1C086:
 ; ---------------------------------------------------------------------------
 
 loc_1C0A5:
-		call	randring2_next8
+		call	@randring2_next8$qv
 		mov	ah, 0
 		mov	bx, 5
 		cwd
@@ -30156,7 +30156,7 @@ loc_1C0E4:
 
 loc_1C0F2:
 		inc	byte_26D4E
-		call	randring2_next8
+		call	@randring2_next8$qv
 		mov	ah, 0
 		mov	bx, 3
 		cwd
