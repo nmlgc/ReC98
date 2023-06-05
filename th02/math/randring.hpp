@@ -26,6 +26,13 @@ template <class T> inline bool is_range_a_power_of_two(T min, T max) {
 }
 
 #if (GAME == 2)
+	inline uint8_t randring1_next8_ge_lt(uint8_t min, uint8_t max) {
+		if(is_range_a_power_of_two(min, max)) {
+			return (min + randring1_next8_and((max - min) - 1));
+		}
+		return (min + (randring1_next8() % (max - min)));
+	}
+
 	inline uint16_t randring1_next16_ge_lt(uint16_t min, uint16_t max) {
 		if(is_range_a_power_of_two(min, max)) {
 			return (min + (randring1_next16() & ((max - min) - 1)));

@@ -85,6 +85,17 @@ extern uint8_t semirandom_ring_p;
 extern int32_t item_score_this_frame;
 // -----
 
+void near items_init_and_reset(void)
+{
+	semirandom_ring_p = randring1_next8_ge_lt(0, (SEMIRANDOM_RING_SIZE - 2));
+	for(int i = 0; i < ITEM_COUNT; i++) {
+		items[i].flag = F_FREE;
+	}
+	point_items_collected = 0;
+	pointnums_init_for_rank_and_reset();
+	items_miss_add_gameover = false;
+}
+
 void pascal items_add_semirandom(screen_x_t left, screen_y_t top)
 {
 	if(item_bigpower_override) {

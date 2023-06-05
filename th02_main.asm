@@ -1509,7 +1509,7 @@ loc_B88A:
 		call	sub_B362
 
 loc_B8AF:
-		call	sub_D629
+		call	@items_init_and_reset$qv
 		call	@score_extend_init$qv
 
 loc_B8B5:
@@ -4561,42 +4561,10 @@ loc_D61D:
 		leave
 		retn
 sub_D488	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_D629	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		push	7
-		call	@randring1_next8_and$quc
-		mov	_item_semirandom_ring_p, al
-		xor	si, si
-		jmp	short loc_D644
-; ---------------------------------------------------------------------------
-
-loc_D639:
-		mov	bx, si
-		shl	bx, 4
-		mov	_items[bx].ITEM_flag, F_FREE
-		inc	si
-
-loc_D644:
-		cmp	si, ITEM_COUNT
-		jl	short loc_D639
-		mov	_point_items_collected, 0
-		call	@pointnums_init_for_rank_and_rese$qv
-		mov	_items_miss_add_gameover, 0
-		pop	si
-		pop	bp
-		retn
-sub_D629	endp
 main_01__TEXT	ends
 
 ITEM_TEXT	segment	byte public 'CODE' use16
+	@items_init_and_reset$qv procdesc near
 	extern @ITEMS_ADD_SEMIRANDOM$QII:proc
 	extern @ITEMS_ADD$QIII:proc
 	@ITEMS_MISS_ADD$QII procdesc pascal near \

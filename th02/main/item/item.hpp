@@ -26,6 +26,10 @@ extern int point_items_collected;
 // (as TH04 and TH05 do it) would have been better than this.
 extern bool items_miss_add_gameover;
 
+// Also picks a new starting point inside the hardcoded randomized item cycle
+// used by items_add_semirandom().
+void near items_init_and_reset(void);
+
 // Unconditionally spawns a big power item if [item_bigpower_override] is > 0.
 // Otherwise, spawns a bomb item with a 1-in-512 chance, or the next item along
 // a hardcoded ring of power and point items.
