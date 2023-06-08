@@ -6,9 +6,7 @@
 #include "master.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th02/v_colors.hpp"
-extern "C" {
 #include "th04/math/vector.hpp"
-}
 #include "th04/hardware/grcg.hpp"
 extern "C" {
 #include "th04/snd/snd.h"

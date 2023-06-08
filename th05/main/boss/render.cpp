@@ -13,9 +13,7 @@
 #include "th01/math/subpixel.hpp"
 #include "th02/v_colors.hpp"
 #include "th04/hardware/grcg.hpp"
-extern "C" {
 #include "th04/math/vector.hpp"
-}
 #include "th04/math/motion.hpp"
 #include "th04/math/randring.hpp"
 #include "th04/formats/bb.h"

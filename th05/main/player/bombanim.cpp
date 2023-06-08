@@ -2,9 +2,7 @@
 #include "pc98.h"
 #include "master.hpp"
 #include "th01/math/subpixel.hpp"
-extern "C" {
 #include "th04/math/vector.hpp"
-}
 #include "th04/math/randring.hpp"
 #include "th04/main/playfld.hpp"
 #include "th04/main/frames.h"
