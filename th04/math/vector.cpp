@@ -6,11 +6,12 @@
 #include "master.hpp"
 #include "th01/math/polar.hpp"
 #include "th01/math/subpixel.hpp"
+#include "th03/math/polar.hpp"
 #include "th04/math/vector.hpp"
 
-extern "C" int pascal vector1_at(int origin, int length, int angle)
+int pascal polar(int center, int radius, int ratio)
 {
-	return (((static_cast<long>(length) * angle) >> 8) + origin);
+	return (((static_cast<long>(radius) * ratio) >> 8) + center);
 }
 
 extern "C" void pascal vector2_at(

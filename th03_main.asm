@@ -3419,14 +3419,14 @@ loc_BD00:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, large (80 shl 16) or 0, _CosTable8[bx]
+		call	@polar$qiii c, large (80 shl 16) or 0, _CosTable8[bx]
 		mov	di, ax
 		mov	bx, word_20CE4
 		mov	al, [bx+6]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, large (80 shl 16) or 0, _SinTable8[bx]
+		call	@polar$qiii c, large (80 shl 16) or 0, _SinTable8[bx]
 		mov	[bp+var_2], ax
 		mov	bx, word_20CE4
 		add	[bx], di
@@ -3982,7 +3982,7 @@ arg_2		= byte ptr  6
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_20E3E, word_20E42, _CosTable8[bx]
+		call	@polar$qiii c, word_20E3E, word_20E42, _CosTable8[bx]
 		mov	dl, _pid_PID_current
 		mov	dh, 0
 		add	dx, dx
@@ -3993,7 +3993,7 @@ arg_2		= byte ptr  6
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_20E40, word_20E42, _SinTable8[bx]
+		call	@polar$qiii c, word_20E40, word_20E42, _SinTable8[bx]
 		mov	[bp+@@top], ax
 		call	sprite16_put pascal, [bp+@@left], ax, 34B4h
 		leave
@@ -5807,7 +5807,7 @@ loc_CF62:
 		mov	ah, 0
 		push	ax
 		push	word ptr [si+2]
-		call	_vector1_at
+		call	@polar$qiii
 		add	sp, 6
 		mov	bx, di
 		add	bx, bx
@@ -5823,7 +5823,7 @@ loc_CF62:
 		mov	ah, 0
 		push	ax
 		push	word ptr [si+4]
-		call	_vector1_at
+		call	@polar$qiii
 		add	sp, 6
 		cwd
 		sub	ax, dx
@@ -8728,7 +8728,7 @@ SHARED	segment	word public 'CODE' use16
 	extern VECTOR2:proc
 	extern VECTOR2_BETWEEN_PLUS:proc
 	extern _game_exit:proc
-	extern _vector1_at:proc
+	extern @polar$qiii:proc
 	extern FRAME_DELAY:proc
 	extern _input_reset_sense_key_held:proc
 	extern _snd_se_reset:proc
@@ -8828,14 +8828,14 @@ loc_F26E:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, di, [bp+@@length], _CosTable8[bx]
+		call	@polar$qiii c, di, [bp+@@length], _CosTable8[bx]
 		add	ax, -24
 		mov	[bp+@@left], ax
 		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, [bp+arg_2], [bp+@@length], _SinTable8[bx]
+		call	@polar$qiii c, [bp+arg_2], [bp+@@length], _SinTable8[bx]
 		add	ax, -24
 		mov	[bp+@@top], ax
 		call	sprite16_put pascal, [bp+@@left], ax, 1930h
@@ -8864,7 +8864,7 @@ loc_F2D4:
 		add	ax, ax
 		push	ax
 		push	di
-		call	_vector1_at
+		call	@polar$qiii
 		add	sp, 6
 		add	ax, -24
 		mov	[bp+@@left], ax
@@ -8877,7 +8877,7 @@ loc_F2D4:
 		add	ax, ax
 		push	ax
 		push	[bp+arg_2]
-		call	_vector1_at
+		call	@polar$qiii
 		add	sp, 6
 		add	ax, -24
 		mov	[bp+@@top], ax
@@ -8928,7 +8928,7 @@ sub_F356	proc near
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, large (16 shl 16) or 0, _SinTable8[bx]
+		call	@polar$qiii c, large (16 shl 16) or 0, _SinTable8[bx]
 		mov	word_1F348, ax
 		cmp	word_1F33E, 300h
 		jg	short loc_F399
@@ -10188,13 +10188,13 @@ loc_FE54:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F33E, (48 shl 4), _CosTable8[bx]
+		call	@polar$qiii c, word_1F33E, (48 shl 4), _CosTable8[bx]
 		mov	word_23E3E, ax
 		mov	al, angle_20E2B
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F340, (48 shl 4), _SinTable8[bx]
+		call	@polar$qiii c, word_1F340, (48 shl 4), _SinTable8[bx]
 		mov	word_23E40, ax
 		mov	al, angle_20E2B
 		add	al, 40h
@@ -10553,13 +10553,13 @@ arg_2		= word ptr  6
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, [bp+var_2], si, _CosTable8[bx]
+		call	@polar$qiii c, [bp+var_2], si, _CosTable8[bx]
 		mov	di, ax
 		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, [bp+var_4], si, _SinTable8[bx]
+		call	@polar$qiii c, [bp+var_4], si, _SinTable8[bx]
 		mov	[bp+@@top], ax
 		call	sprite16_put pascal, di, ax, sprite_1F34C
 		mov	ah, SPRITE16_SET_MASK
@@ -10571,13 +10571,13 @@ arg_2		= word ptr  6
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, [bp+var_2], si, _CosTable8[bx]
+		call	@polar$qiii c, [bp+var_2], si, _CosTable8[bx]
 		mov	di, ax
 		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, [bp+var_4], si, _SinTable8[bx]
+		call	@polar$qiii c, [bp+var_4], si, _SinTable8[bx]
 		mov	[bp+@@top], ax
 		call	sprite16_put pascal, di, ax, sprite_1F34C
 		mov	ah, SPRITE16_SET_MASK
@@ -11744,13 +11744,13 @@ loc_10C8D:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F33E, (32 shl 4), _CosTable8[bx]
+		call	@polar$qiii c, word_1F33E, (32 shl 4), _CosTable8[bx]
 		mov	word_23E3E, ax
 		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F340, (32 shl 4), _SinTable8[bx]
+		call	@polar$qiii c, word_1F340, (32 shl 4), _SinTable8[bx]
 		mov	word_23E40, ax
 		call	sub_17730
 		mov	al, [bp+@@angle]
@@ -11763,13 +11763,13 @@ loc_10C8D:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F33E, (32 shl 4), _CosTable8[bx]
+		call	@polar$qiii c, word_1F33E, (32 shl 4), _CosTable8[bx]
 		mov	word_23E3E, ax
 		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F340, (32 shl 4), _SinTable8[bx]
+		call	@polar$qiii c, word_1F340, (32 shl 4), _SinTable8[bx]
 		mov	word_23E40, ax
 		call	sub_17730
 
@@ -11787,7 +11787,7 @@ loc_10D62:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, point_1F342.y, (48 shl 4), _SinTable8[bx]
+		call	@polar$qiii c, point_1F342.y, (48 shl 4), _SinTable8[bx]
 		mov	word_1F340, ax
 		cmp	word_1F3B0, 80h
 		jb	short locret_10D9E
@@ -11897,7 +11897,7 @@ loc_10E3F:
 		add	ax, ax
 		push	ax
 		push	word_1F33E
-		call	_vector1_at
+		call	@polar$qiii
 		add	sp, 6
 		mov	bx, si
 		add	bx, bx
@@ -11912,7 +11912,7 @@ loc_10E3F:
 		add	ax, ax
 		push	ax
 		push	word_1F340
-		call	_vector1_at
+		call	@polar$qiii
 		add	sp, 6
 		mov	bx, si
 		add	bx, bx
@@ -11951,7 +11951,7 @@ loc_10EC9:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F33E, (48 shl 4), _CosTable8[bx]
+		call	@polar$qiii c, word_1F33E, (48 shl 4), _CosTable8[bx]
 		mov	bx, si
 		add	bx, bx
 		mov	[bx+686Ah], ax
@@ -11959,7 +11959,7 @@ loc_10EC9:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F340, (48 shl 4), _SinTable8[bx]
+		call	@polar$qiii c, word_1F340, (48 shl 4), _SinTable8[bx]
 		mov	bx, si
 		add	bx, bx
 		mov	[bx+6876h], ax
@@ -12432,13 +12432,13 @@ loc_11330:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F33E, [bp+arg_0], _CosTable8[bx]
+		call	@polar$qiii c, word_1F33E, [bp+arg_0], _CosTable8[bx]
 		mov	di, ax
 		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F340, [bp+arg_0], _SinTable8[bx]
+		call	@polar$qiii c, word_1F340, [bp+arg_0], _SinTable8[bx]
 		mov	[bp+@@top], ax
 		push	di
 		mov	al, [bp+@@pid_other]
@@ -13185,13 +13185,13 @@ loc_11978:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F33E, [bp+arg_4], _CosTable8[bx]
+		call	@polar$qiii c, word_1F33E, [bp+arg_4], _CosTable8[bx]
 		mov	di, ax
 		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F340, [bp+arg_4], _SinTable8[bx]
+		call	@polar$qiii c, word_1F340, [bp+arg_4], _SinTable8[bx]
 		mov	[bp+@@top], ax
 		call	playfield_fg_x_to_screen pascal, di, [bp+@@pid_other]
 		add	ax, -16
@@ -13364,13 +13364,13 @@ loc_11ADD:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F33E, word_1F356, _CosTable8[bx]
+		call	@polar$qiii c, word_1F33E, word_1F356, _CosTable8[bx]
 		mov	[bp+var_2], ax
 		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F340, word_1F356, _SinTable8[bx]
+		call	@polar$qiii c, word_1F340, word_1F356, _SinTable8[bx]
 		mov	[bp+var_4], ax
 		mov	ax, [bp+var_2]
 		mov	word_23E3E, ax
@@ -13620,13 +13620,13 @@ loc_11D77:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F33E, word_1F356, _CosTable8[bx]
+		call	@polar$qiii c, word_1F33E, word_1F356, _CosTable8[bx]
 		mov	[bp+var_2], ax
 		mov	al, [bp+var_5]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F340, word_1F356, _SinTable8[bx]
+		call	@polar$qiii c, word_1F340, word_1F356, _SinTable8[bx]
 		mov	[bp+var_4], ax
 		mov	ax, [bp+var_2]
 		mov	word_23E3E, ax
@@ -13925,13 +13925,13 @@ loc_12021:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F33E, [bp+var_6], _CosTable8[bx]
+		call	@polar$qiii c, word_1F33E, [bp+var_6], _CosTable8[bx]
 		mov	di, ax
 		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F340, [bp+var_6], _SinTable8[bx]
+		call	@polar$qiii c, word_1F340, [bp+var_6], _SinTable8[bx]
 		mov	[bp+@@top], ax
 		push	di
 		mov	al, _pid_current
@@ -14959,13 +14959,13 @@ loc_129A0:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F33E, [bp+var_8], _CosTable8[bx]
+		call	@polar$qiii c, word_1F33E, [bp+var_8], _CosTable8[bx]
 		mov	di, ax
 		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F340, [bp+var_8], _SinTable8[bx]
+		call	@polar$qiii c, word_1F340, [bp+var_8], _SinTable8[bx]
 		mov	[bp+@@top], ax
 		call	playfield_fg_x_to_screen pascal, di, [bp+@@pid_other]
 		add	ax, -16
@@ -15980,13 +15980,13 @@ loc_13286:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F33E, [bp+var_6], _CosTable8[bx]
+		call	@polar$qiii c, word_1F33E, [bp+var_6], _CosTable8[bx]
 		mov	di, ax
 		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F340, [bp+var_6], _SinTable8[bx]
+		call	@polar$qiii c, word_1F340, [bp+var_6], _SinTable8[bx]
 		mov	[bp+@@top], ax
 		push	di
 		mov	al, _pid_current
@@ -16182,13 +16182,13 @@ loc_13426:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F33E, (48 shl 4), _CosTable8[bx]
+		call	@polar$qiii c, word_1F33E, (48 shl 4), _CosTable8[bx]
 		mov	word_23E3E, ax
 		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F340, (48 shl 4), _SinTable8[bx]
+		call	@polar$qiii c, word_1F340, (48 shl 4), _SinTable8[bx]
 		mov	word_23E40, ax
 		mov	al, [bp+@@angle]
 		add	al, [bp+var_2]
@@ -16637,13 +16637,13 @@ loc_1383D:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, [bp+@@left], 48, _CosTable8[bx]
+		call	@polar$qiii c, [bp+@@left], 48, _CosTable8[bx]
 		mov	[bp+var_6], ax
 		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, [bp+@@top], 48, _SinTable8[bx]
+		call	@polar$qiii c, [bp+@@top], 48, _SinTable8[bx]
 		mov	[bp+var_8], ax
 		test	di, 3
 		jz	short loc_1388B
@@ -16733,13 +16733,13 @@ loc_13910:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F33E, [bp+var_6], _CosTable8[bx]
+		call	@polar$qiii c, word_1F33E, [bp+var_6], _CosTable8[bx]
 		mov	di, ax
 		mov	al, [bp+@@angle]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, word_1F340, [bp+var_6], _SinTable8[bx]
+		call	@polar$qiii c, word_1F340, [bp+var_6], _SinTable8[bx]
 		mov	[bp+@@top], ax
 		push	di
 		mov	al, _pid_current
@@ -20634,7 +20634,7 @@ loc_15A91:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, 144, di, _CosTable8[bx]
+		call	@polar$qiii c, 144, di, _CosTable8[bx]
 		add	ax, [bp+var_2]
 		mov	bx, si
 		add	bx, bx
@@ -20645,7 +20645,7 @@ loc_15A91:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, 200, di, _SinTable8[bx]
+		call	@polar$qiii c, 200, di, _SinTable8[bx]
 		cwd
 		sub	ax, dx
 		sar	ax, 1
@@ -20678,7 +20678,7 @@ loc_15B29:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, 144, di, _CosTable8[bx]
+		call	@polar$qiii c, 144, di, _CosTable8[bx]
 		add	ax, [bp+var_2]
 		mov	bx, si
 		add	bx, bx
@@ -20689,7 +20689,7 @@ loc_15B29:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, 200, di, _SinTable8[bx]
+		call	@polar$qiii c, 200, di, _SinTable8[bx]
 		cwd
 		sub	ax, dx
 		sar	ax, 1
@@ -22644,14 +22644,14 @@ loc_16BEC:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, [bp+var_6], [bp+@@length], _CosTable8[bx]
+		call	@polar$qiii c, [bp+var_6], [bp+@@length], _CosTable8[bx]
 		mov	di, ax
 		mov	al, [bp+var_A]
 		add	al, [bp+arg_0]
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, [bp+var_8], [bp+@@length], _SinTable8[bx]
+		call	@polar$qiii c, [bp+var_8], [bp+@@length], _SinTable8[bx]
 		mov	[bp+@@top], ax
 		push	di
 		mov	al, _pid_current
@@ -26349,13 +26349,13 @@ loc_18A68:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, large (144 shl 16) or 144, _CosTable8[bx]
+		call	@polar$qiii c, large (144 shl 16) or 144, _CosTable8[bx]
 		mov	si, ax
 		mov	al, angle_1FBD4
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, large (144 shl 16) or 184, _SinTable8[bx]
+		call	@polar$qiii c, large (144 shl 16) or 184, _SinTable8[bx]
 		mov	di, ax
 		mov	ax, si
 		shl	ax, 4
@@ -26373,13 +26373,13 @@ loc_18A68:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, large (144 shl 16) or 144, _CosTable8[bx]
+		call	@polar$qiii c, large (144 shl 16) or 144, _CosTable8[bx]
 		mov	si, ax
 		mov	al, angle_1FBD4
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, large (144 shl 16) or 184, _SinTable8[bx]
+		call	@polar$qiii c, large (144 shl 16) or 184, _SinTable8[bx]
 		mov	di, ax
 		mov	ax, si
 		shl	ax, 4
@@ -27778,7 +27778,7 @@ loc_1969B:
 		mov	bx, [di]
 		push	word ptr [bx+14h]
 		push	word ptr [bx+2]
-		call	_vector1_at
+		call	@polar$qiii
 		add	sp, 6
 		mov	[di+2],	ax
 		mov	bx, [di]
@@ -27790,7 +27790,7 @@ loc_1969B:
 		mov	bx, [di]
 		push	word ptr [bx+14h]
 		push	word ptr [bx+4]
-		call	_vector1_at
+		call	@polar$qiii
 		add	sp, 6
 		mov	[di+10h], ax
 		mov	ax, [di+2]
@@ -34060,7 +34060,7 @@ loc_1C563:
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+3930h]
-		call	_vector1_at
+		call	@polar$qiii
 		add	sp, 6
 		mov	[si], ax
 		mov	al, [si+4]
@@ -34074,7 +34074,7 @@ loc_1C563:
 		add	ax, ax
 		mov	bx, ax
 		push	word ptr [bx+3934h]
-		call	_vector1_at
+		call	@polar$qiii
 		add	sp, 6
 		mov	[si+2],	ax
 		test	byte ptr [bp+var_2], 1

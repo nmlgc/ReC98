@@ -381,7 +381,7 @@ loc_AEF1:
 		add	ax, ax
 		mov	bx, ax
 		push	_CosTable8[bx]
-		call	vector1_at
+		call	@polar$qiii
 		mov	di, ax
 		push	[bp+arg_2]
 		push	si
@@ -390,7 +390,7 @@ loc_AEF1:
 		add	ax, ax
 		mov	bx, ax
 		push	_SinTable8[bx]
-		call	vector1_at
+		call	@polar$qiii
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
@@ -409,7 +409,7 @@ loc_AEF1:
 		add	ax, ax
 		mov	bx, ax
 		push	_CosTable8[bx]
-		call	vector1_at
+		call	@polar$qiii
 		mov	di, ax
 		push	[bp+arg_2]
 		push	si
@@ -418,7 +418,7 @@ loc_AEF1:
 		add	ax, ax
 		mov	bx, ax
 		push	_SinTable8[bx]
-		call	vector1_at
+		call	@polar$qiii
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
@@ -437,7 +437,7 @@ loc_AEF1:
 		add	ax, ax
 		mov	bx, ax
 		push	_CosTable8[bx]
-		call	vector1_at
+		call	@polar$qiii
 		mov	di, ax
 		push	[bp+arg_2]
 		push	si
@@ -446,7 +446,7 @@ loc_AEF1:
 		add	ax, ax
 		mov	bx, ax
 		push	_SinTable8[bx]
-		call	vector1_at
+		call	@polar$qiii
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
@@ -465,7 +465,7 @@ loc_AEF1:
 		add	ax, ax
 		mov	bx, ax
 		push	_CosTable8[bx]
-		call	vector1_at
+		call	@polar$qiii
 		mov	di, ax
 		push	[bp+arg_2]
 		push	si
@@ -474,7 +474,7 @@ loc_AEF1:
 		add	ax, ax
 		mov	bx, ax
 		push	_SinTable8[bx]
-		call	vector1_at
+		call	@polar$qiii
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
@@ -536,7 +536,7 @@ loc_B04E:
 		sar	ax, 1
 		push	ax
 		push	_CosTable8+192
-		call	vector1_at
+		call	@polar$qiii
 		mov	di, ax
 		push	[bp+arg_2]
 		mov	ax, si
@@ -545,7 +545,7 @@ loc_B04E:
 		sar	ax, 1
 		push	ax
 		push	_CosTable8+64
-		call	vector1_at
+		call	@polar$qiii
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
@@ -555,9 +555,9 @@ loc_B04E:
 		push	ax
 		push	0
 		call	cdg_put_plane
-		call	vector1_at pascal, [bp+arg_4], si, _CosTable8+128
+		call	@polar$qiii pascal, [bp+arg_4], si, _CosTable8+128
 		mov	di, ax
-		call	vector1_at pascal, [bp+arg_2], si, _CosTable8
+		call	@polar$qiii pascal, [bp+arg_2], si, _CosTable8
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
@@ -574,7 +574,7 @@ loc_B04E:
 		sar	ax, 1
 		push	ax
 		push	_CosTable8+448
-		call	vector1_at
+		call	@polar$qiii
 		mov	di, ax
 		push	[bp+arg_2]
 		mov	ax, si
@@ -583,7 +583,7 @@ loc_B04E:
 		sar	ax, 1
 		push	ax
 		push	_CosTable8+320
-		call	vector1_at
+		call	@polar$qiii
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
@@ -593,9 +593,9 @@ loc_B04E:
 		push	ax
 		push	2
 		call	cdg_put_plane
-		call	vector1_at pascal, [bp+arg_4], si, _CosTable8+384
+		call	@polar$qiii pascal, [bp+arg_4], si, _CosTable8+384
 		mov	di, ax
-		call	vector1_at pascal, [bp+arg_2], si, _CosTable8+256
+		call	@polar$qiii pascal, [bp+arg_2], si, _CosTable8+256
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
@@ -654,7 +654,7 @@ loc_B165:
 		sar	ax, 1
 		push	ax
 		push	_CosTable8
-		call	vector1_at
+		call	@polar$qiii
 		mov	di, ax
 		push	[bp+arg_2]
 		mov	ax, si
@@ -663,7 +663,7 @@ loc_B165:
 		sar	ax, 1
 		push	ax
 		push	_SinTable8
-		call	vector1_at
+		call	@polar$qiii
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
@@ -673,9 +673,9 @@ loc_B165:
 		push	ax
 		push	0
 		call	cdg_put_plane
-		call	vector1_at pascal, [bp+arg_4], si, _CosTable8
+		call	@polar$qiii pascal, [bp+arg_4], si, _CosTable8
 		mov	di, ax
-		call	vector1_at pascal, [bp+arg_2], si, _SinTable8
+		call	@polar$qiii pascal, [bp+arg_2], si, _SinTable8
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
@@ -692,7 +692,7 @@ loc_B165:
 		sar	ax, 1
 		push	ax
 		push	_CosTable8+256
-		call	vector1_at
+		call	@polar$qiii
 		mov	di, ax
 		push	[bp+arg_2]
 		mov	ax, si
@@ -701,7 +701,7 @@ loc_B165:
 		sar	ax, 1
 		push	ax
 		push	_CosTable8+128
-		call	vector1_at
+		call	@polar$qiii
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
@@ -711,9 +711,9 @@ loc_B165:
 		push	ax
 		push	2
 		call	cdg_put_plane
-		call	vector1_at pascal, [bp+arg_4], si, _CosTable8+256
+		call	@polar$qiii pascal, [bp+arg_4], si, _CosTable8+256
 		mov	di, ax
-		call	vector1_at pascal, [bp+arg_2], si, _CosTable8+128
+		call	@polar$qiii pascal, [bp+arg_2], si, _CosTable8+128
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
@@ -3241,7 +3241,7 @@ SHARED	segment	word public 'CODE' use16
 	extern PI_PUT_8:proc
 	extern PI_LOAD:proc
 	extern INPUT_WAIT_FOR_CHANGE:proc
-	extern VECTOR1_AT:proc
+	extern @POLAR$QIII:proc
 	extern SND_KAJA_INTERRUPT:proc
 	extern SND_DETERMINE_MODES:proc
 	extern SND_DELAY_UNTIL_MEASURE:proc

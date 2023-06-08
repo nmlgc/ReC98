@@ -3914,7 +3914,7 @@ loc_F816:
 		add	ax, ax
 		mov	bx, ax
 		push	_CosTable8[bx]
-		call	vector1_at
+		call	@polar$qiii
 		mov	si, ax
 		push	_midboss_pos.cur.y
 		push	[bp+var_4]
@@ -3923,7 +3923,7 @@ loc_F816:
 		add	ax, ax
 		mov	bx, ax
 		push	_SinTable8[bx]
-		call	vector1_at
+		call	@polar$qiii
 		mov	di, ax
 		cmp	di, (-16 shl 4)
 		jle	short loc_F881
@@ -6691,7 +6691,7 @@ loc_116CE:
 		mov	bx, [bp+@@angle]
 		add	bx, bx
 		push	_SinTable8[bx]
-		call	vector1_at
+		call	@polar$qiii
 		mov	[bp+var_6], ax
 		cmp	byte ptr [di+1], 0
 		jnz	short loc_116F8
@@ -7854,7 +7854,7 @@ SHARED_	segment	word public 'CODE' use16
 	extern _snd_se_update:proc
 	extern CDG_PUT_8:proc
 	extern _game_exit:proc
-	extern VECTOR1_AT:proc
+	extern @POLAR$QIII:proc
 	extern VECTOR2_AT:proc
 	extern SND_LOAD:proc
 	extern SND_KAJA_INTERRUPT:proc
@@ -11740,7 +11740,7 @@ sub_19634	proc near
 		add	ax, ax
 		mov	bx, ax
 		push	_CosTable8[bx]
-		call	vector1_at
+		call	@polar$qiii
 		mov	puppet0.pos.cur.x, ax
 		push	(96 shl 4)
 		push	puppet0.radius_motion
@@ -11749,7 +11749,7 @@ sub_19634	proc near
 		add	ax, ax
 		mov	bx, ax
 		push	_SinTable8[bx]
-		call	vector1_at
+		call	@polar$qiii
 		mov	puppet0.pos.cur.y, ax
 		mov	al, puppet0.PUPPET_angle
 		add	al, -2
@@ -11762,7 +11762,7 @@ sub_19634	proc near
 		add	ax, ax
 		mov	bx, ax
 		push	_CosTable8[bx]
-		call	vector1_at
+		call	@polar$qiii
 		mov	puppet1.pos.cur.x, ax
 		push	(96 shl 4)
 		push	puppet1.radius_motion
@@ -11771,7 +11771,7 @@ sub_19634	proc near
 		add	ax, ax
 		mov	bx, ax
 		push	_SinTable8[bx]
-		call	vector1_at
+		call	@polar$qiii
 		mov	puppet1.pos.cur.y, ax
 		mov	al, puppet1.PUPPET_angle
 		add	al, 2
@@ -19458,7 +19458,7 @@ loc_1F1D4:
 		add	ax, ax
 		mov	bx, ax
 		push	_SinTable8[bx]
-		call	vector1_at
+		call	@polar$qiii
 		mov	_boss_pos.cur.x, ax
 		mov	al, _boss_statebyte[15]
 		add	al, 2

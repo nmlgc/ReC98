@@ -2467,7 +2467,7 @@ loc_B6CF:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, (RES_X / 2), si, _CosTable8[bx]
+		call	@polar$qiii c, (RES_X / 2), si, _CosTable8[bx]
 		mov	[bp+var_2], ax
 		mov	al, byte ptr [bp+var_6]
 		add	al, [bp+arg_6]
@@ -2481,7 +2481,7 @@ loc_B6CF:
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
-		call	_vector1_at c, (RES_Y / 2), si, _SinTable8[bx]
+		call	@polar$qiii c, (RES_Y / 2), si, _SinTable8[bx]
 		mov	[bp+var_4], ax
 		push	[bp+var_2]
 		push	ax
@@ -3309,7 +3309,7 @@ SHARED	segment	word public 'CODE' use16
 	extern _snd_determine_mode:proc
 	extern _snd_load:proc
 	extern _game_exit:proc
-	extern _vector1_at:proc
+	extern @polar$qiii:proc
 	extern CDG_PUT_8:proc
 	extern CDG_PUT_HFLIP_8:proc
 	extern FRAME_DELAY:proc

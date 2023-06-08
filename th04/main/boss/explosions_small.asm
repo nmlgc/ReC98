@@ -34,7 +34,7 @@ public @explosions_small_update_and_rend$qv
 	add	ax, ax
 	mov	bx, ax
 	push	_CosTable8[bx]
-	call	vector1_at
+	call	@polar$qiii
 	mov	[bp+@@draw_x], ax
 	push	[si+explosion_t.center.y]
 	push	[si+explosion_t.EXPLOSION_radius_cur.y]
@@ -44,7 +44,7 @@ public @explosions_small_update_and_rend$qv
 	add	ax, ax
 	mov	bx, ax
 	push	_SinTable8[bx]
-	call	vector1_at
+	call	@polar$qiii
 	mov	[bp+@@draw_y], ax
 	sar	ax, 4
 	add	ax, PLAYFIELD_TOP - (EXPLOSION_SMALL_H / 2)

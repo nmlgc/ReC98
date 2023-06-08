@@ -24,7 +24,7 @@ public @explosions_big_update_and_render$qv
 	add	ax, ax
 	mov	bx, ax
 	push	_CosTable8[bx]
-	call	vector1_at
+	call	@polar$qiii
 	mov	di, ax
 	sar	ax, 4
 	mov	di, ax
@@ -36,7 +36,7 @@ public @explosions_big_update_and_render$qv
 	add	ax, ax
 	mov	bx, ax
 	push	_SinTable8[bx]
-	call	vector1_at
+	call	@polar$qiii
 	mov	[bp+@@draw_y], ax
 	sar	ax, 4
 	; Yes, these are not clipped exactly to the playfield boundaries?

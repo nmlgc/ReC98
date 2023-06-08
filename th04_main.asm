@@ -9223,7 +9223,7 @@ loc_11AC4:
 		add	ax, ax
 		mov	bx, ax
 		push	_CosTable8[bx]
-		call	vector1_at
+		call	@polar$qiii
 		mov	si, ax
 		push	_midboss_pos.cur.y
 		push	[bp+@@length]
@@ -9232,7 +9232,7 @@ loc_11AC4:
 		add	ax, ax
 		mov	bx, ax
 		push	_SinTable8[bx]
-		call	vector1_at
+		call	@polar$qiii
 		mov	di, ax
 		cmp	di, (-16 shl 4)
 		jle	short loc_11B2F
@@ -11673,7 +11673,7 @@ SHARED	segment	word public 'CODE' use16
 	extern MPN_FREE:proc
 	extern INPUT_WAIT_FOR_CHANGE:proc
 	extern MPN_LOAD_PALETTE_SHOW:proc
-	extern VECTOR1_AT:proc
+	extern @POLAR$QIII:proc
 	extern VECTOR2_AT:proc
 	extern SND_KAJA_INTERRUPT:proc
 	extern SND_DETERMINE_MODES:proc
@@ -12414,7 +12414,7 @@ sub_146AF	proc near
 		add	ax, ax
 		mov	bx, ax
 		push	_CosTable8[bx]
-		call	vector1_at
+		call	@polar$qiii
 		mov	_midboss_pos.cur.x, ax
 		push	(96 shl 4)
 		push	_midboss_hp
@@ -12423,7 +12423,7 @@ sub_146AF	proc near
 		add	ax, ax
 		mov	bx, ax
 		push	_SinTable8[bx]
-		call	vector1_at
+		call	@polar$qiii
 		mov	_midboss_pos.cur.y, ax
 		mov	al, _midboss_angle
 		add	al, -2
@@ -12472,7 +12472,7 @@ loc_14749:
 		add	ax, ax
 		mov	bx, ax
 		push	_SinTable8[bx]
-		call	vector1_at
+		call	@polar$qiii
 		mov	_midboss_pos.cur.y, ax
 		mov	al, _midboss_angle
 		add	al, 2
@@ -20062,7 +20062,7 @@ kurumi_18B68	proc near
 		add	ax, ax
 		mov	bx, ax
 		push	_CosTable8[bx]
-		call	vector1_at
+		call	@polar$qiii
 		mov	_boss_pos.cur.x, ax
 		push	((91 shl 4) shl 16) or (20 shl 4)
 		mov	al, _boss_angle
@@ -20070,7 +20070,7 @@ kurumi_18B68	proc near
 		add	ax, ax
 		mov	bx, ax
 		push	_SinTable8[bx]
-		call	vector1_at
+		call	@polar$qiii
 		mov	_boss_pos.cur.y, ax
 		inc	_boss_angle
 		pop	bp
@@ -20091,7 +20091,7 @@ kurumi_18BA7	proc near
 		add	ax, ax
 		mov	bx, ax
 		push	_CosTable8[bx]
-		call	vector1_at
+		call	@polar$qiii
 		mov	_boss_pos.cur.x, ax
 		push	((91 shl 4) shl 16) or (20 shl 4)
 		mov	al, _boss_angle
@@ -20099,7 +20099,7 @@ kurumi_18BA7	proc near
 		add	ax, ax
 		mov	bx, ax
 		push	_SinTable8[bx]
-		call	vector1_at
+		call	@polar$qiii
 		mov	_boss_pos.cur.y, ax
 		dec	_boss_angle
 		pop	bp
@@ -21518,7 +21518,7 @@ loc_1989A:
 		add	ax, ax
 		mov	bx, ax
 		push	_SinTable8[bx]
-		call	vector1_at
+		call	@polar$qiii
 		mov	_boss_pos.velocity.y, ax
 		cmp	_boss_pos.cur.y, (96 shl 4)
 		jl	short loc_198C0
@@ -22697,7 +22697,7 @@ loc_1A4DE:
 		add	ax, ax
 		mov	bx, ax
 		push	_SinTable8[bx]
-		call	vector1_at
+		call	@polar$qiii
 		mov	_boss_pos.cur.y, ax
 		mov	al, _boss_angle
 		add	al, 2
@@ -24928,7 +24928,7 @@ loc_1BCE9:
 		add	ax, ax
 		mov	bx, ax
 		push	_CosTable8[bx]
-		call	vector1_at
+		call	@polar$qiii
 		mov	_boss_pos.cur.x, ax
 		push	(96 shl 4)
 		push	_boss_pos.prev.x
@@ -24937,7 +24937,7 @@ loc_1BCE9:
 		add	ax, ax
 		mov	bx, ax
 		push	_SinTable8[bx]
-		call	vector1_at
+		call	@polar$qiii
 		mov	_boss_pos.cur.y, ax
 		pop	bp
 		retn
@@ -27992,7 +27992,7 @@ loc_1EC01:
 		add	ax, ax
 		mov	bx, ax
 		push	_CosTable8[bx]
-		call	vector1_at
+		call	@polar$qiii
 		mov	[si+reimu_orb_t.B4RO_center.x], ax
 		push	word ptr [si+reimu_orb_t.B4RO_origin.y]
 		push	[si+reimu_orb_t.B4RO_distance]
@@ -28001,7 +28001,7 @@ loc_1EC01:
 		add	ax, ax
 		mov	bx, ax
 		push	_SinTable8[bx]
-		call	vector1_at
+		call	@polar$qiii
 		mov	[si+reimu_orb_t.B4RO_center.y],	ax
 		cmp	[si+reimu_orb_t.B4RO_distance], (64 shl 4)
 		jge	short loc_1EC4E
