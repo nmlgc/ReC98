@@ -349,8 +349,8 @@ sub_AED0	proc near
 
 var_2		= word ptr -2
 arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
+@@top		= word ptr  6
+@@left		= word ptr  8
 
 		enter	2, 0
 		push	si
@@ -358,9 +358,9 @@ arg_4		= word ptr  8
 		mov	si, [bp+arg_0]
 		or	si, si
 		jnz	short loc_AEF1
-		push	[bp+arg_4]
-		push	[bp+arg_2]
-		mov	al, byte_124C6
+		push	[bp+@@left]
+		push	[bp+@@top]
+		mov	al, _cdg_slot
 		mov	ah, 0
 		push	ax
 		call	cdg_put_8
@@ -374,18 +374,18 @@ loc_AEF1:
 		cwd
 		idiv	bx
 		mov	si, ax
-		push	[bp+arg_4]
+		push	[bp+@@left]
 		push	ax
-		mov	al, angle_124C7
+		mov	al, _radial_angle
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
 		push	_CosTable8[bx]
 		call	@polar$qiii
 		mov	di, ax
-		push	[bp+arg_2]
+		push	[bp+@@top]
 		push	si
-		mov	al, angle_124C7
+		mov	al, _radial_angle
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -394,16 +394,16 @@ loc_AEF1:
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
-		mov	al, byte_124C6
+		mov	al, _cdg_slot
 		mov	ah, 0
 		inc	ax
 		push	ax
 		push	0
 		call	cdg_put_plane
-		mov	al, angle_124C7
+		mov	al, _radial_angle
 		add	al, 40h
-		mov	angle_124C7, al
-		push	[bp+arg_4]
+		mov	_radial_angle, al
+		push	[bp+@@left]
 		push	si
 		mov	ah, 0
 		add	ax, ax
@@ -411,9 +411,9 @@ loc_AEF1:
 		push	_CosTable8[bx]
 		call	@polar$qiii
 		mov	di, ax
-		push	[bp+arg_2]
+		push	[bp+@@top]
 		push	si
-		mov	al, angle_124C7
+		mov	al, _radial_angle
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -422,16 +422,16 @@ loc_AEF1:
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
-		mov	al, byte_124C6
+		mov	al, _cdg_slot
 		mov	ah, 0
 		inc	ax
 		push	ax
 		push	1
 		call	cdg_put_plane
-		mov	al, angle_124C7
+		mov	al, _radial_angle
 		add	al, 40h
-		mov	angle_124C7, al
-		push	[bp+arg_4]
+		mov	_radial_angle, al
+		push	[bp+@@left]
 		push	si
 		mov	ah, 0
 		add	ax, ax
@@ -439,9 +439,9 @@ loc_AEF1:
 		push	_CosTable8[bx]
 		call	@polar$qiii
 		mov	di, ax
-		push	[bp+arg_2]
+		push	[bp+@@top]
 		push	si
-		mov	al, angle_124C7
+		mov	al, _radial_angle
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -450,16 +450,16 @@ loc_AEF1:
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
-		mov	al, byte_124C6
+		mov	al, _cdg_slot
 		mov	ah, 0
 		inc	ax
 		push	ax
 		push	2
 		call	cdg_put_plane
-		mov	al, angle_124C7
+		mov	al, _radial_angle
 		add	al, 40h
-		mov	angle_124C7, al
-		push	[bp+arg_4]
+		mov	_radial_angle, al
+		push	[bp+@@left]
 		push	si
 		mov	ah, 0
 		add	ax, ax
@@ -467,9 +467,9 @@ loc_AEF1:
 		push	_CosTable8[bx]
 		call	@polar$qiii
 		mov	di, ax
-		push	[bp+arg_2]
+		push	[bp+@@top]
 		push	si
-		mov	al, angle_124C7
+		mov	al, _radial_angle
 		mov	ah, 0
 		add	ax, ax
 		mov	bx, ax
@@ -478,15 +478,15 @@ loc_AEF1:
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
-		mov	al, byte_124C6
+		mov	al, _cdg_slot
 		mov	ah, 0
 		inc	ax
 		push	ax
 		push	3
 		call	cdg_put_plane
-		mov	al, angle_124C7
+		mov	al, _radial_angle
 		add	al, 40h
-		mov	angle_124C7, al
+		mov	_radial_angle, al
 		GRCG_OFF_CLOBBERING dx
 
 loc_B027:
@@ -516,7 +516,7 @@ arg_4		= word ptr  8
 		jnz	short loc_B04E
 		push	[bp+arg_4]
 		push	[bp+arg_2]
-		mov	al, byte_124C6
+		mov	al, _cdg_slot
 		mov	ah, 0
 		push	ax
 		call	cdg_put_8
@@ -549,7 +549,7 @@ loc_B04E:
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
-		mov	al, byte_124C6
+		mov	al, _cdg_slot
 		mov	ah, 0
 		inc	ax
 		push	ax
@@ -561,7 +561,7 @@ loc_B04E:
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
-		mov	al, byte_124C6
+		mov	al, _cdg_slot
 		mov	ah, 0
 		inc	ax
 		push	ax
@@ -587,7 +587,7 @@ loc_B04E:
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
-		mov	al, byte_124C6
+		mov	al, _cdg_slot
 		mov	ah, 0
 		inc	ax
 		push	ax
@@ -599,7 +599,7 @@ loc_B04E:
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
-		mov	al, byte_124C6
+		mov	al, _cdg_slot
 		mov	ah, 0
 		inc	ax
 		push	ax
@@ -634,7 +634,7 @@ arg_4		= word ptr  8
 		jnz	short loc_B165
 		push	[bp+arg_4]
 		push	[bp+arg_2]
-		mov	al, byte_124C6
+		mov	al, _cdg_slot
 		mov	ah, 0
 		push	ax
 		call	cdg_put_8
@@ -667,7 +667,7 @@ loc_B165:
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
-		mov	al, byte_124C6
+		mov	al, _cdg_slot
 		mov	ah, 0
 		inc	ax
 		push	ax
@@ -679,7 +679,7 @@ loc_B165:
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
-		mov	al, byte_124C6
+		mov	al, _cdg_slot
 		mov	ah, 0
 		inc	ax
 		push	ax
@@ -705,7 +705,7 @@ loc_B165:
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
-		mov	al, byte_124C6
+		mov	al, _cdg_slot
 		mov	ah, 0
 		inc	ax
 		push	ax
@@ -717,7 +717,7 @@ loc_B165:
 		mov	[bp+var_2], ax
 		push	di
 		push	ax
-		mov	al, byte_124C6
+		mov	al, _cdg_slot
 		mov	ah, 0
 		inc	ax
 		push	ax
@@ -781,14 +781,14 @@ sub_B25B	endp
 
 sub_B291	proc near
 
-@@page		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= word ptr  6
+@@page    	= word ptr -2
+@@base_top 	= word ptr  4
+@@base_left	= word ptr  6
 
 		enter	2, 0
 		push	si
 		push	di
-		mov	di, [bp+arg_2]
+		mov	di, [bp+@@base_left]
 		mov	si, 3Fh	; '?'
 		mov	[bp+@@page], 0
 		graph_accesspage 0
@@ -799,13 +799,13 @@ arg_2		= word ptr  6
 
 loc_B2AF:
 		push	di
-		push	[bp+arg_0]
-		mov	al, byte_124C6
+		push	[bp+@@base_top]
+		mov	al, _cdg_slot
 		mov	ah, 0
 		shl	ax, 4
 		mov	bx, ax
 		push	_cdg_slots.pixel_w[bx]
-		mov	al, byte_124C6
+		mov	al, _cdg_slot
 		mov	ah, 0
 		shl	ax, 4
 		mov	bx, ax
@@ -814,13 +814,10 @@ loc_B2AF:
 		push	ax
 		call	sub_B25B
 		dec	si
-		mov	al, angle_124C7
+		mov	al, _radial_angle
 		add	al, 8
-		mov	angle_124C7, al
-		push	di
-		push	[bp+arg_0]
-		push	si
-		call	fp_124C8
+		mov	_radial_angle, al
+		call	_dissolve_put_func pascal, di, [bp+@@base_top], si
 
 loc_B2E8:
 		cmp	vsync_Count1, 2
@@ -851,14 +848,14 @@ sub_B291	endp
 
 sub_B31E	proc near
 
-@@page		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= word ptr  6
+@@page    	= word ptr -2
+@@base_top	= word ptr  4
+@@base_left	= word ptr  6
 
 		enter	2, 0
 		push	si
 		push	di
-		mov	di, [bp+arg_2]
+		mov	di, [bp+@@base_left]
 		xor	si, si
 		mov	[bp+@@page], 0
 		graph_accesspage 0
@@ -868,13 +865,13 @@ arg_2		= word ptr  6
 loc_B339:
 		out	dx, al
 		push	di
-		push	[bp+arg_0]
-		mov	al, byte_124C6
+		push	[bp+@@base_top]
+		mov	al, _cdg_slot
 		mov	ah, 0
 		shl	ax, 4
 		mov	bx, ax
 		push	_cdg_slots.pixel_w[bx]
-		mov	al, byte_124C6
+		mov	al, _cdg_slot
 		mov	ah, 0
 		shl	ax, 4
 		mov	bx, ax
@@ -882,15 +879,12 @@ loc_B339:
 		push	si
 		call	sub_B25B
 		inc	si
-		mov	al, angle_124C7
+		mov	al, _radial_angle
 		add	al, 8
-		mov	angle_124C7, al
+		mov	_radial_angle, al
 		cmp	si, 40h
 		jge	short loc_B39A
-		push	di
-		push	[bp+arg_0]
-		push	si
-		call	fp_124C8
+		call	_dissolve_put_func pascal, di, [bp+@@base_top], si
 
 loc_B375:
 		cmp	vsync_Count1, 2
@@ -922,16 +916,16 @@ sub_B31E	endp
 
 sub_B3AC	proc near
 
-@@page		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-arg_6		= word ptr  0Ah
+@@page       	= word ptr -2
+@@base_top_2 	= word ptr  4
+@@base_left_2	= word ptr  6
+@@base_top_1 	= word ptr  8
+@@base_left_1	= word ptr  0Ah
 
 		enter	2, 0
 		push	si
 		push	di
-		mov	di, [bp+arg_6]
+		mov	di, [bp+@@base_left_1]
 		xor	si, si
 		mov	[bp+@@page], 0
 		graph_accesspage 0
@@ -941,33 +935,27 @@ arg_6		= word ptr  0Ah
 loc_B3C7:
 		out	dx, al
 		push	di
-		push	[bp+arg_4]
+		push	[bp+@@base_top_1]
 		push	_cdg_slots.pixel_w + (size cdg_t * 2)
 		push	_cdg_slots.pixel_h + (size cdg_t * 2)
 		push	si
 		call	sub_B25B
-		push	[bp+arg_2]
-		push	[bp+arg_0]
+		push	[bp+@@base_left_2]
+		push	[bp+@@base_top_2]
 		push	_cdg_slots.pixel_w + (size cdg_t * 0)
 		push	_cdg_slots.pixel_h + (size cdg_t * 0)
 		push	si
 		call	sub_B25B
 		inc	si
-		mov	al, angle_124C7
+		mov	al, _radial_angle
 		add	al, -8
-		mov	angle_124C7, al
+		mov	_radial_angle, al
 		cmp	si, 40h
 		jge	short loc_B43B
-		mov	byte_124C6, 2
-		push	di
-		push	[bp+arg_4]
-		push	si
-		call	fp_124C8
-		mov	byte_124C6, 0
-		push	[bp+arg_2]
-		push	[bp+arg_0]
-		push	si
-		call	fp_124C8
+		mov	_cdg_slot, 2
+		call	_dissolve_put_func pascal, di, [bp+@@base_top_1], si
+		mov	_cdg_slot, 0
+		call	_dissolve_put_func pascal, [bp+@@base_left_2], [bp+@@base_top_2], si
 
 loc_B416:
 		cmp	vsync_Count1, 2
@@ -1017,32 +1005,26 @@ sub_B44D	proc near
 		call	cdg_load_single pascal, 0, ds, offset aSff1_cdg, 0
 		call	cdg_load_single_noalpha pascal, 1, ds, offset aSff1b_cdg, 0
 		call	snd_delay_until_measure pascal, (3 shl 16) or 64
-		mov	byte_124C6, 0
-		mov	fp_124C8, offset sub_AED0
-		push	16000A0h
-		call	sub_B291
+		mov	_cdg_slot, 0
+		mov	_dissolve_put_func, offset sub_AED0
+		call	sub_B291 pascal, (352 shl 16) or 160
 		call	cdg_load_single pascal, 2, ds, offset aSff2_cdg, 0
 		call	cdg_load_single_noalpha pascal, 3, ds, offset aSff2b_cdg, 0
 		call	snd_delay_until_measure pascal, (7 shl 16) or 160
-		mov	fp_124C8, offset sub_B02D
-		push	16000A0h
-		call	sub_B31E
-		mov	byte_124C6, 2
-		mov	fp_124C8, offset sub_B144
-		push	0C00080h
-		call	sub_B291
+		mov	_dissolve_put_func, offset sub_B02D
+		call	sub_B31E pascal, (352 shl 16) or 160
+		mov	_cdg_slot, 2
+		mov	_dissolve_put_func, offset sub_B144
+		call	sub_B291 pascal, (192 shl 16) or 128
 		graph_accesspage 0
-		mov	byte_124C6, 0
+		mov	_cdg_slot, 0
 		call	cdg_load_single pascal, 0, ds, offset aSff3_cdg, 0
 		call	cdg_load_single_noalpha pascal, 1, ds, offset aSff3b_cdg, 0
 		call	snd_delay_until_measure pascal, (11 shl 16) or 160
-		push	12000C8h
-		call	sub_B291
+		call	sub_B291 pascal, (288 shl 16) or 200
 		call	snd_delay_until_measure pascal, (19 shl 16) or 160
-		mov	fp_124C8, offset sub_B02D
-		push	0C00080h
-		push	12000C8h
-		call	sub_B3AC
+		mov	_dissolve_put_func, offset sub_B02D
+		call	sub_B3AC pascal, (192 shl 16) or 128, (288 shl 16) or 200
 		push	4
 		call	palette_black_out
 		call	cdg_free_all
@@ -1058,55 +1040,44 @@ sub_B44D	proc near
 		call	cdg_load_single pascal, 2, ds, offset aSff4_cdg, 0
 		call	cdg_load_single_noalpha pascal, 3, ds, offset aSff4b_cdg, 0
 		call	snd_delay_until_measure pascal, (23 shl 16) or 160
-		mov	byte_124C6, 2
-		mov	fp_124C8, offset sub_B144
-		push	200070h
-		call	sub_B291
+		mov	_cdg_slot, 2
+		mov	_dissolve_put_func, offset sub_B144
+		call	sub_B291 pascal, (32 shl 16) or 112
 		call	cdg_free pascal, 2
 		call	cdg_load_single pascal, 4, ds, offset aSff5_cdg, 0
 		call	cdg_load_single_noalpha pascal, 5, ds, offset aSff5b_cdg, 0
 		call	snd_delay_until_measure pascal, (27 shl 16) or 160
-		mov	byte_124C6, 4
-		mov	fp_124C8, offset sub_B02D
-		push	2000B8h
-		call	sub_B291
+		mov	_cdg_slot, 4
+		mov	_dissolve_put_func, offset sub_B02D
+		call	sub_B291 pascal, (32 shl 16) or 184
 		call	cdg_load_single pascal, 0, ds, offset aSff8_cdg, 0
 		call	cdg_load_single_noalpha pascal, 1, ds, offset aSff8b_cdg, 0
 		call	snd_delay_until_measure pascal, (31 shl 16) or 160
-		mov	fp_124C8, offset sub_B144
-		push	2000B8h
-		call	sub_B31E
-		mov	byte_124C6, 0
-		push	4000B8h
-		call	sub_B291
+		mov	_dissolve_put_func, offset sub_B144
+		call	sub_B31E pascal, (32 shl 16) or 184
+		mov	_cdg_slot, 0
+		call	sub_B291 pascal, (64 shl 16) or 184
 		call	cdg_load_single pascal, 4, ds, offset aSff9_cdg, 0
 		call	cdg_load_single_noalpha pascal, 5, ds, offset aSff9b_cdg, 0
 		call	snd_delay_until_measure pascal, (35 shl 16) or 160
-		mov	fp_124C8, offset sub_AED0
-		push	4000B8h
-		call	sub_B31E
-		mov	byte_124C6, 4
-		push	4000B8h
-		call	sub_B291
+		mov	_dissolve_put_func, offset sub_AED0
+		call	sub_B31E pascal, (64 shl 16) or 184
+		mov	_cdg_slot, 4
+		call	sub_B291 pascal, (64 shl 16) or 184
 		call	cdg_load_single pascal, 0, ds, offset aSff6_cdg, 0
 		call	cdg_load_single_noalpha pascal, 1, ds, offset aSff6b_cdg, 0
 		call	snd_delay_until_measure pascal, (39 shl 16) or 160
-		mov	fp_124C8, offset sub_B02D
-		push	4000B8h
-		call	sub_B31E
-		mov	byte_124C6, 0
-		push	2000B8h
-		call	sub_B291
+		mov	_dissolve_put_func, offset sub_B02D
+		call	sub_B31E pascal, (64 shl 16) or 184
+		mov	_cdg_slot, 0
+		call	sub_B291 pascal, (32 shl 16) or 184
 		call	snd_delay_until_measure pascal, (43 shl 16) or 160
-		mov	fp_124C8, offset sub_B144
-		push	200070h
-		push	2000B8h
-		call	sub_B3AC
+		mov	_dissolve_put_func, offset sub_B144
+		call	sub_B3AC pascal, (32 shl 16) or 112, (32 shl 16) or 184
 		call	cdg_load_single pascal, 0, ds, offset aSff7_cdg, 0
 		call	cdg_load_single_noalpha pascal, 1, ds, offset aSff7b_cdg, 0
-		mov	byte_124C6, 0
-		push	200150h
-		call	sub_B291
+		mov	_cdg_slot, 0
+		call	sub_B291 pascal, (32 shl 16) or 336
 		call	snd_delay_until_measure pascal, (48 shl 16) or 160
 		call	_bgimage_free
 		call	cdg_free_all
@@ -3401,9 +3372,12 @@ include th04/mem[bss].asm
 include th04/hardware/input[bss].asm
 include th04/formats/cdg[bss].asm
 include th03/cutscene/cutscene[bss].asm
-byte_124C6	db ?
-angle_124C7	db ?
-fp_124C8	dw ?
+
+public _cdg_slot, _radial_angle, _dissolve_put_func
+_cdg_slot          	db ?
+_radial_angle     	db ?
+_dissolve_put_func	dw ?
+
 		db 2 dup(?)
 byte_124CC	db ?
 		db    ?	;
