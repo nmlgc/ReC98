@@ -6,3 +6,6 @@
 #else
 	int __cdecl polar(int center, int radius, int ratio);
 #endif
+
+#define polar_x(center, radius, angle) polar(center, radius, CosTable8[angle])
+#define polar_y(center, radius, angle) polar(center, radius, SinTable8[angle])
