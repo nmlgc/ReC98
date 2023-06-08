@@ -6,7 +6,6 @@
 #include "master.hpp"
 #include "th01/math/polar.hpp"
 #include "th01/math/subpixel.hpp"
-#include "th01/math/vector.hpp"
 #include "th04/math/vector.hpp"
 
 extern "C" int pascal vector1_at(int origin, int length, int angle)
