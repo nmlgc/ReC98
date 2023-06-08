@@ -2901,8 +2901,8 @@ shot_marisa_l0	proc near
 		mov	si, ax
 		or	ax, ax
 		jz	short loc_DA70
-		mov	word ptr [si+0Eh], 22h ; '"'
-		mov	byte ptr [si+10h], 0Ah
+		mov	[si+shot_t.patnum_base], 22h
+		mov	[si+shot_t.damage], 10
 
 loc_DA70:
 		pop	si
@@ -2922,15 +2922,15 @@ shot_marisa_l1	proc near
 		mov	si, ax
 		or	ax, ax
 		jz	short loc_DAA3
-		add	ax, 0Ah
+		add	ax, shot_t.pos.velocity
 		push	ax
 		push	7
 		call	@randring1_next16_and$qui
 		add	al, 0BCh
 		push	ax
 		call	@shot_velocity_set$qp7sppointuc
-		mov	word ptr [si+0Eh], 22h ; '"'
-		mov	byte ptr [si+10h], 0Ah
+		mov	[si+shot_t.patnum_base], 22h
+		mov	[si+shot_t.damage], 10
 
 loc_DAA3:
 		pop	si
@@ -2979,24 +2979,24 @@ loc_DADA:
 		mov	si, ax
 		or	ax, ax
 		jz	short loc_DB17
-		mov	word ptr [si+0Eh], 46h ; 'F'
-		mov	byte ptr [si+10h], 9
-		mov	word ptr [si+0Ch], 0FEE0h
+		mov	[si+shot_t.patnum_base], 46h
+		mov	[si+shot_t.damage], 9
+		mov	[si+shot_t.pos.velocity.y], (-18 shl 4)
 		mov	ax, _player_option_pos_cur.x
 		add	ax, (-24 shl 4)
-		mov	[si+2],	ax
+		mov	[si+shot_t.pos.cur.x], ax
 
 loc_DB17:
 		call	@shots_add$qv
 		mov	si, ax
 		or	ax, ax
 		jz	short loc_DB45
-		mov	word ptr [si+0Eh], 46h ; 'F'
-		mov	byte ptr [si+10h], 9
-		mov	word ptr [si+0Ch], 0FEE0h
+		mov	[si+shot_t.patnum_base], 46h
+		mov	[si+shot_t.damage], 9
+		mov	[si+shot_t.pos.velocity.y], (-18 shl 4)
 		mov	ax, _player_option_pos_cur.x
 		add	ax, (24 shl 4)
-		mov	[si+2],	ax
+		mov	[si+shot_t.pos.cur.x], ax
 		jmp	short loc_DB45
 ; ---------------------------------------------------------------------------
 
@@ -3026,15 +3026,15 @@ shot_marisa_a_l2	proc near
 ; ---------------------------------------------------------------------------
 
 loc_DB62:
-		lea	ax, [si+0Ah]
+		lea	ax, [si+shot_t.pos.velocity]
 		push	ax
 		push	7
 		call	@randring1_next16_and$qui
 		add	al, 0BCh
 		push	ax
 		call	@shot_velocity_set$qp7sppointuc
-		mov	word ptr [si+0Eh], 22h ; '"'
-		mov	byte ptr [si+10h], 9
+		mov	[si+shot_t.patnum_base], 22h
+		mov	[si+shot_t.damage], 9
 		jmp	short loc_DB85
 ; ---------------------------------------------------------------------------
 
@@ -3069,16 +3069,16 @@ shot_marisa_a_l3	proc near
 loc_DBA4:
 		cmp	di, 2
 		jnz	short loc_DBB0
-		sub	word ptr [si+2], 80h
+		sub	[si+shot_t.pos.cur.x], (8 shl 4)
 		jmp	short loc_DBB5
 ; ---------------------------------------------------------------------------
 
 loc_DBB0:
-		add	word ptr [si+2], 80h
+		add	[si+shot_t.pos.cur.x], (8 shl 4)
 
 loc_DBB5:
-		mov	word ptr [si+0Eh], 22h ; '"'
-		mov	byte ptr [si+10h], 9
+		mov	[si+shot_t.patnum_base], 22h
+		mov	[si+shot_t.damage], 9
 		dec	di
 		jle	short loc_DBCA
 
@@ -3114,16 +3114,16 @@ shot_marisa_a_l4	proc near
 loc_DBEA:
 		cmp	di, 2
 		jnz	short loc_DBF6
-		sub	word ptr [si+2], 80h
+		sub	[si+shot_t.pos.cur.x], (8 shl 4)
 		jmp	short loc_DBFB
 ; ---------------------------------------------------------------------------
 
 loc_DBF6:
-		add	word ptr [si+2], 80h
+		add	[si+shot_t.pos.cur.x], (8 shl 4)
 
 loc_DBFB:
-		mov	word ptr [si+0Eh], 22h ; '"'
-		mov	byte ptr [si+10h], 9
+		mov	[si+shot_t.patnum_base], 22h
+		mov	[si+shot_t.damage], 9
 		dec	di
 		jle	short loc_DC10
 
@@ -3157,12 +3157,10 @@ shot_marisa_a_l5	proc near
 ; ---------------------------------------------------------------------------
 
 loc_DC35:
-		lea	ax, [si+0Ah]
-		push	ax
-		push	word ptr [bp-1]
-		call	@shot_velocity_set$qp7sppointuc
-		mov	word ptr [si+0Eh], 22h ; '"'
-		mov	byte ptr [si+10h], 8
+		lea	ax, [si+shot_t.pos.velocity]
+		call	@shot_velocity_set$qp7sppointuc pascal, ax, word ptr [bp-1]
+		mov	[si+shot_t.patnum_base], 22h
+		mov	[si+shot_t.damage], 8
 		mov	al, [bp-1]
 		add	al, 8
 		mov	[bp-1],	al
@@ -3199,12 +3197,10 @@ shot_marisa_a_l6	proc near
 ; ---------------------------------------------------------------------------
 
 loc_DC82:
-		lea	ax, [si+0Ah]
-		push	ax
-		push	word ptr [bp-1]
-		call	@shot_velocity_set$qp7sppointuc
-		mov	word ptr [si+0Eh], 22h ; '"'
-		mov	byte ptr [si+10h], 8
+		lea	ax, [si+shot_t.pos.velocity]
+		call	@shot_velocity_set$qp7sppointuc pascal, ax, word ptr [bp-1]
+		mov	[si+shot_t.patnum_base], 22h
+		mov	[si+shot_t.damage], 8
 		mov	al, [bp-1]
 		add	al, 8
 		mov	[bp-1],	al
@@ -3241,12 +3237,10 @@ shot_marisa_a_l7	proc near
 ; ---------------------------------------------------------------------------
 
 loc_DCCF:
-		lea	ax, [si+0Ah]
-		push	ax
-		push	word ptr [bp-1]
-		call	@shot_velocity_set$qp7sppointuc
-		mov	word ptr [si+0Eh], 22h ; '"'
-		mov	byte ptr [si+10h], 8
+		lea	ax, [si+shot_t.pos.velocity]
+		call	@shot_velocity_set$qp7sppointuc pascal, ax, word ptr [bp-1]
+		mov	[si+shot_t.patnum_base], 22h
+		mov	[si+shot_t.damage], 8
 		mov	al, [bp-1]
 		add	al, 8
 		mov	[bp-1],	al
@@ -3283,12 +3277,10 @@ shot_marisa_a_l8	proc near
 ; ---------------------------------------------------------------------------
 
 loc_DD1C:
-		lea	ax, [si+0Ah]
-		push	ax
-		push	word ptr [bp-1]
-		call	@shot_velocity_set$qp7sppointuc
-		mov	word ptr [si+0Eh], 22h ; '"'
-		mov	byte ptr [si+10h], 7
+		lea	ax, [si+shot_t.pos.velocity]
+		call	@shot_velocity_set$qp7sppointuc pascal, ax, word ptr [bp-1]
+		mov	[si+shot_t.patnum_base], 22h
+		mov	[si+shot_t.damage], 7
 		mov	al, [bp-1]
 		add	al, 6
 		mov	[bp-1],	al
@@ -3325,12 +3317,10 @@ shot_marisa_a_l9	proc near
 ; ---------------------------------------------------------------------------
 
 loc_DD69:
-		lea	ax, [si+0Ah]
-		push	ax
-		push	word ptr [bp-1]
-		call	@shot_velocity_set$qp7sppointuc
-		mov	word ptr [si+0Eh], 22h ; '"'
-		mov	byte ptr [si+10h], 7
+		lea	ax, [si+shot_t.pos.velocity]
+		call	@shot_velocity_set$qp7sppointuc pascal, ax, word ptr [bp-1]
+		mov	[si+shot_t.patnum_base], 22h
+		mov	[si+shot_t.damage], 7
 		mov	al, [bp-1]
 		add	al, 6
 		mov	[bp-1],	al
@@ -3366,32 +3356,32 @@ shot_marisa_b_l2	proc near
 loc_DDA9:
 		cmp	di, 1
 		jg	short loc_DDC8
-		mov	word ptr [si+0Eh], 22h ; '"'
-		lea	ax, [si+0Ah]
+		mov	[si+shot_t.patnum_base], 22h
+		lea	ax, [si+shot_t.pos.velocity]
 		push	ax
 		push	7
 		call	@randring1_next16_and$qui
 		add	al, 0BCh
 		push	ax
 		call	@shot_velocity_set$qp7sppointuc
-		mov	byte ptr [si+10h], 0Ah
+		mov	[si+shot_t.damage], 10
 		jmp	short loc_DDE7
 ; ---------------------------------------------------------------------------
 
 loc_DDC8:
 		cmp	di, 3
 		jnz	short loc_DDD4
-		sub	word ptr [si+2], 180h
+		sub	[si+shot_t.pos.cur.x], (24 shl 4)
 		jmp	short loc_DDD9
 ; ---------------------------------------------------------------------------
 
 loc_DDD4:
-		add	word ptr [si+2], 180h
+		add	[si+shot_t.pos.cur.x], (24 shl 4)
 
 loc_DDD9:
-		mov	word ptr [si+0Eh], 24h ; '$'
-		mov	word ptr [si+0Ch], 0FF00h
-		mov	byte ptr [si+10h], 6
+		mov	[si+shot_t.patnum_base], 24h
+		mov	[si+shot_t.pos.velocity.y], (-16 shl 4)
+		mov	[si+shot_t.damage], 6
 
 loc_DDE7:
 		dec	di
@@ -3428,33 +3418,33 @@ loc_DE0C:
 		jg	short loc_DE2D
 		cmp	di, 2
 		jnz	short loc_DE1D
-		sub	word ptr [si+2], 80h
+		sub	[si+shot_t.pos.cur.x], (8 shl 4)
 		jmp	short loc_DE22
 ; ---------------------------------------------------------------------------
 
 loc_DE1D:
-		add	word ptr [si+2], 80h
+		add	[si+shot_t.pos.cur.x], (8 shl 4)
 
 loc_DE22:
-		mov	word ptr [si+0Eh], 22h ; '"'
-		mov	byte ptr [si+10h], 9
+		mov	[si+shot_t.patnum_base], 22h
+		mov	[si+shot_t.damage], 9
 		jmp	short loc_DE4C
 ; ---------------------------------------------------------------------------
 
 loc_DE2D:
 		cmp	di, 4
 		jnz	short loc_DE39
-		sub	word ptr [si+2], 180h
+		sub	[si+shot_t.pos.cur.x], (24 shl 4)
 		jmp	short loc_DE3E
 ; ---------------------------------------------------------------------------
 
 loc_DE39:
-		add	word ptr [si+2], 180h
+		add	[si+shot_t.pos.cur.x], (24 shl 4)
 
 loc_DE3E:
-		mov	word ptr [si+0Eh], 24h ; '$'
-		mov	word ptr [si+0Ch], 0FF00h
-		mov	byte ptr [si+10h], 6
+		mov	[si+shot_t.patnum_base], 24h
+		mov	[si+shot_t.pos.velocity.y], (-16 shl 4)
+		mov	[si+shot_t.damage], 6
 
 loc_DE4C:
 		dec	di
@@ -3491,43 +3481,43 @@ loc_DE71:
 		jg	short loc_DE92
 		cmp	di, 2
 		jnz	short loc_DE82
-		sub	word ptr [si+2], 80h
+		sub	[si+shot_t.pos.cur.x], (8 shl 4)
 		jmp	short loc_DE87
 ; ---------------------------------------------------------------------------
 
 loc_DE82:
-		add	word ptr [si+2], 80h
+		add	[si+shot_t.pos.cur.x], (8 shl 4)
 
 loc_DE87:
-		mov	word ptr [si+0Eh], 22h ; '"'
-		mov	byte ptr [si+10h], 9
+		mov	[si+shot_t.patnum_base], 22h
+		mov	[si+shot_t.damage], 9
 		jmp	short loc_DEC6
 ; ---------------------------------------------------------------------------
 
 loc_DE92:
 		cmp	di, 4
 		jnz	short loc_DE9E
-		sub	word ptr [si+2], 180h
+		sub	[si+shot_t.pos.cur.x], (24 shl 4)
 		jmp	short loc_DEA3
 ; ---------------------------------------------------------------------------
 
 loc_DE9E:
-		add	word ptr [si+2], 180h
+		add	[si+shot_t.pos.cur.x], (24 shl 4)
 
 loc_DEA3:
-		mov	word ptr [si+0Eh], 24h ; '$'
+		mov	[si+shot_t.patnum_base], 24h
 		push	ds
-		lea	ax, [si+0Ah]
+		lea	ax, [si+shot_t.pos.velocity.x]
 		push	ax
 		push	ds
-		lea	ax, [si+0Ch]
+		lea	ax, [si+shot_t.pos.velocity.y]
 		push	ax
 		call	@randring1_next16_and$qui pascal, 7
 		add	al, -44h
 		push	ax
 		push	(16 shl 4)
 		call	vector2
-		mov	byte ptr [si+10h], 6
+		mov	[si+shot_t.damage], 6
 
 loc_DEC6:
 		dec	di
@@ -3562,12 +3552,10 @@ shot_marisa_b_l5	proc near
 loc_DEF0:
 		cmp	di, 3
 		jg	short loc_DF12
-		mov	word ptr [si+0Eh], 22h ; '"'
-		lea	ax, [si+0Ah]
-		push	ax
-		push	word ptr [bp-1]
-		call	@shot_velocity_set$qp7sppointuc
-		mov	byte ptr [si+10h], 9
+		mov	[si+shot_t.patnum_base], 22h
+		lea	ax, [si+shot_t.pos.velocity]
+		call	@shot_velocity_set$qp7sppointuc pascal, ax, word ptr [bp-1]
+		mov	[si+shot_t.damage], 9
 		mov	al, [bp-1]
 		add	al, 8
 		mov	[bp-1],	al
@@ -3577,27 +3565,27 @@ loc_DEF0:
 loc_DF12:
 		cmp	di, 5
 		jnz	short loc_DF1E
-		sub	word ptr [si+2], 180h
+		sub	[si+shot_t.pos.cur.x], (24 shl 4)
 		jmp	short loc_DF23
 ; ---------------------------------------------------------------------------
 
 loc_DF1E:
-		add	word ptr [si+2], 180h
+		add	[si+shot_t.pos.cur.x], (24 shl 4)
 
 loc_DF23:
 		push	ds
-		lea	ax, [si+0Ah]
+		lea	ax, [si+shot_t.pos.velocity.x]
 		push	ax
 		push	ds
-		lea	ax, [si+0Ch]
+		lea	ax, [si+shot_t.pos.velocity.y]
 		push	ax
 		call	@randring1_next16_and$qui pascal, 7
 		add	al, -44h
 		push	ax
 		push	(16 shl 4)
 		call	vector2
-		mov	word ptr [si+0Eh], 24h ; '$'
-		mov	byte ptr [si+10h], 5
+		mov	[si+shot_t.patnum_base], 24h
+		mov	[si+shot_t.damage], 5
 
 loc_DF46:
 		dec	di
@@ -3619,6 +3607,9 @@ shot_marisa_b_l5	endp
 ; ---------------------------------------------------------------------------
 
 shot_marisa_b_l6	proc near
+
+@@x	= word ptr -2
+
 		enter	4, 0
 		push	si
 		push	di
@@ -3632,12 +3623,10 @@ shot_marisa_b_l6	proc near
 loc_DF70:
 		cmp	di, 3
 		jg	short loc_DF92
-		mov	word ptr [si+0Eh], 22h ; '"'
-		lea	ax, [si+0Ah]
-		push	ax
-		push	word ptr [bp-3]
-		call	@shot_velocity_set$qp7sppointuc
-		mov	byte ptr [si+10h], 9
+		mov	[si+shot_t.patnum_base], 22h
+		lea	ax, [si+shot_t.pos.velocity]
+		call	@shot_velocity_set$qp7sppointuc pascal, ax, word ptr [bp-3]
+		mov	[si+shot_t.damage], 9
 		mov	al, [bp-3]
 		add	al, 8
 		mov	[bp-3],	al
@@ -3653,29 +3642,29 @@ loc_DF92:
 		jmp	cs:off_DFE2[bx]
 
 loc_DFA3:
-		mov	word ptr [bp-2], 0FE00h
+		mov	[bp+@@x], (-32 shl 4)
 		jmp	short loc_DFBD
 ; ---------------------------------------------------------------------------
 
 loc_DFAA:
-		mov	word ptr [bp-2], 0FF00h
+		mov	[bp+@@x], (-16 shl 4)
 		jmp	short loc_DFBD
 ; ---------------------------------------------------------------------------
 
 loc_DFB1:
-		mov	word ptr [bp-2], 200h
+		mov	[bp+@@x], (32 shl 4)
 		jmp	short loc_DFBD
 ; ---------------------------------------------------------------------------
 
 loc_DFB8:
-		mov	word ptr [bp-2], 100h
+		mov	[bp+@@x], (16 shl 4)
 
 loc_DFBD:
-		mov	ax, [bp-2]
-		sub	[si+2],	ax
-		mov	word ptr [si+0Eh], 24h ; '$'
-		mov	word ptr [si+0Ch], 0FF00h
-		mov	byte ptr [si+10h], 5
+		mov	ax, [bp+@@x]
+		sub	[si+shot_t.pos.cur.x], ax
+		mov	[si+shot_t.patnum_base], 24h
+		mov	[si+shot_t.pos.velocity.y], (-16 shl 4)
+		mov	[si+shot_t.damage], 5
 
 loc_DFD1:
 		dec	di
@@ -3708,6 +3697,7 @@ off_DFE2	dw offset loc_DFB8
 shot_marisa_b_l7	proc near
 
 var_3		= word ptr -3
+@@x	= word ptr -2
 
 		enter	4, 0
 		push	si
@@ -3722,12 +3712,10 @@ var_3		= word ptr -3
 loc_E004:
 		cmp	di, 3
 		jg	short loc_E026
-		mov	word ptr [si+0Eh], 22h ; '"'
-		lea	ax, [si+0Ah]
-		push	ax
-		push	[bp+var_3]
-		call	@shot_velocity_set$qp7sppointuc
-		mov	byte ptr [si+10h], 8
+		mov	[si+shot_t.patnum_base], 22h
+		lea	ax, [si+shot_t.pos.velocity]
+		call	@shot_velocity_set$qp7sppointuc pascal, ax, [bp+var_3]
+		mov	[si+shot_t.damage], 8
 		mov	al, byte ptr [bp+var_3]
 		add	al, 0Ah
 		mov	byte ptr [bp+var_3], al
@@ -3743,29 +3731,29 @@ loc_E026:
 		jmp	cs:off_E076[bx]
 
 loc_E037:
-		mov	[bp+var_3+1], 0FE00h
+		mov	[bp+@@x], (-32 shl 4)
 		jmp	short loc_E051
 ; ---------------------------------------------------------------------------
 
 loc_E03E:
-		mov	[bp+var_3+1], 0FF00h
+		mov	[bp+@@x], (-16 shl 4)
 		jmp	short loc_E051
 ; ---------------------------------------------------------------------------
 
 loc_E045:
-		mov	[bp+var_3+1], 200h
+		mov	[bp+@@x], (32 shl 4)
 		jmp	short loc_E051
 ; ---------------------------------------------------------------------------
 
 loc_E04C:
-		mov	[bp+var_3+1], 100h
+		mov	[bp+@@x], (16 shl 4)
 
 loc_E051:
-		mov	ax, [bp+var_3+1]
-		sub	[si+2],	ax
-		mov	word ptr [si+0Eh], 24h ; '$'
-		mov	word ptr [si+0Ch], 0FF00h
-		mov	byte ptr [si+10h], 5
+		mov	ax, [bp+@@x]
+		sub	[si+shot_t.pos.cur.x], ax
+		mov	[si+shot_t.patnum_base], 24h
+		mov	[si+shot_t.pos.velocity.y], (-16 shl 4)
+		mov	[si+shot_t.damage], 5
 
 loc_E065:
 		dec	di
@@ -3798,6 +3786,7 @@ off_E076	dw offset loc_E04C
 shot_marisa_b_l8	proc near
 
 var_3		= word ptr -3
+@@x	= word ptr -2
 
 		enter	4, 0
 		push	si
@@ -3814,22 +3803,20 @@ loc_E099:
 		jg	short loc_E0D6
 		cmp	di, 3
 		jnz	short loc_E0AA
-		sub	word ptr [si+2], 80h
+		sub	[si+shot_t.pos.cur.x], (8 shl 4)
 		jmp	short loc_E0B4
 ; ---------------------------------------------------------------------------
 
 loc_E0AA:
 		cmp	di, 2
 		jnz	short loc_E0B4
-		add	word ptr [si+2], 80h
+		add	[si+shot_t.pos.cur.x], (8 shl 4)
 
 loc_E0B4:
-		mov	word ptr [si+0Eh], 22h ; '"'
-		lea	ax, [si+0Ah]
-		push	ax
-		push	[bp+var_3]
-		call	@shot_velocity_set$qp7sppointuc
-		mov	byte ptr [si+10h], 8
+		mov	[si+shot_t.patnum_base], 22h
+		lea	ax, [si+shot_t.pos.velocity]
+		call	@shot_velocity_set$qp7sppointuc pascal, ax, [bp+var_3]
+		mov	[si+shot_t.damage], 8
 		cmp	di, 3
 		jz	short loc_E115
 		mov	al, byte ptr [bp+var_3]
@@ -3847,29 +3834,29 @@ loc_E0D6:
 		jmp	cs:off_E128[bx]
 
 loc_E0E7:
-		mov	[bp+var_3+1], 0FE00h
+		mov	[bp+@@x], (-32 shl 4)
 		jmp	short loc_E101
 ; ---------------------------------------------------------------------------
 
 loc_E0EE:
-		mov	[bp+var_3+1], 0FF00h
+		mov	[bp+@@x], (-16 shl 4)
 		jmp	short loc_E101
 ; ---------------------------------------------------------------------------
 
 loc_E0F5:
-		mov	[bp+var_3+1], 200h
+		mov	[bp+@@x], (32 shl 4)
 		jmp	short loc_E101
 ; ---------------------------------------------------------------------------
 
 loc_E0FC:
-		mov	[bp+var_3+1], 100h
+		mov	[bp+@@x], (16 shl 4)
 
 loc_E101:
-		mov	ax, [bp+var_3+1]
-		sub	[si+2],	ax
-		mov	word ptr [si+0Eh], 24h ; '$'
-		mov	word ptr [si+0Ch], 0FF00h
-		mov	byte ptr [si+10h], 5
+		mov	ax, [bp+@@x]
+		sub	[si+shot_t.pos.cur.x], ax
+		mov	[si+shot_t.patnum_base], 24h
+		mov	[si+shot_t.pos.velocity.y], (-16 shl 4)
+		mov	[si+shot_t.damage], 5
 
 loc_E115:
 		dec	di
@@ -3902,6 +3889,7 @@ off_E128	dw offset loc_E0FC
 shot_marisa_b_l9	proc near
 
 var_3		= word ptr -3
+@@x	= word ptr -2
 
 		enter	4, 0
 		push	si
@@ -3918,22 +3906,20 @@ loc_E14B:
 		jg	short loc_E188
 		cmp	di, 3
 		jnz	short loc_E15C
-		sub	word ptr [si+2], 80h
+		sub	[si+shot_t.pos.cur.x], (8 shl 4)
 		jmp	short loc_E166
 ; ---------------------------------------------------------------------------
 
 loc_E15C:
 		cmp	di, 2
 		jnz	short loc_E166
-		add	word ptr [si+2], 80h
+		add	[si+shot_t.pos.cur.x], (8 shl 4)
 
 loc_E166:
-		mov	word ptr [si+0Eh], 22h ; '"'
-		lea	ax, [si+0Ah]
-		push	ax
-		push	[bp+var_3]
-		call	@shot_velocity_set$qp7sppointuc
-		mov	byte ptr [si+10h], 8
+		mov	[si+shot_t.patnum_base], 22h
+		lea	ax, [si+shot_t.pos.velocity]
+		call	@shot_velocity_set$qp7sppointuc pascal, ax, [bp+var_3]
+		mov	[si+shot_t.damage], 8
 		cmp	di, 3
 		jz	short loc_E1D5
 		mov	al, byte ptr [bp+var_3]
@@ -3951,39 +3937,39 @@ loc_E188:
 		jmp	cs:off_E1E8[bx]
 
 loc_E199:
-		mov	[bp+var_3+1], 0FD00h
+		mov	[bp+@@x], (-48 shl 4)
 		jmp	short loc_E1C1
 ; ---------------------------------------------------------------------------
 
 loc_E1A0:
-		mov	[bp+var_3+1], 0FE00h
+		mov	[bp+@@x], (-32 shl 4)
 		jmp	short loc_E1C1
 ; ---------------------------------------------------------------------------
 
 loc_E1A7:
-		mov	[bp+var_3+1], 0FF00h
+		mov	[bp+@@x], (-16 shl 4)
 		jmp	short loc_E1C1
 ; ---------------------------------------------------------------------------
 
 loc_E1AE:
-		mov	[bp+var_3+1], 300h
+		mov	[bp+@@x], (48 shl 4)
 		jmp	short loc_E1C1
 ; ---------------------------------------------------------------------------
 
 loc_E1B5:
-		mov	[bp+var_3+1], 200h
+		mov	[bp+@@x], (32 shl 4)
 		jmp	short loc_E1C1
 ; ---------------------------------------------------------------------------
 
 loc_E1BC:
-		mov	[bp+var_3+1], 100h
+		mov	[bp+@@x], (16 shl 4)
 
 loc_E1C1:
-		mov	ax, [bp+var_3+1]
-		sub	[si+2],	ax
-		mov	word ptr [si+0Eh], 24h ; '$'
-		mov	word ptr [si+0Ch], 0FF00h
-		mov	byte ptr [si+10h], 4
+		mov	ax, [bp+@@x]
+		sub	[si+shot_t.pos.cur.x], ax
+		mov	[si+shot_t.patnum_base], 24h
+		mov	[si+shot_t.pos.velocity.y], (-16 shl 4)
+		mov	[si+shot_t.damage], 4
 
 loc_E1D5:
 		dec	di
@@ -5912,15 +5898,13 @@ arg_2		= word ptr  6
 		sub	ax, _player_pos.cur.y
 		push	ax
 		mov	ax, _homing_target.x
-		sub	ax, [si+2]
+		sub	ax, [si+shot_t.pos.cur.x]
 		push	ax
 		call	iatan2
 		add	al, byte ptr [bp+arg_0]
 		mov	byte ptr [bp+arg_0], al
-		lea	ax, [si+0Ah]
-		push	ax
-		push	[bp+arg_0]
-		call	@shot_velocity_set$qp7sppointuc
+		lea	ax, [si+shot_t.pos.velocity]
+		call	@shot_velocity_set$qp7sppointuc pascal, ax, [bp+arg_0]
 		pop	si
 		pop	bp
 		retn	4
@@ -5938,8 +5922,8 @@ shot_reimu_l0	proc near
 		mov	si, ax
 		or	ax, ax
 		jz	short loc_F38D
-		mov	word ptr [si+0Eh], 1Ch
-		mov	byte ptr [si+10h], 0Ah
+		mov	[si+shot_t.patnum_base], 1Ch
+		mov	[si+shot_t.damage], 10
 
 loc_F38D:
 		pop	si
@@ -5959,15 +5943,15 @@ shot_reimu_l1	proc near
 		mov	si, ax
 		or	ax, ax
 		jz	short loc_F3C0
-		add	ax, 0Ah
+		add	ax, shot_t.pos.velocity
 		push	ax
 		push	7
 		call	@randring1_next16_and$qui
 		add	al, 0BCh
 		push	ax
 		call	@shot_velocity_set$qp7sppointuc
-		mov	word ptr [si+0Eh], 1Ch
-		mov	byte ptr [si+10h], 0Ah
+		mov	[si+shot_t.patnum_base], 1Ch
+		mov	[si+shot_t.damage], 10
 
 loc_F3C0:
 		pop	si
@@ -6007,26 +5991,26 @@ loc_F3E9:
 loc_F3FA:
 		cmp	di, 1
 		jnz	short loc_F415
-		lea	ax, [si+0Ah]
+		lea	ax, [si+shot_t.pos.velocity]
 		push	ax
 		push	0Fh
 		call	@randring1_next16_and$qui
 		add	al, 0B8h
 		push	ax
 		call	@shot_velocity_set$qp7sppointuc
-		mov	word ptr [si+0Eh], 1Ch
+		mov	[si+shot_t.patnum_base], 1Ch
 		jmp	short loc_F43F
 ; ---------------------------------------------------------------------------
 
 loc_F415:
 		cmp	di, 3
 		jnz	short loc_F421
-		sub	word ptr [si+2], 180h
+		sub	[si+shot_t.pos.cur.x], (24 shl 4)
 		jmp	short loc_F426
 ; ---------------------------------------------------------------------------
 
 loc_F421:
-		add	word ptr [si+2], 180h
+		add	[si+shot_t.pos.cur.x], (24 shl 4)
 
 loc_F426:
 		cmp	_homing_target.y, SUBPIXEL_NONE
@@ -6039,10 +6023,10 @@ loc_F426:
 		call	main_01:sub_F33C
 
 loc_F43A:
-		mov	word ptr [si+0Eh], 1Eh
+		mov	[si+shot_t.patnum_base], 1Eh
 
 loc_F43F:
-		mov	byte ptr [si+10h], 0Ah
+		mov	[si+shot_t.damage], 10
 		dec	di
 		jle	short loc_F44F
 
@@ -6093,28 +6077,28 @@ loc_F48A:
 		jg	short loc_F4AB
 		cmp	di, 2
 		jnz	short loc_F49B
-		sub	word ptr [si+2], 80h
+		sub	[si+shot_t.pos.cur.x], (8 shl 4)
 		jmp	short loc_F4A0
 ; ---------------------------------------------------------------------------
 
 loc_F49B:
-		add	word ptr [si+2], 80h
+		add	[si+shot_t.pos.cur.x], (8 shl 4)
 
 loc_F4A0:
-		mov	word ptr [si+0Eh], 1Ch
-		mov	byte ptr [si+10h], 9
+		mov	[si+shot_t.patnum_base], 1Ch
+		mov	[si+shot_t.damage], 9
 		jmp	short loc_F4D9
 ; ---------------------------------------------------------------------------
 
 loc_F4AB:
 		cmp	di, 4
 		jnz	short loc_F4B7
-		sub	word ptr [si+2], 180h
+		sub	[si+shot_t.pos.cur.x], (24 shl 4)
 		jmp	short loc_F4BC
 ; ---------------------------------------------------------------------------
 
 loc_F4B7:
-		add	word ptr [si+2], 180h
+		add	[si+shot_t.pos.cur.x], (24 shl 4)
 
 loc_F4BC:
 		cmp	_homing_target.y, SUBPIXEL_NONE
@@ -6127,8 +6111,8 @@ loc_F4BC:
 		call	main_01:sub_F33C
 
 loc_F4D0:
-		mov	word ptr [si+0Eh], 1Eh
-		mov	byte ptr [si+10h], 0Ah
+		mov	[si+shot_t.patnum_base], 1Eh
+		mov	[si+shot_t.damage], 10
 
 loc_F4D9:
 		dec	di
@@ -6179,12 +6163,10 @@ loc_F510:
 loc_F525:
 		cmp	di, 3
 		jg	short loc_F547
-		lea	ax, [si+0Ah]
-		push	ax
-		push	word ptr [bp-1]
-		call	@shot_velocity_set$qp7sppointuc
-		mov	word ptr [si+0Eh], 1Ch
-		mov	byte ptr [si+10h], 8
+		lea	ax, [si+shot_t.pos.velocity]
+		call	@shot_velocity_set$qp7sppointuc pascal, ax, word ptr [bp-1]
+		mov	[si+shot_t.patnum_base], 1Ch
+		mov	[si+shot_t.damage], 8
 		mov	al, [bp-1]
 		add	al, 6
 		mov	[bp-1],	al
@@ -6194,12 +6176,12 @@ loc_F525:
 loc_F547:
 		cmp	di, 5
 		jnz	short loc_F553
-		sub	word ptr [si+2], 180h
+		sub	[si+shot_t.pos.cur.x], (24 shl 4)
 		jmp	short loc_F558
 ; ---------------------------------------------------------------------------
 
 loc_F553:
-		add	word ptr [si+2], 180h
+		add	[si+shot_t.pos.cur.x], (24 shl 4)
 
 loc_F558:
 		cmp	_homing_target.y, SUBPIXEL_NONE
@@ -6212,8 +6194,8 @@ loc_F558:
 		call	main_01:sub_F33C
 
 loc_F56C:
-		mov	word ptr [si+0Eh], 1Eh
-		mov	byte ptr [si+10h], 9
+		mov	[si+shot_t.patnum_base], 1Eh
+		mov	[si+shot_t.damage], 9
 
 loc_F575:
 		dec	di
@@ -6264,12 +6246,10 @@ loc_F5AC:
 loc_F5C1:
 		cmp	di, 3
 		jg	short loc_F5E3
-		lea	ax, [si+0Ah]
-		push	ax
-		push	word ptr [bp-1]
-		call	@shot_velocity_set$qp7sppointuc
-		mov	word ptr [si+0Eh], 1Ch
-		mov	byte ptr [si+10h], 8
+		lea	ax, [si+shot_t.pos.velocity]
+		call	@shot_velocity_set$qp7sppointuc pascal, ax, word ptr [bp-1]
+		mov	[si+shot_t.patnum_base], 1Ch
+		mov	[si+shot_t.damage], 8
 		mov	al, [bp-1]
 		add	al, 8
 		mov	[bp-1],	al
@@ -6279,12 +6259,12 @@ loc_F5C1:
 loc_F5E3:
 		cmp	di, 5
 		jnz	short loc_F5EF
-		sub	word ptr [si+2], 180h
+		sub	[si+shot_t.pos.cur.x], (24 shl 4)
 		jmp	short loc_F5F4
 ; ---------------------------------------------------------------------------
 
 loc_F5EF:
-		add	word ptr [si+2], 180h
+		add	[si+shot_t.pos.cur.x], (24 shl 4)
 
 loc_F5F4:
 		cmp	_homing_target.y, SUBPIXEL_NONE
@@ -6297,8 +6277,8 @@ loc_F5F4:
 		call	main_01:sub_F33C
 
 loc_F608:
-		mov	word ptr [si+0Eh], 1Eh
-		mov	byte ptr [si+10h], 9
+		mov	[si+shot_t.patnum_base], 1Eh
+		mov	[si+shot_t.damage], 9
 
 loc_F611:
 		dec	di
@@ -6349,12 +6329,10 @@ loc_F648:
 loc_F65D:
 		cmp	di, 3
 		jg	short loc_F67F
-		lea	ax, [si+0Ah]
-		push	ax
-		push	word ptr [bp-1]
-		call	@shot_velocity_set$qp7sppointuc
-		mov	word ptr [si+0Eh], 1Ch
-		mov	byte ptr [si+10h], 7
+		lea	ax, [si+shot_t.pos.velocity]
+		call	@shot_velocity_set$qp7sppointuc pascal, ax, word ptr [bp-1]
+		mov	[si+shot_t.patnum_base], 1Ch
+		mov	[si+shot_t.damage], 7
 		mov	al, [bp-1]
 		add	al, 8
 		mov	[bp-1],	al
@@ -6364,12 +6342,12 @@ loc_F65D:
 loc_F67F:
 		cmp	di, 5
 		jnz	short loc_F68B
-		sub	word ptr [si+2], 180h
+		sub	[si+shot_t.pos.cur.x], (24 shl 4)
 		jmp	short loc_F690
 ; ---------------------------------------------------------------------------
 
 loc_F68B:
-		add	word ptr [si+2], 180h
+		add	[si+shot_t.pos.cur.x], (24 shl 4)
 
 loc_F690:
 		cmp	_homing_target.y, SUBPIXEL_NONE
@@ -6382,8 +6360,8 @@ loc_F690:
 		call	main_01:sub_F33C
 
 loc_F6A4:
-		mov	word ptr [si+0Eh], 1Eh
-		mov	byte ptr [si+10h], 8
+		mov	[si+shot_t.patnum_base], 1Eh
+		mov	[si+shot_t.damage], 8
 
 loc_F6AD:
 		dec	di
@@ -6439,13 +6417,11 @@ loc_F6E4:
 loc_F6FA:
 		cmp	di, 3
 		jg	short loc_F720
-		lea	ax, [si+0Ah]
-		push	ax
-		push	[bp+var_2+1]
-		call	@shot_velocity_set$qp7sppointuc
-		mov	word ptr [si+0Eh], 1Ch
-		mov	byte ptr [si+10h], 4
-		mov	byte ptr [si+10h], 7
+		lea	ax, [si+shot_t.pos.velocity]
+		call	@shot_velocity_set$qp7sppointuc pascal, ax, [bp+var_2+1]
+		mov	[si+shot_t.patnum_base], 1Ch
+		mov	[si+shot_t.damage], 4
+		mov	[si+shot_t.damage], 7
 		mov	al, byte ptr [bp+var_2+1]
 		add	al, 6
 		mov	byte ptr [bp+var_2+1], al
@@ -6457,33 +6433,31 @@ loc_F720:
 		jg	short loc_F74F
 		cmp	di, 5
 		jnz	short loc_F735
-		sub	word ptr [si+2], 180h
+		sub	[si+shot_t.pos.cur.x], (24 shl 4)
 		mov	byte ptr [bp+var_2], 0B8h
 		jmp	short loc_F73E
 ; ---------------------------------------------------------------------------
 
 loc_F735:
-		add	word ptr [si+2], 180h
+		add	[si+shot_t.pos.cur.x], (24 shl 4)
 		mov	byte ptr [bp+var_2], 0C8h
 
 loc_F73E:
-		lea	ax, [si+0Ah]
-		push	ax
-		push	[bp+var_2]
-		call	@shot_velocity_set$qp7sppointuc
-		mov	word ptr [si+0Eh], 1Ch
+		lea	ax, [si+shot_t.pos.velocity]
+		call	@shot_velocity_set$qp7sppointuc pascal, ax, [bp+var_2]
+		mov	[si+shot_t.patnum_base], 1Ch
 		jmp	short loc_F779
 ; ---------------------------------------------------------------------------
 
 loc_F74F:
 		cmp	di, 7
 		jnz	short loc_F75B
-		sub	word ptr [si+2], 180h
+		sub	[si+shot_t.pos.cur.x], (24 shl 4)
 		jmp	short loc_F760
 ; ---------------------------------------------------------------------------
 
 loc_F75B:
-		add	word ptr [si+2], 180h
+		add	[si+shot_t.pos.cur.x], (24 shl 4)
 
 loc_F760:
 		cmp	_homing_target.y, SUBPIXEL_NONE
@@ -6496,10 +6470,10 @@ loc_F760:
 		call	main_01:sub_F33C
 
 loc_F774:
-		mov	word ptr [si+0Eh], 1Eh
+		mov	[si+shot_t.patnum_base], 1Eh
 
 loc_F779:
-		mov	byte ptr [si+10h], 7
+		mov	[si+shot_t.damage], 7
 
 loc_F77D:
 		dec	di
@@ -6542,12 +6516,10 @@ var_2		= word ptr -2
 loc_F7B1:
 		cmp	di, 3
 		jg	short loc_F7D3
-		lea	ax, [si+0Ah]
-		push	ax
-		push	[bp+var_2+1]
-		call	@shot_velocity_set$qp7sppointuc
-		mov	word ptr [si+0Eh], 1Ch
-		mov	byte ptr [si+10h], 7
+		lea	ax, [si+shot_t.pos.velocity]
+		call	@shot_velocity_set$qp7sppointuc pascal, ax, [bp+var_2+1]
+		mov	[si+shot_t.patnum_base], 1Ch
+		mov	[si+shot_t.damage], 7
 		mov	al, byte ptr [bp+var_2+1]
 		add	al, 6
 		mov	byte ptr [bp+var_2+1], al
@@ -6559,33 +6531,31 @@ loc_F7D3:
 		jg	short loc_F802
 		cmp	di, 5
 		jnz	short loc_F7E8
-		sub	word ptr [si+2], 180h
+		sub	[si+shot_t.pos.cur.x], (24 shl 4)
 		mov	byte ptr [bp+var_2], 0B8h
 		jmp	short loc_F7F1
 ; ---------------------------------------------------------------------------
 
 loc_F7E8:
-		add	word ptr [si+2], 180h
+		add	[si+shot_t.pos.cur.x], (24 shl 4)
 		mov	byte ptr [bp+var_2], 0C8h
 
 loc_F7F1:
-		lea	ax, [si+0Ah]
-		push	ax
-		push	[bp+var_2]
-		call	@shot_velocity_set$qp7sppointuc
-		mov	word ptr [si+0Eh], 1Ch
+		lea	ax, [si+shot_t.pos.velocity]
+		call	@shot_velocity_set$qp7sppointuc pascal, ax, [bp+var_2]
+		mov	[si+shot_t.patnum_base], 1Ch
 		jmp	short loc_F82C
 ; ---------------------------------------------------------------------------
 
 loc_F802:
 		cmp	di, 7
 		jnz	short loc_F80E
-		sub	word ptr [si+2], 180h
+		sub	[si+shot_t.pos.cur.x], (24 shl 4)
 		jmp	short loc_F813
 ; ---------------------------------------------------------------------------
 
 loc_F80E:
-		add	word ptr [si+2], 180h
+		add	[si+shot_t.pos.cur.x], (24 shl 4)
 
 loc_F813:
 		cmp	_homing_target.y, SUBPIXEL_NONE
@@ -6598,10 +6568,10 @@ loc_F813:
 		call	main_01:sub_F33C
 
 loc_F827:
-		mov	word ptr [si+0Eh], 1Eh
+		mov	[si+shot_t.patnum_base], 1Eh
 
 loc_F82C:
-		mov	byte ptr [si+10h], 7
+		mov	[si+shot_t.damage], 7
 
 loc_F830:
 		dec	di
@@ -6659,12 +6629,10 @@ loc_F86C:
 loc_F882:
 		cmp	di, 3
 		jg	short loc_F8A5
-		lea	ax, [si+0Ah]
-		push	ax
-		push	word ptr [bp-1]
-		call	@shot_velocity_set$qp7sppointuc
-		mov	word ptr [si+0Eh], 1Ch
-		mov	byte ptr [si+10h], 6
+		lea	ax, [si+shot_t.pos.velocity]
+		call	@shot_velocity_set$qp7sppointuc pascal, ax, word ptr [bp-1]
+		mov	[si+shot_t.patnum_base], 1Ch
+		mov	[si+shot_t.damage], 6
 		mov	al, [bp-1]
 		add	al, 6
 		mov	[bp-1],	al
@@ -6676,21 +6644,19 @@ loc_F8A5:
 		jg	short loc_F8D4
 		cmp	di, 5
 		jnz	short loc_F8BA
-		sub	word ptr [si+2], 180h
+		sub	[si+shot_t.pos.cur.x], (24 shl 4)
 		mov	byte ptr [bp-2], 0B8h
 		jmp	short loc_F8C3
 ; ---------------------------------------------------------------------------
 
 loc_F8BA:
-		add	word ptr [si+2], 180h
+		add	[si+shot_t.pos.cur.x], (24 shl 4)
 		mov	byte ptr [bp+var_2], 0C8h
 
 loc_F8C3:
-		lea	ax, [si+0Ah]
-		push	ax
-		push	[bp+var_2]
-		call	@shot_velocity_set$qp7sppointuc
-		mov	word ptr [si+0Eh], 1Ch
+		lea	ax, [si+shot_t.pos.velocity]
+		call	@shot_velocity_set$qp7sppointuc pascal, ax, [bp+var_2]
+		mov	[si+shot_t.patnum_base], 1Ch
 		jmp	short loc_F941
 ; ---------------------------------------------------------------------------
 
@@ -6699,13 +6665,13 @@ loc_F8D4:
 		jg	short loc_F91D
 		cmp	di, 7
 		jnz	short loc_F8E9
-		sub	word ptr [si+2], 180h
+		sub	[si+shot_t.pos.cur.x], (24 shl 4)
 		mov	byte ptr [bp-2], 0B4h
 		jmp	short loc_F8F2
 ; ---------------------------------------------------------------------------
 
 loc_F8E9:
-		add	word ptr [si+2], 180h
+		add	[si+shot_t.pos.cur.x], (24 shl 4)
 		mov	byte ptr [bp-2], 0CCh
 
 loc_F8F2:
@@ -6721,26 +6687,24 @@ loc_F8F2:
 ; ---------------------------------------------------------------------------
 
 loc_F908:
-		lea	ax, [si+0Ah]
-		push	ax
-		push	word ptr [bp-2]
-		call	@shot_velocity_set$qp7sppointuc
+		lea	ax, [si+shot_t.pos.velocity]
+		call	@shot_velocity_set$qp7sppointuc pascal, ax, word ptr [bp-2]
 
 loc_F912:
-		mov	word ptr [si+0Eh], 1Eh
-		mov	byte ptr [si+10h], 5
+		mov	[si+shot_t.patnum_base], 1Eh
+		mov	[si+shot_t.damage], 5
 		jmp	short loc_F945
 ; ---------------------------------------------------------------------------
 
 loc_F91D:
 		cmp	di, 9
 		jnz	short loc_F929
-		sub	word ptr [si+2], 180h
+		sub	[si+shot_t.pos.cur.x], (24 shl 4)
 		jmp	short loc_F92E
 ; ---------------------------------------------------------------------------
 
 loc_F929:
-		add	word ptr [si+2], 180h
+		add	[si+shot_t.pos.cur.x], (24 shl 4)
 
 loc_F92E:
 		cmp	_homing_target.y, SUBPIXEL_NONE
@@ -6750,10 +6714,10 @@ loc_F92E:
 		call	main_01:sub_F33C
 
 loc_F93C:
-		mov	word ptr [si+0Eh], 1Eh
+		mov	[si+shot_t.patnum_base], 1Eh
 
 loc_F941:
-		mov	byte ptr [si+10h], 7
+		mov	[si+shot_t.damage], 7
 
 loc_F945:
 		dec	di
@@ -6809,38 +6773,36 @@ loc_F97E:
 loc_F98F:
 		cmp	di, 1
 		jnz	short loc_F9AA
-		lea	ax, [si+0Ah]
+		lea	ax, [si+shot_t.pos.velocity]
 		push	ax
 		push	0Fh
 		call	@randring1_next16_and$qui
 		add	al, 0B8h
 		push	ax
 		call	@shot_velocity_set$qp7sppointuc
-		mov	word ptr [si+0Eh], 1Ch
+		mov	[si+shot_t.patnum_base], 1Ch
 		jmp	short loc_F9D2
 ; ---------------------------------------------------------------------------
 
 loc_F9AA:
 		cmp	di, 3
 		jnz	short loc_F9BA
-		sub	word ptr [si+2], 180h
+		sub	[si+shot_t.pos.cur.x], (24 shl 4)
 		mov	[bp+var_1], 0B8h
 		jmp	short loc_F9C3
 ; ---------------------------------------------------------------------------
 
 loc_F9BA:
-		add	word ptr [si+2], 180h
+		add	[si+shot_t.pos.cur.x], (24 shl 4)
 		mov	[bp+var_1], 0C8h
 
 loc_F9C3:
-		lea	ax, [si+0Ah]
-		push	ax
-		push	word ptr [bp+var_1]
-		call	@shot_velocity_set$qp7sppointuc
-		mov	word ptr [si+0Eh], 20h ; ' '
+		lea	ax, [si+shot_t.pos.velocity]
+		call	@shot_velocity_set$qp7sppointuc pascal, ax, word ptr [bp+var_1]
+		mov	[si+shot_t.patnum_base], 20h
 
 loc_F9D2:
-		mov	byte ptr [si+10h], 0Ah
+		mov	[si+shot_t.damage], 10
 		dec	di
 		jle	short loc_F9E2
 
@@ -6860,6 +6822,9 @@ shot_reimu_b_l2	endp
 ; ---------------------------------------------------------------------------
 
 shot_reimu_b_l3	proc near
+
+@@x	= word ptr -2
+
 		enter	4, 0
 		push	si
 		push	di
@@ -6890,41 +6855,39 @@ loc_FA1E:
 		jg	short loc_FA3B
 		cmp	di, 2
 		jnz	short loc_FA2F
-		mov	word ptr [bp-2], 0FF80h
+		mov	[bp+@@x], (-8 shl 4)
 		jmp	short loc_FA34
 ; ---------------------------------------------------------------------------
 
 loc_FA2F:
-		mov	word ptr [bp-2], 80h
+		mov	[bp+@@x], (8 shl 4)
 
 loc_FA34:
-		mov	word ptr [si+0Eh], 1Ch
+		mov	[si+shot_t.patnum_base], 1Ch
 		jmp	short loc_FA63
 ; ---------------------------------------------------------------------------
 
 loc_FA3B:
 		cmp	di, 4
 		jnz	short loc_FA4B
-		mov	word ptr [bp-2], 0FE80h
+		mov	[bp+@@x], (-24 shl 4)
 		mov	byte ptr [bp-3], 0B8h
 		jmp	short loc_FA54
 ; ---------------------------------------------------------------------------
 
 loc_FA4B:
-		mov	word ptr [bp-2], 180h
+		mov	[bp+@@x], (24 shl 4)
 		mov	byte ptr [bp-3], 0C8h
 
 loc_FA54:
-		lea	ax, [si+0Ah]
-		push	ax
-		push	word ptr [bp-3]
-		call	@shot_velocity_set$qp7sppointuc
-		mov	word ptr [si+0Eh], 20h ; ' '
+		lea	ax, [si+shot_t.pos.velocity]
+		call	@shot_velocity_set$qp7sppointuc pascal, ax, word ptr [bp-3]
+		mov	[si+shot_t.patnum_base], 20h
 
 loc_FA63:
-		mov	byte ptr [si+10h], 9
-		mov	ax, [bp-2]
-		add	[si+2],	ax
+		mov	[si+shot_t.damage], 9
+		mov	ax, [bp+@@x]
+		add	[si+shot_t.pos.cur.x], ax
 		dec	di
 		jle	short loc_FA79
 
@@ -6944,6 +6907,9 @@ shot_reimu_b_l3 endp
 ; ---------------------------------------------------------------------------
 
 shot_reimu_b_l4	proc near
+
+@@x	= word ptr -2
+
 		enter	4, 0
 		push	si
 		push	di
@@ -6973,13 +6939,11 @@ loc_FAA4:
 loc_FAB9:
 		cmp	di, 3
 		jg	short loc_FAE0
-		mov	word ptr [bp-2], 0
-		lea	ax, [si+0Ah]
-		push	ax
-		push	word ptr [bp-3]
-		call	@shot_velocity_set$qp7sppointuc
-		mov	word ptr [si+0Eh], 1Ch
-		mov	byte ptr [si+10h], 9
+		mov	[bp+@@x], 0
+		lea	ax, [si+shot_t.pos.velocity]
+		call	@shot_velocity_set$qp7sppointuc pascal, ax, word ptr [bp-3]
+		mov	[si+shot_t.patnum_base], 1Ch
+		mov	[si+shot_t.damage], 9
 		mov	al, [bp-3]
 		add	al, 6
 		mov	[bp-3],	al
@@ -6989,26 +6953,24 @@ loc_FAB9:
 loc_FAE0:
 		cmp	di, 5
 		jnz	short loc_FAF0
-		mov	word ptr [bp-2], 0FE80h
+		mov	[bp+@@x], (-24 shl 4)
 		mov	byte ptr [bp-4], 0B8h
 		jmp	short loc_FAF9
 ; ---------------------------------------------------------------------------
 
 loc_FAF0:
-		mov	word ptr [bp-2], 180h
+		mov	[bp+@@x], (24 shl 4)
 		mov	byte ptr [bp-4], 0C8h
 
 loc_FAF9:
-		lea	ax, [si+0Ah]
-		push	ax
-		push	word ptr [bp-4]
-		call	@shot_velocity_set$qp7sppointuc
-		mov	word ptr [si+0Eh], 20h ; ' '
-		mov	byte ptr [si+10h], 9
+		lea	ax, [si+shot_t.pos.velocity]
+		call	@shot_velocity_set$qp7sppointuc pascal, ax, word ptr [bp-4]
+		mov	[si+shot_t.patnum_base], 20h
+		mov	[si+shot_t.damage], 9
 
 loc_FB0C:
-		mov	ax, [bp-2]
-		add	[si+2],	ax
+		mov	ax, [bp+@@x]
+		add	[si+shot_t.pos.cur.x], ax
 		dec	di
 		jle	short loc_FB1E
 
@@ -7028,6 +6990,9 @@ shot_reimu_b_l4 endp
 ; ---------------------------------------------------------------------------
 
 shot_reimu_b_l5	proc near
+
+@@x	= word ptr -2
+
 		enter	4, 0
 		push	si
 		push	di
@@ -7057,13 +7022,11 @@ loc_FB49:
 loc_FB5E:
 		cmp	di, 3
 		jg	short loc_FB85
-		mov	word ptr [bp-2], 0
-		lea	ax, [si+0Ah]
-		push	ax
-		push	word ptr [bp-3]
-		call	@shot_velocity_set$qp7sppointuc
-		mov	word ptr [si+0Eh], 1Ch
-		mov	byte ptr [si+10h], 8
+		mov	[bp+@@x], 0
+		lea	ax, [si+shot_t.pos.velocity]
+		call	@shot_velocity_set$qp7sppointuc pascal, ax, word ptr [bp-3]
+		mov	[si+shot_t.patnum_base], 1Ch
+		mov	[si+shot_t.damage], 8
 		mov	al, [bp-3]
 		add	al, 7
 		mov	[bp-3],	al
@@ -7073,12 +7036,12 @@ loc_FB5E:
 loc_FB85:
 		cmp	di, 6
 		jl	short loc_FB91
-		mov	word ptr [bp-2], 0FE80h
+		mov	[bp+@@x], (-24 shl 4)
 		jmp	short loc_FB96
 ; ---------------------------------------------------------------------------
 
 loc_FB91:
-		mov	word ptr [bp-2], 180h
+		mov	[bp+@@x], (24 shl 4)
 
 loc_FB96:
 		mov	bx, di
@@ -7107,16 +7070,14 @@ loc_FBB9:
 		mov	byte ptr [bp-4], 0C7h
 
 loc_FBBD:
-		lea	ax, [si+0Ah]
-		push	ax
-		push	word ptr [bp-4]
-		call	@shot_velocity_set$qp7sppointuc
-		mov	word ptr [si+0Eh], 20h ; ' '
-		mov	byte ptr [si+10h], 9
+		lea	ax, [si+shot_t.pos.velocity]
+		call	@shot_velocity_set$qp7sppointuc pascal, ax, word ptr [bp-4]
+		mov	[si+shot_t.patnum_base], 20h
+		mov	[si+shot_t.damage], 9
 
 loc_FBD0:
-		mov	ax, [bp-2]
-		add	[si+2],	ax
+		mov	ax, [bp+@@x]
+		add	[si+shot_t.pos.cur.x], ax
 		dec	di
 		jle	short loc_FBE4
 
@@ -7141,6 +7102,9 @@ off_FBE8	dw offset loc_FBB9
 ; ---------------------------------------------------------------------------
 
 shot_reimu_b_l6	proc near
+
+@@x	= word ptr -2
+
 		enter	4, 0
 		push	si
 		push	di
@@ -7170,13 +7134,11 @@ loc_FC17:
 loc_FC2C:
 		cmp	di, 3
 		jg	short loc_FC53
-		mov	word ptr [bp-2], 0
-		lea	ax, [si+0Ah]
-		push	ax
-		push	word ptr [bp-3]
-		call	@shot_velocity_set$qp7sppointuc
-		mov	word ptr [si+0Eh], 1Ch
-		mov	byte ptr [si+10h], 8
+		mov	[bp+@@x], 0
+		lea	ax, [si+shot_t.pos.velocity]
+		call	@shot_velocity_set$qp7sppointuc pascal, ax, word ptr [bp-3]
+		mov	[si+shot_t.patnum_base], 1Ch
+		mov	[si+shot_t.damage], 8
 		mov	al, [bp-3]
 		add	al, 6
 		mov	[bp-3],	al
@@ -7186,12 +7148,12 @@ loc_FC2C:
 loc_FC53:
 		cmp	di, 6
 		jl	short loc_FC5F
-		mov	word ptr [bp-2], 0FE80h
+		mov	[bp+@@x], (-24 shl 4)
 		jmp	short loc_FC64
 ; ---------------------------------------------------------------------------
 
 loc_FC5F:
-		mov	word ptr [bp-2], 180h
+		mov	[bp+@@x], (24 shl 4)
 
 loc_FC64:
 		mov	bx, di
@@ -7220,16 +7182,14 @@ loc_FC87:
 		mov	byte ptr [bp-4], 0C7h
 
 loc_FC8B:
-		lea	ax, [si+0Ah]
-		push	ax
-		push	word ptr [bp-4]
-		call	@shot_velocity_set$qp7sppointuc
-		mov	word ptr [si+0Eh], 20h ; ' '
-		mov	byte ptr [si+10h], 9
+		lea	ax, [si+shot_t.pos.velocity]
+		call	@shot_velocity_set$qp7sppointuc pascal, ax, word ptr [bp-4]
+		mov	[si+shot_t.patnum_base], 20h
+		mov	[si+shot_t.damage], 9
 
 loc_FC9E:
-		mov	ax, [bp-2]
-		add	[si+2],	ax
+		mov	ax, [bp+@@x]
+		add	[si+shot_t.pos.cur.x], ax
 		dec	di
 		jle	short loc_FCB2
 
@@ -7254,6 +7214,9 @@ off_FCB6	dw offset loc_FC87
 ; ---------------------------------------------------------------------------
 
 shot_reimu_b_l7	proc near
+
+@@x	= word ptr -2
+
 		enter	4, 0
 		push	si
 		push	di
@@ -7283,13 +7246,11 @@ loc_FCE5:
 loc_FCFA:
 		cmp	di, 3
 		jg	short loc_FD21
-		mov	word ptr [bp-2], 0
-		lea	ax, [si+0Ah]
-		push	ax
-		push	word ptr [bp-3]
-		call	@shot_velocity_set$qp7sppointuc
-		mov	word ptr [si+0Eh], 1Ch
-		mov	byte ptr [si+10h], 8
+		mov	[bp+@@x], 0
+		lea	ax, [si+shot_t.pos.velocity]
+		call	@shot_velocity_set$qp7sppointuc pascal, ax, word ptr [bp-3]
+		mov	[si+shot_t.patnum_base], 1Ch
+		mov	[si+shot_t.damage], 8
 		mov	al, [bp-3]
 		add	al, 6
 		mov	[bp-3],	al
@@ -7299,12 +7260,12 @@ loc_FCFA:
 loc_FD21:
 		cmp	di, 6
 		jl	short loc_FD2D
-		mov	word ptr [bp-2], 0FE80h
+		mov	[bp+@@x], (-24 shl 4)
 		jmp	short loc_FD32
 ; ---------------------------------------------------------------------------
 
 loc_FD2D:
-		mov	word ptr [bp-2], 180h
+		mov	[bp+@@x], (24 shl 4)
 
 loc_FD32:
 		mov	bx, di
@@ -7333,16 +7294,14 @@ loc_FD55:
 		mov	byte ptr [bp-4], 0C7h
 
 loc_FD59:
-		lea	ax, [si+0Ah]
-		push	ax
-		push	word ptr [bp-4]
-		call	@shot_velocity_set$qp7sppointuc
-		mov	word ptr [si+0Eh], 20h ; ' '
-		mov	byte ptr [si+10h], 9
+		lea	ax, [si+shot_t.pos.velocity]
+		call	@shot_velocity_set$qp7sppointuc pascal, ax, word ptr [bp-4]
+		mov	[si+shot_t.patnum_base], 20h
+		mov	[si+shot_t.damage], 9
 
 loc_FD6C:
-		mov	ax, [bp-2]
-		add	[si+2],	ax
+		mov	ax, [bp+@@x]
+		add	[si+shot_t.pos.cur.x], ax
 		dec	di
 		jle	short loc_FD80
 
@@ -7367,6 +7326,9 @@ off_FD84	dw offset loc_FD55
 ; ---------------------------------------------------------------------------
 
 shot_reimu_b_l8	proc near
+
+@@x	= word ptr -2
+
 		enter	4, 0
 		push	si
 		push	di
@@ -7396,13 +7358,11 @@ loc_FDB3:
 loc_FDC8:
 		cmp	di, 5
 		jg	short loc_FDEF
-		mov	word ptr [bp-2], 0
-		lea	ax, [si+0Ah]
-		push	ax
-		push	word ptr [bp-3]
-		call	@shot_velocity_set$qp7sppointuc
-		mov	word ptr [si+0Eh], 1Ch
-		mov	byte ptr [si+10h], 8
+		mov	[bp+@@x], 0
+		lea	ax, [si+shot_t.pos.velocity]
+		call	@shot_velocity_set$qp7sppointuc pascal, ax, word ptr [bp-3]
+		mov	[si+shot_t.patnum_base], 1Ch
+		mov	[si+shot_t.damage], 8
 		mov	al, [bp-3]
 		add	al, 4
 		mov	[bp-3],	al
@@ -7412,12 +7372,12 @@ loc_FDC8:
 loc_FDEF:
 		cmp	di, 8
 		jl	short loc_FDFB
-		mov	word ptr [bp-2], 0FE80h
+		mov	[bp+@@x], (-24 shl 4)
 		jmp	short loc_FE00
 ; ---------------------------------------------------------------------------
 
 loc_FDFB:
-		mov	word ptr [bp-2], 180h
+		mov	[bp+@@x], (24 shl 4)
 
 loc_FE00:
 		mov	bx, di
@@ -7446,16 +7406,14 @@ loc_FE23:
 		mov	byte ptr [bp-4], 0C7h
 
 loc_FE27:
-		lea	ax, [si+0Ah]
-		push	ax
-		push	word ptr [bp-4]
-		call	@shot_velocity_set$qp7sppointuc
-		mov	word ptr [si+0Eh], 20h ; ' '
-		mov	byte ptr [si+10h], 9
+		lea	ax, [si+shot_t.pos.velocity]
+		call	@shot_velocity_set$qp7sppointuc pascal, ax, word ptr [bp-4]
+		mov	[si+shot_t.patnum_base], 20h
+		mov	[si+shot_t.damage], 9
 
 loc_FE3A:
-		mov	ax, [bp-2]
-		add	[si+2],	ax
+		mov	ax, [bp+@@x]
+		add	[si+shot_t.pos.cur.x], ax
 		dec	di
 		jle	short loc_FE4E
 
@@ -7480,6 +7438,9 @@ off_FE52	dw offset loc_FE23
 ; ---------------------------------------------------------------------------
 
 shot_reimu_b_l9	proc near
+
+@@x	= word ptr -2
+
 		enter	4, 0
 		push	si
 		push	di
@@ -7509,13 +7470,11 @@ loc_FE81:
 loc_FE97:
 		cmp	di, 5
 		jg	short loc_FEBE
-		mov	word ptr [bp-2], 0
-		lea	ax, [si+0Ah]
-		push	ax
-		push	word ptr [bp-3]
-		call	@shot_velocity_set$qp7sppointuc
-		mov	word ptr [si+0Eh], 1Ch
-		mov	byte ptr [si+10h], 8
+		mov	[bp+@@x], 0
+		lea	ax, [si+shot_t.pos.velocity]
+		call	@shot_velocity_set$qp7sppointuc pascal, ax, word ptr [bp-3]
+		mov	[si+shot_t.patnum_base], 1Ch
+		mov	[si+shot_t.damage], 8
 		mov	al, [bp-3]
 		add	al, 4
 		mov	[bp-3],	al
@@ -7556,24 +7515,22 @@ loc_FEE7:
 loc_FEEB:
 		test	di, 1
 		jz	short loc_FEF8
-		mov	word ptr [bp-2], 0FE80h
+		mov	[bp+@@x], (-24 shl 4)
 		jmp	short loc_FEFD
 ; ---------------------------------------------------------------------------
 
 loc_FEF8:
-		mov	word ptr [bp-2], 180h
+		mov	[bp+@@x], (24 shl 4)
 
 loc_FEFD:
-		lea	ax, [si+0Ah]
-		push	ax
-		push	word ptr [bp-4]
-		call	@shot_velocity_set$qp7sppointuc
-		mov	word ptr [si+0Eh], 20h ; ' '
-		mov	byte ptr [si+10h], 9
+		lea	ax, [si+shot_t.pos.velocity]
+		call	@shot_velocity_set$qp7sppointuc pascal, ax, word ptr [bp-4]
+		mov	[si+shot_t.patnum_base], 20h
+		mov	[si+shot_t.damage], 9
 
 loc_FF10:
-		mov	ax, [bp-2]
-		add	[si+2],	ax
+		mov	ax, [bp+@@x]
+		add	[si+shot_t.pos.cur.x], ax
 		dec	di
 		jle	short loc_FF24
 
@@ -8203,7 +8160,7 @@ loc_104CF:
 loc_104D7:
 		cmp	[si+shot_t.flag], SF_FREE
 		jz	short loc_10527
-		lea	ax, [si+2]
+		lea	ax, [si+shot_t.pos]
 		call	@PlayfieldMotion@update_seg1$qv pascal, ax
 		cmp	ax, (-(SHOT_W / 2) shl 4)
 		jle	short loc_104F8
@@ -8228,7 +8185,7 @@ loc_104FD:
 		and	ax, (HITSHOT_FRAMES_PER_CEL - 1)
 		cmp	ax, SF_HIT
 		jnz	short loc_10527
-		inc	word ptr [si+0Eh]
+		inc	[si+shot_t.patnum_base]
 		jmp	short loc_10527
 ; ---------------------------------------------------------------------------
 
@@ -8238,7 +8195,7 @@ loc_10515:
 		mov	[di+shot_alive_t.SA_shot], si
 		add	di, size shot_alive_t
 		inc	_shots_alive_count
-		inc	byte ptr [si+1]
+		inc	[si+shot_t.SHOT_age]
 
 loc_10527:
 		inc	[bp+@@i]
@@ -8302,18 +8259,18 @@ loc_10570:
 		mov	cl, al
 
 loc_1058D:
-		mov	ax, [si+4]
-		add	ax, (8 shl 4)
+		mov	ax, [si+shot_t.pos.cur.y]
+		add	ax, ((PLAYFIELD_TOP - (SHOT_H / 2)) shl 4)
 		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
 		mov	dx, ax
-		mov	ax, [si+2]
-		sar	ax, 4
-		add	ax, 24
+		mov	ax, [si+shot_t.pos.cur.x]
+		sar	ax, SUBPIXEL_BITS
+		add	ax, (PLAYFIELD_LEFT - (SHOT_W / 2))
 		call	main_01:z_super_roll_put_tiny_16x16_raw pascal, cx
 
 loc_105A6:
 		inc	di
-		sub	si, 12h
+		sub	si, size shot_t
 
 loc_105AA:
 		cmp	di, SHOT_COUNT
