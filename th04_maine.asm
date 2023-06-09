@@ -221,20 +221,17 @@ sub_A0BD	endp
 public _main
 _main		proc far
 
-var_4		= dword	ptr -4
-_argc		= word ptr  6
-_argv		= dword	ptr  8
-_envp		= dword	ptr  0Ch
+@@cong_fn	= dword	ptr -4
 
 		enter	4, 0
-		mov	word ptr [bp+var_4+2], ds
-		mov	word ptr [bp+var_4], 0A8h ; '¨'
+		mov	word ptr [bp+@@cong_fn+2], ds
+		mov	word ptr [bp+@@cong_fn], offset _CongFN
 		call	_cfg_load_resident_ptr
 		or	ax, ax
 		jz	locret_A290
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.playchar_ascii]
-		les	bx, [bp+var_4]
+		les	bx, [bp+@@cong_fn]
 		mov	es:[bx+4], al
 		mov	_mem_assign_paras, MEM_ASSIGN_PARAS_MAINE
 		call	game_init_main pascal, ds, offset aMSzlEd_dat
@@ -264,14 +261,14 @@ _envp		= dword	ptr  0Ch
 		jnz	short loc_A1E9
 
 loc_A187:
-		les	bx, [bp+var_4]
+		les	bx, [bp+@@cong_fn]
 		mov	al, es:[bx+5]
 		les	bx, _resident
 		add	al, es:[bx+resident_t.rank]
-		les	bx, [bp+var_4]
+		les	bx, [bp+@@cong_fn]
 		mov	es:[bx+5], al
 		graph_accesspage 1
-		call	pi_load pascal, 0, word ptr [bp+var_4+2], bx
+		call	pi_load pascal, 0, word ptr [bp+@@cong_fn+2], bx
 		call	pi_palette_apply pascal, 0
 		call	pi_put_8 pascal, large 0, 0
 		freePISlotLarge	0
@@ -296,12 +293,12 @@ loc_A1FE:
 		jnz	short loc_A274
 		call	frame_delay pascal, 100
 		call	sub_C814
-		les	bx, [bp+var_4]
-		mov	byte ptr es:[bx+5], 34h	; '4'
+		les	bx, [bp+@@cong_fn]
+		mov	byte ptr es:[bx+5], '4'
 		mov	PaletteTone, 0
 		call	far ptr	palette_show
 		graph_accesspage 1
-		call	pi_load pascal, 0, large [bp+var_4]
+		call	pi_load pascal, 0, large [bp+@@cong_fn]
 		call	pi_palette_apply pascal, 0
 		call	pi_put_8 pascal, large 0, 0
 		freePISlotLarge	0
@@ -3228,8 +3225,9 @@ SHARED_	ends
 off_E5C0	dd a_ed000_txt
 					; "_ED000.TXT"
 include th04/formats/cfg_lres[data].asm
+public _CongFN
 a_ed000_txt	db '_ED000.TXT',0
-aCong00_pi	db 'CONG00.pi',0
+_CongFN	db 'CONG00.pi',0
 aMSzlEd_dat	db 'Œ¶‘z‹½ed.dat',0
 aGameft_bft	db 'GAMEFT.bft',0
 ; char arg0[]
