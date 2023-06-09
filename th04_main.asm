@@ -22339,15 +22339,15 @@ yuuka6_1A110	endp
 
 ; Attributes: bp-based frame
 
-yuuka6_1A3C3	proc near
+@yuuka6_phase2_fly$qv	proc near
 		push	bp
 		mov	bp, sp
 		mov	al, _boss_phase_state
 		mov	ah, 0
-		mov	bx, 6
+		mov	bx, (YUUKA6_PHASE2_FLY_NODES + 1)
 		cwd
 		idiv	bx
-		cmp	dx, 5
+		cmp	dx, YUUKA6_PHASE2_FLY_NODES
 		jge	short loc_1A42E
 		mov	ax, _boss_phase_frame
 		cmp	ax, 1
@@ -22359,19 +22359,19 @@ yuuka6_1A3C3	proc near
 
 loc_1A3E5:
 		push	offset _boss_pos.velocity
-		mov	al, byte_25A07
+		mov	al, _yuuka6_phase2_fly_path
 		mov	ah, 0
-		imul	ax, 5
+		imul	ax, YUUKA6_PHASE2_FLY_NODES
 		mov	dl, _boss_phase_state
 		mov	dh, 0
-		mov	bx, 6
+		mov	bx, (YUUKA6_PHASE2_FLY_NODES + 1)
 		push	ax
 		mov	ax, dx
 		cwd
 		idiv	bx
 		pop	bx
 		add	bx, dx
-		mov	al, [bx+1ED4h]
+		mov	al, _YUUKA6_PHASE2_FLY_ANGLES[bx]
 		push	ax
 		push	8
 		call	vector2_near
@@ -22400,7 +22400,7 @@ loc_1A42E:
 		call	yuuka6_1A439 pascal, (((PLAYFIELD_W / 2) shl 4) shl 16) or (80 shl 4)
 		pop	bp
 		retn
-yuuka6_1A3C3	endp
+@yuuka6_phase2_fly$qv	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -23882,9 +23882,8 @@ loc_1B4EB:
 		mov	_boss_phase_frame, 0
 		mov	_yuuka6_anim_frame, 0
 		mov	_yuuka6_sprite_state, Y6SS_PARASOL_BACK_OPEN
-		push	1
-		call	@randring2_next16_and$qui
-		mov	byte_25A07, al
+		call	@randring2_next16_and$qui pascal, (YUUKA6_PHASE2_FLY_PATHS - 1)
+		mov	_yuuka6_phase2_fly_path, al
 		jmp	loc_1B8EA
 ; ---------------------------------------------------------------------------
 
@@ -23923,7 +23922,7 @@ loc_1B55E:
 ; ---------------------------------------------------------------------------
 
 loc_1B563:
-		call	yuuka6_1A3C3	; jumptable 0001B550 case 255
+		call	@yuuka6_phase2_fly$qv	; jumptable 0001B550 case 255
 		or	al, al
 		jz	short loc_1B580	; default
 		mov	al, _boss_phase_state
@@ -31140,17 +31139,16 @@ include th04/scoreupd[data].asm
 include th04/main/hud/gaiji_row[data].asm
 include th04/main/hud/hud[data].asm
 angle_23212	db 0
-		db    0
-		db  60h
-		db    0
-		db  70h	; p
-		db 0E0h
-		db  80h
-		db  20h
-		db  70h	; p
-		db  90h
-		db 0F0h
-		db  10h
+	evendata
+
+YUUKA6_PHASE2_FLY_PATHS = 2
+YUUKA6_PHASE2_FLY_NODES = 5
+
+public _YUUKA6_PHASE2_FLY_ANGLES
+_YUUKA6_PHASE2_FLY_ANGLES label byte
+	db +60h, +00h, +70h, -20h, 80h
+	db +20h, +70h, -70h, -10h, 10h
+
 include th04/main/player/shot_levels[data].asm
 include th04/formats/cfg_lres[data].asm
 	evendata
@@ -31454,9 +31452,9 @@ byte_25A02	db ?
 byte_25A03	db ?
 byte_25A04	db ?
 		db ?
-public _yuuka6_sprite_state
+public _yuuka6_sprite_state, _yuuka6_phase2_fly_path
 _yuuka6_sprite_state	db ?
-byte_25A07	db ?
+_yuuka6_phase2_fly_path	db ?
 byte_25A08	db ?
 		db ?
 public _yuuka6_anim_frame

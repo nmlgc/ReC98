@@ -5,6 +5,9 @@
 #include "th04/main/playfld.hpp"
 #include "th04/main/custom.hpp"
 
+#define phase2_fly_path  	yuuka6_phase2_fly_path
+#define PHASE2_FLY_ANGLES	YUUKA6_PHASE2_FLY_ANGLES
+
 // Constants
 // ---------
 
@@ -14,6 +17,16 @@ static const pixel_t BG_SHAPE_H = 16;
 static const pixel_t CHASECROSS_W = 32;
 static const pixel_t CHASECROSS_H = 32;
 static const int CHASECROSS_KILL_FRAMES_PER_CEL = 4;
+
+// The number of different paths Yuuka can take.
+static const int PHASE2_FLY_PATHS = 2;
+
+// The number of individual points on each fly path.
+static const int PHASE2_FLY_NODES = 5;
+
+extern const unsigned char PHASE2_FLY_ANGLES[PHASE2_FLY_PATHS][
+	PHASE2_FLY_NODES
+];
 // ---------
 
 // Structures
@@ -107,6 +120,7 @@ enum yuuka6_sprite_state_t {
 
 extern int yuuka6_anim_frame;
 extern yuuka6_sprite_state_t yuuka6_sprite_state;
+extern uint8_t phase2_fly_path;
 
 void pascal near chasecrosses_add(
 	unsigned char angle, subpixel_length_8_t speed
