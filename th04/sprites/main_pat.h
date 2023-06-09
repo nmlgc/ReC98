@@ -1,5 +1,13 @@
 #include "th04/sprites/cels.h"
 
+typedef enum {
+	M4C_STILL,
+	M4C_CAST_1,
+	M4C_CAST_2,
+	M4C_CAST_3,
+	M4C_CELS,
+} midboss4_cel_t;
+
 #define REIMU_ORB_CELS 4
 #define YUUKA6_CHASECROSS_CELS 4
 
@@ -57,6 +65,17 @@ typedef enum {
 	/// =================
 
 	PAT_STAGE = 128,
+
+	/// Stage 4
+	/// =======
+	// st03b.bmt
+	// ---------
+	PAT_MIDBOSS4_STILL_LEFT = (PAT_STAGE + 28 + M4C_STILL),
+	PAT_MIDBOSS4_STILL_LEFT_last = (PAT_MIDBOSS4_STILL_LEFT + M4C_CELS - 1),
+	PAT_MIDBOSS4_STILL_RIGHT,
+	PAT_MIDBOSS4_STILL_RIGHT_last = (PAT_MIDBOSS4_STILL_RIGHT + M4C_CELS - 1),
+	// ---------
+	/// =======
 
 	/// Stage 4 – Reimu
 	/// ===============
