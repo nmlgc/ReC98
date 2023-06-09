@@ -2942,36 +2942,36 @@ shot_marisa_l1	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public @SHOT_LASER_UPDATE$QUI18SHOT_LASER_STYLE_T
+@shot_laser_update$qui18shot_laser_style_t	proc near
 
-sub_DAA6	proc near
-
-arg_0		= byte ptr  4
-arg_2		= word ptr  6
+@@style		= byte ptr  4
+@@frames	= word ptr  6
 
 		push	bp
 		mov	bp, sp
 		push	si
-		cmp	word_25608, 0
+		cmp	_shot_laser_time, 0
 		jnz	short loc_DADA
-		mov	ax, [bp+arg_2]
-		mov	word_25608, ax
-		mov	al, [bp+arg_0]
-		mov	byte_2560A, al
+		mov	ax, [bp+@@frames]
+		mov	_shot_laser_time, ax
+		mov	al, [bp+@@style]
+		mov	_shot_laser_style, al
 		mov	ax, _player_option_pos_cur.x
-		mov	_player_option_laser_pos.cur.x, ax
+		mov	_shot_laser_bottomcenter.cur.x, ax
 		mov	ax, _player_option_pos_cur.y
-		mov	_player_option_laser_pos.cur.y, ax
+		mov	_shot_laser_bottomcenter.cur.y, ax
 		mov	ax, _player_option_pos_cur.x
-		mov	_player_option_laser_pos.prev.x, ax
+		mov	_shot_laser_bottomcenter.prev.x, ax
 		mov	ax, _player_option_pos_cur.y
-		mov	_player_option_laser_pos.prev.y, ax
-		mov	byte_22C1A, 0
+		mov	_shot_laser_bottomcenter.prev.y, ax
+		mov	_shot_laser_ring_cycle, 0
 
 loc_DADA:
-		cmp	word_25608, 30h	; '0'
+		cmp	_shot_laser_time, (SHOT_LASER_COOLDOWN_FRAMES + 16)
 		jb	short loc_DB45
-		inc	byte_22C1A
-		cmp	byte_22C1A, 4
+		inc	_shot_laser_ring_cycle
+		cmp	_shot_laser_ring_cycle, 4
 		ja	short loc_DB39
 		mov	_shot_ptr, offset _shots
 		mov	_shot_last_id, 0
@@ -2979,7 +2979,7 @@ loc_DADA:
 		mov	si, ax
 		or	ax, ax
 		jz	short loc_DB17
-		mov	[si+shot_t.patnum_base], 46h
+		mov	[si+shot_t.patnum_base], PAT_SHOT_LASER_RING
 		mov	[si+shot_t.damage], 9
 		mov	[si+shot_t.pos.velocity.y], (-18 shl 4)
 		mov	ax, _player_option_pos_cur.x
@@ -2991,7 +2991,7 @@ loc_DB17:
 		mov	si, ax
 		or	ax, ax
 		jz	short loc_DB45
-		mov	[si+shot_t.patnum_base], 46h
+		mov	[si+shot_t.patnum_base], PAT_SHOT_LASER_RING
 		mov	[si+shot_t.damage], 9
 		mov	[si+shot_t.pos.velocity.y], (-18 shl 4)
 		mov	ax, _player_option_pos_cur.x
@@ -3001,15 +3001,15 @@ loc_DB17:
 ; ---------------------------------------------------------------------------
 
 loc_DB39:
-		cmp	byte_22C1A, 8
+		cmp	_shot_laser_ring_cycle, 8
 		jb	short loc_DB45
-		mov	byte_22C1A, 0
+		mov	_shot_laser_ring_cycle, 0
 
 loc_DB45:
 		pop	si
 		pop	bp
 		retn	4
-sub_DAA6	endp
+@shot_laser_update$qui18shot_laser_style_t	endp
 
 ; ---------------------------------------------------------------------------
 
@@ -3017,9 +3017,7 @@ shot_marisa_a_l2	proc near
 		push	bp
 		mov	bp, sp
 		push	si
-		push	40h
-		push	0
-		call	main_01:sub_DAA6
+		call	@shot_laser_update$qui18shot_laser_style_t pascal, 64, SLS_2
 		mov	_shot_ptr, offset _shots
 		mov	_shot_last_id, 0
 		jmp	short loc_DB7C
@@ -3058,9 +3056,7 @@ shot_marisa_a_l3	proc near
 		push	si
 		push	di
 		mov	di, 2
-		push	48h ; 'H'
-		push	0
-		call	main_01:sub_DAA6
+		call	@shot_laser_update$qui18shot_laser_style_t pascal, 72, SLS_2
 		mov	_shot_ptr, offset _shots
 		mov	_shot_last_id, 0
 		jmp	short loc_DBC1
@@ -3103,9 +3099,7 @@ shot_marisa_a_l4	proc near
 		push	si
 		push	di
 		mov	di, 2
-		push	58h ; 'X'
-		push	1
-		call	main_01:sub_DAA6
+		call	@shot_laser_update$qui18shot_laser_style_t pascal, 88, SLS_4
 		mov	_shot_ptr, offset _shots
 		mov	_shot_last_id, 0
 		jmp	short loc_DC07
@@ -3150,9 +3144,7 @@ shot_marisa_a_l5	proc near
 		push	si
 		push	di
 		mov	di, 3
-		push	68h ; 'h'
-		push	1
-		call	main_01:sub_DAA6
+		call	@shot_laser_update$qui18shot_laser_style_t pascal, 104, SLS_4
 		mov	[bp+@@angle], -48h
 		mov	_shot_ptr, offset _shots
 		mov	_shot_last_id, 0
@@ -3193,9 +3185,7 @@ shot_marisa_a_l6	proc near
 		push	si
 		push	di
 		mov	di, 3
-		push	80h
-		push	2
-		call	main_01:sub_DAA6
+		call	@shot_laser_update$qui18shot_laser_style_t pascal, 128, SLS_6
 		mov	[bp+@@angle], -48h
 		mov	_shot_ptr, offset _shots
 		mov	_shot_last_id, 0
@@ -3236,9 +3226,7 @@ shot_marisa_a_l7	proc near
 		push	si
 		push	di
 		mov	di, 3
-		push	90h
-		push	3
-		call	main_01:sub_DAA6
+		call	@shot_laser_update$qui18shot_laser_style_t pascal, 144, SLS_1_4_1
 		mov	[bp+@@angle], -48h
 		mov	_shot_ptr, offset _shots
 		mov	_shot_last_id, 0
@@ -3279,9 +3267,7 @@ shot_marisa_a_l8	proc near
 		push	si
 		push	di
 		mov	di, 5
-		push	0A8h ; '¨'
-		push	3
-		call	main_01:sub_DAA6
+		call	@shot_laser_update$qui18shot_laser_style_t pascal, 168, SLS_1_4_1
 		mov	[bp+@@angle], -4Ch
 		mov	_shot_ptr, offset _shots
 		mov	_shot_last_id, 0
@@ -3322,9 +3308,7 @@ shot_marisa_a_l9	proc near
 		push	si
 		push	di
 		mov	di, 5
-		push	0C0h
-		push	4
-		call	main_01:sub_DAA6
+		call	@shot_laser_update$qui18shot_laser_style_t pascal, 192, SLS_8
 		mov	[bp+@@angle], -4Ch
 		mov	_shot_ptr, offset _shots
 		mov	_shot_last_id, 0
@@ -4032,9 +4016,9 @@ sub_E1F4	proc near
 		mov	bp, sp
 		push	si
 		push	di
-		cmp	word_25608, 20h	; ' '
+		cmp	_shot_laser_time, SHOT_LASER_COOLDOWN_FRAMES
 		jbe	loc_E2B4
-		mov	al, byte_2560A
+		mov	al, _shot_laser_style
 		mov	ah, 0
 		mov	bx, ax
 		cmp	bx, 4
@@ -4042,38 +4026,38 @@ sub_E1F4	proc near
 		add	bx, bx
 		jmp	cs:off_E2B9[bx]
 
-loc_E215:
-		cmp	word_25608, 28h	; '('
+@@style_4:
+		cmp	_shot_laser_time, (SHOT_LASER_COOLDOWN_FRAMES + 8)
 		ja	short loc_E262
-		jmp	short loc_E257
+		jmp	short @@style_2
 ; ---------------------------------------------------------------------------
 
-loc_E21E:
-		cmp	word_25608, 28h	; '('
+@@style_6:
+		cmp	_shot_laser_time, (SHOT_LASER_COOLDOWN_FRAMES + 8)
 		ja	short loc_E227
-		jmp	short loc_E257
+		jmp	short @@style_2
 ; ---------------------------------------------------------------------------
 
 loc_E227:
-		cmp	word_25608, 30h	; '0'
+		cmp	_shot_laser_time, (SHOT_LASER_COOLDOWN_FRAMES + 16)
 		ja	short loc_E26E
 		jmp	short loc_E262
 ; ---------------------------------------------------------------------------
 
-loc_E230:
-		cmp	word_25608, 28h	; '('
+@@style_1_4_1:
+		cmp	_shot_laser_time, (SHOT_LASER_COOLDOWN_FRAMES + 8)
 		ja	short loc_E239
-		jmp	short loc_E257
+		jmp	short @@style_2
 ; ---------------------------------------------------------------------------
 
 loc_E239:
-		cmp	word_25608, 30h	; '0'
+		cmp	_shot_laser_time, (SHOT_LASER_COOLDOWN_FRAMES + 16)
 		ja	short loc_E242
 		jmp	short loc_E262
 ; ---------------------------------------------------------------------------
 
 loc_E242:
-		cmp	word_25608, 38h	; '8'
+		cmp	_shot_laser_time, (SHOT_LASER_COOLDOWN_FRAMES + 24)
 		ja	short loc_E24B
 		jmp	short loc_E26E
 ; ---------------------------------------------------------------------------
@@ -4083,17 +4067,17 @@ loc_E24B:
 		jmp	short loc_E276
 ; ---------------------------------------------------------------------------
 
-loc_E250:
-		cmp	word_25608, 28h	; '('
+@@style_8:
+		cmp	_shot_laser_time, (SHOT_LASER_COOLDOWN_FRAMES + 8)
 		ja	short loc_E25B
 
-loc_E257:
+@@style_2:
 		xor	di, di	; SHOT_LASER_CEL_0
 		jmp	short loc_E276
 ; ---------------------------------------------------------------------------
 
 loc_E25B:
-		cmp	word_25608, 30h	; '0'
+		cmp	_shot_laser_time, (SHOT_LASER_COOLDOWN_FRAMES + 16)
 		ja	short loc_E267
 
 loc_E262:
@@ -4102,7 +4086,7 @@ loc_E262:
 ; ---------------------------------------------------------------------------
 
 loc_E267:
-		cmp	word_25608, 38h	; '8'
+		cmp	_shot_laser_time, (SHOT_LASER_COOLDOWN_FRAMES + 24)
 		ja	short loc_E273
 
 loc_E26E:
@@ -4118,18 +4102,18 @@ loc_E276:
 		add	al, 8
 		mov	ah, al
 		call	@grcg_setcolor_direct_raw$qv
-		mov	si, _player_option_laser_pos.cur.y
+		mov	si, _shot_laser_bottomcenter.cur.y
 		call	scroll_subpixel_y_to_vram_seg1 pascal, (PLAYFIELD_TOP shl 4)
 		mov	dx, ax
-		mov	ax, _player_option_laser_pos.cur.x
+		mov	ax, _shot_laser_bottomcenter.cur.x
 		sar	ax, 4
 		add	ax, ((PLAYFIELD_LEFT - PLAYER_OPTION_DISTANCE) - (SHOT_LASER_W / 2))
 		mov	bx, di
 		call	shot_laser_put_raw
-		mov	si, _player_option_laser_pos.cur.y
+		mov	si, _shot_laser_bottomcenter.cur.y
 		call	scroll_subpixel_y_to_vram_seg1 pascal, (PLAYFIELD_TOP shl 4)
 		mov	dx, ax
-		mov	ax, _player_option_laser_pos.cur.x
+		mov	ax, _shot_laser_bottomcenter.cur.x
 		sar	ax, 4
 		add	ax, ((PLAYFIELD_LEFT + PLAYER_OPTION_DISTANCE) - (SHOT_LASER_W / 2))
 		mov	bx, di
@@ -4140,15 +4124,15 @@ loc_E2B4:
 		pop	si
 		pop	bp
 		retn
-sub_E1F4	endp
 
 ; ---------------------------------------------------------------------------
 		db 0
-off_E2B9	dw offset loc_E257
-		dw offset loc_E215
-		dw offset loc_E21E
-		dw offset loc_E230
-		dw offset loc_E250
+off_E2B9	dw offset @@style_2
+		dw offset @@style_4
+		dw offset @@style_6
+		dw offset @@style_1_4_1
+		dw offset @@style_8
+sub_E1F4	endp
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -7917,8 +7901,8 @@ bomb_stars_update_and_render_for	endp
 sub_1042A	proc near
 		push	bp
 		mov	bp, sp
-		mov	word_25608, 0
-		mov	byte_2560A, 0
+		mov	_shot_laser_time, 0
+		mov	_shot_laser_style, 0
 		mov	_shot_time, 0
 		mov	byte_259A7, 0
 		pop	bp
@@ -7954,29 +7938,29 @@ loc_1046A:
 loc_1046E:
 		cmp	di, SHOT_COUNT
 		jl	short loc_1045C
-		cmp	word_25608, 20h	; ' '
+		cmp	_shot_laser_time, SHOT_LASER_COOLDOWN_FRAMES
 		jb	short loc_104B2
 		mov	_tile_invalidate_box.x, 8
-		mov	ax, _player_option_laser_pos.prev.y
+		mov	ax, _shot_laser_bottomcenter.prev.y
 		mov	bx, 16
 		cwd
 		idiv	bx
 		mov	_tile_invalidate_box.y, ax
-		mov	ax, _player_option_laser_pos.prev.y
+		mov	ax, _shot_laser_bottomcenter.prev.y
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		push	ax
-		mov	ax, _player_option_laser_pos.prev.x
+		mov	ax, _shot_laser_bottomcenter.prev.x
 		add	ax, (-24 shl 4)
 		push	ax
 		call	main_01:tiles_invalidate_around
-		mov	ax, _player_option_laser_pos.prev.y
+		mov	ax, _shot_laser_bottomcenter.prev.y
 		cwd
 		sub	ax, dx
 		sar	ax, 1
 		push	ax
-		mov	ax, _player_option_laser_pos.prev.x
+		mov	ax, _shot_laser_bottomcenter.prev.x
 		add	ax, (24 shl 4)
 		push	ax
 		call	main_01:tiles_invalidate_around
@@ -8059,13 +8043,13 @@ loc_10527:
 loc_1052D:
 		cmp	[bp+@@i], SHOT_COUNT
 		jl	short loc_104CF
-		cmp	word_25608, 0
+		cmp	_shot_laser_time, 0
 		jz	short loc_1054E
-		mov	eax, _player_option_laser_pos.cur
-		mov	_player_option_laser_pos.prev, eax
+		mov	eax, _shot_laser_bottomcenter.cur
+		mov	_shot_laser_bottomcenter.prev, eax
 		mov	eax, _player_option_pos_cur
-		mov	_player_option_laser_pos.cur, eax
-		dec	word_25608
+		mov	_shot_laser_bottomcenter.cur, eax
+		dec	_shot_laser_time
 
 loc_1054E:
 		pop	di
@@ -8087,7 +8071,7 @@ public @SHOTS_RENDER$QV
 		mov	ax, GRAM_400
 		mov	es, ax
 		call	@grcg_setmode_rmw$qv
-		cmp	word_25608, 20h	; ' '
+		cmp	_shot_laser_time, SHOT_LASER_COOLDOWN_FRAMES
 		jbe	short loc_10569
 		call	main_01:sub_E1F4
 
@@ -8236,12 +8220,12 @@ loc_1067E:
 loc_1068C:
 		cmp	_stage_frame_mod2, 0
 		jz	short loc_10704
-		cmp	word_25608, 20h	; ' '
+		cmp	_shot_laser_time, SHOT_LASER_COOLDOWN_FRAMES
 		jbe	short loc_10704
 		mov	ax, [bp+var_8]
-		cmp	ax, _player_option_laser_pos.cur.y
+		cmp	ax, _shot_laser_bottomcenter.cur.y
 		ja	short loc_10704
-		mov	ax, _player_option_laser_pos.cur.x
+		mov	ax, _shot_laser_bottomcenter.cur.x
 		add	ax, (-PLAYER_OPTION_DISTANCE shl 4)
 		mov	[bp+@@laser_x], ax
 		sub	ax, [bp+var_6]
@@ -8427,9 +8411,9 @@ loc_10ACF:
 ; ---------------------------------------------------------------------------
 
 loc_10AE4:
-		cmp	word_25608, 21h	; '!'
+		cmp	_shot_laser_time, (SHOT_LASER_COOLDOWN_FRAMES + 1)
 		jbe	short loc_10AF1
-		mov	word_25608, 21h	; '!'
+		mov	_shot_laser_time, (SHOT_LASER_COOLDOWN_FRAMES + 1)
 
 loc_10AF1:
 		mov	_miss_time, MISS_ANIM_FRAMES + DEATHBOMB_WINDOW
@@ -30962,8 +30946,9 @@ _BOMB_BG_REIMU_FN 	db 'bb0.cdg',0
 _BOMB_BG_MARISA_FN	db 'bb1.cdg',0
 	evendata
 include th04/main/boss/explosions_big[data].asm
-byte_22C1A	db 0
-		db    0
+public _shot_laser_ring_cycle
+_shot_laser_ring_cycle	db 0
+	evendata
 include th04/gaiji/gameover[data].asm
 asc_22C3F	db '  ',0
 asc_22C42	db '  ',0
@@ -31338,11 +31323,19 @@ public _dialog_side
 _dialog_side	dw ?
 word_255D6	dw ?
 include th04/main/boss/explosions[bss].asm
-word_25608	dw ?
-byte_2560A	db ?
-		db ?
-public _player_option_laser_pos
-_player_option_laser_pos	motion_t <?>
+
+SHOT_LASER_COOLDOWN_FRAMES = 32
+SLS_2 = 0
+SLS_4 = 1
+SLS_6 = 2
+SLS_1_4_1 = 3
+SLS_8 = 4
+
+public _shot_laser_time, _shot_laser_style, _shot_laser_bottomcenter
+_shot_laser_time 	dw ?
+_shot_laser_style	db ?
+	evendata
+_shot_laser_bottomcenter	motion_t <?>
 
 THICKLASER_COUNT = 2
 

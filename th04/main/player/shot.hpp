@@ -142,6 +142,7 @@ void near shots_render(void);
 // Unused in TH05, but still present in the code.
 
 static const pixel_t SHOT_LASER_W = 8;
+static const unsigned int SHOT_LASER_COOLDOWN_FRAMES = 32;
 
 typedef enum {
 	SHOT_LASER_CEL_0,
@@ -151,6 +152,31 @@ typedef enum {
 	SHOT_LASER_CEL_4,
 	SHOT_LASER_CELS,
 } shot_laser_cel_t;
+
+// Describes the longest width and segments of the laser in pixels. Has no
+// effect on damage or hitbox width.
+enum shot_laser_style_t {
+	SLS_2 = 0,    	//    ||
+	SLS_4 = 1,    	//   ||||
+	SLS_6 = 2,    	//  ||||||
+	SLS_1_4_1 = 3,	// | |||| |
+	SLS_8 = 4,    	// ||||||||
+
+	_shot_laser_style_t_FORCE_UINT8 = 0xFF
+};
+
+// A laser is active as long as this is > [SHOT_LASER_COOLDOWN_FRAMES].
+extern unsigned int shot_laser_time;
+
+extern shot_laser_style_t shot_laser_style;
+
+// Timer for the 16×16 ring shots that are spawned on top of the laser. These
+// retain the fixed trajectory they were spawned at, and don't follow the
+// laser.
+extern uint8_t shot_laser_ring_cycle;
+
+// Equivalent to the position of the player.
+extern PlayfieldMotion shot_laser_bottomcenter;
 
 // Takes a Subpixel for [h].
 #define shot_laser_put(left, top, h, cel) \
