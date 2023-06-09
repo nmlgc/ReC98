@@ -12024,7 +12024,7 @@ var_4		= word ptr -4
 		push	1
 		call	@randring2_next16_and$qui
 		mov	byte_25599, al
-		mov	byte_2559A, 0
+		mov	_midboss3_patterns_done, 0
 		jmp	loc_1468D
 ; ---------------------------------------------------------------------------
 
@@ -12079,8 +12079,13 @@ loc_1454C:
 ; ---------------------------------------------------------------------------
 
 loc_14552:
-		cmp	byte_2559A, 0Bh	; jumptable 00014536 case 255
+		cmp	_midboss3_patterns_done, (MIDBOSS3_PATTERNS_MAX - 1)	; jumptable 00014536 case 255
 		ja	short loc_145A5
+
+		; Fight was not timed out yet. Show the gather animation and interrupt
+		; the movement after 64 frames, making sure to never fly the midboss
+		; out of the playfield where it would be clipped.
+
 		mov	ax, _midboss_pos.cur.x
 		mov	_gather_template.GT_center.x, ax
 		mov	ax, _midboss_pos.cur.y
@@ -12104,7 +12109,7 @@ loc_14584:
 
 loc_14592:
 		mov	_midboss_phase_frame, 0
-		mov	al, byte_2559A
+		mov	al, _midboss3_patterns_done
 		and	al, 3
 		mov	byte_25598, al
 		mov	_midboss_sprite, 0
@@ -12112,10 +12117,10 @@ loc_14592:
 loc_145A5:
 		cmp	_midboss_phase_frame, 1
 		jnz	short loc_145EA
-		mov	al, byte_2559A
+		mov	al, _midboss3_patterns_done
 		mov	ah, 0
 		mov	bx, ax
-		mov	al, [bx+1790h]
+		mov	al, _MIDBOSS3_FLY_ANGLES[bx]
 		mov	[bp+@@angle], al
 		cmp	byte_25599, 0
 		jz	short loc_145C9
@@ -12125,16 +12130,19 @@ loc_145A5:
 
 loc_145C9:
 		call	vector2 pascal, ds, offset _midboss_pos.velocity.x, ds, offset _midboss_pos.velocity.y, word ptr [bp+@@angle], (2 shl 4)
-		inc	byte_2559A
+		inc	_midboss3_patterns_done
 		mov	_midboss_sprite, 1
 		mov	_gather_template.GT_ring_points, 8
 
 loc_145EA:
-		cmp	_midboss_pos.cur.y, (368 shl 4)
+		; Time out the fight if the midboss flew off the playfield.
+		; Only supposed to happen as a result of  uninterrupted movement after
+		; the midboss completed the maximum amount of patterns.
+		cmp	_midboss_pos.cur.y, (PLAYFIELD_H shl 4)
 		jge	short loc_14601
 		cmp	_midboss_pos.cur.x, 0
 		jle	short loc_14601
-		cmp	_midboss_pos.cur.x, (384 shl 4)
+		cmp	_midboss_pos.cur.x, (PLAYFIELD_W shl 4)
 		jl	short loc_14606
 
 loc_14601:
@@ -12159,7 +12167,7 @@ loc_14629:
 		call	scroll_subpixel_y_to_vram_always pascal, ax
 		mov	si, ax
 		mov	_bullet_zap_active, 1
-		mov	al, byte_2559A
+		mov	al, _midboss3_patterns_done
 		mov	ah, 0
 		mov	dx, 20
 		sub	dx, ax
@@ -30908,18 +30916,12 @@ include th04/main/player/shot_laser[data].asm
 	evendata
 include th02/sprites/sparks.asp
 include th04/main/player/shot_velocity[data].asm
-		db  18h
-		db  68h	; h
-		db  98h
-		db 0E8h
-		db    0
-		db  60h
-		db 0A0h
-		db  40h
-		db 0E0h
-		db  80h
-		db  20h
-		db  60h
+
+MIDBOSS3_PATTERNS_MAX = 12
+
+public _MIDBOSS3_FLY_ANGLES
+_MIDBOSS3_FLY_ANGLES label byte
+	db +18h, +68h, +98h, -18h, +00h, +60h, -60h, +40h, -20h, +80h, +20h, +60h
 include th02/sprites/pellet.asp
 include th04/sprites/pelletbt.asp
 include th04/main/playfld[data].asm
@@ -31300,7 +31302,8 @@ byte_25594	db ?
 word_25596	dw ?
 byte_25598	db ?
 byte_25599	db ?
-byte_2559A	db ?
+public _midboss3_patterns_done
+_midboss3_patterns_done	db ?
 		db 5 dup(?)
 include th04/main/tile/inv[bss].asm
 		db 2 dup(?)
