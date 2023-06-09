@@ -1,6 +1,14 @@
 /// TH04-specific stage functions
 /// -----------------------------
 
+// Stage 4
+// -------
+
+// Renders the Mugenkan corridor carpet lighting effect for the first 30
+// seconds of Stage 4.
+void pascal near stage4_render(void);
+// -------
+
 // Stage 5
 // -------
 

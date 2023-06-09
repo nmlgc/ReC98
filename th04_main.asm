@@ -821,7 +821,7 @@ loc_B0B2:
 		call	super_entry_bfnt pascal, ds, offset aSt03_bft ; "st03.bft"
 		call	stage4_setup
 		call	mpn_load pascal, ds, offset aSt03_mpn ; "st03.mpn"
-		mov	_stage_render, offset stage4_render
+		mov	_stage_render, offset @stage4_render$qv
 		jmp	short loc_B144
 ; ---------------------------------------------------------------------------
 
@@ -5023,199 +5023,10 @@ public @KURUMI_BACKDROP_COLORFILL$QV
 
 ; ---------------------------------------------------------------------------
 		nop
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_EA8A	proc near
-
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-
-		push	bp
-		mov	bp, sp
-		push	si
-		push	di
-		push	ds
-		pop	es
-		assume es:_DATA
-		mov	bx, 18h
-		mov	ax, [bp+arg_2]
-		mul	bx
-		mov	si, ax
-		add	si, 199Ch
-		mov	ax, [bp+arg_0]
-		add	bx, bx
-		mul	bx
-		add	ax, 190Ch
-		mov	bx, ax
-		xor	dx, dx
-		mov	cx, TILES_X
-
-loc_EAB0:
-		lodsb
-		cmp	al, 1
-		jnz	short loc_EAD8
-		mov	di, dx
-		shl	di, 1
-		mov	ax, [bx]
-
-loc_EABB:
-		mov	_tile_ring[di], ax
-		add	di, (TILES_MEMORY_X * 2)
-		cmp	di, (TILES_MEMORY_X * 2) * TILES_Y
-		jb	short loc_EABB
-		mov	di, dx
-
-loc_EACA:
-		mov	_halftiles_dirty[di], 1
-		add	di, 20h	; ' '
-		cmp	di, 640h
-		jb	short loc_EACA
-
-loc_EAD8:
-		inc	dx
-		add	bx, 2
-		loop	loc_EAB0
-		pop	di
-		pop	si
-		pop	bp
-		retn	4
-sub_EA8A	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-stage4_render	proc near
-
-var_2		= word ptr -2
-
-		enter	2, 0
-		push	si
-		push	di
-		mov	_tile_invalidate_box.x, PLAYFIELD_W
-		mov	_tile_invalidate_box.y, 2
-		call	main_01:tiles_invalidate_around pascal, large ((PLAYFIELD_W / 2) shl 4)
-		mov	ax, _scroll_line
-		mov	bx, (1 shl 4)
-		cwd
-		idiv	bx
-		mov	[bp+var_2], ax
-		xor	di, di
-		jmp	short loc_EB42
-; ---------------------------------------------------------------------------
-
-loc_EB0F:
-		mov	bx, word_22D9C
-		imul	bx, TILES_X
-		cmp	byte ptr [bx+di+199Ch],	2
-		jnz	short loc_EB41
-		mov	al, byte_25668	; jump table for switch	statement
-		mov	ah, 0
-		imul	ax, 30h
-		mov	dx, di
-		add	dx, dx
-		add	ax, dx
-		mov	bx, ax
-		mov	ax, [bx+190Ch]
-		mov	bx, [bp+var_2]
-		shl	bx, 6
-		mov	dx, di
-		add	dx, dx
-		add	bx, dx
-		mov	_tile_ring[bx], ax
-
-loc_EB41:
-		inc	di
-
-loc_EB42:
-		cmp	di, TILES_X
-		jl	short loc_EB0F
-		cmp	_stage_frame, 1
-		ja	short loc_EB8A
-		mov	[bp+var_2], 0
-		jmp	short loc_EB7A
-; ---------------------------------------------------------------------------
-
-loc_EB55:
-		xor	di, di
-		jmp	short loc_EB72
-; ---------------------------------------------------------------------------
-
-loc_EB59:
-		mov	bx, [bp+var_2]
-		shl	bx, 6
-		mov	ax, di
-		add	ax, ax
-		add	bx, ax
-		mov	si, di
-		add	si, si
-		mov	ax, [si+190Ch]
-		mov	_tile_ring[bx], ax
-		inc	di
-
-loc_EB72:
-		cmp	di, TILES_X
-		jl	short loc_EB59
-		inc	[bp+var_2]
-
-loc_EB7A:
-		cmp	[bp+var_2], 19h
-		jl	short loc_EB55
-		call	main_01:tiles_invalidate_all
-		mov	byte_25668, 0
-		jmp	short loc_EBEA
-; ---------------------------------------------------------------------------
-
-loc_EB8A:
-		cmp	byte_25668, 0
-		jnz	short loc_EBB6
-		cmp	_stage_frame, 1664
-		jb	short loc_EBEA
-		push	word_22D9C
-		push	1
-		call	main_01:sub_EA8A
-		cmp	_stage_frame_mod4, 0
-		jnz	short loc_EBEA
-		inc	word_22D9C
-		cmp	word_22D9C, 7
-		jle	short loc_EBEA
-		jmp	short loc_EBD8
-; ---------------------------------------------------------------------------
-
-loc_EBB6:
-		cmp	byte_25668, 1
-		jnz	short loc_EBE4
-		push	word_22D9C
-		push	2
-		call	main_01:sub_EA8A
-		cmp	_stage_frame_mod4, 0
-		jnz	short loc_EBEA
-		inc	word_22D9C
-		cmp	word_22D9C, 7
-		jle	short loc_EBEA
-
-loc_EBD8:
-		inc	byte_25668
-		mov	word_22D9C, 0
-		jmp	short loc_EBEA
-; ---------------------------------------------------------------------------
-
-loc_EBE4:
-		mov	_stage_render, offset nullfunc_near
-
-loc_EBEA:
-		pop	di
-		pop	si
-		leave
-		retn
-stage4_render	endp
 main_TEXT	ends
 
 STAGES_TEXT	segment	byte public 'CODE' use16
+	@STAGE4_RENDER$QV procdesc near
 	@STAGE5_RENDER$QV procdesc near
 	@STAGE5_INVALIDATE$QV procdesc near
 STAGES_TEXT	ends
@@ -31158,306 +30969,100 @@ asc_22C3F	db '  ',0
 asc_22C42	db '  ',0
 ; char aMaine_2[]
 aMaine_2	db 'maine',0
-		db    0
-		db 'H',0
-		db 'H',0
-		db 'H',0
-aJsh		db 'JsH',0
-aJsh_0		db 'JsH',0
-		db 'H',0
-		db 'H',0
-		db 'H',0
-		db 'H',0
-		db 'H',0
-		db 'H',0
-		db 'H',0
-		db 'H',0
-		db 'H',0
-		db 'H',0
-		db 'H',0
-aJxh		db 'JxH',0
-aJxh_0		db 'JxH',0
-		db 'H',0
-		db 'H',0
-aJ7j2jL		db 'J7J2J-L',0
-aJL		db 'J-L',0
-		db  4Ah	; J
-		db  2Dh	; -
-		db  4Ah	; J
-		db  2Dh	; -
-		db  4Ah	; J
-		db  2Dh	; -
-		db  4Ah	; J
-		db  2Dh	; -
-		db  4Ah	; J
-		db  2Dh	; -
-		db  4Ah	; J
-		db  2Dh	; -
-		db  4Ah	; J
-		db  2Dh	; -
-		db  4Ah	; J
-		db  2Dh	; -
-		db  4Ah	; J
-		db  2Dh	; -
-		db  4Ah	; J
-		db  2Dh	; -
-		db  4Ah	; J
-		db  2Dh	; -
-		db  4Ah	; J
-		db  2Dh	; -
-		db  4Ch	; L
-		db    5
-		db  4Ah	; J
-		db  2Dh	; -
-		db  4Ch	; L
-		db    5
-		db  4Ah	; J
-		db  2Dh	; -
-		db  4Ah	; J
-		db  32h	; 2
-		db  4Ah	; J
-		db  37h	; 7
-		db  4Ah	; J
-		db  46h	; F
-		db  4Ah	; J
-		db  41h	; A
-		db  4Ah	; J
-		db  3Ch	; <
-		db  4Ch	; L
-		db  0Ah
-		db  4Ah	; J
-		db  3Ch	; <
-		db  4Ch	; L
-		db  0Ah
-		db  4Ah	; J
-		db  3Ch	; <
-		db  4Ah	; J
-		db  3Ch	; <
-		db  4Ah	; J
-		db  3Ch	; <
-		db  4Ah	; J
-		db  3Ch	; <
-		db  4Ah	; J
-		db  3Ch	; <
-		db  4Ah	; J
-		db  3Ch	; <
-		db  4Ah	; J
-		db  3Ch	; <
-		db  4Ah	; J
-		db  3Ch	; <
-		db  4Ah	; J
-		db  3Ch	; <
-		db  4Ah	; J
-		db  3Ch	; <
-		db  4Ah	; J
-		db  3Ch	; <
-		db  4Ah	; J
-		db  3Ch	; <
-		db  4Ch	; L
-		db  0Fh
-		db  4Ah	; J
-		db  3Ch	; <
-		db  4Ch	; L
-		db  0Fh
-		db  4Ah	; J
-		db  3Ch	; <
-		db  4Ah	; J
-		db  41h	; A
-		db  4Ah	; J
-		db  46h	; F
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    1
-		db    1
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    1
-		db    1
-		db    0
-		db    0
-		db    1
-		db    1
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    1
-		db    1
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    1
-		db    1
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    1
-		db    1
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    1
-		db    1
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    2
-		db    0
-		db    1
-		db    1
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    1
-		db    1
-		db    2
-		db    2
-		db    2
-		db    2
-		db    1
-		db    1
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    1
-		db    1
-		db    2
-		db    1
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    0
-		db    1
-word_22D9C	dw 0
+	evendata
+
+public _CARPET_TILE_IMAGE_VOS, _CARPET_LIGHTING_ANIM, _carpet_lighting_cel
+_CARPET_TILE_IMAGE_VOS label word
+	; Light level 0
+	dw ((TILE_AREA_VRAM_LEFT + (( 0 / TILE_AREA_ROWS) * TILE_VRAM_W)) + ( 0 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + (( 0 / TILE_AREA_ROWS) * TILE_VRAM_W)) + ( 0 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + (( 0 / TILE_AREA_ROWS) * TILE_VRAM_W)) + ( 0 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((48 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (48 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + (( 0 / TILE_AREA_ROWS) * TILE_VRAM_W)) + ( 0 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((48 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (48 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + (( 0 / TILE_AREA_ROWS) * TILE_VRAM_W)) + ( 0 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + (( 0 / TILE_AREA_ROWS) * TILE_VRAM_W)) + ( 0 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + (( 0 / TILE_AREA_ROWS) * TILE_VRAM_W)) + ( 0 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + (( 0 / TILE_AREA_ROWS) * TILE_VRAM_W)) + ( 0 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + (( 0 / TILE_AREA_ROWS) * TILE_VRAM_W)) + ( 0 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + (( 0 / TILE_AREA_ROWS) * TILE_VRAM_W)) + ( 0 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + (( 0 / TILE_AREA_ROWS) * TILE_VRAM_W)) + ( 0 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + (( 0 / TILE_AREA_ROWS) * TILE_VRAM_W)) + ( 0 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + (( 0 / TILE_AREA_ROWS) * TILE_VRAM_W)) + ( 0 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + (( 0 / TILE_AREA_ROWS) * TILE_VRAM_W)) + ( 0 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + (( 0 / TILE_AREA_ROWS) * TILE_VRAM_W)) + ( 0 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + (( 0 / TILE_AREA_ROWS) * TILE_VRAM_W)) + ( 0 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((49 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (49 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + (( 0 / TILE_AREA_ROWS) * TILE_VRAM_W)) + ( 0 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((49 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (49 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + (( 0 / TILE_AREA_ROWS) * TILE_VRAM_W)) + ( 0 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + (( 0 / TILE_AREA_ROWS) * TILE_VRAM_W)) + ( 0 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + (( 0 / TILE_AREA_ROWS) * TILE_VRAM_W)) + ( 0 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+
+	; Light level 1
+	dw ((TILE_AREA_VRAM_LEFT + ((36 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (36 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((35 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (35 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((34 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (34 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((50 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (50 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((34 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (34 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((50 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (50 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((34 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (34 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((34 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (34 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((34 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (34 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((34 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (34 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((34 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (34 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((34 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (34 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((34 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (34 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((34 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (34 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((34 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (34 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((34 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (34 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((34 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (34 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((34 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (34 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((51 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (51 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((34 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (34 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((51 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (51 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((34 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (34 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((35 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (35 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((36 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (36 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+
+	; Light level 2
+	dw ((TILE_AREA_VRAM_LEFT + ((39 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (39 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((38 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (38 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((37 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (37 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((52 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (52 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((37 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (37 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((52 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (52 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((37 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (37 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((37 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (37 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((37 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (37 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((37 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (37 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((37 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (37 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((37 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (37 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((37 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (37 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((37 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (37 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((37 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (37 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((37 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (37 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((37 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (37 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((37 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (37 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((53 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (53 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((37 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (37 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((53 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (53 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((37 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (37 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((38 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (38 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+	dw ((TILE_AREA_VRAM_LEFT + ((39 / TILE_AREA_ROWS) * TILE_VRAM_W)) + (39 mod TILE_AREA_ROWS) * (TILE_H * ROW_SIZE))
+
+_CARPET_LIGHTING_ANIM label byte
+	db 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+	db 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+	db 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 0, 0, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2
+	db 2, 2, 2, 2, 2, 2, 2, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 2, 2, 2, 2
+	db 2, 2, 2, 2, 2, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 2, 2
+	db 2, 2, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2
+	db 2, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2
+	db 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1
+
+_carpet_lighting_cel	dw 0
+
 public _MARISA_BIT_HP
 _MARISA_BIT_HP	dw 220, 400, 280, 450
 include th04/score[data].asm
@@ -31776,8 +31381,10 @@ byte_25664	db ?
 byte_25665	db ?
 byte_25666	db ?
 byte_25667	db ?
-byte_25668	db ?
-		db ?
+
+public _carpet_light_level
+_carpet_light_level	db ?
+	evendata
 include th04/main/stage/funcs[bss].asm
 byte_2566E	db ?
 byte_2566F	db ?
