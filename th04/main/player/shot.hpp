@@ -9,8 +9,31 @@ SPPoint pascal near shot_velocity_set(
 	SPPoint near* velocity, unsigned char angle
 );
 
+#if (GAME == 5)
+	static const int HITSHOT_FRAMES_PER_CEL = 3;
+#else
+	static const int HITSHOT_FRAMES_PER_CEL = 4;
+#endif
+
+static const int HITSHOT_FRAMES = (HITSHOT_FRAMES_PER_CEL * HITSHOT_CELS);
+
+#if (GAME == 4)
+	enum shot_flag_th04_t {
+		SF_FREE = 0,
+		SF_ALIVE = 1,
+		SF_HIT = 2,
+		SF_REMOVE = (SF_HIT + HITSHOT_FRAMES),
+
+		_shot_flag_th04_t_FORCE_UINT8 = 0xFF
+	};
+#endif
+
 struct Shot {
-	entity_flag_t flag;
+	#if (GAME == 5)
+		entity_flag_t flag;
+	#else
+		shot_flag_th04_t flag;
+	#endif
 	char age;
 	PlayfieldMotion pos;
 	// The displayed sprite changes between this one and

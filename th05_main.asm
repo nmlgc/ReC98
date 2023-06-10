@@ -7359,7 +7359,7 @@ loc_12537:
 ; ---------------------------------------------------------------------------
 
 @@hitshot_loop:
-		cmp	[di+hitshot_t.HITSHOT_age], HITSHOT_AGE_MAX
+		cmp	[di+hitshot_t.HITSHOT_age], (HITSHOT_FRAMES + 1)
 		jb	short @@hitshot_active?
 		mov	[di+hitshot_t.HITSHOT_age], 0
 
@@ -7379,7 +7379,11 @@ loc_12537:
 		jl	short @@hitshot_update
 
 @@hitshot_clipped:
-		mov	[di+hitshot_t.HITSHOT_age], HITSHOT_AGE_CLIPPED
+		; ZUN bloat: A relic from TH04, where SF_DONE was equal to this value:
+		; Hitshots were still integrated into the regular `Shot` structure,
+		; their flags started at 2, and HITSHOT_FRAMES_PER_CEL was 3 rather
+		; than 4 in that game.
+		mov	[di+hitshot_t.HITSHOT_age], (HITSHOT_FRAMES + HITSHOT_CELS + 2)
 		jmp	short @@hitshot_next
 ; ---------------------------------------------------------------------------
 
@@ -7387,7 +7391,7 @@ loc_12537:
 		inc	[di+hitshot_t.HITSHOT_age]
 		mov	al, [di+hitshot_t.HITSHOT_age]
 		mov	ah, 0
-		mov	bx, 3
+		mov	bx, HITSHOT_FRAMES_PER_CEL
 		cwd
 		idiv	bx
 		cmp	dx, 1
@@ -7469,7 +7473,7 @@ public @SHOTS_RENDER$QV
 ; ---------------------------------------------------------------------------
 
 @@hitshot_loop:
-		cmp	[si+hitshot_t.HITSHOT_age], HITSHOT_AGE_MAX
+		cmp	[si+hitshot_t.HITSHOT_age], (HITSHOT_FRAMES + 1)
 		jnb	short @@hitshot_next
 		cmp	[si+hitshot_t.HITSHOT_age], 0
 		jbe	short @@hitshot_next

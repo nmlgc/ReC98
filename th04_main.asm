@@ -8131,7 +8131,7 @@ sub_10444	proc near
 ; ---------------------------------------------------------------------------
 
 loc_1045C:
-		cmp	[si+shot_t.flag], F_FREE
+		cmp	[si+shot_t.flag], SF_FREE
 		jz	short loc_1046A
 		call	main_01:tiles_invalidate_around pascal, [si+shot_t.pos.prev.y], [si+shot_t.pos.prev.x]
 
@@ -8196,12 +8196,12 @@ sub_104B6	proc near
 ; ---------------------------------------------------------------------------
 
 loc_104CF:
-		cmp	byte ptr [si], 12h
+		cmp	[si+shot_t.flag], SF_REMOVE
 		jb	short loc_104D7
-		mov	byte ptr [si], 0
+		mov	[si+shot_t.flag], SF_FREE
 
 loc_104D7:
-		cmp	byte ptr [si], 0
+		cmp	[si+shot_t.flag], SF_FREE
 		jz	short loc_10527
 		lea	ax, [si+2]
 		call	@PlayfieldMotion@update_seg1$qv pascal, ax
@@ -8215,18 +8215,18 @@ loc_104D7:
 		jl	short loc_104FD
 
 loc_104F8:
-		mov	byte ptr [si], 12h
+		mov	[si+shot_t.flag], SF_REMOVE
 		jmp	short loc_10527
 ; ---------------------------------------------------------------------------
 
 loc_104FD:
-		cmp	byte ptr [si], 1
+		cmp	[si+shot_t.flag], SF_ALIVE
 		jbe	short loc_10515
-		inc	byte ptr [si]
-		mov	al, [si]
+		inc	[si+shot_t.flag]
+		mov	al, [si+shot_t.flag]
 		mov	ah, 0
-		and	ax, 3
-		cmp	ax, 2
+		and	ax, (HITSHOT_FRAMES_PER_CEL - 1)
+		cmp	ax, SF_HIT
 		jnz	short loc_10527
 		inc	word ptr [si+0Eh]
 		jmp	short loc_10527
@@ -8286,15 +8286,17 @@ loc_10569:
 ; ---------------------------------------------------------------------------
 
 loc_10570:
-		cmp	byte ptr [si], 0
+		cmp	[si+shot_t.flag], SF_FREE
 		jz	short loc_105A6
-		cmp	byte ptr [si], 12h
+		cmp	[si+shot_t.flag], SF_REMOVE
 		jnb	short loc_105A6
 		mov	ch, 0
-		mov	cl, [si+0Eh]
-		cmp	byte ptr [si], 1
+		mov	cl, byte ptr [si+shot_t.patnum_base]
+		cmp	[si+shot_t.flag], SF_ALIVE
 		jnz	short loc_1058D
-		mov	al, [si+1]
+
+@@not_hitshot:	; Hitshots increment [patnum_base] during the update.
+		mov	al, [si+shot_t.SHOT_age]
 		and	al, 1
 		add	al, cl
 		mov	cl, al
@@ -8372,7 +8374,7 @@ var_6		= word ptr -6
 		cmp	ax, [bp+var_C]
 		ja	short @@shot_next
 		mov	si, [bx+shot_alive_t.SA_shot]
-		mov	[si+shot_t.flag], F_REMOVE
+		mov	[si+shot_t.flag], SF_HIT
 		mov	ax, [si+shot_t.pos.velocity.x]
 		mov	bx, 6
 		cwd
