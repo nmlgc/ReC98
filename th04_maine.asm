@@ -1091,34 +1091,34 @@ sub_B44D	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public @GRAPH_3_DIGIT_PUT$QIIU
+@graph_3_digit_put$qiiu	proc near
 
-sub_B787	proc near
-
-var_6		= word ptr -6
-@@g_str		= byte ptr -4
-arg_0		= word ptr  4
-@@y		= word ptr  6
-@@x		= word ptr  8
+@@digit	= word ptr -6
+@@g_str	= byte ptr -4
+@@val  	= word ptr  4
+@@top  	= word ptr  6
+@@left 	= word ptr  8
 
 		enter	6, 0
 		push	si
 		xor	si, si
 		mov	[bp+@@g_str], g_EMPTY
-		mov	ax, [bp+arg_0]
+		mov	ax, [bp+@@val]
 		mov	bx, 100
 		xor	dx, dx
 		div	bx
-		mov	[bp+var_6], ax
-		mov	ax, [bp+arg_0]
+		mov	[bp+@@digit], ax
+		mov	ax, [bp+@@val]
 		xor	dx, dx
 		div	bx
-		mov	[bp+arg_0], dx
-		cmp	byte_EC73, 0
+		mov	[bp+@@val], dx
+		cmp	_graph_3_digit_put_as_fixed_2_dig, 0
 		jnz	short loc_B7C5
-		or	si, [bp+var_6]
+		or	si, [bp+@@digit]
 		or	si, si
 		jz	short loc_B7C1
-		mov	al, byte ptr [bp+var_6]
+		mov	al, byte ptr [bp+@@digit]
 		add	al, gb_0_
 		mov	[bp+@@g_str], al
 		jmp	short loc_B7C5
@@ -1128,22 +1128,22 @@ loc_B7C1:
 		mov	[bp+@@g_str], g_EMPTY
 
 loc_B7C5:
-		mov	ax, [bp+arg_0]
+		mov	ax, [bp+@@val]
 		mov	bx, 10
 		xor	dx, dx
 		div	bx
-		mov	[bp+var_6], ax
-		mov	ax, [bp+arg_0]
+		mov	[bp+@@digit], ax
+		mov	ax, [bp+@@val]
 		xor	dx, dx
 		div	bx
-		mov	[bp+arg_0], dx
-		or	si, [bp+var_6]
-		mov	al, byte_EC73
+		mov	[bp+@@val], dx
+		or	si, [bp+@@digit]
+		mov	al, _graph_3_digit_put_as_fixed_2_dig
 		mov	ah, 0
 		or	si, ax
 		or	si, si
 		jz	short loc_B7F4
-		mov	al, byte ptr [bp+var_6]
+		mov	al, byte ptr [bp+@@digit]
 		add	al, gb_0_
 		mov	[bp+@@g_str+1], al
 		jmp	short loc_B7F8
@@ -1153,12 +1153,12 @@ loc_B7F4:
 		mov	[bp+@@g_str+1], g_EMPTY
 
 loc_B7F8:
-		mov	al, byte ptr [bp+arg_0]
+		mov	al, byte ptr [bp+@@val]
 		add	al, gb_0_
 		mov	[bp+@@g_str+2], al
 		mov	[bp+@@g_str+3], 0
-		push	[bp+@@x]
-		push	[bp+@@y]
+		push	[bp+@@left]
+		push	[bp+@@top]
 		push	GAIJI_W
 		push	ss
 		lea	ax, [bp+@@g_str]
@@ -1168,7 +1168,7 @@ loc_B7F8:
 		pop	si
 		leave
 		retn	6
-sub_B787	endp
+@graph_3_digit_put$qiiu	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -1231,92 +1231,86 @@ sub_B81D	endp
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public @SKILL_APPLY_AND_GRAPH_PERCENTAGE$QIIUIUI
+@skill_apply_and_graph_percentage$qiiuiui	proc near
 
-sub_B886	proc near
-
-var_6		= dword	ptr -6
-var_2		= word ptr -2
-arg_0		= word ptr  4
-arg_2		= word ptr  6
-arg_4		= word ptr  8
-arg_6		= word ptr  0Ah
+@@fraction	= dword	ptr -6
+@@digits  	= word ptr -2
+@@share   	= word ptr  4
+@@total   	= word ptr  6
+@@top     	= word ptr  8
+@@left    	= word ptr  0Ah
 
 		enter	6, 0
 		push	si
 		push	di
-		mov	si, [bp+arg_6]
-		mov	di, [bp+arg_4]
-		cmp	[bp+arg_2], 0
+		mov	si, [bp+@@left]
+		mov	di, [bp+@@top]
+		cmp	[bp+@@total], 0
 		jz	short loc_B8A2
-		mov	[bp+var_6], 1000000
+		mov	[bp+@@fraction], 1000000
 		jmp	short loc_B8AA
 ; ---------------------------------------------------------------------------
 
 loc_B8A2:
-		mov	[bp+var_6], 0
+		mov	[bp+@@fraction], 0
 
 loc_B8AA:
-		mov	ax, [bp+arg_2]
-		cmp	ax, [bp+arg_0]
+		mov	ax, [bp+@@total]
+		cmp	ax, [bp+@@share]
 		jz	short loc_B8E3
-		cmp	[bp+arg_2], 0
+		cmp	[bp+@@total], 0
 		jz	short loc_B8CD
-		movzx	ebx, [bp+arg_2]
-		mov	eax, [bp+var_6]
+		movzx	ebx, [bp+@@total]
+		mov	eax, [bp+@@fraction]
 		xor	edx, edx
 		div	ebx
-		mov	[bp+var_6], eax
+		mov	[bp+@@fraction], eax
 		jmp	short loc_B8D5
 ; ---------------------------------------------------------------------------
 
 loc_B8CD:
-		mov	[bp+var_6], 0
+		mov	[bp+@@fraction], 0
 
 loc_B8D5:
-		movzx	eax, [bp+arg_0]
-		imul	eax, [bp+var_6]
-		mov	[bp+var_6], eax
+		movzx	eax, [bp+@@share]
+		imul	eax, [bp+@@fraction]
+		mov	[bp+@@fraction], eax
 
 loc_B8E3:
-		cmp	byte_EC4A, 0
+		cmp	_skill_subtract, 0
 		jnz	short loc_B8F4
-		mov	eax, dword_124CE
-		add	eax, [bp+var_6]
+		mov	eax, _skill
+		add	eax, [bp+@@fraction]
 		jmp	short loc_B8FC
 ; ---------------------------------------------------------------------------
 
 loc_B8F4:
-		mov	eax, dword_124CE
-		sub	eax, [bp+var_6]
+		mov	eax, _skill
+		sub	eax, [bp+@@fraction]
 
 loc_B8FC:
-		mov	dword_124CE, eax
-		mov	eax, [bp+var_6]
+		mov	_skill, eax
+		mov	eax, [bp+@@fraction]
 		mov	ebx, 10000
 		xor	edx, edx
 		div	ebx
-		mov	[bp+var_2], ax
-		push	si
-		push	di
-		push	ax
-		call	sub_B787
+		mov	[bp+@@digits], ax
+		call	@graph_3_digit_put$qiiu pascal, si, di, ax
 		mov	ebx, 10000
-		mov	eax, [bp+var_6]
+		mov	eax, [bp+@@fraction]
 		xor	edx, edx
 		div	ebx
-		mov	[bp+var_6], edx
-		mov	eax, [bp+var_6]
+		mov	[bp+@@fraction], edx
+		mov	eax, [bp+@@fraction]
 		mov	ebx, 100
 		xor	edx, edx
 		div	ebx
-		mov	[bp+var_2], ax
-		mov	byte_EC73, 1
+		mov	[bp+@@digits], ax
+		mov	_graph_3_digit_put_as_fixed_2_dig, 1
 		lea	ax, [si+48]
-		push	ax
-		push	di
-		push	[bp+var_2]
-		call	sub_B787
-		mov	byte_EC73, 0
+		call	@graph_3_digit_put$qiiu pascal, ax, di, [bp+@@digits]
+		mov	_graph_3_digit_put_as_fixed_2_dig, 0
 		lea	ax, [si+48]
 		call	graph_putsa_fx pascal, ax, di, 14, ds, offset aBd	; "．"
 		lea	ax, [si+96]
@@ -1325,58 +1319,52 @@ loc_B8FC:
 		pop	si
 		leave
 		retn	8
-sub_B886	endp
+@skill_apply_and_graph_percentage$qiiuiui	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
 
 ; Attributes: bp-based frame
+public @GRAPH_FRACTION_OF_MILLION_PUT$QIIUL
+@graph_fraction_of_million_put$qiiul	proc near
 
-sub_B97B	proc near
-
-var_2		= word ptr -2
-arg_0		= dword	ptr  4
-arg_4		= word ptr  8
-arg_6		= word ptr  0Ah
+@@digits	= word ptr -2
+@@val   	= dword	ptr  4
+@@top   	= word ptr  8
+@@left  	= word ptr  0Ah
 
 		enter	2, 0
 		push	si
 		push	di
-		mov	si, [bp+arg_6]
-		mov	di, [bp+arg_4]
-		mov	eax, [bp+arg_0]
+		mov	si, [bp+@@left]
+		mov	di, [bp+@@top]
+		mov	eax, [bp+@@val]
 		mov	ebx, 10000
 		xor	edx, edx
 		div	ebx
-		mov	[bp+var_2], ax
-		push	si
-		push	di
-		push	ax
-		call	sub_B787
+		mov	[bp+@@digits], ax
+		call	@graph_3_digit_put$qiiu pascal, si, di, ax
 		mov	ebx, 10000
-		mov	eax, [bp+arg_0]
+		mov	eax, [bp+@@val]
 		xor	edx, edx
 		div	ebx
-		mov	[bp+arg_0], edx
-		mov	eax, [bp+arg_0]
+		mov	[bp+@@val], edx
+		mov	eax, [bp+@@val]
 		mov	ebx, 100
 		xor	edx, edx
 		div	ebx
-		mov	[bp+var_2], ax
-		mov	byte_EC73, 1
+		mov	[bp+@@digits], ax
+		mov	_graph_3_digit_put_as_fixed_2_dig, 1
 		lea	ax, [si+48]
-		push	ax
-		push	di
-		push	[bp+var_2]
-		call	sub_B787
-		mov	byte_EC73, 0
+		call	@graph_3_digit_put$qiiu pascal, ax, di, [bp+@@digits]
+		mov	_graph_3_digit_put_as_fixed_2_dig, 0
 		lea	ax, [si+48]
 		call	graph_putsa_fx pascal, ax, di, 14, ds, offset aBd_0	; "．"
 		pop	di
 		pop	si
 		leave
 		retn	8
-sub_B97B	endp
+@graph_fraction_of_million_put$qiiul	endp
 
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -1513,12 +1501,10 @@ loc_BB2A:
 		mov	[bp+var_4], 1000000
 
 loc_BB48:
-		mov	eax, dword_124CE
+		mov	eax, _skill
 		add	eax, [bp+var_4]
-		mov	dword_124CE, eax
-		push	0C00108h
-		pushd	[bp+var_4]
-		call	sub_B97B
+		mov	_skill, eax
+		call	@graph_fraction_of_million_put$qiiul pascal, (192 shl 16) or 264, [bp+var_4]
 		call	graph_putsa_fx pascal, (288 shl 16) or 264, 14, ds, offset aBu_0	; "％"
 		leave
 		retn
@@ -1581,18 +1567,18 @@ loc_BC79:
 		push	14
 		call	graph_gaiji_puts
 		call	sub_B81D
-		push	0F00078h
+		push	(240 shl 16) or 120	; (left shl 16) or top
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.miss_count]
 		mov	ah, 0
-		push	ax
-		call	sub_B787
-		push	0F00090h
+		push	ax	; num
+		call	@graph_3_digit_put$qiiu
+		push	(240 shl 16) or 144	; (left shl 16) or top
 		les	bx, _resident
 		mov	al, es:[bx+resident_t.bombs_used]
 		mov	ah, 0
-		push	ax
-		call	sub_B787
+		push	ax	; num
+		call	@graph_3_digit_put$qiiu
 		call	graph_putsa_fx pascal, (288 shl 16) or 120, 14, ds, offset aTimes	; "回"
 		call	graph_putsa_fx pascal, (288 shl 16) or 144, 14, ds, offset aTimes_0	; "回"
 		mov	byte_124CC, 1
@@ -1604,7 +1590,7 @@ loc_BC79:
 		mov	es:[bx+resident_t.std_frames], 44000
 
 loc_BCFF:
-		push	0C000A8h
+		push	(192 shl 16) or 168
 		push	44000
 		jmp	short loc_BD24
 ; ---------------------------------------------------------------------------
@@ -1616,53 +1602,53 @@ loc_BD0A:
 		mov	es:[bx+resident_t.std_frames], 12000
 
 loc_BD1B:
-		push	0C000A8h
-		push	12000
+		push	(192 shl 16) or 168	; (left shl 16) or top
+		push	12000	; total
 
 loc_BD24:
 		les	bx, _resident
-		push	es:[bx+resident_t.std_frames]
-		call	sub_B886
+		push	es:[bx+resident_t.std_frames]	; share
+		call	@skill_apply_and_graph_percentage$qiiuiui
 		mov	byte_124CC, 0
-		push	0C000C0h
+		push	(192 shl 16) or 192	; (left shl 16) or top
 		les	bx, _resident
-		push	es:[bx+resident_t.enemies_gone]
-		push	es:[bx+resident_t.enemies_killed]
-		call	sub_B886
-		push	0C000D8h
+		push	es:[bx+resident_t.enemies_gone]	; total
+		push	es:[bx+resident_t.enemies_killed]	; share
+		call	@skill_apply_and_graph_percentage$qiiuiui
+		push	(192 shl 16) or 216	; (left shl 16) or top
 		les	bx, _resident
-		push	es:[bx+resident_t.items_spawned]
-		push	es:[bx+resident_t.items_collected]
-		call	sub_B886
-		push	0C000F0h
+		push	es:[bx+resident_t.items_spawned]	; total
+		push	es:[bx+resident_t.items_collected]	; share
+		call	@skill_apply_and_graph_percentage$qiiuiui
+		push	(192 shl 16) or 240	; (left shl 16) or top
 		les	bx, _resident
-		push	es:[bx+resident_t.point_items_collected]
-		push	es:[bx+resident_t.max_valued_point_items_collected]
-		call	sub_B886
+		push	es:[bx+resident_t.point_items_collected]	; total
+		push	es:[bx+resident_t.max_valued_point_items_collected]	; share
+		call	@skill_apply_and_graph_percentage$qiiuiui
 		call	sub_B9F2
-		push	0C00120h
+		push	(192 shl 16) or 288	; (left shl 16) or top
 		les	bx, _resident
 		mov	eax, es:[bx+resident_t.frames]
 		mov	ebx, 10
 		xor	edx, edx
 		div	ebx
-		push	ax
+		push	ax	; total
 		mov	bx, word ptr _resident
 		mov	eax, es:[bx+resident_t.slow_frames]
 		mov	ebx, 10
 		xor	edx, edx
 		div	ebx
-		push	ax
-		call	sub_B886
+		push	ax	; share
+		call	@skill_apply_and_graph_percentage$qiiuiui
 		mov	ebx, 5
-		mov	eax, dword_124CE
+		mov	eax, _skill
 		cdq
 		idiv	ebx
-		mov	dword_124CE, eax
+		mov	_skill, eax
 		les	bx, _resident
 		cmp	es:[bx+resident_t.score_last][7], 9
 		jb	short loc_BDD4
-		add	dword_124CE, 600000
+		add	_skill, 600000
 		jmp	short loc_BE08
 ; ---------------------------------------------------------------------------
 
@@ -1670,7 +1656,7 @@ loc_BDD4:
 		les	bx, _resident
 		movzx	eax, es:[bx+resident_t.score_last][6]
 		imul	eax, 10000
-		add	dword_124CE, eax
+		add	_skill, eax
 		cmp	es:[bx+resident_t.score_last][7], 3
 		jbe	short loc_BE08
 		mov	al, es:[bx+resident_t.score_last][7]
@@ -1678,7 +1664,7 @@ loc_BDD4:
 		add	ax, -3
 		cwde
 		imul	eax, 100000
-		add	dword_124CE, eax
+		add	_skill, eax
 
 loc_BE08:
 		mov	al, _verdict_rank
@@ -1690,7 +1676,7 @@ loc_BE08:
 		jmp	cs:off_C0EE[bx]
 
 loc_BE1B:
-		sub	dword_124CE, 50000
+		sub	_skill, 50000
 		mov	[bp+var_4], 800000
 		jmp	short loc_BE6F
 ; ---------------------------------------------------------------------------
@@ -1701,19 +1687,19 @@ loc_BE2E:
 ; ---------------------------------------------------------------------------
 
 loc_BE38:
-		add	dword_124CE, 150000
+		add	_skill, 150000
 		mov	[bp+var_4], 1200000
 		jmp	short loc_BE6F
 ; ---------------------------------------------------------------------------
 
 loc_BE4B:
-		add	dword_124CE, 300000
+		add	_skill, 300000
 		mov	[bp+var_4], 1400000
 		jmp	short loc_BE6F
 ; ---------------------------------------------------------------------------
 
 loc_BE5E:
-		add	dword_124CE, 450000
+		add	_skill, 450000
 		mov	[bp+var_4], 1500000
 
 loc_BE6F:
@@ -1728,13 +1714,13 @@ loc_BE6F:
 		jmp	cs:off_C0E2[bx]
 
 loc_BE88:
-		add	dword_124CE, 50000
+		add	_skill, 50000
 		add	[bp+var_4], 100000
 		jmp	short loc_BECA
 ; ---------------------------------------------------------------------------
 
 loc_BE9B:
-		add	dword_124CE, 25000
+		add	_skill, 25000
 		add	[bp+var_4], 50000
 		jmp	short loc_BECA
 ; ---------------------------------------------------------------------------
@@ -1764,26 +1750,26 @@ loc_BECA:
 ; ---------------------------------------------------------------------------
 
 loc_BEDF:
-		add	dword_124CE, 50000
+		add	_skill, 50000
 		add	[bp+var_4], 100000
 		jmp	short loc_BF03
 ; ---------------------------------------------------------------------------
 
 loc_BEF2:
-		add	dword_124CE, 20000
+		add	_skill, 20000
 		add	[bp+var_4], 50000
 
 loc_BF03:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.turbo_mode], 0
 		jnz	short loc_BF17
-		sub	dword_124CE, 100000
+		sub	_skill, 100000
 
 loc_BF17:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.miss_count], 15
 		jb	short loc_BF2D
-		sub	dword_124CE, 300000
+		sub	_skill, 300000
 		jmp	short loc_BF43
 ; ---------------------------------------------------------------------------
 
@@ -1791,13 +1777,13 @@ loc_BF2D:
 		les	bx, _resident
 		movzx	eax, es:[bx+resident_t.miss_count]
 		imul	eax, 20000
-		sub	dword_124CE, eax
+		sub	_skill, eax
 
 loc_BF43:
 		les	bx, _resident
 		cmp	es:[bx+resident_t.bombs_used], 30
 		jb	short loc_BF59
-		sub	dword_124CE, 90000
+		sub	_skill, 90000
 		jmp	short loc_BF6F
 ; ---------------------------------------------------------------------------
 
@@ -1805,7 +1791,7 @@ loc_BF59:
 		les	bx, _resident
 		movzx	eax, es:[bx+resident_t.bombs_used]
 		imul	eax, 3000
-		sub	dword_124CE, eax
+		sub	_skill, eax
 
 loc_BF6F:
 		les	bx, _resident
@@ -1814,15 +1800,15 @@ loc_BF6F:
 		cmp	_verdict_rank, RANK_EXTRA
 		jz	short loc_BF96
 		mov	ebx, 2
-		mov	eax, dword_124CE
+		mov	eax, _skill
 		cdq
 		idiv	ebx
-		mov	dword_124CE, eax
+		mov	_skill, eax
 		jmp	short loc_BFB4
 ; ---------------------------------------------------------------------------
 
 loc_BF96:
-		sub	dword_124CE, 200000
+		sub	_skill, 200000
 		jmp	short loc_BFB4
 ; ---------------------------------------------------------------------------
 
@@ -1833,18 +1819,18 @@ loc_BFA1:
 		sub	[bp+var_4], 100000
 
 loc_BFB4:
-		cmp	dword_124CE, 0
+		cmp	_skill, 0
 		jge	short loc_BFC7
-		mov	dword_124CE, 0
+		mov	_skill, 0
 		jmp	short loc_BFD9
 ; ---------------------------------------------------------------------------
 
 loc_BFC7:
-		mov	eax, dword_124CE
+		mov	eax, _skill
 		cmp	eax, [bp+var_4]
 		jbe	short loc_BFD9
 		mov	eax, [bp+var_4]
-		mov	dword_124CE, eax
+		mov	_skill, eax
 
 loc_BFD9:
 		les	bx, _resident
@@ -1852,25 +1838,23 @@ loc_BFD9:
 		shr	eax, 1
 		cmp	eax, es:[bx+resident_t.slow_frames]
 		jbe	loc_C0AE
-		push	0C00150h
-		pushd	[dword_124CE]
-		call	sub_B97B
+		call	@graph_fraction_of_million_put$qiiul pascal, (192 shl 16) or 336, [_skill]
 		call	graph_putsa_fx pascal, (288 shl 16) or 336, 14, ds, offset aPoint	; "点"
 		push	ds
 		push	offset a_ude_txt ; "_ude.txt"
 		call	file_ropen
-		cmp	dword_124CE, 1500000
+		cmp	_skill, 1500000
 		jge	short loc_C084
-		cmp	dword_124CE, 0
+		cmp	_skill, 0
 		jnz	short loc_C02E
 		mov	si, 19h
 		jmp	short loc_C074
 ; ---------------------------------------------------------------------------
 
 loc_C02E:
-		cmp	dword_124CE, 1050000
+		cmp	_skill, 1050000
 		jge	short loc_C051
-		mov	eax, dword_124CE
+		mov	eax, _skill
 		mov	ebx, 50000
 		cdq
 		idiv	ebx
@@ -1881,14 +1865,14 @@ loc_C02E:
 ; ---------------------------------------------------------------------------
 
 loc_C051:
-		cmp	dword_124CE, 1200000
+		cmp	_skill, 1200000
 		jge	short loc_C061
 		mov	si, 3
 		jmp	short loc_C074
 ; ---------------------------------------------------------------------------
 
 loc_C061:
-		cmp	dword_124CE, 1350000
+		cmp	_skill, 1350000
 		jge	short loc_C071
 		mov	si, 2
 		jmp	short loc_C074
@@ -3309,9 +3293,7 @@ aSff6b_cdg	db 'sff6b.cdg',0
 aSff7_cdg	db 'sff7.cdg',0
 aSff7b_cdg	db 'sff7b.cdg',0
 		db    0
-byte_EC4A	db 0
 include th04/gaiji/verdict[data].asm
-byte_EC73	db 0
 aU_		db '点',0
 aBd		db '．',0
 aBu		db '％',0
@@ -3381,7 +3363,8 @@ _dissolve_put_func	dw ?
 		db 2 dup(?)
 byte_124CC	db ?
 		db    ?	;
-dword_124CE	dd ?
+public _skill
+_skill	dd ?
 _verdict_rank	db ?
 unk_124D3	db    ?	;
 		db 27 dup(?)
