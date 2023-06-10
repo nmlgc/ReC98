@@ -3391,15 +3391,15 @@ arg_0		= byte ptr  4
 		jmp	cs:off_F188[bx]
 
 loc_EFF7:
-		mov	word_2C934, 14h
-		mov	word_2C936, 14h
+		mov	_dialog_cursor.x, (DIALOG_CURSOR_PLAYCHAR_LEFT / GLYPH_HALF_W)
+		mov	_dialog_cursor.y, (DIALOG_CURSOR_PLAYCHAR_TOP / GLYPH_H)
 		mov	_dialog_side, DIALOG_SIDE_PLAYCHAR
 		jmp	loc_F181
 ; ---------------------------------------------------------------------------
 
 loc_F00C:
-		mov	word_2C934, 6
-		mov	word_2C936, 0Ch
+		mov	_dialog_cursor.x, (DIALOG_CURSOR_BOSS_LEFT / GLYPH_HALF_W)
+		mov	_dialog_cursor.y, (DIALOG_CURSOR_BOSS_TOP / GLYPH_H)
 		mov	_dialog_side, DIALOG_SIDE_BOSS
 		jmp	loc_F181
 ; ---------------------------------------------------------------------------
@@ -3521,18 +3521,18 @@ loc_F11A:
 ; ---------------------------------------------------------------------------
 
 loc_F132:
-		inc	word_2C936
+		inc	_dialog_cursor.y
 		cmp	_dialog_side, DIALOG_SIDE_PLAYCHAR
 		jnz	short loc_F142
-		mov	ax, 14h
+		mov	ax, (DIALOG_CURSOR_PLAYCHAR_LEFT / GLYPH_HALF_W)
 		jmp	short loc_F145
 ; ---------------------------------------------------------------------------
 
 loc_F142:
-		mov	ax, 6
+		mov	ax, (DIALOG_CURSOR_BOSS_LEFT / GLYPH_HALF_W)
 
 loc_F145:
-		mov	word_2C934, ax
+		mov	_dialog_cursor.x, ax
 		jmp	short loc_F170
 ; ---------------------------------------------------------------------------
 
@@ -3541,13 +3541,13 @@ loc_F14A:
 		mov	al, es:[bx]
 		mov	[bp+arg_0], al
 		inc	word ptr _dialog_p
-		push	word_2C934
-		push	word_2C936
+		push	_dialog_cursor.x
+		push	_dialog_cursor.y
 		mov	ah, 0
 		push	ax
 		push	TX_WHITE
 		call	gaiji_putca
-		add	word_2C934, 2
+		add	_dialog_cursor.x, (GLYPH_FULL_W / GLYPH_HALF_W)
 
 loc_F170:
 		mov	al, 1
@@ -3556,8 +3556,8 @@ loc_F170:
 ; ---------------------------------------------------------------------------
 
 loc_F176:
-		push	word_2C934
-		push	word_2C936
+		push	_dialog_cursor.x
+		push	_dialog_cursor.y
 		call	sub_EF74
 
 loc_F181:
@@ -3610,20 +3610,20 @@ loc_F1B3:
 		jnz	loc_F2A5
 		cmp	_dialog_side, DIALOG_SIDE_PLAYCHAR
 		jnz	short loc_F1E6
-		mov	word_2C934, 14h
-		mov	word_2C936, 14h
+		mov	_dialog_cursor.x, (DIALOG_CURSOR_PLAYCHAR_LEFT / GLYPH_HALF_W)
+		mov	_dialog_cursor.y, (DIALOG_CURSOR_PLAYCHAR_TOP / GLYPH_H)
 		jmp	short loc_F1F2
 ; ---------------------------------------------------------------------------
 
 loc_F1E6:
-		mov	word_2C934, 6
-		mov	word_2C936, 0Ch
+		mov	_dialog_cursor.x, (DIALOG_CURSOR_BOSS_LEFT / GLYPH_HALF_W)
+		mov	_dialog_cursor.y, (DIALOG_CURSOR_BOSS_TOP / GLYPH_H)
 
 loc_F1F2:
 		call	text_boxfilla pascal, (20 shl 16) + 20, (50 shl 16) + 23, TX_BLUE
 		call	text_boxfilla pascal, (6 shl 16) + 12, (36 shl 16) + 15, TX_BLUE
-		push	word_2C934
-		push	word_2C936
+		push	_dialog_cursor.x
+		push	_dialog_cursor.y
 		call	sub_EF74
 		mov	[bp+var_2], 0
 
@@ -3653,8 +3653,8 @@ loc_F249:
 		pop	es
 		mov	es:[bx+1], al
 		inc	word ptr _dialog_p
-		call	text_putsa pascal, word_2C934, word_2C936, word ptr [bp+var_6+2], bx, TX_WHITE
-		add	word_2C934, 2
+		call	text_putsa pascal, _dialog_cursor.x, _dialog_cursor.y, word ptr [bp+var_6+2], bx, TX_WHITE
+		add	_dialog_cursor.x, (GLYPH_FULL_W / GLYPH_HALF_W)
 		call	_input_sense
 		cmp	_key_det, INPUT_NONE
 		jnz	short loc_F296
@@ -20953,10 +20953,6 @@ _enemy_cur	dw ?
 include th04/main/circles_color[bss].asm
 fp_2C92E	dw ?
 include th04/main/dialog/dialog[bss].asm
-word_2C934	dw ?
-word_2C936	dw ?
-public _dialog_side
-_dialog_side	dw ?
 		db 2 dup(?)
 include th04/main/boss/explosions[bss].asm
 public _bombing_disabled

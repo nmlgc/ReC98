@@ -2289,18 +2289,18 @@ loc_D1EC:
 		jmp	word ptr cs:[bx+1Eh] ; switch jump
 
 loc_D1F0:
-		add	word_255D2, 10h	; jumptable 0000D1EC case 110
+		add	_dialog_cursor.y, GLYPH_H	; jumptable 0000D1EC case 110
 		cmp	_dialog_side, DIALOG_SIDE_PLAYCHAR
 		jnz	short loc_D201
-		mov	ax, 0A0h
+		mov	ax, DIALOG_CURSOR_PLAYCHAR_LEFT
 		jmp	short loc_D204
 ; ---------------------------------------------------------------------------
 
 loc_D201:
-		mov	ax, 30h	; '0'
+		mov	ax, DIALOG_CURSOR_BOSS_LEFT
 
 loc_D204:
-		mov	word_255D0, ax
+		mov	_dialog_cursor.x, ax
 		jmp	loc_D528	; default
 ; ---------------------------------------------------------------------------
 
@@ -2419,20 +2419,20 @@ loc_D2FE:
 		lea	ax, [bp+var_2]
 		push	ax
 		call	main_01:sub_D0CA
-		mov	ax, word_255D0
-		mov	bx, 8
+		mov	ax, _dialog_cursor.x
+		mov	bx, GLYPH_HALF_W
 		cwd
 		idiv	bx
 		push	ax
-		mov	ax, word_255D2
-		mov	bx, 16
+		mov	ax, _dialog_cursor.y
+		mov	bx, GLYPH_H
 		cwd
 		idiv	bx
 		push	ax
 		push	[bp+var_2]
 		push	TX_WHITE
 		call	gaiji_putca
-		add	word_255D0, 10h
+		add	_dialog_cursor.x, GLYPH_FULL_W
 		jmp	loc_D528	; default
 ; ---------------------------------------------------------------------------
 
@@ -2729,20 +2729,20 @@ loc_D5BA:
 loc_D5C6:
 		cmp	[bp+var_1], 30h	; '0'
 		jnz	short loc_D5E0
-		mov	word_255D0, 0A0h
-		mov	word_255D2, 140h
+		mov	_dialog_cursor.x, DIALOG_CURSOR_PLAYCHAR_LEFT
+		mov	_dialog_cursor.y, DIALOG_CURSOR_PLAYCHAR_TOP
 		mov	_dialog_side, DIALOG_SIDE_PLAYCHAR
 		jmp	short loc_D5F2
 ; ---------------------------------------------------------------------------
 
 loc_D5E0:
-		mov	word_255D0, 30h	; '0'
-		mov	word_255D2, 0C0h
+		mov	_dialog_cursor.x, DIALOG_CURSOR_BOSS_LEFT
+		mov	_dialog_cursor.y, DIALOG_CURSOR_BOSS_TOP
 		mov	_dialog_side, DIALOG_SIDE_BOSS
 
 loc_D5F2:
-		mov	ax, word_255D2
-		mov	bx, 16
+		mov	ax, _dialog_cursor.y
+		mov	bx, GLYPH_H
 		cwd
 		idiv	bx
 		mov	si, ax
@@ -2750,8 +2750,8 @@ loc_D5F2:
 ; ---------------------------------------------------------------------------
 
 loc_D5FF:
-		mov	ax, word_255D0
-		mov	bx, 8
+		mov	ax, _dialog_cursor.x
+		mov	bx, GLYPH_HALF_W
 		cwd
 		idiv	bx
 		mov	di, ax
@@ -2763,21 +2763,21 @@ loc_D60C:
 		inc	di
 
 loc_D61A:
-		mov	ax, word_255D0
-		mov	bx, 8
+		mov	ax, _dialog_cursor.x
+		mov	bx, GLYPH_HALF_W
 		cwd
 		idiv	bx
-		add	ax, 1Eh
+		add	ax, (DIALOG_LINE_W / GLYPH_HALF_W)
 		cmp	ax, di
 		jg	short loc_D60C
 		inc	si
 
 loc_D62B:
-		mov	ax, word_255D2
-		mov	bx, 16
+		mov	ax, _dialog_cursor.y
+		mov	bx, GLYPH_H
 		cwd
 		idiv	bx
-		add	ax, 3
+		add	ax, (DIALOG_BOX_H / GLYPH_H)
 		cmp	ax, si
 		jg	short loc_D5FF
 		mov	[bp+var_2], 0
@@ -2817,20 +2817,20 @@ loc_D684:
 		les	bx, [bp+var_6]
 		mov	es:[bx+1], al
 		inc	word ptr _dialog_p
-		mov	ax, word_255D0
-		mov	bx, 8
+		mov	ax, _dialog_cursor.x
+		mov	bx, GLYPH_HALF_W
 		cwd
 		idiv	bx
 		push	ax
-		mov	ax, word_255D2
-		mov	bx, 16
+		mov	ax, _dialog_cursor.y
+		mov	bx, GLYPH_H
 		cwd
 		idiv	bx
 		push	ax
 		pushd	[bp+var_6]
 		push	TX_WHITE
 		call	text_putsa
-		add	word_255D0, 10h
+		add	_dialog_cursor.x, GLYPH_FULL_W
 		cmp	_key_det, INPUT_NONE
 		jnz	short loc_D6D2
 		push	2
@@ -31317,10 +31317,6 @@ byte_255C8	db ?
 		db ?
 fp_255CA	dw ?
 include th04/main/dialog/dialog[bss].asm
-word_255D0	dw ?
-word_255D2	dw ?
-public _dialog_side
-_dialog_side	dw ?
 word_255D6	dw ?
 include th04/main/boss/explosions[bss].asm
 

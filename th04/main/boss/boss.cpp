@@ -17,6 +17,7 @@ extern "C" {
 extern "C" {
 #include "th04/snd/snd.h"
 }
+#include "th04/sprites/main_cdg.h"
 #if (GAME == 5)
 	#include "th05/sprites/main_pat.h"
 #else
@@ -58,7 +59,6 @@ extern "C" {
 	#include "th04/resident.hpp"
 	#include "th04/formats/bb.h"
 	#include "th04/formats/dialog.hpp"
-	#include "th04/sprites/main_cdg.h"
 	#include "th04/main/boss/boss.hpp"
 	#include "th04/main/boss/bosses.hpp"
 	#include "th04/shiftjis/fns.hpp"

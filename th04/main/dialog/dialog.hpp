@@ -17,6 +17,37 @@ void pascal near dialog_box_put(uscreen_x_t left, uvram_y_t top, int tile);
 void pascal near dialog_box_fade_in();
 // ---
 
+// Lines
+// -----
+
+static const pixel_t DIALOG_MARGIN = 16;
+
+static const pixel_t DIALOG_LINE_W = (PLAYFIELD_W - DIALOG_MARGIN - FACE_W);
+static const screen_x_t DIALOG_CURSOR_PLAYCHAR_LEFT = (
+	PLAYFIELD_RIGHT - DIALOG_MARGIN - DIALOG_LINE_W
+);
+static const screen_y_t DIALOG_CURSOR_PLAYCHAR_TOP = (
+	PLAYFIELD_BOTTOM - DIALOG_MARGIN - DIALOG_BOX_H
+);
+
+static const screen_x_t DIALOG_CURSOR_BOSS_LEFT = (
+	PLAYFIELD_LEFT + DIALOG_MARGIN
+);
+static const screen_y_t DIALOG_CURSOR_BOSS_TOP = (
+	DIALOG_CURSOR_PLAYCHAR_TOP - FACE_H
+);
+// -----
+
+extern struct {
+	#if (GAME == 5)
+		tram_x_t x;
+		tram_y_t y;
+	#else
+		screen_x_t x;
+		screen_y_t y;
+	#endif
+} dialog_cursor;
+
 enum dialog_side_t {
 	DIALOG_SIDE_PLAYCHAR = 0,
 	DIALOG_SIDE_BOSS = 1,
