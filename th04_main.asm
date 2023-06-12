@@ -1978,11 +1978,11 @@ public @MIDBOSS4_RENDER$QV
 		ja	short loc_CE85
 		mov	al, _midboss_sprite
 		mov	ah, 0
-		add	ax, 9Ch
+		add	ax, PAT_MIDBOSS4_STILL_LEFT
 		mov	si, ax
 		cmp	_midboss_pos.cur.x, (192 shl 4)
 		jl	short loc_CE5B
-		add	si, 4
+		add	si, M4C_CELS
 
 loc_CE5B:
 		cmp	_midboss_damage_this_frame, 0
@@ -14940,7 +14940,7 @@ loc_15F67:
 		jl	short loc_15F8F
 		mov	_boss_phase_frame, 0
 		mov	byte_25667, 0
-		mov	_boss_mode, 0FEh
+		mov	_boss_mode, -2
 		sub	_boss_pos.cur.y, (16 shl 4)
 		mov	al, 1
 		jmp	short loc_15F91
@@ -15988,14 +15988,12 @@ loc_169B8:
 
 ; ---------------------------------------------------------------------------
 		db 0
-word_169D4	dw	0,     1,  0FEh,  0FFh
-					; value	table for switch statement
+word_169D4	dw	0, 1, (-2 and 255), (-1 and 255)	; value table for switch statement
 		dw offset loc_16814	; jump table for switch	statement
 		dw offset loc_16819
 		dw offset loc_1681E
 		dw offset loc_16839
-word_169E4	dw	0,     1,  0FEh,  0FFh
-					; value	table for switch statement
+word_169E4	dw	0, 1, (-2 and 255), (-1 and 255)	; value table for switch statement
 		dw offset loc_166F9	; jump table for switch	statement
 		dw offset loc_166FE
 		dw offset loc_16703
@@ -26572,7 +26570,7 @@ arg_0		= word ptr  4
 		push	di
 		mov	di, [bp+arg_0]
 		mov	[bp+@@yellow], 0
-		mov	al, [di+0Eh]
+		mov	al, [di+item_t.ITEM_type]
 		mov	ah, 0
 		mov	bx, ax
 		cmp	bx, 6
@@ -26616,7 +26614,7 @@ loc_1DC19:
 ; ---------------------------------------------------------------------------
 
 loc_1DC33:
-		cmp	word ptr [di+4], 340h
+		cmp	[di+item_t.pos.cur.y], (52 shl 4)
 		jg	short loc_1DC58
 		mov	si, 5120
 		mov	al, _item_playperf_raise
@@ -26631,7 +26629,7 @@ loc_1DC33:
 ; ---------------------------------------------------------------------------
 
 loc_1DC58:
-		mov	ax, [di+4]
+		mov	ax, [di+item_t.pos.cur.y]
 		cwd
 		sub	ax, dx
 		sar	ax, 1
