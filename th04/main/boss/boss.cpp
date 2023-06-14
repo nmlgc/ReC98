@@ -38,6 +38,7 @@ extern "C" {
 #include "th04/main/slowdown.hpp"
 #include "th04/main/hud/overlay.hpp"
 #include "th04/main/stage/stage.hpp"
+#include "th04/main/stage/bonus.hpp"
 extern "C" {
 #include "th04/main/tile/tile.hpp"
 }
