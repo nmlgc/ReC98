@@ -8,12 +8,15 @@
 #include "th02/score.h"
 #include "th02/resident.hpp"
 #include "th02/gaiji/gaiji.h"
-#include "th02/core/globals.hpp"
 extern "C" {
+#include "th02/hardware/frmdelay.h"
+#include "th02/core/globals.hpp"
 #include "th02/snd/snd.h"
 }
+#include "th02/main/playfld.hpp"
 #include "th02/main/player/player.hpp"
 #include "th02/main/hud/hud.hpp"
+#include "th02/main/hud/overlay.hpp"
 
 // Gaiji strings
 // -------------
@@ -187,4 +190,50 @@ void near hud_put(void)
 			/*       RANK_LUNATIC */ TX_RED
 		)
 	);
+}
+
+#pragma option -G-
+
+void pascal near overlay_stage_fade_animate(
+	int gaiji_first // ACTUAL TYPE: gaiji_th02_t
+)
+{
+	enum {
+		PLAYFIELD_GAIJI_W = (PLAYFIELD_W / GLYPH_FULL_W),
+		X_PER_FRAME = 2,
+		DURATION = ((PLAYFIELD_GAIJI_W / X_PER_FRAME) + OVERLAY_FADE_CELS),
+	};
+	shiftjis_kanji_amount_t x;
+	tram_y_t y;
+	int frame;
+
+	// ACTUAL TYPE: gaiji_th02_t
+	int gaiji_last = (gaiji_first + OVERLAY_FADE_CELS - 1);
+
+	for(frame = 0; frame < DURATION; frame++) {
+		for(x = 0; x < PLAYFIELD_GAIJI_W; x++) {
+			for(y = PLAYFIELD_TRAM_TOP; y <= (PLAYFIELD_TRAM_BOTTOM - 1); y++) {
+				int c = ((gaiji_first + frame) - (x >> 1)); // / X_PER_FRAME
+				if(c < gaiji_first) {
+					c = gaiji_first;
+				} else if(c > gaiji_last) {
+					c = gaiji_last;
+				}
+				gaiji_putca(
+					(PLAYFIELD_TRAM_LEFT + (x * GAIJI_TRAM_W)), y, c, TX_BLACK
+				);
+			}
+		}
+		frame_delay(2);
+	}
+}
+
+void overlay_stage_leave_animate(void)
+{
+	overlay_stage_fade_animate(g_OVERLAY_FADE_OUT);
+}
+
+void overlay_stage_enter_animate(void)
+{
+	overlay_stage_fade_animate(g_OVERLAY_FADE_IN);
 }

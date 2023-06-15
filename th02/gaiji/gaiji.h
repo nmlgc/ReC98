@@ -4,6 +4,11 @@
 
 #include "th02/gaiji/from_2.h"
 
+// In TH02, the consecutive cels for the fade-in and fade-out animation
+// respectively include the final fully empty or filled cel that remains on the
+// playfield after the animation.
+#define OVERLAY_FADE_CELS 9
+
 typedef enum {
 	gs_YINYANG = 0x02, // ☯
 	gs_BOMB, // ◉? ⦿? 🎯? 🖸? Or simply 💣?
@@ -32,6 +37,13 @@ typedef enum {
 	gs_REIGEKI_GEKI,
 	gs_Hi,
 	gb_SP,
+
+	// ZUN bloat: Defining any other empty cell to be the "space" would have
+	// been better than repurposing a cel of an animation that just *happens*
+	// to be empty.
+	g_OVERLAY_FADE_OUT = gb_SP,
+	g_OVERLAY_FADE_OUT_last = (g_OVERLAY_FADE_OUT + OVERLAY_FADE_CELS - 1),
+
 	gs_NOTES = 0xD8, // ♫
 	gs_BULLET = 0xDA, // •
 	gs_PERIOD, // .
@@ -51,4 +63,6 @@ typedef enum {
 	gs_LUN, gs_ATIC, // "Lun", "atic"
 
 	gs_ALL, // "All"
+	g_OVERLAY_FADE_IN,
+	g_OVERLAY_FADE_IN_last = (g_OVERLAY_FADE_IN + OVERLAY_FADE_CELS - 1),
 } gaiji_th02_t;

@@ -1014,7 +1014,7 @@ loc_B1CD:
 		mov	eax, es:[bx+mikoconfig_t.frame]
 		mov	random_seed, eax
 		call	sub_B3DA
-		nopcall	sub_E16D
+		nopcall	@overlay_stage_enter_animate$qv
 		les	bx, _resident
 		cmp	es:[bx+mikoconfig_t.demo_num], 0
 		jnz	short loc_B237
@@ -1574,7 +1574,7 @@ sub_B98E	proc near
 		push	bp
 		mov	bp, sp
 		call	@hud_put$qv
-		nopcall	sub_E162
+		nopcall	@overlay_stage_leave_animate$qv
 		mov	ax, 0D0h
 		mov	word_205E8, ax
 		mov	word_205E6, ax
@@ -1590,7 +1590,7 @@ sub_B98E	proc near
 		call	sub_10E0A
 		mov	PaletteTone, 100
 		call	far ptr	palette_show
-		nopcall	sub_E16D
+		nopcall	@overlay_stage_enter_animate$qv
 		pop	bp
 		retn
 sub_B98E	endp
@@ -2449,10 +2449,10 @@ var_2		= word ptr -2
 		push	di
 		mov	[bp+var_2], 0
 		mov	di, 1
-		nopcall	sub_E162
+		nopcall	@overlay_stage_leave_animate$qv
 		mov	PaletteTone, 50
 		call	far ptr	palette_show
-		nopcall	sub_E16D
+		nopcall	@overlay_stage_enter_animate$qv
 		mov	si, 15h
 		jmp	loc_C3E5
 ; ---------------------------------------------------------------------------
@@ -4585,114 +4585,11 @@ HUD_TEXT	segment	byte public 'CODE' use16
 	@hud_lives_put$qv procdesc near
 	@hud_bombs_put$qv procdesc near
 	@hud_put$qv procdesc near
+	extern @overlay_stage_leave_animate$qv:proc
+	extern @overlay_stage_enter_animate$qv:proc
 HUD_TEXT	ends
 
 main_01___TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E0E9	proc near
-
-var_6		= word ptr -6
-var_4		= word ptr -4
-var_2		= word ptr -2
-arg_0		= word ptr  4
-
-		enter	6, 0
-		push	si
-		push	di
-		mov	ax, [bp+arg_0]
-		add	ax, 8
-		mov	[bp+var_6], ax
-		mov	[bp+var_4], 0
-		jmp	short loc_E156
-; ---------------------------------------------------------------------------
-
-loc_E0FF:
-		xor	si, si
-		jmp	short loc_E147
-; ---------------------------------------------------------------------------
-
-loc_E103:
-		mov	[bp+var_2], 1
-		jmp	short loc_E140
-; ---------------------------------------------------------------------------
-
-loc_E10A:
-		mov	ax, si
-		sar	ax, 1
-		mov	dx, [bp+arg_0]
-		add	dx, [bp+var_4]
-		sub	dx, ax
-		mov	di, dx
-		cmp	di, [bp+arg_0]
-		jge	short loc_E122
-		mov	di, [bp+arg_0]
-		jmp	short loc_E12A
-; ---------------------------------------------------------------------------
-
-loc_E122:
-		cmp	di, [bp+var_6]
-		jle	short loc_E12A
-		mov	di, [bp+var_6]
-
-loc_E12A:
-		mov	ax, si
-		add	ax, ax
-		add	ax, 4
-		call	gaiji_putca pascal, ax, [bp+var_2], di, TX_BLACK
-		inc	[bp+var_2]
-
-loc_E140:
-		cmp	[bp+var_2], 17h
-		jle	short loc_E10A
-		inc	si
-
-loc_E147:
-		cmp	si, 18h
-		jl	short loc_E103
-		call	frame_delay pascal, 2
-		inc	[bp+var_4]
-
-loc_E156:
-		cmp	[bp+var_4], 15h
-		jl	short loc_E0FF
-		pop	di
-		pop	si
-		leave
-		retn	2
-sub_E0E9	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E162	proc far
-		push	bp
-		mov	bp, sp
-		push	0CFh
-		call	sub_E0E9
-		pop	bp
-		retf
-sub_E162	endp
-
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_E16D	proc far
-		push	bp
-		mov	bp, sp
-		push	0F1h
-		call	sub_E0E9
-		pop	bp
-		retf
-sub_E16D	endp
-
 
 ; =============== S U B	R O U T	I N E =======================================
 
@@ -11782,7 +11679,7 @@ stones_end	proc far
 		push	1
 		call	sub_1310B
 		call	@stage_clear_bonus_animate$qv
-		call	sub_E162
+		call	@overlay_stage_leave_animate$qv
 		inc	_stage_id
 		pop	bp
 		retf
@@ -14301,7 +14198,7 @@ rika_end	proc far
 		call	sub_1310B
 		call	@stage_clear_bonus_animate$qv
 		call	_key_delay
-		call	sub_E162
+		call	@overlay_stage_leave_animate$qv
 		inc	_stage_id
 		mov	_spark_accel_x, 0
 		mov	word_1EDA4, 0
@@ -16902,7 +16799,7 @@ meira_end	proc far
 		call	sub_1310B
 		call	@stage_clear_bonus_animate$qv
 		call	_key_delay
-		call	sub_E162
+		call	@overlay_stage_leave_animate$qv
 		inc	_stage_id
 		mov	_spark_accel_x, 0
 		pop	bp
@@ -29137,7 +29034,7 @@ marisa_end	proc far
 		call	@stage_clear_bonus_animate$qv
 
 loc_1C27C:
-		call	sub_E162
+		call	@overlay_stage_leave_animate$qv
 		inc	_stage_id
 		pop	bp
 

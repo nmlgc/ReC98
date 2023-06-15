@@ -35,3 +35,11 @@
 		overlay_line_fill_slow(y, atrb); \
 	} \
 }
+
+// Shows the stage fade-in effect in a blocking way. Returns with the playfield
+// area in TRAM filled with empty gaiji cells.
+void overlay_stage_enter_animate(void);
+
+// Shows the stage fade-out effect in a blocking way. Returns with the
+// playfield area in TRAM filled with opaque black cells.
+void overlay_stage_leave_animate(void);
