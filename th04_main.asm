@@ -11499,10 +11499,11 @@ SHARED_	ends
 ; Segment type:	Pure code
 GATHER_TEXT	segment	byte public 'CODE' use16
 		assume cs:main_03
-		;org 0Ch
-		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
 
-include th04/main/gather_add.asm
+	@gather_add_bullets$qv procdesc near
+	@gather_add_only$qv procdesc near
+	@GATHER_ADD_ONLY_3STACK$QIUIUI procdesc pascal near \
+		frame:word, col_for_0_2_and_4:dword
 	extern @gather_update$qv:proc
 	extern @gather_render$qv:proc
 GATHER_TEXT	ends

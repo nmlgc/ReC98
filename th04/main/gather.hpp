@@ -26,8 +26,8 @@ struct gather_t {
 };
 
 struct gather_template_t {
-	SPPoint center;
-	SPPoint velocity;
+	PlayfieldPoint center;
+	PlayfieldPoint velocity;
 	Subpixel radius;
 	int ring_points;
 	vc_t col;
