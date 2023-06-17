@@ -1,4 +1,4 @@
-#pragma option -zCSHARED -3 -Z-
+#pragma option -zCSHARED -Z-
 
 #include "platform.h"
 #include "x86real.h"

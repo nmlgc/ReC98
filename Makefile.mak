@@ -85,9 +85,9 @@ $**
 |
 
 {th02}.c{bin\th02}.obj:
-	$(CC) $(CFLAGS) -ml -Z -DGAME=2 -n$(@D) -c $**
+	$(CC) $(CFLAGS) -ml -3 -Z -DGAME=2 -n$(@D) -c $**
 {th02}.cpp{bin\th02}.obj:
-	$(CC) $(CFLAGS) -ml -Z -DGAME=2 -n$(@D) -c $**
+	$(CC) $(CFLAGS) -ml -3 -Z -DGAME=2 -n$(@D) -c $**
 
 bin\th02\zun_res.com: th02\zun_res1.cpp th02\zun_res2.c th02\zun_res3.c
 	$(CC) $(CFLAGS) -mt -lt -Z -DGAME=2 -nbin\th02\ -eZUN_RES.COM @&&|
@@ -110,9 +110,9 @@ $**
 |
 
 {th03}.c{bin\th03}.obj:
-	$(CC) $(CFLAGS) -ml -Z -DGAME=3 -n$(@D) -c $**
+	$(CC) $(CFLAGS) -ml -3 -Z -DGAME=3 -n$(@D) -c $**
 {th03}.cpp{bin\th03}.obj:
-	$(CC) $(CFLAGS) -ml -Z -DGAME=3 -n$(@D) -c $**
+	$(CC) $(CFLAGS) -ml -3 -Z -DGAME=3 -n$(@D) -c $**
 
 bin\th03\res_yume.com: th03\res_yume.cpp
 	$(CC) $(CFLAGS) -mt -lt -Z -DGAME=3 -nbin\th03\ -eRES_YUME.COM @&&|
@@ -163,7 +163,7 @@ $**
 |
 
 {th05}.cpp{bin\th05}.obj:
-	$(CC) $(CFLAGS) -ml -Z -DGAME=5 -n$(@D) -c $**
+	$(CC) $(CFLAGS) -ml -3 -Z -DGAME=5 -n$(@D) -c $**
 
 bin\th05\res_kso.com: th05\res_kso.cpp
 	$(CC) $(CFLAGS) -mt -lt -Z -DGAME=5 -nbin\th05\ -eRES_KSO.COM @&&|

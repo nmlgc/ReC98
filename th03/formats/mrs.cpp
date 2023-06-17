@@ -1,4 +1,4 @@
-#pragma option -zCSHARED -3
+#pragma option -zCSHARED
 
 #include <stddef.h>
 #include "platform.h"

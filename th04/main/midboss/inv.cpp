@@ -1,5 +1,3 @@
-#pragma option -3
-
 #include "platform.h"
 #include "pc98.h"
 #include "th01/math/subpixel.hpp"

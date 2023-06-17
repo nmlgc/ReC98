@@ -1,4 +1,4 @@
-#pragma option -zCSHARED -3
+#pragma option -zCSHARED
 
 #include "platform.h"
 #include "master.hpp"

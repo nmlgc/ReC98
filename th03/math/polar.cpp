@@ -1,4 +1,4 @@
-#pragma option -zCSHARED -3
+#pragma option -zCSHARED
 
 #include "th03/math/polar.hpp"
 

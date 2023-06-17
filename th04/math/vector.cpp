@@ -1,5 +1,3 @@
-#pragma option -3
-
 #include <stddef.h>
 #include "platform.h"
 #include "pc98.h"
