@@ -100,11 +100,11 @@
 	center_y <  to_sp((h / 2) - PLAYFIELD_ROLL_MARGIN) \
 )
 
-#define playfield_clip_center_bottom_small(center_y, h) ( \
-	center_y >= to_sp(PLAYFIELD_BOTTOM + PLAYFIELD_ROLL_MARGIN - (h / 2)) \
+#define playfield_clip_center_bottom_small_roll(center_y, h) ( \
+	center_y >= to_sp(PLAYFIELD_H + PLAYFIELD_ROLL_MARGIN - (h / 2)) \
 )
-#define playfield_clip_center_bottom_large(center_y, h) ( \
-	center_y >  to_sp(PLAYFIELD_BOTTOM + PLAYFIELD_ROLL_MARGIN - (h / 2)) \
+#define playfield_clip_center_bottom_large_roll(center_y, h) ( \
+	center_y >  to_sp(PLAYFIELD_H + PLAYFIELD_ROLL_MARGIN - (h / 2)) \
 )
 
 #define playfield_clip_left_small( left, w) (left <= (PLAYFIELD_LEFT - w))

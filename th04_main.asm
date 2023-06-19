@@ -43,7 +43,7 @@ include th04/main/enemy/enemy.inc
 	extern _tolower:proc
 	extern __ctype:byte
 
-main_01 group SLOWDOWN_TEXT, m_TEXT, DEMO_TEXT, EMS_TEXT, TILE_SET_TEXT, STD_TEXT, ma_TEXT, PLAYFLD_TEXT, mai_TEXT, DIALOG_TEXT, main_TEXT, STAGES_TEXT, main__TEXT, PLAYER_M_TEXT, PLAYER_P_TEXT, main_0_TEXT, HUD_OVRL_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT, CHECKERB_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT
+main_01 group SLOWDOWN_TEXT, ma_TEXT, DEMO_TEXT, EMS_TEXT, TILE_SET_TEXT, STD_TEXT, mai_TEXT, PLAYFLD_TEXT, M4_RENDER_TEXT, DIALOG_TEXT, main_TEXT, STAGES_TEXT, main__TEXT, PLAYER_M_TEXT, PLAYER_P_TEXT, main_0_TEXT, HUD_OVRL_TEXT, main_01_TEXT, main_012_TEXT, CFG_LRES_TEXT, main_013_TEXT, CHECKERB_TEXT, MB_INV_TEXT, BOSS_BD_TEXT, BOSS_BG_TEXT
 g_SHARED group SHARED, SHARED_
 main_03 group GATHER_TEXT, SCROLLY3_TEXT, MOTION_3_TEXT, main_032_TEXT, VECTOR2N_TEXT, SPARK_A_TEXT, GRCG_3_TEXT, IT_SPL_U_TEXT, B4M_UPDATE_TEXT, main_033_TEXT, MIDBOSS_TEXT, HUD_HP_TEXT, MB_DFT_TEXT, main_034_TEXT, BULLET_U_TEXT, BULLET_A_TEXT, main_035_TEXT, BOSS_TEXT, main_036_TEXT
 
@@ -270,7 +270,7 @@ SLOWDOWN_TEXT segment word public 'CODE' use16
 SLOWDOWN_TEXT ends
 
 ; Segment type:	Pure code
-m_TEXT	segment	word public 'CODE' use16
+ma_TEXT	segment	word public 'CODE' use16
 		assume cs:main_01
 		;org 1
 		assume es:nothing, ss:nothing, ds:_DATA, fs:nothing, gs:nothing
@@ -1011,7 +1011,7 @@ var_4		= dword	ptr -4
 		leave
 		retn
 demo_load	endp
-m_TEXT	ends
+ma_TEXT	ends
 
 DEMO_TEXT	segment	byte public 'CODE' use16
 	@DemoPlay$qv procdesc near
@@ -1031,7 +1031,7 @@ STD_TEXT	segment	byte public 'CODE' use16
 	@std_load$qv procdesc near
 STD_TEXT	ends
 
-ma_TEXT	segment	word public 'CODE' use16
+mai_TEXT	segment	word public 'CODE' use16
 include th04/formats/std.asm
 
 ; =============== S U B	R O U T	I N E =======================================
@@ -1940,75 +1940,15 @@ loc_CD31:
 		pop	bp
 		retn
 sub_CCD6	endp
-ma_TEXT	ends
+mai_TEXT	ends
 
 PLAYFLD_TEXT	segment	byte public 'CODE' use16
 	@playfield_shake_update_and_rende$qv procdesc pascal near
 PLAYFLD_TEXT	ends
 
-mai_TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-public @MIDBOSS4_RENDER$QV
-@midboss4_render$qv	proc near
-
-@@y		= word ptr -2
-
-		enter	2, 0
-		push	si
-		push	di
-		cmp	_midboss_pos.cur.y, 0
-		jle	short loc_CE8F
-		cmp	_midboss_pos.cur.y, (368 shl 4)
-		jge	short loc_CE8F
-		cmp	_midboss_pos.cur.x, 0
-		jle	short loc_CE8F
-		cmp	_midboss_pos.cur.x, (384 shl 4)
-		jge	short loc_CE8F
-		mov	ax, _midboss_pos.cur.x
-		sar	ax, 4
-		mov	di, ax
-		mov	ax, _midboss_pos.cur.y
-		add	ax, (-16 shl 4)
-		call	main_01:scroll_subpixel_y_to_vram_seg1 pascal, ax
-		mov	[bp+@@y], ax
-		cmp	_midboss_phase, 2
-		ja	short loc_CE85
-		mov	al, _midboss_sprite
-		mov	ah, 0
-		add	ax, PAT_MIDBOSS4_STILL_LEFT
-		mov	si, ax
-		cmp	_midboss_pos.cur.x, (192 shl 4)
-		jl	short loc_CE5B
-		add	si, M4C_CELS
-
-loc_CE5B:
-		cmp	_midboss_damage_this_frame, 0
-		jnz	short loc_CE6E
-		call	super_roll_put pascal, di, [bp+@@y], si
-		jmp	short loc_CE8F
-; ---------------------------------------------------------------------------
-
-loc_CE6E:
-		call	super_roll_put_1plane pascal, di, [bp+@@y], si, large PLANE_PUT or GC_BRGI
-		mov	_midboss_damage_this_frame, 0
-		jmp	short loc_CE8F
-; ---------------------------------------------------------------------------
-
-loc_CE85:
-		cmp	_midboss_phase, PHASE_EXPLODE_BIG
-		jnz	short loc_CE8F
-		call	@midboss_defeat_render$qv
-
-loc_CE8F:
-		pop	di
-		pop	si
-		leave
-		retn
-@midboss4_render$qv	endp
-mai_TEXT	ends
+M4_RENDER_TEXT	segment	byte public 'CODE' use16
+	@MIDBOSS4_RENDER$QV procdesc pascal near
+M4_RENDER_TEXT	ends
 
 DIALOG_TEXT	segment	byte public 'CODE' use16
 	@dialog_load$qv procdesc near
