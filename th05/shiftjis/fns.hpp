@@ -29,3 +29,6 @@
 #define BOMB_BG_MARISA_FN	"bb1.cdg"
 #define BOMB_BG_MIMA_FN  	"bb2.cdg"
 #define BOMB_BG_YUUKA_FN 	"bb3.cdg"
+
+#define BOMB_SHAPE_FN      	"bomb0.bft"
+#define BOMB_SHAPE_YUUKA_FN	"bomb3.bft"

@@ -888,13 +888,13 @@ loc_B3AE:
 		cmp	_playchar, PLAYCHAR_YUUKA
 		jnz	short loc_B3C1
 		push	ds
-		push	offset aBomb3_bft ; "bomb3.bft"
+		push	offset _BOMB_SHAPE_YUUKA_FN ; "bomb3.bft"
 		jmp	short loc_B3C5
 ; ---------------------------------------------------------------------------
 
 loc_B3C1:
 		push	ds
-		push	offset aBomb0_bft ; "bomb0.bft"
+		push	offset _BOMB_SHAPE_FN ; "bomb0.bft"
 
 loc_B3C5:
 		call	super_entry_bfnt
@@ -3776,13 +3776,13 @@ loc_F501:
 		cmp	_playchar, PLAYCHAR_YUUKA
 		jnz	short loc_F514
 		push	ds
-		push	offset aBomb3_bft_0 ; "bomb3.bft"
+		push	offset _BOMB_SHAPE_YUUKA_FN_2 ; "bomb3.bft"
 		jmp	short loc_F518
 ; ---------------------------------------------------------------------------
 
 loc_F514:
 		push	ds
-		push	offset aBomb0_bft_0 ; "bomb0.bft"
+		push	offset _BOMB_SHAPE_FN_2 ; "bomb0.bft"
 
 loc_F518:
 		call	super_entry_bfnt
@@ -20305,8 +20305,9 @@ aMari16_bft	db 'mari16.bft',0
 aMima16_bft	db 'mima16.bft',0
 aYuka16_bft	db 'yuka16.bft',0
 aMiko16_bft	db 'miko16.bft',0
-aBomb3_bft	db 'bomb3.bft',0
-aBomb0_bft	db 'bomb0.bft',0
+public _BOMB_SHAPE_YUUKA_FN, _BOMB_SHAPE_FN
+_BOMB_SHAPE_YUUKA_FN	db 'bomb3.bft',0
+_BOMB_SHAPE_FN	    	db 'bomb0.bft',0
 aBss0_cd2	db 'BSS0.CD2',0
 aSt00_bft	db 'st00.bft',0
 aSt00_mpn	db 'st00.mpn',0
@@ -20441,9 +20442,10 @@ _BOMB_BG_MARISA_FN	db 'bb1.cdg',0
 _BOMB_BG_MIMA_FN	db 'bb2.cdg',0
 _BOMB_BG_YUUKA_FN	db 'bb3.cdg',0
 aSt06_16_bft	db 'st06_16.bft',0
-aBomb3_bft_0	db 'bomb3.bft',0
-aBomb0_bft_0	db 'bomb0.bft',0
-		db 0
+public _BOMB_SHAPE_YUUKA_FN_2, _BOMB_SHAPE_FN_2
+_BOMB_SHAPE_YUUKA_FN_2	db 'bomb3.bft',0
+_BOMB_SHAPE_FN_2      	db 'bomb0.bft',0
+	evendata
 include th04/main/boss/explosions_big[data].asm
 byte_22274	db 0
 byte_22275	db 0

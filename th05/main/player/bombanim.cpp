@@ -75,7 +75,7 @@ extern union {
 	super_roll_put_1plane( \
 		star->topleft.screen_x.to_pixel_slow(), \
 		star->topleft.screen_y.to_pixel_slow(), \
-		PAT_PLAYCHAR_BOMB, \
+		PAT_PLAYCHAR_BOMB_SHAPE, \
 		0, \
 		super_plane(col, true) \
 	);

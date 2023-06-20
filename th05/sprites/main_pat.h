@@ -95,7 +95,7 @@ typedef enum {
 	// ------------------------
 	// bomb0.bft / bomb3.bft
 	// ---------------------
-	PAT_PLAYCHAR_BOMB,
+	PAT_PLAYCHAR_BOMB_SHAPE,
 	// ---------------------
 	/// =================
 
