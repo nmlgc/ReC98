@@ -32,3 +32,11 @@
 
 #define BOMB_SHAPE_FN      	"bomb0.bft"
 #define BOMB_SHAPE_YUUKA_FN	"bomb3.bft"
+
+#define main_pat_bomb_shape_load() { \
+	if(playchar == PLAYCHAR_YUUKA) { \
+		super_entry_bfnt(BOMB_SHAPE_YUUKA_FN); \
+	} else { \
+		super_entry_bfnt(BOMB_SHAPE_FN); \
+	} \
+}

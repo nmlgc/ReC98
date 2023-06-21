@@ -883,7 +883,7 @@ loc_B3A7:
 		inc	si
 
 loc_B3AE:
-		cmp	si, 172
+		cmp	si, TINY_MIKO16_END
 		jl	short loc_B3A7
 		cmp	_playchar, PLAYCHAR_YUUKA
 		jnz	short loc_B3C1
@@ -3450,7 +3450,7 @@ loc_F07C:
 ; ---------------------------------------------------------------------------
 
 loc_F091:
-		call	sub_F4DD
+		call	@main_pat_exalice_override$qv
 		jmp	loc_F181
 ; ---------------------------------------------------------------------------
 
@@ -3700,7 +3700,7 @@ public @dialog_animate$qv
 		jz	short loc_F333
 		cmp	byte_221EC, 0
 		jnz	short loc_F318
-		call	sub_F4DD
+		call	@main_pat_exalice_override$qv
 		call	super_entry_bfnt pascal, ds, offset aSt06_bb1 ; "st06.bb1"
 		call	super_entry_bfnt pascal, ds, offset aSt06_bb2 ; "st06.bb2"
 		call	snd_load pascal, ds, offset aSt06b, SND_LOAD_SONG
@@ -3748,49 +3748,10 @@ loc_F333:
 	@DIALOG_FACE_LOAD_UNPUT_PUT_FREE_$QIII procdesc pascal near \
 		left:word, top:word, cel:word
 	@dialog_exit$qv	procdesc near
+	@main_pat_exalice_override$qv procdesc near
 DIALOG_TEXT	ends
 
 main__TEXT	segment	byte public 'CODE' use16
-
-; =============== S U B	R O U T	I N E =======================================
-
-; Attributes: bp-based frame
-
-sub_F4DD	proc near
-		push	bp
-		mov	bp, sp
-		push	si
-		call	super_clean pascal, (36 shl 16) or 320
-		call	super_entry_bfnt pascal, ds, offset aSt06_16_bft ; "st06_16.bft"
-		mov	si, 36
-		jmp	short loc_F501
-; ---------------------------------------------------------------------------
-
-loc_F4FA:
-		call	super_convert_tiny pascal, si
-		inc	si
-
-loc_F501:
-		cmp	si, 172
-		jl	short loc_F4FA
-		cmp	_playchar, PLAYCHAR_YUUKA
-		jnz	short loc_F514
-		push	ds
-		push	offset _BOMB_SHAPE_YUUKA_FN_2 ; "bomb3.bft"
-		jmp	short loc_F518
-; ---------------------------------------------------------------------------
-
-loc_F514:
-		push	ds
-		push	offset _BOMB_SHAPE_FN_2 ; "bomb0.bft"
-
-loc_F518:
-		call	super_entry_bfnt
-		pop	si
-		pop	bp
-		retn
-sub_F4DD	endp
-
 include th04/main/boss/explosions_small.asm
 include th04/main/boss/explosions_big.asm
 
@@ -20434,14 +20395,14 @@ aDemo5_rec	db 'DEMO5.REC',0
 aOp_0		db 'op',0
 public _faceset_boss_format, _faceset_playchar_format
 public _BOMB_BG_REIMU_FN, _BOMB_BG_MARISA_FN, _BOMB_BG_MIMA_FN
-public _BOMB_BG_YUUKA_FN
+public _BOMB_BG_YUUKA_FN, _MIKO16_EXALICE_FN
 _faceset_boss_format    	db 'BsS0.cD2',0
 _faceset_playchar_format	db 'KaO0.cD2',0
 _BOMB_BG_REIMU_FN	db 'bb0.cdg',0
 _BOMB_BG_MARISA_FN	db 'bb1.cdg',0
 _BOMB_BG_MIMA_FN	db 'bb2.cdg',0
 _BOMB_BG_YUUKA_FN	db 'bb3.cdg',0
-aSt06_16_bft	db 'st06_16.bft',0
+_MIKO16_EXALICE_FN	db 'st06_16.bft',0
 public _BOMB_SHAPE_YUUKA_FN_2, _BOMB_SHAPE_FN_2
 _BOMB_SHAPE_YUUKA_FN_2	db 'bomb3.bft',0
 _BOMB_SHAPE_FN_2      	db 'bomb0.bft',0

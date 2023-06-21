@@ -45,7 +45,8 @@ typedef enum {
 	// --------------------------------------------------
 	// miko16.bft / st06_16.bft
 	// ------------------------
-	PAT_ITEM = 36,
+	TINY_MIKO16_START = 36,
+	PAT_ITEM = TINY_MIKO16_START,
 
 	// Non-directional bullets
 	PAT_BULLET16_N_BLUE = 44, // Should not be used in patterns!
@@ -87,7 +88,9 @@ typedef enum {
 
 	PAT_EXPLOSION_SMALL,
 
-	PAT_PARTICLE = 172,
+	TINY_MIKO16_END = 172,
+
+	PAT_PARTICLE = TINY_MIKO16_END,
 	PAT_PARTICLE_last = (PAT_PARTICLE + PARTICLE_CELS - 1),
 	PAT_MIKO16_UNUSED_0,
 	PAT_MIKO16_UNUSED_1,
@@ -202,6 +205,8 @@ typedef enum {
 	TINY_B6BALL_END,
 	/// -------
 	/// =======
+
+	PAT_MAX = 320,
 
 	_main_patnum_t_FORCE_INT16 = 0x7FFF,
 } main_patnum_t;

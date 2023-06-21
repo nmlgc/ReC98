@@ -16,12 +16,21 @@ extern "C" {
 #include "th05/playchar.h"
 #include "th05/formats/dialog.hpp"
 #include "th05/shiftjis/fns.hpp"
+#include "th05/sprites/main_pat.h"
 #include "th05/main/dialog/dialog.hpp"
 
 #pragma option -a2
 
 extern char faceset_boss_format[];
 extern char faceset_playchar_format[];
+
+// Function ordering fails
+// -----------------------
+
+// Replaces the super_*() sprites loaded from MIKO16.BFT with the ones from
+// ST06_16.BFT used in the EX-Alice fight.
+void near main_pat_exalice_override(void);
+// -----------------------
 
 void pascal near dialog_face_load_unput_put_free_8(
 	screen_x_t left, vram_y_t top, int face_id
@@ -97,4 +106,22 @@ void near dialog_exit(void)
 			break;
 		}
 	}
+}
+
+void near main_pat_exalice_override(void)
+{
+	#undef BOMB_SHAPE_FN
+	#undef BOMB_SHAPE_YUUKA_FN
+	#define BOMB_SHAPE_FN      	 BOMB_SHAPE_FN_2
+	#define BOMB_SHAPE_YUUKA_FN	 BOMB_SHAPE_YUUKA_FN_2
+	extern const char BOMB_SHAPE_FN[];
+	extern const char BOMB_SHAPE_YUUKA_FN[];
+	extern const char MIKO16_EXALICE_FN[];
+
+	super_clean(TINY_MIKO16_START, PAT_MAX);
+	super_entry_bfnt(MIKO16_EXALICE_FN);
+	for(int i = TINY_MIKO16_START; i < TINY_MIKO16_END; i++) {
+		super_convert_tiny(i);
+	}
+	main_pat_bomb_shape_load();
 }
