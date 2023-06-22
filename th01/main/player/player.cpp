@@ -142,13 +142,6 @@ struct ModeFrame {
 	main_ptn_id_t to_dash_cel(main_ptn_id_t base) const {
 		return static_cast<main_ptn_id_t>(base + (v & 3));
 	}
-	// And these also just shouldn't exist.
-	int8_t to_dash_cel_int8(main_ptn_id_t base) const {
-		return static_cast<main_ptn_id_t>(base + (v & 3));
-	}
-	int8_t to_dash_cel_2(main_ptn_id_t base) const {
-		return static_cast<main_ptn_id_t>(base + (v % 3));
-	}
 
 	player_48x48_cel_t to_swing_cel(int8_t frame_offset) const {
 		#if (SWING_FRAMES >= (SWING_CELS * SWING_FRAMES_PER_CEL))
@@ -221,11 +214,6 @@ int cardcombo_max = 0;
 /// Helper functions
 /// ----------------
 
-// The most useless operation in here
-inline submode_direction_t input_lr_sanitized() {
-	return static_cast<submode_direction_t>(input_lr % INPUT_LEFT_RIGHT);
-}
-
 inline void player_shots_add_centered(pixel_t distance_x_from_center = 0) {
 	Shots.add(
 		(player_left + (PLAYER_W / 4) + distance_x_from_center), player_top
@@ -242,25 +230,6 @@ inline screen_y_t player_48x48_top(void) {
 
 // Movement
 // --------
-// MODDERS: Just use the regular player_move_and_clamp().
-
-#define move_and_clamp_left(delta) \
-	player_left -= delta; \
-	if(player_left < PLAYER_LEFT_MIN) { \
-		player_left = PLAYER_LEFT_MIN; \
-	}
-
-#define move_and_clamp_left_2(delta) \
-	player_left -= delta; \
-	if(player_left <= PLAYER_LEFT_MIN) { \
-		player_left = PLAYER_LEFT_MIN; \
-	}
-
-#define move_and_clamp_right(delta) \
-	player_left += delta; \
-	if(player_left >= PLAYER_LEFT_MAX) { \
-		player_left = PLAYER_LEFT_MAX; \
-	}
 // --------
 
 // Rendering
@@ -305,10 +274,10 @@ inline void player_48x48_put(const player_48x48_cel_t& cel) {
 // ---------
 
 #define slide_unput_update_render( \
-	mode_frame, combo_enabled, move_func, cel_base \
+	mode_frame, combo_enabled, delta, cel_base \
 ) { \
 	/* screen_x_t */ prev_left = player_left; \
-	move_func(6); \
+	player_move_and_clamp(delta); \
 	player_48x32_unput_and_put( \
 		prev_left, \
 		mode_frame.to_slide_cel_prev(cel_base), \
@@ -374,12 +343,6 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 
 		main_ptn_id_t to_cel(main_ptn_id_t base) const {
 			return static_cast<main_ptn_id_t>(
-				((v % DASH_FRAMES) < DASH_FRAMES_PER_CEL) ? base : (base + 1)
-			);
-		}
-		// Shouldn't exist.
-		int8_t to_cel_int8(main_ptn_id_t base) const {
-			return (
 				((v % DASH_FRAMES) < DASH_FRAMES_PER_CEL) ? base : (base + 1)
 			);
 		}
@@ -496,17 +459,17 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 		case INPUT_RIGHT:
 			dash_direction = X_RIGHT;
 			player_unput(ptn_id_prev);
-			move_and_clamp_right(4);
+			player_move_and_clamp(+4);
 			player_put(dash_cycle.to_cel(PTN_MIKO_R_DASH));
-			ptn_id_prev = dash_cycle.to_cel_int8(PTN_MIKO_R_DASH);
+			ptn_id_prev = dash_cycle.to_cel(PTN_MIKO_R_DASH);
 			submode.direction = SD_RIGHT;
 			break;
 		case INPUT_LEFT:
 			dash_direction = X_LEFT;
 			player_unput(ptn_id_prev);
-			move_and_clamp_left_2(4);
+			player_move_and_clamp(-4);
 			player_put(dash_cycle.to_cel(PTN_MIKO_L_DASH));
-			ptn_id_prev = dash_cycle.to_cel_int8(PTN_MIKO_L_DASH);
+			ptn_id_prev = dash_cycle.to_cel(PTN_MIKO_L_DASH);
 			submode.direction = SD_LEFT;
 			break;
 		}
@@ -548,7 +511,7 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 				mdrv2_se_play(11);
 				mode_frame.v = 0;
 				mode = M_SWING_OR_SLIDE;
-				submode.direction = input_lr_sanitized();
+				submode.direction = input_lr;
 				player_sliding = true;
 				combo_enabled = false;
 				player_48x32_put(
@@ -572,9 +535,9 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 		} else if(submode.direction == SD_RIGHT) {
 			dash_direction = X_RIGHT;
 			player_unput(ptn_id_prev);
-			move_and_clamp_right(4);
+			player_move_and_clamp(+4);
 			player_put(mode_frame.to_dash_cel(PTN_MIKO_R_DASH_SHOOT));
-			ptn_id_prev = mode_frame.to_dash_cel_2(PTN_MIKO_R_DASH_SHOOT);
+			ptn_id_prev = mode_frame.to_dash_cel(PTN_MIKO_R_DASH_SHOOT);
 			if(mode_frame.v >= 1) {
 				player_shots_add_centered();
 				bomb_frames = 0;
@@ -584,9 +547,9 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 		} else if(submode.direction == SD_LEFT) {
 			dash_direction = X_LEFT;
 			player_unput(ptn_id_prev);
-			move_and_clamp_left(4);
+			player_move_and_clamp(-4);
 			player_put(mode_frame.to_dash_cel(PTN_MIKO_L_DASH_SHOOT));
-			ptn_id_prev = mode_frame.to_dash_cel_int8(PTN_MIKO_L_DASH_SHOOT);
+			ptn_id_prev = mode_frame.to_dash_cel(PTN_MIKO_L_DASH_SHOOT);
 			if(mode_frame.v >= 1) {
 				player_shots_add_centered();
 				bomb_frames = 0;
@@ -600,11 +563,8 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 			if(mode_frame.v < 1) {
 				// ZUN bug: No blit call for the rest of the function,
 				// leaving Reimu invisible during the first frame.
-				submode.direction = input_lr_sanitized();
+				submode.direction = (input_lr % INPUT_LEFT_RIGHT);
 				if(submode.direction != SD_STATIONARY) {
-					if(submode.direction == INPUT_LEFT_RIGHT) {
-						submode.direction = SD_STATIONARY;
-					}
 					mode_frame.v = 0;
 					player_deflecting = false;
 					mdrv2_se_play(11);
@@ -641,9 +601,7 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 				}
 			}
 		} else if(submode.direction == SD_RIGHT) {
-			slide_unput_update_render(
-				mode_frame, combo_enabled, move_and_clamp_right, C_R_SLIDE
-			);
+			slide_unput_update_render(mode_frame, combo_enabled, +6, C_R_SLIDE);
 			if(mode_frame.v >= SLIDE_FRAMES) {
 				slide_stop(mode, submode, mode_frame, C_R_SLIDE);
 				if((combo_enabled == true) && (input_strike == true)) {
@@ -659,9 +617,7 @@ void player_unput_update_render(bool16 do_not_reset_player_state)
 				player_invincible_against_orb = false;
 			}
 		} else if(submode.direction == SD_LEFT) {
-			slide_unput_update_render(
-				mode_frame, combo_enabled, move_and_clamp_left, C_L_SLIDE
-			);
+			slide_unput_update_render(mode_frame, combo_enabled, -6, C_L_SLIDE);
 			if(mode_frame.v >= SLIDE_FRAMES) {
 				slide_stop(mode, submode, mode_frame, C_L_SLIDE);
 				if((combo_enabled == true) && (input_strike == true)) {
