@@ -1,3 +1,8 @@
+#include <stddef.h>
+#include "platform.h"
+#include "pc98.h"
+#include "planar.h"
+#include "master.hpp"
 #include "th01/rank.h"
 #include "th01/resident.hpp"
 #include "th01/hardware/egc.h"
@@ -9,7 +14,9 @@
 #include "th01/math/dir.hpp"
 #include "th01/math/subpixel.hpp"
 #include "th01/main/entity.hpp"
+#include "th01/main/playfld.hpp"
 #include "th01/main/hud/hud.hpp"
+#include "th01/main/player/player.hpp"
 #include "th01/main/player/anim.hpp"
 #include "th01/main/player/bomb.hpp"
 #include "th01/main/player/orb.hpp"
@@ -230,6 +237,16 @@ inline screen_y_t player_48x48_top(void) {
 
 // Movement
 // --------
+
+void player_move_and_clamp(pixel_t delta)
+{
+	player_left += delta;
+	if(player_left < PLAYER_LEFT_MIN) {
+		player_left = PLAYER_LEFT_MIN;
+	} else if(player_left >= PLAYER_LEFT_MAX) {
+		player_left = PLAYER_LEFT_MAX;
+	}
+}
 // --------
 
 // Rendering
