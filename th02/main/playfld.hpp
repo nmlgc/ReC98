@@ -173,14 +173,22 @@
 #define playfield_encloses_point(center, w, h) \
 	playfield_encloses(center.x, center.y, w, h)
 
+#define playfield_to_screen_left(subpixel_center_x, sprite_w) ( \
+	PLAYFIELD_LEFT + TO_PIXEL(subpixel_center_x) - (sprite_w / 2) \
+)
+
+#define playfield_to_screen_top(subpixel_center_y, sprite_h) ( \
+	PLAYFIELD_TOP + TO_PIXEL(subpixel_center_y) - (sprite_h / 2) \
+)
+
 #ifdef SUBPIXEL_HPP
 	struct PlayfieldPoint : public SPPoint {
 		screen_x_t to_screen_left(pixel_t sprite_w_if_centered = 0) const {
-			return (PLAYFIELD_LEFT + x.to_pixel() - (sprite_w_if_centered / 2));
+			return playfield_to_screen_left(x, sprite_w_if_centered);
 		}
 
 		screen_y_t to_screen_top(pixel_t sprite_h_if_centered = 0) const {
-			return (PLAYFIELD_TOP + y.to_pixel() - (sprite_h_if_centered / 2));
+			return playfield_to_screen_top(y, sprite_h_if_centered);
 		}
 
 		#ifdef SCROLL_HPP

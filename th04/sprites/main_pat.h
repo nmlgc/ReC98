@@ -17,9 +17,13 @@ typedef enum {
 typedef enum {
 	/// Stage-independent
 	/// =================
+	// mikod.bft
+	// ---------
+	PAT_EXPLOSION_BIG = 3,
+	// ----------
 	// miko32.bft
 	// ----------
-	PAT_ENEMY_KILL = 4,
+	PAT_ENEMY_KILL,
 	PAT_ENEMY_KILL_last = (PAT_ENEMY_KILL + ENEMY_KILL_CELS - 1),
 	PAT_CLOUD_BULLET16_BLUE = 20,
 	PAT_CLOUD_BULLET16_BLUE_last = (PAT_CLOUD_BULLET16_BLUE + BULLET_CLOUD_CELS - 1),
