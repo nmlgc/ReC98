@@ -1822,8 +1822,9 @@ void yuugenmagan_main(void)
 			pentagram.center.x = pentagram.x[0];
 			pentagram.radius = PENTAGRAM_RADIUS_FINAL;
 
-			// ZUN bloat: Done for every rendering call in phase 12.
-			// (And also wrong, since PENTAGRAM_ANGLE_INITIAL is different.)
+			// ZUN bug: This might look redundant, but it sets the coordinates
+			// for the first unblitting call in phase 12. Which are wrong,
+			// because PENTAGRAM_ANGLE_INITIAL is different.
 			pentagram_corners_set_regular(i, 0x00);
 
 			// Work around the inaccuracies of 8-bit angles and make sure that
