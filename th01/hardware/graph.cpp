@@ -669,6 +669,31 @@ end:
 #undef clip_lerp_max
 #undef slope_x
 }
+
+void graph_r_lineloop_put(
+	const screen_x_t x[], const vram_y_t y[], int point_count, vc_t col
+)
+{
+	int i = 0;
+	while((point_count - 1) > i) {
+		graph_r_line(x[i], y[i], x[i + 1], y[i + 1], col);
+		i++;
+	}
+	graph_r_line(x[i], y[i], x[0], y[0], col);
+}
+
+void graph_r_lineloop_unput(
+	const screen_x_t x[], const vram_y_t y[], int point_count
+)
+{
+	int i = 0;
+	while((point_count - 1) > i) {
+		graph_r_line_unput(x[i], y[i], x[i + 1], y[i + 1]);
+		i++;
+	}
+	graph_r_line_unput(x[i], y[i], x[0], y[0]);
+}
+
 /// -----------------------
 
 void z_grcg_boxfill(
