@@ -56,7 +56,7 @@ struct laser_coords_t {
 
 struct Laser {
 	laser_flag_t flag;
-	uint4_t col;
+	vc_t col;
 	laser_coords_t coords;
 
 	// Truncated to 8 bits by the spawn function! Should have therefore rather

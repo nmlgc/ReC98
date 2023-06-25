@@ -14,7 +14,7 @@ void linebullet_put_and_hittest(
 	screen_y_t top,
 	screen_x_t right,
 	screen_y_t bottom,
-	int col
+	vc2 col
 );
 
 // Will only collision-detect for the [right]most pixel itself.
@@ -23,7 +23,7 @@ void linebullet_put_patterned_and_hittest(
 	screen_y_t top,
 	screen_x_t right,
 	screen_y_t bottom,
-	int col,
+	vc2 col,
 	dots16_t pattern
 );
 // --------------

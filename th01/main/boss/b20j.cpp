@@ -305,7 +305,7 @@ template <int SnakeCount> struct Snakes {
 static void spawnray_unput_and_put(
 	screen_x_t origin_x, vram_y_t origin_y,
 	screen_x_t target_x, vram_y_t target_y,
-	int col
+	vc2 col
 )
 {
 	static screen_x_t target_prev_x = -PIXEL_NONE;
@@ -343,7 +343,7 @@ void konngara_load_and_entrance(int8_t)
 	int i;
 	int j;
 	int in_quarter;
-	int ramp_col;
+	svc2 ramp_col;
 	int ramp_comp;
 	int scroll_frame;
 
@@ -1500,13 +1500,13 @@ void konngara_main(void)
 		bool16 invincible;
 		int invincibility_frame;
 
-		void update_and_render(const unsigned char (&flash_colors)[3]) {
+		void update_and_render(const vc_t (&flash_colors)[3]) {
 			boss_hit_update_and_render(
 				invincibility_frame,
 				invincible,
 				boss_hp,
 				flash_colors,
-				sizeof(flash_colors),
+				(sizeof(flash_colors) / sizeof(flash_colors[0])), \
 				10000,
 				boss_nop,
 				overlap_xy_xywh_le_ge_2(
@@ -1560,11 +1560,11 @@ void konngara_main(void)
 
 	int i;
 	int j;
-	int col;
+	svc2 col;
 	int comp;
 	int scroll_frame;
 	face_direction_t fd_track;
-	const unsigned char flash_colors[3] = { 3, 4, 5 };
+	const vc_t flash_colors[3] = { 3, 4, 5 };
 
 	#define pattern_choose( \
 		phase, frame_min, count_on_first_try, count_on_second_try \

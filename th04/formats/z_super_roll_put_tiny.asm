@@ -156,7 +156,7 @@ arg_bx near, @patnum:word
 	MRETURN
 ; ---------------------------------------------------------------------------
 
-; void __usercall near @@grcg_setcolor(uint4_t col<ah>);
+; void __usercall near @@grcg_setcolor(vc_t col<ah>);
 @@grcg_setcolor:
 	GRCG_SETCOLOR_DIRECT ah
 	ret

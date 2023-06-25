@@ -41,7 +41,7 @@ void grcg_whiteline(screen_y_t y)
 #define defeat_animate( \
 	start_y, line_distance, whiteout_interval, whitein_interval \
 ) \
-	int col; \
+	svc2 col; \
 	int comp; \
 	screen_y_t top; \
 	screen_y_t bottom; \
@@ -129,7 +129,7 @@ void singyoku_defeat_animate_and_select_route(void)
 	struct {
 		int v; // ACTUAL TYPE: route_t
 
-		void render(int col_sel, int col_other) {
+		void render(vc2 col_sel, vc2 col_other) {
 			z_palette_set_show(col_sel, RGB4::max(), RGB4::max(), RGB4::max());
 			z_palette_set_show(col_other, 0x9, 0x9, 0x9);
 		}

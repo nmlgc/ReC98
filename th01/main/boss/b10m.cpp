@@ -299,7 +299,7 @@ void yuugenmagan_load(void)
 
 void yuugenmagan_setup(void)
 {
-	int col;
+	svc2 col;
 	int comp;
 
 	grp_palette_load_show("boss2.grp");
@@ -1224,7 +1224,7 @@ inline void conditionally_reset_missiles(bool cond) {
 
 void yuugenmagan_main(void)
 {
-	const unsigned char flash_colors[2] = { 1, 11 };
+	const vc_t flash_colors[2] = { 1, 11 };
 	int i;
 
 	static int invincibility_frame;
@@ -1326,7 +1326,7 @@ void yuugenmagan_main(void)
 	static struct {
 		bool16 invincible;
 
-		void update_and_render(const unsigned char (&flash_colors)[2]) {
+		void update_and_render(const vc_t (&flash_colors)[2]) {
 			#define hittest(eye) ( \
 				(eye.hittest_orb() == true) && (eye.image() != C_HIDDEN) \
 			)
@@ -1336,7 +1336,7 @@ void yuugenmagan_main(void)
 				invincible,
 				boss_hp,
 				flash_colors,
-				sizeof(flash_colors),
+				(sizeof(flash_colors) / sizeof(flash_colors[0])),
 				5000,
 				boss_nop,
 				(

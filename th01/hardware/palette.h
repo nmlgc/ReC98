@@ -12,22 +12,20 @@
 	// that color is excluded from the fade calculation and will stay at its
 	// z_Palettes value throughout the function.
 	void z_palette_fade_from(
-		uint4_t from_r, uint4_t from_g, uint4_t from_b,
-		int keep[COLOR_COUNT],
+		svc_comp_t from_r, svc_comp_t from_g, svc_comp_t from_b,
+		vc2 keep[COLOR_COUNT],
 		unsigned int step_ms
 	);
 #endif
 
 // Sets the given hardware [col] to the given RGB value.
-#define UINT4 int
-void z_palette_show_single(UINT4 col, UINT4 r, UINT4 g, UINT4 b);
+void z_palette_show_single(vc2 col, svc_comp2 r, svc_comp2 g, svc_comp2 b);
 #define z_palette_show_single_col(col, rgb) \
 	z_palette_show_single(col, rgb.c.r, rgb.c.g, rgb.c.b);
-#undef UINT4
 
 // Clamps #[r][g][b] to the 4-bit 0-15 range, then sets the given [col] in
 // both z_Palettes and the hardware palette to that value.
-void z_palette_set_show(int col, int r, int g, int b);
+void z_palette_set_show(vc2 col, svc_comp2 r, svc_comp2 g, svc_comp2 b);
 
 // Sets all hardware colors to #000, without touching z_Palettes.
 void z_palette_black(void);

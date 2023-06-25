@@ -33,10 +33,10 @@ extern "C" {
 static const pixel_t PIC_W = 256;
 static const pixel_t PIC_H = 244;
 
-static const int COL_SELECTED = V_WHITE;
-static const int COL_NOT_SELECTED = 3;
-static const int COL_BOX = 2;
-static const int COL_SHADOW = 1;
+static const vc2 COL_SELECTED = V_WHITE;
+static const vc2 COL_NOT_SELECTED = 3;
+static const vc2 COL_BOX = 2;
+static const vc2 COL_SHADOW = 1;
 
 // Raised edge
 // -----------

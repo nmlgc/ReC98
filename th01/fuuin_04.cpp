@@ -42,7 +42,7 @@ void frame_delay(unsigned int frames)
 
 void pascal grp_palette_settone(int tone)
 {
-	int col;
+	svc2 col;
 	int comp;
 	int blend;
 

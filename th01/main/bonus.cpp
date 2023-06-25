@@ -196,7 +196,7 @@ void pascal near totle_pagetrans_animate(int)
 	uvram_byte_amount_t* row_transfer_offset;
 	bool16* row_active;
 	unsigned int rows_done = 0;
-	unsigned int col;
+	vc2 col;
 	unsigned int comp;
 	unsigned int rows_done_prev = 1;
 	int unused_and_uninitialized_frame_count; // ZUN bloat

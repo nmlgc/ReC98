@@ -97,7 +97,7 @@ struct safetycircle_t {
 	pixel_t radius_filled;
 	pixel_t radius_ring_distance;
 	/* ------------------------- */ int8_t unused_3[8];
-	uint4_t col_ring;
+	vc_t col_ring;
 	/* ------------------------- */ int8_t padding;
 };
 

@@ -152,7 +152,7 @@ static union {
 
 void mima_load(void)
 {
-	int col;
+	svc2 col;
 	int comp;
 
 	mima_ent_load();
@@ -1185,20 +1185,20 @@ void pattern_aimed_lasers_from_corners(void)
 
 void mima_main(void)
 {
-	const unsigned char flash_colors[2] = { 3, 9 };
+	const vc_t flash_colors[2] = { 3, 9 };
 	int i;
 
 	static struct {
 		int invincibility_frame;
 		bool16 invincible;
 
-		void update_and_render(const unsigned char (&flash_colors)[2]) {
+		void update_and_render(const vc_t (&flash_colors)[2]) {
 			boss_hit_update_and_render(
 				invincibility_frame,
 				invincible,
 				boss_hp,
 				flash_colors,
-				sizeof(flash_colors),
+				(sizeof(flash_colors) / sizeof(flash_colors[0])),
 				5000,
 				boss_nop,
 				ent_still.hittest_orb(),

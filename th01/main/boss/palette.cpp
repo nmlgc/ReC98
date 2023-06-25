@@ -6,7 +6,7 @@
 
 void boss_palette_snap(void)
 {
-	int col;
+	svc2 col;
 	int comp;
 	palette_copy(boss_palette, z_Palettes, col, comp);
 }

@@ -73,7 +73,7 @@ void gather_render(void)
 	gather_t near *gather;
 	int circle_i;
 	unsigned char angle;
-	uint4_t col_cur;
+	vc_t col_cur;
 
 	col_cur = -1;
 	gather = gather_circles;

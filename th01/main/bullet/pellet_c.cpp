@@ -7,7 +7,7 @@
 
 #include "th01/sprites/pellet_c.csp"
 
-void pellet_cloud_put_8(screen_x_t left, vram_y_t top, int col, int cel)
+void pellet_cloud_put_8(screen_x_t left, vram_y_t top, vc2 col, int cel)
 {
 	vram_offset_t vram_offset = vram_offset_shift(left, top);
 

@@ -19,7 +19,7 @@ void graph_accesspage_func(int page);
 
 // Fills the entire active page with hardware color 0 or the given [col].
 void z_graph_clear(void);
-void z_graph_clear_col(uint4_t col);
+void z_graph_clear_col(svc_t col);
 
 // Fills page #0 with hardware color 0.
 void z_graph_clear_0(void);
@@ -33,26 +33,26 @@ void graph_copy_accessed_page_to_other(void);
 /// GRCG
 /// ----
 
-void grcg_setcolor_rmw(int col);
+void grcg_setcolor_rmw(vc2 col);
 
 // Enters TCR (Tile Compare Read / "color extraction") mode. VRAM reads will
 // return 1 for any dot whose corresponding pixel has the given [col], and 0
 // otherwise.
-void grcg_setcolor_tcr(int col);
+void grcg_setcolor_tcr(vc2 col);
 
 void grcg_off_func(void);
 #undef grcg_off
 #define grcg_off grcg_off_func
 
 void z_grcg_boxfill(
-	screen_x_t left, vram_y_t top, screen_x_t right, vram_y_t bottom, int col
+	screen_x_t left, vram_y_t top, screen_x_t right, vram_y_t bottom, vc2 col
 );
 /// ----
 
 /// Points
 /// ------
 
-void z_grcg_pset(screen_x_t x, vram_y_t y, int col);
+void z_grcg_pset(screen_x_t x, vram_y_t y, vc2 col);
 // Returns the color value at the given point on the current VRAM page.
 int z_graph_readdot(screen_x_t x, vram_y_t y);
 /// ------
@@ -61,14 +61,14 @@ int z_graph_readdot(screen_x_t x, vram_y_t y);
 /// -----------------------
 
 // Draws straight horizontal lines.
-void graph_r_hline(screen_x_t left, screen_x_t right, vram_y_t y, int col);
+void graph_r_hline(screen_x_t left, screen_x_t right, vram_y_t y, vc2 col);
 
 // Draws straight vertical lines.
-void graph_r_vline(screen_x_t x, vram_y_t top, vram_y_t bottom, int col);
+void graph_r_vline(screen_x_t x, vram_y_t top, vram_y_t bottom, vc2 col);
 
 // Draws a line with an arbitrary angle between the two points.
 void graph_r_line(
-	screen_x_t left, vram_y_t top, screen_x_t right, vram_y_t bottom, int col
+	screen_x_t left, vram_y_t top, screen_x_t right, vram_y_t bottom, vc2 col
 );
 
 // Draws a line with an arbitrary angle and an arbitrary 16-pixel pattern
@@ -78,7 +78,7 @@ void graph_r_line_patterned(
 	vram_y_t top,
 	screen_x_t right,
 	vram_y_t bottom,
-	int col,
+	vc2 col,
 	dots16_t pattern
 );
 
@@ -95,13 +95,13 @@ void graph_r_line_unput(
 
 // Draws the outline of a rectangle.
 void graph_r_box(
-	screen_x_t left, vram_y_t top, screen_x_t right, vram_y_t bottom, int col
+	screen_x_t left, vram_y_t top, screen_x_t right, vram_y_t bottom, vc2 col
 );
 
 // Draws lines in the given [col] from each of the given X/Y points to the
 // next one, and then back from the last point to the first one.
 void graph_r_lineloop_put(
-	const screen_x_t x[], const vram_y_t y[], int point_count, int col
+	const screen_x_t x[], const vram_y_t y[], int point_count, vc2 col
 );
 
 // Like graph_r_lineloop_put(), but recovering the pixels along the given

@@ -204,7 +204,7 @@ void kikuri_load(void)
 
 void kikuri_setup(void)
 {
-	int col;
+	svc2 col;
 	int comp;
 
 	boss_phase = 0;
@@ -921,13 +921,13 @@ void kikuri_main(void)
 		bool16 invincible;
 		int invincibility_frame;
 
-		void update_and_render(const unsigned char (&flash_colors)[4]) {
+		void update_and_render(const vc_t (&flash_colors)[4]) {
 			boss_hit_update_and_render(
 				invincibility_frame,
 				invincible,
 				boss_hp,
 				flash_colors,
-				sizeof(flash_colors),
+				(sizeof(flash_colors) / sizeof(flash_colors[0])),
 				7000,
 				boss_nop,
 				kikuri_hittest_orb()
@@ -950,7 +950,7 @@ void kikuri_main(void)
 	} phase = { P4_SOUL_ACTIVATION, 0 };
 
 	int i;
-	const unsigned char flash_colors[] = { 6, 11, 8, 2 };
+	const vc_t flash_colors[] = { 6, 11, 8, 2 };
 
 	// Entrance animation
 	if(boss_phase == 0) {

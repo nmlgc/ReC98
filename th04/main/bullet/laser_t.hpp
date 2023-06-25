@@ -26,7 +26,7 @@ struct thicklaser_t {
 
 	// Hardware palette color of the outermost layer of the laser. The second
 	// layer is rendered with the hardware palette color at this index + 1.
-	uint8_t col_outline;
+	vc_t col_outline;
 
 	/* ------------------------- */ int8_t unused_3;
 

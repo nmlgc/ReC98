@@ -9610,7 +9610,7 @@ MB_INV_TEXT	segment	byte public 'CODE' use16
 MB_INV_TEXT	ends
 
 BOSS_BD_TEXT	segment	byte public 'CODE' use16
-	@BOSS_BACKDROP_RENDER$QIIC procdesc pascal near \
+	@BOSS_BACKDROP_RENDER$QIIUC procdesc pascal near \
 		left_and_top:dword, col:byte
 BOSS_BD_TEXT	ends
 
@@ -9635,7 +9635,7 @@ BOSS_BG_TEXT	segment	word public 'CODE' use16
 loc_12199:
 		cmp	_boss_phase, PHASE_BOSS_ENTRANCE_BB
 		jnz	short loc_121BF
-		call	@boss_backdrop_render$qiic pascal, (32 shl 16) or 136, 1
+		call	@boss_backdrop_render$qiiuc pascal, (32 shl 16) or 136, 1
 		mov	ax, _bb_boss_seg
 		mov	_tiles_bb_seg, ax
 		mov	ax, _boss_phase_frame
@@ -9649,7 +9649,7 @@ loc_12199:
 loc_121BF:
 		cmp	_boss_phase, PHASE_EXPLODE_BIG
 		jnb	short loc_121D3
-		call	@boss_backdrop_render$qiic pascal, (32 shl 16) or 136, 1
+		call	@boss_backdrop_render$qiiuc pascal, (32 shl 16) or 136, 1
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -9684,7 +9684,7 @@ loc_121E6:
 		jz	short loc_1223D
 		cmp	_boss_phase, PHASE_BOSS_ENTRANCE_BB
 		jnz	short loc_1221B
-		call	@boss_backdrop_render$qiic pascal, (32 shl 16) or 96, 0
+		call	@boss_backdrop_render$qiiuc pascal, (32 shl 16) or 96, 0
 		mov	ax, _bb_boss_seg
 		mov	_tiles_bb_seg, ax
 		mov	ax, _boss_phase_frame
@@ -9698,7 +9698,7 @@ loc_121E6:
 loc_1221B:
 		cmp	_boss_phase, PHASE_EXPLODE_BIG
 		jnb	short loc_1222F
-		call	@boss_backdrop_render$qiic pascal, (32 shl 16) or 96, 0
+		call	@boss_backdrop_render$qiiuc pascal, (32 shl 16) or 96, 0
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -9760,7 +9760,7 @@ sub_12247	endp
 loc_12285:
 		cmp	_boss_phase, 2
 		jnz	short loc_122AB
-		call	@boss_backdrop_render$qiic pascal, (32 shl 16) or 16, 0
+		call	@boss_backdrop_render$qiiuc pascal, (32 shl 16) or 16, 0
 		mov	ax, _bb_boss_seg
 		mov	_tiles_bb_seg, ax
 		mov	ax, _boss_phase_frame
@@ -9774,7 +9774,7 @@ loc_12285:
 loc_122AB:
 		cmp	_boss_phase, PHASE_EXPLODE_BIG
 		jnb	short loc_122BF
-		call	@boss_backdrop_render$qiic pascal, (32 shl 16) or 16, 0
+		call	@boss_backdrop_render$qiiuc pascal, (32 shl 16) or 16, 0
 		pop	bp
 		retn
 ; ---------------------------------------------------------------------------
@@ -9849,7 +9849,7 @@ loc_12327:
 loc_12338:
 		cmp	_boss_phase, PHASE_EXPLODE_BIG
 		jnb	short loc_1234C
-		call	@boss_backdrop_render$qiic pascal, (96 shl 16) or 72, 1
+		call	@boss_backdrop_render$qiiuc pascal, (96 shl 16) or 72, 1
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -9924,7 +9924,7 @@ loc_123B4:
 loc_123C5:
 		cmp	_boss_phase, PHASE_EXPLODE_BIG
 		jnb	short loc_123D9
-		call	@boss_backdrop_render$qiic pascal, (128 shl 16) or 128, 0
+		call	@boss_backdrop_render$qiiuc pascal, (128 shl 16) or 128, 0
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -10702,7 +10702,7 @@ loc_129D2:
 loc_129E3:
 		cmp	_boss_phase, PHASE_EXPLODE_BIG
 		jnb	short loc_129F7
-		call	@boss_backdrop_render$qiic pascal, (32 shl 16) or 16, 1
+		call	@boss_backdrop_render$qiiuc pascal, (32 shl 16) or 16, 1
 		leave
 		retn
 ; ---------------------------------------------------------------------------
@@ -12092,7 +12092,7 @@ loc_14552:
 		mov	_gather_template.GT_center.y, ax
 		mov	ax, _midboss_phase_frame
 		add	ax, -64
-		call	@gather_add_only_3stack$qiii pascal, ax, large (V_WHITE shl 16) or 9
+		call	@gather_add_only_3stack$qiuiui pascal, ax, large (V_WHITE shl 16) or 9
 		mov	ax, _midboss_phase_frame
 		cmp	ax, 64
 		jz	short loc_14584
@@ -12978,7 +12978,7 @@ loc_14DBE:
 		mov	_gather_template.GT_center.y, ax
 		mov	ax, _midboss_phase_frame
 		add	ax, -48
-		call	@gather_add_only_3stack$qiii pascal, ax, large (V_WHITE shl 16) or 7
+		call	@gather_add_only_3stack$qiuiui pascal, ax, large (V_WHITE shl 16) or 7
 		mov	ax, _midboss_phase_frame
 		cmp	ax, 1
 		jz	short loc_14E20
@@ -21017,7 +21017,7 @@ orange_195E4	proc near
 		enter	4, 0
 		mov	ax, _boss_phase_frame
 		add	ax, -70
-		call	@gather_add_only_3stack$qiii pascal, ax, large (7 shl 16) or 6
+		call	@gather_add_only_3stack$qiuiui pascal, ax, large (7 shl 16) or 6
 		cmp	_boss_phase_frame, 16
 		jl	short loc_19678
 		cmp	_boss_phase_frame, 16

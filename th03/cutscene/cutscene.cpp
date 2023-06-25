@@ -116,7 +116,7 @@ extern bool fast_forward;
 extern screen_point_t cursor;
 
 extern int text_interval;
-extern uint8_t text_col;
+extern vc_t text_col;
 extern uint8_t text_fx; // TH04 and TH05 directly set [graph_putsa_fx_func].
 extern int script_number_param_default;
 
@@ -134,7 +134,7 @@ extern int script_number_param_default;
 	static const int COLMAP_COUNT = 8;
 
 	typedef struct {
-		uint4_t values[COLMAP_COUNT];
+		vc_t values[COLMAP_COUNT];
 
 		// Might have been originally meant for a complete character name?
 		ShiftJISKanji keys[COLMAP_COUNT][NAME_KANJI_LEN];

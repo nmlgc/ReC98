@@ -34,7 +34,7 @@ inline void grcg_setmode_rmw_inlined(void) {
 }
 
 // Perfectly inlines if [col] is a compile-time constant.
-inline void grcg_setcolor_direct_constant(uint4_t col) {
+inline void grcg_setcolor_direct_constant(vc_t col) {
 	disable();
 	_DX = 0x7E;
 

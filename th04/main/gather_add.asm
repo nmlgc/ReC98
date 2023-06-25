@@ -146,8 +146,8 @@ public @gather_add_only$qv
 @gather_add_only$qv endp
 
 
-public @GATHER_ADD_ONLY_3STACK$QIII
-@gather_add_only_3stack$qiii proc near
+public @GATHER_ADD_ONLY_3STACK$QIUIUI
+@gather_add_only_3stack$qiuiui proc near
 
 @@col_for_2_and_4		= byte ptr  4
 @@col_for_0		= byte ptr  6
@@ -181,4 +181,4 @@ public @GATHER_ADD_ONLY_3STACK$QIII
 	call	@gather_add_only$qv
 	pop	bp
 	retn	6
-@gather_add_only_3stack$qiii endp
+@gather_add_only_3stack$qiuiui endp

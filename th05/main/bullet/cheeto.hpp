@@ -17,7 +17,7 @@ typedef struct {
 	unsigned char angle;
 	PlayfieldPoint origin;
 	/* -------------------- */ int16_t _unused_2[6];
-	int col;
+	vc2 col;
 	/* -------------------- */ int32_t _unused_3;
 	SubpixelLength8 speed;
 } cheeto_template_t;

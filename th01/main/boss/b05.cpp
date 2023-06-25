@@ -151,7 +151,7 @@ static union {
 
 void singyoku_load(void)
 {
-	int col;
+	svc2 col;
 	int comp;
 
 	singyoku_ent_load();
@@ -617,7 +617,7 @@ void pattern_random_sling_pellets(void)
 
 void singyoku_main(void)
 {
-	const unsigned char flash_colors[1] = { 13 };
+	const vc_t flash_colors[1] = { 13 };
 
 	static struct {
 		int pattern_cur;
@@ -631,13 +631,13 @@ void singyoku_main(void)
 	static struct {
 		bool16 invincible;
 
-		void update_and_render(const unsigned char (&flash_colors)[1]) {
+		void update_and_render(const vc_t (&flash_colors)[1]) {
 			boss_hit_update_and_render(
 				invincibility_frame,
 				invincible,
 				boss_hp,
 				flash_colors,
-				sizeof(flash_colors),
+				(sizeof(flash_colors) / sizeof(flash_colors[0])),
 				3000,
 				boss_nop,
 				ent.hittest_orb(),

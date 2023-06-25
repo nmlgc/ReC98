@@ -19,7 +19,7 @@
 static const int POINTNUM_COUNT = 20;
 
 struct CPointnums {
-	uint8_t col;
+	vc_t col;
 	int8_t unused;
 	screen_x_t left[POINTNUM_COUNT];
 	screen_y_t top[POINTNUM_COUNT][2];

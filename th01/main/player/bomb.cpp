@@ -40,7 +40,7 @@ bool16 bomb_update_and_render(int frame)
 	static Palette4 palette_white;
 
 	static Palette4 palette_flash_bright;
-	static uint4_t white_to_blue_speed;
+	static svc_comp_t white_to_blue_speed;
 
 	static struct {
 		screen_x_t left[(KUJI_COUNT * KUJI_RINGS) + 9]; // yup, 9 extra

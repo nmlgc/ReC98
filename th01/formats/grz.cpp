@@ -11,7 +11,7 @@
 #include "th01/formats/grz.h"
 
 static int8_t planar_stream_id = 0;
-static int8_t grx_col = 0;
+static svc_t grx_col = 0;
 extern uint8_t* rle_streams[GRX_COUNT];
 extern dots8_t* planar_streams[GRX_COUNT][PLANAR_STREAM_PER_GRX_COUNT];
 extern uint8_t planar_stream_count[GRX_COUNT];
@@ -25,7 +25,7 @@ void grx_put_stream(unsigned int slot, int planar_stream)
 	}
 }
 
-void grx_put_col(unsigned int slot, uint4_t col)
+void grx_put_col(unsigned int slot, vc_t col)
 {
 	grx_col = (col + 1);
 	grx_put(slot);

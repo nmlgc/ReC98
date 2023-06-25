@@ -218,7 +218,7 @@ void regist_put_initial(
 			)
 			#define top table_row_top(i)
 		#else
-			int place_col = (
+			vc2 place_col = (
 				(i == entered_place) ? COL_REGIST_SELECTED : COL_REGIST_REGULAR
 			);
 			vram_y_t top = table_row_top(i);

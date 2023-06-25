@@ -46,7 +46,7 @@ int grc_load(main_grc_slot_t slot, const char fn[PF_FN_LEN])
 }
 
 void grc_put_8(
-	screen_x_t left, vram_y_t top, main_grc_slot_t slot, int image, int col
+	screen_x_t left, vram_y_t top, main_grc_slot_t slot, int image, vc2 col
 )
 {
 	vram_offset_t vram_offset_row = vram_offset_shift(left, top);

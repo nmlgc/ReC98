@@ -8,7 +8,7 @@
 #include "platform/x86real/pc98/palette.hpp"
 #include "th01/formats/grz.h"
 
-void grcg_setcolor_rmw(int col)
+void grcg_setcolor_rmw(vc2 col)
 {
 	grcg_setcolor(GC_RMW, col);
 }

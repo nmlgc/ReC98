@@ -19,7 +19,7 @@ enum grcg_mode_t {
 
 // TODO: Decide how to handle the collision with the master.lib GC_* flags,
 // which use BRGI instead of BRGE.
-typedef uint4_t grcg_plane_mask_t;
+typedef vc_t grcg_plane_mask_t;
 
 // Builds the contents of a GRCG tile register from the x86 carry flag by
 // extending its value to a full byte (CF=0 → 0x00, CF=1 → 0xFF).
@@ -43,7 +43,7 @@ struct GRCG {
 		outportb(0x7E, e);
 	}
 
-	void setcolor(uint4_t col);
+	void setcolor(vc_t col);
 
 	~GRCG() {
 		_outportb_(0x7C, GC_OFF);
@@ -66,7 +66,7 @@ template <
 
 // Generates the optimal instructions for setting up the GRCG with a statically
 // known color.
-template <int Col> struct GRCGStaticColor : public GRCG {
+template <vc_t Col> struct GRCGStaticColor : public GRCG {
 	GRCGStaticColor(grcg_mode_t mode, grcg_plane_mask_t plane_mask = 0) :
 		GRCG(mode, plane_mask) {
 		outportb(0x7E, ((Col & 0x1) ? 0xFF : 0x00));
