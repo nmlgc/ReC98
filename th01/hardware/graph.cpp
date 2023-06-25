@@ -670,28 +670,28 @@ end:
 #undef slope_x
 }
 
-void graph_r_lineloop_put(
-	const screen_x_t x[], const vram_y_t y[], int point_count, vc_t col
-)
+void graph_r_lineloop_put(const screen_point_t point[], int count, vc_t col)
 {
 	int i = 0;
-	while((point_count - 1) > i) {
-		graph_r_line(x[i], y[i], x[i + 1], y[i + 1], col);
+	while((count - 1) > i) {
+		graph_r_line(
+			point[i].x, point[i].y, point[i + 1].x, point[i + 1].y, col
+		);
 		i++;
 	}
-	graph_r_line(x[i], y[i], x[0], y[0], col);
+	graph_r_line(point[i].x, point[i].y, point[0].x, point[0].y, col);
 }
 
-void graph_r_lineloop_unput(
-	const screen_x_t x[], const vram_y_t y[], int point_count
-)
+void graph_r_lineloop_unput(const screen_point_t point[], int count)
 {
 	int i = 0;
-	while((point_count - 1) > i) {
-		graph_r_line_unput(x[i], y[i], x[i + 1], y[i + 1]);
+	while((count - 1) > i) {
+		graph_r_line_unput(
+			point[i].x, point[i].y, point[i + 1].x, point[i + 1].y
+		);
 		i++;
 	}
-	graph_r_line_unput(x[i], y[i], x[0], y[0]);
+	graph_r_line_unput(point[i].x, point[i].y, point[0].x, point[0].y);
 }
 
 /// -----------------------

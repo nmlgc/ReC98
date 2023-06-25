@@ -94,17 +94,13 @@ void graph_r_box(
 	screen_x_t left, vram_y_t top, screen_x_t right, vram_y_t bottom, vc2 col
 );
 
-// Draws lines in the given [col] from each of the given X/Y points to the
-// next one, and then back from the last point to the first one.
-void graph_r_lineloop_put(
-	const screen_x_t x[], const vram_y_t y[], int point_count, vc_t col
-);
+// Draws lines in the given [col] from each of the given points to the next
+// one, and then back from the last point to the first one.
+void graph_r_lineloop_put(const screen_point_t point[], int count, vc_t col);
 
 // Like graph_r_lineloop_put(), but recovering the pixels along the given
 // lines from VRAM page 1 instead.
-void graph_r_lineloop_unput(
-	const screen_x_t x[], const vram_y_t y[], int point_count
-);
+void graph_r_lineloop_unput(const screen_point_t point[], int count);
 /// -----------------------
 
 /// Blitting

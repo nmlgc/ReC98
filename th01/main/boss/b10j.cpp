@@ -396,8 +396,7 @@ static const pixel_t SQUARE_RADIUS_STEP = (
 );
 
 void near regular_polygon(
-	screen_x_t *corners_x,
-	screen_y_t *corners_y,
+	screen_point_t* corners,
 	screen_point_t center,
 	pixel_t radius,
 	unsigned char angle,
@@ -405,9 +404,10 @@ void near regular_polygon(
 )
 {
 	for(int i = 0; i < points; i++) {
-		corners_x[i] = polar_x(center.x, radius, angle);
-		corners_y[i] = polar_y(center.y, radius, angle);
+		corners->x = polar_x(center.x, radius, angle);
+		corners->y = polar_y(center.y, radius, angle);
 		angle += (0x100 / points);
+		corners++;
 	}
 }
 
@@ -415,10 +415,8 @@ struct CSquares {
 	unsigned char angle;
 	pixel_t radius;
 	screen_point_t center;
-	screen_x_t corners_regular_x[SQUARE_POINTS];
-	screen_y_t corners_regular_y[SQUARE_POINTS];
-	screen_x_t corners_flipped_x[SQUARE_POINTS];
-	screen_y_t corners_flipped_y[SQUARE_POINTS];
+	screen_point_t corners_regular[SQUARE_POINTS];
+	screen_point_t corners_flipped[SQUARE_POINTS];
 
 	void init(void) {
 		radius = static_cast<pixel_t>(SEAL_RADIUS * 0.4f);
@@ -432,17 +430,15 @@ struct CSquares {
 };
 
 #define square_corners_set(sq, corners, radius, angle) { \
-	regular_polygon( \
-		corners##_x, corners##_y, sq.center, radius, angle, SQUARE_POINTS \
-	); \
+	regular_polygon(corners, sq.center, radius, angle, SQUARE_POINTS); \
 }
 
 #define square_unput(corners) { \
-	graph_r_lineloop_unput(corners##_x, corners##_y, SQUARE_POINTS); \
+	graph_r_lineloop_unput(corners, SQUARE_POINTS); \
 }
 
 #define square_put(corners) { \
-	graph_r_lineloop_put(corners##_x, corners##_y, SQUARE_POINTS, V_WHITE); \
+	graph_r_lineloop_put(corners, SQUARE_POINTS, V_WHITE); \
 }
 
 #define square_regular_set_coords_and_unput(sq) { \
@@ -490,8 +486,8 @@ void pattern_aimed_then_static_pellets_from_square_corners(void)
 				fire_static_from_corner(
 					angle,
 					sq,
-					sq.corners_regular_x[i],
-					sq.corners_regular_y[i],
+					sq.corners_regular[i].x,
+					sq.corners_regular[i].y,
 					pattern_state.speed
 				);
 				mdrv2_se_play(7);
@@ -501,12 +497,12 @@ void pattern_aimed_then_static_pellets_from_square_corners(void)
 				screen_x_t target_x = (player_center_x() - (PELLET_W / 2));
 				screen_x_t target_y = player_center_y();
 				unsigned char angle = iatan2(
-					(target_y - sq.corners_regular_y[i]),
-					(target_x - sq.corners_regular_x[i])
+					(target_y - sq.corners_regular[i].y),
+					(target_x - sq.corners_regular[i].x)
 				);
 				Pellets.add_single(
-					sq.corners_regular_x[i],
-					sq.corners_regular_y[i],
+					sq.corners_regular[i].x,
+					sq.corners_regular[i].y,
 					angle,
 					(pattern_state.speed / 2)
 				);
@@ -557,8 +553,8 @@ void pattern_aimed_missiles_from_square_corners(void)
 			);
 			for(i = 0; i < SQUARE_POINTS; i++) {
 				Missiles.add(
-					sq.corners_regular_x[i],
-					sq.corners_regular_y[i],
+					sq.corners_regular[i].x,
+					sq.corners_regular[i].y,
 					velocity_x.to_pixel(),
 					velocity_y.to_pixel()
 				);
@@ -608,15 +604,15 @@ void pattern_static_pellets_from_corners_of_two_squares(void)
 				fire_static_from_corner(
 					angle,
 					sq,
-					sq.corners_regular_x[i],
-					sq.corners_regular_y[i],
+					sq.corners_regular[i].x,
+					sq.corners_regular[i].y,
 					pattern_state.speed
 				);
 				fire_static_from_corner(
 					angle,
 					sq,
-					sq.corners_flipped_x[i],
-					sq.corners_flipped_y[i],
+					sq.corners_flipped[i].x,
+					sq.corners_flipped[i].y,
 					pattern_state.speed
 				);
 				mdrv2_se_play(7);
@@ -1031,8 +1027,8 @@ void pattern_halfcircle_missiles_downwards_from_corners(void)
 
 			for(int i = 0; i < SQUARE_POINTS; i++) {
 				Missiles.add(
-					sq.corners_regular_x[i],
-					sq.corners_regular_y[i],
+					sq.corners_regular[i].x,
+					sq.corners_regular[i].y,
 					velocity_x,
 					velocity_y
 				);
@@ -1085,8 +1081,8 @@ void pattern_slow_pellet_spray_from_corners(void)
 			);
 			for(int i = 0; i < SQUARE_POINTS; i++) {
 				Pellets.add_single(
-					sq.corners_regular_x[i],
-					sq.corners_regular_y[i],
+					sq.corners_regular[i].x,
+					sq.corners_regular[i].y,
 					pellet_angle,
 					pattern_state.speed
 				);
@@ -1134,8 +1130,8 @@ void pattern_aimed_lasers_from_corners(void)
 	if((boss_phase_frame > 180) && (boss_phase_frame < 300)) {
 		int i = (boss_phase_frame % SQUARE_POINTS);
 		shootout_lasers[i].spawn(
-			sq.corners_regular_x[i],
-			sq.corners_regular_y[i],
+			sq.corners_regular[i].x,
+			sq.corners_regular[i].y,
 			(player_center_x() - (LASER_W / 2)),
 			player_bottom(),
 			pattern_state.speed_multiplied_by_8,
