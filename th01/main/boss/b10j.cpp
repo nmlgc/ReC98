@@ -476,6 +476,8 @@ struct SquareState {
 	square_corners_set(sql, corners, radius, angle); \
 	square_put(corners); \
 }
+
+SquareState sq;
 // ---------------
 
 #define fire_static_from_corner(angle, sql, corner_x, corner_y, speed) { \
@@ -485,7 +487,6 @@ struct SquareState {
 
 void pattern_aimed_then_static_pellets_from_square_corners(void)
 {
-	static SquareState sq;
 	SquareLocal(sql);
 
 	if(boss_phase_frame < 100) {
@@ -543,7 +544,6 @@ void pattern_aimed_then_static_pellets_from_square_corners(void)
 
 void pattern_aimed_missiles_from_square_corners(void)
 {
-	static SquareState sq;
 	SquareLocal(sql);
 	int i;
 	Subpixel velocity_x;
@@ -597,7 +597,6 @@ void pattern_aimed_missiles_from_square_corners(void)
 
 void pattern_static_pellets_from_corners_of_two_squares(void)
 {
-	static SquareState sq;
 	SquareLocal2(sql);
 
 	if(boss_phase_frame == 50) {
@@ -1015,7 +1014,6 @@ void pattern_pillars_and_aimed_spreads(void)
 
 void pattern_halfcircle_missiles_downwards_from_corners(void)
 {
-	static SquareState sq;
 	SquareLocal(sql);
 	pixel_t velocity_x;
 	pixel_t velocity_y;
@@ -1077,7 +1075,6 @@ void pattern_slow_pellet_spray_from_corners(void)
 		KEYFRAME_DONE = 370,
 	};
 
-	static SquareState sq;
 	SquareLocal(sql);
 	static unsigned char pellet_angle;
 
@@ -1128,8 +1125,6 @@ void pattern_aimed_lasers_from_corners(void)
 	enum {
 		LASER_W = 4,
 	};
-
-	static SquareState sq;
 
 	// Could have been local just like in the other patterns, but eh, 16 bytes
 	// for the convenience of being easily able to fire lasers independent of
