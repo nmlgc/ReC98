@@ -411,10 +411,14 @@ void near regular_polygon(
 	}
 }
 
-struct SquareState {
+struct CSquares {
 	unsigned char angle;
 	pixel_t radius;
 	screen_point_t center;
+	screen_x_t corners_regular_x[SQUARE_POINTS];
+	screen_y_t corners_regular_y[SQUARE_POINTS];
+	screen_x_t corners_flipped_x[SQUARE_POINTS];
+	screen_y_t corners_flipped_y[SQUARE_POINTS];
 
 	void init(void) {
 		radius = static_cast<pixel_t>(SEAL_RADIUS * 0.4f);
@@ -426,21 +430,6 @@ struct SquareState {
 		center.y = ent_still.cur_center_y();
 	}
 };
-
-// Pseudo-structure for all local square data, since the original set of data
-// unfortunately is both partly stored in registers, and located on the stack
-// in a way that prevents even parts of it to be turned into a structure.
-// MODDERS: Turn into a proper template class, with all the macros below as
-// methods.
-#define SquareLocal(name) \
-	screen_x_t name##_corners_x[SQUARE_POINTS]; \
-	screen_y_t name##_corners_y[SQUARE_POINTS];
-
-#define SquareLocal2(name) \
-	screen_x_t name##_corners_ccw_x[SQUARE_POINTS]; \
-	screen_y_t name##_corners_ccw_y[SQUARE_POINTS]; \
-	screen_x_t name##_corners_cw_x[SQUARE_POINTS]; \
-	screen_y_t name##_corners_cw_y[SQUARE_POINTS];
 
 #define square_corners_set(sq, corners, radius, angle) { \
 	regular_polygon( \
@@ -456,18 +445,18 @@ struct SquareState {
 	graph_r_lineloop_put(corners##_x, corners##_y, SQUARE_POINTS, V_WHITE); \
 }
 
-#define square_set_coords_and_unput(sq, corners) { \
+#define square_regular_set_coords_and_unput(sq) { \
 	sq.center_set(); \
-	square_corners_set(sq, corners, sq.radius, sq.angle); \
-	square_unput(corners); \
+	square_corners_set(sq, sq.corners_regular, sq.radius, sq.angle); \
+	square_unput(sq.corners_regular); \
 }
 
-#define square_set_coords_and_put(sq, corners) { \
-	square_corners_set(sq, corners, sq.radius, sq.angle); \
-	square_put(corners); \
+#define square_regular_set_coords_and_put(sq) { \
+	square_corners_set(sq, sq.corners_regular, sq.radius, sq.angle); \
+	square_put(sq.corners_regular); \
 }
 
-SquareState sq;
+CSquares sq;
 // ---------------
 
 #define fire_static_from_corner(angle, sq, corner_x, corner_y, speed) { \
@@ -477,8 +466,6 @@ SquareState sq;
 
 void pattern_aimed_then_static_pellets_from_square_corners(void)
 {
-	SquareLocal(sql);
-
 	if(boss_phase_frame < 100) {
 		return;
 	}
@@ -488,7 +475,7 @@ void pattern_aimed_then_static_pellets_from_square_corners(void)
 		mdrv2_se_play(8);
 	}
 	if((boss_phase_frame % SQUARE_INTERVAL) == 0) {
-		square_set_coords_and_unput(sq, sql_corners);
+		square_regular_set_coords_and_unput(sq);
 		sq.angle += ((boss_phase_frame < 260) ? +0x0C : -0x0C);
 		if(sq.radius < SEAL_CIRCUMSQUARE_RADIUS) {
 			sq.radius += SQUARE_RADIUS_STEP;
@@ -503,38 +490,39 @@ void pattern_aimed_then_static_pellets_from_square_corners(void)
 				fire_static_from_corner(
 					angle,
 					sq,
-					sql_corners_x[i],
-					sql_corners_y[i],
+					sq.corners_regular_x[i],
+					sq.corners_regular_y[i],
 					pattern_state.speed
 				);
 				mdrv2_se_play(7);
 			}
 		} else {
 			for(int i = 0; i < SQUARE_POINTS; i++) {
+				screen_x_t target_x = (player_center_x() - (PELLET_W / 2));
+				screen_x_t target_y = player_center_y();
 				unsigned char angle = iatan2(
-					(player_center_y() - sql_corners_y[i]),
-					((player_center_x() - (PELLET_W / 2) - sql_corners_x[i]))
+					(target_y - sq.corners_regular_y[i]),
+					(target_x - sq.corners_regular_x[i])
 				);
 				Pellets.add_single(
-					sql_corners_x[i],
-					sql_corners_y[i],
+					sq.corners_regular_x[i],
+					sq.corners_regular_y[i],
 					angle,
 					(pattern_state.speed / 2)
 				);
 				mdrv2_se_play(7);
 			}
 		}
-		square_set_coords_and_put(sq, sql_corners);
+		square_regular_set_coords_and_put(sq);
 	}
 	if(boss_phase_frame > 360) {
-		square_set_coords_and_unput(sq, sql_corners);
+		square_regular_set_coords_and_unput(sq);
 		boss_phase_frame = 0;
 	}
 }
 
 void pattern_aimed_missiles_from_square_corners(void)
 {
-	SquareLocal(sql);
 	int i;
 	Subpixel velocity_x;
 	Subpixel velocity_y;
@@ -549,7 +537,7 @@ void pattern_aimed_missiles_from_square_corners(void)
 		mdrv2_se_play(8);
 	}
 	if((boss_phase_frame % SQUARE_INTERVAL) == 0) {
-		square_set_coords_and_unput(sq, sql_corners);
+		square_regular_set_coords_and_unput(sq);
 		sq.angle -= 0x0C;
 		if(sq.radius < SEAL_RADIUS) {
 			sq.radius += SQUARE_RADIUS_STEP;
@@ -569,26 +557,24 @@ void pattern_aimed_missiles_from_square_corners(void)
 			);
 			for(i = 0; i < SQUARE_POINTS; i++) {
 				Missiles.add(
-					sql_corners_x[i],
-					sql_corners_y[i],
+					sq.corners_regular_x[i],
+					sq.corners_regular_y[i],
 					velocity_x.to_pixel(),
 					velocity_y.to_pixel()
 				);
 			}
 			mdrv2_se_play(6);
 		}
-		square_set_coords_and_put(sq, sql_corners);
+		square_regular_set_coords_and_put(sq);
 	}
 	if(boss_phase_frame > 320) {
-		square_set_coords_and_unput(sq, sql_corners);
+		square_regular_set_coords_and_unput(sq);
 		boss_phase_frame = 0;
 	}
 }
 
 void pattern_static_pellets_from_corners_of_two_squares(void)
 {
-	SquareLocal2(sql);
-
 	if(boss_phase_frame == 50) {
 		mima_put_cast_both();
 	}
@@ -602,10 +588,12 @@ void pattern_static_pellets_from_corners_of_two_squares(void)
 	}
 	if((boss_phase_frame % SQUARE_INTERVAL) == 0) {
 		sq.center_set();
-		square_corners_set(sq, sql_corners_ccw, sq.radius, sq.angle);
-		square_corners_set(sq, sql_corners_cw, sq.radius, (0x00 - sq.angle));
-		square_unput(sql_corners_ccw);
-		square_unput(sql_corners_cw);
+		square_corners_set(sq, sq.corners_regular, sq.radius, sq.angle);
+		square_corners_set(
+			sq, sq.corners_flipped, sq.radius, (0x00 - sq.angle)
+		);
+		square_unput(sq.corners_regular);
+		square_unput(sq.corners_flipped);
 
 		sq.angle -= 0x06;
 		Pellets.spawn_with_cloud = true;
@@ -620,34 +608,36 @@ void pattern_static_pellets_from_corners_of_two_squares(void)
 				fire_static_from_corner(
 					angle,
 					sq,
-					sql_corners_ccw_x[i],
-					sql_corners_ccw_y[i],
+					sq.corners_regular_x[i],
+					sq.corners_regular_y[i],
 					pattern_state.speed
 				);
 				fire_static_from_corner(
 					angle,
 					sq,
-					sql_corners_cw_x[i],
-					sql_corners_cw_y[i],
+					sq.corners_flipped_x[i],
+					sq.corners_flipped_y[i],
 					pattern_state.speed
 				);
 				mdrv2_se_play(7);
 			}
 		}
-		square_corners_set(sq, sql_corners_ccw, sq.radius, sq.angle);
-		square_corners_set(sq, sql_corners_cw, sq.radius, (0x00 - sq.angle));
-		square_put(sql_corners_ccw);
-		square_put(sql_corners_cw);
+		square_corners_set(sq, sq.corners_regular, sq.radius, sq.angle);
+		square_corners_set(
+			sq, sq.corners_flipped, sq.radius, (0x00 - sq.angle)
+		);
+		square_put(sq.corners_regular);
+		square_put(sq.corners_flipped);
 		Pellets.spawn_with_cloud = false;
 	}
 	if(boss_phase_frame > 320) {
-		// Not redundant, these are local variables here!
 		sq.center_set();
-
-		square_corners_set(sq, sql_corners_ccw, sq.radius, sq.angle);
-		square_corners_set(sq, sql_corners_cw, sq.radius, (0x00 - sq.angle));
-		square_unput(sql_corners_ccw);
-		square_unput(sql_corners_cw);
+		square_corners_set(sq, sq.corners_regular, sq.radius, sq.angle);
+		square_corners_set(
+			sq, sq.corners_flipped, sq.radius, (0x00 - sq.angle)
+		);
+		square_unput(sq.corners_regular);
+		square_unput(sq.corners_flipped);
 		boss_phase_frame = 0;
 		meteor_activate();
 	}
@@ -1004,7 +994,6 @@ void pattern_pillars_and_aimed_spreads(void)
 
 void pattern_halfcircle_missiles_downwards_from_corners(void)
 {
-	SquareLocal(sql);
 	pixel_t velocity_x;
 	pixel_t velocity_y;
 	static unsigned char missile_angle;
@@ -1026,7 +1015,7 @@ void pattern_halfcircle_missiles_downwards_from_corners(void)
 		mdrv2_se_play(8);
 	}
 	if((boss_phase_frame % SQUARE_INTERVAL) == 0) {
-		square_set_coords_and_unput(sq, sql_corners);
+		square_regular_set_coords_and_unput(sq);
 		sq.angle -= 0x0C;
 		if(sq.radius < SEAL_RADIUS) {
 			sq.radius += SQUARE_RADIUS_STEP;
@@ -1042,16 +1031,19 @@ void pattern_halfcircle_missiles_downwards_from_corners(void)
 
 			for(int i = 0; i < SQUARE_POINTS; i++) {
 				Missiles.add(
-					sql_corners_x[i], sql_corners_y[i], velocity_x, velocity_y
+					sq.corners_regular_x[i],
+					sq.corners_regular_y[i],
+					velocity_x,
+					velocity_y
 				);
 			}
 			mdrv2_se_play(6);
 			missile_angle += 0x0D;
 		}
-		square_set_coords_and_put(sq, sql_corners);
+		square_regular_set_coords_and_put(sq);
 	}
 	if(boss_phase_frame > 340) {
-		square_set_coords_and_unput(sq, sql_corners);
+		square_regular_set_coords_and_unput(sq);
 		boss_phase_frame = 0;
 	}
 }
@@ -1065,7 +1057,6 @@ void pattern_slow_pellet_spray_from_corners(void)
 		KEYFRAME_DONE = 370,
 	};
 
-	SquareLocal(sql);
 	static unsigned char pellet_angle;
 
 	if(boss_phase_frame < KEYFRAME_SQUARE) {
@@ -1078,7 +1069,7 @@ void pattern_slow_pellet_spray_from_corners(void)
 		mdrv2_se_play(8);
 	}
 	if((boss_phase_frame % SQUARE_INTERVAL) == 0) {
-		square_set_coords_and_unput(sq, sql_corners);
+		square_regular_set_coords_and_unput(sq);
 		sq.angle = ((boss_phase_frame > KEYFRAME_FIRE_RIGHT_TO_LEFT)
 			? (sq.angle + 0x0C)
 			: (sq.angle - 0x0C)
@@ -1094,18 +1085,18 @@ void pattern_slow_pellet_spray_from_corners(void)
 			);
 			for(int i = 0; i < SQUARE_POINTS; i++) {
 				Pellets.add_single(
-					sql_corners_x[i],
-					sql_corners_y[i],
+					sq.corners_regular_x[i],
+					sq.corners_regular_y[i],
 					pellet_angle,
 					pattern_state.speed
 				);
 			}
 			mdrv2_se_play(6);
 		}
-		square_set_coords_and_put(sq, sql_corners);
+		square_regular_set_coords_and_put(sq);
 	}
 	if(boss_phase_frame > KEYFRAME_DONE) {
-		square_set_coords_and_unput(sq, sql_corners);
+		square_regular_set_coords_and_unput(sq);
 		boss_phase_frame = 0;
 	}
 }
@@ -1115,12 +1106,6 @@ void pattern_aimed_lasers_from_corners(void)
 	enum {
 		LASER_W = 4,
 	};
-
-	// Could have been local just like in the other patterns, but eh, 16 bytes
-	// for the convenience of being easily able to fire lasers independent of
-	// square updates is still fine...
-	static screen_x_t sq_corners_x[SQUARE_POINTS];
-	static screen_y_t sq_corners_y[SQUARE_POINTS];
 
 	if(boss_phase_frame == 50) {
 		mima_put_cast_both();
@@ -1136,7 +1121,7 @@ void pattern_aimed_lasers_from_corners(void)
 		mdrv2_se_play(8);
 	}
 	if((boss_phase_frame % SQUARE_INTERVAL) == 0) {
-		square_set_coords_and_unput(sq, sq_corners);
+		square_regular_set_coords_and_unput(sq);
 		sq.angle += 0x03;
 		if(sq.radius < SEAL_RADIUS) {
 			sq.radius += SQUARE_RADIUS_STEP;
@@ -1144,13 +1129,13 @@ void pattern_aimed_lasers_from_corners(void)
 
 		// ... especially when remembering the coordinates for future frames
 		// is exactly what fixes the corner coordinate quirk in this pattern.
-		square_set_coords_and_put(sq, sq_corners);
+		square_regular_set_coords_and_put(sq);
 	}
 	if((boss_phase_frame > 180) && (boss_phase_frame < 300)) {
 		int i = (boss_phase_frame % SQUARE_POINTS);
 		shootout_lasers[i].spawn(
-			sq_corners_x[i],
-			sq_corners_y[i],
+			sq.corners_regular_x[i],
+			sq.corners_regular_y[i],
 			(player_center_x() - (LASER_W / 2)),
 			player_bottom(),
 			pattern_state.speed_multiplied_by_8,
@@ -1160,7 +1145,7 @@ void pattern_aimed_lasers_from_corners(void)
 		);
 	}
 	if(boss_phase_frame > 300) {
-		square_set_coords_and_unput(sq, sq_corners);
+		square_regular_set_coords_and_unput(sq);
 		boss_phase_frame = 0;
 	}
 }
