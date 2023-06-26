@@ -137,7 +137,7 @@ bool near pattern_dualspeed_rings(void)
 
 	if(boss.phase_frame == PHASE_2_3_PATTERN_START_FRAME) {
 		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_SLOWDOWN);
-		bullet_template.patnum = PAT_BULLET16_N_BLUE;
+		bullet_template.patnum = PAT_BULLET16_N_BALL_BLUE;
 		bullet_template.group = BG_RING;
 		bullet_template.angle = randring2_next16();
 		bullet_template.spread = 16;
@@ -178,7 +178,7 @@ static void near phase_2_3_with_pattern(void)
 			bullet_template.spawn_type = (
 				BST_CLOUD_BACKWARDS | BST_NO_SLOWDOWN
 			);
-			bullet_template.patnum = PAT_BULLET16_N_RED;
+			bullet_template.patnum = PAT_BULLET16_N_BALL_RED;
 			bullet_template.group = BG_RING;
 			bullet_template.speed.set(3.75f);
 			bullet_template.spread = 16;
@@ -220,7 +220,7 @@ bool near pattern_dense_blue_stacks(void)
 {
 	if(boss.phase_frame == PHASE_2_3_PATTERN_START_FRAME) {
 		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_SLOWDOWN);
-		bullet_template.patnum = PAT_BULLET16_N_BLUE;
+		bullet_template.patnum = PAT_BULLET16_N_BALL_BLUE;
 		bullet_template.group = BG_SPREAD_STACK_AIMED;
 		bullet_template.angle = 0x00;
 		bullet_template.set_spread(2, 0x04);
@@ -288,7 +288,7 @@ bool near pattern_wing_preparation(void)
 	}
 	if(wing_frames == 0) {
 		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_SLOWDOWN);
-		bullet_template.patnum = PAT_BULLET16_N_BLUE;
+		bullet_template.patnum = PAT_BULLET16_N_BALL_BLUE;
 		bullet_template.group = BG_SINGLE;
 		bullet_template_tune();
 		for(i = 0; i < 50; i++) {
@@ -347,7 +347,7 @@ void near pattern_random_rain_and_spreads_from_wings(void)
 			boss.pos.cur.y.v - randring2_next16_mod(to_sp(BOSS_H))
 		);
 		bullet_template.spawn_type = (BST_CLOUD_FORWARDS | BST_NO_SLOWDOWN);
-		bullet_template.patnum = PAT_BULLET16_N_BLUE;
+		bullet_template.patnum = PAT_BULLET16_N_BALL_BLUE;
 		bullet_template.group = BG_SPREAD_AIMED;
 		bullet_template.spread = 5;
 		bullet_template.spread_angle_delta = select_for_rank(

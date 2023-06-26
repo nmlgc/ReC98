@@ -83,7 +83,7 @@ void near midboss1_pattern(void)
 		bullet_template.group = BG_SINGLE;
 		bullet_template.spawn_type = BST_CLOUD_FORWARDS;
 		bullet_template.speed.set(1.5f);
-		bullet_template.patnum = PAT_BULLET16_N_BLUE;
+		bullet_template.patnum = PAT_BULLET16_N_BALL_BLUE;
 		bullet_template_tune();
 		bullet_template.angle = randring2_next16();
 		bullet_template.origin.x.v = polar_x(
