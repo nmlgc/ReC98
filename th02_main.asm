@@ -2360,7 +2360,7 @@ RANDRING_NEXT_DEF 1
 public CFG_LOAD
 cfg_load	proc near
 
-@@resident_sgm		= word ptr -2
+@@resident_seg		= word ptr -2
 
 		enter	2, 0
 		push	ds
@@ -2370,14 +2370,14 @@ cfg_load	proc near
 		push	0
 		call	file_seek
 		push	ss
-		lea	ax, [bp+@@resident_sgm]
+		lea	ax, [bp+@@resident_seg]
 		push	ax
 		push	2
 		call	file_read
 		call	file_close
-		cmp	[bp+@@resident_sgm], 0
+		cmp	[bp+@@resident_seg], 0
 		jz	short loc_C2F0
-		mov	ax, [bp+@@resident_sgm]
+		mov	ax, [bp+@@resident_seg]
 		mov	word ptr _resident+2, ax
 		mov	word ptr _resident, 0
 		les	bx, _resident

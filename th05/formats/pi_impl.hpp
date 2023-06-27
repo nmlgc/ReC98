@@ -12,12 +12,12 @@
 	rowloop_func
 
 #define buffer_offset_off	_AX
-#define buffer_offset_sgm	_DX
+#define buffer_offset_seg	_DX
 #define quarter_local    	_CL
 
 #define pi_put_quarter_impl(slot, quarter, rowloop_func) \
 	buffer_offset_off = 0; \
-	buffer_offset_sgm = 0; \
+	buffer_offset_seg = 0; \
 	_SI = slot; \
 	\
 	quarter_local = quarter; \
@@ -27,10 +27,10 @@
 	if(quarter_local & 2) { \
 		/* Careful! Parenthesizing this naively leads to overflows, since */ \
 		/* (PI_QUARTER * PI_W) doesn't fit into 16 bits. */\
-		buffer_offset_sgm = ((PI_QUARTER_H / 2) * (PI_W / 16)); \
+		buffer_offset_seg = ((PI_QUARTER_H / 2) * (PI_W / 16)); \
 	} \
 	_SI <<= 2;	/* *= sizeof(void far *) */ \
 	asm { les	si, pi_buffers[si]; } \
 	_SI += buffer_offset_off; \
-	_ES += buffer_offset_sgm; \
+	_ES += buffer_offset_seg; \
 	rowloop_func

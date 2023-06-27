@@ -1,4 +1,4 @@
-void cfg_init(resident_t __seg *resident_sgm)
+void cfg_init(resident_t __seg *resident_seg)
 {
 	const char *fn = CFG_FN;
 	cfg_options_t opts = OPTS_DEFAULT;
@@ -9,7 +9,7 @@ void cfg_init(resident_t __seg *resident_sgm)
 		handle = dos_create(fn, _A_ARCH);
 		dos_write(handle, &opts, sizeof(opts));
 	}
-	dos_write(handle, &resident_sgm, sizeof(resident_sgm));
+	dos_write(handle, &resident_seg, sizeof(resident_seg));
 	dos_write(handle, &debug, sizeof(debug));
 	dos_close(handle);
 }

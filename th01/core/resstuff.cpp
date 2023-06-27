@@ -20,15 +20,15 @@ void resident_create_and_stuff_set(
 	long rand
 )
 {
-	resident_t __seg *sgm = ResData<resident_t>::exist(RES_ID);
-	if(!sgm) {
-		sgm = ResData<resident_t>::create(RES_ID);
-		resident = sgm;
+	resident_t __seg *seg = ResData<resident_t>::exist(RES_ID);
+	if(!seg) {
+		seg = ResData<resident_t>::create(RES_ID);
+		resident = seg;
 		resident->stage_id = 0;
 		resident->continues_total = 0;
 	}
-	if(sgm) {
-		resident = sgm;
+	if(seg) {
+		resident = seg;
 		resident->rank = rank;
 		resident->bgm_mode = bgm_mode;
 		resident->rem_bombs = rem_bombs;
@@ -48,9 +48,9 @@ int resident_stuff_get(
 	int& stage_id
 )
 {
-	resident_t __seg *sgm = ResData<resident_t>::exist(RES_ID);
-	if(sgm) {
-		resident = sgm;
+	resident_t __seg *seg = ResData<resident_t>::exist(RES_ID);
+	if(seg) {
+		resident = seg;
 		rank = resident->rank;
 		bgm_mode = resident->bgm_mode;
 		rem_bombs = resident->rem_bombs;
@@ -65,8 +65,8 @@ int resident_stuff_get(
 
 void resident_free(void)
 {
-	resident_t __seg *sgm = ResData<resident_t>::exist(RES_ID);
-	if(sgm) {
-		resdata_free(sgm);
+	resident_t __seg *seg = ResData<resident_t>::exist(RES_ID);
+	if(seg) {
+		resdata_free(seg);
 	}
 }

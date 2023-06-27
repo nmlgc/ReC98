@@ -43,7 +43,7 @@ unsigned char snd_bgm_mode;
 static int unused_2; // ZUN bloat
 unsigned int idle_frames;
 unsigned char demo_num;
-resident_t __seg *resident_sgm;
+resident_t __seg *resident_seg;
 putfunc_t near *putfunc;
 
 // Apparently, declaring variables with `extern` before definining them for
@@ -69,11 +69,11 @@ int cfg_load(void)
 		snd_bgm_mode = cfg.opts.bgm_mode;
 		bombs = cfg.opts.bombs;
 		lives = cfg.opts.lives;
-		resident_sgm = cfg.resident;
-		if(!resident_sgm) {
+		resident_seg = cfg.resident;
+		if(!resident_seg) {
 			return 1;
 		}
-		resident = resident_sgm;
+		resident = resident_seg;
 		resident->reduce_effects = cfg.opts.reduce_effects;
 		resident->debug = cfg.debug;
 		file_close();
@@ -107,7 +107,7 @@ void cfg_save(void)
 
 	file_create(cfg_fn);
 	file_write(&cfg, offsetof(cfg_t, resident));
-	file_write(&resident_sgm, sizeof(resident_sgm));
+	file_write(&resident_seg, sizeof(resident_seg));
 	file_write(&cfg.debug, sizeof(cfg.debug));
 	file_close();
 }
@@ -694,7 +694,7 @@ int main(void)
 	}
 
 	ret = resident->op_main_retval;
-	resident_sgm = 0;
+	resident_seg = 0;
 	cfg_save();
 	text_clear();
 	graph_clear();
